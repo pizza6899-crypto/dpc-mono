@@ -31,7 +31,7 @@ export class BankTransferDepositService {
     private readonly activityLog: ActivityLogPort,
     private readonly prismaService: PrismaService,
     private readonly envService: EnvService,
-  ) { }
+  ) {}
 
   async createDeposit(
     userId: string,
