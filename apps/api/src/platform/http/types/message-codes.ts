@@ -1,0 +1,100 @@
+export enum MessageCode {
+  // --- 결제 관련 (Payment) ---
+  DEPOSIT_METHOD_NOT_AVAILABLE = 'DEPOSIT_METHOD_NOT_AVAILABLE', // 입금 방법을 사용할 수 없을 때
+  DEPOSIT_REQUEST_ALREADY_EXISTS = 'DEPOSIT_REQUEST_ALREADY_EXISTS', // 이미 처리 중인 입금 요청이 있을 때
+  WITHDRAW_REQUEST_ALREADY_EXISTS = 'WITHDRAW_REQUEST_ALREADY_EXISTS', // 이미 처리 중인 출금 요청이 있을 때
+  DEPOSIT_NOT_FOUND = 'DEPOSIT_NOT_FOUND', // 입금 내역을 찾을 수 없을 때
+  DEPOSIT_ALREADY_PROCESSED = 'DEPOSIT_ALREADY_PROCESSED', // 이미 처리된 입금 내역일 때
+
+  // --- 인증 관련 (Authentication) ---
+  AUTH_INVALID_TOKEN = 'AUTH_INVALID_TOKEN', // JWT 토큰이 유효하지 않을 때
+  AUTH_TOKEN_EXPIRED = 'AUTH_TOKEN_EXPIRED', // JWT 토큰이 만료되었을 때
+  AUTH_INVALID_CREDENTIALS = 'AUTH_INVALID_CREDENTIALS', // 로그인 정보(ID, 비밀번호)가 틀렸을 때
+  AUTH_ACCOUNT_INACTIVE = 'AUTH_ACCOUNT_INACTIVE', // 사용자 계정이 비활성화 상태일 때
+
+  // --- 권한 관련 (Authorization) ---
+  AUTH_ALREADY_AUTHENTICATED_USERS_CANNOT_ACCESS_THIS_ENDPOINT = 'AUTH_ALREADY_AUTHENTICATED_USERS_CANNOT_ACCESS_THIS_ENDPOINT', // 이미 로그인한 사용자가 접근할 수 없는 엔드포인트(예: 로그인, 회원가입)에 접근 시
+  AUTH_INSUFFICIENT_PERMISSIONS = 'AUTH_INSUFFICIENT_PERMISSIONS', // 특정 작업을 수행할 권한이 없을 때
+
+  // --- 사용자 관련 (User) ---
+  USER_NOT_FOUND = 'USER_NOT_FOUND', // 해당 사용자를 찾을 수 없을 때
+  USER_ALREADY_EXISTS = 'USER_ALREADY_EXISTS', // 이미 존재하는 사용자(예: 이메일 중복)일 때
+  USER_COUNTRY_ALREADY_SET = 'USER_COUNTRY_ALREADY_SET', // 사용자 국가가 이미 설정되어 있을 때
+
+  // --- 데이터베이스 관련 (Database) ---
+  DB_CONNECTION_ERROR = 'DB_CONNECTION_ERROR', // 데이터베이스 연결에 실패했을 때
+  DB_QUERY_ERROR = 'DB_QUERY_ERROR', // 쿼리 실행 중 오류가 발생했을 때
+  DB_CONSTRAINT_VIOLATION = 'DB_CONSTRAINT_VIOLATION', // 데이터베이스 제약 조건(예: Unique Key)을 위반했을 때
+
+  // --- 일반 오류 (General Errors) ---
+  INTERNAL_SERVER_ERROR = 'INTERNAL_SERVER_ERROR', // 예측하지 못한 서버 내부 오류가 발생했을 때
+  VALIDATION_ERROR = 'VALIDATION_ERROR', // 요청 데이터의 유효성 검사에 실패했을 때 (예: DTO 검증)
+
+  // --- 에이전트 관련 (Agent) ---
+  USER_AGENT_CODE_NOT_FOUND = 'USER_AGENT_CODE_NOT_FOUND', // 요청의 User-Agent 정보를 식별할 수 없을 때
+
+  // --- 큐 관련 (Queue) ---
+  QUEUE_UNKNOWN_EMAIL_TYPE = 'QUEUE_UNKNOWN_EMAIL_TYPE', // 큐에서 정의되지 않은 이메일 타입을 처리하려고 할 때
+
+  // --- 콤프 관련 (Comp) ---
+  COMP_NOT_AVAILABLE_YET = 'COMP_NOT_AVAILABLE_YET', // 콤프가 아직 수령 가능하지 않을 때
+  COMP_ALREADY_CLAIMED = 'COMP_ALREADY_CLAIMED', // 이미 수령된 콤프일 때
+  COMP_NOT_FOUND = 'COMP_NOT_FOUND', // 해당 날짜에 적립된 콤프가 없을 때
+  COMP_NO_AMOUNT = 'COMP_NO_AMOUNT', // 수령할 콤프가 없을 때
+
+  // --- 게임 관련 (Game) ---
+  GAME_NOT_FOUND = 'GAME_NOT_FOUND', // 게임을 찾을 수 없을 때
+
+  // --- 통화 관련 (Currency) ---
+  CURRENCY_UNSUPPORTED = 'CURRENCY_UNSUPPORTED', // 지원하지 않는 통화일 때
+  CURRENCY_DISABLED = 'CURRENCY_DISABLED', // 비활성화된 통화일 때
+  CURRENCY_INVALID_WALLET_FORMAT = 'CURRENCY_INVALID_WALLET_FORMAT', // 잘못된 지갑 주소 형식일 때
+  CURRENCY_EXTRA_ID_REQUIRED = 'CURRENCY_EXTRA_ID_REQUIRED', // 추가 ID가 필요할 때
+  CURRENCY_INVALID_EXTRA_ID_FORMAT = 'CURRENCY_INVALID_EXTRA_ID_FORMAT', // 잘못된 추가 ID 형식일 때
+
+  // --- 잔액 관련 (Balance) ---
+  USER_BALANCE_NOT_FOUND = 'USER_BALANCE_NOT_FOUND', // 사용자 잔액을 찾을 수 없을 때
+
+  // --- VIP 관련 (VIP) ---
+  VIP_LEVEL_NOT_FOUND = 'VIP_LEVEL_NOT_FOUND', // VIP 레벨을 찾을 수 없을 때
+
+  // --- 롤링 관련 (Rolling) ---
+  ROLLING_NOT_COMPLETED = 'ROLLING_NOT_COMPLETED', // 롤링 조건을 완료하지 않아 출금할 수 없을 때
+
+  // --- 프로모션 관련 (Promotion) ---
+  PROMOTION_NOT_FOUND = 'PROMOTION_NOT_FOUND', // 프로모션을 찾을 수 없을 때
+  PROMOTION_TRANSLATION_NOT_FOUND = 'PROMOTION_TRANSLATION_NOT_FOUND', // 프로모션 번역을 찾을 수 없을 때
+
+  // --- 쓰로틀링 관련 (Throttle) ---
+  THROTTLE_TOO_MANY_REQUESTS = 'THROTTLE_TOO_MANY_REQUESTS', // 요청 한도 초과
+
+  // 레퍼럴 관련
+  REFERRAL_CODE_NOT_FOUND = 'REFERRAL_CODE_NOT_FOUND',
+  REFERRAL_CODE_INVALID_FORMAT = 'REFERRAL_CODE_INVALID_FORMAT', // 레퍼럴 코드 형식이 올바르지 않을 때
+  REFERRAL_CODE_LIMIT_EXCEEDED = 'REFERRAL_CODE_LIMIT_EXCEEDED', // 레퍼럴 코드 한도 초과
+  REFERRAL_CODE_ALREADY_EXISTS = 'REFERRAL_CODE_ALREADY_EXISTS',
+  REFERRAL_BONUS_NOT_FOUND = 'REFERRAL_BONUS_NOT_FOUND',
+  REFERRAL_BONUS_ALREADY_CLAIMED = 'REFERRAL_BONUS_ALREADY_CLAIMED',
+  REFERRAL_BONUS_INSUFFICIENT_AMOUNT = 'REFERRAL_BONUS_INSUFFICIENT_AMOUNT',
+
+  // --- 언어 관련 (Language) ---
+  INVALID_LANGUAGE_CODE = 'INVALID_LANGUAGE_CODE', // 지원하지 않는 언어 코드일 때
+  INVALID_GAME_PROVIDER = 'INVALID_GAME_PROVIDER', // 지원하지 않는 게임 프로바이더일 때
+
+  // --- DCS 관련 (DCS) ---
+  NO_SUPPORT_GET_REPLAY = 'NO_SUPPORT_GET_REPLAY', // 리플레이 URL 조회 지원하지 않을 때
+
+  // --- 비밀번호 관련 (Password) ---
+  PASSWORD_RESET_TOKEN_INVALID = 'PASSWORD_RESET_TOKEN_INVALID', // 비밀번호 재설정 토큰이 유효하지 않을 때
+  PASSWORD_SAME_AS_CURRENT = 'PASSWORD_SAME_AS_CURRENT', // 새 비밀번호와 현재 비밀번호가 같을 때
+
+  // --- 어플리에이트 관련 (Affiliate) ---
+  AFFILIATE_LINK_LIMIT_EXCEEDED = 'AFFILIATE_LINK_LIMIT_EXCEEDED', // 레퍼럴 링크 최대 개수 초과
+  AFFILIATE_CODE_ALREADY_EXISTS = 'AFFILIATE_CODE_ALREADY_EXISTS', // 이미 존재하는 레퍼럴 코드
+  AFFILIATE_CODE_NOT_FOUND = 'AFFILIATE_CODE_NOT_FOUND', // 어플리에이트 코드를 찾을 수 없음
+  AFFILIATE_CODE_LIMIT_EXCEEDED = 'AFFILIATE_CODE_LIMIT_EXCEEDED', // 어플리에이트 코드 최대 개수 초과
+  AFFILIATE_CODE_CANNOT_DELETE = 'AFFILIATE_CODE_CANNOT_DELETE', // 어플리에이트 코드 삭제 불가 (기본 코드이면서 유일한 코드)
+  AFFILIATE_CODE_INVALID_FORMAT = 'AFFILIATE_CODE_INVALID_FORMAT', // 어플리에이트 코드 형식이 올바르지 않음
+  AFFILIATE_LINK_NOT_FOUND = 'AFFILIATE_LINK_NOT_FOUND', // 레퍼럴 링크를 찾을 수 없음
+  AFFILIATE_DEFAULT_LINK_CANNOT_DELETE = 'AFFILIATE_DEFAULT_LINK_CANNOT_DELETE', // 기본 레퍼럴 링크는 삭제 불가
+}

@@ -1,0 +1,109 @@
+// src/modules/affiliate/commission/application/withdraw-commission.service.ts
+import { Inject, Injectable, Logger } from '@nestjs/common';
+import { ExchangeCurrencyCode, Prisma } from '@prisma/client';
+import { AffiliateWallet } from '../domain';
+import { AFFILIATE_WALLET_REPOSITORY } from '../ports/out/affiliate-wallet.repository.token';
+import type { AffiliateWalletRepositoryPort } from '../ports/out/affiliate-wallet.repository.port';
+import { ACTIVITY_LOG } from 'src/platform/activity-log/activity-log.token';
+import type { ActivityLogPort } from 'src/platform/activity-log/activity-log.port';
+import { ActivityType } from 'src/platform/activity-log/activity-log.types';
+import type { RequestClientInfo } from 'src/platform/http/types/client-info.types';
+import { Transactional } from '@nestjs-cls/transactional';
+
+interface WithdrawCommissionParams {
+  affiliateId: string;
+  currency: ExchangeCurrencyCode;
+  amount: Prisma.Decimal;
+  requestInfo?: RequestClientInfo;
+}
+
+@Injectable()
+export class WithdrawCommissionService {
+  private readonly logger = new Logger(WithdrawCommissionService.name);
+
+  constructor(
+    @Inject(AFFILIATE_WALLET_REPOSITORY)
+    private readonly walletRepository: AffiliateWalletRepositoryPort,
+    @Inject(ACTIVITY_LOG)
+    private readonly activityLog: ActivityLogPort,
+  ) {}
+
+  @Transactional()
+  async execute({
+    affiliateId,
+    currency,
+    amount,
+    requestInfo,
+  }: WithdrawCommissionParams): Promise<AffiliateWallet> {
+    try {
+      // 1. 월렛 조회
+      const wallet = await this.walletRepository.getByAffiliateIdAndCurrency(
+        affiliateId,
+        currency,
+      );
+
+      // 출금 전 잔액 저장 (로그용)
+      const beforeBalance = wallet.availableBalance;
+
+      // 2. 월렛의 withdraw 호출 (내부에서 출금 가능 여부 검증 및 잔액 차감)
+      // wallet.withdraw()는 내부에서 canWithdraw()를 호출하여 검증하므로
+      // 별도의 Policy 검증은 불필요
+      wallet.withdraw(amount);
+
+      // 3. 월렛 업데이트
+      const updatedWallet = await this.walletRepository.upsert(wallet);
+
+      // 4. Activity Log 기록 (성공)
+      if (requestInfo) {
+        await this.activityLog.logSuccess(
+          {
+            userId: affiliateId,
+            activityType: ActivityType.COMMISSION_WITHDRAW,
+            description: `커미션 출금 완료 - 통화: ${currency}, 금액: ${amount.toString()}, 출금 전 잔액: ${beforeBalance.toString()}, 출금 후 잔액: ${updatedWallet.availableBalance.toString()}`,
+            metadata: {
+              affiliateId,
+              currency,
+              amount: amount.toString(),
+              beforeBalance: beforeBalance.toString(),
+              afterBalance: updatedWallet.availableBalance.toString(),
+              pendingBalance: updatedWallet.pendingBalance.toString(),
+              totalEarned: updatedWallet.totalEarned.toString(),
+            },
+          },
+          requestInfo,
+        );
+      }
+
+      this.logger.log(
+        `커미션 출금 완료 - affiliateId: ${affiliateId}, currency: ${currency}, amount: ${amount.toString()}`,
+      );
+
+      return updatedWallet;
+    } catch (error) {
+      // 5. Activity Log 기록 (실패)
+      if (requestInfo) {
+        await this.activityLog.logFailure(
+          {
+            userId: affiliateId,
+            activityType: ActivityType.COMMISSION_WITHDRAW,
+            description: `커미션 출금 실패 - 통화: ${currency}, 금액: ${amount.toString()}`,
+            metadata: {
+              affiliateId,
+              currency,
+              amount: amount.toString(),
+              error: error instanceof Error ? error.message : String(error),
+            },
+          },
+          requestInfo,
+        );
+      }
+
+      this.logger.error(
+        `커미션 출금 실패 - affiliateId: ${affiliateId}, currency: ${currency}, amount: ${amount.toString()}`,
+        error,
+      );
+
+      throw error;
+    }
+  }
+}

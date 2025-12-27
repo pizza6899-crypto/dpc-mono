@@ -1,0 +1,37 @@
+# Dependency directories
+node_modules/
+.pnpm-store/
+
+# Build outputs
+dist/
+.next/
+out/
+build/
+.turbo/
+
+# Environment variables (모든 하위 폴더의 .env 포함)
+.env
+.env.local
+.env.development.local
+.env.test.local
+.env.production.local
+*.env
+
+# Prisma
+# 경로 앞에 /를 붙이면 루트 기준이므로, 하위 폴더까지 고려해 아래처럼 쓰기도 합니다.
+apps/api/prisma/*.db
+apps/api/prisma/*.db-journal
+
+# Logs
+npm-debug.log*
+pnpm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+
+# OS files
+.DS_Store
+Thumbs.db
+
+# IDEs
+.vscode/
+.idea/

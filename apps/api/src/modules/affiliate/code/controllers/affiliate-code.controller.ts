@@ -1,0 +1,236 @@
+// src/modules/affiliate/code/controllers/affiliate-code.controller.ts
+import {
+  Controller,
+  Get,
+  Post,
+  Patch,
+  Delete,
+  Body,
+  Param,
+  HttpCode,
+  HttpStatus,
+} from '@nestjs/common';
+import { ApiTags, ApiOperation } from '@nestjs/swagger';
+import { CurrentUser } from 'src/platform/auth/decorators/current-user.decorator';
+import type { CurrentUserWithSession } from 'src/platform/auth/decorators/current-user.decorator';
+import { RequestClienttInfo } from 'src/platform/auth/decorators/request-info.decorator';
+import type { RequestClientInfo } from 'src/platform/http/types/client-info.types';
+import { CreateCodeService } from '../application/create-code.service';
+import { FindCodesService } from '../application/find-codes.service';
+import { FindCodeByIdService } from '../application/find-code-by-id.service';
+import { FindCodeByCodeService } from '../application/find-code-by-code.service';
+import { UpdateCodeService } from '../application/update-code.service';
+import { DeleteCodeService } from '../application/delete-code.service';
+import { ToggleCodeActiveService } from '../application/toggle-code-active.service';
+import { SetCodeAsDefaultService } from '../application/set-code-as-default.service';
+import { ValidateCodeFormatService } from '../application/validate-code-format.service';
+import { CreateAffiliateCodeDto } from './dto/request/create-affiliate-code.dto';
+import { UpdateAffiliateCodeDto } from './dto/request/update-affiliate-code.dto';
+import { ValidateCodeFormatDto } from './dto/request/validate-code-format.dto';
+import { AffiliateCodeResponseDto } from './dto/response/affiliate-code.response.dto';
+import { GetCodesResponseDto } from './dto/response/get-codes.response.dto';
+import { ValidateCodeFormatResponseDto } from './dto/response/validate-code-format.response.dto';
+import { AffiliateCode } from '../domain';
+
+@ApiTags('Affiliate Codes (어플리에이트 코드)')
+@Controller('affiliate-codes')
+export class AffiliateCodeController {
+  constructor(
+    private readonly createCodeService: CreateCodeService,
+    private readonly findCodesService: FindCodesService,
+    private readonly findCodeByIdService: FindCodeByIdService,
+    private readonly findCodeByCodeService: FindCodeByCodeService,
+    private readonly updateCodeService: UpdateCodeService,
+    private readonly deleteCodeService: DeleteCodeService,
+    private readonly toggleCodeActiveService: ToggleCodeActiveService,
+    private readonly setCodeAsDefaultService: SetCodeAsDefaultService,
+    private readonly validateCodeFormatService: ValidateCodeFormatService,
+  ) {}
+
+  /**
+   * 어플리에이트 코드 생성
+   */
+  @Post()
+  @HttpCode(HttpStatus.CREATED)
+  @ApiOperation({ summary: 'Create affiliate code / 어플리에이트 코드 생성' })
+  async create(
+    @CurrentUser() user: CurrentUserWithSession,
+    @Body() dto: CreateAffiliateCodeDto,
+    @RequestClienttInfo() requestInfo: RequestClientInfo,
+  ): Promise<AffiliateCodeResponseDto> {
+    const code = await this.createCodeService.execute({
+      userId: user.id,
+      campaignName: dto.campaignName,
+      requestInfo,
+    });
+    return this.toResponse(code);
+  }
+
+  /**
+   * 어플리에이트 코드 목록 조회
+   */
+  @Get()
+  @HttpCode(HttpStatus.OK)
+  @ApiOperation({
+    summary: 'Get affiliate codes / 어플리에이트 코드 목록 조회',
+  })
+  async getCodes(
+    @CurrentUser() user: CurrentUserWithSession,
+  ): Promise<GetCodesResponseDto> {
+    const result = await this.findCodesService.execute({ userId: user.id });
+    return {
+      codes: result.codes.map((code) => this.toResponse(code)),
+      total: result.total,
+      limit: result.limit,
+    };
+  }
+
+  /**
+   * 어플리에이트 코드 ID로 조회
+   */
+  @Get(':id')
+  @HttpCode(HttpStatus.OK)
+  @ApiOperation({
+    summary: 'Get affiliate code by ID / 어플리에이트 코드 ID로 조회',
+  })
+  async getCodeById(
+    @CurrentUser() user: CurrentUserWithSession,
+    @Param('id') id: string,
+  ): Promise<AffiliateCodeResponseDto> {
+    const code = await this.findCodeByIdService.execute({
+      id,
+      userId: user.id,
+    });
+    return this.toResponse(code);
+  }
+
+  /**
+   * 어플리에이트 코드로 조회 (검증용)
+   */
+  @Get('code/:code')
+  @HttpCode(HttpStatus.OK)
+  @ApiOperation({
+    summary: 'Get affiliate code by code / 어플리에이트 코드로 조회 (검증용)',
+  })
+  async getCodeByCode(
+    @Param('code') code: string,
+  ): Promise<AffiliateCodeResponseDto | null> {
+    const affiliateCode = await this.findCodeByCodeService.execute({ code });
+    return affiliateCode ? this.toResponse(affiliateCode) : null;
+  }
+
+  /**
+   * 어플리에이트 코드 수정
+   */
+  @Patch(':id')
+  @HttpCode(HttpStatus.OK)
+  @ApiOperation({ summary: 'Update affiliate code / 어플리에이트 코드 수정' })
+  async update(
+    @CurrentUser() user: CurrentUserWithSession,
+    @Param('id') id: string,
+    @Body() dto: UpdateAffiliateCodeDto,
+    @RequestClienttInfo() requestInfo: RequestClientInfo,
+  ): Promise<AffiliateCodeResponseDto> {
+    const code = await this.updateCodeService.execute({
+      id,
+      userId: user.id,
+      campaignName: dto.campaignName,
+      requestInfo,
+    });
+    return this.toResponse(code);
+  }
+
+  /**
+   * 어플리에이트 코드 삭제
+   */
+  @Delete(':id')
+  @HttpCode(HttpStatus.NO_CONTENT)
+  @ApiOperation({ summary: 'Delete affiliate code / 어플리에이트 코드 삭제' })
+  async delete(
+    @CurrentUser() user: CurrentUserWithSession,
+    @Param('id') id: string,
+    @RequestClienttInfo() requestInfo: RequestClientInfo,
+  ): Promise<void> {
+    await this.deleteCodeService.execute({
+      id,
+      userId: user.id,
+      requestInfo,
+    });
+  }
+
+  /**
+   * 어플리에이트 코드 활성화/비활성화 토글
+   */
+  @Patch(':id/toggle-active')
+  @HttpCode(HttpStatus.OK)
+  @ApiOperation({
+    summary:
+      'Toggle affiliate code active status / 어플리에이트 코드 활성화/비활성화 토글',
+  })
+  async toggleActive(
+    @CurrentUser() user: CurrentUserWithSession,
+    @Param('id') id: string,
+    @RequestClienttInfo() requestInfo: RequestClientInfo,
+  ): Promise<AffiliateCodeResponseDto> {
+    const code = await this.toggleCodeActiveService.execute({
+      id,
+      userId: user.id,
+      requestInfo,
+    });
+    return this.toResponse(code);
+  }
+
+  /**
+   * 기본 어플리에이트 코드 설정
+   */
+  @Patch(':id/set-default')
+  @HttpCode(HttpStatus.OK)
+  @ApiOperation({
+    summary: 'Set default affiliate code / 기본 어플리에이트 코드 설정',
+  })
+  async setDefault(
+    @CurrentUser() user: CurrentUserWithSession,
+    @Param('id') id: string,
+    @RequestClienttInfo() requestInfo: RequestClientInfo,
+  ): Promise<AffiliateCodeResponseDto> {
+    const code = await this.setCodeAsDefaultService.execute({
+      id,
+      userId: user.id,
+      requestInfo,
+    });
+    return this.toResponse(code);
+  }
+
+  /**
+   * 코드 형식 검증
+   */
+  @Post('validate')
+  @HttpCode(HttpStatus.OK)
+  @ApiOperation({ summary: 'Validate code format / 코드 형식 검증' })
+  async validateCodeFormat(
+    @Body() dto: ValidateCodeFormatDto,
+  ): Promise<ValidateCodeFormatResponseDto> {
+    const isValid = await this.validateCodeFormatService.execute({
+      code: dto.code,
+    });
+    return { isValid };
+  }
+
+  /**
+   * Domain 엔티티를 Response DTO로 변환
+   */
+  private toResponse(code: AffiliateCode): AffiliateCodeResponseDto {
+    return {
+      id: code.id,
+      userId: code.userId,
+      code: code.code,
+      campaignName: code.campaignName,
+      isActive: code.isActive,
+      isDefault: code.isDefault,
+      expiresAt: code.expiresAt,
+      createdAt: code.createdAt,
+      updatedAt: code.updatedAt,
+      lastUsedAt: code.lastUsedAt,
+    };
+  }
+}
