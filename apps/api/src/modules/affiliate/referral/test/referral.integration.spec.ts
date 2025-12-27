@@ -127,14 +127,7 @@ describe('AffiliateReferralModule Integration', () => {
       });
     }
 
-    // 테스트용 사용자 생성 (이미 있으면 삭제 후 재생성)
-    const existingAffiliate = await prismaService.user.findUnique({
-      where: { email: 'affiliate@test.com' },
-    });
-    if (existingAffiliate) {
-      await prismaService.user.delete({ where: { id: existingAffiliate.id } });
-    }
-
+    // 테스트용 사용자 생성
     affiliateUser = await prismaService.user.create({
       data: {
         email: 'affiliate@test.com',
@@ -143,13 +136,6 @@ describe('AffiliateReferralModule Integration', () => {
       },
     });
 
-    const existingSubUser1 = await prismaService.user.findUnique({
-      where: { email: 'subuser1@test.com' },
-    });
-    if (existingSubUser1) {
-      await prismaService.user.delete({ where: { id: existingSubUser1.id } });
-    }
-
     subUser1 = await prismaService.user.create({
       data: {
         email: 'subuser1@test.com',
@@ -157,13 +143,6 @@ describe('AffiliateReferralModule Integration', () => {
         status: 'ACTIVE',
       },
     });
-
-    const existingSubUser2 = await prismaService.user.findUnique({
-      where: { email: 'subuser2@test.com' },
-    });
-    if (existingSubUser2) {
-      await prismaService.user.delete({ where: { id: existingSubUser2.id } });
-    }
 
     subUser2 = await prismaService.user.create({
       data: {
@@ -653,6 +632,27 @@ describe('AffiliateReferralModule Integration', () => {
           bot: false,
         }),
       ).rejects.toThrow(ReferralNotFoundException);
+    });
+
+    afterEach(async () => {
+      // AdminReferralService 테스트에서 생성한 adminUser 정리
+      if (adminUser?.id) {
+        await prismaService.userBalanceStats.deleteMany({
+          where: { userId: adminUser.id },
+        });
+        await prismaService.userBalance.deleteMany({
+          where: { userId: adminUser.id },
+        });
+        await prismaService.vipHistory.deleteMany({
+          where: { userId: adminUser.id },
+        });
+        await prismaService.vipMembership.deleteMany({
+          where: { userId: adminUser.id },
+        });
+        await prismaService.user.deleteMany({
+          where: { id: adminUser.id },
+        });
+      }
     });
   });
 
