@@ -1,9 +1,3 @@
-// This is your Prisma schema file,
-// learn more about it in the docs: https://pris.ly/d/prisma-schema
-
-// Looking for ways to speed up your queries, or scale easily with your serverless or edge functions?
-// Try Prisma Accelerate: https://pris.ly/cli/accelerate-init
-
 generator client {
   provider = "prisma-client-js"
 }
@@ -14,101 +8,80 @@ datasource db {
 }
 
 model User {
-  id        String @id @default(cuid())
-  numericId Int    @unique @default(autoincrement())
-
-  whitecliffId       BigInt? @unique // 화이트 클리프로 주는 id(게임 실행 시)
-  whitecliffSystemId BigInt? @unique // 화이트 클리프 시스템 Id
-  whitecliffUsername String? @unique
-
-  dcsId String? @unique
-
-  email        String?     @unique
-  passwordHash String?
-  socialType   SocialType? // GOOGLE, APPLE, TELEGRAM ...
-  socialId     String? // 소셜 가입 고유 ID (이메일 없는 경우 식별용)
-
-  agentId String? // 상위 에이전트 (null이면 시스템)
-  agent   User?   @relation("AgentMembers", fields: [agentId], references: [id])
-  members User[]  @relation("AgentMembers") // 나를 상위로 둔 하위 유저들
-
-  balances UserBalance[]
-
-  role     UserRoleType @default(USER)
-  status   UserStatus   @default(ACTIVE)
-  kycLevel KycLevel     @default(NONE)
-
-  country        String? // ISO 3166-1 alpha-2 코드 (KR, JP, US, ...)
-  language       Language? // en, ko, ja, ...
-  timezone       String? // Asia/Seoul, Asia/Tokyo, ...
-  timezoneOffset Int? // UTC+8, UTC+9, ...
-
-  createdAt DateTime @default(now())
-  updatedAt DateTime @updatedAt
-
-  transactions     Transaction[]
-  UserPromotion    UserPromotion[]
-  VipMembership    VipMembership?
-  VipHistory       VipHistory[]
-  CompTransaction  CompTransaction[]
-  DailyCompEarning DailyCompEarning[]
-
-  Rolling              Rolling[]
-  UserToken            UserToken[]
-  EmailLog             EmailLog[]
-  GameSession          GameSession[]
-  UserSession          UserSession[]
-  UserBalanceStats     UserBalanceStats[]
+  id                   String                @id @default(cuid())
+  numericId            Int                   @unique @default(autoincrement())
+  whitecliffId         BigInt?               @unique
+  whitecliffSystemId   BigInt?               @unique
+  whitecliffUsername   String?               @unique
+  dcsId                String?               @unique
+  email                String?               @unique
+  passwordHash         String?
+  socialType           SocialType?
+  socialId             String?
+  agentId              String?
+  role                 UserRoleType          @default(USER)
+  status               UserStatus            @default(ACTIVE)
+  kycLevel             KycLevel              @default(NONE)
+  country              String?
+  language             Language?
+  timezone             String?
+  timezoneOffset       Int?
+  createdAt            DateTime              @default(now())
+  updatedAt            DateTime              @updatedAt
   affiliateCodes       AffiliateCode[]       @relation("AffiliateCodes")
-  affiliateReferrals   Referral[]            @relation("AffiliateReferrals")
-  referredUsers        Referral[]            @relation("ReferredUsers")
-  affiliateWallets     AffiliateWallet[]     @relation("AffiliateWallets")
   affiliateCommissions AffiliateCommission[] @relation("AffiliateCommissions")
   subUserCommissions   AffiliateCommission[] @relation("SubUserCommissions")
   affiliateTier        AffiliateTier?
+  affiliateWallets     AffiliateWallet[]     @relation("AffiliateWallets")
+  CompTransaction      CompTransaction[]
+  DailyCompEarning     DailyCompEarning[]
+  EmailLog             EmailLog[]
+  GameSession          GameSession[]
+  affiliateReferrals   Referral[]            @relation("AffiliateReferrals")
+  referredUsers        Referral[]            @relation("ReferredUsers")
+  Rolling              Rolling[]
+  transactions         Transaction[]
+  agent                User?                 @relation("AgentMembers", fields: [agentId], references: [id])
+  members              User[]                @relation("AgentMembers")
+  balances             UserBalance[]
+  UserBalanceStats     UserBalanceStats[]
+  UserPromotion        UserPromotion[]
+  UserSession          UserSession[]
+  UserToken            UserToken[]
+  VipHistory           VipHistory[]
+  VipMembership        VipMembership?
 }
 
 model UserSession {
-  id     BigInt @id @default(autoincrement())
-  userId String
-  user   User   @relation(fields: [userId], references: [id], onDelete: Cascade)
-
-  // 세션 식별 정보
-  sessionId String @unique // Redis 세션 ID (express-session의 session ID)
-
-  // 디바이스 및 접속 정보
-  deviceInfo String? // 디바이스 정보 (예: "iPhone 14 Pro", "Chrome on Windows")
-  userAgent  String? // User-Agent 헤더
-  ipAddress  String? // IP 주소
-  isMobile   Boolean? // 모바일 여부
-
-  // 세션 상태
-  isActive  Boolean   @default(true) // 활성화 여부 (수동 로그아웃 또는 강제 만료)
-  revokedAt DateTime? // 세션 무효화 시간
-
-  // 타임스탬프
-  createdAt    DateTime @default(now())
-  updatedAt    DateTime @updatedAt
-  lastActiveAt DateTime @default(now()) // 마지막 활동 시간 (세션 갱신 시 업데이트)
-  expiresAt    DateTime // 세션 만료 시간 (Redis 세션 만료 시간과 동기화)
+  userId       String
+  sessionId    String    @unique
+  deviceInfo   String?
+  userAgent    String?
+  ipAddress    String?
+  isMobile     Boolean?
+  isActive     Boolean   @default(true)
+  revokedAt    DateTime?
+  createdAt    DateTime  @default(now())
+  updatedAt    DateTime  @updatedAt
+  lastActiveAt DateTime  @default(now())
+  expiresAt    DateTime
+  id           BigInt    @id @default(autoincrement())
+  user         User      @relation(fields: [userId], references: [id], onDelete: Cascade)
 
   @@index([userId, isActive])
   @@index([sessionId])
   @@index([userId, createdAt])
-  @@index([expiresAt]) // 만료된 세션 정리용
+  @@index([expiresAt])
   @@index([isActive, expiresAt])
 }
 
 model UserBalance {
-  userId   String
-  currency ExchangeCurrencyCode
-
-  mainBalance  Decimal @default(0) @db.Decimal(32, 18) // 메인 잔액 (롤링 적용)
-  bonusBalance Decimal @default(0) @db.Decimal(32, 18) // 보너스 잔액 (롤링 없음)
-
-  updatedAt DateTime @updatedAt
-
-  user User @relation(fields: [userId], references: [id])
+  userId       String
+  currency     ExchangeCurrencyCode
+  mainBalance  Decimal              @default(0) @db.Decimal(32, 18)
+  bonusBalance Decimal              @default(0) @db.Decimal(32, 18)
+  updatedAt    DateTime             @updatedAt
+  user         User                 @relation(fields: [userId], references: [id])
 
   @@id([userId, currency])
   @@index([userId])
@@ -116,27 +89,685 @@ model UserBalance {
 }
 
 model UserBalanceStats {
-  userId   String
-  currency ExchangeCurrencyCode
-
-  // 누적 통계 (덜 자주 변경)
-  totalDeposit           Decimal @default(0) @db.Decimal(32, 18)
-  totalWithdraw          Decimal @default(0) @db.Decimal(32, 18)
-  totalBet               Decimal @default(0) @db.Decimal(32, 18)
-  totalWin               Decimal @default(0) @db.Decimal(32, 18)
-  totalBonus             Decimal @default(0) @db.Decimal(32, 18)
-  totalCompEarned        Decimal @default(0) @db.Decimal(32, 18)
-  totalCompUsed          Decimal @default(0) @db.Decimal(32, 18)
-  totalSettlementFromBet Decimal @default(0) @db.Decimal(32, 18)
-  totalSettlementFromVip Decimal @default(0) @db.Decimal(32, 18)
-
-  updatedAt DateTime @updatedAt
-
-  user User @relation(fields: [userId], references: [id])
+  userId                 String
+  currency               ExchangeCurrencyCode
+  totalDeposit           Decimal              @default(0) @db.Decimal(32, 18)
+  totalWithdraw          Decimal              @default(0) @db.Decimal(32, 18)
+  totalBet               Decimal              @default(0) @db.Decimal(32, 18)
+  totalWin               Decimal              @default(0) @db.Decimal(32, 18)
+  totalBonus             Decimal              @default(0) @db.Decimal(32, 18)
+  totalCompEarned        Decimal              @default(0) @db.Decimal(32, 18)
+  totalCompUsed          Decimal              @default(0) @db.Decimal(32, 18)
+  totalSettlementFromBet Decimal              @default(0) @db.Decimal(32, 18)
+  totalSettlementFromVip Decimal              @default(0) @db.Decimal(32, 18)
+  updatedAt              DateTime             @updatedAt
+  user                   User                 @relation(fields: [userId], references: [id])
 
   @@id([userId, currency])
   @@index([userId])
   @@index([currency])
+}
+
+model ActivityLog {
+  id           BigInt   @id @default(autoincrement())
+  userId       String
+  isAdmin      Boolean  @default(false)
+  activityType String
+  status       String
+  description  String
+  metadata     Json?
+  timestamp    DateTime @default(now())
+  ipAddress    String?
+  userAgent    String?
+  browser      String?
+  os           String?
+  isMobile     Boolean?
+
+  @@index([userId])
+  @@index([timestamp])
+  @@index([isAdmin, timestamp])
+}
+
+model Game {
+  id               Int                @id @default(autoincrement())
+  aggregatorType   GameAggregatorType
+  provider         GameProvider
+  category         GameCategory
+  gameId           Int
+  gameType         String?
+  tableId          String?
+  iconLink         String?
+  isEnabled        Boolean
+  isVisibleToUser  Boolean            @default(true)
+  houseEdge        Decimal            @default(0.04) @db.Decimal(8, 4)
+  contributionRate Decimal            @default(1.0) @db.Decimal(8, 4)
+  createdAt        DateTime           @default(now())
+  updatedAt        DateTime           @updatedAt
+  bonusDetails     BonusDetail[]
+  gameRounds       GameRound[]
+  gameSessions     GameSession[]
+  translations     GameTranslation[]
+
+  @@unique([aggregatorType, provider, gameId])
+  @@index([isEnabled])
+}
+
+model GameTranslation {
+  id           Int      @id @default(autoincrement())
+  gameId       Int
+  language     Language
+  providerName String
+  categoryName String
+  gameName     String
+  createdAt    DateTime @default(now())
+  updatedAt    DateTime @updatedAt
+  game         Game     @relation(fields: [gameId], references: [id], onDelete: Cascade)
+
+  @@unique([gameId, language])
+  @@index([language])
+}
+
+model WhitecliffApiLog {
+  id         BigInt   @id @default(autoincrement())
+  userId     String?
+  action     String
+  endpoint   String
+  httpMethod String?
+  request    Json
+  response   Json
+  statusCode Int?
+  success    Boolean
+  createdAt  DateTime @default(now())
+}
+
+model DcsApiLog {
+  id         BigInt   @id @default(autoincrement())
+  userId     String?
+  action     String
+  endpoint   String
+  httpMethod String?
+  request    Json
+  response   Json
+  statusCode Int?
+  success    Boolean
+  createdAt  DateTime @default(now())
+}
+
+model Transaction {
+  id              BigInt                     @id @default(autoincrement())
+  userId          String
+  type            TransactionType
+  status          TransactionStatus
+  currency        ExchangeCurrencyCode
+  amount          Decimal                    @db.Decimal(32, 18)
+  beforeAmount    Decimal                    @db.Decimal(32, 18)
+  afterAmount     Decimal                    @db.Decimal(32, 18)
+  createdAt       DateTime                   @default(now())
+  updatedAt       DateTime                   @updatedAt
+  bonusDetail     BonusDetail?
+  compTransaction CompTransaction?
+  depositDetail   DepositDetail?
+  gameRound       GameRound?
+  user            User                       @relation(fields: [userId], references: [id])
+  balanceDetails  TransactionBalanceDetail[]
+  withdrawDetail  WithdrawDetail?
+}
+
+model GameRound {
+  id                             BigInt                @id @default(autoincrement())
+  userId                         String
+  aggregatorType                 GameAggregatorType
+  provider                       GameProvider
+  aggregatorTxId                 String
+  aggregatorGameId               Int
+  totalBetAmountInGameCurrency   Decimal?              @db.Decimal(32, 18)
+  totalWinAmountInGameCurrency   Decimal?              @db.Decimal(32, 18)
+  netAmountInGameCurrency        Decimal?              @db.Decimal(32, 18)
+  totalBetAmountInWalletCurrency Decimal?              @db.Decimal(32, 18)
+  totalWinAmountInWalletCurrency Decimal?              @db.Decimal(32, 18)
+  netAmountInWalletCurrency      Decimal?              @db.Decimal(32, 18)
+  transactionId                  BigInt                @unique
+  sessionId                      String?
+  tableId                        String?
+  roundId                        String?
+  replayType                     GameReplayType?
+  replayData                     String?
+  totalPushAmount                Decimal?              @db.Decimal(32, 18)
+  tieBetAmount                   Decimal?              @db.Decimal(32, 18)
+  contributionAmount             Decimal?              @db.Decimal(32, 18)
+  compEarned                     Decimal?              @db.Decimal(32, 18)
+  jackpotContributionAmount      Decimal               @default(0) @db.Decimal(32, 18)
+  startedAt                      DateTime?
+  completedAt                    DateTime?
+  gameId                         Int?
+  gameSessionId                  BigInt
+  AffiliateCommission            AffiliateCommission[]
+  bets                           GameBet[]
+  game                           Game?                 @relation(fields: [gameId], references: [id])
+  GameSession                    GameSession           @relation(fields: [gameSessionId], references: [id])
+  transaction                    Transaction           @relation(fields: [transactionId], references: [id])
+  wins                           GameWin[]
+
+  @@unique([aggregatorTxId, aggregatorType])
+}
+
+model GameBet {
+  id                      BigInt             @id @default(autoincrement())
+  userId                  String
+  gameRoundId             BigInt
+  aggregatorType          GameAggregatorType
+  aggregatorBetId         String
+  betType                 BetType
+  betAmount               Decimal            @db.Decimal(32, 18)
+  bettedAt                DateTime
+  betAmountInGameCurrency Decimal            @db.Decimal(32, 18)
+  createdAt               DateTime           @default(now())
+  isCancelled             Boolean            @default(false)
+  cancelledAt             DateTime?
+  gameRound               GameRound          @relation(fields: [gameRoundId], references: [id], onDelete: Cascade)
+
+  @@unique([aggregatorBetId, aggregatorType])
+  @@index([gameRoundId])
+}
+
+model GameWin {
+  id                      BigInt             @id @default(autoincrement())
+  userId                  String
+  gameRoundId             BigInt
+  aggregatorType          GameAggregatorType
+  aggregatorWinId         String
+  winType                 WinType
+  winAmount               Decimal            @db.Decimal(32, 18)
+  wonAt                   DateTime
+  description             String?
+  winAmountInGameCurrency Decimal            @db.Decimal(32, 18)
+  createdAt               DateTime           @default(now())
+  gameRound               GameRound          @relation(fields: [gameRoundId], references: [id], onDelete: Cascade)
+
+  @@unique([aggregatorWinId, aggregatorType])
+  @@index([gameRoundId])
+}
+
+model TransactionBalanceDetail {
+  id                 BigInt      @id @default(autoincrement())
+  transactionId      BigInt
+  mainBalanceChange  Decimal?    @db.Decimal(32, 18)
+  mainBeforeAmount   Decimal?    @db.Decimal(32, 18)
+  mainAfterAmount    Decimal?    @db.Decimal(32, 18)
+  bonusBalanceChange Decimal?    @db.Decimal(32, 18)
+  bonusBeforeAmount  Decimal?    @db.Decimal(32, 18)
+  bonusAfterAmount   Decimal?    @db.Decimal(32, 18)
+  createdAt          DateTime    @default(now())
+  transaction        Transaction @relation(fields: [transactionId], references: [id])
+
+  @@index([transactionId])
+}
+
+model BonusDetail {
+  id                      BigInt             @id @default(autoincrement())
+  createdAt               DateTime           @default(now())
+  transactionTime         DateTime
+  aggregatorType          GameAggregatorType
+  provider                GameProvider
+  bonusType               BonusType
+  amount                  Decimal            @db.Decimal(32, 18)
+  aggregatorPromotionId   String?
+  aggregatorRoundId       String?
+  aggregatorWagerId       String?
+  aggregatorTransactionId String?
+  aggregatorFreespinId    String?
+  aggregatorSessionId     String?
+  isEndRound              Boolean?
+  description             String?
+  gameId                  Int?
+  transactionId           BigInt             @unique
+  game                    Game?              @relation(fields: [gameId], references: [id])
+  transaction             Transaction        @relation(fields: [transactionId], references: [id])
+}
+
+model DepositDetail {
+  id                   BigInt               @id @default(autoincrement())
+  confirmedAt          DateTime?
+  failedAt             DateTime?
+  createdAt            DateTime             @default(now())
+  updatedAt            DateTime             @updatedAt
+  status               DepositDetailStatus
+  transactionId        BigInt               @unique
+  methodType           DepositMethodType
+  provider             PaymentProvider
+  providerPaymentId    String?              @unique
+  depositCurrency      ExchangeCurrencyCode
+  depositNetwork       String?
+  walletAddress        String?
+  walletAddressExtraId String?
+  bankName             String?
+  accountNumber        String?
+  accountHolder        String?
+  depositorName        String?
+  transactionHash      String?
+  actuallyPaid         Decimal?             @db.Decimal(32, 18)
+  feeAmount            Decimal?             @db.Decimal(32, 18)
+  feeCurrency          String?
+  feePaidBy            FeePaidByType?
+  failureReason        String?
+  providerMetadata     Json?                @default("{}")
+  bankAccountId        Int?
+  BankAccount          BankAccount?         @relation(fields: [bankAccountId], references: [id])
+  transaction          Transaction          @relation(fields: [transactionId], references: [id])
+  Rolling              Rolling[]
+
+  @@index([provider, providerPaymentId])
+}
+
+model WithdrawDetail {
+  id                   BigInt               @id @default(autoincrement())
+  createdAt            DateTime             @default(now())
+  updatedAt            DateTime             @updatedAt
+  status               WithdrawDetailStatus
+  transactionId        BigInt               @unique
+  withdrawCurrency     ExchangeCurrencyCode
+  withdrawNetwork      String
+  withdrawAmount       Decimal              @db.Decimal(32, 18)
+  walletAddress        String
+  walletAddressExtraId String?
+  provider             PaymentProvider
+  providerWithdrawalId String?              @unique
+  transactionHash      String?
+  errorMessage         String?
+  feeAmount            Decimal?             @db.Decimal(32, 18)
+  feeCurrency          String?
+  feePaidBy            FeePaidByType?
+  providerMetadata     Json?                @default("{}")
+  transaction          Transaction          @relation(fields: [transactionId], references: [id])
+
+  @@index([provider, providerWithdrawalId])
+  @@index([provider, status])
+  @@index([transactionHash])
+  @@index([status, createdAt])
+}
+
+model CompTransaction {
+  id                 BigInt           @id @default(autoincrement())
+  userId             String
+  amount             Decimal          @db.Decimal(32, 18)
+  dailyCompEarningId Int
+  transactionId      BigInt           @unique
+  createdAt          DateTime         @default(now())
+  updatedAt          DateTime         @updatedAt
+  dailyCompEarning   DailyCompEarning @relation(fields: [dailyCompEarningId], references: [id])
+  transaction        Transaction      @relation(fields: [transactionId], references: [id])
+  user               User             @relation(fields: [userId], references: [id])
+
+  @@index([userId])
+  @@index([createdAt])
+}
+
+model DailyCompEarning {
+  id                Int               @id @default(autoincrement())
+  userId            String
+  earningDate       DateTime
+  totalContribution Decimal           @db.Decimal(32, 18)
+  compEarned        Decimal           @db.Decimal(32, 18)
+  isProcessed       Boolean           @default(false)
+  processedAt       DateTime?
+  createdAt         DateTime          @default(now())
+  updatedAt         DateTime          @updatedAt
+  CompTransaction   CompTransaction[]
+  user              User              @relation(fields: [userId], references: [id])
+
+  @@unique([userId, earningDate])
+  @@index([earningDate])
+  @@index([isProcessed])
+}
+
+model Promotion {
+  id                             Int                             @id @default(autoincrement())
+  managementName                 String
+  isActive                       Boolean                         @default(true)
+  startDate                      DateTime?
+  endDate                        DateTime?
+  targetType                     PromotionTargetType
+  bonusType                      PromotionBonusType
+  bonusRate                      Decimal?                        @db.Decimal(8, 4)
+  minDepositAmount               Decimal                         @db.Decimal(32, 18)
+  maxBonusAmount                 Decimal?                        @db.Decimal(32, 18)
+  rollingMultiplier              Decimal?                        @db.Decimal(8, 4)
+  qualificationMaintainCondition PromotionQualificationCondition
+  createdAt                      DateTime                        @default(now())
+  updatedAt                      DateTime                        @updatedAt
+  translations                   PromotionTranslation[]
+  UserPromotion                  UserPromotion[]
+}
+
+model PromotionTranslation {
+  id          Int       @id @default(autoincrement())
+  promotionId Int
+  language    Language
+  name        String
+  description String?
+  createdAt   DateTime  @default(now())
+  updatedAt   DateTime  @updatedAt
+  promotion   Promotion @relation(fields: [promotionId], references: [id], onDelete: Cascade)
+
+  @@unique([promotionId, language])
+  @@index([language])
+  @@index([promotionId])
+}
+
+model UserPromotion {
+  id             Int                 @id @default(autoincrement())
+  userId         String
+  promotionId    Int
+  status         UserPromotionStatus @default(ACTIVE)
+  bonusGranted   Boolean             @default(false)
+  bonusGrantedAt DateTime?
+  bonusAmount    Decimal?            @db.Decimal(32, 18)
+  createdAt      DateTime            @default(now())
+  updatedAt      DateTime            @updatedAt
+  Rolling        Rolling[]
+  promotion      Promotion           @relation(fields: [promotionId], references: [id])
+  user           User                @relation(fields: [userId], references: [id])
+}
+
+model NowPaymentCallbackLog {
+  id              BigInt    @id @default(autoincrement())
+  requestHeaders  Json?
+  requestBody     Json
+  responseStatus  Int?
+  responseBody    Json?
+  processed       Boolean   @default(false)
+  processingError String?
+  processedAt     DateTime?
+  createdAt       DateTime  @default(now())
+}
+
+model ExchangeRate {
+  id            Int                  @id @default(autoincrement())
+  baseCurrency  ExchangeCurrencyCode
+  quoteCurrency ExchangeCurrencyCode
+  rate          Decimal              @db.Decimal(32, 18)
+  provider      ExchangeRateProvider
+  collectedAt   DateTime             @default(now())
+  isActive      Boolean              @default(true)
+  createdAt     DateTime             @default(now())
+  updatedAt     DateTime             @updatedAt
+  previousRate  Decimal?             @db.Decimal(32, 18)
+  changeRate    Decimal?             @db.Decimal(8, 4)
+  isValid       Boolean              @default(true)
+
+  @@unique([baseCurrency, quoteCurrency, provider])
+  @@index([baseCurrency, quoteCurrency])
+  @@index([baseCurrency, quoteCurrency, provider])
+  @@index([collectedAt])
+  @@index([isActive, collectedAt])
+}
+
+model VipLevel {
+  id               Int             @id @default(autoincrement())
+  name             String          @unique
+  nameKey          String          @unique
+  rank             Int             @unique
+  requiredRolling  Decimal         @db.Decimal(32, 18)
+  levelUpBonus     Decimal         @db.Decimal(32, 18)
+  compRate         Decimal         @db.Decimal(8, 4)
+  paybackBasisRate Decimal         @db.Decimal(8, 4)
+  weeklyBonusRate  Decimal         @db.Decimal(8, 4)
+  monthlyBonusRate Decimal         @db.Decimal(8, 4)
+  createdAt        DateTime        @default(now())
+  updatedAt        DateTime        @updatedAt
+  memberships      VipMembership[]
+}
+
+model VipMembership {
+  id                 Int          @id @default(autoincrement())
+  userId             String       @unique
+  vipLevelId         Int
+  accumulatedRolling Decimal      @default(0) @db.Decimal(32, 18)
+  totalRewardsPaid   Decimal      @default(0) @db.Decimal(32, 18)
+  achievedAt         DateTime?
+  createdAt          DateTime     @default(now())
+  updatedAt          DateTime     @updatedAt
+  histories          VipHistory[]
+  user               User         @relation(fields: [userId], references: [id])
+  vipLevel           VipLevel     @relation(fields: [vipLevelId], references: [id])
+}
+
+model VipHistory {
+  id                   Int            @id @default(autoincrement())
+  userId               String
+  previousLevelNameKey String?
+  newLevelNameKey      String
+  rewardAmount         Decimal        @db.Decimal(32, 18)
+  rewardPaid           Boolean        @default(false)
+  paidAt               DateTime?
+  createdAt            DateTime       @default(now())
+  vipMembershipId      Int?
+  user                 User           @relation(fields: [userId], references: [id])
+  VipMembership        VipMembership? @relation(fields: [vipMembershipId], references: [id])
+
+  @@index([userId, createdAt])
+}
+
+model Rolling {
+  id                           BigInt            @id @default(autoincrement())
+  userId                       String
+  sourceType                   RollingSourceType @default(DEPOSIT)
+  userPromotionId              Int?
+  requiredAmount               Decimal           @db.Decimal(32, 18)
+  currentAmount                Decimal           @default(0) @db.Decimal(32, 18)
+  cancellationBalanceThreshold Decimal?          @db.Decimal(32, 18)
+  status                       RollingStatus     @default(ACTIVE)
+  depositAmount                Decimal?          @db.Decimal(32, 18)
+  bonusAmount                  Decimal?          @db.Decimal(32, 18)
+  completedAt                  DateTime?
+  cancelledAt                  DateTime?
+  createdAt                    DateTime          @default(now())
+  updatedAt                    DateTime          @updatedAt
+  depositDetailId              BigInt?
+  DepositDetail                DepositDetail?    @relation(fields: [depositDetailId], references: [id])
+  user                         User              @relation(fields: [userId], references: [id])
+  userPromotion                UserPromotion?    @relation(fields: [userPromotionId], references: [id])
+
+  @@index([userId, status, createdAt])
+  @@index([sourceType])
+  @@index([userPromotionId])
+  @@index([status])
+}
+
+model UserToken {
+  id        Int       @id @default(autoincrement())
+  userId    String
+  type      TokenType
+  token     String    @unique
+  expiresAt DateTime
+  usedAt    DateTime?
+  metadata  Json?     @default("{}")
+  createdAt DateTime  @default(now())
+  updatedAt DateTime  @updatedAt
+  user      User      @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  @@index([userId, type])
+  @@index([type, expiresAt])
+  @@index([userId, type, usedAt])
+  @@index([expiresAt])
+}
+
+model EmailLog {
+  id        Int         @id @default(autoincrement())
+  userId    String?
+  type      EmailType
+  status    EmailStatus
+  to        String
+  subject   String
+  from      String?
+  messageId String?
+  error     String?
+  metadata  Json?       @default("{}")
+  sentAt    DateTime?
+  createdAt DateTime    @default(now())
+  user      User?       @relation(fields: [userId], references: [id])
+
+  @@index([userId, type, createdAt])
+  @@index([to, type, createdAt])
+  @@index([status, createdAt])
+  @@index([type, status])
+}
+
+model GameSession {
+  id                     BigInt               @id @default(autoincrement())
+  userId                 String
+  createdAt              DateTime             @default(now())
+  updatedAt              DateTime             @updatedAt
+  lastAccessedAt         DateTime             @default(now())
+  aggregatorType         GameAggregatorType
+  token                  String               @unique
+  walletCurrency         ExchangeCurrencyCode
+  gameCurrency           ExchangeCurrencyCode
+  exchangeRate           Decimal              @db.Decimal(32, 18)
+  exchangeRateSnapshotAt DateTime             @default(now())
+  gameId                 Int?
+  gameRounds             GameRound[]
+  game                   Game?                @relation(fields: [gameId], references: [id])
+  user                   User                 @relation(fields: [userId], references: [id])
+}
+
+model BankAccount {
+  id                 Int                  @id @default(autoincrement())
+  currency           ExchangeCurrencyCode
+  bankName           String
+  accountNumber      String
+  accountHolder      String
+  isActive           Boolean              @default(true)
+  priority           Int                  @default(0)
+  description        String?
+  notes              String?
+  totalDeposits      Int                  @default(0)
+  totalDepositAmount Decimal              @default(0) @db.Decimal(32, 18)
+  createdAt          DateTime             @default(now())
+  updatedAt          DateTime             @updatedAt
+  deletedAt          DateTime?
+  depositDetails     DepositDetail[]
+
+  @@index([currency, isActive, priority])
+  @@index([isActive])
+  @@index([currency])
+  @@index([priority])
+}
+
+model PrismaQueryLog {
+  id        BigInt   @id @default(autoincrement())
+  query     String
+  params    Json?
+  duration  Int
+  createdAt DateTime @default(now())
+}
+
+model AffiliateCode {
+  id           String     @id @default(cuid())
+  userId       String
+  code         String     @unique
+  campaignName String?
+  description  String?
+  isActive     Boolean    @default(true)
+  isDefault    Boolean    @default(false)
+  expiresAt    DateTime?
+  createdAt    DateTime   @default(now())
+  updatedAt    DateTime   @updatedAt
+  lastUsedAt   DateTime?
+  user         User       @relation("AffiliateCodes", fields: [userId], references: [id], onDelete: Cascade)
+  referrals    Referral[]
+
+  @@index([userId])
+  @@index([userId, isActive])
+  @@index([code])
+}
+
+model Referral {
+  id                String        @id @default(cuid())
+  affiliateId       String
+  subUserId         String
+  ipAddress         String?
+  deviceFingerprint String?
+  userAgent         String?
+  createdAt         DateTime      @default(now())
+  updatedAt         DateTime      @updatedAt
+  codeId            String
+  affiliate         User          @relation("AffiliateReferrals", fields: [affiliateId], references: [id], onDelete: Cascade)
+  code              AffiliateCode @relation(fields: [codeId], references: [id], onDelete: Cascade)
+  subUser           User          @relation("ReferredUsers", fields: [subUserId], references: [id], onDelete: Cascade)
+
+  @@unique([affiliateId, subUserId])
+  @@index([affiliateId])
+  @@index([codeId])
+  @@index([subUserId])
+  @@index([affiliateId, codeId])
+  @@index([ipAddress, deviceFingerprint])
+}
+
+model AffiliateWallet {
+  affiliateId      String
+  currency         ExchangeCurrencyCode
+  availableBalance Decimal              @default(0) @db.Decimal(32, 18)
+  pendingBalance   Decimal              @default(0) @db.Decimal(32, 18)
+  totalEarned      Decimal              @default(0) @db.Decimal(32, 18)
+  updatedAt        DateTime             @updatedAt
+  affiliate        User                 @relation("AffiliateWallets", fields: [affiliateId], references: [id], onDelete: Cascade)
+
+  @@id([affiliateId, currency])
+  @@index([affiliateId])
+  @@index([currency])
+}
+
+model AffiliateCommission {
+  affiliateId    String
+  subUserId      String
+  gameRoundId    BigInt?
+  wagerAmount    Decimal              @db.Decimal(32, 18)
+  winAmount      Decimal?             @db.Decimal(32, 18)
+  commission     Decimal              @db.Decimal(32, 18)
+  rateApplied    Decimal              @db.Decimal(8, 4)
+  currency       ExchangeCurrencyCode
+  status         CommissionStatus     @default(PENDING)
+  gameCategory   GameCategory?
+  /// settlementDate: PENDING → AVAILABLE 전환 시점 (월간 정산일)
+  /// claimedAt: AVAILABLE → CLAIMED 전환 시점 (출금 요청 시점)
+  /// withdrawnAt: CLAIMED → WITHDRAWN 전환 시점 (출금 처리 완료 시점)
+  settlementDate DateTime?
+  claimedAt      DateTime?
+  withdrawnAt    DateTime?
+  createdAt      DateTime             @default(now())
+  updatedAt      DateTime             @updatedAt
+  uid            String               @unique
+  id             BigInt               @id @default(autoincrement())
+  affiliate      User                 @relation("AffiliateCommissions", fields: [affiliateId], references: [id], onDelete: Cascade)
+  gameRound      GameRound?           @relation(fields: [gameRoundId], references: [id])
+  subUser        User                 @relation("SubUserCommissions", fields: [subUserId], references: [id], onDelete: Cascade)
+
+  @@index([affiliateId, status])
+  @@index([affiliateId, createdAt])
+  @@index([subUserId])
+  @@index([status, createdAt])
+  @@index([settlementDate])
+  @@index([gameRoundId])
+}
+
+model AffiliateTier {
+  affiliateId        String             @unique
+  tier               AffiliateTierLevel @default(BRONZE)
+  baseRate           Decimal            @db.Decimal(8, 4)
+  customRate         Decimal?           @db.Decimal(8, 4)
+  isCustomRate       Boolean            @default(false)
+  monthlyWagerAmount Decimal            @default(0) @db.Decimal(32, 18)
+  customRateSetBy    String?
+  customRateSetAt    DateTime?
+  createdAt          DateTime           @default(now())
+  updatedAt          DateTime           @updatedAt
+  uid                String             @unique
+  id                 BigInt             @id @default(autoincrement())
+  affiliate          User               @relation(fields: [affiliateId], references: [id], onDelete: Cascade)
+
+  @@index([affiliateId])
+  @@index([tier])
 }
 
 enum SocialType {
@@ -146,10 +777,10 @@ enum SocialType {
 }
 
 enum UserRoleType {
-  USER // 일반 사용자
-  AGENT // 에이전트
-  ADMIN // 관리자
-  SUPER_ADMIN // 최상위 관리자
+  USER
+  AGENT
+  ADMIN
+  SUPER_ADMIN
 }
 
 enum UserStatus {
@@ -159,15 +790,13 @@ enum UserStatus {
 }
 
 enum ExchangeCurrencyCode {
-  // piat
-  USDT // wc-tet
+  USDT
   USD
   KRW
   JPY
   PHP
   IDR
-  VND // 베트남 동남아시아 통화 wc-vn2
-  // crypto
+  VND
   BTC
   ETH
   SOL
@@ -191,27 +820,6 @@ enum KycLevel {
   FULL
 }
 
-model ActivityLog {
-  id           BigInt   @id @default(autoincrement())
-  userId       String
-  isAdmin      Boolean  @default(false) // 추가
-  activityType String
-  status       String
-  description  String
-  metadata     Json?
-  timestamp    DateTime @default(now())
-
-  ipAddress String?
-  userAgent String?
-  browser   String?
-  os        String?
-  isMobile  Boolean?
-
-  @@index([userId])
-  @@index([timestamp])
-  @@index([isAdmin, timestamp]) // 추가: 관리자 로그 조회 최적화
-}
-
 enum GameAggregatorType {
   WHITECLIFF
   DCS
@@ -223,306 +831,42 @@ enum GameCategory {
 }
 
 enum GameProvider {
-  // live casino
-  EVOLUTION // wc 
-  PRAGMATIC_PLAY_LIVE // wc
-
-  // slots
-  PG_SOFT //wc
-  PRAGMATIC_PLAY_SLOTS //wc
-  RELAX_GAMING // dcs
-  PLAYNGO // dcs
-}
-
-model Game {
-  id Int @id @default(autoincrement())
-
-  aggregatorType GameAggregatorType
-  provider       GameProvider
-  category       GameCategory
-
-  gameId          Int // 게임 제공사의 게임id
-  gameType        String? // 슬롯, 미니 게임만 사용(whitecliff 전용)
-  tableId         String? // 라이브카지노 전용(whitecliff 전용)
-  iconLink        String?
-  isEnabled       Boolean
-  isVisibleToUser Boolean @default(true) // 유저에게 표시 가능한지 여부 ( 라이브 카지노 관련 )
-
-  houseEdge        Decimal @default(0.04) @db.Decimal(8, 4) // 기본 4%
-  contributionRate Decimal @default(1.0) @db.Decimal(8, 4) // 기본 1.0000 = 100%
-
-  createdAt DateTime @default(now())
-  updatedAt DateTime @updatedAt
-
-  translations GameTranslation[]
-  gameRounds   GameRound[]
-  bonusDetails BonusDetail[]
-  gameSessions GameSession[]
-
-  @@unique([aggregatorType, provider, gameId])
-  @@index([isEnabled])
-}
-
-model GameTranslation {
-  id     Int  @id @default(autoincrement())
-  gameId Int
-  game   Game @relation(fields: [gameId], references: [id], onDelete: Cascade)
-
-  language     Language
-  providerName String // "에볼루션 아시아"
-  categoryName String // "라이브 카지노"
-  gameName     String // "슈퍼 내부 외부"
-
-  createdAt DateTime @default(now())
-  updatedAt DateTime @updatedAt
-
-  @@unique([gameId, language])
-  @@index([language])
-}
-
-model WhitecliffApiLog {
-  id BigInt @id @default(autoincrement())
-
-  userId String?
-
-  action     String // ex: BET, WIN, ROLLBACK
-  endpoint   String
-  httpMethod String?
-
-  request    Json
-  response   Json
-  statusCode Int?
-  success    Boolean
-
-  createdAt DateTime @default(now())
-}
-
-model DcsApiLog {
-  id BigInt @id @default(autoincrement())
-
-  userId String?
-
-  action     String // ex: LOGIN, WAGER, END_WAGER, CANCEL_WAGER, GET_BALANCE
-  endpoint   String
-  httpMethod String?
-
-  request    Json
-  response   Json
-  statusCode Int?
-  success    Boolean
-
-  createdAt DateTime @default(now())
-}
-
-model Transaction {
-  id     BigInt @id @default(autoincrement())
-  userId String
-  user   User   @relation(fields: [userId], references: [id])
-
-  type     TransactionType // 트랜잭션 타입
-  status   TransactionStatus // 거래 상태
-  currency ExchangeCurrencyCode
-
-  // 변경된 재화의 전후 금액만 기록
-  amount       Decimal @db.Decimal(32, 18) // +/- 실제 변동량
-  beforeAmount Decimal @db.Decimal(32, 18) // 거래 전 해당 재화 잔액
-  afterAmount  Decimal @db.Decimal(32, 18) // 거래 후 해당 재화 잔액
-
-  createdAt DateTime @default(now())
-  updatedAt DateTime @updatedAt
-
-  // 게임 거래 테이블 연결
-  gameRound       GameRound?
-  // 보너스 테이블 연결
-  bonusDetail     BonusDetail?
-  // 입금 테이블 연결
-  depositDetail   DepositDetail?
-  // 출금 테이블 연결
-  withdrawDetail  WithdrawDetail?
-  // 콤프 거래 테이블 연결
-  compTransaction CompTransaction?
-  // 재화 사용 내역 테이블 연결
-  balanceDetails  TransactionBalanceDetail[]
+  EVOLUTION
+  PRAGMATIC_PLAY_LIVE
+  PG_SOFT
+  PRAGMATIC_PLAY_SLOTS
+  RELAX_GAMING
+  PLAYNGO
 }
 
 enum TransactionType {
-  DEPOSIT // 입금
-  WITHDRAW // 출금
-  GAME // 베팅 + 당첨 통합
-  BONUS // 보너스
-  COMP_CLAIM // 콤프 수령
+  DEPOSIT
+  WITHDRAW
+  GAME
+  BONUS
+  COMP_CLAIM
 }
 
 enum TransactionStatus {
-  PENDING // 처리 중
-  COMPLETED // 완료 (PUSH 포함, amount로 구분)
-  CANCELLED // 취소됨
-}
-
-model GameRound {
-  id     BigInt @id @default(autoincrement())
-  userId String // 추가: 역정규화로 조회 성능 향상
-
-  aggregatorType   GameAggregatorType
-  provider         GameProvider
-  aggregatorTxId   String // WC: txn_id, DCS: round_id
-  aggregatorGameId Int // 변경: 애그리게이터 내부 게임 ID (예: Whitecliff의 game_id)
-
-  // 게임 통화 기준 (원본)
-  totalBetAmountInGameCurrency Decimal? @db.Decimal(32, 18)
-  totalWinAmountInGameCurrency Decimal? @db.Decimal(32, 18)
-  netAmountInGameCurrency      Decimal? @db.Decimal(32, 18)
-
-  // 월렛 통화 기준 (실제 차감/증가)
-  totalBetAmountInWalletCurrency Decimal? @db.Decimal(32, 18)
-  totalWinAmountInWalletCurrency Decimal? @db.Decimal(32, 18)
-  netAmountInWalletCurrency      Decimal? @db.Decimal(32, 18)
-
-  transactionId BigInt      @unique
-  transaction   Transaction @relation(fields: [transactionId], references: [id])
-
-  sessionId String?
-  tableId   String?
-  roundId   String?
-
-  replayType GameReplayType? // 리플레이 타입 (TEXT, URL, HTML)
-  replayData String? // 리플레이 데이터 (타입에 따라 text, url, html 문서)
-
-  // 라이브 관련 정보
-  totalPushAmount Decimal? @db.Decimal(32, 18) // 푸시금액 + 타이베팅금액
-  tieBetAmount    Decimal? @db.Decimal(32, 18)
-
-  contributionAmount Decimal? @db.Decimal(32, 18) // 계산된 기여도 금액
-  compEarned         Decimal? @db.Decimal(32, 18) // 해당 게임으로 적립된 콤프 금액
-
-  jackpotContributionAmount Decimal @default(0) @db.Decimal(32, 18) // 잭팟 기여금
-
-  startedAt   DateTime?
-  completedAt DateTime?
-
-  gameId Int?
-  game   Game? @relation(fields: [gameId], references: [id])
-
-  bets GameBet[]
-  wins GameWin[]
-
-  GameSession         GameSession           @relation(fields: [gameSessionId], references: [id])
-  gameSessionId       BigInt
-  AffiliateCommission AffiliateCommission[]
-
-  @@unique([aggregatorTxId, aggregatorType])
+  PENDING
+  COMPLETED
+  CANCELLED
 }
 
 enum GameReplayType {
-  TEXT // 텍스트 형식
-  URL // URL 링크
-  HTML // HTML 문서
-}
-
-model GameBet {
-  id     BigInt @id @default(autoincrement())
-  userId String // 추가: 역정규화로 조회 성능 향상
-
-  gameRoundId BigInt
-  gameRound   GameRound @relation(fields: [gameRoundId], references: [id], onDelete: Cascade)
-
-  aggregatorType  GameAggregatorType
-  aggregatorBetId String
-
-  betType   BetType
-  betAmount Decimal  @db.Decimal(32, 18)
-  bettedAt  DateTime
-
-  betAmountInGameCurrency Decimal @db.Decimal(32, 18) // 게임 통화 기준 베팅 금액
-
-  createdAt DateTime @default(now())
-
-  isCancelled Boolean   @default(false)
-  cancelledAt DateTime?
-
-  @@unique([aggregatorBetId, aggregatorType])
-  @@index([gameRoundId])
+  TEXT
+  URL
+  HTML
 }
 
 enum BetType {
-  NORMAL // 일반 베팅 (bet)
+  NORMAL
   TIP
 }
 
-model GameWin {
-  id     BigInt @id @default(autoincrement())
-  userId String // 추가: 역정규화로 조회 성능 향상
-
-  gameRoundId BigInt
-  gameRound   GameRound @relation(fields: [gameRoundId], references: [id], onDelete: Cascade)
-
-  aggregatorType  GameAggregatorType
-  aggregatorWinId String
-
-  winType     WinType
-  winAmount   Decimal  @db.Decimal(32, 18)
-  wonAt       DateTime
-  description String? // AppendWager 설명
-
-  winAmountInGameCurrency Decimal @db.Decimal(32, 18) // 게임 통화 기준 당첨 금액
-
-  createdAt DateTime @default(now())
-
-  @@unique([aggregatorWinId, aggregatorType])
-  @@index([gameRoundId])
-}
-
 enum WinType {
-  NORMAL // 일반 당첨 (endWager)
-  JACKPOT // 잭팟 (특별 보너스)
-}
-
-model TransactionBalanceDetail {
-  id BigInt @id @default(autoincrement())
-
-  transactionId BigInt
-  transaction   Transaction @relation(fields: [transactionId], references: [id])
-
-  // 메인 잔액 변경 내역
-  mainBalanceChange Decimal? @db.Decimal(32, 18) // null = 변경 없음
-  mainBeforeAmount  Decimal? @db.Decimal(32, 18)
-  mainAfterAmount   Decimal? @db.Decimal(32, 18)
-
-  // 보너스 잔액 변경 내역
-  bonusBalanceChange Decimal? @db.Decimal(32, 18) // null = 변경 없음
-  bonusBeforeAmount  Decimal? @db.Decimal(32, 18)
-  bonusAfterAmount   Decimal? @db.Decimal(32, 18)
-
-  createdAt DateTime @default(now())
-
-  @@index([transactionId])
-}
-
-model BonusDetail {
-  id              BigInt   @id @default(autoincrement())
-  createdAt       DateTime @default(now())
-  transactionTime DateTime
-
-  aggregatorType GameAggregatorType
-  provider       GameProvider
-  bonusType      BonusType
-
-  amount Decimal @db.Decimal(32, 18)
-
-  aggregatorPromotionId   String?
-  aggregatorRoundId       String?
-  aggregatorWagerId       String?
-  aggregatorTransactionId String?
-  aggregatorFreespinId    String?
-  aggregatorSessionId     String?
-  isEndRound              Boolean?
-  description             String?
-
-  gameId Int?
-  game   Game? @relation(fields: [gameId], references: [id])
-
-  transactionId BigInt      @unique
-  transaction   Transaction @relation(fields: [transactionId], references: [id])
+  NORMAL
+  JACKPOT
 }
 
 enum BonusType {
@@ -531,79 +875,24 @@ enum BonusType {
   IN_GAME_BONUS
 }
 
-model DepositDetail {
-  id BigInt @id @default(autoincrement())
-
-  confirmedAt DateTime?
-  failedAt    DateTime?
-  createdAt   DateTime  @default(now())
-  updatedAt   DateTime  @updatedAt
-
-  status DepositDetailStatus
-
-  transactionId BigInt      @unique
-  transaction   Transaction @relation(fields: [transactionId], references: [id])
-
-  methodType        DepositMethodType // 입금 방법 (암호화폐 월렛 vs 무통장 등)
-  provider          PaymentProvider // 결제 프로바이더 타입
-  providerPaymentId String?           @unique // 프로바이더별 외부 입금 ID (예: NowPayment의 paymentId, Tatum의 depositId)
-
-  // 입금 요청 정보 (유저가 선택한 코인 또는 커런시와 네트워크)
-  depositCurrency ExchangeCurrencyCode // 입금할 코인 또는 커런시 (USDT, BTC, KRW, USD, JPY, PHP, IDR, VND 등)
-  depositNetwork  String? // 입금할 네트워크 (ethereum, tron, bitcoin 등)
-
-  // 암호화폐 월렛 정보 (methodType이 CRYPTO_WALLET일 때 사용)
-  walletAddress        String? // 월렛 주소 (예: 0x1234..., TQn9Y2khEsL...)
-  walletAddressExtraId String? // 추가 주소 정보 (memo, tag 등)
-
-  // 무통장 입금 정보 (methodType이 BANK_TRANSFER일 때 사용)
-  bankName      String? // 은행명
-  accountNumber String? // 계좌번호
-  accountHolder String? // 예금주명
-  depositorName String? // 입금자명
-
-  // 입금 확인 정보 (공통)
-  // 실제 지급 금액 = feePaidBy === 'USER' ? actuallyPaid - feeAmount : actuallyPaid
-  transactionHash String? // 트랜잭션 해시 (암호화폐) 또는 거래번호 (무통장)
-  actuallyPaid    Decimal? @db.Decimal(32, 18) // 실제 입금된 금액
-
-  // 수수료 정보
-  feeAmount   Decimal?       @db.Decimal(32, 18) // 수수료 금액
-  feeCurrency String? // 수수료 통화
-  feePaidBy   FeePaidByType? // "USER" | "SYSTEM" (누가 수수료 부담했는지)
-
-  // 실패/거부 이유 (REJECTED, FAILED, CANCELLED 상태일 때 사용)
-  failureReason String? // 실패/거부/취소 사유
-
-  // 프로바이더별 추가 정보 (JSON으로 저장)
-  providerMetadata Json? @default("{}") // 프로바이더별 특수 필드 (예: NowPayment의 batchWithdrawalId 등)
-
-  // 관계
-  Rolling       Rolling[]
-  BankAccount   BankAccount? @relation(fields: [bankAccountId], references: [id])
-  bankAccountId Int?
-
-  @@index([provider, providerPaymentId])
-}
-
 enum PaymentProvider {
   NOWPAYMENT
-  MANUAL // 수동 처리 (무통장 입금 등)
+  MANUAL
 }
 
 enum DepositMethodType {
-  CRYPTO_WALLET // 암호화폐 월렛 (NowPayment, Tatum 등)
+  CRYPTO_WALLET
   BANK_TRANSFER
 }
 
 enum DepositDetailStatus {
-  PENDING // 입금 대기 중 (월렛 주소 생성됨 또는 계좌 정보 제공됨)
-  CONFIRMING // 입금 확인 중 (블록체인 확인 또는 관리자 확인 중)
-  COMPLETED // 입금 완료
-  FAILED // 입금 실패
-  CANCELLED // 취소됨
-  EXPIRED // 만료됨 (입금 시간 초과)
-  REJECTED // 거부됨 (무통장 입금의 경우)
+  PENDING
+  CONFIRMING
+  COMPLETED
+  FAILED
+  CANCELLED
+  EXPIRED
+  REJECTED
 }
 
 enum FeePaidByType {
@@ -611,236 +900,33 @@ enum FeePaidByType {
   SYSTEM
 }
 
-model WithdrawDetail {
-  id BigInt @id @default(autoincrement())
-
-  createdAt DateTime @default(now())
-  updatedAt DateTime @updatedAt
-
-  status WithdrawDetailStatus
-
-  transactionId BigInt      @unique
-  transaction   Transaction @relation(fields: [transactionId], references: [id])
-
-  withdrawCurrency ExchangeCurrencyCode // 출금할 코인 (UserBalance의 currency와 동일)
-  withdrawNetwork  String // 출금할 네트워크
-  withdrawAmount   Decimal              @db.Decimal(32, 18) // 출금할 코인 개수
-
-  // 출금 지갑 정보 (유저가 입력한 출금 주소)
-  walletAddress        String // 출금 지갑 주소
-  walletAddressExtraId String? // 추가 주소 정보 (memo, tag 등)
-
-  // 결제 프로바이더 정보
-  provider             PaymentProvider
-  providerWithdrawalId String?         @unique
-
-  // 출금 확인 정보
-  transactionHash String? // 블록체인 트랜잭션 해시
-  errorMessage    String?
-
-  // 수수료 정보
-  feeAmount   Decimal?       @db.Decimal(32, 18) // 수수료 금액 (코인 단위)
-  feeCurrency String? // 수수료 통화 (보통 withdrawCurrency와 동일)
-  feePaidBy   FeePaidByType? // "USER" | "SYSTEM"
-
-  // 프로바이더별 추가 정보
-  providerMetadata Json? @default("{}")
-
-  @@index([provider, providerWithdrawalId])
-  @@index([provider, status])
-  @@index([transactionHash])
-  @@index([status, createdAt])
-}
-
 enum WithdrawDetailStatus {
-  PENDING // 출금 요청 대기 중 (요청 생성됨, 처리 대기)
-  PROCESSING // 출금 처리 중 (프로바이더에서 처리 중)
-  SENDING // 블록체인 전송 중 (트랜잭션 전송됨, 확인 대기)
-  COMPLETED // 출금 완료
-  FAILED // 출금 실패
-  CANCELLED // 취소됨 (사용자 또는 시스템에 의해)
-  REJECTED // 거부됨 (관리자 검토 후 거부)
-}
-
-model CompTransaction {
-  id     BigInt @id @default(autoincrement())
-  userId String
-  user   User   @relation(fields: [userId], references: [id])
-
-  amount Decimal @db.Decimal(32, 18)
-
-  dailyCompEarningId Int
-  dailyCompEarning   DailyCompEarning @relation(fields: [dailyCompEarningId], references: [id])
-
-  transactionId BigInt      @unique
-  transaction   Transaction @relation(fields: [transactionId], references: [id])
-
-  createdAt DateTime @default(now())
-  updatedAt DateTime @updatedAt
-
-  @@index([userId])
-  @@index([createdAt])
-}
-
-model DailyCompEarning {
-  id     Int    @id @default(autoincrement())
-  userId String
-  user   User   @relation(fields: [userId], references: [id])
-
-  earningDate       DateTime // 적립일 (YYYY-MM-DD)
-  totalContribution Decimal  @db.Decimal(32, 18) // 해당일 총 기여도
-  compEarned        Decimal  @db.Decimal(32, 18) // 적립된 콤프
-
-  isProcessed Boolean   @default(false) // 처리 완료 여부
-  processedAt DateTime?
-
-  createdAt       DateTime          @default(now())
-  updatedAt       DateTime          @updatedAt
-  CompTransaction CompTransaction[]
-
-  @@unique([userId, earningDate])
-  @@index([earningDate])
-  @@index([isProcessed])
-}
-
-model Promotion {
-  id             Int    @id @default(autoincrement())
-  managementName String // 관리용 이름
-
-  // 활성화 및 기간
-  isActive  Boolean   @default(true)
-  startDate DateTime? // 프로모션 시작일 (null이면 기간 제한 없음)
-  endDate   DateTime? // 프로모션 종료일 (null이면 기간 제한 없음)
-
-  // 대상 조건
-  targetType PromotionTargetType // 프로모션 대상 타입
-
-  // 보너스 설정
-  bonusType PromotionBonusType // 보너스 타입 (PERCENTAGE, FIXED_AMOUNT)
-  bonusRate Decimal?           @db.Decimal(8, 4) // 보너스 비율 (예: 1.0 = 100%)
-
-  // 입금 제한
-  minDepositAmount Decimal  @db.Decimal(32, 18) // 최소 입금 금액
-  maxBonusAmount   Decimal? @db.Decimal(32, 18) // 최대 보너스 금액 (null이면 제한 없음)
-
-  // 롤링 요구사항
-  rollingMultiplier Decimal? @db.Decimal(8, 4) // 롤링 배수 (예: 20.0 = 입금+보너스의 20배)
-
-  // 자격 유지 조건
-  qualificationMaintainCondition PromotionQualificationCondition // 자격 유지 조건
-
-  createdAt DateTime @default(now())
-  updatedAt DateTime @updatedAt
-
-  translations  PromotionTranslation[]
-  UserPromotion UserPromotion[]
+  PENDING
+  PROCESSING
+  SENDING
+  COMPLETED
+  FAILED
+  CANCELLED
+  REJECTED
 }
 
 enum PromotionTargetType {
-  NEW_USER_FIRST_DEPOSIT // 신규 가입 첫 충전
-  // ALL_USERS // 모든 회원
-  // VIP_LEVEL // 특정 VIP 레벨 이상
-  // 필요시 추가 가능
+  NEW_USER_FIRST_DEPOSIT
 }
 
 enum PromotionBonusType {
-  PERCENTAGE // 퍼센트 보너스 (예: 100%)
-  // FIXED_AMOUNT // 고정 금액 보너스
+  PERCENTAGE
 }
 
 enum PromotionQualificationCondition {
-  UNTIL_FIRST_WITHDRAWAL // 첫 출금 달성 전까지
-  // UNTIL_ROLLING_COMPLETE // 롤링 완료 전까지
-  // PERMANENT // 영구적
-  // UNTIL_PROMOTION_END // 프로모션 종료 전까지
-}
-
-model PromotionTranslation {
-  id          Int       @id @default(autoincrement())
-  promotionId Int
-  promotion   Promotion @relation(fields: [promotionId], references: [id], onDelete: Cascade)
-
-  language    Language // ko, en, ja, zh 등
-  name        String // 프로모션 이름 (번역된 텍스트)
-  description String? // 프로모션 설명 (번역된 텍스트)
-
-  createdAt DateTime @default(now())
-  updatedAt DateTime @updatedAt
-
-  @@unique([promotionId, language])
-  @@index([language])
-  @@index([promotionId])
-}
-
-model UserPromotion {
-  id Int @id @default(autoincrement())
-
-  userId String
-  user   User   @relation(fields: [userId], references: [id])
-
-  promotionId Int
-  promotion   Promotion @relation(fields: [promotionId], references: [id])
-
-  // 프로모션 상태 관리
-  status         UserPromotionStatus @default(ACTIVE) // 프로모션 상태
-  bonusGranted   Boolean             @default(false) // 보너스 지급 여부
-  bonusGrantedAt DateTime? // 보너스 지급일
-  bonusAmount    Decimal?            @db.Decimal(32, 18) // 지급된 보너스 금액
-
-  createdAt DateTime  @default(now())
-  updatedAt DateTime  @updatedAt
-  Rolling   Rolling[]
+  UNTIL_FIRST_WITHDRAWAL
 }
 
 enum UserPromotionStatus {
-  ACTIVE // 활성 (자격 유지)
-  QUALIFICATION_LOST // 자격 상실 (출금 완료 등)
-  EXPIRED // 만료됨
-  FAILED // 실패 (롤링 실패로 재신청 가능)
-}
-
-model NowPaymentCallbackLog {
-  id BigInt @id @default(autoincrement())
-
-  // HTTP 요청/응답 정보
-  requestHeaders Json? // 요청 헤더 (서명 등)
-  requestBody    Json // 요청 본문 (콜백 데이터)
-  responseStatus Int? // 응답 상태 코드
-  responseBody   Json? // 응답 본문
-
-  // 처리 상태
-  processed       Boolean   @default(false) // 처리 완료 여부
-  processingError String? // 처리 중 에러 메시지
-  processedAt     DateTime? // 처리 완료 시간
-
-  // 타임스탬프
-  createdAt DateTime @default(now())
-}
-
-model ExchangeRate {
-  id Int @id @default(autoincrement())
-
-  baseCurrency  ExchangeCurrencyCode
-  quoteCurrency ExchangeCurrencyCode
-  rate          Decimal              @db.Decimal(32, 18)
-
-  provider    ExchangeRateProvider
-  collectedAt DateTime             @default(now())
-  isActive    Boolean              @default(true)
-
-  createdAt DateTime @default(now())
-  updatedAt DateTime @updatedAt
-
-  // 검증 필드
-  previousRate Decimal? @db.Decimal(32, 18)
-  changeRate   Decimal? @db.Decimal(8, 4)
-  isValid      Boolean  @default(true)
-
-  @@unique([baseCurrency, quoteCurrency, provider])
-  @@index([baseCurrency, quoteCurrency])
-  @@index([baseCurrency, quoteCurrency, provider])
-  @@index([collectedAt])
-  @@index([isActive, collectedAt])
+  ACTIVE
+  QUALIFICATION_LOST
+  EXPIRED
+  FAILED
 }
 
 enum ExchangeRateProvider {
@@ -849,422 +935,36 @@ enum ExchangeRateProvider {
   OPEN_EXCHANGE_RATES
 }
 
-model VipLevel {
-  id              Int     @id @default(autoincrement())
-  name            String  @unique // 예: "Bronze I", "Gold III"
-  nameKey         String  @unique // 예: "bronze_1", "gold_3"
-  rank            Int     @unique // 정렬 순서 (낮을수록 하위, 0 부터 시작)
-  requiredRolling Decimal @db.Decimal(32, 18) // 해당 레벨 달성에 필요한 누적 롤링
-  levelUpBonus    Decimal @db.Decimal(32, 18) // 레벨업 즉시 보너스
-
-  compRate         Decimal @db.Decimal(8, 4) // 일일 콤프 비율
-  paybackBasisRate Decimal @db.Decimal(8, 4) // 누적 페이백 산정 기준 요율
-  weeklyBonusRate  Decimal @db.Decimal(8, 4) // 주간 차액 추가 보너스 요율
-  monthlyBonusRate Decimal @db.Decimal(8, 4) // 월간 차액 추가 보너스 요율
-
-  createdAt DateTime @default(now())
-  updatedAt DateTime @updatedAt
-
-  memberships VipMembership[]
-}
-
-model VipMembership {
-  id                 Int       @id @default(autoincrement())
-  user               User      @relation(fields: [userId], references: [id])
-  userId             String    @unique
-  vipLevel           VipLevel  @relation(fields: [vipLevelId], references: [id])
-  vipLevelId         Int
-  accumulatedRolling Decimal   @default("0") @db.Decimal(32, 18) // 누적된 총 롤링
-  totalRewardsPaid   Decimal   @default("0") @db.Decimal(32, 18) // 지급된 누적 보너스
-  achievedAt         DateTime? // 현재 레벨 달성일
-  createdAt          DateTime  @default(now())
-  updatedAt          DateTime  @updatedAt
-
-  histories VipHistory[]
-}
-
-model VipHistory {
-  id                   Int            @id @default(autoincrement())
-  user                 User           @relation(fields: [userId], references: [id])
-  userId               String
-  previousLevelNameKey String? // 이전 레벨 nameKey
-  newLevelNameKey      String // 새 레벨 nameKey
-  rewardAmount         Decimal        @db.Decimal(32, 18) // 레벨업 보너스
-  rewardPaid           Boolean        @default(false) // 지급 완료 여부
-  paidAt               DateTime?
-  createdAt            DateTime       @default(now())
-  VipMembership        VipMembership? @relation(fields: [vipMembershipId], references: [id])
-  vipMembershipId      Int?
-
-  @@index([userId, createdAt])
-}
-
-model Rolling {
-  id BigInt @id @default(autoincrement())
-
-  userId String
-  user   User   @relation(fields: [userId], references: [id])
-
-  // 롤링 소스 정보
-  sourceType RollingSourceType @default(DEPOSIT) // 롤링 소스 타입
-
-  // 프로모션과의 연결 (PROMOTION_BONUS 타입인 경우)
-  userPromotionId Int?
-  userPromotion   UserPromotion? @relation(fields: [userPromotionId], references: [id])
-
-  // 롤링 요구사항
-  requiredAmount Decimal @db.Decimal(32, 18) // 필요한 롤링 금액
-  currentAmount  Decimal @default(0) @db.Decimal(32, 18) // 현재까지 완료한 롤링 금액
-
-  // 조건부 소멸 설정
-  cancellationBalanceThreshold Decimal? @db.Decimal(32, 18) // 이 금액 이하로 떨어지면 롤링 조건 소멸 (null이면 소멸 없음)
-
-  // 상태
-  status RollingStatus @default(ACTIVE)
-
-  // 입금/보너스 정보 (롤링 계산 기준)
-  depositAmount Decimal? @db.Decimal(32, 18) // 입금 금액 (롤링 계산 기준)
-  bonusAmount   Decimal? @db.Decimal(32, 18) // 보너스 금액 (해당 롤링과 연관된 보너스)
-
-  // 완료/취소 정보
-  completedAt DateTime? // 롤링 완료일
-  cancelledAt DateTime? // 롤링 취소일 (조건부 소멸 등)
-
-  // 타임스탬프 (FIFO 순서 보장용)
-  createdAt       DateTime       @default(now())
-  updatedAt       DateTime       @updatedAt
-  DepositDetail   DepositDetail? @relation(fields: [depositDetailId], references: [id])
-  depositDetailId BigInt?
-
-  @@index([userId, status, createdAt]) // FIFO 순서로 조회하기 위한 인덱스ㅡ
-  @@index([sourceType])
-  @@index([userPromotionId])
-  @@index([status])
-}
-
 enum RollingSourceType {
-  DEPOSIT // 기본 입금 롤링
-  PROMOTION_BONUS // 프로모션 보너스
-  // COUPON // 쿠폰 (나중에 추가)
+  DEPOSIT
+  PROMOTION_BONUS
 }
 
 enum RollingStatus {
-  ACTIVE // 활성 (롤링 진행 중)
-  COMPLETED // 완료 (롤링 달성)
-  CANCELLED // 취소됨 (조건부 소멸 - 잔액 부족)
-}
-
-model UserToken {
-  id        Int       @id @default(autoincrement())
-  userId    String
-  type      TokenType
-  token     String    @unique // 토큰 값 (해시 또는 암호화된 값)
-  expiresAt DateTime // 만료 시간
-  usedAt    DateTime? // 사용된 시간 (null이면 미사용)
-
-  // 타입별 추가 정보를 위한 JSON 필드
-  // 예: 이메일 변경의 경우 새 이메일 주소 저장
-  metadata Json? @default("{}")
-
-  createdAt DateTime @default(now())
-  updatedAt DateTime @updatedAt
-
-  user User @relation(fields: [userId], references: [id], onDelete: Cascade)
-
-  // 인덱스 최적화
-  @@index([userId, type]) // 사용자별 타입별 조회
-  @@index([type, expiresAt]) // 타입별 만료된 토큰 정리
-  @@index([userId, type, usedAt]) // 사용자별 미사용 토큰 조회
-  @@index([expiresAt]) // 만료된 토큰 자동 정리용
+  ACTIVE
+  COMPLETED
+  CANCELLED
 }
 
 enum TokenType {
-  PASSWORD_RESET // 비밀번호 재설정
-  // EMAIL_VERIFICATION    // 이메일 인증
-  // ACCOUNT_ACTIVATION    // 계정 활성화
-  // EMAIL_CHANGE          // 이메일 변경 확인
-  // TWO_FACTOR_AUTH       // 2FA 인증
-  // API_ACCESS            // API 접근 토큰
-}
-
-model EmailLog {
-  id     Int         @id @default(autoincrement())
-  userId String? // 사용자 ID (null이면 비회원)
-  type   EmailType
-  status EmailStatus
-
-  // 이메일 정보
-  to      String // 수신자 이메일
-  subject String
-  from    String? // 발신자 (기본값 사용 시 null)
-
-  // 발송 결과
-  messageId String? // SMTP 메시지 ID
-  error     String? // 실패 시 에러 메시지
-
-  // 메타데이터
-  metadata Json? @default("{}") // 추가 정보 (예: 토큰 ID)
-
-  // 타임스탬프
-  sentAt    DateTime? // 발송 완료 시간
-  createdAt DateTime  @default(now())
-
-  user User? @relation(fields: [userId], references: [id], onDelete: SetNull)
-
-  @@index([userId, type, createdAt])
-  @@index([to, type, createdAt])
-  @@index([status, createdAt])
-  @@index([type, status])
+  PASSWORD_RESET
 }
 
 enum EmailType {
   PASSWORD_RESET
-  // WELCOME
-  // NOTIFICATION
-  // 향후 확장 가능
 }
 
 enum EmailStatus {
-  SENT // 발송 성공
-  FAILED // 발송 실패
-}
-
-model GameSession {
-  id        BigInt   @id @default(autoincrement())
-  userId    String
-  user      User     @relation(fields: [userId], references: [id])
-  createdAt DateTime @default(now())
-  updatedAt DateTime @updatedAt
-
-  // 마지막 액세스 시간 추가
-  lastAccessedAt DateTime @default(now()) // 마지막 콜백/액세스 시간
-
-  aggregatorType GameAggregatorType
-  token          String             @unique // wc sid, dcs token
-
-  // 통화 정보
-  walletCurrency ExchangeCurrencyCode // 유저 지갑 통화 (암호화폐)
-  gameCurrency   ExchangeCurrencyCode // 게임 플레이 통화 (피아트)
-
-  exchangeRate           Decimal  @db.Decimal(32, 18) // 고정 환율 (walletCurrency 1 = exchangeRate gameCurrency)
-  exchangeRateSnapshotAt DateTime @default(now()) // 환율 스냅샷 시점
-
-  gameRounds GameRound[]
-
-  gameId Int?
-  game   Game? @relation(fields: [gameId], references: [id])
-}
-
-model BankAccount {
-  id Int @id @default(autoincrement())
-
-  // 통화 정보
-  currency ExchangeCurrencyCode // 지원하는 통화 (KRW, USD, JPY 등)
-
-  // 계좌 정보
-  bankName      String // 은행명 (예: "KB국민은행", "신한은행", "우리은행")
-  accountNumber String // 계좌번호
-  accountHolder String // 예금주명
-
-  // 상태
-  isActive Boolean @default(true) // 활성화 여부
-  priority Int     @default(0) // 우선순위 (높을수록 우선, 동일 통화 내에서)
-
-  // 관리 정보
-  description String? // 관리자용 설명/메모
-  notes       String? // 추가 메모 (예: 특정 시간대만 사용 가능 등)
-
-  // 사용 통계 (선택사항)
-  totalDeposits      Int     @default(0) // 총 입금 건수
-  totalDepositAmount Decimal @default(0) @db.Decimal(32, 18) // 총 입금 금액
-
-  // 타임스탬프
-  createdAt DateTime  @default(now())
-  updatedAt DateTime  @updatedAt
-  deletedAt DateTime? // 소프트 삭제 (선택사항)
-
-  // 관계
-  depositDetails DepositDetail[] // 이 계좌를 사용한 입금 내역들
-
-  @@index([currency, isActive, priority]) // 통화별 활성 계좌 조회 최적화
-  @@index([isActive])
-  @@index([currency])
-  @@index([priority])
-}
-
-model PrismaQueryLog {
-  id BigInt @id @default(autoincrement())
-
-  // 쿼리 정보
-  query    String // SQL 쿼리
-  params   Json? // 쿼리 파라미터
-  duration Int // 실행 시간 (밀리초)
-
-  createdAt DateTime @default(now())
-}
-
-// ============================================
-// Affiliate Core Module
-// ============================================
-
-model AffiliateCode {
-  id           String  @id @default(cuid())
-  userId       String // 어플리에이트 사용자 ID
-  code         String  @unique // 6-12자 영숫자 (예: SUMMER2024)
-  campaignName String? // 캠페인 이름 (트래픽 소스 추적용)
-  description  String? // 관리자 메모
-
-  isActive  Boolean @default(true)
-  isDefault Boolean @default(false) // 기본 코드 여부 (첫 번째 생성 코드)
-
-  // 만료 설정
-  expiresAt DateTime?
-
-  // 타임스탬프
-  createdAt  DateTime  @default(now())
-  updatedAt  DateTime  @updatedAt
-  lastUsedAt DateTime? // 마지막 사용 일시
-
-  // 관계
-  user      User       @relation("AffiliateCodes", fields: [userId], references: [id], onDelete: Cascade)
-  referrals Referral[]
-
-  // 인덱스
-  @@index([userId])
-  @@index([userId, isActive])
-  @@index([code])
-}
-
-model Referral {
-  id          String @id @default(cuid())
-  affiliateId String // 어플리에이트 사용자 ID
-  codeId      String // 사용된 어플리에이트 코드 ID
-  subUserId   String // 피추천인 (referred player) 사용자 ID
-
-  // 셀프 추천 방지를 위한 정보
-  ipAddress         String? // 가입 시 IP 주소
-  deviceFingerprint String? // 디바이스 핑거프린트 (해시값)
-  userAgent         String? // User-Agent 헤더
-
-  createdAt DateTime @default(now())
-  updatedAt DateTime @updatedAt
-
-  // 관계
-  affiliate User          @relation("AffiliateReferrals", fields: [affiliateId], references: [id], onDelete: Cascade)
-  code      AffiliateCode @relation(fields: [codeId], references: [id], onDelete: Cascade)
-  subUser   User          @relation("ReferredUsers", fields: [subUserId], references: [id], onDelete: Cascade)
-
-  // 인덱스
-  @@unique([affiliateId, subUserId]) // 동일 어플리에이트가 같은 유저를 중복 추천 방지
-  @@index([affiliateId])
-  @@index([codeId])
-  @@index([subUserId])
-  @@index([affiliateId, codeId]) // 코드별 통계 조회용
-  @@index([ipAddress, deviceFingerprint]) // 셀프 추천 감지용
-}
-
-// Affiliate Wallet (다중 통화 지원)
-model AffiliateWallet {
-  affiliateId String
-  currency    ExchangeCurrencyCode
-
-  // 잔액 정보
-  availableBalance Decimal @default(0) @db.Decimal(32, 18) // 출금 가능 잔액
-  pendingBalance   Decimal @default(0) @db.Decimal(32, 18) // 대기 중인 커미션
-  totalEarned      Decimal @default(0) @db.Decimal(32, 18) // 총 적립 커미션
-
-  updatedAt DateTime @updatedAt
-
-  affiliate User @relation("AffiliateWallets", fields: [affiliateId], references: [id], onDelete: Cascade)
-
-  @@id([affiliateId, currency])
-  @@index([affiliateId])
-  @@index([currency])
-}
-
-// Affiliate Commission (커미션 레코드)
-model AffiliateCommission {
-  id  BigInt @id @default(autoincrement())
-  uid String @unique
-
-  affiliateId String
-  subUserId   String
-  gameRoundId BigInt?
-
-  // 게임 정보
-  wagerAmount Decimal  @db.Decimal(32, 18) // 베팅 금액
-  winAmount   Decimal? @db.Decimal(32, 18) // 당첨 금액 (참고용, 계산에 불필요)
-
-  // ✅ Bet Share 모델: 베팅 금액의 일정 비율
-  commission  Decimal @db.Decimal(32, 18) // = wagerAmount * rateApplied
-  rateApplied Decimal @db.Decimal(8, 4) // 적용된 요율 (예: 0.01 = 1%)
-
-  // 통화 정보
-  currency ExchangeCurrencyCode
-
-  // 상태 관리
-  status       CommissionStatus @default(PENDING)
-  gameCategory GameCategory?
-
-  // 정산 정보
-  /// settlementDate: PENDING → AVAILABLE 전환 시점 (월간 정산일)
-  /// claimedAt: AVAILABLE → CLAIMED 전환 시점 (출금 요청 시점)
-  /// withdrawnAt: CLAIMED → WITHDRAWN 전환 시점 (출금 처리 완료 시점)
-  settlementDate DateTime?
-  claimedAt      DateTime?
-  withdrawnAt    DateTime?
-
-  createdAt DateTime @default(now())
-  updatedAt DateTime @updatedAt
-
-  // 관계
-  affiliate User       @relation("AffiliateCommissions", fields: [affiliateId], references: [id], onDelete: Cascade)
-  subUser   User       @relation("SubUserCommissions", fields: [subUserId], references: [id], onDelete: Cascade)
-  gameRound GameRound? @relation(fields: [gameRoundId], references: [id], onDelete: SetNull)
-
-  @@index([affiliateId, status])
-  @@index([affiliateId, createdAt])
-  @@index([subUserId])
-  @@index([status, createdAt])
-  @@index([settlementDate])
-  @@index([gameRoundId])
+  SENT
+  FAILED
 }
 
 enum CommissionStatus {
-  PENDING // 대기 중 (아직 정산 안 됨)
-  AVAILABLE // 정산 완료 (출금 가능)
-  CLAIMED // 출금 요청됨
-  WITHDRAWN // 출금 완료
-  CANCELLED // 취소됨
-}
-
-// Affiliate Tier (어필리에이트 티어 및 요율 관리)
-model AffiliateTier {
-  id          BigInt @id @default(autoincrement())
-  uid         String @unique
-  affiliateId String @unique
-  affiliate   User   @relation(fields: [affiliateId], references: [id], onDelete: Cascade)
-
-  // 티어 정보
-  tier AffiliateTierLevel @default(BRONZE)
-
-  // 요율 정보
-  baseRate     Decimal  @db.Decimal(8, 4) // 티어별 기본 요율 (자동 계산용)
-  customRate   Decimal? @db.Decimal(8, 4) // 관리자가 수동 설정한 요율 (null이면 baseRate 사용)
-  isCustomRate Boolean  @default(false) // 수동 조절 여부
-
-  // 월간 집계 (티어 계산용)
-  monthlyWagerAmount Decimal @default(0) @db.Decimal(32, 18) // 월간 총 베팅 금액 (cron reset)
-
-  // 수동 조절 이력 (선택적)
-  customRateSetBy String? // 수동 조절한 관리자 ID
-  customRateSetAt DateTime? // 수동 조절 일시
-
-  createdAt DateTime @default(now())
-  updatedAt DateTime @updatedAt
-
-  @@index([affiliateId])
-  @@index([tier])
+  PENDING
+  AVAILABLE
+  CLAIMED
+  WITHDRAWN
+  CANCELLED
 }
 
 enum AffiliateTierLevel {
