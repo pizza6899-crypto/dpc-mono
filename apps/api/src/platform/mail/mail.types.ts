@@ -1,4 +1,4 @@
-import { EmailType } from '@prisma/client';
+import type { EmailType } from '@prisma/client';
 
 export interface SendMailOptions {
   to: string | string[];

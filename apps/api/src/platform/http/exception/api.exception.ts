@@ -1,5 +1,5 @@
 import { HttpException } from '@nestjs/common';
-import { MessageCode } from '../types/message-codes';
+import type { MessageCode } from '../types/message-codes';
 
 export class ApiException extends HttpException {
   constructor(

@@ -1,5 +1,6 @@
 // src/modules/affiliate/commission/schedulers/settle-daily-commissions.scheduler.spec.ts
-import { Test, TestingModule } from '@nestjs/testing';
+import type { TestingModule } from '@nestjs/testing';
+import { Test } from '@nestjs/testing';
 import { Logger } from '@nestjs/common';
 import { SettleDailyCommissionsScheduler } from './settle-daily-commissions.scheduler';
 import { SettleDailyCommissionsService } from '../application/settle-daily-commissions.service';

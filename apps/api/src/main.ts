@@ -14,7 +14,7 @@ import session from 'express-session';
 import passport from 'passport';
 import { RedisStore } from 'connect-redis';
 import { createClient } from 'redis';
-import { NestExpressApplication } from '@nestjs/platform-express';
+import type { NestExpressApplication } from '@nestjs/platform-express';
 import { join } from 'path';
 import { SchedulerRegistry } from '@nestjs/schedule';
 import { Prisma } from '@prisma/client';

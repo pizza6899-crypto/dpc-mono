@@ -1,5 +1,5 @@
 // src/modules/affiliate/code/domain/affiliate-code-policy.ts
-import { AffiliateCode } from './model/affiliate-code.entity';
+import type { AffiliateCode } from './model/affiliate-code.entity';
 import {
   AffiliateCodeLimitExceededException,
   AffiliateCodeCannotDeleteException,

@@ -3,7 +3,7 @@ import { init } from '@paralleldrive/cuid2';
 import { customAlphabet } from 'nanoid';
 import type { PrismaService } from '../platform/prisma/prisma.service';
 import { nowUtc } from './date.util';
-import { Prisma } from '@prisma/client';
+import type { Prisma } from '@prisma/client';
 
 // 디폴트 설정으로 한 번만 초기화 (성능 최적화)
 const generateId = init();

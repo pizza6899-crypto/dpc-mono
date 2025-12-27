@@ -1,4 +1,4 @@
-import { DcsResponseDataDto } from '../dtos/callback.dto';
+import type { DcsResponseDataDto } from '../dtos/callback.dto';
 import { Decimal } from '@prisma/client/runtime/library';
 
 /**

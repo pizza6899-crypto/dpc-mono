@@ -1,5 +1,6 @@
 // src/modules/affiliate/code/test/affiliate-code.integration.spec.ts
-import { Test, TestingModule } from '@nestjs/testing';
+import type { TestingModule } from '@nestjs/testing';
+import { Test } from '@nestjs/testing';
 import { PrismaModule } from 'src/platform/prisma/prisma.module';
 import { EnvModule } from 'src/platform/env/env.module';
 import { AffiliateCodeModule } from '../code.module';

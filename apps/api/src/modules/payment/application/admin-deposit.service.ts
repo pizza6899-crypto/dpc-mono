@@ -107,8 +107,8 @@ export class AdminDepositService {
         const afterAmount = beforeAmount.add(actuallyPaid);
 
         // 3. 프로모션 보너스 처리 (첫 입금인 경우)
-        let bonusAmount = new Prisma.Decimal(0);
-        let rollingCreated = false;
+        const bonusAmount = new Prisma.Decimal(0);
+        const rollingCreated = false;
 
         // TODO: 프로모션 체크 로직 구현 시
         // if (isFirstDeposit) {
@@ -134,7 +134,7 @@ export class AdminDepositService {
         await this.userStatsService.updateDepositStats(
           tx,
           userId,
-          depositCurrency as WalletCurrencyCode,
+          depositCurrency,
           actuallyPaid,
         );
 

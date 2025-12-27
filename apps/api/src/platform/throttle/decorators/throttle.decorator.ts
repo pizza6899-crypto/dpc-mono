@@ -1,6 +1,6 @@
 // src/platform/throttle/decorators/throttle.decorator.ts
 import { SetMetadata } from '@nestjs/common';
-import { ThrottleOptions } from '../types/throttle.types';
+import type { ThrottleOptions } from '../types/throttle.types';
 
 export const THROTTLE_KEY = 'throttle';
 

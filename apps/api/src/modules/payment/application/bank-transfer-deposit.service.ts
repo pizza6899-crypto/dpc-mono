@@ -31,7 +31,7 @@ export class BankTransferDepositService {
     private readonly activityLog: ActivityLogPort,
     private readonly prismaService: PrismaService,
     private readonly envService: EnvService,
-  ) {}
+  ) { }
 
   async createDeposit(
     userId: string,
@@ -183,7 +183,7 @@ export class BankTransferDepositService {
       // 은행 계좌 정보 가져오기
       const bankAccount = await this.prismaService.bankAccount.findFirst({
         where: {
-          currency: payCurrency as ExchangeCurrencyCode,
+          currency: payCurrency,
           isActive: true,
         },
         orderBy: { priority: 'desc' },

@@ -392,7 +392,7 @@ export class CasinoBetService {
       await this.casinoBalanceService.updateUserCasinoBalance({
         tx,
         userId,
-        currency: walletCurrency as WalletCurrencyCode,
+        currency: walletCurrency,
         amount: winAmountInWalletCurrency,
       });
 
@@ -549,8 +549,7 @@ export class CasinoBetService {
       throw new Error(CasinoErrorCode.INVALID_TXN);
     }
 
-    const walletCurrency = gameRound.GameSession
-      .walletCurrency as WalletCurrencyCode;
+    const walletCurrency = gameRound.GameSession.walletCurrency;
     const winAmountInWalletCurrency = winAmountInGameCurrency.div(
       gameRound.GameSession.exchangeRate,
     );

@@ -78,8 +78,8 @@ export class AuthService {
     }
 
     // 2. 에이전트 코드 확인 및 에이전트 아이디 조회
-    let referrerId: string | null = null;
-    let signupCodeId: number | null = null;
+    const referrerId: string | null = null;
+    const signupCodeId: number | null = null;
 
     // 국가코드 기반 타임존 및 통화
     const countryConfig = CountryUtil.getCountryConfig({

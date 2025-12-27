@@ -1,5 +1,5 @@
 // src/modules/affiliate/referral/domain/referral-policy.ts
-import { AffiliateCode } from '../../code/domain/model/affiliate-code.entity';
+import type { AffiliateCode } from '../../code/domain/model/affiliate-code.entity';
 import {
   SelfReferralException,
   ReferralCodeInactiveException,

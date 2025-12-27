@@ -381,7 +381,7 @@ export class WhitecliffGameRefreshService {
   ) {
     const category = this.whitecliffMapperService.fromWhitecliffCategory(
       gameData.prd_category,
-    )!;
+    );
 
     const provider =
       this.whitecliffMapperService.fromWhitecliffProvider(providerId)!;
@@ -394,7 +394,7 @@ export class WhitecliffGameRefreshService {
         gameId: gameData.game_id,
         category: this.whitecliffMapperService.fromWhitecliffCategory(
           gameData.prd_category,
-        )!,
+        ),
         tableId: gameData.table_id || null,
         gameType: gameData.game_type || null,
         iconLink: this.extractIconPath(gameData.game_icon_link, provider),

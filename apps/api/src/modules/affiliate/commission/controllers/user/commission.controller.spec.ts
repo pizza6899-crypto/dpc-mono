@@ -1,5 +1,6 @@
 // src/modules/affiliate/commission/controllers/user/commission.controller.spec.ts
-import { Test, TestingModule } from '@nestjs/testing';
+import type { TestingModule } from '@nestjs/testing';
+import { Test } from '@nestjs/testing';
 import { AffiliateCommissionController } from './commission.controller';
 import { FindCommissionsService } from '../../application/find-commissions.service';
 import { FindCommissionByIdService } from '../../application/find-commission-by-id.service';

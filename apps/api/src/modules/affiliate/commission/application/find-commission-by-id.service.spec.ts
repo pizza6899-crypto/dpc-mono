@@ -1,5 +1,6 @@
 // src/modules/affiliate/commission/application/find-commission-by-id.service.spec.ts
-import { Test, TestingModule } from '@nestjs/testing';
+import type { TestingModule } from '@nestjs/testing';
+import { Test } from '@nestjs/testing';
 import {
   CommissionStatus,
   ExchangeCurrencyCode,

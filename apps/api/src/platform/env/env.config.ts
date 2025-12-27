@@ -1,5 +1,5 @@
 import { registerAs } from '@nestjs/config';
-import { WhitecliffConfig } from './env.types';
+import type { WhitecliffConfig } from './env.types';
 
 export const appConfig = registerAs('app', () => ({
   port: parseInt(process.env.PORT ?? '3000', 10),

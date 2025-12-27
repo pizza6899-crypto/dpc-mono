@@ -1,5 +1,6 @@
 // src/modules/affiliate/code/application/validate-code-format.service.spec.ts
-import { Test, TestingModule } from '@nestjs/testing';
+import type { TestingModule } from '@nestjs/testing';
+import { Test } from '@nestjs/testing';
 import { ValidateCodeFormatService } from './validate-code-format.service';
 
 describe('ValidateCodeFormatService', () => {

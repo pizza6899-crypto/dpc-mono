@@ -3,7 +3,7 @@ import type { Transaction } from '@nestjs-cls/transactional';
 import type { TransactionalAdapterPrisma } from '@nestjs-cls/transactional-adapter-prisma';
 import { AffiliateTierLevel, Prisma } from '@prisma/client';
 import { AffiliateTier, TierNotFoundException } from '../domain';
-import { AffiliateTierMapper } from './affiliate-tier.mapper';
+import type { AffiliateTierMapper } from './affiliate-tier.mapper';
 import { AffiliateTierRepository } from './affiliate-tier.repository';
 
 describe('AffiliateTierRepository', () => {

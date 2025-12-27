@@ -56,7 +56,7 @@ export class CryptoDepositService {
       this.envService.deposit.cryptoDepositAllowedCurrencies;
     if (
       allowedCurrencies.length > 0 &&
-      !allowedCurrencies.includes(payCurrency as ExchangeCurrencyCode)
+      !allowedCurrencies.includes(payCurrency)
     ) {
       throw new ApiException(
         MessageCode.DEPOSIT_METHOD_NOT_AVAILABLE,

@@ -1,5 +1,6 @@
 // src/modules/affiliate/referral/application/find-referral-by-id.service.spec.ts
-import { Test, TestingModule } from '@nestjs/testing';
+import type { TestingModule } from '@nestjs/testing';
+import { Test } from '@nestjs/testing';
 import { FindReferralByIdService } from './find-referral-by-id.service';
 import { REFERRAL_REPOSITORY } from '../ports/out/referral.repository.token';
 import type { ReferralRepositoryPort } from '../ports/out/referral.repository.port';

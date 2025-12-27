@@ -8,7 +8,7 @@ import {
   Prisma,
 } from '@prisma/client';
 import { AffiliateCommission, CommissionNotFoundException } from '../domain';
-import { AffiliateCommissionMapper } from './affiliate-commission.mapper';
+import type { AffiliateCommissionMapper } from './affiliate-commission.mapper';
 import { AffiliateCommissionRepository } from './affiliate-commission.repository';
 
 describe('AffiliateCommissionRepository', () => {

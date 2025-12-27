@@ -1,5 +1,6 @@
 // src/modules/affiliate/referral/test/referral.integration.spec.ts
-import { Test, TestingModule } from '@nestjs/testing';
+import type { TestingModule } from '@nestjs/testing';
+import { Test } from '@nestjs/testing';
 import { PrismaModule } from 'src/platform/prisma/prisma.module';
 import { PrismaService } from 'src/platform/prisma/prisma.service';
 import { EnvModule } from 'src/platform/env/env.module';

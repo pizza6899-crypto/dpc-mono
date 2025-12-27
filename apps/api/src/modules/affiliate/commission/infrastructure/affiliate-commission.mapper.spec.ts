@@ -69,7 +69,7 @@ describe('AffiliateCommissionMapper', () => {
       expect(domainEntity.wagerAmount.equals(prismaModel.wagerAmount)).toBe(
         true,
       );
-      expect(domainEntity.winAmount?.equals(prismaModel.winAmount!)).toBe(true);
+      expect(domainEntity.winAmount?.equals(prismaModel.winAmount)).toBe(true);
       expect(domainEntity.commission.equals(prismaModel.commission)).toBe(true);
       expect(domainEntity.rateApplied.equals(prismaModel.rateApplied)).toBe(
         true,
@@ -350,7 +350,7 @@ describe('AffiliateCommissionMapper', () => {
         ),
       ).toBe(true);
       expect(
-        convertedPrismaModel.winAmount?.equals(originalPrismaModel.winAmount!),
+        convertedPrismaModel.winAmount?.equals(originalPrismaModel.winAmount),
       ).toBe(true);
       expect(
         convertedPrismaModel.commission.equals(originalPrismaModel.commission),

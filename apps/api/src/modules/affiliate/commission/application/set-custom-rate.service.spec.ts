@@ -1,5 +1,6 @@
 // src/modules/affiliate/commission/application/set-custom-rate.service.spec.ts
-import { Test, TestingModule } from '@nestjs/testing';
+import type { TestingModule } from '@nestjs/testing';
+import { Test } from '@nestjs/testing';
 import { AffiliateTierLevel, Prisma } from '@prisma/client';
 import { SetCustomRateService } from './set-custom-rate.service';
 import { AFFILIATE_TIER_REPOSITORY } from '../ports/out/affiliate-tier.repository.token';

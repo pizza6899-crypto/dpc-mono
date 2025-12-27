@@ -349,9 +349,7 @@ describe('AffiliateTierMapper', () => {
 
       // Then
       expect(
-        convertedPrismaModel.customRate?.equals(
-          originalPrismaModel.customRate!,
-        ),
+        convertedPrismaModel.customRate?.equals(originalPrismaModel.customRate),
       ).toBe(true);
       expect(convertedPrismaModel.isCustomRate).toBe(
         originalPrismaModel.isCustomRate,

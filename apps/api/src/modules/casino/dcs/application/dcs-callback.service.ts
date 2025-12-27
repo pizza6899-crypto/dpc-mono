@@ -158,7 +158,7 @@ export class DcsCallbackService {
     } = body;
 
     const gameCurrencyEnum =
-      this.dcsMapperService.convertDcsCurrencyToGamingCurrency(currency)!;
+      this.dcsMapperService.convertDcsCurrencyToGamingCurrency(currency);
     const providerEnum = this.dcsMapperService.fromDcsProvider(provider)!;
 
     const jackpotContributionAmount = new Prisma.Decimal(
@@ -289,7 +289,7 @@ export class DcsCallbackService {
     } = body;
 
     const currencyEnum =
-      this.dcsMapperService.convertDcsCurrencyToGamingCurrency(currency)!;
+      this.dcsMapperService.convertDcsCurrencyToGamingCurrency(currency);
 
     // round_id로 gameRound를 조회하여 GameSession을 통해 사용자 정보 가져오기
     const gameRound = await this.prismaService.gameRound.findUnique({
@@ -432,7 +432,7 @@ export class DcsCallbackService {
             );
             if (totalBalance.gt(maxBalance)) {
               maxBalance = totalBalance;
-              maxBalanceCurrency = userBalance.currency as WalletCurrencyCode;
+              maxBalanceCurrency = userBalance.currency;
             }
           }
 
@@ -1087,7 +1087,7 @@ export class DcsCallbackService {
 
       const userBalance = await this.casinoBalanceService.getUserCasinoBalance({
         userId: gameSession.user.id,
-        currency: gameSession.walletCurrency as WalletCurrencyCode,
+        currency: gameSession.walletCurrency,
       });
 
       // getUserCasinoBalance는 잔액이 없으면 에러를 throw하므로 null 체크 불필요
@@ -1215,7 +1215,7 @@ export class DcsCallbackService {
               const userBalance =
                 await this.casinoBalanceService.getUserCasinoBalance({
                   userId: user.id,
-                  currency: gameSession.walletCurrency as WalletCurrencyCode,
+                  currency: gameSession.walletCurrency,
                 });
 
               const exchangeRateBalance = gameSession.exchangeRate.mul(

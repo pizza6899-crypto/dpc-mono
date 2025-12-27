@@ -1,5 +1,6 @@
 // src/modules/affiliate/commission/domain/model/affiliate-tier.entity.ts
-import { AffiliateTierLevel, Prisma } from '@prisma/client';
+import type { AffiliateTierLevel } from '@prisma/client';
+import { Prisma } from '@prisma/client';
 import {
   InvalidCommissionRateException,
   InvalidWalletBalanceException,

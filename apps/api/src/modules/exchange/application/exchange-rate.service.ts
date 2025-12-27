@@ -158,6 +158,6 @@ export class ExchangeRateService {
     // 변경 (6시간)
     await this.redisService.set(cacheKey, record.rate.toString(), 21600);
 
-    return record.rate as Prisma.Decimal;
+    return record.rate;
   }
 }

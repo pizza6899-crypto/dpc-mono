@@ -1,4 +1,4 @@
-import { Request } from 'express';
+import type { Request } from 'express';
 
 export interface ThrottleOptions {
   limit: number; // 허용할 최대 요청 수

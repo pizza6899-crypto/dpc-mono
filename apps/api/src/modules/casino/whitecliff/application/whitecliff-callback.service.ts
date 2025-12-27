@@ -106,7 +106,7 @@ export class WhitecliffCallbackService {
 
       const userBalance = await this.casinoBalanceService.getUserCasinoBalance({
         userId: gameSession.user.id,
-        currency: gameSession.walletCurrency as WalletCurrencyCode,
+        currency: gameSession.walletCurrency,
       });
 
       // getUserCasinoBalance는 잔액이 없으면 에러를 throw하므로 null 체크 불필요
@@ -224,7 +224,7 @@ export class WhitecliffCallbackService {
         gameId = game.id;
       }
 
-      const walletCurrency = gameSession.walletCurrency as WalletCurrencyCode;
+      const walletCurrency = gameSession.walletCurrency;
       const betAmountInWalletCurrency = new Prisma.Decimal(amount).div(
         gameSession.exchangeRate,
       );
@@ -424,7 +424,7 @@ export class WhitecliffCallbackService {
         throw new Error(CasinoErrorCode.INVALID_USER);
       }
 
-      const walletCurrency = gameSession.walletCurrency as WalletCurrencyCode;
+      const walletCurrency = gameSession.walletCurrency;
 
       return await this.concurrencyService.withUserBalanceLock(
         gameSession.user.id,
@@ -541,7 +541,7 @@ export class WhitecliffCallbackService {
       return {
         status: 0,
         balance: 0,
-        error: errorMessage as string,
+        error: errorMessage,
       };
     }
   }

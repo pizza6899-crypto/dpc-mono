@@ -1,5 +1,6 @@
 // src/modules/auth/application/password.service.spec.ts
-import { Test, TestingModule } from '@nestjs/testing';
+import type { TestingModule } from '@nestjs/testing';
+import { Test } from '@nestjs/testing';
 import { PrismaService } from 'src/platform/prisma/prisma.service';
 import { MailService } from 'src/platform/mail/mail.service';
 import { EnvService } from 'src/platform/env/env.service';
@@ -8,7 +9,7 @@ import type { ActivityLogPort } from 'src/platform/activity-log/activity-log.por
 import { TokenType, UserStatus } from '@prisma/client';
 import { ApiException } from 'src/platform/http/exception/api.exception';
 import { MessageCode } from 'src/platform/http/types/message-codes';
-import { RequestClientInfo } from 'src/platform/http/types';
+import type { RequestClientInfo } from 'src/platform/http/types';
 import * as passwordUtil from 'src/utils/password.util';
 import * as idUtil from 'src/utils/id.util';
 import * as dateUtil from 'src/utils/date.util';

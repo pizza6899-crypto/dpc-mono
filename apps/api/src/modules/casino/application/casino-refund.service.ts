@@ -111,8 +111,7 @@ export class CasinoRefundService {
     }
 
     // 취소해야 하는 GameBet의 betAmount와 일치하는 TransactionBalanceDetail 찾기
-    const walletCurrency = existingGameBet.gameRound.GameSession
-      .walletCurrency as WalletCurrencyCode;
+    const walletCurrency = existingGameBet.gameRound.GameSession.walletCurrency;
     const betAmountInWalletCurrency = existingGameBet.betAmount;
     const betAmountInGameCurrency = existingGameBet.betAmount.mul(
       existingGameBet.gameRound.GameSession.exchangeRate,

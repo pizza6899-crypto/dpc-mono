@@ -1,4 +1,5 @@
-import { DateTime, DurationLike } from 'luxon';
+import type { DurationLike } from 'luxon';
+import { DateTime } from 'luxon';
 
 /**
  * Date 유틸리티 함수 모음

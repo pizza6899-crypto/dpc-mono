@@ -1,5 +1,6 @@
 // src/modules/exchange/application/exchange-rate.service.spec.ts
-import { Test, TestingModule } from '@nestjs/testing';
+import type { TestingModule } from '@nestjs/testing';
+import { Test } from '@nestjs/testing';
 import { PrismaService } from 'src/platform/prisma/prisma.service';
 import { RedisService } from 'src/platform/redis/redis.service';
 import {

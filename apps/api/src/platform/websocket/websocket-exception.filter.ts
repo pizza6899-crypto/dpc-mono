@@ -56,7 +56,7 @@ export class WebsocketExceptionFilter implements ExceptionFilter {
           ];
         }
       } else {
-        errorMessages = [(exceptionResponse as string) || 'An error occurred'];
+        errorMessages = [exceptionResponse || 'An error occurred'];
       }
     } else if (exception instanceof Error) {
       exceptionName = exception.name; // constructor.name 대신 name 속성 사용

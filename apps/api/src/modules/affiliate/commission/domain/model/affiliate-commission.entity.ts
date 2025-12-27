@@ -1,10 +1,10 @@
 // src/modules/affiliate/commission/domain/model/affiliate-commission.entity.ts
-import {
-  CommissionStatus,
+import type {
   ExchangeCurrencyCode,
   GameCategory,
   Prisma,
 } from '@prisma/client';
+import { CommissionStatus } from '@prisma/client';
 import {
   CommissionNotAvailableException,
   InvalidCommissionCalculationException,

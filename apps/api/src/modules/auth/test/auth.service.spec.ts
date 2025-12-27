@@ -1,5 +1,6 @@
 // src/modules/auth/application/auth.service.spec.ts
-import { Test, TestingModule } from '@nestjs/testing';
+import type { TestingModule } from '@nestjs/testing';
+import { Test } from '@nestjs/testing';
 import { PrismaService } from 'src/platform/prisma/prisma.service';
 import { VipMembershipService } from 'src/modules/vip/application/vip-membership.service';
 import { EnvService } from 'src/platform/env/env.service';
@@ -12,7 +13,7 @@ import * as passwordUtil from 'src/utils/password.util';
 import * as idUtil from 'src/utils/id.util';
 import * as countryUtil from 'src/utils/country.util';
 import { AuthService } from '../application/auth.service';
-import { RequestClientInfo } from 'src/platform/http/types';
+import type { RequestClientInfo } from 'src/platform/http/types';
 import { LinkReferralService } from 'src/modules/affiliate/referral/application/link-referral.service';
 import { Referral } from 'src/modules/affiliate/referral/domain/model/referral.entity';
 
