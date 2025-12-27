@@ -1,6 +1,7 @@
 ---
+trigger: always_on
 description: 경량 헥사고날 아키텍처의 계층 구조와 의존성 방향 규칙
-globs: src/modules/**/*.ts
+globs: apps/api/**/*.ts
 ---
 
 # 경량 헥사고날 아키텍처 (Lightweight Hexagonal Architecture) 가이드
@@ -54,7 +55,7 @@ module-name/
 │       │   └── response/      # 서버 -> 클라이언트
 │       │       ├── module.response.dto.ts
 │       │       └── module-list.response.dto.ts
-│       └── module-admin.controller.ts
+│       │   └── module-admin.controller.ts
 │   # 참고: 유저/어드민 구분이 없는 경우 controllers/ 바로 아래에 배치 가능
 │
 ├── schedulers/                # 스케줄러 (Inbound Adapter)
@@ -601,4 +602,3 @@ export class ModuleNameModule {}
 - ❌ **도메인 예외 메시지를 한글로 작성** (항상 영어로 작성해야 함)
 
 이 규칙을 준수하여 코드의 일관성, 테스트 용이성, 유지보수성을 유지하세요.
-
