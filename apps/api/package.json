@@ -60,7 +60,7 @@
     "helmet": "^8.1.0",
     "ioredis": "^5.8.2",
     "luxon": "^3.7.1",
-    "nanoid": "^5.1.5",
+    "nanoid": "^3.3.8",
     "nest-commander": "^3.18.0",
     "nestjs-asyncapi": "^1.4.0",
     "nestjs-cls": "^6.1.0",
@@ -126,9 +126,6 @@
     "transform": {
       "^.+\\.(t|j)s$": "ts-jest"
     },
-    "transformIgnorePatterns": [
-      "node_modules/(?!(nanoid)/)"
-    ],
     "collectCoverageFrom": [
       "**/*.(t|j)s"
     ],
