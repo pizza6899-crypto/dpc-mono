@@ -3,11 +3,16 @@
 import { Show, TextField } from "@refinedev/antd";
 import { useShow } from "@refinedev/core";
 import { Typography } from "antd";
+import { useSearchParams } from "next/navigation";
 
 const { Title } = Typography;
 
 export default function CategoryShow() {
-  const { result: record, query } = useShow({});
+  const searchParams = useSearchParams();
+  const id = searchParams.get("id");
+  const { result: record, query } = useShow({
+    id: id ?? undefined,
+  });
   const { isLoading } = query;
 
   return (

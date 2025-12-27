@@ -4,7 +4,6 @@ import { GitHubBanner, Refine } from "@refinedev/core";
 import { RefineKbar, RefineKbarProvider } from "@refinedev/kbar";
 import routerProvider from "@refinedev/nextjs-router";
 import { Metadata } from "next";
-import { cookies } from "next/headers";
 import React, { Suspense } from "react";
 
 import { AntdRegistry } from "@ant-design/nextjs-registry";
@@ -21,14 +20,12 @@ export const metadata: Metadata = {
   },
 };
 
-export default async function RootLayout({
+export default function RootLayout({
   children,
 }: Readonly<{
   children: React.ReactNode;
 }>) {
-  const cookieStore = await cookies();
-  const theme = cookieStore.get("theme");
-  const defaultMode = theme?.value === "dark" ? "dark" : "light";
+
 
   return (
     <html lang="en">
@@ -37,7 +34,7 @@ export default async function RootLayout({
           <GitHubBanner />
           <RefineKbarProvider>
             <AntdRegistry>
-              <ColorModeContextProvider defaultMode={defaultMode}>
+              <ColorModeContextProvider>
                 <DevtoolsProvider>
                   <Refine
                     routerProvider={routerProvider}
@@ -49,8 +46,8 @@ export default async function RootLayout({
                         name: "blog_posts",
                         list: "/blog-posts",
                         create: "/blog-posts/create",
-                        edit: "/blog-posts/edit/:id",
-                        show: "/blog-posts/show/:id",
+                        edit: "/blog-posts/edit",
+                        show: "/blog-posts/show",
                         meta: {
                           canDelete: true,
                         },
@@ -59,8 +56,8 @@ export default async function RootLayout({
                         name: "categories",
                         list: "/categories",
                         create: "/categories/create",
-                        edit: "/categories/edit/:id",
-                        show: "/categories/show/:id",
+                        edit: "/categories/edit",
+                        show: "/categories/show",
                         meta: {
                           canDelete: true,
                         },

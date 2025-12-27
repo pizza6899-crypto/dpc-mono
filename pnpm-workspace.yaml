@@ -12,4 +12,5 @@ onlyBuiltDependencies:
   - prisma
   - protobufjs
   - puppeteer
+  - sharp
   - unrs-resolver

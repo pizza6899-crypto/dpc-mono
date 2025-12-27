@@ -2,9 +2,14 @@
 
 import { Edit, useForm } from "@refinedev/antd";
 import { Form, Input } from "antd";
+import { useSearchParams } from "next/navigation";
 
 export default function CategoryEdit() {
-  const { formProps, saveButtonProps } = useForm({});
+  const searchParams = useSearchParams();
+  const id = searchParams.get("id");
+  const { formProps, saveButtonProps } = useForm({
+    id: id ?? undefined,
+  });
 
   return (
     <Edit saveButtonProps={saveButtonProps}>

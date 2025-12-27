@@ -2,9 +2,14 @@
 
 import { Edit, useForm, useSelect } from "@refinedev/antd";
 import { Form, Input, Select } from "antd";
+import { useSearchParams } from "next/navigation";
 
 export default function BlogPostEdit() {
-  const { formProps, saveButtonProps, query } = useForm({});
+  const searchParams = useSearchParams();
+  const id = searchParams.get("id");
+  const { formProps, saveButtonProps, query } = useForm({
+    id: id ?? undefined,
+  });
 
   const blogPostsData = query?.data?.data;
 
