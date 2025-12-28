@@ -119,7 +119,7 @@ export class ProfileController {
   // async updateCountry(
   //   @CurrentUser() user: CurrentUserWithSession,
   //   @Body() updateProfileDto: UpdateCountryDto,
-  //   @RequestClientInfoParam() requestInfo: RequestClientInfo,
+  //   @RequestClienttInfo() requestInfo: RequestClientInfo,
   // ) {
   //   return this.profileService.updateCountry(
   //     user.id,
