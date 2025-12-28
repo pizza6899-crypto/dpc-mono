@@ -3,16 +3,19 @@ import type { TestingModule } from '@nestjs/testing';
 import { Test } from '@nestjs/testing';
 import type { ExecutionContext } from '@nestjs/common';
 import { CredentialUserController } from './credential-user.controller';
+import { AuthenticateCredentialService } from '../../application/authenticate-credential.service';
 import { LoginService } from '../../application/login.service';
 import { LogoutService } from '../../application/logout.service';
 import { CredentialUserLoginRequestDto } from './dto/request/login.request.dto';
 import type { CurrentUserWithSession } from 'src/platform/auth/decorators/current-user.decorator';
+import type { AuthenticatedUser } from 'src/platform/auth/types/auth.types';
 import type { RequestClientInfo } from 'src/platform/http/types/client-info.types';
 import { UserRoleType } from '@repo/database';
 import type { Request } from 'express';
 
 describe('CredentialUserController', () => {
   let controller: CredentialUserController;
+  let mockAuthenticateCredentialService: jest.Mocked<AuthenticateCredentialService>;
   let mockLoginService: jest.Mocked<LoginService>;
   let mockLogoutService: jest.Mocked<LogoutService>;
 
@@ -64,7 +67,20 @@ describe('CredentialUserController', () => {
     password: 'password123',
   };
 
+  const mockAuthenticatedUser: AuthenticatedUser = {
+    id: 'user-123',
+    email: 'user@example.com',
+    role: UserRoleType.USER,
+  };
+
   beforeEach(async () => {
+    const mockAuthenticateCredentialServiceProvider = {
+      provide: AuthenticateCredentialService,
+      useValue: {
+        execute: jest.fn(),
+      },
+    };
+
     const mockLoginServiceProvider = {
       provide: LoginService,
       useValue: {
@@ -81,12 +97,17 @@ describe('CredentialUserController', () => {
 
     const module: TestingModule = await Test.createTestingModule({
       controllers: [CredentialUserController],
-      providers: [mockLoginServiceProvider, mockLogoutServiceProvider],
+      providers: [
+        mockAuthenticateCredentialServiceProvider,
+        mockLoginServiceProvider,
+        mockLogoutServiceProvider,
+      ],
     }).compile();
 
     controller = module.get<CredentialUserController>(
       CredentialUserController,
     );
+    mockAuthenticateCredentialService = module.get(AuthenticateCredentialService);
     mockLoginService = module.get(LoginService);
     mockLogoutService = module.get(LogoutService);
 
@@ -94,43 +115,119 @@ describe('CredentialUserController', () => {
   });
 
   describe('login', () => {
-    it('로그인 성공 시 사용자 정보를 반환하고 isAdmin=false로 LoginService를 호출해야 함', async () => {
+    it('로그인 성공 시 사용자 정보를 반환하고 AuthenticateCredentialService와 LoginService를 호출해야 함', async () => {
       // Arrange
+      mockAuthenticateCredentialService.execute.mockResolvedValue(
+        mockAuthenticatedUser,
+      );
       mockLoginService.execute.mockResolvedValue(undefined);
+
+      const mockRequest = {
+        login: jest.fn((user: any, callback: (err?: Error) => void) => {
+          callback();
+        }),
+      } as unknown as Request;
 
       // Act
       const result = await controller.login(
-        mockUser,
-        mockClientInfo,
         mockLoginDto,
+        mockClientInfo,
+        mockRequest,
       );
 
       // Assert
       expect(result).toEqual({
         user: {
-          id: mockUser.id,
-          email: mockUser.email,
+          id: mockAuthenticatedUser.id,
+          email: mockAuthenticatedUser.email,
         },
       });
 
+      expect(mockAuthenticateCredentialService.execute).toHaveBeenCalledTimes(1);
+      expect(mockAuthenticateCredentialService.execute).toHaveBeenCalledWith({
+        email: mockLoginDto.email,
+        password: mockLoginDto.password,
+        clientInfo: mockClientInfo,
+        isAdmin: false,
+      });
+
+      expect(mockRequest.login).toHaveBeenCalledTimes(1);
+      expect(mockRequest.login).toHaveBeenCalledWith(
+        mockAuthenticatedUser,
+        expect.any(Function),
+      );
+
       expect(mockLoginService.execute).toHaveBeenCalledTimes(1);
       expect(mockLoginService.execute).toHaveBeenCalledWith({
-        user: mockUser,
+        user: mockAuthenticatedUser,
         clientInfo: mockClientInfo,
         isAdmin: false,
       });
     });
 
-    it('LoginService가 에러를 던지면 예외를 전파해야 함', async () => {
+    it('AuthenticateCredentialService가 에러를 던지면 예외를 전파해야 함', async () => {
       // Arrange
-      const error = new Error('Login service error');
-      mockLoginService.execute.mockRejectedValue(error);
+      const error = new Error('Authentication failed');
+      mockAuthenticateCredentialService.execute.mockRejectedValue(error);
+
+      const mockRequest = {
+        login: jest.fn(),
+      } as unknown as Request;
 
       // Act & Assert
       await expect(
-        controller.login(mockUser, mockClientInfo, mockLoginDto),
+        controller.login(mockLoginDto, mockClientInfo, mockRequest),
+      ).rejects.toThrow('Authentication failed');
+
+      expect(mockAuthenticateCredentialService.execute).toHaveBeenCalledTimes(1);
+      expect(mockRequest.login).not.toHaveBeenCalled();
+      expect(mockLoginService.execute).not.toHaveBeenCalled();
+    });
+
+    it('req.login이 실패하면 예외를 전파해야 함', async () => {
+      // Arrange
+      mockAuthenticateCredentialService.execute.mockResolvedValue(
+        mockAuthenticatedUser,
+      );
+
+      const loginError = new Error('Session login failed');
+      const mockRequest = {
+        login: jest.fn((user: any, callback: (err?: Error) => void) => {
+          callback(loginError);
+        }),
+      } as unknown as Request;
+
+      // Act & Assert
+      await expect(
+        controller.login(mockLoginDto, mockClientInfo, mockRequest),
+      ).rejects.toThrow('Session login failed');
+
+      expect(mockAuthenticateCredentialService.execute).toHaveBeenCalledTimes(1);
+      expect(mockRequest.login).toHaveBeenCalledTimes(1);
+      expect(mockLoginService.execute).not.toHaveBeenCalled();
+    });
+
+    it('LoginService가 에러를 던지면 예외를 전파해야 함', async () => {
+      // Arrange
+      mockAuthenticateCredentialService.execute.mockResolvedValue(
+        mockAuthenticatedUser,
+      );
+      const error = new Error('Login service error');
+      mockLoginService.execute.mockRejectedValue(error);
+
+      const mockRequest = {
+        login: jest.fn((user: any, callback: (err?: Error) => void) => {
+          callback();
+        }),
+      } as unknown as Request;
+
+      // Act & Assert
+      await expect(
+        controller.login(mockLoginDto, mockClientInfo, mockRequest),
       ).rejects.toThrow('Login service error');
 
+      expect(mockAuthenticateCredentialService.execute).toHaveBeenCalledTimes(1);
+      expect(mockRequest.login).toHaveBeenCalledTimes(1);
       expect(mockLoginService.execute).toHaveBeenCalledTimes(1);
     });
   });
@@ -152,9 +249,10 @@ describe('CredentialUserController', () => {
       } as unknown as Request;
 
       // Act
-      await controller.logout(mockUser, mockClientInfo, mockRequest);
+      const result = await controller.logout(mockUser, mockClientInfo, mockRequest);
 
       // Assert
+      expect(result).toEqual({ success: true });
       expect(mockLogoutService.execute).toHaveBeenCalledTimes(1);
       expect(mockLogoutService.execute).toHaveBeenCalledWith({
         userId: mockUser.id,
@@ -182,9 +280,10 @@ describe('CredentialUserController', () => {
       } as unknown as Request;
 
       // Act
-      await controller.logout(mockAdminUser, mockClientInfo, mockRequest);
+      const result = await controller.logout(mockAdminUser, mockClientInfo, mockRequest);
 
       // Assert
+      expect(result).toEqual({ success: true });
       expect(mockLogoutService.execute).toHaveBeenCalledWith({
         userId: mockAdminUser.id,
         clientInfo: mockClientInfo,
@@ -208,9 +307,10 @@ describe('CredentialUserController', () => {
       } as unknown as Request;
 
       // Act
-      await controller.logout(mockSuperAdminUser, mockClientInfo, mockRequest);
+      const result = await controller.logout(mockSuperAdminUser, mockClientInfo, mockRequest);
 
       // Assert
+      expect(result).toEqual({ success: true });
       expect(mockLogoutService.execute).toHaveBeenCalledWith({
         userId: mockSuperAdminUser.id,
         clientInfo: mockClientInfo,
@@ -218,7 +318,7 @@ describe('CredentialUserController', () => {
       });
     });
 
-    it('req.logout이 실패하면 예외를 던져야 함', async () => {
+    it('req.logout이 실패해도 성공 응답을 반환해야 함', async () => {
       // Arrange
       mockLogoutService.execute.mockResolvedValue(undefined);
 
@@ -232,16 +332,15 @@ describe('CredentialUserController', () => {
         },
       } as unknown as Request;
 
-      // Act & Assert
-      await expect(
-        controller.logout(mockUser, mockClientInfo, mockRequest),
-      ).rejects.toThrow('Logout failed');
+      // Act
+      const result = await controller.logout(mockUser, mockClientInfo, mockRequest);
 
+      // Assert
+      expect(result).toEqual({ success: true });
       expect(mockLogoutService.execute).toHaveBeenCalledTimes(1);
-      expect(mockRequest.session.destroy).not.toHaveBeenCalled();
     });
 
-    it('req.session.destroy가 실패하면 예외를 던져야 함', async () => {
+    it('req.session.destroy가 실패해도 성공 응답을 반환해야 함', async () => {
       // Arrange
       mockLogoutService.execute.mockResolvedValue(undefined);
 
@@ -257,35 +356,68 @@ describe('CredentialUserController', () => {
         },
       } as unknown as Request;
 
-      // Act & Assert
-      await expect(
-        controller.logout(mockUser, mockClientInfo, mockRequest),
-      ).rejects.toThrow('Session destroy failed');
+      // Act
+      const result = await controller.logout(mockUser, mockClientInfo, mockRequest);
 
+      // Assert
+      expect(result).toEqual({ success: true });
       expect(mockLogoutService.execute).toHaveBeenCalledTimes(1);
       expect(mockRequest.logout).toHaveBeenCalledTimes(1);
       expect(mockRequest.session.destroy).toHaveBeenCalledTimes(1);
     });
 
-    it('LogoutService가 에러를 던지면 예외를 전파해야 함', async () => {
+    it('LogoutService가 에러를 던져도 성공 응답을 반환해야 함', async () => {
       // Arrange
       const error = new Error('Logout service error');
       mockLogoutService.execute.mockRejectedValue(error);
 
       const mockRequest = {
-        logout: jest.fn(),
+        logout: jest.fn((callback: (err?: Error) => void) => {
+          callback();
+        }),
         session: {
-          destroy: jest.fn(),
+          destroy: jest.fn((callback: (err?: Error) => void) => {
+            callback();
+          }),
         },
       } as unknown as Request;
 
-      // Act & Assert
-      await expect(
-        controller.logout(mockUser, mockClientInfo, mockRequest),
-      ).rejects.toThrow('Logout service error');
+      // Act
+      const result = await controller.logout(mockUser, mockClientInfo, mockRequest);
 
+      // Assert
+      expect(result).toEqual({ success: true });
       expect(mockLogoutService.execute).toHaveBeenCalledTimes(1);
-      expect(mockRequest.logout).not.toHaveBeenCalled();
+    });
+
+    it('인증되지 않은 사용자도 로그아웃 요청 시 성공 응답을 반환해야 함', async () => {
+      // Arrange
+      const mockRequest = {
+        logout: jest.fn((callback: (err?: Error) => void) => {
+          callback();
+        }),
+        session: {
+          destroy: jest.fn((callback: (err?: Error) => void) => {
+            callback();
+          }),
+        },
+      } as unknown as Request;
+
+      // Act
+      const result = await controller.logout(undefined, undefined, mockRequest);
+
+      // Assert
+      expect(result).toEqual({ success: true });
+      expect(mockLogoutService.execute).not.toHaveBeenCalled();
+    });
+
+    it('req가 없어도 성공 응답을 반환해야 함', async () => {
+      // Act
+      const result = await controller.logout(undefined, undefined, undefined);
+
+      // Assert
+      expect(result).toEqual({ success: true });
+      expect(mockLogoutService.execute).not.toHaveBeenCalled();
     });
   });
 

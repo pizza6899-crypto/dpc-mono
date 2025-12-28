@@ -686,6 +686,21 @@ exports.Prisma.AffiliateTierScalarFieldEnum = {
   id: 'id'
 };
 
+exports.Prisma.LoginAttemptScalarFieldEnum = {
+  id: 'id',
+  uid: 'uid',
+  userId: 'userId',
+  result: 'result',
+  failureReason: 'failureReason',
+  ipAddress: 'ipAddress',
+  userAgent: 'userAgent',
+  deviceFingerprint: 'deviceFingerprint',
+  isMobile: 'isMobile',
+  attemptedAt: 'attemptedAt',
+  email: 'email',
+  isAdmin: 'isAdmin'
+};
+
 exports.Prisma.SortOrder = {
   asc: 'asc',
   desc: 'desc'
@@ -920,6 +935,20 @@ exports.AffiliateTierLevel = exports.$Enums.AffiliateTierLevel = {
   DIAMOND: 'DIAMOND'
 };
 
+exports.LoginAttemptResult = exports.$Enums.LoginAttemptResult = {
+  SUCCESS: 'SUCCESS',
+  FAILED: 'FAILED'
+};
+
+exports.LoginFailureReason = exports.$Enums.LoginFailureReason = {
+  INVALID_CREDENTIALS: 'INVALID_CREDENTIALS',
+  USER_NOT_FOUND: 'USER_NOT_FOUND',
+  ACCOUNT_SUSPENDED: 'ACCOUNT_SUSPENDED',
+  ACCOUNT_CLOSED: 'ACCOUNT_CLOSED',
+  THROTTLE_LIMIT_EXCEEDED: 'THROTTLE_LIMIT_EXCEEDED',
+  UNKNOWN: 'UNKNOWN'
+};
+
 exports.Prisma.ModelName = {
   User: 'User',
   UserSession: 'UserSession',
@@ -958,7 +987,8 @@ exports.Prisma.ModelName = {
   Referral: 'Referral',
   AffiliateWallet: 'AffiliateWallet',
   AffiliateCommission: 'AffiliateCommission',
-  AffiliateTier: 'AffiliateTier'
+  AffiliateTier: 'AffiliateTier',
+  LoginAttempt: 'LoginAttempt'
 };
 
 /**

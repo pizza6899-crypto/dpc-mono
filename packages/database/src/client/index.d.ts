@@ -203,6 +203,11 @@ export type AffiliateCommission = $Result.DefaultSelection<Prisma.$AffiliateComm
  * 
  */
 export type AffiliateTier = $Result.DefaultSelection<Prisma.$AffiliateTierPayload>
+/**
+ * Model LoginAttempt
+ * 
+ */
+export type LoginAttempt = $Result.DefaultSelection<Prisma.$LoginAttemptPayload>
 
 /**
  * Enums
@@ -508,6 +513,26 @@ export const AffiliateTierLevel: {
 
 export type AffiliateTierLevel = (typeof AffiliateTierLevel)[keyof typeof AffiliateTierLevel]
 
+
+export const LoginAttemptResult: {
+  SUCCESS: 'SUCCESS',
+  FAILED: 'FAILED'
+};
+
+export type LoginAttemptResult = (typeof LoginAttemptResult)[keyof typeof LoginAttemptResult]
+
+
+export const LoginFailureReason: {
+  INVALID_CREDENTIALS: 'INVALID_CREDENTIALS',
+  USER_NOT_FOUND: 'USER_NOT_FOUND',
+  ACCOUNT_SUSPENDED: 'ACCOUNT_SUSPENDED',
+  ACCOUNT_CLOSED: 'ACCOUNT_CLOSED',
+  THROTTLE_LIMIT_EXCEEDED: 'THROTTLE_LIMIT_EXCEEDED',
+  UNKNOWN: 'UNKNOWN'
+};
+
+export type LoginFailureReason = (typeof LoginFailureReason)[keyof typeof LoginFailureReason]
+
 }
 
 export type SocialType = $Enums.SocialType
@@ -637,6 +662,14 @@ export const CommissionStatus: typeof $Enums.CommissionStatus
 export type AffiliateTierLevel = $Enums.AffiliateTierLevel
 
 export const AffiliateTierLevel: typeof $Enums.AffiliateTierLevel
+
+export type LoginAttemptResult = $Enums.LoginAttemptResult
+
+export const LoginAttemptResult: typeof $Enums.LoginAttemptResult
+
+export type LoginFailureReason = $Enums.LoginFailureReason
+
+export const LoginFailureReason: typeof $Enums.LoginFailureReason
 
 /**
  * ##  Prisma Client ʲˢ
@@ -1134,6 +1167,16 @@ export class PrismaClient<
     * ```
     */
   get affiliateTier(): Prisma.AffiliateTierDelegate<ExtArgs, ClientOptions>;
+
+  /**
+   * `prisma.loginAttempt`: Exposes CRUD operations for the **LoginAttempt** model.
+    * Example usage:
+    * ```ts
+    * // Fetch zero or more LoginAttempts
+    * const loginAttempts = await prisma.loginAttempt.findMany()
+    * ```
+    */
+  get loginAttempt(): Prisma.LoginAttemptDelegate<ExtArgs, ClientOptions>;
 }
 
 export namespace Prisma {
@@ -1605,7 +1648,8 @@ export namespace Prisma {
     Referral: 'Referral',
     AffiliateWallet: 'AffiliateWallet',
     AffiliateCommission: 'AffiliateCommission',
-    AffiliateTier: 'AffiliateTier'
+    AffiliateTier: 'AffiliateTier',
+    LoginAttempt: 'LoginAttempt'
   };
 
   export type ModelName = (typeof ModelName)[keyof typeof ModelName]
@@ -1621,7 +1665,7 @@ export namespace Prisma {
       omit: GlobalOmitOptions
     }
     meta: {
-      modelProps: "user" | "userSession" | "userBalance" | "userBalanceStats" | "activityLog" | "game" | "gameTranslation" | "whitecliffApiLog" | "dcsApiLog" | "transaction" | "gameRound" | "gameBet" | "gameWin" | "transactionBalanceDetail" | "bonusDetail" | "depositDetail" | "withdrawDetail" | "compTransaction" | "dailyCompEarning" | "promotion" | "promotionTranslation" | "userPromotion" | "nowPaymentCallbackLog" | "exchangeRate" | "vipLevel" | "vipMembership" | "vipHistory" | "rolling" | "userToken" | "emailLog" | "gameSession" | "bankAccount" | "prismaQueryLog" | "affiliateCode" | "referral" | "affiliateWallet" | "affiliateCommission" | "affiliateTier"
+      modelProps: "user" | "userSession" | "userBalance" | "userBalanceStats" | "activityLog" | "game" | "gameTranslation" | "whitecliffApiLog" | "dcsApiLog" | "transaction" | "gameRound" | "gameBet" | "gameWin" | "transactionBalanceDetail" | "bonusDetail" | "depositDetail" | "withdrawDetail" | "compTransaction" | "dailyCompEarning" | "promotion" | "promotionTranslation" | "userPromotion" | "nowPaymentCallbackLog" | "exchangeRate" | "vipLevel" | "vipMembership" | "vipHistory" | "rolling" | "userToken" | "emailLog" | "gameSession" | "bankAccount" | "prismaQueryLog" | "affiliateCode" | "referral" | "affiliateWallet" | "affiliateCommission" | "affiliateTier" | "loginAttempt"
       txIsolationLevel: Prisma.TransactionIsolationLevel
     }
     model: {
@@ -4437,6 +4481,80 @@ export namespace Prisma {
           }
         }
       }
+      LoginAttempt: {
+        payload: Prisma.$LoginAttemptPayload<ExtArgs>
+        fields: Prisma.LoginAttemptFieldRefs
+        operations: {
+          findUnique: {
+            args: Prisma.LoginAttemptFindUniqueArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$LoginAttemptPayload> | null
+          }
+          findUniqueOrThrow: {
+            args: Prisma.LoginAttemptFindUniqueOrThrowArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$LoginAttemptPayload>
+          }
+          findFirst: {
+            args: Prisma.LoginAttemptFindFirstArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$LoginAttemptPayload> | null
+          }
+          findFirstOrThrow: {
+            args: Prisma.LoginAttemptFindFirstOrThrowArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$LoginAttemptPayload>
+          }
+          findMany: {
+            args: Prisma.LoginAttemptFindManyArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$LoginAttemptPayload>[]
+          }
+          create: {
+            args: Prisma.LoginAttemptCreateArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$LoginAttemptPayload>
+          }
+          createMany: {
+            args: Prisma.LoginAttemptCreateManyArgs<ExtArgs>
+            result: BatchPayload
+          }
+          createManyAndReturn: {
+            args: Prisma.LoginAttemptCreateManyAndReturnArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$LoginAttemptPayload>[]
+          }
+          delete: {
+            args: Prisma.LoginAttemptDeleteArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$LoginAttemptPayload>
+          }
+          update: {
+            args: Prisma.LoginAttemptUpdateArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$LoginAttemptPayload>
+          }
+          deleteMany: {
+            args: Prisma.LoginAttemptDeleteManyArgs<ExtArgs>
+            result: BatchPayload
+          }
+          updateMany: {
+            args: Prisma.LoginAttemptUpdateManyArgs<ExtArgs>
+            result: BatchPayload
+          }
+          updateManyAndReturn: {
+            args: Prisma.LoginAttemptUpdateManyAndReturnArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$LoginAttemptPayload>[]
+          }
+          upsert: {
+            args: Prisma.LoginAttemptUpsertArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$LoginAttemptPayload>
+          }
+          aggregate: {
+            args: Prisma.LoginAttemptAggregateArgs<ExtArgs>
+            result: $Utils.Optional<AggregateLoginAttempt>
+          }
+          groupBy: {
+            args: Prisma.LoginAttemptGroupByArgs<ExtArgs>
+            result: $Utils.Optional<LoginAttemptGroupByOutputType>[]
+          }
+          count: {
+            args: Prisma.LoginAttemptCountArgs<ExtArgs>
+            result: $Utils.Optional<LoginAttemptCountAggregateOutputType> | number
+          }
+        }
+      }
     }
   } & {
     other: {
@@ -4583,6 +4701,7 @@ export namespace Prisma {
     affiliateWallet?: AffiliateWalletOmit
     affiliateCommission?: AffiliateCommissionOmit
     affiliateTier?: AffiliateTierOmit
+    loginAttempt?: LoginAttemptOmit
   }
 
   /* Types for Logging */
@@ -4681,6 +4800,7 @@ export namespace Prisma {
     UserSession: number
     UserToken: number
     VipHistory: number
+    loginAttempts: number
   }
 
   export type UserCountOutputTypeSelect<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
@@ -4702,6 +4822,7 @@ export namespace Prisma {
     UserSession?: boolean | UserCountOutputTypeCountUserSessionArgs
     UserToken?: boolean | UserCountOutputTypeCountUserTokenArgs
     VipHistory?: boolean | UserCountOutputTypeCountVipHistoryArgs
+    loginAttempts?: boolean | UserCountOutputTypeCountLoginAttemptsArgs
   }
 
   // Custom InputTypes
@@ -4839,6 +4960,13 @@ export namespace Prisma {
    */
   export type UserCountOutputTypeCountVipHistoryArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
     where?: VipHistoryWhereInput
+  }
+
+  /**
+   * UserCountOutputType without action
+   */
+  export type UserCountOutputTypeCountLoginAttemptsArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    where?: LoginAttemptWhereInput
   }
 
 
@@ -5614,6 +5742,7 @@ export namespace Prisma {
     UserToken?: boolean | User$UserTokenArgs<ExtArgs>
     VipHistory?: boolean | User$VipHistoryArgs<ExtArgs>
     VipMembership?: boolean | User$VipMembershipArgs<ExtArgs>
+    loginAttempts?: boolean | User$loginAttemptsArgs<ExtArgs>
     _count?: boolean | UserCountOutputTypeDefaultArgs<ExtArgs>
   }, ExtArgs["result"]["user"]>
 
@@ -5705,6 +5834,7 @@ export namespace Prisma {
     UserToken?: boolean | User$UserTokenArgs<ExtArgs>
     VipHistory?: boolean | User$VipHistoryArgs<ExtArgs>
     VipMembership?: boolean | User$VipMembershipArgs<ExtArgs>
+    loginAttempts?: boolean | User$loginAttemptsArgs<ExtArgs>
     _count?: boolean | UserCountOutputTypeDefaultArgs<ExtArgs>
   }
   export type UserIncludeCreateManyAndReturn<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {}
@@ -5733,6 +5863,7 @@ export namespace Prisma {
       UserToken: Prisma.$UserTokenPayload<ExtArgs>[]
       VipHistory: Prisma.$VipHistoryPayload<ExtArgs>[]
       VipMembership: Prisma.$VipMembershipPayload<ExtArgs> | null
+      loginAttempts: Prisma.$LoginAttemptPayload<ExtArgs>[]
     }
     scalars: $Extensions.GetPayloadResult<{
       id: string
@@ -6168,6 +6299,7 @@ export namespace Prisma {
     UserToken<T extends User$UserTokenArgs<ExtArgs> = {}>(args?: Subset<T, User$UserTokenArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$UserTokenPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
     VipHistory<T extends User$VipHistoryArgs<ExtArgs> = {}>(args?: Subset<T, User$VipHistoryArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$VipHistoryPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
     VipMembership<T extends User$VipMembershipArgs<ExtArgs> = {}>(args?: Subset<T, User$VipMembershipArgs<ExtArgs>>): Prisma__VipMembershipClient<$Result.GetResult<Prisma.$VipMembershipPayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions> | null, null, ExtArgs, GlobalOmitOptions>
+    loginAttempts<T extends User$loginAttemptsArgs<ExtArgs> = {}>(args?: Subset<T, User$loginAttemptsArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$LoginAttemptPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
     /**
      * Attaches callbacks for the resolution and/or rejection of the Promise.
      * @param onfulfilled The callback to execute when the Promise is resolved.
@@ -7071,6 +7203,30 @@ export namespace Prisma {
      */
     include?: VipMembershipInclude<ExtArgs> | null
     where?: VipMembershipWhereInput
+  }
+
+  /**
+   * User.loginAttempts
+   */
+  export type User$loginAttemptsArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the LoginAttempt
+     */
+    select?: LoginAttemptSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the LoginAttempt
+     */
+    omit?: LoginAttemptOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: LoginAttemptInclude<ExtArgs> | null
+    where?: LoginAttemptWhereInput
+    orderBy?: LoginAttemptOrderByWithRelationInput | LoginAttemptOrderByWithRelationInput[]
+    cursor?: LoginAttemptWhereUniqueInput
+    take?: number
+    skip?: number
+    distinct?: LoginAttemptScalarFieldEnum | LoginAttemptScalarFieldEnum[]
   }
 
   /**
@@ -51526,6 +51682,1208 @@ export namespace Prisma {
 
 
   /**
+   * Model LoginAttempt
+   */
+
+  export type AggregateLoginAttempt = {
+    _count: LoginAttemptCountAggregateOutputType | null
+    _avg: LoginAttemptAvgAggregateOutputType | null
+    _sum: LoginAttemptSumAggregateOutputType | null
+    _min: LoginAttemptMinAggregateOutputType | null
+    _max: LoginAttemptMaxAggregateOutputType | null
+  }
+
+  export type LoginAttemptAvgAggregateOutputType = {
+    id: number | null
+  }
+
+  export type LoginAttemptSumAggregateOutputType = {
+    id: bigint | null
+  }
+
+  export type LoginAttemptMinAggregateOutputType = {
+    id: bigint | null
+    uid: string | null
+    userId: string | null
+    result: $Enums.LoginAttemptResult | null
+    failureReason: $Enums.LoginFailureReason | null
+    ipAddress: string | null
+    userAgent: string | null
+    deviceFingerprint: string | null
+    isMobile: boolean | null
+    attemptedAt: Date | null
+    email: string | null
+    isAdmin: boolean | null
+  }
+
+  export type LoginAttemptMaxAggregateOutputType = {
+    id: bigint | null
+    uid: string | null
+    userId: string | null
+    result: $Enums.LoginAttemptResult | null
+    failureReason: $Enums.LoginFailureReason | null
+    ipAddress: string | null
+    userAgent: string | null
+    deviceFingerprint: string | null
+    isMobile: boolean | null
+    attemptedAt: Date | null
+    email: string | null
+    isAdmin: boolean | null
+  }
+
+  export type LoginAttemptCountAggregateOutputType = {
+    id: number
+    uid: number
+    userId: number
+    result: number
+    failureReason: number
+    ipAddress: number
+    userAgent: number
+    deviceFingerprint: number
+    isMobile: number
+    attemptedAt: number
+    email: number
+    isAdmin: number
+    _all: number
+  }
+
+
+  export type LoginAttemptAvgAggregateInputType = {
+    id?: true
+  }
+
+  export type LoginAttemptSumAggregateInputType = {
+    id?: true
+  }
+
+  export type LoginAttemptMinAggregateInputType = {
+    id?: true
+    uid?: true
+    userId?: true
+    result?: true
+    failureReason?: true
+    ipAddress?: true
+    userAgent?: true
+    deviceFingerprint?: true
+    isMobile?: true
+    attemptedAt?: true
+    email?: true
+    isAdmin?: true
+  }
+
+  export type LoginAttemptMaxAggregateInputType = {
+    id?: true
+    uid?: true
+    userId?: true
+    result?: true
+    failureReason?: true
+    ipAddress?: true
+    userAgent?: true
+    deviceFingerprint?: true
+    isMobile?: true
+    attemptedAt?: true
+    email?: true
+    isAdmin?: true
+  }
+
+  export type LoginAttemptCountAggregateInputType = {
+    id?: true
+    uid?: true
+    userId?: true
+    result?: true
+    failureReason?: true
+    ipAddress?: true
+    userAgent?: true
+    deviceFingerprint?: true
+    isMobile?: true
+    attemptedAt?: true
+    email?: true
+    isAdmin?: true
+    _all?: true
+  }
+
+  export type LoginAttemptAggregateArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Filter which LoginAttempt to aggregate.
+     */
+    where?: LoginAttemptWhereInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/sorting Sorting Docs}
+     * 
+     * Determine the order of LoginAttempts to fetch.
+     */
+    orderBy?: LoginAttemptOrderByWithRelationInput | LoginAttemptOrderByWithRelationInput[]
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination#cursor-based-pagination Cursor Docs}
+     * 
+     * Sets the start position
+     */
+    cursor?: LoginAttemptWhereUniqueInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Take `±n` LoginAttempts from the position of the cursor.
+     */
+    take?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Skip the first `n` LoginAttempts.
+     */
+    skip?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
+     * 
+     * Count returned LoginAttempts
+    **/
+    _count?: true | LoginAttemptCountAggregateInputType
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
+     * 
+     * Select which fields to average
+    **/
+    _avg?: LoginAttemptAvgAggregateInputType
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
+     * 
+     * Select which fields to sum
+    **/
+    _sum?: LoginAttemptSumAggregateInputType
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
+     * 
+     * Select which fields to find the minimum value
+    **/
+    _min?: LoginAttemptMinAggregateInputType
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
+     * 
+     * Select which fields to find the maximum value
+    **/
+    _max?: LoginAttemptMaxAggregateInputType
+  }
+
+  export type GetLoginAttemptAggregateType<T extends LoginAttemptAggregateArgs> = {
+        [P in keyof T & keyof AggregateLoginAttempt]: P extends '_count' | 'count'
+      ? T[P] extends true
+        ? number
+        : GetScalarType<T[P], AggregateLoginAttempt[P]>
+      : GetScalarType<T[P], AggregateLoginAttempt[P]>
+  }
+
+
+
+
+  export type LoginAttemptGroupByArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    where?: LoginAttemptWhereInput
+    orderBy?: LoginAttemptOrderByWithAggregationInput | LoginAttemptOrderByWithAggregationInput[]
+    by: LoginAttemptScalarFieldEnum[] | LoginAttemptScalarFieldEnum
+    having?: LoginAttemptScalarWhereWithAggregatesInput
+    take?: number
+    skip?: number
+    _count?: LoginAttemptCountAggregateInputType | true
+    _avg?: LoginAttemptAvgAggregateInputType
+    _sum?: LoginAttemptSumAggregateInputType
+    _min?: LoginAttemptMinAggregateInputType
+    _max?: LoginAttemptMaxAggregateInputType
+  }
+
+  export type LoginAttemptGroupByOutputType = {
+    id: bigint
+    uid: string
+    userId: string | null
+    result: $Enums.LoginAttemptResult
+    failureReason: $Enums.LoginFailureReason | null
+    ipAddress: string | null
+    userAgent: string | null
+    deviceFingerprint: string | null
+    isMobile: boolean | null
+    attemptedAt: Date
+    email: string | null
+    isAdmin: boolean
+    _count: LoginAttemptCountAggregateOutputType | null
+    _avg: LoginAttemptAvgAggregateOutputType | null
+    _sum: LoginAttemptSumAggregateOutputType | null
+    _min: LoginAttemptMinAggregateOutputType | null
+    _max: LoginAttemptMaxAggregateOutputType | null
+  }
+
+  type GetLoginAttemptGroupByPayload<T extends LoginAttemptGroupByArgs> = Prisma.PrismaPromise<
+    Array<
+      PickEnumerable<LoginAttemptGroupByOutputType, T['by']> &
+        {
+          [P in ((keyof T) & (keyof LoginAttemptGroupByOutputType))]: P extends '_count'
+            ? T[P] extends boolean
+              ? number
+              : GetScalarType<T[P], LoginAttemptGroupByOutputType[P]>
+            : GetScalarType<T[P], LoginAttemptGroupByOutputType[P]>
+        }
+      >
+    >
+
+
+  export type LoginAttemptSelect<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetSelect<{
+    id?: boolean
+    uid?: boolean
+    userId?: boolean
+    result?: boolean
+    failureReason?: boolean
+    ipAddress?: boolean
+    userAgent?: boolean
+    deviceFingerprint?: boolean
+    isMobile?: boolean
+    attemptedAt?: boolean
+    email?: boolean
+    isAdmin?: boolean
+    user?: boolean | LoginAttempt$userArgs<ExtArgs>
+  }, ExtArgs["result"]["loginAttempt"]>
+
+  export type LoginAttemptSelectCreateManyAndReturn<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetSelect<{
+    id?: boolean
+    uid?: boolean
+    userId?: boolean
+    result?: boolean
+    failureReason?: boolean
+    ipAddress?: boolean
+    userAgent?: boolean
+    deviceFingerprint?: boolean
+    isMobile?: boolean
+    attemptedAt?: boolean
+    email?: boolean
+    isAdmin?: boolean
+    user?: boolean | LoginAttempt$userArgs<ExtArgs>
+  }, ExtArgs["result"]["loginAttempt"]>
+
+  export type LoginAttemptSelectUpdateManyAndReturn<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetSelect<{
+    id?: boolean
+    uid?: boolean
+    userId?: boolean
+    result?: boolean
+    failureReason?: boolean
+    ipAddress?: boolean
+    userAgent?: boolean
+    deviceFingerprint?: boolean
+    isMobile?: boolean
+    attemptedAt?: boolean
+    email?: boolean
+    isAdmin?: boolean
+    user?: boolean | LoginAttempt$userArgs<ExtArgs>
+  }, ExtArgs["result"]["loginAttempt"]>
+
+  export type LoginAttemptSelectScalar = {
+    id?: boolean
+    uid?: boolean
+    userId?: boolean
+    result?: boolean
+    failureReason?: boolean
+    ipAddress?: boolean
+    userAgent?: boolean
+    deviceFingerprint?: boolean
+    isMobile?: boolean
+    attemptedAt?: boolean
+    email?: boolean
+    isAdmin?: boolean
+  }
+
+  export type LoginAttemptOmit<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetOmit<"id" | "uid" | "userId" | "result" | "failureReason" | "ipAddress" | "userAgent" | "deviceFingerprint" | "isMobile" | "attemptedAt" | "email" | "isAdmin", ExtArgs["result"]["loginAttempt"]>
+  export type LoginAttemptInclude<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    user?: boolean | LoginAttempt$userArgs<ExtArgs>
+  }
+  export type LoginAttemptIncludeCreateManyAndReturn<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    user?: boolean | LoginAttempt$userArgs<ExtArgs>
+  }
+  export type LoginAttemptIncludeUpdateManyAndReturn<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    user?: boolean | LoginAttempt$userArgs<ExtArgs>
+  }
+
+  export type $LoginAttemptPayload<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    name: "LoginAttempt"
+    objects: {
+      user: Prisma.$UserPayload<ExtArgs> | null
+    }
+    scalars: $Extensions.GetPayloadResult<{
+      id: bigint
+      uid: string
+      userId: string | null
+      result: $Enums.LoginAttemptResult
+      failureReason: $Enums.LoginFailureReason | null
+      ipAddress: string | null
+      userAgent: string | null
+      deviceFingerprint: string | null
+      isMobile: boolean | null
+      attemptedAt: Date
+      email: string | null
+      isAdmin: boolean
+    }, ExtArgs["result"]["loginAttempt"]>
+    composites: {}
+  }
+
+  type LoginAttemptGetPayload<S extends boolean | null | undefined | LoginAttemptDefaultArgs> = $Result.GetResult<Prisma.$LoginAttemptPayload, S>
+
+  type LoginAttemptCountArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> =
+    Omit<LoginAttemptFindManyArgs, 'select' | 'include' | 'distinct' | 'omit'> & {
+      select?: LoginAttemptCountAggregateInputType | true
+    }
+
+  export interface LoginAttemptDelegate<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs, GlobalOmitOptions = {}> {
+    [K: symbol]: { types: Prisma.TypeMap<ExtArgs>['model']['LoginAttempt'], meta: { name: 'LoginAttempt' } }
+    /**
+     * Find zero or one LoginAttempt that matches the filter.
+     * @param {LoginAttemptFindUniqueArgs} args - Arguments to find a LoginAttempt
+     * @example
+     * // Get one LoginAttempt
+     * const loginAttempt = await prisma.loginAttempt.findUnique({
+     *   where: {
+     *     // ... provide filter here
+     *   }
+     * })
+     */
+    findUnique<T extends LoginAttemptFindUniqueArgs>(args: SelectSubset<T, LoginAttemptFindUniqueArgs<ExtArgs>>): Prisma__LoginAttemptClient<$Result.GetResult<Prisma.$LoginAttemptPayload<ExtArgs>, T, "findUnique", GlobalOmitOptions> | null, null, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Find one LoginAttempt that matches the filter or throw an error with `error.code='P2025'`
+     * if no matches were found.
+     * @param {LoginAttemptFindUniqueOrThrowArgs} args - Arguments to find a LoginAttempt
+     * @example
+     * // Get one LoginAttempt
+     * const loginAttempt = await prisma.loginAttempt.findUniqueOrThrow({
+     *   where: {
+     *     // ... provide filter here
+     *   }
+     * })
+     */
+    findUniqueOrThrow<T extends LoginAttemptFindUniqueOrThrowArgs>(args: SelectSubset<T, LoginAttemptFindUniqueOrThrowArgs<ExtArgs>>): Prisma__LoginAttemptClient<$Result.GetResult<Prisma.$LoginAttemptPayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Find the first LoginAttempt that matches the filter.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {LoginAttemptFindFirstArgs} args - Arguments to find a LoginAttempt
+     * @example
+     * // Get one LoginAttempt
+     * const loginAttempt = await prisma.loginAttempt.findFirst({
+     *   where: {
+     *     // ... provide filter here
+     *   }
+     * })
+     */
+    findFirst<T extends LoginAttemptFindFirstArgs>(args?: SelectSubset<T, LoginAttemptFindFirstArgs<ExtArgs>>): Prisma__LoginAttemptClient<$Result.GetResult<Prisma.$LoginAttemptPayload<ExtArgs>, T, "findFirst", GlobalOmitOptions> | null, null, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Find the first LoginAttempt that matches the filter or
+     * throw `PrismaKnownClientError` with `P2025` code if no matches were found.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {LoginAttemptFindFirstOrThrowArgs} args - Arguments to find a LoginAttempt
+     * @example
+     * // Get one LoginAttempt
+     * const loginAttempt = await prisma.loginAttempt.findFirstOrThrow({
+     *   where: {
+     *     // ... provide filter here
+     *   }
+     * })
+     */
+    findFirstOrThrow<T extends LoginAttemptFindFirstOrThrowArgs>(args?: SelectSubset<T, LoginAttemptFindFirstOrThrowArgs<ExtArgs>>): Prisma__LoginAttemptClient<$Result.GetResult<Prisma.$LoginAttemptPayload<ExtArgs>, T, "findFirstOrThrow", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Find zero or more LoginAttempts that matches the filter.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {LoginAttemptFindManyArgs} args - Arguments to filter and select certain fields only.
+     * @example
+     * // Get all LoginAttempts
+     * const loginAttempts = await prisma.loginAttempt.findMany()
+     * 
+     * // Get first 10 LoginAttempts
+     * const loginAttempts = await prisma.loginAttempt.findMany({ take: 10 })
+     * 
+     * // Only select the `id`
+     * const loginAttemptWithIdOnly = await prisma.loginAttempt.findMany({ select: { id: true } })
+     * 
+     */
+    findMany<T extends LoginAttemptFindManyArgs>(args?: SelectSubset<T, LoginAttemptFindManyArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$LoginAttemptPayload<ExtArgs>, T, "findMany", GlobalOmitOptions>>
+
+    /**
+     * Create a LoginAttempt.
+     * @param {LoginAttemptCreateArgs} args - Arguments to create a LoginAttempt.
+     * @example
+     * // Create one LoginAttempt
+     * const LoginAttempt = await prisma.loginAttempt.create({
+     *   data: {
+     *     // ... data to create a LoginAttempt
+     *   }
+     * })
+     * 
+     */
+    create<T extends LoginAttemptCreateArgs>(args: SelectSubset<T, LoginAttemptCreateArgs<ExtArgs>>): Prisma__LoginAttemptClient<$Result.GetResult<Prisma.$LoginAttemptPayload<ExtArgs>, T, "create", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Create many LoginAttempts.
+     * @param {LoginAttemptCreateManyArgs} args - Arguments to create many LoginAttempts.
+     * @example
+     * // Create many LoginAttempts
+     * const loginAttempt = await prisma.loginAttempt.createMany({
+     *   data: [
+     *     // ... provide data here
+     *   ]
+     * })
+     *     
+     */
+    createMany<T extends LoginAttemptCreateManyArgs>(args?: SelectSubset<T, LoginAttemptCreateManyArgs<ExtArgs>>): Prisma.PrismaPromise<BatchPayload>
+
+    /**
+     * Create many LoginAttempts and returns the data saved in the database.
+     * @param {LoginAttemptCreateManyAndReturnArgs} args - Arguments to create many LoginAttempts.
+     * @example
+     * // Create many LoginAttempts
+     * const loginAttempt = await prisma.loginAttempt.createManyAndReturn({
+     *   data: [
+     *     // ... provide data here
+     *   ]
+     * })
+     * 
+     * // Create many LoginAttempts and only return the `id`
+     * const loginAttemptWithIdOnly = await prisma.loginAttempt.createManyAndReturn({
+     *   select: { id: true },
+     *   data: [
+     *     // ... provide data here
+     *   ]
+     * })
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * 
+     */
+    createManyAndReturn<T extends LoginAttemptCreateManyAndReturnArgs>(args?: SelectSubset<T, LoginAttemptCreateManyAndReturnArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$LoginAttemptPayload<ExtArgs>, T, "createManyAndReturn", GlobalOmitOptions>>
+
+    /**
+     * Delete a LoginAttempt.
+     * @param {LoginAttemptDeleteArgs} args - Arguments to delete one LoginAttempt.
+     * @example
+     * // Delete one LoginAttempt
+     * const LoginAttempt = await prisma.loginAttempt.delete({
+     *   where: {
+     *     // ... filter to delete one LoginAttempt
+     *   }
+     * })
+     * 
+     */
+    delete<T extends LoginAttemptDeleteArgs>(args: SelectSubset<T, LoginAttemptDeleteArgs<ExtArgs>>): Prisma__LoginAttemptClient<$Result.GetResult<Prisma.$LoginAttemptPayload<ExtArgs>, T, "delete", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Update one LoginAttempt.
+     * @param {LoginAttemptUpdateArgs} args - Arguments to update one LoginAttempt.
+     * @example
+     * // Update one LoginAttempt
+     * const loginAttempt = await prisma.loginAttempt.update({
+     *   where: {
+     *     // ... provide filter here
+     *   },
+     *   data: {
+     *     // ... provide data here
+     *   }
+     * })
+     * 
+     */
+    update<T extends LoginAttemptUpdateArgs>(args: SelectSubset<T, LoginAttemptUpdateArgs<ExtArgs>>): Prisma__LoginAttemptClient<$Result.GetResult<Prisma.$LoginAttemptPayload<ExtArgs>, T, "update", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Delete zero or more LoginAttempts.
+     * @param {LoginAttemptDeleteManyArgs} args - Arguments to filter LoginAttempts to delete.
+     * @example
+     * // Delete a few LoginAttempts
+     * const { count } = await prisma.loginAttempt.deleteMany({
+     *   where: {
+     *     // ... provide filter here
+     *   }
+     * })
+     * 
+     */
+    deleteMany<T extends LoginAttemptDeleteManyArgs>(args?: SelectSubset<T, LoginAttemptDeleteManyArgs<ExtArgs>>): Prisma.PrismaPromise<BatchPayload>
+
+    /**
+     * Update zero or more LoginAttempts.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {LoginAttemptUpdateManyArgs} args - Arguments to update one or more rows.
+     * @example
+     * // Update many LoginAttempts
+     * const loginAttempt = await prisma.loginAttempt.updateMany({
+     *   where: {
+     *     // ... provide filter here
+     *   },
+     *   data: {
+     *     // ... provide data here
+     *   }
+     * })
+     * 
+     */
+    updateMany<T extends LoginAttemptUpdateManyArgs>(args: SelectSubset<T, LoginAttemptUpdateManyArgs<ExtArgs>>): Prisma.PrismaPromise<BatchPayload>
+
+    /**
+     * Update zero or more LoginAttempts and returns the data updated in the database.
+     * @param {LoginAttemptUpdateManyAndReturnArgs} args - Arguments to update many LoginAttempts.
+     * @example
+     * // Update many LoginAttempts
+     * const loginAttempt = await prisma.loginAttempt.updateManyAndReturn({
+     *   where: {
+     *     // ... provide filter here
+     *   },
+     *   data: [
+     *     // ... provide data here
+     *   ]
+     * })
+     * 
+     * // Update zero or more LoginAttempts and only return the `id`
+     * const loginAttemptWithIdOnly = await prisma.loginAttempt.updateManyAndReturn({
+     *   select: { id: true },
+     *   where: {
+     *     // ... provide filter here
+     *   },
+     *   data: [
+     *     // ... provide data here
+     *   ]
+     * })
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * 
+     */
+    updateManyAndReturn<T extends LoginAttemptUpdateManyAndReturnArgs>(args: SelectSubset<T, LoginAttemptUpdateManyAndReturnArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$LoginAttemptPayload<ExtArgs>, T, "updateManyAndReturn", GlobalOmitOptions>>
+
+    /**
+     * Create or update one LoginAttempt.
+     * @param {LoginAttemptUpsertArgs} args - Arguments to update or create a LoginAttempt.
+     * @example
+     * // Update or create a LoginAttempt
+     * const loginAttempt = await prisma.loginAttempt.upsert({
+     *   create: {
+     *     // ... data to create a LoginAttempt
+     *   },
+     *   update: {
+     *     // ... in case it already exists, update
+     *   },
+     *   where: {
+     *     // ... the filter for the LoginAttempt we want to update
+     *   }
+     * })
+     */
+    upsert<T extends LoginAttemptUpsertArgs>(args: SelectSubset<T, LoginAttemptUpsertArgs<ExtArgs>>): Prisma__LoginAttemptClient<$Result.GetResult<Prisma.$LoginAttemptPayload<ExtArgs>, T, "upsert", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
+
+
+    /**
+     * Count the number of LoginAttempts.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {LoginAttemptCountArgs} args - Arguments to filter LoginAttempts to count.
+     * @example
+     * // Count the number of LoginAttempts
+     * const count = await prisma.loginAttempt.count({
+     *   where: {
+     *     // ... the filter for the LoginAttempts we want to count
+     *   }
+     * })
+    **/
+    count<T extends LoginAttemptCountArgs>(
+      args?: Subset<T, LoginAttemptCountArgs>,
+    ): Prisma.PrismaPromise<
+      T extends $Utils.Record<'select', any>
+        ? T['select'] extends true
+          ? number
+          : GetScalarType<T['select'], LoginAttemptCountAggregateOutputType>
+        : number
+    >
+
+    /**
+     * Allows you to perform aggregations operations on a LoginAttempt.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {LoginAttemptAggregateArgs} args - Select which aggregations you would like to apply and on what fields.
+     * @example
+     * // Ordered by age ascending
+     * // Where email contains prisma.io
+     * // Limited to the 10 users
+     * const aggregations = await prisma.user.aggregate({
+     *   _avg: {
+     *     age: true,
+     *   },
+     *   where: {
+     *     email: {
+     *       contains: "prisma.io",
+     *     },
+     *   },
+     *   orderBy: {
+     *     age: "asc",
+     *   },
+     *   take: 10,
+     * })
+    **/
+    aggregate<T extends LoginAttemptAggregateArgs>(args: Subset<T, LoginAttemptAggregateArgs>): Prisma.PrismaPromise<GetLoginAttemptAggregateType<T>>
+
+    /**
+     * Group by LoginAttempt.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {LoginAttemptGroupByArgs} args - Group by arguments.
+     * @example
+     * // Group by city, order by createdAt, get count
+     * const result = await prisma.user.groupBy({
+     *   by: ['city', 'createdAt'],
+     *   orderBy: {
+     *     createdAt: true
+     *   },
+     *   _count: {
+     *     _all: true
+     *   },
+     * })
+     * 
+    **/
+    groupBy<
+      T extends LoginAttemptGroupByArgs,
+      HasSelectOrTake extends Or<
+        Extends<'skip', Keys<T>>,
+        Extends<'take', Keys<T>>
+      >,
+      OrderByArg extends True extends HasSelectOrTake
+        ? { orderBy: LoginAttemptGroupByArgs['orderBy'] }
+        : { orderBy?: LoginAttemptGroupByArgs['orderBy'] },
+      OrderFields extends ExcludeUnderscoreKeys<Keys<MaybeTupleToUnion<T['orderBy']>>>,
+      ByFields extends MaybeTupleToUnion<T['by']>,
+      ByValid extends Has<ByFields, OrderFields>,
+      HavingFields extends GetHavingFields<T['having']>,
+      HavingValid extends Has<ByFields, HavingFields>,
+      ByEmpty extends T['by'] extends never[] ? True : False,
+      InputErrors extends ByEmpty extends True
+      ? `Error: "by" must not be empty.`
+      : HavingValid extends False
+      ? {
+          [P in HavingFields]: P extends ByFields
+            ? never
+            : P extends string
+            ? `Error: Field "${P}" used in "having" needs to be provided in "by".`
+            : [
+                Error,
+                'Field ',
+                P,
+                ` in "having" needs to be provided in "by"`,
+              ]
+        }[HavingFields]
+      : 'take' extends Keys<T>
+      ? 'orderBy' extends Keys<T>
+        ? ByValid extends True
+          ? {}
+          : {
+              [P in OrderFields]: P extends ByFields
+                ? never
+                : `Error: Field "${P}" in "orderBy" needs to be provided in "by"`
+            }[OrderFields]
+        : 'Error: If you provide "take", you also need to provide "orderBy"'
+      : 'skip' extends Keys<T>
+      ? 'orderBy' extends Keys<T>
+        ? ByValid extends True
+          ? {}
+          : {
+              [P in OrderFields]: P extends ByFields
+                ? never
+                : `Error: Field "${P}" in "orderBy" needs to be provided in "by"`
+            }[OrderFields]
+        : 'Error: If you provide "skip", you also need to provide "orderBy"'
+      : ByValid extends True
+      ? {}
+      : {
+          [P in OrderFields]: P extends ByFields
+            ? never
+            : `Error: Field "${P}" in "orderBy" needs to be provided in "by"`
+        }[OrderFields]
+    >(args: SubsetIntersection<T, LoginAttemptGroupByArgs, OrderByArg> & InputErrors): {} extends InputErrors ? GetLoginAttemptGroupByPayload<T> : Prisma.PrismaPromise<InputErrors>
+  /**
+   * Fields of the LoginAttempt model
+   */
+  readonly fields: LoginAttemptFieldRefs;
+  }
+
+  /**
+   * The delegate class that acts as a "Promise-like" for LoginAttempt.
+   * Why is this prefixed with `Prisma__`?
+   * Because we want to prevent naming conflicts as mentioned in
+   * https://github.com/prisma/prisma-client-js/issues/707
+   */
+  export interface Prisma__LoginAttemptClient<T, Null = never, ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs, GlobalOmitOptions = {}> extends Prisma.PrismaPromise<T> {
+    readonly [Symbol.toStringTag]: "PrismaPromise"
+    user<T extends LoginAttempt$userArgs<ExtArgs> = {}>(args?: Subset<T, LoginAttempt$userArgs<ExtArgs>>): Prisma__UserClient<$Result.GetResult<Prisma.$UserPayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions> | null, null, ExtArgs, GlobalOmitOptions>
+    /**
+     * Attaches callbacks for the resolution and/or rejection of the Promise.
+     * @param onfulfilled The callback to execute when the Promise is resolved.
+     * @param onrejected The callback to execute when the Promise is rejected.
+     * @returns A Promise for the completion of which ever callback is executed.
+     */
+    then<TResult1 = T, TResult2 = never>(onfulfilled?: ((value: T) => TResult1 | PromiseLike<TResult1>) | undefined | null, onrejected?: ((reason: any) => TResult2 | PromiseLike<TResult2>) | undefined | null): $Utils.JsPromise<TResult1 | TResult2>
+    /**
+     * Attaches a callback for only the rejection of the Promise.
+     * @param onrejected The callback to execute when the Promise is rejected.
+     * @returns A Promise for the completion of the callback.
+     */
+    catch<TResult = never>(onrejected?: ((reason: any) => TResult | PromiseLike<TResult>) | undefined | null): $Utils.JsPromise<T | TResult>
+    /**
+     * Attaches a callback that is invoked when the Promise is settled (fulfilled or rejected). The
+     * resolved value cannot be modified from the callback.
+     * @param onfinally The callback to execute when the Promise is settled (fulfilled or rejected).
+     * @returns A Promise for the completion of the callback.
+     */
+    finally(onfinally?: (() => void) | undefined | null): $Utils.JsPromise<T>
+  }
+
+
+
+
+  /**
+   * Fields of the LoginAttempt model
+   */
+  interface LoginAttemptFieldRefs {
+    readonly id: FieldRef<"LoginAttempt", 'BigInt'>
+    readonly uid: FieldRef<"LoginAttempt", 'String'>
+    readonly userId: FieldRef<"LoginAttempt", 'String'>
+    readonly result: FieldRef<"LoginAttempt", 'LoginAttemptResult'>
+    readonly failureReason: FieldRef<"LoginAttempt", 'LoginFailureReason'>
+    readonly ipAddress: FieldRef<"LoginAttempt", 'String'>
+    readonly userAgent: FieldRef<"LoginAttempt", 'String'>
+    readonly deviceFingerprint: FieldRef<"LoginAttempt", 'String'>
+    readonly isMobile: FieldRef<"LoginAttempt", 'Boolean'>
+    readonly attemptedAt: FieldRef<"LoginAttempt", 'DateTime'>
+    readonly email: FieldRef<"LoginAttempt", 'String'>
+    readonly isAdmin: FieldRef<"LoginAttempt", 'Boolean'>
+  }
+    
+
+  // Custom InputTypes
+  /**
+   * LoginAttempt findUnique
+   */
+  export type LoginAttemptFindUniqueArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the LoginAttempt
+     */
+    select?: LoginAttemptSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the LoginAttempt
+     */
+    omit?: LoginAttemptOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: LoginAttemptInclude<ExtArgs> | null
+    /**
+     * Filter, which LoginAttempt to fetch.
+     */
+    where: LoginAttemptWhereUniqueInput
+  }
+
+  /**
+   * LoginAttempt findUniqueOrThrow
+   */
+  export type LoginAttemptFindUniqueOrThrowArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the LoginAttempt
+     */
+    select?: LoginAttemptSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the LoginAttempt
+     */
+    omit?: LoginAttemptOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: LoginAttemptInclude<ExtArgs> | null
+    /**
+     * Filter, which LoginAttempt to fetch.
+     */
+    where: LoginAttemptWhereUniqueInput
+  }
+
+  /**
+   * LoginAttempt findFirst
+   */
+  export type LoginAttemptFindFirstArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the LoginAttempt
+     */
+    select?: LoginAttemptSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the LoginAttempt
+     */
+    omit?: LoginAttemptOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: LoginAttemptInclude<ExtArgs> | null
+    /**
+     * Filter, which LoginAttempt to fetch.
+     */
+    where?: LoginAttemptWhereInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/sorting Sorting Docs}
+     * 
+     * Determine the order of LoginAttempts to fetch.
+     */
+    orderBy?: LoginAttemptOrderByWithRelationInput | LoginAttemptOrderByWithRelationInput[]
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination#cursor-based-pagination Cursor Docs}
+     * 
+     * Sets the position for searching for LoginAttempts.
+     */
+    cursor?: LoginAttemptWhereUniqueInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Take `±n` LoginAttempts from the position of the cursor.
+     */
+    take?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Skip the first `n` LoginAttempts.
+     */
+    skip?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/distinct Distinct Docs}
+     * 
+     * Filter by unique combinations of LoginAttempts.
+     */
+    distinct?: LoginAttemptScalarFieldEnum | LoginAttemptScalarFieldEnum[]
+  }
+
+  /**
+   * LoginAttempt findFirstOrThrow
+   */
+  export type LoginAttemptFindFirstOrThrowArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the LoginAttempt
+     */
+    select?: LoginAttemptSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the LoginAttempt
+     */
+    omit?: LoginAttemptOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: LoginAttemptInclude<ExtArgs> | null
+    /**
+     * Filter, which LoginAttempt to fetch.
+     */
+    where?: LoginAttemptWhereInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/sorting Sorting Docs}
+     * 
+     * Determine the order of LoginAttempts to fetch.
+     */
+    orderBy?: LoginAttemptOrderByWithRelationInput | LoginAttemptOrderByWithRelationInput[]
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination#cursor-based-pagination Cursor Docs}
+     * 
+     * Sets the position for searching for LoginAttempts.
+     */
+    cursor?: LoginAttemptWhereUniqueInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Take `±n` LoginAttempts from the position of the cursor.
+     */
+    take?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Skip the first `n` LoginAttempts.
+     */
+    skip?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/distinct Distinct Docs}
+     * 
+     * Filter by unique combinations of LoginAttempts.
+     */
+    distinct?: LoginAttemptScalarFieldEnum | LoginAttemptScalarFieldEnum[]
+  }
+
+  /**
+   * LoginAttempt findMany
+   */
+  export type LoginAttemptFindManyArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the LoginAttempt
+     */
+    select?: LoginAttemptSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the LoginAttempt
+     */
+    omit?: LoginAttemptOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: LoginAttemptInclude<ExtArgs> | null
+    /**
+     * Filter, which LoginAttempts to fetch.
+     */
+    where?: LoginAttemptWhereInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/sorting Sorting Docs}
+     * 
+     * Determine the order of LoginAttempts to fetch.
+     */
+    orderBy?: LoginAttemptOrderByWithRelationInput | LoginAttemptOrderByWithRelationInput[]
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination#cursor-based-pagination Cursor Docs}
+     * 
+     * Sets the position for listing LoginAttempts.
+     */
+    cursor?: LoginAttemptWhereUniqueInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Take `±n` LoginAttempts from the position of the cursor.
+     */
+    take?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Skip the first `n` LoginAttempts.
+     */
+    skip?: number
+    distinct?: LoginAttemptScalarFieldEnum | LoginAttemptScalarFieldEnum[]
+  }
+
+  /**
+   * LoginAttempt create
+   */
+  export type LoginAttemptCreateArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the LoginAttempt
+     */
+    select?: LoginAttemptSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the LoginAttempt
+     */
+    omit?: LoginAttemptOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: LoginAttemptInclude<ExtArgs> | null
+    /**
+     * The data needed to create a LoginAttempt.
+     */
+    data: XOR<LoginAttemptCreateInput, LoginAttemptUncheckedCreateInput>
+  }
+
+  /**
+   * LoginAttempt createMany
+   */
+  export type LoginAttemptCreateManyArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * The data used to create many LoginAttempts.
+     */
+    data: LoginAttemptCreateManyInput | LoginAttemptCreateManyInput[]
+    skipDuplicates?: boolean
+  }
+
+  /**
+   * LoginAttempt createManyAndReturn
+   */
+  export type LoginAttemptCreateManyAndReturnArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the LoginAttempt
+     */
+    select?: LoginAttemptSelectCreateManyAndReturn<ExtArgs> | null
+    /**
+     * Omit specific fields from the LoginAttempt
+     */
+    omit?: LoginAttemptOmit<ExtArgs> | null
+    /**
+     * The data used to create many LoginAttempts.
+     */
+    data: LoginAttemptCreateManyInput | LoginAttemptCreateManyInput[]
+    skipDuplicates?: boolean
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: LoginAttemptIncludeCreateManyAndReturn<ExtArgs> | null
+  }
+
+  /**
+   * LoginAttempt update
+   */
+  export type LoginAttemptUpdateArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the LoginAttempt
+     */
+    select?: LoginAttemptSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the LoginAttempt
+     */
+    omit?: LoginAttemptOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: LoginAttemptInclude<ExtArgs> | null
+    /**
+     * The data needed to update a LoginAttempt.
+     */
+    data: XOR<LoginAttemptUpdateInput, LoginAttemptUncheckedUpdateInput>
+    /**
+     * Choose, which LoginAttempt to update.
+     */
+    where: LoginAttemptWhereUniqueInput
+  }
+
+  /**
+   * LoginAttempt updateMany
+   */
+  export type LoginAttemptUpdateManyArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * The data used to update LoginAttempts.
+     */
+    data: XOR<LoginAttemptUpdateManyMutationInput, LoginAttemptUncheckedUpdateManyInput>
+    /**
+     * Filter which LoginAttempts to update
+     */
+    where?: LoginAttemptWhereInput
+    /**
+     * Limit how many LoginAttempts to update.
+     */
+    limit?: number
+  }
+
+  /**
+   * LoginAttempt updateManyAndReturn
+   */
+  export type LoginAttemptUpdateManyAndReturnArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the LoginAttempt
+     */
+    select?: LoginAttemptSelectUpdateManyAndReturn<ExtArgs> | null
+    /**
+     * Omit specific fields from the LoginAttempt
+     */
+    omit?: LoginAttemptOmit<ExtArgs> | null
+    /**
+     * The data used to update LoginAttempts.
+     */
+    data: XOR<LoginAttemptUpdateManyMutationInput, LoginAttemptUncheckedUpdateManyInput>
+    /**
+     * Filter which LoginAttempts to update
+     */
+    where?: LoginAttemptWhereInput
+    /**
+     * Limit how many LoginAttempts to update.
+     */
+    limit?: number
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: LoginAttemptIncludeUpdateManyAndReturn<ExtArgs> | null
+  }
+
+  /**
+   * LoginAttempt upsert
+   */
+  export type LoginAttemptUpsertArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the LoginAttempt
+     */
+    select?: LoginAttemptSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the LoginAttempt
+     */
+    omit?: LoginAttemptOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: LoginAttemptInclude<ExtArgs> | null
+    /**
+     * The filter to search for the LoginAttempt to update in case it exists.
+     */
+    where: LoginAttemptWhereUniqueInput
+    /**
+     * In case the LoginAttempt found by the `where` argument doesn't exist, create a new LoginAttempt with this data.
+     */
+    create: XOR<LoginAttemptCreateInput, LoginAttemptUncheckedCreateInput>
+    /**
+     * In case the LoginAttempt was found with the provided `where` argument, update it with this data.
+     */
+    update: XOR<LoginAttemptUpdateInput, LoginAttemptUncheckedUpdateInput>
+  }
+
+  /**
+   * LoginAttempt delete
+   */
+  export type LoginAttemptDeleteArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the LoginAttempt
+     */
+    select?: LoginAttemptSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the LoginAttempt
+     */
+    omit?: LoginAttemptOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: LoginAttemptInclude<ExtArgs> | null
+    /**
+     * Filter which LoginAttempt to delete.
+     */
+    where: LoginAttemptWhereUniqueInput
+  }
+
+  /**
+   * LoginAttempt deleteMany
+   */
+  export type LoginAttemptDeleteManyArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Filter which LoginAttempts to delete
+     */
+    where?: LoginAttemptWhereInput
+    /**
+     * Limit how many LoginAttempts to delete.
+     */
+    limit?: number
+  }
+
+  /**
+   * LoginAttempt.user
+   */
+  export type LoginAttempt$userArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the User
+     */
+    select?: UserSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the User
+     */
+    omit?: UserOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: UserInclude<ExtArgs> | null
+    where?: UserWhereInput
+  }
+
+  /**
+   * LoginAttempt without action
+   */
+  export type LoginAttemptDefaultArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the LoginAttempt
+     */
+    select?: LoginAttemptSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the LoginAttempt
+     */
+    omit?: LoginAttemptOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: LoginAttemptInclude<ExtArgs> | null
+  }
+
+
+  /**
    * Enums
    */
 
@@ -52219,6 +53577,24 @@ export namespace Prisma {
   export type AffiliateTierScalarFieldEnum = (typeof AffiliateTierScalarFieldEnum)[keyof typeof AffiliateTierScalarFieldEnum]
 
 
+  export const LoginAttemptScalarFieldEnum: {
+    id: 'id',
+    uid: 'uid',
+    userId: 'userId',
+    result: 'result',
+    failureReason: 'failureReason',
+    ipAddress: 'ipAddress',
+    userAgent: 'userAgent',
+    deviceFingerprint: 'deviceFingerprint',
+    isMobile: 'isMobile',
+    attemptedAt: 'attemptedAt',
+    email: 'email',
+    isAdmin: 'isAdmin'
+  };
+
+  export type LoginAttemptScalarFieldEnum = (typeof LoginAttemptScalarFieldEnum)[keyof typeof LoginAttemptScalarFieldEnum]
+
+
   export const SortOrder: {
     asc: 'asc',
     desc: 'desc'
@@ -52812,6 +54188,34 @@ export namespace Prisma {
 
 
   /**
+   * Reference to a field of type 'LoginAttemptResult'
+   */
+  export type EnumLoginAttemptResultFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaModel, 'LoginAttemptResult'>
+    
+
+
+  /**
+   * Reference to a field of type 'LoginAttemptResult[]'
+   */
+  export type ListEnumLoginAttemptResultFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaModel, 'LoginAttemptResult[]'>
+    
+
+
+  /**
+   * Reference to a field of type 'LoginFailureReason'
+   */
+  export type EnumLoginFailureReasonFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaModel, 'LoginFailureReason'>
+    
+
+
+  /**
+   * Reference to a field of type 'LoginFailureReason[]'
+   */
+  export type ListEnumLoginFailureReasonFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaModel, 'LoginFailureReason[]'>
+    
+
+
+  /**
    * Reference to a field of type 'Float'
    */
   export type FloatFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaModel, 'Float'>
@@ -52871,6 +54275,7 @@ export namespace Prisma {
     UserToken?: UserTokenListRelationFilter
     VipHistory?: VipHistoryListRelationFilter
     VipMembership?: XOR<VipMembershipNullableScalarRelationFilter, VipMembershipWhereInput> | null
+    loginAttempts?: LoginAttemptListRelationFilter
   }
 
   export type UserOrderByWithRelationInput = {
@@ -52913,6 +54318,7 @@ export namespace Prisma {
     UserToken?: UserTokenOrderByRelationAggregateInput
     VipHistory?: VipHistoryOrderByRelationAggregateInput
     VipMembership?: VipMembershipOrderByWithRelationInput
+    loginAttempts?: LoginAttemptOrderByRelationAggregateInput
   }
 
   export type UserWhereUniqueInput = Prisma.AtLeast<{
@@ -52958,6 +54364,7 @@ export namespace Prisma {
     UserToken?: UserTokenListRelationFilter
     VipHistory?: VipHistoryListRelationFilter
     VipMembership?: XOR<VipMembershipNullableScalarRelationFilter, VipMembershipWhereInput> | null
+    loginAttempts?: LoginAttemptListRelationFilter
   }, "id" | "numericId" | "whitecliffId" | "whitecliffSystemId" | "whitecliffUsername" | "dcsId" | "email">
 
   export type UserOrderByWithAggregationInput = {
@@ -56456,6 +57863,98 @@ export namespace Prisma {
     id?: BigIntWithAggregatesFilter<"AffiliateTier"> | bigint | number
   }
 
+  export type LoginAttemptWhereInput = {
+    AND?: LoginAttemptWhereInput | LoginAttemptWhereInput[]
+    OR?: LoginAttemptWhereInput[]
+    NOT?: LoginAttemptWhereInput | LoginAttemptWhereInput[]
+    id?: BigIntFilter<"LoginAttempt"> | bigint | number
+    uid?: StringFilter<"LoginAttempt"> | string
+    userId?: StringNullableFilter<"LoginAttempt"> | string | null
+    result?: EnumLoginAttemptResultFilter<"LoginAttempt"> | $Enums.LoginAttemptResult
+    failureReason?: EnumLoginFailureReasonNullableFilter<"LoginAttempt"> | $Enums.LoginFailureReason | null
+    ipAddress?: StringNullableFilter<"LoginAttempt"> | string | null
+    userAgent?: StringNullableFilter<"LoginAttempt"> | string | null
+    deviceFingerprint?: StringNullableFilter<"LoginAttempt"> | string | null
+    isMobile?: BoolNullableFilter<"LoginAttempt"> | boolean | null
+    attemptedAt?: DateTimeFilter<"LoginAttempt"> | Date | string
+    email?: StringNullableFilter<"LoginAttempt"> | string | null
+    isAdmin?: BoolFilter<"LoginAttempt"> | boolean
+    user?: XOR<UserNullableScalarRelationFilter, UserWhereInput> | null
+  }
+
+  export type LoginAttemptOrderByWithRelationInput = {
+    id?: SortOrder
+    uid?: SortOrder
+    userId?: SortOrderInput | SortOrder
+    result?: SortOrder
+    failureReason?: SortOrderInput | SortOrder
+    ipAddress?: SortOrderInput | SortOrder
+    userAgent?: SortOrderInput | SortOrder
+    deviceFingerprint?: SortOrderInput | SortOrder
+    isMobile?: SortOrderInput | SortOrder
+    attemptedAt?: SortOrder
+    email?: SortOrderInput | SortOrder
+    isAdmin?: SortOrder
+    user?: UserOrderByWithRelationInput
+  }
+
+  export type LoginAttemptWhereUniqueInput = Prisma.AtLeast<{
+    id?: bigint | number
+    uid?: string
+    AND?: LoginAttemptWhereInput | LoginAttemptWhereInput[]
+    OR?: LoginAttemptWhereInput[]
+    NOT?: LoginAttemptWhereInput | LoginAttemptWhereInput[]
+    userId?: StringNullableFilter<"LoginAttempt"> | string | null
+    result?: EnumLoginAttemptResultFilter<"LoginAttempt"> | $Enums.LoginAttemptResult
+    failureReason?: EnumLoginFailureReasonNullableFilter<"LoginAttempt"> | $Enums.LoginFailureReason | null
+    ipAddress?: StringNullableFilter<"LoginAttempt"> | string | null
+    userAgent?: StringNullableFilter<"LoginAttempt"> | string | null
+    deviceFingerprint?: StringNullableFilter<"LoginAttempt"> | string | null
+    isMobile?: BoolNullableFilter<"LoginAttempt"> | boolean | null
+    attemptedAt?: DateTimeFilter<"LoginAttempt"> | Date | string
+    email?: StringNullableFilter<"LoginAttempt"> | string | null
+    isAdmin?: BoolFilter<"LoginAttempt"> | boolean
+    user?: XOR<UserNullableScalarRelationFilter, UserWhereInput> | null
+  }, "id" | "uid">
+
+  export type LoginAttemptOrderByWithAggregationInput = {
+    id?: SortOrder
+    uid?: SortOrder
+    userId?: SortOrderInput | SortOrder
+    result?: SortOrder
+    failureReason?: SortOrderInput | SortOrder
+    ipAddress?: SortOrderInput | SortOrder
+    userAgent?: SortOrderInput | SortOrder
+    deviceFingerprint?: SortOrderInput | SortOrder
+    isMobile?: SortOrderInput | SortOrder
+    attemptedAt?: SortOrder
+    email?: SortOrderInput | SortOrder
+    isAdmin?: SortOrder
+    _count?: LoginAttemptCountOrderByAggregateInput
+    _avg?: LoginAttemptAvgOrderByAggregateInput
+    _max?: LoginAttemptMaxOrderByAggregateInput
+    _min?: LoginAttemptMinOrderByAggregateInput
+    _sum?: LoginAttemptSumOrderByAggregateInput
+  }
+
+  export type LoginAttemptScalarWhereWithAggregatesInput = {
+    AND?: LoginAttemptScalarWhereWithAggregatesInput | LoginAttemptScalarWhereWithAggregatesInput[]
+    OR?: LoginAttemptScalarWhereWithAggregatesInput[]
+    NOT?: LoginAttemptScalarWhereWithAggregatesInput | LoginAttemptScalarWhereWithAggregatesInput[]
+    id?: BigIntWithAggregatesFilter<"LoginAttempt"> | bigint | number
+    uid?: StringWithAggregatesFilter<"LoginAttempt"> | string
+    userId?: StringNullableWithAggregatesFilter<"LoginAttempt"> | string | null
+    result?: EnumLoginAttemptResultWithAggregatesFilter<"LoginAttempt"> | $Enums.LoginAttemptResult
+    failureReason?: EnumLoginFailureReasonNullableWithAggregatesFilter<"LoginAttempt"> | $Enums.LoginFailureReason | null
+    ipAddress?: StringNullableWithAggregatesFilter<"LoginAttempt"> | string | null
+    userAgent?: StringNullableWithAggregatesFilter<"LoginAttempt"> | string | null
+    deviceFingerprint?: StringNullableWithAggregatesFilter<"LoginAttempt"> | string | null
+    isMobile?: BoolNullableWithAggregatesFilter<"LoginAttempt"> | boolean | null
+    attemptedAt?: DateTimeWithAggregatesFilter<"LoginAttempt"> | Date | string
+    email?: StringNullableWithAggregatesFilter<"LoginAttempt"> | string | null
+    isAdmin?: BoolWithAggregatesFilter<"LoginAttempt"> | boolean
+  }
+
   export type UserCreateInput = {
     id?: string
     numericId?: number
@@ -56496,6 +57995,7 @@ export namespace Prisma {
     UserToken?: UserTokenCreateNestedManyWithoutUserInput
     VipHistory?: VipHistoryCreateNestedManyWithoutUserInput
     VipMembership?: VipMembershipCreateNestedOneWithoutUserInput
+    loginAttempts?: LoginAttemptCreateNestedManyWithoutUserInput
   }
 
   export type UserUncheckedCreateInput = {
@@ -56538,6 +58038,7 @@ export namespace Prisma {
     UserToken?: UserTokenUncheckedCreateNestedManyWithoutUserInput
     VipHistory?: VipHistoryUncheckedCreateNestedManyWithoutUserInput
     VipMembership?: VipMembershipUncheckedCreateNestedOneWithoutUserInput
+    loginAttempts?: LoginAttemptUncheckedCreateNestedManyWithoutUserInput
   }
 
   export type UserUpdateInput = {
@@ -56579,6 +58080,7 @@ export namespace Prisma {
     UserToken?: UserTokenUpdateManyWithoutUserNestedInput
     VipHistory?: VipHistoryUpdateManyWithoutUserNestedInput
     VipMembership?: VipMembershipUpdateOneWithoutUserNestedInput
+    loginAttempts?: LoginAttemptUpdateManyWithoutUserNestedInput
   }
 
   export type UserUncheckedUpdateInput = {
@@ -56621,6 +58123,7 @@ export namespace Prisma {
     UserToken?: UserTokenUncheckedUpdateManyWithoutUserNestedInput
     VipHistory?: VipHistoryUncheckedUpdateManyWithoutUserNestedInput
     VipMembership?: VipMembershipUncheckedUpdateOneWithoutUserNestedInput
+    loginAttempts?: LoginAttemptUncheckedUpdateManyWithoutUserNestedInput
   }
 
   export type UserCreateManyInput = {
@@ -60506,6 +62009,110 @@ export namespace Prisma {
     id?: BigIntFieldUpdateOperationsInput | bigint | number
   }
 
+  export type LoginAttemptCreateInput = {
+    id?: bigint | number
+    uid: string
+    result: $Enums.LoginAttemptResult
+    failureReason?: $Enums.LoginFailureReason | null
+    ipAddress?: string | null
+    userAgent?: string | null
+    deviceFingerprint?: string | null
+    isMobile?: boolean | null
+    attemptedAt?: Date | string
+    email?: string | null
+    isAdmin?: boolean
+    user?: UserCreateNestedOneWithoutLoginAttemptsInput
+  }
+
+  export type LoginAttemptUncheckedCreateInput = {
+    id?: bigint | number
+    uid: string
+    userId?: string | null
+    result: $Enums.LoginAttemptResult
+    failureReason?: $Enums.LoginFailureReason | null
+    ipAddress?: string | null
+    userAgent?: string | null
+    deviceFingerprint?: string | null
+    isMobile?: boolean | null
+    attemptedAt?: Date | string
+    email?: string | null
+    isAdmin?: boolean
+  }
+
+  export type LoginAttemptUpdateInput = {
+    id?: BigIntFieldUpdateOperationsInput | bigint | number
+    uid?: StringFieldUpdateOperationsInput | string
+    result?: EnumLoginAttemptResultFieldUpdateOperationsInput | $Enums.LoginAttemptResult
+    failureReason?: NullableEnumLoginFailureReasonFieldUpdateOperationsInput | $Enums.LoginFailureReason | null
+    ipAddress?: NullableStringFieldUpdateOperationsInput | string | null
+    userAgent?: NullableStringFieldUpdateOperationsInput | string | null
+    deviceFingerprint?: NullableStringFieldUpdateOperationsInput | string | null
+    isMobile?: NullableBoolFieldUpdateOperationsInput | boolean | null
+    attemptedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    email?: NullableStringFieldUpdateOperationsInput | string | null
+    isAdmin?: BoolFieldUpdateOperationsInput | boolean
+    user?: UserUpdateOneWithoutLoginAttemptsNestedInput
+  }
+
+  export type LoginAttemptUncheckedUpdateInput = {
+    id?: BigIntFieldUpdateOperationsInput | bigint | number
+    uid?: StringFieldUpdateOperationsInput | string
+    userId?: NullableStringFieldUpdateOperationsInput | string | null
+    result?: EnumLoginAttemptResultFieldUpdateOperationsInput | $Enums.LoginAttemptResult
+    failureReason?: NullableEnumLoginFailureReasonFieldUpdateOperationsInput | $Enums.LoginFailureReason | null
+    ipAddress?: NullableStringFieldUpdateOperationsInput | string | null
+    userAgent?: NullableStringFieldUpdateOperationsInput | string | null
+    deviceFingerprint?: NullableStringFieldUpdateOperationsInput | string | null
+    isMobile?: NullableBoolFieldUpdateOperationsInput | boolean | null
+    attemptedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    email?: NullableStringFieldUpdateOperationsInput | string | null
+    isAdmin?: BoolFieldUpdateOperationsInput | boolean
+  }
+
+  export type LoginAttemptCreateManyInput = {
+    id?: bigint | number
+    uid: string
+    userId?: string | null
+    result: $Enums.LoginAttemptResult
+    failureReason?: $Enums.LoginFailureReason | null
+    ipAddress?: string | null
+    userAgent?: string | null
+    deviceFingerprint?: string | null
+    isMobile?: boolean | null
+    attemptedAt?: Date | string
+    email?: string | null
+    isAdmin?: boolean
+  }
+
+  export type LoginAttemptUpdateManyMutationInput = {
+    id?: BigIntFieldUpdateOperationsInput | bigint | number
+    uid?: StringFieldUpdateOperationsInput | string
+    result?: EnumLoginAttemptResultFieldUpdateOperationsInput | $Enums.LoginAttemptResult
+    failureReason?: NullableEnumLoginFailureReasonFieldUpdateOperationsInput | $Enums.LoginFailureReason | null
+    ipAddress?: NullableStringFieldUpdateOperationsInput | string | null
+    userAgent?: NullableStringFieldUpdateOperationsInput | string | null
+    deviceFingerprint?: NullableStringFieldUpdateOperationsInput | string | null
+    isMobile?: NullableBoolFieldUpdateOperationsInput | boolean | null
+    attemptedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    email?: NullableStringFieldUpdateOperationsInput | string | null
+    isAdmin?: BoolFieldUpdateOperationsInput | boolean
+  }
+
+  export type LoginAttemptUncheckedUpdateManyInput = {
+    id?: BigIntFieldUpdateOperationsInput | bigint | number
+    uid?: StringFieldUpdateOperationsInput | string
+    userId?: NullableStringFieldUpdateOperationsInput | string | null
+    result?: EnumLoginAttemptResultFieldUpdateOperationsInput | $Enums.LoginAttemptResult
+    failureReason?: NullableEnumLoginFailureReasonFieldUpdateOperationsInput | $Enums.LoginFailureReason | null
+    ipAddress?: NullableStringFieldUpdateOperationsInput | string | null
+    userAgent?: NullableStringFieldUpdateOperationsInput | string | null
+    deviceFingerprint?: NullableStringFieldUpdateOperationsInput | string | null
+    isMobile?: NullableBoolFieldUpdateOperationsInput | boolean | null
+    attemptedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    email?: NullableStringFieldUpdateOperationsInput | string | null
+    isAdmin?: BoolFieldUpdateOperationsInput | boolean
+  }
+
   export type StringFilter<$PrismaModel = never> = {
     equals?: string | StringFieldRefInput<$PrismaModel>
     in?: string[] | ListStringFieldRefInput<$PrismaModel>
@@ -60721,6 +62328,12 @@ export namespace Prisma {
     isNot?: VipMembershipWhereInput | null
   }
 
+  export type LoginAttemptListRelationFilter = {
+    every?: LoginAttemptWhereInput
+    some?: LoginAttemptWhereInput
+    none?: LoginAttemptWhereInput
+  }
+
   export type SortOrderInput = {
     sort: SortOrder
     nulls?: NullsOrder
@@ -60787,6 +62400,10 @@ export namespace Prisma {
   }
 
   export type VipHistoryOrderByRelationAggregateInput = {
+    _count?: SortOrder
+  }
+
+  export type LoginAttemptOrderByRelationAggregateInput = {
     _count?: SortOrder
   }
 
@@ -64083,6 +65700,93 @@ export namespace Prisma {
     _max?: NestedEnumAffiliateTierLevelFilter<$PrismaModel>
   }
 
+  export type EnumLoginAttemptResultFilter<$PrismaModel = never> = {
+    equals?: $Enums.LoginAttemptResult | EnumLoginAttemptResultFieldRefInput<$PrismaModel>
+    in?: $Enums.LoginAttemptResult[] | ListEnumLoginAttemptResultFieldRefInput<$PrismaModel>
+    notIn?: $Enums.LoginAttemptResult[] | ListEnumLoginAttemptResultFieldRefInput<$PrismaModel>
+    not?: NestedEnumLoginAttemptResultFilter<$PrismaModel> | $Enums.LoginAttemptResult
+  }
+
+  export type EnumLoginFailureReasonNullableFilter<$PrismaModel = never> = {
+    equals?: $Enums.LoginFailureReason | EnumLoginFailureReasonFieldRefInput<$PrismaModel> | null
+    in?: $Enums.LoginFailureReason[] | ListEnumLoginFailureReasonFieldRefInput<$PrismaModel> | null
+    notIn?: $Enums.LoginFailureReason[] | ListEnumLoginFailureReasonFieldRefInput<$PrismaModel> | null
+    not?: NestedEnumLoginFailureReasonNullableFilter<$PrismaModel> | $Enums.LoginFailureReason | null
+  }
+
+  export type LoginAttemptCountOrderByAggregateInput = {
+    id?: SortOrder
+    uid?: SortOrder
+    userId?: SortOrder
+    result?: SortOrder
+    failureReason?: SortOrder
+    ipAddress?: SortOrder
+    userAgent?: SortOrder
+    deviceFingerprint?: SortOrder
+    isMobile?: SortOrder
+    attemptedAt?: SortOrder
+    email?: SortOrder
+    isAdmin?: SortOrder
+  }
+
+  export type LoginAttemptAvgOrderByAggregateInput = {
+    id?: SortOrder
+  }
+
+  export type LoginAttemptMaxOrderByAggregateInput = {
+    id?: SortOrder
+    uid?: SortOrder
+    userId?: SortOrder
+    result?: SortOrder
+    failureReason?: SortOrder
+    ipAddress?: SortOrder
+    userAgent?: SortOrder
+    deviceFingerprint?: SortOrder
+    isMobile?: SortOrder
+    attemptedAt?: SortOrder
+    email?: SortOrder
+    isAdmin?: SortOrder
+  }
+
+  export type LoginAttemptMinOrderByAggregateInput = {
+    id?: SortOrder
+    uid?: SortOrder
+    userId?: SortOrder
+    result?: SortOrder
+    failureReason?: SortOrder
+    ipAddress?: SortOrder
+    userAgent?: SortOrder
+    deviceFingerprint?: SortOrder
+    isMobile?: SortOrder
+    attemptedAt?: SortOrder
+    email?: SortOrder
+    isAdmin?: SortOrder
+  }
+
+  export type LoginAttemptSumOrderByAggregateInput = {
+    id?: SortOrder
+  }
+
+  export type EnumLoginAttemptResultWithAggregatesFilter<$PrismaModel = never> = {
+    equals?: $Enums.LoginAttemptResult | EnumLoginAttemptResultFieldRefInput<$PrismaModel>
+    in?: $Enums.LoginAttemptResult[] | ListEnumLoginAttemptResultFieldRefInput<$PrismaModel>
+    notIn?: $Enums.LoginAttemptResult[] | ListEnumLoginAttemptResultFieldRefInput<$PrismaModel>
+    not?: NestedEnumLoginAttemptResultWithAggregatesFilter<$PrismaModel> | $Enums.LoginAttemptResult
+    _count?: NestedIntFilter<$PrismaModel>
+    _min?: NestedEnumLoginAttemptResultFilter<$PrismaModel>
+    _max?: NestedEnumLoginAttemptResultFilter<$PrismaModel>
+  }
+
+  export type EnumLoginFailureReasonNullableWithAggregatesFilter<$PrismaModel = never> = {
+    equals?: $Enums.LoginFailureReason | EnumLoginFailureReasonFieldRefInput<$PrismaModel> | null
+    in?: $Enums.LoginFailureReason[] | ListEnumLoginFailureReasonFieldRefInput<$PrismaModel> | null
+    notIn?: $Enums.LoginFailureReason[] | ListEnumLoginFailureReasonFieldRefInput<$PrismaModel> | null
+    not?: NestedEnumLoginFailureReasonNullableWithAggregatesFilter<$PrismaModel> | $Enums.LoginFailureReason | null
+    _count?: NestedIntNullableFilter<$PrismaModel>
+    _min?: NestedEnumLoginFailureReasonNullableFilter<$PrismaModel>
+    _max?: NestedEnumLoginFailureReasonNullableFilter<$PrismaModel>
+  }
+
   export type AffiliateCodeCreateNestedManyWithoutUserInput = {
     create?: XOR<AffiliateCodeCreateWithoutUserInput, AffiliateCodeUncheckedCreateWithoutUserInput> | AffiliateCodeCreateWithoutUserInput[] | AffiliateCodeUncheckedCreateWithoutUserInput[]
     connectOrCreate?: AffiliateCodeCreateOrConnectWithoutUserInput | AffiliateCodeCreateOrConnectWithoutUserInput[]
@@ -64221,6 +65925,13 @@ export namespace Prisma {
     connect?: VipMembershipWhereUniqueInput
   }
 
+  export type LoginAttemptCreateNestedManyWithoutUserInput = {
+    create?: XOR<LoginAttemptCreateWithoutUserInput, LoginAttemptUncheckedCreateWithoutUserInput> | LoginAttemptCreateWithoutUserInput[] | LoginAttemptUncheckedCreateWithoutUserInput[]
+    connectOrCreate?: LoginAttemptCreateOrConnectWithoutUserInput | LoginAttemptCreateOrConnectWithoutUserInput[]
+    createMany?: LoginAttemptCreateManyUserInputEnvelope
+    connect?: LoginAttemptWhereUniqueInput | LoginAttemptWhereUniqueInput[]
+  }
+
   export type AffiliateCodeUncheckedCreateNestedManyWithoutUserInput = {
     create?: XOR<AffiliateCodeCreateWithoutUserInput, AffiliateCodeUncheckedCreateWithoutUserInput> | AffiliateCodeCreateWithoutUserInput[] | AffiliateCodeUncheckedCreateWithoutUserInput[]
     connectOrCreate?: AffiliateCodeCreateOrConnectWithoutUserInput | AffiliateCodeCreateOrConnectWithoutUserInput[]
@@ -64357,6 +66068,13 @@ export namespace Prisma {
     create?: XOR<VipMembershipCreateWithoutUserInput, VipMembershipUncheckedCreateWithoutUserInput>
     connectOrCreate?: VipMembershipCreateOrConnectWithoutUserInput
     connect?: VipMembershipWhereUniqueInput
+  }
+
+  export type LoginAttemptUncheckedCreateNestedManyWithoutUserInput = {
+    create?: XOR<LoginAttemptCreateWithoutUserInput, LoginAttemptUncheckedCreateWithoutUserInput> | LoginAttemptCreateWithoutUserInput[] | LoginAttemptUncheckedCreateWithoutUserInput[]
+    connectOrCreate?: LoginAttemptCreateOrConnectWithoutUserInput | LoginAttemptCreateOrConnectWithoutUserInput[]
+    createMany?: LoginAttemptCreateManyUserInputEnvelope
+    connect?: LoginAttemptWhereUniqueInput | LoginAttemptWhereUniqueInput[]
   }
 
   export type StringFieldUpdateOperationsInput = {
@@ -64679,6 +66397,20 @@ export namespace Prisma {
     update?: XOR<XOR<VipMembershipUpdateToOneWithWhereWithoutUserInput, VipMembershipUpdateWithoutUserInput>, VipMembershipUncheckedUpdateWithoutUserInput>
   }
 
+  export type LoginAttemptUpdateManyWithoutUserNestedInput = {
+    create?: XOR<LoginAttemptCreateWithoutUserInput, LoginAttemptUncheckedCreateWithoutUserInput> | LoginAttemptCreateWithoutUserInput[] | LoginAttemptUncheckedCreateWithoutUserInput[]
+    connectOrCreate?: LoginAttemptCreateOrConnectWithoutUserInput | LoginAttemptCreateOrConnectWithoutUserInput[]
+    upsert?: LoginAttemptUpsertWithWhereUniqueWithoutUserInput | LoginAttemptUpsertWithWhereUniqueWithoutUserInput[]
+    createMany?: LoginAttemptCreateManyUserInputEnvelope
+    set?: LoginAttemptWhereUniqueInput | LoginAttemptWhereUniqueInput[]
+    disconnect?: LoginAttemptWhereUniqueInput | LoginAttemptWhereUniqueInput[]
+    delete?: LoginAttemptWhereUniqueInput | LoginAttemptWhereUniqueInput[]
+    connect?: LoginAttemptWhereUniqueInput | LoginAttemptWhereUniqueInput[]
+    update?: LoginAttemptUpdateWithWhereUniqueWithoutUserInput | LoginAttemptUpdateWithWhereUniqueWithoutUserInput[]
+    updateMany?: LoginAttemptUpdateManyWithWhereWithoutUserInput | LoginAttemptUpdateManyWithWhereWithoutUserInput[]
+    deleteMany?: LoginAttemptScalarWhereInput | LoginAttemptScalarWhereInput[]
+  }
+
   export type IntFieldUpdateOperationsInput = {
     set?: number
     increment?: number
@@ -64957,6 +66689,20 @@ export namespace Prisma {
     delete?: VipMembershipWhereInput | boolean
     connect?: VipMembershipWhereUniqueInput
     update?: XOR<XOR<VipMembershipUpdateToOneWithWhereWithoutUserInput, VipMembershipUpdateWithoutUserInput>, VipMembershipUncheckedUpdateWithoutUserInput>
+  }
+
+  export type LoginAttemptUncheckedUpdateManyWithoutUserNestedInput = {
+    create?: XOR<LoginAttemptCreateWithoutUserInput, LoginAttemptUncheckedCreateWithoutUserInput> | LoginAttemptCreateWithoutUserInput[] | LoginAttemptUncheckedCreateWithoutUserInput[]
+    connectOrCreate?: LoginAttemptCreateOrConnectWithoutUserInput | LoginAttemptCreateOrConnectWithoutUserInput[]
+    upsert?: LoginAttemptUpsertWithWhereUniqueWithoutUserInput | LoginAttemptUpsertWithWhereUniqueWithoutUserInput[]
+    createMany?: LoginAttemptCreateManyUserInputEnvelope
+    set?: LoginAttemptWhereUniqueInput | LoginAttemptWhereUniqueInput[]
+    disconnect?: LoginAttemptWhereUniqueInput | LoginAttemptWhereUniqueInput[]
+    delete?: LoginAttemptWhereUniqueInput | LoginAttemptWhereUniqueInput[]
+    connect?: LoginAttemptWhereUniqueInput | LoginAttemptWhereUniqueInput[]
+    update?: LoginAttemptUpdateWithWhereUniqueWithoutUserInput | LoginAttemptUpdateWithWhereUniqueWithoutUserInput[]
+    updateMany?: LoginAttemptUpdateManyWithWhereWithoutUserInput | LoginAttemptUpdateManyWithWhereWithoutUserInput[]
+    deleteMany?: LoginAttemptScalarWhereInput | LoginAttemptScalarWhereInput[]
   }
 
   export type UserCreateNestedOneWithoutUserSessionInput = {
@@ -66647,6 +68393,30 @@ export namespace Prisma {
     update?: XOR<XOR<UserUpdateToOneWithWhereWithoutAffiliateTierInput, UserUpdateWithoutAffiliateTierInput>, UserUncheckedUpdateWithoutAffiliateTierInput>
   }
 
+  export type UserCreateNestedOneWithoutLoginAttemptsInput = {
+    create?: XOR<UserCreateWithoutLoginAttemptsInput, UserUncheckedCreateWithoutLoginAttemptsInput>
+    connectOrCreate?: UserCreateOrConnectWithoutLoginAttemptsInput
+    connect?: UserWhereUniqueInput
+  }
+
+  export type EnumLoginAttemptResultFieldUpdateOperationsInput = {
+    set?: $Enums.LoginAttemptResult
+  }
+
+  export type NullableEnumLoginFailureReasonFieldUpdateOperationsInput = {
+    set?: $Enums.LoginFailureReason | null
+  }
+
+  export type UserUpdateOneWithoutLoginAttemptsNestedInput = {
+    create?: XOR<UserCreateWithoutLoginAttemptsInput, UserUncheckedCreateWithoutLoginAttemptsInput>
+    connectOrCreate?: UserCreateOrConnectWithoutLoginAttemptsInput
+    upsert?: UserUpsertWithoutLoginAttemptsInput
+    disconnect?: UserWhereInput | boolean
+    delete?: UserWhereInput | boolean
+    connect?: UserWhereUniqueInput
+    update?: XOR<XOR<UserUpdateToOneWithWhereWithoutLoginAttemptsInput, UserUpdateWithoutLoginAttemptsInput>, UserUncheckedUpdateWithoutLoginAttemptsInput>
+  }
+
   export type NestedStringFilter<$PrismaModel = never> = {
     equals?: string | StringFieldRefInput<$PrismaModel>
     in?: string[] | ListStringFieldRefInput<$PrismaModel>
@@ -67593,6 +69363,40 @@ export namespace Prisma {
     _max?: NestedEnumAffiliateTierLevelFilter<$PrismaModel>
   }
 
+  export type NestedEnumLoginAttemptResultFilter<$PrismaModel = never> = {
+    equals?: $Enums.LoginAttemptResult | EnumLoginAttemptResultFieldRefInput<$PrismaModel>
+    in?: $Enums.LoginAttemptResult[] | ListEnumLoginAttemptResultFieldRefInput<$PrismaModel>
+    notIn?: $Enums.LoginAttemptResult[] | ListEnumLoginAttemptResultFieldRefInput<$PrismaModel>
+    not?: NestedEnumLoginAttemptResultFilter<$PrismaModel> | $Enums.LoginAttemptResult
+  }
+
+  export type NestedEnumLoginFailureReasonNullableFilter<$PrismaModel = never> = {
+    equals?: $Enums.LoginFailureReason | EnumLoginFailureReasonFieldRefInput<$PrismaModel> | null
+    in?: $Enums.LoginFailureReason[] | ListEnumLoginFailureReasonFieldRefInput<$PrismaModel> | null
+    notIn?: $Enums.LoginFailureReason[] | ListEnumLoginFailureReasonFieldRefInput<$PrismaModel> | null
+    not?: NestedEnumLoginFailureReasonNullableFilter<$PrismaModel> | $Enums.LoginFailureReason | null
+  }
+
+  export type NestedEnumLoginAttemptResultWithAggregatesFilter<$PrismaModel = never> = {
+    equals?: $Enums.LoginAttemptResult | EnumLoginAttemptResultFieldRefInput<$PrismaModel>
+    in?: $Enums.LoginAttemptResult[] | ListEnumLoginAttemptResultFieldRefInput<$PrismaModel>
+    notIn?: $Enums.LoginAttemptResult[] | ListEnumLoginAttemptResultFieldRefInput<$PrismaModel>
+    not?: NestedEnumLoginAttemptResultWithAggregatesFilter<$PrismaModel> | $Enums.LoginAttemptResult
+    _count?: NestedIntFilter<$PrismaModel>
+    _min?: NestedEnumLoginAttemptResultFilter<$PrismaModel>
+    _max?: NestedEnumLoginAttemptResultFilter<$PrismaModel>
+  }
+
+  export type NestedEnumLoginFailureReasonNullableWithAggregatesFilter<$PrismaModel = never> = {
+    equals?: $Enums.LoginFailureReason | EnumLoginFailureReasonFieldRefInput<$PrismaModel> | null
+    in?: $Enums.LoginFailureReason[] | ListEnumLoginFailureReasonFieldRefInput<$PrismaModel> | null
+    notIn?: $Enums.LoginFailureReason[] | ListEnumLoginFailureReasonFieldRefInput<$PrismaModel> | null
+    not?: NestedEnumLoginFailureReasonNullableWithAggregatesFilter<$PrismaModel> | $Enums.LoginFailureReason | null
+    _count?: NestedIntNullableFilter<$PrismaModel>
+    _min?: NestedEnumLoginFailureReasonNullableFilter<$PrismaModel>
+    _max?: NestedEnumLoginFailureReasonNullableFilter<$PrismaModel>
+  }
+
   export type AffiliateCodeCreateWithoutUserInput = {
     id?: string
     code: string
@@ -68301,6 +70105,44 @@ export namespace Prisma {
     create: XOR<VipMembershipCreateWithoutUserInput, VipMembershipUncheckedCreateWithoutUserInput>
   }
 
+  export type LoginAttemptCreateWithoutUserInput = {
+    id?: bigint | number
+    uid: string
+    result: $Enums.LoginAttemptResult
+    failureReason?: $Enums.LoginFailureReason | null
+    ipAddress?: string | null
+    userAgent?: string | null
+    deviceFingerprint?: string | null
+    isMobile?: boolean | null
+    attemptedAt?: Date | string
+    email?: string | null
+    isAdmin?: boolean
+  }
+
+  export type LoginAttemptUncheckedCreateWithoutUserInput = {
+    id?: bigint | number
+    uid: string
+    result: $Enums.LoginAttemptResult
+    failureReason?: $Enums.LoginFailureReason | null
+    ipAddress?: string | null
+    userAgent?: string | null
+    deviceFingerprint?: string | null
+    isMobile?: boolean | null
+    attemptedAt?: Date | string
+    email?: string | null
+    isAdmin?: boolean
+  }
+
+  export type LoginAttemptCreateOrConnectWithoutUserInput = {
+    where: LoginAttemptWhereUniqueInput
+    create: XOR<LoginAttemptCreateWithoutUserInput, LoginAttemptUncheckedCreateWithoutUserInput>
+  }
+
+  export type LoginAttemptCreateManyUserInputEnvelope = {
+    data: LoginAttemptCreateManyUserInput | LoginAttemptCreateManyUserInput[]
+    skipDuplicates?: boolean
+  }
+
   export type AffiliateCodeUpsertWithWhereUniqueWithoutUserInput = {
     where: AffiliateCodeWhereUniqueInput
     update: XOR<AffiliateCodeUpdateWithoutUserInput, AffiliateCodeUncheckedUpdateWithoutUserInput>
@@ -68921,6 +70763,40 @@ export namespace Prisma {
     histories?: VipHistoryUncheckedUpdateManyWithoutVipMembershipNestedInput
   }
 
+  export type LoginAttemptUpsertWithWhereUniqueWithoutUserInput = {
+    where: LoginAttemptWhereUniqueInput
+    update: XOR<LoginAttemptUpdateWithoutUserInput, LoginAttemptUncheckedUpdateWithoutUserInput>
+    create: XOR<LoginAttemptCreateWithoutUserInput, LoginAttemptUncheckedCreateWithoutUserInput>
+  }
+
+  export type LoginAttemptUpdateWithWhereUniqueWithoutUserInput = {
+    where: LoginAttemptWhereUniqueInput
+    data: XOR<LoginAttemptUpdateWithoutUserInput, LoginAttemptUncheckedUpdateWithoutUserInput>
+  }
+
+  export type LoginAttemptUpdateManyWithWhereWithoutUserInput = {
+    where: LoginAttemptScalarWhereInput
+    data: XOR<LoginAttemptUpdateManyMutationInput, LoginAttemptUncheckedUpdateManyWithoutUserInput>
+  }
+
+  export type LoginAttemptScalarWhereInput = {
+    AND?: LoginAttemptScalarWhereInput | LoginAttemptScalarWhereInput[]
+    OR?: LoginAttemptScalarWhereInput[]
+    NOT?: LoginAttemptScalarWhereInput | LoginAttemptScalarWhereInput[]
+    id?: BigIntFilter<"LoginAttempt"> | bigint | number
+    uid?: StringFilter<"LoginAttempt"> | string
+    userId?: StringNullableFilter<"LoginAttempt"> | string | null
+    result?: EnumLoginAttemptResultFilter<"LoginAttempt"> | $Enums.LoginAttemptResult
+    failureReason?: EnumLoginFailureReasonNullableFilter<"LoginAttempt"> | $Enums.LoginFailureReason | null
+    ipAddress?: StringNullableFilter<"LoginAttempt"> | string | null
+    userAgent?: StringNullableFilter<"LoginAttempt"> | string | null
+    deviceFingerprint?: StringNullableFilter<"LoginAttempt"> | string | null
+    isMobile?: BoolNullableFilter<"LoginAttempt"> | boolean | null
+    attemptedAt?: DateTimeFilter<"LoginAttempt"> | Date | string
+    email?: StringNullableFilter<"LoginAttempt"> | string | null
+    isAdmin?: BoolFilter<"LoginAttempt"> | boolean
+  }
+
   export type UserCreateWithoutUserSessionInput = {
     id?: string
     numericId?: number
@@ -68960,6 +70836,7 @@ export namespace Prisma {
     UserToken?: UserTokenCreateNestedManyWithoutUserInput
     VipHistory?: VipHistoryCreateNestedManyWithoutUserInput
     VipMembership?: VipMembershipCreateNestedOneWithoutUserInput
+    loginAttempts?: LoginAttemptCreateNestedManyWithoutUserInput
   }
 
   export type UserUncheckedCreateWithoutUserSessionInput = {
@@ -69001,6 +70878,7 @@ export namespace Prisma {
     UserToken?: UserTokenUncheckedCreateNestedManyWithoutUserInput
     VipHistory?: VipHistoryUncheckedCreateNestedManyWithoutUserInput
     VipMembership?: VipMembershipUncheckedCreateNestedOneWithoutUserInput
+    loginAttempts?: LoginAttemptUncheckedCreateNestedManyWithoutUserInput
   }
 
   export type UserCreateOrConnectWithoutUserSessionInput = {
@@ -69057,6 +70935,7 @@ export namespace Prisma {
     UserToken?: UserTokenUpdateManyWithoutUserNestedInput
     VipHistory?: VipHistoryUpdateManyWithoutUserNestedInput
     VipMembership?: VipMembershipUpdateOneWithoutUserNestedInput
+    loginAttempts?: LoginAttemptUpdateManyWithoutUserNestedInput
   }
 
   export type UserUncheckedUpdateWithoutUserSessionInput = {
@@ -69098,6 +70977,7 @@ export namespace Prisma {
     UserToken?: UserTokenUncheckedUpdateManyWithoutUserNestedInput
     VipHistory?: VipHistoryUncheckedUpdateManyWithoutUserNestedInput
     VipMembership?: VipMembershipUncheckedUpdateOneWithoutUserNestedInput
+    loginAttempts?: LoginAttemptUncheckedUpdateManyWithoutUserNestedInput
   }
 
   export type UserCreateWithoutBalancesInput = {
@@ -69139,6 +71019,7 @@ export namespace Prisma {
     UserToken?: UserTokenCreateNestedManyWithoutUserInput
     VipHistory?: VipHistoryCreateNestedManyWithoutUserInput
     VipMembership?: VipMembershipCreateNestedOneWithoutUserInput
+    loginAttempts?: LoginAttemptCreateNestedManyWithoutUserInput
   }
 
   export type UserUncheckedCreateWithoutBalancesInput = {
@@ -69180,6 +71061,7 @@ export namespace Prisma {
     UserToken?: UserTokenUncheckedCreateNestedManyWithoutUserInput
     VipHistory?: VipHistoryUncheckedCreateNestedManyWithoutUserInput
     VipMembership?: VipMembershipUncheckedCreateNestedOneWithoutUserInput
+    loginAttempts?: LoginAttemptUncheckedCreateNestedManyWithoutUserInput
   }
 
   export type UserCreateOrConnectWithoutBalancesInput = {
@@ -69236,6 +71118,7 @@ export namespace Prisma {
     UserToken?: UserTokenUpdateManyWithoutUserNestedInput
     VipHistory?: VipHistoryUpdateManyWithoutUserNestedInput
     VipMembership?: VipMembershipUpdateOneWithoutUserNestedInput
+    loginAttempts?: LoginAttemptUpdateManyWithoutUserNestedInput
   }
 
   export type UserUncheckedUpdateWithoutBalancesInput = {
@@ -69277,6 +71160,7 @@ export namespace Prisma {
     UserToken?: UserTokenUncheckedUpdateManyWithoutUserNestedInput
     VipHistory?: VipHistoryUncheckedUpdateManyWithoutUserNestedInput
     VipMembership?: VipMembershipUncheckedUpdateOneWithoutUserNestedInput
+    loginAttempts?: LoginAttemptUncheckedUpdateManyWithoutUserNestedInput
   }
 
   export type UserCreateWithoutUserBalanceStatsInput = {
@@ -69318,6 +71202,7 @@ export namespace Prisma {
     UserToken?: UserTokenCreateNestedManyWithoutUserInput
     VipHistory?: VipHistoryCreateNestedManyWithoutUserInput
     VipMembership?: VipMembershipCreateNestedOneWithoutUserInput
+    loginAttempts?: LoginAttemptCreateNestedManyWithoutUserInput
   }
 
   export type UserUncheckedCreateWithoutUserBalanceStatsInput = {
@@ -69359,6 +71244,7 @@ export namespace Prisma {
     UserToken?: UserTokenUncheckedCreateNestedManyWithoutUserInput
     VipHistory?: VipHistoryUncheckedCreateNestedManyWithoutUserInput
     VipMembership?: VipMembershipUncheckedCreateNestedOneWithoutUserInput
+    loginAttempts?: LoginAttemptUncheckedCreateNestedManyWithoutUserInput
   }
 
   export type UserCreateOrConnectWithoutUserBalanceStatsInput = {
@@ -69415,6 +71301,7 @@ export namespace Prisma {
     UserToken?: UserTokenUpdateManyWithoutUserNestedInput
     VipHistory?: VipHistoryUpdateManyWithoutUserNestedInput
     VipMembership?: VipMembershipUpdateOneWithoutUserNestedInput
+    loginAttempts?: LoginAttemptUpdateManyWithoutUserNestedInput
   }
 
   export type UserUncheckedUpdateWithoutUserBalanceStatsInput = {
@@ -69456,6 +71343,7 @@ export namespace Prisma {
     UserToken?: UserTokenUncheckedUpdateManyWithoutUserNestedInput
     VipHistory?: VipHistoryUncheckedUpdateManyWithoutUserNestedInput
     VipMembership?: VipMembershipUncheckedUpdateOneWithoutUserNestedInput
+    loginAttempts?: LoginAttemptUncheckedUpdateManyWithoutUserNestedInput
   }
 
   export type BonusDetailCreateWithoutGameInput = {
@@ -70114,6 +72002,7 @@ export namespace Prisma {
     UserToken?: UserTokenCreateNestedManyWithoutUserInput
     VipHistory?: VipHistoryCreateNestedManyWithoutUserInput
     VipMembership?: VipMembershipCreateNestedOneWithoutUserInput
+    loginAttempts?: LoginAttemptCreateNestedManyWithoutUserInput
   }
 
   export type UserUncheckedCreateWithoutTransactionsInput = {
@@ -70155,6 +72044,7 @@ export namespace Prisma {
     UserToken?: UserTokenUncheckedCreateNestedManyWithoutUserInput
     VipHistory?: VipHistoryUncheckedCreateNestedManyWithoutUserInput
     VipMembership?: VipMembershipUncheckedCreateNestedOneWithoutUserInput
+    loginAttempts?: LoginAttemptUncheckedCreateNestedManyWithoutUserInput
   }
 
   export type UserCreateOrConnectWithoutTransactionsInput = {
@@ -70510,6 +72400,7 @@ export namespace Prisma {
     UserToken?: UserTokenUpdateManyWithoutUserNestedInput
     VipHistory?: VipHistoryUpdateManyWithoutUserNestedInput
     VipMembership?: VipMembershipUpdateOneWithoutUserNestedInput
+    loginAttempts?: LoginAttemptUpdateManyWithoutUserNestedInput
   }
 
   export type UserUncheckedUpdateWithoutTransactionsInput = {
@@ -70551,6 +72442,7 @@ export namespace Prisma {
     UserToken?: UserTokenUncheckedUpdateManyWithoutUserNestedInput
     VipHistory?: VipHistoryUncheckedUpdateManyWithoutUserNestedInput
     VipMembership?: VipMembershipUncheckedUpdateOneWithoutUserNestedInput
+    loginAttempts?: LoginAttemptUncheckedUpdateManyWithoutUserNestedInput
   }
 
   export type TransactionBalanceDetailUpsertWithWhereUniqueWithoutTransactionInput = {
@@ -72082,6 +73974,7 @@ export namespace Prisma {
     UserToken?: UserTokenCreateNestedManyWithoutUserInput
     VipHistory?: VipHistoryCreateNestedManyWithoutUserInput
     VipMembership?: VipMembershipCreateNestedOneWithoutUserInput
+    loginAttempts?: LoginAttemptCreateNestedManyWithoutUserInput
   }
 
   export type UserUncheckedCreateWithoutCompTransactionInput = {
@@ -72123,6 +74016,7 @@ export namespace Prisma {
     UserToken?: UserTokenUncheckedCreateNestedManyWithoutUserInput
     VipHistory?: VipHistoryUncheckedCreateNestedManyWithoutUserInput
     VipMembership?: VipMembershipUncheckedCreateNestedOneWithoutUserInput
+    loginAttempts?: LoginAttemptUncheckedCreateNestedManyWithoutUserInput
   }
 
   export type UserCreateOrConnectWithoutCompTransactionInput = {
@@ -72260,6 +74154,7 @@ export namespace Prisma {
     UserToken?: UserTokenUpdateManyWithoutUserNestedInput
     VipHistory?: VipHistoryUpdateManyWithoutUserNestedInput
     VipMembership?: VipMembershipUpdateOneWithoutUserNestedInput
+    loginAttempts?: LoginAttemptUpdateManyWithoutUserNestedInput
   }
 
   export type UserUncheckedUpdateWithoutCompTransactionInput = {
@@ -72301,6 +74196,7 @@ export namespace Prisma {
     UserToken?: UserTokenUncheckedUpdateManyWithoutUserNestedInput
     VipHistory?: VipHistoryUncheckedUpdateManyWithoutUserNestedInput
     VipMembership?: VipMembershipUncheckedUpdateOneWithoutUserNestedInput
+    loginAttempts?: LoginAttemptUncheckedUpdateManyWithoutUserNestedInput
   }
 
   export type CompTransactionCreateWithoutDailyCompEarningInput = {
@@ -72370,6 +74266,7 @@ export namespace Prisma {
     UserToken?: UserTokenCreateNestedManyWithoutUserInput
     VipHistory?: VipHistoryCreateNestedManyWithoutUserInput
     VipMembership?: VipMembershipCreateNestedOneWithoutUserInput
+    loginAttempts?: LoginAttemptCreateNestedManyWithoutUserInput
   }
 
   export type UserUncheckedCreateWithoutDailyCompEarningInput = {
@@ -72411,6 +74308,7 @@ export namespace Prisma {
     UserToken?: UserTokenUncheckedCreateNestedManyWithoutUserInput
     VipHistory?: VipHistoryUncheckedCreateNestedManyWithoutUserInput
     VipMembership?: VipMembershipUncheckedCreateNestedOneWithoutUserInput
+    loginAttempts?: LoginAttemptUncheckedCreateNestedManyWithoutUserInput
   }
 
   export type UserCreateOrConnectWithoutDailyCompEarningInput = {
@@ -72483,6 +74381,7 @@ export namespace Prisma {
     UserToken?: UserTokenUpdateManyWithoutUserNestedInput
     VipHistory?: VipHistoryUpdateManyWithoutUserNestedInput
     VipMembership?: VipMembershipUpdateOneWithoutUserNestedInput
+    loginAttempts?: LoginAttemptUpdateManyWithoutUserNestedInput
   }
 
   export type UserUncheckedUpdateWithoutDailyCompEarningInput = {
@@ -72524,6 +74423,7 @@ export namespace Prisma {
     UserToken?: UserTokenUncheckedUpdateManyWithoutUserNestedInput
     VipHistory?: VipHistoryUncheckedUpdateManyWithoutUserNestedInput
     VipMembership?: VipMembershipUncheckedUpdateOneWithoutUserNestedInput
+    loginAttempts?: LoginAttemptUncheckedUpdateManyWithoutUserNestedInput
   }
 
   export type PromotionTranslationCreateWithoutPromotionInput = {
@@ -72840,6 +74740,7 @@ export namespace Prisma {
     UserToken?: UserTokenCreateNestedManyWithoutUserInput
     VipHistory?: VipHistoryCreateNestedManyWithoutUserInput
     VipMembership?: VipMembershipCreateNestedOneWithoutUserInput
+    loginAttempts?: LoginAttemptCreateNestedManyWithoutUserInput
   }
 
   export type UserUncheckedCreateWithoutUserPromotionInput = {
@@ -72881,6 +74782,7 @@ export namespace Prisma {
     UserToken?: UserTokenUncheckedCreateNestedManyWithoutUserInput
     VipHistory?: VipHistoryUncheckedCreateNestedManyWithoutUserInput
     VipMembership?: VipMembershipUncheckedCreateNestedOneWithoutUserInput
+    loginAttempts?: LoginAttemptUncheckedCreateNestedManyWithoutUserInput
   }
 
   export type UserCreateOrConnectWithoutUserPromotionInput = {
@@ -72999,6 +74901,7 @@ export namespace Prisma {
     UserToken?: UserTokenUpdateManyWithoutUserNestedInput
     VipHistory?: VipHistoryUpdateManyWithoutUserNestedInput
     VipMembership?: VipMembershipUpdateOneWithoutUserNestedInput
+    loginAttempts?: LoginAttemptUpdateManyWithoutUserNestedInput
   }
 
   export type UserUncheckedUpdateWithoutUserPromotionInput = {
@@ -73040,6 +74943,7 @@ export namespace Prisma {
     UserToken?: UserTokenUncheckedUpdateManyWithoutUserNestedInput
     VipHistory?: VipHistoryUncheckedUpdateManyWithoutUserNestedInput
     VipMembership?: VipMembershipUncheckedUpdateOneWithoutUserNestedInput
+    loginAttempts?: LoginAttemptUncheckedUpdateManyWithoutUserNestedInput
   }
 
   export type VipMembershipCreateWithoutVipLevelInput = {
@@ -73173,6 +75077,7 @@ export namespace Prisma {
     UserSession?: UserSessionCreateNestedManyWithoutUserInput
     UserToken?: UserTokenCreateNestedManyWithoutUserInput
     VipHistory?: VipHistoryCreateNestedManyWithoutUserInput
+    loginAttempts?: LoginAttemptCreateNestedManyWithoutUserInput
   }
 
   export type UserUncheckedCreateWithoutVipMembershipInput = {
@@ -73214,6 +75119,7 @@ export namespace Prisma {
     UserSession?: UserSessionUncheckedCreateNestedManyWithoutUserInput
     UserToken?: UserTokenUncheckedCreateNestedManyWithoutUserInput
     VipHistory?: VipHistoryUncheckedCreateNestedManyWithoutUserInput
+    loginAttempts?: LoginAttemptUncheckedCreateNestedManyWithoutUserInput
   }
 
   export type UserCreateOrConnectWithoutVipMembershipInput = {
@@ -73320,6 +75226,7 @@ export namespace Prisma {
     UserSession?: UserSessionUpdateManyWithoutUserNestedInput
     UserToken?: UserTokenUpdateManyWithoutUserNestedInput
     VipHistory?: VipHistoryUpdateManyWithoutUserNestedInput
+    loginAttempts?: LoginAttemptUpdateManyWithoutUserNestedInput
   }
 
   export type UserUncheckedUpdateWithoutVipMembershipInput = {
@@ -73361,6 +75268,7 @@ export namespace Prisma {
     UserSession?: UserSessionUncheckedUpdateManyWithoutUserNestedInput
     UserToken?: UserTokenUncheckedUpdateManyWithoutUserNestedInput
     VipHistory?: VipHistoryUncheckedUpdateManyWithoutUserNestedInput
+    loginAttempts?: LoginAttemptUncheckedUpdateManyWithoutUserNestedInput
   }
 
   export type VipLevelUpsertWithoutMembershipsInput = {
@@ -73442,6 +75350,7 @@ export namespace Prisma {
     UserSession?: UserSessionCreateNestedManyWithoutUserInput
     UserToken?: UserTokenCreateNestedManyWithoutUserInput
     VipMembership?: VipMembershipCreateNestedOneWithoutUserInput
+    loginAttempts?: LoginAttemptCreateNestedManyWithoutUserInput
   }
 
   export type UserUncheckedCreateWithoutVipHistoryInput = {
@@ -73483,6 +75392,7 @@ export namespace Prisma {
     UserSession?: UserSessionUncheckedCreateNestedManyWithoutUserInput
     UserToken?: UserTokenUncheckedCreateNestedManyWithoutUserInput
     VipMembership?: VipMembershipUncheckedCreateNestedOneWithoutUserInput
+    loginAttempts?: LoginAttemptUncheckedCreateNestedManyWithoutUserInput
   }
 
   export type UserCreateOrConnectWithoutVipHistoryInput = {
@@ -73565,6 +75475,7 @@ export namespace Prisma {
     UserSession?: UserSessionUpdateManyWithoutUserNestedInput
     UserToken?: UserTokenUpdateManyWithoutUserNestedInput
     VipMembership?: VipMembershipUpdateOneWithoutUserNestedInput
+    loginAttempts?: LoginAttemptUpdateManyWithoutUserNestedInput
   }
 
   export type UserUncheckedUpdateWithoutVipHistoryInput = {
@@ -73606,6 +75517,7 @@ export namespace Prisma {
     UserSession?: UserSessionUncheckedUpdateManyWithoutUserNestedInput
     UserToken?: UserTokenUncheckedUpdateManyWithoutUserNestedInput
     VipMembership?: VipMembershipUncheckedUpdateOneWithoutUserNestedInput
+    loginAttempts?: LoginAttemptUncheckedUpdateManyWithoutUserNestedInput
   }
 
   export type VipMembershipUpsertWithoutHistoriesInput = {
@@ -73742,6 +75654,7 @@ export namespace Prisma {
     UserToken?: UserTokenCreateNestedManyWithoutUserInput
     VipHistory?: VipHistoryCreateNestedManyWithoutUserInput
     VipMembership?: VipMembershipCreateNestedOneWithoutUserInput
+    loginAttempts?: LoginAttemptCreateNestedManyWithoutUserInput
   }
 
   export type UserUncheckedCreateWithoutRollingInput = {
@@ -73783,6 +75696,7 @@ export namespace Prisma {
     UserToken?: UserTokenUncheckedCreateNestedManyWithoutUserInput
     VipHistory?: VipHistoryUncheckedCreateNestedManyWithoutUserInput
     VipMembership?: VipMembershipUncheckedCreateNestedOneWithoutUserInput
+    loginAttempts?: LoginAttemptUncheckedCreateNestedManyWithoutUserInput
   }
 
   export type UserCreateOrConnectWithoutRollingInput = {
@@ -73936,6 +75850,7 @@ export namespace Prisma {
     UserToken?: UserTokenUpdateManyWithoutUserNestedInput
     VipHistory?: VipHistoryUpdateManyWithoutUserNestedInput
     VipMembership?: VipMembershipUpdateOneWithoutUserNestedInput
+    loginAttempts?: LoginAttemptUpdateManyWithoutUserNestedInput
   }
 
   export type UserUncheckedUpdateWithoutRollingInput = {
@@ -73977,6 +75892,7 @@ export namespace Prisma {
     UserToken?: UserTokenUncheckedUpdateManyWithoutUserNestedInput
     VipHistory?: VipHistoryUncheckedUpdateManyWithoutUserNestedInput
     VipMembership?: VipMembershipUncheckedUpdateOneWithoutUserNestedInput
+    loginAttempts?: LoginAttemptUncheckedUpdateManyWithoutUserNestedInput
   }
 
   export type UserPromotionUpsertWithoutRollingInput = {
@@ -74052,6 +75968,7 @@ export namespace Prisma {
     UserSession?: UserSessionCreateNestedManyWithoutUserInput
     VipHistory?: VipHistoryCreateNestedManyWithoutUserInput
     VipMembership?: VipMembershipCreateNestedOneWithoutUserInput
+    loginAttempts?: LoginAttemptCreateNestedManyWithoutUserInput
   }
 
   export type UserUncheckedCreateWithoutUserTokenInput = {
@@ -74093,6 +76010,7 @@ export namespace Prisma {
     UserSession?: UserSessionUncheckedCreateNestedManyWithoutUserInput
     VipHistory?: VipHistoryUncheckedCreateNestedManyWithoutUserInput
     VipMembership?: VipMembershipUncheckedCreateNestedOneWithoutUserInput
+    loginAttempts?: LoginAttemptUncheckedCreateNestedManyWithoutUserInput
   }
 
   export type UserCreateOrConnectWithoutUserTokenInput = {
@@ -74149,6 +76067,7 @@ export namespace Prisma {
     UserSession?: UserSessionUpdateManyWithoutUserNestedInput
     VipHistory?: VipHistoryUpdateManyWithoutUserNestedInput
     VipMembership?: VipMembershipUpdateOneWithoutUserNestedInput
+    loginAttempts?: LoginAttemptUpdateManyWithoutUserNestedInput
   }
 
   export type UserUncheckedUpdateWithoutUserTokenInput = {
@@ -74190,6 +76109,7 @@ export namespace Prisma {
     UserSession?: UserSessionUncheckedUpdateManyWithoutUserNestedInput
     VipHistory?: VipHistoryUncheckedUpdateManyWithoutUserNestedInput
     VipMembership?: VipMembershipUncheckedUpdateOneWithoutUserNestedInput
+    loginAttempts?: LoginAttemptUncheckedUpdateManyWithoutUserNestedInput
   }
 
   export type UserCreateWithoutEmailLogInput = {
@@ -74231,6 +76151,7 @@ export namespace Prisma {
     UserToken?: UserTokenCreateNestedManyWithoutUserInput
     VipHistory?: VipHistoryCreateNestedManyWithoutUserInput
     VipMembership?: VipMembershipCreateNestedOneWithoutUserInput
+    loginAttempts?: LoginAttemptCreateNestedManyWithoutUserInput
   }
 
   export type UserUncheckedCreateWithoutEmailLogInput = {
@@ -74272,6 +76193,7 @@ export namespace Prisma {
     UserToken?: UserTokenUncheckedCreateNestedManyWithoutUserInput
     VipHistory?: VipHistoryUncheckedCreateNestedManyWithoutUserInput
     VipMembership?: VipMembershipUncheckedCreateNestedOneWithoutUserInput
+    loginAttempts?: LoginAttemptUncheckedCreateNestedManyWithoutUserInput
   }
 
   export type UserCreateOrConnectWithoutEmailLogInput = {
@@ -74328,6 +76250,7 @@ export namespace Prisma {
     UserToken?: UserTokenUpdateManyWithoutUserNestedInput
     VipHistory?: VipHistoryUpdateManyWithoutUserNestedInput
     VipMembership?: VipMembershipUpdateOneWithoutUserNestedInput
+    loginAttempts?: LoginAttemptUpdateManyWithoutUserNestedInput
   }
 
   export type UserUncheckedUpdateWithoutEmailLogInput = {
@@ -74369,6 +76292,7 @@ export namespace Prisma {
     UserToken?: UserTokenUncheckedUpdateManyWithoutUserNestedInput
     VipHistory?: VipHistoryUncheckedUpdateManyWithoutUserNestedInput
     VipMembership?: VipMembershipUncheckedUpdateOneWithoutUserNestedInput
+    loginAttempts?: LoginAttemptUncheckedUpdateManyWithoutUserNestedInput
   }
 
   export type GameRoundCreateWithoutGameSessionInput = {
@@ -74528,6 +76452,7 @@ export namespace Prisma {
     UserToken?: UserTokenCreateNestedManyWithoutUserInput
     VipHistory?: VipHistoryCreateNestedManyWithoutUserInput
     VipMembership?: VipMembershipCreateNestedOneWithoutUserInput
+    loginAttempts?: LoginAttemptCreateNestedManyWithoutUserInput
   }
 
   export type UserUncheckedCreateWithoutGameSessionInput = {
@@ -74569,6 +76494,7 @@ export namespace Prisma {
     UserToken?: UserTokenUncheckedCreateNestedManyWithoutUserInput
     VipHistory?: VipHistoryUncheckedCreateNestedManyWithoutUserInput
     VipMembership?: VipMembershipUncheckedCreateNestedOneWithoutUserInput
+    loginAttempts?: LoginAttemptUncheckedCreateNestedManyWithoutUserInput
   }
 
   export type UserCreateOrConnectWithoutGameSessionInput = {
@@ -74691,6 +76617,7 @@ export namespace Prisma {
     UserToken?: UserTokenUpdateManyWithoutUserNestedInput
     VipHistory?: VipHistoryUpdateManyWithoutUserNestedInput
     VipMembership?: VipMembershipUpdateOneWithoutUserNestedInput
+    loginAttempts?: LoginAttemptUpdateManyWithoutUserNestedInput
   }
 
   export type UserUncheckedUpdateWithoutGameSessionInput = {
@@ -74732,6 +76659,7 @@ export namespace Prisma {
     UserToken?: UserTokenUncheckedUpdateManyWithoutUserNestedInput
     VipHistory?: VipHistoryUncheckedUpdateManyWithoutUserNestedInput
     VipMembership?: VipMembershipUncheckedUpdateOneWithoutUserNestedInput
+    loginAttempts?: LoginAttemptUncheckedUpdateManyWithoutUserNestedInput
   }
 
   export type DepositDetailCreateWithoutBankAccountInput = {
@@ -74889,6 +76817,7 @@ export namespace Prisma {
     UserToken?: UserTokenCreateNestedManyWithoutUserInput
     VipHistory?: VipHistoryCreateNestedManyWithoutUserInput
     VipMembership?: VipMembershipCreateNestedOneWithoutUserInput
+    loginAttempts?: LoginAttemptCreateNestedManyWithoutUserInput
   }
 
   export type UserUncheckedCreateWithoutAffiliateCodesInput = {
@@ -74930,6 +76859,7 @@ export namespace Prisma {
     UserToken?: UserTokenUncheckedCreateNestedManyWithoutUserInput
     VipHistory?: VipHistoryUncheckedCreateNestedManyWithoutUserInput
     VipMembership?: VipMembershipUncheckedCreateNestedOneWithoutUserInput
+    loginAttempts?: LoginAttemptUncheckedCreateNestedManyWithoutUserInput
   }
 
   export type UserCreateOrConnectWithoutAffiliateCodesInput = {
@@ -75018,6 +76948,7 @@ export namespace Prisma {
     UserToken?: UserTokenUpdateManyWithoutUserNestedInput
     VipHistory?: VipHistoryUpdateManyWithoutUserNestedInput
     VipMembership?: VipMembershipUpdateOneWithoutUserNestedInput
+    loginAttempts?: LoginAttemptUpdateManyWithoutUserNestedInput
   }
 
   export type UserUncheckedUpdateWithoutAffiliateCodesInput = {
@@ -75059,6 +76990,7 @@ export namespace Prisma {
     UserToken?: UserTokenUncheckedUpdateManyWithoutUserNestedInput
     VipHistory?: VipHistoryUncheckedUpdateManyWithoutUserNestedInput
     VipMembership?: VipMembershipUncheckedUpdateOneWithoutUserNestedInput
+    loginAttempts?: LoginAttemptUncheckedUpdateManyWithoutUserNestedInput
   }
 
   export type ReferralUpsertWithWhereUniqueWithoutCodeInput = {
@@ -75116,6 +77048,7 @@ export namespace Prisma {
     UserToken?: UserTokenCreateNestedManyWithoutUserInput
     VipHistory?: VipHistoryCreateNestedManyWithoutUserInput
     VipMembership?: VipMembershipCreateNestedOneWithoutUserInput
+    loginAttempts?: LoginAttemptCreateNestedManyWithoutUserInput
   }
 
   export type UserUncheckedCreateWithoutAffiliateReferralsInput = {
@@ -75157,6 +77090,7 @@ export namespace Prisma {
     UserToken?: UserTokenUncheckedCreateNestedManyWithoutUserInput
     VipHistory?: VipHistoryUncheckedCreateNestedManyWithoutUserInput
     VipMembership?: VipMembershipUncheckedCreateNestedOneWithoutUserInput
+    loginAttempts?: LoginAttemptUncheckedCreateNestedManyWithoutUserInput
   }
 
   export type UserCreateOrConnectWithoutAffiliateReferralsInput = {
@@ -75236,6 +77170,7 @@ export namespace Prisma {
     UserToken?: UserTokenCreateNestedManyWithoutUserInput
     VipHistory?: VipHistoryCreateNestedManyWithoutUserInput
     VipMembership?: VipMembershipCreateNestedOneWithoutUserInput
+    loginAttempts?: LoginAttemptCreateNestedManyWithoutUserInput
   }
 
   export type UserUncheckedCreateWithoutReferredUsersInput = {
@@ -75277,6 +77212,7 @@ export namespace Prisma {
     UserToken?: UserTokenUncheckedCreateNestedManyWithoutUserInput
     VipHistory?: VipHistoryUncheckedCreateNestedManyWithoutUserInput
     VipMembership?: VipMembershipUncheckedCreateNestedOneWithoutUserInput
+    loginAttempts?: LoginAttemptUncheckedCreateNestedManyWithoutUserInput
   }
 
   export type UserCreateOrConnectWithoutReferredUsersInput = {
@@ -75333,6 +77269,7 @@ export namespace Prisma {
     UserToken?: UserTokenUpdateManyWithoutUserNestedInput
     VipHistory?: VipHistoryUpdateManyWithoutUserNestedInput
     VipMembership?: VipMembershipUpdateOneWithoutUserNestedInput
+    loginAttempts?: LoginAttemptUpdateManyWithoutUserNestedInput
   }
 
   export type UserUncheckedUpdateWithoutAffiliateReferralsInput = {
@@ -75374,6 +77311,7 @@ export namespace Prisma {
     UserToken?: UserTokenUncheckedUpdateManyWithoutUserNestedInput
     VipHistory?: VipHistoryUncheckedUpdateManyWithoutUserNestedInput
     VipMembership?: VipMembershipUncheckedUpdateOneWithoutUserNestedInput
+    loginAttempts?: LoginAttemptUncheckedUpdateManyWithoutUserNestedInput
   }
 
   export type AffiliateCodeUpsertWithoutReferralsInput = {
@@ -75464,6 +77402,7 @@ export namespace Prisma {
     UserToken?: UserTokenUpdateManyWithoutUserNestedInput
     VipHistory?: VipHistoryUpdateManyWithoutUserNestedInput
     VipMembership?: VipMembershipUpdateOneWithoutUserNestedInput
+    loginAttempts?: LoginAttemptUpdateManyWithoutUserNestedInput
   }
 
   export type UserUncheckedUpdateWithoutReferredUsersInput = {
@@ -75505,6 +77444,7 @@ export namespace Prisma {
     UserToken?: UserTokenUncheckedUpdateManyWithoutUserNestedInput
     VipHistory?: VipHistoryUncheckedUpdateManyWithoutUserNestedInput
     VipMembership?: VipMembershipUncheckedUpdateOneWithoutUserNestedInput
+    loginAttempts?: LoginAttemptUncheckedUpdateManyWithoutUserNestedInput
   }
 
   export type UserCreateWithoutAffiliateWalletsInput = {
@@ -75546,6 +77486,7 @@ export namespace Prisma {
     UserToken?: UserTokenCreateNestedManyWithoutUserInput
     VipHistory?: VipHistoryCreateNestedManyWithoutUserInput
     VipMembership?: VipMembershipCreateNestedOneWithoutUserInput
+    loginAttempts?: LoginAttemptCreateNestedManyWithoutUserInput
   }
 
   export type UserUncheckedCreateWithoutAffiliateWalletsInput = {
@@ -75587,6 +77528,7 @@ export namespace Prisma {
     UserToken?: UserTokenUncheckedCreateNestedManyWithoutUserInput
     VipHistory?: VipHistoryUncheckedCreateNestedManyWithoutUserInput
     VipMembership?: VipMembershipUncheckedCreateNestedOneWithoutUserInput
+    loginAttempts?: LoginAttemptUncheckedCreateNestedManyWithoutUserInput
   }
 
   export type UserCreateOrConnectWithoutAffiliateWalletsInput = {
@@ -75643,6 +77585,7 @@ export namespace Prisma {
     UserToken?: UserTokenUpdateManyWithoutUserNestedInput
     VipHistory?: VipHistoryUpdateManyWithoutUserNestedInput
     VipMembership?: VipMembershipUpdateOneWithoutUserNestedInput
+    loginAttempts?: LoginAttemptUpdateManyWithoutUserNestedInput
   }
 
   export type UserUncheckedUpdateWithoutAffiliateWalletsInput = {
@@ -75684,6 +77627,7 @@ export namespace Prisma {
     UserToken?: UserTokenUncheckedUpdateManyWithoutUserNestedInput
     VipHistory?: VipHistoryUncheckedUpdateManyWithoutUserNestedInput
     VipMembership?: VipMembershipUncheckedUpdateOneWithoutUserNestedInput
+    loginAttempts?: LoginAttemptUncheckedUpdateManyWithoutUserNestedInput
   }
 
   export type UserCreateWithoutAffiliateCommissionsInput = {
@@ -75725,6 +77669,7 @@ export namespace Prisma {
     UserToken?: UserTokenCreateNestedManyWithoutUserInput
     VipHistory?: VipHistoryCreateNestedManyWithoutUserInput
     VipMembership?: VipMembershipCreateNestedOneWithoutUserInput
+    loginAttempts?: LoginAttemptCreateNestedManyWithoutUserInput
   }
 
   export type UserUncheckedCreateWithoutAffiliateCommissionsInput = {
@@ -75766,6 +77711,7 @@ export namespace Prisma {
     UserToken?: UserTokenUncheckedCreateNestedManyWithoutUserInput
     VipHistory?: VipHistoryUncheckedCreateNestedManyWithoutUserInput
     VipMembership?: VipMembershipUncheckedCreateNestedOneWithoutUserInput
+    loginAttempts?: LoginAttemptUncheckedCreateNestedManyWithoutUserInput
   }
 
   export type UserCreateOrConnectWithoutAffiliateCommissionsInput = {
@@ -75881,6 +77827,7 @@ export namespace Prisma {
     UserToken?: UserTokenCreateNestedManyWithoutUserInput
     VipHistory?: VipHistoryCreateNestedManyWithoutUserInput
     VipMembership?: VipMembershipCreateNestedOneWithoutUserInput
+    loginAttempts?: LoginAttemptCreateNestedManyWithoutUserInput
   }
 
   export type UserUncheckedCreateWithoutSubUserCommissionsInput = {
@@ -75922,6 +77869,7 @@ export namespace Prisma {
     UserToken?: UserTokenUncheckedCreateNestedManyWithoutUserInput
     VipHistory?: VipHistoryUncheckedCreateNestedManyWithoutUserInput
     VipMembership?: VipMembershipUncheckedCreateNestedOneWithoutUserInput
+    loginAttempts?: LoginAttemptUncheckedCreateNestedManyWithoutUserInput
   }
 
   export type UserCreateOrConnectWithoutSubUserCommissionsInput = {
@@ -75978,6 +77926,7 @@ export namespace Prisma {
     UserToken?: UserTokenUpdateManyWithoutUserNestedInput
     VipHistory?: VipHistoryUpdateManyWithoutUserNestedInput
     VipMembership?: VipMembershipUpdateOneWithoutUserNestedInput
+    loginAttempts?: LoginAttemptUpdateManyWithoutUserNestedInput
   }
 
   export type UserUncheckedUpdateWithoutAffiliateCommissionsInput = {
@@ -76019,6 +77968,7 @@ export namespace Prisma {
     UserToken?: UserTokenUncheckedUpdateManyWithoutUserNestedInput
     VipHistory?: VipHistoryUncheckedUpdateManyWithoutUserNestedInput
     VipMembership?: VipMembershipUncheckedUpdateOneWithoutUserNestedInput
+    loginAttempts?: LoginAttemptUncheckedUpdateManyWithoutUserNestedInput
   }
 
   export type GameRoundUpsertWithoutAffiliateCommissionInput = {
@@ -76145,6 +78095,7 @@ export namespace Prisma {
     UserToken?: UserTokenUpdateManyWithoutUserNestedInput
     VipHistory?: VipHistoryUpdateManyWithoutUserNestedInput
     VipMembership?: VipMembershipUpdateOneWithoutUserNestedInput
+    loginAttempts?: LoginAttemptUpdateManyWithoutUserNestedInput
   }
 
   export type UserUncheckedUpdateWithoutSubUserCommissionsInput = {
@@ -76186,6 +78137,7 @@ export namespace Prisma {
     UserToken?: UserTokenUncheckedUpdateManyWithoutUserNestedInput
     VipHistory?: VipHistoryUncheckedUpdateManyWithoutUserNestedInput
     VipMembership?: VipMembershipUncheckedUpdateOneWithoutUserNestedInput
+    loginAttempts?: LoginAttemptUncheckedUpdateManyWithoutUserNestedInput
   }
 
   export type UserCreateWithoutAffiliateTierInput = {
@@ -76227,6 +78179,7 @@ export namespace Prisma {
     UserToken?: UserTokenCreateNestedManyWithoutUserInput
     VipHistory?: VipHistoryCreateNestedManyWithoutUserInput
     VipMembership?: VipMembershipCreateNestedOneWithoutUserInput
+    loginAttempts?: LoginAttemptCreateNestedManyWithoutUserInput
   }
 
   export type UserUncheckedCreateWithoutAffiliateTierInput = {
@@ -76268,6 +78221,7 @@ export namespace Prisma {
     UserToken?: UserTokenUncheckedCreateNestedManyWithoutUserInput
     VipHistory?: VipHistoryUncheckedCreateNestedManyWithoutUserInput
     VipMembership?: VipMembershipUncheckedCreateNestedOneWithoutUserInput
+    loginAttempts?: LoginAttemptUncheckedCreateNestedManyWithoutUserInput
   }
 
   export type UserCreateOrConnectWithoutAffiliateTierInput = {
@@ -76324,6 +78278,7 @@ export namespace Prisma {
     UserToken?: UserTokenUpdateManyWithoutUserNestedInput
     VipHistory?: VipHistoryUpdateManyWithoutUserNestedInput
     VipMembership?: VipMembershipUpdateOneWithoutUserNestedInput
+    loginAttempts?: LoginAttemptUpdateManyWithoutUserNestedInput
   }
 
   export type UserUncheckedUpdateWithoutAffiliateTierInput = {
@@ -76349,6 +78304,190 @@ export namespace Prisma {
     affiliateCodes?: AffiliateCodeUncheckedUpdateManyWithoutUserNestedInput
     affiliateCommissions?: AffiliateCommissionUncheckedUpdateManyWithoutAffiliateNestedInput
     subUserCommissions?: AffiliateCommissionUncheckedUpdateManyWithoutSubUserNestedInput
+    affiliateWallets?: AffiliateWalletUncheckedUpdateManyWithoutAffiliateNestedInput
+    CompTransaction?: CompTransactionUncheckedUpdateManyWithoutUserNestedInput
+    DailyCompEarning?: DailyCompEarningUncheckedUpdateManyWithoutUserNestedInput
+    EmailLog?: EmailLogUncheckedUpdateManyWithoutUserNestedInput
+    GameSession?: GameSessionUncheckedUpdateManyWithoutUserNestedInput
+    affiliateReferrals?: ReferralUncheckedUpdateManyWithoutAffiliateNestedInput
+    referredUsers?: ReferralUncheckedUpdateManyWithoutSubUserNestedInput
+    Rolling?: RollingUncheckedUpdateManyWithoutUserNestedInput
+    transactions?: TransactionUncheckedUpdateManyWithoutUserNestedInput
+    balances?: UserBalanceUncheckedUpdateManyWithoutUserNestedInput
+    UserBalanceStats?: UserBalanceStatsUncheckedUpdateManyWithoutUserNestedInput
+    UserPromotion?: UserPromotionUncheckedUpdateManyWithoutUserNestedInput
+    UserSession?: UserSessionUncheckedUpdateManyWithoutUserNestedInput
+    UserToken?: UserTokenUncheckedUpdateManyWithoutUserNestedInput
+    VipHistory?: VipHistoryUncheckedUpdateManyWithoutUserNestedInput
+    VipMembership?: VipMembershipUncheckedUpdateOneWithoutUserNestedInput
+    loginAttempts?: LoginAttemptUncheckedUpdateManyWithoutUserNestedInput
+  }
+
+  export type UserCreateWithoutLoginAttemptsInput = {
+    id?: string
+    numericId?: number
+    whitecliffId?: bigint | number | null
+    whitecliffSystemId?: bigint | number | null
+    whitecliffUsername?: string | null
+    dcsId?: string | null
+    email?: string | null
+    passwordHash?: string | null
+    socialType?: $Enums.SocialType | null
+    socialId?: string | null
+    role?: $Enums.UserRoleType
+    status?: $Enums.UserStatus
+    kycLevel?: $Enums.KycLevel
+    country?: string | null
+    language?: $Enums.Language | null
+    timezone?: string | null
+    timezoneOffset?: number | null
+    createdAt?: Date | string
+    updatedAt?: Date | string
+    affiliateCodes?: AffiliateCodeCreateNestedManyWithoutUserInput
+    affiliateCommissions?: AffiliateCommissionCreateNestedManyWithoutAffiliateInput
+    subUserCommissions?: AffiliateCommissionCreateNestedManyWithoutSubUserInput
+    affiliateTier?: AffiliateTierCreateNestedOneWithoutAffiliateInput
+    affiliateWallets?: AffiliateWalletCreateNestedManyWithoutAffiliateInput
+    CompTransaction?: CompTransactionCreateNestedManyWithoutUserInput
+    DailyCompEarning?: DailyCompEarningCreateNestedManyWithoutUserInput
+    EmailLog?: EmailLogCreateNestedManyWithoutUserInput
+    GameSession?: GameSessionCreateNestedManyWithoutUserInput
+    affiliateReferrals?: ReferralCreateNestedManyWithoutAffiliateInput
+    referredUsers?: ReferralCreateNestedManyWithoutSubUserInput
+    Rolling?: RollingCreateNestedManyWithoutUserInput
+    transactions?: TransactionCreateNestedManyWithoutUserInput
+    balances?: UserBalanceCreateNestedManyWithoutUserInput
+    UserBalanceStats?: UserBalanceStatsCreateNestedManyWithoutUserInput
+    UserPromotion?: UserPromotionCreateNestedManyWithoutUserInput
+    UserSession?: UserSessionCreateNestedManyWithoutUserInput
+    UserToken?: UserTokenCreateNestedManyWithoutUserInput
+    VipHistory?: VipHistoryCreateNestedManyWithoutUserInput
+    VipMembership?: VipMembershipCreateNestedOneWithoutUserInput
+  }
+
+  export type UserUncheckedCreateWithoutLoginAttemptsInput = {
+    id?: string
+    numericId?: number
+    whitecliffId?: bigint | number | null
+    whitecliffSystemId?: bigint | number | null
+    whitecliffUsername?: string | null
+    dcsId?: string | null
+    email?: string | null
+    passwordHash?: string | null
+    socialType?: $Enums.SocialType | null
+    socialId?: string | null
+    role?: $Enums.UserRoleType
+    status?: $Enums.UserStatus
+    kycLevel?: $Enums.KycLevel
+    country?: string | null
+    language?: $Enums.Language | null
+    timezone?: string | null
+    timezoneOffset?: number | null
+    createdAt?: Date | string
+    updatedAt?: Date | string
+    affiliateCodes?: AffiliateCodeUncheckedCreateNestedManyWithoutUserInput
+    affiliateCommissions?: AffiliateCommissionUncheckedCreateNestedManyWithoutAffiliateInput
+    subUserCommissions?: AffiliateCommissionUncheckedCreateNestedManyWithoutSubUserInput
+    affiliateTier?: AffiliateTierUncheckedCreateNestedOneWithoutAffiliateInput
+    affiliateWallets?: AffiliateWalletUncheckedCreateNestedManyWithoutAffiliateInput
+    CompTransaction?: CompTransactionUncheckedCreateNestedManyWithoutUserInput
+    DailyCompEarning?: DailyCompEarningUncheckedCreateNestedManyWithoutUserInput
+    EmailLog?: EmailLogUncheckedCreateNestedManyWithoutUserInput
+    GameSession?: GameSessionUncheckedCreateNestedManyWithoutUserInput
+    affiliateReferrals?: ReferralUncheckedCreateNestedManyWithoutAffiliateInput
+    referredUsers?: ReferralUncheckedCreateNestedManyWithoutSubUserInput
+    Rolling?: RollingUncheckedCreateNestedManyWithoutUserInput
+    transactions?: TransactionUncheckedCreateNestedManyWithoutUserInput
+    balances?: UserBalanceUncheckedCreateNestedManyWithoutUserInput
+    UserBalanceStats?: UserBalanceStatsUncheckedCreateNestedManyWithoutUserInput
+    UserPromotion?: UserPromotionUncheckedCreateNestedManyWithoutUserInput
+    UserSession?: UserSessionUncheckedCreateNestedManyWithoutUserInput
+    UserToken?: UserTokenUncheckedCreateNestedManyWithoutUserInput
+    VipHistory?: VipHistoryUncheckedCreateNestedManyWithoutUserInput
+    VipMembership?: VipMembershipUncheckedCreateNestedOneWithoutUserInput
+  }
+
+  export type UserCreateOrConnectWithoutLoginAttemptsInput = {
+    where: UserWhereUniqueInput
+    create: XOR<UserCreateWithoutLoginAttemptsInput, UserUncheckedCreateWithoutLoginAttemptsInput>
+  }
+
+  export type UserUpsertWithoutLoginAttemptsInput = {
+    update: XOR<UserUpdateWithoutLoginAttemptsInput, UserUncheckedUpdateWithoutLoginAttemptsInput>
+    create: XOR<UserCreateWithoutLoginAttemptsInput, UserUncheckedCreateWithoutLoginAttemptsInput>
+    where?: UserWhereInput
+  }
+
+  export type UserUpdateToOneWithWhereWithoutLoginAttemptsInput = {
+    where?: UserWhereInput
+    data: XOR<UserUpdateWithoutLoginAttemptsInput, UserUncheckedUpdateWithoutLoginAttemptsInput>
+  }
+
+  export type UserUpdateWithoutLoginAttemptsInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    whitecliffId?: NullableBigIntFieldUpdateOperationsInput | bigint | number | null
+    whitecliffSystemId?: NullableBigIntFieldUpdateOperationsInput | bigint | number | null
+    whitecliffUsername?: NullableStringFieldUpdateOperationsInput | string | null
+    dcsId?: NullableStringFieldUpdateOperationsInput | string | null
+    email?: NullableStringFieldUpdateOperationsInput | string | null
+    passwordHash?: NullableStringFieldUpdateOperationsInput | string | null
+    socialType?: NullableEnumSocialTypeFieldUpdateOperationsInput | $Enums.SocialType | null
+    socialId?: NullableStringFieldUpdateOperationsInput | string | null
+    role?: EnumUserRoleTypeFieldUpdateOperationsInput | $Enums.UserRoleType
+    status?: EnumUserStatusFieldUpdateOperationsInput | $Enums.UserStatus
+    kycLevel?: EnumKycLevelFieldUpdateOperationsInput | $Enums.KycLevel
+    country?: NullableStringFieldUpdateOperationsInput | string | null
+    language?: NullableEnumLanguageFieldUpdateOperationsInput | $Enums.Language | null
+    timezone?: NullableStringFieldUpdateOperationsInput | string | null
+    timezoneOffset?: NullableIntFieldUpdateOperationsInput | number | null
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    affiliateCodes?: AffiliateCodeUpdateManyWithoutUserNestedInput
+    affiliateCommissions?: AffiliateCommissionUpdateManyWithoutAffiliateNestedInput
+    subUserCommissions?: AffiliateCommissionUpdateManyWithoutSubUserNestedInput
+    affiliateTier?: AffiliateTierUpdateOneWithoutAffiliateNestedInput
+    affiliateWallets?: AffiliateWalletUpdateManyWithoutAffiliateNestedInput
+    CompTransaction?: CompTransactionUpdateManyWithoutUserNestedInput
+    DailyCompEarning?: DailyCompEarningUpdateManyWithoutUserNestedInput
+    EmailLog?: EmailLogUpdateManyWithoutUserNestedInput
+    GameSession?: GameSessionUpdateManyWithoutUserNestedInput
+    affiliateReferrals?: ReferralUpdateManyWithoutAffiliateNestedInput
+    referredUsers?: ReferralUpdateManyWithoutSubUserNestedInput
+    Rolling?: RollingUpdateManyWithoutUserNestedInput
+    transactions?: TransactionUpdateManyWithoutUserNestedInput
+    balances?: UserBalanceUpdateManyWithoutUserNestedInput
+    UserBalanceStats?: UserBalanceStatsUpdateManyWithoutUserNestedInput
+    UserPromotion?: UserPromotionUpdateManyWithoutUserNestedInput
+    UserSession?: UserSessionUpdateManyWithoutUserNestedInput
+    UserToken?: UserTokenUpdateManyWithoutUserNestedInput
+    VipHistory?: VipHistoryUpdateManyWithoutUserNestedInput
+    VipMembership?: VipMembershipUpdateOneWithoutUserNestedInput
+  }
+
+  export type UserUncheckedUpdateWithoutLoginAttemptsInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    numericId?: IntFieldUpdateOperationsInput | number
+    whitecliffId?: NullableBigIntFieldUpdateOperationsInput | bigint | number | null
+    whitecliffSystemId?: NullableBigIntFieldUpdateOperationsInput | bigint | number | null
+    whitecliffUsername?: NullableStringFieldUpdateOperationsInput | string | null
+    dcsId?: NullableStringFieldUpdateOperationsInput | string | null
+    email?: NullableStringFieldUpdateOperationsInput | string | null
+    passwordHash?: NullableStringFieldUpdateOperationsInput | string | null
+    socialType?: NullableEnumSocialTypeFieldUpdateOperationsInput | $Enums.SocialType | null
+    socialId?: NullableStringFieldUpdateOperationsInput | string | null
+    role?: EnumUserRoleTypeFieldUpdateOperationsInput | $Enums.UserRoleType
+    status?: EnumUserStatusFieldUpdateOperationsInput | $Enums.UserStatus
+    kycLevel?: EnumKycLevelFieldUpdateOperationsInput | $Enums.KycLevel
+    country?: NullableStringFieldUpdateOperationsInput | string | null
+    language?: NullableEnumLanguageFieldUpdateOperationsInput | $Enums.Language | null
+    timezone?: NullableStringFieldUpdateOperationsInput | string | null
+    timezoneOffset?: NullableIntFieldUpdateOperationsInput | number | null
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    affiliateCodes?: AffiliateCodeUncheckedUpdateManyWithoutUserNestedInput
+    affiliateCommissions?: AffiliateCommissionUncheckedUpdateManyWithoutAffiliateNestedInput
+    subUserCommissions?: AffiliateCommissionUncheckedUpdateManyWithoutSubUserNestedInput
+    affiliateTier?: AffiliateTierUncheckedUpdateOneWithoutAffiliateNestedInput
     affiliateWallets?: AffiliateWalletUncheckedUpdateManyWithoutAffiliateNestedInput
     CompTransaction?: CompTransactionUncheckedUpdateManyWithoutUserNestedInput
     DailyCompEarning?: DailyCompEarningUncheckedUpdateManyWithoutUserNestedInput
@@ -76592,6 +78731,20 @@ export namespace Prisma {
     paidAt?: Date | string | null
     createdAt?: Date | string
     vipMembershipId?: number | null
+  }
+
+  export type LoginAttemptCreateManyUserInput = {
+    id?: bigint | number
+    uid: string
+    result: $Enums.LoginAttemptResult
+    failureReason?: $Enums.LoginFailureReason | null
+    ipAddress?: string | null
+    userAgent?: string | null
+    deviceFingerprint?: string | null
+    isMobile?: boolean | null
+    attemptedAt?: Date | string
+    email?: string | null
+    isAdmin?: boolean
   }
 
   export type AffiliateCodeUpdateWithoutUserInput = {
@@ -77288,6 +79441,48 @@ export namespace Prisma {
     paidAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     vipMembershipId?: NullableIntFieldUpdateOperationsInput | number | null
+  }
+
+  export type LoginAttemptUpdateWithoutUserInput = {
+    id?: BigIntFieldUpdateOperationsInput | bigint | number
+    uid?: StringFieldUpdateOperationsInput | string
+    result?: EnumLoginAttemptResultFieldUpdateOperationsInput | $Enums.LoginAttemptResult
+    failureReason?: NullableEnumLoginFailureReasonFieldUpdateOperationsInput | $Enums.LoginFailureReason | null
+    ipAddress?: NullableStringFieldUpdateOperationsInput | string | null
+    userAgent?: NullableStringFieldUpdateOperationsInput | string | null
+    deviceFingerprint?: NullableStringFieldUpdateOperationsInput | string | null
+    isMobile?: NullableBoolFieldUpdateOperationsInput | boolean | null
+    attemptedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    email?: NullableStringFieldUpdateOperationsInput | string | null
+    isAdmin?: BoolFieldUpdateOperationsInput | boolean
+  }
+
+  export type LoginAttemptUncheckedUpdateWithoutUserInput = {
+    id?: BigIntFieldUpdateOperationsInput | bigint | number
+    uid?: StringFieldUpdateOperationsInput | string
+    result?: EnumLoginAttemptResultFieldUpdateOperationsInput | $Enums.LoginAttemptResult
+    failureReason?: NullableEnumLoginFailureReasonFieldUpdateOperationsInput | $Enums.LoginFailureReason | null
+    ipAddress?: NullableStringFieldUpdateOperationsInput | string | null
+    userAgent?: NullableStringFieldUpdateOperationsInput | string | null
+    deviceFingerprint?: NullableStringFieldUpdateOperationsInput | string | null
+    isMobile?: NullableBoolFieldUpdateOperationsInput | boolean | null
+    attemptedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    email?: NullableStringFieldUpdateOperationsInput | string | null
+    isAdmin?: BoolFieldUpdateOperationsInput | boolean
+  }
+
+  export type LoginAttemptUncheckedUpdateManyWithoutUserInput = {
+    id?: BigIntFieldUpdateOperationsInput | bigint | number
+    uid?: StringFieldUpdateOperationsInput | string
+    result?: EnumLoginAttemptResultFieldUpdateOperationsInput | $Enums.LoginAttemptResult
+    failureReason?: NullableEnumLoginFailureReasonFieldUpdateOperationsInput | $Enums.LoginFailureReason | null
+    ipAddress?: NullableStringFieldUpdateOperationsInput | string | null
+    userAgent?: NullableStringFieldUpdateOperationsInput | string | null
+    deviceFingerprint?: NullableStringFieldUpdateOperationsInput | string | null
+    isMobile?: NullableBoolFieldUpdateOperationsInput | boolean | null
+    attemptedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    email?: NullableStringFieldUpdateOperationsInput | string | null
+    isAdmin?: BoolFieldUpdateOperationsInput | boolean
   }
 
   export type BonusDetailCreateManyGameInput = {

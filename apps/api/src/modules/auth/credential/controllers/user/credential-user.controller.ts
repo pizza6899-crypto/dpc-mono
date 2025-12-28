@@ -3,7 +3,6 @@ import {
   Post,
   Get,
   Body,
-  UseGuards,
   Req,
   HttpStatus,
 } from '@nestjs/common';
@@ -17,12 +16,13 @@ import { CurrentUser } from 'src/platform/auth/decorators/current-user.decorator
 import type { CurrentUserWithSession } from 'src/platform/auth/decorators/current-user.decorator';
 import { RequestClientInfoParam } from 'src/platform/auth/decorators/request-info.decorator';
 import type { RequestClientInfo } from 'src/platform/http/types/client-info.types';
-import { LocalAuthGuard } from 'src/platform/auth/guards/local-auth.guard';
+import { AuthenticateCredentialService } from '../../application/authenticate-credential.service';
 import { LoginService } from '../../application/login.service';
 import { LogoutService } from '../../application/logout.service';
 import { CredentialUserLoginRequestDto } from './dto/request/login.request.dto';
 import { CredentialUserLoginResponseDto } from './dto/response/login.response.dto';
 import { CredentialUserAuthStatusResponseDto } from './dto/response/auth-status.response.dto';
+import { CredentialUserLogoutResponseDto } from './dto/response/logout.response.dto';
 import { UserRoleType } from '@repo/database';
 import type { Request } from 'express';
 
@@ -31,13 +31,13 @@ import type { Request } from 'express';
 @ApiStandardErrors()
 export class CredentialUserController {
   constructor(
+    private readonly authenticateCredentialService: AuthenticateCredentialService,
     private readonly loginService: LoginService,
     private readonly logoutService: LogoutService,
   ) {}
 
   @Post('login')
-  @Public() // Guard 내부에서 실제 검증 수행
-  @UseGuards(LocalAuthGuard)
+  @Public()
   @ApiOperation({
     summary: 'Login (로그인)',
     description: 'Email/Password 기반 로그인',
@@ -47,65 +47,127 @@ export class CredentialUserController {
     description: 'Login Success',
   })
   async login(
-    @CurrentUser() user: CurrentUserWithSession,
+    @Body() dto: CredentialUserLoginRequestDto,
     @RequestClientInfoParam() clientInfo: RequestClientInfo,
-    @Body() _dto: CredentialUserLoginRequestDto, // Swagger 문서화를 위해 필요
+    @Req() req: Request,
   ): Promise<CredentialUserLoginResponseDto> {
-    await this.loginService.execute({ user, clientInfo, isAdmin: false });
+    // 1. 자격 증명 인증 (이메일/비밀번호 검증, 계정 잠금 체크, 실패 시도 기록)
+    const authenticatedUser = await this.authenticateCredentialService.execute({
+      email: dto.email,
+      password: dto.password,
+      clientInfo,
+      isAdmin: false,
+    });
+
+    // 2. 세션에 사용자 저장
+    await new Promise<void>((resolve, reject) => {
+      req.login(authenticatedUser as any, (err) => {
+        if (err) {
+          reject(err);
+        } else {
+          resolve();
+        }
+      });
+    });
+
+    // 3. 로그인 성공 기록 (액티비티 로그 등)
+    await this.loginService.execute({
+      user: authenticatedUser,
+      clientInfo,
+      isAdmin: false,
+    });
 
     return {
       user: {
-        id: user.id,
-        email: user.email,
+        id: authenticatedUser.id,
+        email: authenticatedUser.email,
       },
     };
   }
 
   @Post('logout')
+  @Public()
   @ApiOperation({
     summary: 'Logout (로그아웃)',
-    description: '현재 세션 종료',
+    description: '현재 세션 종료. 인증 상태와 관계없이 항상 성공 응답을 반환합니다.',
   })
-  @ApiStandardResponse(undefined, {
+  @ApiStandardResponse(CredentialUserLogoutResponseDto, {
     status: HttpStatus.OK,
     description: 'Logout Success',
   })
   async logout(
-    @CurrentUser() user: CurrentUserWithSession,
-    @RequestClientInfoParam() clientInfo: RequestClientInfo,
-    @Req() req: Request,
-  ): Promise<void> {
-    // 사용자 role을 확인하여 isAdmin 결정
-    const isAdmin =
-      user.role === UserRoleType.ADMIN ||
-      user.role === UserRoleType.SUPER_ADMIN;
+    @CurrentUser() user?: CurrentUserWithSession,
+    @RequestClientInfoParam() clientInfo?: RequestClientInfo,
+    @Req() req?: Request,
+  ): Promise<CredentialUserLogoutResponseDto> {
+    // 사용자가 있는 경우에만 로그아웃 서비스 실행 (에러 발생해도 무시)
+    if (user && clientInfo) {
+      try {
+        const isAdmin =
+          user.role === UserRoleType.ADMIN ||
+          user.role === UserRoleType.SUPER_ADMIN;
 
-    await this.logoutService.execute({
-      userId: user.id,
-      clientInfo,
-      isAdmin,
-    });
-
-    // 세션 종료 처리 (Promise로 감싸서 에러 처리)
-    await new Promise<void>((resolve, reject) => {
-      req.logout((err) => {
-        if (err) {
-          console.error('Logout error:', err);
-          reject(err);
-          return;
-        }
-
-        req.session.destroy((destroyErr) => {
-          if (destroyErr) {
-            console.error('Session destroy error:', destroyErr);
-            reject(destroyErr);
-            return;
-          }
-
-          resolve();
+        await this.logoutService.execute({
+          userId: user.id,
+          clientInfo,
+          isAdmin,
         });
-      });
-    });
+      } catch (error) {
+        // LogoutService 에러는 무시하고 성공 응답 반환
+      }
+    }
+
+    // 세션 종료 처리 (에러가 발생해도 무시하고 성공 응답 반환)
+    if (req) {
+      try {
+        await new Promise<void>((resolve) => {
+          // 타임아웃 방지를 위해 최대 100ms 후 강제 resolve
+          const timeout = setTimeout(() => resolve(), 100);
+
+          const cleanup = () => {
+            clearTimeout(timeout);
+            resolve();
+          };
+
+          if (req.logout) {
+            try {
+              req.logout(() => {
+                // logout 콜백: 에러 여부와 관계없이 세션 destroy 시도
+                if (req.session?.destroy) {
+                  try {
+                    req.session.destroy(() => {
+                      cleanup();
+                    });
+                  } catch {
+                    cleanup();
+                  }
+                } else {
+                  cleanup();
+                }
+              });
+            } catch {
+              // logout 호출 자체가 실패하면 즉시 resolve
+              cleanup();
+            }
+          } else if (req.session?.destroy) {
+            try {
+              req.session.destroy(() => {
+                cleanup();
+              });
+            } catch {
+              cleanup();
+            }
+          } else {
+            cleanup();
+          }
+        });
+      } catch (error) {
+        // 세션 종료 실패는 무시하고 성공 응답 반환
+      }
+    }
+
+    // 항상 성공 응답 반환
+    return { success: true };
   }
 
   @Get('status')

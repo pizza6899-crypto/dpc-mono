@@ -48,6 +48,7 @@ model User {
   UserToken            UserToken[]
   VipHistory           VipHistory[]
   VipMembership        VipMembership?
+  loginAttempts        LoginAttempt[]
 }
 
 model UserSession {
@@ -971,4 +972,42 @@ enum AffiliateTierLevel {
   GOLD
   PLATINUM
   DIAMOND
+}
+
+enum LoginAttemptResult {
+  SUCCESS
+  FAILED
+}
+
+enum LoginFailureReason {
+  INVALID_CREDENTIALS
+  USER_NOT_FOUND
+  ACCOUNT_SUSPENDED
+  ACCOUNT_CLOSED
+  THROTTLE_LIMIT_EXCEEDED
+  UNKNOWN
+}
+
+model LoginAttempt {
+  id                BigInt              @id @default(autoincrement())
+  uid               String              @unique
+  userId            String?
+  result            LoginAttemptResult
+  failureReason     LoginFailureReason?
+  ipAddress         String?
+  userAgent         String?
+  deviceFingerprint String?
+  isMobile          Boolean?
+  attemptedAt       DateTime            @default(now())
+  email             String?
+  isAdmin           Boolean             @default(false)
+  user              User?               @relation(fields: [userId], references: [id], onDelete: SetNull)
+
+  @@index([userId])
+  @@index([email])
+  @@index([ipAddress])
+  @@index([attemptedAt])
+  @@index([result])
+  @@index([email, attemptedAt])
+  @@index([ipAddress, attemptedAt])
 }
