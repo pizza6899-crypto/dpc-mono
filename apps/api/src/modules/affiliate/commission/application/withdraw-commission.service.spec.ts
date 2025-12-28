@@ -402,7 +402,8 @@ describe('WithdrawCommissionService', () => {
         wallet,
       );
 
-      const loggerSpy = jest.spyOn(service['logger'], 'error');
+      // 도메인 예외는 warn 레벨로 로깅되므로 warn 스파이 사용
+      const loggerWarnSpy = jest.spyOn(service['logger'], 'warn');
 
       // When
       await expect(
@@ -414,13 +415,14 @@ describe('WithdrawCommissionService', () => {
       ).rejects.toThrow();
 
       // Then
-      expect(loggerSpy).toHaveBeenCalledTimes(1);
-      expect(loggerSpy).toHaveBeenCalledWith(
-        expect.stringContaining('커미션 출금 실패'),
-        expect.any(Error),
+      // 도메인 예외는 warn 레벨로 로깅됨
+      expect(loggerWarnSpy).toHaveBeenCalledTimes(1);
+      expect(loggerWarnSpy).toHaveBeenCalledWith(
+        expect.stringContaining('커미션 출금 실패 (도메인 예외)'),
+        expect.any(String),
       );
 
-      loggerSpy.mockRestore();
+      loggerWarnSpy.mockRestore();
     });
 
     it('성공 시 Logger에 로그를 기록한다', async () => {

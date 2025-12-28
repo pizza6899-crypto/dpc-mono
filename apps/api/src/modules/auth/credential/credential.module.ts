@@ -6,8 +6,10 @@ import { LogoutService } from './application/logout.service';
 import { RecordLoginAttemptService } from './application/record-login-attempt.service';
 import { FindLoginAttemptsService } from './application/find-login-attempts.service';
 import { VerifyCredentialService } from './application/verify-credential.service';
-import { LOGIN_ATTEMPT_REPOSITORY } from './ports/login-attempt.repository.token';
-import { CREDENTIAL_USER_REPOSITORY } from './ports/credential-user.repository.token';
+import {
+  LOGIN_ATTEMPT_REPOSITORY,
+  CREDENTIAL_USER_REPOSITORY,
+} from './ports/out';
 import { LoginAttemptRepository } from './infrastructure/repository';
 import { CredentialUserRepository } from './infrastructure/credential-user.repository';
 import { LoginAttemptMapper } from './infrastructure/mapper';
@@ -51,4 +53,4 @@ import { ActivityLogModule } from 'src/platform/activity-log/activity-log.module
   ],
   exports: [LoginService, LogoutService, VerifyCredentialService],
 })
-export class CredentialModule {}
+export class CredentialModule { }

@@ -11,6 +11,7 @@ import {
   AffiliateTier,
   AffiliateWallet,
   CommissionPolicy,
+  CommissionException,
 } from '../domain';
 import { AFFILIATE_COMMISSION_REPOSITORY } from '../ports/out/affiliate-commission.repository.token';
 import type { AffiliateCommissionRepositoryPort } from '../ports/out/affiliate-commission.repository.port';
@@ -138,10 +139,19 @@ export class CalculateCommissionService {
 
       return savedCommission;
     } catch (error) {
-      this.logger.error(
-        `커미션 계산 실패 - subUserId: ${subUserId}, gameRoundId: ${gameRoundId?.toString()}, wagerAmount: ${wagerAmount?.toString()}`,
-        error,
-      );
+      // 도메인 예외는 WARN 레벨로 로깅 (비즈니스 로직의 정상적인 흐름)
+      if (error instanceof CommissionException) {
+        this.logger.warn(
+          `커미션 계산 실패 (도메인 예외) - subUserId: ${subUserId}, gameRoundId: ${gameRoundId?.toString()}, wagerAmount: ${wagerAmount?.toString()}`,
+          error.message,
+        );
+      } else {
+        // 예상치 못한 시스템 에러만 ERROR 레벨로 로깅
+        this.logger.error(
+          `커미션 계산 실패 - subUserId: ${subUserId}, gameRoundId: ${gameRoundId?.toString()}, wagerAmount: ${wagerAmount?.toString()}`,
+          error,
+        );
+      }
       throw error;
     }
   }

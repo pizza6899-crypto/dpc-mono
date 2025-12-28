@@ -38,11 +38,11 @@ import { CredentialModule } from './credential/credential.module';
     CredentialModule, // 하위 자격 증명 모듈 추가
   ],
   controllers: [
-    AuthController,
-    ProfileController,
-    SocialAuthController,
-    AdminAuthController,
-    PasswordController,
+    // AuthController,
+    // ProfileController,
+    // SocialAuthController,
+    // AdminAuthController,
+    // PasswordController,
   ],
   providers: [
     LocalStrategy,
@@ -57,4 +57,4 @@ import { CredentialModule } from './credential/credential.module';
   ],
   exports: [PassportModule],
 })
-export class AuthModule {}
+export class AuthModule { }

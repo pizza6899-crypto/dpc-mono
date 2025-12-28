@@ -2,7 +2,7 @@ import { Injectable } from '@nestjs/common';
 import { InjectTransaction } from '@nestjs-cls/transactional';
 import type { Transaction } from '@nestjs-cls/transactional';
 import type { TransactionalAdapterPrisma } from '@nestjs-cls/transactional-adapter-prisma';
-import { CredentialUserRepositoryPort } from '../ports/credential-user.repository.port';
+import type { CredentialUserRepositoryPort } from '../ports/out';
 import { CredentialUser } from '../domain';
 import { CredentialUserMapper } from './credential-user.mapper';
 

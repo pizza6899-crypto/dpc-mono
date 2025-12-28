@@ -20,9 +20,9 @@ import type { RequestClientInfo } from 'src/platform/http/types/client-info.type
 import { LocalAuthGuard } from 'src/platform/auth/guards/local-auth.guard';
 import { LoginService } from '../../application/login.service';
 import { LogoutService } from '../../application/logout.service';
-import { LoginRequestDto } from './dto/request/login.request.dto';
-import { LoginResponseDto } from './dto/response/login.response.dto';
-import { AuthStatusResponseDto } from './dto/response/auth-status.response.dto';
+import { CredentialUserLoginRequestDto } from './dto/request/login.request.dto';
+import { CredentialUserLoginResponseDto } from './dto/response/login.response.dto';
+import { CredentialUserAuthStatusResponseDto } from './dto/response/auth-status.response.dto';
 import type { Request } from 'express';
 
 @Controller('auth')
@@ -32,7 +32,7 @@ export class CredentialUserController {
   constructor(
     private readonly loginService: LoginService,
     private readonly logoutService: LogoutService,
-  ) {}
+  ) { }
 
   @Post('login')
   @Public() // Guard 내부에서 실제 검증 수행
@@ -41,15 +41,15 @@ export class CredentialUserController {
     summary: 'Login (로그인)',
     description: 'Email/Password 기반 로그인',
   })
-  @ApiStandardResponse(LoginResponseDto, {
+  @ApiStandardResponse(CredentialUserLoginResponseDto, {
     status: HttpStatus.OK,
     description: 'Login Success',
   })
   async login(
     @CurrentUser() user: CurrentUserWithSession,
     @RequestClienttInfo() clientInfo: RequestClientInfo,
-    @Body() _dto: LoginRequestDto, // Swagger 문서화를 위해 필요
-  ): Promise<LoginResponseDto> {
+    @Body() _dto: CredentialUserLoginRequestDto, // Swagger 문서화를 위해 필요
+  ): Promise<CredentialUserLoginResponseDto> {
     await this.loginService.execute({ user, clientInfo });
 
     return {
@@ -90,13 +90,13 @@ export class CredentialUserController {
     summary: 'Auth Status (인증 상태)',
     description: '현재 로그인 세션 유효 여부 확인',
   })
-  @ApiStandardResponse(AuthStatusResponseDto, {
+  @ApiStandardResponse(CredentialUserAuthStatusResponseDto, {
     status: HttpStatus.OK,
   })
   async checkStatus(
     @Req() req: Request,
     @CurrentUser() user?: CurrentUserWithSession,
-  ): Promise<AuthStatusResponseDto> {
+  ): Promise<CredentialUserAuthStatusResponseDto> {
     const isAuthenticated = req.isAuthenticated() && !!user;
 
     return {
@@ -104,9 +104,9 @@ export class CredentialUserController {
       user:
         isAuthenticated && user
           ? {
-              id: user.id,
-              email: user.email,
-            }
+            id: user.id,
+            email: user.email,
+          }
           : null,
     };
   }

@@ -1,6 +1,8 @@
 import { Inject, Injectable } from '@nestjs/common';
-import { LOGIN_ATTEMPT_REPOSITORY } from '../ports/login-attempt.repository.token';
-import type { LoginAttemptRepositoryPort } from '../ports/login-attempt.repository.port';
+import {
+  LOGIN_ATTEMPT_REPOSITORY,
+  type LoginAttemptRepositoryPort,
+} from '../ports/out';
 import { LoginAttempt } from '../domain';
 
 export interface FindLoginAttemptsParams {

@@ -19,7 +19,7 @@ import type { RequestClientInfo } from 'src/platform/http/types/client-info.type
 import { AdminLocalAuthGuard } from 'src/platform/auth/guards/admin-local-auth.guard';
 import { LoginService } from '../../application/login.service';
 import { FindLoginAttemptsService } from '../../application/find-login-attempts.service';
-import { LoginResponseDto } from '../user/dto/response/login.response.dto';
+import { CredentialUserLoginResponseDto } from '../user/dto/response/login.response.dto';
 import { LoginAttemptResponseDto } from './dto/response/login-attempt.response.dto';
 
 @Controller('admin/auth')
@@ -37,13 +37,13 @@ export class CredentialAdminController {
   @ApiOperation({
     summary: 'Admin Login (관리자 로그인)',
   })
-  @ApiStandardResponse(LoginResponseDto, {
+  @ApiStandardResponse(CredentialUserLoginResponseDto, {
     status: HttpStatus.OK,
   })
   async login(
     @CurrentUser() user: CurrentUserWithSession,
     @RequestClienttInfo() clientInfo: RequestClientInfo,
-  ): Promise<LoginResponseDto> {
+  ): Promise<CredentialUserLoginResponseDto> {
     await this.loginService.execute({ user, clientInfo, isAdmin: true });
 
     return {

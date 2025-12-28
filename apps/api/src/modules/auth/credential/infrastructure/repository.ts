@@ -2,7 +2,7 @@ import { Injectable } from '@nestjs/common';
 import { InjectTransaction } from '@nestjs-cls/transactional';
 import type { Transaction } from '@nestjs-cls/transactional';
 import type { TransactionalAdapterPrisma } from '@nestjs-cls/transactional-adapter-prisma';
-import { LoginAttemptRepositoryPort } from '../ports/login-attempt.repository.port';
+import type { LoginAttemptRepositoryPort } from '../ports/out';
 import { LoginAttempt, LoginFailedException } from '../domain';
 import { LoginAttemptMapper } from './mapper';
 

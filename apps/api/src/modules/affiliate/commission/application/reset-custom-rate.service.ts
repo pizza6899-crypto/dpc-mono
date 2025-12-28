@@ -1,6 +1,6 @@
 // src/modules/affiliate/commission/application/reset-custom-rate.service.ts
 import { Inject, Injectable, Logger } from '@nestjs/common';
-import { AffiliateTier } from '../domain';
+import { AffiliateTier, CommissionException } from '../domain';
 import { AFFILIATE_TIER_REPOSITORY } from '../ports/out/affiliate-tier.repository.token';
 import type { AffiliateTierRepositoryPort } from '../ports/out/affiliate-tier.repository.port';
 import { ACTIVITY_LOG } from 'src/platform/activity-log/activity-log.token';
@@ -87,10 +87,19 @@ export class ResetCustomRateService {
         );
       }
 
-      this.logger.error(
-        `커미션 수동 요율 해제 실패 - affiliateId: ${affiliateId}, resetBy: ${resetBy}`,
-        error,
-      );
+      // 도메인 예외는 WARN 레벨로 로깅 (비즈니스 로직의 정상적인 흐름)
+      if (error instanceof CommissionException) {
+        this.logger.warn(
+          `커미션 수동 요율 해제 실패 (도메인 예외) - affiliateId: ${affiliateId}, resetBy: ${resetBy}`,
+          error.message,
+        );
+      } else {
+        // 예상치 못한 시스템 에러만 ERROR 레벨로 로깅
+        this.logger.error(
+          `커미션 수동 요율 해제 실패 - affiliateId: ${affiliateId}, resetBy: ${resetBy}`,
+          error,
+        );
+      }
 
       throw error;
     }

@@ -1,6 +1,8 @@
 import { Injectable, Inject } from '@nestjs/common';
-import type { CredentialUserRepositoryPort } from '../ports/credential-user.repository.port';
-import { CREDENTIAL_USER_REPOSITORY } from '../ports/credential-user.repository.token';
+import {
+  type CredentialUserRepositoryPort,
+  CREDENTIAL_USER_REPOSITORY,
+} from '../ports/out';
 import { comparePassword } from 'src/utils/password.util';
 import { AuthenticatedUser } from 'src/platform/auth/types/auth.types';
 

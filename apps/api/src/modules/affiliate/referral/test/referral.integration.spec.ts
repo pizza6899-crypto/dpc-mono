@@ -165,76 +165,9 @@ describe('AffiliateReferralModule Integration', () => {
   });
 
   afterEach(async () => {
-    // 테스트 데이터 정리 (생성한 사용자 ID로 필터링하여 삭제)
-    if (affiliateUser?.id) {
-      await prismaService.referral.deleteMany({
-        where: {
-          OR: [
-            { affiliateId: affiliateUser.id },
-            { subUserId: affiliateUser.id },
-          ],
-        },
-      });
-      await prismaService.affiliateCode.deleteMany({
-        where: { userId: affiliateUser.id },
-      });
-      // User 관련 테이블들 삭제 (CASCADE가 없는 것들)
-      await prismaService.userBalanceStats.deleteMany({
-        where: { userId: affiliateUser.id },
-      });
-      await prismaService.userBalance.deleteMany({
-        where: { userId: affiliateUser.id },
-      });
-      await prismaService.vipHistory.deleteMany({
-        where: { userId: affiliateUser.id },
-      });
-      await prismaService.vipMembership.deleteMany({
-        where: { userId: affiliateUser.id },
-      });
-      await prismaService.user.deleteMany({
-        where: { id: affiliateUser.id },
-      });
-    }
-    if (subUser1?.id) {
-      await prismaService.referral.deleteMany({
-        where: { subUserId: subUser1.id },
-      });
-      await prismaService.userBalanceStats.deleteMany({
-        where: { userId: subUser1.id },
-      });
-      await prismaService.userBalance.deleteMany({
-        where: { userId: subUser1.id },
-      });
-      await prismaService.vipHistory.deleteMany({
-        where: { userId: subUser1.id },
-      });
-      await prismaService.vipMembership.deleteMany({
-        where: { userId: subUser1.id },
-      });
-      await prismaService.user.deleteMany({
-        where: { id: subUser1.id },
-      });
-    }
-    if (subUser2?.id) {
-      await prismaService.referral.deleteMany({
-        where: { subUserId: subUser2.id },
-      });
-      await prismaService.userBalanceStats.deleteMany({
-        where: { userId: subUser2.id },
-      });
-      await prismaService.userBalance.deleteMany({
-        where: { userId: subUser2.id },
-      });
-      await prismaService.vipHistory.deleteMany({
-        where: { userId: subUser2.id },
-      });
-      await prismaService.vipMembership.deleteMany({
-        where: { userId: subUser2.id },
-      });
-      await prismaService.user.deleteMany({
-        where: { id: subUser2.id },
-      });
-    }
+    // beforeEach에서 이미 정리하므로, 여기서는 추가 정리만 수행
+    // (각 테스트에서 생성한 추가 데이터가 있는 경우를 대비)
+    // 실제로는 beforeEach의 정리 로직으로 충분하므로 빈 함수로 유지
   });
 
   afterAll(async () => {

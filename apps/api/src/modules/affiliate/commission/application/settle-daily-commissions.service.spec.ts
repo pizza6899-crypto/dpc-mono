@@ -31,6 +31,7 @@ jest.mock('src/utils/currency.util', () => ({
 }));
 
 describe('SettleDailyCommissionsService', () => {
+  let module: TestingModule;
   let service: SettleDailyCommissionsService;
   let mockCommissionRepository: jest.Mocked<AffiliateCommissionRepositoryPort>;
   let mockWalletRepository: jest.Mocked<AffiliateWalletRepositoryPort>;
@@ -117,7 +118,7 @@ describe('SettleDailyCommissionsService', () => {
       updateBalance: jest.fn(),
     };
 
-    const module: TestingModule = await Test.createTestingModule({
+    module = await Test.createTestingModule({
       providers: [
         SettleDailyCommissionsService,
         {
@@ -137,8 +138,12 @@ describe('SettleDailyCommissionsService', () => {
     );
   });
 
-  afterEach(() => {
+  afterEach(async () => {
     jest.clearAllMocks();
+    // PrismaModule 연결 정리를 위해 모듈 닫기
+    if (module) {
+      await module.close();
+    }
   });
 
   describe('단일 어필리에이트 정산', () => {

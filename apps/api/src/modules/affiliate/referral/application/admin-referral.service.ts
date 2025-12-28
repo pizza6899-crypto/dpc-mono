@@ -10,7 +10,10 @@ import type { PaginatedData, RequestClientInfo } from 'src/platform/http/types';
 import { GetReferralsQueryDto } from '../controllers/dto/request/get-referrals-query.dto';
 import { AdminReferralListItemDto } from '../controllers/dto/response/admin-referral-response.dto';
 import { ReferralMapper } from '../infrastructure/referral.mapper';
-import { ReferralNotFoundException } from '../domain/referral.exception';
+import {
+  ReferralNotFoundException,
+  ReferralException,
+} from '../domain/referral.exception';
 
 @Injectable()
 export class AdminReferralService {
@@ -133,7 +136,16 @@ export class AdminReferralService {
         total,
       };
     } catch (error) {
-      this.logger.error(error, `Failed to get referrals - Admin: ${adminId}`);
+      // 도메인 예외는 WARN 레벨로 로깅 (비즈니스 로직의 정상적인 흐름)
+      if (error instanceof ReferralException) {
+        this.logger.warn(
+          `Referral domain exception - Admin: ${adminId}`,
+          error.message,
+        );
+      } else {
+        // 예상치 못한 예외만 ERROR 레벨로 로깅
+        this.logger.error(error, `Failed to get referrals - Admin: ${adminId}`);
+      }
       throw error;
     }
   }
@@ -210,10 +222,19 @@ export class AdminReferralService {
         updatedAt: referral.updatedAt,
       };
     } catch (error) {
-      this.logger.error(
-        error,
-        `Failed to get referral by id - ID: ${id}, Admin: ${adminId}`,
-      );
+      // 도메인 예외는 WARN 레벨로 로깅 (비즈니스 로직의 정상적인 흐름)
+      if (error instanceof ReferralException) {
+        this.logger.warn(
+          `Referral domain exception - ID: ${id}, Admin: ${adminId}`,
+          error.message,
+        );
+      } else {
+        // 예상치 못한 예외만 ERROR 레벨로 로깅
+        this.logger.error(
+          error,
+          `Failed to get referral by id - ID: ${id}, Admin: ${adminId}`,
+        );
+      }
       throw error;
     }
   }

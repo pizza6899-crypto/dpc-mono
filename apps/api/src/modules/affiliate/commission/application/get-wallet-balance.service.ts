@@ -1,7 +1,7 @@
 // src/modules/affiliate/commission/application/get-wallet-balance.service.ts
 import { Inject, Injectable, Logger } from '@nestjs/common';
 import { ExchangeCurrencyCode } from '@repo/database';
-import { AffiliateWallet } from '../domain';
+import { AffiliateWallet, CommissionException } from '../domain';
 import { AFFILIATE_WALLET_REPOSITORY } from '../ports/out/affiliate-wallet.repository.token';
 import type { AffiliateWalletRepositoryPort } from '../ports/out/affiliate-wallet.repository.port';
 
@@ -45,10 +45,19 @@ export class GetWalletBalanceService {
       // 모든 통화 반환
       return await this.repository.findByAffiliateId(affiliateId);
     } catch (error) {
-      this.logger.error(
-        `월렛 잔액 조회 실패 - affiliateId: ${affiliateId}, currency: ${currency || 'all'}`,
-        error,
-      );
+      // 도메인 예외는 WARN 레벨로 로깅 (비즈니스 로직의 정상적인 흐름)
+      if (error instanceof CommissionException) {
+        this.logger.warn(
+          `월렛 잔액 조회 실패 (도메인 예외) - affiliateId: ${affiliateId}, currency: ${currency || 'all'}`,
+          error.message,
+        );
+      } else {
+        // 예상치 못한 시스템 에러만 ERROR 레벨로 로깅
+        this.logger.error(
+          `월렛 잔액 조회 실패 - affiliateId: ${affiliateId}, currency: ${currency || 'all'}`,
+          error,
+        );
+      }
       throw error;
     }
   }

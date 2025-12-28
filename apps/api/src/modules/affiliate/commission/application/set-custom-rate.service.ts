@@ -1,7 +1,7 @@
 // src/modules/affiliate/commission/application/set-custom-rate.service.ts
 import { Inject, Injectable, Logger } from '@nestjs/common';
 import { AffiliateTierLevel, Prisma } from '@repo/database';
-import { AffiliateTier, CommissionPolicy } from '../domain';
+import { AffiliateTier, CommissionPolicy, CommissionException } from '../domain';
 import { AFFILIATE_TIER_REPOSITORY } from '../ports/out/affiliate-tier.repository.token';
 import type { AffiliateTierRepositoryPort } from '../ports/out/affiliate-tier.repository.port';
 import { IdUtil } from 'src/utils/id.util';
@@ -113,10 +113,19 @@ export class SetCustomRateService {
         );
       }
 
-      this.logger.error(
-        `커미션 수동 요율 설정 실패 - affiliateId: ${affiliateId}, customRate: ${customRate.toString()}`,
-        error,
-      );
+      // 도메인 예외는 WARN 레벨로 로깅 (비즈니스 로직의 정상적인 흐름)
+      if (error instanceof CommissionException) {
+        this.logger.warn(
+          `커미션 수동 요율 설정 실패 (도메인 예외) - affiliateId: ${affiliateId}, customRate: ${customRate.toString()}`,
+          error.message,
+        );
+      } else {
+        // 예상치 못한 시스템 에러만 ERROR 레벨로 로깅
+        this.logger.error(
+          `커미션 수동 요율 설정 실패 - affiliateId: ${affiliateId}, customRate: ${customRate.toString()}`,
+          error,
+        );
+      }
 
       throw error;
     }

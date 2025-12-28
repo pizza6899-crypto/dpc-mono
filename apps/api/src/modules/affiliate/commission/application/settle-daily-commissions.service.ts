@@ -1,7 +1,7 @@
 // src/modules/affiliate/commission/application/settle-daily-commissions.service.ts
 import { Inject, Injectable, Logger } from '@nestjs/common';
 import { ExchangeCurrencyCode, Prisma } from '@repo/database';
-import { AffiliateWallet, CommissionPolicy } from '../domain';
+import { AffiliateWallet, CommissionPolicy, CommissionException } from '../domain';
 import { AFFILIATE_COMMISSION_REPOSITORY } from '../ports/out/affiliate-commission.repository.token';
 import type { AffiliateCommissionRepositoryPort } from '../ports/out/affiliate-commission.repository.port';
 import { AFFILIATE_WALLET_REPOSITORY } from '../ports/out/affiliate-wallet.repository.token';
@@ -87,10 +87,20 @@ export class SettleDailyCommissionsService {
           successCount++;
         } catch (error) {
           failureCount++;
-          this.logger.error(
-            `어필리에이트 정산 실패 - affiliateId: ${id}`,
-            error,
-          );
+          // 도메인 예외는 WARN 레벨로 로깅 (비즈니스 로직의 정상적인 흐름)
+          if (error instanceof CommissionException) {
+            this.logger.warn(
+              `어필리에이트 정산 실패 (도메인 예외) - affiliateId: ${id}`,
+              error.message,
+            );
+          } else {
+            // 배치 처리 중 일부 실패는 정상적인 시나리오일 수 있으므로 WARN 레벨로 로깅
+            // (다른 어필리에이트 처리에 영향 없음)
+            this.logger.warn(
+              `어필리에이트 정산 실패 - affiliateId: ${id}`,
+              error instanceof Error ? error.message : String(error),
+            );
+          }
           // 개별 실패는 로깅만 하고 계속 진행 (다른 어필리에이트 처리에 영향 없음)
         }
         totalProcessed++;
