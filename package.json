@@ -7,7 +7,20 @@
     "test": "turbo run test",
     "lint": "turbo run lint",
     "format": "turbo run format",
-    "api:prisma": "pnpm --filter api exec prisma"
+    "api:dev": "pnpm -F api dev",
+    "api:build": "pnpm -F api build",
+    "api:start": "pnpm -F api start",
+    "api:test": "pnpm -F api test",
+    "api:lint": "pnpm -F api lint",
+    "api:format": "pnpm -F api format",
+    "api:cli": "pnpm -F api cli",
+    "db:generate": "pnpm -F @repo/database generate",
+    "db:migrate": "pnpm -F @repo/database migrate",
+    "db:format": "pnpm -F @repo/database format",
+    "db:reset": "pnpm -F @repo/database reset",
+    "db:deploy": "pnpm -F @repo/database deploy",
+    "db:seed": "pnpm -F @repo/database seed",
+    "db:studio": "pnpm -F @repo/database exec prisma studio"
   },
   "devDependencies": {
     "@types/node": "^25.0.3",
