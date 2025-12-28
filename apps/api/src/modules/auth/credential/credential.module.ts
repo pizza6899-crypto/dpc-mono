@@ -17,10 +17,6 @@ import { CredentialUserRepository } from './infrastructure/credential-user.repos
 import { LoginAttemptMapper } from './infrastructure/mapper';
 import { CredentialUserMapper } from './infrastructure/credential-user.mapper';
 import { CredentialPolicy } from './domain/policy';
-import { CredentialLocalStrategy } from './infrastructure/strategies/local.strategy';
-import { CredentialAdminLocalStrategy } from './infrastructure/strategies/admin-local.strategy';
-import { CredentialLocalAuthGuard } from './infrastructure/guards/credential-local-auth.guard';
-import { CredentialAdminLocalAuthGuard } from './infrastructure/guards/credential-admin-local-auth.guard';
 import { VipModule } from '../../vip/vip.module';
 import { AffiliateReferralModule } from '../../affiliate/referral/referral.module';
 import { ActivityLogModule } from 'src/platform/activity-log/activity-log.module';
@@ -62,14 +58,6 @@ import { PassportModule } from '@nestjs/passport';
       provide: CREDENTIAL_USER_REPOSITORY,
       useClass: CredentialUserRepository,
     },
-
-    // Strategies
-    CredentialLocalStrategy,
-    CredentialAdminLocalStrategy,
-
-    // Guards
-    CredentialLocalAuthGuard,
-    CredentialAdminLocalAuthGuard,
   ],
   exports: [LoginService, LogoutService, VerifyCredentialService],
 })
