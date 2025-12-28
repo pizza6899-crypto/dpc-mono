@@ -32,12 +32,16 @@ export class CaslPolicy {
 
   /**
    * SUPER_ADMIN 권한: 모든 리소스에 대한 모든 액션
+   *
+   * CASL에서 'all'은 모든 리소스 타입을 의미하며,
+   * Action.MANAGE는 모든 액션(CREATE, READ, UPDATE, DELETE 등)을 의미합니다.
+   * 따라서 이 한 줄로 모든 권한을 허용합니다.
    */
   private defineSuperAdminPermissions(): Permission[] {
     return [
       {
         action: Action.MANAGE,
-        subject: SubjectType.ALL,
+        subject: 'all', // 모든 리소스에 대한 모든 액션
       },
     ];
   }
@@ -140,6 +144,10 @@ export class CaslPolicy {
 
   /**
    * USER 권한: 기본 읽기 및 자신의 리소스만 관리
+   *
+   * CASL은 "거부 우선" (deny-by-default) 정책을 따릅니다.
+   * 즉, 명시적으로 허용하지 않은 권한은 모두 거부됩니다.
+   * 따라서 USER는 허용할 권한만 세세하게 명시해야 합니다.
    */
   private defineUserPermissions(): Permission[] {
     return [
@@ -166,7 +174,7 @@ export class CaslPolicy {
         subject: SubjectType.WITHDRAW,
         conditions: { userId: '${user.id}' },
       },
-      // 프로모션 조회
+      // 프로모션 조회 (공개 정보)
       {
         action: Action.READ,
         subject: SubjectType.PROMOTION,
@@ -176,6 +184,35 @@ export class CaslPolicy {
         action: Action.READ,
         subject: SubjectType.VIP_MEMBERSHIP,
         conditions: { userId: '${user.id}' },
+      },
+      // 환율 조회 (공개 정보)
+      {
+        action: Action.READ,
+        subject: SubjectType.EXCHANGE_RATE,
+      },
+      // 자신의 어필리에이트 코드 관리
+      {
+        action: [Action.READ, Action.CREATE, Action.UPDATE, Action.DELETE],
+        subject: SubjectType.AFFILIATE_CODE,
+        conditions: { userId: '${user.id}' },
+      },
+      // 자신의 어필리에이트 커미션 조회
+      {
+        action: Action.READ,
+        subject: SubjectType.AFFILIATE_COMMISSION,
+        conditions: { affiliateId: '${user.id}' },
+      },
+      // 자신의 어필리에이트 월렛 조회
+      {
+        action: Action.READ,
+        subject: SubjectType.AFFILIATE_WALLET,
+        conditions: { affiliateId: '${user.id}' },
+      },
+      // 자신의 어필리에이트 레퍼럴 조회
+      {
+        action: Action.READ,
+        subject: SubjectType.AFFILIATE_REFERRAL,
+        conditions: { affiliateId: '${user.id}' },
       },
     ];
   }
