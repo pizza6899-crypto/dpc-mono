@@ -50,7 +50,7 @@ export class CaslAbilityFactory {
     }
 
     return build({
-      detectSubjectType: (item) =>
+      detectSubjectType: (item: any) =>
         item.constructor as ExtractSubjectType<Subjects>,
     });
   }
