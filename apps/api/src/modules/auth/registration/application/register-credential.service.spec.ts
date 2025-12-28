@@ -256,12 +256,14 @@ describe('RegisterCredentialService', () => {
         }),
       ).rejects.toThrow(ApiException);
 
+      // 에러 상세 검증
       try {
         await service.execute({
           email: mockEmail,
           password: mockPassword,
           requestInfo: mockRequestInfo,
         });
+        fail('예외가 발생해야 합니다');
       } catch (error) {
         expect(error).toBeInstanceOf(ApiException);
         expect((error as ApiException).messageCode).toBe(
@@ -271,6 +273,7 @@ describe('RegisterCredentialService', () => {
       }
 
       expect(mockUserRepository.create).not.toHaveBeenCalled();
+      expect(mockFindCodeByCodeService.execute).not.toHaveBeenCalled();
     });
 
     it('레퍼럴 코드가 존재하지 않는 경우 에러를 발생시킨다', async () => {
@@ -452,6 +455,88 @@ describe('RegisterCredentialService', () => {
         }),
       );
     });
+
+    it('userRepository.create 실패 시 에러를 전파해야 함', async () => {
+      // Arrange
+      mockUserRepository.findByEmail.mockResolvedValue(null);
+      const createError = new Error('Database error');
+      mockUserRepository.create.mockRejectedValue(createError);
+
+      // Act & Assert
+      await expect(
+        service.execute({
+          email: mockEmail,
+          password: mockPassword,
+          requestInfo: mockRequestInfo,
+        }),
+      ).rejects.toThrow('Database error');
+
+      expect(mockUserRepository.findByEmail).toHaveBeenCalledWith(mockEmail);
+      expect(mockUserRepository.create).toHaveBeenCalled();
+      expect(mockActivityLog.logSuccess).not.toHaveBeenCalled();
+    });
+
+    it('findCodeByCodeService.execute가 일반 에러를 던지면 예외를 전파해야 함', async () => {
+      // Arrange
+      mockUserRepository.findByEmail.mockResolvedValue(null);
+      const codeError = new Error('Code service error');
+      mockFindCodeByCodeService.execute.mockRejectedValue(codeError);
+
+      // Act & Assert
+      await expect(
+        service.execute({
+          email: mockEmail,
+          password: mockPassword,
+          referralCode: mockReferralCode,
+          requestInfo: mockRequestInfo,
+        }),
+      ).rejects.toThrow('Code service error');
+
+      expect(mockFindCodeByCodeService.execute).toHaveBeenCalledWith({
+        code: mockReferralCode,
+      });
+      expect(mockUserRepository.create).not.toHaveBeenCalled();
+    });
+
+    it('userRepository.findByEmail 실패 시 에러를 전파해야 함', async () => {
+      // Arrange
+      const findError = new Error('Database connection error');
+      mockUserRepository.findByEmail.mockRejectedValue(findError);
+
+      // Act & Assert
+      await expect(
+        service.execute({
+          email: mockEmail,
+          password: mockPassword,
+          requestInfo: mockRequestInfo,
+        }),
+      ).rejects.toThrow('Database connection error');
+
+      expect(mockUserRepository.findByEmail).toHaveBeenCalledWith(mockEmail);
+      expect(mockUserRepository.create).not.toHaveBeenCalled();
+    });
+
+    it('레퍼럴 코드 검증이 사용자 생성 전에 이루어져야 함', async () => {
+      // Arrange
+      mockUserRepository.findByEmail.mockResolvedValue(null);
+      mockFindCodeByCodeService.execute.mockResolvedValue(null);
+
+      // Act & Assert
+      await expect(
+        service.execute({
+          email: mockEmail,
+          password: mockPassword,
+          referralCode: mockReferralCode,
+          requestInfo: mockRequestInfo,
+        }),
+      ).rejects.toThrow(ReferralCodeNotFoundException);
+
+      // 레퍼럴 코드 검증이 먼저 호출되어야 함
+      expect(mockFindCodeByCodeService.execute).toHaveBeenCalled();
+      // 사용자 생성은 호출되지 않아야 함
+      expect(mockUserRepository.create).not.toHaveBeenCalled();
+    });
+
   });
 });
 
