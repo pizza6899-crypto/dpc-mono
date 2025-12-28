@@ -19,11 +19,15 @@ import { RequestClientInfoParam } from 'src/platform/auth/decorators/request-inf
 import type { RequestClientInfo } from 'src/platform/http/types/client-info.types';
 import { AuthenticateCredentialAdminService } from '../../application/authenticate-credential-admin.service';
 import { LoginService } from '../../application/login.service';
+import { LogoutService } from '../../application/logout.service';
 import { FindLoginAttemptsService } from '../../application/find-login-attempts.service';
 import { CredentialUserLoginRequestDto } from '../user/dto/request/login.request.dto';
 import { CredentialUserLoginResponseDto } from '../user/dto/response/login.response.dto';
+import { CredentialUserLogoutResponseDto } from '../user/dto/response/logout.response.dto';
+import { CredentialUserAuthStatusResponseDto } from '../user/dto/response/auth-status.response.dto';
 import { LoginAttemptResponseDto } from './dto/response/login-attempt.response.dto';
 import { FindLoginAttemptsQueryDto } from './dto/request/find-login-attempts-query.dto';
+import { UserRoleType } from '@repo/database';
 import type { Request } from 'express';
 
 @Controller('admin/auth')
@@ -33,6 +37,7 @@ export class CredentialAdminController {
   constructor(
     private readonly authenticateCredentialAdminService: AuthenticateCredentialAdminService,
     private readonly loginService: LoginService,
+    private readonly logoutService: LogoutService,
     private readonly findAttemptsService: FindLoginAttemptsService,
   ) {}
 
@@ -82,6 +87,118 @@ export class CredentialAdminController {
         id: authenticatedUser.id,
         email: authenticatedUser.email,
       },
+    };
+  }
+
+  @Post('logout')
+  @Public()
+  @ApiOperation({
+    summary: 'Admin Logout (관리자 로그아웃)',
+    description: '현재 세션 종료. 인증 상태와 관계없이 항상 성공 응답을 반환합니다.',
+  })
+  @ApiStandardResponse(CredentialUserLogoutResponseDto, {
+    status: HttpStatus.OK,
+    description: 'Logout Success',
+  })
+  async logout(
+    @CurrentUser() user?: CurrentUserWithSession,
+    @RequestClientInfoParam() clientInfo?: RequestClientInfo,
+    @Req() req?: Request,
+  ): Promise<CredentialUserLogoutResponseDto> {
+    // 사용자가 있는 경우에만 로그아웃 서비스 실행 (에러 발생해도 무시)
+    if (user && clientInfo) {
+      try {
+        await this.logoutService.execute({
+          userId: user.id,
+          clientInfo,
+          isAdmin: true,
+        });
+      } catch (error) {
+        // LogoutService 에러는 무시하고 성공 응답 반환
+      }
+    }
+
+    // 세션 종료 처리 (에러가 발생해도 무시하고 성공 응답 반환)
+    if (req) {
+      try {
+        await new Promise<void>((resolve) => {
+          // 타임아웃 방지를 위해 최대 100ms 후 강제 resolve
+          const timeout = setTimeout(() => resolve(), 100);
+
+          const cleanup = () => {
+            clearTimeout(timeout);
+            resolve();
+          };
+
+          if (req.logout) {
+            try {
+              req.logout(() => {
+                // logout 콜백: 에러 여부와 관계없이 세션 destroy 시도
+                if (req.session?.destroy) {
+                  try {
+                    req.session.destroy(() => {
+                      cleanup();
+                    });
+                  } catch {
+                    cleanup();
+                  }
+                } else {
+                  cleanup();
+                }
+              });
+            } catch {
+              // logout 호출 자체가 실패하면 즉시 resolve
+              cleanup();
+            }
+          } else if (req.session?.destroy) {
+            try {
+              req.session.destroy(() => {
+                cleanup();
+              });
+            } catch {
+              cleanup();
+            }
+          } else {
+            cleanup();
+          }
+        });
+      } catch (error) {
+        // 세션 종료 실패는 무시하고 성공 응답 반환
+      }
+    }
+
+    // 항상 성공 응답 반환
+    return { success: true };
+  }
+
+  @Get('status')
+  @Public()
+  @ApiOperation({
+    summary: 'Admin Auth Status (관리자 인증 상태)',
+    description: '현재 관리자 로그인 세션 유효 여부 확인',
+  })
+  @ApiStandardResponse(CredentialUserAuthStatusResponseDto, {
+    status: HttpStatus.OK,
+  })
+  async checkStatus(
+    @Req() req: Request,
+    @CurrentUser() user?: CurrentUserWithSession,
+  ): Promise<CredentialUserAuthStatusResponseDto> {
+    // 관리자 역할 체크
+    const isAdmin =
+      user?.role === UserRoleType.ADMIN ||
+      user?.role === UserRoleType.SUPER_ADMIN;
+    const isAuthenticated = req.isAuthenticated() && !!user && isAdmin;
+
+    return {
+      isAuthenticated,
+      user:
+        isAuthenticated && user
+          ? {
+              id: user.id,
+              email: user.email,
+            }
+          : null,
     };
   }
 
