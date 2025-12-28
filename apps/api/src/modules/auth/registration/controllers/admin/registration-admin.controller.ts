@@ -1,4 +1,4 @@
-import { Controller, Post, Body, HttpStatus, UseGuards } from '@nestjs/common';
+import { Controller, Post, Body, HttpStatus, HttpCode, UseGuards } from '@nestjs/common';
 import { ApiTags, ApiOperation } from '@nestjs/swagger';
 import {
   ApiStandardResponse,
@@ -24,6 +24,7 @@ export class RegistrationAdminController {
   ) {}
 
   @Post('users')
+  @HttpCode(HttpStatus.CREATED)
   @ApiOperation({
     summary: 'Create user (사용자 생성)',
     description:

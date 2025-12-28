@@ -1,4 +1,4 @@
-import { Controller, Post, Body, HttpStatus } from '@nestjs/common';
+import { Controller, Post, Body, HttpStatus, HttpCode } from '@nestjs/common';
 import { ApiTags, ApiOperation } from '@nestjs/swagger';
 import {
   ApiStandardResponse,
@@ -22,6 +22,7 @@ export class RegistrationController {
   ) {}
 
   @Post()
+  @HttpCode(HttpStatus.CREATED)
   @Public()
   @Throttle({
     limit: 5,
