@@ -1,4 +1,4 @@
-import { Controller, Post, Body, HttpStatus, HttpCode, UseGuards } from '@nestjs/common';
+import { Controller, Post, Body, HttpStatus, HttpCode } from '@nestjs/common';
 import { ApiTags, ApiOperation } from '@nestjs/swagger';
 import {
   ApiStandardResponse,
@@ -6,7 +6,6 @@ import {
 } from '../../../../../platform/http/decorators/api-response.decorator';
 import { RequestClientInfoParam } from 'src/platform/auth/decorators/request-info.decorator';
 import type { RequestClientInfo } from 'src/platform/http/types/client-info.types';
-import { SessionAuthGuard } from 'src/platform/auth/guards/session-auth.guard';
 import { RequireRoles } from 'src/platform/auth/decorators/roles.decorator';
 import { UserRoleType } from '@repo/database';
 import { RegisterCredentialAdminService } from '../../application/register-credential-admin.service';
@@ -16,7 +15,6 @@ import { RegisterAdminResponseDto } from './dto/response/register-admin.response
 @Controller('admin/registration')
 @ApiTags('Admin Registration (관리자 회원가입 관리)')
 @ApiStandardErrors()
-@UseGuards(SessionAuthGuard)
 @RequireRoles(UserRoleType.ADMIN, UserRoleType.SUPER_ADMIN)
 export class RegistrationAdminController {
   constructor(

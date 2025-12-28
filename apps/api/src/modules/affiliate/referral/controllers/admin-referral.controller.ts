@@ -4,12 +4,10 @@ import {
   Get,
   Param,
   Query,
-  UseGuards,
   HttpCode,
   HttpStatus,
 } from '@nestjs/common';
 import { ApiTags, ApiOperation, ApiParam } from '@nestjs/swagger';
-import { SessionAuthGuard } from 'src/platform/auth/guards/session-auth.guard';
 import { RequireRoles } from 'src/platform/auth/decorators/roles.decorator';
 import { UserRoleType } from '@repo/database';
 import {
@@ -29,7 +27,6 @@ import { AdminReferralListItemDto } from './dto/response/admin-referral-response
 @Controller('admin/affiliate/referrals')
 @ApiTags('Admin Referral Management (관리자 레퍼럴 관리)')
 @ApiStandardErrors()
-@UseGuards(SessionAuthGuard)
 @RequireRoles(UserRoleType.ADMIN, UserRoleType.SUPER_ADMIN)
 export class AdminReferralController {
   constructor(private readonly adminReferralService: AdminReferralService) {}

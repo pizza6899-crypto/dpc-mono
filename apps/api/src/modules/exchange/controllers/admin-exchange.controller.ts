@@ -3,11 +3,9 @@ import {
   Post,
   HttpCode,
   HttpStatus,
-  UseGuards,
 } from '@nestjs/common';
 import { ApiTags, ApiOperation, ApiResponse } from '@nestjs/swagger';
 import { ExchangeRateService } from '../application/exchange-rate.service';
-import { SessionAuthGuard } from 'src/platform/auth/guards/session-auth.guard';
 import { RequireRoles } from 'src/platform/auth/decorators/roles.decorator';
 import { UserRoleType } from '@repo/database';
 import { Throttle } from 'src/platform/throttle/decorators/throttle.decorator';
@@ -15,7 +13,6 @@ import { ThrottleScope } from 'src/platform/throttle/types/throttle.types';
 
 @ApiTags('Admin Exchange Management (관리자 환율 관리)')
 @Controller('admin/exchange')
-@UseGuards(SessionAuthGuard)
 @RequireRoles(UserRoleType.ADMIN, UserRoleType.SUPER_ADMIN)
 export class AdminExchangeController {
   constructor(private readonly exchangeRateService: ExchangeRateService) {}

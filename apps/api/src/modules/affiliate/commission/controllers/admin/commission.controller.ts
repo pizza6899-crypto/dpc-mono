@@ -7,7 +7,6 @@ import {
   Body,
   HttpCode,
   HttpStatus,
-  UseGuards,
 } from '@nestjs/common';
 import { ApiTags, ApiOperation } from '@nestjs/swagger';
 import {
@@ -18,7 +17,6 @@ import { CurrentUser } from 'src/platform/auth/decorators/current-user.decorator
 import type { CurrentUserWithSession } from 'src/platform/auth/decorators/current-user.decorator';
 import { RequestClientInfoParam } from 'src/platform/auth/decorators/request-info.decorator';
 import type { RequestClientInfo } from 'src/platform/http/types/client-info.types';
-import { SessionAuthGuard } from 'src/platform/auth/guards/session-auth.guard';
 import { RequireRoles } from 'src/platform/auth/decorators/roles.decorator';
 import { UserRoleType } from '@repo/database';
 import { Prisma } from '@repo/database';
@@ -33,7 +31,6 @@ import { AffiliateCommission, AffiliateTier } from '../../domain';
 
 @ApiTags('Admin Commission Management (관리자 커미션 관리)')
 @Controller('admin/commissions')
-@UseGuards(SessionAuthGuard)
 @RequireRoles(UserRoleType.ADMIN, UserRoleType.SUPER_ADMIN)
 @ApiStandardErrors()
 export class AdminCommissionController {

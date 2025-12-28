@@ -5,12 +5,10 @@ import {
   Param,
   Body,
   Query,
-  UseGuards,
   HttpCode,
   HttpStatus,
 } from '@nestjs/common';
 import { ApiTags, ApiOperation, ApiParam } from '@nestjs/swagger';
-import { SessionAuthGuard } from 'src/platform/auth/guards/session-auth.guard';
 import { RequireRoles } from 'src/platform/auth/decorators/roles.decorator';
 import { Prisma, UserRoleType } from '@repo/database';
 import {
@@ -36,7 +34,6 @@ import {
 @Controller('admin/payment/deposits')
 @ApiTags('Admin Deposit Management (관리자 입금 관리)')
 @ApiStandardErrors()
-@UseGuards(SessionAuthGuard)
 @RequireRoles(UserRoleType.ADMIN, UserRoleType.SUPER_ADMIN)
 export class AdminDepositController {
   constructor(private readonly adminDepositService: AdminDepositService) {}
