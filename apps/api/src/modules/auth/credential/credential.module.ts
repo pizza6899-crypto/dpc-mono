@@ -1,24 +1,47 @@
 import { Module } from '@nestjs/common';
-import { PassportModule } from '@nestjs/passport';
+import { CredentialUserController } from './controllers/user/credential-user.controller';
+import { CredentialAdminController } from './controllers/admin/credential-admin.controller';
+import { LoginService } from './application/login.service';
+import { LogoutService } from './application/logout.service';
+import { RecordLoginAttemptService } from './application/record-login-attempt.service';
+import { FindLoginAttemptsService } from './application/find-login-attempts.service';
+import { LOGIN_ATTEMPT_REPOSITORY } from './ports/login-attempt.repository.token';
+import { LoginAttemptRepository } from './infrastructure/repository';
+import { LoginAttemptMapper } from './infrastructure/mapper';
+import { CredentialPolicy } from './domain/policy';
+import { CredentialLocalStrategy } from './infrastructure/strategies/local.strategy';
+import { CredentialAdminLocalStrategy } from './infrastructure/strategies/admin-local.strategy';
+import { AuthService } from '../application/auth.service';
+import { VipModule } from '../../vip/vip.module';
+import { AffiliateReferralModule } from '../../affiliate/referral/referral.module';
 
-/**
- * Credential 모듈
- *
- * 로그인/로그아웃 로직을 담당하는 하위 도메인 모듈입니다.
- *
- * 주요 책임:
- * - 사용자 자격 증명 검증 (ID/PW, 소셜 로그인)
- * - 로그인/로그아웃 Use Case 처리
- * - User/Admin별 인증 컨트롤러 제공
- *
- * 구조:
- * - application/: LoginUseCase 등 (Passport Guard 호출 후 로직)
- * - controllers/: User/Admin별 로그인 컨트롤러
- * - infrastructure/: Passport Strategies (Local, Social 등)
- */
 @Module({
-  imports: [],
-  providers: [],
-  exports: [],
+  imports: [VipModule, AffiliateReferralModule],
+  controllers: [CredentialUserController, CredentialAdminController],
+  providers: [
+    // Application Services
+    LoginService,
+    LogoutService,
+    RecordLoginAttemptService,
+    FindLoginAttemptsService,
+
+    // Domain Policies
+    CredentialPolicy,
+
+    // Infrastructure
+    LoginAttemptMapper,
+    {
+      provide: LOGIN_ATTEMPT_REPOSITORY,
+      useClass: LoginAttemptRepository,
+    },
+
+    // Strategies
+    CredentialLocalStrategy,
+    CredentialAdminLocalStrategy,
+
+    // Shared Services (참조용)
+    AuthService,
+  ],
+  exports: [LoginService, LogoutService],
 })
 export class CredentialModule {}

@@ -22,6 +22,7 @@ import { PasswordService } from './application/password.service';
 import { MailModule } from 'src/platform/mail/mail.module';
 import { SessionModule } from 'src/platform/session/session.module';
 import { AffiliateReferralModule } from '../affiliate/referral/referral.module';
+import { CredentialModule } from './credential/credential.module';
 
 @Module({
   imports: [
@@ -34,6 +35,7 @@ import { AffiliateReferralModule } from '../affiliate/referral/referral.module';
     MailModule,
     SessionModule,
     AffiliateReferralModule, // 레퍼럴 서비스 사용을 위해 추가
+    CredentialModule, // 하위 자격 증명 모듈 추가
   ],
   controllers: [
     AuthController,

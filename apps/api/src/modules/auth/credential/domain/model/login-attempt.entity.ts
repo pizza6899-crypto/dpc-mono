@@ -31,27 +31,24 @@ export enum LoginFailureReason {
 export class LoginAttempt {
   private constructor(
     public readonly id: bigint | null, // 내부 관리용 (DB 저장 시 자동 생성)
-    public readonly uid: string | null, // 비즈니스용 (CUID2, DB 저장 시 자동 생성)
-    public readonly userId: string | null, // 성공한 경우 사용자 ID, 실패한 경우 null
-    private _result: LoginAttemptResult,
-    private _failureReason: LoginFailureReason | null, // 실패한 경우에만 값 존재
-    private readonly _ipAddress: string | null,
-    private readonly _userAgent: string | null,
-    private readonly _deviceFingerprint: string | null,
-    private readonly _isMobile: boolean | null,
+    public readonly uid: string, // 비즈니스용 (CUID2)
+    public readonly userId: string | null, // 시도한 사용자 ID (알 수 있는 경우)
+    public readonly result: LoginAttemptResult,
+    public readonly failureReason: LoginFailureReason | null, // 실패한 경우에만 값 존재
+    public readonly ipAddress: string | null,
+    public readonly userAgent: string | null,
+    public readonly deviceFingerprint: string | null,
+    public readonly isMobile: boolean | null,
     public readonly attemptedAt: Date,
-    public readonly email: string | null, // 시도한 이메일 (보안 목적)
+    public readonly email: string | null, // 시도한 이메일
     public readonly isAdmin: boolean, // 관리자 로그인 시도 여부
   ) {}
 
   /**
    * 성공한 로그인 시도 생성
-   * @param params - 로그인 시도 파라미터
-   * @returns 생성된 로그인 시도 엔티티
-   * @description 새 엔티티 생성 시 id=null, uid는 애플리케이션에서 CUID 생성하여 전달 필수
    */
   static createSuccess(params: {
-    uid: string; // 필수: 애플리케이션에서 CUID 생성하여 전달 (IdUtil.generateUid() 사용)
+    uid: string;
     userId: string;
     ipAddress?: string | null;
     userAgent?: string | null;
@@ -62,11 +59,11 @@ export class LoginAttempt {
     attemptedAt?: Date;
   }): LoginAttempt {
     return new LoginAttempt(
-      null, // 새 엔티티는 id가 null
+      null,
       params.uid,
       params.userId,
       LoginAttemptResult.SUCCESS,
-      null, // 성공한 경우 실패 이유 없음
+      null,
       params.ipAddress ?? null,
       params.userAgent ?? null,
       params.deviceFingerprint ?? null,
@@ -79,13 +76,12 @@ export class LoginAttempt {
 
   /**
    * 실패한 로그인 시도 생성
-   * @param params - 로그인 시도 파라미터
-   * @returns 생성된 로그인 시도 엔티티
-   * @description 새 엔티티 생성 시 id=null, uid는 애플리케이션에서 CUID 생성하여 전달 필수
+   * @description userId를 알 수 있는 경우(예: 패스포트 검증 중 사용자 발견 후 비번 틀림) 함께 기록하면 보안 정책 적용에 유리합니다.
    */
   static createFailure(params: {
-    uid: string; // 필수: 애플리케이션에서 CUID 생성하여 전달 (IdUtil.generateUid() 사용)
+    uid: string;
     failureReason: LoginFailureReason;
+    userId?: string | null;
     ipAddress?: string | null;
     userAgent?: string | null;
     deviceFingerprint?: string | null;
@@ -95,9 +91,9 @@ export class LoginAttempt {
     attemptedAt?: Date;
   }): LoginAttempt {
     return new LoginAttempt(
-      null, // 새 엔티티는 id가 null
+      null,
       params.uid,
-      null, // 실패한 경우 userId 없음
+      params.userId ?? null,
       LoginAttemptResult.FAILED,
       params.failureReason,
       params.ipAddress ?? null,
@@ -112,12 +108,10 @@ export class LoginAttempt {
 
   /**
    * DB에서 조회한 데이터로부터 엔티티 생성
-   * Repository에서 Prisma를 통해 생성/조회된 데이터를 Domain Entity로 변환할 때 사용
-   * @description 영속화된 엔티티는 id와 uid 모두 보유
    */
   static fromPersistence(data: {
     id: bigint | null;
-    uid: string; // 영속화된 엔티티는 항상 uid 보유
+    uid: string;
     userId: string | null;
     result: string;
     failureReason: string | null;
@@ -145,51 +139,17 @@ export class LoginAttempt {
     );
   }
 
-  // Getters
-  get result(): LoginAttemptResult {
-    return this._result;
-  }
-
-  get failureReason(): LoginFailureReason | null {
-    return this._failureReason;
-  }
-
-  get ipAddress(): string | null {
-    return this._ipAddress;
-  }
-
-  get userAgent(): string | null {
-    return this._userAgent;
-  }
-
-  get deviceFingerprint(): string | null {
-    return this._deviceFingerprint;
-  }
-
-  get isMobile(): boolean | null {
-    return this._isMobile;
-  }
-
   // Business Logic Methods
-  /**
-   * 로그인 시도가 성공했는지 확인
-   */
   isSuccess(): boolean {
-    return this._result === LoginAttemptResult.SUCCESS;
+    return this.result === LoginAttemptResult.SUCCESS;
   }
 
-  /**
-   * 로그인 시도가 실패했는지 확인
-   */
   isFailure(): boolean {
-    return this._result === LoginAttemptResult.FAILED;
+    return this.result === LoginAttemptResult.FAILED;
   }
 
-  /**
-   * 특정 실패 이유로 실패했는지 확인
-   */
   hasFailureReason(reason: LoginFailureReason): boolean {
-    return this._failureReason === reason;
+    return this.failureReason === reason;
   }
 
   /**
@@ -200,12 +160,12 @@ export class LoginAttempt {
       id: this.id,
       uid: this.uid,
       userId: this.userId,
-      result: this._result,
-      failureReason: this._failureReason,
-      ipAddress: this._ipAddress,
-      userAgent: this._userAgent,
-      deviceFingerprint: this._deviceFingerprint,
-      isMobile: this._isMobile,
+      result: this.result,
+      failureReason: this.failureReason,
+      ipAddress: this.ipAddress,
+      userAgent: this.userAgent,
+      deviceFingerprint: this.deviceFingerprint,
+      isMobile: this.isMobile,
       attemptedAt: this.attemptedAt,
       email: this.email,
       isAdmin: this.isAdmin,

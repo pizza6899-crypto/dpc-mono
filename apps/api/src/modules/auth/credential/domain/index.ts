@@ -1,10 +1,3 @@
-// src/modules/auth/credential/domain/index.ts
-export {
-  LoginAttempt,
-  LoginAttemptResult,
-  LoginFailureReason,
-} from './model/login-attempt.entity';
-export {
-  CredentialException,
-  LoginAttemptNotFoundException,
-} from './credential.exception';
+export * from './model/login-attempt.entity';
+export * from './policy';
+export * from './exception';

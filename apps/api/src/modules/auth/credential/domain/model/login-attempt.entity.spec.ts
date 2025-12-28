@@ -124,6 +124,17 @@ describe('LoginAttempt Entity', () => {
       expect(attempt.attemptedAt).toEqual(mockAttemptedAt);
     });
 
+    it('사용자 ID가 포함된 실패한 로그인 시도를 생성한다', () => {
+      const attempt = LoginAttempt.createFailure({
+        uid: mockUid,
+        userId: mockUserId,
+        failureReason: LoginFailureReason.INVALID_CREDENTIALS,
+      });
+
+      expect(attempt.userId).toBe(mockUserId);
+      expect(attempt.result).toBe(LoginAttemptResult.FAILED);
+    });
+
     it('다양한 실패 이유로 실패한 로그인 시도를 생성한다', () => {
       const reasons = [
         LoginFailureReason.INVALID_CREDENTIALS,
@@ -142,7 +153,6 @@ describe('LoginAttempt Entity', () => {
 
         expect(attempt.result).toBe(LoginAttemptResult.FAILED);
         expect(attempt.failureReason).toBe(reason);
-        expect(attempt.userId).toBeNull();
       });
     });
 
@@ -228,7 +238,7 @@ describe('LoginAttempt Entity', () => {
       const attempt = LoginAttempt.fromPersistence({
         id: BigInt(2),
         uid: mockUid,
-        userId: null,
+        userId: mockUserId,
         result: 'FAILED',
         failureReason: 'INVALID_CREDENTIALS',
         ipAddress: mockIpAddress,
@@ -242,7 +252,7 @@ describe('LoginAttempt Entity', () => {
 
       expect(attempt.id).toBe(BigInt(2));
       expect(attempt.uid).toBe(mockUid);
-      expect(attempt.userId).toBeNull();
+      expect(attempt.userId).toBe(mockUserId);
       expect(attempt.result).toBe(LoginAttemptResult.FAILED);
       expect(attempt.failureReason).toBe(
         LoginFailureReason.INVALID_CREDENTIALS,
@@ -311,101 +321,6 @@ describe('LoginAttempt Entity', () => {
       expect(attempt.isMobile).toBeNull();
       expect(attempt.email).toBeNull();
       expect(attempt.userId).toBeNull();
-    });
-  });
-
-  describe('Getters', () => {
-    it('result getter가 올바른 값을 반환한다', () => {
-      const successAttempt = LoginAttempt.createSuccess({
-        uid: mockUid,
-        userId: mockUserId,
-      });
-      const failureAttempt = LoginAttempt.createFailure({
-        uid: mockUid,
-        failureReason: LoginFailureReason.INVALID_CREDENTIALS,
-      });
-
-      expect(successAttempt.result).toBe(LoginAttemptResult.SUCCESS);
-      expect(failureAttempt.result).toBe(LoginAttemptResult.FAILED);
-    });
-
-    it('failureReason getter가 올바른 값을 반환한다', () => {
-      const successAttempt = LoginAttempt.createSuccess({
-        uid: mockUid,
-        userId: mockUserId,
-      });
-      const failureAttempt = LoginAttempt.createFailure({
-        uid: mockUid,
-        failureReason: LoginFailureReason.ACCOUNT_SUSPENDED,
-      });
-
-      expect(successAttempt.failureReason).toBeNull();
-      expect(failureAttempt.failureReason).toBe(
-        LoginFailureReason.ACCOUNT_SUSPENDED,
-      );
-    });
-
-    it('ipAddress getter가 올바른 값을 반환한다', () => {
-      const attempt = LoginAttempt.createSuccess({
-        uid: mockUid,
-        userId: mockUserId,
-        ipAddress: mockIpAddress,
-      });
-
-      expect(attempt.ipAddress).toBe(mockIpAddress);
-    });
-
-    it('userAgent getter가 올바른 값을 반환한다', () => {
-      const attempt = LoginAttempt.createSuccess({
-        uid: mockUid,
-        userId: mockUserId,
-        userAgent: mockUserAgent,
-      });
-
-      expect(attempt.userAgent).toBe(mockUserAgent);
-    });
-
-    it('deviceFingerprint getter가 올바른 값을 반환한다', () => {
-      const attempt = LoginAttempt.createSuccess({
-        uid: mockUid,
-        userId: mockUserId,
-        deviceFingerprint: mockDeviceFingerprint,
-      });
-
-      expect(attempt.deviceFingerprint).toBe(mockDeviceFingerprint);
-    });
-
-    it('isMobile getter가 올바른 값을 반환한다', () => {
-      const mobileAttempt = LoginAttempt.createSuccess({
-        uid: mockUid,
-        userId: mockUserId,
-        isMobile: true,
-      });
-      const desktopAttempt = LoginAttempt.createSuccess({
-        uid: mockUid,
-        userId: mockUserId,
-        isMobile: false,
-      });
-      const nullAttempt = LoginAttempt.createSuccess({
-        uid: mockUid,
-        userId: mockUserId,
-      });
-
-      expect(mobileAttempt.isMobile).toBe(true);
-      expect(desktopAttempt.isMobile).toBe(false);
-      expect(nullAttempt.isMobile).toBeNull();
-    });
-
-    it('null 값에 대한 getter가 올바르게 동작한다', () => {
-      const attempt = LoginAttempt.createSuccess({
-        uid: mockUid,
-        userId: mockUserId,
-      });
-
-      expect(attempt.ipAddress).toBeNull();
-      expect(attempt.userAgent).toBeNull();
-      expect(attempt.deviceFingerprint).toBeNull();
-      expect(attempt.email).toBeNull();
     });
   });
 
@@ -578,10 +493,9 @@ describe('LoginAttempt Entity', () => {
       });
 
       const persistence = original.toPersistence();
-      // fromPersistence를 위해 id 추가 및 타입 변환 (실제 DB에서는 자동 생성)
       const recreated = LoginAttempt.fromPersistence({
         id: BigInt(1),
-        uid: persistence.uid!, // 새로 생성된 엔티티는 항상 uid 보유
+        uid: persistence.uid,
         userId: persistence.userId,
         result: persistence.result,
         failureReason: persistence.failureReason,
@@ -614,7 +528,7 @@ describe('LoginAttempt Entity', () => {
       const persistence = original.toPersistence();
       const recreated = LoginAttempt.fromPersistence({
         id: BigInt(2),
-        uid: persistence.uid!, // 새로 생성된 엔티티는 항상 uid 보유
+        uid: persistence.uid,
         userId: persistence.userId,
         result: persistence.result,
         failureReason: persistence.failureReason,

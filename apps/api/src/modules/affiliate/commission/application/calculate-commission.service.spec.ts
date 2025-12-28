@@ -124,6 +124,7 @@ describe('CalculateCommissionService', () => {
       create: jest.fn(),
       updateStatus: jest.fn(),
       settlePendingCommissions: jest.fn(),
+      findAffiliateIdsWithPendingCommissions: jest.fn(),
     };
 
     mockTierRepository = {
