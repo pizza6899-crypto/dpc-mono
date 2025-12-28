@@ -20,15 +20,11 @@ import { CredentialPolicy } from './domain/policy';
 import { VipModule } from '../../vip/vip.module';
 import { AffiliateReferralModule } from '../../affiliate/referral/referral.module';
 import { ActivityLogModule } from 'src/platform/activity-log/activity-log.module';
-import { PrismaModule } from 'src/platform/prisma/prisma.module';
-import { EnvModule } from 'src/platform/env/env.module';
 import { PassportModule } from '@nestjs/passport';
 
 @Module({
   imports: [
     PassportModule.register({ session: true }),
-    PrismaModule, // @Transactional() 데코레이터를 위해 필요
-    EnvModule, // @Transactional() 데코레이터를 위해 필요
     VipModule,
     AffiliateReferralModule,
     ActivityLogModule,
