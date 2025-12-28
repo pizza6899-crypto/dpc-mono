@@ -24,4 +24,4 @@ import { EnvService } from '../env/env.service';
   providers: [PrismaService, EnvService],
   exports: [PrismaService, ClsModule],
 })
-export class PrismaModule {}
+export class PrismaModule { }

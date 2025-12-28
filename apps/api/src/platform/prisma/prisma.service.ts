@@ -12,8 +12,7 @@ import { nowUtc } from 'src/utils/date.util';
 @Injectable()
 export class PrismaService
   extends PrismaClient<Prisma.PrismaClientOptions, 'query'>
-  implements OnModuleInit, OnModuleDestroy
-{
+  implements OnModuleInit, OnModuleDestroy {
   private readonly logger = new Logger(PrismaService.name);
 
   constructor(private readonly envService: EnvService) {
