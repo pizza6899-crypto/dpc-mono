@@ -1,8 +1,7 @@
 import { Injectable } from '@nestjs/common';
 import type { AuthenticatedUser } from 'src/platform/auth/types/auth.types';
 import { CaslPolicy } from '../domain';
-import { CaslAbilityFactory } from '../infrastructure/casl-ability.factory';
-import type { Ability } from '@casl/ability';
+import { CaslAbilityFactory, type AppAbility } from '../infrastructure/casl-ability.factory';
 
 /**
  * 사용자별 권한 정의 Use Case
@@ -22,7 +21,7 @@ export class DefineAbilitiesService {
    * @param user - 인증된 사용자
    * @returns CASL Ability 객체
    */
-  async execute(user: AuthenticatedUser): Promise<Ability> {
+  async execute(user: AuthenticatedUser): Promise<AppAbility> {
     // 1. 역할별 권한 정의
     const permissions = this.policy.defineRolePermissions(user.role);
 
