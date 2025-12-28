@@ -18,10 +18,8 @@ import { ActivityLogPort } from '../../activity-log/activity-log.port';
 import { ACTIVITY_LOG } from '../../activity-log/activity-log.token';
 import {
   ActivityType,
-  ActivityStatus,
 } from '../../activity-log/activity-log.types';
-import { RequestClientInfo } from '../types/client-info.types';
-import { nowUtc } from 'src/utils/date.util';
+import { extractClientInfo } from '../utils/request-info.util';
 import { Prisma } from '@repo/database';
 
 @Catch()
@@ -179,7 +177,7 @@ export class HttpExceptionFilter implements ExceptionFilter {
     }
 
     try {
-      const requestInfo = this.extractRequestClientInfo(request);
+      const requestInfo = extractClientInfo(request);
       const userId =
         (request as any).user?.id ||
         (request as any).session?.userId ||
@@ -214,98 +212,4 @@ export class HttpExceptionFilter implements ExceptionFilter {
     }
   }
 
-  /**
-   * Request에서 RequestClientInfo 추출
-   */
-  private extractRequestClientInfo(request: Request): RequestClientInfo {
-    const getClientIP = (): string => {
-      return (
-        (request.headers['cf-connecting-ip'] as string) ||
-        request.headers['x-forwarded-for']?.toString().split(',')[0].trim() ||
-        (request.headers['x-real-ip'] as string) ||
-        request.ip ||
-        request.connection?.remoteAddress ||
-        request.socket?.remoteAddress ||
-        '127.0.0.1'
-      );
-    };
-
-    const userAgent = request.headers['user-agent'] || '';
-    const deviceInfo = this.parseUserAgent(userAgent);
-
-    return {
-      ip: getClientIP(),
-      userAgent,
-      country: (request.headers['cf-ipcountry'] as string) || 'XX',
-      city: request.headers['cf-ipcity'] as string,
-      referer: request.headers['referer'] || '',
-      acceptLanguage: request.headers['accept-language'] || '',
-      fingerprint: this.generateFingerprint(request),
-      protocol: request.protocol,
-      method: request.method,
-      path: request.path,
-      timestamp: nowUtc(),
-      isMobile: deviceInfo.isMobile,
-      browser: deviceInfo.browser,
-      os: deviceInfo.os,
-      timezone: request.headers['cf-timezone'] as string,
-      isp: request.headers['cf-meta-isp'] as string,
-      asn: request.headers['cf-meta-asn'] as string,
-      threat: request.headers['cf-threat'] as string,
-      bot: request.headers['cf-bot-management'] === 'true',
-    };
-  }
-
-  /**
-   * User-Agent 파싱하여 디바이스 정보 추출
-   */
-  private parseUserAgent(userAgent: string) {
-    const ua = userAgent.toLowerCase();
-
-    const isMobile = /mobile|android|iphone|ipad|phone|tablet/.test(ua);
-
-    let browser = 'unknown';
-    if (ua.includes('chrome') && !ua.includes('edg')) browser = 'Chrome';
-    else if (ua.includes('firefox')) browser = 'Firefox';
-    else if (ua.includes('safari') && !ua.includes('chrome'))
-      browser = 'Safari';
-    else if (ua.includes('edg')) browser = 'Edge';
-    else if (ua.includes('opera')) browser = 'Opera';
-
-    let os = 'unknown';
-    if (ua.includes('windows')) os = 'Windows';
-    else if (ua.includes('mac os')) os = 'macOS';
-    else if (ua.includes('linux')) os = 'Linux';
-    else if (ua.includes('android')) os = 'Android';
-    else if (ua.includes('ios') || ua.includes('iphone') || ua.includes('ipad'))
-      os = 'iOS';
-
-    return { isMobile, browser, os };
-  }
-
-  /**
-   * 브라우저 핑거프린트 생성
-   */
-  private generateFingerprint(request: Request): string {
-    const components = [
-      request.headers['cf-connecting-ip'] || request.ip,
-      request.headers['user-agent'],
-      request.headers['accept-language'],
-      request.headers['accept-encoding'],
-      request.headers['accept'],
-      request.headers['dnt'],
-      request.headers['sec-ch-ua'],
-      request.headers['sec-ch-ua-platform'],
-    ].filter(Boolean);
-
-    if (components.length === 0) return 'unknown';
-
-    const combined = components.join('|');
-    let hash = 5381;
-    for (let i = 0; i < combined.length; i++) {
-      hash = (hash << 5) + hash + combined.charCodeAt(i);
-    }
-
-    return Math.abs(hash).toString(36);
-  }
 }

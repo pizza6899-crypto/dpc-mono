@@ -108,6 +108,7 @@ export class LoginAttempt {
 
   /**
    * DB에서 조회한 데이터로부터 엔티티 생성
+   * @throws {Error} result 또는 failureReason이 유효한 enum 값이 아닌 경우
    */
   static fromPersistence(data: {
     id: bigint | null;
@@ -123,6 +124,46 @@ export class LoginAttempt {
     email: string | null;
     isAdmin: boolean;
   }): LoginAttempt {
+    // result enum 값 검증
+    if (
+      data.result !== LoginAttemptResult.SUCCESS &&
+      data.result !== LoginAttemptResult.FAILED
+    ) {
+      throw new Error(
+        `Invalid LoginAttemptResult: ${data.result}. Expected SUCCESS or FAILED`,
+      );
+    }
+
+    // failureReason enum 값 검증 (null이 아닌 경우에만)
+    if (data.failureReason !== null) {
+      const validReasons = Object.values(LoginFailureReason);
+      if (!validReasons.includes(data.failureReason as LoginFailureReason)) {
+        throw new Error(
+          `Invalid LoginFailureReason: ${data.failureReason}. Expected one of: ${validReasons.join(', ')}`,
+        );
+      }
+    }
+
+    // 비즈니스 규칙 검증: 성공한 경우 failureReason은 null이어야 함
+    if (
+      data.result === LoginAttemptResult.SUCCESS &&
+      data.failureReason !== null
+    ) {
+      throw new Error(
+        'LoginAttemptResult.SUCCESS cannot have a failureReason',
+      );
+    }
+
+    // 비즈니스 규칙 검증: 실패한 경우 failureReason은 필수
+    if (
+      data.result === LoginAttemptResult.FAILED &&
+      data.failureReason === null
+    ) {
+      throw new Error(
+        'LoginAttemptResult.FAILED must have a failureReason',
+      );
+    }
+
     return new LoginAttempt(
       data.id,
       data.uid,

@@ -8,7 +8,7 @@ import {
   LoginAttemptResult,
   LoginFailureReason,
 } from '../domain';
-import { IdUtil } from 'src/utils/id.util';
+import { generateUid } from 'src/utils/id.util';
 
 export interface RecordLoginAttemptParams {
   userId?: string | null;
@@ -40,10 +40,12 @@ export class RecordLoginAttemptService {
     email,
     isAdmin,
   }: RecordLoginAttemptParams): Promise<LoginAttempt> {
-    const uid = IdUtil.generateUid(); // CUID2 생성
+    const uid = generateUid(); // CUID2 생성
 
     let attempt: LoginAttempt;
 
+    // 성공한 로그인 시도는 userId가 필수입니다.
+    // result가 SUCCESS인데 userId가 없으면 실패로 처리합니다.
     if (result === LoginAttemptResult.SUCCESS && userId) {
       attempt = LoginAttempt.createSuccess({
         uid,
@@ -56,10 +58,11 @@ export class RecordLoginAttemptService {
         isAdmin,
       });
     } else {
+      // 실패한 로그인 시도 또는 SUCCESS인데 userId가 없는 경우
       attempt = LoginAttempt.createFailure({
         uid,
         failureReason: failureReason || LoginFailureReason.UNKNOWN,
-        userId,
+        userId, // 실패한 경우에도 userId를 알 수 있으면 기록 (보안 정책 적용에 유리)
         ipAddress,
         userAgent,
         deviceFingerprint,

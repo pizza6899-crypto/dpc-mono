@@ -21,6 +21,7 @@ import { LoginService } from '../../application/login.service';
 import { FindLoginAttemptsService } from '../../application/find-login-attempts.service';
 import { CredentialUserLoginResponseDto } from '../user/dto/response/login.response.dto';
 import { LoginAttemptResponseDto } from './dto/response/login-attempt.response.dto';
+import { FindLoginAttemptsQueryDto } from './dto/request/find-login-attempts-query.dto';
 
 @Controller('admin/auth')
 @ApiTags('Admin Auth(관리자 인증)')
@@ -57,21 +58,19 @@ export class CredentialAdminController {
   @Get('login-attempts')
   @ApiOperation({
     summary: 'Login Attempts (로그인 시도 내역 조회)',
-    description: '감사 및 보안 모니터링 목적',
+    description: '감사 및 보안 모니터링 목적. email 또는 ipAddress 중 하나는 필수입니다.',
   })
   @ApiStandardResponse(LoginAttemptResponseDto, {
     status: HttpStatus.OK,
     isArray: true,
   })
   async getAttempts(
-    @Query('email') email?: string,
-    @Query('ipAddress') ipAddress?: string,
-    @Query('limit') limit: number = 50,
+    @Query() query: FindLoginAttemptsQueryDto,
   ): Promise<LoginAttemptResponseDto[]> {
     const attempts = await this.findAttemptsService.execute({
-      email,
-      ipAddress,
-      limit,
+      email: query.email,
+      ipAddress: query.ipAddress,
+      limit: query.limit,
     });
 
     return attempts.map((attempt) => ({

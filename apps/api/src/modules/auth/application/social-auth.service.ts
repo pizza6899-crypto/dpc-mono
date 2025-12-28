@@ -1,5 +1,4 @@
 import { Injectable, Inject } from '@nestjs/common';
-import { PrismaService } from 'src/platform/prisma/prisma.service';
 import { EnvService } from 'src/platform/env/env.service';
 import type { ActivityLogPort } from 'src/platform/activity-log/activity-log.port';
 import { ActivityType } from 'src/platform/activity-log/activity-log.types';
@@ -11,13 +10,13 @@ import {
   SocialAuthResponseDto,
 } from '../dtos/social-auth.dto';
 import { SocialType } from '@repo/database';
-import { WALLET_CURRENCIES } from 'src/utils/currency.util';
+import { RegisterSocialService } from '../registration/application/register-social.service';
 
 @Injectable()
 export class SocialAuthService {
   constructor(
-    private readonly prisma: PrismaService,
     private readonly envService: EnvService,
+    private readonly registerSocialService: RegisterSocialService,
     @Inject(ACTIVITY_LOG) private readonly activityLog: ActivityLogPort,
   ) {}
 
@@ -50,67 +49,28 @@ export class SocialAuthService {
     googleUser: any,
     requestInfo: RequestClientInfo,
   ): Promise<SocialAuthResponseDto> {
-    let user;
-    let isNewUser = false;
-
-    // 기존 사용자 확인 (구글 ID 또는 이메일로)
-    user = await this.prisma.user.findFirst({
-      where: {
-        // OR: [{ socialId: googleUser.googleId }, { email: googleUser.email }],
-        OR: [{ socialId: googleUser.googleId }],
+    // Registration 모듈을 통해 소셜 회원가입 처리
+    const result = await this.registerSocialService.execute({
+      socialUser: {
+        socialId: googleUser.googleId,
+        email: googleUser.email,
+        firstName: googleUser.firstName,
+        lastName: googleUser.lastName,
+        picture: googleUser.picture,
       },
+      socialType: SocialType.GOOGLE,
+      requestInfo,
     });
 
-    if (!user) {
-      // 새 사용자 생성
-      user = await this.prisma.user.create({
-        data: {
-          email: googleUser.email,
-          socialId: googleUser.googleId,
-          socialType: SocialType.GOOGLE,
-          balances: {
-            create: this.envService.wallet.allowedCurrencies.map(
-              (currency) => ({
-                currency,
-              }),
-            ),
-          },
-        },
-      });
-      isNewUser = true;
-
-      // 신규 사용자 등록 로그
-      await this.activityLog.logSuccess(
-        {
-          userId: user.id,
-          activityType: ActivityType.USER_REGISTER,
-          description: 'Google OAuth 회원가입',
-          metadata: {
-            provider: 'google',
-            socialId: googleUser.googleId,
-            name: `${googleUser.firstName} ${googleUser.lastName}`,
-            picture: googleUser.picture,
-          },
-        },
-        requestInfo,
-      );
-    } else if (!user.googleId) {
-      // 기존 이메일 사용자에게 구글 ID 연결
-      // user = await this.prisma.user.update({
-      //   where: { id: user.id },
-      //   data: { socialId: googleUser.googleId },
-      // });
-    }
-
-    // 로그인 로그
+    // 로그인 로그 (회원가입 로그는 RegisterSocialService에서 처리)
     await this.activityLog.logSuccess(
       {
-        userId: user.id,
+        userId: result.id,
         activityType: ActivityType.USER_LOGIN,
-        description: `Google OAuth ${isNewUser ? '회원가입 후 ' : ''}로그인`,
+        description: `Google OAuth ${result.isNewUser ? '회원가입 후 ' : ''}로그인`,
         metadata: {
           provider: 'google',
-          isNewUser,
+          isNewUser: result.isNewUser,
         },
       },
       requestInfo,
@@ -118,11 +78,11 @@ export class SocialAuthService {
 
     return {
       user: {
-        id: user.id,
-        email: user.email || 'unknown',
-        isNewUser,
+        id: result.id,
+        email: result.email || 'unknown',
+        isNewUser: result.isNewUser,
       },
-      isNewUser,
+      isNewUser: result.isNewUser,
     };
   }
 }

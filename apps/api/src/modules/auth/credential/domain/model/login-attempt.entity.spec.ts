@@ -322,6 +322,82 @@ describe('LoginAttempt Entity', () => {
       expect(attempt.email).toBeNull();
       expect(attempt.userId).toBeNull();
     });
+
+    it('잘못된 result 값에 대해 에러를 발생시킨다', () => {
+      expect(() => {
+        LoginAttempt.fromPersistence({
+          id: BigInt(5),
+          uid: mockUid,
+          userId: mockUserId,
+          result: 'INVALID_RESULT',
+          failureReason: null,
+          ipAddress: null,
+          userAgent: null,
+          deviceFingerprint: null,
+          isMobile: null,
+          attemptedAt: mockAttemptedAt,
+          email: null,
+          isAdmin: false,
+        });
+      }).toThrow('Invalid LoginAttemptResult');
+    });
+
+    it('잘못된 failureReason 값에 대해 에러를 발생시킨다', () => {
+      expect(() => {
+        LoginAttempt.fromPersistence({
+          id: BigInt(6),
+          uid: mockUid,
+          userId: mockUserId,
+          result: 'FAILED',
+          failureReason: 'INVALID_REASON',
+          ipAddress: null,
+          userAgent: null,
+          deviceFingerprint: null,
+          isMobile: null,
+          attemptedAt: mockAttemptedAt,
+          email: null,
+          isAdmin: false,
+        });
+      }).toThrow('Invalid LoginFailureReason');
+    });
+
+    it('성공한 로그인 시도에 failureReason이 있으면 에러를 발생시킨다', () => {
+      expect(() => {
+        LoginAttempt.fromPersistence({
+          id: BigInt(7),
+          uid: mockUid,
+          userId: mockUserId,
+          result: 'SUCCESS',
+          failureReason: 'INVALID_CREDENTIALS',
+          ipAddress: null,
+          userAgent: null,
+          deviceFingerprint: null,
+          isMobile: null,
+          attemptedAt: mockAttemptedAt,
+          email: null,
+          isAdmin: false,
+        });
+      }).toThrow('LoginAttemptResult.SUCCESS cannot have a failureReason');
+    });
+
+    it('실패한 로그인 시도에 failureReason이 없으면 에러를 발생시킨다', () => {
+      expect(() => {
+        LoginAttempt.fromPersistence({
+          id: BigInt(8),
+          uid: mockUid,
+          userId: mockUserId,
+          result: 'FAILED',
+          failureReason: null,
+          ipAddress: null,
+          userAgent: null,
+          deviceFingerprint: null,
+          isMobile: null,
+          attemptedAt: mockAttemptedAt,
+          email: null,
+          isAdmin: false,
+        });
+      }).toThrow('LoginAttemptResult.FAILED must have a failureReason');
+    });
   });
 
   describe('isSuccess', () => {
@@ -488,7 +564,11 @@ describe('LoginAttempt Entity', () => {
         uid: mockUid,
         userId: mockUserId,
         ipAddress: mockIpAddress,
+        userAgent: mockUserAgent,
+        deviceFingerprint: mockDeviceFingerprint,
+        isMobile: false,
         email: mockEmail,
+        isAdmin: false,
         attemptedAt: mockAttemptedAt,
       });
 
@@ -511,17 +591,27 @@ describe('LoginAttempt Entity', () => {
       expect(recreated.uid).toBe(original.uid);
       expect(recreated.userId).toBe(original.userId);
       expect(recreated.result).toBe(original.result);
+      expect(recreated.failureReason).toBe(original.failureReason);
       expect(recreated.ipAddress).toBe(original.ipAddress);
+      expect(recreated.userAgent).toBe(original.userAgent);
+      expect(recreated.deviceFingerprint).toBe(original.deviceFingerprint);
+      expect(recreated.isMobile).toBe(original.isMobile);
       expect(recreated.email).toBe(original.email);
+      expect(recreated.isAdmin).toBe(original.isAdmin);
       expect(recreated.attemptedAt).toEqual(original.attemptedAt);
     });
 
     it('createFailure → toPersistence → fromPersistence 순환 테스트', () => {
       const original = LoginAttempt.createFailure({
         uid: mockUid,
+        userId: mockUserId,
         failureReason: LoginFailureReason.ACCOUNT_CLOSED,
         ipAddress: mockIpAddress,
+        userAgent: mockUserAgent,
+        deviceFingerprint: mockDeviceFingerprint,
+        isMobile: true,
         email: mockEmail,
+        isAdmin: true,
         attemptedAt: mockAttemptedAt,
       });
 
@@ -546,6 +636,12 @@ describe('LoginAttempt Entity', () => {
       expect(recreated.result).toBe(original.result);
       expect(recreated.failureReason).toBe(original.failureReason);
       expect(recreated.ipAddress).toBe(original.ipAddress);
+      expect(recreated.userAgent).toBe(original.userAgent);
+      expect(recreated.deviceFingerprint).toBe(original.deviceFingerprint);
+      expect(recreated.isMobile).toBe(original.isMobile);
+      expect(recreated.email).toBe(original.email);
+      expect(recreated.isAdmin).toBe(original.isAdmin);
+      expect(recreated.attemptedAt).toEqual(original.attemptedAt);
     });
   });
 });
