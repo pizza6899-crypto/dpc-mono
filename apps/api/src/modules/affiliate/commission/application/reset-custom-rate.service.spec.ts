@@ -15,6 +15,7 @@ import { EnvModule } from 'src/platform/env/env.module';
 import type { RequestClientInfo } from 'src/platform/http/types/client-info.types';
 
 describe('ResetCustomRateService', () => {
+  let module: TestingModule;
   let service: ResetCustomRateService;
   let mockRepository: jest.Mocked<AffiliateTierRepositoryPort>;
   let mockActivityLog: jest.Mocked<ActivityLogPort>;
@@ -77,6 +78,11 @@ describe('ResetCustomRateService', () => {
   };
 
   beforeEach(async () => {
+    // 이전 모듈이 있으면 먼저 닫기
+    if (module) {
+      await module.close();
+    }
+
     mockRepository = {
       findByAffiliateId: jest.fn(),
       getByAffiliateId: jest.fn(),
@@ -92,7 +98,7 @@ describe('ResetCustomRateService', () => {
       logFailure: jest.fn(),
     };
 
-    const module: TestingModule = await Test.createTestingModule({
+    module = await Test.createTestingModule({
       imports: [PrismaModule, EnvModule], // TransactionHost를 위해 필요
       providers: [
         ResetCustomRateService,
@@ -112,6 +118,15 @@ describe('ResetCustomRateService', () => {
     mockActivityLog = module.get(ACTIVITY_LOG);
 
     jest.clearAllMocks();
+  });
+
+  afterEach(async () => {
+    jest.clearAllMocks();
+    // PrismaModule 연결 정리를 위해 모듈 닫기
+    if (module) {
+      await module.close();
+      module = null as any; // 타입 안전성을 위해 null로 설정
+    }
   });
 
   describe('execute', () => {

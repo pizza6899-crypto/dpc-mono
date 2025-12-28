@@ -95,6 +95,11 @@ describe('SettleDailyCommissionsService', () => {
   };
 
   beforeEach(async () => {
+    // 이전 모듈이 있으면 먼저 닫기
+    if (module) {
+      await module.close();
+    }
+
     mockCommissionRepository = {
       findByUid: jest.fn(),
       getByUid: jest.fn(),
@@ -143,6 +148,7 @@ describe('SettleDailyCommissionsService', () => {
     // PrismaModule 연결 정리를 위해 모듈 닫기
     if (module) {
       await module.close();
+      module = null as any; // 타입 안전성을 위해 null로 설정
     }
   });
 
