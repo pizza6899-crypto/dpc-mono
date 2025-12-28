@@ -6,8 +6,6 @@ import { RegisterCredentialService } from './register-credential.service';
 import { ACTIVITY_LOG } from 'src/platform/activity-log/activity-log.token';
 import type { ActivityLogPort } from 'src/platform/activity-log/activity-log.port';
 import { ActivityType } from 'src/platform/activity-log/activity-log.types';
-import { VipMembershipService } from 'src/modules/vip/application/vip-membership.service';
-import { EnvService } from 'src/platform/env/env.service';
 import { LinkReferralService } from 'src/modules/affiliate/referral/application/link-referral.service';
 import { FindCodeByCodeService } from 'src/modules/affiliate/code/application/find-code-by-code.service';
 import { RegistrationPolicy } from '../domain/policy';
@@ -31,8 +29,6 @@ import { EnvModule } from 'src/platform/env/env.module';
 describe('RegisterCredentialService', () => {
   let service: RegisterCredentialService;
   let mockActivityLog: jest.Mocked<ActivityLogPort>;
-  let mockVipMembershipService: jest.Mocked<VipMembershipService>;
-  let mockEnvService: jest.Mocked<EnvService>;
   let mockLinkReferralService: jest.Mocked<LinkReferralService>;
   let mockFindCodeByCodeService: jest.Mocked<FindCodeByCodeService>;
   let mockRegistrationPolicy: RegistrationPolicy;
@@ -109,16 +105,6 @@ describe('RegisterCredentialService', () => {
       logFailure: jest.fn(),
     };
 
-    mockVipMembershipService = {
-      getOrCreateMembership: jest.fn(),
-    } as any;
-
-    mockEnvService = {
-      wallet: {
-        allowedCurrencies: ['USD', 'KRW'],
-      },
-    } as any;
-
     mockLinkReferralService = {
       execute: jest.fn(),
     } as any;
@@ -144,14 +130,6 @@ describe('RegisterCredentialService', () => {
           useValue: mockActivityLog,
         },
         {
-          provide: VipMembershipService,
-          useValue: mockVipMembershipService,
-        },
-        {
-          provide: EnvService,
-          useValue: mockEnvService,
-        },
-        {
           provide: LinkReferralService,
           useValue: mockLinkReferralService,
         },
@@ -172,8 +150,6 @@ describe('RegisterCredentialService', () => {
 
     service = module.get<RegisterCredentialService>(RegisterCredentialService);
     mockActivityLog = module.get(ACTIVITY_LOG);
-    mockVipMembershipService = module.get(VipMembershipService);
-    mockEnvService = module.get(EnvService);
     mockLinkReferralService = module.get(LinkReferralService);
     mockFindCodeByCodeService = module.get(FindCodeByCodeService);
     mockUserRepository = module.get(USER_REPOSITORY);
@@ -186,9 +162,6 @@ describe('RegisterCredentialService', () => {
       // Arrange
       mockUserRepository.findByEmail.mockResolvedValue(null);
       mockUserRepository.create.mockResolvedValue(mockUser);
-      mockVipMembershipService.getOrCreateMembership.mockResolvedValue(
-        {} as any,
-      );
       mockActivityLog.logSuccess.mockResolvedValue(undefined);
 
       // Act
@@ -214,9 +187,6 @@ describe('RegisterCredentialService', () => {
         country: mockRequestInfo.country,
         timezone: expect.any(String),
       });
-      expect(mockVipMembershipService.getOrCreateMembership).toHaveBeenCalledWith(
-        mockUserId,
-      );
       expect(mockLinkReferralService.execute).not.toHaveBeenCalled();
       expect(mockActivityLog.logSuccess).toHaveBeenCalledWith(
         {
@@ -233,9 +203,6 @@ describe('RegisterCredentialService', () => {
       mockUserRepository.findByEmail.mockResolvedValue(null);
       mockFindCodeByCodeService.execute.mockResolvedValue(mockAffiliateCode);
       mockUserRepository.create.mockResolvedValue(mockUser);
-      mockVipMembershipService.getOrCreateMembership.mockResolvedValue(
-        {} as any,
-      );
       mockLinkReferralService.execute.mockResolvedValue(mockReferral);
       mockActivityLog.logSuccess.mockResolvedValue(undefined);
 
@@ -393,9 +360,6 @@ describe('RegisterCredentialService', () => {
       // Arrange
       mockUserRepository.findByEmail.mockResolvedValue(null);
       mockUserRepository.create.mockResolvedValue(mockUser);
-      mockVipMembershipService.getOrCreateMembership.mockResolvedValue(
-        {} as any,
-      );
       mockActivityLog.logSuccess.mockRejectedValue(
         new Error('Activity log failed'),
       );
@@ -414,7 +378,6 @@ describe('RegisterCredentialService', () => {
       });
 
       expect(mockUserRepository.create).toHaveBeenCalled();
-      expect(mockVipMembershipService.getOrCreateMembership).toHaveBeenCalled();
       expect(mockActivityLog.logSuccess).toHaveBeenCalled();
     });
 
@@ -423,9 +386,6 @@ describe('RegisterCredentialService', () => {
       mockUserRepository.findByEmail.mockResolvedValue(null);
       mockFindCodeByCodeService.execute.mockResolvedValue(mockAffiliateCode);
       mockUserRepository.create.mockResolvedValue(mockUser);
-      mockVipMembershipService.getOrCreateMembership.mockResolvedValue(
-        {} as any,
-      );
       mockLinkReferralService.execute.mockRejectedValue(
         new Error('Referral link failed'),
       );
@@ -449,9 +409,6 @@ describe('RegisterCredentialService', () => {
       // Arrange
       mockUserRepository.findByEmail.mockResolvedValue(null);
       mockUserRepository.create.mockResolvedValue(mockUser);
-      mockVipMembershipService.getOrCreateMembership.mockResolvedValue(
-        {} as any,
-      );
       mockActivityLog.logSuccess.mockResolvedValue(undefined);
 
       // Act
@@ -478,9 +435,6 @@ describe('RegisterCredentialService', () => {
       // Arrange
       mockUserRepository.findByEmail.mockResolvedValue(null);
       mockUserRepository.create.mockResolvedValue(mockUser);
-      mockVipMembershipService.getOrCreateMembership.mockResolvedValue(
-        {} as any,
-      );
       mockActivityLog.logSuccess.mockResolvedValue(undefined);
 
       // Act
@@ -496,28 +450,6 @@ describe('RegisterCredentialService', () => {
           country: mockRequestInfo.country,
           timezone: expect.any(String),
         }),
-      );
-    });
-
-    it('VIP 멤버십이 생성된다', async () => {
-      // Arrange
-      mockUserRepository.findByEmail.mockResolvedValue(null);
-      mockUserRepository.create.mockResolvedValue(mockUser);
-      mockVipMembershipService.getOrCreateMembership.mockResolvedValue(
-        {} as any,
-      );
-      mockActivityLog.logSuccess.mockResolvedValue(undefined);
-
-      // Act
-      await service.execute({
-        email: mockEmail,
-        password: mockPassword,
-        requestInfo: mockRequestInfo,
-      });
-
-      // Assert
-      expect(mockVipMembershipService.getOrCreateMembership).toHaveBeenCalledWith(
-        mockUserId,
       );
     });
   });

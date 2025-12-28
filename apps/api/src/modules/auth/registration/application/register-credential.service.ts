@@ -41,7 +41,6 @@ export class RegisterCredentialService {
 
   constructor(
     @Inject(ACTIVITY_LOG) private readonly activityLog: ActivityLogPort,
-    private readonly vipMembershipService: VipMembershipService,
     private readonly linkReferralService: LinkReferralService,
     private readonly findCodeByCodeService: FindCodeByCodeService,
     private readonly registrationPolicy: RegistrationPolicy,
@@ -107,9 +106,6 @@ export class RegisterCredentialService {
       country: country,
       timezone: countryConfig.timezone,
     });
-
-    // 6. VIP 멤버십 생성
-    await this.vipMembershipService.getOrCreateMembership(user.id);
 
     // 7. 레퍼럴 코드가 제공된 경우 레퍼럴 관계 생성
     // 사전 검증을 통과했으므로 여기서는 셀프 추천 및 중복 레퍼럴만 체크됨
