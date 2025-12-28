@@ -17,6 +17,8 @@ import { CurrentUser } from 'src/platform/auth/decorators/current-user.decorator
 import type { CurrentUserWithSession } from 'src/platform/auth/decorators/current-user.decorator';
 import { RequestClientInfoParam } from 'src/platform/auth/decorators/request-info.decorator';
 import type { RequestClientInfo } from 'src/platform/http/types/client-info.types';
+import { Throttle } from 'src/platform/throttle/decorators/throttle.decorator';
+import { ThrottleScope } from 'src/platform/throttle/types/throttle.types';
 import { AuthenticateCredentialAdminService } from '../../application/authenticate-credential-admin.service';
 import { LoginService } from '../../application/login.service';
 import { LogoutService } from '../../application/logout.service';
@@ -43,6 +45,11 @@ export class CredentialAdminController {
 
   @Post('login')
   @Public()
+  @Throttle({
+    limit: 10,
+    ttl: 60, // 1분
+    scope: ThrottleScope.IP,
+  })
   @ApiOperation({
     summary: 'Admin Login (관리자 로그인)',
     description: 'Email/Password 기반 관리자 로그인',
@@ -92,6 +99,11 @@ export class CredentialAdminController {
 
   @Post('logout')
   @Public()
+  @Throttle({
+    limit: 10,
+    ttl: 60, // 1분
+    scope: ThrottleScope.IP,
+  })
   @ApiOperation({
     summary: 'Admin Logout (관리자 로그아웃)',
     description: '현재 세션 종료. 인증 상태와 관계없이 항상 성공 응답을 반환합니다.',
@@ -173,6 +185,11 @@ export class CredentialAdminController {
 
   @Get('status')
   @Public()
+  @Throttle({
+    limit: 30,
+    ttl: 60, // 1분
+    scope: ThrottleScope.IP,
+  })
   @ApiOperation({
     summary: 'Admin Auth Status (관리자 인증 상태)',
     description: '현재 관리자 로그인 세션 유효 여부 확인',
