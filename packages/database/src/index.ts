@@ -1,1 +1,2 @@
-export * from '@prisma/client';
+// packages/database/src/index.ts
+export * from './client/client';
