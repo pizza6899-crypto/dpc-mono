@@ -5,7 +5,6 @@ import type { UserRoleType, SocialType } from '@repo/database';
  * User 생성 파라미터
  *
  * 도메인 관점에서 필요한 정보만 포함합니다.
- * 인프라스트럭처 레벨의 세부사항(whitecliffId 등)은 Repository 구현체에서 처리합니다.
  */
 export interface CreateUserParams {
   email: string;
@@ -13,10 +12,8 @@ export interface CreateUserParams {
   socialId: string | null;
   socialType: SocialType | null;
   role: UserRoleType;
-  agentId: string | null;
   country: string | null;
   timezone: string | null;
-  balances: Array<{ currency: string }>;
 }
 
 /**

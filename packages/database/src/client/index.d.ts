@@ -4675,7 +4675,6 @@ export namespace Prisma {
     referredUsers: number
     Rolling: number
     transactions: number
-    members: number
     balances: number
     UserBalanceStats: number
     UserPromotion: number
@@ -4697,7 +4696,6 @@ export namespace Prisma {
     referredUsers?: boolean | UserCountOutputTypeCountReferredUsersArgs
     Rolling?: boolean | UserCountOutputTypeCountRollingArgs
     transactions?: boolean | UserCountOutputTypeCountTransactionsArgs
-    members?: boolean | UserCountOutputTypeCountMembersArgs
     balances?: boolean | UserCountOutputTypeCountBalancesArgs
     UserBalanceStats?: boolean | UserCountOutputTypeCountUserBalanceStatsArgs
     UserPromotion?: boolean | UserCountOutputTypeCountUserPromotionArgs
@@ -4799,13 +4797,6 @@ export namespace Prisma {
    */
   export type UserCountOutputTypeCountTransactionsArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
     where?: TransactionWhereInput
-  }
-
-  /**
-   * UserCountOutputType without action
-   */
-  export type UserCountOutputTypeCountMembersArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
-    where?: UserWhereInput
   }
 
   /**
@@ -5318,7 +5309,6 @@ export namespace Prisma {
     passwordHash: string | null
     socialType: $Enums.SocialType | null
     socialId: string | null
-    agentId: string | null
     role: $Enums.UserRoleType | null
     status: $Enums.UserStatus | null
     kycLevel: $Enums.KycLevel | null
@@ -5341,7 +5331,6 @@ export namespace Prisma {
     passwordHash: string | null
     socialType: $Enums.SocialType | null
     socialId: string | null
-    agentId: string | null
     role: $Enums.UserRoleType | null
     status: $Enums.UserStatus | null
     kycLevel: $Enums.KycLevel | null
@@ -5364,7 +5353,6 @@ export namespace Prisma {
     passwordHash: number
     socialType: number
     socialId: number
-    agentId: number
     role: number
     status: number
     kycLevel: number
@@ -5403,7 +5391,6 @@ export namespace Prisma {
     passwordHash?: true
     socialType?: true
     socialId?: true
-    agentId?: true
     role?: true
     status?: true
     kycLevel?: true
@@ -5426,7 +5413,6 @@ export namespace Prisma {
     passwordHash?: true
     socialType?: true
     socialId?: true
-    agentId?: true
     role?: true
     status?: true
     kycLevel?: true
@@ -5449,7 +5435,6 @@ export namespace Prisma {
     passwordHash?: true
     socialType?: true
     socialId?: true
-    agentId?: true
     role?: true
     status?: true
     kycLevel?: true
@@ -5559,7 +5544,6 @@ export namespace Prisma {
     passwordHash: string | null
     socialType: $Enums.SocialType | null
     socialId: string | null
-    agentId: string | null
     role: $Enums.UserRoleType
     status: $Enums.UserStatus
     kycLevel: $Enums.KycLevel
@@ -5601,7 +5585,6 @@ export namespace Prisma {
     passwordHash?: boolean
     socialType?: boolean
     socialId?: boolean
-    agentId?: boolean
     role?: boolean
     status?: boolean
     kycLevel?: boolean
@@ -5624,8 +5607,6 @@ export namespace Prisma {
     referredUsers?: boolean | User$referredUsersArgs<ExtArgs>
     Rolling?: boolean | User$RollingArgs<ExtArgs>
     transactions?: boolean | User$transactionsArgs<ExtArgs>
-    agent?: boolean | User$agentArgs<ExtArgs>
-    members?: boolean | User$membersArgs<ExtArgs>
     balances?: boolean | User$balancesArgs<ExtArgs>
     UserBalanceStats?: boolean | User$UserBalanceStatsArgs<ExtArgs>
     UserPromotion?: boolean | User$UserPromotionArgs<ExtArgs>
@@ -5647,7 +5628,6 @@ export namespace Prisma {
     passwordHash?: boolean
     socialType?: boolean
     socialId?: boolean
-    agentId?: boolean
     role?: boolean
     status?: boolean
     kycLevel?: boolean
@@ -5657,7 +5637,6 @@ export namespace Prisma {
     timezoneOffset?: boolean
     createdAt?: boolean
     updatedAt?: boolean
-    agent?: boolean | User$agentArgs<ExtArgs>
   }, ExtArgs["result"]["user"]>
 
   export type UserSelectUpdateManyAndReturn<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetSelect<{
@@ -5671,7 +5650,6 @@ export namespace Prisma {
     passwordHash?: boolean
     socialType?: boolean
     socialId?: boolean
-    agentId?: boolean
     role?: boolean
     status?: boolean
     kycLevel?: boolean
@@ -5681,7 +5659,6 @@ export namespace Prisma {
     timezoneOffset?: boolean
     createdAt?: boolean
     updatedAt?: boolean
-    agent?: boolean | User$agentArgs<ExtArgs>
   }, ExtArgs["result"]["user"]>
 
   export type UserSelectScalar = {
@@ -5695,7 +5672,6 @@ export namespace Prisma {
     passwordHash?: boolean
     socialType?: boolean
     socialId?: boolean
-    agentId?: boolean
     role?: boolean
     status?: boolean
     kycLevel?: boolean
@@ -5707,7 +5683,7 @@ export namespace Prisma {
     updatedAt?: boolean
   }
 
-  export type UserOmit<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetOmit<"id" | "numericId" | "whitecliffId" | "whitecliffSystemId" | "whitecliffUsername" | "dcsId" | "email" | "passwordHash" | "socialType" | "socialId" | "agentId" | "role" | "status" | "kycLevel" | "country" | "language" | "timezone" | "timezoneOffset" | "createdAt" | "updatedAt", ExtArgs["result"]["user"]>
+  export type UserOmit<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetOmit<"id" | "numericId" | "whitecliffId" | "whitecliffSystemId" | "whitecliffUsername" | "dcsId" | "email" | "passwordHash" | "socialType" | "socialId" | "role" | "status" | "kycLevel" | "country" | "language" | "timezone" | "timezoneOffset" | "createdAt" | "updatedAt", ExtArgs["result"]["user"]>
   export type UserInclude<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
     affiliateCodes?: boolean | User$affiliateCodesArgs<ExtArgs>
     affiliateCommissions?: boolean | User$affiliateCommissionsArgs<ExtArgs>
@@ -5722,8 +5698,6 @@ export namespace Prisma {
     referredUsers?: boolean | User$referredUsersArgs<ExtArgs>
     Rolling?: boolean | User$RollingArgs<ExtArgs>
     transactions?: boolean | User$transactionsArgs<ExtArgs>
-    agent?: boolean | User$agentArgs<ExtArgs>
-    members?: boolean | User$membersArgs<ExtArgs>
     balances?: boolean | User$balancesArgs<ExtArgs>
     UserBalanceStats?: boolean | User$UserBalanceStatsArgs<ExtArgs>
     UserPromotion?: boolean | User$UserPromotionArgs<ExtArgs>
@@ -5733,12 +5707,8 @@ export namespace Prisma {
     VipMembership?: boolean | User$VipMembershipArgs<ExtArgs>
     _count?: boolean | UserCountOutputTypeDefaultArgs<ExtArgs>
   }
-  export type UserIncludeCreateManyAndReturn<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
-    agent?: boolean | User$agentArgs<ExtArgs>
-  }
-  export type UserIncludeUpdateManyAndReturn<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
-    agent?: boolean | User$agentArgs<ExtArgs>
-  }
+  export type UserIncludeCreateManyAndReturn<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {}
+  export type UserIncludeUpdateManyAndReturn<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {}
 
   export type $UserPayload<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
     name: "User"
@@ -5756,8 +5726,6 @@ export namespace Prisma {
       referredUsers: Prisma.$ReferralPayload<ExtArgs>[]
       Rolling: Prisma.$RollingPayload<ExtArgs>[]
       transactions: Prisma.$TransactionPayload<ExtArgs>[]
-      agent: Prisma.$UserPayload<ExtArgs> | null
-      members: Prisma.$UserPayload<ExtArgs>[]
       balances: Prisma.$UserBalancePayload<ExtArgs>[]
       UserBalanceStats: Prisma.$UserBalanceStatsPayload<ExtArgs>[]
       UserPromotion: Prisma.$UserPromotionPayload<ExtArgs>[]
@@ -5777,7 +5745,6 @@ export namespace Prisma {
       passwordHash: string | null
       socialType: $Enums.SocialType | null
       socialId: string | null
-      agentId: string | null
       role: $Enums.UserRoleType
       status: $Enums.UserStatus
       kycLevel: $Enums.KycLevel
@@ -6194,8 +6161,6 @@ export namespace Prisma {
     referredUsers<T extends User$referredUsersArgs<ExtArgs> = {}>(args?: Subset<T, User$referredUsersArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$ReferralPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
     Rolling<T extends User$RollingArgs<ExtArgs> = {}>(args?: Subset<T, User$RollingArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$RollingPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
     transactions<T extends User$transactionsArgs<ExtArgs> = {}>(args?: Subset<T, User$transactionsArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$TransactionPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
-    agent<T extends User$agentArgs<ExtArgs> = {}>(args?: Subset<T, User$agentArgs<ExtArgs>>): Prisma__UserClient<$Result.GetResult<Prisma.$UserPayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions> | null, null, ExtArgs, GlobalOmitOptions>
-    members<T extends User$membersArgs<ExtArgs> = {}>(args?: Subset<T, User$membersArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$UserPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
     balances<T extends User$balancesArgs<ExtArgs> = {}>(args?: Subset<T, User$balancesArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$UserBalancePayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
     UserBalanceStats<T extends User$UserBalanceStatsArgs<ExtArgs> = {}>(args?: Subset<T, User$UserBalanceStatsArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$UserBalanceStatsPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
     UserPromotion<T extends User$UserPromotionArgs<ExtArgs> = {}>(args?: Subset<T, User$UserPromotionArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$UserPromotionPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
@@ -6242,7 +6207,6 @@ export namespace Prisma {
     readonly passwordHash: FieldRef<"User", 'String'>
     readonly socialType: FieldRef<"User", 'SocialType'>
     readonly socialId: FieldRef<"User", 'String'>
-    readonly agentId: FieldRef<"User", 'String'>
     readonly role: FieldRef<"User", 'UserRoleType'>
     readonly status: FieldRef<"User", 'UserStatus'>
     readonly kycLevel: FieldRef<"User", 'KycLevel'>
@@ -6501,10 +6465,6 @@ export namespace Prisma {
      */
     data: UserCreateManyInput | UserCreateManyInput[]
     skipDuplicates?: boolean
-    /**
-     * Choose, which related nodes to fetch as well
-     */
-    include?: UserIncludeCreateManyAndReturn<ExtArgs> | null
   }
 
   /**
@@ -6575,10 +6535,6 @@ export namespace Prisma {
      * Limit how many Users to update.
      */
     limit?: number
-    /**
-     * Choose, which related nodes to fetch as well
-     */
-    include?: UserIncludeUpdateManyAndReturn<ExtArgs> | null
   }
 
   /**
@@ -6952,49 +6908,6 @@ export namespace Prisma {
     take?: number
     skip?: number
     distinct?: TransactionScalarFieldEnum | TransactionScalarFieldEnum[]
-  }
-
-  /**
-   * User.agent
-   */
-  export type User$agentArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
-    /**
-     * Select specific fields to fetch from the User
-     */
-    select?: UserSelect<ExtArgs> | null
-    /**
-     * Omit specific fields from the User
-     */
-    omit?: UserOmit<ExtArgs> | null
-    /**
-     * Choose, which related nodes to fetch as well
-     */
-    include?: UserInclude<ExtArgs> | null
-    where?: UserWhereInput
-  }
-
-  /**
-   * User.members
-   */
-  export type User$membersArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
-    /**
-     * Select specific fields to fetch from the User
-     */
-    select?: UserSelect<ExtArgs> | null
-    /**
-     * Omit specific fields from the User
-     */
-    omit?: UserOmit<ExtArgs> | null
-    /**
-     * Choose, which related nodes to fetch as well
-     */
-    include?: UserInclude<ExtArgs> | null
-    where?: UserWhereInput
-    orderBy?: UserOrderByWithRelationInput | UserOrderByWithRelationInput[]
-    cursor?: UserWhereUniqueInput
-    take?: number
-    skip?: number
-    distinct?: UserScalarFieldEnum | UserScalarFieldEnum[]
   }
 
   /**
@@ -51637,7 +51550,6 @@ export namespace Prisma {
     passwordHash: 'passwordHash',
     socialType: 'socialType',
     socialId: 'socialId',
-    agentId: 'agentId',
     role: 'role',
     status: 'status',
     kycLevel: 'kycLevel',
@@ -52930,7 +52842,6 @@ export namespace Prisma {
     passwordHash?: StringNullableFilter<"User"> | string | null
     socialType?: EnumSocialTypeNullableFilter<"User"> | $Enums.SocialType | null
     socialId?: StringNullableFilter<"User"> | string | null
-    agentId?: StringNullableFilter<"User"> | string | null
     role?: EnumUserRoleTypeFilter<"User"> | $Enums.UserRoleType
     status?: EnumUserStatusFilter<"User"> | $Enums.UserStatus
     kycLevel?: EnumKycLevelFilter<"User"> | $Enums.KycLevel
@@ -52953,8 +52864,6 @@ export namespace Prisma {
     referredUsers?: ReferralListRelationFilter
     Rolling?: RollingListRelationFilter
     transactions?: TransactionListRelationFilter
-    agent?: XOR<UserNullableScalarRelationFilter, UserWhereInput> | null
-    members?: UserListRelationFilter
     balances?: UserBalanceListRelationFilter
     UserBalanceStats?: UserBalanceStatsListRelationFilter
     UserPromotion?: UserPromotionListRelationFilter
@@ -52975,7 +52884,6 @@ export namespace Prisma {
     passwordHash?: SortOrderInput | SortOrder
     socialType?: SortOrderInput | SortOrder
     socialId?: SortOrderInput | SortOrder
-    agentId?: SortOrderInput | SortOrder
     role?: SortOrder
     status?: SortOrder
     kycLevel?: SortOrder
@@ -52998,8 +52906,6 @@ export namespace Prisma {
     referredUsers?: ReferralOrderByRelationAggregateInput
     Rolling?: RollingOrderByRelationAggregateInput
     transactions?: TransactionOrderByRelationAggregateInput
-    agent?: UserOrderByWithRelationInput
-    members?: UserOrderByRelationAggregateInput
     balances?: UserBalanceOrderByRelationAggregateInput
     UserBalanceStats?: UserBalanceStatsOrderByRelationAggregateInput
     UserPromotion?: UserPromotionOrderByRelationAggregateInput
@@ -53023,7 +52929,6 @@ export namespace Prisma {
     passwordHash?: StringNullableFilter<"User"> | string | null
     socialType?: EnumSocialTypeNullableFilter<"User"> | $Enums.SocialType | null
     socialId?: StringNullableFilter<"User"> | string | null
-    agentId?: StringNullableFilter<"User"> | string | null
     role?: EnumUserRoleTypeFilter<"User"> | $Enums.UserRoleType
     status?: EnumUserStatusFilter<"User"> | $Enums.UserStatus
     kycLevel?: EnumKycLevelFilter<"User"> | $Enums.KycLevel
@@ -53046,8 +52951,6 @@ export namespace Prisma {
     referredUsers?: ReferralListRelationFilter
     Rolling?: RollingListRelationFilter
     transactions?: TransactionListRelationFilter
-    agent?: XOR<UserNullableScalarRelationFilter, UserWhereInput> | null
-    members?: UserListRelationFilter
     balances?: UserBalanceListRelationFilter
     UserBalanceStats?: UserBalanceStatsListRelationFilter
     UserPromotion?: UserPromotionListRelationFilter
@@ -53068,7 +52971,6 @@ export namespace Prisma {
     passwordHash?: SortOrderInput | SortOrder
     socialType?: SortOrderInput | SortOrder
     socialId?: SortOrderInput | SortOrder
-    agentId?: SortOrderInput | SortOrder
     role?: SortOrder
     status?: SortOrder
     kycLevel?: SortOrder
@@ -53099,7 +53001,6 @@ export namespace Prisma {
     passwordHash?: StringNullableWithAggregatesFilter<"User"> | string | null
     socialType?: EnumSocialTypeNullableWithAggregatesFilter<"User"> | $Enums.SocialType | null
     socialId?: StringNullableWithAggregatesFilter<"User"> | string | null
-    agentId?: StringNullableWithAggregatesFilter<"User"> | string | null
     role?: EnumUserRoleTypeWithAggregatesFilter<"User"> | $Enums.UserRoleType
     status?: EnumUserStatusWithAggregatesFilter<"User"> | $Enums.UserStatus
     kycLevel?: EnumKycLevelWithAggregatesFilter<"User"> | $Enums.KycLevel
@@ -56588,8 +56489,6 @@ export namespace Prisma {
     referredUsers?: ReferralCreateNestedManyWithoutSubUserInput
     Rolling?: RollingCreateNestedManyWithoutUserInput
     transactions?: TransactionCreateNestedManyWithoutUserInput
-    agent?: UserCreateNestedOneWithoutMembersInput
-    members?: UserCreateNestedManyWithoutAgentInput
     balances?: UserBalanceCreateNestedManyWithoutUserInput
     UserBalanceStats?: UserBalanceStatsCreateNestedManyWithoutUserInput
     UserPromotion?: UserPromotionCreateNestedManyWithoutUserInput
@@ -56610,7 +56509,6 @@ export namespace Prisma {
     passwordHash?: string | null
     socialType?: $Enums.SocialType | null
     socialId?: string | null
-    agentId?: string | null
     role?: $Enums.UserRoleType
     status?: $Enums.UserStatus
     kycLevel?: $Enums.KycLevel
@@ -56633,7 +56531,6 @@ export namespace Prisma {
     referredUsers?: ReferralUncheckedCreateNestedManyWithoutSubUserInput
     Rolling?: RollingUncheckedCreateNestedManyWithoutUserInput
     transactions?: TransactionUncheckedCreateNestedManyWithoutUserInput
-    members?: UserUncheckedCreateNestedManyWithoutAgentInput
     balances?: UserBalanceUncheckedCreateNestedManyWithoutUserInput
     UserBalanceStats?: UserBalanceStatsUncheckedCreateNestedManyWithoutUserInput
     UserPromotion?: UserPromotionUncheckedCreateNestedManyWithoutUserInput
@@ -56675,8 +56572,6 @@ export namespace Prisma {
     referredUsers?: ReferralUpdateManyWithoutSubUserNestedInput
     Rolling?: RollingUpdateManyWithoutUserNestedInput
     transactions?: TransactionUpdateManyWithoutUserNestedInput
-    agent?: UserUpdateOneWithoutMembersNestedInput
-    members?: UserUpdateManyWithoutAgentNestedInput
     balances?: UserBalanceUpdateManyWithoutUserNestedInput
     UserBalanceStats?: UserBalanceStatsUpdateManyWithoutUserNestedInput
     UserPromotion?: UserPromotionUpdateManyWithoutUserNestedInput
@@ -56697,7 +56592,6 @@ export namespace Prisma {
     passwordHash?: NullableStringFieldUpdateOperationsInput | string | null
     socialType?: NullableEnumSocialTypeFieldUpdateOperationsInput | $Enums.SocialType | null
     socialId?: NullableStringFieldUpdateOperationsInput | string | null
-    agentId?: NullableStringFieldUpdateOperationsInput | string | null
     role?: EnumUserRoleTypeFieldUpdateOperationsInput | $Enums.UserRoleType
     status?: EnumUserStatusFieldUpdateOperationsInput | $Enums.UserStatus
     kycLevel?: EnumKycLevelFieldUpdateOperationsInput | $Enums.KycLevel
@@ -56720,7 +56614,6 @@ export namespace Prisma {
     referredUsers?: ReferralUncheckedUpdateManyWithoutSubUserNestedInput
     Rolling?: RollingUncheckedUpdateManyWithoutUserNestedInput
     transactions?: TransactionUncheckedUpdateManyWithoutUserNestedInput
-    members?: UserUncheckedUpdateManyWithoutAgentNestedInput
     balances?: UserBalanceUncheckedUpdateManyWithoutUserNestedInput
     UserBalanceStats?: UserBalanceStatsUncheckedUpdateManyWithoutUserNestedInput
     UserPromotion?: UserPromotionUncheckedUpdateManyWithoutUserNestedInput
@@ -56741,7 +56634,6 @@ export namespace Prisma {
     passwordHash?: string | null
     socialType?: $Enums.SocialType | null
     socialId?: string | null
-    agentId?: string | null
     role?: $Enums.UserRoleType
     status?: $Enums.UserStatus
     kycLevel?: $Enums.KycLevel
@@ -56785,7 +56677,6 @@ export namespace Prisma {
     passwordHash?: NullableStringFieldUpdateOperationsInput | string | null
     socialType?: NullableEnumSocialTypeFieldUpdateOperationsInput | $Enums.SocialType | null
     socialId?: NullableStringFieldUpdateOperationsInput | string | null
-    agentId?: NullableStringFieldUpdateOperationsInput | string | null
     role?: EnumUserRoleTypeFieldUpdateOperationsInput | $Enums.UserRoleType
     status?: EnumUserStatusFieldUpdateOperationsInput | $Enums.UserStatus
     kycLevel?: EnumKycLevelFieldUpdateOperationsInput | $Enums.KycLevel
@@ -60789,17 +60680,6 @@ export namespace Prisma {
     none?: TransactionWhereInput
   }
 
-  export type UserNullableScalarRelationFilter = {
-    is?: UserWhereInput | null
-    isNot?: UserWhereInput | null
-  }
-
-  export type UserListRelationFilter = {
-    every?: UserWhereInput
-    some?: UserWhereInput
-    none?: UserWhereInput
-  }
-
   export type UserBalanceListRelationFilter = {
     every?: UserBalanceWhereInput
     some?: UserBalanceWhereInput
@@ -60886,10 +60766,6 @@ export namespace Prisma {
     _count?: SortOrder
   }
 
-  export type UserOrderByRelationAggregateInput = {
-    _count?: SortOrder
-  }
-
   export type UserBalanceOrderByRelationAggregateInput = {
     _count?: SortOrder
   }
@@ -60925,7 +60801,6 @@ export namespace Prisma {
     passwordHash?: SortOrder
     socialType?: SortOrder
     socialId?: SortOrder
-    agentId?: SortOrder
     role?: SortOrder
     status?: SortOrder
     kycLevel?: SortOrder
@@ -60955,7 +60830,6 @@ export namespace Prisma {
     passwordHash?: SortOrder
     socialType?: SortOrder
     socialId?: SortOrder
-    agentId?: SortOrder
     role?: SortOrder
     status?: SortOrder
     kycLevel?: SortOrder
@@ -60978,7 +60852,6 @@ export namespace Prisma {
     passwordHash?: SortOrder
     socialType?: SortOrder
     socialId?: SortOrder
-    agentId?: SortOrder
     role?: SortOrder
     status?: SortOrder
     kycLevel?: SortOrder
@@ -63650,6 +63523,11 @@ export namespace Prisma {
     not?: NestedEnumEmailStatusFilter<$PrismaModel> | $Enums.EmailStatus
   }
 
+  export type UserNullableScalarRelationFilter = {
+    is?: UserWhereInput | null
+    isNot?: UserWhereInput | null
+  }
+
   export type EmailLogCountOrderByAggregateInput = {
     id?: SortOrder
     userId?: SortOrder
@@ -64295,19 +64173,6 @@ export namespace Prisma {
     connect?: TransactionWhereUniqueInput | TransactionWhereUniqueInput[]
   }
 
-  export type UserCreateNestedOneWithoutMembersInput = {
-    create?: XOR<UserCreateWithoutMembersInput, UserUncheckedCreateWithoutMembersInput>
-    connectOrCreate?: UserCreateOrConnectWithoutMembersInput
-    connect?: UserWhereUniqueInput
-  }
-
-  export type UserCreateNestedManyWithoutAgentInput = {
-    create?: XOR<UserCreateWithoutAgentInput, UserUncheckedCreateWithoutAgentInput> | UserCreateWithoutAgentInput[] | UserUncheckedCreateWithoutAgentInput[]
-    connectOrCreate?: UserCreateOrConnectWithoutAgentInput | UserCreateOrConnectWithoutAgentInput[]
-    createMany?: UserCreateManyAgentInputEnvelope
-    connect?: UserWhereUniqueInput | UserWhereUniqueInput[]
-  }
-
   export type UserBalanceCreateNestedManyWithoutUserInput = {
     create?: XOR<UserBalanceCreateWithoutUserInput, UserBalanceUncheckedCreateWithoutUserInput> | UserBalanceCreateWithoutUserInput[] | UserBalanceUncheckedCreateWithoutUserInput[]
     connectOrCreate?: UserBalanceCreateOrConnectWithoutUserInput | UserBalanceCreateOrConnectWithoutUserInput[]
@@ -64444,13 +64309,6 @@ export namespace Prisma {
     connectOrCreate?: TransactionCreateOrConnectWithoutUserInput | TransactionCreateOrConnectWithoutUserInput[]
     createMany?: TransactionCreateManyUserInputEnvelope
     connect?: TransactionWhereUniqueInput | TransactionWhereUniqueInput[]
-  }
-
-  export type UserUncheckedCreateNestedManyWithoutAgentInput = {
-    create?: XOR<UserCreateWithoutAgentInput, UserUncheckedCreateWithoutAgentInput> | UserCreateWithoutAgentInput[] | UserUncheckedCreateWithoutAgentInput[]
-    connectOrCreate?: UserCreateOrConnectWithoutAgentInput | UserCreateOrConnectWithoutAgentInput[]
-    createMany?: UserCreateManyAgentInputEnvelope
-    connect?: UserWhereUniqueInput | UserWhereUniqueInput[]
   }
 
   export type UserBalanceUncheckedCreateNestedManyWithoutUserInput = {
@@ -64725,30 +64583,6 @@ export namespace Prisma {
     update?: TransactionUpdateWithWhereUniqueWithoutUserInput | TransactionUpdateWithWhereUniqueWithoutUserInput[]
     updateMany?: TransactionUpdateManyWithWhereWithoutUserInput | TransactionUpdateManyWithWhereWithoutUserInput[]
     deleteMany?: TransactionScalarWhereInput | TransactionScalarWhereInput[]
-  }
-
-  export type UserUpdateOneWithoutMembersNestedInput = {
-    create?: XOR<UserCreateWithoutMembersInput, UserUncheckedCreateWithoutMembersInput>
-    connectOrCreate?: UserCreateOrConnectWithoutMembersInput
-    upsert?: UserUpsertWithoutMembersInput
-    disconnect?: UserWhereInput | boolean
-    delete?: UserWhereInput | boolean
-    connect?: UserWhereUniqueInput
-    update?: XOR<XOR<UserUpdateToOneWithWhereWithoutMembersInput, UserUpdateWithoutMembersInput>, UserUncheckedUpdateWithoutMembersInput>
-  }
-
-  export type UserUpdateManyWithoutAgentNestedInput = {
-    create?: XOR<UserCreateWithoutAgentInput, UserUncheckedCreateWithoutAgentInput> | UserCreateWithoutAgentInput[] | UserUncheckedCreateWithoutAgentInput[]
-    connectOrCreate?: UserCreateOrConnectWithoutAgentInput | UserCreateOrConnectWithoutAgentInput[]
-    upsert?: UserUpsertWithWhereUniqueWithoutAgentInput | UserUpsertWithWhereUniqueWithoutAgentInput[]
-    createMany?: UserCreateManyAgentInputEnvelope
-    set?: UserWhereUniqueInput | UserWhereUniqueInput[]
-    disconnect?: UserWhereUniqueInput | UserWhereUniqueInput[]
-    delete?: UserWhereUniqueInput | UserWhereUniqueInput[]
-    connect?: UserWhereUniqueInput | UserWhereUniqueInput[]
-    update?: UserUpdateWithWhereUniqueWithoutAgentInput | UserUpdateWithWhereUniqueWithoutAgentInput[]
-    updateMany?: UserUpdateManyWithWhereWithoutAgentInput | UserUpdateManyWithWhereWithoutAgentInput[]
-    deleteMany?: UserScalarWhereInput | UserScalarWhereInput[]
   }
 
   export type UserBalanceUpdateManyWithoutUserNestedInput = {
@@ -65029,20 +64863,6 @@ export namespace Prisma {
     update?: TransactionUpdateWithWhereUniqueWithoutUserInput | TransactionUpdateWithWhereUniqueWithoutUserInput[]
     updateMany?: TransactionUpdateManyWithWhereWithoutUserInput | TransactionUpdateManyWithWhereWithoutUserInput[]
     deleteMany?: TransactionScalarWhereInput | TransactionScalarWhereInput[]
-  }
-
-  export type UserUncheckedUpdateManyWithoutAgentNestedInput = {
-    create?: XOR<UserCreateWithoutAgentInput, UserUncheckedCreateWithoutAgentInput> | UserCreateWithoutAgentInput[] | UserUncheckedCreateWithoutAgentInput[]
-    connectOrCreate?: UserCreateOrConnectWithoutAgentInput | UserCreateOrConnectWithoutAgentInput[]
-    upsert?: UserUpsertWithWhereUniqueWithoutAgentInput | UserUpsertWithWhereUniqueWithoutAgentInput[]
-    createMany?: UserCreateManyAgentInputEnvelope
-    set?: UserWhereUniqueInput | UserWhereUniqueInput[]
-    disconnect?: UserWhereUniqueInput | UserWhereUniqueInput[]
-    delete?: UserWhereUniqueInput | UserWhereUniqueInput[]
-    connect?: UserWhereUniqueInput | UserWhereUniqueInput[]
-    update?: UserUpdateWithWhereUniqueWithoutAgentInput | UserUpdateWithWhereUniqueWithoutAgentInput[]
-    updateMany?: UserUpdateManyWithWhereWithoutAgentInput | UserUpdateManyWithWhereWithoutAgentInput[]
-    deleteMany?: UserScalarWhereInput | UserScalarWhereInput[]
   }
 
   export type UserBalanceUncheckedUpdateManyWithoutUserNestedInput = {
@@ -68258,193 +68078,6 @@ export namespace Prisma {
     skipDuplicates?: boolean
   }
 
-  export type UserCreateWithoutMembersInput = {
-    id?: string
-    numericId?: number
-    whitecliffId?: bigint | number | null
-    whitecliffSystemId?: bigint | number | null
-    whitecliffUsername?: string | null
-    dcsId?: string | null
-    email?: string | null
-    passwordHash?: string | null
-    socialType?: $Enums.SocialType | null
-    socialId?: string | null
-    role?: $Enums.UserRoleType
-    status?: $Enums.UserStatus
-    kycLevel?: $Enums.KycLevel
-    country?: string | null
-    language?: $Enums.Language | null
-    timezone?: string | null
-    timezoneOffset?: number | null
-    createdAt?: Date | string
-    updatedAt?: Date | string
-    affiliateCodes?: AffiliateCodeCreateNestedManyWithoutUserInput
-    affiliateCommissions?: AffiliateCommissionCreateNestedManyWithoutAffiliateInput
-    subUserCommissions?: AffiliateCommissionCreateNestedManyWithoutSubUserInput
-    affiliateTier?: AffiliateTierCreateNestedOneWithoutAffiliateInput
-    affiliateWallets?: AffiliateWalletCreateNestedManyWithoutAffiliateInput
-    CompTransaction?: CompTransactionCreateNestedManyWithoutUserInput
-    DailyCompEarning?: DailyCompEarningCreateNestedManyWithoutUserInput
-    EmailLog?: EmailLogCreateNestedManyWithoutUserInput
-    GameSession?: GameSessionCreateNestedManyWithoutUserInput
-    affiliateReferrals?: ReferralCreateNestedManyWithoutAffiliateInput
-    referredUsers?: ReferralCreateNestedManyWithoutSubUserInput
-    Rolling?: RollingCreateNestedManyWithoutUserInput
-    transactions?: TransactionCreateNestedManyWithoutUserInput
-    agent?: UserCreateNestedOneWithoutMembersInput
-    balances?: UserBalanceCreateNestedManyWithoutUserInput
-    UserBalanceStats?: UserBalanceStatsCreateNestedManyWithoutUserInput
-    UserPromotion?: UserPromotionCreateNestedManyWithoutUserInput
-    UserSession?: UserSessionCreateNestedManyWithoutUserInput
-    UserToken?: UserTokenCreateNestedManyWithoutUserInput
-    VipHistory?: VipHistoryCreateNestedManyWithoutUserInput
-    VipMembership?: VipMembershipCreateNestedOneWithoutUserInput
-  }
-
-  export type UserUncheckedCreateWithoutMembersInput = {
-    id?: string
-    numericId?: number
-    whitecliffId?: bigint | number | null
-    whitecliffSystemId?: bigint | number | null
-    whitecliffUsername?: string | null
-    dcsId?: string | null
-    email?: string | null
-    passwordHash?: string | null
-    socialType?: $Enums.SocialType | null
-    socialId?: string | null
-    agentId?: string | null
-    role?: $Enums.UserRoleType
-    status?: $Enums.UserStatus
-    kycLevel?: $Enums.KycLevel
-    country?: string | null
-    language?: $Enums.Language | null
-    timezone?: string | null
-    timezoneOffset?: number | null
-    createdAt?: Date | string
-    updatedAt?: Date | string
-    affiliateCodes?: AffiliateCodeUncheckedCreateNestedManyWithoutUserInput
-    affiliateCommissions?: AffiliateCommissionUncheckedCreateNestedManyWithoutAffiliateInput
-    subUserCommissions?: AffiliateCommissionUncheckedCreateNestedManyWithoutSubUserInput
-    affiliateTier?: AffiliateTierUncheckedCreateNestedOneWithoutAffiliateInput
-    affiliateWallets?: AffiliateWalletUncheckedCreateNestedManyWithoutAffiliateInput
-    CompTransaction?: CompTransactionUncheckedCreateNestedManyWithoutUserInput
-    DailyCompEarning?: DailyCompEarningUncheckedCreateNestedManyWithoutUserInput
-    EmailLog?: EmailLogUncheckedCreateNestedManyWithoutUserInput
-    GameSession?: GameSessionUncheckedCreateNestedManyWithoutUserInput
-    affiliateReferrals?: ReferralUncheckedCreateNestedManyWithoutAffiliateInput
-    referredUsers?: ReferralUncheckedCreateNestedManyWithoutSubUserInput
-    Rolling?: RollingUncheckedCreateNestedManyWithoutUserInput
-    transactions?: TransactionUncheckedCreateNestedManyWithoutUserInput
-    balances?: UserBalanceUncheckedCreateNestedManyWithoutUserInput
-    UserBalanceStats?: UserBalanceStatsUncheckedCreateNestedManyWithoutUserInput
-    UserPromotion?: UserPromotionUncheckedCreateNestedManyWithoutUserInput
-    UserSession?: UserSessionUncheckedCreateNestedManyWithoutUserInput
-    UserToken?: UserTokenUncheckedCreateNestedManyWithoutUserInput
-    VipHistory?: VipHistoryUncheckedCreateNestedManyWithoutUserInput
-    VipMembership?: VipMembershipUncheckedCreateNestedOneWithoutUserInput
-  }
-
-  export type UserCreateOrConnectWithoutMembersInput = {
-    where: UserWhereUniqueInput
-    create: XOR<UserCreateWithoutMembersInput, UserUncheckedCreateWithoutMembersInput>
-  }
-
-  export type UserCreateWithoutAgentInput = {
-    id?: string
-    numericId?: number
-    whitecliffId?: bigint | number | null
-    whitecliffSystemId?: bigint | number | null
-    whitecliffUsername?: string | null
-    dcsId?: string | null
-    email?: string | null
-    passwordHash?: string | null
-    socialType?: $Enums.SocialType | null
-    socialId?: string | null
-    role?: $Enums.UserRoleType
-    status?: $Enums.UserStatus
-    kycLevel?: $Enums.KycLevel
-    country?: string | null
-    language?: $Enums.Language | null
-    timezone?: string | null
-    timezoneOffset?: number | null
-    createdAt?: Date | string
-    updatedAt?: Date | string
-    affiliateCodes?: AffiliateCodeCreateNestedManyWithoutUserInput
-    affiliateCommissions?: AffiliateCommissionCreateNestedManyWithoutAffiliateInput
-    subUserCommissions?: AffiliateCommissionCreateNestedManyWithoutSubUserInput
-    affiliateTier?: AffiliateTierCreateNestedOneWithoutAffiliateInput
-    affiliateWallets?: AffiliateWalletCreateNestedManyWithoutAffiliateInput
-    CompTransaction?: CompTransactionCreateNestedManyWithoutUserInput
-    DailyCompEarning?: DailyCompEarningCreateNestedManyWithoutUserInput
-    EmailLog?: EmailLogCreateNestedManyWithoutUserInput
-    GameSession?: GameSessionCreateNestedManyWithoutUserInput
-    affiliateReferrals?: ReferralCreateNestedManyWithoutAffiliateInput
-    referredUsers?: ReferralCreateNestedManyWithoutSubUserInput
-    Rolling?: RollingCreateNestedManyWithoutUserInput
-    transactions?: TransactionCreateNestedManyWithoutUserInput
-    members?: UserCreateNestedManyWithoutAgentInput
-    balances?: UserBalanceCreateNestedManyWithoutUserInput
-    UserBalanceStats?: UserBalanceStatsCreateNestedManyWithoutUserInput
-    UserPromotion?: UserPromotionCreateNestedManyWithoutUserInput
-    UserSession?: UserSessionCreateNestedManyWithoutUserInput
-    UserToken?: UserTokenCreateNestedManyWithoutUserInput
-    VipHistory?: VipHistoryCreateNestedManyWithoutUserInput
-    VipMembership?: VipMembershipCreateNestedOneWithoutUserInput
-  }
-
-  export type UserUncheckedCreateWithoutAgentInput = {
-    id?: string
-    numericId?: number
-    whitecliffId?: bigint | number | null
-    whitecliffSystemId?: bigint | number | null
-    whitecliffUsername?: string | null
-    dcsId?: string | null
-    email?: string | null
-    passwordHash?: string | null
-    socialType?: $Enums.SocialType | null
-    socialId?: string | null
-    role?: $Enums.UserRoleType
-    status?: $Enums.UserStatus
-    kycLevel?: $Enums.KycLevel
-    country?: string | null
-    language?: $Enums.Language | null
-    timezone?: string | null
-    timezoneOffset?: number | null
-    createdAt?: Date | string
-    updatedAt?: Date | string
-    affiliateCodes?: AffiliateCodeUncheckedCreateNestedManyWithoutUserInput
-    affiliateCommissions?: AffiliateCommissionUncheckedCreateNestedManyWithoutAffiliateInput
-    subUserCommissions?: AffiliateCommissionUncheckedCreateNestedManyWithoutSubUserInput
-    affiliateTier?: AffiliateTierUncheckedCreateNestedOneWithoutAffiliateInput
-    affiliateWallets?: AffiliateWalletUncheckedCreateNestedManyWithoutAffiliateInput
-    CompTransaction?: CompTransactionUncheckedCreateNestedManyWithoutUserInput
-    DailyCompEarning?: DailyCompEarningUncheckedCreateNestedManyWithoutUserInput
-    EmailLog?: EmailLogUncheckedCreateNestedManyWithoutUserInput
-    GameSession?: GameSessionUncheckedCreateNestedManyWithoutUserInput
-    affiliateReferrals?: ReferralUncheckedCreateNestedManyWithoutAffiliateInput
-    referredUsers?: ReferralUncheckedCreateNestedManyWithoutSubUserInput
-    Rolling?: RollingUncheckedCreateNestedManyWithoutUserInput
-    transactions?: TransactionUncheckedCreateNestedManyWithoutUserInput
-    members?: UserUncheckedCreateNestedManyWithoutAgentInput
-    balances?: UserBalanceUncheckedCreateNestedManyWithoutUserInput
-    UserBalanceStats?: UserBalanceStatsUncheckedCreateNestedManyWithoutUserInput
-    UserPromotion?: UserPromotionUncheckedCreateNestedManyWithoutUserInput
-    UserSession?: UserSessionUncheckedCreateNestedManyWithoutUserInput
-    UserToken?: UserTokenUncheckedCreateNestedManyWithoutUserInput
-    VipHistory?: VipHistoryUncheckedCreateNestedManyWithoutUserInput
-    VipMembership?: VipMembershipUncheckedCreateNestedOneWithoutUserInput
-  }
-
-  export type UserCreateOrConnectWithoutAgentInput = {
-    where: UserWhereUniqueInput
-    create: XOR<UserCreateWithoutAgentInput, UserUncheckedCreateWithoutAgentInput>
-  }
-
-  export type UserCreateManyAgentInputEnvelope = {
-    data: UserCreateManyAgentInput | UserCreateManyAgentInput[]
-    skipDuplicates?: boolean
-  }
-
   export type UserBalanceCreateWithoutUserInput = {
     currency: $Enums.ExchangeCurrencyCode
     mainBalance?: Decimal | DecimalJsLike | number | string
@@ -69067,144 +68700,6 @@ export namespace Prisma {
     updatedAt?: DateTimeFilter<"Transaction"> | Date | string
   }
 
-  export type UserUpsertWithoutMembersInput = {
-    update: XOR<UserUpdateWithoutMembersInput, UserUncheckedUpdateWithoutMembersInput>
-    create: XOR<UserCreateWithoutMembersInput, UserUncheckedCreateWithoutMembersInput>
-    where?: UserWhereInput
-  }
-
-  export type UserUpdateToOneWithWhereWithoutMembersInput = {
-    where?: UserWhereInput
-    data: XOR<UserUpdateWithoutMembersInput, UserUncheckedUpdateWithoutMembersInput>
-  }
-
-  export type UserUpdateWithoutMembersInput = {
-    id?: StringFieldUpdateOperationsInput | string
-    whitecliffId?: NullableBigIntFieldUpdateOperationsInput | bigint | number | null
-    whitecliffSystemId?: NullableBigIntFieldUpdateOperationsInput | bigint | number | null
-    whitecliffUsername?: NullableStringFieldUpdateOperationsInput | string | null
-    dcsId?: NullableStringFieldUpdateOperationsInput | string | null
-    email?: NullableStringFieldUpdateOperationsInput | string | null
-    passwordHash?: NullableStringFieldUpdateOperationsInput | string | null
-    socialType?: NullableEnumSocialTypeFieldUpdateOperationsInput | $Enums.SocialType | null
-    socialId?: NullableStringFieldUpdateOperationsInput | string | null
-    role?: EnumUserRoleTypeFieldUpdateOperationsInput | $Enums.UserRoleType
-    status?: EnumUserStatusFieldUpdateOperationsInput | $Enums.UserStatus
-    kycLevel?: EnumKycLevelFieldUpdateOperationsInput | $Enums.KycLevel
-    country?: NullableStringFieldUpdateOperationsInput | string | null
-    language?: NullableEnumLanguageFieldUpdateOperationsInput | $Enums.Language | null
-    timezone?: NullableStringFieldUpdateOperationsInput | string | null
-    timezoneOffset?: NullableIntFieldUpdateOperationsInput | number | null
-    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
-    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
-    affiliateCodes?: AffiliateCodeUpdateManyWithoutUserNestedInput
-    affiliateCommissions?: AffiliateCommissionUpdateManyWithoutAffiliateNestedInput
-    subUserCommissions?: AffiliateCommissionUpdateManyWithoutSubUserNestedInput
-    affiliateTier?: AffiliateTierUpdateOneWithoutAffiliateNestedInput
-    affiliateWallets?: AffiliateWalletUpdateManyWithoutAffiliateNestedInput
-    CompTransaction?: CompTransactionUpdateManyWithoutUserNestedInput
-    DailyCompEarning?: DailyCompEarningUpdateManyWithoutUserNestedInput
-    EmailLog?: EmailLogUpdateManyWithoutUserNestedInput
-    GameSession?: GameSessionUpdateManyWithoutUserNestedInput
-    affiliateReferrals?: ReferralUpdateManyWithoutAffiliateNestedInput
-    referredUsers?: ReferralUpdateManyWithoutSubUserNestedInput
-    Rolling?: RollingUpdateManyWithoutUserNestedInput
-    transactions?: TransactionUpdateManyWithoutUserNestedInput
-    agent?: UserUpdateOneWithoutMembersNestedInput
-    balances?: UserBalanceUpdateManyWithoutUserNestedInput
-    UserBalanceStats?: UserBalanceStatsUpdateManyWithoutUserNestedInput
-    UserPromotion?: UserPromotionUpdateManyWithoutUserNestedInput
-    UserSession?: UserSessionUpdateManyWithoutUserNestedInput
-    UserToken?: UserTokenUpdateManyWithoutUserNestedInput
-    VipHistory?: VipHistoryUpdateManyWithoutUserNestedInput
-    VipMembership?: VipMembershipUpdateOneWithoutUserNestedInput
-  }
-
-  export type UserUncheckedUpdateWithoutMembersInput = {
-    id?: StringFieldUpdateOperationsInput | string
-    numericId?: IntFieldUpdateOperationsInput | number
-    whitecliffId?: NullableBigIntFieldUpdateOperationsInput | bigint | number | null
-    whitecliffSystemId?: NullableBigIntFieldUpdateOperationsInput | bigint | number | null
-    whitecliffUsername?: NullableStringFieldUpdateOperationsInput | string | null
-    dcsId?: NullableStringFieldUpdateOperationsInput | string | null
-    email?: NullableStringFieldUpdateOperationsInput | string | null
-    passwordHash?: NullableStringFieldUpdateOperationsInput | string | null
-    socialType?: NullableEnumSocialTypeFieldUpdateOperationsInput | $Enums.SocialType | null
-    socialId?: NullableStringFieldUpdateOperationsInput | string | null
-    agentId?: NullableStringFieldUpdateOperationsInput | string | null
-    role?: EnumUserRoleTypeFieldUpdateOperationsInput | $Enums.UserRoleType
-    status?: EnumUserStatusFieldUpdateOperationsInput | $Enums.UserStatus
-    kycLevel?: EnumKycLevelFieldUpdateOperationsInput | $Enums.KycLevel
-    country?: NullableStringFieldUpdateOperationsInput | string | null
-    language?: NullableEnumLanguageFieldUpdateOperationsInput | $Enums.Language | null
-    timezone?: NullableStringFieldUpdateOperationsInput | string | null
-    timezoneOffset?: NullableIntFieldUpdateOperationsInput | number | null
-    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
-    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
-    affiliateCodes?: AffiliateCodeUncheckedUpdateManyWithoutUserNestedInput
-    affiliateCommissions?: AffiliateCommissionUncheckedUpdateManyWithoutAffiliateNestedInput
-    subUserCommissions?: AffiliateCommissionUncheckedUpdateManyWithoutSubUserNestedInput
-    affiliateTier?: AffiliateTierUncheckedUpdateOneWithoutAffiliateNestedInput
-    affiliateWallets?: AffiliateWalletUncheckedUpdateManyWithoutAffiliateNestedInput
-    CompTransaction?: CompTransactionUncheckedUpdateManyWithoutUserNestedInput
-    DailyCompEarning?: DailyCompEarningUncheckedUpdateManyWithoutUserNestedInput
-    EmailLog?: EmailLogUncheckedUpdateManyWithoutUserNestedInput
-    GameSession?: GameSessionUncheckedUpdateManyWithoutUserNestedInput
-    affiliateReferrals?: ReferralUncheckedUpdateManyWithoutAffiliateNestedInput
-    referredUsers?: ReferralUncheckedUpdateManyWithoutSubUserNestedInput
-    Rolling?: RollingUncheckedUpdateManyWithoutUserNestedInput
-    transactions?: TransactionUncheckedUpdateManyWithoutUserNestedInput
-    balances?: UserBalanceUncheckedUpdateManyWithoutUserNestedInput
-    UserBalanceStats?: UserBalanceStatsUncheckedUpdateManyWithoutUserNestedInput
-    UserPromotion?: UserPromotionUncheckedUpdateManyWithoutUserNestedInput
-    UserSession?: UserSessionUncheckedUpdateManyWithoutUserNestedInput
-    UserToken?: UserTokenUncheckedUpdateManyWithoutUserNestedInput
-    VipHistory?: VipHistoryUncheckedUpdateManyWithoutUserNestedInput
-    VipMembership?: VipMembershipUncheckedUpdateOneWithoutUserNestedInput
-  }
-
-  export type UserUpsertWithWhereUniqueWithoutAgentInput = {
-    where: UserWhereUniqueInput
-    update: XOR<UserUpdateWithoutAgentInput, UserUncheckedUpdateWithoutAgentInput>
-    create: XOR<UserCreateWithoutAgentInput, UserUncheckedCreateWithoutAgentInput>
-  }
-
-  export type UserUpdateWithWhereUniqueWithoutAgentInput = {
-    where: UserWhereUniqueInput
-    data: XOR<UserUpdateWithoutAgentInput, UserUncheckedUpdateWithoutAgentInput>
-  }
-
-  export type UserUpdateManyWithWhereWithoutAgentInput = {
-    where: UserScalarWhereInput
-    data: XOR<UserUpdateManyMutationInput, UserUncheckedUpdateManyWithoutAgentInput>
-  }
-
-  export type UserScalarWhereInput = {
-    AND?: UserScalarWhereInput | UserScalarWhereInput[]
-    OR?: UserScalarWhereInput[]
-    NOT?: UserScalarWhereInput | UserScalarWhereInput[]
-    id?: StringFilter<"User"> | string
-    numericId?: IntFilter<"User"> | number
-    whitecliffId?: BigIntNullableFilter<"User"> | bigint | number | null
-    whitecliffSystemId?: BigIntNullableFilter<"User"> | bigint | number | null
-    whitecliffUsername?: StringNullableFilter<"User"> | string | null
-    dcsId?: StringNullableFilter<"User"> | string | null
-    email?: StringNullableFilter<"User"> | string | null
-    passwordHash?: StringNullableFilter<"User"> | string | null
-    socialType?: EnumSocialTypeNullableFilter<"User"> | $Enums.SocialType | null
-    socialId?: StringNullableFilter<"User"> | string | null
-    agentId?: StringNullableFilter<"User"> | string | null
-    role?: EnumUserRoleTypeFilter<"User"> | $Enums.UserRoleType
-    status?: EnumUserStatusFilter<"User"> | $Enums.UserStatus
-    kycLevel?: EnumKycLevelFilter<"User"> | $Enums.KycLevel
-    country?: StringNullableFilter<"User"> | string | null
-    language?: EnumLanguageNullableFilter<"User"> | $Enums.Language | null
-    timezone?: StringNullableFilter<"User"> | string | null
-    timezoneOffset?: IntNullableFilter<"User"> | number | null
-    createdAt?: DateTimeFilter<"User"> | Date | string
-    updatedAt?: DateTimeFilter<"User"> | Date | string
-  }
-
   export type UserBalanceUpsertWithWhereUniqueWithoutUserInput = {
     where: UserBalanceWhereUniqueInput
     update: XOR<UserBalanceUpdateWithoutUserInput, UserBalanceUncheckedUpdateWithoutUserInput>
@@ -69459,8 +68954,6 @@ export namespace Prisma {
     referredUsers?: ReferralCreateNestedManyWithoutSubUserInput
     Rolling?: RollingCreateNestedManyWithoutUserInput
     transactions?: TransactionCreateNestedManyWithoutUserInput
-    agent?: UserCreateNestedOneWithoutMembersInput
-    members?: UserCreateNestedManyWithoutAgentInput
     balances?: UserBalanceCreateNestedManyWithoutUserInput
     UserBalanceStats?: UserBalanceStatsCreateNestedManyWithoutUserInput
     UserPromotion?: UserPromotionCreateNestedManyWithoutUserInput
@@ -69480,7 +68973,6 @@ export namespace Prisma {
     passwordHash?: string | null
     socialType?: $Enums.SocialType | null
     socialId?: string | null
-    agentId?: string | null
     role?: $Enums.UserRoleType
     status?: $Enums.UserStatus
     kycLevel?: $Enums.KycLevel
@@ -69503,7 +68995,6 @@ export namespace Prisma {
     referredUsers?: ReferralUncheckedCreateNestedManyWithoutSubUserInput
     Rolling?: RollingUncheckedCreateNestedManyWithoutUserInput
     transactions?: TransactionUncheckedCreateNestedManyWithoutUserInput
-    members?: UserUncheckedCreateNestedManyWithoutAgentInput
     balances?: UserBalanceUncheckedCreateNestedManyWithoutUserInput
     UserBalanceStats?: UserBalanceStatsUncheckedCreateNestedManyWithoutUserInput
     UserPromotion?: UserPromotionUncheckedCreateNestedManyWithoutUserInput
@@ -69560,8 +69051,6 @@ export namespace Prisma {
     referredUsers?: ReferralUpdateManyWithoutSubUserNestedInput
     Rolling?: RollingUpdateManyWithoutUserNestedInput
     transactions?: TransactionUpdateManyWithoutUserNestedInput
-    agent?: UserUpdateOneWithoutMembersNestedInput
-    members?: UserUpdateManyWithoutAgentNestedInput
     balances?: UserBalanceUpdateManyWithoutUserNestedInput
     UserBalanceStats?: UserBalanceStatsUpdateManyWithoutUserNestedInput
     UserPromotion?: UserPromotionUpdateManyWithoutUserNestedInput
@@ -69581,7 +69070,6 @@ export namespace Prisma {
     passwordHash?: NullableStringFieldUpdateOperationsInput | string | null
     socialType?: NullableEnumSocialTypeFieldUpdateOperationsInput | $Enums.SocialType | null
     socialId?: NullableStringFieldUpdateOperationsInput | string | null
-    agentId?: NullableStringFieldUpdateOperationsInput | string | null
     role?: EnumUserRoleTypeFieldUpdateOperationsInput | $Enums.UserRoleType
     status?: EnumUserStatusFieldUpdateOperationsInput | $Enums.UserStatus
     kycLevel?: EnumKycLevelFieldUpdateOperationsInput | $Enums.KycLevel
@@ -69604,7 +69092,6 @@ export namespace Prisma {
     referredUsers?: ReferralUncheckedUpdateManyWithoutSubUserNestedInput
     Rolling?: RollingUncheckedUpdateManyWithoutUserNestedInput
     transactions?: TransactionUncheckedUpdateManyWithoutUserNestedInput
-    members?: UserUncheckedUpdateManyWithoutAgentNestedInput
     balances?: UserBalanceUncheckedUpdateManyWithoutUserNestedInput
     UserBalanceStats?: UserBalanceStatsUncheckedUpdateManyWithoutUserNestedInput
     UserPromotion?: UserPromotionUncheckedUpdateManyWithoutUserNestedInput
@@ -69646,8 +69133,6 @@ export namespace Prisma {
     referredUsers?: ReferralCreateNestedManyWithoutSubUserInput
     Rolling?: RollingCreateNestedManyWithoutUserInput
     transactions?: TransactionCreateNestedManyWithoutUserInput
-    agent?: UserCreateNestedOneWithoutMembersInput
-    members?: UserCreateNestedManyWithoutAgentInput
     UserBalanceStats?: UserBalanceStatsCreateNestedManyWithoutUserInput
     UserPromotion?: UserPromotionCreateNestedManyWithoutUserInput
     UserSession?: UserSessionCreateNestedManyWithoutUserInput
@@ -69667,7 +69152,6 @@ export namespace Prisma {
     passwordHash?: string | null
     socialType?: $Enums.SocialType | null
     socialId?: string | null
-    agentId?: string | null
     role?: $Enums.UserRoleType
     status?: $Enums.UserStatus
     kycLevel?: $Enums.KycLevel
@@ -69690,7 +69174,6 @@ export namespace Prisma {
     referredUsers?: ReferralUncheckedCreateNestedManyWithoutSubUserInput
     Rolling?: RollingUncheckedCreateNestedManyWithoutUserInput
     transactions?: TransactionUncheckedCreateNestedManyWithoutUserInput
-    members?: UserUncheckedCreateNestedManyWithoutAgentInput
     UserBalanceStats?: UserBalanceStatsUncheckedCreateNestedManyWithoutUserInput
     UserPromotion?: UserPromotionUncheckedCreateNestedManyWithoutUserInput
     UserSession?: UserSessionUncheckedCreateNestedManyWithoutUserInput
@@ -69747,8 +69230,6 @@ export namespace Prisma {
     referredUsers?: ReferralUpdateManyWithoutSubUserNestedInput
     Rolling?: RollingUpdateManyWithoutUserNestedInput
     transactions?: TransactionUpdateManyWithoutUserNestedInput
-    agent?: UserUpdateOneWithoutMembersNestedInput
-    members?: UserUpdateManyWithoutAgentNestedInput
     UserBalanceStats?: UserBalanceStatsUpdateManyWithoutUserNestedInput
     UserPromotion?: UserPromotionUpdateManyWithoutUserNestedInput
     UserSession?: UserSessionUpdateManyWithoutUserNestedInput
@@ -69768,7 +69249,6 @@ export namespace Prisma {
     passwordHash?: NullableStringFieldUpdateOperationsInput | string | null
     socialType?: NullableEnumSocialTypeFieldUpdateOperationsInput | $Enums.SocialType | null
     socialId?: NullableStringFieldUpdateOperationsInput | string | null
-    agentId?: NullableStringFieldUpdateOperationsInput | string | null
     role?: EnumUserRoleTypeFieldUpdateOperationsInput | $Enums.UserRoleType
     status?: EnumUserStatusFieldUpdateOperationsInput | $Enums.UserStatus
     kycLevel?: EnumKycLevelFieldUpdateOperationsInput | $Enums.KycLevel
@@ -69791,7 +69271,6 @@ export namespace Prisma {
     referredUsers?: ReferralUncheckedUpdateManyWithoutSubUserNestedInput
     Rolling?: RollingUncheckedUpdateManyWithoutUserNestedInput
     transactions?: TransactionUncheckedUpdateManyWithoutUserNestedInput
-    members?: UserUncheckedUpdateManyWithoutAgentNestedInput
     UserBalanceStats?: UserBalanceStatsUncheckedUpdateManyWithoutUserNestedInput
     UserPromotion?: UserPromotionUncheckedUpdateManyWithoutUserNestedInput
     UserSession?: UserSessionUncheckedUpdateManyWithoutUserNestedInput
@@ -69833,8 +69312,6 @@ export namespace Prisma {
     referredUsers?: ReferralCreateNestedManyWithoutSubUserInput
     Rolling?: RollingCreateNestedManyWithoutUserInput
     transactions?: TransactionCreateNestedManyWithoutUserInput
-    agent?: UserCreateNestedOneWithoutMembersInput
-    members?: UserCreateNestedManyWithoutAgentInput
     balances?: UserBalanceCreateNestedManyWithoutUserInput
     UserPromotion?: UserPromotionCreateNestedManyWithoutUserInput
     UserSession?: UserSessionCreateNestedManyWithoutUserInput
@@ -69854,7 +69331,6 @@ export namespace Prisma {
     passwordHash?: string | null
     socialType?: $Enums.SocialType | null
     socialId?: string | null
-    agentId?: string | null
     role?: $Enums.UserRoleType
     status?: $Enums.UserStatus
     kycLevel?: $Enums.KycLevel
@@ -69877,7 +69353,6 @@ export namespace Prisma {
     referredUsers?: ReferralUncheckedCreateNestedManyWithoutSubUserInput
     Rolling?: RollingUncheckedCreateNestedManyWithoutUserInput
     transactions?: TransactionUncheckedCreateNestedManyWithoutUserInput
-    members?: UserUncheckedCreateNestedManyWithoutAgentInput
     balances?: UserBalanceUncheckedCreateNestedManyWithoutUserInput
     UserPromotion?: UserPromotionUncheckedCreateNestedManyWithoutUserInput
     UserSession?: UserSessionUncheckedCreateNestedManyWithoutUserInput
@@ -69934,8 +69409,6 @@ export namespace Prisma {
     referredUsers?: ReferralUpdateManyWithoutSubUserNestedInput
     Rolling?: RollingUpdateManyWithoutUserNestedInput
     transactions?: TransactionUpdateManyWithoutUserNestedInput
-    agent?: UserUpdateOneWithoutMembersNestedInput
-    members?: UserUpdateManyWithoutAgentNestedInput
     balances?: UserBalanceUpdateManyWithoutUserNestedInput
     UserPromotion?: UserPromotionUpdateManyWithoutUserNestedInput
     UserSession?: UserSessionUpdateManyWithoutUserNestedInput
@@ -69955,7 +69428,6 @@ export namespace Prisma {
     passwordHash?: NullableStringFieldUpdateOperationsInput | string | null
     socialType?: NullableEnumSocialTypeFieldUpdateOperationsInput | $Enums.SocialType | null
     socialId?: NullableStringFieldUpdateOperationsInput | string | null
-    agentId?: NullableStringFieldUpdateOperationsInput | string | null
     role?: EnumUserRoleTypeFieldUpdateOperationsInput | $Enums.UserRoleType
     status?: EnumUserStatusFieldUpdateOperationsInput | $Enums.UserStatus
     kycLevel?: EnumKycLevelFieldUpdateOperationsInput | $Enums.KycLevel
@@ -69978,7 +69450,6 @@ export namespace Prisma {
     referredUsers?: ReferralUncheckedUpdateManyWithoutSubUserNestedInput
     Rolling?: RollingUncheckedUpdateManyWithoutUserNestedInput
     transactions?: TransactionUncheckedUpdateManyWithoutUserNestedInput
-    members?: UserUncheckedUpdateManyWithoutAgentNestedInput
     balances?: UserBalanceUncheckedUpdateManyWithoutUserNestedInput
     UserPromotion?: UserPromotionUncheckedUpdateManyWithoutUserNestedInput
     UserSession?: UserSessionUncheckedUpdateManyWithoutUserNestedInput
@@ -70636,8 +70107,6 @@ export namespace Prisma {
     affiliateReferrals?: ReferralCreateNestedManyWithoutAffiliateInput
     referredUsers?: ReferralCreateNestedManyWithoutSubUserInput
     Rolling?: RollingCreateNestedManyWithoutUserInput
-    agent?: UserCreateNestedOneWithoutMembersInput
-    members?: UserCreateNestedManyWithoutAgentInput
     balances?: UserBalanceCreateNestedManyWithoutUserInput
     UserBalanceStats?: UserBalanceStatsCreateNestedManyWithoutUserInput
     UserPromotion?: UserPromotionCreateNestedManyWithoutUserInput
@@ -70658,7 +70127,6 @@ export namespace Prisma {
     passwordHash?: string | null
     socialType?: $Enums.SocialType | null
     socialId?: string | null
-    agentId?: string | null
     role?: $Enums.UserRoleType
     status?: $Enums.UserStatus
     kycLevel?: $Enums.KycLevel
@@ -70680,7 +70148,6 @@ export namespace Prisma {
     affiliateReferrals?: ReferralUncheckedCreateNestedManyWithoutAffiliateInput
     referredUsers?: ReferralUncheckedCreateNestedManyWithoutSubUserInput
     Rolling?: RollingUncheckedCreateNestedManyWithoutUserInput
-    members?: UserUncheckedCreateNestedManyWithoutAgentInput
     balances?: UserBalanceUncheckedCreateNestedManyWithoutUserInput
     UserBalanceStats?: UserBalanceStatsUncheckedCreateNestedManyWithoutUserInput
     UserPromotion?: UserPromotionUncheckedCreateNestedManyWithoutUserInput
@@ -71036,8 +70503,6 @@ export namespace Prisma {
     affiliateReferrals?: ReferralUpdateManyWithoutAffiliateNestedInput
     referredUsers?: ReferralUpdateManyWithoutSubUserNestedInput
     Rolling?: RollingUpdateManyWithoutUserNestedInput
-    agent?: UserUpdateOneWithoutMembersNestedInput
-    members?: UserUpdateManyWithoutAgentNestedInput
     balances?: UserBalanceUpdateManyWithoutUserNestedInput
     UserBalanceStats?: UserBalanceStatsUpdateManyWithoutUserNestedInput
     UserPromotion?: UserPromotionUpdateManyWithoutUserNestedInput
@@ -71058,7 +70523,6 @@ export namespace Prisma {
     passwordHash?: NullableStringFieldUpdateOperationsInput | string | null
     socialType?: NullableEnumSocialTypeFieldUpdateOperationsInput | $Enums.SocialType | null
     socialId?: NullableStringFieldUpdateOperationsInput | string | null
-    agentId?: NullableStringFieldUpdateOperationsInput | string | null
     role?: EnumUserRoleTypeFieldUpdateOperationsInput | $Enums.UserRoleType
     status?: EnumUserStatusFieldUpdateOperationsInput | $Enums.UserStatus
     kycLevel?: EnumKycLevelFieldUpdateOperationsInput | $Enums.KycLevel
@@ -71080,7 +70544,6 @@ export namespace Prisma {
     affiliateReferrals?: ReferralUncheckedUpdateManyWithoutAffiliateNestedInput
     referredUsers?: ReferralUncheckedUpdateManyWithoutSubUserNestedInput
     Rolling?: RollingUncheckedUpdateManyWithoutUserNestedInput
-    members?: UserUncheckedUpdateManyWithoutAgentNestedInput
     balances?: UserBalanceUncheckedUpdateManyWithoutUserNestedInput
     UserBalanceStats?: UserBalanceStatsUncheckedUpdateManyWithoutUserNestedInput
     UserPromotion?: UserPromotionUncheckedUpdateManyWithoutUserNestedInput
@@ -72612,8 +72075,6 @@ export namespace Prisma {
     referredUsers?: ReferralCreateNestedManyWithoutSubUserInput
     Rolling?: RollingCreateNestedManyWithoutUserInput
     transactions?: TransactionCreateNestedManyWithoutUserInput
-    agent?: UserCreateNestedOneWithoutMembersInput
-    members?: UserCreateNestedManyWithoutAgentInput
     balances?: UserBalanceCreateNestedManyWithoutUserInput
     UserBalanceStats?: UserBalanceStatsCreateNestedManyWithoutUserInput
     UserPromotion?: UserPromotionCreateNestedManyWithoutUserInput
@@ -72634,7 +72095,6 @@ export namespace Prisma {
     passwordHash?: string | null
     socialType?: $Enums.SocialType | null
     socialId?: string | null
-    agentId?: string | null
     role?: $Enums.UserRoleType
     status?: $Enums.UserStatus
     kycLevel?: $Enums.KycLevel
@@ -72656,7 +72116,6 @@ export namespace Prisma {
     referredUsers?: ReferralUncheckedCreateNestedManyWithoutSubUserInput
     Rolling?: RollingUncheckedCreateNestedManyWithoutUserInput
     transactions?: TransactionUncheckedCreateNestedManyWithoutUserInput
-    members?: UserUncheckedCreateNestedManyWithoutAgentInput
     balances?: UserBalanceUncheckedCreateNestedManyWithoutUserInput
     UserBalanceStats?: UserBalanceStatsUncheckedCreateNestedManyWithoutUserInput
     UserPromotion?: UserPromotionUncheckedCreateNestedManyWithoutUserInput
@@ -72794,8 +72253,6 @@ export namespace Prisma {
     referredUsers?: ReferralUpdateManyWithoutSubUserNestedInput
     Rolling?: RollingUpdateManyWithoutUserNestedInput
     transactions?: TransactionUpdateManyWithoutUserNestedInput
-    agent?: UserUpdateOneWithoutMembersNestedInput
-    members?: UserUpdateManyWithoutAgentNestedInput
     balances?: UserBalanceUpdateManyWithoutUserNestedInput
     UserBalanceStats?: UserBalanceStatsUpdateManyWithoutUserNestedInput
     UserPromotion?: UserPromotionUpdateManyWithoutUserNestedInput
@@ -72816,7 +72273,6 @@ export namespace Prisma {
     passwordHash?: NullableStringFieldUpdateOperationsInput | string | null
     socialType?: NullableEnumSocialTypeFieldUpdateOperationsInput | $Enums.SocialType | null
     socialId?: NullableStringFieldUpdateOperationsInput | string | null
-    agentId?: NullableStringFieldUpdateOperationsInput | string | null
     role?: EnumUserRoleTypeFieldUpdateOperationsInput | $Enums.UserRoleType
     status?: EnumUserStatusFieldUpdateOperationsInput | $Enums.UserStatus
     kycLevel?: EnumKycLevelFieldUpdateOperationsInput | $Enums.KycLevel
@@ -72838,7 +72294,6 @@ export namespace Prisma {
     referredUsers?: ReferralUncheckedUpdateManyWithoutSubUserNestedInput
     Rolling?: RollingUncheckedUpdateManyWithoutUserNestedInput
     transactions?: TransactionUncheckedUpdateManyWithoutUserNestedInput
-    members?: UserUncheckedUpdateManyWithoutAgentNestedInput
     balances?: UserBalanceUncheckedUpdateManyWithoutUserNestedInput
     UserBalanceStats?: UserBalanceStatsUncheckedUpdateManyWithoutUserNestedInput
     UserPromotion?: UserPromotionUncheckedUpdateManyWithoutUserNestedInput
@@ -72908,8 +72363,6 @@ export namespace Prisma {
     referredUsers?: ReferralCreateNestedManyWithoutSubUserInput
     Rolling?: RollingCreateNestedManyWithoutUserInput
     transactions?: TransactionCreateNestedManyWithoutUserInput
-    agent?: UserCreateNestedOneWithoutMembersInput
-    members?: UserCreateNestedManyWithoutAgentInput
     balances?: UserBalanceCreateNestedManyWithoutUserInput
     UserBalanceStats?: UserBalanceStatsCreateNestedManyWithoutUserInput
     UserPromotion?: UserPromotionCreateNestedManyWithoutUserInput
@@ -72930,7 +72383,6 @@ export namespace Prisma {
     passwordHash?: string | null
     socialType?: $Enums.SocialType | null
     socialId?: string | null
-    agentId?: string | null
     role?: $Enums.UserRoleType
     status?: $Enums.UserStatus
     kycLevel?: $Enums.KycLevel
@@ -72952,7 +72404,6 @@ export namespace Prisma {
     referredUsers?: ReferralUncheckedCreateNestedManyWithoutSubUserInput
     Rolling?: RollingUncheckedCreateNestedManyWithoutUserInput
     transactions?: TransactionUncheckedCreateNestedManyWithoutUserInput
-    members?: UserUncheckedCreateNestedManyWithoutAgentInput
     balances?: UserBalanceUncheckedCreateNestedManyWithoutUserInput
     UserBalanceStats?: UserBalanceStatsUncheckedCreateNestedManyWithoutUserInput
     UserPromotion?: UserPromotionUncheckedCreateNestedManyWithoutUserInput
@@ -73025,8 +72476,6 @@ export namespace Prisma {
     referredUsers?: ReferralUpdateManyWithoutSubUserNestedInput
     Rolling?: RollingUpdateManyWithoutUserNestedInput
     transactions?: TransactionUpdateManyWithoutUserNestedInput
-    agent?: UserUpdateOneWithoutMembersNestedInput
-    members?: UserUpdateManyWithoutAgentNestedInput
     balances?: UserBalanceUpdateManyWithoutUserNestedInput
     UserBalanceStats?: UserBalanceStatsUpdateManyWithoutUserNestedInput
     UserPromotion?: UserPromotionUpdateManyWithoutUserNestedInput
@@ -73047,7 +72496,6 @@ export namespace Prisma {
     passwordHash?: NullableStringFieldUpdateOperationsInput | string | null
     socialType?: NullableEnumSocialTypeFieldUpdateOperationsInput | $Enums.SocialType | null
     socialId?: NullableStringFieldUpdateOperationsInput | string | null
-    agentId?: NullableStringFieldUpdateOperationsInput | string | null
     role?: EnumUserRoleTypeFieldUpdateOperationsInput | $Enums.UserRoleType
     status?: EnumUserStatusFieldUpdateOperationsInput | $Enums.UserStatus
     kycLevel?: EnumKycLevelFieldUpdateOperationsInput | $Enums.KycLevel
@@ -73069,7 +72517,6 @@ export namespace Prisma {
     referredUsers?: ReferralUncheckedUpdateManyWithoutSubUserNestedInput
     Rolling?: RollingUncheckedUpdateManyWithoutUserNestedInput
     transactions?: TransactionUncheckedUpdateManyWithoutUserNestedInput
-    members?: UserUncheckedUpdateManyWithoutAgentNestedInput
     balances?: UserBalanceUncheckedUpdateManyWithoutUserNestedInput
     UserBalanceStats?: UserBalanceStatsUncheckedUpdateManyWithoutUserNestedInput
     UserPromotion?: UserPromotionUncheckedUpdateManyWithoutUserNestedInput
@@ -73387,8 +72834,6 @@ export namespace Prisma {
     referredUsers?: ReferralCreateNestedManyWithoutSubUserInput
     Rolling?: RollingCreateNestedManyWithoutUserInput
     transactions?: TransactionCreateNestedManyWithoutUserInput
-    agent?: UserCreateNestedOneWithoutMembersInput
-    members?: UserCreateNestedManyWithoutAgentInput
     balances?: UserBalanceCreateNestedManyWithoutUserInput
     UserBalanceStats?: UserBalanceStatsCreateNestedManyWithoutUserInput
     UserSession?: UserSessionCreateNestedManyWithoutUserInput
@@ -73408,7 +72853,6 @@ export namespace Prisma {
     passwordHash?: string | null
     socialType?: $Enums.SocialType | null
     socialId?: string | null
-    agentId?: string | null
     role?: $Enums.UserRoleType
     status?: $Enums.UserStatus
     kycLevel?: $Enums.KycLevel
@@ -73431,7 +72875,6 @@ export namespace Prisma {
     referredUsers?: ReferralUncheckedCreateNestedManyWithoutSubUserInput
     Rolling?: RollingUncheckedCreateNestedManyWithoutUserInput
     transactions?: TransactionUncheckedCreateNestedManyWithoutUserInput
-    members?: UserUncheckedCreateNestedManyWithoutAgentInput
     balances?: UserBalanceUncheckedCreateNestedManyWithoutUserInput
     UserBalanceStats?: UserBalanceStatsUncheckedCreateNestedManyWithoutUserInput
     UserSession?: UserSessionUncheckedCreateNestedManyWithoutUserInput
@@ -73550,8 +72993,6 @@ export namespace Prisma {
     referredUsers?: ReferralUpdateManyWithoutSubUserNestedInput
     Rolling?: RollingUpdateManyWithoutUserNestedInput
     transactions?: TransactionUpdateManyWithoutUserNestedInput
-    agent?: UserUpdateOneWithoutMembersNestedInput
-    members?: UserUpdateManyWithoutAgentNestedInput
     balances?: UserBalanceUpdateManyWithoutUserNestedInput
     UserBalanceStats?: UserBalanceStatsUpdateManyWithoutUserNestedInput
     UserSession?: UserSessionUpdateManyWithoutUserNestedInput
@@ -73571,7 +73012,6 @@ export namespace Prisma {
     passwordHash?: NullableStringFieldUpdateOperationsInput | string | null
     socialType?: NullableEnumSocialTypeFieldUpdateOperationsInput | $Enums.SocialType | null
     socialId?: NullableStringFieldUpdateOperationsInput | string | null
-    agentId?: NullableStringFieldUpdateOperationsInput | string | null
     role?: EnumUserRoleTypeFieldUpdateOperationsInput | $Enums.UserRoleType
     status?: EnumUserStatusFieldUpdateOperationsInput | $Enums.UserStatus
     kycLevel?: EnumKycLevelFieldUpdateOperationsInput | $Enums.KycLevel
@@ -73594,7 +73034,6 @@ export namespace Prisma {
     referredUsers?: ReferralUncheckedUpdateManyWithoutSubUserNestedInput
     Rolling?: RollingUncheckedUpdateManyWithoutUserNestedInput
     transactions?: TransactionUncheckedUpdateManyWithoutUserNestedInput
-    members?: UserUncheckedUpdateManyWithoutAgentNestedInput
     balances?: UserBalanceUncheckedUpdateManyWithoutUserNestedInput
     UserBalanceStats?: UserBalanceStatsUncheckedUpdateManyWithoutUserNestedInput
     UserSession?: UserSessionUncheckedUpdateManyWithoutUserNestedInput
@@ -73728,8 +73167,6 @@ export namespace Prisma {
     referredUsers?: ReferralCreateNestedManyWithoutSubUserInput
     Rolling?: RollingCreateNestedManyWithoutUserInput
     transactions?: TransactionCreateNestedManyWithoutUserInput
-    agent?: UserCreateNestedOneWithoutMembersInput
-    members?: UserCreateNestedManyWithoutAgentInput
     balances?: UserBalanceCreateNestedManyWithoutUserInput
     UserBalanceStats?: UserBalanceStatsCreateNestedManyWithoutUserInput
     UserPromotion?: UserPromotionCreateNestedManyWithoutUserInput
@@ -73749,7 +73186,6 @@ export namespace Prisma {
     passwordHash?: string | null
     socialType?: $Enums.SocialType | null
     socialId?: string | null
-    agentId?: string | null
     role?: $Enums.UserRoleType
     status?: $Enums.UserStatus
     kycLevel?: $Enums.KycLevel
@@ -73772,7 +73208,6 @@ export namespace Prisma {
     referredUsers?: ReferralUncheckedCreateNestedManyWithoutSubUserInput
     Rolling?: RollingUncheckedCreateNestedManyWithoutUserInput
     transactions?: TransactionUncheckedCreateNestedManyWithoutUserInput
-    members?: UserUncheckedCreateNestedManyWithoutAgentInput
     balances?: UserBalanceUncheckedCreateNestedManyWithoutUserInput
     UserBalanceStats?: UserBalanceStatsUncheckedCreateNestedManyWithoutUserInput
     UserPromotion?: UserPromotionUncheckedCreateNestedManyWithoutUserInput
@@ -73879,8 +73314,6 @@ export namespace Prisma {
     referredUsers?: ReferralUpdateManyWithoutSubUserNestedInput
     Rolling?: RollingUpdateManyWithoutUserNestedInput
     transactions?: TransactionUpdateManyWithoutUserNestedInput
-    agent?: UserUpdateOneWithoutMembersNestedInput
-    members?: UserUpdateManyWithoutAgentNestedInput
     balances?: UserBalanceUpdateManyWithoutUserNestedInput
     UserBalanceStats?: UserBalanceStatsUpdateManyWithoutUserNestedInput
     UserPromotion?: UserPromotionUpdateManyWithoutUserNestedInput
@@ -73900,7 +73333,6 @@ export namespace Prisma {
     passwordHash?: NullableStringFieldUpdateOperationsInput | string | null
     socialType?: NullableEnumSocialTypeFieldUpdateOperationsInput | $Enums.SocialType | null
     socialId?: NullableStringFieldUpdateOperationsInput | string | null
-    agentId?: NullableStringFieldUpdateOperationsInput | string | null
     role?: EnumUserRoleTypeFieldUpdateOperationsInput | $Enums.UserRoleType
     status?: EnumUserStatusFieldUpdateOperationsInput | $Enums.UserStatus
     kycLevel?: EnumKycLevelFieldUpdateOperationsInput | $Enums.KycLevel
@@ -73923,7 +73355,6 @@ export namespace Prisma {
     referredUsers?: ReferralUncheckedUpdateManyWithoutSubUserNestedInput
     Rolling?: RollingUncheckedUpdateManyWithoutUserNestedInput
     transactions?: TransactionUncheckedUpdateManyWithoutUserNestedInput
-    members?: UserUncheckedUpdateManyWithoutAgentNestedInput
     balances?: UserBalanceUncheckedUpdateManyWithoutUserNestedInput
     UserBalanceStats?: UserBalanceStatsUncheckedUpdateManyWithoutUserNestedInput
     UserPromotion?: UserPromotionUncheckedUpdateManyWithoutUserNestedInput
@@ -74005,8 +73436,6 @@ export namespace Prisma {
     referredUsers?: ReferralCreateNestedManyWithoutSubUserInput
     Rolling?: RollingCreateNestedManyWithoutUserInput
     transactions?: TransactionCreateNestedManyWithoutUserInput
-    agent?: UserCreateNestedOneWithoutMembersInput
-    members?: UserCreateNestedManyWithoutAgentInput
     balances?: UserBalanceCreateNestedManyWithoutUserInput
     UserBalanceStats?: UserBalanceStatsCreateNestedManyWithoutUserInput
     UserPromotion?: UserPromotionCreateNestedManyWithoutUserInput
@@ -74026,7 +73455,6 @@ export namespace Prisma {
     passwordHash?: string | null
     socialType?: $Enums.SocialType | null
     socialId?: string | null
-    agentId?: string | null
     role?: $Enums.UserRoleType
     status?: $Enums.UserStatus
     kycLevel?: $Enums.KycLevel
@@ -74049,7 +73477,6 @@ export namespace Prisma {
     referredUsers?: ReferralUncheckedCreateNestedManyWithoutSubUserInput
     Rolling?: RollingUncheckedCreateNestedManyWithoutUserInput
     transactions?: TransactionUncheckedCreateNestedManyWithoutUserInput
-    members?: UserUncheckedCreateNestedManyWithoutAgentInput
     balances?: UserBalanceUncheckedCreateNestedManyWithoutUserInput
     UserBalanceStats?: UserBalanceStatsUncheckedCreateNestedManyWithoutUserInput
     UserPromotion?: UserPromotionUncheckedCreateNestedManyWithoutUserInput
@@ -74132,8 +73559,6 @@ export namespace Prisma {
     referredUsers?: ReferralUpdateManyWithoutSubUserNestedInput
     Rolling?: RollingUpdateManyWithoutUserNestedInput
     transactions?: TransactionUpdateManyWithoutUserNestedInput
-    agent?: UserUpdateOneWithoutMembersNestedInput
-    members?: UserUpdateManyWithoutAgentNestedInput
     balances?: UserBalanceUpdateManyWithoutUserNestedInput
     UserBalanceStats?: UserBalanceStatsUpdateManyWithoutUserNestedInput
     UserPromotion?: UserPromotionUpdateManyWithoutUserNestedInput
@@ -74153,7 +73578,6 @@ export namespace Prisma {
     passwordHash?: NullableStringFieldUpdateOperationsInput | string | null
     socialType?: NullableEnumSocialTypeFieldUpdateOperationsInput | $Enums.SocialType | null
     socialId?: NullableStringFieldUpdateOperationsInput | string | null
-    agentId?: NullableStringFieldUpdateOperationsInput | string | null
     role?: EnumUserRoleTypeFieldUpdateOperationsInput | $Enums.UserRoleType
     status?: EnumUserStatusFieldUpdateOperationsInput | $Enums.UserStatus
     kycLevel?: EnumKycLevelFieldUpdateOperationsInput | $Enums.KycLevel
@@ -74176,7 +73600,6 @@ export namespace Prisma {
     referredUsers?: ReferralUncheckedUpdateManyWithoutSubUserNestedInput
     Rolling?: RollingUncheckedUpdateManyWithoutUserNestedInput
     transactions?: TransactionUncheckedUpdateManyWithoutUserNestedInput
-    members?: UserUncheckedUpdateManyWithoutAgentNestedInput
     balances?: UserBalanceUncheckedUpdateManyWithoutUserNestedInput
     UserBalanceStats?: UserBalanceStatsUncheckedUpdateManyWithoutUserNestedInput
     UserPromotion?: UserPromotionUncheckedUpdateManyWithoutUserNestedInput
@@ -74312,8 +73735,6 @@ export namespace Prisma {
     affiliateReferrals?: ReferralCreateNestedManyWithoutAffiliateInput
     referredUsers?: ReferralCreateNestedManyWithoutSubUserInput
     transactions?: TransactionCreateNestedManyWithoutUserInput
-    agent?: UserCreateNestedOneWithoutMembersInput
-    members?: UserCreateNestedManyWithoutAgentInput
     balances?: UserBalanceCreateNestedManyWithoutUserInput
     UserBalanceStats?: UserBalanceStatsCreateNestedManyWithoutUserInput
     UserPromotion?: UserPromotionCreateNestedManyWithoutUserInput
@@ -74334,7 +73755,6 @@ export namespace Prisma {
     passwordHash?: string | null
     socialType?: $Enums.SocialType | null
     socialId?: string | null
-    agentId?: string | null
     role?: $Enums.UserRoleType
     status?: $Enums.UserStatus
     kycLevel?: $Enums.KycLevel
@@ -74356,7 +73776,6 @@ export namespace Prisma {
     affiliateReferrals?: ReferralUncheckedCreateNestedManyWithoutAffiliateInput
     referredUsers?: ReferralUncheckedCreateNestedManyWithoutSubUserInput
     transactions?: TransactionUncheckedCreateNestedManyWithoutUserInput
-    members?: UserUncheckedCreateNestedManyWithoutAgentInput
     balances?: UserBalanceUncheckedCreateNestedManyWithoutUserInput
     UserBalanceStats?: UserBalanceStatsUncheckedCreateNestedManyWithoutUserInput
     UserPromotion?: UserPromotionUncheckedCreateNestedManyWithoutUserInput
@@ -74510,8 +73929,6 @@ export namespace Prisma {
     affiliateReferrals?: ReferralUpdateManyWithoutAffiliateNestedInput
     referredUsers?: ReferralUpdateManyWithoutSubUserNestedInput
     transactions?: TransactionUpdateManyWithoutUserNestedInput
-    agent?: UserUpdateOneWithoutMembersNestedInput
-    members?: UserUpdateManyWithoutAgentNestedInput
     balances?: UserBalanceUpdateManyWithoutUserNestedInput
     UserBalanceStats?: UserBalanceStatsUpdateManyWithoutUserNestedInput
     UserPromotion?: UserPromotionUpdateManyWithoutUserNestedInput
@@ -74532,7 +73949,6 @@ export namespace Prisma {
     passwordHash?: NullableStringFieldUpdateOperationsInput | string | null
     socialType?: NullableEnumSocialTypeFieldUpdateOperationsInput | $Enums.SocialType | null
     socialId?: NullableStringFieldUpdateOperationsInput | string | null
-    agentId?: NullableStringFieldUpdateOperationsInput | string | null
     role?: EnumUserRoleTypeFieldUpdateOperationsInput | $Enums.UserRoleType
     status?: EnumUserStatusFieldUpdateOperationsInput | $Enums.UserStatus
     kycLevel?: EnumKycLevelFieldUpdateOperationsInput | $Enums.KycLevel
@@ -74554,7 +73970,6 @@ export namespace Prisma {
     affiliateReferrals?: ReferralUncheckedUpdateManyWithoutAffiliateNestedInput
     referredUsers?: ReferralUncheckedUpdateManyWithoutSubUserNestedInput
     transactions?: TransactionUncheckedUpdateManyWithoutUserNestedInput
-    members?: UserUncheckedUpdateManyWithoutAgentNestedInput
     balances?: UserBalanceUncheckedUpdateManyWithoutUserNestedInput
     UserBalanceStats?: UserBalanceStatsUncheckedUpdateManyWithoutUserNestedInput
     UserPromotion?: UserPromotionUncheckedUpdateManyWithoutUserNestedInput
@@ -74631,8 +74046,6 @@ export namespace Prisma {
     referredUsers?: ReferralCreateNestedManyWithoutSubUserInput
     Rolling?: RollingCreateNestedManyWithoutUserInput
     transactions?: TransactionCreateNestedManyWithoutUserInput
-    agent?: UserCreateNestedOneWithoutMembersInput
-    members?: UserCreateNestedManyWithoutAgentInput
     balances?: UserBalanceCreateNestedManyWithoutUserInput
     UserBalanceStats?: UserBalanceStatsCreateNestedManyWithoutUserInput
     UserPromotion?: UserPromotionCreateNestedManyWithoutUserInput
@@ -74652,7 +74065,6 @@ export namespace Prisma {
     passwordHash?: string | null
     socialType?: $Enums.SocialType | null
     socialId?: string | null
-    agentId?: string | null
     role?: $Enums.UserRoleType
     status?: $Enums.UserStatus
     kycLevel?: $Enums.KycLevel
@@ -74675,7 +74087,6 @@ export namespace Prisma {
     referredUsers?: ReferralUncheckedCreateNestedManyWithoutSubUserInput
     Rolling?: RollingUncheckedCreateNestedManyWithoutUserInput
     transactions?: TransactionUncheckedCreateNestedManyWithoutUserInput
-    members?: UserUncheckedCreateNestedManyWithoutAgentInput
     balances?: UserBalanceUncheckedCreateNestedManyWithoutUserInput
     UserBalanceStats?: UserBalanceStatsUncheckedCreateNestedManyWithoutUserInput
     UserPromotion?: UserPromotionUncheckedCreateNestedManyWithoutUserInput
@@ -74732,8 +74143,6 @@ export namespace Prisma {
     referredUsers?: ReferralUpdateManyWithoutSubUserNestedInput
     Rolling?: RollingUpdateManyWithoutUserNestedInput
     transactions?: TransactionUpdateManyWithoutUserNestedInput
-    agent?: UserUpdateOneWithoutMembersNestedInput
-    members?: UserUpdateManyWithoutAgentNestedInput
     balances?: UserBalanceUpdateManyWithoutUserNestedInput
     UserBalanceStats?: UserBalanceStatsUpdateManyWithoutUserNestedInput
     UserPromotion?: UserPromotionUpdateManyWithoutUserNestedInput
@@ -74753,7 +74162,6 @@ export namespace Prisma {
     passwordHash?: NullableStringFieldUpdateOperationsInput | string | null
     socialType?: NullableEnumSocialTypeFieldUpdateOperationsInput | $Enums.SocialType | null
     socialId?: NullableStringFieldUpdateOperationsInput | string | null
-    agentId?: NullableStringFieldUpdateOperationsInput | string | null
     role?: EnumUserRoleTypeFieldUpdateOperationsInput | $Enums.UserRoleType
     status?: EnumUserStatusFieldUpdateOperationsInput | $Enums.UserStatus
     kycLevel?: EnumKycLevelFieldUpdateOperationsInput | $Enums.KycLevel
@@ -74776,7 +74184,6 @@ export namespace Prisma {
     referredUsers?: ReferralUncheckedUpdateManyWithoutSubUserNestedInput
     Rolling?: RollingUncheckedUpdateManyWithoutUserNestedInput
     transactions?: TransactionUncheckedUpdateManyWithoutUserNestedInput
-    members?: UserUncheckedUpdateManyWithoutAgentNestedInput
     balances?: UserBalanceUncheckedUpdateManyWithoutUserNestedInput
     UserBalanceStats?: UserBalanceStatsUncheckedUpdateManyWithoutUserNestedInput
     UserPromotion?: UserPromotionUncheckedUpdateManyWithoutUserNestedInput
@@ -74817,8 +74224,6 @@ export namespace Prisma {
     referredUsers?: ReferralCreateNestedManyWithoutSubUserInput
     Rolling?: RollingCreateNestedManyWithoutUserInput
     transactions?: TransactionCreateNestedManyWithoutUserInput
-    agent?: UserCreateNestedOneWithoutMembersInput
-    members?: UserCreateNestedManyWithoutAgentInput
     balances?: UserBalanceCreateNestedManyWithoutUserInput
     UserBalanceStats?: UserBalanceStatsCreateNestedManyWithoutUserInput
     UserPromotion?: UserPromotionCreateNestedManyWithoutUserInput
@@ -74839,7 +74244,6 @@ export namespace Prisma {
     passwordHash?: string | null
     socialType?: $Enums.SocialType | null
     socialId?: string | null
-    agentId?: string | null
     role?: $Enums.UserRoleType
     status?: $Enums.UserStatus
     kycLevel?: $Enums.KycLevel
@@ -74861,7 +74265,6 @@ export namespace Prisma {
     referredUsers?: ReferralUncheckedCreateNestedManyWithoutSubUserInput
     Rolling?: RollingUncheckedCreateNestedManyWithoutUserInput
     transactions?: TransactionUncheckedCreateNestedManyWithoutUserInput
-    members?: UserUncheckedCreateNestedManyWithoutAgentInput
     balances?: UserBalanceUncheckedCreateNestedManyWithoutUserInput
     UserBalanceStats?: UserBalanceStatsUncheckedCreateNestedManyWithoutUserInput
     UserPromotion?: UserPromotionUncheckedCreateNestedManyWithoutUserInput
@@ -74918,8 +74321,6 @@ export namespace Prisma {
     referredUsers?: ReferralUpdateManyWithoutSubUserNestedInput
     Rolling?: RollingUpdateManyWithoutUserNestedInput
     transactions?: TransactionUpdateManyWithoutUserNestedInput
-    agent?: UserUpdateOneWithoutMembersNestedInput
-    members?: UserUpdateManyWithoutAgentNestedInput
     balances?: UserBalanceUpdateManyWithoutUserNestedInput
     UserBalanceStats?: UserBalanceStatsUpdateManyWithoutUserNestedInput
     UserPromotion?: UserPromotionUpdateManyWithoutUserNestedInput
@@ -74940,7 +74341,6 @@ export namespace Prisma {
     passwordHash?: NullableStringFieldUpdateOperationsInput | string | null
     socialType?: NullableEnumSocialTypeFieldUpdateOperationsInput | $Enums.SocialType | null
     socialId?: NullableStringFieldUpdateOperationsInput | string | null
-    agentId?: NullableStringFieldUpdateOperationsInput | string | null
     role?: EnumUserRoleTypeFieldUpdateOperationsInput | $Enums.UserRoleType
     status?: EnumUserStatusFieldUpdateOperationsInput | $Enums.UserStatus
     kycLevel?: EnumKycLevelFieldUpdateOperationsInput | $Enums.KycLevel
@@ -74962,7 +74362,6 @@ export namespace Prisma {
     referredUsers?: ReferralUncheckedUpdateManyWithoutSubUserNestedInput
     Rolling?: RollingUncheckedUpdateManyWithoutUserNestedInput
     transactions?: TransactionUncheckedUpdateManyWithoutUserNestedInput
-    members?: UserUncheckedUpdateManyWithoutAgentNestedInput
     balances?: UserBalanceUncheckedUpdateManyWithoutUserNestedInput
     UserBalanceStats?: UserBalanceStatsUncheckedUpdateManyWithoutUserNestedInput
     UserPromotion?: UserPromotionUncheckedUpdateManyWithoutUserNestedInput
@@ -75122,8 +74521,6 @@ export namespace Prisma {
     referredUsers?: ReferralCreateNestedManyWithoutSubUserInput
     Rolling?: RollingCreateNestedManyWithoutUserInput
     transactions?: TransactionCreateNestedManyWithoutUserInput
-    agent?: UserCreateNestedOneWithoutMembersInput
-    members?: UserCreateNestedManyWithoutAgentInput
     balances?: UserBalanceCreateNestedManyWithoutUserInput
     UserBalanceStats?: UserBalanceStatsCreateNestedManyWithoutUserInput
     UserPromotion?: UserPromotionCreateNestedManyWithoutUserInput
@@ -75144,7 +74541,6 @@ export namespace Prisma {
     passwordHash?: string | null
     socialType?: $Enums.SocialType | null
     socialId?: string | null
-    agentId?: string | null
     role?: $Enums.UserRoleType
     status?: $Enums.UserStatus
     kycLevel?: $Enums.KycLevel
@@ -75166,7 +74562,6 @@ export namespace Prisma {
     referredUsers?: ReferralUncheckedCreateNestedManyWithoutSubUserInput
     Rolling?: RollingUncheckedCreateNestedManyWithoutUserInput
     transactions?: TransactionUncheckedCreateNestedManyWithoutUserInput
-    members?: UserUncheckedCreateNestedManyWithoutAgentInput
     balances?: UserBalanceUncheckedCreateNestedManyWithoutUserInput
     UserBalanceStats?: UserBalanceStatsUncheckedCreateNestedManyWithoutUserInput
     UserPromotion?: UserPromotionUncheckedCreateNestedManyWithoutUserInput
@@ -75289,8 +74684,6 @@ export namespace Prisma {
     referredUsers?: ReferralUpdateManyWithoutSubUserNestedInput
     Rolling?: RollingUpdateManyWithoutUserNestedInput
     transactions?: TransactionUpdateManyWithoutUserNestedInput
-    agent?: UserUpdateOneWithoutMembersNestedInput
-    members?: UserUpdateManyWithoutAgentNestedInput
     balances?: UserBalanceUpdateManyWithoutUserNestedInput
     UserBalanceStats?: UserBalanceStatsUpdateManyWithoutUserNestedInput
     UserPromotion?: UserPromotionUpdateManyWithoutUserNestedInput
@@ -75311,7 +74704,6 @@ export namespace Prisma {
     passwordHash?: NullableStringFieldUpdateOperationsInput | string | null
     socialType?: NullableEnumSocialTypeFieldUpdateOperationsInput | $Enums.SocialType | null
     socialId?: NullableStringFieldUpdateOperationsInput | string | null
-    agentId?: NullableStringFieldUpdateOperationsInput | string | null
     role?: EnumUserRoleTypeFieldUpdateOperationsInput | $Enums.UserRoleType
     status?: EnumUserStatusFieldUpdateOperationsInput | $Enums.UserStatus
     kycLevel?: EnumKycLevelFieldUpdateOperationsInput | $Enums.KycLevel
@@ -75333,7 +74725,6 @@ export namespace Prisma {
     referredUsers?: ReferralUncheckedUpdateManyWithoutSubUserNestedInput
     Rolling?: RollingUncheckedUpdateManyWithoutUserNestedInput
     transactions?: TransactionUncheckedUpdateManyWithoutUserNestedInput
-    members?: UserUncheckedUpdateManyWithoutAgentNestedInput
     balances?: UserBalanceUncheckedUpdateManyWithoutUserNestedInput
     UserBalanceStats?: UserBalanceStatsUncheckedUpdateManyWithoutUserNestedInput
     UserPromotion?: UserPromotionUncheckedUpdateManyWithoutUserNestedInput
@@ -75491,8 +74882,6 @@ export namespace Prisma {
     referredUsers?: ReferralCreateNestedManyWithoutSubUserInput
     Rolling?: RollingCreateNestedManyWithoutUserInput
     transactions?: TransactionCreateNestedManyWithoutUserInput
-    agent?: UserCreateNestedOneWithoutMembersInput
-    members?: UserCreateNestedManyWithoutAgentInput
     balances?: UserBalanceCreateNestedManyWithoutUserInput
     UserBalanceStats?: UserBalanceStatsCreateNestedManyWithoutUserInput
     UserPromotion?: UserPromotionCreateNestedManyWithoutUserInput
@@ -75513,7 +74902,6 @@ export namespace Prisma {
     passwordHash?: string | null
     socialType?: $Enums.SocialType | null
     socialId?: string | null
-    agentId?: string | null
     role?: $Enums.UserRoleType
     status?: $Enums.UserStatus
     kycLevel?: $Enums.KycLevel
@@ -75535,7 +74923,6 @@ export namespace Prisma {
     referredUsers?: ReferralUncheckedCreateNestedManyWithoutSubUserInput
     Rolling?: RollingUncheckedCreateNestedManyWithoutUserInput
     transactions?: TransactionUncheckedCreateNestedManyWithoutUserInput
-    members?: UserUncheckedCreateNestedManyWithoutAgentInput
     balances?: UserBalanceUncheckedCreateNestedManyWithoutUserInput
     UserBalanceStats?: UserBalanceStatsUncheckedCreateNestedManyWithoutUserInput
     UserPromotion?: UserPromotionUncheckedCreateNestedManyWithoutUserInput
@@ -75624,8 +75011,6 @@ export namespace Prisma {
     referredUsers?: ReferralUpdateManyWithoutSubUserNestedInput
     Rolling?: RollingUpdateManyWithoutUserNestedInput
     transactions?: TransactionUpdateManyWithoutUserNestedInput
-    agent?: UserUpdateOneWithoutMembersNestedInput
-    members?: UserUpdateManyWithoutAgentNestedInput
     balances?: UserBalanceUpdateManyWithoutUserNestedInput
     UserBalanceStats?: UserBalanceStatsUpdateManyWithoutUserNestedInput
     UserPromotion?: UserPromotionUpdateManyWithoutUserNestedInput
@@ -75646,7 +75031,6 @@ export namespace Prisma {
     passwordHash?: NullableStringFieldUpdateOperationsInput | string | null
     socialType?: NullableEnumSocialTypeFieldUpdateOperationsInput | $Enums.SocialType | null
     socialId?: NullableStringFieldUpdateOperationsInput | string | null
-    agentId?: NullableStringFieldUpdateOperationsInput | string | null
     role?: EnumUserRoleTypeFieldUpdateOperationsInput | $Enums.UserRoleType
     status?: EnumUserStatusFieldUpdateOperationsInput | $Enums.UserStatus
     kycLevel?: EnumKycLevelFieldUpdateOperationsInput | $Enums.KycLevel
@@ -75668,7 +75052,6 @@ export namespace Prisma {
     referredUsers?: ReferralUncheckedUpdateManyWithoutSubUserNestedInput
     Rolling?: RollingUncheckedUpdateManyWithoutUserNestedInput
     transactions?: TransactionUncheckedUpdateManyWithoutUserNestedInput
-    members?: UserUncheckedUpdateManyWithoutAgentNestedInput
     balances?: UserBalanceUncheckedUpdateManyWithoutUserNestedInput
     UserBalanceStats?: UserBalanceStatsUncheckedUpdateManyWithoutUserNestedInput
     UserPromotion?: UserPromotionUncheckedUpdateManyWithoutUserNestedInput
@@ -75726,8 +75109,6 @@ export namespace Prisma {
     referredUsers?: ReferralCreateNestedManyWithoutSubUserInput
     Rolling?: RollingCreateNestedManyWithoutUserInput
     transactions?: TransactionCreateNestedManyWithoutUserInput
-    agent?: UserCreateNestedOneWithoutMembersInput
-    members?: UserCreateNestedManyWithoutAgentInput
     balances?: UserBalanceCreateNestedManyWithoutUserInput
     UserBalanceStats?: UserBalanceStatsCreateNestedManyWithoutUserInput
     UserPromotion?: UserPromotionCreateNestedManyWithoutUserInput
@@ -75748,7 +75129,6 @@ export namespace Prisma {
     passwordHash?: string | null
     socialType?: $Enums.SocialType | null
     socialId?: string | null
-    agentId?: string | null
     role?: $Enums.UserRoleType
     status?: $Enums.UserStatus
     kycLevel?: $Enums.KycLevel
@@ -75770,7 +75150,6 @@ export namespace Prisma {
     referredUsers?: ReferralUncheckedCreateNestedManyWithoutSubUserInput
     Rolling?: RollingUncheckedCreateNestedManyWithoutUserInput
     transactions?: TransactionUncheckedCreateNestedManyWithoutUserInput
-    members?: UserUncheckedCreateNestedManyWithoutAgentInput
     balances?: UserBalanceUncheckedCreateNestedManyWithoutUserInput
     UserBalanceStats?: UserBalanceStatsUncheckedCreateNestedManyWithoutUserInput
     UserPromotion?: UserPromotionUncheckedCreateNestedManyWithoutUserInput
@@ -75850,8 +75229,6 @@ export namespace Prisma {
     affiliateReferrals?: ReferralCreateNestedManyWithoutAffiliateInput
     Rolling?: RollingCreateNestedManyWithoutUserInput
     transactions?: TransactionCreateNestedManyWithoutUserInput
-    agent?: UserCreateNestedOneWithoutMembersInput
-    members?: UserCreateNestedManyWithoutAgentInput
     balances?: UserBalanceCreateNestedManyWithoutUserInput
     UserBalanceStats?: UserBalanceStatsCreateNestedManyWithoutUserInput
     UserPromotion?: UserPromotionCreateNestedManyWithoutUserInput
@@ -75872,7 +75249,6 @@ export namespace Prisma {
     passwordHash?: string | null
     socialType?: $Enums.SocialType | null
     socialId?: string | null
-    agentId?: string | null
     role?: $Enums.UserRoleType
     status?: $Enums.UserStatus
     kycLevel?: $Enums.KycLevel
@@ -75894,7 +75270,6 @@ export namespace Prisma {
     affiliateReferrals?: ReferralUncheckedCreateNestedManyWithoutAffiliateInput
     Rolling?: RollingUncheckedCreateNestedManyWithoutUserInput
     transactions?: TransactionUncheckedCreateNestedManyWithoutUserInput
-    members?: UserUncheckedCreateNestedManyWithoutAgentInput
     balances?: UserBalanceUncheckedCreateNestedManyWithoutUserInput
     UserBalanceStats?: UserBalanceStatsUncheckedCreateNestedManyWithoutUserInput
     UserPromotion?: UserPromotionUncheckedCreateNestedManyWithoutUserInput
@@ -75951,8 +75326,6 @@ export namespace Prisma {
     referredUsers?: ReferralUpdateManyWithoutSubUserNestedInput
     Rolling?: RollingUpdateManyWithoutUserNestedInput
     transactions?: TransactionUpdateManyWithoutUserNestedInput
-    agent?: UserUpdateOneWithoutMembersNestedInput
-    members?: UserUpdateManyWithoutAgentNestedInput
     balances?: UserBalanceUpdateManyWithoutUserNestedInput
     UserBalanceStats?: UserBalanceStatsUpdateManyWithoutUserNestedInput
     UserPromotion?: UserPromotionUpdateManyWithoutUserNestedInput
@@ -75973,7 +75346,6 @@ export namespace Prisma {
     passwordHash?: NullableStringFieldUpdateOperationsInput | string | null
     socialType?: NullableEnumSocialTypeFieldUpdateOperationsInput | $Enums.SocialType | null
     socialId?: NullableStringFieldUpdateOperationsInput | string | null
-    agentId?: NullableStringFieldUpdateOperationsInput | string | null
     role?: EnumUserRoleTypeFieldUpdateOperationsInput | $Enums.UserRoleType
     status?: EnumUserStatusFieldUpdateOperationsInput | $Enums.UserStatus
     kycLevel?: EnumKycLevelFieldUpdateOperationsInput | $Enums.KycLevel
@@ -75995,7 +75367,6 @@ export namespace Prisma {
     referredUsers?: ReferralUncheckedUpdateManyWithoutSubUserNestedInput
     Rolling?: RollingUncheckedUpdateManyWithoutUserNestedInput
     transactions?: TransactionUncheckedUpdateManyWithoutUserNestedInput
-    members?: UserUncheckedUpdateManyWithoutAgentNestedInput
     balances?: UserBalanceUncheckedUpdateManyWithoutUserNestedInput
     UserBalanceStats?: UserBalanceStatsUncheckedUpdateManyWithoutUserNestedInput
     UserPromotion?: UserPromotionUncheckedUpdateManyWithoutUserNestedInput
@@ -76086,8 +75457,6 @@ export namespace Prisma {
     affiliateReferrals?: ReferralUpdateManyWithoutAffiliateNestedInput
     Rolling?: RollingUpdateManyWithoutUserNestedInput
     transactions?: TransactionUpdateManyWithoutUserNestedInput
-    agent?: UserUpdateOneWithoutMembersNestedInput
-    members?: UserUpdateManyWithoutAgentNestedInput
     balances?: UserBalanceUpdateManyWithoutUserNestedInput
     UserBalanceStats?: UserBalanceStatsUpdateManyWithoutUserNestedInput
     UserPromotion?: UserPromotionUpdateManyWithoutUserNestedInput
@@ -76108,7 +75477,6 @@ export namespace Prisma {
     passwordHash?: NullableStringFieldUpdateOperationsInput | string | null
     socialType?: NullableEnumSocialTypeFieldUpdateOperationsInput | $Enums.SocialType | null
     socialId?: NullableStringFieldUpdateOperationsInput | string | null
-    agentId?: NullableStringFieldUpdateOperationsInput | string | null
     role?: EnumUserRoleTypeFieldUpdateOperationsInput | $Enums.UserRoleType
     status?: EnumUserStatusFieldUpdateOperationsInput | $Enums.UserStatus
     kycLevel?: EnumKycLevelFieldUpdateOperationsInput | $Enums.KycLevel
@@ -76130,7 +75498,6 @@ export namespace Prisma {
     affiliateReferrals?: ReferralUncheckedUpdateManyWithoutAffiliateNestedInput
     Rolling?: RollingUncheckedUpdateManyWithoutUserNestedInput
     transactions?: TransactionUncheckedUpdateManyWithoutUserNestedInput
-    members?: UserUncheckedUpdateManyWithoutAgentNestedInput
     balances?: UserBalanceUncheckedUpdateManyWithoutUserNestedInput
     UserBalanceStats?: UserBalanceStatsUncheckedUpdateManyWithoutUserNestedInput
     UserPromotion?: UserPromotionUncheckedUpdateManyWithoutUserNestedInput
@@ -76172,8 +75539,6 @@ export namespace Prisma {
     referredUsers?: ReferralCreateNestedManyWithoutSubUserInput
     Rolling?: RollingCreateNestedManyWithoutUserInput
     transactions?: TransactionCreateNestedManyWithoutUserInput
-    agent?: UserCreateNestedOneWithoutMembersInput
-    members?: UserCreateNestedManyWithoutAgentInput
     balances?: UserBalanceCreateNestedManyWithoutUserInput
     UserBalanceStats?: UserBalanceStatsCreateNestedManyWithoutUserInput
     UserPromotion?: UserPromotionCreateNestedManyWithoutUserInput
@@ -76194,7 +75559,6 @@ export namespace Prisma {
     passwordHash?: string | null
     socialType?: $Enums.SocialType | null
     socialId?: string | null
-    agentId?: string | null
     role?: $Enums.UserRoleType
     status?: $Enums.UserStatus
     kycLevel?: $Enums.KycLevel
@@ -76216,7 +75580,6 @@ export namespace Prisma {
     referredUsers?: ReferralUncheckedCreateNestedManyWithoutSubUserInput
     Rolling?: RollingUncheckedCreateNestedManyWithoutUserInput
     transactions?: TransactionUncheckedCreateNestedManyWithoutUserInput
-    members?: UserUncheckedCreateNestedManyWithoutAgentInput
     balances?: UserBalanceUncheckedCreateNestedManyWithoutUserInput
     UserBalanceStats?: UserBalanceStatsUncheckedCreateNestedManyWithoutUserInput
     UserPromotion?: UserPromotionUncheckedCreateNestedManyWithoutUserInput
@@ -76273,8 +75636,6 @@ export namespace Prisma {
     referredUsers?: ReferralUpdateManyWithoutSubUserNestedInput
     Rolling?: RollingUpdateManyWithoutUserNestedInput
     transactions?: TransactionUpdateManyWithoutUserNestedInput
-    agent?: UserUpdateOneWithoutMembersNestedInput
-    members?: UserUpdateManyWithoutAgentNestedInput
     balances?: UserBalanceUpdateManyWithoutUserNestedInput
     UserBalanceStats?: UserBalanceStatsUpdateManyWithoutUserNestedInput
     UserPromotion?: UserPromotionUpdateManyWithoutUserNestedInput
@@ -76295,7 +75656,6 @@ export namespace Prisma {
     passwordHash?: NullableStringFieldUpdateOperationsInput | string | null
     socialType?: NullableEnumSocialTypeFieldUpdateOperationsInput | $Enums.SocialType | null
     socialId?: NullableStringFieldUpdateOperationsInput | string | null
-    agentId?: NullableStringFieldUpdateOperationsInput | string | null
     role?: EnumUserRoleTypeFieldUpdateOperationsInput | $Enums.UserRoleType
     status?: EnumUserStatusFieldUpdateOperationsInput | $Enums.UserStatus
     kycLevel?: EnumKycLevelFieldUpdateOperationsInput | $Enums.KycLevel
@@ -76317,7 +75677,6 @@ export namespace Prisma {
     referredUsers?: ReferralUncheckedUpdateManyWithoutSubUserNestedInput
     Rolling?: RollingUncheckedUpdateManyWithoutUserNestedInput
     transactions?: TransactionUncheckedUpdateManyWithoutUserNestedInput
-    members?: UserUncheckedUpdateManyWithoutAgentNestedInput
     balances?: UserBalanceUncheckedUpdateManyWithoutUserNestedInput
     UserBalanceStats?: UserBalanceStatsUncheckedUpdateManyWithoutUserNestedInput
     UserPromotion?: UserPromotionUncheckedUpdateManyWithoutUserNestedInput
@@ -76359,8 +75718,6 @@ export namespace Prisma {
     referredUsers?: ReferralCreateNestedManyWithoutSubUserInput
     Rolling?: RollingCreateNestedManyWithoutUserInput
     transactions?: TransactionCreateNestedManyWithoutUserInput
-    agent?: UserCreateNestedOneWithoutMembersInput
-    members?: UserCreateNestedManyWithoutAgentInput
     balances?: UserBalanceCreateNestedManyWithoutUserInput
     UserBalanceStats?: UserBalanceStatsCreateNestedManyWithoutUserInput
     UserPromotion?: UserPromotionCreateNestedManyWithoutUserInput
@@ -76381,7 +75738,6 @@ export namespace Prisma {
     passwordHash?: string | null
     socialType?: $Enums.SocialType | null
     socialId?: string | null
-    agentId?: string | null
     role?: $Enums.UserRoleType
     status?: $Enums.UserStatus
     kycLevel?: $Enums.KycLevel
@@ -76403,7 +75759,6 @@ export namespace Prisma {
     referredUsers?: ReferralUncheckedCreateNestedManyWithoutSubUserInput
     Rolling?: RollingUncheckedCreateNestedManyWithoutUserInput
     transactions?: TransactionUncheckedCreateNestedManyWithoutUserInput
-    members?: UserUncheckedCreateNestedManyWithoutAgentInput
     balances?: UserBalanceUncheckedCreateNestedManyWithoutUserInput
     UserBalanceStats?: UserBalanceStatsUncheckedCreateNestedManyWithoutUserInput
     UserPromotion?: UserPromotionUncheckedCreateNestedManyWithoutUserInput
@@ -76519,8 +75874,6 @@ export namespace Prisma {
     referredUsers?: ReferralCreateNestedManyWithoutSubUserInput
     Rolling?: RollingCreateNestedManyWithoutUserInput
     transactions?: TransactionCreateNestedManyWithoutUserInput
-    agent?: UserCreateNestedOneWithoutMembersInput
-    members?: UserCreateNestedManyWithoutAgentInput
     balances?: UserBalanceCreateNestedManyWithoutUserInput
     UserBalanceStats?: UserBalanceStatsCreateNestedManyWithoutUserInput
     UserPromotion?: UserPromotionCreateNestedManyWithoutUserInput
@@ -76541,7 +75894,6 @@ export namespace Prisma {
     passwordHash?: string | null
     socialType?: $Enums.SocialType | null
     socialId?: string | null
-    agentId?: string | null
     role?: $Enums.UserRoleType
     status?: $Enums.UserStatus
     kycLevel?: $Enums.KycLevel
@@ -76563,7 +75915,6 @@ export namespace Prisma {
     referredUsers?: ReferralUncheckedCreateNestedManyWithoutSubUserInput
     Rolling?: RollingUncheckedCreateNestedManyWithoutUserInput
     transactions?: TransactionUncheckedCreateNestedManyWithoutUserInput
-    members?: UserUncheckedCreateNestedManyWithoutAgentInput
     balances?: UserBalanceUncheckedCreateNestedManyWithoutUserInput
     UserBalanceStats?: UserBalanceStatsUncheckedCreateNestedManyWithoutUserInput
     UserPromotion?: UserPromotionUncheckedCreateNestedManyWithoutUserInput
@@ -76620,8 +75971,6 @@ export namespace Prisma {
     referredUsers?: ReferralUpdateManyWithoutSubUserNestedInput
     Rolling?: RollingUpdateManyWithoutUserNestedInput
     transactions?: TransactionUpdateManyWithoutUserNestedInput
-    agent?: UserUpdateOneWithoutMembersNestedInput
-    members?: UserUpdateManyWithoutAgentNestedInput
     balances?: UserBalanceUpdateManyWithoutUserNestedInput
     UserBalanceStats?: UserBalanceStatsUpdateManyWithoutUserNestedInput
     UserPromotion?: UserPromotionUpdateManyWithoutUserNestedInput
@@ -76642,7 +75991,6 @@ export namespace Prisma {
     passwordHash?: NullableStringFieldUpdateOperationsInput | string | null
     socialType?: NullableEnumSocialTypeFieldUpdateOperationsInput | $Enums.SocialType | null
     socialId?: NullableStringFieldUpdateOperationsInput | string | null
-    agentId?: NullableStringFieldUpdateOperationsInput | string | null
     role?: EnumUserRoleTypeFieldUpdateOperationsInput | $Enums.UserRoleType
     status?: EnumUserStatusFieldUpdateOperationsInput | $Enums.UserStatus
     kycLevel?: EnumKycLevelFieldUpdateOperationsInput | $Enums.KycLevel
@@ -76664,7 +76012,6 @@ export namespace Prisma {
     referredUsers?: ReferralUncheckedUpdateManyWithoutSubUserNestedInput
     Rolling?: RollingUncheckedUpdateManyWithoutUserNestedInput
     transactions?: TransactionUncheckedUpdateManyWithoutUserNestedInput
-    members?: UserUncheckedUpdateManyWithoutAgentNestedInput
     balances?: UserBalanceUncheckedUpdateManyWithoutUserNestedInput
     UserBalanceStats?: UserBalanceStatsUncheckedUpdateManyWithoutUserNestedInput
     UserPromotion?: UserPromotionUncheckedUpdateManyWithoutUserNestedInput
@@ -76791,8 +76138,6 @@ export namespace Prisma {
     referredUsers?: ReferralUpdateManyWithoutSubUserNestedInput
     Rolling?: RollingUpdateManyWithoutUserNestedInput
     transactions?: TransactionUpdateManyWithoutUserNestedInput
-    agent?: UserUpdateOneWithoutMembersNestedInput
-    members?: UserUpdateManyWithoutAgentNestedInput
     balances?: UserBalanceUpdateManyWithoutUserNestedInput
     UserBalanceStats?: UserBalanceStatsUpdateManyWithoutUserNestedInput
     UserPromotion?: UserPromotionUpdateManyWithoutUserNestedInput
@@ -76813,7 +76158,6 @@ export namespace Prisma {
     passwordHash?: NullableStringFieldUpdateOperationsInput | string | null
     socialType?: NullableEnumSocialTypeFieldUpdateOperationsInput | $Enums.SocialType | null
     socialId?: NullableStringFieldUpdateOperationsInput | string | null
-    agentId?: NullableStringFieldUpdateOperationsInput | string | null
     role?: EnumUserRoleTypeFieldUpdateOperationsInput | $Enums.UserRoleType
     status?: EnumUserStatusFieldUpdateOperationsInput | $Enums.UserStatus
     kycLevel?: EnumKycLevelFieldUpdateOperationsInput | $Enums.KycLevel
@@ -76835,7 +76179,6 @@ export namespace Prisma {
     referredUsers?: ReferralUncheckedUpdateManyWithoutSubUserNestedInput
     Rolling?: RollingUncheckedUpdateManyWithoutUserNestedInput
     transactions?: TransactionUncheckedUpdateManyWithoutUserNestedInput
-    members?: UserUncheckedUpdateManyWithoutAgentNestedInput
     balances?: UserBalanceUncheckedUpdateManyWithoutUserNestedInput
     UserBalanceStats?: UserBalanceStatsUncheckedUpdateManyWithoutUserNestedInput
     UserPromotion?: UserPromotionUncheckedUpdateManyWithoutUserNestedInput
@@ -76877,8 +76220,6 @@ export namespace Prisma {
     referredUsers?: ReferralCreateNestedManyWithoutSubUserInput
     Rolling?: RollingCreateNestedManyWithoutUserInput
     transactions?: TransactionCreateNestedManyWithoutUserInput
-    agent?: UserCreateNestedOneWithoutMembersInput
-    members?: UserCreateNestedManyWithoutAgentInput
     balances?: UserBalanceCreateNestedManyWithoutUserInput
     UserBalanceStats?: UserBalanceStatsCreateNestedManyWithoutUserInput
     UserPromotion?: UserPromotionCreateNestedManyWithoutUserInput
@@ -76899,7 +76240,6 @@ export namespace Prisma {
     passwordHash?: string | null
     socialType?: $Enums.SocialType | null
     socialId?: string | null
-    agentId?: string | null
     role?: $Enums.UserRoleType
     status?: $Enums.UserStatus
     kycLevel?: $Enums.KycLevel
@@ -76921,7 +76261,6 @@ export namespace Prisma {
     referredUsers?: ReferralUncheckedCreateNestedManyWithoutSubUserInput
     Rolling?: RollingUncheckedCreateNestedManyWithoutUserInput
     transactions?: TransactionUncheckedCreateNestedManyWithoutUserInput
-    members?: UserUncheckedCreateNestedManyWithoutAgentInput
     balances?: UserBalanceUncheckedCreateNestedManyWithoutUserInput
     UserBalanceStats?: UserBalanceStatsUncheckedCreateNestedManyWithoutUserInput
     UserPromotion?: UserPromotionUncheckedCreateNestedManyWithoutUserInput
@@ -76978,8 +76317,6 @@ export namespace Prisma {
     referredUsers?: ReferralUpdateManyWithoutSubUserNestedInput
     Rolling?: RollingUpdateManyWithoutUserNestedInput
     transactions?: TransactionUpdateManyWithoutUserNestedInput
-    agent?: UserUpdateOneWithoutMembersNestedInput
-    members?: UserUpdateManyWithoutAgentNestedInput
     balances?: UserBalanceUpdateManyWithoutUserNestedInput
     UserBalanceStats?: UserBalanceStatsUpdateManyWithoutUserNestedInput
     UserPromotion?: UserPromotionUpdateManyWithoutUserNestedInput
@@ -77000,7 +76337,6 @@ export namespace Prisma {
     passwordHash?: NullableStringFieldUpdateOperationsInput | string | null
     socialType?: NullableEnumSocialTypeFieldUpdateOperationsInput | $Enums.SocialType | null
     socialId?: NullableStringFieldUpdateOperationsInput | string | null
-    agentId?: NullableStringFieldUpdateOperationsInput | string | null
     role?: EnumUserRoleTypeFieldUpdateOperationsInput | $Enums.UserRoleType
     status?: EnumUserStatusFieldUpdateOperationsInput | $Enums.UserStatus
     kycLevel?: EnumKycLevelFieldUpdateOperationsInput | $Enums.KycLevel
@@ -77022,7 +76358,6 @@ export namespace Prisma {
     referredUsers?: ReferralUncheckedUpdateManyWithoutSubUserNestedInput
     Rolling?: RollingUncheckedUpdateManyWithoutUserNestedInput
     transactions?: TransactionUncheckedUpdateManyWithoutUserNestedInput
-    members?: UserUncheckedUpdateManyWithoutAgentNestedInput
     balances?: UserBalanceUncheckedUpdateManyWithoutUserNestedInput
     UserBalanceStats?: UserBalanceStatsUncheckedUpdateManyWithoutUserNestedInput
     UserPromotion?: UserPromotionUncheckedUpdateManyWithoutUserNestedInput
@@ -77186,28 +76521,6 @@ export namespace Prisma {
     amount: Decimal | DecimalJsLike | number | string
     beforeAmount: Decimal | DecimalJsLike | number | string
     afterAmount: Decimal | DecimalJsLike | number | string
-    createdAt?: Date | string
-    updatedAt?: Date | string
-  }
-
-  export type UserCreateManyAgentInput = {
-    id?: string
-    numericId?: number
-    whitecliffId?: bigint | number | null
-    whitecliffSystemId?: bigint | number | null
-    whitecliffUsername?: string | null
-    dcsId?: string | null
-    email?: string | null
-    passwordHash?: string | null
-    socialType?: $Enums.SocialType | null
-    socialId?: string | null
-    role?: $Enums.UserRoleType
-    status?: $Enums.UserStatus
-    kycLevel?: $Enums.KycLevel
-    country?: string | null
-    language?: $Enums.Language | null
-    timezone?: string | null
-    timezoneOffset?: number | null
     createdAt?: Date | string
     updatedAt?: Date | string
   }
@@ -77767,113 +77080,6 @@ export namespace Prisma {
     amount?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
     beforeAmount?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
     afterAmount?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
-    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
-    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
-  }
-
-  export type UserUpdateWithoutAgentInput = {
-    id?: StringFieldUpdateOperationsInput | string
-    whitecliffId?: NullableBigIntFieldUpdateOperationsInput | bigint | number | null
-    whitecliffSystemId?: NullableBigIntFieldUpdateOperationsInput | bigint | number | null
-    whitecliffUsername?: NullableStringFieldUpdateOperationsInput | string | null
-    dcsId?: NullableStringFieldUpdateOperationsInput | string | null
-    email?: NullableStringFieldUpdateOperationsInput | string | null
-    passwordHash?: NullableStringFieldUpdateOperationsInput | string | null
-    socialType?: NullableEnumSocialTypeFieldUpdateOperationsInput | $Enums.SocialType | null
-    socialId?: NullableStringFieldUpdateOperationsInput | string | null
-    role?: EnumUserRoleTypeFieldUpdateOperationsInput | $Enums.UserRoleType
-    status?: EnumUserStatusFieldUpdateOperationsInput | $Enums.UserStatus
-    kycLevel?: EnumKycLevelFieldUpdateOperationsInput | $Enums.KycLevel
-    country?: NullableStringFieldUpdateOperationsInput | string | null
-    language?: NullableEnumLanguageFieldUpdateOperationsInput | $Enums.Language | null
-    timezone?: NullableStringFieldUpdateOperationsInput | string | null
-    timezoneOffset?: NullableIntFieldUpdateOperationsInput | number | null
-    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
-    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
-    affiliateCodes?: AffiliateCodeUpdateManyWithoutUserNestedInput
-    affiliateCommissions?: AffiliateCommissionUpdateManyWithoutAffiliateNestedInput
-    subUserCommissions?: AffiliateCommissionUpdateManyWithoutSubUserNestedInput
-    affiliateTier?: AffiliateTierUpdateOneWithoutAffiliateNestedInput
-    affiliateWallets?: AffiliateWalletUpdateManyWithoutAffiliateNestedInput
-    CompTransaction?: CompTransactionUpdateManyWithoutUserNestedInput
-    DailyCompEarning?: DailyCompEarningUpdateManyWithoutUserNestedInput
-    EmailLog?: EmailLogUpdateManyWithoutUserNestedInput
-    GameSession?: GameSessionUpdateManyWithoutUserNestedInput
-    affiliateReferrals?: ReferralUpdateManyWithoutAffiliateNestedInput
-    referredUsers?: ReferralUpdateManyWithoutSubUserNestedInput
-    Rolling?: RollingUpdateManyWithoutUserNestedInput
-    transactions?: TransactionUpdateManyWithoutUserNestedInput
-    members?: UserUpdateManyWithoutAgentNestedInput
-    balances?: UserBalanceUpdateManyWithoutUserNestedInput
-    UserBalanceStats?: UserBalanceStatsUpdateManyWithoutUserNestedInput
-    UserPromotion?: UserPromotionUpdateManyWithoutUserNestedInput
-    UserSession?: UserSessionUpdateManyWithoutUserNestedInput
-    UserToken?: UserTokenUpdateManyWithoutUserNestedInput
-    VipHistory?: VipHistoryUpdateManyWithoutUserNestedInput
-    VipMembership?: VipMembershipUpdateOneWithoutUserNestedInput
-  }
-
-  export type UserUncheckedUpdateWithoutAgentInput = {
-    id?: StringFieldUpdateOperationsInput | string
-    numericId?: IntFieldUpdateOperationsInput | number
-    whitecliffId?: NullableBigIntFieldUpdateOperationsInput | bigint | number | null
-    whitecliffSystemId?: NullableBigIntFieldUpdateOperationsInput | bigint | number | null
-    whitecliffUsername?: NullableStringFieldUpdateOperationsInput | string | null
-    dcsId?: NullableStringFieldUpdateOperationsInput | string | null
-    email?: NullableStringFieldUpdateOperationsInput | string | null
-    passwordHash?: NullableStringFieldUpdateOperationsInput | string | null
-    socialType?: NullableEnumSocialTypeFieldUpdateOperationsInput | $Enums.SocialType | null
-    socialId?: NullableStringFieldUpdateOperationsInput | string | null
-    role?: EnumUserRoleTypeFieldUpdateOperationsInput | $Enums.UserRoleType
-    status?: EnumUserStatusFieldUpdateOperationsInput | $Enums.UserStatus
-    kycLevel?: EnumKycLevelFieldUpdateOperationsInput | $Enums.KycLevel
-    country?: NullableStringFieldUpdateOperationsInput | string | null
-    language?: NullableEnumLanguageFieldUpdateOperationsInput | $Enums.Language | null
-    timezone?: NullableStringFieldUpdateOperationsInput | string | null
-    timezoneOffset?: NullableIntFieldUpdateOperationsInput | number | null
-    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
-    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
-    affiliateCodes?: AffiliateCodeUncheckedUpdateManyWithoutUserNestedInput
-    affiliateCommissions?: AffiliateCommissionUncheckedUpdateManyWithoutAffiliateNestedInput
-    subUserCommissions?: AffiliateCommissionUncheckedUpdateManyWithoutSubUserNestedInput
-    affiliateTier?: AffiliateTierUncheckedUpdateOneWithoutAffiliateNestedInput
-    affiliateWallets?: AffiliateWalletUncheckedUpdateManyWithoutAffiliateNestedInput
-    CompTransaction?: CompTransactionUncheckedUpdateManyWithoutUserNestedInput
-    DailyCompEarning?: DailyCompEarningUncheckedUpdateManyWithoutUserNestedInput
-    EmailLog?: EmailLogUncheckedUpdateManyWithoutUserNestedInput
-    GameSession?: GameSessionUncheckedUpdateManyWithoutUserNestedInput
-    affiliateReferrals?: ReferralUncheckedUpdateManyWithoutAffiliateNestedInput
-    referredUsers?: ReferralUncheckedUpdateManyWithoutSubUserNestedInput
-    Rolling?: RollingUncheckedUpdateManyWithoutUserNestedInput
-    transactions?: TransactionUncheckedUpdateManyWithoutUserNestedInput
-    members?: UserUncheckedUpdateManyWithoutAgentNestedInput
-    balances?: UserBalanceUncheckedUpdateManyWithoutUserNestedInput
-    UserBalanceStats?: UserBalanceStatsUncheckedUpdateManyWithoutUserNestedInput
-    UserPromotion?: UserPromotionUncheckedUpdateManyWithoutUserNestedInput
-    UserSession?: UserSessionUncheckedUpdateManyWithoutUserNestedInput
-    UserToken?: UserTokenUncheckedUpdateManyWithoutUserNestedInput
-    VipHistory?: VipHistoryUncheckedUpdateManyWithoutUserNestedInput
-    VipMembership?: VipMembershipUncheckedUpdateOneWithoutUserNestedInput
-  }
-
-  export type UserUncheckedUpdateManyWithoutAgentInput = {
-    id?: StringFieldUpdateOperationsInput | string
-    numericId?: IntFieldUpdateOperationsInput | number
-    whitecliffId?: NullableBigIntFieldUpdateOperationsInput | bigint | number | null
-    whitecliffSystemId?: NullableBigIntFieldUpdateOperationsInput | bigint | number | null
-    whitecliffUsername?: NullableStringFieldUpdateOperationsInput | string | null
-    dcsId?: NullableStringFieldUpdateOperationsInput | string | null
-    email?: NullableStringFieldUpdateOperationsInput | string | null
-    passwordHash?: NullableStringFieldUpdateOperationsInput | string | null
-    socialType?: NullableEnumSocialTypeFieldUpdateOperationsInput | $Enums.SocialType | null
-    socialId?: NullableStringFieldUpdateOperationsInput | string | null
-    role?: EnumUserRoleTypeFieldUpdateOperationsInput | $Enums.UserRoleType
-    status?: EnumUserStatusFieldUpdateOperationsInput | $Enums.UserStatus
-    kycLevel?: EnumKycLevelFieldUpdateOperationsInput | $Enums.KycLevel
-    country?: NullableStringFieldUpdateOperationsInput | string | null
-    language?: NullableEnumLanguageFieldUpdateOperationsInput | $Enums.Language | null
-    timezone?: NullableStringFieldUpdateOperationsInput | string | null
-    timezoneOffset?: NullableIntFieldUpdateOperationsInput | number | null
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
   }

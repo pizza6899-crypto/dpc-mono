@@ -131,7 +131,6 @@ exports.Prisma.UserScalarFieldEnum = {
   passwordHash: 'passwordHash',
   socialType: 'socialType',
   socialId: 'socialId',
-  agentId: 'agentId',
   role: 'role',
   status: 'status',
   kycLevel: 'kycLevel',

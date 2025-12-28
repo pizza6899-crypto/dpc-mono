@@ -29,28 +29,16 @@ export class UserMapper {
    * CreateUserParams를 Prisma create data로 변환
    *
    * @param params - 도메인 레이어의 사용자 생성 파라미터
-   * @param whitecliffId - 인프라스트럭처 레벨에서 생성된 whitecliffId (BigInt)
-   * @param whitecliffUsername - 인프라스트럭처 레벨에서 생성된 whitecliffUsername
    */
-  toPrismaCreateData(
-    params: CreateUserParams,
-    whitecliffId: bigint,
-    whitecliffUsername: string,
-  ) {
+  toPrismaCreateData(params: CreateUserParams) {
     return {
       email: params.email,
       passwordHash: params.passwordHash,
       socialId: params.socialId,
       socialType: params.socialType,
       role: params.role,
-      agentId: params.agentId,
-      whitecliffId: whitecliffId,
-      whitecliffUsername: whitecliffUsername,
       country: params.country,
       timezone: params.timezone,
-      balances: {
-        create: params.balances,
-      },
     };
   }
 }

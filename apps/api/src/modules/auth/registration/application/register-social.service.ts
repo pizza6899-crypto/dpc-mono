@@ -5,7 +5,6 @@ import type { ActivityLogPort } from 'src/platform/activity-log/activity-log.por
 import { ActivityType } from 'src/platform/activity-log/activity-log.types';
 import { ACTIVITY_LOG } from 'src/platform/activity-log/activity-log.token';
 import type { RequestClientInfo } from 'src/platform/http/types/client-info.types';
-import { EnvService } from 'src/platform/env/env.service';
 import { VipMembershipService } from 'src/modules/vip/application/vip-membership.service';
 import { SocialType, UserRoleType } from '@repo/database';
 import { ApiException } from 'src/platform/http/exception/api.exception';
@@ -43,7 +42,6 @@ export class RegisterSocialService {
   constructor(
     private readonly prisma: PrismaService,
     @Inject(ACTIVITY_LOG) private readonly activityLog: ActivityLogPort,
-    private readonly envService: EnvService,
     private readonly vipMembershipService: VipMembershipService,
     private readonly registrationPolicy: RegistrationPolicy,
     @Inject(USER_REPOSITORY)
@@ -62,19 +60,15 @@ export class RegisterSocialService {
     );
 
     if (this.registrationPolicy.canRegister(existingUser)) {
-      // 2. 새 사용자 생성 (Repository를 통해 - whitecliffId는 Repository에서 자동 생성)
+      // 2. 새 사용자 생성 (Repository를 통해)
       user = await this.userRepository.create({
         email: socialUser.email,
         passwordHash: null,
         socialId: socialUser.socialId,
         socialType: socialType,
         role: UserRoleType.USER,
-        agentId: null,
         country: requestInfo.country,
         timezone: requestInfo.timezone,
-        balances: this.envService.wallet.allowedCurrencies.map((currency) => ({
-          currency,
-        })),
       });
 
       isNewUser = true;

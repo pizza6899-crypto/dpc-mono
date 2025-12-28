@@ -9,7 +9,6 @@ import { ApiException } from 'src/platform/http/exception/api.exception';
 import { MessageCode } from 'src/platform/http/types/message-codes';
 import { CountryUtil } from 'src/utils/country.util';
 import { VipMembershipService } from 'src/modules/vip/application/vip-membership.service';
-import { EnvService } from 'src/platform/env/env.service';
 import { LinkReferralService } from 'src/modules/affiliate/referral/application/link-referral.service';
 import { FindCodeByCodeService } from 'src/modules/affiliate/code/application/find-code-by-code.service';
 import {
@@ -49,7 +48,6 @@ export class RegisterCredentialAdminService {
   constructor(
     @Inject(ACTIVITY_LOG) private readonly activityLog: ActivityLogPort,
     private readonly vipMembershipService: VipMembershipService,
-    private readonly envService: EnvService,
     private readonly linkReferralService: LinkReferralService,
     private readonly findCodeByCodeService: FindCodeByCodeService,
     private readonly registrationPolicy: RegistrationPolicy,
@@ -123,12 +121,8 @@ export class RegisterCredentialAdminService {
       socialId: null,
       socialType: null,
       role, // 어드민이 지정한 role 사용
-      agentId: null,
       country: country,
       timezone: countryConfig.timezone,
-      balances: this.envService.wallet.allowedCurrencies.map((currency) => ({
-        currency,
-      })),
     });
 
     // 6. VIP 멤버십 생성 (일반 사용자만)

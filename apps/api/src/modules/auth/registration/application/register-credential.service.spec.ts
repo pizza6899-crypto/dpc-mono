@@ -211,13 +211,8 @@ describe('RegisterCredentialService', () => {
         socialId: null,
         socialType: null,
         role: UserRoleType.USER,
-        agentId: null,
         country: mockRequestInfo.country,
         timezone: expect.any(String),
-        balances: [
-          { currency: 'USD' },
-          { currency: 'KRW' },
-        ],
       });
       expect(mockVipMembershipService.getOrCreateMembership).toHaveBeenCalledWith(
         mockUserId,

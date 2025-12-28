@@ -19,7 +19,6 @@ model User {
   passwordHash         String?
   socialType           SocialType?
   socialId             String?
-  agentId              String?
   role                 UserRoleType          @default(USER)
   status               UserStatus            @default(ACTIVE)
   kycLevel             KycLevel              @default(NONE)
@@ -42,8 +41,6 @@ model User {
   referredUsers        Referral[]            @relation("ReferredUsers")
   Rolling              Rolling[]
   transactions         Transaction[]
-  agent                User?                 @relation("AgentMembers", fields: [agentId], references: [id])
-  members              User[]                @relation("AgentMembers")
   balances             UserBalance[]
   UserBalanceStats     UserBalanceStats[]
   UserPromotion        UserPromotion[]
