@@ -253,9 +253,10 @@ describe('RecordLoginAttemptService', () => {
             email: mockEmail,
           });
 
-          const createdAttempt = repository.create.mock.calls[
-            repository.create.mock.calls.length - 1
-          ][0];
+          const createdAttempt =
+            repository.create.mock.calls[
+              repository.create.mock.calls.length - 1
+            ][0];
           expect(createdAttempt.failureReason).toBe(reason);
         }
       });
@@ -328,4 +329,3 @@ describe('RecordLoginAttemptService', () => {
     });
   });
 });
-

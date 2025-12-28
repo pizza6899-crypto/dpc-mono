@@ -62,6 +62,11 @@ export class VerifyCredentialService {
       return null;
     }
 
+    // fromPersistence를 통해 생성된 엔티티는 항상 id가 있어야 함
+    if (!user.id) {
+      return null;
+    }
+
     return {
       id: user.id,
       email: user.email,

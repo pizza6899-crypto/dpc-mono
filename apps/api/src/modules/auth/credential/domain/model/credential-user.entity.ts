@@ -2,7 +2,7 @@ import { UserStatus, UserRoleType } from '@repo/database';
 
 export class CredentialUser {
   private constructor(
-    public readonly id: string,
+    public readonly id: string | null, // 내부 관리용 (DB 저장 시 자동 생성)
     public readonly email: string,
     public readonly passwordHash: string | null,
     public readonly status: UserStatus,
@@ -12,16 +12,19 @@ export class CredentialUser {
   /**
    * 새로운 CredentialUser 생성
    * @description Application 레이어에서 새 사용자 생성 시 사용
+   * @param params - 사용자 생성 파라미터
+   * @param params.id - 사용자 ID (선택적, DB 저장 시 자동 생성)
+   * @returns CredentialUser 엔티티 인스턴스
    */
   static create(params: {
-    id: string;
+    id?: string;
     email: string;
     passwordHash: string | null;
     status: UserStatus;
     role: UserRoleType;
   }): CredentialUser {
     return new CredentialUser(
-      params.id,
+      params.id ?? null,
       params.email,
       params.passwordHash,
       params.status,
@@ -36,7 +39,7 @@ export class CredentialUser {
    * @returns CredentialUser 엔티티 인스턴스
    */
   static fromPersistence(data: {
-    id: string;
+    id: string | null;
     email: string;
     passwordHash: string | null;
     status: UserStatus;

@@ -20,7 +20,7 @@ import {
 } from 'src/platform/http/decorators/api-response.decorator';
 import { CurrentUser } from 'src/platform/auth/decorators/current-user.decorator';
 import type { CurrentUserWithSession } from 'src/platform/auth/decorators/current-user.decorator';
-import { RequestClienttInfo } from 'src/platform/auth/decorators/request-info.decorator';
+import { RequestClientInfoParam } from 'src/platform/auth/decorators/request-info.decorator';
 import type { PaginatedData, RequestClientInfo } from 'src/platform/http/types';
 import { Paginated } from 'src/platform/http/decorators/paginated.decorator';
 import { AdminDepositService } from '../application/admin-deposit.service';
@@ -56,7 +56,7 @@ export class AdminDepositController {
   async getDeposits(
     @Query() query: GetDepositsQueryDto,
     @CurrentUser() admin: CurrentUserWithSession,
-    @RequestClienttInfo() requestInfo: RequestClientInfo,
+    @RequestClientInfoParam() requestInfo: RequestClientInfo,
   ): Promise<PaginatedData<AdminDepositListItemDto>> {
     return await this.adminDepositService.getDeposits(
       query,
@@ -85,7 +85,7 @@ export class AdminDepositController {
     @Param('id') id: string,
     @Body() dto: ApproveBankDepositDto,
     @CurrentUser() admin: CurrentUserWithSession,
-    @RequestClienttInfo() requestInfo: RequestClientInfo,
+    @RequestClientInfoParam() requestInfo: RequestClientInfo,
   ) {
     return await this.adminDepositService.approveDeposit(
       BigInt(id),
@@ -116,7 +116,7 @@ export class AdminDepositController {
     @Param('id') id: string,
     @Body() failureReason: RejectDepositDto,
     @CurrentUser() admin: CurrentUserWithSession,
-    @RequestClienttInfo() requestInfo: RequestClientInfo,
+    @RequestClientInfoParam() requestInfo: RequestClientInfo,
   ) {
     return await this.adminDepositService.rejectDeposit(
       BigInt(id),

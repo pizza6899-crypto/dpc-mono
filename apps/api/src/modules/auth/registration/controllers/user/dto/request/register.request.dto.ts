@@ -38,4 +38,3 @@ export class RegisterRequestDto {
   @MaxLength(20, { message: 'Agent code must be at most 20 characters long.' })
   referralCode?: string;
 }
-

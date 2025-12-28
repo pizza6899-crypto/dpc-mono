@@ -59,4 +59,4 @@ import { RegistrationModule } from './registration/registration.module';
   ],
   exports: [PassportModule],
 })
-export class AuthModule { }
+export class AuthModule {}

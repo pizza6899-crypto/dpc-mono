@@ -8,7 +8,7 @@ import {
   UserSessionWithInfo,
 } from './session.types';
 import { UserStatus } from '@repo/database';
-import { RequestClientInfo } from '../http/types';
+import type { RequestClientInfo } from 'src/platform/http/types/client-info.types';
 import { nowUtc } from 'src/utils/date.util';
 
 @Injectable()

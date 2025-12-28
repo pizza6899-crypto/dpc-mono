@@ -32,4 +32,3 @@ export class FindLoginAttemptsQueryDto {
   @Max(100)
   limit?: number = 50;
 }
-

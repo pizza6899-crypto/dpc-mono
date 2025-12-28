@@ -13,7 +13,7 @@ import {
 import { ApiTags, ApiOperation } from '@nestjs/swagger';
 import { CurrentUser } from 'src/platform/auth/decorators/current-user.decorator';
 import type { CurrentUserWithSession } from 'src/platform/auth/decorators/current-user.decorator';
-import { RequestClienttInfo } from 'src/platform/auth/decorators/request-info.decorator';
+import { RequestClientInfoParam } from 'src/platform/auth/decorators/request-info.decorator';
 import type { RequestClientInfo } from 'src/platform/http/types/client-info.types';
 import { CreateCodeService } from '../application/create-code.service';
 import { FindCodesService } from '../application/find-codes.service';
@@ -56,7 +56,7 @@ export class AffiliateCodeController {
   async create(
     @CurrentUser() user: CurrentUserWithSession,
     @Body() dto: CreateAffiliateCodeDto,
-    @RequestClienttInfo() requestInfo: RequestClientInfo,
+    @RequestClientInfoParam() requestInfo: RequestClientInfo,
   ): Promise<AffiliateCodeResponseDto> {
     const code = await this.createCodeService.execute({
       userId: user.id,
@@ -129,7 +129,7 @@ export class AffiliateCodeController {
     @CurrentUser() user: CurrentUserWithSession,
     @Param('id') id: string,
     @Body() dto: UpdateAffiliateCodeDto,
-    @RequestClienttInfo() requestInfo: RequestClientInfo,
+    @RequestClientInfoParam() requestInfo: RequestClientInfo,
   ): Promise<AffiliateCodeResponseDto> {
     const code = await this.updateCodeService.execute({
       id,
@@ -149,7 +149,7 @@ export class AffiliateCodeController {
   async delete(
     @CurrentUser() user: CurrentUserWithSession,
     @Param('id') id: string,
-    @RequestClienttInfo() requestInfo: RequestClientInfo,
+    @RequestClientInfoParam() requestInfo: RequestClientInfo,
   ): Promise<void> {
     await this.deleteCodeService.execute({
       id,
@@ -170,7 +170,7 @@ export class AffiliateCodeController {
   async toggleActive(
     @CurrentUser() user: CurrentUserWithSession,
     @Param('id') id: string,
-    @RequestClienttInfo() requestInfo: RequestClientInfo,
+    @RequestClientInfoParam() requestInfo: RequestClientInfo,
   ): Promise<AffiliateCodeResponseDto> {
     const code = await this.toggleCodeActiveService.execute({
       id,
@@ -191,7 +191,7 @@ export class AffiliateCodeController {
   async setDefault(
     @CurrentUser() user: CurrentUserWithSession,
     @Param('id') id: string,
-    @RequestClienttInfo() requestInfo: RequestClientInfo,
+    @RequestClientInfoParam() requestInfo: RequestClientInfo,
   ): Promise<AffiliateCodeResponseDto> {
     const code = await this.setCodeAsDefaultService.execute({
       id,

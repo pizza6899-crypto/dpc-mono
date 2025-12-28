@@ -18,7 +18,7 @@ import {
 import { CurrentUser } from 'src/platform/auth/decorators/current-user.decorator';
 import type { CurrentUserWithSession } from 'src/platform/auth/decorators/current-user.decorator';
 import type { PaginatedData, RequestClientInfo } from 'src/platform/http/types';
-import { RequestClienttInfo } from 'src/platform/auth/decorators/request-info.decorator';
+import { RequestClientInfoParam } from 'src/platform/auth/decorators/request-info.decorator';
 import { CasinoGameService } from '../application/casino-game.service';
 import { GameInfoDto, GameListRequestDto } from '../dtos/game-list.dto';
 import {
@@ -57,7 +57,7 @@ export class CasinoGameController {
   async launchGame(
     @CurrentUser() user: CurrentUserWithSession,
     @Body() data: GameLaunchRequestDto,
-    @RequestClienttInfo() request: RequestClientInfo,
+    @RequestClientInfoParam() request: RequestClientInfo,
   ): Promise<GameLaunchResponseDto> {
     try {
       const result = await this.casinoGameService.launchGame(

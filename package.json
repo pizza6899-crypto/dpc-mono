@@ -11,6 +11,7 @@
     "api:build": "pnpm -F api build",
     "api:start": "pnpm -F api start",
     "api:test": "pnpm -F api test",
+    "api:test:dev": "pnpm -F api test:dev",
     "api:lint": "pnpm -F api lint",
     "api:format": "pnpm -F api format",
     "api:cli": "pnpm -F api cli",

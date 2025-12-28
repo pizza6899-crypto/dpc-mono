@@ -16,7 +16,7 @@ import {
 } from 'src/platform/http/decorators/api-response.decorator';
 import { CurrentUser } from 'src/platform/auth/decorators/current-user.decorator';
 import type { CurrentUserWithSession } from 'src/platform/auth/decorators/current-user.decorator';
-import { RequestClienttInfo } from 'src/platform/auth/decorators/request-info.decorator';
+import { RequestClientInfoParam } from 'src/platform/auth/decorators/request-info.decorator';
 import type { RequestClientInfo } from 'src/platform/http/types/client-info.types';
 import { Prisma } from '@repo/database';
 import { FindCommissionsService } from '../../application/find-commissions.service';
@@ -198,7 +198,7 @@ export class AffiliateCommissionController {
   async withdrawCommission(
     @CurrentUser() user: CurrentUserWithSession,
     @Body() dto: WithdrawCommissionDto,
-    @RequestClienttInfo() requestInfo: RequestClientInfo,
+    @RequestClientInfoParam() requestInfo: RequestClientInfo,
   ): Promise<WithdrawCommissionResponseDto> {
     const wallet = await this.withdrawCommissionService.execute({
       affiliateId: user.id,

@@ -26,4 +26,3 @@ export class RegistrationFailedException extends DomainException {
     super(`Registration failed: ${reason}`);
   }
 }
-

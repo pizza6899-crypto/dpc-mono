@@ -58,4 +58,3 @@ export class UserRepository implements UserRepositoryPort {
     return this.mapper.toDomain(user);
   }
 }
-

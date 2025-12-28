@@ -16,7 +16,7 @@ import {
 } from 'src/platform/http/decorators/api-response.decorator';
 import { CurrentUser } from 'src/platform/auth/decorators/current-user.decorator';
 import type { CurrentUserWithSession } from 'src/platform/auth/decorators/current-user.decorator';
-import { RequestClienttInfo } from 'src/platform/auth/decorators/request-info.decorator';
+import { RequestClientInfoParam } from 'src/platform/auth/decorators/request-info.decorator';
 import type { RequestClientInfo } from 'src/platform/http/types/client-info.types';
 import { SessionAuthGuard } from 'src/platform/auth/guards/session-auth.guard';
 import { RequireRoles } from 'src/platform/auth/decorators/roles.decorator';
@@ -84,7 +84,7 @@ export class AdminCommissionController {
   async setCustomRate(
     @CurrentUser() user: CurrentUserWithSession,
     @Body() dto: SetCustomRateDto,
-    @RequestClienttInfo() requestInfo: RequestClientInfo,
+    @RequestClientInfoParam() requestInfo: RequestClientInfo,
   ): Promise<AffiliateTierResponseDto> {
     const tier = await this.setCustomRateService.execute({
       affiliateId: dto.affiliateId,
@@ -111,7 +111,7 @@ export class AdminCommissionController {
   async resetCustomRate(
     @CurrentUser() user: CurrentUserWithSession,
     @Body() dto: ResetCustomRateDto,
-    @RequestClienttInfo() requestInfo: RequestClientInfo,
+    @RequestClientInfoParam() requestInfo: RequestClientInfo,
   ): Promise<AffiliateTierResponseDto> {
     const tier = await this.resetCustomRateService.execute({
       affiliateId: dto.affiliateId,

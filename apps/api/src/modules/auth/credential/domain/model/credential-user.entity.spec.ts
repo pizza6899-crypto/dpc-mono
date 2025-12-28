@@ -348,4 +348,3 @@ describe('CredentialUser Entity', () => {
     });
   });
 });
-

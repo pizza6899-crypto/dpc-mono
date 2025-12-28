@@ -17,7 +17,7 @@ import {
 } from '../../../../platform/http/decorators/api-response.decorator';
 import { SocialAuthService } from '../../application/social-auth.service';
 import { GuestOnly } from 'src/platform/auth/decorators/roles.decorator';
-import { RequestClienttInfo } from 'src/platform/auth/decorators/request-info.decorator';
+import { RequestClientInfoParam } from 'src/platform/auth/decorators/request-info.decorator';
 import type { RequestClientInfo } from 'src/platform/http/types/client-info.types';
 import type { Response, Request } from 'express';
 import { EnvService } from 'src/platform/env/env.service';
@@ -80,7 +80,7 @@ export class SocialAuthController {
   })
   async googleAuthCallback(
     @Req() req: any,
-    @RequestClienttInfo() requestInfo: RequestClientInfo,
+    @RequestClientInfoParam() requestInfo: RequestClientInfo,
     @Res({ passthrough: true }) res: Response,
   ): Promise<SocialAuthResponseDto> {
     // Passport Google 전략에서 검증된 사용자 정보
@@ -104,7 +104,7 @@ export class SocialAuthController {
   })
   async handleGoogleRedirect(
     @Req() req: any,
-    @RequestClienttInfo() requestInfo: RequestClientInfo,
+    @RequestClientInfoParam() requestInfo: RequestClientInfo,
     @Res() res: Response,
   ): Promise<void> {
     try {

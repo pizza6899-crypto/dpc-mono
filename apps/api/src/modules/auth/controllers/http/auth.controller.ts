@@ -18,7 +18,7 @@ import {
 import { AuthService } from '../../application/auth.service';
 import { GuestOnly } from 'src/platform/auth/decorators/roles.decorator';
 import type { Request, Response } from 'express';
-import { RequestClienttInfo } from 'src/platform/auth/decorators/request-info.decorator';
+import { RequestClientInfoParam } from 'src/platform/auth/decorators/request-info.decorator';
 import type { RequestClientInfo } from 'src/platform/http/types/client-info.types';
 import { ActivityType } from 'src/platform/activity-log/activity-log.types';
 import { ACTIVITY_LOG } from 'src/platform/activity-log/activity-log.token';
@@ -64,7 +64,7 @@ export class AuthController {
     description: 'Login success',
   })
   async login(
-    @RequestClienttInfo() requestInfo: RequestClientInfo,
+    @RequestClientInfoParam() requestInfo: RequestClientInfo,
     @CurrentUser() user: CurrentUserWithSession,
     @Body() loginDto: LoginDto,
   ): Promise<LoginResponseDto> {
@@ -102,7 +102,7 @@ export class AuthController {
     description: 'Register success',
   })
   async register(
-    @RequestClienttInfo() requestInfo: RequestClientInfo,
+    @RequestClientInfoParam() requestInfo: RequestClientInfo,
     @Body() registerDto: RegisterDto,
   ): Promise<AuthResponseDto> {
     const response = await this.authService.register(registerDto, requestInfo);
@@ -125,7 +125,7 @@ export class AuthController {
     description: 'Logout success',
   })
   async logout(
-    @RequestClienttInfo() requestInfo: RequestClientInfo,
+    @RequestClientInfoParam() requestInfo: RequestClientInfo,
     @CurrentUser() user: CurrentUserWithSession,
     @Req() req: Request,
     @Res({ passthrough: true }) res: Response,

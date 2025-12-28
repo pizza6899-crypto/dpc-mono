@@ -1,4 +1,5 @@
-import { UserStatus, UserRoleType, SocialType } from '@repo/database';
+import type { UserRoleType, SocialType } from '@repo/database';
+import { UserStatus } from '@repo/database';
 
 /**
  * Registration 도메인 엔티티
@@ -95,4 +96,3 @@ export class RegistrationUser {
     return this.status === UserStatus.ACTIVE;
   }
 }
-

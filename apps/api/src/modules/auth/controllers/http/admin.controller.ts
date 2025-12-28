@@ -27,7 +27,7 @@ import type { Request } from 'express';
 import { ACTIVITY_LOG } from 'src/platform/activity-log/activity-log.token';
 import type { ActivityLogPort } from 'src/platform/activity-log/activity-log.port';
 import { AdminLocalAuthGuard } from 'src/platform/auth/guards/admin-local-auth.guard';
-import { RequestClienttInfo } from 'src/platform/auth/decorators/request-info.decorator';
+import { RequestClientInfoParam } from 'src/platform/auth/decorators/request-info.decorator';
 import type { RequestClientInfo } from 'src/platform/http/types';
 import {
   CurrentUser,
@@ -63,7 +63,7 @@ export class AdminAuthController {
     description: '관리자 로그인 성공',
   })
   async login(
-    @RequestClienttInfo() requestInfo: RequestClientInfo,
+    @RequestClientInfoParam() requestInfo: RequestClientInfo,
     @CurrentUser() user: CurrentUserWithSession,
     @Body() loginDto: AdminLoginDto,
   ): Promise<LoginResponseDto> {
@@ -99,7 +99,7 @@ export class AdminAuthController {
     description: '관리자 로그아웃 성공',
   })
   async logout(
-    @RequestClienttInfo() requestInfo: RequestClientInfo,
+    @RequestClientInfoParam() requestInfo: RequestClientInfo,
     @CurrentUser() user: CurrentUserWithSession,
     @Req() req: Request,
   ): Promise<void> {

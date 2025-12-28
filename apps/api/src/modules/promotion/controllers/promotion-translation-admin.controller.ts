@@ -13,7 +13,7 @@ import { RequireRoles } from 'src/platform/auth/decorators/roles.decorator';
 import { UserRoleType } from '@repo/database';
 import { CurrentUser } from 'src/platform/auth/decorators/current-user.decorator';
 import type { CurrentUserWithSession } from 'src/platform/auth/decorators/current-user.decorator';
-import { RequestClienttInfo } from 'src/platform/auth/decorators/request-info.decorator';
+import { RequestClientInfoParam } from 'src/platform/auth/decorators/request-info.decorator';
 import type { RequestClientInfo } from 'src/platform/http/types/client-info.types';
 import {
   ApiStandardResponse,
@@ -55,7 +55,7 @@ export class PromotionTranslationAdminController {
     @Param('promotionId') promotionId: string,
     @Body() dto: UpsertPromotionTranslationDto,
     @CurrentUser() user: CurrentUserWithSession,
-    @RequestClienttInfo() requestInfo: RequestClientInfo,
+    @RequestClientInfoParam() requestInfo: RequestClientInfo,
   ): Promise<PromotionTranslationResponseDto> {
     try {
       const result =
@@ -117,7 +117,7 @@ export class PromotionTranslationAdminController {
   async getTranslations(
     @Param('promotionId') promotionId: string,
     @CurrentUser() user: CurrentUserWithSession,
-    @RequestClienttInfo() requestInfo: RequestClientInfo,
+    @RequestClientInfoParam() requestInfo: RequestClientInfo,
   ): Promise<PromotionTranslationResponseDto[]> {
     const translations =
       await this.promotionTranslationService.getPromotionTranslations(

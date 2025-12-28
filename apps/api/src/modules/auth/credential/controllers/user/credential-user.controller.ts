@@ -15,7 +15,7 @@ import {
 import { Public } from 'src/platform/auth/decorators/roles.decorator';
 import { CurrentUser } from 'src/platform/auth/decorators/current-user.decorator';
 import type { CurrentUserWithSession } from 'src/platform/auth/decorators/current-user.decorator';
-import { RequestClienttInfo } from 'src/platform/auth/decorators/request-info.decorator';
+import { RequestClientInfoParam } from 'src/platform/auth/decorators/request-info.decorator';
 import type { RequestClientInfo } from 'src/platform/http/types/client-info.types';
 import { LocalAuthGuard } from 'src/platform/auth/guards/local-auth.guard';
 import { LoginService } from '../../application/login.service';
@@ -23,6 +23,7 @@ import { LogoutService } from '../../application/logout.service';
 import { CredentialUserLoginRequestDto } from './dto/request/login.request.dto';
 import { CredentialUserLoginResponseDto } from './dto/response/login.response.dto';
 import { CredentialUserAuthStatusResponseDto } from './dto/response/auth-status.response.dto';
+import { UserRoleType } from '@repo/database';
 import type { Request } from 'express';
 
 @Controller('auth')
@@ -32,7 +33,7 @@ export class CredentialUserController {
   constructor(
     private readonly loginService: LoginService,
     private readonly logoutService: LogoutService,
-  ) { }
+  ) {}
 
   @Post('login')
   @Public() // Guard 내부에서 실제 검증 수행
@@ -47,10 +48,10 @@ export class CredentialUserController {
   })
   async login(
     @CurrentUser() user: CurrentUserWithSession,
-    @RequestClienttInfo() clientInfo: RequestClientInfo,
+    @RequestClientInfoParam() clientInfo: RequestClientInfo,
     @Body() _dto: CredentialUserLoginRequestDto, // Swagger 문서화를 위해 필요
   ): Promise<CredentialUserLoginResponseDto> {
-    await this.loginService.execute({ user, clientInfo });
+    await this.loginService.execute({ user, clientInfo, isAdmin: false });
 
     return {
       user: {
@@ -71,16 +72,39 @@ export class CredentialUserController {
   })
   async logout(
     @CurrentUser() user: CurrentUserWithSession,
-    @RequestClienttInfo() clientInfo: RequestClientInfo,
+    @RequestClientInfoParam() clientInfo: RequestClientInfo,
     @Req() req: Request,
   ): Promise<void> {
-    await this.logoutService.execute({ userId: user.id, clientInfo });
+    // 사용자 role을 확인하여 isAdmin 결정
+    const isAdmin =
+      user.role === UserRoleType.ADMIN ||
+      user.role === UserRoleType.SUPER_ADMIN;
 
-    req.logout((err) => {
-      if (err) console.error('Logout error:', err);
+    await this.logoutService.execute({
+      userId: user.id,
+      clientInfo,
+      isAdmin,
     });
-    req.session.destroy((err) => {
-      if (err) console.error('Session destroy error:', err);
+
+    // 세션 종료 처리 (Promise로 감싸서 에러 처리)
+    await new Promise<void>((resolve, reject) => {
+      req.logout((err) => {
+        if (err) {
+          console.error('Logout error:', err);
+          reject(err);
+          return;
+        }
+
+        req.session.destroy((destroyErr) => {
+          if (destroyErr) {
+            console.error('Session destroy error:', destroyErr);
+            reject(destroyErr);
+            return;
+          }
+
+          resolve();
+        });
+      });
     });
   }
 
@@ -104,9 +128,9 @@ export class CredentialUserController {
       user:
         isAuthenticated && user
           ? {
-            id: user.id,
-            email: user.email,
-          }
+              id: user.id,
+              email: user.email,
+            }
           : null,
     };
   }

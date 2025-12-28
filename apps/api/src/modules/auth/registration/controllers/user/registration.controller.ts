@@ -1,16 +1,11 @@
-import {
-  Controller,
-  Post,
-  Body,
-  HttpStatus,
-} from '@nestjs/common';
+import { Controller, Post, Body, HttpStatus } from '@nestjs/common';
 import { ApiTags, ApiOperation } from '@nestjs/swagger';
 import {
   ApiStandardResponse,
   ApiStandardErrors,
 } from '../../../../../platform/http/decorators/api-response.decorator';
 import { Public } from 'src/platform/auth/decorators/roles.decorator';
-import { RequestClienttInfo } from 'src/platform/auth/decorators/request-info.decorator';
+import { RequestClientInfoParam } from 'src/platform/auth/decorators/request-info.decorator';
 import type { RequestClientInfo } from 'src/platform/http/types/client-info.types';
 import { Throttle } from 'src/platform/throttle/decorators/throttle.decorator';
 import { ThrottleScope } from 'src/platform/throttle/types/throttle.types';
@@ -43,7 +38,7 @@ export class RegistrationController {
     description: 'Register success',
   })
   async register(
-    @RequestClienttInfo() requestInfo: RequestClientInfo,
+    @RequestClientInfoParam() requestInfo: RequestClientInfo,
     @Body() registerDto: RegisterRequestDto,
   ): Promise<RegisterResponseDto> {
     const result = await this.registerCredentialService.execute({
@@ -56,4 +51,3 @@ export class RegistrationController {
     return result;
   }
 }
-

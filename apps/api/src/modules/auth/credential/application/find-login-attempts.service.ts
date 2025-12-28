@@ -66,9 +66,7 @@ export class FindLoginAttemptsService {
     }
 
     if (limit > this.MAX_LIMIT) {
-      throw new BadRequestException(
-        `Limit cannot exceed ${this.MAX_LIMIT}`,
-      );
+      throw new BadRequestException(`Limit cannot exceed ${this.MAX_LIMIT}`);
     }
 
     return limit;

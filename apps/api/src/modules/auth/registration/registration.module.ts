@@ -39,4 +39,3 @@ import { USER_REPOSITORY } from './ports/out';
   exports: [RegisterCredentialService, RegisterSocialService],
 })
 export class RegistrationModule {}
-

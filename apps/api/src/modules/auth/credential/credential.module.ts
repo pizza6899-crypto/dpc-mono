@@ -53,4 +53,4 @@ import { ActivityLogModule } from 'src/platform/activity-log/activity-log.module
   ],
   exports: [LoginService, LogoutService, VerifyCredentialService],
 })
-export class CredentialModule { }
+export class CredentialModule {}

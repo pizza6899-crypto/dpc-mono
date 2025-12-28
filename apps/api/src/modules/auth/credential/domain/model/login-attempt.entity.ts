@@ -149,9 +149,7 @@ export class LoginAttempt {
       data.result === LoginAttemptResult.SUCCESS &&
       data.failureReason !== null
     ) {
-      throw new Error(
-        'LoginAttemptResult.SUCCESS cannot have a failureReason',
-      );
+      throw new Error('LoginAttemptResult.SUCCESS cannot have a failureReason');
     }
 
     // 비즈니스 규칙 검증: 실패한 경우 failureReason은 필수
@@ -159,9 +157,7 @@ export class LoginAttempt {
       data.result === LoginAttemptResult.FAILED &&
       data.failureReason === null
     ) {
-      throw new Error(
-        'LoginAttemptResult.FAILED must have a failureReason',
-      );
+      throw new Error('LoginAttemptResult.FAILED must have a failureReason');
     }
 
     return new LoginAttempt(

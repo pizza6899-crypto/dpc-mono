@@ -3,7 +3,7 @@ import { EnvService } from 'src/platform/env/env.service';
 import type { ActivityLogPort } from 'src/platform/activity-log/activity-log.port';
 import { ActivityType } from 'src/platform/activity-log/activity-log.types';
 import { ACTIVITY_LOG } from 'src/platform/activity-log/activity-log.token';
-import { RequestClientInfo } from 'src/platform/http/types/client-info.types';
+import type { RequestClientInfo } from 'src/platform/http/types/client-info.types';
 import { randomBytes } from 'crypto';
 import {
   GoogleAuthUrlResponseDto,

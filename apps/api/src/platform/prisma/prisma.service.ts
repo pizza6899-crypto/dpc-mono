@@ -17,7 +17,8 @@ import { EnvService } from '../env/env.service';
 @Injectable()
 export class PrismaService
   extends PrismaClient<Prisma.PrismaClientOptions>
-  implements OnModuleInit, OnModuleDestroy {
+  implements OnModuleInit, OnModuleDestroy
+{
   private readonly logger = new Logger(PrismaService.name);
 
   constructor(private readonly envService: EnvService) {

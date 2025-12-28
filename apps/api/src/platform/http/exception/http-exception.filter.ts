@@ -16,9 +16,7 @@ import { ApiException } from './api.exception';
 import { sanitizeApiMessage, hasKorean } from 'src/utils/message.util';
 import { ActivityLogPort } from '../../activity-log/activity-log.port';
 import { ACTIVITY_LOG } from '../../activity-log/activity-log.token';
-import {
-  ActivityType,
-} from '../../activity-log/activity-log.types';
+import { ActivityType } from '../../activity-log/activity-log.types';
 import { extractClientInfo } from '../utils/request-info.util';
 import { Prisma } from '@repo/database';
 
@@ -44,7 +42,7 @@ export class HttpExceptionFilter implements ExceptionFilter {
     // 🎯 에러 타입별 메시지 코드 매핑
     if (exception instanceof Prisma.PrismaClientKnownRequestError) {
       status = HttpStatus.BAD_REQUEST;
-      const prismaError = exception as Prisma.PrismaClientKnownRequestError;
+      const prismaError = exception;
 
       switch (prismaError.code) {
         case 'P2002':
@@ -211,5 +209,4 @@ export class HttpExceptionFilter implements ExceptionFilter {
       this.logger.error('한글 감지 로그 저장 실패:', error);
     }
   }
-
 }

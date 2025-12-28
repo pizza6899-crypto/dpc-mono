@@ -1,5 +1,6 @@
 // src/modules/auth/credential/application/find-login-attempts.service.spec.ts
-import { Test, TestingModule } from '@nestjs/testing';
+import type { TestingModule } from '@nestjs/testing';
+import { Test } from '@nestjs/testing';
 import { BadRequestException } from '@nestjs/common';
 import { FindLoginAttemptsService } from './find-login-attempts.service';
 import {
@@ -283,4 +284,3 @@ describe('FindLoginAttemptsService', () => {
     });
   });
 });
-

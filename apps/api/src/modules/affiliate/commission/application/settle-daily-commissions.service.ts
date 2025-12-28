@@ -1,7 +1,11 @@
 // src/modules/affiliate/commission/application/settle-daily-commissions.service.ts
 import { Inject, Injectable, Logger } from '@nestjs/common';
 import { ExchangeCurrencyCode, Prisma } from '@repo/database';
-import { AffiliateWallet, CommissionPolicy, CommissionException } from '../domain';
+import {
+  AffiliateWallet,
+  CommissionPolicy,
+  CommissionException,
+} from '../domain';
 import { AFFILIATE_COMMISSION_REPOSITORY } from '../ports/out/affiliate-commission.repository.token';
 import type { AffiliateCommissionRepositoryPort } from '../ports/out/affiliate-commission.repository.port';
 import { AFFILIATE_WALLET_REPOSITORY } from '../ports/out/affiliate-wallet.repository.token';

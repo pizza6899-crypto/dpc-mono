@@ -12,8 +12,12 @@ import {
   type CredentialUserRepositoryPort,
 } from '../../ports/out';
 import { CredentialUser } from '../../domain/model/credential-user.entity';
-import { LoginAttempt, LoginAttemptResult, LoginFailureReason } from '../../domain';
-import { AuthenticatedUser } from 'src/platform/auth/types/auth.types';
+import {
+  LoginAttempt,
+  LoginAttemptResult,
+  LoginFailureReason,
+} from '../../domain';
+import type { AuthenticatedUser } from 'src/platform/auth/types/auth.types';
 import { ApiException } from 'src/platform/http/exception/api.exception';
 import { MessageCode } from 'src/platform/http/types';
 import { UserStatus, UserRoleType } from '@repo/database';
@@ -108,11 +112,17 @@ describe('CredentialLocalStrategy', () => {
   describe('validate', () => {
     it('유효한 자격 증명으로 사용자를 반환한다', async () => {
       // Arrange
+      const recentAttempts: LoginAttempt[] = [];
+      findAttemptsService.execute.mockResolvedValue(recentAttempts);
       policy.isAccountLocked.mockReturnValue(false);
       verifyService.execute.mockResolvedValue(mockAuthenticatedUser);
 
       // Act
-      const result = await strategy.validate(mockRequest, mockEmail, mockPassword);
+      const result = await strategy.validate(
+        mockRequest,
+        mockEmail,
+        mockPassword,
+      );
 
       // Assert
       expect(result).toEqual(mockAuthenticatedUser);
@@ -123,6 +133,7 @@ describe('CredentialLocalStrategy', () => {
       expect(verifyService.execute).toHaveBeenCalledWith({
         email: mockEmail,
         password: mockPassword,
+        isAdmin: false,
       });
       expect(recordService.execute).not.toHaveBeenCalled();
     });
@@ -172,13 +183,15 @@ describe('CredentialLocalStrategy', () => {
     it('자격 증명이 틀리면 AUTH_INVALID_CREDENTIALS 예외를 발생시킨다', async () => {
       // Arrange
       const user = CredentialUser.fromPersistence({
-        id: mockUserId,
+        id: mockUserId, // fromPersistence를 통해 생성된 엔티티는 항상 id가 있어야 함
         email: mockEmail,
         passwordHash: 'hash',
         status: UserStatus.ACTIVE,
         role: UserRoleType.USER,
       });
 
+      const recentAttempts: LoginAttempt[] = [];
+      findAttemptsService.execute.mockResolvedValue(recentAttempts);
       policy.isAccountLocked.mockReturnValue(false);
       verifyService.execute.mockResolvedValue(null);
       userRepository.findByEmail.mockResolvedValue(user);
@@ -200,6 +213,7 @@ describe('CredentialLocalStrategy', () => {
         );
       }
 
+      // foundUser?.id는 string | null이지만, fromPersistence를 통해 생성된 엔티티는 항상 id가 있음
       expect(recordService.execute).toHaveBeenCalledWith({
         userId: mockUserId,
         email: mockEmail,
@@ -215,6 +229,8 @@ describe('CredentialLocalStrategy', () => {
 
     it('사용자가 없으면 USER_NOT_FOUND 실패 이유로 기록한다', async () => {
       // Arrange
+      const recentAttempts: LoginAttempt[] = [];
+      findAttemptsService.execute.mockResolvedValue(recentAttempts);
       policy.isAccountLocked.mockReturnValue(false);
       verifyService.execute.mockResolvedValue(null);
       userRepository.findByEmail.mockResolvedValue(null);
@@ -257,12 +273,19 @@ describe('CredentialLocalStrategy', () => {
       verifyService.execute.mockResolvedValue(mockAuthenticatedUser);
 
       // Act
-      const result = await strategy.validate(mockRequest, mockEmail, mockPassword);
+      const result = await strategy.validate(
+        mockRequest,
+        mockEmail,
+        mockPassword,
+      );
 
       // Assert
       expect(result).toEqual(mockAuthenticatedUser);
-      expect(verifyService.execute).toHaveBeenCalled();
+      expect(verifyService.execute).toHaveBeenCalledWith({
+        email: mockEmail,
+        password: mockPassword,
+        isAdmin: false,
+      });
     });
   });
 });
-

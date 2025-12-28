@@ -7,4 +7,3 @@ export class RegisterResponseDto {
   @ApiProperty({ description: 'Email' })
   email: string;
 }
-

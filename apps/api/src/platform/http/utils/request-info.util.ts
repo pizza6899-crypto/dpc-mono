@@ -103,4 +103,3 @@ function generateFingerprint(request: Request): string {
 
   return Math.abs(hash).toString(36);
 }
-

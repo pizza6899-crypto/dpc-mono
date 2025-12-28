@@ -14,7 +14,7 @@ import {
 import { Public } from 'src/platform/auth/decorators/roles.decorator';
 import { CurrentUser } from 'src/platform/auth/decorators/current-user.decorator';
 import type { CurrentUserWithSession } from 'src/platform/auth/decorators/current-user.decorator';
-import { RequestClienttInfo } from 'src/platform/auth/decorators/request-info.decorator';
+import { RequestClientInfoParam } from 'src/platform/auth/decorators/request-info.decorator';
 import type { RequestClientInfo } from 'src/platform/http/types/client-info.types';
 import { AdminLocalAuthGuard } from 'src/platform/auth/guards/admin-local-auth.guard';
 import { LoginService } from '../../application/login.service';
@@ -43,7 +43,7 @@ export class CredentialAdminController {
   })
   async login(
     @CurrentUser() user: CurrentUserWithSession,
-    @RequestClienttInfo() clientInfo: RequestClientInfo,
+    @RequestClientInfoParam() clientInfo: RequestClientInfo,
   ): Promise<CredentialUserLoginResponseDto> {
     await this.loginService.execute({ user, clientInfo, isAdmin: true });
 
@@ -58,7 +58,8 @@ export class CredentialAdminController {
   @Get('login-attempts')
   @ApiOperation({
     summary: 'Login Attempts (로그인 시도 내역 조회)',
-    description: '감사 및 보안 모니터링 목적. email 또는 ipAddress 중 하나는 필수입니다.',
+    description:
+      '감사 및 보안 모니터링 목적. email 또는 ipAddress 중 하나는 필수입니다.',
   })
   @ApiStandardResponse(LoginAttemptResponseDto, {
     status: HttpStatus.OK,

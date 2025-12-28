@@ -5,7 +5,7 @@ import { hashPassword } from 'src/utils/password.util';
 import type { ActivityLogPort } from 'src/platform/activity-log/activity-log.port';
 import { ActivityType } from 'src/platform/activity-log/activity-log.types';
 import { ACTIVITY_LOG } from 'src/platform/activity-log/activity-log.token';
-import { RequestClientInfo } from 'src/platform/http/types/client-info.types';
+import type { RequestClientInfo } from 'src/platform/http/types/client-info.types';
 import { ApiException } from 'src/platform/http/exception/api.exception';
 import { MessageCode } from 'src/platform/http/types/message-codes';
 import { CountryUtil } from 'src/utils/country.util';
@@ -141,4 +141,3 @@ export class RegisterCredentialService {
     };
   }
 }
-

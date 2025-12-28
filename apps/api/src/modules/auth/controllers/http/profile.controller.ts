@@ -16,7 +16,7 @@ import { ProfileService } from '../../application/profile.service';
 import { AuthAll } from 'src/platform/auth/decorators/roles.decorator';
 import { CurrentUser } from 'src/platform/auth/decorators/current-user.decorator';
 import type { CurrentUserWithSession } from 'src/platform/auth/decorators/current-user.decorator';
-import { RequestClienttInfo } from 'src/platform/auth/decorators/request-info.decorator';
+import { RequestClientInfoParam } from 'src/platform/auth/decorators/request-info.decorator';
 import type { RequestClientInfo } from 'src/platform/http/types/client-info.types';
 import { ProfileResponseDto } from '../../dtos/profile.dto';
 import { LocaleResponseDto } from '../../dtos/locale-response.dto';
@@ -54,7 +54,7 @@ export class ProfileController {
   async getMyProfile(
     @CurrentUser() user: CurrentUserWithSession,
     @Session() session: any,
-    @RequestClienttInfo() requestInfo: RequestClientInfo,
+    @RequestClientInfoParam() requestInfo: RequestClientInfo,
   ): Promise<ProfileResponseDto> {
     console.log('🔄 user:', user);
     console.log('🔄 session:', session);
@@ -82,7 +82,7 @@ export class ProfileController {
   async updateLocale(
     @CurrentUser() user: CurrentUserWithSession,
     @Body() updateLocaleDto: UpdateLanguageDto,
-    @RequestClienttInfo() requestInfo: RequestClientInfo,
+    @RequestClientInfoParam() requestInfo: RequestClientInfo,
   ): Promise<LocaleResponseDto> {
     return this.profileService.updateUserLocale(
       user.id,
@@ -119,7 +119,7 @@ export class ProfileController {
   // async updateCountry(
   //   @CurrentUser() user: CurrentUserWithSession,
   //   @Body() updateProfileDto: UpdateCountryDto,
-  //   @RequestClienttInfo() requestInfo: RequestClientInfo,
+  //   @RequestClientInfoParam() requestInfo: RequestClientInfo,
   // ) {
   //   return this.profileService.updateCountry(
   //     user.id,

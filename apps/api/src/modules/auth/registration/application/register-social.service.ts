@@ -4,7 +4,7 @@ import { PrismaService } from 'src/platform/prisma/prisma.service';
 import type { ActivityLogPort } from 'src/platform/activity-log/activity-log.port';
 import { ActivityType } from 'src/platform/activity-log/activity-log.types';
 import { ACTIVITY_LOG } from 'src/platform/activity-log/activity-log.token';
-import { RequestClientInfo } from 'src/platform/http/types/client-info.types';
+import type { RequestClientInfo } from 'src/platform/http/types/client-info.types';
 import { EnvService } from 'src/platform/env/env.service';
 import { VipMembershipService } from 'src/modules/vip/application/vip-membership.service';
 import { SocialType, UserRoleType } from '@repo/database';
@@ -92,9 +92,10 @@ export class RegisterSocialService {
             metadata: {
               provider: socialType.toLowerCase(),
               socialId: socialUser.socialId,
-              name: socialUser.firstName && socialUser.lastName
-                ? `${socialUser.firstName} ${socialUser.lastName}`
-                : undefined,
+              name:
+                socialUser.firstName && socialUser.lastName
+                  ? `${socialUser.firstName} ${socialUser.lastName}`
+                  : undefined,
               picture: socialUser.picture,
             },
           },
@@ -120,10 +121,7 @@ export class RegisterSocialService {
       //   });
       // }
       if (!existingUser) {
-        throw new ApiException(
-          MessageCode.INTERNAL_SERVER_ERROR,
-          500,
-        );
+        throw new ApiException(MessageCode.INTERNAL_SERVER_ERROR, 500);
       }
       user = existingUser;
     }
@@ -135,4 +133,3 @@ export class RegisterSocialService {
     };
   }
 }
-

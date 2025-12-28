@@ -6,7 +6,7 @@ import {
 } from 'src/platform/http/decorators/api-response.decorator';
 import { CurrentUser } from 'src/platform/auth/decorators/current-user.decorator';
 import type { CurrentUserWithSession } from 'src/platform/auth/decorators/current-user.decorator';
-import { RequestClienttInfo } from 'src/platform/auth/decorators/request-info.decorator';
+import { RequestClientInfoParam } from 'src/platform/auth/decorators/request-info.decorator';
 import type { RequestClientInfo } from 'src/platform/http/types/client-info.types';
 import { PromotionService } from '../application/promotion.service';
 import {
@@ -42,7 +42,7 @@ export class PromotionController {
   async getActivePromotions(
     @CurrentUser() user: CurrentUserWithSession,
     @Query('language') language?: string,
-    @RequestClienttInfo() requestInfo?: RequestClientInfo,
+    @RequestClientInfoParam() requestInfo?: RequestClientInfo,
   ): Promise<PromotionResponseDto[]> {
     const promotions = await this.promotionService.getActivePromotions(
       user.id,
@@ -82,7 +82,7 @@ export class PromotionController {
     @Param('id') id: string,
     @CurrentUser() user: CurrentUserWithSession,
     @Query('language') language?: string,
-    @RequestClienttInfo() requestInfo?: RequestClientInfo,
+    @RequestClientInfoParam() requestInfo?: RequestClientInfo,
   ): Promise<PromotionResponseDto> {
     const promotion = await this.promotionService.getPromotionById(
       parseInt(id),
@@ -122,7 +122,7 @@ export class PromotionController {
   })
   async getMyPromotions(
     @CurrentUser() user: CurrentUserWithSession,
-    @RequestClienttInfo() requestInfo?: RequestClientInfo,
+    @RequestClientInfoParam() requestInfo?: RequestClientInfo,
   ): Promise<UserPromotionResponseDto[]> {
     const history = await this.promotionService.getUserPromotions(user.id);
 

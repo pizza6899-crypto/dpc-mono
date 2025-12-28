@@ -17,7 +17,7 @@ import { extractClientInfo } from '../../http/utils/request-info.util';
  * }
  * ```
  */
-export const RequestClienttInfo = createParamDecorator(
+export const RequestClientInfoParam = createParamDecorator(
   (
     data: keyof RequestClientInfo | undefined,
     ctx: ExecutionContext,

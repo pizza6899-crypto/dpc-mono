@@ -559,4 +559,3 @@ describe('RegistrationUser Entity', () => {
     });
   });
 });
-

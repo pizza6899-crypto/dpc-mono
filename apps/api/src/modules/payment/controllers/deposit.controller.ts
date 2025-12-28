@@ -25,7 +25,7 @@ import type { CurrentUserWithSession } from 'src/platform/auth/decorators/curren
 import type { ActivityLogPort } from 'src/platform/activity-log/activity-log.port';
 import { ACTIVITY_LOG } from 'src/platform/activity-log/activity-log.token';
 import { Inject } from '@nestjs/common';
-import { RequestClienttInfo } from 'src/platform/auth/decorators/request-info.decorator';
+import { RequestClientInfoParam } from 'src/platform/auth/decorators/request-info.decorator';
 import type { RequestClientInfo } from 'src/platform/http/types';
 
 @ApiTags('입금 (Deposit)')
@@ -57,7 +57,7 @@ export class DepositController {
   async createDeposit(
     @Body() createDepositRequest: CreateDepositRequestDto,
     @CurrentUser() user: CurrentUserWithSession,
-    @RequestClienttInfo() clientInfo: RequestClientInfo,
+    @RequestClientInfoParam() clientInfo: RequestClientInfo,
   ): Promise<CreateDepositResponseDto> {
     return await this.depositService.createDeposit(
       user.id,

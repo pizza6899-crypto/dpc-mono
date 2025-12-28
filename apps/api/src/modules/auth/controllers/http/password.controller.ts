@@ -15,7 +15,7 @@ import {
 } from '../../../../platform/http/decorators/api-response.decorator';
 import { Public } from 'src/platform/auth/decorators/roles.decorator';
 import { AuthAll } from 'src/platform/auth/decorators/roles.decorator';
-import { RequestClienttInfo } from 'src/platform/auth/decorators/request-info.decorator';
+import { RequestClientInfoParam } from 'src/platform/auth/decorators/request-info.decorator';
 import type { RequestClientInfo } from 'src/platform/http/types/client-info.types';
 import { CurrentUser } from 'src/platform/auth/decorators/current-user.decorator';
 import type { CurrentUserWithSession } from 'src/platform/auth/decorators/current-user.decorator';
@@ -55,7 +55,7 @@ export class PasswordController {
     description: 'Password reset email sent successfully',
   })
   async requestPasswordReset(
-    @RequestClienttInfo() requestInfo: RequestClientInfo,
+    @RequestClientInfoParam() requestInfo: RequestClientInfo,
     @Body() passwordResetRequestDto: PasswordResetRequestDto,
   ): Promise<PasswordResponseDto> {
     await this.passwordService.requestPasswordReset(
@@ -85,7 +85,7 @@ export class PasswordController {
     description: 'Password reset successfully',
   })
   async resetPassword(
-    @RequestClienttInfo() requestInfo: RequestClientInfo,
+    @RequestClientInfoParam() requestInfo: RequestClientInfo,
     @Body() passwordResetDto: PasswordResetDto,
   ): Promise<PasswordResponseDto> {
     await this.passwordService.resetPassword(
@@ -116,7 +116,7 @@ export class PasswordController {
     description: 'Password changed successfully',
   })
   async changePassword(
-    @RequestClienttInfo() requestInfo: RequestClientInfo,
+    @RequestClientInfoParam() requestInfo: RequestClientInfo,
     @CurrentUser() user: CurrentUserWithSession,
     @Body() passwordChangeDto: PasswordChangeDto,
   ): Promise<PasswordResponseDto> {

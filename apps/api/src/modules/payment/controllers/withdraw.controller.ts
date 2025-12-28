@@ -24,7 +24,7 @@ import type { ActivityLogPort } from 'src/platform/activity-log/activity-log.por
 import { ActivityType } from 'src/platform/activity-log/activity-log.types';
 import { ACTIVITY_LOG } from 'src/platform/activity-log/activity-log.token';
 import { Inject } from '@nestjs/common';
-import { RequestClienttInfo } from 'src/platform/auth/decorators/request-info.decorator';
+import { RequestClientInfoParam } from 'src/platform/auth/decorators/request-info.decorator';
 import type { RequestClientInfo } from 'src/platform/http/types';
 
 @ApiTags('출금 (Withdraw)')
@@ -56,7 +56,7 @@ export class WithdrawController {
   async createWithdraw(
     @Body() createWithdrawRequest: CreateWithdrawRequestDto,
     @CurrentUser() user: CurrentUserWithSession,
-    @RequestClienttInfo() clientInfo: RequestClientInfo,
+    @RequestClientInfoParam() clientInfo: RequestClientInfo,
   ): Promise<CreateWithdrawResponseDto> {
     try {
       // const result = await this.withdrawService.createWithdraw(

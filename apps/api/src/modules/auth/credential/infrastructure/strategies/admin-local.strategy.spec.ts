@@ -12,8 +12,12 @@ import {
   type CredentialUserRepositoryPort,
 } from '../../ports/out';
 import { CredentialUser } from '../../domain/model/credential-user.entity';
-import { LoginAttempt, LoginAttemptResult, LoginFailureReason } from '../../domain';
-import { AuthenticatedUser } from 'src/platform/auth/types/auth.types';
+import {
+  LoginAttempt,
+  LoginAttemptResult,
+  LoginFailureReason,
+} from '../../domain';
+import type { AuthenticatedUser } from 'src/platform/auth/types/auth.types';
 import { ApiException } from 'src/platform/http/exception/api.exception';
 import { MessageCode } from 'src/platform/http/types';
 import { UserStatus, UserRoleType } from '@repo/database';
@@ -114,7 +118,11 @@ describe('CredentialAdminLocalStrategy', () => {
       verifyService.execute.mockResolvedValue(mockAuthenticatedUser);
 
       // Act
-      const result = await strategy.validate(mockRequest, mockEmail, mockPassword);
+      const result = await strategy.validate(
+        mockRequest,
+        mockEmail,
+        mockPassword,
+      );
 
       // Assert
       expect(result).toEqual(mockAuthenticatedUser);
@@ -241,4 +249,3 @@ describe('CredentialAdminLocalStrategy', () => {
     });
   });
 });
-

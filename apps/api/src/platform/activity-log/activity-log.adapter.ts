@@ -3,7 +3,7 @@ import { PrismaService } from '../prisma/prisma.service';
 import { ActivityLogPort } from './activity-log.port';
 import { ActivityLogData, ActivityStatus } from './activity-log.types';
 import { nowUtc } from 'src/utils/date.util';
-import { RequestClientInfo } from '../http/types/client-info.types';
+import type { RequestClientInfo } from 'src/platform/http/types/client-info.types';
 
 @Injectable()
 export class ActivityLogAdapter implements ActivityLogPort {

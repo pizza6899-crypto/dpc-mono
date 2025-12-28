@@ -35,4 +35,3 @@ export class RegistrationPolicy {
     return existingUser === null;
   }
 }
-
