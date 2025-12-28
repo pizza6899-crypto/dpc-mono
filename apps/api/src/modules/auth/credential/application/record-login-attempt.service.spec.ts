@@ -26,10 +26,6 @@ describe('RecordLoginAttemptService', () => {
   beforeEach(async () => {
     const mockRepository: jest.Mocked<LoginAttemptRepositoryPort> = {
       create: jest.fn(),
-      findByUid: jest.fn(),
-      getByUid: jest.fn(),
-      findById: jest.fn(),
-      getById: jest.fn(),
       listRecent: jest.fn(),
     };
 

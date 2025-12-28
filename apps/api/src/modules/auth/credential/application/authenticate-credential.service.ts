@@ -1,5 +1,4 @@
 import { Injectable, Inject, HttpStatus } from '@nestjs/common';
-import { Transactional } from '@nestjs-cls/transactional';
 import { VerifyCredentialService } from './verify-credential.service';
 import { FindLoginAttemptsService } from './find-login-attempts.service';
 import { RecordLoginAttemptService } from './record-login-attempt.service';
@@ -41,7 +40,6 @@ export class AuthenticateCredentialService {
     private readonly userRepository: CredentialUserRepositoryPort,
   ) {}
 
-  @Transactional()
   async execute({
     email,
     password,
@@ -54,7 +52,8 @@ export class AuthenticateCredentialService {
       limit: 5,
     });
 
-    if (this.policy.isAccountLocked(recentAttempts)) {
+    // 비활성화
+    if (false && this.policy.isAccountLocked(recentAttempts)) {
       // 계정 잠김 시도 기록
       await this.recordService.execute({
         email,

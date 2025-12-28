@@ -21,7 +21,7 @@
     "db:reset": "pnpm -F @repo/database reset",
     "db:deploy": "pnpm -F @repo/database deploy",
     "db:seed": "pnpm -F @repo/database seed",
-    "db:studio": "pnpm -F @repo/database exec prisma studio"
+    "db:studio": "pnpm -F @repo/database studio"
   },
   "devDependencies": {
     "@types/node": "^25.0.3",
