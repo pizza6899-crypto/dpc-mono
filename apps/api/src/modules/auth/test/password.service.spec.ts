@@ -6,7 +6,7 @@ import { MailService } from 'src/platform/mail/mail.service';
 import { EnvService } from 'src/platform/env/env.service';
 import { ACTIVITY_LOG } from 'src/platform/activity-log/activity-log.token';
 import type { ActivityLogPort } from 'src/platform/activity-log/activity-log.port';
-import { TokenType, UserStatus } from '@prisma/client';
+import { TokenType, UserStatus } from '@repo/database';
 import { ApiException } from 'src/platform/http/exception/api.exception';
 import { MessageCode } from 'src/platform/http/types/message-codes';
 import type { RequestClientInfo } from 'src/platform/http/types';

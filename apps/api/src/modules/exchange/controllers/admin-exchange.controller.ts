@@ -9,7 +9,7 @@ import { ApiTags, ApiOperation, ApiResponse } from '@nestjs/swagger';
 import { ExchangeRateService } from '../application/exchange-rate.service';
 import { SessionAuthGuard } from 'src/platform/auth/guards/session-auth.guard';
 import { RequireRoles } from 'src/platform/auth/decorators/roles.decorator';
-import { UserRoleType } from '@prisma/client';
+import { UserRoleType } from '@repo/database';
 import { Throttle } from 'src/platform/throttle/decorators/throttle.decorator';
 import { ThrottleScope } from 'src/platform/throttle/types/throttle.types';
 

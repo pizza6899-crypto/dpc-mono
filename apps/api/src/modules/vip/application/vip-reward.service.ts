@@ -1,16 +1,16 @@
 import { Injectable, Logger } from '@nestjs/common';
 import { PrismaService } from 'src/platform/prisma/prisma.service';
 import { ConcurrencyService } from 'src/platform/concurrency/concurrency.service';
-import { Decimal } from '@prisma/client/runtime/library';
-import { TransactionType, TransactionStatus } from '@prisma/client';
+import { TransactionType, TransactionStatus } from '@repo/database';
 import { nowUtc } from 'src/utils/date.util';
 import { WALLET_CURRENCIES } from 'src/utils/currency.util';
+import { Prisma } from '@repo/database';
 
 // VIP 레벨 타입 정의
 interface VipLevelForReward {
-  levelUpBonus: Decimal;
+  levelUpBonus: Prisma.Decimal;
   nameKey: string;
-  compRate: Decimal;
+  compRate: Prisma.Decimal;
 }
 
 @Injectable()

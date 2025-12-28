@@ -10,7 +10,7 @@ import {
   WhitecliffApiService,
 } from 'src/modules/casino/whitecliff/infrastructure/whitecliff-api.service';
 import { Logger, OnApplicationShutdown } from '@nestjs/common';
-import { GameReplayType, Language } from '@prisma/client';
+import { GameReplayType, Language } from '@repo/database';
 import { GamingCurrencyCode } from 'src/utils/currency.util';
 
 @Processor(QueueNames.WHITECLIFF_FETCH_GAME_RESULT_URL)

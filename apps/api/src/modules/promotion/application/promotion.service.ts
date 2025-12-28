@@ -1,7 +1,6 @@
 import { Injectable, Logger } from '@nestjs/common';
 import { PrismaService } from 'src/platform/prisma/prisma.service';
-import { PromotionTargetType } from '@prisma/client';
-import { Decimal } from '@prisma/client/runtime/library';
+import { Prisma, PromotionTargetType } from '@repo/database';
 import { UserPromotionResponseDto } from '../dtos/promotion.dto';
 import { ApiException } from 'src/platform/http/exception/api.exception';
 import { MessageCode } from 'src/platform/http/types/message-codes';
@@ -107,7 +106,7 @@ export class PromotionService {
   async canApplyPromotion(
     userId: string,
     promotionId: number,
-    depositAmount: Decimal,
+    depositAmount: Prisma.Decimal,
   ): Promise<{ canApply: boolean; reason?: string }> {
     const promotion = await this.prisma.promotion.findUnique({
       where: { id: promotionId },

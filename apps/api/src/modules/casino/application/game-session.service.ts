@@ -6,8 +6,8 @@ import {
   GameAggregatorType,
   ExchangeCurrencyCode,
   Prisma,
-} from '@prisma/client';
-import { GameSession } from '@prisma/client';
+} from '@repo/database';
+import { GameSession } from '@repo/database';
 import { nowUtc } from 'src/utils/date.util';
 
 @Injectable()

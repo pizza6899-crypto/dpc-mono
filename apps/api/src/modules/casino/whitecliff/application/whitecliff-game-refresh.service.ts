@@ -13,7 +13,7 @@ import {
   GameCategory,
   Language,
   GameProvider,
-} from '@prisma/client';
+} from '@repo/database';
 import { toLanguageEnum } from 'src/utils/language.util';
 import { GAMING_CURRENCIES } from 'src/utils/currency.util';
 

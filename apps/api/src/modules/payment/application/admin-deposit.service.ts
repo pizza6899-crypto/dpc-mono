@@ -2,7 +2,7 @@
 import { Injectable, HttpStatus, Logger } from '@nestjs/common';
 import { Inject } from '@nestjs/common';
 import { PrismaService } from '../../../platform/prisma/prisma.service';
-import { Prisma, DepositDetailStatus, TransactionStatus } from '@prisma/client';
+import { Prisma, DepositDetailStatus, TransactionStatus } from '@repo/database';
 import { RollingService } from '../../rolling/application/rolling.service';
 import { ApiException } from 'src/platform/http/exception/api.exception';
 import { MessageCode } from 'src/platform/http/types';

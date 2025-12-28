@@ -1,7 +1,7 @@
 // src/modules/affiliate/commission/application/get-wallet-balance.service.spec.ts
 import type { TestingModule } from '@nestjs/testing';
 import { Test } from '@nestjs/testing';
-import { ExchangeCurrencyCode, Prisma } from '@prisma/client';
+import { ExchangeCurrencyCode, Prisma } from '@repo/database';
 import { GetWalletBalanceService } from './get-wallet-balance.service';
 import { AFFILIATE_WALLET_REPOSITORY } from '../ports/out/affiliate-wallet.repository.token';
 import type { AffiliateWalletRepositoryPort } from '../ports/out/affiliate-wallet.repository.port';

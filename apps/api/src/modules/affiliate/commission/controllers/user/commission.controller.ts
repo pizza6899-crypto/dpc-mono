@@ -18,7 +18,7 @@ import { CurrentUser } from 'src/platform/auth/decorators/current-user.decorator
 import type { CurrentUserWithSession } from 'src/platform/auth/decorators/current-user.decorator';
 import { RequestClienttInfo } from 'src/platform/auth/decorators/request-info.decorator';
 import type { RequestClientInfo } from 'src/platform/http/types/client-info.types';
-import { Prisma } from '@prisma/client';
+import { Prisma } from '@repo/database';
 import { FindCommissionsService } from '../../application/find-commissions.service';
 import { FindCommissionByIdService } from '../../application/find-commission-by-id.service';
 import { GetWalletBalanceService } from '../../application/get-wallet-balance.service';

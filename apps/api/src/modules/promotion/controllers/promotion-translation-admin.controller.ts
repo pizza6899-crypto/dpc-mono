@@ -10,7 +10,7 @@ import {
 } from '@nestjs/common';
 import { ApiTags, ApiOperation } from '@nestjs/swagger';
 import { RequireRoles } from 'src/platform/auth/decorators/roles.decorator';
-import { UserRoleType } from '@prisma/client';
+import { UserRoleType } from '@repo/database';
 import { CurrentUser } from 'src/platform/auth/decorators/current-user.decorator';
 import type { CurrentUserWithSession } from 'src/platform/auth/decorators/current-user.decorator';
 import { RequestClienttInfo } from 'src/platform/auth/decorators/request-info.decorator';

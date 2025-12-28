@@ -18,7 +18,7 @@ import {
   GameCategory,
   GameProvider,
   Language,
-} from '@prisma/client';
+} from '@repo/database';
 import {
   GamingCurrencyCode,
   WalletCurrencyCode,

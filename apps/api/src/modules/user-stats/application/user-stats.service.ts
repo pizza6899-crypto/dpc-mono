@@ -1,5 +1,5 @@
 import { Injectable } from '@nestjs/common';
-import { Prisma } from '@prisma/client';
+import { Prisma } from '@repo/database';
 import { PrismaService } from 'src/platform/prisma/prisma.service';
 import { WalletCurrencyCode } from 'src/utils/currency.util';
 

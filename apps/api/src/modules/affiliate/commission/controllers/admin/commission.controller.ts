@@ -20,8 +20,8 @@ import { RequestClienttInfo } from 'src/platform/auth/decorators/request-info.de
 import type { RequestClientInfo } from 'src/platform/http/types/client-info.types';
 import { SessionAuthGuard } from 'src/platform/auth/guards/session-auth.guard';
 import { RequireRoles } from 'src/platform/auth/decorators/roles.decorator';
-import { UserRoleType } from '@prisma/client';
-import { Prisma } from '@prisma/client';
+import { UserRoleType } from '@repo/database';
+import { Prisma } from '@repo/database';
 import { FindCommissionByIdService } from '../../application/find-commission-by-id.service';
 import { SetCustomRateService } from '../../application/set-custom-rate.service';
 import { ResetCustomRateService } from '../../application/reset-custom-rate.service';

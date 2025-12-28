@@ -2,7 +2,7 @@
 import { Injectable, Logger, HttpStatus } from '@nestjs/common';
 import { CreateDepositRequestDto } from '../dtos/create-deposit-request.dto';
 import { CreateDepositResponseDto } from '../dtos/create-deposit-response.dto';
-import { DepositMethodType, UserRoleType } from '@prisma/client';
+import { DepositMethodType, UserRoleType } from '@repo/database';
 import { ConcurrencyService } from '../../../platform/concurrency/concurrency.service';
 import { UserValidationService } from 'src/platform/user-validation/user-validation.service';
 import { ApiException } from 'src/platform/http/exception/api.exception';

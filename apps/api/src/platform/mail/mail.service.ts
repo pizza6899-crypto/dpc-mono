@@ -4,7 +4,7 @@ import { EnvService } from '../env/env.service';
 import { SendMailOptions } from './mail.types';
 import { PrismaService } from '../prisma/prisma.service';
 import { nowUtc } from 'src/utils/date.util';
-import { EmailStatus, EmailType } from '@prisma/client';
+import { EmailStatus, EmailType } from '@repo/database';
 
 @Injectable()
 export class MailService {

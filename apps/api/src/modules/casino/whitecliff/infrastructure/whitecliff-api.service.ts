@@ -4,7 +4,7 @@ import { EnvService } from 'src/platform/env/env.service';
 import { firstValueFrom } from 'rxjs';
 import { WhitecliffConfig } from 'src/platform/env/env.types';
 import axios from 'axios';
-import { GameProvider, Language } from '@prisma/client';
+import { GameProvider, Language } from '@repo/database';
 import { WhitecliffMapperService } from './whitecliff-mapper.service';
 import { GamingCurrencyCode } from 'src/utils/currency.util';
 

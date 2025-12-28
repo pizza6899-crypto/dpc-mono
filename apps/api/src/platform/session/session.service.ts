@@ -7,7 +7,7 @@ import {
   SessionInfo,
   UserSessionWithInfo,
 } from './session.types';
-import { UserStatus } from '@prisma/client';
+import { UserStatus } from '@repo/database';
 import { RequestClientInfo } from '../http/types';
 import { nowUtc } from 'src/utils/date.util';
 

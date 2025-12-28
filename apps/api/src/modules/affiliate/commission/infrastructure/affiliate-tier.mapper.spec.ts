@@ -1,5 +1,5 @@
 // src/modules/affiliate/commission/infrastructure/affiliate-tier.mapper.spec.ts
-import { AffiliateTierLevel, Prisma } from '@prisma/client';
+import { AffiliateTierLevel, Prisma } from '@repo/database';
 import { AffiliateTier } from '../domain';
 import { AffiliateTierMapper } from './affiliate-tier.mapper';
 

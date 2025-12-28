@@ -4,7 +4,7 @@ import {
   ExchangeCurrencyCode,
   GameCategory,
   Prisma,
-} from '@prisma/client';
+} from '@repo/database';
 import { AffiliateCommission } from './affiliate-commission.entity';
 import {
   CommissionNotAvailableException,

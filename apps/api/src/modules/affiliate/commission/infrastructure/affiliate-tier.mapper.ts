@@ -1,6 +1,6 @@
 // src/modules/affiliate/commission/infrastructure/affiliate-tier.mapper.ts
 import { Injectable } from '@nestjs/common';
-import { AffiliateTierLevel, Prisma } from '@prisma/client';
+import { AffiliateTierLevel, Prisma } from '@repo/database';
 import { AffiliateTier } from '../domain';
 
 /**

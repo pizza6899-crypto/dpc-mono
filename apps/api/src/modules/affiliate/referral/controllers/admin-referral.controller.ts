@@ -11,7 +11,7 @@ import {
 import { ApiTags, ApiOperation, ApiParam } from '@nestjs/swagger';
 import { SessionAuthGuard } from 'src/platform/auth/guards/session-auth.guard';
 import { RequireRoles } from 'src/platform/auth/decorators/roles.decorator';
-import { UserRoleType } from '@prisma/client';
+import { UserRoleType } from '@repo/database';
 import {
   ApiStandardResponse,
   ApiStandardErrors,

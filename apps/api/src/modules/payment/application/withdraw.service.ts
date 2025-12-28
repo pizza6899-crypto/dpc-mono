@@ -13,7 +13,7 @@ import {
   TransactionType,
   TransactionStatus,
   WithdrawDetailStatus,
-} from '@prisma/client';
+} from '@repo/database';
 import { nowUtcMinus } from 'src/utils/date.util';
 import { WALLET_CURRENCIES } from 'src/utils/currency.util';
 import type { ActivityLogPort } from 'src/platform/activity-log/activity-log.port';

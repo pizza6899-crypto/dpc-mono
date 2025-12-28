@@ -2,7 +2,7 @@
 import { Injectable } from '@nestjs/common';
 import { PassportSerializer } from '@nestjs/passport';
 import { PrismaService } from '../../prisma/prisma.service';
-import { UserStatus } from '@prisma/client';
+import { UserStatus } from '@repo/database';
 import { AuthenticatedUser } from '../types/auth.types';
 import { SessionService } from '../../session/session.service';
 

@@ -1,7 +1,7 @@
 // src/modules/user-stats/test/user-stats.service.spec.ts
 import type { TestingModule } from '@nestjs/testing';
 import { Test } from '@nestjs/testing';
-import { Prisma, ExchangeCurrencyCode } from '@prisma/client';
+import { Prisma, ExchangeCurrencyCode } from '@repo/database';
 import { PrismaService } from 'src/platform/prisma/prisma.service';
 import { UserStatsService } from '../application/user-stats.service';
 

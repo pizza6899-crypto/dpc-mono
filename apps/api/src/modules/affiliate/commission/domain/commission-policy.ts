@@ -1,5 +1,5 @@
 // src/modules/affiliate/commission/domain/commission-policy.ts
-import { AffiliateTierLevel, CommissionStatus, Prisma } from '@prisma/client';
+import { AffiliateTierLevel, CommissionStatus, Prisma } from '@repo/database';
 import {
   InvalidCommissionRateException,
   InsufficientBalanceException,

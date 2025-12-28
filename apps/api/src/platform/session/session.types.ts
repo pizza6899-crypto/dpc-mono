@@ -1,5 +1,5 @@
 // src/platform/session/session.types.ts
-import type { UserSession } from '@prisma/client';
+import type { UserSession } from '@repo/database';
 import type { RequestClientInfo } from '../http/types/client-info.types';
 
 export interface CreateSessionDto {

@@ -37,7 +37,7 @@ import {
   GameAggregatorType,
   Prisma,
   TransactionStatus,
-} from '@prisma/client';
+} from '@repo/database';
 import { getCasinoErrorCode } from '../../whitecliff/utils/whitecliff-error-response.util';
 import { CasinoRefundService } from '../../application/casino-refund.service';
 import { parseDateStringOrThrow } from 'src/utils/date.util';

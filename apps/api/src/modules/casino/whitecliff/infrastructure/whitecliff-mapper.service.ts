@@ -1,7 +1,7 @@
 // infrastructure/whitecliff-mapper.service.ts
 
 import { Injectable } from '@nestjs/common';
-import { GameProvider, GameCategory } from '@prisma/client';
+import { GameProvider, GameCategory } from '@repo/database';
 import { GamingCurrencyCode } from 'src/utils/currency.util';
 
 @Injectable()

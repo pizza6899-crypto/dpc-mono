@@ -13,7 +13,7 @@ import { AuthenticatedUser } from 'src/platform/auth/types/auth.types';
 import { VipMembershipService } from 'src/modules/vip/application/vip-membership.service';
 import { RegisterDto } from '../dtos/register.dto';
 import { AuthResponseDto } from '../dtos/auth-response.dto';
-import { UserRoleType, UserStatus } from '@prisma/client';
+import { UserRoleType, UserStatus } from '@repo/database';
 import { EnvService } from 'src/platform/env/env.service';
 import { LinkReferralService } from 'src/modules/affiliate/referral/application/link-referral.service';
 import { Logger } from '@nestjs/common';

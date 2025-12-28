@@ -13,9 +13,9 @@ import { RedisService } from '../../../../platform/redis/redis.service';
 import {
   GameAggregatorType,
   GameProvider,
+  Prisma,
   TransactionStatus,
-} from '@prisma/client';
-import { Decimal } from '@prisma/client/runtime/library';
+} from '@repo/database';
 import { GamingCurrencyCode } from 'src/utils/currency.util';
 
 @Injectable()
@@ -215,8 +215,8 @@ export class WhitecliffPushedBetHistoryScheduler {
           await this.prismaService.gameRound.update({
             where: { id: gameTransaction.id },
             data: {
-              totalPushAmount: new Decimal(pushedBet.total_pushed_amt),
-              tieBetAmount: new Decimal(pushedBet.tie_amt),
+              totalPushAmount: new Prisma.Decimal(pushedBet.total_pushed_amt),
+              tieBetAmount: new Prisma.Decimal(pushedBet.tie_amt),
             },
           });
         }
@@ -303,8 +303,8 @@ export class WhitecliffPushedBetHistoryScheduler {
         await this.prismaService.gameRound.update({
           where: { id: tx.id },
           data: {
-            totalPushAmount: new Decimal(0),
-            tieBetAmount: new Decimal(0),
+            totalPushAmount: new Prisma.Decimal(0),
+            tieBetAmount: new Prisma.Decimal(0),
           },
         });
       }

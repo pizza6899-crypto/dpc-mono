@@ -1,6 +1,6 @@
 // src/modules/affiliate/commission/controllers/admin/dto/response/affiliate-tier.response.dto.ts
 import { ApiProperty } from '@nestjs/swagger';
-import { AffiliateTierLevel } from '@prisma/client';
+import { AffiliateTierLevel } from '@repo/database';
 
 export class AffiliateTierResponseDto {
   @ApiProperty({

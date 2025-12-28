@@ -10,7 +10,6 @@ import {
 } from '@nestjs/common';
 import { Request, Response } from 'express';
 import { ErrorResponseDto } from '../types/response.types';
-import { PrismaClientKnownRequestError } from '@prisma/client/runtime/library';
 import { nowUtcIso } from 'src/utils/date.util';
 import { MessageCode } from '../types/message-codes';
 import { ApiException } from './api.exception';
@@ -23,6 +22,7 @@ import {
 } from '../../activity-log/activity-log.types';
 import { RequestClientInfo } from '../types/client-info.types';
 import { nowUtc } from 'src/utils/date.util';
+import { Prisma } from '@repo/database';
 
 @Catch()
 export class HttpExceptionFilter implements ExceptionFilter {
@@ -44,10 +44,11 @@ export class HttpExceptionFilter implements ExceptionFilter {
     let message = ''; // 옵셔널, 클래스 밸리데이터 및 특정 개발이나 라우팅에서 사용.
 
     // 🎯 에러 타입별 메시지 코드 매핑
-    if (exception instanceof PrismaClientKnownRequestError) {
+    if (exception instanceof Prisma.PrismaClientKnownRequestError) {
       status = HttpStatus.BAD_REQUEST;
+      const prismaError = exception as Prisma.PrismaClientKnownRequestError;
 
-      switch (exception.code) {
+      switch (prismaError.code) {
         case 'P2002':
           messageCode = MessageCode.DB_CONSTRAINT_VIOLATION;
           break;

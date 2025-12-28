@@ -1,6 +1,6 @@
 // src/modules/affiliate/commission/application/set-custom-rate.service.ts
 import { Inject, Injectable, Logger } from '@nestjs/common';
-import { AffiliateTierLevel, Prisma } from '@prisma/client';
+import { AffiliateTierLevel, Prisma } from '@repo/database';
 import { AffiliateTier, CommissionPolicy } from '../domain';
 import { AFFILIATE_TIER_REPOSITORY } from '../ports/out/affiliate-tier.repository.token';
 import type { AffiliateTierRepositoryPort } from '../ports/out/affiliate-tier.repository.port';

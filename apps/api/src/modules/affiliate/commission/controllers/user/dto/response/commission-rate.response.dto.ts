@@ -1,6 +1,6 @@
 // src/modules/affiliate/commission/controllers/user/dto/response/commission-rate.response.dto.ts
 import { ApiProperty } from '@nestjs/swagger';
-import { AffiliateTierLevel } from '@prisma/client';
+import { AffiliateTierLevel } from '@repo/database';
 
 export class CommissionRateResponseDto {
   @ApiProperty({

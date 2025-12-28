@@ -12,7 +12,7 @@ import {
   WalletCurrencyCode,
 } from 'src/utils/currency.util';
 import { GameSessionService } from '../../application/game-session.service';
-import { GameAggregatorType } from '@prisma/client';
+import { GameAggregatorType } from '@repo/database';
 import { ACTIVITY_LOG } from 'src/platform/activity-log/activity-log.token';
 import type { ActivityLogPort } from 'src/platform/activity-log/activity-log.port';
 import { ActivityType } from 'src/platform/activity-log/activity-log.types';

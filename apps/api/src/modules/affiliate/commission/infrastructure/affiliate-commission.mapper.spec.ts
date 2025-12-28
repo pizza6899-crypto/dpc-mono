@@ -4,7 +4,7 @@ import {
   ExchangeCurrencyCode,
   GameCategory,
   Prisma,
-} from '@prisma/client';
+} from '@repo/database';
 import { AffiliateCommission } from '../domain';
 import { AffiliateCommissionMapper } from './affiliate-commission.mapper';
 
@@ -216,7 +216,7 @@ describe('AffiliateCommissionMapper', () => {
       expect(prismaModel.wagerAmount.equals(domainEntity.wagerAmount)).toBe(
         true,
       );
-      expect(prismaModel.winAmount?.equals(domainEntity.winAmount!)).toBe(true);
+      expect(prismaModel.winAmount?.equals(domainEntity.winAmount)).toBe(true);
       expect(prismaModel.commission.equals(domainEntity.commission)).toBe(true);
       expect(prismaModel.rateApplied.equals(domainEntity.rateApplied)).toBe(
         true,
@@ -266,7 +266,7 @@ describe('AffiliateCommissionMapper', () => {
       expect(prismaModel.wagerAmount.equals(persistence.wagerAmount)).toBe(
         true,
       );
-      expect(prismaModel.winAmount?.equals(persistence.winAmount!)).toBe(true);
+      expect(prismaModel.winAmount?.equals(persistence.winAmount)).toBe(true);
       expect(prismaModel.commission.equals(persistence.commission)).toBe(true);
       expect(prismaModel.rateApplied.equals(persistence.rateApplied)).toBe(
         true,

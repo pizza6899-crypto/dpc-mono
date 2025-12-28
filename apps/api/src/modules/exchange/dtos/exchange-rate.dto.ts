@@ -1,4 +1,4 @@
-import { ExchangeCurrencyCode } from '@prisma/client';
+import { ExchangeCurrencyCode } from '@repo/database';
 import { ApiProperty, ApiPropertyOptional } from '@nestjs/swagger';
 import {
   IsEnum,

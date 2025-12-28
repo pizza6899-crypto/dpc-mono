@@ -14,7 +14,7 @@ import {
   GameCategory,
   AffiliateTierLevel,
   Prisma,
-} from '@prisma/client';
+} from '@repo/database';
 import { AffiliateCommission, AffiliateWallet } from '../../domain';
 import { IdUtil } from 'src/utils/id.util';
 

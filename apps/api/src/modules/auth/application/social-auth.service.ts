@@ -10,7 +10,7 @@ import {
   GoogleAuthUrlResponseDto,
   SocialAuthResponseDto,
 } from '../dtos/social-auth.dto';
-import { SocialType } from '@prisma/client';
+import { SocialType } from '@repo/database';
 import { WALLET_CURRENCIES } from 'src/utils/currency.util';
 
 @Injectable()

@@ -12,7 +12,7 @@ import { Logger, OnApplicationShutdown } from '@nestjs/common';
 import { ApiException } from 'src/platform/http/exception/api.exception';
 import { MessageCode } from 'src/platform/http/types';
 import { HttpStatusCode } from 'axios';
-import { GameReplayType } from '@prisma/client';
+import { GameReplayType } from '@repo/database';
 import { GamingCurrencyCode } from 'src/utils/currency.util';
 
 @Processor(QueueNames.DCS_FETCH_GAME_REPLAY_URL, {

@@ -6,7 +6,7 @@ import {
   ExchangeCurrencyCode,
   GameCategory,
   Prisma,
-} from '@prisma/client';
+} from '@repo/database';
 import { FindCommissionsService } from './find-commissions.service';
 import { AFFILIATE_COMMISSION_REPOSITORY } from '../ports/out/affiliate-commission.repository.token';
 import type { AffiliateCommissionRepositoryPort } from '../ports/out/affiliate-commission.repository.port';

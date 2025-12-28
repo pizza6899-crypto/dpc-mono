@@ -1,7 +1,7 @@
 // src/modules/affiliate/commission/infrastructure/affiliate-tier.repository.spec.ts
 import type { Transaction } from '@nestjs-cls/transactional';
 import type { TransactionalAdapterPrisma } from '@nestjs-cls/transactional-adapter-prisma';
-import { AffiliateTierLevel, Prisma } from '@prisma/client';
+import { AffiliateTierLevel, Prisma } from '@repo/database';
 import { AffiliateTier, TierNotFoundException } from '../domain';
 import type { AffiliateTierMapper } from './affiliate-tier.mapper';
 import { AffiliateTierRepository } from './affiliate-tier.repository';

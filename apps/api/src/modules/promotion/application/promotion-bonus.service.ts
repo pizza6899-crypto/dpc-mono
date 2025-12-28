@@ -1,8 +1,7 @@
 import { Injectable, Logger } from '@nestjs/common';
 import { PrismaService } from 'src/platform/prisma/prisma.service';
 import { RollingService } from 'src/modules/rolling/application/rolling.service';
-import { Decimal } from '@prisma/client/runtime/library';
-import { Prisma } from '@prisma/client';
+import { Prisma } from '@repo/database';
 import { ApiException } from 'src/platform/http/exception/api.exception';
 import { MessageCode } from 'src/platform/http/types/message-codes';
 import { HttpStatus } from '@nestjs/common';
@@ -11,10 +10,7 @@ import { HttpStatus } from '@nestjs/common';
 export class PromotionBonusService {
   private readonly logger = new Logger(PromotionBonusService.name);
 
-  constructor(
-    private readonly prisma: PrismaService,
-    private readonly rollingService: RollingService,
-  ) {}
+  constructor(private readonly rollingService: RollingService) {}
 
   /**
    * 프로모션 보너스 지급
@@ -28,11 +24,11 @@ export class PromotionBonusService {
     tx: Prisma.TransactionClient,
     userId: string,
     promotionId: number,
-    depositAmount: Decimal,
+    depositAmount: Prisma.Decimal,
     depositDetailId: bigint,
   ): Promise<{
     userPromotion: any;
-    bonusAmount: Decimal;
+    bonusAmount: Prisma.Decimal;
     rollingCreated: boolean;
   }> {
     // 프로모션 조회
@@ -49,7 +45,7 @@ export class PromotionBonusService {
     }
 
     // 보너스 금액 계산
-    let bonusAmount = new Decimal(0);
+    let bonusAmount = new Prisma.Decimal(0);
     if (promotion.bonusType === 'PERCENTAGE' && promotion.bonusRate) {
       bonusAmount = depositAmount.mul(promotion.bonusRate);
     }

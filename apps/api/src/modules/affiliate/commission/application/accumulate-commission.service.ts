@@ -1,6 +1,6 @@
 // src/modules/affiliate/commission/application/accumulate-commission.service.ts
 import { Injectable, Logger } from '@nestjs/common';
-import { ExchangeCurrencyCode, GameCategory, Prisma } from '@prisma/client';
+import { ExchangeCurrencyCode, GameCategory, Prisma } from '@repo/database';
 import { AffiliateCommission } from '../domain';
 import { CalculateCommissionService } from './calculate-commission.service';
 import { Transactional } from '@nestjs-cls/transactional';

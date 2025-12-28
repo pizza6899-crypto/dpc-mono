@@ -14,7 +14,7 @@ import {
 } from '../dtos/game-launch.dto';
 import { GameInfoDto, GameListRequestDto } from '../dtos/game-list.dto';
 import { WhitecliffGameService } from '../whitecliff/application/whitecliff-game.service';
-import { GameAggregatorType, Prisma } from '@prisma/client';
+import { GameAggregatorType, Prisma } from '@repo/database';
 import { DcsGameService } from '../dcs/application/dcs-game.service';
 import { EnvService } from 'src/platform/env/env.service';
 

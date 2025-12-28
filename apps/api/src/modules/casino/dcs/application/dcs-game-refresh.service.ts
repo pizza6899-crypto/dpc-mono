@@ -8,8 +8,7 @@ import {
   GameProvider,
   Language,
   GameCategory,
-} from '@prisma/client';
-import { Decimal } from '@prisma/client/runtime/library';
+} from '@repo/database';
 import { DcsResponseCode } from '../constants/dcs-response-codes';
 import { mockResponse1 } from './dc-mock1';
 

@@ -1,7 +1,6 @@
 // src/modules/rolling/dtos/rolling.dto.ts
 import { ApiProperty } from '@nestjs/swagger';
-import { Decimal } from '@prisma/client/runtime/library';
-import { RollingStatus, RollingSourceType } from '@prisma/client';
+import { RollingStatus, RollingSourceType } from '@repo/database';
 
 export class RollingResponseDto {
   @ApiProperty()

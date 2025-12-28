@@ -1,9 +1,8 @@
 // src/modules/rolling/application/rolling.service.ts
 import { Injectable, Logger } from '@nestjs/common';
 import { PrismaService } from 'src/platform/prisma/prisma.service';
-import { Decimal } from '@prisma/client/runtime/library';
 import { ConcurrencyService } from 'src/platform/concurrency/concurrency.service';
-import { Prisma, RollingSourceType, RollingStatus } from '@prisma/client';
+import { Prisma, RollingSourceType, RollingStatus } from '@repo/database';
 
 @Injectable()
 export class RollingService {
@@ -25,14 +24,14 @@ export class RollingService {
   async createDepositRolling(
     tx: Prisma.TransactionClient,
     userId: string,
-    depositAmount: Decimal,
+    depositAmount: Prisma.Decimal,
     depositDetailId: bigint,
-    rollingMultiplier: Decimal = new Decimal(1.0),
-    cancellationThreshold?: Decimal,
+    rollingMultiplier: Prisma.Decimal = new Prisma.Decimal(1.0),
+    cancellationThreshold?: Prisma.Decimal,
   ) {
     const requiredAmount = depositAmount.mul(rollingMultiplier);
     const threshold =
-      cancellationThreshold ?? depositAmount.mul(new Decimal(0.1)); // 기본 10% 이하 시 소멸
+      cancellationThreshold ?? depositAmount.mul(new Prisma.Decimal(0.1)); // 기본 10% 이하 시 소멸
 
     const rolling = await tx.rolling.create({
       data: {
@@ -40,7 +39,7 @@ export class RollingService {
         sourceType: RollingSourceType.DEPOSIT,
         depositDetailId: depositDetailId,
         requiredAmount,
-        currentAmount: new Decimal(0),
+        currentAmount: new Prisma.Decimal(0),
         depositAmount,
         cancellationBalanceThreshold: threshold,
         status: RollingStatus.ACTIVE,
@@ -60,10 +59,10 @@ export class RollingService {
   async createPromotionRolling(
     tx: Prisma.TransactionClient,
     userId: string,
-    bonusAmount: Decimal,
+    bonusAmount: Prisma.Decimal,
     userPromotionId: number,
-    rollingMultiplier: Decimal,
-    cancellationThreshold?: Decimal,
+    rollingMultiplier: Prisma.Decimal,
+    cancellationThreshold?: Prisma.Decimal,
   ) {
     const requiredAmount = bonusAmount.mul(rollingMultiplier);
     const threshold = cancellationThreshold ?? bonusAmount;
@@ -75,7 +74,7 @@ export class RollingService {
         userPromotionId,
         bonusAmount,
         requiredAmount,
-        currentAmount: new Decimal(0),
+        currentAmount: new Prisma.Decimal(0),
         cancellationBalanceThreshold: threshold,
         status: RollingStatus.ACTIVE,
       },
@@ -90,8 +89,8 @@ export class RollingService {
    */
   async processRolling(
     userId: string,
-    rollingAmount: Decimal,
-    userBalance: Decimal,
+    rollingAmount: Prisma.Decimal,
+    userBalance: Prisma.Decimal,
   ) {
     return await this.concurrencyService.withUserBalanceLock(
       userId,
@@ -141,7 +140,10 @@ export class RollingService {
             const neededAmount = rolling.requiredAmount.sub(
               rolling.currentAmount,
             );
-            const appliedAmount = Decimal.min(neededAmount, remainingAmount);
+            const appliedAmount = Prisma.Decimal.min(
+              neededAmount,
+              remainingAmount,
+            );
             const newCurrentAmount = rolling.currentAmount.add(appliedAmount);
             remainingAmount = remainingAmount.sub(appliedAmount);
 
@@ -215,11 +217,11 @@ export class RollingService {
 
     const totalRequired = activeRollings.reduce(
       (sum, r) => sum.add(r.requiredAmount),
-      new Decimal(0),
+      new Prisma.Decimal(0),
     );
     const totalCurrent = activeRollings.reduce(
       (sum, r) => sum.add(r.currentAmount),
-      new Decimal(0),
+      new Prisma.Decimal(0),
     );
 
     // RollingResponseDto 형식으로 변환

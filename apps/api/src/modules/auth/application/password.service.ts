@@ -8,7 +8,7 @@ import { RequestClientInfo } from 'src/platform/http/types/client-info.types';
 import { ApiException } from 'src/platform/http/exception/api.exception';
 import { MessageCode } from 'src/platform/http/types/message-codes';
 import { MailService } from 'src/platform/mail/mail.service';
-import { EmailType, TokenType, UserStatus } from '@prisma/client';
+import { EmailType, TokenType, UserStatus } from '@repo/database';
 import { nowUtc, nowUtcPlus } from 'src/utils/date.util';
 import { IdUtil } from 'src/utils/id.util';
 import { EnvService } from 'src/platform/env/env.service';

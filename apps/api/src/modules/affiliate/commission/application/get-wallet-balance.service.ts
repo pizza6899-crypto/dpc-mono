@@ -1,6 +1,6 @@
 // src/modules/affiliate/commission/application/get-wallet-balance.service.ts
 import { Inject, Injectable, Logger } from '@nestjs/common';
-import { ExchangeCurrencyCode } from '@prisma/client';
+import { ExchangeCurrencyCode } from '@repo/database';
 import { AffiliateWallet } from '../domain';
 import { AFFILIATE_WALLET_REPOSITORY } from '../ports/out/affiliate-wallet.repository.token';
 import type { AffiliateWalletRepositoryPort } from '../ports/out/affiliate-wallet.repository.port';

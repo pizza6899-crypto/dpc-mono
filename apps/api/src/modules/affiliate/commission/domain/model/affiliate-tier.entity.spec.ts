@@ -1,5 +1,5 @@
 // src/modules/affiliate/commission/domain/model/affiliate-tier.entity.spec.ts
-import { AffiliateTierLevel, Prisma } from '@prisma/client';
+import { AffiliateTierLevel, Prisma } from '@repo/database';
 import { AffiliateTier } from './affiliate-tier.entity';
 import {
   InvalidCommissionRateException,

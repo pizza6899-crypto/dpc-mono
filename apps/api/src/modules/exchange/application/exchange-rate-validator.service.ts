@@ -1,6 +1,6 @@
 // src/modules/exchange/application/exchange-rate-validator.service.ts
 import { Injectable, Logger } from '@nestjs/common';
-import { ExchangeCurrencyCode, Prisma } from '@prisma/client';
+import { ExchangeCurrencyCode, Prisma } from '@repo/database';
 
 export interface ExchangeRateValidationResult {
   isValid: boolean;

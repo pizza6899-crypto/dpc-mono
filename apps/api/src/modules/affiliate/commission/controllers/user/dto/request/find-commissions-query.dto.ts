@@ -1,7 +1,7 @@
 // src/modules/affiliate/commission/controllers/dto/request/find-commissions-query.dto.ts
 import { ApiPropertyOptional } from '@nestjs/swagger';
 import { IsEnum, IsOptional, IsDateString } from 'class-validator';
-import { CommissionStatus, ExchangeCurrencyCode } from '@prisma/client';
+import { CommissionStatus, ExchangeCurrencyCode } from '@repo/database';
 import { createPaginationQueryDto } from 'src/platform/http/types';
 
 type CommissionSortFields = 'createdAt' | 'updatedAt' | 'settlementDate';

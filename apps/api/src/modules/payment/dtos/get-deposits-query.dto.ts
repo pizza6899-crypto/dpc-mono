@@ -3,7 +3,7 @@ import {
   DepositDetailStatus,
   DepositMethodType,
   ExchangeCurrencyCode,
-} from '@prisma/client';
+} from '@repo/database';
 import { IsDateString, IsEnum, IsOptional, IsString } from 'class-validator';
 import { createPaginationQueryDto } from 'src/platform/http/types/pagination.types';
 

@@ -4,7 +4,7 @@ import { Public } from 'src/platform/auth/decorators/roles.decorator';
 import { ApiStandardErrors } from 'src/platform/http/decorators/api-response.decorator';
 import { DcsApiService } from '../infrastructure/dcs-api.service';
 import { DcsGameRefreshService } from '../application/dcs-game-refresh.service';
-import { GameProvider } from '@prisma/client';
+import { GameProvider } from '@repo/database';
 import { GamingCurrencyCode } from 'src/utils/currency.util';
 
 @Controller('dcs/test')

@@ -10,7 +10,7 @@ import {
   ArrayMinSize,
 } from 'class-validator';
 import { createPaginationQueryDto } from 'src/platform/http/types';
-import { GameCategory, GameProvider, Language } from '@prisma/client';
+import { GameCategory, GameProvider, Language } from '@repo/database';
 
 type GameSortFields = 'createdAt' | 'gameName' | 'categoryName';
 

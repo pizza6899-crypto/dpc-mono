@@ -2,7 +2,7 @@
 import { Injectable, Logger } from '@nestjs/common';
 import { Inject } from '@nestjs/common';
 import { PrismaService } from 'src/platform/prisma/prisma.service';
-import { Prisma } from '@prisma/client';
+import { Prisma } from '@repo/database';
 import { ACTIVITY_LOG } from 'src/platform/activity-log/activity-log.token';
 import type { ActivityLogPort } from 'src/platform/activity-log/activity-log.port';
 import { ActivityType } from 'src/platform/activity-log/activity-log.types';

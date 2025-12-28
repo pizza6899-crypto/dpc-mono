@@ -4,11 +4,12 @@ import {
   OnModuleDestroy,
   Logger,
 } from '@nestjs/common';
-import { PrismaClient, Prisma } from '@prisma/client';
+import { PrismaClient, Prisma } from '@repo/database';
+import { PrismaPg } from '@prisma/adapter-pg';
 import { EnvService } from '../env/env.service';
 import { nowUtc } from 'src/utils/date.util';
 
-@Injectable() // 타입 힌트 추가
+@Injectable()
 export class PrismaService
   extends PrismaClient<Prisma.PrismaClientOptions, 'query'>
   implements OnModuleInit, OnModuleDestroy
@@ -16,8 +17,16 @@ export class PrismaService
   private readonly logger = new Logger(PrismaService.name);
 
   constructor(private readonly envService: EnvService) {
-    // 1. 로그 이벤트를 활성화하도록 설정
+    const connectionString = process.env.DATABASE_URL;
+    if (!connectionString) {
+      throw new Error('DATABASE_URL is not defined in environment variables');
+    }
+
+    const adapter = new PrismaPg({ connectionString });
+
+    // 1. 어댑터와 로그 설정을 함께 전달
     super({
+      adapter,
       log: [
         { emit: 'event', level: 'query' },
         { emit: 'stdout', level: 'error' },
@@ -32,7 +41,7 @@ export class PrismaService
       prismaConfig.slowQueryThresholdMs > 0
     ) {
       this.$on('query', (e: Prisma.QueryEvent) => {
-        // 2. 순환 참조 방지: 로그 저장용 테이블(PrismaQueryLog)에 대한 쿼리는 무시
+        // 2. 순환 참조 방지: 로그 저장용 테이블에 대한 쿼리는 무시
         if (
           e.query.includes('"PrismaQueryLog"') ||
           e.query.includes('prisma_query_logs')
@@ -57,7 +66,6 @@ export class PrismaService
     duration: number;
   }): Promise<void> {
     try {
-      // 3. 비동기 실행 시 컨텍스트 유지를 위해 catch 처리
       await this.prismaQueryLog.create({
         data: {
           query: data.query,

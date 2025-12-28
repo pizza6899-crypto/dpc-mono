@@ -2,11 +2,11 @@
 import { Injectable, Logger } from '@nestjs/common';
 import { PrismaService } from 'src/platform/prisma/prisma.service';
 import { ConcurrencyService } from 'src/platform/concurrency/concurrency.service';
-import { Decimal } from '@prisma/client/runtime/library';
 import { DateTime } from 'luxon';
 import { ApiException } from 'src/platform/http/exception/api.exception';
 import { MessageCode } from 'src/platform/http/types/message-codes';
 import { WALLET_CURRENCIES } from 'src/utils/currency.util';
+import { Prisma } from '@repo/database';
 
 @Injectable()
 export class CompService {
@@ -21,7 +21,11 @@ export class CompService {
    * 콤프 적립 처리 (게임 베팅 시 호출)
    */
   // 'earnComp' 메서드에 날짜 파라미터 추가, 변수명은 earnDate로 함.
-  async earnComp(userId: string, contributionAmount: Decimal, earnDate: Date) {
+  async earnComp(
+    userId: string,
+    contributionAmount: Prisma.Decimal,
+    earnDate: Date,
+  ) {
     if (contributionAmount.lte(0)) return;
 
     const userMembership = await this.prisma.user.findUnique({
@@ -63,8 +67,8 @@ export class CompService {
   // 해당 게임의 comp 포인트 적립을 취소해야함.
   async cancelComp(
     userId: string,
-    contributionAmount: Decimal,
-    compAmount: Decimal,
+    contributionAmount: Prisma.Decimal,
+    compAmount: Prisma.Decimal,
     earnDate: Date,
   ) {
     await this.updateDailyCompEarning(
@@ -282,8 +286,8 @@ export class CompService {
    */
   private async updateDailyCompEarning(
     userId: string,
-    contributionAmount: Decimal,
-    compAmount: Decimal,
+    contributionAmount: Prisma.Decimal,
+    compAmount: Prisma.Decimal,
     earnDate: Date,
   ): Promise<void> {
     try {

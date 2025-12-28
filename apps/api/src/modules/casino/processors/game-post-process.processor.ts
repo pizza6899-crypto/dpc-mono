@@ -6,11 +6,10 @@ import {
 } from '../../../platform/queue/queue.types';
 import { PrismaService } from '../../../platform/prisma/prisma.service';
 import { Logger, OnApplicationShutdown } from '@nestjs/common';
-import { Decimal } from '@prisma/client/runtime/library';
 import { CompService } from '../../comp/application/comp.service';
 import { RollingService } from '../../rolling/application/rolling.service';
 import { VipMembershipService } from '../../vip/application/vip-membership.service';
-import { TransactionStatus } from '@prisma/client';
+import { Prisma, TransactionStatus } from '@repo/database';
 
 @Processor(QueueNames.GAME_POST_PROCESS)
 export class GamePostProcessProcessor
@@ -91,8 +90,8 @@ export class GamePostProcessProcessor
 
         // 2. 베팅 금액 계산 (푸시가 있으면 제외)
         let betAmountForProcessing = gameRound.totalBetAmountInGameCurrency
-          ? new Decimal(gameRound.totalBetAmountInGameCurrency)
-          : new Decimal(0);
+          ? new Prisma.Decimal(gameRound.totalBetAmountInGameCurrency)
+          : new Prisma.Decimal(0);
 
         // 푸시 베팅이 있는 경우 제외
         if (gameRound.totalPushAmount) {
@@ -111,7 +110,7 @@ export class GamePostProcessProcessor
 
         // 3. 기여도 금액 계산
         const contributionRate =
-          gameRound.game?.contributionRate || new Decimal(0);
+          gameRound.game?.contributionRate || new Prisma.Decimal(0);
         const contributionAmount = betAmountForProcessing.mul(contributionRate);
 
         // 4. 콤프 처리
@@ -191,7 +190,7 @@ export class GamePostProcessProcessor
   /**
    * 사용자의 콤프 비율 조회
    */
-  private async getCompRate(userId: string): Promise<Decimal | null> {
+  private async getCompRate(userId: string): Promise<Prisma.Decimal | null> {
     const userMembership = await this.prismaService.user.findUnique({
       where: { id: userId },
       select: {
@@ -208,7 +207,7 @@ export class GamePostProcessProcessor
     });
 
     return userMembership?.VipMembership?.vipLevel?.compRate
-      ? new Decimal(userMembership.VipMembership.vipLevel.compRate)
+      ? new Prisma.Decimal(userMembership.VipMembership.vipLevel.compRate)
       : null;
   }
   async onApplicationShutdown(signal?: string) {

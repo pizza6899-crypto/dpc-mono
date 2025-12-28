@@ -1,5 +1,5 @@
 // src/utils/currency.util.ts
-import { ExchangeCurrencyCode } from '@prisma/client';
+import { ExchangeCurrencyCode } from '@repo/database';
 
 /**
  * 환경 변수에서 월렛 통화 목록을 읽어옵니다.

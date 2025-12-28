@@ -6,7 +6,7 @@ import {
   ExchangeCurrencyCode,
   GameCategory,
   Prisma,
-} from '@prisma/client';
+} from '@repo/database';
 import { AffiliateCommission, CommissionNotFoundException } from '../domain';
 import type { AffiliateCommissionMapper } from './affiliate-commission.mapper';
 import { AffiliateCommissionRepository } from './affiliate-commission.repository';

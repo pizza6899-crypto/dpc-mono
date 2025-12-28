@@ -1,7 +1,7 @@
 // src/modules/exchange/application/exchange-rate-validator.service.spec.ts
 import type { TestingModule } from '@nestjs/testing';
 import { Test } from '@nestjs/testing';
-import { ExchangeCurrencyCode, Prisma } from '@prisma/client';
+import { ExchangeCurrencyCode, Prisma } from '@repo/database';
 import { ExchangeRateValidator } from '../application/exchange-rate-validator.service';
 
 describe('ExchangeRateValidator', () => {

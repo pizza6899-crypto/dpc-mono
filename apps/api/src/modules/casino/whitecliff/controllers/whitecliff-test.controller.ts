@@ -6,7 +6,7 @@ import {
   ApiStandardResponse,
 } from 'src/platform/http/decorators/api-response.decorator';
 import { WhitecliffApiService } from '../infrastructure/whitecliff-api.service';
-import { Language } from '@prisma/client';
+import { Language } from '@repo/database';
 import {
   WhitecliffGameLaunchResponse,
   TransactionResultsResponse,

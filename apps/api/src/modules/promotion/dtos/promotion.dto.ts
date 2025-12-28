@@ -3,7 +3,7 @@ import {
   PromotionTargetType,
   PromotionBonusType,
   PromotionQualificationCondition,
-} from '@prisma/client';
+} from '@repo/database';
 
 export class PromotionResponseDto {
   @ApiProperty()

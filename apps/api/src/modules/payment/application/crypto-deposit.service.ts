@@ -12,7 +12,7 @@ import {
   PaymentProvider,
   TransactionStatus,
   TransactionType,
-} from '@prisma/client';
+} from '@repo/database';
 import { nowUtcMinus } from 'src/utils/date.util';
 import { IdUtil } from 'src/utils/id.util';
 import type { ActivityLogPort } from 'src/platform/activity-log/activity-log.port';

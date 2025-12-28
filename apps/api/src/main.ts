@@ -17,7 +17,7 @@ import { createClient } from 'redis';
 import type { NestExpressApplication } from '@nestjs/platform-express';
 import { join } from 'path';
 import { SchedulerRegistry } from '@nestjs/schedule';
-import { Prisma } from '@prisma/client';
+import { Prisma } from '@repo/database';
 import { AsyncApiModule } from 'nestjs-asyncapi';
 import { AsyncApiDocumentBuilder } from 'nestjs-asyncapi';
 

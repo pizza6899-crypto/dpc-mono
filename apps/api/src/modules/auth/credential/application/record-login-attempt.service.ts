@@ -1,6 +1,6 @@
 import { Inject, Injectable } from '@nestjs/common';
 import { LOGIN_ATTEMPT_REPOSITORY } from '../ports/login-attempt.repository.token';
-import { LoginAttemptRepositoryPort } from '../ports/login-attempt.repository.port';
+import type { LoginAttemptRepositoryPort } from '../ports/login-attempt.repository.port';
 import {
   LoginAttempt,
   LoginAttemptResult,
@@ -20,9 +20,6 @@ export interface RecordLoginAttemptParams {
   isAdmin?: boolean;
 }
 
-/**
- * 로그인 시도 기록 Use Case
- */
 @Injectable()
 export class RecordLoginAttemptService {
   constructor(

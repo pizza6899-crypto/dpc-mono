@@ -7,7 +7,7 @@ import {
   ExchangeCurrencyCode,
   ExchangeRateProvider,
   Prisma,
-} from '@prisma/client';
+} from '@repo/database';
 import { ApiException } from 'src/platform/http/exception/api.exception';
 import { MessageCode } from 'src/platform/http/types';
 import { ExchangeRateService } from '../application/exchange-rate.service';

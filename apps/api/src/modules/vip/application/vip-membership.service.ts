@@ -1,6 +1,5 @@
 import { HttpStatus, Injectable, Logger } from '@nestjs/common';
 import { PrismaService } from 'src/platform/prisma/prisma.service';
-import { Decimal } from '@prisma/client/runtime/library';
 import {
   VipMembershipResponseDto,
   VipHistoryResponseDto,
@@ -8,6 +7,7 @@ import {
 import { ApiException } from 'src/platform/http/exception/api.exception';
 import { MessageCode } from 'src/platform/http/types';
 import { nowUtc } from 'src/utils/date.util';
+import { Prisma } from '@repo/database';
 
 @Injectable()
 export class VipMembershipService {
@@ -184,7 +184,7 @@ export class VipMembershipService {
     }
   }
 
-  async addRolling(userId: string, rollingAmount: Decimal) {
+  async addRolling(userId: string, rollingAmount: Prisma.Decimal) {
     if (rollingAmount.lte(0)) return;
 
     const updatedMembership = await this.prisma.vipMembership.update({
@@ -202,7 +202,7 @@ export class VipMembershipService {
     return updatedMembership.accumulatedRolling;
   }
 
-  async cancelRolling(userId: string, rollingAmount: Decimal) {
+  async cancelRolling(userId: string, rollingAmount: Prisma.Decimal) {
     if (rollingAmount.lte(0)) return;
 
     const updatedMembership = await this.prisma.vipMembership.update({

@@ -1,7 +1,7 @@
 import { HttpStatus } from '@nestjs/common';
-import { Language } from '@prisma/client';
 import { ApiException } from 'src/platform/http/exception/api.exception';
 import { MessageCode } from 'src/platform/http/types';
+import { Language } from '@repo/database';
 
 // src/utils/language.util.ts
 export function toLanguageEnum(code: string): Language {

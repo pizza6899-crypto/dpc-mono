@@ -1,5 +1,5 @@
+import { Prisma } from '@repo/database';
 import type { DcsResponseDataDto } from '../dtos/callback.dto';
-import { Decimal } from '@prisma/client/runtime/library';
 
 /**
  * DCS Seamless Wallet API Response Codes
@@ -121,7 +121,7 @@ export function getDcsResponse(
     }
 
     // Decimal 객체인 경우 number로 변환
-    if (obj instanceof Decimal) {
+    if (obj instanceof Prisma.Decimal) {
       return obj.toDecimalPlaces(6).toNumber();
     }
 

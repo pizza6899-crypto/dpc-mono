@@ -1,7 +1,7 @@
 // src/modules/casino/application/casino-refund.service.ts
 
 import { Injectable, Logger } from '@nestjs/common';
-import { GameAggregatorType, Prisma, TransactionStatus } from '@prisma/client';
+import { GameAggregatorType, Prisma, TransactionStatus } from '@repo/database';
 import { CasinoBalanceService } from './casino-balance.service';
 import { CasinoErrorCode } from '../constants/casino-error-codes';
 import {

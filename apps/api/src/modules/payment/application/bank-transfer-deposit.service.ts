@@ -6,13 +6,12 @@ import { CreateDepositResponseDto } from '../dtos/create-deposit-response.dto';
 import {
   DepositDetailStatus,
   DepositMethodType,
-  ExchangeCurrencyCode,
   FeePaidByType,
   PaymentProvider,
   Prisma,
   TransactionStatus,
   TransactionType,
-} from '@prisma/client';
+} from '@repo/database';
 import { nowUtcMinus } from 'src/utils/date.util';
 import type { ActivityLogPort } from 'src/platform/activity-log/activity-log.port';
 import { ACTIVITY_LOG } from 'src/platform/activity-log/activity-log.token';

@@ -9,7 +9,7 @@ import {
 } from 'class-validator';
 import { ApiProperty, ApiPropertyOptional } from '@nestjs/swagger';
 import type { WalletCurrencyCode } from 'src/utils/currency.util';
-import { DepositMethodType, ExchangeCurrencyCode } from '@prisma/client';
+import { DepositMethodType, ExchangeCurrencyCode } from '@repo/database';
 
 export class CreateDepositRequestDto {
   @ApiPropertyOptional({
