@@ -7,7 +7,6 @@ import { QueueModule } from 'src/platform/queue/queue.module';
 import { PassportModule } from '@nestjs/passport';
 import { SessionSerializer } from 'src/platform/auth/strategies/session.serializer';
 import { VipModule } from '../vip/vip.module';
-import { AdminLocalAuthGuard } from 'src/platform/auth/guards/admin-local-auth.guard';
 import { MailModule } from 'src/platform/mail/mail.module';
 import { SessionModule } from 'src/platform/session/session.module';
 import { AffiliateReferralModule } from '../affiliate/referral/referral.module';
@@ -31,7 +30,6 @@ import { RegistrationModule } from './registration/registration.module';
   providers: [
     GoogleStrategy,
     SessionSerializer,
-    AdminLocalAuthGuard,
   ],
   exports: [PassportModule],
 })
