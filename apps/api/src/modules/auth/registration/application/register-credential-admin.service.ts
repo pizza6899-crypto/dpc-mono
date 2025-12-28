@@ -17,28 +17,34 @@ import {
   ReferralCodeInactiveException,
   ReferralCodeExpiredException,
 } from 'src/modules/affiliate/referral/domain/referral.exception';
-import { UserRoleType } from '@repo/database';
+import { UserRoleType, UserStatus } from '@repo/database';
 import { RegistrationPolicy } from '../domain';
 import { USER_REPOSITORY, type UserRepositoryPort } from '../ports/out';
 
-export interface RegisterCredentialParams {
+export interface RegisterCredentialAdminParams {
   email: string;
   password: string;
+  role?: UserRoleType;
+  country?: string;
+  timezone?: string;
   referralCode?: string;
   requestInfo: RequestClientInfo;
 }
 
-export interface RegisterCredentialResult {
+export interface RegisterCredentialAdminResult {
   id: string;
   email: string;
+  role: UserRoleType;
+  status: UserStatus;
 }
 
 /**
- * 일반 회원가입 Use Case (이메일/비밀번호)
+ * 어드민용 일반 회원가입 Use Case (이메일/비밀번호)
+ * 어드민이 명시적으로 사용자를 생성할 때 사용
  */
 @Injectable()
-export class RegisterCredentialService {
-  private readonly logger = new Logger(RegisterCredentialService.name);
+export class RegisterCredentialAdminService {
+  private readonly logger = new Logger(RegisterCredentialAdminService.name);
 
   constructor(
     @Inject(ACTIVITY_LOG) private readonly activityLog: ActivityLogPort,
@@ -53,10 +59,17 @@ export class RegisterCredentialService {
 
   @Transactional()
   async execute(
-    params: RegisterCredentialParams,
-  ): Promise<RegisterCredentialResult> {
-    const { email, password, referralCode, requestInfo } = params;
-    const { country, timezone } = requestInfo;
+    params: RegisterCredentialAdminParams,
+  ): Promise<RegisterCredentialAdminResult> {
+    const {
+      email,
+      password,
+      role = UserRoleType.USER,
+      country: providedCountry,
+      timezone: providedTimezone,
+      referralCode,
+      requestInfo,
+    } = params;
 
     // 1. 이메일 중복 확인 (도메인 레이어 사용)
     const existingUser = await this.userRepository.findByEmail(email);
@@ -91,6 +104,10 @@ export class RegisterCredentialService {
     }
 
     // 3. 국가코드 기반 타임존 및 통화 설정
+    // 어드민이 명시적으로 지정한 경우 우선 사용, 없으면 requestInfo 사용
+    const country = providedCountry || requestInfo.country;
+    const timezone = providedTimezone || requestInfo.timezone;
+
     const countryConfig = CountryUtil.getCountryConfig({
       countryCode: country,
       timezone,
@@ -99,14 +116,14 @@ export class RegisterCredentialService {
     // 4. 비밀번호 해싱
     const passwordHash = await hashPassword(password);
 
-    // 5. 사용자 생성
+    // 5. 사용자 생성 (어드민이 지정한 role 사용)
     const user = await this.userRepository.create({
       email,
       passwordHash,
       socialId: null,
       socialType: null,
-      role: UserRoleType.USER,
-      agentId: null, // TODO: 에이전트 코드 확인 및 에이전트 아이디 조회 로직 구현 필요
+      role, // 어드민이 지정한 role 사용
+      agentId: null,
       country: country,
       timezone: countryConfig.timezone,
       balances: this.envService.wallet.allowedCurrencies.map((currency) => ({
@@ -114,8 +131,10 @@ export class RegisterCredentialService {
       })),
     });
 
-    // 6. VIP 멤버십 생성
-    await this.vipMembershipService.getOrCreateMembership(user.id);
+    // 6. VIP 멤버십 생성 (일반 사용자만)
+    if (role === UserRoleType.USER) {
+      await this.vipMembershipService.getOrCreateMembership(user.id);
+    }
 
     // 7. 레퍼럴 코드가 제공된 경우 레퍼럴 관계 생성
     // 사전 검증을 통과했으므로 여기서는 셀프 추천 및 중복 레퍼럴만 체크됨
@@ -130,13 +149,18 @@ export class RegisterCredentialService {
       });
     }
 
-    // 8. 액티비티 로그 (부가 기능이므로 실패해도 회원가입은 성공 처리)
+    // 8. 액티비티 로그
     try {
       await this.activityLog.logSuccess(
         {
           userId: user.id,
           activityType: ActivityType.USER_REGISTER,
-          description: 'User registered successfully',
+          description: `User registered by admin - role: ${role}`,
+          metadata: {
+            registeredBy: 'admin',
+            role,
+            country,
+          },
         },
         requestInfo,
       );
@@ -151,6 +175,9 @@ export class RegisterCredentialService {
     return {
       id: user.id,
       email: user.email,
+      role: user.role,
+      status: user.status,
     };
   }
 }
+

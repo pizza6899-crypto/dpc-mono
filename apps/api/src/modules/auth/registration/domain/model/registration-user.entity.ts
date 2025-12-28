@@ -83,9 +83,29 @@ export class RegistrationUser {
   /**
    * 소셜 회원가입 사용자인지 확인
    * @returns socialId가 있으면 true
+   * @note isCredentialUser()와 상호 배타적이지 않을 수 있습니다.
+   *       passwordHash와 socialId가 모두 null이면 둘 다 false를 반환합니다.
    */
   isSocialUser(): boolean {
     return this.socialId !== null;
+  }
+
+  /**
+   * 사용자 타입이 유효한지 확인
+   * @returns 일반 회원가입 또는 소셜 회원가입 중 하나만 true여야 함
+   * @description passwordHash와 socialId의 조합이 비즈니스 규칙에 맞는지 검증합니다.
+   *              - 일반 회원가입: passwordHash !== null && socialId === null
+   *              - 소셜 회원가입: passwordHash === null && socialId !== null
+   */
+  hasValidUserType(): boolean {
+    // 일반 회원가입: passwordHash가 있고 socialId가 없어야 함
+    const isValidCredential =
+      this.passwordHash !== null && this.socialId === null;
+    // 소셜 회원가입: passwordHash가 없고 socialId가 있어야 함
+    const isValidSocial =
+      this.passwordHash === null && this.socialId !== null;
+
+    return isValidCredential || isValidSocial;
   }
 
   /**

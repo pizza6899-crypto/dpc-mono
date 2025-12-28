@@ -558,4 +558,138 @@ describe('RegistrationUser Entity', () => {
       expect(socialUser.isSocialUser()).toBe(true);
     });
   });
+
+  describe('Edge Cases', () => {
+    it('passwordHash와 socialId가 모두 null인 경우 isCredentialUser와 isSocialUser가 모두 false를 반환해야 함', () => {
+      const user = RegistrationUser.create({
+        id: mockId,
+        email: mockEmail,
+        passwordHash: null,
+        socialId: null,
+        socialType: null,
+        status: UserStatus.ACTIVE,
+        role: UserRoleType.USER,
+      });
+
+      expect(user.isCredentialUser()).toBe(false);
+      expect(user.isSocialUser()).toBe(false);
+    });
+
+    it('passwordHash와 socialId가 모두 있는 경우 (잘못된 상태) isCredentialUser는 false, isSocialUser는 true를 반환해야 함', () => {
+      const user = RegistrationUser.create({
+        id: mockId,
+        email: mockEmail,
+        passwordHash: mockPasswordHash,
+        socialId: mockSocialId,
+        socialType: mockSocialType,
+        status: UserStatus.ACTIVE,
+        role: UserRoleType.USER,
+      });
+
+      // socialId가 있으면 isCredentialUser는 false
+      expect(user.isCredentialUser()).toBe(false);
+      // socialId가 있으면 isSocialUser는 true
+      expect(user.isSocialUser()).toBe(true);
+    });
+
+    it('socialId가 있지만 socialType이 null인 경우 isSocialUser가 true를 반환해야 함', () => {
+      const user = RegistrationUser.create({
+        id: mockId,
+        email: mockEmail,
+        passwordHash: null,
+        socialId: mockSocialId,
+        socialType: null, // null인 경우
+        status: UserStatus.ACTIVE,
+        role: UserRoleType.USER,
+      });
+
+      expect(user.isSocialUser()).toBe(true);
+    });
+  });
+
+  describe('hasValidUserType', () => {
+    it('일반 회원가입 사용자는 유효한 사용자 타입을 가져야 함', () => {
+      const user = RegistrationUser.create({
+        id: mockId,
+        email: mockEmail,
+        passwordHash: mockPasswordHash,
+        socialId: null,
+        socialType: null,
+        status: UserStatus.ACTIVE,
+        role: UserRoleType.USER,
+      });
+
+      expect(user.hasValidUserType()).toBe(true);
+    });
+
+    it('소셜 회원가입 사용자는 유효한 사용자 타입을 가져야 함', () => {
+      const user = RegistrationUser.create({
+        id: mockId,
+        email: mockEmail,
+        passwordHash: null,
+        socialId: mockSocialId,
+        socialType: mockSocialType,
+        status: UserStatus.ACTIVE,
+        role: UserRoleType.USER,
+      });
+
+      expect(user.hasValidUserType()).toBe(true);
+    });
+
+    it('passwordHash와 socialId가 모두 null인 경우 유효하지 않은 사용자 타입이어야 함', () => {
+      const user = RegistrationUser.create({
+        id: mockId,
+        email: mockEmail,
+        passwordHash: null,
+        socialId: null,
+        socialType: null,
+        status: UserStatus.ACTIVE,
+        role: UserRoleType.USER,
+      });
+
+      expect(user.hasValidUserType()).toBe(false);
+    });
+
+    it('passwordHash와 socialId가 모두 있는 경우 유효하지 않은 사용자 타입이어야 함', () => {
+      const user = RegistrationUser.create({
+        id: mockId,
+        email: mockEmail,
+        passwordHash: mockPasswordHash,
+        socialId: mockSocialId,
+        socialType: mockSocialType,
+        status: UserStatus.ACTIVE,
+        role: UserRoleType.USER,
+      });
+
+      expect(user.hasValidUserType()).toBe(false);
+    });
+
+    it('fromPersistence로 생성한 일반 회원가입 사용자는 유효한 사용자 타입을 가져야 함', () => {
+      const user = RegistrationUser.fromPersistence({
+        id: mockId,
+        email: mockEmail,
+        passwordHash: mockPasswordHash,
+        socialId: null,
+        socialType: null,
+        status: UserStatus.ACTIVE,
+        role: UserRoleType.USER,
+      });
+
+      expect(user.hasValidUserType()).toBe(true);
+    });
+
+    it('fromPersistence로 생성한 소셜 회원가입 사용자는 유효한 사용자 타입을 가져야 함', () => {
+      const user = RegistrationUser.fromPersistence({
+        id: mockId,
+        email: mockEmail,
+        passwordHash: null,
+        socialId: mockSocialId,
+        socialType: mockSocialType,
+        status: UserStatus.ACTIVE,
+        role: UserRoleType.USER,
+      });
+
+      expect(user.hasValidUserType()).toBe(true);
+    });
+  });
 });

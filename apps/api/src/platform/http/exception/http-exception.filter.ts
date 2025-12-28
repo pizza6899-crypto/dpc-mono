@@ -92,6 +92,44 @@ export class HttpExceptionFilter implements ExceptionFilter {
           status = HttpStatus.BAD_REQUEST;
           messageCode = MessageCode.VALIDATION_ERROR;
       }
+    } else if (
+      exception instanceof Error &&
+      exception.constructor.name.includes('Referral')
+    ) {
+      // Domain Exception 처리 (Referral 관련)
+      const exceptionName = exception.constructor.name;
+      message = exception.message;
+
+      switch (exceptionName) {
+        case 'ReferralCodeNotFoundException':
+          status = HttpStatus.NOT_FOUND;
+          messageCode = MessageCode.REFERRAL_CODE_NOT_FOUND;
+          break;
+        case 'ReferralCodeInactiveException':
+          status = HttpStatus.BAD_REQUEST;
+          messageCode = MessageCode.REFERRAL_CODE_INVALID_FORMAT;
+          break;
+        case 'ReferralCodeExpiredException':
+          status = HttpStatus.BAD_REQUEST;
+          messageCode = MessageCode.REFERRAL_CODE_INVALID_FORMAT;
+          break;
+        case 'SelfReferralException':
+          status = HttpStatus.BAD_REQUEST;
+          messageCode = MessageCode.REFERRAL_CODE_INVALID_FORMAT;
+          break;
+        case 'DuplicateReferralException':
+          status = HttpStatus.CONFLICT;
+          messageCode = MessageCode.REFERRAL_CODE_ALREADY_EXISTS;
+          break;
+        case 'ReferralException':
+          // 일반적인 ReferralException
+          status = HttpStatus.BAD_REQUEST;
+          messageCode = MessageCode.REFERRAL_CODE_INVALID_FORMAT;
+          break;
+        default:
+          status = HttpStatus.BAD_REQUEST;
+          messageCode = MessageCode.VALIDATION_ERROR;
+      }
     } else if (exception instanceof HttpException) {
       status = exception.getStatus();
       const exceptionResponse = exception.getResponse();
