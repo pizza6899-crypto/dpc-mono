@@ -41,9 +41,9 @@ describe('AffiliateReferralModule Integration', () => {
   let findCodeByCodeService: FindCodeByCodeService;
 
   // 테스트용 사용자 및 코드 데이터
-  let affiliateUser: { id: string; email: string | null };
-  let subUser1: { id: string; email: string | null };
-  let subUser2: { id: string; email: string | null };
+  let affiliateUser: { id: bigint; email: string | null };
+  let subUser1: { id: bigint; email: string | null };
+  let subUser2: { id: bigint; email: string | null };
   let affiliateCode: { id: string; code: string };
 
   beforeAll(async () => {
@@ -155,7 +155,7 @@ describe('AffiliateReferralModule Integration', () => {
     // 테스트용 어플리에이트 코드 생성
     affiliateCode = await prismaService.affiliateCode.create({
       data: {
-        userId: affiliateUser.id,
+        userId: affiliateUser.id, // bigint
         code: 'TESTCODE123',
         campaignName: 'Test Campaign',
         isActive: true,
@@ -320,7 +320,7 @@ describe('AffiliateReferralModule Integration', () => {
       // 두 번째 코드 생성
       const code2 = await prismaService.affiliateCode.create({
         data: {
-          userId: affiliateUser.id,
+          userId: affiliateUser.id, // bigint
           code: 'TESTCODE456',
           campaignName: 'Test Campaign 2',
           isActive: true,
@@ -377,7 +377,7 @@ describe('AffiliateReferralModule Integration', () => {
   });
 
   describe('AdminReferralService', () => {
-    let adminUser: { id: string; email: string | null };
+    let adminUser: { id: bigint; email: string | null };
 
     beforeEach(async () => {
       adminUser = await prismaService.user.create({
@@ -440,7 +440,7 @@ describe('AffiliateReferralModule Integration', () => {
         {
           page: 1,
           limit: 10,
-          affiliateId: affiliateUser.id,
+          affiliateId: affiliateUser.id, // bigint
         },
         adminUser.id,
         {
@@ -475,7 +475,7 @@ describe('AffiliateReferralModule Integration', () => {
         {
           page: 1,
           limit: 10,
-          subUserId: subUser1.id,
+          subUserId: subUser1.id, // bigint
         },
         adminUser.id,
         {
@@ -593,9 +593,9 @@ describe('AffiliateReferralModule Integration', () => {
     it('should map Prisma model to domain entity', () => {
       const prismaModel = {
         id: 'test-id',
-        affiliateId: affiliateUser.id,
+        affiliateId: affiliateUser.id, // bigint
         codeId: affiliateCode.id,
-        subUserId: subUser1.id,
+        subUserId: subUser1.id, // bigint
         ipAddress: '192.168.1.1',
         deviceFingerprint: 'fingerprint123',
         userAgent: 'Mozilla/5.0',
@@ -620,9 +620,9 @@ describe('AffiliateReferralModule Integration', () => {
     it('should map domain entity to Prisma model', () => {
       const domainEntity = Referral.fromPersistence({
         id: 'test-id',
-        affiliateId: affiliateUser.id,
+        affiliateId: affiliateUser.id, // bigint
         codeId: affiliateCode.id,
-        subUserId: subUser1.id,
+        subUserId: subUser1.id, // bigint
         ipAddress: '192.168.1.1',
         deviceFingerprint: 'fingerprint123',
         userAgent: 'Mozilla/5.0',
@@ -646,9 +646,9 @@ describe('AffiliateReferralModule Integration', () => {
     it('should handle null values in tracking data', () => {
       const prismaModel = {
         id: 'test-id',
-        affiliateId: affiliateUser.id,
+        affiliateId: affiliateUser.id, // bigint
         codeId: affiliateCode.id,
-        subUserId: subUser1.id,
+        subUserId: subUser1.id, // bigint
         ipAddress: null,
         deviceFingerprint: null,
         userAgent: null,
@@ -668,9 +668,9 @@ describe('AffiliateReferralModule Integration', () => {
   describe('ReferralRepository Integration', () => {
     it('should create referral through repository', async () => {
       const referral = await repository.create({
-        affiliateId: affiliateUser.id,
+        affiliateId: affiliateUser.id, // bigint
         codeId: affiliateCode.id,
-        subUserId: subUser1.id,
+        subUserId: subUser1.id, // bigint
         ipAddress: '192.168.1.1',
         deviceFingerprint: 'fingerprint123',
         userAgent: 'Mozilla/5.0',
@@ -689,9 +689,9 @@ describe('AffiliateReferralModule Integration', () => {
 
     it('should find referral by id through repository', async () => {
       const created = await repository.create({
-        affiliateId: affiliateUser.id,
+        affiliateId: affiliateUser.id, // bigint
         codeId: affiliateCode.id,
-        subUserId: subUser1.id,
+        subUserId: subUser1.id, // bigint
       });
 
       const found = await repository.findById(created.id);
@@ -707,9 +707,9 @@ describe('AffiliateReferralModule Integration', () => {
 
     it('should get referral by id (throws if not found)', async () => {
       const created = await repository.create({
-        affiliateId: affiliateUser.id,
+        affiliateId: affiliateUser.id, // bigint
         codeId: affiliateCode.id,
-        subUserId: subUser1.id,
+        subUserId: subUser1.id, // bigint
       });
 
       const found = await repository.getById(created.id);
@@ -726,15 +726,15 @@ describe('AffiliateReferralModule Integration', () => {
 
     it('should find referrals by affiliate id', async () => {
       await repository.create({
-        affiliateId: affiliateUser.id,
+        affiliateId: affiliateUser.id, // bigint
         codeId: affiliateCode.id,
-        subUserId: subUser1.id,
+        subUserId: subUser1.id, // bigint
       });
 
       await repository.create({
-        affiliateId: affiliateUser.id,
+        affiliateId: affiliateUser.id, // bigint
         codeId: affiliateCode.id,
-        subUserId: subUser2.id,
+        subUserId: subUser2.id, // bigint
       });
 
       const referrals = await repository.findByAffiliateId(affiliateUser.id);
@@ -746,9 +746,9 @@ describe('AffiliateReferralModule Integration', () => {
 
     it('should find referral by sub user id', async () => {
       const created = await repository.create({
-        affiliateId: affiliateUser.id,
+        affiliateId: affiliateUser.id, // bigint
         codeId: affiliateCode.id,
-        subUserId: subUser1.id,
+        subUserId: subUser1.id, // bigint
       });
 
       const found = await repository.findBySubUserId(subUser1.id);
@@ -766,15 +766,15 @@ describe('AffiliateReferralModule Integration', () => {
     it('should find referrals by code id', async () => {
       // 같은 코드로 여러 레퍼럴 생성
       await repository.create({
-        affiliateId: affiliateUser.id,
+        affiliateId: affiliateUser.id, // bigint
         codeId: affiliateCode.id,
-        subUserId: subUser1.id,
+        subUserId: subUser1.id, // bigint
       });
 
       await repository.create({
-        affiliateId: affiliateUser.id,
+        affiliateId: affiliateUser.id, // bigint
         codeId: affiliateCode.id,
-        subUserId: subUser2.id,
+        subUserId: subUser2.id, // bigint
       });
 
       const referrals = await repository.findByCodeId(affiliateCode.id);
@@ -795,9 +795,9 @@ describe('AffiliateReferralModule Integration', () => {
 
     it('should find referral by affiliate and sub user', async () => {
       const created = await repository.create({
-        affiliateId: affiliateUser.id,
+        affiliateId: affiliateUser.id, // bigint
         codeId: affiliateCode.id,
-        subUserId: subUser1.id,
+        subUserId: subUser1.id, // bigint
       });
 
       const found = await repository.findByAffiliateAndSubUser(
@@ -821,15 +821,15 @@ describe('AffiliateReferralModule Integration', () => {
 
     it('should count referrals by affiliate id', async () => {
       await repository.create({
-        affiliateId: affiliateUser.id,
+        affiliateId: affiliateUser.id, // bigint
         codeId: affiliateCode.id,
-        subUserId: subUser1.id,
+        subUserId: subUser1.id, // bigint
       });
 
       await repository.create({
-        affiliateId: affiliateUser.id,
+        affiliateId: affiliateUser.id, // bigint
         codeId: affiliateCode.id,
-        subUserId: subUser2.id,
+        subUserId: subUser2.id, // bigint
       });
 
       const count = await repository.countByAffiliateId(affiliateUser.id);

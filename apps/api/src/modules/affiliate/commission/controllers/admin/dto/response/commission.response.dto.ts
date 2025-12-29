@@ -30,7 +30,7 @@ export class CommissionResponseDto {
     example: '123',
     type: String,
   })
-  gameRoundId: bigint | null;
+  gameRoundId: string | null;
 
   @ApiProperty({
     description: '베팅 금액',

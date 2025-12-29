@@ -88,8 +88,8 @@ export class ReferralRepository implements ReferralRepositoryPort {
   }
 
   async findByAffiliateAndSubUser(
-    affiliateId: string,
-    subUserId: string,
+    affiliateId: bigint,
+    subUserId: bigint,
   ): Promise<Referral | null> {
     const result = await this.tx.referral.findUnique({
       where: {
@@ -107,7 +107,7 @@ export class ReferralRepository implements ReferralRepositoryPort {
     return this.mapper.toDomain(result);
   }
 
-  async countByAffiliateId(affiliateId: string): Promise<number> {
+  async countByAffiliateId(affiliateId: bigint): Promise<number> {
     return await this.tx.referral.count({
       where: { affiliateId },
     });

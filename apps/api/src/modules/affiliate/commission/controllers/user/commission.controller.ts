@@ -225,7 +225,9 @@ export class AffiliateCommissionController {
       uid: commission.uid,
       affiliateId: commission.affiliateId,
       subUserId: commission.subUserId,
-      gameRoundId: commission.gameRoundId,
+      gameRoundId: commission.gameRoundId
+        ? commission.gameRoundId.toString()
+        : '',
       wagerAmount: commission.wagerAmount.toString(),
       winAmount: commission.winAmount?.toString() || null,
       commission: commission.commission.toString(),

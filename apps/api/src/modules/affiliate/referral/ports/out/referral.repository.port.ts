@@ -43,12 +43,12 @@ export interface ReferralRepositoryPort {
    * 어플리에이트와 피추천인으로 레퍼럴 조회 (중복 체크용)
    */
   findByAffiliateAndSubUser(
-    affiliateId: string,
-    subUserId: string,
+    affiliateId: bigint,
+    subUserId: bigint,
   ): Promise<Referral | null>;
 
   /**
    * 어플리에이트별 레퍼럴 개수 조회
    */
-  countByAffiliateId(affiliateId: string): Promise<number>;
+  countByAffiliateId(affiliateId: bigint): Promise<number>;
 }

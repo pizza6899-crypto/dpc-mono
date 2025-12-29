@@ -28,12 +28,10 @@ describe('AdminReferralController', () => {
 
   const mockReferral: AdminReferralListItemDto = {
     id: 'referral-id',
-    affiliateId: 'affiliate-id',
+    affiliateId: BigInt(1),
     affiliateEmail: 'affiliate@test.com',
-    affiliateNumericId: 1,
-    subUserId: 'sub-user-id',
+    subUserId: BigInt(2),
     subUserEmail: 'subuser@test.com',
-    subUserNumericId: 2,
     codeId: 'code-id',
     code: 'TESTCODE123',
     campaignName: 'Test Campaign',

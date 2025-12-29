@@ -154,10 +154,8 @@ describe('AdminReferralService', () => {
             id: referralId,
             affiliateId,
             affiliateEmail: 'affiliate@example.com',
-            affiliateNumericId: 1,
             subUserId,
             subUserEmail: 'subuser@example.com',
-            subUserNumericId: 2,
             codeId,
             code: 'TESTCODE1',
             campaignName: 'Test Campaign',
@@ -183,14 +181,12 @@ describe('AdminReferralService', () => {
             select: {
               id: true,
               email: true,
-              numericId: true,
             },
           },
           subUser: {
             select: {
               id: true,
               email: true,
-              numericId: true,
             },
           },
           code: {
@@ -457,10 +453,8 @@ describe('AdminReferralService', () => {
         id: referralId,
         affiliateId,
         affiliateEmail: 'affiliate@example.com',
-        affiliateNumericId: 1,
         subUserId,
         subUserEmail: 'subuser@example.com',
-        subUserNumericId: 2,
         codeId,
         code: 'TESTCODE1',
         campaignName: 'Test Campaign',
@@ -478,14 +472,12 @@ describe('AdminReferralService', () => {
             select: {
               id: true,
               email: true,
-              numericId: true,
             },
           },
           subUser: {
             select: {
               id: true,
               email: true,
-              numericId: true,
             },
           },
           code: {

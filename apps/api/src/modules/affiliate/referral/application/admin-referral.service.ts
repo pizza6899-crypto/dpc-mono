@@ -93,14 +93,20 @@ export class AdminReferralService {
       ]);
 
       // Activity Log 기록
+      // BigInt를 문자열로 변환하여 직렬화 가능하게 만듦
+      const serializableFilters = {
+        ...filters,
+        ...(filters.affiliateId && { affiliateId: filters.affiliateId.toString() }),
+        ...(filters.subUserId && { subUserId: filters.subUserId.toString() }),
+      };
       await this.activityLog.logSuccess(
         {
           userId: adminId,
           isAdmin: true,
           activityType: ActivityType.ADMIN_AFFILIATE_LINK_LIST_VIEW,
-          description: `관리자가 레퍼럴 목록을 조회했습니다. (필터: ${JSON.stringify(filters)})`,
+          description: `관리자가 레퍼럴 목록을 조회했습니다. (필터: ${JSON.stringify(serializableFilters)})`,
           metadata: {
-            filters,
+            filters: serializableFilters,
             total,
             page,
             limit,
