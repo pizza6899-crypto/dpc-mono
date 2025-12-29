@@ -52252,6 +52252,10 @@ export namespace Prisma {
     userId: bigint | null
     category: string | null
     action: string | null
+    country: string | null
+    city: string | null
+    isMobile: boolean | null
+    cfRay: string | null
   }
 
   export type ActivityLogMaxAggregateOutputType = {
@@ -52260,6 +52264,10 @@ export namespace Prisma {
     userId: bigint | null
     category: string | null
     action: string | null
+    country: string | null
+    city: string | null
+    isMobile: boolean | null
+    cfRay: string | null
   }
 
   export type ActivityLogCountAggregateOutputType = {
@@ -52268,6 +52276,10 @@ export namespace Prisma {
     userId: number
     category: number
     action: number
+    country: number
+    city: number
+    isMobile: number
+    cfRay: number
     metadata: number
     _all: number
   }
@@ -52287,6 +52299,10 @@ export namespace Prisma {
     userId?: true
     category?: true
     action?: true
+    country?: true
+    city?: true
+    isMobile?: true
+    cfRay?: true
   }
 
   export type ActivityLogMaxAggregateInputType = {
@@ -52295,6 +52311,10 @@ export namespace Prisma {
     userId?: true
     category?: true
     action?: true
+    country?: true
+    city?: true
+    isMobile?: true
+    cfRay?: true
   }
 
   export type ActivityLogCountAggregateInputType = {
@@ -52303,6 +52323,10 @@ export namespace Prisma {
     userId?: true
     category?: true
     action?: true
+    country?: true
+    city?: true
+    isMobile?: true
+    cfRay?: true
     metadata?: true
     _all?: true
   }
@@ -52399,6 +52423,10 @@ export namespace Prisma {
     userId: bigint | null
     category: string
     action: string
+    country: string | null
+    city: string | null
+    isMobile: boolean | null
+    cfRay: string | null
     metadata: JsonValue | null
     _count: ActivityLogCountAggregateOutputType | null
     _avg: ActivityLogAvgAggregateOutputType | null
@@ -52427,6 +52455,10 @@ export namespace Prisma {
     userId?: boolean
     category?: boolean
     action?: boolean
+    country?: boolean
+    city?: boolean
+    isMobile?: boolean
+    cfRay?: boolean
     metadata?: boolean
   }, ExtArgs["result"]["activityLog"]>
 
@@ -52436,6 +52468,10 @@ export namespace Prisma {
     userId?: boolean
     category?: boolean
     action?: boolean
+    country?: boolean
+    city?: boolean
+    isMobile?: boolean
+    cfRay?: boolean
     metadata?: boolean
   }, ExtArgs["result"]["activityLog"]>
 
@@ -52445,6 +52481,10 @@ export namespace Prisma {
     userId?: boolean
     category?: boolean
     action?: boolean
+    country?: boolean
+    city?: boolean
+    isMobile?: boolean
+    cfRay?: boolean
     metadata?: boolean
   }, ExtArgs["result"]["activityLog"]>
 
@@ -52454,10 +52494,14 @@ export namespace Prisma {
     userId?: boolean
     category?: boolean
     action?: boolean
+    country?: boolean
+    city?: boolean
+    isMobile?: boolean
+    cfRay?: boolean
     metadata?: boolean
   }
 
-  export type ActivityLogOmit<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetOmit<"id" | "createdAt" | "userId" | "category" | "action" | "metadata", ExtArgs["result"]["activityLog"]>
+  export type ActivityLogOmit<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetOmit<"id" | "createdAt" | "userId" | "category" | "action" | "country" | "city" | "isMobile" | "cfRay" | "metadata", ExtArgs["result"]["activityLog"]>
 
   export type $ActivityLogPayload<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
     name: "ActivityLog"
@@ -52468,6 +52512,10 @@ export namespace Prisma {
       userId: bigint | null
       category: string
       action: string
+      country: string | null
+      city: string | null
+      isMobile: boolean | null
+      cfRay: string | null
       metadata: Prisma.JsonValue | null
     }, ExtArgs["result"]["activityLog"]>
     composites: {}
@@ -52897,6 +52945,10 @@ export namespace Prisma {
     readonly userId: FieldRef<"ActivityLog", 'BigInt'>
     readonly category: FieldRef<"ActivityLog", 'String'>
     readonly action: FieldRef<"ActivityLog", 'String'>
+    readonly country: FieldRef<"ActivityLog", 'String'>
+    readonly city: FieldRef<"ActivityLog", 'String'>
+    readonly isMobile: FieldRef<"ActivityLog", 'Boolean'>
+    readonly cfRay: FieldRef<"ActivityLog", 'String'>
     readonly metadata: FieldRef<"ActivityLog", 'Json'>
   }
     
@@ -53299,6 +53351,14 @@ export namespace Prisma {
     severity: string | null
     resolved: boolean | null
     resolvedAt: Date | null
+    country: string | null
+    city: string | null
+    bot: boolean | null
+    threat: string | null
+    isMobile: boolean | null
+    cfRay: string | null
+    ip: string | null
+    userAgent: string | null
   }
 
   export type SystemErrorLogMaxAggregateOutputType = {
@@ -53314,6 +53374,14 @@ export namespace Prisma {
     severity: string | null
     resolved: boolean | null
     resolvedAt: Date | null
+    country: string | null
+    city: string | null
+    bot: boolean | null
+    threat: string | null
+    isMobile: boolean | null
+    cfRay: string | null
+    ip: string | null
+    userAgent: string | null
   }
 
   export type SystemErrorLogCountAggregateOutputType = {
@@ -53330,6 +53398,14 @@ export namespace Prisma {
     severity: number
     resolved: number
     resolvedAt: number
+    country: number
+    city: number
+    bot: number
+    threat: number
+    isMobile: number
+    cfRay: number
+    ip: number
+    userAgent: number
     _all: number
   }
 
@@ -53357,6 +53433,14 @@ export namespace Prisma {
     severity?: true
     resolved?: true
     resolvedAt?: true
+    country?: true
+    city?: true
+    bot?: true
+    threat?: true
+    isMobile?: true
+    cfRay?: true
+    ip?: true
+    userAgent?: true
   }
 
   export type SystemErrorLogMaxAggregateInputType = {
@@ -53372,6 +53456,14 @@ export namespace Prisma {
     severity?: true
     resolved?: true
     resolvedAt?: true
+    country?: true
+    city?: true
+    bot?: true
+    threat?: true
+    isMobile?: true
+    cfRay?: true
+    ip?: true
+    userAgent?: true
   }
 
   export type SystemErrorLogCountAggregateInputType = {
@@ -53388,6 +53480,14 @@ export namespace Prisma {
     severity?: true
     resolved?: true
     resolvedAt?: true
+    country?: true
+    city?: true
+    bot?: true
+    threat?: true
+    isMobile?: true
+    cfRay?: true
+    ip?: true
+    userAgent?: true
     _all?: true
   }
 
@@ -53491,6 +53591,14 @@ export namespace Prisma {
     severity: string | null
     resolved: boolean
     resolvedAt: Date | null
+    country: string | null
+    city: string | null
+    bot: boolean | null
+    threat: string | null
+    isMobile: boolean | null
+    cfRay: string | null
+    ip: string | null
+    userAgent: string | null
     _count: SystemErrorLogCountAggregateOutputType | null
     _avg: SystemErrorLogAvgAggregateOutputType | null
     _sum: SystemErrorLogSumAggregateOutputType | null
@@ -53526,6 +53634,14 @@ export namespace Prisma {
     severity?: boolean
     resolved?: boolean
     resolvedAt?: boolean
+    country?: boolean
+    city?: boolean
+    bot?: boolean
+    threat?: boolean
+    isMobile?: boolean
+    cfRay?: boolean
+    ip?: boolean
+    userAgent?: boolean
   }, ExtArgs["result"]["systemErrorLog"]>
 
   export type SystemErrorLogSelectCreateManyAndReturn<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetSelect<{
@@ -53542,6 +53658,14 @@ export namespace Prisma {
     severity?: boolean
     resolved?: boolean
     resolvedAt?: boolean
+    country?: boolean
+    city?: boolean
+    bot?: boolean
+    threat?: boolean
+    isMobile?: boolean
+    cfRay?: boolean
+    ip?: boolean
+    userAgent?: boolean
   }, ExtArgs["result"]["systemErrorLog"]>
 
   export type SystemErrorLogSelectUpdateManyAndReturn<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetSelect<{
@@ -53558,6 +53682,14 @@ export namespace Prisma {
     severity?: boolean
     resolved?: boolean
     resolvedAt?: boolean
+    country?: boolean
+    city?: boolean
+    bot?: boolean
+    threat?: boolean
+    isMobile?: boolean
+    cfRay?: boolean
+    ip?: boolean
+    userAgent?: boolean
   }, ExtArgs["result"]["systemErrorLog"]>
 
   export type SystemErrorLogSelectScalar = {
@@ -53574,9 +53706,17 @@ export namespace Prisma {
     severity?: boolean
     resolved?: boolean
     resolvedAt?: boolean
+    country?: boolean
+    city?: boolean
+    bot?: boolean
+    threat?: boolean
+    isMobile?: boolean
+    cfRay?: boolean
+    ip?: boolean
+    userAgent?: boolean
   }
 
-  export type SystemErrorLogOmit<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetOmit<"id" | "createdAt" | "userId" | "errorCode" | "errorMessage" | "stackTrace" | "metadata" | "path" | "method" | "statusCode" | "severity" | "resolved" | "resolvedAt", ExtArgs["result"]["systemErrorLog"]>
+  export type SystemErrorLogOmit<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetOmit<"id" | "createdAt" | "userId" | "errorCode" | "errorMessage" | "stackTrace" | "metadata" | "path" | "method" | "statusCode" | "severity" | "resolved" | "resolvedAt" | "country" | "city" | "bot" | "threat" | "isMobile" | "cfRay" | "ip" | "userAgent", ExtArgs["result"]["systemErrorLog"]>
 
   export type $SystemErrorLogPayload<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
     name: "SystemErrorLog"
@@ -53595,6 +53735,14 @@ export namespace Prisma {
       severity: string | null
       resolved: boolean
       resolvedAt: Date | null
+      country: string | null
+      city: string | null
+      bot: boolean | null
+      threat: string | null
+      isMobile: boolean | null
+      cfRay: string | null
+      ip: string | null
+      userAgent: string | null
     }, ExtArgs["result"]["systemErrorLog"]>
     composites: {}
   }
@@ -54031,6 +54179,14 @@ export namespace Prisma {
     readonly severity: FieldRef<"SystemErrorLog", 'String'>
     readonly resolved: FieldRef<"SystemErrorLog", 'Boolean'>
     readonly resolvedAt: FieldRef<"SystemErrorLog", 'DateTime'>
+    readonly country: FieldRef<"SystemErrorLog", 'String'>
+    readonly city: FieldRef<"SystemErrorLog", 'String'>
+    readonly bot: FieldRef<"SystemErrorLog", 'Boolean'>
+    readonly threat: FieldRef<"SystemErrorLog", 'String'>
+    readonly isMobile: FieldRef<"SystemErrorLog", 'Boolean'>
+    readonly cfRay: FieldRef<"SystemErrorLog", 'String'>
+    readonly ip: FieldRef<"SystemErrorLog", 'String'>
+    readonly userAgent: FieldRef<"SystemErrorLog", 'String'>
   }
     
 
@@ -54432,6 +54588,12 @@ export namespace Prisma {
     duration: number | null
     success: boolean | null
     errorMessage: string | null
+    country: string | null
+    city: string | null
+    bot: boolean | null
+    threat: string | null
+    cfRay: string | null
+    ip: string | null
   }
 
   export type IntegrationLogMaxAggregateOutputType = {
@@ -54445,6 +54607,12 @@ export namespace Prisma {
     duration: number | null
     success: boolean | null
     errorMessage: string | null
+    country: string | null
+    city: string | null
+    bot: boolean | null
+    threat: string | null
+    cfRay: string | null
+    ip: string | null
   }
 
   export type IntegrationLogCountAggregateOutputType = {
@@ -54460,6 +54628,12 @@ export namespace Prisma {
     duration: number
     success: number
     errorMessage: number
+    country: number
+    city: number
+    bot: number
+    threat: number
+    cfRay: number
+    ip: number
     _all: number
   }
 
@@ -54487,6 +54661,12 @@ export namespace Prisma {
     duration?: true
     success?: true
     errorMessage?: true
+    country?: true
+    city?: true
+    bot?: true
+    threat?: true
+    cfRay?: true
+    ip?: true
   }
 
   export type IntegrationLogMaxAggregateInputType = {
@@ -54500,6 +54680,12 @@ export namespace Prisma {
     duration?: true
     success?: true
     errorMessage?: true
+    country?: true
+    city?: true
+    bot?: true
+    threat?: true
+    cfRay?: true
+    ip?: true
   }
 
   export type IntegrationLogCountAggregateInputType = {
@@ -54515,6 +54701,12 @@ export namespace Prisma {
     duration?: true
     success?: true
     errorMessage?: true
+    country?: true
+    city?: true
+    bot?: true
+    threat?: true
+    cfRay?: true
+    ip?: true
     _all?: true
   }
 
@@ -54617,6 +54809,12 @@ export namespace Prisma {
     duration: number
     success: boolean
     errorMessage: string | null
+    country: string | null
+    city: string | null
+    bot: boolean | null
+    threat: string | null
+    cfRay: string | null
+    ip: string | null
     _count: IntegrationLogCountAggregateOutputType | null
     _avg: IntegrationLogAvgAggregateOutputType | null
     _sum: IntegrationLogSumAggregateOutputType | null
@@ -54651,6 +54849,12 @@ export namespace Prisma {
     duration?: boolean
     success?: boolean
     errorMessage?: boolean
+    country?: boolean
+    city?: boolean
+    bot?: boolean
+    threat?: boolean
+    cfRay?: boolean
+    ip?: boolean
   }, ExtArgs["result"]["integrationLog"]>
 
   export type IntegrationLogSelectCreateManyAndReturn<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetSelect<{
@@ -54666,6 +54870,12 @@ export namespace Prisma {
     duration?: boolean
     success?: boolean
     errorMessage?: boolean
+    country?: boolean
+    city?: boolean
+    bot?: boolean
+    threat?: boolean
+    cfRay?: boolean
+    ip?: boolean
   }, ExtArgs["result"]["integrationLog"]>
 
   export type IntegrationLogSelectUpdateManyAndReturn<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetSelect<{
@@ -54681,6 +54891,12 @@ export namespace Prisma {
     duration?: boolean
     success?: boolean
     errorMessage?: boolean
+    country?: boolean
+    city?: boolean
+    bot?: boolean
+    threat?: boolean
+    cfRay?: boolean
+    ip?: boolean
   }, ExtArgs["result"]["integrationLog"]>
 
   export type IntegrationLogSelectScalar = {
@@ -54696,9 +54912,15 @@ export namespace Prisma {
     duration?: boolean
     success?: boolean
     errorMessage?: boolean
+    country?: boolean
+    city?: boolean
+    bot?: boolean
+    threat?: boolean
+    cfRay?: boolean
+    ip?: boolean
   }
 
-  export type IntegrationLogOmit<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetOmit<"id" | "createdAt" | "userId" | "provider" | "method" | "endpoint" | "statusCode" | "requestBody" | "responseBody" | "duration" | "success" | "errorMessage", ExtArgs["result"]["integrationLog"]>
+  export type IntegrationLogOmit<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetOmit<"id" | "createdAt" | "userId" | "provider" | "method" | "endpoint" | "statusCode" | "requestBody" | "responseBody" | "duration" | "success" | "errorMessage" | "country" | "city" | "bot" | "threat" | "cfRay" | "ip", ExtArgs["result"]["integrationLog"]>
 
   export type $IntegrationLogPayload<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
     name: "IntegrationLog"
@@ -54716,6 +54938,12 @@ export namespace Prisma {
       duration: number
       success: boolean
       errorMessage: string | null
+      country: string | null
+      city: string | null
+      bot: boolean | null
+      threat: string | null
+      cfRay: string | null
+      ip: string | null
     }, ExtArgs["result"]["integrationLog"]>
     composites: {}
   }
@@ -55151,6 +55379,12 @@ export namespace Prisma {
     readonly duration: FieldRef<"IntegrationLog", 'Int'>
     readonly success: FieldRef<"IntegrationLog", 'Boolean'>
     readonly errorMessage: FieldRef<"IntegrationLog", 'String'>
+    readonly country: FieldRef<"IntegrationLog", 'String'>
+    readonly city: FieldRef<"IntegrationLog", 'String'>
+    readonly bot: FieldRef<"IntegrationLog", 'Boolean'>
+    readonly threat: FieldRef<"IntegrationLog", 'String'>
+    readonly cfRay: FieldRef<"IntegrationLog", 'String'>
+    readonly ip: FieldRef<"IntegrationLog", 'String'>
   }
     
 
@@ -56226,6 +56460,10 @@ export namespace Prisma {
     userId: 'userId',
     category: 'category',
     action: 'action',
+    country: 'country',
+    city: 'city',
+    isMobile: 'isMobile',
+    cfRay: 'cfRay',
     metadata: 'metadata'
   };
 
@@ -56245,7 +56483,15 @@ export namespace Prisma {
     statusCode: 'statusCode',
     severity: 'severity',
     resolved: 'resolved',
-    resolvedAt: 'resolvedAt'
+    resolvedAt: 'resolvedAt',
+    country: 'country',
+    city: 'city',
+    bot: 'bot',
+    threat: 'threat',
+    isMobile: 'isMobile',
+    cfRay: 'cfRay',
+    ip: 'ip',
+    userAgent: 'userAgent'
   };
 
   export type SystemErrorLogScalarFieldEnum = (typeof SystemErrorLogScalarFieldEnum)[keyof typeof SystemErrorLogScalarFieldEnum]
@@ -56263,7 +56509,13 @@ export namespace Prisma {
     responseBody: 'responseBody',
     duration: 'duration',
     success: 'success',
-    errorMessage: 'errorMessage'
+    errorMessage: 'errorMessage',
+    country: 'country',
+    city: 'city',
+    bot: 'bot',
+    threat: 'threat',
+    cfRay: 'cfRay',
+    ip: 'ip'
   };
 
   export type IntegrationLogScalarFieldEnum = (typeof IntegrationLogScalarFieldEnum)[keyof typeof IntegrationLogScalarFieldEnum]
@@ -60599,6 +60851,10 @@ export namespace Prisma {
     userId?: BigIntNullableFilter<"ActivityLog"> | bigint | number | null
     category?: StringFilter<"ActivityLog"> | string
     action?: StringFilter<"ActivityLog"> | string
+    country?: StringNullableFilter<"ActivityLog"> | string | null
+    city?: StringNullableFilter<"ActivityLog"> | string | null
+    isMobile?: BoolNullableFilter<"ActivityLog"> | boolean | null
+    cfRay?: StringNullableFilter<"ActivityLog"> | string | null
     metadata?: JsonNullableFilter<"ActivityLog">
   }
 
@@ -60608,6 +60864,10 @@ export namespace Prisma {
     userId?: SortOrderInput | SortOrder
     category?: SortOrder
     action?: SortOrder
+    country?: SortOrderInput | SortOrder
+    city?: SortOrderInput | SortOrder
+    isMobile?: SortOrderInput | SortOrder
+    cfRay?: SortOrderInput | SortOrder
     metadata?: SortOrderInput | SortOrder
   }
 
@@ -60621,6 +60881,10 @@ export namespace Prisma {
     userId?: BigIntNullableFilter<"ActivityLog"> | bigint | number | null
     category?: StringFilter<"ActivityLog"> | string
     action?: StringFilter<"ActivityLog"> | string
+    country?: StringNullableFilter<"ActivityLog"> | string | null
+    city?: StringNullableFilter<"ActivityLog"> | string | null
+    isMobile?: BoolNullableFilter<"ActivityLog"> | boolean | null
+    cfRay?: StringNullableFilter<"ActivityLog"> | string | null
     metadata?: JsonNullableFilter<"ActivityLog">
   }, "id_createdAt">
 
@@ -60630,6 +60894,10 @@ export namespace Prisma {
     userId?: SortOrderInput | SortOrder
     category?: SortOrder
     action?: SortOrder
+    country?: SortOrderInput | SortOrder
+    city?: SortOrderInput | SortOrder
+    isMobile?: SortOrderInput | SortOrder
+    cfRay?: SortOrderInput | SortOrder
     metadata?: SortOrderInput | SortOrder
     _count?: ActivityLogCountOrderByAggregateInput
     _avg?: ActivityLogAvgOrderByAggregateInput
@@ -60647,6 +60915,10 @@ export namespace Prisma {
     userId?: BigIntNullableWithAggregatesFilter<"ActivityLog"> | bigint | number | null
     category?: StringWithAggregatesFilter<"ActivityLog"> | string
     action?: StringWithAggregatesFilter<"ActivityLog"> | string
+    country?: StringNullableWithAggregatesFilter<"ActivityLog"> | string | null
+    city?: StringNullableWithAggregatesFilter<"ActivityLog"> | string | null
+    isMobile?: BoolNullableWithAggregatesFilter<"ActivityLog"> | boolean | null
+    cfRay?: StringNullableWithAggregatesFilter<"ActivityLog"> | string | null
     metadata?: JsonNullableWithAggregatesFilter<"ActivityLog">
   }
 
@@ -60667,6 +60939,14 @@ export namespace Prisma {
     severity?: StringNullableFilter<"SystemErrorLog"> | string | null
     resolved?: BoolFilter<"SystemErrorLog"> | boolean
     resolvedAt?: DateTimeNullableFilter<"SystemErrorLog"> | Date | string | null
+    country?: StringNullableFilter<"SystemErrorLog"> | string | null
+    city?: StringNullableFilter<"SystemErrorLog"> | string | null
+    bot?: BoolNullableFilter<"SystemErrorLog"> | boolean | null
+    threat?: StringNullableFilter<"SystemErrorLog"> | string | null
+    isMobile?: BoolNullableFilter<"SystemErrorLog"> | boolean | null
+    cfRay?: StringNullableFilter<"SystemErrorLog"> | string | null
+    ip?: StringNullableFilter<"SystemErrorLog"> | string | null
+    userAgent?: StringNullableFilter<"SystemErrorLog"> | string | null
   }
 
   export type SystemErrorLogOrderByWithRelationInput = {
@@ -60683,6 +60963,14 @@ export namespace Prisma {
     severity?: SortOrderInput | SortOrder
     resolved?: SortOrder
     resolvedAt?: SortOrderInput | SortOrder
+    country?: SortOrderInput | SortOrder
+    city?: SortOrderInput | SortOrder
+    bot?: SortOrderInput | SortOrder
+    threat?: SortOrderInput | SortOrder
+    isMobile?: SortOrderInput | SortOrder
+    cfRay?: SortOrderInput | SortOrder
+    ip?: SortOrderInput | SortOrder
+    userAgent?: SortOrderInput | SortOrder
   }
 
   export type SystemErrorLogWhereUniqueInput = Prisma.AtLeast<{
@@ -60703,6 +60991,14 @@ export namespace Prisma {
     severity?: StringNullableFilter<"SystemErrorLog"> | string | null
     resolved?: BoolFilter<"SystemErrorLog"> | boolean
     resolvedAt?: DateTimeNullableFilter<"SystemErrorLog"> | Date | string | null
+    country?: StringNullableFilter<"SystemErrorLog"> | string | null
+    city?: StringNullableFilter<"SystemErrorLog"> | string | null
+    bot?: BoolNullableFilter<"SystemErrorLog"> | boolean | null
+    threat?: StringNullableFilter<"SystemErrorLog"> | string | null
+    isMobile?: BoolNullableFilter<"SystemErrorLog"> | boolean | null
+    cfRay?: StringNullableFilter<"SystemErrorLog"> | string | null
+    ip?: StringNullableFilter<"SystemErrorLog"> | string | null
+    userAgent?: StringNullableFilter<"SystemErrorLog"> | string | null
   }, "id_createdAt">
 
   export type SystemErrorLogOrderByWithAggregationInput = {
@@ -60719,6 +61015,14 @@ export namespace Prisma {
     severity?: SortOrderInput | SortOrder
     resolved?: SortOrder
     resolvedAt?: SortOrderInput | SortOrder
+    country?: SortOrderInput | SortOrder
+    city?: SortOrderInput | SortOrder
+    bot?: SortOrderInput | SortOrder
+    threat?: SortOrderInput | SortOrder
+    isMobile?: SortOrderInput | SortOrder
+    cfRay?: SortOrderInput | SortOrder
+    ip?: SortOrderInput | SortOrder
+    userAgent?: SortOrderInput | SortOrder
     _count?: SystemErrorLogCountOrderByAggregateInput
     _avg?: SystemErrorLogAvgOrderByAggregateInput
     _max?: SystemErrorLogMaxOrderByAggregateInput
@@ -60743,6 +61047,14 @@ export namespace Prisma {
     severity?: StringNullableWithAggregatesFilter<"SystemErrorLog"> | string | null
     resolved?: BoolWithAggregatesFilter<"SystemErrorLog"> | boolean
     resolvedAt?: DateTimeNullableWithAggregatesFilter<"SystemErrorLog"> | Date | string | null
+    country?: StringNullableWithAggregatesFilter<"SystemErrorLog"> | string | null
+    city?: StringNullableWithAggregatesFilter<"SystemErrorLog"> | string | null
+    bot?: BoolNullableWithAggregatesFilter<"SystemErrorLog"> | boolean | null
+    threat?: StringNullableWithAggregatesFilter<"SystemErrorLog"> | string | null
+    isMobile?: BoolNullableWithAggregatesFilter<"SystemErrorLog"> | boolean | null
+    cfRay?: StringNullableWithAggregatesFilter<"SystemErrorLog"> | string | null
+    ip?: StringNullableWithAggregatesFilter<"SystemErrorLog"> | string | null
+    userAgent?: StringNullableWithAggregatesFilter<"SystemErrorLog"> | string | null
   }
 
   export type IntegrationLogWhereInput = {
@@ -60761,6 +61073,12 @@ export namespace Prisma {
     duration?: IntFilter<"IntegrationLog"> | number
     success?: BoolFilter<"IntegrationLog"> | boolean
     errorMessage?: StringNullableFilter<"IntegrationLog"> | string | null
+    country?: StringNullableFilter<"IntegrationLog"> | string | null
+    city?: StringNullableFilter<"IntegrationLog"> | string | null
+    bot?: BoolNullableFilter<"IntegrationLog"> | boolean | null
+    threat?: StringNullableFilter<"IntegrationLog"> | string | null
+    cfRay?: StringNullableFilter<"IntegrationLog"> | string | null
+    ip?: StringNullableFilter<"IntegrationLog"> | string | null
   }
 
   export type IntegrationLogOrderByWithRelationInput = {
@@ -60776,6 +61094,12 @@ export namespace Prisma {
     duration?: SortOrder
     success?: SortOrder
     errorMessage?: SortOrderInput | SortOrder
+    country?: SortOrderInput | SortOrder
+    city?: SortOrderInput | SortOrder
+    bot?: SortOrderInput | SortOrder
+    threat?: SortOrderInput | SortOrder
+    cfRay?: SortOrderInput | SortOrder
+    ip?: SortOrderInput | SortOrder
   }
 
   export type IntegrationLogWhereUniqueInput = Prisma.AtLeast<{
@@ -60795,6 +61119,12 @@ export namespace Prisma {
     duration?: IntFilter<"IntegrationLog"> | number
     success?: BoolFilter<"IntegrationLog"> | boolean
     errorMessage?: StringNullableFilter<"IntegrationLog"> | string | null
+    country?: StringNullableFilter<"IntegrationLog"> | string | null
+    city?: StringNullableFilter<"IntegrationLog"> | string | null
+    bot?: BoolNullableFilter<"IntegrationLog"> | boolean | null
+    threat?: StringNullableFilter<"IntegrationLog"> | string | null
+    cfRay?: StringNullableFilter<"IntegrationLog"> | string | null
+    ip?: StringNullableFilter<"IntegrationLog"> | string | null
   }, "id_createdAt">
 
   export type IntegrationLogOrderByWithAggregationInput = {
@@ -60810,6 +61140,12 @@ export namespace Prisma {
     duration?: SortOrder
     success?: SortOrder
     errorMessage?: SortOrderInput | SortOrder
+    country?: SortOrderInput | SortOrder
+    city?: SortOrderInput | SortOrder
+    bot?: SortOrderInput | SortOrder
+    threat?: SortOrderInput | SortOrder
+    cfRay?: SortOrderInput | SortOrder
+    ip?: SortOrderInput | SortOrder
     _count?: IntegrationLogCountOrderByAggregateInput
     _avg?: IntegrationLogAvgOrderByAggregateInput
     _max?: IntegrationLogMaxOrderByAggregateInput
@@ -60833,6 +61169,12 @@ export namespace Prisma {
     duration?: IntWithAggregatesFilter<"IntegrationLog"> | number
     success?: BoolWithAggregatesFilter<"IntegrationLog"> | boolean
     errorMessage?: StringNullableWithAggregatesFilter<"IntegrationLog"> | string | null
+    country?: StringNullableWithAggregatesFilter<"IntegrationLog"> | string | null
+    city?: StringNullableWithAggregatesFilter<"IntegrationLog"> | string | null
+    bot?: BoolNullableWithAggregatesFilter<"IntegrationLog"> | boolean | null
+    threat?: StringNullableWithAggregatesFilter<"IntegrationLog"> | string | null
+    cfRay?: StringNullableWithAggregatesFilter<"IntegrationLog"> | string | null
+    ip?: StringNullableWithAggregatesFilter<"IntegrationLog"> | string | null
   }
 
   export type UserCreateInput = {
@@ -64959,6 +65301,10 @@ export namespace Prisma {
     userId?: bigint | number | null
     category: string
     action: string
+    country?: string | null
+    city?: string | null
+    isMobile?: boolean | null
+    cfRay?: string | null
     metadata?: NullableJsonNullValueInput | InputJsonValue
   }
 
@@ -64968,6 +65314,10 @@ export namespace Prisma {
     userId?: bigint | number | null
     category: string
     action: string
+    country?: string | null
+    city?: string | null
+    isMobile?: boolean | null
+    cfRay?: string | null
     metadata?: NullableJsonNullValueInput | InputJsonValue
   }
 
@@ -64977,6 +65327,10 @@ export namespace Prisma {
     userId?: NullableBigIntFieldUpdateOperationsInput | bigint | number | null
     category?: StringFieldUpdateOperationsInput | string
     action?: StringFieldUpdateOperationsInput | string
+    country?: NullableStringFieldUpdateOperationsInput | string | null
+    city?: NullableStringFieldUpdateOperationsInput | string | null
+    isMobile?: NullableBoolFieldUpdateOperationsInput | boolean | null
+    cfRay?: NullableStringFieldUpdateOperationsInput | string | null
     metadata?: NullableJsonNullValueInput | InputJsonValue
   }
 
@@ -64986,6 +65340,10 @@ export namespace Prisma {
     userId?: NullableBigIntFieldUpdateOperationsInput | bigint | number | null
     category?: StringFieldUpdateOperationsInput | string
     action?: StringFieldUpdateOperationsInput | string
+    country?: NullableStringFieldUpdateOperationsInput | string | null
+    city?: NullableStringFieldUpdateOperationsInput | string | null
+    isMobile?: NullableBoolFieldUpdateOperationsInput | boolean | null
+    cfRay?: NullableStringFieldUpdateOperationsInput | string | null
     metadata?: NullableJsonNullValueInput | InputJsonValue
   }
 
@@ -64995,6 +65353,10 @@ export namespace Prisma {
     userId?: bigint | number | null
     category: string
     action: string
+    country?: string | null
+    city?: string | null
+    isMobile?: boolean | null
+    cfRay?: string | null
     metadata?: NullableJsonNullValueInput | InputJsonValue
   }
 
@@ -65004,6 +65366,10 @@ export namespace Prisma {
     userId?: NullableBigIntFieldUpdateOperationsInput | bigint | number | null
     category?: StringFieldUpdateOperationsInput | string
     action?: StringFieldUpdateOperationsInput | string
+    country?: NullableStringFieldUpdateOperationsInput | string | null
+    city?: NullableStringFieldUpdateOperationsInput | string | null
+    isMobile?: NullableBoolFieldUpdateOperationsInput | boolean | null
+    cfRay?: NullableStringFieldUpdateOperationsInput | string | null
     metadata?: NullableJsonNullValueInput | InputJsonValue
   }
 
@@ -65013,6 +65379,10 @@ export namespace Prisma {
     userId?: NullableBigIntFieldUpdateOperationsInput | bigint | number | null
     category?: StringFieldUpdateOperationsInput | string
     action?: StringFieldUpdateOperationsInput | string
+    country?: NullableStringFieldUpdateOperationsInput | string | null
+    city?: NullableStringFieldUpdateOperationsInput | string | null
+    isMobile?: NullableBoolFieldUpdateOperationsInput | boolean | null
+    cfRay?: NullableStringFieldUpdateOperationsInput | string | null
     metadata?: NullableJsonNullValueInput | InputJsonValue
   }
 
@@ -65030,6 +65400,14 @@ export namespace Prisma {
     severity?: string | null
     resolved?: boolean
     resolvedAt?: Date | string | null
+    country?: string | null
+    city?: string | null
+    bot?: boolean | null
+    threat?: string | null
+    isMobile?: boolean | null
+    cfRay?: string | null
+    ip?: string | null
+    userAgent?: string | null
   }
 
   export type SystemErrorLogUncheckedCreateInput = {
@@ -65046,6 +65424,14 @@ export namespace Prisma {
     severity?: string | null
     resolved?: boolean
     resolvedAt?: Date | string | null
+    country?: string | null
+    city?: string | null
+    bot?: boolean | null
+    threat?: string | null
+    isMobile?: boolean | null
+    cfRay?: string | null
+    ip?: string | null
+    userAgent?: string | null
   }
 
   export type SystemErrorLogUpdateInput = {
@@ -65062,6 +65448,14 @@ export namespace Prisma {
     severity?: NullableStringFieldUpdateOperationsInput | string | null
     resolved?: BoolFieldUpdateOperationsInput | boolean
     resolvedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    country?: NullableStringFieldUpdateOperationsInput | string | null
+    city?: NullableStringFieldUpdateOperationsInput | string | null
+    bot?: NullableBoolFieldUpdateOperationsInput | boolean | null
+    threat?: NullableStringFieldUpdateOperationsInput | string | null
+    isMobile?: NullableBoolFieldUpdateOperationsInput | boolean | null
+    cfRay?: NullableStringFieldUpdateOperationsInput | string | null
+    ip?: NullableStringFieldUpdateOperationsInput | string | null
+    userAgent?: NullableStringFieldUpdateOperationsInput | string | null
   }
 
   export type SystemErrorLogUncheckedUpdateInput = {
@@ -65078,6 +65472,14 @@ export namespace Prisma {
     severity?: NullableStringFieldUpdateOperationsInput | string | null
     resolved?: BoolFieldUpdateOperationsInput | boolean
     resolvedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    country?: NullableStringFieldUpdateOperationsInput | string | null
+    city?: NullableStringFieldUpdateOperationsInput | string | null
+    bot?: NullableBoolFieldUpdateOperationsInput | boolean | null
+    threat?: NullableStringFieldUpdateOperationsInput | string | null
+    isMobile?: NullableBoolFieldUpdateOperationsInput | boolean | null
+    cfRay?: NullableStringFieldUpdateOperationsInput | string | null
+    ip?: NullableStringFieldUpdateOperationsInput | string | null
+    userAgent?: NullableStringFieldUpdateOperationsInput | string | null
   }
 
   export type SystemErrorLogCreateManyInput = {
@@ -65094,6 +65496,14 @@ export namespace Prisma {
     severity?: string | null
     resolved?: boolean
     resolvedAt?: Date | string | null
+    country?: string | null
+    city?: string | null
+    bot?: boolean | null
+    threat?: string | null
+    isMobile?: boolean | null
+    cfRay?: string | null
+    ip?: string | null
+    userAgent?: string | null
   }
 
   export type SystemErrorLogUpdateManyMutationInput = {
@@ -65110,6 +65520,14 @@ export namespace Prisma {
     severity?: NullableStringFieldUpdateOperationsInput | string | null
     resolved?: BoolFieldUpdateOperationsInput | boolean
     resolvedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    country?: NullableStringFieldUpdateOperationsInput | string | null
+    city?: NullableStringFieldUpdateOperationsInput | string | null
+    bot?: NullableBoolFieldUpdateOperationsInput | boolean | null
+    threat?: NullableStringFieldUpdateOperationsInput | string | null
+    isMobile?: NullableBoolFieldUpdateOperationsInput | boolean | null
+    cfRay?: NullableStringFieldUpdateOperationsInput | string | null
+    ip?: NullableStringFieldUpdateOperationsInput | string | null
+    userAgent?: NullableStringFieldUpdateOperationsInput | string | null
   }
 
   export type SystemErrorLogUncheckedUpdateManyInput = {
@@ -65126,6 +65544,14 @@ export namespace Prisma {
     severity?: NullableStringFieldUpdateOperationsInput | string | null
     resolved?: BoolFieldUpdateOperationsInput | boolean
     resolvedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    country?: NullableStringFieldUpdateOperationsInput | string | null
+    city?: NullableStringFieldUpdateOperationsInput | string | null
+    bot?: NullableBoolFieldUpdateOperationsInput | boolean | null
+    threat?: NullableStringFieldUpdateOperationsInput | string | null
+    isMobile?: NullableBoolFieldUpdateOperationsInput | boolean | null
+    cfRay?: NullableStringFieldUpdateOperationsInput | string | null
+    ip?: NullableStringFieldUpdateOperationsInput | string | null
+    userAgent?: NullableStringFieldUpdateOperationsInput | string | null
   }
 
   export type IntegrationLogCreateInput = {
@@ -65141,6 +65567,12 @@ export namespace Prisma {
     duration: number
     success: boolean
     errorMessage?: string | null
+    country?: string | null
+    city?: string | null
+    bot?: boolean | null
+    threat?: string | null
+    cfRay?: string | null
+    ip?: string | null
   }
 
   export type IntegrationLogUncheckedCreateInput = {
@@ -65156,6 +65588,12 @@ export namespace Prisma {
     duration: number
     success: boolean
     errorMessage?: string | null
+    country?: string | null
+    city?: string | null
+    bot?: boolean | null
+    threat?: string | null
+    cfRay?: string | null
+    ip?: string | null
   }
 
   export type IntegrationLogUpdateInput = {
@@ -65171,6 +65609,12 @@ export namespace Prisma {
     duration?: IntFieldUpdateOperationsInput | number
     success?: BoolFieldUpdateOperationsInput | boolean
     errorMessage?: NullableStringFieldUpdateOperationsInput | string | null
+    country?: NullableStringFieldUpdateOperationsInput | string | null
+    city?: NullableStringFieldUpdateOperationsInput | string | null
+    bot?: NullableBoolFieldUpdateOperationsInput | boolean | null
+    threat?: NullableStringFieldUpdateOperationsInput | string | null
+    cfRay?: NullableStringFieldUpdateOperationsInput | string | null
+    ip?: NullableStringFieldUpdateOperationsInput | string | null
   }
 
   export type IntegrationLogUncheckedUpdateInput = {
@@ -65186,6 +65630,12 @@ export namespace Prisma {
     duration?: IntFieldUpdateOperationsInput | number
     success?: BoolFieldUpdateOperationsInput | boolean
     errorMessage?: NullableStringFieldUpdateOperationsInput | string | null
+    country?: NullableStringFieldUpdateOperationsInput | string | null
+    city?: NullableStringFieldUpdateOperationsInput | string | null
+    bot?: NullableBoolFieldUpdateOperationsInput | boolean | null
+    threat?: NullableStringFieldUpdateOperationsInput | string | null
+    cfRay?: NullableStringFieldUpdateOperationsInput | string | null
+    ip?: NullableStringFieldUpdateOperationsInput | string | null
   }
 
   export type IntegrationLogCreateManyInput = {
@@ -65201,6 +65651,12 @@ export namespace Prisma {
     duration: number
     success: boolean
     errorMessage?: string | null
+    country?: string | null
+    city?: string | null
+    bot?: boolean | null
+    threat?: string | null
+    cfRay?: string | null
+    ip?: string | null
   }
 
   export type IntegrationLogUpdateManyMutationInput = {
@@ -65216,6 +65672,12 @@ export namespace Prisma {
     duration?: IntFieldUpdateOperationsInput | number
     success?: BoolFieldUpdateOperationsInput | boolean
     errorMessage?: NullableStringFieldUpdateOperationsInput | string | null
+    country?: NullableStringFieldUpdateOperationsInput | string | null
+    city?: NullableStringFieldUpdateOperationsInput | string | null
+    bot?: NullableBoolFieldUpdateOperationsInput | boolean | null
+    threat?: NullableStringFieldUpdateOperationsInput | string | null
+    cfRay?: NullableStringFieldUpdateOperationsInput | string | null
+    ip?: NullableStringFieldUpdateOperationsInput | string | null
   }
 
   export type IntegrationLogUncheckedUpdateManyInput = {
@@ -65231,6 +65693,12 @@ export namespace Prisma {
     duration?: IntFieldUpdateOperationsInput | number
     success?: BoolFieldUpdateOperationsInput | boolean
     errorMessage?: NullableStringFieldUpdateOperationsInput | string | null
+    country?: NullableStringFieldUpdateOperationsInput | string | null
+    city?: NullableStringFieldUpdateOperationsInput | string | null
+    bot?: NullableBoolFieldUpdateOperationsInput | boolean | null
+    threat?: NullableStringFieldUpdateOperationsInput | string | null
+    cfRay?: NullableStringFieldUpdateOperationsInput | string | null
+    ip?: NullableStringFieldUpdateOperationsInput | string | null
   }
 
   export type BigIntFilter<$PrismaModel = never> = {
@@ -68961,6 +69429,10 @@ export namespace Prisma {
     userId?: SortOrder
     category?: SortOrder
     action?: SortOrder
+    country?: SortOrder
+    city?: SortOrder
+    isMobile?: SortOrder
+    cfRay?: SortOrder
     metadata?: SortOrder
   }
 
@@ -68974,6 +69446,10 @@ export namespace Prisma {
     userId?: SortOrder
     category?: SortOrder
     action?: SortOrder
+    country?: SortOrder
+    city?: SortOrder
+    isMobile?: SortOrder
+    cfRay?: SortOrder
   }
 
   export type ActivityLogMinOrderByAggregateInput = {
@@ -68982,6 +69458,10 @@ export namespace Prisma {
     userId?: SortOrder
     category?: SortOrder
     action?: SortOrder
+    country?: SortOrder
+    city?: SortOrder
+    isMobile?: SortOrder
+    cfRay?: SortOrder
   }
 
   export type ActivityLogSumOrderByAggregateInput = {
@@ -69007,6 +69487,14 @@ export namespace Prisma {
     severity?: SortOrder
     resolved?: SortOrder
     resolvedAt?: SortOrder
+    country?: SortOrder
+    city?: SortOrder
+    bot?: SortOrder
+    threat?: SortOrder
+    isMobile?: SortOrder
+    cfRay?: SortOrder
+    ip?: SortOrder
+    userAgent?: SortOrder
   }
 
   export type SystemErrorLogAvgOrderByAggregateInput = {
@@ -69027,6 +69515,14 @@ export namespace Prisma {
     severity?: SortOrder
     resolved?: SortOrder
     resolvedAt?: SortOrder
+    country?: SortOrder
+    city?: SortOrder
+    bot?: SortOrder
+    threat?: SortOrder
+    isMobile?: SortOrder
+    cfRay?: SortOrder
+    ip?: SortOrder
+    userAgent?: SortOrder
   }
 
   export type SystemErrorLogMinOrderByAggregateInput = {
@@ -69042,6 +69538,14 @@ export namespace Prisma {
     severity?: SortOrder
     resolved?: SortOrder
     resolvedAt?: SortOrder
+    country?: SortOrder
+    city?: SortOrder
+    bot?: SortOrder
+    threat?: SortOrder
+    isMobile?: SortOrder
+    cfRay?: SortOrder
+    ip?: SortOrder
+    userAgent?: SortOrder
   }
 
   export type SystemErrorLogSumOrderByAggregateInput = {
@@ -69067,6 +69571,12 @@ export namespace Prisma {
     duration?: SortOrder
     success?: SortOrder
     errorMessage?: SortOrder
+    country?: SortOrder
+    city?: SortOrder
+    bot?: SortOrder
+    threat?: SortOrder
+    cfRay?: SortOrder
+    ip?: SortOrder
   }
 
   export type IntegrationLogAvgOrderByAggregateInput = {
@@ -69086,6 +69596,12 @@ export namespace Prisma {
     duration?: SortOrder
     success?: SortOrder
     errorMessage?: SortOrder
+    country?: SortOrder
+    city?: SortOrder
+    bot?: SortOrder
+    threat?: SortOrder
+    cfRay?: SortOrder
+    ip?: SortOrder
   }
 
   export type IntegrationLogMinOrderByAggregateInput = {
@@ -69099,6 +69615,12 @@ export namespace Prisma {
     duration?: SortOrder
     success?: SortOrder
     errorMessage?: SortOrder
+    country?: SortOrder
+    city?: SortOrder
+    bot?: SortOrder
+    threat?: SortOrder
+    cfRay?: SortOrder
+    ip?: SortOrder
   }
 
   export type IntegrationLogSumOrderByAggregateInput = {

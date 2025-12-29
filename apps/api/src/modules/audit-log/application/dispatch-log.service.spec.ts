@@ -12,6 +12,7 @@ import {
   HEAVY_LOG_QUEUE_NAME,
 } from '../infrastructure/queue.constants';
 import * as idUtil from 'src/utils/id.util';
+import type { RequestClientInfo } from 'src/platform/http/types/client-info.types';
 
 describe('DispatchLogService', () => {
   let service: DispatchLogService;
@@ -264,6 +265,253 @@ describe('DispatchLogService', () => {
           { id: 'id-2', payload: payload2 },
           expect.objectContaining({ jobId: 'id-2' }),
         );
+      });
+    });
+
+    describe('Cloudflare 정보 자동 매핑', () => {
+      const mockClientInfo: RequestClientInfo = {
+        ip: '192.168.1.1',
+        userAgent: 'Mozilla/5.0',
+        protocol: 'https',
+        method: 'POST',
+        path: '/api/test',
+        timestamp: new Date(),
+        country: 'KR',
+        city: 'Seoul',
+        referer: 'https://example.com',
+        acceptLanguage: 'ko-KR',
+        fingerprint: 'fingerprint-123',
+        isMobile: true,
+        browser: 'Chrome',
+        os: 'iOS',
+        timezone: 'Asia/Seoul',
+        isp: 'ISP',
+        asn: 'AS123',
+        threat: 'low',
+        bot: false,
+        cfRay: 'cf-ray-123',
+        cfRequestId: 'cf-request-id-123',
+        cfColo: 'ICN',
+      };
+
+      describe('AUTH 로그', () => {
+        it('clientInfo가 제공되면 Cloudflare 정보가 자동으로 매핑되어야 함', async () => {
+          const payload: LogJobData = {
+            type: LogType.AUTH,
+            data: {
+              userId: 'user-123',
+              action: 'LOGIN',
+              status: 'SUCCESS',
+              metadata: { isAdmin: false },
+            },
+          };
+
+          await service.dispatch(payload, mockClientInfo);
+
+          expect(mockCriticalQueue.add).toHaveBeenCalledWith(
+            'auth-log',
+            {
+              id: 'test-id-123',
+              payload: {
+                type: LogType.AUTH,
+                data: {
+                  userId: 'user-123',
+                  action: 'LOGIN',
+                  status: 'SUCCESS',
+                  metadata: { isAdmin: false },
+                  ip: mockClientInfo.ip,
+                  userAgent: mockClientInfo.userAgent,
+                  deviceFingerprint: mockClientInfo.fingerprint,
+                  country: mockClientInfo.country,
+                  city: mockClientInfo.city,
+                  bot: mockClientInfo.bot,
+                  threat: mockClientInfo.threat,
+                  isMobile: mockClientInfo.isMobile,
+                  cfRay: mockClientInfo.cfRay,
+                },
+              },
+            },
+            expect.objectContaining({
+              jobId: 'test-id-123',
+            }),
+          );
+        });
+
+        it('clientInfo가 없으면 기존 payload 그대로 사용해야 함', async () => {
+          const payload: LogJobData = {
+            type: LogType.AUTH,
+            data: {
+              userId: 'user-123',
+              action: 'LOGIN',
+              status: 'SUCCESS',
+            },
+          };
+
+          await service.dispatch(payload);
+
+          expect(mockCriticalQueue.add).toHaveBeenCalledWith(
+            'auth-log',
+            {
+              id: 'test-id-123',
+              payload,
+            },
+            expect.objectContaining({
+              jobId: 'test-id-123',
+            }),
+          );
+        });
+      });
+
+      describe('ACTIVITY 로그', () => {
+        it('clientInfo가 제공되면 필요한 Cloudflare 정보만 자동으로 매핑되어야 함', async () => {
+          const payload: LogJobData = {
+            type: LogType.ACTIVITY,
+            data: {
+              userId: 'user-123',
+              category: 'PAYMENT',
+              action: 'DEPOSIT_REQUEST',
+              metadata: { amount: 1000 },
+            },
+          };
+
+          await service.dispatch(payload, mockClientInfo);
+
+          expect(mockHeavyQueue.add).toHaveBeenCalledWith(
+            'activity-log',
+            {
+              id: 'test-id-123',
+              payload: {
+                type: LogType.ACTIVITY,
+                data: {
+                  userId: 'user-123',
+                  category: 'PAYMENT',
+                  action: 'DEPOSIT_REQUEST',
+                  metadata: { amount: 1000 },
+                  country: mockClientInfo.country,
+                  city: mockClientInfo.city,
+                  isMobile: mockClientInfo.isMobile,
+                  cfRay: mockClientInfo.cfRay,
+                },
+              },
+            },
+            expect.objectContaining({
+              jobId: 'test-id-123',
+            }),
+          );
+        });
+      });
+
+      describe('ERROR 로그', () => {
+        it('clientInfo가 제공되면 모든 Cloudflare 정보가 자동으로 매핑되어야 함', async () => {
+          const payload: LogJobData = {
+            type: LogType.ERROR,
+            data: {
+              errorMessage: 'Test error',
+              severity: 'ERROR',
+            },
+          };
+
+          await service.dispatch(payload, mockClientInfo);
+
+          expect(mockHeavyQueue.add).toHaveBeenCalledWith(
+            'error-log',
+            {
+              id: 'test-id-123',
+              payload: {
+                type: LogType.ERROR,
+                data: {
+                  errorMessage: 'Test error',
+                  severity: 'ERROR',
+                  country: mockClientInfo.country,
+                  city: mockClientInfo.city,
+                  bot: mockClientInfo.bot,
+                  threat: mockClientInfo.threat,
+                  isMobile: mockClientInfo.isMobile,
+                  cfRay: mockClientInfo.cfRay,
+                  ip: mockClientInfo.ip,
+                  userAgent: mockClientInfo.userAgent,
+                },
+              },
+            },
+            expect.objectContaining({
+              jobId: 'test-id-123',
+            }),
+          );
+        });
+      });
+
+      describe('INTEGRATION 로그', () => {
+        it('clientInfo가 제공되면 필요한 Cloudflare 정보가 자동으로 매핑되어야 함', async () => {
+          const payload: LogJobData = {
+            type: LogType.INTEGRATION,
+            data: {
+              provider: 'PAYMENT_PROVIDER',
+              method: 'POST',
+              endpoint: '/api/payment',
+              duration: 100,
+              success: true,
+            },
+          };
+
+          await service.dispatch(payload, mockClientInfo);
+
+          expect(mockCriticalQueue.add).toHaveBeenCalledWith(
+            'integration-log',
+            {
+              id: 'test-id-123',
+              payload: {
+                type: LogType.INTEGRATION,
+                data: {
+                  provider: 'PAYMENT_PROVIDER',
+                  method: 'POST',
+                  endpoint: '/api/payment',
+                  duration: 100,
+                  success: true,
+                  country: mockClientInfo.country,
+                  city: mockClientInfo.city,
+                  bot: mockClientInfo.bot,
+                  threat: mockClientInfo.threat,
+                  cfRay: mockClientInfo.cfRay,
+                  ip: mockClientInfo.ip,
+                },
+              },
+            },
+            expect.objectContaining({
+              jobId: 'test-id-123',
+            }),
+          );
+        });
+      });
+
+      describe('필드 덮어쓰기', () => {
+        it('payload에 이미 Cloudflare 필드가 있어도 clientInfo 값으로 덮어써야 함 (clientInfo가 더 정확한 정보)', async () => {
+          const payload: LogJobData = {
+            type: LogType.AUTH,
+            data: {
+              userId: 'user-123',
+              action: 'LOGIN',
+              status: 'SUCCESS',
+              country: 'US', // 이미 설정된 값 (하지만 덮어씌워짐)
+              city: 'New York', // 이미 설정된 값 (하지만 덮어씌워짐)
+            },
+          };
+
+          await service.dispatch(payload, mockClientInfo);
+
+          // clientInfo의 값으로 덮어쓰여짐 (clientInfo가 더 정확한 정보이므로)
+          expect(mockCriticalQueue.add).toHaveBeenCalledWith(
+            'auth-log',
+            expect.objectContaining({
+              payload: expect.objectContaining({
+                data: expect.objectContaining({
+                  country: mockClientInfo.country, // clientInfo 값으로 덮어씌워짐
+                  city: mockClientInfo.city, // clientInfo 값으로 덮어씌워짐
+                }),
+              }),
+            }),
+            expect.any(Object),
+          );
+        });
       });
     });
   });

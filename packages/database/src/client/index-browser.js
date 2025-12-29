@@ -701,6 +701,10 @@ exports.Prisma.ActivityLogScalarFieldEnum = {
   userId: 'userId',
   category: 'category',
   action: 'action',
+  country: 'country',
+  city: 'city',
+  isMobile: 'isMobile',
+  cfRay: 'cfRay',
   metadata: 'metadata'
 };
 
@@ -717,7 +721,15 @@ exports.Prisma.SystemErrorLogScalarFieldEnum = {
   statusCode: 'statusCode',
   severity: 'severity',
   resolved: 'resolved',
-  resolvedAt: 'resolvedAt'
+  resolvedAt: 'resolvedAt',
+  country: 'country',
+  city: 'city',
+  bot: 'bot',
+  threat: 'threat',
+  isMobile: 'isMobile',
+  cfRay: 'cfRay',
+  ip: 'ip',
+  userAgent: 'userAgent'
 };
 
 exports.Prisma.IntegrationLogScalarFieldEnum = {
@@ -732,7 +744,13 @@ exports.Prisma.IntegrationLogScalarFieldEnum = {
   responseBody: 'responseBody',
   duration: 'duration',
   success: 'success',
-  errorMessage: 'errorMessage'
+  errorMessage: 'errorMessage',
+  country: 'country',
+  city: 'city',
+  bot: 'bot',
+  threat: 'threat',
+  cfRay: 'cfRay',
+  ip: 'ip'
 };
 
 exports.Prisma.SortOrder = {

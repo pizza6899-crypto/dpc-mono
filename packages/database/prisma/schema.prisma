@@ -1025,6 +1025,13 @@ model ActivityLog {
   userId    BigInt?
   category  String
   action    String
+  // Cloudflare 지리적 정보 (사용자 활동 추적용)
+  country   String?  // CF-IPCountry
+  city      String?  // CF-IPCity
+  // 디바이스 정보
+  isMobile  Boolean? // 모바일 여부
+  // Cloudflare 추적 정보 (디버깅용)
+  cfRay     String?  // CF-Ray: 요청 추적 ID
   metadata  Json?
 
   @@id([id, createdAt])
@@ -1032,6 +1039,8 @@ model ActivityLog {
   @@index([userId, category, createdAt(sort: Desc)])
   @@index([category, action, createdAt(sort: Desc)])
   @@index([createdAt(sort: Desc)])
+  // 지역별 활동 분석
+  @@index([country, createdAt(sort: Desc)])
   @@map("activity_logs")
 }
 
@@ -1050,11 +1059,27 @@ model SystemErrorLog {
   severity     String? // INFO, WARN, ERROR, CRITICAL
   resolved     Boolean   @default(false)
   resolvedAt   DateTime?
+  // Cloudflare 지리적 정보 (에러 발생 위치 추적용)
+  country      String?   // CF-IPCountry
+  city         String?   // CF-IPCity
+  // Cloudflare 보안 정보 (공격성 에러 감지용)
+  bot          Boolean?  // CF-Bot-Management
+  threat       String?   // CF-Threat
+  // 디바이스 정보
+  isMobile     Boolean?  // 모바일 여부
+  // Cloudflare 추적 정보 (디버깅용)
+  cfRay        String?   // CF-Ray: 요청 추적 ID
+  ip           String?   // 클라이언트 IP
+  userAgent    String?   // User-Agent
 
   @@id([id, createdAt])
   // 에러 관리는 severity와 resolved 상태를 먼저 필터링함
   @@index([severity, resolved, createdAt(sort: Desc)])
   @@index([errorCode, createdAt(sort: Desc)])
+  // 지역별 에러 분석
+  @@index([country, createdAt(sort: Desc)])
+  // 봇 공격으로 인한 에러 감지
+  @@index([bot, createdAt(sort: Desc)])
   @@map("system_error_logs")
 }
 
@@ -1072,10 +1097,21 @@ model IntegrationLog {
   duration     Int
   success      Boolean
   errorMessage String?
+  // Cloudflare 지리적 정보 (외부 서비스 연동 추적용)
+  country      String?  // CF-IPCountry
+  city         String?  // CF-IPCity
+  // Cloudflare 보안 정보 (공격성 요청 감지용)
+  bot          Boolean? // CF-Bot-Management
+  threat       String?  // CF-Threat
+  // Cloudflare 추적 정보 (디버깅용)
+  cfRay        String?  // CF-Ray: 요청 추적 ID
+  ip           String?  // 클라이언트 IP
 
   @@id([id, createdAt])
   // 정산 및 장애 대조를 위해 provider와 success를 결합
   @@index([provider, success, createdAt(sort: Desc)])
   @@index([userId, createdAt(sort: Desc)])
+  // 지역별 연동 분석
+  @@index([country, createdAt(sort: Desc)])
   @@map("integration_logs")
 }

@@ -43,6 +43,13 @@ export interface ActivityLogPayload {
   userId?: string;
   category: string; // 예: 'AUTH', 'PAYMENT', 'GAME' 등
   action: string; // 예: 'USER_LOGIN', 'DEPOSIT_REQUEST' 등
+  // Cloudflare 지리적 정보 (사용자 활동 추적용)
+  country?: string; // CF-IPCountry
+  city?: string; // CF-IPCity
+  // 디바이스 정보
+  isMobile?: boolean; // 모바일 여부
+  // Cloudflare 추적 정보 (디버깅용)
+  cfRay?: string; // CF-Ray: 요청 추적 ID
   metadata?: any;
 }
 
@@ -60,6 +67,18 @@ export interface SystemErrorLogPayload {
   path?: string;
   method?: string;
   severity: 'INFO' | 'WARN' | 'ERROR' | 'CRITICAL';
+  // Cloudflare 지리적 정보 (에러 발생 위치 추적용)
+  country?: string; // CF-IPCountry
+  city?: string; // CF-IPCity
+  // Cloudflare 보안 정보 (공격성 에러 감지용)
+  bot?: boolean; // CF-Bot-Management
+  threat?: string; // CF-Threat
+  // 디바이스 정보
+  isMobile?: boolean; // 모바일 여부
+  // Cloudflare 추적 정보 (디버깅용)
+  cfRay?: string; // CF-Ray: 요청 추적 ID
+  ip?: string; // 클라이언트 IP
+  userAgent?: string; // User-Agent
 }
 
 export interface IntegrationLogPayload {
@@ -70,6 +89,15 @@ export interface IntegrationLogPayload {
   statusCode?: number;
   duration: number;
   success: boolean;
+  // Cloudflare 지리적 정보 (외부 서비스 연동 추적용)
+  country?: string; // CF-IPCountry
+  city?: string; // CF-IPCity
+  // Cloudflare 보안 정보 (공격성 요청 감지용)
+  bot?: boolean; // CF-Bot-Management
+  threat?: string; // CF-Threat
+  // Cloudflare 추적 정보 (디버깅용)
+  cfRay?: string; // CF-Ray: 요청 추적 ID
+  ip?: string; // 클라이언트 IP
 }
 
 export type LogJobData =
