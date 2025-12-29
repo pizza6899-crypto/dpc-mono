@@ -2,7 +2,13 @@
 import { Injectable } from '@nestjs/common';
 import { InjectTransaction } from '@nestjs-cls/transactional';
 import type { PrismaTransaction } from 'src/platform/prisma/prisma.module';
-import type { UserRepositoryPort, CreateUserParams } from '../ports/out/user.repository.port';
+import type {
+  UserRepositoryPort,
+  CreateUserParams,
+  FindUsersParams,
+  FindUsersResult,
+} from '../ports/out/user.repository.port';
+import { Prisma } from '@repo/database';
 import { User } from '../domain';
 import { UserMapper } from './user.mapper';
 
@@ -49,6 +55,62 @@ export class UserRepository implements UserRepositoryPort {
     });
 
     return user ? this.mapper.toDomain(user) : null;
+  }
+
+  async findMany(params: FindUsersParams): Promise<FindUsersResult> {
+    const {
+      page = 1,
+      limit = 20,
+      sortBy = 'createdAt',
+      sortOrder = 'desc',
+      email,
+      role,
+      status,
+      startDate,
+      endDate,
+    } = params;
+
+    const skip = (page - 1) * limit;
+
+    // Where 조건 구성
+    const where: Prisma.UserWhereInput = {
+      ...(email && {
+        email: {
+          contains: email,
+          mode: 'insensitive',
+        },
+      }),
+      ...(role && { role }),
+      ...(status && { status }),
+      ...(startDate &&
+        endDate && {
+          createdAt: {
+            gte: startDate,
+            lte: endDate,
+          },
+        }),
+    };
+
+    // 정렬 조건 구성
+    const orderBy: Prisma.UserOrderByWithRelationInput = {
+      [sortBy]: sortOrder,
+    };
+
+    // 데이터 조회 및 총 개수 조회
+    const [users, total] = await Promise.all([
+      this.tx.user.findMany({
+        where,
+        orderBy,
+        skip,
+        take: limit,
+      }),
+      this.tx.user.count({ where }),
+    ]);
+
+    return {
+      users: users.map((user) => this.mapper.toDomain(user)),
+      total,
+    };
   }
 
   async create(params: CreateUserParams): Promise<User> {

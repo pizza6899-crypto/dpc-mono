@@ -1,6 +1,6 @@
 // src/modules/user/ports/out/user.repository.port.ts
 import type { User } from '../../domain';
-import type { UserRoleType, SocialType } from '@repo/database';
+import type { UserRoleType, SocialType, UserStatus } from '@repo/database';
 
 /**
  * User 생성 파라미터
@@ -15,6 +15,29 @@ export interface CreateUserParams {
   role: UserRoleType;
   country: string | null;
   timezone: string | null;
+}
+
+/**
+ * User 목록 조회 필터
+ */
+export interface FindUsersParams {
+  page?: number;
+  limit?: number;
+  sortBy?: 'createdAt' | 'updatedAt' | 'email';
+  sortOrder?: 'asc' | 'desc';
+  email?: string;
+  role?: UserRoleType;
+  status?: UserStatus;
+  startDate?: Date;
+  endDate?: Date;
+}
+
+/**
+ * User 목록 조회 결과
+ */
+export interface FindUsersResult {
+  users: User[];
+  total: number;
 }
 
 /**
@@ -42,6 +65,11 @@ export interface UserRepositoryPort {
    * UID로 사용자 조회
    */
   findByUid(uid: string): Promise<User | null>;
+
+  /**
+   * 사용자 목록 조회 (페이징, 필터링 지원)
+   */
+  findMany(params: FindUsersParams): Promise<FindUsersResult>;
 
   /**
    * 새 사용자 생성
