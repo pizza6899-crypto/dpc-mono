@@ -14,6 +14,7 @@ import { PrismaModule } from 'src/platform/prisma/prisma.module';
 import { EnvModule } from 'src/platform/env/env.module';
 
 describe('AccumulateCommissionService', () => {
+  let module: TestingModule;
   let service: AccumulateCommissionService;
   let mockCalculateCommissionService: jest.Mocked<CalculateCommissionService>;
 
@@ -60,7 +61,7 @@ describe('AccumulateCommissionService', () => {
       execute: jest.fn(),
     } as any;
 
-    const module: TestingModule = await Test.createTestingModule({
+    module = await Test.createTestingModule({
       imports: [PrismaModule, EnvModule], // TransactionHost를 위해 필요
       providers: [
         AccumulateCommissionService,
@@ -77,6 +78,10 @@ describe('AccumulateCommissionService', () => {
     mockCalculateCommissionService = module.get(CalculateCommissionService);
 
     jest.clearAllMocks();
+  });
+
+  afterEach(async () => {
+    await module.close();
   });
 
   describe('execute', () => {

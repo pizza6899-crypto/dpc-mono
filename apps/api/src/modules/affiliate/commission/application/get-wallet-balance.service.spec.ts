@@ -10,6 +10,7 @@ import { PrismaModule } from 'src/platform/prisma/prisma.module';
 import { EnvModule } from 'src/platform/env/env.module';
 
 describe('GetWalletBalanceService', () => {
+  let module: TestingModule;
   let service: GetWalletBalanceService;
   let mockRepository: jest.Mocked<AffiliateWalletRepositoryPort>;
 
@@ -51,7 +52,7 @@ describe('GetWalletBalanceService', () => {
       updateBalance: jest.fn(),
     };
 
-    const module: TestingModule = await Test.createTestingModule({
+    module = await Test.createTestingModule({
       imports: [PrismaModule, EnvModule], // TransactionHost를 위해 필요
       providers: [
         GetWalletBalanceService,
@@ -66,6 +67,10 @@ describe('GetWalletBalanceService', () => {
     mockRepository = module.get(AFFILIATE_WALLET_REPOSITORY);
 
     jest.clearAllMocks();
+  });
+
+  afterEach(async () => {
+    await module.close();
   });
 
   describe('execute', () => {

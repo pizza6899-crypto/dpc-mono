@@ -18,6 +18,7 @@ import { EnvModule } from 'src/platform/env/env.module';
 import type { RequestClientInfo } from 'src/platform/http/types/client-info.types';
 
 describe('WithdrawCommissionService', () => {
+  let module: TestingModule;
   let service: WithdrawCommissionService;
   let mockWalletRepository: jest.Mocked<AffiliateWalletRepositoryPort>;
   let mockActivityLog: jest.Mocked<ActivityLogPort>;
@@ -77,7 +78,7 @@ describe('WithdrawCommissionService', () => {
       logFailure: jest.fn(),
     };
 
-    const module: TestingModule = await Test.createTestingModule({
+    module = await Test.createTestingModule({
       imports: [PrismaModule, EnvModule], // TransactionHost를 위해 필요
       providers: [
         WithdrawCommissionService,
@@ -97,6 +98,10 @@ describe('WithdrawCommissionService', () => {
     mockActivityLog = module.get(ACTIVITY_LOG);
 
     jest.clearAllMocks();
+  });
+
+  afterEach(async () => {
+    await module.close();
   });
 
   describe('execute', () => {

@@ -16,6 +16,7 @@ import type { RequestClientInfo } from 'src/platform/http/types/client-info.type
 import { IdUtil } from 'src/utils/id.util';
 
 describe('SetCustomRateService', () => {
+  let module: TestingModule;
   let service: SetCustomRateService;
   let mockRepository: jest.Mocked<AffiliateTierRepositoryPort>;
   let mockActivityLog: jest.Mocked<ActivityLogPort>;
@@ -92,7 +93,7 @@ describe('SetCustomRateService', () => {
 
     mockPolicy = new CommissionPolicy();
 
-    const module: TestingModule = await Test.createTestingModule({
+    module = await Test.createTestingModule({
       imports: [PrismaModule, EnvModule], // TransactionHost를 위해 필요
       providers: [
         SetCustomRateService,
@@ -114,6 +115,10 @@ describe('SetCustomRateService', () => {
     mockPolicy = module.get(CommissionPolicy);
 
     jest.clearAllMocks();
+  });
+
+  afterEach(async () => {
+    await module.close();
   });
 
   describe('execute', () => {

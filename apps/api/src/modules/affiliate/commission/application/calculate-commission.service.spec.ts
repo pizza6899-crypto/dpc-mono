@@ -27,6 +27,7 @@ import { EnvModule } from 'src/platform/env/env.module';
 import { Referral } from '../../referral/domain/model/referral.entity';
 
 describe('CalculateCommissionService', () => {
+  let module: TestingModule;
   let service: CalculateCommissionService;
   let mockCommissionRepository: jest.Mocked<AffiliateCommissionRepositoryPort>;
   let mockTierRepository: jest.Mocked<AffiliateTierRepositoryPort>;
@@ -150,7 +151,7 @@ describe('CalculateCommissionService', () => {
 
     policy = new CommissionPolicy();
 
-    const module: TestingModule = await Test.createTestingModule({
+    module = await Test.createTestingModule({
       imports: [PrismaModule, EnvModule], // TransactionHost를 위해 필요
       providers: [
         CalculateCommissionService,
@@ -184,6 +185,10 @@ describe('CalculateCommissionService', () => {
     policy = module.get(CommissionPolicy);
 
     jest.clearAllMocks();
+  });
+
+  afterEach(async () => {
+    await module.close();
   });
 
   describe('execute', () => {

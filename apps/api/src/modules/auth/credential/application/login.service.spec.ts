@@ -15,6 +15,7 @@ import { PrismaModule } from 'src/platform/prisma/prisma.module';
 import { EnvModule } from 'src/platform/env/env.module';
 
 describe('LoginService', () => {
+  let module: TestingModule;
   let service: LoginService;
   let mockRecordService: jest.Mocked<RecordLoginAttemptService>;
   let mockActivityLog: jest.Mocked<ActivityLogPort>;
@@ -78,7 +79,7 @@ describe('LoginService', () => {
       },
     };
 
-    const module: TestingModule = await Test.createTestingModule({
+    module = await Test.createTestingModule({
       imports: [PrismaModule, EnvModule], // @Transactional() 데코레이터를 위해 필요
       providers: [
         LoginService,
@@ -94,6 +95,10 @@ describe('LoginService', () => {
     mockActivityLog = module.get(ACTIVITY_LOG);
 
     jest.clearAllMocks();
+  });
+
+  afterEach(async () => {
+    await module.close();
   });
 
   describe('execute', () => {

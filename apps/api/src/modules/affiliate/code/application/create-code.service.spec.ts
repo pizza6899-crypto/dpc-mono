@@ -16,6 +16,7 @@ import { ACTIVITY_LOG } from 'src/platform/activity-log/activity-log.token';
 import type { ActivityLogPort } from 'src/platform/activity-log/activity-log.port';
 
 describe('CreateCodeService', () => {
+  let module: TestingModule;
   let service: CreateCodeService;
   let mockRepository: jest.Mocked<AffiliateCodeRepositoryPort>;
   let mockPolicy: AffiliateCodePolicy;
@@ -61,7 +62,7 @@ describe('CreateCodeService', () => {
       },
     };
 
-    const module: TestingModule = await Test.createTestingModule({
+    module = await Test.createTestingModule({
       imports: [PrismaModule, EnvModule],
       providers: [
         CreateCodeService,
@@ -79,6 +80,10 @@ describe('CreateCodeService', () => {
     mockActivityLog = module.get(ACTIVITY_LOG);
 
     jest.clearAllMocks();
+  });
+
+  afterEach(async () => {
+    await module.close();
   });
 
   describe('execute', () => {

@@ -23,6 +23,7 @@ import { ActivityType } from 'src/platform/activity-log/activity-log.types';
 import type { RequestClientInfo } from 'src/platform/http/types/client-info.types';
 
 describe('LinkReferralService', () => {
+  let module: TestingModule;
   let service: LinkReferralService;
   let mockRepository: jest.Mocked<ReferralRepositoryPort>;
   let mockFindCodeService: jest.Mocked<FindCodeByCodeService>;
@@ -106,7 +107,7 @@ describe('LinkReferralService', () => {
       logFailure: jest.fn(),
     };
 
-    const module: TestingModule = await Test.createTestingModule({
+    module = await Test.createTestingModule({
       imports: [PrismaModule, EnvModule],
       providers: [
         LinkReferralService,
@@ -132,6 +133,10 @@ describe('LinkReferralService', () => {
     mockActivityLog = module.get(ACTIVITY_LOG);
 
     jest.clearAllMocks();
+  });
+
+  afterEach(async () => {
+    await module.close();
   });
 
   describe('execute', () => {

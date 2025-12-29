@@ -7,6 +7,7 @@ import { EnvService } from '../env/env.service';
 import { EnvModule } from '../env/env.module';
 
 describe('ConcurrencyService', () => {
+  let module: TestingModule;
   let service: ConcurrencyService;
   let mockRedisService: jest.Mocked<RedisService>;
   let mockEnvService: jest.Mocked<EnvService>;
@@ -37,7 +38,7 @@ describe('ConcurrencyService', () => {
       },
     };
 
-    const module: TestingModule = await Test.createTestingModule({
+    module = await Test.createTestingModule({
       imports: [EnvModule],
       providers: [
         ConcurrencyService,
@@ -57,6 +58,10 @@ describe('ConcurrencyService', () => {
 
     service = module.get<ConcurrencyService>(ConcurrencyService);
     mockRedisService = module.get(RedisService);
+  });
+
+  afterEach(async () => {
+    await module.close();
   });
 
   it('should be defined', () => {

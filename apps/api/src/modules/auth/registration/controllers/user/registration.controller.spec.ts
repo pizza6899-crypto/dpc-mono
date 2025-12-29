@@ -10,6 +10,7 @@ import { ApiException } from 'src/platform/http/exception/api.exception';
 import { MessageCode } from 'src/platform/http/types/message-codes';
 
 describe('RegistrationController', () => {
+  let module: TestingModule;
   let controller: RegistrationController;
   let mockRegisterCredentialService: jest.Mocked<RegisterCredentialService>;
 
@@ -59,7 +60,7 @@ describe('RegistrationController', () => {
       },
     };
 
-    const module: TestingModule = await Test.createTestingModule({
+    module = await Test.createTestingModule({
       controllers: [RegistrationController],
       providers: [mockRegisterCredentialServiceProvider],
     }).compile();
@@ -68,6 +69,10 @@ describe('RegistrationController', () => {
     mockRegisterCredentialService = module.get(RegisterCredentialService);
 
     jest.clearAllMocks();
+  });
+
+  afterEach(async () => {
+    await module.close();
   });
 
   describe('register', () => {
@@ -116,9 +121,10 @@ describe('RegistrationController', () => {
 
     it('RegisterCredentialService가 ApiException을 던지면 예외를 전파해야 함', async () => {
       // Arrange
-      const error = new ApiException({
-        messageCode: MessageCode.USER_ALREADY_EXISTS,
-      });
+      const error = new ApiException(
+        MessageCode.USER_ALREADY_EXISTS,
+        400,
+      );
       mockRegisterCredentialService.execute.mockRejectedValue(error);
 
       // Act & Assert

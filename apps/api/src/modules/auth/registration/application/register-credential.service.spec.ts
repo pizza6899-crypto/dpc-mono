@@ -28,6 +28,7 @@ import { PrismaModule } from 'src/platform/prisma/prisma.module';
 import { EnvModule } from 'src/platform/env/env.module';
 
 describe('RegisterCredentialService', () => {
+  let module: TestingModule;
   let service: RegisterCredentialService;
   let mockActivityLog: jest.Mocked<ActivityLogPort>;
   let mockLinkReferralService: jest.Mocked<LinkReferralService>;
@@ -147,7 +148,7 @@ describe('RegisterCredentialService', () => {
       create: jest.fn(),
     };
 
-    const module: TestingModule = await Test.createTestingModule({
+    module = await Test.createTestingModule({
       imports: [PrismaModule, EnvModule], // @Transactional() 데코레이터를 위해 필요
       providers: [
         RegisterCredentialService,
@@ -182,6 +183,10 @@ describe('RegisterCredentialService', () => {
     mockUserRepository = module.get(USER_REPOSITORY);
 
     jest.clearAllMocks();
+  });
+
+  afterEach(async () => {
+    await module.close();
   });
 
   describe('execute', () => {
