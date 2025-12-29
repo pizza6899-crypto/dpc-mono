@@ -1,4 +1,4 @@
-// src/modules/affiliate/code/controllers/dto/response/validate-code-format.response.dto.ts
+// src/modules/affiliate/code/controllers/user/dto/response/validate-code-format.response.dto.ts
 import { ApiProperty } from '@nestjs/swagger';
 
 export class ValidateCodeFormatResponseDto {
@@ -8,3 +8,4 @@ export class ValidateCodeFormatResponseDto {
   })
   isValid: boolean;
 }
+

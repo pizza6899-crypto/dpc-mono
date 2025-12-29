@@ -1,4 +1,4 @@
-// src/modules/affiliate/code/controllers/dto/response/affiliate-code.response.dto.ts
+// src/modules/affiliate/code/controllers/user/dto/response/affiliate-code.response.dto.ts
 import { ApiProperty } from '@nestjs/swagger';
 
 export class AffiliateCodeResponseDto {
@@ -65,3 +65,4 @@ export class AffiliateCodeResponseDto {
   })
   lastUsedAt: Date | null;
 }
+

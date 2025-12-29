@@ -1,4 +1,4 @@
-// src/modules/affiliate/code/controllers/dto/request/validate-code-format.dto.ts
+// src/modules/affiliate/code/controllers/user/dto/request/validate-code-format.dto.ts
 import { ApiProperty } from '@nestjs/swagger';
 import { IsString } from 'class-validator';
 
@@ -10,3 +10,4 @@ export class ValidateCodeFormatDto {
   @IsString()
   code: string;
 }
+

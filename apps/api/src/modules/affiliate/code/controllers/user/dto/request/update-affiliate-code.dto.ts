@@ -1,4 +1,4 @@
-// src/modules/affiliate/code/controllers/dto/request/update-affiliate-code.dto.ts
+// src/modules/affiliate/code/controllers/user/dto/request/update-affiliate-code.dto.ts
 import { ApiProperty } from '@nestjs/swagger';
 import { IsOptional, IsString } from 'class-validator';
 
@@ -12,3 +12,4 @@ export class UpdateAffiliateCodeDto {
   @IsString()
   campaignName?: string;
 }
+

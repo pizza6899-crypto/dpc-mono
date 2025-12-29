@@ -8,7 +8,6 @@ import { CreateCodeService } from '../application/create-code.service';
 import { FindCodesService } from '../application/find-codes.service';
 import { FindCodeByCodeService } from '../application/find-code-by-code.service';
 import { UpdateCodeService } from '../application/update-code.service';
-import { DeleteCodeService } from '../application/delete-code.service';
 import { ToggleCodeActiveService } from '../application/toggle-code-active.service';
 import { SetCodeAsDefaultService } from '../application/set-code-as-default.service';
 import { IncrementCodeUsageService } from '../application/increment-code-usage.service';
@@ -27,7 +26,6 @@ describe('AffiliateCodeModule Integration', () => {
   let findCodesService: FindCodesService;
   let findCodeByCodeService: FindCodeByCodeService;
   let updateCodeService: UpdateCodeService;
-  let deleteCodeService: DeleteCodeService;
   let toggleCodeActiveService: ToggleCodeActiveService;
   let setCodeAsDefaultService: SetCodeAsDefaultService;
   let incrementCodeUsageService: IncrementCodeUsageService;
@@ -77,7 +75,6 @@ describe('AffiliateCodeModule Integration', () => {
       FindCodeByCodeService,
     );
     updateCodeService = module.get<UpdateCodeService>(UpdateCodeService);
-    deleteCodeService = module.get<DeleteCodeService>(DeleteCodeService);
     toggleCodeActiveService = module.get<ToggleCodeActiveService>(
       ToggleCodeActiveService,
     );
@@ -212,28 +209,6 @@ describe('AffiliateCodeModule Integration', () => {
     });
   });
 
-  describe('DeleteCodeService', () => {
-    it('should delete code', async () => {
-      mockRepository.findById.mockResolvedValue(mockCode);
-      mockRepository.countByUserId.mockResolvedValue(2);
-      mockRepository.delete.mockResolvedValue();
-
-      await deleteCodeService.execute({ id: codeId, userId });
-
-      expect(mockRepository.findById).toHaveBeenCalledWith(codeId, userId);
-      expect(mockRepository.countByUserId).toHaveBeenCalledWith(userId);
-      expect(mockRepository.delete).toHaveBeenCalledWith(codeId, userId);
-    });
-
-    it('should throw error when code not found', async () => {
-      mockRepository.findById.mockResolvedValue(null);
-
-      await expect(
-        deleteCodeService.execute({ id: codeId, userId }),
-      ).rejects.toThrow(AffiliateCodeNotFoundException);
-    });
-  });
-
   describe('ToggleCodeActiveService', () => {
     it('should toggle code active status', async () => {
       const inactiveCode = AffiliateCode.fromPersistence({
@@ -328,7 +303,6 @@ describe('AffiliateCodeModule Integration', () => {
       expect(findCodesService).toBeDefined();
       expect(findCodeByCodeService).toBeDefined();
       expect(updateCodeService).toBeDefined();
-      expect(deleteCodeService).toBeDefined();
       expect(toggleCodeActiveService).toBeDefined();
       expect(setCodeAsDefaultService).toBeDefined();
       expect(incrementCodeUsageService).toBeDefined();

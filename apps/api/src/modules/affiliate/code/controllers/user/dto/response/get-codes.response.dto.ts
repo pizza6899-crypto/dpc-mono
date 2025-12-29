@@ -1,4 +1,4 @@
-// src/modules/affiliate/code/controllers/dto/response/get-codes.response.dto.ts
+// src/modules/affiliate/code/controllers/user/dto/response/get-codes.response.dto.ts
 import { ApiProperty } from '@nestjs/swagger';
 import { AffiliateCodeResponseDto } from './affiliate-code.response.dto';
 
@@ -21,3 +21,4 @@ export class GetCodesResponseDto {
   })
   limit: number;
 }
+

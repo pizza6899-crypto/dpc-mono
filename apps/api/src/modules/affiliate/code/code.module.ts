@@ -4,7 +4,6 @@ import { CreateCodeService } from './application/create-code.service';
 import { FindCodesService } from './application/find-codes.service';
 import { FindCodeByCodeService } from './application/find-code-by-code.service';
 import { UpdateCodeService } from './application/update-code.service';
-import { DeleteCodeService } from './application/delete-code.service';
 import { ToggleCodeActiveService } from './application/toggle-code-active.service';
 import { SetCodeAsDefaultService } from './application/set-code-as-default.service';
 import { IncrementCodeUsageService } from './application/increment-code-usage.service';
@@ -14,7 +13,7 @@ import { AffiliateCodePolicy } from './domain';
 import { AFFILIATE_CODE_REPOSITORY } from './ports/out/affiliate-code.repository.token';
 import { AffiliateCodeRepository } from './infrastructure/affiliate-code.repository';
 import { AffiliateCodeMapper } from './infrastructure/affiliate-code.mapper';
-import { AffiliateCodeController } from './controllers/affiliate-code.controller';
+import { AffiliateCodeController } from './controllers/user/affiliate-code.controller';
 import { AffiliateCodeAdminController } from './controllers/admin/affiliate-code-admin.controller';
 import { ActivityLogModule } from 'src/platform/activity-log/activity-log.module';
 
@@ -26,7 +25,6 @@ import { ActivityLogModule } from 'src/platform/activity-log/activity-log.module
     FindCodesService,
     FindCodeByCodeService,
     UpdateCodeService,
-    DeleteCodeService,
     ToggleCodeActiveService,
     SetCodeAsDefaultService,
     IncrementCodeUsageService,
@@ -49,7 +47,6 @@ import { ActivityLogModule } from 'src/platform/activity-log/activity-log.module
     FindCodesService,
     FindCodeByCodeService,
     UpdateCodeService,
-    DeleteCodeService,
     ToggleCodeActiveService,
     SetCodeAsDefaultService,
     IncrementCodeUsageService,

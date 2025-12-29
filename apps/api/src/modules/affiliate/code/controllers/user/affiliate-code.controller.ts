@@ -1,10 +1,9 @@
-// src/modules/affiliate/code/controllers/affiliate-code.controller.ts
+// src/modules/affiliate/code/controllers/user/affiliate-code.controller.ts
 import {
   Controller,
   Get,
   Post,
   Patch,
-  Delete,
   Body,
   Param,
   HttpCode,
@@ -15,21 +14,19 @@ import { CurrentUser } from 'src/platform/auth/decorators/current-user.decorator
 import type { CurrentUserWithSession } from 'src/platform/auth/decorators/current-user.decorator';
 import { RequestClientInfoParam } from 'src/platform/auth/decorators/request-info.decorator';
 import type { RequestClientInfo } from 'src/platform/http/types/client-info.types';
-import { CreateCodeService } from '../application/create-code.service';
-import { FindCodesService } from '../application/find-codes.service';
-import { FindCodeByCodeService } from '../application/find-code-by-code.service';
-import { UpdateCodeService } from '../application/update-code.service';
-import { DeleteCodeService } from '../application/delete-code.service';
-import { ToggleCodeActiveService } from '../application/toggle-code-active.service';
-import { SetCodeAsDefaultService } from '../application/set-code-as-default.service';
-import { ValidateCodeFormatService } from '../application/validate-code-format.service';
+import { CreateCodeService } from '../../application/create-code.service';
+import { FindCodesService } from '../../application/find-codes.service';
+import { UpdateCodeService } from '../../application/update-code.service';
+import { ToggleCodeActiveService } from '../../application/toggle-code-active.service';
+import { SetCodeAsDefaultService } from '../../application/set-code-as-default.service';
+import { ValidateCodeFormatService } from '../../application/validate-code-format.service';
 import { CreateAffiliateCodeDto } from './dto/request/create-affiliate-code.dto';
 import { UpdateAffiliateCodeDto } from './dto/request/update-affiliate-code.dto';
 import { ValidateCodeFormatDto } from './dto/request/validate-code-format.dto';
 import { AffiliateCodeResponseDto } from './dto/response/affiliate-code.response.dto';
 import { GetCodesResponseDto } from './dto/response/get-codes.response.dto';
 import { ValidateCodeFormatResponseDto } from './dto/response/validate-code-format.response.dto';
-import { AffiliateCode } from '../domain';
+import { AffiliateCode } from '../../domain';
 
 @ApiTags('Affiliate Codes (어플리에이트 코드)')
 @Controller('affiliate-codes')
@@ -37,9 +34,7 @@ export class AffiliateCodeController {
   constructor(
     private readonly createCodeService: CreateCodeService,
     private readonly findCodesService: FindCodesService,
-    private readonly findCodeByCodeService: FindCodeByCodeService,
     private readonly updateCodeService: UpdateCodeService,
-    private readonly deleteCodeService: DeleteCodeService,
     private readonly toggleCodeActiveService: ToggleCodeActiveService,
     private readonly setCodeAsDefaultService: SetCodeAsDefaultService,
     private readonly validateCodeFormatService: ValidateCodeFormatService,
@@ -84,21 +79,6 @@ export class AffiliateCodeController {
   }
 
   /**
-   * 어플리에이트 코드로 조회 (검증용)
-   */
-  @Get('code/:code')
-  @HttpCode(HttpStatus.OK)
-  @ApiOperation({
-    summary: 'Get affiliate code by code / 어플리에이트 코드로 조회 (검증용)',
-  })
-  async getCodeByCode(
-    @Param('code') code: string,
-  ): Promise<AffiliateCodeResponseDto | null> {
-    const affiliateCode = await this.findCodeByCodeService.execute({ code });
-    return affiliateCode ? this.toResponse(affiliateCode) : null;
-  }
-
-  /**
    * 어플리에이트 코드 수정
    */
   @Patch(':id')
@@ -117,24 +97,6 @@ export class AffiliateCodeController {
       requestInfo,
     });
     return this.toResponse(code);
-  }
-
-  /**
-   * 어플리에이트 코드 삭제
-   */
-  @Delete(':id')
-  @HttpCode(HttpStatus.NO_CONTENT)
-  @ApiOperation({ summary: 'Delete affiliate code / 어플리에이트 코드 삭제' })
-  async delete(
-    @CurrentUser() user: CurrentUserWithSession,
-    @Param('id') id: string,
-    @RequestClientInfoParam() requestInfo: RequestClientInfo,
-  ): Promise<void> {
-    await this.deleteCodeService.execute({
-      id,
-      userId: user.id,
-      requestInfo,
-    });
   }
 
   /**
@@ -213,3 +175,4 @@ export class AffiliateCodeController {
     };
   }
 }
+
