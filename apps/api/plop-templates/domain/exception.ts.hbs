@@ -15,7 +15,7 @@ export class {{pascalCase moduleName}}Exception extends Error {
  */
 export class {{pascalCase moduleName}}NotFoundException extends {{pascalCase moduleName}}Exception {
   constructor(id: string) {
-    super(`{{pascalCase moduleName}}를 찾을 수 없습니다: ${id}`);
+    super(`{{pascalCase moduleName}} not found: ${id}`);
     this.name = '{{pascalCase moduleName}}NotFoundException';
   }
 }

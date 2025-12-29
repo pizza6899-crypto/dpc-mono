@@ -8,10 +8,11 @@ import type { ActivityLogPort } from 'src/platform/activity-log/activity-log.por
 import { ActivityType } from 'src/platform/activity-log/activity-log.types';
 import { LinkReferralService } from 'src/modules/affiliate/referral/application/link-referral.service';
 import { FindCodeByCodeService } from 'src/modules/affiliate/code/application/find-code-by-code.service';
-import { RegistrationPolicy } from '../domain/policy';
-import { USER_REPOSITORY } from '../ports/out';
-import type { UserRepositoryPort } from '../ports/out';
-import { RegistrationUser } from '../domain/model/registration-user.entity';
+import { USER_REPOSITORY } from 'src/modules/user/ports/out/user.repository.token';
+import type { UserRepositoryPort } from 'src/modules/user/ports/out/user.repository.port';
+import { User } from 'src/modules/user/domain';
+import { CreateUserService } from 'src/modules/user/application/create-user.service';
+import { UserAlreadyExistsException } from 'src/modules/user/domain/user.exception';
 import { AffiliateCode } from 'src/modules/affiliate/code/domain/model/affiliate-code.entity';
 import {
   ReferralCodeNotFoundException,
@@ -31,7 +32,7 @@ describe('RegisterCredentialService', () => {
   let mockActivityLog: jest.Mocked<ActivityLogPort>;
   let mockLinkReferralService: jest.Mocked<LinkReferralService>;
   let mockFindCodeByCodeService: jest.Mocked<FindCodeByCodeService>;
-  let mockRegistrationPolicy: RegistrationPolicy;
+  let mockCreateUserService: jest.Mocked<CreateUserService>;
   let mockUserRepository: jest.Mocked<UserRepositoryPort>;
 
   const mockEmail = 'test@example.com';
@@ -64,7 +65,7 @@ describe('RegisterCredentialService', () => {
     bot: false,
   };
 
-  const mockUser = RegistrationUser.create({
+  const mockUser = User.fromPersistence({
     id: mockUserId,
     uid: mockUserUid,
     email: mockEmail,
@@ -73,6 +74,25 @@ describe('RegisterCredentialService', () => {
     socialType: null,
     status: UserStatus.ACTIVE,
     role: UserRoleType.USER,
+    country: null,
+    timezone: null,
+    createdAt: new Date(),
+    updatedAt: new Date(),
+  });
+
+  const mockDomainUser = User.fromPersistence({
+    id: mockUserId,
+    uid: mockUserUid,
+    email: mockEmail,
+    passwordHash: '$2b$10$hashedpassword123',
+    socialId: null,
+    socialType: null,
+    status: UserStatus.ACTIVE,
+    role: UserRoleType.USER,
+    country: mockRequestInfo.country,
+    timezone: mockRequestInfo.timezone,
+    createdAt: new Date(),
+    updatedAt: new Date(),
   });
 
   const mockAffiliateCode = AffiliateCode.fromPersistence({
@@ -115,11 +135,15 @@ describe('RegisterCredentialService', () => {
       execute: jest.fn(),
     } as any;
 
-    mockRegistrationPolicy = new RegistrationPolicy();
+    mockCreateUserService = {
+      execute: jest.fn(),
+    } as any;
 
     mockUserRepository = {
       findByEmail: jest.fn(),
       findBySocialId: jest.fn(),
+      findById: jest.fn(),
+      findByUid: jest.fn(),
       create: jest.fn(),
     };
 
@@ -140,8 +164,8 @@ describe('RegisterCredentialService', () => {
           useValue: mockFindCodeByCodeService,
         },
         {
-          provide: RegistrationPolicy,
-          useValue: mockRegistrationPolicy,
+          provide: CreateUserService,
+          useValue: mockCreateUserService,
         },
         {
           provide: USER_REPOSITORY,
@@ -154,6 +178,7 @@ describe('RegisterCredentialService', () => {
     mockActivityLog = module.get(ACTIVITY_LOG);
     mockLinkReferralService = module.get(LinkReferralService);
     mockFindCodeByCodeService = module.get(FindCodeByCodeService);
+    mockCreateUserService = module.get(CreateUserService);
     mockUserRepository = module.get(USER_REPOSITORY);
 
     jest.clearAllMocks();
@@ -162,8 +187,9 @@ describe('RegisterCredentialService', () => {
   describe('execute', () => {
     it('레퍼럴 코드 없이 정상적으로 회원가입을 완료한다', async () => {
       // Arrange
-      mockUserRepository.findByEmail.mockResolvedValue(null);
-      mockUserRepository.create.mockResolvedValue(mockUser);
+      mockCreateUserService.execute.mockResolvedValue({
+        user: mockDomainUser,
+      });
       mockActivityLog.logSuccess.mockResolvedValue(undefined);
 
       // Act
@@ -179,8 +205,7 @@ describe('RegisterCredentialService', () => {
         email: mockEmail,
       });
 
-      expect(mockUserRepository.findByEmail).toHaveBeenCalledWith(mockEmail);
-      expect(mockUserRepository.create).toHaveBeenCalledWith({
+      expect(mockCreateUserService.execute).toHaveBeenCalledWith({
         email: mockEmail,
         passwordHash: expect.any(String),
         socialId: null,
@@ -202,9 +227,10 @@ describe('RegisterCredentialService', () => {
 
     it('유효한 레퍼럴 코드와 함께 정상적으로 회원가입을 완료한다', async () => {
       // Arrange
-      mockUserRepository.findByEmail.mockResolvedValue(null);
       mockFindCodeByCodeService.execute.mockResolvedValue(mockAffiliateCode);
-      mockUserRepository.create.mockResolvedValue(mockUser);
+      mockCreateUserService.execute.mockResolvedValue({
+        user: mockDomainUser,
+      });
       mockLinkReferralService.execute.mockResolvedValue(mockReferral);
       mockActivityLog.logSuccess.mockResolvedValue(undefined);
 
@@ -225,6 +251,7 @@ describe('RegisterCredentialService', () => {
       expect(mockFindCodeByCodeService.execute).toHaveBeenCalledWith({
         code: mockReferralCode,
       });
+      expect(mockCreateUserService.execute).toHaveBeenCalled();
       expect(mockLinkReferralService.execute).toHaveBeenCalledWith({
         subUserId: mockUserId,
         referralCode: mockReferralCode,
@@ -237,18 +264,9 @@ describe('RegisterCredentialService', () => {
 
     it('이메일이 이미 존재하는 경우 에러를 발생시킨다', async () => {
       // Arrange
-      const existingUser = RegistrationUser.create({
-        id: BigInt(456),
-        uid: 'existing-user-123',
-        email: mockEmail,
-        passwordHash: '$2b$10$existinghash',
-        socialId: null,
-        socialType: null,
-        status: UserStatus.ACTIVE,
-        role: UserRoleType.USER,
-      });
-
-      mockUserRepository.findByEmail.mockResolvedValue(existingUser);
+      mockCreateUserService.execute.mockRejectedValue(
+        new UserAlreadyExistsException(mockEmail),
+      );
 
       // Act & Assert
       await expect(
@@ -275,13 +293,12 @@ describe('RegisterCredentialService', () => {
         expect((error as ApiException).getStatus()).toBe(HttpStatus.BAD_REQUEST);
       }
 
-      expect(mockUserRepository.create).not.toHaveBeenCalled();
+      expect(mockCreateUserService.execute).toHaveBeenCalled();
       expect(mockFindCodeByCodeService.execute).not.toHaveBeenCalled();
     });
 
     it('레퍼럴 코드가 존재하지 않는 경우 에러를 발생시킨다', async () => {
       // Arrange
-      mockUserRepository.findByEmail.mockResolvedValue(null);
       mockFindCodeByCodeService.execute.mockResolvedValue(null);
 
       // Act & Assert
@@ -294,7 +311,7 @@ describe('RegisterCredentialService', () => {
         }),
       ).rejects.toThrow(ReferralCodeNotFoundException);
 
-      expect(mockUserRepository.create).not.toHaveBeenCalled();
+      expect(mockCreateUserService.execute).not.toHaveBeenCalled();
     });
 
     it('레퍼럴 코드가 비활성화된 경우 에러를 발생시킨다', async () => {
@@ -312,7 +329,6 @@ describe('RegisterCredentialService', () => {
         lastUsedAt: null,
       });
 
-      mockUserRepository.findByEmail.mockResolvedValue(null);
       mockFindCodeByCodeService.execute.mockResolvedValue(inactiveCode);
 
       // Act & Assert
@@ -325,7 +341,7 @@ describe('RegisterCredentialService', () => {
         }),
       ).rejects.toThrow(ReferralCodeInactiveException);
 
-      expect(mockUserRepository.create).not.toHaveBeenCalled();
+      expect(mockCreateUserService.execute).not.toHaveBeenCalled();
     });
 
     it('레퍼럴 코드가 만료된 경우 에러를 발생시킨다', async () => {
@@ -346,7 +362,6 @@ describe('RegisterCredentialService', () => {
         lastUsedAt: null,
       });
 
-      mockUserRepository.findByEmail.mockResolvedValue(null);
       mockFindCodeByCodeService.execute.mockResolvedValue(expiredCode);
 
       // Act & Assert
@@ -359,13 +374,14 @@ describe('RegisterCredentialService', () => {
         }),
       ).rejects.toThrow(ReferralCodeExpiredException);
 
-      expect(mockUserRepository.create).not.toHaveBeenCalled();
+      expect(mockCreateUserService.execute).not.toHaveBeenCalled();
     });
 
     it('액티비티 로그 실패 시에도 회원가입은 성공한다', async () => {
       // Arrange
-      mockUserRepository.findByEmail.mockResolvedValue(null);
-      mockUserRepository.create.mockResolvedValue(mockUser);
+      mockCreateUserService.execute.mockResolvedValue({
+        user: mockDomainUser,
+      });
       mockActivityLog.logSuccess.mockRejectedValue(
         new Error('Activity log failed'),
       );
@@ -383,15 +399,16 @@ describe('RegisterCredentialService', () => {
         email: mockEmail,
       });
 
-      expect(mockUserRepository.create).toHaveBeenCalled();
+      expect(mockCreateUserService.execute).toHaveBeenCalled();
       expect(mockActivityLog.logSuccess).toHaveBeenCalled();
     });
 
     it('레퍼럴 관계 생성 실패 시 트랜잭션이 롤백되어 회원가입도 실패한다', async () => {
       // Arrange
-      mockUserRepository.findByEmail.mockResolvedValue(null);
       mockFindCodeByCodeService.execute.mockResolvedValue(mockAffiliateCode);
-      mockUserRepository.create.mockResolvedValue(mockUser);
+      mockCreateUserService.execute.mockResolvedValue({
+        user: mockDomainUser,
+      });
       mockLinkReferralService.execute.mockRejectedValue(
         new Error('Referral link failed'),
       );
@@ -408,13 +425,15 @@ describe('RegisterCredentialService', () => {
         }),
       ).rejects.toThrow('Referral link failed');
 
+      expect(mockCreateUserService.execute).toHaveBeenCalled();
       expect(mockLinkReferralService.execute).toHaveBeenCalled();
     });
 
     it('비밀번호가 올바르게 해싱되어 저장된다', async () => {
       // Arrange
-      mockUserRepository.findByEmail.mockResolvedValue(null);
-      mockUserRepository.create.mockResolvedValue(mockUser);
+      mockCreateUserService.execute.mockResolvedValue({
+        user: mockDomainUser,
+      });
       mockActivityLog.logSuccess.mockResolvedValue(undefined);
 
       // Act
@@ -425,22 +444,23 @@ describe('RegisterCredentialService', () => {
       });
 
       // Assert
-      expect(mockUserRepository.create).toHaveBeenCalledWith(
+      expect(mockCreateUserService.execute).toHaveBeenCalledWith(
         expect.objectContaining({
           passwordHash: expect.any(String),
         }),
       );
 
       // 비밀번호 해시는 원본 비밀번호와 다르야 함
-      const createCall = mockUserRepository.create.mock.calls[0][0];
+      const createCall = mockCreateUserService.execute.mock.calls[0][0];
       expect(createCall.passwordHash).not.toBe(mockPassword);
       expect(createCall.passwordHash).toMatch(/^\$2[aby]\$/); // bcrypt 해시 형식
     });
 
     it('국가코드와 타임존이 올바르게 설정된다', async () => {
       // Arrange
-      mockUserRepository.findByEmail.mockResolvedValue(null);
-      mockUserRepository.create.mockResolvedValue(mockUser);
+      mockCreateUserService.execute.mockResolvedValue({
+        user: mockDomainUser,
+      });
       mockActivityLog.logSuccess.mockResolvedValue(undefined);
 
       // Act
@@ -451,7 +471,7 @@ describe('RegisterCredentialService', () => {
       });
 
       // Assert
-      expect(mockUserRepository.create).toHaveBeenCalledWith(
+      expect(mockCreateUserService.execute).toHaveBeenCalledWith(
         expect.objectContaining({
           country: mockRequestInfo.country,
           timezone: expect.any(String),
@@ -459,11 +479,10 @@ describe('RegisterCredentialService', () => {
       );
     });
 
-    it('userRepository.create 실패 시 에러를 전파해야 함', async () => {
+    it('createUserService.execute 실패 시 에러를 전파해야 함', async () => {
       // Arrange
-      mockUserRepository.findByEmail.mockResolvedValue(null);
       const createError = new Error('Database error');
-      mockUserRepository.create.mockRejectedValue(createError);
+      mockCreateUserService.execute.mockRejectedValue(createError);
 
       // Act & Assert
       await expect(
@@ -474,14 +493,12 @@ describe('RegisterCredentialService', () => {
         }),
       ).rejects.toThrow('Database error');
 
-      expect(mockUserRepository.findByEmail).toHaveBeenCalledWith(mockEmail);
-      expect(mockUserRepository.create).toHaveBeenCalled();
+      expect(mockCreateUserService.execute).toHaveBeenCalled();
       expect(mockActivityLog.logSuccess).not.toHaveBeenCalled();
     });
 
     it('findCodeByCodeService.execute가 일반 에러를 던지면 예외를 전파해야 함', async () => {
       // Arrange
-      mockUserRepository.findByEmail.mockResolvedValue(null);
       const codeError = new Error('Code service error');
       mockFindCodeByCodeService.execute.mockRejectedValue(codeError);
 
@@ -498,13 +515,13 @@ describe('RegisterCredentialService', () => {
       expect(mockFindCodeByCodeService.execute).toHaveBeenCalledWith({
         code: mockReferralCode,
       });
-      expect(mockUserRepository.create).not.toHaveBeenCalled();
+      expect(mockCreateUserService.execute).not.toHaveBeenCalled();
     });
 
-    it('userRepository.findByEmail 실패 시 에러를 전파해야 함', async () => {
+    it('createUserService.execute가 일반 에러를 던지면 예외를 전파해야 함', async () => {
       // Arrange
-      const findError = new Error('Database connection error');
-      mockUserRepository.findByEmail.mockRejectedValue(findError);
+      const createError = new Error('Database connection error');
+      mockCreateUserService.execute.mockRejectedValue(createError);
 
       // Act & Assert
       await expect(
@@ -515,13 +532,11 @@ describe('RegisterCredentialService', () => {
         }),
       ).rejects.toThrow('Database connection error');
 
-      expect(mockUserRepository.findByEmail).toHaveBeenCalledWith(mockEmail);
-      expect(mockUserRepository.create).not.toHaveBeenCalled();
+      expect(mockCreateUserService.execute).toHaveBeenCalled();
     });
 
     it('레퍼럴 코드 검증이 사용자 생성 전에 이루어져야 함', async () => {
       // Arrange
-      mockUserRepository.findByEmail.mockResolvedValue(null);
       mockFindCodeByCodeService.execute.mockResolvedValue(null);
 
       // Act & Assert
@@ -537,7 +552,7 @@ describe('RegisterCredentialService', () => {
       // 레퍼럴 코드 검증이 먼저 호출되어야 함
       expect(mockFindCodeByCodeService.execute).toHaveBeenCalled();
       // 사용자 생성은 호출되지 않아야 함
-      expect(mockUserRepository.create).not.toHaveBeenCalled();
+      expect(mockCreateUserService.execute).not.toHaveBeenCalled();
     });
 
   });

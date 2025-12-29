@@ -1,18 +1,27 @@
 // src/modules/user/user.module.ts
 import { Module } from '@nestjs/common';
+import { CreateUserService } from './application/create-user.service';
+import { UserRepository } from './infrastructure/user.repository';
+import { UserMapper } from './infrastructure/user.mapper';
+import { UserPolicy } from './domain/user-policy';
+import { USER_REPOSITORY } from './ports/out/user.repository.token';
 
 @Module({
   imports: [
-    // TODO: 필요한 모듈 import 추가
   ],
   providers: [
-    // TODO: Providers 추가
+    CreateUserService,
+    UserPolicy,
+    UserMapper,
+    {
+      provide: USER_REPOSITORY,
+      useClass: UserRepository,
+    },
   ],
-  controllers: [
-    // TODO: Controllers 추가
-  ],
+  controllers: [],
   exports: [
-    // TODO: Exports 추가
+    CreateUserService,
+    USER_REPOSITORY, // registration 모듈에서 사용
   ],
 })
 export class UserModule {}

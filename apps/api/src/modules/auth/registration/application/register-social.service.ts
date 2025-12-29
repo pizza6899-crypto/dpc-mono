@@ -1,4 +1,4 @@
-import { Injectable, Inject, Logger } from '@nestjs/common';
+import { Injectable, Inject, Logger, HttpStatus } from '@nestjs/common';
 import { Transactional } from '@nestjs-cls/transactional';
 import { PrismaService } from 'src/platform/prisma/prisma.service';
 import type { ActivityLogPort } from 'src/platform/activity-log/activity-log.port';
@@ -9,8 +9,11 @@ import { VipMembershipService } from 'src/modules/vip/application/vip-membership
 import { SocialType, UserRoleType } from '@repo/database';
 import { ApiException } from 'src/platform/http/exception/api.exception';
 import { MessageCode } from 'src/platform/http/types/message-codes';
-import { RegistrationPolicy, RegistrationUser } from '../domain';
-import { USER_REPOSITORY, type UserRepositoryPort } from '../ports/out';
+import { User } from 'src/modules/user/domain';
+import { USER_REPOSITORY } from 'src/modules/user/ports/out/user.repository.token';
+import type { UserRepositoryPort } from 'src/modules/user/ports/out/user.repository.port';
+import { CreateUserService } from 'src/modules/user/application/create-user.service';
+import { UserAlreadyExistsException } from 'src/modules/user/domain/user.exception';
 
 export interface SocialUserInfo {
   socialId: string;
@@ -43,7 +46,7 @@ export class RegisterSocialService {
     private readonly prisma: PrismaService,
     @Inject(ACTIVITY_LOG) private readonly activityLog: ActivityLogPort,
     private readonly vipMembershipService: VipMembershipService,
-    private readonly registrationPolicy: RegistrationPolicy,
+    private readonly createUserService: CreateUserService,
     @Inject(USER_REPOSITORY)
     private readonly userRepository: UserRepositoryPort,
   ) {}
@@ -51,7 +54,7 @@ export class RegisterSocialService {
   @Transactional()
   async execute(params: RegisterSocialParams): Promise<RegisterSocialResult> {
     const { socialUser, socialType, requestInfo } = params;
-    let user: RegistrationUser;
+    let user: User;
     let isNewUser = false;
 
     // 1. 기존 사용자 확인 (소셜 ID로) - 도메인 레이어 사용
@@ -59,19 +62,29 @@ export class RegisterSocialService {
       socialUser.socialId,
     );
 
-    if (this.registrationPolicy.canRegister(existingUser)) {
-      // 2. 새 사용자 생성 (Repository를 통해)
-      user = await this.userRepository.create({
-        email: socialUser.email,
-        passwordHash: null,
-        socialId: socialUser.socialId,
-        socialType: socialType,
-        role: UserRoleType.USER,
-        country: requestInfo.country,
-        timezone: requestInfo.timezone,
-      });
-
-      isNewUser = true;
+    if (!existingUser) {
+      // 2. 새 사용자 생성 (user 모듈의 유즈케이스 사용)
+      try {
+        const result = await this.createUserService.execute({
+          email: socialUser.email,
+          passwordHash: null,
+          socialId: socialUser.socialId,
+          socialType: socialType,
+          role: UserRoleType.USER,
+          country: requestInfo.country,
+          timezone: requestInfo.timezone,
+        });
+        user = result.user;
+        isNewUser = true;
+      } catch (error) {
+        if (error instanceof UserAlreadyExistsException) {
+          throw new ApiException(
+            MessageCode.USER_ALREADY_EXISTS,
+            HttpStatus.BAD_REQUEST,
+          );
+        }
+        throw error;
+      }
 
       // 4. VIP 멤버십 생성
       await this.vipMembershipService.getOrCreateMembership(user.id);

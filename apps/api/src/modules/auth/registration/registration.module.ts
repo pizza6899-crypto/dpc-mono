@@ -4,16 +4,13 @@ import { RegistrationAdminController } from './controllers/admin/registration-ad
 import { RegisterCredentialService } from './application/register-credential.service';
 import { RegisterCredentialAdminService } from './application/register-credential-admin.service';
 import { RegisterSocialService } from './application/register-social.service';
-import { RegistrationPolicy } from './domain';
 import { VipModule } from '../../vip/vip.module';
 import { AffiliateReferralModule } from '../../affiliate/referral/referral.module';
 import { AffiliateCodeModule } from '../../affiliate/code/code.module';
 import { ActivityLogModule } from 'src/platform/activity-log/activity-log.module';
 import { PrismaModule } from 'src/platform/prisma/prisma.module';
 import { EnvModule } from 'src/platform/env/env.module';
-import { UserRepository } from './infrastructure/user.repository';
-import { UserMapper } from './infrastructure/user.mapper';
-import { USER_REPOSITORY } from './ports/out';
+import { UserModule } from '../../user/user.module';
 
 @Module({
   imports: [
@@ -23,6 +20,7 @@ import { USER_REPOSITORY } from './ports/out';
     AffiliateReferralModule,
     AffiliateCodeModule, // 레퍼럴 코드 사전 검증을 위해 필요
     ActivityLogModule,
+    UserModule, // user 모듈의 CreateUserService 사용을 위해 추가
   ],
   controllers: [RegistrationController, RegistrationAdminController],
   providers: [
@@ -30,16 +28,6 @@ import { USER_REPOSITORY } from './ports/out';
     RegisterCredentialService,
     RegisterCredentialAdminService,
     RegisterSocialService,
-
-    // Domain Policies
-    RegistrationPolicy,
-
-    // Infrastructure
-    UserMapper,
-    {
-      provide: USER_REPOSITORY,
-      useClass: UserRepository,
-    },
   ],
   exports: [RegisterCredentialService, RegisterSocialService],
 })

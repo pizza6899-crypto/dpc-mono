@@ -17,8 +17,10 @@ import {
   ReferralCodeExpiredException,
 } from 'src/modules/affiliate/referral/domain/referral.exception';
 import { UserRoleType, UserStatus } from '@repo/database';
-import { RegistrationPolicy } from '../domain';
-import { USER_REPOSITORY, type UserRepositoryPort } from '../ports/out';
+import { USER_REPOSITORY } from 'src/modules/user/ports/out/user.repository.token';
+import type { UserRepositoryPort } from 'src/modules/user/ports/out/user.repository.port';
+import { CreateUserService } from 'src/modules/user/application/create-user.service';
+import { UserAlreadyExistsException } from 'src/modules/user/domain/user.exception';
 
 export interface RegisterCredentialAdminParams {
   email: string;
@@ -50,7 +52,7 @@ export class RegisterCredentialAdminService {
     private readonly vipMembershipService: VipMembershipService,
     private readonly linkReferralService: LinkReferralService,
     private readonly findCodeByCodeService: FindCodeByCodeService,
-    private readonly registrationPolicy: RegistrationPolicy,
+    private readonly createUserService: CreateUserService,
     @Inject(USER_REPOSITORY)
     private readonly userRepository: UserRepositoryPort,
   ) {}
@@ -69,17 +71,7 @@ export class RegisterCredentialAdminService {
       requestInfo,
     } = params;
 
-    // 1. 이메일 중복 확인 (도메인 레이어 사용)
-    const existingUser = await this.userRepository.findByEmail(email);
-
-    if (!this.registrationPolicy.canRegister(existingUser)) {
-      throw new ApiException(
-        MessageCode.USER_ALREADY_EXISTS,
-        HttpStatus.BAD_REQUEST,
-      );
-    }
-
-    // 2. 레퍼럴 코드 사전 검증 (사용자 생성 전)
+    // 1. 레퍼럴 코드 사전 검증 (사용자 생성 전)
     // 유효하지 않은 레퍼럴 코드인 경우 회원가입을 취소
     if (referralCode) {
       const code = await this.findCodeByCodeService.execute({
@@ -101,7 +93,7 @@ export class RegisterCredentialAdminService {
       }
     }
 
-    // 3. 국가코드 기반 타임존 및 통화 설정
+    // 2. 국가코드 기반 타임존 및 통화 설정
     // 어드민이 명시적으로 지정한 경우 우선 사용, 없으면 requestInfo 사용
     const country = providedCountry || requestInfo.country;
     const timezone = providedTimezone || requestInfo.timezone;
@@ -111,26 +103,38 @@ export class RegisterCredentialAdminService {
       timezone,
     });
 
-    // 4. 비밀번호 해싱
+    // 3. 비밀번호 해싱
     const passwordHash = await hashPassword(password);
 
-    // 5. 사용자 생성 (어드민이 지정한 role 사용)
-    const user = await this.userRepository.create({
-      email,
-      passwordHash,
-      socialId: null,
-      socialType: null,
-      role, // 어드민이 지정한 role 사용
-      country: country,
-      timezone: countryConfig.timezone,
-    });
+    // 4. 사용자 생성 (user 모듈의 유즈케이스 사용, 어드민이 지정한 role 사용)
+    let user;
+    try {
+      const result = await this.createUserService.execute({
+        email,
+        passwordHash,
+        socialId: null,
+        socialType: null,
+        role, // 어드민이 지정한 role 사용
+        country: country,
+        timezone: countryConfig.timezone,
+      });
+      user = result.user;
+    } catch (error) {
+      if (error instanceof UserAlreadyExistsException) {
+        throw new ApiException(
+          MessageCode.USER_ALREADY_EXISTS,
+          HttpStatus.BAD_REQUEST,
+        );
+      }
+      throw error;
+    }
 
-    // 6. VIP 멤버십 생성 (일반 사용자만)
+    // 5. VIP 멤버십 생성 (일반 사용자만)
     if (role === UserRoleType.USER) {
       await this.vipMembershipService.getOrCreateMembership(user.id);
     }
 
-    // 7. 레퍼럴 코드가 제공된 경우 레퍼럴 관계 생성
+    // 6. 레퍼럴 코드가 제공된 경우 레퍼럴 관계 생성
     // 사전 검증을 통과했으므로 여기서는 셀프 추천 및 중복 레퍼럴만 체크됨
     if (referralCode) {
       await this.linkReferralService.execute({
@@ -143,7 +147,7 @@ export class RegisterCredentialAdminService {
       });
     }
 
-    // 8. 액티비티 로그
+    // 7. 액티비티 로그
     try {
       await this.activityLog.logSuccess(
         {
