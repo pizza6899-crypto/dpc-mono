@@ -5,6 +5,7 @@ import compression from 'compression';
 import { corsConfig } from './platform/security/cors.config';
 import { helmetConfig } from './platform/security/helmet.config';
 import { TransformInterceptor } from './platform/http/interceptors/transform.interceptor';
+import { RequestInfoInterceptor } from './platform/http/interceptors/request-info.interceptor';
 import { CustomValidationPipe } from './platform/http/pipes/validation.pipe';
 import { EnvService } from './platform/env/env.service';
 import { SwaggerModule, DocumentBuilder } from '@nestjs/swagger';
@@ -131,7 +132,10 @@ async function bootstrap() {
       }
     });
 
-    app.useGlobalInterceptors(new TransformInterceptor(app.get(Reflector)));
+    app.useGlobalInterceptors(
+      new RequestInfoInterceptor(),
+      new TransformInterceptor(app.get(Reflector)),
+    );
     app.useGlobalPipes(new CustomValidationPipe());
 
     // 정적 파일 서빙 설정 추가
