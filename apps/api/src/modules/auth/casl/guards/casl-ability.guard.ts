@@ -19,6 +19,16 @@ import type { AppAbility } from '../infrastructure/casl-ability.factory';
  * CASL 기반 권한 검증 Guard
  *
  * `@CheckAbility()` 데코레이터와 함께 사용하여 엔드포인트 접근 권한을 검증합니다.
+ *
+ * 동작 방식:
+ * 1. @CheckAbility() 데코레이터가 없는 엔드포인트는 open으로 간주하여 통과 (인증 불필요)
+ * 2. @CheckAbility() 데코레이터가 있는 엔드포인트는:
+ *    - 사용자 인증 확인 (인증되지 않은 경우 ForbiddenException)
+ *    - 사용자별 Ability 생성
+ *    - 권한 검증 (권한이 없는 경우 InsufficientPermissionException)
+ *
+ * 글로벌로 등록되어 모든 엔드포인트에 적용되지만,
+ * 데코레이터가 없으면 자동으로 통과하므로 기존 엔드포인트에 영향을 주지 않습니다.
  */
 @Injectable()
 export class CaslAbilityGuard implements CanActivate {
@@ -28,6 +38,7 @@ export class CaslAbilityGuard implements CanActivate {
   ) {}
 
   async canActivate(context: ExecutionContext): Promise<boolean> {
+    console.log('히히 가드가 실행되었습니다.');
     // 1. 메타데이터에서 권한 요구사항 추출
     const requiredAbility = this.reflector.getAllAndOverride<CheckAbilityMetadata>(
       CHECK_ABILITY_KEY,
@@ -35,6 +46,7 @@ export class CaslAbilityGuard implements CanActivate {
     );
 
     // 권한 검증이 필요하지 않은 경우 (데코레이터 없음)
+    // @CheckAbility() 데코레이터가 없는 엔드포인트는 open으로 간주하여 통과
     if (!requiredAbility) {
       return true;
     }
