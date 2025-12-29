@@ -28,21 +28,24 @@ describe('CredentialAdminController', () => {
   let mockFindAttemptsService: jest.Mocked<FindLoginAttemptsService>;
 
   const mockAdminUser: CurrentUserWithSession = {
-    id: 'admin-123',
+    id: BigInt(123),
+    uid: 'admin-123',
     email: 'admin@example.com',
     role: UserRoleType.ADMIN,
     sessionId: 'session-456',
   };
 
   const mockSuperAdminUser: CurrentUserWithSession = {
-    id: 'super-admin-123',
+    id: BigInt(789),
+    uid: 'super-admin-123',
     email: 'superadmin@example.com',
     role: UserRoleType.SUPER_ADMIN,
     sessionId: 'session-789',
   };
 
   const mockUser: CurrentUserWithSession = {
-    id: 'user-123',
+    id: BigInt(456),
+    uid: 'user-123',
     email: 'user@example.com',
     role: UserRoleType.USER,
     sessionId: 'session-123',
@@ -76,7 +79,8 @@ describe('CredentialAdminController', () => {
   };
 
   const mockAuthenticatedAdminUser: AuthenticatedUser = {
-    id: 'admin-123',
+    id: BigInt(123),
+    uid: 'admin-123',
     email: 'admin@example.com',
     role: UserRoleType.ADMIN,
   };
@@ -157,7 +161,7 @@ describe('CredentialAdminController', () => {
       // Assert
       expect(result).toEqual({
         user: {
-          id: mockAuthenticatedAdminUser.id,
+          uid: mockAuthenticatedAdminUser.uid,
           email: mockAuthenticatedAdminUser.email,
         },
       });
@@ -465,7 +469,7 @@ describe('CredentialAdminController', () => {
       expect(result).toEqual({
         isAuthenticated: true,
         user: {
-          id: mockAdminUser.id,
+          uid: mockAdminUser.uid,
           email: mockAdminUser.email,
         },
       });
@@ -489,7 +493,7 @@ describe('CredentialAdminController', () => {
       expect(result).toEqual({
         isAuthenticated: true,
         user: {
-          id: mockSuperAdminUser.id,
+          uid: mockSuperAdminUser.uid,
           email: mockSuperAdminUser.email,
         },
       });

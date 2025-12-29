@@ -47,7 +47,7 @@ describe('RegistrationController', () => {
   };
 
   const mockRegisterResult: RegisterResponseDto = {
-    id: 'user-123',
+    uid: 'user-123',
     email: 'user@example.com',
   };
 

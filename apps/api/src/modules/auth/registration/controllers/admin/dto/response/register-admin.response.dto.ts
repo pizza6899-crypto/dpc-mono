@@ -2,8 +2,8 @@ import { ApiProperty } from '@nestjs/swagger';
 import { UserRoleType, UserStatus } from '@repo/database';
 
 export class RegisterAdminResponseDto {
-  @ApiProperty({ description: 'User ID' })
-  id: bigint;
+  @ApiProperty({ description: 'User UID' })
+  uid: string;
 
   @ApiProperty({ description: 'Email' })
   email: string;

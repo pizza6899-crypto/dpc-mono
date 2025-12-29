@@ -91,7 +91,7 @@ export class CredentialAdminController {
 
     return {
       user: {
-        id: authenticatedUser.id,
+        uid: authenticatedUser.uid,
         email: authenticatedUser.email,
       },
     };
@@ -212,7 +212,7 @@ export class CredentialAdminController {
       user:
         isAuthenticated && user
           ? {
-              id: user.id,
+              uid: user.uid,
               email: user.email,
             }
           : null,

@@ -28,7 +28,7 @@ export interface RegisterCredentialParams {
 }
 
 export interface RegisterCredentialResult {
-  id: bigint;
+  uid: string;
   email: string;
 }
 
@@ -139,7 +139,7 @@ export class RegisterCredentialService {
     }
 
     return {
-      id: user.id,
+      uid: user.uid,
       email: user.email,
     };
   }

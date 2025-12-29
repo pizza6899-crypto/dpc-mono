@@ -31,7 +31,7 @@ export interface RegisterCredentialAdminParams {
 }
 
 export interface RegisterCredentialAdminResult {
-  id: bigint;
+  uid: string;
   email: string;
   role: UserRoleType;
   status: UserStatus;
@@ -167,7 +167,7 @@ export class RegisterCredentialAdminService {
     }
 
     return {
-      id: user.id,
+      uid: user.uid,
       email: user.email,
       role: user.role,
       status: user.status,

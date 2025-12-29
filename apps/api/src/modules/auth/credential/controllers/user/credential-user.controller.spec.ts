@@ -20,21 +20,24 @@ describe('CredentialUserController', () => {
   let mockLogoutService: jest.Mocked<LogoutService>;
 
   const mockUser: CurrentUserWithSession = {
-    id: 'user-123',
+    id: BigInt(123),
+    uid: 'user-123',
     email: 'user@example.com',
     role: UserRoleType.USER,
     sessionId: 'session-123',
   };
 
   const mockAdminUser: CurrentUserWithSession = {
-    id: 'admin-123',
+    id: BigInt(456),
+    uid: 'admin-123',
     email: 'admin@example.com',
     role: UserRoleType.ADMIN,
     sessionId: 'session-456',
   };
 
   const mockSuperAdminUser: CurrentUserWithSession = {
-    id: 'super-admin-123',
+    id: BigInt(789),
+    uid: 'super-admin-123',
     email: 'superadmin@example.com',
     role: UserRoleType.SUPER_ADMIN,
     sessionId: 'session-789',
@@ -68,7 +71,8 @@ describe('CredentialUserController', () => {
   };
 
   const mockAuthenticatedUser: AuthenticatedUser = {
-    id: 'user-123',
+    id: BigInt(123),
+    uid: 'user-123',
     email: 'user@example.com',
     role: UserRoleType.USER,
   };
@@ -138,7 +142,7 @@ describe('CredentialUserController', () => {
       // Assert
       expect(result).toEqual({
         user: {
-          id: mockAuthenticatedUser.id,
+          uid: mockAuthenticatedUser.uid,
           email: mockAuthenticatedUser.email,
         },
       });
@@ -509,7 +513,7 @@ describe('CredentialUserController', () => {
       expect(result).toEqual({
         isAuthenticated: true,
         user: {
-          id: mockUser.id,
+          uid: mockUser.uid,
           email: mockUser.email,
         },
       });

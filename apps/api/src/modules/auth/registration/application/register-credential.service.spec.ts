@@ -36,10 +36,11 @@ describe('RegisterCredentialService', () => {
 
   const mockEmail = 'test@example.com';
   const mockPassword = 'password123!';
-  const mockUserId = 'user-123';
+  const mockUserId = BigInt(123);
+  const mockUserUid = 'user-123';
   const mockReferralCode = 'REFERRAL123';
   const mockCodeId = 'code-123';
-  const mockAffiliateId = 'affiliate-123';
+  const mockAffiliateId = BigInt(123);
 
   const mockRequestInfo: RequestClientInfo = {
     ip: '192.168.1.1',
@@ -65,6 +66,7 @@ describe('RegisterCredentialService', () => {
 
   const mockUser = RegistrationUser.create({
     id: mockUserId,
+    uid: mockUserUid,
     email: mockEmail,
     passwordHash: '$2b$10$hashedpassword123',
     socialId: null,
@@ -173,7 +175,7 @@ describe('RegisterCredentialService', () => {
 
       // Assert
       expect(result).toEqual({
-        id: mockUserId,
+        uid: mockUserUid,
         email: mockEmail,
       });
 
@@ -216,7 +218,7 @@ describe('RegisterCredentialService', () => {
 
       // Assert
       expect(result).toEqual({
-        id: mockUserId,
+        uid: mockUserUid,
         email: mockEmail,
       });
 
@@ -236,7 +238,8 @@ describe('RegisterCredentialService', () => {
     it('이메일이 이미 존재하는 경우 에러를 발생시킨다', async () => {
       // Arrange
       const existingUser = RegistrationUser.create({
-        id: 'existing-user-123',
+        id: BigInt(456),
+        uid: 'existing-user-123',
         email: mockEmail,
         passwordHash: '$2b$10$existinghash',
         socialId: null,
@@ -376,7 +379,7 @@ describe('RegisterCredentialService', () => {
 
       // Assert
       expect(result).toEqual({
-        id: mockUserId,
+        uid: mockUserUid,
         email: mockEmail,
       });
 
