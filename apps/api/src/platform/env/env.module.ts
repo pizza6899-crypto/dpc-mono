@@ -18,7 +18,6 @@ import {
   depositConfig,
   walletConfig,
   openExchangeRatesConfig,
-  prismaConfig,
 } from './env.config';
 import { validate } from './env.validation';
 
@@ -43,7 +42,6 @@ import { validate } from './env.validation';
         openExchangeRatesConfig,
         depositConfig,
         walletConfig,
-        prismaConfig,
       ],
       validate,
       validationOptions: {

@@ -18,7 +18,6 @@ import {
   DepositConfig,
   WalletConfig,
   OpenExchangeRatesConfig,
-  PrismaConfig, // 추가
 } from './env.types';
 
 @Injectable()
@@ -103,10 +102,6 @@ export class EnvService {
     return this.configService.get<WalletConfig>('wallet')!;
   }
 
-  get prisma(): PrismaConfig {
-    return this.configService.get<PrismaConfig>('prisma')!;
-  }
-
   get all(): EnvironmentConfig {
     return {
       app: this.app,
@@ -125,7 +120,6 @@ export class EnvService {
       openExchangeRates: this.openExchangeRates,
       deposit: this.deposit,
       wallet: this.wallet,
-      prisma: this.prisma,
     };
   }
 }

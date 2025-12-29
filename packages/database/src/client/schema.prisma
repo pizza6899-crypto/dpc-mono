@@ -653,14 +653,6 @@ model BankAccount {
   @@index([priority])
 }
 
-model PrismaQueryLog {
-  id        BigInt   @id @default(autoincrement())
-  query     String
-  params    Json?
-  duration  Int
-  createdAt DateTime @default(now())
-}
-
 model AffiliateCode {
   id           String     @id @default(cuid())
   userId       BigInt

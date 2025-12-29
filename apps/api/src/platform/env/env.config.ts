@@ -169,11 +169,3 @@ export const walletConfig = registerAs('wallet', () => ({
       )
     : [], // 기본값
 }));
-
-export const prismaConfig = registerAs('prisma', () => ({
-  slowQueryThresholdMs: parseInt(
-    process.env.PRISMA_SLOW_QUERY_THRESHOLD_MS ?? '1000',
-    10,
-  ), // 기본값: 1000ms
-  queryLoggingEnabled: process.env.PRISMA_QUERY_LOGGING_ENABLED === 'true', // 개발 환경에서 모든 쿼리 로깅 여부
-}));

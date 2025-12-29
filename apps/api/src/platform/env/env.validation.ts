@@ -308,15 +308,6 @@ class EnvironmentVariables {
   // Wallet 관련 환경변수 추가
   @IsString()
   WALLET_ALLOWED_CURRENCIES?: string;
-
-  // Prisma 관련 환경변수 추가
-  @Type(() => Number)
-  @IsNumber()
-  PRISMA_SLOW_QUERY_THRESHOLD_MS: number;
-
-  @Transform(({ value }) => value === 'true')
-  @IsBoolean()
-  PRISMA_QUERY_LOGGING_ENABLED: boolean;
 }
 
 export function validate(config: Record<string, unknown>) {

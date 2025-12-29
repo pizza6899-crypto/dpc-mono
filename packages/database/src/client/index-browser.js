@@ -608,14 +608,6 @@ exports.Prisma.BankAccountScalarFieldEnum = {
   deletedAt: 'deletedAt'
 };
 
-exports.Prisma.PrismaQueryLogScalarFieldEnum = {
-  id: 'id',
-  query: 'query',
-  params: 'params',
-  duration: 'duration',
-  createdAt: 'createdAt'
-};
-
 exports.Prisma.AffiliateCodeScalarFieldEnum = {
   id: 'id',
   userId: 'userId',
@@ -982,7 +974,6 @@ exports.Prisma.ModelName = {
   EmailLog: 'EmailLog',
   GameSession: 'GameSession',
   BankAccount: 'BankAccount',
-  PrismaQueryLog: 'PrismaQueryLog',
   AffiliateCode: 'AffiliateCode',
   Referral: 'Referral',
   AffiliateWallet: 'AffiliateWallet',

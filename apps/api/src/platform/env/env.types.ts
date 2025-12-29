@@ -135,12 +135,6 @@ export interface WalletConfig {
   allowedCurrencies: ExchangeCurrencyCode[];
 }
 
-// Prisma 설정 인터페이스 추가
-export interface PrismaConfig {
-  slowQueryThresholdMs: number; // 슬로우 쿼리 임계값 (ms)
-  queryLoggingEnabled: boolean; // 쿼리 로깅 여부
-}
-
 export interface EnvironmentConfig {
   app: AppConfig;
   jwt: JwtConfig;
@@ -158,5 +152,4 @@ export interface EnvironmentConfig {
   openExchangeRates: OpenExchangeRatesConfig;
   deposit: DepositConfig;
   wallet: WalletConfig;
-  prisma: PrismaConfig;
 }
