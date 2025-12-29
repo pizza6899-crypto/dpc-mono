@@ -1,58 +1,18 @@
 // src/modules/{{#if parentPath}}{{parentPath}}/{{/if}}{{kebabCase moduleName}}/{{kebabCase moduleName}}.module.ts
 import { Module } from '@nestjs/common';
-import { PrismaModule } from 'src/platform/prisma/prisma.module';
-{{#if withPolicy}}
-import { {{pascalCase moduleName}}Policy } from './domain';
-{{/if}}
-{{#if withService}}
-import { Create{{pascalCase moduleName}}Service } from './application/create-{{kebabCase moduleName}}.service';
-{{/if}}
-{{#if withMapper}}
-import { {{pascalCase moduleName}}Mapper } from './infrastructure/{{kebabCase moduleName}}.mapper';
-{{/if}}
-{{#if withRepository}}
-import { {{pascalCase moduleName}}Repository } from './infrastructure/{{kebabCase moduleName}}.repository';
-import { {{constantCase moduleName}}_REPOSITORY } from './ports/out/{{kebabCase moduleName}}.repository.token';
-{{/if}}
-{{#if withController}}
-import { {{pascalCase moduleName}}Controller } from './controllers/{{kebabCase moduleName}}.controller';
-{{/if}}
 
 @Module({
   imports: [
-    PrismaModule, // PrismaService를 위해 필요
+    // TODO: 필요한 모듈 import 추가
   ],
   providers: [
-    {{#if withPolicy}}
-    // Domain Policy
-    {{pascalCase moduleName}}Policy,
-    {{/if}}
-    {{#if withService}}
-    // Use Case Services
-    Create{{pascalCase moduleName}}Service,
-    {{/if}}
-    {{#if withMapper}}
-    // Infrastructure
-    {{pascalCase moduleName}}Mapper,
-    {{/if}}
-    {{#if withRepository}}
-    // Repository (Outbound Port 구현)
-    {
-      provide: {{constantCase moduleName}}_REPOSITORY,
-      useClass: {{pascalCase moduleName}}Repository,
-    },
-    {{/if}}
+    // TODO: Providers 추가
   ],
-  {{#if withController}}
   controllers: [
-    {{pascalCase moduleName}}Controller,
+    // TODO: Controllers 추가
   ],
-  {{/if}}
   exports: [
-    {{#if withService}}
-    // Use Case Services (다른 모듈에서 사용 가능)
-    Create{{pascalCase moduleName}}Service,
-    {{/if}}
+    // TODO: Exports 추가
   ],
 })
 export class {{pascalCase moduleName}}Module {}
