@@ -45,4 +45,9 @@ export enum QueueNames {
 
   // 게임 후처리 큐 (모든 게임사 공통)
   GAME_POST_PROCESS = 'game-post-process',
+
+  // 로그 큐들
+  // 단순 활동 및 에러 기록. 데이터 양이 매우 많음. 처리 지연이 발생해도 시스템 운영에 치명적이지 않음.
+  // (각 로그 모듈은 자신의 큐 이름을 관리합니다)
+  HEAVY_LOG_QUEUE = 'heavy-log-queue',
 }

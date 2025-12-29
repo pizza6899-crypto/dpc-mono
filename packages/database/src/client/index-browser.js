@@ -181,22 +181,6 @@ exports.Prisma.UserBalanceStatsScalarFieldEnum = {
   updatedAt: 'updatedAt'
 };
 
-exports.Prisma.ActivityLogScalarFieldEnum = {
-  id: 'id',
-  userId: 'userId',
-  isAdmin: 'isAdmin',
-  activityType: 'activityType',
-  status: 'status',
-  description: 'description',
-  metadata: 'metadata',
-  timestamp: 'timestamp',
-  ipAddress: 'ipAddress',
-  userAgent: 'userAgent',
-  browser: 'browser',
-  os: 'os',
-  isMobile: 'isMobile'
-};
-
 exports.Prisma.GameScalarFieldEnum = {
   id: 'id',
   aggregatorType: 'aggregatorType',
@@ -693,17 +677,69 @@ exports.Prisma.LoginAttemptScalarFieldEnum = {
   isAdmin: 'isAdmin'
 };
 
+exports.Prisma.AuthAuditLogScalarFieldEnum = {
+  id: 'id',
+  createdAt: 'createdAt',
+  userId: 'userId',
+  action: 'action',
+  status: 'status',
+  ip: 'ip',
+  userAgent: 'userAgent',
+  deviceFingerprint: 'deviceFingerprint',
+  metadata: 'metadata'
+};
+
+exports.Prisma.ActivityLogScalarFieldEnum = {
+  id: 'id',
+  createdAt: 'createdAt',
+  userId: 'userId',
+  category: 'category',
+  action: 'action',
+  metadata: 'metadata'
+};
+
+exports.Prisma.SystemErrorLogScalarFieldEnum = {
+  id: 'id',
+  createdAt: 'createdAt',
+  userId: 'userId',
+  errorCode: 'errorCode',
+  errorMessage: 'errorMessage',
+  stackTrace: 'stackTrace',
+  metadata: 'metadata',
+  path: 'path',
+  method: 'method',
+  statusCode: 'statusCode',
+  severity: 'severity',
+  resolved: 'resolved',
+  resolvedAt: 'resolvedAt'
+};
+
+exports.Prisma.IntegrationLogScalarFieldEnum = {
+  id: 'id',
+  createdAt: 'createdAt',
+  userId: 'userId',
+  provider: 'provider',
+  method: 'method',
+  endpoint: 'endpoint',
+  statusCode: 'statusCode',
+  requestBody: 'requestBody',
+  responseBody: 'responseBody',
+  duration: 'duration',
+  success: 'success',
+  errorMessage: 'errorMessage'
+};
+
 exports.Prisma.SortOrder = {
   asc: 'asc',
   desc: 'desc'
 };
 
-exports.Prisma.NullableJsonNullValueInput = {
-  DbNull: Prisma.DbNull,
+exports.Prisma.JsonNullValueInput = {
   JsonNull: Prisma.JsonNull
 };
 
-exports.Prisma.JsonNullValueInput = {
+exports.Prisma.NullableJsonNullValueInput = {
+  DbNull: Prisma.DbNull,
   JsonNull: Prisma.JsonNull
 };
 
@@ -946,7 +982,6 @@ exports.Prisma.ModelName = {
   UserSession: 'UserSession',
   UserBalance: 'UserBalance',
   UserBalanceStats: 'UserBalanceStats',
-  ActivityLog: 'ActivityLog',
   Game: 'Game',
   GameTranslation: 'GameTranslation',
   WhitecliffApiLog: 'WhitecliffApiLog',
@@ -979,7 +1014,11 @@ exports.Prisma.ModelName = {
   AffiliateWallet: 'AffiliateWallet',
   AffiliateCommission: 'AffiliateCommission',
   AffiliateTier: 'AffiliateTier',
-  LoginAttempt: 'LoginAttempt'
+  LoginAttempt: 'LoginAttempt',
+  AuthAuditLog: 'AuthAuditLog',
+  ActivityLog: 'ActivityLog',
+  SystemErrorLog: 'SystemErrorLog',
+  IntegrationLog: 'IntegrationLog'
 };
 
 /**

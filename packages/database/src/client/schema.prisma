@@ -107,25 +107,27 @@ model UserBalanceStats {
   @@index([currency])
 }
 
-model ActivityLog {
-  id           BigInt   @id @default(autoincrement())
-  userId       BigInt
-  isAdmin      Boolean  @default(false)
-  activityType String
-  status       String
-  description  String
-  metadata     Json?
-  timestamp    DateTime @default(now())
-  ipAddress    String?
-  userAgent    String?
-  browser      String?
-  os           String?
-  isMobile     Boolean?
+// 기존 ActivityLog - 새로운 구조로 마이그레이션 예정
+// TODO: 기존 데이터 마이그레이션 후 제거
+// model ActivityLog {
+//   id           BigInt   @id @default(autoincrement())
+//   userId       BigInt
+//   isAdmin      Boolean  @default(false)
+//   activityType String
+//   status       String
+//   description  String
+//   metadata     Json?
+//   timestamp    DateTime @default(now())
+//   ipAddress    String?
+//   userAgent    String?
+//   browser      String?
+//   os           String?
+//   isMobile     Boolean?
 
-  @@index([userId])
-  @@index([timestamp])
-  @@index([isAdmin, timestamp])
-}
+//   @@index([userId])
+//   @@index([timestamp])
+//   @@index([isAdmin, timestamp])
+// }
 
 model Game {
   id               Int                @id @default(autoincrement())
@@ -1002,4 +1004,84 @@ model LoginAttempt {
   @@index([result])
   @@index([email, attemptedAt])
   @@index([ipAddress, attemptedAt])
+}
+
+// 1. 보안/인증 로그
+model AuthAuditLog {
+  id                String   @default(cuid())
+  createdAt         DateTime @default(now())
+  userId            BigInt?
+  action            String
+  status            String
+  ip                String?
+  userAgent         String?
+  deviceFingerprint String?
+  metadata          Json?
+
+  @@id([id, createdAt])
+  // 보안 추적은 보통 '누가' 했는지와 '언제' 했는지가 결합됩니다.
+  @@index([userId, createdAt(sort: Desc)])
+  @@map("auth_audit_logs")
+}
+
+// 2. 서비스 활동 로그
+model ActivityLog {
+  id        String   @default(cuid())
+  createdAt DateTime @default(now())
+  userId    BigInt?
+  category  String
+  action    String
+  metadata  Json?
+
+  @@id([id, createdAt])
+  // CS 조회를 위해 userId와 category를 결합한 인덱스 최적화
+  @@index([userId, category, createdAt(sort: Desc)])
+  @@index([category, action, createdAt(sort: Desc)])
+  @@index([createdAt(sort: Desc)])
+  @@map("activity_logs")
+}
+
+// 3. 기술적 문제 로그
+model SystemErrorLog {
+  id           String    @default(cuid())
+  createdAt    DateTime  @default(now())
+  userId       BigInt?
+  errorCode    String?
+  errorMessage String
+  stackTrace   String?   @db.Text
+  metadata     Json? // 에러 당시 Request/Session 스냅샷용 추가
+  path         String?
+  method       String?
+  statusCode   Int?
+  severity     String? // INFO, WARN, ERROR, CRITICAL
+  resolved     Boolean   @default(false)
+  resolvedAt   DateTime?
+
+  @@id([id, createdAt])
+  // 에러 관리는 severity와 resolved 상태를 먼저 필터링함
+  @@index([severity, resolved, createdAt(sort: Desc)])
+  @@index([errorCode, createdAt(sort: Desc)])
+  @@map("system_error_logs")
+}
+
+// 4. 외부 서비스 연동 기록
+model IntegrationLog {
+  id           String   @default(cuid())
+  createdAt    DateTime @default(now())
+  userId       BigInt?
+  provider     String
+  method       String
+  endpoint     String
+  statusCode   Int?
+  requestBody  Json?
+  responseBody Json?
+  duration     Int
+  success      Boolean
+  errorMessage String?
+
+  @@id([id, createdAt])
+  // 정산 및 장애 대조를 위해 provider와 success를 결합
+  @@index([provider, success, createdAt(sort: Desc)])
+  @@index([userId, createdAt(sort: Desc)])
+  @@map("integration_logs")
 }

@@ -14,22 +14,22 @@ export class ActivityLogAdapter implements ActivityLogPort {
     requestInfo: RequestClientInfo,
   ): Promise<void> {
     try {
-      await this.prisma.activityLog.create({
-        data: {
-          userId: data.userId,
-          isAdmin: data.isAdmin ?? false,
-          activityType: data.activityType,
-          status: data.status,
-          description: data.description,
-          metadata: data.metadata,
-          timestamp: nowUtc(),
-          ipAddress: requestInfo.ip,
-          userAgent: requestInfo.userAgent,
-          browser: requestInfo.browser || 'unknown',
-          os: requestInfo.os || 'unknown',
-          isMobile: requestInfo.isMobile || false,
-        },
-      });
+      // await this.prisma.activityLog.create({
+      //   data: {
+      //     userId: data.userId,
+      //     isAdmin: data.isAdmin ?? false,
+      //     activityType: data.activityType,
+      //     status: data.status,
+      //     description: data.description,
+      //     metadata: data.metadata,
+      //     timestamp: nowUtc(),
+      //     ipAddress: requestInfo.ip,
+      //     userAgent: requestInfo.userAgent,
+      //     browser: requestInfo.browser || 'unknown',
+      //     os: requestInfo.os || 'unknown',
+      //     isMobile: requestInfo.isMobile || false,
+      //   },
+      // });
     } catch (error) {
       // 로깅 실패는 시스템에 영향을 주지 않도록 조용히 처리
       console.error('Activity log 저장 실패:', error);
