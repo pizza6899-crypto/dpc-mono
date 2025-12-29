@@ -7,7 +7,7 @@ import {
   CRITICAL_LOG_QUEUE_NAME,
   HEAVY_LOG_QUEUE_NAME,
 } from '../infrastructure/queue.constants';
-import { IdUtil } from 'src/utils/id.util';
+import { generateUid } from 'src/utils/id.util';
 
 interface LogQueueJobData {
   id: string;
@@ -36,7 +36,7 @@ export class DispatchLogService {
    */
   async dispatch(payload: LogJobData): Promise<void> {
     try {
-      const id = IdUtil.generateUid();
+      const id = generateUid();
       const jobData: LogQueueJobData = { id, payload };
 
       // 로그 타입에 따라 적절한 큐에 추가
