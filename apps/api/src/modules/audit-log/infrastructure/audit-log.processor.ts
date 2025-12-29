@@ -56,9 +56,19 @@ export class CriticalLogProcessor
   }
 
   async onApplicationShutdown(signal?: string): Promise<void> {
-    if (this.worker) {
+    try {
+      if (!this.worker) {
+        return;
+      }
+
       await this.worker.close();
+
       this.logger.log('워커가 안전하게 종료되었습니다.');
+    } catch (error) {
+      this.logger.error(
+        'CriticalLogProcessor 종료 중 오류 발생',
+        error instanceof Error ? error.stack : String(error),
+      );
     }
   }
 }
@@ -102,9 +112,19 @@ export class HeavyLogProcessor
   }
 
   async onApplicationShutdown(signal?: string): Promise<void> {
-    if (this.worker) {
+    try {
+      if (!this.worker) {
+        return;
+      }
+
       await this.worker.close();
+
       this.logger.log('워커가 안전하게 종료되었습니다.');
+    } catch (error) {
+      this.logger.error(
+        'HeavyLogProcessor 종료 중 오류 발생',
+        error instanceof Error ? error.stack : String(error),
+      );
     }
   }
 }

@@ -16,6 +16,7 @@ import {
   LoginAttemptResult,
   LoginFailureReason,
 } from '../domain/model/login-attempt.entity';
+import { DispatchLogService } from 'src/modules/audit-log/application/dispatch-log.service';
 
 export interface AuthenticateCredentialAdminParams {
   email: string;
@@ -38,6 +39,7 @@ export class AuthenticateCredentialAdminService {
     private readonly policy: CredentialPolicy,
     @Inject(CREDENTIAL_USER_REPOSITORY)
     private readonly userRepository: CredentialUserRepositoryPort,
+    private readonly dispatchLogService: DispatchLogService,
   ) {}
 
   @Transactional()

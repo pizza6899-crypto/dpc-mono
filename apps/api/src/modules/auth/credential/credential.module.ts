@@ -28,6 +28,7 @@ import {
   PASSWORD_RESET_TOKEN_REPOSITORY,
 } from './ports/out';
 import { PasswordResetTokenRepository } from './infrastructure/password-reset-token.repository';
+import { AuditLogModule } from 'src/modules/audit-log/audit-log.module';
 
 @Module({
   imports: [
@@ -35,6 +36,7 @@ import { PasswordResetTokenRepository } from './infrastructure/password-reset-to
     VipModule,
     AffiliateReferralModule,
     ActivityLogModule,
+    AuditLogModule,
     UserModule, // UserRepository 사용을 위해 필요
   ],
   controllers: [CredentialUserController, CredentialAdminController],
