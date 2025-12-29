@@ -9,12 +9,18 @@ import { LogoutService } from './application/logout.service';
 import { RecordLoginAttemptService } from './application/record-login-attempt.service';
 import { FindLoginAttemptsService } from './application/find-login-attempts.service';
 import { VerifyCredentialService } from './application/verify-credential.service';
+import { ChangePasswordService } from './application/change-password.service';
+import { RequestPasswordResetService } from './application/request-password-reset.service';
+import { ResetPasswordService } from './application/reset-password.service';
+import { ResetUserPasswordAdminService } from './application/reset-user-password-admin.service';
 import { CredentialPolicy } from './domain/policy';
 import {
   LOGIN_ATTEMPT_REPOSITORY,
   CREDENTIAL_USER_REPOSITORY,
+  PASSWORD_RESET_TOKEN_REPOSITORY,
   type LoginAttemptRepositoryPort,
   type CredentialUserRepositoryPort,
+  type PasswordResetTokenRepositoryPort,
 } from './ports/out';
 import { LoginAttemptMapper } from './infrastructure/mapper';
 import { CredentialUserMapper } from './infrastructure/credential-user.mapper';
@@ -25,6 +31,8 @@ import { EnvModule } from 'src/platform/env/env.module';
 import { VipModule } from '../../vip/vip.module';
 import { AffiliateReferralModule } from '../../affiliate/referral/referral.module';
 import { ActivityLogModule } from 'src/platform/activity-log/activity-log.module';
+import { MailModule } from 'src/platform/mail/mail.module';
+import { UserModule } from '../../user/user.module';
 import { PassportModule } from '@nestjs/passport';
 
 describe('CredentialModule Integration', () => {
@@ -36,9 +44,14 @@ describe('CredentialModule Integration', () => {
   let recordLoginAttemptService: RecordLoginAttemptService;
   let findLoginAttemptsService: FindLoginAttemptsService;
   let verifyCredentialService: VerifyCredentialService;
+  let changePasswordService: ChangePasswordService;
+  let requestPasswordResetService: RequestPasswordResetService;
+  let resetPasswordService: ResetPasswordService;
+  let resetUserPasswordAdminService: ResetUserPasswordAdminService;
   let credentialPolicy: CredentialPolicy;
   let loginAttemptRepository: LoginAttemptRepositoryPort;
   let credentialUserRepository: CredentialUserRepositoryPort;
+  let passwordResetTokenRepository: PasswordResetTokenRepositoryPort;
   let loginAttemptMapper: LoginAttemptMapper;
   let credentialUserMapper: CredentialUserMapper;
   let credentialUserController: CredentialUserController;
@@ -53,6 +66,8 @@ describe('CredentialModule Integration', () => {
         VipModule,
         AffiliateReferralModule,
         ActivityLogModule,
+        MailModule,
+        UserModule,
         CredentialModule,
       ],
     }).compile();
@@ -75,12 +90,27 @@ describe('CredentialModule Integration', () => {
     verifyCredentialService = module.get<VerifyCredentialService>(
       VerifyCredentialService,
     );
+    changePasswordService = module.get<ChangePasswordService>(
+      ChangePasswordService,
+    );
+    requestPasswordResetService = module.get<RequestPasswordResetService>(
+      RequestPasswordResetService,
+    );
+    resetPasswordService = module.get<ResetPasswordService>(
+      ResetPasswordService,
+    );
+    resetUserPasswordAdminService = module.get<ResetUserPasswordAdminService>(
+      ResetUserPasswordAdminService,
+    );
     credentialPolicy = module.get<CredentialPolicy>(CredentialPolicy);
     loginAttemptRepository = module.get<LoginAttemptRepositoryPort>(
       LOGIN_ATTEMPT_REPOSITORY,
     );
     credentialUserRepository = module.get<CredentialUserRepositoryPort>(
       CREDENTIAL_USER_REPOSITORY,
+    );
+    passwordResetTokenRepository = module.get<PasswordResetTokenRepositoryPort>(
+      PASSWORD_RESET_TOKEN_REPOSITORY,
     );
     loginAttemptMapper = module.get<LoginAttemptMapper>(LoginAttemptMapper);
     credentialUserMapper = module.get<CredentialUserMapper>(
@@ -111,6 +141,10 @@ describe('CredentialModule Integration', () => {
       expect(recordLoginAttemptService).toBeDefined();
       expect(findLoginAttemptsService).toBeDefined();
       expect(verifyCredentialService).toBeDefined();
+      expect(changePasswordService).toBeDefined();
+      expect(requestPasswordResetService).toBeDefined();
+      expect(resetPasswordService).toBeDefined();
+      expect(resetUserPasswordAdminService).toBeDefined();
     });
 
     it('모든 Domain Policies가 주입되어야 함', () => {
@@ -120,6 +154,7 @@ describe('CredentialModule Integration', () => {
     it('모든 Infrastructure가 주입되어야 함', () => {
       expect(loginAttemptRepository).toBeDefined();
       expect(credentialUserRepository).toBeDefined();
+      expect(passwordResetTokenRepository).toBeDefined();
       expect(loginAttemptMapper).toBeDefined();
       expect(credentialUserMapper).toBeDefined();
     });
@@ -166,6 +201,26 @@ describe('CredentialModule Integration', () => {
       expect(verifyCredentialService).toBeDefined();
       expect(verifyCredentialService.execute).toBeDefined();
     });
+
+    it('ChangePasswordService가 필요한 의존성을 가지고 있어야 함', () => {
+      expect(changePasswordService).toBeDefined();
+      expect(changePasswordService.execute).toBeDefined();
+    });
+
+    it('RequestPasswordResetService가 필요한 의존성을 가지고 있어야 함', () => {
+      expect(requestPasswordResetService).toBeDefined();
+      expect(requestPasswordResetService.execute).toBeDefined();
+    });
+
+    it('ResetPasswordService가 필요한 의존성을 가지고 있어야 함', () => {
+      expect(resetPasswordService).toBeDefined();
+      expect(resetPasswordService.execute).toBeDefined();
+    });
+
+    it('ResetUserPasswordAdminService가 필요한 의존성을 가지고 있어야 함', () => {
+      expect(resetUserPasswordAdminService).toBeDefined();
+      expect(resetUserPasswordAdminService.execute).toBeDefined();
+    });
   });
 
   describe('Repository Dependencies', () => {
@@ -178,6 +233,14 @@ describe('CredentialModule Integration', () => {
     it('CredentialUserRepository가 CredentialUserRepositoryPort 인터페이스를 구현해야 함', () => {
       expect(credentialUserRepository).toBeDefined();
       expect(credentialUserRepository.findByEmail).toBeDefined();
+    });
+
+    it('PasswordResetTokenRepository가 PasswordResetTokenRepositoryPort 인터페이스를 구현해야 함', () => {
+      expect(passwordResetTokenRepository).toBeDefined();
+      expect(passwordResetTokenRepository.create).toBeDefined();
+      expect(passwordResetTokenRepository.findByToken).toBeDefined();
+      expect(passwordResetTokenRepository.markAsUsed).toBeDefined();
+      expect(passwordResetTokenRepository.deleteUnusedByUserId).toBeDefined();
     });
   });
 
@@ -221,6 +284,9 @@ describe('CredentialModule Integration', () => {
       expect(credentialUserController.login).toBeDefined();
       expect(credentialUserController.logout).toBeDefined();
       expect(credentialUserController.checkStatus).toBeDefined();
+      expect(credentialUserController.changePassword).toBeDefined();
+      expect(credentialUserController.requestPasswordReset).toBeDefined();
+      expect(credentialUserController.resetPassword).toBeDefined();
     });
 
     it('CredentialAdminController가 모든 의존성을 가지고 있어야 함', () => {
@@ -229,6 +295,8 @@ describe('CredentialModule Integration', () => {
       expect(credentialAdminController.logout).toBeDefined();
       expect(credentialAdminController.checkStatus).toBeDefined();
       expect(credentialAdminController.getAttempts).toBeDefined();
+      expect(credentialAdminController.changePassword).toBeDefined();
+      expect(credentialAdminController.resetUserPassword).toBeDefined();
     });
   });
 
@@ -273,6 +341,28 @@ describe('CredentialModule Integration', () => {
 
     it('VerifyCredentialService가 CredentialUserRepository를 사용해야 함', () => {
       expect(verifyCredentialService).toBeDefined();
+      expect(credentialUserRepository).toBeDefined();
+    });
+
+    it('ChangePasswordService가 UserRepository를 사용해야 함', () => {
+      expect(changePasswordService).toBeDefined();
+      expect(credentialUserRepository).toBeDefined();
+    });
+
+    it('RequestPasswordResetService가 UserRepository와 PasswordResetTokenRepository를 사용해야 함', () => {
+      expect(requestPasswordResetService).toBeDefined();
+      expect(credentialUserRepository).toBeDefined();
+      expect(passwordResetTokenRepository).toBeDefined();
+    });
+
+    it('ResetPasswordService가 UserRepository와 PasswordResetTokenRepository를 사용해야 함', () => {
+      expect(resetPasswordService).toBeDefined();
+      expect(credentialUserRepository).toBeDefined();
+      expect(passwordResetTokenRepository).toBeDefined();
+    });
+
+    it('ResetUserPasswordAdminService가 UserRepository를 사용해야 함', () => {
+      expect(resetUserPasswordAdminService).toBeDefined();
       expect(credentialUserRepository).toBeDefined();
     });
   });

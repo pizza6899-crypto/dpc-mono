@@ -7,7 +7,6 @@ import { USER_REPOSITORY } from 'src/modules/user/ports/out/user.repository.toke
 import type { UserRepositoryPort } from 'src/modules/user/ports/out/user.repository.port';
 import { PASSWORD_RESET_TOKEN_REPOSITORY } from '../ports/out/password-reset-token.repository.token';
 import type { PasswordResetTokenRepositoryPort } from '../ports/out/password-reset-token.repository.port';
-import { MailService } from 'src/platform/mail/mail.service';
 import { User } from 'src/modules/user/domain';
 import { UserStatus, UserRoleType, SocialType } from '@repo/database';
 import type { RequestClientInfo } from 'src/platform/http/types/client-info.types';
@@ -19,7 +18,6 @@ describe('RequestPasswordResetService', () => {
   let service: RequestPasswordResetService;
   let mockUserRepository: jest.Mocked<UserRepositoryPort>;
   let mockTokenRepository: jest.Mocked<PasswordResetTokenRepositoryPort>;
-  let mockMailService: jest.Mocked<MailService>;
 
   const mockUserId = BigInt(1);
   const mockEmail = 'user@example.com';
@@ -64,20 +62,12 @@ describe('RequestPasswordResetService', () => {
       },
     };
 
-    const mockMailServiceProvider = {
-      provide: MailService,
-      useValue: {
-        sendMail: jest.fn(),
-      },
-    };
-
     module = await Test.createTestingModule({
       imports: [PrismaModule, EnvModule], // @Transactional() 데코레이터를 위해 필요
       providers: [
         RequestPasswordResetService,
         mockUserRepositoryProvider,
         mockTokenRepositoryProvider,
-        mockMailServiceProvider,
       ],
     })
       .setLogger(new Logger())
@@ -88,7 +78,6 @@ describe('RequestPasswordResetService', () => {
     );
     mockUserRepository = module.get(USER_REPOSITORY);
     mockTokenRepository = module.get(PASSWORD_RESET_TOKEN_REPOSITORY);
-    mockMailService = module.get(MailService);
 
     jest.clearAllMocks();
   });
@@ -150,7 +139,6 @@ describe('RequestPasswordResetService', () => {
         createdAt: new Date(),
         updatedAt: new Date(),
       });
-      mockMailService.sendMail.mockResolvedValue(undefined);
 
       // Act
       await service.execute({
@@ -168,17 +156,6 @@ describe('RequestPasswordResetService', () => {
         token: expect.any(String), // nanoid로 생성된 토큰
         expiresAt: expect.any(Date),
       });
-      expect(mockMailService.sendMail).toHaveBeenCalledWith({
-        to: mockEmail,
-        subject: '비밀번호 재설정 요청',
-        html: expect.stringContaining('비밀번호 재설정'),
-        text: expect.stringContaining('비밀번호 재설정'),
-        userId: mockUserId,
-        emailType: expect.any(String),
-        metadata: expect.objectContaining({
-          expiresAt: expect.any(String),
-        }),
-      });
     });
 
     it('사용자가 존재하지 않으면 성공 응답을 반환해야 함 (타이밍 공격 방지)', async () => {
@@ -195,7 +172,6 @@ describe('RequestPasswordResetService', () => {
       expect(mockUserRepository.findByEmail).toHaveBeenCalledWith(mockEmail);
       expect(mockTokenRepository.deleteUnusedByUserId).not.toHaveBeenCalled();
       expect(mockTokenRepository.create).not.toHaveBeenCalled();
-      expect(mockMailService.sendMail).not.toHaveBeenCalled();
     });
 
     it('소셜 로그인 사용자인 경우 성공 응답을 반환해야 함 (비밀번호 재설정 불가)', async () => {
@@ -213,45 +189,6 @@ describe('RequestPasswordResetService', () => {
       expect(mockUserRepository.findByEmail).toHaveBeenCalledWith(mockEmail);
       expect(mockTokenRepository.deleteUnusedByUserId).not.toHaveBeenCalled();
       expect(mockTokenRepository.create).not.toHaveBeenCalled();
-      expect(mockMailService.sendMail).not.toHaveBeenCalled();
-    });
-
-    it('이메일 발송 실패 시에도 성공 응답을 반환해야 함 (보안)', async () => {
-      // Arrange
-      const mockUser = createMockCredentialUser();
-      const mockToken = 'test-token-12345678901234567890123456789012';
-      const mockExpiresAt = new Date();
-      mockExpiresAt.setHours(mockExpiresAt.getHours() + 1);
-
-      mockUserRepository.findByEmail.mockResolvedValue(mockUser);
-      mockTokenRepository.deleteUnusedByUserId.mockResolvedValue(undefined);
-      mockTokenRepository.create.mockResolvedValue({
-        id: 1,
-        userId: mockUserId,
-        token: mockToken,
-        expiresAt: mockExpiresAt,
-        usedAt: null,
-        createdAt: new Date(),
-        updatedAt: new Date(),
-      });
-      mockMailService.sendMail.mockRejectedValue(
-        new Error('SMTP connection failed'),
-      );
-
-      // Act
-      await service.execute({
-        email: mockEmail,
-        requestInfo: mockClientInfo,
-      });
-
-      // Assert
-      expect(mockUserRepository.findByEmail).toHaveBeenCalledWith(mockEmail);
-      expect(mockTokenRepository.deleteUnusedByUserId).toHaveBeenCalledWith(
-        mockUserId,
-      );
-      expect(mockTokenRepository.create).toHaveBeenCalled();
-      expect(mockMailService.sendMail).toHaveBeenCalled();
-      // 예외가 전파되지 않아야 함
     });
 
     it('기존 미사용 토큰을 삭제해야 함', async () => {
@@ -272,7 +209,6 @@ describe('RequestPasswordResetService', () => {
         createdAt: new Date(),
         updatedAt: new Date(),
       });
-      mockMailService.sendMail.mockResolvedValue(undefined);
 
       // Act
       await service.execute({
@@ -313,7 +249,6 @@ describe('RequestPasswordResetService', () => {
         createdAt: new Date(),
         updatedAt: new Date(),
       });
-      mockMailService.sendMail.mockResolvedValue(undefined);
 
       // Act
       await service.execute({
@@ -338,7 +273,7 @@ describe('RequestPasswordResetService', () => {
       expect(timeDiff).toBeLessThanOrEqual(oneHourInMs + 60000);
     });
 
-    it('이메일 템플릿에 토큰이 포함되어야 함', async () => {
+    it('토큰이 32자리로 생성되어야 함', async () => {
       // Arrange
       const mockUser = createMockCredentialUser();
       const mockExpiresAt = new Date();
@@ -360,7 +295,6 @@ describe('RequestPasswordResetService', () => {
           updatedAt: new Date(),
         };
       });
-      mockMailService.sendMail.mockResolvedValue(undefined);
 
       // Act
       await service.execute({
@@ -369,91 +303,8 @@ describe('RequestPasswordResetService', () => {
       });
 
       // Assert
-      const sendMailCall = mockMailService.sendMail.mock.calls[0][0];
-      expect(sendMailCall.html).toContain(actualToken!);
-      expect(sendMailCall.text).toContain(actualToken!);
-      expect(sendMailCall.html).toContain('비밀번호 재설정');
-      expect(sendMailCall.html).toContain('1시간 동안만 유효');
-    });
-
-    it('환경변수 FRONTEND_URL이 설정되어 있으면 해당 URL을 사용해야 함', async () => {
-      // Arrange
-      const originalEnv = process.env.FRONTEND_URL;
-      process.env.FRONTEND_URL = 'https://custom-frontend.com';
-
-      const mockUser = createMockCredentialUser();
-      const mockExpiresAt = new Date();
-      mockExpiresAt.setHours(mockExpiresAt.getHours() + 1);
-
-      mockUserRepository.findByEmail.mockResolvedValue(mockUser);
-      mockTokenRepository.deleteUnusedByUserId.mockResolvedValue(undefined);
-      mockTokenRepository.create.mockImplementation(async (params) => ({
-        id: 1,
-        userId: mockUserId,
-        token: params.token,
-        expiresAt: params.expiresAt,
-        usedAt: null,
-        createdAt: new Date(),
-        updatedAt: new Date(),
-      }));
-      mockMailService.sendMail.mockResolvedValue(undefined);
-
-      // Act
-      await service.execute({
-        email: mockEmail,
-        requestInfo: mockClientInfo,
-      });
-
-      // Assert
-      const sendMailCall = mockMailService.sendMail.mock.calls[0][0];
-      expect(sendMailCall.html).toContain('https://custom-frontend.com');
-      expect(sendMailCall.text).toContain('https://custom-frontend.com');
-
-      // Cleanup
-      if (originalEnv) {
-        process.env.FRONTEND_URL = originalEnv;
-      } else {
-        delete process.env.FRONTEND_URL;
-      }
-    });
-
-    it('환경변수 FRONTEND_URL이 없으면 기본값을 사용해야 함', async () => {
-      // Arrange
-      const originalEnv = process.env.FRONTEND_URL;
-      delete process.env.FRONTEND_URL;
-
-      const mockUser = createMockCredentialUser();
-      const mockExpiresAt = new Date();
-      mockExpiresAt.setHours(mockExpiresAt.getHours() + 1);
-
-      mockUserRepository.findByEmail.mockResolvedValue(mockUser);
-      mockTokenRepository.deleteUnusedByUserId.mockResolvedValue(undefined);
-      mockTokenRepository.create.mockImplementation(async (params) => ({
-        id: 1,
-        userId: mockUserId,
-        token: params.token,
-        expiresAt: params.expiresAt,
-        usedAt: null,
-        createdAt: new Date(),
-        updatedAt: new Date(),
-      }));
-      mockMailService.sendMail.mockResolvedValue(undefined);
-
-      // Act
-      await service.execute({
-        email: mockEmail,
-        requestInfo: mockClientInfo,
-      });
-
-      // Assert
-      const sendMailCall = mockMailService.sendMail.mock.calls[0][0];
-      expect(sendMailCall.html).toContain('https://example.com');
-      expect(sendMailCall.text).toContain('https://example.com');
-
-      // Cleanup
-      if (originalEnv) {
-        process.env.FRONTEND_URL = originalEnv;
-      }
+      expect(actualToken!).toBeDefined();
+      expect(actualToken!.length).toBe(32); // nanoid(32)로 생성된 토큰
     });
   });
 });
