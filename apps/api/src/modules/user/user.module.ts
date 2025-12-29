@@ -3,7 +3,6 @@ import { Module } from '@nestjs/common';
 import { CreateUserService } from './application/create-user.service';
 import { UserRepository } from './infrastructure/user.repository';
 import { UserMapper } from './infrastructure/user.mapper';
-import { UserPolicy } from './domain/user-policy';
 import { USER_REPOSITORY } from './ports/out/user.repository.token';
 
 @Module({
@@ -11,7 +10,6 @@ import { USER_REPOSITORY } from './ports/out/user.repository.token';
   ],
   providers: [
     CreateUserService,
-    UserPolicy,
     UserMapper,
     {
       provide: USER_REPOSITORY,

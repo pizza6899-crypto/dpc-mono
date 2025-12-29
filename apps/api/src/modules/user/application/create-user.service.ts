@@ -4,7 +4,6 @@ import { Transactional } from '@nestjs-cls/transactional';
 import { User } from '../domain';
 import { USER_REPOSITORY } from '../ports/out/user.repository.token';
 import type { UserRepositoryPort, CreateUserParams } from '../ports/out/user.repository.port';
-import { UserPolicy } from '../domain/user-policy';
 import { UserAlreadyExistsException } from '../domain/user.exception';
 
 interface CreateUserServiceParams {
@@ -34,7 +33,6 @@ export class CreateUserService {
   constructor(
     @Inject(USER_REPOSITORY)
     private readonly userRepository: UserRepositoryPort,
-    private readonly userPolicy: UserPolicy,
   ) {}
 
   @Transactional()
@@ -68,8 +66,6 @@ export class CreateUserService {
       country,
       timezone,
     });
-
-    this.logger.log(`User created successfully - id: ${user.id}, email: ${user.email}`);
 
     return {
       user,
