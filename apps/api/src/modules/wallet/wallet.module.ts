@@ -3,6 +3,7 @@ import { Module } from '@nestjs/common';
 import { GetUserBalanceService } from './application/get-user-balance.service';
 import { GetUserBalanceAdminService } from './application/get-user-balance-admin.service';
 import { UpdateUserBalanceService } from './application/update-user-balance.service';
+import { UpdateUserBalanceAdminService } from './application/update-user-balance-admin.service';
 import { UserWalletRepository } from './infrastructure/user-wallet.repository';
 import { UserWalletMapper } from './infrastructure/user-wallet.mapper';
 import { USER_WALLET_REPOSITORY } from './ports/out/user-wallet.repository.token';
@@ -38,6 +39,7 @@ import { UserModule } from '../user/user.module';
     GetUserBalanceService,
     GetUserBalanceAdminService,
     UpdateUserBalanceService,
+    UpdateUserBalanceAdminService,
     UserWalletMapper,
     {
       provide: USER_WALLET_REPOSITORY,
@@ -49,6 +51,7 @@ import { UserModule } from '../user/user.module';
     GetUserBalanceService,
     GetUserBalanceAdminService,
     UpdateUserBalanceService,
+    UpdateUserBalanceAdminService,
   ],
 })
 export class WalletModule {}
