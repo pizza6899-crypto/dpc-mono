@@ -17,7 +17,6 @@ import { RequestClientInfoParam } from 'src/platform/auth/decorators/request-inf
 import type { RequestClientInfo } from 'src/platform/http/types/client-info.types';
 import { CreateCodeService } from '../application/create-code.service';
 import { FindCodesService } from '../application/find-codes.service';
-import { FindCodeByIdService } from '../application/find-code-by-id.service';
 import { FindCodeByCodeService } from '../application/find-code-by-code.service';
 import { UpdateCodeService } from '../application/update-code.service';
 import { DeleteCodeService } from '../application/delete-code.service';
@@ -38,7 +37,6 @@ export class AffiliateCodeController {
   constructor(
     private readonly createCodeService: CreateCodeService,
     private readonly findCodesService: FindCodesService,
-    private readonly findCodeByIdService: FindCodeByIdService,
     private readonly findCodeByCodeService: FindCodeByCodeService,
     private readonly updateCodeService: UpdateCodeService,
     private readonly deleteCodeService: DeleteCodeService,
@@ -83,25 +81,6 @@ export class AffiliateCodeController {
       total: result.total,
       limit: result.limit,
     };
-  }
-
-  /**
-   * 어플리에이트 코드 ID로 조회
-   */
-  @Get(':id')
-  @HttpCode(HttpStatus.OK)
-  @ApiOperation({
-    summary: 'Get affiliate code by ID / 어플리에이트 코드 ID로 조회',
-  })
-  async getCodeById(
-    @CurrentUser() user: CurrentUserWithSession,
-    @Param('id') id: string,
-  ): Promise<AffiliateCodeResponseDto> {
-    const code = await this.findCodeByIdService.execute({
-      id,
-      userId: user.id,
-    });
-    return this.toResponse(code);
   }
 
   /**

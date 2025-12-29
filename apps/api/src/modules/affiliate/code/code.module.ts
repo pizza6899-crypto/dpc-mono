@@ -2,7 +2,6 @@
 import { Module } from '@nestjs/common';
 import { CreateCodeService } from './application/create-code.service';
 import { FindCodesService } from './application/find-codes.service';
-import { FindCodeByIdService } from './application/find-code-by-id.service';
 import { FindCodeByCodeService } from './application/find-code-by-code.service';
 import { UpdateCodeService } from './application/update-code.service';
 import { DeleteCodeService } from './application/delete-code.service';
@@ -23,7 +22,6 @@ import { ActivityLogModule } from 'src/platform/activity-log/activity-log.module
     // Use Case Services
     CreateCodeService,
     FindCodesService,
-    FindCodeByIdService,
     FindCodeByCodeService,
     UpdateCodeService,
     DeleteCodeService,
@@ -46,7 +44,6 @@ import { ActivityLogModule } from 'src/platform/activity-log/activity-log.module
     // Use Case Services (다른 모듈에서 사용 가능)
     CreateCodeService,
     FindCodesService,
-    FindCodeByIdService,
     FindCodeByCodeService,
     UpdateCodeService,
     DeleteCodeService,

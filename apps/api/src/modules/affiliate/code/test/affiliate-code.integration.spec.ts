@@ -6,7 +6,6 @@ import { EnvModule } from 'src/platform/env/env.module';
 import { AffiliateCodeModule } from '../code.module';
 import { CreateCodeService } from '../application/create-code.service';
 import { FindCodesService } from '../application/find-codes.service';
-import { FindCodeByIdService } from '../application/find-code-by-id.service';
 import { FindCodeByCodeService } from '../application/find-code-by-code.service';
 import { UpdateCodeService } from '../application/update-code.service';
 import { DeleteCodeService } from '../application/delete-code.service';
@@ -26,7 +25,6 @@ describe('AffiliateCodeModule Integration', () => {
   let module: TestingModule;
   let createCodeService: CreateCodeService;
   let findCodesService: FindCodesService;
-  let findCodeByIdService: FindCodeByIdService;
   let findCodeByCodeService: FindCodeByCodeService;
   let updateCodeService: UpdateCodeService;
   let deleteCodeService: DeleteCodeService;
@@ -36,7 +34,7 @@ describe('AffiliateCodeModule Integration', () => {
   let validateCodeFormatService: ValidateCodeFormatService;
   let mockRepository: jest.Mocked<AffiliateCodeRepositoryPort>;
 
-  const userId = 'user-123';
+  const userId = BigInt(123);
   const codeId = 'code-123';
   const mockCode = AffiliateCode.fromPersistence({
     id: codeId,
@@ -75,7 +73,6 @@ describe('AffiliateCodeModule Integration', () => {
 
     createCodeService = module.get<CreateCodeService>(CreateCodeService);
     findCodesService = module.get<FindCodesService>(FindCodesService);
-    findCodeByIdService = module.get<FindCodeByIdService>(FindCodeByIdService);
     findCodeByCodeService = module.get<FindCodeByCodeService>(
       FindCodeByCodeService,
     );
@@ -155,28 +152,6 @@ describe('AffiliateCodeModule Integration', () => {
       expect(result.limit).toBe(20);
       expect(mockRepository.findByUserId).toHaveBeenCalledWith(userId);
       expect(mockRepository.countByUserId).toHaveBeenCalledWith(userId);
-    });
-  });
-
-  describe('FindCodeByIdService', () => {
-    it('should return code by id', async () => {
-      mockRepository.findById.mockResolvedValue(mockCode);
-
-      const result = await findCodeByIdService.execute({
-        id: codeId,
-        userId,
-      });
-
-      expect(result).toEqual(mockCode);
-      expect(mockRepository.findById).toHaveBeenCalledWith(codeId, userId);
-    });
-
-    it('should throw error when code not found', async () => {
-      mockRepository.findById.mockResolvedValue(null);
-
-      await expect(
-        findCodeByIdService.execute({ id: codeId, userId }),
-      ).rejects.toThrow(AffiliateCodeNotFoundException);
     });
   });
 
@@ -351,7 +326,6 @@ describe('AffiliateCodeModule Integration', () => {
     it('should have all services registered', () => {
       expect(createCodeService).toBeDefined();
       expect(findCodesService).toBeDefined();
-      expect(findCodeByIdService).toBeDefined();
       expect(findCodeByCodeService).toBeDefined();
       expect(updateCodeService).toBeDefined();
       expect(deleteCodeService).toBeDefined();
