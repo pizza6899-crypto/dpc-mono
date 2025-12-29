@@ -51100,6 +51100,12 @@ export namespace Prisma {
     ip: string | null
     userAgent: string | null
     deviceFingerprint: string | null
+    country: string | null
+    city: string | null
+    bot: boolean | null
+    threat: string | null
+    isMobile: boolean | null
+    cfRay: string | null
   }
 
   export type AuthAuditLogMaxAggregateOutputType = {
@@ -51111,6 +51117,12 @@ export namespace Prisma {
     ip: string | null
     userAgent: string | null
     deviceFingerprint: string | null
+    country: string | null
+    city: string | null
+    bot: boolean | null
+    threat: string | null
+    isMobile: boolean | null
+    cfRay: string | null
   }
 
   export type AuthAuditLogCountAggregateOutputType = {
@@ -51122,6 +51134,12 @@ export namespace Prisma {
     ip: number
     userAgent: number
     deviceFingerprint: number
+    country: number
+    city: number
+    bot: number
+    threat: number
+    isMobile: number
+    cfRay: number
     metadata: number
     _all: number
   }
@@ -51144,6 +51162,12 @@ export namespace Prisma {
     ip?: true
     userAgent?: true
     deviceFingerprint?: true
+    country?: true
+    city?: true
+    bot?: true
+    threat?: true
+    isMobile?: true
+    cfRay?: true
   }
 
   export type AuthAuditLogMaxAggregateInputType = {
@@ -51155,6 +51179,12 @@ export namespace Prisma {
     ip?: true
     userAgent?: true
     deviceFingerprint?: true
+    country?: true
+    city?: true
+    bot?: true
+    threat?: true
+    isMobile?: true
+    cfRay?: true
   }
 
   export type AuthAuditLogCountAggregateInputType = {
@@ -51166,6 +51196,12 @@ export namespace Prisma {
     ip?: true
     userAgent?: true
     deviceFingerprint?: true
+    country?: true
+    city?: true
+    bot?: true
+    threat?: true
+    isMobile?: true
+    cfRay?: true
     metadata?: true
     _all?: true
   }
@@ -51265,6 +51301,12 @@ export namespace Prisma {
     ip: string | null
     userAgent: string | null
     deviceFingerprint: string | null
+    country: string | null
+    city: string | null
+    bot: boolean | null
+    threat: string | null
+    isMobile: boolean | null
+    cfRay: string | null
     metadata: JsonValue | null
     _count: AuthAuditLogCountAggregateOutputType | null
     _avg: AuthAuditLogAvgAggregateOutputType | null
@@ -51296,6 +51338,12 @@ export namespace Prisma {
     ip?: boolean
     userAgent?: boolean
     deviceFingerprint?: boolean
+    country?: boolean
+    city?: boolean
+    bot?: boolean
+    threat?: boolean
+    isMobile?: boolean
+    cfRay?: boolean
     metadata?: boolean
   }, ExtArgs["result"]["authAuditLog"]>
 
@@ -51308,6 +51356,12 @@ export namespace Prisma {
     ip?: boolean
     userAgent?: boolean
     deviceFingerprint?: boolean
+    country?: boolean
+    city?: boolean
+    bot?: boolean
+    threat?: boolean
+    isMobile?: boolean
+    cfRay?: boolean
     metadata?: boolean
   }, ExtArgs["result"]["authAuditLog"]>
 
@@ -51320,6 +51374,12 @@ export namespace Prisma {
     ip?: boolean
     userAgent?: boolean
     deviceFingerprint?: boolean
+    country?: boolean
+    city?: boolean
+    bot?: boolean
+    threat?: boolean
+    isMobile?: boolean
+    cfRay?: boolean
     metadata?: boolean
   }, ExtArgs["result"]["authAuditLog"]>
 
@@ -51332,10 +51392,16 @@ export namespace Prisma {
     ip?: boolean
     userAgent?: boolean
     deviceFingerprint?: boolean
+    country?: boolean
+    city?: boolean
+    bot?: boolean
+    threat?: boolean
+    isMobile?: boolean
+    cfRay?: boolean
     metadata?: boolean
   }
 
-  export type AuthAuditLogOmit<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetOmit<"id" | "createdAt" | "userId" | "action" | "status" | "ip" | "userAgent" | "deviceFingerprint" | "metadata", ExtArgs["result"]["authAuditLog"]>
+  export type AuthAuditLogOmit<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetOmit<"id" | "createdAt" | "userId" | "action" | "status" | "ip" | "userAgent" | "deviceFingerprint" | "country" | "city" | "bot" | "threat" | "isMobile" | "cfRay" | "metadata", ExtArgs["result"]["authAuditLog"]>
 
   export type $AuthAuditLogPayload<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
     name: "AuthAuditLog"
@@ -51349,6 +51415,12 @@ export namespace Prisma {
       ip: string | null
       userAgent: string | null
       deviceFingerprint: string | null
+      country: string | null
+      city: string | null
+      bot: boolean | null
+      threat: string | null
+      isMobile: boolean | null
+      cfRay: string | null
       metadata: Prisma.JsonValue | null
     }, ExtArgs["result"]["authAuditLog"]>
     composites: {}
@@ -51781,6 +51853,12 @@ export namespace Prisma {
     readonly ip: FieldRef<"AuthAuditLog", 'String'>
     readonly userAgent: FieldRef<"AuthAuditLog", 'String'>
     readonly deviceFingerprint: FieldRef<"AuthAuditLog", 'String'>
+    readonly country: FieldRef<"AuthAuditLog", 'String'>
+    readonly city: FieldRef<"AuthAuditLog", 'String'>
+    readonly bot: FieldRef<"AuthAuditLog", 'Boolean'>
+    readonly threat: FieldRef<"AuthAuditLog", 'String'>
+    readonly isMobile: FieldRef<"AuthAuditLog", 'Boolean'>
+    readonly cfRay: FieldRef<"AuthAuditLog", 'String'>
     readonly metadata: FieldRef<"AuthAuditLog", 'Json'>
   }
     
@@ -56130,6 +56208,12 @@ export namespace Prisma {
     ip: 'ip',
     userAgent: 'userAgent',
     deviceFingerprint: 'deviceFingerprint',
+    country: 'country',
+    city: 'city',
+    bot: 'bot',
+    threat: 'threat',
+    isMobile: 'isMobile',
+    cfRay: 'cfRay',
     metadata: 'metadata'
   };
 
@@ -60413,6 +60497,12 @@ export namespace Prisma {
     ip?: StringNullableFilter<"AuthAuditLog"> | string | null
     userAgent?: StringNullableFilter<"AuthAuditLog"> | string | null
     deviceFingerprint?: StringNullableFilter<"AuthAuditLog"> | string | null
+    country?: StringNullableFilter<"AuthAuditLog"> | string | null
+    city?: StringNullableFilter<"AuthAuditLog"> | string | null
+    bot?: BoolNullableFilter<"AuthAuditLog"> | boolean | null
+    threat?: StringNullableFilter<"AuthAuditLog"> | string | null
+    isMobile?: BoolNullableFilter<"AuthAuditLog"> | boolean | null
+    cfRay?: StringNullableFilter<"AuthAuditLog"> | string | null
     metadata?: JsonNullableFilter<"AuthAuditLog">
   }
 
@@ -60425,6 +60515,12 @@ export namespace Prisma {
     ip?: SortOrderInput | SortOrder
     userAgent?: SortOrderInput | SortOrder
     deviceFingerprint?: SortOrderInput | SortOrder
+    country?: SortOrderInput | SortOrder
+    city?: SortOrderInput | SortOrder
+    bot?: SortOrderInput | SortOrder
+    threat?: SortOrderInput | SortOrder
+    isMobile?: SortOrderInput | SortOrder
+    cfRay?: SortOrderInput | SortOrder
     metadata?: SortOrderInput | SortOrder
   }
 
@@ -60441,6 +60537,12 @@ export namespace Prisma {
     ip?: StringNullableFilter<"AuthAuditLog"> | string | null
     userAgent?: StringNullableFilter<"AuthAuditLog"> | string | null
     deviceFingerprint?: StringNullableFilter<"AuthAuditLog"> | string | null
+    country?: StringNullableFilter<"AuthAuditLog"> | string | null
+    city?: StringNullableFilter<"AuthAuditLog"> | string | null
+    bot?: BoolNullableFilter<"AuthAuditLog"> | boolean | null
+    threat?: StringNullableFilter<"AuthAuditLog"> | string | null
+    isMobile?: BoolNullableFilter<"AuthAuditLog"> | boolean | null
+    cfRay?: StringNullableFilter<"AuthAuditLog"> | string | null
     metadata?: JsonNullableFilter<"AuthAuditLog">
   }, "id_createdAt">
 
@@ -60453,6 +60555,12 @@ export namespace Prisma {
     ip?: SortOrderInput | SortOrder
     userAgent?: SortOrderInput | SortOrder
     deviceFingerprint?: SortOrderInput | SortOrder
+    country?: SortOrderInput | SortOrder
+    city?: SortOrderInput | SortOrder
+    bot?: SortOrderInput | SortOrder
+    threat?: SortOrderInput | SortOrder
+    isMobile?: SortOrderInput | SortOrder
+    cfRay?: SortOrderInput | SortOrder
     metadata?: SortOrderInput | SortOrder
     _count?: AuthAuditLogCountOrderByAggregateInput
     _avg?: AuthAuditLogAvgOrderByAggregateInput
@@ -60473,6 +60581,12 @@ export namespace Prisma {
     ip?: StringNullableWithAggregatesFilter<"AuthAuditLog"> | string | null
     userAgent?: StringNullableWithAggregatesFilter<"AuthAuditLog"> | string | null
     deviceFingerprint?: StringNullableWithAggregatesFilter<"AuthAuditLog"> | string | null
+    country?: StringNullableWithAggregatesFilter<"AuthAuditLog"> | string | null
+    city?: StringNullableWithAggregatesFilter<"AuthAuditLog"> | string | null
+    bot?: BoolNullableWithAggregatesFilter<"AuthAuditLog"> | boolean | null
+    threat?: StringNullableWithAggregatesFilter<"AuthAuditLog"> | string | null
+    isMobile?: BoolNullableWithAggregatesFilter<"AuthAuditLog"> | boolean | null
+    cfRay?: StringNullableWithAggregatesFilter<"AuthAuditLog"> | string | null
     metadata?: JsonNullableWithAggregatesFilter<"AuthAuditLog">
   }
 
@@ -64722,6 +64836,12 @@ export namespace Prisma {
     ip?: string | null
     userAgent?: string | null
     deviceFingerprint?: string | null
+    country?: string | null
+    city?: string | null
+    bot?: boolean | null
+    threat?: string | null
+    isMobile?: boolean | null
+    cfRay?: string | null
     metadata?: NullableJsonNullValueInput | InputJsonValue
   }
 
@@ -64734,6 +64854,12 @@ export namespace Prisma {
     ip?: string | null
     userAgent?: string | null
     deviceFingerprint?: string | null
+    country?: string | null
+    city?: string | null
+    bot?: boolean | null
+    threat?: string | null
+    isMobile?: boolean | null
+    cfRay?: string | null
     metadata?: NullableJsonNullValueInput | InputJsonValue
   }
 
@@ -64746,6 +64872,12 @@ export namespace Prisma {
     ip?: NullableStringFieldUpdateOperationsInput | string | null
     userAgent?: NullableStringFieldUpdateOperationsInput | string | null
     deviceFingerprint?: NullableStringFieldUpdateOperationsInput | string | null
+    country?: NullableStringFieldUpdateOperationsInput | string | null
+    city?: NullableStringFieldUpdateOperationsInput | string | null
+    bot?: NullableBoolFieldUpdateOperationsInput | boolean | null
+    threat?: NullableStringFieldUpdateOperationsInput | string | null
+    isMobile?: NullableBoolFieldUpdateOperationsInput | boolean | null
+    cfRay?: NullableStringFieldUpdateOperationsInput | string | null
     metadata?: NullableJsonNullValueInput | InputJsonValue
   }
 
@@ -64758,6 +64890,12 @@ export namespace Prisma {
     ip?: NullableStringFieldUpdateOperationsInput | string | null
     userAgent?: NullableStringFieldUpdateOperationsInput | string | null
     deviceFingerprint?: NullableStringFieldUpdateOperationsInput | string | null
+    country?: NullableStringFieldUpdateOperationsInput | string | null
+    city?: NullableStringFieldUpdateOperationsInput | string | null
+    bot?: NullableBoolFieldUpdateOperationsInput | boolean | null
+    threat?: NullableStringFieldUpdateOperationsInput | string | null
+    isMobile?: NullableBoolFieldUpdateOperationsInput | boolean | null
+    cfRay?: NullableStringFieldUpdateOperationsInput | string | null
     metadata?: NullableJsonNullValueInput | InputJsonValue
   }
 
@@ -64770,6 +64908,12 @@ export namespace Prisma {
     ip?: string | null
     userAgent?: string | null
     deviceFingerprint?: string | null
+    country?: string | null
+    city?: string | null
+    bot?: boolean | null
+    threat?: string | null
+    isMobile?: boolean | null
+    cfRay?: string | null
     metadata?: NullableJsonNullValueInput | InputJsonValue
   }
 
@@ -64782,6 +64926,12 @@ export namespace Prisma {
     ip?: NullableStringFieldUpdateOperationsInput | string | null
     userAgent?: NullableStringFieldUpdateOperationsInput | string | null
     deviceFingerprint?: NullableStringFieldUpdateOperationsInput | string | null
+    country?: NullableStringFieldUpdateOperationsInput | string | null
+    city?: NullableStringFieldUpdateOperationsInput | string | null
+    bot?: NullableBoolFieldUpdateOperationsInput | boolean | null
+    threat?: NullableStringFieldUpdateOperationsInput | string | null
+    isMobile?: NullableBoolFieldUpdateOperationsInput | boolean | null
+    cfRay?: NullableStringFieldUpdateOperationsInput | string | null
     metadata?: NullableJsonNullValueInput | InputJsonValue
   }
 
@@ -64794,6 +64944,12 @@ export namespace Prisma {
     ip?: NullableStringFieldUpdateOperationsInput | string | null
     userAgent?: NullableStringFieldUpdateOperationsInput | string | null
     deviceFingerprint?: NullableStringFieldUpdateOperationsInput | string | null
+    country?: NullableStringFieldUpdateOperationsInput | string | null
+    city?: NullableStringFieldUpdateOperationsInput | string | null
+    bot?: NullableBoolFieldUpdateOperationsInput | boolean | null
+    threat?: NullableStringFieldUpdateOperationsInput | string | null
+    isMobile?: NullableBoolFieldUpdateOperationsInput | boolean | null
+    cfRay?: NullableStringFieldUpdateOperationsInput | string | null
     metadata?: NullableJsonNullValueInput | InputJsonValue
   }
 
@@ -68743,6 +68899,12 @@ export namespace Prisma {
     ip?: SortOrder
     userAgent?: SortOrder
     deviceFingerprint?: SortOrder
+    country?: SortOrder
+    city?: SortOrder
+    bot?: SortOrder
+    threat?: SortOrder
+    isMobile?: SortOrder
+    cfRay?: SortOrder
     metadata?: SortOrder
   }
 
@@ -68759,6 +68921,12 @@ export namespace Prisma {
     ip?: SortOrder
     userAgent?: SortOrder
     deviceFingerprint?: SortOrder
+    country?: SortOrder
+    city?: SortOrder
+    bot?: SortOrder
+    threat?: SortOrder
+    isMobile?: SortOrder
+    cfRay?: SortOrder
   }
 
   export type AuthAuditLogMinOrderByAggregateInput = {
@@ -68770,6 +68938,12 @@ export namespace Prisma {
     ip?: SortOrder
     userAgent?: SortOrder
     deviceFingerprint?: SortOrder
+    country?: SortOrder
+    city?: SortOrder
+    bot?: SortOrder
+    threat?: SortOrder
+    isMobile?: SortOrder
+    cfRay?: SortOrder
   }
 
   export type AuthAuditLogSumOrderByAggregateInput = {

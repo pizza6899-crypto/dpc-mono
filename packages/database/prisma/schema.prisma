@@ -994,11 +994,27 @@ model AuthAuditLog {
   ip                String?
   userAgent         String?
   deviceFingerprint String?
+  // Cloudflare 지리적 정보 (보안 분석용)
+  country           String?  // CF-IPCountry: 비정상적인 위치 감지
+  city              String?  // CF-IPCity
+  // Cloudflare 보안 정보
+  bot               Boolean? // CF-Bot-Management: 봇 공격 감지
+  threat            String?  // CF-Threat: 위협 점수
+  // 디바이스 정보
+  isMobile          Boolean? // 모바일 여부
+  // Cloudflare 추적 정보 (디버깅용)
+  cfRay             String?  // CF-Ray: 요청 추적 ID
   metadata          Json?
 
   @@id([id, createdAt])
   // 보안 추적은 보통 '누가' 했는지와 '언제' 했는지가 결합됩니다.
   @@index([userId, createdAt(sort: Desc)])
+  // 비정상적인 위치에서의 로그인 시도 감지
+  @@index([country, createdAt(sort: Desc)])
+  // 봇 공격 감지
+  @@index([bot, createdAt(sort: Desc)])
+  // 위협 점수 기반 필터링
+  @@index([threat, createdAt(sort: Desc)])
   @@map("auth_audit_logs")
 }
 

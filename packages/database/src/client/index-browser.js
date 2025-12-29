@@ -686,6 +686,12 @@ exports.Prisma.AuthAuditLogScalarFieldEnum = {
   ip: 'ip',
   userAgent: 'userAgent',
   deviceFingerprint: 'deviceFingerprint',
+  country: 'country',
+  city: 'city',
+  bot: 'bot',
+  threat: 'threat',
+  isMobile: 'isMobile',
+  cfRay: 'cfRay',
   metadata: 'metadata'
 };
 

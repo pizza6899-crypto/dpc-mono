@@ -26,7 +26,17 @@ export class AuditLogAdapter implements AuditLogRepositoryPort {
         status: payload.status,
         ip: payload.ip || null,
         userAgent: payload.userAgent || null,
-        deviceFingerprint: null,
+        deviceFingerprint: payload.deviceFingerprint || null,
+        // Cloudflare 지리적 정보
+        country: payload.country || null,
+        city: payload.city || null,
+        // Cloudflare 보안 정보
+        bot: payload.bot ?? null,
+        threat: payload.threat || null,
+        // 디바이스 정보
+        isMobile: payload.isMobile ?? null,
+        // Cloudflare 추적 정보
+        cfRay: payload.cfRay || null,
         metadata: payload.metadata || undefined,
       },
     });

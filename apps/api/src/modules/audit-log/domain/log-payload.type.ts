@@ -18,6 +18,17 @@ export interface AuthLogPayload {
   status: string; // 예: 'SUCCESS', 'FAILURE' 등
   ip?: string;
   userAgent?: string;
+  deviceFingerprint?: string; // 브라우저 핑거프린트
+  // Cloudflare 지리적 정보 (보안 분석용)
+  country?: string; // CF-IPCountry: 비정상적인 위치 감지
+  city?: string; // CF-IPCity
+  // Cloudflare 보안 정보
+  bot?: boolean; // CF-Bot-Management: 봇 공격 감지
+  threat?: string; // CF-Threat: 위협 점수
+  // 디바이스 정보
+  isMobile?: boolean; // 모바일 여부
+  // Cloudflare 추적 정보 (디버깅용)
+  cfRay?: string; // CF-Ray: 요청 추적 ID
   metadata?: any;
 }
 
