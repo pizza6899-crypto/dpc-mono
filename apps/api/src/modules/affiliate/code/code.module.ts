@@ -3,6 +3,7 @@ import { Module } from '@nestjs/common';
 import { CreateCodeService } from './application/create-code.service';
 import { FindCodesService } from './application/find-codes.service';
 import { FindCodeByCodeService } from './application/find-code-by-code.service';
+import { FindDefaultCodeService } from './application/find-default-code.service';
 import { UpdateCodeService } from './application/update-code.service';
 import { ToggleCodeActiveService } from './application/toggle-code-active.service';
 import { SetCodeAsDefaultService } from './application/set-code-as-default.service';
@@ -24,6 +25,7 @@ import { ActivityLogModule } from 'src/platform/activity-log/activity-log.module
     CreateCodeService,
     FindCodesService,
     FindCodeByCodeService,
+    FindDefaultCodeService,
     UpdateCodeService,
     ToggleCodeActiveService,
     SetCodeAsDefaultService,
@@ -46,6 +48,7 @@ import { ActivityLogModule } from 'src/platform/activity-log/activity-log.module
     CreateCodeService,
     FindCodesService,
     FindCodeByCodeService,
+    FindDefaultCodeService,
     UpdateCodeService,
     ToggleCodeActiveService,
     SetCodeAsDefaultService,

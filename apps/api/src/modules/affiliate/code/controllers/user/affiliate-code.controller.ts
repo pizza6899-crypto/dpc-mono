@@ -16,6 +16,7 @@ import { RequestClientInfoParam } from 'src/platform/auth/decorators/request-inf
 import type { RequestClientInfo } from 'src/platform/http/types/client-info.types';
 import { CreateCodeService } from '../../application/create-code.service';
 import { FindCodesService } from '../../application/find-codes.service';
+import { FindDefaultCodeService } from '../../application/find-default-code.service';
 import { UpdateCodeService } from '../../application/update-code.service';
 import { ToggleCodeActiveService } from '../../application/toggle-code-active.service';
 import { SetCodeAsDefaultService } from '../../application/set-code-as-default.service';
@@ -34,6 +35,7 @@ export class AffiliateCodeController {
   constructor(
     private readonly createCodeService: CreateCodeService,
     private readonly findCodesService: FindCodesService,
+    private readonly findDefaultCodeService: FindDefaultCodeService,
     private readonly updateCodeService: UpdateCodeService,
     private readonly toggleCodeActiveService: ToggleCodeActiveService,
     private readonly setCodeAsDefaultService: SetCodeAsDefaultService,
@@ -76,6 +78,21 @@ export class AffiliateCodeController {
       total: result.total,
       limit: result.limit,
     };
+  }
+
+  /**
+   * 대표 어플리에이트 코드 조회
+   */
+  @Get('default')
+  @HttpCode(HttpStatus.OK)
+  @ApiOperation({
+    summary: 'Get default affiliate code / 대표 어플리에이트 코드 조회',
+  })
+  async getDefaultCode(
+    @CurrentUser() user: CurrentUserWithSession,
+  ): Promise<AffiliateCodeResponseDto | null> {
+    const code = await this.findDefaultCodeService.execute({ userId: user.id });
+    return code ? this.toResponse(code) : null;
   }
 
   /**
