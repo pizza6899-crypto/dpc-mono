@@ -16,7 +16,7 @@ export class AffiliateTierRepository implements AffiliateTierRepositoryPort {
     private readonly mapper: AffiliateTierMapper,
   ) {}
 
-  async findByAffiliateId(affiliateId: string): Promise<AffiliateTier | null> {
+  async findByAffiliateId(affiliateId: bigint): Promise<AffiliateTier | null> {
     const result = await this.tx.affiliateTier.findUnique({
       where: { affiliateId },
     });
@@ -24,7 +24,7 @@ export class AffiliateTierRepository implements AffiliateTierRepositoryPort {
     return result ? this.mapper.toDomain(result) : null;
   }
 
-  async getByAffiliateId(affiliateId: string): Promise<AffiliateTier> {
+  async getByAffiliateId(affiliateId: bigint): Promise<AffiliateTier> {
     const tier = await this.findByAffiliateId(affiliateId);
     if (!tier) {
       throw new TierNotFoundException(affiliateId);
@@ -65,7 +65,7 @@ export class AffiliateTierRepository implements AffiliateTierRepositoryPort {
   }
 
   async updateTier(
-    affiliateId: string,
+    affiliateId: bigint,
     tier: AffiliateTierLevel,
     baseRate: bigint,
   ): Promise<AffiliateTier> {
@@ -85,7 +85,7 @@ export class AffiliateTierRepository implements AffiliateTierRepositoryPort {
   }
 
   async updateMonthlyWagerAmount(
-    affiliateId: string,
+    affiliateId: bigint,
     monthlyWagerAmount: bigint,
   ): Promise<AffiliateTier> {
     const result = await this.tx.affiliateTier.update({
@@ -99,7 +99,7 @@ export class AffiliateTierRepository implements AffiliateTierRepositoryPort {
     return this.mapper.toDomain(result);
   }
 
-  async resetMonthlyWagerAmount(affiliateId: string): Promise<AffiliateTier> {
+  async resetMonthlyWagerAmount(affiliateId: bigint): Promise<AffiliateTier> {
     const result = await this.tx.affiliateTier.update({
       where: { affiliateId },
       data: {

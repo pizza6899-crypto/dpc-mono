@@ -14,7 +14,7 @@ export interface SendMailOptions {
   }>;
 
   // EmailLog 저장을 위한 옵션 추가
-  userId?: string; // 사용자 ID
+  userId?: bigint; // 사용자 ID
   emailType: EmailType; // 이메일 타입 (필수)
   metadata?: Record<string, any>; // 추가 메타데이터
 }

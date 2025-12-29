@@ -9,8 +9,8 @@ datasource db {
 }
 
 model User {
-  id                   String                @id @default(cuid())
-  numericId            Int                   @unique @default(autoincrement())
+  id                   BigInt                @id @default(autoincrement())
+  uid                  String                @unique @default(cuid())
   whitecliffId         BigInt?               @unique
   whitecliffSystemId   BigInt?               @unique
   whitecliffUsername   String?               @unique
@@ -52,20 +52,20 @@ model User {
 }
 
 model UserSession {
-  userId       String
-  sessionId    String    @unique
-  deviceInfo   String?
-  userAgent    String?
-  ipAddress    String?
-  isMobile     Boolean?
-  isActive     Boolean   @default(true)
-  revokedAt    DateTime?
-  createdAt    DateTime  @default(now())
-  updatedAt    DateTime  @updatedAt
-  lastActiveAt DateTime  @default(now())
-  expiresAt    DateTime
-  id           BigInt    @id @default(autoincrement())
-  user         User      @relation(fields: [userId], references: [id], onDelete: Cascade)
+  userId        BigInt
+  sessionId     String    @unique
+  debetsiceInfo String?
+  userAgent     String?
+  ipAddress     String?
+  isMobile      Boolean?
+  isActive      Boolean   @default(true)
+  revokedAt     DateTime?
+  createdAt     DateTime  @default(now())
+  updatedAt     DateTime  @updatedAt
+  lastActiveAt  DateTime  @default(now())
+  expiresAt     DateTime
+  id            BigInt    @id @default(autoincrement())
+  user          User      @relation(fields: [userId], references: [id], onDelete: Cascade)
 
   @@index([userId, isActive])
   @@index([sessionId])
@@ -75,7 +75,7 @@ model UserSession {
 }
 
 model UserBalance {
-  userId       String
+  userId       BigInt
   currency     ExchangeCurrencyCode
   mainBalance  Decimal              @default(0) @db.Decimal(32, 18)
   bonusBalance Decimal              @default(0) @db.Decimal(32, 18)
@@ -88,7 +88,7 @@ model UserBalance {
 }
 
 model UserBalanceStats {
-  userId                 String
+  userId                 BigInt
   currency               ExchangeCurrencyCode
   totalDeposit           Decimal              @default(0) @db.Decimal(32, 18)
   totalWithdraw          Decimal              @default(0) @db.Decimal(32, 18)
@@ -109,7 +109,7 @@ model UserBalanceStats {
 
 model ActivityLog {
   id           BigInt   @id @default(autoincrement())
-  userId       String
+  userId       BigInt
   isAdmin      Boolean  @default(false)
   activityType String
   status       String
@@ -168,7 +168,7 @@ model GameTranslation {
 
 model WhitecliffApiLog {
   id         BigInt   @id @default(autoincrement())
-  userId     String?
+  userId     BigInt?
   action     String
   endpoint   String
   httpMethod String?
@@ -181,7 +181,7 @@ model WhitecliffApiLog {
 
 model DcsApiLog {
   id         BigInt   @id @default(autoincrement())
-  userId     String?
+  userId     BigInt?
   action     String
   endpoint   String
   httpMethod String?
@@ -194,7 +194,7 @@ model DcsApiLog {
 
 model Transaction {
   id              BigInt                     @id @default(autoincrement())
-  userId          String
+  userId          BigInt
   type            TransactionType
   status          TransactionStatus
   currency        ExchangeCurrencyCode
@@ -214,7 +214,7 @@ model Transaction {
 
 model GameRound {
   id                             BigInt                @id @default(autoincrement())
-  userId                         String
+  userId                         BigInt
   aggregatorType                 GameAggregatorType
   provider                       GameProvider
   aggregatorTxId                 String
@@ -252,7 +252,7 @@ model GameRound {
 
 model GameBet {
   id                      BigInt             @id @default(autoincrement())
-  userId                  String
+  userId                  BigInt
   gameRoundId             BigInt
   aggregatorType          GameAggregatorType
   aggregatorBetId         String
@@ -271,7 +271,7 @@ model GameBet {
 
 model GameWin {
   id                      BigInt             @id @default(autoincrement())
-  userId                  String
+  userId                  BigInt
   gameRoundId             BigInt
   aggregatorType          GameAggregatorType
   aggregatorWinId         String
@@ -387,7 +387,7 @@ model WithdrawDetail {
 
 model CompTransaction {
   id                 BigInt           @id @default(autoincrement())
-  userId             String
+  userId             BigInt
   amount             Decimal          @db.Decimal(32, 18)
   dailyCompEarningId Int
   transactionId      BigInt           @unique
@@ -403,7 +403,7 @@ model CompTransaction {
 
 model DailyCompEarning {
   id                Int               @id @default(autoincrement())
-  userId            String
+  userId            BigInt
   earningDate       DateTime
   totalContribution Decimal           @db.Decimal(32, 18)
   compEarned        Decimal           @db.Decimal(32, 18)
@@ -455,7 +455,7 @@ model PromotionTranslation {
 
 model UserPromotion {
   id             Int                 @id @default(autoincrement())
-  userId         String
+  userId         BigInt
   promotionId    Int
   status         UserPromotionStatus @default(ACTIVE)
   bonusGranted   Boolean             @default(false)
@@ -519,7 +519,7 @@ model VipLevel {
 
 model VipMembership {
   id                 Int          @id @default(autoincrement())
-  userId             String       @unique
+  userId             BigInt       @unique
   vipLevelId         Int
   accumulatedRolling Decimal      @default(0) @db.Decimal(32, 18)
   totalRewardsPaid   Decimal      @default(0) @db.Decimal(32, 18)
@@ -533,7 +533,7 @@ model VipMembership {
 
 model VipHistory {
   id                   Int            @id @default(autoincrement())
-  userId               String
+  userId               BigInt
   previousLevelNameKey String?
   newLevelNameKey      String
   rewardAmount         Decimal        @db.Decimal(32, 18)
@@ -549,7 +549,7 @@ model VipHistory {
 
 model Rolling {
   id                           BigInt            @id @default(autoincrement())
-  userId                       String
+  userId                       BigInt
   sourceType                   RollingSourceType @default(DEPOSIT)
   userPromotionId              Int?
   requiredAmount               Decimal           @db.Decimal(32, 18)
@@ -575,7 +575,7 @@ model Rolling {
 
 model UserToken {
   id        Int       @id @default(autoincrement())
-  userId    String
+  userId    BigInt
   type      TokenType
   token     String    @unique
   expiresAt DateTime
@@ -593,7 +593,7 @@ model UserToken {
 
 model EmailLog {
   id        Int         @id @default(autoincrement())
-  userId    String?
+  userId    BigInt?
   type      EmailType
   status    EmailStatus
   to        String
@@ -614,7 +614,7 @@ model EmailLog {
 
 model GameSession {
   id                     BigInt               @id @default(autoincrement())
-  userId                 String
+  userId                 BigInt
   createdAt              DateTime             @default(now())
   updatedAt              DateTime             @updatedAt
   lastAccessedAt         DateTime             @default(now())
@@ -663,7 +663,7 @@ model PrismaQueryLog {
 
 model AffiliateCode {
   id           String     @id @default(cuid())
-  userId       String
+  userId       BigInt
   code         String     @unique
   campaignName String?
   description  String?
@@ -683,8 +683,8 @@ model AffiliateCode {
 
 model Referral {
   id                String        @id @default(cuid())
-  affiliateId       String
-  subUserId         String
+  affiliateId       BigInt
+  subUserId         BigInt
   ipAddress         String?
   deviceFingerprint String?
   userAgent         String?
@@ -704,7 +704,7 @@ model Referral {
 }
 
 model AffiliateWallet {
-  affiliateId      String
+  affiliateId      BigInt
   currency         ExchangeCurrencyCode
   availableBalance Decimal              @default(0) @db.Decimal(32, 18)
   pendingBalance   Decimal              @default(0) @db.Decimal(32, 18)
@@ -718,8 +718,8 @@ model AffiliateWallet {
 }
 
 model AffiliateCommission {
-  affiliateId    String
-  subUserId      String
+  affiliateId    BigInt
+  subUserId      BigInt
   gameRoundId    BigInt?
   wagerAmount    Decimal              @db.Decimal(32, 18)
   winAmount      Decimal?             @db.Decimal(32, 18)
@@ -751,7 +751,7 @@ model AffiliateCommission {
 }
 
 model AffiliateTier {
-  affiliateId        String             @unique
+  affiliateId        BigInt             @unique
   tier               AffiliateTierLevel @default(BRONZE)
   baseRate           Decimal            @db.Decimal(8, 4)
   customRate         Decimal?           @db.Decimal(8, 4)
@@ -991,7 +991,7 @@ enum LoginFailureReason {
 model LoginAttempt {
   id                BigInt              @id @default(autoincrement())
   uid               String              @unique
-  userId            String?
+  userId            BigInt?
   result            LoginAttemptResult
   failureReason     LoginFailureReason?
   ipAddress         String?

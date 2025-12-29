@@ -14,7 +14,7 @@ export interface AffiliateWalletRepositoryPort {
    * @returns 월렛 엔티티 또는 null
    */
   findByAffiliateIdAndCurrency(
-    affiliateId: string,
+    affiliateId: bigint,
     currency: ExchangeCurrencyCode,
   ): Promise<AffiliateWallet | null>;
 
@@ -26,7 +26,7 @@ export interface AffiliateWalletRepositoryPort {
    * @throws {WalletNotFoundException} 월렛이 없는 경우
    */
   getByAffiliateIdAndCurrency(
-    affiliateId: string,
+    affiliateId: bigint,
     currency: ExchangeCurrencyCode,
   ): Promise<AffiliateWallet>;
 
@@ -35,7 +35,7 @@ export interface AffiliateWalletRepositoryPort {
    * @param affiliateId - 어필리에이트 ID
    * @returns 월렛 엔티티 배열
    */
-  findByAffiliateId(affiliateId: string): Promise<AffiliateWallet[]>;
+  findByAffiliateId(affiliateId: bigint): Promise<AffiliateWallet[]>;
 
   /**
    * 월렛 생성 또는 업데이트

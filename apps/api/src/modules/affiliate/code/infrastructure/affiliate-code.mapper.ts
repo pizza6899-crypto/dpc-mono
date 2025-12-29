@@ -13,7 +13,7 @@ export class AffiliateCodeMapper {
    */
   toDomain(prismaModel: {
     id: string;
-    userId: string;
+    userId: bigint;
     code: string;
     campaignName: string | null;
     isActive: boolean;
@@ -42,7 +42,7 @@ export class AffiliateCodeMapper {
    */
   toPrisma(domain: AffiliateCode): {
     id: string;
-    userId: string;
+    userId: bigint;
     code: string;
     campaignName: string | null;
     isActive: boolean;

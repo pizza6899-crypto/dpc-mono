@@ -9,7 +9,8 @@ import { UserStatus } from '@repo/database';
  */
 export class RegistrationUser {
   private constructor(
-    public readonly id: string,
+    public readonly id: bigint,
+    public readonly uid: string,
     public readonly email: string,
     public readonly passwordHash: string | null,
     public readonly socialId: string | null,
@@ -25,7 +26,8 @@ export class RegistrationUser {
    * @returns RegistrationUser 엔티티 인스턴스
    */
   static create(params: {
-    id: string;
+    id: bigint;
+    uid: string;
     email: string;
     passwordHash: string | null;
     socialId: string | null;
@@ -35,6 +37,7 @@ export class RegistrationUser {
   }): RegistrationUser {
     return new RegistrationUser(
       params.id,
+      params.uid,
       params.email,
       params.passwordHash,
       params.socialId,
@@ -51,7 +54,8 @@ export class RegistrationUser {
    * @returns RegistrationUser 엔티티 인스턴스
    */
   static fromPersistence(data: {
-    id: string;
+    id: bigint;
+    uid: string;
     email: string;
     passwordHash: string | null;
     socialId: string | null;
@@ -61,6 +65,7 @@ export class RegistrationUser {
   }): RegistrationUser {
     return new RegistrationUser(
       data.id,
+      data.uid,
       data.email,
       data.passwordHash,
       data.socialId,

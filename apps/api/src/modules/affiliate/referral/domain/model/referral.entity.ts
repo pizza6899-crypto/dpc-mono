@@ -3,9 +3,9 @@
 export class Referral {
   private constructor(
     public readonly id: string,
-    public readonly affiliateId: string,
+    public readonly affiliateId: bigint,
     public readonly codeId: string,
-    public readonly subUserId: string,
+    public readonly subUserId: bigint,
     private readonly _ipAddress: string | null,
     private readonly _deviceFingerprint: string | null,
     private readonly _userAgent: string | null,
@@ -22,9 +22,9 @@ export class Referral {
    */
   static fromPersistence(data: {
     id: string;
-    affiliateId: string;
+    affiliateId: bigint;
     codeId: string;
-    subUserId: string;
+    subUserId: bigint;
     ipAddress: string | null;
     deviceFingerprint: string | null;
     userAgent: string | null;

@@ -101,7 +101,7 @@ export class MailService {
    * EmailLog 저장 (내부 메서드)
    */
   private async saveEmailLog(data: {
-    userId?: string;
+    userId?: bigint;
     emailType: EmailType;
     to: string;
     subject: string;

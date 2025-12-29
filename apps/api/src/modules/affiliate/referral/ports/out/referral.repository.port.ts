@@ -6,9 +6,9 @@ export interface ReferralRepositoryPort {
    * 레퍼럴 관계 생성
    */
   create(params: {
-    affiliateId: string;
+    affiliateId: bigint;
     codeId: string;
-    subUserId: string;
+    subUserId: bigint;
     ipAddress?: string | null;
     deviceFingerprint?: string | null;
     userAgent?: string | null;
@@ -27,12 +27,12 @@ export interface ReferralRepositoryPort {
   /**
    * 어플리에이트별 레퍼럴 목록 조회
    */
-  findByAffiliateId(affiliateId: string): Promise<Referral[]>;
+  findByAffiliateId(affiliateId: bigint): Promise<Referral[]>;
 
   /**
    * 피추천인별 레퍼럴 조회 (중복 방지용)
    */
-  findBySubUserId(subUserId: string): Promise<Referral | null>;
+  findBySubUserId(subUserId: bigint): Promise<Referral | null>;
 
   /**
    * 코드별 레퍼럴 목록 조회

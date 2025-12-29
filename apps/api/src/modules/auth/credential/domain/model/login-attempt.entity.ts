@@ -32,7 +32,7 @@ export class LoginAttempt {
   private constructor(
     public readonly id: bigint | null, // 내부 관리용 (DB 저장 시 자동 생성)
     public readonly uid: string, // 비즈니스용 (CUID2)
-    public readonly userId: string | null, // 시도한 사용자 ID (알 수 있는 경우)
+    public readonly userId: bigint | null, // 시도한 사용자 ID (알 수 있는 경우)
     public readonly result: LoginAttemptResult,
     public readonly failureReason: LoginFailureReason | null, // 실패한 경우에만 값 존재
     public readonly ipAddress: string | null,
@@ -49,7 +49,7 @@ export class LoginAttempt {
    */
   static createSuccess(params: {
     uid: string;
-    userId: string;
+    userId: bigint;
     ipAddress?: string | null;
     userAgent?: string | null;
     deviceFingerprint?: string | null;
@@ -81,7 +81,7 @@ export class LoginAttempt {
   static createFailure(params: {
     uid: string;
     failureReason: LoginFailureReason;
-    userId?: string | null;
+    userId?: bigint | null;
     ipAddress?: string | null;
     userAgent?: string | null;
     deviceFingerprint?: string | null;
@@ -113,7 +113,7 @@ export class LoginAttempt {
   static fromPersistence(data: {
     id: bigint | null;
     uid: string;
-    userId: string | null;
+    userId: bigint | null;
     result: string;
     failureReason: string | null;
     ipAddress: string | null;

@@ -15,7 +15,7 @@ import type { ActivityLogPort } from 'src/platform/activity-log/activity-log.por
 import { ActivityType } from 'src/platform/activity-log/activity-log.types';
 
 interface CreateCodeParams {
-  userId: string;
+  userId: bigint;
   campaignName?: string;
   requestInfo?: RequestClientInfo;
 }

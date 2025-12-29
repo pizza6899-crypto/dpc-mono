@@ -42,7 +42,7 @@ export class HttpExceptionFilter implements ExceptionFilter {
     // 🎯 에러 타입별 메시지 코드 매핑
     if (exception instanceof Prisma.PrismaClientKnownRequestError) {
       status = HttpStatus.BAD_REQUEST;
-      const prismaError = exception;
+      const prismaError = exception as Prisma.PrismaClientKnownRequestError;
 
       switch (prismaError.code) {
         case 'P2002':

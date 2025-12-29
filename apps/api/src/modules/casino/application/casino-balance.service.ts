@@ -21,7 +21,7 @@ export class CasinoBalanceService {
     currency,
     tx = this.prismaService,
   }: {
-    userId: string;
+    userId: bigint;
     currency: WalletCurrencyCode;
     tx?: Prisma.TransactionClient;
   }): Promise<{ mainBalance: Prisma.Decimal; bonusBalance: Prisma.Decimal }> {
@@ -50,7 +50,7 @@ export class CasinoBalanceService {
     amount,
   }: {
     tx: Prisma.TransactionClient;
-    userId: string;
+    userId: bigint;
     currency: WalletCurrencyCode;
     amount: Prisma.Decimal;
   }): Promise<{
@@ -157,7 +157,7 @@ export class CasinoBalanceService {
     bonusAmount,
   }: {
     tx: Prisma.TransactionClient;
-    userId: string;
+    userId: bigint;
     currency: WalletCurrencyCode;
     mainAmount: Prisma.Decimal; // 반환할 메인 잔액 (양수)
     bonusAmount: Prisma.Decimal; // 반환할 보너스 잔액 (양수)

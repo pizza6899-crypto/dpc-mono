@@ -122,7 +122,7 @@ exports.Prisma.TransactionIsolationLevel = makeStrictEnum({
 
 exports.Prisma.UserScalarFieldEnum = {
   id: 'id',
-  numericId: 'numericId',
+  uid: 'uid',
   whitecliffId: 'whitecliffId',
   whitecliffSystemId: 'whitecliffSystemId',
   whitecliffUsername: 'whitecliffUsername',
@@ -145,7 +145,7 @@ exports.Prisma.UserScalarFieldEnum = {
 exports.Prisma.UserSessionScalarFieldEnum = {
   userId: 'userId',
   sessionId: 'sessionId',
-  deviceInfo: 'deviceInfo',
+  debetsiceInfo: 'debetsiceInfo',
   userAgent: 'userAgent',
   ipAddress: 'ipAddress',
   isMobile: 'isMobile',

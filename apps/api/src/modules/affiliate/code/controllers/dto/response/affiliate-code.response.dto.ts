@@ -12,7 +12,7 @@ export class AffiliateCodeResponseDto {
     description: 'User ID / 사용자 ID',
     example: 'user-123',
   })
-  userId: string;
+  userId: bigint;
 
   @ApiProperty({
     description: 'Affiliate code / 어플리에이트 코드',

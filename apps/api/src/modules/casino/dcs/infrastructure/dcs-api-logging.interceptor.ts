@@ -429,25 +429,7 @@ export class DcsApiLoggingInterceptor {
     }
   }
 
-  // 필드 추출 메서드들
-  private extractBrandUid(data: any): string | undefined {
-    return data?.brand_uid || data?.user_id;
-  }
-
-  private extractWagerId(data: any): string | undefined {
-    return data?.wager_id;
-  }
-
-  private extractRoundId(data: any): string | undefined {
-    return data?.round_id;
-  }
-
-  private extractGameId(data: any): number | undefined {
-    const gameId = data?.game_id;
-    return gameId ? Number(gameId) : undefined;
-  }
-
-  private extractUserId(data: any): string | undefined {
+  private extractUserId(data: any): bigint | undefined {
     return data?.user_id?.toString() || data?.brand_uid?.toString();
   }
 }

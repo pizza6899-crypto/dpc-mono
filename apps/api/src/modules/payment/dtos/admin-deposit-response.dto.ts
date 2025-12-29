@@ -11,13 +11,10 @@ export class AdminDepositListItemDto {
   id: string;
 
   @ApiProperty({ description: 'User ID' })
-  userId: string;
+  userId: bigint;
 
   @ApiProperty({ description: 'User email' })
   userEmail: string;
-
-  @ApiProperty({ description: 'User numeric ID' })
-  userNumericId: number;
 
   @ApiProperty({ enum: DepositDetailStatus, description: 'Deposit status' })
   status: DepositDetailStatus;

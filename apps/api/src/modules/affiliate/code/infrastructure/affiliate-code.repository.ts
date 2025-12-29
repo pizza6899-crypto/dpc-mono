@@ -16,7 +16,7 @@ export class AffiliateCodeRepository implements AffiliateCodeRepositoryPort {
   ) {}
 
   async create(params: {
-    userId: string;
+    userId: bigint;
     code: string;
     campaignName?: string | null;
     isDefault?: boolean;
@@ -37,7 +37,7 @@ export class AffiliateCodeRepository implements AffiliateCodeRepositoryPort {
     return this.mapper.toDomain(result);
   }
 
-  async findByUserId(userId: string): Promise<AffiliateCode[]> {
+  async findByUserId(userId: bigint): Promise<AffiliateCode[]> {
     const results = await this.tx.affiliateCode.findMany({
       where: { userId },
       orderBy: { createdAt: 'desc' },
@@ -46,7 +46,7 @@ export class AffiliateCodeRepository implements AffiliateCodeRepositoryPort {
     return results.map((result) => this.mapper.toDomain(result));
   }
 
-  async findById(id: string, userId: string): Promise<AffiliateCode | null> {
+  async findById(id: string, userId: bigint): Promise<AffiliateCode | null> {
     const result = await this.tx.affiliateCode.findFirst({
       where: {
         id,
@@ -76,7 +76,7 @@ export class AffiliateCodeRepository implements AffiliateCodeRepositoryPort {
     return this.mapper.toDomain(result);
   }
 
-  async countByUserId(userId: string): Promise<number> {
+  async countByUserId(userId: bigint): Promise<number> {
     return await this.tx.affiliateCode.count({
       where: { userId },
     });
@@ -90,7 +90,7 @@ export class AffiliateCodeRepository implements AffiliateCodeRepositoryPort {
     return count > 0;
   }
 
-  async findDefaultByUserId(userId: string): Promise<AffiliateCode | null> {
+  async findDefaultByUserId(userId: bigint): Promise<AffiliateCode | null> {
     const result = await this.tx.affiliateCode.findFirst({
       where: {
         userId,
@@ -123,7 +123,7 @@ export class AffiliateCodeRepository implements AffiliateCodeRepositoryPort {
     return this.mapper.toDomain(result);
   }
 
-  async delete(id: string, userId: string): Promise<void> {
+  async delete(id: string, userId: bigint): Promise<void> {
     await this.tx.affiliateCode.delete({
       where: {
         id,

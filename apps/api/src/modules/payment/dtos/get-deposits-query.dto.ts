@@ -4,7 +4,8 @@ import {
   DepositMethodType,
   ExchangeCurrencyCode,
 } from '@repo/database';
-import { IsDateString, IsEnum, IsOptional, IsString } from 'class-validator';
+import { Transform } from 'class-transformer';
+import { IsDateString, IsEnum, IsNumberString, IsOptional, IsString } from 'class-validator';
 import { createPaginationQueryDto } from 'src/platform/http/types/pagination.types';
 
 type DepositSortFields =
@@ -42,8 +43,9 @@ export class GetDepositsQueryDto extends createPaginationQueryDto<DepositSortFie
     description: '사용자 ID 필터',
   })
   @IsOptional()
-  @IsString()
-  userId?: string;
+  @IsNumberString()
+  @Transform(({ value }) => (value ? BigInt(value) : value))
+  userId?: bigint;
 
   @ApiPropertyOptional({
     description: '통화 필터',

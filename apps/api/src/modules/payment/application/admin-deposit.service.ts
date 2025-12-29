@@ -39,7 +39,7 @@ export class AdminDepositService {
     actuallyPaid: Prisma.Decimal,
     transactionHash: string | undefined,
     memo: string | undefined,
-    adminId: string,
+    adminId: bigint,
     requestInfo: RequestClientInfo,
   ) {
     try {
@@ -169,7 +169,7 @@ export class AdminDepositService {
             confirmedAt: nowUtc(),
             providerMetadata: {
               ...((depositDetail.providerMetadata as object) || {}),
-              approvedBy: adminId,
+              approvedBy: adminId.toString(),
               approvedAt: nowUtc(),
               memo,
             },
@@ -242,7 +242,7 @@ export class AdminDepositService {
   async rejectDeposit(
     depositDetailId: bigint,
     failureReason: string,
-    adminId: string,
+    adminId: bigint,
     requestInfo: RequestClientInfo,
   ): Promise<RejectDepositResponseDto> {
     try {
@@ -289,7 +289,7 @@ export class AdminDepositService {
             failureReason: failureReason,
             providerMetadata: {
               ...((depositDetail.providerMetadata as object) || {}),
-              rejectedBy: adminId,
+              rejectedBy: adminId.toString(),
               rejectedAt: new Date(),
               rejectionReason: failureReason,
             },
@@ -353,7 +353,7 @@ export class AdminDepositService {
    */
   async getDeposits(
     query: GetDepositsQueryDto,
-    adminId: string,
+    adminId: bigint,
     requestInfo: RequestClientInfo,
   ): Promise<PaginatedData<AdminDepositListItemDto>> {
     try {
@@ -406,8 +406,8 @@ export class AdminDepositService {
                 user: {
                   select: {
                     id: true,
+                    uid: true,
                     email: true,
-                    numericId: true,
                   },
                 },
               },
@@ -444,7 +444,6 @@ export class AdminDepositService {
           id: deposit.id.toString(),
           userId: deposit.transaction.user.id,
           userEmail: deposit.transaction.user.email ?? '',
-          userNumericId: deposit.transaction.user.numericId,
           status: deposit.status,
           methodType: deposit.methodType,
           provider: deposit.provider,

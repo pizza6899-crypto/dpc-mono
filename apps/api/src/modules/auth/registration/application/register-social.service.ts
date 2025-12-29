@@ -27,7 +27,7 @@ export interface RegisterSocialParams {
 }
 
 export interface RegisterSocialResult {
-  id: string;
+  id: bigint;
   email: string;
   isNewUser: boolean;
 }

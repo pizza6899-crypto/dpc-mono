@@ -2,7 +2,7 @@ import { ApiProperty } from '@nestjs/swagger';
 
 export class VipMembershipResponseDto {
   @ApiProperty({ description: '사용자 ID' })
-  userId: string;
+  userId: bigint;
 
   @ApiProperty({ description: '현재 VIP 레벨' })
   currentLevel: {

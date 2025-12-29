@@ -12,7 +12,7 @@ export class RollingCheckService {
    * 출금 전 롤링 체크
    * @throws ApiException 롤링 미완료 시
    */
-  async validateWithdrawal(userId: string): Promise<void> {
+  async validateWithdrawal(userId: bigint): Promise<void> {
     const canWithdraw = await this.rollingService.canWithdraw(userId);
 
     if (!canWithdraw) {

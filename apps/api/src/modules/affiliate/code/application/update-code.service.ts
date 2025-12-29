@@ -10,7 +10,7 @@ import { ActivityType } from 'src/platform/activity-log/activity-log.types';
 
 interface UpdateCodeParams {
   id: string;
-  userId: string;
+  userId: bigint;
   campaignName?: string;
   requestInfo?: RequestClientInfo;
 }

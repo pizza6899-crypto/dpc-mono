@@ -129,7 +129,7 @@ export class AdminCommissionController {
       uid: commission.uid,
       affiliateId: commission.affiliateId,
       subUserId: commission.subUserId,
-      gameRoundId: commission.gameRoundId?.toString() || '',
+      gameRoundId: commission.gameRoundId,
       wagerAmount: commission.wagerAmount.toString(),
       winAmount: commission.winAmount?.toString() || null,
       commission: commission.commission.toString(),

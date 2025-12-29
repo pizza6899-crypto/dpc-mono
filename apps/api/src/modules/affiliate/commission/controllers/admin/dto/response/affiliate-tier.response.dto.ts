@@ -11,9 +11,9 @@ export class AffiliateTierResponseDto {
 
   @ApiProperty({
     description: '어필리에이트 ID',
-    example: 'affiliate-123',
+    example: '123',
   })
-  affiliateId: string;
+  affiliateId: bigint;
 
   @ApiProperty({
     description: '티어',
@@ -52,10 +52,10 @@ export class AffiliateTierResponseDto {
 
   @ApiProperty({
     description: '수동 요율 설정자 ID',
-    example: 'admin-456',
+    example: '456',
     nullable: true,
   })
-  customRateSetBy: string | null;
+  customRateSetBy: bigint | null;
 
   @ApiProperty({
     description: '수동 요율 설정일시',

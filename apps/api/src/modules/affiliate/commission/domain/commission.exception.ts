@@ -58,7 +58,7 @@ export class CommissionNotAvailableException extends CommissionException {
  * 월렛을 찾을 수 없는 경우
  */
 export class WalletNotFoundException extends CommissionException {
-  constructor(affiliateId: string, currency: string) {
+  constructor(affiliateId: bigint, currency: string) {
     super(
       `Wallet not found for affiliate: ${affiliateId}, currency: ${currency}`,
     );
@@ -70,7 +70,7 @@ export class WalletNotFoundException extends CommissionException {
  * 티어를 찾을 수 없는 경우
  */
 export class TierNotFoundException extends CommissionException {
-  constructor(affiliateId: string) {
+  constructor(affiliateId: bigint) {
     super(`Tier not found for affiliate: ${affiliateId}`);
     this.name = 'TierNotFoundException';
   }

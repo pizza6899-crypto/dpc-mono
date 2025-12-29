@@ -12,7 +12,7 @@ import {
  */
 export class AffiliateWallet {
   private constructor(
-    public readonly affiliateId: string,
+    public readonly affiliateId: bigint,
     public readonly currency: ExchangeCurrencyCode,
     private _availableBalance: Prisma.Decimal, // 출금 가능 잔액
     private _pendingBalance: Prisma.Decimal, // 대기 중인 커미션
@@ -27,7 +27,7 @@ export class AffiliateWallet {
    * @description Application 레이어에서 Prisma.Decimal로 변환하여 전달해야 함
    */
   static create(params: {
-    affiliateId: string;
+    affiliateId: bigint;
     currency: ExchangeCurrencyCode;
     availableBalance?: Prisma.Decimal; // 기본값: 0
     pendingBalance?: Prisma.Decimal; // 기본값: 0
@@ -80,7 +80,7 @@ export class AffiliateWallet {
    * @description Mapper에서 Prisma.Decimal로 변환하여 전달해야 함
    */
   static fromPersistence(data: {
-    affiliateId: string;
+    affiliateId: bigint;
     currency: ExchangeCurrencyCode;
     availableBalance: Prisma.Decimal;
     pendingBalance: Prisma.Decimal;

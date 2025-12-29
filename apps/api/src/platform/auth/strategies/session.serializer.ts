@@ -4,17 +4,15 @@ import { PassportSerializer } from '@nestjs/passport';
 import { PrismaService } from '../../prisma/prisma.service';
 import { UserStatus } from '@repo/database';
 import { AuthenticatedUser } from '../types/auth.types';
-import { SessionService } from '../../session/session.service';
 
 interface UserForSerialization {
-  id: string;
+  id: bigint;
 }
 
 @Injectable()
 export class SessionSerializer extends PassportSerializer {
   constructor(
     private prisma: PrismaService,
-    private sessionService: SessionService,
   ) {
     super();
   }
@@ -34,21 +32,22 @@ export class SessionSerializer extends PassportSerializer {
     req?: any, // express Request 객체 (passport에서 제공)
   ) {
     try {
-      // 1. 세션 ID로 세션 유효성 검증
-      if (req?.sessionID) {
-        const isValidSession = await this.sessionService.validateSession(
-          req.sessionID,
-        );
-        if (!isValidSession) {
-          return done(null, false);
-        }
-      }
+      // // 1. 세션 ID로 세션 유효성 검증
+      // if (req?.sessionID) {
+      //   const isValidSession = await this.sessionService.validateSession(
+      //     req.sessionID,
+      //   );
+      //   if (!isValidSession) {
+      //     return done(null, false);
+      //   }
+      // }
 
       // 2. userId로 사용자 정보 조회
       const user = await this.prisma.user.findUnique({
         where: { id: payload.id },
         select: {
           id: true,
+          uid: true,
           email: true,
           role: true,
           status: true,
@@ -61,6 +60,7 @@ export class SessionSerializer extends PassportSerializer {
 
       const authUser: AuthenticatedUser = {
         id: user.id,
+        uid: user.uid,
         email: user.email || '',
         role: user.role,
       };

@@ -5,7 +5,7 @@ import { AFFILIATE_CODE_REPOSITORY } from '../ports/out/affiliate-code.repositor
 import type { AffiliateCodeRepositoryPort } from '../ports/out/affiliate-code.repository.port';
 
 interface FindCodesParams {
-  userId: string;
+  userId: bigint;
 }
 
 @Injectable()

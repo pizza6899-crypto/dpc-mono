@@ -6,22 +6,16 @@ export class AdminReferralListItemDto {
   id: string;
 
   @ApiProperty({ description: '어플리에이트 사용자 ID' })
-  affiliateId: string;
+  affiliateId: bigint;
 
   @ApiProperty({ description: '어플리에이트 이메일', nullable: true })
   affiliateEmail: string | null;
 
-  @ApiProperty({ description: '어플리에이트 숫자 ID' })
-  affiliateNumericId: number;
-
   @ApiProperty({ description: '피추천인 사용자 ID' })
-  subUserId: string;
+  subUserId: bigint;
 
   @ApiProperty({ description: '피추천인 이메일', nullable: true })
   subUserEmail: string | null;
-
-  @ApiProperty({ description: '피추천인 숫자 ID' })
-  subUserNumericId: number;
 
   @ApiProperty({ description: '레퍼럴 코드 ID' })
   codeId: string;

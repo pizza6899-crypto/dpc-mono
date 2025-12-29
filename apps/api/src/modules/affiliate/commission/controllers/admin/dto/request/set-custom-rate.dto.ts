@@ -1,14 +1,16 @@
 // src/modules/affiliate/commission/controllers/admin/dto/request/set-custom-rate.dto.ts
 import { ApiProperty } from '@nestjs/swagger';
-import { IsString, Matches } from 'class-validator';
+import { Transform } from 'class-transformer';
+import { IsNumberString, IsString, Matches } from 'class-validator';
 
 export class SetCustomRateDto {
   @ApiProperty({
     description: '어필리에이트 ID',
-    example: 'affiliate-123',
+    example: '123',
   })
-  @IsString()
-  affiliateId: string;
+  @IsNumberString()
+  @Transform(({ value }) => (value ? BigInt(value) : value))
+  affiliateId: bigint;
 
   @ApiProperty({
     description: '설정할 커미션 요율 (0.01 = 1%, 최대 1.0 = 100%)',

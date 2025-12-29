@@ -14,7 +14,7 @@ export interface ProcessCancelParams {
   aggregatorTxId: string;
   aggregatorBetId: string;
   aggregatorType: GameAggregatorType;
-  userId: string;
+  userId: bigint;
   gameCurrency: GamingCurrencyCode;
   cancelTime: Date;
   isEndRound: boolean;

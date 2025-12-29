@@ -22,7 +22,7 @@ export class CompService {
    */
   // 'earnComp' 메서드에 날짜 파라미터 추가, 변수명은 earnDate로 함.
   async earnComp(
-    userId: string,
+    userId: bigint,
     contributionAmount: Prisma.Decimal,
     earnDate: Date,
   ) {
@@ -66,7 +66,7 @@ export class CompService {
   // earnComp로 오늘 콤프 적립했지만, 해당 게임이 취소나 타이 등 특정 이유로 무효화가 되면,
   // 해당 게임의 comp 포인트 적립을 취소해야함.
   async cancelComp(
-    userId: string,
+    userId: bigint,
     contributionAmount: Prisma.Decimal,
     compAmount: Prisma.Decimal,
     earnDate: Date,
@@ -82,7 +82,7 @@ export class CompService {
   /**
    * 콤프 수령 처리 (특정 날짜의 베팅 금액 기준)
    */
-  async claimComp(userId: string, targetDate?: string) {
+  async claimComp(userId: bigint, targetDate?: string) {
     return await this.concurrencyService.withUserBalanceLock(
       userId,
       async () => {
@@ -239,7 +239,7 @@ export class CompService {
   /**
    * 미수령 콤프 내역 조회
    */
-  async getUnclaimedComp(userId: string) {
+  async getUnclaimedComp(userId: bigint) {
     // 동경시 기준으로 현재 시간 계산
     const now = DateTime.now().setZone('Asia/Tokyo');
 
@@ -285,7 +285,7 @@ export class CompService {
    * 일일 콤프 적립 기록 업데이트
    */
   private async updateDailyCompEarning(
-    userId: string,
+    userId: bigint,
     contributionAmount: Prisma.Decimal,
     compAmount: Prisma.Decimal,
     earnDate: Date,

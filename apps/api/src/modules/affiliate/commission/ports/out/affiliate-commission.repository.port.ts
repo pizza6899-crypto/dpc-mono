@@ -44,7 +44,7 @@ export interface AffiliateCommissionRepositoryPort {
    * @returns 커미션 엔티티 배열
    */
   findByAffiliateId(
-    affiliateId: string,
+    affiliateId: bigint,
     options?: {
       status?: CommissionStatus;
       currency?: ExchangeCurrencyCode;
@@ -62,7 +62,7 @@ export interface AffiliateCommissionRepositoryPort {
    * @returns 커미션 개수
    */
   countByAffiliateId(
-    affiliateId: string,
+    affiliateId: bigint,
     options?: {
       status?: CommissionStatus;
       currency?: ExchangeCurrencyCode;
@@ -79,7 +79,7 @@ export interface AffiliateCommissionRepositoryPort {
    * @returns 커미션 엔티티 배열
    */
   findPendingByAffiliateId(
-    affiliateId: string,
+    affiliateId: bigint,
     currency: ExchangeCurrencyCode,
     options?: {
       limit?: number;
@@ -137,5 +137,5 @@ export interface AffiliateCommissionRepositoryPort {
   findAffiliateIdsWithPendingCommissions(options?: {
     limit?: number;
     offset?: number;
-  }): Promise<string[]>;
+  }): Promise<bigint[]>;
 }

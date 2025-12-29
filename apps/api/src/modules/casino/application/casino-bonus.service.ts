@@ -17,7 +17,7 @@ import { ExchangeRateService } from 'src/modules/exchange/application/exchange-r
 
 export interface ProcessBonusParams {
   tx: Prisma.TransactionClient;
-  userId: string;
+  userId: bigint;
   gameCurrency: GamingCurrencyCode;
   transactionTime: Date;
   aggregatorType: GameAggregatorType;
@@ -188,7 +188,7 @@ export class CasinoBonusService {
       // 기존 로직 (fallback)
       gameSession = await tx.gameSession.findFirst({
         where: {
-          userId: userId,
+          userId,
           aggregatorType: aggregatorType,
           gameCurrency: gameCurrency,
         },

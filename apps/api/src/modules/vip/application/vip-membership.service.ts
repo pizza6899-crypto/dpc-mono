@@ -18,7 +18,7 @@ export class VipMembershipService {
   /**
    * 사용자 VIP 멤버십 조회/생성
    */
-  async getOrCreateMembership(userId: string) {
+  async getOrCreateMembership(userId: bigint) {
     let membership = await this.prisma.vipMembership.findUnique({
       where: { userId },
       select: {
@@ -87,7 +87,7 @@ export class VipMembershipService {
   /**
    * 사용자 VIP 정보 조회
    */
-  async getUserVipInfo(userId: string): Promise<VipMembershipResponseDto> {
+  async getUserVipInfo(userId: bigint): Promise<VipMembershipResponseDto> {
     const membership = await this.getOrCreateMembership(userId);
     const nextLevel = await this.prisma.vipLevel.findFirst({
       where: {
@@ -127,7 +127,7 @@ export class VipMembershipService {
   /**
    * VIP 레벨 자동 업데이트 (롤링 금액 기반, 단계별 처리)
    */
-  async updateVipLevel(userId: string) {
+  async updateVipLevel(userId: bigint) {
     const membership = await this.getOrCreateMembership(userId);
 
     // 현재 롤링 금액으로 달성 가능한 모든 레벨 찾기 (순서대로)
@@ -184,7 +184,7 @@ export class VipMembershipService {
     }
   }
 
-  async addRolling(userId: string, rollingAmount: Prisma.Decimal) {
+  async addRolling(userId: bigint, rollingAmount: Prisma.Decimal) {
     if (rollingAmount.lte(0)) return;
 
     const updatedMembership = await this.prisma.vipMembership.update({
@@ -202,7 +202,7 @@ export class VipMembershipService {
     return updatedMembership.accumulatedRolling;
   }
 
-  async cancelRolling(userId: string, rollingAmount: Prisma.Decimal) {
+  async cancelRolling(userId: bigint, rollingAmount: Prisma.Decimal) {
     if (rollingAmount.lte(0)) return;
 
     const updatedMembership = await this.prisma.vipMembership.update({

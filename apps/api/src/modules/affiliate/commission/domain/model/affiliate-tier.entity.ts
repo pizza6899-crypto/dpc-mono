@@ -14,13 +14,13 @@ export class AffiliateTier {
   private constructor(
     public readonly id: bigint | null, // 내부 관리용 (DB 저장 시 자동 생성)
     public readonly uid: string, // 비즈니스용 (CUID, 애플리케이션에서 생성 필수)
-    public readonly affiliateId: string,
+    public readonly affiliateId: bigint,
     private _tier: AffiliateTierLevel,
     private _baseRate: Prisma.Decimal, // 티어별 기본 요율 (예: 0.01 = 1%)
     private _customRate: Prisma.Decimal | null, // 관리자가 수동 설정한 요율
     private _isCustomRate: boolean,
     private _monthlyWagerAmount: Prisma.Decimal, // 월간 총 베팅 금액
-    private _customRateSetBy: string | null,
+    private _customRateSetBy: bigint | null,
     private _customRateSetAt: Date | null,
     public readonly createdAt: Date,
     private _updatedAt: Date,
@@ -36,13 +36,13 @@ export class AffiliateTier {
   static create(params: {
     id?: bigint; // 선택적: 영속화된 엔티티 재생성 시에만 사용
     uid: string; // 필수: 애플리케이션에서 CUID 생성하여 전달 (IdUtil.generateUid() 사용)
-    affiliateId: string;
+    affiliateId: bigint;
     tier: AffiliateTierLevel;
     baseRate: Prisma.Decimal;
     customRate?: Prisma.Decimal | null; // 기본값: null
     isCustomRate?: boolean; // 기본값: false
     monthlyWagerAmount?: Prisma.Decimal; // 기본값: 0
-    customRateSetBy?: string | null; // 기본값: null
+    customRateSetBy?: bigint | null; // 기본값: null
     customRateSetAt?: Date | null; // 기본값: null
   }): AffiliateTier {
     const baseRate = params.baseRate;
@@ -110,13 +110,13 @@ export class AffiliateTier {
   static fromPersistence(data: {
     id: bigint | null;
     uid: string;
-    affiliateId: string;
+    affiliateId: bigint;
     tier: AffiliateTierLevel;
     baseRate: Prisma.Decimal;
     customRate: Prisma.Decimal | null;
     isCustomRate: boolean;
     monthlyWagerAmount: Prisma.Decimal;
-    customRateSetBy: string | null;
+    customRateSetBy: bigint | null;
     customRateSetAt: Date | null;
     createdAt: Date;
     updatedAt: Date;
@@ -162,7 +162,7 @@ export class AffiliateTier {
     return this._updatedAt;
   }
 
-  get customRateSetBy(): string | null {
+  get customRateSetBy(): bigint | null {
     return this._customRateSetBy;
   }
 
@@ -217,7 +217,7 @@ export class AffiliateTier {
    * @param setBy - 설정한 관리자 ID
    * @throws {InvalidCommissionRateException} 요율이 유효하지 않은 경우
    */
-  setCustomRate(customRate: Prisma.Decimal, setBy: string): void {
+  setCustomRate(customRate: Prisma.Decimal, setBy: bigint): void {
     // 요율 검증
     const customRateAsBigInt = BigInt(customRate.mul(10000).toFixed(0));
     if (customRate.lte(0) || customRate.gt(1)) {

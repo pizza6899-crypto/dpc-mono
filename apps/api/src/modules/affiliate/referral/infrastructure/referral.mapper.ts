@@ -13,9 +13,9 @@ export class ReferralMapper {
    */
   toDomain(prismaModel: {
     id: string;
-    affiliateId: string;
+    affiliateId: bigint;
     codeId: string;
-    subUserId: string;
+    subUserId: bigint;
     ipAddress: string | null;
     deviceFingerprint: string | null;
     userAgent: string | null;
@@ -40,9 +40,9 @@ export class ReferralMapper {
    */
   toPrisma(domain: Referral): {
     id: string;
-    affiliateId: string;
+    affiliateId: bigint;
     codeId: string;
-    subUserId: string;
+    subUserId: bigint;
     ipAddress: string | null;
     deviceFingerprint: string | null;
     userAgent: string | null;

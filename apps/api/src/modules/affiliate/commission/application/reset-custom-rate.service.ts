@@ -10,8 +10,8 @@ import type { RequestClientInfo } from 'src/platform/http/types/client-info.type
 import { Transactional } from '@nestjs-cls/transactional';
 
 interface ResetCustomRateParams {
-  affiliateId: string;
-  resetBy: string; // 관리자 ID
+  affiliateId: bigint;
+  resetBy: bigint; // 관리자 ID
   requestInfo?: RequestClientInfo;
 }
 

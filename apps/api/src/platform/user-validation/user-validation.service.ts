@@ -23,7 +23,7 @@ export class UserValidationService {
    * @throws ApiException | BadRequestException
    */
   async validateUser(
-    userId: string,
+    userId: bigint,
     options: UserValidationOptions = {},
     currentRole?: UserRoleType,
   ): Promise<void> {

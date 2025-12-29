@@ -33,7 +33,7 @@ export class BankTransferDepositService {
   ) {}
 
   async createDeposit(
-    userId: string,
+    userId: bigint,
     request: CreateDepositRequestDto,
     requestInfo: RequestClientInfo,
   ): Promise<CreateDepositResponseDto> {

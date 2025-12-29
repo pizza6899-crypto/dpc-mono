@@ -1,6 +1,7 @@
 // src/modules/affiliate/referral/controllers/dto/request/get-referrals-query.dto.ts
 import { ApiPropertyOptional } from '@nestjs/swagger';
-import { IsDateString, IsOptional, IsString } from 'class-validator';
+import { Transform } from 'class-transformer';
+import { IsDateString, IsNumberString, IsOptional, IsString } from 'class-validator';
 import { createPaginationQueryDto } from 'src/platform/http/types/pagination.types';
 
 type ReferralSortFields = 'createdAt' | 'updatedAt';
@@ -18,15 +19,17 @@ export class GetReferralsQueryDto extends createPaginationQueryDto<ReferralSortF
     description: '어플리에이트 사용자 ID 필터',
   })
   @IsOptional()
-  @IsString()
-  affiliateId?: string;
+  @IsNumberString()
+  @Transform(({ value }) => (value ? BigInt(value) : value))
+  affiliateId?: bigint;
 
   @ApiPropertyOptional({
     description: '피추천인 사용자 ID 필터',
   })
   @IsOptional()
-  @IsString()
-  subUserId?: string;
+  @IsNumberString()
+  @Transform(({ value }) => (value ? BigInt(value) : value))
+  subUserId?: bigint;
 
   @ApiPropertyOptional({
     description: '레퍼럴 코드 ID 필터',

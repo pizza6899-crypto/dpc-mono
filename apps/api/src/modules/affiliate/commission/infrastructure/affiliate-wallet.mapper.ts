@@ -13,7 +13,7 @@ export class AffiliateWalletMapper {
    * Prisma 모델 → Domain 엔티티 변환
    */
   toDomain(prismaModel: {
-    affiliateId: string;
+    affiliateId: bigint;
     currency: ExchangeCurrencyCode;
     availableBalance: Prisma.Decimal;
     pendingBalance: Prisma.Decimal;
@@ -34,7 +34,7 @@ export class AffiliateWalletMapper {
    * Domain 엔티티 → Prisma 모델 변환
    */
   toPrisma(domain: AffiliateWallet): {
-    affiliateId: string;
+    affiliateId: bigint;
     currency: ExchangeCurrencyCode;
     availableBalance: Prisma.Decimal;
     pendingBalance: Prisma.Decimal;

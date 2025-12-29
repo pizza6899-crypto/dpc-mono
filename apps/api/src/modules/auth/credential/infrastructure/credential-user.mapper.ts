@@ -10,6 +10,7 @@ export class CredentialUserMapper {
   toDomain(prismaModel: any): CredentialUser {
     return CredentialUser.fromPersistence({
       id: prismaModel.id,
+      uid: prismaModel.uid,
       email: prismaModel.email,
       passwordHash: prismaModel.passwordHash,
       status: prismaModel.status,

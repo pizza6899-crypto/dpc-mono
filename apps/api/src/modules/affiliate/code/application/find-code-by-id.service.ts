@@ -6,7 +6,7 @@ import type { AffiliateCodeRepositoryPort } from '../ports/out/affiliate-code.re
 
 interface FindCodeByIdParams {
   id: string;
-  userId: string;
+  userId: bigint;
 }
 
 @Injectable()

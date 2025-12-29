@@ -49,7 +49,7 @@ export class AffiliateCommissionRepository implements AffiliateCommissionReposit
   }
 
   async findByAffiliateId(
-    affiliateId: string,
+    affiliateId: bigint,
     options?: {
       status?: CommissionStatus;
       currency?: ExchangeCurrencyCode;
@@ -88,7 +88,7 @@ export class AffiliateCommissionRepository implements AffiliateCommissionReposit
   }
 
   async countByAffiliateId(
-    affiliateId: string,
+    affiliateId: bigint,
     options?: {
       status?: CommissionStatus;
       currency?: ExchangeCurrencyCode;
@@ -118,7 +118,7 @@ export class AffiliateCommissionRepository implements AffiliateCommissionReposit
   }
 
   async findPendingByAffiliateId(
-    affiliateId: string,
+    affiliateId: bigint,
     currency: ExchangeCurrencyCode,
     options?: {
       limit?: number;
@@ -240,7 +240,7 @@ export class AffiliateCommissionRepository implements AffiliateCommissionReposit
   async findAffiliateIdsWithPendingCommissions(options?: {
     limit?: number;
     offset?: number;
-  }): Promise<string[]> {
+  }): Promise<bigint[]> {
     // PENDING 상태 커미션이 있는 어필리에이트 ID 목록 조회 (중복 제거)
     const results = await this.tx.affiliateCommission.findMany({
       where: {

@@ -6,7 +6,7 @@ import { AFFILIATE_COMMISSION_REPOSITORY } from '../ports/out/affiliate-commissi
 import type { AffiliateCommissionRepositoryPort } from '../ports/out/affiliate-commission.repository.port';
 
 interface FindCommissionsParams {
-  affiliateId: string;
+  affiliateId: bigint;
   options?: {
     status?: CommissionStatus;
     currency?: ExchangeCurrencyCode;

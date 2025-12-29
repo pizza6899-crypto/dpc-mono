@@ -3,7 +3,7 @@ import { UserRoleType, UserStatus } from '@repo/database';
 
 export class RegisterAdminResponseDto {
   @ApiProperty({ description: 'User ID' })
-  id: string;
+  id: bigint;
 
   @ApiProperty({ description: 'Email' })
   email: string;

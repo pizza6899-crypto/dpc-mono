@@ -17,7 +17,7 @@ export class AffiliateWalletRepository implements AffiliateWalletRepositoryPort 
   ) {}
 
   async findByAffiliateIdAndCurrency(
-    affiliateId: string,
+    affiliateId: bigint,
     currency: ExchangeCurrencyCode,
   ): Promise<AffiliateWallet | null> {
     const result = await this.tx.affiliateWallet.findUnique({
@@ -33,7 +33,7 @@ export class AffiliateWalletRepository implements AffiliateWalletRepositoryPort 
   }
 
   async getByAffiliateIdAndCurrency(
-    affiliateId: string,
+    affiliateId: bigint,
     currency: ExchangeCurrencyCode,
   ): Promise<AffiliateWallet> {
     const wallet = await this.findByAffiliateIdAndCurrency(
@@ -46,7 +46,7 @@ export class AffiliateWalletRepository implements AffiliateWalletRepositoryPort 
     return wallet;
   }
 
-  async findByAffiliateId(affiliateId: string): Promise<AffiliateWallet[]> {
+  async findByAffiliateId(affiliateId: bigint): Promise<AffiliateWallet[]> {
     const results = await this.tx.affiliateWallet.findMany({
       where: { affiliateId },
     });

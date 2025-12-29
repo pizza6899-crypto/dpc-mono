@@ -499,7 +499,7 @@ export class WhitecliffApiLoggingInterceptor {
     }
   }
 
-  private extractUserId(data: any): string | undefined {
+  private extractUserId(data: any): bigint | undefined {
     return (
       data?.summary?.user?.id?.toString() ||
       data?.user?.id?.toString() ||

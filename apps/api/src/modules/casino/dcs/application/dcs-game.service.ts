@@ -36,7 +36,7 @@ export class DcsGameService {
     walletCurrency,
     requestInfo,
   }: {
-    userId: string;
+    userId: bigint;
     gameId: number;
     channel: string;
     country_code: string;

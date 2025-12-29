@@ -4,7 +4,7 @@ import { AffiliateCodeValue } from './affiliate-code-value';
 export class AffiliateCode {
   private constructor(
     public readonly id: string,
-    public readonly userId: string,
+    public readonly userId: bigint,
     private _code: AffiliateCodeValue,
     private _campaignName: string | null,
     private _isActive: boolean,
@@ -22,7 +22,7 @@ export class AffiliateCode {
    */
   static fromPersistence(data: {
     id: string;
-    userId: string;
+    userId: bigint;
     code: string;
     campaignName: string | null;
     isActive: boolean;

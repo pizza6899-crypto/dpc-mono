@@ -24,7 +24,7 @@ import { IdUtil } from 'src/utils/id.util';
 import { Transactional } from '@nestjs-cls/transactional';
 
 interface CalculateCommissionParams {
-  subUserId: string; // 게임 플레이한 유저
+  subUserId: bigint; // 게임 플레이한 유저
   gameRoundId: bigint;
   wagerAmount: Prisma.Decimal;
   winAmount?: Prisma.Decimal | null;

@@ -16,6 +16,7 @@ export class UserMapper {
   toDomain(user: User): RegistrationUser {
     return RegistrationUser.fromPersistence({
       id: user.id,
+      uid: user.uid,
       email: user.email || '',
       passwordHash: user.passwordHash,
       socialId: user.socialId,

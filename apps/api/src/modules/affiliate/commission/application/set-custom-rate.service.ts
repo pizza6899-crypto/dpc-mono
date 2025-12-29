@@ -16,9 +16,9 @@ import type { RequestClientInfo } from 'src/platform/http/types/client-info.type
 import { Transactional } from '@nestjs-cls/transactional';
 
 interface SetCustomRateParams {
-  affiliateId: string;
+  affiliateId: bigint;
   customRate: Prisma.Decimal;
-  setBy: string; // 관리자 ID
+  setBy: bigint; // 관리자 ID
   requestInfo?: RequestClientInfo;
 }
 

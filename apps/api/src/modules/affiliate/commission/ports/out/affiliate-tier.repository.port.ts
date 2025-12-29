@@ -12,7 +12,7 @@ export interface AffiliateTierRepositoryPort {
    * @param affiliateId - 어필리에이트 ID
    * @returns 티어 엔티티 또는 null
    */
-  findByAffiliateId(affiliateId: string): Promise<AffiliateTier | null>;
+  findByAffiliateId(affiliateId: bigint): Promise<AffiliateTier | null>;
 
   /**
    * 어필리에이트 티어 조회 (없으면 예외)
@@ -20,7 +20,7 @@ export interface AffiliateTierRepositoryPort {
    * @returns 티어 엔티티
    * @throws {TierNotFoundException} 티어가 없는 경우
    */
-  getByAffiliateId(affiliateId: string): Promise<AffiliateTier>;
+  getByAffiliateId(affiliateId: bigint): Promise<AffiliateTier>;
 
   /**
    * 티어 생성 또는 업데이트
@@ -37,7 +37,7 @@ export interface AffiliateTierRepositoryPort {
    * @returns 업데이트된 티어 엔티티
    */
   updateTier(
-    affiliateId: string,
+    affiliateId: bigint,
     tier: AffiliateTierLevel,
     baseRate: bigint,
   ): Promise<AffiliateTier>;
@@ -49,7 +49,7 @@ export interface AffiliateTierRepositoryPort {
    * @returns 업데이트된 티어 엔티티
    */
   updateMonthlyWagerAmount(
-    affiliateId: string,
+    affiliateId: bigint,
     monthlyWagerAmount: bigint,
   ): Promise<AffiliateTier>;
 
@@ -58,5 +58,5 @@ export interface AffiliateTierRepositoryPort {
    * @param affiliateId - 어필리에이트 ID
    * @returns 업데이트된 티어 엔티티
    */
-  resetMonthlyWagerAmount(affiliateId: string): Promise<AffiliateTier>;
+  resetMonthlyWagerAmount(affiliateId: bigint): Promise<AffiliateTier>;
 }

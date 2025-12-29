@@ -3,7 +3,8 @@ import { UserStatus, UserRoleType, SocialType } from '@repo/database';
 import { RegistrationUser } from './registration-user.entity';
 
 describe('RegistrationUser Entity', () => {
-  const mockId = 'user-123';
+  const mockId = BigInt(123);
+  const mockUid = 'user-uid-123';
   const mockEmail = 'user@example.com';
   const mockPasswordHash = '$2b$10$hashedpassword123';
   const mockSocialId = 'google-123456';
@@ -13,6 +14,7 @@ describe('RegistrationUser Entity', () => {
     it('모든 필드가 올바르게 설정된 일반 회원가입 RegistrationUser를 생성한다', () => {
       const user = RegistrationUser.create({
         id: mockId,
+        uid: mockUid,
         email: mockEmail,
         passwordHash: mockPasswordHash,
         socialId: null,
@@ -22,6 +24,7 @@ describe('RegistrationUser Entity', () => {
       });
 
       expect(user.id).toBe(mockId);
+      expect(user.uid).toBe(mockUid);
       expect(user.email).toBe(mockEmail);
       expect(user.passwordHash).toBe(mockPasswordHash);
       expect(user.socialId).toBeNull();
@@ -33,6 +36,7 @@ describe('RegistrationUser Entity', () => {
     it('모든 필드가 올바르게 설정된 소셜 회원가입 RegistrationUser를 생성한다', () => {
       const user = RegistrationUser.create({
         id: mockId,
+        uid: mockUid,
         email: mockEmail,
         passwordHash: null,
         socialId: mockSocialId,
@@ -42,6 +46,7 @@ describe('RegistrationUser Entity', () => {
       });
 
       expect(user.id).toBe(mockId);
+      expect(user.uid).toBe(mockUid);
       expect(user.email).toBe(mockEmail);
       expect(user.passwordHash).toBeNull();
       expect(user.socialId).toBe(mockSocialId);
@@ -53,6 +58,7 @@ describe('RegistrationUser Entity', () => {
     it('passwordHash가 null인 일반 회원가입 RegistrationUser를 생성한다', () => {
       const user = RegistrationUser.create({
         id: mockId,
+        uid: mockUid,
         email: mockEmail,
         passwordHash: null,
         socialId: null,
@@ -75,6 +81,7 @@ describe('RegistrationUser Entity', () => {
       statuses.forEach((status) => {
         const user = RegistrationUser.create({
           id: mockId,
+          uid: mockUid,
           email: mockEmail,
           passwordHash: mockPasswordHash,
           socialId: null,
@@ -98,6 +105,7 @@ describe('RegistrationUser Entity', () => {
       roles.forEach((role) => {
         const user = RegistrationUser.create({
           id: mockId,
+          uid: mockUid,
           email: mockEmail,
           passwordHash: mockPasswordHash,
           socialId: null,
@@ -116,6 +124,7 @@ describe('RegistrationUser Entity', () => {
       socialTypes.forEach((socialType) => {
         const user = RegistrationUser.create({
           id: mockId,
+          uid: mockUid,
           email: mockEmail,
           passwordHash: null,
           socialId: `social-${socialType}`,
@@ -133,6 +142,7 @@ describe('RegistrationUser Entity', () => {
     it('DB 데이터로부터 일반 회원가입 RegistrationUser 엔티티를 생성한다', () => {
       const user = RegistrationUser.fromPersistence({
         id: mockId,
+        uid: mockUid,
         email: mockEmail,
         passwordHash: mockPasswordHash,
         socialId: null,
@@ -142,6 +152,7 @@ describe('RegistrationUser Entity', () => {
       });
 
       expect(user.id).toBe(mockId);
+      expect(user.uid).toBe(mockUid);
       expect(user.email).toBe(mockEmail);
       expect(user.passwordHash).toBe(mockPasswordHash);
       expect(user.socialId).toBeNull();
@@ -153,6 +164,7 @@ describe('RegistrationUser Entity', () => {
     it('DB 데이터로부터 소셜 회원가입 RegistrationUser 엔티티를 생성한다', () => {
       const user = RegistrationUser.fromPersistence({
         id: mockId,
+        uid: mockUid,
         email: mockEmail,
         passwordHash: null,
         socialId: mockSocialId,
@@ -162,6 +174,7 @@ describe('RegistrationUser Entity', () => {
       });
 
       expect(user.id).toBe(mockId);
+      expect(user.uid).toBe(mockUid);
       expect(user.email).toBe(mockEmail);
       expect(user.passwordHash).toBeNull();
       expect(user.socialId).toBe(mockSocialId);
@@ -173,6 +186,7 @@ describe('RegistrationUser Entity', () => {
     it('passwordHash가 null인 DB 데이터로부터 RegistrationUser를 생성한다', () => {
       const user = RegistrationUser.fromPersistence({
         id: mockId,
+        uid: mockUid,
         email: mockEmail,
         passwordHash: null,
         socialId: null,
@@ -194,6 +208,7 @@ describe('RegistrationUser Entity', () => {
       statuses.forEach((status) => {
         const user = RegistrationUser.fromPersistence({
           id: mockId,
+          uid: mockUid,
           email: mockEmail,
           passwordHash: mockPasswordHash,
           socialId: null,
@@ -217,6 +232,7 @@ describe('RegistrationUser Entity', () => {
       roles.forEach((role) => {
         const user = RegistrationUser.fromPersistence({
           id: mockId,
+          uid: mockUid,
           email: mockEmail,
           passwordHash: mockPasswordHash,
           socialId: null,
@@ -234,6 +250,7 @@ describe('RegistrationUser Entity', () => {
     it('passwordHash가 있고 socialId가 없는 일반 회원가입 사용자에 대해 true를 반환한다', () => {
       const user = RegistrationUser.create({
         id: mockId,
+        uid: mockUid,
         email: mockEmail,
         passwordHash: mockPasswordHash,
         socialId: null,
@@ -248,6 +265,7 @@ describe('RegistrationUser Entity', () => {
     it('passwordHash가 null인 사용자에 대해 false를 반환한다', () => {
       const user = RegistrationUser.create({
         id: mockId,
+        uid: mockUid,
         email: mockEmail,
         passwordHash: null,
         socialId: null,
@@ -262,6 +280,7 @@ describe('RegistrationUser Entity', () => {
     it('socialId가 있는 소셜 회원가입 사용자에 대해 false를 반환한다', () => {
       const user = RegistrationUser.create({
         id: mockId,
+        uid: mockUid,
         email: mockEmail,
         passwordHash: null,
         socialId: mockSocialId,
@@ -276,6 +295,7 @@ describe('RegistrationUser Entity', () => {
     it('fromPersistence로 생성한 일반 회원가입 사용자에 대해 true를 반환한다', () => {
       const user = RegistrationUser.fromPersistence({
         id: mockId,
+        uid: mockUid,
         email: mockEmail,
         passwordHash: mockPasswordHash,
         socialId: null,
@@ -292,6 +312,7 @@ describe('RegistrationUser Entity', () => {
     it('socialId가 있는 소셜 회원가입 사용자에 대해 true를 반환한다', () => {
       const user = RegistrationUser.create({
         id: mockId,
+        uid: mockUid,
         email: mockEmail,
         passwordHash: null,
         socialId: mockSocialId,
@@ -306,6 +327,7 @@ describe('RegistrationUser Entity', () => {
     it('socialId가 null인 일반 회원가입 사용자에 대해 false를 반환한다', () => {
       const user = RegistrationUser.create({
         id: mockId,
+        uid: mockUid,
         email: mockEmail,
         passwordHash: mockPasswordHash,
         socialId: null,
@@ -320,6 +342,7 @@ describe('RegistrationUser Entity', () => {
     it('fromPersistence로 생성한 소셜 회원가입 사용자에 대해 true를 반환한다', () => {
       const user = RegistrationUser.fromPersistence({
         id: mockId,
+        uid: mockUid,
         email: mockEmail,
         passwordHash: null,
         socialId: mockSocialId,
@@ -336,6 +359,7 @@ describe('RegistrationUser Entity', () => {
     it('ACTIVE 상태인 사용자에 대해 true를 반환한다', () => {
       const user = RegistrationUser.create({
         id: mockId,
+        uid: mockUid,
         email: mockEmail,
         passwordHash: mockPasswordHash,
         socialId: null,
@@ -350,6 +374,7 @@ describe('RegistrationUser Entity', () => {
     it('SUSPENDED 상태인 사용자에 대해 false를 반환한다', () => {
       const user = RegistrationUser.create({
         id: mockId,
+        uid: mockUid,
         email: mockEmail,
         passwordHash: mockPasswordHash,
         socialId: null,
@@ -364,6 +389,7 @@ describe('RegistrationUser Entity', () => {
     it('CLOSED 상태인 사용자에 대해 false를 반환한다', () => {
       const user = RegistrationUser.create({
         id: mockId,
+        uid: mockUid,
         email: mockEmail,
         passwordHash: mockPasswordHash,
         socialId: null,
@@ -378,6 +404,7 @@ describe('RegistrationUser Entity', () => {
     it('fromPersistence로 생성한 ACTIVE 사용자에 대해 true를 반환한다', () => {
       const user = RegistrationUser.fromPersistence({
         id: mockId,
+        uid: mockUid,
         email: mockEmail,
         passwordHash: mockPasswordHash,
         socialId: null,
@@ -392,6 +419,7 @@ describe('RegistrationUser Entity', () => {
     it('소셜 회원가입 ACTIVE 사용자에 대해 true를 반환한다', () => {
       const user = RegistrationUser.create({
         id: mockId,
+        uid: mockUid,
         email: mockEmail,
         passwordHash: null,
         socialId: mockSocialId,
@@ -408,6 +436,7 @@ describe('RegistrationUser Entity', () => {
     it('create → fromPersistence 순환 테스트 (일반 회원가입)', () => {
       const original = RegistrationUser.create({
         id: mockId,
+        uid: mockUid,
         email: mockEmail,
         passwordHash: mockPasswordHash,
         socialId: null,
@@ -418,6 +447,7 @@ describe('RegistrationUser Entity', () => {
 
       const recreated = RegistrationUser.fromPersistence({
         id: original.id,
+        uid: original.uid,
         email: original.email,
         passwordHash: original.passwordHash,
         socialId: original.socialId,
@@ -427,6 +457,7 @@ describe('RegistrationUser Entity', () => {
       });
 
       expect(recreated.id).toBe(original.id);
+      expect(recreated.uid).toBe(original.uid);
       expect(recreated.email).toBe(original.email);
       expect(recreated.passwordHash).toBe(original.passwordHash);
       expect(recreated.socialId).toBe(original.socialId);
@@ -441,6 +472,7 @@ describe('RegistrationUser Entity', () => {
     it('create → fromPersistence 순환 테스트 (소셜 회원가입)', () => {
       const original = RegistrationUser.create({
         id: mockId,
+        uid: mockUid,
         email: mockEmail,
         passwordHash: null,
         socialId: mockSocialId,
@@ -451,6 +483,7 @@ describe('RegistrationUser Entity', () => {
 
       const recreated = RegistrationUser.fromPersistence({
         id: original.id,
+        uid: original.uid,
         email: original.email,
         passwordHash: original.passwordHash,
         socialId: original.socialId,
@@ -460,6 +493,7 @@ describe('RegistrationUser Entity', () => {
       });
 
       expect(recreated.id).toBe(original.id);
+      expect(recreated.uid).toBe(original.uid);
       expect(recreated.email).toBe(original.email);
       expect(recreated.passwordHash).toBe(original.passwordHash);
       expect(recreated.socialId).toBe(original.socialId);
@@ -474,6 +508,7 @@ describe('RegistrationUser Entity', () => {
     it('fromPersistence → create 순환 테스트', () => {
       const original = RegistrationUser.fromPersistence({
         id: mockId,
+        uid: mockUid,
         email: mockEmail,
         passwordHash: mockPasswordHash,
         socialId: null,
@@ -484,6 +519,7 @@ describe('RegistrationUser Entity', () => {
 
       const recreated = RegistrationUser.create({
         id: original.id,
+        uid: original.uid,
         email: original.email,
         passwordHash: original.passwordHash,
         socialId: original.socialId,
@@ -493,6 +529,7 @@ describe('RegistrationUser Entity', () => {
       });
 
       expect(recreated.id).toBe(original.id);
+      expect(recreated.uid).toBe(original.uid);
       expect(recreated.email).toBe(original.email);
       expect(recreated.passwordHash).toBe(original.passwordHash);
       expect(recreated.socialId).toBe(original.socialId);
@@ -507,6 +544,7 @@ describe('RegistrationUser Entity', () => {
     it('passwordHash가 null인 경우 순환 테스트', () => {
       const original = RegistrationUser.create({
         id: mockId,
+        uid: mockUid,
         email: mockEmail,
         passwordHash: null,
         socialId: null,
@@ -517,6 +555,7 @@ describe('RegistrationUser Entity', () => {
 
       const recreated = RegistrationUser.fromPersistence({
         id: original.id,
+        uid: original.uid,
         email: original.email,
         passwordHash: original.passwordHash,
         socialId: original.socialId,
@@ -533,6 +572,7 @@ describe('RegistrationUser Entity', () => {
     it('일반 회원가입과 소셜 회원가입이 서로 배타적임을 확인', () => {
       const credentialUser = RegistrationUser.create({
         id: mockId,
+        uid: mockUid,
         email: mockEmail,
         passwordHash: mockPasswordHash,
         socialId: null,
@@ -542,7 +582,8 @@ describe('RegistrationUser Entity', () => {
       });
 
       const socialUser = RegistrationUser.create({
-        id: 'user-456',
+        id: BigInt(456),
+        uid: 'user-uid-456',
         email: 'social@example.com',
         passwordHash: null,
         socialId: mockSocialId,
@@ -563,6 +604,7 @@ describe('RegistrationUser Entity', () => {
     it('passwordHash와 socialId가 모두 null인 경우 isCredentialUser와 isSocialUser가 모두 false를 반환해야 함', () => {
       const user = RegistrationUser.create({
         id: mockId,
+        uid: mockUid,
         email: mockEmail,
         passwordHash: null,
         socialId: null,
@@ -578,6 +620,7 @@ describe('RegistrationUser Entity', () => {
     it('passwordHash와 socialId가 모두 있는 경우 (잘못된 상태) isCredentialUser는 false, isSocialUser는 true를 반환해야 함', () => {
       const user = RegistrationUser.create({
         id: mockId,
+        uid: mockUid,
         email: mockEmail,
         passwordHash: mockPasswordHash,
         socialId: mockSocialId,
@@ -595,6 +638,7 @@ describe('RegistrationUser Entity', () => {
     it('socialId가 있지만 socialType이 null인 경우 isSocialUser가 true를 반환해야 함', () => {
       const user = RegistrationUser.create({
         id: mockId,
+        uid: mockUid,
         email: mockEmail,
         passwordHash: null,
         socialId: mockSocialId,
@@ -611,6 +655,7 @@ describe('RegistrationUser Entity', () => {
     it('일반 회원가입 사용자는 유효한 사용자 타입을 가져야 함', () => {
       const user = RegistrationUser.create({
         id: mockId,
+        uid: mockUid,
         email: mockEmail,
         passwordHash: mockPasswordHash,
         socialId: null,
@@ -625,6 +670,7 @@ describe('RegistrationUser Entity', () => {
     it('소셜 회원가입 사용자는 유효한 사용자 타입을 가져야 함', () => {
       const user = RegistrationUser.create({
         id: mockId,
+        uid: mockUid,
         email: mockEmail,
         passwordHash: null,
         socialId: mockSocialId,
@@ -639,6 +685,7 @@ describe('RegistrationUser Entity', () => {
     it('passwordHash와 socialId가 모두 null인 경우 유효하지 않은 사용자 타입이어야 함', () => {
       const user = RegistrationUser.create({
         id: mockId,
+        uid: mockUid,
         email: mockEmail,
         passwordHash: null,
         socialId: null,
@@ -653,6 +700,7 @@ describe('RegistrationUser Entity', () => {
     it('passwordHash와 socialId가 모두 있는 경우 유효하지 않은 사용자 타입이어야 함', () => {
       const user = RegistrationUser.create({
         id: mockId,
+        uid: mockUid,
         email: mockEmail,
         passwordHash: mockPasswordHash,
         socialId: mockSocialId,
@@ -667,6 +715,7 @@ describe('RegistrationUser Entity', () => {
     it('fromPersistence로 생성한 일반 회원가입 사용자는 유효한 사용자 타입을 가져야 함', () => {
       const user = RegistrationUser.fromPersistence({
         id: mockId,
+        uid: mockUid,
         email: mockEmail,
         passwordHash: mockPasswordHash,
         socialId: null,
@@ -681,6 +730,7 @@ describe('RegistrationUser Entity', () => {
     it('fromPersistence로 생성한 소셜 회원가입 사용자는 유효한 사용자 타입을 가져야 함', () => {
       const user = RegistrationUser.fromPersistence({
         id: mockId,
+        uid: mockUid,
         email: mockEmail,
         passwordHash: null,
         socialId: mockSocialId,

@@ -22,7 +22,7 @@ export class PromotionBonusService {
    */
   async grantPromotionBonus(
     tx: Prisma.TransactionClient,
-    userId: string,
+    userId: bigint,
     promotionId: number,
     depositAmount: Prisma.Decimal,
     depositDetailId: bigint,

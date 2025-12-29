@@ -190,7 +190,7 @@ export class GamePostProcessProcessor
   /**
    * 사용자의 콤프 비율 조회
    */
-  private async getCompRate(userId: string): Promise<Prisma.Decimal | null> {
+  private async getCompRate(userId: bigint): Promise<Prisma.Decimal | null> {
     const userMembership = await this.prismaService.user.findUnique({
       where: { id: userId },
       select: {

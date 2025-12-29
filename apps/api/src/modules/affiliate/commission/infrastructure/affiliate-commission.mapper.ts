@@ -20,8 +20,8 @@ export class AffiliateCommissionMapper {
   toDomain(prismaModel: {
     id: bigint;
     uid: string;
-    affiliateId: string;
-    subUserId: string;
+    affiliateId: bigint;
+    subUserId: bigint;
     gameRoundId: bigint | null;
     wagerAmount: Prisma.Decimal;
     winAmount: Prisma.Decimal | null;
@@ -63,8 +63,8 @@ export class AffiliateCommissionMapper {
   toPrisma(domain: AffiliateCommission): {
     id: bigint | null;
     uid: string;
-    affiliateId: string;
-    subUserId: string;
+    affiliateId: bigint;
+    subUserId: bigint;
     gameRoundId: bigint | null;
     wagerAmount: Prisma.Decimal;
     winAmount: Prisma.Decimal | null;

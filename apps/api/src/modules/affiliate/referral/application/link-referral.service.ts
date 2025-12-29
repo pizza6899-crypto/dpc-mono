@@ -15,7 +15,7 @@ import type { ActivityLogPort } from 'src/platform/activity-log/activity-log.por
 import { ActivityType } from 'src/platform/activity-log/activity-log.types';
 
 interface LinkReferralParams {
-  subUserId: string; // 피추천인 (가입하는 사용자)
+  subUserId: bigint; // 피추천인 (가입하는 사용자)
   referralCode: string; // 레퍼럴 코드 문자열
   ipAddress?: string | null;
   deviceFingerprint?: string | null;

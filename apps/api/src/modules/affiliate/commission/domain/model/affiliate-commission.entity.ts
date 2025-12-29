@@ -19,8 +19,8 @@ export class AffiliateCommission {
   private constructor(
     public readonly id: bigint | null, // 내부 관리용 (DB 저장 시 자동 생성)
     public readonly uid: string, // 비즈니스용 (CUID, 애플리케이션에서 생성 필수)
-    public readonly affiliateId: string,
-    public readonly subUserId: string,
+    public readonly affiliateId: bigint,
+    public readonly subUserId: bigint,
     public readonly gameRoundId: bigint | null, // Prisma BigInt 타입
     private _wagerAmount: Prisma.Decimal, // 베팅 금액
     private _winAmount: Prisma.Decimal | null, // 당첨 금액 (참고용)
@@ -46,8 +46,8 @@ export class AffiliateCommission {
   static create(params: {
     id?: bigint; // 선택적: 영속화된 엔티티 재생성 시에만 사용
     uid: string; // 필수: 애플리케이션에서 CUID 생성하여 전달 (IdUtil.generateCuid() 사용)
-    affiliateId: string;
-    subUserId: string;
+    affiliateId: bigint;
+    subUserId: bigint;
     gameRoundId: bigint | null;
     wagerAmount: Prisma.Decimal;
     winAmount: Prisma.Decimal | null;
@@ -97,8 +97,8 @@ export class AffiliateCommission {
   static fromPersistence(data: {
     id: bigint | null;
     uid: string;
-    affiliateId: string;
-    subUserId: string;
+    affiliateId: bigint;
+    subUserId: bigint;
     gameRoundId: bigint | null;
     wagerAmount: Prisma.Decimal;
     winAmount: Prisma.Decimal | null;

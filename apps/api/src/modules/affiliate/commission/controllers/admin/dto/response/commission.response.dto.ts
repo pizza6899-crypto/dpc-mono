@@ -15,22 +15,22 @@ export class CommissionResponseDto {
 
   @ApiProperty({
     description: '어필리에이트 ID',
-    example: 'affiliate-123',
+    example: '123',
   })
-  affiliateId: string;
+  affiliateId: bigint;
 
   @ApiProperty({
     description: '피추천인 사용자 ID',
-    example: 'user-456',
+    example: '456',
   })
-  subUserId: string;
+  subUserId: bigint;
 
   @ApiProperty({
     description: '게임 라운드 ID',
-    example: '789',
+    example: '123',
     type: String,
   })
-  gameRoundId: string;
+  gameRoundId: bigint | null;
 
   @ApiProperty({
     description: '베팅 금액',

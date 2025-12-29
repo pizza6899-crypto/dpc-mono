@@ -5,7 +5,7 @@ import { REFERRAL_REPOSITORY } from '../ports/out/referral.repository.token';
 import type { ReferralRepositoryPort } from '../ports/out/referral.repository.port';
 
 interface FindReferralsByAffiliateIdParams {
-  affiliateId: string;
+  affiliateId: bigint;
 }
 
 @Injectable()

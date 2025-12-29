@@ -6,11 +6,12 @@
     "types": "./src/index.ts",
     "scripts": {
         "prisma": "dotenv -e ../../.env -- prisma",
-        "generate": "pnpm prisma generate",
-        "migrate": "pnpm prisma migrate dev",
+        "clean:client": "rm -rf src/client",
+        "generate": "pnpm clean:client && pnpm prisma generate",
+        "migrate": "pnpm clean:client && pnpm prisma migrate dev && pnpm prisma generate",
         "format": "pnpm prisma format",
         "reset": "pnpm prisma migrate reset",
-        "deploy": "pnpm prisma migrate deploy",
+        "deploy": "pnpm clean:client && pnpm prisma migrate deploy && pnpm prisma generate",
         "seed": "pnpm prisma db seed",
         "studio": "pnpm prisma studio"
     },

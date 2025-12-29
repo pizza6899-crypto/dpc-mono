@@ -11,7 +11,7 @@ import {
 import { generateUid } from 'src/utils/id.util';
 
 export interface RecordLoginAttemptParams {
-  userId?: string | null;
+  userId?: bigint | null;
   result: LoginAttemptResult;
   failureReason?: LoginFailureReason | null;
   ipAddress?: string | null;

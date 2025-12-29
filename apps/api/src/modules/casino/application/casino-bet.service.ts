@@ -16,7 +16,7 @@ import {
 
 export interface ProcessBetParams {
   tx: Prisma.TransactionClient;
-  userId: string;
+  userId: bigint;
   aggregatorType: GameAggregatorType;
   provider: GameProvider;
   walletCurrency: WalletCurrencyCode;
@@ -44,7 +44,7 @@ export interface ProcessBetResult {
 export interface ProcessWinParams {
   tx: Prisma.TransactionClient;
   aggregatorType: GameAggregatorType;
-  userId: string;
+  userId: bigint;
   gameCurrency: GamingCurrencyCode;
   walletCurrency: WalletCurrencyCode;
   aggregatorTxId: string;
@@ -67,7 +67,7 @@ export interface ProcessWinResult {
 export interface ProcessAppendWagerParams {
   tx: Prisma.TransactionClient;
   aggregatorType: GameAggregatorType;
-  userId: string;
+  userId: bigint;
   currency: GamingCurrencyCode;
   aggregatorTxId: string; // round_id
   aggregatorWagerId: string; // wager_id

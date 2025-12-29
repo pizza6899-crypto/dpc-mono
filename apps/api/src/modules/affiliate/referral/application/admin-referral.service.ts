@@ -31,7 +31,7 @@ export class AdminReferralService {
    */
   async getReferrals(
     query: GetReferralsQueryDto,
-    adminId: string,
+    adminId: bigint,
     requestInfo: RequestClientInfo,
   ): Promise<PaginatedData<AdminReferralListItemDto>> {
     try {
@@ -72,14 +72,12 @@ export class AdminReferralService {
               select: {
                 id: true,
                 email: true,
-                numericId: true,
               },
             },
             subUser: {
               select: {
                 id: true,
                 email: true,
-                numericId: true,
               },
             },
             code: {
@@ -115,10 +113,8 @@ export class AdminReferralService {
         id: referral.id,
         affiliateId: referral.affiliateId,
         affiliateEmail: referral.affiliate.email,
-        affiliateNumericId: referral.affiliate.numericId,
         subUserId: referral.subUserId,
         subUserEmail: referral.subUser.email,
-        subUserNumericId: referral.subUser.numericId,
         codeId: referral.codeId,
         code: referral.code.code,
         campaignName: referral.code.campaignName,
@@ -155,7 +151,7 @@ export class AdminReferralService {
    */
   async getReferralById(
     id: string,
-    adminId: string,
+    adminId: bigint,
     requestInfo: RequestClientInfo,
   ): Promise<AdminReferralListItemDto> {
     try {
@@ -166,14 +162,12 @@ export class AdminReferralService {
             select: {
               id: true,
               email: true,
-              numericId: true,
             },
           },
           subUser: {
             select: {
               id: true,
               email: true,
-              numericId: true,
             },
           },
           code: {
@@ -208,10 +202,8 @@ export class AdminReferralService {
         id: referral.id,
         affiliateId: referral.affiliateId,
         affiliateEmail: referral.affiliate.email,
-        affiliateNumericId: referral.affiliate.numericId,
         subUserId: referral.subUserId,
         subUserEmail: referral.subUser.email,
-        subUserNumericId: referral.subUser.numericId,
         codeId: referral.codeId,
         code: referral.code.code,
         campaignName: referral.code.campaignName,

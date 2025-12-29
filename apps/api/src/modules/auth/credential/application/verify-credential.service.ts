@@ -69,6 +69,7 @@ export class VerifyCredentialService {
 
     return {
       id: user.id,
+      uid: user.uid,
       email: user.email,
       role: user.role,
     };

@@ -5413,22 +5413,22 @@ export namespace Prisma {
   }
 
   export type UserAvgAggregateOutputType = {
-    numericId: number | null
+    id: number | null
     whitecliffId: number | null
     whitecliffSystemId: number | null
     timezoneOffset: number | null
   }
 
   export type UserSumAggregateOutputType = {
-    numericId: number | null
+    id: bigint | null
     whitecliffId: bigint | null
     whitecliffSystemId: bigint | null
     timezoneOffset: number | null
   }
 
   export type UserMinAggregateOutputType = {
-    id: string | null
-    numericId: number | null
+    id: bigint | null
+    uid: string | null
     whitecliffId: bigint | null
     whitecliffSystemId: bigint | null
     whitecliffUsername: string | null
@@ -5449,8 +5449,8 @@ export namespace Prisma {
   }
 
   export type UserMaxAggregateOutputType = {
-    id: string | null
-    numericId: number | null
+    id: bigint | null
+    uid: string | null
     whitecliffId: bigint | null
     whitecliffSystemId: bigint | null
     whitecliffUsername: string | null
@@ -5472,7 +5472,7 @@ export namespace Prisma {
 
   export type UserCountAggregateOutputType = {
     id: number
-    numericId: number
+    uid: number
     whitecliffId: number
     whitecliffSystemId: number
     whitecliffUsername: number
@@ -5495,14 +5495,14 @@ export namespace Prisma {
 
 
   export type UserAvgAggregateInputType = {
-    numericId?: true
+    id?: true
     whitecliffId?: true
     whitecliffSystemId?: true
     timezoneOffset?: true
   }
 
   export type UserSumAggregateInputType = {
-    numericId?: true
+    id?: true
     whitecliffId?: true
     whitecliffSystemId?: true
     timezoneOffset?: true
@@ -5510,7 +5510,7 @@ export namespace Prisma {
 
   export type UserMinAggregateInputType = {
     id?: true
-    numericId?: true
+    uid?: true
     whitecliffId?: true
     whitecliffSystemId?: true
     whitecliffUsername?: true
@@ -5532,7 +5532,7 @@ export namespace Prisma {
 
   export type UserMaxAggregateInputType = {
     id?: true
-    numericId?: true
+    uid?: true
     whitecliffId?: true
     whitecliffSystemId?: true
     whitecliffUsername?: true
@@ -5554,7 +5554,7 @@ export namespace Prisma {
 
   export type UserCountAggregateInputType = {
     id?: true
-    numericId?: true
+    uid?: true
     whitecliffId?: true
     whitecliffSystemId?: true
     whitecliffUsername?: true
@@ -5662,8 +5662,8 @@ export namespace Prisma {
   }
 
   export type UserGroupByOutputType = {
-    id: string
-    numericId: number
+    id: bigint
+    uid: string
     whitecliffId: bigint | null
     whitecliffSystemId: bigint | null
     whitecliffUsername: string | null
@@ -5704,7 +5704,7 @@ export namespace Prisma {
 
   export type UserSelect<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetSelect<{
     id?: boolean
-    numericId?: boolean
+    uid?: boolean
     whitecliffId?: boolean
     whitecliffSystemId?: boolean
     whitecliffUsername?: boolean
@@ -5748,7 +5748,7 @@ export namespace Prisma {
 
   export type UserSelectCreateManyAndReturn<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetSelect<{
     id?: boolean
-    numericId?: boolean
+    uid?: boolean
     whitecliffId?: boolean
     whitecliffSystemId?: boolean
     whitecliffUsername?: boolean
@@ -5770,7 +5770,7 @@ export namespace Prisma {
 
   export type UserSelectUpdateManyAndReturn<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetSelect<{
     id?: boolean
-    numericId?: boolean
+    uid?: boolean
     whitecliffId?: boolean
     whitecliffSystemId?: boolean
     whitecliffUsername?: boolean
@@ -5792,7 +5792,7 @@ export namespace Prisma {
 
   export type UserSelectScalar = {
     id?: boolean
-    numericId?: boolean
+    uid?: boolean
     whitecliffId?: boolean
     whitecliffSystemId?: boolean
     whitecliffUsername?: boolean
@@ -5812,7 +5812,7 @@ export namespace Prisma {
     updatedAt?: boolean
   }
 
-  export type UserOmit<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetOmit<"id" | "numericId" | "whitecliffId" | "whitecliffSystemId" | "whitecliffUsername" | "dcsId" | "email" | "passwordHash" | "socialType" | "socialId" | "role" | "status" | "kycLevel" | "country" | "language" | "timezone" | "timezoneOffset" | "createdAt" | "updatedAt", ExtArgs["result"]["user"]>
+  export type UserOmit<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetOmit<"id" | "uid" | "whitecliffId" | "whitecliffSystemId" | "whitecliffUsername" | "dcsId" | "email" | "passwordHash" | "socialType" | "socialId" | "role" | "status" | "kycLevel" | "country" | "language" | "timezone" | "timezoneOffset" | "createdAt" | "updatedAt", ExtArgs["result"]["user"]>
   export type UserInclude<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
     affiliateCodes?: boolean | User$affiliateCodesArgs<ExtArgs>
     affiliateCommissions?: boolean | User$affiliateCommissionsArgs<ExtArgs>
@@ -5866,8 +5866,8 @@ export namespace Prisma {
       loginAttempts: Prisma.$LoginAttemptPayload<ExtArgs>[]
     }
     scalars: $Extensions.GetPayloadResult<{
-      id: string
-      numericId: number
+      id: bigint
+      uid: string
       whitecliffId: bigint | null
       whitecliffSystemId: bigint | null
       whitecliffUsername: string | null
@@ -6329,8 +6329,8 @@ export namespace Prisma {
    * Fields of the User model
    */
   interface UserFieldRefs {
-    readonly id: FieldRef<"User", 'String'>
-    readonly numericId: FieldRef<"User", 'Int'>
+    readonly id: FieldRef<"User", 'BigInt'>
+    readonly uid: FieldRef<"User", 'String'>
     readonly whitecliffId: FieldRef<"User", 'BigInt'>
     readonly whitecliffSystemId: FieldRef<"User", 'BigInt'>
     readonly whitecliffUsername: FieldRef<"User", 'String'>
@@ -7261,17 +7261,19 @@ export namespace Prisma {
   }
 
   export type UserSessionAvgAggregateOutputType = {
+    userId: number | null
     id: number | null
   }
 
   export type UserSessionSumAggregateOutputType = {
+    userId: bigint | null
     id: bigint | null
   }
 
   export type UserSessionMinAggregateOutputType = {
-    userId: string | null
+    userId: bigint | null
     sessionId: string | null
-    deviceInfo: string | null
+    debetsiceInfo: string | null
     userAgent: string | null
     ipAddress: string | null
     isMobile: boolean | null
@@ -7285,9 +7287,9 @@ export namespace Prisma {
   }
 
   export type UserSessionMaxAggregateOutputType = {
-    userId: string | null
+    userId: bigint | null
     sessionId: string | null
-    deviceInfo: string | null
+    debetsiceInfo: string | null
     userAgent: string | null
     ipAddress: string | null
     isMobile: boolean | null
@@ -7303,7 +7305,7 @@ export namespace Prisma {
   export type UserSessionCountAggregateOutputType = {
     userId: number
     sessionId: number
-    deviceInfo: number
+    debetsiceInfo: number
     userAgent: number
     ipAddress: number
     isMobile: number
@@ -7319,17 +7321,19 @@ export namespace Prisma {
 
 
   export type UserSessionAvgAggregateInputType = {
+    userId?: true
     id?: true
   }
 
   export type UserSessionSumAggregateInputType = {
+    userId?: true
     id?: true
   }
 
   export type UserSessionMinAggregateInputType = {
     userId?: true
     sessionId?: true
-    deviceInfo?: true
+    debetsiceInfo?: true
     userAgent?: true
     ipAddress?: true
     isMobile?: true
@@ -7345,7 +7349,7 @@ export namespace Prisma {
   export type UserSessionMaxAggregateInputType = {
     userId?: true
     sessionId?: true
-    deviceInfo?: true
+    debetsiceInfo?: true
     userAgent?: true
     ipAddress?: true
     isMobile?: true
@@ -7361,7 +7365,7 @@ export namespace Prisma {
   export type UserSessionCountAggregateInputType = {
     userId?: true
     sessionId?: true
-    deviceInfo?: true
+    debetsiceInfo?: true
     userAgent?: true
     ipAddress?: true
     isMobile?: true
@@ -7462,9 +7466,9 @@ export namespace Prisma {
   }
 
   export type UserSessionGroupByOutputType = {
-    userId: string
+    userId: bigint
     sessionId: string
-    deviceInfo: string | null
+    debetsiceInfo: string | null
     userAgent: string | null
     ipAddress: string | null
     isMobile: boolean | null
@@ -7499,7 +7503,7 @@ export namespace Prisma {
   export type UserSessionSelect<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetSelect<{
     userId?: boolean
     sessionId?: boolean
-    deviceInfo?: boolean
+    debetsiceInfo?: boolean
     userAgent?: boolean
     ipAddress?: boolean
     isMobile?: boolean
@@ -7516,7 +7520,7 @@ export namespace Prisma {
   export type UserSessionSelectCreateManyAndReturn<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetSelect<{
     userId?: boolean
     sessionId?: boolean
-    deviceInfo?: boolean
+    debetsiceInfo?: boolean
     userAgent?: boolean
     ipAddress?: boolean
     isMobile?: boolean
@@ -7533,7 +7537,7 @@ export namespace Prisma {
   export type UserSessionSelectUpdateManyAndReturn<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetSelect<{
     userId?: boolean
     sessionId?: boolean
-    deviceInfo?: boolean
+    debetsiceInfo?: boolean
     userAgent?: boolean
     ipAddress?: boolean
     isMobile?: boolean
@@ -7550,7 +7554,7 @@ export namespace Prisma {
   export type UserSessionSelectScalar = {
     userId?: boolean
     sessionId?: boolean
-    deviceInfo?: boolean
+    debetsiceInfo?: boolean
     userAgent?: boolean
     ipAddress?: boolean
     isMobile?: boolean
@@ -7563,7 +7567,7 @@ export namespace Prisma {
     id?: boolean
   }
 
-  export type UserSessionOmit<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetOmit<"userId" | "sessionId" | "deviceInfo" | "userAgent" | "ipAddress" | "isMobile" | "isActive" | "revokedAt" | "createdAt" | "updatedAt" | "lastActiveAt" | "expiresAt" | "id", ExtArgs["result"]["userSession"]>
+  export type UserSessionOmit<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetOmit<"userId" | "sessionId" | "debetsiceInfo" | "userAgent" | "ipAddress" | "isMobile" | "isActive" | "revokedAt" | "createdAt" | "updatedAt" | "lastActiveAt" | "expiresAt" | "id", ExtArgs["result"]["userSession"]>
   export type UserSessionInclude<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
     user?: boolean | UserDefaultArgs<ExtArgs>
   }
@@ -7580,9 +7584,9 @@ export namespace Prisma {
       user: Prisma.$UserPayload<ExtArgs>
     }
     scalars: $Extensions.GetPayloadResult<{
-      userId: string
+      userId: bigint
       sessionId: string
-      deviceInfo: string | null
+      debetsiceInfo: string | null
       userAgent: string | null
       ipAddress: string | null
       isMobile: boolean | null
@@ -8017,9 +8021,9 @@ export namespace Prisma {
    * Fields of the UserSession model
    */
   interface UserSessionFieldRefs {
-    readonly userId: FieldRef<"UserSession", 'String'>
+    readonly userId: FieldRef<"UserSession", 'BigInt'>
     readonly sessionId: FieldRef<"UserSession", 'String'>
-    readonly deviceInfo: FieldRef<"UserSession", 'String'>
+    readonly debetsiceInfo: FieldRef<"UserSession", 'String'>
     readonly userAgent: FieldRef<"UserSession", 'String'>
     readonly ipAddress: FieldRef<"UserSession", 'String'>
     readonly isMobile: FieldRef<"UserSession", 'Boolean'>
@@ -8457,17 +8461,19 @@ export namespace Prisma {
   }
 
   export type UserBalanceAvgAggregateOutputType = {
+    userId: number | null
     mainBalance: Decimal | null
     bonusBalance: Decimal | null
   }
 
   export type UserBalanceSumAggregateOutputType = {
+    userId: bigint | null
     mainBalance: Decimal | null
     bonusBalance: Decimal | null
   }
 
   export type UserBalanceMinAggregateOutputType = {
-    userId: string | null
+    userId: bigint | null
     currency: $Enums.ExchangeCurrencyCode | null
     mainBalance: Decimal | null
     bonusBalance: Decimal | null
@@ -8475,7 +8481,7 @@ export namespace Prisma {
   }
 
   export type UserBalanceMaxAggregateOutputType = {
-    userId: string | null
+    userId: bigint | null
     currency: $Enums.ExchangeCurrencyCode | null
     mainBalance: Decimal | null
     bonusBalance: Decimal | null
@@ -8493,11 +8499,13 @@ export namespace Prisma {
 
 
   export type UserBalanceAvgAggregateInputType = {
+    userId?: true
     mainBalance?: true
     bonusBalance?: true
   }
 
   export type UserBalanceSumAggregateInputType = {
+    userId?: true
     mainBalance?: true
     bonusBalance?: true
   }
@@ -8614,7 +8622,7 @@ export namespace Prisma {
   }
 
   export type UserBalanceGroupByOutputType = {
-    userId: string
+    userId: bigint
     currency: $Enums.ExchangeCurrencyCode
     mainBalance: Decimal
     bonusBalance: Decimal
@@ -8692,7 +8700,7 @@ export namespace Prisma {
       user: Prisma.$UserPayload<ExtArgs>
     }
     scalars: $Extensions.GetPayloadResult<{
-      userId: string
+      userId: bigint
       currency: $Enums.ExchangeCurrencyCode
       mainBalance: Prisma.Decimal
       bonusBalance: Prisma.Decimal
@@ -9121,7 +9129,7 @@ export namespace Prisma {
    * Fields of the UserBalance model
    */
   interface UserBalanceFieldRefs {
-    readonly userId: FieldRef<"UserBalance", 'String'>
+    readonly userId: FieldRef<"UserBalance", 'BigInt'>
     readonly currency: FieldRef<"UserBalance", 'ExchangeCurrencyCode'>
     readonly mainBalance: FieldRef<"UserBalance", 'Decimal'>
     readonly bonusBalance: FieldRef<"UserBalance", 'Decimal'>
@@ -9553,6 +9561,7 @@ export namespace Prisma {
   }
 
   export type UserBalanceStatsAvgAggregateOutputType = {
+    userId: number | null
     totalDeposit: Decimal | null
     totalWithdraw: Decimal | null
     totalBet: Decimal | null
@@ -9565,6 +9574,7 @@ export namespace Prisma {
   }
 
   export type UserBalanceStatsSumAggregateOutputType = {
+    userId: bigint | null
     totalDeposit: Decimal | null
     totalWithdraw: Decimal | null
     totalBet: Decimal | null
@@ -9577,7 +9587,7 @@ export namespace Prisma {
   }
 
   export type UserBalanceStatsMinAggregateOutputType = {
-    userId: string | null
+    userId: bigint | null
     currency: $Enums.ExchangeCurrencyCode | null
     totalDeposit: Decimal | null
     totalWithdraw: Decimal | null
@@ -9592,7 +9602,7 @@ export namespace Prisma {
   }
 
   export type UserBalanceStatsMaxAggregateOutputType = {
-    userId: string | null
+    userId: bigint | null
     currency: $Enums.ExchangeCurrencyCode | null
     totalDeposit: Decimal | null
     totalWithdraw: Decimal | null
@@ -9624,6 +9634,7 @@ export namespace Prisma {
 
 
   export type UserBalanceStatsAvgAggregateInputType = {
+    userId?: true
     totalDeposit?: true
     totalWithdraw?: true
     totalBet?: true
@@ -9636,6 +9647,7 @@ export namespace Prisma {
   }
 
   export type UserBalanceStatsSumAggregateInputType = {
+    userId?: true
     totalDeposit?: true
     totalWithdraw?: true
     totalBet?: true
@@ -9780,7 +9792,7 @@ export namespace Prisma {
   }
 
   export type UserBalanceStatsGroupByOutputType = {
-    userId: string
+    userId: bigint
     currency: $Enums.ExchangeCurrencyCode
     totalDeposit: Decimal
     totalWithdraw: Decimal
@@ -9893,7 +9905,7 @@ export namespace Prisma {
       user: Prisma.$UserPayload<ExtArgs>
     }
     scalars: $Extensions.GetPayloadResult<{
-      userId: string
+      userId: bigint
       currency: $Enums.ExchangeCurrencyCode
       totalDeposit: Prisma.Decimal
       totalWithdraw: Prisma.Decimal
@@ -10329,7 +10341,7 @@ export namespace Prisma {
    * Fields of the UserBalanceStats model
    */
   interface UserBalanceStatsFieldRefs {
-    readonly userId: FieldRef<"UserBalanceStats", 'String'>
+    readonly userId: FieldRef<"UserBalanceStats", 'BigInt'>
     readonly currency: FieldRef<"UserBalanceStats", 'ExchangeCurrencyCode'>
     readonly totalDeposit: FieldRef<"UserBalanceStats", 'Decimal'>
     readonly totalWithdraw: FieldRef<"UserBalanceStats", 'Decimal'>
@@ -10769,15 +10781,17 @@ export namespace Prisma {
 
   export type ActivityLogAvgAggregateOutputType = {
     id: number | null
+    userId: number | null
   }
 
   export type ActivityLogSumAggregateOutputType = {
     id: bigint | null
+    userId: bigint | null
   }
 
   export type ActivityLogMinAggregateOutputType = {
     id: bigint | null
-    userId: string | null
+    userId: bigint | null
     isAdmin: boolean | null
     activityType: string | null
     status: string | null
@@ -10792,7 +10806,7 @@ export namespace Prisma {
 
   export type ActivityLogMaxAggregateOutputType = {
     id: bigint | null
-    userId: string | null
+    userId: bigint | null
     isAdmin: boolean | null
     activityType: string | null
     status: string | null
@@ -10825,10 +10839,12 @@ export namespace Prisma {
 
   export type ActivityLogAvgAggregateInputType = {
     id?: true
+    userId?: true
   }
 
   export type ActivityLogSumAggregateInputType = {
     id?: true
+    userId?: true
   }
 
   export type ActivityLogMinAggregateInputType = {
@@ -10966,7 +10982,7 @@ export namespace Prisma {
 
   export type ActivityLogGroupByOutputType = {
     id: bigint
-    userId: string
+    userId: bigint
     isAdmin: boolean
     activityType: string
     status: string
@@ -11070,7 +11086,7 @@ export namespace Prisma {
     objects: {}
     scalars: $Extensions.GetPayloadResult<{
       id: bigint
-      userId: string
+      userId: bigint
       isAdmin: boolean
       activityType: string
       status: string
@@ -11506,7 +11522,7 @@ export namespace Prisma {
    */
   interface ActivityLogFieldRefs {
     readonly id: FieldRef<"ActivityLog", 'BigInt'>
-    readonly userId: FieldRef<"ActivityLog", 'String'>
+    readonly userId: FieldRef<"ActivityLog", 'BigInt'>
     readonly isAdmin: FieldRef<"ActivityLog", 'Boolean'>
     readonly activityType: FieldRef<"ActivityLog", 'String'>
     readonly status: FieldRef<"ActivityLog", 'String'>
@@ -14350,17 +14366,19 @@ export namespace Prisma {
 
   export type WhitecliffApiLogAvgAggregateOutputType = {
     id: number | null
+    userId: number | null
     statusCode: number | null
   }
 
   export type WhitecliffApiLogSumAggregateOutputType = {
     id: bigint | null
+    userId: bigint | null
     statusCode: number | null
   }
 
   export type WhitecliffApiLogMinAggregateOutputType = {
     id: bigint | null
-    userId: string | null
+    userId: bigint | null
     action: string | null
     endpoint: string | null
     httpMethod: string | null
@@ -14371,7 +14389,7 @@ export namespace Prisma {
 
   export type WhitecliffApiLogMaxAggregateOutputType = {
     id: bigint | null
-    userId: string | null
+    userId: bigint | null
     action: string | null
     endpoint: string | null
     httpMethod: string | null
@@ -14397,11 +14415,13 @@ export namespace Prisma {
 
   export type WhitecliffApiLogAvgAggregateInputType = {
     id?: true
+    userId?: true
     statusCode?: true
   }
 
   export type WhitecliffApiLogSumAggregateInputType = {
     id?: true
+    userId?: true
     statusCode?: true
   }
 
@@ -14529,7 +14549,7 @@ export namespace Prisma {
 
   export type WhitecliffApiLogGroupByOutputType = {
     id: bigint
-    userId: string | null
+    userId: bigint | null
     action: string
     endpoint: string
     httpMethod: string | null
@@ -14618,7 +14638,7 @@ export namespace Prisma {
     objects: {}
     scalars: $Extensions.GetPayloadResult<{
       id: bigint
-      userId: string | null
+      userId: bigint | null
       action: string
       endpoint: string
       httpMethod: string | null
@@ -15051,7 +15071,7 @@ export namespace Prisma {
    */
   interface WhitecliffApiLogFieldRefs {
     readonly id: FieldRef<"WhitecliffApiLog", 'BigInt'>
-    readonly userId: FieldRef<"WhitecliffApiLog", 'String'>
+    readonly userId: FieldRef<"WhitecliffApiLog", 'BigInt'>
     readonly action: FieldRef<"WhitecliffApiLog", 'String'>
     readonly endpoint: FieldRef<"WhitecliffApiLog", 'String'>
     readonly httpMethod: FieldRef<"WhitecliffApiLog", 'String'>
@@ -15440,17 +15460,19 @@ export namespace Prisma {
 
   export type DcsApiLogAvgAggregateOutputType = {
     id: number | null
+    userId: number | null
     statusCode: number | null
   }
 
   export type DcsApiLogSumAggregateOutputType = {
     id: bigint | null
+    userId: bigint | null
     statusCode: number | null
   }
 
   export type DcsApiLogMinAggregateOutputType = {
     id: bigint | null
-    userId: string | null
+    userId: bigint | null
     action: string | null
     endpoint: string | null
     httpMethod: string | null
@@ -15461,7 +15483,7 @@ export namespace Prisma {
 
   export type DcsApiLogMaxAggregateOutputType = {
     id: bigint | null
-    userId: string | null
+    userId: bigint | null
     action: string | null
     endpoint: string | null
     httpMethod: string | null
@@ -15487,11 +15509,13 @@ export namespace Prisma {
 
   export type DcsApiLogAvgAggregateInputType = {
     id?: true
+    userId?: true
     statusCode?: true
   }
 
   export type DcsApiLogSumAggregateInputType = {
     id?: true
+    userId?: true
     statusCode?: true
   }
 
@@ -15619,7 +15643,7 @@ export namespace Prisma {
 
   export type DcsApiLogGroupByOutputType = {
     id: bigint
-    userId: string | null
+    userId: bigint | null
     action: string
     endpoint: string
     httpMethod: string | null
@@ -15708,7 +15732,7 @@ export namespace Prisma {
     objects: {}
     scalars: $Extensions.GetPayloadResult<{
       id: bigint
-      userId: string | null
+      userId: bigint | null
       action: string
       endpoint: string
       httpMethod: string | null
@@ -16141,7 +16165,7 @@ export namespace Prisma {
    */
   interface DcsApiLogFieldRefs {
     readonly id: FieldRef<"DcsApiLog", 'BigInt'>
-    readonly userId: FieldRef<"DcsApiLog", 'String'>
+    readonly userId: FieldRef<"DcsApiLog", 'BigInt'>
     readonly action: FieldRef<"DcsApiLog", 'String'>
     readonly endpoint: FieldRef<"DcsApiLog", 'String'>
     readonly httpMethod: FieldRef<"DcsApiLog", 'String'>
@@ -16530,6 +16554,7 @@ export namespace Prisma {
 
   export type TransactionAvgAggregateOutputType = {
     id: number | null
+    userId: number | null
     amount: Decimal | null
     beforeAmount: Decimal | null
     afterAmount: Decimal | null
@@ -16537,6 +16562,7 @@ export namespace Prisma {
 
   export type TransactionSumAggregateOutputType = {
     id: bigint | null
+    userId: bigint | null
     amount: Decimal | null
     beforeAmount: Decimal | null
     afterAmount: Decimal | null
@@ -16544,7 +16570,7 @@ export namespace Prisma {
 
   export type TransactionMinAggregateOutputType = {
     id: bigint | null
-    userId: string | null
+    userId: bigint | null
     type: $Enums.TransactionType | null
     status: $Enums.TransactionStatus | null
     currency: $Enums.ExchangeCurrencyCode | null
@@ -16557,7 +16583,7 @@ export namespace Prisma {
 
   export type TransactionMaxAggregateOutputType = {
     id: bigint | null
-    userId: string | null
+    userId: bigint | null
     type: $Enums.TransactionType | null
     status: $Enums.TransactionStatus | null
     currency: $Enums.ExchangeCurrencyCode | null
@@ -16585,6 +16611,7 @@ export namespace Prisma {
 
   export type TransactionAvgAggregateInputType = {
     id?: true
+    userId?: true
     amount?: true
     beforeAmount?: true
     afterAmount?: true
@@ -16592,6 +16619,7 @@ export namespace Prisma {
 
   export type TransactionSumAggregateInputType = {
     id?: true
+    userId?: true
     amount?: true
     beforeAmount?: true
     afterAmount?: true
@@ -16725,7 +16753,7 @@ export namespace Prisma {
 
   export type TransactionGroupByOutputType = {
     id: bigint
-    userId: string
+    userId: bigint
     type: $Enums.TransactionType
     status: $Enums.TransactionStatus
     currency: $Enums.ExchangeCurrencyCode
@@ -16848,7 +16876,7 @@ export namespace Prisma {
     }
     scalars: $Extensions.GetPayloadResult<{
       id: bigint
-      userId: string
+      userId: bigint
       type: $Enums.TransactionType
       status: $Enums.TransactionStatus
       currency: $Enums.ExchangeCurrencyCode
@@ -17288,7 +17316,7 @@ export namespace Prisma {
    */
   interface TransactionFieldRefs {
     readonly id: FieldRef<"Transaction", 'BigInt'>
-    readonly userId: FieldRef<"Transaction", 'String'>
+    readonly userId: FieldRef<"Transaction", 'BigInt'>
     readonly type: FieldRef<"Transaction", 'TransactionType'>
     readonly status: FieldRef<"Transaction", 'TransactionStatus'>
     readonly currency: FieldRef<"Transaction", 'ExchangeCurrencyCode'>
@@ -17844,6 +17872,7 @@ export namespace Prisma {
 
   export type GameRoundAvgAggregateOutputType = {
     id: number | null
+    userId: number | null
     aggregatorGameId: number | null
     totalBetAmountInGameCurrency: Decimal | null
     totalWinAmountInGameCurrency: Decimal | null
@@ -17863,6 +17892,7 @@ export namespace Prisma {
 
   export type GameRoundSumAggregateOutputType = {
     id: bigint | null
+    userId: bigint | null
     aggregatorGameId: number | null
     totalBetAmountInGameCurrency: Decimal | null
     totalWinAmountInGameCurrency: Decimal | null
@@ -17882,7 +17912,7 @@ export namespace Prisma {
 
   export type GameRoundMinAggregateOutputType = {
     id: bigint | null
-    userId: string | null
+    userId: bigint | null
     aggregatorType: $Enums.GameAggregatorType | null
     provider: $Enums.GameProvider | null
     aggregatorTxId: string | null
@@ -17912,7 +17942,7 @@ export namespace Prisma {
 
   export type GameRoundMaxAggregateOutputType = {
     id: bigint | null
-    userId: string | null
+    userId: bigint | null
     aggregatorType: $Enums.GameAggregatorType | null
     provider: $Enums.GameProvider | null
     aggregatorTxId: string | null
@@ -17974,6 +18004,7 @@ export namespace Prisma {
 
   export type GameRoundAvgAggregateInputType = {
     id?: true
+    userId?: true
     aggregatorGameId?: true
     totalBetAmountInGameCurrency?: true
     totalWinAmountInGameCurrency?: true
@@ -17993,6 +18024,7 @@ export namespace Prisma {
 
   export type GameRoundSumAggregateInputType = {
     id?: true
+    userId?: true
     aggregatorGameId?: true
     totalBetAmountInGameCurrency?: true
     totalWinAmountInGameCurrency?: true
@@ -18189,7 +18221,7 @@ export namespace Prisma {
 
   export type GameRoundGroupByOutputType = {
     id: bigint
-    userId: string
+    userId: bigint
     aggregatorType: $Enums.GameAggregatorType
     provider: $Enums.GameProvider
     aggregatorTxId: string
@@ -18402,7 +18434,7 @@ export namespace Prisma {
     }
     scalars: $Extensions.GetPayloadResult<{
       id: bigint
-      userId: string
+      userId: bigint
       aggregatorType: $Enums.GameAggregatorType
       provider: $Enums.GameProvider
       aggregatorTxId: string
@@ -18858,7 +18890,7 @@ export namespace Prisma {
    */
   interface GameRoundFieldRefs {
     readonly id: FieldRef<"GameRound", 'BigInt'>
-    readonly userId: FieldRef<"GameRound", 'String'>
+    readonly userId: FieldRef<"GameRound", 'BigInt'>
     readonly aggregatorType: FieldRef<"GameRound", 'GameAggregatorType'>
     readonly provider: FieldRef<"GameRound", 'GameProvider'>
     readonly aggregatorTxId: FieldRef<"GameRound", 'String'>
@@ -19403,6 +19435,7 @@ export namespace Prisma {
 
   export type GameBetAvgAggregateOutputType = {
     id: number | null
+    userId: number | null
     gameRoundId: number | null
     betAmount: Decimal | null
     betAmountInGameCurrency: Decimal | null
@@ -19410,6 +19443,7 @@ export namespace Prisma {
 
   export type GameBetSumAggregateOutputType = {
     id: bigint | null
+    userId: bigint | null
     gameRoundId: bigint | null
     betAmount: Decimal | null
     betAmountInGameCurrency: Decimal | null
@@ -19417,7 +19451,7 @@ export namespace Prisma {
 
   export type GameBetMinAggregateOutputType = {
     id: bigint | null
-    userId: string | null
+    userId: bigint | null
     gameRoundId: bigint | null
     aggregatorType: $Enums.GameAggregatorType | null
     aggregatorBetId: string | null
@@ -19432,7 +19466,7 @@ export namespace Prisma {
 
   export type GameBetMaxAggregateOutputType = {
     id: bigint | null
-    userId: string | null
+    userId: bigint | null
     gameRoundId: bigint | null
     aggregatorType: $Enums.GameAggregatorType | null
     aggregatorBetId: string | null
@@ -19464,6 +19498,7 @@ export namespace Prisma {
 
   export type GameBetAvgAggregateInputType = {
     id?: true
+    userId?: true
     gameRoundId?: true
     betAmount?: true
     betAmountInGameCurrency?: true
@@ -19471,6 +19506,7 @@ export namespace Prisma {
 
   export type GameBetSumAggregateInputType = {
     id?: true
+    userId?: true
     gameRoundId?: true
     betAmount?: true
     betAmountInGameCurrency?: true
@@ -19610,7 +19646,7 @@ export namespace Prisma {
 
   export type GameBetGroupByOutputType = {
     id: bigint
-    userId: string
+    userId: bigint
     gameRoundId: bigint
     aggregatorType: $Enums.GameAggregatorType
     aggregatorBetId: string
@@ -19723,7 +19759,7 @@ export namespace Prisma {
     }
     scalars: $Extensions.GetPayloadResult<{
       id: bigint
-      userId: string
+      userId: bigint
       gameRoundId: bigint
       aggregatorType: $Enums.GameAggregatorType
       aggregatorBetId: string
@@ -20159,7 +20195,7 @@ export namespace Prisma {
    */
   interface GameBetFieldRefs {
     readonly id: FieldRef<"GameBet", 'BigInt'>
-    readonly userId: FieldRef<"GameBet", 'String'>
+    readonly userId: FieldRef<"GameBet", 'BigInt'>
     readonly gameRoundId: FieldRef<"GameBet", 'BigInt'>
     readonly aggregatorType: FieldRef<"GameBet", 'GameAggregatorType'>
     readonly aggregatorBetId: FieldRef<"GameBet", 'String'>
@@ -20598,6 +20634,7 @@ export namespace Prisma {
 
   export type GameWinAvgAggregateOutputType = {
     id: number | null
+    userId: number | null
     gameRoundId: number | null
     winAmount: Decimal | null
     winAmountInGameCurrency: Decimal | null
@@ -20605,6 +20642,7 @@ export namespace Prisma {
 
   export type GameWinSumAggregateOutputType = {
     id: bigint | null
+    userId: bigint | null
     gameRoundId: bigint | null
     winAmount: Decimal | null
     winAmountInGameCurrency: Decimal | null
@@ -20612,7 +20650,7 @@ export namespace Prisma {
 
   export type GameWinMinAggregateOutputType = {
     id: bigint | null
-    userId: string | null
+    userId: bigint | null
     gameRoundId: bigint | null
     aggregatorType: $Enums.GameAggregatorType | null
     aggregatorWinId: string | null
@@ -20626,7 +20664,7 @@ export namespace Prisma {
 
   export type GameWinMaxAggregateOutputType = {
     id: bigint | null
-    userId: string | null
+    userId: bigint | null
     gameRoundId: bigint | null
     aggregatorType: $Enums.GameAggregatorType | null
     aggregatorWinId: string | null
@@ -20656,6 +20694,7 @@ export namespace Prisma {
 
   export type GameWinAvgAggregateInputType = {
     id?: true
+    userId?: true
     gameRoundId?: true
     winAmount?: true
     winAmountInGameCurrency?: true
@@ -20663,6 +20702,7 @@ export namespace Prisma {
 
   export type GameWinSumAggregateInputType = {
     id?: true
+    userId?: true
     gameRoundId?: true
     winAmount?: true
     winAmountInGameCurrency?: true
@@ -20799,7 +20839,7 @@ export namespace Prisma {
 
   export type GameWinGroupByOutputType = {
     id: bigint
-    userId: string
+    userId: bigint
     gameRoundId: bigint
     aggregatorType: $Enums.GameAggregatorType
     aggregatorWinId: string
@@ -20907,7 +20947,7 @@ export namespace Prisma {
     }
     scalars: $Extensions.GetPayloadResult<{
       id: bigint
-      userId: string
+      userId: bigint
       gameRoundId: bigint
       aggregatorType: $Enums.GameAggregatorType
       aggregatorWinId: string
@@ -21342,7 +21382,7 @@ export namespace Prisma {
    */
   interface GameWinFieldRefs {
     readonly id: FieldRef<"GameWin", 'BigInt'>
-    readonly userId: FieldRef<"GameWin", 'String'>
+    readonly userId: FieldRef<"GameWin", 'BigInt'>
     readonly gameRoundId: FieldRef<"GameWin", 'BigInt'>
     readonly aggregatorType: FieldRef<"GameWin", 'GameAggregatorType'>
     readonly aggregatorWinId: FieldRef<"GameWin", 'String'>
@@ -26942,6 +26982,7 @@ export namespace Prisma {
 
   export type CompTransactionAvgAggregateOutputType = {
     id: number | null
+    userId: number | null
     amount: Decimal | null
     dailyCompEarningId: number | null
     transactionId: number | null
@@ -26949,6 +26990,7 @@ export namespace Prisma {
 
   export type CompTransactionSumAggregateOutputType = {
     id: bigint | null
+    userId: bigint | null
     amount: Decimal | null
     dailyCompEarningId: number | null
     transactionId: bigint | null
@@ -26956,7 +26998,7 @@ export namespace Prisma {
 
   export type CompTransactionMinAggregateOutputType = {
     id: bigint | null
-    userId: string | null
+    userId: bigint | null
     amount: Decimal | null
     dailyCompEarningId: number | null
     transactionId: bigint | null
@@ -26966,7 +27008,7 @@ export namespace Prisma {
 
   export type CompTransactionMaxAggregateOutputType = {
     id: bigint | null
-    userId: string | null
+    userId: bigint | null
     amount: Decimal | null
     dailyCompEarningId: number | null
     transactionId: bigint | null
@@ -26988,6 +27030,7 @@ export namespace Prisma {
 
   export type CompTransactionAvgAggregateInputType = {
     id?: true
+    userId?: true
     amount?: true
     dailyCompEarningId?: true
     transactionId?: true
@@ -26995,6 +27038,7 @@ export namespace Prisma {
 
   export type CompTransactionSumAggregateInputType = {
     id?: true
+    userId?: true
     amount?: true
     dailyCompEarningId?: true
     transactionId?: true
@@ -27119,7 +27163,7 @@ export namespace Prisma {
 
   export type CompTransactionGroupByOutputType = {
     id: bigint
-    userId: string
+    userId: bigint
     amount: Decimal
     dailyCompEarningId: number
     transactionId: bigint
@@ -27221,7 +27265,7 @@ export namespace Prisma {
     }
     scalars: $Extensions.GetPayloadResult<{
       id: bigint
-      userId: string
+      userId: bigint
       amount: Prisma.Decimal
       dailyCompEarningId: number
       transactionId: bigint
@@ -27654,7 +27698,7 @@ export namespace Prisma {
    */
   interface CompTransactionFieldRefs {
     readonly id: FieldRef<"CompTransaction", 'BigInt'>
-    readonly userId: FieldRef<"CompTransaction", 'String'>
+    readonly userId: FieldRef<"CompTransaction", 'BigInt'>
     readonly amount: FieldRef<"CompTransaction", 'Decimal'>
     readonly dailyCompEarningId: FieldRef<"CompTransaction", 'Int'>
     readonly transactionId: FieldRef<"CompTransaction", 'BigInt'>
@@ -28088,19 +28132,21 @@ export namespace Prisma {
 
   export type DailyCompEarningAvgAggregateOutputType = {
     id: number | null
+    userId: number | null
     totalContribution: Decimal | null
     compEarned: Decimal | null
   }
 
   export type DailyCompEarningSumAggregateOutputType = {
     id: number | null
+    userId: bigint | null
     totalContribution: Decimal | null
     compEarned: Decimal | null
   }
 
   export type DailyCompEarningMinAggregateOutputType = {
     id: number | null
-    userId: string | null
+    userId: bigint | null
     earningDate: Date | null
     totalContribution: Decimal | null
     compEarned: Decimal | null
@@ -28112,7 +28158,7 @@ export namespace Prisma {
 
   export type DailyCompEarningMaxAggregateOutputType = {
     id: number | null
-    userId: string | null
+    userId: bigint | null
     earningDate: Date | null
     totalContribution: Decimal | null
     compEarned: Decimal | null
@@ -28138,12 +28184,14 @@ export namespace Prisma {
 
   export type DailyCompEarningAvgAggregateInputType = {
     id?: true
+    userId?: true
     totalContribution?: true
     compEarned?: true
   }
 
   export type DailyCompEarningSumAggregateInputType = {
     id?: true
+    userId?: true
     totalContribution?: true
     compEarned?: true
   }
@@ -28273,7 +28321,7 @@ export namespace Prisma {
 
   export type DailyCompEarningGroupByOutputType = {
     id: number
-    userId: string
+    userId: bigint
     earningDate: Date
     totalContribution: Decimal
     compEarned: Decimal
@@ -28376,7 +28424,7 @@ export namespace Prisma {
     }
     scalars: $Extensions.GetPayloadResult<{
       id: number
-      userId: string
+      userId: bigint
       earningDate: Date
       totalContribution: Prisma.Decimal
       compEarned: Prisma.Decimal
@@ -28810,7 +28858,7 @@ export namespace Prisma {
    */
   interface DailyCompEarningFieldRefs {
     readonly id: FieldRef<"DailyCompEarning", 'Int'>
-    readonly userId: FieldRef<"DailyCompEarning", 'String'>
+    readonly userId: FieldRef<"DailyCompEarning", 'BigInt'>
     readonly earningDate: FieldRef<"DailyCompEarning", 'DateTime'>
     readonly totalContribution: FieldRef<"DailyCompEarning", 'Decimal'>
     readonly compEarned: FieldRef<"DailyCompEarning", 'Decimal'>
@@ -31657,19 +31705,21 @@ export namespace Prisma {
 
   export type UserPromotionAvgAggregateOutputType = {
     id: number | null
+    userId: number | null
     promotionId: number | null
     bonusAmount: Decimal | null
   }
 
   export type UserPromotionSumAggregateOutputType = {
     id: number | null
+    userId: bigint | null
     promotionId: number | null
     bonusAmount: Decimal | null
   }
 
   export type UserPromotionMinAggregateOutputType = {
     id: number | null
-    userId: string | null
+    userId: bigint | null
     promotionId: number | null
     status: $Enums.UserPromotionStatus | null
     bonusGranted: boolean | null
@@ -31681,7 +31731,7 @@ export namespace Prisma {
 
   export type UserPromotionMaxAggregateOutputType = {
     id: number | null
-    userId: string | null
+    userId: bigint | null
     promotionId: number | null
     status: $Enums.UserPromotionStatus | null
     bonusGranted: boolean | null
@@ -31707,12 +31757,14 @@ export namespace Prisma {
 
   export type UserPromotionAvgAggregateInputType = {
     id?: true
+    userId?: true
     promotionId?: true
     bonusAmount?: true
   }
 
   export type UserPromotionSumAggregateInputType = {
     id?: true
+    userId?: true
     promotionId?: true
     bonusAmount?: true
   }
@@ -31842,7 +31894,7 @@ export namespace Prisma {
 
   export type UserPromotionGroupByOutputType = {
     id: number
-    userId: string
+    userId: bigint
     promotionId: number
     status: $Enums.UserPromotionStatus
     bonusGranted: boolean
@@ -31952,7 +32004,7 @@ export namespace Prisma {
     }
     scalars: $Extensions.GetPayloadResult<{
       id: number
-      userId: string
+      userId: bigint
       promotionId: number
       status: $Enums.UserPromotionStatus
       bonusGranted: boolean
@@ -32387,7 +32439,7 @@ export namespace Prisma {
    */
   interface UserPromotionFieldRefs {
     readonly id: FieldRef<"UserPromotion", 'Int'>
-    readonly userId: FieldRef<"UserPromotion", 'String'>
+    readonly userId: FieldRef<"UserPromotion", 'BigInt'>
     readonly promotionId: FieldRef<"UserPromotion", 'Int'>
     readonly status: FieldRef<"UserPromotion", 'UserPromotionStatus'>
     readonly bonusGranted: FieldRef<"UserPromotion", 'Boolean'>
@@ -36275,6 +36327,7 @@ export namespace Prisma {
 
   export type VipMembershipAvgAggregateOutputType = {
     id: number | null
+    userId: number | null
     vipLevelId: number | null
     accumulatedRolling: Decimal | null
     totalRewardsPaid: Decimal | null
@@ -36282,6 +36335,7 @@ export namespace Prisma {
 
   export type VipMembershipSumAggregateOutputType = {
     id: number | null
+    userId: bigint | null
     vipLevelId: number | null
     accumulatedRolling: Decimal | null
     totalRewardsPaid: Decimal | null
@@ -36289,7 +36343,7 @@ export namespace Prisma {
 
   export type VipMembershipMinAggregateOutputType = {
     id: number | null
-    userId: string | null
+    userId: bigint | null
     vipLevelId: number | null
     accumulatedRolling: Decimal | null
     totalRewardsPaid: Decimal | null
@@ -36300,7 +36354,7 @@ export namespace Prisma {
 
   export type VipMembershipMaxAggregateOutputType = {
     id: number | null
-    userId: string | null
+    userId: bigint | null
     vipLevelId: number | null
     accumulatedRolling: Decimal | null
     totalRewardsPaid: Decimal | null
@@ -36324,6 +36378,7 @@ export namespace Prisma {
 
   export type VipMembershipAvgAggregateInputType = {
     id?: true
+    userId?: true
     vipLevelId?: true
     accumulatedRolling?: true
     totalRewardsPaid?: true
@@ -36331,6 +36386,7 @@ export namespace Prisma {
 
   export type VipMembershipSumAggregateInputType = {
     id?: true
+    userId?: true
     vipLevelId?: true
     accumulatedRolling?: true
     totalRewardsPaid?: true
@@ -36458,7 +36514,7 @@ export namespace Prisma {
 
   export type VipMembershipGroupByOutputType = {
     id: number
-    userId: string
+    userId: bigint
     vipLevelId: number
     accumulatedRolling: Decimal
     totalRewardsPaid: Decimal
@@ -36563,7 +36619,7 @@ export namespace Prisma {
     }
     scalars: $Extensions.GetPayloadResult<{
       id: number
-      userId: string
+      userId: bigint
       vipLevelId: number
       accumulatedRolling: Prisma.Decimal
       totalRewardsPaid: Prisma.Decimal
@@ -36997,7 +37053,7 @@ export namespace Prisma {
    */
   interface VipMembershipFieldRefs {
     readonly id: FieldRef<"VipMembership", 'Int'>
-    readonly userId: FieldRef<"VipMembership", 'String'>
+    readonly userId: FieldRef<"VipMembership", 'BigInt'>
     readonly vipLevelId: FieldRef<"VipMembership", 'Int'>
     readonly accumulatedRolling: FieldRef<"VipMembership", 'Decimal'>
     readonly totalRewardsPaid: FieldRef<"VipMembership", 'Decimal'>
@@ -37456,19 +37512,21 @@ export namespace Prisma {
 
   export type VipHistoryAvgAggregateOutputType = {
     id: number | null
+    userId: number | null
     rewardAmount: Decimal | null
     vipMembershipId: number | null
   }
 
   export type VipHistorySumAggregateOutputType = {
     id: number | null
+    userId: bigint | null
     rewardAmount: Decimal | null
     vipMembershipId: number | null
   }
 
   export type VipHistoryMinAggregateOutputType = {
     id: number | null
-    userId: string | null
+    userId: bigint | null
     previousLevelNameKey: string | null
     newLevelNameKey: string | null
     rewardAmount: Decimal | null
@@ -37480,7 +37538,7 @@ export namespace Prisma {
 
   export type VipHistoryMaxAggregateOutputType = {
     id: number | null
-    userId: string | null
+    userId: bigint | null
     previousLevelNameKey: string | null
     newLevelNameKey: string | null
     rewardAmount: Decimal | null
@@ -37506,12 +37564,14 @@ export namespace Prisma {
 
   export type VipHistoryAvgAggregateInputType = {
     id?: true
+    userId?: true
     rewardAmount?: true
     vipMembershipId?: true
   }
 
   export type VipHistorySumAggregateInputType = {
     id?: true
+    userId?: true
     rewardAmount?: true
     vipMembershipId?: true
   }
@@ -37641,7 +37701,7 @@ export namespace Prisma {
 
   export type VipHistoryGroupByOutputType = {
     id: number
-    userId: string
+    userId: bigint
     previousLevelNameKey: string | null
     newLevelNameKey: string
     rewardAmount: Decimal
@@ -37746,7 +37806,7 @@ export namespace Prisma {
     }
     scalars: $Extensions.GetPayloadResult<{
       id: number
-      userId: string
+      userId: bigint
       previousLevelNameKey: string | null
       newLevelNameKey: string
       rewardAmount: Prisma.Decimal
@@ -38180,7 +38240,7 @@ export namespace Prisma {
    */
   interface VipHistoryFieldRefs {
     readonly id: FieldRef<"VipHistory", 'Int'>
-    readonly userId: FieldRef<"VipHistory", 'String'>
+    readonly userId: FieldRef<"VipHistory", 'BigInt'>
     readonly previousLevelNameKey: FieldRef<"VipHistory", 'String'>
     readonly newLevelNameKey: FieldRef<"VipHistory", 'String'>
     readonly rewardAmount: FieldRef<"VipHistory", 'Decimal'>
@@ -38635,6 +38695,7 @@ export namespace Prisma {
 
   export type RollingAvgAggregateOutputType = {
     id: number | null
+    userId: number | null
     userPromotionId: number | null
     requiredAmount: Decimal | null
     currentAmount: Decimal | null
@@ -38646,6 +38707,7 @@ export namespace Prisma {
 
   export type RollingSumAggregateOutputType = {
     id: bigint | null
+    userId: bigint | null
     userPromotionId: number | null
     requiredAmount: Decimal | null
     currentAmount: Decimal | null
@@ -38657,7 +38719,7 @@ export namespace Prisma {
 
   export type RollingMinAggregateOutputType = {
     id: bigint | null
-    userId: string | null
+    userId: bigint | null
     sourceType: $Enums.RollingSourceType | null
     userPromotionId: number | null
     requiredAmount: Decimal | null
@@ -38675,7 +38737,7 @@ export namespace Prisma {
 
   export type RollingMaxAggregateOutputType = {
     id: bigint | null
-    userId: string | null
+    userId: bigint | null
     sourceType: $Enums.RollingSourceType | null
     userPromotionId: number | null
     requiredAmount: Decimal | null
@@ -38713,6 +38775,7 @@ export namespace Prisma {
 
   export type RollingAvgAggregateInputType = {
     id?: true
+    userId?: true
     userPromotionId?: true
     requiredAmount?: true
     currentAmount?: true
@@ -38724,6 +38787,7 @@ export namespace Prisma {
 
   export type RollingSumAggregateInputType = {
     id?: true
+    userId?: true
     userPromotionId?: true
     requiredAmount?: true
     currentAmount?: true
@@ -38876,7 +38940,7 @@ export namespace Prisma {
 
   export type RollingGroupByOutputType = {
     id: bigint
-    userId: string
+    userId: bigint
     sourceType: $Enums.RollingSourceType
     userPromotionId: number | null
     requiredAmount: Decimal
@@ -39018,7 +39082,7 @@ export namespace Prisma {
     }
     scalars: $Extensions.GetPayloadResult<{
       id: bigint
-      userId: string
+      userId: bigint
       sourceType: $Enums.RollingSourceType
       userPromotionId: number | null
       requiredAmount: Prisma.Decimal
@@ -39459,7 +39523,7 @@ export namespace Prisma {
    */
   interface RollingFieldRefs {
     readonly id: FieldRef<"Rolling", 'BigInt'>
-    readonly userId: FieldRef<"Rolling", 'String'>
+    readonly userId: FieldRef<"Rolling", 'BigInt'>
     readonly sourceType: FieldRef<"Rolling", 'RollingSourceType'>
     readonly userPromotionId: FieldRef<"Rolling", 'Int'>
     readonly requiredAmount: FieldRef<"Rolling", 'Decimal'>
@@ -39939,15 +40003,17 @@ export namespace Prisma {
 
   export type UserTokenAvgAggregateOutputType = {
     id: number | null
+    userId: number | null
   }
 
   export type UserTokenSumAggregateOutputType = {
     id: number | null
+    userId: bigint | null
   }
 
   export type UserTokenMinAggregateOutputType = {
     id: number | null
-    userId: string | null
+    userId: bigint | null
     type: $Enums.TokenType | null
     token: string | null
     expiresAt: Date | null
@@ -39958,7 +40024,7 @@ export namespace Prisma {
 
   export type UserTokenMaxAggregateOutputType = {
     id: number | null
-    userId: string | null
+    userId: bigint | null
     type: $Enums.TokenType | null
     token: string | null
     expiresAt: Date | null
@@ -39983,10 +40049,12 @@ export namespace Prisma {
 
   export type UserTokenAvgAggregateInputType = {
     id?: true
+    userId?: true
   }
 
   export type UserTokenSumAggregateInputType = {
     id?: true
+    userId?: true
   }
 
   export type UserTokenMinAggregateInputType = {
@@ -40112,7 +40180,7 @@ export namespace Prisma {
 
   export type UserTokenGroupByOutputType = {
     id: number
-    userId: string
+    userId: bigint
     type: $Enums.TokenType
     token: string
     expiresAt: Date
@@ -40210,7 +40278,7 @@ export namespace Prisma {
     }
     scalars: $Extensions.GetPayloadResult<{
       id: number
-      userId: string
+      userId: bigint
       type: $Enums.TokenType
       token: string
       expiresAt: Date
@@ -40643,7 +40711,7 @@ export namespace Prisma {
    */
   interface UserTokenFieldRefs {
     readonly id: FieldRef<"UserToken", 'Int'>
-    readonly userId: FieldRef<"UserToken", 'String'>
+    readonly userId: FieldRef<"UserToken", 'BigInt'>
     readonly type: FieldRef<"UserToken", 'TokenType'>
     readonly token: FieldRef<"UserToken", 'String'>
     readonly expiresAt: FieldRef<"UserToken", 'DateTime'>
@@ -41079,15 +41147,17 @@ export namespace Prisma {
 
   export type EmailLogAvgAggregateOutputType = {
     id: number | null
+    userId: number | null
   }
 
   export type EmailLogSumAggregateOutputType = {
     id: number | null
+    userId: bigint | null
   }
 
   export type EmailLogMinAggregateOutputType = {
     id: number | null
-    userId: string | null
+    userId: bigint | null
     type: $Enums.EmailType | null
     status: $Enums.EmailStatus | null
     to: string | null
@@ -41101,7 +41171,7 @@ export namespace Prisma {
 
   export type EmailLogMaxAggregateOutputType = {
     id: number | null
-    userId: string | null
+    userId: bigint | null
     type: $Enums.EmailType | null
     status: $Enums.EmailStatus | null
     to: string | null
@@ -41132,10 +41202,12 @@ export namespace Prisma {
 
   export type EmailLogAvgAggregateInputType = {
     id?: true
+    userId?: true
   }
 
   export type EmailLogSumAggregateInputType = {
     id?: true
+    userId?: true
   }
 
   export type EmailLogMinAggregateInputType = {
@@ -41270,7 +41342,7 @@ export namespace Prisma {
 
   export type EmailLogGroupByOutputType = {
     id: number
-    userId: string | null
+    userId: bigint | null
     type: $Enums.EmailType
     status: $Enums.EmailStatus
     to: string
@@ -41383,7 +41455,7 @@ export namespace Prisma {
     }
     scalars: $Extensions.GetPayloadResult<{
       id: number
-      userId: string | null
+      userId: bigint | null
       type: $Enums.EmailType
       status: $Enums.EmailStatus
       to: string
@@ -41819,7 +41891,7 @@ export namespace Prisma {
    */
   interface EmailLogFieldRefs {
     readonly id: FieldRef<"EmailLog", 'Int'>
-    readonly userId: FieldRef<"EmailLog", 'String'>
+    readonly userId: FieldRef<"EmailLog", 'BigInt'>
     readonly type: FieldRef<"EmailLog", 'EmailType'>
     readonly status: FieldRef<"EmailLog", 'EmailStatus'>
     readonly to: FieldRef<"EmailLog", 'String'>
@@ -42277,19 +42349,21 @@ export namespace Prisma {
 
   export type GameSessionAvgAggregateOutputType = {
     id: number | null
+    userId: number | null
     exchangeRate: Decimal | null
     gameId: number | null
   }
 
   export type GameSessionSumAggregateOutputType = {
     id: bigint | null
+    userId: bigint | null
     exchangeRate: Decimal | null
     gameId: number | null
   }
 
   export type GameSessionMinAggregateOutputType = {
     id: bigint | null
-    userId: string | null
+    userId: bigint | null
     createdAt: Date | null
     updatedAt: Date | null
     lastAccessedAt: Date | null
@@ -42304,7 +42378,7 @@ export namespace Prisma {
 
   export type GameSessionMaxAggregateOutputType = {
     id: bigint | null
-    userId: string | null
+    userId: bigint | null
     createdAt: Date | null
     updatedAt: Date | null
     lastAccessedAt: Date | null
@@ -42336,12 +42410,14 @@ export namespace Prisma {
 
   export type GameSessionAvgAggregateInputType = {
     id?: true
+    userId?: true
     exchangeRate?: true
     gameId?: true
   }
 
   export type GameSessionSumAggregateInputType = {
     id?: true
+    userId?: true
     exchangeRate?: true
     gameId?: true
   }
@@ -42480,7 +42556,7 @@ export namespace Prisma {
 
   export type GameSessionGroupByOutputType = {
     id: bigint
-    userId: string
+    userId: bigint
     createdAt: Date
     updatedAt: Date
     lastAccessedAt: Date
@@ -42605,7 +42681,7 @@ export namespace Prisma {
     }
     scalars: $Extensions.GetPayloadResult<{
       id: bigint
-      userId: string
+      userId: bigint
       createdAt: Date
       updatedAt: Date
       lastAccessedAt: Date
@@ -43043,7 +43119,7 @@ export namespace Prisma {
    */
   interface GameSessionFieldRefs {
     readonly id: FieldRef<"GameSession", 'BigInt'>
-    readonly userId: FieldRef<"GameSession", 'String'>
+    readonly userId: FieldRef<"GameSession", 'BigInt'>
     readonly createdAt: FieldRef<"GameSession", 'DateTime'>
     readonly updatedAt: FieldRef<"GameSession", 'DateTime'>
     readonly lastAccessedAt: FieldRef<"GameSession", 'DateTime'>
@@ -45779,13 +45855,23 @@ export namespace Prisma {
 
   export type AggregateAffiliateCode = {
     _count: AffiliateCodeCountAggregateOutputType | null
+    _avg: AffiliateCodeAvgAggregateOutputType | null
+    _sum: AffiliateCodeSumAggregateOutputType | null
     _min: AffiliateCodeMinAggregateOutputType | null
     _max: AffiliateCodeMaxAggregateOutputType | null
   }
 
+  export type AffiliateCodeAvgAggregateOutputType = {
+    userId: number | null
+  }
+
+  export type AffiliateCodeSumAggregateOutputType = {
+    userId: bigint | null
+  }
+
   export type AffiliateCodeMinAggregateOutputType = {
     id: string | null
-    userId: string | null
+    userId: bigint | null
     code: string | null
     campaignName: string | null
     description: string | null
@@ -45799,7 +45885,7 @@ export namespace Prisma {
 
   export type AffiliateCodeMaxAggregateOutputType = {
     id: string | null
-    userId: string | null
+    userId: bigint | null
     code: string | null
     campaignName: string | null
     description: string | null
@@ -45826,6 +45912,14 @@ export namespace Prisma {
     _all: number
   }
 
+
+  export type AffiliateCodeAvgAggregateInputType = {
+    userId?: true
+  }
+
+  export type AffiliateCodeSumAggregateInputType = {
+    userId?: true
+  }
 
   export type AffiliateCodeMinAggregateInputType = {
     id?: true
@@ -45908,6 +46002,18 @@ export namespace Prisma {
     /**
      * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
      * 
+     * Select which fields to average
+    **/
+    _avg?: AffiliateCodeAvgAggregateInputType
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
+     * 
+     * Select which fields to sum
+    **/
+    _sum?: AffiliateCodeSumAggregateInputType
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
+     * 
      * Select which fields to find the minimum value
     **/
     _min?: AffiliateCodeMinAggregateInputType
@@ -45938,13 +46044,15 @@ export namespace Prisma {
     take?: number
     skip?: number
     _count?: AffiliateCodeCountAggregateInputType | true
+    _avg?: AffiliateCodeAvgAggregateInputType
+    _sum?: AffiliateCodeSumAggregateInputType
     _min?: AffiliateCodeMinAggregateInputType
     _max?: AffiliateCodeMaxAggregateInputType
   }
 
   export type AffiliateCodeGroupByOutputType = {
     id: string
-    userId: string
+    userId: bigint
     code: string
     campaignName: string | null
     description: string | null
@@ -45955,6 +46063,8 @@ export namespace Prisma {
     updatedAt: Date
     lastUsedAt: Date | null
     _count: AffiliateCodeCountAggregateOutputType | null
+    _avg: AffiliateCodeAvgAggregateOutputType | null
+    _sum: AffiliateCodeSumAggregateOutputType | null
     _min: AffiliateCodeMinAggregateOutputType | null
     _max: AffiliateCodeMaxAggregateOutputType | null
   }
@@ -46055,7 +46165,7 @@ export namespace Prisma {
     }
     scalars: $Extensions.GetPayloadResult<{
       id: string
-      userId: string
+      userId: bigint
       code: string
       campaignName: string | null
       description: string | null
@@ -46491,7 +46601,7 @@ export namespace Prisma {
    */
   interface AffiliateCodeFieldRefs {
     readonly id: FieldRef<"AffiliateCode", 'String'>
-    readonly userId: FieldRef<"AffiliateCode", 'String'>
+    readonly userId: FieldRef<"AffiliateCode", 'BigInt'>
     readonly code: FieldRef<"AffiliateCode", 'String'>
     readonly campaignName: FieldRef<"AffiliateCode", 'String'>
     readonly description: FieldRef<"AffiliateCode", 'String'>
@@ -46945,14 +47055,26 @@ export namespace Prisma {
 
   export type AggregateReferral = {
     _count: ReferralCountAggregateOutputType | null
+    _avg: ReferralAvgAggregateOutputType | null
+    _sum: ReferralSumAggregateOutputType | null
     _min: ReferralMinAggregateOutputType | null
     _max: ReferralMaxAggregateOutputType | null
   }
 
+  export type ReferralAvgAggregateOutputType = {
+    affiliateId: number | null
+    subUserId: number | null
+  }
+
+  export type ReferralSumAggregateOutputType = {
+    affiliateId: bigint | null
+    subUserId: bigint | null
+  }
+
   export type ReferralMinAggregateOutputType = {
     id: string | null
-    affiliateId: string | null
-    subUserId: string | null
+    affiliateId: bigint | null
+    subUserId: bigint | null
     ipAddress: string | null
     deviceFingerprint: string | null
     userAgent: string | null
@@ -46963,8 +47085,8 @@ export namespace Prisma {
 
   export type ReferralMaxAggregateOutputType = {
     id: string | null
-    affiliateId: string | null
-    subUserId: string | null
+    affiliateId: bigint | null
+    subUserId: bigint | null
     ipAddress: string | null
     deviceFingerprint: string | null
     userAgent: string | null
@@ -46986,6 +47108,16 @@ export namespace Prisma {
     _all: number
   }
 
+
+  export type ReferralAvgAggregateInputType = {
+    affiliateId?: true
+    subUserId?: true
+  }
+
+  export type ReferralSumAggregateInputType = {
+    affiliateId?: true
+    subUserId?: true
+  }
 
   export type ReferralMinAggregateInputType = {
     id?: true
@@ -47062,6 +47194,18 @@ export namespace Prisma {
     /**
      * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
      * 
+     * Select which fields to average
+    **/
+    _avg?: ReferralAvgAggregateInputType
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
+     * 
+     * Select which fields to sum
+    **/
+    _sum?: ReferralSumAggregateInputType
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
+     * 
      * Select which fields to find the minimum value
     **/
     _min?: ReferralMinAggregateInputType
@@ -47092,14 +47236,16 @@ export namespace Prisma {
     take?: number
     skip?: number
     _count?: ReferralCountAggregateInputType | true
+    _avg?: ReferralAvgAggregateInputType
+    _sum?: ReferralSumAggregateInputType
     _min?: ReferralMinAggregateInputType
     _max?: ReferralMaxAggregateInputType
   }
 
   export type ReferralGroupByOutputType = {
     id: string
-    affiliateId: string
-    subUserId: string
+    affiliateId: bigint
+    subUserId: bigint
     ipAddress: string | null
     deviceFingerprint: string | null
     userAgent: string | null
@@ -47107,6 +47253,8 @@ export namespace Prisma {
     updatedAt: Date
     codeId: string
     _count: ReferralCountAggregateOutputType | null
+    _avg: ReferralAvgAggregateOutputType | null
+    _sum: ReferralSumAggregateOutputType | null
     _min: ReferralMinAggregateOutputType | null
     _max: ReferralMaxAggregateOutputType | null
   }
@@ -47208,8 +47356,8 @@ export namespace Prisma {
     }
     scalars: $Extensions.GetPayloadResult<{
       id: string
-      affiliateId: string
-      subUserId: string
+      affiliateId: bigint
+      subUserId: bigint
       ipAddress: string | null
       deviceFingerprint: string | null
       userAgent: string | null
@@ -47643,8 +47791,8 @@ export namespace Prisma {
    */
   interface ReferralFieldRefs {
     readonly id: FieldRef<"Referral", 'String'>
-    readonly affiliateId: FieldRef<"Referral", 'String'>
-    readonly subUserId: FieldRef<"Referral", 'String'>
+    readonly affiliateId: FieldRef<"Referral", 'BigInt'>
+    readonly subUserId: FieldRef<"Referral", 'BigInt'>
     readonly ipAddress: FieldRef<"Referral", 'String'>
     readonly deviceFingerprint: FieldRef<"Referral", 'String'>
     readonly userAgent: FieldRef<"Referral", 'String'>
@@ -48078,19 +48226,21 @@ export namespace Prisma {
   }
 
   export type AffiliateWalletAvgAggregateOutputType = {
+    affiliateId: number | null
     availableBalance: Decimal | null
     pendingBalance: Decimal | null
     totalEarned: Decimal | null
   }
 
   export type AffiliateWalletSumAggregateOutputType = {
+    affiliateId: bigint | null
     availableBalance: Decimal | null
     pendingBalance: Decimal | null
     totalEarned: Decimal | null
   }
 
   export type AffiliateWalletMinAggregateOutputType = {
-    affiliateId: string | null
+    affiliateId: bigint | null
     currency: $Enums.ExchangeCurrencyCode | null
     availableBalance: Decimal | null
     pendingBalance: Decimal | null
@@ -48099,7 +48249,7 @@ export namespace Prisma {
   }
 
   export type AffiliateWalletMaxAggregateOutputType = {
-    affiliateId: string | null
+    affiliateId: bigint | null
     currency: $Enums.ExchangeCurrencyCode | null
     availableBalance: Decimal | null
     pendingBalance: Decimal | null
@@ -48119,12 +48269,14 @@ export namespace Prisma {
 
 
   export type AffiliateWalletAvgAggregateInputType = {
+    affiliateId?: true
     availableBalance?: true
     pendingBalance?: true
     totalEarned?: true
   }
 
   export type AffiliateWalletSumAggregateInputType = {
+    affiliateId?: true
     availableBalance?: true
     pendingBalance?: true
     totalEarned?: true
@@ -48245,7 +48397,7 @@ export namespace Prisma {
   }
 
   export type AffiliateWalletGroupByOutputType = {
-    affiliateId: string
+    affiliateId: bigint
     currency: $Enums.ExchangeCurrencyCode
     availableBalance: Decimal
     pendingBalance: Decimal
@@ -48328,7 +48480,7 @@ export namespace Prisma {
       affiliate: Prisma.$UserPayload<ExtArgs>
     }
     scalars: $Extensions.GetPayloadResult<{
-      affiliateId: string
+      affiliateId: bigint
       currency: $Enums.ExchangeCurrencyCode
       availableBalance: Prisma.Decimal
       pendingBalance: Prisma.Decimal
@@ -48758,7 +48910,7 @@ export namespace Prisma {
    * Fields of the AffiliateWallet model
    */
   interface AffiliateWalletFieldRefs {
-    readonly affiliateId: FieldRef<"AffiliateWallet", 'String'>
+    readonly affiliateId: FieldRef<"AffiliateWallet", 'BigInt'>
     readonly currency: FieldRef<"AffiliateWallet", 'ExchangeCurrencyCode'>
     readonly availableBalance: FieldRef<"AffiliateWallet", 'Decimal'>
     readonly pendingBalance: FieldRef<"AffiliateWallet", 'Decimal'>
@@ -49191,6 +49343,8 @@ export namespace Prisma {
   }
 
   export type AffiliateCommissionAvgAggregateOutputType = {
+    affiliateId: number | null
+    subUserId: number | null
     gameRoundId: number | null
     wagerAmount: Decimal | null
     winAmount: Decimal | null
@@ -49200,6 +49354,8 @@ export namespace Prisma {
   }
 
   export type AffiliateCommissionSumAggregateOutputType = {
+    affiliateId: bigint | null
+    subUserId: bigint | null
     gameRoundId: bigint | null
     wagerAmount: Decimal | null
     winAmount: Decimal | null
@@ -49209,8 +49365,8 @@ export namespace Prisma {
   }
 
   export type AffiliateCommissionMinAggregateOutputType = {
-    affiliateId: string | null
-    subUserId: string | null
+    affiliateId: bigint | null
+    subUserId: bigint | null
     gameRoundId: bigint | null
     wagerAmount: Decimal | null
     winAmount: Decimal | null
@@ -49229,8 +49385,8 @@ export namespace Prisma {
   }
 
   export type AffiliateCommissionMaxAggregateOutputType = {
-    affiliateId: string | null
-    subUserId: string | null
+    affiliateId: bigint | null
+    subUserId: bigint | null
     gameRoundId: bigint | null
     wagerAmount: Decimal | null
     winAmount: Decimal | null
@@ -49271,6 +49427,8 @@ export namespace Prisma {
 
 
   export type AffiliateCommissionAvgAggregateInputType = {
+    affiliateId?: true
+    subUserId?: true
     gameRoundId?: true
     wagerAmount?: true
     winAmount?: true
@@ -49280,6 +49438,8 @@ export namespace Prisma {
   }
 
   export type AffiliateCommissionSumAggregateInputType = {
+    affiliateId?: true
+    subUserId?: true
     gameRoundId?: true
     wagerAmount?: true
     winAmount?: true
@@ -49436,8 +49596,8 @@ export namespace Prisma {
   }
 
   export type AffiliateCommissionGroupByOutputType = {
-    affiliateId: string
-    subUserId: string
+    affiliateId: bigint
+    subUserId: bigint
     gameRoundId: bigint | null
     wagerAmount: Decimal
     winAmount: Decimal | null
@@ -49588,8 +49748,8 @@ export namespace Prisma {
       subUser: Prisma.$UserPayload<ExtArgs>
     }
     scalars: $Extensions.GetPayloadResult<{
-      affiliateId: string
-      subUserId: string
+      affiliateId: bigint
+      subUserId: bigint
       gameRoundId: bigint | null
       wagerAmount: Prisma.Decimal
       winAmount: Prisma.Decimal | null
@@ -50036,8 +50196,8 @@ export namespace Prisma {
    * Fields of the AffiliateCommission model
    */
   interface AffiliateCommissionFieldRefs {
-    readonly affiliateId: FieldRef<"AffiliateCommission", 'String'>
-    readonly subUserId: FieldRef<"AffiliateCommission", 'String'>
+    readonly affiliateId: FieldRef<"AffiliateCommission", 'BigInt'>
+    readonly subUserId: FieldRef<"AffiliateCommission", 'BigInt'>
     readonly gameRoundId: FieldRef<"AffiliateCommission", 'BigInt'>
     readonly wagerAmount: FieldRef<"AffiliateCommission", 'Decimal'>
     readonly winAmount: FieldRef<"AffiliateCommission", 'Decimal'>
@@ -50499,6 +50659,7 @@ export namespace Prisma {
   }
 
   export type AffiliateTierAvgAggregateOutputType = {
+    affiliateId: number | null
     baseRate: Decimal | null
     customRate: Decimal | null
     monthlyWagerAmount: Decimal | null
@@ -50506,6 +50667,7 @@ export namespace Prisma {
   }
 
   export type AffiliateTierSumAggregateOutputType = {
+    affiliateId: bigint | null
     baseRate: Decimal | null
     customRate: Decimal | null
     monthlyWagerAmount: Decimal | null
@@ -50513,7 +50675,7 @@ export namespace Prisma {
   }
 
   export type AffiliateTierMinAggregateOutputType = {
-    affiliateId: string | null
+    affiliateId: bigint | null
     tier: $Enums.AffiliateTierLevel | null
     baseRate: Decimal | null
     customRate: Decimal | null
@@ -50528,7 +50690,7 @@ export namespace Prisma {
   }
 
   export type AffiliateTierMaxAggregateOutputType = {
-    affiliateId: string | null
+    affiliateId: bigint | null
     tier: $Enums.AffiliateTierLevel | null
     baseRate: Decimal | null
     customRate: Decimal | null
@@ -50560,6 +50722,7 @@ export namespace Prisma {
 
 
   export type AffiliateTierAvgAggregateInputType = {
+    affiliateId?: true
     baseRate?: true
     customRate?: true
     monthlyWagerAmount?: true
@@ -50567,6 +50730,7 @@ export namespace Prisma {
   }
 
   export type AffiliateTierSumAggregateInputType = {
+    affiliateId?: true
     baseRate?: true
     customRate?: true
     monthlyWagerAmount?: true
@@ -50706,7 +50870,7 @@ export namespace Prisma {
   }
 
   export type AffiliateTierGroupByOutputType = {
-    affiliateId: string
+    affiliateId: bigint
     tier: $Enums.AffiliateTierLevel
     baseRate: Decimal
     customRate: Decimal | null
@@ -50819,7 +50983,7 @@ export namespace Prisma {
       affiliate: Prisma.$UserPayload<ExtArgs>
     }
     scalars: $Extensions.GetPayloadResult<{
-      affiliateId: string
+      affiliateId: bigint
       tier: $Enums.AffiliateTierLevel
       baseRate: Prisma.Decimal
       customRate: Prisma.Decimal | null
@@ -51255,7 +51419,7 @@ export namespace Prisma {
    * Fields of the AffiliateTier model
    */
   interface AffiliateTierFieldRefs {
-    readonly affiliateId: FieldRef<"AffiliateTier", 'String'>
+    readonly affiliateId: FieldRef<"AffiliateTier", 'BigInt'>
     readonly tier: FieldRef<"AffiliateTier", 'AffiliateTierLevel'>
     readonly baseRate: FieldRef<"AffiliateTier", 'Decimal'>
     readonly customRate: FieldRef<"AffiliateTier", 'Decimal'>
@@ -51695,16 +51859,18 @@ export namespace Prisma {
 
   export type LoginAttemptAvgAggregateOutputType = {
     id: number | null
+    userId: number | null
   }
 
   export type LoginAttemptSumAggregateOutputType = {
     id: bigint | null
+    userId: bigint | null
   }
 
   export type LoginAttemptMinAggregateOutputType = {
     id: bigint | null
     uid: string | null
-    userId: string | null
+    userId: bigint | null
     result: $Enums.LoginAttemptResult | null
     failureReason: $Enums.LoginFailureReason | null
     ipAddress: string | null
@@ -51719,7 +51885,7 @@ export namespace Prisma {
   export type LoginAttemptMaxAggregateOutputType = {
     id: bigint | null
     uid: string | null
-    userId: string | null
+    userId: bigint | null
     result: $Enums.LoginAttemptResult | null
     failureReason: $Enums.LoginFailureReason | null
     ipAddress: string | null
@@ -51750,10 +51916,12 @@ export namespace Prisma {
 
   export type LoginAttemptAvgAggregateInputType = {
     id?: true
+    userId?: true
   }
 
   export type LoginAttemptSumAggregateInputType = {
     id?: true
+    userId?: true
   }
 
   export type LoginAttemptMinAggregateInputType = {
@@ -51891,7 +52059,7 @@ export namespace Prisma {
   export type LoginAttemptGroupByOutputType = {
     id: bigint
     uid: string
-    userId: string | null
+    userId: bigint | null
     result: $Enums.LoginAttemptResult
     failureReason: $Enums.LoginFailureReason | null
     ipAddress: string | null
@@ -52004,7 +52172,7 @@ export namespace Prisma {
     scalars: $Extensions.GetPayloadResult<{
       id: bigint
       uid: string
-      userId: string | null
+      userId: bigint | null
       result: $Enums.LoginAttemptResult
       failureReason: $Enums.LoginFailureReason | null
       ipAddress: string | null
@@ -52440,7 +52608,7 @@ export namespace Prisma {
   interface LoginAttemptFieldRefs {
     readonly id: FieldRef<"LoginAttempt", 'BigInt'>
     readonly uid: FieldRef<"LoginAttempt", 'String'>
-    readonly userId: FieldRef<"LoginAttempt", 'String'>
+    readonly userId: FieldRef<"LoginAttempt", 'BigInt'>
     readonly result: FieldRef<"LoginAttempt", 'LoginAttemptResult'>
     readonly failureReason: FieldRef<"LoginAttempt", 'LoginFailureReason'>
     readonly ipAddress: FieldRef<"LoginAttempt", 'String'>
@@ -52899,7 +53067,7 @@ export namespace Prisma {
 
   export const UserScalarFieldEnum: {
     id: 'id',
-    numericId: 'numericId',
+    uid: 'uid',
     whitecliffId: 'whitecliffId',
     whitecliffSystemId: 'whitecliffSystemId',
     whitecliffUsername: 'whitecliffUsername',
@@ -52925,7 +53093,7 @@ export namespace Prisma {
   export const UserSessionScalarFieldEnum: {
     userId: 'userId',
     sessionId: 'sessionId',
-    deviceInfo: 'deviceInfo',
+    debetsiceInfo: 'debetsiceInfo',
     userAgent: 'userAgent',
     ipAddress: 'ipAddress',
     isMobile: 'isMobile',
@@ -53649,34 +53817,6 @@ export namespace Prisma {
 
 
   /**
-   * Reference to a field of type 'String'
-   */
-  export type StringFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaModel, 'String'>
-    
-
-
-  /**
-   * Reference to a field of type 'String[]'
-   */
-  export type ListStringFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaModel, 'String[]'>
-    
-
-
-  /**
-   * Reference to a field of type 'Int'
-   */
-  export type IntFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaModel, 'Int'>
-    
-
-
-  /**
-   * Reference to a field of type 'Int[]'
-   */
-  export type ListIntFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaModel, 'Int[]'>
-    
-
-
-  /**
    * Reference to a field of type 'BigInt'
    */
   export type BigIntFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaModel, 'BigInt'>
@@ -53687,6 +53827,20 @@ export namespace Prisma {
    * Reference to a field of type 'BigInt[]'
    */
   export type ListBigIntFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaModel, 'BigInt[]'>
+    
+
+
+  /**
+   * Reference to a field of type 'String'
+   */
+  export type StringFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaModel, 'String'>
+    
+
+
+  /**
+   * Reference to a field of type 'String[]'
+   */
+  export type ListStringFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaModel, 'String[]'>
     
 
 
@@ -53757,6 +53911,20 @@ export namespace Prisma {
    * Reference to a field of type 'Language[]'
    */
   export type ListEnumLanguageFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaModel, 'Language[]'>
+    
+
+
+  /**
+   * Reference to a field of type 'Int'
+   */
+  export type IntFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaModel, 'Int'>
+    
+
+
+  /**
+   * Reference to a field of type 'Int[]'
+   */
+  export type ListIntFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaModel, 'Int[]'>
     
 
 
@@ -54236,8 +54404,8 @@ export namespace Prisma {
     AND?: UserWhereInput | UserWhereInput[]
     OR?: UserWhereInput[]
     NOT?: UserWhereInput | UserWhereInput[]
-    id?: StringFilter<"User"> | string
-    numericId?: IntFilter<"User"> | number
+    id?: BigIntFilter<"User"> | bigint | number
+    uid?: StringFilter<"User"> | string
     whitecliffId?: BigIntNullableFilter<"User"> | bigint | number | null
     whitecliffSystemId?: BigIntNullableFilter<"User"> | bigint | number | null
     whitecliffUsername?: StringNullableFilter<"User"> | string | null
@@ -54280,7 +54448,7 @@ export namespace Prisma {
 
   export type UserOrderByWithRelationInput = {
     id?: SortOrder
-    numericId?: SortOrder
+    uid?: SortOrder
     whitecliffId?: SortOrderInput | SortOrder
     whitecliffSystemId?: SortOrderInput | SortOrder
     whitecliffUsername?: SortOrderInput | SortOrder
@@ -54322,8 +54490,8 @@ export namespace Prisma {
   }
 
   export type UserWhereUniqueInput = Prisma.AtLeast<{
-    id?: string
-    numericId?: number
+    id?: bigint | number
+    uid?: string
     whitecliffId?: bigint | number
     whitecliffSystemId?: bigint | number
     whitecliffUsername?: string
@@ -54365,11 +54533,11 @@ export namespace Prisma {
     VipHistory?: VipHistoryListRelationFilter
     VipMembership?: XOR<VipMembershipNullableScalarRelationFilter, VipMembershipWhereInput> | null
     loginAttempts?: LoginAttemptListRelationFilter
-  }, "id" | "numericId" | "whitecliffId" | "whitecliffSystemId" | "whitecliffUsername" | "dcsId" | "email">
+  }, "id" | "uid" | "whitecliffId" | "whitecliffSystemId" | "whitecliffUsername" | "dcsId" | "email">
 
   export type UserOrderByWithAggregationInput = {
     id?: SortOrder
-    numericId?: SortOrder
+    uid?: SortOrder
     whitecliffId?: SortOrderInput | SortOrder
     whitecliffSystemId?: SortOrderInput | SortOrder
     whitecliffUsername?: SortOrderInput | SortOrder
@@ -54398,8 +54566,8 @@ export namespace Prisma {
     AND?: UserScalarWhereWithAggregatesInput | UserScalarWhereWithAggregatesInput[]
     OR?: UserScalarWhereWithAggregatesInput[]
     NOT?: UserScalarWhereWithAggregatesInput | UserScalarWhereWithAggregatesInput[]
-    id?: StringWithAggregatesFilter<"User"> | string
-    numericId?: IntWithAggregatesFilter<"User"> | number
+    id?: BigIntWithAggregatesFilter<"User"> | bigint | number
+    uid?: StringWithAggregatesFilter<"User"> | string
     whitecliffId?: BigIntNullableWithAggregatesFilter<"User"> | bigint | number | null
     whitecliffSystemId?: BigIntNullableWithAggregatesFilter<"User"> | bigint | number | null
     whitecliffUsername?: StringNullableWithAggregatesFilter<"User"> | string | null
@@ -54423,9 +54591,9 @@ export namespace Prisma {
     AND?: UserSessionWhereInput | UserSessionWhereInput[]
     OR?: UserSessionWhereInput[]
     NOT?: UserSessionWhereInput | UserSessionWhereInput[]
-    userId?: StringFilter<"UserSession"> | string
+    userId?: BigIntFilter<"UserSession"> | bigint | number
     sessionId?: StringFilter<"UserSession"> | string
-    deviceInfo?: StringNullableFilter<"UserSession"> | string | null
+    debetsiceInfo?: StringNullableFilter<"UserSession"> | string | null
     userAgent?: StringNullableFilter<"UserSession"> | string | null
     ipAddress?: StringNullableFilter<"UserSession"> | string | null
     isMobile?: BoolNullableFilter<"UserSession"> | boolean | null
@@ -54442,7 +54610,7 @@ export namespace Prisma {
   export type UserSessionOrderByWithRelationInput = {
     userId?: SortOrder
     sessionId?: SortOrder
-    deviceInfo?: SortOrderInput | SortOrder
+    debetsiceInfo?: SortOrderInput | SortOrder
     userAgent?: SortOrderInput | SortOrder
     ipAddress?: SortOrderInput | SortOrder
     isMobile?: SortOrderInput | SortOrder
@@ -54462,8 +54630,8 @@ export namespace Prisma {
     AND?: UserSessionWhereInput | UserSessionWhereInput[]
     OR?: UserSessionWhereInput[]
     NOT?: UserSessionWhereInput | UserSessionWhereInput[]
-    userId?: StringFilter<"UserSession"> | string
-    deviceInfo?: StringNullableFilter<"UserSession"> | string | null
+    userId?: BigIntFilter<"UserSession"> | bigint | number
+    debetsiceInfo?: StringNullableFilter<"UserSession"> | string | null
     userAgent?: StringNullableFilter<"UserSession"> | string | null
     ipAddress?: StringNullableFilter<"UserSession"> | string | null
     isMobile?: BoolNullableFilter<"UserSession"> | boolean | null
@@ -54479,7 +54647,7 @@ export namespace Prisma {
   export type UserSessionOrderByWithAggregationInput = {
     userId?: SortOrder
     sessionId?: SortOrder
-    deviceInfo?: SortOrderInput | SortOrder
+    debetsiceInfo?: SortOrderInput | SortOrder
     userAgent?: SortOrderInput | SortOrder
     ipAddress?: SortOrderInput | SortOrder
     isMobile?: SortOrderInput | SortOrder
@@ -54501,9 +54669,9 @@ export namespace Prisma {
     AND?: UserSessionScalarWhereWithAggregatesInput | UserSessionScalarWhereWithAggregatesInput[]
     OR?: UserSessionScalarWhereWithAggregatesInput[]
     NOT?: UserSessionScalarWhereWithAggregatesInput | UserSessionScalarWhereWithAggregatesInput[]
-    userId?: StringWithAggregatesFilter<"UserSession"> | string
+    userId?: BigIntWithAggregatesFilter<"UserSession"> | bigint | number
     sessionId?: StringWithAggregatesFilter<"UserSession"> | string
-    deviceInfo?: StringNullableWithAggregatesFilter<"UserSession"> | string | null
+    debetsiceInfo?: StringNullableWithAggregatesFilter<"UserSession"> | string | null
     userAgent?: StringNullableWithAggregatesFilter<"UserSession"> | string | null
     ipAddress?: StringNullableWithAggregatesFilter<"UserSession"> | string | null
     isMobile?: BoolNullableWithAggregatesFilter<"UserSession"> | boolean | null
@@ -54520,7 +54688,7 @@ export namespace Prisma {
     AND?: UserBalanceWhereInput | UserBalanceWhereInput[]
     OR?: UserBalanceWhereInput[]
     NOT?: UserBalanceWhereInput | UserBalanceWhereInput[]
-    userId?: StringFilter<"UserBalance"> | string
+    userId?: BigIntFilter<"UserBalance"> | bigint | number
     currency?: EnumExchangeCurrencyCodeFilter<"UserBalance"> | $Enums.ExchangeCurrencyCode
     mainBalance?: DecimalFilter<"UserBalance"> | Decimal | DecimalJsLike | number | string
     bonusBalance?: DecimalFilter<"UserBalance"> | Decimal | DecimalJsLike | number | string
@@ -54542,7 +54710,7 @@ export namespace Prisma {
     AND?: UserBalanceWhereInput | UserBalanceWhereInput[]
     OR?: UserBalanceWhereInput[]
     NOT?: UserBalanceWhereInput | UserBalanceWhereInput[]
-    userId?: StringFilter<"UserBalance"> | string
+    userId?: BigIntFilter<"UserBalance"> | bigint | number
     currency?: EnumExchangeCurrencyCodeFilter<"UserBalance"> | $Enums.ExchangeCurrencyCode
     mainBalance?: DecimalFilter<"UserBalance"> | Decimal | DecimalJsLike | number | string
     bonusBalance?: DecimalFilter<"UserBalance"> | Decimal | DecimalJsLike | number | string
@@ -54567,7 +54735,7 @@ export namespace Prisma {
     AND?: UserBalanceScalarWhereWithAggregatesInput | UserBalanceScalarWhereWithAggregatesInput[]
     OR?: UserBalanceScalarWhereWithAggregatesInput[]
     NOT?: UserBalanceScalarWhereWithAggregatesInput | UserBalanceScalarWhereWithAggregatesInput[]
-    userId?: StringWithAggregatesFilter<"UserBalance"> | string
+    userId?: BigIntWithAggregatesFilter<"UserBalance"> | bigint | number
     currency?: EnumExchangeCurrencyCodeWithAggregatesFilter<"UserBalance"> | $Enums.ExchangeCurrencyCode
     mainBalance?: DecimalWithAggregatesFilter<"UserBalance"> | Decimal | DecimalJsLike | number | string
     bonusBalance?: DecimalWithAggregatesFilter<"UserBalance"> | Decimal | DecimalJsLike | number | string
@@ -54578,7 +54746,7 @@ export namespace Prisma {
     AND?: UserBalanceStatsWhereInput | UserBalanceStatsWhereInput[]
     OR?: UserBalanceStatsWhereInput[]
     NOT?: UserBalanceStatsWhereInput | UserBalanceStatsWhereInput[]
-    userId?: StringFilter<"UserBalanceStats"> | string
+    userId?: BigIntFilter<"UserBalanceStats"> | bigint | number
     currency?: EnumExchangeCurrencyCodeFilter<"UserBalanceStats"> | $Enums.ExchangeCurrencyCode
     totalDeposit?: DecimalFilter<"UserBalanceStats"> | Decimal | DecimalJsLike | number | string
     totalWithdraw?: DecimalFilter<"UserBalanceStats"> | Decimal | DecimalJsLike | number | string
@@ -54614,7 +54782,7 @@ export namespace Prisma {
     AND?: UserBalanceStatsWhereInput | UserBalanceStatsWhereInput[]
     OR?: UserBalanceStatsWhereInput[]
     NOT?: UserBalanceStatsWhereInput | UserBalanceStatsWhereInput[]
-    userId?: StringFilter<"UserBalanceStats"> | string
+    userId?: BigIntFilter<"UserBalanceStats"> | bigint | number
     currency?: EnumExchangeCurrencyCodeFilter<"UserBalanceStats"> | $Enums.ExchangeCurrencyCode
     totalDeposit?: DecimalFilter<"UserBalanceStats"> | Decimal | DecimalJsLike | number | string
     totalWithdraw?: DecimalFilter<"UserBalanceStats"> | Decimal | DecimalJsLike | number | string
@@ -54653,7 +54821,7 @@ export namespace Prisma {
     AND?: UserBalanceStatsScalarWhereWithAggregatesInput | UserBalanceStatsScalarWhereWithAggregatesInput[]
     OR?: UserBalanceStatsScalarWhereWithAggregatesInput[]
     NOT?: UserBalanceStatsScalarWhereWithAggregatesInput | UserBalanceStatsScalarWhereWithAggregatesInput[]
-    userId?: StringWithAggregatesFilter<"UserBalanceStats"> | string
+    userId?: BigIntWithAggregatesFilter<"UserBalanceStats"> | bigint | number
     currency?: EnumExchangeCurrencyCodeWithAggregatesFilter<"UserBalanceStats"> | $Enums.ExchangeCurrencyCode
     totalDeposit?: DecimalWithAggregatesFilter<"UserBalanceStats"> | Decimal | DecimalJsLike | number | string
     totalWithdraw?: DecimalWithAggregatesFilter<"UserBalanceStats"> | Decimal | DecimalJsLike | number | string
@@ -54672,7 +54840,7 @@ export namespace Prisma {
     OR?: ActivityLogWhereInput[]
     NOT?: ActivityLogWhereInput | ActivityLogWhereInput[]
     id?: BigIntFilter<"ActivityLog"> | bigint | number
-    userId?: StringFilter<"ActivityLog"> | string
+    userId?: BigIntFilter<"ActivityLog"> | bigint | number
     isAdmin?: BoolFilter<"ActivityLog"> | boolean
     activityType?: StringFilter<"ActivityLog"> | string
     status?: StringFilter<"ActivityLog"> | string
@@ -54707,7 +54875,7 @@ export namespace Prisma {
     AND?: ActivityLogWhereInput | ActivityLogWhereInput[]
     OR?: ActivityLogWhereInput[]
     NOT?: ActivityLogWhereInput | ActivityLogWhereInput[]
-    userId?: StringFilter<"ActivityLog"> | string
+    userId?: BigIntFilter<"ActivityLog"> | bigint | number
     isAdmin?: BoolFilter<"ActivityLog"> | boolean
     activityType?: StringFilter<"ActivityLog"> | string
     status?: StringFilter<"ActivityLog"> | string
@@ -54747,7 +54915,7 @@ export namespace Prisma {
     OR?: ActivityLogScalarWhereWithAggregatesInput[]
     NOT?: ActivityLogScalarWhereWithAggregatesInput | ActivityLogScalarWhereWithAggregatesInput[]
     id?: BigIntWithAggregatesFilter<"ActivityLog"> | bigint | number
-    userId?: StringWithAggregatesFilter<"ActivityLog"> | string
+    userId?: BigIntWithAggregatesFilter<"ActivityLog"> | bigint | number
     isAdmin?: BoolWithAggregatesFilter<"ActivityLog"> | boolean
     activityType?: StringWithAggregatesFilter<"ActivityLog"> | string
     status?: StringWithAggregatesFilter<"ActivityLog"> | string
@@ -54951,7 +55119,7 @@ export namespace Prisma {
     OR?: WhitecliffApiLogWhereInput[]
     NOT?: WhitecliffApiLogWhereInput | WhitecliffApiLogWhereInput[]
     id?: BigIntFilter<"WhitecliffApiLog"> | bigint | number
-    userId?: StringNullableFilter<"WhitecliffApiLog"> | string | null
+    userId?: BigIntNullableFilter<"WhitecliffApiLog"> | bigint | number | null
     action?: StringFilter<"WhitecliffApiLog"> | string
     endpoint?: StringFilter<"WhitecliffApiLog"> | string
     httpMethod?: StringNullableFilter<"WhitecliffApiLog"> | string | null
@@ -54980,7 +55148,7 @@ export namespace Prisma {
     AND?: WhitecliffApiLogWhereInput | WhitecliffApiLogWhereInput[]
     OR?: WhitecliffApiLogWhereInput[]
     NOT?: WhitecliffApiLogWhereInput | WhitecliffApiLogWhereInput[]
-    userId?: StringNullableFilter<"WhitecliffApiLog"> | string | null
+    userId?: BigIntNullableFilter<"WhitecliffApiLog"> | bigint | number | null
     action?: StringFilter<"WhitecliffApiLog"> | string
     endpoint?: StringFilter<"WhitecliffApiLog"> | string
     httpMethod?: StringNullableFilter<"WhitecliffApiLog"> | string | null
@@ -55014,7 +55182,7 @@ export namespace Prisma {
     OR?: WhitecliffApiLogScalarWhereWithAggregatesInput[]
     NOT?: WhitecliffApiLogScalarWhereWithAggregatesInput | WhitecliffApiLogScalarWhereWithAggregatesInput[]
     id?: BigIntWithAggregatesFilter<"WhitecliffApiLog"> | bigint | number
-    userId?: StringNullableWithAggregatesFilter<"WhitecliffApiLog"> | string | null
+    userId?: BigIntNullableWithAggregatesFilter<"WhitecliffApiLog"> | bigint | number | null
     action?: StringWithAggregatesFilter<"WhitecliffApiLog"> | string
     endpoint?: StringWithAggregatesFilter<"WhitecliffApiLog"> | string
     httpMethod?: StringNullableWithAggregatesFilter<"WhitecliffApiLog"> | string | null
@@ -55030,7 +55198,7 @@ export namespace Prisma {
     OR?: DcsApiLogWhereInput[]
     NOT?: DcsApiLogWhereInput | DcsApiLogWhereInput[]
     id?: BigIntFilter<"DcsApiLog"> | bigint | number
-    userId?: StringNullableFilter<"DcsApiLog"> | string | null
+    userId?: BigIntNullableFilter<"DcsApiLog"> | bigint | number | null
     action?: StringFilter<"DcsApiLog"> | string
     endpoint?: StringFilter<"DcsApiLog"> | string
     httpMethod?: StringNullableFilter<"DcsApiLog"> | string | null
@@ -55059,7 +55227,7 @@ export namespace Prisma {
     AND?: DcsApiLogWhereInput | DcsApiLogWhereInput[]
     OR?: DcsApiLogWhereInput[]
     NOT?: DcsApiLogWhereInput | DcsApiLogWhereInput[]
-    userId?: StringNullableFilter<"DcsApiLog"> | string | null
+    userId?: BigIntNullableFilter<"DcsApiLog"> | bigint | number | null
     action?: StringFilter<"DcsApiLog"> | string
     endpoint?: StringFilter<"DcsApiLog"> | string
     httpMethod?: StringNullableFilter<"DcsApiLog"> | string | null
@@ -55093,7 +55261,7 @@ export namespace Prisma {
     OR?: DcsApiLogScalarWhereWithAggregatesInput[]
     NOT?: DcsApiLogScalarWhereWithAggregatesInput | DcsApiLogScalarWhereWithAggregatesInput[]
     id?: BigIntWithAggregatesFilter<"DcsApiLog"> | bigint | number
-    userId?: StringNullableWithAggregatesFilter<"DcsApiLog"> | string | null
+    userId?: BigIntNullableWithAggregatesFilter<"DcsApiLog"> | bigint | number | null
     action?: StringWithAggregatesFilter<"DcsApiLog"> | string
     endpoint?: StringWithAggregatesFilter<"DcsApiLog"> | string
     httpMethod?: StringNullableWithAggregatesFilter<"DcsApiLog"> | string | null
@@ -55109,7 +55277,7 @@ export namespace Prisma {
     OR?: TransactionWhereInput[]
     NOT?: TransactionWhereInput | TransactionWhereInput[]
     id?: BigIntFilter<"Transaction"> | bigint | number
-    userId?: StringFilter<"Transaction"> | string
+    userId?: BigIntFilter<"Transaction"> | bigint | number
     type?: EnumTransactionTypeFilter<"Transaction"> | $Enums.TransactionType
     status?: EnumTransactionStatusFilter<"Transaction"> | $Enums.TransactionStatus
     currency?: EnumExchangeCurrencyCodeFilter<"Transaction"> | $Enums.ExchangeCurrencyCode
@@ -55152,7 +55320,7 @@ export namespace Prisma {
     AND?: TransactionWhereInput | TransactionWhereInput[]
     OR?: TransactionWhereInput[]
     NOT?: TransactionWhereInput | TransactionWhereInput[]
-    userId?: StringFilter<"Transaction"> | string
+    userId?: BigIntFilter<"Transaction"> | bigint | number
     type?: EnumTransactionTypeFilter<"Transaction"> | $Enums.TransactionType
     status?: EnumTransactionStatusFilter<"Transaction"> | $Enums.TransactionStatus
     currency?: EnumExchangeCurrencyCodeFilter<"Transaction"> | $Enums.ExchangeCurrencyCode
@@ -55193,7 +55361,7 @@ export namespace Prisma {
     OR?: TransactionScalarWhereWithAggregatesInput[]
     NOT?: TransactionScalarWhereWithAggregatesInput | TransactionScalarWhereWithAggregatesInput[]
     id?: BigIntWithAggregatesFilter<"Transaction"> | bigint | number
-    userId?: StringWithAggregatesFilter<"Transaction"> | string
+    userId?: BigIntWithAggregatesFilter<"Transaction"> | bigint | number
     type?: EnumTransactionTypeWithAggregatesFilter<"Transaction"> | $Enums.TransactionType
     status?: EnumTransactionStatusWithAggregatesFilter<"Transaction"> | $Enums.TransactionStatus
     currency?: EnumExchangeCurrencyCodeWithAggregatesFilter<"Transaction"> | $Enums.ExchangeCurrencyCode
@@ -55209,7 +55377,7 @@ export namespace Prisma {
     OR?: GameRoundWhereInput[]
     NOT?: GameRoundWhereInput | GameRoundWhereInput[]
     id?: BigIntFilter<"GameRound"> | bigint | number
-    userId?: StringFilter<"GameRound"> | string
+    userId?: BigIntFilter<"GameRound"> | bigint | number
     aggregatorType?: EnumGameAggregatorTypeFilter<"GameRound"> | $Enums.GameAggregatorType
     provider?: EnumGameProviderFilter<"GameRound"> | $Enums.GameProvider
     aggregatorTxId?: StringFilter<"GameRound"> | string
@@ -55286,7 +55454,7 @@ export namespace Prisma {
     AND?: GameRoundWhereInput | GameRoundWhereInput[]
     OR?: GameRoundWhereInput[]
     NOT?: GameRoundWhereInput | GameRoundWhereInput[]
-    userId?: StringFilter<"GameRound"> | string
+    userId?: BigIntFilter<"GameRound"> | bigint | number
     aggregatorType?: EnumGameAggregatorTypeFilter<"GameRound"> | $Enums.GameAggregatorType
     provider?: EnumGameProviderFilter<"GameRound"> | $Enums.GameProvider
     aggregatorTxId?: StringFilter<"GameRound"> | string
@@ -55359,7 +55527,7 @@ export namespace Prisma {
     OR?: GameRoundScalarWhereWithAggregatesInput[]
     NOT?: GameRoundScalarWhereWithAggregatesInput | GameRoundScalarWhereWithAggregatesInput[]
     id?: BigIntWithAggregatesFilter<"GameRound"> | bigint | number
-    userId?: StringWithAggregatesFilter<"GameRound"> | string
+    userId?: BigIntWithAggregatesFilter<"GameRound"> | bigint | number
     aggregatorType?: EnumGameAggregatorTypeWithAggregatesFilter<"GameRound"> | $Enums.GameAggregatorType
     provider?: EnumGameProviderWithAggregatesFilter<"GameRound"> | $Enums.GameProvider
     aggregatorTxId?: StringWithAggregatesFilter<"GameRound"> | string
@@ -55392,7 +55560,7 @@ export namespace Prisma {
     OR?: GameBetWhereInput[]
     NOT?: GameBetWhereInput | GameBetWhereInput[]
     id?: BigIntFilter<"GameBet"> | bigint | number
-    userId?: StringFilter<"GameBet"> | string
+    userId?: BigIntFilter<"GameBet"> | bigint | number
     gameRoundId?: BigIntFilter<"GameBet"> | bigint | number
     aggregatorType?: EnumGameAggregatorTypeFilter<"GameBet"> | $Enums.GameAggregatorType
     aggregatorBetId?: StringFilter<"GameBet"> | string
@@ -55428,7 +55596,7 @@ export namespace Prisma {
     AND?: GameBetWhereInput | GameBetWhereInput[]
     OR?: GameBetWhereInput[]
     NOT?: GameBetWhereInput | GameBetWhereInput[]
-    userId?: StringFilter<"GameBet"> | string
+    userId?: BigIntFilter<"GameBet"> | bigint | number
     gameRoundId?: BigIntFilter<"GameBet"> | bigint | number
     aggregatorType?: EnumGameAggregatorTypeFilter<"GameBet"> | $Enums.GameAggregatorType
     aggregatorBetId?: StringFilter<"GameBet"> | string
@@ -55467,7 +55635,7 @@ export namespace Prisma {
     OR?: GameBetScalarWhereWithAggregatesInput[]
     NOT?: GameBetScalarWhereWithAggregatesInput | GameBetScalarWhereWithAggregatesInput[]
     id?: BigIntWithAggregatesFilter<"GameBet"> | bigint | number
-    userId?: StringWithAggregatesFilter<"GameBet"> | string
+    userId?: BigIntWithAggregatesFilter<"GameBet"> | bigint | number
     gameRoundId?: BigIntWithAggregatesFilter<"GameBet"> | bigint | number
     aggregatorType?: EnumGameAggregatorTypeWithAggregatesFilter<"GameBet"> | $Enums.GameAggregatorType
     aggregatorBetId?: StringWithAggregatesFilter<"GameBet"> | string
@@ -55485,7 +55653,7 @@ export namespace Prisma {
     OR?: GameWinWhereInput[]
     NOT?: GameWinWhereInput | GameWinWhereInput[]
     id?: BigIntFilter<"GameWin"> | bigint | number
-    userId?: StringFilter<"GameWin"> | string
+    userId?: BigIntFilter<"GameWin"> | bigint | number
     gameRoundId?: BigIntFilter<"GameWin"> | bigint | number
     aggregatorType?: EnumGameAggregatorTypeFilter<"GameWin"> | $Enums.GameAggregatorType
     aggregatorWinId?: StringFilter<"GameWin"> | string
@@ -55519,7 +55687,7 @@ export namespace Prisma {
     AND?: GameWinWhereInput | GameWinWhereInput[]
     OR?: GameWinWhereInput[]
     NOT?: GameWinWhereInput | GameWinWhereInput[]
-    userId?: StringFilter<"GameWin"> | string
+    userId?: BigIntFilter<"GameWin"> | bigint | number
     gameRoundId?: BigIntFilter<"GameWin"> | bigint | number
     aggregatorType?: EnumGameAggregatorTypeFilter<"GameWin"> | $Enums.GameAggregatorType
     aggregatorWinId?: StringFilter<"GameWin"> | string
@@ -55556,7 +55724,7 @@ export namespace Prisma {
     OR?: GameWinScalarWhereWithAggregatesInput[]
     NOT?: GameWinScalarWhereWithAggregatesInput | GameWinScalarWhereWithAggregatesInput[]
     id?: BigIntWithAggregatesFilter<"GameWin"> | bigint | number
-    userId?: StringWithAggregatesFilter<"GameWin"> | string
+    userId?: BigIntWithAggregatesFilter<"GameWin"> | bigint | number
     gameRoundId?: BigIntWithAggregatesFilter<"GameWin"> | bigint | number
     aggregatorType?: EnumGameAggregatorTypeWithAggregatesFilter<"GameWin"> | $Enums.GameAggregatorType
     aggregatorWinId?: StringWithAggregatesFilter<"GameWin"> | string
@@ -56060,7 +56228,7 @@ export namespace Prisma {
     OR?: CompTransactionWhereInput[]
     NOT?: CompTransactionWhereInput | CompTransactionWhereInput[]
     id?: BigIntFilter<"CompTransaction"> | bigint | number
-    userId?: StringFilter<"CompTransaction"> | string
+    userId?: BigIntFilter<"CompTransaction"> | bigint | number
     amount?: DecimalFilter<"CompTransaction"> | Decimal | DecimalJsLike | number | string
     dailyCompEarningId?: IntFilter<"CompTransaction"> | number
     transactionId?: BigIntFilter<"CompTransaction"> | bigint | number
@@ -56090,7 +56258,7 @@ export namespace Prisma {
     AND?: CompTransactionWhereInput | CompTransactionWhereInput[]
     OR?: CompTransactionWhereInput[]
     NOT?: CompTransactionWhereInput | CompTransactionWhereInput[]
-    userId?: StringFilter<"CompTransaction"> | string
+    userId?: BigIntFilter<"CompTransaction"> | bigint | number
     amount?: DecimalFilter<"CompTransaction"> | Decimal | DecimalJsLike | number | string
     dailyCompEarningId?: IntFilter<"CompTransaction"> | number
     createdAt?: DateTimeFilter<"CompTransaction"> | Date | string
@@ -56120,7 +56288,7 @@ export namespace Prisma {
     OR?: CompTransactionScalarWhereWithAggregatesInput[]
     NOT?: CompTransactionScalarWhereWithAggregatesInput | CompTransactionScalarWhereWithAggregatesInput[]
     id?: BigIntWithAggregatesFilter<"CompTransaction"> | bigint | number
-    userId?: StringWithAggregatesFilter<"CompTransaction"> | string
+    userId?: BigIntWithAggregatesFilter<"CompTransaction"> | bigint | number
     amount?: DecimalWithAggregatesFilter<"CompTransaction"> | Decimal | DecimalJsLike | number | string
     dailyCompEarningId?: IntWithAggregatesFilter<"CompTransaction"> | number
     transactionId?: BigIntWithAggregatesFilter<"CompTransaction"> | bigint | number
@@ -56133,7 +56301,7 @@ export namespace Prisma {
     OR?: DailyCompEarningWhereInput[]
     NOT?: DailyCompEarningWhereInput | DailyCompEarningWhereInput[]
     id?: IntFilter<"DailyCompEarning"> | number
-    userId?: StringFilter<"DailyCompEarning"> | string
+    userId?: BigIntFilter<"DailyCompEarning"> | bigint | number
     earningDate?: DateTimeFilter<"DailyCompEarning"> | Date | string
     totalContribution?: DecimalFilter<"DailyCompEarning"> | Decimal | DecimalJsLike | number | string
     compEarned?: DecimalFilter<"DailyCompEarning"> | Decimal | DecimalJsLike | number | string
@@ -56165,7 +56333,7 @@ export namespace Prisma {
     AND?: DailyCompEarningWhereInput | DailyCompEarningWhereInput[]
     OR?: DailyCompEarningWhereInput[]
     NOT?: DailyCompEarningWhereInput | DailyCompEarningWhereInput[]
-    userId?: StringFilter<"DailyCompEarning"> | string
+    userId?: BigIntFilter<"DailyCompEarning"> | bigint | number
     earningDate?: DateTimeFilter<"DailyCompEarning"> | Date | string
     totalContribution?: DecimalFilter<"DailyCompEarning"> | Decimal | DecimalJsLike | number | string
     compEarned?: DecimalFilter<"DailyCompEarning"> | Decimal | DecimalJsLike | number | string
@@ -56199,7 +56367,7 @@ export namespace Prisma {
     OR?: DailyCompEarningScalarWhereWithAggregatesInput[]
     NOT?: DailyCompEarningScalarWhereWithAggregatesInput | DailyCompEarningScalarWhereWithAggregatesInput[]
     id?: IntWithAggregatesFilter<"DailyCompEarning"> | number
-    userId?: StringWithAggregatesFilter<"DailyCompEarning"> | string
+    userId?: BigIntWithAggregatesFilter<"DailyCompEarning"> | bigint | number
     earningDate?: DateTimeWithAggregatesFilter<"DailyCompEarning"> | Date | string
     totalContribution?: DecimalWithAggregatesFilter<"DailyCompEarning"> | Decimal | DecimalJsLike | number | string
     compEarned?: DecimalWithAggregatesFilter<"DailyCompEarning"> | Decimal | DecimalJsLike | number | string
@@ -56387,7 +56555,7 @@ export namespace Prisma {
     OR?: UserPromotionWhereInput[]
     NOT?: UserPromotionWhereInput | UserPromotionWhereInput[]
     id?: IntFilter<"UserPromotion"> | number
-    userId?: StringFilter<"UserPromotion"> | string
+    userId?: BigIntFilter<"UserPromotion"> | bigint | number
     promotionId?: IntFilter<"UserPromotion"> | number
     status?: EnumUserPromotionStatusFilter<"UserPromotion"> | $Enums.UserPromotionStatus
     bonusGranted?: BoolFilter<"UserPromotion"> | boolean
@@ -56420,7 +56588,7 @@ export namespace Prisma {
     AND?: UserPromotionWhereInput | UserPromotionWhereInput[]
     OR?: UserPromotionWhereInput[]
     NOT?: UserPromotionWhereInput | UserPromotionWhereInput[]
-    userId?: StringFilter<"UserPromotion"> | string
+    userId?: BigIntFilter<"UserPromotion"> | bigint | number
     promotionId?: IntFilter<"UserPromotion"> | number
     status?: EnumUserPromotionStatusFilter<"UserPromotion"> | $Enums.UserPromotionStatus
     bonusGranted?: BoolFilter<"UserPromotion"> | boolean
@@ -56455,7 +56623,7 @@ export namespace Prisma {
     OR?: UserPromotionScalarWhereWithAggregatesInput[]
     NOT?: UserPromotionScalarWhereWithAggregatesInput | UserPromotionScalarWhereWithAggregatesInput[]
     id?: IntWithAggregatesFilter<"UserPromotion"> | number
-    userId?: StringWithAggregatesFilter<"UserPromotion"> | string
+    userId?: BigIntWithAggregatesFilter<"UserPromotion"> | bigint | number
     promotionId?: IntWithAggregatesFilter<"UserPromotion"> | number
     status?: EnumUserPromotionStatusWithAggregatesFilter<"UserPromotion"> | $Enums.UserPromotionStatus
     bonusGranted?: BoolWithAggregatesFilter<"UserPromotion"> | boolean
@@ -56726,7 +56894,7 @@ export namespace Prisma {
     OR?: VipMembershipWhereInput[]
     NOT?: VipMembershipWhereInput | VipMembershipWhereInput[]
     id?: IntFilter<"VipMembership"> | number
-    userId?: StringFilter<"VipMembership"> | string
+    userId?: BigIntFilter<"VipMembership"> | bigint | number
     vipLevelId?: IntFilter<"VipMembership"> | number
     accumulatedRolling?: DecimalFilter<"VipMembership"> | Decimal | DecimalJsLike | number | string
     totalRewardsPaid?: DecimalFilter<"VipMembership"> | Decimal | DecimalJsLike | number | string
@@ -56754,7 +56922,7 @@ export namespace Prisma {
 
   export type VipMembershipWhereUniqueInput = Prisma.AtLeast<{
     id?: number
-    userId?: string
+    userId?: bigint | number
     AND?: VipMembershipWhereInput | VipMembershipWhereInput[]
     OR?: VipMembershipWhereInput[]
     NOT?: VipMembershipWhereInput | VipMembershipWhereInput[]
@@ -56790,7 +56958,7 @@ export namespace Prisma {
     OR?: VipMembershipScalarWhereWithAggregatesInput[]
     NOT?: VipMembershipScalarWhereWithAggregatesInput | VipMembershipScalarWhereWithAggregatesInput[]
     id?: IntWithAggregatesFilter<"VipMembership"> | number
-    userId?: StringWithAggregatesFilter<"VipMembership"> | string
+    userId?: BigIntWithAggregatesFilter<"VipMembership"> | bigint | number
     vipLevelId?: IntWithAggregatesFilter<"VipMembership"> | number
     accumulatedRolling?: DecimalWithAggregatesFilter<"VipMembership"> | Decimal | DecimalJsLike | number | string
     totalRewardsPaid?: DecimalWithAggregatesFilter<"VipMembership"> | Decimal | DecimalJsLike | number | string
@@ -56804,7 +56972,7 @@ export namespace Prisma {
     OR?: VipHistoryWhereInput[]
     NOT?: VipHistoryWhereInput | VipHistoryWhereInput[]
     id?: IntFilter<"VipHistory"> | number
-    userId?: StringFilter<"VipHistory"> | string
+    userId?: BigIntFilter<"VipHistory"> | bigint | number
     previousLevelNameKey?: StringNullableFilter<"VipHistory"> | string | null
     newLevelNameKey?: StringFilter<"VipHistory"> | string
     rewardAmount?: DecimalFilter<"VipHistory"> | Decimal | DecimalJsLike | number | string
@@ -56835,7 +57003,7 @@ export namespace Prisma {
     AND?: VipHistoryWhereInput | VipHistoryWhereInput[]
     OR?: VipHistoryWhereInput[]
     NOT?: VipHistoryWhereInput | VipHistoryWhereInput[]
-    userId?: StringFilter<"VipHistory"> | string
+    userId?: BigIntFilter<"VipHistory"> | bigint | number
     previousLevelNameKey?: StringNullableFilter<"VipHistory"> | string | null
     newLevelNameKey?: StringFilter<"VipHistory"> | string
     rewardAmount?: DecimalFilter<"VipHistory"> | Decimal | DecimalJsLike | number | string
@@ -56869,7 +57037,7 @@ export namespace Prisma {
     OR?: VipHistoryScalarWhereWithAggregatesInput[]
     NOT?: VipHistoryScalarWhereWithAggregatesInput | VipHistoryScalarWhereWithAggregatesInput[]
     id?: IntWithAggregatesFilter<"VipHistory"> | number
-    userId?: StringWithAggregatesFilter<"VipHistory"> | string
+    userId?: BigIntWithAggregatesFilter<"VipHistory"> | bigint | number
     previousLevelNameKey?: StringNullableWithAggregatesFilter<"VipHistory"> | string | null
     newLevelNameKey?: StringWithAggregatesFilter<"VipHistory"> | string
     rewardAmount?: DecimalWithAggregatesFilter<"VipHistory"> | Decimal | DecimalJsLike | number | string
@@ -56884,7 +57052,7 @@ export namespace Prisma {
     OR?: RollingWhereInput[]
     NOT?: RollingWhereInput | RollingWhereInput[]
     id?: BigIntFilter<"Rolling"> | bigint | number
-    userId?: StringFilter<"Rolling"> | string
+    userId?: BigIntFilter<"Rolling"> | bigint | number
     sourceType?: EnumRollingSourceTypeFilter<"Rolling"> | $Enums.RollingSourceType
     userPromotionId?: IntNullableFilter<"Rolling"> | number | null
     requiredAmount?: DecimalFilter<"Rolling"> | Decimal | DecimalJsLike | number | string
@@ -56929,7 +57097,7 @@ export namespace Prisma {
     AND?: RollingWhereInput | RollingWhereInput[]
     OR?: RollingWhereInput[]
     NOT?: RollingWhereInput | RollingWhereInput[]
-    userId?: StringFilter<"Rolling"> | string
+    userId?: BigIntFilter<"Rolling"> | bigint | number
     sourceType?: EnumRollingSourceTypeFilter<"Rolling"> | $Enums.RollingSourceType
     userPromotionId?: IntNullableFilter<"Rolling"> | number | null
     requiredAmount?: DecimalFilter<"Rolling"> | Decimal | DecimalJsLike | number | string
@@ -56976,7 +57144,7 @@ export namespace Prisma {
     OR?: RollingScalarWhereWithAggregatesInput[]
     NOT?: RollingScalarWhereWithAggregatesInput | RollingScalarWhereWithAggregatesInput[]
     id?: BigIntWithAggregatesFilter<"Rolling"> | bigint | number
-    userId?: StringWithAggregatesFilter<"Rolling"> | string
+    userId?: BigIntWithAggregatesFilter<"Rolling"> | bigint | number
     sourceType?: EnumRollingSourceTypeWithAggregatesFilter<"Rolling"> | $Enums.RollingSourceType
     userPromotionId?: IntNullableWithAggregatesFilter<"Rolling"> | number | null
     requiredAmount?: DecimalWithAggregatesFilter<"Rolling"> | Decimal | DecimalJsLike | number | string
@@ -56997,7 +57165,7 @@ export namespace Prisma {
     OR?: UserTokenWhereInput[]
     NOT?: UserTokenWhereInput | UserTokenWhereInput[]
     id?: IntFilter<"UserToken"> | number
-    userId?: StringFilter<"UserToken"> | string
+    userId?: BigIntFilter<"UserToken"> | bigint | number
     type?: EnumTokenTypeFilter<"UserToken"> | $Enums.TokenType
     token?: StringFilter<"UserToken"> | string
     expiresAt?: DateTimeFilter<"UserToken"> | Date | string
@@ -57027,7 +57195,7 @@ export namespace Prisma {
     AND?: UserTokenWhereInput | UserTokenWhereInput[]
     OR?: UserTokenWhereInput[]
     NOT?: UserTokenWhereInput | UserTokenWhereInput[]
-    userId?: StringFilter<"UserToken"> | string
+    userId?: BigIntFilter<"UserToken"> | bigint | number
     type?: EnumTokenTypeFilter<"UserToken"> | $Enums.TokenType
     expiresAt?: DateTimeFilter<"UserToken"> | Date | string
     usedAt?: DateTimeNullableFilter<"UserToken"> | Date | string | null
@@ -57059,7 +57227,7 @@ export namespace Prisma {
     OR?: UserTokenScalarWhereWithAggregatesInput[]
     NOT?: UserTokenScalarWhereWithAggregatesInput | UserTokenScalarWhereWithAggregatesInput[]
     id?: IntWithAggregatesFilter<"UserToken"> | number
-    userId?: StringWithAggregatesFilter<"UserToken"> | string
+    userId?: BigIntWithAggregatesFilter<"UserToken"> | bigint | number
     type?: EnumTokenTypeWithAggregatesFilter<"UserToken"> | $Enums.TokenType
     token?: StringWithAggregatesFilter<"UserToken"> | string
     expiresAt?: DateTimeWithAggregatesFilter<"UserToken"> | Date | string
@@ -57074,7 +57242,7 @@ export namespace Prisma {
     OR?: EmailLogWhereInput[]
     NOT?: EmailLogWhereInput | EmailLogWhereInput[]
     id?: IntFilter<"EmailLog"> | number
-    userId?: StringNullableFilter<"EmailLog"> | string | null
+    userId?: BigIntNullableFilter<"EmailLog"> | bigint | number | null
     type?: EnumEmailTypeFilter<"EmailLog"> | $Enums.EmailType
     status?: EnumEmailStatusFilter<"EmailLog"> | $Enums.EmailStatus
     to?: StringFilter<"EmailLog"> | string
@@ -57109,7 +57277,7 @@ export namespace Prisma {
     AND?: EmailLogWhereInput | EmailLogWhereInput[]
     OR?: EmailLogWhereInput[]
     NOT?: EmailLogWhereInput | EmailLogWhereInput[]
-    userId?: StringNullableFilter<"EmailLog"> | string | null
+    userId?: BigIntNullableFilter<"EmailLog"> | bigint | number | null
     type?: EnumEmailTypeFilter<"EmailLog"> | $Enums.EmailType
     status?: EnumEmailStatusFilter<"EmailLog"> | $Enums.EmailStatus
     to?: StringFilter<"EmailLog"> | string
@@ -57148,7 +57316,7 @@ export namespace Prisma {
     OR?: EmailLogScalarWhereWithAggregatesInput[]
     NOT?: EmailLogScalarWhereWithAggregatesInput | EmailLogScalarWhereWithAggregatesInput[]
     id?: IntWithAggregatesFilter<"EmailLog"> | number
-    userId?: StringNullableWithAggregatesFilter<"EmailLog"> | string | null
+    userId?: BigIntNullableWithAggregatesFilter<"EmailLog"> | bigint | number | null
     type?: EnumEmailTypeWithAggregatesFilter<"EmailLog"> | $Enums.EmailType
     status?: EnumEmailStatusWithAggregatesFilter<"EmailLog"> | $Enums.EmailStatus
     to?: StringWithAggregatesFilter<"EmailLog"> | string
@@ -57166,7 +57334,7 @@ export namespace Prisma {
     OR?: GameSessionWhereInput[]
     NOT?: GameSessionWhereInput | GameSessionWhereInput[]
     id?: BigIntFilter<"GameSession"> | bigint | number
-    userId?: StringFilter<"GameSession"> | string
+    userId?: BigIntFilter<"GameSession"> | bigint | number
     createdAt?: DateTimeFilter<"GameSession"> | Date | string
     updatedAt?: DateTimeFilter<"GameSession"> | Date | string
     lastAccessedAt?: DateTimeFilter<"GameSession"> | Date | string
@@ -57206,7 +57374,7 @@ export namespace Prisma {
     AND?: GameSessionWhereInput | GameSessionWhereInput[]
     OR?: GameSessionWhereInput[]
     NOT?: GameSessionWhereInput | GameSessionWhereInput[]
-    userId?: StringFilter<"GameSession"> | string
+    userId?: BigIntFilter<"GameSession"> | bigint | number
     createdAt?: DateTimeFilter<"GameSession"> | Date | string
     updatedAt?: DateTimeFilter<"GameSession"> | Date | string
     lastAccessedAt?: DateTimeFilter<"GameSession"> | Date | string
@@ -57246,7 +57414,7 @@ export namespace Prisma {
     OR?: GameSessionScalarWhereWithAggregatesInput[]
     NOT?: GameSessionScalarWhereWithAggregatesInput | GameSessionScalarWhereWithAggregatesInput[]
     id?: BigIntWithAggregatesFilter<"GameSession"> | bigint | number
-    userId?: StringWithAggregatesFilter<"GameSession"> | string
+    userId?: BigIntWithAggregatesFilter<"GameSession"> | bigint | number
     createdAt?: DateTimeWithAggregatesFilter<"GameSession"> | Date | string
     updatedAt?: DateTimeWithAggregatesFilter<"GameSession"> | Date | string
     lastAccessedAt?: DateTimeWithAggregatesFilter<"GameSession"> | Date | string
@@ -57420,7 +57588,7 @@ export namespace Prisma {
     OR?: AffiliateCodeWhereInput[]
     NOT?: AffiliateCodeWhereInput | AffiliateCodeWhereInput[]
     id?: StringFilter<"AffiliateCode"> | string
-    userId?: StringFilter<"AffiliateCode"> | string
+    userId?: BigIntFilter<"AffiliateCode"> | bigint | number
     code?: StringFilter<"AffiliateCode"> | string
     campaignName?: StringNullableFilter<"AffiliateCode"> | string | null
     description?: StringNullableFilter<"AffiliateCode"> | string | null
@@ -57456,7 +57624,7 @@ export namespace Prisma {
     AND?: AffiliateCodeWhereInput | AffiliateCodeWhereInput[]
     OR?: AffiliateCodeWhereInput[]
     NOT?: AffiliateCodeWhereInput | AffiliateCodeWhereInput[]
-    userId?: StringFilter<"AffiliateCode"> | string
+    userId?: BigIntFilter<"AffiliateCode"> | bigint | number
     campaignName?: StringNullableFilter<"AffiliateCode"> | string | null
     description?: StringNullableFilter<"AffiliateCode"> | string | null
     isActive?: BoolFilter<"AffiliateCode"> | boolean
@@ -57482,8 +57650,10 @@ export namespace Prisma {
     updatedAt?: SortOrder
     lastUsedAt?: SortOrderInput | SortOrder
     _count?: AffiliateCodeCountOrderByAggregateInput
+    _avg?: AffiliateCodeAvgOrderByAggregateInput
     _max?: AffiliateCodeMaxOrderByAggregateInput
     _min?: AffiliateCodeMinOrderByAggregateInput
+    _sum?: AffiliateCodeSumOrderByAggregateInput
   }
 
   export type AffiliateCodeScalarWhereWithAggregatesInput = {
@@ -57491,7 +57661,7 @@ export namespace Prisma {
     OR?: AffiliateCodeScalarWhereWithAggregatesInput[]
     NOT?: AffiliateCodeScalarWhereWithAggregatesInput | AffiliateCodeScalarWhereWithAggregatesInput[]
     id?: StringWithAggregatesFilter<"AffiliateCode"> | string
-    userId?: StringWithAggregatesFilter<"AffiliateCode"> | string
+    userId?: BigIntWithAggregatesFilter<"AffiliateCode"> | bigint | number
     code?: StringWithAggregatesFilter<"AffiliateCode"> | string
     campaignName?: StringNullableWithAggregatesFilter<"AffiliateCode"> | string | null
     description?: StringNullableWithAggregatesFilter<"AffiliateCode"> | string | null
@@ -57508,8 +57678,8 @@ export namespace Prisma {
     OR?: ReferralWhereInput[]
     NOT?: ReferralWhereInput | ReferralWhereInput[]
     id?: StringFilter<"Referral"> | string
-    affiliateId?: StringFilter<"Referral"> | string
-    subUserId?: StringFilter<"Referral"> | string
+    affiliateId?: BigIntFilter<"Referral"> | bigint | number
+    subUserId?: BigIntFilter<"Referral"> | bigint | number
     ipAddress?: StringNullableFilter<"Referral"> | string | null
     deviceFingerprint?: StringNullableFilter<"Referral"> | string | null
     userAgent?: StringNullableFilter<"Referral"> | string | null
@@ -57542,8 +57712,8 @@ export namespace Prisma {
     AND?: ReferralWhereInput | ReferralWhereInput[]
     OR?: ReferralWhereInput[]
     NOT?: ReferralWhereInput | ReferralWhereInput[]
-    affiliateId?: StringFilter<"Referral"> | string
-    subUserId?: StringFilter<"Referral"> | string
+    affiliateId?: BigIntFilter<"Referral"> | bigint | number
+    subUserId?: BigIntFilter<"Referral"> | bigint | number
     ipAddress?: StringNullableFilter<"Referral"> | string | null
     deviceFingerprint?: StringNullableFilter<"Referral"> | string | null
     userAgent?: StringNullableFilter<"Referral"> | string | null
@@ -57566,8 +57736,10 @@ export namespace Prisma {
     updatedAt?: SortOrder
     codeId?: SortOrder
     _count?: ReferralCountOrderByAggregateInput
+    _avg?: ReferralAvgOrderByAggregateInput
     _max?: ReferralMaxOrderByAggregateInput
     _min?: ReferralMinOrderByAggregateInput
+    _sum?: ReferralSumOrderByAggregateInput
   }
 
   export type ReferralScalarWhereWithAggregatesInput = {
@@ -57575,8 +57747,8 @@ export namespace Prisma {
     OR?: ReferralScalarWhereWithAggregatesInput[]
     NOT?: ReferralScalarWhereWithAggregatesInput | ReferralScalarWhereWithAggregatesInput[]
     id?: StringWithAggregatesFilter<"Referral"> | string
-    affiliateId?: StringWithAggregatesFilter<"Referral"> | string
-    subUserId?: StringWithAggregatesFilter<"Referral"> | string
+    affiliateId?: BigIntWithAggregatesFilter<"Referral"> | bigint | number
+    subUserId?: BigIntWithAggregatesFilter<"Referral"> | bigint | number
     ipAddress?: StringNullableWithAggregatesFilter<"Referral"> | string | null
     deviceFingerprint?: StringNullableWithAggregatesFilter<"Referral"> | string | null
     userAgent?: StringNullableWithAggregatesFilter<"Referral"> | string | null
@@ -57589,7 +57761,7 @@ export namespace Prisma {
     AND?: AffiliateWalletWhereInput | AffiliateWalletWhereInput[]
     OR?: AffiliateWalletWhereInput[]
     NOT?: AffiliateWalletWhereInput | AffiliateWalletWhereInput[]
-    affiliateId?: StringFilter<"AffiliateWallet"> | string
+    affiliateId?: BigIntFilter<"AffiliateWallet"> | bigint | number
     currency?: EnumExchangeCurrencyCodeFilter<"AffiliateWallet"> | $Enums.ExchangeCurrencyCode
     availableBalance?: DecimalFilter<"AffiliateWallet"> | Decimal | DecimalJsLike | number | string
     pendingBalance?: DecimalFilter<"AffiliateWallet"> | Decimal | DecimalJsLike | number | string
@@ -57613,7 +57785,7 @@ export namespace Prisma {
     AND?: AffiliateWalletWhereInput | AffiliateWalletWhereInput[]
     OR?: AffiliateWalletWhereInput[]
     NOT?: AffiliateWalletWhereInput | AffiliateWalletWhereInput[]
-    affiliateId?: StringFilter<"AffiliateWallet"> | string
+    affiliateId?: BigIntFilter<"AffiliateWallet"> | bigint | number
     currency?: EnumExchangeCurrencyCodeFilter<"AffiliateWallet"> | $Enums.ExchangeCurrencyCode
     availableBalance?: DecimalFilter<"AffiliateWallet"> | Decimal | DecimalJsLike | number | string
     pendingBalance?: DecimalFilter<"AffiliateWallet"> | Decimal | DecimalJsLike | number | string
@@ -57640,7 +57812,7 @@ export namespace Prisma {
     AND?: AffiliateWalletScalarWhereWithAggregatesInput | AffiliateWalletScalarWhereWithAggregatesInput[]
     OR?: AffiliateWalletScalarWhereWithAggregatesInput[]
     NOT?: AffiliateWalletScalarWhereWithAggregatesInput | AffiliateWalletScalarWhereWithAggregatesInput[]
-    affiliateId?: StringWithAggregatesFilter<"AffiliateWallet"> | string
+    affiliateId?: BigIntWithAggregatesFilter<"AffiliateWallet"> | bigint | number
     currency?: EnumExchangeCurrencyCodeWithAggregatesFilter<"AffiliateWallet"> | $Enums.ExchangeCurrencyCode
     availableBalance?: DecimalWithAggregatesFilter<"AffiliateWallet"> | Decimal | DecimalJsLike | number | string
     pendingBalance?: DecimalWithAggregatesFilter<"AffiliateWallet"> | Decimal | DecimalJsLike | number | string
@@ -57652,8 +57824,8 @@ export namespace Prisma {
     AND?: AffiliateCommissionWhereInput | AffiliateCommissionWhereInput[]
     OR?: AffiliateCommissionWhereInput[]
     NOT?: AffiliateCommissionWhereInput | AffiliateCommissionWhereInput[]
-    affiliateId?: StringFilter<"AffiliateCommission"> | string
-    subUserId?: StringFilter<"AffiliateCommission"> | string
+    affiliateId?: BigIntFilter<"AffiliateCommission"> | bigint | number
+    subUserId?: BigIntFilter<"AffiliateCommission"> | bigint | number
     gameRoundId?: BigIntNullableFilter<"AffiliateCommission"> | bigint | number | null
     wagerAmount?: DecimalFilter<"AffiliateCommission"> | Decimal | DecimalJsLike | number | string
     winAmount?: DecimalNullableFilter<"AffiliateCommission"> | Decimal | DecimalJsLike | number | string | null
@@ -57703,8 +57875,8 @@ export namespace Prisma {
     AND?: AffiliateCommissionWhereInput | AffiliateCommissionWhereInput[]
     OR?: AffiliateCommissionWhereInput[]
     NOT?: AffiliateCommissionWhereInput | AffiliateCommissionWhereInput[]
-    affiliateId?: StringFilter<"AffiliateCommission"> | string
-    subUserId?: StringFilter<"AffiliateCommission"> | string
+    affiliateId?: BigIntFilter<"AffiliateCommission"> | bigint | number
+    subUserId?: BigIntFilter<"AffiliateCommission"> | bigint | number
     gameRoundId?: BigIntNullableFilter<"AffiliateCommission"> | bigint | number | null
     wagerAmount?: DecimalFilter<"AffiliateCommission"> | Decimal | DecimalJsLike | number | string
     winAmount?: DecimalNullableFilter<"AffiliateCommission"> | Decimal | DecimalJsLike | number | string | null
@@ -57752,8 +57924,8 @@ export namespace Prisma {
     AND?: AffiliateCommissionScalarWhereWithAggregatesInput | AffiliateCommissionScalarWhereWithAggregatesInput[]
     OR?: AffiliateCommissionScalarWhereWithAggregatesInput[]
     NOT?: AffiliateCommissionScalarWhereWithAggregatesInput | AffiliateCommissionScalarWhereWithAggregatesInput[]
-    affiliateId?: StringWithAggregatesFilter<"AffiliateCommission"> | string
-    subUserId?: StringWithAggregatesFilter<"AffiliateCommission"> | string
+    affiliateId?: BigIntWithAggregatesFilter<"AffiliateCommission"> | bigint | number
+    subUserId?: BigIntWithAggregatesFilter<"AffiliateCommission"> | bigint | number
     gameRoundId?: BigIntNullableWithAggregatesFilter<"AffiliateCommission"> | bigint | number | null
     wagerAmount?: DecimalWithAggregatesFilter<"AffiliateCommission"> | Decimal | DecimalJsLike | number | string
     winAmount?: DecimalNullableWithAggregatesFilter<"AffiliateCommission"> | Decimal | DecimalJsLike | number | string | null
@@ -57775,7 +57947,7 @@ export namespace Prisma {
     AND?: AffiliateTierWhereInput | AffiliateTierWhereInput[]
     OR?: AffiliateTierWhereInput[]
     NOT?: AffiliateTierWhereInput | AffiliateTierWhereInput[]
-    affiliateId?: StringFilter<"AffiliateTier"> | string
+    affiliateId?: BigIntFilter<"AffiliateTier"> | bigint | number
     tier?: EnumAffiliateTierLevelFilter<"AffiliateTier"> | $Enums.AffiliateTierLevel
     baseRate?: DecimalFilter<"AffiliateTier"> | Decimal | DecimalJsLike | number | string
     customRate?: DecimalNullableFilter<"AffiliateTier"> | Decimal | DecimalJsLike | number | string | null
@@ -57807,7 +57979,7 @@ export namespace Prisma {
   }
 
   export type AffiliateTierWhereUniqueInput = Prisma.AtLeast<{
-    affiliateId?: string
+    affiliateId?: bigint | number
     uid?: string
     id?: bigint | number
     AND?: AffiliateTierWhereInput | AffiliateTierWhereInput[]
@@ -57849,7 +58021,7 @@ export namespace Prisma {
     AND?: AffiliateTierScalarWhereWithAggregatesInput | AffiliateTierScalarWhereWithAggregatesInput[]
     OR?: AffiliateTierScalarWhereWithAggregatesInput[]
     NOT?: AffiliateTierScalarWhereWithAggregatesInput | AffiliateTierScalarWhereWithAggregatesInput[]
-    affiliateId?: StringWithAggregatesFilter<"AffiliateTier"> | string
+    affiliateId?: BigIntWithAggregatesFilter<"AffiliateTier"> | bigint | number
     tier?: EnumAffiliateTierLevelWithAggregatesFilter<"AffiliateTier"> | $Enums.AffiliateTierLevel
     baseRate?: DecimalWithAggregatesFilter<"AffiliateTier"> | Decimal | DecimalJsLike | number | string
     customRate?: DecimalNullableWithAggregatesFilter<"AffiliateTier"> | Decimal | DecimalJsLike | number | string | null
@@ -57869,7 +58041,7 @@ export namespace Prisma {
     NOT?: LoginAttemptWhereInput | LoginAttemptWhereInput[]
     id?: BigIntFilter<"LoginAttempt"> | bigint | number
     uid?: StringFilter<"LoginAttempt"> | string
-    userId?: StringNullableFilter<"LoginAttempt"> | string | null
+    userId?: BigIntNullableFilter<"LoginAttempt"> | bigint | number | null
     result?: EnumLoginAttemptResultFilter<"LoginAttempt"> | $Enums.LoginAttemptResult
     failureReason?: EnumLoginFailureReasonNullableFilter<"LoginAttempt"> | $Enums.LoginFailureReason | null
     ipAddress?: StringNullableFilter<"LoginAttempt"> | string | null
@@ -57904,7 +58076,7 @@ export namespace Prisma {
     AND?: LoginAttemptWhereInput | LoginAttemptWhereInput[]
     OR?: LoginAttemptWhereInput[]
     NOT?: LoginAttemptWhereInput | LoginAttemptWhereInput[]
-    userId?: StringNullableFilter<"LoginAttempt"> | string | null
+    userId?: BigIntNullableFilter<"LoginAttempt"> | bigint | number | null
     result?: EnumLoginAttemptResultFilter<"LoginAttempt"> | $Enums.LoginAttemptResult
     failureReason?: EnumLoginFailureReasonNullableFilter<"LoginAttempt"> | $Enums.LoginFailureReason | null
     ipAddress?: StringNullableFilter<"LoginAttempt"> | string | null
@@ -57943,7 +58115,7 @@ export namespace Prisma {
     NOT?: LoginAttemptScalarWhereWithAggregatesInput | LoginAttemptScalarWhereWithAggregatesInput[]
     id?: BigIntWithAggregatesFilter<"LoginAttempt"> | bigint | number
     uid?: StringWithAggregatesFilter<"LoginAttempt"> | string
-    userId?: StringNullableWithAggregatesFilter<"LoginAttempt"> | string | null
+    userId?: BigIntNullableWithAggregatesFilter<"LoginAttempt"> | bigint | number | null
     result?: EnumLoginAttemptResultWithAggregatesFilter<"LoginAttempt"> | $Enums.LoginAttemptResult
     failureReason?: EnumLoginFailureReasonNullableWithAggregatesFilter<"LoginAttempt"> | $Enums.LoginFailureReason | null
     ipAddress?: StringNullableWithAggregatesFilter<"LoginAttempt"> | string | null
@@ -57956,8 +58128,8 @@ export namespace Prisma {
   }
 
   export type UserCreateInput = {
-    id?: string
-    numericId?: number
+    id?: bigint | number
+    uid?: string
     whitecliffId?: bigint | number | null
     whitecliffSystemId?: bigint | number | null
     whitecliffUsername?: string | null
@@ -57999,8 +58171,8 @@ export namespace Prisma {
   }
 
   export type UserUncheckedCreateInput = {
-    id?: string
-    numericId?: number
+    id?: bigint | number
+    uid?: string
     whitecliffId?: bigint | number | null
     whitecliffSystemId?: bigint | number | null
     whitecliffUsername?: string | null
@@ -58042,7 +58214,8 @@ export namespace Prisma {
   }
 
   export type UserUpdateInput = {
-    id?: StringFieldUpdateOperationsInput | string
+    id?: BigIntFieldUpdateOperationsInput | bigint | number
+    uid?: StringFieldUpdateOperationsInput | string
     whitecliffId?: NullableBigIntFieldUpdateOperationsInput | bigint | number | null
     whitecliffSystemId?: NullableBigIntFieldUpdateOperationsInput | bigint | number | null
     whitecliffUsername?: NullableStringFieldUpdateOperationsInput | string | null
@@ -58084,8 +58257,8 @@ export namespace Prisma {
   }
 
   export type UserUncheckedUpdateInput = {
-    id?: StringFieldUpdateOperationsInput | string
-    numericId?: IntFieldUpdateOperationsInput | number
+    id?: BigIntFieldUpdateOperationsInput | bigint | number
+    uid?: StringFieldUpdateOperationsInput | string
     whitecliffId?: NullableBigIntFieldUpdateOperationsInput | bigint | number | null
     whitecliffSystemId?: NullableBigIntFieldUpdateOperationsInput | bigint | number | null
     whitecliffUsername?: NullableStringFieldUpdateOperationsInput | string | null
@@ -58127,8 +58300,8 @@ export namespace Prisma {
   }
 
   export type UserCreateManyInput = {
-    id?: string
-    numericId?: number
+    id?: bigint | number
+    uid?: string
     whitecliffId?: bigint | number | null
     whitecliffSystemId?: bigint | number | null
     whitecliffUsername?: string | null
@@ -58149,7 +58322,8 @@ export namespace Prisma {
   }
 
   export type UserUpdateManyMutationInput = {
-    id?: StringFieldUpdateOperationsInput | string
+    id?: BigIntFieldUpdateOperationsInput | bigint | number
+    uid?: StringFieldUpdateOperationsInput | string
     whitecliffId?: NullableBigIntFieldUpdateOperationsInput | bigint | number | null
     whitecliffSystemId?: NullableBigIntFieldUpdateOperationsInput | bigint | number | null
     whitecliffUsername?: NullableStringFieldUpdateOperationsInput | string | null
@@ -58170,8 +58344,8 @@ export namespace Prisma {
   }
 
   export type UserUncheckedUpdateManyInput = {
-    id?: StringFieldUpdateOperationsInput | string
-    numericId?: IntFieldUpdateOperationsInput | number
+    id?: BigIntFieldUpdateOperationsInput | bigint | number
+    uid?: StringFieldUpdateOperationsInput | string
     whitecliffId?: NullableBigIntFieldUpdateOperationsInput | bigint | number | null
     whitecliffSystemId?: NullableBigIntFieldUpdateOperationsInput | bigint | number | null
     whitecliffUsername?: NullableStringFieldUpdateOperationsInput | string | null
@@ -58193,7 +58367,7 @@ export namespace Prisma {
 
   export type UserSessionCreateInput = {
     sessionId: string
-    deviceInfo?: string | null
+    debetsiceInfo?: string | null
     userAgent?: string | null
     ipAddress?: string | null
     isMobile?: boolean | null
@@ -58208,9 +58382,9 @@ export namespace Prisma {
   }
 
   export type UserSessionUncheckedCreateInput = {
-    userId: string
+    userId: bigint | number
     sessionId: string
-    deviceInfo?: string | null
+    debetsiceInfo?: string | null
     userAgent?: string | null
     ipAddress?: string | null
     isMobile?: boolean | null
@@ -58225,7 +58399,7 @@ export namespace Prisma {
 
   export type UserSessionUpdateInput = {
     sessionId?: StringFieldUpdateOperationsInput | string
-    deviceInfo?: NullableStringFieldUpdateOperationsInput | string | null
+    debetsiceInfo?: NullableStringFieldUpdateOperationsInput | string | null
     userAgent?: NullableStringFieldUpdateOperationsInput | string | null
     ipAddress?: NullableStringFieldUpdateOperationsInput | string | null
     isMobile?: NullableBoolFieldUpdateOperationsInput | boolean | null
@@ -58240,9 +58414,9 @@ export namespace Prisma {
   }
 
   export type UserSessionUncheckedUpdateInput = {
-    userId?: StringFieldUpdateOperationsInput | string
+    userId?: BigIntFieldUpdateOperationsInput | bigint | number
     sessionId?: StringFieldUpdateOperationsInput | string
-    deviceInfo?: NullableStringFieldUpdateOperationsInput | string | null
+    debetsiceInfo?: NullableStringFieldUpdateOperationsInput | string | null
     userAgent?: NullableStringFieldUpdateOperationsInput | string | null
     ipAddress?: NullableStringFieldUpdateOperationsInput | string | null
     isMobile?: NullableBoolFieldUpdateOperationsInput | boolean | null
@@ -58256,9 +58430,9 @@ export namespace Prisma {
   }
 
   export type UserSessionCreateManyInput = {
-    userId: string
+    userId: bigint | number
     sessionId: string
-    deviceInfo?: string | null
+    debetsiceInfo?: string | null
     userAgent?: string | null
     ipAddress?: string | null
     isMobile?: boolean | null
@@ -58273,7 +58447,7 @@ export namespace Prisma {
 
   export type UserSessionUpdateManyMutationInput = {
     sessionId?: StringFieldUpdateOperationsInput | string
-    deviceInfo?: NullableStringFieldUpdateOperationsInput | string | null
+    debetsiceInfo?: NullableStringFieldUpdateOperationsInput | string | null
     userAgent?: NullableStringFieldUpdateOperationsInput | string | null
     ipAddress?: NullableStringFieldUpdateOperationsInput | string | null
     isMobile?: NullableBoolFieldUpdateOperationsInput | boolean | null
@@ -58287,9 +58461,9 @@ export namespace Prisma {
   }
 
   export type UserSessionUncheckedUpdateManyInput = {
-    userId?: StringFieldUpdateOperationsInput | string
+    userId?: BigIntFieldUpdateOperationsInput | bigint | number
     sessionId?: StringFieldUpdateOperationsInput | string
-    deviceInfo?: NullableStringFieldUpdateOperationsInput | string | null
+    debetsiceInfo?: NullableStringFieldUpdateOperationsInput | string | null
     userAgent?: NullableStringFieldUpdateOperationsInput | string | null
     ipAddress?: NullableStringFieldUpdateOperationsInput | string | null
     isMobile?: NullableBoolFieldUpdateOperationsInput | boolean | null
@@ -58311,7 +58485,7 @@ export namespace Prisma {
   }
 
   export type UserBalanceUncheckedCreateInput = {
-    userId: string
+    userId: bigint | number
     currency: $Enums.ExchangeCurrencyCode
     mainBalance?: Decimal | DecimalJsLike | number | string
     bonusBalance?: Decimal | DecimalJsLike | number | string
@@ -58327,7 +58501,7 @@ export namespace Prisma {
   }
 
   export type UserBalanceUncheckedUpdateInput = {
-    userId?: StringFieldUpdateOperationsInput | string
+    userId?: BigIntFieldUpdateOperationsInput | bigint | number
     currency?: EnumExchangeCurrencyCodeFieldUpdateOperationsInput | $Enums.ExchangeCurrencyCode
     mainBalance?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
     bonusBalance?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
@@ -58335,7 +58509,7 @@ export namespace Prisma {
   }
 
   export type UserBalanceCreateManyInput = {
-    userId: string
+    userId: bigint | number
     currency: $Enums.ExchangeCurrencyCode
     mainBalance?: Decimal | DecimalJsLike | number | string
     bonusBalance?: Decimal | DecimalJsLike | number | string
@@ -58350,7 +58524,7 @@ export namespace Prisma {
   }
 
   export type UserBalanceUncheckedUpdateManyInput = {
-    userId?: StringFieldUpdateOperationsInput | string
+    userId?: BigIntFieldUpdateOperationsInput | bigint | number
     currency?: EnumExchangeCurrencyCodeFieldUpdateOperationsInput | $Enums.ExchangeCurrencyCode
     mainBalance?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
     bonusBalance?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
@@ -58373,7 +58547,7 @@ export namespace Prisma {
   }
 
   export type UserBalanceStatsUncheckedCreateInput = {
-    userId: string
+    userId: bigint | number
     currency: $Enums.ExchangeCurrencyCode
     totalDeposit?: Decimal | DecimalJsLike | number | string
     totalWithdraw?: Decimal | DecimalJsLike | number | string
@@ -58403,7 +58577,7 @@ export namespace Prisma {
   }
 
   export type UserBalanceStatsUncheckedUpdateInput = {
-    userId?: StringFieldUpdateOperationsInput | string
+    userId?: BigIntFieldUpdateOperationsInput | bigint | number
     currency?: EnumExchangeCurrencyCodeFieldUpdateOperationsInput | $Enums.ExchangeCurrencyCode
     totalDeposit?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
     totalWithdraw?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
@@ -58418,7 +58592,7 @@ export namespace Prisma {
   }
 
   export type UserBalanceStatsCreateManyInput = {
-    userId: string
+    userId: bigint | number
     currency: $Enums.ExchangeCurrencyCode
     totalDeposit?: Decimal | DecimalJsLike | number | string
     totalWithdraw?: Decimal | DecimalJsLike | number | string
@@ -58447,7 +58621,7 @@ export namespace Prisma {
   }
 
   export type UserBalanceStatsUncheckedUpdateManyInput = {
-    userId?: StringFieldUpdateOperationsInput | string
+    userId?: BigIntFieldUpdateOperationsInput | bigint | number
     currency?: EnumExchangeCurrencyCodeFieldUpdateOperationsInput | $Enums.ExchangeCurrencyCode
     totalDeposit?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
     totalWithdraw?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
@@ -58463,7 +58637,7 @@ export namespace Prisma {
 
   export type ActivityLogCreateInput = {
     id?: bigint | number
-    userId: string
+    userId: bigint | number
     isAdmin?: boolean
     activityType: string
     status: string
@@ -58479,7 +58653,7 @@ export namespace Prisma {
 
   export type ActivityLogUncheckedCreateInput = {
     id?: bigint | number
-    userId: string
+    userId: bigint | number
     isAdmin?: boolean
     activityType: string
     status: string
@@ -58495,7 +58669,7 @@ export namespace Prisma {
 
   export type ActivityLogUpdateInput = {
     id?: BigIntFieldUpdateOperationsInput | bigint | number
-    userId?: StringFieldUpdateOperationsInput | string
+    userId?: BigIntFieldUpdateOperationsInput | bigint | number
     isAdmin?: BoolFieldUpdateOperationsInput | boolean
     activityType?: StringFieldUpdateOperationsInput | string
     status?: StringFieldUpdateOperationsInput | string
@@ -58511,7 +58685,7 @@ export namespace Prisma {
 
   export type ActivityLogUncheckedUpdateInput = {
     id?: BigIntFieldUpdateOperationsInput | bigint | number
-    userId?: StringFieldUpdateOperationsInput | string
+    userId?: BigIntFieldUpdateOperationsInput | bigint | number
     isAdmin?: BoolFieldUpdateOperationsInput | boolean
     activityType?: StringFieldUpdateOperationsInput | string
     status?: StringFieldUpdateOperationsInput | string
@@ -58527,7 +58701,7 @@ export namespace Prisma {
 
   export type ActivityLogCreateManyInput = {
     id?: bigint | number
-    userId: string
+    userId: bigint | number
     isAdmin?: boolean
     activityType: string
     status: string
@@ -58543,7 +58717,7 @@ export namespace Prisma {
 
   export type ActivityLogUpdateManyMutationInput = {
     id?: BigIntFieldUpdateOperationsInput | bigint | number
-    userId?: StringFieldUpdateOperationsInput | string
+    userId?: BigIntFieldUpdateOperationsInput | bigint | number
     isAdmin?: BoolFieldUpdateOperationsInput | boolean
     activityType?: StringFieldUpdateOperationsInput | string
     status?: StringFieldUpdateOperationsInput | string
@@ -58559,7 +58733,7 @@ export namespace Prisma {
 
   export type ActivityLogUncheckedUpdateManyInput = {
     id?: BigIntFieldUpdateOperationsInput | bigint | number
-    userId?: StringFieldUpdateOperationsInput | string
+    userId?: BigIntFieldUpdateOperationsInput | bigint | number
     isAdmin?: BoolFieldUpdateOperationsInput | boolean
     activityType?: StringFieldUpdateOperationsInput | string
     status?: StringFieldUpdateOperationsInput | string
@@ -58780,7 +58954,7 @@ export namespace Prisma {
 
   export type WhitecliffApiLogCreateInput = {
     id?: bigint | number
-    userId?: string | null
+    userId?: bigint | number | null
     action: string
     endpoint: string
     httpMethod?: string | null
@@ -58793,7 +58967,7 @@ export namespace Prisma {
 
   export type WhitecliffApiLogUncheckedCreateInput = {
     id?: bigint | number
-    userId?: string | null
+    userId?: bigint | number | null
     action: string
     endpoint: string
     httpMethod?: string | null
@@ -58806,7 +58980,7 @@ export namespace Prisma {
 
   export type WhitecliffApiLogUpdateInput = {
     id?: BigIntFieldUpdateOperationsInput | bigint | number
-    userId?: NullableStringFieldUpdateOperationsInput | string | null
+    userId?: NullableBigIntFieldUpdateOperationsInput | bigint | number | null
     action?: StringFieldUpdateOperationsInput | string
     endpoint?: StringFieldUpdateOperationsInput | string
     httpMethod?: NullableStringFieldUpdateOperationsInput | string | null
@@ -58819,7 +58993,7 @@ export namespace Prisma {
 
   export type WhitecliffApiLogUncheckedUpdateInput = {
     id?: BigIntFieldUpdateOperationsInput | bigint | number
-    userId?: NullableStringFieldUpdateOperationsInput | string | null
+    userId?: NullableBigIntFieldUpdateOperationsInput | bigint | number | null
     action?: StringFieldUpdateOperationsInput | string
     endpoint?: StringFieldUpdateOperationsInput | string
     httpMethod?: NullableStringFieldUpdateOperationsInput | string | null
@@ -58832,7 +59006,7 @@ export namespace Prisma {
 
   export type WhitecliffApiLogCreateManyInput = {
     id?: bigint | number
-    userId?: string | null
+    userId?: bigint | number | null
     action: string
     endpoint: string
     httpMethod?: string | null
@@ -58845,7 +59019,7 @@ export namespace Prisma {
 
   export type WhitecliffApiLogUpdateManyMutationInput = {
     id?: BigIntFieldUpdateOperationsInput | bigint | number
-    userId?: NullableStringFieldUpdateOperationsInput | string | null
+    userId?: NullableBigIntFieldUpdateOperationsInput | bigint | number | null
     action?: StringFieldUpdateOperationsInput | string
     endpoint?: StringFieldUpdateOperationsInput | string
     httpMethod?: NullableStringFieldUpdateOperationsInput | string | null
@@ -58858,7 +59032,7 @@ export namespace Prisma {
 
   export type WhitecliffApiLogUncheckedUpdateManyInput = {
     id?: BigIntFieldUpdateOperationsInput | bigint | number
-    userId?: NullableStringFieldUpdateOperationsInput | string | null
+    userId?: NullableBigIntFieldUpdateOperationsInput | bigint | number | null
     action?: StringFieldUpdateOperationsInput | string
     endpoint?: StringFieldUpdateOperationsInput | string
     httpMethod?: NullableStringFieldUpdateOperationsInput | string | null
@@ -58871,7 +59045,7 @@ export namespace Prisma {
 
   export type DcsApiLogCreateInput = {
     id?: bigint | number
-    userId?: string | null
+    userId?: bigint | number | null
     action: string
     endpoint: string
     httpMethod?: string | null
@@ -58884,7 +59058,7 @@ export namespace Prisma {
 
   export type DcsApiLogUncheckedCreateInput = {
     id?: bigint | number
-    userId?: string | null
+    userId?: bigint | number | null
     action: string
     endpoint: string
     httpMethod?: string | null
@@ -58897,7 +59071,7 @@ export namespace Prisma {
 
   export type DcsApiLogUpdateInput = {
     id?: BigIntFieldUpdateOperationsInput | bigint | number
-    userId?: NullableStringFieldUpdateOperationsInput | string | null
+    userId?: NullableBigIntFieldUpdateOperationsInput | bigint | number | null
     action?: StringFieldUpdateOperationsInput | string
     endpoint?: StringFieldUpdateOperationsInput | string
     httpMethod?: NullableStringFieldUpdateOperationsInput | string | null
@@ -58910,7 +59084,7 @@ export namespace Prisma {
 
   export type DcsApiLogUncheckedUpdateInput = {
     id?: BigIntFieldUpdateOperationsInput | bigint | number
-    userId?: NullableStringFieldUpdateOperationsInput | string | null
+    userId?: NullableBigIntFieldUpdateOperationsInput | bigint | number | null
     action?: StringFieldUpdateOperationsInput | string
     endpoint?: StringFieldUpdateOperationsInput | string
     httpMethod?: NullableStringFieldUpdateOperationsInput | string | null
@@ -58923,7 +59097,7 @@ export namespace Prisma {
 
   export type DcsApiLogCreateManyInput = {
     id?: bigint | number
-    userId?: string | null
+    userId?: bigint | number | null
     action: string
     endpoint: string
     httpMethod?: string | null
@@ -58936,7 +59110,7 @@ export namespace Prisma {
 
   export type DcsApiLogUpdateManyMutationInput = {
     id?: BigIntFieldUpdateOperationsInput | bigint | number
-    userId?: NullableStringFieldUpdateOperationsInput | string | null
+    userId?: NullableBigIntFieldUpdateOperationsInput | bigint | number | null
     action?: StringFieldUpdateOperationsInput | string
     endpoint?: StringFieldUpdateOperationsInput | string
     httpMethod?: NullableStringFieldUpdateOperationsInput | string | null
@@ -58949,7 +59123,7 @@ export namespace Prisma {
 
   export type DcsApiLogUncheckedUpdateManyInput = {
     id?: BigIntFieldUpdateOperationsInput | bigint | number
-    userId?: NullableStringFieldUpdateOperationsInput | string | null
+    userId?: NullableBigIntFieldUpdateOperationsInput | bigint | number | null
     action?: StringFieldUpdateOperationsInput | string
     endpoint?: StringFieldUpdateOperationsInput | string
     httpMethod?: NullableStringFieldUpdateOperationsInput | string | null
@@ -58981,7 +59155,7 @@ export namespace Prisma {
 
   export type TransactionUncheckedCreateInput = {
     id?: bigint | number
-    userId: string
+    userId: bigint | number
     type: $Enums.TransactionType
     status: $Enums.TransactionStatus
     currency: $Enums.ExchangeCurrencyCode
@@ -59019,7 +59193,7 @@ export namespace Prisma {
 
   export type TransactionUncheckedUpdateInput = {
     id?: BigIntFieldUpdateOperationsInput | bigint | number
-    userId?: StringFieldUpdateOperationsInput | string
+    userId?: BigIntFieldUpdateOperationsInput | bigint | number
     type?: EnumTransactionTypeFieldUpdateOperationsInput | $Enums.TransactionType
     status?: EnumTransactionStatusFieldUpdateOperationsInput | $Enums.TransactionStatus
     currency?: EnumExchangeCurrencyCodeFieldUpdateOperationsInput | $Enums.ExchangeCurrencyCode
@@ -59038,7 +59212,7 @@ export namespace Prisma {
 
   export type TransactionCreateManyInput = {
     id?: bigint | number
-    userId: string
+    userId: bigint | number
     type: $Enums.TransactionType
     status: $Enums.TransactionStatus
     currency: $Enums.ExchangeCurrencyCode
@@ -59063,7 +59237,7 @@ export namespace Prisma {
 
   export type TransactionUncheckedUpdateManyInput = {
     id?: BigIntFieldUpdateOperationsInput | bigint | number
-    userId?: StringFieldUpdateOperationsInput | string
+    userId?: BigIntFieldUpdateOperationsInput | bigint | number
     type?: EnumTransactionTypeFieldUpdateOperationsInput | $Enums.TransactionType
     status?: EnumTransactionStatusFieldUpdateOperationsInput | $Enums.TransactionStatus
     currency?: EnumExchangeCurrencyCodeFieldUpdateOperationsInput | $Enums.ExchangeCurrencyCode
@@ -59076,7 +59250,7 @@ export namespace Prisma {
 
   export type GameRoundCreateInput = {
     id?: bigint | number
-    userId: string
+    userId: bigint | number
     aggregatorType: $Enums.GameAggregatorType
     provider: $Enums.GameProvider
     aggregatorTxId: string
@@ -59109,7 +59283,7 @@ export namespace Prisma {
 
   export type GameRoundUncheckedCreateInput = {
     id?: bigint | number
-    userId: string
+    userId: bigint | number
     aggregatorType: $Enums.GameAggregatorType
     provider: $Enums.GameProvider
     aggregatorTxId: string
@@ -59142,7 +59316,7 @@ export namespace Prisma {
 
   export type GameRoundUpdateInput = {
     id?: BigIntFieldUpdateOperationsInput | bigint | number
-    userId?: StringFieldUpdateOperationsInput | string
+    userId?: BigIntFieldUpdateOperationsInput | bigint | number
     aggregatorType?: EnumGameAggregatorTypeFieldUpdateOperationsInput | $Enums.GameAggregatorType
     provider?: EnumGameProviderFieldUpdateOperationsInput | $Enums.GameProvider
     aggregatorTxId?: StringFieldUpdateOperationsInput | string
@@ -59175,7 +59349,7 @@ export namespace Prisma {
 
   export type GameRoundUncheckedUpdateInput = {
     id?: BigIntFieldUpdateOperationsInput | bigint | number
-    userId?: StringFieldUpdateOperationsInput | string
+    userId?: BigIntFieldUpdateOperationsInput | bigint | number
     aggregatorType?: EnumGameAggregatorTypeFieldUpdateOperationsInput | $Enums.GameAggregatorType
     provider?: EnumGameProviderFieldUpdateOperationsInput | $Enums.GameProvider
     aggregatorTxId?: StringFieldUpdateOperationsInput | string
@@ -59208,7 +59382,7 @@ export namespace Prisma {
 
   export type GameRoundCreateManyInput = {
     id?: bigint | number
-    userId: string
+    userId: bigint | number
     aggregatorType: $Enums.GameAggregatorType
     provider: $Enums.GameProvider
     aggregatorTxId: string
@@ -59238,7 +59412,7 @@ export namespace Prisma {
 
   export type GameRoundUpdateManyMutationInput = {
     id?: BigIntFieldUpdateOperationsInput | bigint | number
-    userId?: StringFieldUpdateOperationsInput | string
+    userId?: BigIntFieldUpdateOperationsInput | bigint | number
     aggregatorType?: EnumGameAggregatorTypeFieldUpdateOperationsInput | $Enums.GameAggregatorType
     provider?: EnumGameProviderFieldUpdateOperationsInput | $Enums.GameProvider
     aggregatorTxId?: StringFieldUpdateOperationsInput | string
@@ -59265,7 +59439,7 @@ export namespace Prisma {
 
   export type GameRoundUncheckedUpdateManyInput = {
     id?: BigIntFieldUpdateOperationsInput | bigint | number
-    userId?: StringFieldUpdateOperationsInput | string
+    userId?: BigIntFieldUpdateOperationsInput | bigint | number
     aggregatorType?: EnumGameAggregatorTypeFieldUpdateOperationsInput | $Enums.GameAggregatorType
     provider?: EnumGameProviderFieldUpdateOperationsInput | $Enums.GameProvider
     aggregatorTxId?: StringFieldUpdateOperationsInput | string
@@ -59295,7 +59469,7 @@ export namespace Prisma {
 
   export type GameBetCreateInput = {
     id?: bigint | number
-    userId: string
+    userId: bigint | number
     aggregatorType: $Enums.GameAggregatorType
     aggregatorBetId: string
     betType: $Enums.BetType
@@ -59310,7 +59484,7 @@ export namespace Prisma {
 
   export type GameBetUncheckedCreateInput = {
     id?: bigint | number
-    userId: string
+    userId: bigint | number
     gameRoundId: bigint | number
     aggregatorType: $Enums.GameAggregatorType
     aggregatorBetId: string
@@ -59325,7 +59499,7 @@ export namespace Prisma {
 
   export type GameBetUpdateInput = {
     id?: BigIntFieldUpdateOperationsInput | bigint | number
-    userId?: StringFieldUpdateOperationsInput | string
+    userId?: BigIntFieldUpdateOperationsInput | bigint | number
     aggregatorType?: EnumGameAggregatorTypeFieldUpdateOperationsInput | $Enums.GameAggregatorType
     aggregatorBetId?: StringFieldUpdateOperationsInput | string
     betType?: EnumBetTypeFieldUpdateOperationsInput | $Enums.BetType
@@ -59340,7 +59514,7 @@ export namespace Prisma {
 
   export type GameBetUncheckedUpdateInput = {
     id?: BigIntFieldUpdateOperationsInput | bigint | number
-    userId?: StringFieldUpdateOperationsInput | string
+    userId?: BigIntFieldUpdateOperationsInput | bigint | number
     gameRoundId?: BigIntFieldUpdateOperationsInput | bigint | number
     aggregatorType?: EnumGameAggregatorTypeFieldUpdateOperationsInput | $Enums.GameAggregatorType
     aggregatorBetId?: StringFieldUpdateOperationsInput | string
@@ -59355,7 +59529,7 @@ export namespace Prisma {
 
   export type GameBetCreateManyInput = {
     id?: bigint | number
-    userId: string
+    userId: bigint | number
     gameRoundId: bigint | number
     aggregatorType: $Enums.GameAggregatorType
     aggregatorBetId: string
@@ -59370,7 +59544,7 @@ export namespace Prisma {
 
   export type GameBetUpdateManyMutationInput = {
     id?: BigIntFieldUpdateOperationsInput | bigint | number
-    userId?: StringFieldUpdateOperationsInput | string
+    userId?: BigIntFieldUpdateOperationsInput | bigint | number
     aggregatorType?: EnumGameAggregatorTypeFieldUpdateOperationsInput | $Enums.GameAggregatorType
     aggregatorBetId?: StringFieldUpdateOperationsInput | string
     betType?: EnumBetTypeFieldUpdateOperationsInput | $Enums.BetType
@@ -59384,7 +59558,7 @@ export namespace Prisma {
 
   export type GameBetUncheckedUpdateManyInput = {
     id?: BigIntFieldUpdateOperationsInput | bigint | number
-    userId?: StringFieldUpdateOperationsInput | string
+    userId?: BigIntFieldUpdateOperationsInput | bigint | number
     gameRoundId?: BigIntFieldUpdateOperationsInput | bigint | number
     aggregatorType?: EnumGameAggregatorTypeFieldUpdateOperationsInput | $Enums.GameAggregatorType
     aggregatorBetId?: StringFieldUpdateOperationsInput | string
@@ -59399,7 +59573,7 @@ export namespace Prisma {
 
   export type GameWinCreateInput = {
     id?: bigint | number
-    userId: string
+    userId: bigint | number
     aggregatorType: $Enums.GameAggregatorType
     aggregatorWinId: string
     winType: $Enums.WinType
@@ -59413,7 +59587,7 @@ export namespace Prisma {
 
   export type GameWinUncheckedCreateInput = {
     id?: bigint | number
-    userId: string
+    userId: bigint | number
     gameRoundId: bigint | number
     aggregatorType: $Enums.GameAggregatorType
     aggregatorWinId: string
@@ -59427,7 +59601,7 @@ export namespace Prisma {
 
   export type GameWinUpdateInput = {
     id?: BigIntFieldUpdateOperationsInput | bigint | number
-    userId?: StringFieldUpdateOperationsInput | string
+    userId?: BigIntFieldUpdateOperationsInput | bigint | number
     aggregatorType?: EnumGameAggregatorTypeFieldUpdateOperationsInput | $Enums.GameAggregatorType
     aggregatorWinId?: StringFieldUpdateOperationsInput | string
     winType?: EnumWinTypeFieldUpdateOperationsInput | $Enums.WinType
@@ -59441,7 +59615,7 @@ export namespace Prisma {
 
   export type GameWinUncheckedUpdateInput = {
     id?: BigIntFieldUpdateOperationsInput | bigint | number
-    userId?: StringFieldUpdateOperationsInput | string
+    userId?: BigIntFieldUpdateOperationsInput | bigint | number
     gameRoundId?: BigIntFieldUpdateOperationsInput | bigint | number
     aggregatorType?: EnumGameAggregatorTypeFieldUpdateOperationsInput | $Enums.GameAggregatorType
     aggregatorWinId?: StringFieldUpdateOperationsInput | string
@@ -59455,7 +59629,7 @@ export namespace Prisma {
 
   export type GameWinCreateManyInput = {
     id?: bigint | number
-    userId: string
+    userId: bigint | number
     gameRoundId: bigint | number
     aggregatorType: $Enums.GameAggregatorType
     aggregatorWinId: string
@@ -59469,7 +59643,7 @@ export namespace Prisma {
 
   export type GameWinUpdateManyMutationInput = {
     id?: BigIntFieldUpdateOperationsInput | bigint | number
-    userId?: StringFieldUpdateOperationsInput | string
+    userId?: BigIntFieldUpdateOperationsInput | bigint | number
     aggregatorType?: EnumGameAggregatorTypeFieldUpdateOperationsInput | $Enums.GameAggregatorType
     aggregatorWinId?: StringFieldUpdateOperationsInput | string
     winType?: EnumWinTypeFieldUpdateOperationsInput | $Enums.WinType
@@ -59482,7 +59656,7 @@ export namespace Prisma {
 
   export type GameWinUncheckedUpdateManyInput = {
     id?: BigIntFieldUpdateOperationsInput | bigint | number
-    userId?: StringFieldUpdateOperationsInput | string
+    userId?: BigIntFieldUpdateOperationsInput | bigint | number
     gameRoundId?: BigIntFieldUpdateOperationsInput | bigint | number
     aggregatorType?: EnumGameAggregatorTypeFieldUpdateOperationsInput | $Enums.GameAggregatorType
     aggregatorWinId?: StringFieldUpdateOperationsInput | string
@@ -60078,7 +60252,7 @@ export namespace Prisma {
 
   export type CompTransactionUncheckedCreateInput = {
     id?: bigint | number
-    userId: string
+    userId: bigint | number
     amount: Decimal | DecimalJsLike | number | string
     dailyCompEarningId: number
     transactionId: bigint | number
@@ -60098,7 +60272,7 @@ export namespace Prisma {
 
   export type CompTransactionUncheckedUpdateInput = {
     id?: BigIntFieldUpdateOperationsInput | bigint | number
-    userId?: StringFieldUpdateOperationsInput | string
+    userId?: BigIntFieldUpdateOperationsInput | bigint | number
     amount?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
     dailyCompEarningId?: IntFieldUpdateOperationsInput | number
     transactionId?: BigIntFieldUpdateOperationsInput | bigint | number
@@ -60108,7 +60282,7 @@ export namespace Prisma {
 
   export type CompTransactionCreateManyInput = {
     id?: bigint | number
-    userId: string
+    userId: bigint | number
     amount: Decimal | DecimalJsLike | number | string
     dailyCompEarningId: number
     transactionId: bigint | number
@@ -60125,7 +60299,7 @@ export namespace Prisma {
 
   export type CompTransactionUncheckedUpdateManyInput = {
     id?: BigIntFieldUpdateOperationsInput | bigint | number
-    userId?: StringFieldUpdateOperationsInput | string
+    userId?: BigIntFieldUpdateOperationsInput | bigint | number
     amount?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
     dailyCompEarningId?: IntFieldUpdateOperationsInput | number
     transactionId?: BigIntFieldUpdateOperationsInput | bigint | number
@@ -60147,7 +60321,7 @@ export namespace Prisma {
 
   export type DailyCompEarningUncheckedCreateInput = {
     id?: number
-    userId: string
+    userId: bigint | number
     earningDate: Date | string
     totalContribution: Decimal | DecimalJsLike | number | string
     compEarned: Decimal | DecimalJsLike | number | string
@@ -60172,7 +60346,7 @@ export namespace Prisma {
 
   export type DailyCompEarningUncheckedUpdateInput = {
     id?: IntFieldUpdateOperationsInput | number
-    userId?: StringFieldUpdateOperationsInput | string
+    userId?: BigIntFieldUpdateOperationsInput | bigint | number
     earningDate?: DateTimeFieldUpdateOperationsInput | Date | string
     totalContribution?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
     compEarned?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
@@ -60185,7 +60359,7 @@ export namespace Prisma {
 
   export type DailyCompEarningCreateManyInput = {
     id?: number
-    userId: string
+    userId: bigint | number
     earningDate: Date | string
     totalContribution: Decimal | DecimalJsLike | number | string
     compEarned: Decimal | DecimalJsLike | number | string
@@ -60207,7 +60381,7 @@ export namespace Prisma {
 
   export type DailyCompEarningUncheckedUpdateManyInput = {
     id?: IntFieldUpdateOperationsInput | number
-    userId?: StringFieldUpdateOperationsInput | string
+    userId?: BigIntFieldUpdateOperationsInput | bigint | number
     earningDate?: DateTimeFieldUpdateOperationsInput | Date | string
     totalContribution?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
     compEarned?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
@@ -60421,7 +60595,7 @@ export namespace Prisma {
 
   export type UserPromotionUncheckedCreateInput = {
     id?: number
-    userId: string
+    userId: bigint | number
     promotionId: number
     status?: $Enums.UserPromotionStatus
     bonusGranted?: boolean
@@ -60446,7 +60620,7 @@ export namespace Prisma {
 
   export type UserPromotionUncheckedUpdateInput = {
     id?: IntFieldUpdateOperationsInput | number
-    userId?: StringFieldUpdateOperationsInput | string
+    userId?: BigIntFieldUpdateOperationsInput | bigint | number
     promotionId?: IntFieldUpdateOperationsInput | number
     status?: EnumUserPromotionStatusFieldUpdateOperationsInput | $Enums.UserPromotionStatus
     bonusGranted?: BoolFieldUpdateOperationsInput | boolean
@@ -60459,7 +60633,7 @@ export namespace Prisma {
 
   export type UserPromotionCreateManyInput = {
     id?: number
-    userId: string
+    userId: bigint | number
     promotionId: number
     status?: $Enums.UserPromotionStatus
     bonusGranted?: boolean
@@ -60480,7 +60654,7 @@ export namespace Prisma {
 
   export type UserPromotionUncheckedUpdateManyInput = {
     id?: IntFieldUpdateOperationsInput | number
-    userId?: StringFieldUpdateOperationsInput | string
+    userId?: BigIntFieldUpdateOperationsInput | bigint | number
     promotionId?: IntFieldUpdateOperationsInput | number
     status?: EnumUserPromotionStatusFieldUpdateOperationsInput | $Enums.UserPromotionStatus
     bonusGranted?: BoolFieldUpdateOperationsInput | boolean
@@ -60795,7 +60969,7 @@ export namespace Prisma {
 
   export type VipMembershipUncheckedCreateInput = {
     id?: number
-    userId: string
+    userId: bigint | number
     vipLevelId: number
     accumulatedRolling?: Decimal | DecimalJsLike | number | string
     totalRewardsPaid?: Decimal | DecimalJsLike | number | string
@@ -60818,7 +60992,7 @@ export namespace Prisma {
 
   export type VipMembershipUncheckedUpdateInput = {
     id?: IntFieldUpdateOperationsInput | number
-    userId?: StringFieldUpdateOperationsInput | string
+    userId?: BigIntFieldUpdateOperationsInput | bigint | number
     vipLevelId?: IntFieldUpdateOperationsInput | number
     accumulatedRolling?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
     totalRewardsPaid?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
@@ -60830,7 +61004,7 @@ export namespace Prisma {
 
   export type VipMembershipCreateManyInput = {
     id?: number
-    userId: string
+    userId: bigint | number
     vipLevelId: number
     accumulatedRolling?: Decimal | DecimalJsLike | number | string
     totalRewardsPaid?: Decimal | DecimalJsLike | number | string
@@ -60849,7 +61023,7 @@ export namespace Prisma {
 
   export type VipMembershipUncheckedUpdateManyInput = {
     id?: IntFieldUpdateOperationsInput | number
-    userId?: StringFieldUpdateOperationsInput | string
+    userId?: BigIntFieldUpdateOperationsInput | bigint | number
     vipLevelId?: IntFieldUpdateOperationsInput | number
     accumulatedRolling?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
     totalRewardsPaid?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
@@ -60871,7 +61045,7 @@ export namespace Prisma {
 
   export type VipHistoryUncheckedCreateInput = {
     id?: number
-    userId: string
+    userId: bigint | number
     previousLevelNameKey?: string | null
     newLevelNameKey: string
     rewardAmount: Decimal | DecimalJsLike | number | string
@@ -60894,7 +61068,7 @@ export namespace Prisma {
 
   export type VipHistoryUncheckedUpdateInput = {
     id?: IntFieldUpdateOperationsInput | number
-    userId?: StringFieldUpdateOperationsInput | string
+    userId?: BigIntFieldUpdateOperationsInput | bigint | number
     previousLevelNameKey?: NullableStringFieldUpdateOperationsInput | string | null
     newLevelNameKey?: StringFieldUpdateOperationsInput | string
     rewardAmount?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
@@ -60906,7 +61080,7 @@ export namespace Prisma {
 
   export type VipHistoryCreateManyInput = {
     id?: number
-    userId: string
+    userId: bigint | number
     previousLevelNameKey?: string | null
     newLevelNameKey: string
     rewardAmount: Decimal | DecimalJsLike | number | string
@@ -60927,7 +61101,7 @@ export namespace Prisma {
 
   export type VipHistoryUncheckedUpdateManyInput = {
     id?: IntFieldUpdateOperationsInput | number
-    userId?: StringFieldUpdateOperationsInput | string
+    userId?: BigIntFieldUpdateOperationsInput | bigint | number
     previousLevelNameKey?: NullableStringFieldUpdateOperationsInput | string | null
     newLevelNameKey?: StringFieldUpdateOperationsInput | string
     rewardAmount?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
@@ -60957,7 +61131,7 @@ export namespace Prisma {
 
   export type RollingUncheckedCreateInput = {
     id?: bigint | number
-    userId: string
+    userId: bigint | number
     sourceType?: $Enums.RollingSourceType
     userPromotionId?: number | null
     requiredAmount: Decimal | DecimalJsLike | number | string
@@ -60993,7 +61167,7 @@ export namespace Prisma {
 
   export type RollingUncheckedUpdateInput = {
     id?: BigIntFieldUpdateOperationsInput | bigint | number
-    userId?: StringFieldUpdateOperationsInput | string
+    userId?: BigIntFieldUpdateOperationsInput | bigint | number
     sourceType?: EnumRollingSourceTypeFieldUpdateOperationsInput | $Enums.RollingSourceType
     userPromotionId?: NullableIntFieldUpdateOperationsInput | number | null
     requiredAmount?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
@@ -61011,7 +61185,7 @@ export namespace Prisma {
 
   export type RollingCreateManyInput = {
     id?: bigint | number
-    userId: string
+    userId: bigint | number
     sourceType?: $Enums.RollingSourceType
     userPromotionId?: number | null
     requiredAmount: Decimal | DecimalJsLike | number | string
@@ -61044,7 +61218,7 @@ export namespace Prisma {
 
   export type RollingUncheckedUpdateManyInput = {
     id?: BigIntFieldUpdateOperationsInput | bigint | number
-    userId?: StringFieldUpdateOperationsInput | string
+    userId?: BigIntFieldUpdateOperationsInput | bigint | number
     sourceType?: EnumRollingSourceTypeFieldUpdateOperationsInput | $Enums.RollingSourceType
     userPromotionId?: NullableIntFieldUpdateOperationsInput | number | null
     requiredAmount?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
@@ -61073,7 +61247,7 @@ export namespace Prisma {
 
   export type UserTokenUncheckedCreateInput = {
     id?: number
-    userId: string
+    userId: bigint | number
     type: $Enums.TokenType
     token: string
     expiresAt: Date | string
@@ -61096,7 +61270,7 @@ export namespace Prisma {
 
   export type UserTokenUncheckedUpdateInput = {
     id?: IntFieldUpdateOperationsInput | number
-    userId?: StringFieldUpdateOperationsInput | string
+    userId?: BigIntFieldUpdateOperationsInput | bigint | number
     type?: EnumTokenTypeFieldUpdateOperationsInput | $Enums.TokenType
     token?: StringFieldUpdateOperationsInput | string
     expiresAt?: DateTimeFieldUpdateOperationsInput | Date | string
@@ -61108,7 +61282,7 @@ export namespace Prisma {
 
   export type UserTokenCreateManyInput = {
     id?: number
-    userId: string
+    userId: bigint | number
     type: $Enums.TokenType
     token: string
     expiresAt: Date | string
@@ -61130,7 +61304,7 @@ export namespace Prisma {
 
   export type UserTokenUncheckedUpdateManyInput = {
     id?: IntFieldUpdateOperationsInput | number
-    userId?: StringFieldUpdateOperationsInput | string
+    userId?: BigIntFieldUpdateOperationsInput | bigint | number
     type?: EnumTokenTypeFieldUpdateOperationsInput | $Enums.TokenType
     token?: StringFieldUpdateOperationsInput | string
     expiresAt?: DateTimeFieldUpdateOperationsInput | Date | string
@@ -61156,7 +61330,7 @@ export namespace Prisma {
 
   export type EmailLogUncheckedCreateInput = {
     id?: number
-    userId?: string | null
+    userId?: bigint | number | null
     type: $Enums.EmailType
     status: $Enums.EmailStatus
     to: string
@@ -61185,7 +61359,7 @@ export namespace Prisma {
 
   export type EmailLogUncheckedUpdateInput = {
     id?: IntFieldUpdateOperationsInput | number
-    userId?: NullableStringFieldUpdateOperationsInput | string | null
+    userId?: NullableBigIntFieldUpdateOperationsInput | bigint | number | null
     type?: EnumEmailTypeFieldUpdateOperationsInput | $Enums.EmailType
     status?: EnumEmailStatusFieldUpdateOperationsInput | $Enums.EmailStatus
     to?: StringFieldUpdateOperationsInput | string
@@ -61200,7 +61374,7 @@ export namespace Prisma {
 
   export type EmailLogCreateManyInput = {
     id?: number
-    userId?: string | null
+    userId?: bigint | number | null
     type: $Enums.EmailType
     status: $Enums.EmailStatus
     to: string
@@ -61228,7 +61402,7 @@ export namespace Prisma {
 
   export type EmailLogUncheckedUpdateManyInput = {
     id?: IntFieldUpdateOperationsInput | number
-    userId?: NullableStringFieldUpdateOperationsInput | string | null
+    userId?: NullableBigIntFieldUpdateOperationsInput | bigint | number | null
     type?: EnumEmailTypeFieldUpdateOperationsInput | $Enums.EmailType
     status?: EnumEmailStatusFieldUpdateOperationsInput | $Enums.EmailStatus
     to?: StringFieldUpdateOperationsInput | string
@@ -61259,7 +61433,7 @@ export namespace Prisma {
 
   export type GameSessionUncheckedCreateInput = {
     id?: bigint | number
-    userId: string
+    userId: bigint | number
     createdAt?: Date | string
     updatedAt?: Date | string
     lastAccessedAt?: Date | string
@@ -61291,7 +61465,7 @@ export namespace Prisma {
 
   export type GameSessionUncheckedUpdateInput = {
     id?: BigIntFieldUpdateOperationsInput | bigint | number
-    userId?: StringFieldUpdateOperationsInput | string
+    userId?: BigIntFieldUpdateOperationsInput | bigint | number
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
     lastAccessedAt?: DateTimeFieldUpdateOperationsInput | Date | string
@@ -61307,7 +61481,7 @@ export namespace Prisma {
 
   export type GameSessionCreateManyInput = {
     id?: bigint | number
-    userId: string
+    userId: bigint | number
     createdAt?: Date | string
     updatedAt?: Date | string
     lastAccessedAt?: Date | string
@@ -61335,7 +61509,7 @@ export namespace Prisma {
 
   export type GameSessionUncheckedUpdateManyInput = {
     id?: BigIntFieldUpdateOperationsInput | bigint | number
-    userId?: StringFieldUpdateOperationsInput | string
+    userId?: BigIntFieldUpdateOperationsInput | bigint | number
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
     lastAccessedAt?: DateTimeFieldUpdateOperationsInput | Date | string
@@ -61541,7 +61715,7 @@ export namespace Prisma {
 
   export type AffiliateCodeUncheckedCreateInput = {
     id?: string
-    userId: string
+    userId: bigint | number
     code: string
     campaignName?: string | null
     description?: string | null
@@ -61571,7 +61745,7 @@ export namespace Prisma {
 
   export type AffiliateCodeUncheckedUpdateInput = {
     id?: StringFieldUpdateOperationsInput | string
-    userId?: StringFieldUpdateOperationsInput | string
+    userId?: BigIntFieldUpdateOperationsInput | bigint | number
     code?: StringFieldUpdateOperationsInput | string
     campaignName?: NullableStringFieldUpdateOperationsInput | string | null
     description?: NullableStringFieldUpdateOperationsInput | string | null
@@ -61586,7 +61760,7 @@ export namespace Prisma {
 
   export type AffiliateCodeCreateManyInput = {
     id?: string
-    userId: string
+    userId: bigint | number
     code: string
     campaignName?: string | null
     description?: string | null
@@ -61613,7 +61787,7 @@ export namespace Prisma {
 
   export type AffiliateCodeUncheckedUpdateManyInput = {
     id?: StringFieldUpdateOperationsInput | string
-    userId?: StringFieldUpdateOperationsInput | string
+    userId?: BigIntFieldUpdateOperationsInput | bigint | number
     code?: StringFieldUpdateOperationsInput | string
     campaignName?: NullableStringFieldUpdateOperationsInput | string | null
     description?: NullableStringFieldUpdateOperationsInput | string | null
@@ -61639,8 +61813,8 @@ export namespace Prisma {
 
   export type ReferralUncheckedCreateInput = {
     id?: string
-    affiliateId: string
-    subUserId: string
+    affiliateId: bigint | number
+    subUserId: bigint | number
     ipAddress?: string | null
     deviceFingerprint?: string | null
     userAgent?: string | null
@@ -61663,8 +61837,8 @@ export namespace Prisma {
 
   export type ReferralUncheckedUpdateInput = {
     id?: StringFieldUpdateOperationsInput | string
-    affiliateId?: StringFieldUpdateOperationsInput | string
-    subUserId?: StringFieldUpdateOperationsInput | string
+    affiliateId?: BigIntFieldUpdateOperationsInput | bigint | number
+    subUserId?: BigIntFieldUpdateOperationsInput | bigint | number
     ipAddress?: NullableStringFieldUpdateOperationsInput | string | null
     deviceFingerprint?: NullableStringFieldUpdateOperationsInput | string | null
     userAgent?: NullableStringFieldUpdateOperationsInput | string | null
@@ -61675,8 +61849,8 @@ export namespace Prisma {
 
   export type ReferralCreateManyInput = {
     id?: string
-    affiliateId: string
-    subUserId: string
+    affiliateId: bigint | number
+    subUserId: bigint | number
     ipAddress?: string | null
     deviceFingerprint?: string | null
     userAgent?: string | null
@@ -61696,8 +61870,8 @@ export namespace Prisma {
 
   export type ReferralUncheckedUpdateManyInput = {
     id?: StringFieldUpdateOperationsInput | string
-    affiliateId?: StringFieldUpdateOperationsInput | string
-    subUserId?: StringFieldUpdateOperationsInput | string
+    affiliateId?: BigIntFieldUpdateOperationsInput | bigint | number
+    subUserId?: BigIntFieldUpdateOperationsInput | bigint | number
     ipAddress?: NullableStringFieldUpdateOperationsInput | string | null
     deviceFingerprint?: NullableStringFieldUpdateOperationsInput | string | null
     userAgent?: NullableStringFieldUpdateOperationsInput | string | null
@@ -61716,7 +61890,7 @@ export namespace Prisma {
   }
 
   export type AffiliateWalletUncheckedCreateInput = {
-    affiliateId: string
+    affiliateId: bigint | number
     currency: $Enums.ExchangeCurrencyCode
     availableBalance?: Decimal | DecimalJsLike | number | string
     pendingBalance?: Decimal | DecimalJsLike | number | string
@@ -61734,7 +61908,7 @@ export namespace Prisma {
   }
 
   export type AffiliateWalletUncheckedUpdateInput = {
-    affiliateId?: StringFieldUpdateOperationsInput | string
+    affiliateId?: BigIntFieldUpdateOperationsInput | bigint | number
     currency?: EnumExchangeCurrencyCodeFieldUpdateOperationsInput | $Enums.ExchangeCurrencyCode
     availableBalance?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
     pendingBalance?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
@@ -61743,7 +61917,7 @@ export namespace Prisma {
   }
 
   export type AffiliateWalletCreateManyInput = {
-    affiliateId: string
+    affiliateId: bigint | number
     currency: $Enums.ExchangeCurrencyCode
     availableBalance?: Decimal | DecimalJsLike | number | string
     pendingBalance?: Decimal | DecimalJsLike | number | string
@@ -61760,7 +61934,7 @@ export namespace Prisma {
   }
 
   export type AffiliateWalletUncheckedUpdateManyInput = {
-    affiliateId?: StringFieldUpdateOperationsInput | string
+    affiliateId?: BigIntFieldUpdateOperationsInput | bigint | number
     currency?: EnumExchangeCurrencyCodeFieldUpdateOperationsInput | $Enums.ExchangeCurrencyCode
     availableBalance?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
     pendingBalance?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
@@ -61789,8 +61963,8 @@ export namespace Prisma {
   }
 
   export type AffiliateCommissionUncheckedCreateInput = {
-    affiliateId: string
-    subUserId: string
+    affiliateId: bigint | number
+    subUserId: bigint | number
     gameRoundId?: bigint | number | null
     wagerAmount: Decimal | DecimalJsLike | number | string
     winAmount?: Decimal | DecimalJsLike | number | string | null
@@ -61829,8 +62003,8 @@ export namespace Prisma {
   }
 
   export type AffiliateCommissionUncheckedUpdateInput = {
-    affiliateId?: StringFieldUpdateOperationsInput | string
-    subUserId?: StringFieldUpdateOperationsInput | string
+    affiliateId?: BigIntFieldUpdateOperationsInput | bigint | number
+    subUserId?: BigIntFieldUpdateOperationsInput | bigint | number
     gameRoundId?: NullableBigIntFieldUpdateOperationsInput | bigint | number | null
     wagerAmount?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
     winAmount?: NullableDecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string | null
@@ -61849,8 +62023,8 @@ export namespace Prisma {
   }
 
   export type AffiliateCommissionCreateManyInput = {
-    affiliateId: string
-    subUserId: string
+    affiliateId: bigint | number
+    subUserId: bigint | number
     gameRoundId?: bigint | number | null
     wagerAmount: Decimal | DecimalJsLike | number | string
     winAmount?: Decimal | DecimalJsLike | number | string | null
@@ -61886,8 +62060,8 @@ export namespace Prisma {
   }
 
   export type AffiliateCommissionUncheckedUpdateManyInput = {
-    affiliateId?: StringFieldUpdateOperationsInput | string
-    subUserId?: StringFieldUpdateOperationsInput | string
+    affiliateId?: BigIntFieldUpdateOperationsInput | bigint | number
+    subUserId?: BigIntFieldUpdateOperationsInput | bigint | number
     gameRoundId?: NullableBigIntFieldUpdateOperationsInput | bigint | number | null
     wagerAmount?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
     winAmount?: NullableDecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string | null
@@ -61921,7 +62095,7 @@ export namespace Prisma {
   }
 
   export type AffiliateTierUncheckedCreateInput = {
-    affiliateId: string
+    affiliateId: bigint | number
     tier?: $Enums.AffiliateTierLevel
     baseRate: Decimal | DecimalJsLike | number | string
     customRate?: Decimal | DecimalJsLike | number | string | null
@@ -61951,7 +62125,7 @@ export namespace Prisma {
   }
 
   export type AffiliateTierUncheckedUpdateInput = {
-    affiliateId?: StringFieldUpdateOperationsInput | string
+    affiliateId?: BigIntFieldUpdateOperationsInput | bigint | number
     tier?: EnumAffiliateTierLevelFieldUpdateOperationsInput | $Enums.AffiliateTierLevel
     baseRate?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
     customRate?: NullableDecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string | null
@@ -61966,7 +62140,7 @@ export namespace Prisma {
   }
 
   export type AffiliateTierCreateManyInput = {
-    affiliateId: string
+    affiliateId: bigint | number
     tier?: $Enums.AffiliateTierLevel
     baseRate: Decimal | DecimalJsLike | number | string
     customRate?: Decimal | DecimalJsLike | number | string | null
@@ -61995,7 +62169,7 @@ export namespace Prisma {
   }
 
   export type AffiliateTierUncheckedUpdateManyInput = {
-    affiliateId?: StringFieldUpdateOperationsInput | string
+    affiliateId?: BigIntFieldUpdateOperationsInput | bigint | number
     tier?: EnumAffiliateTierLevelFieldUpdateOperationsInput | $Enums.AffiliateTierLevel
     baseRate?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
     customRate?: NullableDecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string | null
@@ -62027,7 +62201,7 @@ export namespace Prisma {
   export type LoginAttemptUncheckedCreateInput = {
     id?: bigint | number
     uid: string
-    userId?: string | null
+    userId?: bigint | number | null
     result: $Enums.LoginAttemptResult
     failureReason?: $Enums.LoginFailureReason | null
     ipAddress?: string | null
@@ -62057,7 +62231,7 @@ export namespace Prisma {
   export type LoginAttemptUncheckedUpdateInput = {
     id?: BigIntFieldUpdateOperationsInput | bigint | number
     uid?: StringFieldUpdateOperationsInput | string
-    userId?: NullableStringFieldUpdateOperationsInput | string | null
+    userId?: NullableBigIntFieldUpdateOperationsInput | bigint | number | null
     result?: EnumLoginAttemptResultFieldUpdateOperationsInput | $Enums.LoginAttemptResult
     failureReason?: NullableEnumLoginFailureReasonFieldUpdateOperationsInput | $Enums.LoginFailureReason | null
     ipAddress?: NullableStringFieldUpdateOperationsInput | string | null
@@ -62072,7 +62246,7 @@ export namespace Prisma {
   export type LoginAttemptCreateManyInput = {
     id?: bigint | number
     uid: string
-    userId?: string | null
+    userId?: bigint | number | null
     result: $Enums.LoginAttemptResult
     failureReason?: $Enums.LoginFailureReason | null
     ipAddress?: string | null
@@ -62101,7 +62275,7 @@ export namespace Prisma {
   export type LoginAttemptUncheckedUpdateManyInput = {
     id?: BigIntFieldUpdateOperationsInput | bigint | number
     uid?: StringFieldUpdateOperationsInput | string
-    userId?: NullableStringFieldUpdateOperationsInput | string | null
+    userId?: NullableBigIntFieldUpdateOperationsInput | bigint | number | null
     result?: EnumLoginAttemptResultFieldUpdateOperationsInput | $Enums.LoginAttemptResult
     failureReason?: NullableEnumLoginFailureReasonFieldUpdateOperationsInput | $Enums.LoginFailureReason | null
     ipAddress?: NullableStringFieldUpdateOperationsInput | string | null
@@ -62111,6 +62285,17 @@ export namespace Prisma {
     attemptedAt?: DateTimeFieldUpdateOperationsInput | Date | string
     email?: NullableStringFieldUpdateOperationsInput | string | null
     isAdmin?: BoolFieldUpdateOperationsInput | boolean
+  }
+
+  export type BigIntFilter<$PrismaModel = never> = {
+    equals?: bigint | number | BigIntFieldRefInput<$PrismaModel>
+    in?: bigint[] | number[] | ListBigIntFieldRefInput<$PrismaModel>
+    notIn?: bigint[] | number[] | ListBigIntFieldRefInput<$PrismaModel>
+    lt?: bigint | number | BigIntFieldRefInput<$PrismaModel>
+    lte?: bigint | number | BigIntFieldRefInput<$PrismaModel>
+    gt?: bigint | number | BigIntFieldRefInput<$PrismaModel>
+    gte?: bigint | number | BigIntFieldRefInput<$PrismaModel>
+    not?: NestedBigIntFilter<$PrismaModel> | bigint | number
   }
 
   export type StringFilter<$PrismaModel = never> = {
@@ -62126,17 +62311,6 @@ export namespace Prisma {
     endsWith?: string | StringFieldRefInput<$PrismaModel>
     mode?: QueryMode
     not?: NestedStringFilter<$PrismaModel> | string
-  }
-
-  export type IntFilter<$PrismaModel = never> = {
-    equals?: number | IntFieldRefInput<$PrismaModel>
-    in?: number[] | ListIntFieldRefInput<$PrismaModel>
-    notIn?: number[] | ListIntFieldRefInput<$PrismaModel>
-    lt?: number | IntFieldRefInput<$PrismaModel>
-    lte?: number | IntFieldRefInput<$PrismaModel>
-    gt?: number | IntFieldRefInput<$PrismaModel>
-    gte?: number | IntFieldRefInput<$PrismaModel>
-    not?: NestedIntFilter<$PrismaModel> | number
   }
 
   export type BigIntNullableFilter<$PrismaModel = never> = {
@@ -62409,7 +62583,7 @@ export namespace Prisma {
 
   export type UserCountOrderByAggregateInput = {
     id?: SortOrder
-    numericId?: SortOrder
+    uid?: SortOrder
     whitecliffId?: SortOrder
     whitecliffSystemId?: SortOrder
     whitecliffUsername?: SortOrder
@@ -62430,7 +62604,7 @@ export namespace Prisma {
   }
 
   export type UserAvgOrderByAggregateInput = {
-    numericId?: SortOrder
+    id?: SortOrder
     whitecliffId?: SortOrder
     whitecliffSystemId?: SortOrder
     timezoneOffset?: SortOrder
@@ -62438,7 +62612,7 @@ export namespace Prisma {
 
   export type UserMaxOrderByAggregateInput = {
     id?: SortOrder
-    numericId?: SortOrder
+    uid?: SortOrder
     whitecliffId?: SortOrder
     whitecliffSystemId?: SortOrder
     whitecliffUsername?: SortOrder
@@ -62460,7 +62634,7 @@ export namespace Prisma {
 
   export type UserMinOrderByAggregateInput = {
     id?: SortOrder
-    numericId?: SortOrder
+    uid?: SortOrder
     whitecliffId?: SortOrder
     whitecliffSystemId?: SortOrder
     whitecliffUsername?: SortOrder
@@ -62481,10 +62655,26 @@ export namespace Prisma {
   }
 
   export type UserSumOrderByAggregateInput = {
-    numericId?: SortOrder
+    id?: SortOrder
     whitecliffId?: SortOrder
     whitecliffSystemId?: SortOrder
     timezoneOffset?: SortOrder
+  }
+
+  export type BigIntWithAggregatesFilter<$PrismaModel = never> = {
+    equals?: bigint | number | BigIntFieldRefInput<$PrismaModel>
+    in?: bigint[] | number[] | ListBigIntFieldRefInput<$PrismaModel>
+    notIn?: bigint[] | number[] | ListBigIntFieldRefInput<$PrismaModel>
+    lt?: bigint | number | BigIntFieldRefInput<$PrismaModel>
+    lte?: bigint | number | BigIntFieldRefInput<$PrismaModel>
+    gt?: bigint | number | BigIntFieldRefInput<$PrismaModel>
+    gte?: bigint | number | BigIntFieldRefInput<$PrismaModel>
+    not?: NestedBigIntWithAggregatesFilter<$PrismaModel> | bigint | number
+    _count?: NestedIntFilter<$PrismaModel>
+    _avg?: NestedFloatFilter<$PrismaModel>
+    _sum?: NestedBigIntFilter<$PrismaModel>
+    _min?: NestedBigIntFilter<$PrismaModel>
+    _max?: NestedBigIntFilter<$PrismaModel>
   }
 
   export type StringWithAggregatesFilter<$PrismaModel = never> = {
@@ -62503,22 +62693,6 @@ export namespace Prisma {
     _count?: NestedIntFilter<$PrismaModel>
     _min?: NestedStringFilter<$PrismaModel>
     _max?: NestedStringFilter<$PrismaModel>
-  }
-
-  export type IntWithAggregatesFilter<$PrismaModel = never> = {
-    equals?: number | IntFieldRefInput<$PrismaModel>
-    in?: number[] | ListIntFieldRefInput<$PrismaModel>
-    notIn?: number[] | ListIntFieldRefInput<$PrismaModel>
-    lt?: number | IntFieldRefInput<$PrismaModel>
-    lte?: number | IntFieldRefInput<$PrismaModel>
-    gt?: number | IntFieldRefInput<$PrismaModel>
-    gte?: number | IntFieldRefInput<$PrismaModel>
-    not?: NestedIntWithAggregatesFilter<$PrismaModel> | number
-    _count?: NestedIntFilter<$PrismaModel>
-    _avg?: NestedFloatFilter<$PrismaModel>
-    _sum?: NestedIntFilter<$PrismaModel>
-    _min?: NestedIntFilter<$PrismaModel>
-    _max?: NestedIntFilter<$PrismaModel>
   }
 
   export type BigIntNullableWithAggregatesFilter<$PrismaModel = never> = {
@@ -62656,17 +62830,6 @@ export namespace Prisma {
     not?: NestedDateTimeNullableFilter<$PrismaModel> | Date | string | null
   }
 
-  export type BigIntFilter<$PrismaModel = never> = {
-    equals?: bigint | number | BigIntFieldRefInput<$PrismaModel>
-    in?: bigint[] | number[] | ListBigIntFieldRefInput<$PrismaModel>
-    notIn?: bigint[] | number[] | ListBigIntFieldRefInput<$PrismaModel>
-    lt?: bigint | number | BigIntFieldRefInput<$PrismaModel>
-    lte?: bigint | number | BigIntFieldRefInput<$PrismaModel>
-    gt?: bigint | number | BigIntFieldRefInput<$PrismaModel>
-    gte?: bigint | number | BigIntFieldRefInput<$PrismaModel>
-    not?: NestedBigIntFilter<$PrismaModel> | bigint | number
-  }
-
   export type UserScalarRelationFilter = {
     is?: UserWhereInput
     isNot?: UserWhereInput
@@ -62675,7 +62838,7 @@ export namespace Prisma {
   export type UserSessionCountOrderByAggregateInput = {
     userId?: SortOrder
     sessionId?: SortOrder
-    deviceInfo?: SortOrder
+    debetsiceInfo?: SortOrder
     userAgent?: SortOrder
     ipAddress?: SortOrder
     isMobile?: SortOrder
@@ -62689,13 +62852,14 @@ export namespace Prisma {
   }
 
   export type UserSessionAvgOrderByAggregateInput = {
+    userId?: SortOrder
     id?: SortOrder
   }
 
   export type UserSessionMaxOrderByAggregateInput = {
     userId?: SortOrder
     sessionId?: SortOrder
-    deviceInfo?: SortOrder
+    debetsiceInfo?: SortOrder
     userAgent?: SortOrder
     ipAddress?: SortOrder
     isMobile?: SortOrder
@@ -62711,7 +62875,7 @@ export namespace Prisma {
   export type UserSessionMinOrderByAggregateInput = {
     userId?: SortOrder
     sessionId?: SortOrder
-    deviceInfo?: SortOrder
+    debetsiceInfo?: SortOrder
     userAgent?: SortOrder
     ipAddress?: SortOrder
     isMobile?: SortOrder
@@ -62725,6 +62889,7 @@ export namespace Prisma {
   }
 
   export type UserSessionSumOrderByAggregateInput = {
+    userId?: SortOrder
     id?: SortOrder
   }
 
@@ -62758,22 +62923,6 @@ export namespace Prisma {
     _max?: NestedDateTimeNullableFilter<$PrismaModel>
   }
 
-  export type BigIntWithAggregatesFilter<$PrismaModel = never> = {
-    equals?: bigint | number | BigIntFieldRefInput<$PrismaModel>
-    in?: bigint[] | number[] | ListBigIntFieldRefInput<$PrismaModel>
-    notIn?: bigint[] | number[] | ListBigIntFieldRefInput<$PrismaModel>
-    lt?: bigint | number | BigIntFieldRefInput<$PrismaModel>
-    lte?: bigint | number | BigIntFieldRefInput<$PrismaModel>
-    gt?: bigint | number | BigIntFieldRefInput<$PrismaModel>
-    gte?: bigint | number | BigIntFieldRefInput<$PrismaModel>
-    not?: NestedBigIntWithAggregatesFilter<$PrismaModel> | bigint | number
-    _count?: NestedIntFilter<$PrismaModel>
-    _avg?: NestedFloatFilter<$PrismaModel>
-    _sum?: NestedBigIntFilter<$PrismaModel>
-    _min?: NestedBigIntFilter<$PrismaModel>
-    _max?: NestedBigIntFilter<$PrismaModel>
-  }
-
   export type EnumExchangeCurrencyCodeFilter<$PrismaModel = never> = {
     equals?: $Enums.ExchangeCurrencyCode | EnumExchangeCurrencyCodeFieldRefInput<$PrismaModel>
     in?: $Enums.ExchangeCurrencyCode[] | ListEnumExchangeCurrencyCodeFieldRefInput<$PrismaModel>
@@ -62793,7 +62942,7 @@ export namespace Prisma {
   }
 
   export type UserBalanceUserIdCurrencyCompoundUniqueInput = {
-    userId: string
+    userId: bigint | number
     currency: $Enums.ExchangeCurrencyCode
   }
 
@@ -62806,6 +62955,7 @@ export namespace Prisma {
   }
 
   export type UserBalanceAvgOrderByAggregateInput = {
+    userId?: SortOrder
     mainBalance?: SortOrder
     bonusBalance?: SortOrder
   }
@@ -62827,6 +62977,7 @@ export namespace Prisma {
   }
 
   export type UserBalanceSumOrderByAggregateInput = {
+    userId?: SortOrder
     mainBalance?: SortOrder
     bonusBalance?: SortOrder
   }
@@ -62858,7 +63009,7 @@ export namespace Prisma {
   }
 
   export type UserBalanceStatsUserIdCurrencyCompoundUniqueInput = {
-    userId: string
+    userId: bigint | number
     currency: $Enums.ExchangeCurrencyCode
   }
 
@@ -62878,6 +63029,7 @@ export namespace Prisma {
   }
 
   export type UserBalanceStatsAvgOrderByAggregateInput = {
+    userId?: SortOrder
     totalDeposit?: SortOrder
     totalWithdraw?: SortOrder
     totalBet?: SortOrder
@@ -62920,6 +63072,7 @@ export namespace Prisma {
   }
 
   export type UserBalanceStatsSumOrderByAggregateInput = {
+    userId?: SortOrder
     totalDeposit?: SortOrder
     totalWithdraw?: SortOrder
     totalBet?: SortOrder
@@ -62972,6 +63125,7 @@ export namespace Prisma {
 
   export type ActivityLogAvgOrderByAggregateInput = {
     id?: SortOrder
+    userId?: SortOrder
   }
 
   export type ActivityLogMaxOrderByAggregateInput = {
@@ -63006,6 +63160,7 @@ export namespace Prisma {
 
   export type ActivityLogSumOrderByAggregateInput = {
     id?: SortOrder
+    userId?: SortOrder
   }
   export type JsonNullableWithAggregatesFilter<$PrismaModel = never> =
     | PatchUndefined<
@@ -63032,6 +63187,17 @@ export namespace Prisma {
     _count?: NestedIntNullableFilter<$PrismaModel>
     _min?: NestedJsonNullableFilter<$PrismaModel>
     _max?: NestedJsonNullableFilter<$PrismaModel>
+  }
+
+  export type IntFilter<$PrismaModel = never> = {
+    equals?: number | IntFieldRefInput<$PrismaModel>
+    in?: number[] | ListIntFieldRefInput<$PrismaModel>
+    notIn?: number[] | ListIntFieldRefInput<$PrismaModel>
+    lt?: number | IntFieldRefInput<$PrismaModel>
+    lte?: number | IntFieldRefInput<$PrismaModel>
+    gt?: number | IntFieldRefInput<$PrismaModel>
+    gte?: number | IntFieldRefInput<$PrismaModel>
+    not?: NestedIntFilter<$PrismaModel> | number
   }
 
   export type EnumGameAggregatorTypeFilter<$PrismaModel = never> = {
@@ -63154,6 +63320,22 @@ export namespace Prisma {
     gameId?: SortOrder
     houseEdge?: SortOrder
     contributionRate?: SortOrder
+  }
+
+  export type IntWithAggregatesFilter<$PrismaModel = never> = {
+    equals?: number | IntFieldRefInput<$PrismaModel>
+    in?: number[] | ListIntFieldRefInput<$PrismaModel>
+    notIn?: number[] | ListIntFieldRefInput<$PrismaModel>
+    lt?: number | IntFieldRefInput<$PrismaModel>
+    lte?: number | IntFieldRefInput<$PrismaModel>
+    gt?: number | IntFieldRefInput<$PrismaModel>
+    gte?: number | IntFieldRefInput<$PrismaModel>
+    not?: NestedIntWithAggregatesFilter<$PrismaModel> | number
+    _count?: NestedIntFilter<$PrismaModel>
+    _avg?: NestedFloatFilter<$PrismaModel>
+    _sum?: NestedIntFilter<$PrismaModel>
+    _min?: NestedIntFilter<$PrismaModel>
+    _max?: NestedIntFilter<$PrismaModel>
   }
 
   export type EnumGameAggregatorTypeWithAggregatesFilter<$PrismaModel = never> = {
@@ -63294,6 +63476,7 @@ export namespace Prisma {
 
   export type WhitecliffApiLogAvgOrderByAggregateInput = {
     id?: SortOrder
+    userId?: SortOrder
     statusCode?: SortOrder
   }
 
@@ -63321,6 +63504,7 @@ export namespace Prisma {
 
   export type WhitecliffApiLogSumOrderByAggregateInput = {
     id?: SortOrder
+    userId?: SortOrder
     statusCode?: SortOrder
   }
   export type JsonWithAggregatesFilter<$PrismaModel = never> =
@@ -63365,6 +63549,7 @@ export namespace Prisma {
 
   export type DcsApiLogAvgOrderByAggregateInput = {
     id?: SortOrder
+    userId?: SortOrder
     statusCode?: SortOrder
   }
 
@@ -63392,6 +63577,7 @@ export namespace Prisma {
 
   export type DcsApiLogSumOrderByAggregateInput = {
     id?: SortOrder
+    userId?: SortOrder
     statusCode?: SortOrder
   }
 
@@ -63459,6 +63645,7 @@ export namespace Prisma {
 
   export type TransactionAvgOrderByAggregateInput = {
     id?: SortOrder
+    userId?: SortOrder
     amount?: SortOrder
     beforeAmount?: SortOrder
     afterAmount?: SortOrder
@@ -63492,6 +63679,7 @@ export namespace Prisma {
 
   export type TransactionSumOrderByAggregateInput = {
     id?: SortOrder
+    userId?: SortOrder
     amount?: SortOrder
     beforeAmount?: SortOrder
     afterAmount?: SortOrder
@@ -63607,6 +63795,7 @@ export namespace Prisma {
 
   export type GameRoundAvgOrderByAggregateInput = {
     id?: SortOrder
+    userId?: SortOrder
     aggregatorGameId?: SortOrder
     totalBetAmountInGameCurrency?: SortOrder
     totalWinAmountInGameCurrency?: SortOrder
@@ -63686,6 +63875,7 @@ export namespace Prisma {
 
   export type GameRoundSumOrderByAggregateInput = {
     id?: SortOrder
+    userId?: SortOrder
     aggregatorGameId?: SortOrder
     totalBetAmountInGameCurrency?: SortOrder
     totalWinAmountInGameCurrency?: SortOrder
@@ -63763,6 +63953,7 @@ export namespace Prisma {
 
   export type GameBetAvgOrderByAggregateInput = {
     id?: SortOrder
+    userId?: SortOrder
     gameRoundId?: SortOrder
     betAmount?: SortOrder
     betAmountInGameCurrency?: SortOrder
@@ -63800,6 +63991,7 @@ export namespace Prisma {
 
   export type GameBetSumOrderByAggregateInput = {
     id?: SortOrder
+    userId?: SortOrder
     gameRoundId?: SortOrder
     betAmount?: SortOrder
     betAmountInGameCurrency?: SortOrder
@@ -63843,6 +64035,7 @@ export namespace Prisma {
 
   export type GameWinAvgOrderByAggregateInput = {
     id?: SortOrder
+    userId?: SortOrder
     gameRoundId?: SortOrder
     winAmount?: SortOrder
     winAmountInGameCurrency?: SortOrder
@@ -63878,6 +64071,7 @@ export namespace Prisma {
 
   export type GameWinSumOrderByAggregateInput = {
     id?: SortOrder
+    userId?: SortOrder
     gameRoundId?: SortOrder
     winAmount?: SortOrder
     winAmountInGameCurrency?: SortOrder
@@ -64325,6 +64519,7 @@ export namespace Prisma {
 
   export type CompTransactionAvgOrderByAggregateInput = {
     id?: SortOrder
+    userId?: SortOrder
     amount?: SortOrder
     dailyCompEarningId?: SortOrder
     transactionId?: SortOrder
@@ -64352,13 +64547,14 @@ export namespace Prisma {
 
   export type CompTransactionSumOrderByAggregateInput = {
     id?: SortOrder
+    userId?: SortOrder
     amount?: SortOrder
     dailyCompEarningId?: SortOrder
     transactionId?: SortOrder
   }
 
   export type DailyCompEarningUserIdEarningDateCompoundUniqueInput = {
-    userId: string
+    userId: bigint | number
     earningDate: Date | string
   }
 
@@ -64376,6 +64572,7 @@ export namespace Prisma {
 
   export type DailyCompEarningAvgOrderByAggregateInput = {
     id?: SortOrder
+    userId?: SortOrder
     totalContribution?: SortOrder
     compEarned?: SortOrder
   }
@@ -64406,6 +64603,7 @@ export namespace Prisma {
 
   export type DailyCompEarningSumOrderByAggregateInput = {
     id?: SortOrder
+    userId?: SortOrder
     totalContribution?: SortOrder
     compEarned?: SortOrder
   }
@@ -64609,6 +64807,7 @@ export namespace Prisma {
 
   export type UserPromotionAvgOrderByAggregateInput = {
     id?: SortOrder
+    userId?: SortOrder
     promotionId?: SortOrder
     bonusAmount?: SortOrder
   }
@@ -64639,6 +64838,7 @@ export namespace Prisma {
 
   export type UserPromotionSumOrderByAggregateInput = {
     id?: SortOrder
+    userId?: SortOrder
     promotionId?: SortOrder
     bonusAmount?: SortOrder
   }
@@ -64870,6 +65070,7 @@ export namespace Prisma {
 
   export type VipMembershipAvgOrderByAggregateInput = {
     id?: SortOrder
+    userId?: SortOrder
     vipLevelId?: SortOrder
     accumulatedRolling?: SortOrder
     totalRewardsPaid?: SortOrder
@@ -64899,6 +65100,7 @@ export namespace Prisma {
 
   export type VipMembershipSumOrderByAggregateInput = {
     id?: SortOrder
+    userId?: SortOrder
     vipLevelId?: SortOrder
     accumulatedRolling?: SortOrder
     totalRewardsPaid?: SortOrder
@@ -64918,6 +65120,7 @@ export namespace Prisma {
 
   export type VipHistoryAvgOrderByAggregateInput = {
     id?: SortOrder
+    userId?: SortOrder
     rewardAmount?: SortOrder
     vipMembershipId?: SortOrder
   }
@@ -64948,6 +65151,7 @@ export namespace Prisma {
 
   export type VipHistorySumOrderByAggregateInput = {
     id?: SortOrder
+    userId?: SortOrder
     rewardAmount?: SortOrder
     vipMembershipId?: SortOrder
   }
@@ -64991,6 +65195,7 @@ export namespace Prisma {
 
   export type RollingAvgOrderByAggregateInput = {
     id?: SortOrder
+    userId?: SortOrder
     userPromotionId?: SortOrder
     requiredAmount?: SortOrder
     currentAmount?: SortOrder
@@ -65038,6 +65243,7 @@ export namespace Prisma {
 
   export type RollingSumOrderByAggregateInput = {
     id?: SortOrder
+    userId?: SortOrder
     userPromotionId?: SortOrder
     requiredAmount?: SortOrder
     currentAmount?: SortOrder
@@ -65088,6 +65294,7 @@ export namespace Prisma {
 
   export type UserTokenAvgOrderByAggregateInput = {
     id?: SortOrder
+    userId?: SortOrder
   }
 
   export type UserTokenMaxOrderByAggregateInput = {
@@ -65114,6 +65321,7 @@ export namespace Prisma {
 
   export type UserTokenSumOrderByAggregateInput = {
     id?: SortOrder
+    userId?: SortOrder
   }
 
   export type EnumTokenTypeWithAggregatesFilter<$PrismaModel = never> = {
@@ -65162,6 +65370,7 @@ export namespace Prisma {
 
   export type EmailLogAvgOrderByAggregateInput = {
     id?: SortOrder
+    userId?: SortOrder
   }
 
   export type EmailLogMaxOrderByAggregateInput = {
@@ -65194,6 +65403,7 @@ export namespace Prisma {
 
   export type EmailLogSumOrderByAggregateInput = {
     id?: SortOrder
+    userId?: SortOrder
   }
 
   export type EnumEmailTypeWithAggregatesFilter<$PrismaModel = never> = {
@@ -65233,6 +65443,7 @@ export namespace Prisma {
 
   export type GameSessionAvgOrderByAggregateInput = {
     id?: SortOrder
+    userId?: SortOrder
     exchangeRate?: SortOrder
     gameId?: SortOrder
   }
@@ -65269,6 +65480,7 @@ export namespace Prisma {
 
   export type GameSessionSumOrderByAggregateInput = {
     id?: SortOrder
+    userId?: SortOrder
     exchangeRate?: SortOrder
     gameId?: SortOrder
   }
@@ -65394,6 +65606,10 @@ export namespace Prisma {
     lastUsedAt?: SortOrder
   }
 
+  export type AffiliateCodeAvgOrderByAggregateInput = {
+    userId?: SortOrder
+  }
+
   export type AffiliateCodeMaxOrderByAggregateInput = {
     id?: SortOrder
     userId?: SortOrder
@@ -65422,14 +65638,18 @@ export namespace Prisma {
     lastUsedAt?: SortOrder
   }
 
+  export type AffiliateCodeSumOrderByAggregateInput = {
+    userId?: SortOrder
+  }
+
   export type AffiliateCodeScalarRelationFilter = {
     is?: AffiliateCodeWhereInput
     isNot?: AffiliateCodeWhereInput
   }
 
   export type ReferralAffiliateIdSubUserIdCompoundUniqueInput = {
-    affiliateId: string
-    subUserId: string
+    affiliateId: bigint | number
+    subUserId: bigint | number
   }
 
   export type ReferralCountOrderByAggregateInput = {
@@ -65442,6 +65662,11 @@ export namespace Prisma {
     createdAt?: SortOrder
     updatedAt?: SortOrder
     codeId?: SortOrder
+  }
+
+  export type ReferralAvgOrderByAggregateInput = {
+    affiliateId?: SortOrder
+    subUserId?: SortOrder
   }
 
   export type ReferralMaxOrderByAggregateInput = {
@@ -65468,8 +65693,13 @@ export namespace Prisma {
     codeId?: SortOrder
   }
 
+  export type ReferralSumOrderByAggregateInput = {
+    affiliateId?: SortOrder
+    subUserId?: SortOrder
+  }
+
   export type AffiliateWalletAffiliateIdCurrencyCompoundUniqueInput = {
-    affiliateId: string
+    affiliateId: bigint | number
     currency: $Enums.ExchangeCurrencyCode
   }
 
@@ -65483,6 +65713,7 @@ export namespace Prisma {
   }
 
   export type AffiliateWalletAvgOrderByAggregateInput = {
+    affiliateId?: SortOrder
     availableBalance?: SortOrder
     pendingBalance?: SortOrder
     totalEarned?: SortOrder
@@ -65507,6 +65738,7 @@ export namespace Prisma {
   }
 
   export type AffiliateWalletSumOrderByAggregateInput = {
+    affiliateId?: SortOrder
     availableBalance?: SortOrder
     pendingBalance?: SortOrder
     totalEarned?: SortOrder
@@ -65547,6 +65779,8 @@ export namespace Prisma {
   }
 
   export type AffiliateCommissionAvgOrderByAggregateInput = {
+    affiliateId?: SortOrder
+    subUserId?: SortOrder
     gameRoundId?: SortOrder
     wagerAmount?: SortOrder
     winAmount?: SortOrder
@@ -65596,6 +65830,8 @@ export namespace Prisma {
   }
 
   export type AffiliateCommissionSumOrderByAggregateInput = {
+    affiliateId?: SortOrder
+    subUserId?: SortOrder
     gameRoundId?: SortOrder
     wagerAmount?: SortOrder
     winAmount?: SortOrder
@@ -65647,6 +65883,7 @@ export namespace Prisma {
   }
 
   export type AffiliateTierAvgOrderByAggregateInput = {
+    affiliateId?: SortOrder
     baseRate?: SortOrder
     customRate?: SortOrder
     monthlyWagerAmount?: SortOrder
@@ -65684,6 +65921,7 @@ export namespace Prisma {
   }
 
   export type AffiliateTierSumOrderByAggregateInput = {
+    affiliateId?: SortOrder
     baseRate?: SortOrder
     customRate?: SortOrder
     monthlyWagerAmount?: SortOrder
@@ -65731,6 +65969,7 @@ export namespace Prisma {
 
   export type LoginAttemptAvgOrderByAggregateInput = {
     id?: SortOrder
+    userId?: SortOrder
   }
 
   export type LoginAttemptMaxOrderByAggregateInput = {
@@ -65765,6 +66004,7 @@ export namespace Prisma {
 
   export type LoginAttemptSumOrderByAggregateInput = {
     id?: SortOrder
+    userId?: SortOrder
   }
 
   export type EnumLoginAttemptResultWithAggregatesFilter<$PrismaModel = never> = {
@@ -66075,6 +66315,14 @@ export namespace Prisma {
     connectOrCreate?: LoginAttemptCreateOrConnectWithoutUserInput | LoginAttemptCreateOrConnectWithoutUserInput[]
     createMany?: LoginAttemptCreateManyUserInputEnvelope
     connect?: LoginAttemptWhereUniqueInput | LoginAttemptWhereUniqueInput[]
+  }
+
+  export type BigIntFieldUpdateOperationsInput = {
+    set?: bigint | number
+    increment?: bigint | number
+    decrement?: bigint | number
+    multiply?: bigint | number
+    divide?: bigint | number
   }
 
   export type StringFieldUpdateOperationsInput = {
@@ -66411,14 +66659,6 @@ export namespace Prisma {
     deleteMany?: LoginAttemptScalarWhereInput | LoginAttemptScalarWhereInput[]
   }
 
-  export type IntFieldUpdateOperationsInput = {
-    set?: number
-    increment?: number
-    decrement?: number
-    multiply?: number
-    divide?: number
-  }
-
   export type AffiliateCodeUncheckedUpdateManyWithoutUserNestedInput = {
     create?: XOR<AffiliateCodeCreateWithoutUserInput, AffiliateCodeUncheckedCreateWithoutUserInput> | AffiliateCodeCreateWithoutUserInput[] | AffiliateCodeUncheckedCreateWithoutUserInput[]
     connectOrCreate?: AffiliateCodeCreateOrConnectWithoutUserInput | AffiliateCodeCreateOrConnectWithoutUserInput[]
@@ -66723,14 +66963,6 @@ export namespace Prisma {
     set?: Date | string | null
   }
 
-  export type BigIntFieldUpdateOperationsInput = {
-    set?: bigint | number
-    increment?: bigint | number
-    decrement?: bigint | number
-    multiply?: bigint | number
-    divide?: bigint | number
-  }
-
   export type UserUpdateOneRequiredWithoutUserSessionNestedInput = {
     create?: XOR<UserCreateWithoutUserSessionInput, UserUncheckedCreateWithoutUserSessionInput>
     connectOrCreate?: UserCreateOrConnectWithoutUserSessionInput
@@ -66845,6 +67077,14 @@ export namespace Prisma {
 
   export type EnumGameCategoryFieldUpdateOperationsInput = {
     set?: $Enums.GameCategory
+  }
+
+  export type IntFieldUpdateOperationsInput = {
+    set?: number
+    increment?: number
+    decrement?: number
+    multiply?: number
+    divide?: number
   }
 
   export type BonusDetailUpdateManyWithoutGameNestedInput = {
@@ -68417,6 +68657,17 @@ export namespace Prisma {
     update?: XOR<XOR<UserUpdateToOneWithWhereWithoutLoginAttemptsInput, UserUpdateWithoutLoginAttemptsInput>, UserUncheckedUpdateWithoutLoginAttemptsInput>
   }
 
+  export type NestedBigIntFilter<$PrismaModel = never> = {
+    equals?: bigint | number | BigIntFieldRefInput<$PrismaModel>
+    in?: bigint[] | number[] | ListBigIntFieldRefInput<$PrismaModel>
+    notIn?: bigint[] | number[] | ListBigIntFieldRefInput<$PrismaModel>
+    lt?: bigint | number | BigIntFieldRefInput<$PrismaModel>
+    lte?: bigint | number | BigIntFieldRefInput<$PrismaModel>
+    gt?: bigint | number | BigIntFieldRefInput<$PrismaModel>
+    gte?: bigint | number | BigIntFieldRefInput<$PrismaModel>
+    not?: NestedBigIntFilter<$PrismaModel> | bigint | number
+  }
+
   export type NestedStringFilter<$PrismaModel = never> = {
     equals?: string | StringFieldRefInput<$PrismaModel>
     in?: string[] | ListStringFieldRefInput<$PrismaModel>
@@ -68429,17 +68680,6 @@ export namespace Prisma {
     startsWith?: string | StringFieldRefInput<$PrismaModel>
     endsWith?: string | StringFieldRefInput<$PrismaModel>
     not?: NestedStringFilter<$PrismaModel> | string
-  }
-
-  export type NestedIntFilter<$PrismaModel = never> = {
-    equals?: number | IntFieldRefInput<$PrismaModel>
-    in?: number[] | ListIntFieldRefInput<$PrismaModel>
-    notIn?: number[] | ListIntFieldRefInput<$PrismaModel>
-    lt?: number | IntFieldRefInput<$PrismaModel>
-    lte?: number | IntFieldRefInput<$PrismaModel>
-    gt?: number | IntFieldRefInput<$PrismaModel>
-    gte?: number | IntFieldRefInput<$PrismaModel>
-    not?: NestedIntFilter<$PrismaModel> | number
   }
 
   export type NestedBigIntNullableFilter<$PrismaModel = never> = {
@@ -68524,6 +68764,44 @@ export namespace Prisma {
     not?: NestedDateTimeFilter<$PrismaModel> | Date | string
   }
 
+  export type NestedBigIntWithAggregatesFilter<$PrismaModel = never> = {
+    equals?: bigint | number | BigIntFieldRefInput<$PrismaModel>
+    in?: bigint[] | number[] | ListBigIntFieldRefInput<$PrismaModel>
+    notIn?: bigint[] | number[] | ListBigIntFieldRefInput<$PrismaModel>
+    lt?: bigint | number | BigIntFieldRefInput<$PrismaModel>
+    lte?: bigint | number | BigIntFieldRefInput<$PrismaModel>
+    gt?: bigint | number | BigIntFieldRefInput<$PrismaModel>
+    gte?: bigint | number | BigIntFieldRefInput<$PrismaModel>
+    not?: NestedBigIntWithAggregatesFilter<$PrismaModel> | bigint | number
+    _count?: NestedIntFilter<$PrismaModel>
+    _avg?: NestedFloatFilter<$PrismaModel>
+    _sum?: NestedBigIntFilter<$PrismaModel>
+    _min?: NestedBigIntFilter<$PrismaModel>
+    _max?: NestedBigIntFilter<$PrismaModel>
+  }
+
+  export type NestedIntFilter<$PrismaModel = never> = {
+    equals?: number | IntFieldRefInput<$PrismaModel>
+    in?: number[] | ListIntFieldRefInput<$PrismaModel>
+    notIn?: number[] | ListIntFieldRefInput<$PrismaModel>
+    lt?: number | IntFieldRefInput<$PrismaModel>
+    lte?: number | IntFieldRefInput<$PrismaModel>
+    gt?: number | IntFieldRefInput<$PrismaModel>
+    gte?: number | IntFieldRefInput<$PrismaModel>
+    not?: NestedIntFilter<$PrismaModel> | number
+  }
+
+  export type NestedFloatFilter<$PrismaModel = never> = {
+    equals?: number | FloatFieldRefInput<$PrismaModel>
+    in?: number[] | ListFloatFieldRefInput<$PrismaModel>
+    notIn?: number[] | ListFloatFieldRefInput<$PrismaModel>
+    lt?: number | FloatFieldRefInput<$PrismaModel>
+    lte?: number | FloatFieldRefInput<$PrismaModel>
+    gt?: number | FloatFieldRefInput<$PrismaModel>
+    gte?: number | FloatFieldRefInput<$PrismaModel>
+    not?: NestedFloatFilter<$PrismaModel> | number
+  }
+
   export type NestedStringWithAggregatesFilter<$PrismaModel = never> = {
     equals?: string | StringFieldRefInput<$PrismaModel>
     in?: string[] | ListStringFieldRefInput<$PrismaModel>
@@ -68539,33 +68817,6 @@ export namespace Prisma {
     _count?: NestedIntFilter<$PrismaModel>
     _min?: NestedStringFilter<$PrismaModel>
     _max?: NestedStringFilter<$PrismaModel>
-  }
-
-  export type NestedIntWithAggregatesFilter<$PrismaModel = never> = {
-    equals?: number | IntFieldRefInput<$PrismaModel>
-    in?: number[] | ListIntFieldRefInput<$PrismaModel>
-    notIn?: number[] | ListIntFieldRefInput<$PrismaModel>
-    lt?: number | IntFieldRefInput<$PrismaModel>
-    lte?: number | IntFieldRefInput<$PrismaModel>
-    gt?: number | IntFieldRefInput<$PrismaModel>
-    gte?: number | IntFieldRefInput<$PrismaModel>
-    not?: NestedIntWithAggregatesFilter<$PrismaModel> | number
-    _count?: NestedIntFilter<$PrismaModel>
-    _avg?: NestedFloatFilter<$PrismaModel>
-    _sum?: NestedIntFilter<$PrismaModel>
-    _min?: NestedIntFilter<$PrismaModel>
-    _max?: NestedIntFilter<$PrismaModel>
-  }
-
-  export type NestedFloatFilter<$PrismaModel = never> = {
-    equals?: number | FloatFieldRefInput<$PrismaModel>
-    in?: number[] | ListFloatFieldRefInput<$PrismaModel>
-    notIn?: number[] | ListFloatFieldRefInput<$PrismaModel>
-    lt?: number | FloatFieldRefInput<$PrismaModel>
-    lte?: number | FloatFieldRefInput<$PrismaModel>
-    gt?: number | FloatFieldRefInput<$PrismaModel>
-    gte?: number | FloatFieldRefInput<$PrismaModel>
-    not?: NestedFloatFilter<$PrismaModel> | number
   }
 
   export type NestedBigIntNullableWithAggregatesFilter<$PrismaModel = never> = {
@@ -68713,17 +68964,6 @@ export namespace Prisma {
     not?: NestedDateTimeNullableFilter<$PrismaModel> | Date | string | null
   }
 
-  export type NestedBigIntFilter<$PrismaModel = never> = {
-    equals?: bigint | number | BigIntFieldRefInput<$PrismaModel>
-    in?: bigint[] | number[] | ListBigIntFieldRefInput<$PrismaModel>
-    notIn?: bigint[] | number[] | ListBigIntFieldRefInput<$PrismaModel>
-    lt?: bigint | number | BigIntFieldRefInput<$PrismaModel>
-    lte?: bigint | number | BigIntFieldRefInput<$PrismaModel>
-    gt?: bigint | number | BigIntFieldRefInput<$PrismaModel>
-    gte?: bigint | number | BigIntFieldRefInput<$PrismaModel>
-    not?: NestedBigIntFilter<$PrismaModel> | bigint | number
-  }
-
   export type NestedBoolNullableWithAggregatesFilter<$PrismaModel = never> = {
     equals?: boolean | BooleanFieldRefInput<$PrismaModel> | null
     not?: NestedBoolNullableWithAggregatesFilter<$PrismaModel> | boolean | null
@@ -68752,22 +68992,6 @@ export namespace Prisma {
     _count?: NestedIntNullableFilter<$PrismaModel>
     _min?: NestedDateTimeNullableFilter<$PrismaModel>
     _max?: NestedDateTimeNullableFilter<$PrismaModel>
-  }
-
-  export type NestedBigIntWithAggregatesFilter<$PrismaModel = never> = {
-    equals?: bigint | number | BigIntFieldRefInput<$PrismaModel>
-    in?: bigint[] | number[] | ListBigIntFieldRefInput<$PrismaModel>
-    notIn?: bigint[] | number[] | ListBigIntFieldRefInput<$PrismaModel>
-    lt?: bigint | number | BigIntFieldRefInput<$PrismaModel>
-    lte?: bigint | number | BigIntFieldRefInput<$PrismaModel>
-    gt?: bigint | number | BigIntFieldRefInput<$PrismaModel>
-    gte?: bigint | number | BigIntFieldRefInput<$PrismaModel>
-    not?: NestedBigIntWithAggregatesFilter<$PrismaModel> | bigint | number
-    _count?: NestedIntFilter<$PrismaModel>
-    _avg?: NestedFloatFilter<$PrismaModel>
-    _sum?: NestedBigIntFilter<$PrismaModel>
-    _min?: NestedBigIntFilter<$PrismaModel>
-    _max?: NestedBigIntFilter<$PrismaModel>
   }
 
   export type NestedEnumExchangeCurrencyCodeFilter<$PrismaModel = never> = {
@@ -68856,6 +69080,22 @@ export namespace Prisma {
     in?: $Enums.GameCategory[] | ListEnumGameCategoryFieldRefInput<$PrismaModel>
     notIn?: $Enums.GameCategory[] | ListEnumGameCategoryFieldRefInput<$PrismaModel>
     not?: NestedEnumGameCategoryFilter<$PrismaModel> | $Enums.GameCategory
+  }
+
+  export type NestedIntWithAggregatesFilter<$PrismaModel = never> = {
+    equals?: number | IntFieldRefInput<$PrismaModel>
+    in?: number[] | ListIntFieldRefInput<$PrismaModel>
+    notIn?: number[] | ListIntFieldRefInput<$PrismaModel>
+    lt?: number | IntFieldRefInput<$PrismaModel>
+    lte?: number | IntFieldRefInput<$PrismaModel>
+    gt?: number | IntFieldRefInput<$PrismaModel>
+    gte?: number | IntFieldRefInput<$PrismaModel>
+    not?: NestedIntWithAggregatesFilter<$PrismaModel> | number
+    _count?: NestedIntFilter<$PrismaModel>
+    _avg?: NestedFloatFilter<$PrismaModel>
+    _sum?: NestedIntFilter<$PrismaModel>
+    _min?: NestedIntFilter<$PrismaModel>
+    _max?: NestedIntFilter<$PrismaModel>
   }
 
   export type NestedEnumGameAggregatorTypeWithAggregatesFilter<$PrismaModel = never> = {
@@ -69455,7 +69695,7 @@ export namespace Prisma {
   }
 
   export type AffiliateCommissionUncheckedCreateWithoutAffiliateInput = {
-    subUserId: string
+    subUserId: bigint | number
     gameRoundId?: bigint | number | null
     wagerAmount: Decimal | DecimalJsLike | number | string
     winAmount?: Decimal | DecimalJsLike | number | string | null
@@ -69503,7 +69743,7 @@ export namespace Prisma {
   }
 
   export type AffiliateCommissionUncheckedCreateWithoutSubUserInput = {
-    affiliateId: string
+    affiliateId: bigint | number
     gameRoundId?: bigint | number | null
     wagerAmount: Decimal | DecimalJsLike | number | string
     winAmount?: Decimal | DecimalJsLike | number | string | null
@@ -69741,7 +69981,7 @@ export namespace Prisma {
 
   export type ReferralUncheckedCreateWithoutAffiliateInput = {
     id?: string
-    subUserId: string
+    subUserId: bigint | number
     ipAddress?: string | null
     deviceFingerprint?: string | null
     userAgent?: string | null
@@ -69773,7 +70013,7 @@ export namespace Prisma {
 
   export type ReferralUncheckedCreateWithoutSubUserInput = {
     id?: string
-    affiliateId: string
+    affiliateId: bigint | number
     ipAddress?: string | null
     deviceFingerprint?: string | null
     userAgent?: string | null
@@ -69979,7 +70219,7 @@ export namespace Prisma {
 
   export type UserSessionCreateWithoutUserInput = {
     sessionId: string
-    deviceInfo?: string | null
+    debetsiceInfo?: string | null
     userAgent?: string | null
     ipAddress?: string | null
     isMobile?: boolean | null
@@ -69994,7 +70234,7 @@ export namespace Prisma {
 
   export type UserSessionUncheckedCreateWithoutUserInput = {
     sessionId: string
-    deviceInfo?: string | null
+    debetsiceInfo?: string | null
     userAgent?: string | null
     ipAddress?: string | null
     isMobile?: boolean | null
@@ -70164,7 +70404,7 @@ export namespace Prisma {
     OR?: AffiliateCodeScalarWhereInput[]
     NOT?: AffiliateCodeScalarWhereInput | AffiliateCodeScalarWhereInput[]
     id?: StringFilter<"AffiliateCode"> | string
-    userId?: StringFilter<"AffiliateCode"> | string
+    userId?: BigIntFilter<"AffiliateCode"> | bigint | number
     code?: StringFilter<"AffiliateCode"> | string
     campaignName?: StringNullableFilter<"AffiliateCode"> | string | null
     description?: StringNullableFilter<"AffiliateCode"> | string | null
@@ -70196,8 +70436,8 @@ export namespace Prisma {
     AND?: AffiliateCommissionScalarWhereInput | AffiliateCommissionScalarWhereInput[]
     OR?: AffiliateCommissionScalarWhereInput[]
     NOT?: AffiliateCommissionScalarWhereInput | AffiliateCommissionScalarWhereInput[]
-    affiliateId?: StringFilter<"AffiliateCommission"> | string
-    subUserId?: StringFilter<"AffiliateCommission"> | string
+    affiliateId?: BigIntFilter<"AffiliateCommission"> | bigint | number
+    subUserId?: BigIntFilter<"AffiliateCommission"> | bigint | number
     gameRoundId?: BigIntNullableFilter<"AffiliateCommission"> | bigint | number | null
     wagerAmount?: DecimalFilter<"AffiliateCommission"> | Decimal | DecimalJsLike | number | string
     winAmount?: DecimalNullableFilter<"AffiliateCommission"> | Decimal | DecimalJsLike | number | string | null
@@ -70290,7 +70530,7 @@ export namespace Prisma {
     AND?: AffiliateWalletScalarWhereInput | AffiliateWalletScalarWhereInput[]
     OR?: AffiliateWalletScalarWhereInput[]
     NOT?: AffiliateWalletScalarWhereInput | AffiliateWalletScalarWhereInput[]
-    affiliateId?: StringFilter<"AffiliateWallet"> | string
+    affiliateId?: BigIntFilter<"AffiliateWallet"> | bigint | number
     currency?: EnumExchangeCurrencyCodeFilter<"AffiliateWallet"> | $Enums.ExchangeCurrencyCode
     availableBalance?: DecimalFilter<"AffiliateWallet"> | Decimal | DecimalJsLike | number | string
     pendingBalance?: DecimalFilter<"AffiliateWallet"> | Decimal | DecimalJsLike | number | string
@@ -70319,7 +70559,7 @@ export namespace Prisma {
     OR?: CompTransactionScalarWhereInput[]
     NOT?: CompTransactionScalarWhereInput | CompTransactionScalarWhereInput[]
     id?: BigIntFilter<"CompTransaction"> | bigint | number
-    userId?: StringFilter<"CompTransaction"> | string
+    userId?: BigIntFilter<"CompTransaction"> | bigint | number
     amount?: DecimalFilter<"CompTransaction"> | Decimal | DecimalJsLike | number | string
     dailyCompEarningId?: IntFilter<"CompTransaction"> | number
     transactionId?: BigIntFilter<"CompTransaction"> | bigint | number
@@ -70348,7 +70588,7 @@ export namespace Prisma {
     OR?: DailyCompEarningScalarWhereInput[]
     NOT?: DailyCompEarningScalarWhereInput | DailyCompEarningScalarWhereInput[]
     id?: IntFilter<"DailyCompEarning"> | number
-    userId?: StringFilter<"DailyCompEarning"> | string
+    userId?: BigIntFilter<"DailyCompEarning"> | bigint | number
     earningDate?: DateTimeFilter<"DailyCompEarning"> | Date | string
     totalContribution?: DecimalFilter<"DailyCompEarning"> | Decimal | DecimalJsLike | number | string
     compEarned?: DecimalFilter<"DailyCompEarning"> | Decimal | DecimalJsLike | number | string
@@ -70379,7 +70619,7 @@ export namespace Prisma {
     OR?: EmailLogScalarWhereInput[]
     NOT?: EmailLogScalarWhereInput | EmailLogScalarWhereInput[]
     id?: IntFilter<"EmailLog"> | number
-    userId?: StringNullableFilter<"EmailLog"> | string | null
+    userId?: BigIntNullableFilter<"EmailLog"> | bigint | number | null
     type?: EnumEmailTypeFilter<"EmailLog"> | $Enums.EmailType
     status?: EnumEmailStatusFilter<"EmailLog"> | $Enums.EmailStatus
     to?: StringFilter<"EmailLog"> | string
@@ -70413,7 +70653,7 @@ export namespace Prisma {
     OR?: GameSessionScalarWhereInput[]
     NOT?: GameSessionScalarWhereInput | GameSessionScalarWhereInput[]
     id?: BigIntFilter<"GameSession"> | bigint | number
-    userId?: StringFilter<"GameSession"> | string
+    userId?: BigIntFilter<"GameSession"> | bigint | number
     createdAt?: DateTimeFilter<"GameSession"> | Date | string
     updatedAt?: DateTimeFilter<"GameSession"> | Date | string
     lastAccessedAt?: DateTimeFilter<"GameSession"> | Date | string
@@ -70447,8 +70687,8 @@ export namespace Prisma {
     OR?: ReferralScalarWhereInput[]
     NOT?: ReferralScalarWhereInput | ReferralScalarWhereInput[]
     id?: StringFilter<"Referral"> | string
-    affiliateId?: StringFilter<"Referral"> | string
-    subUserId?: StringFilter<"Referral"> | string
+    affiliateId?: BigIntFilter<"Referral"> | bigint | number
+    subUserId?: BigIntFilter<"Referral"> | bigint | number
     ipAddress?: StringNullableFilter<"Referral"> | string | null
     deviceFingerprint?: StringNullableFilter<"Referral"> | string | null
     userAgent?: StringNullableFilter<"Referral"> | string | null
@@ -70494,7 +70734,7 @@ export namespace Prisma {
     OR?: RollingScalarWhereInput[]
     NOT?: RollingScalarWhereInput | RollingScalarWhereInput[]
     id?: BigIntFilter<"Rolling"> | bigint | number
-    userId?: StringFilter<"Rolling"> | string
+    userId?: BigIntFilter<"Rolling"> | bigint | number
     sourceType?: EnumRollingSourceTypeFilter<"Rolling"> | $Enums.RollingSourceType
     userPromotionId?: IntNullableFilter<"Rolling"> | number | null
     requiredAmount?: DecimalFilter<"Rolling"> | Decimal | DecimalJsLike | number | string
@@ -70531,7 +70771,7 @@ export namespace Prisma {
     OR?: TransactionScalarWhereInput[]
     NOT?: TransactionScalarWhereInput | TransactionScalarWhereInput[]
     id?: BigIntFilter<"Transaction"> | bigint | number
-    userId?: StringFilter<"Transaction"> | string
+    userId?: BigIntFilter<"Transaction"> | bigint | number
     type?: EnumTransactionTypeFilter<"Transaction"> | $Enums.TransactionType
     status?: EnumTransactionStatusFilter<"Transaction"> | $Enums.TransactionStatus
     currency?: EnumExchangeCurrencyCodeFilter<"Transaction"> | $Enums.ExchangeCurrencyCode
@@ -70562,7 +70802,7 @@ export namespace Prisma {
     AND?: UserBalanceScalarWhereInput | UserBalanceScalarWhereInput[]
     OR?: UserBalanceScalarWhereInput[]
     NOT?: UserBalanceScalarWhereInput | UserBalanceScalarWhereInput[]
-    userId?: StringFilter<"UserBalance"> | string
+    userId?: BigIntFilter<"UserBalance"> | bigint | number
     currency?: EnumExchangeCurrencyCodeFilter<"UserBalance"> | $Enums.ExchangeCurrencyCode
     mainBalance?: DecimalFilter<"UserBalance"> | Decimal | DecimalJsLike | number | string
     bonusBalance?: DecimalFilter<"UserBalance"> | Decimal | DecimalJsLike | number | string
@@ -70589,7 +70829,7 @@ export namespace Prisma {
     AND?: UserBalanceStatsScalarWhereInput | UserBalanceStatsScalarWhereInput[]
     OR?: UserBalanceStatsScalarWhereInput[]
     NOT?: UserBalanceStatsScalarWhereInput | UserBalanceStatsScalarWhereInput[]
-    userId?: StringFilter<"UserBalanceStats"> | string
+    userId?: BigIntFilter<"UserBalanceStats"> | bigint | number
     currency?: EnumExchangeCurrencyCodeFilter<"UserBalanceStats"> | $Enums.ExchangeCurrencyCode
     totalDeposit?: DecimalFilter<"UserBalanceStats"> | Decimal | DecimalJsLike | number | string
     totalWithdraw?: DecimalFilter<"UserBalanceStats"> | Decimal | DecimalJsLike | number | string
@@ -70624,7 +70864,7 @@ export namespace Prisma {
     OR?: UserPromotionScalarWhereInput[]
     NOT?: UserPromotionScalarWhereInput | UserPromotionScalarWhereInput[]
     id?: IntFilter<"UserPromotion"> | number
-    userId?: StringFilter<"UserPromotion"> | string
+    userId?: BigIntFilter<"UserPromotion"> | bigint | number
     promotionId?: IntFilter<"UserPromotion"> | number
     status?: EnumUserPromotionStatusFilter<"UserPromotion"> | $Enums.UserPromotionStatus
     bonusGranted?: BoolFilter<"UserPromotion"> | boolean
@@ -70654,9 +70894,9 @@ export namespace Prisma {
     AND?: UserSessionScalarWhereInput | UserSessionScalarWhereInput[]
     OR?: UserSessionScalarWhereInput[]
     NOT?: UserSessionScalarWhereInput | UserSessionScalarWhereInput[]
-    userId?: StringFilter<"UserSession"> | string
+    userId?: BigIntFilter<"UserSession"> | bigint | number
     sessionId?: StringFilter<"UserSession"> | string
-    deviceInfo?: StringNullableFilter<"UserSession"> | string | null
+    debetsiceInfo?: StringNullableFilter<"UserSession"> | string | null
     userAgent?: StringNullableFilter<"UserSession"> | string | null
     ipAddress?: StringNullableFilter<"UserSession"> | string | null
     isMobile?: BoolNullableFilter<"UserSession"> | boolean | null
@@ -70690,7 +70930,7 @@ export namespace Prisma {
     OR?: UserTokenScalarWhereInput[]
     NOT?: UserTokenScalarWhereInput | UserTokenScalarWhereInput[]
     id?: IntFilter<"UserToken"> | number
-    userId?: StringFilter<"UserToken"> | string
+    userId?: BigIntFilter<"UserToken"> | bigint | number
     type?: EnumTokenTypeFilter<"UserToken"> | $Enums.TokenType
     token?: StringFilter<"UserToken"> | string
     expiresAt?: DateTimeFilter<"UserToken"> | Date | string
@@ -70721,7 +70961,7 @@ export namespace Prisma {
     OR?: VipHistoryScalarWhereInput[]
     NOT?: VipHistoryScalarWhereInput | VipHistoryScalarWhereInput[]
     id?: IntFilter<"VipHistory"> | number
-    userId?: StringFilter<"VipHistory"> | string
+    userId?: BigIntFilter<"VipHistory"> | bigint | number
     previousLevelNameKey?: StringNullableFilter<"VipHistory"> | string | null
     newLevelNameKey?: StringFilter<"VipHistory"> | string
     rewardAmount?: DecimalFilter<"VipHistory"> | Decimal | DecimalJsLike | number | string
@@ -70785,7 +71025,7 @@ export namespace Prisma {
     NOT?: LoginAttemptScalarWhereInput | LoginAttemptScalarWhereInput[]
     id?: BigIntFilter<"LoginAttempt"> | bigint | number
     uid?: StringFilter<"LoginAttempt"> | string
-    userId?: StringNullableFilter<"LoginAttempt"> | string | null
+    userId?: BigIntNullableFilter<"LoginAttempt"> | bigint | number | null
     result?: EnumLoginAttemptResultFilter<"LoginAttempt"> | $Enums.LoginAttemptResult
     failureReason?: EnumLoginFailureReasonNullableFilter<"LoginAttempt"> | $Enums.LoginFailureReason | null
     ipAddress?: StringNullableFilter<"LoginAttempt"> | string | null
@@ -70798,8 +71038,8 @@ export namespace Prisma {
   }
 
   export type UserCreateWithoutUserSessionInput = {
-    id?: string
-    numericId?: number
+    id?: bigint | number
+    uid?: string
     whitecliffId?: bigint | number | null
     whitecliffSystemId?: bigint | number | null
     whitecliffUsername?: string | null
@@ -70840,8 +71080,8 @@ export namespace Prisma {
   }
 
   export type UserUncheckedCreateWithoutUserSessionInput = {
-    id?: string
-    numericId?: number
+    id?: bigint | number
+    uid?: string
     whitecliffId?: bigint | number | null
     whitecliffSystemId?: bigint | number | null
     whitecliffUsername?: string | null
@@ -70898,7 +71138,8 @@ export namespace Prisma {
   }
 
   export type UserUpdateWithoutUserSessionInput = {
-    id?: StringFieldUpdateOperationsInput | string
+    id?: BigIntFieldUpdateOperationsInput | bigint | number
+    uid?: StringFieldUpdateOperationsInput | string
     whitecliffId?: NullableBigIntFieldUpdateOperationsInput | bigint | number | null
     whitecliffSystemId?: NullableBigIntFieldUpdateOperationsInput | bigint | number | null
     whitecliffUsername?: NullableStringFieldUpdateOperationsInput | string | null
@@ -70939,8 +71180,8 @@ export namespace Prisma {
   }
 
   export type UserUncheckedUpdateWithoutUserSessionInput = {
-    id?: StringFieldUpdateOperationsInput | string
-    numericId?: IntFieldUpdateOperationsInput | number
+    id?: BigIntFieldUpdateOperationsInput | bigint | number
+    uid?: StringFieldUpdateOperationsInput | string
     whitecliffId?: NullableBigIntFieldUpdateOperationsInput | bigint | number | null
     whitecliffSystemId?: NullableBigIntFieldUpdateOperationsInput | bigint | number | null
     whitecliffUsername?: NullableStringFieldUpdateOperationsInput | string | null
@@ -70981,8 +71222,8 @@ export namespace Prisma {
   }
 
   export type UserCreateWithoutBalancesInput = {
-    id?: string
-    numericId?: number
+    id?: bigint | number
+    uid?: string
     whitecliffId?: bigint | number | null
     whitecliffSystemId?: bigint | number | null
     whitecliffUsername?: string | null
@@ -71023,8 +71264,8 @@ export namespace Prisma {
   }
 
   export type UserUncheckedCreateWithoutBalancesInput = {
-    id?: string
-    numericId?: number
+    id?: bigint | number
+    uid?: string
     whitecliffId?: bigint | number | null
     whitecliffSystemId?: bigint | number | null
     whitecliffUsername?: string | null
@@ -71081,7 +71322,8 @@ export namespace Prisma {
   }
 
   export type UserUpdateWithoutBalancesInput = {
-    id?: StringFieldUpdateOperationsInput | string
+    id?: BigIntFieldUpdateOperationsInput | bigint | number
+    uid?: StringFieldUpdateOperationsInput | string
     whitecliffId?: NullableBigIntFieldUpdateOperationsInput | bigint | number | null
     whitecliffSystemId?: NullableBigIntFieldUpdateOperationsInput | bigint | number | null
     whitecliffUsername?: NullableStringFieldUpdateOperationsInput | string | null
@@ -71122,8 +71364,8 @@ export namespace Prisma {
   }
 
   export type UserUncheckedUpdateWithoutBalancesInput = {
-    id?: StringFieldUpdateOperationsInput | string
-    numericId?: IntFieldUpdateOperationsInput | number
+    id?: BigIntFieldUpdateOperationsInput | bigint | number
+    uid?: StringFieldUpdateOperationsInput | string
     whitecliffId?: NullableBigIntFieldUpdateOperationsInput | bigint | number | null
     whitecliffSystemId?: NullableBigIntFieldUpdateOperationsInput | bigint | number | null
     whitecliffUsername?: NullableStringFieldUpdateOperationsInput | string | null
@@ -71164,8 +71406,8 @@ export namespace Prisma {
   }
 
   export type UserCreateWithoutUserBalanceStatsInput = {
-    id?: string
-    numericId?: number
+    id?: bigint | number
+    uid?: string
     whitecliffId?: bigint | number | null
     whitecliffSystemId?: bigint | number | null
     whitecliffUsername?: string | null
@@ -71206,8 +71448,8 @@ export namespace Prisma {
   }
 
   export type UserUncheckedCreateWithoutUserBalanceStatsInput = {
-    id?: string
-    numericId?: number
+    id?: bigint | number
+    uid?: string
     whitecliffId?: bigint | number | null
     whitecliffSystemId?: bigint | number | null
     whitecliffUsername?: string | null
@@ -71264,7 +71506,8 @@ export namespace Prisma {
   }
 
   export type UserUpdateWithoutUserBalanceStatsInput = {
-    id?: StringFieldUpdateOperationsInput | string
+    id?: BigIntFieldUpdateOperationsInput | bigint | number
+    uid?: StringFieldUpdateOperationsInput | string
     whitecliffId?: NullableBigIntFieldUpdateOperationsInput | bigint | number | null
     whitecliffSystemId?: NullableBigIntFieldUpdateOperationsInput | bigint | number | null
     whitecliffUsername?: NullableStringFieldUpdateOperationsInput | string | null
@@ -71305,8 +71548,8 @@ export namespace Prisma {
   }
 
   export type UserUncheckedUpdateWithoutUserBalanceStatsInput = {
-    id?: StringFieldUpdateOperationsInput | string
-    numericId?: IntFieldUpdateOperationsInput | number
+    id?: BigIntFieldUpdateOperationsInput | bigint | number
+    uid?: StringFieldUpdateOperationsInput | string
     whitecliffId?: NullableBigIntFieldUpdateOperationsInput | bigint | number | null
     whitecliffSystemId?: NullableBigIntFieldUpdateOperationsInput | bigint | number | null
     whitecliffUsername?: NullableStringFieldUpdateOperationsInput | string | null
@@ -71396,7 +71639,7 @@ export namespace Prisma {
 
   export type GameRoundCreateWithoutGameInput = {
     id?: bigint | number
-    userId: string
+    userId: bigint | number
     aggregatorType: $Enums.GameAggregatorType
     provider: $Enums.GameProvider
     aggregatorTxId: string
@@ -71428,7 +71671,7 @@ export namespace Prisma {
 
   export type GameRoundUncheckedCreateWithoutGameInput = {
     id?: bigint | number
-    userId: string
+    userId: bigint | number
     aggregatorType: $Enums.GameAggregatorType
     provider: $Enums.GameProvider
     aggregatorTxId: string
@@ -71485,7 +71728,7 @@ export namespace Prisma {
 
   export type GameSessionUncheckedCreateWithoutGameInput = {
     id?: bigint | number
-    userId: string
+    userId: bigint | number
     createdAt?: Date | string
     updatedAt?: Date | string
     lastAccessedAt?: Date | string
@@ -71597,7 +71840,7 @@ export namespace Prisma {
     OR?: GameRoundScalarWhereInput[]
     NOT?: GameRoundScalarWhereInput | GameRoundScalarWhereInput[]
     id?: BigIntFilter<"GameRound"> | bigint | number
-    userId?: StringFilter<"GameRound"> | string
+    userId?: BigIntFilter<"GameRound"> | bigint | number
     aggregatorType?: EnumGameAggregatorTypeFilter<"GameRound"> | $Enums.GameAggregatorType
     provider?: EnumGameProviderFilter<"GameRound"> | $Enums.GameProvider
     aggregatorTxId?: StringFilter<"GameRound"> | string
@@ -71819,7 +72062,7 @@ export namespace Prisma {
 
   export type CompTransactionUncheckedCreateWithoutTransactionInput = {
     id?: bigint | number
-    userId: string
+    userId: bigint | number
     amount: Decimal | DecimalJsLike | number | string
     dailyCompEarningId: number
     createdAt?: Date | string
@@ -71896,7 +72139,7 @@ export namespace Prisma {
 
   export type GameRoundCreateWithoutTransactionInput = {
     id?: bigint | number
-    userId: string
+    userId: bigint | number
     aggregatorType: $Enums.GameAggregatorType
     provider: $Enums.GameProvider
     aggregatorTxId: string
@@ -71928,7 +72171,7 @@ export namespace Prisma {
 
   export type GameRoundUncheckedCreateWithoutTransactionInput = {
     id?: bigint | number
-    userId: string
+    userId: bigint | number
     aggregatorType: $Enums.GameAggregatorType
     provider: $Enums.GameProvider
     aggregatorTxId: string
@@ -71964,8 +72207,8 @@ export namespace Prisma {
   }
 
   export type UserCreateWithoutTransactionsInput = {
-    id?: string
-    numericId?: number
+    id?: bigint | number
+    uid?: string
     whitecliffId?: bigint | number | null
     whitecliffSystemId?: bigint | number | null
     whitecliffUsername?: string | null
@@ -72006,8 +72249,8 @@ export namespace Prisma {
   }
 
   export type UserUncheckedCreateWithoutTransactionsInput = {
-    id?: string
-    numericId?: number
+    id?: bigint | number
+    uid?: string
     whitecliffId?: bigint | number | null
     whitecliffSystemId?: bigint | number | null
     whitecliffUsername?: string | null
@@ -72200,7 +72443,7 @@ export namespace Prisma {
 
   export type CompTransactionUncheckedUpdateWithoutTransactionInput = {
     id?: BigIntFieldUpdateOperationsInput | bigint | number
-    userId?: StringFieldUpdateOperationsInput | string
+    userId?: BigIntFieldUpdateOperationsInput | bigint | number
     amount?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
     dailyCompEarningId?: IntFieldUpdateOperationsInput | number
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
@@ -72289,7 +72532,7 @@ export namespace Prisma {
 
   export type GameRoundUpdateWithoutTransactionInput = {
     id?: BigIntFieldUpdateOperationsInput | bigint | number
-    userId?: StringFieldUpdateOperationsInput | string
+    userId?: BigIntFieldUpdateOperationsInput | bigint | number
     aggregatorType?: EnumGameAggregatorTypeFieldUpdateOperationsInput | $Enums.GameAggregatorType
     provider?: EnumGameProviderFieldUpdateOperationsInput | $Enums.GameProvider
     aggregatorTxId?: StringFieldUpdateOperationsInput | string
@@ -72321,7 +72564,7 @@ export namespace Prisma {
 
   export type GameRoundUncheckedUpdateWithoutTransactionInput = {
     id?: BigIntFieldUpdateOperationsInput | bigint | number
-    userId?: StringFieldUpdateOperationsInput | string
+    userId?: BigIntFieldUpdateOperationsInput | bigint | number
     aggregatorType?: EnumGameAggregatorTypeFieldUpdateOperationsInput | $Enums.GameAggregatorType
     provider?: EnumGameProviderFieldUpdateOperationsInput | $Enums.GameProvider
     aggregatorTxId?: StringFieldUpdateOperationsInput | string
@@ -72363,7 +72606,8 @@ export namespace Prisma {
   }
 
   export type UserUpdateWithoutTransactionsInput = {
-    id?: StringFieldUpdateOperationsInput | string
+    id?: BigIntFieldUpdateOperationsInput | bigint | number
+    uid?: StringFieldUpdateOperationsInput | string
     whitecliffId?: NullableBigIntFieldUpdateOperationsInput | bigint | number | null
     whitecliffSystemId?: NullableBigIntFieldUpdateOperationsInput | bigint | number | null
     whitecliffUsername?: NullableStringFieldUpdateOperationsInput | string | null
@@ -72404,8 +72648,8 @@ export namespace Prisma {
   }
 
   export type UserUncheckedUpdateWithoutTransactionsInput = {
-    id?: StringFieldUpdateOperationsInput | string
-    numericId?: IntFieldUpdateOperationsInput | number
+    id?: BigIntFieldUpdateOperationsInput | bigint | number
+    uid?: StringFieldUpdateOperationsInput | string
     whitecliffId?: NullableBigIntFieldUpdateOperationsInput | bigint | number | null
     whitecliffSystemId?: NullableBigIntFieldUpdateOperationsInput | bigint | number | null
     whitecliffUsername?: NullableStringFieldUpdateOperationsInput | string | null
@@ -72547,8 +72791,8 @@ export namespace Prisma {
   }
 
   export type AffiliateCommissionUncheckedCreateWithoutGameRoundInput = {
-    affiliateId: string
-    subUserId: string
+    affiliateId: bigint | number
+    subUserId: bigint | number
     wagerAmount: Decimal | DecimalJsLike | number | string
     winAmount?: Decimal | DecimalJsLike | number | string | null
     commission: Decimal | DecimalJsLike | number | string
@@ -72577,7 +72821,7 @@ export namespace Prisma {
 
   export type GameBetCreateWithoutGameRoundInput = {
     id?: bigint | number
-    userId: string
+    userId: bigint | number
     aggregatorType: $Enums.GameAggregatorType
     aggregatorBetId: string
     betType: $Enums.BetType
@@ -72591,7 +72835,7 @@ export namespace Prisma {
 
   export type GameBetUncheckedCreateWithoutGameRoundInput = {
     id?: bigint | number
-    userId: string
+    userId: bigint | number
     aggregatorType: $Enums.GameAggregatorType
     aggregatorBetId: string
     betType: $Enums.BetType
@@ -72674,7 +72918,7 @@ export namespace Prisma {
 
   export type GameSessionUncheckedCreateWithoutGameRoundsInput = {
     id?: bigint | number
-    userId: string
+    userId: bigint | number
     createdAt?: Date | string
     updatedAt?: Date | string
     lastAccessedAt?: Date | string
@@ -72712,7 +72956,7 @@ export namespace Prisma {
 
   export type TransactionUncheckedCreateWithoutGameRoundInput = {
     id?: bigint | number
-    userId: string
+    userId: bigint | number
     type: $Enums.TransactionType
     status: $Enums.TransactionStatus
     currency: $Enums.ExchangeCurrencyCode
@@ -72735,7 +72979,7 @@ export namespace Prisma {
 
   export type GameWinCreateWithoutGameRoundInput = {
     id?: bigint | number
-    userId: string
+    userId: bigint | number
     aggregatorType: $Enums.GameAggregatorType
     aggregatorWinId: string
     winType: $Enums.WinType
@@ -72748,7 +72992,7 @@ export namespace Prisma {
 
   export type GameWinUncheckedCreateWithoutGameRoundInput = {
     id?: bigint | number
-    userId: string
+    userId: bigint | number
     aggregatorType: $Enums.GameAggregatorType
     aggregatorWinId: string
     winType: $Enums.WinType
@@ -72806,7 +73050,7 @@ export namespace Prisma {
     OR?: GameBetScalarWhereInput[]
     NOT?: GameBetScalarWhereInput | GameBetScalarWhereInput[]
     id?: BigIntFilter<"GameBet"> | bigint | number
-    userId?: StringFilter<"GameBet"> | string
+    userId?: BigIntFilter<"GameBet"> | bigint | number
     gameRoundId?: BigIntFilter<"GameBet"> | bigint | number
     aggregatorType?: EnumGameAggregatorTypeFilter<"GameBet"> | $Enums.GameAggregatorType
     aggregatorBetId?: StringFilter<"GameBet"> | string
@@ -72897,7 +73141,7 @@ export namespace Prisma {
 
   export type GameSessionUncheckedUpdateWithoutGameRoundsInput = {
     id?: BigIntFieldUpdateOperationsInput | bigint | number
-    userId?: StringFieldUpdateOperationsInput | string
+    userId?: BigIntFieldUpdateOperationsInput | bigint | number
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
     lastAccessedAt?: DateTimeFieldUpdateOperationsInput | Date | string
@@ -72941,7 +73185,7 @@ export namespace Prisma {
 
   export type TransactionUncheckedUpdateWithoutGameRoundInput = {
     id?: BigIntFieldUpdateOperationsInput | bigint | number
-    userId?: StringFieldUpdateOperationsInput | string
+    userId?: BigIntFieldUpdateOperationsInput | bigint | number
     type?: EnumTransactionTypeFieldUpdateOperationsInput | $Enums.TransactionType
     status?: EnumTransactionStatusFieldUpdateOperationsInput | $Enums.TransactionStatus
     currency?: EnumExchangeCurrencyCodeFieldUpdateOperationsInput | $Enums.ExchangeCurrencyCode
@@ -72978,7 +73222,7 @@ export namespace Prisma {
     OR?: GameWinScalarWhereInput[]
     NOT?: GameWinScalarWhereInput | GameWinScalarWhereInput[]
     id?: BigIntFilter<"GameWin"> | bigint | number
-    userId?: StringFilter<"GameWin"> | string
+    userId?: BigIntFilter<"GameWin"> | bigint | number
     gameRoundId?: BigIntFilter<"GameWin"> | bigint | number
     aggregatorType?: EnumGameAggregatorTypeFilter<"GameWin"> | $Enums.GameAggregatorType
     aggregatorWinId?: StringFilter<"GameWin"> | string
@@ -72992,7 +73236,7 @@ export namespace Prisma {
 
   export type GameRoundCreateWithoutBetsInput = {
     id?: bigint | number
-    userId: string
+    userId: bigint | number
     aggregatorType: $Enums.GameAggregatorType
     provider: $Enums.GameProvider
     aggregatorTxId: string
@@ -73024,7 +73268,7 @@ export namespace Prisma {
 
   export type GameRoundUncheckedCreateWithoutBetsInput = {
     id?: bigint | number
-    userId: string
+    userId: bigint | number
     aggregatorType: $Enums.GameAggregatorType
     provider: $Enums.GameProvider
     aggregatorTxId: string
@@ -73072,7 +73316,7 @@ export namespace Prisma {
 
   export type GameRoundUpdateWithoutBetsInput = {
     id?: BigIntFieldUpdateOperationsInput | bigint | number
-    userId?: StringFieldUpdateOperationsInput | string
+    userId?: BigIntFieldUpdateOperationsInput | bigint | number
     aggregatorType?: EnumGameAggregatorTypeFieldUpdateOperationsInput | $Enums.GameAggregatorType
     provider?: EnumGameProviderFieldUpdateOperationsInput | $Enums.GameProvider
     aggregatorTxId?: StringFieldUpdateOperationsInput | string
@@ -73104,7 +73348,7 @@ export namespace Prisma {
 
   export type GameRoundUncheckedUpdateWithoutBetsInput = {
     id?: BigIntFieldUpdateOperationsInput | bigint | number
-    userId?: StringFieldUpdateOperationsInput | string
+    userId?: BigIntFieldUpdateOperationsInput | bigint | number
     aggregatorType?: EnumGameAggregatorTypeFieldUpdateOperationsInput | $Enums.GameAggregatorType
     provider?: EnumGameProviderFieldUpdateOperationsInput | $Enums.GameProvider
     aggregatorTxId?: StringFieldUpdateOperationsInput | string
@@ -73136,7 +73380,7 @@ export namespace Prisma {
 
   export type GameRoundCreateWithoutWinsInput = {
     id?: bigint | number
-    userId: string
+    userId: bigint | number
     aggregatorType: $Enums.GameAggregatorType
     provider: $Enums.GameProvider
     aggregatorTxId: string
@@ -73168,7 +73412,7 @@ export namespace Prisma {
 
   export type GameRoundUncheckedCreateWithoutWinsInput = {
     id?: bigint | number
-    userId: string
+    userId: bigint | number
     aggregatorType: $Enums.GameAggregatorType
     provider: $Enums.GameProvider
     aggregatorTxId: string
@@ -73216,7 +73460,7 @@ export namespace Prisma {
 
   export type GameRoundUpdateWithoutWinsInput = {
     id?: BigIntFieldUpdateOperationsInput | bigint | number
-    userId?: StringFieldUpdateOperationsInput | string
+    userId?: BigIntFieldUpdateOperationsInput | bigint | number
     aggregatorType?: EnumGameAggregatorTypeFieldUpdateOperationsInput | $Enums.GameAggregatorType
     provider?: EnumGameProviderFieldUpdateOperationsInput | $Enums.GameProvider
     aggregatorTxId?: StringFieldUpdateOperationsInput | string
@@ -73248,7 +73492,7 @@ export namespace Prisma {
 
   export type GameRoundUncheckedUpdateWithoutWinsInput = {
     id?: BigIntFieldUpdateOperationsInput | bigint | number
-    userId?: StringFieldUpdateOperationsInput | string
+    userId?: BigIntFieldUpdateOperationsInput | bigint | number
     aggregatorType?: EnumGameAggregatorTypeFieldUpdateOperationsInput | $Enums.GameAggregatorType
     provider?: EnumGameProviderFieldUpdateOperationsInput | $Enums.GameProvider
     aggregatorTxId?: StringFieldUpdateOperationsInput | string
@@ -73298,7 +73542,7 @@ export namespace Prisma {
 
   export type TransactionUncheckedCreateWithoutBalanceDetailsInput = {
     id?: bigint | number
-    userId: string
+    userId: bigint | number
     type: $Enums.TransactionType
     status: $Enums.TransactionStatus
     currency: $Enums.ExchangeCurrencyCode
@@ -73350,7 +73594,7 @@ export namespace Prisma {
 
   export type TransactionUncheckedUpdateWithoutBalanceDetailsInput = {
     id?: BigIntFieldUpdateOperationsInput | bigint | number
-    userId?: StringFieldUpdateOperationsInput | string
+    userId?: BigIntFieldUpdateOperationsInput | bigint | number
     type?: EnumTransactionTypeFieldUpdateOperationsInput | $Enums.TransactionType
     status?: EnumTransactionStatusFieldUpdateOperationsInput | $Enums.TransactionStatus
     currency?: EnumExchangeCurrencyCodeFieldUpdateOperationsInput | $Enums.ExchangeCurrencyCode
@@ -73430,7 +73674,7 @@ export namespace Prisma {
 
   export type TransactionUncheckedCreateWithoutBonusDetailInput = {
     id?: bigint | number
-    userId: string
+    userId: bigint | number
     type: $Enums.TransactionType
     status: $Enums.TransactionStatus
     currency: $Enums.ExchangeCurrencyCode
@@ -73532,7 +73776,7 @@ export namespace Prisma {
 
   export type TransactionUncheckedUpdateWithoutBonusDetailInput = {
     id?: BigIntFieldUpdateOperationsInput | bigint | number
-    userId?: StringFieldUpdateOperationsInput | string
+    userId?: BigIntFieldUpdateOperationsInput | bigint | number
     type?: EnumTransactionTypeFieldUpdateOperationsInput | $Enums.TransactionType
     status?: EnumTransactionStatusFieldUpdateOperationsInput | $Enums.TransactionStatus
     currency?: EnumExchangeCurrencyCodeFieldUpdateOperationsInput | $Enums.ExchangeCurrencyCode
@@ -73606,7 +73850,7 @@ export namespace Prisma {
 
   export type TransactionUncheckedCreateWithoutDepositDetailInput = {
     id?: bigint | number
-    userId: string
+    userId: bigint | number
     type: $Enums.TransactionType
     status: $Enums.TransactionStatus
     currency: $Enums.ExchangeCurrencyCode
@@ -73646,7 +73890,7 @@ export namespace Prisma {
 
   export type RollingUncheckedCreateWithoutDepositDetailInput = {
     id?: bigint | number
-    userId: string
+    userId: bigint | number
     sourceType?: $Enums.RollingSourceType
     userPromotionId?: number | null
     requiredAmount: Decimal | DecimalJsLike | number | string
@@ -73746,7 +73990,7 @@ export namespace Prisma {
 
   export type TransactionUncheckedUpdateWithoutDepositDetailInput = {
     id?: BigIntFieldUpdateOperationsInput | bigint | number
-    userId?: StringFieldUpdateOperationsInput | string
+    userId?: BigIntFieldUpdateOperationsInput | bigint | number
     type?: EnumTransactionTypeFieldUpdateOperationsInput | $Enums.TransactionType
     status?: EnumTransactionStatusFieldUpdateOperationsInput | $Enums.TransactionStatus
     currency?: EnumExchangeCurrencyCodeFieldUpdateOperationsInput | $Enums.ExchangeCurrencyCode
@@ -73798,7 +74042,7 @@ export namespace Prisma {
 
   export type TransactionUncheckedCreateWithoutWithdrawDetailInput = {
     id?: bigint | number
-    userId: string
+    userId: bigint | number
     type: $Enums.TransactionType
     status: $Enums.TransactionStatus
     currency: $Enums.ExchangeCurrencyCode
@@ -73850,7 +74094,7 @@ export namespace Prisma {
 
   export type TransactionUncheckedUpdateWithoutWithdrawDetailInput = {
     id?: BigIntFieldUpdateOperationsInput | bigint | number
-    userId?: StringFieldUpdateOperationsInput | string
+    userId?: BigIntFieldUpdateOperationsInput | bigint | number
     type?: EnumTransactionTypeFieldUpdateOperationsInput | $Enums.TransactionType
     status?: EnumTransactionStatusFieldUpdateOperationsInput | $Enums.TransactionStatus
     currency?: EnumExchangeCurrencyCodeFieldUpdateOperationsInput | $Enums.ExchangeCurrencyCode
@@ -73879,7 +74123,7 @@ export namespace Prisma {
 
   export type DailyCompEarningUncheckedCreateWithoutCompTransactionInput = {
     id?: number
-    userId: string
+    userId: bigint | number
     earningDate: Date | string
     totalContribution: Decimal | DecimalJsLike | number | string
     compEarned: Decimal | DecimalJsLike | number | string
@@ -73914,7 +74158,7 @@ export namespace Prisma {
 
   export type TransactionUncheckedCreateWithoutCompTransactionInput = {
     id?: bigint | number
-    userId: string
+    userId: bigint | number
     type: $Enums.TransactionType
     status: $Enums.TransactionStatus
     currency: $Enums.ExchangeCurrencyCode
@@ -73936,8 +74180,8 @@ export namespace Prisma {
   }
 
   export type UserCreateWithoutCompTransactionInput = {
-    id?: string
-    numericId?: number
+    id?: bigint | number
+    uid?: string
     whitecliffId?: bigint | number | null
     whitecliffSystemId?: bigint | number | null
     whitecliffUsername?: string | null
@@ -73978,8 +74222,8 @@ export namespace Prisma {
   }
 
   export type UserUncheckedCreateWithoutCompTransactionInput = {
-    id?: string
-    numericId?: number
+    id?: bigint | number
+    uid?: string
     whitecliffId?: bigint | number | null
     whitecliffSystemId?: bigint | number | null
     whitecliffUsername?: string | null
@@ -74048,7 +74292,7 @@ export namespace Prisma {
 
   export type DailyCompEarningUncheckedUpdateWithoutCompTransactionInput = {
     id?: IntFieldUpdateOperationsInput | number
-    userId?: StringFieldUpdateOperationsInput | string
+    userId?: BigIntFieldUpdateOperationsInput | bigint | number
     earningDate?: DateTimeFieldUpdateOperationsInput | Date | string
     totalContribution?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
     compEarned?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
@@ -74089,7 +74333,7 @@ export namespace Prisma {
 
   export type TransactionUncheckedUpdateWithoutCompTransactionInput = {
     id?: BigIntFieldUpdateOperationsInput | bigint | number
-    userId?: StringFieldUpdateOperationsInput | string
+    userId?: BigIntFieldUpdateOperationsInput | bigint | number
     type?: EnumTransactionTypeFieldUpdateOperationsInput | $Enums.TransactionType
     status?: EnumTransactionStatusFieldUpdateOperationsInput | $Enums.TransactionStatus
     currency?: EnumExchangeCurrencyCodeFieldUpdateOperationsInput | $Enums.ExchangeCurrencyCode
@@ -74117,7 +74361,8 @@ export namespace Prisma {
   }
 
   export type UserUpdateWithoutCompTransactionInput = {
-    id?: StringFieldUpdateOperationsInput | string
+    id?: BigIntFieldUpdateOperationsInput | bigint | number
+    uid?: StringFieldUpdateOperationsInput | string
     whitecliffId?: NullableBigIntFieldUpdateOperationsInput | bigint | number | null
     whitecliffSystemId?: NullableBigIntFieldUpdateOperationsInput | bigint | number | null
     whitecliffUsername?: NullableStringFieldUpdateOperationsInput | string | null
@@ -74158,8 +74403,8 @@ export namespace Prisma {
   }
 
   export type UserUncheckedUpdateWithoutCompTransactionInput = {
-    id?: StringFieldUpdateOperationsInput | string
-    numericId?: IntFieldUpdateOperationsInput | number
+    id?: BigIntFieldUpdateOperationsInput | bigint | number
+    uid?: StringFieldUpdateOperationsInput | string
     whitecliffId?: NullableBigIntFieldUpdateOperationsInput | bigint | number | null
     whitecliffSystemId?: NullableBigIntFieldUpdateOperationsInput | bigint | number | null
     whitecliffUsername?: NullableStringFieldUpdateOperationsInput | string | null
@@ -74210,7 +74455,7 @@ export namespace Prisma {
 
   export type CompTransactionUncheckedCreateWithoutDailyCompEarningInput = {
     id?: bigint | number
-    userId: string
+    userId: bigint | number
     amount: Decimal | DecimalJsLike | number | string
     transactionId: bigint | number
     createdAt?: Date | string
@@ -74228,8 +74473,8 @@ export namespace Prisma {
   }
 
   export type UserCreateWithoutDailyCompEarningInput = {
-    id?: string
-    numericId?: number
+    id?: bigint | number
+    uid?: string
     whitecliffId?: bigint | number | null
     whitecliffSystemId?: bigint | number | null
     whitecliffUsername?: string | null
@@ -74270,8 +74515,8 @@ export namespace Prisma {
   }
 
   export type UserUncheckedCreateWithoutDailyCompEarningInput = {
-    id?: string
-    numericId?: number
+    id?: bigint | number
+    uid?: string
     whitecliffId?: bigint | number | null
     whitecliffSystemId?: bigint | number | null
     whitecliffUsername?: string | null
@@ -74344,7 +74589,8 @@ export namespace Prisma {
   }
 
   export type UserUpdateWithoutDailyCompEarningInput = {
-    id?: StringFieldUpdateOperationsInput | string
+    id?: BigIntFieldUpdateOperationsInput | bigint | number
+    uid?: StringFieldUpdateOperationsInput | string
     whitecliffId?: NullableBigIntFieldUpdateOperationsInput | bigint | number | null
     whitecliffSystemId?: NullableBigIntFieldUpdateOperationsInput | bigint | number | null
     whitecliffUsername?: NullableStringFieldUpdateOperationsInput | string | null
@@ -74385,8 +74631,8 @@ export namespace Prisma {
   }
 
   export type UserUncheckedUpdateWithoutDailyCompEarningInput = {
-    id?: StringFieldUpdateOperationsInput | string
-    numericId?: IntFieldUpdateOperationsInput | number
+    id?: BigIntFieldUpdateOperationsInput | bigint | number
+    uid?: StringFieldUpdateOperationsInput | string
     whitecliffId?: NullableBigIntFieldUpdateOperationsInput | bigint | number | null
     whitecliffSystemId?: NullableBigIntFieldUpdateOperationsInput | bigint | number | null
     whitecliffUsername?: NullableStringFieldUpdateOperationsInput | string | null
@@ -74466,7 +74712,7 @@ export namespace Prisma {
 
   export type UserPromotionUncheckedCreateWithoutPromotionInput = {
     id?: number
-    userId: string
+    userId: bigint | number
     status?: $Enums.UserPromotionStatus
     bonusGranted?: boolean
     bonusGrantedAt?: Date | string | null
@@ -74636,7 +74882,7 @@ export namespace Prisma {
 
   export type RollingUncheckedCreateWithoutUserPromotionInput = {
     id?: bigint | number
-    userId: string
+    userId: bigint | number
     sourceType?: $Enums.RollingSourceType
     requiredAmount: Decimal | DecimalJsLike | number | string
     currentAmount?: Decimal | DecimalJsLike | number | string
@@ -74702,8 +74948,8 @@ export namespace Prisma {
   }
 
   export type UserCreateWithoutUserPromotionInput = {
-    id?: string
-    numericId?: number
+    id?: bigint | number
+    uid?: string
     whitecliffId?: bigint | number | null
     whitecliffSystemId?: bigint | number | null
     whitecliffUsername?: string | null
@@ -74744,8 +74990,8 @@ export namespace Prisma {
   }
 
   export type UserUncheckedCreateWithoutUserPromotionInput = {
-    id?: string
-    numericId?: number
+    id?: bigint | number
+    uid?: string
     whitecliffId?: bigint | number | null
     whitecliffSystemId?: bigint | number | null
     whitecliffUsername?: string | null
@@ -74864,7 +75110,8 @@ export namespace Prisma {
   }
 
   export type UserUpdateWithoutUserPromotionInput = {
-    id?: StringFieldUpdateOperationsInput | string
+    id?: BigIntFieldUpdateOperationsInput | bigint | number
+    uid?: StringFieldUpdateOperationsInput | string
     whitecliffId?: NullableBigIntFieldUpdateOperationsInput | bigint | number | null
     whitecliffSystemId?: NullableBigIntFieldUpdateOperationsInput | bigint | number | null
     whitecliffUsername?: NullableStringFieldUpdateOperationsInput | string | null
@@ -74905,8 +75152,8 @@ export namespace Prisma {
   }
 
   export type UserUncheckedUpdateWithoutUserPromotionInput = {
-    id?: StringFieldUpdateOperationsInput | string
-    numericId?: IntFieldUpdateOperationsInput | number
+    id?: BigIntFieldUpdateOperationsInput | bigint | number
+    uid?: StringFieldUpdateOperationsInput | string
     whitecliffId?: NullableBigIntFieldUpdateOperationsInput | bigint | number | null
     whitecliffSystemId?: NullableBigIntFieldUpdateOperationsInput | bigint | number | null
     whitecliffUsername?: NullableStringFieldUpdateOperationsInput | string | null
@@ -74958,7 +75205,7 @@ export namespace Prisma {
 
   export type VipMembershipUncheckedCreateWithoutVipLevelInput = {
     id?: number
-    userId: string
+    userId: bigint | number
     accumulatedRolling?: Decimal | DecimalJsLike | number | string
     totalRewardsPaid?: Decimal | DecimalJsLike | number | string
     achievedAt?: Date | string | null
@@ -74998,7 +75245,7 @@ export namespace Prisma {
     OR?: VipMembershipScalarWhereInput[]
     NOT?: VipMembershipScalarWhereInput | VipMembershipScalarWhereInput[]
     id?: IntFilter<"VipMembership"> | number
-    userId?: StringFilter<"VipMembership"> | string
+    userId?: BigIntFilter<"VipMembership"> | bigint | number
     vipLevelId?: IntFilter<"VipMembership"> | number
     accumulatedRolling?: DecimalFilter<"VipMembership"> | Decimal | DecimalJsLike | number | string
     totalRewardsPaid?: DecimalFilter<"VipMembership"> | Decimal | DecimalJsLike | number | string
@@ -75019,7 +75266,7 @@ export namespace Prisma {
 
   export type VipHistoryUncheckedCreateWithoutVipMembershipInput = {
     id?: number
-    userId: string
+    userId: bigint | number
     previousLevelNameKey?: string | null
     newLevelNameKey: string
     rewardAmount: Decimal | DecimalJsLike | number | string
@@ -75039,8 +75286,8 @@ export namespace Prisma {
   }
 
   export type UserCreateWithoutVipMembershipInput = {
-    id?: string
-    numericId?: number
+    id?: bigint | number
+    uid?: string
     whitecliffId?: bigint | number | null
     whitecliffSystemId?: bigint | number | null
     whitecliffUsername?: string | null
@@ -75081,8 +75328,8 @@ export namespace Prisma {
   }
 
   export type UserUncheckedCreateWithoutVipMembershipInput = {
-    id?: string
-    numericId?: number
+    id?: bigint | number
+    uid?: string
     whitecliffId?: bigint | number | null
     whitecliffSystemId?: bigint | number | null
     whitecliffUsername?: string | null
@@ -75189,7 +75436,8 @@ export namespace Prisma {
   }
 
   export type UserUpdateWithoutVipMembershipInput = {
-    id?: StringFieldUpdateOperationsInput | string
+    id?: BigIntFieldUpdateOperationsInput | bigint | number
+    uid?: StringFieldUpdateOperationsInput | string
     whitecliffId?: NullableBigIntFieldUpdateOperationsInput | bigint | number | null
     whitecliffSystemId?: NullableBigIntFieldUpdateOperationsInput | bigint | number | null
     whitecliffUsername?: NullableStringFieldUpdateOperationsInput | string | null
@@ -75230,8 +75478,8 @@ export namespace Prisma {
   }
 
   export type UserUncheckedUpdateWithoutVipMembershipInput = {
-    id?: StringFieldUpdateOperationsInput | string
-    numericId?: IntFieldUpdateOperationsInput | number
+    id?: BigIntFieldUpdateOperationsInput | bigint | number
+    uid?: StringFieldUpdateOperationsInput | string
     whitecliffId?: NullableBigIntFieldUpdateOperationsInput | bigint | number | null
     whitecliffSystemId?: NullableBigIntFieldUpdateOperationsInput | bigint | number | null
     whitecliffUsername?: NullableStringFieldUpdateOperationsInput | string | null
@@ -75312,8 +75560,8 @@ export namespace Prisma {
   }
 
   export type UserCreateWithoutVipHistoryInput = {
-    id?: string
-    numericId?: number
+    id?: bigint | number
+    uid?: string
     whitecliffId?: bigint | number | null
     whitecliffSystemId?: bigint | number | null
     whitecliffUsername?: string | null
@@ -75354,8 +75602,8 @@ export namespace Prisma {
   }
 
   export type UserUncheckedCreateWithoutVipHistoryInput = {
-    id?: string
-    numericId?: number
+    id?: bigint | number
+    uid?: string
     whitecliffId?: bigint | number | null
     whitecliffSystemId?: bigint | number | null
     whitecliffUsername?: string | null
@@ -75412,7 +75660,7 @@ export namespace Prisma {
 
   export type VipMembershipUncheckedCreateWithoutHistoriesInput = {
     id?: number
-    userId: string
+    userId: bigint | number
     vipLevelId: number
     accumulatedRolling?: Decimal | DecimalJsLike | number | string
     totalRewardsPaid?: Decimal | DecimalJsLike | number | string
@@ -75438,7 +75686,8 @@ export namespace Prisma {
   }
 
   export type UserUpdateWithoutVipHistoryInput = {
-    id?: StringFieldUpdateOperationsInput | string
+    id?: BigIntFieldUpdateOperationsInput | bigint | number
+    uid?: StringFieldUpdateOperationsInput | string
     whitecliffId?: NullableBigIntFieldUpdateOperationsInput | bigint | number | null
     whitecliffSystemId?: NullableBigIntFieldUpdateOperationsInput | bigint | number | null
     whitecliffUsername?: NullableStringFieldUpdateOperationsInput | string | null
@@ -75479,8 +75728,8 @@ export namespace Prisma {
   }
 
   export type UserUncheckedUpdateWithoutVipHistoryInput = {
-    id?: StringFieldUpdateOperationsInput | string
-    numericId?: IntFieldUpdateOperationsInput | number
+    id?: BigIntFieldUpdateOperationsInput | bigint | number
+    uid?: StringFieldUpdateOperationsInput | string
     whitecliffId?: NullableBigIntFieldUpdateOperationsInput | bigint | number | null
     whitecliffSystemId?: NullableBigIntFieldUpdateOperationsInput | bigint | number | null
     whitecliffUsername?: NullableStringFieldUpdateOperationsInput | string | null
@@ -75543,7 +75792,7 @@ export namespace Prisma {
 
   export type VipMembershipUncheckedUpdateWithoutHistoriesInput = {
     id?: IntFieldUpdateOperationsInput | number
-    userId?: StringFieldUpdateOperationsInput | string
+    userId?: BigIntFieldUpdateOperationsInput | bigint | number
     vipLevelId?: IntFieldUpdateOperationsInput | number
     accumulatedRolling?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
     totalRewardsPaid?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
@@ -75616,8 +75865,8 @@ export namespace Prisma {
   }
 
   export type UserCreateWithoutRollingInput = {
-    id?: string
-    numericId?: number
+    id?: bigint | number
+    uid?: string
     whitecliffId?: bigint | number | null
     whitecliffSystemId?: bigint | number | null
     whitecliffUsername?: string | null
@@ -75658,8 +75907,8 @@ export namespace Prisma {
   }
 
   export type UserUncheckedCreateWithoutRollingInput = {
-    id?: string
-    numericId?: number
+    id?: bigint | number
+    uid?: string
     whitecliffId?: bigint | number | null
     whitecliffSystemId?: bigint | number | null
     whitecliffUsername?: string | null
@@ -75717,7 +75966,7 @@ export namespace Prisma {
 
   export type UserPromotionUncheckedCreateWithoutRollingInput = {
     id?: number
-    userId: string
+    userId: bigint | number
     promotionId: number
     status?: $Enums.UserPromotionStatus
     bonusGranted?: boolean
@@ -75813,7 +76062,8 @@ export namespace Prisma {
   }
 
   export type UserUpdateWithoutRollingInput = {
-    id?: StringFieldUpdateOperationsInput | string
+    id?: BigIntFieldUpdateOperationsInput | bigint | number
+    uid?: StringFieldUpdateOperationsInput | string
     whitecliffId?: NullableBigIntFieldUpdateOperationsInput | bigint | number | null
     whitecliffSystemId?: NullableBigIntFieldUpdateOperationsInput | bigint | number | null
     whitecliffUsername?: NullableStringFieldUpdateOperationsInput | string | null
@@ -75854,8 +76104,8 @@ export namespace Prisma {
   }
 
   export type UserUncheckedUpdateWithoutRollingInput = {
-    id?: StringFieldUpdateOperationsInput | string
-    numericId?: IntFieldUpdateOperationsInput | number
+    id?: BigIntFieldUpdateOperationsInput | bigint | number
+    uid?: StringFieldUpdateOperationsInput | string
     whitecliffId?: NullableBigIntFieldUpdateOperationsInput | bigint | number | null
     whitecliffSystemId?: NullableBigIntFieldUpdateOperationsInput | bigint | number | null
     whitecliffUsername?: NullableStringFieldUpdateOperationsInput | string | null
@@ -75919,7 +76169,7 @@ export namespace Prisma {
 
   export type UserPromotionUncheckedUpdateWithoutRollingInput = {
     id?: IntFieldUpdateOperationsInput | number
-    userId?: StringFieldUpdateOperationsInput | string
+    userId?: BigIntFieldUpdateOperationsInput | bigint | number
     promotionId?: IntFieldUpdateOperationsInput | number
     status?: EnumUserPromotionStatusFieldUpdateOperationsInput | $Enums.UserPromotionStatus
     bonusGranted?: BoolFieldUpdateOperationsInput | boolean
@@ -75930,8 +76180,8 @@ export namespace Prisma {
   }
 
   export type UserCreateWithoutUserTokenInput = {
-    id?: string
-    numericId?: number
+    id?: bigint | number
+    uid?: string
     whitecliffId?: bigint | number | null
     whitecliffSystemId?: bigint | number | null
     whitecliffUsername?: string | null
@@ -75972,8 +76222,8 @@ export namespace Prisma {
   }
 
   export type UserUncheckedCreateWithoutUserTokenInput = {
-    id?: string
-    numericId?: number
+    id?: bigint | number
+    uid?: string
     whitecliffId?: bigint | number | null
     whitecliffSystemId?: bigint | number | null
     whitecliffUsername?: string | null
@@ -76030,7 +76280,8 @@ export namespace Prisma {
   }
 
   export type UserUpdateWithoutUserTokenInput = {
-    id?: StringFieldUpdateOperationsInput | string
+    id?: BigIntFieldUpdateOperationsInput | bigint | number
+    uid?: StringFieldUpdateOperationsInput | string
     whitecliffId?: NullableBigIntFieldUpdateOperationsInput | bigint | number | null
     whitecliffSystemId?: NullableBigIntFieldUpdateOperationsInput | bigint | number | null
     whitecliffUsername?: NullableStringFieldUpdateOperationsInput | string | null
@@ -76071,8 +76322,8 @@ export namespace Prisma {
   }
 
   export type UserUncheckedUpdateWithoutUserTokenInput = {
-    id?: StringFieldUpdateOperationsInput | string
-    numericId?: IntFieldUpdateOperationsInput | number
+    id?: BigIntFieldUpdateOperationsInput | bigint | number
+    uid?: StringFieldUpdateOperationsInput | string
     whitecliffId?: NullableBigIntFieldUpdateOperationsInput | bigint | number | null
     whitecliffSystemId?: NullableBigIntFieldUpdateOperationsInput | bigint | number | null
     whitecliffUsername?: NullableStringFieldUpdateOperationsInput | string | null
@@ -76113,8 +76364,8 @@ export namespace Prisma {
   }
 
   export type UserCreateWithoutEmailLogInput = {
-    id?: string
-    numericId?: number
+    id?: bigint | number
+    uid?: string
     whitecliffId?: bigint | number | null
     whitecliffSystemId?: bigint | number | null
     whitecliffUsername?: string | null
@@ -76155,8 +76406,8 @@ export namespace Prisma {
   }
 
   export type UserUncheckedCreateWithoutEmailLogInput = {
-    id?: string
-    numericId?: number
+    id?: bigint | number
+    uid?: string
     whitecliffId?: bigint | number | null
     whitecliffSystemId?: bigint | number | null
     whitecliffUsername?: string | null
@@ -76213,7 +76464,8 @@ export namespace Prisma {
   }
 
   export type UserUpdateWithoutEmailLogInput = {
-    id?: StringFieldUpdateOperationsInput | string
+    id?: BigIntFieldUpdateOperationsInput | bigint | number
+    uid?: StringFieldUpdateOperationsInput | string
     whitecliffId?: NullableBigIntFieldUpdateOperationsInput | bigint | number | null
     whitecliffSystemId?: NullableBigIntFieldUpdateOperationsInput | bigint | number | null
     whitecliffUsername?: NullableStringFieldUpdateOperationsInput | string | null
@@ -76254,8 +76506,8 @@ export namespace Prisma {
   }
 
   export type UserUncheckedUpdateWithoutEmailLogInput = {
-    id?: StringFieldUpdateOperationsInput | string
-    numericId?: IntFieldUpdateOperationsInput | number
+    id?: BigIntFieldUpdateOperationsInput | bigint | number
+    uid?: StringFieldUpdateOperationsInput | string
     whitecliffId?: NullableBigIntFieldUpdateOperationsInput | bigint | number | null
     whitecliffSystemId?: NullableBigIntFieldUpdateOperationsInput | bigint | number | null
     whitecliffUsername?: NullableStringFieldUpdateOperationsInput | string | null
@@ -76297,7 +76549,7 @@ export namespace Prisma {
 
   export type GameRoundCreateWithoutGameSessionInput = {
     id?: bigint | number
-    userId: string
+    userId: bigint | number
     aggregatorType: $Enums.GameAggregatorType
     provider: $Enums.GameProvider
     aggregatorTxId: string
@@ -76329,7 +76581,7 @@ export namespace Prisma {
 
   export type GameRoundUncheckedCreateWithoutGameSessionInput = {
     id?: bigint | number
-    userId: string
+    userId: bigint | number
     aggregatorType: $Enums.GameAggregatorType
     provider: $Enums.GameProvider
     aggregatorTxId: string
@@ -76414,8 +76666,8 @@ export namespace Prisma {
   }
 
   export type UserCreateWithoutGameSessionInput = {
-    id?: string
-    numericId?: number
+    id?: bigint | number
+    uid?: string
     whitecliffId?: bigint | number | null
     whitecliffSystemId?: bigint | number | null
     whitecliffUsername?: string | null
@@ -76456,8 +76708,8 @@ export namespace Prisma {
   }
 
   export type UserUncheckedCreateWithoutGameSessionInput = {
-    id?: string
-    numericId?: number
+    id?: bigint | number
+    uid?: string
     whitecliffId?: bigint | number | null
     whitecliffSystemId?: bigint | number | null
     whitecliffUsername?: string | null
@@ -76580,7 +76832,8 @@ export namespace Prisma {
   }
 
   export type UserUpdateWithoutGameSessionInput = {
-    id?: StringFieldUpdateOperationsInput | string
+    id?: BigIntFieldUpdateOperationsInput | bigint | number
+    uid?: StringFieldUpdateOperationsInput | string
     whitecliffId?: NullableBigIntFieldUpdateOperationsInput | bigint | number | null
     whitecliffSystemId?: NullableBigIntFieldUpdateOperationsInput | bigint | number | null
     whitecliffUsername?: NullableStringFieldUpdateOperationsInput | string | null
@@ -76621,8 +76874,8 @@ export namespace Prisma {
   }
 
   export type UserUncheckedUpdateWithoutGameSessionInput = {
-    id?: StringFieldUpdateOperationsInput | string
-    numericId?: IntFieldUpdateOperationsInput | number
+    id?: BigIntFieldUpdateOperationsInput | bigint | number
+    uid?: StringFieldUpdateOperationsInput | string
     whitecliffId?: NullableBigIntFieldUpdateOperationsInput | bigint | number | null
     whitecliffSystemId?: NullableBigIntFieldUpdateOperationsInput | bigint | number | null
     whitecliffUsername?: NullableStringFieldUpdateOperationsInput | string | null
@@ -76779,8 +77032,8 @@ export namespace Prisma {
   }
 
   export type UserCreateWithoutAffiliateCodesInput = {
-    id?: string
-    numericId?: number
+    id?: bigint | number
+    uid?: string
     whitecliffId?: bigint | number | null
     whitecliffSystemId?: bigint | number | null
     whitecliffUsername?: string | null
@@ -76821,8 +77074,8 @@ export namespace Prisma {
   }
 
   export type UserUncheckedCreateWithoutAffiliateCodesInput = {
-    id?: string
-    numericId?: number
+    id?: bigint | number
+    uid?: string
     whitecliffId?: bigint | number | null
     whitecliffSystemId?: bigint | number | null
     whitecliffUsername?: string | null
@@ -76880,8 +77133,8 @@ export namespace Prisma {
 
   export type ReferralUncheckedCreateWithoutCodeInput = {
     id?: string
-    affiliateId: string
-    subUserId: string
+    affiliateId: bigint | number
+    subUserId: bigint | number
     ipAddress?: string | null
     deviceFingerprint?: string | null
     userAgent?: string | null
@@ -76911,7 +77164,8 @@ export namespace Prisma {
   }
 
   export type UserUpdateWithoutAffiliateCodesInput = {
-    id?: StringFieldUpdateOperationsInput | string
+    id?: BigIntFieldUpdateOperationsInput | bigint | number
+    uid?: StringFieldUpdateOperationsInput | string
     whitecliffId?: NullableBigIntFieldUpdateOperationsInput | bigint | number | null
     whitecliffSystemId?: NullableBigIntFieldUpdateOperationsInput | bigint | number | null
     whitecliffUsername?: NullableStringFieldUpdateOperationsInput | string | null
@@ -76952,8 +77206,8 @@ export namespace Prisma {
   }
 
   export type UserUncheckedUpdateWithoutAffiliateCodesInput = {
-    id?: StringFieldUpdateOperationsInput | string
-    numericId?: IntFieldUpdateOperationsInput | number
+    id?: BigIntFieldUpdateOperationsInput | bigint | number
+    uid?: StringFieldUpdateOperationsInput | string
     whitecliffId?: NullableBigIntFieldUpdateOperationsInput | bigint | number | null
     whitecliffSystemId?: NullableBigIntFieldUpdateOperationsInput | bigint | number | null
     whitecliffUsername?: NullableStringFieldUpdateOperationsInput | string | null
@@ -77010,8 +77264,8 @@ export namespace Prisma {
   }
 
   export type UserCreateWithoutAffiliateReferralsInput = {
-    id?: string
-    numericId?: number
+    id?: bigint | number
+    uid?: string
     whitecliffId?: bigint | number | null
     whitecliffSystemId?: bigint | number | null
     whitecliffUsername?: string | null
@@ -77052,8 +77306,8 @@ export namespace Prisma {
   }
 
   export type UserUncheckedCreateWithoutAffiliateReferralsInput = {
-    id?: string
-    numericId?: number
+    id?: bigint | number
+    uid?: string
     whitecliffId?: bigint | number | null
     whitecliffSystemId?: bigint | number | null
     whitecliffUsername?: string | null
@@ -77114,7 +77368,7 @@ export namespace Prisma {
 
   export type AffiliateCodeUncheckedCreateWithoutReferralsInput = {
     id?: string
-    userId: string
+    userId: bigint | number
     code: string
     campaignName?: string | null
     description?: string | null
@@ -77132,8 +77386,8 @@ export namespace Prisma {
   }
 
   export type UserCreateWithoutReferredUsersInput = {
-    id?: string
-    numericId?: number
+    id?: bigint | number
+    uid?: string
     whitecliffId?: bigint | number | null
     whitecliffSystemId?: bigint | number | null
     whitecliffUsername?: string | null
@@ -77174,8 +77428,8 @@ export namespace Prisma {
   }
 
   export type UserUncheckedCreateWithoutReferredUsersInput = {
-    id?: string
-    numericId?: number
+    id?: bigint | number
+    uid?: string
     whitecliffId?: bigint | number | null
     whitecliffSystemId?: bigint | number | null
     whitecliffUsername?: string | null
@@ -77232,7 +77486,8 @@ export namespace Prisma {
   }
 
   export type UserUpdateWithoutAffiliateReferralsInput = {
-    id?: StringFieldUpdateOperationsInput | string
+    id?: BigIntFieldUpdateOperationsInput | bigint | number
+    uid?: StringFieldUpdateOperationsInput | string
     whitecliffId?: NullableBigIntFieldUpdateOperationsInput | bigint | number | null
     whitecliffSystemId?: NullableBigIntFieldUpdateOperationsInput | bigint | number | null
     whitecliffUsername?: NullableStringFieldUpdateOperationsInput | string | null
@@ -77273,8 +77528,8 @@ export namespace Prisma {
   }
 
   export type UserUncheckedUpdateWithoutAffiliateReferralsInput = {
-    id?: StringFieldUpdateOperationsInput | string
-    numericId?: IntFieldUpdateOperationsInput | number
+    id?: BigIntFieldUpdateOperationsInput | bigint | number
+    uid?: StringFieldUpdateOperationsInput | string
     whitecliffId?: NullableBigIntFieldUpdateOperationsInput | bigint | number | null
     whitecliffSystemId?: NullableBigIntFieldUpdateOperationsInput | bigint | number | null
     whitecliffUsername?: NullableStringFieldUpdateOperationsInput | string | null
@@ -77341,7 +77596,7 @@ export namespace Prisma {
 
   export type AffiliateCodeUncheckedUpdateWithoutReferralsInput = {
     id?: StringFieldUpdateOperationsInput | string
-    userId?: StringFieldUpdateOperationsInput | string
+    userId?: BigIntFieldUpdateOperationsInput | bigint | number
     code?: StringFieldUpdateOperationsInput | string
     campaignName?: NullableStringFieldUpdateOperationsInput | string | null
     description?: NullableStringFieldUpdateOperationsInput | string | null
@@ -77365,7 +77620,8 @@ export namespace Prisma {
   }
 
   export type UserUpdateWithoutReferredUsersInput = {
-    id?: StringFieldUpdateOperationsInput | string
+    id?: BigIntFieldUpdateOperationsInput | bigint | number
+    uid?: StringFieldUpdateOperationsInput | string
     whitecliffId?: NullableBigIntFieldUpdateOperationsInput | bigint | number | null
     whitecliffSystemId?: NullableBigIntFieldUpdateOperationsInput | bigint | number | null
     whitecliffUsername?: NullableStringFieldUpdateOperationsInput | string | null
@@ -77406,8 +77662,8 @@ export namespace Prisma {
   }
 
   export type UserUncheckedUpdateWithoutReferredUsersInput = {
-    id?: StringFieldUpdateOperationsInput | string
-    numericId?: IntFieldUpdateOperationsInput | number
+    id?: BigIntFieldUpdateOperationsInput | bigint | number
+    uid?: StringFieldUpdateOperationsInput | string
     whitecliffId?: NullableBigIntFieldUpdateOperationsInput | bigint | number | null
     whitecliffSystemId?: NullableBigIntFieldUpdateOperationsInput | bigint | number | null
     whitecliffUsername?: NullableStringFieldUpdateOperationsInput | string | null
@@ -77448,8 +77704,8 @@ export namespace Prisma {
   }
 
   export type UserCreateWithoutAffiliateWalletsInput = {
-    id?: string
-    numericId?: number
+    id?: bigint | number
+    uid?: string
     whitecliffId?: bigint | number | null
     whitecliffSystemId?: bigint | number | null
     whitecliffUsername?: string | null
@@ -77490,8 +77746,8 @@ export namespace Prisma {
   }
 
   export type UserUncheckedCreateWithoutAffiliateWalletsInput = {
-    id?: string
-    numericId?: number
+    id?: bigint | number
+    uid?: string
     whitecliffId?: bigint | number | null
     whitecliffSystemId?: bigint | number | null
     whitecliffUsername?: string | null
@@ -77548,7 +77804,8 @@ export namespace Prisma {
   }
 
   export type UserUpdateWithoutAffiliateWalletsInput = {
-    id?: StringFieldUpdateOperationsInput | string
+    id?: BigIntFieldUpdateOperationsInput | bigint | number
+    uid?: StringFieldUpdateOperationsInput | string
     whitecliffId?: NullableBigIntFieldUpdateOperationsInput | bigint | number | null
     whitecliffSystemId?: NullableBigIntFieldUpdateOperationsInput | bigint | number | null
     whitecliffUsername?: NullableStringFieldUpdateOperationsInput | string | null
@@ -77589,8 +77846,8 @@ export namespace Prisma {
   }
 
   export type UserUncheckedUpdateWithoutAffiliateWalletsInput = {
-    id?: StringFieldUpdateOperationsInput | string
-    numericId?: IntFieldUpdateOperationsInput | number
+    id?: BigIntFieldUpdateOperationsInput | bigint | number
+    uid?: StringFieldUpdateOperationsInput | string
     whitecliffId?: NullableBigIntFieldUpdateOperationsInput | bigint | number | null
     whitecliffSystemId?: NullableBigIntFieldUpdateOperationsInput | bigint | number | null
     whitecliffUsername?: NullableStringFieldUpdateOperationsInput | string | null
@@ -77631,8 +77888,8 @@ export namespace Prisma {
   }
 
   export type UserCreateWithoutAffiliateCommissionsInput = {
-    id?: string
-    numericId?: number
+    id?: bigint | number
+    uid?: string
     whitecliffId?: bigint | number | null
     whitecliffSystemId?: bigint | number | null
     whitecliffUsername?: string | null
@@ -77673,8 +77930,8 @@ export namespace Prisma {
   }
 
   export type UserUncheckedCreateWithoutAffiliateCommissionsInput = {
-    id?: string
-    numericId?: number
+    id?: bigint | number
+    uid?: string
     whitecliffId?: bigint | number | null
     whitecliffSystemId?: bigint | number | null
     whitecliffUsername?: string | null
@@ -77721,7 +77978,7 @@ export namespace Prisma {
 
   export type GameRoundCreateWithoutAffiliateCommissionInput = {
     id?: bigint | number
-    userId: string
+    userId: bigint | number
     aggregatorType: $Enums.GameAggregatorType
     provider: $Enums.GameProvider
     aggregatorTxId: string
@@ -77753,7 +78010,7 @@ export namespace Prisma {
 
   export type GameRoundUncheckedCreateWithoutAffiliateCommissionInput = {
     id?: bigint | number
-    userId: string
+    userId: bigint | number
     aggregatorType: $Enums.GameAggregatorType
     provider: $Enums.GameProvider
     aggregatorTxId: string
@@ -77789,8 +78046,8 @@ export namespace Prisma {
   }
 
   export type UserCreateWithoutSubUserCommissionsInput = {
-    id?: string
-    numericId?: number
+    id?: bigint | number
+    uid?: string
     whitecliffId?: bigint | number | null
     whitecliffSystemId?: bigint | number | null
     whitecliffUsername?: string | null
@@ -77831,8 +78088,8 @@ export namespace Prisma {
   }
 
   export type UserUncheckedCreateWithoutSubUserCommissionsInput = {
-    id?: string
-    numericId?: number
+    id?: bigint | number
+    uid?: string
     whitecliffId?: bigint | number | null
     whitecliffSystemId?: bigint | number | null
     whitecliffUsername?: string | null
@@ -77889,7 +78146,8 @@ export namespace Prisma {
   }
 
   export type UserUpdateWithoutAffiliateCommissionsInput = {
-    id?: StringFieldUpdateOperationsInput | string
+    id?: BigIntFieldUpdateOperationsInput | bigint | number
+    uid?: StringFieldUpdateOperationsInput | string
     whitecliffId?: NullableBigIntFieldUpdateOperationsInput | bigint | number | null
     whitecliffSystemId?: NullableBigIntFieldUpdateOperationsInput | bigint | number | null
     whitecliffUsername?: NullableStringFieldUpdateOperationsInput | string | null
@@ -77930,8 +78188,8 @@ export namespace Prisma {
   }
 
   export type UserUncheckedUpdateWithoutAffiliateCommissionsInput = {
-    id?: StringFieldUpdateOperationsInput | string
-    numericId?: IntFieldUpdateOperationsInput | number
+    id?: BigIntFieldUpdateOperationsInput | bigint | number
+    uid?: StringFieldUpdateOperationsInput | string
     whitecliffId?: NullableBigIntFieldUpdateOperationsInput | bigint | number | null
     whitecliffSystemId?: NullableBigIntFieldUpdateOperationsInput | bigint | number | null
     whitecliffUsername?: NullableStringFieldUpdateOperationsInput | string | null
@@ -77984,7 +78242,7 @@ export namespace Prisma {
 
   export type GameRoundUpdateWithoutAffiliateCommissionInput = {
     id?: BigIntFieldUpdateOperationsInput | bigint | number
-    userId?: StringFieldUpdateOperationsInput | string
+    userId?: BigIntFieldUpdateOperationsInput | bigint | number
     aggregatorType?: EnumGameAggregatorTypeFieldUpdateOperationsInput | $Enums.GameAggregatorType
     provider?: EnumGameProviderFieldUpdateOperationsInput | $Enums.GameProvider
     aggregatorTxId?: StringFieldUpdateOperationsInput | string
@@ -78016,7 +78274,7 @@ export namespace Prisma {
 
   export type GameRoundUncheckedUpdateWithoutAffiliateCommissionInput = {
     id?: BigIntFieldUpdateOperationsInput | bigint | number
-    userId?: StringFieldUpdateOperationsInput | string
+    userId?: BigIntFieldUpdateOperationsInput | bigint | number
     aggregatorType?: EnumGameAggregatorTypeFieldUpdateOperationsInput | $Enums.GameAggregatorType
     provider?: EnumGameProviderFieldUpdateOperationsInput | $Enums.GameProvider
     aggregatorTxId?: StringFieldUpdateOperationsInput | string
@@ -78058,7 +78316,8 @@ export namespace Prisma {
   }
 
   export type UserUpdateWithoutSubUserCommissionsInput = {
-    id?: StringFieldUpdateOperationsInput | string
+    id?: BigIntFieldUpdateOperationsInput | bigint | number
+    uid?: StringFieldUpdateOperationsInput | string
     whitecliffId?: NullableBigIntFieldUpdateOperationsInput | bigint | number | null
     whitecliffSystemId?: NullableBigIntFieldUpdateOperationsInput | bigint | number | null
     whitecliffUsername?: NullableStringFieldUpdateOperationsInput | string | null
@@ -78099,8 +78358,8 @@ export namespace Prisma {
   }
 
   export type UserUncheckedUpdateWithoutSubUserCommissionsInput = {
-    id?: StringFieldUpdateOperationsInput | string
-    numericId?: IntFieldUpdateOperationsInput | number
+    id?: BigIntFieldUpdateOperationsInput | bigint | number
+    uid?: StringFieldUpdateOperationsInput | string
     whitecliffId?: NullableBigIntFieldUpdateOperationsInput | bigint | number | null
     whitecliffSystemId?: NullableBigIntFieldUpdateOperationsInput | bigint | number | null
     whitecliffUsername?: NullableStringFieldUpdateOperationsInput | string | null
@@ -78141,8 +78400,8 @@ export namespace Prisma {
   }
 
   export type UserCreateWithoutAffiliateTierInput = {
-    id?: string
-    numericId?: number
+    id?: bigint | number
+    uid?: string
     whitecliffId?: bigint | number | null
     whitecliffSystemId?: bigint | number | null
     whitecliffUsername?: string | null
@@ -78183,8 +78442,8 @@ export namespace Prisma {
   }
 
   export type UserUncheckedCreateWithoutAffiliateTierInput = {
-    id?: string
-    numericId?: number
+    id?: bigint | number
+    uid?: string
     whitecliffId?: bigint | number | null
     whitecliffSystemId?: bigint | number | null
     whitecliffUsername?: string | null
@@ -78241,7 +78500,8 @@ export namespace Prisma {
   }
 
   export type UserUpdateWithoutAffiliateTierInput = {
-    id?: StringFieldUpdateOperationsInput | string
+    id?: BigIntFieldUpdateOperationsInput | bigint | number
+    uid?: StringFieldUpdateOperationsInput | string
     whitecliffId?: NullableBigIntFieldUpdateOperationsInput | bigint | number | null
     whitecliffSystemId?: NullableBigIntFieldUpdateOperationsInput | bigint | number | null
     whitecliffUsername?: NullableStringFieldUpdateOperationsInput | string | null
@@ -78282,8 +78542,8 @@ export namespace Prisma {
   }
 
   export type UserUncheckedUpdateWithoutAffiliateTierInput = {
-    id?: StringFieldUpdateOperationsInput | string
-    numericId?: IntFieldUpdateOperationsInput | number
+    id?: BigIntFieldUpdateOperationsInput | bigint | number
+    uid?: StringFieldUpdateOperationsInput | string
     whitecliffId?: NullableBigIntFieldUpdateOperationsInput | bigint | number | null
     whitecliffSystemId?: NullableBigIntFieldUpdateOperationsInput | bigint | number | null
     whitecliffUsername?: NullableStringFieldUpdateOperationsInput | string | null
@@ -78324,8 +78584,8 @@ export namespace Prisma {
   }
 
   export type UserCreateWithoutLoginAttemptsInput = {
-    id?: string
-    numericId?: number
+    id?: bigint | number
+    uid?: string
     whitecliffId?: bigint | number | null
     whitecliffSystemId?: bigint | number | null
     whitecliffUsername?: string | null
@@ -78366,8 +78626,8 @@ export namespace Prisma {
   }
 
   export type UserUncheckedCreateWithoutLoginAttemptsInput = {
-    id?: string
-    numericId?: number
+    id?: bigint | number
+    uid?: string
     whitecliffId?: bigint | number | null
     whitecliffSystemId?: bigint | number | null
     whitecliffUsername?: string | null
@@ -78424,7 +78684,8 @@ export namespace Prisma {
   }
 
   export type UserUpdateWithoutLoginAttemptsInput = {
-    id?: StringFieldUpdateOperationsInput | string
+    id?: BigIntFieldUpdateOperationsInput | bigint | number
+    uid?: StringFieldUpdateOperationsInput | string
     whitecliffId?: NullableBigIntFieldUpdateOperationsInput | bigint | number | null
     whitecliffSystemId?: NullableBigIntFieldUpdateOperationsInput | bigint | number | null
     whitecliffUsername?: NullableStringFieldUpdateOperationsInput | string | null
@@ -78465,8 +78726,8 @@ export namespace Prisma {
   }
 
   export type UserUncheckedUpdateWithoutLoginAttemptsInput = {
-    id?: StringFieldUpdateOperationsInput | string
-    numericId?: IntFieldUpdateOperationsInput | number
+    id?: BigIntFieldUpdateOperationsInput | bigint | number
+    uid?: StringFieldUpdateOperationsInput | string
     whitecliffId?: NullableBigIntFieldUpdateOperationsInput | bigint | number | null
     whitecliffSystemId?: NullableBigIntFieldUpdateOperationsInput | bigint | number | null
     whitecliffUsername?: NullableStringFieldUpdateOperationsInput | string | null
@@ -78520,7 +78781,7 @@ export namespace Prisma {
   }
 
   export type AffiliateCommissionCreateManyAffiliateInput = {
-    subUserId: string
+    subUserId: bigint | number
     gameRoundId?: bigint | number | null
     wagerAmount: Decimal | DecimalJsLike | number | string
     winAmount?: Decimal | DecimalJsLike | number | string | null
@@ -78539,7 +78800,7 @@ export namespace Prisma {
   }
 
   export type AffiliateCommissionCreateManySubUserInput = {
-    affiliateId: string
+    affiliateId: bigint | number
     gameRoundId?: bigint | number | null
     wagerAmount: Decimal | DecimalJsLike | number | string
     winAmount?: Decimal | DecimalJsLike | number | string | null
@@ -78615,7 +78876,7 @@ export namespace Prisma {
 
   export type ReferralCreateManyAffiliateInput = {
     id?: string
-    subUserId: string
+    subUserId: bigint | number
     ipAddress?: string | null
     deviceFingerprint?: string | null
     userAgent?: string | null
@@ -78626,7 +78887,7 @@ export namespace Prisma {
 
   export type ReferralCreateManySubUserInput = {
     id?: string
-    affiliateId: string
+    affiliateId: bigint | number
     ipAddress?: string | null
     deviceFingerprint?: string | null
     userAgent?: string | null
@@ -78698,7 +78959,7 @@ export namespace Prisma {
 
   export type UserSessionCreateManyUserInput = {
     sessionId: string
-    deviceInfo?: string | null
+    debetsiceInfo?: string | null
     userAgent?: string | null
     ipAddress?: string | null
     isMobile?: boolean | null
@@ -78808,7 +79069,7 @@ export namespace Prisma {
   }
 
   export type AffiliateCommissionUncheckedUpdateWithoutAffiliateInput = {
-    subUserId?: StringFieldUpdateOperationsInput | string
+    subUserId?: BigIntFieldUpdateOperationsInput | bigint | number
     gameRoundId?: NullableBigIntFieldUpdateOperationsInput | bigint | number | null
     wagerAmount?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
     winAmount?: NullableDecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string | null
@@ -78827,7 +79088,7 @@ export namespace Prisma {
   }
 
   export type AffiliateCommissionUncheckedUpdateManyWithoutAffiliateInput = {
-    subUserId?: StringFieldUpdateOperationsInput | string
+    subUserId?: BigIntFieldUpdateOperationsInput | bigint | number
     gameRoundId?: NullableBigIntFieldUpdateOperationsInput | bigint | number | null
     wagerAmount?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
     winAmount?: NullableDecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string | null
@@ -78865,7 +79126,7 @@ export namespace Prisma {
   }
 
   export type AffiliateCommissionUncheckedUpdateWithoutSubUserInput = {
-    affiliateId?: StringFieldUpdateOperationsInput | string
+    affiliateId?: BigIntFieldUpdateOperationsInput | bigint | number
     gameRoundId?: NullableBigIntFieldUpdateOperationsInput | bigint | number | null
     wagerAmount?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
     winAmount?: NullableDecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string | null
@@ -78884,7 +79145,7 @@ export namespace Prisma {
   }
 
   export type AffiliateCommissionUncheckedUpdateManyWithoutSubUserInput = {
-    affiliateId?: StringFieldUpdateOperationsInput | string
+    affiliateId?: BigIntFieldUpdateOperationsInput | bigint | number
     gameRoundId?: NullableBigIntFieldUpdateOperationsInput | bigint | number | null
     wagerAmount?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
     winAmount?: NullableDecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string | null
@@ -79085,7 +79346,7 @@ export namespace Prisma {
 
   export type ReferralUncheckedUpdateWithoutAffiliateInput = {
     id?: StringFieldUpdateOperationsInput | string
-    subUserId?: StringFieldUpdateOperationsInput | string
+    subUserId?: BigIntFieldUpdateOperationsInput | bigint | number
     ipAddress?: NullableStringFieldUpdateOperationsInput | string | null
     deviceFingerprint?: NullableStringFieldUpdateOperationsInput | string | null
     userAgent?: NullableStringFieldUpdateOperationsInput | string | null
@@ -79096,7 +79357,7 @@ export namespace Prisma {
 
   export type ReferralUncheckedUpdateManyWithoutAffiliateInput = {
     id?: StringFieldUpdateOperationsInput | string
-    subUserId?: StringFieldUpdateOperationsInput | string
+    subUserId?: BigIntFieldUpdateOperationsInput | bigint | number
     ipAddress?: NullableStringFieldUpdateOperationsInput | string | null
     deviceFingerprint?: NullableStringFieldUpdateOperationsInput | string | null
     userAgent?: NullableStringFieldUpdateOperationsInput | string | null
@@ -79118,7 +79379,7 @@ export namespace Prisma {
 
   export type ReferralUncheckedUpdateWithoutSubUserInput = {
     id?: StringFieldUpdateOperationsInput | string
-    affiliateId?: StringFieldUpdateOperationsInput | string
+    affiliateId?: BigIntFieldUpdateOperationsInput | bigint | number
     ipAddress?: NullableStringFieldUpdateOperationsInput | string | null
     deviceFingerprint?: NullableStringFieldUpdateOperationsInput | string | null
     userAgent?: NullableStringFieldUpdateOperationsInput | string | null
@@ -79129,7 +79390,7 @@ export namespace Prisma {
 
   export type ReferralUncheckedUpdateManyWithoutSubUserInput = {
     id?: StringFieldUpdateOperationsInput | string
-    affiliateId?: StringFieldUpdateOperationsInput | string
+    affiliateId?: BigIntFieldUpdateOperationsInput | bigint | number
     ipAddress?: NullableStringFieldUpdateOperationsInput | string | null
     deviceFingerprint?: NullableStringFieldUpdateOperationsInput | string | null
     userAgent?: NullableStringFieldUpdateOperationsInput | string | null
@@ -79336,7 +79597,7 @@ export namespace Prisma {
 
   export type UserSessionUpdateWithoutUserInput = {
     sessionId?: StringFieldUpdateOperationsInput | string
-    deviceInfo?: NullableStringFieldUpdateOperationsInput | string | null
+    debetsiceInfo?: NullableStringFieldUpdateOperationsInput | string | null
     userAgent?: NullableStringFieldUpdateOperationsInput | string | null
     ipAddress?: NullableStringFieldUpdateOperationsInput | string | null
     isMobile?: NullableBoolFieldUpdateOperationsInput | boolean | null
@@ -79351,7 +79612,7 @@ export namespace Prisma {
 
   export type UserSessionUncheckedUpdateWithoutUserInput = {
     sessionId?: StringFieldUpdateOperationsInput | string
-    deviceInfo?: NullableStringFieldUpdateOperationsInput | string | null
+    debetsiceInfo?: NullableStringFieldUpdateOperationsInput | string | null
     userAgent?: NullableStringFieldUpdateOperationsInput | string | null
     ipAddress?: NullableStringFieldUpdateOperationsInput | string | null
     isMobile?: NullableBoolFieldUpdateOperationsInput | boolean | null
@@ -79366,7 +79627,7 @@ export namespace Prisma {
 
   export type UserSessionUncheckedUpdateManyWithoutUserInput = {
     sessionId?: StringFieldUpdateOperationsInput | string
-    deviceInfo?: NullableStringFieldUpdateOperationsInput | string | null
+    debetsiceInfo?: NullableStringFieldUpdateOperationsInput | string | null
     userAgent?: NullableStringFieldUpdateOperationsInput | string | null
     ipAddress?: NullableStringFieldUpdateOperationsInput | string | null
     isMobile?: NullableBoolFieldUpdateOperationsInput | boolean | null
@@ -79506,7 +79767,7 @@ export namespace Prisma {
 
   export type GameRoundCreateManyGameInput = {
     id?: bigint | number
-    userId: string
+    userId: bigint | number
     aggregatorType: $Enums.GameAggregatorType
     provider: $Enums.GameProvider
     aggregatorTxId: string
@@ -79535,7 +79796,7 @@ export namespace Prisma {
 
   export type GameSessionCreateManyGameInput = {
     id?: bigint | number
-    userId: string
+    userId: bigint | number
     createdAt?: Date | string
     updatedAt?: Date | string
     lastAccessedAt?: Date | string
@@ -79616,7 +79877,7 @@ export namespace Prisma {
 
   export type GameRoundUpdateWithoutGameInput = {
     id?: BigIntFieldUpdateOperationsInput | bigint | number
-    userId?: StringFieldUpdateOperationsInput | string
+    userId?: BigIntFieldUpdateOperationsInput | bigint | number
     aggregatorType?: EnumGameAggregatorTypeFieldUpdateOperationsInput | $Enums.GameAggregatorType
     provider?: EnumGameProviderFieldUpdateOperationsInput | $Enums.GameProvider
     aggregatorTxId?: StringFieldUpdateOperationsInput | string
@@ -79648,7 +79909,7 @@ export namespace Prisma {
 
   export type GameRoundUncheckedUpdateWithoutGameInput = {
     id?: BigIntFieldUpdateOperationsInput | bigint | number
-    userId?: StringFieldUpdateOperationsInput | string
+    userId?: BigIntFieldUpdateOperationsInput | bigint | number
     aggregatorType?: EnumGameAggregatorTypeFieldUpdateOperationsInput | $Enums.GameAggregatorType
     provider?: EnumGameProviderFieldUpdateOperationsInput | $Enums.GameProvider
     aggregatorTxId?: StringFieldUpdateOperationsInput | string
@@ -79680,7 +79941,7 @@ export namespace Prisma {
 
   export type GameRoundUncheckedUpdateManyWithoutGameInput = {
     id?: BigIntFieldUpdateOperationsInput | bigint | number
-    userId?: StringFieldUpdateOperationsInput | string
+    userId?: BigIntFieldUpdateOperationsInput | bigint | number
     aggregatorType?: EnumGameAggregatorTypeFieldUpdateOperationsInput | $Enums.GameAggregatorType
     provider?: EnumGameProviderFieldUpdateOperationsInput | $Enums.GameProvider
     aggregatorTxId?: StringFieldUpdateOperationsInput | string
@@ -79724,7 +79985,7 @@ export namespace Prisma {
 
   export type GameSessionUncheckedUpdateWithoutGameInput = {
     id?: BigIntFieldUpdateOperationsInput | bigint | number
-    userId?: StringFieldUpdateOperationsInput | string
+    userId?: BigIntFieldUpdateOperationsInput | bigint | number
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
     lastAccessedAt?: DateTimeFieldUpdateOperationsInput | Date | string
@@ -79739,7 +80000,7 @@ export namespace Prisma {
 
   export type GameSessionUncheckedUpdateManyWithoutGameInput = {
     id?: BigIntFieldUpdateOperationsInput | bigint | number
-    userId?: StringFieldUpdateOperationsInput | string
+    userId?: BigIntFieldUpdateOperationsInput | bigint | number
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
     lastAccessedAt?: DateTimeFieldUpdateOperationsInput | Date | string
@@ -79825,8 +80086,8 @@ export namespace Prisma {
   }
 
   export type AffiliateCommissionCreateManyGameRoundInput = {
-    affiliateId: string
-    subUserId: string
+    affiliateId: bigint | number
+    subUserId: bigint | number
     wagerAmount: Decimal | DecimalJsLike | number | string
     winAmount?: Decimal | DecimalJsLike | number | string | null
     commission: Decimal | DecimalJsLike | number | string
@@ -79845,7 +80106,7 @@ export namespace Prisma {
 
   export type GameBetCreateManyGameRoundInput = {
     id?: bigint | number
-    userId: string
+    userId: bigint | number
     aggregatorType: $Enums.GameAggregatorType
     aggregatorBetId: string
     betType: $Enums.BetType
@@ -79859,7 +80120,7 @@ export namespace Prisma {
 
   export type GameWinCreateManyGameRoundInput = {
     id?: bigint | number
-    userId: string
+    userId: bigint | number
     aggregatorType: $Enums.GameAggregatorType
     aggregatorWinId: string
     winType: $Enums.WinType
@@ -79890,8 +80151,8 @@ export namespace Prisma {
   }
 
   export type AffiliateCommissionUncheckedUpdateWithoutGameRoundInput = {
-    affiliateId?: StringFieldUpdateOperationsInput | string
-    subUserId?: StringFieldUpdateOperationsInput | string
+    affiliateId?: BigIntFieldUpdateOperationsInput | bigint | number
+    subUserId?: BigIntFieldUpdateOperationsInput | bigint | number
     wagerAmount?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
     winAmount?: NullableDecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string | null
     commission?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
@@ -79909,8 +80170,8 @@ export namespace Prisma {
   }
 
   export type AffiliateCommissionUncheckedUpdateManyWithoutGameRoundInput = {
-    affiliateId?: StringFieldUpdateOperationsInput | string
-    subUserId?: StringFieldUpdateOperationsInput | string
+    affiliateId?: BigIntFieldUpdateOperationsInput | bigint | number
+    subUserId?: BigIntFieldUpdateOperationsInput | bigint | number
     wagerAmount?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
     winAmount?: NullableDecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string | null
     commission?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
@@ -79929,7 +80190,7 @@ export namespace Prisma {
 
   export type GameBetUpdateWithoutGameRoundInput = {
     id?: BigIntFieldUpdateOperationsInput | bigint | number
-    userId?: StringFieldUpdateOperationsInput | string
+    userId?: BigIntFieldUpdateOperationsInput | bigint | number
     aggregatorType?: EnumGameAggregatorTypeFieldUpdateOperationsInput | $Enums.GameAggregatorType
     aggregatorBetId?: StringFieldUpdateOperationsInput | string
     betType?: EnumBetTypeFieldUpdateOperationsInput | $Enums.BetType
@@ -79943,7 +80204,7 @@ export namespace Prisma {
 
   export type GameBetUncheckedUpdateWithoutGameRoundInput = {
     id?: BigIntFieldUpdateOperationsInput | bigint | number
-    userId?: StringFieldUpdateOperationsInput | string
+    userId?: BigIntFieldUpdateOperationsInput | bigint | number
     aggregatorType?: EnumGameAggregatorTypeFieldUpdateOperationsInput | $Enums.GameAggregatorType
     aggregatorBetId?: StringFieldUpdateOperationsInput | string
     betType?: EnumBetTypeFieldUpdateOperationsInput | $Enums.BetType
@@ -79957,7 +80218,7 @@ export namespace Prisma {
 
   export type GameBetUncheckedUpdateManyWithoutGameRoundInput = {
     id?: BigIntFieldUpdateOperationsInput | bigint | number
-    userId?: StringFieldUpdateOperationsInput | string
+    userId?: BigIntFieldUpdateOperationsInput | bigint | number
     aggregatorType?: EnumGameAggregatorTypeFieldUpdateOperationsInput | $Enums.GameAggregatorType
     aggregatorBetId?: StringFieldUpdateOperationsInput | string
     betType?: EnumBetTypeFieldUpdateOperationsInput | $Enums.BetType
@@ -79971,7 +80232,7 @@ export namespace Prisma {
 
   export type GameWinUpdateWithoutGameRoundInput = {
     id?: BigIntFieldUpdateOperationsInput | bigint | number
-    userId?: StringFieldUpdateOperationsInput | string
+    userId?: BigIntFieldUpdateOperationsInput | bigint | number
     aggregatorType?: EnumGameAggregatorTypeFieldUpdateOperationsInput | $Enums.GameAggregatorType
     aggregatorWinId?: StringFieldUpdateOperationsInput | string
     winType?: EnumWinTypeFieldUpdateOperationsInput | $Enums.WinType
@@ -79984,7 +80245,7 @@ export namespace Prisma {
 
   export type GameWinUncheckedUpdateWithoutGameRoundInput = {
     id?: BigIntFieldUpdateOperationsInput | bigint | number
-    userId?: StringFieldUpdateOperationsInput | string
+    userId?: BigIntFieldUpdateOperationsInput | bigint | number
     aggregatorType?: EnumGameAggregatorTypeFieldUpdateOperationsInput | $Enums.GameAggregatorType
     aggregatorWinId?: StringFieldUpdateOperationsInput | string
     winType?: EnumWinTypeFieldUpdateOperationsInput | $Enums.WinType
@@ -79997,7 +80258,7 @@ export namespace Prisma {
 
   export type GameWinUncheckedUpdateManyWithoutGameRoundInput = {
     id?: BigIntFieldUpdateOperationsInput | bigint | number
-    userId?: StringFieldUpdateOperationsInput | string
+    userId?: BigIntFieldUpdateOperationsInput | bigint | number
     aggregatorType?: EnumGameAggregatorTypeFieldUpdateOperationsInput | $Enums.GameAggregatorType
     aggregatorWinId?: StringFieldUpdateOperationsInput | string
     winType?: EnumWinTypeFieldUpdateOperationsInput | $Enums.WinType
@@ -80010,7 +80271,7 @@ export namespace Prisma {
 
   export type RollingCreateManyDepositDetailInput = {
     id?: bigint | number
-    userId: string
+    userId: bigint | number
     sourceType?: $Enums.RollingSourceType
     userPromotionId?: number | null
     requiredAmount: Decimal | DecimalJsLike | number | string
@@ -80044,7 +80305,7 @@ export namespace Prisma {
 
   export type RollingUncheckedUpdateWithoutDepositDetailInput = {
     id?: BigIntFieldUpdateOperationsInput | bigint | number
-    userId?: StringFieldUpdateOperationsInput | string
+    userId?: BigIntFieldUpdateOperationsInput | bigint | number
     sourceType?: EnumRollingSourceTypeFieldUpdateOperationsInput | $Enums.RollingSourceType
     userPromotionId?: NullableIntFieldUpdateOperationsInput | number | null
     requiredAmount?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
@@ -80061,7 +80322,7 @@ export namespace Prisma {
 
   export type RollingUncheckedUpdateManyWithoutDepositDetailInput = {
     id?: BigIntFieldUpdateOperationsInput | bigint | number
-    userId?: StringFieldUpdateOperationsInput | string
+    userId?: BigIntFieldUpdateOperationsInput | bigint | number
     sourceType?: EnumRollingSourceTypeFieldUpdateOperationsInput | $Enums.RollingSourceType
     userPromotionId?: NullableIntFieldUpdateOperationsInput | number | null
     requiredAmount?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
@@ -80078,7 +80339,7 @@ export namespace Prisma {
 
   export type CompTransactionCreateManyDailyCompEarningInput = {
     id?: bigint | number
-    userId: string
+    userId: bigint | number
     amount: Decimal | DecimalJsLike | number | string
     transactionId: bigint | number
     createdAt?: Date | string
@@ -80096,7 +80357,7 @@ export namespace Prisma {
 
   export type CompTransactionUncheckedUpdateWithoutDailyCompEarningInput = {
     id?: BigIntFieldUpdateOperationsInput | bigint | number
-    userId?: StringFieldUpdateOperationsInput | string
+    userId?: BigIntFieldUpdateOperationsInput | bigint | number
     amount?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
     transactionId?: BigIntFieldUpdateOperationsInput | bigint | number
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
@@ -80105,7 +80366,7 @@ export namespace Prisma {
 
   export type CompTransactionUncheckedUpdateManyWithoutDailyCompEarningInput = {
     id?: BigIntFieldUpdateOperationsInput | bigint | number
-    userId?: StringFieldUpdateOperationsInput | string
+    userId?: BigIntFieldUpdateOperationsInput | bigint | number
     amount?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
     transactionId?: BigIntFieldUpdateOperationsInput | bigint | number
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
@@ -80123,7 +80384,7 @@ export namespace Prisma {
 
   export type UserPromotionCreateManyPromotionInput = {
     id?: number
-    userId: string
+    userId: bigint | number
     status?: $Enums.UserPromotionStatus
     bonusGranted?: boolean
     bonusGrantedAt?: Date | string | null
@@ -80171,7 +80432,7 @@ export namespace Prisma {
 
   export type UserPromotionUncheckedUpdateWithoutPromotionInput = {
     id?: IntFieldUpdateOperationsInput | number
-    userId?: StringFieldUpdateOperationsInput | string
+    userId?: BigIntFieldUpdateOperationsInput | bigint | number
     status?: EnumUserPromotionStatusFieldUpdateOperationsInput | $Enums.UserPromotionStatus
     bonusGranted?: BoolFieldUpdateOperationsInput | boolean
     bonusGrantedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
@@ -80183,7 +80444,7 @@ export namespace Prisma {
 
   export type UserPromotionUncheckedUpdateManyWithoutPromotionInput = {
     id?: IntFieldUpdateOperationsInput | number
-    userId?: StringFieldUpdateOperationsInput | string
+    userId?: BigIntFieldUpdateOperationsInput | bigint | number
     status?: EnumUserPromotionStatusFieldUpdateOperationsInput | $Enums.UserPromotionStatus
     bonusGranted?: BoolFieldUpdateOperationsInput | boolean
     bonusGrantedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
@@ -80194,7 +80455,7 @@ export namespace Prisma {
 
   export type RollingCreateManyUserPromotionInput = {
     id?: bigint | number
-    userId: string
+    userId: bigint | number
     sourceType?: $Enums.RollingSourceType
     requiredAmount: Decimal | DecimalJsLike | number | string
     currentAmount?: Decimal | DecimalJsLike | number | string
@@ -80228,7 +80489,7 @@ export namespace Prisma {
 
   export type RollingUncheckedUpdateWithoutUserPromotionInput = {
     id?: BigIntFieldUpdateOperationsInput | bigint | number
-    userId?: StringFieldUpdateOperationsInput | string
+    userId?: BigIntFieldUpdateOperationsInput | bigint | number
     sourceType?: EnumRollingSourceTypeFieldUpdateOperationsInput | $Enums.RollingSourceType
     requiredAmount?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
     currentAmount?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
@@ -80245,7 +80506,7 @@ export namespace Prisma {
 
   export type RollingUncheckedUpdateManyWithoutUserPromotionInput = {
     id?: BigIntFieldUpdateOperationsInput | bigint | number
-    userId?: StringFieldUpdateOperationsInput | string
+    userId?: BigIntFieldUpdateOperationsInput | bigint | number
     sourceType?: EnumRollingSourceTypeFieldUpdateOperationsInput | $Enums.RollingSourceType
     requiredAmount?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
     currentAmount?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
@@ -80262,7 +80523,7 @@ export namespace Prisma {
 
   export type VipMembershipCreateManyVipLevelInput = {
     id?: number
-    userId: string
+    userId: bigint | number
     accumulatedRolling?: Decimal | DecimalJsLike | number | string
     totalRewardsPaid?: Decimal | DecimalJsLike | number | string
     achievedAt?: Date | string | null
@@ -80282,7 +80543,7 @@ export namespace Prisma {
 
   export type VipMembershipUncheckedUpdateWithoutVipLevelInput = {
     id?: IntFieldUpdateOperationsInput | number
-    userId?: StringFieldUpdateOperationsInput | string
+    userId?: BigIntFieldUpdateOperationsInput | bigint | number
     accumulatedRolling?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
     totalRewardsPaid?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
     achievedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
@@ -80293,7 +80554,7 @@ export namespace Prisma {
 
   export type VipMembershipUncheckedUpdateManyWithoutVipLevelInput = {
     id?: IntFieldUpdateOperationsInput | number
-    userId?: StringFieldUpdateOperationsInput | string
+    userId?: BigIntFieldUpdateOperationsInput | bigint | number
     accumulatedRolling?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
     totalRewardsPaid?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
     achievedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
@@ -80303,7 +80564,7 @@ export namespace Prisma {
 
   export type VipHistoryCreateManyVipMembershipInput = {
     id?: number
-    userId: string
+    userId: bigint | number
     previousLevelNameKey?: string | null
     newLevelNameKey: string
     rewardAmount: Decimal | DecimalJsLike | number | string
@@ -80324,7 +80585,7 @@ export namespace Prisma {
 
   export type VipHistoryUncheckedUpdateWithoutVipMembershipInput = {
     id?: IntFieldUpdateOperationsInput | number
-    userId?: StringFieldUpdateOperationsInput | string
+    userId?: BigIntFieldUpdateOperationsInput | bigint | number
     previousLevelNameKey?: NullableStringFieldUpdateOperationsInput | string | null
     newLevelNameKey?: StringFieldUpdateOperationsInput | string
     rewardAmount?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
@@ -80335,7 +80596,7 @@ export namespace Prisma {
 
   export type VipHistoryUncheckedUpdateManyWithoutVipMembershipInput = {
     id?: IntFieldUpdateOperationsInput | number
-    userId?: StringFieldUpdateOperationsInput | string
+    userId?: BigIntFieldUpdateOperationsInput | bigint | number
     previousLevelNameKey?: NullableStringFieldUpdateOperationsInput | string | null
     newLevelNameKey?: StringFieldUpdateOperationsInput | string
     rewardAmount?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
@@ -80346,7 +80607,7 @@ export namespace Prisma {
 
   export type GameRoundCreateManyGameSessionInput = {
     id?: bigint | number
-    userId: string
+    userId: bigint | number
     aggregatorType: $Enums.GameAggregatorType
     provider: $Enums.GameProvider
     aggregatorTxId: string
@@ -80375,7 +80636,7 @@ export namespace Prisma {
 
   export type GameRoundUpdateWithoutGameSessionInput = {
     id?: BigIntFieldUpdateOperationsInput | bigint | number
-    userId?: StringFieldUpdateOperationsInput | string
+    userId?: BigIntFieldUpdateOperationsInput | bigint | number
     aggregatorType?: EnumGameAggregatorTypeFieldUpdateOperationsInput | $Enums.GameAggregatorType
     provider?: EnumGameProviderFieldUpdateOperationsInput | $Enums.GameProvider
     aggregatorTxId?: StringFieldUpdateOperationsInput | string
@@ -80407,7 +80668,7 @@ export namespace Prisma {
 
   export type GameRoundUncheckedUpdateWithoutGameSessionInput = {
     id?: BigIntFieldUpdateOperationsInput | bigint | number
-    userId?: StringFieldUpdateOperationsInput | string
+    userId?: BigIntFieldUpdateOperationsInput | bigint | number
     aggregatorType?: EnumGameAggregatorTypeFieldUpdateOperationsInput | $Enums.GameAggregatorType
     provider?: EnumGameProviderFieldUpdateOperationsInput | $Enums.GameProvider
     aggregatorTxId?: StringFieldUpdateOperationsInput | string
@@ -80439,7 +80700,7 @@ export namespace Prisma {
 
   export type GameRoundUncheckedUpdateManyWithoutGameSessionInput = {
     id?: BigIntFieldUpdateOperationsInput | bigint | number
-    userId?: StringFieldUpdateOperationsInput | string
+    userId?: BigIntFieldUpdateOperationsInput | bigint | number
     aggregatorType?: EnumGameAggregatorTypeFieldUpdateOperationsInput | $Enums.GameAggregatorType
     provider?: EnumGameProviderFieldUpdateOperationsInput | $Enums.GameProvider
     aggregatorTxId?: StringFieldUpdateOperationsInput | string
@@ -80582,8 +80843,8 @@ export namespace Prisma {
 
   export type ReferralCreateManyCodeInput = {
     id?: string
-    affiliateId: string
-    subUserId: string
+    affiliateId: bigint | number
+    subUserId: bigint | number
     ipAddress?: string | null
     deviceFingerprint?: string | null
     userAgent?: string | null
@@ -80604,8 +80865,8 @@ export namespace Prisma {
 
   export type ReferralUncheckedUpdateWithoutCodeInput = {
     id?: StringFieldUpdateOperationsInput | string
-    affiliateId?: StringFieldUpdateOperationsInput | string
-    subUserId?: StringFieldUpdateOperationsInput | string
+    affiliateId?: BigIntFieldUpdateOperationsInput | bigint | number
+    subUserId?: BigIntFieldUpdateOperationsInput | bigint | number
     ipAddress?: NullableStringFieldUpdateOperationsInput | string | null
     deviceFingerprint?: NullableStringFieldUpdateOperationsInput | string | null
     userAgent?: NullableStringFieldUpdateOperationsInput | string | null
@@ -80615,8 +80876,8 @@ export namespace Prisma {
 
   export type ReferralUncheckedUpdateManyWithoutCodeInput = {
     id?: StringFieldUpdateOperationsInput | string
-    affiliateId?: StringFieldUpdateOperationsInput | string
-    subUserId?: StringFieldUpdateOperationsInput | string
+    affiliateId?: BigIntFieldUpdateOperationsInput | bigint | number
+    subUserId?: BigIntFieldUpdateOperationsInput | bigint | number
     ipAddress?: NullableStringFieldUpdateOperationsInput | string | null
     deviceFingerprint?: NullableStringFieldUpdateOperationsInput | string | null
     userAgent?: NullableStringFieldUpdateOperationsInput | string | null

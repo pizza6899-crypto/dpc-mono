@@ -36,7 +36,7 @@ export class CryptoDepositService {
   ) {}
 
   async createDeposit(
-    userId: string,
+    userId: bigint,
     request: CreateDepositRequestDto,
     requestInfo: RequestClientInfo,
   ): Promise<CreateDepositResponseDto> {

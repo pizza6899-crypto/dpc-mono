@@ -2,7 +2,8 @@ import { UserStatus, UserRoleType } from '@repo/database';
 
 export class CredentialUser {
   private constructor(
-    public readonly id: string | null, // 내부 관리용 (DB 저장 시 자동 생성)
+    public readonly id: bigint | null, // 내부 관리용 (DB 저장 시 자동 생성)
+    public readonly uid: string,
     public readonly email: string,
     public readonly passwordHash: string | null,
     public readonly status: UserStatus,
@@ -17,7 +18,8 @@ export class CredentialUser {
    * @returns CredentialUser 엔티티 인스턴스
    */
   static create(params: {
-    id?: string;
+    id?: bigint;
+    uid: string;
     email: string;
     passwordHash: string | null;
     status: UserStatus;
@@ -25,6 +27,7 @@ export class CredentialUser {
   }): CredentialUser {
     return new CredentialUser(
       params.id ?? null,
+      params.uid,
       params.email,
       params.passwordHash,
       params.status,
@@ -39,7 +42,8 @@ export class CredentialUser {
    * @returns CredentialUser 엔티티 인스턴스
    */
   static fromPersistence(data: {
-    id: string | null;
+    id: bigint | null;
+    uid: string;
     email: string;
     passwordHash: string | null;
     status: UserStatus;
@@ -47,6 +51,7 @@ export class CredentialUser {
   }): CredentialUser {
     return new CredentialUser(
       data.id,
+      data.uid,
       data.email,
       data.passwordHash,
       data.status,

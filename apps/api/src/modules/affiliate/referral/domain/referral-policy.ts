@@ -21,8 +21,8 @@ export class ReferralPolicy {
    * @throws {ReferralCodeExpiredException} 코드가 만료된 경우
    */
   canCreateReferral(
-    affiliateId: string,
-    subUserId: string,
+    affiliateId: bigint,
+    subUserId: bigint,
     code: AffiliateCode,
   ): void {
     // 1. 셀프 추천 방지

@@ -26,7 +26,7 @@ export class VipRewardService {
    * 레벨업 보너스 지급
    */
   async processLevelUpBonus(
-    userId: string,
+    userId: bigint,
     newLevel: VipLevelForReward,
   ): Promise<void> {
     if (newLevel.levelUpBonus.lte(0)) {

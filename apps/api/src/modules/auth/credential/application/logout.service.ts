@@ -5,7 +5,7 @@ import { ActivityType } from 'src/platform/activity-log/activity-log.types';
 import type { RequestClientInfo } from 'src/platform/http/types/client-info.types';
 
 export interface LogoutParams {
-  userId?: string;
+  userId?: bigint;
   clientInfo: RequestClientInfo;
   isAdmin?: boolean;
 }

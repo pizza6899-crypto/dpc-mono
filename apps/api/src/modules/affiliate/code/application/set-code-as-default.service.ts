@@ -11,7 +11,7 @@ import { ActivityType } from 'src/platform/activity-log/activity-log.types';
 
 interface SetCodeAsDefaultParams {
   id: string;
-  userId: string;
+  userId: bigint;
   requestInfo?: RequestClientInfo;
 }
 

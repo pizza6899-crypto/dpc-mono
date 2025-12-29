@@ -6,7 +6,7 @@ import { AFFILIATE_WALLET_REPOSITORY } from '../ports/out/affiliate-wallet.repos
 import type { AffiliateWalletRepositoryPort } from '../ports/out/affiliate-wallet.repository.port';
 
 interface GetWalletBalanceParams {
-  affiliateId: string;
+  affiliateId: bigint;
   currency?: ExchangeCurrencyCode; // 없으면 모든 통화 반환
 }
 

@@ -7,7 +7,7 @@ import type { AffiliateTierRepositoryPort } from '../ports/out/affiliate-tier.re
 import { IdUtil } from 'src/utils/id.util';
 
 interface GetCommissionRateParams {
-  affiliateId: string;
+  affiliateId: bigint;
 }
 
 interface CommissionRateResult {

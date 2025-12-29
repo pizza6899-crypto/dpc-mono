@@ -8,7 +8,7 @@ export class LoginAttemptResponseDto {
   uid: string;
 
   @ApiProperty({ description: '사용자 ID', nullable: true })
-  userId: string | null;
+  userId: bigint | null;
 
   @ApiProperty({ description: '결과 (SUCCESS/FAILED)' })
   result: string;

@@ -1,7 +1,8 @@
 import type { UserRoleType } from '@repo/database';
 
 export interface AuthenticatedUser {
-  id: string;
+  id: bigint;
+  uid: string;
   email: string;
   role: UserRoleType;
 }

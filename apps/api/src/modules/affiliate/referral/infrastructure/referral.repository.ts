@@ -16,9 +16,9 @@ export class ReferralRepository implements ReferralRepositoryPort {
   ) {}
 
   async create(params: {
-    affiliateId: string;
+    affiliateId: bigint;
     codeId: string;
-    subUserId: string;
+    subUserId: bigint;
     ipAddress?: string | null;
     deviceFingerprint?: string | null;
     userAgent?: string | null;
@@ -57,7 +57,7 @@ export class ReferralRepository implements ReferralRepositoryPort {
     return referral;
   }
 
-  async findByAffiliateId(affiliateId: string): Promise<Referral[]> {
+  async findByAffiliateId(affiliateId: bigint): Promise<Referral[]> {
     const results = await this.tx.referral.findMany({
       where: { affiliateId },
       orderBy: { createdAt: 'desc' },
@@ -66,7 +66,7 @@ export class ReferralRepository implements ReferralRepositoryPort {
     return results.map((result) => this.mapper.toDomain(result));
   }
 
-  async findBySubUserId(subUserId: string): Promise<Referral | null> {
+  async findBySubUserId(subUserId: bigint): Promise<Referral | null> {
     const result = await this.tx.referral.findFirst({
       where: { subUserId },
     });

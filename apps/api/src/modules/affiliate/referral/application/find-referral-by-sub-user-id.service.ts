@@ -5,7 +5,7 @@ import { REFERRAL_REPOSITORY } from '../ports/out/referral.repository.token';
 import type { ReferralRepositoryPort } from '../ports/out/referral.repository.port';
 
 interface FindReferralBySubUserIdParams {
-  subUserId: string;
+  subUserId: bigint;
 }
 
 @Injectable()

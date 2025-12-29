@@ -11,7 +11,7 @@ import type { RequestClientInfo } from 'src/platform/http/types/client-info.type
 import { Transactional } from '@nestjs-cls/transactional';
 
 interface WithdrawCommissionParams {
-  affiliateId: string;
+  affiliateId: bigint;
   currency: ExchangeCurrencyCode;
   amount: Prisma.Decimal;
   requestInfo?: RequestClientInfo;

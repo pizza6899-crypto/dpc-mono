@@ -28,7 +28,7 @@ export interface RegisterCredentialParams {
 }
 
 export interface RegisterCredentialResult {
-  id: string;
+  id: bigint;
   email: string;
 }
 

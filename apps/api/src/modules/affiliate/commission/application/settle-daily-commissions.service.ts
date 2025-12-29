@@ -15,7 +15,7 @@ import { Transactional } from '@nestjs-cls/transactional';
 
 interface SettleDailyCommissionsParams {
   settlementDate: Date; // 정산 기준일
-  affiliateId?: string; // 특정 어필리에이트만, 없으면 전체
+  affiliateId?: bigint; // 특정 어필리에이트만, 없으면 전체
 }
 
 interface SettleDailyCommissionsResult {
@@ -140,7 +140,7 @@ export class SettleDailyCommissionsService {
    */
   @Transactional()
   private async settleForAffiliate(
-    affiliateId: string,
+    affiliateId: bigint,
     settlementDate: Date,
   ): Promise<SettleDailyCommissionsResult> {
     // 통화별로 처리 (월렛으로 사용 가능한 통화만)

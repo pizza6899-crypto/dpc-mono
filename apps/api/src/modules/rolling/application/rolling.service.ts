@@ -23,7 +23,7 @@ export class RollingService {
    */
   async createDepositRolling(
     tx: Prisma.TransactionClient,
-    userId: string,
+    userId: bigint,
     depositAmount: Prisma.Decimal,
     depositDetailId: bigint,
     rollingMultiplier: Prisma.Decimal = new Prisma.Decimal(1.0),
@@ -58,7 +58,7 @@ export class RollingService {
    */
   async createPromotionRolling(
     tx: Prisma.TransactionClient,
-    userId: string,
+    userId: bigint,
     bonusAmount: Prisma.Decimal,
     userPromotionId: number,
     rollingMultiplier: Prisma.Decimal,
@@ -88,7 +88,7 @@ export class RollingService {
    * @param userBalance 현재 유저 잔액 (조건부 소멸 체크용)
    */
   async processRolling(
-    userId: string,
+    userId: bigint,
     rollingAmount: Prisma.Decimal,
     userBalance: Prisma.Decimal,
   ) {
@@ -174,7 +174,7 @@ export class RollingService {
   /**
    * 사용자의 활성 롤링 조회
    */
-  async getActiveRollings(userId: string) {
+  async getActiveRollings(userId: bigint) {
     return await this.prisma.rolling.findMany({
       where: {
         userId,
@@ -189,7 +189,7 @@ export class RollingService {
   /**
    * 사용자의 모든 롤링 조회
    */
-  async getUserRollings(userId: string, status?: RollingStatus) {
+  async getUserRollings(userId: bigint, status?: RollingStatus) {
     return await this.prisma.rolling.findMany({
       where: {
         userId,
@@ -204,7 +204,7 @@ export class RollingService {
   /**
    * 출금 가능 여부 체크 (모든 활성 롤링이 완료되어야 함)
    */
-  async canWithdraw(userId: string): Promise<boolean> {
+  async canWithdraw(userId: bigint): Promise<boolean> {
     const activeRollings = await this.getActiveRollings(userId);
     return activeRollings.length === 0;
   }
@@ -212,7 +212,7 @@ export class RollingService {
   /**
    * 롤링 요약 정보 조회
    */
-  async getRollingSummary(userId: string) {
+  async getRollingSummary(userId: bigint) {
     const activeRollings = await this.getActiveRollings(userId);
 
     const totalRequired = activeRollings.reduce(

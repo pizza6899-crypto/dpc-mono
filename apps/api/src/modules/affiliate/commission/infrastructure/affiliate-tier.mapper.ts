@@ -15,13 +15,13 @@ export class AffiliateTierMapper {
   toDomain(prismaModel: {
     id: bigint;
     uid: string;
-    affiliateId: string;
+    affiliateId: bigint;
     tier: AffiliateTierLevel;
     baseRate: Prisma.Decimal;
     customRate: Prisma.Decimal | null;
     isCustomRate: boolean;
     monthlyWagerAmount: Prisma.Decimal;
-    customRateSetBy: string | null;
+    customRateSetBy: bigint | null;
     customRateSetAt: Date | null;
     createdAt: Date;
     updatedAt: Date;
@@ -48,13 +48,13 @@ export class AffiliateTierMapper {
   toPrisma(domain: AffiliateTier): {
     id: bigint | null;
     uid: string;
-    affiliateId: string;
+    affiliateId: bigint;
     tier: AffiliateTierLevel;
     baseRate: Prisma.Decimal;
     customRate: Prisma.Decimal | null;
     isCustomRate: boolean;
     monthlyWagerAmount: Prisma.Decimal;
-    customRateSetBy: string | null;
+    customRateSetBy: bigint | null;
     customRateSetAt: Date | null;
     createdAt: Date;
     updatedAt: Date;

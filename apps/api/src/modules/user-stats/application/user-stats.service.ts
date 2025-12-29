@@ -12,7 +12,7 @@ export class UserStatsService {
    */
   async updateBetWinStats(
     tx: Prisma.TransactionClient,
-    userId: string,
+    userId: bigint,
     currency: WalletCurrencyCode,
     betAmount: Prisma.Decimal,
     winAmount: Prisma.Decimal,
@@ -57,7 +57,7 @@ export class UserStatsService {
    */
   async updateDepositStats(
     tx: Prisma.TransactionClient,
-    userId: string,
+    userId: bigint,
     currency: WalletCurrencyCode,
     amount: Prisma.Decimal,
   ): Promise<void> {
@@ -100,7 +100,7 @@ export class UserStatsService {
    */
   async updateWithdrawStats(
     tx: Prisma.TransactionClient,
-    userId: string,
+    userId: bigint,
     currency: WalletCurrencyCode,
     amount: Prisma.Decimal,
   ): Promise<void> {
@@ -143,7 +143,7 @@ export class UserStatsService {
    */
   async updateBonusStats(
     tx: Prisma.TransactionClient,
-    userId: string,
+    userId: bigint,
     currency: WalletCurrencyCode,
     amount: Prisma.Decimal,
   ): Promise<void> {
@@ -186,7 +186,7 @@ export class UserStatsService {
    */
   async updateCompEarnedStats(
     tx: Prisma.TransactionClient,
-    userId: string,
+    userId: bigint,
     currency: WalletCurrencyCode,
     amount: Prisma.Decimal,
   ): Promise<void> {
@@ -229,7 +229,7 @@ export class UserStatsService {
    */
   async updateCompUsedStats(
     tx: Prisma.TransactionClient,
-    userId: string,
+    userId: bigint,
     currency: WalletCurrencyCode,
     amount: Prisma.Decimal,
   ): Promise<void> {
@@ -272,7 +272,7 @@ export class UserStatsService {
    */
   async updateSettlementStats(
     tx: Prisma.TransactionClient,
-    userId: string,
+    userId: bigint,
     currency: WalletCurrencyCode,
     fromBet: Prisma.Decimal,
     fromVip: Prisma.Decimal,
@@ -315,7 +315,7 @@ export class UserStatsService {
   /**
    * 통계 조회
    */
-  async getStats(userId: string, currency: WalletCurrencyCode) {
+  async getStats(userId: bigint, currency: WalletCurrencyCode) {
     return await this.prisma.userBalanceStats.findUnique({
       where: { userId_currency: { userId, currency } },
     });
@@ -324,7 +324,7 @@ export class UserStatsService {
   /**
    * 사용자의 모든 통화별 통계 조회
    */
-  async getAllStats(userId: string) {
+  async getAllStats(userId: bigint) {
     return await this.prisma.userBalanceStats.findMany({
       where: { userId },
       orderBy: { currency: 'asc' },

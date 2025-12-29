@@ -72,7 +72,7 @@ export enum ActivityStatus {
   FAILURE = 'FAILURE',
 }
 export interface ActivityLogData {
-  userId: string;
+  userId: bigint;
   isAdmin?: boolean; // 추가 (선택적)
   activityType: ActivityType;
   status: ActivityStatus;

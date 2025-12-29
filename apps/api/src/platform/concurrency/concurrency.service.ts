@@ -39,7 +39,7 @@ export class ConcurrencyService {
    * 사용자 레벨 락 획득
    */
   async acquireUserLock(
-    userId: string,
+    userId: bigint,
     operation: string,
     options: LockOptions = {},
   ): Promise<DistributedLock | null> {
@@ -220,7 +220,7 @@ export class ConcurrencyService {
     callback,
     options = { ttl: 30, retryCount: 10, retryDelay: 100 },
   }: {
-    userId: string;
+    userId: bigint;
     operation: string;
     callback: () => Promise<T>;
     options?: LockOptions;
@@ -323,7 +323,7 @@ export class ConcurrencyService {
    * 사용자 잔액 동시성 제어
    */
   async withUserBalanceLock<T>(
-    userId: string,
+    userId: bigint,
     callback: () => Promise<T>,
     options: LockOptions = {},
   ): Promise<T> {
@@ -339,7 +339,7 @@ export class ConcurrencyService {
    * 사용자 프로필 동시성 제어
    */
   async withUserProfileLock<T>(
-    userId: string,
+    userId: bigint,
     callback: () => Promise<T>,
     options: LockOptions = {},
   ): Promise<T> {
@@ -355,7 +355,7 @@ export class ConcurrencyService {
    * 사용자 인증 동시성 제어
    */
   async withUserAuthLock<T>(
-    userId: string,
+    userId: bigint,
     callback: () => Promise<T>,
     options: LockOptions = {},
   ): Promise<T> {

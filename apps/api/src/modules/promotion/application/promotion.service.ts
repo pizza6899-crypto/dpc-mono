@@ -19,7 +19,7 @@ export class PromotionService {
    * @param language 언어 코드
    */
   async getActivePromotions(
-    userId: string,
+    userId: bigint,
     language: string = 'ko',
   ): Promise<any[]> {
     const now = new Date();
@@ -104,7 +104,7 @@ export class PromotionService {
    * 프로모션 적용 가능 여부 체크
    */
   async canApplyPromotion(
-    userId: string,
+    userId: bigint,
     promotionId: number,
     depositAmount: Prisma.Decimal,
   ): Promise<{ canApply: boolean; reason?: string }> {
@@ -180,7 +180,7 @@ export class PromotionService {
   /**
    * 사용자의 프로모션 이력 조회
    */
-  async getUserPromotions(userId: string): Promise<UserPromotionResponseDto[]> {
+  async getUserPromotions(userId: bigint): Promise<UserPromotionResponseDto[]> {
     const userPromotions = await this.prisma.userPromotion.findMany({
       where: { userId },
       include: {

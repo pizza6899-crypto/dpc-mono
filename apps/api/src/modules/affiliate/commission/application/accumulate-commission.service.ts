@@ -6,7 +6,7 @@ import { CalculateCommissionService } from './calculate-commission.service';
 import { Transactional } from '@nestjs-cls/transactional';
 
 export interface GameRound {
-  subUserId: string;
+  subUserId: bigint;
   gameRoundId: bigint;
   wagerAmount: Prisma.Decimal;
   winAmount?: Prisma.Decimal | null;
