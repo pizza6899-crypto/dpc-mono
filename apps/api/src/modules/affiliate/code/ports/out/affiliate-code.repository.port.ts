@@ -57,4 +57,23 @@ export interface AffiliateCodeRepositoryPort {
    * 트랜잭션 내에서 여러 코드 업데이트
    */
   updateMany(updates: Array<{ code: AffiliateCode }>): Promise<AffiliateCode[]>;
+
+  /**
+   * 관리자용 코드 목록 조회 (페이징, 필터링 지원)
+   */
+  findManyForAdmin(params: {
+    page?: number;
+    limit?: number;
+    sortBy?: 'createdAt' | 'updatedAt' | 'code';
+    sortOrder?: 'asc' | 'desc';
+    userId?: bigint;
+    code?: string;
+    isActive?: boolean;
+    isDefault?: boolean;
+    startDate?: Date;
+    endDate?: Date;
+  }): Promise<{
+    codes: AffiliateCode[];
+    total: number;
+  }>;
 }

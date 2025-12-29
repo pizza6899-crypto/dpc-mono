@@ -9,11 +9,13 @@ import { ToggleCodeActiveService } from './application/toggle-code-active.servic
 import { SetCodeAsDefaultService } from './application/set-code-as-default.service';
 import { IncrementCodeUsageService } from './application/increment-code-usage.service';
 import { ValidateCodeFormatService } from './application/validate-code-format.service';
+import { FindCodesAdminService } from './application/find-codes-admin.service';
 import { AffiliateCodePolicy } from './domain';
 import { AFFILIATE_CODE_REPOSITORY } from './ports/out/affiliate-code.repository.token';
 import { AffiliateCodeRepository } from './infrastructure/affiliate-code.repository';
 import { AffiliateCodeMapper } from './infrastructure/affiliate-code.mapper';
 import { AffiliateCodeController } from './controllers/affiliate-code.controller';
+import { AffiliateCodeAdminController } from './controllers/admin/affiliate-code-admin.controller';
 import { ActivityLogModule } from 'src/platform/activity-log/activity-log.module';
 
 @Module({
@@ -29,6 +31,7 @@ import { ActivityLogModule } from 'src/platform/activity-log/activity-log.module
     SetCodeAsDefaultService,
     IncrementCodeUsageService,
     ValidateCodeFormatService,
+    FindCodesAdminService,
     // Domain Policy
     AffiliateCodePolicy,
     // Infrastructure
@@ -39,7 +42,7 @@ import { ActivityLogModule } from 'src/platform/activity-log/activity-log.module
       useClass: AffiliateCodeRepository,
     },
   ],
-  controllers: [AffiliateCodeController],
+  controllers: [AffiliateCodeController, AffiliateCodeAdminController],
   exports: [
     // Use Case Services (다른 모듈에서 사용 가능)
     CreateCodeService,
@@ -51,6 +54,7 @@ import { ActivityLogModule } from 'src/platform/activity-log/activity-log.module
     SetCodeAsDefaultService,
     IncrementCodeUsageService,
     ValidateCodeFormatService,
+    FindCodesAdminService,
   ],
 })
 export class AffiliateCodeModule {}
