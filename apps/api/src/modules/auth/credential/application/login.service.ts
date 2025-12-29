@@ -7,6 +7,8 @@ import type { RequestClientInfo } from 'src/platform/http/types/client-info.type
 import { ACTIVITY_LOG } from 'src/platform/activity-log/activity-log.token';
 import type { ActivityLogPort } from 'src/platform/activity-log/activity-log.port';
 import { ActivityType } from 'src/platform/activity-log/activity-log.types';
+import { DispatchLogService } from 'src/modules/audit-log/application/dispatch-log.service';
+import { LogType } from 'src/modules/audit-log/domain';
 
 export interface LoginParams {
   user: AuthenticatedUser;
@@ -26,6 +28,7 @@ export class LoginService {
   constructor(
     private readonly recordService: RecordLoginAttemptService,
     @Inject(ACTIVITY_LOG) private readonly activityLog: ActivityLogPort,
+    private readonly dispatchLogService: DispatchLogService,
   ) {}
 
   @Transactional()
@@ -68,6 +71,30 @@ export class LoginService {
       this.logger.error(
         error,
         `Activity log 기록 실패 (로그인은 성공) - userId: ${user.id}, isAdmin: ${isAdmin}`,
+      );
+    }
+
+    // 3. Audit 로그 기록 (보안 로그)
+    try {
+      await this.dispatchLogService.dispatch({
+        type: LogType.AUTH,
+        data: {
+          userId: user.id.toString(),
+          action: isAdmin ? 'ADMIN_LOGIN' : 'USER_LOGIN',
+          status: 'SUCCESS',
+          ip: clientInfo.ip,
+          userAgent: clientInfo.userAgent,
+          metadata: {
+            isAdmin,
+            email: user.email,
+          },
+        },
+      });
+    } catch (error) {
+      // Audit 로그 실패는 로그인 성공에 영향을 주지 않도록 처리
+      this.logger.error(
+        error,
+        `Audit log 기록 실패 (로그인은 성공) - userId: ${user.id}`,
       );
     }
   }

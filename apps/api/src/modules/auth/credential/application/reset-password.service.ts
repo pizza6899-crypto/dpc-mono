@@ -11,6 +11,8 @@ import { ActivityType } from 'src/platform/activity-log/activity-log.types';
 import type { RequestClientInfo } from 'src/platform/http/types/client-info.types';
 import { ApiException } from 'src/platform/http/exception/api.exception';
 import { MessageCode } from 'src/platform/http/types';
+import { DispatchLogService } from 'src/modules/audit-log/application/dispatch-log.service';
+import { LogType } from 'src/modules/audit-log/domain';
 
 export interface ResetPasswordParams {
   token: string;
@@ -34,6 +36,7 @@ export class ResetPasswordService {
     private readonly tokenRepository: PasswordResetTokenRepositoryPort,
     @Inject(ACTIVITY_LOG)
     private readonly activityLog: ActivityLogPort,
+    private readonly dispatchLogService: DispatchLogService,
   ) {}
 
   @Transactional()
@@ -93,6 +96,30 @@ export class ResetPasswordService {
       this.logger.error(
         error,
         `Activity log 기록 실패 (비밀번호 재설정은 성공) - userId: ${tokenData.userId}`,
+      );
+    }
+
+    // 8. Audit 로그 기록 (보안 로그)
+    try {
+      await this.dispatchLogService.dispatch({
+        type: LogType.AUTH,
+        data: {
+          userId: tokenData.userId.toString(),
+          action: 'PASSWORD_RESET',
+          status: 'SUCCESS',
+          ip: requestInfo.ip,
+          userAgent: requestInfo.userAgent,
+          metadata: {
+            email: user.email,
+            tokenId: tokenData.id,
+          },
+        },
+      });
+    } catch (error) {
+      // Audit 로그 실패는 비밀번호 재설정 성공에 영향을 주지 않도록 처리
+      this.logger.error(
+        error,
+        `Audit log 기록 실패 (비밀번호 재설정은 성공) - userId: ${tokenData.userId}`,
       );
     }
   }

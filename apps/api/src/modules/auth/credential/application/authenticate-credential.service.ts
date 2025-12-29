@@ -1,4 +1,4 @@
-import { Injectable, Inject, HttpStatus } from '@nestjs/common';
+import { Injectable, Inject, HttpStatus, Logger } from '@nestjs/common';
 import { VerifyCredentialService } from './verify-credential.service';
 import { FindLoginAttemptsService } from './find-login-attempts.service';
 import { RecordLoginAttemptService } from './record-login-attempt.service';
@@ -15,6 +15,8 @@ import {
   LoginAttemptResult,
   LoginFailureReason,
 } from '../domain/model/login-attempt.entity';
+import { DispatchLogService } from 'src/modules/audit-log/application/dispatch-log.service';
+import { LogType } from 'src/modules/audit-log/domain';
 
 export interface AuthenticateCredentialParams {
   email: string;
@@ -31,6 +33,8 @@ export interface AuthenticateCredentialParams {
  */
 @Injectable()
 export class AuthenticateCredentialService {
+  private readonly logger = new Logger(AuthenticateCredentialService.name);
+
   constructor(
     private readonly verifyService: VerifyCredentialService,
     private readonly findAttemptsService: FindLoginAttemptsService,
@@ -38,6 +42,7 @@ export class AuthenticateCredentialService {
     private readonly policy: CredentialPolicy,
     @Inject(CREDENTIAL_USER_REPOSITORY)
     private readonly userRepository: CredentialUserRepositoryPort,
+    private readonly dispatchLogService: DispatchLogService,
   ) {}
 
   async execute({
@@ -98,6 +103,33 @@ export class AuthenticateCredentialService {
         isMobile: clientInfo.isMobile ?? null,
         isAdmin,
       });
+
+      // Audit 로그 기록 (로그인 실패)
+      try {
+        await this.dispatchLogService.dispatch({
+          type: LogType.AUTH,
+          data: {
+            userId: foundUser?.id?.toString(),
+            action: isAdmin ? 'ADMIN_LOGIN' : 'USER_LOGIN',
+            status: 'FAILURE',
+            ip: clientInfo.ip,
+            userAgent: clientInfo.userAgent,
+            metadata: {
+              isAdmin,
+              email,
+              failureReason: foundUser
+                ? 'INVALID_CREDENTIALS'
+                : 'USER_NOT_FOUND',
+            },
+          },
+        });
+      } catch (error) {
+        // Audit 로그 실패는 로그인 실패 처리에 영향을 주지 않도록 처리
+        this.logger.error(
+          error,
+          `Audit log 기록 실패 (로그인 실패) - email: ${email}`,
+        );
+      }
 
       throw new ApiException(
         MessageCode.AUTH_INVALID_CREDENTIALS,

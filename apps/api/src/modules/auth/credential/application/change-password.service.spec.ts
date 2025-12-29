@@ -17,6 +17,7 @@ import { MessageCode } from 'src/platform/http/types';
 import type { RequestClientInfo } from 'src/platform/http/types/client-info.types';
 import { PrismaModule } from 'src/platform/prisma/prisma.module';
 import { EnvModule } from 'src/platform/env/env.module';
+import { DispatchLogService } from 'src/modules/audit-log/application/dispatch-log.service';
 
 describe('ChangePasswordService', () => {
   let module: TestingModule;
@@ -24,6 +25,7 @@ describe('ChangePasswordService', () => {
   let mockVerifyService: jest.Mocked<VerifyCredentialService>;
   let mockUserRepository: jest.Mocked<UserRepositoryPort>;
   let mockActivityLog: jest.Mocked<ActivityLogPort>;
+  let mockDispatchLogService: jest.Mocked<DispatchLogService>;
 
   const mockUserId = BigInt(1);
   const mockEmail = 'user@example.com';
@@ -84,6 +86,13 @@ describe('ChangePasswordService', () => {
       },
     };
 
+    const mockDispatchLogServiceProvider = {
+      provide: DispatchLogService,
+      useValue: {
+        dispatch: jest.fn().mockResolvedValue(undefined),
+      },
+    };
+
     module = await Test.createTestingModule({
       imports: [PrismaModule, EnvModule], // @Transactional() 데코레이터를 위해 필요
       providers: [
@@ -91,6 +100,7 @@ describe('ChangePasswordService', () => {
         mockVerifyServiceProvider,
         mockUserRepositoryProvider,
         mockActivityLogProvider,
+        mockDispatchLogServiceProvider,
       ],
     })
       .setLogger(new Logger())
@@ -100,6 +110,7 @@ describe('ChangePasswordService', () => {
     mockVerifyService = module.get(VerifyCredentialService);
     mockUserRepository = module.get(USER_REPOSITORY);
     mockActivityLog = module.get(ACTIVITY_LOG);
+    mockDispatchLogService = module.get(DispatchLogService);
 
     jest.clearAllMocks();
   });

@@ -18,6 +18,7 @@ import { MessageCode } from 'src/platform/http/types';
 import type { RequestClientInfo } from 'src/platform/http/types/client-info.types';
 import { PrismaModule } from 'src/platform/prisma/prisma.module';
 import { EnvModule } from 'src/platform/env/env.module';
+import { DispatchLogService } from 'src/modules/audit-log/application/dispatch-log.service';
 
 describe('ResetPasswordService', () => {
   let module: TestingModule;
@@ -25,6 +26,7 @@ describe('ResetPasswordService', () => {
   let mockUserRepository: jest.Mocked<UserRepositoryPort>;
   let mockTokenRepository: jest.Mocked<PasswordResetTokenRepositoryPort>;
   let mockActivityLog: jest.Mocked<ActivityLogPort>;
+  let mockDispatchLogService: jest.Mocked<DispatchLogService>;
 
   const mockUserId = BigInt(1);
   const mockToken = 'test-token-12345678901234567890123456789012';
@@ -93,6 +95,13 @@ describe('ResetPasswordService', () => {
       },
     };
 
+    const mockDispatchLogServiceProvider = {
+      provide: DispatchLogService,
+      useValue: {
+        dispatch: jest.fn().mockResolvedValue(undefined),
+      },
+    };
+
     module = await Test.createTestingModule({
       imports: [PrismaModule, EnvModule], // @Transactional() 데코레이터를 위해 필요
       providers: [
@@ -100,6 +109,7 @@ describe('ResetPasswordService', () => {
         mockUserRepositoryProvider,
         mockTokenRepositoryProvider,
         mockActivityLogProvider,
+        mockDispatchLogServiceProvider,
       ],
     })
       .setLogger(new Logger())
@@ -109,6 +119,7 @@ describe('ResetPasswordService', () => {
     mockUserRepository = module.get(USER_REPOSITORY);
     mockTokenRepository = module.get(PASSWORD_RESET_TOKEN_REPOSITORY);
     mockActivityLog = module.get(ACTIVITY_LOG);
+    mockDispatchLogService = module.get(DispatchLogService);
 
     jest.clearAllMocks();
   });

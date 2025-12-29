@@ -13,12 +13,14 @@ import type { RequestClientInfo } from 'src/platform/http/types/client-info.type
 import { UserRoleType } from '@repo/database';
 import { PrismaModule } from 'src/platform/prisma/prisma.module';
 import { EnvModule } from 'src/platform/env/env.module';
+import { DispatchLogService } from 'src/modules/audit-log/application/dispatch-log.service';
 
 describe('LoginService', () => {
   let module: TestingModule;
   let service: LoginService;
   let mockRecordService: jest.Mocked<RecordLoginAttemptService>;
   let mockActivityLog: jest.Mocked<ActivityLogPort>;
+  let mockDispatchLogService: jest.Mocked<DispatchLogService>;
 
   const mockUser: AuthenticatedUser = {
     id: 'user-123',
@@ -79,12 +81,20 @@ describe('LoginService', () => {
       },
     };
 
+    const mockDispatchLogServiceProvider = {
+      provide: DispatchLogService,
+      useValue: {
+        dispatch: jest.fn().mockResolvedValue(undefined),
+      },
+    };
+
     module = await Test.createTestingModule({
       imports: [PrismaModule, EnvModule], // @Transactional() 데코레이터를 위해 필요
       providers: [
         LoginService,
         mockRecordServiceProvider,
         mockActivityLogProvider,
+        mockDispatchLogServiceProvider,
       ],
     })
       .setLogger(new Logger())
@@ -93,6 +103,7 @@ describe('LoginService', () => {
     service = module.get<LoginService>(LoginService);
     mockRecordService = module.get(RecordLoginAttemptService);
     mockActivityLog = module.get(ACTIVITY_LOG);
+    mockDispatchLogService = module.get(DispatchLogService);
 
     jest.clearAllMocks();
   });

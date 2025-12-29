@@ -12,12 +12,14 @@ import { UserStatus, UserRoleType, SocialType } from '@repo/database';
 import type { RequestClientInfo } from 'src/platform/http/types/client-info.types';
 import { PrismaModule } from 'src/platform/prisma/prisma.module';
 import { EnvModule } from 'src/platform/env/env.module';
+import { DispatchLogService } from 'src/modules/audit-log/application/dispatch-log.service';
 
 describe('RequestPasswordResetService', () => {
   let module: TestingModule;
   let service: RequestPasswordResetService;
   let mockUserRepository: jest.Mocked<UserRepositoryPort>;
   let mockTokenRepository: jest.Mocked<PasswordResetTokenRepositoryPort>;
+  let mockDispatchLogService: jest.Mocked<DispatchLogService>;
 
   const mockUserId = BigInt(1);
   const mockEmail = 'user@example.com';
@@ -62,12 +64,20 @@ describe('RequestPasswordResetService', () => {
       },
     };
 
+    const mockDispatchLogServiceProvider = {
+      provide: DispatchLogService,
+      useValue: {
+        dispatch: jest.fn().mockResolvedValue(undefined),
+      },
+    };
+
     module = await Test.createTestingModule({
       imports: [PrismaModule, EnvModule], // @Transactional() 데코레이터를 위해 필요
       providers: [
         RequestPasswordResetService,
         mockUserRepositoryProvider,
         mockTokenRepositoryProvider,
+        mockDispatchLogServiceProvider,
       ],
     })
       .setLogger(new Logger())
@@ -78,6 +88,7 @@ describe('RequestPasswordResetService', () => {
     );
     mockUserRepository = module.get(USER_REPOSITORY);
     mockTokenRepository = module.get(PASSWORD_RESET_TOKEN_REPOSITORY);
+    mockDispatchLogService = module.get(DispatchLogService);
 
     jest.clearAllMocks();
   });

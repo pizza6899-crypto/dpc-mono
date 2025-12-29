@@ -7,10 +7,12 @@ import { ACTIVITY_LOG } from 'src/platform/activity-log/activity-log.token';
 import type { ActivityLogPort } from 'src/platform/activity-log/activity-log.port';
 import { ActivityType } from 'src/platform/activity-log/activity-log.types';
 import type { RequestClientInfo } from 'src/platform/http/types/client-info.types';
+import { DispatchLogService } from 'src/modules/audit-log/application/dispatch-log.service';
 
 describe('LogoutService', () => {
   let service: LogoutService;
   let mockActivityLog: jest.Mocked<ActivityLogPort>;
+  let mockDispatchLogService: jest.Mocked<DispatchLogService>;
 
   const mockUserId = 'user-123';
   const mockAdminUserId = 'admin-123';
@@ -55,14 +57,26 @@ describe('LogoutService', () => {
       },
     };
 
+    const mockDispatchLogServiceProvider = {
+      provide: DispatchLogService,
+      useValue: {
+        dispatch: jest.fn().mockResolvedValue(undefined),
+      },
+    };
+
     const module: TestingModule = await Test.createTestingModule({
-      providers: [LogoutService, mockActivityLogProvider],
+      providers: [
+        LogoutService,
+        mockActivityLogProvider,
+        mockDispatchLogServiceProvider,
+      ],
     })
       .setLogger(new Logger())
       .compile();
 
     service = module.get<LogoutService>(LogoutService);
     mockActivityLog = module.get(ACTIVITY_LOG);
+    mockDispatchLogService = module.get(DispatchLogService);
 
     jest.clearAllMocks();
   });

@@ -3,6 +3,8 @@ import type { ActivityLogPort } from 'src/platform/activity-log/activity-log.por
 import { ACTIVITY_LOG } from 'src/platform/activity-log/activity-log.token';
 import { ActivityType } from 'src/platform/activity-log/activity-log.types';
 import type { RequestClientInfo } from 'src/platform/http/types/client-info.types';
+import { DispatchLogService } from 'src/modules/audit-log/application/dispatch-log.service';
+import { LogType } from 'src/modules/audit-log/domain';
 
 export interface LogoutParams {
   userId?: bigint;
@@ -19,6 +21,7 @@ export class LogoutService {
 
   constructor(
     @Inject(ACTIVITY_LOG) private readonly activityLog: ActivityLogPort,
+    private readonly dispatchLogService: DispatchLogService,
   ) {}
 
   async execute({
@@ -46,6 +49,29 @@ export class LogoutService {
         this.logger.error(
           error,
           `Activity log 기록 실패 (로그아웃은 성공) - userId: ${userId}, isAdmin: ${isAdmin}`,
+        );
+      }
+
+      // Audit 로그 기록 (보안 로그)
+      try {
+        await this.dispatchLogService.dispatch({
+          type: LogType.AUTH,
+          data: {
+            userId: userId.toString(),
+            action: isAdmin ? 'ADMIN_LOGOUT' : 'USER_LOGOUT',
+            status: 'SUCCESS',
+            ip: clientInfo.ip,
+            userAgent: clientInfo.userAgent,
+            metadata: {
+              isAdmin,
+            },
+          },
+        });
+      } catch (error) {
+        // Audit 로그 실패는 로그아웃 성공에 영향을 주지 않도록 처리
+        this.logger.error(
+          error,
+          `Audit log 기록 실패 (로그아웃은 성공) - userId: ${userId}`,
         );
       }
     }
