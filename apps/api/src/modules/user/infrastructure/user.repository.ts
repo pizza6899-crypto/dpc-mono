@@ -122,5 +122,14 @@ export class UserRepository implements UserRepositoryPort {
 
     return this.mapper.toDomain(user);
   }
+
+  async updatePassword(userId: bigint, passwordHash: string): Promise<User> {
+    const user = await this.tx.user.update({
+      where: { id: userId },
+      data: { passwordHash },
+    });
+
+    return this.mapper.toDomain(user);
+  }
 }
 

@@ -148,6 +148,23 @@ export class User {
     return this.location;
   }
 
+  /**
+   * 비밀번호 업데이트
+   */
+  updatePassword(newPasswordHash: string): User {
+    const updatedAuthInfo = this.authInfo.withPasswordHash(newPasswordHash);
+    return new User(
+      this.id,
+      this.uid,
+      updatedAuthInfo,
+      this.location,
+      this.status,
+      this.role,
+      this.createdAt,
+      this.updatedAt,
+    );
+  }
+
   // 추후 확장 예정 메서드들 (주석 처리)
   /*
   // 프로필 관리 (추후 구현)

@@ -75,5 +75,10 @@ export interface UserRepositoryPort {
    * 새 사용자 생성
    */
   create(params: CreateUserParams): Promise<User>;
+
+  /**
+   * 사용자 비밀번호 업데이트
+   */
+  updatePassword(userId: bigint, passwordHash: string): Promise<User>;
 }
 

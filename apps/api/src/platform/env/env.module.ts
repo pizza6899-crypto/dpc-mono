@@ -31,7 +31,7 @@ import { validate } from './env.validation';
         redisConfig,
         googleOAuthConfig,
         whitecliffConfig,
-        dcsConfig,
+        dcsConfig, 
         schedulerConfig,
         nowPaymentConfig,
         sessionConfig,

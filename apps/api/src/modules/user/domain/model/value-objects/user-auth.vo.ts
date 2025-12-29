@@ -103,6 +103,18 @@ export class UserAuth {
   }
 
   /**
+   * 비밀번호 해시로 새로운 UserAuth 인스턴스 생성 (불변성 유지)
+   */
+  withPasswordHash(passwordHash: string | null): UserAuth {
+    return new UserAuth(
+      this.email,
+      passwordHash,
+      this.socialId,
+      this.socialType,
+    );
+  }
+
+  /**
    * 이메일 형식 검증
    */
   private isValidEmail(email: string): boolean {

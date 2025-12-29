@@ -2,9 +2,11 @@ import {
   Controller,
   Post,
   Get,
+  Patch,
   Body,
   Req,
   HttpStatus,
+  HttpCode,
 } from '@nestjs/common';
 import { ApiTags, ApiOperation } from '@nestjs/swagger';
 import {
@@ -21,10 +23,17 @@ import { ThrottleScope } from 'src/platform/throttle/types/throttle.types';
 import { AuthenticateCredentialService } from '../../application/authenticate-credential.service';
 import { LoginService } from '../../application/login.service';
 import { LogoutService } from '../../application/logout.service';
+import { ChangePasswordService } from '../../application/change-password.service';
 import { CredentialUserLoginRequestDto } from './dto/request/login.request.dto';
 import { CredentialUserLoginResponseDto } from './dto/response/login.response.dto';
 import { CredentialUserAuthStatusResponseDto } from './dto/response/auth-status.response.dto';
 import { CredentialUserLogoutResponseDto } from './dto/response/logout.response.dto';
+import { ChangePasswordRequestDto } from './dto/request/change-password.request.dto';
+import { ChangePasswordResponseDto } from './dto/response/change-password.response.dto';
+import { RequestPasswordResetRequestDto } from './dto/request/request-password-reset.request.dto';
+import { RequestPasswordResetResponseDto } from './dto/response/request-password-reset.response.dto';
+import { ResetPasswordRequestDto } from './dto/request/reset-password.request.dto';
+import { ResetPasswordResponseDto } from './dto/response/reset-password.response.dto';
 import { UserRoleType } from '@repo/database';
 import type { Request } from 'express';
 
@@ -36,6 +45,7 @@ export class CredentialUserController {
     private readonly authenticateCredentialService: AuthenticateCredentialService,
     private readonly loginService: LoginService,
     private readonly logoutService: LogoutService,
+    private readonly changePasswordService: ChangePasswordService,
   ) {}
 
   @Post('login')
@@ -212,5 +222,79 @@ export class CredentialUserController {
             }
           : null,
     };
+  }
+
+  @Patch('password')
+  @HttpCode(HttpStatus.OK)
+  @ApiOperation({
+    summary: 'Change Password / 비밀번호 변경',
+    description: '로그인한 사용자가 현재 비밀번호를 알고 있는 상태에서 비밀번호를 변경합니다.',
+  })
+  @ApiStandardResponse(ChangePasswordResponseDto, {
+    status: HttpStatus.OK,
+    description: 'Password changed successfully / 비밀번호 변경 성공',
+  })
+  async changePassword(
+    @CurrentUser() user: CurrentUserWithSession,
+    @Body() dto: ChangePasswordRequestDto,
+    @RequestClientInfoParam() requestInfo: RequestClientInfo,
+  ): Promise<ChangePasswordResponseDto> {
+    await this.changePasswordService.execute({
+      userId: user.id,
+      currentPassword: dto.currentPassword,
+      newPassword: dto.newPassword,
+      requestInfo,
+      isAdmin: false,
+    });
+
+    return { success: true };
+  }
+
+  @Post('password/reset-request')
+  @Public()
+  @HttpCode(HttpStatus.OK)
+  @Throttle({
+    limit: 5,
+    ttl: 3600, // 1시간
+    scope: ThrottleScope.IP,
+  })
+  @ApiOperation({
+    summary: 'Request Password Reset / 비밀번호 재설정 요청',
+    description: '비밀번호를 잊은 경우 이메일로 재설정 토큰을 발송합니다.',
+  })
+  @ApiStandardResponse(RequestPasswordResetResponseDto, {
+    status: HttpStatus.OK,
+    description: 'Password reset email sent / 비밀번호 재설정 이메일 발송 완료',
+  })
+  async requestPasswordReset(
+    @Body() dto: RequestPasswordResetRequestDto,
+    @RequestClientInfoParam() requestInfo: RequestClientInfo,
+  ): Promise<RequestPasswordResetResponseDto> {
+    // TODO: RequestPasswordResetService 구현 필요
+    throw new Error('Not implemented');
+  }
+
+  @Post('password/reset')
+  @Public()
+  @HttpCode(HttpStatus.OK)
+  @Throttle({
+    limit: 10,
+    ttl: 3600, // 1시간
+    scope: ThrottleScope.IP,
+  })
+  @ApiOperation({
+    summary: 'Reset Password / 비밀번호 재설정',
+    description: '이메일로 받은 토큰을 사용하여 비밀번호를 재설정합니다.',
+  })
+  @ApiStandardResponse(ResetPasswordResponseDto, {
+    status: HttpStatus.OK,
+    description: 'Password reset successfully / 비밀번호 재설정 성공',
+  })
+  async resetPassword(
+    @Body() dto: ResetPasswordRequestDto,
+    @RequestClientInfoParam() requestInfo: RequestClientInfo,
+  ): Promise<ResetPasswordResponseDto> {
+    // TODO: ResetPasswordService 구현 필요
+    throw new Error('Not implemented');
   }
 }

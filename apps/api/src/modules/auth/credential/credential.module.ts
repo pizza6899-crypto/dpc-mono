@@ -21,6 +21,9 @@ import { VipModule } from '../../vip/vip.module';
 import { AffiliateReferralModule } from '../../affiliate/referral/referral.module';
 import { ActivityLogModule } from 'src/platform/activity-log/activity-log.module';
 import { PassportModule } from '@nestjs/passport';
+import { UserModule } from '../../user/user.module';
+import { ChangePasswordService } from './application/change-password.service';
+import { ResetUserPasswordAdminService } from './application/reset-user-password-admin.service';
 
 @Module({
   imports: [
@@ -28,6 +31,7 @@ import { PassportModule } from '@nestjs/passport';
     VipModule,
     AffiliateReferralModule,
     ActivityLogModule,
+    UserModule, // UserRepository 사용을 위해 필요
   ],
   controllers: [CredentialUserController, CredentialAdminController],
   providers: [
@@ -39,6 +43,8 @@ import { PassportModule } from '@nestjs/passport';
     RecordLoginAttemptService,
     FindLoginAttemptsService,
     VerifyCredentialService,
+    ChangePasswordService,
+    ResetUserPasswordAdminService,
 
     // Domain Policies
     CredentialPolicy,

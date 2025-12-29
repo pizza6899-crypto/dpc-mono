@@ -2,17 +2,20 @@ import {
   Controller,
   Post,
   Get,
+  Patch,
   Query,
   Body,
+  Param,
   Req,
   HttpStatus,
+  HttpCode,
 } from '@nestjs/common';
 import { ApiTags, ApiOperation } from '@nestjs/swagger';
 import {
   ApiStandardResponse,
   ApiStandardErrors,
 } from '../../../../../platform/http/decorators/api-response.decorator';
-import { Public } from 'src/platform/auth/decorators/roles.decorator';
+import { Public, RequireRoles } from 'src/platform/auth/decorators/roles.decorator';
 import { CurrentUser } from 'src/platform/auth/decorators/current-user.decorator';
 import type { CurrentUserWithSession } from 'src/platform/auth/decorators/current-user.decorator';
 import { RequestClientInfoParam } from 'src/platform/auth/decorators/request-info.decorator';
@@ -23,12 +26,18 @@ import { AuthenticateCredentialAdminService } from '../../application/authentica
 import { LoginService } from '../../application/login.service';
 import { LogoutService } from '../../application/logout.service';
 import { FindLoginAttemptsService } from '../../application/find-login-attempts.service';
+import { ChangePasswordService } from '../../application/change-password.service';
+import { ResetUserPasswordAdminService } from '../../application/reset-user-password-admin.service';
 import { CredentialUserLoginRequestDto } from '../user/dto/request/login.request.dto';
 import { CredentialUserLoginResponseDto } from '../user/dto/response/login.response.dto';
 import { CredentialUserLogoutResponseDto } from '../user/dto/response/logout.response.dto';
 import { CredentialUserAuthStatusResponseDto } from '../user/dto/response/auth-status.response.dto';
 import { LoginAttemptResponseDto } from './dto/response/login-attempt.response.dto';
 import { FindLoginAttemptsQueryDto } from './dto/request/find-login-attempts-query.dto';
+import { ChangePasswordRequestDto } from '../user/dto/request/change-password.request.dto';
+import { ChangePasswordResponseDto } from '../user/dto/response/change-password.response.dto';
+import { ResetUserPasswordRequestDto } from './dto/request/reset-user-password.request.dto';
+import { ResetUserPasswordResponseDto } from './dto/response/reset-user-password.response.dto';
 import { UserRoleType } from '@repo/database';
 import type { Request } from 'express';
 
@@ -41,6 +50,8 @@ export class CredentialAdminController {
     private readonly loginService: LoginService,
     private readonly logoutService: LogoutService,
     private readonly findAttemptsService: FindLoginAttemptsService,
+    private readonly changePasswordService: ChangePasswordService,
+    private readonly resetUserPasswordAdminService: ResetUserPasswordAdminService,
   ) {}
 
   @Post('login')
@@ -249,5 +260,63 @@ export class CredentialAdminController {
       attemptedAt: attempt.attemptedAt,
       isAdmin: attempt.isAdmin,
     }));
+  }
+
+  @Patch('password')
+  @HttpCode(HttpStatus.OK)
+  @ApiOperation({
+    summary: 'Change Admin Password / 관리자 비밀번호 변경',
+    description: '로그인한 관리자가 현재 비밀번호를 알고 있는 상태에서 비밀번호를 변경합니다.',
+  })
+  @ApiStandardResponse(ChangePasswordResponseDto, {
+    status: HttpStatus.OK,
+    description: 'Password changed successfully / 비밀번호 변경 성공',
+  })
+  async changePassword(
+    @CurrentUser() admin: CurrentUserWithSession,
+    @Body() dto: ChangePasswordRequestDto,
+    @RequestClientInfoParam() requestInfo: RequestClientInfo,
+  ): Promise<ChangePasswordResponseDto> {
+    await this.changePasswordService.execute({
+      userId: admin.id,
+      currentPassword: dto.currentPassword,
+      newPassword: dto.newPassword,
+      requestInfo,
+      isAdmin: true,
+    });
+
+    return { success: true };
+  }
+
+  @Patch('users/:userId/password')
+  @HttpCode(HttpStatus.OK)
+  @RequireRoles(UserRoleType.ADMIN, UserRoleType.SUPER_ADMIN)
+  @ApiOperation({
+    summary: 'Reset User Password / 사용자 비밀번호 초기화',
+    description: '관리자가 특정 사용자의 비밀번호를 초기화합니다.',
+  })
+  @ApiStandardResponse(ResetUserPasswordResponseDto, {
+    status: HttpStatus.OK,
+    description: 'User password reset successfully / 사용자 비밀번호 초기화 성공',
+  })
+  async resetUserPassword(
+    @Param('userId') userId: string,
+    @Body() dto: ResetUserPasswordRequestDto,
+    @CurrentUser() admin: CurrentUserWithSession,
+    @RequestClientInfoParam() requestInfo: RequestClientInfo,
+  ): Promise<ResetUserPasswordResponseDto> {
+    const targetUserId = BigInt(userId);
+
+    await this.resetUserPasswordAdminService.execute({
+      targetUserId,
+      adminUserId: admin.id,
+      newPassword: dto.newPassword,
+      requestInfo,
+    });
+
+    return {
+      success: true,
+      message: '비밀번호가 초기화되었습니다.',
+    };
   }
 }
