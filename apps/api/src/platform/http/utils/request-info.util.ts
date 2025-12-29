@@ -56,22 +56,22 @@ export function extractClientInfo(request: Request): RequestClientInfo {
     cfColo: request.headers['cf-ipcolo'] as string | undefined,
 
     // 지리적 정보
-    country: (request.headers['cf-ipcountry'] as string) || 'XX', // Cloudflare 국가 코드
-    countryIso: request.headers['cf-ipcountry-iso'] as string | undefined, // ISO 국가 코드
-    continent: request.headers['cf-ipcontinent'] as string | undefined, // 대륙
+    country: (request.headers['cf-ipcountry'] as string) || 'XX', // Cloudflare 국가 코드 (2자리 ISO 3166-1 Alpha-2)
+    countryIso: request.headers['cf-ipcountry-iso'] as string | undefined, // ISO 국가 코드 (3자리 ISO 3166-1 Alpha-3, Enterprise 플랜)
+    continent: request.headers['cf-ipcontinent'] as string | undefined, // 대륙 코드 (Enterprise 플랜)
     city: request.headers['cf-ipcity'] as string, // Cloudflare 도시
-    region: request.headers['cf-ipregion'] as string | undefined, // 지역/주
-    regionCode: request.headers['cf-ipregioncode'] as string | undefined, // 지역 코드
-    postalCode: request.headers['cf-ippostalcode'] as string | undefined, // 우편번호
-    latitude: request.headers['cf-iplatitude'] as string | undefined, // 위도
-    longitude: request.headers['cf-iplongitude'] as string | undefined, // 경도
+    region: request.headers['cf-ipregion'] as string | undefined, // 지역/주 (Enterprise 플랜)
+    regionCode: request.headers['cf-ipregioncode'] as string | undefined, // 지역 코드 (Enterprise 플랜)
+    postalCode: request.headers['cf-ippostalcode'] as string | undefined, // 우편번호 (Enterprise 플랜)
+    latitude: request.headers['cf-iplatitude'] as string | undefined, // 위도 (Enterprise 플랜)
+    longitude: request.headers['cf-iplongitude'] as string | undefined, // 경도 (Enterprise 플랜)
     timezone: request.headers['cf-timezone'] as string, // Cloudflare 타임존
 
     // 네트워크 정보
     isp: request.headers['cf-meta-isp'] as string, // ISP 정보
     asn: request.headers['cf-meta-asn'] as string, // ASN 정보
-    asNum: request.headers['cf-ipasnum'] as string | undefined, // AS 번호
-    asOrg: request.headers['cf-ipasorg'] as string | undefined, // AS 조직명
+    asNum: request.headers['cf-ipasnum'] as string | undefined, // AS 번호 (CF-IPASNum, Enterprise 플랜)
+    asOrg: request.headers['cf-ipasorg'] as string | undefined, // AS 조직명 (CF-IPASOrg, Enterprise 플랜)
 
     // 보안 정보
     threat: request.headers['cf-threat'] as string, // 위험도 점수

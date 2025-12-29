@@ -21,23 +21,23 @@ export interface RequestClientInfo {
   cfColo?: string;
 
   // 지리적 정보
-  /** 국가 코드 (CF-IPCountry) */
+  /** 국가 코드 (CF-IPCountry) - 2자리 ISO 3166-1 Alpha-2 */
   country: string;
-  /** ISO 국가 코드 (CF-IPCountry-ISO) */
+  /** ISO 국가 코드 (CF-IPCountry-ISO) - 3자리 ISO 3166-1 Alpha-3, Enterprise 플랜 */
   countryIso?: string;
-  /** 대륙 (CF-IPContinent) */
+  /** 대륙 (CF-IPContinent) - Enterprise 플랜 */
   continent?: string;
   /** 도시 (CF-IPCity) */
   city: string;
-  /** 지역/주 (CF-IPRegion) */
+  /** 지역/주 (CF-IPRegion) - Enterprise 플랜 */
   region?: string;
-  /** 지역 코드 (CF-IPRegionCode) */
+  /** 지역 코드 (CF-IPRegionCode) - Enterprise 플랜 */
   regionCode?: string;
-  /** 우편번호 (CF-IPPostalCode) */
+  /** 우편번호 (CF-IPPostalCode) - Enterprise 플랜 */
   postalCode?: string;
-  /** 위도 (CF-IPLatitude) */
+  /** 위도 (CF-IPLatitude) - Enterprise 플랜 */
   latitude?: string;
-  /** 경도 (CF-IPLongitude) */
+  /** 경도 (CF-IPLongitude) - Enterprise 플랜 */
   longitude?: string;
   /** 타임존 (CF-Timezone) */
   timezone: string;
@@ -47,9 +47,9 @@ export interface RequestClientInfo {
   isp: string;
   /** ASN 정보 (CF-Meta-ASN) */
   asn: string;
-  /** AS 번호 (CF-IPASNum) */
+  /** AS 번호 (CF-IPASNum) - Enterprise 플랜 */
   asNum?: string;
-  /** AS 조직명 (CF-IPASOrg) */
+  /** AS 조직명 (CF-IPASOrg) - Enterprise 플랜 */
   asOrg?: string;
 
   // 보안 정보
