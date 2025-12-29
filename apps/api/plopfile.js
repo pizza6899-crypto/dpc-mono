@@ -108,12 +108,14 @@ module.exports = function (plop) {
         : `src/modules/{{kebabCase moduleName}}`;
 
       // 디렉토리 구조만 생성 (.gitkeep 파일로 디렉토리 유지)
+      // 주의: test 폴더는 생성하지 않음
       
-      // 루트 모듈 디렉토리
+      // Module 파일 생성 (예외적으로 파일 생성)
       actions.push({
         type: 'add',
-        path: `${modulePath}/.gitkeep`,
-        template: '',
+        path: `${modulePath}/{{kebabCase moduleName}}.module.ts`,
+        templateFile: 'plop-templates/module/module.ts.hbs',
+        data: { parentPath: parentPath },
       });
 
       // Domain 디렉토리
@@ -185,14 +187,6 @@ module.exports = function (plop) {
 
       // 기존 파일 생성 코드 (주석처리)
       /*
-      // Module 파일
-      actions.push({
-        type: 'add',
-        path: `${modulePath}/{{kebabCase moduleName}}.module.ts`,
-        templateFile: 'plop-templates/module/module.ts.hbs',
-        data: { parentPath: parentPath },
-      });
-
       // Domain - Index
       actions.push({
         type: 'add',
@@ -317,6 +311,7 @@ module.exports = function (plop) {
     ],
     actions: [
       // 디렉토리 구조만 생성
+      // 주의: test 폴더는 생성하지 않음
       {
         type: 'add',
         path: 'src/modules/{{modulePath}}/application/.gitkeep',
@@ -373,6 +368,7 @@ module.exports = function (plop) {
       const basePath = `src/modules/${data.modulePath}/controllers`;
 
       // 디렉토리 구조만 생성
+      // 주의: test 폴더는 생성하지 않음
       actions.push({
         type: 'add',
         path: `${basePath}/.gitkeep`,
@@ -453,6 +449,7 @@ module.exports = function (plop) {
     ],
     actions: [
       // 디렉토리 구조만 생성
+      // 주의: test 폴더는 생성하지 않음
       {
         type: 'add',
         path: 'src/modules/{{modulePath}}/domain/.gitkeep',
