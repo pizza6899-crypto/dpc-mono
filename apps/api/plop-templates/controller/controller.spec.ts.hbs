@@ -1,0 +1,26 @@
+// src/modules/{{modulePath}}/controllers/{{kebabCase controllerName}}.controller.spec.ts
+import type { TestingModule } from '@nestjs/testing';
+import { Test } from '@nestjs/testing';
+import { {{pascalCase controllerName}}Controller } from './{{kebabCase controllerName}}.controller';
+
+describe('{{pascalCase controllerName}}Controller', () => {
+  let controller: {{pascalCase controllerName}}Controller;
+
+  beforeEach(async () => {
+    const module: TestingModule = await Test.createTestingModule({
+      controllers: [{{pascalCase controllerName}}Controller],
+      providers: [
+        // TODO: Mock providers 추가
+      ],
+    }).compile();
+
+    controller = module.get<{{pascalCase controllerName}}Controller>({{pascalCase controllerName}}Controller);
+  });
+
+  it('should be defined', () => {
+    expect(controller).toBeDefined();
+  });
+
+  // TODO: 테스트 케이스 추가
+});
+

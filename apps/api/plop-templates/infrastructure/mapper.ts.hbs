@@ -1,0 +1,42 @@
+// src/modules/{{#if parentPath}}{{parentPath}}/{{/if}}{{kebabCase moduleName}}/infrastructure/{{kebabCase moduleName}}.mapper.ts
+import { Injectable } from '@nestjs/common';
+import { {{pascalCase moduleName}} } from '../domain';
+
+/**
+ * Domain 엔티티와 Prisma 모델 간 변환을 담당하는 Mapper
+ * Infrastructure 레이어에 위치하여 Domain → Infrastructure 의존을 방지
+ */
+@Injectable()
+export class {{pascalCase moduleName}}Mapper {
+  /**
+   * Prisma 모델 → Domain 엔티티 변환
+   */
+  toDomain(prismaModel: {
+    id: string;
+    createdAt: Date;
+    updatedAt: Date;
+  }): {{pascalCase moduleName}} {
+    return {{pascalCase moduleName}}.fromPersistence({
+      id: prismaModel.id,
+      createdAt: prismaModel.createdAt,
+      updatedAt: prismaModel.updatedAt,
+    });
+  }
+
+  /**
+   * Domain 엔티티 → Prisma 모델 변환
+   */
+  toPrisma(domain: {{pascalCase moduleName}}): {
+    id: string;
+    createdAt: Date;
+    updatedAt: Date;
+  } {
+    const persistence = domain.toPersistence();
+    return {
+      id: persistence.id,
+      createdAt: persistence.createdAt,
+      updatedAt: persistence.updatedAt,
+    };
+  }
+}
+

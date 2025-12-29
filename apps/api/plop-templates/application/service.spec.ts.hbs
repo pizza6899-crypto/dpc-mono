@@ -1,0 +1,26 @@
+// src/modules/{{modulePath}}/application/{{kebabCase serviceName}}.service.spec.ts
+import type { TestingModule } from '@nestjs/testing';
+import { Test } from '@nestjs/testing';
+import { {{pascalCase serviceName}}Service } from './{{kebabCase serviceName}}.service';
+
+describe('{{pascalCase serviceName}}Service', () => {
+  let service: {{pascalCase serviceName}}Service;
+
+  beforeEach(async () => {
+    const module: TestingModule = await Test.createTestingModule({
+      providers: [
+        {{pascalCase serviceName}}Service,
+        // TODO: Mock providers 추가
+      ],
+    }).compile();
+
+    service = module.get<{{pascalCase serviceName}}Service>({{pascalCase serviceName}}Service);
+  });
+
+  it('should be defined', () => {
+    expect(service).toBeDefined();
+  });
+
+  // TODO: 테스트 케이스 추가
+});
+
