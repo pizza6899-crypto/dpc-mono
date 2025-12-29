@@ -262,7 +262,7 @@ export class DcsTestController {
 
     return {
       success: true,
-      message: '게임 목록 업데이트 완료',
+      message: 'Game list updated successfully.',
     };
   }
 }

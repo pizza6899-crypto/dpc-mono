@@ -24,6 +24,8 @@ import { AuthenticateCredentialService } from '../../application/authenticate-cr
 import { LoginService } from '../../application/login.service';
 import { LogoutService } from '../../application/logout.service';
 import { ChangePasswordService } from '../../application/change-password.service';
+import { RequestPasswordResetService } from '../../application/request-password-reset.service';
+import { ResetPasswordService } from '../../application/reset-password.service';
 import { CredentialUserLoginRequestDto } from './dto/request/login.request.dto';
 import { CredentialUserLoginResponseDto } from './dto/response/login.response.dto';
 import { CredentialUserAuthStatusResponseDto } from './dto/response/auth-status.response.dto';
@@ -46,6 +48,8 @@ export class CredentialUserController {
     private readonly loginService: LoginService,
     private readonly logoutService: LogoutService,
     private readonly changePasswordService: ChangePasswordService,
+    private readonly requestPasswordResetService: RequestPasswordResetService,
+    private readonly resetPasswordService: ResetPasswordService,
   ) {}
 
   @Post('login')
@@ -270,8 +274,15 @@ export class CredentialUserController {
     @Body() dto: RequestPasswordResetRequestDto,
     @RequestClientInfoParam() requestInfo: RequestClientInfo,
   ): Promise<RequestPasswordResetResponseDto> {
-    // TODO: RequestPasswordResetService 구현 필요
-    throw new Error('Not implemented');
+    await this.requestPasswordResetService.execute({
+      email: dto.email,
+      requestInfo,
+    });
+
+    return {
+      success: true,
+      message: 'Password reset email has been sent.',
+    };
   }
 
   @Post('password/reset')
@@ -294,7 +305,12 @@ export class CredentialUserController {
     @Body() dto: ResetPasswordRequestDto,
     @RequestClientInfoParam() requestInfo: RequestClientInfo,
   ): Promise<ResetPasswordResponseDto> {
-    // TODO: ResetPasswordService 구현 필요
-    throw new Error('Not implemented');
+    await this.resetPasswordService.execute({
+      token: dto.token,
+      newPassword: dto.newPassword,
+      requestInfo,
+    });
+
+    return { success: true };
   }
 }

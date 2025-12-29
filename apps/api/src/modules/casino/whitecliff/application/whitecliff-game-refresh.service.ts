@@ -42,7 +42,7 @@ export class WhitecliffGameRefreshService {
     if (currentStatus.isRunning) {
       return {
         success: false,
-        message: '게임 목록 업데이트가 이미 진행 중입니다.',
+        message: 'Game list update is already in progress.',
       };
     }
 
@@ -57,7 +57,7 @@ export class WhitecliffGameRefreshService {
 
     return {
       success: true,
-      message: '게임 목록 업데이트가 시작되었습니다.',
+      message: 'Game list update has been started.',
     };
   }
 

@@ -316,7 +316,7 @@ export class CredentialAdminController {
 
     return {
       success: true,
-      message: '비밀번호가 초기화되었습니다.',
+      message: 'Password has been reset.',
     };
   }
 }

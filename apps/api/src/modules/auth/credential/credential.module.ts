@@ -8,10 +8,6 @@ import { LogoutService } from './application/logout.service';
 import { RecordLoginAttemptService } from './application/record-login-attempt.service';
 import { FindLoginAttemptsService } from './application/find-login-attempts.service';
 import { VerifyCredentialService } from './application/verify-credential.service';
-import {
-  LOGIN_ATTEMPT_REPOSITORY,
-  CREDENTIAL_USER_REPOSITORY,
-} from './ports/out';
 import { LoginAttemptRepository } from './infrastructure/login-attempt.repository';
 import { CredentialUserRepository } from './infrastructure/credential-user.repository';
 import { LoginAttemptMapper } from './infrastructure/mapper';
@@ -24,6 +20,14 @@ import { PassportModule } from '@nestjs/passport';
 import { UserModule } from '../../user/user.module';
 import { ChangePasswordService } from './application/change-password.service';
 import { ResetUserPasswordAdminService } from './application/reset-user-password-admin.service';
+import { RequestPasswordResetService } from './application/request-password-reset.service';
+import { ResetPasswordService } from './application/reset-password.service';
+import {
+  LOGIN_ATTEMPT_REPOSITORY,
+  CREDENTIAL_USER_REPOSITORY,
+  PASSWORD_RESET_TOKEN_REPOSITORY,
+} from './ports/out';
+import { PasswordResetTokenRepository } from './infrastructure/password-reset-token.repository';
 
 @Module({
   imports: [
@@ -45,6 +49,8 @@ import { ResetUserPasswordAdminService } from './application/reset-user-password
     VerifyCredentialService,
     ChangePasswordService,
     ResetUserPasswordAdminService,
+    RequestPasswordResetService,
+    ResetPasswordService,
 
     // Domain Policies
     CredentialPolicy,
@@ -59,6 +65,10 @@ import { ResetUserPasswordAdminService } from './application/reset-user-password
     {
       provide: CREDENTIAL_USER_REPOSITORY,
       useClass: CredentialUserRepository,
+    },
+    {
+      provide: PASSWORD_RESET_TOKEN_REPOSITORY,
+      useClass: PasswordResetTokenRepository,
     },
   ],
   exports: [LoginService, LogoutService, VerifyCredentialService],

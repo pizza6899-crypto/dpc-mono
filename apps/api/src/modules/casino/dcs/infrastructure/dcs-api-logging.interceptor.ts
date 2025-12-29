@@ -175,7 +175,7 @@ export class DcsApiLoggingInterceptor {
       return {
         data: {
           _error: true,
-          _message: 'JSON 직렬화 실패',
+          _message: 'JSON serialization failed',
           _originalError: error.message,
           _type: typeof data,
           _isArray: Array.isArray(data),
@@ -222,7 +222,7 @@ export class DcsApiLoggingInterceptor {
       return {
         data: {
           _error: true,
-          _message: '응답 데이터 압축 실패',
+          _message: 'Response data compression failed',
           _originalError: error.message,
         },
         size: 0,
