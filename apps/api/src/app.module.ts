@@ -19,6 +19,7 @@ import { WebsocketModule } from './platform/websocket/websocket.module';
 import { AffiliateModule } from './modules/affiliate/affiliate.module';
 import { ActivityLogModule } from './platform/activity-log/activity-log.module';
 import { HttpExceptionFilter } from './platform/http/exception/http-exception.filter';
+import { WalletModule } from './modules/wallet/wallet.module';
 
 @Module({
   imports: [
@@ -38,6 +39,7 @@ import { HttpExceptionFilter } from './platform/http/exception/http-exception.fi
     RollingModule,
     PromotionModule,
     AffiliateModule,
+    WalletModule,
   ],
   providers: [
     Reflector,

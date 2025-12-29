@@ -475,13 +475,13 @@ describe('User', () => {
         });
         expect(googleUser.isSocialUser()).toBe(true);
 
-        const kakaoUser = User.fromPersistence({
+        const appleUser = User.fromPersistence({
           id: mockId,
           uid: mockUid,
           email: mockEmail,
           passwordHash: null,
           socialId: mockSocialId,
-          socialType: SocialType.KAKAO,
+          socialType: SocialType.APPLE,
           status: UserStatus.ACTIVE,
           role: UserRoleType.USER,
           country: mockCountry,
@@ -489,7 +489,23 @@ describe('User', () => {
           createdAt: mockCreatedAt,
           updatedAt: mockUpdatedAt,
         });
-        expect(kakaoUser.isSocialUser()).toBe(true);
+        expect(appleUser.isSocialUser()).toBe(true);
+
+        const telegramUser = User.fromPersistence({
+          id: mockId,
+          uid: mockUid,
+          email: mockEmail,
+          passwordHash: null,
+          socialId: mockSocialId,
+          socialType: SocialType.TELEGRAM,
+          status: UserStatus.ACTIVE,
+          role: UserRoleType.USER,
+          country: mockCountry,
+          timezone: mockTimezone,
+          createdAt: mockCreatedAt,
+          updatedAt: mockUpdatedAt,
+        });
+        expect(telegramUser.isSocialUser()).toBe(true);
       });
     });
 
@@ -569,7 +585,7 @@ describe('User', () => {
       const statuses = [
         UserStatus.ACTIVE,
         UserStatus.SUSPENDED,
-        UserStatus.DEACTIVATED,
+        UserStatus.CLOSED,
       ];
 
       statuses.forEach((status) => {

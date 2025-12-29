@@ -38,7 +38,6 @@ export class CaslAbilityGuard implements CanActivate {
   ) {}
 
   async canActivate(context: ExecutionContext): Promise<boolean> {
-    console.log('히히 가드가 실행되었습니다.');
     // 1. 메타데이터에서 권한 요구사항 추출
     const requiredAbility = this.reflector.getAllAndOverride<CheckAbilityMetadata>(
       CHECK_ABILITY_KEY,

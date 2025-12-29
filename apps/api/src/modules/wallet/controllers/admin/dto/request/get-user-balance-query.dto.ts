@@ -1,0 +1,19 @@
+// src/modules/wallet/controllers/admin/dto/request/get-user-balance-query.dto.ts
+import { ApiPropertyOptional } from '@nestjs/swagger';
+import { IsEnum, IsOptional } from 'class-validator';
+import { ExchangeCurrencyCode } from '@repo/database';
+import { WALLET_CURRENCIES } from 'src/utils/currency.util';
+
+export class GetUserBalanceQueryDto {
+  @ApiPropertyOptional({
+    description: '통화 코드 (지정하지 않으면 모든 통화의 잔액을 반환)',
+    enum: WALLET_CURRENCIES,
+    example: 'USD',
+  })
+  @IsOptional()
+  @IsEnum(ExchangeCurrencyCode, {
+    message: 'Invalid currency code',
+  })
+  currency?: ExchangeCurrencyCode;
+}
+
