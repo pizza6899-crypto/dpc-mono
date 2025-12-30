@@ -22,8 +22,7 @@ export class ExpireSessionsScheduler {
    * - WebSocket 연결 해제 (WebSocket 세션인 경우)
    * - 실행 시간: 매 5분마다
    */
-  // @Cron(CronExpression.EVERY_5_MINUTES)
-  @Cron(CronExpression.EVERY_10_SECONDS)
+  @Cron(CronExpression.EVERY_5_MINUTES)
   async expireSessions() {
     // 스케줄러가 비활성화된 경우 실행하지 않음
     if (!this.envService.scheduler.enabled) {
