@@ -1,0 +1,8 @@
+# Package Manager
+이 프로젝트는 pnpm을 사용합니다. npm, yarn, 또는 다른 패키지 매니저를 사용하지 마세요.
+
+- 모든 패키지 설치 및 관리 명령은 pnpm을 사용해야 합니다
+- 예: `pnpm install`, `pnpm add`, `pnpm remove` 등
+- 절대 `npm install`, `yarn install` 등을 사용하지 마세요
+- 스크립트 실행도 pnpm을 통해 실행합니다: `pnpm run <script>`
+

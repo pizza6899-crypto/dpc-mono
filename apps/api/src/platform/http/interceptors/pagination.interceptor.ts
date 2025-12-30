@@ -31,7 +31,6 @@ export class PaginationInterceptor<T> implements NestInterceptor<
 
     return next.handle().pipe(
       map((result: PaginatedData<T>) => {
-        const totalPages = Math.ceil(result.total / result.limit);
 
         return {
           success: true,
@@ -42,9 +41,6 @@ export class PaginationInterceptor<T> implements NestInterceptor<
             page: result.page,
             limit: result.limit,
             total: result.total,
-            totalPages,
-            hasNext: result.page < totalPages,
-            hasPrev: result.page > 1,
           },
         };
       }),

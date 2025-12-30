@@ -57,14 +57,20 @@ export class CriticalLogProcessor
 
   async onApplicationShutdown(signal?: string): Promise<void> {
     try {
-      if (!this.worker) {
+      // Worker가 초기화되지 않았을 수 있으므로 try-catch로 안전하게 처리
+      const worker = this.worker;
+      if (worker) {
+        await worker.close();
+        this.logger.log('워커가 안전하게 종료되었습니다.');
+      }
+    } catch (error) {
+      // Worker가 초기화되지 않은 경우 에러를 무시 (테스트 환경 등)
+      if (
+        error instanceof Error &&
+        error.message.includes('has not yet been initialized')
+      ) {
         return;
       }
-
-      await this.worker.close();
-
-      this.logger.log('워커가 안전하게 종료되었습니다.');
-    } catch (error) {
       this.logger.error(
         'CriticalLogProcessor 종료 중 오류 발생',
         error instanceof Error ? error.stack : String(error),
@@ -113,14 +119,20 @@ export class HeavyLogProcessor
 
   async onApplicationShutdown(signal?: string): Promise<void> {
     try {
-      if (!this.worker) {
+      // Worker가 초기화되지 않았을 수 있으므로 try-catch로 안전하게 처리
+      const worker = this.worker;
+      if (worker) {
+        await worker.close();
+        this.logger.log('워커가 안전하게 종료되었습니다.');
+      }
+    } catch (error) {
+      // Worker가 초기화되지 않은 경우 에러를 무시 (테스트 환경 등)
+      if (
+        error instanceof Error &&
+        error.message.includes('has not yet been initialized')
+      ) {
         return;
       }
-
-      await this.worker.close();
-
-      this.logger.log('워커가 안전하게 종료되었습니다.');
-    } catch (error) {
       this.logger.error(
         'HeavyLogProcessor 종료 중 오류 발생',
         error instanceof Error ? error.stack : String(error),

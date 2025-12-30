@@ -55,7 +55,6 @@ export class TransformInterceptor<T> implements NestInterceptor<
         };
 
         if (isPaginated && this.isPaginatedData(data)) {
-          const totalPages = Math.ceil(data.total / data.limit);
 
           return {
             ...baseResponse,
@@ -64,9 +63,6 @@ export class TransformInterceptor<T> implements NestInterceptor<
               page: data.page,
               limit: data.limit,
               total: data.total,
-              totalPages,
-              hasNext: data.page < totalPages,
-              hasPrev: data.page > 1,
             },
           } as PaginatedResponseDto<T>;
         }

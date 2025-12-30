@@ -9,10 +9,14 @@ import type { ActivityLogPort } from 'src/platform/activity-log/activity-log.por
 import { ActivityType } from 'src/platform/activity-log/activity-log.types';
 import { DispatchLogService } from 'src/modules/audit-log/application/dispatch-log.service';
 import { LogType } from 'src/modules/audit-log/domain';
+import { CreateSessionService } from '../../session/application/create-session.service';
+import { SessionType, DeviceInfo } from '../../session/domain';
+import { EnvService } from 'src/platform/env/env.service';
 
 export interface LoginParams {
   user: AuthenticatedUser;
   clientInfo: RequestClientInfo;
+  sessionId: string; // Express session ID
   isAdmin?: boolean;
 }
 
@@ -29,12 +33,15 @@ export class LoginService {
     private readonly recordService: RecordLoginAttemptService,
     @Inject(ACTIVITY_LOG) private readonly activityLog: ActivityLogPort,
     private readonly dispatchLogService: DispatchLogService,
+    private readonly createSessionService: CreateSessionService,
+    private readonly envService: EnvService,
   ) {}
 
   @Transactional()
   async execute({
     user,
     clientInfo,
+    sessionId,
     isAdmin = false,
   }: LoginParams): Promise<void> {
     // 1. 로그인 시도 성공 기록 (Credential 도메인)
@@ -50,7 +57,32 @@ export class LoginService {
       isAdmin,
     });
 
-    // 2. 액티비티 로그 기록 (기존 플랫폼 기능 유지)
+    // 2. HTTP 세션 생성
+    const deviceInfo = DeviceInfo.create({
+      ipAddress: clientInfo.ip ?? null,
+      userAgent: clientInfo.userAgent ?? null,
+      deviceFingerprint: clientInfo.fingerprint ?? null,
+      isMobile: clientInfo.isMobile ?? null,
+      os: clientInfo.os ?? null,
+      browser: clientInfo.browser ?? null,
+    });
+
+    const sessionConfig = isAdmin
+      ? this.envService.adminSession
+      : this.envService.session;
+
+    const expiresAt = new Date(Date.now() + sessionConfig.maxAge);
+
+    await this.createSessionService.execute({
+      userId: user.id,
+      sessionId,
+      type: SessionType.HTTP,
+      isAdmin,
+      deviceInfo,
+      expiresAt,
+    });
+
+    // 3. 액티비티 로그 기록 (기존 플랫폼 기능 유지)
     // 주의: ActivityLogAdapter가 내부에서 에러를 조용히 처리하므로
     // 트랜잭션 롤백이 되지 않을 수 있습니다.
     // 액티비티 로그는 부가 기능이므로 실패해도 로그인은 성공 처리됩니다.
@@ -74,7 +106,7 @@ export class LoginService {
       );
     }
 
-    // 3. Audit 로그 기록 (보안 로그)
+    // 4. Audit 로그 기록 (보안 로그)
     try {
       await this.dispatchLogService.dispatch(
         {

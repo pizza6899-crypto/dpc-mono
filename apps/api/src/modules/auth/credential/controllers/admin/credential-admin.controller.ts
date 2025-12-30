@@ -93,10 +93,11 @@ export class CredentialAdminController {
       });
     });
 
-    // 3. 로그인 성공 기록 (액티비티 로그 등)
+    // 3. 로그인 성공 기록 (액티비티 로그 등) 및 HTTP 세션 생성
     await this.loginService.execute({
       user: authenticatedUser,
       clientInfo,
+      sessionId: req.sessionID,
       isAdmin: true,
     });
 
@@ -128,11 +129,16 @@ export class CredentialAdminController {
     @RequestClientInfoParam() clientInfo?: RequestClientInfo,
     @Req() req?: Request,
   ): Promise<CredentialUserLogoutResponseDto> {
+    // 1. DB 세션 종료 (LogoutService에서 처리)
     // 사용자가 있는 경우에만 로그아웃 서비스 실행 (에러 발생해도 무시)
     if (user && clientInfo) {
       try {
+        // req.logout() 전에 sessionID 저장 (DB 세션 종료에 필요)
+        const sessionId = req?.sessionID;
+
         await this.logoutService.execute({
           userId: user.id,
+          sessionId,
           clientInfo,
           isAdmin: true,
         });
@@ -141,7 +147,8 @@ export class CredentialAdminController {
       }
     }
 
-    // 세션 종료 처리 (에러가 발생해도 무시하고 성공 응답 반환)
+    // 2. Express 세션 종료 (DB 세션 종료 후 처리)
+    // 에러가 발생해도 무시하고 성공 응답 반환
     if (req) {
       try {
         await new Promise<void>((resolve) => {

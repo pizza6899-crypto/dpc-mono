@@ -29,15 +29,19 @@ import {
 } from './ports/out';
 import { PasswordResetTokenRepository } from './infrastructure/password-reset-token.repository';
 import { AuditLogModule } from 'src/modules/audit-log/audit-log.module';
+import { SessionModule } from '../session/session.module';
+import { EnvModule } from 'src/platform/env/env.module';
 
 @Module({
   imports: [
     PassportModule.register({ session: true }),
+    EnvModule, // LoginService가 EnvService를 사용하기 위해 필요
     VipModule,
     AffiliateReferralModule,
     ActivityLogModule,
     AuditLogModule,
     UserModule, // UserRepository 사용을 위해 필요
+    SessionModule, // CreateSessionService 사용을 위해 필요
   ],
   controllers: [CredentialUserController, CredentialAdminController],
   providers: [

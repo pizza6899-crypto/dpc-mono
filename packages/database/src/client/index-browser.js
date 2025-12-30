@@ -222,22 +222,6 @@ exports.Prisma.UserScalarFieldEnum = {
   updatedAt: 'updatedAt'
 };
 
-exports.Prisma.UserSessionScalarFieldEnum = {
-  userId: 'userId',
-  sessionId: 'sessionId',
-  debetsiceInfo: 'debetsiceInfo',
-  userAgent: 'userAgent',
-  ipAddress: 'ipAddress',
-  isMobile: 'isMobile',
-  isActive: 'isActive',
-  revokedAt: 'revokedAt',
-  createdAt: 'createdAt',
-  updatedAt: 'updatedAt',
-  lastActiveAt: 'lastActiveAt',
-  expiresAt: 'expiresAt',
-  id: 'id'
-};
-
 exports.Prisma.UserBalanceScalarFieldEnum = {
   userId: 'userId',
   currency: 'currency',
@@ -757,6 +741,30 @@ exports.Prisma.LoginAttemptScalarFieldEnum = {
   isAdmin: 'isAdmin'
 };
 
+exports.Prisma.UserSessionScalarFieldEnum = {
+  id: 'id',
+  uid: 'uid',
+  userId: 'userId',
+  sessionId: 'sessionId',
+  type: 'type',
+  status: 'status',
+  isAdmin: 'isAdmin',
+  ipAddress: 'ipAddress',
+  userAgent: 'userAgent',
+  deviceFingerprint: 'deviceFingerprint',
+  isMobile: 'isMobile',
+  deviceName: 'deviceName',
+  os: 'os',
+  browser: 'browser',
+  createdAt: 'createdAt',
+  updatedAt: 'updatedAt',
+  lastActiveAt: 'lastActiveAt',
+  expiresAt: 'expiresAt',
+  revokedAt: 'revokedAt',
+  revokedBy: 'revokedBy',
+  metadata: 'metadata'
+};
+
 exports.Prisma.SortOrder = {
   asc: 'asc',
   desc: 'desc'
@@ -1005,13 +1013,23 @@ exports.LoginFailureReason = exports.$Enums.LoginFailureReason = {
   UNKNOWN: 'UNKNOWN'
 };
 
+exports.SessionType = exports.$Enums.SessionType = {
+  HTTP: 'HTTP',
+  WEBSOCKET: 'WEBSOCKET'
+};
+
+exports.SessionStatus = exports.$Enums.SessionStatus = {
+  ACTIVE: 'ACTIVE',
+  REVOKED: 'REVOKED',
+  EXPIRED: 'EXPIRED'
+};
+
 exports.Prisma.ModelName = {
   AuthAuditLog: 'AuthAuditLog',
   ActivityLog: 'ActivityLog',
   SystemErrorLog: 'SystemErrorLog',
   IntegrationLog: 'IntegrationLog',
   User: 'User',
-  UserSession: 'UserSession',
   UserBalance: 'UserBalance',
   UserBalanceStats: 'UserBalanceStats',
   Game: 'Game',
@@ -1046,7 +1064,8 @@ exports.Prisma.ModelName = {
   AffiliateWallet: 'AffiliateWallet',
   AffiliateCommission: 'AffiliateCommission',
   AffiliateTier: 'AffiliateTier',
-  LoginAttempt: 'LoginAttempt'
+  LoginAttempt: 'LoginAttempt',
+  UserSession: 'UserSession'
 };
 
 /**

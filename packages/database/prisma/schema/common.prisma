@@ -44,34 +44,12 @@ model User {
   balances             UserBalance[]
   UserBalanceStats     UserBalanceStats[]
   UserPromotion        UserPromotion[]
-  UserSession          UserSession[]
+  UserSession          UserSession[]            @relation("UserSessions")
+  RevokedSessions      UserSession[]            @relation("RevokedSessions")
   UserToken            UserToken[]
   VipHistory           VipHistory[]
   VipMembership        VipMembership?
   loginAttempts        LoginAttempt[]
-}
-
-model UserSession {
-  userId        BigInt
-  sessionId     String    @unique
-  debetsiceInfo String?
-  userAgent     String?
-  ipAddress     String?
-  isMobile      Boolean?
-  isActive      Boolean   @default(true)
-  revokedAt     DateTime?
-  createdAt     DateTime  @default(now())
-  updatedAt     DateTime  @updatedAt
-  lastActiveAt  DateTime  @default(now())
-  expiresAt     DateTime
-  id            BigInt    @id @default(autoincrement())
-  user          User      @relation(fields: [userId], references: [id], onDelete: Cascade)
-
-  @@index([userId, isActive])
-  @@index([sessionId])
-  @@index([userId, createdAt])
-  @@index([expiresAt])
-  @@index([isActive, expiresAt])
 }
 
 model UserBalance {

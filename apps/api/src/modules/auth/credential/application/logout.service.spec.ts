@@ -8,14 +8,18 @@ import type { ActivityLogPort } from 'src/platform/activity-log/activity-log.por
 import { ActivityType } from 'src/platform/activity-log/activity-log.types';
 import type { RequestClientInfo } from 'src/platform/http/types/client-info.types';
 import { DispatchLogService } from 'src/modules/audit-log/application/dispatch-log.service';
+import { RevokeSessionService } from '../../session/application/revoke-session.service';
+import { LogType } from 'src/modules/audit-log/domain';
 
 describe('LogoutService', () => {
+  let module: TestingModule;
   let service: LogoutService;
   let mockActivityLog: jest.Mocked<ActivityLogPort>;
   let mockDispatchLogService: jest.Mocked<DispatchLogService>;
+  let mockRevokeSessionService: jest.Mocked<RevokeSessionService>;
 
-  const mockUserId = 'user-123';
-  const mockAdminUserId = 'admin-123';
+  const mockUserId = BigInt(123);
+  const mockAdminUserId = BigInt(456);
 
   const mockClientInfo: RequestClientInfo = {
     ip: '192.168.1.1',
@@ -64,11 +68,19 @@ describe('LogoutService', () => {
       },
     };
 
-    const module: TestingModule = await Test.createTestingModule({
+    const mockRevokeSessionServiceProvider = {
+      provide: RevokeSessionService,
+      useValue: {
+        execute: jest.fn().mockResolvedValue(undefined),
+      },
+    };
+
+    module = await Test.createTestingModule({
       providers: [
         LogoutService,
         mockActivityLogProvider,
         mockDispatchLogServiceProvider,
+        mockRevokeSessionServiceProvider,
       ],
     })
       .setLogger(new Logger())
@@ -77,8 +89,15 @@ describe('LogoutService', () => {
     service = module.get<LogoutService>(LogoutService);
     mockActivityLog = module.get(ACTIVITY_LOG);
     mockDispatchLogService = module.get(DispatchLogService);
+    mockRevokeSessionService = module.get(RevokeSessionService);
 
     jest.clearAllMocks();
+  });
+
+  afterEach(async () => {
+    if (module) {
+      await module.close();
+    }
   });
 
   describe('execute', () => {
@@ -103,6 +122,20 @@ describe('LogoutService', () => {
         },
         mockClientInfo,
       );
+      expect(mockDispatchLogService.dispatch).toHaveBeenCalledTimes(1);
+      expect(mockDispatchLogService.dispatch).toHaveBeenCalledWith({
+        type: LogType.AUTH,
+        data: {
+          userId: mockUserId.toString(),
+          action: 'USER_LOGOUT',
+          status: 'SUCCESS',
+          ip: mockClientInfo.ip,
+          userAgent: mockClientInfo.userAgent,
+          metadata: {
+            isAdmin: false,
+          },
+        },
+      });
     });
 
     it('관리자 로그아웃 시 isAdmin=true로 기록하고 ADMIN_LOGOUT 액티비티 타입을 사용해야 함', async () => {
@@ -125,6 +158,19 @@ describe('LogoutService', () => {
         },
         mockClientInfo,
       );
+      expect(mockDispatchLogService.dispatch).toHaveBeenCalledWith({
+        type: LogType.AUTH,
+        data: {
+          userId: mockAdminUserId.toString(),
+          action: 'ADMIN_LOGOUT',
+          status: 'SUCCESS',
+          ip: mockClientInfo.ip,
+          userAgent: mockClientInfo.userAgent,
+          metadata: {
+            isAdmin: true,
+          },
+        },
+      });
     });
 
     it('isAdmin이 명시되지 않으면 기본값 false를 사용해야 함', async () => {
@@ -195,8 +241,133 @@ describe('LogoutService', () => {
         activityLogError,
         expect.stringContaining('Activity log 기록 실패 (로그아웃은 성공)'),
       );
+      // Audit 로그는 여전히 호출되어야 함
+      expect(mockDispatchLogService.dispatch).toHaveBeenCalledTimes(1);
 
       loggerErrorSpy.mockRestore();
+    });
+
+    it('dispatchLogService.dispatch가 실패해도 로그아웃은 성공해야 함 (에러는 조용히 처리)', async () => {
+      // Arrange
+      const auditLogError = new Error('Audit log failed');
+      mockActivityLog.logSuccess.mockResolvedValue(undefined);
+      mockDispatchLogService.dispatch.mockRejectedValue(auditLogError);
+
+      // Logger.error를 모킹하여 에러 로깅 확인
+      const loggerErrorSpy = jest
+        .spyOn(Logger.prototype, 'error')
+        .mockImplementation(() => {});
+
+      // Act
+      await service.execute({
+        userId: mockUserId,
+        clientInfo: mockClientInfo,
+        isAdmin: false,
+      });
+
+      // Assert
+      expect(mockActivityLog.logSuccess).toHaveBeenCalledTimes(1);
+      expect(mockDispatchLogService.dispatch).toHaveBeenCalledTimes(1);
+      // 에러가 조용히 처리되어 예외가 전파되지 않아야 함
+      expect(loggerErrorSpy).toHaveBeenCalledWith(
+        auditLogError,
+        expect.stringContaining('Audit log 기록 실패 (로그아웃은 성공)'),
+      );
+
+      loggerErrorSpy.mockRestore();
+    });
+
+    it('sessionId가 있으면 revokeSessionService를 호출해야 함', async () => {
+      // Arrange
+      const sessionId = 'session-123';
+      mockActivityLog.logSuccess.mockResolvedValue(undefined);
+      mockRevokeSessionService.execute.mockResolvedValue(undefined as any);
+
+      // Act
+      await service.execute({
+        userId: mockUserId,
+        sessionId,
+        clientInfo: mockClientInfo,
+        isAdmin: false,
+      });
+
+      // Assert
+      expect(mockRevokeSessionService.execute).toHaveBeenCalledTimes(1);
+      expect(mockRevokeSessionService.execute).toHaveBeenCalledWith({
+        sessionId,
+        revokedBy: mockUserId,
+      });
+      expect(mockActivityLog.logSuccess).toHaveBeenCalledTimes(1);
+      expect(mockDispatchLogService.dispatch).toHaveBeenCalledTimes(1);
+    });
+
+    it('revokeSessionService가 실패해도 로그아웃은 성공해야 함 (에러는 조용히 처리)', async () => {
+      // Arrange
+      const sessionId = 'session-123';
+      const revokeError = new Error('Session revoke failed');
+      mockRevokeSessionService.execute.mockRejectedValue(revokeError);
+      mockActivityLog.logSuccess.mockResolvedValue(undefined);
+
+      // Logger.error를 모킹하여 에러 로깅 확인
+      const loggerErrorSpy = jest
+        .spyOn(Logger.prototype, 'error')
+        .mockImplementation(() => {});
+
+      // Act
+      await service.execute({
+        userId: mockUserId,
+        sessionId,
+        clientInfo: mockClientInfo,
+        isAdmin: false,
+      });
+
+      // Assert
+      expect(mockRevokeSessionService.execute).toHaveBeenCalledTimes(1);
+      // 에러가 조용히 처리되어 예외가 전파되지 않아야 함
+      expect(loggerErrorSpy).toHaveBeenCalledWith(
+        revokeError,
+        expect.stringContaining('세션 종료 실패 (로그아웃은 성공)'),
+      );
+      // Activity log와 Audit log는 여전히 호출되어야 함
+      expect(mockActivityLog.logSuccess).toHaveBeenCalledTimes(1);
+      expect(mockDispatchLogService.dispatch).toHaveBeenCalledTimes(1);
+
+      loggerErrorSpy.mockRestore();
+    });
+
+    it('sessionId가 없으면 revokeSessionService를 호출하지 않아야 함', async () => {
+      // Arrange
+      mockActivityLog.logSuccess.mockResolvedValue(undefined);
+
+      // Act
+      await service.execute({
+        userId: mockUserId,
+        clientInfo: mockClientInfo,
+        isAdmin: false,
+      });
+
+      // Assert
+      expect(mockRevokeSessionService.execute).not.toHaveBeenCalled();
+      expect(mockActivityLog.logSuccess).toHaveBeenCalledTimes(1);
+      expect(mockDispatchLogService.dispatch).toHaveBeenCalledTimes(1);
+    });
+
+    it('userId가 없으면 activity log와 audit log를 기록하지 않아야 함', async () => {
+      // Arrange
+      const sessionId = 'session-123';
+
+      // Act
+      await service.execute({
+        sessionId,
+        clientInfo: mockClientInfo,
+        isAdmin: false,
+      });
+
+      // Assert
+      expect(mockActivityLog.logSuccess).not.toHaveBeenCalled();
+      expect(mockDispatchLogService.dispatch).not.toHaveBeenCalled();
+      // sessionId만 있고 userId가 없으면 revokeSessionService도 호출되지 않음
+      expect(mockRevokeSessionService.execute).not.toHaveBeenCalled();
     });
 
     it('모바일 기기에서 로그아웃 시도도 정상적으로 처리해야 함', async () => {

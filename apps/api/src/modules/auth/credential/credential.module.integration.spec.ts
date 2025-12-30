@@ -34,6 +34,10 @@ import { ActivityLogModule } from 'src/platform/activity-log/activity-log.module
 import { MailModule } from 'src/platform/mail/mail.module';
 import { UserModule } from '../../user/user.module';
 import { PassportModule } from '@nestjs/passport';
+import { SessionModule } from '../session/session.module';
+import { AuditLogModule } from 'src/modules/audit-log/audit-log.module';
+import { CreateSessionService } from '../session/application/create-session.service';
+import { RevokeSessionService } from '../session/application/revoke-session.service';
 
 describe('CredentialModule Integration', () => {
   let module: TestingModule;
@@ -66,8 +70,10 @@ describe('CredentialModule Integration', () => {
         VipModule,
         AffiliateReferralModule,
         ActivityLogModule,
+        AuditLogModule,
         MailModule,
         UserModule,
+        SessionModule, // LoginService와 LogoutService가 SessionModule 의존
         CredentialModule,
       ],
     }).compile();
@@ -125,7 +131,9 @@ describe('CredentialModule Integration', () => {
   });
 
   afterEach(async () => {
-    await module.close();
+    if (module) {
+      await module.close();
+    }
   });
 
   describe('Module Initialization', () => {
@@ -325,6 +333,28 @@ describe('CredentialModule Integration', () => {
     it('LoginService가 RecordLoginAttemptService를 사용해야 함', () => {
       expect(loginService).toBeDefined();
       expect(recordLoginAttemptService).toBeDefined();
+    });
+
+    it('LoginService가 CreateSessionService를 사용해야 함', () => {
+      expect(loginService).toBeDefined();
+      // CreateSessionService는 SessionModule에서 export됨
+      const createSessionService = module.get<CreateSessionService>(
+        CreateSessionService,
+      );
+      // SessionModule이 import되었으므로 CreateSessionService가 주입 가능해야 함
+      expect(createSessionService).toBeDefined();
+      expect(createSessionService.execute).toBeDefined();
+    });
+
+    it('LogoutService가 RevokeSessionService를 사용해야 함', () => {
+      expect(logoutService).toBeDefined();
+      // RevokeSessionService는 SessionModule에서 export됨
+      const revokeSessionService = module.get<RevokeSessionService>(
+        RevokeSessionService,
+      );
+      // SessionModule이 import되었으므로 RevokeSessionService가 주입 가능해야 함
+      expect(revokeSessionService).toBeDefined();
+      expect(revokeSessionService.execute).toBeDefined();
     });
   });
 

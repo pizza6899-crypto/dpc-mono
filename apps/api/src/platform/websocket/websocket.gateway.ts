@@ -23,6 +23,11 @@ import { Type } from 'class-transformer';
 import { CustomValidationPipe } from '../http/pipes/validation.pipe'; // 추가
 import { WebsocketExceptionFilter } from './websocket-exception.filter'; // 추가
 import { ExceptionResponseDto } from './dtos/exception-response.dto';
+import { CreateSessionService } from 'src/modules/auth/session/application/create-session.service';
+import { SessionTrackerService } from 'src/modules/auth/session/infrastructure/session-tracker.service';
+import { SessionType, DeviceInfo } from 'src/modules/auth/session/domain';
+import type { RequestClientInfo } from '../http/types/client-info.types';
+import { extractClientInfo } from '../http/utils/request-info.util';
 
 // DTO 클래스 정의 - export 필수!
 export class MessageRequestDto {
@@ -80,6 +85,8 @@ export class WebsocketGateway
   constructor(
     private readonly redisService: RedisService,
     private readonly envService: EnvService,
+    private readonly createSessionService: CreateSessionService,
+    private readonly sessionTracker: SessionTrackerService,
   ) {}
 
   // Gateway 초기화 시 Redis Adapter 설정
@@ -103,6 +110,9 @@ export class WebsocketGateway
     server.engine.use(passport.initialize());
     server.engine.use(passport.session());
 
+    // SessionTrackerService에 WebSocket 서버 등록
+    this.sessionTracker.setWebSocketServer(server);
+
     this.logger.log(
       'WebSocket Gateway initialized with Redis Adapter and Session Support',
     );
@@ -114,16 +124,61 @@ export class WebsocketGateway
     const session = (client.request as any).session;
     const user = session?.passport?.user;
 
-    // if (!user) {
-    //   this.logger.warn(`Unauthenticated connection attempt: ${client.id}`);
-    //   client.disconnect();
-    //   return;
-    // }
+    if (!user) {
+      this.logger.warn(`Unauthenticated connection attempt: ${client.id}`);
+      client.disconnect();
+      return;
+    }
 
-    // this.logger.log(`User ${user.id} connected: ${client.id}`);
+    this.logger.log(`User ${user.id} connected: ${client.id}`);
 
-    // // userId와 socketId 매핑
-    // this.mapUserToSocket(user.id, client.id);
+    try {
+      // 클라이언트 정보 추출 (HTTP 세션과 동일한 정보 사용)
+      const clientInfo = extractClientInfo(client.request as any);
+      
+      // DeviceInfo 생성 (HTTP 세션과 동일한 정보 사용)
+      const deviceInfo = DeviceInfo.create({
+        ipAddress: clientInfo.ip ?? null,
+        userAgent: clientInfo.userAgent ?? null,
+        deviceFingerprint: clientInfo.fingerprint ?? null,
+        isMobile: clientInfo.isMobile ?? null,
+        os: clientInfo.os ?? null,
+        browser: clientInfo.browser ?? null,
+      });
+
+      // WebSocket 세션 생성
+      const sessionConfig = user.role === 'ADMIN' || user.role === 'SUPER_ADMIN'
+        ? this.envService.adminSession
+        : this.envService.session;
+
+      const expiresAt = new Date(Date.now() + sessionConfig.maxAge);
+
+      const isAdmin = user.role === 'ADMIN' || user.role === 'SUPER_ADMIN';
+
+      await this.createSessionService.execute({
+        userId: user.id,
+        sessionId: client.id, // Socket.io socket ID를 세션 ID로 사용
+        type: SessionType.WEBSOCKET,
+        isAdmin,
+        deviceInfo,
+        expiresAt,
+      });
+
+      // Room에 조인 (userId와 sessionId)
+      client.join(user.id.toString()); // 모든 사용자 연결을 userId Room에 조인
+      client.join(client.id); // 특정 세션 소켓을 sessionId Room에 조인
+
+      this.logger.log(
+        `WebSocket 세션 생성 완료: socketId=${client.id}, userId=${user.id}`,
+      );
+    } catch (error) {
+      this.logger.error(
+        error,
+        `WebSocket 세션 생성 실패: socketId=${client.id}, userId=${user.id}`,
+      );
+      // 세션 생성 실패 시 연결 해제
+      client.disconnect();
+    }
   }
 
   // 클라이언트 연결 해제 시

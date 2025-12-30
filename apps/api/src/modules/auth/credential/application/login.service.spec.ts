@@ -14,6 +14,7 @@ import { UserRoleType } from '@repo/database';
 import { PrismaModule } from 'src/platform/prisma/prisma.module';
 import { EnvModule } from 'src/platform/env/env.module';
 import { DispatchLogService } from 'src/modules/audit-log/application/dispatch-log.service';
+import { CreateSessionService } from '../../session/application/create-session.service';
 
 describe('LoginService', () => {
   let module: TestingModule;
@@ -21,15 +22,18 @@ describe('LoginService', () => {
   let mockRecordService: jest.Mocked<RecordLoginAttemptService>;
   let mockActivityLog: jest.Mocked<ActivityLogPort>;
   let mockDispatchLogService: jest.Mocked<DispatchLogService>;
+  let mockCreateSessionService: jest.Mocked<CreateSessionService>;
 
   const mockUser: AuthenticatedUser = {
-    id: 'user-123',
+    id: BigInt(123),
+    uid: 'user-123',
     email: 'test@example.com',
     role: UserRoleType.USER,
   };
 
   const mockAdminUser: AuthenticatedUser = {
-    id: 'admin-123',
+    id: BigInt(456),
+    uid: 'admin-123',
     email: 'admin@example.com',
     role: UserRoleType.ADMIN,
   };
@@ -88,6 +92,13 @@ describe('LoginService', () => {
       },
     };
 
+    const mockCreateSessionServiceProvider = {
+      provide: CreateSessionService,
+      useValue: {
+        execute: jest.fn().mockResolvedValue(undefined),
+      },
+    };
+
     module = await Test.createTestingModule({
       imports: [PrismaModule, EnvModule], // @Transactional() 데코레이터를 위해 필요
       providers: [
@@ -95,6 +106,7 @@ describe('LoginService', () => {
         mockRecordServiceProvider,
         mockActivityLogProvider,
         mockDispatchLogServiceProvider,
+        mockCreateSessionServiceProvider,
       ],
     })
       .setLogger(new Logger())
@@ -104,12 +116,15 @@ describe('LoginService', () => {
     mockRecordService = module.get(RecordLoginAttemptService);
     mockActivityLog = module.get(ACTIVITY_LOG);
     mockDispatchLogService = module.get(DispatchLogService);
+    mockCreateSessionService = module.get(CreateSessionService);
 
     jest.clearAllMocks();
   });
 
   afterEach(async () => {
-    await module.close();
+    if (module) {
+      await module.close();
+    }
   });
 
   describe('execute', () => {
@@ -133,6 +148,7 @@ describe('LoginService', () => {
       await service.execute({
         user: mockUser,
         clientInfo: mockClientInfo,
+        sessionId: 'session-123',
         isAdmin: false,
       });
 
@@ -180,6 +196,7 @@ describe('LoginService', () => {
       await service.execute({
         user: mockAdminUser,
         clientInfo: mockClientInfo,
+        sessionId: 'session-123',
         isAdmin: true,
       });
 
@@ -225,6 +242,7 @@ describe('LoginService', () => {
       await service.execute({
         user: mockUser,
         clientInfo: mockClientInfoWithNulls,
+        sessionId: 'session-123',
         isAdmin: false,
       });
 
@@ -261,6 +279,7 @@ describe('LoginService', () => {
       await service.execute({
         user: mockUser,
         clientInfo: mockClientInfo,
+        sessionId: 'session-123',
         // isAdmin 생략
       });
 
@@ -290,6 +309,7 @@ describe('LoginService', () => {
         service.execute({
           user: mockUser,
           clientInfo: mockClientInfo,
+          sessionId: 'session-123',
           isAdmin: false,
         }),
       ).rejects.toThrow('Database error');
@@ -324,6 +344,7 @@ describe('LoginService', () => {
       await service.execute({
         user: mockUser,
         clientInfo: mockClientInfo,
+        sessionId: 'session-123',
         isAdmin: false,
       });
 
@@ -364,6 +385,7 @@ describe('LoginService', () => {
       await service.execute({
         user: mockUser,
         clientInfo: mobileClientInfo,
+        sessionId: 'session-123',
         isAdmin: false,
       });
 
