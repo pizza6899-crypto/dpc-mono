@@ -76,9 +76,7 @@ export const authProviderClient: AuthProvider = {
     try {
       const response = await credentialAdminControllerCheckStatus();
 
-      console.log(response);
       if (response.data?.isAuthenticated && response.data.user) {
-        console.log("check success");
         // 인증 성공 - 사용자 정보를 클라이언트 쿠키에 저장 (getIdentity에서 사용)
         Cookies.set("auth", JSON.stringify(response.data.user), {
           expires: 30,
@@ -91,7 +89,6 @@ export const authProviderClient: AuthProvider = {
       }
 
       // 인증 실패 - 직접 리다이렉트
-      console.log("check failed");
       Cookies.remove("auth", { path: "/" });
       
       // 클라이언트 사이드에서 직접 리다이렉트
