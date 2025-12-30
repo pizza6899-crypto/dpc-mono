@@ -1,6 +1,5 @@
 import { Module } from '@nestjs/common';
 import { AuthModule } from './modules/auth/auth.module';
-import { AppLoggerModule } from './platform/logging/app-logger.module';
 import { EnvModule } from './platform/env/env.module';
 import { APP_FILTER, APP_GUARD, Reflector } from '@nestjs/core';
 import { PrismaModule } from './platform/prisma/prisma.module';
@@ -20,15 +19,16 @@ import { AffiliateModule } from './modules/affiliate/affiliate.module';
 import { ActivityLogModule } from './platform/activity-log/activity-log.module';
 import { HttpExceptionFilter } from './platform/http/exception/http-exception.filter';
 import { WalletModule } from './modules/wallet/wallet.module';
+import { CommonLoggerModule } from './common/logger/logger.module';
 
 @Module({
   imports: [
     EnvModule,
     PrismaModule,
     ThrottleModule,
+    CommonLoggerModule,
     WebsocketModule,
     ScheduleModule.forRoot(),
-    AppLoggerModule,
     ActivityLogModule,
     AuthModule,
     CasinoModule,
