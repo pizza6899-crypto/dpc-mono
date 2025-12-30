@@ -21,7 +21,7 @@ export class PrismaService
 {
   private readonly logger = new Logger(PrismaService.name);
 
-  constructor(private readonly envService: EnvService) {
+  constructor() {
     // DATABASE_URL 환경변수에서 연결 문자열 가져오기
     const connectionString = process.env.DATABASE_URL;
     if (!connectionString) {

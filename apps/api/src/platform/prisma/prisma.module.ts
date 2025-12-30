@@ -4,7 +4,6 @@ import { ClsPluginTransactional } from '@nestjs-cls/transactional';
 import { TransactionalAdapterPrisma } from '@nestjs-cls/transactional-adapter-prisma';
 import type { Transaction } from '@nestjs-cls/transactional';
 import { PrismaService } from './prisma.service';
-import { EnvService } from '../env/env.service';
 import type { PrismaClient } from '@repo/database';
 
 // Transaction 어댑터 타입 정의
@@ -29,7 +28,7 @@ export type PrismaTransaction = Transaction<PrismaTransactionalAdapter>;
       ],
     }),
   ],
-  providers: [PrismaService, EnvService],
+  providers: [PrismaService],
   exports: [PrismaService, ClsModule],
 })
 export class PrismaModule {}
