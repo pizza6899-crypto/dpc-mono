@@ -10,7 +10,9 @@
     "build": "refine build",
     "start": "refine start",
     "lint": "next lint",
-    "refine": "refine"
+    "refine": "refine",
+    "api:generate": "orval" ,
+    "api:watch": "orval --watch"
   },
   "dependencies": {
     "@ant-design/icons": "^5.5.1",
