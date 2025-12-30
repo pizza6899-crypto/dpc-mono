@@ -1,0 +1,44 @@
+# 1. 의존성 및 빌드 결과물 (가장 많은 토큰을 잡아먹음)
+node_modules/
+dist/
+out/
+build/
+.next/
+.nuxt/
+
+# 2. 바이너리 및 미디어 파일 (AI가 해석 불가)
+*.png
+*.jpg
+*.jpeg
+*.gif
+*.svg
+*.ico
+*.pdf
+*.zip
+*.tar.gz
+*.mp4
+
+# 3. 로그 및 임시 파일
+*.log
+logs/
+tmp/
+.temp/
+.cache/
+.eslintcache
+
+# 4. 환경 변수 및 비밀 정보 (보안 및 토큰 절약)
+.env
+.env.*
+!.env.example  # 예시 파일은 구조 파악을 위해 제외(보여줌)
+.pem
+.key
+
+# 5. Git 및 IDE 설정
+.git/
+.svn/
+.vscode/
+.idea/
+
+# 6. 테스트 커버리지 및 도큐먼트 (필요 시에만 @로 직접 호출)
+coverage/
+storybook-static/

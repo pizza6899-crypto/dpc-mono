@@ -6,7 +6,7 @@ import { PrismaService } from 'src/infrastructure/prisma/prisma.service';
 import { EnvModule } from 'src/common/env/env.module';
 import { AffiliateReferralModule } from '../referral.module';
 import { AffiliateCodeModule } from '../../code/code.module';
-import { ActivityLogModule } from 'src/common/activity-log/activity-log.module';
+import { AuditLogModule } from 'src/modules/audit-log/audit-log.module';
 import { LinkReferralService } from '../application/link-referral.service';
 import { FindReferralByIdService } from '../application/find-referral-by-id.service';
 import { FindReferralsByAffiliateIdService } from '../application/find-referrals-by-affiliate-id.service';
@@ -52,7 +52,7 @@ describe('AffiliateReferralModule Integration', () => {
         EnvModule,
         PrismaModule,
         AffiliateCodeModule,
-        ActivityLogModule,
+        AuditLogModule,
         AffiliateReferralModule,
       ],
     }).compile();

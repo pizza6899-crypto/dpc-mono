@@ -12,15 +12,14 @@ import {
   AffiliateCodeLimitExceededException,
   AffiliateCodeAlreadyExistsException,
 } from '../domain';
-import { ACTIVITY_LOG } from 'src/common/activity-log/activity-log.token';
-import type { ActivityLogPort } from 'src/common/activity-log/activity-log.port';
+import { DispatchLogService } from 'src/modules/audit-log/application/dispatch-log.service';
 
 describe('CreateCodeService', () => {
   let module: TestingModule;
   let service: CreateCodeService;
   let mockRepository: jest.Mocked<AffiliateCodeRepositoryPort>;
   let mockPolicy: AffiliateCodePolicy;
-  let mockActivityLog: jest.Mocked<ActivityLogPort>;
+  let mockDispatchLogService: jest.Mocked<DispatchLogService>;
 
   const userId = BigInt(123);
   const codeId = 'code-123';
@@ -52,16 +51,11 @@ describe('CreateCodeService', () => {
       findManyForAdmin: jest.fn(),
     };
 
-    mockPolicy = new AffiliateCodePolicy();
+    mockDispatchLogService = {
+      dispatch: jest.fn().mockResolvedValue(undefined),
+    } as any;
 
-    const mockActivityLogProvider = {
-      provide: ACTIVITY_LOG,
-      useValue: {
-        log: jest.fn(),
-        logSuccess: jest.fn(),
-        logFailure: jest.fn(),
-      },
-    };
+    mockPolicy = new AffiliateCodePolicy();
 
     module = await Test.createTestingModule({
       imports: [PrismaModule, EnvModule],
@@ -71,14 +65,16 @@ describe('CreateCodeService', () => {
           provide: AFFILIATE_CODE_REPOSITORY,
           useValue: mockRepository,
         },
+        {
+          provide: DispatchLogService,
+          useValue: mockDispatchLogService,
+        },
         AffiliateCodePolicy,
-        mockActivityLogProvider,
       ],
     }).compile();
 
     service = module.get<CreateCodeService>(CreateCodeService);
     mockRepository = module.get(AFFILIATE_CODE_REPOSITORY);
-    mockActivityLog = module.get(ACTIVITY_LOG);
 
     jest.clearAllMocks();
   });
@@ -153,7 +149,6 @@ describe('CreateCodeService', () => {
 
     it('should retry when generated code already exists', async () => {
       mockRepository.findByUserId.mockResolvedValue([]);
-      // 첫 번째 시도는 중복, 두 번째는 성공
       mockRepository.existsByCode
         .mockResolvedValueOnce(true)
         .mockResolvedValueOnce(false);

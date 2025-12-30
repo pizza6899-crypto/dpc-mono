@@ -7,13 +7,15 @@ import { AFFILIATE_TIER_REPOSITORY } from '../ports/out/affiliate-tier.repositor
 import type { AffiliateTierRepositoryPort } from '../ports/out/affiliate-tier.repository.port';
 import { AffiliateTier, CommissionPolicy } from '../domain';
 import { IdUtil } from 'src/utils/id.util';
+import { DispatchLogService } from 'src/modules/audit-log/application/dispatch-log.service';
 
 describe('GetCommissionRateService', () => {
   let service: GetCommissionRateService;
   let mockRepository: jest.Mocked<AffiliateTierRepositoryPort>;
   let mockPolicy: CommissionPolicy;
+  let mockDispatchLogService: jest.Mocked<DispatchLogService>;
 
-  const mockAffiliateId = 'affiliate-123';
+  const mockAffiliateId = BigInt(123);
   const mockUid = 'tier-1234567890';
   const mockId = BigInt(1);
   const mockBaseRate = new Prisma.Decimal('0.005'); // BRONZE: 0.5%
@@ -55,6 +57,13 @@ describe('GetCommissionRateService', () => {
 
     mockPolicy = new CommissionPolicy();
 
+    const mockDispatchLogServiceProvider = {
+      provide: DispatchLogService,
+      useValue: {
+        dispatch: jest.fn().mockResolvedValue(undefined),
+      },
+    };
+
     const module: TestingModule = await Test.createTestingModule({
       providers: [
         GetCommissionRateService,
@@ -63,12 +72,16 @@ describe('GetCommissionRateService', () => {
           useValue: mockRepository,
         },
         CommissionPolicy,
+        mockDispatchLogServiceProvider,
       ],
     }).compile();
 
     service = module.get<GetCommissionRateService>(GetCommissionRateService);
     mockRepository = module.get(AFFILIATE_TIER_REPOSITORY);
     mockPolicy = module.get(CommissionPolicy);
+    mockDispatchLogService = module.get(
+      DispatchLogService,
+    ) as jest.Mocked<DispatchLogService>;
 
     jest.clearAllMocks();
   });

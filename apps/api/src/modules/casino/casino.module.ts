@@ -5,8 +5,6 @@ import { DcsModule } from './dcs/dcs.module';
 import { CasinoBalanceService } from './application/casino-balance.service';
 import { CasinoGameController } from './controllers/casino-game.controller';
 import { CasinoGameService } from './application/casino-game.service';
-import { ActivityLogAdapter } from 'src/common/activity-log/activity-log.adapter';
-import { ACTIVITY_LOG } from 'src/common/activity-log/activity-log.token';
 import { CasinoBetService } from './application/casino-bet.service';
 import { ConcurrencyModule } from 'src/common/concurrency/concurrency.module';
 import { VipModule } from '../vip/vip.module';
@@ -39,10 +37,6 @@ import { UserStatsModule } from '../user-stats/user-stats.module';
   providers: [
     CasinoBalanceService,
     CasinoGameService,
-    {
-      provide: ACTIVITY_LOG,
-      useClass: ActivityLogAdapter,
-    },
     CasinoBetService,
     CasinoBonusService,
     CasinoRefundService,

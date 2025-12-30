@@ -5,15 +5,14 @@ import { UpdateCodeService } from './update-code.service';
 import { AFFILIATE_CODE_REPOSITORY } from '../ports/out/affiliate-code.repository.token';
 import type { AffiliateCodeRepositoryPort } from '../ports/out/affiliate-code.repository.port';
 import { AffiliateCode, AffiliateCodeNotFoundException } from '../domain';
-import { ACTIVITY_LOG } from 'src/common/activity-log/activity-log.token';
-import type { ActivityLogPort } from 'src/common/activity-log/activity-log.port';
+import { DispatchLogService } from 'src/modules/audit-log/application/dispatch-log.service';
 
 describe('UpdateCodeService', () => {
   let service: UpdateCodeService;
   let mockRepository: jest.Mocked<AffiliateCodeRepositoryPort>;
-  let mockActivityLog: jest.Mocked<ActivityLogPort>;
+  let mockDispatchLogService: jest.Mocked<DispatchLogService>;
 
-  const userId = 'user-123';
+  const userId = BigInt(123);
   const codeId = 'code-123';
   const mockCode = AffiliateCode.fromPersistence({
     id: codeId,
@@ -40,14 +39,13 @@ describe('UpdateCodeService', () => {
       update: jest.fn(),
       delete: jest.fn(),
       updateMany: jest.fn(),
+      findManyForAdmin: jest.fn(),
     };
 
-    const mockActivityLogProvider = {
-      provide: ACTIVITY_LOG,
+    const mockDispatchLogServiceProvider = {
+      provide: DispatchLogService,
       useValue: {
-        log: jest.fn(),
-        logSuccess: jest.fn(),
-        logFailure: jest.fn(),
+        dispatch: jest.fn().mockResolvedValue(undefined),
       },
     };
 
@@ -58,13 +56,13 @@ describe('UpdateCodeService', () => {
           provide: AFFILIATE_CODE_REPOSITORY,
           useValue: mockRepository,
         },
-        mockActivityLogProvider,
+        mockDispatchLogServiceProvider,
       ],
     }).compile();
 
     service = module.get<UpdateCodeService>(UpdateCodeService);
     mockRepository = module.get(AFFILIATE_CODE_REPOSITORY);
-    mockActivityLog = module.get(ACTIVITY_LOG);
+    mockDispatchLogService = module.get(DispatchLogService);
 
     jest.clearAllMocks();
   });

@@ -7,7 +7,6 @@ import { CreateDepositResponseDto } from '../dtos/create-deposit-response.dto';
 import {
   DepositDetailStatus,
   DepositMethodType,
-  ExchangeCurrencyCode,
   FeePaidByType,
   PaymentProvider,
   TransactionStatus,
@@ -15,11 +14,8 @@ import {
 } from '@repo/database';
 import { nowUtcMinus } from 'src/utils/date.util';
 import { IdUtil } from 'src/utils/id.util';
-import type { ActivityLogPort } from 'src/common/activity-log/activity-log.port';
-import { ACTIVITY_LOG } from 'src/common/activity-log/activity-log.token';
 import { ApiException } from 'src/common/http/exception/api.exception';
 import { MessageCode } from 'src/common/http/types';
-import { ActivityType } from 'src/common/activity-log/activity-log.types';
 import type { RequestClientInfo } from 'src/common/http/types/client-info.types';
 import { EnvService } from 'src/common/env/env.service';
 
@@ -28,8 +24,6 @@ export class CryptoDepositService {
   private readonly logger = new Logger(CryptoDepositService.name);
 
   constructor(
-    @Inject(ACTIVITY_LOG)
-    private readonly activityLog: ActivityLogPort,
     private readonly prismaService: PrismaService,
     private readonly nowPaymentApiService: NowPaymentApiService,
     private readonly envService: EnvService,
@@ -151,25 +145,6 @@ export class CryptoDepositService {
       payNetwork: paymentResponse.network,
       transactionId: transaction.id.toString(),
     };
-
-    // 성공 액티비티 로그 기록
-    if (requestInfo) {
-      await this.activityLog.logSuccess(
-        {
-          userId,
-          activityType: ActivityType.DEPOSIT_REQUEST,
-          description: `암호화폐 입금 인보이스 생성 완료 - 통화: ${payCurrency}, 네트워크: ${payNetwork}`,
-          metadata: {
-            transactionId: transaction.id.toString(),
-            payCurrency,
-            payNetwork,
-            payAddress: result.payAddress,
-            providerPaymentId: paymentResponse.order_id,
-          },
-        },
-        requestInfo,
-      );
-    }
 
     return result;
   }

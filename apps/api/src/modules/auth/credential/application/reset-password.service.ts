@@ -5,9 +5,6 @@ import type { UserRepositoryPort } from 'src/modules/user/ports/out/user.reposit
 import { PASSWORD_RESET_TOKEN_REPOSITORY } from '../ports/out/password-reset-token.repository.token';
 import type { PasswordResetTokenRepositoryPort } from '../ports/out/password-reset-token.repository.port';
 import { hashPassword } from 'src/utils/password.util';
-import { ACTIVITY_LOG } from 'src/common/activity-log/activity-log.token';
-import type { ActivityLogPort } from 'src/common/activity-log/activity-log.port';
-import { ActivityType } from 'src/common/activity-log/activity-log.types';
 import type { RequestClientInfo } from 'src/common/http/types/client-info.types';
 import { ApiException } from 'src/common/http/exception/api.exception';
 import { MessageCode } from 'src/common/http/types';
@@ -34,8 +31,6 @@ export class ResetPasswordService {
     private readonly userRepository: UserRepositoryPort,
     @Inject(PASSWORD_RESET_TOKEN_REPOSITORY)
     private readonly tokenRepository: PasswordResetTokenRepositoryPort,
-    @Inject(ACTIVITY_LOG)
-    private readonly activityLog: ActivityLogPort,
     private readonly dispatchLogService: DispatchLogService,
   ) {}
 
@@ -156,28 +151,7 @@ export class ResetPasswordService {
     // 6. 토큰 사용 처리
     await this.tokenRepository.markAsUsed(tokenData.id);
 
-    // 7. Activity Log 기록
-    try {
-      await this.activityLog.logSuccess(
-        {
-          userId: tokenData.userId,
-          activityType: ActivityType.PASSWORD_RESET,
-          description: `비밀번호 재설정 완료 (토큰 사용)`,
-          metadata: {
-            tokenId: tokenData.id,
-          },
-        },
-        requestInfo,
-      );
-    } catch (error) {
-      // Activity Log 실패는 비밀번호 재설정 성공에 영향을 주지 않도록 처리
-      this.logger.error(
-        error,
-        `Activity log 기록 실패 (비밀번호 재설정은 성공) - userId: ${tokenData.userId}`,
-      );
-    }
-
-    // 8. Audit 로그 기록 (보안 로그)
+    // 7. Audit 로그 기록 (보안 로그)
     try {
       await this.dispatchLogService.dispatch(
         {

@@ -14,10 +14,12 @@ import {
   SessionStatus,
   DeviceInfo,
 } from '../domain';
+import { DispatchLogService } from 'src/modules/audit-log/application/dispatch-log.service';
 
 describe('ListSessionsService', () => {
   let service: ListSessionsService;
   let repository: jest.Mocked<UserSessionRepositoryPort>;
+  let mockDispatchLogService: jest.Mocked<DispatchLogService>;
   let module: TestingModule;
 
   const mockUserId = BigInt(123);
@@ -60,6 +62,13 @@ describe('ListSessionsService', () => {
       deleteExpiredSessions: jest.fn(),
     };
 
+    const mockDispatchLogServiceProvider = {
+      provide: DispatchLogService,
+      useValue: {
+        dispatch: jest.fn().mockResolvedValue(undefined),
+      },
+    };
+
     module = await Test.createTestingModule({
       imports: [],
       providers: [
@@ -68,6 +77,7 @@ describe('ListSessionsService', () => {
           provide: USER_SESSION_REPOSITORY,
           useValue: mockRepository,
         },
+        mockDispatchLogServiceProvider,
       ],
     })
       .setLogger(new Logger())
@@ -75,6 +85,9 @@ describe('ListSessionsService', () => {
 
     service = module.get<ListSessionsService>(ListSessionsService);
     repository = module.get(USER_SESSION_REPOSITORY);
+    mockDispatchLogService = module.get(
+      DispatchLogService,
+    ) as jest.Mocked<DispatchLogService>;
 
     jest.clearAllMocks();
   });

@@ -5,19 +5,21 @@ import { FindReferralsByAffiliateIdService } from './find-referrals-by-affiliate
 import { REFERRAL_REPOSITORY } from '../ports/out/referral.repository.token';
 import type { ReferralRepositoryPort } from '../ports/out/referral.repository.port';
 import { Referral } from '../domain/model/referral.entity';
+import { DispatchLogService } from 'src/modules/audit-log/application/dispatch-log.service';
 
 describe('FindReferralsByAffiliateIdService', () => {
   let service: FindReferralsByAffiliateIdService;
   let mockRepository: jest.Mocked<ReferralRepositoryPort>;
+  let mockDispatchLogService: jest.Mocked<DispatchLogService>;
 
-  const affiliateId = 'affiliate-123';
+  const affiliateId = 123n;
   const codeId = 'code-789';
 
   const mockReferral1 = Referral.fromPersistence({
     id: 'referral-1',
     affiliateId,
     codeId,
-    subUserId: 'sub-user-1',
+    subUserId: 1n,
     ipAddress: '192.168.1.1',
     deviceFingerprint: 'fingerprint-1',
     userAgent: 'Mozilla/5.0',
@@ -29,7 +31,7 @@ describe('FindReferralsByAffiliateIdService', () => {
     id: 'referral-2',
     affiliateId,
     codeId,
-    subUserId: 'sub-user-2',
+    subUserId: 2n,
     ipAddress: '192.168.1.2',
     deviceFingerprint: 'fingerprint-2',
     userAgent: 'Mozilla/5.0',
@@ -49,12 +51,20 @@ describe('FindReferralsByAffiliateIdService', () => {
       countByAffiliateId: jest.fn(),
     };
 
+    mockDispatchLogService = {
+      dispatch: jest.fn().mockResolvedValue(undefined),
+    } as unknown as jest.Mocked<DispatchLogService>;
+
     const module: TestingModule = await Test.createTestingModule({
       providers: [
         FindReferralsByAffiliateIdService,
         {
           provide: REFERRAL_REPOSITORY,
           useValue: mockRepository,
+        },
+        {
+          provide: DispatchLogService,
+          useValue: mockDispatchLogService,
         },
       ],
     }).compile();

@@ -6,6 +6,8 @@ import {
 } from '../ports/out';
 import { SessionTrackerService } from '../infrastructure/session-tracker.service';
 import { SessionStatus } from '../domain';
+import { DispatchLogService } from 'src/modules/audit-log/application/dispatch-log.service';
+import { LogType } from 'src/modules/audit-log/domain';
 
 export interface ExpireSessionsBatchParams {
   /**
@@ -33,6 +35,7 @@ export class ExpireSessionsBatchService {
     @Inject(USER_SESSION_REPOSITORY)
     private readonly repository: UserSessionRepositoryPort,
     private readonly sessionTracker: SessionTrackerService,
+    private readonly dispatchLogService: DispatchLogService,
   ) {}
 
   @Transactional()
@@ -81,6 +84,29 @@ export class ExpireSessionsBatchService {
     this.logger.log(
       `만료된 세션 처리 완료: ${expiredCount}개 세션 만료 처리됨`,
     );
+
+    // 3. Audit 로그 기록 (활동 로그 - 시스템 작업)
+    if (expiredCount > 0) {
+      try {
+        await this.dispatchLogService.dispatch({
+          type: LogType.ACTIVITY,
+          data: {
+            category: 'AUTH',
+            action: 'SYSTEM_EXPIRE_SESSIONS_BATCH',
+            metadata: {
+              expiredCount,
+              batchSize,
+            },
+          },
+        });
+      } catch (error) {
+        // Audit 로그 실패는 세션 만료 성공에 영향을 주지 않도록 처리
+        this.logger.error(
+          error,
+          `Audit log 기록 실패 (세션 만료는 성공) - expiredCount: ${expiredCount}`,
+        );
+      }
+    }
 
     return { expiredCount };
   }

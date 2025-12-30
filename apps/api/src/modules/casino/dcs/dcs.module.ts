@@ -3,7 +3,6 @@ import { HttpModule } from '@nestjs/axios';
 import { PrismaModule } from 'src/infrastructure/prisma/prisma.module';
 import { EnvModule } from 'src/common/env/env.module';
 import { ConcurrencyModule } from 'src/common/concurrency/concurrency.module';
-import { ActivityLogModule } from 'src/common/activity-log/activity-log.module';
 import { RedisModule } from 'src/infrastructure/redis/redis.module';
 import { DcsMapperService } from './infrastructure/dcs-mapper.service';
 import { DcsApiService } from './infrastructure/dcs-api.service';
@@ -24,7 +23,6 @@ import { DcsFetchGameReplayUrlProcessor } from './processors/dcs-fetch-game-repl
     PrismaModule,
     EnvModule,
     ConcurrencyModule,
-    ActivityLogModule,
     RedisModule,
     forwardRef(() => CasinoModule),
     QueueModule,

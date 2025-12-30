@@ -30,7 +30,6 @@ import { PrismaModule } from 'src/infrastructure/prisma/prisma.module';
 import { EnvModule } from 'src/common/env/env.module';
 import { VipModule } from '../../vip/vip.module';
 import { AffiliateReferralModule } from '../../affiliate/referral/referral.module';
-import { ActivityLogModule } from 'src/common/activity-log/activity-log.module';
 import { UserModule } from '../../user/user.module';
 import { PassportModule } from '@nestjs/passport';
 import { SessionModule } from '../session/session.module';
@@ -68,7 +67,6 @@ describe('CredentialModule Integration', () => {
         PassportModule.register({ session: true }),
         VipModule,
         AffiliateReferralModule,
-        ActivityLogModule,
         AuditLogModule,
         UserModule,
         SessionModule, // LoginService와 LogoutService가 SessionModule 의존

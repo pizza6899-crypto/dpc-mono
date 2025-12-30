@@ -25,9 +25,6 @@ import {
   GameLaunchRequestDto,
   GameLaunchResponseDto,
 } from '../dtos/game-launch.dto';
-import { ActivityType } from 'src/common/activity-log/activity-log.types';
-import { ACTIVITY_LOG } from 'src/common/activity-log/activity-log.token';
-import type { ActivityLogPort } from 'src/common/activity-log/activity-log.port';
 import { Throttle } from 'src/common/throttle/decorators/throttle.decorator';
 import { ThrottleScope } from 'src/common/throttle/types/throttle.types';
 
@@ -37,8 +34,6 @@ import { ThrottleScope } from 'src/common/throttle/types/throttle.types';
 export class CasinoGameController {
   constructor(
     private readonly casinoGameService: CasinoGameService,
-    @Inject(ACTIVITY_LOG)
-    private readonly activityLog: ActivityLogPort,
   ) {}
 
   @Post('launch')
@@ -66,37 +61,8 @@ export class CasinoGameController {
         request,
       );
 
-      // 성공 로그 기록
-      await this.activityLog.logSuccess(
-        {
-          userId: user.id,
-          activityType: ActivityType.GAME_LAUNCH,
-          description: `게임 실행 - 게임 ID: ${data.gameId}, 모바일: ${data.isMobile}`,
-          metadata: {
-            gameId: data.gameId,
-            isMobile: data.isMobile,
-            gameUrl: result.gameUrl,
-          },
-        },
-        request,
-      );
-
       return result;
     } catch (error) {
-      // 실패 로그 기록
-      await this.activityLog.logFailure(
-        {
-          userId: user.id,
-          activityType: ActivityType.GAME_LAUNCH,
-          description: `게임 실행 실패 - 게임 ID: ${data.gameId}, 모바일: ${data.isMobile}`,
-          metadata: {
-            gameId: data.gameId,
-            isMobile: data.isMobile,
-            error: error.message,
-          },
-        },
-        request,
-      );
       throw error;
     }
   }

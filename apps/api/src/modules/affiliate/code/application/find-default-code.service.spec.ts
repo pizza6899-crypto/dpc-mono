@@ -5,10 +5,12 @@ import { FindDefaultCodeService } from './find-default-code.service';
 import { AFFILIATE_CODE_REPOSITORY } from '../ports/out/affiliate-code.repository.token';
 import type { AffiliateCodeRepositoryPort } from '../ports/out/affiliate-code.repository.port';
 import { AffiliateCode } from '../domain';
+import { DispatchLogService } from 'src/modules/audit-log/application/dispatch-log.service';
 
 describe('FindDefaultCodeService', () => {
   let service: FindDefaultCodeService;
   let mockRepository: jest.Mocked<AffiliateCodeRepositoryPort>;
+  let mockDispatchLogService: jest.Mocked<DispatchLogService>;
 
   const userId = BigInt(123);
   const mockDefaultCode = AffiliateCode.fromPersistence({
@@ -39,6 +41,13 @@ describe('FindDefaultCodeService', () => {
       findManyForAdmin: jest.fn(),
     };
 
+    const mockDispatchLogServiceProvider = {
+      provide: DispatchLogService,
+      useValue: {
+        dispatch: jest.fn().mockResolvedValue(undefined),
+      },
+    };
+
     const module: TestingModule = await Test.createTestingModule({
       providers: [
         FindDefaultCodeService,
@@ -46,11 +55,13 @@ describe('FindDefaultCodeService', () => {
           provide: AFFILIATE_CODE_REPOSITORY,
           useValue: mockRepository,
         },
+        mockDispatchLogServiceProvider,
       ],
     }).compile();
 
     service = module.get<FindDefaultCodeService>(FindDefaultCodeService);
     mockRepository = module.get(AFFILIATE_CODE_REPOSITORY);
+    mockDispatchLogService = module.get(DispatchLogService);
 
     jest.clearAllMocks();
   });

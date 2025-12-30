@@ -1,10 +1,9 @@
 import { Injectable, Inject, Logger, HttpStatus } from '@nestjs/common';
 import { Transactional } from '@nestjs-cls/transactional';
 import { hashPassword } from 'src/utils/password.util';
-import type { ActivityLogPort } from 'src/common/activity-log/activity-log.port';
-import { ActivityType } from 'src/common/activity-log/activity-log.types';
-import { ACTIVITY_LOG } from 'src/common/activity-log/activity-log.token';
 import type { RequestClientInfo } from 'src/common/http/types/client-info.types';
+import { DispatchLogService } from 'src/modules/audit-log/application/dispatch-log.service';
+import { LogType } from 'src/modules/audit-log/domain';
 import { ApiException } from 'src/common/http/exception/api.exception';
 import { MessageCode } from 'src/common/http/types/message-codes';
 import { CountryUtil } from 'src/utils/country.util';
@@ -48,7 +47,7 @@ export class RegisterCredentialAdminService {
   private readonly logger = new Logger(RegisterCredentialAdminService.name);
 
   constructor(
-    @Inject(ACTIVITY_LOG) private readonly activityLog: ActivityLogPort,
+    private readonly dispatchLogService: DispatchLogService,
     private readonly vipMembershipService: VipMembershipService,
     private readonly linkReferralService: LinkReferralService,
     private readonly findCodeByCodeService: FindCodeByCodeService,
@@ -147,26 +146,30 @@ export class RegisterCredentialAdminService {
       });
     }
 
-    // 7. 액티비티 로그
+    // 7. Audit 로그
     try {
-      await this.activityLog.logSuccess(
+      await this.dispatchLogService.dispatch(
         {
-          userId: user.id,
-          activityType: ActivityType.USER_REGISTER,
-          description: `User registered by admin - role: ${role}`,
-          metadata: {
-            registeredBy: 'admin',
-            role,
-            country,
+          type: LogType.AUTH,
+          data: {
+            userId: user.id.toString(),
+            action: 'ADMIN_USER_REGISTER',
+            status: 'SUCCESS',
+            metadata: {
+              registeredBy: 'admin',
+              role,
+              country,
+              referralCode: referralCode || null,
+            },
           },
         },
         requestInfo,
       );
     } catch (error) {
-      // 액티비티 로그 실패는 회원가입 성공에 영향을 주지 않도록 처리
+      // Audit 로그 실패는 회원가입 성공에 영향을 주지 않도록 처리
       this.logger.error(
         error,
-        `Activity log 기록 실패 (회원가입은 성공) - userId: ${user.id}`,
+        `Audit log 기록 실패 (회원가입은 성공) - userId: ${user.id}`,
       );
     }
 

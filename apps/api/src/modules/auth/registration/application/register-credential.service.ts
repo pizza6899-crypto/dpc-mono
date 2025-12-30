@@ -1,10 +1,9 @@
 import { Injectable, Inject, Logger, HttpStatus } from '@nestjs/common';
 import { Transactional } from '@nestjs-cls/transactional';
 import { hashPassword } from 'src/utils/password.util';
-import type { ActivityLogPort } from 'src/common/activity-log/activity-log.port';
-import { ActivityType } from 'src/common/activity-log/activity-log.types';
-import { ACTIVITY_LOG } from 'src/common/activity-log/activity-log.token';
 import type { RequestClientInfo } from 'src/common/http/types/client-info.types';
+import { DispatchLogService } from 'src/modules/audit-log/application/dispatch-log.service';
+import { LogType } from 'src/modules/audit-log/domain';
 import { ApiException } from 'src/common/http/exception/api.exception';
 import { MessageCode } from 'src/common/http/types/message-codes';
 import { CountryUtil } from 'src/utils/country.util';
@@ -42,7 +41,7 @@ export class RegisterCredentialService {
   private readonly logger = new Logger(RegisterCredentialService.name);
 
   constructor(
-    @Inject(ACTIVITY_LOG) private readonly activityLog: ActivityLogPort,
+    private readonly dispatchLogService: DispatchLogService,
     private readonly linkReferralService: LinkReferralService,
     private readonly findCodeByCodeService: FindCodeByCodeService,
     private readonly createUserService: CreateUserService,
@@ -124,21 +123,28 @@ export class RegisterCredentialService {
       });
     }
 
-    // 6. 액티비티 로그 (부가 기능이므로 실패해도 회원가입은 성공 처리)
+    // 6. Audit 로그 (부가 기능이므로 실패해도 회원가입은 성공 처리)
     try {
-      await this.activityLog.logSuccess(
+      await this.dispatchLogService.dispatch(
         {
-          userId: user.id,
-          activityType: ActivityType.USER_REGISTER,
-          description: 'User registered successfully',
+          type: LogType.AUTH,
+          data: {
+            userId: user.id.toString(),
+            action: 'USER_REGISTER',
+            status: 'SUCCESS',
+            metadata: {
+              registrationMethod: 'EMAIL',
+              referralCode: referralCode || null,
+            },
+          },
         },
         requestInfo,
       );
     } catch (error) {
-      // 액티비티 로그 실패는 회원가입 성공에 영향을 주지 않도록 처리
+      // Audit 로그 실패는 회원가입 성공에 영향을 주지 않도록 처리
       this.logger.error(
         error,
-        `Activity log 기록 실패 (회원가입은 성공) - userId: ${user.id}`,
+        `Audit log 기록 실패 (회원가입은 성공) - userId: ${user.id}`,
       );
     }
 

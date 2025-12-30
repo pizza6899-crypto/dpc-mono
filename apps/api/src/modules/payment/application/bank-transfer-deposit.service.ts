@@ -13,11 +13,8 @@ import {
   TransactionType,
 } from '@repo/database';
 import { nowUtcMinus } from 'src/utils/date.util';
-import type { ActivityLogPort } from 'src/common/activity-log/activity-log.port';
-import { ACTIVITY_LOG } from 'src/common/activity-log/activity-log.token';
 import { ApiException } from 'src/common/http/exception/api.exception';
 import { MessageCode } from 'src/common/http/types';
-import { ActivityType } from 'src/common/activity-log/activity-log.types';
 import type { RequestClientInfo } from 'src/common/http/types/client-info.types';
 import { EnvService } from 'src/common/env/env.service';
 
@@ -26,8 +23,6 @@ export class BankTransferDepositService {
   private readonly logger = new Logger(BankTransferDepositService.name);
 
   constructor(
-    @Inject(ACTIVITY_LOG)
-    private readonly activityLog: ActivityLogPort,
     private readonly prismaService: PrismaService,
     private readonly envService: EnvService,
   ) {}
@@ -44,26 +39,7 @@ export class BankTransferDepositService {
       if (!this.envService.deposit.bankTransferEnabled) {
         // 실패 로그 기록
         if (requestInfo) {
-          await this.activityLog.logFailure(
-            {
-              userId,
-              activityType: ActivityType.DEPOSIT_REQUEST,
-              description: `무통장 입금 요청 실패 - 서비스 비활성화`,
-              metadata: {
-                payCurrency,
-                amount,
-                depositorName,
-                reason: 'SERVICE_DISABLED',
-              },
-            },
-            requestInfo,
-          );
         }
-        throw new ApiException(
-          MessageCode.DEPOSIT_METHOD_NOT_AVAILABLE,
-          HttpStatus.SERVICE_UNAVAILABLE,
-          'Bank transfer deposit is currently disabled',
-        );
       }
 
       // 허용된 통화 확인
@@ -75,27 +51,7 @@ export class BankTransferDepositService {
       ) {
         // 실패 로그 기록
         if (requestInfo) {
-          await this.activityLog.logFailure(
-            {
-              userId,
-              activityType: ActivityType.DEPOSIT_REQUEST,
-              description: `무통장 입금 요청 실패 - 지원하지 않는 통화: ${payCurrency}`,
-              metadata: {
-                payCurrency,
-                amount,
-                depositorName,
-                reason: 'CURRENCY_NOT_ALLOWED',
-                allowedCurrencies,
-              },
-            },
-            requestInfo,
-          );
         }
-        throw new ApiException(
-          MessageCode.DEPOSIT_METHOD_NOT_AVAILABLE,
-          HttpStatus.SERVICE_UNAVAILABLE,
-          `Bank transfer deposit is not available for currency: ${payCurrency}`,
-        );
       }
 
       // 기존 대기 중인 입금 요청 확인
@@ -128,21 +84,6 @@ export class BankTransferDepositService {
       if (existingDeposit) {
         // 실패 로그 기록
         if (requestInfo) {
-          await this.activityLog.logFailure(
-            {
-              userId,
-              activityType: ActivityType.DEPOSIT_REQUEST,
-              description: `무통장 입금 요청 실패 - 중복 요청`,
-              metadata: {
-                payCurrency,
-                amount,
-                depositorName,
-                reason: 'DUPLICATE_REQUEST',
-                existingDepositId: existingDeposit.id.toString(),
-              },
-            },
-            requestInfo,
-          );
         }
         this.logger.warn(
           `사용자 ${userId}가 이미 대기 중인 무통장 입금 요청이 있습니다: ${existingDeposit.id}`,
@@ -157,24 +98,6 @@ export class BankTransferDepositService {
           isDuplicate: true, // 중복 요청임을 명시
         };
 
-        // 성공 액티비티 로그 기록 (기존 요청 조회)
-        if (requestInfo) {
-          await this.activityLog.logSuccess(
-            {
-              userId,
-              activityType: ActivityType.DEPOSIT_REQUEST,
-              description: `무통장 입금 요청 - 기존 요청 반환 (중복 요청)`,
-              metadata: {
-                transactionId: existingDeposit.transaction.id.toString(),
-                payCurrency: existingDeposit.depositCurrency,
-                existingDepositId: existingDeposit.id.toString(),
-                requestedAmount: amount,
-                reason: 'DUPLICATE_REQUEST_RETURNED',
-              },
-            },
-            requestInfo,
-          );
-        }
 
         return existingResponse;
       }
@@ -197,26 +120,7 @@ export class BankTransferDepositService {
       if (!bankAccount) {
         // 실패 로그 기록
         if (requestInfo) {
-          await this.activityLog.logFailure(
-            {
-              userId,
-              activityType: ActivityType.DEPOSIT_REQUEST,
-              description: `무통장 입금 요청 실패 - 사용 가능한 계좌 없음`,
-              metadata: {
-                payCurrency,
-                amount,
-                depositorName,
-                reason: 'NO_BANK_ACCOUNT_AVAILABLE',
-              },
-            },
-            requestInfo,
-          );
         }
-        throw new ApiException(
-          MessageCode.DEPOSIT_METHOD_NOT_AVAILABLE,
-          HttpStatus.SERVICE_UNAVAILABLE,
-          'Bank transfer deposit is currently disabled',
-        );
       }
 
       // 거래 생성 - 명시적 트랜잭션 사용
@@ -247,16 +151,16 @@ export class BankTransferDepositService {
                 methodType: DepositMethodType.BANK_TRANSFER,
                 provider: PaymentProvider.MANUAL,
                 depositCurrency: payCurrency,
-                bankName: bankAccount.bankName,
-                accountNumber: bankAccount.accountNumber,
-                accountHolder: bankAccount.accountHolder,
+                bankName: bankAccount?.bankName,
+                accountNumber: bankAccount?.accountNumber,
+                accountHolder: bankAccount?.accountHolder,
                 depositorName: depositorName,
                 feePaidBy: FeePaidByType.USER,
                 providerMetadata: {
                   requestedAmount: amount,
                   currency: payCurrency,
                 },
-                bankAccountId: bankAccount.id,
+                bankAccountId: bankAccount?.id,
               },
             },
           },
@@ -265,9 +169,9 @@ export class BankTransferDepositService {
 
         return {
           transactionId: transaction.id.toString(),
-          bankName: bankAccount.bankName,
-          accountNumber: bankAccount.accountNumber,
-          accountHolder: bankAccount.accountHolder,
+          bankName: bankAccount?.bankName,
+          accountNumber: bankAccount?.accountNumber,
+          accountHolder: bankAccount?.accountHolder,
         };
       });
 
@@ -282,45 +186,11 @@ export class BankTransferDepositService {
         transactionId: result.transactionId,
       };
 
-      // 성공 액티비티 로그 기록
-      if (requestInfo) {
-        await this.activityLog.logSuccess(
-          {
-            userId,
-            activityType: ActivityType.DEPOSIT_REQUEST,
-            description: `무통장 입금 요청 생성 완료 - 통화: ${payCurrency}, 금액: ${amount}`,
-            metadata: {
-              transactionId: result.transactionId,
-              payCurrency,
-              amount,
-              depositorName,
-              bankName: result.bankName,
-              accountNumber: result.accountNumber,
-            },
-          },
-          requestInfo,
-        );
-      }
 
       return response;
     } catch (error) {
       // 예상치 못한 에러에 대한 실패 로그 기록
       if (requestInfo && !(error instanceof ApiException)) {
-        await this.activityLog.logFailure(
-          {
-            userId,
-            activityType: ActivityType.DEPOSIT_REQUEST,
-            description: `무통장 입금 요청 실패 - 예상치 못한 에러`,
-            metadata: {
-              payCurrency,
-              amount,
-              depositorName,
-              reason: 'UNEXPECTED_ERROR',
-              error: error.message,
-            },
-          },
-          requestInfo,
-        );
       }
       throw error;
     }

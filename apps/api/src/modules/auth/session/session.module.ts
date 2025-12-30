@@ -17,12 +17,14 @@ import {
 import { ExpireSessionsScheduler } from './schedulers/expire-sessions.scheduler';
 import { ConcurrencyModule } from 'src/common/concurrency/concurrency.module';
 import { EnvModule } from 'src/common/env/env.module';
+import { AuditLogModule } from 'src/modules/audit-log/audit-log.module';
 
 @Module({
   imports: [
     RedisModule, // SessionTrackerService가 RedisService 사용
     ConcurrencyModule, // ExpireSessionsScheduler가 ConcurrencyService 사용
     EnvModule, // ExpireSessionsScheduler가 EnvService 사용
+    AuditLogModule, // Audit 로그 사용
   ],
   controllers: [
     SessionAdminController,

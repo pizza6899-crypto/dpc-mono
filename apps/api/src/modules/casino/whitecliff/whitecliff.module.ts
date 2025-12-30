@@ -11,7 +11,6 @@ import { WhitecliffAdminController } from './controllers/whitecliff-admin.contro
 import { WhitecliffLoggingInterceptor } from './infrastructure/whitecliff-logging.interceptor';
 import { WhitecliffApiLoggingInterceptor } from './infrastructure/whitecliff-api-logging.interceptor';
 import { WhitecliffGameRefreshService } from './application/whitecliff-game-refresh.service';
-import { ActivityLogModule } from 'src/common/activity-log/activity-log.module';
 import { RedisModule } from 'src/infrastructure/redis/redis.module';
 import { WhitecliffMapperService } from './infrastructure/whitecliff-mapper.service';
 import { CasinoModule } from '../casino.module';
@@ -27,7 +26,6 @@ import { WhitecliffPushedBetHistoryScheduler } from './schedulers/whitecliff-pus
     PrismaModule,
     EnvModule,
     ConcurrencyModule,
-    ActivityLogModule,
     RedisModule,
     forwardRef(() => CasinoModule),
     QueueModule,

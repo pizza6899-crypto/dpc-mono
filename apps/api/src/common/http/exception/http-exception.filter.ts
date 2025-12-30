@@ -5,8 +5,6 @@ import {
   HttpException,
   HttpStatus,
   Logger,
-  Inject,
-  Optional,
 } from '@nestjs/common';
 import { Request, Response } from 'express';
 import { ErrorResponseDto } from '../types/response.types';
@@ -14,21 +12,16 @@ import { nowUtcIso } from 'src/utils/date.util';
 import { MessageCode } from '../types/message-codes';
 import { ApiException } from './api.exception';
 import { sanitizeApiMessage, hasKorean } from 'src/utils/message.util';
-import { ActivityLogPort } from '../../activity-log/activity-log.port';
-import { ACTIVITY_LOG } from '../../activity-log/activity-log.token';
-import { ActivityType } from '../../activity-log/activity-log.types';
 import { extractClientInfo } from '../utils/request-info.util';
 import { Prisma } from '@repo/database';
+import { DispatchLogService } from 'src/modules/audit-log/application/dispatch-log.service';
+import { LogType } from 'src/modules/audit-log/domain';
 
 @Catch()
 export class HttpExceptionFilter implements ExceptionFilter {
   private readonly logger = new Logger(HttpExceptionFilter.name);
 
-  constructor(
-    @Optional()
-    @Inject(ACTIVITY_LOG)
-    private readonly activityLog: ActivityLogPort | undefined,
-  ) {}
+  constructor(private readonly dispatchLogService?: DispatchLogService) {}
 
   catch(exception: unknown, host: ArgumentsHost): void {
     const ctx = host.switchToHttp();
@@ -197,54 +190,57 @@ export class HttpExceptionFilter implements ExceptionFilter {
   }
 
   /**
-   * 한글 감지 시 DB에 로그 기록
+   * 한글 감지 시 Audit Log에 기록
    */
   private async logKoreanDetected(
     request: Request,
     originalMessage: string,
     exception: unknown,
   ): Promise<void> {
-    if (!this.activityLog) {
-      // ActivityLog가 주입되지 않은 경우 (초기화 전 등) 로그만 남김
+    if (!this.dispatchLogService) {
+      // DispatchLogService가 주입되지 않은 경우 (초기화 전 등) 로그만 남김
       this.logger.warn(
-        `한글 감지됨 (ActivityLog 미사용): ${request.method} ${request.url} - "${originalMessage}"`,
+        `한글 감지됨 (DispatchLogService 미사용): ${request.method} ${request.url} - "${originalMessage}"`,
       );
       return;
     }
 
-    try {
       const requestInfo = extractClientInfo(request);
       const userId =
         (request as any).user?.id ||
-        (request as any).session?.userId ||
-        'anonymous';
+        (request as any).session?.userId;
 
-      await this.activityLog.logFailure(
+      await this.dispatchLogService.dispatch(
         {
-          userId,
-          isAdmin: (request as any).user?.isAdmin || false,
-          activityType: ActivityType.KOREAN_DETECTED_IN_API_RESPONSE,
-          description: `API 응답 메시지에 한글이 포함되어 있습니다: "${originalMessage}"`,
-          metadata: {
-            method: request.method,
-            url: request.url,
-            path: request.path,
-            originalMessage,
-            exceptionName:
-              exception instanceof Error
-                ? exception.constructor.name
-                : 'Unknown',
-            exceptionMessage:
-              exception instanceof Error
-                ? exception.message
-                : String(exception),
+          type: LogType.ACTIVITY,
+          data: {
+            userId: userId ? userId.toString() : undefined,
+            category: 'API_RESPONSE',
+            action: 'KOREAN_DETECTED',
+            country: requestInfo.country,
+            city: requestInfo.city,
+            isMobile: requestInfo.isMobile,
+            cfRay: requestInfo.cfRay,
+            metadata: {
+              method: request.method,
+              url: request.url,
+              path: request.path,
+              ip: requestInfo.ip,
+              userAgent: requestInfo.userAgent,
+              originalMessage,
+              isAdmin: (request as any).user?.isAdmin || false,
+              exceptionName:
+                exception instanceof Error
+                  ? exception.constructor.name
+                  : 'Unknown',
+              exceptionMessage:
+                exception instanceof Error
+                  ? exception.message
+                  : String(exception),
+            },
           },
         },
         requestInfo,
       );
-    } catch (error) {
-      // 로깅 실패는 시스템에 영향을 주지 않도록 조용히 처리
-      this.logger.error('한글 감지 로그 저장 실패:', error);
-    }
   }
 }

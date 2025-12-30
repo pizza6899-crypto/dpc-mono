@@ -1,7 +1,7 @@
 // src/modules/affiliate/commission/commission.module.ts
 import { Module } from '@nestjs/common';
 import { PrismaModule } from 'src/infrastructure/prisma/prisma.module';
-import { ActivityLogModule } from 'src/common/activity-log/activity-log.module';
+import { AuditLogModule } from 'src/modules/audit-log/audit-log.module';
 import { AffiliateReferralModule } from '../referral/referral.module';
 import { CommissionPolicy } from './domain';
 
@@ -44,7 +44,7 @@ import { ConcurrencyModule } from 'src/common/concurrency/concurrency.module';
     PrismaModule, // PrismaService를 위해 필요
     EnvModule,
     ConcurrencyModule,
-    ActivityLogModule, // Activity Log를 위해 필요
+    AuditLogModule, // Audit Log를 위해 필요
     AffiliateReferralModule, // 레퍼럴 관계 조회를 위해 필요
   ],
   providers: [

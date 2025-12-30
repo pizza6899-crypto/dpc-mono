@@ -20,10 +20,6 @@ import { CreateWithdrawRequestDto } from '../dtos/create-withdraw-request.dto';
 import { CreateWithdrawResponseDto } from '../dtos/create-withdraw-response.dto';
 import { CurrentUser } from 'src/common/auth/decorators/current-user.decorator';
 import type { CurrentUserWithSession } from 'src/common/auth/decorators/current-user.decorator';
-import type { ActivityLogPort } from 'src/common/activity-log/activity-log.port';
-import { ActivityType } from 'src/common/activity-log/activity-log.types';
-import { ACTIVITY_LOG } from 'src/common/activity-log/activity-log.token';
-import { Inject } from '@nestjs/common';
 import { RequestClientInfoParam } from 'src/common/auth/decorators/request-info.decorator';
 import type { RequestClientInfo } from 'src/common/http/types';
 
@@ -33,8 +29,6 @@ import type { RequestClientInfo } from 'src/common/http/types';
 export class WithdrawController {
   constructor(
     private readonly withdrawService: WithdrawService,
-    @Inject(ACTIVITY_LOG)
-    private readonly activityLog: ActivityLogPort,
   ) {}
 
   @Post()
@@ -64,21 +58,6 @@ export class WithdrawController {
       //   createWithdrawRequest,
       // );
 
-      // 성공 로그 기록
-      await this.activityLog.logSuccess(
-        {
-          userId: user.id,
-          activityType: ActivityType.WITHDRAW_REQUEST,
-          description: `출금 요청 생성 - 금액: ${createWithdrawRequest.amount}, 통화: ${createWithdrawRequest.cryptoCurrency}`,
-          metadata: {
-            amount: createWithdrawRequest.amount,
-            cryptoCurrency: createWithdrawRequest.cryptoCurrency,
-            address: createWithdrawRequest.address,
-          },
-        },
-        clientInfo,
-      );
-
       // return result;
       return {
         amount: createWithdrawRequest.amount,
@@ -86,21 +65,6 @@ export class WithdrawController {
         address: createWithdrawRequest.address,
       };
     } catch (error) {
-      // 실패 로그 기록
-      await this.activityLog.logFailure(
-        {
-          userId: user.id,
-          activityType: ActivityType.WITHDRAW_REQUEST,
-          description: `출금 요청 실패 - 금액: ${createWithdrawRequest.amount}, 통화: ${createWithdrawRequest.cryptoCurrency}`,
-          metadata: {
-            amount: createWithdrawRequest.amount,
-            cryptoCurrency: createWithdrawRequest.cryptoCurrency,
-            address: createWithdrawRequest.address,
-            error: error.message,
-          },
-        },
-        clientInfo,
-      );
       throw error;
     }
   }

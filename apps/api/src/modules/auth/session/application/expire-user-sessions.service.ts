@@ -6,6 +6,9 @@ import {
 } from '../ports/out';
 import { UserSession } from '../domain';
 import { SessionTrackerService } from '../infrastructure/session-tracker.service';
+import { DispatchLogService } from 'src/modules/audit-log/application/dispatch-log.service';
+import { LogType } from 'src/modules/audit-log/domain';
+import type { RequestClientInfo } from 'src/common/http/types/client-info.types';
 
 export interface ExpireUserSessionsParams {
   userId: bigint;
@@ -14,6 +17,10 @@ export interface ExpireUserSessionsParams {
    * revokedBy 필드에 기록됨
    */
   revokedBy: bigint;
+  /**
+   * 요청자 정보 (옵셔널, audit 로그용)
+   */
+  requestInfo?: RequestClientInfo;
 }
 
 /**
@@ -38,6 +45,7 @@ export class ExpireUserSessionsService {
     @Inject(USER_SESSION_REPOSITORY)
     private readonly repository: UserSessionRepositoryPort,
     private readonly sessionTracker: SessionTrackerService,
+    private readonly dispatchLogService: DispatchLogService,
   ) {}
 
   @Transactional()
@@ -45,7 +53,7 @@ export class ExpireUserSessionsService {
     revokedCount: number;
     sessions: UserSession[];
   }> {
-    const { userId, revokedBy } = params;
+    const { userId, revokedBy, requestInfo } = params;
 
     // 1. 입력 검증
     if (!userId || userId <= 0) {
@@ -96,6 +104,36 @@ export class ExpireUserSessionsService {
     this.logger.log(
       `유저의 모든 세션 종료 처리 완료: userId=${userId}, 종료된 세션 수=${revokedCount}, revokedBy=${revokedBy}`,
     );
+
+    // 4. Audit 로그 기록 (보안 로그)
+    if (revokedCount > 0) {
+      try {
+        await this.dispatchLogService.dispatch(
+          {
+            type: LogType.AUTH,
+            data: {
+              userId: revokedBy.toString(),
+              action: 'ADMIN_REVOKE_ALL_USER_SESSIONS',
+              status: 'SUCCESS',
+              ip: requestInfo?.ip,
+              userAgent: requestInfo?.userAgent,
+              metadata: {
+                targetUserId: userId.toString(),
+                revokedCount,
+                sessionIds: revokedSessions.map((s) => s.sessionId),
+              },
+            },
+          },
+          requestInfo,
+        );
+      } catch (error) {
+        // Audit 로그 실패는 세션 종료 성공에 영향을 주지 않도록 처리
+        this.logger.error(
+          error,
+          `Audit log 기록 실패 (세션 종료는 성공) - userId: ${userId}, revokedBy: ${revokedBy}`,
+        );
+      }
+    }
 
     return {
       revokedCount,

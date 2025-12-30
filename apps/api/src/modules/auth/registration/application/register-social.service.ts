@@ -1,10 +1,9 @@
 import { Injectable, Inject, Logger, HttpStatus } from '@nestjs/common';
 import { Transactional } from '@nestjs-cls/transactional';
 import { PrismaService } from 'src/infrastructure/prisma/prisma.service';
-import type { ActivityLogPort } from 'src/common/activity-log/activity-log.port';
-import { ActivityType } from 'src/common/activity-log/activity-log.types';
-import { ACTIVITY_LOG } from 'src/common/activity-log/activity-log.token';
 import type { RequestClientInfo } from 'src/common/http/types/client-info.types';
+import { DispatchLogService } from 'src/modules/audit-log/application/dispatch-log.service';
+import { LogType } from 'src/modules/audit-log/domain';
 import { VipMembershipService } from 'src/modules/vip/application/vip-membership.service';
 import { SocialType, UserRoleType } from '@repo/database';
 import { ApiException } from 'src/common/http/exception/api.exception';
@@ -44,7 +43,7 @@ export class RegisterSocialService {
 
   constructor(
     private readonly prisma: PrismaService,
-    @Inject(ACTIVITY_LOG) private readonly activityLog: ActivityLogPort,
+    private readonly dispatchLogService: DispatchLogService,
     private readonly vipMembershipService: VipMembershipService,
     private readonly createUserService: CreateUserService,
     @Inject(USER_REPOSITORY)
@@ -89,30 +88,33 @@ export class RegisterSocialService {
       // 4. VIP 멤버십 생성
       await this.vipMembershipService.getOrCreateMembership(user.id);
 
-      // 5. 신규 사용자 등록 로그 (부가 기능이므로 실패해도 회원가입은 성공 처리)
+      // 5. 신규 사용자 등록 Audit 로그 (부가 기능이므로 실패해도 회원가입은 성공 처리)
       try {
-        await this.activityLog.logSuccess(
+        await this.dispatchLogService.dispatch(
           {
-            userId: user.id,
-            activityType: ActivityType.USER_REGISTER,
-            description: `${socialType} OAuth 회원가입`,
-            metadata: {
-              provider: socialType.toLowerCase(),
-              socialId: socialUser.socialId,
-              name:
-                socialUser.firstName && socialUser.lastName
-                  ? `${socialUser.firstName} ${socialUser.lastName}`
-                  : undefined,
-              picture: socialUser.picture,
+            type: LogType.AUTH,
+            data: {
+              userId: user.id.toString(),
+              action: 'SOCIAL_USER_REGISTER',
+              status: 'SUCCESS',
+              metadata: {
+                provider: socialType.toLowerCase(),
+                socialId: socialUser.socialId,
+                name:
+                  socialUser.firstName && socialUser.lastName
+                    ? `${socialUser.firstName} ${socialUser.lastName}`
+                    : undefined,
+                picture: socialUser.picture,
+              },
             },
           },
           requestInfo,
         );
       } catch (error) {
-        // 액티비티 로그 실패는 회원가입 성공에 영향을 주지 않도록 처리
+        // Audit 로그 실패는 회원가입 성공에 영향을 주지 않도록 처리
         this.logger.error(
           error,
-          `Activity log 기록 실패 (회원가입은 성공) - userId: ${user.id}, socialType: ${socialType}`,
+          `Audit log 기록 실패 (회원가입은 성공) - userId: ${user.id}, socialType: ${socialType}`,
         );
       }
 

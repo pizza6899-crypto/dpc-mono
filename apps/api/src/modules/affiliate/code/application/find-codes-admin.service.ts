@@ -2,8 +2,10 @@
 import { Inject, Injectable, Logger } from '@nestjs/common';
 import { AFFILIATE_CODE_REPOSITORY } from '../ports/out/affiliate-code.repository.token';
 import type { AffiliateCodeRepositoryPort } from '../ports/out/affiliate-code.repository.port';
-import type { PaginatedData } from 'src/common/http/types';
+import type { PaginatedData, RequestClientInfo } from 'src/common/http/types';
 import { AffiliateCode } from '../domain';
+import { DispatchLogService } from 'src/modules/audit-log/application/dispatch-log.service';
+import { LogType } from 'src/modules/audit-log/domain';
 
 interface FindCodesAdminParams {
   page?: number;
@@ -16,6 +18,8 @@ interface FindCodesAdminParams {
   isDefault?: boolean;
   startDate?: string;
   endDate?: string;
+  adminId?: bigint;
+  requestInfo?: RequestClientInfo;
 }
 
 interface FindCodesAdminResult extends PaginatedData<AffiliateCode> {}
@@ -33,6 +37,7 @@ export class FindCodesAdminService {
   constructor(
     @Inject(AFFILIATE_CODE_REPOSITORY)
     private readonly repository: AffiliateCodeRepositoryPort,
+    private readonly dispatchLogService: DispatchLogService,
   ) {}
 
   async execute(
@@ -49,6 +54,8 @@ export class FindCodesAdminService {
       isDefault,
       startDate,
       endDate,
+      adminId,
+      requestInfo,
     } = params;
 
     try {
@@ -65,6 +72,35 @@ export class FindCodesAdminService {
         startDate: startDate ? new Date(startDate) : undefined,
         endDate: endDate ? new Date(endDate) : undefined,
       });
+
+      // Audit Log 기록 (관리자가 코드 목록 조회)
+      if (requestInfo && adminId) {
+        const serializableFilters = {
+          userId,
+          code,
+          isActive,
+          isDefault,
+          startDate,
+          endDate,
+        };
+        await this.dispatchLogService.dispatch(
+          {
+            type: LogType.ACTIVITY,
+            data: {
+              userId: adminId.toString(),
+              category: 'AFFILIATE',
+              action: 'ADMIN_AFFILIATE_CODE_LIST_VIEW',
+              metadata: {
+                filters: serializableFilters,
+                total: result.total,
+                page,
+                limit,
+              },
+            },
+          },
+          requestInfo,
+        );
+      }
 
       return {
         data: result.codes,

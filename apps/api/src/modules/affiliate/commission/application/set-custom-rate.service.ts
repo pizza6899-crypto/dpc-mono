@@ -9,11 +9,10 @@ import {
 import { AFFILIATE_TIER_REPOSITORY } from '../ports/out/affiliate-tier.repository.token';
 import type { AffiliateTierRepositoryPort } from '../ports/out/affiliate-tier.repository.port';
 import { IdUtil } from 'src/utils/id.util';
-import { ACTIVITY_LOG } from 'src/common/activity-log/activity-log.token';
-import type { ActivityLogPort } from 'src/common/activity-log/activity-log.port';
-import { ActivityType } from 'src/common/activity-log/activity-log.types';
 import type { RequestClientInfo } from 'src/common/http/types/client-info.types';
 import { Transactional } from '@nestjs-cls/transactional';
+import { DispatchLogService } from 'src/modules/audit-log/application/dispatch-log.service';
+import { LogType } from 'src/modules/audit-log/domain';
 
 interface SetCustomRateParams {
   affiliateId: bigint;
@@ -30,8 +29,7 @@ export class SetCustomRateService {
     @Inject(AFFILIATE_TIER_REPOSITORY)
     private readonly repository: AffiliateTierRepositoryPort,
     private readonly policy: CommissionPolicy,
-    @Inject(ACTIVITY_LOG)
-    private readonly activityLog: ActivityLogPort,
+    private readonly dispatchLogService: DispatchLogService,
   ) {}
 
   @Transactional()
@@ -76,21 +74,23 @@ export class SetCustomRateService {
       // 엔티티를 변경한 후 upsert()를 사용하는 것이 더 일관성 있는 패턴
       const updatedTier = await this.repository.upsert(tier);
 
-      // Activity Log 기록 (성공)
+      // Audit Log 기록 (성공)
       if (requestInfo) {
-        await this.activityLog.logSuccess(
+        await this.dispatchLogService.dispatch(
           {
-            userId: setBy, // 관리자 ID (액션을 수행한 사용자)
-            isAdmin: true,
-            activityType: ActivityType.COMMISSION_RATE_SET,
-            description: `커미션 수동 요율 설정 완료 - 요율: ${customRate.toString()} (${customRate.mul(10000).toFixed(0)}), 설정자: ${setBy}`,
-            metadata: {
-              affiliateId, // 대상 어필리에이트 유저 ID
-              customRate: customRate.toString(),
-              previousCustomRate: previousCustomRate?.toString() || null,
-              wasCustomRate,
-              tier: updatedTier.tier,
-              baseRate: updatedTier.baseRate.toString(),
+            type: LogType.ACTIVITY,
+            data: {
+              userId: setBy.toString(), // 관리자 ID (액션을 수행한 사용자)
+              category: 'AFFILIATE',
+              action: 'COMMISSION_RATE_SET',
+              metadata: {
+                affiliateId: affiliateId.toString(), // 대상 어필리에이트 유저 ID
+                customRate: customRate.toString(),
+                previousCustomRate: previousCustomRate?.toString() || null,
+                wasCustomRate,
+                tier: updatedTier.tier,
+                baseRate: updatedTier.baseRate.toString(),
+              },
             },
           },
           requestInfo,
@@ -99,18 +99,20 @@ export class SetCustomRateService {
 
       return updatedTier;
     } catch (error) {
-      // Activity Log 기록 (실패)
+      // Audit Log 기록 (실패)
       if (requestInfo) {
-        await this.activityLog.logFailure(
+        await this.dispatchLogService.dispatch(
           {
-            userId: setBy, // 관리자 ID (액션을 수행한 사용자)
-            isAdmin: true,
-            activityType: ActivityType.COMMISSION_RATE_SET,
-            description: `커미션 수동 요율 설정 실패 - 요율: ${customRate.toString()}`,
-            metadata: {
-              affiliateId, // 대상 어필리에이트 유저 ID
-              customRate: customRate.toString(),
-              error: error instanceof Error ? error.message : String(error),
+            type: LogType.ACTIVITY,
+            data: {
+              userId: setBy.toString(), // 관리자 ID (액션을 수행한 사용자)
+              category: 'AFFILIATE',
+              action: 'COMMISSION_RATE_SET',
+              metadata: {
+                affiliateId: affiliateId.toString(), // 대상 어필리에이트 유저 ID
+                customRate: customRate.toString(),
+                error: error instanceof Error ? error.message : String(error),
+              },
             },
           },
           requestInfo,

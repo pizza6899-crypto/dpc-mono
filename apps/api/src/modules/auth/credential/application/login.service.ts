@@ -1,12 +1,9 @@
-import { Injectable, Inject, Logger } from '@nestjs/common';
+import { Injectable, Logger } from '@nestjs/common';
 import { Transactional } from '@nestjs-cls/transactional';
 import { RecordLoginAttemptService } from './record-login-attempt.service';
 import { LoginAttemptResult } from '../domain';
 import type { AuthenticatedUser } from 'src/common/auth/types/auth.types';
 import type { RequestClientInfo } from 'src/common/http/types/client-info.types';
-import { ACTIVITY_LOG } from 'src/common/activity-log/activity-log.token';
-import type { ActivityLogPort } from 'src/common/activity-log/activity-log.port';
-import { ActivityType } from 'src/common/activity-log/activity-log.types';
 import { DispatchLogService } from 'src/modules/audit-log/application/dispatch-log.service';
 import { LogType } from 'src/modules/audit-log/domain';
 import { CreateSessionService } from '../../session/application/create-session.service';
@@ -31,7 +28,6 @@ export class LoginService {
 
   constructor(
     private readonly recordService: RecordLoginAttemptService,
-    @Inject(ACTIVITY_LOG) private readonly activityLog: ActivityLogPort,
     private readonly dispatchLogService: DispatchLogService,
     private readonly createSessionService: CreateSessionService,
     private readonly envService: EnvService,
@@ -82,31 +78,7 @@ export class LoginService {
       expiresAt,
     });
 
-    // 3. 액티비티 로그 기록 (기존 플랫폼 기능 유지)
-    // 주의: ActivityLogAdapter가 내부에서 에러를 조용히 처리하므로
-    // 트랜잭션 롤백이 되지 않을 수 있습니다.
-    // 액티비티 로그는 부가 기능이므로 실패해도 로그인은 성공 처리됩니다.
-    try {
-      await this.activityLog.logSuccess(
-        {
-          userId: user.id,
-          activityType: isAdmin
-            ? ActivityType.ADMIN_LOGIN
-            : ActivityType.USER_LOGIN,
-          description: `${isAdmin ? 'Admin' : 'User'} logged in successfully`,
-        },
-        clientInfo,
-      );
-    } catch (error) {
-      // 액티비티 로그 실패는 로그인 성공에 영향을 주지 않도록 처리
-      // 하지만 에러는 로깅하여 모니터링 가능하도록 함
-      this.logger.error(
-        error,
-        `Activity log 기록 실패 (로그인은 성공) - userId: ${user.id}, isAdmin: ${isAdmin}`,
-      );
-    }
-
-    // 4. Audit 로그 기록 (보안 로그)
+    // 3. Audit 로그 기록 (보안 로그)
     try {
       await this.dispatchLogService.dispatch(
         {
@@ -129,7 +101,7 @@ export class LoginService {
       // Audit 로그 실패는 로그인 성공에 영향을 주지 않도록 처리
       this.logger.error(
         error,
-        `Audit log 기록 실패 (로그인은 성공) - userId: ${user.id}`,
+        `Audit log 기록 실패 (로그인은 성공) - userId: ${user.id}, isAdmin: ${isAdmin}`,
       );
     }
   }

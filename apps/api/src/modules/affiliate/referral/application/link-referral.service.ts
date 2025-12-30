@@ -10,9 +10,8 @@ import {
   ReferralCodeNotFoundException,
 } from '../domain/referral.exception';
 import type { RequestClientInfo } from 'src/common/http/types/client-info.types';
-import { ACTIVITY_LOG } from 'src/common/activity-log/activity-log.token';
-import type { ActivityLogPort } from 'src/common/activity-log/activity-log.port';
-import { ActivityType } from 'src/common/activity-log/activity-log.types';
+import { DispatchLogService } from 'src/modules/audit-log/application/dispatch-log.service';
+import { LogType } from 'src/modules/audit-log/domain';
 
 interface LinkReferralParams {
   subUserId: bigint; // 피추천인 (가입하는 사용자)
@@ -30,8 +29,7 @@ export class LinkReferralService {
     private readonly repository: ReferralRepositoryPort,
     private readonly findCodeByCodeService: FindCodeByCodeService,
     private readonly policy: ReferralPolicy,
-    @Inject(ACTIVITY_LOG)
-    private readonly activityLog: ActivityLogPort,
+    private readonly dispatchLogService: DispatchLogService,
   ) {}
 
   @Transactional()
@@ -70,19 +68,22 @@ export class LinkReferralService {
       userAgent,
     });
 
-    // 5. Activity Log 기록 (피추천인 관점에서 기록)
+    // 5. Audit Log 기록 (피추천인 관점에서 기록)
     if (requestInfo) {
-      await this.activityLog.logSuccess(
+      await this.dispatchLogService.dispatch(
         {
-          userId: subUserId,
-          activityType: ActivityType.REFERRAL_LINKED,
-          description: `레퍼럴 관계 생성 완료 - 추천인: ${code.userId}, 레퍼럴 코드: ${referralCode}`,
-          metadata: {
-            referralId: referral.id,
-            affiliateId: code.userId,
-            referralCode: referralCode,
-            codeId: code.id,
-            codeCampaignName: code.campaignName || null,
+          type: LogType.ACTIVITY,
+          data: {
+            userId: subUserId.toString(),
+            category: 'AFFILIATE',
+            action: 'REFERRAL_LINKED',
+            metadata: {
+              referralId: referral.id,
+              affiliateId: code.userId.toString(),
+              referralCode: referralCode,
+              codeId: code.id,
+              codeCampaignName: code.campaignName || null,
+            },
           },
         },
         requestInfo,

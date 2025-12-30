@@ -6,7 +6,10 @@ import {
 } from '../ports/out';
 import { UserSession } from '../domain';
 import { SessionTrackerService } from '../infrastructure/session-tracker.service';
-import { SessionNotFoundException, SessionOwnershipException } from '../domain/exception';
+import { SessionNotFoundException } from '../domain/exception';
+import { DispatchLogService } from 'src/modules/audit-log/application/dispatch-log.service';
+import { LogType } from 'src/modules/audit-log/domain';
+import type { RequestClientInfo } from 'src/common/http/types/client-info.types';
 
 export interface RevokeSessionParams {
   sessionId: string;
@@ -15,6 +18,10 @@ export interface RevokeSessionParams {
    * revokedBy 필드에 기록됨
    */
   revokedBy: bigint;
+  /**
+   * 요청자 정보 (옵셔널, audit 로그용)
+   */
+  requestInfo?: RequestClientInfo;
 }
 
 /**
@@ -33,11 +40,12 @@ export class RevokeSessionService {
     @Inject(USER_SESSION_REPOSITORY)
     private readonly repository: UserSessionRepositoryPort,
     private readonly sessionTracker: SessionTrackerService,
+    private readonly dispatchLogService: DispatchLogService,
   ) {}
 
   @Transactional()
   async execute(params: RevokeSessionParams): Promise<UserSession> {
-    const { sessionId, revokedBy } = params;
+    const { sessionId, revokedBy, requestInfo } = params;
 
     // 1. 입력 검증
     if (!sessionId || typeof sessionId !== 'string' || sessionId.trim().length === 0) {
@@ -81,6 +89,36 @@ export class RevokeSessionService {
     this.logger.log(
       `세션 종료 처리 완료: sessionId=${sessionId}, userId=${session.userId}, type=${session.type}, revokedBy=${revokedBy}`,
     );
+
+    // 6. Audit 로그 기록 (보안 로그)
+    try {
+      await this.dispatchLogService.dispatch(
+        {
+          type: LogType.AUTH,
+          data: {
+            userId: revokedBy.toString(),
+            sessionId: sessionId,
+            action: 'ADMIN_SESSION_REVOKE',
+            status: 'SUCCESS',
+            ip: requestInfo?.ip,
+            userAgent: requestInfo?.userAgent,
+            metadata: {
+              targetUserId: session.userId.toString(),
+              targetSessionId: sessionId,
+              sessionType: session.type,
+              isAdmin: session.isAdmin,
+            },
+          },
+        },
+        requestInfo,
+      );
+    } catch (error) {
+      // Audit 로그 실패는 세션 종료 성공에 영향을 주지 않도록 처리
+      this.logger.error(
+        error,
+        `Audit log 기록 실패 (세션 종료는 성공) - sessionId: ${sessionId}, revokedBy: ${revokedBy}`,
+      );
+    }
 
     return revokedSession;
   }

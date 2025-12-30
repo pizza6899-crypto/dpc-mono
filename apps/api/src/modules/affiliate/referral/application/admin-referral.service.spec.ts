@@ -4,9 +4,8 @@ import { Test } from '@nestjs/testing';
 import { AdminReferralService } from './admin-referral.service';
 import { PrismaService } from 'src/infrastructure/prisma/prisma.service';
 import { ReferralMapper } from '../infrastructure/referral.mapper';
-import { ACTIVITY_LOG } from 'src/common/activity-log/activity-log.token';
-import type { ActivityLogPort } from 'src/common/activity-log/activity-log.port';
-import { ActivityType } from 'src/common/activity-log/activity-log.types';
+import { DispatchLogService } from 'src/modules/audit-log/application/dispatch-log.service';
+import { LogType } from 'src/modules/audit-log/domain';
 import { ReferralNotFoundException } from '../domain/referral.exception';
 import type { RequestClientInfo } from 'src/common/http/types/client-info.types';
 import type { GetReferralsQueryDto } from '../controllers/dto/request/get-referrals-query.dto';
@@ -19,7 +18,7 @@ describe('AdminReferralService', () => {
     count: jest.Mock;
   };
   let mockMapper: jest.Mocked<ReferralMapper>;
-  let mockActivityLog: jest.Mocked<ActivityLogPort>;
+  let mockDispatchLogService: jest.Mocked<DispatchLogService>;
 
   const adminId = BigInt(123);
   const referralId = 'referral-123';
@@ -105,12 +104,10 @@ describe('AdminReferralService', () => {
       },
     };
 
-    const mockActivityLogProvider = {
-      provide: ACTIVITY_LOG,
+    const mockDispatchLogServiceProvider = {
+      provide: DispatchLogService,
       useValue: {
-        log: jest.fn(),
-        logSuccess: jest.fn(),
-        logFailure: jest.fn(),
+        dispatch: jest.fn().mockResolvedValue(undefined),
       },
     };
 
@@ -119,13 +116,15 @@ describe('AdminReferralService', () => {
         AdminReferralService,
         mockPrismaServiceProvider,
         mockMapperProvider,
-        mockActivityLogProvider,
+        mockDispatchLogServiceProvider,
       ],
     }).compile();
 
     service = module.get<AdminReferralService>(AdminReferralService);
     mockMapper = module.get(ReferralMapper);
-    mockActivityLog = module.get(ACTIVITY_LOG);
+    mockDispatchLogService = module.get(
+      DispatchLogService,
+    ) as jest.Mocked<DispatchLogService>;
 
     jest.clearAllMocks();
   });
@@ -199,19 +198,19 @@ describe('AdminReferralService', () => {
         },
       });
 
-      expect(mockActivityLog.logSuccess).toHaveBeenCalledWith(
+      expect(mockDispatchLogService.dispatch).toHaveBeenCalledWith(
         {
-          userId: adminId,
-          isAdmin: true,
-          activityType: ActivityType.ADMIN_AFFILIATE_LINK_LIST_VIEW,
-          description: expect.stringContaining(
-            '관리자가 레퍼럴 목록을 조회했습니다',
-          ),
-          metadata: {
-            filters: {},
-            total: 1,
-            page: 1,
-            limit: 20,
+          type: LogType.ACTIVITY,
+          data: {
+            userId: adminId.toString(),
+            category: 'AFFILIATE',
+            action: 'ADMIN_REFERRAL_LIST_VIEW',
+            metadata: {
+              filters: {},
+              total: 1,
+              page: 1,
+              limit: 20,
+            },
           },
         },
         mockRequestInfo,
@@ -490,16 +489,16 @@ describe('AdminReferralService', () => {
         },
       });
 
-      expect(mockActivityLog.logSuccess).toHaveBeenCalledWith(
+      expect(mockDispatchLogService.dispatch).toHaveBeenCalledWith(
         {
-          userId: adminId,
-          isAdmin: true,
-          activityType: ActivityType.ADMIN_AFFILIATE_LINK_LIST_VIEW,
-          description: expect.stringContaining(
-            '관리자가 레퍼럴 상세를 조회했습니다',
-          ),
-          metadata: {
-            referralId,
+          type: LogType.ACTIVITY,
+          data: {
+            userId: adminId.toString(),
+            category: 'AFFILIATE',
+            action: 'ADMIN_REFERRAL_DETAIL_VIEW',
+            metadata: {
+              referralId,
+            },
           },
         },
         mockRequestInfo,
@@ -513,7 +512,7 @@ describe('AdminReferralService', () => {
         service.getReferralById(referralId, adminId, mockRequestInfo),
       ).rejects.toThrow(ReferralNotFoundException);
 
-      expect(mockActivityLog.logSuccess).not.toHaveBeenCalled();
+      expect(mockDispatchLogService.dispatch).not.toHaveBeenCalled();
     });
 
     it('should handle referral with null email', async () => {

@@ -1,21 +1,16 @@
 import {
   Injectable,
   Logger,
-  Inject,
 } from '@nestjs/common';
 import { PrismaService } from 'src/infrastructure/prisma/prisma.service';
 import { NowPaymentApiService } from '../infrastructure/now-payment-api.service';
 import { ConcurrencyService } from 'src/common/concurrency/concurrency.service';
-import type { ActivityLogPort } from 'src/common/activity-log/activity-log.port';
-import { ACTIVITY_LOG } from 'src/common/activity-log/activity-log.token';
 
 @Injectable()
 export class WithdrawService {
   private readonly logger = new Logger(WithdrawService.name);
 
   constructor(
-    @Inject(ACTIVITY_LOG)
-    private readonly activityLog: ActivityLogPort,
     private readonly prismaService: PrismaService,
     private readonly nowPaymentApiService: NowPaymentApiService,
     private readonly concurrencyService: ConcurrencyService,

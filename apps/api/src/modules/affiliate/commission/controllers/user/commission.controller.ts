@@ -61,6 +61,7 @@ export class AffiliateCommissionController {
   async getCommissions(
     @CurrentUser() user: CurrentUserWithSession,
     @Query() query: FindCommissionsQueryDto,
+    @RequestClientInfoParam() requestInfo: RequestClientInfo,
   ): Promise<CommissionResponseDto[]> {
     const {
       page = 1,
@@ -82,6 +83,7 @@ export class AffiliateCommissionController {
         limit,
         offset,
       },
+      requestInfo,
     });
 
     return commissions.map((commission) =>
@@ -104,9 +106,12 @@ export class AffiliateCommissionController {
   async getCommissionByUid(
     @CurrentUser() user: CurrentUserWithSession,
     @Param('uid') uid: string,
+    @RequestClientInfoParam() requestInfo: RequestClientInfo,
   ): Promise<CommissionResponseDto> {
     const commission = await this.findCommissionByIdService.execute({
       uid,
+      affiliateId: user.id,
+      requestInfo,
     });
 
     if (!commission) {
@@ -136,10 +141,12 @@ export class AffiliateCommissionController {
   async getWalletBalance(
     @CurrentUser() user: CurrentUserWithSession,
     @Query('currency') currency?: string,
+    @RequestClientInfoParam() requestInfo?: RequestClientInfo,
   ): Promise<WalletBalanceResponseDto> {
     const wallets = await this.getWalletBalanceService.execute({
       affiliateId: user.id,
       currency: currency as any,
+      requestInfo,
     });
 
     const walletArray = Array.isArray(wallets) ? wallets : [wallets];
@@ -169,9 +176,11 @@ export class AffiliateCommissionController {
   })
   async getCommissionRate(
     @CurrentUser() user: CurrentUserWithSession,
+    @RequestClientInfoParam() requestInfo: RequestClientInfo,
   ): Promise<CommissionRateResponseDto> {
     const rate = await this.getCommissionRateService.execute({
       affiliateId: user.id,
+      requestInfo,
     });
 
     return {

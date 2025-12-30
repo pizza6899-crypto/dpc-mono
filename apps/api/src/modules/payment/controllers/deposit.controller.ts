@@ -22,8 +22,6 @@ import { CreateDepositResponseDto } from '../dtos/create-deposit-response.dto';
 import { CreateDepositRequestDto } from '../dtos/create-deposit-request.dto';
 import { CurrentUser } from 'src/common/auth/decorators/current-user.decorator';
 import type { CurrentUserWithSession } from 'src/common/auth/decorators/current-user.decorator';
-import type { ActivityLogPort } from 'src/common/activity-log/activity-log.port';
-import { ACTIVITY_LOG } from 'src/common/activity-log/activity-log.token';
 import { Inject } from '@nestjs/common';
 import { RequestClientInfoParam } from 'src/common/auth/decorators/request-info.decorator';
 import type { RequestClientInfo } from 'src/common/http/types';
@@ -34,8 +32,6 @@ import type { RequestClientInfo } from 'src/common/http/types';
 export class DepositController {
   constructor(
     private readonly depositService: DepositService,
-    @Inject(ACTIVITY_LOG)
-    private readonly activityLog: ActivityLogPort,
   ) {}
 
   @Post()

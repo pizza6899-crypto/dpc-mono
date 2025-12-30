@@ -1,7 +1,7 @@
 // src/modules/affiliate/referral/referral.module.ts
 import { Module } from '@nestjs/common';
 import { AffiliateCodeModule } from '../code/code.module';
-import { ActivityLogModule } from 'src/common/activity-log/activity-log.module';
+import { AuditLogModule } from 'src/modules/audit-log/audit-log.module';
 import { PrismaModule } from 'src/infrastructure/prisma/prisma.module';
 import { ReferralPolicy } from './domain';
 import { LinkReferralService } from './application/link-referral.service';
@@ -18,7 +18,7 @@ import { AdminReferralController } from './controllers/admin-referral.controller
   imports: [
     PrismaModule, // PrismaService를 위해 필요
     AffiliateCodeModule, // 레퍼럴 코드 조회를 위해 필요
-    ActivityLogModule, // Activity Log를 위해 필요
+    AuditLogModule, // Audit Log를 위해 필요
   ],
   providers: [
     // Domain Policy

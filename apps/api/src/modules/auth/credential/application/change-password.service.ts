@@ -2,9 +2,6 @@ import { Injectable, Inject, Logger, HttpStatus } from '@nestjs/common';
 import { Transactional } from '@nestjs-cls/transactional';
 import { VerifyCredentialService } from './verify-credential.service';
 import { hashPassword } from 'src/utils/password.util';
-import { ACTIVITY_LOG } from 'src/common/activity-log/activity-log.token';
-import type { ActivityLogPort } from 'src/common/activity-log/activity-log.port';
-import { ActivityType } from 'src/common/activity-log/activity-log.types';
 import type { RequestClientInfo } from 'src/common/http/types/client-info.types';
 import { ApiException } from 'src/common/http/exception/api.exception';
 import { MessageCode } from 'src/common/http/types';
@@ -34,8 +31,6 @@ export class ChangePasswordService {
     private readonly verifyService: VerifyCredentialService,
     @Inject(USER_REPOSITORY)
     private readonly userRepository: UserRepositoryPort,
-    @Inject(ACTIVITY_LOG)
-    private readonly activityLog: ActivityLogPort,
     private readonly dispatchLogService: DispatchLogService,
   ) {}
 
@@ -116,28 +111,7 @@ export class ChangePasswordService {
     // 5. 비밀번호 업데이트
     await this.userRepository.updatePassword(userId, newPasswordHash);
 
-    // 6. Activity Log 기록
-    try {
-      await this.activityLog.logSuccess(
-        {
-          userId,
-          activityType: ActivityType.PASSWORD_CHANGE,
-          description: `비밀번호 변경 완료`,
-          metadata: {
-            isAdmin,
-          },
-        },
-        requestInfo,
-      );
-    } catch (error) {
-      // Activity Log 실패는 비밀번호 변경 성공에 영향을 주지 않도록 처리
-      this.logger.error(
-        error,
-        `Activity log 기록 실패 (비밀번호 변경은 성공) - userId: ${userId}`,
-      );
-    }
-
-    // 7. Audit 로그 기록 (보안 로그)
+    // 6. Audit 로그 기록 (보안 로그)
     try {
       await this.dispatchLogService.dispatch(
         {

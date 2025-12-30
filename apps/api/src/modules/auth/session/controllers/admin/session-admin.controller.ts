@@ -28,6 +28,8 @@ import {
   RevokeSessionResponseDto,
   RevokeUserSessionsResponseDto,
 } from './dto/response/revoke-session.response.dto';
+import { RequestClientInfoParam } from 'src/common/auth/decorators/request-info.decorator';
+import type { RequestClientInfo } from 'src/common/http/types/client-info.types';
 
 @Controller('admin/sessions')
 @ApiTags('Admin Sessions (관리자 세션 관리)')
@@ -57,6 +59,8 @@ export class SessionAdminController {
   })
   async listSessions(
     @Query() query: ListSessionsQueryDto,
+    @CurrentUser() admin: CurrentUserWithSession,
+    @RequestClientInfoParam() requestInfo: RequestClientInfo,
   ): Promise<PaginatedData<SessionListItemDto>> {
     const result = await this.listSessionsService.execute({
       page: query.page,
@@ -69,6 +73,8 @@ export class SessionAdminController {
       activeOnly: query.activeOnly,
       startDate: query.startDate,
       endDate: query.endDate,
+      requestInfo,
+      adminUserId: admin.id,
     });
 
     return {
@@ -96,10 +102,12 @@ export class SessionAdminController {
   async revokeSession(
     @Param('sessionId') sessionId: string,
     @CurrentUser() admin: CurrentUserWithSession,
+    @RequestClientInfoParam() requestInfo: RequestClientInfo,
   ): Promise<RevokeSessionResponseDto> {
     const revokedSession = await this.revokeSessionService.execute({
       sessionId,
       revokedBy: admin.id,
+      requestInfo,
     });
 
     return {
@@ -127,10 +135,12 @@ export class SessionAdminController {
   async revokeUserSessions(
     @Param('userId') userId: string,
     @CurrentUser() admin: CurrentUserWithSession,
+    @RequestClientInfoParam() requestInfo: RequestClientInfo,
   ): Promise<RevokeUserSessionsResponseDto> {
     const result = await this.expireUserSessionsService.execute({
       userId: BigInt(userId),
       revokedBy: admin.id,
+      requestInfo,
     });
 
     return {

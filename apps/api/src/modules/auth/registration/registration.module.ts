@@ -7,7 +7,7 @@ import { RegisterSocialService } from './application/register-social.service';
 import { VipModule } from '../../vip/vip.module';
 import { AffiliateReferralModule } from '../../affiliate/referral/referral.module';
 import { AffiliateCodeModule } from '../../affiliate/code/code.module';
-import { ActivityLogModule } from 'src/common/activity-log/activity-log.module';
+import { AuditLogModule } from 'src/modules/audit-log/audit-log.module';
 import { PrismaModule } from 'src/infrastructure/prisma/prisma.module';
 import { EnvModule } from 'src/common/env/env.module';
 import { UserModule } from '../../user/user.module';
@@ -19,7 +19,7 @@ import { UserModule } from '../../user/user.module';
     VipModule,
     AffiliateReferralModule,
     AffiliateCodeModule, // 레퍼럴 코드 사전 검증을 위해 필요
-    ActivityLogModule,
+    AuditLogModule,
     UserModule, // user 모듈의 CreateUserService 사용을 위해 추가
   ],
   controllers: [RegistrationController, RegistrationAdminController],

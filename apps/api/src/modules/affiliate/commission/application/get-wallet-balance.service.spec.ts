@@ -8,11 +8,13 @@ import type { AffiliateWalletRepositoryPort } from '../ports/out/affiliate-walle
 import { AffiliateWallet } from '../domain';
 import { PrismaModule } from 'src/infrastructure/prisma/prisma.module';
 import { EnvModule } from 'src/common/env/env.module';
+import { DispatchLogService } from 'src/modules/audit-log/application/dispatch-log.service';
 
 describe('GetWalletBalanceService', () => {
   let module: TestingModule;
   let service: GetWalletBalanceService;
   let mockRepository: jest.Mocked<AffiliateWalletRepositoryPort>;
+  let mockDispatchLogService: jest.Mocked<DispatchLogService>;
 
   const mockAffiliateId = BigInt(123);
   const mockCurrency = ExchangeCurrencyCode.USD;
@@ -52,6 +54,13 @@ describe('GetWalletBalanceService', () => {
       updateBalance: jest.fn(),
     };
 
+    const mockDispatchLogServiceProvider = {
+      provide: DispatchLogService,
+      useValue: {
+        dispatch: jest.fn().mockResolvedValue(undefined),
+      },
+    };
+
     module = await Test.createTestingModule({
       imports: [PrismaModule, EnvModule], // TransactionHost를 위해 필요
       providers: [
@@ -60,11 +69,15 @@ describe('GetWalletBalanceService', () => {
           provide: AFFILIATE_WALLET_REPOSITORY,
           useValue: mockRepository,
         },
+        mockDispatchLogServiceProvider,
       ],
     }).compile();
 
     service = module.get<GetWalletBalanceService>(GetWalletBalanceService);
     mockRepository = module.get(AFFILIATE_WALLET_REPOSITORY);
+    mockDispatchLogService = module.get(
+      DispatchLogService,
+    ) as jest.Mocked<DispatchLogService>;
 
     jest.clearAllMocks();
   });

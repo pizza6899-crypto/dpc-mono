@@ -16,11 +16,13 @@ import {
 } from '../domain';
 import { PrismaModule } from 'src/infrastructure/prisma/prisma.module';
 import { EnvModule } from 'src/common/env/env.module';
+import { DispatchLogService } from 'src/modules/audit-log/application/dispatch-log.service';
 
 describe('ExpireSessionsBatchService', () => {
   let service: ExpireSessionsBatchService;
   let repository: jest.Mocked<UserSessionRepositoryPort>;
   let sessionTracker: jest.Mocked<SessionTrackerService>;
+  let dispatchLogService: jest.Mocked<DispatchLogService>;
   let module: TestingModule;
 
   const mockUserId = BigInt(123);
@@ -54,6 +56,10 @@ describe('ExpireSessionsBatchService', () => {
       setWebSocketServer: jest.fn(),
     } as any;
 
+    const mockDispatchLogService: jest.Mocked<DispatchLogService> = {
+      dispatch: jest.fn().mockResolvedValue(undefined),
+    } as any;
+
     module = await Test.createTestingModule({
       imports: [PrismaModule, EnvModule], // @Transactional() 데코레이터를 위해 필요
       providers: [
@@ -66,6 +72,10 @@ describe('ExpireSessionsBatchService', () => {
           provide: SessionTrackerService,
           useValue: mockSessionTracker,
         },
+        {
+          provide: DispatchLogService,
+          useValue: mockDispatchLogService,
+        },
       ],
     })
       .setLogger(new Logger())
@@ -76,6 +86,7 @@ describe('ExpireSessionsBatchService', () => {
     );
     repository = module.get(USER_SESSION_REPOSITORY);
     sessionTracker = module.get(SessionTrackerService);
+    dispatchLogService = module.get(DispatchLogService);
 
     jest.clearAllMocks();
   });

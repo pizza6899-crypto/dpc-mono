@@ -13,9 +13,6 @@ import {
   PromotionResponseDto,
   UserPromotionResponseDto,
 } from '../dtos/promotion.dto';
-import { ActivityType } from 'src/common/activity-log/activity-log.types';
-import { ACTIVITY_LOG } from 'src/common/activity-log/activity-log.token';
-import type { ActivityLogPort } from 'src/common/activity-log/activity-log.port';
 
 @ApiTags('Promotion (프로모션)')
 @Controller('promotions')
@@ -23,8 +20,6 @@ import type { ActivityLogPort } from 'src/common/activity-log/activity-log.port'
 export class PromotionController {
   constructor(
     private readonly promotionService: PromotionService,
-    @Inject(ACTIVITY_LOG)
-    private readonly activityLog: ActivityLogPort,
   ) {}
 
   @Get('active')
@@ -48,22 +43,6 @@ export class PromotionController {
       user.id,
       language || 'ko',
     );
-
-    // 로그 기록
-    if (requestInfo) {
-      await this.activityLog.logSuccess(
-        {
-          userId: user.id,
-          activityType: ActivityType.PROMOTION_VIEW,
-          description: `활성 프로모션 조회 - ${promotions.length}개`,
-          metadata: {
-            language: language || 'ko',
-            count: promotions.length,
-          },
-        },
-        requestInfo,
-      );
-    }
 
     return promotions;
   }
@@ -89,22 +68,6 @@ export class PromotionController {
       language || 'ko',
     );
 
-    // 로그 기록
-    if (requestInfo) {
-      await this.activityLog.logSuccess(
-        {
-          userId: user.id,
-          activityType: ActivityType.PROMOTION_DETAIL_VIEW,
-          description: `프로모션 상세 조회 - ID: ${id}`,
-          metadata: {
-            promotionId: parseInt(id),
-            language: language || 'ko',
-          },
-        },
-        requestInfo,
-      );
-    }
-
     return promotion;
   }
 
@@ -125,21 +88,6 @@ export class PromotionController {
     @RequestClientInfoParam() requestInfo?: RequestClientInfo,
   ): Promise<UserPromotionResponseDto[]> {
     const history = await this.promotionService.getUserPromotions(user.id);
-
-    // 로그 기록
-    if (requestInfo) {
-      await this.activityLog.logSuccess(
-        {
-          userId: user.id,
-          activityType: ActivityType.PROMOTION_HISTORY_VIEW,
-          description: `프로모션 이력 조회 - ${history.length}개`,
-          metadata: {
-            count: history.length,
-          },
-        },
-        requestInfo,
-      );
-    }
 
     return history;
   }

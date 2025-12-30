@@ -5,9 +5,13 @@ import { AffiliateTier, CommissionPolicy } from '../domain';
 import { AFFILIATE_TIER_REPOSITORY } from '../ports/out/affiliate-tier.repository.token';
 import type { AffiliateTierRepositoryPort } from '../ports/out/affiliate-tier.repository.port';
 import { IdUtil } from 'src/utils/id.util';
+import type { RequestClientInfo } from 'src/common/http/types/client-info.types';
+import { DispatchLogService } from 'src/modules/audit-log/application/dispatch-log.service';
+import { LogType } from 'src/modules/audit-log/domain';
 
 interface GetCommissionRateParams {
   affiliateId: bigint;
+  requestInfo?: RequestClientInfo;
 }
 
 interface CommissionRateResult {
@@ -26,10 +30,12 @@ export class GetCommissionRateService {
     @Inject(AFFILIATE_TIER_REPOSITORY)
     private readonly repository: AffiliateTierRepositoryPort,
     private readonly policy: CommissionPolicy,
+    private readonly dispatchLogService: DispatchLogService,
   ) {}
 
   async execute({
     affiliateId,
+    requestInfo,
   }: GetCommissionRateParams): Promise<CommissionRateResult> {
     try {
       // 티어 조회 (없으면 기본 티어로 생성)
@@ -49,13 +55,38 @@ export class GetCommissionRateService {
         tier = await this.repository.upsert(newTier);
       }
 
-      return {
+      const result = {
         tier: tier.tier,
         baseRate: tier.baseRate,
         customRate: tier.customRate,
         isCustomRate: tier.isCustomRate,
         effectiveRate: tier.getEffectiveRate(),
       };
+
+      // Audit Log 기록 (사용자가 커미션 요율 조회)
+      if (requestInfo) {
+        await this.dispatchLogService.dispatch(
+          {
+            type: LogType.ACTIVITY,
+            data: {
+              userId: affiliateId.toString(),
+              category: 'AFFILIATE',
+              action: 'COMMISSION_RATE_VIEW',
+              metadata: {
+                affiliateId: affiliateId.toString(),
+                tier: tier.tier,
+                baseRate: tier.baseRate.toString(),
+                customRate: tier.customRate?.toString() || null,
+                isCustomRate: tier.isCustomRate,
+                effectiveRate: tier.getEffectiveRate().toString(),
+              },
+            },
+          },
+          requestInfo,
+        );
+      }
+
+      return result;
     } catch (error) {
       this.logger.error(
         `커미션 요율 조회 실패 - affiliateId: ${affiliateId}`,

@@ -6,7 +6,6 @@ import {
   Param,
   HttpCode,
   HttpStatus,
-  Inject,
 } from '@nestjs/common';
 import { ApiTags, ApiOperation } from '@nestjs/swagger';
 import { RequireRoles } from 'src/common/auth/decorators/roles.decorator';
@@ -24,9 +23,6 @@ import {
   UpsertPromotionTranslationDto,
   PromotionTranslationResponseDto,
 } from '../dtos/promotion-translation.dto';
-import { ActivityType } from 'src/common/activity-log/activity-log.types';
-import { ACTIVITY_LOG } from 'src/common/activity-log/activity-log.token';
-import type { ActivityLogPort } from 'src/common/activity-log/activity-log.port';
 
 @ApiTags('Promotion Translation Admin (프로모션 번역 관리)')
 @Controller('promotions/:promotionId/translations')
@@ -35,8 +31,6 @@ import type { ActivityLogPort } from 'src/common/activity-log/activity-log.port'
 export class PromotionTranslationAdminController {
   constructor(
     private readonly promotionTranslationService: PromotionTranslationService,
-    @Inject(ACTIVITY_LOG)
-    private readonly activityLog: ActivityLogPort,
   ) {}
 
   @Post()
@@ -66,37 +60,8 @@ export class PromotionTranslationAdminController {
           dto.description,
         );
 
-      // 성공 로그 기록
-      await this.activityLog.logSuccess(
-        {
-          userId: user.id,
-          activityType: ActivityType.PROMOTION_TRANSLATION_CREATE,
-          description: `프로모션 번역 생성/수정 - 프로모션 ID: ${promotionId}, 언어: ${dto.language}`,
-          metadata: {
-            promotionId: parseInt(promotionId),
-            language: dto.language,
-            name: dto.name,
-          },
-        },
-        requestInfo,
-      );
-
       return result;
     } catch (error) {
-      // 실패 로그 기록
-      await this.activityLog.logFailure(
-        {
-          userId: user.id,
-          activityType: ActivityType.PROMOTION_TRANSLATION_CREATE,
-          description: `프로모션 번역 생성/수정 실패 - 프로모션 ID: ${promotionId}, 언어: ${dto.language}`,
-          metadata: {
-            promotionId: parseInt(promotionId),
-            language: dto.language,
-            error: error.message,
-          },
-        },
-        requestInfo,
-      );
       throw error;
     }
   }
@@ -123,20 +88,6 @@ export class PromotionTranslationAdminController {
       await this.promotionTranslationService.getPromotionTranslations(
         parseInt(promotionId),
       );
-
-    // 로그 기록
-    await this.activityLog.logSuccess(
-      {
-        userId: user.id,
-        activityType: ActivityType.PROMOTION_TRANSLATION_VIEW,
-        description: `프로모션 번역 목록 조회 - 프로모션 ID: ${promotionId}`,
-        metadata: {
-          promotionId: parseInt(promotionId),
-          count: translations.length,
-        },
-      },
-      requestInfo,
-    );
 
     return translations;
   }

@@ -4,11 +4,10 @@ import { ExchangeCurrencyCode, Prisma } from '@repo/database';
 import { AffiliateWallet, CommissionException } from '../domain';
 import { AFFILIATE_WALLET_REPOSITORY } from '../ports/out/affiliate-wallet.repository.token';
 import type { AffiliateWalletRepositoryPort } from '../ports/out/affiliate-wallet.repository.port';
-import { ACTIVITY_LOG } from 'src/common/activity-log/activity-log.token';
-import type { ActivityLogPort } from 'src/common/activity-log/activity-log.port';
-import { ActivityType } from 'src/common/activity-log/activity-log.types';
 import type { RequestClientInfo } from 'src/common/http/types/client-info.types';
 import { Transactional } from '@nestjs-cls/transactional';
+import { DispatchLogService } from 'src/modules/audit-log/application/dispatch-log.service';
+import { LogType } from 'src/modules/audit-log/domain';
 
 interface WithdrawCommissionParams {
   affiliateId: bigint;
@@ -24,8 +23,7 @@ export class WithdrawCommissionService {
   constructor(
     @Inject(AFFILIATE_WALLET_REPOSITORY)
     private readonly walletRepository: AffiliateWalletRepositoryPort,
-    @Inject(ACTIVITY_LOG)
-    private readonly activityLog: ActivityLogPort,
+    private readonly dispatchLogService: DispatchLogService,
   ) {}
 
   @Transactional()
@@ -53,21 +51,24 @@ export class WithdrawCommissionService {
       // 3. 월렛 업데이트
       const updatedWallet = await this.walletRepository.upsert(wallet);
 
-      // 4. Activity Log 기록 (성공)
+      // 4. Audit Log 기록 (성공)
       if (requestInfo) {
-        await this.activityLog.logSuccess(
+        await this.dispatchLogService.dispatch(
           {
-            userId: affiliateId,
-            activityType: ActivityType.COMMISSION_WITHDRAW,
-            description: `커미션 출금 완료 - 통화: ${currency}, 금액: ${amount.toString()}, 출금 전 잔액: ${beforeBalance.toString()}, 출금 후 잔액: ${updatedWallet.availableBalance.toString()}`,
-            metadata: {
-              affiliateId,
-              currency,
-              amount: amount.toString(),
-              beforeBalance: beforeBalance.toString(),
-              afterBalance: updatedWallet.availableBalance.toString(),
-              pendingBalance: updatedWallet.pendingBalance.toString(),
-              totalEarned: updatedWallet.totalEarned.toString(),
+            type: LogType.ACTIVITY,
+            data: {
+              userId: affiliateId.toString(),
+              category: 'AFFILIATE',
+              action: 'COMMISSION_WITHDRAW',
+              metadata: {
+                affiliateId: affiliateId.toString(),
+                currency,
+                amount: amount.toString(),
+                beforeBalance: beforeBalance.toString(),
+                afterBalance: updatedWallet.availableBalance.toString(),
+                pendingBalance: updatedWallet.pendingBalance.toString(),
+                totalEarned: updatedWallet.totalEarned.toString(),
+              },
             },
           },
           requestInfo,
@@ -80,18 +81,21 @@ export class WithdrawCommissionService {
 
       return updatedWallet;
     } catch (error) {
-      // 5. Activity Log 기록 (실패)
+      // 5. Audit Log 기록 (실패)
       if (requestInfo) {
-        await this.activityLog.logFailure(
+        await this.dispatchLogService.dispatch(
           {
-            userId: affiliateId,
-            activityType: ActivityType.COMMISSION_WITHDRAW,
-            description: `커미션 출금 실패 - 통화: ${currency}, 금액: ${amount.toString()}`,
-            metadata: {
-              affiliateId,
-              currency,
-              amount: amount.toString(),
-              error: error instanceof Error ? error.message : String(error),
+            type: LogType.ACTIVITY,
+            data: {
+              userId: affiliateId.toString(),
+              category: 'AFFILIATE',
+              action: 'COMMISSION_WITHDRAW',
+              metadata: {
+                affiliateId: affiliateId.toString(),
+                currency,
+                amount: amount.toString(),
+                error: error instanceof Error ? error.message : String(error),
+              },
             },
           },
           requestInfo,

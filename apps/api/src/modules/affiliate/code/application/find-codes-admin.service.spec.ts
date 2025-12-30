@@ -7,11 +7,13 @@ import type { AffiliateCodeRepositoryPort } from '../ports/out/affiliate-code.re
 import { AffiliateCode } from '../domain';
 import { PrismaModule } from 'src/infrastructure/prisma/prisma.module';
 import { EnvModule } from 'src/common/env/env.module';
+import { DispatchLogService } from 'src/modules/audit-log/application/dispatch-log.service';
 
 describe('FindCodesAdminService', () => {
   let module: TestingModule;
   let service: FindCodesAdminService;
   let mockRepository: jest.Mocked<AffiliateCodeRepositoryPort>;
+  let mockDispatchLogService: jest.Mocked<DispatchLogService>;
 
   const mockUserId1 = BigInt(123);
   const mockUserId2 = BigInt(456);
@@ -60,6 +62,13 @@ describe('FindCodesAdminService', () => {
       findManyForAdmin: jest.fn(),
     };
 
+    const mockDispatchLogServiceProvider = {
+      provide: DispatchLogService,
+      useValue: {
+        dispatch: jest.fn().mockResolvedValue(undefined),
+      },
+    };
+
     module = await Test.createTestingModule({
       imports: [PrismaModule, EnvModule], // TransactionHost를 위해 필요
       providers: [
@@ -68,17 +77,21 @@ describe('FindCodesAdminService', () => {
           provide: AFFILIATE_CODE_REPOSITORY,
           useValue: mockRepository,
         },
+        mockDispatchLogServiceProvider,
       ],
     }).compile();
 
     service = module.get<FindCodesAdminService>(FindCodesAdminService);
     mockRepository = module.get(AFFILIATE_CODE_REPOSITORY);
+    mockDispatchLogService = module.get(DispatchLogService);
 
     jest.clearAllMocks();
   });
 
   afterEach(async () => {
-    await module.close();
+    if (module) {
+      await module.close();
+    }
   });
 
   describe('execute', () => {

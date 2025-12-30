@@ -71,8 +71,12 @@ export class AffiliateCodeController {
   })
   async getCodes(
     @CurrentUser() user: CurrentUserWithSession,
+    @RequestClientInfoParam() requestInfo: RequestClientInfo,
   ): Promise<GetCodesResponseDto> {
-    const result = await this.findCodesService.execute({ userId: user.id });
+    const result = await this.findCodesService.execute({
+      userId: user.id,
+      requestInfo,
+    });
     return {
       codes: result.codes.map((code) => this.toResponse(code)),
       total: result.total,
@@ -90,8 +94,12 @@ export class AffiliateCodeController {
   })
   async getDefaultCode(
     @CurrentUser() user: CurrentUserWithSession,
+    @RequestClientInfoParam() requestInfo: RequestClientInfo,
   ): Promise<AffiliateCodeResponseDto | null> {
-    const code = await this.findDefaultCodeService.execute({ userId: user.id });
+    const code = await this.findDefaultCodeService.execute({
+      userId: user.id,
+      requestInfo,
+    });
     return code ? this.toResponse(code) : null;
   }
 

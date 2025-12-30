@@ -15,7 +15,6 @@ import { CredentialUserMapper } from './infrastructure/credential-user.mapper';
 import { CredentialPolicy } from './domain/policy';
 import { VipModule } from '../../vip/vip.module';
 import { AffiliateReferralModule } from '../../affiliate/referral/referral.module';
-import { ActivityLogModule } from 'src/common/activity-log/activity-log.module';
 import { PassportModule } from '@nestjs/passport';
 import { UserModule } from '../../user/user.module';
 import { ChangePasswordService } from './application/change-password.service';
@@ -38,7 +37,6 @@ import { EnvModule } from 'src/common/env/env.module';
     EnvModule, // LoginService가 EnvService를 사용하기 위해 필요
     VipModule,
     AffiliateReferralModule,
-    ActivityLogModule,
     AuditLogModule,
     UserModule, // UserRepository 사용을 위해 필요
     SessionModule, // CreateSessionService 사용을 위해 필요

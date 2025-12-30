@@ -7,14 +7,13 @@ import { SetCodeAsDefaultService } from './set-code-as-default.service';
 import { AFFILIATE_CODE_REPOSITORY } from '../ports/out/affiliate-code.repository.token';
 import type { AffiliateCodeRepositoryPort } from '../ports/out/affiliate-code.repository.port';
 import { AffiliateCode, AffiliateCodeNotFoundException } from '../domain';
-import { ACTIVITY_LOG } from 'src/common/activity-log/activity-log.token';
-import type { ActivityLogPort } from 'src/common/activity-log/activity-log.port';
+import { DispatchLogService } from 'src/modules/audit-log/application/dispatch-log.service';
 
 describe('SetCodeAsDefaultService', () => {
   let module: TestingModule;
   let service: SetCodeAsDefaultService;
   let mockRepository: jest.Mocked<AffiliateCodeRepositoryPort>;
-  let mockActivityLog: jest.Mocked<ActivityLogPort>;
+  let mockDispatchLogService: jest.Mocked<DispatchLogService>;
 
   const userId = BigInt(123);
   const codeId = 'code-123';
@@ -60,14 +59,9 @@ describe('SetCodeAsDefaultService', () => {
       findManyForAdmin: jest.fn(),
     };
 
-    const mockActivityLogProvider = {
-      provide: ACTIVITY_LOG,
-      useValue: {
-        log: jest.fn(),
-        logSuccess: jest.fn(),
-        logFailure: jest.fn(),
-      },
-    };
+    mockDispatchLogService = {
+      dispatch: jest.fn().mockResolvedValue(undefined),
+    } as any;
 
     module = await Test.createTestingModule({
       imports: [PrismaModule, EnvModule],
@@ -77,13 +71,15 @@ describe('SetCodeAsDefaultService', () => {
           provide: AFFILIATE_CODE_REPOSITORY,
           useValue: mockRepository,
         },
-        mockActivityLogProvider,
+        {
+          provide: DispatchLogService,
+          useValue: mockDispatchLogService,
+        },
       ],
     }).compile();
 
     service = module.get<SetCodeAsDefaultService>(SetCodeAsDefaultService);
     mockRepository = module.get(AFFILIATE_CODE_REPOSITORY);
-    mockActivityLog = module.get(ACTIVITY_LOG);
 
     jest.clearAllMocks();
   });

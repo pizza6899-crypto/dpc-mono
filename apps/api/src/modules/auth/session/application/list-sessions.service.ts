@@ -6,6 +6,9 @@ import {
 } from '../ports/out';
 import { UserSession, SessionStatus, SessionType } from '../domain';
 import { PaginatedData } from 'src/common/http/types';
+import { DispatchLogService } from 'src/modules/audit-log/application/dispatch-log.service';
+import { LogType } from 'src/modules/audit-log/domain';
+import type { RequestClientInfo } from 'src/common/http/types/client-info.types';
 
 export interface ListSessionsServiceParams {
   page?: number;
@@ -18,6 +21,14 @@ export interface ListSessionsServiceParams {
   activeOnly?: boolean;
   startDate?: string;
   endDate?: string;
+  /**
+   * 요청자 정보 (옵셔널, audit 로그용)
+   */
+  requestInfo?: RequestClientInfo;
+  /**
+   * 요청한 사용자 ID (관리자 ID, audit 로그용)
+   */
+  adminUserId?: bigint;
 }
 
 interface ListSessionsServiceResult extends PaginatedData<UserSession> {}
@@ -35,6 +46,7 @@ export class ListSessionsService {
   constructor(
     @Inject(USER_SESSION_REPOSITORY)
     private readonly repository: UserSessionRepositoryPort,
+    private readonly dispatchLogService: DispatchLogService,
   ) {}
 
   async execute(
@@ -51,6 +63,8 @@ export class ListSessionsService {
       activeOnly,
       startDate,
       endDate,
+      requestInfo,
+      adminUserId,
     } = params;
 
     try {
@@ -74,6 +88,42 @@ export class ListSessionsService {
       this.logger.log(
         `세션 목록 조회 완료: page=${page}, limit=${limit}, total=${result.total}`,
       );
+
+      // Audit 로그 기록 (활동 로그)
+      if (adminUserId) {
+        try {
+          await this.dispatchLogService.dispatch(
+            {
+              type: LogType.ACTIVITY,
+              data: {
+                userId: adminUserId.toString(),
+                category: 'AUTH',
+                action: 'ADMIN_LIST_SESSIONS',
+                metadata: {
+                  page,
+                  limit,
+                  total: result.total,
+                  filters: {
+                    userId,
+                    status,
+                    type,
+                    activeOnly,
+                    startDate,
+                    endDate,
+                  },
+                },
+              },
+            },
+            requestInfo,
+          );
+        } catch (error) {
+          // Audit 로그 실패는 조회 성공에 영향을 주지 않도록 처리
+          this.logger.error(
+            error,
+            `Audit log 기록 실패 (세션 목록 조회는 성공) - adminUserId: ${adminUserId}`,
+          );
+        }
+      }
 
       return {
         data: result.sessions,

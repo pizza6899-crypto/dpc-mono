@@ -17,6 +17,7 @@ import {
 import { SessionNotFoundException } from '../domain/exception';
 import { PrismaModule } from 'src/infrastructure/prisma/prisma.module';
 import { EnvModule } from 'src/common/env/env.module';
+import { DispatchLogService } from 'src/modules/audit-log/application/dispatch-log.service';
 
 describe('RevokeSessionService', () => {
   let service: RevokeSessionService;
@@ -58,6 +59,13 @@ describe('RevokeSessionService', () => {
       setWebSocketServer: jest.fn(),
     } as any;
 
+    const mockDispatchLogServiceProvider = {
+      provide: DispatchLogService,
+      useValue: {
+        dispatch: jest.fn().mockResolvedValue(undefined),
+      },
+    };
+
     module = await Test.createTestingModule({
       imports: [PrismaModule, EnvModule], // @Transactional() 데코레이터를 위해 필요
       providers: [
@@ -70,6 +78,7 @@ describe('RevokeSessionService', () => {
           provide: SessionTrackerService,
           useValue: mockSessionTracker,
         },
+        mockDispatchLogServiceProvider,
       ],
     })
       .setLogger(new Logger())

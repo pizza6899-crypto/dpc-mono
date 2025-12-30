@@ -3,7 +3,6 @@ import { Test, TestingModule } from '@nestjs/testing';
 import { PrismaService } from 'src/infrastructure/prisma/prisma.service';
 import { PrismaModule } from 'src/infrastructure/prisma/prisma.module';
 import { EnvModule } from 'src/common/env/env.module';
-import { ActivityLogModule } from 'src/common/activity-log/activity-log.module';
 import { AffiliateReferralModule } from 'src/modules/affiliate/referral/referral.module';
 import { AffiliateCommissionModule } from 'src/modules/affiliate/commission/commission.module';
 import {

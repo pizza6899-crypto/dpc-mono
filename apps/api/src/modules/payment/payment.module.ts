@@ -13,8 +13,6 @@ import { DepositService } from './application/deposit.service';
 import { DepositController } from './controllers/deposit.controller';
 import { WithdrawService } from './application/withdraw.service';
 import { WithdrawController } from './controllers/withdraw.controller';
-import { ACTIVITY_LOG } from 'src/common/activity-log/activity-log.token';
-import { ActivityLogAdapter } from 'src/common/activity-log/activity-log.adapter';
 import { UserValidationModule } from 'src/common/user-validation/user-validation.module';
 import { BankTransferDepositService } from './application/bank-transfer-deposit.service';
 import { CryptoDepositService } from './application/crypto-deposit.service';
@@ -47,10 +45,6 @@ import { UserStatsModule } from '../user-stats/user-stats.module';
     NowPaymentCallbackLogService,
     DepositService,
     WithdrawService,
-    {
-      provide: ACTIVITY_LOG,
-      useClass: ActivityLogAdapter,
-    },
     BankTransferDepositService,
     CryptoDepositService,
     AdminDepositService,

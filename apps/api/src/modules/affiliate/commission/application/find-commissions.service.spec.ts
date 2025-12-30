@@ -11,17 +11,19 @@ import { FindCommissionsService } from './find-commissions.service';
 import { AFFILIATE_COMMISSION_REPOSITORY } from '../ports/out/affiliate-commission.repository.token';
 import type { AffiliateCommissionRepositoryPort } from '../ports/out/affiliate-commission.repository.port';
 import { AffiliateCommission } from '../domain';
+import { DispatchLogService } from 'src/modules/audit-log/application/dispatch-log.service';
 
 describe('FindCommissionsService', () => {
   let service: FindCommissionsService;
   let mockRepository: jest.Mocked<AffiliateCommissionRepositoryPort>;
+  let mockDispatchLogService: jest.Mocked<DispatchLogService>;
 
-  const mockAffiliateId = 'affiliate-123';
+  const mockAffiliateId = BigInt(123);
   const mockUid1 = 'cmt-1234567890';
   const mockUid2 = 'cmt-0987654321';
   const mockId1 = BigInt(1);
   const mockId2 = BigInt(2);
-  const mockSubUserId = 'user-456';
+  const mockSubUserId = BigInt(456);
   const mockGameRoundId = BigInt(789);
   const mockCurrency = ExchangeCurrencyCode.USD;
   const mockCurrency2 = ExchangeCurrencyCode.KRW;
@@ -69,6 +71,14 @@ describe('FindCommissionsService', () => {
       create: jest.fn(),
       updateStatus: jest.fn(),
       settlePendingCommissions: jest.fn(),
+      findAffiliateIdsWithPendingCommissions: jest.fn(),
+    };
+
+    const mockDispatchLogServiceProvider = {
+      provide: DispatchLogService,
+      useValue: {
+        dispatch: jest.fn().mockResolvedValue(undefined),
+      },
     };
 
     const module: TestingModule = await Test.createTestingModule({
@@ -78,11 +88,15 @@ describe('FindCommissionsService', () => {
           provide: AFFILIATE_COMMISSION_REPOSITORY,
           useValue: mockRepository,
         },
+        mockDispatchLogServiceProvider,
       ],
     }).compile();
 
     service = module.get<FindCommissionsService>(FindCommissionsService);
     mockRepository = module.get(AFFILIATE_COMMISSION_REPOSITORY);
+    mockDispatchLogService = module.get(
+      DispatchLogService,
+    ) as jest.Mocked<DispatchLogService>;
 
     jest.clearAllMocks();
   });
@@ -377,7 +391,7 @@ describe('FindCommissionsService', () => {
       );
       // 옵션 정보가 로그에 포함되는지 확인
       const logCall = loggerSpy.mock.calls[0][0];
-      expect(logCall).toContain(mockAffiliateId);
+      expect(logCall).toContain(mockAffiliateId.toString());
 
       loggerSpy.mockRestore();
     });

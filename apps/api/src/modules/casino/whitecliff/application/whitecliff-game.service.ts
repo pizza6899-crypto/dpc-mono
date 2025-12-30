@@ -7,9 +7,6 @@ import {
 import { MessageCode, RequestClientInfo } from 'src/common/http/types';
 import { ApiException } from 'src/common/http/exception/api.exception';
 import { HttpStatusCode } from 'axios';
-import type { ActivityLogPort } from 'src/common/activity-log/activity-log.port';
-import { ACTIVITY_LOG } from 'src/common/activity-log/activity-log.token';
-import { ActivityType } from 'src/common/activity-log/activity-log.types';
 import { IdUtil } from 'src/utils/id.util';
 import { CurrentUserWithSession } from 'src/common/auth/decorators/current-user.decorator';
 import { WhitecliffMapperService } from '../infrastructure/whitecliff-mapper.service';
@@ -33,7 +30,6 @@ export class WhitecliffGameService {
   constructor(
     private readonly prismaService: PrismaService,
     private readonly whitecliffApiService: WhitecliffApiService,
-    @Inject(ACTIVITY_LOG) private readonly activityLog: ActivityLogPort,
     private readonly whitecliffMapperService: WhitecliffMapperService,
     private readonly gameSessionService: GameSessionService,
     private readonly exchangeRateService: ExchangeRateService,
@@ -162,21 +158,6 @@ export class WhitecliffGameService {
         },
       });
 
-      await this.activityLog.logSuccess(
-        {
-          userId: user.id,
-          activityType: ActivityType.WHITECLIFF_USER_REGENERATED,
-          description: '화이트 클리프 ID/이름 중복으로 인한 신규 사용자 생성',
-          metadata: {
-            oldWhitecliffId: user.whitecliffId,
-            oldWhitecliffUsername: user.whitecliffUsername,
-            oldWhitecliffSystemId: user.whitecliffSystemId,
-            whitecliffId: whitecliffId,
-            whitecliffUsername: whitecliffUsername,
-          },
-        },
-        requestInfo,
-      );
     }
 
     if (gameUrl.status === 0) {
@@ -209,18 +190,6 @@ export class WhitecliffGameService {
       gameCurrency,
       token: result.sid,
     });
-
-    await this.activityLog.logSuccess(
-      {
-        userId: user.id,
-        activityType: ActivityType.GAME_LAUNCH,
-        description: '게임 실행',
-        metadata: {
-          ...result,
-        },
-      },
-      requestInfo,
-    );
 
     return {
       gameUrl: result.launch_url,

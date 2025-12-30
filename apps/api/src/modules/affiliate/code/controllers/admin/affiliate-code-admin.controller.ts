@@ -15,6 +15,10 @@ import { Paginated } from 'src/common/http/decorators/paginated.decorator';
 import { RequireRoles } from 'src/common/auth/decorators/roles.decorator';
 import { UserRoleType } from '@repo/database';
 import type { PaginatedData } from 'src/common/http/types';
+import { CurrentUser } from 'src/common/auth/decorators/current-user.decorator';
+import type { CurrentUserWithSession } from 'src/common/auth/decorators/current-user.decorator';
+import { RequestClientInfoParam } from 'src/common/auth/decorators/request-info.decorator';
+import type { RequestClientInfo } from 'src/common/http/types/client-info.types';
 import { FindCodesAdminService } from '../../application/find-codes-admin.service';
 import { FindCodesQueryDto } from './dto/request/find-codes-query.dto';
 import { AdminCodeListItemDto } from './dto/response/admin-code-list.response.dto';
@@ -46,6 +50,8 @@ export class AffiliateCodeAdminController {
   })
   async listCodes(
     @Query() query: FindCodesQueryDto,
+    @CurrentUser() admin: CurrentUserWithSession,
+    @RequestClientInfoParam() requestInfo: RequestClientInfo,
   ): Promise<PaginatedData<AdminCodeListItemDto>> {
     const result = await this.findCodesAdminService.execute({
       page: query.page,
@@ -58,6 +64,8 @@ export class AffiliateCodeAdminController {
       isDefault: query.isDefault,
       startDate: query.startDate,
       endDate: query.endDate,
+      adminId: admin.id,
+      requestInfo,
     });
 
     return {

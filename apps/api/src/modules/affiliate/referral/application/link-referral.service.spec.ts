@@ -17,9 +17,8 @@ import {
 } from '../domain/referral.exception';
 import { Referral } from '../domain/model/referral.entity';
 import { AffiliateCode } from '../../code/domain/model/affiliate-code.entity';
-import { ACTIVITY_LOG } from 'src/common/activity-log/activity-log.token';
-import type { ActivityLogPort } from 'src/common/activity-log/activity-log.port';
-import { ActivityType } from 'src/common/activity-log/activity-log.types';
+import { DispatchLogService } from 'src/modules/audit-log/application/dispatch-log.service';
+import { LogType } from 'src/modules/audit-log/domain';
 import type { RequestClientInfo } from 'src/common/http/types/client-info.types';
 
 describe('LinkReferralService', () => {
@@ -28,7 +27,7 @@ describe('LinkReferralService', () => {
   let mockRepository: jest.Mocked<ReferralRepositoryPort>;
   let mockFindCodeService: jest.Mocked<FindCodeByCodeService>;
   let mockPolicy: ReferralPolicy;
-  let mockActivityLog: jest.Mocked<ActivityLogPort>;
+  let mockDispatchLogService: jest.Mocked<DispatchLogService>;
 
   const affiliateId = BigInt(123);
   const subUserId = BigInt(456);
@@ -101,11 +100,9 @@ describe('LinkReferralService', () => {
 
     mockPolicy = new ReferralPolicy();
 
-    mockActivityLog = {
-      log: jest.fn(),
-      logSuccess: jest.fn(),
-      logFailure: jest.fn(),
-    };
+    mockDispatchLogService = {
+      dispatch: jest.fn(),
+    } as any;
 
     module = await Test.createTestingModule({
       imports: [PrismaModule, EnvModule],
@@ -121,8 +118,8 @@ describe('LinkReferralService', () => {
         },
         ReferralPolicy,
         {
-          provide: ACTIVITY_LOG,
-          useValue: mockActivityLog,
+          provide: DispatchLogService,
+          useValue: mockDispatchLogService,
         },
       ],
     }).compile();
@@ -130,7 +127,7 @@ describe('LinkReferralService', () => {
     service = module.get<LinkReferralService>(LinkReferralService);
     mockRepository = module.get(REFERRAL_REPOSITORY);
     mockFindCodeService = module.get(FindCodeByCodeService);
-    mockActivityLog = module.get(ACTIVITY_LOG);
+    mockDispatchLogService = module.get(DispatchLogService);
 
     jest.clearAllMocks();
   });
@@ -290,17 +287,20 @@ describe('LinkReferralService', () => {
         requestInfo: mockRequestInfo,
       });
 
-      expect(mockActivityLog.logSuccess).toHaveBeenCalledWith(
+      expect(mockDispatchLogService.dispatch).toHaveBeenCalledWith(
         {
-          userId: subUserId,
-          activityType: ActivityType.REFERRAL_LINKED,
-          description: expect.stringContaining('레퍼럴 관계 생성 완료'),
-          metadata: {
-            referralId,
-            affiliateId,
-            referralCode,
-            codeId,
-            codeCampaignName: 'Test Campaign',
+          type: LogType.ACTIVITY,
+          data: {
+            userId: subUserId.toString(),
+            category: 'AFFILIATE',
+            action: 'REFERRAL_LINKED',
+            metadata: {
+              referralId,
+              affiliateId: affiliateId.toString(),
+              referralCode,
+              codeId,
+              codeCampaignName: 'Test Campaign',
+            },
           },
         },
         mockRequestInfo,
@@ -317,7 +317,7 @@ describe('LinkReferralService', () => {
         referralCode,
       });
 
-      expect(mockActivityLog.logSuccess).not.toHaveBeenCalled();
+      expect(mockDispatchLogService.dispatch).not.toHaveBeenCalled();
     });
 
     it('should handle code with null campaign name', async () => {
@@ -336,10 +336,13 @@ describe('LinkReferralService', () => {
         requestInfo: mockRequestInfo,
       });
 
-      expect(mockActivityLog.logSuccess).toHaveBeenCalledWith(
+      expect(mockDispatchLogService.dispatch).toHaveBeenCalledWith(
         expect.objectContaining({
-          metadata: expect.objectContaining({
-            codeCampaignName: null,
+          type: LogType.ACTIVITY,
+          data: expect.objectContaining({
+            metadata: expect.objectContaining({
+              codeCampaignName: null,
+            }),
           }),
         }),
         mockRequestInfo,

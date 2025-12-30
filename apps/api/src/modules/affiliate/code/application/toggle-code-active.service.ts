@@ -4,9 +4,8 @@ import { AffiliateCode, AffiliateCodeNotFoundException } from '../domain';
 import { AFFILIATE_CODE_REPOSITORY } from '../ports/out/affiliate-code.repository.token';
 import type { AffiliateCodeRepositoryPort } from '../ports/out/affiliate-code.repository.port';
 import type { RequestClientInfo } from 'src/common/http/types/client-info.types';
-import { ACTIVITY_LOG } from 'src/common/activity-log/activity-log.token';
-import type { ActivityLogPort } from 'src/common/activity-log/activity-log.port';
-import { ActivityType } from 'src/common/activity-log/activity-log.types';
+import { DispatchLogService } from 'src/modules/audit-log/application/dispatch-log.service';
+import { LogType } from 'src/modules/audit-log/domain';
 
 interface ToggleCodeActiveParams {
   id: string;
@@ -19,8 +18,7 @@ export class ToggleCodeActiveService {
   constructor(
     @Inject(AFFILIATE_CODE_REPOSITORY)
     private readonly repository: AffiliateCodeRepositoryPort,
-    @Inject(ACTIVITY_LOG)
-    private readonly activityLog: ActivityLogPort,
+    private readonly dispatchLogService: DispatchLogService,
   ) {}
 
   async execute({
@@ -42,18 +40,21 @@ export class ToggleCodeActiveService {
     // 저장
     const updatedCode = await this.repository.update(code);
 
-    // Activity Log 기록
+    // Audit Log 기록
     if (requestInfo) {
-      await this.activityLog.logSuccess(
+      await this.dispatchLogService.dispatch(
         {
-          userId,
-          activityType: ActivityType.AFFILIATE_CODE_TOGGLE_ACTIVE,
-          description: `어플리에이트 코드 활성화 상태 변경 - 코드: ${code.code}, ${previousActive ? '활성' : '비활성'} -> ${updatedCode.isActive ? '활성' : '비활성'}`,
-          metadata: {
-            codeId: id,
-            code: code.code,
-            previousActive,
-            newActive: updatedCode.isActive,
+          type: LogType.ACTIVITY,
+          data: {
+            userId: userId.toString(),
+            category: 'AFFILIATE',
+            action: 'AFFILIATE_CODE_TOGGLE_ACTIVE',
+            metadata: {
+              codeId: id,
+              code: code.code,
+              previousActive,
+              newActive: updatedCode.isActive,
+            },
           },
         },
         requestInfo,

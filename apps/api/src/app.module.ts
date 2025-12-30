@@ -16,10 +16,10 @@ import { ThrottleModule } from './common/throttle/throttle.module';
 import { ThrottleGuard } from './common/throttle/throttle.guard';
 import { WebsocketModule } from './common/websocket/websocket.module';
 import { AffiliateModule } from './modules/affiliate/affiliate.module';
-import { ActivityLogModule } from './common/activity-log/activity-log.module';
 import { HttpExceptionFilter } from './common/http/exception/http-exception.filter';
 import { WalletModule } from './modules/wallet/wallet.module';
 import { CommonLoggerModule } from './common/logger/logger.module';
+import { AuditLogModule } from './modules/audit-log/audit-log.module';
 
 @Module({
   imports: [
@@ -29,7 +29,7 @@ import { CommonLoggerModule } from './common/logger/logger.module';
     CommonLoggerModule,
     WebsocketModule,
     ScheduleModule.forRoot(),
-    ActivityLogModule,
+    AuditLogModule,
     AuthModule,
     CasinoModule,
     PaymentModule,

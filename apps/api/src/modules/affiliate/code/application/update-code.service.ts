@@ -4,9 +4,8 @@ import { AffiliateCode, AffiliateCodeNotFoundException } from '../domain';
 import { AFFILIATE_CODE_REPOSITORY } from '../ports/out/affiliate-code.repository.token';
 import type { AffiliateCodeRepositoryPort } from '../ports/out/affiliate-code.repository.port';
 import type { RequestClientInfo } from 'src/common/http/types/client-info.types';
-import { ACTIVITY_LOG } from 'src/common/activity-log/activity-log.token';
-import type { ActivityLogPort } from 'src/common/activity-log/activity-log.port';
-import { ActivityType } from 'src/common/activity-log/activity-log.types';
+import { DispatchLogService } from 'src/modules/audit-log/application/dispatch-log.service';
+import { LogType } from 'src/modules/audit-log/domain';
 
 interface UpdateCodeParams {
   id: string;
@@ -20,8 +19,7 @@ export class UpdateCodeService {
   constructor(
     @Inject(AFFILIATE_CODE_REPOSITORY)
     private readonly repository: AffiliateCodeRepositoryPort,
-    @Inject(ACTIVITY_LOG)
-    private readonly activityLog: ActivityLogPort,
+    private readonly dispatchLogService: DispatchLogService,
   ) {}
 
   async execute({
@@ -44,18 +42,21 @@ export class UpdateCodeService {
     // 저장
     const updatedCode = await this.repository.update(code);
 
-    // Activity Log 기록
+    // Audit Log 기록
     if (requestInfo) {
-      await this.activityLog.logSuccess(
+      await this.dispatchLogService.dispatch(
         {
-          userId,
-          activityType: ActivityType.AFFILIATE_CODE_UPDATE,
-          description: `어플리에이트 코드 수정 완료 - 코드: ${code.code}, 캠페인명: ${previousCampaignName || '없음'} -> ${campaignName || '없음'}`,
-          metadata: {
-            codeId: id,
-            code: code.code,
-            previousCampaignName: previousCampaignName || null,
-            newCampaignName: campaignName || null,
+          type: LogType.ACTIVITY,
+          data: {
+            userId: userId.toString(),
+            category: 'AFFILIATE',
+            action: 'AFFILIATE_CODE_UPDATE',
+            metadata: {
+              codeId: id,
+              code: code.code,
+              previousCampaignName: previousCampaignName || null,
+              newCampaignName: campaignName || null,
+            },
           },
         },
         requestInfo,

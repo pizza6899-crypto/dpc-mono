@@ -11,15 +11,17 @@ import { FindCommissionByIdService } from './find-commission-by-id.service';
 import { AFFILIATE_COMMISSION_REPOSITORY } from '../ports/out/affiliate-commission.repository.token';
 import type { AffiliateCommissionRepositoryPort } from '../ports/out/affiliate-commission.repository.port';
 import { AffiliateCommission, InvalidParameterException } from '../domain';
+import { DispatchLogService } from 'src/modules/audit-log/application/dispatch-log.service';
 
 describe('FindCommissionByIdService', () => {
   let service: FindCommissionByIdService;
   let mockRepository: jest.Mocked<AffiliateCommissionRepositoryPort>;
+  let mockDispatchLogService: jest.Mocked<DispatchLogService>;
 
   const mockUid = 'cmt-1234567890';
   const mockId = BigInt(1);
-  const mockAffiliateId = 'affiliate-123';
-  const mockSubUserId = 'user-456';
+  const mockAffiliateId = BigInt(123);
+  const mockSubUserId = BigInt(456);
   const mockGameRoundId = BigInt(789);
   const mockCurrency = ExchangeCurrencyCode.USD;
   const mockCreatedAt = new Date('2024-01-01T00:00:00Z');
@@ -67,6 +69,10 @@ describe('FindCommissionByIdService', () => {
       findAffiliateIdsWithPendingCommissions: jest.fn(),
     };
 
+    mockDispatchLogService = {
+      dispatch: jest.fn().mockResolvedValue(undefined),
+    } as any;
+
     const module: TestingModule = await Test.createTestingModule({
       providers: [
         FindCommissionByIdService,
@@ -74,11 +80,16 @@ describe('FindCommissionByIdService', () => {
           provide: AFFILIATE_COMMISSION_REPOSITORY,
           useValue: mockRepository,
         },
+        {
+          provide: DispatchLogService,
+          useValue: mockDispatchLogService,
+        },
       ],
     }).compile();
 
     service = module.get<FindCommissionByIdService>(FindCommissionByIdService);
     mockRepository = module.get(AFFILIATE_COMMISSION_REPOSITORY);
+    mockDispatchLogService = module.get(DispatchLogService);
 
     jest.clearAllMocks();
   });

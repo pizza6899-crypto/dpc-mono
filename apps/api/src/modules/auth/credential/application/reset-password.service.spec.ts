@@ -7,9 +7,6 @@ import { USER_REPOSITORY } from 'src/modules/user/ports/out/user.repository.toke
 import type { UserRepositoryPort } from 'src/modules/user/ports/out/user.repository.port';
 import { PASSWORD_RESET_TOKEN_REPOSITORY } from '../ports/out/password-reset-token.repository.token';
 import type { PasswordResetTokenRepositoryPort } from '../ports/out/password-reset-token.repository.port';
-import { ACTIVITY_LOG } from 'src/common/activity-log/activity-log.token';
-import type { ActivityLogPort } from 'src/common/activity-log/activity-log.port';
-import { ActivityType } from 'src/common/activity-log/activity-log.types';
 import { User } from 'src/modules/user/domain';
 import { UserStatus, UserRoleType, SocialType } from '@repo/database';
 import { hashPassword } from 'src/utils/password.util';
@@ -19,13 +16,13 @@ import type { RequestClientInfo } from 'src/common/http/types/client-info.types'
 import { PrismaModule } from 'src/infrastructure/prisma/prisma.module';
 import { EnvModule } from 'src/common/env/env.module';
 import { DispatchLogService } from 'src/modules/audit-log/application/dispatch-log.service';
+import { LogType } from 'src/modules/audit-log/domain';
 
 describe('ResetPasswordService', () => {
   let module: TestingModule;
   let service: ResetPasswordService;
   let mockUserRepository: jest.Mocked<UserRepositoryPort>;
   let mockTokenRepository: jest.Mocked<PasswordResetTokenRepositoryPort>;
-  let mockActivityLog: jest.Mocked<ActivityLogPort>;
   let mockDispatchLogService: jest.Mocked<DispatchLogService>;
 
   const mockUserId = BigInt(1);
@@ -86,15 +83,6 @@ describe('ResetPasswordService', () => {
       },
     };
 
-    const mockActivityLogProvider = {
-      provide: ACTIVITY_LOG,
-      useValue: {
-        logSuccess: jest.fn(),
-        logFailure: jest.fn(),
-        log: jest.fn(),
-      },
-    };
-
     const mockDispatchLogServiceProvider = {
       provide: DispatchLogService,
       useValue: {
@@ -108,7 +96,6 @@ describe('ResetPasswordService', () => {
         ResetPasswordService,
         mockUserRepositoryProvider,
         mockTokenRepositoryProvider,
-        mockActivityLogProvider,
         mockDispatchLogServiceProvider,
       ],
     })
@@ -118,7 +105,6 @@ describe('ResetPasswordService', () => {
     service = module.get<ResetPasswordService>(ResetPasswordService);
     mockUserRepository = module.get(USER_REPOSITORY);
     mockTokenRepository = module.get(PASSWORD_RESET_TOKEN_REPOSITORY);
-    mockActivityLog = module.get(ACTIVITY_LOG);
     mockDispatchLogService = module.get(DispatchLogService);
 
     jest.clearAllMocks();
@@ -175,7 +161,6 @@ describe('ResetPasswordService', () => {
         }),
       );
       mockTokenRepository.markAsUsed.mockResolvedValue(undefined);
-      mockActivityLog.logSuccess.mockResolvedValue(undefined);
 
       // Act
       await service.execute({
@@ -193,17 +178,6 @@ describe('ResetPasswordService', () => {
       );
       expect(mockTokenRepository.markAsUsed).toHaveBeenCalledWith(
         mockTokenData.id,
-      );
-      expect(mockActivityLog.logSuccess).toHaveBeenCalledWith(
-        {
-          userId: mockUserId,
-          activityType: ActivityType.PASSWORD_RESET,
-          description: '비밀번호 재설정 완료 (토큰 사용)',
-          metadata: {
-            tokenId: mockTokenData.id,
-          },
-        },
-        mockClientInfo,
       );
     });
 
@@ -331,7 +305,6 @@ describe('ResetPasswordService', () => {
         }),
       );
       mockTokenRepository.markAsUsed.mockResolvedValue(undefined);
-      mockActivityLog.logSuccess.mockResolvedValue(undefined);
 
       // Act
       await service.execute({
@@ -366,7 +339,6 @@ describe('ResetPasswordService', () => {
         }),
       );
       mockTokenRepository.markAsUsed.mockResolvedValue(undefined);
-      mockActivityLog.logSuccess.mockResolvedValue(undefined);
 
       // Act
       await service.execute({
@@ -401,7 +373,6 @@ describe('ResetPasswordService', () => {
         }),
       );
       mockTokenRepository.markAsUsed.mockResolvedValue(undefined);
-      mockActivityLog.logSuccess.mockResolvedValue(undefined);
 
       // Act
       await service.execute({
@@ -411,13 +382,19 @@ describe('ResetPasswordService', () => {
       });
 
       // Assert
-      expect(mockActivityLog.logSuccess).toHaveBeenCalledWith(
+      expect(mockDispatchLogService.dispatch).toHaveBeenCalledWith(
         {
-          userId: mockUserId,
-          activityType: ActivityType.PASSWORD_RESET,
-          description: '비밀번호 재설정 완료 (토큰 사용)',
-          metadata: {
-            tokenId: mockTokenData.id,
+          type: LogType.AUTH,
+          data: {
+            userId: mockUserId.toString(),
+            action: 'PASSWORD_RESET',
+            status: 'SUCCESS',
+            ip: mockClientInfo.ip,
+            userAgent: mockClientInfo.userAgent,
+            metadata: {
+              email: mockUser.email,
+              tokenId: mockTokenData.id,
+            },
           },
         },
         mockClientInfo,
@@ -436,7 +413,7 @@ describe('ResetPasswordService', () => {
         }),
       );
       mockTokenRepository.markAsUsed.mockResolvedValue(undefined);
-      mockActivityLog.logSuccess.mockRejectedValue(
+      mockDispatchLogService.dispatch.mockRejectedValue(
         new Error('Activity log failed'),
       );
 
@@ -451,7 +428,7 @@ describe('ResetPasswordService', () => {
       // 예외가 전파되지 않아야 함
       expect(mockUserRepository.updatePassword).toHaveBeenCalled();
       expect(mockTokenRepository.markAsUsed).toHaveBeenCalled();
-      expect(mockActivityLog.logSuccess).toHaveBeenCalled();
+      expect(mockDispatchLogService.dispatch).toHaveBeenCalled();
     });
 
     it('모든 단계가 올바른 순서로 실행되어야 함', async () => {
@@ -466,7 +443,7 @@ describe('ResetPasswordService', () => {
         }),
       );
       mockTokenRepository.markAsUsed.mockResolvedValue(undefined);
-      mockActivityLog.logSuccess.mockResolvedValue(undefined);
+      mockDispatchLogService.dispatch.mockResolvedValue(undefined);
 
       // Act
       await service.execute({
@@ -489,7 +466,7 @@ describe('ResetPasswordService', () => {
         mockTokenRepository.markAsUsed as jest.Mock
       ).mock.invocationCallOrder[0];
       const logSuccessOrder = (
-        mockActivityLog.logSuccess as jest.Mock
+        mockDispatchLogService.dispatch as jest.Mock
       ).mock.invocationCallOrder[0];
 
       expect(findByTokenOrder).toBeLessThan(findByIdOrder);

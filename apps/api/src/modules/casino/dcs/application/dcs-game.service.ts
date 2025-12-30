@@ -13,14 +13,10 @@ import {
 } from 'src/utils/currency.util';
 import { GameSessionService } from '../../application/game-session.service';
 import { GameAggregatorType } from '@repo/database';
-import { ACTIVITY_LOG } from 'src/common/activity-log/activity-log.token';
-import type { ActivityLogPort } from 'src/common/activity-log/activity-log.port';
-import { ActivityType } from 'src/common/activity-log/activity-log.types';
 
 @Injectable()
 export class DcsGameService {
   constructor(
-    @Inject(ACTIVITY_LOG) private readonly activityLog: ActivityLogPort,
     private readonly prismaService: PrismaService,
     private readonly dcsApiService: DcsApiService,
     private readonly gameSessionService: GameSessionService,
@@ -109,25 +105,6 @@ export class DcsGameService {
       });
 
       if (response.code !== DcsResponseCode.SUCCESS) {
-        if (requestInfo) {
-          await this.activityLog.logFailure(
-            {
-              userId,
-              activityType: ActivityType.GAME_LAUNCH,
-              description: `DCS 게임 실행 실패 - 게임 ID: ${gameId}`,
-              metadata: {
-                gameId,
-                gameCurrency,
-                walletCurrency,
-                channel,
-                country_code,
-                dcsResponseCode: response.code,
-                dcsResponseMsg: response.msg,
-              },
-            },
-            requestInfo,
-          );
-        }
 
         throw new ApiException(
           MessageCode.INTERNAL_SERVER_ERROR,
@@ -144,46 +121,11 @@ export class DcsGameService {
         token: newDcsToken,
       });
 
-      if (requestInfo) {
-        await this.activityLog.logSuccess(
-          {
-            userId,
-            activityType: ActivityType.GAME_LAUNCH,
-            description: 'DCS 게임 실행',
-            metadata: {
-              gameId,
-              gameCurrency,
-              walletCurrency,
-              channel,
-              country_code,
-              gameUrl: response.data.game_url,
-              dcsToken: newDcsToken,
-            },
-          },
-          requestInfo,
-        );
-      }
 
       return {
         gameUrl: response.data.game_url,
       };
     } catch (error) {
-      if (requestInfo) {
-        await this.activityLog.logFailure(
-          {
-            userId,
-            activityType: ActivityType.GAME_LAUNCH,
-            description: `DCS 게임 실행 실패 - 게임 ID: ${gameId}`,
-            metadata: {
-              gameId,
-              gameCurrency,
-              walletCurrency,
-              error: error instanceof Error ? error.message : String(error),
-            },
-          },
-          requestInfo,
-        );
-      }
 
       throw error;
     }

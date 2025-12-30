@@ -27,7 +27,7 @@ describe('AffiliateCommissionController', () => {
   let withdrawCommissionService: jest.Mocked<WithdrawCommissionService>;
 
   const mockUser = {
-    id: 'affiliate-123',
+    id: BigInt(123),
     email: 'affiliate@test.com',
     role: 'USER',
     session: {
@@ -63,7 +63,7 @@ describe('AffiliateCommissionController', () => {
   const createMockCommission = (overrides?: {
     uid?: string;
     id?: bigint;
-    affiliateId?: string;
+    affiliateId?: bigint;
     status?: CommissionStatus;
     gameRoundId?: bigint | null;
     winAmount?: Prisma.Decimal | null;
@@ -79,8 +79,8 @@ describe('AffiliateCommissionController', () => {
     return AffiliateCommission.fromPersistence({
       id: overrides?.id ?? BigInt(1),
       uid: overrides?.uid ?? IdUtil.generateUid(),
-      affiliateId: overrides?.affiliateId ?? mockUser.id,
-      subUserId: 'sub-user-456',
+      affiliateId: overrides?.affiliateId ?? BigInt(123),
+      subUserId: BigInt(456),
       gameRoundId,
       wagerAmount: new Prisma.Decimal('10000.00'),
       winAmount:
@@ -198,7 +198,7 @@ describe('AffiliateCommissionController', () => {
         id: BigInt(2),
         uid: IdUtil.generateUid(),
         affiliateId: mockUser.id,
-        subUserId: 'sub-user-456',
+        subUserId: BigInt(456),
         gameRoundId: BigInt(789),
         wagerAmount: new Prisma.Decimal('20000.00'),
         winAmount: new Prisma.Decimal('10000.00'),
@@ -220,7 +220,11 @@ describe('AffiliateCommissionController', () => {
       ]);
 
       // When
-      const result = await controller.getCommissions(mockUser, query);
+      const result = await controller.getCommissions(
+        mockUser,
+        query,
+        mockRequestInfo,
+      );
 
       // Then
       expect(result).toHaveLength(2);
@@ -243,6 +247,7 @@ describe('AffiliateCommissionController', () => {
           limit: 20,
           offset: 0,
         },
+        requestInfo: mockRequestInfo,
       });
     });
 
@@ -260,7 +265,7 @@ describe('AffiliateCommissionController', () => {
       findCommissionsService.execute.mockResolvedValue([]);
 
       // When
-      await controller.getCommissions(mockUser, query);
+      await controller.getCommissions(mockUser, query, mockRequestInfo);
 
       // Then
       expect(findCommissionsService.execute).toHaveBeenCalledWith({
@@ -273,6 +278,7 @@ describe('AffiliateCommissionController', () => {
           limit: 10,
           offset: 10,
         },
+        requestInfo: mockRequestInfo,
       });
     });
 
@@ -286,7 +292,11 @@ describe('AffiliateCommissionController', () => {
       findCommissionsService.execute.mockResolvedValue([]);
 
       // When
-      const result = await controller.getCommissions(mockUser, query);
+      const result = await controller.getCommissions(
+        mockUser,
+        query,
+        mockRequestInfo,
+      );
 
       // Then
       expect(result).toHaveLength(0);
@@ -299,7 +309,7 @@ describe('AffiliateCommissionController', () => {
       findCommissionsService.execute.mockResolvedValue([]);
 
       // When
-      await controller.getCommissions(mockUser, query);
+      await controller.getCommissions(mockUser, query, mockRequestInfo);
 
       // Then
       expect(findCommissionsService.execute).toHaveBeenCalledWith({
@@ -312,6 +322,7 @@ describe('AffiliateCommissionController', () => {
           limit: 20,
           offset: 0,
         },
+        requestInfo: mockRequestInfo,
       });
     });
   });
@@ -325,7 +336,11 @@ describe('AffiliateCommissionController', () => {
       findCommissionByIdService.execute.mockResolvedValue(mockCommission);
 
       // When
-      const result = await controller.getCommissionByUid(mockUser, uid);
+      const result = await controller.getCommissionByUid(
+        mockUser,
+        uid,
+        mockRequestInfo,
+      );
 
       // Then
       expect(result).toMatchObject({
@@ -335,6 +350,8 @@ describe('AffiliateCommissionController', () => {
       expect(result.commission).toBe('100');
       expect(findCommissionByIdService.execute).toHaveBeenCalledWith({
         uid,
+        affiliateId: mockUser.id,
+        requestInfo: mockRequestInfo,
       });
     });
 
@@ -346,11 +363,13 @@ describe('AffiliateCommissionController', () => {
 
       // When & Then
       await expect(
-        controller.getCommissionByUid(mockUser, uid),
+        controller.getCommissionByUid(mockUser, uid, mockRequestInfo),
       ).rejects.toThrow('Commission not found');
 
       expect(findCommissionByIdService.execute).toHaveBeenCalledWith({
         uid,
+        affiliateId: mockUser.id,
+        requestInfo: mockRequestInfo,
       });
     });
 
@@ -359,18 +378,20 @@ describe('AffiliateCommissionController', () => {
       const uid = 'cmt-1234567890';
       const mockCommission = createMockCommission({
         uid,
-        affiliateId: 'different-affiliate',
+        affiliateId: BigInt(999),
       });
 
       findCommissionByIdService.execute.mockResolvedValue(mockCommission);
 
       // When & Then
       await expect(
-        controller.getCommissionByUid(mockUser, uid),
+        controller.getCommissionByUid(mockUser, uid, mockRequestInfo),
       ).rejects.toThrow('Unauthorized');
 
       expect(findCommissionByIdService.execute).toHaveBeenCalledWith({
         uid,
+        affiliateId: mockUser.id,
+        requestInfo: mockRequestInfo,
       });
     });
   });
@@ -384,7 +405,11 @@ describe('AffiliateCommissionController', () => {
       getWalletBalanceService.execute.mockResolvedValue(mockWallet);
 
       // When
-      const result = await controller.getWalletBalance(mockUser, currency);
+      const result = await controller.getWalletBalance(
+        mockUser,
+        currency,
+        mockRequestInfo,
+      );
 
       // Then
       expect(result.wallets).toHaveLength(1);
@@ -400,6 +425,7 @@ describe('AffiliateCommissionController', () => {
       expect(getWalletBalanceService.execute).toHaveBeenCalledWith({
         affiliateId: mockUser.id,
         currency: ExchangeCurrencyCode.USD,
+        requestInfo: mockRequestInfo,
       });
     });
 
@@ -421,7 +447,11 @@ describe('AffiliateCommissionController', () => {
       ]);
 
       // When
-      const result = await controller.getWalletBalance(mockUser, undefined);
+      const result = await controller.getWalletBalance(
+        mockUser,
+        undefined,
+        mockRequestInfo,
+      );
 
       // Then
       expect(result.wallets).toHaveLength(2);
@@ -436,6 +466,7 @@ describe('AffiliateCommissionController', () => {
       expect(getWalletBalanceService.execute).toHaveBeenCalledWith({
         affiliateId: mockUser.id,
         currency: undefined,
+        requestInfo: mockRequestInfo,
       });
     });
 
@@ -446,7 +477,11 @@ describe('AffiliateCommissionController', () => {
       getWalletBalanceService.execute.mockResolvedValue(mockWallet);
 
       // When
-      const result = await controller.getWalletBalance(mockUser, undefined);
+      const result = await controller.getWalletBalance(
+        mockUser,
+        undefined,
+        mockRequestInfo,
+      );
 
       // Then
       expect(result.wallets).toHaveLength(1);
@@ -471,7 +506,10 @@ describe('AffiliateCommissionController', () => {
       getCommissionRateService.execute.mockResolvedValue(mockRate);
 
       // When
-      const result = await controller.getCommissionRate(mockUser);
+      const result = await controller.getCommissionRate(
+        mockUser,
+        mockRequestInfo,
+      );
 
       // Then
       expect(result).toEqual({
@@ -483,6 +521,7 @@ describe('AffiliateCommissionController', () => {
       });
       expect(getCommissionRateService.execute).toHaveBeenCalledWith({
         affiliateId: mockUser.id,
+        requestInfo: mockRequestInfo,
       });
     });
 
@@ -499,7 +538,10 @@ describe('AffiliateCommissionController', () => {
       getCommissionRateService.execute.mockResolvedValue(mockRate);
 
       // When
-      const result = await controller.getCommissionRate(mockUser);
+      const result = await controller.getCommissionRate(
+        mockUser,
+        mockRequestInfo,
+      );
 
       // Then
       expect(result).toEqual({
@@ -609,6 +651,7 @@ describe('AffiliateCommissionController', () => {
       const result = await controller.getCommissionByUid(
         mockUser,
         mockCommission.uid,
+        mockRequestInfo,
       );
 
       // Then
@@ -640,6 +683,7 @@ describe('AffiliateCommissionController', () => {
       const result = await controller.getCommissionByUid(
         mockUser,
         mockCommission.uid,
+        mockRequestInfo,
       );
 
       // Then
@@ -660,6 +704,7 @@ describe('AffiliateCommissionController', () => {
       const result = await controller.getCommissionByUid(
         mockUser,
         mockCommission.uid,
+        mockRequestInfo,
       );
 
       // Then

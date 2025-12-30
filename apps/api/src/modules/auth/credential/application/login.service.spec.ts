@@ -4,9 +4,6 @@ import { Test } from '@nestjs/testing';
 import { Logger } from '@nestjs/common';
 import { LoginService } from './login.service';
 import { RecordLoginAttemptService } from './record-login-attempt.service';
-import { ACTIVITY_LOG } from 'src/common/activity-log/activity-log.token';
-import type { ActivityLogPort } from 'src/common/activity-log/activity-log.port';
-import { ActivityType } from 'src/common/activity-log/activity-log.types';
 import { LoginAttempt, LoginAttemptResult } from '../domain';
 import type { AuthenticatedUser } from 'src/common/auth/types/auth.types';
 import type { RequestClientInfo } from 'src/common/http/types/client-info.types';
@@ -20,7 +17,6 @@ describe('LoginService', () => {
   let module: TestingModule;
   let service: LoginService;
   let mockRecordService: jest.Mocked<RecordLoginAttemptService>;
-  let mockActivityLog: jest.Mocked<ActivityLogPort>;
   let mockDispatchLogService: jest.Mocked<DispatchLogService>;
   let mockCreateSessionService: jest.Mocked<CreateSessionService>;
 
@@ -76,15 +72,6 @@ describe('LoginService', () => {
       },
     };
 
-    const mockActivityLogProvider = {
-      provide: ACTIVITY_LOG,
-      useValue: {
-        logSuccess: jest.fn(),
-        logFailure: jest.fn(),
-        log: jest.fn(),
-      },
-    };
-
     const mockDispatchLogServiceProvider = {
       provide: DispatchLogService,
       useValue: {
@@ -104,7 +91,6 @@ describe('LoginService', () => {
       providers: [
         LoginService,
         mockRecordServiceProvider,
-        mockActivityLogProvider,
         mockDispatchLogServiceProvider,
         mockCreateSessionServiceProvider,
       ],
@@ -114,7 +100,6 @@ describe('LoginService', () => {
 
     service = module.get<LoginService>(LoginService);
     mockRecordService = module.get(RecordLoginAttemptService);
-    mockActivityLog = module.get(ACTIVITY_LOG);
     mockDispatchLogService = module.get(DispatchLogService);
     mockCreateSessionService = module.get(CreateSessionService);
 
@@ -142,7 +127,6 @@ describe('LoginService', () => {
       });
 
       mockRecordService.execute.mockResolvedValue(mockLoginAttempt);
-      mockActivityLog.logSuccess.mockResolvedValue(undefined);
 
       // Act
       await service.execute({
@@ -165,15 +149,6 @@ describe('LoginService', () => {
         isAdmin: false,
       });
 
-      expect(mockActivityLog.logSuccess).toHaveBeenCalledTimes(1);
-      expect(mockActivityLog.logSuccess).toHaveBeenCalledWith(
-        {
-          userId: mockUser.id,
-          activityType: ActivityType.USER_LOGIN,
-          description: 'User logged in successfully',
-        },
-        mockClientInfo,
-      );
     });
 
     it('관리자 로그인 시 isAdmin=true로 기록하고 ADMIN_LOGIN 액티비티 타입을 사용해야 함', async () => {
@@ -190,7 +165,6 @@ describe('LoginService', () => {
       });
 
       mockRecordService.execute.mockResolvedValue(mockLoginAttempt);
-      mockActivityLog.logSuccess.mockResolvedValue(undefined);
 
       // Act
       await service.execute({
@@ -212,14 +186,6 @@ describe('LoginService', () => {
         isAdmin: true,
       });
 
-      expect(mockActivityLog.logSuccess).toHaveBeenCalledWith(
-        {
-          userId: mockAdminUser.id,
-          activityType: ActivityType.ADMIN_LOGIN,
-          description: 'Admin logged in successfully',
-        },
-        mockClientInfo,
-      );
     });
 
     it('clientInfo 필드가 null이면 null로 변환하여 전달해야 함', async () => {
@@ -236,7 +202,6 @@ describe('LoginService', () => {
       });
 
       mockRecordService.execute.mockResolvedValue(mockLoginAttempt);
-      mockActivityLog.logSuccess.mockResolvedValue(undefined);
 
       // Act
       await service.execute({
@@ -273,7 +238,6 @@ describe('LoginService', () => {
       });
 
       mockRecordService.execute.mockResolvedValue(mockLoginAttempt);
-      mockActivityLog.logSuccess.mockResolvedValue(undefined);
 
       // Act
       await service.execute({
@@ -290,10 +254,19 @@ describe('LoginService', () => {
         }),
       );
 
-      expect(mockActivityLog.logSuccess).toHaveBeenCalledWith(
+      expect(mockDispatchLogService.dispatch).toHaveBeenCalledWith(
         expect.objectContaining({
-          activityType: ActivityType.USER_LOGIN,
-          description: 'User logged in successfully',
+          type: 'AUTH',
+          data: expect.objectContaining({
+            action: 'USER_LOGIN',
+            status: 'SUCCESS',
+            ip: mockClientInfo.ip,
+            userAgent: mockClientInfo.userAgent,
+            metadata: {
+              isAdmin: false,
+              email: mockUser.email,
+            },
+          }),
         }),
         mockClientInfo,
       );
@@ -315,7 +288,6 @@ describe('LoginService', () => {
       ).rejects.toThrow('Database error');
 
       expect(mockRecordService.execute).toHaveBeenCalledTimes(1);
-      expect(mockActivityLog.logSuccess).not.toHaveBeenCalled();
     });
 
     it('activityLog.logSuccess가 실패해도 로그인은 성공해야 함 (에러는 조용히 처리)', async () => {
@@ -333,7 +305,7 @@ describe('LoginService', () => {
 
       const activityLogError = new Error('Activity log failed');
       mockRecordService.execute.mockResolvedValue(mockLoginAttempt);
-      mockActivityLog.logSuccess.mockRejectedValue(activityLogError);
+      mockDispatchLogService.dispatch.mockRejectedValue(activityLogError);
 
       // Logger.error를 모킹하여 에러 로깅 확인
       const loggerErrorSpy = jest
@@ -350,11 +322,11 @@ describe('LoginService', () => {
 
       // Assert
       expect(mockRecordService.execute).toHaveBeenCalledTimes(1);
-      expect(mockActivityLog.logSuccess).toHaveBeenCalledTimes(1);
+      expect(mockDispatchLogService.dispatch).toHaveBeenCalledTimes(1);
       // 에러가 조용히 처리되어 예외가 전파되지 않아야 함
       expect(loggerErrorSpy).toHaveBeenCalledWith(
         activityLogError,
-        expect.stringContaining('Activity log 기록 실패 (로그인은 성공)'),
+        expect.stringContaining('Audit log 기록 실패 (로그인은 성공)'),
       );
 
       loggerErrorSpy.mockRestore();
@@ -379,7 +351,7 @@ describe('LoginService', () => {
       });
 
       mockRecordService.execute.mockResolvedValue(mockLoginAttempt);
-      mockActivityLog.logSuccess.mockResolvedValue(undefined);
+      mockDispatchLogService.dispatch.mockResolvedValue(undefined);
 
       // Act
       await service.execute({

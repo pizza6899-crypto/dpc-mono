@@ -3,9 +3,7 @@ import type { TestingModule } from '@nestjs/testing';
 import { Test } from '@nestjs/testing';
 import { HttpStatus } from '@nestjs/common';
 import { RegisterCredentialService } from './register-credential.service';
-import { ACTIVITY_LOG } from 'src/common/activity-log/activity-log.token';
-import type { ActivityLogPort } from 'src/common/activity-log/activity-log.port';
-import { ActivityType } from 'src/common/activity-log/activity-log.types';
+import { DispatchLogService } from 'src/modules/audit-log/application/dispatch-log.service';
 import { LinkReferralService } from 'src/modules/affiliate/referral/application/link-referral.service';
 import { FindCodeByCodeService } from 'src/modules/affiliate/code/application/find-code-by-code.service';
 import { USER_REPOSITORY } from 'src/modules/user/ports/out/user.repository.token';
@@ -26,11 +24,12 @@ import type { RequestClientInfo } from 'src/common/http/types/client-info.types'
 import { Referral } from 'src/modules/affiliate/referral/domain/model/referral.entity';
 import { PrismaModule } from 'src/infrastructure/prisma/prisma.module';
 import { EnvModule } from 'src/common/env/env.module';
+import { LogType } from 'src/modules/audit-log/domain';
 
 describe('RegisterCredentialService', () => {
   let module: TestingModule;
   let service: RegisterCredentialService;
-  let mockActivityLog: jest.Mocked<ActivityLogPort>;
+  let mockDispatchLogService: jest.Mocked<DispatchLogService>;
   let mockLinkReferralService: jest.Mocked<LinkReferralService>;
   let mockFindCodeByCodeService: jest.Mocked<FindCodeByCodeService>;
   let mockCreateUserService: jest.Mocked<CreateUserService>;
@@ -122,11 +121,9 @@ describe('RegisterCredentialService', () => {
   });
 
   beforeEach(async () => {
-    mockActivityLog = {
-      log: jest.fn(),
-      logSuccess: jest.fn(),
-      logFailure: jest.fn(),
-    };
+    mockDispatchLogService = {
+      dispatch: jest.fn(),
+    } as any;
 
     mockLinkReferralService = {
       execute: jest.fn(),
@@ -155,8 +152,8 @@ describe('RegisterCredentialService', () => {
       providers: [
         RegisterCredentialService,
         {
-          provide: ACTIVITY_LOG,
-          useValue: mockActivityLog,
+          provide: DispatchLogService,
+          useValue: mockDispatchLogService,
         },
         {
           provide: LinkReferralService,
@@ -178,7 +175,7 @@ describe('RegisterCredentialService', () => {
     }).compile();
 
     service = module.get<RegisterCredentialService>(RegisterCredentialService);
-    mockActivityLog = module.get(ACTIVITY_LOG);
+    mockDispatchLogService = module.get(DispatchLogService);
     mockLinkReferralService = module.get(LinkReferralService);
     mockFindCodeByCodeService = module.get(FindCodeByCodeService);
     mockCreateUserService = module.get(CreateUserService);
@@ -197,7 +194,7 @@ describe('RegisterCredentialService', () => {
       mockCreateUserService.execute.mockResolvedValue({
         user: mockDomainUser,
       });
-      mockActivityLog.logSuccess.mockResolvedValue(undefined);
+      mockDispatchLogService.dispatch.mockResolvedValue(undefined);
 
       // Act
       const result = await service.execute({
@@ -222,11 +219,18 @@ describe('RegisterCredentialService', () => {
         timezone: expect.any(String),
       });
       expect(mockLinkReferralService.execute).not.toHaveBeenCalled();
-      expect(mockActivityLog.logSuccess).toHaveBeenCalledWith(
+      expect(mockDispatchLogService.dispatch).toHaveBeenCalledWith(
         {
-          userId: mockUserId,
-          activityType: ActivityType.USER_REGISTER,
-          description: 'User registered successfully',
+          type: LogType.AUTH,
+          data: {
+            userId: mockUserId.toString(),
+            action: 'USER_REGISTER',
+            status: 'SUCCESS',
+            metadata: {
+              registrationMethod: 'EMAIL',
+              referralCode: null,
+            },
+          },
         },
         mockRequestInfo,
       );
@@ -239,7 +243,7 @@ describe('RegisterCredentialService', () => {
         user: mockDomainUser,
       });
       mockLinkReferralService.execute.mockResolvedValue(mockReferral);
-      mockActivityLog.logSuccess.mockResolvedValue(undefined);
+      mockDispatchLogService.dispatch.mockResolvedValue(undefined);
 
       // Act
       const result = await service.execute({
@@ -267,6 +271,21 @@ describe('RegisterCredentialService', () => {
         userAgent: mockRequestInfo.userAgent,
         requestInfo: mockRequestInfo,
       });
+      expect(mockDispatchLogService.dispatch).toHaveBeenCalledWith(
+        {
+          type: LogType.AUTH,
+          data: {
+            userId: mockUserId.toString(),
+            action: 'USER_REGISTER',
+            status: 'SUCCESS',
+            metadata: {
+              registrationMethod: 'EMAIL',
+              referralCode: mockReferralCode,
+            },
+          },
+        },
+        mockRequestInfo,
+      );
     });
 
     it('이메일이 이미 존재하는 경우 에러를 발생시킨다', async () => {
@@ -384,13 +403,13 @@ describe('RegisterCredentialService', () => {
       expect(mockCreateUserService.execute).not.toHaveBeenCalled();
     });
 
-    it('액티비티 로그 실패 시에도 회원가입은 성공한다', async () => {
+    it('Audit 로그 실패 시에도 회원가입은 성공한다', async () => {
       // Arrange
       mockCreateUserService.execute.mockResolvedValue({
         user: mockDomainUser,
       });
-      mockActivityLog.logSuccess.mockRejectedValue(
-        new Error('Activity log failed'),
+      mockDispatchLogService.dispatch.mockRejectedValue(
+        new Error('Audit log failed'),
       );
 
       // Act
@@ -407,7 +426,7 @@ describe('RegisterCredentialService', () => {
       });
 
       expect(mockCreateUserService.execute).toHaveBeenCalled();
-      expect(mockActivityLog.logSuccess).toHaveBeenCalled();
+      expect(mockDispatchLogService.dispatch).toHaveBeenCalled();
     });
 
     it('레퍼럴 관계 생성 실패 시 트랜잭션이 롤백되어 회원가입도 실패한다', async () => {
@@ -441,7 +460,7 @@ describe('RegisterCredentialService', () => {
       mockCreateUserService.execute.mockResolvedValue({
         user: mockDomainUser,
       });
-      mockActivityLog.logSuccess.mockResolvedValue(undefined);
+      mockDispatchLogService.dispatch.mockResolvedValue(undefined);
 
       // Act
       await service.execute({
@@ -468,7 +487,7 @@ describe('RegisterCredentialService', () => {
       mockCreateUserService.execute.mockResolvedValue({
         user: mockDomainUser,
       });
-      mockActivityLog.logSuccess.mockResolvedValue(undefined);
+      mockDispatchLogService.dispatch.mockResolvedValue(undefined);
 
       // Act
       await service.execute({
@@ -501,7 +520,7 @@ describe('RegisterCredentialService', () => {
       ).rejects.toThrow('Database error');
 
       expect(mockCreateUserService.execute).toHaveBeenCalled();
-      expect(mockActivityLog.logSuccess).not.toHaveBeenCalled();
+      expect(mockDispatchLogService.dispatch).not.toHaveBeenCalled();
     });
 
     it('findCodeByCodeService.execute가 일반 에러를 던지면 예외를 전파해야 함', async () => {

@@ -1,12 +1,10 @@
 // src/modules/affiliate/referral/application/admin-referral.service.ts
 import { Injectable, Logger } from '@nestjs/common';
-import { Inject } from '@nestjs/common';
 import { PrismaService } from 'src/infrastructure/prisma/prisma.service';
 import { Prisma } from '@repo/database';
-import { ACTIVITY_LOG } from 'src/common/activity-log/activity-log.token';
-import type { ActivityLogPort } from 'src/common/activity-log/activity-log.port';
-import { ActivityType } from 'src/common/activity-log/activity-log.types';
 import type { PaginatedData, RequestClientInfo } from 'src/common/http/types';
+import { DispatchLogService } from 'src/modules/audit-log/application/dispatch-log.service';
+import { LogType } from 'src/modules/audit-log/domain';
 import { GetReferralsQueryDto } from '../controllers/dto/request/get-referrals-query.dto';
 import { AdminReferralListItemDto } from '../controllers/dto/response/admin-referral-response.dto';
 import { ReferralMapper } from '../infrastructure/referral.mapper';
@@ -22,8 +20,7 @@ export class AdminReferralService {
   constructor(
     private readonly prismaService: PrismaService,
     private readonly mapper: ReferralMapper,
-    @Inject(ACTIVITY_LOG)
-    private readonly activityLog: ActivityLogPort,
+    private readonly dispatchLogService: DispatchLogService,
   ) {}
 
   /**
@@ -92,24 +89,26 @@ export class AdminReferralService {
         this.prismaService.referral.count({ where }),
       ]);
 
-      // Activity Log 기록
+      // Audit Log 기록
       // BigInt를 문자열로 변환하여 직렬화 가능하게 만듦
       const serializableFilters = {
         ...filters,
         ...(filters.affiliateId && { affiliateId: filters.affiliateId.toString() }),
         ...(filters.subUserId && { subUserId: filters.subUserId.toString() }),
       };
-      await this.activityLog.logSuccess(
+      await this.dispatchLogService.dispatch(
         {
-          userId: adminId,
-          isAdmin: true,
-          activityType: ActivityType.ADMIN_AFFILIATE_LINK_LIST_VIEW,
-          description: `관리자가 레퍼럴 목록을 조회했습니다. (필터: ${JSON.stringify(serializableFilters)})`,
-          metadata: {
-            filters: serializableFilters,
-            total,
-            page,
-            limit,
+          type: LogType.ACTIVITY,
+          data: {
+            userId: adminId.toString(),
+            category: 'AFFILIATE',
+            action: 'ADMIN_REFERRAL_LIST_VIEW',
+            metadata: {
+              filters: serializableFilters,
+              total,
+              page,
+              limit,
+            },
           },
         },
         requestInfo,
@@ -190,15 +189,17 @@ export class AdminReferralService {
         throw new ReferralNotFoundException(id);
       }
 
-      // Activity Log 기록
-      await this.activityLog.logSuccess(
+      // Audit Log 기록
+      await this.dispatchLogService.dispatch(
         {
-          userId: adminId,
-          isAdmin: true,
-          activityType: ActivityType.ADMIN_AFFILIATE_LINK_LIST_VIEW,
-          description: `관리자가 레퍼럴 상세를 조회했습니다. (ID: ${id})`,
-          metadata: {
-            referralId: id,
+          type: LogType.ACTIVITY,
+          data: {
+            userId: adminId.toString(),
+            category: 'AFFILIATE',
+            action: 'ADMIN_REFERRAL_DETAIL_VIEW',
+            metadata: {
+              referralId: id,
+            },
           },
         },
         requestInfo,

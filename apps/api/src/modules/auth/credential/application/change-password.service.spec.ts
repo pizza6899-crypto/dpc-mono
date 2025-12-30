@@ -6,9 +6,6 @@ import { ChangePasswordService } from './change-password.service';
 import { VerifyCredentialService } from './verify-credential.service';
 import { USER_REPOSITORY } from 'src/modules/user/ports/out/user.repository.token';
 import type { UserRepositoryPort } from 'src/modules/user/ports/out/user.repository.port';
-import { ACTIVITY_LOG } from 'src/common/activity-log/activity-log.token';
-import type { ActivityLogPort } from 'src/common/activity-log/activity-log.port';
-import { ActivityType } from 'src/common/activity-log/activity-log.types';
 import { User } from 'src/modules/user/domain';
 import { UserStatus, UserRoleType, SocialType } from '@repo/database';
 import { hashPassword } from 'src/utils/password.util';
@@ -24,7 +21,6 @@ describe('ChangePasswordService', () => {
   let service: ChangePasswordService;
   let mockVerifyService: jest.Mocked<VerifyCredentialService>;
   let mockUserRepository: jest.Mocked<UserRepositoryPort>;
-  let mockActivityLog: jest.Mocked<ActivityLogPort>;
   let mockDispatchLogService: jest.Mocked<DispatchLogService>;
 
   const mockUserId = BigInt(1);
@@ -77,15 +73,6 @@ describe('ChangePasswordService', () => {
       },
     };
 
-    const mockActivityLogProvider = {
-      provide: ACTIVITY_LOG,
-      useValue: {
-        logSuccess: jest.fn(),
-        logFailure: jest.fn(),
-        log: jest.fn(),
-      },
-    };
-
     const mockDispatchLogServiceProvider = {
       provide: DispatchLogService,
       useValue: {
@@ -99,7 +86,6 @@ describe('ChangePasswordService', () => {
         ChangePasswordService,
         mockVerifyServiceProvider,
         mockUserRepositoryProvider,
-        mockActivityLogProvider,
         mockDispatchLogServiceProvider,
       ],
     })
@@ -109,7 +95,6 @@ describe('ChangePasswordService', () => {
     service = module.get<ChangePasswordService>(ChangePasswordService);
     mockVerifyService = module.get(VerifyCredentialService);
     mockUserRepository = module.get(USER_REPOSITORY);
-    mockActivityLog = module.get(ACTIVITY_LOG);
     mockDispatchLogService = module.get(DispatchLogService);
 
     jest.clearAllMocks();
@@ -155,7 +140,6 @@ describe('ChangePasswordService', () => {
           passwordHash: mockNewPasswordHash,
         }),
       );
-      mockActivityLog.logSuccess.mockResolvedValue(undefined);
 
       // Act
       await service.execute({
@@ -176,17 +160,6 @@ describe('ChangePasswordService', () => {
       expect(mockUserRepository.updatePassword).toHaveBeenCalledWith(
         mockUserId,
         expect.any(String), // 해시된 비밀번호
-      );
-      expect(mockActivityLog.logSuccess).toHaveBeenCalledWith(
-        {
-          userId: mockUserId,
-          activityType: ActivityType.PASSWORD_CHANGE,
-          description: '비밀번호 변경 완료',
-          metadata: {
-            isAdmin: false,
-          },
-        },
-        mockClientInfo,
       );
     });
 
@@ -417,7 +390,6 @@ describe('ChangePasswordService', () => {
           passwordHash: mockNewPasswordHash,
         }),
       );
-      mockActivityLog.logSuccess.mockResolvedValue(undefined);
 
       // Act
       await service.execute({
@@ -434,14 +406,6 @@ describe('ChangePasswordService', () => {
         password: mockCurrentPassword,
         isAdmin: true,
       });
-      expect(mockActivityLog.logSuccess).toHaveBeenCalledWith(
-        expect.objectContaining({
-          metadata: {
-            isAdmin: true,
-          },
-        }),
-        mockClientInfo,
-      );
     });
 
     it('Activity Log 실패 시에도 비밀번호 변경은 성공해야 함', async () => {
@@ -464,7 +428,8 @@ describe('ChangePasswordService', () => {
           passwordHash: mockNewPasswordHash,
         }),
       );
-      mockActivityLog.logSuccess.mockRejectedValue(activityLogError);
+      // Activity Log 실패 시뮬레이션
+      mockDispatchLogService.dispatch.mockRejectedValue(activityLogError);
 
       // Logger.error를 모킹하여 에러 로깅 확인
       const loggerErrorSpy = jest
@@ -482,11 +447,10 @@ describe('ChangePasswordService', () => {
 
       // Assert
       expect(mockUserRepository.updatePassword).toHaveBeenCalledTimes(1);
-      expect(mockActivityLog.logSuccess).toHaveBeenCalledTimes(1);
       // 에러가 조용히 처리되어 예외가 전파되지 않아야 함
       expect(loggerErrorSpy).toHaveBeenCalledWith(
         activityLogError,
-        expect.stringContaining('Activity log 기록 실패 (비밀번호 변경은 성공)'),
+        expect.stringContaining('Audit log 기록 실패 (비밀번호 변경은 성공)'),
       );
 
       loggerErrorSpy.mockRestore();
@@ -510,7 +474,6 @@ describe('ChangePasswordService', () => {
           passwordHash: mockNewPasswordHash,
         }),
       );
-      mockActivityLog.logSuccess.mockResolvedValue(undefined);
 
       // Act
       await service.execute({
@@ -527,14 +490,6 @@ describe('ChangePasswordService', () => {
         password: mockCurrentPassword,
         isAdmin: false,
       });
-      expect(mockActivityLog.logSuccess).toHaveBeenCalledWith(
-        expect.objectContaining({
-          metadata: {
-            isAdmin: false,
-          },
-        }),
-        mockClientInfo,
-      );
     });
 
     it('새 비밀번호가 해싱되어 저장되어야 함', async () => {
@@ -555,7 +510,6 @@ describe('ChangePasswordService', () => {
           passwordHash: mockNewPasswordHash,
         }),
       );
-      mockActivityLog.logSuccess.mockResolvedValue(undefined);
 
       // Act
       await service.execute({

@@ -5,9 +5,8 @@ import { AFFILIATE_CODE_REPOSITORY } from '../ports/out/affiliate-code.repositor
 import type { AffiliateCodeRepositoryPort } from '../ports/out/affiliate-code.repository.port';
 import { Transactional } from '@nestjs-cls/transactional';
 import type { RequestClientInfo } from 'src/common/http/types/client-info.types';
-import { ACTIVITY_LOG } from 'src/common/activity-log/activity-log.token';
-import type { ActivityLogPort } from 'src/common/activity-log/activity-log.port';
-import { ActivityType } from 'src/common/activity-log/activity-log.types';
+import { DispatchLogService } from 'src/modules/audit-log/application/dispatch-log.service';
+import { LogType } from 'src/modules/audit-log/domain';
 
 interface SetCodeAsDefaultParams {
   id: string;
@@ -20,8 +19,7 @@ export class SetCodeAsDefaultService {
   constructor(
     @Inject(AFFILIATE_CODE_REPOSITORY)
     private readonly repository: AffiliateCodeRepositoryPort,
-    @Inject(ACTIVITY_LOG)
-    private readonly activityLog: ActivityLogPort,
+    private readonly dispatchLogService: DispatchLogService,
   ) {}
 
   @Transactional()
@@ -58,32 +56,38 @@ export class SetCodeAsDefaultService {
     // 새로 설정된 기본 코드 반환
     const result = updatedCodes.find((c) => c.id === code.id) || code;
 
-    // Activity Log 기록
+    // Audit Log 기록
     if (requestInfo) {
       if (existingDefault && existingDefault.id !== code.id) {
-        await this.activityLog.logSuccess(
+        await this.dispatchLogService.dispatch(
           {
-            userId,
-            activityType: ActivityType.AFFILIATE_CODE_SET_DEFAULT,
-            description: `기본 어플리에이트 코드 변경 - 이전 코드: ${existingDefault.code}, 새 코드: ${code.code}`,
-            metadata: {
-              codeId: id,
-              code: code.code,
-              previousDefaultCodeId: existingDefault.id,
-              previousDefaultCode: existingDefault.code,
+            type: LogType.ACTIVITY,
+            data: {
+              userId: userId.toString(),
+              category: 'AFFILIATE',
+              action: 'AFFILIATE_CODE_SET_DEFAULT',
+              metadata: {
+                codeId: id,
+                code: code.code,
+                previousDefaultCodeId: existingDefault.id,
+                previousDefaultCode: existingDefault.code,
+              },
             },
           },
           requestInfo,
         );
       } else {
-        await this.activityLog.logSuccess(
+        await this.dispatchLogService.dispatch(
           {
-            userId,
-            activityType: ActivityType.AFFILIATE_CODE_SET_DEFAULT,
-            description: `기본 어플리에이트 코드 설정 - 코드: ${code.code}`,
-            metadata: {
-              codeId: id,
-              code: code.code,
+            type: LogType.ACTIVITY,
+            data: {
+              userId: userId.toString(),
+              category: 'AFFILIATE',
+              action: 'AFFILIATE_CODE_SET_DEFAULT',
+              metadata: {
+                codeId: id,
+                code: code.code,
+              },
             },
           },
           requestInfo,

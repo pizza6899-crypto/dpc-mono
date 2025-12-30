@@ -6,14 +6,16 @@ import { REFERRAL_REPOSITORY } from '../ports/out/referral.repository.token';
 import type { ReferralRepositoryPort } from '../ports/out/referral.repository.port';
 import { Referral } from '../domain/model/referral.entity';
 import { ReferralNotFoundException } from '../domain/referral.exception';
+import { DispatchLogService } from 'src/modules/audit-log/application/dispatch-log.service';
 
 describe('FindReferralByIdService', () => {
   let service: FindReferralByIdService;
   let mockRepository: jest.Mocked<ReferralRepositoryPort>;
+  let mockDispatchLogService: jest.Mocked<DispatchLogService>;
 
   const referralId = 'referral-123';
-  const affiliateId = 'affiliate-123';
-  const subUserId = 'sub-user-456';
+  const affiliateId = BigInt(123);
+  const subUserId = BigInt(456);
   const codeId = 'code-789';
 
   const mockReferral = Referral.fromPersistence({
@@ -40,6 +42,13 @@ describe('FindReferralByIdService', () => {
       countByAffiliateId: jest.fn(),
     };
 
+    const mockDispatchLogServiceProvider = {
+      provide: DispatchLogService,
+      useValue: {
+        dispatch: jest.fn().mockResolvedValue(undefined),
+      },
+    };
+
     const module: TestingModule = await Test.createTestingModule({
       providers: [
         FindReferralByIdService,
@@ -47,11 +56,15 @@ describe('FindReferralByIdService', () => {
           provide: REFERRAL_REPOSITORY,
           useValue: mockRepository,
         },
+        mockDispatchLogServiceProvider,
       ],
     }).compile();
 
     service = module.get<FindReferralByIdService>(FindReferralByIdService);
     mockRepository = module.get(REFERRAL_REPOSITORY);
+    mockDispatchLogService = module.get(
+      DispatchLogService,
+    ) as jest.Mocked<DispatchLogService>;
 
     jest.clearAllMocks();
   });

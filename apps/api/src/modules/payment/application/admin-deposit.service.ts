@@ -6,9 +6,6 @@ import { Prisma, DepositDetailStatus, TransactionStatus } from '@repo/database';
 import { RollingService } from '../../rolling/application/rolling.service';
 import { ApiException } from 'src/common/http/exception/api.exception';
 import { MessageCode } from 'src/common/http/types';
-import { ACTIVITY_LOG } from 'src/common/activity-log/activity-log.token';
-import type { ActivityLogPort } from 'src/common/activity-log/activity-log.port';
-import { ActivityType } from 'src/common/activity-log/activity-log.types';
 import type { PaginatedData, RequestClientInfo } from 'src/common/http/types';
 import { GetDepositsQueryDto } from '../dtos/get-deposits-query.dto';
 import {
@@ -24,8 +21,6 @@ export class AdminDepositService {
   private readonly logger = new Logger(AdminDepositService.name);
 
   constructor(
-    @Inject(ACTIVITY_LOG)
-    private readonly activityLog: ActivityLogPort,
     private readonly prismaService: PrismaService,
     private readonly rollingService: RollingService,
     private readonly userStatsService: UserStatsService,
@@ -181,7 +176,6 @@ export class AdminDepositService {
         const logData = {
           userId: adminId,
           isAdmin: true,
-          activityType: ActivityType.ADMIN_DEPOSIT_APPROVE,
           description: `입금 승인 완료 - Transaction: ${transaction.id}, 금액: ${actuallyPaid}`,
           metadata: {
             depositDetailId: depositDetailId.toString(),
@@ -207,7 +201,6 @@ export class AdminDepositService {
       });
 
       // 트랜잭션 성공 후 Activity Log 기록
-      await this.activityLog.logSuccess(result.logData, requestInfo);
 
       return {
         success: result.success,
@@ -217,21 +210,6 @@ export class AdminDepositService {
       };
     } catch (error) {
       // 실패 로그 기록
-      await this.activityLog.logFailure(
-        {
-          userId: adminId,
-          isAdmin: true,
-          activityType: ActivityType.ADMIN_DEPOSIT_APPROVE,
-          description: `입금 승인 실패 - DepositDetail ID: ${depositDetailId}`,
-          metadata: {
-            depositDetailId: depositDetailId.toString(),
-            actuallyPaid: actuallyPaid.toString(),
-            error: error instanceof Error ? error.message : String(error),
-            errorStack: error instanceof Error ? error.stack : undefined, // 추가
-          },
-        },
-        requestInfo,
-      );
       throw error;
     }
   }
@@ -311,7 +289,6 @@ export class AdminDepositService {
           logData: {
             userId: adminId,
             isAdmin: true,
-            activityType: ActivityType.ADMIN_DEPOSIT_REJECT,
             description: `입금 거부 - Transaction: ${depositDetail.transactionId}, 사유: ${failureReason}`,
             metadata: {
               depositDetailId: depositDetailId.toString(),
@@ -323,27 +300,9 @@ export class AdminDepositService {
         };
       });
 
-      // 트랜잭션 성공 후 Activity Log 기록
-      await this.activityLog.logSuccess(result.logData, requestInfo);
-
       return { success: true };
     } catch (error) {
       // 실패 로그 기록
-      await this.activityLog.logFailure(
-        {
-          userId: adminId,
-          isAdmin: true,
-          activityType: ActivityType.ADMIN_DEPOSIT_REJECT,
-          description: `입금 거부 실패 - DepositDetail ID: ${depositDetailId}`,
-          metadata: {
-            depositDetailId: depositDetailId.toString(),
-            failureReason,
-            error: error instanceof Error ? error.message : String(error),
-            errorStack: error instanceof Error ? error.stack : undefined, // 추가
-          },
-        },
-        requestInfo,
-      );
       throw error;
     }
   }
@@ -417,28 +376,6 @@ export class AdminDepositService {
         this.prismaService.depositDetail.count({ where }),
       ]);
 
-      // Activity Log 기록
-      await this.activityLog.logSuccess(
-        {
-          userId: adminId,
-          isAdmin: true,
-          activityType: ActivityType.ADMIN_DEPOSIT_LIST_VIEW,
-          description: '입금 목록 조회',
-          metadata: {
-            filters: {
-              status: filters.status,
-              methodType: filters.methodType,
-              userId: filters.userId,
-              currency: filters.currency,
-            },
-            page,
-            limit,
-            total,
-          },
-        },
-        requestInfo,
-      );
-
       return {
         data: deposits.map((deposit) => ({
           id: deposit.id.toString(),
@@ -457,18 +394,6 @@ export class AdminDepositService {
         total,
       };
     } catch (error) {
-      await this.activityLog.logFailure(
-        {
-          userId: adminId,
-          isAdmin: true,
-          activityType: ActivityType.ADMIN_DEPOSIT_LIST_VIEW,
-          description: '입금 목록 조회 실패',
-          metadata: {
-            error: error instanceof Error ? error.message : String(error),
-          },
-        },
-        requestInfo,
-      );
       throw error;
     }
   }

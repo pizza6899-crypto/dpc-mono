@@ -5,9 +5,8 @@ import { ExchangeCurrencyCode, Prisma } from '@repo/database';
 import { WithdrawCommissionService } from './withdraw-commission.service';
 import { AFFILIATE_WALLET_REPOSITORY } from '../ports/out/affiliate-wallet.repository.token';
 import type { AffiliateWalletRepositoryPort } from '../ports/out/affiliate-wallet.repository.port';
-import { ACTIVITY_LOG } from 'src/common/activity-log/activity-log.token';
-import type { ActivityLogPort } from 'src/common/activity-log/activity-log.port';
-import { ActivityType } from 'src/common/activity-log/activity-log.types';
+import { DispatchLogService } from 'src/modules/audit-log/application/dispatch-log.service';
+import { LogType } from 'src/modules/audit-log/domain';
 import { AffiliateWallet } from '../domain';
 import {
   InsufficientBalanceException,
@@ -21,7 +20,7 @@ describe('WithdrawCommissionService', () => {
   let module: TestingModule;
   let service: WithdrawCommissionService;
   let mockWalletRepository: jest.Mocked<AffiliateWalletRepositoryPort>;
-  let mockActivityLog: jest.Mocked<ActivityLogPort>;
+  let mockDispatchLogService: jest.Mocked<DispatchLogService>;
 
   const mockAffiliateId = BigInt(123);
   const mockCurrency = ExchangeCurrencyCode.USD;
@@ -72,10 +71,11 @@ describe('WithdrawCommissionService', () => {
       updateBalance: jest.fn(),
     };
 
-    mockActivityLog = {
-      log: jest.fn(),
-      logSuccess: jest.fn(),
-      logFailure: jest.fn(),
+    const mockDispatchLogServiceProvider = {
+      provide: DispatchLogService,
+      useValue: {
+        dispatch: jest.fn().mockResolvedValue(undefined),
+      },
     };
 
     module = await Test.createTestingModule({
@@ -86,16 +86,15 @@ describe('WithdrawCommissionService', () => {
           provide: AFFILIATE_WALLET_REPOSITORY,
           useValue: mockWalletRepository,
         },
-        {
-          provide: ACTIVITY_LOG,
-          useValue: mockActivityLog,
-        },
+        mockDispatchLogServiceProvider,
       ],
     }).compile();
 
     service = module.get<WithdrawCommissionService>(WithdrawCommissionService);
     mockWalletRepository = module.get(AFFILIATE_WALLET_REPOSITORY);
-    mockActivityLog = module.get(ACTIVITY_LOG);
+    mockDispatchLogService = module.get(
+      DispatchLogService,
+    ) as jest.Mocked<DispatchLogService>;
 
     jest.clearAllMocks();
   });
@@ -133,8 +132,7 @@ describe('WithdrawCommissionService', () => {
         mockWalletRepository.getByAffiliateIdAndCurrency,
       ).toHaveBeenCalledWith(mockAffiliateId, mockCurrency);
       expect(mockWalletRepository.upsert).toHaveBeenCalled();
-      expect(mockActivityLog.logSuccess).not.toHaveBeenCalled();
-      expect(mockActivityLog.logFailure).not.toHaveBeenCalled();
+      expect(mockDispatchLogService.dispatch).not.toHaveBeenCalled();
     });
 
     it('requestInfo가 있을 때 Activity Log에 성공 로그를 기록한다', async () => {
@@ -161,20 +159,23 @@ describe('WithdrawCommissionService', () => {
 
       // Then
       expect(result).toBe(updatedWallet);
-      expect(mockActivityLog.logSuccess).toHaveBeenCalledTimes(1);
-      expect(mockActivityLog.logSuccess).toHaveBeenCalledWith(
+      expect(mockDispatchLogService.dispatch).toHaveBeenCalledTimes(1);
+      expect(mockDispatchLogService.dispatch).toHaveBeenCalledWith(
         {
-          userId: mockAffiliateId,
-          activityType: ActivityType.COMMISSION_WITHDRAW,
-          description: expect.stringContaining('커미션 출금 완료'),
-          metadata: {
-            affiliateId: mockAffiliateId,
-            currency: mockCurrency,
-            amount: mockWithdrawAmount.toString(),
-            beforeBalance: beforeBalance.toString(),
-            afterBalance: updatedWallet.availableBalance.toString(),
-            pendingBalance: updatedWallet.pendingBalance.toString(),
-            totalEarned: updatedWallet.totalEarned.toString(),
+          type: LogType.ACTIVITY,
+          data: {
+            userId: mockAffiliateId.toString(),
+            category: 'AFFILIATE',
+            action: 'COMMISSION_WITHDRAW',
+            metadata: {
+              affiliateId: mockAffiliateId.toString(),
+              currency: mockCurrency,
+              amount: mockWithdrawAmount.toString(),
+              beforeBalance: beforeBalance.toString(),
+              afterBalance: updatedWallet.availableBalance.toString(),
+              pendingBalance: updatedWallet.pendingBalance.toString(),
+              totalEarned: updatedWallet.totalEarned.toString(),
+            },
           },
         },
         mockRequestInfo,
@@ -228,17 +229,20 @@ describe('WithdrawCommissionService', () => {
         }),
       ).rejects.toThrow(WalletNotFoundException);
 
-      expect(mockActivityLog.logFailure).toHaveBeenCalledTimes(1);
-      expect(mockActivityLog.logFailure).toHaveBeenCalledWith(
+      expect(mockDispatchLogService.dispatch).toHaveBeenCalledTimes(1);
+      expect(mockDispatchLogService.dispatch).toHaveBeenCalledWith(
         {
-          userId: mockAffiliateId,
-          activityType: ActivityType.COMMISSION_WITHDRAW,
-          description: expect.stringContaining('커미션 출금 실패'),
-          metadata: {
-            affiliateId: mockAffiliateId,
-            currency: mockCurrency,
-            amount: mockWithdrawAmount.toString(),
-            error: expect.stringContaining('Wallet not found'),
+          type: LogType.ACTIVITY,
+          data: {
+            userId: mockAffiliateId.toString(),
+            category: 'AFFILIATE',
+            action: 'COMMISSION_WITHDRAW',
+            metadata: {
+              affiliateId: mockAffiliateId.toString(),
+              currency: mockCurrency,
+              amount: mockWithdrawAmount.toString(),
+              error: expect.stringContaining('Wallet not found'),
+            },
           },
         },
         mockRequestInfo,
@@ -265,17 +269,20 @@ describe('WithdrawCommissionService', () => {
       ).rejects.toThrow(InsufficientBalanceException);
 
       expect(mockWalletRepository.upsert).not.toHaveBeenCalled();
-      expect(mockActivityLog.logFailure).toHaveBeenCalledTimes(1);
-      expect(mockActivityLog.logFailure).toHaveBeenCalledWith(
+      expect(mockDispatchLogService.dispatch).toHaveBeenCalledTimes(1);
+      expect(mockDispatchLogService.dispatch).toHaveBeenCalledWith(
         {
-          userId: mockAffiliateId,
-          activityType: ActivityType.COMMISSION_WITHDRAW,
-          description: expect.stringContaining('커미션 출금 실패'),
-          metadata: {
-            affiliateId: mockAffiliateId,
-            currency: mockCurrency,
-            amount: largeAmount.toString(),
-            error: expect.stringContaining('Insufficient balance'),
+          type: LogType.ACTIVITY,
+          data: {
+            userId: mockAffiliateId.toString(),
+            category: 'AFFILIATE',
+            action: 'COMMISSION_WITHDRAW',
+            metadata: {
+              affiliateId: mockAffiliateId.toString(),
+              currency: mockCurrency,
+              amount: largeAmount.toString(),
+              error: expect.stringContaining('Insufficient balance'),
+            },
           },
         },
         mockRequestInfo,
@@ -302,7 +309,7 @@ describe('WithdrawCommissionService', () => {
       ).rejects.toThrow(InsufficientBalanceException);
 
       expect(mockWalletRepository.upsert).not.toHaveBeenCalled();
-      expect(mockActivityLog.logFailure).toHaveBeenCalledTimes(1);
+      expect(mockDispatchLogService.dispatch).toHaveBeenCalledTimes(1);
     });
 
     it('전체 잔액을 출금하는 경우 성공한다', async () => {
@@ -328,7 +335,7 @@ describe('WithdrawCommissionService', () => {
       // Then
       expect(result).toBe(updatedWallet);
       expect(result.availableBalance.toString()).toBe('0');
-      expect(mockActivityLog.logSuccess).toHaveBeenCalledTimes(1);
+      expect(mockDispatchLogService.dispatch).toHaveBeenCalledTimes(1);
     });
 
     it('requestInfo가 없을 때 Activity Log를 기록하지 않는다', async () => {
@@ -353,8 +360,7 @@ describe('WithdrawCommissionService', () => {
       });
 
       // Then
-      expect(mockActivityLog.logSuccess).not.toHaveBeenCalled();
-      expect(mockActivityLog.logFailure).not.toHaveBeenCalled();
+      expect(mockDispatchLogService.dispatch).not.toHaveBeenCalled();
     });
 
     it('다양한 통화에 대해 출금을 처리한다', async () => {

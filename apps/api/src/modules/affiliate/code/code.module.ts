@@ -16,10 +16,10 @@ import { AffiliateCodeRepository } from './infrastructure/affiliate-code.reposit
 import { AffiliateCodeMapper } from './infrastructure/affiliate-code.mapper';
 import { AffiliateCodeController } from './controllers/user/affiliate-code.controller';
 import { AffiliateCodeAdminController } from './controllers/admin/affiliate-code-admin.controller';
-import { ActivityLogModule } from 'src/common/activity-log/activity-log.module';
+import { AuditLogModule } from 'src/modules/audit-log/audit-log.module';
 
 @Module({
-  imports: [ActivityLogModule],
+  imports: [AuditLogModule],
   providers: [
     // Use Case Services
     CreateCodeService,

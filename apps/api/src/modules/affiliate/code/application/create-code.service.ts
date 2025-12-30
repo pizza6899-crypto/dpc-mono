@@ -10,9 +10,8 @@ import {
 import { AFFILIATE_CODE_REPOSITORY } from '../ports/out/affiliate-code.repository.token';
 import type { AffiliateCodeRepositoryPort } from '../ports/out/affiliate-code.repository.port';
 import type { RequestClientInfo } from 'src/common/http/types/client-info.types';
-import { ACTIVITY_LOG } from 'src/common/activity-log/activity-log.token';
-import type { ActivityLogPort } from 'src/common/activity-log/activity-log.port';
-import { ActivityType } from 'src/common/activity-log/activity-log.types';
+import { DispatchLogService } from 'src/modules/audit-log/application/dispatch-log.service';
+import { LogType } from 'src/modules/audit-log/domain';
 
 interface CreateCodeParams {
   userId: bigint;
@@ -26,8 +25,7 @@ export class CreateCodeService {
     @Inject(AFFILIATE_CODE_REPOSITORY)
     private readonly repository: AffiliateCodeRepositoryPort,
     private readonly policy: AffiliateCodePolicy,
-    @Inject(ACTIVITY_LOG)
-    private readonly activityLog: ActivityLogPort,
+    private readonly dispatchLogService: DispatchLogService,
   ) {}
 
   @Transactional()
@@ -56,21 +54,24 @@ export class CreateCodeService {
       isDefault: isFirstCode, // 첫 번째 코드는 기본 코드로 설정
     });
 
-    // Activity Log 기록
+    // Audit Log 기록
     if (requestInfo) {
-      await this.activityLog.logSuccess(
-        {
-          userId,
-          activityType: ActivityType.AFFILIATE_CODE_CREATE,
-          description: `어플리에이트 코드 생성 완료 - 코드: ${code}, 캠페인명: ${campaignName || '없음'}, 기본코드: ${isFirstCode}`,
-          metadata: {
-            codeId: createdCode.id,
-            code,
-            campaignName: campaignName || null,
-            isDefault: isFirstCode,
+        await this.dispatchLogService.dispatch(
+          {
+            type: LogType.ACTIVITY,
+            data: {
+              userId: userId.toString(),
+              category: 'AFFILIATE',
+              action: 'AFFILIATE_CODE_CREATE',
+              metadata: {
+                codeId: createdCode.id.toString(),
+                code,
+                campaignName: campaignName || null,
+                isDefault: isFirstCode,
+              },
+            },
           },
-        },
-        requestInfo,
+          requestInfo,
       );
     }
 

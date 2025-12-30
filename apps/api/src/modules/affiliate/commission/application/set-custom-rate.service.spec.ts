@@ -5,9 +5,8 @@ import { AffiliateTierLevel, Prisma } from '@repo/database';
 import { SetCustomRateService } from './set-custom-rate.service';
 import { AFFILIATE_TIER_REPOSITORY } from '../ports/out/affiliate-tier.repository.token';
 import type { AffiliateTierRepositoryPort } from '../ports/out/affiliate-tier.repository.port';
-import { ACTIVITY_LOG } from 'src/common/activity-log/activity-log.token';
-import type { ActivityLogPort } from 'src/common/activity-log/activity-log.port';
-import { ActivityType } from 'src/common/activity-log/activity-log.types';
+import { DispatchLogService } from 'src/modules/audit-log/application/dispatch-log.service';
+import { LogType } from 'src/modules/audit-log/domain';
 import { AffiliateTier, CommissionPolicy } from '../domain';
 import { InvalidCommissionRateException } from '../domain/commission.exception';
 import { PrismaModule } from 'src/infrastructure/prisma/prisma.module';
@@ -18,7 +17,7 @@ describe('SetCustomRateService', () => {
   let module: TestingModule;
   let service: SetCustomRateService;
   let mockRepository: jest.Mocked<AffiliateTierRepositoryPort>;
-  let mockActivityLog: jest.Mocked<ActivityLogPort>;
+  let mockDispatchLogService: jest.Mocked<DispatchLogService>;
   let mockPolicy: CommissionPolicy;
 
   const mockAffiliateId = BigInt(123);
@@ -84,10 +83,11 @@ describe('SetCustomRateService', () => {
       resetMonthlyWagerAmount: jest.fn(),
     };
 
-    mockActivityLog = {
-      log: jest.fn(),
-      logSuccess: jest.fn(),
-      logFailure: jest.fn(),
+    const mockDispatchLogServiceProvider = {
+      provide: DispatchLogService,
+      useValue: {
+        dispatch: jest.fn().mockResolvedValue(undefined),
+      },
     };
 
     mockPolicy = new CommissionPolicy();
@@ -101,16 +101,15 @@ describe('SetCustomRateService', () => {
           useValue: mockRepository,
         },
         CommissionPolicy,
-        {
-          provide: ACTIVITY_LOG,
-          useValue: mockActivityLog,
-        },
+        mockDispatchLogServiceProvider,
       ],
     }).compile();
 
     service = module.get<SetCustomRateService>(SetCustomRateService);
     mockRepository = module.get(AFFILIATE_TIER_REPOSITORY);
-    mockActivityLog = module.get(ACTIVITY_LOG);
+    mockDispatchLogService = module.get(
+      DispatchLogService,
+    ) as jest.Mocked<DispatchLogService>;
     mockPolicy = module.get(CommissionPolicy);
 
     jest.clearAllMocks();
@@ -147,7 +146,7 @@ describe('SetCustomRateService', () => {
         mockAffiliateId,
       );
       expect(mockRepository.upsert).toHaveBeenCalled();
-      expect(mockActivityLog.logSuccess).not.toHaveBeenCalled();
+      expect(mockDispatchLogService.dispatch).not.toHaveBeenCalled();
     });
 
     it('requestInfo가 있을 때 Activity Log에 성공 로그를 기록한다', async () => {
@@ -171,20 +170,22 @@ describe('SetCustomRateService', () => {
 
       // Then
       expect(result).toBe(updatedTier);
-      expect(mockActivityLog.logSuccess).toHaveBeenCalledTimes(1);
-      expect(mockActivityLog.logSuccess).toHaveBeenCalledWith(
+      expect(mockDispatchLogService.dispatch).toHaveBeenCalledTimes(1);
+      expect(mockDispatchLogService.dispatch).toHaveBeenCalledWith(
         {
-          userId: mockSetBy, // 관리자 ID (액션을 수행한 사용자)
-          isAdmin: true,
-          activityType: ActivityType.COMMISSION_RATE_SET,
-          description: `커미션 수동 요율 설정 완료 - 요율: ${mockCustomRate.toString()} (${mockCustomRate.mul(10000).toFixed(0)}), 설정자: ${mockSetBy}`,
-          metadata: {
-            affiliateId: mockAffiliateId, // 대상 어필리에이트 유저 ID
-            customRate: mockCustomRate.toString(),
-            previousCustomRate: null,
-            wasCustomRate: false,
-            tier: updatedTier.tier,
-            baseRate: updatedTier.baseRate.toString(),
+          type: LogType.ACTIVITY,
+          data: {
+            userId: mockSetBy.toString(), // 관리자 ID (액션을 수행한 사용자)
+            category: 'AFFILIATE',
+            action: 'COMMISSION_RATE_SET',
+            metadata: {
+              affiliateId: mockAffiliateId.toString(), // 대상 어필리에이트 유저 ID
+              customRate: mockCustomRate.toString(),
+              previousCustomRate: null,
+              wasCustomRate: false,
+              tier: updatedTier.tier,
+              baseRate: updatedTier.baseRate.toString(),
+            },
           },
         },
         mockRequestInfo,
@@ -256,11 +257,14 @@ describe('SetCustomRateService', () => {
 
       // Then
       expect(result).toBe(updatedTier);
-      expect(mockActivityLog.logSuccess).toHaveBeenCalledWith(
+      expect(mockDispatchLogService.dispatch).toHaveBeenCalledWith(
         expect.objectContaining({
-          metadata: expect.objectContaining({
-            previousCustomRate: previousCustomRate.toString(),
-            wasCustomRate: true,
+          type: LogType.ACTIVITY,
+          data: expect.objectContaining({
+            metadata: expect.objectContaining({
+              previousCustomRate: previousCustomRate.toString(),
+              wasCustomRate: true,
+            }),
           }),
         }),
         mockRequestInfo,
@@ -282,17 +286,19 @@ describe('SetCustomRateService', () => {
       ).rejects.toThrow(InvalidCommissionRateException);
 
       expect(mockRepository.findByAffiliateId).not.toHaveBeenCalled();
-      expect(mockActivityLog.logFailure).toHaveBeenCalledTimes(1);
-      expect(mockActivityLog.logFailure).toHaveBeenCalledWith(
+      expect(mockDispatchLogService.dispatch).toHaveBeenCalledTimes(1);
+      expect(mockDispatchLogService.dispatch).toHaveBeenCalledWith(
         {
-          userId: mockSetBy, // 관리자 ID
-          isAdmin: true,
-          activityType: ActivityType.COMMISSION_RATE_SET,
-          description: `커미션 수동 요율 설정 실패 - 요율: ${invalidRate.toString()}`,
-          metadata: {
-            affiliateId: mockAffiliateId,
-            customRate: invalidRate.toString(),
-            error: expect.stringContaining('Invalid commission rate'),
+          type: LogType.ACTIVITY,
+          data: {
+            userId: mockSetBy.toString(), // 관리자 ID
+            category: 'AFFILIATE',
+            action: 'COMMISSION_RATE_SET',
+            metadata: {
+              affiliateId: mockAffiliateId.toString(),
+              customRate: invalidRate.toString(),
+              error: expect.stringContaining('Invalid commission rate'),
+            },
           },
         },
         mockRequestInfo,
@@ -314,7 +320,7 @@ describe('SetCustomRateService', () => {
       ).rejects.toThrow(InvalidCommissionRateException);
 
       expect(mockRepository.findByAffiliateId).not.toHaveBeenCalled();
-      expect(mockActivityLog.logFailure).toHaveBeenCalledTimes(1);
+      expect(mockDispatchLogService.dispatch).toHaveBeenCalledTimes(1);
     });
 
     it('요율이 음수인 경우 InvalidCommissionRateException을 발생시킨다', async () => {
@@ -331,7 +337,7 @@ describe('SetCustomRateService', () => {
         }),
       ).rejects.toThrow(InvalidCommissionRateException);
 
-      expect(mockActivityLog.logFailure).toHaveBeenCalledTimes(1);
+      expect(mockDispatchLogService.dispatch).toHaveBeenCalledTimes(1);
     });
 
     it('다양한 요율 값에 대해 정상적으로 처리한다', async () => {
@@ -388,8 +394,7 @@ describe('SetCustomRateService', () => {
       });
 
       // Then
-      expect(mockActivityLog.logSuccess).not.toHaveBeenCalled();
-      expect(mockActivityLog.logFailure).not.toHaveBeenCalled();
+      expect(mockDispatchLogService.dispatch).not.toHaveBeenCalled();
     });
 
     it('에러 발생 시 Logger에 에러를 기록한다', async () => {
@@ -436,17 +441,19 @@ describe('SetCustomRateService', () => {
         }),
       ).rejects.toThrow(repositoryError);
 
-      expect(mockActivityLog.logFailure).toHaveBeenCalledTimes(1);
-      expect(mockActivityLog.logFailure).toHaveBeenCalledWith(
+      expect(mockDispatchLogService.dispatch).toHaveBeenCalledTimes(1);
+      expect(mockDispatchLogService.dispatch).toHaveBeenCalledWith(
         {
-          userId: mockSetBy, // 관리자 ID
-          isAdmin: true,
-          activityType: ActivityType.COMMISSION_RATE_SET,
-          description: `커미션 수동 요율 설정 실패 - 요율: ${mockCustomRate.toString()}`,
-          metadata: {
-            affiliateId: mockAffiliateId,
-            customRate: mockCustomRate.toString(),
-            error: repositoryError.message,
+          type: LogType.ACTIVITY,
+          data: {
+            userId: mockSetBy.toString(), // 관리자 ID
+            category: 'AFFILIATE',
+            action: 'COMMISSION_RATE_SET',
+            metadata: {
+              affiliateId: mockAffiliateId.toString(),
+              customRate: mockCustomRate.toString(),
+              error: repositoryError.message,
+            },
           },
         },
         mockRequestInfo,

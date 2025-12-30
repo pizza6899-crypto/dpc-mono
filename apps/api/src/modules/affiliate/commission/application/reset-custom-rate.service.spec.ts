@@ -5,20 +5,19 @@ import { AffiliateTierLevel, Prisma } from '@repo/database';
 import { ResetCustomRateService } from './reset-custom-rate.service';
 import { AFFILIATE_TIER_REPOSITORY } from '../ports/out/affiliate-tier.repository.token';
 import type { AffiliateTierRepositoryPort } from '../ports/out/affiliate-tier.repository.port';
-import { ACTIVITY_LOG } from 'src/common/activity-log/activity-log.token';
-import type { ActivityLogPort } from 'src/common/activity-log/activity-log.port';
-import { ActivityType } from 'src/common/activity-log/activity-log.types';
 import { AffiliateTier } from '../domain';
 import { TierNotFoundException } from '../domain/commission.exception';
 import { PrismaModule } from 'src/infrastructure/prisma/prisma.module';
 import { EnvModule } from 'src/common/env/env.module';
 import type { RequestClientInfo } from 'src/common/http/types/client-info.types';
+import { DispatchLogService } from 'src/modules/audit-log/application/dispatch-log.service';
+import { LogType } from 'src/modules/audit-log/domain';
 
 describe('ResetCustomRateService', () => {
   let module: TestingModule;
   let service: ResetCustomRateService;
   let mockRepository: jest.Mocked<AffiliateTierRepositoryPort>;
-  let mockActivityLog: jest.Mocked<ActivityLogPort>;
+  let mockDispatchLogService: jest.Mocked<DispatchLogService>;
 
   const mockAffiliateId = BigInt(123);
   const mockResetBy = BigInt(456);
@@ -92,10 +91,11 @@ describe('ResetCustomRateService', () => {
       resetMonthlyWagerAmount: jest.fn(),
     };
 
-    mockActivityLog = {
-      log: jest.fn(),
-      logSuccess: jest.fn(),
-      logFailure: jest.fn(),
+    const mockDispatchLogServiceProvider = {
+      provide: DispatchLogService,
+      useValue: {
+        dispatch: jest.fn().mockResolvedValue(undefined),
+      },
     };
 
     module = await Test.createTestingModule({
@@ -106,16 +106,15 @@ describe('ResetCustomRateService', () => {
           provide: AFFILIATE_TIER_REPOSITORY,
           useValue: mockRepository,
         },
-        {
-          provide: ACTIVITY_LOG,
-          useValue: mockActivityLog,
-        },
+        mockDispatchLogServiceProvider,
       ],
     }).compile();
 
     service = module.get<ResetCustomRateService>(ResetCustomRateService);
     mockRepository = module.get(AFFILIATE_TIER_REPOSITORY);
-    mockActivityLog = module.get(ACTIVITY_LOG);
+    mockDispatchLogService = module.get(
+      DispatchLogService,
+    ) as jest.Mocked<DispatchLogService>;
 
     jest.clearAllMocks();
   });
@@ -164,7 +163,7 @@ describe('ResetCustomRateService', () => {
         mockAffiliateId,
       );
       expect(mockRepository.upsert).toHaveBeenCalled();
-      expect(mockActivityLog.logSuccess).not.toHaveBeenCalled();
+      expect(mockDispatchLogService.dispatch).not.toHaveBeenCalled();
     });
 
     it('requestInfo가 있을 때 Activity Log에 성공 로그를 기록한다', async () => {
@@ -194,19 +193,21 @@ describe('ResetCustomRateService', () => {
 
       // Then
       expect(result).toBe(updatedTier);
-      expect(mockActivityLog.logSuccess).toHaveBeenCalledTimes(1);
-      expect(mockActivityLog.logSuccess).toHaveBeenCalledWith(
+      expect(mockDispatchLogService.dispatch).toHaveBeenCalledTimes(1);
+      expect(mockDispatchLogService.dispatch).toHaveBeenCalledWith(
         {
-          userId: mockResetBy, // 관리자 ID (액션을 수행한 사용자)
-          isAdmin: true,
-          activityType: ActivityType.COMMISSION_RATE_RESET,
-          description: `커미션 수동 요율 해제 완료 - 기본 요율로 복귀 (티어: ${updatedTier.tier}, 기본 요율: ${updatedTier.baseRate.toString()}), 해제자: ${mockResetBy}`,
-          metadata: {
-            affiliateId: mockAffiliateId, // 대상 어필리에이트 유저 ID
-            tier: updatedTier.tier,
-            baseRate: updatedTier.baseRate.toString(),
-            previousCustomRate: mockCustomRate.toString(),
-            wasCustomRate: true,
+          type: LogType.ACTIVITY,
+          data: {
+            userId: mockResetBy.toString(), // 관리자 ID (액션을 수행한 사용자)
+            category: 'AFFILIATE',
+            action: 'COMMISSION_RATE_RESET',
+            metadata: {
+              affiliateId: mockAffiliateId.toString(), // 대상 어필리에이트 유저 ID
+              tier: updatedTier.tier,
+              baseRate: updatedTier.baseRate.toString(),
+              previousCustomRate: mockCustomRate.toString(),
+              wasCustomRate: true,
+            },
           },
         },
         mockRequestInfo,
@@ -238,11 +239,14 @@ describe('ResetCustomRateService', () => {
       expect(result).toBe(updatedTier);
       expect(result.customRate).toBeNull();
       expect(result.isCustomRate).toBe(false);
-      expect(mockActivityLog.logSuccess).toHaveBeenCalledWith(
+      expect(mockDispatchLogService.dispatch).toHaveBeenCalledWith(
         expect.objectContaining({
-          metadata: expect.objectContaining({
-            previousCustomRate: null,
-            wasCustomRate: false,
+          type: LogType.ACTIVITY,
+          data: expect.objectContaining({
+            metadata: expect.objectContaining({
+              previousCustomRate: null,
+              wasCustomRate: false,
+            }),
           }),
         }),
         mockRequestInfo,
@@ -264,16 +268,18 @@ describe('ResetCustomRateService', () => {
         }),
       ).rejects.toThrow(TierNotFoundException);
 
-      expect(mockActivityLog.logFailure).toHaveBeenCalledTimes(1);
-      expect(mockActivityLog.logFailure).toHaveBeenCalledWith(
+      expect(mockDispatchLogService.dispatch).toHaveBeenCalledTimes(1);
+      expect(mockDispatchLogService.dispatch).toHaveBeenCalledWith(
         {
-          userId: mockResetBy, // 관리자 ID
-          isAdmin: true,
-          activityType: ActivityType.COMMISSION_RATE_RESET,
-          description: `커미션 수동 요율 해제 실패`,
-          metadata: {
-            affiliateId: mockAffiliateId,
-            error: expect.stringContaining('Tier not found'),
+          type: LogType.ACTIVITY,
+          data: {
+            userId: mockResetBy.toString(), // 관리자 ID
+            category: 'AFFILIATE',
+            action: 'COMMISSION_RATE_RESET',
+            metadata: {
+              affiliateId: mockAffiliateId.toString(),
+              error: expect.stringContaining('Tier not found'),
+            },
           },
         },
         mockRequestInfo,
@@ -302,8 +308,7 @@ describe('ResetCustomRateService', () => {
       });
 
       // Then
-      expect(mockActivityLog.logSuccess).not.toHaveBeenCalled();
-      expect(mockActivityLog.logFailure).not.toHaveBeenCalled();
+      expect(mockDispatchLogService.dispatch).not.toHaveBeenCalled();
     });
 
     it('에러 발생 시 Logger에 에러를 기록한다', async () => {
@@ -350,16 +355,18 @@ describe('ResetCustomRateService', () => {
         }),
       ).rejects.toThrow(repositoryError);
 
-      expect(mockActivityLog.logFailure).toHaveBeenCalledTimes(1);
-      expect(mockActivityLog.logFailure).toHaveBeenCalledWith(
+      expect(mockDispatchLogService.dispatch).toHaveBeenCalledTimes(1);
+      expect(mockDispatchLogService.dispatch).toHaveBeenCalledWith(
         {
-          userId: mockResetBy, // 관리자 ID
-          isAdmin: true,
-          activityType: ActivityType.COMMISSION_RATE_RESET,
-          description: `커미션 수동 요율 해제 실패`,
-          metadata: {
-            affiliateId: mockAffiliateId,
-            error: repositoryError.message,
+          type: LogType.ACTIVITY,
+          data: {
+            userId: mockResetBy.toString(), // 관리자 ID
+            category: 'AFFILIATE',
+            action: 'COMMISSION_RATE_RESET',
+            metadata: {
+              affiliateId: mockAffiliateId.toString(),
+              error: repositoryError.message,
+            },
           },
         },
         mockRequestInfo,
@@ -462,11 +469,14 @@ describe('ResetCustomRateService', () => {
       });
 
       // Then
-      expect(mockActivityLog.logSuccess).toHaveBeenCalledWith(
+      expect(mockDispatchLogService.dispatch).toHaveBeenCalledWith(
         expect.objectContaining({
-          metadata: expect.objectContaining({
-            previousCustomRate: previousCustomRate.toString(),
-            wasCustomRate: true,
+          type: LogType.ACTIVITY,
+          data: expect.objectContaining({
+            metadata: expect.objectContaining({
+              previousCustomRate: previousCustomRate.toString(),
+              wasCustomRate: true,
+            }),
           }),
         }),
         mockRequestInfo,
@@ -487,7 +497,7 @@ describe('ResetCustomRateService', () => {
         }),
       ).rejects.toThrow(repositoryError);
 
-      expect(mockActivityLog.logFailure).not.toHaveBeenCalled();
+      expect(mockDispatchLogService.dispatch).not.toHaveBeenCalled();
     });
   });
 });
