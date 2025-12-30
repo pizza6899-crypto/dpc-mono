@@ -82,7 +82,6 @@ export class CredentialAdminController {
         clientInfo,
       });
 
-    // 2. 세션에 사용자 저장
     await new Promise<void>((resolve, reject) => {
       req.login(authenticatedUser as any, (err) => {
         if (err) {

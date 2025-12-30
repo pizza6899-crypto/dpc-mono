@@ -30,6 +30,7 @@ import { PasswordResetTokenRepository } from './infrastructure/password-reset-to
 import { AuditLogModule } from 'src/modules/audit-log/audit-log.module';
 import { SessionModule } from '../session/session.module';
 import { EnvModule } from 'src/common/env/env.module';
+import { SessionSerializer } from 'src/common/auth/strategies/session.serializer';
 
 @Module({
   imports: [
@@ -74,6 +75,8 @@ import { EnvModule } from 'src/common/env/env.module';
       provide: PASSWORD_RESET_TOKEN_REPOSITORY,
       useClass: PasswordResetTokenRepository,
     },
+
+    SessionSerializer,
   ],
   exports: [LoginService, LogoutService, VerifyCredentialService],
 })
