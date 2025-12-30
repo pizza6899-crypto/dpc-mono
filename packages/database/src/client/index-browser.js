@@ -120,6 +120,86 @@ exports.Prisma.TransactionIsolationLevel = makeStrictEnum({
   Serializable: 'Serializable'
 });
 
+exports.Prisma.AuthAuditLogScalarFieldEnum = {
+  id: 'id',
+  createdAt: 'createdAt',
+  userId: 'userId',
+  sessionId: 'sessionId',
+  action: 'action',
+  status: 'status',
+  ip: 'ip',
+  userAgent: 'userAgent',
+  deviceFingerprint: 'deviceFingerprint',
+  country: 'country',
+  city: 'city',
+  bot: 'bot',
+  threat: 'threat',
+  isMobile: 'isMobile',
+  cfRay: 'cfRay',
+  metadata: 'metadata'
+};
+
+exports.Prisma.ActivityLogScalarFieldEnum = {
+  id: 'id',
+  createdAt: 'createdAt',
+  userId: 'userId',
+  sessionId: 'sessionId',
+  category: 'category',
+  action: 'action',
+  country: 'country',
+  city: 'city',
+  isMobile: 'isMobile',
+  cfRay: 'cfRay',
+  metadata: 'metadata'
+};
+
+exports.Prisma.SystemErrorLogScalarFieldEnum = {
+  id: 'id',
+  createdAt: 'createdAt',
+  userId: 'userId',
+  sessionId: 'sessionId',
+  errorCode: 'errorCode',
+  errorMessage: 'errorMessage',
+  stackTrace: 'stackTrace',
+  metadata: 'metadata',
+  path: 'path',
+  method: 'method',
+  statusCode: 'statusCode',
+  severity: 'severity',
+  resolved: 'resolved',
+  resolvedAt: 'resolvedAt',
+  country: 'country',
+  city: 'city',
+  bot: 'bot',
+  threat: 'threat',
+  isMobile: 'isMobile',
+  cfRay: 'cfRay',
+  ip: 'ip',
+  userAgent: 'userAgent'
+};
+
+exports.Prisma.IntegrationLogScalarFieldEnum = {
+  id: 'id',
+  createdAt: 'createdAt',
+  userId: 'userId',
+  sessionId: 'sessionId',
+  provider: 'provider',
+  method: 'method',
+  endpoint: 'endpoint',
+  statusCode: 'statusCode',
+  requestBody: 'requestBody',
+  responseBody: 'responseBody',
+  duration: 'duration',
+  success: 'success',
+  errorMessage: 'errorMessage',
+  country: 'country',
+  city: 'city',
+  bot: 'bot',
+  threat: 'threat',
+  cfRay: 'cfRay',
+  ip: 'ip'
+};
+
 exports.Prisma.UserScalarFieldEnum = {
   id: 'id',
   uid: 'uid',
@@ -677,93 +757,17 @@ exports.Prisma.LoginAttemptScalarFieldEnum = {
   isAdmin: 'isAdmin'
 };
 
-exports.Prisma.AuthAuditLogScalarFieldEnum = {
-  id: 'id',
-  createdAt: 'createdAt',
-  userId: 'userId',
-  action: 'action',
-  status: 'status',
-  ip: 'ip',
-  userAgent: 'userAgent',
-  deviceFingerprint: 'deviceFingerprint',
-  country: 'country',
-  city: 'city',
-  bot: 'bot',
-  threat: 'threat',
-  isMobile: 'isMobile',
-  cfRay: 'cfRay',
-  metadata: 'metadata'
-};
-
-exports.Prisma.ActivityLogScalarFieldEnum = {
-  id: 'id',
-  createdAt: 'createdAt',
-  userId: 'userId',
-  category: 'category',
-  action: 'action',
-  country: 'country',
-  city: 'city',
-  isMobile: 'isMobile',
-  cfRay: 'cfRay',
-  metadata: 'metadata'
-};
-
-exports.Prisma.SystemErrorLogScalarFieldEnum = {
-  id: 'id',
-  createdAt: 'createdAt',
-  userId: 'userId',
-  errorCode: 'errorCode',
-  errorMessage: 'errorMessage',
-  stackTrace: 'stackTrace',
-  metadata: 'metadata',
-  path: 'path',
-  method: 'method',
-  statusCode: 'statusCode',
-  severity: 'severity',
-  resolved: 'resolved',
-  resolvedAt: 'resolvedAt',
-  country: 'country',
-  city: 'city',
-  bot: 'bot',
-  threat: 'threat',
-  isMobile: 'isMobile',
-  cfRay: 'cfRay',
-  ip: 'ip',
-  userAgent: 'userAgent'
-};
-
-exports.Prisma.IntegrationLogScalarFieldEnum = {
-  id: 'id',
-  createdAt: 'createdAt',
-  userId: 'userId',
-  provider: 'provider',
-  method: 'method',
-  endpoint: 'endpoint',
-  statusCode: 'statusCode',
-  requestBody: 'requestBody',
-  responseBody: 'responseBody',
-  duration: 'duration',
-  success: 'success',
-  errorMessage: 'errorMessage',
-  country: 'country',
-  city: 'city',
-  bot: 'bot',
-  threat: 'threat',
-  cfRay: 'cfRay',
-  ip: 'ip'
-};
-
 exports.Prisma.SortOrder = {
   asc: 'asc',
   desc: 'desc'
 };
 
-exports.Prisma.JsonNullValueInput = {
+exports.Prisma.NullableJsonNullValueInput = {
+  DbNull: Prisma.DbNull,
   JsonNull: Prisma.JsonNull
 };
 
-exports.Prisma.NullableJsonNullValueInput = {
-  DbNull: Prisma.DbNull,
+exports.Prisma.JsonNullValueInput = {
   JsonNull: Prisma.JsonNull
 };
 
@@ -772,15 +776,15 @@ exports.Prisma.QueryMode = {
   insensitive: 'insensitive'
 };
 
-exports.Prisma.NullsOrder = {
-  first: 'first',
-  last: 'last'
-};
-
 exports.Prisma.JsonNullValueFilter = {
   DbNull: Prisma.DbNull,
   JsonNull: Prisma.JsonNull,
   AnyNull: Prisma.AnyNull
+};
+
+exports.Prisma.NullsOrder = {
+  first: 'first',
+  last: 'last'
 };
 exports.SocialType = exports.$Enums.SocialType = {
   GOOGLE: 'GOOGLE',
@@ -1002,6 +1006,10 @@ exports.LoginFailureReason = exports.$Enums.LoginFailureReason = {
 };
 
 exports.Prisma.ModelName = {
+  AuthAuditLog: 'AuthAuditLog',
+  ActivityLog: 'ActivityLog',
+  SystemErrorLog: 'SystemErrorLog',
+  IntegrationLog: 'IntegrationLog',
   User: 'User',
   UserSession: 'UserSession',
   UserBalance: 'UserBalance',
@@ -1038,11 +1046,7 @@ exports.Prisma.ModelName = {
   AffiliateWallet: 'AffiliateWallet',
   AffiliateCommission: 'AffiliateCommission',
   AffiliateTier: 'AffiliateTier',
-  LoginAttempt: 'LoginAttempt',
-  AuthAuditLog: 'AuthAuditLog',
-  ActivityLog: 'ActivityLog',
-  SystemErrorLog: 'SystemErrorLog',
-  IntegrationLog: 'IntegrationLog'
+  LoginAttempt: 'LoginAttempt'
 };
 
 /**

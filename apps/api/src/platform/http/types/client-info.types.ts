@@ -65,4 +65,8 @@ export interface RequestClientInfo {
   isMobile: boolean;
   browser: string;
   os: string;
+
+  // 세션 정보
+  /** 세션 ID (request.sessionID) */
+  sessionId?: string;
 }

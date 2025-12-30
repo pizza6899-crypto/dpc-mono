@@ -4,9 +4,6 @@ import { Queue } from 'bullmq';
 import type {
   LogJobData,
   AuthLogPayload,
-  ActivityLogPayload,
-  SystemErrorLogPayload,
-  IntegrationLogPayload,
 } from '../domain';
 import { LogType } from '../domain';
 import {
@@ -49,6 +46,7 @@ export class DispatchLogService {
         ...payload,
         data: {
           ...payload.data,
+          sessionId: clientInfo.sessionId || payload.data.sessionId,
           ip: clientInfo.ip,
           userAgent: clientInfo.userAgent,
           deviceFingerprint: clientInfo.fingerprint,
@@ -67,6 +65,7 @@ export class DispatchLogService {
         ...payload,
         data: {
           ...payload.data,
+          sessionId: clientInfo.sessionId || payload.data.sessionId,
           country: clientInfo.country,
           city: clientInfo.city,
           isMobile: clientInfo.isMobile,
@@ -80,6 +79,7 @@ export class DispatchLogService {
         ...payload,
         data: {
           ...payload.data,
+          sessionId: clientInfo.sessionId || payload.data.sessionId,
           country: clientInfo.country,
           city: clientInfo.city,
           bot: clientInfo.bot,
@@ -97,6 +97,7 @@ export class DispatchLogService {
         ...payload,
         data: {
           ...payload.data,
+          sessionId: clientInfo.sessionId || payload.data.sessionId,
           country: clientInfo.country,
           city: clientInfo.city,
           bot: clientInfo.bot,

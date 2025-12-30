@@ -84,6 +84,9 @@ export function extractClientInfo(request: Request): RequestClientInfo {
     isMobile: deviceInfo.isMobile,
     browser: deviceInfo.browser,
     os: deviceInfo.os,
+
+    // 세션 정보
+    sessionId: (request as any).sessionID || undefined, // express-session의 sessionID
   };
 }
 
