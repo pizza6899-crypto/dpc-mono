@@ -30,8 +30,6 @@ export default function RootLayout({
   return (
     <html lang="en">
       <body>
-        <Suspense>
-          <GitHubBanner />
           <RefineKbarProvider>
             <AntdRegistry>
               <ColorModeContextProvider>
@@ -76,7 +74,6 @@ export default function RootLayout({
               </ColorModeContextProvider>
             </AntdRegistry>
           </RefineKbarProvider>
-        </Suspense>
       </body>
     </html>
   );

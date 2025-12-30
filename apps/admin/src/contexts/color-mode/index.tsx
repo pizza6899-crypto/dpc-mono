@@ -52,6 +52,13 @@ export const ColorModeContextProvider: React.FC<
 
   const { darkAlgorithm, defaultAlgorithm } = theme;
 
+  // 브랜드 컬러 정의 (필요시 커스터마이징 가능)
+  const brandColors = {
+    // primary: '#1890ff', // 기본 Blue 테마 사용
+    // 또는 커스텀 브랜드 컬러로 변경 가능
+    // primary: '#your-brand-color',
+  };
+
   return (
     <ColorModeContext.Provider
       value={{
@@ -60,9 +67,12 @@ export const ColorModeContextProvider: React.FC<
       }}
     >
       <ConfigProvider
-        // you can change the theme colors here. example: ...RefineThemes.Magenta,
+        // Compact 모드: 백오피스의 높은 정보 밀도를 위한 컴포넌트 크기 설정
+        componentSize="middle"
+        // 브랜드 컬러 및 테마 설정
         theme={{
           ...RefineThemes.Blue,
+          ...brandColors, // 브랜드 컬러 오버라이드 (필요시)
           algorithm: mode === "light" ? defaultAlgorithm : darkAlgorithm,
         }}
       >
