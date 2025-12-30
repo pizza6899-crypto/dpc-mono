@@ -113,7 +113,6 @@ class EnvironmentVariables {
   // WHITECLIFF_WALLET_TYPE: string;
 
   // DCS 환경변수 추가
-  @Transform(({ value }) => value === 'true')
   @IsBoolean()
   DCS_API_ENABLED: boolean;
 
@@ -133,15 +132,12 @@ class EnvironmentVariables {
   DCS_BRAND_API_URL: string;
 
   // 스케줄러 환경변수 추가
-  @Transform(({ value }) => value === 'true')
   @IsBoolean()
   SCHEDULER_ENABLED: boolean;
 
-  @Transform(({ value }) => value === 'true')
   @IsBoolean()
   WHITECLIFF_PUSHED_BET_HISTORY_SCHEDULER_ENABLED: boolean;
 
-  @Transform(({ value }) => value === 'true')
   @IsBoolean()
   EXCHANGE_RATE_UPDATE_SCHEDULER_ENABLED: boolean;
 
@@ -158,7 +154,6 @@ class EnvironmentVariables {
   @IsString()
   NOWPAYMENT_BASE_URL: string;
 
-  @Transform(({ value }) => value === 'true')
   @IsBoolean()
   NOWPAYMENT_ENABLED: boolean;
 
@@ -168,26 +163,21 @@ class EnvironmentVariables {
   @IsString()
   NOWPAYMENT_IPN_CALLBACK_URL: string;
 
-  @Transform(({ value }) => value === 'true')
   @IsBoolean()
   NOWPAYMENT_IS_FIXED_RATE: boolean;
 
-  @Transform(({ value }) => value === 'true')
   @IsBoolean()
   NOWPAYMENT_IS_FEE_PAID_BY_USER: boolean;
 
   @IsString()
   SESSION_SECRET: string;
 
-  @Type(() => Number)
   @IsNumber()
   SESSION_MAX_AGE: number;
 
-  @Transform(({ value }) => value === 'true')
   @IsBoolean()
   SESSION_SECURE: boolean;
 
-  @Transform(({ value }) => value !== 'false')
   @IsBoolean()
   SESSION_HTTP_ONLY: boolean;
 
@@ -204,11 +194,9 @@ class EnvironmentVariables {
   @IsNumber()
   ADMIN_SESSION_MAX_AGE: number;
 
-  @Transform(({ value }) => value === 'true')
   @IsBoolean()
   ADMIN_SESSION_SECURE: boolean;
 
-  @Transform(({ value }) => value !== 'false')
   @IsBoolean()
   ADMIN_SESSION_HTTP_ONLY: boolean;
 
@@ -218,7 +206,6 @@ class EnvironmentVariables {
   @IsString()
   ADMIN_SESSION_NAME: string;
 
-  @Transform(({ value }) => value === 'true')
   @IsBoolean()
   CSRF_ENABLED: boolean;
 
@@ -228,7 +215,6 @@ class EnvironmentVariables {
   @IsString()
   CSRF_HEADER_NAME: string;
 
-  @Transform(({ value }) => value === 'true')
   @IsBoolean()
   CSRF_SECURE: boolean;
 
@@ -239,12 +225,10 @@ class EnvironmentVariables {
   @IsNumber()
   CSRF_MAX_AGE: number;
 
-  @Transform(({ value }) => value !== 'false')
   @IsBoolean()
   CSRF_HTTP_ONLY: boolean;
 
   // SMTP 환경변수 추가
-  @Transform(({ value }) => value === 'true')
   @IsBoolean()
   SMTP_ENABLED: boolean;
 
@@ -255,7 +239,6 @@ class EnvironmentVariables {
   @IsNumber()
   SMTP_PORT: number;
 
-  @Transform(({ value }) => value === 'true')
   @IsBoolean()
   SMTP_SECURE: boolean;
 
@@ -269,7 +252,6 @@ class EnvironmentVariables {
   SMTP_FROM: string;
 
   // CoinGecko 환경변수 추가
-  @Transform(({ value }) => value === 'true')
   @IsBoolean()
   COINGECKO_ENABLED: boolean;
 
@@ -280,7 +262,6 @@ class EnvironmentVariables {
   COINGECKO_API_KEY?: string;
 
   // Open Exchange Rates 환경변수 추가
-  @Transform(({ value }) => value === 'true')
   @IsBoolean()
   OPEN_EXCHANGE_RATES_ENABLED: boolean;
 
@@ -291,14 +272,12 @@ class EnvironmentVariables {
   OPEN_EXCHANGE_RATES_APP_KEY: string;
 
   // Deposit 관련 환경변수 추가
-  @Transform(({ value }) => value === 'true')
   @IsBoolean()
   CRYPTO_DEPOSIT_ENABLED: boolean;
 
   @IsString()
   CRYPTO_DEPOSIT_ALLOWED_CURRENCIES?: string;
 
-  @Transform(({ value }) => value === 'true')
   @IsBoolean()
   BANK_TRANSFER_DEPOSIT_ENABLED: boolean;
 

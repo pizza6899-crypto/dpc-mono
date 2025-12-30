@@ -68,13 +68,13 @@ export const dcsConfig = registerAs('dcs', () => ({
 }));
 
 export const schedulerConfig = registerAs('scheduler', () => ({
-  enabled: process.env.SCHEDULER_ENABLED === 'true',
+  enabled: process.env.SCHEDULER_ENABLED?.toLowerCase().trim() === 'true',
   whitecliffPushedBetHistoryEnabled:
-    process.env.WHITECLIFF_PUSHED_BET_HISTORY_SCHEDULER_ENABLED === 'true',
+    process.env.WHITECLIFF_PUSHED_BET_HISTORY_SCHEDULER_ENABLED?.toLowerCase().trim() === 'true',
   exchangeRateUpdateEnabled:
-    process.env.EXCHANGE_RATE_UPDATE_SCHEDULER_ENABLED === 'true',
+    process.env.EXCHANGE_RATE_UPDATE_SCHEDULER_ENABLED?.toLowerCase().trim() === 'true',
   settleDailyCommissionsEnabled:
-    process.env.SETTLE_DAILY_COMMISSIONS_SCHEDULER_ENABLED === 'true',
+    process.env.SETTLE_DAILY_COMMISSIONS_SCHEDULER_ENABLED?.toLowerCase().trim() === 'true',
 }));
 
 export const nowPaymentConfig = registerAs('nowPayment', () => ({
