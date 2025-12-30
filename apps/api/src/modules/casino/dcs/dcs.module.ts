@@ -1,10 +1,10 @@
 import { forwardRef, Module } from '@nestjs/common';
 import { HttpModule } from '@nestjs/axios';
-import { PrismaModule } from 'src/common/prisma/prisma.module';
+import { PrismaModule } from 'src/infrastructure/prisma/prisma.module';
 import { EnvModule } from 'src/common/env/env.module';
 import { ConcurrencyModule } from 'src/common/concurrency/concurrency.module';
 import { ActivityLogModule } from 'src/common/activity-log/activity-log.module';
-import { RedisModule } from 'src/common/redis/redis.module';
+import { RedisModule } from 'src/infrastructure/redis/redis.module';
 import { DcsMapperService } from './infrastructure/dcs-mapper.service';
 import { DcsApiService } from './infrastructure/dcs-api.service';
 import { DcsTestController } from './controllers/dcs-test.controller';
@@ -15,7 +15,7 @@ import { CasinoModule } from '../casino.module';
 import { DcsApiLoggingInterceptor } from './infrastructure/dcs-api-logging.interceptor';
 import { DcsLoggingInterceptor } from './infrastructure/dcs-logging.interceptor';
 import { DcsGameRefreshService } from './application/dcs-game-refresh.service';
-import { QueueModule } from 'src/common/queue/queue.module';
+import { QueueModule } from 'src/infrastructure/queue/queue.module';
 import { DcsFetchGameReplayUrlProcessor } from './processors/dcs-fetch-game-replay-url.processor';
 
 @Module({

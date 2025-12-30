@@ -1,7 +1,7 @@
 // src/platform/throttle/throttle.service.ts
 import { Injectable, Logger } from '@nestjs/common';
 import { Request } from 'express';
-import { RedisService } from '../redis/redis.service';
+import { RedisService } from 'src/infrastructure/redis/redis.service';
 import {
   ThrottleOptions,
   ThrottleResult,

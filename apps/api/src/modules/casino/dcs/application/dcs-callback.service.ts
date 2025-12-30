@@ -1,9 +1,7 @@
 import { Injectable, Logger } from '@nestjs/common';
-import { PrismaService } from 'src/common/prisma/prisma.service';
+import { PrismaService } from 'src/infrastructure/prisma/prisma.service';
 import { EnvService } from 'src/common/env/env.service';
 import {
-  LoginRequestDto,
-  DcsLoginResponseDto,
   WagerRequestDto,
   WagerResponseDto,
   CancelWagerRequestDto,
@@ -29,7 +27,7 @@ import {
 } from '../constants/dcs-response-codes';
 import { CasinoBalanceService } from '../../application/casino-balance.service';
 import { DcsMapperService } from '../infrastructure/dcs-mapper.service';
-import { QueueService } from 'src/common/queue/queue.service';
+import { QueueService } from 'src/infrastructure/queue/queue.service';
 import { CasinoBetService } from '../../application/casino-bet.service';
 import {
   BetType,
@@ -38,13 +36,11 @@ import {
   Prisma,
   TransactionStatus,
 } from '@repo/database';
-import { getCasinoErrorCode } from '../../whitecliff/utils/whitecliff-error-response.util';
 import { CasinoRefundService } from '../../application/casino-refund.service';
 import { parseDateStringOrThrow } from 'src/utils/date.util';
 import { CasinoBonusService } from '../../application/casino-bonus.service';
 import { WalletCurrencyCode } from 'src/utils/currency.util';
 import { CasinoErrorCode } from '../../constants/casino-error-codes';
-import { text } from 'stream/consumers';
 
 @Injectable()
 export class DcsCallbackService {

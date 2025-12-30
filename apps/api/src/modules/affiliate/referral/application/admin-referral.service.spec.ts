@@ -2,7 +2,7 @@
 import type { TestingModule } from '@nestjs/testing';
 import { Test } from '@nestjs/testing';
 import { AdminReferralService } from './admin-referral.service';
-import { PrismaService } from 'src/common/prisma/prisma.service';
+import { PrismaService } from 'src/infrastructure/prisma/prisma.service';
 import { ReferralMapper } from '../infrastructure/referral.mapper';
 import { ACTIVITY_LOG } from 'src/common/activity-log/activity-log.token';
 import type { ActivityLogPort } from 'src/common/activity-log/activity-log.port';
@@ -21,10 +21,10 @@ describe('AdminReferralService', () => {
   let mockMapper: jest.Mocked<ReferralMapper>;
   let mockActivityLog: jest.Mocked<ActivityLogPort>;
 
-  const adminId = 'admin-123';
+  const adminId = BigInt(123);
   const referralId = 'referral-123';
-  const affiliateId = 'affiliate-123';
-  const subUserId = 'sub-user-456';
+  const affiliateId = BigInt(123);
+  const subUserId = BigInt(456);
   const codeId = 'code-789';
 
   const mockRequestInfo: RequestClientInfo = {

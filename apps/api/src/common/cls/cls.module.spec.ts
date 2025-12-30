@@ -1,8 +1,8 @@
 import type { TestingModule } from '@nestjs/testing';
 import { Test } from '@nestjs/testing';
 import { ClsModule } from 'nestjs-cls';
-import { PrismaModule } from '../prisma/prisma.module';
-import { PrismaService } from '../prisma/prisma.service';
+import { PrismaModule } from 'src/infrastructure/prisma/prisma.module';
+import { PrismaService } from 'src/infrastructure/prisma/prisma.service';
 import { EnvModule } from '../env/env.module';
 
 describe('PrismaModule with ClsModule', () => {

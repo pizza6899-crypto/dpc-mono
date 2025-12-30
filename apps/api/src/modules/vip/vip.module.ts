@@ -1,5 +1,5 @@
 import { Module } from '@nestjs/common';
-import { PrismaModule } from 'src/common/prisma/prisma.module';
+import { PrismaModule } from 'src/infrastructure/prisma/prisma.module';
 import { ConcurrencyModule } from 'src/common/concurrency/concurrency.module';
 import { ActivityLogModule } from 'src/common/activity-log/activity-log.module';
 import { VipLevelService } from './application/vip-level.service';

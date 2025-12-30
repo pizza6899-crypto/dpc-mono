@@ -1,5 +1,5 @@
 import { forwardRef, Module } from '@nestjs/common';
-import { PrismaModule } from 'src/common/prisma/prisma.module';
+import { PrismaModule } from 'src/infrastructure/prisma/prisma.module';
 import { WhitecliffModule } from './whitecliff/whitecliff.module';
 import { DcsModule } from './dcs/dcs.module';
 import { CasinoBalanceService } from './application/casino-balance.service';
@@ -12,7 +12,7 @@ import { ConcurrencyModule } from 'src/common/concurrency/concurrency.module';
 import { VipModule } from '../vip/vip.module';
 import { CompModule } from '../comp/comp.module';
 import { CasinoBonusService } from './application/casino-bonus.service';
-import { QueueModule } from 'src/common/queue/queue.module';
+import { QueueModule } from 'src/infrastructure/queue/queue.module';
 import { RollingModule } from '../rolling/rolling.module';
 import { GamePostProcessProcessor } from './processors/game-post-process.processor';
 import { EnvModule } from 'src/common/env/env.module';

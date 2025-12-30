@@ -1,21 +1,11 @@
 import {
   Injectable,
   Logger,
-  BadRequestException,
   Inject,
 } from '@nestjs/common';
-import { PrismaService } from '../../../common/prisma/prisma.service';
+import { PrismaService } from 'src/infrastructure/prisma/prisma.service';
 import { NowPaymentApiService } from '../infrastructure/now-payment-api.service';
-import { ConcurrencyService } from '../../../common/concurrency/concurrency.service';
-import { CreateWithdrawRequestDto } from '../dtos/create-withdraw-request.dto';
-import { CreateWithdrawResponseDto } from '../dtos/create-withdraw-response.dto';
-import {
-  TransactionType,
-  TransactionStatus,
-  WithdrawDetailStatus,
-} from '@repo/database';
-import { nowUtcMinus } from 'src/utils/date.util';
-import { WALLET_CURRENCIES } from 'src/utils/currency.util';
+import { ConcurrencyService } from 'src/common/concurrency/concurrency.service';
 import type { ActivityLogPort } from 'src/common/activity-log/activity-log.port';
 import { ACTIVITY_LOG } from 'src/common/activity-log/activity-log.token';
 

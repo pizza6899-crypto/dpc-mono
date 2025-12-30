@@ -101,7 +101,7 @@ export class ResetUserPasswordAdminService {
 
   /**
    * 랜덤 비밀번호 생성
-   * 12자리, 대문자, 소문자, 숫자 포함
+   * 10자리, 대문자, 소문자, 숫자 포함
    */
   private generateRandomPassword(): string {
     // nanoid를 사용하여 안전한 랜덤 문자열 생성

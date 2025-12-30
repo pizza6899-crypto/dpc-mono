@@ -11,7 +11,7 @@ import { LoginAttempt, LoginAttemptResult } from '../domain';
 import type { AuthenticatedUser } from 'src/common/auth/types/auth.types';
 import type { RequestClientInfo } from 'src/common/http/types/client-info.types';
 import { UserRoleType } from '@repo/database';
-import { PrismaModule } from 'src/common/prisma/prisma.module';
+import { PrismaModule } from 'src/infrastructure/prisma/prisma.module';
 import { EnvModule } from 'src/common/env/env.module';
 import { DispatchLogService } from 'src/modules/audit-log/application/dispatch-log.service';
 import { CreateSessionService } from '../../session/application/create-session.service';

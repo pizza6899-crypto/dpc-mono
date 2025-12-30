@@ -6,7 +6,7 @@ import { GetWalletBalanceService } from './get-wallet-balance.service';
 import { AFFILIATE_WALLET_REPOSITORY } from '../ports/out/affiliate-wallet.repository.token';
 import type { AffiliateWalletRepositoryPort } from '../ports/out/affiliate-wallet.repository.port';
 import { AffiliateWallet } from '../domain';
-import { PrismaModule } from 'src/common/prisma/prisma.module';
+import { PrismaModule } from 'src/infrastructure/prisma/prisma.module';
 import { EnvModule } from 'src/common/env/env.module';
 
 describe('GetWalletBalanceService', () => {
@@ -14,7 +14,7 @@ describe('GetWalletBalanceService', () => {
   let service: GetWalletBalanceService;
   let mockRepository: jest.Mocked<AffiliateWalletRepositoryPort>;
 
-  const mockAffiliateId = 'affiliate-123';
+  const mockAffiliateId = BigInt(123);
   const mockCurrency = ExchangeCurrencyCode.USD;
   const mockCurrency2 = ExchangeCurrencyCode.KRW;
   const mockAvailableBalance = new Prisma.Decimal('1000');

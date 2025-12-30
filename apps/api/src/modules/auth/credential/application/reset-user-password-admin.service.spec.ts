@@ -14,7 +14,7 @@ import { hashPassword } from 'src/utils/password.util';
 import { ApiException } from 'src/common/http/exception/api.exception';
 import { MessageCode } from 'src/common/http/types';
 import type { RequestClientInfo } from 'src/common/http/types/client-info.types';
-import { PrismaModule } from 'src/common/prisma/prisma.module';
+import { PrismaModule } from 'src/infrastructure/prisma/prisma.module';
 import { EnvModule } from 'src/common/env/env.module';
 
 describe('ResetUserPasswordAdminService', () => {
@@ -334,31 +334,34 @@ describe('ResetUserPasswordAdminService', () => {
       expect(actualHash).toMatch(/^\$2[aby]\$\d+\$/); // bcrypt 해시 형식
     });
 
-    it('자동 생성된 비밀번호가 올바른 형식이어야 함', async () => {
-      // Arrange
-      const mockUser = createMockCredentialUser();
-      mockUserRepository.findById.mockResolvedValue(mockUser);
-      mockUserRepository.updatePassword.mockResolvedValue(
-        User.fromPersistence({
-          ...mockUser.toPersistence(),
-          passwordHash: mockNewPasswordHash,
-        }),
-      );
-      mockActivityLog.logSuccess.mockResolvedValue(undefined);
-
-      // Act - 여러 번 실행하여 다양한 비밀번호 생성 확인
-      const passwords: string[] = [];
-      for (let i = 0; i < 10; i++) {
-        const result = await service.execute({
-          targetUserId: mockTargetUserId,
-          adminUserId: mockAdminUserId,
-          requestInfo: mockClientInfo,
+    it(
+      '자동 생성된 비밀번호가 올바른 형식이어야 함',
+      async () => {
+        // Arrange
+        const mockUser = createMockCredentialUser();
+        mockUserRepository.findById.mockResolvedValue(mockUser);
+        // 매번 다른 해시를 반환하도록 설정 (실제로는 매번 다른 비밀번호가 생성되므로)
+        mockUserRepository.updatePassword.mockImplementation(async (userId, hash) => {
+          return User.fromPersistence({
+            ...mockUser.toPersistence(),
+            passwordHash: hash, // 실제 생성된 해시 사용
+          });
         });
-        passwords.push(result.newPassword);
-      }
+        mockActivityLog.logSuccess.mockResolvedValue(undefined);
 
-      // Assert
-      passwords.forEach((password) => {
+        // Act - 여러 번 실행하여 다양한 비밀번호 생성 확인
+        const passwords: string[] = [];
+        for (let i = 0; i < 10; i++) {
+          const result = await service.execute({
+            targetUserId: mockTargetUserId,
+            adminUserId: mockAdminUserId,
+            requestInfo: mockClientInfo,
+          });
+          passwords.push(result.newPassword);
+        }
+
+      // Assert - 각 비밀번호의 형식 검증
+      passwords.forEach((password, index) => {
         expect(password.length).toBe(10);
         expect(password).toMatch(/[A-Z]/); // 대문자 포함
         expect(password).toMatch(/[a-z]/); // 소문자 포함
@@ -366,10 +369,17 @@ describe('ResetUserPasswordAdminService', () => {
         expect(password).toMatch(/^[A-Za-z0-9]+$/); // 알파벳과 숫자만 포함
       });
 
-      // 모든 비밀번호가 서로 다른지 확인 (랜덤성 검증)
+      // 랜덤성 검증 - 모든 비밀번호가 서로 다른지 확인
       const uniquePasswords = new Set(passwords);
-      expect(uniquePasswords.size).toBeGreaterThan(1); // 대부분 다른 비밀번호 생성
-    });
+      // 10개 중 최소 9개 이상이 서로 달라야 함 (90% 이상의 고유성 보장)
+      // 통계적으로 거의 모든 경우에 10개가 모두 달라야 하므로 9개 이상으로 설정
+      expect(uniquePasswords.size).toBeGreaterThanOrEqual(9);
+      
+      // 추가 검증: 비밀번호 배열의 길이 확인
+      expect(passwords.length).toBe(10);
+      },
+      10000, // 타임아웃 10초 (10번 반복 실행으로 인한 지연 고려)
+    );
 
     it('Activity Log가 올바른 정보로 기록되어야 함 (비밀번호 제공)', async () => {
       // Arrange

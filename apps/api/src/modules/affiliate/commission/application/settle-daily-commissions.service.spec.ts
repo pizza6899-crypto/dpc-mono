@@ -13,7 +13,7 @@ import type { AffiliateCommissionRepositoryPort } from '../ports/out/affiliate-c
 import { AFFILIATE_WALLET_REPOSITORY } from '../ports/out/affiliate-wallet.repository.token';
 import type { AffiliateWalletRepositoryPort } from '../ports/out/affiliate-wallet.repository.port';
 import { AffiliateCommission, AffiliateWallet } from '../domain';
-import { PrismaModule } from 'src/common/prisma/prisma.module';
+import { PrismaModule } from 'src/infrastructure/prisma/prisma.module';
 import { EnvModule } from 'src/common/env/env.module';
 
 // currency.util 모킹
@@ -36,10 +36,10 @@ describe('SettleDailyCommissionsService', () => {
   let mockCommissionRepository: jest.Mocked<AffiliateCommissionRepositoryPort>;
   let mockWalletRepository: jest.Mocked<AffiliateWalletRepositoryPort>;
 
-  const mockAffiliateId1 = 'affiliate-123';
-  const mockAffiliateId2 = 'affiliate-456';
-  const mockAffiliateId3 = 'affiliate-789';
-  const mockSubUserId = 'user-456';
+  const mockAffiliateId1 = BigInt(123);
+  const mockAffiliateId2 = BigInt(456);
+  const mockAffiliateId3 = BigInt(789);
+  const mockSubUserId = BigInt(456);
   const mockGameRoundId1 = BigInt(789);
   const mockGameRoundId2 = BigInt(790);
   const mockGameRoundId3 = BigInt(791);
@@ -50,7 +50,7 @@ describe('SettleDailyCommissionsService', () => {
   const createMockCommission = (overrides?: {
     id?: bigint;
     uid?: string;
-    affiliateId?: string;
+    affiliateId?: bigint;
     currency?: ExchangeCurrencyCode;
     commission?: Prisma.Decimal;
     status?: CommissionStatus;
@@ -59,8 +59,8 @@ describe('SettleDailyCommissionsService', () => {
     return AffiliateCommission.fromPersistence({
       id: overrides?.id ?? BigInt(1),
       uid: overrides?.uid ?? 'cmt-1234567890',
-      affiliateId: overrides?.affiliateId ?? mockAffiliateId1,
-      subUserId: mockSubUserId,
+      affiliateId: overrides?.affiliateId ? BigInt(overrides.affiliateId) : BigInt(mockAffiliateId1),
+      subUserId: BigInt(mockSubUserId),
       gameRoundId: mockGameRoundId1,
       wagerAmount: new Prisma.Decimal('10000'),
       winAmount: new Prisma.Decimal('5000'),
@@ -78,7 +78,7 @@ describe('SettleDailyCommissionsService', () => {
   };
 
   const createMockWallet = (overrides?: {
-    affiliateId?: string;
+    affiliateId?: bigint;
     currency?: ExchangeCurrencyCode;
     availableBalance?: Prisma.Decimal;
     pendingBalance?: Prisma.Decimal;
@@ -569,7 +569,7 @@ describe('SettleDailyCommissionsService', () => {
       // Given
       const affiliateIds = Array.from(
         { length: 150 },
-        (_, i) => `affiliate-${i + 1}`,
+        (_, i) => BigInt(i + 1),
       );
 
       // 첫 번째 배치 (100개)

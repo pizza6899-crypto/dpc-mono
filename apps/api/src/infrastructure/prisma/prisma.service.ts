@@ -6,7 +6,7 @@ import {
 } from '@nestjs/common';
 import { PrismaClient, Prisma } from '@repo/database';
 import { PrismaPg } from '@prisma/adapter-pg';
-import { EnvService } from '../env/env.service';
+import { EnvService } from 'src/common/env/env.service';
 
 /**
  * Prisma 데이터베이스 서비스

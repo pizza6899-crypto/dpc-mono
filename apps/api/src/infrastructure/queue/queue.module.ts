@@ -1,11 +1,11 @@
 import { Module, Global } from '@nestjs/common';
 import { BullModule } from '@nestjs/bullmq';
 import { RedisModule } from '../redis/redis.module';
-import { EnvModule } from '../env/env.module';
+import { EnvModule } from 'src/common/env/env.module';
 import { QueueService } from './queue.service';
-import { EnvService } from '../env/env.service';
+import { EnvService } from 'src/common/env/env.service';
 import { QueueNames } from './queue.types';
-import { PrismaModule } from '../prisma/prisma.module';
+import { PrismaModule } from 'src/infrastructure/prisma/prisma.module';
 
 @Module({
   imports: [

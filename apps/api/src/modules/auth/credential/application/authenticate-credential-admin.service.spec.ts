@@ -23,7 +23,7 @@ import {
   LoginFailureReason,
 } from '../domain/model/login-attempt.entity';
 import { UserRoleType } from '@repo/database';
-import { PrismaModule } from 'src/common/prisma/prisma.module';
+import { PrismaModule } from 'src/infrastructure/prisma/prisma.module';
 import { EnvModule } from 'src/common/env/env.module';
 
 describe('AuthenticateCredentialAdminService', () => {

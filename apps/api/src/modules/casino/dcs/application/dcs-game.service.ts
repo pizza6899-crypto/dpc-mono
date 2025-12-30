@@ -1,7 +1,7 @@
 import { Inject, Injectable } from '@nestjs/common';
 import { DcsApiService } from '../infrastructure/dcs-api.service';
 import { MessageCode, RequestClientInfo } from 'src/common/http/types';
-import { PrismaService } from 'src/common/prisma/prisma.service';
+import { PrismaService } from 'src/infrastructure/prisma/prisma.service';
 import { ApiException } from 'src/common/http/exception/api.exception';
 import { HttpStatusCode } from 'axios';
 import { IdUtil } from 'src/utils/id.util';

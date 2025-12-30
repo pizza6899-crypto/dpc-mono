@@ -1,6 +1,6 @@
 import { Injectable, Inject, Logger, HttpStatus } from '@nestjs/common';
 import { Transactional } from '@nestjs-cls/transactional';
-import { PrismaService } from 'src/common/prisma/prisma.service';
+import { PrismaService } from 'src/infrastructure/prisma/prisma.service';
 import type { ActivityLogPort } from 'src/common/activity-log/activity-log.port';
 import { ActivityType } from 'src/common/activity-log/activity-log.types';
 import { ACTIVITY_LOG } from 'src/common/activity-log/activity-log.token';

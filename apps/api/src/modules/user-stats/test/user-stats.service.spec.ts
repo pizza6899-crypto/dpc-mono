@@ -2,7 +2,7 @@
 import type { TestingModule } from '@nestjs/testing';
 import { Test } from '@nestjs/testing';
 import { Prisma, ExchangeCurrencyCode } from '@repo/database';
-import { PrismaService } from 'src/common/prisma/prisma.service';
+import { PrismaService } from 'src/infrastructure/prisma/prisma.service';
 import { UserStatsService } from '../application/user-stats.service';
 
 describe('UserStatsService', () => {
@@ -24,7 +24,7 @@ describe('UserStatsService', () => {
     },
   });
 
-  const userId = 'user-123';
+  const userId = BigInt(123);
   const currency = ExchangeCurrencyCode.USD;
 
   beforeEach(async () => {

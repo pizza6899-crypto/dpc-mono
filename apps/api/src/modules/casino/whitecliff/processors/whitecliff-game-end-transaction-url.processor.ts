@@ -3,8 +3,8 @@ import { Job } from 'bullmq';
 import {
   QueueNames,
   WhitecliffFetchGameResultUrlData,
-} from '../../../../common/queue/queue.types';
-import { PrismaService } from '../../../../common/prisma/prisma.service';
+} from 'src/infrastructure/queue/queue.types';
+import { PrismaService } from 'src/infrastructure/prisma/prisma.service';
 import {
   TransactionResultsResponse,
   WhitecliffApiService,

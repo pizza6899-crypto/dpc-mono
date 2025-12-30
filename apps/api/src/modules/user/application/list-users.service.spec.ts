@@ -9,7 +9,7 @@ import type {
 } from '../ports/out/user.repository.port';
 import { User } from '../domain';
 import { UserRoleType, UserStatus } from '@repo/database';
-import { PrismaModule } from 'src/common/prisma/prisma.module';
+import { PrismaModule } from 'src/infrastructure/prisma/prisma.module';
 import { EnvModule } from 'src/common/env/env.module';
 
 describe('ListUsersService', () => {
@@ -60,6 +60,7 @@ describe('ListUsersService', () => {
       findByUid: jest.fn(),
       findMany: jest.fn(),
       create: jest.fn(),
+      updatePassword: jest.fn(),
     };
 
     module = await Test.createTestingModule({

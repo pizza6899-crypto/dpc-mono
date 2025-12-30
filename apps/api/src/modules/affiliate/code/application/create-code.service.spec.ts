@@ -1,7 +1,7 @@
 // src/modules/affiliate/code/application/create-code.service.spec.ts
 import type { TestingModule } from '@nestjs/testing';
 import { Test } from '@nestjs/testing';
-import { PrismaModule } from 'src/common/prisma/prisma.module';
+import { PrismaModule } from 'src/infrastructure/prisma/prisma.module';
 import { EnvModule } from 'src/common/env/env.module';
 import { CreateCodeService } from './create-code.service';
 import { AFFILIATE_CODE_REPOSITORY } from '../ports/out/affiliate-code.repository.token';
@@ -22,7 +22,7 @@ describe('CreateCodeService', () => {
   let mockPolicy: AffiliateCodePolicy;
   let mockActivityLog: jest.Mocked<ActivityLogPort>;
 
-  const userId = 'user-123';
+  const userId = BigInt(123);
   const codeId = 'code-123';
   const mockCode = AffiliateCode.fromPersistence({
     id: codeId,
@@ -49,6 +49,7 @@ describe('CreateCodeService', () => {
       update: jest.fn(),
       delete: jest.fn(),
       updateMany: jest.fn(),
+      findManyForAdmin: jest.fn(),
     };
 
     mockPolicy = new AffiliateCodePolicy();

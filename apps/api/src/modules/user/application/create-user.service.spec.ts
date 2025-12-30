@@ -7,7 +7,7 @@ import type { UserRepositoryPort } from '../ports/out/user.repository.port';
 import { User } from '../domain';
 import { UserAlreadyExistsException } from '../domain/user.exception';
 import { UserRoleType, UserStatus, SocialType } from '@repo/database';
-import { PrismaModule } from 'src/common/prisma/prisma.module';
+import { PrismaModule } from 'src/infrastructure/prisma/prisma.module';
 import { EnvModule } from 'src/common/env/env.module';
 
 describe('CreateUserService', () => {
@@ -70,6 +70,8 @@ describe('CreateUserService', () => {
       findById: jest.fn(),
       findByUid: jest.fn(),
       create: jest.fn(),
+      findMany: jest.fn(),
+      updatePassword: jest.fn(),
     };
 
     module = await Test.createTestingModule({

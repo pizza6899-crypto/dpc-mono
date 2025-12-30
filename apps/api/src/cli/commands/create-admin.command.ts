@@ -1,6 +1,6 @@
 import { Command, CommandRunner, Option } from 'nest-commander';
 import { Injectable, Logger } from '@nestjs/common';
-import { PrismaService } from 'src/common/prisma/prisma.service';
+import { PrismaService } from 'src/infrastructure/prisma/prisma.service';
 import { UserRoleType, UserStatus, Language } from '@repo/database';
 import { hashPassword } from 'src/utils/password.util';
 import { WALLET_CURRENCIES } from 'src/utils/currency.util';

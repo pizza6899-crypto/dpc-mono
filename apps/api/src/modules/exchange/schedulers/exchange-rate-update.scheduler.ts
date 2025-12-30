@@ -1,7 +1,7 @@
 // src/modules/exchange/schedulers/exchange-rate-update.scheduler.ts
 import { Injectable, Logger, OnApplicationBootstrap } from '@nestjs/common';
 import { Cron, CronExpression } from '@nestjs/schedule';
-import { PrismaService } from 'src/common/prisma/prisma.service';
+import { PrismaService } from 'src/infrastructure/prisma/prisma.service';
 import {
   ExchangeCurrencyCode,
   ExchangeRateProvider,

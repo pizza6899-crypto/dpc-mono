@@ -1,6 +1,6 @@
 // src/modules/affiliate/commission/commission.module.ts
 import { Module } from '@nestjs/common';
-import { PrismaModule } from 'src/common/prisma/prisma.module';
+import { PrismaModule } from 'src/infrastructure/prisma/prisma.module';
 import { ActivityLogModule } from 'src/common/activity-log/activity-log.module';
 import { AffiliateReferralModule } from '../referral/referral.module';
 import { CommissionPolicy } from './domain';

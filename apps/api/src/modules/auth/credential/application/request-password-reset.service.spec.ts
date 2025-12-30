@@ -10,7 +10,7 @@ import type { PasswordResetTokenRepositoryPort } from '../ports/out/password-res
 import { User } from 'src/modules/user/domain';
 import { UserStatus, UserRoleType, SocialType } from '@repo/database';
 import type { RequestClientInfo } from 'src/common/http/types/client-info.types';
-import { PrismaModule } from 'src/common/prisma/prisma.module';
+import { PrismaModule } from 'src/infrastructure/prisma/prisma.module';
 import { EnvModule } from 'src/common/env/env.module';
 import { DispatchLogService } from 'src/modules/audit-log/application/dispatch-log.service';
 

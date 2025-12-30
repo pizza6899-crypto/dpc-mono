@@ -1,7 +1,7 @@
 // src/platform/auth/strategies/session.serializer.ts
 import { Injectable, Inject } from '@nestjs/common';
 import { PassportSerializer } from '@nestjs/passport';
-import { PrismaService } from '../../prisma/prisma.service';
+import { PrismaService } from 'src/infrastructure/prisma/prisma.service';
 import { UserStatus } from '@repo/database';
 import { AuthenticatedUser } from '../types/auth.types';
 import { USER_SESSION_REPOSITORY } from 'src/modules/auth/session/ports/out';

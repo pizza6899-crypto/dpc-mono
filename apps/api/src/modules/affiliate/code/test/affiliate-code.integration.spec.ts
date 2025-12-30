@@ -1,7 +1,7 @@
 // src/modules/affiliate/code/test/affiliate-code.integration.spec.ts
 import type { TestingModule } from '@nestjs/testing';
 import { Test } from '@nestjs/testing';
-import { PrismaModule } from 'src/common/prisma/prisma.module';
+import { PrismaModule } from 'src/infrastructure/prisma/prisma.module';
 import { EnvModule } from 'src/common/env/env.module';
 import { AffiliateCodeModule } from '../code.module';
 import { CreateCodeService } from '../application/create-code.service';
@@ -60,6 +60,7 @@ describe('AffiliateCodeModule Integration', () => {
       update: jest.fn(),
       delete: jest.fn(),
       updateMany: jest.fn(),
+      findManyForAdmin: jest.fn(),
     };
 
     module = await Test.createTestingModule({

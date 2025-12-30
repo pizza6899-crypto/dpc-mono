@@ -8,7 +8,7 @@ import { VipModule } from '../../vip/vip.module';
 import { AffiliateReferralModule } from '../../affiliate/referral/referral.module';
 import { AffiliateCodeModule } from '../../affiliate/code/code.module';
 import { ActivityLogModule } from 'src/common/activity-log/activity-log.module';
-import { PrismaModule } from 'src/common/prisma/prisma.module';
+import { PrismaModule } from 'src/infrastructure/prisma/prisma.module';
 import { EnvModule } from 'src/common/env/env.module';
 import { UserModule } from '../../user/user.module';
 

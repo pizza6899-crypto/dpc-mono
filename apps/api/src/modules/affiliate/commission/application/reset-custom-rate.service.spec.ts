@@ -10,7 +10,7 @@ import type { ActivityLogPort } from 'src/common/activity-log/activity-log.port'
 import { ActivityType } from 'src/common/activity-log/activity-log.types';
 import { AffiliateTier } from '../domain';
 import { TierNotFoundException } from '../domain/commission.exception';
-import { PrismaModule } from 'src/common/prisma/prisma.module';
+import { PrismaModule } from 'src/infrastructure/prisma/prisma.module';
 import { EnvModule } from 'src/common/env/env.module';
 import type { RequestClientInfo } from 'src/common/http/types/client-info.types';
 
@@ -20,15 +20,15 @@ describe('ResetCustomRateService', () => {
   let mockRepository: jest.Mocked<AffiliateTierRepositoryPort>;
   let mockActivityLog: jest.Mocked<ActivityLogPort>;
 
-  const mockAffiliateId = 'affiliate-123';
-  const mockResetBy = 'admin-456';
+  const mockAffiliateId = BigInt(123);
+  const mockResetBy = BigInt(456);
   const mockUid = 'tier-1234567890';
   const mockId = BigInt(1);
   const mockBaseRate = new Prisma.Decimal('0.005'); // BRONZE: 0.5%
   const mockCustomRate = new Prisma.Decimal('0.01'); // 1%
   const mockCreatedAt = new Date('2024-01-01T00:00:00Z');
   const mockUpdatedAt = new Date('2024-01-01T00:00:00Z');
-  const mockCustomRateSetBy = 'admin-789';
+  const mockCustomRateSetBy = BigInt(789);
   const mockCustomRateSetAt = new Date('2024-01-02T00:00:00Z');
 
   const mockRequestInfo: RequestClientInfo = {
@@ -58,7 +58,7 @@ describe('ResetCustomRateService', () => {
     isCustomRate?: boolean;
     tier?: AffiliateTierLevel;
     baseRate?: Prisma.Decimal;
-    customRateSetBy?: string | null;
+    customRateSetBy?: bigint | null;
     customRateSetAt?: Date | null;
   }) => {
     return AffiliateTier.fromPersistence({

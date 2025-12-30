@@ -1,7 +1,7 @@
 // src/modules/affiliate/referral/application/link-referral.service.spec.ts
 import type { TestingModule } from '@nestjs/testing';
 import { Test } from '@nestjs/testing';
-import { PrismaModule } from 'src/common/prisma/prisma.module';
+import { PrismaModule } from 'src/infrastructure/prisma/prisma.module';
 import { EnvModule } from 'src/common/env/env.module';
 import { LinkReferralService } from './link-referral.service';
 import { REFERRAL_REPOSITORY } from '../ports/out/referral.repository.token';
@@ -30,8 +30,8 @@ describe('LinkReferralService', () => {
   let mockPolicy: ReferralPolicy;
   let mockActivityLog: jest.Mocked<ActivityLogPort>;
 
-  const affiliateId = 'affiliate-123';
-  const subUserId = 'sub-user-456';
+  const affiliateId = BigInt(123);
+  const subUserId = BigInt(456);
   const codeId = 'code-789';
   const referralCode = 'TESTCODE1';
   const referralId = 'referral-123';

@@ -1,6 +1,6 @@
 // src/modules/payment/application/crypto-deposit.service.ts
 import { Injectable, Logger, Inject, HttpStatus } from '@nestjs/common';
-import { PrismaService } from '../../../common/prisma/prisma.service';
+import { PrismaService } from 'src/infrastructure/prisma/prisma.service';
 import { NowPaymentApiService } from '../infrastructure/now-payment-api.service';
 import { CreateDepositRequestDto } from '../dtos/create-deposit-request.dto';
 import { CreateDepositResponseDto } from '../dtos/create-deposit-response.dto';

@@ -19,7 +19,7 @@ import {
 import { UserNotFoundException } from 'src/modules/user/domain/user.exception';
 import { User } from 'src/modules/user/domain';
 import { UserRoleType, UserStatus } from '@repo/database';
-import { PrismaModule } from 'src/common/prisma/prisma.module';
+import { PrismaModule } from 'src/infrastructure/prisma/prisma.module';
 import { EnvModule } from 'src/common/env/env.module';
 
 describe('UpdateUserBalanceAdminService', () => {
@@ -79,6 +79,8 @@ describe('UpdateUserBalanceAdminService', () => {
       findById: jest.fn(),
       findByUid: jest.fn(),
       create: jest.fn(),
+      findMany: jest.fn(),
+      updatePassword: jest.fn(),
     };
 
     module = await Test.createTestingModule({

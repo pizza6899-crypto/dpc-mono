@@ -1,8 +1,7 @@
 import { Injectable } from '@nestjs/common';
-import { PrismaService } from '../prisma/prisma.service';
+import { PrismaService } from 'src/infrastructure/prisma/prisma.service';
 import { ActivityLogPort } from './activity-log.port';
 import { ActivityLogData, ActivityStatus } from './activity-log.types';
-import { nowUtc } from 'src/utils/date.util';
 import type { RequestClientInfo } from 'src/common/http/types/client-info.types';
 
 @Injectable()

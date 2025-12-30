@@ -11,9 +11,9 @@ import {
 import { Server, Socket } from 'socket.io';
 import { Logger, UseFilters, UsePipes } from '@nestjs/common';
 import { createAdapter } from '@socket.io/redis-adapter';
-import { RedisService } from '../redis/redis.service';
+import { RedisService } from 'src/infrastructure/redis/redis.service';
 import Redis from 'ioredis';
-import { EnvService } from '../env/env.service';
+import { EnvService } from 'src/common/env/env.service';
 import session from 'express-session';
 import passport from 'passport';
 import { ApiProperty } from '@nestjs/swagger';

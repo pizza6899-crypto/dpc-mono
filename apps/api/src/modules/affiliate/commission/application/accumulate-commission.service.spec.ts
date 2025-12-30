@@ -10,7 +10,7 @@ import {
 import { AccumulateCommissionService } from './accumulate-commission.service';
 import { CalculateCommissionService } from './calculate-commission.service';
 import { AffiliateCommission } from '../domain';
-import { PrismaModule } from 'src/common/prisma/prisma.module';
+import { PrismaModule } from 'src/infrastructure/prisma/prisma.module';
 import { EnvModule } from 'src/common/env/env.module';
 
 describe('AccumulateCommissionService', () => {
@@ -20,8 +20,8 @@ describe('AccumulateCommissionService', () => {
 
   const mockId = BigInt(1);
   const mockUid = 'cmt-1234567890';
-  const mockAffiliateId = 'affiliate-123';
-  const mockSubUserId = 'user-456';
+  const mockAffiliateId = BigInt(123);
+  const mockSubUserId = BigInt(456);
   const mockGameRoundId1 = BigInt(789);
   const mockGameRoundId2 = BigInt(790);
   const mockGameRoundId3 = BigInt(791);
@@ -189,7 +189,7 @@ describe('AccumulateCommissionService', () => {
           gameCategory: mockGameCategory,
         },
         {
-          subUserId: 'user-without-referral',
+          subUserId: mockSubUserId,
           gameRoundId: mockGameRoundId2,
           wagerAmount: mockWagerAmount,
           winAmount: mockWinAmount,
@@ -247,7 +247,7 @@ describe('AccumulateCommissionService', () => {
       // Given
       const rounds = [
         {
-          subUserId: 'user-without-referral-1',
+          subUserId: mockSubUserId,
           gameRoundId: mockGameRoundId1,
           wagerAmount: mockWagerAmount,
           winAmount: mockWinAmount,
@@ -255,7 +255,7 @@ describe('AccumulateCommissionService', () => {
           gameCategory: mockGameCategory,
         },
         {
-          subUserId: 'user-without-referral-2',
+          subUserId: mockSubUserId,
           gameRoundId: mockGameRoundId2,
           wagerAmount: mockWagerAmount,
           winAmount: mockWinAmount,

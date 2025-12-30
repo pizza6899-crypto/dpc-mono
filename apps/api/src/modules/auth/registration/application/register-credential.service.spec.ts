@@ -24,7 +24,7 @@ import { MessageCode } from 'src/common/http/types/message-codes';
 import { UserRoleType, UserStatus } from '@repo/database';
 import type { RequestClientInfo } from 'src/common/http/types/client-info.types';
 import { Referral } from 'src/modules/affiliate/referral/domain/model/referral.entity';
-import { PrismaModule } from 'src/common/prisma/prisma.module';
+import { PrismaModule } from 'src/infrastructure/prisma/prisma.module';
 import { EnvModule } from 'src/common/env/env.module';
 
 describe('RegisterCredentialService', () => {
@@ -146,6 +146,8 @@ describe('RegisterCredentialService', () => {
       findById: jest.fn(),
       findByUid: jest.fn(),
       create: jest.fn(),
+      findMany: jest.fn(),
+      updatePassword: jest.fn(),
     };
 
     module = await Test.createTestingModule({

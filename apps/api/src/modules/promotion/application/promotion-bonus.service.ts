@@ -1,5 +1,4 @@
 import { Injectable, Logger } from '@nestjs/common';
-import { PrismaService } from 'src/common/prisma/prisma.service';
 import { RollingService } from 'src/modules/rolling/application/rolling.service';
 import { Prisma } from '@repo/database';
 import { ApiException } from 'src/common/http/exception/api.exception';

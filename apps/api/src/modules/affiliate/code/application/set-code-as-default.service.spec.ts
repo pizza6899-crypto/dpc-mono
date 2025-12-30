@@ -1,7 +1,7 @@
 // src/modules/affiliate/code/application/set-code-as-default.service.spec.ts
 import type { TestingModule } from '@nestjs/testing';
 import { Test } from '@nestjs/testing';
-import { PrismaModule } from 'src/common/prisma/prisma.module';
+import { PrismaModule } from 'src/infrastructure/prisma/prisma.module';
 import { EnvModule } from 'src/common/env/env.module';
 import { SetCodeAsDefaultService } from './set-code-as-default.service';
 import { AFFILIATE_CODE_REPOSITORY } from '../ports/out/affiliate-code.repository.token';
@@ -16,7 +16,7 @@ describe('SetCodeAsDefaultService', () => {
   let mockRepository: jest.Mocked<AffiliateCodeRepositoryPort>;
   let mockActivityLog: jest.Mocked<ActivityLogPort>;
 
-  const userId = 'user-123';
+  const userId = BigInt(123);
   const codeId = 'code-123';
   const existingDefaultId = 'existing-default-id';
   const mockCode = AffiliateCode.fromPersistence({
@@ -57,6 +57,7 @@ describe('SetCodeAsDefaultService', () => {
       update: jest.fn(),
       delete: jest.fn(),
       updateMany: jest.fn(),
+      findManyForAdmin: jest.fn(),
     };
 
     const mockActivityLogProvider = {

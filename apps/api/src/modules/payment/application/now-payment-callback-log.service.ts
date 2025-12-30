@@ -1,6 +1,6 @@
 // src/modules/payment/application/now-payment-callback-log.service.ts
 import { Injectable, Logger } from '@nestjs/common';
-import { PrismaService } from '../../../common/prisma/prisma.service';
+import { PrismaService } from 'src/infrastructure/prisma/prisma.service';
 import { nowUtc } from 'src/utils/date.util';
 
 @Injectable()

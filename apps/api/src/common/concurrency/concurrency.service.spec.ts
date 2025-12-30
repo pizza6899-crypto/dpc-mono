@@ -1,7 +1,7 @@
 import type { TestingModule } from '@nestjs/testing';
 import { Test } from '@nestjs/testing';
 import { ConcurrencyService } from './concurrency.service';
-import { RedisService } from '../redis/redis.service';
+import { RedisService } from 'src/infrastructure/redis/redis.service';
 import { Logger } from '@nestjs/common';
 import { EnvService } from '../env/env.service';
 import { EnvModule } from '../env/env.module';
@@ -72,12 +72,12 @@ describe('ConcurrencyService', () => {
     it('should acquire user lock successfully', async () => {
       mockRedisService.setLock.mockResolvedValue(true);
 
-      const result = await service.acquireUserLock('user123', 'balance');
+      const result = await service.acquireUserLock(BigInt(123), 'balance');
 
       expect(result).toBeDefined();
-      expect(result?.key).toBe('lock:user:user123:balance');
+      expect(result?.key).toBe('lock:user:123:balance');
       expect(mockRedisService.setLock).toHaveBeenCalledWith(
-        'lock:user:user123:balance',
+        'lock:user:123:balance',
         expect.any(String),
         30,
       );
@@ -86,7 +86,7 @@ describe('ConcurrencyService', () => {
     it('should return null when lock acquisition fails', async () => {
       mockRedisService.setLock.mockResolvedValue(false);
 
-      const result = await service.acquireUserLock('user123', 'balance');
+      const result = await service.acquireUserLock(BigInt(123), 'balance');
 
       expect(result).toBeNull();
     });
@@ -97,7 +97,7 @@ describe('ConcurrencyService', () => {
         .mockResolvedValueOnce(false)
         .mockResolvedValueOnce(true);
 
-      const result = await service.acquireUserLock('user123', 'balance', {
+      const result = await service.acquireUserLock(BigInt(123), 'balance', {
         retryCount: 2,
         retryDelay: 10,
       });
@@ -151,7 +151,7 @@ describe('ConcurrencyService', () => {
       const callback = jest.fn().mockResolvedValue('test-result');
 
       const result = await service.withUserLock({
-        userId: 'user123',
+        userId: BigInt(123),
         operation: 'balance',
         callback,
       });
@@ -170,7 +170,7 @@ describe('ConcurrencyService', () => {
 
       await expect(
         service.withUserLock({
-          userId: 'user123',
+          userId: BigInt(123),
           operation: 'balance',
           callback,
         }),

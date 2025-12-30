@@ -22,7 +22,7 @@ import {
   AffiliateWallet,
   CommissionPolicy,
 } from '../domain';
-import { PrismaModule } from 'src/common/prisma/prisma.module';
+import { PrismaModule } from 'src/infrastructure/prisma/prisma.module';
 import { EnvModule } from 'src/common/env/env.module';
 import { Referral } from '../../referral/domain/model/referral.entity';
 
@@ -37,8 +37,8 @@ describe('CalculateCommissionService', () => {
 
   const mockId = BigInt(1);
   const mockUid = 'cmt-1234567890';
-  const mockAffiliateId = 'affiliate-123';
-  const mockSubUserId = 'user-456';
+  const mockAffiliateId = BigInt(123);
+  const mockSubUserId = BigInt(456);
   const mockGameRoundId = BigInt(789);
   const mockWagerAmount = new Prisma.Decimal('10000');
   const mockWinAmount = new Prisma.Decimal('5000');

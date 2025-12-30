@@ -1,5 +1,5 @@
 import { Injectable, Logger } from '@nestjs/common';
-import { PrismaService } from 'src/common/prisma/prisma.service';
+import { PrismaService } from 'src/infrastructure/prisma/prisma.service';
 import { Prisma, PromotionTargetType } from '@repo/database';
 import { UserPromotionResponseDto } from '../dtos/promotion.dto';
 import { ApiException } from 'src/common/http/exception/api.exception';

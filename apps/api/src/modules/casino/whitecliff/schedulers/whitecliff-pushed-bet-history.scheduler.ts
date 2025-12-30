@@ -5,11 +5,11 @@ import {
   PushedBetHistoryResponse,
   WhitecliffApiService,
 } from 'src/modules/casino/whitecliff/infrastructure/whitecliff-api.service';
-import { PrismaService } from '../../../../common/prisma/prisma.service';
+import { PrismaService } from 'src/infrastructure/prisma/prisma.service';
 import { nowUtcMinus } from 'src/utils/date.util';
 import { ConcurrencyService } from '../../../../common/concurrency/concurrency.service';
 import { WhitecliffMapperService } from 'src/modules/casino/whitecliff/infrastructure/whitecliff-mapper.service';
-import { RedisService } from '../../../../common/redis/redis.service';
+import { RedisService } from 'src/infrastructure/redis/redis.service';
 import {
   GameAggregatorType,
   GameProvider,

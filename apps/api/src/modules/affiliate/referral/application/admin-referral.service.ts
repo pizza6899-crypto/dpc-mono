@@ -1,7 +1,7 @@
 // src/modules/affiliate/referral/application/admin-referral.service.ts
 import { Injectable, Logger } from '@nestjs/common';
 import { Inject } from '@nestjs/common';
-import { PrismaService } from 'src/common/prisma/prisma.service';
+import { PrismaService } from 'src/infrastructure/prisma/prisma.service';
 import { Prisma } from '@repo/database';
 import { ACTIVITY_LOG } from 'src/common/activity-log/activity-log.token';
 import type { ActivityLogPort } from 'src/common/activity-log/activity-log.port';

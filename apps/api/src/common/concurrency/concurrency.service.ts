@@ -1,7 +1,7 @@
 import { Injectable, Logger } from '@nestjs/common';
-import { RedisService } from '../redis/redis.service';
-import { IdUtil } from '../../utils/id.util';
-import { EnvService } from '../env/env.service';
+import { RedisService } from 'src/infrastructure/redis/redis.service';
+import { IdUtil } from 'src/utils/id.util';
+import { EnvService } from 'src/common/env/env.service';
 
 export interface LockOptions {
   ttl?: number; // 락 유지 시간 (초)

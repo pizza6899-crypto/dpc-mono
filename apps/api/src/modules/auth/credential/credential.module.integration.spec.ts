@@ -26,12 +26,11 @@ import { LoginAttemptMapper } from './infrastructure/mapper';
 import { CredentialUserMapper } from './infrastructure/credential-user.mapper';
 import { CredentialUserController } from './controllers/user/credential-user.controller';
 import { CredentialAdminController } from './controllers/admin/credential-admin.controller';
-import { PrismaModule } from 'src/common/prisma/prisma.module';
+import { PrismaModule } from 'src/infrastructure/prisma/prisma.module';
 import { EnvModule } from 'src/common/env/env.module';
 import { VipModule } from '../../vip/vip.module';
 import { AffiliateReferralModule } from '../../affiliate/referral/referral.module';
 import { ActivityLogModule } from 'src/common/activity-log/activity-log.module';
-import { MailModule } from 'src/common/mail/mail.module';
 import { UserModule } from '../../user/user.module';
 import { PassportModule } from '@nestjs/passport';
 import { SessionModule } from '../session/session.module';
@@ -71,7 +70,6 @@ describe('CredentialModule Integration', () => {
         AffiliateReferralModule,
         ActivityLogModule,
         AuditLogModule,
-        MailModule,
         UserModule,
         SessionModule, // LoginService와 LogoutService가 SessionModule 의존
         CredentialModule,

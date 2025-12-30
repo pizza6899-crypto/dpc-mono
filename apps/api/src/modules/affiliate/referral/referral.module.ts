@@ -2,7 +2,7 @@
 import { Module } from '@nestjs/common';
 import { AffiliateCodeModule } from '../code/code.module';
 import { ActivityLogModule } from 'src/common/activity-log/activity-log.module';
-import { PrismaModule } from 'src/common/prisma/prisma.module';
+import { PrismaModule } from 'src/infrastructure/prisma/prisma.module';
 import { ReferralPolicy } from './domain';
 import { LinkReferralService } from './application/link-referral.service';
 import { FindReferralByIdService } from './application/find-referral-by-id.service';

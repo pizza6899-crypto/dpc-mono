@@ -1,7 +1,7 @@
 // src/modules/payment/application/admin-deposit.service.ts
 import { Injectable, HttpStatus, Logger } from '@nestjs/common';
 import { Inject } from '@nestjs/common';
-import { PrismaService } from '../../../common/prisma/prisma.service';
+import { PrismaService } from 'src/infrastructure/prisma/prisma.service';
 import { Prisma, DepositDetailStatus, TransactionStatus } from '@repo/database';
 import { RollingService } from '../../rolling/application/rolling.service';
 import { ApiException } from 'src/common/http/exception/api.exception';

@@ -2,7 +2,7 @@
 import { Module } from '@nestjs/common';
 import { ThrottleService } from './throttle.service';
 import { ThrottleGuard } from './throttle.guard';
-import { RedisModule } from '../redis/redis.module';
+import { RedisModule } from 'src/infrastructure/redis/redis.module';
 
 @Module({
   imports: [RedisModule],

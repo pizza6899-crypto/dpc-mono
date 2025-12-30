@@ -1,7 +1,7 @@
 // test/integration/affiliate/commission/commission.integration.spec.ts
 import { Test, TestingModule } from '@nestjs/testing';
-import { PrismaService } from 'src/common/prisma/prisma.service';
-import { PrismaModule } from 'src/common/prisma/prisma.module';
+import { PrismaService } from 'src/infrastructure/prisma/prisma.service';
+import { PrismaModule } from 'src/infrastructure/prisma/prisma.module';
 import { EnvModule } from 'src/common/env/env.module';
 import { ActivityLogModule } from 'src/common/activity-log/activity-log.module';
 import { AffiliateReferralModule } from 'src/modules/affiliate/referral/referral.module';
@@ -40,8 +40,8 @@ describe('AffiliateCommissionModule Integration', () => {
   let commissionRepository: AffiliateCommissionRepositoryPort;
   let tierRepository: AffiliateTierRepositoryPort;
 
-  const testAffiliateId = 'test-affiliate-commission-integration';
-  const testSubUserId = 'test-sub-user-commission-integration';
+  const testAffiliateId = BigInt(123);
+  const testSubUserId = BigInt(456);
   const testCurrency = ExchangeCurrencyCode.USD;
 
   beforeAll(async () => {
@@ -168,7 +168,7 @@ describe('AffiliateCommissionModule Integration', () => {
       // When
       const found = await testWithTransaction(async () => {
         return await walletRepository.findByAffiliateIdAndCurrency(
-          'non-existent-affiliate',
+          BigInt(457),
           testCurrency,
         );
       });
@@ -182,7 +182,7 @@ describe('AffiliateCommissionModule Integration', () => {
       await expect(
         testWithTransaction(async () => {
           return await walletRepository.getByAffiliateIdAndCurrency(
-            'non-existent-affiliate',
+            BigInt(457),
             testCurrency,
           );
         }),
@@ -323,7 +323,7 @@ describe('AffiliateCommissionModule Integration', () => {
       });
 
       // When
-      tier.setCustomRate(new Prisma.Decimal('0.01'), 'admin-123');
+      tier.setCustomRate(new Prisma.Decimal('0.01'), BigInt(789));
       const updated = await testWithTransaction(async () => {
         return await tierRepository.upsert(tier);
       });

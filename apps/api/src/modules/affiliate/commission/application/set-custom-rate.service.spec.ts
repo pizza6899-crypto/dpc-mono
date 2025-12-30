@@ -10,10 +10,9 @@ import type { ActivityLogPort } from 'src/common/activity-log/activity-log.port'
 import { ActivityType } from 'src/common/activity-log/activity-log.types';
 import { AffiliateTier, CommissionPolicy } from '../domain';
 import { InvalidCommissionRateException } from '../domain/commission.exception';
-import { PrismaModule } from 'src/common/prisma/prisma.module';
+import { PrismaModule } from 'src/infrastructure/prisma/prisma.module';
 import { EnvModule } from 'src/common/env/env.module';
 import type { RequestClientInfo } from 'src/common/http/types/client-info.types';
-import { IdUtil } from 'src/utils/id.util';
 
 describe('SetCustomRateService', () => {
   let module: TestingModule;
@@ -22,8 +21,8 @@ describe('SetCustomRateService', () => {
   let mockActivityLog: jest.Mocked<ActivityLogPort>;
   let mockPolicy: CommissionPolicy;
 
-  const mockAffiliateId = 'affiliate-123';
-  const mockSetBy = 'admin-456';
+  const mockAffiliateId = BigInt(123);
+  const mockSetBy = BigInt(456);
   const mockUid = 'tier-1234567890';
   const mockId = BigInt(1);
   const mockBaseRate = new Prisma.Decimal('0.005'); // BRONZE: 0.5%
@@ -62,7 +61,7 @@ describe('SetCustomRateService', () => {
     return AffiliateTier.fromPersistence({
       id: mockId,
       uid: mockUid,
-      affiliateId: mockAffiliateId,
+      affiliateId: BigInt(mockAffiliateId),
       tier: overrides?.tier ?? AffiliateTierLevel.BRONZE,
       baseRate: overrides?.baseRate ?? mockBaseRate,
       customRate: overrides?.customRate ?? null,

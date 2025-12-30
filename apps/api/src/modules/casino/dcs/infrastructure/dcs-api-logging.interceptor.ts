@@ -1,6 +1,6 @@
 import { Injectable } from '@nestjs/common';
 import { HttpService } from '@nestjs/axios';
-import { PrismaService } from 'src/common/prisma/prisma.service';
+import { PrismaService } from 'src/infrastructure/prisma/prisma.service';
 import { EnvService } from 'src/common/env/env.service';
 import { InternalAxiosRequestConfig, AxiosResponse } from 'axios';
 import { nowUtc } from 'src/utils/date.util';

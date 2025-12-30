@@ -1,5 +1,5 @@
 import { Injectable, Logger } from '@nestjs/common';
-import { PrismaService } from 'src/common/prisma/prisma.service';
+import { PrismaService } from 'src/infrastructure/prisma/prisma.service';
 import { EnvService } from 'src/common/env/env.service';
 import {
   GetWhitecliffBalanceRequestDto,
@@ -23,10 +23,9 @@ import { WhitecliffMapperService } from '../infrastructure/whitecliff-mapper.ser
 import { CasinoBalanceService } from '../../application/casino-balance.service';
 import { CasinoBetService } from '../../application/casino-bet.service';
 import { CasinoBonusService } from '../../application/casino-bonus.service';
-import { GameSessionService } from '../../application/game-session.service';
 import { getCasinoErrorCode } from '../utils/whitecliff-error-response.util';
 import { CasinoErrorCode } from '../../constants/casino-error-codes';
-import { QueueService } from 'src/common/queue/queue.service';
+import { QueueService } from 'src/infrastructure/queue/queue.service';
 import { CasinoRefundService } from '../../application/casino-refund.service';
 import { nowUtc, parseDateStringOrThrow } from 'src/utils/date.util';
 import {

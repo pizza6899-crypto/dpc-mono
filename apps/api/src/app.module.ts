@@ -2,7 +2,7 @@ import { Module } from '@nestjs/common';
 import { AuthModule } from './modules/auth/auth.module';
 import { EnvModule } from './common/env/env.module';
 import { APP_FILTER, APP_GUARD, Reflector } from '@nestjs/core';
-import { PrismaModule } from './common/prisma/prisma.module';
+import { PrismaModule } from 'src/infrastructure/prisma/prisma.module';
 import { CasinoModule } from './modules/casino/casino.module';
 import { ScheduleModule } from '@nestjs/schedule';
 import { PaymentModule } from './modules/payment/payment.module';

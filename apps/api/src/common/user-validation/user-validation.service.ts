@@ -1,6 +1,6 @@
 // src/platform/user-validation/user-validation.service.ts
 import { Injectable, BadRequestException, Logger } from '@nestjs/common';
-import { PrismaService } from '../prisma/prisma.service';
+import { PrismaService } from 'src/infrastructure/prisma/prisma.service';
 import { ApiException } from '../http/exception/api.exception';
 import { MessageCode } from '../http/types/message-codes';
 import { UserStatus, UserRoleType, KycLevel } from '@repo/database';

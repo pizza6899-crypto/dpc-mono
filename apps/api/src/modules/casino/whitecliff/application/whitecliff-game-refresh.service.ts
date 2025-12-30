@@ -3,8 +3,8 @@ import {
   ProductGameListResponse,
   WhitecliffApiService,
 } from '../infrastructure/whitecliff-api.service';
-import { PrismaService } from 'src/common/prisma/prisma.service';
-import { RedisService } from 'src/common/redis/redis.service';
+import { PrismaService } from 'src/infrastructure/prisma/prisma.service';
+import { RedisService } from 'src/infrastructure/redis/redis.service';
 import { GameListUpdateStatusDto } from '../dtos/game-update.dto';
 import { nowUtc } from 'src/utils/date.util';
 import { WhitecliffMapperService } from '../infrastructure/whitecliff-mapper.service';

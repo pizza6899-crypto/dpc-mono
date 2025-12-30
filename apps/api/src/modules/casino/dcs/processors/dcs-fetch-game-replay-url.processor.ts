@@ -5,8 +5,8 @@ import { Job } from 'bullmq';
 import {
   QueueNames,
   DcsFetchGameReplayUrlData,
-} from '../../../../common/queue/queue.types';
-import { PrismaService } from '../../../../common/prisma/prisma.service';
+} from 'src/infrastructure/queue/queue.types';
+import { PrismaService } from 'src/infrastructure/prisma/prisma.service';
 import { DcsApiService } from '../infrastructure/dcs-api.service';
 import { Logger, OnApplicationShutdown } from '@nestjs/common';
 import { ApiException } from 'src/common/http/exception/api.exception';

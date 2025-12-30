@@ -1,7 +1,7 @@
 // src/modules/wallet/infrastructure/user-wallet.repository.ts
 import { Injectable } from '@nestjs/common';
 import { InjectTransaction } from '@nestjs-cls/transactional';
-import type { PrismaTransaction } from 'src/common/prisma/prisma.module';
+import type { PrismaTransaction } from 'src/infrastructure/prisma/prisma.module';
 import type { UserWalletRepositoryPort } from '../ports/out/user-wallet.repository.port';
 import { UserWallet } from '../domain';
 import { UserWalletMapper } from './user-wallet.mapper';

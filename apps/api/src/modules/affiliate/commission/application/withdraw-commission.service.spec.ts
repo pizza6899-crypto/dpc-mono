@@ -13,7 +13,7 @@ import {
   InsufficientBalanceException,
   WalletNotFoundException,
 } from '../domain/commission.exception';
-import { PrismaModule } from 'src/common/prisma/prisma.module';
+import { PrismaModule } from 'src/infrastructure/prisma/prisma.module';
 import { EnvModule } from 'src/common/env/env.module';
 import type { RequestClientInfo } from 'src/common/http/types/client-info.types';
 
@@ -23,7 +23,7 @@ describe('WithdrawCommissionService', () => {
   let mockWalletRepository: jest.Mocked<AffiliateWalletRepositoryPort>;
   let mockActivityLog: jest.Mocked<ActivityLogPort>;
 
-  const mockAffiliateId = 'affiliate-123';
+  const mockAffiliateId = BigInt(123);
   const mockCurrency = ExchangeCurrencyCode.USD;
   const mockAvailableBalance = new Prisma.Decimal('1000');
   const mockPendingBalance = new Prisma.Decimal('500');

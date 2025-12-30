@@ -1,6 +1,6 @@
 // src/modules/auth/session/session.module.ts
 import { Module } from '@nestjs/common';
-import { RedisModule } from 'src/common/redis/redis.module';
+import { RedisModule } from 'src/infrastructure/redis/redis.module';
 import { SessionAdminController } from './controllers/admin/session-admin.controller';
 import { CreateSessionService } from './application/create-session.service';
 import { ExpireSessionsBatchService } from './application/expire-sessions-batch.service';

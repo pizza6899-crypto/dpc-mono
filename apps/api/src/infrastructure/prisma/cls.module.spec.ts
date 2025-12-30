@@ -3,7 +3,7 @@ import { Test } from '@nestjs/testing';
 import { ClsModule } from 'nestjs-cls';
 import { PrismaModule } from './prisma.module';
 import { PrismaService } from './prisma.service';
-import { EnvModule } from '../env/env.module';
+import { EnvModule } from 'src/common/env/env.module';
 
 describe('PrismaModule with ClsModule', () => {
   let module: TestingModule;
