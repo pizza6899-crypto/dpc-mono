@@ -9,3 +9,6 @@ export * from './pagination.types';
 
 // Message Codes
 export * from './message-codes';
+
+// Express Type Extensions
+import './express';

@@ -1,76 +1,151 @@
 {
   "openapi": "3.0.0",
   "paths": {
-    "/vip/levels": {
+    "/admin/sessions": {
       "get": {
-        "operationId": "VipLevelController_getAllLevels",
-        "parameters": [],
-        "responses": {
-          "200": {
-            "description": "Successfully retrieved VIP level list / VIP 레벨 목록 조회 성공",
-            "content": {
-              "application/json": {
-                "schema": {
-                  "allOf": [
-                    {
-                      "$ref": "#/components/schemas/ApiResponseDto"
-                    },
-                    {
-                      "properties": {
-                        "data": {
-                          "$ref": "#/components/schemas/VipLevelListResponseDto"
-                        }
-                      }
-                    }
-                  ]
-                }
-              }
-            }
-          },
-          "400": {
-            "description": "Bad Request",
-            "content": {
-              "application/json": {
-                "schema": {
-                  "$ref": "#/components/schemas/ErrorResponseDto"
-                }
-              }
-            }
-          }
-        },
-        "summary": "Get all VIP levels / 모든 VIP 레벨 조회",
-        "tags": [
-          "VIP Levels"
-        ]
-      }
-    },
-    "/vip/levels/{id}": {
-      "get": {
-        "operationId": "VipLevelController_getLevelById",
+        "description": "관리자가 전체 세션 목록을 조회합니다. 페이징, 필터링, 정렬 기능을 지원합니다. userId 필터를 사용하여 특정 유저의 세션만 조회할 수 있습니다.",
+        "operationId": "SessionAdminController_listSessions",
         "parameters": [
           {
-            "name": "id",
-            "required": true,
-            "in": "path",
+            "name": "page",
+            "required": false,
+            "in": "query",
+            "description": "페이지 번호 (기본값: 1)",
             "schema": {
+              "minimum": 1,
+              "example": 1,
               "type": "number"
+            }
+          },
+          {
+            "name": "limit",
+            "required": false,
+            "in": "query",
+            "description": "페이지당 항목 수 (기본값: 20, 최대: 100)",
+            "schema": {
+              "minimum": 1,
+              "maximum": 100,
+              "example": 20,
+              "type": "number"
+            }
+          },
+          {
+            "name": "sortBy",
+            "required": false,
+            "in": "query",
+            "description": "정렬 필드",
+            "schema": {
+              "example": "createdAt",
+              "type": "string",
+              "enum": [
+                "createdAt",
+                "updatedAt",
+                "lastActiveAt",
+                "expiresAt"
+              ]
+            }
+          },
+          {
+            "name": "sortOrder",
+            "required": false,
+            "in": "query",
+            "description": "정렬 방향 (asc, desc)",
+            "schema": {
+              "example": "desc",
+              "type": "string",
+              "enum": [
+                "asc",
+                "desc"
+              ]
+            }
+          },
+          {
+            "name": "userId",
+            "required": false,
+            "in": "query",
+            "description": "사용자 ID 필터",
+            "schema": {
+              "example": "1234567890123456789",
+              "type": "string"
+            }
+          },
+          {
+            "name": "status",
+            "required": false,
+            "in": "query",
+            "description": "세션 상태 필터",
+            "schema": {
+              "example": "ACTIVE",
+              "type": "string",
+              "enum": [
+                "ACTIVE",
+                "REVOKED",
+                "EXPIRED"
+              ]
+            }
+          },
+          {
+            "name": "type",
+            "required": false,
+            "in": "query",
+            "description": "세션 타입 필터",
+            "schema": {
+              "example": "HTTP",
+              "type": "string",
+              "enum": [
+                "HTTP",
+                "WEBSOCKET"
+              ]
+            }
+          },
+          {
+            "name": "activeOnly",
+            "required": false,
+            "in": "query",
+            "description": "활성 세션만 조회할지 여부 (기본값: false)",
+            "schema": {
+              "example": true,
+              "type": "boolean"
+            }
+          },
+          {
+            "name": "startDate",
+            "required": false,
+            "in": "query",
+            "description": "시작 날짜 (ISO 8601 형식) - 생성일 기준",
+            "schema": {
+              "example": "2024-01-01T00:00:00Z",
+              "type": "string"
+            }
+          },
+          {
+            "name": "endDate",
+            "required": false,
+            "in": "query",
+            "description": "종료 날짜 (ISO 8601 형식) - 생성일 기준",
+            "schema": {
+              "example": "2024-12-31T23:59:59Z",
+              "type": "string"
             }
           }
         ],
         "responses": {
           "200": {
-            "description": "Successfully retrieved VIP level / VIP 레벨 조회 성공",
+            "description": "Successfully retrieved session list / 세션 목록 조회 성공",
             "content": {
               "application/json": {
                 "schema": {
                   "allOf": [
                     {
-                      "$ref": "#/components/schemas/ApiResponseDto"
+                      "$ref": "#/components/schemas/PaginatedResponseDto"
                     },
                     {
                       "properties": {
                         "data": {
-                          "$ref": "#/components/schemas/VipLevelResponseDto"
+                          "type": "array",
+                          "items": {
+                            "$ref": "#/components/schemas/SessionListItemDto"
+                          }
                         }
                       }
                     }
@@ -90,31 +165,115 @@
             }
           }
         },
-        "summary": "Get specific VIP level / 특정 VIP 레벨 조회",
+        "summary": "Get session list / 세션 목록 조회 (관리자용)",
         "tags": [
-          "VIP Levels"
+          "Admin Sessions (관리자 세션 관리)"
         ]
       }
     },
-    "/vip/membership": {
-      "get": {
-        "operationId": "VipMembershipController_getMyVipInfo",
-        "parameters": [],
+    "/admin/sessions/{sessionId}": {
+      "delete": {
+        "description": "관리자가 특정 세션을 명시적으로 종료 처리합니다. DB에서 REVOKED 상태로 변경하고 실제 세션 연결도 종료합니다.",
+        "operationId": "SessionAdminController_revokeSession",
+        "parameters": [
+          {
+            "name": "sessionId",
+            "required": true,
+            "in": "path",
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
         "responses": {
           "200": {
-            "description": "",
+            "description": "Successfully revoked session / 세션 종료 성공",
             "content": {
               "application/json": {
                 "schema": {
-                  "$ref": "#/components/schemas/VipMembershipResponseDto"
+                  "allOf": [
+                    {
+                      "$ref": "#/components/schemas/ApiResponseDto"
+                    },
+                    {
+                      "properties": {
+                        "data": {
+                          "$ref": "#/components/schemas/RevokeSessionResponseDto"
+                        }
+                      }
+                    }
+                  ]
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Bad Request",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponseDto"
                 }
               }
             }
           }
         },
-        "summary": "내 VIP 정보 조회",
+        "summary": "Revoke session / 특정 세션 종료",
         "tags": [
-          "VIP Membership"
+          "Admin Sessions (관리자 세션 관리)"
+        ]
+      }
+    },
+    "/admin/sessions/users/{userId}": {
+      "delete": {
+        "description": "관리자가 특정 유저의 모든 활성 세션을 종료 처리합니다. 각 세션을 REVOKED 상태로 변경하고 실제 세션 연결도 종료합니다.",
+        "operationId": "SessionAdminController_revokeUserSessions",
+        "parameters": [
+          {
+            "name": "userId",
+            "required": true,
+            "in": "path",
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Successfully revoked all user sessions / 유저의 모든 세션 종료 성공",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "allOf": [
+                    {
+                      "$ref": "#/components/schemas/ApiResponseDto"
+                    },
+                    {
+                      "properties": {
+                        "data": {
+                          "$ref": "#/components/schemas/RevokeUserSessionsResponseDto"
+                        }
+                      }
+                    }
+                  ]
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Bad Request",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponseDto"
+                }
+              }
+            }
+          }
+        },
+        "summary": "Revoke all user sessions / 유저의 모든 세션 종료",
+        "tags": [
+          "Admin Sessions (관리자 세션 관리)"
         ]
       }
     },
@@ -356,29 +515,22 @@
         ]
       }
     },
-    "/affiliate-codes/{id}": {
+    "/affiliate-codes/default": {
       "get": {
-        "operationId": "AffiliateCodeController_getCodeById",
-        "parameters": [
-          {
-            "name": "id",
-            "required": true,
-            "in": "path",
-            "schema": {
-              "type": "string"
-            }
-          }
-        ],
+        "operationId": "AffiliateCodeController_getDefaultCode",
+        "parameters": [],
         "responses": {
           "200": {
             "description": ""
           }
         },
-        "summary": "Get affiliate code by ID / 어플리에이트 코드 ID로 조회",
+        "summary": "Get default affiliate code / 대표 어플리에이트 코드 조회",
         "tags": [
           "Affiliate Codes (어플리에이트 코드)"
         ]
-      },
+      }
+    },
+    "/affiliate-codes/{id}": {
       "patch": {
         "operationId": "AffiliateCodeController_update",
         "parameters": [
@@ -407,52 +559,6 @@
           }
         },
         "summary": "Update affiliate code / 어플리에이트 코드 수정",
-        "tags": [
-          "Affiliate Codes (어플리에이트 코드)"
-        ]
-      },
-      "delete": {
-        "operationId": "AffiliateCodeController_delete",
-        "parameters": [
-          {
-            "name": "id",
-            "required": true,
-            "in": "path",
-            "schema": {
-              "type": "string"
-            }
-          }
-        ],
-        "responses": {
-          "204": {
-            "description": ""
-          }
-        },
-        "summary": "Delete affiliate code / 어플리에이트 코드 삭제",
-        "tags": [
-          "Affiliate Codes (어플리에이트 코드)"
-        ]
-      }
-    },
-    "/affiliate-codes/code/{code}": {
-      "get": {
-        "operationId": "AffiliateCodeController_getCodeByCode",
-        "parameters": [
-          {
-            "name": "code",
-            "required": true,
-            "in": "path",
-            "schema": {
-              "type": "string"
-            }
-          }
-        ],
-        "responses": {
-          "200": {
-            "description": ""
-          }
-        },
-        "summary": "Get affiliate code by code / 어플리에이트 코드로 조회 (검증용)",
         "tags": [
           "Affiliate Codes (어플리에이트 코드)"
         ]
@@ -528,6 +634,166 @@
         "summary": "Validate code format / 코드 형식 검증",
         "tags": [
           "Affiliate Codes (어플리에이트 코드)"
+        ]
+      }
+    },
+    "/admin/affiliate-codes": {
+      "get": {
+        "description": "관리자가 모든 어플리에이트 코드를 조회합니다. 페이징, 필터링, 정렬 기능을 지원합니다.",
+        "operationId": "AffiliateCodeAdminController_listCodes",
+        "parameters": [
+          {
+            "name": "page",
+            "required": false,
+            "in": "query",
+            "description": "페이지 번호 (기본값: 1)",
+            "schema": {
+              "minimum": 1,
+              "example": 1,
+              "type": "number"
+            }
+          },
+          {
+            "name": "limit",
+            "required": false,
+            "in": "query",
+            "description": "페이지당 항목 수 (기본값: 20, 최대: 100)",
+            "schema": {
+              "minimum": 1,
+              "maximum": 100,
+              "example": 20,
+              "type": "number"
+            }
+          },
+          {
+            "name": "sortBy",
+            "required": false,
+            "in": "query",
+            "description": "정렬 필드",
+            "schema": {
+              "example": "createdAt",
+              "type": "string",
+              "enum": [
+                "createdAt",
+                "updatedAt",
+                "code"
+              ]
+            }
+          },
+          {
+            "name": "sortOrder",
+            "required": false,
+            "in": "query",
+            "description": "정렬 방향 (asc, desc)",
+            "schema": {
+              "example": "desc",
+              "type": "string",
+              "enum": [
+                "asc",
+                "desc"
+              ]
+            }
+          },
+          {
+            "name": "userId",
+            "required": false,
+            "in": "query",
+            "description": "사용자 ID 필터",
+            "schema": {
+              "example": "1234567890123456789",
+              "type": "string"
+            }
+          },
+          {
+            "name": "code",
+            "required": false,
+            "in": "query",
+            "description": "코드 검색 (부분 일치)",
+            "schema": {
+              "example": "SUMMER",
+              "type": "string"
+            }
+          },
+          {
+            "name": "isActive",
+            "required": false,
+            "in": "query",
+            "description": "활성화 여부 필터",
+            "schema": {
+              "example": true,
+              "type": "boolean"
+            }
+          },
+          {
+            "name": "isDefault",
+            "required": false,
+            "in": "query",
+            "description": "기본 코드 여부 필터",
+            "schema": {
+              "example": false,
+              "type": "boolean"
+            }
+          },
+          {
+            "name": "startDate",
+            "required": false,
+            "in": "query",
+            "description": "시작 날짜 (ISO 8601 형식) - 생성일 기준",
+            "schema": {
+              "example": "2024-01-01T00:00:00Z",
+              "type": "string"
+            }
+          },
+          {
+            "name": "endDate",
+            "required": false,
+            "in": "query",
+            "description": "종료 날짜 (ISO 8601 형식) - 생성일 기준",
+            "schema": {
+              "example": "2024-12-31T23:59:59Z",
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Successfully retrieved affiliate codes list / 어플리에이트 코드 목록 조회 성공",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "allOf": [
+                    {
+                      "$ref": "#/components/schemas/PaginatedResponseDto"
+                    },
+                    {
+                      "properties": {
+                        "data": {
+                          "type": "array",
+                          "items": {
+                            "$ref": "#/components/schemas/AdminCodeListItemDto"
+                          }
+                        }
+                      }
+                    }
+                  ]
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Bad Request",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponseDto"
+                }
+              }
+            }
+          }
+        },
+        "summary": "Get affiliate codes list / 어플리에이트 코드 목록 조회 (관리자용)",
+        "tags": [
+          "Admin Affiliate Codes (관리자 어플리에이트 코드 관리)"
         ]
       }
     },
@@ -668,6 +934,168 @@
           }
         },
         "summary": "Auth Status (인증 상태)",
+        "tags": [
+          "Auth(인증)"
+        ]
+      }
+    },
+    "/auth/password": {
+      "patch": {
+        "description": "로그인한 사용자가 현재 비밀번호를 알고 있는 상태에서 비밀번호를 변경합니다.",
+        "operationId": "CredentialUserController_changePassword",
+        "parameters": [],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/ChangePasswordRequestDto"
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "Password changed successfully / 비밀번호 변경 성공",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "allOf": [
+                    {
+                      "$ref": "#/components/schemas/ApiResponseDto"
+                    },
+                    {
+                      "properties": {
+                        "data": {
+                          "$ref": "#/components/schemas/ChangePasswordResponseDto"
+                        }
+                      }
+                    }
+                  ]
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Bad Request",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponseDto"
+                }
+              }
+            }
+          }
+        },
+        "summary": "Change Password / 비밀번호 변경",
+        "tags": [
+          "Auth(인증)"
+        ]
+      }
+    },
+    "/auth/password/reset-request": {
+      "post": {
+        "description": "비밀번호를 잊은 경우 이메일로 재설정 토큰을 발송합니다.",
+        "operationId": "CredentialUserController_requestPasswordReset",
+        "parameters": [],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/RequestPasswordResetRequestDto"
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "Password reset email sent / 비밀번호 재설정 이메일 발송 완료",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "allOf": [
+                    {
+                      "$ref": "#/components/schemas/ApiResponseDto"
+                    },
+                    {
+                      "properties": {
+                        "data": {
+                          "$ref": "#/components/schemas/RequestPasswordResetResponseDto"
+                        }
+                      }
+                    }
+                  ]
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Bad Request",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponseDto"
+                }
+              }
+            }
+          }
+        },
+        "summary": "Request Password Reset / 비밀번호 재설정 요청",
+        "tags": [
+          "Auth(인증)"
+        ]
+      }
+    },
+    "/auth/password/reset": {
+      "post": {
+        "description": "이메일로 받은 토큰을 사용하여 비밀번호를 재설정합니다.",
+        "operationId": "CredentialUserController_resetPassword",
+        "parameters": [],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/ResetPasswordRequestDto"
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "Password reset successfully / 비밀번호 재설정 성공",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "allOf": [
+                    {
+                      "$ref": "#/components/schemas/ApiResponseDto"
+                    },
+                    {
+                      "properties": {
+                        "data": {
+                          "$ref": "#/components/schemas/ResetPasswordResponseDto"
+                        }
+                      }
+                    }
+                  ]
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Bad Request",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponseDto"
+                }
+              }
+            }
+          }
+        },
+        "summary": "Reset Password / 비밀번호 재설정",
         "tags": [
           "Auth(인증)"
         ]
@@ -895,24 +1323,24 @@
         ]
       }
     },
-    "/auth/register": {
-      "post": {
-        "description": "Creates a new user account with email and password. (이메일과 비밀번호로 새로운 사용자 계정을 생성합니다.)",
-        "operationId": "RegistrationController_register",
+    "/admin/auth/password": {
+      "patch": {
+        "description": "로그인한 관리자가 현재 비밀번호를 알고 있는 상태에서 비밀번호를 변경합니다.",
+        "operationId": "CredentialAdminController_changePassword",
         "parameters": [],
         "requestBody": {
           "required": true,
           "content": {
             "application/json": {
               "schema": {
-                "$ref": "#/components/schemas/RegisterRequestDto"
+                "$ref": "#/components/schemas/ChangePasswordRequestDto"
               }
             }
           }
         },
         "responses": {
-          "201": {
-            "description": "Register success",
+          "200": {
+            "description": "Password changed successfully / 비밀번호 변경 성공",
             "content": {
               "application/json": {
                 "schema": {
@@ -923,7 +1351,7 @@
                     {
                       "properties": {
                         "data": {
-                          "$ref": "#/components/schemas/RegisterResponseDto"
+                          "$ref": "#/components/schemas/ChangePasswordResponseDto"
                         }
                       }
                     }
@@ -943,30 +1371,39 @@
             }
           }
         },
-        "summary": "Register (회원가입)",
+        "summary": "Change Admin Password / 관리자 비밀번호 변경",
         "tags": [
-          "Auth(인증)"
+          "Admin Auth(관리자 인증)"
         ]
       }
     },
-    "/admin/registration/users": {
-      "post": {
-        "description": "Creates a new user account with email and password. Admin can specify role, country, and timezone. (이메일과 비밀번호로 새로운 사용자 계정을 생성합니다. 관리자는 역할, 국가, 타임존을 지정할 수 있습니다.)",
-        "operationId": "RegistrationAdminController_createUser",
-        "parameters": [],
+    "/admin/auth/users/{userId}/password": {
+      "patch": {
+        "description": "관리자가 특정 사용자의 비밀번호를 초기화합니다.",
+        "operationId": "CredentialAdminController_resetUserPassword",
+        "parameters": [
+          {
+            "name": "userId",
+            "required": true,
+            "in": "path",
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
         "requestBody": {
           "required": true,
           "content": {
             "application/json": {
               "schema": {
-                "$ref": "#/components/schemas/RegisterAdminRequestDto"
+                "$ref": "#/components/schemas/ResetUserPasswordRequestDto"
               }
             }
           }
         },
         "responses": {
-          "201": {
-            "description": "User created successfully",
+          "200": {
+            "description": "User password reset successfully / 사용자 비밀번호 초기화 성공",
             "content": {
               "application/json": {
                 "schema": {
@@ -977,7 +1414,7 @@
                     {
                       "properties": {
                         "data": {
-                          "$ref": "#/components/schemas/RegisterAdminResponseDto"
+                          "$ref": "#/components/schemas/ResetUserPasswordResponseDto"
                         }
                       }
                     }
@@ -997,9 +1434,126 @@
             }
           }
         },
-        "summary": "Create user (사용자 생성)",
+        "summary": "Reset User Password / 사용자 비밀번호 초기화",
         "tags": [
-          "Admin Registration (관리자 회원가입 관리)"
+          "Admin Auth(관리자 인증)"
+        ]
+      }
+    },
+    "/vip/levels": {
+      "get": {
+        "operationId": "VipLevelController_getAllLevels",
+        "parameters": [],
+        "responses": {
+          "200": {
+            "description": "Successfully retrieved VIP level list / VIP 레벨 목록 조회 성공",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "allOf": [
+                    {
+                      "$ref": "#/components/schemas/ApiResponseDto"
+                    },
+                    {
+                      "properties": {
+                        "data": {
+                          "$ref": "#/components/schemas/VipLevelListResponseDto"
+                        }
+                      }
+                    }
+                  ]
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Bad Request",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponseDto"
+                }
+              }
+            }
+          }
+        },
+        "summary": "Get all VIP levels / 모든 VIP 레벨 조회",
+        "tags": [
+          "VIP Levels"
+        ]
+      }
+    },
+    "/vip/levels/{id}": {
+      "get": {
+        "operationId": "VipLevelController_getLevelById",
+        "parameters": [
+          {
+            "name": "id",
+            "required": true,
+            "in": "path",
+            "schema": {
+              "type": "number"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Successfully retrieved VIP level / VIP 레벨 조회 성공",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "allOf": [
+                    {
+                      "$ref": "#/components/schemas/ApiResponseDto"
+                    },
+                    {
+                      "properties": {
+                        "data": {
+                          "$ref": "#/components/schemas/VipLevelResponseDto"
+                        }
+                      }
+                    }
+                  ]
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Bad Request",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponseDto"
+                }
+              }
+            }
+          }
+        },
+        "summary": "Get specific VIP level / 특정 VIP 레벨 조회",
+        "tags": [
+          "VIP Levels"
+        ]
+      }
+    },
+    "/vip/membership": {
+      "get": {
+        "operationId": "VipMembershipController_getMyVipInfo",
+        "parameters": [],
+        "responses": {
+          "200": {
+            "description": "",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/VipMembershipResponseDto"
+                }
+              }
+            }
+          }
+        },
+        "summary": "내 VIP 정보 조회",
+        "tags": [
+          "VIP Membership"
         ]
       }
     },
@@ -1130,12 +1684,15 @@
                 "schema": {
                   "allOf": [
                     {
-                      "$ref": "#/components/schemas/ApiResponseDto"
+                      "$ref": "#/components/schemas/PaginatedResponseDto"
                     },
                     {
                       "properties": {
                         "data": {
-                          "$ref": "#/components/schemas/UserListResponseDto"
+                          "type": "array",
+                          "items": {
+                            "$ref": "#/components/schemas/UserListItemDto"
+                          }
                         }
                       }
                     }
@@ -1158,6 +1715,114 @@
         "summary": "Get user list / 사용자 목록 조회 (관리자용)",
         "tags": [
           "Admin Users (관리자 사용자 관리)"
+        ]
+      }
+    },
+    "/auth/register": {
+      "post": {
+        "description": "Creates a new user account with email and password. (이메일과 비밀번호로 새로운 사용자 계정을 생성합니다.)",
+        "operationId": "RegistrationController_register",
+        "parameters": [],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/RegisterRequestDto"
+              }
+            }
+          }
+        },
+        "responses": {
+          "201": {
+            "description": "Register success",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "allOf": [
+                    {
+                      "$ref": "#/components/schemas/ApiResponseDto"
+                    },
+                    {
+                      "properties": {
+                        "data": {
+                          "$ref": "#/components/schemas/RegisterResponseDto"
+                        }
+                      }
+                    }
+                  ]
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Bad Request",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponseDto"
+                }
+              }
+            }
+          }
+        },
+        "summary": "Register (회원가입)",
+        "tags": [
+          "Auth(인증)"
+        ]
+      }
+    },
+    "/admin/registration/users": {
+      "post": {
+        "description": "Creates a new user account with email and password. Admin can specify role, country, and timezone. (이메일과 비밀번호로 새로운 사용자 계정을 생성합니다. 관리자는 역할, 국가, 타임존을 지정할 수 있습니다.)",
+        "operationId": "RegistrationAdminController_createUser",
+        "parameters": [],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/RegisterAdminRequestDto"
+              }
+            }
+          }
+        },
+        "responses": {
+          "201": {
+            "description": "User created successfully",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "allOf": [
+                    {
+                      "$ref": "#/components/schemas/ApiResponseDto"
+                    },
+                    {
+                      "properties": {
+                        "data": {
+                          "$ref": "#/components/schemas/RegisterAdminResponseDto"
+                        }
+                      }
+                    }
+                  ]
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Bad Request",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponseDto"
+                }
+              }
+            }
+          }
+        },
+        "summary": "Create user (사용자 생성)",
+        "tags": [
+          "Admin Registration (관리자 회원가입 관리)"
         ]
       }
     },
@@ -4540,55 +5205,252 @@
           "statusCode"
         ]
       },
-      "VipLevelResponseDto": {
+      "DeviceInfoDto": {
         "type": "object",
         "properties": {
-          "id": {
-            "type": "number",
-            "description": "VIP 레벨 ID"
+          "ipAddress": {
+            "type": "object",
+            "description": "IP 주소",
+            "example": "192.168.1.1",
+            "nullable": true
           },
-          "nameKey": {
-            "type": "string",
-            "description": "다국어 키"
+          "userAgent": {
+            "type": "object",
+            "description": "User Agent",
+            "example": "Mozilla/5.0...",
+            "nullable": true
           },
-          "rank": {
-            "type": "number",
-            "description": "레벨 순위"
+          "deviceFingerprint": {
+            "type": "object",
+            "description": "디바이스 핑거프린트",
+            "example": "fingerprint-123",
+            "nullable": true
           },
-          "requiredRolling": {
-            "type": "number",
-            "description": "필요 롤링"
+          "isMobile": {
+            "type": "object",
+            "description": "모바일 디바이스 여부",
+            "example": false,
+            "nullable": true
           },
-          "levelUpBonus": {
-            "type": "number",
-            "description": "레벨업 보너스"
+          "deviceName": {
+            "type": "object",
+            "description": "디바이스 이름",
+            "example": "iPhone 14 Pro",
+            "nullable": true
           },
-          "compRate": {
-            "type": "number",
-            "description": "콤프 비율"
+          "os": {
+            "type": "object",
+            "description": "운영체제",
+            "example": "iOS 17.0",
+            "nullable": true
+          },
+          "browser": {
+            "type": "object",
+            "description": "브라우저",
+            "example": "Safari 17",
+            "nullable": true
           }
         },
         "required": [
-          "id",
-          "nameKey",
-          "rank",
-          "requiredRolling",
-          "levelUpBonus",
-          "compRate"
+          "ipAddress",
+          "userAgent",
+          "deviceFingerprint",
+          "isMobile",
+          "deviceName",
+          "os",
+          "browser"
         ]
       },
-      "VipLevelListResponseDto": {
+      "SessionListItemDto": {
         "type": "object",
         "properties": {
-          "levels": {
-            "type": "array",
-            "items": {
-              "$ref": "#/components/schemas/VipLevelResponseDto"
-            }
+          "uid": {
+            "type": "string",
+            "description": "세션 UID",
+            "example": "session-1234567890"
+          },
+          "sessionId": {
+            "type": "string",
+            "description": "세션 ID",
+            "example": "sess-abc123"
+          },
+          "userId": {
+            "type": "string",
+            "description": "사용자 ID",
+            "example": "1234567890123456789"
+          },
+          "type": {
+            "type": "string",
+            "description": "세션 타입",
+            "enum": [
+              "HTTP",
+              "WEBSOCKET"
+            ],
+            "example": "HTTP"
+          },
+          "status": {
+            "type": "string",
+            "description": "세션 상태",
+            "enum": [
+              "ACTIVE",
+              "REVOKED",
+              "EXPIRED"
+            ],
+            "example": "ACTIVE"
+          },
+          "deviceInfo": {
+            "description": "디바이스 정보",
+            "allOf": [
+              {
+                "$ref": "#/components/schemas/DeviceInfoDto"
+              }
+            ]
+          },
+          "createdAt": {
+            "format": "date-time",
+            "type": "string",
+            "description": "생성 시간",
+            "example": "2024-01-01T00:00:00Z"
+          },
+          "updatedAt": {
+            "format": "date-time",
+            "type": "string",
+            "description": "마지막 업데이트 시간",
+            "example": "2024-01-01T00:00:00Z"
+          },
+          "lastActiveAt": {
+            "format": "date-time",
+            "type": "string",
+            "description": "마지막 활동 시간",
+            "example": "2024-01-01T00:00:00Z"
+          },
+          "expiresAt": {
+            "format": "date-time",
+            "type": "string",
+            "description": "만료 시간",
+            "example": "2024-01-08T00:00:00Z"
+          },
+          "revokedAt": {
+            "type": "object",
+            "description": "종료 시간 (REVOKED 상태일 때)",
+            "example": "2024-01-01T00:00:00Z",
+            "nullable": true
+          },
+          "revokedBy": {
+            "type": "string",
+            "description": "종료한 사용자 ID (관리자가 종료한 경우)",
+            "example": "9876543210987654321",
+            "nullable": true
           }
         },
         "required": [
-          "levels"
+          "uid",
+          "sessionId",
+          "userId",
+          "type",
+          "status",
+          "deviceInfo",
+          "createdAt",
+          "updatedAt",
+          "lastActiveAt",
+          "expiresAt",
+          "revokedAt",
+          "revokedBy"
+        ]
+      },
+      "PaginationDto": {
+        "type": "object",
+        "properties": {
+          "page": {
+            "type": "number",
+            "example": 1,
+            "description": "Current page (현재 페이지)"
+          },
+          "limit": {
+            "type": "number",
+            "example": 10,
+            "description": "Items per page (페이지당 항목 수)"
+          },
+          "total": {
+            "type": "number",
+            "example": 100,
+            "description": "Total items (전체 항목 수)"
+          }
+        },
+        "required": [
+          "page",
+          "limit",
+          "total"
+        ]
+      },
+      "PaginatedResponseDto": {
+        "type": "object",
+        "properties": {
+          "success": {
+            "type": "boolean",
+            "example": true,
+            "default": true,
+            "description": "Success (성공 여부)"
+          },
+          "data": {
+            "type": "object",
+            "description": "Response data (응답 데이터)"
+          },
+          "timestamp": {
+            "type": "string",
+            "example": "2024-01-01T00:00:00.000Z",
+            "description": "Response time (응답 시간)"
+          },
+          "statusCode": {
+            "type": "number",
+            "example": 200,
+            "description": "HTTP status code (HTTP 상태 코드)"
+          },
+          "pagination": {
+            "description": "Pagination information (페이지네이션 정보)",
+            "allOf": [
+              {
+                "$ref": "#/components/schemas/PaginationDto"
+              }
+            ]
+          }
+        },
+        "required": [
+          "success",
+          "timestamp",
+          "statusCode",
+          "pagination"
+        ]
+      },
+      "RevokeSessionResponseDto": {
+        "type": "object",
+        "properties": {
+          "uid": {
+            "type": "string",
+            "description": "세션 UID",
+            "example": "session-1234567890"
+          },
+          "sessionId": {
+            "type": "string",
+            "description": "세션 ID",
+            "example": "sess-abc123"
+          },
+          "userId": {
+            "type": "string",
+            "description": "사용자 ID",
+            "example": "1234567890123456789"
+          },
+          "success": {
+            "type": "boolean",
+            "description": "세션 종료 성공 여부",
+            "example": true
+          }
+        },
+        "required": [
+          "uid",
+          "sessionId",
+          "userId",
+          "success"
         ]
       },
       "ApiResponseDto": {
@@ -4621,42 +5483,23 @@
           "statusCode"
         ]
       },
-      "VipMembershipResponseDto": {
+      "RevokeUserSessionsResponseDto": {
         "type": "object",
         "properties": {
+          "revokedCount": {
+            "type": "number",
+            "description": "종료된 세션 수",
+            "example": 3
+          },
           "userId": {
-            "format": "int64",
-            "type": "integer",
-            "description": "사용자 ID"
-          },
-          "currentLevel": {
-            "type": "object",
-            "description": "현재 VIP 레벨"
-          },
-          "accumulatedRolling": {
-            "type": "number",
-            "description": "누적 롤링"
-          },
-          "achievedAt": {
-            "type": "object",
-            "description": "레벨 달성일"
-          },
-          "nextLevelRequiredRolling": {
-            "type": "number",
-            "description": "다음 레벨까지 필요한 롤링"
-          },
-          "nextLevel": {
-            "type": "object",
-            "description": "다음 레벨 정보"
+            "type": "string",
+            "description": "사용자 ID",
+            "example": "1234567890123456789"
           }
         },
         "required": [
-          "userId",
-          "currentLevel",
-          "accumulatedRolling",
-          "achievedAt",
-          "nextLevelRequiredRolling",
-          "nextLevel"
+          "revokedCount",
+          "userId"
         ]
       },
       "AdminReferralListItemDto": {
@@ -4741,70 +5584,6 @@
           "updatedAt"
         ]
       },
-      "PaginationDto": {
-        "type": "object",
-        "properties": {
-          "page": {
-            "type": "number",
-            "example": 1,
-            "description": "Current page (현재 페이지)"
-          },
-          "limit": {
-            "type": "number",
-            "example": 10,
-            "description": "Items per page (페이지당 항목 수)"
-          },
-          "total": {
-            "type": "number",
-            "example": 100,
-            "description": "Total items (전체 항목 수)"
-          }
-        },
-        "required": [
-          "page",
-          "limit",
-          "total"
-        ]
-      },
-      "PaginatedResponseDto": {
-        "type": "object",
-        "properties": {
-          "success": {
-            "type": "boolean",
-            "example": true,
-            "default": true,
-            "description": "Success (성공 여부)"
-          },
-          "data": {
-            "type": "object",
-            "description": "Response data (응답 데이터)"
-          },
-          "timestamp": {
-            "type": "string",
-            "example": "2024-01-01T00:00:00.000Z",
-            "description": "Response time (응답 시간)"
-          },
-          "statusCode": {
-            "type": "number",
-            "example": 200,
-            "description": "HTTP status code (HTTP 상태 코드)"
-          },
-          "pagination": {
-            "description": "Pagination information (페이지네이션 정보)",
-            "allOf": [
-              {
-                "$ref": "#/components/schemas/PaginationDto"
-              }
-            ]
-          }
-        },
-        "required": [
-          "success",
-          "timestamp",
-          "statusCode",
-          "pagination"
-        ]
-      },
       "CreateAffiliateCodeDto": {
         "type": "object",
         "properties": {
@@ -4836,6 +5615,78 @@
         },
         "required": [
           "code"
+        ]
+      },
+      "AdminCodeListItemDto": {
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "string",
+            "description": "Code ID / 코드 ID",
+            "example": "clx1234567890"
+          },
+          "userId": {
+            "type": "string",
+            "description": "User ID / 사용자 ID",
+            "example": "1234567890123456789"
+          },
+          "code": {
+            "type": "string",
+            "description": "Affiliate code / 어플리에이트 코드",
+            "example": "SUMMER2024"
+          },
+          "campaignName": {
+            "type": "object",
+            "description": "Campaign name / 캠페인 이름",
+            "example": "Summer Campaign",
+            "nullable": true
+          },
+          "isActive": {
+            "type": "boolean",
+            "description": "Is active / 활성화 여부",
+            "example": true
+          },
+          "isDefault": {
+            "type": "boolean",
+            "description": "Is default / 기본 코드 여부",
+            "example": false
+          },
+          "expiresAt": {
+            "type": "object",
+            "description": "Expires at / 만료일시",
+            "example": "2024-12-31T23:59:59.000Z",
+            "nullable": true
+          },
+          "createdAt": {
+            "format": "date-time",
+            "type": "string",
+            "description": "Created at / 생성일시",
+            "example": "2024-01-01T00:00:00.000Z"
+          },
+          "updatedAt": {
+            "format": "date-time",
+            "type": "string",
+            "description": "Updated at / 수정일시",
+            "example": "2024-01-01T00:00:00.000Z"
+          },
+          "lastUsedAt": {
+            "type": "object",
+            "description": "Last used at / 마지막 사용일시",
+            "example": "2024-01-15T10:30:00.000Z",
+            "nullable": true
+          }
+        },
+        "required": [
+          "id",
+          "userId",
+          "code",
+          "campaignName",
+          "isActive",
+          "isDefault",
+          "expiresAt",
+          "createdAt",
+          "updatedAt",
+          "lastUsedAt"
         ]
       },
       "CredentialUserLoginUserResponseDto": {
@@ -4918,6 +5769,102 @@
           "isAuthenticated"
         ]
       },
+      "ChangePasswordResponseDto": {
+        "type": "object",
+        "properties": {
+          "success": {
+            "type": "boolean",
+            "description": "성공 여부",
+            "example": true
+          }
+        },
+        "required": [
+          "success"
+        ]
+      },
+      "ChangePasswordRequestDto": {
+        "type": "object",
+        "properties": {
+          "currentPassword": {
+            "type": "string",
+            "description": "현재 비밀번호",
+            "example": "currentPassword123!"
+          },
+          "newPassword": {
+            "type": "string",
+            "description": "새 비밀번호",
+            "example": "newPassword123!"
+          }
+        },
+        "required": [
+          "currentPassword",
+          "newPassword"
+        ]
+      },
+      "RequestPasswordResetResponseDto": {
+        "type": "object",
+        "properties": {
+          "success": {
+            "type": "boolean",
+            "description": "성공 여부",
+            "example": true
+          },
+          "message": {
+            "type": "string",
+            "description": "메시지",
+            "example": "비밀번호 재설정 이메일이 발송되었습니다."
+          }
+        },
+        "required": [
+          "success",
+          "message"
+        ]
+      },
+      "RequestPasswordResetRequestDto": {
+        "type": "object",
+        "properties": {
+          "email": {
+            "type": "string",
+            "description": "이메일",
+            "example": "user@example.com"
+          }
+        },
+        "required": [
+          "email"
+        ]
+      },
+      "ResetPasswordResponseDto": {
+        "type": "object",
+        "properties": {
+          "success": {
+            "type": "boolean",
+            "description": "성공 여부",
+            "example": true
+          }
+        },
+        "required": [
+          "success"
+        ]
+      },
+      "ResetPasswordRequestDto": {
+        "type": "object",
+        "properties": {
+          "token": {
+            "type": "string",
+            "description": "비밀번호 재설정 토큰",
+            "example": "clx..."
+          },
+          "newPassword": {
+            "type": "string",
+            "description": "새 비밀번호",
+            "example": "newPassword123!"
+          }
+        },
+        "required": [
+          "token",
+          "newPassword"
+        ]
+      },
       "LoginAttemptResponseDto": {
         "type": "object",
         "properties": {
@@ -4973,6 +5920,201 @@
           "email",
           "attemptedAt",
           "isAdmin"
+        ]
+      },
+      "ResetUserPasswordResponseDto": {
+        "type": "object",
+        "properties": {
+          "success": {
+            "type": "boolean",
+            "description": "성공 여부",
+            "example": true
+          },
+          "message": {
+            "type": "string",
+            "description": "메시지",
+            "example": "비밀번호가 초기화되었습니다."
+          }
+        },
+        "required": [
+          "success",
+          "message"
+        ]
+      },
+      "ResetUserPasswordRequestDto": {
+        "type": "object",
+        "properties": {
+          "newPassword": {
+            "type": "string",
+            "description": "새 비밀번호 (선택사항, 미제공 시 자동 생성)",
+            "example": "newPassword123!"
+          }
+        }
+      },
+      "VipLevelResponseDto": {
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "number",
+            "description": "VIP 레벨 ID"
+          },
+          "nameKey": {
+            "type": "string",
+            "description": "다국어 키"
+          },
+          "rank": {
+            "type": "number",
+            "description": "레벨 순위"
+          },
+          "requiredRolling": {
+            "type": "number",
+            "description": "필요 롤링"
+          },
+          "levelUpBonus": {
+            "type": "number",
+            "description": "레벨업 보너스"
+          },
+          "compRate": {
+            "type": "number",
+            "description": "콤프 비율"
+          }
+        },
+        "required": [
+          "id",
+          "nameKey",
+          "rank",
+          "requiredRolling",
+          "levelUpBonus",
+          "compRate"
+        ]
+      },
+      "VipLevelListResponseDto": {
+        "type": "object",
+        "properties": {
+          "levels": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/VipLevelResponseDto"
+            }
+          }
+        },
+        "required": [
+          "levels"
+        ]
+      },
+      "VipMembershipResponseDto": {
+        "type": "object",
+        "properties": {
+          "userId": {
+            "format": "int64",
+            "type": "integer",
+            "description": "사용자 ID"
+          },
+          "currentLevel": {
+            "type": "object",
+            "description": "현재 VIP 레벨"
+          },
+          "accumulatedRolling": {
+            "type": "number",
+            "description": "누적 롤링"
+          },
+          "achievedAt": {
+            "type": "object",
+            "description": "레벨 달성일"
+          },
+          "nextLevelRequiredRolling": {
+            "type": "number",
+            "description": "다음 레벨까지 필요한 롤링"
+          },
+          "nextLevel": {
+            "type": "object",
+            "description": "다음 레벨 정보"
+          }
+        },
+        "required": [
+          "userId",
+          "currentLevel",
+          "accumulatedRolling",
+          "achievedAt",
+          "nextLevelRequiredRolling",
+          "nextLevel"
+        ]
+      },
+      "UserListItemDto": {
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "string",
+            "description": "사용자 ID",
+            "example": "1234567890123456789"
+          },
+          "uid": {
+            "type": "string",
+            "description": "사용자 UID",
+            "example": "user-1234567890"
+          },
+          "email": {
+            "type": "object",
+            "description": "이메일",
+            "example": "user@example.com",
+            "nullable": true
+          },
+          "role": {
+            "type": "string",
+            "description": "사용자 역할",
+            "enum": [
+              "USER",
+              "AGENT",
+              "ADMIN",
+              "SUPER_ADMIN"
+            ],
+            "example": "USER"
+          },
+          "status": {
+            "type": "string",
+            "description": "사용자 상태",
+            "enum": [
+              "ACTIVE",
+              "SUSPENDED",
+              "CLOSED"
+            ],
+            "example": "ACTIVE"
+          },
+          "country": {
+            "type": "object",
+            "description": "국가 코드",
+            "example": "KR",
+            "nullable": true
+          },
+          "timezone": {
+            "type": "object",
+            "description": "타임존",
+            "example": "Asia/Seoul",
+            "nullable": true
+          },
+          "createdAt": {
+            "format": "date-time",
+            "type": "string",
+            "description": "가입일",
+            "example": "2024-01-01T00:00:00Z"
+          },
+          "updatedAt": {
+            "format": "date-time",
+            "type": "string",
+            "description": "최종 수정일",
+            "example": "2024-01-02T00:00:00Z"
+          }
+        },
+        "required": [
+          "id",
+          "uid",
+          "email",
+          "role",
+          "status",
+          "country",
+          "timezone",
+          "createdAt",
+          "updatedAt"
         ]
       },
       "RegisterResponseDto": {
@@ -5100,116 +6242,6 @@
         "required": [
           "email",
           "password"
-        ]
-      },
-      "UserListItemDto": {
-        "type": "object",
-        "properties": {
-          "id": {
-            "type": "string",
-            "description": "사용자 ID",
-            "example": "1234567890123456789"
-          },
-          "uid": {
-            "type": "string",
-            "description": "사용자 UID",
-            "example": "user-1234567890"
-          },
-          "email": {
-            "type": "object",
-            "description": "이메일",
-            "example": "user@example.com",
-            "nullable": true
-          },
-          "role": {
-            "type": "string",
-            "description": "사용자 역할",
-            "enum": [
-              "USER",
-              "AGENT",
-              "ADMIN",
-              "SUPER_ADMIN"
-            ],
-            "example": "USER"
-          },
-          "status": {
-            "type": "string",
-            "description": "사용자 상태",
-            "enum": [
-              "ACTIVE",
-              "SUSPENDED",
-              "CLOSED"
-            ],
-            "example": "ACTIVE"
-          },
-          "country": {
-            "type": "object",
-            "description": "국가 코드",
-            "example": "KR",
-            "nullable": true
-          },
-          "timezone": {
-            "type": "object",
-            "description": "타임존",
-            "example": "Asia/Seoul",
-            "nullable": true
-          },
-          "createdAt": {
-            "format": "date-time",
-            "type": "string",
-            "description": "가입일",
-            "example": "2024-01-01T00:00:00Z"
-          },
-          "updatedAt": {
-            "format": "date-time",
-            "type": "string",
-            "description": "최종 수정일",
-            "example": "2024-01-02T00:00:00Z"
-          }
-        },
-        "required": [
-          "id",
-          "uid",
-          "email",
-          "role",
-          "status",
-          "country",
-          "timezone",
-          "createdAt",
-          "updatedAt"
-        ]
-      },
-      "UserListResponseDto": {
-        "type": "object",
-        "properties": {
-          "data": {
-            "description": "사용자 목록",
-            "type": "array",
-            "items": {
-              "$ref": "#/components/schemas/UserListItemDto"
-            }
-          },
-          "page": {
-            "type": "number",
-            "description": "현재 페이지",
-            "example": 1
-          },
-          "limit": {
-            "type": "number",
-            "description": "페이지당 항목 수",
-            "example": 20
-          },
-          "total": {
-            "type": "number",
-            "description": "전체 항목 수",
-            "example": 100
-          }
-        },
-        "required": [
-          "data",
-          "page",
-          "limit",
-          "total"
         ]
       },
       "GameLaunchResponseDto": {

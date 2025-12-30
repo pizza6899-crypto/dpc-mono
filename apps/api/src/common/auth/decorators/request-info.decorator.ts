@@ -2,6 +2,7 @@ import type { ExecutionContext } from '@nestjs/common';
 import { createParamDecorator } from '@nestjs/common';
 import type { Request } from 'express';
 import type { RequestClientInfo } from '../../http/types/client-info.types';
+import '../../http/types';
 
 /**
  * 요청자 정보를 가져오는 데코레이터
