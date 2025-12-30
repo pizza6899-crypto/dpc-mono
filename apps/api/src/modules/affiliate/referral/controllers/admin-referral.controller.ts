@@ -8,18 +8,18 @@ import {
   HttpStatus,
 } from '@nestjs/common';
 import { ApiTags, ApiOperation, ApiParam } from '@nestjs/swagger';
-import { RequireRoles } from 'src/platform/auth/decorators/roles.decorator';
+import { RequireRoles } from 'src/common/auth/decorators/roles.decorator';
 import { UserRoleType } from '@repo/database';
 import {
   ApiStandardResponse,
   ApiStandardErrors,
   ApiPaginatedResponse,
-} from 'src/platform/http/decorators/api-response.decorator';
-import { CurrentUser } from 'src/platform/auth/decorators/current-user.decorator';
-import type { CurrentUserWithSession } from 'src/platform/auth/decorators/current-user.decorator';
-import { RequestClientInfoParam } from 'src/platform/auth/decorators/request-info.decorator';
-import type { PaginatedData, RequestClientInfo } from 'src/platform/http/types';
-import { Paginated } from 'src/platform/http/decorators/paginated.decorator';
+} from 'src/common/http/decorators/api-response.decorator';
+import { CurrentUser } from 'src/common/auth/decorators/current-user.decorator';
+import type { CurrentUserWithSession } from 'src/common/auth/decorators/current-user.decorator';
+import { RequestClientInfoParam } from 'src/common/auth/decorators/request-info.decorator';
+import type { PaginatedData, RequestClientInfo } from 'src/common/http/types';
+import { Paginated } from 'src/common/http/decorators/paginated.decorator';
 import { AdminReferralService } from '../application/admin-referral.service';
 import { GetReferralsQueryDto } from './dto/request/get-referrals-query.dto';
 import { AdminReferralListItemDto } from './dto/response/admin-referral-response.dto';

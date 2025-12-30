@@ -1,9 +1,9 @@
 import { Injectable, Logger } from '@nestjs/common';
 import * as crypto from 'crypto';
 import { PaymentCallbackDto } from '../dtos/now-payment-callback.dto';
-import { EnvService } from 'src/platform/env/env.service';
+import { EnvService } from 'src/common/env/env.service';
 import { NowPaymentCallbackLogService } from './now-payment-callback-log.service';
-import { PrismaService } from 'src/platform/prisma/prisma.service';
+import { PrismaService } from 'src/common/prisma/prisma.service';
 
 @Injectable()
 export class NowPaymentCallbackService {

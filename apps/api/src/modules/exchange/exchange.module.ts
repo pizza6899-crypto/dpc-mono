@@ -1,9 +1,9 @@
 import { Module } from '@nestjs/common';
 import { ExchangeRateService } from './application/exchange-rate.service';
-import { PrismaModule } from 'src/platform/prisma/prisma.module';
-import { ConcurrencyModule } from 'src/platform/concurrency/concurrency.module';
-import { RedisModule } from 'src/platform/redis/redis.module';
-import { EnvModule } from 'src/platform/env/env.module';
+import { PrismaModule } from 'src/common/prisma/prisma.module';
+import { ConcurrencyModule } from 'src/common/concurrency/concurrency.module';
+import { RedisModule } from 'src/common/redis/redis.module';
+import { EnvModule } from 'src/common/env/env.module';
 import { HttpModule } from '@nestjs/axios';
 import { OpenExchangeRatesApiService } from './infrastructure/open-exchange-rates-api.service';
 import { ExchangeRateUpdateScheduler } from './schedulers/exchange-rate-update.scheduler';

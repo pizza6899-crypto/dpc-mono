@@ -3,12 +3,12 @@ import { ApiTags, ApiOperation } from '@nestjs/swagger';
 import {
   ApiStandardResponse,
   ApiStandardErrors,
-} from '../../../../../platform/http/decorators/api-response.decorator';
-import { Public } from 'src/platform/auth/decorators/roles.decorator';
-import { RequestClientInfoParam } from 'src/platform/auth/decorators/request-info.decorator';
-import type { RequestClientInfo } from 'src/platform/http/types/client-info.types';
-import { Throttle } from 'src/platform/throttle/decorators/throttle.decorator';
-import { ThrottleScope } from 'src/platform/throttle/types/throttle.types';
+} from '../../../../../common/http/decorators/api-response.decorator';
+import { Public } from 'src/common/auth/decorators/roles.decorator';
+import { RequestClientInfoParam } from 'src/common/auth/decorators/request-info.decorator';
+import type { RequestClientInfo } from 'src/common/http/types/client-info.types';
+import { Throttle } from 'src/common/throttle/decorators/throttle.decorator';
+import { ThrottleScope } from 'src/common/throttle/types/throttle.types';
 import { RegisterCredentialService } from '../../application/register-credential.service';
 import { RegisterRequestDto } from './dto/request/register.request.dto';
 import { RegisterResponseDto } from './dto/response/register.response.dto';

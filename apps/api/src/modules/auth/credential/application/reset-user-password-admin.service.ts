@@ -3,12 +3,12 @@ import { Transactional } from '@nestjs-cls/transactional';
 import { USER_REPOSITORY } from 'src/modules/user/ports/out/user.repository.token';
 import type { UserRepositoryPort } from 'src/modules/user/ports/out/user.repository.port';
 import { hashPassword } from 'src/utils/password.util';
-import { ACTIVITY_LOG } from 'src/platform/activity-log/activity-log.token';
-import type { ActivityLogPort } from 'src/platform/activity-log/activity-log.port';
-import { ActivityType } from 'src/platform/activity-log/activity-log.types';
-import type { RequestClientInfo } from 'src/platform/http/types/client-info.types';
-import { ApiException } from 'src/platform/http/exception/api.exception';
-import { MessageCode } from 'src/platform/http/types';
+import { ACTIVITY_LOG } from 'src/common/activity-log/activity-log.token';
+import type { ActivityLogPort } from 'src/common/activity-log/activity-log.port';
+import { ActivityType } from 'src/common/activity-log/activity-log.types';
+import type { RequestClientInfo } from 'src/common/http/types/client-info.types';
+import { ApiException } from 'src/common/http/exception/api.exception';
+import { MessageCode } from 'src/common/http/types';
 import { nanoid } from 'nanoid';
 
 export interface ResetUserPasswordAdminParams {

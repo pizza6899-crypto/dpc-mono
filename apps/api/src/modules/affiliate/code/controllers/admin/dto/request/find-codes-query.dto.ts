@@ -7,8 +7,8 @@ import {
   IsOptional,
   IsString,
 } from 'class-validator';
-import { createPaginationQueryDto } from 'src/platform/http/types/pagination.types';
-import { TransformToBoolean } from 'src/platform/http/decorators/transform-boolean.decorator';
+import { createPaginationQueryDto } from 'src/common/http/types/pagination.types';
+import { TransformToBoolean } from 'src/common/http/decorators/transform-boolean.decorator';
 
 type CodeSortFields = 'createdAt' | 'updatedAt' | 'code';
 

@@ -1,5 +1,5 @@
 import { Injectable } from '@nestjs/common';
-import type { AuthenticatedUser } from 'src/platform/auth/types/auth.types';
+import type { AuthenticatedUser } from 'src/common/auth/types/auth.types';
 import { CaslPolicy } from '../domain';
 import { CaslAbilityFactory, type AppAbility } from '../infrastructure/casl-ability.factory';
 

@@ -3,11 +3,11 @@ import { Injectable, Logger, HttpStatus } from '@nestjs/common';
 import { CreateDepositRequestDto } from '../dtos/create-deposit-request.dto';
 import { CreateDepositResponseDto } from '../dtos/create-deposit-response.dto';
 import { DepositMethodType, UserRoleType } from '@repo/database';
-import { ConcurrencyService } from '../../../platform/concurrency/concurrency.service';
-import { UserValidationService } from 'src/platform/user-validation/user-validation.service';
-import { ApiException } from 'src/platform/http/exception/api.exception';
-import { MessageCode } from 'src/platform/http/types';
-import type { RequestClientInfo } from 'src/platform/http/types/client-info.types';
+import { ConcurrencyService } from '../../../common/concurrency/concurrency.service';
+import { UserValidationService } from 'src/common/user-validation/user-validation.service';
+import { ApiException } from 'src/common/http/exception/api.exception';
+import { MessageCode } from 'src/common/http/types';
+import type { RequestClientInfo } from 'src/common/http/types/client-info.types';
 import { BankTransferDepositService } from './bank-transfer-deposit.service';
 import { CryptoDepositService } from './crypto-deposit.service';
 

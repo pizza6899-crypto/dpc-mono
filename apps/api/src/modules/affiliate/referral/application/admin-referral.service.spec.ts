@@ -2,13 +2,13 @@
 import type { TestingModule } from '@nestjs/testing';
 import { Test } from '@nestjs/testing';
 import { AdminReferralService } from './admin-referral.service';
-import { PrismaService } from 'src/platform/prisma/prisma.service';
+import { PrismaService } from 'src/common/prisma/prisma.service';
 import { ReferralMapper } from '../infrastructure/referral.mapper';
-import { ACTIVITY_LOG } from 'src/platform/activity-log/activity-log.token';
-import type { ActivityLogPort } from 'src/platform/activity-log/activity-log.port';
-import { ActivityType } from 'src/platform/activity-log/activity-log.types';
+import { ACTIVITY_LOG } from 'src/common/activity-log/activity-log.token';
+import type { ActivityLogPort } from 'src/common/activity-log/activity-log.port';
+import { ActivityType } from 'src/common/activity-log/activity-log.types';
 import { ReferralNotFoundException } from '../domain/referral.exception';
-import type { RequestClientInfo } from 'src/platform/http/types/client-info.types';
+import type { RequestClientInfo } from 'src/common/http/types/client-info.types';
 import type { GetReferralsQueryDto } from '../controllers/dto/request/get-referrals-query.dto';
 
 describe('AdminReferralService', () => {

@@ -1,14 +1,14 @@
 // src/modules/affiliate/code/application/set-code-as-default.service.spec.ts
 import type { TestingModule } from '@nestjs/testing';
 import { Test } from '@nestjs/testing';
-import { PrismaModule } from 'src/platform/prisma/prisma.module';
-import { EnvModule } from 'src/platform/env/env.module';
+import { PrismaModule } from 'src/common/prisma/prisma.module';
+import { EnvModule } from 'src/common/env/env.module';
 import { SetCodeAsDefaultService } from './set-code-as-default.service';
 import { AFFILIATE_CODE_REPOSITORY } from '../ports/out/affiliate-code.repository.token';
 import type { AffiliateCodeRepositoryPort } from '../ports/out/affiliate-code.repository.port';
 import { AffiliateCode, AffiliateCodeNotFoundException } from '../domain';
-import { ACTIVITY_LOG } from 'src/platform/activity-log/activity-log.token';
-import type { ActivityLogPort } from 'src/platform/activity-log/activity-log.port';
+import { ACTIVITY_LOG } from 'src/common/activity-log/activity-log.token';
+import type { ActivityLogPort } from 'src/common/activity-log/activity-log.port';
 
 describe('SetCodeAsDefaultService', () => {
   let module: TestingModule;

@@ -4,7 +4,7 @@ import { Test } from '@nestjs/testing';
 import { AdminReferralController } from './admin-referral.controller';
 import { AdminReferralService } from '../application/admin-referral.service';
 import { ReferralNotFoundException } from '../domain/referral.exception';
-import type { PaginatedData, RequestClientInfo } from 'src/platform/http/types';
+import type { PaginatedData, RequestClientInfo } from 'src/common/http/types';
 import type { AdminReferralListItemDto } from './dto/response/admin-referral-response.dto';
 import type { GetReferralsQueryDto } from './dto/request/get-referrals-query.dto';
 

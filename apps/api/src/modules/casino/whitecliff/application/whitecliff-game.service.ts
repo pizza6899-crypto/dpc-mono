@@ -1,17 +1,17 @@
 import { Inject, Injectable, Logger } from '@nestjs/common';
-import { PrismaService } from 'src/platform/prisma/prisma.service';
+import { PrismaService } from 'src/common/prisma/prisma.service';
 import {
   WhitecliffApiService,
   WhitecliffGameLaunchResponse,
 } from '../infrastructure/whitecliff-api.service';
-import { MessageCode, RequestClientInfo } from 'src/platform/http/types';
-import { ApiException } from 'src/platform/http/exception/api.exception';
+import { MessageCode, RequestClientInfo } from 'src/common/http/types';
+import { ApiException } from 'src/common/http/exception/api.exception';
 import { HttpStatusCode } from 'axios';
-import type { ActivityLogPort } from 'src/platform/activity-log/activity-log.port';
-import { ACTIVITY_LOG } from 'src/platform/activity-log/activity-log.token';
-import { ActivityType } from 'src/platform/activity-log/activity-log.types';
+import type { ActivityLogPort } from 'src/common/activity-log/activity-log.port';
+import { ACTIVITY_LOG } from 'src/common/activity-log/activity-log.token';
+import { ActivityType } from 'src/common/activity-log/activity-log.types';
 import { IdUtil } from 'src/utils/id.util';
-import { CurrentUserWithSession } from 'src/platform/auth/decorators/current-user.decorator';
+import { CurrentUserWithSession } from 'src/common/auth/decorators/current-user.decorator';
 import { WhitecliffMapperService } from '../infrastructure/whitecliff-mapper.service';
 import {
   GameAggregatorType,

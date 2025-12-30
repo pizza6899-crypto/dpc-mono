@@ -12,7 +12,7 @@ import {
   HEAVY_LOG_QUEUE_NAME,
 } from '../infrastructure/queue.constants';
 import * as idUtil from 'src/utils/id.util';
-import type { RequestClientInfo } from 'src/platform/http/types/client-info.types';
+import type { RequestClientInfo } from 'src/common/http/types/client-info.types';
 
 describe('DispatchLogService', () => {
   let service: DispatchLogService;

@@ -7,7 +7,7 @@ import {
   IsString,
 } from 'class-validator';
 import { Transform } from 'class-transformer';
-import { createPaginationQueryDto } from 'src/platform/http/types/pagination.types';
+import { createPaginationQueryDto } from 'src/common/http/types/pagination.types';
 import { SessionType, SessionStatus } from '../../../../domain';
 
 type SessionSortFields = 'createdAt' | 'updatedAt' | 'lastActiveAt' | 'expiresAt';

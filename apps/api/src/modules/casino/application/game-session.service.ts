@@ -1,6 +1,6 @@
 // src/modules/casino/application/game-session.service.ts
 import { Injectable } from '@nestjs/common';
-import { PrismaService } from 'src/platform/prisma/prisma.service';
+import { PrismaService } from 'src/common/prisma/prisma.service';
 import { ExchangeRateService } from 'src/modules/exchange/application/exchange-rate.service';
 import {
   GameAggregatorType,

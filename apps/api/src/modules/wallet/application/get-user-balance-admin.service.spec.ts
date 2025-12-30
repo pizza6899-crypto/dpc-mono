@@ -11,8 +11,8 @@ import { UserWallet } from '../domain';
 import { User } from 'src/modules/user/domain';
 import { UserNotFoundException } from 'src/modules/user/domain/user.exception';
 import { UserRoleType, UserStatus } from '@repo/database';
-import { PrismaModule } from 'src/platform/prisma/prisma.module';
-import { EnvModule } from 'src/platform/env/env.module';
+import { PrismaModule } from 'src/common/prisma/prisma.module';
+import { EnvModule } from 'src/common/env/env.module';
 import * as currencyUtil from 'src/utils/currency.util';
 
 // WALLET_CURRENCIES 모킹

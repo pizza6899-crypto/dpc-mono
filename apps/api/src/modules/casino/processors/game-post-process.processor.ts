@@ -3,8 +3,8 @@ import { Job } from 'bullmq';
 import {
   QueueNames,
   GamePostProcessData,
-} from '../../../platform/queue/queue.types';
-import { PrismaService } from '../../../platform/prisma/prisma.service';
+} from '../../../common/queue/queue.types';
+import { PrismaService } from '../../../common/prisma/prisma.service';
 import { Logger, OnApplicationShutdown } from '@nestjs/common';
 import { CompService } from '../../comp/application/comp.service';
 import { RollingService } from '../../rolling/application/rolling.service';

@@ -17,8 +17,8 @@ import {
   SessionStatus,
   DeviceInfo,
 } from '../domain';
-import { PrismaModule } from 'src/platform/prisma/prisma.module';
-import { EnvModule } from 'src/platform/env/env.module';
+import { PrismaModule } from 'src/common/prisma/prisma.module';
+import { EnvModule } from 'src/common/env/env.module';
 
 describe('ExpireUserSessionsService', () => {
   let service: ExpireUserSessionsService;

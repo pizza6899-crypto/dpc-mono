@@ -4,9 +4,9 @@ import {
   BadRequestException,
   Inject,
 } from '@nestjs/common';
-import { PrismaService } from '../../../platform/prisma/prisma.service';
+import { PrismaService } from '../../../common/prisma/prisma.service';
 import { NowPaymentApiService } from '../infrastructure/now-payment-api.service';
-import { ConcurrencyService } from '../../../platform/concurrency/concurrency.service';
+import { ConcurrencyService } from '../../../common/concurrency/concurrency.service';
 import { CreateWithdrawRequestDto } from '../dtos/create-withdraw-request.dto';
 import { CreateWithdrawResponseDto } from '../dtos/create-withdraw-response.dto';
 import {
@@ -16,8 +16,8 @@ import {
 } from '@repo/database';
 import { nowUtcMinus } from 'src/utils/date.util';
 import { WALLET_CURRENCIES } from 'src/utils/currency.util';
-import type { ActivityLogPort } from 'src/platform/activity-log/activity-log.port';
-import { ACTIVITY_LOG } from 'src/platform/activity-log/activity-log.token';
+import type { ActivityLogPort } from 'src/common/activity-log/activity-log.port';
+import { ACTIVITY_LOG } from 'src/common/activity-log/activity-log.token';
 
 @Injectable()
 export class WithdrawService {

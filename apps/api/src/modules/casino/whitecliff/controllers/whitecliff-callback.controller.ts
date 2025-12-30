@@ -18,8 +18,8 @@ import {
   GetBonusRequestDto,
   GetBonusResponseDto,
 } from '../dtos';
-import { CasinoResponse } from '../../../../platform/http/decorators/casino-response.decorator';
-import { GuestOnly } from 'src/platform/auth/decorators/roles.decorator';
+import { CasinoResponse } from '../../../../common/http/decorators/casino-response.decorator';
+import { GuestOnly } from 'src/common/auth/decorators/roles.decorator';
 import { WhitecliffCallbackService } from '../application/whitecliff-callback.service';
 import { WhitecliffLoggingInterceptor } from '../infrastructure/whitecliff-logging.interceptor';
 

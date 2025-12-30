@@ -1,8 +1,8 @@
 import { Injectable, Logger } from '@nestjs/common';
-import { PrismaService } from 'src/platform/prisma/prisma.service';
+import { PrismaService } from 'src/common/prisma/prisma.service';
 import { VipLevelResponseDto } from '../dtos/vip-level.dto';
-import { ApiException } from 'src/platform/http/exception/api.exception';
-import { MessageCode } from 'src/platform/http/types/message-codes';
+import { ApiException } from 'src/common/http/exception/api.exception';
+import { MessageCode } from 'src/common/http/types/message-codes';
 import { HttpStatus } from '@nestjs/common';
 
 @Injectable()

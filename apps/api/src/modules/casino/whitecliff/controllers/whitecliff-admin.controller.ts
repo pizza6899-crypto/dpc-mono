@@ -1,10 +1,10 @@
 import { Controller, Post, Get, Body } from '@nestjs/common';
 import { ApiTags, ApiOperation } from '@nestjs/swagger';
-import { Public } from 'src/platform/auth/decorators/roles.decorator';
+import { Public } from 'src/common/auth/decorators/roles.decorator';
 import {
   ApiStandardErrors,
   ApiStandardResponse,
-} from 'src/platform/http/decorators/api-response.decorator';
+} from 'src/common/http/decorators/api-response.decorator';
 import {
   GameListUpdateResponseDto,
   GameListUpdateStatusDto,

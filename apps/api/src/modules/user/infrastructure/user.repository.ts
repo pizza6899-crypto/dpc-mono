@@ -1,7 +1,7 @@
 // src/modules/user/infrastructure/user.repository.ts
 import { Injectable } from '@nestjs/common';
 import { InjectTransaction } from '@nestjs-cls/transactional';
-import type { PrismaTransaction } from 'src/platform/prisma/prisma.module';
+import type { PrismaTransaction } from 'src/common/prisma/prisma.module';
 import type {
   UserRepositoryPort,
   CreateUserParams,

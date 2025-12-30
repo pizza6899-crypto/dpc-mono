@@ -6,7 +6,7 @@ import {
 } from '@repo/database';
 import { Transform } from 'class-transformer';
 import { IsDateString, IsEnum, IsNumberString, IsOptional, IsString } from 'class-validator';
-import { createPaginationQueryDto } from 'src/platform/http/types/pagination.types';
+import { createPaginationQueryDto } from 'src/common/http/types/pagination.types';
 
 type DepositSortFields =
   | 'createdAt'

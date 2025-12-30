@@ -1,8 +1,8 @@
 // src/modules/rolling/application/rolling-check.service.ts
 import { Injectable, HttpStatus } from '@nestjs/common';
 import { RollingService } from './rolling.service';
-import { ApiException } from 'src/platform/http/exception/api.exception';
-import { MessageCode } from 'src/platform/http/types/message-codes';
+import { ApiException } from 'src/common/http/exception/api.exception';
+import { MessageCode } from 'src/common/http/types/message-codes';
 
 @Injectable()
 export class RollingCheckService {

@@ -4,10 +4,10 @@ import { AffiliateCode, AffiliateCodeNotFoundException } from '../domain';
 import { AFFILIATE_CODE_REPOSITORY } from '../ports/out/affiliate-code.repository.token';
 import type { AffiliateCodeRepositoryPort } from '../ports/out/affiliate-code.repository.port';
 import { Transactional } from '@nestjs-cls/transactional';
-import type { RequestClientInfo } from 'src/platform/http/types/client-info.types';
-import { ACTIVITY_LOG } from 'src/platform/activity-log/activity-log.token';
-import type { ActivityLogPort } from 'src/platform/activity-log/activity-log.port';
-import { ActivityType } from 'src/platform/activity-log/activity-log.types';
+import type { RequestClientInfo } from 'src/common/http/types/client-info.types';
+import { ACTIVITY_LOG } from 'src/common/activity-log/activity-log.token';
+import type { ActivityLogPort } from 'src/common/activity-log/activity-log.port';
+import { ActivityType } from 'src/common/activity-log/activity-log.types';
 
 interface SetCodeAsDefaultParams {
   id: string;

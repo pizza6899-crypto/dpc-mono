@@ -1,8 +1,8 @@
 // src/modules/affiliate/commission/schedulers/settle-daily-commissions.scheduler.ts
 import { Injectable, Logger } from '@nestjs/common';
 import { Cron, CronExpression } from '@nestjs/schedule';
-import { EnvService } from 'src/platform/env/env.service';
-import { ConcurrencyService } from 'src/platform/concurrency/concurrency.service';
+import { EnvService } from 'src/common/env/env.service';
+import { ConcurrencyService } from 'src/common/concurrency/concurrency.service';
 import { SettleDailyCommissionsService } from '../application/settle-daily-commissions.service';
 import { nowUtc } from 'src/utils/date.util';
 

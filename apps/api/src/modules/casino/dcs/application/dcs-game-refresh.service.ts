@@ -2,7 +2,7 @@
 
 import { Injectable, Logger } from '@nestjs/common';
 import { DcsApiService } from '../infrastructure/dcs-api.service';
-import { PrismaService } from 'src/platform/prisma/prisma.service';
+import { PrismaService } from 'src/common/prisma/prisma.service';
 import {
   GameAggregatorType,
   GameProvider,

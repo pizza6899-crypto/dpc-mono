@@ -1,8 +1,8 @@
 import { Injectable, Logger } from '@nestjs/common';
 import { HttpService } from '@nestjs/axios';
-import { EnvService } from 'src/platform/env/env.service';
+import { EnvService } from 'src/common/env/env.service';
 import { firstValueFrom } from 'rxjs';
-import { WhitecliffConfig } from 'src/platform/env/env.types';
+import { WhitecliffConfig } from 'src/common/env/env.types';
 import axios from 'axios';
 import { GameProvider, Language } from '@repo/database';
 import { WhitecliffMapperService } from './whitecliff-mapper.service';

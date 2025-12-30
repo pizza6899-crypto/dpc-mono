@@ -1,15 +1,15 @@
 import { Injectable, Logger } from '@nestjs/common';
 import { Cron, CronExpression } from '@nestjs/schedule';
-import { EnvService } from '../../../../platform/env/env.service';
+import { EnvService } from '../../../../common/env/env.service';
 import {
   PushedBetHistoryResponse,
   WhitecliffApiService,
 } from 'src/modules/casino/whitecliff/infrastructure/whitecliff-api.service';
-import { PrismaService } from '../../../../platform/prisma/prisma.service';
+import { PrismaService } from '../../../../common/prisma/prisma.service';
 import { nowUtcMinus } from 'src/utils/date.util';
-import { ConcurrencyService } from '../../../../platform/concurrency/concurrency.service';
+import { ConcurrencyService } from '../../../../common/concurrency/concurrency.service';
 import { WhitecliffMapperService } from 'src/modules/casino/whitecliff/infrastructure/whitecliff-mapper.service';
-import { RedisService } from '../../../../platform/redis/redis.service';
+import { RedisService } from '../../../../common/redis/redis.service';
 import {
   GameAggregatorType,
   GameProvider,

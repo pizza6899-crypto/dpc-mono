@@ -1,6 +1,6 @@
 import { Injectable } from '@nestjs/common';
 import { Ability, AbilityBuilder, AbilityClass, ExtractSubjectType, MongoAbility } from '@casl/ability';
-import type { AuthenticatedUser } from 'src/platform/auth/types/auth.types';
+import type { AuthenticatedUser } from 'src/common/auth/types/auth.types';
 import { Action, Permission, SubjectType } from '../domain';
 import type { Subjects } from '../domain';
 

@@ -18,14 +18,14 @@ import {
 import { WithdrawService } from '../application/withdraw.service';
 import { CreateWithdrawRequestDto } from '../dtos/create-withdraw-request.dto';
 import { CreateWithdrawResponseDto } from '../dtos/create-withdraw-response.dto';
-import { CurrentUser } from 'src/platform/auth/decorators/current-user.decorator';
-import type { CurrentUserWithSession } from 'src/platform/auth/decorators/current-user.decorator';
-import type { ActivityLogPort } from 'src/platform/activity-log/activity-log.port';
-import { ActivityType } from 'src/platform/activity-log/activity-log.types';
-import { ACTIVITY_LOG } from 'src/platform/activity-log/activity-log.token';
+import { CurrentUser } from 'src/common/auth/decorators/current-user.decorator';
+import type { CurrentUserWithSession } from 'src/common/auth/decorators/current-user.decorator';
+import type { ActivityLogPort } from 'src/common/activity-log/activity-log.port';
+import { ActivityType } from 'src/common/activity-log/activity-log.types';
+import { ACTIVITY_LOG } from 'src/common/activity-log/activity-log.token';
 import { Inject } from '@nestjs/common';
-import { RequestClientInfoParam } from 'src/platform/auth/decorators/request-info.decorator';
-import type { RequestClientInfo } from 'src/platform/http/types';
+import { RequestClientInfoParam } from 'src/common/auth/decorators/request-info.decorator';
+import type { RequestClientInfo } from 'src/common/http/types';
 
 @ApiTags('출금 (Withdraw)')
 @Controller('withdraws')

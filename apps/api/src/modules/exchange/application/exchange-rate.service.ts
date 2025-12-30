@@ -1,13 +1,13 @@
 import { Injectable, Logger, HttpStatus } from '@nestjs/common';
-import { PrismaService } from 'src/platform/prisma/prisma.service';
+import { PrismaService } from 'src/common/prisma/prisma.service';
 import {
   ExchangeCurrencyCode,
   ExchangeRateProvider,
   Prisma,
 } from '@repo/database';
-import { ApiException } from 'src/platform/http/exception/api.exception';
-import { MessageCode } from 'src/platform/http/types';
-import { RedisService } from 'src/platform/redis/redis.service';
+import { ApiException } from 'src/common/http/exception/api.exception';
+import { MessageCode } from 'src/common/http/types';
+import { RedisService } from 'src/common/redis/redis.service';
 
 export interface ConvertCurrencyParams {
   amount: Prisma.Decimal | number | string;

@@ -19,8 +19,8 @@ import {
 import { UserNotFoundException } from 'src/modules/user/domain/user.exception';
 import { User } from 'src/modules/user/domain';
 import { UserRoleType, UserStatus } from '@repo/database';
-import { PrismaModule } from 'src/platform/prisma/prisma.module';
-import { EnvModule } from 'src/platform/env/env.module';
+import { PrismaModule } from 'src/common/prisma/prisma.module';
+import { EnvModule } from 'src/common/env/env.module';
 
 describe('UpdateUserBalanceAdminService', () => {
   let module: TestingModule;

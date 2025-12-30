@@ -5,7 +5,7 @@ import {
   type FindSessionsParams,
 } from '../ports/out';
 import { UserSession, SessionStatus, SessionType } from '../domain';
-import { PaginatedData } from 'src/platform/http/types';
+import { PaginatedData } from 'src/common/http/types';
 
 export interface ListSessionsServiceParams {
   page?: number;

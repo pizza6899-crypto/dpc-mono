@@ -1,7 +1,7 @@
 import { Module } from '@nestjs/common';
-import { PrismaModule } from 'src/platform/prisma/prisma.module';
-import { ConcurrencyModule } from 'src/platform/concurrency/concurrency.module';
-import { ActivityLogModule } from 'src/platform/activity-log/activity-log.module';
+import { PrismaModule } from 'src/common/prisma/prisma.module';
+import { ConcurrencyModule } from 'src/common/concurrency/concurrency.module';
+import { ActivityLogModule } from 'src/common/activity-log/activity-log.module';
 import { VipLevelService } from './application/vip-level.service';
 import { VipMembershipService } from './application/vip-membership.service';
 import { VipRewardService } from './application/vip-reward.service';

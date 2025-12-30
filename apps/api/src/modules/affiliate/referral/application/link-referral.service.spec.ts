@@ -1,8 +1,8 @@
 // src/modules/affiliate/referral/application/link-referral.service.spec.ts
 import type { TestingModule } from '@nestjs/testing';
 import { Test } from '@nestjs/testing';
-import { PrismaModule } from 'src/platform/prisma/prisma.module';
-import { EnvModule } from 'src/platform/env/env.module';
+import { PrismaModule } from 'src/common/prisma/prisma.module';
+import { EnvModule } from 'src/common/env/env.module';
 import { LinkReferralService } from './link-referral.service';
 import { REFERRAL_REPOSITORY } from '../ports/out/referral.repository.token';
 import type { ReferralRepositoryPort } from '../ports/out/referral.repository.port';
@@ -17,10 +17,10 @@ import {
 } from '../domain/referral.exception';
 import { Referral } from '../domain/model/referral.entity';
 import { AffiliateCode } from '../../code/domain/model/affiliate-code.entity';
-import { ACTIVITY_LOG } from 'src/platform/activity-log/activity-log.token';
-import type { ActivityLogPort } from 'src/platform/activity-log/activity-log.port';
-import { ActivityType } from 'src/platform/activity-log/activity-log.types';
-import type { RequestClientInfo } from 'src/platform/http/types/client-info.types';
+import { ACTIVITY_LOG } from 'src/common/activity-log/activity-log.token';
+import type { ActivityLogPort } from 'src/common/activity-log/activity-log.port';
+import { ActivityType } from 'src/common/activity-log/activity-log.types';
+import type { RequestClientInfo } from 'src/common/http/types/client-info.types';
 
 describe('LinkReferralService', () => {
   let module: TestingModule;

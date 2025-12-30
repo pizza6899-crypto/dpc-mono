@@ -11,8 +11,8 @@ import {
   GUEST_ONLY_KEY,
   ROLES_KEY,
 } from '../decorators/roles.decorator';
-import { ApiException } from 'src/platform/http/exception/api.exception';
-import { MessageCode } from 'src/platform/http/types/message-codes';
+import { ApiException } from 'src/common/http/exception/api.exception';
+import { MessageCode } from 'src/common/http/types/message-codes';
 
 @Injectable()
 export class SessionAuthGuard implements CanActivate {

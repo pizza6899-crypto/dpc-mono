@@ -1,8 +1,8 @@
 import { Injectable, Logger } from '@nestjs/common';
 import { HttpService } from '@nestjs/axios';
-import { EnvService } from '../../../platform/env/env.service';
-import { RedisService } from '../../../platform/redis/redis.service';
-import { ConcurrencyService } from '../../../platform/concurrency/concurrency.service';
+import { EnvService } from '../../../common/env/env.service';
+import { RedisService } from '../../../common/redis/redis.service';
+import { ConcurrencyService } from '../../../common/concurrency/concurrency.service';
 import { nowUtc } from 'src/utils/date.util';
 import { firstValueFrom } from 'rxjs';
 

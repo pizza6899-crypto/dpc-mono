@@ -1,6 +1,6 @@
 import { HttpStatus } from '@nestjs/common';
-import { ApiException } from 'src/platform/http/exception/api.exception';
-import { MessageCode } from 'src/platform/http/types';
+import { ApiException } from 'src/common/http/exception/api.exception';
+import { MessageCode } from 'src/common/http/types';
 import { Language } from '@repo/database';
 
 // src/utils/language.util.ts

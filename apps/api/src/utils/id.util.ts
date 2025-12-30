@@ -1,7 +1,7 @@
 // src/utils/id.util.ts
 import { init } from '@paralleldrive/cuid2';
 import { customAlphabet } from 'nanoid';
-import type { PrismaService } from '../platform/prisma/prisma.service';
+import type { PrismaService } from '../common/prisma/prisma.service';
 import { nowUtc } from './date.util';
 import type { Prisma } from '@repo/database';
 

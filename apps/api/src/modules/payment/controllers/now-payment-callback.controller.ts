@@ -12,7 +12,7 @@ import {
 import { ApiTags, ApiOperation, ApiBody, ApiResponse } from '@nestjs/swagger';
 import { NowPaymentCallbackResponseDto } from '../dtos/now-payment-callback.dto';
 import { NowPaymentCallbackService } from '../application/now-payment-callback.service';
-import { GuestOnly } from '../../../platform/auth/decorators/roles.decorator';
+import { GuestOnly } from '../../../common/auth/decorators/roles.decorator';
 import { ObjectUtil } from '../../../utils/object.util';
 
 @ApiTags('NowPayment Callback(콜백)')

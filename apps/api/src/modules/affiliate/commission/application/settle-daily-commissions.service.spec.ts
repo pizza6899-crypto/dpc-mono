@@ -13,8 +13,8 @@ import type { AffiliateCommissionRepositoryPort } from '../ports/out/affiliate-c
 import { AFFILIATE_WALLET_REPOSITORY } from '../ports/out/affiliate-wallet.repository.token';
 import type { AffiliateWalletRepositoryPort } from '../ports/out/affiliate-wallet.repository.port';
 import { AffiliateCommission, AffiliateWallet } from '../domain';
-import { PrismaModule } from 'src/platform/prisma/prisma.module';
-import { EnvModule } from 'src/platform/env/env.module';
+import { PrismaModule } from 'src/common/prisma/prisma.module';
+import { EnvModule } from 'src/common/env/env.module';
 
 // currency.util 모킹
 jest.mock('src/utils/currency.util', () => ({

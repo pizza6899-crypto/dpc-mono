@@ -9,8 +9,8 @@ import type {
 } from '../ports/out/user.repository.port';
 import { User } from '../domain';
 import { UserRoleType, UserStatus } from '@repo/database';
-import { PrismaModule } from 'src/platform/prisma/prisma.module';
-import { EnvModule } from 'src/platform/env/env.module';
+import { PrismaModule } from 'src/common/prisma/prisma.module';
+import { EnvModule } from 'src/common/env/env.module';
 
 describe('ListUsersService', () => {
   let module: TestingModule;

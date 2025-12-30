@@ -2,12 +2,12 @@
 
 import { Injectable, Logger, Provider } from '@nestjs/common';
 import { HttpService } from '@nestjs/axios';
-import { EnvService } from 'src/platform/env/env.service';
+import { EnvService } from 'src/common/env/env.service';
 import { firstValueFrom } from 'rxjs';
-import { DcsConfig } from 'src/platform/env/env.types';
+import { DcsConfig } from 'src/common/env/env.types';
 import * as crypto from 'crypto';
-import { ApiException } from 'src/platform/http/exception/api.exception';
-import { MessageCode } from 'src/platform/http/types';
+import { ApiException } from 'src/common/http/exception/api.exception';
+import { MessageCode } from 'src/common/http/types';
 import { HttpStatusCode } from 'axios';
 import { GameProvider } from '@repo/database';
 import { DcsMapperService } from './dcs-mapper.service';

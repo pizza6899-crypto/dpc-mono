@@ -5,12 +5,12 @@ import { Job } from 'bullmq';
 import {
   QueueNames,
   DcsFetchGameReplayUrlData,
-} from '../../../../platform/queue/queue.types';
-import { PrismaService } from '../../../../platform/prisma/prisma.service';
+} from '../../../../common/queue/queue.types';
+import { PrismaService } from '../../../../common/prisma/prisma.service';
 import { DcsApiService } from '../infrastructure/dcs-api.service';
 import { Logger, OnApplicationShutdown } from '@nestjs/common';
-import { ApiException } from 'src/platform/http/exception/api.exception';
-import { MessageCode } from 'src/platform/http/types';
+import { ApiException } from 'src/common/http/exception/api.exception';
+import { MessageCode } from 'src/common/http/types';
 import { HttpStatusCode } from 'axios';
 import { GameReplayType } from '@repo/database';
 import { GamingCurrencyCode } from 'src/utils/currency.util';

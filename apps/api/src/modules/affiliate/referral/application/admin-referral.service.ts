@@ -1,12 +1,12 @@
 // src/modules/affiliate/referral/application/admin-referral.service.ts
 import { Injectable, Logger } from '@nestjs/common';
 import { Inject } from '@nestjs/common';
-import { PrismaService } from 'src/platform/prisma/prisma.service';
+import { PrismaService } from 'src/common/prisma/prisma.service';
 import { Prisma } from '@repo/database';
-import { ACTIVITY_LOG } from 'src/platform/activity-log/activity-log.token';
-import type { ActivityLogPort } from 'src/platform/activity-log/activity-log.port';
-import { ActivityType } from 'src/platform/activity-log/activity-log.types';
-import type { PaginatedData, RequestClientInfo } from 'src/platform/http/types';
+import { ACTIVITY_LOG } from 'src/common/activity-log/activity-log.token';
+import type { ActivityLogPort } from 'src/common/activity-log/activity-log.port';
+import { ActivityType } from 'src/common/activity-log/activity-log.types';
+import type { PaginatedData, RequestClientInfo } from 'src/common/http/types';
 import { GetReferralsQueryDto } from '../controllers/dto/request/get-referrals-query.dto';
 import { AdminReferralListItemDto } from '../controllers/dto/response/admin-referral-response.dto';
 import { ReferralMapper } from '../infrastructure/referral.mapper';

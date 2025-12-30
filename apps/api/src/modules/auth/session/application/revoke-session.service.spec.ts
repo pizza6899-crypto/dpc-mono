@@ -15,8 +15,8 @@ import {
   DeviceInfo,
 } from '../domain';
 import { SessionNotFoundException } from '../domain/exception';
-import { PrismaModule } from 'src/platform/prisma/prisma.module';
-import { EnvModule } from 'src/platform/env/env.module';
+import { PrismaModule } from 'src/common/prisma/prisma.module';
+import { EnvModule } from 'src/common/env/env.module';
 
 describe('RevokeSessionService', () => {
   let service: RevokeSessionService;

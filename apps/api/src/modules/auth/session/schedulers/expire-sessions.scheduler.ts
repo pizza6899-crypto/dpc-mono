@@ -1,8 +1,8 @@
 // src/modules/auth/session/schedulers/expire-sessions.scheduler.ts
 import { Injectable, Logger } from '@nestjs/common';
 import { Cron, CronExpression } from '@nestjs/schedule';
-import { EnvService } from 'src/platform/env/env.service';
-import { ConcurrencyService } from 'src/platform/concurrency/concurrency.service';
+import { EnvService } from 'src/common/env/env.service';
+import { ConcurrencyService } from 'src/common/concurrency/concurrency.service';
 import { ExpireSessionsBatchService } from '../application/expire-sessions-batch.service';
 
 @Injectable()

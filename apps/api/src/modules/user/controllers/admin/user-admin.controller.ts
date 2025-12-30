@@ -10,11 +10,11 @@ import { ApiTags, ApiOperation } from '@nestjs/swagger';
 import {
   ApiStandardErrors,
   ApiPaginatedResponse,
-} from 'src/platform/http/decorators/api-response.decorator';
-import { Paginated } from 'src/platform/http/decorators/paginated.decorator';
-import { RequireRoles } from 'src/platform/auth/decorators/roles.decorator';
+} from 'src/common/http/decorators/api-response.decorator';
+import { Paginated } from 'src/common/http/decorators/paginated.decorator';
+import { RequireRoles } from 'src/common/auth/decorators/roles.decorator';
 import { UserRoleType } from '@repo/database';
-import type { PaginatedData } from 'src/platform/http/types';
+import type { PaginatedData } from 'src/common/http/types';
 import { ListUsersService } from '../../application/list-users.service';
 import { ListUsersQueryDto } from './dto/request/list-users-query.dto';
 import { UserListItemDto } from './dto/response/user-list.response.dto';

@@ -4,9 +4,9 @@ import { ApiTags, ApiOperation } from '@nestjs/swagger';
 import {
   ApiStandardResponse,
   ApiStandardErrors,
-} from 'src/platform/http/decorators/api-response.decorator';
-import { CurrentUser } from 'src/platform/auth/decorators/current-user.decorator';
-import type { CurrentUserWithSession } from 'src/platform/auth/decorators/current-user.decorator';
+} from 'src/common/http/decorators/api-response.decorator';
+import { CurrentUser } from 'src/common/auth/decorators/current-user.decorator';
+import type { CurrentUserWithSession } from 'src/common/auth/decorators/current-user.decorator';
 import { RollingService } from '../application/rolling.service';
 import { UserRollingSummaryDto, RollingResponseDto } from '../dtos/rolling.dto';
 

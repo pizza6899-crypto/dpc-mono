@@ -2,16 +2,16 @@ import { Injectable, Inject, Logger } from '@nestjs/common';
 import { Transactional } from '@nestjs-cls/transactional';
 import { RecordLoginAttemptService } from './record-login-attempt.service';
 import { LoginAttemptResult } from '../domain';
-import type { AuthenticatedUser } from 'src/platform/auth/types/auth.types';
-import type { RequestClientInfo } from 'src/platform/http/types/client-info.types';
-import { ACTIVITY_LOG } from 'src/platform/activity-log/activity-log.token';
-import type { ActivityLogPort } from 'src/platform/activity-log/activity-log.port';
-import { ActivityType } from 'src/platform/activity-log/activity-log.types';
+import type { AuthenticatedUser } from 'src/common/auth/types/auth.types';
+import type { RequestClientInfo } from 'src/common/http/types/client-info.types';
+import { ACTIVITY_LOG } from 'src/common/activity-log/activity-log.token';
+import type { ActivityLogPort } from 'src/common/activity-log/activity-log.port';
+import { ActivityType } from 'src/common/activity-log/activity-log.types';
 import { DispatchLogService } from 'src/modules/audit-log/application/dispatch-log.service';
 import { LogType } from 'src/modules/audit-log/domain';
 import { CreateSessionService } from '../../session/application/create-session.service';
 import { SessionType, DeviceInfo } from '../../session/domain';
-import { EnvService } from 'src/platform/env/env.service';
+import { EnvService } from 'src/common/env/env.service';
 
 export interface LoginParams {
   user: AuthenticatedUser;

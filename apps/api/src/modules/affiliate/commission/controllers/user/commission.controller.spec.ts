@@ -7,7 +7,7 @@ import { FindCommissionByIdService } from '../../application/find-commission-by-
 import { GetWalletBalanceService } from '../../application/get-wallet-balance.service';
 import { GetCommissionRateService } from '../../application/get-commission-rate.service';
 import { WithdrawCommissionService } from '../../application/withdraw-commission.service';
-import type { RequestClientInfo } from 'src/platform/http/types/client-info.types';
+import type { RequestClientInfo } from 'src/common/http/types/client-info.types';
 import {
   CommissionStatus,
   ExchangeCurrencyCode,

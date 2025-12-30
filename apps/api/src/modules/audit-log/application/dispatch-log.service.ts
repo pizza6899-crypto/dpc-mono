@@ -11,7 +11,7 @@ import {
   HEAVY_LOG_QUEUE_NAME,
 } from '../infrastructure/queue.constants';
 import { generateUid } from 'src/utils/id.util';
-import type { RequestClientInfo } from 'src/platform/http/types/client-info.types';
+import type { RequestClientInfo } from 'src/common/http/types/client-info.types';
 
 interface LogQueueJobData {
   id: string;

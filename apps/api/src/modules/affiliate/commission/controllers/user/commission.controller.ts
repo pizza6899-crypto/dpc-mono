@@ -13,11 +13,11 @@ import { ApiTags, ApiOperation } from '@nestjs/swagger';
 import {
   ApiStandardResponse,
   ApiStandardErrors,
-} from 'src/platform/http/decorators/api-response.decorator';
-import { CurrentUser } from 'src/platform/auth/decorators/current-user.decorator';
-import type { CurrentUserWithSession } from 'src/platform/auth/decorators/current-user.decorator';
-import { RequestClientInfoParam } from 'src/platform/auth/decorators/request-info.decorator';
-import type { RequestClientInfo } from 'src/platform/http/types/client-info.types';
+} from 'src/common/http/decorators/api-response.decorator';
+import { CurrentUser } from 'src/common/auth/decorators/current-user.decorator';
+import type { CurrentUserWithSession } from 'src/common/auth/decorators/current-user.decorator';
+import { RequestClientInfoParam } from 'src/common/auth/decorators/request-info.decorator';
+import type { RequestClientInfo } from 'src/common/http/types/client-info.types';
 import { Prisma } from '@repo/database';
 import { FindCommissionsService } from '../../application/find-commissions.service';
 import { FindCommissionByIdService } from '../../application/find-commission-by-id.service';

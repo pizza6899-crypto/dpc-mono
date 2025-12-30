@@ -5,14 +5,14 @@ import { AffiliateTierLevel, Prisma } from '@repo/database';
 import { ResetCustomRateService } from './reset-custom-rate.service';
 import { AFFILIATE_TIER_REPOSITORY } from '../ports/out/affiliate-tier.repository.token';
 import type { AffiliateTierRepositoryPort } from '../ports/out/affiliate-tier.repository.port';
-import { ACTIVITY_LOG } from 'src/platform/activity-log/activity-log.token';
-import type { ActivityLogPort } from 'src/platform/activity-log/activity-log.port';
-import { ActivityType } from 'src/platform/activity-log/activity-log.types';
+import { ACTIVITY_LOG } from 'src/common/activity-log/activity-log.token';
+import type { ActivityLogPort } from 'src/common/activity-log/activity-log.port';
+import { ActivityType } from 'src/common/activity-log/activity-log.types';
 import { AffiliateTier } from '../domain';
 import { TierNotFoundException } from '../domain/commission.exception';
-import { PrismaModule } from 'src/platform/prisma/prisma.module';
-import { EnvModule } from 'src/platform/env/env.module';
-import type { RequestClientInfo } from 'src/platform/http/types/client-info.types';
+import { PrismaModule } from 'src/common/prisma/prisma.module';
+import { EnvModule } from 'src/common/env/env.module';
+import type { RequestClientInfo } from 'src/common/http/types/client-info.types';
 
 describe('ResetCustomRateService', () => {
   let module: TestingModule;

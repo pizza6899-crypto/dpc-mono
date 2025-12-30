@@ -1,13 +1,13 @@
 import { Injectable, Logger } from '@nestjs/common';
-import { PrismaService } from 'src/platform/prisma/prisma.service';
+import { PrismaService } from 'src/common/prisma/prisma.service';
 import {
   MessageCode,
   PaginatedData,
   RequestClientInfo,
-} from 'src/platform/http/types';
-import { ApiException } from 'src/platform/http/exception/api.exception';
+} from 'src/common/http/types';
+import { ApiException } from 'src/common/http/exception/api.exception';
 import { HttpStatusCode } from 'axios';
-import { CurrentUserWithSession } from 'src/platform/auth/decorators/current-user.decorator';
+import { CurrentUserWithSession } from 'src/common/auth/decorators/current-user.decorator';
 import {
   GameLaunchRequestDto,
   GameLaunchResponseDto,
@@ -16,7 +16,7 @@ import { GameInfoDto, GameListRequestDto } from '../dtos/game-list.dto';
 import { WhitecliffGameService } from '../whitecliff/application/whitecliff-game.service';
 import { GameAggregatorType, Prisma } from '@repo/database';
 import { DcsGameService } from '../dcs/application/dcs-game.service';
-import { EnvService } from 'src/platform/env/env.service';
+import { EnvService } from 'src/common/env/env.service';
 
 @Injectable()
 export class CasinoGameService {

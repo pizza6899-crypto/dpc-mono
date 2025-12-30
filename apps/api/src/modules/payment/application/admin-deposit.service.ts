@@ -1,15 +1,15 @@
 // src/modules/payment/application/admin-deposit.service.ts
 import { Injectable, HttpStatus, Logger } from '@nestjs/common';
 import { Inject } from '@nestjs/common';
-import { PrismaService } from '../../../platform/prisma/prisma.service';
+import { PrismaService } from '../../../common/prisma/prisma.service';
 import { Prisma, DepositDetailStatus, TransactionStatus } from '@repo/database';
 import { RollingService } from '../../rolling/application/rolling.service';
-import { ApiException } from 'src/platform/http/exception/api.exception';
-import { MessageCode } from 'src/platform/http/types';
-import { ACTIVITY_LOG } from 'src/platform/activity-log/activity-log.token';
-import type { ActivityLogPort } from 'src/platform/activity-log/activity-log.port';
-import { ActivityType } from 'src/platform/activity-log/activity-log.types';
-import type { PaginatedData, RequestClientInfo } from 'src/platform/http/types';
+import { ApiException } from 'src/common/http/exception/api.exception';
+import { MessageCode } from 'src/common/http/types';
+import { ACTIVITY_LOG } from 'src/common/activity-log/activity-log.token';
+import type { ActivityLogPort } from 'src/common/activity-log/activity-log.port';
+import { ActivityType } from 'src/common/activity-log/activity-log.types';
+import type { PaginatedData, RequestClientInfo } from 'src/common/http/types';
 import { GetDepositsQueryDto } from '../dtos/get-deposits-query.dto';
 import {
   AdminDepositListItemDto,

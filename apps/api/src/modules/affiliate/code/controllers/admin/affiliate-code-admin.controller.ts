@@ -10,11 +10,11 @@ import { ApiTags, ApiOperation } from '@nestjs/swagger';
 import {
   ApiStandardErrors,
   ApiPaginatedResponse,
-} from 'src/platform/http/decorators/api-response.decorator';
-import { Paginated } from 'src/platform/http/decorators/paginated.decorator';
-import { RequireRoles } from 'src/platform/auth/decorators/roles.decorator';
+} from 'src/common/http/decorators/api-response.decorator';
+import { Paginated } from 'src/common/http/decorators/paginated.decorator';
+import { RequireRoles } from 'src/common/auth/decorators/roles.decorator';
 import { UserRoleType } from '@repo/database';
-import type { PaginatedData } from 'src/platform/http/types';
+import type { PaginatedData } from 'src/common/http/types';
 import { FindCodesAdminService } from '../../application/find-codes-admin.service';
 import { FindCodesQueryDto } from './dto/request/find-codes-query.dto';
 import { AdminCodeListItemDto } from './dto/response/admin-code-list.response.dto';

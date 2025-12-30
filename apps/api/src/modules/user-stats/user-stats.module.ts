@@ -1,5 +1,5 @@
 import { Module } from '@nestjs/common';
-import { PrismaModule } from 'src/platform/prisma/prisma.module';
+import { PrismaModule } from 'src/common/prisma/prisma.module';
 import { UserStatsService } from './application/user-stats.service';
 
 @Module({

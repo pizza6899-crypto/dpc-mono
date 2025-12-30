@@ -1,11 +1,11 @@
 import { HttpStatus, Injectable, Logger } from '@nestjs/common';
-import { PrismaService } from 'src/platform/prisma/prisma.service';
+import { PrismaService } from 'src/common/prisma/prisma.service';
 import {
   VipMembershipResponseDto,
   VipHistoryResponseDto,
 } from '../dtos/vip-membership.dto';
-import { ApiException } from 'src/platform/http/exception/api.exception';
-import { MessageCode } from 'src/platform/http/types';
+import { ApiException } from 'src/common/http/exception/api.exception';
+import { MessageCode } from 'src/common/http/types';
 import { nowUtc } from 'src/utils/date.util';
 import { Prisma } from '@repo/database';
 

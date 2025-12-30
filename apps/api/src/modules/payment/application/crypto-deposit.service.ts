@@ -1,6 +1,6 @@
 // src/modules/payment/application/crypto-deposit.service.ts
 import { Injectable, Logger, Inject, HttpStatus } from '@nestjs/common';
-import { PrismaService } from '../../../platform/prisma/prisma.service';
+import { PrismaService } from '../../../common/prisma/prisma.service';
 import { NowPaymentApiService } from '../infrastructure/now-payment-api.service';
 import { CreateDepositRequestDto } from '../dtos/create-deposit-request.dto';
 import { CreateDepositResponseDto } from '../dtos/create-deposit-response.dto';
@@ -15,13 +15,13 @@ import {
 } from '@repo/database';
 import { nowUtcMinus } from 'src/utils/date.util';
 import { IdUtil } from 'src/utils/id.util';
-import type { ActivityLogPort } from 'src/platform/activity-log/activity-log.port';
-import { ACTIVITY_LOG } from 'src/platform/activity-log/activity-log.token';
-import { ApiException } from 'src/platform/http/exception/api.exception';
-import { MessageCode } from 'src/platform/http/types';
-import { ActivityType } from 'src/platform/activity-log/activity-log.types';
-import type { RequestClientInfo } from 'src/platform/http/types/client-info.types';
-import { EnvService } from 'src/platform/env/env.service';
+import type { ActivityLogPort } from 'src/common/activity-log/activity-log.port';
+import { ACTIVITY_LOG } from 'src/common/activity-log/activity-log.token';
+import { ApiException } from 'src/common/http/exception/api.exception';
+import { MessageCode } from 'src/common/http/types';
+import { ActivityType } from 'src/common/activity-log/activity-log.types';
+import type { RequestClientInfo } from 'src/common/http/types/client-info.types';
+import { EnvService } from 'src/common/env/env.service';
 
 @Injectable()
 export class CryptoDepositService {

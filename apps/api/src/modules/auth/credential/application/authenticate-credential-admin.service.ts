@@ -8,10 +8,10 @@ import {
   CREDENTIAL_USER_REPOSITORY,
   type CredentialUserRepositoryPort,
 } from '../ports/out';
-import type { AuthenticatedUser } from 'src/platform/auth/types/auth.types';
-import type { RequestClientInfo } from 'src/platform/http/types/client-info.types';
-import { ApiException } from 'src/platform/http/exception/api.exception';
-import { MessageCode } from 'src/platform/http/types';
+import type { AuthenticatedUser } from 'src/common/auth/types/auth.types';
+import type { RequestClientInfo } from 'src/common/http/types/client-info.types';
+import { ApiException } from 'src/common/http/exception/api.exception';
+import { MessageCode } from 'src/common/http/types';
 import {
   LoginAttemptResult,
   LoginFailureReason,

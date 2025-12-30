@@ -9,10 +9,10 @@ import {
 import { AFFILIATE_TIER_REPOSITORY } from '../ports/out/affiliate-tier.repository.token';
 import type { AffiliateTierRepositoryPort } from '../ports/out/affiliate-tier.repository.port';
 import { IdUtil } from 'src/utils/id.util';
-import { ACTIVITY_LOG } from 'src/platform/activity-log/activity-log.token';
-import type { ActivityLogPort } from 'src/platform/activity-log/activity-log.port';
-import { ActivityType } from 'src/platform/activity-log/activity-log.types';
-import type { RequestClientInfo } from 'src/platform/http/types/client-info.types';
+import { ACTIVITY_LOG } from 'src/common/activity-log/activity-log.token';
+import type { ActivityLogPort } from 'src/common/activity-log/activity-log.port';
+import { ActivityType } from 'src/common/activity-log/activity-log.types';
+import type { RequestClientInfo } from 'src/common/http/types/client-info.types';
 import { Transactional } from '@nestjs-cls/transactional';
 
 interface SetCustomRateParams {

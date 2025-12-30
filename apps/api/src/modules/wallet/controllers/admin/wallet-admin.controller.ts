@@ -13,8 +13,8 @@ import { ApiTags, ApiOperation, ApiParam } from '@nestjs/swagger';
 import {
   ApiStandardResponse,
   ApiStandardErrors,
-} from 'src/platform/http/decorators/api-response.decorator';
-import { RequireRoles } from 'src/platform/auth/decorators/roles.decorator';
+} from 'src/common/http/decorators/api-response.decorator';
+import { RequireRoles } from 'src/common/auth/decorators/roles.decorator';
 import { UserRoleType } from '@repo/database';
 import { GetUserBalanceAdminService } from '../../application/get-user-balance-admin.service';
 import { UpdateUserBalanceAdminService } from '../../application/update-user-balance-admin.service';
@@ -28,8 +28,8 @@ import {
   InvalidWalletBalanceException,
 } from '../../domain';
 import { UserNotFoundException } from 'src/modules/user/domain/user.exception';
-import { ApiException } from 'src/platform/http/exception/api.exception';
-import { MessageCode } from 'src/platform/http/types/message-codes';
+import { ApiException } from 'src/common/http/exception/api.exception';
+import { MessageCode } from 'src/common/http/types/message-codes';
 import { Prisma } from '@repo/database';
 
 @Controller('admin/wallet')

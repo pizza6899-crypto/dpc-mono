@@ -6,7 +6,7 @@ import {
 } from '@nestjs/common';
 import { Reflector } from '@nestjs/core';
 import type { Request } from 'express';
-import type { AuthenticatedUser } from 'src/platform/auth/types/auth.types';
+import type { AuthenticatedUser } from 'src/common/auth/types/auth.types';
 import { DefineAbilitiesService } from '../application/define-abilities.service';
 import {
   CHECK_ABILITY_KEY,

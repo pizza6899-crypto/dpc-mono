@@ -15,7 +15,7 @@ import { CredentialUserMapper } from './infrastructure/credential-user.mapper';
 import { CredentialPolicy } from './domain/policy';
 import { VipModule } from '../../vip/vip.module';
 import { AffiliateReferralModule } from '../../affiliate/referral/referral.module';
-import { ActivityLogModule } from 'src/platform/activity-log/activity-log.module';
+import { ActivityLogModule } from 'src/common/activity-log/activity-log.module';
 import { PassportModule } from '@nestjs/passport';
 import { UserModule } from '../../user/user.module';
 import { ChangePasswordService } from './application/change-password.service';
@@ -30,7 +30,7 @@ import {
 import { PasswordResetTokenRepository } from './infrastructure/password-reset-token.repository';
 import { AuditLogModule } from 'src/modules/audit-log/audit-log.module';
 import { SessionModule } from '../session/session.module';
-import { EnvModule } from 'src/platform/env/env.module';
+import { EnvModule } from 'src/common/env/env.module';
 
 @Module({
   imports: [

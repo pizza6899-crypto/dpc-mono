@@ -9,24 +9,24 @@ import {
   Inject,
 } from '@nestjs/common';
 import { ApiTags, ApiOperation } from '@nestjs/swagger';
-import { RequireRoles } from 'src/platform/auth/decorators/roles.decorator';
+import { RequireRoles } from 'src/common/auth/decorators/roles.decorator';
 import { UserRoleType } from '@repo/database';
-import { CurrentUser } from 'src/platform/auth/decorators/current-user.decorator';
-import type { CurrentUserWithSession } from 'src/platform/auth/decorators/current-user.decorator';
-import { RequestClientInfoParam } from 'src/platform/auth/decorators/request-info.decorator';
-import type { RequestClientInfo } from 'src/platform/http/types/client-info.types';
+import { CurrentUser } from 'src/common/auth/decorators/current-user.decorator';
+import type { CurrentUserWithSession } from 'src/common/auth/decorators/current-user.decorator';
+import { RequestClientInfoParam } from 'src/common/auth/decorators/request-info.decorator';
+import type { RequestClientInfo } from 'src/common/http/types/client-info.types';
 import {
   ApiStandardResponse,
   ApiStandardErrors,
-} from 'src/platform/http/decorators/api-response.decorator';
+} from 'src/common/http/decorators/api-response.decorator';
 import { PromotionTranslationService } from '../application/promotion-translation.service';
 import {
   UpsertPromotionTranslationDto,
   PromotionTranslationResponseDto,
 } from '../dtos/promotion-translation.dto';
-import { ActivityType } from 'src/platform/activity-log/activity-log.types';
-import { ACTIVITY_LOG } from 'src/platform/activity-log/activity-log.token';
-import type { ActivityLogPort } from 'src/platform/activity-log/activity-log.port';
+import { ActivityType } from 'src/common/activity-log/activity-log.types';
+import { ACTIVITY_LOG } from 'src/common/activity-log/activity-log.token';
+import type { ActivityLogPort } from 'src/common/activity-log/activity-log.port';
 
 @ApiTags('Promotion Translation Admin (프로모션 번역 관리)')
 @Controller('promotions/:promotionId/translations')

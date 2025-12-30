@@ -20,13 +20,13 @@ import {
 import { DepositService } from '../application/deposit.service';
 import { CreateDepositResponseDto } from '../dtos/create-deposit-response.dto';
 import { CreateDepositRequestDto } from '../dtos/create-deposit-request.dto';
-import { CurrentUser } from 'src/platform/auth/decorators/current-user.decorator';
-import type { CurrentUserWithSession } from 'src/platform/auth/decorators/current-user.decorator';
-import type { ActivityLogPort } from 'src/platform/activity-log/activity-log.port';
-import { ACTIVITY_LOG } from 'src/platform/activity-log/activity-log.token';
+import { CurrentUser } from 'src/common/auth/decorators/current-user.decorator';
+import type { CurrentUserWithSession } from 'src/common/auth/decorators/current-user.decorator';
+import type { ActivityLogPort } from 'src/common/activity-log/activity-log.port';
+import { ACTIVITY_LOG } from 'src/common/activity-log/activity-log.token';
 import { Inject } from '@nestjs/common';
-import { RequestClientInfoParam } from 'src/platform/auth/decorators/request-info.decorator';
-import type { RequestClientInfo } from 'src/platform/http/types';
+import { RequestClientInfoParam } from 'src/common/auth/decorators/request-info.decorator';
+import type { RequestClientInfo } from 'src/common/http/types';
 
 @ApiTags('입금 (Deposit)')
 @Controller('deposits')

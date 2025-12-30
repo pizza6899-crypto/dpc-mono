@@ -1,9 +1,9 @@
 // test/integration/affiliate/commission/commission.integration.spec.ts
 import { Test, TestingModule } from '@nestjs/testing';
-import { PrismaService } from 'src/platform/prisma/prisma.service';
-import { PrismaModule } from 'src/platform/prisma/prisma.module';
-import { EnvModule } from 'src/platform/env/env.module';
-import { ActivityLogModule } from 'src/platform/activity-log/activity-log.module';
+import { PrismaService } from 'src/common/prisma/prisma.service';
+import { PrismaModule } from 'src/common/prisma/prisma.module';
+import { EnvModule } from 'src/common/env/env.module';
+import { ActivityLogModule } from 'src/common/activity-log/activity-log.module';
 import { AffiliateReferralModule } from 'src/modules/affiliate/referral/referral.module';
 import { AffiliateCommissionModule } from 'src/modules/affiliate/commission/commission.module';
 import {

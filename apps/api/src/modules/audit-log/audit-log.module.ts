@@ -35,7 +35,7 @@ import {
   HeavyLogProcessor,
 } from './infrastructure/audit-log.processor';
 import { DispatchLogService } from './application/dispatch-log.service';
-import { PrismaModule } from 'src/platform/prisma/prisma.module';
+import { PrismaModule } from 'src/common/prisma/prisma.module';
 import { AUDIT_LOG_REPOSITORY } from './ports/out';
 import {
   CRITICAL_LOG_QUEUE_CONFIG,

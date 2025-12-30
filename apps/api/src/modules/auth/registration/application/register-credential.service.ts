@@ -1,12 +1,12 @@
 import { Injectable, Inject, Logger, HttpStatus } from '@nestjs/common';
 import { Transactional } from '@nestjs-cls/transactional';
 import { hashPassword } from 'src/utils/password.util';
-import type { ActivityLogPort } from 'src/platform/activity-log/activity-log.port';
-import { ActivityType } from 'src/platform/activity-log/activity-log.types';
-import { ACTIVITY_LOG } from 'src/platform/activity-log/activity-log.token';
-import type { RequestClientInfo } from 'src/platform/http/types/client-info.types';
-import { ApiException } from 'src/platform/http/exception/api.exception';
-import { MessageCode } from 'src/platform/http/types/message-codes';
+import type { ActivityLogPort } from 'src/common/activity-log/activity-log.port';
+import { ActivityType } from 'src/common/activity-log/activity-log.types';
+import { ACTIVITY_LOG } from 'src/common/activity-log/activity-log.token';
+import type { RequestClientInfo } from 'src/common/http/types/client-info.types';
+import { ApiException } from 'src/common/http/exception/api.exception';
+import { MessageCode } from 'src/common/http/types/message-codes';
 import { CountryUtil } from 'src/utils/country.util';
 import { VipMembershipService } from 'src/modules/vip/application/vip-membership.service';
 import { LinkReferralService } from 'src/modules/affiliate/referral/application/link-referral.service';

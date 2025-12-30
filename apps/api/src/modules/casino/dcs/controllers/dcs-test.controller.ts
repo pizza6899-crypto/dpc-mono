@@ -1,7 +1,7 @@
 import { Controller, Post, Get, Body, Query } from '@nestjs/common';
 import { ApiTags, ApiOperation, ApiBody } from '@nestjs/swagger';
-import { Public } from 'src/platform/auth/decorators/roles.decorator';
-import { ApiStandardErrors } from 'src/platform/http/decorators/api-response.decorator';
+import { Public } from 'src/common/auth/decorators/roles.decorator';
+import { ApiStandardErrors } from 'src/common/http/decorators/api-response.decorator';
 import { DcsApiService } from '../infrastructure/dcs-api.service';
 import { DcsGameRefreshService } from '../application/dcs-game-refresh.service';
 import { GameProvider } from '@repo/database';

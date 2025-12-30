@@ -7,17 +7,17 @@ import { USER_REPOSITORY } from 'src/modules/user/ports/out/user.repository.toke
 import type { UserRepositoryPort } from 'src/modules/user/ports/out/user.repository.port';
 import { PASSWORD_RESET_TOKEN_REPOSITORY } from '../ports/out/password-reset-token.repository.token';
 import type { PasswordResetTokenRepositoryPort } from '../ports/out/password-reset-token.repository.port';
-import { ACTIVITY_LOG } from 'src/platform/activity-log/activity-log.token';
-import type { ActivityLogPort } from 'src/platform/activity-log/activity-log.port';
-import { ActivityType } from 'src/platform/activity-log/activity-log.types';
+import { ACTIVITY_LOG } from 'src/common/activity-log/activity-log.token';
+import type { ActivityLogPort } from 'src/common/activity-log/activity-log.port';
+import { ActivityType } from 'src/common/activity-log/activity-log.types';
 import { User } from 'src/modules/user/domain';
 import { UserStatus, UserRoleType, SocialType } from '@repo/database';
 import { hashPassword } from 'src/utils/password.util';
-import { ApiException } from 'src/platform/http/exception/api.exception';
-import { MessageCode } from 'src/platform/http/types';
-import type { RequestClientInfo } from 'src/platform/http/types/client-info.types';
-import { PrismaModule } from 'src/platform/prisma/prisma.module';
-import { EnvModule } from 'src/platform/env/env.module';
+import { ApiException } from 'src/common/http/exception/api.exception';
+import { MessageCode } from 'src/common/http/types';
+import type { RequestClientInfo } from 'src/common/http/types/client-info.types';
+import { PrismaModule } from 'src/common/prisma/prisma.module';
+import { EnvModule } from 'src/common/env/env.module';
 import { DispatchLogService } from 'src/modules/audit-log/application/dispatch-log.service';
 
 describe('ResetPasswordService', () => {

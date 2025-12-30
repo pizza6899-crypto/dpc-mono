@@ -26,8 +26,8 @@ import {
   PromoPayoutRequestDto,
   PromoPayoutResponseDto,
 } from '../dtos/callback.dto';
-import { CasinoResponse } from 'src/platform/http/decorators/casino-response.decorator';
-import { GuestOnly } from 'src/platform/auth/decorators/roles.decorator';
+import { CasinoResponse } from 'src/common/http/decorators/casino-response.decorator';
+import { GuestOnly } from 'src/common/auth/decorators/roles.decorator';
 import { DcsCallbackService } from '../application/dcs-callback.service';
 import { DcsLoggingInterceptor } from '../infrastructure/dcs-logging.interceptor';
 

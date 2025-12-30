@@ -4,7 +4,7 @@ import {
   CREDENTIAL_USER_REPOSITORY,
 } from '../ports/out';
 import { comparePassword } from 'src/utils/password.util';
-import { AuthenticatedUser } from 'src/platform/auth/types/auth.types';
+import { AuthenticatedUser } from 'src/common/auth/types/auth.types';
 
 export interface VerifyCredentialParams {
   email: string;

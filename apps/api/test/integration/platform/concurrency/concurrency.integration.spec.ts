@@ -1,8 +1,8 @@
 import { Test, TestingModule } from '@nestjs/testing';
-import { ConcurrencyService } from 'src/platform/concurrency/concurrency.service';
-import { RedisService } from 'src/platform/redis/redis.service';
-import { EnvModule } from 'src/platform/env/env.module';
-import { RedisModule } from 'src/platform/redis/redis.module';
+import { ConcurrencyService } from 'src/common/concurrency/concurrency.service';
+import { RedisService } from 'src/common/redis/redis.service';
+import { EnvModule } from 'src/common/env/env.module';
+import { RedisModule } from 'src/common/redis/redis.module';
 import { nowUtc } from 'src/utils/date.util';
 
 describe('ConcurrencyService Integration', () => {

@@ -1,8 +1,8 @@
 import { Injectable, Inject, Logger } from '@nestjs/common';
-import type { ActivityLogPort } from 'src/platform/activity-log/activity-log.port';
-import { ACTIVITY_LOG } from 'src/platform/activity-log/activity-log.token';
-import { ActivityType } from 'src/platform/activity-log/activity-log.types';
-import type { RequestClientInfo } from 'src/platform/http/types/client-info.types';
+import type { ActivityLogPort } from 'src/common/activity-log/activity-log.port';
+import { ACTIVITY_LOG } from 'src/common/activity-log/activity-log.token';
+import { ActivityType } from 'src/common/activity-log/activity-log.types';
+import type { RequestClientInfo } from 'src/common/http/types/client-info.types';
 import { DispatchLogService } from 'src/modules/audit-log/application/dispatch-log.service';
 import { LogType } from 'src/modules/audit-log/domain';
 import { RevokeSessionService } from '../../session/application/revoke-session.service';

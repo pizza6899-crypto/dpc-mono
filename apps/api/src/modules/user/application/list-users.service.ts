@@ -5,7 +5,7 @@ import type {
   UserRepositoryPort,
   FindUsersParams,
 } from '../ports/out/user.repository.port';
-import type { PaginatedData } from 'src/platform/http/types';
+import type { PaginatedData } from 'src/common/http/types';
 import type { UserRoleType, UserStatus } from '@repo/database';
 import { User } from '../domain';
 

@@ -4,8 +4,8 @@ import { Test } from '@nestjs/testing';
 import { Logger } from '@nestjs/common';
 import { SettleDailyCommissionsScheduler } from './settle-daily-commissions.scheduler';
 import { SettleDailyCommissionsService } from '../application/settle-daily-commissions.service';
-import { EnvService } from 'src/platform/env/env.service';
-import { ConcurrencyService } from 'src/platform/concurrency/concurrency.service';
+import { EnvService } from 'src/common/env/env.service';
+import { ConcurrencyService } from 'src/common/concurrency/concurrency.service';
 import { Prisma } from '@repo/database';
 import { nowUtc } from 'src/utils/date.util';
 

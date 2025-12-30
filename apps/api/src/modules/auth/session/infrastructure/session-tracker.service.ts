@@ -1,5 +1,5 @@
 import { Injectable, Logger } from '@nestjs/common';
-import { RedisService } from 'src/platform/redis/redis.service';
+import { RedisService } from 'src/common/redis/redis.service';
 import { Server } from 'socket.io';
 import { SessionType } from '../domain';
 

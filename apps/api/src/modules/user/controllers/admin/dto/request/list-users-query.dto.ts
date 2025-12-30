@@ -1,7 +1,7 @@
 // src/modules/user/controllers/admin/dto/request/list-users-query.dto.ts
 import { ApiPropertyOptional } from '@nestjs/swagger';
 import { IsDateString, IsEnum, IsOptional, IsString } from 'class-validator';
-import { createPaginationQueryDto } from 'src/platform/http/types/pagination.types';
+import { createPaginationQueryDto } from 'src/common/http/types/pagination.types';
 import { UserRoleType, UserStatus } from '@repo/database';
 
 type UserSortFields = 'createdAt' | 'updatedAt' | 'email';

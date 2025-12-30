@@ -1,6 +1,6 @@
 // src/modules/auth/session/session.module.ts
 import { Module } from '@nestjs/common';
-import { RedisModule } from 'src/platform/redis/redis.module';
+import { RedisModule } from 'src/common/redis/redis.module';
 import { SessionAdminController } from './controllers/admin/session-admin.controller';
 import { CreateSessionService } from './application/create-session.service';
 import { ExpireSessionsBatchService } from './application/expire-sessions-batch.service';
@@ -15,8 +15,8 @@ import {
   USER_SESSION_REPOSITORY,
 } from './ports/out';
 import { ExpireSessionsScheduler } from './schedulers/expire-sessions.scheduler';
-import { ConcurrencyModule } from 'src/platform/concurrency/concurrency.module';
-import { EnvModule } from 'src/platform/env/env.module';
+import { ConcurrencyModule } from 'src/common/concurrency/concurrency.module';
+import { EnvModule } from 'src/common/env/env.module';
 
 @Module({
   imports: [

@@ -5,7 +5,7 @@ import { AdminCommissionController } from './commission.controller';
 import { FindCommissionByIdService } from '../../application/find-commission-by-id.service';
 import { SetCustomRateService } from '../../application/set-custom-rate.service';
 import { ResetCustomRateService } from '../../application/reset-custom-rate.service';
-import type { RequestClientInfo } from 'src/platform/http/types/client-info.types';
+import type { RequestClientInfo } from 'src/common/http/types/client-info.types';
 import {
   CommissionStatus,
   ExchangeCurrencyCode,

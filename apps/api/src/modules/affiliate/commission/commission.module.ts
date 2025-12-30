@@ -1,7 +1,7 @@
 // src/modules/affiliate/commission/commission.module.ts
 import { Module } from '@nestjs/common';
-import { PrismaModule } from 'src/platform/prisma/prisma.module';
-import { ActivityLogModule } from 'src/platform/activity-log/activity-log.module';
+import { PrismaModule } from 'src/common/prisma/prisma.module';
+import { ActivityLogModule } from 'src/common/activity-log/activity-log.module';
 import { AffiliateReferralModule } from '../referral/referral.module';
 import { CommissionPolicy } from './domain';
 
@@ -36,8 +36,8 @@ import { AdminCommissionController } from './controllers/admin/commission.contro
 
 // Schedulers
 import { SettleDailyCommissionsScheduler } from './schedulers/settle-daily-commissions.scheduler';
-import { EnvModule } from 'src/platform/env/env.module';
-import { ConcurrencyModule } from 'src/platform/concurrency/concurrency.module';
+import { EnvModule } from 'src/common/env/env.module';
+import { ConcurrencyModule } from 'src/common/concurrency/concurrency.module';
 
 @Module({
   imports: [

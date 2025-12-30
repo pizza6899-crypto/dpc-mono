@@ -1,15 +1,15 @@
 // src/modules/exchange/application/exchange-rate.service.spec.ts
 import type { TestingModule } from '@nestjs/testing';
 import { Test } from '@nestjs/testing';
-import { PrismaService } from 'src/platform/prisma/prisma.service';
-import { RedisService } from 'src/platform/redis/redis.service';
+import { PrismaService } from 'src/common/prisma/prisma.service';
+import { RedisService } from 'src/common/redis/redis.service';
 import {
   ExchangeCurrencyCode,
   ExchangeRateProvider,
   Prisma,
 } from '@repo/database';
-import { ApiException } from 'src/platform/http/exception/api.exception';
-import { MessageCode } from 'src/platform/http/types';
+import { ApiException } from 'src/common/http/exception/api.exception';
+import { MessageCode } from 'src/common/http/types';
 import { ExchangeRateService } from '../application/exchange-rate.service';
 
 describe('ExchangeRateService', () => {

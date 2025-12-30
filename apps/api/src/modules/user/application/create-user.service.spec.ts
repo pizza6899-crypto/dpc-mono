@@ -7,8 +7,8 @@ import type { UserRepositoryPort } from '../ports/out/user.repository.port';
 import { User } from '../domain';
 import { UserAlreadyExistsException } from '../domain/user.exception';
 import { UserRoleType, UserStatus, SocialType } from '@repo/database';
-import { PrismaModule } from 'src/platform/prisma/prisma.module';
-import { EnvModule } from 'src/platform/env/env.module';
+import { PrismaModule } from 'src/common/prisma/prisma.module';
+import { EnvModule } from 'src/common/env/env.module';
 
 describe('CreateUserService', () => {
   let module: TestingModule;

@@ -9,27 +9,27 @@ import {
   Inject,
 } from '@nestjs/common';
 import { ApiTags, ApiOperation } from '@nestjs/swagger';
-import { AuthAll, Public } from 'src/platform/auth/decorators/roles.decorator';
+import { AuthAll, Public } from 'src/common/auth/decorators/roles.decorator';
 import {
   ApiPaginatedResponse,
   ApiStandardErrors,
   ApiStandardResponse,
-} from 'src/platform/http/decorators/api-response.decorator';
-import { CurrentUser } from 'src/platform/auth/decorators/current-user.decorator';
-import type { CurrentUserWithSession } from 'src/platform/auth/decorators/current-user.decorator';
-import type { PaginatedData, RequestClientInfo } from 'src/platform/http/types';
-import { RequestClientInfoParam } from 'src/platform/auth/decorators/request-info.decorator';
+} from 'src/common/http/decorators/api-response.decorator';
+import { CurrentUser } from 'src/common/auth/decorators/current-user.decorator';
+import type { CurrentUserWithSession } from 'src/common/auth/decorators/current-user.decorator';
+import type { PaginatedData, RequestClientInfo } from 'src/common/http/types';
+import { RequestClientInfoParam } from 'src/common/auth/decorators/request-info.decorator';
 import { CasinoGameService } from '../application/casino-game.service';
 import { GameInfoDto, GameListRequestDto } from '../dtos/game-list.dto';
 import {
   GameLaunchRequestDto,
   GameLaunchResponseDto,
 } from '../dtos/game-launch.dto';
-import { ActivityType } from 'src/platform/activity-log/activity-log.types';
-import { ACTIVITY_LOG } from 'src/platform/activity-log/activity-log.token';
-import type { ActivityLogPort } from 'src/platform/activity-log/activity-log.port';
-import { Throttle } from 'src/platform/throttle/decorators/throttle.decorator';
-import { ThrottleScope } from 'src/platform/throttle/types/throttle.types';
+import { ActivityType } from 'src/common/activity-log/activity-log.types';
+import { ACTIVITY_LOG } from 'src/common/activity-log/activity-log.token';
+import type { ActivityLogPort } from 'src/common/activity-log/activity-log.port';
+import { Throttle } from 'src/common/throttle/decorators/throttle.decorator';
+import { ThrottleScope } from 'src/common/throttle/types/throttle.types';
 
 @Controller('casino/games')
 @ApiTags('Casino Games')

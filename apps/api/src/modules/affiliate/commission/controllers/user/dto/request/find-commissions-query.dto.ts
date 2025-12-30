@@ -2,7 +2,7 @@
 import { ApiPropertyOptional } from '@nestjs/swagger';
 import { IsEnum, IsOptional, IsDateString } from 'class-validator';
 import { CommissionStatus, ExchangeCurrencyCode } from '@repo/database';
-import { createPaginationQueryDto } from 'src/platform/http/types';
+import { createPaginationQueryDto } from 'src/common/http/types';
 
 type CommissionSortFields = 'createdAt' | 'updatedAt' | 'settlementDate';
 

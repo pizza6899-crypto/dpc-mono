@@ -1,4 +1,4 @@
-import { DomainException } from 'src/platform/exception/domain.exception';
+import { DomainException } from 'src/common/exception/domain.exception';
 
 /**
  * 로그인 실패 예외

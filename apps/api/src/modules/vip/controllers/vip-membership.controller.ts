@@ -5,8 +5,8 @@ import {
   VipMembershipResponseDto,
   VipHistoryResponseDto,
 } from '../dtos/vip-membership.dto';
-import { CurrentUser } from 'src/platform/auth/decorators/current-user.decorator';
-import type { CurrentUserWithSession } from 'src/platform/auth/decorators/current-user.decorator';
+import { CurrentUser } from 'src/common/auth/decorators/current-user.decorator';
+import type { CurrentUserWithSession } from 'src/common/auth/decorators/current-user.decorator';
 
 @ApiTags('VIP Membership')
 @Controller('vip/membership')

@@ -1,17 +1,17 @@
 // src/modules/exchange/schedulers/exchange-rate-update.scheduler.ts
 import { Injectable, Logger, OnApplicationBootstrap } from '@nestjs/common';
 import { Cron, CronExpression } from '@nestjs/schedule';
-import { PrismaService } from 'src/platform/prisma/prisma.service';
+import { PrismaService } from 'src/common/prisma/prisma.service';
 import {
   ExchangeCurrencyCode,
   ExchangeRateProvider,
   Prisma,
 } from '@repo/database';
-import { EnvService } from 'src/platform/env/env.service';
+import { EnvService } from 'src/common/env/env.service';
 import { nowUtc } from 'src/utils/date.util';
 import { OpenExchangeRatesApiService } from '../infrastructure/open-exchange-rates-api.service';
 import { ExchangeRateValidator } from '../application/exchange-rate-validator.service';
-import { ConcurrencyService } from 'src/platform/concurrency/concurrency.service';
+import { ConcurrencyService } from 'src/common/concurrency/concurrency.service';
 import { ExchangeRateService } from '../application/exchange-rate.service';
 
 @Injectable()

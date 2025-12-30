@@ -2,7 +2,7 @@
 import { Inject, Injectable, Logger } from '@nestjs/common';
 import { AFFILIATE_CODE_REPOSITORY } from '../ports/out/affiliate-code.repository.token';
 import type { AffiliateCodeRepositoryPort } from '../ports/out/affiliate-code.repository.port';
-import type { PaginatedData } from 'src/platform/http/types';
+import type { PaginatedData } from 'src/common/http/types';
 import { AffiliateCode } from '../domain';
 
 interface FindCodesAdminParams {

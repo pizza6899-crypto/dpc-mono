@@ -1,10 +1,10 @@
 // src/modules/comp/application/comp.service.ts
 import { Injectable, Logger } from '@nestjs/common';
-import { PrismaService } from 'src/platform/prisma/prisma.service';
-import { ConcurrencyService } from 'src/platform/concurrency/concurrency.service';
+import { PrismaService } from 'src/common/prisma/prisma.service';
+import { ConcurrencyService } from 'src/common/concurrency/concurrency.service';
 import { DateTime } from 'luxon';
-import { ApiException } from 'src/platform/http/exception/api.exception';
-import { MessageCode } from 'src/platform/http/types/message-codes';
+import { ApiException } from 'src/common/http/exception/api.exception';
+import { MessageCode } from 'src/common/http/types/message-codes';
 import { WALLET_CURRENCIES } from 'src/utils/currency.util';
 import { Prisma } from '@repo/database';
 

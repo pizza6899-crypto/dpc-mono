@@ -13,18 +13,18 @@ import {
 } from '../ports/out';
 import { DispatchLogService } from 'src/modules/audit-log/application/dispatch-log.service';
 import { LogType } from 'src/modules/audit-log/domain';
-import type { AuthenticatedUser } from 'src/platform/auth/types/auth.types';
-import type { RequestClientInfo } from 'src/platform/http/types/client-info.types';
-import { ApiException } from 'src/platform/http/exception/api.exception';
-import { MessageCode } from 'src/platform/http/types';
+import type { AuthenticatedUser } from 'src/common/auth/types/auth.types';
+import type { RequestClientInfo } from 'src/common/http/types/client-info.types';
+import { ApiException } from 'src/common/http/exception/api.exception';
+import { MessageCode } from 'src/common/http/types';
 import {
   LoginAttempt,
   LoginAttemptResult,
   LoginFailureReason,
 } from '../domain/model/login-attempt.entity';
 import { UserRoleType } from '@repo/database';
-import { PrismaModule } from 'src/platform/prisma/prisma.module';
-import { EnvModule } from 'src/platform/env/env.module';
+import { PrismaModule } from 'src/common/prisma/prisma.module';
+import { EnvModule } from 'src/common/env/env.module';
 
 describe('AuthenticateCredentialAdminService', () => {
   let module: TestingModule;

@@ -5,7 +5,7 @@ import {
   ApiExtraModels,
   getSchemaPath,
 } from '@nestjs/swagger';
-import { SkipTransform } from 'src/platform/http/decorators/skip-transform.decorator';
+import { SkipTransform } from 'src/common/http/decorators/skip-transform.decorator';
 
 /**
  * Casino 컨트롤러에서 사용하는 전용 응답 데코레이터

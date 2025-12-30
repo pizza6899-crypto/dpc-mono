@@ -1,8 +1,8 @@
 import { Inject, Injectable } from '@nestjs/common';
 import { DcsApiService } from '../infrastructure/dcs-api.service';
-import { MessageCode, RequestClientInfo } from 'src/platform/http/types';
-import { PrismaService } from 'src/platform/prisma/prisma.service';
-import { ApiException } from 'src/platform/http/exception/api.exception';
+import { MessageCode, RequestClientInfo } from 'src/common/http/types';
+import { PrismaService } from 'src/common/prisma/prisma.service';
+import { ApiException } from 'src/common/http/exception/api.exception';
 import { HttpStatusCode } from 'axios';
 import { IdUtil } from 'src/utils/id.util';
 import { DcsResponseCode } from '../constants/dcs-response-codes';
@@ -13,9 +13,9 @@ import {
 } from 'src/utils/currency.util';
 import { GameSessionService } from '../../application/game-session.service';
 import { GameAggregatorType } from '@repo/database';
-import { ACTIVITY_LOG } from 'src/platform/activity-log/activity-log.token';
-import type { ActivityLogPort } from 'src/platform/activity-log/activity-log.port';
-import { ActivityType } from 'src/platform/activity-log/activity-log.types';
+import { ACTIVITY_LOG } from 'src/common/activity-log/activity-log.token';
+import type { ActivityLogPort } from 'src/common/activity-log/activity-log.port';
+import { ActivityType } from 'src/common/activity-log/activity-log.types';
 
 @Injectable()
 export class DcsGameService {

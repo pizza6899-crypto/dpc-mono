@@ -13,10 +13,10 @@ import {
   ConvertCurrencyResponseDto,
 } from '../dtos/exchange-rate.dto';
 import { ExchangeCurrencyCode, Prisma } from '@repo/database';
-import { Public } from 'src/platform/auth/decorators/roles.decorator';
-import { Throttle } from 'src/platform/throttle/decorators/throttle.decorator';
-import { ThrottleScope } from 'src/platform/throttle/types/throttle.types';
-import { PaginatedData, PaginatedResponseDto } from 'src/platform/http/types';
+import { Public } from 'src/common/auth/decorators/roles.decorator';
+import { Throttle } from 'src/common/throttle/decorators/throttle.decorator';
+import { ThrottleScope } from 'src/common/throttle/types/throttle.types';
+import { PaginatedData, PaginatedResponseDto } from 'src/common/http/types';
 
 @ApiTags('Exchange / 환율')
 @ApiBearerAuth()

@@ -1,6 +1,6 @@
 import { Injectable, Logger } from '@nestjs/common';
-import { PrismaService } from 'src/platform/prisma/prisma.service';
-import { EnvService } from 'src/platform/env/env.service';
+import { PrismaService } from 'src/common/prisma/prisma.service';
+import { EnvService } from 'src/common/env/env.service';
 import {
   LoginRequestDto,
   DcsLoginResponseDto,
@@ -20,8 +20,8 @@ import {
   PromoPayoutResponseDto,
   DcsCommonResponseDto,
 } from '../dtos/callback.dto';
-import { ConcurrencyService } from 'src/platform/concurrency/concurrency.service';
-import { DcsConfig } from 'src/platform/env/env.types';
+import { ConcurrencyService } from 'src/common/concurrency/concurrency.service';
+import { DcsConfig } from 'src/common/env/env.types';
 import * as crypto from 'crypto';
 import {
   DcsResponseCode,
@@ -29,7 +29,7 @@ import {
 } from '../constants/dcs-response-codes';
 import { CasinoBalanceService } from '../../application/casino-balance.service';
 import { DcsMapperService } from '../infrastructure/dcs-mapper.service';
-import { QueueService } from 'src/platform/queue/queue.service';
+import { QueueService } from 'src/common/queue/queue.service';
 import { CasinoBetService } from '../../application/casino-bet.service';
 import {
   BetType,

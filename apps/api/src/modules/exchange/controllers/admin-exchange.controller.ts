@@ -6,10 +6,10 @@ import {
 } from '@nestjs/common';
 import { ApiTags, ApiOperation, ApiResponse } from '@nestjs/swagger';
 import { ExchangeRateService } from '../application/exchange-rate.service';
-import { RequireRoles } from 'src/platform/auth/decorators/roles.decorator';
+import { RequireRoles } from 'src/common/auth/decorators/roles.decorator';
 import { UserRoleType } from '@repo/database';
-import { Throttle } from 'src/platform/throttle/decorators/throttle.decorator';
-import { ThrottleScope } from 'src/platform/throttle/types/throttle.types';
+import { Throttle } from 'src/common/throttle/decorators/throttle.decorator';
+import { ThrottleScope } from 'src/common/throttle/types/throttle.types';
 
 @ApiTags('Admin Exchange Management (관리자 환율 관리)')
 @Controller('admin/exchange')

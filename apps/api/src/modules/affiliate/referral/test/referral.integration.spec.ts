@@ -1,12 +1,12 @@
 // src/modules/affiliate/referral/test/referral.integration.spec.ts
 import type { TestingModule } from '@nestjs/testing';
 import { Test } from '@nestjs/testing';
-import { PrismaModule } from 'src/platform/prisma/prisma.module';
-import { PrismaService } from 'src/platform/prisma/prisma.service';
-import { EnvModule } from 'src/platform/env/env.module';
+import { PrismaModule } from 'src/common/prisma/prisma.module';
+import { PrismaService } from 'src/common/prisma/prisma.service';
+import { EnvModule } from 'src/common/env/env.module';
 import { AffiliateReferralModule } from '../referral.module';
 import { AffiliateCodeModule } from '../../code/code.module';
-import { ActivityLogModule } from 'src/platform/activity-log/activity-log.module';
+import { ActivityLogModule } from 'src/common/activity-log/activity-log.module';
 import { LinkReferralService } from '../application/link-referral.service';
 import { FindReferralByIdService } from '../application/find-referral-by-id.service';
 import { FindReferralsByAffiliateIdService } from '../application/find-referrals-by-affiliate-id.service';

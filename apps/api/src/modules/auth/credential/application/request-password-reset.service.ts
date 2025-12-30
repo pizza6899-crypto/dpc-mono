@@ -5,7 +5,7 @@ import type { UserRepositoryPort } from 'src/modules/user/ports/out/user.reposit
 import { PASSWORD_RESET_TOKEN_REPOSITORY } from '../ports/out/password-reset-token.repository.token';
 import type { PasswordResetTokenRepositoryPort } from '../ports/out/password-reset-token.repository.port';
 import { nanoid } from 'nanoid';
-import type { RequestClientInfo } from 'src/platform/http/types/client-info.types';
+import type { RequestClientInfo } from 'src/common/http/types/client-info.types';
 import { DispatchLogService } from 'src/modules/audit-log/application/dispatch-log.service';
 import { LogType } from 'src/modules/audit-log/domain';
 

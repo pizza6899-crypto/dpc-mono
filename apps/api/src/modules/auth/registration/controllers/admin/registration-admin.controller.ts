@@ -3,10 +3,10 @@ import { ApiTags, ApiOperation } from '@nestjs/swagger';
 import {
   ApiStandardResponse,
   ApiStandardErrors,
-} from '../../../../../platform/http/decorators/api-response.decorator';
-import { RequestClientInfoParam } from 'src/platform/auth/decorators/request-info.decorator';
-import type { RequestClientInfo } from 'src/platform/http/types/client-info.types';
-import { RequireRoles } from 'src/platform/auth/decorators/roles.decorator';
+} from '../../../../../common/http/decorators/api-response.decorator';
+import { RequestClientInfoParam } from 'src/common/auth/decorators/request-info.decorator';
+import type { RequestClientInfo } from 'src/common/http/types/client-info.types';
+import { RequireRoles } from 'src/common/auth/decorators/roles.decorator';
 import { UserRoleType } from '@repo/database';
 import { RegisterCredentialAdminService } from '../../application/register-credential-admin.service';
 import { RegisterAdminRequestDto } from './dto/request/register-admin.request.dto';

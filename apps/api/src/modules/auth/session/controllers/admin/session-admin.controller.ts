@@ -11,14 +11,14 @@ import { ApiTags, ApiOperation } from '@nestjs/swagger';
 import {
   ApiStandardResponse,
   ApiStandardErrors,
-} from 'src/platform/http/decorators/api-response.decorator';
-import { Paginated } from 'src/platform/http/decorators/paginated.decorator';
-import { ApiPaginatedResponse } from 'src/platform/http/decorators/api-response.decorator';
-import { RequireRoles } from 'src/platform/auth/decorators/roles.decorator';
-import { CurrentUser } from 'src/platform/auth/decorators/current-user.decorator';
-import type { CurrentUserWithSession } from 'src/platform/auth/decorators/current-user.decorator';
+} from 'src/common/http/decorators/api-response.decorator';
+import { Paginated } from 'src/common/http/decorators/paginated.decorator';
+import { ApiPaginatedResponse } from 'src/common/http/decorators/api-response.decorator';
+import { RequireRoles } from 'src/common/auth/decorators/roles.decorator';
+import { CurrentUser } from 'src/common/auth/decorators/current-user.decorator';
+import type { CurrentUserWithSession } from 'src/common/auth/decorators/current-user.decorator';
 import { UserRoleType } from '@repo/database';
-import { PaginatedData } from 'src/platform/http/types';
+import { PaginatedData } from 'src/common/http/types';
 import { ListSessionsService } from '../../application/list-sessions.service';
 import { RevokeSessionService } from '../../application/revoke-session.service';
 import { ExpireUserSessionsService } from '../../application/expire-user-sessions.service';

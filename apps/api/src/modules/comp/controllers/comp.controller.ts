@@ -1,8 +1,8 @@
 // src/modules/comp/controllers/comp.controller.ts
 import { Controller, Get, Post, Body, UseGuards } from '@nestjs/common';
 import { CompService } from '../application/comp.service';
-import { CurrentUser } from 'src/platform/auth/decorators/current-user.decorator';
-import type { CurrentUserWithSession } from 'src/platform/auth/decorators/current-user.decorator';
+import { CurrentUser } from 'src/common/auth/decorators/current-user.decorator';
+import type { CurrentUserWithSession } from 'src/common/auth/decorators/current-user.decorator';
 import {
   ClaimCompRequestDto,
   UnclaimedCompResponseDto,

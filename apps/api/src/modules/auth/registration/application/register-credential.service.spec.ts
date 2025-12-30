@@ -3,9 +3,9 @@ import type { TestingModule } from '@nestjs/testing';
 import { Test } from '@nestjs/testing';
 import { HttpStatus } from '@nestjs/common';
 import { RegisterCredentialService } from './register-credential.service';
-import { ACTIVITY_LOG } from 'src/platform/activity-log/activity-log.token';
-import type { ActivityLogPort } from 'src/platform/activity-log/activity-log.port';
-import { ActivityType } from 'src/platform/activity-log/activity-log.types';
+import { ACTIVITY_LOG } from 'src/common/activity-log/activity-log.token';
+import type { ActivityLogPort } from 'src/common/activity-log/activity-log.port';
+import { ActivityType } from 'src/common/activity-log/activity-log.types';
 import { LinkReferralService } from 'src/modules/affiliate/referral/application/link-referral.service';
 import { FindCodeByCodeService } from 'src/modules/affiliate/code/application/find-code-by-code.service';
 import { USER_REPOSITORY } from 'src/modules/user/ports/out/user.repository.token';
@@ -19,13 +19,13 @@ import {
   ReferralCodeInactiveException,
   ReferralCodeExpiredException,
 } from 'src/modules/affiliate/referral/domain/referral.exception';
-import { ApiException } from 'src/platform/http/exception/api.exception';
-import { MessageCode } from 'src/platform/http/types/message-codes';
+import { ApiException } from 'src/common/http/exception/api.exception';
+import { MessageCode } from 'src/common/http/types/message-codes';
 import { UserRoleType, UserStatus } from '@repo/database';
-import type { RequestClientInfo } from 'src/platform/http/types/client-info.types';
+import type { RequestClientInfo } from 'src/common/http/types/client-info.types';
 import { Referral } from 'src/modules/affiliate/referral/domain/model/referral.entity';
-import { PrismaModule } from 'src/platform/prisma/prisma.module';
-import { EnvModule } from 'src/platform/env/env.module';
+import { PrismaModule } from 'src/common/prisma/prisma.module';
+import { EnvModule } from 'src/common/env/env.module';
 
 describe('RegisterCredentialService', () => {
   let module: TestingModule;

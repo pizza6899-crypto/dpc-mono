@@ -5,9 +5,9 @@ import { RegistrationController } from './registration.controller';
 import { RegisterCredentialService } from '../../application/register-credential.service';
 import { RegisterRequestDto } from './dto/request/register.request.dto';
 import { RegisterResponseDto } from './dto/response/register.response.dto';
-import type { RequestClientInfo } from 'src/platform/http/types/client-info.types';
-import { ApiException } from 'src/platform/http/exception/api.exception';
-import { MessageCode } from 'src/platform/http/types/message-codes';
+import type { RequestClientInfo } from 'src/common/http/types/client-info.types';
+import { ApiException } from 'src/common/http/exception/api.exception';
+import { MessageCode } from 'src/common/http/types/message-codes';
 
 describe('RegistrationController', () => {
   let module: TestingModule;
