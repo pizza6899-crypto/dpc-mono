@@ -106,23 +106,26 @@ export class AuthenticateCredentialService {
 
       // Audit 로그 기록 (로그인 실패)
       try {
-        await this.dispatchLogService.dispatch({
-          type: LogType.AUTH,
-          data: {
-            userId: foundUser?.id?.toString(),
-            action: isAdmin ? 'ADMIN_LOGIN' : 'USER_LOGIN',
-            status: 'FAILURE',
-            ip: clientInfo.ip,
-            userAgent: clientInfo.userAgent,
-            metadata: {
-              isAdmin,
-              email,
-              failureReason: foundUser
-                ? 'INVALID_CREDENTIALS'
-                : 'USER_NOT_FOUND',
+        await this.dispatchLogService.dispatch(
+          {
+            type: LogType.AUTH,
+            data: {
+              userId: foundUser?.id?.toString(),
+              action: isAdmin ? 'ADMIN_LOGIN' : 'USER_LOGIN',
+              status: 'FAILURE',
+              ip: clientInfo.ip,
+              userAgent: clientInfo.userAgent,
+              metadata: {
+                isAdmin,
+                email,
+                failureReason: foundUser
+                  ? 'INVALID_CREDENTIALS'
+                  : 'USER_NOT_FOUND',
+              },
             },
           },
-        });
+          clientInfo,
+        );
       } catch (error) {
         // Audit 로그 실패는 로그인 실패 처리에 영향을 주지 않도록 처리
         this.logger.error(

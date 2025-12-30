@@ -71,19 +71,22 @@ export class RequestPasswordResetService {
 
     // 6. Audit 로그 기록 (보안 로그)
     try {
-      await this.dispatchLogService.dispatch({
-        type: LogType.AUTH,
-        data: {
-          userId: user.id.toString(),
-          action: 'PASSWORD_RESET_REQUEST',
-          status: 'SUCCESS',
-          ip: requestInfo.ip,
-          userAgent: requestInfo.userAgent,
-          metadata: {
-            email: user.email,
+      await this.dispatchLogService.dispatch(
+        {
+          type: LogType.AUTH,
+          data: {
+            userId: user.id.toString(),
+            action: 'PASSWORD_RESET_REQUEST',
+            status: 'SUCCESS',
+            ip: requestInfo.ip,
+            userAgent: requestInfo.userAgent,
+            metadata: {
+              email: user.email,
+            },
           },
         },
-      });
+        requestInfo,
+      );
     } catch (error) {
       // Audit 로그 실패는 비밀번호 재설정 요청 성공에 영향을 주지 않도록 처리
       this.logger.error(

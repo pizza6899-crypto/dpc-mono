@@ -46,6 +46,31 @@ export class ResetPasswordService {
     // 1. 토큰 조회 및 검증
     const tokenData = await this.tokenRepository.findByToken(token);
     if (!tokenData) {
+      // Audit 로그 기록 (비밀번호 재설정 실패 - 토큰 없음)
+      try {
+        await this.dispatchLogService.dispatch(
+          {
+            type: LogType.AUTH,
+            data: {
+              action: 'PASSWORD_RESET',
+              status: 'FAILURE',
+              ip: requestInfo.ip,
+              userAgent: requestInfo.userAgent,
+              metadata: {
+                failureReason: 'INVALID_TOKEN',
+                token: token.substring(0, 8) + '...', // 보안을 위해 일부만 기록
+              },
+            },
+          },
+          requestInfo,
+        );
+      } catch (error) {
+        this.logger.error(
+          error,
+          `Audit log 기록 실패 (비밀번호 재설정 실패 - 토큰 없음)`,
+        );
+      }
+
       throw new ApiException(
         MessageCode.AUTH_INVALID_CREDENTIALS,
         HttpStatus.BAD_REQUEST,
@@ -55,6 +80,32 @@ export class ResetPasswordService {
     // 2. 사용자 조회
     const user = await this.userRepository.findById(tokenData.userId);
     if (!user) {
+      // Audit 로그 기록 (비밀번호 재설정 실패 - 사용자 없음)
+      try {
+        await this.dispatchLogService.dispatch(
+          {
+            type: LogType.AUTH,
+            data: {
+              userId: tokenData.userId.toString(),
+              action: 'PASSWORD_RESET',
+              status: 'FAILURE',
+              ip: requestInfo.ip,
+              userAgent: requestInfo.userAgent,
+              metadata: {
+                failureReason: 'USER_NOT_FOUND',
+                tokenId: tokenData.id,
+              },
+            },
+          },
+          requestInfo,
+        );
+      } catch (error) {
+        this.logger.error(
+          error,
+          `Audit log 기록 실패 (비밀번호 재설정 실패 - 사용자 없음) - userId: ${tokenData.userId}`,
+        );
+      }
+
       throw new ApiException(
         MessageCode.USER_NOT_FOUND,
         HttpStatus.NOT_FOUND,
@@ -63,6 +114,33 @@ export class ResetPasswordService {
 
     // 3. 일반 회원가입 사용자인지 확인
     if (!user.isCredentialUser()) {
+      // Audit 로그 기록 (비밀번호 재설정 실패 - 소셜 로그인 사용자)
+      try {
+        await this.dispatchLogService.dispatch(
+          {
+            type: LogType.AUTH,
+            data: {
+              userId: user.id.toString(),
+              action: 'PASSWORD_RESET',
+              status: 'FAILURE',
+              ip: requestInfo.ip,
+              userAgent: requestInfo.userAgent,
+              metadata: {
+                failureReason: 'NOT_CREDENTIAL_USER',
+                email: user.email,
+                tokenId: tokenData.id,
+              },
+            },
+          },
+          requestInfo,
+        );
+      } catch (error) {
+        this.logger.error(
+          error,
+          `Audit log 기록 실패 (비밀번호 재설정 실패 - 소셜 로그인 사용자) - userId: ${user.id}`,
+        );
+      }
+
       throw new ApiException(
         MessageCode.AUTH_INVALID_CREDENTIALS,
         HttpStatus.BAD_REQUEST,
@@ -101,20 +179,23 @@ export class ResetPasswordService {
 
     // 8. Audit 로그 기록 (보안 로그)
     try {
-      await this.dispatchLogService.dispatch({
-        type: LogType.AUTH,
-        data: {
-          userId: tokenData.userId.toString(),
-          action: 'PASSWORD_RESET',
-          status: 'SUCCESS',
-          ip: requestInfo.ip,
-          userAgent: requestInfo.userAgent,
-          metadata: {
-            email: user.email,
-            tokenId: tokenData.id,
+      await this.dispatchLogService.dispatch(
+        {
+          type: LogType.AUTH,
+          data: {
+            userId: tokenData.userId.toString(),
+            action: 'PASSWORD_RESET',
+            status: 'SUCCESS',
+            ip: requestInfo.ip,
+            userAgent: requestInfo.userAgent,
+            metadata: {
+              email: user.email,
+              tokenId: tokenData.id,
+            },
           },
         },
-      });
+        requestInfo,
+      );
     } catch (error) {
       // Audit 로그 실패는 비밀번호 재설정 성공에 영향을 주지 않도록 처리
       this.logger.error(

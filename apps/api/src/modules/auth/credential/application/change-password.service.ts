@@ -76,6 +76,34 @@ export class ChangePasswordService {
     });
 
     if (!isValidPassword) {
+      // Audit 로그 기록 (비밀번호 변경 실패 - 현재 비밀번호 불일치)
+      try {
+        await this.dispatchLogService.dispatch(
+          {
+            type: LogType.AUTH,
+            data: {
+              userId: userId.toString(),
+              action: 'PASSWORD_CHANGE',
+              status: 'FAILURE',
+              ip: requestInfo.ip,
+              userAgent: requestInfo.userAgent,
+              metadata: {
+                isAdmin,
+                email: user.email,
+                failureReason: 'INVALID_CURRENT_PASSWORD',
+              },
+            },
+          },
+          requestInfo,
+        );
+      } catch (error) {
+        // Audit 로그 실패는 비밀번호 변경 실패 처리에 영향을 주지 않도록 처리
+        this.logger.error(
+          error,
+          `Audit log 기록 실패 (비밀번호 변경 실패) - userId: ${userId}`,
+        );
+      }
+
       throw new ApiException(
         MessageCode.AUTH_INVALID_CREDENTIALS,
         HttpStatus.UNAUTHORIZED,
@@ -111,20 +139,23 @@ export class ChangePasswordService {
 
     // 7. Audit 로그 기록 (보안 로그)
     try {
-      await this.dispatchLogService.dispatch({
-        type: LogType.AUTH,
-        data: {
-          userId: userId.toString(),
-          action: 'PASSWORD_CHANGE',
-          status: 'SUCCESS',
-          ip: requestInfo.ip,
-          userAgent: requestInfo.userAgent,
-          metadata: {
-            isAdmin,
-            email: user.email,
+      await this.dispatchLogService.dispatch(
+        {
+          type: LogType.AUTH,
+          data: {
+            userId: userId.toString(),
+            action: 'PASSWORD_CHANGE',
+            status: 'SUCCESS',
+            ip: requestInfo.ip,
+            userAgent: requestInfo.userAgent,
+            metadata: {
+              isAdmin,
+              email: user.email,
+            },
           },
         },
-      });
+        requestInfo,
+      );
     } catch (error) {
       // Audit 로그 실패는 비밀번호 변경 성공에 영향을 주지 않도록 처리
       this.logger.error(

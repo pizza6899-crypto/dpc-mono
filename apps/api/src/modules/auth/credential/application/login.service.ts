@@ -76,20 +76,23 @@ export class LoginService {
 
     // 3. Audit 로그 기록 (보안 로그)
     try {
-      await this.dispatchLogService.dispatch({
-        type: LogType.AUTH,
-        data: {
-          userId: user.id.toString(),
-          action: isAdmin ? 'ADMIN_LOGIN' : 'USER_LOGIN',
-          status: 'SUCCESS',
-          ip: clientInfo.ip,
-          userAgent: clientInfo.userAgent,
-          metadata: {
-            isAdmin,
-            email: user.email,
+      await this.dispatchLogService.dispatch(
+        {
+          type: LogType.AUTH,
+          data: {
+            userId: user.id.toString(),
+            action: isAdmin ? 'ADMIN_LOGIN' : 'USER_LOGIN',
+            status: 'SUCCESS',
+            ip: clientInfo.ip,
+            userAgent: clientInfo.userAgent,
+            metadata: {
+              isAdmin,
+              email: user.email,
+            },
           },
         },
-      });
+        clientInfo,
+      );
     } catch (error) {
       // Audit 로그 실패는 로그인 성공에 영향을 주지 않도록 처리
       this.logger.error(
