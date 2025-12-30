@@ -1,7 +1,6 @@
 // src/platform/auth/strategies/session.serializer.ts
 import { Injectable, Inject } from '@nestjs/common';
 import { PassportSerializer } from '@nestjs/passport';
-import { PrismaService } from 'src/infrastructure/prisma/prisma.service';
 import { UserStatus, UserRoleType } from '@repo/database';
 import { AuthenticatedUser } from '../types/auth.types';
 import { USER_SESSION_REPOSITORY } from 'src/modules/auth/session/ports/out';
@@ -18,7 +17,6 @@ interface UserForSerialization {
 @Injectable()
 export class SessionSerializer extends PassportSerializer {
   constructor(
-    private prisma: PrismaService,
     @Inject(USER_SESSION_REPOSITORY)
     private readonly sessionRepository: UserSessionRepositoryPort,
   ) {
@@ -29,7 +27,6 @@ export class SessionSerializer extends PassportSerializer {
     user: AuthenticatedUser,
     done: (err: Error | null, payload?: UserForSerialization) => void,
   ) {
-    try {
       // 세션에 필요한 모든 정보 저장 (DB 쿼리 제거)
       // status는 로그인 시점의 값이지만, 세션 만료 시 재검증됨
       const serializedUser: UserForSerialization = {
@@ -40,9 +37,6 @@ export class SessionSerializer extends PassportSerializer {
         status: UserStatus.ACTIVE, // 로그인 시점에는 항상 ACTIVE
       };
       done(null, serializedUser);
-    } catch (error) {
-      done(error instanceof Error ? error : new Error('Serialization failed'));
-    }
   }
 
   async deserializeUser(
@@ -50,7 +44,6 @@ export class SessionSerializer extends PassportSerializer {
     done: (err: Error | null, user?: AuthenticatedUser | false) => void,
     req?: any, // express Request 객체 (passport에서 제공)
   ) {
-    try {
       // 1. 세션 ID로 세션 유효성 검증 (DB 세션 상태 확인)
       if (req?.sessionID) {
         try {
@@ -88,8 +81,5 @@ export class SessionSerializer extends PassportSerializer {
       };
 
       done(null, authUser);
-    } catch (error) {
-      done(error instanceof Error ? error : new Error('Unknown error'), false);
-    }
   }
 }

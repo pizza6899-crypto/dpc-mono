@@ -15,7 +15,6 @@ import { CredentialUserMapper } from './infrastructure/credential-user.mapper';
 import { CredentialPolicy } from './domain/policy';
 import { VipModule } from '../../vip/vip.module';
 import { AffiliateReferralModule } from '../../affiliate/referral/referral.module';
-import { PassportModule } from '@nestjs/passport';
 import { UserModule } from '../../user/user.module';
 import { ChangePasswordService } from './application/change-password.service';
 import { ResetUserPasswordAdminService } from './application/reset-user-password-admin.service';
@@ -30,6 +29,7 @@ import { PasswordResetTokenRepository } from './infrastructure/password-reset-to
 import { AuditLogModule } from 'src/modules/audit-log/audit-log.module';
 import { SessionModule } from '../session/session.module';
 import { EnvModule } from 'src/common/env/env.module';
+import { PassportModule } from '@nestjs/passport';
 import { SessionSerializer } from 'src/common/auth/strategies/session.serializer';
 
 @Module({
@@ -75,9 +75,9 @@ import { SessionSerializer } from 'src/common/auth/strategies/session.serializer
       provide: PASSWORD_RESET_TOKEN_REPOSITORY,
       useClass: PasswordResetTokenRepository,
     },
-
+    
     SessionSerializer,
   ],
-  exports: [LoginService, LogoutService, VerifyCredentialService],
+  exports: [PassportModule, LoginService, LogoutService, VerifyCredentialService],
 })
 export class CredentialModule {}
