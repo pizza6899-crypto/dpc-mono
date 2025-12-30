@@ -1,6 +1,7 @@
 import type { Request } from 'express';
 import type { RequestClientInfo } from '../types/client-info.types';
 import { nowUtc } from 'src/utils/date.util';
+import { createHash } from 'crypto';
 
 /**
  * Request 객체로부터 RequestClientInfo 추출
@@ -121,27 +122,37 @@ function parseUserAgent(userAgent: string) {
 
 /**
  * 브라우저 핑거프린트 생성
+ * 
+ * 1. x-device-id 헤더가 있으면 그것을 핑거프린트로 사용
+ * 2. 없으면 IP를 제외하고 기기 고유성이 높은 헤더들로 핑거프린트 생성
  */
 function generateFingerprint(request: Request): string {
-  const components = [
-    request.headers['cf-connecting-ip'] || request.ip,
-    request.headers['user-agent'],
-    request.headers['accept-language'],
-    request.headers['accept-encoding'],
-    request.headers['accept'],
-    request.headers['dnt'], // Do Not Track
-    request.headers['sec-ch-ua'], // Client Hints
-    request.headers['sec-ch-ua-platform'],
-  ].filter(Boolean);
+  const h = request.headers;
 
-  if (components.length === 0) return 'unknown';
-
-  // 더 안전한 해시 생성
-  const combined = components.join('|');
-  let hash = 5381;
-  for (let i = 0; i < combined.length; i++) {
-    hash = (hash << 5) + hash + combined.charCodeAt(i);
+  // x-device-id 헤더가 있으면 그것을 사용
+  const deviceId = h['x-device-id'];
+  if (deviceId && typeof deviceId === 'string' && deviceId.trim().length > 0) {
+    return deviceId.trim();
   }
 
-  return Math.abs(hash).toString(36);
+  // IP를 제외하고 기기 고유성이 높은 헤더들만 추출
+  const coreComponents = {
+    ua: h['user-agent'],
+    lang: h['accept-language'],
+    // Client Hints: 최신 크롬/엣지 등에서 상세 기기 정보를 제공함
+    model: h['sec-ch-ua-model'],
+    platform: h['sec-ch-ua-platform'],
+    arch: h['sec-ch-ua-arch'],
+    bitness: h['sec-ch-ua-bitness'],
+  };
+
+  const seed = Object.values(coreComponents).filter(Boolean).join('|');
+
+  // 값이 없으면 unknown 반환
+  if (!seed || seed.length === 0) {
+    return 'unknown';
+  }
+
+  // SHA-256을 사용하여 충돌 방지 및 고유성 강화
+  return createHash('sha256').update(seed).digest('hex').slice(0, 20);
 }
