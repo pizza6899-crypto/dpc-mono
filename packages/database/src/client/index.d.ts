@@ -34,6 +34,11 @@ export type SystemErrorLog = $Result.DefaultSelection<Prisma.$SystemErrorLogPayl
  */
 export type IntegrationLog = $Result.DefaultSelection<Prisma.$IntegrationLogPayload>
 /**
+ * Model UnifiedLog
+ * @view
+ */
+export type UnifiedLog = $Result.DefaultSelection<Prisma.$UnifiedLogPayload>
+/**
  * Model User
  * 
  */
@@ -871,6 +876,16 @@ export class PrismaClient<
   get integrationLog(): Prisma.IntegrationLogDelegate<ExtArgs, ClientOptions>;
 
   /**
+   * `prisma.unifiedLog`: Exposes CRUD operations for the **UnifiedLog** model.
+    * Example usage:
+    * ```ts
+    * // Fetch zero or more UnifiedLogs
+    * const unifiedLogs = await prisma.unifiedLog.findMany()
+    * ```
+    */
+  get unifiedLog(): Prisma.UnifiedLogDelegate<ExtArgs, ClientOptions>;
+
+  /**
    * `prisma.user`: Exposes CRUD operations for the **User** model.
     * Example usage:
     * ```ts
@@ -1677,6 +1692,7 @@ export namespace Prisma {
     ActivityLog: 'ActivityLog',
     SystemErrorLog: 'SystemErrorLog',
     IntegrationLog: 'IntegrationLog',
+    UnifiedLog: 'UnifiedLog',
     User: 'User',
     UserBalance: 'UserBalance',
     UserBalanceStats: 'UserBalanceStats',
@@ -1729,7 +1745,7 @@ export namespace Prisma {
       omit: GlobalOmitOptions
     }
     meta: {
-      modelProps: "authAuditLog" | "activityLog" | "systemErrorLog" | "integrationLog" | "user" | "userBalance" | "userBalanceStats" | "game" | "gameTranslation" | "whitecliffApiLog" | "dcsApiLog" | "transaction" | "gameRound" | "gameBet" | "gameWin" | "transactionBalanceDetail" | "bonusDetail" | "depositDetail" | "withdrawDetail" | "compTransaction" | "dailyCompEarning" | "promotion" | "promotionTranslation" | "userPromotion" | "nowPaymentCallbackLog" | "exchangeRate" | "vipLevel" | "vipMembership" | "vipHistory" | "rolling" | "userToken" | "emailLog" | "gameSession" | "bankAccount" | "affiliateCode" | "referral" | "affiliateWallet" | "affiliateCommission" | "affiliateTier" | "loginAttempt" | "userSession"
+      modelProps: "authAuditLog" | "activityLog" | "systemErrorLog" | "integrationLog" | "unifiedLog" | "user" | "userBalance" | "userBalanceStats" | "game" | "gameTranslation" | "whitecliffApiLog" | "dcsApiLog" | "transaction" | "gameRound" | "gameBet" | "gameWin" | "transactionBalanceDetail" | "bonusDetail" | "depositDetail" | "withdrawDetail" | "compTransaction" | "dailyCompEarning" | "promotion" | "promotionTranslation" | "userPromotion" | "nowPaymentCallbackLog" | "exchangeRate" | "vipLevel" | "vipMembership" | "vipHistory" | "rolling" | "userToken" | "emailLog" | "gameSession" | "bankAccount" | "affiliateCode" | "referral" | "affiliateWallet" | "affiliateCommission" | "affiliateTier" | "loginAttempt" | "userSession"
       txIsolationLevel: Prisma.TransactionIsolationLevel
     }
     model: {
@@ -2026,6 +2042,80 @@ export namespace Prisma {
           count: {
             args: Prisma.IntegrationLogCountArgs<ExtArgs>
             result: $Utils.Optional<IntegrationLogCountAggregateOutputType> | number
+          }
+        }
+      }
+      UnifiedLog: {
+        payload: Prisma.$UnifiedLogPayload<ExtArgs>
+        fields: Prisma.UnifiedLogFieldRefs
+        operations: {
+          findUnique: {
+            args: Prisma.UnifiedLogFindUniqueArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$UnifiedLogPayload> | null
+          }
+          findUniqueOrThrow: {
+            args: Prisma.UnifiedLogFindUniqueOrThrowArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$UnifiedLogPayload>
+          }
+          findFirst: {
+            args: Prisma.UnifiedLogFindFirstArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$UnifiedLogPayload> | null
+          }
+          findFirstOrThrow: {
+            args: Prisma.UnifiedLogFindFirstOrThrowArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$UnifiedLogPayload>
+          }
+          findMany: {
+            args: Prisma.UnifiedLogFindManyArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$UnifiedLogPayload>[]
+          }
+          create: {
+            args: Prisma.UnifiedLogCreateArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$UnifiedLogPayload>
+          }
+          createMany: {
+            args: Prisma.UnifiedLogCreateManyArgs<ExtArgs>
+            result: BatchPayload
+          }
+          createManyAndReturn: {
+            args: Prisma.UnifiedLogCreateManyAndReturnArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$UnifiedLogPayload>[]
+          }
+          delete: {
+            args: Prisma.UnifiedLogDeleteArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$UnifiedLogPayload>
+          }
+          update: {
+            args: Prisma.UnifiedLogUpdateArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$UnifiedLogPayload>
+          }
+          deleteMany: {
+            args: Prisma.UnifiedLogDeleteManyArgs<ExtArgs>
+            result: BatchPayload
+          }
+          updateMany: {
+            args: Prisma.UnifiedLogUpdateManyArgs<ExtArgs>
+            result: BatchPayload
+          }
+          updateManyAndReturn: {
+            args: Prisma.UnifiedLogUpdateManyAndReturnArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$UnifiedLogPayload>[]
+          }
+          upsert: {
+            args: Prisma.UnifiedLogUpsertArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$UnifiedLogPayload>
+          }
+          aggregate: {
+            args: Prisma.UnifiedLogAggregateArgs<ExtArgs>
+            result: $Utils.Optional<AggregateUnifiedLog>
+          }
+          groupBy: {
+            args: Prisma.UnifiedLogGroupByArgs<ExtArgs>
+            result: $Utils.Optional<UnifiedLogGroupByOutputType>[]
+          }
+          count: {
+            args: Prisma.UnifiedLogCountArgs<ExtArgs>
+            result: $Utils.Optional<UnifiedLogCountAggregateOutputType> | number
           }
         }
       }
@@ -4879,6 +4969,7 @@ export namespace Prisma {
     activityLog?: ActivityLogOmit
     systemErrorLog?: SystemErrorLogOmit
     integrationLog?: IntegrationLogOmit
+    unifiedLog?: UnifiedLogOmit
     user?: UserOmit
     userBalance?: UserBalanceOmit
     userBalanceStats?: UserBalanceStatsOmit
@@ -10352,6 +10443,1161 @@ export namespace Prisma {
      * Omit specific fields from the IntegrationLog
      */
     omit?: IntegrationLogOmit<ExtArgs> | null
+  }
+
+
+  /**
+   * Model UnifiedLog
+   */
+
+  export type AggregateUnifiedLog = {
+    _count: UnifiedLogCountAggregateOutputType | null
+    _avg: UnifiedLogAvgAggregateOutputType | null
+    _sum: UnifiedLogSumAggregateOutputType | null
+    _min: UnifiedLogMinAggregateOutputType | null
+    _max: UnifiedLogMaxAggregateOutputType | null
+  }
+
+  export type UnifiedLogAvgAggregateOutputType = {
+    userId: number | null
+  }
+
+  export type UnifiedLogSumAggregateOutputType = {
+    userId: bigint | null
+  }
+
+  export type UnifiedLogMinAggregateOutputType = {
+    id: string | null
+    createdAt: Date | null
+    userId: bigint | null
+    sessionId: string | null
+    cfRay: string | null
+    country: string | null
+    city: string | null
+    bot: boolean | null
+    threat: string | null
+    isMobile: boolean | null
+    ip: string | null
+    logType: string | null
+    category: string | null
+    detail: string | null
+  }
+
+  export type UnifiedLogMaxAggregateOutputType = {
+    id: string | null
+    createdAt: Date | null
+    userId: bigint | null
+    sessionId: string | null
+    cfRay: string | null
+    country: string | null
+    city: string | null
+    bot: boolean | null
+    threat: string | null
+    isMobile: boolean | null
+    ip: string | null
+    logType: string | null
+    category: string | null
+    detail: string | null
+  }
+
+  export type UnifiedLogCountAggregateOutputType = {
+    id: number
+    createdAt: number
+    userId: number
+    sessionId: number
+    cfRay: number
+    country: number
+    city: number
+    bot: number
+    threat: number
+    isMobile: number
+    ip: number
+    logType: number
+    category: number
+    detail: number
+    metadata: number
+    _all: number
+  }
+
+
+  export type UnifiedLogAvgAggregateInputType = {
+    userId?: true
+  }
+
+  export type UnifiedLogSumAggregateInputType = {
+    userId?: true
+  }
+
+  export type UnifiedLogMinAggregateInputType = {
+    id?: true
+    createdAt?: true
+    userId?: true
+    sessionId?: true
+    cfRay?: true
+    country?: true
+    city?: true
+    bot?: true
+    threat?: true
+    isMobile?: true
+    ip?: true
+    logType?: true
+    category?: true
+    detail?: true
+  }
+
+  export type UnifiedLogMaxAggregateInputType = {
+    id?: true
+    createdAt?: true
+    userId?: true
+    sessionId?: true
+    cfRay?: true
+    country?: true
+    city?: true
+    bot?: true
+    threat?: true
+    isMobile?: true
+    ip?: true
+    logType?: true
+    category?: true
+    detail?: true
+  }
+
+  export type UnifiedLogCountAggregateInputType = {
+    id?: true
+    createdAt?: true
+    userId?: true
+    sessionId?: true
+    cfRay?: true
+    country?: true
+    city?: true
+    bot?: true
+    threat?: true
+    isMobile?: true
+    ip?: true
+    logType?: true
+    category?: true
+    detail?: true
+    metadata?: true
+    _all?: true
+  }
+
+  export type UnifiedLogAggregateArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Filter which UnifiedLog to aggregate.
+     */
+    where?: UnifiedLogWhereInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/sorting Sorting Docs}
+     * 
+     * Determine the order of UnifiedLogs to fetch.
+     */
+    orderBy?: UnifiedLogOrderByWithRelationInput | UnifiedLogOrderByWithRelationInput[]
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination#cursor-based-pagination Cursor Docs}
+     * 
+     * Sets the start position
+     */
+    cursor?: UnifiedLogWhereUniqueInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Take `±n` UnifiedLogs from the position of the cursor.
+     */
+    take?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Skip the first `n` UnifiedLogs.
+     */
+    skip?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
+     * 
+     * Count returned UnifiedLogs
+    **/
+    _count?: true | UnifiedLogCountAggregateInputType
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
+     * 
+     * Select which fields to average
+    **/
+    _avg?: UnifiedLogAvgAggregateInputType
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
+     * 
+     * Select which fields to sum
+    **/
+    _sum?: UnifiedLogSumAggregateInputType
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
+     * 
+     * Select which fields to find the minimum value
+    **/
+    _min?: UnifiedLogMinAggregateInputType
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
+     * 
+     * Select which fields to find the maximum value
+    **/
+    _max?: UnifiedLogMaxAggregateInputType
+  }
+
+  export type GetUnifiedLogAggregateType<T extends UnifiedLogAggregateArgs> = {
+        [P in keyof T & keyof AggregateUnifiedLog]: P extends '_count' | 'count'
+      ? T[P] extends true
+        ? number
+        : GetScalarType<T[P], AggregateUnifiedLog[P]>
+      : GetScalarType<T[P], AggregateUnifiedLog[P]>
+  }
+
+
+
+
+  export type UnifiedLogGroupByArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    where?: UnifiedLogWhereInput
+    orderBy?: UnifiedLogOrderByWithAggregationInput | UnifiedLogOrderByWithAggregationInput[]
+    by: UnifiedLogScalarFieldEnum[] | UnifiedLogScalarFieldEnum
+    having?: UnifiedLogScalarWhereWithAggregatesInput
+    take?: number
+    skip?: number
+    _count?: UnifiedLogCountAggregateInputType | true
+    _avg?: UnifiedLogAvgAggregateInputType
+    _sum?: UnifiedLogSumAggregateInputType
+    _min?: UnifiedLogMinAggregateInputType
+    _max?: UnifiedLogMaxAggregateInputType
+  }
+
+  export type UnifiedLogGroupByOutputType = {
+    id: string
+    createdAt: Date
+    userId: bigint | null
+    sessionId: string | null
+    cfRay: string | null
+    country: string | null
+    city: string | null
+    bot: boolean | null
+    threat: string | null
+    isMobile: boolean | null
+    ip: string | null
+    logType: string
+    category: string
+    detail: string
+    metadata: JsonValue | null
+    _count: UnifiedLogCountAggregateOutputType | null
+    _avg: UnifiedLogAvgAggregateOutputType | null
+    _sum: UnifiedLogSumAggregateOutputType | null
+    _min: UnifiedLogMinAggregateOutputType | null
+    _max: UnifiedLogMaxAggregateOutputType | null
+  }
+
+  type GetUnifiedLogGroupByPayload<T extends UnifiedLogGroupByArgs> = Prisma.PrismaPromise<
+    Array<
+      PickEnumerable<UnifiedLogGroupByOutputType, T['by']> &
+        {
+          [P in ((keyof T) & (keyof UnifiedLogGroupByOutputType))]: P extends '_count'
+            ? T[P] extends boolean
+              ? number
+              : GetScalarType<T[P], UnifiedLogGroupByOutputType[P]>
+            : GetScalarType<T[P], UnifiedLogGroupByOutputType[P]>
+        }
+      >
+    >
+
+
+  export type UnifiedLogSelect<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetSelect<{
+    id?: boolean
+    createdAt?: boolean
+    userId?: boolean
+    sessionId?: boolean
+    cfRay?: boolean
+    country?: boolean
+    city?: boolean
+    bot?: boolean
+    threat?: boolean
+    isMobile?: boolean
+    ip?: boolean
+    logType?: boolean
+    category?: boolean
+    detail?: boolean
+    metadata?: boolean
+  }, ExtArgs["result"]["unifiedLog"]>
+
+  export type UnifiedLogSelectCreateManyAndReturn<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetSelect<{
+    id?: boolean
+    createdAt?: boolean
+    userId?: boolean
+    sessionId?: boolean
+    cfRay?: boolean
+    country?: boolean
+    city?: boolean
+    bot?: boolean
+    threat?: boolean
+    isMobile?: boolean
+    ip?: boolean
+    logType?: boolean
+    category?: boolean
+    detail?: boolean
+    metadata?: boolean
+  }, ExtArgs["result"]["unifiedLog"]>
+
+  export type UnifiedLogSelectUpdateManyAndReturn<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetSelect<{
+    id?: boolean
+    createdAt?: boolean
+    userId?: boolean
+    sessionId?: boolean
+    cfRay?: boolean
+    country?: boolean
+    city?: boolean
+    bot?: boolean
+    threat?: boolean
+    isMobile?: boolean
+    ip?: boolean
+    logType?: boolean
+    category?: boolean
+    detail?: boolean
+    metadata?: boolean
+  }, ExtArgs["result"]["unifiedLog"]>
+
+  export type UnifiedLogSelectScalar = {
+    id?: boolean
+    createdAt?: boolean
+    userId?: boolean
+    sessionId?: boolean
+    cfRay?: boolean
+    country?: boolean
+    city?: boolean
+    bot?: boolean
+    threat?: boolean
+    isMobile?: boolean
+    ip?: boolean
+    logType?: boolean
+    category?: boolean
+    detail?: boolean
+    metadata?: boolean
+  }
+
+  export type UnifiedLogOmit<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetOmit<"id" | "createdAt" | "userId" | "sessionId" | "cfRay" | "country" | "city" | "bot" | "threat" | "isMobile" | "ip" | "logType" | "category" | "detail" | "metadata", ExtArgs["result"]["unifiedLog"]>
+
+  export type $UnifiedLogPayload<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    name: "UnifiedLog"
+    objects: {}
+    scalars: $Extensions.GetPayloadResult<{
+      id: string
+      createdAt: Date
+      userId: bigint | null
+      sessionId: string | null
+      cfRay: string | null
+      country: string | null
+      city: string | null
+      bot: boolean | null
+      threat: string | null
+      isMobile: boolean | null
+      ip: string | null
+      logType: string
+      category: string
+      detail: string
+      metadata: Prisma.JsonValue | null
+    }, ExtArgs["result"]["unifiedLog"]>
+    composites: {}
+  }
+
+  type UnifiedLogGetPayload<S extends boolean | null | undefined | UnifiedLogDefaultArgs> = $Result.GetResult<Prisma.$UnifiedLogPayload, S>
+
+  type UnifiedLogCountArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> =
+    Omit<UnifiedLogFindManyArgs, 'select' | 'include' | 'distinct' | 'omit'> & {
+      select?: UnifiedLogCountAggregateInputType | true
+    }
+
+  export interface UnifiedLogDelegate<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs, GlobalOmitOptions = {}> {
+    [K: symbol]: { types: Prisma.TypeMap<ExtArgs>['model']['UnifiedLog'], meta: { name: 'UnifiedLog' } }
+    /**
+     * Find zero or one UnifiedLog that matches the filter.
+     * @param {UnifiedLogFindUniqueArgs} args - Arguments to find a UnifiedLog
+     * @example
+     * // Get one UnifiedLog
+     * const unifiedLog = await prisma.unifiedLog.findUnique({
+     *   where: {
+     *     // ... provide filter here
+     *   }
+     * })
+     */
+    findUnique<T extends UnifiedLogFindUniqueArgs>(args: SelectSubset<T, UnifiedLogFindUniqueArgs<ExtArgs>>): Prisma__UnifiedLogClient<$Result.GetResult<Prisma.$UnifiedLogPayload<ExtArgs>, T, "findUnique", GlobalOmitOptions> | null, null, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Find one UnifiedLog that matches the filter or throw an error with `error.code='P2025'`
+     * if no matches were found.
+     * @param {UnifiedLogFindUniqueOrThrowArgs} args - Arguments to find a UnifiedLog
+     * @example
+     * // Get one UnifiedLog
+     * const unifiedLog = await prisma.unifiedLog.findUniqueOrThrow({
+     *   where: {
+     *     // ... provide filter here
+     *   }
+     * })
+     */
+    findUniqueOrThrow<T extends UnifiedLogFindUniqueOrThrowArgs>(args: SelectSubset<T, UnifiedLogFindUniqueOrThrowArgs<ExtArgs>>): Prisma__UnifiedLogClient<$Result.GetResult<Prisma.$UnifiedLogPayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Find the first UnifiedLog that matches the filter.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {UnifiedLogFindFirstArgs} args - Arguments to find a UnifiedLog
+     * @example
+     * // Get one UnifiedLog
+     * const unifiedLog = await prisma.unifiedLog.findFirst({
+     *   where: {
+     *     // ... provide filter here
+     *   }
+     * })
+     */
+    findFirst<T extends UnifiedLogFindFirstArgs>(args?: SelectSubset<T, UnifiedLogFindFirstArgs<ExtArgs>>): Prisma__UnifiedLogClient<$Result.GetResult<Prisma.$UnifiedLogPayload<ExtArgs>, T, "findFirst", GlobalOmitOptions> | null, null, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Find the first UnifiedLog that matches the filter or
+     * throw `PrismaKnownClientError` with `P2025` code if no matches were found.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {UnifiedLogFindFirstOrThrowArgs} args - Arguments to find a UnifiedLog
+     * @example
+     * // Get one UnifiedLog
+     * const unifiedLog = await prisma.unifiedLog.findFirstOrThrow({
+     *   where: {
+     *     // ... provide filter here
+     *   }
+     * })
+     */
+    findFirstOrThrow<T extends UnifiedLogFindFirstOrThrowArgs>(args?: SelectSubset<T, UnifiedLogFindFirstOrThrowArgs<ExtArgs>>): Prisma__UnifiedLogClient<$Result.GetResult<Prisma.$UnifiedLogPayload<ExtArgs>, T, "findFirstOrThrow", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Find zero or more UnifiedLogs that matches the filter.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {UnifiedLogFindManyArgs} args - Arguments to filter and select certain fields only.
+     * @example
+     * // Get all UnifiedLogs
+     * const unifiedLogs = await prisma.unifiedLog.findMany()
+     * 
+     * // Get first 10 UnifiedLogs
+     * const unifiedLogs = await prisma.unifiedLog.findMany({ take: 10 })
+     * 
+     * // Only select the `id`
+     * const unifiedLogWithIdOnly = await prisma.unifiedLog.findMany({ select: { id: true } })
+     * 
+     */
+    findMany<T extends UnifiedLogFindManyArgs>(args?: SelectSubset<T, UnifiedLogFindManyArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$UnifiedLogPayload<ExtArgs>, T, "findMany", GlobalOmitOptions>>
+
+    /**
+     * Create a UnifiedLog.
+     * @param {UnifiedLogCreateArgs} args - Arguments to create a UnifiedLog.
+     * @example
+     * // Create one UnifiedLog
+     * const UnifiedLog = await prisma.unifiedLog.create({
+     *   data: {
+     *     // ... data to create a UnifiedLog
+     *   }
+     * })
+     * 
+     */
+    create<T extends UnifiedLogCreateArgs>(args: SelectSubset<T, UnifiedLogCreateArgs<ExtArgs>>): Prisma__UnifiedLogClient<$Result.GetResult<Prisma.$UnifiedLogPayload<ExtArgs>, T, "create", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Create many UnifiedLogs.
+     * @param {UnifiedLogCreateManyArgs} args - Arguments to create many UnifiedLogs.
+     * @example
+     * // Create many UnifiedLogs
+     * const unifiedLog = await prisma.unifiedLog.createMany({
+     *   data: [
+     *     // ... provide data here
+     *   ]
+     * })
+     *     
+     */
+    createMany<T extends UnifiedLogCreateManyArgs>(args?: SelectSubset<T, UnifiedLogCreateManyArgs<ExtArgs>>): Prisma.PrismaPromise<BatchPayload>
+
+    /**
+     * Create many UnifiedLogs and returns the data saved in the database.
+     * @param {UnifiedLogCreateManyAndReturnArgs} args - Arguments to create many UnifiedLogs.
+     * @example
+     * // Create many UnifiedLogs
+     * const unifiedLog = await prisma.unifiedLog.createManyAndReturn({
+     *   data: [
+     *     // ... provide data here
+     *   ]
+     * })
+     * 
+     * // Create many UnifiedLogs and only return the `id`
+     * const unifiedLogWithIdOnly = await prisma.unifiedLog.createManyAndReturn({
+     *   select: { id: true },
+     *   data: [
+     *     // ... provide data here
+     *   ]
+     * })
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * 
+     */
+    createManyAndReturn<T extends UnifiedLogCreateManyAndReturnArgs>(args?: SelectSubset<T, UnifiedLogCreateManyAndReturnArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$UnifiedLogPayload<ExtArgs>, T, "createManyAndReturn", GlobalOmitOptions>>
+
+    /**
+     * Delete a UnifiedLog.
+     * @param {UnifiedLogDeleteArgs} args - Arguments to delete one UnifiedLog.
+     * @example
+     * // Delete one UnifiedLog
+     * const UnifiedLog = await prisma.unifiedLog.delete({
+     *   where: {
+     *     // ... filter to delete one UnifiedLog
+     *   }
+     * })
+     * 
+     */
+    delete<T extends UnifiedLogDeleteArgs>(args: SelectSubset<T, UnifiedLogDeleteArgs<ExtArgs>>): Prisma__UnifiedLogClient<$Result.GetResult<Prisma.$UnifiedLogPayload<ExtArgs>, T, "delete", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Update one UnifiedLog.
+     * @param {UnifiedLogUpdateArgs} args - Arguments to update one UnifiedLog.
+     * @example
+     * // Update one UnifiedLog
+     * const unifiedLog = await prisma.unifiedLog.update({
+     *   where: {
+     *     // ... provide filter here
+     *   },
+     *   data: {
+     *     // ... provide data here
+     *   }
+     * })
+     * 
+     */
+    update<T extends UnifiedLogUpdateArgs>(args: SelectSubset<T, UnifiedLogUpdateArgs<ExtArgs>>): Prisma__UnifiedLogClient<$Result.GetResult<Prisma.$UnifiedLogPayload<ExtArgs>, T, "update", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Delete zero or more UnifiedLogs.
+     * @param {UnifiedLogDeleteManyArgs} args - Arguments to filter UnifiedLogs to delete.
+     * @example
+     * // Delete a few UnifiedLogs
+     * const { count } = await prisma.unifiedLog.deleteMany({
+     *   where: {
+     *     // ... provide filter here
+     *   }
+     * })
+     * 
+     */
+    deleteMany<T extends UnifiedLogDeleteManyArgs>(args?: SelectSubset<T, UnifiedLogDeleteManyArgs<ExtArgs>>): Prisma.PrismaPromise<BatchPayload>
+
+    /**
+     * Update zero or more UnifiedLogs.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {UnifiedLogUpdateManyArgs} args - Arguments to update one or more rows.
+     * @example
+     * // Update many UnifiedLogs
+     * const unifiedLog = await prisma.unifiedLog.updateMany({
+     *   where: {
+     *     // ... provide filter here
+     *   },
+     *   data: {
+     *     // ... provide data here
+     *   }
+     * })
+     * 
+     */
+    updateMany<T extends UnifiedLogUpdateManyArgs>(args: SelectSubset<T, UnifiedLogUpdateManyArgs<ExtArgs>>): Prisma.PrismaPromise<BatchPayload>
+
+    /**
+     * Update zero or more UnifiedLogs and returns the data updated in the database.
+     * @param {UnifiedLogUpdateManyAndReturnArgs} args - Arguments to update many UnifiedLogs.
+     * @example
+     * // Update many UnifiedLogs
+     * const unifiedLog = await prisma.unifiedLog.updateManyAndReturn({
+     *   where: {
+     *     // ... provide filter here
+     *   },
+     *   data: [
+     *     // ... provide data here
+     *   ]
+     * })
+     * 
+     * // Update zero or more UnifiedLogs and only return the `id`
+     * const unifiedLogWithIdOnly = await prisma.unifiedLog.updateManyAndReturn({
+     *   select: { id: true },
+     *   where: {
+     *     // ... provide filter here
+     *   },
+     *   data: [
+     *     // ... provide data here
+     *   ]
+     * })
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * 
+     */
+    updateManyAndReturn<T extends UnifiedLogUpdateManyAndReturnArgs>(args: SelectSubset<T, UnifiedLogUpdateManyAndReturnArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$UnifiedLogPayload<ExtArgs>, T, "updateManyAndReturn", GlobalOmitOptions>>
+
+    /**
+     * Create or update one UnifiedLog.
+     * @param {UnifiedLogUpsertArgs} args - Arguments to update or create a UnifiedLog.
+     * @example
+     * // Update or create a UnifiedLog
+     * const unifiedLog = await prisma.unifiedLog.upsert({
+     *   create: {
+     *     // ... data to create a UnifiedLog
+     *   },
+     *   update: {
+     *     // ... in case it already exists, update
+     *   },
+     *   where: {
+     *     // ... the filter for the UnifiedLog we want to update
+     *   }
+     * })
+     */
+    upsert<T extends UnifiedLogUpsertArgs>(args: SelectSubset<T, UnifiedLogUpsertArgs<ExtArgs>>): Prisma__UnifiedLogClient<$Result.GetResult<Prisma.$UnifiedLogPayload<ExtArgs>, T, "upsert", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
+
+
+    /**
+     * Count the number of UnifiedLogs.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {UnifiedLogCountArgs} args - Arguments to filter UnifiedLogs to count.
+     * @example
+     * // Count the number of UnifiedLogs
+     * const count = await prisma.unifiedLog.count({
+     *   where: {
+     *     // ... the filter for the UnifiedLogs we want to count
+     *   }
+     * })
+    **/
+    count<T extends UnifiedLogCountArgs>(
+      args?: Subset<T, UnifiedLogCountArgs>,
+    ): Prisma.PrismaPromise<
+      T extends $Utils.Record<'select', any>
+        ? T['select'] extends true
+          ? number
+          : GetScalarType<T['select'], UnifiedLogCountAggregateOutputType>
+        : number
+    >
+
+    /**
+     * Allows you to perform aggregations operations on a UnifiedLog.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {UnifiedLogAggregateArgs} args - Select which aggregations you would like to apply and on what fields.
+     * @example
+     * // Ordered by age ascending
+     * // Where email contains prisma.io
+     * // Limited to the 10 users
+     * const aggregations = await prisma.user.aggregate({
+     *   _avg: {
+     *     age: true,
+     *   },
+     *   where: {
+     *     email: {
+     *       contains: "prisma.io",
+     *     },
+     *   },
+     *   orderBy: {
+     *     age: "asc",
+     *   },
+     *   take: 10,
+     * })
+    **/
+    aggregate<T extends UnifiedLogAggregateArgs>(args: Subset<T, UnifiedLogAggregateArgs>): Prisma.PrismaPromise<GetUnifiedLogAggregateType<T>>
+
+    /**
+     * Group by UnifiedLog.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {UnifiedLogGroupByArgs} args - Group by arguments.
+     * @example
+     * // Group by city, order by createdAt, get count
+     * const result = await prisma.user.groupBy({
+     *   by: ['city', 'createdAt'],
+     *   orderBy: {
+     *     createdAt: true
+     *   },
+     *   _count: {
+     *     _all: true
+     *   },
+     * })
+     * 
+    **/
+    groupBy<
+      T extends UnifiedLogGroupByArgs,
+      HasSelectOrTake extends Or<
+        Extends<'skip', Keys<T>>,
+        Extends<'take', Keys<T>>
+      >,
+      OrderByArg extends True extends HasSelectOrTake
+        ? { orderBy: UnifiedLogGroupByArgs['orderBy'] }
+        : { orderBy?: UnifiedLogGroupByArgs['orderBy'] },
+      OrderFields extends ExcludeUnderscoreKeys<Keys<MaybeTupleToUnion<T['orderBy']>>>,
+      ByFields extends MaybeTupleToUnion<T['by']>,
+      ByValid extends Has<ByFields, OrderFields>,
+      HavingFields extends GetHavingFields<T['having']>,
+      HavingValid extends Has<ByFields, HavingFields>,
+      ByEmpty extends T['by'] extends never[] ? True : False,
+      InputErrors extends ByEmpty extends True
+      ? `Error: "by" must not be empty.`
+      : HavingValid extends False
+      ? {
+          [P in HavingFields]: P extends ByFields
+            ? never
+            : P extends string
+            ? `Error: Field "${P}" used in "having" needs to be provided in "by".`
+            : [
+                Error,
+                'Field ',
+                P,
+                ` in "having" needs to be provided in "by"`,
+              ]
+        }[HavingFields]
+      : 'take' extends Keys<T>
+      ? 'orderBy' extends Keys<T>
+        ? ByValid extends True
+          ? {}
+          : {
+              [P in OrderFields]: P extends ByFields
+                ? never
+                : `Error: Field "${P}" in "orderBy" needs to be provided in "by"`
+            }[OrderFields]
+        : 'Error: If you provide "take", you also need to provide "orderBy"'
+      : 'skip' extends Keys<T>
+      ? 'orderBy' extends Keys<T>
+        ? ByValid extends True
+          ? {}
+          : {
+              [P in OrderFields]: P extends ByFields
+                ? never
+                : `Error: Field "${P}" in "orderBy" needs to be provided in "by"`
+            }[OrderFields]
+        : 'Error: If you provide "skip", you also need to provide "orderBy"'
+      : ByValid extends True
+      ? {}
+      : {
+          [P in OrderFields]: P extends ByFields
+            ? never
+            : `Error: Field "${P}" in "orderBy" needs to be provided in "by"`
+        }[OrderFields]
+    >(args: SubsetIntersection<T, UnifiedLogGroupByArgs, OrderByArg> & InputErrors): {} extends InputErrors ? GetUnifiedLogGroupByPayload<T> : Prisma.PrismaPromise<InputErrors>
+  /**
+   * Fields of the UnifiedLog model
+   */
+  readonly fields: UnifiedLogFieldRefs;
+  }
+
+  /**
+   * The delegate class that acts as a "Promise-like" for UnifiedLog.
+   * Why is this prefixed with `Prisma__`?
+   * Because we want to prevent naming conflicts as mentioned in
+   * https://github.com/prisma/prisma-client-js/issues/707
+   */
+  export interface Prisma__UnifiedLogClient<T, Null = never, ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs, GlobalOmitOptions = {}> extends Prisma.PrismaPromise<T> {
+    readonly [Symbol.toStringTag]: "PrismaPromise"
+    /**
+     * Attaches callbacks for the resolution and/or rejection of the Promise.
+     * @param onfulfilled The callback to execute when the Promise is resolved.
+     * @param onrejected The callback to execute when the Promise is rejected.
+     * @returns A Promise for the completion of which ever callback is executed.
+     */
+    then<TResult1 = T, TResult2 = never>(onfulfilled?: ((value: T) => TResult1 | PromiseLike<TResult1>) | undefined | null, onrejected?: ((reason: any) => TResult2 | PromiseLike<TResult2>) | undefined | null): $Utils.JsPromise<TResult1 | TResult2>
+    /**
+     * Attaches a callback for only the rejection of the Promise.
+     * @param onrejected The callback to execute when the Promise is rejected.
+     * @returns A Promise for the completion of the callback.
+     */
+    catch<TResult = never>(onrejected?: ((reason: any) => TResult | PromiseLike<TResult>) | undefined | null): $Utils.JsPromise<T | TResult>
+    /**
+     * Attaches a callback that is invoked when the Promise is settled (fulfilled or rejected). The
+     * resolved value cannot be modified from the callback.
+     * @param onfinally The callback to execute when the Promise is settled (fulfilled or rejected).
+     * @returns A Promise for the completion of the callback.
+     */
+    finally(onfinally?: (() => void) | undefined | null): $Utils.JsPromise<T>
+  }
+
+
+
+
+  /**
+   * Fields of the UnifiedLog model
+   */
+  interface UnifiedLogFieldRefs {
+    readonly id: FieldRef<"UnifiedLog", 'String'>
+    readonly createdAt: FieldRef<"UnifiedLog", 'DateTime'>
+    readonly userId: FieldRef<"UnifiedLog", 'BigInt'>
+    readonly sessionId: FieldRef<"UnifiedLog", 'String'>
+    readonly cfRay: FieldRef<"UnifiedLog", 'String'>
+    readonly country: FieldRef<"UnifiedLog", 'String'>
+    readonly city: FieldRef<"UnifiedLog", 'String'>
+    readonly bot: FieldRef<"UnifiedLog", 'Boolean'>
+    readonly threat: FieldRef<"UnifiedLog", 'String'>
+    readonly isMobile: FieldRef<"UnifiedLog", 'Boolean'>
+    readonly ip: FieldRef<"UnifiedLog", 'String'>
+    readonly logType: FieldRef<"UnifiedLog", 'String'>
+    readonly category: FieldRef<"UnifiedLog", 'String'>
+    readonly detail: FieldRef<"UnifiedLog", 'String'>
+    readonly metadata: FieldRef<"UnifiedLog", 'Json'>
+  }
+    
+
+  // Custom InputTypes
+  /**
+   * UnifiedLog findUnique
+   */
+  export type UnifiedLogFindUniqueArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the UnifiedLog
+     */
+    select?: UnifiedLogSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the UnifiedLog
+     */
+    omit?: UnifiedLogOmit<ExtArgs> | null
+    /**
+     * Filter, which UnifiedLog to fetch.
+     */
+    where: UnifiedLogWhereUniqueInput
+  }
+
+  /**
+   * UnifiedLog findUniqueOrThrow
+   */
+  export type UnifiedLogFindUniqueOrThrowArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the UnifiedLog
+     */
+    select?: UnifiedLogSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the UnifiedLog
+     */
+    omit?: UnifiedLogOmit<ExtArgs> | null
+    /**
+     * Filter, which UnifiedLog to fetch.
+     */
+    where: UnifiedLogWhereUniqueInput
+  }
+
+  /**
+   * UnifiedLog findFirst
+   */
+  export type UnifiedLogFindFirstArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the UnifiedLog
+     */
+    select?: UnifiedLogSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the UnifiedLog
+     */
+    omit?: UnifiedLogOmit<ExtArgs> | null
+    /**
+     * Filter, which UnifiedLog to fetch.
+     */
+    where?: UnifiedLogWhereInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/sorting Sorting Docs}
+     * 
+     * Determine the order of UnifiedLogs to fetch.
+     */
+    orderBy?: UnifiedLogOrderByWithRelationInput | UnifiedLogOrderByWithRelationInput[]
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination#cursor-based-pagination Cursor Docs}
+     * 
+     * Sets the position for searching for UnifiedLogs.
+     */
+    cursor?: UnifiedLogWhereUniqueInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Take `±n` UnifiedLogs from the position of the cursor.
+     */
+    take?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Skip the first `n` UnifiedLogs.
+     */
+    skip?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/distinct Distinct Docs}
+     * 
+     * Filter by unique combinations of UnifiedLogs.
+     */
+    distinct?: UnifiedLogScalarFieldEnum | UnifiedLogScalarFieldEnum[]
+  }
+
+  /**
+   * UnifiedLog findFirstOrThrow
+   */
+  export type UnifiedLogFindFirstOrThrowArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the UnifiedLog
+     */
+    select?: UnifiedLogSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the UnifiedLog
+     */
+    omit?: UnifiedLogOmit<ExtArgs> | null
+    /**
+     * Filter, which UnifiedLog to fetch.
+     */
+    where?: UnifiedLogWhereInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/sorting Sorting Docs}
+     * 
+     * Determine the order of UnifiedLogs to fetch.
+     */
+    orderBy?: UnifiedLogOrderByWithRelationInput | UnifiedLogOrderByWithRelationInput[]
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination#cursor-based-pagination Cursor Docs}
+     * 
+     * Sets the position for searching for UnifiedLogs.
+     */
+    cursor?: UnifiedLogWhereUniqueInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Take `±n` UnifiedLogs from the position of the cursor.
+     */
+    take?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Skip the first `n` UnifiedLogs.
+     */
+    skip?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/distinct Distinct Docs}
+     * 
+     * Filter by unique combinations of UnifiedLogs.
+     */
+    distinct?: UnifiedLogScalarFieldEnum | UnifiedLogScalarFieldEnum[]
+  }
+
+  /**
+   * UnifiedLog findMany
+   */
+  export type UnifiedLogFindManyArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the UnifiedLog
+     */
+    select?: UnifiedLogSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the UnifiedLog
+     */
+    omit?: UnifiedLogOmit<ExtArgs> | null
+    /**
+     * Filter, which UnifiedLogs to fetch.
+     */
+    where?: UnifiedLogWhereInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/sorting Sorting Docs}
+     * 
+     * Determine the order of UnifiedLogs to fetch.
+     */
+    orderBy?: UnifiedLogOrderByWithRelationInput | UnifiedLogOrderByWithRelationInput[]
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination#cursor-based-pagination Cursor Docs}
+     * 
+     * Sets the position for listing UnifiedLogs.
+     */
+    cursor?: UnifiedLogWhereUniqueInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Take `±n` UnifiedLogs from the position of the cursor.
+     */
+    take?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Skip the first `n` UnifiedLogs.
+     */
+    skip?: number
+    distinct?: UnifiedLogScalarFieldEnum | UnifiedLogScalarFieldEnum[]
+  }
+
+  /**
+   * UnifiedLog create
+   */
+  export type UnifiedLogCreateArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the UnifiedLog
+     */
+    select?: UnifiedLogSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the UnifiedLog
+     */
+    omit?: UnifiedLogOmit<ExtArgs> | null
+    /**
+     * The data needed to create a UnifiedLog.
+     */
+    data: XOR<UnifiedLogCreateInput, UnifiedLogUncheckedCreateInput>
+  }
+
+  /**
+   * UnifiedLog createMany
+   */
+  export type UnifiedLogCreateManyArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * The data used to create many UnifiedLogs.
+     */
+    data: UnifiedLogCreateManyInput | UnifiedLogCreateManyInput[]
+    skipDuplicates?: boolean
+  }
+
+  /**
+   * UnifiedLog createManyAndReturn
+   */
+  export type UnifiedLogCreateManyAndReturnArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the UnifiedLog
+     */
+    select?: UnifiedLogSelectCreateManyAndReturn<ExtArgs> | null
+    /**
+     * Omit specific fields from the UnifiedLog
+     */
+    omit?: UnifiedLogOmit<ExtArgs> | null
+    /**
+     * The data used to create many UnifiedLogs.
+     */
+    data: UnifiedLogCreateManyInput | UnifiedLogCreateManyInput[]
+    skipDuplicates?: boolean
+  }
+
+  /**
+   * UnifiedLog update
+   */
+  export type UnifiedLogUpdateArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the UnifiedLog
+     */
+    select?: UnifiedLogSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the UnifiedLog
+     */
+    omit?: UnifiedLogOmit<ExtArgs> | null
+    /**
+     * The data needed to update a UnifiedLog.
+     */
+    data: XOR<UnifiedLogUpdateInput, UnifiedLogUncheckedUpdateInput>
+    /**
+     * Choose, which UnifiedLog to update.
+     */
+    where: UnifiedLogWhereUniqueInput
+  }
+
+  /**
+   * UnifiedLog updateMany
+   */
+  export type UnifiedLogUpdateManyArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * The data used to update UnifiedLogs.
+     */
+    data: XOR<UnifiedLogUpdateManyMutationInput, UnifiedLogUncheckedUpdateManyInput>
+    /**
+     * Filter which UnifiedLogs to update
+     */
+    where?: UnifiedLogWhereInput
+    /**
+     * Limit how many UnifiedLogs to update.
+     */
+    limit?: number
+  }
+
+  /**
+   * UnifiedLog updateManyAndReturn
+   */
+  export type UnifiedLogUpdateManyAndReturnArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the UnifiedLog
+     */
+    select?: UnifiedLogSelectUpdateManyAndReturn<ExtArgs> | null
+    /**
+     * Omit specific fields from the UnifiedLog
+     */
+    omit?: UnifiedLogOmit<ExtArgs> | null
+    /**
+     * The data used to update UnifiedLogs.
+     */
+    data: XOR<UnifiedLogUpdateManyMutationInput, UnifiedLogUncheckedUpdateManyInput>
+    /**
+     * Filter which UnifiedLogs to update
+     */
+    where?: UnifiedLogWhereInput
+    /**
+     * Limit how many UnifiedLogs to update.
+     */
+    limit?: number
+  }
+
+  /**
+   * UnifiedLog upsert
+   */
+  export type UnifiedLogUpsertArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the UnifiedLog
+     */
+    select?: UnifiedLogSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the UnifiedLog
+     */
+    omit?: UnifiedLogOmit<ExtArgs> | null
+    /**
+     * The filter to search for the UnifiedLog to update in case it exists.
+     */
+    where: UnifiedLogWhereUniqueInput
+    /**
+     * In case the UnifiedLog found by the `where` argument doesn't exist, create a new UnifiedLog with this data.
+     */
+    create: XOR<UnifiedLogCreateInput, UnifiedLogUncheckedCreateInput>
+    /**
+     * In case the UnifiedLog was found with the provided `where` argument, update it with this data.
+     */
+    update: XOR<UnifiedLogUpdateInput, UnifiedLogUncheckedUpdateInput>
+  }
+
+  /**
+   * UnifiedLog delete
+   */
+  export type UnifiedLogDeleteArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the UnifiedLog
+     */
+    select?: UnifiedLogSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the UnifiedLog
+     */
+    omit?: UnifiedLogOmit<ExtArgs> | null
+    /**
+     * Filter which UnifiedLog to delete.
+     */
+    where: UnifiedLogWhereUniqueInput
+  }
+
+  /**
+   * UnifiedLog deleteMany
+   */
+  export type UnifiedLogDeleteManyArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Filter which UnifiedLogs to delete
+     */
+    where?: UnifiedLogWhereInput
+    /**
+     * Limit how many UnifiedLogs to delete.
+     */
+    limit?: number
+  }
+
+  /**
+   * UnifiedLog without action
+   */
+  export type UnifiedLogDefaultArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the UnifiedLog
+     */
+    select?: UnifiedLogSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the UnifiedLog
+     */
+    omit?: UnifiedLogOmit<ExtArgs> | null
   }
 
 
@@ -56158,6 +57404,27 @@ export namespace Prisma {
   export type IntegrationLogScalarFieldEnum = (typeof IntegrationLogScalarFieldEnum)[keyof typeof IntegrationLogScalarFieldEnum]
 
 
+  export const UnifiedLogScalarFieldEnum: {
+    id: 'id',
+    createdAt: 'createdAt',
+    userId: 'userId',
+    sessionId: 'sessionId',
+    cfRay: 'cfRay',
+    country: 'country',
+    city: 'city',
+    bot: 'bot',
+    threat: 'threat',
+    isMobile: 'isMobile',
+    ip: 'ip',
+    logType: 'logType',
+    category: 'category',
+    detail: 'detail',
+    metadata: 'metadata'
+  };
+
+  export type UnifiedLogScalarFieldEnum = (typeof UnifiedLogScalarFieldEnum)[keyof typeof UnifiedLogScalarFieldEnum]
+
+
   export const UserScalarFieldEnum: {
     id: 'id',
     uid: 'uid',
@@ -57957,6 +59224,110 @@ export namespace Prisma {
     threat?: StringNullableWithAggregatesFilter<"IntegrationLog"> | string | null
     cfRay?: StringNullableWithAggregatesFilter<"IntegrationLog"> | string | null
     ip?: StringNullableWithAggregatesFilter<"IntegrationLog"> | string | null
+  }
+
+  export type UnifiedLogWhereInput = {
+    AND?: UnifiedLogWhereInput | UnifiedLogWhereInput[]
+    OR?: UnifiedLogWhereInput[]
+    NOT?: UnifiedLogWhereInput | UnifiedLogWhereInput[]
+    id?: StringFilter<"UnifiedLog"> | string
+    createdAt?: DateTimeFilter<"UnifiedLog"> | Date | string
+    userId?: BigIntNullableFilter<"UnifiedLog"> | bigint | number | null
+    sessionId?: StringNullableFilter<"UnifiedLog"> | string | null
+    cfRay?: StringNullableFilter<"UnifiedLog"> | string | null
+    country?: StringNullableFilter<"UnifiedLog"> | string | null
+    city?: StringNullableFilter<"UnifiedLog"> | string | null
+    bot?: BoolNullableFilter<"UnifiedLog"> | boolean | null
+    threat?: StringNullableFilter<"UnifiedLog"> | string | null
+    isMobile?: BoolNullableFilter<"UnifiedLog"> | boolean | null
+    ip?: StringNullableFilter<"UnifiedLog"> | string | null
+    logType?: StringFilter<"UnifiedLog"> | string
+    category?: StringFilter<"UnifiedLog"> | string
+    detail?: StringFilter<"UnifiedLog"> | string
+    metadata?: JsonNullableFilter<"UnifiedLog">
+  }
+
+  export type UnifiedLogOrderByWithRelationInput = {
+    id?: SortOrder
+    createdAt?: SortOrder
+    userId?: SortOrderInput | SortOrder
+    sessionId?: SortOrderInput | SortOrder
+    cfRay?: SortOrderInput | SortOrder
+    country?: SortOrderInput | SortOrder
+    city?: SortOrderInput | SortOrder
+    bot?: SortOrderInput | SortOrder
+    threat?: SortOrderInput | SortOrder
+    isMobile?: SortOrderInput | SortOrder
+    ip?: SortOrderInput | SortOrder
+    logType?: SortOrder
+    category?: SortOrder
+    detail?: SortOrder
+    metadata?: SortOrderInput | SortOrder
+  }
+
+  export type UnifiedLogWhereUniqueInput = Prisma.AtLeast<{
+    id?: string
+    AND?: UnifiedLogWhereInput | UnifiedLogWhereInput[]
+    OR?: UnifiedLogWhereInput[]
+    NOT?: UnifiedLogWhereInput | UnifiedLogWhereInput[]
+    createdAt?: DateTimeFilter<"UnifiedLog"> | Date | string
+    userId?: BigIntNullableFilter<"UnifiedLog"> | bigint | number | null
+    sessionId?: StringNullableFilter<"UnifiedLog"> | string | null
+    cfRay?: StringNullableFilter<"UnifiedLog"> | string | null
+    country?: StringNullableFilter<"UnifiedLog"> | string | null
+    city?: StringNullableFilter<"UnifiedLog"> | string | null
+    bot?: BoolNullableFilter<"UnifiedLog"> | boolean | null
+    threat?: StringNullableFilter<"UnifiedLog"> | string | null
+    isMobile?: BoolNullableFilter<"UnifiedLog"> | boolean | null
+    ip?: StringNullableFilter<"UnifiedLog"> | string | null
+    logType?: StringFilter<"UnifiedLog"> | string
+    category?: StringFilter<"UnifiedLog"> | string
+    detail?: StringFilter<"UnifiedLog"> | string
+    metadata?: JsonNullableFilter<"UnifiedLog">
+  }, "id">
+
+  export type UnifiedLogOrderByWithAggregationInput = {
+    id?: SortOrder
+    createdAt?: SortOrder
+    userId?: SortOrderInput | SortOrder
+    sessionId?: SortOrderInput | SortOrder
+    cfRay?: SortOrderInput | SortOrder
+    country?: SortOrderInput | SortOrder
+    city?: SortOrderInput | SortOrder
+    bot?: SortOrderInput | SortOrder
+    threat?: SortOrderInput | SortOrder
+    isMobile?: SortOrderInput | SortOrder
+    ip?: SortOrderInput | SortOrder
+    logType?: SortOrder
+    category?: SortOrder
+    detail?: SortOrder
+    metadata?: SortOrderInput | SortOrder
+    _count?: UnifiedLogCountOrderByAggregateInput
+    _avg?: UnifiedLogAvgOrderByAggregateInput
+    _max?: UnifiedLogMaxOrderByAggregateInput
+    _min?: UnifiedLogMinOrderByAggregateInput
+    _sum?: UnifiedLogSumOrderByAggregateInput
+  }
+
+  export type UnifiedLogScalarWhereWithAggregatesInput = {
+    AND?: UnifiedLogScalarWhereWithAggregatesInput | UnifiedLogScalarWhereWithAggregatesInput[]
+    OR?: UnifiedLogScalarWhereWithAggregatesInput[]
+    NOT?: UnifiedLogScalarWhereWithAggregatesInput | UnifiedLogScalarWhereWithAggregatesInput[]
+    id?: StringWithAggregatesFilter<"UnifiedLog"> | string
+    createdAt?: DateTimeWithAggregatesFilter<"UnifiedLog"> | Date | string
+    userId?: BigIntNullableWithAggregatesFilter<"UnifiedLog"> | bigint | number | null
+    sessionId?: StringNullableWithAggregatesFilter<"UnifiedLog"> | string | null
+    cfRay?: StringNullableWithAggregatesFilter<"UnifiedLog"> | string | null
+    country?: StringNullableWithAggregatesFilter<"UnifiedLog"> | string | null
+    city?: StringNullableWithAggregatesFilter<"UnifiedLog"> | string | null
+    bot?: BoolNullableWithAggregatesFilter<"UnifiedLog"> | boolean | null
+    threat?: StringNullableWithAggregatesFilter<"UnifiedLog"> | string | null
+    isMobile?: BoolNullableWithAggregatesFilter<"UnifiedLog"> | boolean | null
+    ip?: StringNullableWithAggregatesFilter<"UnifiedLog"> | string | null
+    logType?: StringWithAggregatesFilter<"UnifiedLog"> | string
+    category?: StringWithAggregatesFilter<"UnifiedLog"> | string
+    detail?: StringWithAggregatesFilter<"UnifiedLog"> | string
+    metadata?: JsonNullableWithAggregatesFilter<"UnifiedLog">
   }
 
   export type UserWhereInput = {
@@ -62142,6 +63513,132 @@ export namespace Prisma {
     threat?: NullableStringFieldUpdateOperationsInput | string | null
     cfRay?: NullableStringFieldUpdateOperationsInput | string | null
     ip?: NullableStringFieldUpdateOperationsInput | string | null
+  }
+
+  export type UnifiedLogCreateInput = {
+    id: string
+    createdAt: Date | string
+    userId?: bigint | number | null
+    sessionId?: string | null
+    cfRay?: string | null
+    country?: string | null
+    city?: string | null
+    bot?: boolean | null
+    threat?: string | null
+    isMobile?: boolean | null
+    ip?: string | null
+    logType: string
+    category: string
+    detail: string
+    metadata?: NullableJsonNullValueInput | InputJsonValue
+  }
+
+  export type UnifiedLogUncheckedCreateInput = {
+    id: string
+    createdAt: Date | string
+    userId?: bigint | number | null
+    sessionId?: string | null
+    cfRay?: string | null
+    country?: string | null
+    city?: string | null
+    bot?: boolean | null
+    threat?: string | null
+    isMobile?: boolean | null
+    ip?: string | null
+    logType: string
+    category: string
+    detail: string
+    metadata?: NullableJsonNullValueInput | InputJsonValue
+  }
+
+  export type UnifiedLogUpdateInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    userId?: NullableBigIntFieldUpdateOperationsInput | bigint | number | null
+    sessionId?: NullableStringFieldUpdateOperationsInput | string | null
+    cfRay?: NullableStringFieldUpdateOperationsInput | string | null
+    country?: NullableStringFieldUpdateOperationsInput | string | null
+    city?: NullableStringFieldUpdateOperationsInput | string | null
+    bot?: NullableBoolFieldUpdateOperationsInput | boolean | null
+    threat?: NullableStringFieldUpdateOperationsInput | string | null
+    isMobile?: NullableBoolFieldUpdateOperationsInput | boolean | null
+    ip?: NullableStringFieldUpdateOperationsInput | string | null
+    logType?: StringFieldUpdateOperationsInput | string
+    category?: StringFieldUpdateOperationsInput | string
+    detail?: StringFieldUpdateOperationsInput | string
+    metadata?: NullableJsonNullValueInput | InputJsonValue
+  }
+
+  export type UnifiedLogUncheckedUpdateInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    userId?: NullableBigIntFieldUpdateOperationsInput | bigint | number | null
+    sessionId?: NullableStringFieldUpdateOperationsInput | string | null
+    cfRay?: NullableStringFieldUpdateOperationsInput | string | null
+    country?: NullableStringFieldUpdateOperationsInput | string | null
+    city?: NullableStringFieldUpdateOperationsInput | string | null
+    bot?: NullableBoolFieldUpdateOperationsInput | boolean | null
+    threat?: NullableStringFieldUpdateOperationsInput | string | null
+    isMobile?: NullableBoolFieldUpdateOperationsInput | boolean | null
+    ip?: NullableStringFieldUpdateOperationsInput | string | null
+    logType?: StringFieldUpdateOperationsInput | string
+    category?: StringFieldUpdateOperationsInput | string
+    detail?: StringFieldUpdateOperationsInput | string
+    metadata?: NullableJsonNullValueInput | InputJsonValue
+  }
+
+  export type UnifiedLogCreateManyInput = {
+    id: string
+    createdAt: Date | string
+    userId?: bigint | number | null
+    sessionId?: string | null
+    cfRay?: string | null
+    country?: string | null
+    city?: string | null
+    bot?: boolean | null
+    threat?: string | null
+    isMobile?: boolean | null
+    ip?: string | null
+    logType: string
+    category: string
+    detail: string
+    metadata?: NullableJsonNullValueInput | InputJsonValue
+  }
+
+  export type UnifiedLogUpdateManyMutationInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    userId?: NullableBigIntFieldUpdateOperationsInput | bigint | number | null
+    sessionId?: NullableStringFieldUpdateOperationsInput | string | null
+    cfRay?: NullableStringFieldUpdateOperationsInput | string | null
+    country?: NullableStringFieldUpdateOperationsInput | string | null
+    city?: NullableStringFieldUpdateOperationsInput | string | null
+    bot?: NullableBoolFieldUpdateOperationsInput | boolean | null
+    threat?: NullableStringFieldUpdateOperationsInput | string | null
+    isMobile?: NullableBoolFieldUpdateOperationsInput | boolean | null
+    ip?: NullableStringFieldUpdateOperationsInput | string | null
+    logType?: StringFieldUpdateOperationsInput | string
+    category?: StringFieldUpdateOperationsInput | string
+    detail?: StringFieldUpdateOperationsInput | string
+    metadata?: NullableJsonNullValueInput | InputJsonValue
+  }
+
+  export type UnifiedLogUncheckedUpdateManyInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    userId?: NullableBigIntFieldUpdateOperationsInput | bigint | number | null
+    sessionId?: NullableStringFieldUpdateOperationsInput | string | null
+    cfRay?: NullableStringFieldUpdateOperationsInput | string | null
+    country?: NullableStringFieldUpdateOperationsInput | string | null
+    city?: NullableStringFieldUpdateOperationsInput | string | null
+    bot?: NullableBoolFieldUpdateOperationsInput | boolean | null
+    threat?: NullableStringFieldUpdateOperationsInput | string | null
+    isMobile?: NullableBoolFieldUpdateOperationsInput | boolean | null
+    ip?: NullableStringFieldUpdateOperationsInput | string | null
+    logType?: StringFieldUpdateOperationsInput | string
+    category?: StringFieldUpdateOperationsInput | string
+    detail?: StringFieldUpdateOperationsInput | string
+    metadata?: NullableJsonNullValueInput | InputJsonValue
   }
 
   export type UserCreateInput = {
@@ -66758,6 +68255,66 @@ export namespace Prisma {
     _sum?: NestedIntFilter<$PrismaModel>
     _min?: NestedIntFilter<$PrismaModel>
     _max?: NestedIntFilter<$PrismaModel>
+  }
+
+  export type UnifiedLogCountOrderByAggregateInput = {
+    id?: SortOrder
+    createdAt?: SortOrder
+    userId?: SortOrder
+    sessionId?: SortOrder
+    cfRay?: SortOrder
+    country?: SortOrder
+    city?: SortOrder
+    bot?: SortOrder
+    threat?: SortOrder
+    isMobile?: SortOrder
+    ip?: SortOrder
+    logType?: SortOrder
+    category?: SortOrder
+    detail?: SortOrder
+    metadata?: SortOrder
+  }
+
+  export type UnifiedLogAvgOrderByAggregateInput = {
+    userId?: SortOrder
+  }
+
+  export type UnifiedLogMaxOrderByAggregateInput = {
+    id?: SortOrder
+    createdAt?: SortOrder
+    userId?: SortOrder
+    sessionId?: SortOrder
+    cfRay?: SortOrder
+    country?: SortOrder
+    city?: SortOrder
+    bot?: SortOrder
+    threat?: SortOrder
+    isMobile?: SortOrder
+    ip?: SortOrder
+    logType?: SortOrder
+    category?: SortOrder
+    detail?: SortOrder
+  }
+
+  export type UnifiedLogMinOrderByAggregateInput = {
+    id?: SortOrder
+    createdAt?: SortOrder
+    userId?: SortOrder
+    sessionId?: SortOrder
+    cfRay?: SortOrder
+    country?: SortOrder
+    city?: SortOrder
+    bot?: SortOrder
+    threat?: SortOrder
+    isMobile?: SortOrder
+    ip?: SortOrder
+    logType?: SortOrder
+    category?: SortOrder
+    detail?: SortOrder
+  }
+
+  export type UnifiedLogSumOrderByAggregateInput = {
+    userId?: SortOrder
   }
 
   export type BigIntFilter<$PrismaModel = never> = {

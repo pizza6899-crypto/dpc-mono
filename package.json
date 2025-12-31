@@ -23,7 +23,9 @@
     "db:reset": "pnpm -F @repo/database reset",
     "db:deploy": "pnpm -F @repo/database deploy",
     "db:seed": "pnpm -F @repo/database seed",
-    "db:studio": "pnpm -F @repo/database studio"
+    "db:studio": "pnpm -F @repo/database studio",
+    "db:create:unified-logs-view": "pnpm -F @repo/database create:unified-logs-view",
+    "db:partition:audit-tables": "pnpm -F @repo/database partition:audit-tables"
   },
   "devDependencies": {
     "@types/node": "^25.0.3",

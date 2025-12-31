@@ -200,6 +200,24 @@ exports.Prisma.IntegrationLogScalarFieldEnum = {
   ip: 'ip'
 };
 
+exports.Prisma.UnifiedLogScalarFieldEnum = {
+  id: 'id',
+  createdAt: 'createdAt',
+  userId: 'userId',
+  sessionId: 'sessionId',
+  cfRay: 'cfRay',
+  country: 'country',
+  city: 'city',
+  bot: 'bot',
+  threat: 'threat',
+  isMobile: 'isMobile',
+  ip: 'ip',
+  logType: 'logType',
+  category: 'category',
+  detail: 'detail',
+  metadata: 'metadata'
+};
+
 exports.Prisma.UserScalarFieldEnum = {
   id: 'id',
   uid: 'uid',
@@ -1029,6 +1047,7 @@ exports.Prisma.ModelName = {
   ActivityLog: 'ActivityLog',
   SystemErrorLog: 'SystemErrorLog',
   IntegrationLog: 'IntegrationLog',
+  UnifiedLog: 'UnifiedLog',
   User: 'User',
   UserBalance: 'UserBalance',
   UserBalanceStats: 'UserBalanceStats',
