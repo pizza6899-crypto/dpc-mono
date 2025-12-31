@@ -54,7 +54,8 @@
     }
   },
   "menu": {
-    "dashboard": "Dashboard"
+    "dashboard": "Dashboard",
+    "users": "Users"
   },
   "pages": {
     "error": {

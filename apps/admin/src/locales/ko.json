@@ -54,7 +54,8 @@
     }
   },
   "menu": {
-    "dashboard": "대시보드"
+    "dashboard": "대시보드",
+    "users": "사용자"
   },
   "pages": {
     "error": {

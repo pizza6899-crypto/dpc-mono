@@ -40,6 +40,16 @@ export const RefineContext = ({ children }: RefineContextProps) => {
                 icon: null,
               },
             },
+            {
+              name: "admin/users",
+              list: "/users",
+              create: "/users/create",
+              edit: "/users/edit/:id",
+              meta: {
+                label: t("users"),
+                icon: null,
+              },
+            },
           ]}
           options={{
             syncWithLocation: true,
