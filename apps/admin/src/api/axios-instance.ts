@@ -9,3 +9,11 @@ export const AXIOS_INSTANCE = axios.create({
 });
 
 export type ErrorType<Error> = AxiosError<Error>;
+
+// Orval mutator 함수
+export const customInstance = async <T>(
+  config: AxiosRequestConfig,
+): Promise<T> => {
+  const { data } = await AXIOS_INSTANCE.request<T>(config);
+  return data;
+};
