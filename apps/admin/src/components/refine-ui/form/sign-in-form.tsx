@@ -1,8 +1,9 @@
 "use client";
 
 import { useState } from "react";
+import { useTranslations } from "next-intl";
 
-import { useLogin, useRefineOptions, useTranslate } from "@refinedev/core";
+import { useLogin, useRefineOptions } from "@refinedev/core";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
@@ -16,6 +17,7 @@ import {
 } from "@/components/ui/card";
 import { Separator } from "@/components/ui/separator";
 import { InputPassword } from "@/components/refine-ui/form/input-password";
+import { LocaleSelect } from "@/components/refine-ui/locale/locale-select";
 import { cn } from "@/lib/utils";
 
 export const SignInForm = () => {
@@ -24,7 +26,7 @@ export const SignInForm = () => {
   const [password, setPassword] = useState("admin123!");
 
   const { title } = useRefineOptions();
-  const t = useTranslate();
+  const t = useTranslations("pages.signIn");
 
   const { mutate: login } = useLogin();
 
@@ -46,9 +48,15 @@ export const SignInForm = () => {
         "justify-center",
         "px-6",
         "py-8",
-        "min-h-svh"
+        "min-h-svh",
+        "relative"
       )}
     >
+      {/* 언어 선택을 상단 오른쪽에 배치 */}
+      <div className={cn("absolute", "top-4", "right-4", "w-32")}>
+        <LocaleSelect />
+      </div>
+
       <div className={cn("flex", "items-center", "justify-center")}>
         {title.icon && (
           <div
@@ -69,12 +77,12 @@ export const SignInForm = () => {
               "font-semibold"
             )}
           >
-            {t("pages.signIn.title", "Sign in")}
+            {t("title")}
           </CardTitle>
           <CardDescription
             className={cn("text-muted-foreground", "font-medium")}
           >
-            {t("pages.signIn.welcomeBack", "Welcome back")}
+            {t("welcomeBack")}
           </CardDescription>
         </CardHeader>
 
@@ -83,7 +91,7 @@ export const SignInForm = () => {
         <CardContent className={cn("px-0")}>
           <form onSubmit={handleSignIn}>
             <div className={cn("flex", "flex-col", "gap-2")}>
-              <Label htmlFor="email">{t("pages.signIn.email", "Email")}</Label>
+              <Label htmlFor="email">{t("email")}</Label>
               <Input
                 id="email"
                 type="email"
@@ -96,7 +104,7 @@ export const SignInForm = () => {
             <div
               className={cn("relative", "flex", "flex-col", "gap-2", "mt-6")}
             >
-              <Label htmlFor="password">{t("pages.signIn.password", "Password")}</Label>
+              <Label htmlFor="password">{t("password")}</Label>
               <InputPassword
                 value={password}
                 onChange={(e) => setPassword(e.target.value)}
@@ -119,12 +127,12 @@ export const SignInForm = () => {
                     setRememberMe(checked === "indeterminate" ? false : checked)
                   }
                 />
-                <Label htmlFor="remember">{t("pages.signIn.rememberMe", "Remember me")}</Label>
+                <Label htmlFor="remember">{t("rememberMe")}</Label>
               </div>
             </div>
 
             <Button type="submit" size="lg" className={cn("w-full", "mt-6")}>
-              {t("pages.signIn.submit", "Sign in")}
+              {t("submit")}
             </Button>
           </form>
         </CardContent>

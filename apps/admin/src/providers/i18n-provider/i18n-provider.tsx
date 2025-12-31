@@ -2,7 +2,7 @@
 
 import { NextIntlClientProvider } from "next-intl";
 import { ReactNode, useEffect, useState } from "react";
-import { defaultLocale, type Locale } from "@/i18n";
+import { defaultLocale, type Locale, locales } from "@/i18n";
 import { getStoredLocale } from "@/lib/i18n-utils";
 
 type I18nProviderProps = {
@@ -30,6 +30,40 @@ export function I18nProvider({
       const storedLocale = getStoredLocale();
       setLocale(storedLocale);
     }
+  }, [localeProp]);
+
+  // localStorage 변경 감지
+  useEffect(() => {
+    if (typeof window === "undefined") return;
+
+    const handleStorageChange = (e: StorageEvent) => {
+      if (e.key === "locale" && e.newValue) {
+        const newLocale = e.newValue as Locale;
+        if (locales.includes(newLocale) && !localeProp) {
+          setLocale(newLocale);
+        }
+      }
+    };
+
+    // 다른 탭에서의 변경 감지
+    window.addEventListener("storage", handleStorageChange);
+
+    // 같은 탭에서의 변경 감지를 위한 커스텀 이벤트
+    const handleCustomStorageChange = (e: CustomEvent) => {
+      if (e.detail?.key === "locale" && e.detail?.value) {
+        const newLocale = e.detail.value as Locale;
+        if (locales.includes(newLocale) && !localeProp) {
+          setLocale(newLocale);
+        }
+      }
+    };
+
+    window.addEventListener("localeChange" as any, handleCustomStorageChange);
+
+    return () => {
+      window.removeEventListener("storage", handleStorageChange);
+      window.removeEventListener("localeChange" as any, handleCustomStorageChange);
+    };
   }, [localeProp]);
 
   useEffect(() => {

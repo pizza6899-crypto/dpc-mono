@@ -23,6 +23,13 @@ export function useLocale() {
       // 로케일을 localStorage에 저장
       if (typeof window !== "undefined") {
         localStorage.setItem("locale", newLocale);
+        
+        // 같은 탭에서의 변경을 감지하기 위한 커스텀 이벤트 발생
+        window.dispatchEvent(
+          new CustomEvent("localeChange", {
+            detail: { key: "locale", value: newLocale },
+          })
+        );
       }
 
       // 페이지 새로고침 (실제로는 URL 기반 라우팅을 사용하는 것이 좋지만,
