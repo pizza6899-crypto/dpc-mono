@@ -56,6 +56,14 @@
   "pages": {
     "error": {
       "info": "You may have forgotten to add the \"{action}\" component to \"{resource}\" resource."
+    },
+    "signIn": {
+      "title": "Sign in",
+      "welcomeBack": "Welcome back",
+      "email": "Email",
+      "password": "Password",
+      "rememberMe": "Remember me",
+      "submit": "Sign in"
     }
   }
 }

@@ -2,7 +2,7 @@
 
 import { useState } from "react";
 
-import { useLogin, useRefineOptions } from "@refinedev/core";
+import { useLogin, useRefineOptions, useTranslate } from "@refinedev/core";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
@@ -24,6 +24,7 @@ export const SignInForm = () => {
   const [password, setPassword] = useState("admin123!");
 
   const { title } = useRefineOptions();
+  const t = useTranslate();
 
   const { mutate: login } = useLogin();
 
@@ -68,12 +69,12 @@ export const SignInForm = () => {
               "font-semibold"
             )}
           >
-            Sign in
+            {t("pages.signIn.title", "Sign in")}
           </CardTitle>
           <CardDescription
             className={cn("text-muted-foreground", "font-medium")}
           >
-            Welcome back
+            {t("pages.signIn.welcomeBack", "Welcome back")}
           </CardDescription>
         </CardHeader>
 
@@ -82,7 +83,7 @@ export const SignInForm = () => {
         <CardContent className={cn("px-0")}>
           <form onSubmit={handleSignIn}>
             <div className={cn("flex", "flex-col", "gap-2")}>
-              <Label htmlFor="email">Email</Label>
+              <Label htmlFor="email">{t("pages.signIn.email", "Email")}</Label>
               <Input
                 id="email"
                 type="email"
@@ -95,7 +96,7 @@ export const SignInForm = () => {
             <div
               className={cn("relative", "flex", "flex-col", "gap-2", "mt-6")}
             >
-              <Label htmlFor="password">Password</Label>
+              <Label htmlFor="password">{t("pages.signIn.password", "Password")}</Label>
               <InputPassword
                 value={password}
                 onChange={(e) => setPassword(e.target.value)}
@@ -118,12 +119,12 @@ export const SignInForm = () => {
                     setRememberMe(checked === "indeterminate" ? false : checked)
                   }
                 />
-                <Label htmlFor="remember">Remember me</Label>
+                <Label htmlFor="remember">{t("pages.signIn.rememberMe", "Remember me")}</Label>
               </div>
             </div>
 
             <Button type="submit" size="lg" className={cn("w-full", "mt-6")}>
-              Sign in
+              {t("pages.signIn.submit", "Sign in")}
             </Button>
           </form>
         </CardContent>

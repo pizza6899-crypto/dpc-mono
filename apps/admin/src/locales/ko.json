@@ -56,6 +56,14 @@
   "pages": {
     "error": {
       "info": "리소스 \"{resource}\"에 \"{action}\" 컴포넌트를 추가하는 것을 잊으셨을 수 있습니다."
+    },
+    "signIn": {
+      "title": "로그인",
+      "welcomeBack": "다시 오신 것을 환영합니다",
+      "email": "이메일",
+      "password": "비밀번호",
+      "rememberMe": "로그인 상태 유지",
+      "submit": "로그인"
     }
   }
 }
