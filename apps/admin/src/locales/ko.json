@@ -1,0 +1,62 @@
+{
+  "common": {
+    "dashboard": "대시보드",
+    "login": "로그인",
+    "logout": "로그아웃",
+    "save": "저장",
+    "cancel": "취소",
+    "delete": "삭제",
+    "edit": "수정",
+    "create": "생성",
+    "search": "검색",
+    "filter": "필터",
+    "reset": "초기화",
+    "submit": "제출",
+    "back": "뒤로",
+    "next": "다음",
+    "previous": "이전",
+    "loading": "로딩 중...",
+    "error": "오류",
+    "success": "성공",
+    "confirm": "확인",
+    "close": "닫기"
+  },
+  "table": {
+    "filter": {
+      "operator": {
+        "eq": "같음",
+        "ne": "다름",
+        "lt": "보다 작음",
+        "gt": "보다 큼",
+        "lte": "보다 작거나 같음",
+        "gte": "보다 크거나 같음",
+        "in": "포함",
+        "nin": "포함하지 않음",
+        "ina": "배열에 포함",
+        "nina": "배열에 포함하지 않음",
+        "contains": "포함",
+        "ncontains": "포함하지 않음",
+        "containss": "포함 (대소문자 구분)",
+        "ncontainss": "포함하지 않음 (대소문자 구분)",
+        "between": "사이",
+        "nbetween": "사이 아님",
+        "null": "null",
+        "nnull": "null 아님",
+        "startswith": "시작",
+        "nstartswith": "시작하지 않음",
+        "startswiths": "시작 (대소문자 구분)",
+        "nstartswiths": "시작하지 않음 (대소문자 구분)",
+        "endswith": "끝",
+        "nendswith": "끝나지 않음",
+        "endswiths": "끝 (대소문자 구분)",
+        "nendswiths": "끝나지 않음 (대소문자 구분)"
+      }
+    }
+  },
+  "pages": {
+    "error": {
+      "info": "리소스 \"{resource}\"에 \"{action}\" 컴포넌트를 추가하는 것을 잊으셨을 수 있습니다."
+    }
+  }
+}
+

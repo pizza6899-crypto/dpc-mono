@@ -2,9 +2,7 @@
 
 import { useState } from "react";
 
-import { CircleHelp } from "lucide-react";
-
-import { useLogin, useRefineOptions, useLink } from "@refinedev/core";
+import { useLogin, useRefineOptions } from "@refinedev/core";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
@@ -24,8 +22,6 @@ export const SignInForm = () => {
   const [rememberMe, setRememberMe] = useState(false);
   const [email, setEmail] = useState("admin@dpc.com");
   const [password, setPassword] = useState("admin123!");
-
-  const Link = useLink();
 
   const { title } = useRefineOptions();
 
@@ -109,8 +105,7 @@ export const SignInForm = () => {
 
             <div
               className={cn(
-                "flex items-center justify-between",
-                "flex-wrap",
+                "flex items-center",
                 "gap-2",
                 "mt-4"
               )}
@@ -125,21 +120,6 @@ export const SignInForm = () => {
                 />
                 <Label htmlFor="remember">Remember me</Label>
               </div>
-              <Link
-                to="/forgot-password"
-                className={cn(
-                  "text-sm",
-                  "flex",
-                  "items-center",
-                  "gap-2",
-                  "text-primary hover:underline",
-                  "text-blue-600",
-                  "dark:text-blue-400"
-                )}
-              >
-                <span>Forgot password</span>
-                <CircleHelp className={cn("w-4", "h-4")} />
-              </Link>
             </div>
 
             <Button type="submit" size="lg" className={cn("w-full", "mt-6")}>

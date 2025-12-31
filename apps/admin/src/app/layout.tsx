@@ -2,6 +2,7 @@
 
 import React, { Suspense, useEffect } from "react";
 import { RefineContext } from "./_refine_context";
+import { I18nProvider } from "@/providers/i18n-provider";
 // dayjs 초기화 (플러그인 및 로케일 설정)
 import "@/lib/dayjs";
 
@@ -23,10 +24,12 @@ export default function RootLayout({
   }, []);
 
   return (
-    <html lang="en">
+    <html lang="ko">
       <body>
         <Suspense>
-          <RefineContext>{children}</RefineContext>
+          <I18nProvider>
+            <RefineContext>{children}</RefineContext>
+          </I18nProvider>
         </Suspense>
       </body>
     </html>
