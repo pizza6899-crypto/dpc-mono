@@ -9,12 +9,14 @@ type CopyableCellProps = {
   value: string | null | undefined;
   className?: string;
   displayValue?: string;
+  enabled?: boolean;
 };
 
 export function CopyableCell({
   value,
   className,
   displayValue,
+  enabled = false, // 임시로 비활성화
 }: CopyableCellProps) {
   const [copied, setCopied] = useState(false);
   const [open, setOpen] = useState(false);
@@ -40,6 +42,15 @@ export function CopyableCell({
   };
 
   const textToShow = displayValue || value;
+
+  // 복사 기능이 비활성화된 경우 일반 텍스트로 표시
+  if (!enabled) {
+    return (
+      <div className={cn("truncate", className)}>
+        {textToShow}
+      </div>
+    );
+  }
 
   return (
     <Tooltip open={open} onOpenChange={setOpen}>

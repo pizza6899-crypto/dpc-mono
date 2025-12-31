@@ -19,10 +19,12 @@ import { useEffect, useRef, useState } from "react";
 
 type DataTableProps<TData extends BaseRecord> = {
   table: UseTableReturnType<TData, HttpError>;
+  onRowClick?: (record: TData) => void;
 };
 
 export function DataTable<TData extends BaseRecord>({
   table,
+  onRowClick,
 }: DataTableProps<TData>) {
   const {
     reactTable: { getHeaderGroups, getRowModel, getAllColumns },
@@ -161,12 +163,20 @@ export function DataTable<TData extends BaseRecord>({
               </>
             ) : getRowModel().rows?.length ? (
               getRowModel().rows.map((row) => {
+                const record = row.original;
                 return (
                   <TableRow
                     key={row.original?.id ?? row.id}
                     data-state={row.getIsSelected() && "selected"}
+                    onDoubleClick={() => {
+                      if (onRowClick && record) {
+                        onRowClick(record);
+                      }
+                    }}
+                    className={onRowClick ? "cursor-pointer" : undefined}
                   >
                     {row.getVisibleCells().map((cell) => {
+                      const isActionsColumn = cell.column.id === "actions";
                       return (
                         <TableCell
                           key={cell.id}
@@ -175,6 +185,10 @@ export function DataTable<TData extends BaseRecord>({
                               column: cell.column,
                               isOverflowing: isOverflowing,
                             }),
+                          }}
+                          onClick={(e) => {
+                            // actions 컬럼이나 셀 내부 클릭은 행 클릭 이벤트를 막음
+                            e.stopPropagation();
                           }}
                         >
                           <div className="truncate">
