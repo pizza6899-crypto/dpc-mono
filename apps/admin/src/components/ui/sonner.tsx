@@ -1,5 +1,7 @@
-import { useTheme } from "next-themes";
+"use client";
+
 import { Toaster as Sonner, ToasterProps } from "sonner";
+import { useTheme } from "@/components/refine-ui/theme/theme-provider";
 
 const Toaster = ({ ...props }: ToasterProps) => {
   const { theme = "system" } = useTheme();

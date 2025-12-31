@@ -53,9 +53,20 @@
       }
     }
   },
+  "menu": {
+    "dashboard": "Dashboard"
+  },
   "pages": {
     "error": {
-      "info": "You may have forgotten to add the \"{action}\" component to \"{resource}\" resource."
+      "info": "You may have forgotten to add the \"{action}\" component to \"{resource}\" resource.",
+      "title": "Page not found.",
+      "description": "The page you're looking for does not exist.",
+      "backHome": "Back to homepage",
+      "unexpectedError": "An unexpected error occurred.",
+      "unexpectedErrorDescription": "If the problem persists, please refresh the page or try again later.",
+      "refresh": "Refresh",
+      "tryAgain": "Try again",
+      "errorId": "Error ID"
     },
     "signIn": {
       "title": "Sign in",

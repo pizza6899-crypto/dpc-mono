@@ -10,6 +10,7 @@ import {
 } from "@/components/ui/dropdown-menu";
 import { DropdownMenuTrigger } from "@/components/ui/dropdown-menu";
 import { ThemeToggle } from "@/components/refine-ui/theme/theme-toggle";
+import { LocaleSelect } from "@/components/refine-ui/locale/locale-select";
 import { UserAvatar } from "@/components/refine-ui/layout/user-avatar";
 import { useSidebar, SidebarTrigger } from "@/components/ui/sidebar";
 import { LogOutIcon } from "lucide-react";
@@ -40,6 +41,7 @@ function DesktopHeader() {
         "z-40"
       )}
     >
+      <LocaleSelect className="w-auto min-w-[100px]" />
       <ThemeToggle />
       <UserDropdown />
     </header>
@@ -112,7 +114,10 @@ function MobileHeader() {
         </h2>
       </div>
 
-      <ThemeToggle className={cn("h-8", "w-8")} />
+      <div className={cn("flex", "items-center", "gap-2")}>
+        <LocaleSelect className="w-auto min-w-[80px] h-8" />
+        <ThemeToggle className={cn("h-8", "w-8")} />
+      </div>
     </header>
   );
 }

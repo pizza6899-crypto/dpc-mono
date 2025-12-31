@@ -3,6 +3,7 @@
 import React from "react";
 import { Refine } from "@refinedev/core";
 import { RefineKbar, RefineKbarProvider } from "@refinedev/kbar";
+import { useTranslations } from "next-intl";
 
 import routerProvider from "@refinedev/nextjs-router";
 
@@ -20,6 +21,7 @@ type RefineContextProps = {
 
 export const RefineContext = ({ children }: RefineContextProps) => {
   const notificationProvider = useNotificationProvider();
+  const t = useTranslations("menu");
 
   return (
     <RefineKbarProvider>
@@ -34,7 +36,7 @@ export const RefineContext = ({ children }: RefineContextProps) => {
               name: "dashboard",
               list: "/dashboard",
               meta: {
-                label: "대시보드",
+                label: t("dashboard"),
                 icon: null,
               },
             },

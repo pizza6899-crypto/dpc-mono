@@ -32,7 +32,11 @@ const localeOptions: LocaleOption[] = [
   },
 ];
 
-export function LocaleSelect() {
+type LocaleSelectProps = {
+  className?: string;
+};
+
+export function LocaleSelect({ className }: LocaleSelectProps = {}) {
   const { locale, setLocale } = useLocale();
 
   const currentLocale = localeOptions.find((option) => option.value === locale) || localeOptions[0];
@@ -44,7 +48,6 @@ export function LocaleSelect() {
           variant="ghost"
           size="sm"
           className={cn(
-            "w-full",
             "justify-between",
             "px-3",
             "text-left",
@@ -55,7 +58,8 @@ export function LocaleSelect() {
             "hover:text-accent-foreground",
             "focus-visible:outline-none",
             "focus-visible:ring-2",
-            "focus-visible:ring-ring"
+            "focus-visible:ring-ring",
+            className
           )}
         >
           <div className="flex items-center gap-2">

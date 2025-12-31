@@ -53,9 +53,20 @@
       }
     }
   },
+  "menu": {
+    "dashboard": "대시보드"
+  },
   "pages": {
     "error": {
-      "info": "리소스 \"{resource}\"에 \"{action}\" 컴포넌트를 추가하는 것을 잊으셨을 수 있습니다."
+      "info": "리소스 \"{resource}\"에 \"{action}\" 컴포넌트를 추가하는 것을 잊으셨을 수 있습니다.",
+      "title": "페이지를 찾을 수 없습니다.",
+      "description": "찾고 계신 페이지가 존재하지 않습니다.",
+      "backHome": "홈으로 돌아가기",
+      "unexpectedError": "예기치 않은 오류가 발생했습니다.",
+      "unexpectedErrorDescription": "문제가 지속되면 페이지를 새로고침하거나 잠시 후 다시 시도해주세요.",
+      "refresh": "새로고침",
+      "tryAgain": "다시 시도",
+      "errorId": "오류 ID"
     },
     "signIn": {
       "title": "로그인",
