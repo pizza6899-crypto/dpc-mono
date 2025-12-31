@@ -1,86 +1,117 @@
 "use client";
 
 import type { AuthProvider } from "@refinedev/core";
-import Cookies from "js-cookie";
-
-const mockUsers = [
-  {
-    name: "John Doe",
-    email: "johndoe@mail.com",
-    roles: ["admin"],
-    avatar: "https://i.pravatar.cc/150?img=1",
-  },
-  {
-    name: "Jane Doe",
-    email: "janedoe@mail.com",
-    roles: ["editor"],
-    avatar: "https://i.pravatar.cc/150?img=1",
-  },
-];
+import {
+  credentialAdminControllerLogin,
+  credentialAdminControllerLogout,
+  credentialAdminControllerCheckStatus,
+} from "@/api/generated/endpoints/admin-auth-관리자-인증/admin-auth-관리자-인증";
 
 export const authProviderClient: AuthProvider = {
-  login: async ({ email, username, password, remember }) => {
-    // Suppose we actually send a request to the back end here.
-    const user = mockUsers[0];
-
-    if (user) {
-      Cookies.set("auth", JSON.stringify(user), {
-        expires: 30, // 30 days
-        path: "/",
+  login: async ({ email, username, password }) => {
+    try {
+      const response = await credentialAdminControllerLogin({
+        email: email || username || "",
+        password: password || "",
       });
+
+      if (response.success && response.data?.user) {
+        return {
+          success: true,
+          redirectTo: "/dashboard",
+        };
+      }
+
       return {
-        success: true,
-        redirectTo: "/",
+        success: false,
+        error: {
+          name: "LoginError",
+          message: "Invalid email or password",
+        },
+      };
+    } catch (error: unknown) {
+      const errorMessage =
+        (error as { response?: { data?: { message?: string } }; message?: string })
+          ?.response?.data?.message ||
+        (error as { message?: string })?.message ||
+        "Login failed";
+
+      return {
+        success: false,
+        error: {
+          name: "LoginError",
+          message: errorMessage,
+        },
       };
     }
-
-    return {
-      success: false,
-      error: {
-        name: "LoginError",
-        message: "Invalid username or password",
-      },
-    };
   },
   logout: async () => {
-    Cookies.remove("auth", { path: "/" });
-    return {
-      success: true,
-      redirectTo: "/login",
-    };
-  },
-  check: async () => {
-    const auth = Cookies.get("auth");
-    if (auth) {
+    try {
+      await credentialAdminControllerLogout();
       return {
-        authenticated: true,
+        success: true,
+        redirectTo: "/login",
+      };
+    } catch {
+      // 로그아웃은 항상 성공으로 처리
+      return {
+        success: true,
+        redirectTo: "/login",
       };
     }
+  },
+  check: async () => {
+    try {
+      const response = await credentialAdminControllerCheckStatus();
 
-    return {
-      authenticated: false,
-      logout: true,
-      redirectTo: "/login",
-    };
+      if (response.success && response.data?.isAuthenticated) {
+        return {
+          authenticated: true,
+        };
+      }
+
+      return {
+        authenticated: false,
+        logout: true,
+        redirectTo: "/login",
+      };
+    } catch {
+      return {
+        authenticated: false,
+        logout: true,
+        redirectTo: "/login",
+      };
+    }
   },
   getPermissions: async () => {
-    const auth = Cookies.get("auth");
-    if (auth) {
-      const parsedUser = JSON.parse(auth);
-      return parsedUser.roles;
+    try {
+      const response = await credentialAdminControllerCheckStatus();
+      if (response.success && response.data?.user) {
+        // 관리자는 항상 admin 권한을 가진다고 가정
+        // 실제로는 백엔드에서 권한 정보를 제공해야 함
+        return ["admin"];
+      }
+      return null;
+    } catch {
+      return null;
     }
-    return null;
   },
   getIdentity: async () => {
-    const auth = Cookies.get("auth");
-    if (auth) {
-      const parsedUser = JSON.parse(auth);
-      return parsedUser;
+    try {
+      const response = await credentialAdminControllerCheckStatus();
+      if (response.success && response.data?.user) {
+        return {
+          uid: response.data.user.uid,
+          email: response.data.user.email,
+        };
+      }
+      return null;
+    } catch {
+      return null;
     }
-    return null;
   },
   onError: async (error) => {
-    if (error.response?.status === 401) {
+    if (error?.response?.status === 401) {
       return {
         logout: true,
       };

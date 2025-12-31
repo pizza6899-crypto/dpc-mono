@@ -1,7 +1,7 @@
 "use client";
 
 import React from "react";
-import { Refine, GitHubBanner } from "@refinedev/core";
+import { Refine } from "@refinedev/core";
 import { RefineKbar, RefineKbarProvider } from "@refinedev/kbar";
 
 import routerProvider from "@refinedev/nextjs-router";
@@ -31,23 +31,11 @@ export const RefineContext = ({ children }: RefineContextProps) => {
           routerProvider={routerProvider}
           resources={[
             {
-              name: "blog_posts",
-              list: "/blog-posts",
-              create: "/blog-posts/create",
-              edit: "/blog-posts/edit/:id",
-              show: "/blog-posts/show/:id",
+              name: "dashboard",
+              list: "/dashboard",
               meta: {
-                canDelete: true,
-              },
-            },
-            {
-              name: "categories",
-              list: "/categories",
-              create: "/categories/create",
-              edit: "/categories/edit/:id",
-              show: "/categories/show/:id",
-              meta: {
-                canDelete: true,
+                label: "대시보드",
+                icon: null,
               },
             },
           ]}
