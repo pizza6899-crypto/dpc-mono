@@ -4,6 +4,7 @@ import React from "react";
 import { Refine } from "@refinedev/core";
 import { RefineKbar, RefineKbarProvider } from "@refinedev/kbar";
 import { useTranslations } from "next-intl";
+import { LayoutDashboard, Users } from "lucide-react";
 
 import routerProvider from "@refinedev/nextjs-router";
 
@@ -37,7 +38,7 @@ export const RefineContext = ({ children }: RefineContextProps) => {
               list: "/dashboard",
               meta: {
                 label: t("dashboard"),
-                icon: null,
+                icon: <LayoutDashboard className="h-4 w-4" />,
               },
             },
             {
@@ -47,7 +48,7 @@ export const RefineContext = ({ children }: RefineContextProps) => {
               edit: "/users/edit/:id",
               meta: {
                 label: t("users"),
-                icon: null,
+                icon: <Users className="h-4 w-4" />,
               },
             },
           ]}
