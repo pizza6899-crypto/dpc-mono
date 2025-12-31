@@ -36,6 +36,7 @@ export class SessionSerializer extends PassportSerializer {
         role: user.role,
         status: UserStatus.ACTIVE, // 로그인 시점에는 항상 ACTIVE
       };
+      
       done(null, serializedUser);
   }
 

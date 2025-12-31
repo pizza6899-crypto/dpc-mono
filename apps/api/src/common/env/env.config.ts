@@ -93,7 +93,7 @@ export const sessionConfig = registerAs('session', () => ({
   secret: process.env.SESSION_SECRET,
   maxAge: parseInt(process.env.SESSION_MAX_AGE ?? '604800000', 10), // 7일 (밀리초)
   secure: process.env.SESSION_SECURE === 'true',
-  httpOnly: process.env.SESSION_HTTP_ONLY !== 'false',
+  httpOnly: process.env.SESSION_HTTP_ONLY?.toLowerCase().trim() !== 'false',
   sameSite:
     (process.env.SESSION_SAME_SITE as 'lax' | 'strict' | 'none') || 'lax',
   name: process.env.SESSION_NAME || 'sessionId',
@@ -103,7 +103,7 @@ export const adminSessionConfig = registerAs('adminSession', () => ({
   secret: process.env.ADMIN_SESSION_SECRET,
   maxAge: parseInt(process.env.ADMIN_SESSION_MAX_AGE ?? '3600000', 10), // 1시간 (밀리초)
   secure: process.env.ADMIN_SESSION_SECURE === 'true',
-  httpOnly: process.env.ADMIN_SESSION_HTTP_ONLY !== 'false',
+  httpOnly: process.env.ADMIN_SESSION_HTTP_ONLY?.toLowerCase().trim() !== 'false',
   sameSite:
     (process.env.ADMIN_SESSION_SAME_SITE as 'lax' | 'strict' | 'none') ||
     'strict',
@@ -118,7 +118,7 @@ export const csrfConfig = registerAs('csrf', () => ({
   sameSite:
     (process.env.CSRF_SAME_SITE as 'lax' | 'strict' | 'none') || 'strict',
   maxAge: parseInt(process.env.CSRF_MAX_AGE ?? '86400000', 10), // 24시간 (밀리초)
-  httpOnly: process.env.CSRF_HTTP_ONLY !== 'false',
+  httpOnly: process.env.CSRF_HTTP_ONLY?.toLowerCase().trim() !== 'false',
 }));
 
 export const smtpConfig = registerAs('smtp', () => ({

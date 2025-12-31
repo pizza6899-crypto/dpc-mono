@@ -19,7 +19,6 @@ import {
   walletConfig,
   openExchangeRatesConfig,
 } from './env.config';
-import { validate } from './env.validation';
 
 @Module({
   imports: [
@@ -43,11 +42,6 @@ import { validate } from './env.validation';
         depositConfig,
         walletConfig,
       ],
-      validate,
-      validationOptions: {
-        allowUnknown: true,
-        abortEarly: false,
-      },
     }),
   ],
   providers: [EnvService],
