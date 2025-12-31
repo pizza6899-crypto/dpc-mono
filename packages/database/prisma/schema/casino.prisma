@@ -1,0 +1,159 @@
+enum GameAggregatorType {
+  WHITECLIFF
+  DCS
+}
+
+enum GameCategory {
+  LIVE_CASINO
+  SLOTS
+}
+
+enum GameProvider {
+  EVOLUTION
+  PRAGMATIC_PLAY_LIVE
+  PG_SOFT
+  PRAGMATIC_PLAY_SLOTS
+  RELAX_GAMING
+  PLAYNGO
+}
+
+
+model Game {
+  id               Int                @id @default(autoincrement())
+  aggregatorType   GameAggregatorType @map("aggregator_type")
+  provider         GameProvider
+  category         GameCategory
+  gameId           Int                 @map("game_id")
+  gameType         String?            @map("game_type")
+  tableId          String?            @map("table_id")
+  iconLink         String?            @map("icon_link")
+  isEnabled        Boolean            @map("is_enabled")
+  isVisibleToUser  Boolean            @default(true) @map("is_visible_to_user")
+  houseEdge        Decimal            @default(0.04) @db.Decimal(8, 4) @map("house_edge")
+  contributionRate Decimal            @default(1.0) @db.Decimal(8, 4) @map("contribution_rate")
+  createdAt        DateTime           @default(now()) @map("created_at")
+  updatedAt        DateTime           @updatedAt @map("updated_at")
+  bonusDetails     BonusDetail[]
+  gameRounds       GameRound[]
+  gameSessions     GameSession[]
+  translations     GameTranslation[]
+
+  @@unique([aggregatorType, provider, gameId])
+  @@index([isEnabled])
+  @@map("games")
+}
+
+model GameTranslation {
+  id           Int      @id @default(autoincrement())
+  gameId       Int      @map("game_id")
+  language     Language
+  providerName String   @map("provider_name")
+  categoryName String   @map("category_name")
+  gameName     String   @map("game_name")
+  createdAt    DateTime @default(now()) @map("created_at")
+  updatedAt    DateTime @updatedAt @map("updated_at")
+  game         Game     @relation(fields: [gameId], references: [id], onDelete: Cascade)
+
+  @@unique([gameId, language])
+  @@index([language])
+  @@map("game_translations")
+}
+
+model GameSession {
+  id                     BigInt               @id @default(autoincrement())
+  userId                 BigInt               @map("user_id")
+  createdAt              DateTime             @default(now()) @map("created_at")
+  updatedAt              DateTime             @updatedAt @map("updated_at")
+  lastAccessedAt         DateTime             @default(now()) @map("last_accessed_at")
+  aggregatorType         GameAggregatorType   @map("aggregator_type")
+  token                  String               @unique
+  walletCurrency         ExchangeCurrencyCode @map("wallet_currency")
+  gameCurrency           ExchangeCurrencyCode @map("game_currency")
+  exchangeRate           Decimal              @db.Decimal(32, 18) @map("exchange_rate")
+  exchangeRateSnapshotAt DateTime             @default(now()) @map("exchange_rate_snapshot_at")
+  gameId                 Int?                 @map("game_id")
+  gameRounds             GameRound[]
+  game                   Game?                @relation(fields: [gameId], references: [id])
+  user                   User                 @relation(fields: [userId], references: [id])
+
+  @@map("game_sessions")
+}
+
+model GameRound {
+  id                             BigInt                @id @default(autoincrement())
+  userId                         BigInt                @map("user_id")
+  aggregatorType                 GameAggregatorType     @map("aggregator_type")
+  provider                       GameProvider
+  aggregatorTxId                 String                @map("aggregator_tx_id")
+  aggregatorGameId               Int                   @map("aggregator_game_id")
+  totalBetAmountInGameCurrency   Decimal?              @db.Decimal(32, 18) @map("total_bet_amount_in_game_currency")
+  totalWinAmountInGameCurrency   Decimal?              @db.Decimal(32, 18) @map("total_win_amount_in_game_currency")
+  netAmountInGameCurrency        Decimal?              @db.Decimal(32, 18) @map("net_amount_in_game_currency")
+  totalBetAmountInWalletCurrency Decimal?             @db.Decimal(32, 18) @map("total_bet_amount_in_wallet_currency")
+  totalWinAmountInWalletCurrency Decimal?              @db.Decimal(32, 18) @map("total_win_amount_in_wallet_currency")
+  netAmountInWalletCurrency      Decimal?              @db.Decimal(32, 18) @map("net_amount_in_wallet_currency")
+  transactionId                  BigInt                @unique @map("transaction_id")
+  sessionId                      String?               @map("session_id")
+  tableId                        String?                @map("table_id")
+  roundId                        String?                @map("round_id")
+  replayType                     GameReplayType?        @map("replay_type")
+  replayData                     String?                @map("replay_data")
+  totalPushAmount                Decimal?               @db.Decimal(32, 18) @map("total_push_amount")
+  tieBetAmount                   Decimal?               @db.Decimal(32, 18) @map("tie_bet_amount")
+  contributionAmount             Decimal?               @db.Decimal(32, 18) @map("contribution_amount")
+  compEarned                     Decimal?               @db.Decimal(32, 18) @map("comp_earned")
+  jackpotContributionAmount      Decimal               @default(0) @db.Decimal(32, 18) @map("jackpot_contribution_amount")
+  startedAt                      DateTime?              @map("started_at")
+  completedAt                    DateTime?              @map("completed_at")
+  gameId                         Int?                  @map("game_id")
+  gameSessionId                  BigInt                @map("game_session_id")
+  AffiliateCommission            AffiliateCommission[]
+  bets                           GameBet[]
+  game                           Game?                 @relation(fields: [gameId], references: [id])
+  GameSession                    GameSession           @relation(fields: [gameSessionId], references: [id])
+  transaction                    Transaction           @relation(fields: [transactionId], references: [id])
+  wins                           GameWin[]
+
+  @@unique([aggregatorTxId, aggregatorType])
+  @@map("game_rounds")
+}
+
+model GameBet {
+  id                      BigInt             @id @default(autoincrement())
+  userId                  BigInt             @map("user_id")
+  gameRoundId             BigInt             @map("game_round_id")
+  aggregatorType          GameAggregatorType @map("aggregator_type")
+  aggregatorBetId         String            @map("aggregator_bet_id")
+  betType                 BetType           @map("bet_type")
+  betAmount               Decimal            @db.Decimal(32, 18) @map("bet_amount")
+  bettedAt                DateTime          @map("betted_at")
+  betAmountInGameCurrency Decimal           @db.Decimal(32, 18) @map("bet_amount_in_game_currency")
+  createdAt               DateTime          @default(now()) @map("created_at")
+  isCancelled             Boolean           @default(false) @map("is_cancelled")
+  cancelledAt             DateTime?         @map("cancelled_at")
+  gameRound               GameRound          @relation(fields: [gameRoundId], references: [id], onDelete: Cascade)
+
+  @@unique([aggregatorBetId, aggregatorType])
+  @@index([gameRoundId])
+  @@map("game_bets")
+}
+
+model GameWin {
+  id                      BigInt             @id @default(autoincrement())
+  userId                  BigInt              @map("user_id")
+  gameRoundId             BigInt              @map("game_round_id")
+  aggregatorType          GameAggregatorType  @map("aggregator_type")
+  aggregatorWinId         String             @map("aggregator_win_id")
+  winType                 WinType            @map("win_type")
+  winAmount               Decimal             @db.Decimal(32, 18) @map("win_amount")
+  wonAt                   DateTime           @map("won_at")
+  description             String?
+  winAmountInGameCurrency Decimal            @db.Decimal(32, 18) @map("win_amount_in_game_currency")
+  createdAt               DateTime           @default(now()) @map("created_at")
+  gameRound               GameRound          @relation(fields: [gameRoundId], references: [id], onDelete: Cascade)
+
+  @@unique([aggregatorWinId, aggregatorType])
+  @@index([gameRoundId])
+  @@map("game_wins")
+}
+

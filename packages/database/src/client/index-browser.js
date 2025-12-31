@@ -120,6 +120,44 @@ exports.Prisma.TransactionIsolationLevel = makeStrictEnum({
   Serializable: 'Serializable'
 });
 
+exports.Prisma.NowPaymentCallbackLogScalarFieldEnum = {
+  id: 'id',
+  requestHeaders: 'requestHeaders',
+  requestBody: 'requestBody',
+  responseStatus: 'responseStatus',
+  responseBody: 'responseBody',
+  processed: 'processed',
+  processingError: 'processingError',
+  processedAt: 'processedAt',
+  createdAt: 'createdAt'
+};
+
+exports.Prisma.WhitecliffApiLogScalarFieldEnum = {
+  id: 'id',
+  userId: 'userId',
+  action: 'action',
+  endpoint: 'endpoint',
+  httpMethod: 'httpMethod',
+  request: 'request',
+  response: 'response',
+  statusCode: 'statusCode',
+  success: 'success',
+  createdAt: 'createdAt'
+};
+
+exports.Prisma.DcsApiLogScalarFieldEnum = {
+  id: 'id',
+  userId: 'userId',
+  action: 'action',
+  endpoint: 'endpoint',
+  httpMethod: 'httpMethod',
+  request: 'request',
+  response: 'response',
+  statusCode: 'statusCode',
+  success: 'success',
+  createdAt: 'createdAt'
+};
+
 exports.Prisma.AuthAuditLogScalarFieldEnum = {
   id: 'id',
   createdAt: 'createdAt',
@@ -218,51 +256,6 @@ exports.Prisma.UnifiedLogScalarFieldEnum = {
   metadata: 'metadata'
 };
 
-exports.Prisma.UserScalarFieldEnum = {
-  id: 'id',
-  uid: 'uid',
-  whitecliffId: 'whitecliffId',
-  whitecliffSystemId: 'whitecliffSystemId',
-  whitecliffUsername: 'whitecliffUsername',
-  dcsId: 'dcsId',
-  email: 'email',
-  passwordHash: 'passwordHash',
-  socialType: 'socialType',
-  socialId: 'socialId',
-  role: 'role',
-  status: 'status',
-  kycLevel: 'kycLevel',
-  country: 'country',
-  language: 'language',
-  timezone: 'timezone',
-  timezoneOffset: 'timezoneOffset',
-  createdAt: 'createdAt',
-  updatedAt: 'updatedAt'
-};
-
-exports.Prisma.UserBalanceScalarFieldEnum = {
-  userId: 'userId',
-  currency: 'currency',
-  mainBalance: 'mainBalance',
-  bonusBalance: 'bonusBalance',
-  updatedAt: 'updatedAt'
-};
-
-exports.Prisma.UserBalanceStatsScalarFieldEnum = {
-  userId: 'userId',
-  currency: 'currency',
-  totalDeposit: 'totalDeposit',
-  totalWithdraw: 'totalWithdraw',
-  totalBet: 'totalBet',
-  totalWin: 'totalWin',
-  totalBonus: 'totalBonus',
-  totalCompEarned: 'totalCompEarned',
-  totalCompUsed: 'totalCompUsed',
-  totalSettlementFromBet: 'totalSettlementFromBet',
-  totalSettlementFromVip: 'totalSettlementFromVip',
-  updatedAt: 'updatedAt'
-};
-
 exports.Prisma.GameScalarFieldEnum = {
   id: 'id',
   aggregatorType: 'aggregatorType',
@@ -291,43 +284,19 @@ exports.Prisma.GameTranslationScalarFieldEnum = {
   updatedAt: 'updatedAt'
 };
 
-exports.Prisma.WhitecliffApiLogScalarFieldEnum = {
+exports.Prisma.GameSessionScalarFieldEnum = {
   id: 'id',
   userId: 'userId',
-  action: 'action',
-  endpoint: 'endpoint',
-  httpMethod: 'httpMethod',
-  request: 'request',
-  response: 'response',
-  statusCode: 'statusCode',
-  success: 'success',
-  createdAt: 'createdAt'
-};
-
-exports.Prisma.DcsApiLogScalarFieldEnum = {
-  id: 'id',
-  userId: 'userId',
-  action: 'action',
-  endpoint: 'endpoint',
-  httpMethod: 'httpMethod',
-  request: 'request',
-  response: 'response',
-  statusCode: 'statusCode',
-  success: 'success',
-  createdAt: 'createdAt'
-};
-
-exports.Prisma.TransactionScalarFieldEnum = {
-  id: 'id',
-  userId: 'userId',
-  type: 'type',
-  status: 'status',
-  currency: 'currency',
-  amount: 'amount',
-  beforeAmount: 'beforeAmount',
-  afterAmount: 'afterAmount',
   createdAt: 'createdAt',
-  updatedAt: 'updatedAt'
+  updatedAt: 'updatedAt',
+  lastAccessedAt: 'lastAccessedAt',
+  aggregatorType: 'aggregatorType',
+  token: 'token',
+  walletCurrency: 'walletCurrency',
+  gameCurrency: 'gameCurrency',
+  exchangeRate: 'exchangeRate',
+  exchangeRateSnapshotAt: 'exchangeRateSnapshotAt',
+  gameId: 'gameId'
 };
 
 exports.Prisma.GameRoundScalarFieldEnum = {
@@ -387,6 +356,64 @@ exports.Prisma.GameWinScalarFieldEnum = {
   description: 'description',
   winAmountInGameCurrency: 'winAmountInGameCurrency',
   createdAt: 'createdAt'
+};
+
+exports.Prisma.UserScalarFieldEnum = {
+  id: 'id',
+  uid: 'uid',
+  whitecliffId: 'whitecliffId',
+  whitecliffSystemId: 'whitecliffSystemId',
+  whitecliffUsername: 'whitecliffUsername',
+  dcsId: 'dcsId',
+  email: 'email',
+  passwordHash: 'passwordHash',
+  socialType: 'socialType',
+  socialId: 'socialId',
+  role: 'role',
+  status: 'status',
+  kycLevel: 'kycLevel',
+  country: 'country',
+  language: 'language',
+  timezone: 'timezone',
+  timezoneOffset: 'timezoneOffset',
+  createdAt: 'createdAt',
+  updatedAt: 'updatedAt'
+};
+
+exports.Prisma.UserBalanceScalarFieldEnum = {
+  userId: 'userId',
+  currency: 'currency',
+  mainBalance: 'mainBalance',
+  bonusBalance: 'bonusBalance',
+  updatedAt: 'updatedAt'
+};
+
+exports.Prisma.UserBalanceStatsScalarFieldEnum = {
+  userId: 'userId',
+  currency: 'currency',
+  totalDeposit: 'totalDeposit',
+  totalWithdraw: 'totalWithdraw',
+  totalBet: 'totalBet',
+  totalWin: 'totalWin',
+  totalBonus: 'totalBonus',
+  totalCompEarned: 'totalCompEarned',
+  totalCompUsed: 'totalCompUsed',
+  totalSettlementFromBet: 'totalSettlementFromBet',
+  totalSettlementFromVip: 'totalSettlementFromVip',
+  updatedAt: 'updatedAt'
+};
+
+exports.Prisma.TransactionScalarFieldEnum = {
+  id: 'id',
+  userId: 'userId',
+  type: 'type',
+  status: 'status',
+  currency: 'currency',
+  amount: 'amount',
+  beforeAmount: 'beforeAmount',
+  afterAmount: 'afterAmount',
+  createdAt: 'createdAt',
+  updatedAt: 'updatedAt'
 };
 
 exports.Prisma.TransactionBalanceDetailScalarFieldEnum = {
@@ -532,18 +559,6 @@ exports.Prisma.UserPromotionScalarFieldEnum = {
   updatedAt: 'updatedAt'
 };
 
-exports.Prisma.NowPaymentCallbackLogScalarFieldEnum = {
-  id: 'id',
-  requestHeaders: 'requestHeaders',
-  requestBody: 'requestBody',
-  responseStatus: 'responseStatus',
-  responseBody: 'responseBody',
-  processed: 'processed',
-  processingError: 'processingError',
-  processedAt: 'processedAt',
-  createdAt: 'createdAt'
-};
-
 exports.Prisma.ExchangeRateScalarFieldEnum = {
   id: 'id',
   baseCurrency: 'baseCurrency',
@@ -640,21 +655,6 @@ exports.Prisma.EmailLogScalarFieldEnum = {
   metadata: 'metadata',
   sentAt: 'sentAt',
   createdAt: 'createdAt'
-};
-
-exports.Prisma.GameSessionScalarFieldEnum = {
-  id: 'id',
-  userId: 'userId',
-  createdAt: 'createdAt',
-  updatedAt: 'updatedAt',
-  lastAccessedAt: 'lastAccessedAt',
-  aggregatorType: 'aggregatorType',
-  token: 'token',
-  walletCurrency: 'walletCurrency',
-  gameCurrency: 'gameCurrency',
-  exchangeRate: 'exchangeRate',
-  exchangeRateSnapshotAt: 'exchangeRateSnapshotAt',
-  gameId: 'gameId'
 };
 
 exports.Prisma.BankAccountScalarFieldEnum = {
@@ -797,44 +797,38 @@ exports.Prisma.JsonNullValueInput = {
   JsonNull: Prisma.JsonNull
 };
 
-exports.Prisma.QueryMode = {
-  default: 'default',
-  insensitive: 'insensitive'
-};
-
 exports.Prisma.JsonNullValueFilter = {
   DbNull: Prisma.DbNull,
   JsonNull: Prisma.JsonNull,
   AnyNull: Prisma.AnyNull
 };
 
+exports.Prisma.QueryMode = {
+  default: 'default',
+  insensitive: 'insensitive'
+};
+
 exports.Prisma.NullsOrder = {
   first: 'first',
   last: 'last'
 };
-exports.SocialType = exports.$Enums.SocialType = {
-  GOOGLE: 'GOOGLE',
-  APPLE: 'APPLE',
-  TELEGRAM: 'TELEGRAM'
+exports.GameAggregatorType = exports.$Enums.GameAggregatorType = {
+  WHITECLIFF: 'WHITECLIFF',
+  DCS: 'DCS'
 };
 
-exports.UserRoleType = exports.$Enums.UserRoleType = {
-  USER: 'USER',
-  AGENT: 'AGENT',
-  ADMIN: 'ADMIN',
-  SUPER_ADMIN: 'SUPER_ADMIN'
+exports.GameProvider = exports.$Enums.GameProvider = {
+  EVOLUTION: 'EVOLUTION',
+  PRAGMATIC_PLAY_LIVE: 'PRAGMATIC_PLAY_LIVE',
+  PG_SOFT: 'PG_SOFT',
+  PRAGMATIC_PLAY_SLOTS: 'PRAGMATIC_PLAY_SLOTS',
+  RELAX_GAMING: 'RELAX_GAMING',
+  PLAYNGO: 'PLAYNGO'
 };
 
-exports.UserStatus = exports.$Enums.UserStatus = {
-  ACTIVE: 'ACTIVE',
-  SUSPENDED: 'SUSPENDED',
-  CLOSED: 'CLOSED'
-};
-
-exports.KycLevel = exports.$Enums.KycLevel = {
-  NONE: 'NONE',
-  BASIC: 'BASIC',
-  FULL: 'FULL'
+exports.GameCategory = exports.$Enums.GameCategory = {
+  LIVE_CASINO: 'LIVE_CASINO',
+  SLOTS: 'SLOTS'
 };
 
 exports.Language = exports.$Enums.Language = {
@@ -862,39 +856,6 @@ exports.ExchangeCurrencyCode = exports.$Enums.ExchangeCurrencyCode = {
   TRX: 'TRX'
 };
 
-exports.GameAggregatorType = exports.$Enums.GameAggregatorType = {
-  WHITECLIFF: 'WHITECLIFF',
-  DCS: 'DCS'
-};
-
-exports.GameProvider = exports.$Enums.GameProvider = {
-  EVOLUTION: 'EVOLUTION',
-  PRAGMATIC_PLAY_LIVE: 'PRAGMATIC_PLAY_LIVE',
-  PG_SOFT: 'PG_SOFT',
-  PRAGMATIC_PLAY_SLOTS: 'PRAGMATIC_PLAY_SLOTS',
-  RELAX_GAMING: 'RELAX_GAMING',
-  PLAYNGO: 'PLAYNGO'
-};
-
-exports.GameCategory = exports.$Enums.GameCategory = {
-  LIVE_CASINO: 'LIVE_CASINO',
-  SLOTS: 'SLOTS'
-};
-
-exports.TransactionType = exports.$Enums.TransactionType = {
-  DEPOSIT: 'DEPOSIT',
-  WITHDRAW: 'WITHDRAW',
-  GAME: 'GAME',
-  BONUS: 'BONUS',
-  COMP_CLAIM: 'COMP_CLAIM'
-};
-
-exports.TransactionStatus = exports.$Enums.TransactionStatus = {
-  PENDING: 'PENDING',
-  COMPLETED: 'COMPLETED',
-  CANCELLED: 'CANCELLED'
-};
-
 exports.GameReplayType = exports.$Enums.GameReplayType = {
   TEXT: 'TEXT',
   URL: 'URL',
@@ -909,6 +870,45 @@ exports.BetType = exports.$Enums.BetType = {
 exports.WinType = exports.$Enums.WinType = {
   NORMAL: 'NORMAL',
   JACKPOT: 'JACKPOT'
+};
+
+exports.SocialType = exports.$Enums.SocialType = {
+  GOOGLE: 'GOOGLE',
+  APPLE: 'APPLE',
+  TELEGRAM: 'TELEGRAM'
+};
+
+exports.UserRoleType = exports.$Enums.UserRoleType = {
+  USER: 'USER',
+  AGENT: 'AGENT',
+  ADMIN: 'ADMIN',
+  SUPER_ADMIN: 'SUPER_ADMIN'
+};
+
+exports.UserStatus = exports.$Enums.UserStatus = {
+  ACTIVE: 'ACTIVE',
+  SUSPENDED: 'SUSPENDED',
+  CLOSED: 'CLOSED'
+};
+
+exports.KycLevel = exports.$Enums.KycLevel = {
+  NONE: 'NONE',
+  BASIC: 'BASIC',
+  FULL: 'FULL'
+};
+
+exports.TransactionType = exports.$Enums.TransactionType = {
+  DEPOSIT: 'DEPOSIT',
+  WITHDRAW: 'WITHDRAW',
+  GAME: 'GAME',
+  BONUS: 'BONUS',
+  COMP_CLAIM: 'COMP_CLAIM'
+};
+
+exports.TransactionStatus = exports.$Enums.TransactionStatus = {
+  PENDING: 'PENDING',
+  COMPLETED: 'COMPLETED',
+  CANCELLED: 'CANCELLED'
 };
 
 exports.BonusType = exports.$Enums.BonusType = {
@@ -1043,22 +1043,24 @@ exports.SessionStatus = exports.$Enums.SessionStatus = {
 };
 
 exports.Prisma.ModelName = {
+  NowPaymentCallbackLog: 'NowPaymentCallbackLog',
+  WhitecliffApiLog: 'WhitecliffApiLog',
+  DcsApiLog: 'DcsApiLog',
   AuthAuditLog: 'AuthAuditLog',
   ActivityLog: 'ActivityLog',
   SystemErrorLog: 'SystemErrorLog',
   IntegrationLog: 'IntegrationLog',
   UnifiedLog: 'UnifiedLog',
-  User: 'User',
-  UserBalance: 'UserBalance',
-  UserBalanceStats: 'UserBalanceStats',
   Game: 'Game',
   GameTranslation: 'GameTranslation',
-  WhitecliffApiLog: 'WhitecliffApiLog',
-  DcsApiLog: 'DcsApiLog',
-  Transaction: 'Transaction',
+  GameSession: 'GameSession',
   GameRound: 'GameRound',
   GameBet: 'GameBet',
   GameWin: 'GameWin',
+  User: 'User',
+  UserBalance: 'UserBalance',
+  UserBalanceStats: 'UserBalanceStats',
+  Transaction: 'Transaction',
   TransactionBalanceDetail: 'TransactionBalanceDetail',
   BonusDetail: 'BonusDetail',
   DepositDetail: 'DepositDetail',
@@ -1068,7 +1070,6 @@ exports.Prisma.ModelName = {
   Promotion: 'Promotion',
   PromotionTranslation: 'PromotionTranslation',
   UserPromotion: 'UserPromotion',
-  NowPaymentCallbackLog: 'NowPaymentCallbackLog',
   ExchangeRate: 'ExchangeRate',
   VipLevel: 'VipLevel',
   VipMembership: 'VipMembership',
@@ -1076,7 +1077,6 @@ exports.Prisma.ModelName = {
   Rolling: 'Rolling',
   UserToken: 'UserToken',
   EmailLog: 'EmailLog',
-  GameSession: 'GameSession',
   BankAccount: 'BankAccount',
   AffiliateCode: 'AffiliateCode',
   Referral: 'Referral',

@@ -1,3 +1,47 @@
+model NowPaymentCallbackLog {
+  id              BigInt    @id @default(autoincrement())
+  requestHeaders  Json?     @map("request_headers")
+  requestBody     Json      @map("request_body")
+  responseStatus  Int?      @map("response_status")
+  responseBody    Json?     @map("response_body")
+  processed       Boolean   @default(false)
+  processingError String?   @map("processing_error")
+  processedAt     DateTime? @map("processed_at")
+  createdAt       DateTime  @default(now()) @map("created_at")
+
+  @@map("now_payment_callback_logs")
+}
+
+model WhitecliffApiLog {
+  id         BigInt   @id @default(autoincrement())
+  userId     BigInt?  @map("user_id")
+  action     String
+  endpoint   String
+  httpMethod String?  @map("http_method")
+  request    Json
+  response   Json
+  statusCode Int?     @map("status_code")
+  success    Boolean
+  createdAt  DateTime @default(now()) @map("created_at")
+
+  @@map("whitecliff_api_logs")
+}
+
+model DcsApiLog {
+  id         BigInt   @id @default(autoincrement())
+  userId     BigInt?  @map("user_id")
+  action     String
+  endpoint   String
+  httpMethod String?  @map("http_method")
+  request    Json
+  response   Json
+  statusCode Int?     @map("status_code")
+  success    Boolean
+  createdAt  DateTime @default(now()) @map("created_at")
+
+  @@map("dcs_api_logs")
+}
+
 // 1. 보안/인증 로그
 model AuthAuditLog {
   id                String   @default(cuid())
@@ -18,7 +62,7 @@ model AuthAuditLog {
   // 디바이스 정보
   isMobile          Boolean? @map("is_mobile") // 모바일 여부
   // Cloudflare 추적 정보 (디버깅용)
-  cfRay             String? @map("cf_ray") // CF-Ray: 요청 추적 ID
+  cfRay             String?  @map("cf_ray") // CF-Ray: 요청 추적 ID
   metadata          Json?
 
   @@id([id, createdAt])
@@ -72,7 +116,7 @@ model SystemErrorLog {
   sessionId    String?   @map("session_id")
   errorCode    String?   @map("error_code")
   errorMessage String    @map("error_message")
-  stackTrace   String?   @db.Text @map("stack_trace")
+  stackTrace   String?   @map("stack_trace") @db.Text
   metadata     Json? // 에러 당시 Request/Session 스냅샷용 추가
   path         String?
   method       String?
@@ -144,23 +188,23 @@ model IntegrationLog {
 
 /// @view
 model UnifiedLog {
-  id          String   @id
-  createdAt   DateTime @map("created_at")
-  userId      BigInt?  @map("user_id")
-  sessionId   String?  @map("session_id")
-  cfRay       String?  @map("cf_ray")
-  country     String?
-  city        String?
-  bot         Boolean?
-  threat      String?
-  isMobile    Boolean? @map("is_mobile")
-  ip          String?
-  
+  id        String   @id
+  createdAt DateTime @map("created_at")
+  userId    BigInt?  @map("user_id")
+  sessionId String?  @map("session_id")
+  cfRay     String?  @map("cf_ray")
+  country   String?
+  city      String?
+  bot       Boolean?
+  threat    String?
+  isMobile  Boolean? @map("is_mobile")
+  ip        String?
+
   // 구분자 필드
-  logType     String   @map("log_type") // AUTH, ACTIVITY, ERROR, INTEGRATION
-  category    String   // 각 테이블의 주요 분류
-  detail      String   // 주요 내용 (상태, 액션, 에러메시지 등)
-  metadata    Json?
+  logType  String @map("log_type") // AUTH, ACTIVITY, ERROR, INTEGRATION
+  category String // 각 테이블의 주요 분류
+  detail   String // 주요 내용 (상태, 액션, 에러메시지 등)
+  metadata Json?
 
   @@map("unified_logs")
 }

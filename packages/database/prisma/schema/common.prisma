@@ -44,8 +44,8 @@ model User {
   balances             UserBalance[]
   UserBalanceStats     UserBalanceStats[]
   UserPromotion        UserPromotion[]
-  UserSession          UserSession[]            @relation("UserSessions")
-  RevokedSessions      UserSession[]            @relation("RevokedSessions")
+  UserSession          UserSession[]         @relation("UserSessions")
+  RevokedSessions      UserSession[]         @relation("RevokedSessions")
   UserToken            UserToken[]
   VipHistory           VipHistory[]
   VipMembership        VipMembership?
@@ -85,71 +85,6 @@ model UserBalanceStats {
   @@index([currency])
 }
 
-model Game {
-  id               Int                @id @default(autoincrement())
-  aggregatorType   GameAggregatorType
-  provider         GameProvider
-  category         GameCategory
-  gameId           Int
-  gameType         String?
-  tableId          String?
-  iconLink         String?
-  isEnabled        Boolean
-  isVisibleToUser  Boolean            @default(true)
-  houseEdge        Decimal            @default(0.04) @db.Decimal(8, 4)
-  contributionRate Decimal            @default(1.0) @db.Decimal(8, 4)
-  createdAt        DateTime           @default(now())
-  updatedAt        DateTime           @updatedAt
-  bonusDetails     BonusDetail[]
-  gameRounds       GameRound[]
-  gameSessions     GameSession[]
-  translations     GameTranslation[]
-
-  @@unique([aggregatorType, provider, gameId])
-  @@index([isEnabled])
-}
-
-model GameTranslation {
-  id           Int      @id @default(autoincrement())
-  gameId       Int
-  language     Language
-  providerName String
-  categoryName String
-  gameName     String
-  createdAt    DateTime @default(now())
-  updatedAt    DateTime @updatedAt
-  game         Game     @relation(fields: [gameId], references: [id], onDelete: Cascade)
-
-  @@unique([gameId, language])
-  @@index([language])
-}
-
-model WhitecliffApiLog {
-  id         BigInt   @id @default(autoincrement())
-  userId     BigInt?
-  action     String
-  endpoint   String
-  httpMethod String?
-  request    Json
-  response   Json
-  statusCode Int?
-  success    Boolean
-  createdAt  DateTime @default(now())
-}
-
-model DcsApiLog {
-  id         BigInt   @id @default(autoincrement())
-  userId     BigInt?
-  action     String
-  endpoint   String
-  httpMethod String?
-  request    Json
-  response   Json
-  statusCode Int?
-  success    Boolean
-  createdAt  DateTime @default(now())
-}
-
 model Transaction {
   id              BigInt                     @id @default(autoincrement())
   userId          BigInt
@@ -168,81 +103,6 @@ model Transaction {
   user            User                       @relation(fields: [userId], references: [id])
   balanceDetails  TransactionBalanceDetail[]
   withdrawDetail  WithdrawDetail?
-}
-
-model GameRound {
-  id                             BigInt                @id @default(autoincrement())
-  userId                         BigInt
-  aggregatorType                 GameAggregatorType
-  provider                       GameProvider
-  aggregatorTxId                 String
-  aggregatorGameId               Int
-  totalBetAmountInGameCurrency   Decimal?              @db.Decimal(32, 18)
-  totalWinAmountInGameCurrency   Decimal?              @db.Decimal(32, 18)
-  netAmountInGameCurrency        Decimal?              @db.Decimal(32, 18)
-  totalBetAmountInWalletCurrency Decimal?              @db.Decimal(32, 18)
-  totalWinAmountInWalletCurrency Decimal?              @db.Decimal(32, 18)
-  netAmountInWalletCurrency      Decimal?              @db.Decimal(32, 18)
-  transactionId                  BigInt                @unique
-  sessionId                      String?
-  tableId                        String?
-  roundId                        String?
-  replayType                     GameReplayType?
-  replayData                     String?
-  totalPushAmount                Decimal?              @db.Decimal(32, 18)
-  tieBetAmount                   Decimal?              @db.Decimal(32, 18)
-  contributionAmount             Decimal?              @db.Decimal(32, 18)
-  compEarned                     Decimal?              @db.Decimal(32, 18)
-  jackpotContributionAmount      Decimal               @default(0) @db.Decimal(32, 18)
-  startedAt                      DateTime?
-  completedAt                    DateTime?
-  gameId                         Int?
-  gameSessionId                  BigInt
-  AffiliateCommission            AffiliateCommission[]
-  bets                           GameBet[]
-  game                           Game?                 @relation(fields: [gameId], references: [id])
-  GameSession                    GameSession           @relation(fields: [gameSessionId], references: [id])
-  transaction                    Transaction           @relation(fields: [transactionId], references: [id])
-  wins                           GameWin[]
-
-  @@unique([aggregatorTxId, aggregatorType])
-}
-
-model GameBet {
-  id                      BigInt             @id @default(autoincrement())
-  userId                  BigInt
-  gameRoundId             BigInt
-  aggregatorType          GameAggregatorType
-  aggregatorBetId         String
-  betType                 BetType
-  betAmount               Decimal            @db.Decimal(32, 18)
-  bettedAt                DateTime
-  betAmountInGameCurrency Decimal            @db.Decimal(32, 18)
-  createdAt               DateTime           @default(now())
-  isCancelled             Boolean            @default(false)
-  cancelledAt             DateTime?
-  gameRound               GameRound          @relation(fields: [gameRoundId], references: [id], onDelete: Cascade)
-
-  @@unique([aggregatorBetId, aggregatorType])
-  @@index([gameRoundId])
-}
-
-model GameWin {
-  id                      BigInt             @id @default(autoincrement())
-  userId                  BigInt
-  gameRoundId             BigInt
-  aggregatorType          GameAggregatorType
-  aggregatorWinId         String
-  winType                 WinType
-  winAmount               Decimal            @db.Decimal(32, 18)
-  wonAt                   DateTime
-  description             String?
-  winAmountInGameCurrency Decimal            @db.Decimal(32, 18)
-  createdAt               DateTime           @default(now())
-  gameRound               GameRound          @relation(fields: [gameRoundId], references: [id], onDelete: Cascade)
-
-  @@unique([aggregatorWinId, aggregatorType])
-  @@index([gameRoundId])
 }
 
 model TransactionBalanceDetail {
@@ -426,18 +286,6 @@ model UserPromotion {
   user           User                @relation(fields: [userId], references: [id])
 }
 
-model NowPaymentCallbackLog {
-  id              BigInt    @id @default(autoincrement())
-  requestHeaders  Json?
-  requestBody     Json
-  responseStatus  Int?
-  responseBody    Json?
-  processed       Boolean   @default(false)
-  processingError String?
-  processedAt     DateTime?
-  createdAt       DateTime  @default(now())
-}
-
 model ExchangeRate {
   id            Int                  @id @default(autoincrement())
   baseCurrency  ExchangeCurrencyCode
@@ -568,24 +416,6 @@ model EmailLog {
   @@index([to, type, createdAt])
   @@index([status, createdAt])
   @@index([type, status])
-}
-
-model GameSession {
-  id                     BigInt               @id @default(autoincrement())
-  userId                 BigInt
-  createdAt              DateTime             @default(now())
-  updatedAt              DateTime             @updatedAt
-  lastAccessedAt         DateTime             @default(now())
-  aggregatorType         GameAggregatorType
-  token                  String               @unique
-  walletCurrency         ExchangeCurrencyCode
-  gameCurrency           ExchangeCurrencyCode
-  exchangeRate           Decimal              @db.Decimal(32, 18)
-  exchangeRateSnapshotAt DateTime             @default(now())
-  gameId                 Int?
-  gameRounds             GameRound[]
-  game                   Game?                @relation(fields: [gameId], references: [id])
-  user                   User                 @relation(fields: [userId], references: [id])
 }
 
 model BankAccount {
@@ -767,25 +597,6 @@ enum KycLevel {
   NONE
   BASIC
   FULL
-}
-
-enum GameAggregatorType {
-  WHITECLIFF
-  DCS
-}
-
-enum GameCategory {
-  LIVE_CASINO
-  SLOTS
-}
-
-enum GameProvider {
-  EVOLUTION
-  PRAGMATIC_PLAY_LIVE
-  PG_SOFT
-  PRAGMATIC_PLAY_SLOTS
-  RELAX_GAMING
-  PLAYNGO
 }
 
 enum TransactionType {
