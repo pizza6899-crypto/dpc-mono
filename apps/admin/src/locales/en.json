@@ -51,6 +51,22 @@
         "endswiths": "Ends with (case sensitive)",
         "nendswiths": "Does not end with (case sensitive)"
       }
+    },
+    "copy": {
+      "copied": "Copied",
+      "clickToCopy": "Click to copy"
+    },
+    "user": {
+      "id": "ID",
+      "uid": "UID",
+      "email": "Email",
+      "role": "Role",
+      "status": "Status",
+      "country": "Country",
+      "timezone": "Timezone",
+      "createdAt": "Created At",
+      "updatedAt": "Updated At",
+      "actions": "Actions"
     }
   },
   "menu": {

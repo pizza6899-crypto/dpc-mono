@@ -51,6 +51,22 @@
         "endswiths": "끝 (대소문자 구분)",
         "nendswiths": "끝나지 않음 (대소문자 구분)"
       }
+    },
+    "copy": {
+      "copied": "복사됨",
+      "clickToCopy": "클릭하여 복사"
+    },
+    "user": {
+      "id": "ID",
+      "uid": "UID",
+      "email": "이메일",
+      "role": "역할",
+      "status": "상태",
+      "country": "국가",
+      "timezone": "타임존",
+      "createdAt": "생성일",
+      "updatedAt": "수정일",
+      "actions": "작업"
     }
   },
   "menu": {
