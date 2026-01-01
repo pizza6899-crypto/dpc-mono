@@ -16,6 +16,7 @@ import {
 } from '@repo/database';
 import { toLanguageEnum } from 'src/utils/language.util';
 import { GAMING_CURRENCIES } from 'src/utils/currency.util';
+import { generateUid } from 'src/utils/id.util';
 
 @Injectable()
 export class WhitecliffGameRefreshService {
@@ -201,7 +202,7 @@ export class WhitecliffGameRefreshService {
         select: {
           id: true,
           provider: true,
-          gameId: true,
+          aggregatorGameId: true,
           isEnabled: true,
           tableId: true,
           gameType: true,
@@ -218,7 +219,7 @@ export class WhitecliffGameRefreshService {
       });
 
       const existingGameMap = new Map(
-        existingGames.map((game) => [`${game.gameId}`, game]),
+        existingGames.map((game) => [`${game.aggregatorGameId}`, game]),
       );
 
       // 각 게임을 순차적으로 처리
@@ -264,7 +265,7 @@ export class WhitecliffGameRefreshService {
       const apiGameIds = new Set((games as any[]).map((g) => g.game_id));
       const toDisableGames = existingGames.filter(
         (game) =>
-          !apiGameIds.has(game.gameId) && game.isEnabled && game.gameId !== 0, // 로비 게임 제외
+          !apiGameIds.has(game.aggregatorGameId) && game.isEnabled && game.aggregatorGameId !== 0, // 로비 게임 제외
       );
 
       for (const game of toDisableGames) {
@@ -277,7 +278,7 @@ export class WhitecliffGameRefreshService {
 
           await this.sleep(10);
         } catch (error) {
-          this.logger.error(error, `게임 비활성화 실패: ID ${game.gameId}`);
+          this.logger.error(error, `게임 비활성화 실패: ID ${game.aggregatorGameId}`);
         }
       }
     }
@@ -323,7 +324,7 @@ export class WhitecliffGameRefreshService {
   }
 
   private async updateExistingGame(
-    gameId: number,
+    gameId: bigint,
     gameData: any,
     lang: Language,
   ) {
@@ -362,6 +363,7 @@ export class WhitecliffGameRefreshService {
           gameName: gameData.game_name, // ✅ gameName
         },
         create: {
+          uid: generateUid(),
           gameId: gameId,
           language: lang,
           providerName: gameData.prd_name, // ✅ providerName
@@ -389,9 +391,10 @@ export class WhitecliffGameRefreshService {
     // ✅ 올바른 필드명으로 게임 생성
     const newGame = await this.prismaService.game.create({
       data: {
+        uid: generateUid(),
         aggregatorType: GameAggregatorType.WHITECLIFF,
         provider: provider,
-        gameId: gameData.game_id,
+        aggregatorGameId: gameData.game_id,
         category: this.whitecliffMapperService.fromWhitecliffCategory(
           gameData.prd_category,
         ),
@@ -407,6 +410,7 @@ export class WhitecliffGameRefreshService {
     try {
       await this.prismaService.gameTranslation.create({
         data: {
+          uid: generateUid(),
           gameId: newGame.id,
           language: lang,
           providerName: gameData.prd_name, // ✅ providerName

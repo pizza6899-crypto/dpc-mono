@@ -96,7 +96,7 @@ export class WhitecliffGameService {
       where: { id: gameId },
       select: {
         provider: true,
-        gameId: true,
+        aggregatorGameId: true,
         category: true,
         tableId: true,
       },
@@ -109,7 +109,7 @@ export class WhitecliffGameService {
       );
     }
 
-    const type = game.category === GameCategory.LIVE_CASINO ? 0 : game.gameId;
+    const type = game.category === GameCategory.LIVE_CASINO ? 0 : game.aggregatorGameId;
 
     // 에볼루션인 경우 currency에 따라 프로바이더 ID 변경
     let providerId = this.whitecliffMapperService.toWhitecliffProvider(
@@ -184,7 +184,7 @@ export class WhitecliffGameService {
 
     const gameSession = await this.gameSessionService.createGameSession({
       userId: user.id,
-      gameId: game.gameId,
+      gameId: game.aggregatorGameId,
       aggregatorType: GameAggregatorType.WHITECLIFF,
       walletCurrency,
       gameCurrency,

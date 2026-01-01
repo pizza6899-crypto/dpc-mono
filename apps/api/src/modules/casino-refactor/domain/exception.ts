@@ -83,9 +83,13 @@ export class GameNotFoundException extends DomainException {
 }
 
 export class GameAlreadyExistsException extends DomainException {
-  constructor(aggregatorType: string, provider: string, gameId: number) {
+  constructor(
+    aggregatorType: string,
+    provider: string,
+    aggregatorGameId: number,
+  ) {
     super(
-      `Game already exists: aggregatorType=${aggregatorType}, provider=${provider}, gameId=${gameId}`,
+      `Game already exists: aggregatorType=${aggregatorType}, provider=${provider}, aggregatorGameId=${aggregatorGameId}`,
     );
   }
 }
@@ -106,16 +110,22 @@ export class GameNotVisibleException extends DomainException {
  * GameTranslation 관련 예외
  */
 export class GameTranslationNotFoundException extends DomainException {
-  constructor(gameId: number, language: string) {
+  constructor(gameId: bigint, language: string) {
     super(`Game translation not found: gameId=${gameId}, language=${language}`);
   }
 }
 
 export class GameTranslationAlreadyExistsException extends DomainException {
-  constructor(gameId: number, language: string) {
+  constructor(gameId: bigint, language: string) {
     super(
       `Game translation already exists: gameId=${gameId}, language=${language}`,
     );
+  }
+}
+
+export class InvalidGameTranslationException extends DomainException {
+  constructor(field: string, reason: string) {
+    super(`Invalid game translation ${field}: ${reason}`);
   }
 }
 

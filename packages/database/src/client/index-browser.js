@@ -238,30 +238,13 @@ exports.Prisma.IntegrationLogScalarFieldEnum = {
   ip: 'ip'
 };
 
-exports.Prisma.UnifiedLogScalarFieldEnum = {
-  id: 'id',
-  createdAt: 'createdAt',
-  userId: 'userId',
-  sessionId: 'sessionId',
-  cfRay: 'cfRay',
-  country: 'country',
-  city: 'city',
-  bot: 'bot',
-  threat: 'threat',
-  isMobile: 'isMobile',
-  ip: 'ip',
-  logType: 'logType',
-  category: 'category',
-  detail: 'detail',
-  metadata: 'metadata'
-};
-
 exports.Prisma.GameScalarFieldEnum = {
   id: 'id',
+  uid: 'uid',
   aggregatorType: 'aggregatorType',
   provider: 'provider',
   category: 'category',
-  gameId: 'gameId',
+  aggregatorGameId: 'aggregatorGameId',
   gameType: 'gameType',
   tableId: 'tableId',
   iconLink: 'iconLink',
@@ -275,6 +258,7 @@ exports.Prisma.GameScalarFieldEnum = {
 
 exports.Prisma.GameTranslationScalarFieldEnum = {
   id: 'id',
+  uid: 'uid',
   gameId: 'gameId',
   language: 'language',
   providerName: 'providerName',
@@ -286,6 +270,7 @@ exports.Prisma.GameTranslationScalarFieldEnum = {
 
 exports.Prisma.GameSessionScalarFieldEnum = {
   id: 'id',
+  uid: 'uid',
   userId: 'userId',
   createdAt: 'createdAt',
   updatedAt: 'updatedAt',
@@ -301,6 +286,7 @@ exports.Prisma.GameSessionScalarFieldEnum = {
 
 exports.Prisma.GameRoundScalarFieldEnum = {
   id: 'id',
+  uid: 'uid',
   userId: 'userId',
   aggregatorType: 'aggregatorType',
   provider: 'provider',
@@ -331,6 +317,7 @@ exports.Prisma.GameRoundScalarFieldEnum = {
 
 exports.Prisma.GameBetScalarFieldEnum = {
   id: 'id',
+  uid: 'uid',
   userId: 'userId',
   gameRoundId: 'gameRoundId',
   aggregatorType: 'aggregatorType',
@@ -346,6 +333,7 @@ exports.Prisma.GameBetScalarFieldEnum = {
 
 exports.Prisma.GameWinScalarFieldEnum = {
   id: 'id',
+  uid: 'uid',
   userId: 'userId',
   gameRoundId: 'gameRoundId',
   aggregatorType: 'aggregatorType',
@@ -1050,7 +1038,6 @@ exports.Prisma.ModelName = {
   ActivityLog: 'ActivityLog',
   SystemErrorLog: 'SystemErrorLog',
   IntegrationLog: 'IntegrationLog',
-  UnifiedLog: 'UnifiedLog',
   Game: 'Game',
   GameTranslation: 'GameTranslation',
   GameSession: 'GameSession',

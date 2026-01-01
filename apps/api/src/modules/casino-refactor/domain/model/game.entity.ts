@@ -17,11 +17,12 @@ import { GameTranslation } from './game-translation.entity';
  */
 export class Game {
   private constructor(
-    public readonly id: number | null,
+    public readonly id: bigint | null,
+    public readonly uid: string,
     public readonly aggregatorType: GameAggregatorType,
     public readonly provider: GameProvider,
     public readonly category: GameCategory,
-    public readonly gameId: number,
+    public readonly aggregatorGameId: number,
     public readonly gameType: string | null,
     public readonly tableId: string | null,
     public readonly iconLink: string | null,
@@ -49,10 +50,12 @@ export class Game {
    * @returns 생성된 게임 엔티티
    */
   static create(params: {
+    uid: string;
     aggregatorType: GameAggregatorType;
     provider: GameProvider;
     category: GameCategory;
-    gameId: number;
+    /** 게임 애그리게이터와 통신에서 사용되는 외부 게임 식별자 */
+    aggregatorGameId: number;
     gameType?: string;
     tableId?: string;
     iconLink?: string;
@@ -64,10 +67,11 @@ export class Game {
     const now = new Date();
     return new Game(
       null, // id는 DB 저장 시 자동 생성
+      params.uid,
       params.aggregatorType,
       params.provider,
       params.category,
-      params.gameId,
+      params.aggregatorGameId,
       params.gameType ?? null,
       params.tableId ?? null,
       params.iconLink ?? null,
@@ -84,11 +88,13 @@ export class Game {
    * DB에서 조회한 데이터로부터 엔티티 생성
    */
   static fromPersistence(data: {
-    id: number;
+    id: bigint;
+    uid: string;
     aggregatorType: GameAggregatorType;
     provider: GameProvider;
     category: GameCategory;
-    gameId: number;
+    /** 게임 애그리게이터와 통신에서 사용되는 외부 게임 식별자 */
+    aggregatorGameId: number;
     gameType: string | null;
     tableId: string | null;
     iconLink: string | null;
@@ -99,8 +105,8 @@ export class Game {
     createdAt: Date;
     updatedAt: Date;
     translations?: Array<{
-      id: number;
-      gameId: number;
+      id: bigint;
+      gameId: bigint;
       language: Language;
       providerName: string;
       categoryName: string;
@@ -110,13 +116,14 @@ export class Game {
     }>;
   }): Game {
     const translations =
-      data.translations?.map((t) => GameTranslation.fromPersistence(t)) ?? [];
+      data.translations?.map((t) => GameTranslation.fromPersistence({ ...t, uid: data.uid })) ?? [];
     return new Game(
       data.id,
+      data.uid,
       data.aggregatorType,
       data.provider,
       data.category,
-      data.gameId,
+      data.aggregatorGameId,
       data.gameType,
       data.tableId,
       data.iconLink,
@@ -137,7 +144,8 @@ export class Game {
     aggregatorType: GameAggregatorType;
     provider: GameProvider;
     category: GameCategory;
-    gameId: number;
+    /** 게임 애그리게이터와 통신에서 사용되는 외부 게임 식별자 */
+    aggregatorGameId: number;
     gameType: string | null;
     tableId: string | null;
     iconLink: string | null;
@@ -152,7 +160,7 @@ export class Game {
       aggregatorType: this.aggregatorType,
       provider: this.provider,
       category: this.category,
-      gameId: this.gameId,
+      aggregatorGameId: this.aggregatorGameId,
       gameType: this.gameType,
       tableId: this.tableId,
       iconLink: this.iconLink,
@@ -269,7 +277,10 @@ export class Game {
       );
     }
     // gameId 일치 확인
-    if (translation.gameId !== (this.id ?? 0)) {
+    if (this.id === null) {
+      throw new Error('Cannot add translation to game without id');
+    }
+    if (translation.gameId !== this.id) {
       throw new Error('Translation gameId does not match game id');
     }
     this._translations.push(translation);
@@ -331,7 +342,10 @@ export class Game {
       );
     }
     // gameId 일치 확인
-    if (translation.gameId !== (this.id ?? 0)) {
+    if (this.id === null) {
+      throw new Error('Cannot add translation to game without id');
+    }
+    if (translation.gameId !== this.id) {
       throw new Error('Translation gameId does not match game id');
     }
     this._translations[index] = translation;

@@ -526,7 +526,7 @@ export class DcsCallbackService {
         game: {
           select: {
             id: true,
-            gameId: true,
+            aggregatorGameId: true,
           },
         },
       },
@@ -547,7 +547,7 @@ export class DcsCallbackService {
     }
 
     // 게임 ID 검증
-    if (!gameRound.game || gameRound.game.gameId !== game_id) {
+    if (!gameRound.game || gameRound.game.aggregatorGameId !== game_id) {
       return getDcsResponse(DcsResponseCode.GAME_ID_NOT_EXIST);
     }
 
@@ -877,11 +877,11 @@ export class DcsCallbackService {
       where: {
         aggregatorType: GameAggregatorType.DCS,
         provider: providerEnum,
-        gameId: game_id,
+        aggregatorGameId: game_id,
       },
       select: {
         id: true,
-        gameId: true,
+        aggregatorGameId: true,
       },
     });
 

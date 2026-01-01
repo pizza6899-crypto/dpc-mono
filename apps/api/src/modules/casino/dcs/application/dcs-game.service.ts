@@ -81,7 +81,7 @@ export class DcsGameService {
       const game = await this.prismaService.game.findUnique({
         where: { id: gameId },
         select: {
-          gameId: true,
+          aggregatorGameId: true,
         },
       });
 
@@ -96,7 +96,7 @@ export class DcsGameService {
       const response = await this.dcsApiService.loginGame({
         dcsUserId: updatedUser.dcsId!,
         dcsUserToken: newDcsToken,
-        gameId: game.gameId,
+        gameId: game.aggregatorGameId,
         gameCurrency: gameCurrency,
         language: fromLanguageEnum(updatedUser.language),
         channel: channel,
@@ -114,7 +114,7 @@ export class DcsGameService {
 
       const gameSession = await this.gameSessionService.createGameSession({
         userId,
-        gameId: game.gameId,
+        gameId: game.aggregatorGameId,
         aggregatorType: GameAggregatorType.DCS,
         walletCurrency,
         gameCurrency,

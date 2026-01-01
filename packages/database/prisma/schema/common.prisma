@@ -1,7 +1,8 @@
 generator client {
-  provider     = "prisma-client-js"
-  output       = "../../src/client"
-  moduleFormat = "cjs"
+  provider        = "prisma-client-js"
+  output          = "../../src/client"
+  moduleFormat    = "cjs"
+  previewFeatures = ["views"]
 }
 
 datasource db {
@@ -136,7 +137,7 @@ model BonusDetail {
   aggregatorSessionId     String?
   isEndRound              Boolean?
   description             String?
-  gameId                  Int?
+  gameId                  BigInt?
   transactionId           BigInt             @unique
   game                    Game?              @relation(fields: [gameId], references: [id])
   transaction             Transaction        @relation(fields: [transactionId], references: [id])

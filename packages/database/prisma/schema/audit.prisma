@@ -186,25 +186,25 @@ model IntegrationLog {
   @@map("integration_logs")
 }
 
-/// @view
-model UnifiedLog {
-  id        String   @id
-  createdAt DateTime @map("created_at")
-  userId    BigInt?  @map("user_id")
-  sessionId String?  @map("session_id")
-  cfRay     String?  @map("cf_ray")
-  country   String?
-  city      String?
-  bot       Boolean?
-  threat    String?
-  isMobile  Boolean? @map("is_mobile")
-  ip        String?
+// /// @view
+// model UnifiedLog {
+//   id        String   @id
+//   createdAt DateTime @map("created_at")
+//   userId    BigInt?  @map("user_id")
+//   sessionId String?  @map("session_id")
+//   cfRay     String?  @map("cf_ray")
+//   country   String?
+//   city      String?
+//   bot       Boolean?
+//   threat    String?
+//   isMobile  Boolean? @map("is_mobile")
+//   ip        String?
 
-  // 구분자 필드
-  logType  String @map("log_type") // AUTH, ACTIVITY, ERROR, INTEGRATION
-  category String // 각 테이블의 주요 분류
-  detail   String // 주요 내용 (상태, 액션, 에러메시지 등)
-  metadata Json?
+//   // 구분자 필드
+//   logType  String @map("log_type") // AUTH, ACTIVITY, ERROR, INTEGRATION
+//   category String // 각 테이블의 주요 분류
+//   detail   String // 주요 내용 (상태, 액션, 에러메시지 등)
+//   metadata Json?
 
-  @@map("unified_logs")
-}
+//   @@map("unified_logs")
+// }

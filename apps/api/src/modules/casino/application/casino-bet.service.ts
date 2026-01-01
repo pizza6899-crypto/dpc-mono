@@ -13,6 +13,7 @@ import {
   GamingCurrencyCode,
   WalletCurrencyCode,
 } from 'src/utils/currency.util';
+import { generateUid } from 'src/utils/id.util';
 
 export interface ProcessBetParams {
   tx: Prisma.TransactionClient;
@@ -26,7 +27,7 @@ export interface ProcessBetParams {
   aggregatorBetId: string;
   betTime: string;
   aggregatorGameId: number;
-  gameId: number;
+  gameId: bigint;
   jackpotContributionAmount: Prisma.Decimal;
   gameSessionId: bigint;
   betType: BetType;
@@ -190,6 +191,7 @@ export class CasinoBetService {
           },
           bets: {
             create: {
+              uid: generateUid(),
               userId,
               betAmount: betAmountInWalletCurrency,
               betAmountInGameCurrency: betAmountInGameCurrency,
@@ -253,6 +255,7 @@ export class CasinoBetService {
           afterAmount,
           gameRound: {
             create: {
+              uid: generateUid(),
               userId,
               aggregatorType,
               provider,
@@ -271,6 +274,7 @@ export class CasinoBetService {
               gameSessionId,
               bets: {
                 create: {
+                  uid: generateUid(),
                   userId,
                   betAmount: betAmountInWalletCurrency,
                   betAmountInGameCurrency: betAmountInGameCurrency,
@@ -452,6 +456,7 @@ export class CasinoBetService {
         },
         wins: {
           create: {
+            uid: generateUid(),
             userId,
             winType: WinType.NORMAL,
             aggregatorType,
@@ -618,6 +623,7 @@ export class CasinoBetService {
         },
         wins: {
           create: {
+            uid: generateUid(),
             userId,
             winType: WinType.JACKPOT,
             aggregatorType,

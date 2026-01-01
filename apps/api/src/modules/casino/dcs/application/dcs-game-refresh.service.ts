@@ -11,6 +11,7 @@ import {
 } from '@repo/database';
 import { DcsResponseCode } from '../constants/dcs-response-codes';
 import { mockResponse1 } from './dc-mock1';
+import { generateUid } from 'src/utils/id.util';
 
 @Injectable()
 export class DcsGameRefreshService {
@@ -63,10 +64,10 @@ export class DcsGameRefreshService {
       // 게임 생성 또는 업데이트
       const game = await this.prismaService.game.upsert({
         where: {
-          aggregatorType_provider_gameId: {
+          aggregatorType_provider_aggregatorGameId: {
             aggregatorType: GameAggregatorType.DCS,
             provider: provider,
-            gameId: gameData.game_id,
+            aggregatorGameId: gameData.game_id,
           },
         },
         update: {
@@ -76,10 +77,11 @@ export class DcsGameRefreshService {
           isVisibleToUser: true,
         },
         create: {
+          uid: generateUid(),
           aggregatorType: GameAggregatorType.DCS,
           provider: provider,
           category: GameCategory.SLOTS,
-          gameId: gameData.game_id,
+          aggregatorGameId: gameData.game_id,
           gameType: gameData.game_type || null,
           tableId: null,
           iconLink: this.extractIconPath(gameData.game_icon, provider),
@@ -88,18 +90,21 @@ export class DcsGameRefreshService {
           translations: {
             create: [
               {
+                uid: generateUid(),
                 language: Language.EN,
                 providerName: gameData.content || '',
                 categoryName: 'Slots',
                 gameName: gameData.game_name,
               },
               {
+                uid: generateUid(),
                 language: Language.KO,
                 providerName: gameData.content || '',
                 categoryName: '슬롯',
                 gameName: gameData.game_name,
               },
               {
+                uid: generateUid(),
                 language: Language.JA,
                 providerName: gameData.content || '',
                 categoryName: 'スロット',
@@ -132,6 +137,7 @@ export class DcsGameRefreshService {
               gameName: gameData.game_name,
             },
             create: {
+              uid: generateUid(),
               gameId: game.id,
               language: lang,
               providerName: gameData.content || '',
@@ -150,7 +156,7 @@ export class DcsGameRefreshService {
 
     // ��️ API에서 제거된 게임들 비활성화
     const toDisableGames = existingGames.filter(
-      (game) => !apiGameIds.has(game.gameId) && game.isEnabled,
+      (game) => !apiGameIds.has(game.aggregatorGameId) && game.isEnabled,
     );
 
     for (const game of toDisableGames) {
@@ -159,9 +165,9 @@ export class DcsGameRefreshService {
           where: { id: game.id },
           data: { isEnabled: false },
         });
-        this.logger.log(`게임 비활성화: gameId=${game.gameId}`);
+        this.logger.log(`게임 비활성화: gameId=${game.aggregatorGameId}`);
       } catch (error) {
-        this.logger.error(error, `게임 비활성화 실패: gameId=${game.gameId}`);
+        this.logger.error(error, `게임 비활성화 실패: gameId=${game.aggregatorGameId}`);
       }
     }
   }

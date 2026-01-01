@@ -161,7 +161,7 @@ export class CasinoGameService {
       }
 
       return {
-        gameId: game.game.id,
+        gameId: Number(game.game.id),
         gameName: game.gameName,
         category: game.game.category,
         provider: game.game.provider,

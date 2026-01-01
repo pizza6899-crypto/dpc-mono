@@ -186,28 +186,28 @@ model IntegrationLog {
   @@map("integration_logs")
 }
 
-/// @view
-model UnifiedLog {
-  id        String   @id
-  createdAt DateTime @map("created_at")
-  userId    BigInt?  @map("user_id")
-  sessionId String?  @map("session_id")
-  cfRay     String?  @map("cf_ray")
-  country   String?
-  city      String?
-  bot       Boolean?
-  threat    String?
-  isMobile  Boolean? @map("is_mobile")
-  ip        String?
+// /// @view
+// model UnifiedLog {
+//   id        String   @id
+//   createdAt DateTime @map("created_at")
+//   userId    BigInt?  @map("user_id")
+//   sessionId String?  @map("session_id")
+//   cfRay     String?  @map("cf_ray")
+//   country   String?
+//   city      String?
+//   bot       Boolean?
+//   threat    String?
+//   isMobile  Boolean? @map("is_mobile")
+//   ip        String?
 
-  // 구분자 필드
-  logType  String @map("log_type") // AUTH, ACTIVITY, ERROR, INTEGRATION
-  category String // 각 테이블의 주요 분류
-  detail   String // 주요 내용 (상태, 액션, 에러메시지 등)
-  metadata Json?
+//   // 구분자 필드
+//   logType  String @map("log_type") // AUTH, ACTIVITY, ERROR, INTEGRATION
+//   category String // 각 테이블의 주요 분류
+//   detail   String // 주요 내용 (상태, 액션, 에러메시지 등)
+//   metadata Json?
 
-  @@map("unified_logs")
-}
+//   @@map("unified_logs")
+// }
 
 enum GameAggregatorType {
   WHITECLIFF
@@ -229,11 +229,12 @@ enum GameProvider {
 }
 
 model Game {
-  id               Int                @id @default(autoincrement())
+  id               BigInt             @id @default(autoincrement())
+  uid              String             @unique
   aggregatorType   GameAggregatorType @map("aggregator_type")
   provider         GameProvider
   category         GameCategory
-  gameId           Int                @map("game_id")
+  aggregatorGameId Int                @map("aggregator_game_id")
   gameType         String?            @map("game_type")
   tableId          String?            @map("table_id")
   iconLink         String?            @map("icon_link")
@@ -248,14 +249,15 @@ model Game {
   gameSessions     GameSession[]
   translations     GameTranslation[]
 
-  @@unique([aggregatorType, provider, gameId])
+  @@unique([aggregatorType, provider, aggregatorGameId])
   @@index([isEnabled])
   @@map("games")
 }
 
 model GameTranslation {
-  id           Int      @id @default(autoincrement())
-  gameId       Int      @map("game_id")
+  id           BigInt   @id @default(autoincrement())
+  uid          String   @unique
+  gameId       BigInt   @map("game_id")
   language     Language
   providerName String   @map("provider_name")
   categoryName String   @map("category_name")
@@ -271,6 +273,7 @@ model GameTranslation {
 
 model GameSession {
   id                     BigInt               @id @default(autoincrement())
+  uid                    String               @unique
   userId                 BigInt               @map("user_id")
   createdAt              DateTime             @default(now()) @map("created_at")
   updatedAt              DateTime             @updatedAt @map("updated_at")
@@ -281,7 +284,7 @@ model GameSession {
   gameCurrency           ExchangeCurrencyCode @map("game_currency")
   exchangeRate           Decimal              @map("exchange_rate") @db.Decimal(32, 18)
   exchangeRateSnapshotAt DateTime             @default(now()) @map("exchange_rate_snapshot_at")
-  gameId                 Int?                 @map("game_id")
+  gameId                 BigInt?              @map("game_id")
   gameRounds             GameRound[]
   game                   Game?                @relation(fields: [gameId], references: [id])
   user                   User                 @relation(fields: [userId], references: [id])
@@ -291,6 +294,7 @@ model GameSession {
 
 model GameRound {
   id                             BigInt                @id @default(autoincrement())
+  uid                            String                @unique
   userId                         BigInt                @map("user_id")
   aggregatorType                 GameAggregatorType    @map("aggregator_type")
   provider                       GameProvider
@@ -315,7 +319,7 @@ model GameRound {
   jackpotContributionAmount      Decimal               @default(0) @map("jackpot_contribution_amount") @db.Decimal(32, 18)
   startedAt                      DateTime?             @map("started_at")
   completedAt                    DateTime?             @map("completed_at")
-  gameId                         Int?                  @map("game_id")
+  gameId                         BigInt?               @map("game_id")
   gameSessionId                  BigInt                @map("game_session_id")
   AffiliateCommission            AffiliateCommission[]
   bets                           GameBet[]
@@ -330,6 +334,7 @@ model GameRound {
 
 model GameBet {
   id                      BigInt             @id @default(autoincrement())
+  uid                     String             @unique
   userId                  BigInt             @map("user_id")
   gameRoundId             BigInt             @map("game_round_id")
   aggregatorType          GameAggregatorType @map("aggregator_type")
@@ -350,6 +355,7 @@ model GameBet {
 
 model GameWin {
   id                      BigInt             @id @default(autoincrement())
+  uid                     String             @unique
   userId                  BigInt             @map("user_id")
   gameRoundId             BigInt             @map("game_round_id")
   aggregatorType          GameAggregatorType @map("aggregator_type")
@@ -368,9 +374,10 @@ model GameWin {
 }
 
 generator client {
-  provider     = "prisma-client-js"
-  output       = "../../src/client"
-  moduleFormat = "cjs"
+  provider        = "prisma-client-js"
+  output          = "../../src/client"
+  moduleFormat    = "cjs"
+  previewFeatures = ["views"]
 }
 
 datasource db {
@@ -505,7 +512,7 @@ model BonusDetail {
   aggregatorSessionId     String?
   isEndRound              Boolean?
   description             String?
-  gameId                  Int?
+  gameId                  BigInt?
   transactionId           BigInt             @unique
   game                    Game?              @relation(fields: [gameId], references: [id])
   transaction             Transaction        @relation(fields: [transactionId], references: [id])

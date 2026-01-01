@@ -1,5 +1,6 @@
 // src/modules/casino-refactor/domain/model/game-translation.entity.ts
 import type { Language } from '@repo/database';
+import { InvalidGameTranslationException } from '../exception';
 
 /**
  * GameTranslation 도메인 엔티티
@@ -9,8 +10,9 @@ import type { Language } from '@repo/database';
  */
 export class GameTranslation {
   private constructor(
-    public readonly id: number | null,
-    public readonly gameId: number,
+    public readonly id: bigint | null,
+    public readonly uid: string,
+    public readonly gameId: bigint,
     public readonly language: Language,
     private _providerName: string,
     private _categoryName: string,
@@ -20,13 +22,22 @@ export class GameTranslation {
   ) {
     // 비즈니스 규칙: 게임명은 비어있을 수 없음
     if (!this._gameName || this._gameName.trim().length === 0) {
-      throw new Error('Game name cannot be empty');
+      throw new InvalidGameTranslationException(
+        'gameName',
+        'Game name cannot be empty',
+      );
     }
     if (!this._providerName || this._providerName.trim().length === 0) {
-      throw new Error('Provider name cannot be empty');
+      throw new InvalidGameTranslationException(
+        'providerName',
+        'Provider name cannot be empty',
+      );
     }
     if (!this._categoryName || this._categoryName.trim().length === 0) {
-      throw new Error('Category name cannot be empty');
+      throw new InvalidGameTranslationException(
+        'categoryName',
+        'Category name cannot be empty',
+      );
     }
   }
 
@@ -36,7 +47,8 @@ export class GameTranslation {
    * @returns 생성된 게임 번역 엔티티
    */
   static create(params: {
-    gameId: number;
+    uid: string;
+    gameId: bigint;
     language: Language;
     providerName: string;
     categoryName: string;
@@ -45,6 +57,7 @@ export class GameTranslation {
     const now = new Date();
     return new GameTranslation(
       null, // id는 DB 저장 시 자동 생성
+      params.uid,
       params.gameId,
       params.language,
       params.providerName,
@@ -59,8 +72,9 @@ export class GameTranslation {
    * DB에서 조회한 데이터로부터 엔티티 생성
    */
   static fromPersistence(data: {
-    id: number;
-    gameId: number;
+    id: bigint;
+    uid: string;
+    gameId: bigint;
     language: Language;
     providerName: string;
     categoryName: string;
@@ -70,6 +84,7 @@ export class GameTranslation {
   }): GameTranslation {
     return new GameTranslation(
       data.id,
+      data.uid,
       data.gameId,
       data.language,
       data.providerName,
@@ -84,7 +99,7 @@ export class GameTranslation {
    * Domain 엔티티를 Persistence 레이어로 변환
    */
   toPersistence(): {
-    gameId: number;
+    gameId: bigint;
     language: Language;
     providerName: string;
     categoryName: string;
@@ -108,7 +123,10 @@ export class GameTranslation {
    */
   updateGameName(gameName: string): void {
     if (!gameName || gameName.trim().length === 0) {
-      throw new Error('Game name cannot be empty');
+      throw new InvalidGameTranslationException(
+        'gameName',
+        'Game name cannot be empty',
+      );
     }
     (this as any)._gameName = gameName;
     (this as any).updatedAt = new Date();
@@ -119,7 +137,10 @@ export class GameTranslation {
    */
   updateProviderName(providerName: string): void {
     if (!providerName || providerName.trim().length === 0) {
-      throw new Error('Provider name cannot be empty');
+      throw new InvalidGameTranslationException(
+        'providerName',
+        'Provider name cannot be empty',
+      );
     }
     (this as any)._providerName = providerName;
     (this as any).updatedAt = new Date();
@@ -130,7 +151,10 @@ export class GameTranslation {
    */
   updateCategoryName(categoryName: string): void {
     if (!categoryName || categoryName.trim().length === 0) {
-      throw new Error('Category name cannot be empty');
+      throw new InvalidGameTranslationException(
+        'categoryName',
+        'Category name cannot be empty',
+      );
     }
     (this as any)._categoryName = categoryName;
     (this as any).updatedAt = new Date();

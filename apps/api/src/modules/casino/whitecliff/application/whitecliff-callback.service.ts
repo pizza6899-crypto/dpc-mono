@@ -205,10 +205,10 @@ export class WhitecliffCallbackService {
       if (!gameId) {
         const game = await this.prismaService.game.findUnique({
           where: {
-            aggregatorType_provider_gameId: {
+            aggregatorType_provider_aggregatorGameId: {
               aggregatorType: GameAggregatorType.WHITECLIFF,
               provider,
-              gameId: game_id,
+              aggregatorGameId: game_id,
             },
           },
           select: {
@@ -579,10 +579,10 @@ export class WhitecliffCallbackService {
       // 1. 게임 조회
       const game = await this.prismaService.game.findUnique({
         where: {
-          aggregatorType_provider_gameId: {
+          aggregatorType_provider_aggregatorGameId: {
             aggregatorType: GameAggregatorType.WHITECLIFF,
             provider: provider,
-            gameId: game_id,
+            aggregatorGameId: game_id,
           },
         },
         select: {

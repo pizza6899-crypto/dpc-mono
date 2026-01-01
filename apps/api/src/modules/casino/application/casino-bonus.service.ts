@@ -32,7 +32,7 @@ export interface ProcessBonusParams {
   isEndRound?: boolean;
   aggregatorSessionId?: string;
   description?: string;
-  gameId?: number;
+  gameId?: bigint;
   gameSessionId?: bigint; // 추가
 }
 

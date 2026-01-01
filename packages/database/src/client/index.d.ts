@@ -49,11 +49,6 @@ export type SystemErrorLog = $Result.DefaultSelection<Prisma.$SystemErrorLogPayl
  */
 export type IntegrationLog = $Result.DefaultSelection<Prisma.$IntegrationLogPayload>
 /**
- * Model UnifiedLog
- * @view
- */
-export type UnifiedLog = $Result.DefaultSelection<Prisma.$UnifiedLogPayload>
-/**
  * Model Game
  * 
  */
@@ -905,16 +900,6 @@ export class PrismaClient<
   get integrationLog(): Prisma.IntegrationLogDelegate<ExtArgs, ClientOptions>;
 
   /**
-   * `prisma.unifiedLog`: Exposes CRUD operations for the **UnifiedLog** model.
-    * Example usage:
-    * ```ts
-    * // Fetch zero or more UnifiedLogs
-    * const unifiedLogs = await prisma.unifiedLog.findMany()
-    * ```
-    */
-  get unifiedLog(): Prisma.UnifiedLogDelegate<ExtArgs, ClientOptions>;
-
-  /**
    * `prisma.game`: Exposes CRUD operations for the **Game** model.
     * Example usage:
     * ```ts
@@ -1694,7 +1679,6 @@ export namespace Prisma {
     ActivityLog: 'ActivityLog',
     SystemErrorLog: 'SystemErrorLog',
     IntegrationLog: 'IntegrationLog',
-    UnifiedLog: 'UnifiedLog',
     Game: 'Game',
     GameTranslation: 'GameTranslation',
     GameSession: 'GameSession',
@@ -1744,7 +1728,7 @@ export namespace Prisma {
       omit: GlobalOmitOptions
     }
     meta: {
-      modelProps: "nowPaymentCallbackLog" | "whitecliffApiLog" | "dcsApiLog" | "authAuditLog" | "activityLog" | "systemErrorLog" | "integrationLog" | "unifiedLog" | "game" | "gameTranslation" | "gameSession" | "gameRound" | "gameBet" | "gameWin" | "user" | "userBalance" | "userBalanceStats" | "transaction" | "transactionBalanceDetail" | "bonusDetail" | "depositDetail" | "withdrawDetail" | "compTransaction" | "dailyCompEarning" | "promotion" | "promotionTranslation" | "userPromotion" | "exchangeRate" | "vipLevel" | "vipMembership" | "vipHistory" | "rolling" | "userToken" | "emailLog" | "bankAccount" | "affiliateCode" | "referral" | "affiliateWallet" | "affiliateCommission" | "affiliateTier" | "loginAttempt" | "userSession"
+      modelProps: "nowPaymentCallbackLog" | "whitecliffApiLog" | "dcsApiLog" | "authAuditLog" | "activityLog" | "systemErrorLog" | "integrationLog" | "game" | "gameTranslation" | "gameSession" | "gameRound" | "gameBet" | "gameWin" | "user" | "userBalance" | "userBalanceStats" | "transaction" | "transactionBalanceDetail" | "bonusDetail" | "depositDetail" | "withdrawDetail" | "compTransaction" | "dailyCompEarning" | "promotion" | "promotionTranslation" | "userPromotion" | "exchangeRate" | "vipLevel" | "vipMembership" | "vipHistory" | "rolling" | "userToken" | "emailLog" | "bankAccount" | "affiliateCode" | "referral" | "affiliateWallet" | "affiliateCommission" | "affiliateTier" | "loginAttempt" | "userSession"
       txIsolationLevel: Prisma.TransactionIsolationLevel
     }
     model: {
@@ -2263,80 +2247,6 @@ export namespace Prisma {
           count: {
             args: Prisma.IntegrationLogCountArgs<ExtArgs>
             result: $Utils.Optional<IntegrationLogCountAggregateOutputType> | number
-          }
-        }
-      }
-      UnifiedLog: {
-        payload: Prisma.$UnifiedLogPayload<ExtArgs>
-        fields: Prisma.UnifiedLogFieldRefs
-        operations: {
-          findUnique: {
-            args: Prisma.UnifiedLogFindUniqueArgs<ExtArgs>
-            result: $Utils.PayloadToResult<Prisma.$UnifiedLogPayload> | null
-          }
-          findUniqueOrThrow: {
-            args: Prisma.UnifiedLogFindUniqueOrThrowArgs<ExtArgs>
-            result: $Utils.PayloadToResult<Prisma.$UnifiedLogPayload>
-          }
-          findFirst: {
-            args: Prisma.UnifiedLogFindFirstArgs<ExtArgs>
-            result: $Utils.PayloadToResult<Prisma.$UnifiedLogPayload> | null
-          }
-          findFirstOrThrow: {
-            args: Prisma.UnifiedLogFindFirstOrThrowArgs<ExtArgs>
-            result: $Utils.PayloadToResult<Prisma.$UnifiedLogPayload>
-          }
-          findMany: {
-            args: Prisma.UnifiedLogFindManyArgs<ExtArgs>
-            result: $Utils.PayloadToResult<Prisma.$UnifiedLogPayload>[]
-          }
-          create: {
-            args: Prisma.UnifiedLogCreateArgs<ExtArgs>
-            result: $Utils.PayloadToResult<Prisma.$UnifiedLogPayload>
-          }
-          createMany: {
-            args: Prisma.UnifiedLogCreateManyArgs<ExtArgs>
-            result: BatchPayload
-          }
-          createManyAndReturn: {
-            args: Prisma.UnifiedLogCreateManyAndReturnArgs<ExtArgs>
-            result: $Utils.PayloadToResult<Prisma.$UnifiedLogPayload>[]
-          }
-          delete: {
-            args: Prisma.UnifiedLogDeleteArgs<ExtArgs>
-            result: $Utils.PayloadToResult<Prisma.$UnifiedLogPayload>
-          }
-          update: {
-            args: Prisma.UnifiedLogUpdateArgs<ExtArgs>
-            result: $Utils.PayloadToResult<Prisma.$UnifiedLogPayload>
-          }
-          deleteMany: {
-            args: Prisma.UnifiedLogDeleteManyArgs<ExtArgs>
-            result: BatchPayload
-          }
-          updateMany: {
-            args: Prisma.UnifiedLogUpdateManyArgs<ExtArgs>
-            result: BatchPayload
-          }
-          updateManyAndReturn: {
-            args: Prisma.UnifiedLogUpdateManyAndReturnArgs<ExtArgs>
-            result: $Utils.PayloadToResult<Prisma.$UnifiedLogPayload>[]
-          }
-          upsert: {
-            args: Prisma.UnifiedLogUpsertArgs<ExtArgs>
-            result: $Utils.PayloadToResult<Prisma.$UnifiedLogPayload>
-          }
-          aggregate: {
-            args: Prisma.UnifiedLogAggregateArgs<ExtArgs>
-            result: $Utils.Optional<AggregateUnifiedLog>
-          }
-          groupBy: {
-            args: Prisma.UnifiedLogGroupByArgs<ExtArgs>
-            result: $Utils.Optional<UnifiedLogGroupByOutputType>[]
-          }
-          count: {
-            args: Prisma.UnifiedLogCountArgs<ExtArgs>
-            result: $Utils.Optional<UnifiedLogCountAggregateOutputType> | number
           }
         }
       }
@@ -4971,7 +4881,6 @@ export namespace Prisma {
     activityLog?: ActivityLogOmit
     systemErrorLog?: SystemErrorLogOmit
     integrationLog?: IntegrationLogOmit
-    unifiedLog?: UnifiedLogOmit
     game?: GameOmit
     gameTranslation?: GameTranslationOmit
     gameSession?: GameSessionOmit
@@ -13707,1161 +13616,6 @@ export namespace Prisma {
 
 
   /**
-   * Model UnifiedLog
-   */
-
-  export type AggregateUnifiedLog = {
-    _count: UnifiedLogCountAggregateOutputType | null
-    _avg: UnifiedLogAvgAggregateOutputType | null
-    _sum: UnifiedLogSumAggregateOutputType | null
-    _min: UnifiedLogMinAggregateOutputType | null
-    _max: UnifiedLogMaxAggregateOutputType | null
-  }
-
-  export type UnifiedLogAvgAggregateOutputType = {
-    userId: number | null
-  }
-
-  export type UnifiedLogSumAggregateOutputType = {
-    userId: bigint | null
-  }
-
-  export type UnifiedLogMinAggregateOutputType = {
-    id: string | null
-    createdAt: Date | null
-    userId: bigint | null
-    sessionId: string | null
-    cfRay: string | null
-    country: string | null
-    city: string | null
-    bot: boolean | null
-    threat: string | null
-    isMobile: boolean | null
-    ip: string | null
-    logType: string | null
-    category: string | null
-    detail: string | null
-  }
-
-  export type UnifiedLogMaxAggregateOutputType = {
-    id: string | null
-    createdAt: Date | null
-    userId: bigint | null
-    sessionId: string | null
-    cfRay: string | null
-    country: string | null
-    city: string | null
-    bot: boolean | null
-    threat: string | null
-    isMobile: boolean | null
-    ip: string | null
-    logType: string | null
-    category: string | null
-    detail: string | null
-  }
-
-  export type UnifiedLogCountAggregateOutputType = {
-    id: number
-    createdAt: number
-    userId: number
-    sessionId: number
-    cfRay: number
-    country: number
-    city: number
-    bot: number
-    threat: number
-    isMobile: number
-    ip: number
-    logType: number
-    category: number
-    detail: number
-    metadata: number
-    _all: number
-  }
-
-
-  export type UnifiedLogAvgAggregateInputType = {
-    userId?: true
-  }
-
-  export type UnifiedLogSumAggregateInputType = {
-    userId?: true
-  }
-
-  export type UnifiedLogMinAggregateInputType = {
-    id?: true
-    createdAt?: true
-    userId?: true
-    sessionId?: true
-    cfRay?: true
-    country?: true
-    city?: true
-    bot?: true
-    threat?: true
-    isMobile?: true
-    ip?: true
-    logType?: true
-    category?: true
-    detail?: true
-  }
-
-  export type UnifiedLogMaxAggregateInputType = {
-    id?: true
-    createdAt?: true
-    userId?: true
-    sessionId?: true
-    cfRay?: true
-    country?: true
-    city?: true
-    bot?: true
-    threat?: true
-    isMobile?: true
-    ip?: true
-    logType?: true
-    category?: true
-    detail?: true
-  }
-
-  export type UnifiedLogCountAggregateInputType = {
-    id?: true
-    createdAt?: true
-    userId?: true
-    sessionId?: true
-    cfRay?: true
-    country?: true
-    city?: true
-    bot?: true
-    threat?: true
-    isMobile?: true
-    ip?: true
-    logType?: true
-    category?: true
-    detail?: true
-    metadata?: true
-    _all?: true
-  }
-
-  export type UnifiedLogAggregateArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
-    /**
-     * Filter which UnifiedLog to aggregate.
-     */
-    where?: UnifiedLogWhereInput
-    /**
-     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/sorting Sorting Docs}
-     * 
-     * Determine the order of UnifiedLogs to fetch.
-     */
-    orderBy?: UnifiedLogOrderByWithRelationInput | UnifiedLogOrderByWithRelationInput[]
-    /**
-     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination#cursor-based-pagination Cursor Docs}
-     * 
-     * Sets the start position
-     */
-    cursor?: UnifiedLogWhereUniqueInput
-    /**
-     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
-     * 
-     * Take `±n` UnifiedLogs from the position of the cursor.
-     */
-    take?: number
-    /**
-     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
-     * 
-     * Skip the first `n` UnifiedLogs.
-     */
-    skip?: number
-    /**
-     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
-     * 
-     * Count returned UnifiedLogs
-    **/
-    _count?: true | UnifiedLogCountAggregateInputType
-    /**
-     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
-     * 
-     * Select which fields to average
-    **/
-    _avg?: UnifiedLogAvgAggregateInputType
-    /**
-     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
-     * 
-     * Select which fields to sum
-    **/
-    _sum?: UnifiedLogSumAggregateInputType
-    /**
-     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
-     * 
-     * Select which fields to find the minimum value
-    **/
-    _min?: UnifiedLogMinAggregateInputType
-    /**
-     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
-     * 
-     * Select which fields to find the maximum value
-    **/
-    _max?: UnifiedLogMaxAggregateInputType
-  }
-
-  export type GetUnifiedLogAggregateType<T extends UnifiedLogAggregateArgs> = {
-        [P in keyof T & keyof AggregateUnifiedLog]: P extends '_count' | 'count'
-      ? T[P] extends true
-        ? number
-        : GetScalarType<T[P], AggregateUnifiedLog[P]>
-      : GetScalarType<T[P], AggregateUnifiedLog[P]>
-  }
-
-
-
-
-  export type UnifiedLogGroupByArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
-    where?: UnifiedLogWhereInput
-    orderBy?: UnifiedLogOrderByWithAggregationInput | UnifiedLogOrderByWithAggregationInput[]
-    by: UnifiedLogScalarFieldEnum[] | UnifiedLogScalarFieldEnum
-    having?: UnifiedLogScalarWhereWithAggregatesInput
-    take?: number
-    skip?: number
-    _count?: UnifiedLogCountAggregateInputType | true
-    _avg?: UnifiedLogAvgAggregateInputType
-    _sum?: UnifiedLogSumAggregateInputType
-    _min?: UnifiedLogMinAggregateInputType
-    _max?: UnifiedLogMaxAggregateInputType
-  }
-
-  export type UnifiedLogGroupByOutputType = {
-    id: string
-    createdAt: Date
-    userId: bigint | null
-    sessionId: string | null
-    cfRay: string | null
-    country: string | null
-    city: string | null
-    bot: boolean | null
-    threat: string | null
-    isMobile: boolean | null
-    ip: string | null
-    logType: string
-    category: string
-    detail: string
-    metadata: JsonValue | null
-    _count: UnifiedLogCountAggregateOutputType | null
-    _avg: UnifiedLogAvgAggregateOutputType | null
-    _sum: UnifiedLogSumAggregateOutputType | null
-    _min: UnifiedLogMinAggregateOutputType | null
-    _max: UnifiedLogMaxAggregateOutputType | null
-  }
-
-  type GetUnifiedLogGroupByPayload<T extends UnifiedLogGroupByArgs> = Prisma.PrismaPromise<
-    Array<
-      PickEnumerable<UnifiedLogGroupByOutputType, T['by']> &
-        {
-          [P in ((keyof T) & (keyof UnifiedLogGroupByOutputType))]: P extends '_count'
-            ? T[P] extends boolean
-              ? number
-              : GetScalarType<T[P], UnifiedLogGroupByOutputType[P]>
-            : GetScalarType<T[P], UnifiedLogGroupByOutputType[P]>
-        }
-      >
-    >
-
-
-  export type UnifiedLogSelect<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetSelect<{
-    id?: boolean
-    createdAt?: boolean
-    userId?: boolean
-    sessionId?: boolean
-    cfRay?: boolean
-    country?: boolean
-    city?: boolean
-    bot?: boolean
-    threat?: boolean
-    isMobile?: boolean
-    ip?: boolean
-    logType?: boolean
-    category?: boolean
-    detail?: boolean
-    metadata?: boolean
-  }, ExtArgs["result"]["unifiedLog"]>
-
-  export type UnifiedLogSelectCreateManyAndReturn<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetSelect<{
-    id?: boolean
-    createdAt?: boolean
-    userId?: boolean
-    sessionId?: boolean
-    cfRay?: boolean
-    country?: boolean
-    city?: boolean
-    bot?: boolean
-    threat?: boolean
-    isMobile?: boolean
-    ip?: boolean
-    logType?: boolean
-    category?: boolean
-    detail?: boolean
-    metadata?: boolean
-  }, ExtArgs["result"]["unifiedLog"]>
-
-  export type UnifiedLogSelectUpdateManyAndReturn<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetSelect<{
-    id?: boolean
-    createdAt?: boolean
-    userId?: boolean
-    sessionId?: boolean
-    cfRay?: boolean
-    country?: boolean
-    city?: boolean
-    bot?: boolean
-    threat?: boolean
-    isMobile?: boolean
-    ip?: boolean
-    logType?: boolean
-    category?: boolean
-    detail?: boolean
-    metadata?: boolean
-  }, ExtArgs["result"]["unifiedLog"]>
-
-  export type UnifiedLogSelectScalar = {
-    id?: boolean
-    createdAt?: boolean
-    userId?: boolean
-    sessionId?: boolean
-    cfRay?: boolean
-    country?: boolean
-    city?: boolean
-    bot?: boolean
-    threat?: boolean
-    isMobile?: boolean
-    ip?: boolean
-    logType?: boolean
-    category?: boolean
-    detail?: boolean
-    metadata?: boolean
-  }
-
-  export type UnifiedLogOmit<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetOmit<"id" | "createdAt" | "userId" | "sessionId" | "cfRay" | "country" | "city" | "bot" | "threat" | "isMobile" | "ip" | "logType" | "category" | "detail" | "metadata", ExtArgs["result"]["unifiedLog"]>
-
-  export type $UnifiedLogPayload<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
-    name: "UnifiedLog"
-    objects: {}
-    scalars: $Extensions.GetPayloadResult<{
-      id: string
-      createdAt: Date
-      userId: bigint | null
-      sessionId: string | null
-      cfRay: string | null
-      country: string | null
-      city: string | null
-      bot: boolean | null
-      threat: string | null
-      isMobile: boolean | null
-      ip: string | null
-      logType: string
-      category: string
-      detail: string
-      metadata: Prisma.JsonValue | null
-    }, ExtArgs["result"]["unifiedLog"]>
-    composites: {}
-  }
-
-  type UnifiedLogGetPayload<S extends boolean | null | undefined | UnifiedLogDefaultArgs> = $Result.GetResult<Prisma.$UnifiedLogPayload, S>
-
-  type UnifiedLogCountArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> =
-    Omit<UnifiedLogFindManyArgs, 'select' | 'include' | 'distinct' | 'omit'> & {
-      select?: UnifiedLogCountAggregateInputType | true
-    }
-
-  export interface UnifiedLogDelegate<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs, GlobalOmitOptions = {}> {
-    [K: symbol]: { types: Prisma.TypeMap<ExtArgs>['model']['UnifiedLog'], meta: { name: 'UnifiedLog' } }
-    /**
-     * Find zero or one UnifiedLog that matches the filter.
-     * @param {UnifiedLogFindUniqueArgs} args - Arguments to find a UnifiedLog
-     * @example
-     * // Get one UnifiedLog
-     * const unifiedLog = await prisma.unifiedLog.findUnique({
-     *   where: {
-     *     // ... provide filter here
-     *   }
-     * })
-     */
-    findUnique<T extends UnifiedLogFindUniqueArgs>(args: SelectSubset<T, UnifiedLogFindUniqueArgs<ExtArgs>>): Prisma__UnifiedLogClient<$Result.GetResult<Prisma.$UnifiedLogPayload<ExtArgs>, T, "findUnique", GlobalOmitOptions> | null, null, ExtArgs, GlobalOmitOptions>
-
-    /**
-     * Find one UnifiedLog that matches the filter or throw an error with `error.code='P2025'`
-     * if no matches were found.
-     * @param {UnifiedLogFindUniqueOrThrowArgs} args - Arguments to find a UnifiedLog
-     * @example
-     * // Get one UnifiedLog
-     * const unifiedLog = await prisma.unifiedLog.findUniqueOrThrow({
-     *   where: {
-     *     // ... provide filter here
-     *   }
-     * })
-     */
-    findUniqueOrThrow<T extends UnifiedLogFindUniqueOrThrowArgs>(args: SelectSubset<T, UnifiedLogFindUniqueOrThrowArgs<ExtArgs>>): Prisma__UnifiedLogClient<$Result.GetResult<Prisma.$UnifiedLogPayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
-
-    /**
-     * Find the first UnifiedLog that matches the filter.
-     * Note, that providing `undefined` is treated as the value not being there.
-     * Read more here: https://pris.ly/d/null-undefined
-     * @param {UnifiedLogFindFirstArgs} args - Arguments to find a UnifiedLog
-     * @example
-     * // Get one UnifiedLog
-     * const unifiedLog = await prisma.unifiedLog.findFirst({
-     *   where: {
-     *     // ... provide filter here
-     *   }
-     * })
-     */
-    findFirst<T extends UnifiedLogFindFirstArgs>(args?: SelectSubset<T, UnifiedLogFindFirstArgs<ExtArgs>>): Prisma__UnifiedLogClient<$Result.GetResult<Prisma.$UnifiedLogPayload<ExtArgs>, T, "findFirst", GlobalOmitOptions> | null, null, ExtArgs, GlobalOmitOptions>
-
-    /**
-     * Find the first UnifiedLog that matches the filter or
-     * throw `PrismaKnownClientError` with `P2025` code if no matches were found.
-     * Note, that providing `undefined` is treated as the value not being there.
-     * Read more here: https://pris.ly/d/null-undefined
-     * @param {UnifiedLogFindFirstOrThrowArgs} args - Arguments to find a UnifiedLog
-     * @example
-     * // Get one UnifiedLog
-     * const unifiedLog = await prisma.unifiedLog.findFirstOrThrow({
-     *   where: {
-     *     // ... provide filter here
-     *   }
-     * })
-     */
-    findFirstOrThrow<T extends UnifiedLogFindFirstOrThrowArgs>(args?: SelectSubset<T, UnifiedLogFindFirstOrThrowArgs<ExtArgs>>): Prisma__UnifiedLogClient<$Result.GetResult<Prisma.$UnifiedLogPayload<ExtArgs>, T, "findFirstOrThrow", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
-
-    /**
-     * Find zero or more UnifiedLogs that matches the filter.
-     * Note, that providing `undefined` is treated as the value not being there.
-     * Read more here: https://pris.ly/d/null-undefined
-     * @param {UnifiedLogFindManyArgs} args - Arguments to filter and select certain fields only.
-     * @example
-     * // Get all UnifiedLogs
-     * const unifiedLogs = await prisma.unifiedLog.findMany()
-     * 
-     * // Get first 10 UnifiedLogs
-     * const unifiedLogs = await prisma.unifiedLog.findMany({ take: 10 })
-     * 
-     * // Only select the `id`
-     * const unifiedLogWithIdOnly = await prisma.unifiedLog.findMany({ select: { id: true } })
-     * 
-     */
-    findMany<T extends UnifiedLogFindManyArgs>(args?: SelectSubset<T, UnifiedLogFindManyArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$UnifiedLogPayload<ExtArgs>, T, "findMany", GlobalOmitOptions>>
-
-    /**
-     * Create a UnifiedLog.
-     * @param {UnifiedLogCreateArgs} args - Arguments to create a UnifiedLog.
-     * @example
-     * // Create one UnifiedLog
-     * const UnifiedLog = await prisma.unifiedLog.create({
-     *   data: {
-     *     // ... data to create a UnifiedLog
-     *   }
-     * })
-     * 
-     */
-    create<T extends UnifiedLogCreateArgs>(args: SelectSubset<T, UnifiedLogCreateArgs<ExtArgs>>): Prisma__UnifiedLogClient<$Result.GetResult<Prisma.$UnifiedLogPayload<ExtArgs>, T, "create", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
-
-    /**
-     * Create many UnifiedLogs.
-     * @param {UnifiedLogCreateManyArgs} args - Arguments to create many UnifiedLogs.
-     * @example
-     * // Create many UnifiedLogs
-     * const unifiedLog = await prisma.unifiedLog.createMany({
-     *   data: [
-     *     // ... provide data here
-     *   ]
-     * })
-     *     
-     */
-    createMany<T extends UnifiedLogCreateManyArgs>(args?: SelectSubset<T, UnifiedLogCreateManyArgs<ExtArgs>>): Prisma.PrismaPromise<BatchPayload>
-
-    /**
-     * Create many UnifiedLogs and returns the data saved in the database.
-     * @param {UnifiedLogCreateManyAndReturnArgs} args - Arguments to create many UnifiedLogs.
-     * @example
-     * // Create many UnifiedLogs
-     * const unifiedLog = await prisma.unifiedLog.createManyAndReturn({
-     *   data: [
-     *     // ... provide data here
-     *   ]
-     * })
-     * 
-     * // Create many UnifiedLogs and only return the `id`
-     * const unifiedLogWithIdOnly = await prisma.unifiedLog.createManyAndReturn({
-     *   select: { id: true },
-     *   data: [
-     *     // ... provide data here
-     *   ]
-     * })
-     * Note, that providing `undefined` is treated as the value not being there.
-     * Read more here: https://pris.ly/d/null-undefined
-     * 
-     */
-    createManyAndReturn<T extends UnifiedLogCreateManyAndReturnArgs>(args?: SelectSubset<T, UnifiedLogCreateManyAndReturnArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$UnifiedLogPayload<ExtArgs>, T, "createManyAndReturn", GlobalOmitOptions>>
-
-    /**
-     * Delete a UnifiedLog.
-     * @param {UnifiedLogDeleteArgs} args - Arguments to delete one UnifiedLog.
-     * @example
-     * // Delete one UnifiedLog
-     * const UnifiedLog = await prisma.unifiedLog.delete({
-     *   where: {
-     *     // ... filter to delete one UnifiedLog
-     *   }
-     * })
-     * 
-     */
-    delete<T extends UnifiedLogDeleteArgs>(args: SelectSubset<T, UnifiedLogDeleteArgs<ExtArgs>>): Prisma__UnifiedLogClient<$Result.GetResult<Prisma.$UnifiedLogPayload<ExtArgs>, T, "delete", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
-
-    /**
-     * Update one UnifiedLog.
-     * @param {UnifiedLogUpdateArgs} args - Arguments to update one UnifiedLog.
-     * @example
-     * // Update one UnifiedLog
-     * const unifiedLog = await prisma.unifiedLog.update({
-     *   where: {
-     *     // ... provide filter here
-     *   },
-     *   data: {
-     *     // ... provide data here
-     *   }
-     * })
-     * 
-     */
-    update<T extends UnifiedLogUpdateArgs>(args: SelectSubset<T, UnifiedLogUpdateArgs<ExtArgs>>): Prisma__UnifiedLogClient<$Result.GetResult<Prisma.$UnifiedLogPayload<ExtArgs>, T, "update", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
-
-    /**
-     * Delete zero or more UnifiedLogs.
-     * @param {UnifiedLogDeleteManyArgs} args - Arguments to filter UnifiedLogs to delete.
-     * @example
-     * // Delete a few UnifiedLogs
-     * const { count } = await prisma.unifiedLog.deleteMany({
-     *   where: {
-     *     // ... provide filter here
-     *   }
-     * })
-     * 
-     */
-    deleteMany<T extends UnifiedLogDeleteManyArgs>(args?: SelectSubset<T, UnifiedLogDeleteManyArgs<ExtArgs>>): Prisma.PrismaPromise<BatchPayload>
-
-    /**
-     * Update zero or more UnifiedLogs.
-     * Note, that providing `undefined` is treated as the value not being there.
-     * Read more here: https://pris.ly/d/null-undefined
-     * @param {UnifiedLogUpdateManyArgs} args - Arguments to update one or more rows.
-     * @example
-     * // Update many UnifiedLogs
-     * const unifiedLog = await prisma.unifiedLog.updateMany({
-     *   where: {
-     *     // ... provide filter here
-     *   },
-     *   data: {
-     *     // ... provide data here
-     *   }
-     * })
-     * 
-     */
-    updateMany<T extends UnifiedLogUpdateManyArgs>(args: SelectSubset<T, UnifiedLogUpdateManyArgs<ExtArgs>>): Prisma.PrismaPromise<BatchPayload>
-
-    /**
-     * Update zero or more UnifiedLogs and returns the data updated in the database.
-     * @param {UnifiedLogUpdateManyAndReturnArgs} args - Arguments to update many UnifiedLogs.
-     * @example
-     * // Update many UnifiedLogs
-     * const unifiedLog = await prisma.unifiedLog.updateManyAndReturn({
-     *   where: {
-     *     // ... provide filter here
-     *   },
-     *   data: [
-     *     // ... provide data here
-     *   ]
-     * })
-     * 
-     * // Update zero or more UnifiedLogs and only return the `id`
-     * const unifiedLogWithIdOnly = await prisma.unifiedLog.updateManyAndReturn({
-     *   select: { id: true },
-     *   where: {
-     *     // ... provide filter here
-     *   },
-     *   data: [
-     *     // ... provide data here
-     *   ]
-     * })
-     * Note, that providing `undefined` is treated as the value not being there.
-     * Read more here: https://pris.ly/d/null-undefined
-     * 
-     */
-    updateManyAndReturn<T extends UnifiedLogUpdateManyAndReturnArgs>(args: SelectSubset<T, UnifiedLogUpdateManyAndReturnArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$UnifiedLogPayload<ExtArgs>, T, "updateManyAndReturn", GlobalOmitOptions>>
-
-    /**
-     * Create or update one UnifiedLog.
-     * @param {UnifiedLogUpsertArgs} args - Arguments to update or create a UnifiedLog.
-     * @example
-     * // Update or create a UnifiedLog
-     * const unifiedLog = await prisma.unifiedLog.upsert({
-     *   create: {
-     *     // ... data to create a UnifiedLog
-     *   },
-     *   update: {
-     *     // ... in case it already exists, update
-     *   },
-     *   where: {
-     *     // ... the filter for the UnifiedLog we want to update
-     *   }
-     * })
-     */
-    upsert<T extends UnifiedLogUpsertArgs>(args: SelectSubset<T, UnifiedLogUpsertArgs<ExtArgs>>): Prisma__UnifiedLogClient<$Result.GetResult<Prisma.$UnifiedLogPayload<ExtArgs>, T, "upsert", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
-
-
-    /**
-     * Count the number of UnifiedLogs.
-     * Note, that providing `undefined` is treated as the value not being there.
-     * Read more here: https://pris.ly/d/null-undefined
-     * @param {UnifiedLogCountArgs} args - Arguments to filter UnifiedLogs to count.
-     * @example
-     * // Count the number of UnifiedLogs
-     * const count = await prisma.unifiedLog.count({
-     *   where: {
-     *     // ... the filter for the UnifiedLogs we want to count
-     *   }
-     * })
-    **/
-    count<T extends UnifiedLogCountArgs>(
-      args?: Subset<T, UnifiedLogCountArgs>,
-    ): Prisma.PrismaPromise<
-      T extends $Utils.Record<'select', any>
-        ? T['select'] extends true
-          ? number
-          : GetScalarType<T['select'], UnifiedLogCountAggregateOutputType>
-        : number
-    >
-
-    /**
-     * Allows you to perform aggregations operations on a UnifiedLog.
-     * Note, that providing `undefined` is treated as the value not being there.
-     * Read more here: https://pris.ly/d/null-undefined
-     * @param {UnifiedLogAggregateArgs} args - Select which aggregations you would like to apply and on what fields.
-     * @example
-     * // Ordered by age ascending
-     * // Where email contains prisma.io
-     * // Limited to the 10 users
-     * const aggregations = await prisma.user.aggregate({
-     *   _avg: {
-     *     age: true,
-     *   },
-     *   where: {
-     *     email: {
-     *       contains: "prisma.io",
-     *     },
-     *   },
-     *   orderBy: {
-     *     age: "asc",
-     *   },
-     *   take: 10,
-     * })
-    **/
-    aggregate<T extends UnifiedLogAggregateArgs>(args: Subset<T, UnifiedLogAggregateArgs>): Prisma.PrismaPromise<GetUnifiedLogAggregateType<T>>
-
-    /**
-     * Group by UnifiedLog.
-     * Note, that providing `undefined` is treated as the value not being there.
-     * Read more here: https://pris.ly/d/null-undefined
-     * @param {UnifiedLogGroupByArgs} args - Group by arguments.
-     * @example
-     * // Group by city, order by createdAt, get count
-     * const result = await prisma.user.groupBy({
-     *   by: ['city', 'createdAt'],
-     *   orderBy: {
-     *     createdAt: true
-     *   },
-     *   _count: {
-     *     _all: true
-     *   },
-     * })
-     * 
-    **/
-    groupBy<
-      T extends UnifiedLogGroupByArgs,
-      HasSelectOrTake extends Or<
-        Extends<'skip', Keys<T>>,
-        Extends<'take', Keys<T>>
-      >,
-      OrderByArg extends True extends HasSelectOrTake
-        ? { orderBy: UnifiedLogGroupByArgs['orderBy'] }
-        : { orderBy?: UnifiedLogGroupByArgs['orderBy'] },
-      OrderFields extends ExcludeUnderscoreKeys<Keys<MaybeTupleToUnion<T['orderBy']>>>,
-      ByFields extends MaybeTupleToUnion<T['by']>,
-      ByValid extends Has<ByFields, OrderFields>,
-      HavingFields extends GetHavingFields<T['having']>,
-      HavingValid extends Has<ByFields, HavingFields>,
-      ByEmpty extends T['by'] extends never[] ? True : False,
-      InputErrors extends ByEmpty extends True
-      ? `Error: "by" must not be empty.`
-      : HavingValid extends False
-      ? {
-          [P in HavingFields]: P extends ByFields
-            ? never
-            : P extends string
-            ? `Error: Field "${P}" used in "having" needs to be provided in "by".`
-            : [
-                Error,
-                'Field ',
-                P,
-                ` in "having" needs to be provided in "by"`,
-              ]
-        }[HavingFields]
-      : 'take' extends Keys<T>
-      ? 'orderBy' extends Keys<T>
-        ? ByValid extends True
-          ? {}
-          : {
-              [P in OrderFields]: P extends ByFields
-                ? never
-                : `Error: Field "${P}" in "orderBy" needs to be provided in "by"`
-            }[OrderFields]
-        : 'Error: If you provide "take", you also need to provide "orderBy"'
-      : 'skip' extends Keys<T>
-      ? 'orderBy' extends Keys<T>
-        ? ByValid extends True
-          ? {}
-          : {
-              [P in OrderFields]: P extends ByFields
-                ? never
-                : `Error: Field "${P}" in "orderBy" needs to be provided in "by"`
-            }[OrderFields]
-        : 'Error: If you provide "skip", you also need to provide "orderBy"'
-      : ByValid extends True
-      ? {}
-      : {
-          [P in OrderFields]: P extends ByFields
-            ? never
-            : `Error: Field "${P}" in "orderBy" needs to be provided in "by"`
-        }[OrderFields]
-    >(args: SubsetIntersection<T, UnifiedLogGroupByArgs, OrderByArg> & InputErrors): {} extends InputErrors ? GetUnifiedLogGroupByPayload<T> : Prisma.PrismaPromise<InputErrors>
-  /**
-   * Fields of the UnifiedLog model
-   */
-  readonly fields: UnifiedLogFieldRefs;
-  }
-
-  /**
-   * The delegate class that acts as a "Promise-like" for UnifiedLog.
-   * Why is this prefixed with `Prisma__`?
-   * Because we want to prevent naming conflicts as mentioned in
-   * https://github.com/prisma/prisma-client-js/issues/707
-   */
-  export interface Prisma__UnifiedLogClient<T, Null = never, ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs, GlobalOmitOptions = {}> extends Prisma.PrismaPromise<T> {
-    readonly [Symbol.toStringTag]: "PrismaPromise"
-    /**
-     * Attaches callbacks for the resolution and/or rejection of the Promise.
-     * @param onfulfilled The callback to execute when the Promise is resolved.
-     * @param onrejected The callback to execute when the Promise is rejected.
-     * @returns A Promise for the completion of which ever callback is executed.
-     */
-    then<TResult1 = T, TResult2 = never>(onfulfilled?: ((value: T) => TResult1 | PromiseLike<TResult1>) | undefined | null, onrejected?: ((reason: any) => TResult2 | PromiseLike<TResult2>) | undefined | null): $Utils.JsPromise<TResult1 | TResult2>
-    /**
-     * Attaches a callback for only the rejection of the Promise.
-     * @param onrejected The callback to execute when the Promise is rejected.
-     * @returns A Promise for the completion of the callback.
-     */
-    catch<TResult = never>(onrejected?: ((reason: any) => TResult | PromiseLike<TResult>) | undefined | null): $Utils.JsPromise<T | TResult>
-    /**
-     * Attaches a callback that is invoked when the Promise is settled (fulfilled or rejected). The
-     * resolved value cannot be modified from the callback.
-     * @param onfinally The callback to execute when the Promise is settled (fulfilled or rejected).
-     * @returns A Promise for the completion of the callback.
-     */
-    finally(onfinally?: (() => void) | undefined | null): $Utils.JsPromise<T>
-  }
-
-
-
-
-  /**
-   * Fields of the UnifiedLog model
-   */
-  interface UnifiedLogFieldRefs {
-    readonly id: FieldRef<"UnifiedLog", 'String'>
-    readonly createdAt: FieldRef<"UnifiedLog", 'DateTime'>
-    readonly userId: FieldRef<"UnifiedLog", 'BigInt'>
-    readonly sessionId: FieldRef<"UnifiedLog", 'String'>
-    readonly cfRay: FieldRef<"UnifiedLog", 'String'>
-    readonly country: FieldRef<"UnifiedLog", 'String'>
-    readonly city: FieldRef<"UnifiedLog", 'String'>
-    readonly bot: FieldRef<"UnifiedLog", 'Boolean'>
-    readonly threat: FieldRef<"UnifiedLog", 'String'>
-    readonly isMobile: FieldRef<"UnifiedLog", 'Boolean'>
-    readonly ip: FieldRef<"UnifiedLog", 'String'>
-    readonly logType: FieldRef<"UnifiedLog", 'String'>
-    readonly category: FieldRef<"UnifiedLog", 'String'>
-    readonly detail: FieldRef<"UnifiedLog", 'String'>
-    readonly metadata: FieldRef<"UnifiedLog", 'Json'>
-  }
-    
-
-  // Custom InputTypes
-  /**
-   * UnifiedLog findUnique
-   */
-  export type UnifiedLogFindUniqueArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
-    /**
-     * Select specific fields to fetch from the UnifiedLog
-     */
-    select?: UnifiedLogSelect<ExtArgs> | null
-    /**
-     * Omit specific fields from the UnifiedLog
-     */
-    omit?: UnifiedLogOmit<ExtArgs> | null
-    /**
-     * Filter, which UnifiedLog to fetch.
-     */
-    where: UnifiedLogWhereUniqueInput
-  }
-
-  /**
-   * UnifiedLog findUniqueOrThrow
-   */
-  export type UnifiedLogFindUniqueOrThrowArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
-    /**
-     * Select specific fields to fetch from the UnifiedLog
-     */
-    select?: UnifiedLogSelect<ExtArgs> | null
-    /**
-     * Omit specific fields from the UnifiedLog
-     */
-    omit?: UnifiedLogOmit<ExtArgs> | null
-    /**
-     * Filter, which UnifiedLog to fetch.
-     */
-    where: UnifiedLogWhereUniqueInput
-  }
-
-  /**
-   * UnifiedLog findFirst
-   */
-  export type UnifiedLogFindFirstArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
-    /**
-     * Select specific fields to fetch from the UnifiedLog
-     */
-    select?: UnifiedLogSelect<ExtArgs> | null
-    /**
-     * Omit specific fields from the UnifiedLog
-     */
-    omit?: UnifiedLogOmit<ExtArgs> | null
-    /**
-     * Filter, which UnifiedLog to fetch.
-     */
-    where?: UnifiedLogWhereInput
-    /**
-     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/sorting Sorting Docs}
-     * 
-     * Determine the order of UnifiedLogs to fetch.
-     */
-    orderBy?: UnifiedLogOrderByWithRelationInput | UnifiedLogOrderByWithRelationInput[]
-    /**
-     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination#cursor-based-pagination Cursor Docs}
-     * 
-     * Sets the position for searching for UnifiedLogs.
-     */
-    cursor?: UnifiedLogWhereUniqueInput
-    /**
-     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
-     * 
-     * Take `±n` UnifiedLogs from the position of the cursor.
-     */
-    take?: number
-    /**
-     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
-     * 
-     * Skip the first `n` UnifiedLogs.
-     */
-    skip?: number
-    /**
-     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/distinct Distinct Docs}
-     * 
-     * Filter by unique combinations of UnifiedLogs.
-     */
-    distinct?: UnifiedLogScalarFieldEnum | UnifiedLogScalarFieldEnum[]
-  }
-
-  /**
-   * UnifiedLog findFirstOrThrow
-   */
-  export type UnifiedLogFindFirstOrThrowArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
-    /**
-     * Select specific fields to fetch from the UnifiedLog
-     */
-    select?: UnifiedLogSelect<ExtArgs> | null
-    /**
-     * Omit specific fields from the UnifiedLog
-     */
-    omit?: UnifiedLogOmit<ExtArgs> | null
-    /**
-     * Filter, which UnifiedLog to fetch.
-     */
-    where?: UnifiedLogWhereInput
-    /**
-     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/sorting Sorting Docs}
-     * 
-     * Determine the order of UnifiedLogs to fetch.
-     */
-    orderBy?: UnifiedLogOrderByWithRelationInput | UnifiedLogOrderByWithRelationInput[]
-    /**
-     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination#cursor-based-pagination Cursor Docs}
-     * 
-     * Sets the position for searching for UnifiedLogs.
-     */
-    cursor?: UnifiedLogWhereUniqueInput
-    /**
-     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
-     * 
-     * Take `±n` UnifiedLogs from the position of the cursor.
-     */
-    take?: number
-    /**
-     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
-     * 
-     * Skip the first `n` UnifiedLogs.
-     */
-    skip?: number
-    /**
-     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/distinct Distinct Docs}
-     * 
-     * Filter by unique combinations of UnifiedLogs.
-     */
-    distinct?: UnifiedLogScalarFieldEnum | UnifiedLogScalarFieldEnum[]
-  }
-
-  /**
-   * UnifiedLog findMany
-   */
-  export type UnifiedLogFindManyArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
-    /**
-     * Select specific fields to fetch from the UnifiedLog
-     */
-    select?: UnifiedLogSelect<ExtArgs> | null
-    /**
-     * Omit specific fields from the UnifiedLog
-     */
-    omit?: UnifiedLogOmit<ExtArgs> | null
-    /**
-     * Filter, which UnifiedLogs to fetch.
-     */
-    where?: UnifiedLogWhereInput
-    /**
-     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/sorting Sorting Docs}
-     * 
-     * Determine the order of UnifiedLogs to fetch.
-     */
-    orderBy?: UnifiedLogOrderByWithRelationInput | UnifiedLogOrderByWithRelationInput[]
-    /**
-     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination#cursor-based-pagination Cursor Docs}
-     * 
-     * Sets the position for listing UnifiedLogs.
-     */
-    cursor?: UnifiedLogWhereUniqueInput
-    /**
-     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
-     * 
-     * Take `±n` UnifiedLogs from the position of the cursor.
-     */
-    take?: number
-    /**
-     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
-     * 
-     * Skip the first `n` UnifiedLogs.
-     */
-    skip?: number
-    distinct?: UnifiedLogScalarFieldEnum | UnifiedLogScalarFieldEnum[]
-  }
-
-  /**
-   * UnifiedLog create
-   */
-  export type UnifiedLogCreateArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
-    /**
-     * Select specific fields to fetch from the UnifiedLog
-     */
-    select?: UnifiedLogSelect<ExtArgs> | null
-    /**
-     * Omit specific fields from the UnifiedLog
-     */
-    omit?: UnifiedLogOmit<ExtArgs> | null
-    /**
-     * The data needed to create a UnifiedLog.
-     */
-    data: XOR<UnifiedLogCreateInput, UnifiedLogUncheckedCreateInput>
-  }
-
-  /**
-   * UnifiedLog createMany
-   */
-  export type UnifiedLogCreateManyArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
-    /**
-     * The data used to create many UnifiedLogs.
-     */
-    data: UnifiedLogCreateManyInput | UnifiedLogCreateManyInput[]
-    skipDuplicates?: boolean
-  }
-
-  /**
-   * UnifiedLog createManyAndReturn
-   */
-  export type UnifiedLogCreateManyAndReturnArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
-    /**
-     * Select specific fields to fetch from the UnifiedLog
-     */
-    select?: UnifiedLogSelectCreateManyAndReturn<ExtArgs> | null
-    /**
-     * Omit specific fields from the UnifiedLog
-     */
-    omit?: UnifiedLogOmit<ExtArgs> | null
-    /**
-     * The data used to create many UnifiedLogs.
-     */
-    data: UnifiedLogCreateManyInput | UnifiedLogCreateManyInput[]
-    skipDuplicates?: boolean
-  }
-
-  /**
-   * UnifiedLog update
-   */
-  export type UnifiedLogUpdateArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
-    /**
-     * Select specific fields to fetch from the UnifiedLog
-     */
-    select?: UnifiedLogSelect<ExtArgs> | null
-    /**
-     * Omit specific fields from the UnifiedLog
-     */
-    omit?: UnifiedLogOmit<ExtArgs> | null
-    /**
-     * The data needed to update a UnifiedLog.
-     */
-    data: XOR<UnifiedLogUpdateInput, UnifiedLogUncheckedUpdateInput>
-    /**
-     * Choose, which UnifiedLog to update.
-     */
-    where: UnifiedLogWhereUniqueInput
-  }
-
-  /**
-   * UnifiedLog updateMany
-   */
-  export type UnifiedLogUpdateManyArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
-    /**
-     * The data used to update UnifiedLogs.
-     */
-    data: XOR<UnifiedLogUpdateManyMutationInput, UnifiedLogUncheckedUpdateManyInput>
-    /**
-     * Filter which UnifiedLogs to update
-     */
-    where?: UnifiedLogWhereInput
-    /**
-     * Limit how many UnifiedLogs to update.
-     */
-    limit?: number
-  }
-
-  /**
-   * UnifiedLog updateManyAndReturn
-   */
-  export type UnifiedLogUpdateManyAndReturnArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
-    /**
-     * Select specific fields to fetch from the UnifiedLog
-     */
-    select?: UnifiedLogSelectUpdateManyAndReturn<ExtArgs> | null
-    /**
-     * Omit specific fields from the UnifiedLog
-     */
-    omit?: UnifiedLogOmit<ExtArgs> | null
-    /**
-     * The data used to update UnifiedLogs.
-     */
-    data: XOR<UnifiedLogUpdateManyMutationInput, UnifiedLogUncheckedUpdateManyInput>
-    /**
-     * Filter which UnifiedLogs to update
-     */
-    where?: UnifiedLogWhereInput
-    /**
-     * Limit how many UnifiedLogs to update.
-     */
-    limit?: number
-  }
-
-  /**
-   * UnifiedLog upsert
-   */
-  export type UnifiedLogUpsertArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
-    /**
-     * Select specific fields to fetch from the UnifiedLog
-     */
-    select?: UnifiedLogSelect<ExtArgs> | null
-    /**
-     * Omit specific fields from the UnifiedLog
-     */
-    omit?: UnifiedLogOmit<ExtArgs> | null
-    /**
-     * The filter to search for the UnifiedLog to update in case it exists.
-     */
-    where: UnifiedLogWhereUniqueInput
-    /**
-     * In case the UnifiedLog found by the `where` argument doesn't exist, create a new UnifiedLog with this data.
-     */
-    create: XOR<UnifiedLogCreateInput, UnifiedLogUncheckedCreateInput>
-    /**
-     * In case the UnifiedLog was found with the provided `where` argument, update it with this data.
-     */
-    update: XOR<UnifiedLogUpdateInput, UnifiedLogUncheckedUpdateInput>
-  }
-
-  /**
-   * UnifiedLog delete
-   */
-  export type UnifiedLogDeleteArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
-    /**
-     * Select specific fields to fetch from the UnifiedLog
-     */
-    select?: UnifiedLogSelect<ExtArgs> | null
-    /**
-     * Omit specific fields from the UnifiedLog
-     */
-    omit?: UnifiedLogOmit<ExtArgs> | null
-    /**
-     * Filter which UnifiedLog to delete.
-     */
-    where: UnifiedLogWhereUniqueInput
-  }
-
-  /**
-   * UnifiedLog deleteMany
-   */
-  export type UnifiedLogDeleteManyArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
-    /**
-     * Filter which UnifiedLogs to delete
-     */
-    where?: UnifiedLogWhereInput
-    /**
-     * Limit how many UnifiedLogs to delete.
-     */
-    limit?: number
-  }
-
-  /**
-   * UnifiedLog without action
-   */
-  export type UnifiedLogDefaultArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
-    /**
-     * Select specific fields to fetch from the UnifiedLog
-     */
-    select?: UnifiedLogSelect<ExtArgs> | null
-    /**
-     * Omit specific fields from the UnifiedLog
-     */
-    omit?: UnifiedLogOmit<ExtArgs> | null
-  }
-
-
-  /**
    * Model Game
    */
 
@@ -14875,24 +13629,25 @@ export namespace Prisma {
 
   export type GameAvgAggregateOutputType = {
     id: number | null
-    gameId: number | null
+    aggregatorGameId: number | null
     houseEdge: Decimal | null
     contributionRate: Decimal | null
   }
 
   export type GameSumAggregateOutputType = {
-    id: number | null
-    gameId: number | null
+    id: bigint | null
+    aggregatorGameId: number | null
     houseEdge: Decimal | null
     contributionRate: Decimal | null
   }
 
   export type GameMinAggregateOutputType = {
-    id: number | null
+    id: bigint | null
+    uid: string | null
     aggregatorType: $Enums.GameAggregatorType | null
     provider: $Enums.GameProvider | null
     category: $Enums.GameCategory | null
-    gameId: number | null
+    aggregatorGameId: number | null
     gameType: string | null
     tableId: string | null
     iconLink: string | null
@@ -14905,11 +13660,12 @@ export namespace Prisma {
   }
 
   export type GameMaxAggregateOutputType = {
-    id: number | null
+    id: bigint | null
+    uid: string | null
     aggregatorType: $Enums.GameAggregatorType | null
     provider: $Enums.GameProvider | null
     category: $Enums.GameCategory | null
-    gameId: number | null
+    aggregatorGameId: number | null
     gameType: string | null
     tableId: string | null
     iconLink: string | null
@@ -14923,10 +13679,11 @@ export namespace Prisma {
 
   export type GameCountAggregateOutputType = {
     id: number
+    uid: number
     aggregatorType: number
     provider: number
     category: number
-    gameId: number
+    aggregatorGameId: number
     gameType: number
     tableId: number
     iconLink: number
@@ -14942,24 +13699,25 @@ export namespace Prisma {
 
   export type GameAvgAggregateInputType = {
     id?: true
-    gameId?: true
+    aggregatorGameId?: true
     houseEdge?: true
     contributionRate?: true
   }
 
   export type GameSumAggregateInputType = {
     id?: true
-    gameId?: true
+    aggregatorGameId?: true
     houseEdge?: true
     contributionRate?: true
   }
 
   export type GameMinAggregateInputType = {
     id?: true
+    uid?: true
     aggregatorType?: true
     provider?: true
     category?: true
-    gameId?: true
+    aggregatorGameId?: true
     gameType?: true
     tableId?: true
     iconLink?: true
@@ -14973,10 +13731,11 @@ export namespace Prisma {
 
   export type GameMaxAggregateInputType = {
     id?: true
+    uid?: true
     aggregatorType?: true
     provider?: true
     category?: true
-    gameId?: true
+    aggregatorGameId?: true
     gameType?: true
     tableId?: true
     iconLink?: true
@@ -14990,10 +13749,11 @@ export namespace Prisma {
 
   export type GameCountAggregateInputType = {
     id?: true
+    uid?: true
     aggregatorType?: true
     provider?: true
     category?: true
-    gameId?: true
+    aggregatorGameId?: true
     gameType?: true
     tableId?: true
     iconLink?: true
@@ -15093,11 +13853,12 @@ export namespace Prisma {
   }
 
   export type GameGroupByOutputType = {
-    id: number
+    id: bigint
+    uid: string
     aggregatorType: $Enums.GameAggregatorType
     provider: $Enums.GameProvider
     category: $Enums.GameCategory
-    gameId: number
+    aggregatorGameId: number
     gameType: string | null
     tableId: string | null
     iconLink: string | null
@@ -15130,10 +13891,11 @@ export namespace Prisma {
 
   export type GameSelect<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetSelect<{
     id?: boolean
+    uid?: boolean
     aggregatorType?: boolean
     provider?: boolean
     category?: boolean
-    gameId?: boolean
+    aggregatorGameId?: boolean
     gameType?: boolean
     tableId?: boolean
     iconLink?: boolean
@@ -15152,10 +13914,11 @@ export namespace Prisma {
 
   export type GameSelectCreateManyAndReturn<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetSelect<{
     id?: boolean
+    uid?: boolean
     aggregatorType?: boolean
     provider?: boolean
     category?: boolean
-    gameId?: boolean
+    aggregatorGameId?: boolean
     gameType?: boolean
     tableId?: boolean
     iconLink?: boolean
@@ -15169,10 +13932,11 @@ export namespace Prisma {
 
   export type GameSelectUpdateManyAndReturn<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetSelect<{
     id?: boolean
+    uid?: boolean
     aggregatorType?: boolean
     provider?: boolean
     category?: boolean
-    gameId?: boolean
+    aggregatorGameId?: boolean
     gameType?: boolean
     tableId?: boolean
     iconLink?: boolean
@@ -15186,10 +13950,11 @@ export namespace Prisma {
 
   export type GameSelectScalar = {
     id?: boolean
+    uid?: boolean
     aggregatorType?: boolean
     provider?: boolean
     category?: boolean
-    gameId?: boolean
+    aggregatorGameId?: boolean
     gameType?: boolean
     tableId?: boolean
     iconLink?: boolean
@@ -15201,7 +13966,7 @@ export namespace Prisma {
     updatedAt?: boolean
   }
 
-  export type GameOmit<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetOmit<"id" | "aggregatorType" | "provider" | "category" | "gameId" | "gameType" | "tableId" | "iconLink" | "isEnabled" | "isVisibleToUser" | "houseEdge" | "contributionRate" | "createdAt" | "updatedAt", ExtArgs["result"]["game"]>
+  export type GameOmit<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetOmit<"id" | "uid" | "aggregatorType" | "provider" | "category" | "aggregatorGameId" | "gameType" | "tableId" | "iconLink" | "isEnabled" | "isVisibleToUser" | "houseEdge" | "contributionRate" | "createdAt" | "updatedAt", ExtArgs["result"]["game"]>
   export type GameInclude<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
     bonusDetails?: boolean | Game$bonusDetailsArgs<ExtArgs>
     gameRounds?: boolean | Game$gameRoundsArgs<ExtArgs>
@@ -15221,11 +13986,12 @@ export namespace Prisma {
       translations: Prisma.$GameTranslationPayload<ExtArgs>[]
     }
     scalars: $Extensions.GetPayloadResult<{
-      id: number
+      id: bigint
+      uid: string
       aggregatorType: $Enums.GameAggregatorType
       provider: $Enums.GameProvider
       category: $Enums.GameCategory
-      gameId: number
+      aggregatorGameId: number
       gameType: string | null
       tableId: string | null
       iconLink: string | null
@@ -15662,11 +14428,12 @@ export namespace Prisma {
    * Fields of the Game model
    */
   interface GameFieldRefs {
-    readonly id: FieldRef<"Game", 'Int'>
+    readonly id: FieldRef<"Game", 'BigInt'>
+    readonly uid: FieldRef<"Game", 'String'>
     readonly aggregatorType: FieldRef<"Game", 'GameAggregatorType'>
     readonly provider: FieldRef<"Game", 'GameProvider'>
     readonly category: FieldRef<"Game", 'GameCategory'>
-    readonly gameId: FieldRef<"Game", 'Int'>
+    readonly aggregatorGameId: FieldRef<"Game", 'Int'>
     readonly gameType: FieldRef<"Game", 'String'>
     readonly tableId: FieldRef<"Game", 'String'>
     readonly iconLink: FieldRef<"Game", 'String'>
@@ -16196,13 +14963,14 @@ export namespace Prisma {
   }
 
   export type GameTranslationSumAggregateOutputType = {
-    id: number | null
-    gameId: number | null
+    id: bigint | null
+    gameId: bigint | null
   }
 
   export type GameTranslationMinAggregateOutputType = {
-    id: number | null
-    gameId: number | null
+    id: bigint | null
+    uid: string | null
+    gameId: bigint | null
     language: $Enums.Language | null
     providerName: string | null
     categoryName: string | null
@@ -16212,8 +14980,9 @@ export namespace Prisma {
   }
 
   export type GameTranslationMaxAggregateOutputType = {
-    id: number | null
-    gameId: number | null
+    id: bigint | null
+    uid: string | null
+    gameId: bigint | null
     language: $Enums.Language | null
     providerName: string | null
     categoryName: string | null
@@ -16224,6 +14993,7 @@ export namespace Prisma {
 
   export type GameTranslationCountAggregateOutputType = {
     id: number
+    uid: number
     gameId: number
     language: number
     providerName: number
@@ -16247,6 +15017,7 @@ export namespace Prisma {
 
   export type GameTranslationMinAggregateInputType = {
     id?: true
+    uid?: true
     gameId?: true
     language?: true
     providerName?: true
@@ -16258,6 +15029,7 @@ export namespace Prisma {
 
   export type GameTranslationMaxAggregateInputType = {
     id?: true
+    uid?: true
     gameId?: true
     language?: true
     providerName?: true
@@ -16269,6 +15041,7 @@ export namespace Prisma {
 
   export type GameTranslationCountAggregateInputType = {
     id?: true
+    uid?: true
     gameId?: true
     language?: true
     providerName?: true
@@ -16366,8 +15139,9 @@ export namespace Prisma {
   }
 
   export type GameTranslationGroupByOutputType = {
-    id: number
-    gameId: number
+    id: bigint
+    uid: string
+    gameId: bigint
     language: $Enums.Language
     providerName: string
     categoryName: string
@@ -16397,6 +15171,7 @@ export namespace Prisma {
 
   export type GameTranslationSelect<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetSelect<{
     id?: boolean
+    uid?: boolean
     gameId?: boolean
     language?: boolean
     providerName?: boolean
@@ -16409,6 +15184,7 @@ export namespace Prisma {
 
   export type GameTranslationSelectCreateManyAndReturn<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetSelect<{
     id?: boolean
+    uid?: boolean
     gameId?: boolean
     language?: boolean
     providerName?: boolean
@@ -16421,6 +15197,7 @@ export namespace Prisma {
 
   export type GameTranslationSelectUpdateManyAndReturn<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetSelect<{
     id?: boolean
+    uid?: boolean
     gameId?: boolean
     language?: boolean
     providerName?: boolean
@@ -16433,6 +15210,7 @@ export namespace Prisma {
 
   export type GameTranslationSelectScalar = {
     id?: boolean
+    uid?: boolean
     gameId?: boolean
     language?: boolean
     providerName?: boolean
@@ -16442,7 +15220,7 @@ export namespace Prisma {
     updatedAt?: boolean
   }
 
-  export type GameTranslationOmit<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetOmit<"id" | "gameId" | "language" | "providerName" | "categoryName" | "gameName" | "createdAt" | "updatedAt", ExtArgs["result"]["gameTranslation"]>
+  export type GameTranslationOmit<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetOmit<"id" | "uid" | "gameId" | "language" | "providerName" | "categoryName" | "gameName" | "createdAt" | "updatedAt", ExtArgs["result"]["gameTranslation"]>
   export type GameTranslationInclude<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
     game?: boolean | GameDefaultArgs<ExtArgs>
   }
@@ -16459,8 +15237,9 @@ export namespace Prisma {
       game: Prisma.$GamePayload<ExtArgs>
     }
     scalars: $Extensions.GetPayloadResult<{
-      id: number
-      gameId: number
+      id: bigint
+      uid: string
+      gameId: bigint
       language: $Enums.Language
       providerName: string
       categoryName: string
@@ -16891,8 +15670,9 @@ export namespace Prisma {
    * Fields of the GameTranslation model
    */
   interface GameTranslationFieldRefs {
-    readonly id: FieldRef<"GameTranslation", 'Int'>
-    readonly gameId: FieldRef<"GameTranslation", 'Int'>
+    readonly id: FieldRef<"GameTranslation", 'BigInt'>
+    readonly uid: FieldRef<"GameTranslation", 'String'>
+    readonly gameId: FieldRef<"GameTranslation", 'BigInt'>
     readonly language: FieldRef<"GameTranslation", 'Language'>
     readonly providerName: FieldRef<"GameTranslation", 'String'>
     readonly categoryName: FieldRef<"GameTranslation", 'String'>
@@ -17336,11 +16116,12 @@ export namespace Prisma {
     id: bigint | null
     userId: bigint | null
     exchangeRate: Decimal | null
-    gameId: number | null
+    gameId: bigint | null
   }
 
   export type GameSessionMinAggregateOutputType = {
     id: bigint | null
+    uid: string | null
     userId: bigint | null
     createdAt: Date | null
     updatedAt: Date | null
@@ -17351,11 +16132,12 @@ export namespace Prisma {
     gameCurrency: $Enums.ExchangeCurrencyCode | null
     exchangeRate: Decimal | null
     exchangeRateSnapshotAt: Date | null
-    gameId: number | null
+    gameId: bigint | null
   }
 
   export type GameSessionMaxAggregateOutputType = {
     id: bigint | null
+    uid: string | null
     userId: bigint | null
     createdAt: Date | null
     updatedAt: Date | null
@@ -17366,11 +16148,12 @@ export namespace Prisma {
     gameCurrency: $Enums.ExchangeCurrencyCode | null
     exchangeRate: Decimal | null
     exchangeRateSnapshotAt: Date | null
-    gameId: number | null
+    gameId: bigint | null
   }
 
   export type GameSessionCountAggregateOutputType = {
     id: number
+    uid: number
     userId: number
     createdAt: number
     updatedAt: number
@@ -17402,6 +16185,7 @@ export namespace Prisma {
 
   export type GameSessionMinAggregateInputType = {
     id?: true
+    uid?: true
     userId?: true
     createdAt?: true
     updatedAt?: true
@@ -17417,6 +16201,7 @@ export namespace Prisma {
 
   export type GameSessionMaxAggregateInputType = {
     id?: true
+    uid?: true
     userId?: true
     createdAt?: true
     updatedAt?: true
@@ -17432,6 +16217,7 @@ export namespace Prisma {
 
   export type GameSessionCountAggregateInputType = {
     id?: true
+    uid?: true
     userId?: true
     createdAt?: true
     updatedAt?: true
@@ -17534,6 +16320,7 @@ export namespace Prisma {
 
   export type GameSessionGroupByOutputType = {
     id: bigint
+    uid: string
     userId: bigint
     createdAt: Date
     updatedAt: Date
@@ -17544,7 +16331,7 @@ export namespace Prisma {
     gameCurrency: $Enums.ExchangeCurrencyCode
     exchangeRate: Decimal
     exchangeRateSnapshotAt: Date
-    gameId: number | null
+    gameId: bigint | null
     _count: GameSessionCountAggregateOutputType | null
     _avg: GameSessionAvgAggregateOutputType | null
     _sum: GameSessionSumAggregateOutputType | null
@@ -17568,6 +16355,7 @@ export namespace Prisma {
 
   export type GameSessionSelect<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetSelect<{
     id?: boolean
+    uid?: boolean
     userId?: boolean
     createdAt?: boolean
     updatedAt?: boolean
@@ -17587,6 +16375,7 @@ export namespace Prisma {
 
   export type GameSessionSelectCreateManyAndReturn<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetSelect<{
     id?: boolean
+    uid?: boolean
     userId?: boolean
     createdAt?: boolean
     updatedAt?: boolean
@@ -17604,6 +16393,7 @@ export namespace Prisma {
 
   export type GameSessionSelectUpdateManyAndReturn<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetSelect<{
     id?: boolean
+    uid?: boolean
     userId?: boolean
     createdAt?: boolean
     updatedAt?: boolean
@@ -17621,6 +16411,7 @@ export namespace Prisma {
 
   export type GameSessionSelectScalar = {
     id?: boolean
+    uid?: boolean
     userId?: boolean
     createdAt?: boolean
     updatedAt?: boolean
@@ -17634,7 +16425,7 @@ export namespace Prisma {
     gameId?: boolean
   }
 
-  export type GameSessionOmit<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetOmit<"id" | "userId" | "createdAt" | "updatedAt" | "lastAccessedAt" | "aggregatorType" | "token" | "walletCurrency" | "gameCurrency" | "exchangeRate" | "exchangeRateSnapshotAt" | "gameId", ExtArgs["result"]["gameSession"]>
+  export type GameSessionOmit<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetOmit<"id" | "uid" | "userId" | "createdAt" | "updatedAt" | "lastAccessedAt" | "aggregatorType" | "token" | "walletCurrency" | "gameCurrency" | "exchangeRate" | "exchangeRateSnapshotAt" | "gameId", ExtArgs["result"]["gameSession"]>
   export type GameSessionInclude<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
     gameRounds?: boolean | GameSession$gameRoundsArgs<ExtArgs>
     game?: boolean | GameSession$gameArgs<ExtArgs>
@@ -17659,6 +16450,7 @@ export namespace Prisma {
     }
     scalars: $Extensions.GetPayloadResult<{
       id: bigint
+      uid: string
       userId: bigint
       createdAt: Date
       updatedAt: Date
@@ -17669,7 +16461,7 @@ export namespace Prisma {
       gameCurrency: $Enums.ExchangeCurrencyCode
       exchangeRate: Prisma.Decimal
       exchangeRateSnapshotAt: Date
-      gameId: number | null
+      gameId: bigint | null
     }, ExtArgs["result"]["gameSession"]>
     composites: {}
   }
@@ -18097,6 +16889,7 @@ export namespace Prisma {
    */
   interface GameSessionFieldRefs {
     readonly id: FieldRef<"GameSession", 'BigInt'>
+    readonly uid: FieldRef<"GameSession", 'String'>
     readonly userId: FieldRef<"GameSession", 'BigInt'>
     readonly createdAt: FieldRef<"GameSession", 'DateTime'>
     readonly updatedAt: FieldRef<"GameSession", 'DateTime'>
@@ -18107,7 +16900,7 @@ export namespace Prisma {
     readonly gameCurrency: FieldRef<"GameSession", 'ExchangeCurrencyCode'>
     readonly exchangeRate: FieldRef<"GameSession", 'Decimal'>
     readonly exchangeRateSnapshotAt: FieldRef<"GameSession", 'DateTime'>
-    readonly gameId: FieldRef<"GameSession", 'Int'>
+    readonly gameId: FieldRef<"GameSession", 'BigInt'>
   }
     
 
@@ -18613,12 +17406,13 @@ export namespace Prisma {
     contributionAmount: Decimal | null
     compEarned: Decimal | null
     jackpotContributionAmount: Decimal | null
-    gameId: number | null
+    gameId: bigint | null
     gameSessionId: bigint | null
   }
 
   export type GameRoundMinAggregateOutputType = {
     id: bigint | null
+    uid: string | null
     userId: bigint | null
     aggregatorType: $Enums.GameAggregatorType | null
     provider: $Enums.GameProvider | null
@@ -18643,12 +17437,13 @@ export namespace Prisma {
     jackpotContributionAmount: Decimal | null
     startedAt: Date | null
     completedAt: Date | null
-    gameId: number | null
+    gameId: bigint | null
     gameSessionId: bigint | null
   }
 
   export type GameRoundMaxAggregateOutputType = {
     id: bigint | null
+    uid: string | null
     userId: bigint | null
     aggregatorType: $Enums.GameAggregatorType | null
     provider: $Enums.GameProvider | null
@@ -18673,12 +17468,13 @@ export namespace Prisma {
     jackpotContributionAmount: Decimal | null
     startedAt: Date | null
     completedAt: Date | null
-    gameId: number | null
+    gameId: bigint | null
     gameSessionId: bigint | null
   }
 
   export type GameRoundCountAggregateOutputType = {
     id: number
+    uid: number
     userId: number
     aggregatorType: number
     provider: number
@@ -18751,6 +17547,7 @@ export namespace Prisma {
 
   export type GameRoundMinAggregateInputType = {
     id?: true
+    uid?: true
     userId?: true
     aggregatorType?: true
     provider?: true
@@ -18781,6 +17578,7 @@ export namespace Prisma {
 
   export type GameRoundMaxAggregateInputType = {
     id?: true
+    uid?: true
     userId?: true
     aggregatorType?: true
     provider?: true
@@ -18811,6 +17609,7 @@ export namespace Prisma {
 
   export type GameRoundCountAggregateInputType = {
     id?: true
+    uid?: true
     userId?: true
     aggregatorType?: true
     provider?: true
@@ -18928,6 +17727,7 @@ export namespace Prisma {
 
   export type GameRoundGroupByOutputType = {
     id: bigint
+    uid: string
     userId: bigint
     aggregatorType: $Enums.GameAggregatorType
     provider: $Enums.GameProvider
@@ -18952,7 +17752,7 @@ export namespace Prisma {
     jackpotContributionAmount: Decimal
     startedAt: Date | null
     completedAt: Date | null
-    gameId: number | null
+    gameId: bigint | null
     gameSessionId: bigint
     _count: GameRoundCountAggregateOutputType | null
     _avg: GameRoundAvgAggregateOutputType | null
@@ -18977,6 +17777,7 @@ export namespace Prisma {
 
   export type GameRoundSelect<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetSelect<{
     id?: boolean
+    uid?: boolean
     userId?: boolean
     aggregatorType?: boolean
     provider?: boolean
@@ -19014,6 +17815,7 @@ export namespace Prisma {
 
   export type GameRoundSelectCreateManyAndReturn<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetSelect<{
     id?: boolean
+    uid?: boolean
     userId?: boolean
     aggregatorType?: boolean
     provider?: boolean
@@ -19047,6 +17849,7 @@ export namespace Prisma {
 
   export type GameRoundSelectUpdateManyAndReturn<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetSelect<{
     id?: boolean
+    uid?: boolean
     userId?: boolean
     aggregatorType?: boolean
     provider?: boolean
@@ -19080,6 +17883,7 @@ export namespace Prisma {
 
   export type GameRoundSelectScalar = {
     id?: boolean
+    uid?: boolean
     userId?: boolean
     aggregatorType?: boolean
     provider?: boolean
@@ -19108,7 +17912,7 @@ export namespace Prisma {
     gameSessionId?: boolean
   }
 
-  export type GameRoundOmit<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetOmit<"id" | "userId" | "aggregatorType" | "provider" | "aggregatorTxId" | "aggregatorGameId" | "totalBetAmountInGameCurrency" | "totalWinAmountInGameCurrency" | "netAmountInGameCurrency" | "totalBetAmountInWalletCurrency" | "totalWinAmountInWalletCurrency" | "netAmountInWalletCurrency" | "transactionId" | "sessionId" | "tableId" | "roundId" | "replayType" | "replayData" | "totalPushAmount" | "tieBetAmount" | "contributionAmount" | "compEarned" | "jackpotContributionAmount" | "startedAt" | "completedAt" | "gameId" | "gameSessionId", ExtArgs["result"]["gameRound"]>
+  export type GameRoundOmit<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetOmit<"id" | "uid" | "userId" | "aggregatorType" | "provider" | "aggregatorTxId" | "aggregatorGameId" | "totalBetAmountInGameCurrency" | "totalWinAmountInGameCurrency" | "netAmountInGameCurrency" | "totalBetAmountInWalletCurrency" | "totalWinAmountInWalletCurrency" | "netAmountInWalletCurrency" | "transactionId" | "sessionId" | "tableId" | "roundId" | "replayType" | "replayData" | "totalPushAmount" | "tieBetAmount" | "contributionAmount" | "compEarned" | "jackpotContributionAmount" | "startedAt" | "completedAt" | "gameId" | "gameSessionId", ExtArgs["result"]["gameRound"]>
   export type GameRoundInclude<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
     AffiliateCommission?: boolean | GameRound$AffiliateCommissionArgs<ExtArgs>
     bets?: boolean | GameRound$betsArgs<ExtArgs>
@@ -19141,6 +17945,7 @@ export namespace Prisma {
     }
     scalars: $Extensions.GetPayloadResult<{
       id: bigint
+      uid: string
       userId: bigint
       aggregatorType: $Enums.GameAggregatorType
       provider: $Enums.GameProvider
@@ -19165,7 +17970,7 @@ export namespace Prisma {
       jackpotContributionAmount: Prisma.Decimal
       startedAt: Date | null
       completedAt: Date | null
-      gameId: number | null
+      gameId: bigint | null
       gameSessionId: bigint
     }, ExtArgs["result"]["gameRound"]>
     composites: {}
@@ -19597,6 +18402,7 @@ export namespace Prisma {
    */
   interface GameRoundFieldRefs {
     readonly id: FieldRef<"GameRound", 'BigInt'>
+    readonly uid: FieldRef<"GameRound", 'String'>
     readonly userId: FieldRef<"GameRound", 'BigInt'>
     readonly aggregatorType: FieldRef<"GameRound", 'GameAggregatorType'>
     readonly provider: FieldRef<"GameRound", 'GameProvider'>
@@ -19621,7 +18427,7 @@ export namespace Prisma {
     readonly jackpotContributionAmount: FieldRef<"GameRound", 'Decimal'>
     readonly startedAt: FieldRef<"GameRound", 'DateTime'>
     readonly completedAt: FieldRef<"GameRound", 'DateTime'>
-    readonly gameId: FieldRef<"GameRound", 'Int'>
+    readonly gameId: FieldRef<"GameRound", 'BigInt'>
     readonly gameSessionId: FieldRef<"GameRound", 'BigInt'>
   }
     
@@ -20158,6 +18964,7 @@ export namespace Prisma {
 
   export type GameBetMinAggregateOutputType = {
     id: bigint | null
+    uid: string | null
     userId: bigint | null
     gameRoundId: bigint | null
     aggregatorType: $Enums.GameAggregatorType | null
@@ -20173,6 +18980,7 @@ export namespace Prisma {
 
   export type GameBetMaxAggregateOutputType = {
     id: bigint | null
+    uid: string | null
     userId: bigint | null
     gameRoundId: bigint | null
     aggregatorType: $Enums.GameAggregatorType | null
@@ -20188,6 +18996,7 @@ export namespace Prisma {
 
   export type GameBetCountAggregateOutputType = {
     id: number
+    uid: number
     userId: number
     gameRoundId: number
     aggregatorType: number
@@ -20221,6 +19030,7 @@ export namespace Prisma {
 
   export type GameBetMinAggregateInputType = {
     id?: true
+    uid?: true
     userId?: true
     gameRoundId?: true
     aggregatorType?: true
@@ -20236,6 +19046,7 @@ export namespace Prisma {
 
   export type GameBetMaxAggregateInputType = {
     id?: true
+    uid?: true
     userId?: true
     gameRoundId?: true
     aggregatorType?: true
@@ -20251,6 +19062,7 @@ export namespace Prisma {
 
   export type GameBetCountAggregateInputType = {
     id?: true
+    uid?: true
     userId?: true
     gameRoundId?: true
     aggregatorType?: true
@@ -20353,6 +19165,7 @@ export namespace Prisma {
 
   export type GameBetGroupByOutputType = {
     id: bigint
+    uid: string
     userId: bigint
     gameRoundId: bigint
     aggregatorType: $Enums.GameAggregatorType
@@ -20387,6 +19200,7 @@ export namespace Prisma {
 
   export type GameBetSelect<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetSelect<{
     id?: boolean
+    uid?: boolean
     userId?: boolean
     gameRoundId?: boolean
     aggregatorType?: boolean
@@ -20403,6 +19217,7 @@ export namespace Prisma {
 
   export type GameBetSelectCreateManyAndReturn<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetSelect<{
     id?: boolean
+    uid?: boolean
     userId?: boolean
     gameRoundId?: boolean
     aggregatorType?: boolean
@@ -20419,6 +19234,7 @@ export namespace Prisma {
 
   export type GameBetSelectUpdateManyAndReturn<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetSelect<{
     id?: boolean
+    uid?: boolean
     userId?: boolean
     gameRoundId?: boolean
     aggregatorType?: boolean
@@ -20435,6 +19251,7 @@ export namespace Prisma {
 
   export type GameBetSelectScalar = {
     id?: boolean
+    uid?: boolean
     userId?: boolean
     gameRoundId?: boolean
     aggregatorType?: boolean
@@ -20448,7 +19265,7 @@ export namespace Prisma {
     cancelledAt?: boolean
   }
 
-  export type GameBetOmit<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetOmit<"id" | "userId" | "gameRoundId" | "aggregatorType" | "aggregatorBetId" | "betType" | "betAmount" | "bettedAt" | "betAmountInGameCurrency" | "createdAt" | "isCancelled" | "cancelledAt", ExtArgs["result"]["gameBet"]>
+  export type GameBetOmit<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetOmit<"id" | "uid" | "userId" | "gameRoundId" | "aggregatorType" | "aggregatorBetId" | "betType" | "betAmount" | "bettedAt" | "betAmountInGameCurrency" | "createdAt" | "isCancelled" | "cancelledAt", ExtArgs["result"]["gameBet"]>
   export type GameBetInclude<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
     gameRound?: boolean | GameRoundDefaultArgs<ExtArgs>
   }
@@ -20466,6 +19283,7 @@ export namespace Prisma {
     }
     scalars: $Extensions.GetPayloadResult<{
       id: bigint
+      uid: string
       userId: bigint
       gameRoundId: bigint
       aggregatorType: $Enums.GameAggregatorType
@@ -20902,6 +19720,7 @@ export namespace Prisma {
    */
   interface GameBetFieldRefs {
     readonly id: FieldRef<"GameBet", 'BigInt'>
+    readonly uid: FieldRef<"GameBet", 'String'>
     readonly userId: FieldRef<"GameBet", 'BigInt'>
     readonly gameRoundId: FieldRef<"GameBet", 'BigInt'>
     readonly aggregatorType: FieldRef<"GameBet", 'GameAggregatorType'>
@@ -21357,6 +20176,7 @@ export namespace Prisma {
 
   export type GameWinMinAggregateOutputType = {
     id: bigint | null
+    uid: string | null
     userId: bigint | null
     gameRoundId: bigint | null
     aggregatorType: $Enums.GameAggregatorType | null
@@ -21371,6 +20191,7 @@ export namespace Prisma {
 
   export type GameWinMaxAggregateOutputType = {
     id: bigint | null
+    uid: string | null
     userId: bigint | null
     gameRoundId: bigint | null
     aggregatorType: $Enums.GameAggregatorType | null
@@ -21385,6 +20206,7 @@ export namespace Prisma {
 
   export type GameWinCountAggregateOutputType = {
     id: number
+    uid: number
     userId: number
     gameRoundId: number
     aggregatorType: number
@@ -21417,6 +20239,7 @@ export namespace Prisma {
 
   export type GameWinMinAggregateInputType = {
     id?: true
+    uid?: true
     userId?: true
     gameRoundId?: true
     aggregatorType?: true
@@ -21431,6 +20254,7 @@ export namespace Prisma {
 
   export type GameWinMaxAggregateInputType = {
     id?: true
+    uid?: true
     userId?: true
     gameRoundId?: true
     aggregatorType?: true
@@ -21445,6 +20269,7 @@ export namespace Prisma {
 
   export type GameWinCountAggregateInputType = {
     id?: true
+    uid?: true
     userId?: true
     gameRoundId?: true
     aggregatorType?: true
@@ -21546,6 +20371,7 @@ export namespace Prisma {
 
   export type GameWinGroupByOutputType = {
     id: bigint
+    uid: string
     userId: bigint
     gameRoundId: bigint
     aggregatorType: $Enums.GameAggregatorType
@@ -21579,6 +20405,7 @@ export namespace Prisma {
 
   export type GameWinSelect<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetSelect<{
     id?: boolean
+    uid?: boolean
     userId?: boolean
     gameRoundId?: boolean
     aggregatorType?: boolean
@@ -21594,6 +20421,7 @@ export namespace Prisma {
 
   export type GameWinSelectCreateManyAndReturn<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetSelect<{
     id?: boolean
+    uid?: boolean
     userId?: boolean
     gameRoundId?: boolean
     aggregatorType?: boolean
@@ -21609,6 +20437,7 @@ export namespace Prisma {
 
   export type GameWinSelectUpdateManyAndReturn<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetSelect<{
     id?: boolean
+    uid?: boolean
     userId?: boolean
     gameRoundId?: boolean
     aggregatorType?: boolean
@@ -21624,6 +20453,7 @@ export namespace Prisma {
 
   export type GameWinSelectScalar = {
     id?: boolean
+    uid?: boolean
     userId?: boolean
     gameRoundId?: boolean
     aggregatorType?: boolean
@@ -21636,7 +20466,7 @@ export namespace Prisma {
     createdAt?: boolean
   }
 
-  export type GameWinOmit<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetOmit<"id" | "userId" | "gameRoundId" | "aggregatorType" | "aggregatorWinId" | "winType" | "winAmount" | "wonAt" | "description" | "winAmountInGameCurrency" | "createdAt", ExtArgs["result"]["gameWin"]>
+  export type GameWinOmit<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetOmit<"id" | "uid" | "userId" | "gameRoundId" | "aggregatorType" | "aggregatorWinId" | "winType" | "winAmount" | "wonAt" | "description" | "winAmountInGameCurrency" | "createdAt", ExtArgs["result"]["gameWin"]>
   export type GameWinInclude<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
     gameRound?: boolean | GameRoundDefaultArgs<ExtArgs>
   }
@@ -21654,6 +20484,7 @@ export namespace Prisma {
     }
     scalars: $Extensions.GetPayloadResult<{
       id: bigint
+      uid: string
       userId: bigint
       gameRoundId: bigint
       aggregatorType: $Enums.GameAggregatorType
@@ -22089,6 +20920,7 @@ export namespace Prisma {
    */
   interface GameWinFieldRefs {
     readonly id: FieldRef<"GameWin", 'BigInt'>
+    readonly uid: FieldRef<"GameWin", 'String'>
     readonly userId: FieldRef<"GameWin", 'BigInt'>
     readonly gameRoundId: FieldRef<"GameWin", 'BigInt'>
     readonly aggregatorType: FieldRef<"GameWin", 'GameAggregatorType'>
@@ -29220,7 +28052,7 @@ export namespace Prisma {
   export type BonusDetailSumAggregateOutputType = {
     id: bigint | null
     amount: Decimal | null
-    gameId: number | null
+    gameId: bigint | null
     transactionId: bigint | null
   }
 
@@ -29240,7 +28072,7 @@ export namespace Prisma {
     aggregatorSessionId: string | null
     isEndRound: boolean | null
     description: string | null
-    gameId: number | null
+    gameId: bigint | null
     transactionId: bigint | null
   }
 
@@ -29260,7 +28092,7 @@ export namespace Prisma {
     aggregatorSessionId: string | null
     isEndRound: boolean | null
     description: string | null
-    gameId: number | null
+    gameId: bigint | null
     transactionId: bigint | null
   }
 
@@ -29463,7 +28295,7 @@ export namespace Prisma {
     aggregatorSessionId: string | null
     isEndRound: boolean | null
     description: string | null
-    gameId: number | null
+    gameId: bigint | null
     transactionId: bigint
     _count: BonusDetailCountAggregateOutputType | null
     _avg: BonusDetailAvgAggregateOutputType | null
@@ -29608,7 +28440,7 @@ export namespace Prisma {
       aggregatorSessionId: string | null
       isEndRound: boolean | null
       description: string | null
-      gameId: number | null
+      gameId: bigint | null
       transactionId: bigint
     }, ExtArgs["result"]["bonusDetail"]>
     composites: {}
@@ -30050,7 +28882,7 @@ export namespace Prisma {
     readonly aggregatorSessionId: FieldRef<"BonusDetail", 'String'>
     readonly isEndRound: FieldRef<"BonusDetail", 'Boolean'>
     readonly description: FieldRef<"BonusDetail", 'String'>
-    readonly gameId: FieldRef<"BonusDetail", 'Int'>
+    readonly gameId: FieldRef<"BonusDetail", 'BigInt'>
     readonly transactionId: FieldRef<"BonusDetail", 'BigInt'>
   }
     
@@ -57450,33 +56282,13 @@ export namespace Prisma {
   export type IntegrationLogScalarFieldEnum = (typeof IntegrationLogScalarFieldEnum)[keyof typeof IntegrationLogScalarFieldEnum]
 
 
-  export const UnifiedLogScalarFieldEnum: {
-    id: 'id',
-    createdAt: 'createdAt',
-    userId: 'userId',
-    sessionId: 'sessionId',
-    cfRay: 'cfRay',
-    country: 'country',
-    city: 'city',
-    bot: 'bot',
-    threat: 'threat',
-    isMobile: 'isMobile',
-    ip: 'ip',
-    logType: 'logType',
-    category: 'category',
-    detail: 'detail',
-    metadata: 'metadata'
-  };
-
-  export type UnifiedLogScalarFieldEnum = (typeof UnifiedLogScalarFieldEnum)[keyof typeof UnifiedLogScalarFieldEnum]
-
-
   export const GameScalarFieldEnum: {
     id: 'id',
+    uid: 'uid',
     aggregatorType: 'aggregatorType',
     provider: 'provider',
     category: 'category',
-    gameId: 'gameId',
+    aggregatorGameId: 'aggregatorGameId',
     gameType: 'gameType',
     tableId: 'tableId',
     iconLink: 'iconLink',
@@ -57493,6 +56305,7 @@ export namespace Prisma {
 
   export const GameTranslationScalarFieldEnum: {
     id: 'id',
+    uid: 'uid',
     gameId: 'gameId',
     language: 'language',
     providerName: 'providerName',
@@ -57507,6 +56320,7 @@ export namespace Prisma {
 
   export const GameSessionScalarFieldEnum: {
     id: 'id',
+    uid: 'uid',
     userId: 'userId',
     createdAt: 'createdAt',
     updatedAt: 'updatedAt',
@@ -57525,6 +56339,7 @@ export namespace Prisma {
 
   export const GameRoundScalarFieldEnum: {
     id: 'id',
+    uid: 'uid',
     userId: 'userId',
     aggregatorType: 'aggregatorType',
     provider: 'provider',
@@ -57558,6 +56373,7 @@ export namespace Prisma {
 
   export const GameBetScalarFieldEnum: {
     id: 'id',
+    uid: 'uid',
     userId: 'userId',
     gameRoundId: 'gameRoundId',
     aggregatorType: 'aggregatorType',
@@ -57576,6 +56392,7 @@ export namespace Prisma {
 
   export const GameWinScalarFieldEnum: {
     id: 'id',
+    uid: 'uid',
     userId: 'userId',
     gameRoundId: 'gameRoundId',
     aggregatorType: 'aggregatorType',
@@ -59457,119 +58274,16 @@ export namespace Prisma {
     ip?: StringNullableWithAggregatesFilter<"IntegrationLog"> | string | null
   }
 
-  export type UnifiedLogWhereInput = {
-    AND?: UnifiedLogWhereInput | UnifiedLogWhereInput[]
-    OR?: UnifiedLogWhereInput[]
-    NOT?: UnifiedLogWhereInput | UnifiedLogWhereInput[]
-    id?: StringFilter<"UnifiedLog"> | string
-    createdAt?: DateTimeFilter<"UnifiedLog"> | Date | string
-    userId?: BigIntNullableFilter<"UnifiedLog"> | bigint | number | null
-    sessionId?: StringNullableFilter<"UnifiedLog"> | string | null
-    cfRay?: StringNullableFilter<"UnifiedLog"> | string | null
-    country?: StringNullableFilter<"UnifiedLog"> | string | null
-    city?: StringNullableFilter<"UnifiedLog"> | string | null
-    bot?: BoolNullableFilter<"UnifiedLog"> | boolean | null
-    threat?: StringNullableFilter<"UnifiedLog"> | string | null
-    isMobile?: BoolNullableFilter<"UnifiedLog"> | boolean | null
-    ip?: StringNullableFilter<"UnifiedLog"> | string | null
-    logType?: StringFilter<"UnifiedLog"> | string
-    category?: StringFilter<"UnifiedLog"> | string
-    detail?: StringFilter<"UnifiedLog"> | string
-    metadata?: JsonNullableFilter<"UnifiedLog">
-  }
-
-  export type UnifiedLogOrderByWithRelationInput = {
-    id?: SortOrder
-    createdAt?: SortOrder
-    userId?: SortOrderInput | SortOrder
-    sessionId?: SortOrderInput | SortOrder
-    cfRay?: SortOrderInput | SortOrder
-    country?: SortOrderInput | SortOrder
-    city?: SortOrderInput | SortOrder
-    bot?: SortOrderInput | SortOrder
-    threat?: SortOrderInput | SortOrder
-    isMobile?: SortOrderInput | SortOrder
-    ip?: SortOrderInput | SortOrder
-    logType?: SortOrder
-    category?: SortOrder
-    detail?: SortOrder
-    metadata?: SortOrderInput | SortOrder
-  }
-
-  export type UnifiedLogWhereUniqueInput = Prisma.AtLeast<{
-    id?: string
-    AND?: UnifiedLogWhereInput | UnifiedLogWhereInput[]
-    OR?: UnifiedLogWhereInput[]
-    NOT?: UnifiedLogWhereInput | UnifiedLogWhereInput[]
-    createdAt?: DateTimeFilter<"UnifiedLog"> | Date | string
-    userId?: BigIntNullableFilter<"UnifiedLog"> | bigint | number | null
-    sessionId?: StringNullableFilter<"UnifiedLog"> | string | null
-    cfRay?: StringNullableFilter<"UnifiedLog"> | string | null
-    country?: StringNullableFilter<"UnifiedLog"> | string | null
-    city?: StringNullableFilter<"UnifiedLog"> | string | null
-    bot?: BoolNullableFilter<"UnifiedLog"> | boolean | null
-    threat?: StringNullableFilter<"UnifiedLog"> | string | null
-    isMobile?: BoolNullableFilter<"UnifiedLog"> | boolean | null
-    ip?: StringNullableFilter<"UnifiedLog"> | string | null
-    logType?: StringFilter<"UnifiedLog"> | string
-    category?: StringFilter<"UnifiedLog"> | string
-    detail?: StringFilter<"UnifiedLog"> | string
-    metadata?: JsonNullableFilter<"UnifiedLog">
-  }, "id">
-
-  export type UnifiedLogOrderByWithAggregationInput = {
-    id?: SortOrder
-    createdAt?: SortOrder
-    userId?: SortOrderInput | SortOrder
-    sessionId?: SortOrderInput | SortOrder
-    cfRay?: SortOrderInput | SortOrder
-    country?: SortOrderInput | SortOrder
-    city?: SortOrderInput | SortOrder
-    bot?: SortOrderInput | SortOrder
-    threat?: SortOrderInput | SortOrder
-    isMobile?: SortOrderInput | SortOrder
-    ip?: SortOrderInput | SortOrder
-    logType?: SortOrder
-    category?: SortOrder
-    detail?: SortOrder
-    metadata?: SortOrderInput | SortOrder
-    _count?: UnifiedLogCountOrderByAggregateInput
-    _avg?: UnifiedLogAvgOrderByAggregateInput
-    _max?: UnifiedLogMaxOrderByAggregateInput
-    _min?: UnifiedLogMinOrderByAggregateInput
-    _sum?: UnifiedLogSumOrderByAggregateInput
-  }
-
-  export type UnifiedLogScalarWhereWithAggregatesInput = {
-    AND?: UnifiedLogScalarWhereWithAggregatesInput | UnifiedLogScalarWhereWithAggregatesInput[]
-    OR?: UnifiedLogScalarWhereWithAggregatesInput[]
-    NOT?: UnifiedLogScalarWhereWithAggregatesInput | UnifiedLogScalarWhereWithAggregatesInput[]
-    id?: StringWithAggregatesFilter<"UnifiedLog"> | string
-    createdAt?: DateTimeWithAggregatesFilter<"UnifiedLog"> | Date | string
-    userId?: BigIntNullableWithAggregatesFilter<"UnifiedLog"> | bigint | number | null
-    sessionId?: StringNullableWithAggregatesFilter<"UnifiedLog"> | string | null
-    cfRay?: StringNullableWithAggregatesFilter<"UnifiedLog"> | string | null
-    country?: StringNullableWithAggregatesFilter<"UnifiedLog"> | string | null
-    city?: StringNullableWithAggregatesFilter<"UnifiedLog"> | string | null
-    bot?: BoolNullableWithAggregatesFilter<"UnifiedLog"> | boolean | null
-    threat?: StringNullableWithAggregatesFilter<"UnifiedLog"> | string | null
-    isMobile?: BoolNullableWithAggregatesFilter<"UnifiedLog"> | boolean | null
-    ip?: StringNullableWithAggregatesFilter<"UnifiedLog"> | string | null
-    logType?: StringWithAggregatesFilter<"UnifiedLog"> | string
-    category?: StringWithAggregatesFilter<"UnifiedLog"> | string
-    detail?: StringWithAggregatesFilter<"UnifiedLog"> | string
-    metadata?: JsonNullableWithAggregatesFilter<"UnifiedLog">
-  }
-
   export type GameWhereInput = {
     AND?: GameWhereInput | GameWhereInput[]
     OR?: GameWhereInput[]
     NOT?: GameWhereInput | GameWhereInput[]
-    id?: IntFilter<"Game"> | number
+    id?: BigIntFilter<"Game"> | bigint | number
+    uid?: StringFilter<"Game"> | string
     aggregatorType?: EnumGameAggregatorTypeFilter<"Game"> | $Enums.GameAggregatorType
     provider?: EnumGameProviderFilter<"Game"> | $Enums.GameProvider
     category?: EnumGameCategoryFilter<"Game"> | $Enums.GameCategory
-    gameId?: IntFilter<"Game"> | number
+    aggregatorGameId?: IntFilter<"Game"> | number
     gameType?: StringNullableFilter<"Game"> | string | null
     tableId?: StringNullableFilter<"Game"> | string | null
     iconLink?: StringNullableFilter<"Game"> | string | null
@@ -59587,10 +58301,11 @@ export namespace Prisma {
 
   export type GameOrderByWithRelationInput = {
     id?: SortOrder
+    uid?: SortOrder
     aggregatorType?: SortOrder
     provider?: SortOrder
     category?: SortOrder
-    gameId?: SortOrder
+    aggregatorGameId?: SortOrder
     gameType?: SortOrderInput | SortOrder
     tableId?: SortOrderInput | SortOrder
     iconLink?: SortOrderInput | SortOrder
@@ -59607,15 +58322,16 @@ export namespace Prisma {
   }
 
   export type GameWhereUniqueInput = Prisma.AtLeast<{
-    id?: number
-    aggregatorType_provider_gameId?: GameAggregatorTypeProviderGameIdCompoundUniqueInput
+    id?: bigint | number
+    uid?: string
+    aggregatorType_provider_aggregatorGameId?: GameAggregatorTypeProviderAggregatorGameIdCompoundUniqueInput
     AND?: GameWhereInput | GameWhereInput[]
     OR?: GameWhereInput[]
     NOT?: GameWhereInput | GameWhereInput[]
     aggregatorType?: EnumGameAggregatorTypeFilter<"Game"> | $Enums.GameAggregatorType
     provider?: EnumGameProviderFilter<"Game"> | $Enums.GameProvider
     category?: EnumGameCategoryFilter<"Game"> | $Enums.GameCategory
-    gameId?: IntFilter<"Game"> | number
+    aggregatorGameId?: IntFilter<"Game"> | number
     gameType?: StringNullableFilter<"Game"> | string | null
     tableId?: StringNullableFilter<"Game"> | string | null
     iconLink?: StringNullableFilter<"Game"> | string | null
@@ -59629,14 +58345,15 @@ export namespace Prisma {
     gameRounds?: GameRoundListRelationFilter
     gameSessions?: GameSessionListRelationFilter
     translations?: GameTranslationListRelationFilter
-  }, "id" | "aggregatorType_provider_gameId">
+  }, "id" | "uid" | "aggregatorType_provider_aggregatorGameId">
 
   export type GameOrderByWithAggregationInput = {
     id?: SortOrder
+    uid?: SortOrder
     aggregatorType?: SortOrder
     provider?: SortOrder
     category?: SortOrder
-    gameId?: SortOrder
+    aggregatorGameId?: SortOrder
     gameType?: SortOrderInput | SortOrder
     tableId?: SortOrderInput | SortOrder
     iconLink?: SortOrderInput | SortOrder
@@ -59657,11 +58374,12 @@ export namespace Prisma {
     AND?: GameScalarWhereWithAggregatesInput | GameScalarWhereWithAggregatesInput[]
     OR?: GameScalarWhereWithAggregatesInput[]
     NOT?: GameScalarWhereWithAggregatesInput | GameScalarWhereWithAggregatesInput[]
-    id?: IntWithAggregatesFilter<"Game"> | number
+    id?: BigIntWithAggregatesFilter<"Game"> | bigint | number
+    uid?: StringWithAggregatesFilter<"Game"> | string
     aggregatorType?: EnumGameAggregatorTypeWithAggregatesFilter<"Game"> | $Enums.GameAggregatorType
     provider?: EnumGameProviderWithAggregatesFilter<"Game"> | $Enums.GameProvider
     category?: EnumGameCategoryWithAggregatesFilter<"Game"> | $Enums.GameCategory
-    gameId?: IntWithAggregatesFilter<"Game"> | number
+    aggregatorGameId?: IntWithAggregatesFilter<"Game"> | number
     gameType?: StringNullableWithAggregatesFilter<"Game"> | string | null
     tableId?: StringNullableWithAggregatesFilter<"Game"> | string | null
     iconLink?: StringNullableWithAggregatesFilter<"Game"> | string | null
@@ -59677,8 +58395,9 @@ export namespace Prisma {
     AND?: GameTranslationWhereInput | GameTranslationWhereInput[]
     OR?: GameTranslationWhereInput[]
     NOT?: GameTranslationWhereInput | GameTranslationWhereInput[]
-    id?: IntFilter<"GameTranslation"> | number
-    gameId?: IntFilter<"GameTranslation"> | number
+    id?: BigIntFilter<"GameTranslation"> | bigint | number
+    uid?: StringFilter<"GameTranslation"> | string
+    gameId?: BigIntFilter<"GameTranslation"> | bigint | number
     language?: EnumLanguageFilter<"GameTranslation"> | $Enums.Language
     providerName?: StringFilter<"GameTranslation"> | string
     categoryName?: StringFilter<"GameTranslation"> | string
@@ -59690,6 +58409,7 @@ export namespace Prisma {
 
   export type GameTranslationOrderByWithRelationInput = {
     id?: SortOrder
+    uid?: SortOrder
     gameId?: SortOrder
     language?: SortOrder
     providerName?: SortOrder
@@ -59701,12 +58421,13 @@ export namespace Prisma {
   }
 
   export type GameTranslationWhereUniqueInput = Prisma.AtLeast<{
-    id?: number
+    id?: bigint | number
+    uid?: string
     gameId_language?: GameTranslationGameIdLanguageCompoundUniqueInput
     AND?: GameTranslationWhereInput | GameTranslationWhereInput[]
     OR?: GameTranslationWhereInput[]
     NOT?: GameTranslationWhereInput | GameTranslationWhereInput[]
-    gameId?: IntFilter<"GameTranslation"> | number
+    gameId?: BigIntFilter<"GameTranslation"> | bigint | number
     language?: EnumLanguageFilter<"GameTranslation"> | $Enums.Language
     providerName?: StringFilter<"GameTranslation"> | string
     categoryName?: StringFilter<"GameTranslation"> | string
@@ -59714,10 +58435,11 @@ export namespace Prisma {
     createdAt?: DateTimeFilter<"GameTranslation"> | Date | string
     updatedAt?: DateTimeFilter<"GameTranslation"> | Date | string
     game?: XOR<GameScalarRelationFilter, GameWhereInput>
-  }, "id" | "gameId_language">
+  }, "id" | "uid" | "gameId_language">
 
   export type GameTranslationOrderByWithAggregationInput = {
     id?: SortOrder
+    uid?: SortOrder
     gameId?: SortOrder
     language?: SortOrder
     providerName?: SortOrder
@@ -59736,8 +58458,9 @@ export namespace Prisma {
     AND?: GameTranslationScalarWhereWithAggregatesInput | GameTranslationScalarWhereWithAggregatesInput[]
     OR?: GameTranslationScalarWhereWithAggregatesInput[]
     NOT?: GameTranslationScalarWhereWithAggregatesInput | GameTranslationScalarWhereWithAggregatesInput[]
-    id?: IntWithAggregatesFilter<"GameTranslation"> | number
-    gameId?: IntWithAggregatesFilter<"GameTranslation"> | number
+    id?: BigIntWithAggregatesFilter<"GameTranslation"> | bigint | number
+    uid?: StringWithAggregatesFilter<"GameTranslation"> | string
+    gameId?: BigIntWithAggregatesFilter<"GameTranslation"> | bigint | number
     language?: EnumLanguageWithAggregatesFilter<"GameTranslation"> | $Enums.Language
     providerName?: StringWithAggregatesFilter<"GameTranslation"> | string
     categoryName?: StringWithAggregatesFilter<"GameTranslation"> | string
@@ -59751,6 +58474,7 @@ export namespace Prisma {
     OR?: GameSessionWhereInput[]
     NOT?: GameSessionWhereInput | GameSessionWhereInput[]
     id?: BigIntFilter<"GameSession"> | bigint | number
+    uid?: StringFilter<"GameSession"> | string
     userId?: BigIntFilter<"GameSession"> | bigint | number
     createdAt?: DateTimeFilter<"GameSession"> | Date | string
     updatedAt?: DateTimeFilter<"GameSession"> | Date | string
@@ -59761,7 +58485,7 @@ export namespace Prisma {
     gameCurrency?: EnumExchangeCurrencyCodeFilter<"GameSession"> | $Enums.ExchangeCurrencyCode
     exchangeRate?: DecimalFilter<"GameSession"> | Decimal | DecimalJsLike | number | string
     exchangeRateSnapshotAt?: DateTimeFilter<"GameSession"> | Date | string
-    gameId?: IntNullableFilter<"GameSession"> | number | null
+    gameId?: BigIntNullableFilter<"GameSession"> | bigint | number | null
     gameRounds?: GameRoundListRelationFilter
     game?: XOR<GameNullableScalarRelationFilter, GameWhereInput> | null
     user?: XOR<UserScalarRelationFilter, UserWhereInput>
@@ -59769,6 +58493,7 @@ export namespace Prisma {
 
   export type GameSessionOrderByWithRelationInput = {
     id?: SortOrder
+    uid?: SortOrder
     userId?: SortOrder
     createdAt?: SortOrder
     updatedAt?: SortOrder
@@ -59787,6 +58512,7 @@ export namespace Prisma {
 
   export type GameSessionWhereUniqueInput = Prisma.AtLeast<{
     id?: bigint | number
+    uid?: string
     token?: string
     AND?: GameSessionWhereInput | GameSessionWhereInput[]
     OR?: GameSessionWhereInput[]
@@ -59800,14 +58526,15 @@ export namespace Prisma {
     gameCurrency?: EnumExchangeCurrencyCodeFilter<"GameSession"> | $Enums.ExchangeCurrencyCode
     exchangeRate?: DecimalFilter<"GameSession"> | Decimal | DecimalJsLike | number | string
     exchangeRateSnapshotAt?: DateTimeFilter<"GameSession"> | Date | string
-    gameId?: IntNullableFilter<"GameSession"> | number | null
+    gameId?: BigIntNullableFilter<"GameSession"> | bigint | number | null
     gameRounds?: GameRoundListRelationFilter
     game?: XOR<GameNullableScalarRelationFilter, GameWhereInput> | null
     user?: XOR<UserScalarRelationFilter, UserWhereInput>
-  }, "id" | "token">
+  }, "id" | "uid" | "token">
 
   export type GameSessionOrderByWithAggregationInput = {
     id?: SortOrder
+    uid?: SortOrder
     userId?: SortOrder
     createdAt?: SortOrder
     updatedAt?: SortOrder
@@ -59831,6 +58558,7 @@ export namespace Prisma {
     OR?: GameSessionScalarWhereWithAggregatesInput[]
     NOT?: GameSessionScalarWhereWithAggregatesInput | GameSessionScalarWhereWithAggregatesInput[]
     id?: BigIntWithAggregatesFilter<"GameSession"> | bigint | number
+    uid?: StringWithAggregatesFilter<"GameSession"> | string
     userId?: BigIntWithAggregatesFilter<"GameSession"> | bigint | number
     createdAt?: DateTimeWithAggregatesFilter<"GameSession"> | Date | string
     updatedAt?: DateTimeWithAggregatesFilter<"GameSession"> | Date | string
@@ -59841,7 +58569,7 @@ export namespace Prisma {
     gameCurrency?: EnumExchangeCurrencyCodeWithAggregatesFilter<"GameSession"> | $Enums.ExchangeCurrencyCode
     exchangeRate?: DecimalWithAggregatesFilter<"GameSession"> | Decimal | DecimalJsLike | number | string
     exchangeRateSnapshotAt?: DateTimeWithAggregatesFilter<"GameSession"> | Date | string
-    gameId?: IntNullableWithAggregatesFilter<"GameSession"> | number | null
+    gameId?: BigIntNullableWithAggregatesFilter<"GameSession"> | bigint | number | null
   }
 
   export type GameRoundWhereInput = {
@@ -59849,6 +58577,7 @@ export namespace Prisma {
     OR?: GameRoundWhereInput[]
     NOT?: GameRoundWhereInput | GameRoundWhereInput[]
     id?: BigIntFilter<"GameRound"> | bigint | number
+    uid?: StringFilter<"GameRound"> | string
     userId?: BigIntFilter<"GameRound"> | bigint | number
     aggregatorType?: EnumGameAggregatorTypeFilter<"GameRound"> | $Enums.GameAggregatorType
     provider?: EnumGameProviderFilter<"GameRound"> | $Enums.GameProvider
@@ -59873,7 +58602,7 @@ export namespace Prisma {
     jackpotContributionAmount?: DecimalFilter<"GameRound"> | Decimal | DecimalJsLike | number | string
     startedAt?: DateTimeNullableFilter<"GameRound"> | Date | string | null
     completedAt?: DateTimeNullableFilter<"GameRound"> | Date | string | null
-    gameId?: IntNullableFilter<"GameRound"> | number | null
+    gameId?: BigIntNullableFilter<"GameRound"> | bigint | number | null
     gameSessionId?: BigIntFilter<"GameRound"> | bigint | number
     AffiliateCommission?: AffiliateCommissionListRelationFilter
     bets?: GameBetListRelationFilter
@@ -59885,6 +58614,7 @@ export namespace Prisma {
 
   export type GameRoundOrderByWithRelationInput = {
     id?: SortOrder
+    uid?: SortOrder
     userId?: SortOrder
     aggregatorType?: SortOrder
     provider?: SortOrder
@@ -59921,6 +58651,7 @@ export namespace Prisma {
 
   export type GameRoundWhereUniqueInput = Prisma.AtLeast<{
     id?: bigint | number
+    uid?: string
     transactionId?: bigint | number
     aggregatorTxId_aggregatorType?: GameRoundAggregatorTxIdAggregatorTypeCompoundUniqueInput
     AND?: GameRoundWhereInput | GameRoundWhereInput[]
@@ -59949,7 +58680,7 @@ export namespace Prisma {
     jackpotContributionAmount?: DecimalFilter<"GameRound"> | Decimal | DecimalJsLike | number | string
     startedAt?: DateTimeNullableFilter<"GameRound"> | Date | string | null
     completedAt?: DateTimeNullableFilter<"GameRound"> | Date | string | null
-    gameId?: IntNullableFilter<"GameRound"> | number | null
+    gameId?: BigIntNullableFilter<"GameRound"> | bigint | number | null
     gameSessionId?: BigIntFilter<"GameRound"> | bigint | number
     AffiliateCommission?: AffiliateCommissionListRelationFilter
     bets?: GameBetListRelationFilter
@@ -59957,10 +58688,11 @@ export namespace Prisma {
     GameSession?: XOR<GameSessionScalarRelationFilter, GameSessionWhereInput>
     transaction?: XOR<TransactionScalarRelationFilter, TransactionWhereInput>
     wins?: GameWinListRelationFilter
-  }, "id" | "transactionId" | "aggregatorTxId_aggregatorType">
+  }, "id" | "uid" | "transactionId" | "aggregatorTxId_aggregatorType">
 
   export type GameRoundOrderByWithAggregationInput = {
     id?: SortOrder
+    uid?: SortOrder
     userId?: SortOrder
     aggregatorType?: SortOrder
     provider?: SortOrder
@@ -59999,6 +58731,7 @@ export namespace Prisma {
     OR?: GameRoundScalarWhereWithAggregatesInput[]
     NOT?: GameRoundScalarWhereWithAggregatesInput | GameRoundScalarWhereWithAggregatesInput[]
     id?: BigIntWithAggregatesFilter<"GameRound"> | bigint | number
+    uid?: StringWithAggregatesFilter<"GameRound"> | string
     userId?: BigIntWithAggregatesFilter<"GameRound"> | bigint | number
     aggregatorType?: EnumGameAggregatorTypeWithAggregatesFilter<"GameRound"> | $Enums.GameAggregatorType
     provider?: EnumGameProviderWithAggregatesFilter<"GameRound"> | $Enums.GameProvider
@@ -60023,7 +58756,7 @@ export namespace Prisma {
     jackpotContributionAmount?: DecimalWithAggregatesFilter<"GameRound"> | Decimal | DecimalJsLike | number | string
     startedAt?: DateTimeNullableWithAggregatesFilter<"GameRound"> | Date | string | null
     completedAt?: DateTimeNullableWithAggregatesFilter<"GameRound"> | Date | string | null
-    gameId?: IntNullableWithAggregatesFilter<"GameRound"> | number | null
+    gameId?: BigIntNullableWithAggregatesFilter<"GameRound"> | bigint | number | null
     gameSessionId?: BigIntWithAggregatesFilter<"GameRound"> | bigint | number
   }
 
@@ -60032,6 +58765,7 @@ export namespace Prisma {
     OR?: GameBetWhereInput[]
     NOT?: GameBetWhereInput | GameBetWhereInput[]
     id?: BigIntFilter<"GameBet"> | bigint | number
+    uid?: StringFilter<"GameBet"> | string
     userId?: BigIntFilter<"GameBet"> | bigint | number
     gameRoundId?: BigIntFilter<"GameBet"> | bigint | number
     aggregatorType?: EnumGameAggregatorTypeFilter<"GameBet"> | $Enums.GameAggregatorType
@@ -60048,6 +58782,7 @@ export namespace Prisma {
 
   export type GameBetOrderByWithRelationInput = {
     id?: SortOrder
+    uid?: SortOrder
     userId?: SortOrder
     gameRoundId?: SortOrder
     aggregatorType?: SortOrder
@@ -60064,6 +58799,7 @@ export namespace Prisma {
 
   export type GameBetWhereUniqueInput = Prisma.AtLeast<{
     id?: bigint | number
+    uid?: string
     aggregatorBetId_aggregatorType?: GameBetAggregatorBetIdAggregatorTypeCompoundUniqueInput
     AND?: GameBetWhereInput | GameBetWhereInput[]
     OR?: GameBetWhereInput[]
@@ -60080,10 +58816,11 @@ export namespace Prisma {
     isCancelled?: BoolFilter<"GameBet"> | boolean
     cancelledAt?: DateTimeNullableFilter<"GameBet"> | Date | string | null
     gameRound?: XOR<GameRoundScalarRelationFilter, GameRoundWhereInput>
-  }, "id" | "aggregatorBetId_aggregatorType">
+  }, "id" | "uid" | "aggregatorBetId_aggregatorType">
 
   export type GameBetOrderByWithAggregationInput = {
     id?: SortOrder
+    uid?: SortOrder
     userId?: SortOrder
     gameRoundId?: SortOrder
     aggregatorType?: SortOrder
@@ -60107,6 +58844,7 @@ export namespace Prisma {
     OR?: GameBetScalarWhereWithAggregatesInput[]
     NOT?: GameBetScalarWhereWithAggregatesInput | GameBetScalarWhereWithAggregatesInput[]
     id?: BigIntWithAggregatesFilter<"GameBet"> | bigint | number
+    uid?: StringWithAggregatesFilter<"GameBet"> | string
     userId?: BigIntWithAggregatesFilter<"GameBet"> | bigint | number
     gameRoundId?: BigIntWithAggregatesFilter<"GameBet"> | bigint | number
     aggregatorType?: EnumGameAggregatorTypeWithAggregatesFilter<"GameBet"> | $Enums.GameAggregatorType
@@ -60125,6 +58863,7 @@ export namespace Prisma {
     OR?: GameWinWhereInput[]
     NOT?: GameWinWhereInput | GameWinWhereInput[]
     id?: BigIntFilter<"GameWin"> | bigint | number
+    uid?: StringFilter<"GameWin"> | string
     userId?: BigIntFilter<"GameWin"> | bigint | number
     gameRoundId?: BigIntFilter<"GameWin"> | bigint | number
     aggregatorType?: EnumGameAggregatorTypeFilter<"GameWin"> | $Enums.GameAggregatorType
@@ -60140,6 +58879,7 @@ export namespace Prisma {
 
   export type GameWinOrderByWithRelationInput = {
     id?: SortOrder
+    uid?: SortOrder
     userId?: SortOrder
     gameRoundId?: SortOrder
     aggregatorType?: SortOrder
@@ -60155,6 +58895,7 @@ export namespace Prisma {
 
   export type GameWinWhereUniqueInput = Prisma.AtLeast<{
     id?: bigint | number
+    uid?: string
     aggregatorWinId_aggregatorType?: GameWinAggregatorWinIdAggregatorTypeCompoundUniqueInput
     AND?: GameWinWhereInput | GameWinWhereInput[]
     OR?: GameWinWhereInput[]
@@ -60170,10 +58911,11 @@ export namespace Prisma {
     winAmountInGameCurrency?: DecimalFilter<"GameWin"> | Decimal | DecimalJsLike | number | string
     createdAt?: DateTimeFilter<"GameWin"> | Date | string
     gameRound?: XOR<GameRoundScalarRelationFilter, GameRoundWhereInput>
-  }, "id" | "aggregatorWinId_aggregatorType">
+  }, "id" | "uid" | "aggregatorWinId_aggregatorType">
 
   export type GameWinOrderByWithAggregationInput = {
     id?: SortOrder
+    uid?: SortOrder
     userId?: SortOrder
     gameRoundId?: SortOrder
     aggregatorType?: SortOrder
@@ -60196,6 +58938,7 @@ export namespace Prisma {
     OR?: GameWinScalarWhereWithAggregatesInput[]
     NOT?: GameWinScalarWhereWithAggregatesInput | GameWinScalarWhereWithAggregatesInput[]
     id?: BigIntWithAggregatesFilter<"GameWin"> | bigint | number
+    uid?: StringWithAggregatesFilter<"GameWin"> | string
     userId?: BigIntWithAggregatesFilter<"GameWin"> | bigint | number
     gameRoundId?: BigIntWithAggregatesFilter<"GameWin"> | bigint | number
     aggregatorType?: EnumGameAggregatorTypeWithAggregatesFilter<"GameWin"> | $Enums.GameAggregatorType
@@ -60745,7 +59488,7 @@ export namespace Prisma {
     aggregatorSessionId?: StringNullableFilter<"BonusDetail"> | string | null
     isEndRound?: BoolNullableFilter<"BonusDetail"> | boolean | null
     description?: StringNullableFilter<"BonusDetail"> | string | null
-    gameId?: IntNullableFilter<"BonusDetail"> | number | null
+    gameId?: BigIntNullableFilter<"BonusDetail"> | bigint | number | null
     transactionId?: BigIntFilter<"BonusDetail"> | bigint | number
     game?: XOR<GameNullableScalarRelationFilter, GameWhereInput> | null
     transaction?: XOR<TransactionScalarRelationFilter, TransactionWhereInput>
@@ -60793,7 +59536,7 @@ export namespace Prisma {
     aggregatorSessionId?: StringNullableFilter<"BonusDetail"> | string | null
     isEndRound?: BoolNullableFilter<"BonusDetail"> | boolean | null
     description?: StringNullableFilter<"BonusDetail"> | string | null
-    gameId?: IntNullableFilter<"BonusDetail"> | number | null
+    gameId?: BigIntNullableFilter<"BonusDetail"> | bigint | number | null
     game?: XOR<GameNullableScalarRelationFilter, GameWhereInput> | null
     transaction?: XOR<TransactionScalarRelationFilter, TransactionWhereInput>
   }, "id" | "transactionId">
@@ -60842,7 +59585,7 @@ export namespace Prisma {
     aggregatorSessionId?: StringNullableWithAggregatesFilter<"BonusDetail"> | string | null
     isEndRound?: BoolNullableWithAggregatesFilter<"BonusDetail"> | boolean | null
     description?: StringNullableWithAggregatesFilter<"BonusDetail"> | string | null
-    gameId?: IntNullableWithAggregatesFilter<"BonusDetail"> | number | null
+    gameId?: BigIntNullableWithAggregatesFilter<"BonusDetail"> | bigint | number | null
     transactionId?: BigIntWithAggregatesFilter<"BonusDetail"> | bigint | number
   }
 
@@ -63780,137 +62523,13 @@ export namespace Prisma {
     ip?: NullableStringFieldUpdateOperationsInput | string | null
   }
 
-  export type UnifiedLogCreateInput = {
-    id: string
-    createdAt: Date | string
-    userId?: bigint | number | null
-    sessionId?: string | null
-    cfRay?: string | null
-    country?: string | null
-    city?: string | null
-    bot?: boolean | null
-    threat?: string | null
-    isMobile?: boolean | null
-    ip?: string | null
-    logType: string
-    category: string
-    detail: string
-    metadata?: NullableJsonNullValueInput | InputJsonValue
-  }
-
-  export type UnifiedLogUncheckedCreateInput = {
-    id: string
-    createdAt: Date | string
-    userId?: bigint | number | null
-    sessionId?: string | null
-    cfRay?: string | null
-    country?: string | null
-    city?: string | null
-    bot?: boolean | null
-    threat?: string | null
-    isMobile?: boolean | null
-    ip?: string | null
-    logType: string
-    category: string
-    detail: string
-    metadata?: NullableJsonNullValueInput | InputJsonValue
-  }
-
-  export type UnifiedLogUpdateInput = {
-    id?: StringFieldUpdateOperationsInput | string
-    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
-    userId?: NullableBigIntFieldUpdateOperationsInput | bigint | number | null
-    sessionId?: NullableStringFieldUpdateOperationsInput | string | null
-    cfRay?: NullableStringFieldUpdateOperationsInput | string | null
-    country?: NullableStringFieldUpdateOperationsInput | string | null
-    city?: NullableStringFieldUpdateOperationsInput | string | null
-    bot?: NullableBoolFieldUpdateOperationsInput | boolean | null
-    threat?: NullableStringFieldUpdateOperationsInput | string | null
-    isMobile?: NullableBoolFieldUpdateOperationsInput | boolean | null
-    ip?: NullableStringFieldUpdateOperationsInput | string | null
-    logType?: StringFieldUpdateOperationsInput | string
-    category?: StringFieldUpdateOperationsInput | string
-    detail?: StringFieldUpdateOperationsInput | string
-    metadata?: NullableJsonNullValueInput | InputJsonValue
-  }
-
-  export type UnifiedLogUncheckedUpdateInput = {
-    id?: StringFieldUpdateOperationsInput | string
-    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
-    userId?: NullableBigIntFieldUpdateOperationsInput | bigint | number | null
-    sessionId?: NullableStringFieldUpdateOperationsInput | string | null
-    cfRay?: NullableStringFieldUpdateOperationsInput | string | null
-    country?: NullableStringFieldUpdateOperationsInput | string | null
-    city?: NullableStringFieldUpdateOperationsInput | string | null
-    bot?: NullableBoolFieldUpdateOperationsInput | boolean | null
-    threat?: NullableStringFieldUpdateOperationsInput | string | null
-    isMobile?: NullableBoolFieldUpdateOperationsInput | boolean | null
-    ip?: NullableStringFieldUpdateOperationsInput | string | null
-    logType?: StringFieldUpdateOperationsInput | string
-    category?: StringFieldUpdateOperationsInput | string
-    detail?: StringFieldUpdateOperationsInput | string
-    metadata?: NullableJsonNullValueInput | InputJsonValue
-  }
-
-  export type UnifiedLogCreateManyInput = {
-    id: string
-    createdAt: Date | string
-    userId?: bigint | number | null
-    sessionId?: string | null
-    cfRay?: string | null
-    country?: string | null
-    city?: string | null
-    bot?: boolean | null
-    threat?: string | null
-    isMobile?: boolean | null
-    ip?: string | null
-    logType: string
-    category: string
-    detail: string
-    metadata?: NullableJsonNullValueInput | InputJsonValue
-  }
-
-  export type UnifiedLogUpdateManyMutationInput = {
-    id?: StringFieldUpdateOperationsInput | string
-    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
-    userId?: NullableBigIntFieldUpdateOperationsInput | bigint | number | null
-    sessionId?: NullableStringFieldUpdateOperationsInput | string | null
-    cfRay?: NullableStringFieldUpdateOperationsInput | string | null
-    country?: NullableStringFieldUpdateOperationsInput | string | null
-    city?: NullableStringFieldUpdateOperationsInput | string | null
-    bot?: NullableBoolFieldUpdateOperationsInput | boolean | null
-    threat?: NullableStringFieldUpdateOperationsInput | string | null
-    isMobile?: NullableBoolFieldUpdateOperationsInput | boolean | null
-    ip?: NullableStringFieldUpdateOperationsInput | string | null
-    logType?: StringFieldUpdateOperationsInput | string
-    category?: StringFieldUpdateOperationsInput | string
-    detail?: StringFieldUpdateOperationsInput | string
-    metadata?: NullableJsonNullValueInput | InputJsonValue
-  }
-
-  export type UnifiedLogUncheckedUpdateManyInput = {
-    id?: StringFieldUpdateOperationsInput | string
-    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
-    userId?: NullableBigIntFieldUpdateOperationsInput | bigint | number | null
-    sessionId?: NullableStringFieldUpdateOperationsInput | string | null
-    cfRay?: NullableStringFieldUpdateOperationsInput | string | null
-    country?: NullableStringFieldUpdateOperationsInput | string | null
-    city?: NullableStringFieldUpdateOperationsInput | string | null
-    bot?: NullableBoolFieldUpdateOperationsInput | boolean | null
-    threat?: NullableStringFieldUpdateOperationsInput | string | null
-    isMobile?: NullableBoolFieldUpdateOperationsInput | boolean | null
-    ip?: NullableStringFieldUpdateOperationsInput | string | null
-    logType?: StringFieldUpdateOperationsInput | string
-    category?: StringFieldUpdateOperationsInput | string
-    detail?: StringFieldUpdateOperationsInput | string
-    metadata?: NullableJsonNullValueInput | InputJsonValue
-  }
-
   export type GameCreateInput = {
+    id?: bigint | number
+    uid: string
     aggregatorType: $Enums.GameAggregatorType
     provider: $Enums.GameProvider
     category: $Enums.GameCategory
-    gameId: number
+    aggregatorGameId: number
     gameType?: string | null
     tableId?: string | null
     iconLink?: string | null
@@ -63927,11 +62546,12 @@ export namespace Prisma {
   }
 
   export type GameUncheckedCreateInput = {
-    id?: number
+    id?: bigint | number
+    uid: string
     aggregatorType: $Enums.GameAggregatorType
     provider: $Enums.GameProvider
     category: $Enums.GameCategory
-    gameId: number
+    aggregatorGameId: number
     gameType?: string | null
     tableId?: string | null
     iconLink?: string | null
@@ -63948,10 +62568,12 @@ export namespace Prisma {
   }
 
   export type GameUpdateInput = {
+    id?: BigIntFieldUpdateOperationsInput | bigint | number
+    uid?: StringFieldUpdateOperationsInput | string
     aggregatorType?: EnumGameAggregatorTypeFieldUpdateOperationsInput | $Enums.GameAggregatorType
     provider?: EnumGameProviderFieldUpdateOperationsInput | $Enums.GameProvider
     category?: EnumGameCategoryFieldUpdateOperationsInput | $Enums.GameCategory
-    gameId?: IntFieldUpdateOperationsInput | number
+    aggregatorGameId?: IntFieldUpdateOperationsInput | number
     gameType?: NullableStringFieldUpdateOperationsInput | string | null
     tableId?: NullableStringFieldUpdateOperationsInput | string | null
     iconLink?: NullableStringFieldUpdateOperationsInput | string | null
@@ -63968,11 +62590,12 @@ export namespace Prisma {
   }
 
   export type GameUncheckedUpdateInput = {
-    id?: IntFieldUpdateOperationsInput | number
+    id?: BigIntFieldUpdateOperationsInput | bigint | number
+    uid?: StringFieldUpdateOperationsInput | string
     aggregatorType?: EnumGameAggregatorTypeFieldUpdateOperationsInput | $Enums.GameAggregatorType
     provider?: EnumGameProviderFieldUpdateOperationsInput | $Enums.GameProvider
     category?: EnumGameCategoryFieldUpdateOperationsInput | $Enums.GameCategory
-    gameId?: IntFieldUpdateOperationsInput | number
+    aggregatorGameId?: IntFieldUpdateOperationsInput | number
     gameType?: NullableStringFieldUpdateOperationsInput | string | null
     tableId?: NullableStringFieldUpdateOperationsInput | string | null
     iconLink?: NullableStringFieldUpdateOperationsInput | string | null
@@ -63989,11 +62612,12 @@ export namespace Prisma {
   }
 
   export type GameCreateManyInput = {
-    id?: number
+    id?: bigint | number
+    uid: string
     aggregatorType: $Enums.GameAggregatorType
     provider: $Enums.GameProvider
     category: $Enums.GameCategory
-    gameId: number
+    aggregatorGameId: number
     gameType?: string | null
     tableId?: string | null
     iconLink?: string | null
@@ -64006,10 +62630,12 @@ export namespace Prisma {
   }
 
   export type GameUpdateManyMutationInput = {
+    id?: BigIntFieldUpdateOperationsInput | bigint | number
+    uid?: StringFieldUpdateOperationsInput | string
     aggregatorType?: EnumGameAggregatorTypeFieldUpdateOperationsInput | $Enums.GameAggregatorType
     provider?: EnumGameProviderFieldUpdateOperationsInput | $Enums.GameProvider
     category?: EnumGameCategoryFieldUpdateOperationsInput | $Enums.GameCategory
-    gameId?: IntFieldUpdateOperationsInput | number
+    aggregatorGameId?: IntFieldUpdateOperationsInput | number
     gameType?: NullableStringFieldUpdateOperationsInput | string | null
     tableId?: NullableStringFieldUpdateOperationsInput | string | null
     iconLink?: NullableStringFieldUpdateOperationsInput | string | null
@@ -64022,11 +62648,12 @@ export namespace Prisma {
   }
 
   export type GameUncheckedUpdateManyInput = {
-    id?: IntFieldUpdateOperationsInput | number
+    id?: BigIntFieldUpdateOperationsInput | bigint | number
+    uid?: StringFieldUpdateOperationsInput | string
     aggregatorType?: EnumGameAggregatorTypeFieldUpdateOperationsInput | $Enums.GameAggregatorType
     provider?: EnumGameProviderFieldUpdateOperationsInput | $Enums.GameProvider
     category?: EnumGameCategoryFieldUpdateOperationsInput | $Enums.GameCategory
-    gameId?: IntFieldUpdateOperationsInput | number
+    aggregatorGameId?: IntFieldUpdateOperationsInput | number
     gameType?: NullableStringFieldUpdateOperationsInput | string | null
     tableId?: NullableStringFieldUpdateOperationsInput | string | null
     iconLink?: NullableStringFieldUpdateOperationsInput | string | null
@@ -64039,6 +62666,8 @@ export namespace Prisma {
   }
 
   export type GameTranslationCreateInput = {
+    id?: bigint | number
+    uid: string
     language: $Enums.Language
     providerName: string
     categoryName: string
@@ -64049,8 +62678,9 @@ export namespace Prisma {
   }
 
   export type GameTranslationUncheckedCreateInput = {
-    id?: number
-    gameId: number
+    id?: bigint | number
+    uid: string
+    gameId: bigint | number
     language: $Enums.Language
     providerName: string
     categoryName: string
@@ -64060,6 +62690,8 @@ export namespace Prisma {
   }
 
   export type GameTranslationUpdateInput = {
+    id?: BigIntFieldUpdateOperationsInput | bigint | number
+    uid?: StringFieldUpdateOperationsInput | string
     language?: EnumLanguageFieldUpdateOperationsInput | $Enums.Language
     providerName?: StringFieldUpdateOperationsInput | string
     categoryName?: StringFieldUpdateOperationsInput | string
@@ -64070,8 +62702,9 @@ export namespace Prisma {
   }
 
   export type GameTranslationUncheckedUpdateInput = {
-    id?: IntFieldUpdateOperationsInput | number
-    gameId?: IntFieldUpdateOperationsInput | number
+    id?: BigIntFieldUpdateOperationsInput | bigint | number
+    uid?: StringFieldUpdateOperationsInput | string
+    gameId?: BigIntFieldUpdateOperationsInput | bigint | number
     language?: EnumLanguageFieldUpdateOperationsInput | $Enums.Language
     providerName?: StringFieldUpdateOperationsInput | string
     categoryName?: StringFieldUpdateOperationsInput | string
@@ -64081,8 +62714,9 @@ export namespace Prisma {
   }
 
   export type GameTranslationCreateManyInput = {
-    id?: number
-    gameId: number
+    id?: bigint | number
+    uid: string
+    gameId: bigint | number
     language: $Enums.Language
     providerName: string
     categoryName: string
@@ -64092,6 +62726,8 @@ export namespace Prisma {
   }
 
   export type GameTranslationUpdateManyMutationInput = {
+    id?: BigIntFieldUpdateOperationsInput | bigint | number
+    uid?: StringFieldUpdateOperationsInput | string
     language?: EnumLanguageFieldUpdateOperationsInput | $Enums.Language
     providerName?: StringFieldUpdateOperationsInput | string
     categoryName?: StringFieldUpdateOperationsInput | string
@@ -64101,8 +62737,9 @@ export namespace Prisma {
   }
 
   export type GameTranslationUncheckedUpdateManyInput = {
-    id?: IntFieldUpdateOperationsInput | number
-    gameId?: IntFieldUpdateOperationsInput | number
+    id?: BigIntFieldUpdateOperationsInput | bigint | number
+    uid?: StringFieldUpdateOperationsInput | string
+    gameId?: BigIntFieldUpdateOperationsInput | bigint | number
     language?: EnumLanguageFieldUpdateOperationsInput | $Enums.Language
     providerName?: StringFieldUpdateOperationsInput | string
     categoryName?: StringFieldUpdateOperationsInput | string
@@ -64113,6 +62750,7 @@ export namespace Prisma {
 
   export type GameSessionCreateInput = {
     id?: bigint | number
+    uid: string
     createdAt?: Date | string
     updatedAt?: Date | string
     lastAccessedAt?: Date | string
@@ -64129,6 +62767,7 @@ export namespace Prisma {
 
   export type GameSessionUncheckedCreateInput = {
     id?: bigint | number
+    uid: string
     userId: bigint | number
     createdAt?: Date | string
     updatedAt?: Date | string
@@ -64139,12 +62778,13 @@ export namespace Prisma {
     gameCurrency: $Enums.ExchangeCurrencyCode
     exchangeRate: Decimal | DecimalJsLike | number | string
     exchangeRateSnapshotAt?: Date | string
-    gameId?: number | null
+    gameId?: bigint | number | null
     gameRounds?: GameRoundUncheckedCreateNestedManyWithoutGameSessionInput
   }
 
   export type GameSessionUpdateInput = {
     id?: BigIntFieldUpdateOperationsInput | bigint | number
+    uid?: StringFieldUpdateOperationsInput | string
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
     lastAccessedAt?: DateTimeFieldUpdateOperationsInput | Date | string
@@ -64161,6 +62801,7 @@ export namespace Prisma {
 
   export type GameSessionUncheckedUpdateInput = {
     id?: BigIntFieldUpdateOperationsInput | bigint | number
+    uid?: StringFieldUpdateOperationsInput | string
     userId?: BigIntFieldUpdateOperationsInput | bigint | number
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
@@ -64171,12 +62812,13 @@ export namespace Prisma {
     gameCurrency?: EnumExchangeCurrencyCodeFieldUpdateOperationsInput | $Enums.ExchangeCurrencyCode
     exchangeRate?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
     exchangeRateSnapshotAt?: DateTimeFieldUpdateOperationsInput | Date | string
-    gameId?: NullableIntFieldUpdateOperationsInput | number | null
+    gameId?: NullableBigIntFieldUpdateOperationsInput | bigint | number | null
     gameRounds?: GameRoundUncheckedUpdateManyWithoutGameSessionNestedInput
   }
 
   export type GameSessionCreateManyInput = {
     id?: bigint | number
+    uid: string
     userId: bigint | number
     createdAt?: Date | string
     updatedAt?: Date | string
@@ -64187,11 +62829,12 @@ export namespace Prisma {
     gameCurrency: $Enums.ExchangeCurrencyCode
     exchangeRate: Decimal | DecimalJsLike | number | string
     exchangeRateSnapshotAt?: Date | string
-    gameId?: number | null
+    gameId?: bigint | number | null
   }
 
   export type GameSessionUpdateManyMutationInput = {
     id?: BigIntFieldUpdateOperationsInput | bigint | number
+    uid?: StringFieldUpdateOperationsInput | string
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
     lastAccessedAt?: DateTimeFieldUpdateOperationsInput | Date | string
@@ -64205,6 +62848,7 @@ export namespace Prisma {
 
   export type GameSessionUncheckedUpdateManyInput = {
     id?: BigIntFieldUpdateOperationsInput | bigint | number
+    uid?: StringFieldUpdateOperationsInput | string
     userId?: BigIntFieldUpdateOperationsInput | bigint | number
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
@@ -64215,11 +62859,12 @@ export namespace Prisma {
     gameCurrency?: EnumExchangeCurrencyCodeFieldUpdateOperationsInput | $Enums.ExchangeCurrencyCode
     exchangeRate?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
     exchangeRateSnapshotAt?: DateTimeFieldUpdateOperationsInput | Date | string
-    gameId?: NullableIntFieldUpdateOperationsInput | number | null
+    gameId?: NullableBigIntFieldUpdateOperationsInput | bigint | number | null
   }
 
   export type GameRoundCreateInput = {
     id?: bigint | number
+    uid: string
     userId: bigint | number
     aggregatorType: $Enums.GameAggregatorType
     provider: $Enums.GameProvider
@@ -64253,6 +62898,7 @@ export namespace Prisma {
 
   export type GameRoundUncheckedCreateInput = {
     id?: bigint | number
+    uid: string
     userId: bigint | number
     aggregatorType: $Enums.GameAggregatorType
     provider: $Enums.GameProvider
@@ -64277,7 +62923,7 @@ export namespace Prisma {
     jackpotContributionAmount?: Decimal | DecimalJsLike | number | string
     startedAt?: Date | string | null
     completedAt?: Date | string | null
-    gameId?: number | null
+    gameId?: bigint | number | null
     gameSessionId: bigint | number
     AffiliateCommission?: AffiliateCommissionUncheckedCreateNestedManyWithoutGameRoundInput
     bets?: GameBetUncheckedCreateNestedManyWithoutGameRoundInput
@@ -64286,6 +62932,7 @@ export namespace Prisma {
 
   export type GameRoundUpdateInput = {
     id?: BigIntFieldUpdateOperationsInput | bigint | number
+    uid?: StringFieldUpdateOperationsInput | string
     userId?: BigIntFieldUpdateOperationsInput | bigint | number
     aggregatorType?: EnumGameAggregatorTypeFieldUpdateOperationsInput | $Enums.GameAggregatorType
     provider?: EnumGameProviderFieldUpdateOperationsInput | $Enums.GameProvider
@@ -64319,6 +62966,7 @@ export namespace Prisma {
 
   export type GameRoundUncheckedUpdateInput = {
     id?: BigIntFieldUpdateOperationsInput | bigint | number
+    uid?: StringFieldUpdateOperationsInput | string
     userId?: BigIntFieldUpdateOperationsInput | bigint | number
     aggregatorType?: EnumGameAggregatorTypeFieldUpdateOperationsInput | $Enums.GameAggregatorType
     provider?: EnumGameProviderFieldUpdateOperationsInput | $Enums.GameProvider
@@ -64343,7 +62991,7 @@ export namespace Prisma {
     jackpotContributionAmount?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
     startedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     completedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
-    gameId?: NullableIntFieldUpdateOperationsInput | number | null
+    gameId?: NullableBigIntFieldUpdateOperationsInput | bigint | number | null
     gameSessionId?: BigIntFieldUpdateOperationsInput | bigint | number
     AffiliateCommission?: AffiliateCommissionUncheckedUpdateManyWithoutGameRoundNestedInput
     bets?: GameBetUncheckedUpdateManyWithoutGameRoundNestedInput
@@ -64352,6 +63000,7 @@ export namespace Prisma {
 
   export type GameRoundCreateManyInput = {
     id?: bigint | number
+    uid: string
     userId: bigint | number
     aggregatorType: $Enums.GameAggregatorType
     provider: $Enums.GameProvider
@@ -64376,12 +63025,13 @@ export namespace Prisma {
     jackpotContributionAmount?: Decimal | DecimalJsLike | number | string
     startedAt?: Date | string | null
     completedAt?: Date | string | null
-    gameId?: number | null
+    gameId?: bigint | number | null
     gameSessionId: bigint | number
   }
 
   export type GameRoundUpdateManyMutationInput = {
     id?: BigIntFieldUpdateOperationsInput | bigint | number
+    uid?: StringFieldUpdateOperationsInput | string
     userId?: BigIntFieldUpdateOperationsInput | bigint | number
     aggregatorType?: EnumGameAggregatorTypeFieldUpdateOperationsInput | $Enums.GameAggregatorType
     provider?: EnumGameProviderFieldUpdateOperationsInput | $Enums.GameProvider
@@ -64409,6 +63059,7 @@ export namespace Prisma {
 
   export type GameRoundUncheckedUpdateManyInput = {
     id?: BigIntFieldUpdateOperationsInput | bigint | number
+    uid?: StringFieldUpdateOperationsInput | string
     userId?: BigIntFieldUpdateOperationsInput | bigint | number
     aggregatorType?: EnumGameAggregatorTypeFieldUpdateOperationsInput | $Enums.GameAggregatorType
     provider?: EnumGameProviderFieldUpdateOperationsInput | $Enums.GameProvider
@@ -64433,12 +63084,13 @@ export namespace Prisma {
     jackpotContributionAmount?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
     startedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     completedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
-    gameId?: NullableIntFieldUpdateOperationsInput | number | null
+    gameId?: NullableBigIntFieldUpdateOperationsInput | bigint | number | null
     gameSessionId?: BigIntFieldUpdateOperationsInput | bigint | number
   }
 
   export type GameBetCreateInput = {
     id?: bigint | number
+    uid: string
     userId: bigint | number
     aggregatorType: $Enums.GameAggregatorType
     aggregatorBetId: string
@@ -64454,6 +63106,7 @@ export namespace Prisma {
 
   export type GameBetUncheckedCreateInput = {
     id?: bigint | number
+    uid: string
     userId: bigint | number
     gameRoundId: bigint | number
     aggregatorType: $Enums.GameAggregatorType
@@ -64469,6 +63122,7 @@ export namespace Prisma {
 
   export type GameBetUpdateInput = {
     id?: BigIntFieldUpdateOperationsInput | bigint | number
+    uid?: StringFieldUpdateOperationsInput | string
     userId?: BigIntFieldUpdateOperationsInput | bigint | number
     aggregatorType?: EnumGameAggregatorTypeFieldUpdateOperationsInput | $Enums.GameAggregatorType
     aggregatorBetId?: StringFieldUpdateOperationsInput | string
@@ -64484,6 +63138,7 @@ export namespace Prisma {
 
   export type GameBetUncheckedUpdateInput = {
     id?: BigIntFieldUpdateOperationsInput | bigint | number
+    uid?: StringFieldUpdateOperationsInput | string
     userId?: BigIntFieldUpdateOperationsInput | bigint | number
     gameRoundId?: BigIntFieldUpdateOperationsInput | bigint | number
     aggregatorType?: EnumGameAggregatorTypeFieldUpdateOperationsInput | $Enums.GameAggregatorType
@@ -64499,6 +63154,7 @@ export namespace Prisma {
 
   export type GameBetCreateManyInput = {
     id?: bigint | number
+    uid: string
     userId: bigint | number
     gameRoundId: bigint | number
     aggregatorType: $Enums.GameAggregatorType
@@ -64514,6 +63170,7 @@ export namespace Prisma {
 
   export type GameBetUpdateManyMutationInput = {
     id?: BigIntFieldUpdateOperationsInput | bigint | number
+    uid?: StringFieldUpdateOperationsInput | string
     userId?: BigIntFieldUpdateOperationsInput | bigint | number
     aggregatorType?: EnumGameAggregatorTypeFieldUpdateOperationsInput | $Enums.GameAggregatorType
     aggregatorBetId?: StringFieldUpdateOperationsInput | string
@@ -64528,6 +63185,7 @@ export namespace Prisma {
 
   export type GameBetUncheckedUpdateManyInput = {
     id?: BigIntFieldUpdateOperationsInput | bigint | number
+    uid?: StringFieldUpdateOperationsInput | string
     userId?: BigIntFieldUpdateOperationsInput | bigint | number
     gameRoundId?: BigIntFieldUpdateOperationsInput | bigint | number
     aggregatorType?: EnumGameAggregatorTypeFieldUpdateOperationsInput | $Enums.GameAggregatorType
@@ -64543,6 +63201,7 @@ export namespace Prisma {
 
   export type GameWinCreateInput = {
     id?: bigint | number
+    uid: string
     userId: bigint | number
     aggregatorType: $Enums.GameAggregatorType
     aggregatorWinId: string
@@ -64557,6 +63216,7 @@ export namespace Prisma {
 
   export type GameWinUncheckedCreateInput = {
     id?: bigint | number
+    uid: string
     userId: bigint | number
     gameRoundId: bigint | number
     aggregatorType: $Enums.GameAggregatorType
@@ -64571,6 +63231,7 @@ export namespace Prisma {
 
   export type GameWinUpdateInput = {
     id?: BigIntFieldUpdateOperationsInput | bigint | number
+    uid?: StringFieldUpdateOperationsInput | string
     userId?: BigIntFieldUpdateOperationsInput | bigint | number
     aggregatorType?: EnumGameAggregatorTypeFieldUpdateOperationsInput | $Enums.GameAggregatorType
     aggregatorWinId?: StringFieldUpdateOperationsInput | string
@@ -64585,6 +63246,7 @@ export namespace Prisma {
 
   export type GameWinUncheckedUpdateInput = {
     id?: BigIntFieldUpdateOperationsInput | bigint | number
+    uid?: StringFieldUpdateOperationsInput | string
     userId?: BigIntFieldUpdateOperationsInput | bigint | number
     gameRoundId?: BigIntFieldUpdateOperationsInput | bigint | number
     aggregatorType?: EnumGameAggregatorTypeFieldUpdateOperationsInput | $Enums.GameAggregatorType
@@ -64599,6 +63261,7 @@ export namespace Prisma {
 
   export type GameWinCreateManyInput = {
     id?: bigint | number
+    uid: string
     userId: bigint | number
     gameRoundId: bigint | number
     aggregatorType: $Enums.GameAggregatorType
@@ -64613,6 +63276,7 @@ export namespace Prisma {
 
   export type GameWinUpdateManyMutationInput = {
     id?: BigIntFieldUpdateOperationsInput | bigint | number
+    uid?: StringFieldUpdateOperationsInput | string
     userId?: BigIntFieldUpdateOperationsInput | bigint | number
     aggregatorType?: EnumGameAggregatorTypeFieldUpdateOperationsInput | $Enums.GameAggregatorType
     aggregatorWinId?: StringFieldUpdateOperationsInput | string
@@ -64626,6 +63290,7 @@ export namespace Prisma {
 
   export type GameWinUncheckedUpdateManyInput = {
     id?: BigIntFieldUpdateOperationsInput | bigint | number
+    uid?: StringFieldUpdateOperationsInput | string
     userId?: BigIntFieldUpdateOperationsInput | bigint | number
     gameRoundId?: BigIntFieldUpdateOperationsInput | bigint | number
     aggregatorType?: EnumGameAggregatorTypeFieldUpdateOperationsInput | $Enums.GameAggregatorType
@@ -65272,7 +63937,7 @@ export namespace Prisma {
     aggregatorSessionId?: string | null
     isEndRound?: boolean | null
     description?: string | null
-    gameId?: number | null
+    gameId?: bigint | number | null
     transactionId: bigint | number
   }
 
@@ -65312,7 +63977,7 @@ export namespace Prisma {
     aggregatorSessionId?: NullableStringFieldUpdateOperationsInput | string | null
     isEndRound?: NullableBoolFieldUpdateOperationsInput | boolean | null
     description?: NullableStringFieldUpdateOperationsInput | string | null
-    gameId?: NullableIntFieldUpdateOperationsInput | number | null
+    gameId?: NullableBigIntFieldUpdateOperationsInput | bigint | number | null
     transactionId?: BigIntFieldUpdateOperationsInput | bigint | number
   }
 
@@ -65332,7 +63997,7 @@ export namespace Prisma {
     aggregatorSessionId?: string | null
     isEndRound?: boolean | null
     description?: string | null
-    gameId?: number | null
+    gameId?: bigint | number | null
     transactionId: bigint | number
   }
 
@@ -65370,7 +64035,7 @@ export namespace Prisma {
     aggregatorSessionId?: NullableStringFieldUpdateOperationsInput | string | null
     isEndRound?: NullableBoolFieldUpdateOperationsInput | boolean | null
     description?: NullableStringFieldUpdateOperationsInput | string | null
-    gameId?: NullableIntFieldUpdateOperationsInput | number | null
+    gameId?: NullableBigIntFieldUpdateOperationsInput | bigint | number | null
     transactionId?: BigIntFieldUpdateOperationsInput | bigint | number
   }
 
@@ -68466,66 +67131,6 @@ export namespace Prisma {
     _max?: NestedIntFilter<$PrismaModel>
   }
 
-  export type UnifiedLogCountOrderByAggregateInput = {
-    id?: SortOrder
-    createdAt?: SortOrder
-    userId?: SortOrder
-    sessionId?: SortOrder
-    cfRay?: SortOrder
-    country?: SortOrder
-    city?: SortOrder
-    bot?: SortOrder
-    threat?: SortOrder
-    isMobile?: SortOrder
-    ip?: SortOrder
-    logType?: SortOrder
-    category?: SortOrder
-    detail?: SortOrder
-    metadata?: SortOrder
-  }
-
-  export type UnifiedLogAvgOrderByAggregateInput = {
-    userId?: SortOrder
-  }
-
-  export type UnifiedLogMaxOrderByAggregateInput = {
-    id?: SortOrder
-    createdAt?: SortOrder
-    userId?: SortOrder
-    sessionId?: SortOrder
-    cfRay?: SortOrder
-    country?: SortOrder
-    city?: SortOrder
-    bot?: SortOrder
-    threat?: SortOrder
-    isMobile?: SortOrder
-    ip?: SortOrder
-    logType?: SortOrder
-    category?: SortOrder
-    detail?: SortOrder
-  }
-
-  export type UnifiedLogMinOrderByAggregateInput = {
-    id?: SortOrder
-    createdAt?: SortOrder
-    userId?: SortOrder
-    sessionId?: SortOrder
-    cfRay?: SortOrder
-    country?: SortOrder
-    city?: SortOrder
-    bot?: SortOrder
-    threat?: SortOrder
-    isMobile?: SortOrder
-    ip?: SortOrder
-    logType?: SortOrder
-    category?: SortOrder
-    detail?: SortOrder
-  }
-
-  export type UnifiedLogSumOrderByAggregateInput = {
-    userId?: SortOrder
-  }
-
   export type EnumGameAggregatorTypeFilter<$PrismaModel = never> = {
     equals?: $Enums.GameAggregatorType | EnumGameAggregatorTypeFieldRefInput<$PrismaModel>
     in?: $Enums.GameAggregatorType[] | ListEnumGameAggregatorTypeFieldRefInput<$PrismaModel>
@@ -68598,18 +67203,19 @@ export namespace Prisma {
     _count?: SortOrder
   }
 
-  export type GameAggregatorTypeProviderGameIdCompoundUniqueInput = {
+  export type GameAggregatorTypeProviderAggregatorGameIdCompoundUniqueInput = {
     aggregatorType: $Enums.GameAggregatorType
     provider: $Enums.GameProvider
-    gameId: number
+    aggregatorGameId: number
   }
 
   export type GameCountOrderByAggregateInput = {
     id?: SortOrder
+    uid?: SortOrder
     aggregatorType?: SortOrder
     provider?: SortOrder
     category?: SortOrder
-    gameId?: SortOrder
+    aggregatorGameId?: SortOrder
     gameType?: SortOrder
     tableId?: SortOrder
     iconLink?: SortOrder
@@ -68623,17 +67229,18 @@ export namespace Prisma {
 
   export type GameAvgOrderByAggregateInput = {
     id?: SortOrder
-    gameId?: SortOrder
+    aggregatorGameId?: SortOrder
     houseEdge?: SortOrder
     contributionRate?: SortOrder
   }
 
   export type GameMaxOrderByAggregateInput = {
     id?: SortOrder
+    uid?: SortOrder
     aggregatorType?: SortOrder
     provider?: SortOrder
     category?: SortOrder
-    gameId?: SortOrder
+    aggregatorGameId?: SortOrder
     gameType?: SortOrder
     tableId?: SortOrder
     iconLink?: SortOrder
@@ -68647,10 +67254,11 @@ export namespace Prisma {
 
   export type GameMinOrderByAggregateInput = {
     id?: SortOrder
+    uid?: SortOrder
     aggregatorType?: SortOrder
     provider?: SortOrder
     category?: SortOrder
-    gameId?: SortOrder
+    aggregatorGameId?: SortOrder
     gameType?: SortOrder
     tableId?: SortOrder
     iconLink?: SortOrder
@@ -68664,7 +67272,7 @@ export namespace Prisma {
 
   export type GameSumOrderByAggregateInput = {
     id?: SortOrder
-    gameId?: SortOrder
+    aggregatorGameId?: SortOrder
     houseEdge?: SortOrder
     contributionRate?: SortOrder
   }
@@ -68728,12 +67336,13 @@ export namespace Prisma {
   }
 
   export type GameTranslationGameIdLanguageCompoundUniqueInput = {
-    gameId: number
+    gameId: bigint | number
     language: $Enums.Language
   }
 
   export type GameTranslationCountOrderByAggregateInput = {
     id?: SortOrder
+    uid?: SortOrder
     gameId?: SortOrder
     language?: SortOrder
     providerName?: SortOrder
@@ -68750,6 +67359,7 @@ export namespace Prisma {
 
   export type GameTranslationMaxOrderByAggregateInput = {
     id?: SortOrder
+    uid?: SortOrder
     gameId?: SortOrder
     language?: SortOrder
     providerName?: SortOrder
@@ -68761,6 +67371,7 @@ export namespace Prisma {
 
   export type GameTranslationMinOrderByAggregateInput = {
     id?: SortOrder
+    uid?: SortOrder
     gameId?: SortOrder
     language?: SortOrder
     providerName?: SortOrder
@@ -68804,6 +67415,7 @@ export namespace Prisma {
 
   export type GameSessionCountOrderByAggregateInput = {
     id?: SortOrder
+    uid?: SortOrder
     userId?: SortOrder
     createdAt?: SortOrder
     updatedAt?: SortOrder
@@ -68826,6 +67438,7 @@ export namespace Prisma {
 
   export type GameSessionMaxOrderByAggregateInput = {
     id?: SortOrder
+    uid?: SortOrder
     userId?: SortOrder
     createdAt?: SortOrder
     updatedAt?: SortOrder
@@ -68841,6 +67454,7 @@ export namespace Prisma {
 
   export type GameSessionMinOrderByAggregateInput = {
     id?: SortOrder
+    uid?: SortOrder
     userId?: SortOrder
     createdAt?: SortOrder
     updatedAt?: SortOrder
@@ -68936,6 +67550,7 @@ export namespace Prisma {
 
   export type GameRoundCountOrderByAggregateInput = {
     id?: SortOrder
+    uid?: SortOrder
     userId?: SortOrder
     aggregatorType?: SortOrder
     provider?: SortOrder
@@ -68986,6 +67601,7 @@ export namespace Prisma {
 
   export type GameRoundMaxOrderByAggregateInput = {
     id?: SortOrder
+    uid?: SortOrder
     userId?: SortOrder
     aggregatorType?: SortOrder
     provider?: SortOrder
@@ -69016,6 +67632,7 @@ export namespace Prisma {
 
   export type GameRoundMinOrderByAggregateInput = {
     id?: SortOrder
+    uid?: SortOrder
     userId?: SortOrder
     aggregatorType?: SortOrder
     provider?: SortOrder
@@ -69109,6 +67726,7 @@ export namespace Prisma {
 
   export type GameBetCountOrderByAggregateInput = {
     id?: SortOrder
+    uid?: SortOrder
     userId?: SortOrder
     gameRoundId?: SortOrder
     aggregatorType?: SortOrder
@@ -69132,6 +67750,7 @@ export namespace Prisma {
 
   export type GameBetMaxOrderByAggregateInput = {
     id?: SortOrder
+    uid?: SortOrder
     userId?: SortOrder
     gameRoundId?: SortOrder
     aggregatorType?: SortOrder
@@ -69147,6 +67766,7 @@ export namespace Prisma {
 
   export type GameBetMinOrderByAggregateInput = {
     id?: SortOrder
+    uid?: SortOrder
     userId?: SortOrder
     gameRoundId?: SortOrder
     aggregatorType?: SortOrder
@@ -69192,6 +67812,7 @@ export namespace Prisma {
 
   export type GameWinCountOrderByAggregateInput = {
     id?: SortOrder
+    uid?: SortOrder
     userId?: SortOrder
     gameRoundId?: SortOrder
     aggregatorType?: SortOrder
@@ -69214,6 +67835,7 @@ export namespace Prisma {
 
   export type GameWinMaxOrderByAggregateInput = {
     id?: SortOrder
+    uid?: SortOrder
     userId?: SortOrder
     gameRoundId?: SortOrder
     aggregatorType?: SortOrder
@@ -69228,6 +67850,7 @@ export namespace Prisma {
 
   export type GameWinMinOrderByAggregateInput = {
     id?: SortOrder
+    uid?: SortOrder
     userId?: SortOrder
     gameRoundId?: SortOrder
     aggregatorType?: SortOrder
@@ -75509,6 +74132,7 @@ export namespace Prisma {
 
   export type GameRoundCreateWithoutGameInput = {
     id?: bigint | number
+    uid: string
     userId: bigint | number
     aggregatorType: $Enums.GameAggregatorType
     provider: $Enums.GameProvider
@@ -75541,6 +74165,7 @@ export namespace Prisma {
 
   export type GameRoundUncheckedCreateWithoutGameInput = {
     id?: bigint | number
+    uid: string
     userId: bigint | number
     aggregatorType: $Enums.GameAggregatorType
     provider: $Enums.GameProvider
@@ -75583,6 +74208,7 @@ export namespace Prisma {
 
   export type GameSessionCreateWithoutGameInput = {
     id?: bigint | number
+    uid: string
     createdAt?: Date | string
     updatedAt?: Date | string
     lastAccessedAt?: Date | string
@@ -75598,6 +74224,7 @@ export namespace Prisma {
 
   export type GameSessionUncheckedCreateWithoutGameInput = {
     id?: bigint | number
+    uid: string
     userId: bigint | number
     createdAt?: Date | string
     updatedAt?: Date | string
@@ -75622,6 +74249,8 @@ export namespace Prisma {
   }
 
   export type GameTranslationCreateWithoutGameInput = {
+    id?: bigint | number
+    uid: string
     language: $Enums.Language
     providerName: string
     categoryName: string
@@ -75631,7 +74260,8 @@ export namespace Prisma {
   }
 
   export type GameTranslationUncheckedCreateWithoutGameInput = {
-    id?: number
+    id?: bigint | number
+    uid: string
     language: $Enums.Language
     providerName: string
     categoryName: string
@@ -75685,7 +74315,7 @@ export namespace Prisma {
     aggregatorSessionId?: StringNullableFilter<"BonusDetail"> | string | null
     isEndRound?: BoolNullableFilter<"BonusDetail"> | boolean | null
     description?: StringNullableFilter<"BonusDetail"> | string | null
-    gameId?: IntNullableFilter<"BonusDetail"> | number | null
+    gameId?: BigIntNullableFilter<"BonusDetail"> | bigint | number | null
     transactionId?: BigIntFilter<"BonusDetail"> | bigint | number
   }
 
@@ -75710,6 +74340,7 @@ export namespace Prisma {
     OR?: GameRoundScalarWhereInput[]
     NOT?: GameRoundScalarWhereInput | GameRoundScalarWhereInput[]
     id?: BigIntFilter<"GameRound"> | bigint | number
+    uid?: StringFilter<"GameRound"> | string
     userId?: BigIntFilter<"GameRound"> | bigint | number
     aggregatorType?: EnumGameAggregatorTypeFilter<"GameRound"> | $Enums.GameAggregatorType
     provider?: EnumGameProviderFilter<"GameRound"> | $Enums.GameProvider
@@ -75734,7 +74365,7 @@ export namespace Prisma {
     jackpotContributionAmount?: DecimalFilter<"GameRound"> | Decimal | DecimalJsLike | number | string
     startedAt?: DateTimeNullableFilter<"GameRound"> | Date | string | null
     completedAt?: DateTimeNullableFilter<"GameRound"> | Date | string | null
-    gameId?: IntNullableFilter<"GameRound"> | number | null
+    gameId?: BigIntNullableFilter<"GameRound"> | bigint | number | null
     gameSessionId?: BigIntFilter<"GameRound"> | bigint | number
   }
 
@@ -75759,6 +74390,7 @@ export namespace Prisma {
     OR?: GameSessionScalarWhereInput[]
     NOT?: GameSessionScalarWhereInput | GameSessionScalarWhereInput[]
     id?: BigIntFilter<"GameSession"> | bigint | number
+    uid?: StringFilter<"GameSession"> | string
     userId?: BigIntFilter<"GameSession"> | bigint | number
     createdAt?: DateTimeFilter<"GameSession"> | Date | string
     updatedAt?: DateTimeFilter<"GameSession"> | Date | string
@@ -75769,7 +74401,7 @@ export namespace Prisma {
     gameCurrency?: EnumExchangeCurrencyCodeFilter<"GameSession"> | $Enums.ExchangeCurrencyCode
     exchangeRate?: DecimalFilter<"GameSession"> | Decimal | DecimalJsLike | number | string
     exchangeRateSnapshotAt?: DateTimeFilter<"GameSession"> | Date | string
-    gameId?: IntNullableFilter<"GameSession"> | number | null
+    gameId?: BigIntNullableFilter<"GameSession"> | bigint | number | null
   }
 
   export type GameTranslationUpsertWithWhereUniqueWithoutGameInput = {
@@ -75792,8 +74424,9 @@ export namespace Prisma {
     AND?: GameTranslationScalarWhereInput | GameTranslationScalarWhereInput[]
     OR?: GameTranslationScalarWhereInput[]
     NOT?: GameTranslationScalarWhereInput | GameTranslationScalarWhereInput[]
-    id?: IntFilter<"GameTranslation"> | number
-    gameId?: IntFilter<"GameTranslation"> | number
+    id?: BigIntFilter<"GameTranslation"> | bigint | number
+    uid?: StringFilter<"GameTranslation"> | string
+    gameId?: BigIntFilter<"GameTranslation"> | bigint | number
     language?: EnumLanguageFilter<"GameTranslation"> | $Enums.Language
     providerName?: StringFilter<"GameTranslation"> | string
     categoryName?: StringFilter<"GameTranslation"> | string
@@ -75803,10 +74436,12 @@ export namespace Prisma {
   }
 
   export type GameCreateWithoutTranslationsInput = {
+    id?: bigint | number
+    uid: string
     aggregatorType: $Enums.GameAggregatorType
     provider: $Enums.GameProvider
     category: $Enums.GameCategory
-    gameId: number
+    aggregatorGameId: number
     gameType?: string | null
     tableId?: string | null
     iconLink?: string | null
@@ -75822,11 +74457,12 @@ export namespace Prisma {
   }
 
   export type GameUncheckedCreateWithoutTranslationsInput = {
-    id?: number
+    id?: bigint | number
+    uid: string
     aggregatorType: $Enums.GameAggregatorType
     provider: $Enums.GameProvider
     category: $Enums.GameCategory
-    gameId: number
+    aggregatorGameId: number
     gameType?: string | null
     tableId?: string | null
     iconLink?: string | null
@@ -75858,10 +74494,12 @@ export namespace Prisma {
   }
 
   export type GameUpdateWithoutTranslationsInput = {
+    id?: BigIntFieldUpdateOperationsInput | bigint | number
+    uid?: StringFieldUpdateOperationsInput | string
     aggregatorType?: EnumGameAggregatorTypeFieldUpdateOperationsInput | $Enums.GameAggregatorType
     provider?: EnumGameProviderFieldUpdateOperationsInput | $Enums.GameProvider
     category?: EnumGameCategoryFieldUpdateOperationsInput | $Enums.GameCategory
-    gameId?: IntFieldUpdateOperationsInput | number
+    aggregatorGameId?: IntFieldUpdateOperationsInput | number
     gameType?: NullableStringFieldUpdateOperationsInput | string | null
     tableId?: NullableStringFieldUpdateOperationsInput | string | null
     iconLink?: NullableStringFieldUpdateOperationsInput | string | null
@@ -75877,11 +74515,12 @@ export namespace Prisma {
   }
 
   export type GameUncheckedUpdateWithoutTranslationsInput = {
-    id?: IntFieldUpdateOperationsInput | number
+    id?: BigIntFieldUpdateOperationsInput | bigint | number
+    uid?: StringFieldUpdateOperationsInput | string
     aggregatorType?: EnumGameAggregatorTypeFieldUpdateOperationsInput | $Enums.GameAggregatorType
     provider?: EnumGameProviderFieldUpdateOperationsInput | $Enums.GameProvider
     category?: EnumGameCategoryFieldUpdateOperationsInput | $Enums.GameCategory
-    gameId?: IntFieldUpdateOperationsInput | number
+    aggregatorGameId?: IntFieldUpdateOperationsInput | number
     gameType?: NullableStringFieldUpdateOperationsInput | string | null
     tableId?: NullableStringFieldUpdateOperationsInput | string | null
     iconLink?: NullableStringFieldUpdateOperationsInput | string | null
@@ -75898,6 +74537,7 @@ export namespace Prisma {
 
   export type GameRoundCreateWithoutGameSessionInput = {
     id?: bigint | number
+    uid: string
     userId: bigint | number
     aggregatorType: $Enums.GameAggregatorType
     provider: $Enums.GameProvider
@@ -75930,6 +74570,7 @@ export namespace Prisma {
 
   export type GameRoundUncheckedCreateWithoutGameSessionInput = {
     id?: bigint | number
+    uid: string
     userId: bigint | number
     aggregatorType: $Enums.GameAggregatorType
     provider: $Enums.GameProvider
@@ -75954,7 +74595,7 @@ export namespace Prisma {
     jackpotContributionAmount?: Decimal | DecimalJsLike | number | string
     startedAt?: Date | string | null
     completedAt?: Date | string | null
-    gameId?: number | null
+    gameId?: bigint | number | null
     AffiliateCommission?: AffiliateCommissionUncheckedCreateNestedManyWithoutGameRoundInput
     bets?: GameBetUncheckedCreateNestedManyWithoutGameRoundInput
     wins?: GameWinUncheckedCreateNestedManyWithoutGameRoundInput
@@ -75971,10 +74612,12 @@ export namespace Prisma {
   }
 
   export type GameCreateWithoutGameSessionsInput = {
+    id?: bigint | number
+    uid: string
     aggregatorType: $Enums.GameAggregatorType
     provider: $Enums.GameProvider
     category: $Enums.GameCategory
-    gameId: number
+    aggregatorGameId: number
     gameType?: string | null
     tableId?: string | null
     iconLink?: string | null
@@ -75990,11 +74633,12 @@ export namespace Prisma {
   }
 
   export type GameUncheckedCreateWithoutGameSessionsInput = {
-    id?: number
+    id?: bigint | number
+    uid: string
     aggregatorType: $Enums.GameAggregatorType
     provider: $Enums.GameProvider
     category: $Enums.GameCategory
-    gameId: number
+    aggregatorGameId: number
     gameType?: string | null
     tableId?: string | null
     iconLink?: string | null
@@ -76133,10 +74777,12 @@ export namespace Prisma {
   }
 
   export type GameUpdateWithoutGameSessionsInput = {
+    id?: BigIntFieldUpdateOperationsInput | bigint | number
+    uid?: StringFieldUpdateOperationsInput | string
     aggregatorType?: EnumGameAggregatorTypeFieldUpdateOperationsInput | $Enums.GameAggregatorType
     provider?: EnumGameProviderFieldUpdateOperationsInput | $Enums.GameProvider
     category?: EnumGameCategoryFieldUpdateOperationsInput | $Enums.GameCategory
-    gameId?: IntFieldUpdateOperationsInput | number
+    aggregatorGameId?: IntFieldUpdateOperationsInput | number
     gameType?: NullableStringFieldUpdateOperationsInput | string | null
     tableId?: NullableStringFieldUpdateOperationsInput | string | null
     iconLink?: NullableStringFieldUpdateOperationsInput | string | null
@@ -76152,11 +74798,12 @@ export namespace Prisma {
   }
 
   export type GameUncheckedUpdateWithoutGameSessionsInput = {
-    id?: IntFieldUpdateOperationsInput | number
+    id?: BigIntFieldUpdateOperationsInput | bigint | number
+    uid?: StringFieldUpdateOperationsInput | string
     aggregatorType?: EnumGameAggregatorTypeFieldUpdateOperationsInput | $Enums.GameAggregatorType
     provider?: EnumGameProviderFieldUpdateOperationsInput | $Enums.GameProvider
     category?: EnumGameCategoryFieldUpdateOperationsInput | $Enums.GameCategory
-    gameId?: IntFieldUpdateOperationsInput | number
+    aggregatorGameId?: IntFieldUpdateOperationsInput | number
     gameType?: NullableStringFieldUpdateOperationsInput | string | null
     tableId?: NullableStringFieldUpdateOperationsInput | string | null
     iconLink?: NullableStringFieldUpdateOperationsInput | string | null
@@ -76318,6 +74965,7 @@ export namespace Prisma {
 
   export type GameBetCreateWithoutGameRoundInput = {
     id?: bigint | number
+    uid: string
     userId: bigint | number
     aggregatorType: $Enums.GameAggregatorType
     aggregatorBetId: string
@@ -76332,6 +74980,7 @@ export namespace Prisma {
 
   export type GameBetUncheckedCreateWithoutGameRoundInput = {
     id?: bigint | number
+    uid: string
     userId: bigint | number
     aggregatorType: $Enums.GameAggregatorType
     aggregatorBetId: string
@@ -76355,10 +75004,12 @@ export namespace Prisma {
   }
 
   export type GameCreateWithoutGameRoundsInput = {
+    id?: bigint | number
+    uid: string
     aggregatorType: $Enums.GameAggregatorType
     provider: $Enums.GameProvider
     category: $Enums.GameCategory
-    gameId: number
+    aggregatorGameId: number
     gameType?: string | null
     tableId?: string | null
     iconLink?: string | null
@@ -76374,11 +75025,12 @@ export namespace Prisma {
   }
 
   export type GameUncheckedCreateWithoutGameRoundsInput = {
-    id?: number
+    id?: bigint | number
+    uid: string
     aggregatorType: $Enums.GameAggregatorType
     provider: $Enums.GameProvider
     category: $Enums.GameCategory
-    gameId: number
+    aggregatorGameId: number
     gameType?: string | null
     tableId?: string | null
     iconLink?: string | null
@@ -76400,6 +75052,7 @@ export namespace Prisma {
 
   export type GameSessionCreateWithoutGameRoundsInput = {
     id?: bigint | number
+    uid: string
     createdAt?: Date | string
     updatedAt?: Date | string
     lastAccessedAt?: Date | string
@@ -76415,6 +75068,7 @@ export namespace Prisma {
 
   export type GameSessionUncheckedCreateWithoutGameRoundsInput = {
     id?: bigint | number
+    uid: string
     userId: bigint | number
     createdAt?: Date | string
     updatedAt?: Date | string
@@ -76425,7 +75079,7 @@ export namespace Prisma {
     gameCurrency: $Enums.ExchangeCurrencyCode
     exchangeRate: Decimal | DecimalJsLike | number | string
     exchangeRateSnapshotAt?: Date | string
-    gameId?: number | null
+    gameId?: bigint | number | null
   }
 
   export type GameSessionCreateOrConnectWithoutGameRoundsInput = {
@@ -76476,6 +75130,7 @@ export namespace Prisma {
 
   export type GameWinCreateWithoutGameRoundInput = {
     id?: bigint | number
+    uid: string
     userId: bigint | number
     aggregatorType: $Enums.GameAggregatorType
     aggregatorWinId: string
@@ -76489,6 +75144,7 @@ export namespace Prisma {
 
   export type GameWinUncheckedCreateWithoutGameRoundInput = {
     id?: bigint | number
+    uid: string
     userId: bigint | number
     aggregatorType: $Enums.GameAggregatorType
     aggregatorWinId: string
@@ -76570,6 +75226,7 @@ export namespace Prisma {
     OR?: GameBetScalarWhereInput[]
     NOT?: GameBetScalarWhereInput | GameBetScalarWhereInput[]
     id?: BigIntFilter<"GameBet"> | bigint | number
+    uid?: StringFilter<"GameBet"> | string
     userId?: BigIntFilter<"GameBet"> | bigint | number
     gameRoundId?: BigIntFilter<"GameBet"> | bigint | number
     aggregatorType?: EnumGameAggregatorTypeFilter<"GameBet"> | $Enums.GameAggregatorType
@@ -76595,10 +75252,12 @@ export namespace Prisma {
   }
 
   export type GameUpdateWithoutGameRoundsInput = {
+    id?: BigIntFieldUpdateOperationsInput | bigint | number
+    uid?: StringFieldUpdateOperationsInput | string
     aggregatorType?: EnumGameAggregatorTypeFieldUpdateOperationsInput | $Enums.GameAggregatorType
     provider?: EnumGameProviderFieldUpdateOperationsInput | $Enums.GameProvider
     category?: EnumGameCategoryFieldUpdateOperationsInput | $Enums.GameCategory
-    gameId?: IntFieldUpdateOperationsInput | number
+    aggregatorGameId?: IntFieldUpdateOperationsInput | number
     gameType?: NullableStringFieldUpdateOperationsInput | string | null
     tableId?: NullableStringFieldUpdateOperationsInput | string | null
     iconLink?: NullableStringFieldUpdateOperationsInput | string | null
@@ -76614,11 +75273,12 @@ export namespace Prisma {
   }
 
   export type GameUncheckedUpdateWithoutGameRoundsInput = {
-    id?: IntFieldUpdateOperationsInput | number
+    id?: BigIntFieldUpdateOperationsInput | bigint | number
+    uid?: StringFieldUpdateOperationsInput | string
     aggregatorType?: EnumGameAggregatorTypeFieldUpdateOperationsInput | $Enums.GameAggregatorType
     provider?: EnumGameProviderFieldUpdateOperationsInput | $Enums.GameProvider
     category?: EnumGameCategoryFieldUpdateOperationsInput | $Enums.GameCategory
-    gameId?: IntFieldUpdateOperationsInput | number
+    aggregatorGameId?: IntFieldUpdateOperationsInput | number
     gameType?: NullableStringFieldUpdateOperationsInput | string | null
     tableId?: NullableStringFieldUpdateOperationsInput | string | null
     iconLink?: NullableStringFieldUpdateOperationsInput | string | null
@@ -76646,6 +75306,7 @@ export namespace Prisma {
 
   export type GameSessionUpdateWithoutGameRoundsInput = {
     id?: BigIntFieldUpdateOperationsInput | bigint | number
+    uid?: StringFieldUpdateOperationsInput | string
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
     lastAccessedAt?: DateTimeFieldUpdateOperationsInput | Date | string
@@ -76661,6 +75322,7 @@ export namespace Prisma {
 
   export type GameSessionUncheckedUpdateWithoutGameRoundsInput = {
     id?: BigIntFieldUpdateOperationsInput | bigint | number
+    uid?: StringFieldUpdateOperationsInput | string
     userId?: BigIntFieldUpdateOperationsInput | bigint | number
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
@@ -76671,7 +75333,7 @@ export namespace Prisma {
     gameCurrency?: EnumExchangeCurrencyCodeFieldUpdateOperationsInput | $Enums.ExchangeCurrencyCode
     exchangeRate?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
     exchangeRateSnapshotAt?: DateTimeFieldUpdateOperationsInput | Date | string
-    gameId?: NullableIntFieldUpdateOperationsInput | number | null
+    gameId?: NullableBigIntFieldUpdateOperationsInput | bigint | number | null
   }
 
   export type TransactionUpsertWithoutGameRoundInput = {
@@ -76742,6 +75404,7 @@ export namespace Prisma {
     OR?: GameWinScalarWhereInput[]
     NOT?: GameWinScalarWhereInput | GameWinScalarWhereInput[]
     id?: BigIntFilter<"GameWin"> | bigint | number
+    uid?: StringFilter<"GameWin"> | string
     userId?: BigIntFilter<"GameWin"> | bigint | number
     gameRoundId?: BigIntFilter<"GameWin"> | bigint | number
     aggregatorType?: EnumGameAggregatorTypeFilter<"GameWin"> | $Enums.GameAggregatorType
@@ -76756,6 +75419,7 @@ export namespace Prisma {
 
   export type GameRoundCreateWithoutBetsInput = {
     id?: bigint | number
+    uid: string
     userId: bigint | number
     aggregatorType: $Enums.GameAggregatorType
     provider: $Enums.GameProvider
@@ -76788,6 +75452,7 @@ export namespace Prisma {
 
   export type GameRoundUncheckedCreateWithoutBetsInput = {
     id?: bigint | number
+    uid: string
     userId: bigint | number
     aggregatorType: $Enums.GameAggregatorType
     provider: $Enums.GameProvider
@@ -76812,7 +75477,7 @@ export namespace Prisma {
     jackpotContributionAmount?: Decimal | DecimalJsLike | number | string
     startedAt?: Date | string | null
     completedAt?: Date | string | null
-    gameId?: number | null
+    gameId?: bigint | number | null
     gameSessionId: bigint | number
     AffiliateCommission?: AffiliateCommissionUncheckedCreateNestedManyWithoutGameRoundInput
     wins?: GameWinUncheckedCreateNestedManyWithoutGameRoundInput
@@ -76836,6 +75501,7 @@ export namespace Prisma {
 
   export type GameRoundUpdateWithoutBetsInput = {
     id?: BigIntFieldUpdateOperationsInput | bigint | number
+    uid?: StringFieldUpdateOperationsInput | string
     userId?: BigIntFieldUpdateOperationsInput | bigint | number
     aggregatorType?: EnumGameAggregatorTypeFieldUpdateOperationsInput | $Enums.GameAggregatorType
     provider?: EnumGameProviderFieldUpdateOperationsInput | $Enums.GameProvider
@@ -76868,6 +75534,7 @@ export namespace Prisma {
 
   export type GameRoundUncheckedUpdateWithoutBetsInput = {
     id?: BigIntFieldUpdateOperationsInput | bigint | number
+    uid?: StringFieldUpdateOperationsInput | string
     userId?: BigIntFieldUpdateOperationsInput | bigint | number
     aggregatorType?: EnumGameAggregatorTypeFieldUpdateOperationsInput | $Enums.GameAggregatorType
     provider?: EnumGameProviderFieldUpdateOperationsInput | $Enums.GameProvider
@@ -76892,7 +75559,7 @@ export namespace Prisma {
     jackpotContributionAmount?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
     startedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     completedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
-    gameId?: NullableIntFieldUpdateOperationsInput | number | null
+    gameId?: NullableBigIntFieldUpdateOperationsInput | bigint | number | null
     gameSessionId?: BigIntFieldUpdateOperationsInput | bigint | number
     AffiliateCommission?: AffiliateCommissionUncheckedUpdateManyWithoutGameRoundNestedInput
     wins?: GameWinUncheckedUpdateManyWithoutGameRoundNestedInput
@@ -76900,6 +75567,7 @@ export namespace Prisma {
 
   export type GameRoundCreateWithoutWinsInput = {
     id?: bigint | number
+    uid: string
     userId: bigint | number
     aggregatorType: $Enums.GameAggregatorType
     provider: $Enums.GameProvider
@@ -76932,6 +75600,7 @@ export namespace Prisma {
 
   export type GameRoundUncheckedCreateWithoutWinsInput = {
     id?: bigint | number
+    uid: string
     userId: bigint | number
     aggregatorType: $Enums.GameAggregatorType
     provider: $Enums.GameProvider
@@ -76956,7 +75625,7 @@ export namespace Prisma {
     jackpotContributionAmount?: Decimal | DecimalJsLike | number | string
     startedAt?: Date | string | null
     completedAt?: Date | string | null
-    gameId?: number | null
+    gameId?: bigint | number | null
     gameSessionId: bigint | number
     AffiliateCommission?: AffiliateCommissionUncheckedCreateNestedManyWithoutGameRoundInput
     bets?: GameBetUncheckedCreateNestedManyWithoutGameRoundInput
@@ -76980,6 +75649,7 @@ export namespace Prisma {
 
   export type GameRoundUpdateWithoutWinsInput = {
     id?: BigIntFieldUpdateOperationsInput | bigint | number
+    uid?: StringFieldUpdateOperationsInput | string
     userId?: BigIntFieldUpdateOperationsInput | bigint | number
     aggregatorType?: EnumGameAggregatorTypeFieldUpdateOperationsInput | $Enums.GameAggregatorType
     provider?: EnumGameProviderFieldUpdateOperationsInput | $Enums.GameProvider
@@ -77012,6 +75682,7 @@ export namespace Prisma {
 
   export type GameRoundUncheckedUpdateWithoutWinsInput = {
     id?: BigIntFieldUpdateOperationsInput | bigint | number
+    uid?: StringFieldUpdateOperationsInput | string
     userId?: BigIntFieldUpdateOperationsInput | bigint | number
     aggregatorType?: EnumGameAggregatorTypeFieldUpdateOperationsInput | $Enums.GameAggregatorType
     provider?: EnumGameProviderFieldUpdateOperationsInput | $Enums.GameProvider
@@ -77036,7 +75707,7 @@ export namespace Prisma {
     jackpotContributionAmount?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
     startedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     completedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
-    gameId?: NullableIntFieldUpdateOperationsInput | number | null
+    gameId?: NullableBigIntFieldUpdateOperationsInput | bigint | number | null
     gameSessionId?: BigIntFieldUpdateOperationsInput | bigint | number
     AffiliateCommission?: AffiliateCommissionUncheckedUpdateManyWithoutGameRoundNestedInput
     bets?: GameBetUncheckedUpdateManyWithoutGameRoundNestedInput
@@ -77335,6 +76006,7 @@ export namespace Prisma {
 
   export type GameSessionCreateWithoutUserInput = {
     id?: bigint | number
+    uid: string
     createdAt?: Date | string
     updatedAt?: Date | string
     lastAccessedAt?: Date | string
@@ -77350,6 +76022,7 @@ export namespace Prisma {
 
   export type GameSessionUncheckedCreateWithoutUserInput = {
     id?: bigint | number
+    uid: string
     createdAt?: Date | string
     updatedAt?: Date | string
     lastAccessedAt?: Date | string
@@ -77359,7 +76032,7 @@ export namespace Prisma {
     gameCurrency: $Enums.ExchangeCurrencyCode
     exchangeRate: Decimal | DecimalJsLike | number | string
     exchangeRateSnapshotAt?: Date | string
-    gameId?: number | null
+    gameId?: bigint | number | null
     gameRounds?: GameRoundUncheckedCreateNestedManyWithoutGameSessionInput
   }
 
@@ -78908,7 +77581,7 @@ export namespace Prisma {
     aggregatorSessionId?: string | null
     isEndRound?: boolean | null
     description?: string | null
-    gameId?: number | null
+    gameId?: bigint | number | null
   }
 
   export type BonusDetailCreateOrConnectWithoutTransactionInput = {
@@ -79004,6 +77677,7 @@ export namespace Prisma {
 
   export type GameRoundCreateWithoutTransactionInput = {
     id?: bigint | number
+    uid: string
     userId: bigint | number
     aggregatorType: $Enums.GameAggregatorType
     provider: $Enums.GameProvider
@@ -79036,6 +77710,7 @@ export namespace Prisma {
 
   export type GameRoundUncheckedCreateWithoutTransactionInput = {
     id?: bigint | number
+    uid: string
     userId: bigint | number
     aggregatorType: $Enums.GameAggregatorType
     provider: $Enums.GameProvider
@@ -79059,7 +77734,7 @@ export namespace Prisma {
     jackpotContributionAmount?: Decimal | DecimalJsLike | number | string
     startedAt?: Date | string | null
     completedAt?: Date | string | null
-    gameId?: number | null
+    gameId?: bigint | number | null
     gameSessionId: bigint | number
     AffiliateCommission?: AffiliateCommissionUncheckedCreateNestedManyWithoutGameRoundInput
     bets?: GameBetUncheckedCreateNestedManyWithoutGameRoundInput
@@ -79285,7 +77960,7 @@ export namespace Prisma {
     aggregatorSessionId?: NullableStringFieldUpdateOperationsInput | string | null
     isEndRound?: NullableBoolFieldUpdateOperationsInput | boolean | null
     description?: NullableStringFieldUpdateOperationsInput | string | null
-    gameId?: NullableIntFieldUpdateOperationsInput | number | null
+    gameId?: NullableBigIntFieldUpdateOperationsInput | bigint | number | null
   }
 
   export type CompTransactionUpsertWithoutTransactionInput = {
@@ -79399,6 +78074,7 @@ export namespace Prisma {
 
   export type GameRoundUpdateWithoutTransactionInput = {
     id?: BigIntFieldUpdateOperationsInput | bigint | number
+    uid?: StringFieldUpdateOperationsInput | string
     userId?: BigIntFieldUpdateOperationsInput | bigint | number
     aggregatorType?: EnumGameAggregatorTypeFieldUpdateOperationsInput | $Enums.GameAggregatorType
     provider?: EnumGameProviderFieldUpdateOperationsInput | $Enums.GameProvider
@@ -79431,6 +78107,7 @@ export namespace Prisma {
 
   export type GameRoundUncheckedUpdateWithoutTransactionInput = {
     id?: BigIntFieldUpdateOperationsInput | bigint | number
+    uid?: StringFieldUpdateOperationsInput | string
     userId?: BigIntFieldUpdateOperationsInput | bigint | number
     aggregatorType?: EnumGameAggregatorTypeFieldUpdateOperationsInput | $Enums.GameAggregatorType
     provider?: EnumGameProviderFieldUpdateOperationsInput | $Enums.GameProvider
@@ -79454,7 +78131,7 @@ export namespace Prisma {
     jackpotContributionAmount?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
     startedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     completedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
-    gameId?: NullableIntFieldUpdateOperationsInput | number | null
+    gameId?: NullableBigIntFieldUpdateOperationsInput | bigint | number | null
     gameSessionId?: BigIntFieldUpdateOperationsInput | bigint | number
     AffiliateCommission?: AffiliateCommissionUncheckedUpdateManyWithoutGameRoundNestedInput
     bets?: GameBetUncheckedUpdateManyWithoutGameRoundNestedInput
@@ -79729,10 +78406,12 @@ export namespace Prisma {
   }
 
   export type GameCreateWithoutBonusDetailsInput = {
+    id?: bigint | number
+    uid: string
     aggregatorType: $Enums.GameAggregatorType
     provider: $Enums.GameProvider
     category: $Enums.GameCategory
-    gameId: number
+    aggregatorGameId: number
     gameType?: string | null
     tableId?: string | null
     iconLink?: string | null
@@ -79748,11 +78427,12 @@ export namespace Prisma {
   }
 
   export type GameUncheckedCreateWithoutBonusDetailsInput = {
-    id?: number
+    id?: bigint | number
+    uid: string
     aggregatorType: $Enums.GameAggregatorType
     provider: $Enums.GameProvider
     category: $Enums.GameCategory
-    gameId: number
+    aggregatorGameId: number
     gameType?: string | null
     tableId?: string | null
     iconLink?: string | null
@@ -79825,10 +78505,12 @@ export namespace Prisma {
   }
 
   export type GameUpdateWithoutBonusDetailsInput = {
+    id?: BigIntFieldUpdateOperationsInput | bigint | number
+    uid?: StringFieldUpdateOperationsInput | string
     aggregatorType?: EnumGameAggregatorTypeFieldUpdateOperationsInput | $Enums.GameAggregatorType
     provider?: EnumGameProviderFieldUpdateOperationsInput | $Enums.GameProvider
     category?: EnumGameCategoryFieldUpdateOperationsInput | $Enums.GameCategory
-    gameId?: IntFieldUpdateOperationsInput | number
+    aggregatorGameId?: IntFieldUpdateOperationsInput | number
     gameType?: NullableStringFieldUpdateOperationsInput | string | null
     tableId?: NullableStringFieldUpdateOperationsInput | string | null
     iconLink?: NullableStringFieldUpdateOperationsInput | string | null
@@ -79844,11 +78526,12 @@ export namespace Prisma {
   }
 
   export type GameUncheckedUpdateWithoutBonusDetailsInput = {
-    id?: IntFieldUpdateOperationsInput | number
+    id?: BigIntFieldUpdateOperationsInput | bigint | number
+    uid?: StringFieldUpdateOperationsInput | string
     aggregatorType?: EnumGameAggregatorTypeFieldUpdateOperationsInput | $Enums.GameAggregatorType
     provider?: EnumGameProviderFieldUpdateOperationsInput | $Enums.GameProvider
     category?: EnumGameCategoryFieldUpdateOperationsInput | $Enums.GameCategory
-    gameId?: IntFieldUpdateOperationsInput | number
+    aggregatorGameId?: IntFieldUpdateOperationsInput | number
     gameType?: NullableStringFieldUpdateOperationsInput | string | null
     tableId?: NullableStringFieldUpdateOperationsInput | string | null
     iconLink?: NullableStringFieldUpdateOperationsInput | string | null
@@ -83778,6 +82461,7 @@ export namespace Prisma {
 
   export type GameRoundCreateWithoutAffiliateCommissionInput = {
     id?: bigint | number
+    uid: string
     userId: bigint | number
     aggregatorType: $Enums.GameAggregatorType
     provider: $Enums.GameProvider
@@ -83810,6 +82494,7 @@ export namespace Prisma {
 
   export type GameRoundUncheckedCreateWithoutAffiliateCommissionInput = {
     id?: bigint | number
+    uid: string
     userId: bigint | number
     aggregatorType: $Enums.GameAggregatorType
     provider: $Enums.GameProvider
@@ -83834,7 +82519,7 @@ export namespace Prisma {
     jackpotContributionAmount?: Decimal | DecimalJsLike | number | string
     startedAt?: Date | string | null
     completedAt?: Date | string | null
-    gameId?: number | null
+    gameId?: bigint | number | null
     gameSessionId: bigint | number
     bets?: GameBetUncheckedCreateNestedManyWithoutGameRoundInput
     wins?: GameWinUncheckedCreateNestedManyWithoutGameRoundInput
@@ -84046,6 +82731,7 @@ export namespace Prisma {
 
   export type GameRoundUpdateWithoutAffiliateCommissionInput = {
     id?: BigIntFieldUpdateOperationsInput | bigint | number
+    uid?: StringFieldUpdateOperationsInput | string
     userId?: BigIntFieldUpdateOperationsInput | bigint | number
     aggregatorType?: EnumGameAggregatorTypeFieldUpdateOperationsInput | $Enums.GameAggregatorType
     provider?: EnumGameProviderFieldUpdateOperationsInput | $Enums.GameProvider
@@ -84078,6 +82764,7 @@ export namespace Prisma {
 
   export type GameRoundUncheckedUpdateWithoutAffiliateCommissionInput = {
     id?: BigIntFieldUpdateOperationsInput | bigint | number
+    uid?: StringFieldUpdateOperationsInput | string
     userId?: BigIntFieldUpdateOperationsInput | bigint | number
     aggregatorType?: EnumGameAggregatorTypeFieldUpdateOperationsInput | $Enums.GameAggregatorType
     provider?: EnumGameProviderFieldUpdateOperationsInput | $Enums.GameProvider
@@ -84102,7 +82789,7 @@ export namespace Prisma {
     jackpotContributionAmount?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
     startedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     completedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
-    gameId?: NullableIntFieldUpdateOperationsInput | number | null
+    gameId?: NullableBigIntFieldUpdateOperationsInput | bigint | number | null
     gameSessionId?: BigIntFieldUpdateOperationsInput | bigint | number
     bets?: GameBetUncheckedUpdateManyWithoutGameRoundNestedInput
     wins?: GameWinUncheckedUpdateManyWithoutGameRoundNestedInput
@@ -84978,6 +83665,7 @@ export namespace Prisma {
 
   export type GameRoundCreateManyGameInput = {
     id?: bigint | number
+    uid: string
     userId: bigint | number
     aggregatorType: $Enums.GameAggregatorType
     provider: $Enums.GameProvider
@@ -85007,6 +83695,7 @@ export namespace Prisma {
 
   export type GameSessionCreateManyGameInput = {
     id?: bigint | number
+    uid: string
     userId: bigint | number
     createdAt?: Date | string
     updatedAt?: Date | string
@@ -85020,7 +83709,8 @@ export namespace Prisma {
   }
 
   export type GameTranslationCreateManyGameInput = {
-    id?: number
+    id?: bigint | number
+    uid: string
     language: $Enums.Language
     providerName: string
     categoryName: string
@@ -85088,6 +83778,7 @@ export namespace Prisma {
 
   export type GameRoundUpdateWithoutGameInput = {
     id?: BigIntFieldUpdateOperationsInput | bigint | number
+    uid?: StringFieldUpdateOperationsInput | string
     userId?: BigIntFieldUpdateOperationsInput | bigint | number
     aggregatorType?: EnumGameAggregatorTypeFieldUpdateOperationsInput | $Enums.GameAggregatorType
     provider?: EnumGameProviderFieldUpdateOperationsInput | $Enums.GameProvider
@@ -85120,6 +83811,7 @@ export namespace Prisma {
 
   export type GameRoundUncheckedUpdateWithoutGameInput = {
     id?: BigIntFieldUpdateOperationsInput | bigint | number
+    uid?: StringFieldUpdateOperationsInput | string
     userId?: BigIntFieldUpdateOperationsInput | bigint | number
     aggregatorType?: EnumGameAggregatorTypeFieldUpdateOperationsInput | $Enums.GameAggregatorType
     provider?: EnumGameProviderFieldUpdateOperationsInput | $Enums.GameProvider
@@ -85152,6 +83844,7 @@ export namespace Prisma {
 
   export type GameRoundUncheckedUpdateManyWithoutGameInput = {
     id?: BigIntFieldUpdateOperationsInput | bigint | number
+    uid?: StringFieldUpdateOperationsInput | string
     userId?: BigIntFieldUpdateOperationsInput | bigint | number
     aggregatorType?: EnumGameAggregatorTypeFieldUpdateOperationsInput | $Enums.GameAggregatorType
     provider?: EnumGameProviderFieldUpdateOperationsInput | $Enums.GameProvider
@@ -85181,6 +83874,7 @@ export namespace Prisma {
 
   export type GameSessionUpdateWithoutGameInput = {
     id?: BigIntFieldUpdateOperationsInput | bigint | number
+    uid?: StringFieldUpdateOperationsInput | string
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
     lastAccessedAt?: DateTimeFieldUpdateOperationsInput | Date | string
@@ -85196,6 +83890,7 @@ export namespace Prisma {
 
   export type GameSessionUncheckedUpdateWithoutGameInput = {
     id?: BigIntFieldUpdateOperationsInput | bigint | number
+    uid?: StringFieldUpdateOperationsInput | string
     userId?: BigIntFieldUpdateOperationsInput | bigint | number
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
@@ -85211,6 +83906,7 @@ export namespace Prisma {
 
   export type GameSessionUncheckedUpdateManyWithoutGameInput = {
     id?: BigIntFieldUpdateOperationsInput | bigint | number
+    uid?: StringFieldUpdateOperationsInput | string
     userId?: BigIntFieldUpdateOperationsInput | bigint | number
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
@@ -85224,6 +83920,8 @@ export namespace Prisma {
   }
 
   export type GameTranslationUpdateWithoutGameInput = {
+    id?: BigIntFieldUpdateOperationsInput | bigint | number
+    uid?: StringFieldUpdateOperationsInput | string
     language?: EnumLanguageFieldUpdateOperationsInput | $Enums.Language
     providerName?: StringFieldUpdateOperationsInput | string
     categoryName?: StringFieldUpdateOperationsInput | string
@@ -85233,7 +83931,8 @@ export namespace Prisma {
   }
 
   export type GameTranslationUncheckedUpdateWithoutGameInput = {
-    id?: IntFieldUpdateOperationsInput | number
+    id?: BigIntFieldUpdateOperationsInput | bigint | number
+    uid?: StringFieldUpdateOperationsInput | string
     language?: EnumLanguageFieldUpdateOperationsInput | $Enums.Language
     providerName?: StringFieldUpdateOperationsInput | string
     categoryName?: StringFieldUpdateOperationsInput | string
@@ -85243,7 +83942,8 @@ export namespace Prisma {
   }
 
   export type GameTranslationUncheckedUpdateManyWithoutGameInput = {
-    id?: IntFieldUpdateOperationsInput | number
+    id?: BigIntFieldUpdateOperationsInput | bigint | number
+    uid?: StringFieldUpdateOperationsInput | string
     language?: EnumLanguageFieldUpdateOperationsInput | $Enums.Language
     providerName?: StringFieldUpdateOperationsInput | string
     categoryName?: StringFieldUpdateOperationsInput | string
@@ -85254,6 +83954,7 @@ export namespace Prisma {
 
   export type GameRoundCreateManyGameSessionInput = {
     id?: bigint | number
+    uid: string
     userId: bigint | number
     aggregatorType: $Enums.GameAggregatorType
     provider: $Enums.GameProvider
@@ -85278,11 +83979,12 @@ export namespace Prisma {
     jackpotContributionAmount?: Decimal | DecimalJsLike | number | string
     startedAt?: Date | string | null
     completedAt?: Date | string | null
-    gameId?: number | null
+    gameId?: bigint | number | null
   }
 
   export type GameRoundUpdateWithoutGameSessionInput = {
     id?: BigIntFieldUpdateOperationsInput | bigint | number
+    uid?: StringFieldUpdateOperationsInput | string
     userId?: BigIntFieldUpdateOperationsInput | bigint | number
     aggregatorType?: EnumGameAggregatorTypeFieldUpdateOperationsInput | $Enums.GameAggregatorType
     provider?: EnumGameProviderFieldUpdateOperationsInput | $Enums.GameProvider
@@ -85315,6 +84017,7 @@ export namespace Prisma {
 
   export type GameRoundUncheckedUpdateWithoutGameSessionInput = {
     id?: BigIntFieldUpdateOperationsInput | bigint | number
+    uid?: StringFieldUpdateOperationsInput | string
     userId?: BigIntFieldUpdateOperationsInput | bigint | number
     aggregatorType?: EnumGameAggregatorTypeFieldUpdateOperationsInput | $Enums.GameAggregatorType
     provider?: EnumGameProviderFieldUpdateOperationsInput | $Enums.GameProvider
@@ -85339,7 +84042,7 @@ export namespace Prisma {
     jackpotContributionAmount?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
     startedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     completedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
-    gameId?: NullableIntFieldUpdateOperationsInput | number | null
+    gameId?: NullableBigIntFieldUpdateOperationsInput | bigint | number | null
     AffiliateCommission?: AffiliateCommissionUncheckedUpdateManyWithoutGameRoundNestedInput
     bets?: GameBetUncheckedUpdateManyWithoutGameRoundNestedInput
     wins?: GameWinUncheckedUpdateManyWithoutGameRoundNestedInput
@@ -85347,6 +84050,7 @@ export namespace Prisma {
 
   export type GameRoundUncheckedUpdateManyWithoutGameSessionInput = {
     id?: BigIntFieldUpdateOperationsInput | bigint | number
+    uid?: StringFieldUpdateOperationsInput | string
     userId?: BigIntFieldUpdateOperationsInput | bigint | number
     aggregatorType?: EnumGameAggregatorTypeFieldUpdateOperationsInput | $Enums.GameAggregatorType
     provider?: EnumGameProviderFieldUpdateOperationsInput | $Enums.GameProvider
@@ -85371,7 +84075,7 @@ export namespace Prisma {
     jackpotContributionAmount?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
     startedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     completedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
-    gameId?: NullableIntFieldUpdateOperationsInput | number | null
+    gameId?: NullableBigIntFieldUpdateOperationsInput | bigint | number | null
   }
 
   export type AffiliateCommissionCreateManyGameRoundInput = {
@@ -85395,6 +84099,7 @@ export namespace Prisma {
 
   export type GameBetCreateManyGameRoundInput = {
     id?: bigint | number
+    uid: string
     userId: bigint | number
     aggregatorType: $Enums.GameAggregatorType
     aggregatorBetId: string
@@ -85409,6 +84114,7 @@ export namespace Prisma {
 
   export type GameWinCreateManyGameRoundInput = {
     id?: bigint | number
+    uid: string
     userId: bigint | number
     aggregatorType: $Enums.GameAggregatorType
     aggregatorWinId: string
@@ -85479,6 +84185,7 @@ export namespace Prisma {
 
   export type GameBetUpdateWithoutGameRoundInput = {
     id?: BigIntFieldUpdateOperationsInput | bigint | number
+    uid?: StringFieldUpdateOperationsInput | string
     userId?: BigIntFieldUpdateOperationsInput | bigint | number
     aggregatorType?: EnumGameAggregatorTypeFieldUpdateOperationsInput | $Enums.GameAggregatorType
     aggregatorBetId?: StringFieldUpdateOperationsInput | string
@@ -85493,6 +84200,7 @@ export namespace Prisma {
 
   export type GameBetUncheckedUpdateWithoutGameRoundInput = {
     id?: BigIntFieldUpdateOperationsInput | bigint | number
+    uid?: StringFieldUpdateOperationsInput | string
     userId?: BigIntFieldUpdateOperationsInput | bigint | number
     aggregatorType?: EnumGameAggregatorTypeFieldUpdateOperationsInput | $Enums.GameAggregatorType
     aggregatorBetId?: StringFieldUpdateOperationsInput | string
@@ -85507,6 +84215,7 @@ export namespace Prisma {
 
   export type GameBetUncheckedUpdateManyWithoutGameRoundInput = {
     id?: BigIntFieldUpdateOperationsInput | bigint | number
+    uid?: StringFieldUpdateOperationsInput | string
     userId?: BigIntFieldUpdateOperationsInput | bigint | number
     aggregatorType?: EnumGameAggregatorTypeFieldUpdateOperationsInput | $Enums.GameAggregatorType
     aggregatorBetId?: StringFieldUpdateOperationsInput | string
@@ -85521,6 +84230,7 @@ export namespace Prisma {
 
   export type GameWinUpdateWithoutGameRoundInput = {
     id?: BigIntFieldUpdateOperationsInput | bigint | number
+    uid?: StringFieldUpdateOperationsInput | string
     userId?: BigIntFieldUpdateOperationsInput | bigint | number
     aggregatorType?: EnumGameAggregatorTypeFieldUpdateOperationsInput | $Enums.GameAggregatorType
     aggregatorWinId?: StringFieldUpdateOperationsInput | string
@@ -85534,6 +84244,7 @@ export namespace Prisma {
 
   export type GameWinUncheckedUpdateWithoutGameRoundInput = {
     id?: BigIntFieldUpdateOperationsInput | bigint | number
+    uid?: StringFieldUpdateOperationsInput | string
     userId?: BigIntFieldUpdateOperationsInput | bigint | number
     aggregatorType?: EnumGameAggregatorTypeFieldUpdateOperationsInput | $Enums.GameAggregatorType
     aggregatorWinId?: StringFieldUpdateOperationsInput | string
@@ -85547,6 +84258,7 @@ export namespace Prisma {
 
   export type GameWinUncheckedUpdateManyWithoutGameRoundInput = {
     id?: BigIntFieldUpdateOperationsInput | bigint | number
+    uid?: StringFieldUpdateOperationsInput | string
     userId?: BigIntFieldUpdateOperationsInput | bigint | number
     aggregatorType?: EnumGameAggregatorTypeFieldUpdateOperationsInput | $Enums.GameAggregatorType
     aggregatorWinId?: StringFieldUpdateOperationsInput | string
@@ -85653,6 +84365,7 @@ export namespace Prisma {
 
   export type GameSessionCreateManyUserInput = {
     id?: bigint | number
+    uid: string
     createdAt?: Date | string
     updatedAt?: Date | string
     lastAccessedAt?: Date | string
@@ -85662,7 +84375,7 @@ export namespace Prisma {
     gameCurrency: $Enums.ExchangeCurrencyCode
     exchangeRate: Decimal | DecimalJsLike | number | string
     exchangeRateSnapshotAt?: Date | string
-    gameId?: number | null
+    gameId?: bigint | number | null
   }
 
   export type ReferralCreateManyAffiliateInput = {
@@ -86113,6 +84826,7 @@ export namespace Prisma {
 
   export type GameSessionUpdateWithoutUserInput = {
     id?: BigIntFieldUpdateOperationsInput | bigint | number
+    uid?: StringFieldUpdateOperationsInput | string
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
     lastAccessedAt?: DateTimeFieldUpdateOperationsInput | Date | string
@@ -86128,6 +84842,7 @@ export namespace Prisma {
 
   export type GameSessionUncheckedUpdateWithoutUserInput = {
     id?: BigIntFieldUpdateOperationsInput | bigint | number
+    uid?: StringFieldUpdateOperationsInput | string
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
     lastAccessedAt?: DateTimeFieldUpdateOperationsInput | Date | string
@@ -86137,12 +84852,13 @@ export namespace Prisma {
     gameCurrency?: EnumExchangeCurrencyCodeFieldUpdateOperationsInput | $Enums.ExchangeCurrencyCode
     exchangeRate?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
     exchangeRateSnapshotAt?: DateTimeFieldUpdateOperationsInput | Date | string
-    gameId?: NullableIntFieldUpdateOperationsInput | number | null
+    gameId?: NullableBigIntFieldUpdateOperationsInput | bigint | number | null
     gameRounds?: GameRoundUncheckedUpdateManyWithoutGameSessionNestedInput
   }
 
   export type GameSessionUncheckedUpdateManyWithoutUserInput = {
     id?: BigIntFieldUpdateOperationsInput | bigint | number
+    uid?: StringFieldUpdateOperationsInput | string
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
     lastAccessedAt?: DateTimeFieldUpdateOperationsInput | Date | string
@@ -86152,7 +84868,7 @@ export namespace Prisma {
     gameCurrency?: EnumExchangeCurrencyCodeFieldUpdateOperationsInput | $Enums.ExchangeCurrencyCode
     exchangeRate?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
     exchangeRateSnapshotAt?: DateTimeFieldUpdateOperationsInput | Date | string
-    gameId?: NullableIntFieldUpdateOperationsInput | number | null
+    gameId?: NullableBigIntFieldUpdateOperationsInput | bigint | number | null
   }
 
   export type ReferralUpdateWithoutAffiliateInput = {
