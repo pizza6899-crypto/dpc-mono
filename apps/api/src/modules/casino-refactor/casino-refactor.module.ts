@@ -5,6 +5,7 @@ import { ListPlayableGamesService } from './application/list-playable-games.serv
 import { UpdateGameService } from './application/update-game.service';
 import { UpdateGameTranslationService } from './application/update-game-translation.service';
 import { SyncGamesFromAggregatorService } from './application/sync-games-from-aggregator.service';
+import { LaunchGameService } from './application/launch-game.service';
 import { GameAdminController } from './controllers/admin/game-admin.controller';
 import { GameController } from './controllers/user/game.controller';
 import { GameRepository } from './infrastructure/game.repository';
@@ -15,13 +16,18 @@ import { WcModule } from './aggregator/wc/wc.module';
 import { AuditLogModule } from 'src/modules/audit-log/audit-log.module';
 
 @Module({
-  imports: [DcModule, WcModule, AuditLogModule],
+  imports: [
+    DcModule,
+    WcModule,
+    AuditLogModule,
+  ],
   providers: [
     ListGamesService,
     ListPlayableGamesService,
     UpdateGameService,
     UpdateGameTranslationService,
     SyncGamesFromAggregatorService,
+    LaunchGameService,
     GameMapper,
     {
       provide: GAME_REPOSITORY,

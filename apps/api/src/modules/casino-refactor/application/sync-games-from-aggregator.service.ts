@@ -408,7 +408,6 @@ export class SyncGamesFromAggregatorService {
         );
       }
     } catch (error) {
-      this.logger.error(error, 'DC game list fetch failed');
       const errorMessage = `DC game list fetch failed: ${error.message || 'Unknown error'}`;
       errors.push(errorMessage);
 
