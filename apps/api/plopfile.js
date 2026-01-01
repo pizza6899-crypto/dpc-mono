@@ -97,7 +97,7 @@ module.exports = function (plop) {
         type: 'confirm',
         name: 'withController',
         message: 'Controller를 생성하시겠습니까?',
-        default: false,
+        default: true,
       },
     ],
     actions: (data) => {
