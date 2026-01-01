@@ -104,64 +104,11 @@ export class WcAggregatorApiAdapter implements WcAggregatorApiPort {
     };
 
     try {
-      // Mock 데이터 사용 (임시)
-      const mockData = mockResponse2;
+      // // Mock 데이터 사용 (임시)
+      // const mockData = mockResponse2;
 
-      const duration = Date.now() - startTime;
-
-      // API audit 로그 저장 (성공)
-      this.dispatchLogService.dispatch({
-        type: LogType.INTEGRATION,
-        data: {
-          provider: 'WHITECLIFF',
-          method: 'POST',
-          endpoint,
-          statusCode: 200, // Mock 응답이므로 200으로 가정
-          duration,
-          success: true,
-          requestBody: body,
-          responseBody: mockData,
-        },
-      });
-
-      return mockData;
-
-      // 실제 API 호출 로직 (주석 처리)
-      // this.checkApiAvailability();
-      //
-      // // 기본 통화로 설정 조회 (USDT 사용)
-      // const config = this.getConfigByCurrency('USDT');
-      // const url = `${config.endpoint}${endpoint}`;
-      //
-      // const response = await firstValueFrom(
-      //   this.httpService.post<{
-      //     status: number;
-      //     game_list: {
-      //       [prd_id: string]: {
-      //         prd_name: string;
-      //         prd_category: string;
-      //         game_id: number;
-      //         game_name: string;
-      //         table_id?: string | null;
-      //         game_type?: string | null;
-      //         game_icon_link?: string | null;
-      //         game_icon_link_sq?: string;
-      //         is_enabled: number;
-      //       }[];
-      //     };
-      //     error?: string;
-      //   }>(url, body, {
-      //     headers: {
-      //       'Content-Type': 'application/json',
-      //       'ag-code': config.agentCode,
-      //       'ag-token': config.token,
-      //     },
-      //     timeout: 10000,
-      //   }),
-      // );
-      //
       // const duration = Date.now() - startTime;
-      //
+
       // // API audit 로그 저장 (성공)
       // this.dispatchLogService.dispatch({
       //   type: LogType.INTEGRATION,
@@ -169,15 +116,68 @@ export class WcAggregatorApiAdapter implements WcAggregatorApiPort {
       //     provider: 'WHITECLIFF',
       //     method: 'POST',
       //     endpoint,
-      //     statusCode: response.status,
+      //     statusCode: 200, // Mock 응답이므로 200으로 가정
       //     duration,
       //     success: true,
       //     requestBody: body,
-      //     responseBody: response.data,
+      //     responseBody: mockData,
       //   },
       // });
-      //
-      // return response.data;
+
+      // return mockData;
+
+      // 실제 API 호출 로직 (주석 처리)
+      this.checkApiAvailability();
+      
+      // 기본 통화로 설정 조회 (USDT 사용)
+      const config = this.getConfigByCurrency('USDT');
+      const url = `${config.endpoint}${endpoint}`;
+      
+      const response = await firstValueFrom(
+        this.httpService.post<{
+          status: number;
+          game_list: {
+            [prd_id: string]: {
+              prd_name: string;
+              prd_category: string;
+              game_id: number;
+              game_name: string;
+              table_id?: string | null;
+              game_type?: string | null;
+              game_icon_link?: string | null;
+              game_icon_link_sq?: string;
+              is_enabled: number;
+            }[];
+          };
+          error?: string;
+        }>(url, body, {
+          headers: {
+            'Content-Type': 'application/json',
+            'ag-code': config.agentCode,
+            'ag-token': config.token,
+          },
+          timeout: 10000,
+        }),
+      );
+      
+      const duration = Date.now() - startTime;
+      
+      // API audit 로그 저장 (성공)
+      this.dispatchLogService.dispatch({
+        type: LogType.INTEGRATION,
+        data: {
+          provider: 'WHITECLIFF',
+          method: 'POST',
+          endpoint,
+          statusCode: response.status,
+          duration,
+          success: true,
+          requestBody: body,
+          responseBody: response.data,
+        },
+      });
+      
+      return response.data;
     } catch (error: any) {
       const duration = Date.now() - startTime;
 

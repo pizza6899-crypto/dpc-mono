@@ -10,7 +10,6 @@ import {
   ValidateDcCallbackMetadata,
 } from '../decorators/validate-dc-callback.decorator';
 import { DcCallbackValidatorService } from '../application/dc-callback-validator.service';
-import { DcCallbackValidationException } from '../domain/validation.exception';
 
 /**
  * DC 콜백 검증 Guard
@@ -45,7 +44,7 @@ export class DcCallbackValidationGuard implements CanActivate {
     const requiredFieldsResponse =
       this.validator.validateRequiredFields(body, requiredFields);
     if (requiredFieldsResponse) {
-      throw new DcCallbackValidationException(requiredFieldsResponse);
+      throw new Error(requiredFieldsResponse.msg);
     }
 
     // 2. 서명 검증
@@ -57,7 +56,7 @@ export class DcCallbackValidationGuard implements CanActivate {
     );
 
     if (signVerificationResponse) {
-      throw new DcCallbackValidationException(signVerificationResponse);
+      throw new Error(signVerificationResponse.msg);
     }
 
     return true;

@@ -58,7 +58,7 @@ export class GameBalanceService {
     // 3. 환율 적용하여 게임 통화로 변환
     const balance = exchangeRate
       .mul(userBalance.mainBalance.add(userBalance.bonusBalance))
-      .toDecimalPlaces(2)
+      .toDecimalPlaces(6)
       .toNumber();
 
     return balance;

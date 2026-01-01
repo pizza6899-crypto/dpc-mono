@@ -81,77 +81,27 @@ export class DcAggregatorApiAdapter implements DcAggregatorApiPort {
     };
 
     try {
-      // Mock 데이터 파일 읽기 (임시)
-      // process.cwd()는 apps/api를 가리키므로, src부터의 경로를 사용
-      const mockFilePath = path.join(
-        process.cwd(),
-        'src',
-        'modules',
-        'casino-refactor',
-        'aggregator',
-        'dc',
-        'infrastructure',
-        'gamelist_mock_dc.txt',
-      );
-
-      if (!fs.existsSync(mockFilePath)) {
-        this.logger.error(`Mock 파일을 찾을 수 없습니다: ${mockFilePath}`);
-        throw new Error(`Mock file not found: ${mockFilePath}`);
-      }
-
-      const mockFileContent = fs.readFileSync(mockFilePath, 'utf-8');
-      const mockData = JSON.parse(mockFileContent);
-
-      const duration = Date.now() - startTime;
-
-      // API audit 로그 저장 (성공)
-      this.dispatchLogService.dispatch({
-        type: LogType.INTEGRATION,
-        data: {
-          provider: 'DCS',
-          method: 'POST',
-          endpoint,
-          statusCode: 200,
-          duration,
-          success: true,
-          requestBody: body,
-          responseBody: mockData,
-        },
-      });
-
-      return mockData;
-
-      // 기존 API 호출 로직 (주석 처리)
-      // this.checkApiAvailability();
-      //
-      // const url = `${this.dcConfig.apiUrl}/dcs/getGameList`;
-      //
-      // const response = await firstValueFrom(
-      //   this.httpService.post<{
-      //     code: number;
-      //     msg: string;
-      //     data: {
-      //       provider: string;
-      //       game_id: number;
-      //       game_name: string;
-      //       game_name_cn: string;
-      //       release_date: string;
-      //       rtp: string;
-      //       game_icon: string;
-      //       content_type: string;
-      //       game_type: string;
-      //       content: string;
-      //     }[];
-      //   }>(url, body, {
-      //     headers: {
-      //       'Content-Type': 'application/json',
-      //     },
-      //     timeout: 10000,
-      //   }),
+      // const mockFilePath = path.join(
+      //   process.cwd(),
+      //   'src',
+      //   'modules',
+      //   'casino-refactor',
+      //   'aggregator',
+      //   'dc',
+      //   'infrastructure',
+      //   'gamelist_mock_dc.txt',
       // );
-      //
+
+      // if (!fs.existsSync(mockFilePath)) {
+      //   this.logger.error(`Mock 파일을 찾을 수 없습니다: ${mockFilePath}`);
+      //   throw new Error(`Mock file not found: ${mockFilePath}`);
+      // }
+
+      // const mockFileContent = fs.readFileSync(mockFilePath, 'utf-8');
+      // const mockData = JSON.parse(mockFileContent);
+
       // const duration = Date.now() - startTime;
-      //
+
       // // API audit 로그 저장 (성공)
       // this.dispatchLogService.dispatch({
       //   type: LogType.INTEGRATION,
@@ -159,15 +109,63 @@ export class DcAggregatorApiAdapter implements DcAggregatorApiPort {
       //     provider: 'DCS',
       //     method: 'POST',
       //     endpoint,
-      //     statusCode: response.status,
+      //     statusCode: 200,
       //     duration,
       //     success: true,
       //     requestBody: body,
-      //     responseBody: response.data,
+      //     responseBody: mockData,
       //   },
       // });
-      //
-      // return response.data;
+
+      // return mockData;
+
+      // 기존 API 호출 로직 (주석 처리)
+      this.checkApiAvailability();
+      
+      const url = `${this.dcConfig.apiUrl}/dcs/getGameList`;
+      
+      const response = await firstValueFrom(
+        this.httpService.post<{
+          code: number;
+          msg: string;
+          data: {
+            provider: string;
+            game_id: number;
+            game_name: string;
+            game_name_cn: string;
+            release_date: string;
+            rtp: string;
+            game_icon: string;
+            content_type: string;
+            game_type: string;
+            content: string;
+          }[];
+        }>(url, body, {
+          headers: {
+            'Content-Type': 'application/json',
+          },
+          timeout: 10000,
+        }),
+      );
+      
+      const duration = Date.now() - startTime;
+      
+      // API audit 로그 저장 (성공)
+      this.dispatchLogService.dispatch({
+        type: LogType.INTEGRATION,
+        data: {
+          provider: 'DCS',
+          method: 'POST',
+          endpoint,
+          statusCode: response.status,
+          duration,
+          success: true,
+          requestBody: body,
+          responseBody: response.data,
+        },
+      });
+      
+      return response.data;
     } catch (error: any) {
       const duration = Date.now() - startTime;
 

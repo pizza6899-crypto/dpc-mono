@@ -9,6 +9,9 @@ export { GameBet } from './model/game-bet.entity';
 export { GameWin } from './model/game-win.entity';
 export { GameBonus } from './model/game-bonus.entity';
 
+// Value Objects
+export { UserGameBalance } from './model/user-game-balance.vo';
+
 // Exceptions
 export {
   GameNotFoundException,

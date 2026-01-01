@@ -14,12 +14,18 @@ import { GAME_REPOSITORY } from './ports/out/game.repository.token';
 import { DcModule } from './aggregator/dc/dc.module';
 import { WcModule } from './aggregator/wc/wc.module';
 import { AuditLogModule } from 'src/modules/audit-log/audit-log.module';
+import { GameBalanceService } from './application/game-balance.service';
+import { GameSessionService } from './application/game-session.service';
+import { ExchangeModule } from 'src/modules/exchange/exchange.module';
+import { PrismaModule } from 'src/infrastructure/prisma/prisma.module';
 
 @Module({
   imports: [
     DcModule,
     WcModule,
     AuditLogModule,
+    ExchangeModule,
+    PrismaModule,
   ],
   providers: [
     ListGamesService,
@@ -29,6 +35,8 @@ import { AuditLogModule } from 'src/modules/audit-log/audit-log.module';
     SyncGamesFromAggregatorService,
     LaunchGameService,
     GameMapper,
+    GameBalanceService,
+    GameSessionService,
     {
       provide: GAME_REPOSITORY,
       useClass: GameRepository,

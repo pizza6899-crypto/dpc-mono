@@ -29,34 +29,19 @@ import {
   DcPromoPayoutRequestDto,
   DcPromoPayoutResponseDto,
 } from '../dtos/callback.dto';
-import { DcBalanceCallbackService } from '../application/dc-balance-callback.service';
-import { WagerDcBetCallbackUseCase } from '../application/use-cases/wager-dc-bet-callback.use-case';
-import { CancelWagerDcBetCallbackUseCase } from '../application/use-cases/cancel-wager-dc-bet-callback.use-case';
-import { AppendWagerDcBetCallbackUseCase } from '../application/use-cases/append-wager-dc-bet-callback.use-case';
-import { EndWagerDcBetCallbackUseCase } from '../application/use-cases/end-wager-dc-bet-callback.use-case';
-import { FreeSpinResultDcBetCallbackUseCase } from '../application/use-cases/free-spin-result-dc-bet-callback.use-case';
-import { PromoPayoutDcBetCallbackUseCase } from '../application/use-cases/promo-payout-dc-bet-callback.use-case';
 import { DcCallbackValidationGuard } from '../guards/dc-callback-validation.guard';
 import { DcCallbackExceptionFilter } from '../filters/dc-callback-exception.filter';
 import { ValidateDcCallback } from '../decorators/validate-dc-callback.decorator';
-import { DcBalanceFormatInterceptor } from '../interceptors/dc-balance-format.interceptor';
-import { GetBalanceDcCallbackUseCase } from '../application/use-cases/get-balance-dc-callback.use-case';
+import { DcAuditLogInterceptor } from '../interceptors/dc-audit-log.interceptor';
 
 @ApiTags('DC Callback(콜백)')
 @Controller('dopaminedev')
 @GuestOnly()
 @UseGuards(DcCallbackValidationGuard)
 @UseFilters(DcCallbackExceptionFilter)
-@UseInterceptors(DcBalanceFormatInterceptor)
+@UseInterceptors(DcAuditLogInterceptor)
 export class DcCallbackController {
   constructor(
-    private readonly getBalanceUseCase: GetBalanceDcCallbackUseCase,
-    private readonly wagerUseCase: WagerDcBetCallbackUseCase,
-    private readonly cancelWagerUseCase: CancelWagerDcBetCallbackUseCase,
-    private readonly appendWagerUseCase: AppendWagerDcBetCallbackUseCase,
-    private readonly endWagerUseCase: EndWagerDcBetCallbackUseCase,
-    private readonly freeSpinResultUseCase: FreeSpinResultDcBetCallbackUseCase,
-    private readonly promoPayoutUseCase: PromoPayoutDcBetCallbackUseCase,
   ) {}
 
   @Post('/login')
@@ -69,7 +54,8 @@ export class DcCallbackController {
     ['token'],
   )
   async login(@Body() body: DcLoginRequestDto): Promise<DcLoginResponseDto> {
-    return await this.getBalanceUseCase.execute(body);
+    // return await this.getBalanceUseCase.execute(body);
+    throw new Error('Not implemented');
   }
 
   @Post('/wager')
@@ -98,7 +84,8 @@ export class DcCallbackController {
     ['wager_id'],
   )
   async wager(@Body() body: DcWagerRequestDto): Promise<DcWagerResponseDto> {
-    return await this.wagerUseCase.execute(body);
+    // return await this.wagerUseCase.execute(body);
+    throw new Error('Not implemented');
   }
 
   @Post('/cancelWager')
@@ -124,7 +111,8 @@ export class DcCallbackController {
   async cancelWager(
     @Body() body: DcCancelWagerRequestDto,
   ): Promise<DcCancelWagerResponseDto> {
-    return await this.cancelWagerUseCase.execute(body);
+    // return await this.cancelWagerUseCase.execute(body);
+    throw new Error('Not implemented');
   }
 
   @Post('/appendWager')
@@ -153,7 +141,8 @@ export class DcCallbackController {
   async appendWager(
     @Body() body: DcAppendWagerRequestDto,
   ): Promise<DcAppendWagerResponseDto> {
-    return await this.appendWagerUseCase.execute(body);
+    // return await this.appendWagerUseCase.execute(body);
+    throw new Error('Not implemented');
   }
 
   @Post('/endWager')
@@ -179,7 +168,8 @@ export class DcCallbackController {
   async endWager(
     @Body() body: DcEndWagerRequestDto,
   ): Promise<DcEndWagerResponseDto> {
-    return await this.endWagerUseCase.execute(body);
+    // return await this.endWagerUseCase.execute(body);
+    throw new Error('Not implemented');
   }
 
   @Post('/freeSpinResult')
@@ -209,7 +199,8 @@ export class DcCallbackController {
   async freeSpinResult(
     @Body() body: DcFreeSpinResultRequestDto,
   ): Promise<DcFreeSpinResultResponseDto> {
-    return await this.freeSpinResultUseCase.execute(body);
+    // return await this.freeSpinResultUseCase.execute(body);
+    throw new Error('Not implemented');
   }
 
   @Post('/getBalance')
@@ -224,7 +215,8 @@ export class DcCallbackController {
   async getBalance(
     @Body() body: GetDcBalanceRequestDto,
   ): Promise<GetDcBalanceResponseDto> {
-    return await this.getBalanceUseCase.execute(body);
+    // return await this.getBalanceUseCase.execute(body);
+    throw new Error('Not implemented');
   }
 
   @Post('/promoPayout')
@@ -249,7 +241,8 @@ export class DcCallbackController {
   async promoPayout(
     @Body() body: DcPromoPayoutRequestDto,
   ): Promise<DcPromoPayoutResponseDto> {
-    return await this.promoPayoutUseCase.execute(body);
+    // return await this.promoPayoutUseCase.execute(body);
+    throw new Error('Not implemented');
   }
 }
 
