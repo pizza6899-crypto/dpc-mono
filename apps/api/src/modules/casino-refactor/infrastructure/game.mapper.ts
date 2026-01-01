@@ -53,6 +53,7 @@ export class GameMapper {
    * Domain Game 엔티티 → Prisma 모델 변환
    */
   toPrisma(domain: Game): {
+    uid: string;
     aggregatorType: PrismaGame['aggregatorType'];
     provider: PrismaGame['provider'];
     category: PrismaGame['category'];
@@ -69,6 +70,7 @@ export class GameMapper {
   } {
     const persistence = domain.toPersistence();
     return {
+      uid: domain.uid,
       aggregatorType: persistence.aggregatorType,
       provider: persistence.provider,
       category: persistence.category,
