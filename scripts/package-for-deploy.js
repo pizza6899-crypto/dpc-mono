@@ -4,14 +4,13 @@ const { execSync } = require('child_process');
 
 const ROOT_DIR = path.resolve(__dirname, '..');
 const OUTPUT_DIR = path.join(ROOT_DIR, 'deploy-package');
-const ZIP_NAME = `api-deploy-${new Date().toISOString().split('T')[0]}.zip`;
+const ZIP_NAME = `output-deploy-${new Date().toISOString().split('T')[0]}.zip`;
 
 // 제외할 파일/디렉토리 패턴
 const EXCLUDE_PATTERNS = [
   'node_modules',
   'dist',
   '.next',
-  'out',
   'build',
   '.turbo',
   '.git',
@@ -28,6 +27,9 @@ const EXCLUDE_PATTERNS = [
   'pnpm-debug.log*',
   'npm-debug.log*',
 ];
+
+// 루트 레벨에서만 제외할 패턴 (소스 코드 내부는 포함)
+const ROOT_LEVEL_EXCLUDE = ['out'];
 
 console.log('📦 배포 패키지 생성 시작...\n');
 
@@ -54,7 +56,7 @@ console.log('\n2. apps/api 복사 중...');
 const apiSrc = path.join(ROOT_DIR, 'apps', 'api');
 const apiDest = path.join(OUTPUT_DIR, 'apps', 'api');
 
-function copyDir(src, dest, relativePath = '') {
+function copyDir(src, dest, relativePath = '', isRootLevel = false) {
   if (!fs.existsSync(dest)) {
     fs.mkdirSync(dest, { recursive: true });
   }
@@ -66,12 +68,20 @@ function copyDir(src, dest, relativePath = '') {
     const destPath = path.join(dest, entry.name);
     const fullRelativePath = path.join(relativePath, entry.name);
 
+    // 루트 레벨에서만 제외하는 패턴 체크
+    if (isRootLevel && ROOT_LEVEL_EXCLUDE.includes(entry.name)) {
+      continue;
+    }
+
     // 제외 패턴 체크
     const shouldExclude = EXCLUDE_PATTERNS.some(pattern => {
       if (pattern.includes('*')) {
-        const regex = new RegExp(pattern.replace(/\*/g, '.*'));
-        return regex.test(entry.name) || regex.test(fullRelativePath);
+        // 와일드카드 패턴: 파일명 기준으로만 매칭
+        // 파일명이 패턴과 일치하는지만 체크 (경로는 체크하지 않음)
+        const regex = new RegExp('^' + pattern.replace(/\*/g, '.*') + '$');
+        return regex.test(entry.name);
       }
+      // 정확한 패턴 매칭: 파일명 또는 전체 경로
       return entry.name === pattern || fullRelativePath === pattern;
     });
 
@@ -80,21 +90,21 @@ function copyDir(src, dest, relativePath = '') {
     }
 
     if (entry.isDirectory()) {
-      copyDir(srcPath, destPath, fullRelativePath);
+      copyDir(srcPath, destPath, fullRelativePath, false);
     } else {
       fs.copyFileSync(srcPath, destPath);
     }
   }
 }
 
-copyDir(apiSrc, apiDest, 'apps/api');
+copyDir(apiSrc, apiDest, 'apps/api', false);
 console.log('   ✓ apps/api 복사 완료');
 
 // 3. packages/database 복사
 console.log('\n3. packages/database 복사 중...');
 const dbSrc = path.join(ROOT_DIR, 'packages', 'database');
 const dbDest = path.join(OUTPUT_DIR, 'packages', 'database');
-copyDir(dbSrc, dbDest, 'packages/database');
+copyDir(dbSrc, dbDest, 'packages/database', false);
 console.log('   ✓ packages/database 복사 완료');
 
 // 4. ZIP 파일 생성

@@ -12,6 +12,5 @@ onlyBuiltDependencies:
   - msgpackr-extract
   - prisma
   - protobufjs
-  - puppeteer
   - sharp
   - unrs-resolver
