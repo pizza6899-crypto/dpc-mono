@@ -10,10 +10,9 @@ import { GameController } from './controllers/user/game.controller';
 import { GameRepository } from './infrastructure/game.repository';
 import { GameMapper } from './infrastructure/game.mapper';
 import { GAME_REPOSITORY } from './ports/out/game.repository.token';
-import { WcModule } from './aggregator/wc/wc.module';
 
 @Module({
-  imports: [forwardRef(() => WcModule)],
+  imports: [],
   providers: [
     ListGamesService,
     ListPlayableGamesService,

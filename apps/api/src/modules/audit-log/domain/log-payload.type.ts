@@ -91,8 +91,11 @@ export interface IntegrationLogPayload {
   method: string;
   endpoint: string;
   statusCode?: number;
+  requestBody?: any; // 요청 본문 (JSON)
+  responseBody?: any; // 응답 본문 (JSON)
   duration: number;
   success: boolean;
+  errorMessage?: string; // 에러 메시지 (실패 시)
   // Cloudflare 지리적 정보 (외부 서비스 연동 추적용)
   country?: string; // CF-IPCountry
   city?: string; // CF-IPCity

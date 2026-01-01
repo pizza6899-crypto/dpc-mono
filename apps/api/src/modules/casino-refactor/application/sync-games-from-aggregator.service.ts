@@ -13,7 +13,6 @@ import {
 } from '@repo/database';
 import { generateUid } from 'src/utils/id.util';
 import { GamingCurrencyCode, GAMING_CURRENCIES } from 'src/utils/currency.util';
-import { SyncGamesFromWcService } from '../aggregator/wc/application/sync-games-from-wc.service';
 
 interface SyncGamesFromAggregatorParams {
   aggregatorType: GameAggregatorType;
@@ -83,41 +82,7 @@ export class SyncGamesFromAggregatorService {
 
       if (params.aggregatorType === GameAggregatorType.WHITECLIFF) {
         // WC 모듈의 서비스 호출 (ModuleRef를 통해 동적 주입)
-        try {
-          const syncGamesFromWcService = this.moduleRef.get(
-            SyncGamesFromWcService,
-            { strict: false },
-          );
-
-          if (!syncGamesFromWcService) {
-            result.errors.push(
-              'WC 게임 동기화 서비스가 등록되지 않았습니다. WcModule을 import해야 합니다.',
-            );
             return result;
-          }
-
-          // 기본 게임 통화는 USDT 사용 (또는 첫 번째 게임 통화)
-          const gameCurrency: GamingCurrencyCode =
-            GAMING_CURRENCIES[0] || 'USDT';
-          const language = params.language || Language.EN;
-
-          const wcResult = await syncGamesFromWcService.execute({
-            gameCurrency,
-            language,
-            provider: params.provider,
-          });
-
-          if (wcResult.errors.length > 0) {
-            result.errors.push(...wcResult.errors);
-          }
-
-          gameDataList = wcResult.gameDataList;
-        } catch (error) {
-          this.logger.error(error, 'WC 게임 동기화 서비스 호출 실패');
-          result.errors.push(
-            `WC 게임 동기화 서비스 호출 실패: ${error.message}`,
-          );
-        }
       } else if (params.aggregatorType === GameAggregatorType.DCS) {
         // TODO: DC 모듈의 서비스 호출
         this.logger.warn(
