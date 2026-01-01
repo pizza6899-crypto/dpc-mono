@@ -73,12 +73,20 @@ function copyDir(src, dest, relativePath = '', isRootLevel = false) {
       continue;
     }
 
+    // packages/database의 prisma 마이그레이션 제외
+    if (fullRelativePath.includes('packages/database/prisma/migrations')) {
+      continue;
+    }
+
     // 제외 패턴 체크
     const shouldExclude = EXCLUDE_PATTERNS.some(pattern => {
       if (pattern.includes('*')) {
         // 와일드카드 패턴: 파일명 기준으로만 매칭
-        // 파일명이 패턴과 일치하는지만 체크 (경로는 체크하지 않음)
-        const regex = new RegExp('^' + pattern.replace(/\*/g, '.*') + '$');
+        // 특수 문자를 이스케이프하고 *를 .*로 변환
+        const escapedPattern = pattern
+          .replace(/[.+?^${}()|[\]\\]/g, '\\$&') // 정규식 특수 문자 이스케이프
+          .replace(/\*/g, '.*'); // *를 .*로 변환
+        const regex = new RegExp('^' + escapedPattern + '$');
         return regex.test(entry.name);
       }
       // 정확한 패턴 매칭: 파일명 또는 전체 경로
