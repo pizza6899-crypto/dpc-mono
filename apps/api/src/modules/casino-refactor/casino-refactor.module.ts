@@ -1,5 +1,5 @@
 // src/modules/casino-refactor/casino-refactor.module.ts
-import { Module } from '@nestjs/common';
+import { Module, forwardRef } from '@nestjs/common';
 import { ListGamesService } from './application/list-games.service';
 import { ListPlayableGamesService } from './application/list-playable-games.service';
 import { UpdateGameService } from './application/update-game.service';
@@ -10,9 +10,10 @@ import { GameController } from './controllers/user/game.controller';
 import { GameRepository } from './infrastructure/game.repository';
 import { GameMapper } from './infrastructure/game.mapper';
 import { GAME_REPOSITORY } from './ports/out/game.repository.token';
+import { WcModule } from './aggregator/wc/wc.module';
 
 @Module({
-  imports: [],
+  imports: [forwardRef(() => WcModule)],
   providers: [
     ListGamesService,
     ListPlayableGamesService,
