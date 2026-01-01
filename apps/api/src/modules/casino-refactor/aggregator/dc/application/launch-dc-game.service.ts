@@ -1,6 +1,5 @@
 // src/modules/casino-refactor/aggregator/dc/application/launch-dc-game.service.ts
 import { Inject, Injectable, Logger } from '@nestjs/common';
-import { Transactional } from '@nestjs-cls/transactional';
 import { InjectTransaction } from '@nestjs-cls/transactional';
 import type { PrismaTransaction } from 'src/infrastructure/prisma/prisma.module';
 import { DC_AGGREGATOR_API } from '../ports/out/dc-aggregator-api.token';
@@ -41,7 +40,6 @@ interface LaunchDcGameResult {
  */
 @Injectable()
 export class LaunchDcGameService {
-  private readonly logger = new Logger(LaunchDcGameService.name);
 
   constructor(
     @InjectTransaction()

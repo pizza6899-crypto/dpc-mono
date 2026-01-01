@@ -18,6 +18,8 @@ import {
 import { LaunchDcGameService } from '../aggregator/dc/application/launch-dc-game.service';
 import { LaunchWcGameService } from '../aggregator/wc/application/launch-wc-game.service';
 import { Game } from '../domain';
+import { DispatchLogService } from 'src/modules/audit-log/application/dispatch-log.service';
+import { LogType } from 'src/modules/audit-log/domain';
 
 interface LaunchGameParams {
   user: CurrentUserWithSession;
@@ -40,57 +42,120 @@ interface LaunchGameResult {
  */
 @Injectable()
 export class LaunchGameService {
+  private readonly logger = new Logger(LaunchGameService.name);
 
   constructor(
     @Inject(GAME_REPOSITORY)
     private readonly gameRepository: GameRepositoryPort,
     private readonly launchDcGameService: LaunchDcGameService,
     private readonly launchWcGameService: LaunchWcGameService,
+    private readonly dispatchLogService: DispatchLogService,
   ) {}
 
   async execute(params: LaunchGameParams): Promise<LaunchGameResult> {
     const { user, gameUid, isMobile, walletCurrency, gameCurrency, requestInfo } = params;
+    const startTime = Date.now();
 
-    // 1. 게임 정보 조회
-    const game = await this.gameRepository.getByUid(gameUid);
+    try {
+      // 1. 게임 정보 조회
+      const game = await this.gameRepository.getByUid(gameUid);
 
-    // 2. 게임이 플레이 가능한지 확인 (도메인 규칙 검증)
-    if (!game.isEnabled) {
-      const gameId = game.id ? Number(game.id) : 0;
-      throw new GameNotEnabledException(gameId);
-    }
+      // 2. 게임이 플레이 가능한지 확인 (도메인 규칙 검증)
+      if (!game.isEnabled) {
+        const gameId = game.id ? Number(game.id) : 0;
+        throw new GameNotEnabledException(gameId);
+      }
 
-    if (!game.isVisibleToUser) {
-      const gameId = game.id ? Number(game.id) : 0;
-      throw new GameNotVisibleException(gameId);
-    }
+      if (!game.isVisibleToUser) {
+        const gameId = game.id ? Number(game.id) : 0;
+        throw new GameNotVisibleException(gameId);
+      }
 
-    // 3. 애그리게이터 타입에 따라 분기 처리
-    switch (game.aggregatorType) {
-      case GameAggregatorType.DCS:
-        return await this.launchDcsGame({
-          user,
-          game,
-          isMobile,
-          walletCurrency,
-          gameCurrency,
+      // 3. 애그리게이터 타입에 따라 분기 처리
+      let result: LaunchGameResult;
+      switch (game.aggregatorType) {
+        case GameAggregatorType.DCS:
+          result = await this.launchDcsGame({
+            user,
+            game,
+            isMobile,
+            walletCurrency,
+            gameCurrency,
+            requestInfo,
+          });
+          break;
+
+        case GameAggregatorType.WHITECLIFF:
+          result = await this.launchWhitecliffGame({
+            user,
+            game,
+            isMobile,
+            walletCurrency,
+            gameCurrency,
+            requestInfo,
+          });
+          break;
+
+        default:
+          throw new UnsupportedAggregatorTypeException(
+            game.aggregatorType || 'UNKNOWN',
+          );
+      }
+
+      // Audit 로그 기록 (성공)
+      const duration = Date.now() - startTime;
+        await this.dispatchLogService.dispatch(
+          {
+            type: LogType.ACTIVITY,
+            data: {
+              userId: user.id.toString(),
+              sessionId: user.sessionId,
+              category: 'GAME',
+              action: 'LAUNCH_GAME',
+              isMobile,
+              metadata: {
+                gameUid,
+                gameId: game.id ? Number(game.id) : null,
+                aggregatorType: game.aggregatorType,
+                provider: game.provider,
+                category: game.category,
+                walletCurrency,
+                gameCurrency,
+                duration,
+                success: true,
+              },
+            },
+          },
           requestInfo,
-        });
-
-      case GameAggregatorType.WHITECLIFF:
-        return await this.launchWhitecliffGame({
-          user,
-          game,
-          isMobile,
-          walletCurrency,
-          gameCurrency,
-          requestInfo,
-        });
-
-      default:
-        throw new UnsupportedAggregatorTypeException(
-          game.aggregatorType || 'UNKNOWN',
         );
+
+      return result;
+    } catch (error) {
+      // Audit 로그 기록 (실패)
+      const duration = Date.now() - startTime;
+        await this.dispatchLogService.dispatch(
+          {
+            type: LogType.ACTIVITY,
+            data: {
+              userId: user.id.toString(),
+              sessionId: user.sessionId,
+              category: 'GAME',
+              action: 'LAUNCH_GAME',
+              isMobile,
+              metadata: {
+                gameUid,
+                walletCurrency,
+                gameCurrency,
+                duration,
+                success: false,
+                errorMessage: error instanceof Error ? error.message : String(error),
+                errorType: error instanceof Error ? error.constructor.name : 'Unknown',
+              },
+            },
+          },
+          requestInfo,
+        );
+      throw error;
     }
   }
 
