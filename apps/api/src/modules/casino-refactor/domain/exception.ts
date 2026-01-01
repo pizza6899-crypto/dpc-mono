@@ -168,3 +168,28 @@ export class InvalidTransactionException extends DomainException {
   }
 }
 
+/**
+ * Aggregator API 관련 예외
+ */
+export class AggregatorApiException extends DomainException {
+  constructor(
+    aggregatorType: string,
+    endpoint: string,
+    reason?: string,
+  ) {
+    const message = reason
+      ? `Aggregator API failed: aggregatorType=${aggregatorType}, endpoint=${endpoint}, reason=${reason}`
+      : `Aggregator API failed: aggregatorType=${aggregatorType}, endpoint=${endpoint}`;
+    super(message);
+  }
+}
+
+/**
+ * 지원하지 않는 애그리게이터 타입 예외
+ */
+export class UnsupportedAggregatorTypeException extends DomainException {
+  constructor(aggregatorType: string) {
+    super(`Unsupported aggregator type: ${aggregatorType}`);
+  }
+}
+

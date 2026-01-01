@@ -80,5 +80,13 @@ export class DcMapperService {
         return normalizedDcCurrency as GamingCurrencyCode;
     }
   }
+
+  /**
+   * 국가 코드 변환
+   * 'XX' (알 수 없음) → 'JP' (일본)로 변환, 그 외는 그대로 반환
+   */
+  toDcCountryCode(countryCode: string): string {
+    return countryCode === 'XX' ? 'JP' : countryCode;
+  }
 }
 

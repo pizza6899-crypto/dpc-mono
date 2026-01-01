@@ -1,18 +1,18 @@
 // src/modules/casino-refactor/aggregator/wc/application/launch-wc-game.service.ts
 import { Inject, Injectable, Logger } from '@nestjs/common';
-import { PrismaService } from 'src/infrastructure/prisma/prisma.service';
+import { Transactional } from '@nestjs-cls/transactional';
+import { InjectTransaction } from '@nestjs-cls/transactional';
+import type { PrismaTransaction } from 'src/infrastructure/prisma/prisma.module';
 import { WC_AGGREGATOR_API } from '../ports/out/wc-aggregator-api.token';
 import type { WcAggregatorApiPort } from '../ports/out/wc-aggregator-api.port';
-import { MessageCode, RequestClientInfo } from 'src/common/http/types';
-import { ApiException } from 'src/common/http/exception/api.exception';
-import { HttpStatusCode } from 'axios';
+import { RequestClientInfo } from 'src/common/http/types';
 import { IdUtil } from 'src/utils/id.util';
 import {
   GamingCurrencyCode,
   WalletCurrencyCode,
 } from 'src/utils/currency.util';
 import { GameSessionService } from '../../../application/game-session.service';
-import { ExchangeRateService } from 'src/modules/exchange/application/exchange-rate.service';
+import { GameBalanceService } from '../../../application/game-balance.service';
 import {
   GameAggregatorType,
   GameCategory,
@@ -24,6 +24,8 @@ import { WcMapperService } from '../infrastructure/wc-mapper.service';
 import type {
   WhitecliffGameLaunchResponse,
 } from '../ports/out/wc-aggregator-api.port';
+import { UserNotFoundException } from 'src/modules/user/domain';
+import { AggregatorApiException } from 'src/modules/casino-refactor/domain';
 
 interface LaunchWcGameParams {
   user: CurrentUserWithSession;
@@ -52,12 +54,13 @@ export class LaunchWcGameService {
   private readonly logger = new Logger(LaunchWcGameService.name);
 
   constructor(
-    private readonly prismaService: PrismaService,
+    @InjectTransaction()
+    private readonly tx: PrismaTransaction,
     @Inject(WC_AGGREGATOR_API)
     private readonly wcAggregatorApi: WcAggregatorApiPort,
     private readonly wcMapperService: WcMapperService,
     private readonly gameSessionService: GameSessionService,
-    private readonly exchangeRateService: ExchangeRateService,
+    private readonly gameBalanceService: GameBalanceService,
   ) {}
 
   async execute(params: LaunchWcGameParams): Promise<LaunchWcGameResult> {
@@ -76,48 +79,28 @@ export class LaunchWcGameService {
 
     const token = IdUtil.generateUrlSafeNanoid(32);
 
-    try {
-      // 1. 사용자 정보 조회
-      const userData = await this.prismaService.user.findUnique({
-        where: { id: user.id },
-        select: {
-          id: true,
-          whitecliffId: true,
-          whitecliffUsername: true,
-          whitecliffSystemId: true,
-          language: true,
-        },
-      });
+    // 1. 사용자 정보 조회
+    const userData = await this.tx.user.findUnique({
+      where: { id: user.id },
+      select: {
+        id: true,
+        whitecliffId: true,
+        whitecliffUsername: true,
+        whitecliffSystemId: true,
+        language: true,
+      },
+    });
 
-      if (!userData) {
-        throw new ApiException(
-          MessageCode.USER_NOT_FOUND,
-          HttpStatusCode.NotFound,
-        );
-      }
+    if (!userData) {
+      throw new UserNotFoundException(user.id);
+    }
 
-      // 2. 환율 조회 및 잔액 계산
-      const exchangeRate = await this.exchangeRateService.getRate({
-        fromCurrency: walletCurrency,
-        toCurrency: gameCurrency,
-      });
-
-      const userBalance = await this.prismaService.userBalance.findUnique({
-        where: { userId_currency: { userId: user.id, currency: walletCurrency } },
-        select: { mainBalance: true, bonusBalance: true },
-      });
-
-      if (!userBalance) {
-        throw new ApiException(
-          MessageCode.USER_BALANCE_NOT_FOUND,
-          HttpStatusCode.NotFound,
-        );
-      }
-
-      const balance = exchangeRate
-        .mul(userBalance.mainBalance.add(userBalance.bonusBalance))
-        .toDecimalPlaces(2)
-        .toNumber();
+    // 2. 게임 통화로 변환된 잔액 조회
+    const balance = await this.gameBalanceService.getGameBalance({
+      userId: user.id,
+      walletCurrency,
+      gameCurrency,
+    });
 
       const whitecliffUsername = userData.whitecliffUsername;
 
@@ -156,73 +139,67 @@ export class LaunchWcGameService {
         },
       });
 
-      // 6. 사용자 등록 처리 (INVALID_USER 에러인 경우)
-      if (gameUrl.status === 0 && (gameUrl as any).error === 'INVALID_USER') {
-        const whitecliffId = await IdUtil.generateNextWhitecliffId(
-          this.prismaService,
-        );
-        const newWhitecliffUsername = `wcf${whitecliffId}`;
+    // 6. 사용자 등록 처리 (INVALID_USER 에러인 경우)
+    if (gameUrl.status === 0 && (gameUrl as any).error === 'INVALID_USER') {
+      const whitecliffId = await IdUtil.generateNextWhitecliffId(this.tx);
+      const newWhitecliffUsername = `wcf${whitecliffId}`;
 
-        await this.prismaService.user.update({
-          where: { id: user.id },
-          data: {
-            whitecliffId: whitecliffId,
-            whitecliffUsername: newWhitecliffUsername,
-            whitecliffSystemId: null,
-          },
-        });
-
-        // 재시도는 하지 않고 에러 반환
-        throw new ApiException(
-          MessageCode.INTERNAL_SERVER_ERROR,
-          HttpStatusCode.InternalServerError,
-        );
-      }
-
-      // 7. 에러 체크
-      if (gameUrl.status === 0) {
-        this.logger.error(`게임 실행 실패: ${(gameUrl as any).error}`);
-        throw new ApiException(
-          MessageCode.GAME_NOT_FOUND,
-          HttpStatusCode.BadRequest,
-        );
-      }
-
-      const result = gameUrl as WhitecliffGameLaunchResponse;
-
-      // 8. whitecliffSystemId 업데이트
-      if (
-        userData.whitecliffSystemId == null ||
-        Number(userData.whitecliffSystemId) !== result.user_id
-      ) {
-        await this.prismaService.user.update({
-          where: { id: user.id },
-          data: {
-            whitecliffSystemId: result.user_id,
-          },
-        });
-      }
-
-      // 9. 게임 세션 생성
-      await this.gameSessionService.createGameSession({
-        userId: user.id,
-        gameId: aggregatorGameId,
-        aggregatorType: GameAggregatorType.WHITECLIFF,
-        walletCurrency,
-        gameCurrency,
-        token: result.sid,
+      await this.tx.user.update({
+        where: { id: user.id },
+        data: {
+          whitecliffId: whitecliffId,
+          whitecliffUsername: newWhitecliffUsername,
+          whitecliffSystemId: null,
+        },
       });
 
-      return {
-        gameUrl: result.launch_url,
-      };
-    } catch (error) {
-      this.logger.error(
-        error,
-        `WC 게임 실행 실패: userId=${user.id}, gameId=${gameId}`,
+      // 재시도는 하지 않고 에러 반환
+      throw new AggregatorApiException(
+        'WHITECLIFF',
+        '/auth',
+        'INVALID_USER - User registration failed',
       );
-      throw error;
     }
+
+    // 7. 에러 체크
+    if (gameUrl.status === 0) {
+      const errorMessage = (gameUrl as any).error || 'Unknown error';
+      this.logger.error(`게임 실행 실패: ${errorMessage}`);
+      throw new AggregatorApiException(
+        'WHITECLIFF',
+        '/auth',
+        `Game launch failed: ${errorMessage}`,
+      );
+    }
+
+    const result = gameUrl as WhitecliffGameLaunchResponse;
+
+    // 8. whitecliffSystemId 업데이트
+    if (
+      userData.whitecliffSystemId == null ||
+      Number(userData.whitecliffSystemId) !== result.user_id
+    ) {
+      await this.tx.user.update({
+        where: { id: user.id },
+        data: {
+          whitecliffSystemId: result.user_id,
+        },
+      });
+    }
+
+    // 9. 게임 세션 생성
+    await this.gameSessionService.createGameSession({
+      userId: user.id,
+      gameId,
+      aggregatorType: GameAggregatorType.WHITECLIFF,
+      walletCurrency,
+      gameCurrency,
+      token: result.sid,
+    });
+
+    return {
+      gameUrl: result.launch_url,
+    };
   }
 }
 

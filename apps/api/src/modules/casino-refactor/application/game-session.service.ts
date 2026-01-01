@@ -1,6 +1,5 @@
 // src/modules/casino-refactor/application/game-session.service.ts
 import { Injectable } from '@nestjs/common';
-import { PrismaService } from 'src/infrastructure/prisma/prisma.service';
 import { ExchangeRateService } from 'src/modules/exchange/application/exchange-rate.service';
 import {
   GameAggregatorType,
@@ -10,6 +9,8 @@ import {
 import { GameSession } from '@repo/database';
 import { nowUtc } from 'src/utils/date.util';
 import { generateUid } from 'src/utils/id.util';
+import { InjectTransaction } from '@nestjs-cls/transactional';
+import type { PrismaTransaction } from 'src/infrastructure/prisma/prisma.module';
 
 /**
  * 게임 세션 서비스
@@ -19,7 +20,8 @@ import { generateUid } from 'src/utils/id.util';
 @Injectable()
 export class GameSessionService {
   constructor(
-    private readonly prismaService: PrismaService,
+    @InjectTransaction()
+    private readonly tx: PrismaTransaction,
     private readonly exchangeRateService: ExchangeRateService,
   ) {}
 
@@ -27,7 +29,6 @@ export class GameSessionService {
    * 게임 세션 생성 (환율 고정 포함)
    */
   async createGameSession(params: {
-    tx?: Prisma.TransactionClient;
     userId: bigint;
     gameId?: number;
     aggregatorType: GameAggregatorType;
@@ -36,7 +37,6 @@ export class GameSessionService {
     token: string;
   }): Promise<GameSession> {
     const {
-      tx = this.prismaService,
       userId,
       gameId,
       aggregatorType,
@@ -52,7 +52,7 @@ export class GameSessionService {
     });
 
     // 2. GameSession 생성
-    return await tx.gameSession.create({
+    return await this.tx.gameSession.create({
       data: {
         uid: generateUid(),
         userId,

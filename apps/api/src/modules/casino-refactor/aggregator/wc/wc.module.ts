@@ -11,12 +11,14 @@ import { WcAggregatorApiAdapter } from './infrastructure/wc-aggregator-api.adapt
 import { WC_AGGREGATOR_API } from './ports/out/wc-aggregator-api.token';
 import { LaunchWcGameService } from './application/launch-wc-game.service';
 import { GameSessionService } from '../../application/game-session.service';
+import { GameBalanceService } from '../../application/game-balance.service';
 
 @Module({
   imports: [HttpModule, EnvModule, AuditLogModule, PrismaModule, ExchangeModule],
   providers: [
     WcMapperService,
     GameSessionService,
+    GameBalanceService,
     LaunchWcGameService,
     {
       provide: WC_AGGREGATOR_API,

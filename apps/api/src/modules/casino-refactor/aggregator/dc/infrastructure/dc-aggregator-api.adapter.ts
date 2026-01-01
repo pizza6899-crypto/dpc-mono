@@ -8,15 +8,13 @@ import { LogType } from 'src/modules/audit-log/domain';
 import { firstValueFrom } from 'rxjs';
 import { DcsConfig } from 'src/common/env/env.types';
 import * as crypto from 'crypto';
-import { ApiException } from 'src/common/http/exception/api.exception';
-import { MessageCode } from 'src/common/http/types';
-import { HttpStatusCode } from 'axios';
 import { GameProvider } from '@repo/database';
 import { DcMapperService } from './dc-mapper.service';
 import type { DcAggregatorApiPort } from '../ports/out/dc-aggregator-api.port';
 import * as fs from 'fs';
 import * as path from 'path';
 import { GamingCurrencyCode } from 'src/utils/currency.util';
+import { AggregatorApiException } from 'src/modules/casino-refactor/domain';
 
 /**
  * DC Aggregator API Adapter
@@ -44,7 +42,7 @@ export class DcAggregatorApiAdapter implements DcAggregatorApiPort {
   private checkApiAvailability(): void {
     if (!this.dcConfig.apiEnabled) {
       this.logger.error('DC API 송신이 비활성화되어 있습니다.');
-      throw new Error('DC API is disabled');
+      throw new AggregatorApiException('DCS', '', 'API is disabled');
     }
   }
 
@@ -194,9 +192,10 @@ export class DcAggregatorApiAdapter implements DcAggregatorApiPort {
         },
       });
 
-      throw new ApiException(
-        MessageCode.INTERNAL_SERVER_ERROR,
-        HttpStatusCode.InternalServerError,
+      throw new AggregatorApiException(
+        'DCS',
+        endpoint,
+        error.message || 'Unknown error',
       );
     }
   }
@@ -237,6 +236,7 @@ export class DcAggregatorApiAdapter implements DcAggregatorApiPort {
 
     this.checkApiAvailability();
     const dcsCurrency = this.dcMapperService.toDcCurrency(gameCurrency);
+    const dcsCountryCode = this.dcMapperService.toDcCountryCode(country_code);
 
     const body = {
       brand_id: this.dcConfig.brandId,
@@ -244,19 +244,15 @@ export class DcAggregatorApiAdapter implements DcAggregatorApiPort {
       brand_uid: dcsUserId,
       token: dcsUserToken,
       game_id: gameId,
-      language: language,
       currency: dcsCurrency,
+      language: language,
       channel: channel,
-      country_code: country_code === 'XX' ? 'JP' : country_code,
+      country_code: dcsCountryCode,
       ...(full_screen !== undefined && { full_screen }),
     };
 
     try {
       const url = `${this.dcConfig.apiUrl}${endpoint}`;
-
-      this.logger.log(
-        `게임 로그인 요청: dcsUserId=${dcsUserId}, gameId=${gameId}`,
-      );
 
       const response = await firstValueFrom(
         this.httpService.post<{
@@ -290,18 +286,9 @@ export class DcAggregatorApiAdapter implements DcAggregatorApiPort {
         },
       });
 
-      this.logger.log(
-        `게임 로그인 성공: dcsUserId=${dcsUserId}, status=${response.data.code}`,
-      );
-
       return response.data;
     } catch (error: any) {
       const duration = Date.now() - startTime;
-
-      this.logger.error(
-        error,
-        `게임 로그인 실패: dcsUserId=${dcsUserId}, gameId=${gameId}, currency=${gameCurrency}, language=${language}`,
-      );
 
       // API audit 로그 저장 (실패)
       this.dispatchLogService.dispatch({
@@ -319,9 +306,10 @@ export class DcAggregatorApiAdapter implements DcAggregatorApiPort {
         },
       });
 
-      throw new ApiException(
-        MessageCode.INTERNAL_SERVER_ERROR,
-        HttpStatusCode.InternalServerError,
+      throw new AggregatorApiException(
+        'DCS',
+        endpoint,
+        error.message || 'Unknown error',
       );
     }
   }

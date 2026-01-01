@@ -3,9 +3,6 @@ import { Inject, Injectable, Logger } from '@nestjs/common';
 import { GAME_REPOSITORY } from '../ports/out/game.repository.token';
 import type { GameRepositoryPort } from '../ports/out/game.repository.port';
 import { GameAggregatorType } from '@repo/database';
-import { ApiException } from 'src/common/http/exception/api.exception';
-import { MessageCode } from 'src/common/http/types';
-import { HttpStatusCode } from 'axios';
 import type {
   GamingCurrencyCode,
   WalletCurrencyCode,
@@ -16,7 +13,8 @@ import {
   GameNotEnabledException,
   GameNotVisibleException,
   GameNotFoundException,
-} from '../domain/exception';
+  UnsupportedAggregatorTypeException,
+} from '../domain';
 import { LaunchDcGameService } from '../aggregator/dc/application/launch-dc-game.service';
 import { LaunchWcGameService } from '../aggregator/wc/application/launch-wc-game.service';
 import { Game } from '../domain';
@@ -42,7 +40,6 @@ interface LaunchGameResult {
  */
 @Injectable()
 export class LaunchGameService {
-  private readonly logger = new Logger(LaunchGameService.name);
 
   constructor(
     @Inject(GAME_REPOSITORY)
@@ -91,9 +88,8 @@ export class LaunchGameService {
         });
 
       default:
-        throw new ApiException(
-          MessageCode.INTERNAL_SERVER_ERROR,
-          HttpStatusCode.InternalServerError,
+        throw new UnsupportedAggregatorTypeException(
+          game.aggregatorType || 'UNKNOWN',
         );
     }
   }

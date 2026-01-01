@@ -1,11 +1,11 @@
 // src/modules/casino-refactor/aggregator/dc/application/launch-dc-game.service.ts
 import { Inject, Injectable, Logger } from '@nestjs/common';
-import { PrismaService } from 'src/infrastructure/prisma/prisma.service';
+import { Transactional } from '@nestjs-cls/transactional';
+import { InjectTransaction } from '@nestjs-cls/transactional';
+import type { PrismaTransaction } from 'src/infrastructure/prisma/prisma.module';
 import { DC_AGGREGATOR_API } from '../ports/out/dc-aggregator-api.token';
 import type { DcAggregatorApiPort } from '../ports/out/dc-aggregator-api.port';
-import { MessageCode, RequestClientInfo } from 'src/common/http/types';
-import { ApiException } from 'src/common/http/exception/api.exception';
-import { HttpStatusCode } from 'axios';
+import { RequestClientInfo } from 'src/common/http/types';
 import { IdUtil } from 'src/utils/id.util';
 import { DcsResponseCode } from 'src/modules/casino/dcs/constants/dcs-response-codes';
 import { fromLanguageEnum } from 'src/utils/language.util';
@@ -16,6 +16,8 @@ import {
 import { GameSessionService } from '../../../application/game-session.service';
 import { GameAggregatorType } from '@repo/database';
 import type { CurrentUserWithSession } from 'src/common/auth/decorators/current-user.decorator';
+import { UserNotFoundException } from 'src/modules/user/domain';
+import { AggregatorApiException } from 'src/modules/casino-refactor/domain';
 
 interface LaunchDcGameParams {
   user: CurrentUserWithSession;
@@ -42,7 +44,8 @@ export class LaunchDcGameService {
   private readonly logger = new Logger(LaunchDcGameService.name);
 
   constructor(
-    private readonly prismaService: PrismaService,
+    @InjectTransaction()
+    private readonly tx: PrismaTransaction,
     @Inject(DC_AGGREGATOR_API)
     private readonly dcAggregatorApi: DcAggregatorApiPort,
     private readonly gameSessionService: GameSessionService,
@@ -62,80 +65,62 @@ export class LaunchDcGameService {
 
     const newDcsToken = IdUtil.generateUrlSafeNanoid(32);
 
-    try {
-      // 1. 사용자 정보 조회 및 DCS ID 생성/확인
-      const { updatedUser } = await this.prismaService.$transaction(
-        async (tx) => {
-          const userData = await tx.user.findUnique({
-            where: { id: user.id },
-            select: {
-              dcsId: true,
-              language: true,
-            },
-          });
+    // 1. 사용자 정보 조회 및 DCS ID 생성/확인
+    const userData = await this.tx.user.findUnique({
+      where: { id: user.id },
+      select: {
+        dcsId: true,
+        language: true,
+      },
+    });
 
-          if (!userData) {
-            throw new ApiException(
-              MessageCode.USER_NOT_FOUND,
-              HttpStatusCode.NotFound,
-            );
-          }
-
-          const dcsId = userData.dcsId ?? (await IdUtil.generateNextDcsId(tx));
-
-          const updatedUser = await tx.user.update({
-            where: { id: user.id },
-            data: { dcsId },
-            select: {
-              dcsId: true,
-              language: true,
-            },
-          });
-
-          return {
-            updatedUser,
-          };
-        },
-      );
-
-      // 2. API 호출 (트랜잭션 밖에서 - 외부 API이므로 롤백 불가)
-      const response = await this.dcAggregatorApi.loginGame({
-        dcsUserId: updatedUser.dcsId!,
-        dcsUserToken: newDcsToken,
-        gameId: aggregatorGameId,
-        gameCurrency: gameCurrency,
-        language: fromLanguageEnum(updatedUser.language),
-        channel: channel,
-        country_code: country_code,
-      });
-
-      if (response.code !== DcsResponseCode.SUCCESS) {
-        throw new ApiException(
-          MessageCode.INTERNAL_SERVER_ERROR,
-          HttpStatusCode.InternalServerError,
-        );
-      }
-
-      // 3. 게임 세션 생성
-      await this.gameSessionService.createGameSession({
-        userId: user.id,
-        gameId: aggregatorGameId,
-        aggregatorType: GameAggregatorType.DCS,
-        walletCurrency,
-        gameCurrency,
-        token: newDcsToken,
-      });
-
-      return {
-        gameUrl: response.data.game_url,
-      };
-    } catch (error) {
-      this.logger.error(
-        error,
-        `DC 게임 실행 실패: userId=${user.id}, gameId=${gameId}`,
-      );
-      throw error;
+    if (!userData) {
+      throw new UserNotFoundException(user.id);
     }
+
+    const dcsId = userData.dcsId ?? (await IdUtil.generateNextDcsId(this.tx));
+
+    const updatedUser = await this.tx.user.update({
+      where: { id: user.id },
+      data: { dcsId },
+      select: {
+        dcsId: true,
+        language: true,
+      },
+    });
+
+    // 2. API 호출 (외부 API이므로 실패 시 롤백되어도 외부 상태는 변경됨)
+    const response = await this.dcAggregatorApi.loginGame({
+      dcsUserId: updatedUser.dcsId!,
+      dcsUserToken: newDcsToken,
+      gameId: aggregatorGameId,
+      gameCurrency: gameCurrency,
+      language: fromLanguageEnum(updatedUser.language),
+      channel: channel,
+      country_code: country_code,
+    });
+
+    if (response.code !== DcsResponseCode.SUCCESS) {
+      throw new AggregatorApiException(
+        'DCS',
+        '/dcs/loginGame',
+        `Response code: ${response.code}, message: ${response.msg}`,
+      );
+    }
+
+    // 3. 게임 세션 생성
+    await this.gameSessionService.createGameSession({
+      userId: user.id,
+      gameId,
+      aggregatorType: GameAggregatorType.DCS,
+      walletCurrency,
+      gameCurrency,
+      token: newDcsToken,
+    });
+
+    return {
+      gameUrl: response.data.game_url,
+    };
   }
 }
 

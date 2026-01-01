@@ -30,5 +30,7 @@ export {
   GameBonusAlreadyExistsException,
   InsufficientFundsException,
   InvalidTransactionException,
+  AggregatorApiException,
+  UnsupportedAggregatorTypeException,
 } from './exception';
 
