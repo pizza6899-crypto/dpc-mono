@@ -52,6 +52,13 @@ export class DcMapperService {
   }
 
   /**
+   * DC 프로바이더 ID → Domain GameProvider 변환 (DCS 호환성)
+   */
+  fromDcsProvider(providerId: string): GameProvider | null {
+    return this.toDomainProvider(providerId);
+  }
+
+  /**
    * Domain GameProvider → DC 프로바이더 ID 변환
    */
   toDcProvider(provider: GameProvider): string | null {
@@ -79,6 +86,13 @@ export class DcMapperService {
       default:
         return normalizedDcCurrency as GamingCurrencyCode;
     }
+  }
+
+  /**
+   * DC 통화 코드 → Domain GamingCurrencyCode 변환 (DCS 호환성)
+   */
+  convertDcsCurrencyToGamingCurrency(dcCurrency: string): GamingCurrencyCode {
+    return this.toDomainCurrency(dcCurrency);
   }
 
   /**

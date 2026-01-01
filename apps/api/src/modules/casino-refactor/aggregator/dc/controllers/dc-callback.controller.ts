@@ -5,6 +5,8 @@ import {
   HttpCode,
   HttpStatus,
   UseFilters,
+  UseGuards,
+  UseInterceptors,
 } from '@nestjs/common';
 import { ApiTags, ApiOperation, ApiBody } from '@nestjs/swagger';
 import { CasinoResponse } from 'src/common/http/decorators/casino-response.decorator';
@@ -27,22 +29,46 @@ import {
   DcPromoPayoutRequestDto,
   DcPromoPayoutResponseDto,
 } from '../dtos/callback.dto';
+import { DcBalanceCallbackService } from '../application/dc-balance-callback.service';
+import { WagerDcBetCallbackUseCase } from '../application/use-cases/wager-dc-bet-callback.use-case';
+import { CancelWagerDcBetCallbackUseCase } from '../application/use-cases/cancel-wager-dc-bet-callback.use-case';
+import { AppendWagerDcBetCallbackUseCase } from '../application/use-cases/append-wager-dc-bet-callback.use-case';
+import { EndWagerDcBetCallbackUseCase } from '../application/use-cases/end-wager-dc-bet-callback.use-case';
+import { FreeSpinResultDcBetCallbackUseCase } from '../application/use-cases/free-spin-result-dc-bet-callback.use-case';
+import { PromoPayoutDcBetCallbackUseCase } from '../application/use-cases/promo-payout-dc-bet-callback.use-case';
+import { DcCallbackValidationGuard } from '../guards/dc-callback-validation.guard';
+import { DcCallbackExceptionFilter } from '../filters/dc-callback-exception.filter';
+import { ValidateDcCallback } from '../decorators/validate-dc-callback.decorator';
+import { DcBalanceFormatInterceptor } from '../interceptors/dc-balance-format.interceptor';
 
 @ApiTags('DC Callback(콜백)')
 @Controller('dopaminedev')
 @GuestOnly()
-@UseFilters() // 글로벌 예외 필터 비활성화
+@UseGuards(DcCallbackValidationGuard)
+@UseFilters(DcCallbackExceptionFilter)
+@UseInterceptors(DcBalanceFormatInterceptor)
 export class DcCallbackController {
-  // TODO: Service 의존성 주입 예정
+  constructor(
+    private readonly balanceCallbackService: DcBalanceCallbackService,
+    private readonly wagerUseCase: WagerDcBetCallbackUseCase,
+    private readonly cancelWagerUseCase: CancelWagerDcBetCallbackUseCase,
+    private readonly appendWagerUseCase: AppendWagerDcBetCallbackUseCase,
+    private readonly endWagerUseCase: EndWagerDcBetCallbackUseCase,
+    private readonly freeSpinResultUseCase: FreeSpinResultDcBetCallbackUseCase,
+    private readonly promoPayoutUseCase: PromoPayoutDcBetCallbackUseCase,
+  ) {}
 
   @Post('/login')
   @HttpCode(HttpStatus.OK)
   @ApiOperation({ summary: '로그인 콜백' })
   @ApiBody({ type: DcLoginRequestDto })
   @CasinoResponse(DcLoginResponseDto, { description: '로그인 성공' })
+  @ValidateDcCallback(
+    ['brand_id', 'sign', 'token', 'brand_uid', 'currency'],
+    ['token'],
+  )
   async login(@Body() body: DcLoginRequestDto): Promise<DcLoginResponseDto> {
-    // TODO: 로직 구현 예정
-    throw new Error('Not implemented');
+    return await this.balanceCallbackService.getBalance(body);
   }
 
   @Post('/wager')
@@ -50,9 +76,28 @@ export class DcCallbackController {
   @ApiOperation({ summary: '베팅 콜백' })
   @ApiBody({ type: DcWagerRequestDto })
   @CasinoResponse(DcWagerResponseDto, { description: '베팅 성공' })
+  @ValidateDcCallback(
+    [
+      'brand_id',
+      'sign',
+      'token',
+      'brand_uid',
+      'currency',
+      'amount',
+      'jackpot_contribution',
+      'game_id',
+      'game_name',
+      'round_id',
+      'wager_id',
+      'provider',
+      'bet_type',
+      'transaction_time',
+      'is_endround',
+    ],
+    ['wager_id'],
+  )
   async wager(@Body() body: DcWagerRequestDto): Promise<DcWagerResponseDto> {
-    // TODO: 로직 구현 예정
-    throw new Error('Not implemented');
+    return await this.wagerUseCase.execute(body);
   }
 
   @Post('/cancelWager')
@@ -60,11 +105,25 @@ export class DcCallbackController {
   @ApiOperation({ summary: '베팅 취소 콜백' })
   @ApiBody({ type: DcCancelWagerRequestDto })
   @CasinoResponse(DcCancelWagerResponseDto, { description: '베팅 취소 성공' })
+  @ValidateDcCallback(
+    [
+      'brand_id',
+      'sign',
+      'brand_uid',
+      'currency',
+      'round_id',
+      'wager_id',
+      'provider',
+      'wager_type',
+      'is_endround',
+      'transaction_time',
+    ],
+    ['wager_id'],
+  )
   async cancelWager(
     @Body() body: DcCancelWagerRequestDto,
   ): Promise<DcCancelWagerResponseDto> {
-    // TODO: 로직 구현 예정
-    throw new Error('Not implemented');
+    return await this.cancelWagerUseCase.execute(body);
   }
 
   @Post('/appendWager')
@@ -72,11 +131,28 @@ export class DcCallbackController {
   @ApiOperation({ summary: '추가 베팅 콜백' })
   @ApiBody({ type: DcAppendWagerRequestDto })
   @CasinoResponse(DcAppendWagerResponseDto, { description: '추가 베팅 성공' })
+  @ValidateDcCallback(
+    [
+      'brand_id',
+      'sign',
+      'brand_uid',
+      'currency',
+      'amount',
+      'game_id',
+      'game_name',
+      'round_id',
+      'wager_id',
+      'provider',
+      'description',
+      'is_endround',
+      'transaction_time',
+    ],
+    ['wager_id'],
+  )
   async appendWager(
     @Body() body: DcAppendWagerRequestDto,
   ): Promise<DcAppendWagerResponseDto> {
-    // TODO: 로직 구현 예정
-    throw new Error('Not implemented');
+    return await this.appendWagerUseCase.execute(body);
   }
 
   @Post('/endWager')
@@ -84,11 +160,25 @@ export class DcCallbackController {
   @ApiOperation({ summary: '베팅 종료 및 지급 콜백' })
   @ApiBody({ type: DcEndWagerRequestDto })
   @CasinoResponse(DcEndWagerResponseDto, { description: '베팅 종료 성공' })
+  @ValidateDcCallback(
+    [
+      'brand_id',
+      'sign',
+      'brand_uid',
+      'currency',
+      'round_id',
+      'provider',
+      'is_endround',
+      'amount',
+      'wager_id',
+      'transaction_time',
+    ],
+    ['wager_id'],
+  )
   async endWager(
     @Body() body: DcEndWagerRequestDto,
   ): Promise<DcEndWagerResponseDto> {
-    // TODO: 로직 구현 예정
-    throw new Error('Not implemented');
+    return await this.endWagerUseCase.execute(body);
   }
 
   @Post('/freeSpinResult')
@@ -98,11 +188,27 @@ export class DcCallbackController {
   @CasinoResponse(DcFreeSpinResultResponseDto, {
     description: '무료 스핀 결과 처리 성공',
   })
+  @ValidateDcCallback(
+    [
+      'brand_id',
+      'sign',
+      'brand_uid',
+      'currency',
+      'round_id',
+      'wager_id',
+      'provider',
+      'is_endround',
+      'transaction_time',
+      'amount',
+      'game_id',
+      'game_name',
+    ],
+    ['wager_id'],
+  )
   async freeSpinResult(
     @Body() body: DcFreeSpinResultRequestDto,
   ): Promise<DcFreeSpinResultResponseDto> {
-    // TODO: 로직 구현 예정
-    throw new Error('Not implemented');
+    return await this.freeSpinResultUseCase.execute(body);
   }
 
   @Post('/getBalance')
@@ -110,11 +216,14 @@ export class DcCallbackController {
   @ApiOperation({ summary: '잔액 조회 콜백' })
   @ApiBody({ type: GetDcBalanceRequestDto })
   @CasinoResponse(GetDcBalanceResponseDto, { description: '잔액 조회 성공' })
+  @ValidateDcCallback(
+    ['brand_id', 'sign', 'token', 'brand_uid', 'currency'],
+    ['token'],
+  )
   async getBalance(
     @Body() body: GetDcBalanceRequestDto,
   ): Promise<GetDcBalanceResponseDto> {
-    // TODO: 로직 구현 예정
-    throw new Error('Not implemented');
+    return await this.balanceCallbackService.getBalance(body);
   }
 
   @Post('/promoPayout')
@@ -122,11 +231,24 @@ export class DcCallbackController {
   @ApiOperation({ summary: '프로모션 지급 콜백' })
   @ApiBody({ type: DcPromoPayoutRequestDto })
   @CasinoResponse(DcPromoPayoutResponseDto, { description: '프로모션 지급 성공' })
+  @ValidateDcCallback(
+    [
+      'brand_id',
+      'sign',
+      'brand_uid',
+      'currency',
+      'amount',
+      'promotion_id',
+      'trans_id',
+      'provider',
+      'transaction_time',
+    ],
+    ['promotion_id', 'trans_id'],
+  )
   async promoPayout(
     @Body() body: DcPromoPayoutRequestDto,
   ): Promise<DcPromoPayoutResponseDto> {
-    // TODO: 로직 구현 예정
-    throw new Error('Not implemented');
+    return await this.promoPayoutUseCase.execute(body);
   }
 }
 
