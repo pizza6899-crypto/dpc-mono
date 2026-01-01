@@ -16,6 +16,7 @@ import { DcMapperService } from './dc-mapper.service';
 import type { DcAggregatorApiPort } from '../ports/out/dc-aggregator-api.port';
 import * as fs from 'fs';
 import * as path from 'path';
+import { GamingCurrencyCode } from 'src/utils/currency.util';
 
 /**
  * DC Aggregator API Adapter
@@ -189,6 +190,131 @@ export class DcAggregatorApiAdapter implements DcAggregatorApiPort {
           success: false,
           requestBody: body,
           responseBody: null,
+          errorMessage: error.message || 'Unknown error',
+        },
+      });
+
+      throw new ApiException(
+        MessageCode.INTERNAL_SERVER_ERROR,
+        HttpStatusCode.InternalServerError,
+      );
+    }
+  }
+
+  /**
+   * 게임 로그인
+   * @param dcsUserId DCS 사용자 ID
+   * @param dcsUserToken DCS 사용자 토큰
+   * @param gameId 게임 ID
+   * @param gameCurrency 게임 통화
+   * @param language 언어
+   * @param channel 채널 (mobile/pc)
+   * @param country_code 국가 코드
+   * @param full_screen 전체 화면 여부
+   * @returns 게임 로그인 응답 데이터
+   */
+  async loginGame({
+    dcsUserId,
+    dcsUserToken,
+    gameId,
+    gameCurrency,
+    language,
+    channel,
+    country_code,
+    full_screen,
+  }: {
+    dcsUserId: string;
+    dcsUserToken: string;
+    gameId: number;
+    gameCurrency: GamingCurrencyCode;
+    language: string;
+    channel: string;
+    country_code: string;
+    full_screen?: boolean;
+  }) {
+    const startTime = Date.now();
+    const endpoint = '/dcs/loginGame';
+
+    this.checkApiAvailability();
+    const dcsCurrency = this.dcMapperService.toDcCurrency(gameCurrency);
+
+    const body = {
+      brand_id: this.dcConfig.brandId,
+      sign: this.generateSign(dcsUserId),
+      brand_uid: dcsUserId,
+      token: dcsUserToken,
+      game_id: gameId,
+      language: language,
+      currency: dcsCurrency,
+      channel: channel,
+      country_code: country_code === 'XX' ? 'JP' : country_code,
+      ...(full_screen !== undefined && { full_screen }),
+    };
+
+    try {
+      const url = `${this.dcConfig.apiUrl}${endpoint}`;
+
+      this.logger.log(
+        `게임 로그인 요청: dcsUserId=${dcsUserId}, gameId=${gameId}`,
+      );
+
+      const response = await firstValueFrom(
+        this.httpService.post<{
+          code: number;
+          msg: string;
+          data: {
+            game_url: string;
+          };
+        }>(url, body, {
+          headers: {
+            'Content-Type': 'application/json',
+          },
+          timeout: 10000,
+        }),
+      );
+
+      const duration = Date.now() - startTime;
+
+      // API audit 로그 저장 (성공)
+      this.dispatchLogService.dispatch({
+        type: LogType.INTEGRATION,
+        data: {
+          provider: 'DCS',
+          method: 'POST',
+          endpoint,
+          statusCode: 200,
+          duration,
+          success: true,
+          requestBody: body,
+          responseBody: response.data,
+        },
+      });
+
+      this.logger.log(
+        `게임 로그인 성공: dcsUserId=${dcsUserId}, status=${response.data.code}`,
+      );
+
+      return response.data;
+    } catch (error: any) {
+      const duration = Date.now() - startTime;
+
+      this.logger.error(
+        error,
+        `게임 로그인 실패: dcsUserId=${dcsUserId}, gameId=${gameId}, currency=${gameCurrency}, language=${language}`,
+      );
+
+      // API audit 로그 저장 (실패)
+      this.dispatchLogService.dispatch({
+        type: LogType.INTEGRATION,
+        data: {
+          provider: 'DCS',
+          method: 'POST',
+          endpoint,
+          statusCode: error.response?.status || 500,
+          duration,
+          success: false,
+          requestBody: body,
+          responseBody: error.response?.data || null,
           errorMessage: error.message || 'Unknown error',
         },
       });

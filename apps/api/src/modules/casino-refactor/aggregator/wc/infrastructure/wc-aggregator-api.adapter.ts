@@ -16,6 +16,19 @@ import type { WcAggregatorApiPort } from '../ports/out/wc-aggregator-api.port';
 import { GamingCurrencyCode } from 'src/utils/currency.util';
 import { mockResponse2 } from './mock2';
 
+export interface WhitecliffGameLaunchResponse {
+  status: number;
+  user_id: number;
+  sid: string;
+  launch_url: string;
+}
+
+export interface WhitecliffErrorResponse {
+  status: number;
+  error: string;
+  message?: string;
+}
+
 /**
  * WC Aggregator API Adapter
  *
@@ -193,6 +206,120 @@ export class WcAggregatorApiAdapter implements WcAggregatorApiPort {
         MessageCode.INTERNAL_SERVER_ERROR,
         HttpStatusCode.InternalServerError,
       );
+    }
+  }
+
+  /**
+   * 게임 실행 (회원가입 겸용)
+   */
+  async launchGame({
+    user,
+    prd,
+  }: {
+    user: {
+      id: number;
+      name: string;
+      balance: number;
+      language: Language;
+      gameCurrency: GamingCurrencyCode;
+      token: string;
+    };
+    prd: {
+      id: number;
+      type?: number;
+      is_mobile?: boolean;
+      table_id?: string;
+    };
+  }): Promise<WhitecliffGameLaunchResponse | WhitecliffErrorResponse> {
+    const startTime = Date.now();
+    const endpoint = '/auth';
+
+    try {
+      this.checkApiAvailability();
+
+      const whitecliffConfig = this.getConfigByCurrency(user.gameCurrency);
+
+      const authData = {
+        user: {
+          id: user.id,
+          name: user.name,
+          balance: user.balance,
+          language: user.language || Language.EN,
+          sid: user.token || '',
+          currency: whitecliffConfig.currency,
+          home_url: whitecliffConfig.redirectHomeUrl,
+        },
+        prd: {
+          id: prd.id,
+          type: prd.type || 0, // 0: 라이브 게임, 1: 슬롯/미니게임 (게임사별 게임 번호)
+          is_mobile: prd.is_mobile || false,
+          table_id: prd.table_id || '',
+        },
+      };
+
+      const url = `${whitecliffConfig.endpoint}${endpoint}`;
+
+      this.logger.log(`게임 실행 요청: userId=${user.id}, prdId=${prd.id}`);
+
+      const response = await firstValueFrom(
+        this.httpService.post<WhitecliffGameLaunchResponse>(url, authData, {
+          headers: {
+            'Content-Type': 'application/json',
+            'ag-code': whitecliffConfig.agentCode,
+            'ag-token': whitecliffConfig.token,
+          },
+          timeout: 10000,
+        }),
+      );
+
+      const duration = Date.now() - startTime;
+
+      // API audit 로그 저장 (성공)
+      this.dispatchLogService.dispatch({
+        type: LogType.INTEGRATION,
+        data: {
+          provider: 'WHITECLIFF',
+          method: 'POST',
+          endpoint,
+          statusCode: 200,
+          duration,
+          success: true,
+          requestBody: authData,
+          responseBody: response.data,
+        },
+      });
+
+      this.logger.log(
+        `게임 실행 성공: userId=${user.id}, status=${response.data.status}`,
+      );
+
+      return response.data;
+    } catch (error: any) {
+      const duration = Date.now() - startTime;
+
+      this.logger.error(error, `게임 실행 실패`);
+
+      // API audit 로그 저장 (실패)
+      this.dispatchLogService.dispatch({
+        type: LogType.INTEGRATION,
+        data: {
+          provider: 'WHITECLIFF',
+          method: 'POST',
+          endpoint,
+          statusCode: error.response?.status || 500,
+          duration,
+          success: false,
+          requestBody: null,
+          responseBody: error.response?.data || null,
+          errorMessage: error.message || 'Unknown error',
+        },
+      });
+
+      return {
+        status: 0,
+        error: 'API_REQUEST_FAILED',
+        message: error.message,
+      };
     }
   }
 }

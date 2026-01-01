@@ -1,7 +1,9 @@
 # 1. 의존성 및 빌드 결과물 (가장 많은 토큰을 잡아먹음)
 node_modules/
 dist/
-**/out/
+**/out/**
+!**/ports/
+!**/ports/**
 !**/ports/out/**
 build/
 .next/

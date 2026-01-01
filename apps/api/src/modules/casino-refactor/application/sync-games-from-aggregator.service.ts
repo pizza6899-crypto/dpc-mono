@@ -15,6 +15,10 @@ import type { DcAggregatorApiPort } from '../aggregator/dc/ports/out/dc-aggregat
 import { DcMapperService } from '../aggregator/dc/infrastructure/dc-mapper.service';
 import { WC_AGGREGATOR_API } from '../aggregator/wc/ports/out/wc-aggregator-api.token';
 import type { WcAggregatorApiPort } from '../aggregator/wc/ports/out/wc-aggregator-api.port';
+import {
+  isWhitecliffGameListResponse,
+  isWhitecliffErrorResponse,
+} from '../aggregator/wc/utils/wc-response.util';
 import { WcMapperService } from '../aggregator/wc/infrastructure/wc-mapper.service';
 import { GameTranslation } from '../domain';
 import { DispatchLogService } from 'src/modules/audit-log/application/dispatch-log.service';
@@ -447,7 +451,8 @@ export class SyncGamesFromAggregatorService {
     try {
       const wcResponse = await this.wcAdapter.getGameList({ provider });
 
-      if (wcResponse.status === 1 && wcResponse.game_list) {
+      // 타입 가드를 사용하여 성공 응답인지 확인
+      if (isWhitecliffGameListResponse(wcResponse)) {
         // EVOLUTION 프로바이더인 경우, 추가 prd_id들도 처리
         if (provider === GameProvider.EVOLUTION) {
           // 모든 prd_id (1: 아시아, 29: 인도, 31: 코리아) - 유저에게 보이지 않음
@@ -500,7 +505,7 @@ export class SyncGamesFromAggregatorService {
             }
           }
         }
-      } else {
+      } else if (isWhitecliffErrorResponse(wcResponse)) {
         const errorMessage = `WC API call failed: status=${wcResponse.status}, error=${wcResponse.error || 'Unknown error'}`;
         errors.push(errorMessage);
 
