@@ -99,6 +99,7 @@ export class GameTranslation {
    * Domain 엔티티를 Persistence 레이어로 변환
    */
   toPersistence(): {
+    uid: string;
     gameId: bigint;
     language: Language;
     providerName: string;
@@ -108,6 +109,7 @@ export class GameTranslation {
     updatedAt: Date;
   } {
     return {
+      uid: this.uid,
       gameId: this.gameId,
       language: this.language,
       providerName: this._providerName,

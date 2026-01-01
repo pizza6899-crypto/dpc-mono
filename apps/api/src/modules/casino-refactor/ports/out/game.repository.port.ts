@@ -76,4 +76,9 @@ export interface GameRepositoryPort {
    * 게임 번역 저장
    */
   saveTranslation(translation: GameTranslation): Promise<GameTranslation>;
+
+  /**
+   * 게임 번역 생성
+   */
+  createTranslation(translation: GameTranslation): Promise<GameTranslation>;
 }

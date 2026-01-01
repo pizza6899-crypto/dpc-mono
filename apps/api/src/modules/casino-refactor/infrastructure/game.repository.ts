@@ -265,5 +265,36 @@ export class GameRepository implements GameRepositoryPort {
       updatedAt: updatedTranslation.updatedAt,
     });
   }
+
+  async createTranslation(translation: GameTranslation): Promise<GameTranslation> {
+    if (translation.id !== null) {
+      throw new Error('Cannot create translation with existing id');
+    }
+
+    const persistence = translation.toPersistence();
+
+    const createdTranslation = await this.tx.gameTranslation.create({
+      data: {
+        uid: persistence.uid,
+        gameId: persistence.gameId,
+        language: persistence.language,
+        providerName: persistence.providerName,
+        categoryName: persistence.categoryName,
+        gameName: persistence.gameName,
+      },
+    });
+
+    return GameTranslation.fromPersistence({
+      id: createdTranslation.id,
+      uid: createdTranslation.uid,
+      gameId: createdTranslation.gameId,
+      language: createdTranslation.language,
+      providerName: createdTranslation.providerName,
+      categoryName: createdTranslation.categoryName,
+      gameName: createdTranslation.gameName,
+      createdAt: createdTranslation.createdAt,
+      updatedAt: createdTranslation.updatedAt,
+    });
+  }
 }
 

@@ -18,6 +18,10 @@ import {
 } from 'src/common/http/decorators/api-response.decorator';
 import { Paginated } from 'src/common/http/decorators/paginated.decorator';
 import { RequireRoles } from 'src/common/auth/decorators/roles.decorator';
+import { CurrentUser } from 'src/common/auth/decorators/current-user.decorator';
+import type { CurrentUserWithSession } from 'src/common/auth/decorators/current-user.decorator';
+import { RequestClientInfoParam } from 'src/common/auth/decorators/request-info.decorator';
+import type { RequestClientInfo } from 'src/common/http/types/client-info.types';
 import { UserRoleType } from '@repo/database';
 import type { PaginatedData } from 'src/common/http/types';
 import { ListGamesService } from '../../application/list-games.service';
@@ -161,19 +165,23 @@ export class GameAdminController {
   @Post('sync')
   @HttpCode(HttpStatus.OK)
   @ApiOperation({
-    summary: 'Sync games from DC aggregator / DC 게임 애그리게이터에서 게임 데이터 동기화 (관리자용)',
+    summary: 'Sync games from aggregator / 게임 애그리게이터에서 게임 데이터 동기화 (관리자용)',
     description:
-      '관리자가 명시적으로 호출하여 DC 게임 애그리게이터 API를 통해 게임 데이터를 업데이트하거나 생성합니다. (신규 게임, 서비스 종료 게임, 이미지 변경, 이름 변경, 다국어 등)',
+      '관리자가 명시적으로 호출하여 게임 애그리게이터 API를 통해 게임 데이터를 업데이트하거나 생성합니다. (신규 게임, 서비스 종료 게임, 이미지 변경, 이름 변경, 다국어 등) provider 파라미터가 없으면 전체 프로바이더를 동기화합니다.',
   })
   @ApiStandardResponse(SyncGamesFromAggregatorResponseDto, {
     status: 200,
-    description: 'Successfully synced games from DC aggregator / DC 게임 데이터 동기화 성공',
+    description: 'Successfully synced games from aggregator / 게임 데이터 동기화 성공',
   })
   async syncGamesFromAggregator(
+    @CurrentUser() admin: CurrentUserWithSession,
+    @RequestClientInfoParam() clientInfo: RequestClientInfo,
     @Body() dto: SyncGamesFromAggregatorDto,
   ): Promise<SyncGamesFromAggregatorResponseDto> {
     return await this.syncGamesFromAggregatorService.execute({
       provider: dto.provider,
+      adminUserId: admin?.id?.toString(),
+      clientInfo,
     });
   }
 
