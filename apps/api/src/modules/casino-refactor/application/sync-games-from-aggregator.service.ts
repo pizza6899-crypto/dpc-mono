@@ -103,39 +103,18 @@ export class SyncGamesFromAggregatorService {
 
       // 각 프로바이더별로 동기화 수행
       for (const provider of providers) {
-        try {
-          const providerResult = await this.syncProvider(
-            provider,
-            params.adminUserId,
-            params.clientInfo,
-          );
-          result.total += providerResult.total;
-          result.created += providerResult.created;
-          result.updated += providerResult.updated;
-          result.disabled += providerResult.disabled;
-          result.errors.push(...providerResult.errors);
-        } catch (error) {
-          result.errors.push(
-            `Provider sync failed (${provider}): ${error.message || 'Unknown error'}`,
-          );
-
-          // Audit 시스템 에러 로그 저장
-          this.dispatchLogService.dispatch(
-            {
-              type: LogType.ERROR,
-              data: {
-                userId: params.adminUserId,
-                errorCode: 'PROVIDER_SYNC_FAILED',
-                errorMessage: `프로바이더 동기화 실패: ${provider} - ${error.message || 'Unknown error'}`,
-                stackTrace: error instanceof Error ? error.stack : undefined,
-                path: '/admin/games/sync',
-                method: 'POST',
-                severity: 'ERROR',
-              },
-            },
-            params.clientInfo,
-          );
-        }
+        // syncProvider는 내부에서 모든 에러를 catch하고 로깅하므로
+        // 여기서는 결과만 수집 (중복 로깅 방지)
+        const providerResult = await this.syncProvider(
+          provider,
+          params.adminUserId,
+          params.clientInfo,
+        );
+        result.total += providerResult.total;
+        result.created += providerResult.created;
+        result.updated += providerResult.updated;
+        result.disabled += providerResult.disabled;
+        result.errors.push(...providerResult.errors);
       }
 
       const duration = Date.now() - startTime;
@@ -290,6 +269,7 @@ export class SyncGamesFromAggregatorService {
               {
                 type: LogType.ERROR,
                 data: {
+                  userId: adminUserId,
                   errorCode: 'GAME_UPSERT_FAILED',
                   errorMessage: `게임 upsert 실패: aggregatorGameId=${gameData.aggregatorGameId}, provider=${gameData.provider}`,
                   stackTrace: error instanceof Error ? error.stack : undefined,
@@ -298,6 +278,7 @@ export class SyncGamesFromAggregatorService {
                   severity: 'WARN', // 개별 게임 실패는 WARN 레벨
                 },
               },
+              clientInfo,
             );
           }
         }
@@ -431,7 +412,7 @@ export class SyncGamesFromAggregatorService {
       const errorMessage = `DC game list fetch failed: ${error.message || 'Unknown error'}`;
       errors.push(errorMessage);
 
-      // Audit 시스템 에러 로그 저장
+      // Audit 시스템 에러 로그 저장 (catch 블록에서 통합 처리)
       this.dispatchLogService.dispatch(
         {
           type: LogType.ERROR,
@@ -487,6 +468,24 @@ export class SyncGamesFromAggregatorService {
               }
             }
           }
+        } else if (provider === GameProvider.PRAGMATIC_PLAY_LIVE) {
+          // PRAGMATIC_PLAY_LIVE 프로바이더인 경우, prd_id 28 처리 - 유저에게 보이지 않음
+          const pragmaticLivePrdIds = [28];
+          for (const prdId of pragmaticLivePrdIds) {
+            const games = wcResponse.game_list[prdId.toString()];
+            if (games && Array.isArray(games)) {
+              for (const wcGame of games) {
+                const gameData = this.convertWcGameToGameData(
+                  wcGame,
+                  provider,
+                  false, // isVisibleToUser: false
+                );
+                if (gameData) {
+                  gameDataList.push(gameData);
+                }
+              }
+            }
+          }
         } else {
           // 다른 프로바이더는 기존 로직대로
           const prd_id = this.wcMapper.toWcProvider(provider);
@@ -527,7 +526,7 @@ export class SyncGamesFromAggregatorService {
       const errorMessage = `WC game list fetch failed: ${error.message || 'Unknown error'}`;
       errors.push(errorMessage);
 
-      // Audit 시스템 에러 로그 저장
+      // Audit 시스템 에러 로그 저장 (catch 블록에서 통합 처리)
       this.dispatchLogService.dispatch(
         {
           type: LogType.ERROR,
