@@ -66,5 +66,43 @@ export class GameSessionService {
       },
     });
   }
+
+  /**
+   * 토큰으로 게임 세션 조회 (트랜잭션 없이)
+   */
+  async findByToken(params: {
+    aggregatorType: GameAggregatorType;
+    token: string;
+  }): Promise<{
+    id: bigint;
+    exchangeRate: Prisma.Decimal;
+    walletCurrency: ExchangeCurrencyCode;
+    user: {
+      id: bigint;
+      dcsId: string | null;
+    };
+  } | null> {
+    const { aggregatorType, token } = params;
+
+    const gameSession = await this.tx.gameSession.findFirst({
+      where: {
+        aggregatorType,
+        token,
+      },
+      select: {
+        id: true,
+        exchangeRate: true,
+        walletCurrency: true,
+        user: {
+          select: {
+            id: true,
+            dcsId: true,
+          },
+        },
+      },
+    });
+
+    return gameSession;
+  }
 }
 

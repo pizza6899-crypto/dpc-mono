@@ -20,6 +20,7 @@ import { AppendWagerDcBetCallbackUseCase } from './application/use-cases/append-
 import { EndWagerDcBetCallbackUseCase } from './application/use-cases/end-wager-dc-bet-callback.use-case';
 import { FreeSpinResultDcBetCallbackUseCase } from './application/use-cases/free-spin-result-dc-bet-callback.use-case';
 import { PromoPayoutDcBetCallbackUseCase } from './application/use-cases/promo-payout-dc-bet-callback.use-case';
+import { GetBalanceDcCallbackUseCase } from './application/use-cases/get-balance-dc-callback.use-case';
 import { DcCallbackValidationGuard } from './guards/dc-callback-validation.guard';
 import { DcCallbackExceptionFilter } from './filters/dc-callback-exception.filter';
 import { DcBalanceFormatInterceptor } from './interceptors/dc-balance-format.interceptor';
@@ -45,6 +46,7 @@ import { DcBalanceFormatInterceptor } from './interceptors/dc-balance-format.int
     EndWagerDcBetCallbackUseCase,
     FreeSpinResultDcBetCallbackUseCase,
     PromoPayoutDcBetCallbackUseCase,
+    GetBalanceDcCallbackUseCase,
     DcCallbackValidationGuard,
     DcCallbackExceptionFilter,
     DcBalanceFormatInterceptor,

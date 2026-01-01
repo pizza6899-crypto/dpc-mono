@@ -11,7 +11,6 @@ import { DcsCallbackController } from './controllers/dcs-callback.controller';
 import { DcsCallbackService } from './application/dcs-callback.service';
 import { DcsGameService } from './application/dcs-game.service';
 import { CasinoModule } from '../casino.module';
-import { DcsApiLoggingInterceptor } from './infrastructure/dcs-api-logging.interceptor';
 import { DcsLoggingInterceptor } from './infrastructure/dcs-logging.interceptor';
 import { DcsGameRefreshService } from './application/dcs-game-refresh.service';
 import { QueueModule } from 'src/infrastructure/queue/queue.module';
@@ -34,7 +33,6 @@ import { DcsFetchGameReplayUrlProcessor } from './processors/dcs-fetch-game-repl
     DcsCallbackService,
     DcsGameService,
     DcsGameRefreshService,
-    DcsApiLoggingInterceptor,
     DcsLoggingInterceptor,
     DcsMapperService,
     DcsFetchGameReplayUrlProcessor,

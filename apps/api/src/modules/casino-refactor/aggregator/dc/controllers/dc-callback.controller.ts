@@ -40,6 +40,7 @@ import { DcCallbackValidationGuard } from '../guards/dc-callback-validation.guar
 import { DcCallbackExceptionFilter } from '../filters/dc-callback-exception.filter';
 import { ValidateDcCallback } from '../decorators/validate-dc-callback.decorator';
 import { DcBalanceFormatInterceptor } from '../interceptors/dc-balance-format.interceptor';
+import { GetBalanceDcCallbackUseCase } from '../application/use-cases/get-balance-dc-callback.use-case';
 
 @ApiTags('DC Callback(콜백)')
 @Controller('dopaminedev')
@@ -49,7 +50,7 @@ import { DcBalanceFormatInterceptor } from '../interceptors/dc-balance-format.in
 @UseInterceptors(DcBalanceFormatInterceptor)
 export class DcCallbackController {
   constructor(
-    private readonly balanceCallbackService: DcBalanceCallbackService,
+    private readonly getBalanceUseCase: GetBalanceDcCallbackUseCase,
     private readonly wagerUseCase: WagerDcBetCallbackUseCase,
     private readonly cancelWagerUseCase: CancelWagerDcBetCallbackUseCase,
     private readonly appendWagerUseCase: AppendWagerDcBetCallbackUseCase,
@@ -68,7 +69,7 @@ export class DcCallbackController {
     ['token'],
   )
   async login(@Body() body: DcLoginRequestDto): Promise<DcLoginResponseDto> {
-    return await this.balanceCallbackService.getBalance(body);
+    return await this.getBalanceUseCase.execute(body);
   }
 
   @Post('/wager')
@@ -223,7 +224,7 @@ export class DcCallbackController {
   async getBalance(
     @Body() body: GetDcBalanceRequestDto,
   ): Promise<GetDcBalanceResponseDto> {
-    return await this.balanceCallbackService.getBalance(body);
+    return await this.getBalanceUseCase.execute(body);
   }
 
   @Post('/promoPayout')
