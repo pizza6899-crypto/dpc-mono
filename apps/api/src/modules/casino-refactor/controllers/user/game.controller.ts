@@ -12,6 +12,9 @@ import {
   ApiPaginatedResponse,
 } from 'src/common/http/decorators/api-response.decorator';
 import { Paginated } from 'src/common/http/decorators/paginated.decorator';
+import { Public } from 'src/common/auth/decorators/roles.decorator';
+import { Throttle } from 'src/common/throttle/decorators/throttle.decorator';
+import { ThrottleScope } from 'src/common/throttle/types/throttle.types';
 import type { PaginatedData } from 'src/common/http/types';
 import { ListPlayableGamesService } from '../../application/list-playable-games.service';
 import { ListPlayableGamesQueryDto } from './dto/request/list-playable-games-query.dto';
@@ -33,8 +36,14 @@ export class GameController {
    * 플레이 가능한 게임 목록 조회 (유저용)
    */
   @Get()
+  @Public()
   @HttpCode(HttpStatus.OK)
   @Paginated()
+  @Throttle({
+    limit: 100,
+    ttl: 60, // 1분
+    scope: ThrottleScope.IP,
+  })
   @ApiOperation({
     summary: 'Get playable games / 플레이 가능한 게임 목록 조회',
     description:
