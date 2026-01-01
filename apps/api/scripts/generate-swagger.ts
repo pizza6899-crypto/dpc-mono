@@ -16,6 +16,17 @@ async function generate() {
 
   const document = SwaggerModule.createDocument(app, config);
 
+  // /admin으로 시작하는 엔드포인트만 필터링
+  if (document.paths) {
+    const adminPaths: Record<string, any> = {};
+    for (const [path, methods] of Object.entries(document.paths)) {
+      if (path.startsWith('/admin')) {
+        adminPaths[path] = methods;
+      }
+    }
+    document.paths = adminPaths;
+  }
+
   // 🔥 핵심: 모노레포 루트 경로 지정
   // apps/api/scripts에서 실행되므로, 모노레포 루트는 ../../ 입니다
   // process.cwd()는 명령어 실행 위치이므로, apps/api에서 실행하면 apps/api가 됩니다
