@@ -15,6 +15,7 @@
     "api:lint": "pnpm -F api lint",
     "api:format": "pnpm -F api format",
     "api:cli": "pnpm -F api cli",
+    "api:zip": "pnpm -F api zip",
     "api:template": "pnpm -F api template:generate",
     "api:swagger": "pnpm -F api swagger:generate",
     "db:generate": "pnpm -F @repo/database generate",
@@ -25,7 +26,8 @@
     "db:seed": "pnpm -F @repo/database seed",
     "db:studio": "pnpm -F @repo/database studio",
     "db:create:unified-logs-view": "pnpm -F @repo/database create:unified-logs-view",
-    "db:partition:audit-tables": "pnpm -F @repo/database partition:audit-tables"
+    "db:partition:audit-tables": "pnpm -F @repo/database partition:audit-tables",
+    "package:deploy": "node scripts/package-for-deploy.js && open ."
   },
   "devDependencies": {
     "@types/node": "^25.0.3",
