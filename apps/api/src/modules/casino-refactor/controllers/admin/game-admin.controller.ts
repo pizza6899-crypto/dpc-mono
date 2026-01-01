@@ -161,21 +161,19 @@ export class GameAdminController {
   @Post('sync')
   @HttpCode(HttpStatus.OK)
   @ApiOperation({
-    summary: 'Sync games from aggregator / 게임 애그리게이터에서 게임 데이터 동기화 (관리자용)',
+    summary: 'Sync games from DC aggregator / DC 게임 애그리게이터에서 게임 데이터 동기화 (관리자용)',
     description:
-      '관리자가 명시적으로 호출하여 하위 게임 애그리게이터 API를 통해 게임 데이터를 업데이트하거나 생성합니다. (신규 게임, 서비스 종료 게임, 이미지 변경, 이름 변경, 다국어 등)',
+      '관리자가 명시적으로 호출하여 DC 게임 애그리게이터 API를 통해 게임 데이터를 업데이트하거나 생성합니다. (신규 게임, 서비스 종료 게임, 이미지 변경, 이름 변경, 다국어 등)',
   })
   @ApiStandardResponse(SyncGamesFromAggregatorResponseDto, {
     status: 200,
-    description: 'Successfully synced games from aggregator / 게임 데이터 동기화 성공',
+    description: 'Successfully synced games from DC aggregator / DC 게임 데이터 동기화 성공',
   })
   async syncGamesFromAggregator(
     @Body() dto: SyncGamesFromAggregatorDto,
   ): Promise<SyncGamesFromAggregatorResponseDto> {
     return await this.syncGamesFromAggregatorService.execute({
-      aggregatorType: dto.aggregatorType,
       provider: dto.provider,
-      language: dto.language,
     });
   }
 

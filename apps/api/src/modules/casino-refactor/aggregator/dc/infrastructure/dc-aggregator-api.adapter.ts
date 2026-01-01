@@ -14,6 +14,8 @@ import { HttpStatusCode } from 'axios';
 import { GameProvider } from '@repo/database';
 import { DcMapperService } from './dc-mapper.service';
 import type { DcAggregatorApiPort } from '../ports/out/dc-aggregator-api.port';
+import * as fs from 'fs';
+import * as path from 'path';
 
 /**
  * DC Aggregator API Adapter
@@ -67,12 +69,10 @@ export class DcAggregatorApiAdapter implements DcAggregatorApiPort {
 
   /**
    * 게임 목록 조회
+   * TODO: 테스트용으로 mock 데이터 반환 중. 실제 API 연동 시 주석 해제 필요
    */
   async getGameList({ provider }: { provider: GameProvider }) {
-    this.checkApiAvailability();
-
     const startTime = Date.now();
-    const url = `${this.dcConfig.apiUrl}/dcs/getGameList`;
     const endpoint = '/dcs/getGameList';
 
     const body = {
@@ -82,68 +82,116 @@ export class DcAggregatorApiAdapter implements DcAggregatorApiPort {
     };
 
     try {
-      const response = await firstValueFrom(
-        this.httpService.post<{
-          code: number;
-          msg: string;
-          data: {
-            provider: string;
-            game_id: number;
-            game_name: string;
-            game_name_cn: string;
-            release_date: string;
-            rtp: string;
-            game_icon: string;
-            content_type: string;
-            game_type: string;
-            content: string;
-          }[];
-        }>(url, body, {
-          headers: {
-            'Content-Type': 'application/json',
-          },
-          timeout: 10000,
-        }),
+      // Mock 데이터 파일 읽기 (임시)
+      // process.cwd()는 apps/api를 가리키므로, src부터의 경로를 사용
+      const mockFilePath = path.join(
+        process.cwd(),
+        'src',
+        'modules',
+        'casino-refactor',
+        'aggregator',
+        'dc',
+        'infrastructure',
+        'gamelist_mock_dc.txt',
       );
+
+      if (!fs.existsSync(mockFilePath)) {
+        this.logger.error(`Mock 파일을 찾을 수 없습니다: ${mockFilePath}`);
+        throw new Error(`Mock file not found: ${mockFilePath}`);
+      }
+
+      const mockFileContent = fs.readFileSync(mockFilePath, 'utf-8');
+      const mockData = JSON.parse(mockFileContent);
 
       const duration = Date.now() - startTime;
 
-      // API audit 로그 저장 (성공) - 실패해도 메인 로직에 영향 없음
-      this.dispatchLogService
-        .dispatch({
-          type: LogType.INTEGRATION,
-          data: {
-            provider: 'DCS',
-            method: 'POST',
-            endpoint,
-            statusCode: response.status,
-            duration,
-            success: true,
-            requestBody: body,
-            responseBody: response.data,
-          },
-        })
+      // API audit 로그 저장 (성공)
+      this.dispatchLogService.dispatch({
+        type: LogType.INTEGRATION,
+        data: {
+          provider: 'DCS',
+          method: 'POST',
+          endpoint,
+          statusCode: 200,
+          duration,
+          success: true,
+          requestBody: body,
+          responseBody: mockData,
+        },
+      });
 
-      return response.data;
+      return mockData;
+
+      // 기존 API 호출 로직 (주석 처리)
+      // this.checkApiAvailability();
+      //
+      // const url = `${this.dcConfig.apiUrl}/dcs/getGameList`;
+      //
+      // const response = await firstValueFrom(
+      //   this.httpService.post<{
+      //     code: number;
+      //     msg: string;
+      //     data: {
+      //       provider: string;
+      //       game_id: number;
+      //       game_name: string;
+      //       game_name_cn: string;
+      //       release_date: string;
+      //       rtp: string;
+      //       game_icon: string;
+      //       content_type: string;
+      //       game_type: string;
+      //       content: string;
+      //     }[];
+      //   }>(url, body, {
+      //     headers: {
+      //       'Content-Type': 'application/json',
+      //     },
+      //     timeout: 10000,
+      //   }),
+      // );
+      //
+      // const duration = Date.now() - startTime;
+      //
+      // // API audit 로그 저장 (성공)
+      // this.dispatchLogService.dispatch({
+      //   type: LogType.INTEGRATION,
+      //   data: {
+      //     provider: 'DCS',
+      //     method: 'POST',
+      //     endpoint,
+      //     statusCode: response.status,
+      //     duration,
+      //     success: true,
+      //     requestBody: body,
+      //     responseBody: response.data,
+      //   },
+      // });
+      //
+      // return response.data;
     } catch (error: any) {
       const duration = Date.now() - startTime;
 
-      // API audit 로그 저장 (실패) - 실패해도 메인 로직에 영향 없음
-      this.dispatchLogService
-        .dispatch({
-          type: LogType.INTEGRATION,
-          data: {
-            provider: 'DCS',
-            method: 'POST',
-            endpoint,
-            statusCode: error.response?.status,
-            duration,
-            success: false,
-            requestBody: body,
-            responseBody: error.response?.data,
-            errorMessage: error.message || 'Unknown error',
-          },
-        })
+      this.logger.error(
+        error,
+        `게임 목록 조회 실패: provider=${provider}`,
+      );
+
+      // API audit 로그 저장 (실패)
+      this.dispatchLogService.dispatch({
+        type: LogType.INTEGRATION,
+        data: {
+          provider: 'DCS',
+          method: 'POST',
+          endpoint,
+          statusCode: 500,
+          duration,
+          success: false,
+          requestBody: body,
+          responseBody: null,
+          errorMessage: error.message || 'Unknown error',
+        },
+      });
 
       throw new ApiException(
         MessageCode.INTERNAL_SERVER_ERROR,

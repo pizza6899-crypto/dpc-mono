@@ -1,23 +1,21 @@
 // src/modules/casino-refactor/application/sync-games-from-aggregator.service.ts
 import { Inject, Injectable, Logger } from '@nestjs/common';
-import { ModuleRef } from '@nestjs/core';
 import { GAME_REPOSITORY } from '../ports/out/game.repository.token';
 import type { GameRepositoryPort } from '../ports/out/game.repository.port';
-import { Game, GameTranslation } from '../domain';
+import { Game } from '../domain';
 import {
   GameAggregatorType,
   GameProvider,
   GameCategory,
   Language,
-  Prisma,
 } from '@repo/database';
 import { generateUid } from 'src/utils/id.util';
-import { GamingCurrencyCode, GAMING_CURRENCIES } from 'src/utils/currency.util';
+import { DC_AGGREGATOR_API } from '../aggregator/dc/ports/out/dc-aggregator-api.token';
+import type { DcAggregatorApiPort } from '../aggregator/dc/ports/out/dc-aggregator-api.port';
+import { DcMapperService } from '../aggregator/dc/infrastructure/dc-mapper.service';
 
 interface SyncGamesFromAggregatorParams {
-  aggregatorType: GameAggregatorType;
-  provider?: GameProvider;
-  language?: Language;
+  provider: GameProvider;
 }
 
 interface SyncGamesResult {
@@ -42,15 +40,15 @@ export class SyncGamesFromAggregatorService {
   constructor(
     @Inject(GAME_REPOSITORY)
     private readonly repository: GameRepositoryPort,
-    private readonly moduleRef: ModuleRef,
+    @Inject(DC_AGGREGATOR_API)
+    private readonly dcAdapter: DcAggregatorApiPort,
+    private readonly dcMapper: DcMapperService,
   ) {}
 
   async execute(
     params: SyncGamesFromAggregatorParams,
   ): Promise<SyncGamesResult> {
-    this.logger.log(
-      `게임 동기화 시작: aggregatorType=${params.aggregatorType}, provider=${params.provider}`,
-    );
+    this.logger.log(`게임 동기화 시작: provider=${params.provider}`);
 
     const result: SyncGamesResult = {
       total: 0,
@@ -61,6 +59,15 @@ export class SyncGamesFromAggregatorService {
     };
 
     try {
+      // 프로바이더에 따라 애그리게이터 결정
+      const aggregatorType = this.getAggregatorTypeByProvider(params.provider);
+      if (!aggregatorType) {
+        result.errors.push(
+          `Unsupported provider: ${params.provider}`,
+        );
+        return result;
+      }
+
       // 애그리게이터 타입에 따라 분기
       let gameDataList: Array<{
         aggregatorType: GameAggregatorType;
@@ -80,19 +87,77 @@ export class SyncGamesFromAggregatorService {
         }>;
       }> = [];
 
-      if (params.aggregatorType === GameAggregatorType.WHITECLIFF) {
+      if (aggregatorType === GameAggregatorType.DCS) {
+        // DC 어댑터 호출
+        try {
+
+          // DC API 호출
+          const dcResponse = await this.dcAdapter.getGameList({
+            provider: params.provider,
+          });
+
+          // DC 응답을 도메인 모델로 변환
+          if (dcResponse.code === 1000 && dcResponse.data) {
+            for (const dcGame of dcResponse.data) {
+              const domainProvider = this.dcMapper.toDomainProvider(dcGame.provider);
+              if (!domainProvider) {
+                continue;
+              }
+
+              // 카테고리는 content_type이나 game_type에서 추론
+              // DC API 응답에는 명시적인 category가 없으므로 기본값 사용
+              const category = GameCategory.SLOTS; // 기본값, 필요시 매핑 로직 추가
+
+              // 번역 정보 준비
+              const translations: Array<{
+                language: Language;
+                providerName: string;
+                categoryName: string;
+                gameName: string;
+              }> = [];
+
+              // 영어 번역
+              if (dcGame.game_name) {
+                translations.push({
+                  language: Language.EN,
+                  providerName: dcGame.content || dcGame.provider,
+                  categoryName: dcGame.content_type || 'Standard',
+                  gameName: dcGame.game_name,
+                });
+              }
+
+              gameDataList.push({
+                aggregatorType: GameAggregatorType.DCS,
+                provider: domainProvider,
+                category,
+                aggregatorGameId: dcGame.game_id,
+                gameType: dcGame.game_type || null,
+                tableId: null,
+                iconLink: dcGame.game_icon || null,
+                isEnabled: true,
+                isVisibleToUser: true,
+                translations,
+              });
+            }
+          } else {
+            result.errors.push(
+              `DC API call failed: code=${dcResponse.code}, msg=${dcResponse.msg}`,
+            );
+          }
+        } catch (error) {
+          this.logger.error(error, 'DC game list fetch failed');
+          result.errors.push(
+            `DC game list fetch failed: ${error.message || 'Unknown error'}`,
+          );
+        }
+      } else if (aggregatorType === GameAggregatorType.WHITECLIFF) {
         // WC 모듈의 서비스 호출 (ModuleRef를 통해 동적 주입)
-            return result;
-      } else if (params.aggregatorType === GameAggregatorType.DCS) {
-        // TODO: DC 모듈의 서비스 호출
-        this.logger.warn(
-          'DC 게임 동기화는 아직 구현되지 않았습니다.',
-        );
-        result.errors.push('DC 게임 동기화는 아직 구현되지 않았습니다.');
+        // TODO: 구현 필요
+        result.errors.push('Whitecliff 게임 동기화는 아직 구현되지 않았습니다.');
         return result;
       } else {
         result.errors.push(
-          `지원하지 않는 애그리게이터 타입: ${params.aggregatorType}`,
+          `지원하지 않는 애그리게이터 타입: ${aggregatorType}`,
         );
         return result;
       }
@@ -211,6 +276,34 @@ export class SyncGamesFromAggregatorService {
 
       return { created: true, game: createdGame };
     }
+  }
+
+  /**
+   * 프로바이더에 따라 애그리게이터 타입 결정
+   * @private
+   */
+  private getAggregatorTypeByProvider(
+    provider: GameProvider,
+  ): GameAggregatorType | null {
+    // DC 애그리게이터를 사용하는 프로바이더
+    if (
+      provider === GameProvider.RELAX_GAMING ||
+      provider === GameProvider.PLAYNGO
+    ) {
+      return GameAggregatorType.DCS;
+    }
+
+    // Whitecliff 애그리게이터를 사용하는 프로바이더
+    if (
+      provider === GameProvider.EVOLUTION ||
+      provider === GameProvider.PRAGMATIC_PLAY_LIVE ||
+      provider === GameProvider.PG_SOFT ||
+      provider === GameProvider.PRAGMATIC_PLAY_SLOTS
+    ) {
+      return GameAggregatorType.WHITECLIFF;
+    }
+
+    return null;
   }
 }
 

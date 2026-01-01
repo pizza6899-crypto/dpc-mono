@@ -10,9 +10,10 @@ import { GameController } from './controllers/user/game.controller';
 import { GameRepository } from './infrastructure/game.repository';
 import { GameMapper } from './infrastructure/game.mapper';
 import { GAME_REPOSITORY } from './ports/out/game.repository.token';
+import { DcModule } from './aggregator/dc/dc.module';
 
 @Module({
-  imports: [],
+  imports: [DcModule],
   providers: [
     ListGamesService,
     ListPlayableGamesService,
