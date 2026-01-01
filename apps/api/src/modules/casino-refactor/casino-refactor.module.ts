@@ -1,18 +1,38 @@
 // src/modules/casino-refactor/casino-refactor.module.ts
 import { Module } from '@nestjs/common';
+import { ListGamesService } from './application/list-games.service';
+import { ListPlayableGamesService } from './application/list-playable-games.service';
+import { UpdateGameService } from './application/update-game.service';
+import { UpdateGameTranslationService } from './application/update-game-translation.service';
+import { SyncGamesFromAggregatorService } from './application/sync-games-from-aggregator.service';
+import { GameAdminController } from './controllers/admin/game-admin.controller';
+import { GameController } from './controllers/user/game.controller';
+import { GameRepository } from './infrastructure/game.repository';
+import { GameMapper } from './infrastructure/game.mapper';
+import { GAME_REPOSITORY } from './ports/out/game.repository.token';
 
 @Module({
-  imports: [
-    // TODO: 필요한 모듈 import 추가
-  ],
+  imports: [],
   providers: [
-    // TODO: Providers 추가
+    ListGamesService,
+    ListPlayableGamesService,
+    UpdateGameService,
+    UpdateGameTranslationService,
+    SyncGamesFromAggregatorService,
+    GameMapper,
+    {
+      provide: GAME_REPOSITORY,
+      useClass: GameRepository,
+    },
   ],
   controllers: [
-    // TODO: Controllers 추가
+    GameAdminController,
+    GameController,
   ],
   exports: [
-    // TODO: Exports 추가
+    ListGamesService,
+    ListPlayableGamesService,
+    GAME_REPOSITORY,
   ],
 })
 export class CasinoRefactorModule {}

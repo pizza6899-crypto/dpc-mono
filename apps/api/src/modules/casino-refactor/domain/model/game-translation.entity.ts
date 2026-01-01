@@ -160,6 +160,25 @@ export class GameTranslation {
     (this as any).updatedAt = new Date();
   }
 
+  /**
+   * 번역 정보 업데이트
+   */
+  update(params: {
+    providerName?: string;
+    categoryName?: string;
+    gameName?: string;
+  }): void {
+    if (params.providerName !== undefined) {
+      this.updateProviderName(params.providerName);
+    }
+    if (params.categoryName !== undefined) {
+      this.updateCategoryName(params.categoryName);
+    }
+    if (params.gameName !== undefined) {
+      this.updateGameName(params.gameName);
+    }
+  }
+
   // Getters
   get providerName(): string {
     return this._providerName;

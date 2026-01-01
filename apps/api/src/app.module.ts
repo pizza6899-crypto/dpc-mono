@@ -20,6 +20,7 @@ import { HttpExceptionFilter } from './common/http/exception/http-exception.filt
 import { WalletModule } from './modules/wallet/wallet.module';
 import { CommonLoggerModule } from './common/logger/logger.module';
 import { AuditLogModule } from './modules/audit-log/audit-log.module';
+import { CasinoRefactorModule } from './modules/casino-refactor/casino-refactor.module';
 
 @Module({
   imports: [
@@ -31,7 +32,8 @@ import { AuditLogModule } from './modules/audit-log/audit-log.module';
     ScheduleModule.forRoot(),
     AuditLogModule,
     AuthModule,
-    CasinoModule,
+    // CasinoModule,
+    CasinoRefactorModule,
     PaymentModule,
     ExchangeModule,
     VipModule,

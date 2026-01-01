@@ -246,6 +246,44 @@ export class Game {
     (this as any).updatedAt = new Date();
   }
 
+  /**
+   * 게임 정보 업데이트
+   */
+  update(params: {
+    gameType?: string | null;
+    tableId?: string | null;
+    iconLink?: string | null;
+    isEnabled?: boolean;
+    isVisibleToUser?: boolean;
+    houseEdge?: Prisma.Decimal;
+    contributionRate?: Prisma.Decimal;
+  }): void {
+    if (params.gameType !== undefined) {
+      (this as any).gameType = params.gameType;
+    }
+    if (params.tableId !== undefined) {
+      (this as any).tableId = params.tableId;
+    }
+    if (params.iconLink !== undefined) {
+      (this as any).iconLink = params.iconLink;
+    }
+    if (params.isEnabled !== undefined) {
+      (this as any)._isEnabled = params.isEnabled;
+    }
+    if (params.isVisibleToUser !== undefined) {
+      (this as any)._isVisibleToUser = params.isVisibleToUser;
+    }
+    if (params.houseEdge !== undefined) {
+      this.updateHouseEdge(params.houseEdge);
+      return; // updateHouseEdge가 이미 updatedAt을 업데이트함
+    }
+    if (params.contributionRate !== undefined) {
+      this.updateContributionRate(params.contributionRate);
+      return; // updateContributionRate가 이미 updatedAt을 업데이트함
+    }
+    (this as any).updatedAt = new Date();
+  }
+
   // Getters
   get isEnabled(): boolean {
     return this._isEnabled;

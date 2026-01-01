@@ -2,6 +2,7 @@
 node_modules/
 dist/
 out/
+!**/ports/out/**  # ports/out/ 디렉토리는 예외 (헥사고날 아키텍처 구조)
 build/
 .next/
 .nuxt/
