@@ -13,6 +13,8 @@ import { DeletePromotionService } from './application/delete-promotion.service';
 import { TogglePromotionActiveService } from './application/toggle-promotion-active.service';
 import { FindPromotionParticipantsService } from './application/find-promotion-participants.service';
 import { GetPromotionStatisticsService } from './application/get-promotion-statistics.service';
+import { GetActivePromotionsForUserService } from './application/get-active-promotions-for-user.service';
+import { GetPromotionByIdForUserService } from './application/get-promotion-by-id-for-user.service';
 import { PromotionRepository } from './infrastructure/promotion.repository';
 import { PromotionMapper } from './infrastructure/promotion.mapper';
 import { PROMOTION_REPOSITORY } from './ports/out';
@@ -34,6 +36,8 @@ import { PromotionAdminController } from './controllers/admin/promotion-admin.co
     TogglePromotionActiveService,
     FindPromotionParticipantsService,
     GetPromotionStatisticsService,
+    GetActivePromotionsForUserService,
+    GetPromotionByIdForUserService,
     PromotionMapper,
     {
       provide: PROMOTION_REPOSITORY,

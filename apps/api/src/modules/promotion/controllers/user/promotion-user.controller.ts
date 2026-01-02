@@ -21,8 +21,9 @@ import { CurrentUser } from 'src/common/auth/decorators/current-user.decorator';
 import type { CurrentUserWithSession } from 'src/common/auth/decorators/current-user.decorator';
 import { AuditLog } from 'src/modules/audit-log/infrastructure';
 import { LogType } from 'src/modules/audit-log/domain';
-import { FindActivePromotionsService } from '../../application/find-active-promotions.service';
 import { FindUserPromotionsService } from '../../application/find-user-promotions.service';
+import { GetActivePromotionsForUserService } from '../../application/get-active-promotions-for-user.service';
+import { GetPromotionByIdForUserService } from '../../application/get-promotion-by-id-for-user.service';
 import {
   ActivePromotionsResponseDto,
   PromotionResponseDto,
@@ -37,15 +38,15 @@ import { PROMOTION_REPOSITORY } from '../../ports/out';
 import type { PromotionRepositoryPort } from '../../ports/out/promotion.repository.port';
 import { Inject } from '@nestjs/common';
 import { Language } from '@repo/database';
-import { PromotionNotFoundException } from '../../domain';
 
 @Controller('promotions')
 @ApiTags('Promotion (프로모션)')
 @ApiStandardErrors()
 export class PromotionUserController {
   constructor(
-    private readonly findActivePromotionsService: FindActivePromotionsService,
     private readonly findUserPromotionsService: FindUserPromotionsService,
+    private readonly getActivePromotionsForUserService: GetActivePromotionsForUserService,
+    private readonly getPromotionByIdForUserService: GetPromotionByIdForUserService,
     @Inject(PROMOTION_REPOSITORY)
     private readonly repository: PromotionRepositoryPort,
   ) {}
@@ -79,50 +80,14 @@ export class PromotionUserController {
   async getActivePromotions(
     @Query() query: ListActivePromotionsQueryDto,
   ): Promise<PaginatedData<PromotionResponseDto>> {
-    const result = await this.repository.findActivePromotionsPaginated({
+    return await this.getActivePromotionsForUserService.execute({
       page: query.page,
       limit: query.limit,
       sortBy: query.sortBy,
       sortOrder: query.sortOrder,
+      language: query.language,
+      currency: query.currency,
     });
-    const defaultLanguage = query.language || Language.EN;
-
-    return {
-      data: result.promotions.map((promotion): PromotionResponseDto => {
-        const translations = promotion.getTranslations();
-        const currencies = promotion.getCurrencies();
-        const currentTranslation = translations?.find(
-          (t) => t.language === defaultLanguage,
-        );
-
-        return {
-          id: Number(promotion.id),
-          name: currentTranslation?.name || promotion.managementName,
-          description: currentTranslation?.description || null,
-          managementName: promotion.managementName,
-          targetType: promotion.targetType as string,
-          bonusType: promotion.bonusType as string,
-          bonusRate: promotion.bonusRate?.toString(),
-          rollingMultiplier: promotion.rollingMultiplier?.toString(),
-          isOneTime: promotion.isOneTime,
-          startDate: promotion.startDate,
-          endDate: promotion.endDate,
-          translations: translations?.map((t) => ({
-            language: t.language,
-            name: t.name,
-            description: t.description,
-          })),
-          currencies: currencies?.map((c) => ({
-            currency: c.currency,
-            minDepositAmount: c.minDepositAmount.toString(),
-            maxBonusAmount: c.maxBonusAmount?.toString(),
-          })),
-        };
-      }),
-      page: query.page || 1,
-      limit: query.limit || 20,
-      total: result.total,
-    };
   }
 
   /**
@@ -160,41 +125,10 @@ export class PromotionUserController {
     @Param('id', ParseIntPipe) id: number,
     @Query('language') language?: Language,
   ): Promise<PromotionResponseDto> {
-    const promotion = await this.repository.findById(BigInt(id));
-    if (!promotion) {
-      throw new PromotionNotFoundException(BigInt(id));
-    }
-
-    const translations = promotion.getTranslations();
-    const currencies = promotion.getCurrencies();
-    const defaultLanguage = language || Language.EN;
-    const currentTranslation = translations?.find(
-      (t) => t.language === defaultLanguage,
-    );
-
-    return {
-      id: Number(promotion.id),
-      name: currentTranslation?.name || promotion.managementName,
-      description: currentTranslation?.description || null,
-      managementName: promotion.managementName,
-      targetType: promotion.targetType as string,
-      bonusType: promotion.bonusType as string,
-      bonusRate: promotion.bonusRate?.toString(),
-      rollingMultiplier: promotion.rollingMultiplier?.toString(),
-      isOneTime: promotion.isOneTime,
-      startDate: promotion.startDate,
-      endDate: promotion.endDate,
-      translations: translations?.map((t) => ({
-        language: t.language,
-        name: t.name,
-        description: t.description,
-      })),
-      currencies: currencies?.map((c) => ({
-        currency: c.currency,
-        minDepositAmount: c.minDepositAmount.toString(),
-        maxBonusAmount: c.maxBonusAmount?.toString(),
-      })),
-    };
+    return await this.getPromotionByIdForUserService.execute({
+      id: BigInt(id),
+      language,
+    });
   }
 
   /**

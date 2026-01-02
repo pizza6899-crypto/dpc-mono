@@ -2,7 +2,7 @@
 import { ApiPropertyOptional } from '@nestjs/swagger';
 import { IsEnum, IsOptional } from 'class-validator';
 import { createPaginationQueryDto } from 'src/common/http/types/pagination.types';
-import { Language } from '@repo/database';
+import { Language, ExchangeCurrencyCode } from '@repo/database';
 
 type PromotionSortFields = 'createdAt' | 'updatedAt' | 'id';
 
@@ -23,5 +23,14 @@ export class ListActivePromotionsQueryDto extends createPaginationQueryDto<Promo
   @IsOptional()
   @IsEnum(Language)
   language?: Language;
+
+  @ApiPropertyOptional({
+    description: '통화 코드 (특정 통화의 프로모션만 조회)',
+    enum: ExchangeCurrencyCode,
+    example: ExchangeCurrencyCode.USDT,
+  })
+  @IsOptional()
+  @IsEnum(ExchangeCurrencyCode)
+  currency?: ExchangeCurrencyCode;
 }
 

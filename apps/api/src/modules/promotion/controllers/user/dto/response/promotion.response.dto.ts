@@ -1,55 +1,12 @@
 // src/modules/promotion/controllers/user/dto/response/promotion.response.dto.ts
 import { ApiProperty, ApiPropertyOptional } from '@nestjs/swagger';
 
-export class PromotionTranslationDto {
-  @ApiProperty({
-    description: '언어 코드',
-    example: 'KO',
-  })
-  language: string;
-
-  @ApiProperty({
-    description: '프로모션 이름',
-    example: '첫 충전 100% 보너스',
-  })
-  name: string;
-
-  @ApiPropertyOptional({
-    description: '프로모션 설명',
-    example: '첫 충전 시 100% 보너스를 받으세요!',
-    nullable: true,
-  })
-  description?: string | null;
-}
-
-export class PromotionCurrencyDto {
-  @ApiProperty({
-    description: '통화 코드',
-    example: 'USDT',
-  })
-  currency: string;
-
-  @ApiProperty({
-    description: '최소 입금 금액',
-    example: '10.00',
-    type: String,
-  })
-  minDepositAmount: string;
-
-  @ApiPropertyOptional({
-    description: '최대 보너스 금액',
-    example: '1000.00',
-    type: String,
-  })
-  maxBonusAmount?: string;
-}
-
 export class PromotionResponseDto {
   @ApiProperty({
-    description: '프로모션 ID',
-    example: 1,
+    description: '프로모션 UID',
+    example: 'promo_abc123',
   })
-  id: number;
+  uid: string;
 
   @ApiProperty({
     description: '프로모션 이름 (현재 언어)',
@@ -65,10 +22,31 @@ export class PromotionResponseDto {
   description?: string | null;
 
   @ApiPropertyOptional({
-    description: '관리용 프로모션 이름 (fallback)',
-    example: '첫 충전 100% 보너스',
+    description: '언어 코드',
+    example: 'KO',
   })
-  managementName?: string;
+  language?: string;
+
+  @ApiPropertyOptional({
+    description: '통화 코드',
+    example: 'USDT',
+  })
+  currency?: string;
+
+  @ApiPropertyOptional({
+    description: '최소 입금 금액',
+    example: '10.00',
+    type: String,
+  })
+  minDepositAmount?: string;
+
+  @ApiPropertyOptional({
+    description: '최대 보너스 금액',
+    example: '1000.00',
+    type: String,
+    nullable: true,
+  })
+  maxBonusAmount?: string | null;
 
   @ApiProperty({
     description: '프로모션 타겟 타입',
@@ -115,18 +93,6 @@ export class PromotionResponseDto {
     nullable: true,
   })
   endDate: Date | null;
-
-  @ApiPropertyOptional({
-    description: '번역 정보 목록',
-    type: [PromotionTranslationDto],
-  })
-  translations?: PromotionTranslationDto[];
-
-  @ApiPropertyOptional({
-    description: '통화별 설정 목록',
-    type: [PromotionCurrencyDto],
-  })
-  currencies?: PromotionCurrencyDto[];
 }
 
 export class ActivePromotionsResponseDto {
