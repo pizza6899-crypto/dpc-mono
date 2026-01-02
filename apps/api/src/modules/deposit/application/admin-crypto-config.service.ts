@@ -1,33 +1,35 @@
 // src/modules/deposit/application/admin-crypto-config.service.ts
 import { Injectable, Logger } from '@nestjs/common';
-import { PrismaService } from 'src/infrastructure/prisma/prisma.service';
+import { InjectTransaction } from '@nestjs-cls/transactional';
+import type { Transaction } from '@nestjs-cls/transactional';
+import type { TransactionalAdapterPrisma } from '@nestjs-cls/transactional-adapter-prisma';
 import { Prisma } from '@repo/database';
 import type { PaginatedData, RequestClientInfo } from 'src/common/http/types';
 import { generateUid } from 'src/utils/id.util';
 import { CryptoConfigNotFoundException } from '../domain';
+import {
+  GetCryptoConfigsQueryDto,
+  UpdateCryptoConfigRequestDto,
+  CryptoConfigResponseDto
+} from '../dtos/crypto-config-admin.dto';
 
 @Injectable()
 export class AdminCryptoConfigService {
   private readonly logger = new Logger(AdminCryptoConfigService.name);
 
-  constructor(private readonly prismaService: PrismaService) {}
+  constructor(
+    @InjectTransaction()
+    private readonly tx: Transaction<TransactionalAdapterPrisma>,
+  ) { }
 
   /**
    * 암호화폐 설정 목록 조회
    */
   async getCryptoConfigs(
-    query: {
-      page?: number;
-      limit?: number;
-      sortBy?: string;
-      sortOrder?: 'asc' | 'desc';
-      symbol?: string;
-      network?: string;
-      isActive?: boolean;
-    },
+    query: GetCryptoConfigsQueryDto,
     adminId: bigint,
     requestInfo: RequestClientInfo,
-  ): Promise<PaginatedData<any>> {
+  ): Promise<PaginatedData<CryptoConfigResponseDto>> {
     const {
       page = 1,
       limit = 20,
@@ -51,13 +53,13 @@ export class AdminCryptoConfigService {
     };
 
     const [configs, total] = await Promise.all([
-      this.prismaService.cryptoConfig.findMany({
+      this.tx.cryptoConfig.findMany({
         where,
         skip,
         take: limit,
         orderBy,
       }),
-      this.prismaService.cryptoConfig.count({ where }),
+      this.tx.cryptoConfig.count({ where }),
     ]);
 
     return {
@@ -87,8 +89,8 @@ export class AdminCryptoConfigService {
     id: bigint,
     adminId: bigint,
     requestInfo: RequestClientInfo,
-  ): Promise<any> {
-    const config = await this.prismaService.cryptoConfig.findUnique({
+  ): Promise<CryptoConfigResponseDto> {
+    const config = await this.tx.cryptoConfig.findUnique({
       where: { id },
     });
 
@@ -116,19 +118,11 @@ export class AdminCryptoConfigService {
    */
   async updateCryptoConfig(
     id: bigint,
-    dto: {
-      symbol?: string;
-      network?: string;
-      isActive?: boolean;
-      minDepositAmount?: string;
-      depositFeeRate?: string;
-      confirmations?: number;
-      contractAddress?: string | null;
-    },
+    dto: UpdateCryptoConfigRequestDto,
     adminId: bigint,
     requestInfo: RequestClientInfo,
-  ): Promise<any> {
-    const existing = await this.prismaService.cryptoConfig.findUnique({
+  ): Promise<CryptoConfigResponseDto> {
+    const existing = await this.tx.cryptoConfig.findUnique({
       where: { id },
     });
 
@@ -149,7 +143,7 @@ export class AdminCryptoConfigService {
     if (dto.contractAddress !== undefined)
       updateData.contractAddress = dto.contractAddress;
 
-    const updated = await this.prismaService.cryptoConfig.update({
+    const updated = await this.tx.cryptoConfig.update({
       where: { id },
       data: updateData,
     });

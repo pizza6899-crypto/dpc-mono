@@ -13,7 +13,7 @@ import { ExchangeCurrencyCode } from '@repo/database';
  */
 export class BankConfig {
   private constructor(
-    public readonly id: bigint,
+    public readonly id: bigint | null,
     public readonly uid: string,
     public readonly currency: ExchangeCurrencyCode,
     public readonly bankName: string,
@@ -30,7 +30,44 @@ export class BankConfig {
     public readonly createdAt: Date,
     public readonly updatedAt: Date,
     private _deletedAt: Date | null,
-  ) {}
+  ) { }
+
+  /**
+   * 새로운 엔티티 생성 (팩토리 메서드)
+   */
+  static create(params: {
+    uid: string;
+    currency: ExchangeCurrencyCode;
+    bankName: string;
+    accountNumber: string;
+    accountHolder: string;
+    isActive?: boolean;
+    priority?: number;
+    description?: string | null;
+    notes?: string | null;
+    minAmount: Prisma.Decimal;
+    maxAmount?: Prisma.Decimal | null;
+  }): BankConfig {
+    return new BankConfig(
+      null, // 새 엔티티는 id 없음
+      params.uid, // 새 엔티티는 uid 없음 (DB 자동 생성)
+      params.currency,
+      params.bankName,
+      params.accountNumber,
+      params.accountHolder,
+      params.isActive ?? true,
+      params.priority ?? 0,
+      params.description ?? null,
+      params.notes ?? null,
+      params.minAmount,
+      params.maxAmount ?? null,
+      0, // totalDeposits 초기값
+      new Prisma.Decimal(0), // totalDepositAmount 초기값
+      new Date(),
+      new Date(),
+      null,
+    );
+  }
 
   /**
    * DB에서 조회한 데이터로부터 엔티티 생성
@@ -79,7 +116,7 @@ export class BankConfig {
    * Domain 엔티티를 Persistence 레이어로 변환
    */
   toPersistence(): {
-    id: bigint;
+    id: bigint | null;
     uid: string;
     currency: ExchangeCurrencyCode;
     bankName: string;

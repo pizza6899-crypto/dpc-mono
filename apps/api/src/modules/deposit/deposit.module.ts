@@ -17,9 +17,19 @@ import { ApproveDepositService } from './application/approve-deposit.service';
 import { RejectDepositService } from './application/reject-deposit.service';
 import { AdminBankConfigService } from './application/admin-bank-config.service';
 import { AdminCryptoConfigService } from './application/admin-crypto-config.service';
+import { GetAvailableDepositMethodsService } from './application/get-available-deposit-methods.service';
+import { CreateBankConfigService } from './application/create-bank-config.service';
 import { DepositDetailMapper } from './infrastructure/deposit-detail.mapper';
 import { DepositDetailRepository } from './infrastructure/deposit-detail.repository';
-import { DEPOSIT_DETAIL_REPOSITORY } from './ports/out';
+import { BankConfigMapper } from './infrastructure/bank-config.mapper';
+import { BankConfigRepository } from './infrastructure/bank-config.repository';
+import { CryptoConfigMapper } from './infrastructure/crypto-config.mapper';
+import { CryptoConfigRepository } from './infrastructure/crypto-config.repository';
+import {
+  DEPOSIT_DETAIL_REPOSITORY,
+  BANK_CONFIG_REPOSITORY,
+  CRYPTO_CONFIG_REPOSITORY,
+} from './ports/out';
 
 @Module({
   imports: [
@@ -35,11 +45,21 @@ import { DEPOSIT_DETAIL_REPOSITORY } from './ports/out';
   providers: [
     // Infrastructure (Mapper)
     DepositDetailMapper,
+    BankConfigMapper,
+    CryptoConfigMapper,
 
     // Repository (Outbound Port 구현)
     {
       provide: DEPOSIT_DETAIL_REPOSITORY,
       useClass: DepositDetailRepository,
+    },
+    {
+      provide: BANK_CONFIG_REPOSITORY,
+      useClass: BankConfigRepository,
+    },
+    {
+      provide: CRYPTO_CONFIG_REPOSITORY,
+      useClass: CryptoConfigRepository,
     },
 
     // Use Case Services
@@ -50,6 +70,8 @@ import { DEPOSIT_DETAIL_REPOSITORY } from './ports/out';
     RejectDepositService,
     AdminBankConfigService,
     AdminCryptoConfigService,
+    GetAvailableDepositMethodsService,
+    CreateBankConfigService,
   ],
   controllers: [
     DepositController,
@@ -63,7 +85,9 @@ import { DEPOSIT_DETAIL_REPOSITORY } from './ports/out';
     RejectDepositService,
     AdminBankConfigService,
     AdminCryptoConfigService,
+    GetAvailableDepositMethodsService,
+    CreateBankConfigService,
   ],
 })
-export class DepositModule {}
+export class DepositModule { }
 

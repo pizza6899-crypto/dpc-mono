@@ -32,13 +32,16 @@ import type { CurrentUserWithSession } from 'src/common/auth/decorators/current-
 import { RequestClientInfoParam } from 'src/common/auth/decorators/request-info.decorator';
 import { AuditLog } from 'src/modules/audit-log/infrastructure';
 import { LogType } from 'src/modules/audit-log/domain';
+import { GetAvailableDepositMethodsService } from '../../application/get-available-deposit-methods.service';
 
 @ApiTags('입금 (Deposit)')
 @Controller('deposits')
 @ApiBearerAuth()
 @ApiStandardErrors()
 export class DepositController {
-  constructor() {}
+  constructor(
+    private readonly getAvailableMethodsService: GetAvailableDepositMethodsService,
+  ) { }
 
   // ============================================
   // 입금 수단 조회
@@ -64,7 +67,7 @@ export class DepositController {
     @CurrentUser() user: CurrentUserWithSession,
     @RequestClientInfoParam() requestInfo: RequestClientInfo,
   ) {
-    throw new NotImplementedException('서비스 구현 필요');
+    return this.getAvailableMethodsService.execute();
   }
 
   // ============================================

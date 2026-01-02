@@ -1,33 +1,37 @@
 // src/modules/deposit/application/admin-bank-config.service.ts
 import { Injectable, Logger } from '@nestjs/common';
-import { PrismaService } from 'src/infrastructure/prisma/prisma.service';
+import { InjectTransaction } from '@nestjs-cls/transactional';
+import type { Transaction } from '@nestjs-cls/transactional';
+import type { TransactionalAdapterPrisma } from '@nestjs-cls/transactional-adapter-prisma';
 import { Prisma } from '@repo/database';
 import { ExchangeCurrencyCode } from '@repo/database';
 import type { PaginatedData, RequestClientInfo } from 'src/common/http/types';
 import { generateUid } from 'src/utils/id.util';
 import { BankConfigNotFoundException } from '../domain';
+import {
+  GetBankConfigsQueryDto,
+  CreateBankConfigRequestDto,
+  UpdateBankConfigRequestDto,
+  BankConfigResponseDto
+} from '../dtos/bank-config-admin.dto';
 
 @Injectable()
 export class AdminBankConfigService {
   private readonly logger = new Logger(AdminBankConfigService.name);
 
-  constructor(private readonly prismaService: PrismaService) {}
+  constructor(
+    @InjectTransaction()
+    private readonly tx: Transaction<TransactionalAdapterPrisma>,
+  ) { }
 
   /**
    * 은행 계좌 목록 조회
    */
   async getBankConfigs(
-    query: {
-      page?: number;
-      limit?: number;
-      sortBy?: string;
-      sortOrder?: 'asc' | 'desc';
-      currency?: ExchangeCurrencyCode;
-      isActive?: boolean;
-    },
+    query: GetBankConfigsQueryDto,
     adminId: bigint,
     requestInfo: RequestClientInfo,
-  ): Promise<PaginatedData<any>> {
+  ): Promise<PaginatedData<BankConfigResponseDto>> {
     const {
       page = 1,
       limit = 20,
@@ -50,13 +54,13 @@ export class AdminBankConfigService {
     };
 
     const [configs, total] = await Promise.all([
-      this.prismaService.bankConfig.findMany({
+      this.tx.bankConfig.findMany({
         where,
         skip,
         take: limit,
         orderBy,
       }),
-      this.prismaService.bankConfig.count({ where }),
+      this.tx.bankConfig.count({ where }),
     ]);
 
     return {
@@ -88,22 +92,11 @@ export class AdminBankConfigService {
    * 은행 계좌 등록
    */
   async createBankConfig(
-    dto: {
-      currency: ExchangeCurrencyCode;
-      bankName: string;
-      accountNumber: string;
-      accountHolder: string;
-      isActive?: boolean;
-      priority?: number;
-      description?: string;
-      notes?: string;
-      minAmount: string;
-      maxAmount?: string;
-    },
+    dto: CreateBankConfigRequestDto,
     adminId: bigint,
     requestInfo: RequestClientInfo,
-  ): Promise<any> {
-    const bankConfig = await this.prismaService.bankConfig.create({
+  ): Promise<BankConfigResponseDto> {
+    const bankConfig = await this.tx.bankConfig.create({
       data: {
         uid: generateUid(),
         currency: dto.currency,
@@ -131,7 +124,9 @@ export class AdminBankConfigService {
       description: bankConfig.description,
       notes: bankConfig.notes,
       minAmount: bankConfig.minAmount.toString(),
-      maxAmount: bankConfig.maxAmount?.toString(),
+      maxAmount: bankConfig.maxAmount?.toString() ?? null,
+      totalDeposits: 0,
+      totalDepositAmount: '0',
       createdAt: bankConfig.createdAt,
       updatedAt: bankConfig.updatedAt,
     };
@@ -144,8 +139,8 @@ export class AdminBankConfigService {
     id: bigint,
     adminId: bigint,
     requestInfo: RequestClientInfo,
-  ): Promise<any> {
-    const config = await this.prismaService.bankConfig.findUnique({
+  ): Promise<BankConfigResponseDto> {
+    const config = await this.tx.bankConfig.findUnique({
       where: { id },
     });
 
@@ -178,22 +173,11 @@ export class AdminBankConfigService {
    */
   async updateBankConfig(
     id: bigint,
-    dto: {
-      currency?: ExchangeCurrencyCode;
-      bankName?: string;
-      accountNumber?: string;
-      accountHolder?: string;
-      isActive?: boolean;
-      priority?: number;
-      description?: string;
-      notes?: string;
-      minAmount?: string;
-      maxAmount?: string;
-    },
+    dto: UpdateBankConfigRequestDto,
     adminId: bigint,
     requestInfo: RequestClientInfo,
-  ): Promise<any> {
-    const existing = await this.prismaService.bankConfig.findUnique({
+  ): Promise<BankConfigResponseDto> {
+    const existing = await this.tx.bankConfig.findUnique({
       where: { id },
     });
 
@@ -219,7 +203,7 @@ export class AdminBankConfigService {
         ? new Prisma.Decimal(dto.maxAmount)
         : null;
 
-    const updated = await this.prismaService.bankConfig.update({
+    const updated = await this.tx.bankConfig.update({
       where: { id },
       data: updateData,
     });
@@ -236,7 +220,9 @@ export class AdminBankConfigService {
       description: updated.description,
       notes: updated.notes,
       minAmount: updated.minAmount.toString(),
-      maxAmount: updated.maxAmount?.toString(),
+      maxAmount: updated.maxAmount?.toString() ?? null,
+      totalDeposits: updated.totalDeposits,
+      totalDepositAmount: updated.totalDepositAmount.toString(),
       createdAt: updated.createdAt,
       updatedAt: updated.updatedAt,
     };
@@ -250,7 +236,7 @@ export class AdminBankConfigService {
     adminId: bigint,
     requestInfo: RequestClientInfo,
   ): Promise<{ success: boolean }> {
-    const existing = await this.prismaService.bankConfig.findUnique({
+    const existing = await this.tx.bankConfig.findUnique({
       where: { id },
     });
 
@@ -258,7 +244,7 @@ export class AdminBankConfigService {
       throw new BankConfigNotFoundException(id);
     }
 
-    await this.prismaService.bankConfig.update({
+    await this.tx.bankConfig.update({
       where: { id },
       data: {
         deletedAt: new Date(),

@@ -54,7 +54,7 @@ export class CredentialAdminController {
     private readonly findAttemptsService: FindLoginAttemptsService,
     private readonly changePasswordService: ChangePasswordService,
     private readonly resetUserPasswordAdminService: ResetUserPasswordAdminService,
-  ) {}
+  ) { }
 
   @Post('login')
   @Public()
@@ -76,7 +76,7 @@ export class CredentialAdminController {
     action: 'ADMIN_LOGIN',
     extractMetadata: (args, result, error) => {
       const [params] = args;
-      
+
       if (error) {
         // 에러 타입에 따라 failureReason 결정
         if (error.message?.includes('THROTTLE')) {
@@ -90,7 +90,7 @@ export class CredentialAdminController {
           failureReason: 'INVALID_CREDENTIALS',
         };
       }
-      
+
       // 성공 시
       return {
         email: params.email,
@@ -263,9 +263,9 @@ export class CredentialAdminController {
       user:
         isAuthenticated && user
           ? {
-              uid: user.uid,
-              email: user.email,
-            }
+            uid: user.uid,
+            email: user.email,
+          }
           : null,
     };
   }
