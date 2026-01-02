@@ -20,6 +20,7 @@ export class CryptoConfigRepository implements CryptoConfigRepositoryPort {
         const configs = await this.tx.cryptoConfig.findMany({
             where: {
                 isActive: true,
+                deletedAt: null,
             },
         });
         return configs.map((config) => this.mapper.toDomain(config));
@@ -27,7 +28,10 @@ export class CryptoConfigRepository implements CryptoConfigRepositoryPort {
 
     async findByUid(uid: string): Promise<CryptoConfig | null> {
         const config = await this.tx.cryptoConfig.findUnique({
-            where: { uid },
+            where: {
+                uid,
+                deletedAt: null,
+            },
         });
         return config ? this.mapper.toDomain(config) : null;
     }
@@ -42,7 +46,10 @@ export class CryptoConfigRepository implements CryptoConfigRepositoryPort {
 
     async findById(id: bigint): Promise<CryptoConfig | null> {
         const config = await this.tx.cryptoConfig.findUnique({
-            where: { id },
+            where: {
+                id,
+                deletedAt: null,
+            },
         });
         return config ? this.mapper.toDomain(config) : null;
     }

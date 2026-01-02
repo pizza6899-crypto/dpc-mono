@@ -147,6 +147,7 @@ model CryptoConfig {
   contractAddress  String?         @map("contract_address") // 토큰일 경우 컨트랙트 주소
   createdAt        DateTime        @default(now()) @map("created_at")
   updatedAt        DateTime        @updatedAt @map("updated_at")
+  deletedAt        DateTime?       @map("deleted_at")
   depositDetails   DepositDetail[]
 
   @@unique([symbol, network])

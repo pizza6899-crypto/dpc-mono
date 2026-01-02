@@ -51475,6 +51475,7 @@ export namespace Prisma {
     contractAddress: string | null
     createdAt: Date | null
     updatedAt: Date | null
+    deletedAt: Date | null
   }
 
   export type CryptoConfigMaxAggregateOutputType = {
@@ -51489,6 +51490,7 @@ export namespace Prisma {
     contractAddress: string | null
     createdAt: Date | null
     updatedAt: Date | null
+    deletedAt: Date | null
   }
 
   export type CryptoConfigCountAggregateOutputType = {
@@ -51503,6 +51505,7 @@ export namespace Prisma {
     contractAddress: number
     createdAt: number
     updatedAt: number
+    deletedAt: number
     _all: number
   }
 
@@ -51533,6 +51536,7 @@ export namespace Prisma {
     contractAddress?: true
     createdAt?: true
     updatedAt?: true
+    deletedAt?: true
   }
 
   export type CryptoConfigMaxAggregateInputType = {
@@ -51547,6 +51551,7 @@ export namespace Prisma {
     contractAddress?: true
     createdAt?: true
     updatedAt?: true
+    deletedAt?: true
   }
 
   export type CryptoConfigCountAggregateInputType = {
@@ -51561,6 +51566,7 @@ export namespace Prisma {
     contractAddress?: true
     createdAt?: true
     updatedAt?: true
+    deletedAt?: true
     _all?: true
   }
 
@@ -51662,6 +51668,7 @@ export namespace Prisma {
     contractAddress: string | null
     createdAt: Date
     updatedAt: Date
+    deletedAt: Date | null
     _count: CryptoConfigCountAggregateOutputType | null
     _avg: CryptoConfigAvgAggregateOutputType | null
     _sum: CryptoConfigSumAggregateOutputType | null
@@ -51695,6 +51702,7 @@ export namespace Prisma {
     contractAddress?: boolean
     createdAt?: boolean
     updatedAt?: boolean
+    deletedAt?: boolean
     depositDetails?: boolean | CryptoConfig$depositDetailsArgs<ExtArgs>
     _count?: boolean | CryptoConfigCountOutputTypeDefaultArgs<ExtArgs>
   }, ExtArgs["result"]["cryptoConfig"]>
@@ -51711,6 +51719,7 @@ export namespace Prisma {
     contractAddress?: boolean
     createdAt?: boolean
     updatedAt?: boolean
+    deletedAt?: boolean
   }, ExtArgs["result"]["cryptoConfig"]>
 
   export type CryptoConfigSelectUpdateManyAndReturn<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetSelect<{
@@ -51725,6 +51734,7 @@ export namespace Prisma {
     contractAddress?: boolean
     createdAt?: boolean
     updatedAt?: boolean
+    deletedAt?: boolean
   }, ExtArgs["result"]["cryptoConfig"]>
 
   export type CryptoConfigSelectScalar = {
@@ -51739,9 +51749,10 @@ export namespace Prisma {
     contractAddress?: boolean
     createdAt?: boolean
     updatedAt?: boolean
+    deletedAt?: boolean
   }
 
-  export type CryptoConfigOmit<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetOmit<"id" | "uid" | "symbol" | "network" | "isActive" | "minDepositAmount" | "depositFeeRate" | "confirmations" | "contractAddress" | "createdAt" | "updatedAt", ExtArgs["result"]["cryptoConfig"]>
+  export type CryptoConfigOmit<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetOmit<"id" | "uid" | "symbol" | "network" | "isActive" | "minDepositAmount" | "depositFeeRate" | "confirmations" | "contractAddress" | "createdAt" | "updatedAt" | "deletedAt", ExtArgs["result"]["cryptoConfig"]>
   export type CryptoConfigInclude<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
     depositDetails?: boolean | CryptoConfig$depositDetailsArgs<ExtArgs>
     _count?: boolean | CryptoConfigCountOutputTypeDefaultArgs<ExtArgs>
@@ -51766,6 +51777,7 @@ export namespace Prisma {
       contractAddress: string | null
       createdAt: Date
       updatedAt: Date
+      deletedAt: Date | null
     }, ExtArgs["result"]["cryptoConfig"]>
     composites: {}
   }
@@ -52201,6 +52213,7 @@ export namespace Prisma {
     readonly contractAddress: FieldRef<"CryptoConfig", 'String'>
     readonly createdAt: FieldRef<"CryptoConfig", 'DateTime'>
     readonly updatedAt: FieldRef<"CryptoConfig", 'DateTime'>
+    readonly deletedAt: FieldRef<"CryptoConfig", 'DateTime'>
   }
     
 
@@ -60796,7 +60809,8 @@ export namespace Prisma {
     confirmations: 'confirmations',
     contractAddress: 'contractAddress',
     createdAt: 'createdAt',
-    updatedAt: 'updatedAt'
+    updatedAt: 'updatedAt',
+    deletedAt: 'deletedAt'
   };
 
   export type CryptoConfigScalarFieldEnum = (typeof CryptoConfigScalarFieldEnum)[keyof typeof CryptoConfigScalarFieldEnum]
@@ -65310,6 +65324,7 @@ export namespace Prisma {
     contractAddress?: StringNullableFilter<"CryptoConfig"> | string | null
     createdAt?: DateTimeFilter<"CryptoConfig"> | Date | string
     updatedAt?: DateTimeFilter<"CryptoConfig"> | Date | string
+    deletedAt?: DateTimeNullableFilter<"CryptoConfig"> | Date | string | null
     depositDetails?: DepositDetailListRelationFilter
   }
 
@@ -65325,6 +65340,7 @@ export namespace Prisma {
     contractAddress?: SortOrderInput | SortOrder
     createdAt?: SortOrder
     updatedAt?: SortOrder
+    deletedAt?: SortOrderInput | SortOrder
     depositDetails?: DepositDetailOrderByRelationAggregateInput
   }
 
@@ -65344,6 +65360,7 @@ export namespace Prisma {
     contractAddress?: StringNullableFilter<"CryptoConfig"> | string | null
     createdAt?: DateTimeFilter<"CryptoConfig"> | Date | string
     updatedAt?: DateTimeFilter<"CryptoConfig"> | Date | string
+    deletedAt?: DateTimeNullableFilter<"CryptoConfig"> | Date | string | null
     depositDetails?: DepositDetailListRelationFilter
   }, "id" | "uid" | "symbol_network">
 
@@ -65359,6 +65376,7 @@ export namespace Prisma {
     contractAddress?: SortOrderInput | SortOrder
     createdAt?: SortOrder
     updatedAt?: SortOrder
+    deletedAt?: SortOrderInput | SortOrder
     _count?: CryptoConfigCountOrderByAggregateInput
     _avg?: CryptoConfigAvgOrderByAggregateInput
     _max?: CryptoConfigMaxOrderByAggregateInput
@@ -65381,6 +65399,7 @@ export namespace Prisma {
     contractAddress?: StringNullableWithAggregatesFilter<"CryptoConfig"> | string | null
     createdAt?: DateTimeWithAggregatesFilter<"CryptoConfig"> | Date | string
     updatedAt?: DateTimeWithAggregatesFilter<"CryptoConfig"> | Date | string
+    deletedAt?: DateTimeNullableWithAggregatesFilter<"CryptoConfig"> | Date | string | null
   }
 
   export type BankConfigWhereInput = {
@@ -70199,6 +70218,7 @@ export namespace Prisma {
     contractAddress?: string | null
     createdAt?: Date | string
     updatedAt?: Date | string
+    deletedAt?: Date | string | null
     depositDetails?: DepositDetailCreateNestedManyWithoutCryptoConfigInput
   }
 
@@ -70214,6 +70234,7 @@ export namespace Prisma {
     contractAddress?: string | null
     createdAt?: Date | string
     updatedAt?: Date | string
+    deletedAt?: Date | string | null
     depositDetails?: DepositDetailUncheckedCreateNestedManyWithoutCryptoConfigInput
   }
 
@@ -70229,6 +70250,7 @@ export namespace Prisma {
     contractAddress?: NullableStringFieldUpdateOperationsInput | string | null
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    deletedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     depositDetails?: DepositDetailUpdateManyWithoutCryptoConfigNestedInput
   }
 
@@ -70244,6 +70266,7 @@ export namespace Prisma {
     contractAddress?: NullableStringFieldUpdateOperationsInput | string | null
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    deletedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     depositDetails?: DepositDetailUncheckedUpdateManyWithoutCryptoConfigNestedInput
   }
 
@@ -70259,6 +70282,7 @@ export namespace Prisma {
     contractAddress?: string | null
     createdAt?: Date | string
     updatedAt?: Date | string
+    deletedAt?: Date | string | null
   }
 
   export type CryptoConfigUpdateManyMutationInput = {
@@ -70273,6 +70297,7 @@ export namespace Prisma {
     contractAddress?: NullableStringFieldUpdateOperationsInput | string | null
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    deletedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   }
 
   export type CryptoConfigUncheckedUpdateManyInput = {
@@ -70287,6 +70312,7 @@ export namespace Prisma {
     contractAddress?: NullableStringFieldUpdateOperationsInput | string | null
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    deletedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   }
 
   export type BankConfigCreateInput = {
@@ -74647,6 +74673,7 @@ export namespace Prisma {
     contractAddress?: SortOrder
     createdAt?: SortOrder
     updatedAt?: SortOrder
+    deletedAt?: SortOrder
   }
 
   export type CryptoConfigAvgOrderByAggregateInput = {
@@ -74668,6 +74695,7 @@ export namespace Prisma {
     contractAddress?: SortOrder
     createdAt?: SortOrder
     updatedAt?: SortOrder
+    deletedAt?: SortOrder
   }
 
   export type CryptoConfigMinOrderByAggregateInput = {
@@ -74682,6 +74710,7 @@ export namespace Prisma {
     contractAddress?: SortOrder
     createdAt?: SortOrder
     updatedAt?: SortOrder
+    deletedAt?: SortOrder
   }
 
   export type CryptoConfigSumOrderByAggregateInput = {
@@ -87381,6 +87410,7 @@ export namespace Prisma {
     contractAddress?: string | null
     createdAt?: Date | string
     updatedAt?: Date | string
+    deletedAt?: Date | string | null
   }
 
   export type CryptoConfigUncheckedCreateWithoutDepositDetailsInput = {
@@ -87395,6 +87425,7 @@ export namespace Prisma {
     contractAddress?: string | null
     createdAt?: Date | string
     updatedAt?: Date | string
+    deletedAt?: Date | string | null
   }
 
   export type CryptoConfigCreateOrConnectWithoutDepositDetailsInput = {
@@ -87561,6 +87592,7 @@ export namespace Prisma {
     contractAddress?: NullableStringFieldUpdateOperationsInput | string | null
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    deletedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   }
 
   export type CryptoConfigUncheckedUpdateWithoutDepositDetailsInput = {
@@ -87575,6 +87607,7 @@ export namespace Prisma {
     contractAddress?: NullableStringFieldUpdateOperationsInput | string | null
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    deletedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   }
 
   export type TransactionUpsertWithoutDepositDetailInput = {

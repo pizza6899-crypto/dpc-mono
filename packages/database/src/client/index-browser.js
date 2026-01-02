@@ -718,7 +718,8 @@ exports.Prisma.CryptoConfigScalarFieldEnum = {
   confirmations: 'confirmations',
   contractAddress: 'contractAddress',
   createdAt: 'createdAt',
-  updatedAt: 'updatedAt'
+  updatedAt: 'updatedAt',
+  deletedAt: 'deletedAt'
 };
 
 exports.Prisma.BankConfigScalarFieldEnum = {

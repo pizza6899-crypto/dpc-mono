@@ -44,6 +44,7 @@ export class AdminCryptoConfigService {
     const skip = (page - 1) * limit;
 
     const where: Prisma.CryptoConfigWhereInput = {
+      deletedAt: null,
       ...(symbol && { symbol }),
       ...(network && { network }),
       ...(isActive !== undefined && { isActive }),
@@ -131,7 +132,7 @@ export class AdminCryptoConfigService {
       where: { id },
     });
 
-    if (!config) {
+    if (!config || (config as any).deletedAt) {
       throw new CryptoConfigNotFoundException(id);
     }
 
@@ -163,7 +164,7 @@ export class AdminCryptoConfigService {
       where: { id },
     });
 
-    if (!existing) {
+    if (!existing || (existing as any).deletedAt) {
       throw new CryptoConfigNotFoundException(id);
     }
 
@@ -212,12 +213,15 @@ export class AdminCryptoConfigService {
       where: { id },
     });
 
-    if (!existing) {
+    if (!existing || (existing as any).deletedAt) {
       throw new CryptoConfigNotFoundException(id);
     }
 
-    await this.tx.cryptoConfig.delete({
+    await this.tx.cryptoConfig.update({
       where: { id },
+      data: {
+        deletedAt: new Date(),
+      },
     });
 
     return { success: true };
