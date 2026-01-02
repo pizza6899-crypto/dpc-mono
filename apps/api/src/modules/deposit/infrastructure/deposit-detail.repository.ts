@@ -104,5 +104,74 @@ export class DepositDetailRepository implements DepositDetailRepositoryPort {
 
     return this.mapper.toDomain(result);
   }
+
+  async listByUserId(
+    userId: bigint,
+    query: any,
+  ): Promise<{ items: DepositDetail[]; total: number }> {
+    const {
+      skip,
+      take,
+      status,
+      methodType,
+      currency,
+      startDate,
+      endDate,
+      sortBy,
+      sortOrder,
+    } = query;
+
+    const where: Prisma.DepositDetailWhereInput = {
+      userId,
+      status: status ? { equals: status } : undefined,
+      methodType: methodType ? { equals: methodType } : undefined,
+      depositCurrency: currency ? { equals: currency } : undefined,
+      createdAt: {
+        gte: startDate ? new Date(startDate) : undefined,
+        lte: endDate ? new Date(endDate) : undefined,
+      },
+    };
+
+    const [total, items] = await Promise.all([
+      this.tx.depositDetail.count({ where }),
+      this.tx.depositDetail.findMany({
+        where,
+        skip,
+        take,
+        orderBy: {
+          [sortBy]: sortOrder,
+        },
+        include: {
+          transaction: false,
+          BankConfig: true,
+          CryptoConfig: true,
+        },
+      }),
+    ]);
+
+    return {
+      items: items.map((item) => this.mapper.toDomain(item)),
+      total,
+    };
+  }
+
+  async findByUidAndUserId(
+    uid: string,
+    userId: bigint,
+  ): Promise<DepositDetail | null> {
+    const result = await this.tx.depositDetail.findFirst({
+      where: {
+        uid,
+        userId,
+      },
+      include: {
+        transaction: false,
+        BankConfig: true,
+        CryptoConfig: true,
+      },
+    });
+
+    return result ? this.mapper.toDomain(result) : null;
+  }
 }
 

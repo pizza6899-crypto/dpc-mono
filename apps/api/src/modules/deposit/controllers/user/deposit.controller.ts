@@ -25,13 +25,18 @@ import {
 import { Paginated } from 'src/common/http/decorators/paginated.decorator';
 import type { PaginatedData, RequestClientInfo } from 'src/common/http/types';
 import { CreateDepositResponseDto } from '../../dtos/create-deposit-response.dto';
-import { CreateDepositRequestDto } from '../../dtos/create-deposit-request.dto';
+import { CreateCryptoDepositRequestDto } from '../../dtos/create-crypto-deposit-request.dto';
+import { CreateBankDepositRequestDto } from '../../dtos/create-bank-deposit-request.dto';
 import { CurrentUser } from 'src/common/auth/decorators/current-user.decorator';
 import type { CurrentUserWithSession } from 'src/common/auth/decorators/current-user.decorator';
 import { RequestClientInfoParam } from 'src/common/auth/decorators/request-info.decorator';
 import { AuditLog } from 'src/modules/audit-log/infrastructure';
 import { LogType } from 'src/modules/audit-log/domain';
 import { GetAvailableDepositMethodsService } from '../../application/get-available-deposit-methods.service';
+import { CreateCryptoDepositService } from '../../application/create-crypto-deposit.service';
+import { CreateBankDepositService } from '../../application/create-bank-deposit.service';
+import { GetMyDepositsService } from '../../application/get-my-deposits.service';
+import { GetMyDepositDetailService } from '../../application/get-my-deposit-detail.service';
 import {
   UserDepositResponseDto,
   CancelDepositResponseDto,
@@ -46,6 +51,10 @@ import { GetDepositsQueryDto } from '../../dtos/get-deposits-query.dto';
 export class DepositController {
   constructor(
     private readonly getAvailableMethodsService: GetAvailableDepositMethodsService,
+    private readonly createCryptoDepositService: CreateCryptoDepositService,
+    private readonly createBankDepositService: CreateBankDepositService,
+    private readonly getMyDepositsService: GetMyDepositsService,
+    private readonly getMyDepositDetailService: GetMyDepositDetailService,
   ) { }
 
   // ============================================
@@ -101,7 +110,11 @@ export class DepositController {
     @CurrentUser() user: CurrentUserWithSession,
     @RequestClientInfoParam() requestInfo: RequestClientInfo,
   ): Promise<PaginatedData<UserDepositResponseDto>> {
-    throw new NotImplementedException('서비스 구현 필요');
+    return this.getMyDepositsService.execute({
+      query,
+      userId: user.id,
+      requestInfo,
+    });
   }
 
   @Get(':uid')
@@ -133,36 +146,76 @@ export class DepositController {
     @CurrentUser() user: CurrentUserWithSession,
     @RequestClientInfoParam() requestInfo: RequestClientInfo,
   ): Promise<UserDepositResponseDto> {
-    throw new NotImplementedException('서비스 구현 필요');
+    return this.getMyDepositDetailService.execute({
+      uid,
+      userId: user.id,
+    });
   }
 
-  @Post()
+  @Post('crypto')
   @HttpCode(HttpStatus.CREATED)
   @ApiOperation({
-    summary: 'Create deposit request / 입금 요청 생성',
+    summary: 'Create crypto deposit request / 암호화폐 입금 요청 생성',
     description:
-      'Create a new deposit request. (새로운 입금 요청을 생성합니다.)',
+      'Create a new cryptocurrency deposit request. (새로운 암호화폐 입금 요청을 생성합니다.)',
   })
   @ApiStandardResponse(CreateDepositResponseDto, {
     status: 201,
-    description: 'Deposit request created successfully / 입금 요청 생성 성공',
+    description: 'Crypto deposit request created successfully / 암호화폐 입금 요청 생성 성공',
   })
   @AuditLog({
     type: LogType.ACTIVITY,
-    action: 'CREATE_DEPOSIT_REQUEST',
+    action: 'CREATE_CRYPTO_DEPOSIT_REQUEST',
     category: 'DEPOSIT',
     extractMetadata: (args) => ({
-      methodType: args[0]?.methodType,
+      currency: args[0]?.payCurrency,
+      network: args[0]?.payNetwork,
+    }),
+  })
+  async createCryptoDeposit(
+    @Body() dto: CreateCryptoDepositRequestDto,
+    @CurrentUser() user: CurrentUserWithSession,
+    @RequestClientInfoParam() clientInfo: RequestClientInfo,
+  ): Promise<CreateDepositResponseDto> {
+    return await this.createCryptoDepositService.execute({
+      ...dto,
+      userId: user.id,
+      ipAddress: clientInfo.ip,
+      deviceFingerprint: clientInfo.userAgent,
+    });
+  }
+
+  @Post('bank')
+  @HttpCode(HttpStatus.CREATED)
+  @ApiOperation({
+    summary: 'Create bank deposit request / 무통장 입금 요청 생성',
+    description:
+      'Create a new bank transfer deposit request. (새로운 무통장 입금 요청을 생성합니다.)',
+  })
+  @ApiStandardResponse(CreateDepositResponseDto, {
+    status: 201,
+    description: 'Bank deposit request created successfully / 무통장 입금 요청 생성 성공',
+  })
+  @AuditLog({
+    type: LogType.ACTIVITY,
+    action: 'CREATE_BANK_DEPOSIT_REQUEST',
+    category: 'DEPOSIT',
+    extractMetadata: (args) => ({
       currency: args[0]?.payCurrency,
       amount: args[0]?.amount,
     }),
   })
-  async createDeposit(
-    @Body() createDepositRequest: CreateDepositRequestDto,
+  async createBankDeposit(
+    @Body() dto: CreateBankDepositRequestDto,
     @CurrentUser() user: CurrentUserWithSession,
     @RequestClientInfoParam() clientInfo: RequestClientInfo,
   ): Promise<CreateDepositResponseDto> {
-    throw new NotImplementedException('서비스 구현 필요');
+    return await this.createBankDepositService.execute({
+      ...dto,
+      userId: user.id,
+      ipAddress: clientInfo.ip,
+      deviceFingerprint: clientInfo.userAgent,
+    });
   }
 
   @Delete(':uid')

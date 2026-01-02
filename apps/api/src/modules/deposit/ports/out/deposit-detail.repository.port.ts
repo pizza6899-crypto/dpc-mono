@@ -17,4 +17,7 @@ export interface DepositDetailRepositoryPort {
     afterAmount: Prisma.Decimal;
   }): Promise<bigint>;
   getTransactionUserId(transactionId: bigint): Promise<bigint | null>;
+  listByUserId(userId: bigint, query: any): Promise<{ items: DepositDetail[]; total: number }>;
+  findByUidAndUserId(uid: string, userId: bigint): Promise<DepositDetail | null>;
 }
+

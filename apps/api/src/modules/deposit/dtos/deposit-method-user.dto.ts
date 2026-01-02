@@ -1,63 +1,40 @@
-// src/modules/deposit/dtos/deposit-method-user.dto.ts
 import { ApiProperty } from '@nestjs/swagger';
 import { ExchangeCurrencyCode } from '@repo/database';
 
-export class BankTransferMethodDto {
-    @ApiProperty({ description: 'Configuration UID' })
-    uid: string;
+// -------------------- Crypto --------------------
 
-    @ApiProperty({ description: 'Bank name' })
-    bankName: string;
-
-    @ApiProperty({ description: 'Account holder name' })
-    accountHolder: string;
-
-    @ApiProperty({ description: 'Bank account number' })
-    accountNumber: string;
-
-    @ApiProperty({ enum: ExchangeCurrencyCode, description: 'Currency code' })
-    currency: ExchangeCurrencyCode;
-
-    @ApiProperty({ description: 'Minimum deposit amount' })
-    minAmount: string;
-
-    @ApiProperty({ description: 'Maximum deposit amount', nullable: true })
-    maxAmount: string | null;
-
-    @ApiProperty({ description: 'User-facing description', nullable: true })
-    description: string | null;
-
-    @ApiProperty({ description: 'Internal or detail notes', nullable: true })
-    notes: string | null;
-}
-
-export class CryptoMethodDto {
-    @ApiProperty({ description: 'Configuration UID' })
-    uid: string;
-
-    @ApiProperty({ enum: ExchangeCurrencyCode, description: 'Currency symbol' })
-    symbol: ExchangeCurrencyCode;
-
-    @ApiProperty({ description: 'Network name' })
+export class CryptoNetworkSimpleDto {
+    @ApiProperty({ description: 'Network name', example: 'TRC20' })
     network: string;
 
-    @ApiProperty({ description: 'Minimum deposit amount' })
+    @ApiProperty({ description: 'Minimum deposit amount', example: '10' })
     minDepositAmount: string;
-
-    @ApiProperty({ description: 'Deposit fee rate' })
-    depositFeeRate: string;
-
-    @ApiProperty({ description: 'Confirmations required' })
-    confirmations: number;
-
-    @ApiProperty({ description: 'Contract address for tokens', nullable: true })
-    contractAddress: string | null;
 }
 
-export class GetAvailableDepositMethodsResponseDto {
-    @ApiProperty({ type: [BankTransferMethodDto], description: 'List of available bank transfer methods' })
-    bankTransfer: BankTransferMethodDto[];
+export class CryptoGroupSimpleDto {
+    @ApiProperty({ enum: ExchangeCurrencyCode, description: 'Currency symbol (Coin)', example: 'USDT' })
+    symbol: ExchangeCurrencyCode;
 
-    @ApiProperty({ type: [CryptoMethodDto], description: 'List of available crypto deposit methods' })
-    crypto: CryptoMethodDto[];
+    @ApiProperty({ type: [CryptoNetworkSimpleDto], description: 'Supported networks' })
+    networks: CryptoNetworkSimpleDto[];
+}
+
+// -------------------- Bank --------------------
+
+export class BankGroupSimpleDto {
+    @ApiProperty({ enum: ExchangeCurrencyCode, description: 'Currency code', example: 'KRW' })
+    currency: ExchangeCurrencyCode;
+
+    @ApiProperty({ description: 'Minimum deposit amount for this currency', example: '10000' })
+    minAmount: string;
+}
+
+// -------------------- Response --------------------
+
+export class GetAvailableDepositMethodsResponseDto {
+    @ApiProperty({ type: [BankGroupSimpleDto], description: 'Available bank currencies' })
+    bank: BankGroupSimpleDto[];
+
+    @ApiProperty({ type: [CryptoGroupSimpleDto], description: 'Available crypto methods' })
+    crypto: CryptoGroupSimpleDto[];
 }

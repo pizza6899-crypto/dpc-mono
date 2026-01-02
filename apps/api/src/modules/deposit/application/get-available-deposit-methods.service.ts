@@ -8,9 +8,13 @@ import type {
     BankConfigRepositoryPort,
     CryptoConfigRepositoryPort,
 } from '../ports/out';
-import { BankConfig, CryptoConfig } from '../domain';
-import { GetAvailableDepositMethodsResponseDto } from '../dtos/deposit-method-user.dto';
-import { ExchangeCurrencyCode } from '@repo/database';
+import { CryptoConfig, BankConfig } from '../domain'; // BankConfig import 추가
+import {
+    GetAvailableDepositMethodsResponseDto,
+    CryptoGroupSimpleDto,
+    BankGroupSimpleDto,
+} from '../dtos/deposit-method-user.dto';
+import { ExchangeCurrencyCode, Prisma } from '@repo/database'; // Prisma util for decimal comparison if needed
 
 @Injectable()
 export class GetAvailableDepositMethodsService {
@@ -27,27 +31,48 @@ export class GetAvailableDepositMethodsService {
             this.cryptoConfigRepository.listActive(),
         ]);
 
-        return {
-            bankTransfer: bankConfigs.map((config: BankConfig) => ({
-                uid: config.uid!,
-                bankName: config.bankName,
-                accountHolder: config.accountHolder,
-                accountNumber: config.accountNumber,
-                currency: config.currency as ExchangeCurrencyCode,
-                minAmount: config.minAmount.toString(),
-                maxAmount: config.maxAmount?.toString() ?? null,
-                description: config.description,
-                notes: config.notes,
-            })),
-            crypto: cryptoConfigs.map((config: CryptoConfig) => ({
-                uid: config.uid,
-                symbol: config.symbol as ExchangeCurrencyCode,
+        // 1. Group Crypto Configs by Symbol
+        const cryptoGroupMap = new Map<string, CryptoConfig[]>();
+        cryptoConfigs.forEach((config) => {
+            const list = cryptoGroupMap.get(config.symbol) || [];
+            list.push(config);
+            cryptoGroupMap.set(config.symbol, list);
+        });
+
+        const cryptoResponse: CryptoGroupSimpleDto[] = Array.from(cryptoGroupMap.entries()).map(([symbol, configs]) => ({
+            symbol: symbol as ExchangeCurrencyCode,
+            networks: configs.map((config) => ({
                 network: config.network,
                 minDepositAmount: config.minDepositAmount.toString(),
-                depositFeeRate: config.depositFeeRate.toString(),
-                confirmations: config.confirmations,
-                contractAddress: config.contractAddress,
             })),
+        }));
+
+        // 2. Group Bank Configs by Currency and find minimum amount
+        const bankGroupMap = new Map<string, BankConfig[]>();
+        bankConfigs.forEach((config) => {
+            const list = bankGroupMap.get(config.currency) || [];
+            list.push(config);
+            bankGroupMap.set(config.currency, list);
+        });
+
+        const bankResponse: BankGroupSimpleDto[] = Array.from(bankGroupMap.entries()).map(([currency, configs]) => {
+            // 해당 통화의 모든 설정 중 가장 작은 최소 입금액 찾기
+            let minAmount = configs[0].minAmount;
+            for (const config of configs) {
+                if (config.minAmount.lessThan(minAmount)) {
+                    minAmount = config.minAmount;
+                }
+            }
+
+            return {
+                currency: currency as ExchangeCurrencyCode,
+                minAmount: minAmount.toString(),
+            };
+        });
+
+        return {
+            bank: bankResponse,
+            crypto: cryptoResponse,
         };
     }
 }
