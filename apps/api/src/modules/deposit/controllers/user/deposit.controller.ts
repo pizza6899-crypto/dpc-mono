@@ -30,16 +30,9 @@ import { CurrentUser } from 'src/common/auth/decorators/current-user.decorator';
 import type { CurrentUserWithSession } from 'src/common/auth/decorators/current-user.decorator';
 import { RequestClientInfoParam } from 'src/common/auth/decorators/request-info.decorator';
 import { AuditLog } from 'src/modules/audit-log/infrastructure';
-import { Prisma } from '@repo/database';
 import { LogType } from 'src/modules/audit-log/domain';
 import { GetAvailableDepositMethodsService } from '../../application/get-available-deposit-methods.service';
-import { GetBankDepositAddressService } from '../../application/get-bank-deposit-address.service';
-import { GetCryptoDepositAddressService } from '../../application/get-crypto-deposit-address.service';
 import {
-  GetCryptoDepositAddressRequestDto,
-  CryptoDepositAddressResponseDto,
-  GetBankDepositAddressRequestDto,
-  BankDepositAddressResponseDto,
   UserDepositResponseDto,
   CancelDepositResponseDto,
 } from '../../dtos/deposit-address-user.dto';
@@ -53,8 +46,6 @@ import { GetDepositsQueryDto } from '../../dtos/get-deposits-query.dto';
 export class DepositController {
   constructor(
     private readonly getAvailableMethodsService: GetAvailableDepositMethodsService,
-    private readonly getCryptoDepositAddressService: GetCryptoDepositAddressService,
-    private readonly getBankDepositAddressService: GetBankDepositAddressService,
   ) { }
 
   // ============================================
@@ -82,80 +73,6 @@ export class DepositController {
     @RequestClientInfoParam() requestInfo: RequestClientInfo,
   ): Promise<GetAvailableDepositMethodsResponseDto> {
     return this.getAvailableMethodsService.execute();
-  }
-
-  // ============================================
-  // 입금 주소 요청
-  // ============================================
-
-  @Get('crypto/address')
-  @HttpCode(HttpStatus.OK)
-  @ApiOperation({
-    summary: 'Get crypto deposit address / 암호화폐 입금 주소 요청',
-    description:
-      'Request a cryptocurrency deposit address for the specified currency and network. (지정된 통화 및 네트워크에 대한 암호화폐 입금 주소를 요청합니다.)',
-  })
-  @ApiStandardResponse(CryptoDepositAddressResponseDto, {
-    status: 200,
-    description: 'Crypto deposit address retrieved successfully / 암호화폐 입금 주소 조회 성공',
-  })
-  @AuditLog({
-    type: LogType.ACTIVITY,
-    action: 'REQUEST_CRYPTO_DEPOSIT_ADDRESS',
-    category: 'DEPOSIT',
-    extractMetadata: (args) => ({
-      currency: args[0]?.currency,
-      network: args[0]?.network,
-      amount: args[0]?.amount,
-    }),
-  })
-  async getCryptoDepositAddress(
-    @Query() dto: GetCryptoDepositAddressRequestDto,
-    @CurrentUser() user: CurrentUserWithSession,
-    @RequestClientInfoParam() requestInfo: RequestClientInfo,
-  ): Promise<CryptoDepositAddressResponseDto> {
-    return await this.getCryptoDepositAddressService.execute({
-      symbol: dto.currency,
-      network: dto.network,
-      userId: user.id,
-      amount: dto.amount ? new Prisma.Decimal(dto.amount) : undefined,
-      ipAddress: requestInfo.ip,
-      deviceFingerprint: requestInfo.userAgent,
-    });
-  }
-
-  @Get('bank/address')
-  @HttpCode(HttpStatus.OK)
-  @ApiOperation({
-    summary: 'Get bank deposit account / 계좌 이체 입금 계좌 정보 요청',
-    description:
-      'Request bank account information for bank transfer deposit. (계좌 이체 입금을 위한 은행 계좌 정보를 요청합니다.)',
-  })
-  @ApiStandardResponse(BankDepositAddressResponseDto, {
-    status: 200,
-    description: 'Bank deposit account retrieved successfully / 계좌 이체 입금 계좌 정보 조회 성공',
-  })
-  @AuditLog({
-    type: LogType.ACTIVITY,
-    action: 'REQUEST_BANK_DEPOSIT_ADDRESS',
-    category: 'DEPOSIT',
-    extractMetadata: (args) => ({
-      currency: args[0]?.currency,
-      amount: args[0]?.amount,
-    }),
-  })
-  async getBankDepositAddress(
-    @Query() dto: GetBankDepositAddressRequestDto,
-    @CurrentUser() user: CurrentUserWithSession,
-    @RequestClientInfoParam() requestInfo: RequestClientInfo,
-  ): Promise<BankDepositAddressResponseDto> {
-    return await this.getBankDepositAddressService.execute({
-      currency: dto.currency,
-      userId: user.id,
-      amount: dto.amount ? new Prisma.Decimal(dto.amount) : undefined,
-      ipAddress: requestInfo.ip,
-      deviceFingerprint: requestInfo.userAgent,
-    });
   }
 
   // ============================================
