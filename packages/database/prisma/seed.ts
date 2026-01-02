@@ -1,6 +1,5 @@
 import { seedUsers } from './seeders/user.seeder';
 import { seedVipLevels } from './seeders/vip-level.seeder';
-import { seedPromotions } from './seeders/promotion.seeder';
 import { seedLobbyGames } from './seeders/game.seeder';
 import { PrismaClient } from '../src';
 import { PrismaPg } from '@prisma/adapter-pg';
@@ -25,10 +24,6 @@ async function main() {
     // VIP 레벨 시딩 처리
     await seedVipLevels(prisma);
     console.log('✅ VIP 레벨 시딩이 완료되었습니다.');
-
-    // 프로모션 시딩 처리
-    await seedPromotions(prisma);
-    console.log('✅ 프로모션 시딩이 완료되었습니다.');
 
     // 게임 시딩 처리
     await seedLobbyGames(prisma);

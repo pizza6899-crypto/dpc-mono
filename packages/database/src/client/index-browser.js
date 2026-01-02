@@ -493,45 +493,6 @@ exports.Prisma.DailyCompEarningScalarFieldEnum = {
   updatedAt: 'updatedAt'
 };
 
-exports.Prisma.PromotionScalarFieldEnum = {
-  id: 'id',
-  managementName: 'managementName',
-  isActive: 'isActive',
-  startDate: 'startDate',
-  endDate: 'endDate',
-  targetType: 'targetType',
-  bonusType: 'bonusType',
-  bonusRate: 'bonusRate',
-  minDepositAmount: 'minDepositAmount',
-  maxBonusAmount: 'maxBonusAmount',
-  rollingMultiplier: 'rollingMultiplier',
-  qualificationMaintainCondition: 'qualificationMaintainCondition',
-  createdAt: 'createdAt',
-  updatedAt: 'updatedAt'
-};
-
-exports.Prisma.PromotionTranslationScalarFieldEnum = {
-  id: 'id',
-  promotionId: 'promotionId',
-  language: 'language',
-  name: 'name',
-  description: 'description',
-  createdAt: 'createdAt',
-  updatedAt: 'updatedAt'
-};
-
-exports.Prisma.UserPromotionScalarFieldEnum = {
-  id: 'id',
-  userId: 'userId',
-  promotionId: 'promotionId',
-  status: 'status',
-  bonusGranted: 'bonusGranted',
-  bonusGrantedAt: 'bonusGrantedAt',
-  bonusAmount: 'bonusAmount',
-  createdAt: 'createdAt',
-  updatedAt: 'updatedAt'
-};
-
 exports.Prisma.NowPaymentCallbackLogScalarFieldEnum = {
   id: 'id',
   requestHeaders: 'requestHeaders',
@@ -759,6 +720,58 @@ exports.Prisma.LoginAttemptScalarFieldEnum = {
   isAdmin: 'isAdmin'
 };
 
+exports.Prisma.PromotionScalarFieldEnum = {
+  id: 'id',
+  uid: 'uid',
+  managementName: 'managementName',
+  isActive: 'isActive',
+  startDate: 'startDate',
+  endDate: 'endDate',
+  deletedAt: 'deletedAt',
+  targetType: 'targetType',
+  bonusType: 'bonusType',
+  bonusRate: 'bonusRate',
+  rollingMultiplier: 'rollingMultiplier',
+  qualificationMaintainCondition: 'qualificationMaintainCondition',
+  isOneTime: 'isOneTime',
+  createdAt: 'createdAt',
+  updatedAt: 'updatedAt'
+};
+
+exports.Prisma.PromotionTranslationScalarFieldEnum = {
+  id: 'id',
+  promotionId: 'promotionId',
+  language: 'language',
+  name: 'name',
+  description: 'description',
+  createdAt: 'createdAt',
+  updatedAt: 'updatedAt'
+};
+
+exports.Prisma.PromotionCurrencyScalarFieldEnum = {
+  id: 'id',
+  promotionId: 'promotionId',
+  currency: 'currency',
+  minDepositAmount: 'minDepositAmount',
+  maxBonusAmount: 'maxBonusAmount',
+  createdAt: 'createdAt',
+  updatedAt: 'updatedAt'
+};
+
+exports.Prisma.UserPromotionScalarFieldEnum = {
+  id: 'id',
+  userId: 'userId',
+  promotionId: 'promotionId',
+  status: 'status',
+  depositAmount: 'depositAmount',
+  bonusAmount: 'bonusAmount',
+  targetRollingAmount: 'targetRollingAmount',
+  currentRollingAmount: 'currentRollingAmount',
+  currency: 'currency',
+  createdAt: 'createdAt',
+  updatedAt: 'updatedAt'
+};
+
 exports.Prisma.UserSessionScalarFieldEnum = {
   id: 'id',
   uid: 'uid',
@@ -952,25 +965,6 @@ exports.WithdrawDetailStatus = exports.$Enums.WithdrawDetailStatus = {
   REJECTED: 'REJECTED'
 };
 
-exports.PromotionTargetType = exports.$Enums.PromotionTargetType = {
-  NEW_USER_FIRST_DEPOSIT: 'NEW_USER_FIRST_DEPOSIT'
-};
-
-exports.PromotionBonusType = exports.$Enums.PromotionBonusType = {
-  PERCENTAGE: 'PERCENTAGE'
-};
-
-exports.PromotionQualificationCondition = exports.$Enums.PromotionQualificationCondition = {
-  UNTIL_FIRST_WITHDRAWAL: 'UNTIL_FIRST_WITHDRAWAL'
-};
-
-exports.UserPromotionStatus = exports.$Enums.UserPromotionStatus = {
-  ACTIVE: 'ACTIVE',
-  QUALIFICATION_LOST: 'QUALIFICATION_LOST',
-  EXPIRED: 'EXPIRED',
-  FAILED: 'FAILED'
-};
-
 exports.ExchangeRateProvider = exports.$Enums.ExchangeRateProvider = {
   NOWPAYMENT: 'NOWPAYMENT',
   COINGECKO: 'COINGECKO',
@@ -1031,6 +1025,25 @@ exports.LoginFailureReason = exports.$Enums.LoginFailureReason = {
   UNKNOWN: 'UNKNOWN'
 };
 
+exports.PromotionTargetType = exports.$Enums.PromotionTargetType = {
+  NEW_USER_FIRST_DEPOSIT: 'NEW_USER_FIRST_DEPOSIT'
+};
+
+exports.PromotionBonusType = exports.$Enums.PromotionBonusType = {
+  PERCENTAGE: 'PERCENTAGE'
+};
+
+exports.PromotionQualificationCondition = exports.$Enums.PromotionQualificationCondition = {
+  UNTIL_FIRST_WITHDRAWAL: 'UNTIL_FIRST_WITHDRAWAL'
+};
+
+exports.UserPromotionStatus = exports.$Enums.UserPromotionStatus = {
+  ACTIVE: 'ACTIVE',
+  QUALIFICATION_LOST: 'QUALIFICATION_LOST',
+  EXPIRED: 'EXPIRED',
+  FAILED: 'FAILED'
+};
+
 exports.SessionType = exports.$Enums.SessionType = {
   HTTP: 'HTTP',
   WEBSOCKET: 'WEBSOCKET'
@@ -1065,9 +1078,6 @@ exports.Prisma.ModelName = {
   WithdrawDetail: 'WithdrawDetail',
   CompTransaction: 'CompTransaction',
   DailyCompEarning: 'DailyCompEarning',
-  Promotion: 'Promotion',
-  PromotionTranslation: 'PromotionTranslation',
-  UserPromotion: 'UserPromotion',
   NowPaymentCallbackLog: 'NowPaymentCallbackLog',
   ExchangeRate: 'ExchangeRate',
   VipLevel: 'VipLevel',
@@ -1084,6 +1094,10 @@ exports.Prisma.ModelName = {
   AffiliateCommission: 'AffiliateCommission',
   AffiliateTier: 'AffiliateTier',
   LoginAttempt: 'LoginAttempt',
+  Promotion: 'Promotion',
+  PromotionTranslation: 'PromotionTranslation',
+  PromotionCurrency: 'PromotionCurrency',
+  UserPromotion: 'UserPromotion',
   UserSession: 'UserSession'
 };
 

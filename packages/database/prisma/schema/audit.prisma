@@ -18,7 +18,7 @@ model AuthAuditLog {
   // 디바이스 정보
   isMobile          Boolean? @map("is_mobile") // 모바일 여부
   // Cloudflare 추적 정보 (디버깅용)
-  cfRay             String? @map("cf_ray") // CF-Ray: 요청 추적 ID
+  cfRay             String?  @map("cf_ray") // CF-Ray: 요청 추적 ID
   metadata          Json?
 
   @@id([id, createdAt])
@@ -72,7 +72,7 @@ model SystemErrorLog {
   sessionId    String?   @map("session_id")
   errorCode    String?   @map("error_code")
   errorMessage String    @map("error_message")
-  stackTrace   String?   @db.Text @map("stack_trace")
+  stackTrace   String?   @map("stack_trace") @db.Text
   metadata     Json? // 에러 당시 Request/Session 스냅샷용 추가
   path         String?
   method       String?
@@ -144,23 +144,23 @@ model IntegrationLog {
 
 /// @view
 model UnifiedLog {
-  id          String   @id
-  createdAt   DateTime @map("created_at")
-  userId      BigInt?  @map("user_id")
-  sessionId   String?  @map("session_id")
-  cfRay       String?  @map("cf_ray")
-  country     String?
-  city        String?
-  bot         Boolean?
-  threat      String?
-  isMobile    Boolean? @map("is_mobile")
-  ip          String?
-  
+  id        String   @id
+  createdAt DateTime @map("created_at")
+  userId    BigInt?  @map("user_id")
+  sessionId String?  @map("session_id")
+  cfRay     String?  @map("cf_ray")
+  country   String?
+  city      String?
+  bot       Boolean?
+  threat    String?
+  isMobile  Boolean? @map("is_mobile")
+  ip        String?
+
   // 구분자 필드
-  logType     String   @map("log_type") // AUTH, ACTIVITY, ERROR, INTEGRATION
-  category    String   // 각 테이블의 주요 분류
-  detail      String   // 주요 내용 (상태, 액션, 에러메시지 등)
-  metadata    Json?
+  logType  String @map("log_type") // AUTH, ACTIVITY, ERROR, INTEGRATION
+  category String // 각 테이블의 주요 분류
+  detail   String // 주요 내용 (상태, 액션, 에러메시지 등)
+  metadata Json?
 
   @@map("unified_logs")
 }

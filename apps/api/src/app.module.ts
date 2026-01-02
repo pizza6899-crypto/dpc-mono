@@ -21,6 +21,7 @@ import { CommonLoggerModule } from './common/logger/logger.module';
 import { AuditLogModule } from './modules/audit-log/audit-log.module';
 import { AuditLogInterceptor } from './modules/audit-log/infrastructure/audit-log.interceptor';
 import { RequestInfoInterceptor } from './common/http/interceptors/request-info.interceptor';
+import { PromotionModule } from './modules/promotion/promotion.module';
 
 @Module({
   imports: [
@@ -40,6 +41,7 @@ import { RequestInfoInterceptor } from './common/http/interceptors/request-info.
     RollingModule,
     AffiliateModule,
     WalletModule,
+    PromotionModule,
   ],
   providers: [
     Reflector,

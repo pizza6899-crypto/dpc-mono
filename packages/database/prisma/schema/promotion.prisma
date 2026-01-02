@@ -1,0 +1,88 @@
+model Promotion {
+  id                             BigInt                          @id @default(autoincrement())
+  uid                            String                          @unique
+  managementName                 String
+  isActive                       Boolean                         @default(true)
+  startDate                      DateTime?
+  endDate                        DateTime?
+  deletedAt                      DateTime?
+  targetType                     PromotionTargetType
+  bonusType                      PromotionBonusType
+  bonusRate                      Decimal?                        @db.Decimal(8, 4)
+  rollingMultiplier              Decimal?                        @db.Decimal(8, 4)
+  qualificationMaintainCondition PromotionQualificationCondition
+  isOneTime                      Boolean                         @default(false)
+  createdAt                      DateTime                        @default(now())
+  updatedAt                      DateTime                        @updatedAt
+  translations                   PromotionTranslation[]
+  currencies                     PromotionCurrency[]
+  UserPromotion                  UserPromotion[]
+}
+
+model PromotionTranslation {
+  id          BigInt    @id @default(autoincrement())
+  promotionId BigInt
+  language    Language
+  name        String
+  description String?
+  createdAt   DateTime  @default(now())
+  updatedAt   DateTime  @updatedAt
+  promotion   Promotion @relation(fields: [promotionId], references: [id], onDelete: Cascade)
+
+  @@unique([promotionId, language])
+  @@index([language])
+  @@index([promotionId])
+}
+
+model PromotionCurrency {
+  id               BigInt              @id @default(autoincrement())
+  promotionId      BigInt
+  currency         ExchangeCurrencyCode
+  minDepositAmount Decimal             @db.Decimal(32, 18)
+  maxBonusAmount   Decimal?            @db.Decimal(32, 18)
+  createdAt        DateTime            @default(now())
+  updatedAt        DateTime            @updatedAt
+  promotion        Promotion           @relation(fields: [promotionId], references: [id], onDelete: Cascade)
+
+  @@unique([promotionId, currency])
+  @@index([promotionId])
+  @@index([currency])
+}
+
+model UserPromotion {
+  id                  BigInt              @id @default(autoincrement())
+  userId              BigInt
+  promotionId         BigInt
+  status             UserPromotionStatus @default(ACTIVE)
+  depositAmount        Decimal             @db.Decimal(32, 18)
+  bonusAmount          Decimal             @db.Decimal(32, 18)
+  targetRollingAmount  Decimal             @db.Decimal(32, 18)
+  currentRollingAmount Decimal             @default(0) @db.Decimal(32, 18)
+  currency             ExchangeCurrencyCode
+  createdAt            DateTime            @default(now())
+  updatedAt            DateTime            @updatedAt
+  Rolling              Rolling[]
+  promotion            Promotion           @relation(fields: [promotionId], references: [id])
+  user                 User                @relation(fields: [userId], references: [id])
+
+  @@index([userId, status])
+}
+
+enum PromotionTargetType {
+  NEW_USER_FIRST_DEPOSIT
+}
+
+enum PromotionBonusType {
+  PERCENTAGE
+}
+
+enum PromotionQualificationCondition {
+  UNTIL_FIRST_WITHDRAWAL
+}
+
+enum UserPromotionStatus {
+  ACTIVE
+  QUALIFICATION_LOST
+  EXPIRED
+  FAILED
+}

@@ -124,21 +124,6 @@ export type CompTransaction = $Result.DefaultSelection<Prisma.$CompTransactionPa
  */
 export type DailyCompEarning = $Result.DefaultSelection<Prisma.$DailyCompEarningPayload>
 /**
- * Model Promotion
- * 
- */
-export type Promotion = $Result.DefaultSelection<Prisma.$PromotionPayload>
-/**
- * Model PromotionTranslation
- * 
- */
-export type PromotionTranslation = $Result.DefaultSelection<Prisma.$PromotionTranslationPayload>
-/**
- * Model UserPromotion
- * 
- */
-export type UserPromotion = $Result.DefaultSelection<Prisma.$UserPromotionPayload>
-/**
  * Model NowPaymentCallbackLog
  * 
  */
@@ -219,10 +204,29 @@ export type AffiliateTier = $Result.DefaultSelection<Prisma.$AffiliateTierPayloa
  */
 export type LoginAttempt = $Result.DefaultSelection<Prisma.$LoginAttemptPayload>
 /**
+ * Model Promotion
+ * 
+ */
+export type Promotion = $Result.DefaultSelection<Prisma.$PromotionPayload>
+/**
+ * Model PromotionTranslation
+ * 
+ */
+export type PromotionTranslation = $Result.DefaultSelection<Prisma.$PromotionTranslationPayload>
+/**
+ * Model PromotionCurrency
+ * 
+ */
+export type PromotionCurrency = $Result.DefaultSelection<Prisma.$PromotionCurrencyPayload>
+/**
+ * Model UserPromotion
+ * 
+ */
+export type UserPromotion = $Result.DefaultSelection<Prisma.$UserPromotionPayload>
+/**
  * Model UserSession
  * *
  *  * 사용자 세션 모델
- *  *
  *  * 사용자의 활성 세션을 추적하고 관리합니다.
  *  * - HTTP 세션 및 WebSocket 세션 모두 추적
  *  * - 여러 디바이스에서의 동시 로그인 지원
@@ -435,37 +439,6 @@ export const WithdrawDetailStatus: {
 export type WithdrawDetailStatus = (typeof WithdrawDetailStatus)[keyof typeof WithdrawDetailStatus]
 
 
-export const PromotionTargetType: {
-  NEW_USER_FIRST_DEPOSIT: 'NEW_USER_FIRST_DEPOSIT'
-};
-
-export type PromotionTargetType = (typeof PromotionTargetType)[keyof typeof PromotionTargetType]
-
-
-export const PromotionBonusType: {
-  PERCENTAGE: 'PERCENTAGE'
-};
-
-export type PromotionBonusType = (typeof PromotionBonusType)[keyof typeof PromotionBonusType]
-
-
-export const PromotionQualificationCondition: {
-  UNTIL_FIRST_WITHDRAWAL: 'UNTIL_FIRST_WITHDRAWAL'
-};
-
-export type PromotionQualificationCondition = (typeof PromotionQualificationCondition)[keyof typeof PromotionQualificationCondition]
-
-
-export const UserPromotionStatus: {
-  ACTIVE: 'ACTIVE',
-  QUALIFICATION_LOST: 'QUALIFICATION_LOST',
-  EXPIRED: 'EXPIRED',
-  FAILED: 'FAILED'
-};
-
-export type UserPromotionStatus = (typeof UserPromotionStatus)[keyof typeof UserPromotionStatus]
-
-
 export const ExchangeRateProvider: {
   NOWPAYMENT: 'NOWPAYMENT',
   COINGECKO: 'COINGECKO',
@@ -554,6 +527,37 @@ export const LoginFailureReason: {
 };
 
 export type LoginFailureReason = (typeof LoginFailureReason)[keyof typeof LoginFailureReason]
+
+
+export const PromotionTargetType: {
+  NEW_USER_FIRST_DEPOSIT: 'NEW_USER_FIRST_DEPOSIT'
+};
+
+export type PromotionTargetType = (typeof PromotionTargetType)[keyof typeof PromotionTargetType]
+
+
+export const PromotionBonusType: {
+  PERCENTAGE: 'PERCENTAGE'
+};
+
+export type PromotionBonusType = (typeof PromotionBonusType)[keyof typeof PromotionBonusType]
+
+
+export const PromotionQualificationCondition: {
+  UNTIL_FIRST_WITHDRAWAL: 'UNTIL_FIRST_WITHDRAWAL'
+};
+
+export type PromotionQualificationCondition = (typeof PromotionQualificationCondition)[keyof typeof PromotionQualificationCondition]
+
+
+export const UserPromotionStatus: {
+  ACTIVE: 'ACTIVE',
+  QUALIFICATION_LOST: 'QUALIFICATION_LOST',
+  EXPIRED: 'EXPIRED',
+  FAILED: 'FAILED'
+};
+
+export type UserPromotionStatus = (typeof UserPromotionStatus)[keyof typeof UserPromotionStatus]
 
 
 export const SessionType: {
@@ -654,22 +658,6 @@ export type WithdrawDetailStatus = $Enums.WithdrawDetailStatus
 
 export const WithdrawDetailStatus: typeof $Enums.WithdrawDetailStatus
 
-export type PromotionTargetType = $Enums.PromotionTargetType
-
-export const PromotionTargetType: typeof $Enums.PromotionTargetType
-
-export type PromotionBonusType = $Enums.PromotionBonusType
-
-export const PromotionBonusType: typeof $Enums.PromotionBonusType
-
-export type PromotionQualificationCondition = $Enums.PromotionQualificationCondition
-
-export const PromotionQualificationCondition: typeof $Enums.PromotionQualificationCondition
-
-export type UserPromotionStatus = $Enums.UserPromotionStatus
-
-export const UserPromotionStatus: typeof $Enums.UserPromotionStatus
-
 export type ExchangeRateProvider = $Enums.ExchangeRateProvider
 
 export const ExchangeRateProvider: typeof $Enums.ExchangeRateProvider
@@ -709,6 +697,22 @@ export const LoginAttemptResult: typeof $Enums.LoginAttemptResult
 export type LoginFailureReason = $Enums.LoginFailureReason
 
 export const LoginFailureReason: typeof $Enums.LoginFailureReason
+
+export type PromotionTargetType = $Enums.PromotionTargetType
+
+export const PromotionTargetType: typeof $Enums.PromotionTargetType
+
+export type PromotionBonusType = $Enums.PromotionBonusType
+
+export const PromotionBonusType: typeof $Enums.PromotionBonusType
+
+export type PromotionQualificationCondition = $Enums.PromotionQualificationCondition
+
+export const PromotionQualificationCondition: typeof $Enums.PromotionQualificationCondition
+
+export type UserPromotionStatus = $Enums.UserPromotionStatus
+
+export const UserPromotionStatus: typeof $Enums.UserPromotionStatus
 
 export type SessionType = $Enums.SessionType
 
@@ -1056,36 +1060,6 @@ export class PrismaClient<
   get dailyCompEarning(): Prisma.DailyCompEarningDelegate<ExtArgs, ClientOptions>;
 
   /**
-   * `prisma.promotion`: Exposes CRUD operations for the **Promotion** model.
-    * Example usage:
-    * ```ts
-    * // Fetch zero or more Promotions
-    * const promotions = await prisma.promotion.findMany()
-    * ```
-    */
-  get promotion(): Prisma.PromotionDelegate<ExtArgs, ClientOptions>;
-
-  /**
-   * `prisma.promotionTranslation`: Exposes CRUD operations for the **PromotionTranslation** model.
-    * Example usage:
-    * ```ts
-    * // Fetch zero or more PromotionTranslations
-    * const promotionTranslations = await prisma.promotionTranslation.findMany()
-    * ```
-    */
-  get promotionTranslation(): Prisma.PromotionTranslationDelegate<ExtArgs, ClientOptions>;
-
-  /**
-   * `prisma.userPromotion`: Exposes CRUD operations for the **UserPromotion** model.
-    * Example usage:
-    * ```ts
-    * // Fetch zero or more UserPromotions
-    * const userPromotions = await prisma.userPromotion.findMany()
-    * ```
-    */
-  get userPromotion(): Prisma.UserPromotionDelegate<ExtArgs, ClientOptions>;
-
-  /**
    * `prisma.nowPaymentCallbackLog`: Exposes CRUD operations for the **NowPaymentCallbackLog** model.
     * Example usage:
     * ```ts
@@ -1244,6 +1218,46 @@ export class PrismaClient<
     * ```
     */
   get loginAttempt(): Prisma.LoginAttemptDelegate<ExtArgs, ClientOptions>;
+
+  /**
+   * `prisma.promotion`: Exposes CRUD operations for the **Promotion** model.
+    * Example usage:
+    * ```ts
+    * // Fetch zero or more Promotions
+    * const promotions = await prisma.promotion.findMany()
+    * ```
+    */
+  get promotion(): Prisma.PromotionDelegate<ExtArgs, ClientOptions>;
+
+  /**
+   * `prisma.promotionTranslation`: Exposes CRUD operations for the **PromotionTranslation** model.
+    * Example usage:
+    * ```ts
+    * // Fetch zero or more PromotionTranslations
+    * const promotionTranslations = await prisma.promotionTranslation.findMany()
+    * ```
+    */
+  get promotionTranslation(): Prisma.PromotionTranslationDelegate<ExtArgs, ClientOptions>;
+
+  /**
+   * `prisma.promotionCurrency`: Exposes CRUD operations for the **PromotionCurrency** model.
+    * Example usage:
+    * ```ts
+    * // Fetch zero or more PromotionCurrencies
+    * const promotionCurrencies = await prisma.promotionCurrency.findMany()
+    * ```
+    */
+  get promotionCurrency(): Prisma.PromotionCurrencyDelegate<ExtArgs, ClientOptions>;
+
+  /**
+   * `prisma.userPromotion`: Exposes CRUD operations for the **UserPromotion** model.
+    * Example usage:
+    * ```ts
+    * // Fetch zero or more UserPromotions
+    * const userPromotions = await prisma.userPromotion.findMany()
+    * ```
+    */
+  get userPromotion(): Prisma.UserPromotionDelegate<ExtArgs, ClientOptions>;
 
   /**
    * `prisma.userSession`: Exposes CRUD operations for the **UserSession** model.
@@ -1710,9 +1724,6 @@ export namespace Prisma {
     WithdrawDetail: 'WithdrawDetail',
     CompTransaction: 'CompTransaction',
     DailyCompEarning: 'DailyCompEarning',
-    Promotion: 'Promotion',
-    PromotionTranslation: 'PromotionTranslation',
-    UserPromotion: 'UserPromotion',
     NowPaymentCallbackLog: 'NowPaymentCallbackLog',
     ExchangeRate: 'ExchangeRate',
     VipLevel: 'VipLevel',
@@ -1729,6 +1740,10 @@ export namespace Prisma {
     AffiliateCommission: 'AffiliateCommission',
     AffiliateTier: 'AffiliateTier',
     LoginAttempt: 'LoginAttempt',
+    Promotion: 'Promotion',
+    PromotionTranslation: 'PromotionTranslation',
+    PromotionCurrency: 'PromotionCurrency',
+    UserPromotion: 'UserPromotion',
     UserSession: 'UserSession'
   };
 
@@ -1745,7 +1760,7 @@ export namespace Prisma {
       omit: GlobalOmitOptions
     }
     meta: {
-      modelProps: "authAuditLog" | "activityLog" | "systemErrorLog" | "integrationLog" | "unifiedLog" | "user" | "userBalance" | "userBalanceStats" | "game" | "gameTranslation" | "whitecliffApiLog" | "dcsApiLog" | "transaction" | "gameRound" | "gameBet" | "gameWin" | "transactionBalanceDetail" | "bonusDetail" | "depositDetail" | "withdrawDetail" | "compTransaction" | "dailyCompEarning" | "promotion" | "promotionTranslation" | "userPromotion" | "nowPaymentCallbackLog" | "exchangeRate" | "vipLevel" | "vipMembership" | "vipHistory" | "rolling" | "userToken" | "emailLog" | "gameSession" | "bankAccount" | "affiliateCode" | "referral" | "affiliateWallet" | "affiliateCommission" | "affiliateTier" | "loginAttempt" | "userSession"
+      modelProps: "authAuditLog" | "activityLog" | "systemErrorLog" | "integrationLog" | "unifiedLog" | "user" | "userBalance" | "userBalanceStats" | "game" | "gameTranslation" | "whitecliffApiLog" | "dcsApiLog" | "transaction" | "gameRound" | "gameBet" | "gameWin" | "transactionBalanceDetail" | "bonusDetail" | "depositDetail" | "withdrawDetail" | "compTransaction" | "dailyCompEarning" | "nowPaymentCallbackLog" | "exchangeRate" | "vipLevel" | "vipMembership" | "vipHistory" | "rolling" | "userToken" | "emailLog" | "gameSession" | "bankAccount" | "affiliateCode" | "referral" | "affiliateWallet" | "affiliateCommission" | "affiliateTier" | "loginAttempt" | "promotion" | "promotionTranslation" | "promotionCurrency" | "userPromotion" | "userSession"
       txIsolationLevel: Prisma.TransactionIsolationLevel
     }
     model: {
@@ -3377,228 +3392,6 @@ export namespace Prisma {
           }
         }
       }
-      Promotion: {
-        payload: Prisma.$PromotionPayload<ExtArgs>
-        fields: Prisma.PromotionFieldRefs
-        operations: {
-          findUnique: {
-            args: Prisma.PromotionFindUniqueArgs<ExtArgs>
-            result: $Utils.PayloadToResult<Prisma.$PromotionPayload> | null
-          }
-          findUniqueOrThrow: {
-            args: Prisma.PromotionFindUniqueOrThrowArgs<ExtArgs>
-            result: $Utils.PayloadToResult<Prisma.$PromotionPayload>
-          }
-          findFirst: {
-            args: Prisma.PromotionFindFirstArgs<ExtArgs>
-            result: $Utils.PayloadToResult<Prisma.$PromotionPayload> | null
-          }
-          findFirstOrThrow: {
-            args: Prisma.PromotionFindFirstOrThrowArgs<ExtArgs>
-            result: $Utils.PayloadToResult<Prisma.$PromotionPayload>
-          }
-          findMany: {
-            args: Prisma.PromotionFindManyArgs<ExtArgs>
-            result: $Utils.PayloadToResult<Prisma.$PromotionPayload>[]
-          }
-          create: {
-            args: Prisma.PromotionCreateArgs<ExtArgs>
-            result: $Utils.PayloadToResult<Prisma.$PromotionPayload>
-          }
-          createMany: {
-            args: Prisma.PromotionCreateManyArgs<ExtArgs>
-            result: BatchPayload
-          }
-          createManyAndReturn: {
-            args: Prisma.PromotionCreateManyAndReturnArgs<ExtArgs>
-            result: $Utils.PayloadToResult<Prisma.$PromotionPayload>[]
-          }
-          delete: {
-            args: Prisma.PromotionDeleteArgs<ExtArgs>
-            result: $Utils.PayloadToResult<Prisma.$PromotionPayload>
-          }
-          update: {
-            args: Prisma.PromotionUpdateArgs<ExtArgs>
-            result: $Utils.PayloadToResult<Prisma.$PromotionPayload>
-          }
-          deleteMany: {
-            args: Prisma.PromotionDeleteManyArgs<ExtArgs>
-            result: BatchPayload
-          }
-          updateMany: {
-            args: Prisma.PromotionUpdateManyArgs<ExtArgs>
-            result: BatchPayload
-          }
-          updateManyAndReturn: {
-            args: Prisma.PromotionUpdateManyAndReturnArgs<ExtArgs>
-            result: $Utils.PayloadToResult<Prisma.$PromotionPayload>[]
-          }
-          upsert: {
-            args: Prisma.PromotionUpsertArgs<ExtArgs>
-            result: $Utils.PayloadToResult<Prisma.$PromotionPayload>
-          }
-          aggregate: {
-            args: Prisma.PromotionAggregateArgs<ExtArgs>
-            result: $Utils.Optional<AggregatePromotion>
-          }
-          groupBy: {
-            args: Prisma.PromotionGroupByArgs<ExtArgs>
-            result: $Utils.Optional<PromotionGroupByOutputType>[]
-          }
-          count: {
-            args: Prisma.PromotionCountArgs<ExtArgs>
-            result: $Utils.Optional<PromotionCountAggregateOutputType> | number
-          }
-        }
-      }
-      PromotionTranslation: {
-        payload: Prisma.$PromotionTranslationPayload<ExtArgs>
-        fields: Prisma.PromotionTranslationFieldRefs
-        operations: {
-          findUnique: {
-            args: Prisma.PromotionTranslationFindUniqueArgs<ExtArgs>
-            result: $Utils.PayloadToResult<Prisma.$PromotionTranslationPayload> | null
-          }
-          findUniqueOrThrow: {
-            args: Prisma.PromotionTranslationFindUniqueOrThrowArgs<ExtArgs>
-            result: $Utils.PayloadToResult<Prisma.$PromotionTranslationPayload>
-          }
-          findFirst: {
-            args: Prisma.PromotionTranslationFindFirstArgs<ExtArgs>
-            result: $Utils.PayloadToResult<Prisma.$PromotionTranslationPayload> | null
-          }
-          findFirstOrThrow: {
-            args: Prisma.PromotionTranslationFindFirstOrThrowArgs<ExtArgs>
-            result: $Utils.PayloadToResult<Prisma.$PromotionTranslationPayload>
-          }
-          findMany: {
-            args: Prisma.PromotionTranslationFindManyArgs<ExtArgs>
-            result: $Utils.PayloadToResult<Prisma.$PromotionTranslationPayload>[]
-          }
-          create: {
-            args: Prisma.PromotionTranslationCreateArgs<ExtArgs>
-            result: $Utils.PayloadToResult<Prisma.$PromotionTranslationPayload>
-          }
-          createMany: {
-            args: Prisma.PromotionTranslationCreateManyArgs<ExtArgs>
-            result: BatchPayload
-          }
-          createManyAndReturn: {
-            args: Prisma.PromotionTranslationCreateManyAndReturnArgs<ExtArgs>
-            result: $Utils.PayloadToResult<Prisma.$PromotionTranslationPayload>[]
-          }
-          delete: {
-            args: Prisma.PromotionTranslationDeleteArgs<ExtArgs>
-            result: $Utils.PayloadToResult<Prisma.$PromotionTranslationPayload>
-          }
-          update: {
-            args: Prisma.PromotionTranslationUpdateArgs<ExtArgs>
-            result: $Utils.PayloadToResult<Prisma.$PromotionTranslationPayload>
-          }
-          deleteMany: {
-            args: Prisma.PromotionTranslationDeleteManyArgs<ExtArgs>
-            result: BatchPayload
-          }
-          updateMany: {
-            args: Prisma.PromotionTranslationUpdateManyArgs<ExtArgs>
-            result: BatchPayload
-          }
-          updateManyAndReturn: {
-            args: Prisma.PromotionTranslationUpdateManyAndReturnArgs<ExtArgs>
-            result: $Utils.PayloadToResult<Prisma.$PromotionTranslationPayload>[]
-          }
-          upsert: {
-            args: Prisma.PromotionTranslationUpsertArgs<ExtArgs>
-            result: $Utils.PayloadToResult<Prisma.$PromotionTranslationPayload>
-          }
-          aggregate: {
-            args: Prisma.PromotionTranslationAggregateArgs<ExtArgs>
-            result: $Utils.Optional<AggregatePromotionTranslation>
-          }
-          groupBy: {
-            args: Prisma.PromotionTranslationGroupByArgs<ExtArgs>
-            result: $Utils.Optional<PromotionTranslationGroupByOutputType>[]
-          }
-          count: {
-            args: Prisma.PromotionTranslationCountArgs<ExtArgs>
-            result: $Utils.Optional<PromotionTranslationCountAggregateOutputType> | number
-          }
-        }
-      }
-      UserPromotion: {
-        payload: Prisma.$UserPromotionPayload<ExtArgs>
-        fields: Prisma.UserPromotionFieldRefs
-        operations: {
-          findUnique: {
-            args: Prisma.UserPromotionFindUniqueArgs<ExtArgs>
-            result: $Utils.PayloadToResult<Prisma.$UserPromotionPayload> | null
-          }
-          findUniqueOrThrow: {
-            args: Prisma.UserPromotionFindUniqueOrThrowArgs<ExtArgs>
-            result: $Utils.PayloadToResult<Prisma.$UserPromotionPayload>
-          }
-          findFirst: {
-            args: Prisma.UserPromotionFindFirstArgs<ExtArgs>
-            result: $Utils.PayloadToResult<Prisma.$UserPromotionPayload> | null
-          }
-          findFirstOrThrow: {
-            args: Prisma.UserPromotionFindFirstOrThrowArgs<ExtArgs>
-            result: $Utils.PayloadToResult<Prisma.$UserPromotionPayload>
-          }
-          findMany: {
-            args: Prisma.UserPromotionFindManyArgs<ExtArgs>
-            result: $Utils.PayloadToResult<Prisma.$UserPromotionPayload>[]
-          }
-          create: {
-            args: Prisma.UserPromotionCreateArgs<ExtArgs>
-            result: $Utils.PayloadToResult<Prisma.$UserPromotionPayload>
-          }
-          createMany: {
-            args: Prisma.UserPromotionCreateManyArgs<ExtArgs>
-            result: BatchPayload
-          }
-          createManyAndReturn: {
-            args: Prisma.UserPromotionCreateManyAndReturnArgs<ExtArgs>
-            result: $Utils.PayloadToResult<Prisma.$UserPromotionPayload>[]
-          }
-          delete: {
-            args: Prisma.UserPromotionDeleteArgs<ExtArgs>
-            result: $Utils.PayloadToResult<Prisma.$UserPromotionPayload>
-          }
-          update: {
-            args: Prisma.UserPromotionUpdateArgs<ExtArgs>
-            result: $Utils.PayloadToResult<Prisma.$UserPromotionPayload>
-          }
-          deleteMany: {
-            args: Prisma.UserPromotionDeleteManyArgs<ExtArgs>
-            result: BatchPayload
-          }
-          updateMany: {
-            args: Prisma.UserPromotionUpdateManyArgs<ExtArgs>
-            result: BatchPayload
-          }
-          updateManyAndReturn: {
-            args: Prisma.UserPromotionUpdateManyAndReturnArgs<ExtArgs>
-            result: $Utils.PayloadToResult<Prisma.$UserPromotionPayload>[]
-          }
-          upsert: {
-            args: Prisma.UserPromotionUpsertArgs<ExtArgs>
-            result: $Utils.PayloadToResult<Prisma.$UserPromotionPayload>
-          }
-          aggregate: {
-            args: Prisma.UserPromotionAggregateArgs<ExtArgs>
-            result: $Utils.Optional<AggregateUserPromotion>
-          }
-          groupBy: {
-            args: Prisma.UserPromotionGroupByArgs<ExtArgs>
-            result: $Utils.Optional<UserPromotionGroupByOutputType>[]
-          }
-          count: {
-            args: Prisma.UserPromotionCountArgs<ExtArgs>
-            result: $Utils.Optional<UserPromotionCountAggregateOutputType> | number
-          }
-        }
-      }
       NowPaymentCallbackLog: {
         payload: Prisma.$NowPaymentCallbackLogPayload<ExtArgs>
         fields: Prisma.NowPaymentCallbackLogFieldRefs
@@ -4783,6 +4576,302 @@ export namespace Prisma {
           }
         }
       }
+      Promotion: {
+        payload: Prisma.$PromotionPayload<ExtArgs>
+        fields: Prisma.PromotionFieldRefs
+        operations: {
+          findUnique: {
+            args: Prisma.PromotionFindUniqueArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$PromotionPayload> | null
+          }
+          findUniqueOrThrow: {
+            args: Prisma.PromotionFindUniqueOrThrowArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$PromotionPayload>
+          }
+          findFirst: {
+            args: Prisma.PromotionFindFirstArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$PromotionPayload> | null
+          }
+          findFirstOrThrow: {
+            args: Prisma.PromotionFindFirstOrThrowArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$PromotionPayload>
+          }
+          findMany: {
+            args: Prisma.PromotionFindManyArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$PromotionPayload>[]
+          }
+          create: {
+            args: Prisma.PromotionCreateArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$PromotionPayload>
+          }
+          createMany: {
+            args: Prisma.PromotionCreateManyArgs<ExtArgs>
+            result: BatchPayload
+          }
+          createManyAndReturn: {
+            args: Prisma.PromotionCreateManyAndReturnArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$PromotionPayload>[]
+          }
+          delete: {
+            args: Prisma.PromotionDeleteArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$PromotionPayload>
+          }
+          update: {
+            args: Prisma.PromotionUpdateArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$PromotionPayload>
+          }
+          deleteMany: {
+            args: Prisma.PromotionDeleteManyArgs<ExtArgs>
+            result: BatchPayload
+          }
+          updateMany: {
+            args: Prisma.PromotionUpdateManyArgs<ExtArgs>
+            result: BatchPayload
+          }
+          updateManyAndReturn: {
+            args: Prisma.PromotionUpdateManyAndReturnArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$PromotionPayload>[]
+          }
+          upsert: {
+            args: Prisma.PromotionUpsertArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$PromotionPayload>
+          }
+          aggregate: {
+            args: Prisma.PromotionAggregateArgs<ExtArgs>
+            result: $Utils.Optional<AggregatePromotion>
+          }
+          groupBy: {
+            args: Prisma.PromotionGroupByArgs<ExtArgs>
+            result: $Utils.Optional<PromotionGroupByOutputType>[]
+          }
+          count: {
+            args: Prisma.PromotionCountArgs<ExtArgs>
+            result: $Utils.Optional<PromotionCountAggregateOutputType> | number
+          }
+        }
+      }
+      PromotionTranslation: {
+        payload: Prisma.$PromotionTranslationPayload<ExtArgs>
+        fields: Prisma.PromotionTranslationFieldRefs
+        operations: {
+          findUnique: {
+            args: Prisma.PromotionTranslationFindUniqueArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$PromotionTranslationPayload> | null
+          }
+          findUniqueOrThrow: {
+            args: Prisma.PromotionTranslationFindUniqueOrThrowArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$PromotionTranslationPayload>
+          }
+          findFirst: {
+            args: Prisma.PromotionTranslationFindFirstArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$PromotionTranslationPayload> | null
+          }
+          findFirstOrThrow: {
+            args: Prisma.PromotionTranslationFindFirstOrThrowArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$PromotionTranslationPayload>
+          }
+          findMany: {
+            args: Prisma.PromotionTranslationFindManyArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$PromotionTranslationPayload>[]
+          }
+          create: {
+            args: Prisma.PromotionTranslationCreateArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$PromotionTranslationPayload>
+          }
+          createMany: {
+            args: Prisma.PromotionTranslationCreateManyArgs<ExtArgs>
+            result: BatchPayload
+          }
+          createManyAndReturn: {
+            args: Prisma.PromotionTranslationCreateManyAndReturnArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$PromotionTranslationPayload>[]
+          }
+          delete: {
+            args: Prisma.PromotionTranslationDeleteArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$PromotionTranslationPayload>
+          }
+          update: {
+            args: Prisma.PromotionTranslationUpdateArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$PromotionTranslationPayload>
+          }
+          deleteMany: {
+            args: Prisma.PromotionTranslationDeleteManyArgs<ExtArgs>
+            result: BatchPayload
+          }
+          updateMany: {
+            args: Prisma.PromotionTranslationUpdateManyArgs<ExtArgs>
+            result: BatchPayload
+          }
+          updateManyAndReturn: {
+            args: Prisma.PromotionTranslationUpdateManyAndReturnArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$PromotionTranslationPayload>[]
+          }
+          upsert: {
+            args: Prisma.PromotionTranslationUpsertArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$PromotionTranslationPayload>
+          }
+          aggregate: {
+            args: Prisma.PromotionTranslationAggregateArgs<ExtArgs>
+            result: $Utils.Optional<AggregatePromotionTranslation>
+          }
+          groupBy: {
+            args: Prisma.PromotionTranslationGroupByArgs<ExtArgs>
+            result: $Utils.Optional<PromotionTranslationGroupByOutputType>[]
+          }
+          count: {
+            args: Prisma.PromotionTranslationCountArgs<ExtArgs>
+            result: $Utils.Optional<PromotionTranslationCountAggregateOutputType> | number
+          }
+        }
+      }
+      PromotionCurrency: {
+        payload: Prisma.$PromotionCurrencyPayload<ExtArgs>
+        fields: Prisma.PromotionCurrencyFieldRefs
+        operations: {
+          findUnique: {
+            args: Prisma.PromotionCurrencyFindUniqueArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$PromotionCurrencyPayload> | null
+          }
+          findUniqueOrThrow: {
+            args: Prisma.PromotionCurrencyFindUniqueOrThrowArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$PromotionCurrencyPayload>
+          }
+          findFirst: {
+            args: Prisma.PromotionCurrencyFindFirstArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$PromotionCurrencyPayload> | null
+          }
+          findFirstOrThrow: {
+            args: Prisma.PromotionCurrencyFindFirstOrThrowArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$PromotionCurrencyPayload>
+          }
+          findMany: {
+            args: Prisma.PromotionCurrencyFindManyArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$PromotionCurrencyPayload>[]
+          }
+          create: {
+            args: Prisma.PromotionCurrencyCreateArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$PromotionCurrencyPayload>
+          }
+          createMany: {
+            args: Prisma.PromotionCurrencyCreateManyArgs<ExtArgs>
+            result: BatchPayload
+          }
+          createManyAndReturn: {
+            args: Prisma.PromotionCurrencyCreateManyAndReturnArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$PromotionCurrencyPayload>[]
+          }
+          delete: {
+            args: Prisma.PromotionCurrencyDeleteArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$PromotionCurrencyPayload>
+          }
+          update: {
+            args: Prisma.PromotionCurrencyUpdateArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$PromotionCurrencyPayload>
+          }
+          deleteMany: {
+            args: Prisma.PromotionCurrencyDeleteManyArgs<ExtArgs>
+            result: BatchPayload
+          }
+          updateMany: {
+            args: Prisma.PromotionCurrencyUpdateManyArgs<ExtArgs>
+            result: BatchPayload
+          }
+          updateManyAndReturn: {
+            args: Prisma.PromotionCurrencyUpdateManyAndReturnArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$PromotionCurrencyPayload>[]
+          }
+          upsert: {
+            args: Prisma.PromotionCurrencyUpsertArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$PromotionCurrencyPayload>
+          }
+          aggregate: {
+            args: Prisma.PromotionCurrencyAggregateArgs<ExtArgs>
+            result: $Utils.Optional<AggregatePromotionCurrency>
+          }
+          groupBy: {
+            args: Prisma.PromotionCurrencyGroupByArgs<ExtArgs>
+            result: $Utils.Optional<PromotionCurrencyGroupByOutputType>[]
+          }
+          count: {
+            args: Prisma.PromotionCurrencyCountArgs<ExtArgs>
+            result: $Utils.Optional<PromotionCurrencyCountAggregateOutputType> | number
+          }
+        }
+      }
+      UserPromotion: {
+        payload: Prisma.$UserPromotionPayload<ExtArgs>
+        fields: Prisma.UserPromotionFieldRefs
+        operations: {
+          findUnique: {
+            args: Prisma.UserPromotionFindUniqueArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$UserPromotionPayload> | null
+          }
+          findUniqueOrThrow: {
+            args: Prisma.UserPromotionFindUniqueOrThrowArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$UserPromotionPayload>
+          }
+          findFirst: {
+            args: Prisma.UserPromotionFindFirstArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$UserPromotionPayload> | null
+          }
+          findFirstOrThrow: {
+            args: Prisma.UserPromotionFindFirstOrThrowArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$UserPromotionPayload>
+          }
+          findMany: {
+            args: Prisma.UserPromotionFindManyArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$UserPromotionPayload>[]
+          }
+          create: {
+            args: Prisma.UserPromotionCreateArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$UserPromotionPayload>
+          }
+          createMany: {
+            args: Prisma.UserPromotionCreateManyArgs<ExtArgs>
+            result: BatchPayload
+          }
+          createManyAndReturn: {
+            args: Prisma.UserPromotionCreateManyAndReturnArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$UserPromotionPayload>[]
+          }
+          delete: {
+            args: Prisma.UserPromotionDeleteArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$UserPromotionPayload>
+          }
+          update: {
+            args: Prisma.UserPromotionUpdateArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$UserPromotionPayload>
+          }
+          deleteMany: {
+            args: Prisma.UserPromotionDeleteManyArgs<ExtArgs>
+            result: BatchPayload
+          }
+          updateMany: {
+            args: Prisma.UserPromotionUpdateManyArgs<ExtArgs>
+            result: BatchPayload
+          }
+          updateManyAndReturn: {
+            args: Prisma.UserPromotionUpdateManyAndReturnArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$UserPromotionPayload>[]
+          }
+          upsert: {
+            args: Prisma.UserPromotionUpsertArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$UserPromotionPayload>
+          }
+          aggregate: {
+            args: Prisma.UserPromotionAggregateArgs<ExtArgs>
+            result: $Utils.Optional<AggregateUserPromotion>
+          }
+          groupBy: {
+            args: Prisma.UserPromotionGroupByArgs<ExtArgs>
+            result: $Utils.Optional<UserPromotionGroupByOutputType>[]
+          }
+          count: {
+            args: Prisma.UserPromotionCountArgs<ExtArgs>
+            result: $Utils.Optional<UserPromotionCountAggregateOutputType> | number
+          }
+        }
+      }
       UserSession: {
         payload: Prisma.$UserSessionPayload<ExtArgs>
         fields: Prisma.UserSessionFieldRefs
@@ -4987,9 +5076,6 @@ export namespace Prisma {
     withdrawDetail?: WithdrawDetailOmit
     compTransaction?: CompTransactionOmit
     dailyCompEarning?: DailyCompEarningOmit
-    promotion?: PromotionOmit
-    promotionTranslation?: PromotionTranslationOmit
-    userPromotion?: UserPromotionOmit
     nowPaymentCallbackLog?: NowPaymentCallbackLogOmit
     exchangeRate?: ExchangeRateOmit
     vipLevel?: VipLevelOmit
@@ -5006,6 +5092,10 @@ export namespace Prisma {
     affiliateCommission?: AffiliateCommissionOmit
     affiliateTier?: AffiliateTierOmit
     loginAttempt?: LoginAttemptOmit
+    promotion?: PromotionOmit
+    promotionTranslation?: PromotionTranslationOmit
+    promotionCurrency?: PromotionCurrencyOmit
+    userPromotion?: UserPromotionOmit
     userSession?: UserSessionOmit
   }
 
@@ -5485,77 +5575,6 @@ export namespace Prisma {
 
 
   /**
-   * Count Type PromotionCountOutputType
-   */
-
-  export type PromotionCountOutputType = {
-    translations: number
-    UserPromotion: number
-  }
-
-  export type PromotionCountOutputTypeSelect<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
-    translations?: boolean | PromotionCountOutputTypeCountTranslationsArgs
-    UserPromotion?: boolean | PromotionCountOutputTypeCountUserPromotionArgs
-  }
-
-  // Custom InputTypes
-  /**
-   * PromotionCountOutputType without action
-   */
-  export type PromotionCountOutputTypeDefaultArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
-    /**
-     * Select specific fields to fetch from the PromotionCountOutputType
-     */
-    select?: PromotionCountOutputTypeSelect<ExtArgs> | null
-  }
-
-  /**
-   * PromotionCountOutputType without action
-   */
-  export type PromotionCountOutputTypeCountTranslationsArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
-    where?: PromotionTranslationWhereInput
-  }
-
-  /**
-   * PromotionCountOutputType without action
-   */
-  export type PromotionCountOutputTypeCountUserPromotionArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
-    where?: UserPromotionWhereInput
-  }
-
-
-  /**
-   * Count Type UserPromotionCountOutputType
-   */
-
-  export type UserPromotionCountOutputType = {
-    Rolling: number
-  }
-
-  export type UserPromotionCountOutputTypeSelect<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
-    Rolling?: boolean | UserPromotionCountOutputTypeCountRollingArgs
-  }
-
-  // Custom InputTypes
-  /**
-   * UserPromotionCountOutputType without action
-   */
-  export type UserPromotionCountOutputTypeDefaultArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
-    /**
-     * Select specific fields to fetch from the UserPromotionCountOutputType
-     */
-    select?: UserPromotionCountOutputTypeSelect<ExtArgs> | null
-  }
-
-  /**
-   * UserPromotionCountOutputType without action
-   */
-  export type UserPromotionCountOutputTypeCountRollingArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
-    where?: RollingWhereInput
-  }
-
-
-  /**
    * Count Type VipLevelCountOutputType
    */
 
@@ -5707,6 +5726,86 @@ export namespace Prisma {
    */
   export type AffiliateCodeCountOutputTypeCountReferralsArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
     where?: ReferralWhereInput
+  }
+
+
+  /**
+   * Count Type PromotionCountOutputType
+   */
+
+  export type PromotionCountOutputType = {
+    translations: number
+    currencies: number
+    UserPromotion: number
+  }
+
+  export type PromotionCountOutputTypeSelect<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    translations?: boolean | PromotionCountOutputTypeCountTranslationsArgs
+    currencies?: boolean | PromotionCountOutputTypeCountCurrenciesArgs
+    UserPromotion?: boolean | PromotionCountOutputTypeCountUserPromotionArgs
+  }
+
+  // Custom InputTypes
+  /**
+   * PromotionCountOutputType without action
+   */
+  export type PromotionCountOutputTypeDefaultArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the PromotionCountOutputType
+     */
+    select?: PromotionCountOutputTypeSelect<ExtArgs> | null
+  }
+
+  /**
+   * PromotionCountOutputType without action
+   */
+  export type PromotionCountOutputTypeCountTranslationsArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    where?: PromotionTranslationWhereInput
+  }
+
+  /**
+   * PromotionCountOutputType without action
+   */
+  export type PromotionCountOutputTypeCountCurrenciesArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    where?: PromotionCurrencyWhereInput
+  }
+
+  /**
+   * PromotionCountOutputType without action
+   */
+  export type PromotionCountOutputTypeCountUserPromotionArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    where?: UserPromotionWhereInput
+  }
+
+
+  /**
+   * Count Type UserPromotionCountOutputType
+   */
+
+  export type UserPromotionCountOutputType = {
+    Rolling: number
+  }
+
+  export type UserPromotionCountOutputTypeSelect<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    Rolling?: boolean | UserPromotionCountOutputTypeCountRollingArgs
+  }
+
+  // Custom InputTypes
+  /**
+   * UserPromotionCountOutputType without action
+   */
+  export type UserPromotionCountOutputTypeDefaultArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the UserPromotionCountOutputType
+     */
+    select?: UserPromotionCountOutputTypeSelect<ExtArgs> | null
+  }
+
+  /**
+   * UserPromotionCountOutputType without action
+   */
+  export type UserPromotionCountOutputTypeCountRollingArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    where?: RollingWhereInput
   }
 
 
@@ -33201,3587 +33300,6 @@ export namespace Prisma {
 
 
   /**
-   * Model Promotion
-   */
-
-  export type AggregatePromotion = {
-    _count: PromotionCountAggregateOutputType | null
-    _avg: PromotionAvgAggregateOutputType | null
-    _sum: PromotionSumAggregateOutputType | null
-    _min: PromotionMinAggregateOutputType | null
-    _max: PromotionMaxAggregateOutputType | null
-  }
-
-  export type PromotionAvgAggregateOutputType = {
-    id: number | null
-    bonusRate: Decimal | null
-    minDepositAmount: Decimal | null
-    maxBonusAmount: Decimal | null
-    rollingMultiplier: Decimal | null
-  }
-
-  export type PromotionSumAggregateOutputType = {
-    id: number | null
-    bonusRate: Decimal | null
-    minDepositAmount: Decimal | null
-    maxBonusAmount: Decimal | null
-    rollingMultiplier: Decimal | null
-  }
-
-  export type PromotionMinAggregateOutputType = {
-    id: number | null
-    managementName: string | null
-    isActive: boolean | null
-    startDate: Date | null
-    endDate: Date | null
-    targetType: $Enums.PromotionTargetType | null
-    bonusType: $Enums.PromotionBonusType | null
-    bonusRate: Decimal | null
-    minDepositAmount: Decimal | null
-    maxBonusAmount: Decimal | null
-    rollingMultiplier: Decimal | null
-    qualificationMaintainCondition: $Enums.PromotionQualificationCondition | null
-    createdAt: Date | null
-    updatedAt: Date | null
-  }
-
-  export type PromotionMaxAggregateOutputType = {
-    id: number | null
-    managementName: string | null
-    isActive: boolean | null
-    startDate: Date | null
-    endDate: Date | null
-    targetType: $Enums.PromotionTargetType | null
-    bonusType: $Enums.PromotionBonusType | null
-    bonusRate: Decimal | null
-    minDepositAmount: Decimal | null
-    maxBonusAmount: Decimal | null
-    rollingMultiplier: Decimal | null
-    qualificationMaintainCondition: $Enums.PromotionQualificationCondition | null
-    createdAt: Date | null
-    updatedAt: Date | null
-  }
-
-  export type PromotionCountAggregateOutputType = {
-    id: number
-    managementName: number
-    isActive: number
-    startDate: number
-    endDate: number
-    targetType: number
-    bonusType: number
-    bonusRate: number
-    minDepositAmount: number
-    maxBonusAmount: number
-    rollingMultiplier: number
-    qualificationMaintainCondition: number
-    createdAt: number
-    updatedAt: number
-    _all: number
-  }
-
-
-  export type PromotionAvgAggregateInputType = {
-    id?: true
-    bonusRate?: true
-    minDepositAmount?: true
-    maxBonusAmount?: true
-    rollingMultiplier?: true
-  }
-
-  export type PromotionSumAggregateInputType = {
-    id?: true
-    bonusRate?: true
-    minDepositAmount?: true
-    maxBonusAmount?: true
-    rollingMultiplier?: true
-  }
-
-  export type PromotionMinAggregateInputType = {
-    id?: true
-    managementName?: true
-    isActive?: true
-    startDate?: true
-    endDate?: true
-    targetType?: true
-    bonusType?: true
-    bonusRate?: true
-    minDepositAmount?: true
-    maxBonusAmount?: true
-    rollingMultiplier?: true
-    qualificationMaintainCondition?: true
-    createdAt?: true
-    updatedAt?: true
-  }
-
-  export type PromotionMaxAggregateInputType = {
-    id?: true
-    managementName?: true
-    isActive?: true
-    startDate?: true
-    endDate?: true
-    targetType?: true
-    bonusType?: true
-    bonusRate?: true
-    minDepositAmount?: true
-    maxBonusAmount?: true
-    rollingMultiplier?: true
-    qualificationMaintainCondition?: true
-    createdAt?: true
-    updatedAt?: true
-  }
-
-  export type PromotionCountAggregateInputType = {
-    id?: true
-    managementName?: true
-    isActive?: true
-    startDate?: true
-    endDate?: true
-    targetType?: true
-    bonusType?: true
-    bonusRate?: true
-    minDepositAmount?: true
-    maxBonusAmount?: true
-    rollingMultiplier?: true
-    qualificationMaintainCondition?: true
-    createdAt?: true
-    updatedAt?: true
-    _all?: true
-  }
-
-  export type PromotionAggregateArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
-    /**
-     * Filter which Promotion to aggregate.
-     */
-    where?: PromotionWhereInput
-    /**
-     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/sorting Sorting Docs}
-     * 
-     * Determine the order of Promotions to fetch.
-     */
-    orderBy?: PromotionOrderByWithRelationInput | PromotionOrderByWithRelationInput[]
-    /**
-     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination#cursor-based-pagination Cursor Docs}
-     * 
-     * Sets the start position
-     */
-    cursor?: PromotionWhereUniqueInput
-    /**
-     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
-     * 
-     * Take `±n` Promotions from the position of the cursor.
-     */
-    take?: number
-    /**
-     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
-     * 
-     * Skip the first `n` Promotions.
-     */
-    skip?: number
-    /**
-     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
-     * 
-     * Count returned Promotions
-    **/
-    _count?: true | PromotionCountAggregateInputType
-    /**
-     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
-     * 
-     * Select which fields to average
-    **/
-    _avg?: PromotionAvgAggregateInputType
-    /**
-     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
-     * 
-     * Select which fields to sum
-    **/
-    _sum?: PromotionSumAggregateInputType
-    /**
-     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
-     * 
-     * Select which fields to find the minimum value
-    **/
-    _min?: PromotionMinAggregateInputType
-    /**
-     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
-     * 
-     * Select which fields to find the maximum value
-    **/
-    _max?: PromotionMaxAggregateInputType
-  }
-
-  export type GetPromotionAggregateType<T extends PromotionAggregateArgs> = {
-        [P in keyof T & keyof AggregatePromotion]: P extends '_count' | 'count'
-      ? T[P] extends true
-        ? number
-        : GetScalarType<T[P], AggregatePromotion[P]>
-      : GetScalarType<T[P], AggregatePromotion[P]>
-  }
-
-
-
-
-  export type PromotionGroupByArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
-    where?: PromotionWhereInput
-    orderBy?: PromotionOrderByWithAggregationInput | PromotionOrderByWithAggregationInput[]
-    by: PromotionScalarFieldEnum[] | PromotionScalarFieldEnum
-    having?: PromotionScalarWhereWithAggregatesInput
-    take?: number
-    skip?: number
-    _count?: PromotionCountAggregateInputType | true
-    _avg?: PromotionAvgAggregateInputType
-    _sum?: PromotionSumAggregateInputType
-    _min?: PromotionMinAggregateInputType
-    _max?: PromotionMaxAggregateInputType
-  }
-
-  export type PromotionGroupByOutputType = {
-    id: number
-    managementName: string
-    isActive: boolean
-    startDate: Date | null
-    endDate: Date | null
-    targetType: $Enums.PromotionTargetType
-    bonusType: $Enums.PromotionBonusType
-    bonusRate: Decimal | null
-    minDepositAmount: Decimal
-    maxBonusAmount: Decimal | null
-    rollingMultiplier: Decimal | null
-    qualificationMaintainCondition: $Enums.PromotionQualificationCondition
-    createdAt: Date
-    updatedAt: Date
-    _count: PromotionCountAggregateOutputType | null
-    _avg: PromotionAvgAggregateOutputType | null
-    _sum: PromotionSumAggregateOutputType | null
-    _min: PromotionMinAggregateOutputType | null
-    _max: PromotionMaxAggregateOutputType | null
-  }
-
-  type GetPromotionGroupByPayload<T extends PromotionGroupByArgs> = Prisma.PrismaPromise<
-    Array<
-      PickEnumerable<PromotionGroupByOutputType, T['by']> &
-        {
-          [P in ((keyof T) & (keyof PromotionGroupByOutputType))]: P extends '_count'
-            ? T[P] extends boolean
-              ? number
-              : GetScalarType<T[P], PromotionGroupByOutputType[P]>
-            : GetScalarType<T[P], PromotionGroupByOutputType[P]>
-        }
-      >
-    >
-
-
-  export type PromotionSelect<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetSelect<{
-    id?: boolean
-    managementName?: boolean
-    isActive?: boolean
-    startDate?: boolean
-    endDate?: boolean
-    targetType?: boolean
-    bonusType?: boolean
-    bonusRate?: boolean
-    minDepositAmount?: boolean
-    maxBonusAmount?: boolean
-    rollingMultiplier?: boolean
-    qualificationMaintainCondition?: boolean
-    createdAt?: boolean
-    updatedAt?: boolean
-    translations?: boolean | Promotion$translationsArgs<ExtArgs>
-    UserPromotion?: boolean | Promotion$UserPromotionArgs<ExtArgs>
-    _count?: boolean | PromotionCountOutputTypeDefaultArgs<ExtArgs>
-  }, ExtArgs["result"]["promotion"]>
-
-  export type PromotionSelectCreateManyAndReturn<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetSelect<{
-    id?: boolean
-    managementName?: boolean
-    isActive?: boolean
-    startDate?: boolean
-    endDate?: boolean
-    targetType?: boolean
-    bonusType?: boolean
-    bonusRate?: boolean
-    minDepositAmount?: boolean
-    maxBonusAmount?: boolean
-    rollingMultiplier?: boolean
-    qualificationMaintainCondition?: boolean
-    createdAt?: boolean
-    updatedAt?: boolean
-  }, ExtArgs["result"]["promotion"]>
-
-  export type PromotionSelectUpdateManyAndReturn<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetSelect<{
-    id?: boolean
-    managementName?: boolean
-    isActive?: boolean
-    startDate?: boolean
-    endDate?: boolean
-    targetType?: boolean
-    bonusType?: boolean
-    bonusRate?: boolean
-    minDepositAmount?: boolean
-    maxBonusAmount?: boolean
-    rollingMultiplier?: boolean
-    qualificationMaintainCondition?: boolean
-    createdAt?: boolean
-    updatedAt?: boolean
-  }, ExtArgs["result"]["promotion"]>
-
-  export type PromotionSelectScalar = {
-    id?: boolean
-    managementName?: boolean
-    isActive?: boolean
-    startDate?: boolean
-    endDate?: boolean
-    targetType?: boolean
-    bonusType?: boolean
-    bonusRate?: boolean
-    minDepositAmount?: boolean
-    maxBonusAmount?: boolean
-    rollingMultiplier?: boolean
-    qualificationMaintainCondition?: boolean
-    createdAt?: boolean
-    updatedAt?: boolean
-  }
-
-  export type PromotionOmit<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetOmit<"id" | "managementName" | "isActive" | "startDate" | "endDate" | "targetType" | "bonusType" | "bonusRate" | "minDepositAmount" | "maxBonusAmount" | "rollingMultiplier" | "qualificationMaintainCondition" | "createdAt" | "updatedAt", ExtArgs["result"]["promotion"]>
-  export type PromotionInclude<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
-    translations?: boolean | Promotion$translationsArgs<ExtArgs>
-    UserPromotion?: boolean | Promotion$UserPromotionArgs<ExtArgs>
-    _count?: boolean | PromotionCountOutputTypeDefaultArgs<ExtArgs>
-  }
-  export type PromotionIncludeCreateManyAndReturn<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {}
-  export type PromotionIncludeUpdateManyAndReturn<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {}
-
-  export type $PromotionPayload<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
-    name: "Promotion"
-    objects: {
-      translations: Prisma.$PromotionTranslationPayload<ExtArgs>[]
-      UserPromotion: Prisma.$UserPromotionPayload<ExtArgs>[]
-    }
-    scalars: $Extensions.GetPayloadResult<{
-      id: number
-      managementName: string
-      isActive: boolean
-      startDate: Date | null
-      endDate: Date | null
-      targetType: $Enums.PromotionTargetType
-      bonusType: $Enums.PromotionBonusType
-      bonusRate: Prisma.Decimal | null
-      minDepositAmount: Prisma.Decimal
-      maxBonusAmount: Prisma.Decimal | null
-      rollingMultiplier: Prisma.Decimal | null
-      qualificationMaintainCondition: $Enums.PromotionQualificationCondition
-      createdAt: Date
-      updatedAt: Date
-    }, ExtArgs["result"]["promotion"]>
-    composites: {}
-  }
-
-  type PromotionGetPayload<S extends boolean | null | undefined | PromotionDefaultArgs> = $Result.GetResult<Prisma.$PromotionPayload, S>
-
-  type PromotionCountArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> =
-    Omit<PromotionFindManyArgs, 'select' | 'include' | 'distinct' | 'omit'> & {
-      select?: PromotionCountAggregateInputType | true
-    }
-
-  export interface PromotionDelegate<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs, GlobalOmitOptions = {}> {
-    [K: symbol]: { types: Prisma.TypeMap<ExtArgs>['model']['Promotion'], meta: { name: 'Promotion' } }
-    /**
-     * Find zero or one Promotion that matches the filter.
-     * @param {PromotionFindUniqueArgs} args - Arguments to find a Promotion
-     * @example
-     * // Get one Promotion
-     * const promotion = await prisma.promotion.findUnique({
-     *   where: {
-     *     // ... provide filter here
-     *   }
-     * })
-     */
-    findUnique<T extends PromotionFindUniqueArgs>(args: SelectSubset<T, PromotionFindUniqueArgs<ExtArgs>>): Prisma__PromotionClient<$Result.GetResult<Prisma.$PromotionPayload<ExtArgs>, T, "findUnique", GlobalOmitOptions> | null, null, ExtArgs, GlobalOmitOptions>
-
-    /**
-     * Find one Promotion that matches the filter or throw an error with `error.code='P2025'`
-     * if no matches were found.
-     * @param {PromotionFindUniqueOrThrowArgs} args - Arguments to find a Promotion
-     * @example
-     * // Get one Promotion
-     * const promotion = await prisma.promotion.findUniqueOrThrow({
-     *   where: {
-     *     // ... provide filter here
-     *   }
-     * })
-     */
-    findUniqueOrThrow<T extends PromotionFindUniqueOrThrowArgs>(args: SelectSubset<T, PromotionFindUniqueOrThrowArgs<ExtArgs>>): Prisma__PromotionClient<$Result.GetResult<Prisma.$PromotionPayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
-
-    /**
-     * Find the first Promotion that matches the filter.
-     * Note, that providing `undefined` is treated as the value not being there.
-     * Read more here: https://pris.ly/d/null-undefined
-     * @param {PromotionFindFirstArgs} args - Arguments to find a Promotion
-     * @example
-     * // Get one Promotion
-     * const promotion = await prisma.promotion.findFirst({
-     *   where: {
-     *     // ... provide filter here
-     *   }
-     * })
-     */
-    findFirst<T extends PromotionFindFirstArgs>(args?: SelectSubset<T, PromotionFindFirstArgs<ExtArgs>>): Prisma__PromotionClient<$Result.GetResult<Prisma.$PromotionPayload<ExtArgs>, T, "findFirst", GlobalOmitOptions> | null, null, ExtArgs, GlobalOmitOptions>
-
-    /**
-     * Find the first Promotion that matches the filter or
-     * throw `PrismaKnownClientError` with `P2025` code if no matches were found.
-     * Note, that providing `undefined` is treated as the value not being there.
-     * Read more here: https://pris.ly/d/null-undefined
-     * @param {PromotionFindFirstOrThrowArgs} args - Arguments to find a Promotion
-     * @example
-     * // Get one Promotion
-     * const promotion = await prisma.promotion.findFirstOrThrow({
-     *   where: {
-     *     // ... provide filter here
-     *   }
-     * })
-     */
-    findFirstOrThrow<T extends PromotionFindFirstOrThrowArgs>(args?: SelectSubset<T, PromotionFindFirstOrThrowArgs<ExtArgs>>): Prisma__PromotionClient<$Result.GetResult<Prisma.$PromotionPayload<ExtArgs>, T, "findFirstOrThrow", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
-
-    /**
-     * Find zero or more Promotions that matches the filter.
-     * Note, that providing `undefined` is treated as the value not being there.
-     * Read more here: https://pris.ly/d/null-undefined
-     * @param {PromotionFindManyArgs} args - Arguments to filter and select certain fields only.
-     * @example
-     * // Get all Promotions
-     * const promotions = await prisma.promotion.findMany()
-     * 
-     * // Get first 10 Promotions
-     * const promotions = await prisma.promotion.findMany({ take: 10 })
-     * 
-     * // Only select the `id`
-     * const promotionWithIdOnly = await prisma.promotion.findMany({ select: { id: true } })
-     * 
-     */
-    findMany<T extends PromotionFindManyArgs>(args?: SelectSubset<T, PromotionFindManyArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$PromotionPayload<ExtArgs>, T, "findMany", GlobalOmitOptions>>
-
-    /**
-     * Create a Promotion.
-     * @param {PromotionCreateArgs} args - Arguments to create a Promotion.
-     * @example
-     * // Create one Promotion
-     * const Promotion = await prisma.promotion.create({
-     *   data: {
-     *     // ... data to create a Promotion
-     *   }
-     * })
-     * 
-     */
-    create<T extends PromotionCreateArgs>(args: SelectSubset<T, PromotionCreateArgs<ExtArgs>>): Prisma__PromotionClient<$Result.GetResult<Prisma.$PromotionPayload<ExtArgs>, T, "create", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
-
-    /**
-     * Create many Promotions.
-     * @param {PromotionCreateManyArgs} args - Arguments to create many Promotions.
-     * @example
-     * // Create many Promotions
-     * const promotion = await prisma.promotion.createMany({
-     *   data: [
-     *     // ... provide data here
-     *   ]
-     * })
-     *     
-     */
-    createMany<T extends PromotionCreateManyArgs>(args?: SelectSubset<T, PromotionCreateManyArgs<ExtArgs>>): Prisma.PrismaPromise<BatchPayload>
-
-    /**
-     * Create many Promotions and returns the data saved in the database.
-     * @param {PromotionCreateManyAndReturnArgs} args - Arguments to create many Promotions.
-     * @example
-     * // Create many Promotions
-     * const promotion = await prisma.promotion.createManyAndReturn({
-     *   data: [
-     *     // ... provide data here
-     *   ]
-     * })
-     * 
-     * // Create many Promotions and only return the `id`
-     * const promotionWithIdOnly = await prisma.promotion.createManyAndReturn({
-     *   select: { id: true },
-     *   data: [
-     *     // ... provide data here
-     *   ]
-     * })
-     * Note, that providing `undefined` is treated as the value not being there.
-     * Read more here: https://pris.ly/d/null-undefined
-     * 
-     */
-    createManyAndReturn<T extends PromotionCreateManyAndReturnArgs>(args?: SelectSubset<T, PromotionCreateManyAndReturnArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$PromotionPayload<ExtArgs>, T, "createManyAndReturn", GlobalOmitOptions>>
-
-    /**
-     * Delete a Promotion.
-     * @param {PromotionDeleteArgs} args - Arguments to delete one Promotion.
-     * @example
-     * // Delete one Promotion
-     * const Promotion = await prisma.promotion.delete({
-     *   where: {
-     *     // ... filter to delete one Promotion
-     *   }
-     * })
-     * 
-     */
-    delete<T extends PromotionDeleteArgs>(args: SelectSubset<T, PromotionDeleteArgs<ExtArgs>>): Prisma__PromotionClient<$Result.GetResult<Prisma.$PromotionPayload<ExtArgs>, T, "delete", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
-
-    /**
-     * Update one Promotion.
-     * @param {PromotionUpdateArgs} args - Arguments to update one Promotion.
-     * @example
-     * // Update one Promotion
-     * const promotion = await prisma.promotion.update({
-     *   where: {
-     *     // ... provide filter here
-     *   },
-     *   data: {
-     *     // ... provide data here
-     *   }
-     * })
-     * 
-     */
-    update<T extends PromotionUpdateArgs>(args: SelectSubset<T, PromotionUpdateArgs<ExtArgs>>): Prisma__PromotionClient<$Result.GetResult<Prisma.$PromotionPayload<ExtArgs>, T, "update", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
-
-    /**
-     * Delete zero or more Promotions.
-     * @param {PromotionDeleteManyArgs} args - Arguments to filter Promotions to delete.
-     * @example
-     * // Delete a few Promotions
-     * const { count } = await prisma.promotion.deleteMany({
-     *   where: {
-     *     // ... provide filter here
-     *   }
-     * })
-     * 
-     */
-    deleteMany<T extends PromotionDeleteManyArgs>(args?: SelectSubset<T, PromotionDeleteManyArgs<ExtArgs>>): Prisma.PrismaPromise<BatchPayload>
-
-    /**
-     * Update zero or more Promotions.
-     * Note, that providing `undefined` is treated as the value not being there.
-     * Read more here: https://pris.ly/d/null-undefined
-     * @param {PromotionUpdateManyArgs} args - Arguments to update one or more rows.
-     * @example
-     * // Update many Promotions
-     * const promotion = await prisma.promotion.updateMany({
-     *   where: {
-     *     // ... provide filter here
-     *   },
-     *   data: {
-     *     // ... provide data here
-     *   }
-     * })
-     * 
-     */
-    updateMany<T extends PromotionUpdateManyArgs>(args: SelectSubset<T, PromotionUpdateManyArgs<ExtArgs>>): Prisma.PrismaPromise<BatchPayload>
-
-    /**
-     * Update zero or more Promotions and returns the data updated in the database.
-     * @param {PromotionUpdateManyAndReturnArgs} args - Arguments to update many Promotions.
-     * @example
-     * // Update many Promotions
-     * const promotion = await prisma.promotion.updateManyAndReturn({
-     *   where: {
-     *     // ... provide filter here
-     *   },
-     *   data: [
-     *     // ... provide data here
-     *   ]
-     * })
-     * 
-     * // Update zero or more Promotions and only return the `id`
-     * const promotionWithIdOnly = await prisma.promotion.updateManyAndReturn({
-     *   select: { id: true },
-     *   where: {
-     *     // ... provide filter here
-     *   },
-     *   data: [
-     *     // ... provide data here
-     *   ]
-     * })
-     * Note, that providing `undefined` is treated as the value not being there.
-     * Read more here: https://pris.ly/d/null-undefined
-     * 
-     */
-    updateManyAndReturn<T extends PromotionUpdateManyAndReturnArgs>(args: SelectSubset<T, PromotionUpdateManyAndReturnArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$PromotionPayload<ExtArgs>, T, "updateManyAndReturn", GlobalOmitOptions>>
-
-    /**
-     * Create or update one Promotion.
-     * @param {PromotionUpsertArgs} args - Arguments to update or create a Promotion.
-     * @example
-     * // Update or create a Promotion
-     * const promotion = await prisma.promotion.upsert({
-     *   create: {
-     *     // ... data to create a Promotion
-     *   },
-     *   update: {
-     *     // ... in case it already exists, update
-     *   },
-     *   where: {
-     *     // ... the filter for the Promotion we want to update
-     *   }
-     * })
-     */
-    upsert<T extends PromotionUpsertArgs>(args: SelectSubset<T, PromotionUpsertArgs<ExtArgs>>): Prisma__PromotionClient<$Result.GetResult<Prisma.$PromotionPayload<ExtArgs>, T, "upsert", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
-
-
-    /**
-     * Count the number of Promotions.
-     * Note, that providing `undefined` is treated as the value not being there.
-     * Read more here: https://pris.ly/d/null-undefined
-     * @param {PromotionCountArgs} args - Arguments to filter Promotions to count.
-     * @example
-     * // Count the number of Promotions
-     * const count = await prisma.promotion.count({
-     *   where: {
-     *     // ... the filter for the Promotions we want to count
-     *   }
-     * })
-    **/
-    count<T extends PromotionCountArgs>(
-      args?: Subset<T, PromotionCountArgs>,
-    ): Prisma.PrismaPromise<
-      T extends $Utils.Record<'select', any>
-        ? T['select'] extends true
-          ? number
-          : GetScalarType<T['select'], PromotionCountAggregateOutputType>
-        : number
-    >
-
-    /**
-     * Allows you to perform aggregations operations on a Promotion.
-     * Note, that providing `undefined` is treated as the value not being there.
-     * Read more here: https://pris.ly/d/null-undefined
-     * @param {PromotionAggregateArgs} args - Select which aggregations you would like to apply and on what fields.
-     * @example
-     * // Ordered by age ascending
-     * // Where email contains prisma.io
-     * // Limited to the 10 users
-     * const aggregations = await prisma.user.aggregate({
-     *   _avg: {
-     *     age: true,
-     *   },
-     *   where: {
-     *     email: {
-     *       contains: "prisma.io",
-     *     },
-     *   },
-     *   orderBy: {
-     *     age: "asc",
-     *   },
-     *   take: 10,
-     * })
-    **/
-    aggregate<T extends PromotionAggregateArgs>(args: Subset<T, PromotionAggregateArgs>): Prisma.PrismaPromise<GetPromotionAggregateType<T>>
-
-    /**
-     * Group by Promotion.
-     * Note, that providing `undefined` is treated as the value not being there.
-     * Read more here: https://pris.ly/d/null-undefined
-     * @param {PromotionGroupByArgs} args - Group by arguments.
-     * @example
-     * // Group by city, order by createdAt, get count
-     * const result = await prisma.user.groupBy({
-     *   by: ['city', 'createdAt'],
-     *   orderBy: {
-     *     createdAt: true
-     *   },
-     *   _count: {
-     *     _all: true
-     *   },
-     * })
-     * 
-    **/
-    groupBy<
-      T extends PromotionGroupByArgs,
-      HasSelectOrTake extends Or<
-        Extends<'skip', Keys<T>>,
-        Extends<'take', Keys<T>>
-      >,
-      OrderByArg extends True extends HasSelectOrTake
-        ? { orderBy: PromotionGroupByArgs['orderBy'] }
-        : { orderBy?: PromotionGroupByArgs['orderBy'] },
-      OrderFields extends ExcludeUnderscoreKeys<Keys<MaybeTupleToUnion<T['orderBy']>>>,
-      ByFields extends MaybeTupleToUnion<T['by']>,
-      ByValid extends Has<ByFields, OrderFields>,
-      HavingFields extends GetHavingFields<T['having']>,
-      HavingValid extends Has<ByFields, HavingFields>,
-      ByEmpty extends T['by'] extends never[] ? True : False,
-      InputErrors extends ByEmpty extends True
-      ? `Error: "by" must not be empty.`
-      : HavingValid extends False
-      ? {
-          [P in HavingFields]: P extends ByFields
-            ? never
-            : P extends string
-            ? `Error: Field "${P}" used in "having" needs to be provided in "by".`
-            : [
-                Error,
-                'Field ',
-                P,
-                ` in "having" needs to be provided in "by"`,
-              ]
-        }[HavingFields]
-      : 'take' extends Keys<T>
-      ? 'orderBy' extends Keys<T>
-        ? ByValid extends True
-          ? {}
-          : {
-              [P in OrderFields]: P extends ByFields
-                ? never
-                : `Error: Field "${P}" in "orderBy" needs to be provided in "by"`
-            }[OrderFields]
-        : 'Error: If you provide "take", you also need to provide "orderBy"'
-      : 'skip' extends Keys<T>
-      ? 'orderBy' extends Keys<T>
-        ? ByValid extends True
-          ? {}
-          : {
-              [P in OrderFields]: P extends ByFields
-                ? never
-                : `Error: Field "${P}" in "orderBy" needs to be provided in "by"`
-            }[OrderFields]
-        : 'Error: If you provide "skip", you also need to provide "orderBy"'
-      : ByValid extends True
-      ? {}
-      : {
-          [P in OrderFields]: P extends ByFields
-            ? never
-            : `Error: Field "${P}" in "orderBy" needs to be provided in "by"`
-        }[OrderFields]
-    >(args: SubsetIntersection<T, PromotionGroupByArgs, OrderByArg> & InputErrors): {} extends InputErrors ? GetPromotionGroupByPayload<T> : Prisma.PrismaPromise<InputErrors>
-  /**
-   * Fields of the Promotion model
-   */
-  readonly fields: PromotionFieldRefs;
-  }
-
-  /**
-   * The delegate class that acts as a "Promise-like" for Promotion.
-   * Why is this prefixed with `Prisma__`?
-   * Because we want to prevent naming conflicts as mentioned in
-   * https://github.com/prisma/prisma-client-js/issues/707
-   */
-  export interface Prisma__PromotionClient<T, Null = never, ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs, GlobalOmitOptions = {}> extends Prisma.PrismaPromise<T> {
-    readonly [Symbol.toStringTag]: "PrismaPromise"
-    translations<T extends Promotion$translationsArgs<ExtArgs> = {}>(args?: Subset<T, Promotion$translationsArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$PromotionTranslationPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
-    UserPromotion<T extends Promotion$UserPromotionArgs<ExtArgs> = {}>(args?: Subset<T, Promotion$UserPromotionArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$UserPromotionPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
-    /**
-     * Attaches callbacks for the resolution and/or rejection of the Promise.
-     * @param onfulfilled The callback to execute when the Promise is resolved.
-     * @param onrejected The callback to execute when the Promise is rejected.
-     * @returns A Promise for the completion of which ever callback is executed.
-     */
-    then<TResult1 = T, TResult2 = never>(onfulfilled?: ((value: T) => TResult1 | PromiseLike<TResult1>) | undefined | null, onrejected?: ((reason: any) => TResult2 | PromiseLike<TResult2>) | undefined | null): $Utils.JsPromise<TResult1 | TResult2>
-    /**
-     * Attaches a callback for only the rejection of the Promise.
-     * @param onrejected The callback to execute when the Promise is rejected.
-     * @returns A Promise for the completion of the callback.
-     */
-    catch<TResult = never>(onrejected?: ((reason: any) => TResult | PromiseLike<TResult>) | undefined | null): $Utils.JsPromise<T | TResult>
-    /**
-     * Attaches a callback that is invoked when the Promise is settled (fulfilled or rejected). The
-     * resolved value cannot be modified from the callback.
-     * @param onfinally The callback to execute when the Promise is settled (fulfilled or rejected).
-     * @returns A Promise for the completion of the callback.
-     */
-    finally(onfinally?: (() => void) | undefined | null): $Utils.JsPromise<T>
-  }
-
-
-
-
-  /**
-   * Fields of the Promotion model
-   */
-  interface PromotionFieldRefs {
-    readonly id: FieldRef<"Promotion", 'Int'>
-    readonly managementName: FieldRef<"Promotion", 'String'>
-    readonly isActive: FieldRef<"Promotion", 'Boolean'>
-    readonly startDate: FieldRef<"Promotion", 'DateTime'>
-    readonly endDate: FieldRef<"Promotion", 'DateTime'>
-    readonly targetType: FieldRef<"Promotion", 'PromotionTargetType'>
-    readonly bonusType: FieldRef<"Promotion", 'PromotionBonusType'>
-    readonly bonusRate: FieldRef<"Promotion", 'Decimal'>
-    readonly minDepositAmount: FieldRef<"Promotion", 'Decimal'>
-    readonly maxBonusAmount: FieldRef<"Promotion", 'Decimal'>
-    readonly rollingMultiplier: FieldRef<"Promotion", 'Decimal'>
-    readonly qualificationMaintainCondition: FieldRef<"Promotion", 'PromotionQualificationCondition'>
-    readonly createdAt: FieldRef<"Promotion", 'DateTime'>
-    readonly updatedAt: FieldRef<"Promotion", 'DateTime'>
-  }
-    
-
-  // Custom InputTypes
-  /**
-   * Promotion findUnique
-   */
-  export type PromotionFindUniqueArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
-    /**
-     * Select specific fields to fetch from the Promotion
-     */
-    select?: PromotionSelect<ExtArgs> | null
-    /**
-     * Omit specific fields from the Promotion
-     */
-    omit?: PromotionOmit<ExtArgs> | null
-    /**
-     * Choose, which related nodes to fetch as well
-     */
-    include?: PromotionInclude<ExtArgs> | null
-    /**
-     * Filter, which Promotion to fetch.
-     */
-    where: PromotionWhereUniqueInput
-  }
-
-  /**
-   * Promotion findUniqueOrThrow
-   */
-  export type PromotionFindUniqueOrThrowArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
-    /**
-     * Select specific fields to fetch from the Promotion
-     */
-    select?: PromotionSelect<ExtArgs> | null
-    /**
-     * Omit specific fields from the Promotion
-     */
-    omit?: PromotionOmit<ExtArgs> | null
-    /**
-     * Choose, which related nodes to fetch as well
-     */
-    include?: PromotionInclude<ExtArgs> | null
-    /**
-     * Filter, which Promotion to fetch.
-     */
-    where: PromotionWhereUniqueInput
-  }
-
-  /**
-   * Promotion findFirst
-   */
-  export type PromotionFindFirstArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
-    /**
-     * Select specific fields to fetch from the Promotion
-     */
-    select?: PromotionSelect<ExtArgs> | null
-    /**
-     * Omit specific fields from the Promotion
-     */
-    omit?: PromotionOmit<ExtArgs> | null
-    /**
-     * Choose, which related nodes to fetch as well
-     */
-    include?: PromotionInclude<ExtArgs> | null
-    /**
-     * Filter, which Promotion to fetch.
-     */
-    where?: PromotionWhereInput
-    /**
-     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/sorting Sorting Docs}
-     * 
-     * Determine the order of Promotions to fetch.
-     */
-    orderBy?: PromotionOrderByWithRelationInput | PromotionOrderByWithRelationInput[]
-    /**
-     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination#cursor-based-pagination Cursor Docs}
-     * 
-     * Sets the position for searching for Promotions.
-     */
-    cursor?: PromotionWhereUniqueInput
-    /**
-     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
-     * 
-     * Take `±n` Promotions from the position of the cursor.
-     */
-    take?: number
-    /**
-     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
-     * 
-     * Skip the first `n` Promotions.
-     */
-    skip?: number
-    /**
-     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/distinct Distinct Docs}
-     * 
-     * Filter by unique combinations of Promotions.
-     */
-    distinct?: PromotionScalarFieldEnum | PromotionScalarFieldEnum[]
-  }
-
-  /**
-   * Promotion findFirstOrThrow
-   */
-  export type PromotionFindFirstOrThrowArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
-    /**
-     * Select specific fields to fetch from the Promotion
-     */
-    select?: PromotionSelect<ExtArgs> | null
-    /**
-     * Omit specific fields from the Promotion
-     */
-    omit?: PromotionOmit<ExtArgs> | null
-    /**
-     * Choose, which related nodes to fetch as well
-     */
-    include?: PromotionInclude<ExtArgs> | null
-    /**
-     * Filter, which Promotion to fetch.
-     */
-    where?: PromotionWhereInput
-    /**
-     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/sorting Sorting Docs}
-     * 
-     * Determine the order of Promotions to fetch.
-     */
-    orderBy?: PromotionOrderByWithRelationInput | PromotionOrderByWithRelationInput[]
-    /**
-     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination#cursor-based-pagination Cursor Docs}
-     * 
-     * Sets the position for searching for Promotions.
-     */
-    cursor?: PromotionWhereUniqueInput
-    /**
-     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
-     * 
-     * Take `±n` Promotions from the position of the cursor.
-     */
-    take?: number
-    /**
-     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
-     * 
-     * Skip the first `n` Promotions.
-     */
-    skip?: number
-    /**
-     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/distinct Distinct Docs}
-     * 
-     * Filter by unique combinations of Promotions.
-     */
-    distinct?: PromotionScalarFieldEnum | PromotionScalarFieldEnum[]
-  }
-
-  /**
-   * Promotion findMany
-   */
-  export type PromotionFindManyArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
-    /**
-     * Select specific fields to fetch from the Promotion
-     */
-    select?: PromotionSelect<ExtArgs> | null
-    /**
-     * Omit specific fields from the Promotion
-     */
-    omit?: PromotionOmit<ExtArgs> | null
-    /**
-     * Choose, which related nodes to fetch as well
-     */
-    include?: PromotionInclude<ExtArgs> | null
-    /**
-     * Filter, which Promotions to fetch.
-     */
-    where?: PromotionWhereInput
-    /**
-     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/sorting Sorting Docs}
-     * 
-     * Determine the order of Promotions to fetch.
-     */
-    orderBy?: PromotionOrderByWithRelationInput | PromotionOrderByWithRelationInput[]
-    /**
-     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination#cursor-based-pagination Cursor Docs}
-     * 
-     * Sets the position for listing Promotions.
-     */
-    cursor?: PromotionWhereUniqueInput
-    /**
-     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
-     * 
-     * Take `±n` Promotions from the position of the cursor.
-     */
-    take?: number
-    /**
-     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
-     * 
-     * Skip the first `n` Promotions.
-     */
-    skip?: number
-    distinct?: PromotionScalarFieldEnum | PromotionScalarFieldEnum[]
-  }
-
-  /**
-   * Promotion create
-   */
-  export type PromotionCreateArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
-    /**
-     * Select specific fields to fetch from the Promotion
-     */
-    select?: PromotionSelect<ExtArgs> | null
-    /**
-     * Omit specific fields from the Promotion
-     */
-    omit?: PromotionOmit<ExtArgs> | null
-    /**
-     * Choose, which related nodes to fetch as well
-     */
-    include?: PromotionInclude<ExtArgs> | null
-    /**
-     * The data needed to create a Promotion.
-     */
-    data: XOR<PromotionCreateInput, PromotionUncheckedCreateInput>
-  }
-
-  /**
-   * Promotion createMany
-   */
-  export type PromotionCreateManyArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
-    /**
-     * The data used to create many Promotions.
-     */
-    data: PromotionCreateManyInput | PromotionCreateManyInput[]
-    skipDuplicates?: boolean
-  }
-
-  /**
-   * Promotion createManyAndReturn
-   */
-  export type PromotionCreateManyAndReturnArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
-    /**
-     * Select specific fields to fetch from the Promotion
-     */
-    select?: PromotionSelectCreateManyAndReturn<ExtArgs> | null
-    /**
-     * Omit specific fields from the Promotion
-     */
-    omit?: PromotionOmit<ExtArgs> | null
-    /**
-     * The data used to create many Promotions.
-     */
-    data: PromotionCreateManyInput | PromotionCreateManyInput[]
-    skipDuplicates?: boolean
-  }
-
-  /**
-   * Promotion update
-   */
-  export type PromotionUpdateArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
-    /**
-     * Select specific fields to fetch from the Promotion
-     */
-    select?: PromotionSelect<ExtArgs> | null
-    /**
-     * Omit specific fields from the Promotion
-     */
-    omit?: PromotionOmit<ExtArgs> | null
-    /**
-     * Choose, which related nodes to fetch as well
-     */
-    include?: PromotionInclude<ExtArgs> | null
-    /**
-     * The data needed to update a Promotion.
-     */
-    data: XOR<PromotionUpdateInput, PromotionUncheckedUpdateInput>
-    /**
-     * Choose, which Promotion to update.
-     */
-    where: PromotionWhereUniqueInput
-  }
-
-  /**
-   * Promotion updateMany
-   */
-  export type PromotionUpdateManyArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
-    /**
-     * The data used to update Promotions.
-     */
-    data: XOR<PromotionUpdateManyMutationInput, PromotionUncheckedUpdateManyInput>
-    /**
-     * Filter which Promotions to update
-     */
-    where?: PromotionWhereInput
-    /**
-     * Limit how many Promotions to update.
-     */
-    limit?: number
-  }
-
-  /**
-   * Promotion updateManyAndReturn
-   */
-  export type PromotionUpdateManyAndReturnArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
-    /**
-     * Select specific fields to fetch from the Promotion
-     */
-    select?: PromotionSelectUpdateManyAndReturn<ExtArgs> | null
-    /**
-     * Omit specific fields from the Promotion
-     */
-    omit?: PromotionOmit<ExtArgs> | null
-    /**
-     * The data used to update Promotions.
-     */
-    data: XOR<PromotionUpdateManyMutationInput, PromotionUncheckedUpdateManyInput>
-    /**
-     * Filter which Promotions to update
-     */
-    where?: PromotionWhereInput
-    /**
-     * Limit how many Promotions to update.
-     */
-    limit?: number
-  }
-
-  /**
-   * Promotion upsert
-   */
-  export type PromotionUpsertArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
-    /**
-     * Select specific fields to fetch from the Promotion
-     */
-    select?: PromotionSelect<ExtArgs> | null
-    /**
-     * Omit specific fields from the Promotion
-     */
-    omit?: PromotionOmit<ExtArgs> | null
-    /**
-     * Choose, which related nodes to fetch as well
-     */
-    include?: PromotionInclude<ExtArgs> | null
-    /**
-     * The filter to search for the Promotion to update in case it exists.
-     */
-    where: PromotionWhereUniqueInput
-    /**
-     * In case the Promotion found by the `where` argument doesn't exist, create a new Promotion with this data.
-     */
-    create: XOR<PromotionCreateInput, PromotionUncheckedCreateInput>
-    /**
-     * In case the Promotion was found with the provided `where` argument, update it with this data.
-     */
-    update: XOR<PromotionUpdateInput, PromotionUncheckedUpdateInput>
-  }
-
-  /**
-   * Promotion delete
-   */
-  export type PromotionDeleteArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
-    /**
-     * Select specific fields to fetch from the Promotion
-     */
-    select?: PromotionSelect<ExtArgs> | null
-    /**
-     * Omit specific fields from the Promotion
-     */
-    omit?: PromotionOmit<ExtArgs> | null
-    /**
-     * Choose, which related nodes to fetch as well
-     */
-    include?: PromotionInclude<ExtArgs> | null
-    /**
-     * Filter which Promotion to delete.
-     */
-    where: PromotionWhereUniqueInput
-  }
-
-  /**
-   * Promotion deleteMany
-   */
-  export type PromotionDeleteManyArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
-    /**
-     * Filter which Promotions to delete
-     */
-    where?: PromotionWhereInput
-    /**
-     * Limit how many Promotions to delete.
-     */
-    limit?: number
-  }
-
-  /**
-   * Promotion.translations
-   */
-  export type Promotion$translationsArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
-    /**
-     * Select specific fields to fetch from the PromotionTranslation
-     */
-    select?: PromotionTranslationSelect<ExtArgs> | null
-    /**
-     * Omit specific fields from the PromotionTranslation
-     */
-    omit?: PromotionTranslationOmit<ExtArgs> | null
-    /**
-     * Choose, which related nodes to fetch as well
-     */
-    include?: PromotionTranslationInclude<ExtArgs> | null
-    where?: PromotionTranslationWhereInput
-    orderBy?: PromotionTranslationOrderByWithRelationInput | PromotionTranslationOrderByWithRelationInput[]
-    cursor?: PromotionTranslationWhereUniqueInput
-    take?: number
-    skip?: number
-    distinct?: PromotionTranslationScalarFieldEnum | PromotionTranslationScalarFieldEnum[]
-  }
-
-  /**
-   * Promotion.UserPromotion
-   */
-  export type Promotion$UserPromotionArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
-    /**
-     * Select specific fields to fetch from the UserPromotion
-     */
-    select?: UserPromotionSelect<ExtArgs> | null
-    /**
-     * Omit specific fields from the UserPromotion
-     */
-    omit?: UserPromotionOmit<ExtArgs> | null
-    /**
-     * Choose, which related nodes to fetch as well
-     */
-    include?: UserPromotionInclude<ExtArgs> | null
-    where?: UserPromotionWhereInput
-    orderBy?: UserPromotionOrderByWithRelationInput | UserPromotionOrderByWithRelationInput[]
-    cursor?: UserPromotionWhereUniqueInput
-    take?: number
-    skip?: number
-    distinct?: UserPromotionScalarFieldEnum | UserPromotionScalarFieldEnum[]
-  }
-
-  /**
-   * Promotion without action
-   */
-  export type PromotionDefaultArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
-    /**
-     * Select specific fields to fetch from the Promotion
-     */
-    select?: PromotionSelect<ExtArgs> | null
-    /**
-     * Omit specific fields from the Promotion
-     */
-    omit?: PromotionOmit<ExtArgs> | null
-    /**
-     * Choose, which related nodes to fetch as well
-     */
-    include?: PromotionInclude<ExtArgs> | null
-  }
-
-
-  /**
-   * Model PromotionTranslation
-   */
-
-  export type AggregatePromotionTranslation = {
-    _count: PromotionTranslationCountAggregateOutputType | null
-    _avg: PromotionTranslationAvgAggregateOutputType | null
-    _sum: PromotionTranslationSumAggregateOutputType | null
-    _min: PromotionTranslationMinAggregateOutputType | null
-    _max: PromotionTranslationMaxAggregateOutputType | null
-  }
-
-  export type PromotionTranslationAvgAggregateOutputType = {
-    id: number | null
-    promotionId: number | null
-  }
-
-  export type PromotionTranslationSumAggregateOutputType = {
-    id: number | null
-    promotionId: number | null
-  }
-
-  export type PromotionTranslationMinAggregateOutputType = {
-    id: number | null
-    promotionId: number | null
-    language: $Enums.Language | null
-    name: string | null
-    description: string | null
-    createdAt: Date | null
-    updatedAt: Date | null
-  }
-
-  export type PromotionTranslationMaxAggregateOutputType = {
-    id: number | null
-    promotionId: number | null
-    language: $Enums.Language | null
-    name: string | null
-    description: string | null
-    createdAt: Date | null
-    updatedAt: Date | null
-  }
-
-  export type PromotionTranslationCountAggregateOutputType = {
-    id: number
-    promotionId: number
-    language: number
-    name: number
-    description: number
-    createdAt: number
-    updatedAt: number
-    _all: number
-  }
-
-
-  export type PromotionTranslationAvgAggregateInputType = {
-    id?: true
-    promotionId?: true
-  }
-
-  export type PromotionTranslationSumAggregateInputType = {
-    id?: true
-    promotionId?: true
-  }
-
-  export type PromotionTranslationMinAggregateInputType = {
-    id?: true
-    promotionId?: true
-    language?: true
-    name?: true
-    description?: true
-    createdAt?: true
-    updatedAt?: true
-  }
-
-  export type PromotionTranslationMaxAggregateInputType = {
-    id?: true
-    promotionId?: true
-    language?: true
-    name?: true
-    description?: true
-    createdAt?: true
-    updatedAt?: true
-  }
-
-  export type PromotionTranslationCountAggregateInputType = {
-    id?: true
-    promotionId?: true
-    language?: true
-    name?: true
-    description?: true
-    createdAt?: true
-    updatedAt?: true
-    _all?: true
-  }
-
-  export type PromotionTranslationAggregateArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
-    /**
-     * Filter which PromotionTranslation to aggregate.
-     */
-    where?: PromotionTranslationWhereInput
-    /**
-     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/sorting Sorting Docs}
-     * 
-     * Determine the order of PromotionTranslations to fetch.
-     */
-    orderBy?: PromotionTranslationOrderByWithRelationInput | PromotionTranslationOrderByWithRelationInput[]
-    /**
-     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination#cursor-based-pagination Cursor Docs}
-     * 
-     * Sets the start position
-     */
-    cursor?: PromotionTranslationWhereUniqueInput
-    /**
-     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
-     * 
-     * Take `±n` PromotionTranslations from the position of the cursor.
-     */
-    take?: number
-    /**
-     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
-     * 
-     * Skip the first `n` PromotionTranslations.
-     */
-    skip?: number
-    /**
-     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
-     * 
-     * Count returned PromotionTranslations
-    **/
-    _count?: true | PromotionTranslationCountAggregateInputType
-    /**
-     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
-     * 
-     * Select which fields to average
-    **/
-    _avg?: PromotionTranslationAvgAggregateInputType
-    /**
-     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
-     * 
-     * Select which fields to sum
-    **/
-    _sum?: PromotionTranslationSumAggregateInputType
-    /**
-     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
-     * 
-     * Select which fields to find the minimum value
-    **/
-    _min?: PromotionTranslationMinAggregateInputType
-    /**
-     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
-     * 
-     * Select which fields to find the maximum value
-    **/
-    _max?: PromotionTranslationMaxAggregateInputType
-  }
-
-  export type GetPromotionTranslationAggregateType<T extends PromotionTranslationAggregateArgs> = {
-        [P in keyof T & keyof AggregatePromotionTranslation]: P extends '_count' | 'count'
-      ? T[P] extends true
-        ? number
-        : GetScalarType<T[P], AggregatePromotionTranslation[P]>
-      : GetScalarType<T[P], AggregatePromotionTranslation[P]>
-  }
-
-
-
-
-  export type PromotionTranslationGroupByArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
-    where?: PromotionTranslationWhereInput
-    orderBy?: PromotionTranslationOrderByWithAggregationInput | PromotionTranslationOrderByWithAggregationInput[]
-    by: PromotionTranslationScalarFieldEnum[] | PromotionTranslationScalarFieldEnum
-    having?: PromotionTranslationScalarWhereWithAggregatesInput
-    take?: number
-    skip?: number
-    _count?: PromotionTranslationCountAggregateInputType | true
-    _avg?: PromotionTranslationAvgAggregateInputType
-    _sum?: PromotionTranslationSumAggregateInputType
-    _min?: PromotionTranslationMinAggregateInputType
-    _max?: PromotionTranslationMaxAggregateInputType
-  }
-
-  export type PromotionTranslationGroupByOutputType = {
-    id: number
-    promotionId: number
-    language: $Enums.Language
-    name: string
-    description: string | null
-    createdAt: Date
-    updatedAt: Date
-    _count: PromotionTranslationCountAggregateOutputType | null
-    _avg: PromotionTranslationAvgAggregateOutputType | null
-    _sum: PromotionTranslationSumAggregateOutputType | null
-    _min: PromotionTranslationMinAggregateOutputType | null
-    _max: PromotionTranslationMaxAggregateOutputType | null
-  }
-
-  type GetPromotionTranslationGroupByPayload<T extends PromotionTranslationGroupByArgs> = Prisma.PrismaPromise<
-    Array<
-      PickEnumerable<PromotionTranslationGroupByOutputType, T['by']> &
-        {
-          [P in ((keyof T) & (keyof PromotionTranslationGroupByOutputType))]: P extends '_count'
-            ? T[P] extends boolean
-              ? number
-              : GetScalarType<T[P], PromotionTranslationGroupByOutputType[P]>
-            : GetScalarType<T[P], PromotionTranslationGroupByOutputType[P]>
-        }
-      >
-    >
-
-
-  export type PromotionTranslationSelect<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetSelect<{
-    id?: boolean
-    promotionId?: boolean
-    language?: boolean
-    name?: boolean
-    description?: boolean
-    createdAt?: boolean
-    updatedAt?: boolean
-    promotion?: boolean | PromotionDefaultArgs<ExtArgs>
-  }, ExtArgs["result"]["promotionTranslation"]>
-
-  export type PromotionTranslationSelectCreateManyAndReturn<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetSelect<{
-    id?: boolean
-    promotionId?: boolean
-    language?: boolean
-    name?: boolean
-    description?: boolean
-    createdAt?: boolean
-    updatedAt?: boolean
-    promotion?: boolean | PromotionDefaultArgs<ExtArgs>
-  }, ExtArgs["result"]["promotionTranslation"]>
-
-  export type PromotionTranslationSelectUpdateManyAndReturn<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetSelect<{
-    id?: boolean
-    promotionId?: boolean
-    language?: boolean
-    name?: boolean
-    description?: boolean
-    createdAt?: boolean
-    updatedAt?: boolean
-    promotion?: boolean | PromotionDefaultArgs<ExtArgs>
-  }, ExtArgs["result"]["promotionTranslation"]>
-
-  export type PromotionTranslationSelectScalar = {
-    id?: boolean
-    promotionId?: boolean
-    language?: boolean
-    name?: boolean
-    description?: boolean
-    createdAt?: boolean
-    updatedAt?: boolean
-  }
-
-  export type PromotionTranslationOmit<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetOmit<"id" | "promotionId" | "language" | "name" | "description" | "createdAt" | "updatedAt", ExtArgs["result"]["promotionTranslation"]>
-  export type PromotionTranslationInclude<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
-    promotion?: boolean | PromotionDefaultArgs<ExtArgs>
-  }
-  export type PromotionTranslationIncludeCreateManyAndReturn<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
-    promotion?: boolean | PromotionDefaultArgs<ExtArgs>
-  }
-  export type PromotionTranslationIncludeUpdateManyAndReturn<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
-    promotion?: boolean | PromotionDefaultArgs<ExtArgs>
-  }
-
-  export type $PromotionTranslationPayload<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
-    name: "PromotionTranslation"
-    objects: {
-      promotion: Prisma.$PromotionPayload<ExtArgs>
-    }
-    scalars: $Extensions.GetPayloadResult<{
-      id: number
-      promotionId: number
-      language: $Enums.Language
-      name: string
-      description: string | null
-      createdAt: Date
-      updatedAt: Date
-    }, ExtArgs["result"]["promotionTranslation"]>
-    composites: {}
-  }
-
-  type PromotionTranslationGetPayload<S extends boolean | null | undefined | PromotionTranslationDefaultArgs> = $Result.GetResult<Prisma.$PromotionTranslationPayload, S>
-
-  type PromotionTranslationCountArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> =
-    Omit<PromotionTranslationFindManyArgs, 'select' | 'include' | 'distinct' | 'omit'> & {
-      select?: PromotionTranslationCountAggregateInputType | true
-    }
-
-  export interface PromotionTranslationDelegate<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs, GlobalOmitOptions = {}> {
-    [K: symbol]: { types: Prisma.TypeMap<ExtArgs>['model']['PromotionTranslation'], meta: { name: 'PromotionTranslation' } }
-    /**
-     * Find zero or one PromotionTranslation that matches the filter.
-     * @param {PromotionTranslationFindUniqueArgs} args - Arguments to find a PromotionTranslation
-     * @example
-     * // Get one PromotionTranslation
-     * const promotionTranslation = await prisma.promotionTranslation.findUnique({
-     *   where: {
-     *     // ... provide filter here
-     *   }
-     * })
-     */
-    findUnique<T extends PromotionTranslationFindUniqueArgs>(args: SelectSubset<T, PromotionTranslationFindUniqueArgs<ExtArgs>>): Prisma__PromotionTranslationClient<$Result.GetResult<Prisma.$PromotionTranslationPayload<ExtArgs>, T, "findUnique", GlobalOmitOptions> | null, null, ExtArgs, GlobalOmitOptions>
-
-    /**
-     * Find one PromotionTranslation that matches the filter or throw an error with `error.code='P2025'`
-     * if no matches were found.
-     * @param {PromotionTranslationFindUniqueOrThrowArgs} args - Arguments to find a PromotionTranslation
-     * @example
-     * // Get one PromotionTranslation
-     * const promotionTranslation = await prisma.promotionTranslation.findUniqueOrThrow({
-     *   where: {
-     *     // ... provide filter here
-     *   }
-     * })
-     */
-    findUniqueOrThrow<T extends PromotionTranslationFindUniqueOrThrowArgs>(args: SelectSubset<T, PromotionTranslationFindUniqueOrThrowArgs<ExtArgs>>): Prisma__PromotionTranslationClient<$Result.GetResult<Prisma.$PromotionTranslationPayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
-
-    /**
-     * Find the first PromotionTranslation that matches the filter.
-     * Note, that providing `undefined` is treated as the value not being there.
-     * Read more here: https://pris.ly/d/null-undefined
-     * @param {PromotionTranslationFindFirstArgs} args - Arguments to find a PromotionTranslation
-     * @example
-     * // Get one PromotionTranslation
-     * const promotionTranslation = await prisma.promotionTranslation.findFirst({
-     *   where: {
-     *     // ... provide filter here
-     *   }
-     * })
-     */
-    findFirst<T extends PromotionTranslationFindFirstArgs>(args?: SelectSubset<T, PromotionTranslationFindFirstArgs<ExtArgs>>): Prisma__PromotionTranslationClient<$Result.GetResult<Prisma.$PromotionTranslationPayload<ExtArgs>, T, "findFirst", GlobalOmitOptions> | null, null, ExtArgs, GlobalOmitOptions>
-
-    /**
-     * Find the first PromotionTranslation that matches the filter or
-     * throw `PrismaKnownClientError` with `P2025` code if no matches were found.
-     * Note, that providing `undefined` is treated as the value not being there.
-     * Read more here: https://pris.ly/d/null-undefined
-     * @param {PromotionTranslationFindFirstOrThrowArgs} args - Arguments to find a PromotionTranslation
-     * @example
-     * // Get one PromotionTranslation
-     * const promotionTranslation = await prisma.promotionTranslation.findFirstOrThrow({
-     *   where: {
-     *     // ... provide filter here
-     *   }
-     * })
-     */
-    findFirstOrThrow<T extends PromotionTranslationFindFirstOrThrowArgs>(args?: SelectSubset<T, PromotionTranslationFindFirstOrThrowArgs<ExtArgs>>): Prisma__PromotionTranslationClient<$Result.GetResult<Prisma.$PromotionTranslationPayload<ExtArgs>, T, "findFirstOrThrow", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
-
-    /**
-     * Find zero or more PromotionTranslations that matches the filter.
-     * Note, that providing `undefined` is treated as the value not being there.
-     * Read more here: https://pris.ly/d/null-undefined
-     * @param {PromotionTranslationFindManyArgs} args - Arguments to filter and select certain fields only.
-     * @example
-     * // Get all PromotionTranslations
-     * const promotionTranslations = await prisma.promotionTranslation.findMany()
-     * 
-     * // Get first 10 PromotionTranslations
-     * const promotionTranslations = await prisma.promotionTranslation.findMany({ take: 10 })
-     * 
-     * // Only select the `id`
-     * const promotionTranslationWithIdOnly = await prisma.promotionTranslation.findMany({ select: { id: true } })
-     * 
-     */
-    findMany<T extends PromotionTranslationFindManyArgs>(args?: SelectSubset<T, PromotionTranslationFindManyArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$PromotionTranslationPayload<ExtArgs>, T, "findMany", GlobalOmitOptions>>
-
-    /**
-     * Create a PromotionTranslation.
-     * @param {PromotionTranslationCreateArgs} args - Arguments to create a PromotionTranslation.
-     * @example
-     * // Create one PromotionTranslation
-     * const PromotionTranslation = await prisma.promotionTranslation.create({
-     *   data: {
-     *     // ... data to create a PromotionTranslation
-     *   }
-     * })
-     * 
-     */
-    create<T extends PromotionTranslationCreateArgs>(args: SelectSubset<T, PromotionTranslationCreateArgs<ExtArgs>>): Prisma__PromotionTranslationClient<$Result.GetResult<Prisma.$PromotionTranslationPayload<ExtArgs>, T, "create", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
-
-    /**
-     * Create many PromotionTranslations.
-     * @param {PromotionTranslationCreateManyArgs} args - Arguments to create many PromotionTranslations.
-     * @example
-     * // Create many PromotionTranslations
-     * const promotionTranslation = await prisma.promotionTranslation.createMany({
-     *   data: [
-     *     // ... provide data here
-     *   ]
-     * })
-     *     
-     */
-    createMany<T extends PromotionTranslationCreateManyArgs>(args?: SelectSubset<T, PromotionTranslationCreateManyArgs<ExtArgs>>): Prisma.PrismaPromise<BatchPayload>
-
-    /**
-     * Create many PromotionTranslations and returns the data saved in the database.
-     * @param {PromotionTranslationCreateManyAndReturnArgs} args - Arguments to create many PromotionTranslations.
-     * @example
-     * // Create many PromotionTranslations
-     * const promotionTranslation = await prisma.promotionTranslation.createManyAndReturn({
-     *   data: [
-     *     // ... provide data here
-     *   ]
-     * })
-     * 
-     * // Create many PromotionTranslations and only return the `id`
-     * const promotionTranslationWithIdOnly = await prisma.promotionTranslation.createManyAndReturn({
-     *   select: { id: true },
-     *   data: [
-     *     // ... provide data here
-     *   ]
-     * })
-     * Note, that providing `undefined` is treated as the value not being there.
-     * Read more here: https://pris.ly/d/null-undefined
-     * 
-     */
-    createManyAndReturn<T extends PromotionTranslationCreateManyAndReturnArgs>(args?: SelectSubset<T, PromotionTranslationCreateManyAndReturnArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$PromotionTranslationPayload<ExtArgs>, T, "createManyAndReturn", GlobalOmitOptions>>
-
-    /**
-     * Delete a PromotionTranslation.
-     * @param {PromotionTranslationDeleteArgs} args - Arguments to delete one PromotionTranslation.
-     * @example
-     * // Delete one PromotionTranslation
-     * const PromotionTranslation = await prisma.promotionTranslation.delete({
-     *   where: {
-     *     // ... filter to delete one PromotionTranslation
-     *   }
-     * })
-     * 
-     */
-    delete<T extends PromotionTranslationDeleteArgs>(args: SelectSubset<T, PromotionTranslationDeleteArgs<ExtArgs>>): Prisma__PromotionTranslationClient<$Result.GetResult<Prisma.$PromotionTranslationPayload<ExtArgs>, T, "delete", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
-
-    /**
-     * Update one PromotionTranslation.
-     * @param {PromotionTranslationUpdateArgs} args - Arguments to update one PromotionTranslation.
-     * @example
-     * // Update one PromotionTranslation
-     * const promotionTranslation = await prisma.promotionTranslation.update({
-     *   where: {
-     *     // ... provide filter here
-     *   },
-     *   data: {
-     *     // ... provide data here
-     *   }
-     * })
-     * 
-     */
-    update<T extends PromotionTranslationUpdateArgs>(args: SelectSubset<T, PromotionTranslationUpdateArgs<ExtArgs>>): Prisma__PromotionTranslationClient<$Result.GetResult<Prisma.$PromotionTranslationPayload<ExtArgs>, T, "update", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
-
-    /**
-     * Delete zero or more PromotionTranslations.
-     * @param {PromotionTranslationDeleteManyArgs} args - Arguments to filter PromotionTranslations to delete.
-     * @example
-     * // Delete a few PromotionTranslations
-     * const { count } = await prisma.promotionTranslation.deleteMany({
-     *   where: {
-     *     // ... provide filter here
-     *   }
-     * })
-     * 
-     */
-    deleteMany<T extends PromotionTranslationDeleteManyArgs>(args?: SelectSubset<T, PromotionTranslationDeleteManyArgs<ExtArgs>>): Prisma.PrismaPromise<BatchPayload>
-
-    /**
-     * Update zero or more PromotionTranslations.
-     * Note, that providing `undefined` is treated as the value not being there.
-     * Read more here: https://pris.ly/d/null-undefined
-     * @param {PromotionTranslationUpdateManyArgs} args - Arguments to update one or more rows.
-     * @example
-     * // Update many PromotionTranslations
-     * const promotionTranslation = await prisma.promotionTranslation.updateMany({
-     *   where: {
-     *     // ... provide filter here
-     *   },
-     *   data: {
-     *     // ... provide data here
-     *   }
-     * })
-     * 
-     */
-    updateMany<T extends PromotionTranslationUpdateManyArgs>(args: SelectSubset<T, PromotionTranslationUpdateManyArgs<ExtArgs>>): Prisma.PrismaPromise<BatchPayload>
-
-    /**
-     * Update zero or more PromotionTranslations and returns the data updated in the database.
-     * @param {PromotionTranslationUpdateManyAndReturnArgs} args - Arguments to update many PromotionTranslations.
-     * @example
-     * // Update many PromotionTranslations
-     * const promotionTranslation = await prisma.promotionTranslation.updateManyAndReturn({
-     *   where: {
-     *     // ... provide filter here
-     *   },
-     *   data: [
-     *     // ... provide data here
-     *   ]
-     * })
-     * 
-     * // Update zero or more PromotionTranslations and only return the `id`
-     * const promotionTranslationWithIdOnly = await prisma.promotionTranslation.updateManyAndReturn({
-     *   select: { id: true },
-     *   where: {
-     *     // ... provide filter here
-     *   },
-     *   data: [
-     *     // ... provide data here
-     *   ]
-     * })
-     * Note, that providing `undefined` is treated as the value not being there.
-     * Read more here: https://pris.ly/d/null-undefined
-     * 
-     */
-    updateManyAndReturn<T extends PromotionTranslationUpdateManyAndReturnArgs>(args: SelectSubset<T, PromotionTranslationUpdateManyAndReturnArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$PromotionTranslationPayload<ExtArgs>, T, "updateManyAndReturn", GlobalOmitOptions>>
-
-    /**
-     * Create or update one PromotionTranslation.
-     * @param {PromotionTranslationUpsertArgs} args - Arguments to update or create a PromotionTranslation.
-     * @example
-     * // Update or create a PromotionTranslation
-     * const promotionTranslation = await prisma.promotionTranslation.upsert({
-     *   create: {
-     *     // ... data to create a PromotionTranslation
-     *   },
-     *   update: {
-     *     // ... in case it already exists, update
-     *   },
-     *   where: {
-     *     // ... the filter for the PromotionTranslation we want to update
-     *   }
-     * })
-     */
-    upsert<T extends PromotionTranslationUpsertArgs>(args: SelectSubset<T, PromotionTranslationUpsertArgs<ExtArgs>>): Prisma__PromotionTranslationClient<$Result.GetResult<Prisma.$PromotionTranslationPayload<ExtArgs>, T, "upsert", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
-
-
-    /**
-     * Count the number of PromotionTranslations.
-     * Note, that providing `undefined` is treated as the value not being there.
-     * Read more here: https://pris.ly/d/null-undefined
-     * @param {PromotionTranslationCountArgs} args - Arguments to filter PromotionTranslations to count.
-     * @example
-     * // Count the number of PromotionTranslations
-     * const count = await prisma.promotionTranslation.count({
-     *   where: {
-     *     // ... the filter for the PromotionTranslations we want to count
-     *   }
-     * })
-    **/
-    count<T extends PromotionTranslationCountArgs>(
-      args?: Subset<T, PromotionTranslationCountArgs>,
-    ): Prisma.PrismaPromise<
-      T extends $Utils.Record<'select', any>
-        ? T['select'] extends true
-          ? number
-          : GetScalarType<T['select'], PromotionTranslationCountAggregateOutputType>
-        : number
-    >
-
-    /**
-     * Allows you to perform aggregations operations on a PromotionTranslation.
-     * Note, that providing `undefined` is treated as the value not being there.
-     * Read more here: https://pris.ly/d/null-undefined
-     * @param {PromotionTranslationAggregateArgs} args - Select which aggregations you would like to apply and on what fields.
-     * @example
-     * // Ordered by age ascending
-     * // Where email contains prisma.io
-     * // Limited to the 10 users
-     * const aggregations = await prisma.user.aggregate({
-     *   _avg: {
-     *     age: true,
-     *   },
-     *   where: {
-     *     email: {
-     *       contains: "prisma.io",
-     *     },
-     *   },
-     *   orderBy: {
-     *     age: "asc",
-     *   },
-     *   take: 10,
-     * })
-    **/
-    aggregate<T extends PromotionTranslationAggregateArgs>(args: Subset<T, PromotionTranslationAggregateArgs>): Prisma.PrismaPromise<GetPromotionTranslationAggregateType<T>>
-
-    /**
-     * Group by PromotionTranslation.
-     * Note, that providing `undefined` is treated as the value not being there.
-     * Read more here: https://pris.ly/d/null-undefined
-     * @param {PromotionTranslationGroupByArgs} args - Group by arguments.
-     * @example
-     * // Group by city, order by createdAt, get count
-     * const result = await prisma.user.groupBy({
-     *   by: ['city', 'createdAt'],
-     *   orderBy: {
-     *     createdAt: true
-     *   },
-     *   _count: {
-     *     _all: true
-     *   },
-     * })
-     * 
-    **/
-    groupBy<
-      T extends PromotionTranslationGroupByArgs,
-      HasSelectOrTake extends Or<
-        Extends<'skip', Keys<T>>,
-        Extends<'take', Keys<T>>
-      >,
-      OrderByArg extends True extends HasSelectOrTake
-        ? { orderBy: PromotionTranslationGroupByArgs['orderBy'] }
-        : { orderBy?: PromotionTranslationGroupByArgs['orderBy'] },
-      OrderFields extends ExcludeUnderscoreKeys<Keys<MaybeTupleToUnion<T['orderBy']>>>,
-      ByFields extends MaybeTupleToUnion<T['by']>,
-      ByValid extends Has<ByFields, OrderFields>,
-      HavingFields extends GetHavingFields<T['having']>,
-      HavingValid extends Has<ByFields, HavingFields>,
-      ByEmpty extends T['by'] extends never[] ? True : False,
-      InputErrors extends ByEmpty extends True
-      ? `Error: "by" must not be empty.`
-      : HavingValid extends False
-      ? {
-          [P in HavingFields]: P extends ByFields
-            ? never
-            : P extends string
-            ? `Error: Field "${P}" used in "having" needs to be provided in "by".`
-            : [
-                Error,
-                'Field ',
-                P,
-                ` in "having" needs to be provided in "by"`,
-              ]
-        }[HavingFields]
-      : 'take' extends Keys<T>
-      ? 'orderBy' extends Keys<T>
-        ? ByValid extends True
-          ? {}
-          : {
-              [P in OrderFields]: P extends ByFields
-                ? never
-                : `Error: Field "${P}" in "orderBy" needs to be provided in "by"`
-            }[OrderFields]
-        : 'Error: If you provide "take", you also need to provide "orderBy"'
-      : 'skip' extends Keys<T>
-      ? 'orderBy' extends Keys<T>
-        ? ByValid extends True
-          ? {}
-          : {
-              [P in OrderFields]: P extends ByFields
-                ? never
-                : `Error: Field "${P}" in "orderBy" needs to be provided in "by"`
-            }[OrderFields]
-        : 'Error: If you provide "skip", you also need to provide "orderBy"'
-      : ByValid extends True
-      ? {}
-      : {
-          [P in OrderFields]: P extends ByFields
-            ? never
-            : `Error: Field "${P}" in "orderBy" needs to be provided in "by"`
-        }[OrderFields]
-    >(args: SubsetIntersection<T, PromotionTranslationGroupByArgs, OrderByArg> & InputErrors): {} extends InputErrors ? GetPromotionTranslationGroupByPayload<T> : Prisma.PrismaPromise<InputErrors>
-  /**
-   * Fields of the PromotionTranslation model
-   */
-  readonly fields: PromotionTranslationFieldRefs;
-  }
-
-  /**
-   * The delegate class that acts as a "Promise-like" for PromotionTranslation.
-   * Why is this prefixed with `Prisma__`?
-   * Because we want to prevent naming conflicts as mentioned in
-   * https://github.com/prisma/prisma-client-js/issues/707
-   */
-  export interface Prisma__PromotionTranslationClient<T, Null = never, ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs, GlobalOmitOptions = {}> extends Prisma.PrismaPromise<T> {
-    readonly [Symbol.toStringTag]: "PrismaPromise"
-    promotion<T extends PromotionDefaultArgs<ExtArgs> = {}>(args?: Subset<T, PromotionDefaultArgs<ExtArgs>>): Prisma__PromotionClient<$Result.GetResult<Prisma.$PromotionPayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions> | Null, Null, ExtArgs, GlobalOmitOptions>
-    /**
-     * Attaches callbacks for the resolution and/or rejection of the Promise.
-     * @param onfulfilled The callback to execute when the Promise is resolved.
-     * @param onrejected The callback to execute when the Promise is rejected.
-     * @returns A Promise for the completion of which ever callback is executed.
-     */
-    then<TResult1 = T, TResult2 = never>(onfulfilled?: ((value: T) => TResult1 | PromiseLike<TResult1>) | undefined | null, onrejected?: ((reason: any) => TResult2 | PromiseLike<TResult2>) | undefined | null): $Utils.JsPromise<TResult1 | TResult2>
-    /**
-     * Attaches a callback for only the rejection of the Promise.
-     * @param onrejected The callback to execute when the Promise is rejected.
-     * @returns A Promise for the completion of the callback.
-     */
-    catch<TResult = never>(onrejected?: ((reason: any) => TResult | PromiseLike<TResult>) | undefined | null): $Utils.JsPromise<T | TResult>
-    /**
-     * Attaches a callback that is invoked when the Promise is settled (fulfilled or rejected). The
-     * resolved value cannot be modified from the callback.
-     * @param onfinally The callback to execute when the Promise is settled (fulfilled or rejected).
-     * @returns A Promise for the completion of the callback.
-     */
-    finally(onfinally?: (() => void) | undefined | null): $Utils.JsPromise<T>
-  }
-
-
-
-
-  /**
-   * Fields of the PromotionTranslation model
-   */
-  interface PromotionTranslationFieldRefs {
-    readonly id: FieldRef<"PromotionTranslation", 'Int'>
-    readonly promotionId: FieldRef<"PromotionTranslation", 'Int'>
-    readonly language: FieldRef<"PromotionTranslation", 'Language'>
-    readonly name: FieldRef<"PromotionTranslation", 'String'>
-    readonly description: FieldRef<"PromotionTranslation", 'String'>
-    readonly createdAt: FieldRef<"PromotionTranslation", 'DateTime'>
-    readonly updatedAt: FieldRef<"PromotionTranslation", 'DateTime'>
-  }
-    
-
-  // Custom InputTypes
-  /**
-   * PromotionTranslation findUnique
-   */
-  export type PromotionTranslationFindUniqueArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
-    /**
-     * Select specific fields to fetch from the PromotionTranslation
-     */
-    select?: PromotionTranslationSelect<ExtArgs> | null
-    /**
-     * Omit specific fields from the PromotionTranslation
-     */
-    omit?: PromotionTranslationOmit<ExtArgs> | null
-    /**
-     * Choose, which related nodes to fetch as well
-     */
-    include?: PromotionTranslationInclude<ExtArgs> | null
-    /**
-     * Filter, which PromotionTranslation to fetch.
-     */
-    where: PromotionTranslationWhereUniqueInput
-  }
-
-  /**
-   * PromotionTranslation findUniqueOrThrow
-   */
-  export type PromotionTranslationFindUniqueOrThrowArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
-    /**
-     * Select specific fields to fetch from the PromotionTranslation
-     */
-    select?: PromotionTranslationSelect<ExtArgs> | null
-    /**
-     * Omit specific fields from the PromotionTranslation
-     */
-    omit?: PromotionTranslationOmit<ExtArgs> | null
-    /**
-     * Choose, which related nodes to fetch as well
-     */
-    include?: PromotionTranslationInclude<ExtArgs> | null
-    /**
-     * Filter, which PromotionTranslation to fetch.
-     */
-    where: PromotionTranslationWhereUniqueInput
-  }
-
-  /**
-   * PromotionTranslation findFirst
-   */
-  export type PromotionTranslationFindFirstArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
-    /**
-     * Select specific fields to fetch from the PromotionTranslation
-     */
-    select?: PromotionTranslationSelect<ExtArgs> | null
-    /**
-     * Omit specific fields from the PromotionTranslation
-     */
-    omit?: PromotionTranslationOmit<ExtArgs> | null
-    /**
-     * Choose, which related nodes to fetch as well
-     */
-    include?: PromotionTranslationInclude<ExtArgs> | null
-    /**
-     * Filter, which PromotionTranslation to fetch.
-     */
-    where?: PromotionTranslationWhereInput
-    /**
-     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/sorting Sorting Docs}
-     * 
-     * Determine the order of PromotionTranslations to fetch.
-     */
-    orderBy?: PromotionTranslationOrderByWithRelationInput | PromotionTranslationOrderByWithRelationInput[]
-    /**
-     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination#cursor-based-pagination Cursor Docs}
-     * 
-     * Sets the position for searching for PromotionTranslations.
-     */
-    cursor?: PromotionTranslationWhereUniqueInput
-    /**
-     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
-     * 
-     * Take `±n` PromotionTranslations from the position of the cursor.
-     */
-    take?: number
-    /**
-     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
-     * 
-     * Skip the first `n` PromotionTranslations.
-     */
-    skip?: number
-    /**
-     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/distinct Distinct Docs}
-     * 
-     * Filter by unique combinations of PromotionTranslations.
-     */
-    distinct?: PromotionTranslationScalarFieldEnum | PromotionTranslationScalarFieldEnum[]
-  }
-
-  /**
-   * PromotionTranslation findFirstOrThrow
-   */
-  export type PromotionTranslationFindFirstOrThrowArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
-    /**
-     * Select specific fields to fetch from the PromotionTranslation
-     */
-    select?: PromotionTranslationSelect<ExtArgs> | null
-    /**
-     * Omit specific fields from the PromotionTranslation
-     */
-    omit?: PromotionTranslationOmit<ExtArgs> | null
-    /**
-     * Choose, which related nodes to fetch as well
-     */
-    include?: PromotionTranslationInclude<ExtArgs> | null
-    /**
-     * Filter, which PromotionTranslation to fetch.
-     */
-    where?: PromotionTranslationWhereInput
-    /**
-     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/sorting Sorting Docs}
-     * 
-     * Determine the order of PromotionTranslations to fetch.
-     */
-    orderBy?: PromotionTranslationOrderByWithRelationInput | PromotionTranslationOrderByWithRelationInput[]
-    /**
-     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination#cursor-based-pagination Cursor Docs}
-     * 
-     * Sets the position for searching for PromotionTranslations.
-     */
-    cursor?: PromotionTranslationWhereUniqueInput
-    /**
-     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
-     * 
-     * Take `±n` PromotionTranslations from the position of the cursor.
-     */
-    take?: number
-    /**
-     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
-     * 
-     * Skip the first `n` PromotionTranslations.
-     */
-    skip?: number
-    /**
-     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/distinct Distinct Docs}
-     * 
-     * Filter by unique combinations of PromotionTranslations.
-     */
-    distinct?: PromotionTranslationScalarFieldEnum | PromotionTranslationScalarFieldEnum[]
-  }
-
-  /**
-   * PromotionTranslation findMany
-   */
-  export type PromotionTranslationFindManyArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
-    /**
-     * Select specific fields to fetch from the PromotionTranslation
-     */
-    select?: PromotionTranslationSelect<ExtArgs> | null
-    /**
-     * Omit specific fields from the PromotionTranslation
-     */
-    omit?: PromotionTranslationOmit<ExtArgs> | null
-    /**
-     * Choose, which related nodes to fetch as well
-     */
-    include?: PromotionTranslationInclude<ExtArgs> | null
-    /**
-     * Filter, which PromotionTranslations to fetch.
-     */
-    where?: PromotionTranslationWhereInput
-    /**
-     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/sorting Sorting Docs}
-     * 
-     * Determine the order of PromotionTranslations to fetch.
-     */
-    orderBy?: PromotionTranslationOrderByWithRelationInput | PromotionTranslationOrderByWithRelationInput[]
-    /**
-     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination#cursor-based-pagination Cursor Docs}
-     * 
-     * Sets the position for listing PromotionTranslations.
-     */
-    cursor?: PromotionTranslationWhereUniqueInput
-    /**
-     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
-     * 
-     * Take `±n` PromotionTranslations from the position of the cursor.
-     */
-    take?: number
-    /**
-     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
-     * 
-     * Skip the first `n` PromotionTranslations.
-     */
-    skip?: number
-    distinct?: PromotionTranslationScalarFieldEnum | PromotionTranslationScalarFieldEnum[]
-  }
-
-  /**
-   * PromotionTranslation create
-   */
-  export type PromotionTranslationCreateArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
-    /**
-     * Select specific fields to fetch from the PromotionTranslation
-     */
-    select?: PromotionTranslationSelect<ExtArgs> | null
-    /**
-     * Omit specific fields from the PromotionTranslation
-     */
-    omit?: PromotionTranslationOmit<ExtArgs> | null
-    /**
-     * Choose, which related nodes to fetch as well
-     */
-    include?: PromotionTranslationInclude<ExtArgs> | null
-    /**
-     * The data needed to create a PromotionTranslation.
-     */
-    data: XOR<PromotionTranslationCreateInput, PromotionTranslationUncheckedCreateInput>
-  }
-
-  /**
-   * PromotionTranslation createMany
-   */
-  export type PromotionTranslationCreateManyArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
-    /**
-     * The data used to create many PromotionTranslations.
-     */
-    data: PromotionTranslationCreateManyInput | PromotionTranslationCreateManyInput[]
-    skipDuplicates?: boolean
-  }
-
-  /**
-   * PromotionTranslation createManyAndReturn
-   */
-  export type PromotionTranslationCreateManyAndReturnArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
-    /**
-     * Select specific fields to fetch from the PromotionTranslation
-     */
-    select?: PromotionTranslationSelectCreateManyAndReturn<ExtArgs> | null
-    /**
-     * Omit specific fields from the PromotionTranslation
-     */
-    omit?: PromotionTranslationOmit<ExtArgs> | null
-    /**
-     * The data used to create many PromotionTranslations.
-     */
-    data: PromotionTranslationCreateManyInput | PromotionTranslationCreateManyInput[]
-    skipDuplicates?: boolean
-    /**
-     * Choose, which related nodes to fetch as well
-     */
-    include?: PromotionTranslationIncludeCreateManyAndReturn<ExtArgs> | null
-  }
-
-  /**
-   * PromotionTranslation update
-   */
-  export type PromotionTranslationUpdateArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
-    /**
-     * Select specific fields to fetch from the PromotionTranslation
-     */
-    select?: PromotionTranslationSelect<ExtArgs> | null
-    /**
-     * Omit specific fields from the PromotionTranslation
-     */
-    omit?: PromotionTranslationOmit<ExtArgs> | null
-    /**
-     * Choose, which related nodes to fetch as well
-     */
-    include?: PromotionTranslationInclude<ExtArgs> | null
-    /**
-     * The data needed to update a PromotionTranslation.
-     */
-    data: XOR<PromotionTranslationUpdateInput, PromotionTranslationUncheckedUpdateInput>
-    /**
-     * Choose, which PromotionTranslation to update.
-     */
-    where: PromotionTranslationWhereUniqueInput
-  }
-
-  /**
-   * PromotionTranslation updateMany
-   */
-  export type PromotionTranslationUpdateManyArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
-    /**
-     * The data used to update PromotionTranslations.
-     */
-    data: XOR<PromotionTranslationUpdateManyMutationInput, PromotionTranslationUncheckedUpdateManyInput>
-    /**
-     * Filter which PromotionTranslations to update
-     */
-    where?: PromotionTranslationWhereInput
-    /**
-     * Limit how many PromotionTranslations to update.
-     */
-    limit?: number
-  }
-
-  /**
-   * PromotionTranslation updateManyAndReturn
-   */
-  export type PromotionTranslationUpdateManyAndReturnArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
-    /**
-     * Select specific fields to fetch from the PromotionTranslation
-     */
-    select?: PromotionTranslationSelectUpdateManyAndReturn<ExtArgs> | null
-    /**
-     * Omit specific fields from the PromotionTranslation
-     */
-    omit?: PromotionTranslationOmit<ExtArgs> | null
-    /**
-     * The data used to update PromotionTranslations.
-     */
-    data: XOR<PromotionTranslationUpdateManyMutationInput, PromotionTranslationUncheckedUpdateManyInput>
-    /**
-     * Filter which PromotionTranslations to update
-     */
-    where?: PromotionTranslationWhereInput
-    /**
-     * Limit how many PromotionTranslations to update.
-     */
-    limit?: number
-    /**
-     * Choose, which related nodes to fetch as well
-     */
-    include?: PromotionTranslationIncludeUpdateManyAndReturn<ExtArgs> | null
-  }
-
-  /**
-   * PromotionTranslation upsert
-   */
-  export type PromotionTranslationUpsertArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
-    /**
-     * Select specific fields to fetch from the PromotionTranslation
-     */
-    select?: PromotionTranslationSelect<ExtArgs> | null
-    /**
-     * Omit specific fields from the PromotionTranslation
-     */
-    omit?: PromotionTranslationOmit<ExtArgs> | null
-    /**
-     * Choose, which related nodes to fetch as well
-     */
-    include?: PromotionTranslationInclude<ExtArgs> | null
-    /**
-     * The filter to search for the PromotionTranslation to update in case it exists.
-     */
-    where: PromotionTranslationWhereUniqueInput
-    /**
-     * In case the PromotionTranslation found by the `where` argument doesn't exist, create a new PromotionTranslation with this data.
-     */
-    create: XOR<PromotionTranslationCreateInput, PromotionTranslationUncheckedCreateInput>
-    /**
-     * In case the PromotionTranslation was found with the provided `where` argument, update it with this data.
-     */
-    update: XOR<PromotionTranslationUpdateInput, PromotionTranslationUncheckedUpdateInput>
-  }
-
-  /**
-   * PromotionTranslation delete
-   */
-  export type PromotionTranslationDeleteArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
-    /**
-     * Select specific fields to fetch from the PromotionTranslation
-     */
-    select?: PromotionTranslationSelect<ExtArgs> | null
-    /**
-     * Omit specific fields from the PromotionTranslation
-     */
-    omit?: PromotionTranslationOmit<ExtArgs> | null
-    /**
-     * Choose, which related nodes to fetch as well
-     */
-    include?: PromotionTranslationInclude<ExtArgs> | null
-    /**
-     * Filter which PromotionTranslation to delete.
-     */
-    where: PromotionTranslationWhereUniqueInput
-  }
-
-  /**
-   * PromotionTranslation deleteMany
-   */
-  export type PromotionTranslationDeleteManyArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
-    /**
-     * Filter which PromotionTranslations to delete
-     */
-    where?: PromotionTranslationWhereInput
-    /**
-     * Limit how many PromotionTranslations to delete.
-     */
-    limit?: number
-  }
-
-  /**
-   * PromotionTranslation without action
-   */
-  export type PromotionTranslationDefaultArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
-    /**
-     * Select specific fields to fetch from the PromotionTranslation
-     */
-    select?: PromotionTranslationSelect<ExtArgs> | null
-    /**
-     * Omit specific fields from the PromotionTranslation
-     */
-    omit?: PromotionTranslationOmit<ExtArgs> | null
-    /**
-     * Choose, which related nodes to fetch as well
-     */
-    include?: PromotionTranslationInclude<ExtArgs> | null
-  }
-
-
-  /**
-   * Model UserPromotion
-   */
-
-  export type AggregateUserPromotion = {
-    _count: UserPromotionCountAggregateOutputType | null
-    _avg: UserPromotionAvgAggregateOutputType | null
-    _sum: UserPromotionSumAggregateOutputType | null
-    _min: UserPromotionMinAggregateOutputType | null
-    _max: UserPromotionMaxAggregateOutputType | null
-  }
-
-  export type UserPromotionAvgAggregateOutputType = {
-    id: number | null
-    userId: number | null
-    promotionId: number | null
-    bonusAmount: Decimal | null
-  }
-
-  export type UserPromotionSumAggregateOutputType = {
-    id: number | null
-    userId: bigint | null
-    promotionId: number | null
-    bonusAmount: Decimal | null
-  }
-
-  export type UserPromotionMinAggregateOutputType = {
-    id: number | null
-    userId: bigint | null
-    promotionId: number | null
-    status: $Enums.UserPromotionStatus | null
-    bonusGranted: boolean | null
-    bonusGrantedAt: Date | null
-    bonusAmount: Decimal | null
-    createdAt: Date | null
-    updatedAt: Date | null
-  }
-
-  export type UserPromotionMaxAggregateOutputType = {
-    id: number | null
-    userId: bigint | null
-    promotionId: number | null
-    status: $Enums.UserPromotionStatus | null
-    bonusGranted: boolean | null
-    bonusGrantedAt: Date | null
-    bonusAmount: Decimal | null
-    createdAt: Date | null
-    updatedAt: Date | null
-  }
-
-  export type UserPromotionCountAggregateOutputType = {
-    id: number
-    userId: number
-    promotionId: number
-    status: number
-    bonusGranted: number
-    bonusGrantedAt: number
-    bonusAmount: number
-    createdAt: number
-    updatedAt: number
-    _all: number
-  }
-
-
-  export type UserPromotionAvgAggregateInputType = {
-    id?: true
-    userId?: true
-    promotionId?: true
-    bonusAmount?: true
-  }
-
-  export type UserPromotionSumAggregateInputType = {
-    id?: true
-    userId?: true
-    promotionId?: true
-    bonusAmount?: true
-  }
-
-  export type UserPromotionMinAggregateInputType = {
-    id?: true
-    userId?: true
-    promotionId?: true
-    status?: true
-    bonusGranted?: true
-    bonusGrantedAt?: true
-    bonusAmount?: true
-    createdAt?: true
-    updatedAt?: true
-  }
-
-  export type UserPromotionMaxAggregateInputType = {
-    id?: true
-    userId?: true
-    promotionId?: true
-    status?: true
-    bonusGranted?: true
-    bonusGrantedAt?: true
-    bonusAmount?: true
-    createdAt?: true
-    updatedAt?: true
-  }
-
-  export type UserPromotionCountAggregateInputType = {
-    id?: true
-    userId?: true
-    promotionId?: true
-    status?: true
-    bonusGranted?: true
-    bonusGrantedAt?: true
-    bonusAmount?: true
-    createdAt?: true
-    updatedAt?: true
-    _all?: true
-  }
-
-  export type UserPromotionAggregateArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
-    /**
-     * Filter which UserPromotion to aggregate.
-     */
-    where?: UserPromotionWhereInput
-    /**
-     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/sorting Sorting Docs}
-     * 
-     * Determine the order of UserPromotions to fetch.
-     */
-    orderBy?: UserPromotionOrderByWithRelationInput | UserPromotionOrderByWithRelationInput[]
-    /**
-     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination#cursor-based-pagination Cursor Docs}
-     * 
-     * Sets the start position
-     */
-    cursor?: UserPromotionWhereUniqueInput
-    /**
-     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
-     * 
-     * Take `±n` UserPromotions from the position of the cursor.
-     */
-    take?: number
-    /**
-     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
-     * 
-     * Skip the first `n` UserPromotions.
-     */
-    skip?: number
-    /**
-     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
-     * 
-     * Count returned UserPromotions
-    **/
-    _count?: true | UserPromotionCountAggregateInputType
-    /**
-     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
-     * 
-     * Select which fields to average
-    **/
-    _avg?: UserPromotionAvgAggregateInputType
-    /**
-     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
-     * 
-     * Select which fields to sum
-    **/
-    _sum?: UserPromotionSumAggregateInputType
-    /**
-     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
-     * 
-     * Select which fields to find the minimum value
-    **/
-    _min?: UserPromotionMinAggregateInputType
-    /**
-     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
-     * 
-     * Select which fields to find the maximum value
-    **/
-    _max?: UserPromotionMaxAggregateInputType
-  }
-
-  export type GetUserPromotionAggregateType<T extends UserPromotionAggregateArgs> = {
-        [P in keyof T & keyof AggregateUserPromotion]: P extends '_count' | 'count'
-      ? T[P] extends true
-        ? number
-        : GetScalarType<T[P], AggregateUserPromotion[P]>
-      : GetScalarType<T[P], AggregateUserPromotion[P]>
-  }
-
-
-
-
-  export type UserPromotionGroupByArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
-    where?: UserPromotionWhereInput
-    orderBy?: UserPromotionOrderByWithAggregationInput | UserPromotionOrderByWithAggregationInput[]
-    by: UserPromotionScalarFieldEnum[] | UserPromotionScalarFieldEnum
-    having?: UserPromotionScalarWhereWithAggregatesInput
-    take?: number
-    skip?: number
-    _count?: UserPromotionCountAggregateInputType | true
-    _avg?: UserPromotionAvgAggregateInputType
-    _sum?: UserPromotionSumAggregateInputType
-    _min?: UserPromotionMinAggregateInputType
-    _max?: UserPromotionMaxAggregateInputType
-  }
-
-  export type UserPromotionGroupByOutputType = {
-    id: number
-    userId: bigint
-    promotionId: number
-    status: $Enums.UserPromotionStatus
-    bonusGranted: boolean
-    bonusGrantedAt: Date | null
-    bonusAmount: Decimal | null
-    createdAt: Date
-    updatedAt: Date
-    _count: UserPromotionCountAggregateOutputType | null
-    _avg: UserPromotionAvgAggregateOutputType | null
-    _sum: UserPromotionSumAggregateOutputType | null
-    _min: UserPromotionMinAggregateOutputType | null
-    _max: UserPromotionMaxAggregateOutputType | null
-  }
-
-  type GetUserPromotionGroupByPayload<T extends UserPromotionGroupByArgs> = Prisma.PrismaPromise<
-    Array<
-      PickEnumerable<UserPromotionGroupByOutputType, T['by']> &
-        {
-          [P in ((keyof T) & (keyof UserPromotionGroupByOutputType))]: P extends '_count'
-            ? T[P] extends boolean
-              ? number
-              : GetScalarType<T[P], UserPromotionGroupByOutputType[P]>
-            : GetScalarType<T[P], UserPromotionGroupByOutputType[P]>
-        }
-      >
-    >
-
-
-  export type UserPromotionSelect<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetSelect<{
-    id?: boolean
-    userId?: boolean
-    promotionId?: boolean
-    status?: boolean
-    bonusGranted?: boolean
-    bonusGrantedAt?: boolean
-    bonusAmount?: boolean
-    createdAt?: boolean
-    updatedAt?: boolean
-    Rolling?: boolean | UserPromotion$RollingArgs<ExtArgs>
-    promotion?: boolean | PromotionDefaultArgs<ExtArgs>
-    user?: boolean | UserDefaultArgs<ExtArgs>
-    _count?: boolean | UserPromotionCountOutputTypeDefaultArgs<ExtArgs>
-  }, ExtArgs["result"]["userPromotion"]>
-
-  export type UserPromotionSelectCreateManyAndReturn<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetSelect<{
-    id?: boolean
-    userId?: boolean
-    promotionId?: boolean
-    status?: boolean
-    bonusGranted?: boolean
-    bonusGrantedAt?: boolean
-    bonusAmount?: boolean
-    createdAt?: boolean
-    updatedAt?: boolean
-    promotion?: boolean | PromotionDefaultArgs<ExtArgs>
-    user?: boolean | UserDefaultArgs<ExtArgs>
-  }, ExtArgs["result"]["userPromotion"]>
-
-  export type UserPromotionSelectUpdateManyAndReturn<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetSelect<{
-    id?: boolean
-    userId?: boolean
-    promotionId?: boolean
-    status?: boolean
-    bonusGranted?: boolean
-    bonusGrantedAt?: boolean
-    bonusAmount?: boolean
-    createdAt?: boolean
-    updatedAt?: boolean
-    promotion?: boolean | PromotionDefaultArgs<ExtArgs>
-    user?: boolean | UserDefaultArgs<ExtArgs>
-  }, ExtArgs["result"]["userPromotion"]>
-
-  export type UserPromotionSelectScalar = {
-    id?: boolean
-    userId?: boolean
-    promotionId?: boolean
-    status?: boolean
-    bonusGranted?: boolean
-    bonusGrantedAt?: boolean
-    bonusAmount?: boolean
-    createdAt?: boolean
-    updatedAt?: boolean
-  }
-
-  export type UserPromotionOmit<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetOmit<"id" | "userId" | "promotionId" | "status" | "bonusGranted" | "bonusGrantedAt" | "bonusAmount" | "createdAt" | "updatedAt", ExtArgs["result"]["userPromotion"]>
-  export type UserPromotionInclude<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
-    Rolling?: boolean | UserPromotion$RollingArgs<ExtArgs>
-    promotion?: boolean | PromotionDefaultArgs<ExtArgs>
-    user?: boolean | UserDefaultArgs<ExtArgs>
-    _count?: boolean | UserPromotionCountOutputTypeDefaultArgs<ExtArgs>
-  }
-  export type UserPromotionIncludeCreateManyAndReturn<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
-    promotion?: boolean | PromotionDefaultArgs<ExtArgs>
-    user?: boolean | UserDefaultArgs<ExtArgs>
-  }
-  export type UserPromotionIncludeUpdateManyAndReturn<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
-    promotion?: boolean | PromotionDefaultArgs<ExtArgs>
-    user?: boolean | UserDefaultArgs<ExtArgs>
-  }
-
-  export type $UserPromotionPayload<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
-    name: "UserPromotion"
-    objects: {
-      Rolling: Prisma.$RollingPayload<ExtArgs>[]
-      promotion: Prisma.$PromotionPayload<ExtArgs>
-      user: Prisma.$UserPayload<ExtArgs>
-    }
-    scalars: $Extensions.GetPayloadResult<{
-      id: number
-      userId: bigint
-      promotionId: number
-      status: $Enums.UserPromotionStatus
-      bonusGranted: boolean
-      bonusGrantedAt: Date | null
-      bonusAmount: Prisma.Decimal | null
-      createdAt: Date
-      updatedAt: Date
-    }, ExtArgs["result"]["userPromotion"]>
-    composites: {}
-  }
-
-  type UserPromotionGetPayload<S extends boolean | null | undefined | UserPromotionDefaultArgs> = $Result.GetResult<Prisma.$UserPromotionPayload, S>
-
-  type UserPromotionCountArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> =
-    Omit<UserPromotionFindManyArgs, 'select' | 'include' | 'distinct' | 'omit'> & {
-      select?: UserPromotionCountAggregateInputType | true
-    }
-
-  export interface UserPromotionDelegate<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs, GlobalOmitOptions = {}> {
-    [K: symbol]: { types: Prisma.TypeMap<ExtArgs>['model']['UserPromotion'], meta: { name: 'UserPromotion' } }
-    /**
-     * Find zero or one UserPromotion that matches the filter.
-     * @param {UserPromotionFindUniqueArgs} args - Arguments to find a UserPromotion
-     * @example
-     * // Get one UserPromotion
-     * const userPromotion = await prisma.userPromotion.findUnique({
-     *   where: {
-     *     // ... provide filter here
-     *   }
-     * })
-     */
-    findUnique<T extends UserPromotionFindUniqueArgs>(args: SelectSubset<T, UserPromotionFindUniqueArgs<ExtArgs>>): Prisma__UserPromotionClient<$Result.GetResult<Prisma.$UserPromotionPayload<ExtArgs>, T, "findUnique", GlobalOmitOptions> | null, null, ExtArgs, GlobalOmitOptions>
-
-    /**
-     * Find one UserPromotion that matches the filter or throw an error with `error.code='P2025'`
-     * if no matches were found.
-     * @param {UserPromotionFindUniqueOrThrowArgs} args - Arguments to find a UserPromotion
-     * @example
-     * // Get one UserPromotion
-     * const userPromotion = await prisma.userPromotion.findUniqueOrThrow({
-     *   where: {
-     *     // ... provide filter here
-     *   }
-     * })
-     */
-    findUniqueOrThrow<T extends UserPromotionFindUniqueOrThrowArgs>(args: SelectSubset<T, UserPromotionFindUniqueOrThrowArgs<ExtArgs>>): Prisma__UserPromotionClient<$Result.GetResult<Prisma.$UserPromotionPayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
-
-    /**
-     * Find the first UserPromotion that matches the filter.
-     * Note, that providing `undefined` is treated as the value not being there.
-     * Read more here: https://pris.ly/d/null-undefined
-     * @param {UserPromotionFindFirstArgs} args - Arguments to find a UserPromotion
-     * @example
-     * // Get one UserPromotion
-     * const userPromotion = await prisma.userPromotion.findFirst({
-     *   where: {
-     *     // ... provide filter here
-     *   }
-     * })
-     */
-    findFirst<T extends UserPromotionFindFirstArgs>(args?: SelectSubset<T, UserPromotionFindFirstArgs<ExtArgs>>): Prisma__UserPromotionClient<$Result.GetResult<Prisma.$UserPromotionPayload<ExtArgs>, T, "findFirst", GlobalOmitOptions> | null, null, ExtArgs, GlobalOmitOptions>
-
-    /**
-     * Find the first UserPromotion that matches the filter or
-     * throw `PrismaKnownClientError` with `P2025` code if no matches were found.
-     * Note, that providing `undefined` is treated as the value not being there.
-     * Read more here: https://pris.ly/d/null-undefined
-     * @param {UserPromotionFindFirstOrThrowArgs} args - Arguments to find a UserPromotion
-     * @example
-     * // Get one UserPromotion
-     * const userPromotion = await prisma.userPromotion.findFirstOrThrow({
-     *   where: {
-     *     // ... provide filter here
-     *   }
-     * })
-     */
-    findFirstOrThrow<T extends UserPromotionFindFirstOrThrowArgs>(args?: SelectSubset<T, UserPromotionFindFirstOrThrowArgs<ExtArgs>>): Prisma__UserPromotionClient<$Result.GetResult<Prisma.$UserPromotionPayload<ExtArgs>, T, "findFirstOrThrow", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
-
-    /**
-     * Find zero or more UserPromotions that matches the filter.
-     * Note, that providing `undefined` is treated as the value not being there.
-     * Read more here: https://pris.ly/d/null-undefined
-     * @param {UserPromotionFindManyArgs} args - Arguments to filter and select certain fields only.
-     * @example
-     * // Get all UserPromotions
-     * const userPromotions = await prisma.userPromotion.findMany()
-     * 
-     * // Get first 10 UserPromotions
-     * const userPromotions = await prisma.userPromotion.findMany({ take: 10 })
-     * 
-     * // Only select the `id`
-     * const userPromotionWithIdOnly = await prisma.userPromotion.findMany({ select: { id: true } })
-     * 
-     */
-    findMany<T extends UserPromotionFindManyArgs>(args?: SelectSubset<T, UserPromotionFindManyArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$UserPromotionPayload<ExtArgs>, T, "findMany", GlobalOmitOptions>>
-
-    /**
-     * Create a UserPromotion.
-     * @param {UserPromotionCreateArgs} args - Arguments to create a UserPromotion.
-     * @example
-     * // Create one UserPromotion
-     * const UserPromotion = await prisma.userPromotion.create({
-     *   data: {
-     *     // ... data to create a UserPromotion
-     *   }
-     * })
-     * 
-     */
-    create<T extends UserPromotionCreateArgs>(args: SelectSubset<T, UserPromotionCreateArgs<ExtArgs>>): Prisma__UserPromotionClient<$Result.GetResult<Prisma.$UserPromotionPayload<ExtArgs>, T, "create", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
-
-    /**
-     * Create many UserPromotions.
-     * @param {UserPromotionCreateManyArgs} args - Arguments to create many UserPromotions.
-     * @example
-     * // Create many UserPromotions
-     * const userPromotion = await prisma.userPromotion.createMany({
-     *   data: [
-     *     // ... provide data here
-     *   ]
-     * })
-     *     
-     */
-    createMany<T extends UserPromotionCreateManyArgs>(args?: SelectSubset<T, UserPromotionCreateManyArgs<ExtArgs>>): Prisma.PrismaPromise<BatchPayload>
-
-    /**
-     * Create many UserPromotions and returns the data saved in the database.
-     * @param {UserPromotionCreateManyAndReturnArgs} args - Arguments to create many UserPromotions.
-     * @example
-     * // Create many UserPromotions
-     * const userPromotion = await prisma.userPromotion.createManyAndReturn({
-     *   data: [
-     *     // ... provide data here
-     *   ]
-     * })
-     * 
-     * // Create many UserPromotions and only return the `id`
-     * const userPromotionWithIdOnly = await prisma.userPromotion.createManyAndReturn({
-     *   select: { id: true },
-     *   data: [
-     *     // ... provide data here
-     *   ]
-     * })
-     * Note, that providing `undefined` is treated as the value not being there.
-     * Read more here: https://pris.ly/d/null-undefined
-     * 
-     */
-    createManyAndReturn<T extends UserPromotionCreateManyAndReturnArgs>(args?: SelectSubset<T, UserPromotionCreateManyAndReturnArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$UserPromotionPayload<ExtArgs>, T, "createManyAndReturn", GlobalOmitOptions>>
-
-    /**
-     * Delete a UserPromotion.
-     * @param {UserPromotionDeleteArgs} args - Arguments to delete one UserPromotion.
-     * @example
-     * // Delete one UserPromotion
-     * const UserPromotion = await prisma.userPromotion.delete({
-     *   where: {
-     *     // ... filter to delete one UserPromotion
-     *   }
-     * })
-     * 
-     */
-    delete<T extends UserPromotionDeleteArgs>(args: SelectSubset<T, UserPromotionDeleteArgs<ExtArgs>>): Prisma__UserPromotionClient<$Result.GetResult<Prisma.$UserPromotionPayload<ExtArgs>, T, "delete", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
-
-    /**
-     * Update one UserPromotion.
-     * @param {UserPromotionUpdateArgs} args - Arguments to update one UserPromotion.
-     * @example
-     * // Update one UserPromotion
-     * const userPromotion = await prisma.userPromotion.update({
-     *   where: {
-     *     // ... provide filter here
-     *   },
-     *   data: {
-     *     // ... provide data here
-     *   }
-     * })
-     * 
-     */
-    update<T extends UserPromotionUpdateArgs>(args: SelectSubset<T, UserPromotionUpdateArgs<ExtArgs>>): Prisma__UserPromotionClient<$Result.GetResult<Prisma.$UserPromotionPayload<ExtArgs>, T, "update", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
-
-    /**
-     * Delete zero or more UserPromotions.
-     * @param {UserPromotionDeleteManyArgs} args - Arguments to filter UserPromotions to delete.
-     * @example
-     * // Delete a few UserPromotions
-     * const { count } = await prisma.userPromotion.deleteMany({
-     *   where: {
-     *     // ... provide filter here
-     *   }
-     * })
-     * 
-     */
-    deleteMany<T extends UserPromotionDeleteManyArgs>(args?: SelectSubset<T, UserPromotionDeleteManyArgs<ExtArgs>>): Prisma.PrismaPromise<BatchPayload>
-
-    /**
-     * Update zero or more UserPromotions.
-     * Note, that providing `undefined` is treated as the value not being there.
-     * Read more here: https://pris.ly/d/null-undefined
-     * @param {UserPromotionUpdateManyArgs} args - Arguments to update one or more rows.
-     * @example
-     * // Update many UserPromotions
-     * const userPromotion = await prisma.userPromotion.updateMany({
-     *   where: {
-     *     // ... provide filter here
-     *   },
-     *   data: {
-     *     // ... provide data here
-     *   }
-     * })
-     * 
-     */
-    updateMany<T extends UserPromotionUpdateManyArgs>(args: SelectSubset<T, UserPromotionUpdateManyArgs<ExtArgs>>): Prisma.PrismaPromise<BatchPayload>
-
-    /**
-     * Update zero or more UserPromotions and returns the data updated in the database.
-     * @param {UserPromotionUpdateManyAndReturnArgs} args - Arguments to update many UserPromotions.
-     * @example
-     * // Update many UserPromotions
-     * const userPromotion = await prisma.userPromotion.updateManyAndReturn({
-     *   where: {
-     *     // ... provide filter here
-     *   },
-     *   data: [
-     *     // ... provide data here
-     *   ]
-     * })
-     * 
-     * // Update zero or more UserPromotions and only return the `id`
-     * const userPromotionWithIdOnly = await prisma.userPromotion.updateManyAndReturn({
-     *   select: { id: true },
-     *   where: {
-     *     // ... provide filter here
-     *   },
-     *   data: [
-     *     // ... provide data here
-     *   ]
-     * })
-     * Note, that providing `undefined` is treated as the value not being there.
-     * Read more here: https://pris.ly/d/null-undefined
-     * 
-     */
-    updateManyAndReturn<T extends UserPromotionUpdateManyAndReturnArgs>(args: SelectSubset<T, UserPromotionUpdateManyAndReturnArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$UserPromotionPayload<ExtArgs>, T, "updateManyAndReturn", GlobalOmitOptions>>
-
-    /**
-     * Create or update one UserPromotion.
-     * @param {UserPromotionUpsertArgs} args - Arguments to update or create a UserPromotion.
-     * @example
-     * // Update or create a UserPromotion
-     * const userPromotion = await prisma.userPromotion.upsert({
-     *   create: {
-     *     // ... data to create a UserPromotion
-     *   },
-     *   update: {
-     *     // ... in case it already exists, update
-     *   },
-     *   where: {
-     *     // ... the filter for the UserPromotion we want to update
-     *   }
-     * })
-     */
-    upsert<T extends UserPromotionUpsertArgs>(args: SelectSubset<T, UserPromotionUpsertArgs<ExtArgs>>): Prisma__UserPromotionClient<$Result.GetResult<Prisma.$UserPromotionPayload<ExtArgs>, T, "upsert", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
-
-
-    /**
-     * Count the number of UserPromotions.
-     * Note, that providing `undefined` is treated as the value not being there.
-     * Read more here: https://pris.ly/d/null-undefined
-     * @param {UserPromotionCountArgs} args - Arguments to filter UserPromotions to count.
-     * @example
-     * // Count the number of UserPromotions
-     * const count = await prisma.userPromotion.count({
-     *   where: {
-     *     // ... the filter for the UserPromotions we want to count
-     *   }
-     * })
-    **/
-    count<T extends UserPromotionCountArgs>(
-      args?: Subset<T, UserPromotionCountArgs>,
-    ): Prisma.PrismaPromise<
-      T extends $Utils.Record<'select', any>
-        ? T['select'] extends true
-          ? number
-          : GetScalarType<T['select'], UserPromotionCountAggregateOutputType>
-        : number
-    >
-
-    /**
-     * Allows you to perform aggregations operations on a UserPromotion.
-     * Note, that providing `undefined` is treated as the value not being there.
-     * Read more here: https://pris.ly/d/null-undefined
-     * @param {UserPromotionAggregateArgs} args - Select which aggregations you would like to apply and on what fields.
-     * @example
-     * // Ordered by age ascending
-     * // Where email contains prisma.io
-     * // Limited to the 10 users
-     * const aggregations = await prisma.user.aggregate({
-     *   _avg: {
-     *     age: true,
-     *   },
-     *   where: {
-     *     email: {
-     *       contains: "prisma.io",
-     *     },
-     *   },
-     *   orderBy: {
-     *     age: "asc",
-     *   },
-     *   take: 10,
-     * })
-    **/
-    aggregate<T extends UserPromotionAggregateArgs>(args: Subset<T, UserPromotionAggregateArgs>): Prisma.PrismaPromise<GetUserPromotionAggregateType<T>>
-
-    /**
-     * Group by UserPromotion.
-     * Note, that providing `undefined` is treated as the value not being there.
-     * Read more here: https://pris.ly/d/null-undefined
-     * @param {UserPromotionGroupByArgs} args - Group by arguments.
-     * @example
-     * // Group by city, order by createdAt, get count
-     * const result = await prisma.user.groupBy({
-     *   by: ['city', 'createdAt'],
-     *   orderBy: {
-     *     createdAt: true
-     *   },
-     *   _count: {
-     *     _all: true
-     *   },
-     * })
-     * 
-    **/
-    groupBy<
-      T extends UserPromotionGroupByArgs,
-      HasSelectOrTake extends Or<
-        Extends<'skip', Keys<T>>,
-        Extends<'take', Keys<T>>
-      >,
-      OrderByArg extends True extends HasSelectOrTake
-        ? { orderBy: UserPromotionGroupByArgs['orderBy'] }
-        : { orderBy?: UserPromotionGroupByArgs['orderBy'] },
-      OrderFields extends ExcludeUnderscoreKeys<Keys<MaybeTupleToUnion<T['orderBy']>>>,
-      ByFields extends MaybeTupleToUnion<T['by']>,
-      ByValid extends Has<ByFields, OrderFields>,
-      HavingFields extends GetHavingFields<T['having']>,
-      HavingValid extends Has<ByFields, HavingFields>,
-      ByEmpty extends T['by'] extends never[] ? True : False,
-      InputErrors extends ByEmpty extends True
-      ? `Error: "by" must not be empty.`
-      : HavingValid extends False
-      ? {
-          [P in HavingFields]: P extends ByFields
-            ? never
-            : P extends string
-            ? `Error: Field "${P}" used in "having" needs to be provided in "by".`
-            : [
-                Error,
-                'Field ',
-                P,
-                ` in "having" needs to be provided in "by"`,
-              ]
-        }[HavingFields]
-      : 'take' extends Keys<T>
-      ? 'orderBy' extends Keys<T>
-        ? ByValid extends True
-          ? {}
-          : {
-              [P in OrderFields]: P extends ByFields
-                ? never
-                : `Error: Field "${P}" in "orderBy" needs to be provided in "by"`
-            }[OrderFields]
-        : 'Error: If you provide "take", you also need to provide "orderBy"'
-      : 'skip' extends Keys<T>
-      ? 'orderBy' extends Keys<T>
-        ? ByValid extends True
-          ? {}
-          : {
-              [P in OrderFields]: P extends ByFields
-                ? never
-                : `Error: Field "${P}" in "orderBy" needs to be provided in "by"`
-            }[OrderFields]
-        : 'Error: If you provide "skip", you also need to provide "orderBy"'
-      : ByValid extends True
-      ? {}
-      : {
-          [P in OrderFields]: P extends ByFields
-            ? never
-            : `Error: Field "${P}" in "orderBy" needs to be provided in "by"`
-        }[OrderFields]
-    >(args: SubsetIntersection<T, UserPromotionGroupByArgs, OrderByArg> & InputErrors): {} extends InputErrors ? GetUserPromotionGroupByPayload<T> : Prisma.PrismaPromise<InputErrors>
-  /**
-   * Fields of the UserPromotion model
-   */
-  readonly fields: UserPromotionFieldRefs;
-  }
-
-  /**
-   * The delegate class that acts as a "Promise-like" for UserPromotion.
-   * Why is this prefixed with `Prisma__`?
-   * Because we want to prevent naming conflicts as mentioned in
-   * https://github.com/prisma/prisma-client-js/issues/707
-   */
-  export interface Prisma__UserPromotionClient<T, Null = never, ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs, GlobalOmitOptions = {}> extends Prisma.PrismaPromise<T> {
-    readonly [Symbol.toStringTag]: "PrismaPromise"
-    Rolling<T extends UserPromotion$RollingArgs<ExtArgs> = {}>(args?: Subset<T, UserPromotion$RollingArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$RollingPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
-    promotion<T extends PromotionDefaultArgs<ExtArgs> = {}>(args?: Subset<T, PromotionDefaultArgs<ExtArgs>>): Prisma__PromotionClient<$Result.GetResult<Prisma.$PromotionPayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions> | Null, Null, ExtArgs, GlobalOmitOptions>
-    user<T extends UserDefaultArgs<ExtArgs> = {}>(args?: Subset<T, UserDefaultArgs<ExtArgs>>): Prisma__UserClient<$Result.GetResult<Prisma.$UserPayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions> | Null, Null, ExtArgs, GlobalOmitOptions>
-    /**
-     * Attaches callbacks for the resolution and/or rejection of the Promise.
-     * @param onfulfilled The callback to execute when the Promise is resolved.
-     * @param onrejected The callback to execute when the Promise is rejected.
-     * @returns A Promise for the completion of which ever callback is executed.
-     */
-    then<TResult1 = T, TResult2 = never>(onfulfilled?: ((value: T) => TResult1 | PromiseLike<TResult1>) | undefined | null, onrejected?: ((reason: any) => TResult2 | PromiseLike<TResult2>) | undefined | null): $Utils.JsPromise<TResult1 | TResult2>
-    /**
-     * Attaches a callback for only the rejection of the Promise.
-     * @param onrejected The callback to execute when the Promise is rejected.
-     * @returns A Promise for the completion of the callback.
-     */
-    catch<TResult = never>(onrejected?: ((reason: any) => TResult | PromiseLike<TResult>) | undefined | null): $Utils.JsPromise<T | TResult>
-    /**
-     * Attaches a callback that is invoked when the Promise is settled (fulfilled or rejected). The
-     * resolved value cannot be modified from the callback.
-     * @param onfinally The callback to execute when the Promise is settled (fulfilled or rejected).
-     * @returns A Promise for the completion of the callback.
-     */
-    finally(onfinally?: (() => void) | undefined | null): $Utils.JsPromise<T>
-  }
-
-
-
-
-  /**
-   * Fields of the UserPromotion model
-   */
-  interface UserPromotionFieldRefs {
-    readonly id: FieldRef<"UserPromotion", 'Int'>
-    readonly userId: FieldRef<"UserPromotion", 'BigInt'>
-    readonly promotionId: FieldRef<"UserPromotion", 'Int'>
-    readonly status: FieldRef<"UserPromotion", 'UserPromotionStatus'>
-    readonly bonusGranted: FieldRef<"UserPromotion", 'Boolean'>
-    readonly bonusGrantedAt: FieldRef<"UserPromotion", 'DateTime'>
-    readonly bonusAmount: FieldRef<"UserPromotion", 'Decimal'>
-    readonly createdAt: FieldRef<"UserPromotion", 'DateTime'>
-    readonly updatedAt: FieldRef<"UserPromotion", 'DateTime'>
-  }
-    
-
-  // Custom InputTypes
-  /**
-   * UserPromotion findUnique
-   */
-  export type UserPromotionFindUniqueArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
-    /**
-     * Select specific fields to fetch from the UserPromotion
-     */
-    select?: UserPromotionSelect<ExtArgs> | null
-    /**
-     * Omit specific fields from the UserPromotion
-     */
-    omit?: UserPromotionOmit<ExtArgs> | null
-    /**
-     * Choose, which related nodes to fetch as well
-     */
-    include?: UserPromotionInclude<ExtArgs> | null
-    /**
-     * Filter, which UserPromotion to fetch.
-     */
-    where: UserPromotionWhereUniqueInput
-  }
-
-  /**
-   * UserPromotion findUniqueOrThrow
-   */
-  export type UserPromotionFindUniqueOrThrowArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
-    /**
-     * Select specific fields to fetch from the UserPromotion
-     */
-    select?: UserPromotionSelect<ExtArgs> | null
-    /**
-     * Omit specific fields from the UserPromotion
-     */
-    omit?: UserPromotionOmit<ExtArgs> | null
-    /**
-     * Choose, which related nodes to fetch as well
-     */
-    include?: UserPromotionInclude<ExtArgs> | null
-    /**
-     * Filter, which UserPromotion to fetch.
-     */
-    where: UserPromotionWhereUniqueInput
-  }
-
-  /**
-   * UserPromotion findFirst
-   */
-  export type UserPromotionFindFirstArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
-    /**
-     * Select specific fields to fetch from the UserPromotion
-     */
-    select?: UserPromotionSelect<ExtArgs> | null
-    /**
-     * Omit specific fields from the UserPromotion
-     */
-    omit?: UserPromotionOmit<ExtArgs> | null
-    /**
-     * Choose, which related nodes to fetch as well
-     */
-    include?: UserPromotionInclude<ExtArgs> | null
-    /**
-     * Filter, which UserPromotion to fetch.
-     */
-    where?: UserPromotionWhereInput
-    /**
-     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/sorting Sorting Docs}
-     * 
-     * Determine the order of UserPromotions to fetch.
-     */
-    orderBy?: UserPromotionOrderByWithRelationInput | UserPromotionOrderByWithRelationInput[]
-    /**
-     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination#cursor-based-pagination Cursor Docs}
-     * 
-     * Sets the position for searching for UserPromotions.
-     */
-    cursor?: UserPromotionWhereUniqueInput
-    /**
-     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
-     * 
-     * Take `±n` UserPromotions from the position of the cursor.
-     */
-    take?: number
-    /**
-     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
-     * 
-     * Skip the first `n` UserPromotions.
-     */
-    skip?: number
-    /**
-     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/distinct Distinct Docs}
-     * 
-     * Filter by unique combinations of UserPromotions.
-     */
-    distinct?: UserPromotionScalarFieldEnum | UserPromotionScalarFieldEnum[]
-  }
-
-  /**
-   * UserPromotion findFirstOrThrow
-   */
-  export type UserPromotionFindFirstOrThrowArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
-    /**
-     * Select specific fields to fetch from the UserPromotion
-     */
-    select?: UserPromotionSelect<ExtArgs> | null
-    /**
-     * Omit specific fields from the UserPromotion
-     */
-    omit?: UserPromotionOmit<ExtArgs> | null
-    /**
-     * Choose, which related nodes to fetch as well
-     */
-    include?: UserPromotionInclude<ExtArgs> | null
-    /**
-     * Filter, which UserPromotion to fetch.
-     */
-    where?: UserPromotionWhereInput
-    /**
-     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/sorting Sorting Docs}
-     * 
-     * Determine the order of UserPromotions to fetch.
-     */
-    orderBy?: UserPromotionOrderByWithRelationInput | UserPromotionOrderByWithRelationInput[]
-    /**
-     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination#cursor-based-pagination Cursor Docs}
-     * 
-     * Sets the position for searching for UserPromotions.
-     */
-    cursor?: UserPromotionWhereUniqueInput
-    /**
-     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
-     * 
-     * Take `±n` UserPromotions from the position of the cursor.
-     */
-    take?: number
-    /**
-     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
-     * 
-     * Skip the first `n` UserPromotions.
-     */
-    skip?: number
-    /**
-     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/distinct Distinct Docs}
-     * 
-     * Filter by unique combinations of UserPromotions.
-     */
-    distinct?: UserPromotionScalarFieldEnum | UserPromotionScalarFieldEnum[]
-  }
-
-  /**
-   * UserPromotion findMany
-   */
-  export type UserPromotionFindManyArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
-    /**
-     * Select specific fields to fetch from the UserPromotion
-     */
-    select?: UserPromotionSelect<ExtArgs> | null
-    /**
-     * Omit specific fields from the UserPromotion
-     */
-    omit?: UserPromotionOmit<ExtArgs> | null
-    /**
-     * Choose, which related nodes to fetch as well
-     */
-    include?: UserPromotionInclude<ExtArgs> | null
-    /**
-     * Filter, which UserPromotions to fetch.
-     */
-    where?: UserPromotionWhereInput
-    /**
-     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/sorting Sorting Docs}
-     * 
-     * Determine the order of UserPromotions to fetch.
-     */
-    orderBy?: UserPromotionOrderByWithRelationInput | UserPromotionOrderByWithRelationInput[]
-    /**
-     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination#cursor-based-pagination Cursor Docs}
-     * 
-     * Sets the position for listing UserPromotions.
-     */
-    cursor?: UserPromotionWhereUniqueInput
-    /**
-     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
-     * 
-     * Take `±n` UserPromotions from the position of the cursor.
-     */
-    take?: number
-    /**
-     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
-     * 
-     * Skip the first `n` UserPromotions.
-     */
-    skip?: number
-    distinct?: UserPromotionScalarFieldEnum | UserPromotionScalarFieldEnum[]
-  }
-
-  /**
-   * UserPromotion create
-   */
-  export type UserPromotionCreateArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
-    /**
-     * Select specific fields to fetch from the UserPromotion
-     */
-    select?: UserPromotionSelect<ExtArgs> | null
-    /**
-     * Omit specific fields from the UserPromotion
-     */
-    omit?: UserPromotionOmit<ExtArgs> | null
-    /**
-     * Choose, which related nodes to fetch as well
-     */
-    include?: UserPromotionInclude<ExtArgs> | null
-    /**
-     * The data needed to create a UserPromotion.
-     */
-    data: XOR<UserPromotionCreateInput, UserPromotionUncheckedCreateInput>
-  }
-
-  /**
-   * UserPromotion createMany
-   */
-  export type UserPromotionCreateManyArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
-    /**
-     * The data used to create many UserPromotions.
-     */
-    data: UserPromotionCreateManyInput | UserPromotionCreateManyInput[]
-    skipDuplicates?: boolean
-  }
-
-  /**
-   * UserPromotion createManyAndReturn
-   */
-  export type UserPromotionCreateManyAndReturnArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
-    /**
-     * Select specific fields to fetch from the UserPromotion
-     */
-    select?: UserPromotionSelectCreateManyAndReturn<ExtArgs> | null
-    /**
-     * Omit specific fields from the UserPromotion
-     */
-    omit?: UserPromotionOmit<ExtArgs> | null
-    /**
-     * The data used to create many UserPromotions.
-     */
-    data: UserPromotionCreateManyInput | UserPromotionCreateManyInput[]
-    skipDuplicates?: boolean
-    /**
-     * Choose, which related nodes to fetch as well
-     */
-    include?: UserPromotionIncludeCreateManyAndReturn<ExtArgs> | null
-  }
-
-  /**
-   * UserPromotion update
-   */
-  export type UserPromotionUpdateArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
-    /**
-     * Select specific fields to fetch from the UserPromotion
-     */
-    select?: UserPromotionSelect<ExtArgs> | null
-    /**
-     * Omit specific fields from the UserPromotion
-     */
-    omit?: UserPromotionOmit<ExtArgs> | null
-    /**
-     * Choose, which related nodes to fetch as well
-     */
-    include?: UserPromotionInclude<ExtArgs> | null
-    /**
-     * The data needed to update a UserPromotion.
-     */
-    data: XOR<UserPromotionUpdateInput, UserPromotionUncheckedUpdateInput>
-    /**
-     * Choose, which UserPromotion to update.
-     */
-    where: UserPromotionWhereUniqueInput
-  }
-
-  /**
-   * UserPromotion updateMany
-   */
-  export type UserPromotionUpdateManyArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
-    /**
-     * The data used to update UserPromotions.
-     */
-    data: XOR<UserPromotionUpdateManyMutationInput, UserPromotionUncheckedUpdateManyInput>
-    /**
-     * Filter which UserPromotions to update
-     */
-    where?: UserPromotionWhereInput
-    /**
-     * Limit how many UserPromotions to update.
-     */
-    limit?: number
-  }
-
-  /**
-   * UserPromotion updateManyAndReturn
-   */
-  export type UserPromotionUpdateManyAndReturnArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
-    /**
-     * Select specific fields to fetch from the UserPromotion
-     */
-    select?: UserPromotionSelectUpdateManyAndReturn<ExtArgs> | null
-    /**
-     * Omit specific fields from the UserPromotion
-     */
-    omit?: UserPromotionOmit<ExtArgs> | null
-    /**
-     * The data used to update UserPromotions.
-     */
-    data: XOR<UserPromotionUpdateManyMutationInput, UserPromotionUncheckedUpdateManyInput>
-    /**
-     * Filter which UserPromotions to update
-     */
-    where?: UserPromotionWhereInput
-    /**
-     * Limit how many UserPromotions to update.
-     */
-    limit?: number
-    /**
-     * Choose, which related nodes to fetch as well
-     */
-    include?: UserPromotionIncludeUpdateManyAndReturn<ExtArgs> | null
-  }
-
-  /**
-   * UserPromotion upsert
-   */
-  export type UserPromotionUpsertArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
-    /**
-     * Select specific fields to fetch from the UserPromotion
-     */
-    select?: UserPromotionSelect<ExtArgs> | null
-    /**
-     * Omit specific fields from the UserPromotion
-     */
-    omit?: UserPromotionOmit<ExtArgs> | null
-    /**
-     * Choose, which related nodes to fetch as well
-     */
-    include?: UserPromotionInclude<ExtArgs> | null
-    /**
-     * The filter to search for the UserPromotion to update in case it exists.
-     */
-    where: UserPromotionWhereUniqueInput
-    /**
-     * In case the UserPromotion found by the `where` argument doesn't exist, create a new UserPromotion with this data.
-     */
-    create: XOR<UserPromotionCreateInput, UserPromotionUncheckedCreateInput>
-    /**
-     * In case the UserPromotion was found with the provided `where` argument, update it with this data.
-     */
-    update: XOR<UserPromotionUpdateInput, UserPromotionUncheckedUpdateInput>
-  }
-
-  /**
-   * UserPromotion delete
-   */
-  export type UserPromotionDeleteArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
-    /**
-     * Select specific fields to fetch from the UserPromotion
-     */
-    select?: UserPromotionSelect<ExtArgs> | null
-    /**
-     * Omit specific fields from the UserPromotion
-     */
-    omit?: UserPromotionOmit<ExtArgs> | null
-    /**
-     * Choose, which related nodes to fetch as well
-     */
-    include?: UserPromotionInclude<ExtArgs> | null
-    /**
-     * Filter which UserPromotion to delete.
-     */
-    where: UserPromotionWhereUniqueInput
-  }
-
-  /**
-   * UserPromotion deleteMany
-   */
-  export type UserPromotionDeleteManyArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
-    /**
-     * Filter which UserPromotions to delete
-     */
-    where?: UserPromotionWhereInput
-    /**
-     * Limit how many UserPromotions to delete.
-     */
-    limit?: number
-  }
-
-  /**
-   * UserPromotion.Rolling
-   */
-  export type UserPromotion$RollingArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
-    /**
-     * Select specific fields to fetch from the Rolling
-     */
-    select?: RollingSelect<ExtArgs> | null
-    /**
-     * Omit specific fields from the Rolling
-     */
-    omit?: RollingOmit<ExtArgs> | null
-    /**
-     * Choose, which related nodes to fetch as well
-     */
-    include?: RollingInclude<ExtArgs> | null
-    where?: RollingWhereInput
-    orderBy?: RollingOrderByWithRelationInput | RollingOrderByWithRelationInput[]
-    cursor?: RollingWhereUniqueInput
-    take?: number
-    skip?: number
-    distinct?: RollingScalarFieldEnum | RollingScalarFieldEnum[]
-  }
-
-  /**
-   * UserPromotion without action
-   */
-  export type UserPromotionDefaultArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
-    /**
-     * Select specific fields to fetch from the UserPromotion
-     */
-    select?: UserPromotionSelect<ExtArgs> | null
-    /**
-     * Omit specific fields from the UserPromotion
-     */
-    omit?: UserPromotionOmit<ExtArgs> | null
-    /**
-     * Choose, which related nodes to fetch as well
-     */
-    include?: UserPromotionInclude<ExtArgs> | null
-  }
-
-
-  /**
    * Model NowPaymentCallbackLog
    */
 
@@ -42604,7 +39122,7 @@ export namespace Prisma {
   export type RollingSumAggregateOutputType = {
     id: bigint | null
     userId: bigint | null
-    userPromotionId: number | null
+    userPromotionId: bigint | null
     requiredAmount: Decimal | null
     currentAmount: Decimal | null
     cancellationBalanceThreshold: Decimal | null
@@ -42617,7 +39135,7 @@ export namespace Prisma {
     id: bigint | null
     userId: bigint | null
     sourceType: $Enums.RollingSourceType | null
-    userPromotionId: number | null
+    userPromotionId: bigint | null
     requiredAmount: Decimal | null
     currentAmount: Decimal | null
     cancellationBalanceThreshold: Decimal | null
@@ -42635,7 +39153,7 @@ export namespace Prisma {
     id: bigint | null
     userId: bigint | null
     sourceType: $Enums.RollingSourceType | null
-    userPromotionId: number | null
+    userPromotionId: bigint | null
     requiredAmount: Decimal | null
     currentAmount: Decimal | null
     cancellationBalanceThreshold: Decimal | null
@@ -42838,7 +39356,7 @@ export namespace Prisma {
     id: bigint
     userId: bigint
     sourceType: $Enums.RollingSourceType
-    userPromotionId: number | null
+    userPromotionId: bigint | null
     requiredAmount: Decimal
     currentAmount: Decimal
     cancellationBalanceThreshold: Decimal | null
@@ -42980,7 +39498,7 @@ export namespace Prisma {
       id: bigint
       userId: bigint
       sourceType: $Enums.RollingSourceType
-      userPromotionId: number | null
+      userPromotionId: bigint | null
       requiredAmount: Prisma.Decimal
       currentAmount: Prisma.Decimal
       cancellationBalanceThreshold: Prisma.Decimal | null
@@ -43421,7 +39939,7 @@ export namespace Prisma {
     readonly id: FieldRef<"Rolling", 'BigInt'>
     readonly userId: FieldRef<"Rolling", 'BigInt'>
     readonly sourceType: FieldRef<"Rolling", 'RollingSourceType'>
-    readonly userPromotionId: FieldRef<"Rolling", 'Int'>
+    readonly userPromotionId: FieldRef<"Rolling", 'BigInt'>
     readonly requiredAmount: FieldRef<"Rolling", 'Decimal'>
     readonly currentAmount: FieldRef<"Rolling", 'Decimal'>
     readonly cancellationBalanceThreshold: FieldRef<"Rolling", 'Decimal'>
@@ -55919,6 +52437,4788 @@ export namespace Prisma {
 
 
   /**
+   * Model Promotion
+   */
+
+  export type AggregatePromotion = {
+    _count: PromotionCountAggregateOutputType | null
+    _avg: PromotionAvgAggregateOutputType | null
+    _sum: PromotionSumAggregateOutputType | null
+    _min: PromotionMinAggregateOutputType | null
+    _max: PromotionMaxAggregateOutputType | null
+  }
+
+  export type PromotionAvgAggregateOutputType = {
+    id: number | null
+    bonusRate: Decimal | null
+    rollingMultiplier: Decimal | null
+  }
+
+  export type PromotionSumAggregateOutputType = {
+    id: bigint | null
+    bonusRate: Decimal | null
+    rollingMultiplier: Decimal | null
+  }
+
+  export type PromotionMinAggregateOutputType = {
+    id: bigint | null
+    uid: string | null
+    managementName: string | null
+    isActive: boolean | null
+    startDate: Date | null
+    endDate: Date | null
+    deletedAt: Date | null
+    targetType: $Enums.PromotionTargetType | null
+    bonusType: $Enums.PromotionBonusType | null
+    bonusRate: Decimal | null
+    rollingMultiplier: Decimal | null
+    qualificationMaintainCondition: $Enums.PromotionQualificationCondition | null
+    isOneTime: boolean | null
+    createdAt: Date | null
+    updatedAt: Date | null
+  }
+
+  export type PromotionMaxAggregateOutputType = {
+    id: bigint | null
+    uid: string | null
+    managementName: string | null
+    isActive: boolean | null
+    startDate: Date | null
+    endDate: Date | null
+    deletedAt: Date | null
+    targetType: $Enums.PromotionTargetType | null
+    bonusType: $Enums.PromotionBonusType | null
+    bonusRate: Decimal | null
+    rollingMultiplier: Decimal | null
+    qualificationMaintainCondition: $Enums.PromotionQualificationCondition | null
+    isOneTime: boolean | null
+    createdAt: Date | null
+    updatedAt: Date | null
+  }
+
+  export type PromotionCountAggregateOutputType = {
+    id: number
+    uid: number
+    managementName: number
+    isActive: number
+    startDate: number
+    endDate: number
+    deletedAt: number
+    targetType: number
+    bonusType: number
+    bonusRate: number
+    rollingMultiplier: number
+    qualificationMaintainCondition: number
+    isOneTime: number
+    createdAt: number
+    updatedAt: number
+    _all: number
+  }
+
+
+  export type PromotionAvgAggregateInputType = {
+    id?: true
+    bonusRate?: true
+    rollingMultiplier?: true
+  }
+
+  export type PromotionSumAggregateInputType = {
+    id?: true
+    bonusRate?: true
+    rollingMultiplier?: true
+  }
+
+  export type PromotionMinAggregateInputType = {
+    id?: true
+    uid?: true
+    managementName?: true
+    isActive?: true
+    startDate?: true
+    endDate?: true
+    deletedAt?: true
+    targetType?: true
+    bonusType?: true
+    bonusRate?: true
+    rollingMultiplier?: true
+    qualificationMaintainCondition?: true
+    isOneTime?: true
+    createdAt?: true
+    updatedAt?: true
+  }
+
+  export type PromotionMaxAggregateInputType = {
+    id?: true
+    uid?: true
+    managementName?: true
+    isActive?: true
+    startDate?: true
+    endDate?: true
+    deletedAt?: true
+    targetType?: true
+    bonusType?: true
+    bonusRate?: true
+    rollingMultiplier?: true
+    qualificationMaintainCondition?: true
+    isOneTime?: true
+    createdAt?: true
+    updatedAt?: true
+  }
+
+  export type PromotionCountAggregateInputType = {
+    id?: true
+    uid?: true
+    managementName?: true
+    isActive?: true
+    startDate?: true
+    endDate?: true
+    deletedAt?: true
+    targetType?: true
+    bonusType?: true
+    bonusRate?: true
+    rollingMultiplier?: true
+    qualificationMaintainCondition?: true
+    isOneTime?: true
+    createdAt?: true
+    updatedAt?: true
+    _all?: true
+  }
+
+  export type PromotionAggregateArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Filter which Promotion to aggregate.
+     */
+    where?: PromotionWhereInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/sorting Sorting Docs}
+     * 
+     * Determine the order of Promotions to fetch.
+     */
+    orderBy?: PromotionOrderByWithRelationInput | PromotionOrderByWithRelationInput[]
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination#cursor-based-pagination Cursor Docs}
+     * 
+     * Sets the start position
+     */
+    cursor?: PromotionWhereUniqueInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Take `±n` Promotions from the position of the cursor.
+     */
+    take?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Skip the first `n` Promotions.
+     */
+    skip?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
+     * 
+     * Count returned Promotions
+    **/
+    _count?: true | PromotionCountAggregateInputType
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
+     * 
+     * Select which fields to average
+    **/
+    _avg?: PromotionAvgAggregateInputType
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
+     * 
+     * Select which fields to sum
+    **/
+    _sum?: PromotionSumAggregateInputType
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
+     * 
+     * Select which fields to find the minimum value
+    **/
+    _min?: PromotionMinAggregateInputType
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
+     * 
+     * Select which fields to find the maximum value
+    **/
+    _max?: PromotionMaxAggregateInputType
+  }
+
+  export type GetPromotionAggregateType<T extends PromotionAggregateArgs> = {
+        [P in keyof T & keyof AggregatePromotion]: P extends '_count' | 'count'
+      ? T[P] extends true
+        ? number
+        : GetScalarType<T[P], AggregatePromotion[P]>
+      : GetScalarType<T[P], AggregatePromotion[P]>
+  }
+
+
+
+
+  export type PromotionGroupByArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    where?: PromotionWhereInput
+    orderBy?: PromotionOrderByWithAggregationInput | PromotionOrderByWithAggregationInput[]
+    by: PromotionScalarFieldEnum[] | PromotionScalarFieldEnum
+    having?: PromotionScalarWhereWithAggregatesInput
+    take?: number
+    skip?: number
+    _count?: PromotionCountAggregateInputType | true
+    _avg?: PromotionAvgAggregateInputType
+    _sum?: PromotionSumAggregateInputType
+    _min?: PromotionMinAggregateInputType
+    _max?: PromotionMaxAggregateInputType
+  }
+
+  export type PromotionGroupByOutputType = {
+    id: bigint
+    uid: string
+    managementName: string
+    isActive: boolean
+    startDate: Date | null
+    endDate: Date | null
+    deletedAt: Date | null
+    targetType: $Enums.PromotionTargetType
+    bonusType: $Enums.PromotionBonusType
+    bonusRate: Decimal | null
+    rollingMultiplier: Decimal | null
+    qualificationMaintainCondition: $Enums.PromotionQualificationCondition
+    isOneTime: boolean
+    createdAt: Date
+    updatedAt: Date
+    _count: PromotionCountAggregateOutputType | null
+    _avg: PromotionAvgAggregateOutputType | null
+    _sum: PromotionSumAggregateOutputType | null
+    _min: PromotionMinAggregateOutputType | null
+    _max: PromotionMaxAggregateOutputType | null
+  }
+
+  type GetPromotionGroupByPayload<T extends PromotionGroupByArgs> = Prisma.PrismaPromise<
+    Array<
+      PickEnumerable<PromotionGroupByOutputType, T['by']> &
+        {
+          [P in ((keyof T) & (keyof PromotionGroupByOutputType))]: P extends '_count'
+            ? T[P] extends boolean
+              ? number
+              : GetScalarType<T[P], PromotionGroupByOutputType[P]>
+            : GetScalarType<T[P], PromotionGroupByOutputType[P]>
+        }
+      >
+    >
+
+
+  export type PromotionSelect<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetSelect<{
+    id?: boolean
+    uid?: boolean
+    managementName?: boolean
+    isActive?: boolean
+    startDate?: boolean
+    endDate?: boolean
+    deletedAt?: boolean
+    targetType?: boolean
+    bonusType?: boolean
+    bonusRate?: boolean
+    rollingMultiplier?: boolean
+    qualificationMaintainCondition?: boolean
+    isOneTime?: boolean
+    createdAt?: boolean
+    updatedAt?: boolean
+    translations?: boolean | Promotion$translationsArgs<ExtArgs>
+    currencies?: boolean | Promotion$currenciesArgs<ExtArgs>
+    UserPromotion?: boolean | Promotion$UserPromotionArgs<ExtArgs>
+    _count?: boolean | PromotionCountOutputTypeDefaultArgs<ExtArgs>
+  }, ExtArgs["result"]["promotion"]>
+
+  export type PromotionSelectCreateManyAndReturn<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetSelect<{
+    id?: boolean
+    uid?: boolean
+    managementName?: boolean
+    isActive?: boolean
+    startDate?: boolean
+    endDate?: boolean
+    deletedAt?: boolean
+    targetType?: boolean
+    bonusType?: boolean
+    bonusRate?: boolean
+    rollingMultiplier?: boolean
+    qualificationMaintainCondition?: boolean
+    isOneTime?: boolean
+    createdAt?: boolean
+    updatedAt?: boolean
+  }, ExtArgs["result"]["promotion"]>
+
+  export type PromotionSelectUpdateManyAndReturn<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetSelect<{
+    id?: boolean
+    uid?: boolean
+    managementName?: boolean
+    isActive?: boolean
+    startDate?: boolean
+    endDate?: boolean
+    deletedAt?: boolean
+    targetType?: boolean
+    bonusType?: boolean
+    bonusRate?: boolean
+    rollingMultiplier?: boolean
+    qualificationMaintainCondition?: boolean
+    isOneTime?: boolean
+    createdAt?: boolean
+    updatedAt?: boolean
+  }, ExtArgs["result"]["promotion"]>
+
+  export type PromotionSelectScalar = {
+    id?: boolean
+    uid?: boolean
+    managementName?: boolean
+    isActive?: boolean
+    startDate?: boolean
+    endDate?: boolean
+    deletedAt?: boolean
+    targetType?: boolean
+    bonusType?: boolean
+    bonusRate?: boolean
+    rollingMultiplier?: boolean
+    qualificationMaintainCondition?: boolean
+    isOneTime?: boolean
+    createdAt?: boolean
+    updatedAt?: boolean
+  }
+
+  export type PromotionOmit<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetOmit<"id" | "uid" | "managementName" | "isActive" | "startDate" | "endDate" | "deletedAt" | "targetType" | "bonusType" | "bonusRate" | "rollingMultiplier" | "qualificationMaintainCondition" | "isOneTime" | "createdAt" | "updatedAt", ExtArgs["result"]["promotion"]>
+  export type PromotionInclude<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    translations?: boolean | Promotion$translationsArgs<ExtArgs>
+    currencies?: boolean | Promotion$currenciesArgs<ExtArgs>
+    UserPromotion?: boolean | Promotion$UserPromotionArgs<ExtArgs>
+    _count?: boolean | PromotionCountOutputTypeDefaultArgs<ExtArgs>
+  }
+  export type PromotionIncludeCreateManyAndReturn<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {}
+  export type PromotionIncludeUpdateManyAndReturn<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {}
+
+  export type $PromotionPayload<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    name: "Promotion"
+    objects: {
+      translations: Prisma.$PromotionTranslationPayload<ExtArgs>[]
+      currencies: Prisma.$PromotionCurrencyPayload<ExtArgs>[]
+      UserPromotion: Prisma.$UserPromotionPayload<ExtArgs>[]
+    }
+    scalars: $Extensions.GetPayloadResult<{
+      id: bigint
+      uid: string
+      managementName: string
+      isActive: boolean
+      startDate: Date | null
+      endDate: Date | null
+      deletedAt: Date | null
+      targetType: $Enums.PromotionTargetType
+      bonusType: $Enums.PromotionBonusType
+      bonusRate: Prisma.Decimal | null
+      rollingMultiplier: Prisma.Decimal | null
+      qualificationMaintainCondition: $Enums.PromotionQualificationCondition
+      isOneTime: boolean
+      createdAt: Date
+      updatedAt: Date
+    }, ExtArgs["result"]["promotion"]>
+    composites: {}
+  }
+
+  type PromotionGetPayload<S extends boolean | null | undefined | PromotionDefaultArgs> = $Result.GetResult<Prisma.$PromotionPayload, S>
+
+  type PromotionCountArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> =
+    Omit<PromotionFindManyArgs, 'select' | 'include' | 'distinct' | 'omit'> & {
+      select?: PromotionCountAggregateInputType | true
+    }
+
+  export interface PromotionDelegate<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs, GlobalOmitOptions = {}> {
+    [K: symbol]: { types: Prisma.TypeMap<ExtArgs>['model']['Promotion'], meta: { name: 'Promotion' } }
+    /**
+     * Find zero or one Promotion that matches the filter.
+     * @param {PromotionFindUniqueArgs} args - Arguments to find a Promotion
+     * @example
+     * // Get one Promotion
+     * const promotion = await prisma.promotion.findUnique({
+     *   where: {
+     *     // ... provide filter here
+     *   }
+     * })
+     */
+    findUnique<T extends PromotionFindUniqueArgs>(args: SelectSubset<T, PromotionFindUniqueArgs<ExtArgs>>): Prisma__PromotionClient<$Result.GetResult<Prisma.$PromotionPayload<ExtArgs>, T, "findUnique", GlobalOmitOptions> | null, null, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Find one Promotion that matches the filter or throw an error with `error.code='P2025'`
+     * if no matches were found.
+     * @param {PromotionFindUniqueOrThrowArgs} args - Arguments to find a Promotion
+     * @example
+     * // Get one Promotion
+     * const promotion = await prisma.promotion.findUniqueOrThrow({
+     *   where: {
+     *     // ... provide filter here
+     *   }
+     * })
+     */
+    findUniqueOrThrow<T extends PromotionFindUniqueOrThrowArgs>(args: SelectSubset<T, PromotionFindUniqueOrThrowArgs<ExtArgs>>): Prisma__PromotionClient<$Result.GetResult<Prisma.$PromotionPayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Find the first Promotion that matches the filter.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {PromotionFindFirstArgs} args - Arguments to find a Promotion
+     * @example
+     * // Get one Promotion
+     * const promotion = await prisma.promotion.findFirst({
+     *   where: {
+     *     // ... provide filter here
+     *   }
+     * })
+     */
+    findFirst<T extends PromotionFindFirstArgs>(args?: SelectSubset<T, PromotionFindFirstArgs<ExtArgs>>): Prisma__PromotionClient<$Result.GetResult<Prisma.$PromotionPayload<ExtArgs>, T, "findFirst", GlobalOmitOptions> | null, null, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Find the first Promotion that matches the filter or
+     * throw `PrismaKnownClientError` with `P2025` code if no matches were found.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {PromotionFindFirstOrThrowArgs} args - Arguments to find a Promotion
+     * @example
+     * // Get one Promotion
+     * const promotion = await prisma.promotion.findFirstOrThrow({
+     *   where: {
+     *     // ... provide filter here
+     *   }
+     * })
+     */
+    findFirstOrThrow<T extends PromotionFindFirstOrThrowArgs>(args?: SelectSubset<T, PromotionFindFirstOrThrowArgs<ExtArgs>>): Prisma__PromotionClient<$Result.GetResult<Prisma.$PromotionPayload<ExtArgs>, T, "findFirstOrThrow", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Find zero or more Promotions that matches the filter.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {PromotionFindManyArgs} args - Arguments to filter and select certain fields only.
+     * @example
+     * // Get all Promotions
+     * const promotions = await prisma.promotion.findMany()
+     * 
+     * // Get first 10 Promotions
+     * const promotions = await prisma.promotion.findMany({ take: 10 })
+     * 
+     * // Only select the `id`
+     * const promotionWithIdOnly = await prisma.promotion.findMany({ select: { id: true } })
+     * 
+     */
+    findMany<T extends PromotionFindManyArgs>(args?: SelectSubset<T, PromotionFindManyArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$PromotionPayload<ExtArgs>, T, "findMany", GlobalOmitOptions>>
+
+    /**
+     * Create a Promotion.
+     * @param {PromotionCreateArgs} args - Arguments to create a Promotion.
+     * @example
+     * // Create one Promotion
+     * const Promotion = await prisma.promotion.create({
+     *   data: {
+     *     // ... data to create a Promotion
+     *   }
+     * })
+     * 
+     */
+    create<T extends PromotionCreateArgs>(args: SelectSubset<T, PromotionCreateArgs<ExtArgs>>): Prisma__PromotionClient<$Result.GetResult<Prisma.$PromotionPayload<ExtArgs>, T, "create", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Create many Promotions.
+     * @param {PromotionCreateManyArgs} args - Arguments to create many Promotions.
+     * @example
+     * // Create many Promotions
+     * const promotion = await prisma.promotion.createMany({
+     *   data: [
+     *     // ... provide data here
+     *   ]
+     * })
+     *     
+     */
+    createMany<T extends PromotionCreateManyArgs>(args?: SelectSubset<T, PromotionCreateManyArgs<ExtArgs>>): Prisma.PrismaPromise<BatchPayload>
+
+    /**
+     * Create many Promotions and returns the data saved in the database.
+     * @param {PromotionCreateManyAndReturnArgs} args - Arguments to create many Promotions.
+     * @example
+     * // Create many Promotions
+     * const promotion = await prisma.promotion.createManyAndReturn({
+     *   data: [
+     *     // ... provide data here
+     *   ]
+     * })
+     * 
+     * // Create many Promotions and only return the `id`
+     * const promotionWithIdOnly = await prisma.promotion.createManyAndReturn({
+     *   select: { id: true },
+     *   data: [
+     *     // ... provide data here
+     *   ]
+     * })
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * 
+     */
+    createManyAndReturn<T extends PromotionCreateManyAndReturnArgs>(args?: SelectSubset<T, PromotionCreateManyAndReturnArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$PromotionPayload<ExtArgs>, T, "createManyAndReturn", GlobalOmitOptions>>
+
+    /**
+     * Delete a Promotion.
+     * @param {PromotionDeleteArgs} args - Arguments to delete one Promotion.
+     * @example
+     * // Delete one Promotion
+     * const Promotion = await prisma.promotion.delete({
+     *   where: {
+     *     // ... filter to delete one Promotion
+     *   }
+     * })
+     * 
+     */
+    delete<T extends PromotionDeleteArgs>(args: SelectSubset<T, PromotionDeleteArgs<ExtArgs>>): Prisma__PromotionClient<$Result.GetResult<Prisma.$PromotionPayload<ExtArgs>, T, "delete", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Update one Promotion.
+     * @param {PromotionUpdateArgs} args - Arguments to update one Promotion.
+     * @example
+     * // Update one Promotion
+     * const promotion = await prisma.promotion.update({
+     *   where: {
+     *     // ... provide filter here
+     *   },
+     *   data: {
+     *     // ... provide data here
+     *   }
+     * })
+     * 
+     */
+    update<T extends PromotionUpdateArgs>(args: SelectSubset<T, PromotionUpdateArgs<ExtArgs>>): Prisma__PromotionClient<$Result.GetResult<Prisma.$PromotionPayload<ExtArgs>, T, "update", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Delete zero or more Promotions.
+     * @param {PromotionDeleteManyArgs} args - Arguments to filter Promotions to delete.
+     * @example
+     * // Delete a few Promotions
+     * const { count } = await prisma.promotion.deleteMany({
+     *   where: {
+     *     // ... provide filter here
+     *   }
+     * })
+     * 
+     */
+    deleteMany<T extends PromotionDeleteManyArgs>(args?: SelectSubset<T, PromotionDeleteManyArgs<ExtArgs>>): Prisma.PrismaPromise<BatchPayload>
+
+    /**
+     * Update zero or more Promotions.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {PromotionUpdateManyArgs} args - Arguments to update one or more rows.
+     * @example
+     * // Update many Promotions
+     * const promotion = await prisma.promotion.updateMany({
+     *   where: {
+     *     // ... provide filter here
+     *   },
+     *   data: {
+     *     // ... provide data here
+     *   }
+     * })
+     * 
+     */
+    updateMany<T extends PromotionUpdateManyArgs>(args: SelectSubset<T, PromotionUpdateManyArgs<ExtArgs>>): Prisma.PrismaPromise<BatchPayload>
+
+    /**
+     * Update zero or more Promotions and returns the data updated in the database.
+     * @param {PromotionUpdateManyAndReturnArgs} args - Arguments to update many Promotions.
+     * @example
+     * // Update many Promotions
+     * const promotion = await prisma.promotion.updateManyAndReturn({
+     *   where: {
+     *     // ... provide filter here
+     *   },
+     *   data: [
+     *     // ... provide data here
+     *   ]
+     * })
+     * 
+     * // Update zero or more Promotions and only return the `id`
+     * const promotionWithIdOnly = await prisma.promotion.updateManyAndReturn({
+     *   select: { id: true },
+     *   where: {
+     *     // ... provide filter here
+     *   },
+     *   data: [
+     *     // ... provide data here
+     *   ]
+     * })
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * 
+     */
+    updateManyAndReturn<T extends PromotionUpdateManyAndReturnArgs>(args: SelectSubset<T, PromotionUpdateManyAndReturnArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$PromotionPayload<ExtArgs>, T, "updateManyAndReturn", GlobalOmitOptions>>
+
+    /**
+     * Create or update one Promotion.
+     * @param {PromotionUpsertArgs} args - Arguments to update or create a Promotion.
+     * @example
+     * // Update or create a Promotion
+     * const promotion = await prisma.promotion.upsert({
+     *   create: {
+     *     // ... data to create a Promotion
+     *   },
+     *   update: {
+     *     // ... in case it already exists, update
+     *   },
+     *   where: {
+     *     // ... the filter for the Promotion we want to update
+     *   }
+     * })
+     */
+    upsert<T extends PromotionUpsertArgs>(args: SelectSubset<T, PromotionUpsertArgs<ExtArgs>>): Prisma__PromotionClient<$Result.GetResult<Prisma.$PromotionPayload<ExtArgs>, T, "upsert", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
+
+
+    /**
+     * Count the number of Promotions.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {PromotionCountArgs} args - Arguments to filter Promotions to count.
+     * @example
+     * // Count the number of Promotions
+     * const count = await prisma.promotion.count({
+     *   where: {
+     *     // ... the filter for the Promotions we want to count
+     *   }
+     * })
+    **/
+    count<T extends PromotionCountArgs>(
+      args?: Subset<T, PromotionCountArgs>,
+    ): Prisma.PrismaPromise<
+      T extends $Utils.Record<'select', any>
+        ? T['select'] extends true
+          ? number
+          : GetScalarType<T['select'], PromotionCountAggregateOutputType>
+        : number
+    >
+
+    /**
+     * Allows you to perform aggregations operations on a Promotion.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {PromotionAggregateArgs} args - Select which aggregations you would like to apply and on what fields.
+     * @example
+     * // Ordered by age ascending
+     * // Where email contains prisma.io
+     * // Limited to the 10 users
+     * const aggregations = await prisma.user.aggregate({
+     *   _avg: {
+     *     age: true,
+     *   },
+     *   where: {
+     *     email: {
+     *       contains: "prisma.io",
+     *     },
+     *   },
+     *   orderBy: {
+     *     age: "asc",
+     *   },
+     *   take: 10,
+     * })
+    **/
+    aggregate<T extends PromotionAggregateArgs>(args: Subset<T, PromotionAggregateArgs>): Prisma.PrismaPromise<GetPromotionAggregateType<T>>
+
+    /**
+     * Group by Promotion.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {PromotionGroupByArgs} args - Group by arguments.
+     * @example
+     * // Group by city, order by createdAt, get count
+     * const result = await prisma.user.groupBy({
+     *   by: ['city', 'createdAt'],
+     *   orderBy: {
+     *     createdAt: true
+     *   },
+     *   _count: {
+     *     _all: true
+     *   },
+     * })
+     * 
+    **/
+    groupBy<
+      T extends PromotionGroupByArgs,
+      HasSelectOrTake extends Or<
+        Extends<'skip', Keys<T>>,
+        Extends<'take', Keys<T>>
+      >,
+      OrderByArg extends True extends HasSelectOrTake
+        ? { orderBy: PromotionGroupByArgs['orderBy'] }
+        : { orderBy?: PromotionGroupByArgs['orderBy'] },
+      OrderFields extends ExcludeUnderscoreKeys<Keys<MaybeTupleToUnion<T['orderBy']>>>,
+      ByFields extends MaybeTupleToUnion<T['by']>,
+      ByValid extends Has<ByFields, OrderFields>,
+      HavingFields extends GetHavingFields<T['having']>,
+      HavingValid extends Has<ByFields, HavingFields>,
+      ByEmpty extends T['by'] extends never[] ? True : False,
+      InputErrors extends ByEmpty extends True
+      ? `Error: "by" must not be empty.`
+      : HavingValid extends False
+      ? {
+          [P in HavingFields]: P extends ByFields
+            ? never
+            : P extends string
+            ? `Error: Field "${P}" used in "having" needs to be provided in "by".`
+            : [
+                Error,
+                'Field ',
+                P,
+                ` in "having" needs to be provided in "by"`,
+              ]
+        }[HavingFields]
+      : 'take' extends Keys<T>
+      ? 'orderBy' extends Keys<T>
+        ? ByValid extends True
+          ? {}
+          : {
+              [P in OrderFields]: P extends ByFields
+                ? never
+                : `Error: Field "${P}" in "orderBy" needs to be provided in "by"`
+            }[OrderFields]
+        : 'Error: If you provide "take", you also need to provide "orderBy"'
+      : 'skip' extends Keys<T>
+      ? 'orderBy' extends Keys<T>
+        ? ByValid extends True
+          ? {}
+          : {
+              [P in OrderFields]: P extends ByFields
+                ? never
+                : `Error: Field "${P}" in "orderBy" needs to be provided in "by"`
+            }[OrderFields]
+        : 'Error: If you provide "skip", you also need to provide "orderBy"'
+      : ByValid extends True
+      ? {}
+      : {
+          [P in OrderFields]: P extends ByFields
+            ? never
+            : `Error: Field "${P}" in "orderBy" needs to be provided in "by"`
+        }[OrderFields]
+    >(args: SubsetIntersection<T, PromotionGroupByArgs, OrderByArg> & InputErrors): {} extends InputErrors ? GetPromotionGroupByPayload<T> : Prisma.PrismaPromise<InputErrors>
+  /**
+   * Fields of the Promotion model
+   */
+  readonly fields: PromotionFieldRefs;
+  }
+
+  /**
+   * The delegate class that acts as a "Promise-like" for Promotion.
+   * Why is this prefixed with `Prisma__`?
+   * Because we want to prevent naming conflicts as mentioned in
+   * https://github.com/prisma/prisma-client-js/issues/707
+   */
+  export interface Prisma__PromotionClient<T, Null = never, ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs, GlobalOmitOptions = {}> extends Prisma.PrismaPromise<T> {
+    readonly [Symbol.toStringTag]: "PrismaPromise"
+    translations<T extends Promotion$translationsArgs<ExtArgs> = {}>(args?: Subset<T, Promotion$translationsArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$PromotionTranslationPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
+    currencies<T extends Promotion$currenciesArgs<ExtArgs> = {}>(args?: Subset<T, Promotion$currenciesArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$PromotionCurrencyPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
+    UserPromotion<T extends Promotion$UserPromotionArgs<ExtArgs> = {}>(args?: Subset<T, Promotion$UserPromotionArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$UserPromotionPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
+    /**
+     * Attaches callbacks for the resolution and/or rejection of the Promise.
+     * @param onfulfilled The callback to execute when the Promise is resolved.
+     * @param onrejected The callback to execute when the Promise is rejected.
+     * @returns A Promise for the completion of which ever callback is executed.
+     */
+    then<TResult1 = T, TResult2 = never>(onfulfilled?: ((value: T) => TResult1 | PromiseLike<TResult1>) | undefined | null, onrejected?: ((reason: any) => TResult2 | PromiseLike<TResult2>) | undefined | null): $Utils.JsPromise<TResult1 | TResult2>
+    /**
+     * Attaches a callback for only the rejection of the Promise.
+     * @param onrejected The callback to execute when the Promise is rejected.
+     * @returns A Promise for the completion of the callback.
+     */
+    catch<TResult = never>(onrejected?: ((reason: any) => TResult | PromiseLike<TResult>) | undefined | null): $Utils.JsPromise<T | TResult>
+    /**
+     * Attaches a callback that is invoked when the Promise is settled (fulfilled or rejected). The
+     * resolved value cannot be modified from the callback.
+     * @param onfinally The callback to execute when the Promise is settled (fulfilled or rejected).
+     * @returns A Promise for the completion of the callback.
+     */
+    finally(onfinally?: (() => void) | undefined | null): $Utils.JsPromise<T>
+  }
+
+
+
+
+  /**
+   * Fields of the Promotion model
+   */
+  interface PromotionFieldRefs {
+    readonly id: FieldRef<"Promotion", 'BigInt'>
+    readonly uid: FieldRef<"Promotion", 'String'>
+    readonly managementName: FieldRef<"Promotion", 'String'>
+    readonly isActive: FieldRef<"Promotion", 'Boolean'>
+    readonly startDate: FieldRef<"Promotion", 'DateTime'>
+    readonly endDate: FieldRef<"Promotion", 'DateTime'>
+    readonly deletedAt: FieldRef<"Promotion", 'DateTime'>
+    readonly targetType: FieldRef<"Promotion", 'PromotionTargetType'>
+    readonly bonusType: FieldRef<"Promotion", 'PromotionBonusType'>
+    readonly bonusRate: FieldRef<"Promotion", 'Decimal'>
+    readonly rollingMultiplier: FieldRef<"Promotion", 'Decimal'>
+    readonly qualificationMaintainCondition: FieldRef<"Promotion", 'PromotionQualificationCondition'>
+    readonly isOneTime: FieldRef<"Promotion", 'Boolean'>
+    readonly createdAt: FieldRef<"Promotion", 'DateTime'>
+    readonly updatedAt: FieldRef<"Promotion", 'DateTime'>
+  }
+    
+
+  // Custom InputTypes
+  /**
+   * Promotion findUnique
+   */
+  export type PromotionFindUniqueArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the Promotion
+     */
+    select?: PromotionSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the Promotion
+     */
+    omit?: PromotionOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: PromotionInclude<ExtArgs> | null
+    /**
+     * Filter, which Promotion to fetch.
+     */
+    where: PromotionWhereUniqueInput
+  }
+
+  /**
+   * Promotion findUniqueOrThrow
+   */
+  export type PromotionFindUniqueOrThrowArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the Promotion
+     */
+    select?: PromotionSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the Promotion
+     */
+    omit?: PromotionOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: PromotionInclude<ExtArgs> | null
+    /**
+     * Filter, which Promotion to fetch.
+     */
+    where: PromotionWhereUniqueInput
+  }
+
+  /**
+   * Promotion findFirst
+   */
+  export type PromotionFindFirstArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the Promotion
+     */
+    select?: PromotionSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the Promotion
+     */
+    omit?: PromotionOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: PromotionInclude<ExtArgs> | null
+    /**
+     * Filter, which Promotion to fetch.
+     */
+    where?: PromotionWhereInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/sorting Sorting Docs}
+     * 
+     * Determine the order of Promotions to fetch.
+     */
+    orderBy?: PromotionOrderByWithRelationInput | PromotionOrderByWithRelationInput[]
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination#cursor-based-pagination Cursor Docs}
+     * 
+     * Sets the position for searching for Promotions.
+     */
+    cursor?: PromotionWhereUniqueInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Take `±n` Promotions from the position of the cursor.
+     */
+    take?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Skip the first `n` Promotions.
+     */
+    skip?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/distinct Distinct Docs}
+     * 
+     * Filter by unique combinations of Promotions.
+     */
+    distinct?: PromotionScalarFieldEnum | PromotionScalarFieldEnum[]
+  }
+
+  /**
+   * Promotion findFirstOrThrow
+   */
+  export type PromotionFindFirstOrThrowArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the Promotion
+     */
+    select?: PromotionSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the Promotion
+     */
+    omit?: PromotionOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: PromotionInclude<ExtArgs> | null
+    /**
+     * Filter, which Promotion to fetch.
+     */
+    where?: PromotionWhereInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/sorting Sorting Docs}
+     * 
+     * Determine the order of Promotions to fetch.
+     */
+    orderBy?: PromotionOrderByWithRelationInput | PromotionOrderByWithRelationInput[]
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination#cursor-based-pagination Cursor Docs}
+     * 
+     * Sets the position for searching for Promotions.
+     */
+    cursor?: PromotionWhereUniqueInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Take `±n` Promotions from the position of the cursor.
+     */
+    take?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Skip the first `n` Promotions.
+     */
+    skip?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/distinct Distinct Docs}
+     * 
+     * Filter by unique combinations of Promotions.
+     */
+    distinct?: PromotionScalarFieldEnum | PromotionScalarFieldEnum[]
+  }
+
+  /**
+   * Promotion findMany
+   */
+  export type PromotionFindManyArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the Promotion
+     */
+    select?: PromotionSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the Promotion
+     */
+    omit?: PromotionOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: PromotionInclude<ExtArgs> | null
+    /**
+     * Filter, which Promotions to fetch.
+     */
+    where?: PromotionWhereInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/sorting Sorting Docs}
+     * 
+     * Determine the order of Promotions to fetch.
+     */
+    orderBy?: PromotionOrderByWithRelationInput | PromotionOrderByWithRelationInput[]
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination#cursor-based-pagination Cursor Docs}
+     * 
+     * Sets the position for listing Promotions.
+     */
+    cursor?: PromotionWhereUniqueInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Take `±n` Promotions from the position of the cursor.
+     */
+    take?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Skip the first `n` Promotions.
+     */
+    skip?: number
+    distinct?: PromotionScalarFieldEnum | PromotionScalarFieldEnum[]
+  }
+
+  /**
+   * Promotion create
+   */
+  export type PromotionCreateArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the Promotion
+     */
+    select?: PromotionSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the Promotion
+     */
+    omit?: PromotionOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: PromotionInclude<ExtArgs> | null
+    /**
+     * The data needed to create a Promotion.
+     */
+    data: XOR<PromotionCreateInput, PromotionUncheckedCreateInput>
+  }
+
+  /**
+   * Promotion createMany
+   */
+  export type PromotionCreateManyArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * The data used to create many Promotions.
+     */
+    data: PromotionCreateManyInput | PromotionCreateManyInput[]
+    skipDuplicates?: boolean
+  }
+
+  /**
+   * Promotion createManyAndReturn
+   */
+  export type PromotionCreateManyAndReturnArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the Promotion
+     */
+    select?: PromotionSelectCreateManyAndReturn<ExtArgs> | null
+    /**
+     * Omit specific fields from the Promotion
+     */
+    omit?: PromotionOmit<ExtArgs> | null
+    /**
+     * The data used to create many Promotions.
+     */
+    data: PromotionCreateManyInput | PromotionCreateManyInput[]
+    skipDuplicates?: boolean
+  }
+
+  /**
+   * Promotion update
+   */
+  export type PromotionUpdateArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the Promotion
+     */
+    select?: PromotionSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the Promotion
+     */
+    omit?: PromotionOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: PromotionInclude<ExtArgs> | null
+    /**
+     * The data needed to update a Promotion.
+     */
+    data: XOR<PromotionUpdateInput, PromotionUncheckedUpdateInput>
+    /**
+     * Choose, which Promotion to update.
+     */
+    where: PromotionWhereUniqueInput
+  }
+
+  /**
+   * Promotion updateMany
+   */
+  export type PromotionUpdateManyArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * The data used to update Promotions.
+     */
+    data: XOR<PromotionUpdateManyMutationInput, PromotionUncheckedUpdateManyInput>
+    /**
+     * Filter which Promotions to update
+     */
+    where?: PromotionWhereInput
+    /**
+     * Limit how many Promotions to update.
+     */
+    limit?: number
+  }
+
+  /**
+   * Promotion updateManyAndReturn
+   */
+  export type PromotionUpdateManyAndReturnArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the Promotion
+     */
+    select?: PromotionSelectUpdateManyAndReturn<ExtArgs> | null
+    /**
+     * Omit specific fields from the Promotion
+     */
+    omit?: PromotionOmit<ExtArgs> | null
+    /**
+     * The data used to update Promotions.
+     */
+    data: XOR<PromotionUpdateManyMutationInput, PromotionUncheckedUpdateManyInput>
+    /**
+     * Filter which Promotions to update
+     */
+    where?: PromotionWhereInput
+    /**
+     * Limit how many Promotions to update.
+     */
+    limit?: number
+  }
+
+  /**
+   * Promotion upsert
+   */
+  export type PromotionUpsertArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the Promotion
+     */
+    select?: PromotionSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the Promotion
+     */
+    omit?: PromotionOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: PromotionInclude<ExtArgs> | null
+    /**
+     * The filter to search for the Promotion to update in case it exists.
+     */
+    where: PromotionWhereUniqueInput
+    /**
+     * In case the Promotion found by the `where` argument doesn't exist, create a new Promotion with this data.
+     */
+    create: XOR<PromotionCreateInput, PromotionUncheckedCreateInput>
+    /**
+     * In case the Promotion was found with the provided `where` argument, update it with this data.
+     */
+    update: XOR<PromotionUpdateInput, PromotionUncheckedUpdateInput>
+  }
+
+  /**
+   * Promotion delete
+   */
+  export type PromotionDeleteArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the Promotion
+     */
+    select?: PromotionSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the Promotion
+     */
+    omit?: PromotionOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: PromotionInclude<ExtArgs> | null
+    /**
+     * Filter which Promotion to delete.
+     */
+    where: PromotionWhereUniqueInput
+  }
+
+  /**
+   * Promotion deleteMany
+   */
+  export type PromotionDeleteManyArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Filter which Promotions to delete
+     */
+    where?: PromotionWhereInput
+    /**
+     * Limit how many Promotions to delete.
+     */
+    limit?: number
+  }
+
+  /**
+   * Promotion.translations
+   */
+  export type Promotion$translationsArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the PromotionTranslation
+     */
+    select?: PromotionTranslationSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the PromotionTranslation
+     */
+    omit?: PromotionTranslationOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: PromotionTranslationInclude<ExtArgs> | null
+    where?: PromotionTranslationWhereInput
+    orderBy?: PromotionTranslationOrderByWithRelationInput | PromotionTranslationOrderByWithRelationInput[]
+    cursor?: PromotionTranslationWhereUniqueInput
+    take?: number
+    skip?: number
+    distinct?: PromotionTranslationScalarFieldEnum | PromotionTranslationScalarFieldEnum[]
+  }
+
+  /**
+   * Promotion.currencies
+   */
+  export type Promotion$currenciesArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the PromotionCurrency
+     */
+    select?: PromotionCurrencySelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the PromotionCurrency
+     */
+    omit?: PromotionCurrencyOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: PromotionCurrencyInclude<ExtArgs> | null
+    where?: PromotionCurrencyWhereInput
+    orderBy?: PromotionCurrencyOrderByWithRelationInput | PromotionCurrencyOrderByWithRelationInput[]
+    cursor?: PromotionCurrencyWhereUniqueInput
+    take?: number
+    skip?: number
+    distinct?: PromotionCurrencyScalarFieldEnum | PromotionCurrencyScalarFieldEnum[]
+  }
+
+  /**
+   * Promotion.UserPromotion
+   */
+  export type Promotion$UserPromotionArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the UserPromotion
+     */
+    select?: UserPromotionSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the UserPromotion
+     */
+    omit?: UserPromotionOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: UserPromotionInclude<ExtArgs> | null
+    where?: UserPromotionWhereInput
+    orderBy?: UserPromotionOrderByWithRelationInput | UserPromotionOrderByWithRelationInput[]
+    cursor?: UserPromotionWhereUniqueInput
+    take?: number
+    skip?: number
+    distinct?: UserPromotionScalarFieldEnum | UserPromotionScalarFieldEnum[]
+  }
+
+  /**
+   * Promotion without action
+   */
+  export type PromotionDefaultArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the Promotion
+     */
+    select?: PromotionSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the Promotion
+     */
+    omit?: PromotionOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: PromotionInclude<ExtArgs> | null
+  }
+
+
+  /**
+   * Model PromotionTranslation
+   */
+
+  export type AggregatePromotionTranslation = {
+    _count: PromotionTranslationCountAggregateOutputType | null
+    _avg: PromotionTranslationAvgAggregateOutputType | null
+    _sum: PromotionTranslationSumAggregateOutputType | null
+    _min: PromotionTranslationMinAggregateOutputType | null
+    _max: PromotionTranslationMaxAggregateOutputType | null
+  }
+
+  export type PromotionTranslationAvgAggregateOutputType = {
+    id: number | null
+    promotionId: number | null
+  }
+
+  export type PromotionTranslationSumAggregateOutputType = {
+    id: bigint | null
+    promotionId: bigint | null
+  }
+
+  export type PromotionTranslationMinAggregateOutputType = {
+    id: bigint | null
+    promotionId: bigint | null
+    language: $Enums.Language | null
+    name: string | null
+    description: string | null
+    createdAt: Date | null
+    updatedAt: Date | null
+  }
+
+  export type PromotionTranslationMaxAggregateOutputType = {
+    id: bigint | null
+    promotionId: bigint | null
+    language: $Enums.Language | null
+    name: string | null
+    description: string | null
+    createdAt: Date | null
+    updatedAt: Date | null
+  }
+
+  export type PromotionTranslationCountAggregateOutputType = {
+    id: number
+    promotionId: number
+    language: number
+    name: number
+    description: number
+    createdAt: number
+    updatedAt: number
+    _all: number
+  }
+
+
+  export type PromotionTranslationAvgAggregateInputType = {
+    id?: true
+    promotionId?: true
+  }
+
+  export type PromotionTranslationSumAggregateInputType = {
+    id?: true
+    promotionId?: true
+  }
+
+  export type PromotionTranslationMinAggregateInputType = {
+    id?: true
+    promotionId?: true
+    language?: true
+    name?: true
+    description?: true
+    createdAt?: true
+    updatedAt?: true
+  }
+
+  export type PromotionTranslationMaxAggregateInputType = {
+    id?: true
+    promotionId?: true
+    language?: true
+    name?: true
+    description?: true
+    createdAt?: true
+    updatedAt?: true
+  }
+
+  export type PromotionTranslationCountAggregateInputType = {
+    id?: true
+    promotionId?: true
+    language?: true
+    name?: true
+    description?: true
+    createdAt?: true
+    updatedAt?: true
+    _all?: true
+  }
+
+  export type PromotionTranslationAggregateArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Filter which PromotionTranslation to aggregate.
+     */
+    where?: PromotionTranslationWhereInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/sorting Sorting Docs}
+     * 
+     * Determine the order of PromotionTranslations to fetch.
+     */
+    orderBy?: PromotionTranslationOrderByWithRelationInput | PromotionTranslationOrderByWithRelationInput[]
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination#cursor-based-pagination Cursor Docs}
+     * 
+     * Sets the start position
+     */
+    cursor?: PromotionTranslationWhereUniqueInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Take `±n` PromotionTranslations from the position of the cursor.
+     */
+    take?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Skip the first `n` PromotionTranslations.
+     */
+    skip?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
+     * 
+     * Count returned PromotionTranslations
+    **/
+    _count?: true | PromotionTranslationCountAggregateInputType
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
+     * 
+     * Select which fields to average
+    **/
+    _avg?: PromotionTranslationAvgAggregateInputType
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
+     * 
+     * Select which fields to sum
+    **/
+    _sum?: PromotionTranslationSumAggregateInputType
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
+     * 
+     * Select which fields to find the minimum value
+    **/
+    _min?: PromotionTranslationMinAggregateInputType
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
+     * 
+     * Select which fields to find the maximum value
+    **/
+    _max?: PromotionTranslationMaxAggregateInputType
+  }
+
+  export type GetPromotionTranslationAggregateType<T extends PromotionTranslationAggregateArgs> = {
+        [P in keyof T & keyof AggregatePromotionTranslation]: P extends '_count' | 'count'
+      ? T[P] extends true
+        ? number
+        : GetScalarType<T[P], AggregatePromotionTranslation[P]>
+      : GetScalarType<T[P], AggregatePromotionTranslation[P]>
+  }
+
+
+
+
+  export type PromotionTranslationGroupByArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    where?: PromotionTranslationWhereInput
+    orderBy?: PromotionTranslationOrderByWithAggregationInput | PromotionTranslationOrderByWithAggregationInput[]
+    by: PromotionTranslationScalarFieldEnum[] | PromotionTranslationScalarFieldEnum
+    having?: PromotionTranslationScalarWhereWithAggregatesInput
+    take?: number
+    skip?: number
+    _count?: PromotionTranslationCountAggregateInputType | true
+    _avg?: PromotionTranslationAvgAggregateInputType
+    _sum?: PromotionTranslationSumAggregateInputType
+    _min?: PromotionTranslationMinAggregateInputType
+    _max?: PromotionTranslationMaxAggregateInputType
+  }
+
+  export type PromotionTranslationGroupByOutputType = {
+    id: bigint
+    promotionId: bigint
+    language: $Enums.Language
+    name: string
+    description: string | null
+    createdAt: Date
+    updatedAt: Date
+    _count: PromotionTranslationCountAggregateOutputType | null
+    _avg: PromotionTranslationAvgAggregateOutputType | null
+    _sum: PromotionTranslationSumAggregateOutputType | null
+    _min: PromotionTranslationMinAggregateOutputType | null
+    _max: PromotionTranslationMaxAggregateOutputType | null
+  }
+
+  type GetPromotionTranslationGroupByPayload<T extends PromotionTranslationGroupByArgs> = Prisma.PrismaPromise<
+    Array<
+      PickEnumerable<PromotionTranslationGroupByOutputType, T['by']> &
+        {
+          [P in ((keyof T) & (keyof PromotionTranslationGroupByOutputType))]: P extends '_count'
+            ? T[P] extends boolean
+              ? number
+              : GetScalarType<T[P], PromotionTranslationGroupByOutputType[P]>
+            : GetScalarType<T[P], PromotionTranslationGroupByOutputType[P]>
+        }
+      >
+    >
+
+
+  export type PromotionTranslationSelect<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetSelect<{
+    id?: boolean
+    promotionId?: boolean
+    language?: boolean
+    name?: boolean
+    description?: boolean
+    createdAt?: boolean
+    updatedAt?: boolean
+    promotion?: boolean | PromotionDefaultArgs<ExtArgs>
+  }, ExtArgs["result"]["promotionTranslation"]>
+
+  export type PromotionTranslationSelectCreateManyAndReturn<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetSelect<{
+    id?: boolean
+    promotionId?: boolean
+    language?: boolean
+    name?: boolean
+    description?: boolean
+    createdAt?: boolean
+    updatedAt?: boolean
+    promotion?: boolean | PromotionDefaultArgs<ExtArgs>
+  }, ExtArgs["result"]["promotionTranslation"]>
+
+  export type PromotionTranslationSelectUpdateManyAndReturn<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetSelect<{
+    id?: boolean
+    promotionId?: boolean
+    language?: boolean
+    name?: boolean
+    description?: boolean
+    createdAt?: boolean
+    updatedAt?: boolean
+    promotion?: boolean | PromotionDefaultArgs<ExtArgs>
+  }, ExtArgs["result"]["promotionTranslation"]>
+
+  export type PromotionTranslationSelectScalar = {
+    id?: boolean
+    promotionId?: boolean
+    language?: boolean
+    name?: boolean
+    description?: boolean
+    createdAt?: boolean
+    updatedAt?: boolean
+  }
+
+  export type PromotionTranslationOmit<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetOmit<"id" | "promotionId" | "language" | "name" | "description" | "createdAt" | "updatedAt", ExtArgs["result"]["promotionTranslation"]>
+  export type PromotionTranslationInclude<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    promotion?: boolean | PromotionDefaultArgs<ExtArgs>
+  }
+  export type PromotionTranslationIncludeCreateManyAndReturn<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    promotion?: boolean | PromotionDefaultArgs<ExtArgs>
+  }
+  export type PromotionTranslationIncludeUpdateManyAndReturn<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    promotion?: boolean | PromotionDefaultArgs<ExtArgs>
+  }
+
+  export type $PromotionTranslationPayload<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    name: "PromotionTranslation"
+    objects: {
+      promotion: Prisma.$PromotionPayload<ExtArgs>
+    }
+    scalars: $Extensions.GetPayloadResult<{
+      id: bigint
+      promotionId: bigint
+      language: $Enums.Language
+      name: string
+      description: string | null
+      createdAt: Date
+      updatedAt: Date
+    }, ExtArgs["result"]["promotionTranslation"]>
+    composites: {}
+  }
+
+  type PromotionTranslationGetPayload<S extends boolean | null | undefined | PromotionTranslationDefaultArgs> = $Result.GetResult<Prisma.$PromotionTranslationPayload, S>
+
+  type PromotionTranslationCountArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> =
+    Omit<PromotionTranslationFindManyArgs, 'select' | 'include' | 'distinct' | 'omit'> & {
+      select?: PromotionTranslationCountAggregateInputType | true
+    }
+
+  export interface PromotionTranslationDelegate<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs, GlobalOmitOptions = {}> {
+    [K: symbol]: { types: Prisma.TypeMap<ExtArgs>['model']['PromotionTranslation'], meta: { name: 'PromotionTranslation' } }
+    /**
+     * Find zero or one PromotionTranslation that matches the filter.
+     * @param {PromotionTranslationFindUniqueArgs} args - Arguments to find a PromotionTranslation
+     * @example
+     * // Get one PromotionTranslation
+     * const promotionTranslation = await prisma.promotionTranslation.findUnique({
+     *   where: {
+     *     // ... provide filter here
+     *   }
+     * })
+     */
+    findUnique<T extends PromotionTranslationFindUniqueArgs>(args: SelectSubset<T, PromotionTranslationFindUniqueArgs<ExtArgs>>): Prisma__PromotionTranslationClient<$Result.GetResult<Prisma.$PromotionTranslationPayload<ExtArgs>, T, "findUnique", GlobalOmitOptions> | null, null, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Find one PromotionTranslation that matches the filter or throw an error with `error.code='P2025'`
+     * if no matches were found.
+     * @param {PromotionTranslationFindUniqueOrThrowArgs} args - Arguments to find a PromotionTranslation
+     * @example
+     * // Get one PromotionTranslation
+     * const promotionTranslation = await prisma.promotionTranslation.findUniqueOrThrow({
+     *   where: {
+     *     // ... provide filter here
+     *   }
+     * })
+     */
+    findUniqueOrThrow<T extends PromotionTranslationFindUniqueOrThrowArgs>(args: SelectSubset<T, PromotionTranslationFindUniqueOrThrowArgs<ExtArgs>>): Prisma__PromotionTranslationClient<$Result.GetResult<Prisma.$PromotionTranslationPayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Find the first PromotionTranslation that matches the filter.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {PromotionTranslationFindFirstArgs} args - Arguments to find a PromotionTranslation
+     * @example
+     * // Get one PromotionTranslation
+     * const promotionTranslation = await prisma.promotionTranslation.findFirst({
+     *   where: {
+     *     // ... provide filter here
+     *   }
+     * })
+     */
+    findFirst<T extends PromotionTranslationFindFirstArgs>(args?: SelectSubset<T, PromotionTranslationFindFirstArgs<ExtArgs>>): Prisma__PromotionTranslationClient<$Result.GetResult<Prisma.$PromotionTranslationPayload<ExtArgs>, T, "findFirst", GlobalOmitOptions> | null, null, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Find the first PromotionTranslation that matches the filter or
+     * throw `PrismaKnownClientError` with `P2025` code if no matches were found.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {PromotionTranslationFindFirstOrThrowArgs} args - Arguments to find a PromotionTranslation
+     * @example
+     * // Get one PromotionTranslation
+     * const promotionTranslation = await prisma.promotionTranslation.findFirstOrThrow({
+     *   where: {
+     *     // ... provide filter here
+     *   }
+     * })
+     */
+    findFirstOrThrow<T extends PromotionTranslationFindFirstOrThrowArgs>(args?: SelectSubset<T, PromotionTranslationFindFirstOrThrowArgs<ExtArgs>>): Prisma__PromotionTranslationClient<$Result.GetResult<Prisma.$PromotionTranslationPayload<ExtArgs>, T, "findFirstOrThrow", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Find zero or more PromotionTranslations that matches the filter.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {PromotionTranslationFindManyArgs} args - Arguments to filter and select certain fields only.
+     * @example
+     * // Get all PromotionTranslations
+     * const promotionTranslations = await prisma.promotionTranslation.findMany()
+     * 
+     * // Get first 10 PromotionTranslations
+     * const promotionTranslations = await prisma.promotionTranslation.findMany({ take: 10 })
+     * 
+     * // Only select the `id`
+     * const promotionTranslationWithIdOnly = await prisma.promotionTranslation.findMany({ select: { id: true } })
+     * 
+     */
+    findMany<T extends PromotionTranslationFindManyArgs>(args?: SelectSubset<T, PromotionTranslationFindManyArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$PromotionTranslationPayload<ExtArgs>, T, "findMany", GlobalOmitOptions>>
+
+    /**
+     * Create a PromotionTranslation.
+     * @param {PromotionTranslationCreateArgs} args - Arguments to create a PromotionTranslation.
+     * @example
+     * // Create one PromotionTranslation
+     * const PromotionTranslation = await prisma.promotionTranslation.create({
+     *   data: {
+     *     // ... data to create a PromotionTranslation
+     *   }
+     * })
+     * 
+     */
+    create<T extends PromotionTranslationCreateArgs>(args: SelectSubset<T, PromotionTranslationCreateArgs<ExtArgs>>): Prisma__PromotionTranslationClient<$Result.GetResult<Prisma.$PromotionTranslationPayload<ExtArgs>, T, "create", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Create many PromotionTranslations.
+     * @param {PromotionTranslationCreateManyArgs} args - Arguments to create many PromotionTranslations.
+     * @example
+     * // Create many PromotionTranslations
+     * const promotionTranslation = await prisma.promotionTranslation.createMany({
+     *   data: [
+     *     // ... provide data here
+     *   ]
+     * })
+     *     
+     */
+    createMany<T extends PromotionTranslationCreateManyArgs>(args?: SelectSubset<T, PromotionTranslationCreateManyArgs<ExtArgs>>): Prisma.PrismaPromise<BatchPayload>
+
+    /**
+     * Create many PromotionTranslations and returns the data saved in the database.
+     * @param {PromotionTranslationCreateManyAndReturnArgs} args - Arguments to create many PromotionTranslations.
+     * @example
+     * // Create many PromotionTranslations
+     * const promotionTranslation = await prisma.promotionTranslation.createManyAndReturn({
+     *   data: [
+     *     // ... provide data here
+     *   ]
+     * })
+     * 
+     * // Create many PromotionTranslations and only return the `id`
+     * const promotionTranslationWithIdOnly = await prisma.promotionTranslation.createManyAndReturn({
+     *   select: { id: true },
+     *   data: [
+     *     // ... provide data here
+     *   ]
+     * })
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * 
+     */
+    createManyAndReturn<T extends PromotionTranslationCreateManyAndReturnArgs>(args?: SelectSubset<T, PromotionTranslationCreateManyAndReturnArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$PromotionTranslationPayload<ExtArgs>, T, "createManyAndReturn", GlobalOmitOptions>>
+
+    /**
+     * Delete a PromotionTranslation.
+     * @param {PromotionTranslationDeleteArgs} args - Arguments to delete one PromotionTranslation.
+     * @example
+     * // Delete one PromotionTranslation
+     * const PromotionTranslation = await prisma.promotionTranslation.delete({
+     *   where: {
+     *     // ... filter to delete one PromotionTranslation
+     *   }
+     * })
+     * 
+     */
+    delete<T extends PromotionTranslationDeleteArgs>(args: SelectSubset<T, PromotionTranslationDeleteArgs<ExtArgs>>): Prisma__PromotionTranslationClient<$Result.GetResult<Prisma.$PromotionTranslationPayload<ExtArgs>, T, "delete", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Update one PromotionTranslation.
+     * @param {PromotionTranslationUpdateArgs} args - Arguments to update one PromotionTranslation.
+     * @example
+     * // Update one PromotionTranslation
+     * const promotionTranslation = await prisma.promotionTranslation.update({
+     *   where: {
+     *     // ... provide filter here
+     *   },
+     *   data: {
+     *     // ... provide data here
+     *   }
+     * })
+     * 
+     */
+    update<T extends PromotionTranslationUpdateArgs>(args: SelectSubset<T, PromotionTranslationUpdateArgs<ExtArgs>>): Prisma__PromotionTranslationClient<$Result.GetResult<Prisma.$PromotionTranslationPayload<ExtArgs>, T, "update", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Delete zero or more PromotionTranslations.
+     * @param {PromotionTranslationDeleteManyArgs} args - Arguments to filter PromotionTranslations to delete.
+     * @example
+     * // Delete a few PromotionTranslations
+     * const { count } = await prisma.promotionTranslation.deleteMany({
+     *   where: {
+     *     // ... provide filter here
+     *   }
+     * })
+     * 
+     */
+    deleteMany<T extends PromotionTranslationDeleteManyArgs>(args?: SelectSubset<T, PromotionTranslationDeleteManyArgs<ExtArgs>>): Prisma.PrismaPromise<BatchPayload>
+
+    /**
+     * Update zero or more PromotionTranslations.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {PromotionTranslationUpdateManyArgs} args - Arguments to update one or more rows.
+     * @example
+     * // Update many PromotionTranslations
+     * const promotionTranslation = await prisma.promotionTranslation.updateMany({
+     *   where: {
+     *     // ... provide filter here
+     *   },
+     *   data: {
+     *     // ... provide data here
+     *   }
+     * })
+     * 
+     */
+    updateMany<T extends PromotionTranslationUpdateManyArgs>(args: SelectSubset<T, PromotionTranslationUpdateManyArgs<ExtArgs>>): Prisma.PrismaPromise<BatchPayload>
+
+    /**
+     * Update zero or more PromotionTranslations and returns the data updated in the database.
+     * @param {PromotionTranslationUpdateManyAndReturnArgs} args - Arguments to update many PromotionTranslations.
+     * @example
+     * // Update many PromotionTranslations
+     * const promotionTranslation = await prisma.promotionTranslation.updateManyAndReturn({
+     *   where: {
+     *     // ... provide filter here
+     *   },
+     *   data: [
+     *     // ... provide data here
+     *   ]
+     * })
+     * 
+     * // Update zero or more PromotionTranslations and only return the `id`
+     * const promotionTranslationWithIdOnly = await prisma.promotionTranslation.updateManyAndReturn({
+     *   select: { id: true },
+     *   where: {
+     *     // ... provide filter here
+     *   },
+     *   data: [
+     *     // ... provide data here
+     *   ]
+     * })
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * 
+     */
+    updateManyAndReturn<T extends PromotionTranslationUpdateManyAndReturnArgs>(args: SelectSubset<T, PromotionTranslationUpdateManyAndReturnArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$PromotionTranslationPayload<ExtArgs>, T, "updateManyAndReturn", GlobalOmitOptions>>
+
+    /**
+     * Create or update one PromotionTranslation.
+     * @param {PromotionTranslationUpsertArgs} args - Arguments to update or create a PromotionTranslation.
+     * @example
+     * // Update or create a PromotionTranslation
+     * const promotionTranslation = await prisma.promotionTranslation.upsert({
+     *   create: {
+     *     // ... data to create a PromotionTranslation
+     *   },
+     *   update: {
+     *     // ... in case it already exists, update
+     *   },
+     *   where: {
+     *     // ... the filter for the PromotionTranslation we want to update
+     *   }
+     * })
+     */
+    upsert<T extends PromotionTranslationUpsertArgs>(args: SelectSubset<T, PromotionTranslationUpsertArgs<ExtArgs>>): Prisma__PromotionTranslationClient<$Result.GetResult<Prisma.$PromotionTranslationPayload<ExtArgs>, T, "upsert", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
+
+
+    /**
+     * Count the number of PromotionTranslations.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {PromotionTranslationCountArgs} args - Arguments to filter PromotionTranslations to count.
+     * @example
+     * // Count the number of PromotionTranslations
+     * const count = await prisma.promotionTranslation.count({
+     *   where: {
+     *     // ... the filter for the PromotionTranslations we want to count
+     *   }
+     * })
+    **/
+    count<T extends PromotionTranslationCountArgs>(
+      args?: Subset<T, PromotionTranslationCountArgs>,
+    ): Prisma.PrismaPromise<
+      T extends $Utils.Record<'select', any>
+        ? T['select'] extends true
+          ? number
+          : GetScalarType<T['select'], PromotionTranslationCountAggregateOutputType>
+        : number
+    >
+
+    /**
+     * Allows you to perform aggregations operations on a PromotionTranslation.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {PromotionTranslationAggregateArgs} args - Select which aggregations you would like to apply and on what fields.
+     * @example
+     * // Ordered by age ascending
+     * // Where email contains prisma.io
+     * // Limited to the 10 users
+     * const aggregations = await prisma.user.aggregate({
+     *   _avg: {
+     *     age: true,
+     *   },
+     *   where: {
+     *     email: {
+     *       contains: "prisma.io",
+     *     },
+     *   },
+     *   orderBy: {
+     *     age: "asc",
+     *   },
+     *   take: 10,
+     * })
+    **/
+    aggregate<T extends PromotionTranslationAggregateArgs>(args: Subset<T, PromotionTranslationAggregateArgs>): Prisma.PrismaPromise<GetPromotionTranslationAggregateType<T>>
+
+    /**
+     * Group by PromotionTranslation.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {PromotionTranslationGroupByArgs} args - Group by arguments.
+     * @example
+     * // Group by city, order by createdAt, get count
+     * const result = await prisma.user.groupBy({
+     *   by: ['city', 'createdAt'],
+     *   orderBy: {
+     *     createdAt: true
+     *   },
+     *   _count: {
+     *     _all: true
+     *   },
+     * })
+     * 
+    **/
+    groupBy<
+      T extends PromotionTranslationGroupByArgs,
+      HasSelectOrTake extends Or<
+        Extends<'skip', Keys<T>>,
+        Extends<'take', Keys<T>>
+      >,
+      OrderByArg extends True extends HasSelectOrTake
+        ? { orderBy: PromotionTranslationGroupByArgs['orderBy'] }
+        : { orderBy?: PromotionTranslationGroupByArgs['orderBy'] },
+      OrderFields extends ExcludeUnderscoreKeys<Keys<MaybeTupleToUnion<T['orderBy']>>>,
+      ByFields extends MaybeTupleToUnion<T['by']>,
+      ByValid extends Has<ByFields, OrderFields>,
+      HavingFields extends GetHavingFields<T['having']>,
+      HavingValid extends Has<ByFields, HavingFields>,
+      ByEmpty extends T['by'] extends never[] ? True : False,
+      InputErrors extends ByEmpty extends True
+      ? `Error: "by" must not be empty.`
+      : HavingValid extends False
+      ? {
+          [P in HavingFields]: P extends ByFields
+            ? never
+            : P extends string
+            ? `Error: Field "${P}" used in "having" needs to be provided in "by".`
+            : [
+                Error,
+                'Field ',
+                P,
+                ` in "having" needs to be provided in "by"`,
+              ]
+        }[HavingFields]
+      : 'take' extends Keys<T>
+      ? 'orderBy' extends Keys<T>
+        ? ByValid extends True
+          ? {}
+          : {
+              [P in OrderFields]: P extends ByFields
+                ? never
+                : `Error: Field "${P}" in "orderBy" needs to be provided in "by"`
+            }[OrderFields]
+        : 'Error: If you provide "take", you also need to provide "orderBy"'
+      : 'skip' extends Keys<T>
+      ? 'orderBy' extends Keys<T>
+        ? ByValid extends True
+          ? {}
+          : {
+              [P in OrderFields]: P extends ByFields
+                ? never
+                : `Error: Field "${P}" in "orderBy" needs to be provided in "by"`
+            }[OrderFields]
+        : 'Error: If you provide "skip", you also need to provide "orderBy"'
+      : ByValid extends True
+      ? {}
+      : {
+          [P in OrderFields]: P extends ByFields
+            ? never
+            : `Error: Field "${P}" in "orderBy" needs to be provided in "by"`
+        }[OrderFields]
+    >(args: SubsetIntersection<T, PromotionTranslationGroupByArgs, OrderByArg> & InputErrors): {} extends InputErrors ? GetPromotionTranslationGroupByPayload<T> : Prisma.PrismaPromise<InputErrors>
+  /**
+   * Fields of the PromotionTranslation model
+   */
+  readonly fields: PromotionTranslationFieldRefs;
+  }
+
+  /**
+   * The delegate class that acts as a "Promise-like" for PromotionTranslation.
+   * Why is this prefixed with `Prisma__`?
+   * Because we want to prevent naming conflicts as mentioned in
+   * https://github.com/prisma/prisma-client-js/issues/707
+   */
+  export interface Prisma__PromotionTranslationClient<T, Null = never, ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs, GlobalOmitOptions = {}> extends Prisma.PrismaPromise<T> {
+    readonly [Symbol.toStringTag]: "PrismaPromise"
+    promotion<T extends PromotionDefaultArgs<ExtArgs> = {}>(args?: Subset<T, PromotionDefaultArgs<ExtArgs>>): Prisma__PromotionClient<$Result.GetResult<Prisma.$PromotionPayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions> | Null, Null, ExtArgs, GlobalOmitOptions>
+    /**
+     * Attaches callbacks for the resolution and/or rejection of the Promise.
+     * @param onfulfilled The callback to execute when the Promise is resolved.
+     * @param onrejected The callback to execute when the Promise is rejected.
+     * @returns A Promise for the completion of which ever callback is executed.
+     */
+    then<TResult1 = T, TResult2 = never>(onfulfilled?: ((value: T) => TResult1 | PromiseLike<TResult1>) | undefined | null, onrejected?: ((reason: any) => TResult2 | PromiseLike<TResult2>) | undefined | null): $Utils.JsPromise<TResult1 | TResult2>
+    /**
+     * Attaches a callback for only the rejection of the Promise.
+     * @param onrejected The callback to execute when the Promise is rejected.
+     * @returns A Promise for the completion of the callback.
+     */
+    catch<TResult = never>(onrejected?: ((reason: any) => TResult | PromiseLike<TResult>) | undefined | null): $Utils.JsPromise<T | TResult>
+    /**
+     * Attaches a callback that is invoked when the Promise is settled (fulfilled or rejected). The
+     * resolved value cannot be modified from the callback.
+     * @param onfinally The callback to execute when the Promise is settled (fulfilled or rejected).
+     * @returns A Promise for the completion of the callback.
+     */
+    finally(onfinally?: (() => void) | undefined | null): $Utils.JsPromise<T>
+  }
+
+
+
+
+  /**
+   * Fields of the PromotionTranslation model
+   */
+  interface PromotionTranslationFieldRefs {
+    readonly id: FieldRef<"PromotionTranslation", 'BigInt'>
+    readonly promotionId: FieldRef<"PromotionTranslation", 'BigInt'>
+    readonly language: FieldRef<"PromotionTranslation", 'Language'>
+    readonly name: FieldRef<"PromotionTranslation", 'String'>
+    readonly description: FieldRef<"PromotionTranslation", 'String'>
+    readonly createdAt: FieldRef<"PromotionTranslation", 'DateTime'>
+    readonly updatedAt: FieldRef<"PromotionTranslation", 'DateTime'>
+  }
+    
+
+  // Custom InputTypes
+  /**
+   * PromotionTranslation findUnique
+   */
+  export type PromotionTranslationFindUniqueArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the PromotionTranslation
+     */
+    select?: PromotionTranslationSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the PromotionTranslation
+     */
+    omit?: PromotionTranslationOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: PromotionTranslationInclude<ExtArgs> | null
+    /**
+     * Filter, which PromotionTranslation to fetch.
+     */
+    where: PromotionTranslationWhereUniqueInput
+  }
+
+  /**
+   * PromotionTranslation findUniqueOrThrow
+   */
+  export type PromotionTranslationFindUniqueOrThrowArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the PromotionTranslation
+     */
+    select?: PromotionTranslationSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the PromotionTranslation
+     */
+    omit?: PromotionTranslationOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: PromotionTranslationInclude<ExtArgs> | null
+    /**
+     * Filter, which PromotionTranslation to fetch.
+     */
+    where: PromotionTranslationWhereUniqueInput
+  }
+
+  /**
+   * PromotionTranslation findFirst
+   */
+  export type PromotionTranslationFindFirstArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the PromotionTranslation
+     */
+    select?: PromotionTranslationSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the PromotionTranslation
+     */
+    omit?: PromotionTranslationOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: PromotionTranslationInclude<ExtArgs> | null
+    /**
+     * Filter, which PromotionTranslation to fetch.
+     */
+    where?: PromotionTranslationWhereInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/sorting Sorting Docs}
+     * 
+     * Determine the order of PromotionTranslations to fetch.
+     */
+    orderBy?: PromotionTranslationOrderByWithRelationInput | PromotionTranslationOrderByWithRelationInput[]
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination#cursor-based-pagination Cursor Docs}
+     * 
+     * Sets the position for searching for PromotionTranslations.
+     */
+    cursor?: PromotionTranslationWhereUniqueInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Take `±n` PromotionTranslations from the position of the cursor.
+     */
+    take?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Skip the first `n` PromotionTranslations.
+     */
+    skip?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/distinct Distinct Docs}
+     * 
+     * Filter by unique combinations of PromotionTranslations.
+     */
+    distinct?: PromotionTranslationScalarFieldEnum | PromotionTranslationScalarFieldEnum[]
+  }
+
+  /**
+   * PromotionTranslation findFirstOrThrow
+   */
+  export type PromotionTranslationFindFirstOrThrowArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the PromotionTranslation
+     */
+    select?: PromotionTranslationSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the PromotionTranslation
+     */
+    omit?: PromotionTranslationOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: PromotionTranslationInclude<ExtArgs> | null
+    /**
+     * Filter, which PromotionTranslation to fetch.
+     */
+    where?: PromotionTranslationWhereInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/sorting Sorting Docs}
+     * 
+     * Determine the order of PromotionTranslations to fetch.
+     */
+    orderBy?: PromotionTranslationOrderByWithRelationInput | PromotionTranslationOrderByWithRelationInput[]
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination#cursor-based-pagination Cursor Docs}
+     * 
+     * Sets the position for searching for PromotionTranslations.
+     */
+    cursor?: PromotionTranslationWhereUniqueInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Take `±n` PromotionTranslations from the position of the cursor.
+     */
+    take?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Skip the first `n` PromotionTranslations.
+     */
+    skip?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/distinct Distinct Docs}
+     * 
+     * Filter by unique combinations of PromotionTranslations.
+     */
+    distinct?: PromotionTranslationScalarFieldEnum | PromotionTranslationScalarFieldEnum[]
+  }
+
+  /**
+   * PromotionTranslation findMany
+   */
+  export type PromotionTranslationFindManyArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the PromotionTranslation
+     */
+    select?: PromotionTranslationSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the PromotionTranslation
+     */
+    omit?: PromotionTranslationOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: PromotionTranslationInclude<ExtArgs> | null
+    /**
+     * Filter, which PromotionTranslations to fetch.
+     */
+    where?: PromotionTranslationWhereInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/sorting Sorting Docs}
+     * 
+     * Determine the order of PromotionTranslations to fetch.
+     */
+    orderBy?: PromotionTranslationOrderByWithRelationInput | PromotionTranslationOrderByWithRelationInput[]
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination#cursor-based-pagination Cursor Docs}
+     * 
+     * Sets the position for listing PromotionTranslations.
+     */
+    cursor?: PromotionTranslationWhereUniqueInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Take `±n` PromotionTranslations from the position of the cursor.
+     */
+    take?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Skip the first `n` PromotionTranslations.
+     */
+    skip?: number
+    distinct?: PromotionTranslationScalarFieldEnum | PromotionTranslationScalarFieldEnum[]
+  }
+
+  /**
+   * PromotionTranslation create
+   */
+  export type PromotionTranslationCreateArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the PromotionTranslation
+     */
+    select?: PromotionTranslationSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the PromotionTranslation
+     */
+    omit?: PromotionTranslationOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: PromotionTranslationInclude<ExtArgs> | null
+    /**
+     * The data needed to create a PromotionTranslation.
+     */
+    data: XOR<PromotionTranslationCreateInput, PromotionTranslationUncheckedCreateInput>
+  }
+
+  /**
+   * PromotionTranslation createMany
+   */
+  export type PromotionTranslationCreateManyArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * The data used to create many PromotionTranslations.
+     */
+    data: PromotionTranslationCreateManyInput | PromotionTranslationCreateManyInput[]
+    skipDuplicates?: boolean
+  }
+
+  /**
+   * PromotionTranslation createManyAndReturn
+   */
+  export type PromotionTranslationCreateManyAndReturnArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the PromotionTranslation
+     */
+    select?: PromotionTranslationSelectCreateManyAndReturn<ExtArgs> | null
+    /**
+     * Omit specific fields from the PromotionTranslation
+     */
+    omit?: PromotionTranslationOmit<ExtArgs> | null
+    /**
+     * The data used to create many PromotionTranslations.
+     */
+    data: PromotionTranslationCreateManyInput | PromotionTranslationCreateManyInput[]
+    skipDuplicates?: boolean
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: PromotionTranslationIncludeCreateManyAndReturn<ExtArgs> | null
+  }
+
+  /**
+   * PromotionTranslation update
+   */
+  export type PromotionTranslationUpdateArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the PromotionTranslation
+     */
+    select?: PromotionTranslationSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the PromotionTranslation
+     */
+    omit?: PromotionTranslationOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: PromotionTranslationInclude<ExtArgs> | null
+    /**
+     * The data needed to update a PromotionTranslation.
+     */
+    data: XOR<PromotionTranslationUpdateInput, PromotionTranslationUncheckedUpdateInput>
+    /**
+     * Choose, which PromotionTranslation to update.
+     */
+    where: PromotionTranslationWhereUniqueInput
+  }
+
+  /**
+   * PromotionTranslation updateMany
+   */
+  export type PromotionTranslationUpdateManyArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * The data used to update PromotionTranslations.
+     */
+    data: XOR<PromotionTranslationUpdateManyMutationInput, PromotionTranslationUncheckedUpdateManyInput>
+    /**
+     * Filter which PromotionTranslations to update
+     */
+    where?: PromotionTranslationWhereInput
+    /**
+     * Limit how many PromotionTranslations to update.
+     */
+    limit?: number
+  }
+
+  /**
+   * PromotionTranslation updateManyAndReturn
+   */
+  export type PromotionTranslationUpdateManyAndReturnArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the PromotionTranslation
+     */
+    select?: PromotionTranslationSelectUpdateManyAndReturn<ExtArgs> | null
+    /**
+     * Omit specific fields from the PromotionTranslation
+     */
+    omit?: PromotionTranslationOmit<ExtArgs> | null
+    /**
+     * The data used to update PromotionTranslations.
+     */
+    data: XOR<PromotionTranslationUpdateManyMutationInput, PromotionTranslationUncheckedUpdateManyInput>
+    /**
+     * Filter which PromotionTranslations to update
+     */
+    where?: PromotionTranslationWhereInput
+    /**
+     * Limit how many PromotionTranslations to update.
+     */
+    limit?: number
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: PromotionTranslationIncludeUpdateManyAndReturn<ExtArgs> | null
+  }
+
+  /**
+   * PromotionTranslation upsert
+   */
+  export type PromotionTranslationUpsertArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the PromotionTranslation
+     */
+    select?: PromotionTranslationSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the PromotionTranslation
+     */
+    omit?: PromotionTranslationOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: PromotionTranslationInclude<ExtArgs> | null
+    /**
+     * The filter to search for the PromotionTranslation to update in case it exists.
+     */
+    where: PromotionTranslationWhereUniqueInput
+    /**
+     * In case the PromotionTranslation found by the `where` argument doesn't exist, create a new PromotionTranslation with this data.
+     */
+    create: XOR<PromotionTranslationCreateInput, PromotionTranslationUncheckedCreateInput>
+    /**
+     * In case the PromotionTranslation was found with the provided `where` argument, update it with this data.
+     */
+    update: XOR<PromotionTranslationUpdateInput, PromotionTranslationUncheckedUpdateInput>
+  }
+
+  /**
+   * PromotionTranslation delete
+   */
+  export type PromotionTranslationDeleteArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the PromotionTranslation
+     */
+    select?: PromotionTranslationSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the PromotionTranslation
+     */
+    omit?: PromotionTranslationOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: PromotionTranslationInclude<ExtArgs> | null
+    /**
+     * Filter which PromotionTranslation to delete.
+     */
+    where: PromotionTranslationWhereUniqueInput
+  }
+
+  /**
+   * PromotionTranslation deleteMany
+   */
+  export type PromotionTranslationDeleteManyArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Filter which PromotionTranslations to delete
+     */
+    where?: PromotionTranslationWhereInput
+    /**
+     * Limit how many PromotionTranslations to delete.
+     */
+    limit?: number
+  }
+
+  /**
+   * PromotionTranslation without action
+   */
+  export type PromotionTranslationDefaultArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the PromotionTranslation
+     */
+    select?: PromotionTranslationSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the PromotionTranslation
+     */
+    omit?: PromotionTranslationOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: PromotionTranslationInclude<ExtArgs> | null
+  }
+
+
+  /**
+   * Model PromotionCurrency
+   */
+
+  export type AggregatePromotionCurrency = {
+    _count: PromotionCurrencyCountAggregateOutputType | null
+    _avg: PromotionCurrencyAvgAggregateOutputType | null
+    _sum: PromotionCurrencySumAggregateOutputType | null
+    _min: PromotionCurrencyMinAggregateOutputType | null
+    _max: PromotionCurrencyMaxAggregateOutputType | null
+  }
+
+  export type PromotionCurrencyAvgAggregateOutputType = {
+    id: number | null
+    promotionId: number | null
+    minDepositAmount: Decimal | null
+    maxBonusAmount: Decimal | null
+  }
+
+  export type PromotionCurrencySumAggregateOutputType = {
+    id: bigint | null
+    promotionId: bigint | null
+    minDepositAmount: Decimal | null
+    maxBonusAmount: Decimal | null
+  }
+
+  export type PromotionCurrencyMinAggregateOutputType = {
+    id: bigint | null
+    promotionId: bigint | null
+    currency: $Enums.ExchangeCurrencyCode | null
+    minDepositAmount: Decimal | null
+    maxBonusAmount: Decimal | null
+    createdAt: Date | null
+    updatedAt: Date | null
+  }
+
+  export type PromotionCurrencyMaxAggregateOutputType = {
+    id: bigint | null
+    promotionId: bigint | null
+    currency: $Enums.ExchangeCurrencyCode | null
+    minDepositAmount: Decimal | null
+    maxBonusAmount: Decimal | null
+    createdAt: Date | null
+    updatedAt: Date | null
+  }
+
+  export type PromotionCurrencyCountAggregateOutputType = {
+    id: number
+    promotionId: number
+    currency: number
+    minDepositAmount: number
+    maxBonusAmount: number
+    createdAt: number
+    updatedAt: number
+    _all: number
+  }
+
+
+  export type PromotionCurrencyAvgAggregateInputType = {
+    id?: true
+    promotionId?: true
+    minDepositAmount?: true
+    maxBonusAmount?: true
+  }
+
+  export type PromotionCurrencySumAggregateInputType = {
+    id?: true
+    promotionId?: true
+    minDepositAmount?: true
+    maxBonusAmount?: true
+  }
+
+  export type PromotionCurrencyMinAggregateInputType = {
+    id?: true
+    promotionId?: true
+    currency?: true
+    minDepositAmount?: true
+    maxBonusAmount?: true
+    createdAt?: true
+    updatedAt?: true
+  }
+
+  export type PromotionCurrencyMaxAggregateInputType = {
+    id?: true
+    promotionId?: true
+    currency?: true
+    minDepositAmount?: true
+    maxBonusAmount?: true
+    createdAt?: true
+    updatedAt?: true
+  }
+
+  export type PromotionCurrencyCountAggregateInputType = {
+    id?: true
+    promotionId?: true
+    currency?: true
+    minDepositAmount?: true
+    maxBonusAmount?: true
+    createdAt?: true
+    updatedAt?: true
+    _all?: true
+  }
+
+  export type PromotionCurrencyAggregateArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Filter which PromotionCurrency to aggregate.
+     */
+    where?: PromotionCurrencyWhereInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/sorting Sorting Docs}
+     * 
+     * Determine the order of PromotionCurrencies to fetch.
+     */
+    orderBy?: PromotionCurrencyOrderByWithRelationInput | PromotionCurrencyOrderByWithRelationInput[]
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination#cursor-based-pagination Cursor Docs}
+     * 
+     * Sets the start position
+     */
+    cursor?: PromotionCurrencyWhereUniqueInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Take `±n` PromotionCurrencies from the position of the cursor.
+     */
+    take?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Skip the first `n` PromotionCurrencies.
+     */
+    skip?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
+     * 
+     * Count returned PromotionCurrencies
+    **/
+    _count?: true | PromotionCurrencyCountAggregateInputType
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
+     * 
+     * Select which fields to average
+    **/
+    _avg?: PromotionCurrencyAvgAggregateInputType
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
+     * 
+     * Select which fields to sum
+    **/
+    _sum?: PromotionCurrencySumAggregateInputType
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
+     * 
+     * Select which fields to find the minimum value
+    **/
+    _min?: PromotionCurrencyMinAggregateInputType
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
+     * 
+     * Select which fields to find the maximum value
+    **/
+    _max?: PromotionCurrencyMaxAggregateInputType
+  }
+
+  export type GetPromotionCurrencyAggregateType<T extends PromotionCurrencyAggregateArgs> = {
+        [P in keyof T & keyof AggregatePromotionCurrency]: P extends '_count' | 'count'
+      ? T[P] extends true
+        ? number
+        : GetScalarType<T[P], AggregatePromotionCurrency[P]>
+      : GetScalarType<T[P], AggregatePromotionCurrency[P]>
+  }
+
+
+
+
+  export type PromotionCurrencyGroupByArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    where?: PromotionCurrencyWhereInput
+    orderBy?: PromotionCurrencyOrderByWithAggregationInput | PromotionCurrencyOrderByWithAggregationInput[]
+    by: PromotionCurrencyScalarFieldEnum[] | PromotionCurrencyScalarFieldEnum
+    having?: PromotionCurrencyScalarWhereWithAggregatesInput
+    take?: number
+    skip?: number
+    _count?: PromotionCurrencyCountAggregateInputType | true
+    _avg?: PromotionCurrencyAvgAggregateInputType
+    _sum?: PromotionCurrencySumAggregateInputType
+    _min?: PromotionCurrencyMinAggregateInputType
+    _max?: PromotionCurrencyMaxAggregateInputType
+  }
+
+  export type PromotionCurrencyGroupByOutputType = {
+    id: bigint
+    promotionId: bigint
+    currency: $Enums.ExchangeCurrencyCode
+    minDepositAmount: Decimal
+    maxBonusAmount: Decimal | null
+    createdAt: Date
+    updatedAt: Date
+    _count: PromotionCurrencyCountAggregateOutputType | null
+    _avg: PromotionCurrencyAvgAggregateOutputType | null
+    _sum: PromotionCurrencySumAggregateOutputType | null
+    _min: PromotionCurrencyMinAggregateOutputType | null
+    _max: PromotionCurrencyMaxAggregateOutputType | null
+  }
+
+  type GetPromotionCurrencyGroupByPayload<T extends PromotionCurrencyGroupByArgs> = Prisma.PrismaPromise<
+    Array<
+      PickEnumerable<PromotionCurrencyGroupByOutputType, T['by']> &
+        {
+          [P in ((keyof T) & (keyof PromotionCurrencyGroupByOutputType))]: P extends '_count'
+            ? T[P] extends boolean
+              ? number
+              : GetScalarType<T[P], PromotionCurrencyGroupByOutputType[P]>
+            : GetScalarType<T[P], PromotionCurrencyGroupByOutputType[P]>
+        }
+      >
+    >
+
+
+  export type PromotionCurrencySelect<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetSelect<{
+    id?: boolean
+    promotionId?: boolean
+    currency?: boolean
+    minDepositAmount?: boolean
+    maxBonusAmount?: boolean
+    createdAt?: boolean
+    updatedAt?: boolean
+    promotion?: boolean | PromotionDefaultArgs<ExtArgs>
+  }, ExtArgs["result"]["promotionCurrency"]>
+
+  export type PromotionCurrencySelectCreateManyAndReturn<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetSelect<{
+    id?: boolean
+    promotionId?: boolean
+    currency?: boolean
+    minDepositAmount?: boolean
+    maxBonusAmount?: boolean
+    createdAt?: boolean
+    updatedAt?: boolean
+    promotion?: boolean | PromotionDefaultArgs<ExtArgs>
+  }, ExtArgs["result"]["promotionCurrency"]>
+
+  export type PromotionCurrencySelectUpdateManyAndReturn<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetSelect<{
+    id?: boolean
+    promotionId?: boolean
+    currency?: boolean
+    minDepositAmount?: boolean
+    maxBonusAmount?: boolean
+    createdAt?: boolean
+    updatedAt?: boolean
+    promotion?: boolean | PromotionDefaultArgs<ExtArgs>
+  }, ExtArgs["result"]["promotionCurrency"]>
+
+  export type PromotionCurrencySelectScalar = {
+    id?: boolean
+    promotionId?: boolean
+    currency?: boolean
+    minDepositAmount?: boolean
+    maxBonusAmount?: boolean
+    createdAt?: boolean
+    updatedAt?: boolean
+  }
+
+  export type PromotionCurrencyOmit<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetOmit<"id" | "promotionId" | "currency" | "minDepositAmount" | "maxBonusAmount" | "createdAt" | "updatedAt", ExtArgs["result"]["promotionCurrency"]>
+  export type PromotionCurrencyInclude<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    promotion?: boolean | PromotionDefaultArgs<ExtArgs>
+  }
+  export type PromotionCurrencyIncludeCreateManyAndReturn<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    promotion?: boolean | PromotionDefaultArgs<ExtArgs>
+  }
+  export type PromotionCurrencyIncludeUpdateManyAndReturn<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    promotion?: boolean | PromotionDefaultArgs<ExtArgs>
+  }
+
+  export type $PromotionCurrencyPayload<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    name: "PromotionCurrency"
+    objects: {
+      promotion: Prisma.$PromotionPayload<ExtArgs>
+    }
+    scalars: $Extensions.GetPayloadResult<{
+      id: bigint
+      promotionId: bigint
+      currency: $Enums.ExchangeCurrencyCode
+      minDepositAmount: Prisma.Decimal
+      maxBonusAmount: Prisma.Decimal | null
+      createdAt: Date
+      updatedAt: Date
+    }, ExtArgs["result"]["promotionCurrency"]>
+    composites: {}
+  }
+
+  type PromotionCurrencyGetPayload<S extends boolean | null | undefined | PromotionCurrencyDefaultArgs> = $Result.GetResult<Prisma.$PromotionCurrencyPayload, S>
+
+  type PromotionCurrencyCountArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> =
+    Omit<PromotionCurrencyFindManyArgs, 'select' | 'include' | 'distinct' | 'omit'> & {
+      select?: PromotionCurrencyCountAggregateInputType | true
+    }
+
+  export interface PromotionCurrencyDelegate<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs, GlobalOmitOptions = {}> {
+    [K: symbol]: { types: Prisma.TypeMap<ExtArgs>['model']['PromotionCurrency'], meta: { name: 'PromotionCurrency' } }
+    /**
+     * Find zero or one PromotionCurrency that matches the filter.
+     * @param {PromotionCurrencyFindUniqueArgs} args - Arguments to find a PromotionCurrency
+     * @example
+     * // Get one PromotionCurrency
+     * const promotionCurrency = await prisma.promotionCurrency.findUnique({
+     *   where: {
+     *     // ... provide filter here
+     *   }
+     * })
+     */
+    findUnique<T extends PromotionCurrencyFindUniqueArgs>(args: SelectSubset<T, PromotionCurrencyFindUniqueArgs<ExtArgs>>): Prisma__PromotionCurrencyClient<$Result.GetResult<Prisma.$PromotionCurrencyPayload<ExtArgs>, T, "findUnique", GlobalOmitOptions> | null, null, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Find one PromotionCurrency that matches the filter or throw an error with `error.code='P2025'`
+     * if no matches were found.
+     * @param {PromotionCurrencyFindUniqueOrThrowArgs} args - Arguments to find a PromotionCurrency
+     * @example
+     * // Get one PromotionCurrency
+     * const promotionCurrency = await prisma.promotionCurrency.findUniqueOrThrow({
+     *   where: {
+     *     // ... provide filter here
+     *   }
+     * })
+     */
+    findUniqueOrThrow<T extends PromotionCurrencyFindUniqueOrThrowArgs>(args: SelectSubset<T, PromotionCurrencyFindUniqueOrThrowArgs<ExtArgs>>): Prisma__PromotionCurrencyClient<$Result.GetResult<Prisma.$PromotionCurrencyPayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Find the first PromotionCurrency that matches the filter.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {PromotionCurrencyFindFirstArgs} args - Arguments to find a PromotionCurrency
+     * @example
+     * // Get one PromotionCurrency
+     * const promotionCurrency = await prisma.promotionCurrency.findFirst({
+     *   where: {
+     *     // ... provide filter here
+     *   }
+     * })
+     */
+    findFirst<T extends PromotionCurrencyFindFirstArgs>(args?: SelectSubset<T, PromotionCurrencyFindFirstArgs<ExtArgs>>): Prisma__PromotionCurrencyClient<$Result.GetResult<Prisma.$PromotionCurrencyPayload<ExtArgs>, T, "findFirst", GlobalOmitOptions> | null, null, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Find the first PromotionCurrency that matches the filter or
+     * throw `PrismaKnownClientError` with `P2025` code if no matches were found.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {PromotionCurrencyFindFirstOrThrowArgs} args - Arguments to find a PromotionCurrency
+     * @example
+     * // Get one PromotionCurrency
+     * const promotionCurrency = await prisma.promotionCurrency.findFirstOrThrow({
+     *   where: {
+     *     // ... provide filter here
+     *   }
+     * })
+     */
+    findFirstOrThrow<T extends PromotionCurrencyFindFirstOrThrowArgs>(args?: SelectSubset<T, PromotionCurrencyFindFirstOrThrowArgs<ExtArgs>>): Prisma__PromotionCurrencyClient<$Result.GetResult<Prisma.$PromotionCurrencyPayload<ExtArgs>, T, "findFirstOrThrow", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Find zero or more PromotionCurrencies that matches the filter.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {PromotionCurrencyFindManyArgs} args - Arguments to filter and select certain fields only.
+     * @example
+     * // Get all PromotionCurrencies
+     * const promotionCurrencies = await prisma.promotionCurrency.findMany()
+     * 
+     * // Get first 10 PromotionCurrencies
+     * const promotionCurrencies = await prisma.promotionCurrency.findMany({ take: 10 })
+     * 
+     * // Only select the `id`
+     * const promotionCurrencyWithIdOnly = await prisma.promotionCurrency.findMany({ select: { id: true } })
+     * 
+     */
+    findMany<T extends PromotionCurrencyFindManyArgs>(args?: SelectSubset<T, PromotionCurrencyFindManyArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$PromotionCurrencyPayload<ExtArgs>, T, "findMany", GlobalOmitOptions>>
+
+    /**
+     * Create a PromotionCurrency.
+     * @param {PromotionCurrencyCreateArgs} args - Arguments to create a PromotionCurrency.
+     * @example
+     * // Create one PromotionCurrency
+     * const PromotionCurrency = await prisma.promotionCurrency.create({
+     *   data: {
+     *     // ... data to create a PromotionCurrency
+     *   }
+     * })
+     * 
+     */
+    create<T extends PromotionCurrencyCreateArgs>(args: SelectSubset<T, PromotionCurrencyCreateArgs<ExtArgs>>): Prisma__PromotionCurrencyClient<$Result.GetResult<Prisma.$PromotionCurrencyPayload<ExtArgs>, T, "create", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Create many PromotionCurrencies.
+     * @param {PromotionCurrencyCreateManyArgs} args - Arguments to create many PromotionCurrencies.
+     * @example
+     * // Create many PromotionCurrencies
+     * const promotionCurrency = await prisma.promotionCurrency.createMany({
+     *   data: [
+     *     // ... provide data here
+     *   ]
+     * })
+     *     
+     */
+    createMany<T extends PromotionCurrencyCreateManyArgs>(args?: SelectSubset<T, PromotionCurrencyCreateManyArgs<ExtArgs>>): Prisma.PrismaPromise<BatchPayload>
+
+    /**
+     * Create many PromotionCurrencies and returns the data saved in the database.
+     * @param {PromotionCurrencyCreateManyAndReturnArgs} args - Arguments to create many PromotionCurrencies.
+     * @example
+     * // Create many PromotionCurrencies
+     * const promotionCurrency = await prisma.promotionCurrency.createManyAndReturn({
+     *   data: [
+     *     // ... provide data here
+     *   ]
+     * })
+     * 
+     * // Create many PromotionCurrencies and only return the `id`
+     * const promotionCurrencyWithIdOnly = await prisma.promotionCurrency.createManyAndReturn({
+     *   select: { id: true },
+     *   data: [
+     *     // ... provide data here
+     *   ]
+     * })
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * 
+     */
+    createManyAndReturn<T extends PromotionCurrencyCreateManyAndReturnArgs>(args?: SelectSubset<T, PromotionCurrencyCreateManyAndReturnArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$PromotionCurrencyPayload<ExtArgs>, T, "createManyAndReturn", GlobalOmitOptions>>
+
+    /**
+     * Delete a PromotionCurrency.
+     * @param {PromotionCurrencyDeleteArgs} args - Arguments to delete one PromotionCurrency.
+     * @example
+     * // Delete one PromotionCurrency
+     * const PromotionCurrency = await prisma.promotionCurrency.delete({
+     *   where: {
+     *     // ... filter to delete one PromotionCurrency
+     *   }
+     * })
+     * 
+     */
+    delete<T extends PromotionCurrencyDeleteArgs>(args: SelectSubset<T, PromotionCurrencyDeleteArgs<ExtArgs>>): Prisma__PromotionCurrencyClient<$Result.GetResult<Prisma.$PromotionCurrencyPayload<ExtArgs>, T, "delete", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Update one PromotionCurrency.
+     * @param {PromotionCurrencyUpdateArgs} args - Arguments to update one PromotionCurrency.
+     * @example
+     * // Update one PromotionCurrency
+     * const promotionCurrency = await prisma.promotionCurrency.update({
+     *   where: {
+     *     // ... provide filter here
+     *   },
+     *   data: {
+     *     // ... provide data here
+     *   }
+     * })
+     * 
+     */
+    update<T extends PromotionCurrencyUpdateArgs>(args: SelectSubset<T, PromotionCurrencyUpdateArgs<ExtArgs>>): Prisma__PromotionCurrencyClient<$Result.GetResult<Prisma.$PromotionCurrencyPayload<ExtArgs>, T, "update", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Delete zero or more PromotionCurrencies.
+     * @param {PromotionCurrencyDeleteManyArgs} args - Arguments to filter PromotionCurrencies to delete.
+     * @example
+     * // Delete a few PromotionCurrencies
+     * const { count } = await prisma.promotionCurrency.deleteMany({
+     *   where: {
+     *     // ... provide filter here
+     *   }
+     * })
+     * 
+     */
+    deleteMany<T extends PromotionCurrencyDeleteManyArgs>(args?: SelectSubset<T, PromotionCurrencyDeleteManyArgs<ExtArgs>>): Prisma.PrismaPromise<BatchPayload>
+
+    /**
+     * Update zero or more PromotionCurrencies.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {PromotionCurrencyUpdateManyArgs} args - Arguments to update one or more rows.
+     * @example
+     * // Update many PromotionCurrencies
+     * const promotionCurrency = await prisma.promotionCurrency.updateMany({
+     *   where: {
+     *     // ... provide filter here
+     *   },
+     *   data: {
+     *     // ... provide data here
+     *   }
+     * })
+     * 
+     */
+    updateMany<T extends PromotionCurrencyUpdateManyArgs>(args: SelectSubset<T, PromotionCurrencyUpdateManyArgs<ExtArgs>>): Prisma.PrismaPromise<BatchPayload>
+
+    /**
+     * Update zero or more PromotionCurrencies and returns the data updated in the database.
+     * @param {PromotionCurrencyUpdateManyAndReturnArgs} args - Arguments to update many PromotionCurrencies.
+     * @example
+     * // Update many PromotionCurrencies
+     * const promotionCurrency = await prisma.promotionCurrency.updateManyAndReturn({
+     *   where: {
+     *     // ... provide filter here
+     *   },
+     *   data: [
+     *     // ... provide data here
+     *   ]
+     * })
+     * 
+     * // Update zero or more PromotionCurrencies and only return the `id`
+     * const promotionCurrencyWithIdOnly = await prisma.promotionCurrency.updateManyAndReturn({
+     *   select: { id: true },
+     *   where: {
+     *     // ... provide filter here
+     *   },
+     *   data: [
+     *     // ... provide data here
+     *   ]
+     * })
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * 
+     */
+    updateManyAndReturn<T extends PromotionCurrencyUpdateManyAndReturnArgs>(args: SelectSubset<T, PromotionCurrencyUpdateManyAndReturnArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$PromotionCurrencyPayload<ExtArgs>, T, "updateManyAndReturn", GlobalOmitOptions>>
+
+    /**
+     * Create or update one PromotionCurrency.
+     * @param {PromotionCurrencyUpsertArgs} args - Arguments to update or create a PromotionCurrency.
+     * @example
+     * // Update or create a PromotionCurrency
+     * const promotionCurrency = await prisma.promotionCurrency.upsert({
+     *   create: {
+     *     // ... data to create a PromotionCurrency
+     *   },
+     *   update: {
+     *     // ... in case it already exists, update
+     *   },
+     *   where: {
+     *     // ... the filter for the PromotionCurrency we want to update
+     *   }
+     * })
+     */
+    upsert<T extends PromotionCurrencyUpsertArgs>(args: SelectSubset<T, PromotionCurrencyUpsertArgs<ExtArgs>>): Prisma__PromotionCurrencyClient<$Result.GetResult<Prisma.$PromotionCurrencyPayload<ExtArgs>, T, "upsert", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
+
+
+    /**
+     * Count the number of PromotionCurrencies.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {PromotionCurrencyCountArgs} args - Arguments to filter PromotionCurrencies to count.
+     * @example
+     * // Count the number of PromotionCurrencies
+     * const count = await prisma.promotionCurrency.count({
+     *   where: {
+     *     // ... the filter for the PromotionCurrencies we want to count
+     *   }
+     * })
+    **/
+    count<T extends PromotionCurrencyCountArgs>(
+      args?: Subset<T, PromotionCurrencyCountArgs>,
+    ): Prisma.PrismaPromise<
+      T extends $Utils.Record<'select', any>
+        ? T['select'] extends true
+          ? number
+          : GetScalarType<T['select'], PromotionCurrencyCountAggregateOutputType>
+        : number
+    >
+
+    /**
+     * Allows you to perform aggregations operations on a PromotionCurrency.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {PromotionCurrencyAggregateArgs} args - Select which aggregations you would like to apply and on what fields.
+     * @example
+     * // Ordered by age ascending
+     * // Where email contains prisma.io
+     * // Limited to the 10 users
+     * const aggregations = await prisma.user.aggregate({
+     *   _avg: {
+     *     age: true,
+     *   },
+     *   where: {
+     *     email: {
+     *       contains: "prisma.io",
+     *     },
+     *   },
+     *   orderBy: {
+     *     age: "asc",
+     *   },
+     *   take: 10,
+     * })
+    **/
+    aggregate<T extends PromotionCurrencyAggregateArgs>(args: Subset<T, PromotionCurrencyAggregateArgs>): Prisma.PrismaPromise<GetPromotionCurrencyAggregateType<T>>
+
+    /**
+     * Group by PromotionCurrency.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {PromotionCurrencyGroupByArgs} args - Group by arguments.
+     * @example
+     * // Group by city, order by createdAt, get count
+     * const result = await prisma.user.groupBy({
+     *   by: ['city', 'createdAt'],
+     *   orderBy: {
+     *     createdAt: true
+     *   },
+     *   _count: {
+     *     _all: true
+     *   },
+     * })
+     * 
+    **/
+    groupBy<
+      T extends PromotionCurrencyGroupByArgs,
+      HasSelectOrTake extends Or<
+        Extends<'skip', Keys<T>>,
+        Extends<'take', Keys<T>>
+      >,
+      OrderByArg extends True extends HasSelectOrTake
+        ? { orderBy: PromotionCurrencyGroupByArgs['orderBy'] }
+        : { orderBy?: PromotionCurrencyGroupByArgs['orderBy'] },
+      OrderFields extends ExcludeUnderscoreKeys<Keys<MaybeTupleToUnion<T['orderBy']>>>,
+      ByFields extends MaybeTupleToUnion<T['by']>,
+      ByValid extends Has<ByFields, OrderFields>,
+      HavingFields extends GetHavingFields<T['having']>,
+      HavingValid extends Has<ByFields, HavingFields>,
+      ByEmpty extends T['by'] extends never[] ? True : False,
+      InputErrors extends ByEmpty extends True
+      ? `Error: "by" must not be empty.`
+      : HavingValid extends False
+      ? {
+          [P in HavingFields]: P extends ByFields
+            ? never
+            : P extends string
+            ? `Error: Field "${P}" used in "having" needs to be provided in "by".`
+            : [
+                Error,
+                'Field ',
+                P,
+                ` in "having" needs to be provided in "by"`,
+              ]
+        }[HavingFields]
+      : 'take' extends Keys<T>
+      ? 'orderBy' extends Keys<T>
+        ? ByValid extends True
+          ? {}
+          : {
+              [P in OrderFields]: P extends ByFields
+                ? never
+                : `Error: Field "${P}" in "orderBy" needs to be provided in "by"`
+            }[OrderFields]
+        : 'Error: If you provide "take", you also need to provide "orderBy"'
+      : 'skip' extends Keys<T>
+      ? 'orderBy' extends Keys<T>
+        ? ByValid extends True
+          ? {}
+          : {
+              [P in OrderFields]: P extends ByFields
+                ? never
+                : `Error: Field "${P}" in "orderBy" needs to be provided in "by"`
+            }[OrderFields]
+        : 'Error: If you provide "skip", you also need to provide "orderBy"'
+      : ByValid extends True
+      ? {}
+      : {
+          [P in OrderFields]: P extends ByFields
+            ? never
+            : `Error: Field "${P}" in "orderBy" needs to be provided in "by"`
+        }[OrderFields]
+    >(args: SubsetIntersection<T, PromotionCurrencyGroupByArgs, OrderByArg> & InputErrors): {} extends InputErrors ? GetPromotionCurrencyGroupByPayload<T> : Prisma.PrismaPromise<InputErrors>
+  /**
+   * Fields of the PromotionCurrency model
+   */
+  readonly fields: PromotionCurrencyFieldRefs;
+  }
+
+  /**
+   * The delegate class that acts as a "Promise-like" for PromotionCurrency.
+   * Why is this prefixed with `Prisma__`?
+   * Because we want to prevent naming conflicts as mentioned in
+   * https://github.com/prisma/prisma-client-js/issues/707
+   */
+  export interface Prisma__PromotionCurrencyClient<T, Null = never, ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs, GlobalOmitOptions = {}> extends Prisma.PrismaPromise<T> {
+    readonly [Symbol.toStringTag]: "PrismaPromise"
+    promotion<T extends PromotionDefaultArgs<ExtArgs> = {}>(args?: Subset<T, PromotionDefaultArgs<ExtArgs>>): Prisma__PromotionClient<$Result.GetResult<Prisma.$PromotionPayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions> | Null, Null, ExtArgs, GlobalOmitOptions>
+    /**
+     * Attaches callbacks for the resolution and/or rejection of the Promise.
+     * @param onfulfilled The callback to execute when the Promise is resolved.
+     * @param onrejected The callback to execute when the Promise is rejected.
+     * @returns A Promise for the completion of which ever callback is executed.
+     */
+    then<TResult1 = T, TResult2 = never>(onfulfilled?: ((value: T) => TResult1 | PromiseLike<TResult1>) | undefined | null, onrejected?: ((reason: any) => TResult2 | PromiseLike<TResult2>) | undefined | null): $Utils.JsPromise<TResult1 | TResult2>
+    /**
+     * Attaches a callback for only the rejection of the Promise.
+     * @param onrejected The callback to execute when the Promise is rejected.
+     * @returns A Promise for the completion of the callback.
+     */
+    catch<TResult = never>(onrejected?: ((reason: any) => TResult | PromiseLike<TResult>) | undefined | null): $Utils.JsPromise<T | TResult>
+    /**
+     * Attaches a callback that is invoked when the Promise is settled (fulfilled or rejected). The
+     * resolved value cannot be modified from the callback.
+     * @param onfinally The callback to execute when the Promise is settled (fulfilled or rejected).
+     * @returns A Promise for the completion of the callback.
+     */
+    finally(onfinally?: (() => void) | undefined | null): $Utils.JsPromise<T>
+  }
+
+
+
+
+  /**
+   * Fields of the PromotionCurrency model
+   */
+  interface PromotionCurrencyFieldRefs {
+    readonly id: FieldRef<"PromotionCurrency", 'BigInt'>
+    readonly promotionId: FieldRef<"PromotionCurrency", 'BigInt'>
+    readonly currency: FieldRef<"PromotionCurrency", 'ExchangeCurrencyCode'>
+    readonly minDepositAmount: FieldRef<"PromotionCurrency", 'Decimal'>
+    readonly maxBonusAmount: FieldRef<"PromotionCurrency", 'Decimal'>
+    readonly createdAt: FieldRef<"PromotionCurrency", 'DateTime'>
+    readonly updatedAt: FieldRef<"PromotionCurrency", 'DateTime'>
+  }
+    
+
+  // Custom InputTypes
+  /**
+   * PromotionCurrency findUnique
+   */
+  export type PromotionCurrencyFindUniqueArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the PromotionCurrency
+     */
+    select?: PromotionCurrencySelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the PromotionCurrency
+     */
+    omit?: PromotionCurrencyOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: PromotionCurrencyInclude<ExtArgs> | null
+    /**
+     * Filter, which PromotionCurrency to fetch.
+     */
+    where: PromotionCurrencyWhereUniqueInput
+  }
+
+  /**
+   * PromotionCurrency findUniqueOrThrow
+   */
+  export type PromotionCurrencyFindUniqueOrThrowArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the PromotionCurrency
+     */
+    select?: PromotionCurrencySelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the PromotionCurrency
+     */
+    omit?: PromotionCurrencyOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: PromotionCurrencyInclude<ExtArgs> | null
+    /**
+     * Filter, which PromotionCurrency to fetch.
+     */
+    where: PromotionCurrencyWhereUniqueInput
+  }
+
+  /**
+   * PromotionCurrency findFirst
+   */
+  export type PromotionCurrencyFindFirstArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the PromotionCurrency
+     */
+    select?: PromotionCurrencySelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the PromotionCurrency
+     */
+    omit?: PromotionCurrencyOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: PromotionCurrencyInclude<ExtArgs> | null
+    /**
+     * Filter, which PromotionCurrency to fetch.
+     */
+    where?: PromotionCurrencyWhereInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/sorting Sorting Docs}
+     * 
+     * Determine the order of PromotionCurrencies to fetch.
+     */
+    orderBy?: PromotionCurrencyOrderByWithRelationInput | PromotionCurrencyOrderByWithRelationInput[]
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination#cursor-based-pagination Cursor Docs}
+     * 
+     * Sets the position for searching for PromotionCurrencies.
+     */
+    cursor?: PromotionCurrencyWhereUniqueInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Take `±n` PromotionCurrencies from the position of the cursor.
+     */
+    take?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Skip the first `n` PromotionCurrencies.
+     */
+    skip?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/distinct Distinct Docs}
+     * 
+     * Filter by unique combinations of PromotionCurrencies.
+     */
+    distinct?: PromotionCurrencyScalarFieldEnum | PromotionCurrencyScalarFieldEnum[]
+  }
+
+  /**
+   * PromotionCurrency findFirstOrThrow
+   */
+  export type PromotionCurrencyFindFirstOrThrowArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the PromotionCurrency
+     */
+    select?: PromotionCurrencySelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the PromotionCurrency
+     */
+    omit?: PromotionCurrencyOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: PromotionCurrencyInclude<ExtArgs> | null
+    /**
+     * Filter, which PromotionCurrency to fetch.
+     */
+    where?: PromotionCurrencyWhereInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/sorting Sorting Docs}
+     * 
+     * Determine the order of PromotionCurrencies to fetch.
+     */
+    orderBy?: PromotionCurrencyOrderByWithRelationInput | PromotionCurrencyOrderByWithRelationInput[]
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination#cursor-based-pagination Cursor Docs}
+     * 
+     * Sets the position for searching for PromotionCurrencies.
+     */
+    cursor?: PromotionCurrencyWhereUniqueInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Take `±n` PromotionCurrencies from the position of the cursor.
+     */
+    take?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Skip the first `n` PromotionCurrencies.
+     */
+    skip?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/distinct Distinct Docs}
+     * 
+     * Filter by unique combinations of PromotionCurrencies.
+     */
+    distinct?: PromotionCurrencyScalarFieldEnum | PromotionCurrencyScalarFieldEnum[]
+  }
+
+  /**
+   * PromotionCurrency findMany
+   */
+  export type PromotionCurrencyFindManyArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the PromotionCurrency
+     */
+    select?: PromotionCurrencySelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the PromotionCurrency
+     */
+    omit?: PromotionCurrencyOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: PromotionCurrencyInclude<ExtArgs> | null
+    /**
+     * Filter, which PromotionCurrencies to fetch.
+     */
+    where?: PromotionCurrencyWhereInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/sorting Sorting Docs}
+     * 
+     * Determine the order of PromotionCurrencies to fetch.
+     */
+    orderBy?: PromotionCurrencyOrderByWithRelationInput | PromotionCurrencyOrderByWithRelationInput[]
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination#cursor-based-pagination Cursor Docs}
+     * 
+     * Sets the position for listing PromotionCurrencies.
+     */
+    cursor?: PromotionCurrencyWhereUniqueInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Take `±n` PromotionCurrencies from the position of the cursor.
+     */
+    take?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Skip the first `n` PromotionCurrencies.
+     */
+    skip?: number
+    distinct?: PromotionCurrencyScalarFieldEnum | PromotionCurrencyScalarFieldEnum[]
+  }
+
+  /**
+   * PromotionCurrency create
+   */
+  export type PromotionCurrencyCreateArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the PromotionCurrency
+     */
+    select?: PromotionCurrencySelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the PromotionCurrency
+     */
+    omit?: PromotionCurrencyOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: PromotionCurrencyInclude<ExtArgs> | null
+    /**
+     * The data needed to create a PromotionCurrency.
+     */
+    data: XOR<PromotionCurrencyCreateInput, PromotionCurrencyUncheckedCreateInput>
+  }
+
+  /**
+   * PromotionCurrency createMany
+   */
+  export type PromotionCurrencyCreateManyArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * The data used to create many PromotionCurrencies.
+     */
+    data: PromotionCurrencyCreateManyInput | PromotionCurrencyCreateManyInput[]
+    skipDuplicates?: boolean
+  }
+
+  /**
+   * PromotionCurrency createManyAndReturn
+   */
+  export type PromotionCurrencyCreateManyAndReturnArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the PromotionCurrency
+     */
+    select?: PromotionCurrencySelectCreateManyAndReturn<ExtArgs> | null
+    /**
+     * Omit specific fields from the PromotionCurrency
+     */
+    omit?: PromotionCurrencyOmit<ExtArgs> | null
+    /**
+     * The data used to create many PromotionCurrencies.
+     */
+    data: PromotionCurrencyCreateManyInput | PromotionCurrencyCreateManyInput[]
+    skipDuplicates?: boolean
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: PromotionCurrencyIncludeCreateManyAndReturn<ExtArgs> | null
+  }
+
+  /**
+   * PromotionCurrency update
+   */
+  export type PromotionCurrencyUpdateArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the PromotionCurrency
+     */
+    select?: PromotionCurrencySelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the PromotionCurrency
+     */
+    omit?: PromotionCurrencyOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: PromotionCurrencyInclude<ExtArgs> | null
+    /**
+     * The data needed to update a PromotionCurrency.
+     */
+    data: XOR<PromotionCurrencyUpdateInput, PromotionCurrencyUncheckedUpdateInput>
+    /**
+     * Choose, which PromotionCurrency to update.
+     */
+    where: PromotionCurrencyWhereUniqueInput
+  }
+
+  /**
+   * PromotionCurrency updateMany
+   */
+  export type PromotionCurrencyUpdateManyArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * The data used to update PromotionCurrencies.
+     */
+    data: XOR<PromotionCurrencyUpdateManyMutationInput, PromotionCurrencyUncheckedUpdateManyInput>
+    /**
+     * Filter which PromotionCurrencies to update
+     */
+    where?: PromotionCurrencyWhereInput
+    /**
+     * Limit how many PromotionCurrencies to update.
+     */
+    limit?: number
+  }
+
+  /**
+   * PromotionCurrency updateManyAndReturn
+   */
+  export type PromotionCurrencyUpdateManyAndReturnArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the PromotionCurrency
+     */
+    select?: PromotionCurrencySelectUpdateManyAndReturn<ExtArgs> | null
+    /**
+     * Omit specific fields from the PromotionCurrency
+     */
+    omit?: PromotionCurrencyOmit<ExtArgs> | null
+    /**
+     * The data used to update PromotionCurrencies.
+     */
+    data: XOR<PromotionCurrencyUpdateManyMutationInput, PromotionCurrencyUncheckedUpdateManyInput>
+    /**
+     * Filter which PromotionCurrencies to update
+     */
+    where?: PromotionCurrencyWhereInput
+    /**
+     * Limit how many PromotionCurrencies to update.
+     */
+    limit?: number
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: PromotionCurrencyIncludeUpdateManyAndReturn<ExtArgs> | null
+  }
+
+  /**
+   * PromotionCurrency upsert
+   */
+  export type PromotionCurrencyUpsertArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the PromotionCurrency
+     */
+    select?: PromotionCurrencySelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the PromotionCurrency
+     */
+    omit?: PromotionCurrencyOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: PromotionCurrencyInclude<ExtArgs> | null
+    /**
+     * The filter to search for the PromotionCurrency to update in case it exists.
+     */
+    where: PromotionCurrencyWhereUniqueInput
+    /**
+     * In case the PromotionCurrency found by the `where` argument doesn't exist, create a new PromotionCurrency with this data.
+     */
+    create: XOR<PromotionCurrencyCreateInput, PromotionCurrencyUncheckedCreateInput>
+    /**
+     * In case the PromotionCurrency was found with the provided `where` argument, update it with this data.
+     */
+    update: XOR<PromotionCurrencyUpdateInput, PromotionCurrencyUncheckedUpdateInput>
+  }
+
+  /**
+   * PromotionCurrency delete
+   */
+  export type PromotionCurrencyDeleteArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the PromotionCurrency
+     */
+    select?: PromotionCurrencySelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the PromotionCurrency
+     */
+    omit?: PromotionCurrencyOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: PromotionCurrencyInclude<ExtArgs> | null
+    /**
+     * Filter which PromotionCurrency to delete.
+     */
+    where: PromotionCurrencyWhereUniqueInput
+  }
+
+  /**
+   * PromotionCurrency deleteMany
+   */
+  export type PromotionCurrencyDeleteManyArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Filter which PromotionCurrencies to delete
+     */
+    where?: PromotionCurrencyWhereInput
+    /**
+     * Limit how many PromotionCurrencies to delete.
+     */
+    limit?: number
+  }
+
+  /**
+   * PromotionCurrency without action
+   */
+  export type PromotionCurrencyDefaultArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the PromotionCurrency
+     */
+    select?: PromotionCurrencySelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the PromotionCurrency
+     */
+    omit?: PromotionCurrencyOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: PromotionCurrencyInclude<ExtArgs> | null
+  }
+
+
+  /**
+   * Model UserPromotion
+   */
+
+  export type AggregateUserPromotion = {
+    _count: UserPromotionCountAggregateOutputType | null
+    _avg: UserPromotionAvgAggregateOutputType | null
+    _sum: UserPromotionSumAggregateOutputType | null
+    _min: UserPromotionMinAggregateOutputType | null
+    _max: UserPromotionMaxAggregateOutputType | null
+  }
+
+  export type UserPromotionAvgAggregateOutputType = {
+    id: number | null
+    userId: number | null
+    promotionId: number | null
+    depositAmount: Decimal | null
+    bonusAmount: Decimal | null
+    targetRollingAmount: Decimal | null
+    currentRollingAmount: Decimal | null
+  }
+
+  export type UserPromotionSumAggregateOutputType = {
+    id: bigint | null
+    userId: bigint | null
+    promotionId: bigint | null
+    depositAmount: Decimal | null
+    bonusAmount: Decimal | null
+    targetRollingAmount: Decimal | null
+    currentRollingAmount: Decimal | null
+  }
+
+  export type UserPromotionMinAggregateOutputType = {
+    id: bigint | null
+    userId: bigint | null
+    promotionId: bigint | null
+    status: $Enums.UserPromotionStatus | null
+    depositAmount: Decimal | null
+    bonusAmount: Decimal | null
+    targetRollingAmount: Decimal | null
+    currentRollingAmount: Decimal | null
+    currency: $Enums.ExchangeCurrencyCode | null
+    createdAt: Date | null
+    updatedAt: Date | null
+  }
+
+  export type UserPromotionMaxAggregateOutputType = {
+    id: bigint | null
+    userId: bigint | null
+    promotionId: bigint | null
+    status: $Enums.UserPromotionStatus | null
+    depositAmount: Decimal | null
+    bonusAmount: Decimal | null
+    targetRollingAmount: Decimal | null
+    currentRollingAmount: Decimal | null
+    currency: $Enums.ExchangeCurrencyCode | null
+    createdAt: Date | null
+    updatedAt: Date | null
+  }
+
+  export type UserPromotionCountAggregateOutputType = {
+    id: number
+    userId: number
+    promotionId: number
+    status: number
+    depositAmount: number
+    bonusAmount: number
+    targetRollingAmount: number
+    currentRollingAmount: number
+    currency: number
+    createdAt: number
+    updatedAt: number
+    _all: number
+  }
+
+
+  export type UserPromotionAvgAggregateInputType = {
+    id?: true
+    userId?: true
+    promotionId?: true
+    depositAmount?: true
+    bonusAmount?: true
+    targetRollingAmount?: true
+    currentRollingAmount?: true
+  }
+
+  export type UserPromotionSumAggregateInputType = {
+    id?: true
+    userId?: true
+    promotionId?: true
+    depositAmount?: true
+    bonusAmount?: true
+    targetRollingAmount?: true
+    currentRollingAmount?: true
+  }
+
+  export type UserPromotionMinAggregateInputType = {
+    id?: true
+    userId?: true
+    promotionId?: true
+    status?: true
+    depositAmount?: true
+    bonusAmount?: true
+    targetRollingAmount?: true
+    currentRollingAmount?: true
+    currency?: true
+    createdAt?: true
+    updatedAt?: true
+  }
+
+  export type UserPromotionMaxAggregateInputType = {
+    id?: true
+    userId?: true
+    promotionId?: true
+    status?: true
+    depositAmount?: true
+    bonusAmount?: true
+    targetRollingAmount?: true
+    currentRollingAmount?: true
+    currency?: true
+    createdAt?: true
+    updatedAt?: true
+  }
+
+  export type UserPromotionCountAggregateInputType = {
+    id?: true
+    userId?: true
+    promotionId?: true
+    status?: true
+    depositAmount?: true
+    bonusAmount?: true
+    targetRollingAmount?: true
+    currentRollingAmount?: true
+    currency?: true
+    createdAt?: true
+    updatedAt?: true
+    _all?: true
+  }
+
+  export type UserPromotionAggregateArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Filter which UserPromotion to aggregate.
+     */
+    where?: UserPromotionWhereInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/sorting Sorting Docs}
+     * 
+     * Determine the order of UserPromotions to fetch.
+     */
+    orderBy?: UserPromotionOrderByWithRelationInput | UserPromotionOrderByWithRelationInput[]
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination#cursor-based-pagination Cursor Docs}
+     * 
+     * Sets the start position
+     */
+    cursor?: UserPromotionWhereUniqueInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Take `±n` UserPromotions from the position of the cursor.
+     */
+    take?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Skip the first `n` UserPromotions.
+     */
+    skip?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
+     * 
+     * Count returned UserPromotions
+    **/
+    _count?: true | UserPromotionCountAggregateInputType
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
+     * 
+     * Select which fields to average
+    **/
+    _avg?: UserPromotionAvgAggregateInputType
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
+     * 
+     * Select which fields to sum
+    **/
+    _sum?: UserPromotionSumAggregateInputType
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
+     * 
+     * Select which fields to find the minimum value
+    **/
+    _min?: UserPromotionMinAggregateInputType
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
+     * 
+     * Select which fields to find the maximum value
+    **/
+    _max?: UserPromotionMaxAggregateInputType
+  }
+
+  export type GetUserPromotionAggregateType<T extends UserPromotionAggregateArgs> = {
+        [P in keyof T & keyof AggregateUserPromotion]: P extends '_count' | 'count'
+      ? T[P] extends true
+        ? number
+        : GetScalarType<T[P], AggregateUserPromotion[P]>
+      : GetScalarType<T[P], AggregateUserPromotion[P]>
+  }
+
+
+
+
+  export type UserPromotionGroupByArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    where?: UserPromotionWhereInput
+    orderBy?: UserPromotionOrderByWithAggregationInput | UserPromotionOrderByWithAggregationInput[]
+    by: UserPromotionScalarFieldEnum[] | UserPromotionScalarFieldEnum
+    having?: UserPromotionScalarWhereWithAggregatesInput
+    take?: number
+    skip?: number
+    _count?: UserPromotionCountAggregateInputType | true
+    _avg?: UserPromotionAvgAggregateInputType
+    _sum?: UserPromotionSumAggregateInputType
+    _min?: UserPromotionMinAggregateInputType
+    _max?: UserPromotionMaxAggregateInputType
+  }
+
+  export type UserPromotionGroupByOutputType = {
+    id: bigint
+    userId: bigint
+    promotionId: bigint
+    status: $Enums.UserPromotionStatus
+    depositAmount: Decimal
+    bonusAmount: Decimal
+    targetRollingAmount: Decimal
+    currentRollingAmount: Decimal
+    currency: $Enums.ExchangeCurrencyCode
+    createdAt: Date
+    updatedAt: Date
+    _count: UserPromotionCountAggregateOutputType | null
+    _avg: UserPromotionAvgAggregateOutputType | null
+    _sum: UserPromotionSumAggregateOutputType | null
+    _min: UserPromotionMinAggregateOutputType | null
+    _max: UserPromotionMaxAggregateOutputType | null
+  }
+
+  type GetUserPromotionGroupByPayload<T extends UserPromotionGroupByArgs> = Prisma.PrismaPromise<
+    Array<
+      PickEnumerable<UserPromotionGroupByOutputType, T['by']> &
+        {
+          [P in ((keyof T) & (keyof UserPromotionGroupByOutputType))]: P extends '_count'
+            ? T[P] extends boolean
+              ? number
+              : GetScalarType<T[P], UserPromotionGroupByOutputType[P]>
+            : GetScalarType<T[P], UserPromotionGroupByOutputType[P]>
+        }
+      >
+    >
+
+
+  export type UserPromotionSelect<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetSelect<{
+    id?: boolean
+    userId?: boolean
+    promotionId?: boolean
+    status?: boolean
+    depositAmount?: boolean
+    bonusAmount?: boolean
+    targetRollingAmount?: boolean
+    currentRollingAmount?: boolean
+    currency?: boolean
+    createdAt?: boolean
+    updatedAt?: boolean
+    Rolling?: boolean | UserPromotion$RollingArgs<ExtArgs>
+    promotion?: boolean | PromotionDefaultArgs<ExtArgs>
+    user?: boolean | UserDefaultArgs<ExtArgs>
+    _count?: boolean | UserPromotionCountOutputTypeDefaultArgs<ExtArgs>
+  }, ExtArgs["result"]["userPromotion"]>
+
+  export type UserPromotionSelectCreateManyAndReturn<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetSelect<{
+    id?: boolean
+    userId?: boolean
+    promotionId?: boolean
+    status?: boolean
+    depositAmount?: boolean
+    bonusAmount?: boolean
+    targetRollingAmount?: boolean
+    currentRollingAmount?: boolean
+    currency?: boolean
+    createdAt?: boolean
+    updatedAt?: boolean
+    promotion?: boolean | PromotionDefaultArgs<ExtArgs>
+    user?: boolean | UserDefaultArgs<ExtArgs>
+  }, ExtArgs["result"]["userPromotion"]>
+
+  export type UserPromotionSelectUpdateManyAndReturn<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetSelect<{
+    id?: boolean
+    userId?: boolean
+    promotionId?: boolean
+    status?: boolean
+    depositAmount?: boolean
+    bonusAmount?: boolean
+    targetRollingAmount?: boolean
+    currentRollingAmount?: boolean
+    currency?: boolean
+    createdAt?: boolean
+    updatedAt?: boolean
+    promotion?: boolean | PromotionDefaultArgs<ExtArgs>
+    user?: boolean | UserDefaultArgs<ExtArgs>
+  }, ExtArgs["result"]["userPromotion"]>
+
+  export type UserPromotionSelectScalar = {
+    id?: boolean
+    userId?: boolean
+    promotionId?: boolean
+    status?: boolean
+    depositAmount?: boolean
+    bonusAmount?: boolean
+    targetRollingAmount?: boolean
+    currentRollingAmount?: boolean
+    currency?: boolean
+    createdAt?: boolean
+    updatedAt?: boolean
+  }
+
+  export type UserPromotionOmit<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetOmit<"id" | "userId" | "promotionId" | "status" | "depositAmount" | "bonusAmount" | "targetRollingAmount" | "currentRollingAmount" | "currency" | "createdAt" | "updatedAt", ExtArgs["result"]["userPromotion"]>
+  export type UserPromotionInclude<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    Rolling?: boolean | UserPromotion$RollingArgs<ExtArgs>
+    promotion?: boolean | PromotionDefaultArgs<ExtArgs>
+    user?: boolean | UserDefaultArgs<ExtArgs>
+    _count?: boolean | UserPromotionCountOutputTypeDefaultArgs<ExtArgs>
+  }
+  export type UserPromotionIncludeCreateManyAndReturn<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    promotion?: boolean | PromotionDefaultArgs<ExtArgs>
+    user?: boolean | UserDefaultArgs<ExtArgs>
+  }
+  export type UserPromotionIncludeUpdateManyAndReturn<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    promotion?: boolean | PromotionDefaultArgs<ExtArgs>
+    user?: boolean | UserDefaultArgs<ExtArgs>
+  }
+
+  export type $UserPromotionPayload<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    name: "UserPromotion"
+    objects: {
+      Rolling: Prisma.$RollingPayload<ExtArgs>[]
+      promotion: Prisma.$PromotionPayload<ExtArgs>
+      user: Prisma.$UserPayload<ExtArgs>
+    }
+    scalars: $Extensions.GetPayloadResult<{
+      id: bigint
+      userId: bigint
+      promotionId: bigint
+      status: $Enums.UserPromotionStatus
+      depositAmount: Prisma.Decimal
+      bonusAmount: Prisma.Decimal
+      targetRollingAmount: Prisma.Decimal
+      currentRollingAmount: Prisma.Decimal
+      currency: $Enums.ExchangeCurrencyCode
+      createdAt: Date
+      updatedAt: Date
+    }, ExtArgs["result"]["userPromotion"]>
+    composites: {}
+  }
+
+  type UserPromotionGetPayload<S extends boolean | null | undefined | UserPromotionDefaultArgs> = $Result.GetResult<Prisma.$UserPromotionPayload, S>
+
+  type UserPromotionCountArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> =
+    Omit<UserPromotionFindManyArgs, 'select' | 'include' | 'distinct' | 'omit'> & {
+      select?: UserPromotionCountAggregateInputType | true
+    }
+
+  export interface UserPromotionDelegate<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs, GlobalOmitOptions = {}> {
+    [K: symbol]: { types: Prisma.TypeMap<ExtArgs>['model']['UserPromotion'], meta: { name: 'UserPromotion' } }
+    /**
+     * Find zero or one UserPromotion that matches the filter.
+     * @param {UserPromotionFindUniqueArgs} args - Arguments to find a UserPromotion
+     * @example
+     * // Get one UserPromotion
+     * const userPromotion = await prisma.userPromotion.findUnique({
+     *   where: {
+     *     // ... provide filter here
+     *   }
+     * })
+     */
+    findUnique<T extends UserPromotionFindUniqueArgs>(args: SelectSubset<T, UserPromotionFindUniqueArgs<ExtArgs>>): Prisma__UserPromotionClient<$Result.GetResult<Prisma.$UserPromotionPayload<ExtArgs>, T, "findUnique", GlobalOmitOptions> | null, null, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Find one UserPromotion that matches the filter or throw an error with `error.code='P2025'`
+     * if no matches were found.
+     * @param {UserPromotionFindUniqueOrThrowArgs} args - Arguments to find a UserPromotion
+     * @example
+     * // Get one UserPromotion
+     * const userPromotion = await prisma.userPromotion.findUniqueOrThrow({
+     *   where: {
+     *     // ... provide filter here
+     *   }
+     * })
+     */
+    findUniqueOrThrow<T extends UserPromotionFindUniqueOrThrowArgs>(args: SelectSubset<T, UserPromotionFindUniqueOrThrowArgs<ExtArgs>>): Prisma__UserPromotionClient<$Result.GetResult<Prisma.$UserPromotionPayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Find the first UserPromotion that matches the filter.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {UserPromotionFindFirstArgs} args - Arguments to find a UserPromotion
+     * @example
+     * // Get one UserPromotion
+     * const userPromotion = await prisma.userPromotion.findFirst({
+     *   where: {
+     *     // ... provide filter here
+     *   }
+     * })
+     */
+    findFirst<T extends UserPromotionFindFirstArgs>(args?: SelectSubset<T, UserPromotionFindFirstArgs<ExtArgs>>): Prisma__UserPromotionClient<$Result.GetResult<Prisma.$UserPromotionPayload<ExtArgs>, T, "findFirst", GlobalOmitOptions> | null, null, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Find the first UserPromotion that matches the filter or
+     * throw `PrismaKnownClientError` with `P2025` code if no matches were found.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {UserPromotionFindFirstOrThrowArgs} args - Arguments to find a UserPromotion
+     * @example
+     * // Get one UserPromotion
+     * const userPromotion = await prisma.userPromotion.findFirstOrThrow({
+     *   where: {
+     *     // ... provide filter here
+     *   }
+     * })
+     */
+    findFirstOrThrow<T extends UserPromotionFindFirstOrThrowArgs>(args?: SelectSubset<T, UserPromotionFindFirstOrThrowArgs<ExtArgs>>): Prisma__UserPromotionClient<$Result.GetResult<Prisma.$UserPromotionPayload<ExtArgs>, T, "findFirstOrThrow", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Find zero or more UserPromotions that matches the filter.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {UserPromotionFindManyArgs} args - Arguments to filter and select certain fields only.
+     * @example
+     * // Get all UserPromotions
+     * const userPromotions = await prisma.userPromotion.findMany()
+     * 
+     * // Get first 10 UserPromotions
+     * const userPromotions = await prisma.userPromotion.findMany({ take: 10 })
+     * 
+     * // Only select the `id`
+     * const userPromotionWithIdOnly = await prisma.userPromotion.findMany({ select: { id: true } })
+     * 
+     */
+    findMany<T extends UserPromotionFindManyArgs>(args?: SelectSubset<T, UserPromotionFindManyArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$UserPromotionPayload<ExtArgs>, T, "findMany", GlobalOmitOptions>>
+
+    /**
+     * Create a UserPromotion.
+     * @param {UserPromotionCreateArgs} args - Arguments to create a UserPromotion.
+     * @example
+     * // Create one UserPromotion
+     * const UserPromotion = await prisma.userPromotion.create({
+     *   data: {
+     *     // ... data to create a UserPromotion
+     *   }
+     * })
+     * 
+     */
+    create<T extends UserPromotionCreateArgs>(args: SelectSubset<T, UserPromotionCreateArgs<ExtArgs>>): Prisma__UserPromotionClient<$Result.GetResult<Prisma.$UserPromotionPayload<ExtArgs>, T, "create", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Create many UserPromotions.
+     * @param {UserPromotionCreateManyArgs} args - Arguments to create many UserPromotions.
+     * @example
+     * // Create many UserPromotions
+     * const userPromotion = await prisma.userPromotion.createMany({
+     *   data: [
+     *     // ... provide data here
+     *   ]
+     * })
+     *     
+     */
+    createMany<T extends UserPromotionCreateManyArgs>(args?: SelectSubset<T, UserPromotionCreateManyArgs<ExtArgs>>): Prisma.PrismaPromise<BatchPayload>
+
+    /**
+     * Create many UserPromotions and returns the data saved in the database.
+     * @param {UserPromotionCreateManyAndReturnArgs} args - Arguments to create many UserPromotions.
+     * @example
+     * // Create many UserPromotions
+     * const userPromotion = await prisma.userPromotion.createManyAndReturn({
+     *   data: [
+     *     // ... provide data here
+     *   ]
+     * })
+     * 
+     * // Create many UserPromotions and only return the `id`
+     * const userPromotionWithIdOnly = await prisma.userPromotion.createManyAndReturn({
+     *   select: { id: true },
+     *   data: [
+     *     // ... provide data here
+     *   ]
+     * })
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * 
+     */
+    createManyAndReturn<T extends UserPromotionCreateManyAndReturnArgs>(args?: SelectSubset<T, UserPromotionCreateManyAndReturnArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$UserPromotionPayload<ExtArgs>, T, "createManyAndReturn", GlobalOmitOptions>>
+
+    /**
+     * Delete a UserPromotion.
+     * @param {UserPromotionDeleteArgs} args - Arguments to delete one UserPromotion.
+     * @example
+     * // Delete one UserPromotion
+     * const UserPromotion = await prisma.userPromotion.delete({
+     *   where: {
+     *     // ... filter to delete one UserPromotion
+     *   }
+     * })
+     * 
+     */
+    delete<T extends UserPromotionDeleteArgs>(args: SelectSubset<T, UserPromotionDeleteArgs<ExtArgs>>): Prisma__UserPromotionClient<$Result.GetResult<Prisma.$UserPromotionPayload<ExtArgs>, T, "delete", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Update one UserPromotion.
+     * @param {UserPromotionUpdateArgs} args - Arguments to update one UserPromotion.
+     * @example
+     * // Update one UserPromotion
+     * const userPromotion = await prisma.userPromotion.update({
+     *   where: {
+     *     // ... provide filter here
+     *   },
+     *   data: {
+     *     // ... provide data here
+     *   }
+     * })
+     * 
+     */
+    update<T extends UserPromotionUpdateArgs>(args: SelectSubset<T, UserPromotionUpdateArgs<ExtArgs>>): Prisma__UserPromotionClient<$Result.GetResult<Prisma.$UserPromotionPayload<ExtArgs>, T, "update", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Delete zero or more UserPromotions.
+     * @param {UserPromotionDeleteManyArgs} args - Arguments to filter UserPromotions to delete.
+     * @example
+     * // Delete a few UserPromotions
+     * const { count } = await prisma.userPromotion.deleteMany({
+     *   where: {
+     *     // ... provide filter here
+     *   }
+     * })
+     * 
+     */
+    deleteMany<T extends UserPromotionDeleteManyArgs>(args?: SelectSubset<T, UserPromotionDeleteManyArgs<ExtArgs>>): Prisma.PrismaPromise<BatchPayload>
+
+    /**
+     * Update zero or more UserPromotions.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {UserPromotionUpdateManyArgs} args - Arguments to update one or more rows.
+     * @example
+     * // Update many UserPromotions
+     * const userPromotion = await prisma.userPromotion.updateMany({
+     *   where: {
+     *     // ... provide filter here
+     *   },
+     *   data: {
+     *     // ... provide data here
+     *   }
+     * })
+     * 
+     */
+    updateMany<T extends UserPromotionUpdateManyArgs>(args: SelectSubset<T, UserPromotionUpdateManyArgs<ExtArgs>>): Prisma.PrismaPromise<BatchPayload>
+
+    /**
+     * Update zero or more UserPromotions and returns the data updated in the database.
+     * @param {UserPromotionUpdateManyAndReturnArgs} args - Arguments to update many UserPromotions.
+     * @example
+     * // Update many UserPromotions
+     * const userPromotion = await prisma.userPromotion.updateManyAndReturn({
+     *   where: {
+     *     // ... provide filter here
+     *   },
+     *   data: [
+     *     // ... provide data here
+     *   ]
+     * })
+     * 
+     * // Update zero or more UserPromotions and only return the `id`
+     * const userPromotionWithIdOnly = await prisma.userPromotion.updateManyAndReturn({
+     *   select: { id: true },
+     *   where: {
+     *     // ... provide filter here
+     *   },
+     *   data: [
+     *     // ... provide data here
+     *   ]
+     * })
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * 
+     */
+    updateManyAndReturn<T extends UserPromotionUpdateManyAndReturnArgs>(args: SelectSubset<T, UserPromotionUpdateManyAndReturnArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$UserPromotionPayload<ExtArgs>, T, "updateManyAndReturn", GlobalOmitOptions>>
+
+    /**
+     * Create or update one UserPromotion.
+     * @param {UserPromotionUpsertArgs} args - Arguments to update or create a UserPromotion.
+     * @example
+     * // Update or create a UserPromotion
+     * const userPromotion = await prisma.userPromotion.upsert({
+     *   create: {
+     *     // ... data to create a UserPromotion
+     *   },
+     *   update: {
+     *     // ... in case it already exists, update
+     *   },
+     *   where: {
+     *     // ... the filter for the UserPromotion we want to update
+     *   }
+     * })
+     */
+    upsert<T extends UserPromotionUpsertArgs>(args: SelectSubset<T, UserPromotionUpsertArgs<ExtArgs>>): Prisma__UserPromotionClient<$Result.GetResult<Prisma.$UserPromotionPayload<ExtArgs>, T, "upsert", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
+
+
+    /**
+     * Count the number of UserPromotions.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {UserPromotionCountArgs} args - Arguments to filter UserPromotions to count.
+     * @example
+     * // Count the number of UserPromotions
+     * const count = await prisma.userPromotion.count({
+     *   where: {
+     *     // ... the filter for the UserPromotions we want to count
+     *   }
+     * })
+    **/
+    count<T extends UserPromotionCountArgs>(
+      args?: Subset<T, UserPromotionCountArgs>,
+    ): Prisma.PrismaPromise<
+      T extends $Utils.Record<'select', any>
+        ? T['select'] extends true
+          ? number
+          : GetScalarType<T['select'], UserPromotionCountAggregateOutputType>
+        : number
+    >
+
+    /**
+     * Allows you to perform aggregations operations on a UserPromotion.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {UserPromotionAggregateArgs} args - Select which aggregations you would like to apply and on what fields.
+     * @example
+     * // Ordered by age ascending
+     * // Where email contains prisma.io
+     * // Limited to the 10 users
+     * const aggregations = await prisma.user.aggregate({
+     *   _avg: {
+     *     age: true,
+     *   },
+     *   where: {
+     *     email: {
+     *       contains: "prisma.io",
+     *     },
+     *   },
+     *   orderBy: {
+     *     age: "asc",
+     *   },
+     *   take: 10,
+     * })
+    **/
+    aggregate<T extends UserPromotionAggregateArgs>(args: Subset<T, UserPromotionAggregateArgs>): Prisma.PrismaPromise<GetUserPromotionAggregateType<T>>
+
+    /**
+     * Group by UserPromotion.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {UserPromotionGroupByArgs} args - Group by arguments.
+     * @example
+     * // Group by city, order by createdAt, get count
+     * const result = await prisma.user.groupBy({
+     *   by: ['city', 'createdAt'],
+     *   orderBy: {
+     *     createdAt: true
+     *   },
+     *   _count: {
+     *     _all: true
+     *   },
+     * })
+     * 
+    **/
+    groupBy<
+      T extends UserPromotionGroupByArgs,
+      HasSelectOrTake extends Or<
+        Extends<'skip', Keys<T>>,
+        Extends<'take', Keys<T>>
+      >,
+      OrderByArg extends True extends HasSelectOrTake
+        ? { orderBy: UserPromotionGroupByArgs['orderBy'] }
+        : { orderBy?: UserPromotionGroupByArgs['orderBy'] },
+      OrderFields extends ExcludeUnderscoreKeys<Keys<MaybeTupleToUnion<T['orderBy']>>>,
+      ByFields extends MaybeTupleToUnion<T['by']>,
+      ByValid extends Has<ByFields, OrderFields>,
+      HavingFields extends GetHavingFields<T['having']>,
+      HavingValid extends Has<ByFields, HavingFields>,
+      ByEmpty extends T['by'] extends never[] ? True : False,
+      InputErrors extends ByEmpty extends True
+      ? `Error: "by" must not be empty.`
+      : HavingValid extends False
+      ? {
+          [P in HavingFields]: P extends ByFields
+            ? never
+            : P extends string
+            ? `Error: Field "${P}" used in "having" needs to be provided in "by".`
+            : [
+                Error,
+                'Field ',
+                P,
+                ` in "having" needs to be provided in "by"`,
+              ]
+        }[HavingFields]
+      : 'take' extends Keys<T>
+      ? 'orderBy' extends Keys<T>
+        ? ByValid extends True
+          ? {}
+          : {
+              [P in OrderFields]: P extends ByFields
+                ? never
+                : `Error: Field "${P}" in "orderBy" needs to be provided in "by"`
+            }[OrderFields]
+        : 'Error: If you provide "take", you also need to provide "orderBy"'
+      : 'skip' extends Keys<T>
+      ? 'orderBy' extends Keys<T>
+        ? ByValid extends True
+          ? {}
+          : {
+              [P in OrderFields]: P extends ByFields
+                ? never
+                : `Error: Field "${P}" in "orderBy" needs to be provided in "by"`
+            }[OrderFields]
+        : 'Error: If you provide "skip", you also need to provide "orderBy"'
+      : ByValid extends True
+      ? {}
+      : {
+          [P in OrderFields]: P extends ByFields
+            ? never
+            : `Error: Field "${P}" in "orderBy" needs to be provided in "by"`
+        }[OrderFields]
+    >(args: SubsetIntersection<T, UserPromotionGroupByArgs, OrderByArg> & InputErrors): {} extends InputErrors ? GetUserPromotionGroupByPayload<T> : Prisma.PrismaPromise<InputErrors>
+  /**
+   * Fields of the UserPromotion model
+   */
+  readonly fields: UserPromotionFieldRefs;
+  }
+
+  /**
+   * The delegate class that acts as a "Promise-like" for UserPromotion.
+   * Why is this prefixed with `Prisma__`?
+   * Because we want to prevent naming conflicts as mentioned in
+   * https://github.com/prisma/prisma-client-js/issues/707
+   */
+  export interface Prisma__UserPromotionClient<T, Null = never, ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs, GlobalOmitOptions = {}> extends Prisma.PrismaPromise<T> {
+    readonly [Symbol.toStringTag]: "PrismaPromise"
+    Rolling<T extends UserPromotion$RollingArgs<ExtArgs> = {}>(args?: Subset<T, UserPromotion$RollingArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$RollingPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
+    promotion<T extends PromotionDefaultArgs<ExtArgs> = {}>(args?: Subset<T, PromotionDefaultArgs<ExtArgs>>): Prisma__PromotionClient<$Result.GetResult<Prisma.$PromotionPayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions> | Null, Null, ExtArgs, GlobalOmitOptions>
+    user<T extends UserDefaultArgs<ExtArgs> = {}>(args?: Subset<T, UserDefaultArgs<ExtArgs>>): Prisma__UserClient<$Result.GetResult<Prisma.$UserPayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions> | Null, Null, ExtArgs, GlobalOmitOptions>
+    /**
+     * Attaches callbacks for the resolution and/or rejection of the Promise.
+     * @param onfulfilled The callback to execute when the Promise is resolved.
+     * @param onrejected The callback to execute when the Promise is rejected.
+     * @returns A Promise for the completion of which ever callback is executed.
+     */
+    then<TResult1 = T, TResult2 = never>(onfulfilled?: ((value: T) => TResult1 | PromiseLike<TResult1>) | undefined | null, onrejected?: ((reason: any) => TResult2 | PromiseLike<TResult2>) | undefined | null): $Utils.JsPromise<TResult1 | TResult2>
+    /**
+     * Attaches a callback for only the rejection of the Promise.
+     * @param onrejected The callback to execute when the Promise is rejected.
+     * @returns A Promise for the completion of the callback.
+     */
+    catch<TResult = never>(onrejected?: ((reason: any) => TResult | PromiseLike<TResult>) | undefined | null): $Utils.JsPromise<T | TResult>
+    /**
+     * Attaches a callback that is invoked when the Promise is settled (fulfilled or rejected). The
+     * resolved value cannot be modified from the callback.
+     * @param onfinally The callback to execute when the Promise is settled (fulfilled or rejected).
+     * @returns A Promise for the completion of the callback.
+     */
+    finally(onfinally?: (() => void) | undefined | null): $Utils.JsPromise<T>
+  }
+
+
+
+
+  /**
+   * Fields of the UserPromotion model
+   */
+  interface UserPromotionFieldRefs {
+    readonly id: FieldRef<"UserPromotion", 'BigInt'>
+    readonly userId: FieldRef<"UserPromotion", 'BigInt'>
+    readonly promotionId: FieldRef<"UserPromotion", 'BigInt'>
+    readonly status: FieldRef<"UserPromotion", 'UserPromotionStatus'>
+    readonly depositAmount: FieldRef<"UserPromotion", 'Decimal'>
+    readonly bonusAmount: FieldRef<"UserPromotion", 'Decimal'>
+    readonly targetRollingAmount: FieldRef<"UserPromotion", 'Decimal'>
+    readonly currentRollingAmount: FieldRef<"UserPromotion", 'Decimal'>
+    readonly currency: FieldRef<"UserPromotion", 'ExchangeCurrencyCode'>
+    readonly createdAt: FieldRef<"UserPromotion", 'DateTime'>
+    readonly updatedAt: FieldRef<"UserPromotion", 'DateTime'>
+  }
+    
+
+  // Custom InputTypes
+  /**
+   * UserPromotion findUnique
+   */
+  export type UserPromotionFindUniqueArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the UserPromotion
+     */
+    select?: UserPromotionSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the UserPromotion
+     */
+    omit?: UserPromotionOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: UserPromotionInclude<ExtArgs> | null
+    /**
+     * Filter, which UserPromotion to fetch.
+     */
+    where: UserPromotionWhereUniqueInput
+  }
+
+  /**
+   * UserPromotion findUniqueOrThrow
+   */
+  export type UserPromotionFindUniqueOrThrowArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the UserPromotion
+     */
+    select?: UserPromotionSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the UserPromotion
+     */
+    omit?: UserPromotionOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: UserPromotionInclude<ExtArgs> | null
+    /**
+     * Filter, which UserPromotion to fetch.
+     */
+    where: UserPromotionWhereUniqueInput
+  }
+
+  /**
+   * UserPromotion findFirst
+   */
+  export type UserPromotionFindFirstArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the UserPromotion
+     */
+    select?: UserPromotionSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the UserPromotion
+     */
+    omit?: UserPromotionOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: UserPromotionInclude<ExtArgs> | null
+    /**
+     * Filter, which UserPromotion to fetch.
+     */
+    where?: UserPromotionWhereInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/sorting Sorting Docs}
+     * 
+     * Determine the order of UserPromotions to fetch.
+     */
+    orderBy?: UserPromotionOrderByWithRelationInput | UserPromotionOrderByWithRelationInput[]
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination#cursor-based-pagination Cursor Docs}
+     * 
+     * Sets the position for searching for UserPromotions.
+     */
+    cursor?: UserPromotionWhereUniqueInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Take `±n` UserPromotions from the position of the cursor.
+     */
+    take?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Skip the first `n` UserPromotions.
+     */
+    skip?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/distinct Distinct Docs}
+     * 
+     * Filter by unique combinations of UserPromotions.
+     */
+    distinct?: UserPromotionScalarFieldEnum | UserPromotionScalarFieldEnum[]
+  }
+
+  /**
+   * UserPromotion findFirstOrThrow
+   */
+  export type UserPromotionFindFirstOrThrowArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the UserPromotion
+     */
+    select?: UserPromotionSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the UserPromotion
+     */
+    omit?: UserPromotionOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: UserPromotionInclude<ExtArgs> | null
+    /**
+     * Filter, which UserPromotion to fetch.
+     */
+    where?: UserPromotionWhereInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/sorting Sorting Docs}
+     * 
+     * Determine the order of UserPromotions to fetch.
+     */
+    orderBy?: UserPromotionOrderByWithRelationInput | UserPromotionOrderByWithRelationInput[]
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination#cursor-based-pagination Cursor Docs}
+     * 
+     * Sets the position for searching for UserPromotions.
+     */
+    cursor?: UserPromotionWhereUniqueInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Take `±n` UserPromotions from the position of the cursor.
+     */
+    take?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Skip the first `n` UserPromotions.
+     */
+    skip?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/distinct Distinct Docs}
+     * 
+     * Filter by unique combinations of UserPromotions.
+     */
+    distinct?: UserPromotionScalarFieldEnum | UserPromotionScalarFieldEnum[]
+  }
+
+  /**
+   * UserPromotion findMany
+   */
+  export type UserPromotionFindManyArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the UserPromotion
+     */
+    select?: UserPromotionSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the UserPromotion
+     */
+    omit?: UserPromotionOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: UserPromotionInclude<ExtArgs> | null
+    /**
+     * Filter, which UserPromotions to fetch.
+     */
+    where?: UserPromotionWhereInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/sorting Sorting Docs}
+     * 
+     * Determine the order of UserPromotions to fetch.
+     */
+    orderBy?: UserPromotionOrderByWithRelationInput | UserPromotionOrderByWithRelationInput[]
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination#cursor-based-pagination Cursor Docs}
+     * 
+     * Sets the position for listing UserPromotions.
+     */
+    cursor?: UserPromotionWhereUniqueInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Take `±n` UserPromotions from the position of the cursor.
+     */
+    take?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Skip the first `n` UserPromotions.
+     */
+    skip?: number
+    distinct?: UserPromotionScalarFieldEnum | UserPromotionScalarFieldEnum[]
+  }
+
+  /**
+   * UserPromotion create
+   */
+  export type UserPromotionCreateArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the UserPromotion
+     */
+    select?: UserPromotionSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the UserPromotion
+     */
+    omit?: UserPromotionOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: UserPromotionInclude<ExtArgs> | null
+    /**
+     * The data needed to create a UserPromotion.
+     */
+    data: XOR<UserPromotionCreateInput, UserPromotionUncheckedCreateInput>
+  }
+
+  /**
+   * UserPromotion createMany
+   */
+  export type UserPromotionCreateManyArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * The data used to create many UserPromotions.
+     */
+    data: UserPromotionCreateManyInput | UserPromotionCreateManyInput[]
+    skipDuplicates?: boolean
+  }
+
+  /**
+   * UserPromotion createManyAndReturn
+   */
+  export type UserPromotionCreateManyAndReturnArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the UserPromotion
+     */
+    select?: UserPromotionSelectCreateManyAndReturn<ExtArgs> | null
+    /**
+     * Omit specific fields from the UserPromotion
+     */
+    omit?: UserPromotionOmit<ExtArgs> | null
+    /**
+     * The data used to create many UserPromotions.
+     */
+    data: UserPromotionCreateManyInput | UserPromotionCreateManyInput[]
+    skipDuplicates?: boolean
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: UserPromotionIncludeCreateManyAndReturn<ExtArgs> | null
+  }
+
+  /**
+   * UserPromotion update
+   */
+  export type UserPromotionUpdateArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the UserPromotion
+     */
+    select?: UserPromotionSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the UserPromotion
+     */
+    omit?: UserPromotionOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: UserPromotionInclude<ExtArgs> | null
+    /**
+     * The data needed to update a UserPromotion.
+     */
+    data: XOR<UserPromotionUpdateInput, UserPromotionUncheckedUpdateInput>
+    /**
+     * Choose, which UserPromotion to update.
+     */
+    where: UserPromotionWhereUniqueInput
+  }
+
+  /**
+   * UserPromotion updateMany
+   */
+  export type UserPromotionUpdateManyArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * The data used to update UserPromotions.
+     */
+    data: XOR<UserPromotionUpdateManyMutationInput, UserPromotionUncheckedUpdateManyInput>
+    /**
+     * Filter which UserPromotions to update
+     */
+    where?: UserPromotionWhereInput
+    /**
+     * Limit how many UserPromotions to update.
+     */
+    limit?: number
+  }
+
+  /**
+   * UserPromotion updateManyAndReturn
+   */
+  export type UserPromotionUpdateManyAndReturnArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the UserPromotion
+     */
+    select?: UserPromotionSelectUpdateManyAndReturn<ExtArgs> | null
+    /**
+     * Omit specific fields from the UserPromotion
+     */
+    omit?: UserPromotionOmit<ExtArgs> | null
+    /**
+     * The data used to update UserPromotions.
+     */
+    data: XOR<UserPromotionUpdateManyMutationInput, UserPromotionUncheckedUpdateManyInput>
+    /**
+     * Filter which UserPromotions to update
+     */
+    where?: UserPromotionWhereInput
+    /**
+     * Limit how many UserPromotions to update.
+     */
+    limit?: number
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: UserPromotionIncludeUpdateManyAndReturn<ExtArgs> | null
+  }
+
+  /**
+   * UserPromotion upsert
+   */
+  export type UserPromotionUpsertArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the UserPromotion
+     */
+    select?: UserPromotionSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the UserPromotion
+     */
+    omit?: UserPromotionOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: UserPromotionInclude<ExtArgs> | null
+    /**
+     * The filter to search for the UserPromotion to update in case it exists.
+     */
+    where: UserPromotionWhereUniqueInput
+    /**
+     * In case the UserPromotion found by the `where` argument doesn't exist, create a new UserPromotion with this data.
+     */
+    create: XOR<UserPromotionCreateInput, UserPromotionUncheckedCreateInput>
+    /**
+     * In case the UserPromotion was found with the provided `where` argument, update it with this data.
+     */
+    update: XOR<UserPromotionUpdateInput, UserPromotionUncheckedUpdateInput>
+  }
+
+  /**
+   * UserPromotion delete
+   */
+  export type UserPromotionDeleteArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the UserPromotion
+     */
+    select?: UserPromotionSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the UserPromotion
+     */
+    omit?: UserPromotionOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: UserPromotionInclude<ExtArgs> | null
+    /**
+     * Filter which UserPromotion to delete.
+     */
+    where: UserPromotionWhereUniqueInput
+  }
+
+  /**
+   * UserPromotion deleteMany
+   */
+  export type UserPromotionDeleteManyArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Filter which UserPromotions to delete
+     */
+    where?: UserPromotionWhereInput
+    /**
+     * Limit how many UserPromotions to delete.
+     */
+    limit?: number
+  }
+
+  /**
+   * UserPromotion.Rolling
+   */
+  export type UserPromotion$RollingArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the Rolling
+     */
+    select?: RollingSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the Rolling
+     */
+    omit?: RollingOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: RollingInclude<ExtArgs> | null
+    where?: RollingWhereInput
+    orderBy?: RollingOrderByWithRelationInput | RollingOrderByWithRelationInput[]
+    cursor?: RollingWhereUniqueInput
+    take?: number
+    skip?: number
+    distinct?: RollingScalarFieldEnum | RollingScalarFieldEnum[]
+  }
+
+  /**
+   * UserPromotion without action
+   */
+  export type UserPromotionDefaultArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the UserPromotion
+     */
+    select?: UserPromotionSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the UserPromotion
+     */
+    omit?: UserPromotionOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: UserPromotionInclude<ExtArgs> | null
+  }
+
+
+  /**
    * Model UserSession
    */
 
@@ -57751,54 +59051,6 @@ export namespace Prisma {
   export type DailyCompEarningScalarFieldEnum = (typeof DailyCompEarningScalarFieldEnum)[keyof typeof DailyCompEarningScalarFieldEnum]
 
 
-  export const PromotionScalarFieldEnum: {
-    id: 'id',
-    managementName: 'managementName',
-    isActive: 'isActive',
-    startDate: 'startDate',
-    endDate: 'endDate',
-    targetType: 'targetType',
-    bonusType: 'bonusType',
-    bonusRate: 'bonusRate',
-    minDepositAmount: 'minDepositAmount',
-    maxBonusAmount: 'maxBonusAmount',
-    rollingMultiplier: 'rollingMultiplier',
-    qualificationMaintainCondition: 'qualificationMaintainCondition',
-    createdAt: 'createdAt',
-    updatedAt: 'updatedAt'
-  };
-
-  export type PromotionScalarFieldEnum = (typeof PromotionScalarFieldEnum)[keyof typeof PromotionScalarFieldEnum]
-
-
-  export const PromotionTranslationScalarFieldEnum: {
-    id: 'id',
-    promotionId: 'promotionId',
-    language: 'language',
-    name: 'name',
-    description: 'description',
-    createdAt: 'createdAt',
-    updatedAt: 'updatedAt'
-  };
-
-  export type PromotionTranslationScalarFieldEnum = (typeof PromotionTranslationScalarFieldEnum)[keyof typeof PromotionTranslationScalarFieldEnum]
-
-
-  export const UserPromotionScalarFieldEnum: {
-    id: 'id',
-    userId: 'userId',
-    promotionId: 'promotionId',
-    status: 'status',
-    bonusGranted: 'bonusGranted',
-    bonusGrantedAt: 'bonusGrantedAt',
-    bonusAmount: 'bonusAmount',
-    createdAt: 'createdAt',
-    updatedAt: 'updatedAt'
-  };
-
-  export type UserPromotionScalarFieldEnum = (typeof UserPromotionScalarFieldEnum)[keyof typeof UserPromotionScalarFieldEnum]
-
-
   export const NowPaymentCallbackLogScalarFieldEnum: {
     id: 'id',
     requestHeaders: 'requestHeaders',
@@ -58072,6 +59324,70 @@ export namespace Prisma {
   };
 
   export type LoginAttemptScalarFieldEnum = (typeof LoginAttemptScalarFieldEnum)[keyof typeof LoginAttemptScalarFieldEnum]
+
+
+  export const PromotionScalarFieldEnum: {
+    id: 'id',
+    uid: 'uid',
+    managementName: 'managementName',
+    isActive: 'isActive',
+    startDate: 'startDate',
+    endDate: 'endDate',
+    deletedAt: 'deletedAt',
+    targetType: 'targetType',
+    bonusType: 'bonusType',
+    bonusRate: 'bonusRate',
+    rollingMultiplier: 'rollingMultiplier',
+    qualificationMaintainCondition: 'qualificationMaintainCondition',
+    isOneTime: 'isOneTime',
+    createdAt: 'createdAt',
+    updatedAt: 'updatedAt'
+  };
+
+  export type PromotionScalarFieldEnum = (typeof PromotionScalarFieldEnum)[keyof typeof PromotionScalarFieldEnum]
+
+
+  export const PromotionTranslationScalarFieldEnum: {
+    id: 'id',
+    promotionId: 'promotionId',
+    language: 'language',
+    name: 'name',
+    description: 'description',
+    createdAt: 'createdAt',
+    updatedAt: 'updatedAt'
+  };
+
+  export type PromotionTranslationScalarFieldEnum = (typeof PromotionTranslationScalarFieldEnum)[keyof typeof PromotionTranslationScalarFieldEnum]
+
+
+  export const PromotionCurrencyScalarFieldEnum: {
+    id: 'id',
+    promotionId: 'promotionId',
+    currency: 'currency',
+    minDepositAmount: 'minDepositAmount',
+    maxBonusAmount: 'maxBonusAmount',
+    createdAt: 'createdAt',
+    updatedAt: 'updatedAt'
+  };
+
+  export type PromotionCurrencyScalarFieldEnum = (typeof PromotionCurrencyScalarFieldEnum)[keyof typeof PromotionCurrencyScalarFieldEnum]
+
+
+  export const UserPromotionScalarFieldEnum: {
+    id: 'id',
+    userId: 'userId',
+    promotionId: 'promotionId',
+    status: 'status',
+    depositAmount: 'depositAmount',
+    bonusAmount: 'bonusAmount',
+    targetRollingAmount: 'targetRollingAmount',
+    currentRollingAmount: 'currentRollingAmount',
+    currency: 'currency',
+    createdAt: 'createdAt',
+    updatedAt: 'updatedAt'
+  };
+
+  export type UserPromotionScalarFieldEnum = (typeof UserPromotionScalarFieldEnum)[keyof typeof UserPromotionScalarFieldEnum]
 
 
   export const UserSessionScalarFieldEnum: {
@@ -58526,62 +59842,6 @@ export namespace Prisma {
 
 
   /**
-   * Reference to a field of type 'PromotionTargetType'
-   */
-  export type EnumPromotionTargetTypeFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaModel, 'PromotionTargetType'>
-    
-
-
-  /**
-   * Reference to a field of type 'PromotionTargetType[]'
-   */
-  export type ListEnumPromotionTargetTypeFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaModel, 'PromotionTargetType[]'>
-    
-
-
-  /**
-   * Reference to a field of type 'PromotionBonusType'
-   */
-  export type EnumPromotionBonusTypeFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaModel, 'PromotionBonusType'>
-    
-
-
-  /**
-   * Reference to a field of type 'PromotionBonusType[]'
-   */
-  export type ListEnumPromotionBonusTypeFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaModel, 'PromotionBonusType[]'>
-    
-
-
-  /**
-   * Reference to a field of type 'PromotionQualificationCondition'
-   */
-  export type EnumPromotionQualificationConditionFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaModel, 'PromotionQualificationCondition'>
-    
-
-
-  /**
-   * Reference to a field of type 'PromotionQualificationCondition[]'
-   */
-  export type ListEnumPromotionQualificationConditionFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaModel, 'PromotionQualificationCondition[]'>
-    
-
-
-  /**
-   * Reference to a field of type 'UserPromotionStatus'
-   */
-  export type EnumUserPromotionStatusFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaModel, 'UserPromotionStatus'>
-    
-
-
-  /**
-   * Reference to a field of type 'UserPromotionStatus[]'
-   */
-  export type ListEnumUserPromotionStatusFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaModel, 'UserPromotionStatus[]'>
-    
-
-
-  /**
    * Reference to a field of type 'ExchangeRateProvider'
    */
   export type EnumExchangeRateProviderFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaModel, 'ExchangeRateProvider'>
@@ -58718,6 +59978,62 @@ export namespace Prisma {
    * Reference to a field of type 'LoginFailureReason[]'
    */
   export type ListEnumLoginFailureReasonFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaModel, 'LoginFailureReason[]'>
+    
+
+
+  /**
+   * Reference to a field of type 'PromotionTargetType'
+   */
+  export type EnumPromotionTargetTypeFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaModel, 'PromotionTargetType'>
+    
+
+
+  /**
+   * Reference to a field of type 'PromotionTargetType[]'
+   */
+  export type ListEnumPromotionTargetTypeFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaModel, 'PromotionTargetType[]'>
+    
+
+
+  /**
+   * Reference to a field of type 'PromotionBonusType'
+   */
+  export type EnumPromotionBonusTypeFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaModel, 'PromotionBonusType'>
+    
+
+
+  /**
+   * Reference to a field of type 'PromotionBonusType[]'
+   */
+  export type ListEnumPromotionBonusTypeFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaModel, 'PromotionBonusType[]'>
+    
+
+
+  /**
+   * Reference to a field of type 'PromotionQualificationCondition'
+   */
+  export type EnumPromotionQualificationConditionFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaModel, 'PromotionQualificationCondition'>
+    
+
+
+  /**
+   * Reference to a field of type 'PromotionQualificationCondition[]'
+   */
+  export type ListEnumPromotionQualificationConditionFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaModel, 'PromotionQualificationCondition[]'>
+    
+
+
+  /**
+   * Reference to a field of type 'UserPromotionStatus'
+   */
+  export type EnumUserPromotionStatusFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaModel, 'UserPromotionStatus'>
+    
+
+
+  /**
+   * Reference to a field of type 'UserPromotionStatus[]'
+   */
+  export type ListEnumUserPromotionStatusFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaModel, 'UserPromotionStatus[]'>
     
 
 
@@ -61119,262 +62435,6 @@ export namespace Prisma {
     updatedAt?: DateTimeWithAggregatesFilter<"DailyCompEarning"> | Date | string
   }
 
-  export type PromotionWhereInput = {
-    AND?: PromotionWhereInput | PromotionWhereInput[]
-    OR?: PromotionWhereInput[]
-    NOT?: PromotionWhereInput | PromotionWhereInput[]
-    id?: IntFilter<"Promotion"> | number
-    managementName?: StringFilter<"Promotion"> | string
-    isActive?: BoolFilter<"Promotion"> | boolean
-    startDate?: DateTimeNullableFilter<"Promotion"> | Date | string | null
-    endDate?: DateTimeNullableFilter<"Promotion"> | Date | string | null
-    targetType?: EnumPromotionTargetTypeFilter<"Promotion"> | $Enums.PromotionTargetType
-    bonusType?: EnumPromotionBonusTypeFilter<"Promotion"> | $Enums.PromotionBonusType
-    bonusRate?: DecimalNullableFilter<"Promotion"> | Decimal | DecimalJsLike | number | string | null
-    minDepositAmount?: DecimalFilter<"Promotion"> | Decimal | DecimalJsLike | number | string
-    maxBonusAmount?: DecimalNullableFilter<"Promotion"> | Decimal | DecimalJsLike | number | string | null
-    rollingMultiplier?: DecimalNullableFilter<"Promotion"> | Decimal | DecimalJsLike | number | string | null
-    qualificationMaintainCondition?: EnumPromotionQualificationConditionFilter<"Promotion"> | $Enums.PromotionQualificationCondition
-    createdAt?: DateTimeFilter<"Promotion"> | Date | string
-    updatedAt?: DateTimeFilter<"Promotion"> | Date | string
-    translations?: PromotionTranslationListRelationFilter
-    UserPromotion?: UserPromotionListRelationFilter
-  }
-
-  export type PromotionOrderByWithRelationInput = {
-    id?: SortOrder
-    managementName?: SortOrder
-    isActive?: SortOrder
-    startDate?: SortOrderInput | SortOrder
-    endDate?: SortOrderInput | SortOrder
-    targetType?: SortOrder
-    bonusType?: SortOrder
-    bonusRate?: SortOrderInput | SortOrder
-    minDepositAmount?: SortOrder
-    maxBonusAmount?: SortOrderInput | SortOrder
-    rollingMultiplier?: SortOrderInput | SortOrder
-    qualificationMaintainCondition?: SortOrder
-    createdAt?: SortOrder
-    updatedAt?: SortOrder
-    translations?: PromotionTranslationOrderByRelationAggregateInput
-    UserPromotion?: UserPromotionOrderByRelationAggregateInput
-  }
-
-  export type PromotionWhereUniqueInput = Prisma.AtLeast<{
-    id?: number
-    AND?: PromotionWhereInput | PromotionWhereInput[]
-    OR?: PromotionWhereInput[]
-    NOT?: PromotionWhereInput | PromotionWhereInput[]
-    managementName?: StringFilter<"Promotion"> | string
-    isActive?: BoolFilter<"Promotion"> | boolean
-    startDate?: DateTimeNullableFilter<"Promotion"> | Date | string | null
-    endDate?: DateTimeNullableFilter<"Promotion"> | Date | string | null
-    targetType?: EnumPromotionTargetTypeFilter<"Promotion"> | $Enums.PromotionTargetType
-    bonusType?: EnumPromotionBonusTypeFilter<"Promotion"> | $Enums.PromotionBonusType
-    bonusRate?: DecimalNullableFilter<"Promotion"> | Decimal | DecimalJsLike | number | string | null
-    minDepositAmount?: DecimalFilter<"Promotion"> | Decimal | DecimalJsLike | number | string
-    maxBonusAmount?: DecimalNullableFilter<"Promotion"> | Decimal | DecimalJsLike | number | string | null
-    rollingMultiplier?: DecimalNullableFilter<"Promotion"> | Decimal | DecimalJsLike | number | string | null
-    qualificationMaintainCondition?: EnumPromotionQualificationConditionFilter<"Promotion"> | $Enums.PromotionQualificationCondition
-    createdAt?: DateTimeFilter<"Promotion"> | Date | string
-    updatedAt?: DateTimeFilter<"Promotion"> | Date | string
-    translations?: PromotionTranslationListRelationFilter
-    UserPromotion?: UserPromotionListRelationFilter
-  }, "id">
-
-  export type PromotionOrderByWithAggregationInput = {
-    id?: SortOrder
-    managementName?: SortOrder
-    isActive?: SortOrder
-    startDate?: SortOrderInput | SortOrder
-    endDate?: SortOrderInput | SortOrder
-    targetType?: SortOrder
-    bonusType?: SortOrder
-    bonusRate?: SortOrderInput | SortOrder
-    minDepositAmount?: SortOrder
-    maxBonusAmount?: SortOrderInput | SortOrder
-    rollingMultiplier?: SortOrderInput | SortOrder
-    qualificationMaintainCondition?: SortOrder
-    createdAt?: SortOrder
-    updatedAt?: SortOrder
-    _count?: PromotionCountOrderByAggregateInput
-    _avg?: PromotionAvgOrderByAggregateInput
-    _max?: PromotionMaxOrderByAggregateInput
-    _min?: PromotionMinOrderByAggregateInput
-    _sum?: PromotionSumOrderByAggregateInput
-  }
-
-  export type PromotionScalarWhereWithAggregatesInput = {
-    AND?: PromotionScalarWhereWithAggregatesInput | PromotionScalarWhereWithAggregatesInput[]
-    OR?: PromotionScalarWhereWithAggregatesInput[]
-    NOT?: PromotionScalarWhereWithAggregatesInput | PromotionScalarWhereWithAggregatesInput[]
-    id?: IntWithAggregatesFilter<"Promotion"> | number
-    managementName?: StringWithAggregatesFilter<"Promotion"> | string
-    isActive?: BoolWithAggregatesFilter<"Promotion"> | boolean
-    startDate?: DateTimeNullableWithAggregatesFilter<"Promotion"> | Date | string | null
-    endDate?: DateTimeNullableWithAggregatesFilter<"Promotion"> | Date | string | null
-    targetType?: EnumPromotionTargetTypeWithAggregatesFilter<"Promotion"> | $Enums.PromotionTargetType
-    bonusType?: EnumPromotionBonusTypeWithAggregatesFilter<"Promotion"> | $Enums.PromotionBonusType
-    bonusRate?: DecimalNullableWithAggregatesFilter<"Promotion"> | Decimal | DecimalJsLike | number | string | null
-    minDepositAmount?: DecimalWithAggregatesFilter<"Promotion"> | Decimal | DecimalJsLike | number | string
-    maxBonusAmount?: DecimalNullableWithAggregatesFilter<"Promotion"> | Decimal | DecimalJsLike | number | string | null
-    rollingMultiplier?: DecimalNullableWithAggregatesFilter<"Promotion"> | Decimal | DecimalJsLike | number | string | null
-    qualificationMaintainCondition?: EnumPromotionQualificationConditionWithAggregatesFilter<"Promotion"> | $Enums.PromotionQualificationCondition
-    createdAt?: DateTimeWithAggregatesFilter<"Promotion"> | Date | string
-    updatedAt?: DateTimeWithAggregatesFilter<"Promotion"> | Date | string
-  }
-
-  export type PromotionTranslationWhereInput = {
-    AND?: PromotionTranslationWhereInput | PromotionTranslationWhereInput[]
-    OR?: PromotionTranslationWhereInput[]
-    NOT?: PromotionTranslationWhereInput | PromotionTranslationWhereInput[]
-    id?: IntFilter<"PromotionTranslation"> | number
-    promotionId?: IntFilter<"PromotionTranslation"> | number
-    language?: EnumLanguageFilter<"PromotionTranslation"> | $Enums.Language
-    name?: StringFilter<"PromotionTranslation"> | string
-    description?: StringNullableFilter<"PromotionTranslation"> | string | null
-    createdAt?: DateTimeFilter<"PromotionTranslation"> | Date | string
-    updatedAt?: DateTimeFilter<"PromotionTranslation"> | Date | string
-    promotion?: XOR<PromotionScalarRelationFilter, PromotionWhereInput>
-  }
-
-  export type PromotionTranslationOrderByWithRelationInput = {
-    id?: SortOrder
-    promotionId?: SortOrder
-    language?: SortOrder
-    name?: SortOrder
-    description?: SortOrderInput | SortOrder
-    createdAt?: SortOrder
-    updatedAt?: SortOrder
-    promotion?: PromotionOrderByWithRelationInput
-  }
-
-  export type PromotionTranslationWhereUniqueInput = Prisma.AtLeast<{
-    id?: number
-    promotionId_language?: PromotionTranslationPromotionIdLanguageCompoundUniqueInput
-    AND?: PromotionTranslationWhereInput | PromotionTranslationWhereInput[]
-    OR?: PromotionTranslationWhereInput[]
-    NOT?: PromotionTranslationWhereInput | PromotionTranslationWhereInput[]
-    promotionId?: IntFilter<"PromotionTranslation"> | number
-    language?: EnumLanguageFilter<"PromotionTranslation"> | $Enums.Language
-    name?: StringFilter<"PromotionTranslation"> | string
-    description?: StringNullableFilter<"PromotionTranslation"> | string | null
-    createdAt?: DateTimeFilter<"PromotionTranslation"> | Date | string
-    updatedAt?: DateTimeFilter<"PromotionTranslation"> | Date | string
-    promotion?: XOR<PromotionScalarRelationFilter, PromotionWhereInput>
-  }, "id" | "promotionId_language">
-
-  export type PromotionTranslationOrderByWithAggregationInput = {
-    id?: SortOrder
-    promotionId?: SortOrder
-    language?: SortOrder
-    name?: SortOrder
-    description?: SortOrderInput | SortOrder
-    createdAt?: SortOrder
-    updatedAt?: SortOrder
-    _count?: PromotionTranslationCountOrderByAggregateInput
-    _avg?: PromotionTranslationAvgOrderByAggregateInput
-    _max?: PromotionTranslationMaxOrderByAggregateInput
-    _min?: PromotionTranslationMinOrderByAggregateInput
-    _sum?: PromotionTranslationSumOrderByAggregateInput
-  }
-
-  export type PromotionTranslationScalarWhereWithAggregatesInput = {
-    AND?: PromotionTranslationScalarWhereWithAggregatesInput | PromotionTranslationScalarWhereWithAggregatesInput[]
-    OR?: PromotionTranslationScalarWhereWithAggregatesInput[]
-    NOT?: PromotionTranslationScalarWhereWithAggregatesInput | PromotionTranslationScalarWhereWithAggregatesInput[]
-    id?: IntWithAggregatesFilter<"PromotionTranslation"> | number
-    promotionId?: IntWithAggregatesFilter<"PromotionTranslation"> | number
-    language?: EnumLanguageWithAggregatesFilter<"PromotionTranslation"> | $Enums.Language
-    name?: StringWithAggregatesFilter<"PromotionTranslation"> | string
-    description?: StringNullableWithAggregatesFilter<"PromotionTranslation"> | string | null
-    createdAt?: DateTimeWithAggregatesFilter<"PromotionTranslation"> | Date | string
-    updatedAt?: DateTimeWithAggregatesFilter<"PromotionTranslation"> | Date | string
-  }
-
-  export type UserPromotionWhereInput = {
-    AND?: UserPromotionWhereInput | UserPromotionWhereInput[]
-    OR?: UserPromotionWhereInput[]
-    NOT?: UserPromotionWhereInput | UserPromotionWhereInput[]
-    id?: IntFilter<"UserPromotion"> | number
-    userId?: BigIntFilter<"UserPromotion"> | bigint | number
-    promotionId?: IntFilter<"UserPromotion"> | number
-    status?: EnumUserPromotionStatusFilter<"UserPromotion"> | $Enums.UserPromotionStatus
-    bonusGranted?: BoolFilter<"UserPromotion"> | boolean
-    bonusGrantedAt?: DateTimeNullableFilter<"UserPromotion"> | Date | string | null
-    bonusAmount?: DecimalNullableFilter<"UserPromotion"> | Decimal | DecimalJsLike | number | string | null
-    createdAt?: DateTimeFilter<"UserPromotion"> | Date | string
-    updatedAt?: DateTimeFilter<"UserPromotion"> | Date | string
-    Rolling?: RollingListRelationFilter
-    promotion?: XOR<PromotionScalarRelationFilter, PromotionWhereInput>
-    user?: XOR<UserScalarRelationFilter, UserWhereInput>
-  }
-
-  export type UserPromotionOrderByWithRelationInput = {
-    id?: SortOrder
-    userId?: SortOrder
-    promotionId?: SortOrder
-    status?: SortOrder
-    bonusGranted?: SortOrder
-    bonusGrantedAt?: SortOrderInput | SortOrder
-    bonusAmount?: SortOrderInput | SortOrder
-    createdAt?: SortOrder
-    updatedAt?: SortOrder
-    Rolling?: RollingOrderByRelationAggregateInput
-    promotion?: PromotionOrderByWithRelationInput
-    user?: UserOrderByWithRelationInput
-  }
-
-  export type UserPromotionWhereUniqueInput = Prisma.AtLeast<{
-    id?: number
-    AND?: UserPromotionWhereInput | UserPromotionWhereInput[]
-    OR?: UserPromotionWhereInput[]
-    NOT?: UserPromotionWhereInput | UserPromotionWhereInput[]
-    userId?: BigIntFilter<"UserPromotion"> | bigint | number
-    promotionId?: IntFilter<"UserPromotion"> | number
-    status?: EnumUserPromotionStatusFilter<"UserPromotion"> | $Enums.UserPromotionStatus
-    bonusGranted?: BoolFilter<"UserPromotion"> | boolean
-    bonusGrantedAt?: DateTimeNullableFilter<"UserPromotion"> | Date | string | null
-    bonusAmount?: DecimalNullableFilter<"UserPromotion"> | Decimal | DecimalJsLike | number | string | null
-    createdAt?: DateTimeFilter<"UserPromotion"> | Date | string
-    updatedAt?: DateTimeFilter<"UserPromotion"> | Date | string
-    Rolling?: RollingListRelationFilter
-    promotion?: XOR<PromotionScalarRelationFilter, PromotionWhereInput>
-    user?: XOR<UserScalarRelationFilter, UserWhereInput>
-  }, "id">
-
-  export type UserPromotionOrderByWithAggregationInput = {
-    id?: SortOrder
-    userId?: SortOrder
-    promotionId?: SortOrder
-    status?: SortOrder
-    bonusGranted?: SortOrder
-    bonusGrantedAt?: SortOrderInput | SortOrder
-    bonusAmount?: SortOrderInput | SortOrder
-    createdAt?: SortOrder
-    updatedAt?: SortOrder
-    _count?: UserPromotionCountOrderByAggregateInput
-    _avg?: UserPromotionAvgOrderByAggregateInput
-    _max?: UserPromotionMaxOrderByAggregateInput
-    _min?: UserPromotionMinOrderByAggregateInput
-    _sum?: UserPromotionSumOrderByAggregateInput
-  }
-
-  export type UserPromotionScalarWhereWithAggregatesInput = {
-    AND?: UserPromotionScalarWhereWithAggregatesInput | UserPromotionScalarWhereWithAggregatesInput[]
-    OR?: UserPromotionScalarWhereWithAggregatesInput[]
-    NOT?: UserPromotionScalarWhereWithAggregatesInput | UserPromotionScalarWhereWithAggregatesInput[]
-    id?: IntWithAggregatesFilter<"UserPromotion"> | number
-    userId?: BigIntWithAggregatesFilter<"UserPromotion"> | bigint | number
-    promotionId?: IntWithAggregatesFilter<"UserPromotion"> | number
-    status?: EnumUserPromotionStatusWithAggregatesFilter<"UserPromotion"> | $Enums.UserPromotionStatus
-    bonusGranted?: BoolWithAggregatesFilter<"UserPromotion"> | boolean
-    bonusGrantedAt?: DateTimeNullableWithAggregatesFilter<"UserPromotion"> | Date | string | null
-    bonusAmount?: DecimalNullableWithAggregatesFilter<"UserPromotion"> | Decimal | DecimalJsLike | number | string | null
-    createdAt?: DateTimeWithAggregatesFilter<"UserPromotion"> | Date | string
-    updatedAt?: DateTimeWithAggregatesFilter<"UserPromotion"> | Date | string
-  }
-
   export type NowPaymentCallbackLogWhereInput = {
     AND?: NowPaymentCallbackLogWhereInput | NowPaymentCallbackLogWhereInput[]
     OR?: NowPaymentCallbackLogWhereInput[]
@@ -61796,7 +62856,7 @@ export namespace Prisma {
     id?: BigIntFilter<"Rolling"> | bigint | number
     userId?: BigIntFilter<"Rolling"> | bigint | number
     sourceType?: EnumRollingSourceTypeFilter<"Rolling"> | $Enums.RollingSourceType
-    userPromotionId?: IntNullableFilter<"Rolling"> | number | null
+    userPromotionId?: BigIntNullableFilter<"Rolling"> | bigint | number | null
     requiredAmount?: DecimalFilter<"Rolling"> | Decimal | DecimalJsLike | number | string
     currentAmount?: DecimalFilter<"Rolling"> | Decimal | DecimalJsLike | number | string
     cancellationBalanceThreshold?: DecimalNullableFilter<"Rolling"> | Decimal | DecimalJsLike | number | string | null
@@ -61841,7 +62901,7 @@ export namespace Prisma {
     NOT?: RollingWhereInput | RollingWhereInput[]
     userId?: BigIntFilter<"Rolling"> | bigint | number
     sourceType?: EnumRollingSourceTypeFilter<"Rolling"> | $Enums.RollingSourceType
-    userPromotionId?: IntNullableFilter<"Rolling"> | number | null
+    userPromotionId?: BigIntNullableFilter<"Rolling"> | bigint | number | null
     requiredAmount?: DecimalFilter<"Rolling"> | Decimal | DecimalJsLike | number | string
     currentAmount?: DecimalFilter<"Rolling"> | Decimal | DecimalJsLike | number | string
     cancellationBalanceThreshold?: DecimalNullableFilter<"Rolling"> | Decimal | DecimalJsLike | number | string | null
@@ -61888,7 +62948,7 @@ export namespace Prisma {
     id?: BigIntWithAggregatesFilter<"Rolling"> | bigint | number
     userId?: BigIntWithAggregatesFilter<"Rolling"> | bigint | number
     sourceType?: EnumRollingSourceTypeWithAggregatesFilter<"Rolling"> | $Enums.RollingSourceType
-    userPromotionId?: IntNullableWithAggregatesFilter<"Rolling"> | number | null
+    userPromotionId?: BigIntNullableWithAggregatesFilter<"Rolling"> | bigint | number | null
     requiredAmount?: DecimalWithAggregatesFilter<"Rolling"> | Decimal | DecimalJsLike | number | string
     currentAmount?: DecimalWithAggregatesFilter<"Rolling"> | Decimal | DecimalJsLike | number | string
     cancellationBalanceThreshold?: DecimalNullableWithAggregatesFilter<"Rolling"> | Decimal | DecimalJsLike | number | string | null
@@ -62813,6 +63873,348 @@ export namespace Prisma {
     attemptedAt?: DateTimeWithAggregatesFilter<"LoginAttempt"> | Date | string
     email?: StringNullableWithAggregatesFilter<"LoginAttempt"> | string | null
     isAdmin?: BoolWithAggregatesFilter<"LoginAttempt"> | boolean
+  }
+
+  export type PromotionWhereInput = {
+    AND?: PromotionWhereInput | PromotionWhereInput[]
+    OR?: PromotionWhereInput[]
+    NOT?: PromotionWhereInput | PromotionWhereInput[]
+    id?: BigIntFilter<"Promotion"> | bigint | number
+    uid?: StringFilter<"Promotion"> | string
+    managementName?: StringFilter<"Promotion"> | string
+    isActive?: BoolFilter<"Promotion"> | boolean
+    startDate?: DateTimeNullableFilter<"Promotion"> | Date | string | null
+    endDate?: DateTimeNullableFilter<"Promotion"> | Date | string | null
+    deletedAt?: DateTimeNullableFilter<"Promotion"> | Date | string | null
+    targetType?: EnumPromotionTargetTypeFilter<"Promotion"> | $Enums.PromotionTargetType
+    bonusType?: EnumPromotionBonusTypeFilter<"Promotion"> | $Enums.PromotionBonusType
+    bonusRate?: DecimalNullableFilter<"Promotion"> | Decimal | DecimalJsLike | number | string | null
+    rollingMultiplier?: DecimalNullableFilter<"Promotion"> | Decimal | DecimalJsLike | number | string | null
+    qualificationMaintainCondition?: EnumPromotionQualificationConditionFilter<"Promotion"> | $Enums.PromotionQualificationCondition
+    isOneTime?: BoolFilter<"Promotion"> | boolean
+    createdAt?: DateTimeFilter<"Promotion"> | Date | string
+    updatedAt?: DateTimeFilter<"Promotion"> | Date | string
+    translations?: PromotionTranslationListRelationFilter
+    currencies?: PromotionCurrencyListRelationFilter
+    UserPromotion?: UserPromotionListRelationFilter
+  }
+
+  export type PromotionOrderByWithRelationInput = {
+    id?: SortOrder
+    uid?: SortOrder
+    managementName?: SortOrder
+    isActive?: SortOrder
+    startDate?: SortOrderInput | SortOrder
+    endDate?: SortOrderInput | SortOrder
+    deletedAt?: SortOrderInput | SortOrder
+    targetType?: SortOrder
+    bonusType?: SortOrder
+    bonusRate?: SortOrderInput | SortOrder
+    rollingMultiplier?: SortOrderInput | SortOrder
+    qualificationMaintainCondition?: SortOrder
+    isOneTime?: SortOrder
+    createdAt?: SortOrder
+    updatedAt?: SortOrder
+    translations?: PromotionTranslationOrderByRelationAggregateInput
+    currencies?: PromotionCurrencyOrderByRelationAggregateInput
+    UserPromotion?: UserPromotionOrderByRelationAggregateInput
+  }
+
+  export type PromotionWhereUniqueInput = Prisma.AtLeast<{
+    id?: bigint | number
+    uid?: string
+    AND?: PromotionWhereInput | PromotionWhereInput[]
+    OR?: PromotionWhereInput[]
+    NOT?: PromotionWhereInput | PromotionWhereInput[]
+    managementName?: StringFilter<"Promotion"> | string
+    isActive?: BoolFilter<"Promotion"> | boolean
+    startDate?: DateTimeNullableFilter<"Promotion"> | Date | string | null
+    endDate?: DateTimeNullableFilter<"Promotion"> | Date | string | null
+    deletedAt?: DateTimeNullableFilter<"Promotion"> | Date | string | null
+    targetType?: EnumPromotionTargetTypeFilter<"Promotion"> | $Enums.PromotionTargetType
+    bonusType?: EnumPromotionBonusTypeFilter<"Promotion"> | $Enums.PromotionBonusType
+    bonusRate?: DecimalNullableFilter<"Promotion"> | Decimal | DecimalJsLike | number | string | null
+    rollingMultiplier?: DecimalNullableFilter<"Promotion"> | Decimal | DecimalJsLike | number | string | null
+    qualificationMaintainCondition?: EnumPromotionQualificationConditionFilter<"Promotion"> | $Enums.PromotionQualificationCondition
+    isOneTime?: BoolFilter<"Promotion"> | boolean
+    createdAt?: DateTimeFilter<"Promotion"> | Date | string
+    updatedAt?: DateTimeFilter<"Promotion"> | Date | string
+    translations?: PromotionTranslationListRelationFilter
+    currencies?: PromotionCurrencyListRelationFilter
+    UserPromotion?: UserPromotionListRelationFilter
+  }, "id" | "uid">
+
+  export type PromotionOrderByWithAggregationInput = {
+    id?: SortOrder
+    uid?: SortOrder
+    managementName?: SortOrder
+    isActive?: SortOrder
+    startDate?: SortOrderInput | SortOrder
+    endDate?: SortOrderInput | SortOrder
+    deletedAt?: SortOrderInput | SortOrder
+    targetType?: SortOrder
+    bonusType?: SortOrder
+    bonusRate?: SortOrderInput | SortOrder
+    rollingMultiplier?: SortOrderInput | SortOrder
+    qualificationMaintainCondition?: SortOrder
+    isOneTime?: SortOrder
+    createdAt?: SortOrder
+    updatedAt?: SortOrder
+    _count?: PromotionCountOrderByAggregateInput
+    _avg?: PromotionAvgOrderByAggregateInput
+    _max?: PromotionMaxOrderByAggregateInput
+    _min?: PromotionMinOrderByAggregateInput
+    _sum?: PromotionSumOrderByAggregateInput
+  }
+
+  export type PromotionScalarWhereWithAggregatesInput = {
+    AND?: PromotionScalarWhereWithAggregatesInput | PromotionScalarWhereWithAggregatesInput[]
+    OR?: PromotionScalarWhereWithAggregatesInput[]
+    NOT?: PromotionScalarWhereWithAggregatesInput | PromotionScalarWhereWithAggregatesInput[]
+    id?: BigIntWithAggregatesFilter<"Promotion"> | bigint | number
+    uid?: StringWithAggregatesFilter<"Promotion"> | string
+    managementName?: StringWithAggregatesFilter<"Promotion"> | string
+    isActive?: BoolWithAggregatesFilter<"Promotion"> | boolean
+    startDate?: DateTimeNullableWithAggregatesFilter<"Promotion"> | Date | string | null
+    endDate?: DateTimeNullableWithAggregatesFilter<"Promotion"> | Date | string | null
+    deletedAt?: DateTimeNullableWithAggregatesFilter<"Promotion"> | Date | string | null
+    targetType?: EnumPromotionTargetTypeWithAggregatesFilter<"Promotion"> | $Enums.PromotionTargetType
+    bonusType?: EnumPromotionBonusTypeWithAggregatesFilter<"Promotion"> | $Enums.PromotionBonusType
+    bonusRate?: DecimalNullableWithAggregatesFilter<"Promotion"> | Decimal | DecimalJsLike | number | string | null
+    rollingMultiplier?: DecimalNullableWithAggregatesFilter<"Promotion"> | Decimal | DecimalJsLike | number | string | null
+    qualificationMaintainCondition?: EnumPromotionQualificationConditionWithAggregatesFilter<"Promotion"> | $Enums.PromotionQualificationCondition
+    isOneTime?: BoolWithAggregatesFilter<"Promotion"> | boolean
+    createdAt?: DateTimeWithAggregatesFilter<"Promotion"> | Date | string
+    updatedAt?: DateTimeWithAggregatesFilter<"Promotion"> | Date | string
+  }
+
+  export type PromotionTranslationWhereInput = {
+    AND?: PromotionTranslationWhereInput | PromotionTranslationWhereInput[]
+    OR?: PromotionTranslationWhereInput[]
+    NOT?: PromotionTranslationWhereInput | PromotionTranslationWhereInput[]
+    id?: BigIntFilter<"PromotionTranslation"> | bigint | number
+    promotionId?: BigIntFilter<"PromotionTranslation"> | bigint | number
+    language?: EnumLanguageFilter<"PromotionTranslation"> | $Enums.Language
+    name?: StringFilter<"PromotionTranslation"> | string
+    description?: StringNullableFilter<"PromotionTranslation"> | string | null
+    createdAt?: DateTimeFilter<"PromotionTranslation"> | Date | string
+    updatedAt?: DateTimeFilter<"PromotionTranslation"> | Date | string
+    promotion?: XOR<PromotionScalarRelationFilter, PromotionWhereInput>
+  }
+
+  export type PromotionTranslationOrderByWithRelationInput = {
+    id?: SortOrder
+    promotionId?: SortOrder
+    language?: SortOrder
+    name?: SortOrder
+    description?: SortOrderInput | SortOrder
+    createdAt?: SortOrder
+    updatedAt?: SortOrder
+    promotion?: PromotionOrderByWithRelationInput
+  }
+
+  export type PromotionTranslationWhereUniqueInput = Prisma.AtLeast<{
+    id?: bigint | number
+    promotionId_language?: PromotionTranslationPromotionIdLanguageCompoundUniqueInput
+    AND?: PromotionTranslationWhereInput | PromotionTranslationWhereInput[]
+    OR?: PromotionTranslationWhereInput[]
+    NOT?: PromotionTranslationWhereInput | PromotionTranslationWhereInput[]
+    promotionId?: BigIntFilter<"PromotionTranslation"> | bigint | number
+    language?: EnumLanguageFilter<"PromotionTranslation"> | $Enums.Language
+    name?: StringFilter<"PromotionTranslation"> | string
+    description?: StringNullableFilter<"PromotionTranslation"> | string | null
+    createdAt?: DateTimeFilter<"PromotionTranslation"> | Date | string
+    updatedAt?: DateTimeFilter<"PromotionTranslation"> | Date | string
+    promotion?: XOR<PromotionScalarRelationFilter, PromotionWhereInput>
+  }, "id" | "promotionId_language">
+
+  export type PromotionTranslationOrderByWithAggregationInput = {
+    id?: SortOrder
+    promotionId?: SortOrder
+    language?: SortOrder
+    name?: SortOrder
+    description?: SortOrderInput | SortOrder
+    createdAt?: SortOrder
+    updatedAt?: SortOrder
+    _count?: PromotionTranslationCountOrderByAggregateInput
+    _avg?: PromotionTranslationAvgOrderByAggregateInput
+    _max?: PromotionTranslationMaxOrderByAggregateInput
+    _min?: PromotionTranslationMinOrderByAggregateInput
+    _sum?: PromotionTranslationSumOrderByAggregateInput
+  }
+
+  export type PromotionTranslationScalarWhereWithAggregatesInput = {
+    AND?: PromotionTranslationScalarWhereWithAggregatesInput | PromotionTranslationScalarWhereWithAggregatesInput[]
+    OR?: PromotionTranslationScalarWhereWithAggregatesInput[]
+    NOT?: PromotionTranslationScalarWhereWithAggregatesInput | PromotionTranslationScalarWhereWithAggregatesInput[]
+    id?: BigIntWithAggregatesFilter<"PromotionTranslation"> | bigint | number
+    promotionId?: BigIntWithAggregatesFilter<"PromotionTranslation"> | bigint | number
+    language?: EnumLanguageWithAggregatesFilter<"PromotionTranslation"> | $Enums.Language
+    name?: StringWithAggregatesFilter<"PromotionTranslation"> | string
+    description?: StringNullableWithAggregatesFilter<"PromotionTranslation"> | string | null
+    createdAt?: DateTimeWithAggregatesFilter<"PromotionTranslation"> | Date | string
+    updatedAt?: DateTimeWithAggregatesFilter<"PromotionTranslation"> | Date | string
+  }
+
+  export type PromotionCurrencyWhereInput = {
+    AND?: PromotionCurrencyWhereInput | PromotionCurrencyWhereInput[]
+    OR?: PromotionCurrencyWhereInput[]
+    NOT?: PromotionCurrencyWhereInput | PromotionCurrencyWhereInput[]
+    id?: BigIntFilter<"PromotionCurrency"> | bigint | number
+    promotionId?: BigIntFilter<"PromotionCurrency"> | bigint | number
+    currency?: EnumExchangeCurrencyCodeFilter<"PromotionCurrency"> | $Enums.ExchangeCurrencyCode
+    minDepositAmount?: DecimalFilter<"PromotionCurrency"> | Decimal | DecimalJsLike | number | string
+    maxBonusAmount?: DecimalNullableFilter<"PromotionCurrency"> | Decimal | DecimalJsLike | number | string | null
+    createdAt?: DateTimeFilter<"PromotionCurrency"> | Date | string
+    updatedAt?: DateTimeFilter<"PromotionCurrency"> | Date | string
+    promotion?: XOR<PromotionScalarRelationFilter, PromotionWhereInput>
+  }
+
+  export type PromotionCurrencyOrderByWithRelationInput = {
+    id?: SortOrder
+    promotionId?: SortOrder
+    currency?: SortOrder
+    minDepositAmount?: SortOrder
+    maxBonusAmount?: SortOrderInput | SortOrder
+    createdAt?: SortOrder
+    updatedAt?: SortOrder
+    promotion?: PromotionOrderByWithRelationInput
+  }
+
+  export type PromotionCurrencyWhereUniqueInput = Prisma.AtLeast<{
+    id?: bigint | number
+    promotionId_currency?: PromotionCurrencyPromotionIdCurrencyCompoundUniqueInput
+    AND?: PromotionCurrencyWhereInput | PromotionCurrencyWhereInput[]
+    OR?: PromotionCurrencyWhereInput[]
+    NOT?: PromotionCurrencyWhereInput | PromotionCurrencyWhereInput[]
+    promotionId?: BigIntFilter<"PromotionCurrency"> | bigint | number
+    currency?: EnumExchangeCurrencyCodeFilter<"PromotionCurrency"> | $Enums.ExchangeCurrencyCode
+    minDepositAmount?: DecimalFilter<"PromotionCurrency"> | Decimal | DecimalJsLike | number | string
+    maxBonusAmount?: DecimalNullableFilter<"PromotionCurrency"> | Decimal | DecimalJsLike | number | string | null
+    createdAt?: DateTimeFilter<"PromotionCurrency"> | Date | string
+    updatedAt?: DateTimeFilter<"PromotionCurrency"> | Date | string
+    promotion?: XOR<PromotionScalarRelationFilter, PromotionWhereInput>
+  }, "id" | "promotionId_currency">
+
+  export type PromotionCurrencyOrderByWithAggregationInput = {
+    id?: SortOrder
+    promotionId?: SortOrder
+    currency?: SortOrder
+    minDepositAmount?: SortOrder
+    maxBonusAmount?: SortOrderInput | SortOrder
+    createdAt?: SortOrder
+    updatedAt?: SortOrder
+    _count?: PromotionCurrencyCountOrderByAggregateInput
+    _avg?: PromotionCurrencyAvgOrderByAggregateInput
+    _max?: PromotionCurrencyMaxOrderByAggregateInput
+    _min?: PromotionCurrencyMinOrderByAggregateInput
+    _sum?: PromotionCurrencySumOrderByAggregateInput
+  }
+
+  export type PromotionCurrencyScalarWhereWithAggregatesInput = {
+    AND?: PromotionCurrencyScalarWhereWithAggregatesInput | PromotionCurrencyScalarWhereWithAggregatesInput[]
+    OR?: PromotionCurrencyScalarWhereWithAggregatesInput[]
+    NOT?: PromotionCurrencyScalarWhereWithAggregatesInput | PromotionCurrencyScalarWhereWithAggregatesInput[]
+    id?: BigIntWithAggregatesFilter<"PromotionCurrency"> | bigint | number
+    promotionId?: BigIntWithAggregatesFilter<"PromotionCurrency"> | bigint | number
+    currency?: EnumExchangeCurrencyCodeWithAggregatesFilter<"PromotionCurrency"> | $Enums.ExchangeCurrencyCode
+    minDepositAmount?: DecimalWithAggregatesFilter<"PromotionCurrency"> | Decimal | DecimalJsLike | number | string
+    maxBonusAmount?: DecimalNullableWithAggregatesFilter<"PromotionCurrency"> | Decimal | DecimalJsLike | number | string | null
+    createdAt?: DateTimeWithAggregatesFilter<"PromotionCurrency"> | Date | string
+    updatedAt?: DateTimeWithAggregatesFilter<"PromotionCurrency"> | Date | string
+  }
+
+  export type UserPromotionWhereInput = {
+    AND?: UserPromotionWhereInput | UserPromotionWhereInput[]
+    OR?: UserPromotionWhereInput[]
+    NOT?: UserPromotionWhereInput | UserPromotionWhereInput[]
+    id?: BigIntFilter<"UserPromotion"> | bigint | number
+    userId?: BigIntFilter<"UserPromotion"> | bigint | number
+    promotionId?: BigIntFilter<"UserPromotion"> | bigint | number
+    status?: EnumUserPromotionStatusFilter<"UserPromotion"> | $Enums.UserPromotionStatus
+    depositAmount?: DecimalFilter<"UserPromotion"> | Decimal | DecimalJsLike | number | string
+    bonusAmount?: DecimalFilter<"UserPromotion"> | Decimal | DecimalJsLike | number | string
+    targetRollingAmount?: DecimalFilter<"UserPromotion"> | Decimal | DecimalJsLike | number | string
+    currentRollingAmount?: DecimalFilter<"UserPromotion"> | Decimal | DecimalJsLike | number | string
+    currency?: EnumExchangeCurrencyCodeFilter<"UserPromotion"> | $Enums.ExchangeCurrencyCode
+    createdAt?: DateTimeFilter<"UserPromotion"> | Date | string
+    updatedAt?: DateTimeFilter<"UserPromotion"> | Date | string
+    Rolling?: RollingListRelationFilter
+    promotion?: XOR<PromotionScalarRelationFilter, PromotionWhereInput>
+    user?: XOR<UserScalarRelationFilter, UserWhereInput>
+  }
+
+  export type UserPromotionOrderByWithRelationInput = {
+    id?: SortOrder
+    userId?: SortOrder
+    promotionId?: SortOrder
+    status?: SortOrder
+    depositAmount?: SortOrder
+    bonusAmount?: SortOrder
+    targetRollingAmount?: SortOrder
+    currentRollingAmount?: SortOrder
+    currency?: SortOrder
+    createdAt?: SortOrder
+    updatedAt?: SortOrder
+    Rolling?: RollingOrderByRelationAggregateInput
+    promotion?: PromotionOrderByWithRelationInput
+    user?: UserOrderByWithRelationInput
+  }
+
+  export type UserPromotionWhereUniqueInput = Prisma.AtLeast<{
+    id?: bigint | number
+    AND?: UserPromotionWhereInput | UserPromotionWhereInput[]
+    OR?: UserPromotionWhereInput[]
+    NOT?: UserPromotionWhereInput | UserPromotionWhereInput[]
+    userId?: BigIntFilter<"UserPromotion"> | bigint | number
+    promotionId?: BigIntFilter<"UserPromotion"> | bigint | number
+    status?: EnumUserPromotionStatusFilter<"UserPromotion"> | $Enums.UserPromotionStatus
+    depositAmount?: DecimalFilter<"UserPromotion"> | Decimal | DecimalJsLike | number | string
+    bonusAmount?: DecimalFilter<"UserPromotion"> | Decimal | DecimalJsLike | number | string
+    targetRollingAmount?: DecimalFilter<"UserPromotion"> | Decimal | DecimalJsLike | number | string
+    currentRollingAmount?: DecimalFilter<"UserPromotion"> | Decimal | DecimalJsLike | number | string
+    currency?: EnumExchangeCurrencyCodeFilter<"UserPromotion"> | $Enums.ExchangeCurrencyCode
+    createdAt?: DateTimeFilter<"UserPromotion"> | Date | string
+    updatedAt?: DateTimeFilter<"UserPromotion"> | Date | string
+    Rolling?: RollingListRelationFilter
+    promotion?: XOR<PromotionScalarRelationFilter, PromotionWhereInput>
+    user?: XOR<UserScalarRelationFilter, UserWhereInput>
+  }, "id">
+
+  export type UserPromotionOrderByWithAggregationInput = {
+    id?: SortOrder
+    userId?: SortOrder
+    promotionId?: SortOrder
+    status?: SortOrder
+    depositAmount?: SortOrder
+    bonusAmount?: SortOrder
+    targetRollingAmount?: SortOrder
+    currentRollingAmount?: SortOrder
+    currency?: SortOrder
+    createdAt?: SortOrder
+    updatedAt?: SortOrder
+    _count?: UserPromotionCountOrderByAggregateInput
+    _avg?: UserPromotionAvgOrderByAggregateInput
+    _max?: UserPromotionMaxOrderByAggregateInput
+    _min?: UserPromotionMinOrderByAggregateInput
+    _sum?: UserPromotionSumOrderByAggregateInput
+  }
+
+  export type UserPromotionScalarWhereWithAggregatesInput = {
+    AND?: UserPromotionScalarWhereWithAggregatesInput | UserPromotionScalarWhereWithAggregatesInput[]
+    OR?: UserPromotionScalarWhereWithAggregatesInput[]
+    NOT?: UserPromotionScalarWhereWithAggregatesInput | UserPromotionScalarWhereWithAggregatesInput[]
+    id?: BigIntWithAggregatesFilter<"UserPromotion"> | bigint | number
+    userId?: BigIntWithAggregatesFilter<"UserPromotion"> | bigint | number
+    promotionId?: BigIntWithAggregatesFilter<"UserPromotion"> | bigint | number
+    status?: EnumUserPromotionStatusWithAggregatesFilter<"UserPromotion"> | $Enums.UserPromotionStatus
+    depositAmount?: DecimalWithAggregatesFilter<"UserPromotion"> | Decimal | DecimalJsLike | number | string
+    bonusAmount?: DecimalWithAggregatesFilter<"UserPromotion"> | Decimal | DecimalJsLike | number | string
+    targetRollingAmount?: DecimalWithAggregatesFilter<"UserPromotion"> | Decimal | DecimalJsLike | number | string
+    currentRollingAmount?: DecimalWithAggregatesFilter<"UserPromotion"> | Decimal | DecimalJsLike | number | string
+    currency?: EnumExchangeCurrencyCodeWithAggregatesFilter<"UserPromotion"> | $Enums.ExchangeCurrencyCode
+    createdAt?: DateTimeWithAggregatesFilter<"UserPromotion"> | Date | string
+    updatedAt?: DateTimeWithAggregatesFilter<"UserPromotion"> | Date | string
   }
 
   export type UserSessionWhereInput = {
@@ -65686,279 +67088,6 @@ export namespace Prisma {
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
   }
 
-  export type PromotionCreateInput = {
-    managementName: string
-    isActive?: boolean
-    startDate?: Date | string | null
-    endDate?: Date | string | null
-    targetType: $Enums.PromotionTargetType
-    bonusType: $Enums.PromotionBonusType
-    bonusRate?: Decimal | DecimalJsLike | number | string | null
-    minDepositAmount: Decimal | DecimalJsLike | number | string
-    maxBonusAmount?: Decimal | DecimalJsLike | number | string | null
-    rollingMultiplier?: Decimal | DecimalJsLike | number | string | null
-    qualificationMaintainCondition: $Enums.PromotionQualificationCondition
-    createdAt?: Date | string
-    updatedAt?: Date | string
-    translations?: PromotionTranslationCreateNestedManyWithoutPromotionInput
-    UserPromotion?: UserPromotionCreateNestedManyWithoutPromotionInput
-  }
-
-  export type PromotionUncheckedCreateInput = {
-    id?: number
-    managementName: string
-    isActive?: boolean
-    startDate?: Date | string | null
-    endDate?: Date | string | null
-    targetType: $Enums.PromotionTargetType
-    bonusType: $Enums.PromotionBonusType
-    bonusRate?: Decimal | DecimalJsLike | number | string | null
-    minDepositAmount: Decimal | DecimalJsLike | number | string
-    maxBonusAmount?: Decimal | DecimalJsLike | number | string | null
-    rollingMultiplier?: Decimal | DecimalJsLike | number | string | null
-    qualificationMaintainCondition: $Enums.PromotionQualificationCondition
-    createdAt?: Date | string
-    updatedAt?: Date | string
-    translations?: PromotionTranslationUncheckedCreateNestedManyWithoutPromotionInput
-    UserPromotion?: UserPromotionUncheckedCreateNestedManyWithoutPromotionInput
-  }
-
-  export type PromotionUpdateInput = {
-    managementName?: StringFieldUpdateOperationsInput | string
-    isActive?: BoolFieldUpdateOperationsInput | boolean
-    startDate?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
-    endDate?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
-    targetType?: EnumPromotionTargetTypeFieldUpdateOperationsInput | $Enums.PromotionTargetType
-    bonusType?: EnumPromotionBonusTypeFieldUpdateOperationsInput | $Enums.PromotionBonusType
-    bonusRate?: NullableDecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string | null
-    minDepositAmount?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
-    maxBonusAmount?: NullableDecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string | null
-    rollingMultiplier?: NullableDecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string | null
-    qualificationMaintainCondition?: EnumPromotionQualificationConditionFieldUpdateOperationsInput | $Enums.PromotionQualificationCondition
-    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
-    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
-    translations?: PromotionTranslationUpdateManyWithoutPromotionNestedInput
-    UserPromotion?: UserPromotionUpdateManyWithoutPromotionNestedInput
-  }
-
-  export type PromotionUncheckedUpdateInput = {
-    id?: IntFieldUpdateOperationsInput | number
-    managementName?: StringFieldUpdateOperationsInput | string
-    isActive?: BoolFieldUpdateOperationsInput | boolean
-    startDate?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
-    endDate?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
-    targetType?: EnumPromotionTargetTypeFieldUpdateOperationsInput | $Enums.PromotionTargetType
-    bonusType?: EnumPromotionBonusTypeFieldUpdateOperationsInput | $Enums.PromotionBonusType
-    bonusRate?: NullableDecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string | null
-    minDepositAmount?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
-    maxBonusAmount?: NullableDecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string | null
-    rollingMultiplier?: NullableDecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string | null
-    qualificationMaintainCondition?: EnumPromotionQualificationConditionFieldUpdateOperationsInput | $Enums.PromotionQualificationCondition
-    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
-    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
-    translations?: PromotionTranslationUncheckedUpdateManyWithoutPromotionNestedInput
-    UserPromotion?: UserPromotionUncheckedUpdateManyWithoutPromotionNestedInput
-  }
-
-  export type PromotionCreateManyInput = {
-    id?: number
-    managementName: string
-    isActive?: boolean
-    startDate?: Date | string | null
-    endDate?: Date | string | null
-    targetType: $Enums.PromotionTargetType
-    bonusType: $Enums.PromotionBonusType
-    bonusRate?: Decimal | DecimalJsLike | number | string | null
-    minDepositAmount: Decimal | DecimalJsLike | number | string
-    maxBonusAmount?: Decimal | DecimalJsLike | number | string | null
-    rollingMultiplier?: Decimal | DecimalJsLike | number | string | null
-    qualificationMaintainCondition: $Enums.PromotionQualificationCondition
-    createdAt?: Date | string
-    updatedAt?: Date | string
-  }
-
-  export type PromotionUpdateManyMutationInput = {
-    managementName?: StringFieldUpdateOperationsInput | string
-    isActive?: BoolFieldUpdateOperationsInput | boolean
-    startDate?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
-    endDate?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
-    targetType?: EnumPromotionTargetTypeFieldUpdateOperationsInput | $Enums.PromotionTargetType
-    bonusType?: EnumPromotionBonusTypeFieldUpdateOperationsInput | $Enums.PromotionBonusType
-    bonusRate?: NullableDecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string | null
-    minDepositAmount?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
-    maxBonusAmount?: NullableDecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string | null
-    rollingMultiplier?: NullableDecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string | null
-    qualificationMaintainCondition?: EnumPromotionQualificationConditionFieldUpdateOperationsInput | $Enums.PromotionQualificationCondition
-    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
-    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
-  }
-
-  export type PromotionUncheckedUpdateManyInput = {
-    id?: IntFieldUpdateOperationsInput | number
-    managementName?: StringFieldUpdateOperationsInput | string
-    isActive?: BoolFieldUpdateOperationsInput | boolean
-    startDate?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
-    endDate?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
-    targetType?: EnumPromotionTargetTypeFieldUpdateOperationsInput | $Enums.PromotionTargetType
-    bonusType?: EnumPromotionBonusTypeFieldUpdateOperationsInput | $Enums.PromotionBonusType
-    bonusRate?: NullableDecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string | null
-    minDepositAmount?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
-    maxBonusAmount?: NullableDecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string | null
-    rollingMultiplier?: NullableDecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string | null
-    qualificationMaintainCondition?: EnumPromotionQualificationConditionFieldUpdateOperationsInput | $Enums.PromotionQualificationCondition
-    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
-    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
-  }
-
-  export type PromotionTranslationCreateInput = {
-    language: $Enums.Language
-    name: string
-    description?: string | null
-    createdAt?: Date | string
-    updatedAt?: Date | string
-    promotion: PromotionCreateNestedOneWithoutTranslationsInput
-  }
-
-  export type PromotionTranslationUncheckedCreateInput = {
-    id?: number
-    promotionId: number
-    language: $Enums.Language
-    name: string
-    description?: string | null
-    createdAt?: Date | string
-    updatedAt?: Date | string
-  }
-
-  export type PromotionTranslationUpdateInput = {
-    language?: EnumLanguageFieldUpdateOperationsInput | $Enums.Language
-    name?: StringFieldUpdateOperationsInput | string
-    description?: NullableStringFieldUpdateOperationsInput | string | null
-    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
-    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
-    promotion?: PromotionUpdateOneRequiredWithoutTranslationsNestedInput
-  }
-
-  export type PromotionTranslationUncheckedUpdateInput = {
-    id?: IntFieldUpdateOperationsInput | number
-    promotionId?: IntFieldUpdateOperationsInput | number
-    language?: EnumLanguageFieldUpdateOperationsInput | $Enums.Language
-    name?: StringFieldUpdateOperationsInput | string
-    description?: NullableStringFieldUpdateOperationsInput | string | null
-    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
-    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
-  }
-
-  export type PromotionTranslationCreateManyInput = {
-    id?: number
-    promotionId: number
-    language: $Enums.Language
-    name: string
-    description?: string | null
-    createdAt?: Date | string
-    updatedAt?: Date | string
-  }
-
-  export type PromotionTranslationUpdateManyMutationInput = {
-    language?: EnumLanguageFieldUpdateOperationsInput | $Enums.Language
-    name?: StringFieldUpdateOperationsInput | string
-    description?: NullableStringFieldUpdateOperationsInput | string | null
-    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
-    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
-  }
-
-  export type PromotionTranslationUncheckedUpdateManyInput = {
-    id?: IntFieldUpdateOperationsInput | number
-    promotionId?: IntFieldUpdateOperationsInput | number
-    language?: EnumLanguageFieldUpdateOperationsInput | $Enums.Language
-    name?: StringFieldUpdateOperationsInput | string
-    description?: NullableStringFieldUpdateOperationsInput | string | null
-    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
-    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
-  }
-
-  export type UserPromotionCreateInput = {
-    status?: $Enums.UserPromotionStatus
-    bonusGranted?: boolean
-    bonusGrantedAt?: Date | string | null
-    bonusAmount?: Decimal | DecimalJsLike | number | string | null
-    createdAt?: Date | string
-    updatedAt?: Date | string
-    Rolling?: RollingCreateNestedManyWithoutUserPromotionInput
-    promotion: PromotionCreateNestedOneWithoutUserPromotionInput
-    user: UserCreateNestedOneWithoutUserPromotionInput
-  }
-
-  export type UserPromotionUncheckedCreateInput = {
-    id?: number
-    userId: bigint | number
-    promotionId: number
-    status?: $Enums.UserPromotionStatus
-    bonusGranted?: boolean
-    bonusGrantedAt?: Date | string | null
-    bonusAmount?: Decimal | DecimalJsLike | number | string | null
-    createdAt?: Date | string
-    updatedAt?: Date | string
-    Rolling?: RollingUncheckedCreateNestedManyWithoutUserPromotionInput
-  }
-
-  export type UserPromotionUpdateInput = {
-    status?: EnumUserPromotionStatusFieldUpdateOperationsInput | $Enums.UserPromotionStatus
-    bonusGranted?: BoolFieldUpdateOperationsInput | boolean
-    bonusGrantedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
-    bonusAmount?: NullableDecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string | null
-    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
-    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
-    Rolling?: RollingUpdateManyWithoutUserPromotionNestedInput
-    promotion?: PromotionUpdateOneRequiredWithoutUserPromotionNestedInput
-    user?: UserUpdateOneRequiredWithoutUserPromotionNestedInput
-  }
-
-  export type UserPromotionUncheckedUpdateInput = {
-    id?: IntFieldUpdateOperationsInput | number
-    userId?: BigIntFieldUpdateOperationsInput | bigint | number
-    promotionId?: IntFieldUpdateOperationsInput | number
-    status?: EnumUserPromotionStatusFieldUpdateOperationsInput | $Enums.UserPromotionStatus
-    bonusGranted?: BoolFieldUpdateOperationsInput | boolean
-    bonusGrantedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
-    bonusAmount?: NullableDecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string | null
-    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
-    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
-    Rolling?: RollingUncheckedUpdateManyWithoutUserPromotionNestedInput
-  }
-
-  export type UserPromotionCreateManyInput = {
-    id?: number
-    userId: bigint | number
-    promotionId: number
-    status?: $Enums.UserPromotionStatus
-    bonusGranted?: boolean
-    bonusGrantedAt?: Date | string | null
-    bonusAmount?: Decimal | DecimalJsLike | number | string | null
-    createdAt?: Date | string
-    updatedAt?: Date | string
-  }
-
-  export type UserPromotionUpdateManyMutationInput = {
-    status?: EnumUserPromotionStatusFieldUpdateOperationsInput | $Enums.UserPromotionStatus
-    bonusGranted?: BoolFieldUpdateOperationsInput | boolean
-    bonusGrantedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
-    bonusAmount?: NullableDecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string | null
-    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
-    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
-  }
-
-  export type UserPromotionUncheckedUpdateManyInput = {
-    id?: IntFieldUpdateOperationsInput | number
-    userId?: BigIntFieldUpdateOperationsInput | bigint | number
-    promotionId?: IntFieldUpdateOperationsInput | number
-    status?: EnumUserPromotionStatusFieldUpdateOperationsInput | $Enums.UserPromotionStatus
-    bonusGranted?: BoolFieldUpdateOperationsInput | boolean
-    bonusGrantedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
-    bonusAmount?: NullableDecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string | null
-    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
-    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
-  }
-
   export type NowPaymentCallbackLogCreateInput = {
     id?: bigint | number
     requestHeaders?: NullableJsonNullValueInput | InputJsonValue
@@ -66428,7 +67557,7 @@ export namespace Prisma {
     id?: bigint | number
     userId: bigint | number
     sourceType?: $Enums.RollingSourceType
-    userPromotionId?: number | null
+    userPromotionId?: bigint | number | null
     requiredAmount: Decimal | DecimalJsLike | number | string
     currentAmount?: Decimal | DecimalJsLike | number | string
     cancellationBalanceThreshold?: Decimal | DecimalJsLike | number | string | null
@@ -66464,7 +67593,7 @@ export namespace Prisma {
     id?: BigIntFieldUpdateOperationsInput | bigint | number
     userId?: BigIntFieldUpdateOperationsInput | bigint | number
     sourceType?: EnumRollingSourceTypeFieldUpdateOperationsInput | $Enums.RollingSourceType
-    userPromotionId?: NullableIntFieldUpdateOperationsInput | number | null
+    userPromotionId?: NullableBigIntFieldUpdateOperationsInput | bigint | number | null
     requiredAmount?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
     currentAmount?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
     cancellationBalanceThreshold?: NullableDecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string | null
@@ -66482,7 +67611,7 @@ export namespace Prisma {
     id?: bigint | number
     userId: bigint | number
     sourceType?: $Enums.RollingSourceType
-    userPromotionId?: number | null
+    userPromotionId?: bigint | number | null
     requiredAmount: Decimal | DecimalJsLike | number | string
     currentAmount?: Decimal | DecimalJsLike | number | string
     cancellationBalanceThreshold?: Decimal | DecimalJsLike | number | string | null
@@ -66515,7 +67644,7 @@ export namespace Prisma {
     id?: BigIntFieldUpdateOperationsInput | bigint | number
     userId?: BigIntFieldUpdateOperationsInput | bigint | number
     sourceType?: EnumRollingSourceTypeFieldUpdateOperationsInput | $Enums.RollingSourceType
-    userPromotionId?: NullableIntFieldUpdateOperationsInput | number | null
+    userPromotionId?: NullableBigIntFieldUpdateOperationsInput | bigint | number | null
     requiredAmount?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
     currentAmount?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
     cancellationBalanceThreshold?: NullableDecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string | null
@@ -67524,6 +68653,382 @@ export namespace Prisma {
     attemptedAt?: DateTimeFieldUpdateOperationsInput | Date | string
     email?: NullableStringFieldUpdateOperationsInput | string | null
     isAdmin?: BoolFieldUpdateOperationsInput | boolean
+  }
+
+  export type PromotionCreateInput = {
+    id?: bigint | number
+    uid: string
+    managementName: string
+    isActive?: boolean
+    startDate?: Date | string | null
+    endDate?: Date | string | null
+    deletedAt?: Date | string | null
+    targetType: $Enums.PromotionTargetType
+    bonusType: $Enums.PromotionBonusType
+    bonusRate?: Decimal | DecimalJsLike | number | string | null
+    rollingMultiplier?: Decimal | DecimalJsLike | number | string | null
+    qualificationMaintainCondition: $Enums.PromotionQualificationCondition
+    isOneTime?: boolean
+    createdAt?: Date | string
+    updatedAt?: Date | string
+    translations?: PromotionTranslationCreateNestedManyWithoutPromotionInput
+    currencies?: PromotionCurrencyCreateNestedManyWithoutPromotionInput
+    UserPromotion?: UserPromotionCreateNestedManyWithoutPromotionInput
+  }
+
+  export type PromotionUncheckedCreateInput = {
+    id?: bigint | number
+    uid: string
+    managementName: string
+    isActive?: boolean
+    startDate?: Date | string | null
+    endDate?: Date | string | null
+    deletedAt?: Date | string | null
+    targetType: $Enums.PromotionTargetType
+    bonusType: $Enums.PromotionBonusType
+    bonusRate?: Decimal | DecimalJsLike | number | string | null
+    rollingMultiplier?: Decimal | DecimalJsLike | number | string | null
+    qualificationMaintainCondition: $Enums.PromotionQualificationCondition
+    isOneTime?: boolean
+    createdAt?: Date | string
+    updatedAt?: Date | string
+    translations?: PromotionTranslationUncheckedCreateNestedManyWithoutPromotionInput
+    currencies?: PromotionCurrencyUncheckedCreateNestedManyWithoutPromotionInput
+    UserPromotion?: UserPromotionUncheckedCreateNestedManyWithoutPromotionInput
+  }
+
+  export type PromotionUpdateInput = {
+    id?: BigIntFieldUpdateOperationsInput | bigint | number
+    uid?: StringFieldUpdateOperationsInput | string
+    managementName?: StringFieldUpdateOperationsInput | string
+    isActive?: BoolFieldUpdateOperationsInput | boolean
+    startDate?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    endDate?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    deletedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    targetType?: EnumPromotionTargetTypeFieldUpdateOperationsInput | $Enums.PromotionTargetType
+    bonusType?: EnumPromotionBonusTypeFieldUpdateOperationsInput | $Enums.PromotionBonusType
+    bonusRate?: NullableDecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string | null
+    rollingMultiplier?: NullableDecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string | null
+    qualificationMaintainCondition?: EnumPromotionQualificationConditionFieldUpdateOperationsInput | $Enums.PromotionQualificationCondition
+    isOneTime?: BoolFieldUpdateOperationsInput | boolean
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    translations?: PromotionTranslationUpdateManyWithoutPromotionNestedInput
+    currencies?: PromotionCurrencyUpdateManyWithoutPromotionNestedInput
+    UserPromotion?: UserPromotionUpdateManyWithoutPromotionNestedInput
+  }
+
+  export type PromotionUncheckedUpdateInput = {
+    id?: BigIntFieldUpdateOperationsInput | bigint | number
+    uid?: StringFieldUpdateOperationsInput | string
+    managementName?: StringFieldUpdateOperationsInput | string
+    isActive?: BoolFieldUpdateOperationsInput | boolean
+    startDate?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    endDate?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    deletedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    targetType?: EnumPromotionTargetTypeFieldUpdateOperationsInput | $Enums.PromotionTargetType
+    bonusType?: EnumPromotionBonusTypeFieldUpdateOperationsInput | $Enums.PromotionBonusType
+    bonusRate?: NullableDecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string | null
+    rollingMultiplier?: NullableDecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string | null
+    qualificationMaintainCondition?: EnumPromotionQualificationConditionFieldUpdateOperationsInput | $Enums.PromotionQualificationCondition
+    isOneTime?: BoolFieldUpdateOperationsInput | boolean
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    translations?: PromotionTranslationUncheckedUpdateManyWithoutPromotionNestedInput
+    currencies?: PromotionCurrencyUncheckedUpdateManyWithoutPromotionNestedInput
+    UserPromotion?: UserPromotionUncheckedUpdateManyWithoutPromotionNestedInput
+  }
+
+  export type PromotionCreateManyInput = {
+    id?: bigint | number
+    uid: string
+    managementName: string
+    isActive?: boolean
+    startDate?: Date | string | null
+    endDate?: Date | string | null
+    deletedAt?: Date | string | null
+    targetType: $Enums.PromotionTargetType
+    bonusType: $Enums.PromotionBonusType
+    bonusRate?: Decimal | DecimalJsLike | number | string | null
+    rollingMultiplier?: Decimal | DecimalJsLike | number | string | null
+    qualificationMaintainCondition: $Enums.PromotionQualificationCondition
+    isOneTime?: boolean
+    createdAt?: Date | string
+    updatedAt?: Date | string
+  }
+
+  export type PromotionUpdateManyMutationInput = {
+    id?: BigIntFieldUpdateOperationsInput | bigint | number
+    uid?: StringFieldUpdateOperationsInput | string
+    managementName?: StringFieldUpdateOperationsInput | string
+    isActive?: BoolFieldUpdateOperationsInput | boolean
+    startDate?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    endDate?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    deletedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    targetType?: EnumPromotionTargetTypeFieldUpdateOperationsInput | $Enums.PromotionTargetType
+    bonusType?: EnumPromotionBonusTypeFieldUpdateOperationsInput | $Enums.PromotionBonusType
+    bonusRate?: NullableDecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string | null
+    rollingMultiplier?: NullableDecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string | null
+    qualificationMaintainCondition?: EnumPromotionQualificationConditionFieldUpdateOperationsInput | $Enums.PromotionQualificationCondition
+    isOneTime?: BoolFieldUpdateOperationsInput | boolean
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+  }
+
+  export type PromotionUncheckedUpdateManyInput = {
+    id?: BigIntFieldUpdateOperationsInput | bigint | number
+    uid?: StringFieldUpdateOperationsInput | string
+    managementName?: StringFieldUpdateOperationsInput | string
+    isActive?: BoolFieldUpdateOperationsInput | boolean
+    startDate?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    endDate?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    deletedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    targetType?: EnumPromotionTargetTypeFieldUpdateOperationsInput | $Enums.PromotionTargetType
+    bonusType?: EnumPromotionBonusTypeFieldUpdateOperationsInput | $Enums.PromotionBonusType
+    bonusRate?: NullableDecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string | null
+    rollingMultiplier?: NullableDecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string | null
+    qualificationMaintainCondition?: EnumPromotionQualificationConditionFieldUpdateOperationsInput | $Enums.PromotionQualificationCondition
+    isOneTime?: BoolFieldUpdateOperationsInput | boolean
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+  }
+
+  export type PromotionTranslationCreateInput = {
+    id?: bigint | number
+    language: $Enums.Language
+    name: string
+    description?: string | null
+    createdAt?: Date | string
+    updatedAt?: Date | string
+    promotion: PromotionCreateNestedOneWithoutTranslationsInput
+  }
+
+  export type PromotionTranslationUncheckedCreateInput = {
+    id?: bigint | number
+    promotionId: bigint | number
+    language: $Enums.Language
+    name: string
+    description?: string | null
+    createdAt?: Date | string
+    updatedAt?: Date | string
+  }
+
+  export type PromotionTranslationUpdateInput = {
+    id?: BigIntFieldUpdateOperationsInput | bigint | number
+    language?: EnumLanguageFieldUpdateOperationsInput | $Enums.Language
+    name?: StringFieldUpdateOperationsInput | string
+    description?: NullableStringFieldUpdateOperationsInput | string | null
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    promotion?: PromotionUpdateOneRequiredWithoutTranslationsNestedInput
+  }
+
+  export type PromotionTranslationUncheckedUpdateInput = {
+    id?: BigIntFieldUpdateOperationsInput | bigint | number
+    promotionId?: BigIntFieldUpdateOperationsInput | bigint | number
+    language?: EnumLanguageFieldUpdateOperationsInput | $Enums.Language
+    name?: StringFieldUpdateOperationsInput | string
+    description?: NullableStringFieldUpdateOperationsInput | string | null
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+  }
+
+  export type PromotionTranslationCreateManyInput = {
+    id?: bigint | number
+    promotionId: bigint | number
+    language: $Enums.Language
+    name: string
+    description?: string | null
+    createdAt?: Date | string
+    updatedAt?: Date | string
+  }
+
+  export type PromotionTranslationUpdateManyMutationInput = {
+    id?: BigIntFieldUpdateOperationsInput | bigint | number
+    language?: EnumLanguageFieldUpdateOperationsInput | $Enums.Language
+    name?: StringFieldUpdateOperationsInput | string
+    description?: NullableStringFieldUpdateOperationsInput | string | null
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+  }
+
+  export type PromotionTranslationUncheckedUpdateManyInput = {
+    id?: BigIntFieldUpdateOperationsInput | bigint | number
+    promotionId?: BigIntFieldUpdateOperationsInput | bigint | number
+    language?: EnumLanguageFieldUpdateOperationsInput | $Enums.Language
+    name?: StringFieldUpdateOperationsInput | string
+    description?: NullableStringFieldUpdateOperationsInput | string | null
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+  }
+
+  export type PromotionCurrencyCreateInput = {
+    id?: bigint | number
+    currency: $Enums.ExchangeCurrencyCode
+    minDepositAmount: Decimal | DecimalJsLike | number | string
+    maxBonusAmount?: Decimal | DecimalJsLike | number | string | null
+    createdAt?: Date | string
+    updatedAt?: Date | string
+    promotion: PromotionCreateNestedOneWithoutCurrenciesInput
+  }
+
+  export type PromotionCurrencyUncheckedCreateInput = {
+    id?: bigint | number
+    promotionId: bigint | number
+    currency: $Enums.ExchangeCurrencyCode
+    minDepositAmount: Decimal | DecimalJsLike | number | string
+    maxBonusAmount?: Decimal | DecimalJsLike | number | string | null
+    createdAt?: Date | string
+    updatedAt?: Date | string
+  }
+
+  export type PromotionCurrencyUpdateInput = {
+    id?: BigIntFieldUpdateOperationsInput | bigint | number
+    currency?: EnumExchangeCurrencyCodeFieldUpdateOperationsInput | $Enums.ExchangeCurrencyCode
+    minDepositAmount?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
+    maxBonusAmount?: NullableDecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string | null
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    promotion?: PromotionUpdateOneRequiredWithoutCurrenciesNestedInput
+  }
+
+  export type PromotionCurrencyUncheckedUpdateInput = {
+    id?: BigIntFieldUpdateOperationsInput | bigint | number
+    promotionId?: BigIntFieldUpdateOperationsInput | bigint | number
+    currency?: EnumExchangeCurrencyCodeFieldUpdateOperationsInput | $Enums.ExchangeCurrencyCode
+    minDepositAmount?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
+    maxBonusAmount?: NullableDecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string | null
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+  }
+
+  export type PromotionCurrencyCreateManyInput = {
+    id?: bigint | number
+    promotionId: bigint | number
+    currency: $Enums.ExchangeCurrencyCode
+    minDepositAmount: Decimal | DecimalJsLike | number | string
+    maxBonusAmount?: Decimal | DecimalJsLike | number | string | null
+    createdAt?: Date | string
+    updatedAt?: Date | string
+  }
+
+  export type PromotionCurrencyUpdateManyMutationInput = {
+    id?: BigIntFieldUpdateOperationsInput | bigint | number
+    currency?: EnumExchangeCurrencyCodeFieldUpdateOperationsInput | $Enums.ExchangeCurrencyCode
+    minDepositAmount?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
+    maxBonusAmount?: NullableDecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string | null
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+  }
+
+  export type PromotionCurrencyUncheckedUpdateManyInput = {
+    id?: BigIntFieldUpdateOperationsInput | bigint | number
+    promotionId?: BigIntFieldUpdateOperationsInput | bigint | number
+    currency?: EnumExchangeCurrencyCodeFieldUpdateOperationsInput | $Enums.ExchangeCurrencyCode
+    minDepositAmount?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
+    maxBonusAmount?: NullableDecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string | null
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+  }
+
+  export type UserPromotionCreateInput = {
+    id?: bigint | number
+    status?: $Enums.UserPromotionStatus
+    depositAmount: Decimal | DecimalJsLike | number | string
+    bonusAmount: Decimal | DecimalJsLike | number | string
+    targetRollingAmount: Decimal | DecimalJsLike | number | string
+    currentRollingAmount?: Decimal | DecimalJsLike | number | string
+    currency: $Enums.ExchangeCurrencyCode
+    createdAt?: Date | string
+    updatedAt?: Date | string
+    Rolling?: RollingCreateNestedManyWithoutUserPromotionInput
+    promotion: PromotionCreateNestedOneWithoutUserPromotionInput
+    user: UserCreateNestedOneWithoutUserPromotionInput
+  }
+
+  export type UserPromotionUncheckedCreateInput = {
+    id?: bigint | number
+    userId: bigint | number
+    promotionId: bigint | number
+    status?: $Enums.UserPromotionStatus
+    depositAmount: Decimal | DecimalJsLike | number | string
+    bonusAmount: Decimal | DecimalJsLike | number | string
+    targetRollingAmount: Decimal | DecimalJsLike | number | string
+    currentRollingAmount?: Decimal | DecimalJsLike | number | string
+    currency: $Enums.ExchangeCurrencyCode
+    createdAt?: Date | string
+    updatedAt?: Date | string
+    Rolling?: RollingUncheckedCreateNestedManyWithoutUserPromotionInput
+  }
+
+  export type UserPromotionUpdateInput = {
+    id?: BigIntFieldUpdateOperationsInput | bigint | number
+    status?: EnumUserPromotionStatusFieldUpdateOperationsInput | $Enums.UserPromotionStatus
+    depositAmount?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
+    bonusAmount?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
+    targetRollingAmount?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
+    currentRollingAmount?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
+    currency?: EnumExchangeCurrencyCodeFieldUpdateOperationsInput | $Enums.ExchangeCurrencyCode
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    Rolling?: RollingUpdateManyWithoutUserPromotionNestedInput
+    promotion?: PromotionUpdateOneRequiredWithoutUserPromotionNestedInput
+    user?: UserUpdateOneRequiredWithoutUserPromotionNestedInput
+  }
+
+  export type UserPromotionUncheckedUpdateInput = {
+    id?: BigIntFieldUpdateOperationsInput | bigint | number
+    userId?: BigIntFieldUpdateOperationsInput | bigint | number
+    promotionId?: BigIntFieldUpdateOperationsInput | bigint | number
+    status?: EnumUserPromotionStatusFieldUpdateOperationsInput | $Enums.UserPromotionStatus
+    depositAmount?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
+    bonusAmount?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
+    targetRollingAmount?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
+    currentRollingAmount?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
+    currency?: EnumExchangeCurrencyCodeFieldUpdateOperationsInput | $Enums.ExchangeCurrencyCode
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    Rolling?: RollingUncheckedUpdateManyWithoutUserPromotionNestedInput
+  }
+
+  export type UserPromotionCreateManyInput = {
+    id?: bigint | number
+    userId: bigint | number
+    promotionId: bigint | number
+    status?: $Enums.UserPromotionStatus
+    depositAmount: Decimal | DecimalJsLike | number | string
+    bonusAmount: Decimal | DecimalJsLike | number | string
+    targetRollingAmount: Decimal | DecimalJsLike | number | string
+    currentRollingAmount?: Decimal | DecimalJsLike | number | string
+    currency: $Enums.ExchangeCurrencyCode
+    createdAt?: Date | string
+    updatedAt?: Date | string
+  }
+
+  export type UserPromotionUpdateManyMutationInput = {
+    id?: BigIntFieldUpdateOperationsInput | bigint | number
+    status?: EnumUserPromotionStatusFieldUpdateOperationsInput | $Enums.UserPromotionStatus
+    depositAmount?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
+    bonusAmount?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
+    targetRollingAmount?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
+    currentRollingAmount?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
+    currency?: EnumExchangeCurrencyCodeFieldUpdateOperationsInput | $Enums.ExchangeCurrencyCode
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+  }
+
+  export type UserPromotionUncheckedUpdateManyInput = {
+    id?: BigIntFieldUpdateOperationsInput | bigint | number
+    userId?: BigIntFieldUpdateOperationsInput | bigint | number
+    promotionId?: BigIntFieldUpdateOperationsInput | bigint | number
+    status?: EnumUserPromotionStatusFieldUpdateOperationsInput | $Enums.UserPromotionStatus
+    depositAmount?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
+    bonusAmount?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
+    targetRollingAmount?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
+    currentRollingAmount?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
+    currency?: EnumExchangeCurrencyCodeFieldUpdateOperationsInput | $Enums.ExchangeCurrencyCode
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
   }
 
   export type UserSessionCreateInput = {
@@ -70247,251 +71752,6 @@ export namespace Prisma {
     compEarned?: SortOrder
   }
 
-  export type EnumPromotionTargetTypeFilter<$PrismaModel = never> = {
-    equals?: $Enums.PromotionTargetType | EnumPromotionTargetTypeFieldRefInput<$PrismaModel>
-    in?: $Enums.PromotionTargetType[] | ListEnumPromotionTargetTypeFieldRefInput<$PrismaModel>
-    notIn?: $Enums.PromotionTargetType[] | ListEnumPromotionTargetTypeFieldRefInput<$PrismaModel>
-    not?: NestedEnumPromotionTargetTypeFilter<$PrismaModel> | $Enums.PromotionTargetType
-  }
-
-  export type EnumPromotionBonusTypeFilter<$PrismaModel = never> = {
-    equals?: $Enums.PromotionBonusType | EnumPromotionBonusTypeFieldRefInput<$PrismaModel>
-    in?: $Enums.PromotionBonusType[] | ListEnumPromotionBonusTypeFieldRefInput<$PrismaModel>
-    notIn?: $Enums.PromotionBonusType[] | ListEnumPromotionBonusTypeFieldRefInput<$PrismaModel>
-    not?: NestedEnumPromotionBonusTypeFilter<$PrismaModel> | $Enums.PromotionBonusType
-  }
-
-  export type EnumPromotionQualificationConditionFilter<$PrismaModel = never> = {
-    equals?: $Enums.PromotionQualificationCondition | EnumPromotionQualificationConditionFieldRefInput<$PrismaModel>
-    in?: $Enums.PromotionQualificationCondition[] | ListEnumPromotionQualificationConditionFieldRefInput<$PrismaModel>
-    notIn?: $Enums.PromotionQualificationCondition[] | ListEnumPromotionQualificationConditionFieldRefInput<$PrismaModel>
-    not?: NestedEnumPromotionQualificationConditionFilter<$PrismaModel> | $Enums.PromotionQualificationCondition
-  }
-
-  export type PromotionTranslationListRelationFilter = {
-    every?: PromotionTranslationWhereInput
-    some?: PromotionTranslationWhereInput
-    none?: PromotionTranslationWhereInput
-  }
-
-  export type PromotionTranslationOrderByRelationAggregateInput = {
-    _count?: SortOrder
-  }
-
-  export type PromotionCountOrderByAggregateInput = {
-    id?: SortOrder
-    managementName?: SortOrder
-    isActive?: SortOrder
-    startDate?: SortOrder
-    endDate?: SortOrder
-    targetType?: SortOrder
-    bonusType?: SortOrder
-    bonusRate?: SortOrder
-    minDepositAmount?: SortOrder
-    maxBonusAmount?: SortOrder
-    rollingMultiplier?: SortOrder
-    qualificationMaintainCondition?: SortOrder
-    createdAt?: SortOrder
-    updatedAt?: SortOrder
-  }
-
-  export type PromotionAvgOrderByAggregateInput = {
-    id?: SortOrder
-    bonusRate?: SortOrder
-    minDepositAmount?: SortOrder
-    maxBonusAmount?: SortOrder
-    rollingMultiplier?: SortOrder
-  }
-
-  export type PromotionMaxOrderByAggregateInput = {
-    id?: SortOrder
-    managementName?: SortOrder
-    isActive?: SortOrder
-    startDate?: SortOrder
-    endDate?: SortOrder
-    targetType?: SortOrder
-    bonusType?: SortOrder
-    bonusRate?: SortOrder
-    minDepositAmount?: SortOrder
-    maxBonusAmount?: SortOrder
-    rollingMultiplier?: SortOrder
-    qualificationMaintainCondition?: SortOrder
-    createdAt?: SortOrder
-    updatedAt?: SortOrder
-  }
-
-  export type PromotionMinOrderByAggregateInput = {
-    id?: SortOrder
-    managementName?: SortOrder
-    isActive?: SortOrder
-    startDate?: SortOrder
-    endDate?: SortOrder
-    targetType?: SortOrder
-    bonusType?: SortOrder
-    bonusRate?: SortOrder
-    minDepositAmount?: SortOrder
-    maxBonusAmount?: SortOrder
-    rollingMultiplier?: SortOrder
-    qualificationMaintainCondition?: SortOrder
-    createdAt?: SortOrder
-    updatedAt?: SortOrder
-  }
-
-  export type PromotionSumOrderByAggregateInput = {
-    id?: SortOrder
-    bonusRate?: SortOrder
-    minDepositAmount?: SortOrder
-    maxBonusAmount?: SortOrder
-    rollingMultiplier?: SortOrder
-  }
-
-  export type EnumPromotionTargetTypeWithAggregatesFilter<$PrismaModel = never> = {
-    equals?: $Enums.PromotionTargetType | EnumPromotionTargetTypeFieldRefInput<$PrismaModel>
-    in?: $Enums.PromotionTargetType[] | ListEnumPromotionTargetTypeFieldRefInput<$PrismaModel>
-    notIn?: $Enums.PromotionTargetType[] | ListEnumPromotionTargetTypeFieldRefInput<$PrismaModel>
-    not?: NestedEnumPromotionTargetTypeWithAggregatesFilter<$PrismaModel> | $Enums.PromotionTargetType
-    _count?: NestedIntFilter<$PrismaModel>
-    _min?: NestedEnumPromotionTargetTypeFilter<$PrismaModel>
-    _max?: NestedEnumPromotionTargetTypeFilter<$PrismaModel>
-  }
-
-  export type EnumPromotionBonusTypeWithAggregatesFilter<$PrismaModel = never> = {
-    equals?: $Enums.PromotionBonusType | EnumPromotionBonusTypeFieldRefInput<$PrismaModel>
-    in?: $Enums.PromotionBonusType[] | ListEnumPromotionBonusTypeFieldRefInput<$PrismaModel>
-    notIn?: $Enums.PromotionBonusType[] | ListEnumPromotionBonusTypeFieldRefInput<$PrismaModel>
-    not?: NestedEnumPromotionBonusTypeWithAggregatesFilter<$PrismaModel> | $Enums.PromotionBonusType
-    _count?: NestedIntFilter<$PrismaModel>
-    _min?: NestedEnumPromotionBonusTypeFilter<$PrismaModel>
-    _max?: NestedEnumPromotionBonusTypeFilter<$PrismaModel>
-  }
-
-  export type EnumPromotionQualificationConditionWithAggregatesFilter<$PrismaModel = never> = {
-    equals?: $Enums.PromotionQualificationCondition | EnumPromotionQualificationConditionFieldRefInput<$PrismaModel>
-    in?: $Enums.PromotionQualificationCondition[] | ListEnumPromotionQualificationConditionFieldRefInput<$PrismaModel>
-    notIn?: $Enums.PromotionQualificationCondition[] | ListEnumPromotionQualificationConditionFieldRefInput<$PrismaModel>
-    not?: NestedEnumPromotionQualificationConditionWithAggregatesFilter<$PrismaModel> | $Enums.PromotionQualificationCondition
-    _count?: NestedIntFilter<$PrismaModel>
-    _min?: NestedEnumPromotionQualificationConditionFilter<$PrismaModel>
-    _max?: NestedEnumPromotionQualificationConditionFilter<$PrismaModel>
-  }
-
-  export type PromotionScalarRelationFilter = {
-    is?: PromotionWhereInput
-    isNot?: PromotionWhereInput
-  }
-
-  export type PromotionTranslationPromotionIdLanguageCompoundUniqueInput = {
-    promotionId: number
-    language: $Enums.Language
-  }
-
-  export type PromotionTranslationCountOrderByAggregateInput = {
-    id?: SortOrder
-    promotionId?: SortOrder
-    language?: SortOrder
-    name?: SortOrder
-    description?: SortOrder
-    createdAt?: SortOrder
-    updatedAt?: SortOrder
-  }
-
-  export type PromotionTranslationAvgOrderByAggregateInput = {
-    id?: SortOrder
-    promotionId?: SortOrder
-  }
-
-  export type PromotionTranslationMaxOrderByAggregateInput = {
-    id?: SortOrder
-    promotionId?: SortOrder
-    language?: SortOrder
-    name?: SortOrder
-    description?: SortOrder
-    createdAt?: SortOrder
-    updatedAt?: SortOrder
-  }
-
-  export type PromotionTranslationMinOrderByAggregateInput = {
-    id?: SortOrder
-    promotionId?: SortOrder
-    language?: SortOrder
-    name?: SortOrder
-    description?: SortOrder
-    createdAt?: SortOrder
-    updatedAt?: SortOrder
-  }
-
-  export type PromotionTranslationSumOrderByAggregateInput = {
-    id?: SortOrder
-    promotionId?: SortOrder
-  }
-
-  export type EnumUserPromotionStatusFilter<$PrismaModel = never> = {
-    equals?: $Enums.UserPromotionStatus | EnumUserPromotionStatusFieldRefInput<$PrismaModel>
-    in?: $Enums.UserPromotionStatus[] | ListEnumUserPromotionStatusFieldRefInput<$PrismaModel>
-    notIn?: $Enums.UserPromotionStatus[] | ListEnumUserPromotionStatusFieldRefInput<$PrismaModel>
-    not?: NestedEnumUserPromotionStatusFilter<$PrismaModel> | $Enums.UserPromotionStatus
-  }
-
-  export type UserPromotionCountOrderByAggregateInput = {
-    id?: SortOrder
-    userId?: SortOrder
-    promotionId?: SortOrder
-    status?: SortOrder
-    bonusGranted?: SortOrder
-    bonusGrantedAt?: SortOrder
-    bonusAmount?: SortOrder
-    createdAt?: SortOrder
-    updatedAt?: SortOrder
-  }
-
-  export type UserPromotionAvgOrderByAggregateInput = {
-    id?: SortOrder
-    userId?: SortOrder
-    promotionId?: SortOrder
-    bonusAmount?: SortOrder
-  }
-
-  export type UserPromotionMaxOrderByAggregateInput = {
-    id?: SortOrder
-    userId?: SortOrder
-    promotionId?: SortOrder
-    status?: SortOrder
-    bonusGranted?: SortOrder
-    bonusGrantedAt?: SortOrder
-    bonusAmount?: SortOrder
-    createdAt?: SortOrder
-    updatedAt?: SortOrder
-  }
-
-  export type UserPromotionMinOrderByAggregateInput = {
-    id?: SortOrder
-    userId?: SortOrder
-    promotionId?: SortOrder
-    status?: SortOrder
-    bonusGranted?: SortOrder
-    bonusGrantedAt?: SortOrder
-    bonusAmount?: SortOrder
-    createdAt?: SortOrder
-    updatedAt?: SortOrder
-  }
-
-  export type UserPromotionSumOrderByAggregateInput = {
-    id?: SortOrder
-    userId?: SortOrder
-    promotionId?: SortOrder
-    bonusAmount?: SortOrder
-  }
-
-  export type EnumUserPromotionStatusWithAggregatesFilter<$PrismaModel = never> = {
-    equals?: $Enums.UserPromotionStatus | EnumUserPromotionStatusFieldRefInput<$PrismaModel>
-    in?: $Enums.UserPromotionStatus[] | ListEnumUserPromotionStatusFieldRefInput<$PrismaModel>
-    notIn?: $Enums.UserPromotionStatus[] | ListEnumUserPromotionStatusFieldRefInput<$PrismaModel>
-    not?: NestedEnumUserPromotionStatusWithAggregatesFilter<$PrismaModel> | $Enums.UserPromotionStatus
-    _count?: NestedIntFilter<$PrismaModel>
-    _min?: NestedEnumUserPromotionStatusFilter<$PrismaModel>
-    _max?: NestedEnumUserPromotionStatusFilter<$PrismaModel>
-  }
-
   export type NowPaymentCallbackLogCountOrderByAggregateInput = {
     id?: SortOrder
     requestHeaders?: SortOrder
@@ -71632,6 +72892,321 @@ export namespace Prisma {
     _count?: NestedIntNullableFilter<$PrismaModel>
     _min?: NestedEnumLoginFailureReasonNullableFilter<$PrismaModel>
     _max?: NestedEnumLoginFailureReasonNullableFilter<$PrismaModel>
+  }
+
+  export type EnumPromotionTargetTypeFilter<$PrismaModel = never> = {
+    equals?: $Enums.PromotionTargetType | EnumPromotionTargetTypeFieldRefInput<$PrismaModel>
+    in?: $Enums.PromotionTargetType[] | ListEnumPromotionTargetTypeFieldRefInput<$PrismaModel>
+    notIn?: $Enums.PromotionTargetType[] | ListEnumPromotionTargetTypeFieldRefInput<$PrismaModel>
+    not?: NestedEnumPromotionTargetTypeFilter<$PrismaModel> | $Enums.PromotionTargetType
+  }
+
+  export type EnumPromotionBonusTypeFilter<$PrismaModel = never> = {
+    equals?: $Enums.PromotionBonusType | EnumPromotionBonusTypeFieldRefInput<$PrismaModel>
+    in?: $Enums.PromotionBonusType[] | ListEnumPromotionBonusTypeFieldRefInput<$PrismaModel>
+    notIn?: $Enums.PromotionBonusType[] | ListEnumPromotionBonusTypeFieldRefInput<$PrismaModel>
+    not?: NestedEnumPromotionBonusTypeFilter<$PrismaModel> | $Enums.PromotionBonusType
+  }
+
+  export type EnumPromotionQualificationConditionFilter<$PrismaModel = never> = {
+    equals?: $Enums.PromotionQualificationCondition | EnumPromotionQualificationConditionFieldRefInput<$PrismaModel>
+    in?: $Enums.PromotionQualificationCondition[] | ListEnumPromotionQualificationConditionFieldRefInput<$PrismaModel>
+    notIn?: $Enums.PromotionQualificationCondition[] | ListEnumPromotionQualificationConditionFieldRefInput<$PrismaModel>
+    not?: NestedEnumPromotionQualificationConditionFilter<$PrismaModel> | $Enums.PromotionQualificationCondition
+  }
+
+  export type PromotionTranslationListRelationFilter = {
+    every?: PromotionTranslationWhereInput
+    some?: PromotionTranslationWhereInput
+    none?: PromotionTranslationWhereInput
+  }
+
+  export type PromotionCurrencyListRelationFilter = {
+    every?: PromotionCurrencyWhereInput
+    some?: PromotionCurrencyWhereInput
+    none?: PromotionCurrencyWhereInput
+  }
+
+  export type PromotionTranslationOrderByRelationAggregateInput = {
+    _count?: SortOrder
+  }
+
+  export type PromotionCurrencyOrderByRelationAggregateInput = {
+    _count?: SortOrder
+  }
+
+  export type PromotionCountOrderByAggregateInput = {
+    id?: SortOrder
+    uid?: SortOrder
+    managementName?: SortOrder
+    isActive?: SortOrder
+    startDate?: SortOrder
+    endDate?: SortOrder
+    deletedAt?: SortOrder
+    targetType?: SortOrder
+    bonusType?: SortOrder
+    bonusRate?: SortOrder
+    rollingMultiplier?: SortOrder
+    qualificationMaintainCondition?: SortOrder
+    isOneTime?: SortOrder
+    createdAt?: SortOrder
+    updatedAt?: SortOrder
+  }
+
+  export type PromotionAvgOrderByAggregateInput = {
+    id?: SortOrder
+    bonusRate?: SortOrder
+    rollingMultiplier?: SortOrder
+  }
+
+  export type PromotionMaxOrderByAggregateInput = {
+    id?: SortOrder
+    uid?: SortOrder
+    managementName?: SortOrder
+    isActive?: SortOrder
+    startDate?: SortOrder
+    endDate?: SortOrder
+    deletedAt?: SortOrder
+    targetType?: SortOrder
+    bonusType?: SortOrder
+    bonusRate?: SortOrder
+    rollingMultiplier?: SortOrder
+    qualificationMaintainCondition?: SortOrder
+    isOneTime?: SortOrder
+    createdAt?: SortOrder
+    updatedAt?: SortOrder
+  }
+
+  export type PromotionMinOrderByAggregateInput = {
+    id?: SortOrder
+    uid?: SortOrder
+    managementName?: SortOrder
+    isActive?: SortOrder
+    startDate?: SortOrder
+    endDate?: SortOrder
+    deletedAt?: SortOrder
+    targetType?: SortOrder
+    bonusType?: SortOrder
+    bonusRate?: SortOrder
+    rollingMultiplier?: SortOrder
+    qualificationMaintainCondition?: SortOrder
+    isOneTime?: SortOrder
+    createdAt?: SortOrder
+    updatedAt?: SortOrder
+  }
+
+  export type PromotionSumOrderByAggregateInput = {
+    id?: SortOrder
+    bonusRate?: SortOrder
+    rollingMultiplier?: SortOrder
+  }
+
+  export type EnumPromotionTargetTypeWithAggregatesFilter<$PrismaModel = never> = {
+    equals?: $Enums.PromotionTargetType | EnumPromotionTargetTypeFieldRefInput<$PrismaModel>
+    in?: $Enums.PromotionTargetType[] | ListEnumPromotionTargetTypeFieldRefInput<$PrismaModel>
+    notIn?: $Enums.PromotionTargetType[] | ListEnumPromotionTargetTypeFieldRefInput<$PrismaModel>
+    not?: NestedEnumPromotionTargetTypeWithAggregatesFilter<$PrismaModel> | $Enums.PromotionTargetType
+    _count?: NestedIntFilter<$PrismaModel>
+    _min?: NestedEnumPromotionTargetTypeFilter<$PrismaModel>
+    _max?: NestedEnumPromotionTargetTypeFilter<$PrismaModel>
+  }
+
+  export type EnumPromotionBonusTypeWithAggregatesFilter<$PrismaModel = never> = {
+    equals?: $Enums.PromotionBonusType | EnumPromotionBonusTypeFieldRefInput<$PrismaModel>
+    in?: $Enums.PromotionBonusType[] | ListEnumPromotionBonusTypeFieldRefInput<$PrismaModel>
+    notIn?: $Enums.PromotionBonusType[] | ListEnumPromotionBonusTypeFieldRefInput<$PrismaModel>
+    not?: NestedEnumPromotionBonusTypeWithAggregatesFilter<$PrismaModel> | $Enums.PromotionBonusType
+    _count?: NestedIntFilter<$PrismaModel>
+    _min?: NestedEnumPromotionBonusTypeFilter<$PrismaModel>
+    _max?: NestedEnumPromotionBonusTypeFilter<$PrismaModel>
+  }
+
+  export type EnumPromotionQualificationConditionWithAggregatesFilter<$PrismaModel = never> = {
+    equals?: $Enums.PromotionQualificationCondition | EnumPromotionQualificationConditionFieldRefInput<$PrismaModel>
+    in?: $Enums.PromotionQualificationCondition[] | ListEnumPromotionQualificationConditionFieldRefInput<$PrismaModel>
+    notIn?: $Enums.PromotionQualificationCondition[] | ListEnumPromotionQualificationConditionFieldRefInput<$PrismaModel>
+    not?: NestedEnumPromotionQualificationConditionWithAggregatesFilter<$PrismaModel> | $Enums.PromotionQualificationCondition
+    _count?: NestedIntFilter<$PrismaModel>
+    _min?: NestedEnumPromotionQualificationConditionFilter<$PrismaModel>
+    _max?: NestedEnumPromotionQualificationConditionFilter<$PrismaModel>
+  }
+
+  export type PromotionScalarRelationFilter = {
+    is?: PromotionWhereInput
+    isNot?: PromotionWhereInput
+  }
+
+  export type PromotionTranslationPromotionIdLanguageCompoundUniqueInput = {
+    promotionId: bigint | number
+    language: $Enums.Language
+  }
+
+  export type PromotionTranslationCountOrderByAggregateInput = {
+    id?: SortOrder
+    promotionId?: SortOrder
+    language?: SortOrder
+    name?: SortOrder
+    description?: SortOrder
+    createdAt?: SortOrder
+    updatedAt?: SortOrder
+  }
+
+  export type PromotionTranslationAvgOrderByAggregateInput = {
+    id?: SortOrder
+    promotionId?: SortOrder
+  }
+
+  export type PromotionTranslationMaxOrderByAggregateInput = {
+    id?: SortOrder
+    promotionId?: SortOrder
+    language?: SortOrder
+    name?: SortOrder
+    description?: SortOrder
+    createdAt?: SortOrder
+    updatedAt?: SortOrder
+  }
+
+  export type PromotionTranslationMinOrderByAggregateInput = {
+    id?: SortOrder
+    promotionId?: SortOrder
+    language?: SortOrder
+    name?: SortOrder
+    description?: SortOrder
+    createdAt?: SortOrder
+    updatedAt?: SortOrder
+  }
+
+  export type PromotionTranslationSumOrderByAggregateInput = {
+    id?: SortOrder
+    promotionId?: SortOrder
+  }
+
+  export type PromotionCurrencyPromotionIdCurrencyCompoundUniqueInput = {
+    promotionId: bigint | number
+    currency: $Enums.ExchangeCurrencyCode
+  }
+
+  export type PromotionCurrencyCountOrderByAggregateInput = {
+    id?: SortOrder
+    promotionId?: SortOrder
+    currency?: SortOrder
+    minDepositAmount?: SortOrder
+    maxBonusAmount?: SortOrder
+    createdAt?: SortOrder
+    updatedAt?: SortOrder
+  }
+
+  export type PromotionCurrencyAvgOrderByAggregateInput = {
+    id?: SortOrder
+    promotionId?: SortOrder
+    minDepositAmount?: SortOrder
+    maxBonusAmount?: SortOrder
+  }
+
+  export type PromotionCurrencyMaxOrderByAggregateInput = {
+    id?: SortOrder
+    promotionId?: SortOrder
+    currency?: SortOrder
+    minDepositAmount?: SortOrder
+    maxBonusAmount?: SortOrder
+    createdAt?: SortOrder
+    updatedAt?: SortOrder
+  }
+
+  export type PromotionCurrencyMinOrderByAggregateInput = {
+    id?: SortOrder
+    promotionId?: SortOrder
+    currency?: SortOrder
+    minDepositAmount?: SortOrder
+    maxBonusAmount?: SortOrder
+    createdAt?: SortOrder
+    updatedAt?: SortOrder
+  }
+
+  export type PromotionCurrencySumOrderByAggregateInput = {
+    id?: SortOrder
+    promotionId?: SortOrder
+    minDepositAmount?: SortOrder
+    maxBonusAmount?: SortOrder
+  }
+
+  export type EnumUserPromotionStatusFilter<$PrismaModel = never> = {
+    equals?: $Enums.UserPromotionStatus | EnumUserPromotionStatusFieldRefInput<$PrismaModel>
+    in?: $Enums.UserPromotionStatus[] | ListEnumUserPromotionStatusFieldRefInput<$PrismaModel>
+    notIn?: $Enums.UserPromotionStatus[] | ListEnumUserPromotionStatusFieldRefInput<$PrismaModel>
+    not?: NestedEnumUserPromotionStatusFilter<$PrismaModel> | $Enums.UserPromotionStatus
+  }
+
+  export type UserPromotionCountOrderByAggregateInput = {
+    id?: SortOrder
+    userId?: SortOrder
+    promotionId?: SortOrder
+    status?: SortOrder
+    depositAmount?: SortOrder
+    bonusAmount?: SortOrder
+    targetRollingAmount?: SortOrder
+    currentRollingAmount?: SortOrder
+    currency?: SortOrder
+    createdAt?: SortOrder
+    updatedAt?: SortOrder
+  }
+
+  export type UserPromotionAvgOrderByAggregateInput = {
+    id?: SortOrder
+    userId?: SortOrder
+    promotionId?: SortOrder
+    depositAmount?: SortOrder
+    bonusAmount?: SortOrder
+    targetRollingAmount?: SortOrder
+    currentRollingAmount?: SortOrder
+  }
+
+  export type UserPromotionMaxOrderByAggregateInput = {
+    id?: SortOrder
+    userId?: SortOrder
+    promotionId?: SortOrder
+    status?: SortOrder
+    depositAmount?: SortOrder
+    bonusAmount?: SortOrder
+    targetRollingAmount?: SortOrder
+    currentRollingAmount?: SortOrder
+    currency?: SortOrder
+    createdAt?: SortOrder
+    updatedAt?: SortOrder
+  }
+
+  export type UserPromotionMinOrderByAggregateInput = {
+    id?: SortOrder
+    userId?: SortOrder
+    promotionId?: SortOrder
+    status?: SortOrder
+    depositAmount?: SortOrder
+    bonusAmount?: SortOrder
+    targetRollingAmount?: SortOrder
+    currentRollingAmount?: SortOrder
+    currency?: SortOrder
+    createdAt?: SortOrder
+    updatedAt?: SortOrder
+  }
+
+  export type UserPromotionSumOrderByAggregateInput = {
+    id?: SortOrder
+    userId?: SortOrder
+    promotionId?: SortOrder
+    depositAmount?: SortOrder
+    bonusAmount?: SortOrder
+    targetRollingAmount?: SortOrder
+    currentRollingAmount?: SortOrder
+  }
+
+  export type EnumUserPromotionStatusWithAggregatesFilter<$PrismaModel = never> = {
+    equals?: $Enums.UserPromotionStatus | EnumUserPromotionStatusFieldRefInput<$PrismaModel>
+    in?: $Enums.UserPromotionStatus[] | ListEnumUserPromotionStatusFieldRefInput<$PrismaModel>
+    notIn?: $Enums.UserPromotionStatus[] | ListEnumUserPromotionStatusFieldRefInput<$PrismaModel>
+    not?: NestedEnumUserPromotionStatusWithAggregatesFilter<$PrismaModel> | $Enums.UserPromotionStatus
+    _count?: NestedIntFilter<$PrismaModel>
+    _min?: NestedEnumUserPromotionStatusFilter<$PrismaModel>
+    _max?: NestedEnumUserPromotionStatusFilter<$PrismaModel>
   }
 
   export type EnumSessionTypeFilter<$PrismaModel = never> = {
@@ -73662,190 +75237,6 @@ export namespace Prisma {
     deleteMany?: CompTransactionScalarWhereInput | CompTransactionScalarWhereInput[]
   }
 
-  export type PromotionTranslationCreateNestedManyWithoutPromotionInput = {
-    create?: XOR<PromotionTranslationCreateWithoutPromotionInput, PromotionTranslationUncheckedCreateWithoutPromotionInput> | PromotionTranslationCreateWithoutPromotionInput[] | PromotionTranslationUncheckedCreateWithoutPromotionInput[]
-    connectOrCreate?: PromotionTranslationCreateOrConnectWithoutPromotionInput | PromotionTranslationCreateOrConnectWithoutPromotionInput[]
-    createMany?: PromotionTranslationCreateManyPromotionInputEnvelope
-    connect?: PromotionTranslationWhereUniqueInput | PromotionTranslationWhereUniqueInput[]
-  }
-
-  export type UserPromotionCreateNestedManyWithoutPromotionInput = {
-    create?: XOR<UserPromotionCreateWithoutPromotionInput, UserPromotionUncheckedCreateWithoutPromotionInput> | UserPromotionCreateWithoutPromotionInput[] | UserPromotionUncheckedCreateWithoutPromotionInput[]
-    connectOrCreate?: UserPromotionCreateOrConnectWithoutPromotionInput | UserPromotionCreateOrConnectWithoutPromotionInput[]
-    createMany?: UserPromotionCreateManyPromotionInputEnvelope
-    connect?: UserPromotionWhereUniqueInput | UserPromotionWhereUniqueInput[]
-  }
-
-  export type PromotionTranslationUncheckedCreateNestedManyWithoutPromotionInput = {
-    create?: XOR<PromotionTranslationCreateWithoutPromotionInput, PromotionTranslationUncheckedCreateWithoutPromotionInput> | PromotionTranslationCreateWithoutPromotionInput[] | PromotionTranslationUncheckedCreateWithoutPromotionInput[]
-    connectOrCreate?: PromotionTranslationCreateOrConnectWithoutPromotionInput | PromotionTranslationCreateOrConnectWithoutPromotionInput[]
-    createMany?: PromotionTranslationCreateManyPromotionInputEnvelope
-    connect?: PromotionTranslationWhereUniqueInput | PromotionTranslationWhereUniqueInput[]
-  }
-
-  export type UserPromotionUncheckedCreateNestedManyWithoutPromotionInput = {
-    create?: XOR<UserPromotionCreateWithoutPromotionInput, UserPromotionUncheckedCreateWithoutPromotionInput> | UserPromotionCreateWithoutPromotionInput[] | UserPromotionUncheckedCreateWithoutPromotionInput[]
-    connectOrCreate?: UserPromotionCreateOrConnectWithoutPromotionInput | UserPromotionCreateOrConnectWithoutPromotionInput[]
-    createMany?: UserPromotionCreateManyPromotionInputEnvelope
-    connect?: UserPromotionWhereUniqueInput | UserPromotionWhereUniqueInput[]
-  }
-
-  export type EnumPromotionTargetTypeFieldUpdateOperationsInput = {
-    set?: $Enums.PromotionTargetType
-  }
-
-  export type EnumPromotionBonusTypeFieldUpdateOperationsInput = {
-    set?: $Enums.PromotionBonusType
-  }
-
-  export type EnumPromotionQualificationConditionFieldUpdateOperationsInput = {
-    set?: $Enums.PromotionQualificationCondition
-  }
-
-  export type PromotionTranslationUpdateManyWithoutPromotionNestedInput = {
-    create?: XOR<PromotionTranslationCreateWithoutPromotionInput, PromotionTranslationUncheckedCreateWithoutPromotionInput> | PromotionTranslationCreateWithoutPromotionInput[] | PromotionTranslationUncheckedCreateWithoutPromotionInput[]
-    connectOrCreate?: PromotionTranslationCreateOrConnectWithoutPromotionInput | PromotionTranslationCreateOrConnectWithoutPromotionInput[]
-    upsert?: PromotionTranslationUpsertWithWhereUniqueWithoutPromotionInput | PromotionTranslationUpsertWithWhereUniqueWithoutPromotionInput[]
-    createMany?: PromotionTranslationCreateManyPromotionInputEnvelope
-    set?: PromotionTranslationWhereUniqueInput | PromotionTranslationWhereUniqueInput[]
-    disconnect?: PromotionTranslationWhereUniqueInput | PromotionTranslationWhereUniqueInput[]
-    delete?: PromotionTranslationWhereUniqueInput | PromotionTranslationWhereUniqueInput[]
-    connect?: PromotionTranslationWhereUniqueInput | PromotionTranslationWhereUniqueInput[]
-    update?: PromotionTranslationUpdateWithWhereUniqueWithoutPromotionInput | PromotionTranslationUpdateWithWhereUniqueWithoutPromotionInput[]
-    updateMany?: PromotionTranslationUpdateManyWithWhereWithoutPromotionInput | PromotionTranslationUpdateManyWithWhereWithoutPromotionInput[]
-    deleteMany?: PromotionTranslationScalarWhereInput | PromotionTranslationScalarWhereInput[]
-  }
-
-  export type UserPromotionUpdateManyWithoutPromotionNestedInput = {
-    create?: XOR<UserPromotionCreateWithoutPromotionInput, UserPromotionUncheckedCreateWithoutPromotionInput> | UserPromotionCreateWithoutPromotionInput[] | UserPromotionUncheckedCreateWithoutPromotionInput[]
-    connectOrCreate?: UserPromotionCreateOrConnectWithoutPromotionInput | UserPromotionCreateOrConnectWithoutPromotionInput[]
-    upsert?: UserPromotionUpsertWithWhereUniqueWithoutPromotionInput | UserPromotionUpsertWithWhereUniqueWithoutPromotionInput[]
-    createMany?: UserPromotionCreateManyPromotionInputEnvelope
-    set?: UserPromotionWhereUniqueInput | UserPromotionWhereUniqueInput[]
-    disconnect?: UserPromotionWhereUniqueInput | UserPromotionWhereUniqueInput[]
-    delete?: UserPromotionWhereUniqueInput | UserPromotionWhereUniqueInput[]
-    connect?: UserPromotionWhereUniqueInput | UserPromotionWhereUniqueInput[]
-    update?: UserPromotionUpdateWithWhereUniqueWithoutPromotionInput | UserPromotionUpdateWithWhereUniqueWithoutPromotionInput[]
-    updateMany?: UserPromotionUpdateManyWithWhereWithoutPromotionInput | UserPromotionUpdateManyWithWhereWithoutPromotionInput[]
-    deleteMany?: UserPromotionScalarWhereInput | UserPromotionScalarWhereInput[]
-  }
-
-  export type PromotionTranslationUncheckedUpdateManyWithoutPromotionNestedInput = {
-    create?: XOR<PromotionTranslationCreateWithoutPromotionInput, PromotionTranslationUncheckedCreateWithoutPromotionInput> | PromotionTranslationCreateWithoutPromotionInput[] | PromotionTranslationUncheckedCreateWithoutPromotionInput[]
-    connectOrCreate?: PromotionTranslationCreateOrConnectWithoutPromotionInput | PromotionTranslationCreateOrConnectWithoutPromotionInput[]
-    upsert?: PromotionTranslationUpsertWithWhereUniqueWithoutPromotionInput | PromotionTranslationUpsertWithWhereUniqueWithoutPromotionInput[]
-    createMany?: PromotionTranslationCreateManyPromotionInputEnvelope
-    set?: PromotionTranslationWhereUniqueInput | PromotionTranslationWhereUniqueInput[]
-    disconnect?: PromotionTranslationWhereUniqueInput | PromotionTranslationWhereUniqueInput[]
-    delete?: PromotionTranslationWhereUniqueInput | PromotionTranslationWhereUniqueInput[]
-    connect?: PromotionTranslationWhereUniqueInput | PromotionTranslationWhereUniqueInput[]
-    update?: PromotionTranslationUpdateWithWhereUniqueWithoutPromotionInput | PromotionTranslationUpdateWithWhereUniqueWithoutPromotionInput[]
-    updateMany?: PromotionTranslationUpdateManyWithWhereWithoutPromotionInput | PromotionTranslationUpdateManyWithWhereWithoutPromotionInput[]
-    deleteMany?: PromotionTranslationScalarWhereInput | PromotionTranslationScalarWhereInput[]
-  }
-
-  export type UserPromotionUncheckedUpdateManyWithoutPromotionNestedInput = {
-    create?: XOR<UserPromotionCreateWithoutPromotionInput, UserPromotionUncheckedCreateWithoutPromotionInput> | UserPromotionCreateWithoutPromotionInput[] | UserPromotionUncheckedCreateWithoutPromotionInput[]
-    connectOrCreate?: UserPromotionCreateOrConnectWithoutPromotionInput | UserPromotionCreateOrConnectWithoutPromotionInput[]
-    upsert?: UserPromotionUpsertWithWhereUniqueWithoutPromotionInput | UserPromotionUpsertWithWhereUniqueWithoutPromotionInput[]
-    createMany?: UserPromotionCreateManyPromotionInputEnvelope
-    set?: UserPromotionWhereUniqueInput | UserPromotionWhereUniqueInput[]
-    disconnect?: UserPromotionWhereUniqueInput | UserPromotionWhereUniqueInput[]
-    delete?: UserPromotionWhereUniqueInput | UserPromotionWhereUniqueInput[]
-    connect?: UserPromotionWhereUniqueInput | UserPromotionWhereUniqueInput[]
-    update?: UserPromotionUpdateWithWhereUniqueWithoutPromotionInput | UserPromotionUpdateWithWhereUniqueWithoutPromotionInput[]
-    updateMany?: UserPromotionUpdateManyWithWhereWithoutPromotionInput | UserPromotionUpdateManyWithWhereWithoutPromotionInput[]
-    deleteMany?: UserPromotionScalarWhereInput | UserPromotionScalarWhereInput[]
-  }
-
-  export type PromotionCreateNestedOneWithoutTranslationsInput = {
-    create?: XOR<PromotionCreateWithoutTranslationsInput, PromotionUncheckedCreateWithoutTranslationsInput>
-    connectOrCreate?: PromotionCreateOrConnectWithoutTranslationsInput
-    connect?: PromotionWhereUniqueInput
-  }
-
-  export type PromotionUpdateOneRequiredWithoutTranslationsNestedInput = {
-    create?: XOR<PromotionCreateWithoutTranslationsInput, PromotionUncheckedCreateWithoutTranslationsInput>
-    connectOrCreate?: PromotionCreateOrConnectWithoutTranslationsInput
-    upsert?: PromotionUpsertWithoutTranslationsInput
-    connect?: PromotionWhereUniqueInput
-    update?: XOR<XOR<PromotionUpdateToOneWithWhereWithoutTranslationsInput, PromotionUpdateWithoutTranslationsInput>, PromotionUncheckedUpdateWithoutTranslationsInput>
-  }
-
-  export type RollingCreateNestedManyWithoutUserPromotionInput = {
-    create?: XOR<RollingCreateWithoutUserPromotionInput, RollingUncheckedCreateWithoutUserPromotionInput> | RollingCreateWithoutUserPromotionInput[] | RollingUncheckedCreateWithoutUserPromotionInput[]
-    connectOrCreate?: RollingCreateOrConnectWithoutUserPromotionInput | RollingCreateOrConnectWithoutUserPromotionInput[]
-    createMany?: RollingCreateManyUserPromotionInputEnvelope
-    connect?: RollingWhereUniqueInput | RollingWhereUniqueInput[]
-  }
-
-  export type PromotionCreateNestedOneWithoutUserPromotionInput = {
-    create?: XOR<PromotionCreateWithoutUserPromotionInput, PromotionUncheckedCreateWithoutUserPromotionInput>
-    connectOrCreate?: PromotionCreateOrConnectWithoutUserPromotionInput
-    connect?: PromotionWhereUniqueInput
-  }
-
-  export type UserCreateNestedOneWithoutUserPromotionInput = {
-    create?: XOR<UserCreateWithoutUserPromotionInput, UserUncheckedCreateWithoutUserPromotionInput>
-    connectOrCreate?: UserCreateOrConnectWithoutUserPromotionInput
-    connect?: UserWhereUniqueInput
-  }
-
-  export type RollingUncheckedCreateNestedManyWithoutUserPromotionInput = {
-    create?: XOR<RollingCreateWithoutUserPromotionInput, RollingUncheckedCreateWithoutUserPromotionInput> | RollingCreateWithoutUserPromotionInput[] | RollingUncheckedCreateWithoutUserPromotionInput[]
-    connectOrCreate?: RollingCreateOrConnectWithoutUserPromotionInput | RollingCreateOrConnectWithoutUserPromotionInput[]
-    createMany?: RollingCreateManyUserPromotionInputEnvelope
-    connect?: RollingWhereUniqueInput | RollingWhereUniqueInput[]
-  }
-
-  export type EnumUserPromotionStatusFieldUpdateOperationsInput = {
-    set?: $Enums.UserPromotionStatus
-  }
-
-  export type RollingUpdateManyWithoutUserPromotionNestedInput = {
-    create?: XOR<RollingCreateWithoutUserPromotionInput, RollingUncheckedCreateWithoutUserPromotionInput> | RollingCreateWithoutUserPromotionInput[] | RollingUncheckedCreateWithoutUserPromotionInput[]
-    connectOrCreate?: RollingCreateOrConnectWithoutUserPromotionInput | RollingCreateOrConnectWithoutUserPromotionInput[]
-    upsert?: RollingUpsertWithWhereUniqueWithoutUserPromotionInput | RollingUpsertWithWhereUniqueWithoutUserPromotionInput[]
-    createMany?: RollingCreateManyUserPromotionInputEnvelope
-    set?: RollingWhereUniqueInput | RollingWhereUniqueInput[]
-    disconnect?: RollingWhereUniqueInput | RollingWhereUniqueInput[]
-    delete?: RollingWhereUniqueInput | RollingWhereUniqueInput[]
-    connect?: RollingWhereUniqueInput | RollingWhereUniqueInput[]
-    update?: RollingUpdateWithWhereUniqueWithoutUserPromotionInput | RollingUpdateWithWhereUniqueWithoutUserPromotionInput[]
-    updateMany?: RollingUpdateManyWithWhereWithoutUserPromotionInput | RollingUpdateManyWithWhereWithoutUserPromotionInput[]
-    deleteMany?: RollingScalarWhereInput | RollingScalarWhereInput[]
-  }
-
-  export type PromotionUpdateOneRequiredWithoutUserPromotionNestedInput = {
-    create?: XOR<PromotionCreateWithoutUserPromotionInput, PromotionUncheckedCreateWithoutUserPromotionInput>
-    connectOrCreate?: PromotionCreateOrConnectWithoutUserPromotionInput
-    upsert?: PromotionUpsertWithoutUserPromotionInput
-    connect?: PromotionWhereUniqueInput
-    update?: XOR<XOR<PromotionUpdateToOneWithWhereWithoutUserPromotionInput, PromotionUpdateWithoutUserPromotionInput>, PromotionUncheckedUpdateWithoutUserPromotionInput>
-  }
-
-  export type UserUpdateOneRequiredWithoutUserPromotionNestedInput = {
-    create?: XOR<UserCreateWithoutUserPromotionInput, UserUncheckedCreateWithoutUserPromotionInput>
-    connectOrCreate?: UserCreateOrConnectWithoutUserPromotionInput
-    upsert?: UserUpsertWithoutUserPromotionInput
-    connect?: UserWhereUniqueInput
-    update?: XOR<XOR<UserUpdateToOneWithWhereWithoutUserPromotionInput, UserUpdateWithoutUserPromotionInput>, UserUncheckedUpdateWithoutUserPromotionInput>
-  }
-
-  export type RollingUncheckedUpdateManyWithoutUserPromotionNestedInput = {
-    create?: XOR<RollingCreateWithoutUserPromotionInput, RollingUncheckedCreateWithoutUserPromotionInput> | RollingCreateWithoutUserPromotionInput[] | RollingUncheckedCreateWithoutUserPromotionInput[]
-    connectOrCreate?: RollingCreateOrConnectWithoutUserPromotionInput | RollingCreateOrConnectWithoutUserPromotionInput[]
-    upsert?: RollingUpsertWithWhereUniqueWithoutUserPromotionInput | RollingUpsertWithWhereUniqueWithoutUserPromotionInput[]
-    createMany?: RollingCreateManyUserPromotionInputEnvelope
-    set?: RollingWhereUniqueInput | RollingWhereUniqueInput[]
-    disconnect?: RollingWhereUniqueInput | RollingWhereUniqueInput[]
-    delete?: RollingWhereUniqueInput | RollingWhereUniqueInput[]
-    connect?: RollingWhereUniqueInput | RollingWhereUniqueInput[]
-    update?: RollingUpdateWithWhereUniqueWithoutUserPromotionInput | RollingUpdateWithWhereUniqueWithoutUserPromotionInput[]
-    updateMany?: RollingUpdateManyWithWhereWithoutUserPromotionInput | RollingUpdateManyWithWhereWithoutUserPromotionInput[]
-    deleteMany?: RollingScalarWhereInput | RollingScalarWhereInput[]
-  }
-
   export type EnumExchangeRateProviderFieldUpdateOperationsInput = {
     set?: $Enums.ExchangeRateProvider
   }
@@ -74406,6 +75797,246 @@ export namespace Prisma {
     delete?: UserWhereInput | boolean
     connect?: UserWhereUniqueInput
     update?: XOR<XOR<UserUpdateToOneWithWhereWithoutLoginAttemptsInput, UserUpdateWithoutLoginAttemptsInput>, UserUncheckedUpdateWithoutLoginAttemptsInput>
+  }
+
+  export type PromotionTranslationCreateNestedManyWithoutPromotionInput = {
+    create?: XOR<PromotionTranslationCreateWithoutPromotionInput, PromotionTranslationUncheckedCreateWithoutPromotionInput> | PromotionTranslationCreateWithoutPromotionInput[] | PromotionTranslationUncheckedCreateWithoutPromotionInput[]
+    connectOrCreate?: PromotionTranslationCreateOrConnectWithoutPromotionInput | PromotionTranslationCreateOrConnectWithoutPromotionInput[]
+    createMany?: PromotionTranslationCreateManyPromotionInputEnvelope
+    connect?: PromotionTranslationWhereUniqueInput | PromotionTranslationWhereUniqueInput[]
+  }
+
+  export type PromotionCurrencyCreateNestedManyWithoutPromotionInput = {
+    create?: XOR<PromotionCurrencyCreateWithoutPromotionInput, PromotionCurrencyUncheckedCreateWithoutPromotionInput> | PromotionCurrencyCreateWithoutPromotionInput[] | PromotionCurrencyUncheckedCreateWithoutPromotionInput[]
+    connectOrCreate?: PromotionCurrencyCreateOrConnectWithoutPromotionInput | PromotionCurrencyCreateOrConnectWithoutPromotionInput[]
+    createMany?: PromotionCurrencyCreateManyPromotionInputEnvelope
+    connect?: PromotionCurrencyWhereUniqueInput | PromotionCurrencyWhereUniqueInput[]
+  }
+
+  export type UserPromotionCreateNestedManyWithoutPromotionInput = {
+    create?: XOR<UserPromotionCreateWithoutPromotionInput, UserPromotionUncheckedCreateWithoutPromotionInput> | UserPromotionCreateWithoutPromotionInput[] | UserPromotionUncheckedCreateWithoutPromotionInput[]
+    connectOrCreate?: UserPromotionCreateOrConnectWithoutPromotionInput | UserPromotionCreateOrConnectWithoutPromotionInput[]
+    createMany?: UserPromotionCreateManyPromotionInputEnvelope
+    connect?: UserPromotionWhereUniqueInput | UserPromotionWhereUniqueInput[]
+  }
+
+  export type PromotionTranslationUncheckedCreateNestedManyWithoutPromotionInput = {
+    create?: XOR<PromotionTranslationCreateWithoutPromotionInput, PromotionTranslationUncheckedCreateWithoutPromotionInput> | PromotionTranslationCreateWithoutPromotionInput[] | PromotionTranslationUncheckedCreateWithoutPromotionInput[]
+    connectOrCreate?: PromotionTranslationCreateOrConnectWithoutPromotionInput | PromotionTranslationCreateOrConnectWithoutPromotionInput[]
+    createMany?: PromotionTranslationCreateManyPromotionInputEnvelope
+    connect?: PromotionTranslationWhereUniqueInput | PromotionTranslationWhereUniqueInput[]
+  }
+
+  export type PromotionCurrencyUncheckedCreateNestedManyWithoutPromotionInput = {
+    create?: XOR<PromotionCurrencyCreateWithoutPromotionInput, PromotionCurrencyUncheckedCreateWithoutPromotionInput> | PromotionCurrencyCreateWithoutPromotionInput[] | PromotionCurrencyUncheckedCreateWithoutPromotionInput[]
+    connectOrCreate?: PromotionCurrencyCreateOrConnectWithoutPromotionInput | PromotionCurrencyCreateOrConnectWithoutPromotionInput[]
+    createMany?: PromotionCurrencyCreateManyPromotionInputEnvelope
+    connect?: PromotionCurrencyWhereUniqueInput | PromotionCurrencyWhereUniqueInput[]
+  }
+
+  export type UserPromotionUncheckedCreateNestedManyWithoutPromotionInput = {
+    create?: XOR<UserPromotionCreateWithoutPromotionInput, UserPromotionUncheckedCreateWithoutPromotionInput> | UserPromotionCreateWithoutPromotionInput[] | UserPromotionUncheckedCreateWithoutPromotionInput[]
+    connectOrCreate?: UserPromotionCreateOrConnectWithoutPromotionInput | UserPromotionCreateOrConnectWithoutPromotionInput[]
+    createMany?: UserPromotionCreateManyPromotionInputEnvelope
+    connect?: UserPromotionWhereUniqueInput | UserPromotionWhereUniqueInput[]
+  }
+
+  export type EnumPromotionTargetTypeFieldUpdateOperationsInput = {
+    set?: $Enums.PromotionTargetType
+  }
+
+  export type EnumPromotionBonusTypeFieldUpdateOperationsInput = {
+    set?: $Enums.PromotionBonusType
+  }
+
+  export type EnumPromotionQualificationConditionFieldUpdateOperationsInput = {
+    set?: $Enums.PromotionQualificationCondition
+  }
+
+  export type PromotionTranslationUpdateManyWithoutPromotionNestedInput = {
+    create?: XOR<PromotionTranslationCreateWithoutPromotionInput, PromotionTranslationUncheckedCreateWithoutPromotionInput> | PromotionTranslationCreateWithoutPromotionInput[] | PromotionTranslationUncheckedCreateWithoutPromotionInput[]
+    connectOrCreate?: PromotionTranslationCreateOrConnectWithoutPromotionInput | PromotionTranslationCreateOrConnectWithoutPromotionInput[]
+    upsert?: PromotionTranslationUpsertWithWhereUniqueWithoutPromotionInput | PromotionTranslationUpsertWithWhereUniqueWithoutPromotionInput[]
+    createMany?: PromotionTranslationCreateManyPromotionInputEnvelope
+    set?: PromotionTranslationWhereUniqueInput | PromotionTranslationWhereUniqueInput[]
+    disconnect?: PromotionTranslationWhereUniqueInput | PromotionTranslationWhereUniqueInput[]
+    delete?: PromotionTranslationWhereUniqueInput | PromotionTranslationWhereUniqueInput[]
+    connect?: PromotionTranslationWhereUniqueInput | PromotionTranslationWhereUniqueInput[]
+    update?: PromotionTranslationUpdateWithWhereUniqueWithoutPromotionInput | PromotionTranslationUpdateWithWhereUniqueWithoutPromotionInput[]
+    updateMany?: PromotionTranslationUpdateManyWithWhereWithoutPromotionInput | PromotionTranslationUpdateManyWithWhereWithoutPromotionInput[]
+    deleteMany?: PromotionTranslationScalarWhereInput | PromotionTranslationScalarWhereInput[]
+  }
+
+  export type PromotionCurrencyUpdateManyWithoutPromotionNestedInput = {
+    create?: XOR<PromotionCurrencyCreateWithoutPromotionInput, PromotionCurrencyUncheckedCreateWithoutPromotionInput> | PromotionCurrencyCreateWithoutPromotionInput[] | PromotionCurrencyUncheckedCreateWithoutPromotionInput[]
+    connectOrCreate?: PromotionCurrencyCreateOrConnectWithoutPromotionInput | PromotionCurrencyCreateOrConnectWithoutPromotionInput[]
+    upsert?: PromotionCurrencyUpsertWithWhereUniqueWithoutPromotionInput | PromotionCurrencyUpsertWithWhereUniqueWithoutPromotionInput[]
+    createMany?: PromotionCurrencyCreateManyPromotionInputEnvelope
+    set?: PromotionCurrencyWhereUniqueInput | PromotionCurrencyWhereUniqueInput[]
+    disconnect?: PromotionCurrencyWhereUniqueInput | PromotionCurrencyWhereUniqueInput[]
+    delete?: PromotionCurrencyWhereUniqueInput | PromotionCurrencyWhereUniqueInput[]
+    connect?: PromotionCurrencyWhereUniqueInput | PromotionCurrencyWhereUniqueInput[]
+    update?: PromotionCurrencyUpdateWithWhereUniqueWithoutPromotionInput | PromotionCurrencyUpdateWithWhereUniqueWithoutPromotionInput[]
+    updateMany?: PromotionCurrencyUpdateManyWithWhereWithoutPromotionInput | PromotionCurrencyUpdateManyWithWhereWithoutPromotionInput[]
+    deleteMany?: PromotionCurrencyScalarWhereInput | PromotionCurrencyScalarWhereInput[]
+  }
+
+  export type UserPromotionUpdateManyWithoutPromotionNestedInput = {
+    create?: XOR<UserPromotionCreateWithoutPromotionInput, UserPromotionUncheckedCreateWithoutPromotionInput> | UserPromotionCreateWithoutPromotionInput[] | UserPromotionUncheckedCreateWithoutPromotionInput[]
+    connectOrCreate?: UserPromotionCreateOrConnectWithoutPromotionInput | UserPromotionCreateOrConnectWithoutPromotionInput[]
+    upsert?: UserPromotionUpsertWithWhereUniqueWithoutPromotionInput | UserPromotionUpsertWithWhereUniqueWithoutPromotionInput[]
+    createMany?: UserPromotionCreateManyPromotionInputEnvelope
+    set?: UserPromotionWhereUniqueInput | UserPromotionWhereUniqueInput[]
+    disconnect?: UserPromotionWhereUniqueInput | UserPromotionWhereUniqueInput[]
+    delete?: UserPromotionWhereUniqueInput | UserPromotionWhereUniqueInput[]
+    connect?: UserPromotionWhereUniqueInput | UserPromotionWhereUniqueInput[]
+    update?: UserPromotionUpdateWithWhereUniqueWithoutPromotionInput | UserPromotionUpdateWithWhereUniqueWithoutPromotionInput[]
+    updateMany?: UserPromotionUpdateManyWithWhereWithoutPromotionInput | UserPromotionUpdateManyWithWhereWithoutPromotionInput[]
+    deleteMany?: UserPromotionScalarWhereInput | UserPromotionScalarWhereInput[]
+  }
+
+  export type PromotionTranslationUncheckedUpdateManyWithoutPromotionNestedInput = {
+    create?: XOR<PromotionTranslationCreateWithoutPromotionInput, PromotionTranslationUncheckedCreateWithoutPromotionInput> | PromotionTranslationCreateWithoutPromotionInput[] | PromotionTranslationUncheckedCreateWithoutPromotionInput[]
+    connectOrCreate?: PromotionTranslationCreateOrConnectWithoutPromotionInput | PromotionTranslationCreateOrConnectWithoutPromotionInput[]
+    upsert?: PromotionTranslationUpsertWithWhereUniqueWithoutPromotionInput | PromotionTranslationUpsertWithWhereUniqueWithoutPromotionInput[]
+    createMany?: PromotionTranslationCreateManyPromotionInputEnvelope
+    set?: PromotionTranslationWhereUniqueInput | PromotionTranslationWhereUniqueInput[]
+    disconnect?: PromotionTranslationWhereUniqueInput | PromotionTranslationWhereUniqueInput[]
+    delete?: PromotionTranslationWhereUniqueInput | PromotionTranslationWhereUniqueInput[]
+    connect?: PromotionTranslationWhereUniqueInput | PromotionTranslationWhereUniqueInput[]
+    update?: PromotionTranslationUpdateWithWhereUniqueWithoutPromotionInput | PromotionTranslationUpdateWithWhereUniqueWithoutPromotionInput[]
+    updateMany?: PromotionTranslationUpdateManyWithWhereWithoutPromotionInput | PromotionTranslationUpdateManyWithWhereWithoutPromotionInput[]
+    deleteMany?: PromotionTranslationScalarWhereInput | PromotionTranslationScalarWhereInput[]
+  }
+
+  export type PromotionCurrencyUncheckedUpdateManyWithoutPromotionNestedInput = {
+    create?: XOR<PromotionCurrencyCreateWithoutPromotionInput, PromotionCurrencyUncheckedCreateWithoutPromotionInput> | PromotionCurrencyCreateWithoutPromotionInput[] | PromotionCurrencyUncheckedCreateWithoutPromotionInput[]
+    connectOrCreate?: PromotionCurrencyCreateOrConnectWithoutPromotionInput | PromotionCurrencyCreateOrConnectWithoutPromotionInput[]
+    upsert?: PromotionCurrencyUpsertWithWhereUniqueWithoutPromotionInput | PromotionCurrencyUpsertWithWhereUniqueWithoutPromotionInput[]
+    createMany?: PromotionCurrencyCreateManyPromotionInputEnvelope
+    set?: PromotionCurrencyWhereUniqueInput | PromotionCurrencyWhereUniqueInput[]
+    disconnect?: PromotionCurrencyWhereUniqueInput | PromotionCurrencyWhereUniqueInput[]
+    delete?: PromotionCurrencyWhereUniqueInput | PromotionCurrencyWhereUniqueInput[]
+    connect?: PromotionCurrencyWhereUniqueInput | PromotionCurrencyWhereUniqueInput[]
+    update?: PromotionCurrencyUpdateWithWhereUniqueWithoutPromotionInput | PromotionCurrencyUpdateWithWhereUniqueWithoutPromotionInput[]
+    updateMany?: PromotionCurrencyUpdateManyWithWhereWithoutPromotionInput | PromotionCurrencyUpdateManyWithWhereWithoutPromotionInput[]
+    deleteMany?: PromotionCurrencyScalarWhereInput | PromotionCurrencyScalarWhereInput[]
+  }
+
+  export type UserPromotionUncheckedUpdateManyWithoutPromotionNestedInput = {
+    create?: XOR<UserPromotionCreateWithoutPromotionInput, UserPromotionUncheckedCreateWithoutPromotionInput> | UserPromotionCreateWithoutPromotionInput[] | UserPromotionUncheckedCreateWithoutPromotionInput[]
+    connectOrCreate?: UserPromotionCreateOrConnectWithoutPromotionInput | UserPromotionCreateOrConnectWithoutPromotionInput[]
+    upsert?: UserPromotionUpsertWithWhereUniqueWithoutPromotionInput | UserPromotionUpsertWithWhereUniqueWithoutPromotionInput[]
+    createMany?: UserPromotionCreateManyPromotionInputEnvelope
+    set?: UserPromotionWhereUniqueInput | UserPromotionWhereUniqueInput[]
+    disconnect?: UserPromotionWhereUniqueInput | UserPromotionWhereUniqueInput[]
+    delete?: UserPromotionWhereUniqueInput | UserPromotionWhereUniqueInput[]
+    connect?: UserPromotionWhereUniqueInput | UserPromotionWhereUniqueInput[]
+    update?: UserPromotionUpdateWithWhereUniqueWithoutPromotionInput | UserPromotionUpdateWithWhereUniqueWithoutPromotionInput[]
+    updateMany?: UserPromotionUpdateManyWithWhereWithoutPromotionInput | UserPromotionUpdateManyWithWhereWithoutPromotionInput[]
+    deleteMany?: UserPromotionScalarWhereInput | UserPromotionScalarWhereInput[]
+  }
+
+  export type PromotionCreateNestedOneWithoutTranslationsInput = {
+    create?: XOR<PromotionCreateWithoutTranslationsInput, PromotionUncheckedCreateWithoutTranslationsInput>
+    connectOrCreate?: PromotionCreateOrConnectWithoutTranslationsInput
+    connect?: PromotionWhereUniqueInput
+  }
+
+  export type PromotionUpdateOneRequiredWithoutTranslationsNestedInput = {
+    create?: XOR<PromotionCreateWithoutTranslationsInput, PromotionUncheckedCreateWithoutTranslationsInput>
+    connectOrCreate?: PromotionCreateOrConnectWithoutTranslationsInput
+    upsert?: PromotionUpsertWithoutTranslationsInput
+    connect?: PromotionWhereUniqueInput
+    update?: XOR<XOR<PromotionUpdateToOneWithWhereWithoutTranslationsInput, PromotionUpdateWithoutTranslationsInput>, PromotionUncheckedUpdateWithoutTranslationsInput>
+  }
+
+  export type PromotionCreateNestedOneWithoutCurrenciesInput = {
+    create?: XOR<PromotionCreateWithoutCurrenciesInput, PromotionUncheckedCreateWithoutCurrenciesInput>
+    connectOrCreate?: PromotionCreateOrConnectWithoutCurrenciesInput
+    connect?: PromotionWhereUniqueInput
+  }
+
+  export type PromotionUpdateOneRequiredWithoutCurrenciesNestedInput = {
+    create?: XOR<PromotionCreateWithoutCurrenciesInput, PromotionUncheckedCreateWithoutCurrenciesInput>
+    connectOrCreate?: PromotionCreateOrConnectWithoutCurrenciesInput
+    upsert?: PromotionUpsertWithoutCurrenciesInput
+    connect?: PromotionWhereUniqueInput
+    update?: XOR<XOR<PromotionUpdateToOneWithWhereWithoutCurrenciesInput, PromotionUpdateWithoutCurrenciesInput>, PromotionUncheckedUpdateWithoutCurrenciesInput>
+  }
+
+  export type RollingCreateNestedManyWithoutUserPromotionInput = {
+    create?: XOR<RollingCreateWithoutUserPromotionInput, RollingUncheckedCreateWithoutUserPromotionInput> | RollingCreateWithoutUserPromotionInput[] | RollingUncheckedCreateWithoutUserPromotionInput[]
+    connectOrCreate?: RollingCreateOrConnectWithoutUserPromotionInput | RollingCreateOrConnectWithoutUserPromotionInput[]
+    createMany?: RollingCreateManyUserPromotionInputEnvelope
+    connect?: RollingWhereUniqueInput | RollingWhereUniqueInput[]
+  }
+
+  export type PromotionCreateNestedOneWithoutUserPromotionInput = {
+    create?: XOR<PromotionCreateWithoutUserPromotionInput, PromotionUncheckedCreateWithoutUserPromotionInput>
+    connectOrCreate?: PromotionCreateOrConnectWithoutUserPromotionInput
+    connect?: PromotionWhereUniqueInput
+  }
+
+  export type UserCreateNestedOneWithoutUserPromotionInput = {
+    create?: XOR<UserCreateWithoutUserPromotionInput, UserUncheckedCreateWithoutUserPromotionInput>
+    connectOrCreate?: UserCreateOrConnectWithoutUserPromotionInput
+    connect?: UserWhereUniqueInput
+  }
+
+  export type RollingUncheckedCreateNestedManyWithoutUserPromotionInput = {
+    create?: XOR<RollingCreateWithoutUserPromotionInput, RollingUncheckedCreateWithoutUserPromotionInput> | RollingCreateWithoutUserPromotionInput[] | RollingUncheckedCreateWithoutUserPromotionInput[]
+    connectOrCreate?: RollingCreateOrConnectWithoutUserPromotionInput | RollingCreateOrConnectWithoutUserPromotionInput[]
+    createMany?: RollingCreateManyUserPromotionInputEnvelope
+    connect?: RollingWhereUniqueInput | RollingWhereUniqueInput[]
+  }
+
+  export type EnumUserPromotionStatusFieldUpdateOperationsInput = {
+    set?: $Enums.UserPromotionStatus
+  }
+
+  export type RollingUpdateManyWithoutUserPromotionNestedInput = {
+    create?: XOR<RollingCreateWithoutUserPromotionInput, RollingUncheckedCreateWithoutUserPromotionInput> | RollingCreateWithoutUserPromotionInput[] | RollingUncheckedCreateWithoutUserPromotionInput[]
+    connectOrCreate?: RollingCreateOrConnectWithoutUserPromotionInput | RollingCreateOrConnectWithoutUserPromotionInput[]
+    upsert?: RollingUpsertWithWhereUniqueWithoutUserPromotionInput | RollingUpsertWithWhereUniqueWithoutUserPromotionInput[]
+    createMany?: RollingCreateManyUserPromotionInputEnvelope
+    set?: RollingWhereUniqueInput | RollingWhereUniqueInput[]
+    disconnect?: RollingWhereUniqueInput | RollingWhereUniqueInput[]
+    delete?: RollingWhereUniqueInput | RollingWhereUniqueInput[]
+    connect?: RollingWhereUniqueInput | RollingWhereUniqueInput[]
+    update?: RollingUpdateWithWhereUniqueWithoutUserPromotionInput | RollingUpdateWithWhereUniqueWithoutUserPromotionInput[]
+    updateMany?: RollingUpdateManyWithWhereWithoutUserPromotionInput | RollingUpdateManyWithWhereWithoutUserPromotionInput[]
+    deleteMany?: RollingScalarWhereInput | RollingScalarWhereInput[]
+  }
+
+  export type PromotionUpdateOneRequiredWithoutUserPromotionNestedInput = {
+    create?: XOR<PromotionCreateWithoutUserPromotionInput, PromotionUncheckedCreateWithoutUserPromotionInput>
+    connectOrCreate?: PromotionCreateOrConnectWithoutUserPromotionInput
+    upsert?: PromotionUpsertWithoutUserPromotionInput
+    connect?: PromotionWhereUniqueInput
+    update?: XOR<XOR<PromotionUpdateToOneWithWhereWithoutUserPromotionInput, PromotionUpdateWithoutUserPromotionInput>, PromotionUncheckedUpdateWithoutUserPromotionInput>
+  }
+
+  export type UserUpdateOneRequiredWithoutUserPromotionNestedInput = {
+    create?: XOR<UserCreateWithoutUserPromotionInput, UserUncheckedCreateWithoutUserPromotionInput>
+    connectOrCreate?: UserCreateOrConnectWithoutUserPromotionInput
+    upsert?: UserUpsertWithoutUserPromotionInput
+    connect?: UserWhereUniqueInput
+    update?: XOR<XOR<UserUpdateToOneWithWhereWithoutUserPromotionInput, UserUpdateWithoutUserPromotionInput>, UserUncheckedUpdateWithoutUserPromotionInput>
+  }
+
+  export type RollingUncheckedUpdateManyWithoutUserPromotionNestedInput = {
+    create?: XOR<RollingCreateWithoutUserPromotionInput, RollingUncheckedCreateWithoutUserPromotionInput> | RollingCreateWithoutUserPromotionInput[] | RollingUncheckedCreateWithoutUserPromotionInput[]
+    connectOrCreate?: RollingCreateOrConnectWithoutUserPromotionInput | RollingCreateOrConnectWithoutUserPromotionInput[]
+    upsert?: RollingUpsertWithWhereUniqueWithoutUserPromotionInput | RollingUpsertWithWhereUniqueWithoutUserPromotionInput[]
+    createMany?: RollingCreateManyUserPromotionInputEnvelope
+    set?: RollingWhereUniqueInput | RollingWhereUniqueInput[]
+    disconnect?: RollingWhereUniqueInput | RollingWhereUniqueInput[]
+    delete?: RollingWhereUniqueInput | RollingWhereUniqueInput[]
+    connect?: RollingWhereUniqueInput | RollingWhereUniqueInput[]
+    update?: RollingUpdateWithWhereUniqueWithoutUserPromotionInput | RollingUpdateWithWhereUniqueWithoutUserPromotionInput[]
+    updateMany?: RollingUpdateManyWithWhereWithoutUserPromotionInput | RollingUpdateManyWithWhereWithoutUserPromotionInput[]
+    deleteMany?: RollingScalarWhereInput | RollingScalarWhereInput[]
   }
 
   export type UserCreateNestedOneWithoutUserSessionInput = {
@@ -75171,74 +76802,6 @@ export namespace Prisma {
     _max?: NestedEnumWithdrawDetailStatusFilter<$PrismaModel>
   }
 
-  export type NestedEnumPromotionTargetTypeFilter<$PrismaModel = never> = {
-    equals?: $Enums.PromotionTargetType | EnumPromotionTargetTypeFieldRefInput<$PrismaModel>
-    in?: $Enums.PromotionTargetType[] | ListEnumPromotionTargetTypeFieldRefInput<$PrismaModel>
-    notIn?: $Enums.PromotionTargetType[] | ListEnumPromotionTargetTypeFieldRefInput<$PrismaModel>
-    not?: NestedEnumPromotionTargetTypeFilter<$PrismaModel> | $Enums.PromotionTargetType
-  }
-
-  export type NestedEnumPromotionBonusTypeFilter<$PrismaModel = never> = {
-    equals?: $Enums.PromotionBonusType | EnumPromotionBonusTypeFieldRefInput<$PrismaModel>
-    in?: $Enums.PromotionBonusType[] | ListEnumPromotionBonusTypeFieldRefInput<$PrismaModel>
-    notIn?: $Enums.PromotionBonusType[] | ListEnumPromotionBonusTypeFieldRefInput<$PrismaModel>
-    not?: NestedEnumPromotionBonusTypeFilter<$PrismaModel> | $Enums.PromotionBonusType
-  }
-
-  export type NestedEnumPromotionQualificationConditionFilter<$PrismaModel = never> = {
-    equals?: $Enums.PromotionQualificationCondition | EnumPromotionQualificationConditionFieldRefInput<$PrismaModel>
-    in?: $Enums.PromotionQualificationCondition[] | ListEnumPromotionQualificationConditionFieldRefInput<$PrismaModel>
-    notIn?: $Enums.PromotionQualificationCondition[] | ListEnumPromotionQualificationConditionFieldRefInput<$PrismaModel>
-    not?: NestedEnumPromotionQualificationConditionFilter<$PrismaModel> | $Enums.PromotionQualificationCondition
-  }
-
-  export type NestedEnumPromotionTargetTypeWithAggregatesFilter<$PrismaModel = never> = {
-    equals?: $Enums.PromotionTargetType | EnumPromotionTargetTypeFieldRefInput<$PrismaModel>
-    in?: $Enums.PromotionTargetType[] | ListEnumPromotionTargetTypeFieldRefInput<$PrismaModel>
-    notIn?: $Enums.PromotionTargetType[] | ListEnumPromotionTargetTypeFieldRefInput<$PrismaModel>
-    not?: NestedEnumPromotionTargetTypeWithAggregatesFilter<$PrismaModel> | $Enums.PromotionTargetType
-    _count?: NestedIntFilter<$PrismaModel>
-    _min?: NestedEnumPromotionTargetTypeFilter<$PrismaModel>
-    _max?: NestedEnumPromotionTargetTypeFilter<$PrismaModel>
-  }
-
-  export type NestedEnumPromotionBonusTypeWithAggregatesFilter<$PrismaModel = never> = {
-    equals?: $Enums.PromotionBonusType | EnumPromotionBonusTypeFieldRefInput<$PrismaModel>
-    in?: $Enums.PromotionBonusType[] | ListEnumPromotionBonusTypeFieldRefInput<$PrismaModel>
-    notIn?: $Enums.PromotionBonusType[] | ListEnumPromotionBonusTypeFieldRefInput<$PrismaModel>
-    not?: NestedEnumPromotionBonusTypeWithAggregatesFilter<$PrismaModel> | $Enums.PromotionBonusType
-    _count?: NestedIntFilter<$PrismaModel>
-    _min?: NestedEnumPromotionBonusTypeFilter<$PrismaModel>
-    _max?: NestedEnumPromotionBonusTypeFilter<$PrismaModel>
-  }
-
-  export type NestedEnumPromotionQualificationConditionWithAggregatesFilter<$PrismaModel = never> = {
-    equals?: $Enums.PromotionQualificationCondition | EnumPromotionQualificationConditionFieldRefInput<$PrismaModel>
-    in?: $Enums.PromotionQualificationCondition[] | ListEnumPromotionQualificationConditionFieldRefInput<$PrismaModel>
-    notIn?: $Enums.PromotionQualificationCondition[] | ListEnumPromotionQualificationConditionFieldRefInput<$PrismaModel>
-    not?: NestedEnumPromotionQualificationConditionWithAggregatesFilter<$PrismaModel> | $Enums.PromotionQualificationCondition
-    _count?: NestedIntFilter<$PrismaModel>
-    _min?: NestedEnumPromotionQualificationConditionFilter<$PrismaModel>
-    _max?: NestedEnumPromotionQualificationConditionFilter<$PrismaModel>
-  }
-
-  export type NestedEnumUserPromotionStatusFilter<$PrismaModel = never> = {
-    equals?: $Enums.UserPromotionStatus | EnumUserPromotionStatusFieldRefInput<$PrismaModel>
-    in?: $Enums.UserPromotionStatus[] | ListEnumUserPromotionStatusFieldRefInput<$PrismaModel>
-    notIn?: $Enums.UserPromotionStatus[] | ListEnumUserPromotionStatusFieldRefInput<$PrismaModel>
-    not?: NestedEnumUserPromotionStatusFilter<$PrismaModel> | $Enums.UserPromotionStatus
-  }
-
-  export type NestedEnumUserPromotionStatusWithAggregatesFilter<$PrismaModel = never> = {
-    equals?: $Enums.UserPromotionStatus | EnumUserPromotionStatusFieldRefInput<$PrismaModel>
-    in?: $Enums.UserPromotionStatus[] | ListEnumUserPromotionStatusFieldRefInput<$PrismaModel>
-    notIn?: $Enums.UserPromotionStatus[] | ListEnumUserPromotionStatusFieldRefInput<$PrismaModel>
-    not?: NestedEnumUserPromotionStatusWithAggregatesFilter<$PrismaModel> | $Enums.UserPromotionStatus
-    _count?: NestedIntFilter<$PrismaModel>
-    _min?: NestedEnumUserPromotionStatusFilter<$PrismaModel>
-    _max?: NestedEnumUserPromotionStatusFilter<$PrismaModel>
-  }
-
   export type NestedEnumExchangeRateProviderFilter<$PrismaModel = never> = {
     equals?: $Enums.ExchangeRateProvider | EnumExchangeRateProviderFieldRefInput<$PrismaModel>
     in?: $Enums.ExchangeRateProvider[] | ListEnumExchangeRateProviderFieldRefInput<$PrismaModel>
@@ -75424,6 +76987,74 @@ export namespace Prisma {
     _count?: NestedIntNullableFilter<$PrismaModel>
     _min?: NestedEnumLoginFailureReasonNullableFilter<$PrismaModel>
     _max?: NestedEnumLoginFailureReasonNullableFilter<$PrismaModel>
+  }
+
+  export type NestedEnumPromotionTargetTypeFilter<$PrismaModel = never> = {
+    equals?: $Enums.PromotionTargetType | EnumPromotionTargetTypeFieldRefInput<$PrismaModel>
+    in?: $Enums.PromotionTargetType[] | ListEnumPromotionTargetTypeFieldRefInput<$PrismaModel>
+    notIn?: $Enums.PromotionTargetType[] | ListEnumPromotionTargetTypeFieldRefInput<$PrismaModel>
+    not?: NestedEnumPromotionTargetTypeFilter<$PrismaModel> | $Enums.PromotionTargetType
+  }
+
+  export type NestedEnumPromotionBonusTypeFilter<$PrismaModel = never> = {
+    equals?: $Enums.PromotionBonusType | EnumPromotionBonusTypeFieldRefInput<$PrismaModel>
+    in?: $Enums.PromotionBonusType[] | ListEnumPromotionBonusTypeFieldRefInput<$PrismaModel>
+    notIn?: $Enums.PromotionBonusType[] | ListEnumPromotionBonusTypeFieldRefInput<$PrismaModel>
+    not?: NestedEnumPromotionBonusTypeFilter<$PrismaModel> | $Enums.PromotionBonusType
+  }
+
+  export type NestedEnumPromotionQualificationConditionFilter<$PrismaModel = never> = {
+    equals?: $Enums.PromotionQualificationCondition | EnumPromotionQualificationConditionFieldRefInput<$PrismaModel>
+    in?: $Enums.PromotionQualificationCondition[] | ListEnumPromotionQualificationConditionFieldRefInput<$PrismaModel>
+    notIn?: $Enums.PromotionQualificationCondition[] | ListEnumPromotionQualificationConditionFieldRefInput<$PrismaModel>
+    not?: NestedEnumPromotionQualificationConditionFilter<$PrismaModel> | $Enums.PromotionQualificationCondition
+  }
+
+  export type NestedEnumPromotionTargetTypeWithAggregatesFilter<$PrismaModel = never> = {
+    equals?: $Enums.PromotionTargetType | EnumPromotionTargetTypeFieldRefInput<$PrismaModel>
+    in?: $Enums.PromotionTargetType[] | ListEnumPromotionTargetTypeFieldRefInput<$PrismaModel>
+    notIn?: $Enums.PromotionTargetType[] | ListEnumPromotionTargetTypeFieldRefInput<$PrismaModel>
+    not?: NestedEnumPromotionTargetTypeWithAggregatesFilter<$PrismaModel> | $Enums.PromotionTargetType
+    _count?: NestedIntFilter<$PrismaModel>
+    _min?: NestedEnumPromotionTargetTypeFilter<$PrismaModel>
+    _max?: NestedEnumPromotionTargetTypeFilter<$PrismaModel>
+  }
+
+  export type NestedEnumPromotionBonusTypeWithAggregatesFilter<$PrismaModel = never> = {
+    equals?: $Enums.PromotionBonusType | EnumPromotionBonusTypeFieldRefInput<$PrismaModel>
+    in?: $Enums.PromotionBonusType[] | ListEnumPromotionBonusTypeFieldRefInput<$PrismaModel>
+    notIn?: $Enums.PromotionBonusType[] | ListEnumPromotionBonusTypeFieldRefInput<$PrismaModel>
+    not?: NestedEnumPromotionBonusTypeWithAggregatesFilter<$PrismaModel> | $Enums.PromotionBonusType
+    _count?: NestedIntFilter<$PrismaModel>
+    _min?: NestedEnumPromotionBonusTypeFilter<$PrismaModel>
+    _max?: NestedEnumPromotionBonusTypeFilter<$PrismaModel>
+  }
+
+  export type NestedEnumPromotionQualificationConditionWithAggregatesFilter<$PrismaModel = never> = {
+    equals?: $Enums.PromotionQualificationCondition | EnumPromotionQualificationConditionFieldRefInput<$PrismaModel>
+    in?: $Enums.PromotionQualificationCondition[] | ListEnumPromotionQualificationConditionFieldRefInput<$PrismaModel>
+    notIn?: $Enums.PromotionQualificationCondition[] | ListEnumPromotionQualificationConditionFieldRefInput<$PrismaModel>
+    not?: NestedEnumPromotionQualificationConditionWithAggregatesFilter<$PrismaModel> | $Enums.PromotionQualificationCondition
+    _count?: NestedIntFilter<$PrismaModel>
+    _min?: NestedEnumPromotionQualificationConditionFilter<$PrismaModel>
+    _max?: NestedEnumPromotionQualificationConditionFilter<$PrismaModel>
+  }
+
+  export type NestedEnumUserPromotionStatusFilter<$PrismaModel = never> = {
+    equals?: $Enums.UserPromotionStatus | EnumUserPromotionStatusFieldRefInput<$PrismaModel>
+    in?: $Enums.UserPromotionStatus[] | ListEnumUserPromotionStatusFieldRefInput<$PrismaModel>
+    notIn?: $Enums.UserPromotionStatus[] | ListEnumUserPromotionStatusFieldRefInput<$PrismaModel>
+    not?: NestedEnumUserPromotionStatusFilter<$PrismaModel> | $Enums.UserPromotionStatus
+  }
+
+  export type NestedEnumUserPromotionStatusWithAggregatesFilter<$PrismaModel = never> = {
+    equals?: $Enums.UserPromotionStatus | EnumUserPromotionStatusFieldRefInput<$PrismaModel>
+    in?: $Enums.UserPromotionStatus[] | ListEnumUserPromotionStatusFieldRefInput<$PrismaModel>
+    notIn?: $Enums.UserPromotionStatus[] | ListEnumUserPromotionStatusFieldRefInput<$PrismaModel>
+    not?: NestedEnumUserPromotionStatusWithAggregatesFilter<$PrismaModel> | $Enums.UserPromotionStatus
+    _count?: NestedIntFilter<$PrismaModel>
+    _min?: NestedEnumUserPromotionStatusFilter<$PrismaModel>
+    _max?: NestedEnumUserPromotionStatusFilter<$PrismaModel>
   }
 
   export type NestedEnumSessionTypeFilter<$PrismaModel = never> = {
@@ -75875,7 +77506,7 @@ export namespace Prisma {
   export type RollingUncheckedCreateWithoutUserInput = {
     id?: bigint | number
     sourceType?: $Enums.RollingSourceType
-    userPromotionId?: number | null
+    userPromotionId?: bigint | number | null
     requiredAmount: Decimal | DecimalJsLike | number | string
     currentAmount?: Decimal | DecimalJsLike | number | string
     cancellationBalanceThreshold?: Decimal | DecimalJsLike | number | string | null
@@ -76008,10 +77639,13 @@ export namespace Prisma {
   }
 
   export type UserPromotionCreateWithoutUserInput = {
+    id?: bigint | number
     status?: $Enums.UserPromotionStatus
-    bonusGranted?: boolean
-    bonusGrantedAt?: Date | string | null
-    bonusAmount?: Decimal | DecimalJsLike | number | string | null
+    depositAmount: Decimal | DecimalJsLike | number | string
+    bonusAmount: Decimal | DecimalJsLike | number | string
+    targetRollingAmount: Decimal | DecimalJsLike | number | string
+    currentRollingAmount?: Decimal | DecimalJsLike | number | string
+    currency: $Enums.ExchangeCurrencyCode
     createdAt?: Date | string
     updatedAt?: Date | string
     Rolling?: RollingCreateNestedManyWithoutUserPromotionInput
@@ -76019,12 +77653,14 @@ export namespace Prisma {
   }
 
   export type UserPromotionUncheckedCreateWithoutUserInput = {
-    id?: number
-    promotionId: number
+    id?: bigint | number
+    promotionId: bigint | number
     status?: $Enums.UserPromotionStatus
-    bonusGranted?: boolean
-    bonusGrantedAt?: Date | string | null
-    bonusAmount?: Decimal | DecimalJsLike | number | string | null
+    depositAmount: Decimal | DecimalJsLike | number | string
+    bonusAmount: Decimal | DecimalJsLike | number | string
+    targetRollingAmount: Decimal | DecimalJsLike | number | string
+    currentRollingAmount?: Decimal | DecimalJsLike | number | string
+    currency: $Enums.ExchangeCurrencyCode
     createdAt?: Date | string
     updatedAt?: Date | string
     Rolling?: RollingUncheckedCreateNestedManyWithoutUserPromotionInput
@@ -76631,7 +78267,7 @@ export namespace Prisma {
     id?: BigIntFilter<"Rolling"> | bigint | number
     userId?: BigIntFilter<"Rolling"> | bigint | number
     sourceType?: EnumRollingSourceTypeFilter<"Rolling"> | $Enums.RollingSourceType
-    userPromotionId?: IntNullableFilter<"Rolling"> | number | null
+    userPromotionId?: BigIntNullableFilter<"Rolling"> | bigint | number | null
     requiredAmount?: DecimalFilter<"Rolling"> | Decimal | DecimalJsLike | number | string
     currentAmount?: DecimalFilter<"Rolling"> | Decimal | DecimalJsLike | number | string
     cancellationBalanceThreshold?: DecimalNullableFilter<"Rolling"> | Decimal | DecimalJsLike | number | string | null
@@ -76758,13 +78394,15 @@ export namespace Prisma {
     AND?: UserPromotionScalarWhereInput | UserPromotionScalarWhereInput[]
     OR?: UserPromotionScalarWhereInput[]
     NOT?: UserPromotionScalarWhereInput | UserPromotionScalarWhereInput[]
-    id?: IntFilter<"UserPromotion"> | number
+    id?: BigIntFilter<"UserPromotion"> | bigint | number
     userId?: BigIntFilter<"UserPromotion"> | bigint | number
-    promotionId?: IntFilter<"UserPromotion"> | number
+    promotionId?: BigIntFilter<"UserPromotion"> | bigint | number
     status?: EnumUserPromotionStatusFilter<"UserPromotion"> | $Enums.UserPromotionStatus
-    bonusGranted?: BoolFilter<"UserPromotion"> | boolean
-    bonusGrantedAt?: DateTimeNullableFilter<"UserPromotion"> | Date | string | null
-    bonusAmount?: DecimalNullableFilter<"UserPromotion"> | Decimal | DecimalJsLike | number | string | null
+    depositAmount?: DecimalFilter<"UserPromotion"> | Decimal | DecimalJsLike | number | string
+    bonusAmount?: DecimalFilter<"UserPromotion"> | Decimal | DecimalJsLike | number | string
+    targetRollingAmount?: DecimalFilter<"UserPromotion"> | Decimal | DecimalJsLike | number | string
+    currentRollingAmount?: DecimalFilter<"UserPromotion"> | Decimal | DecimalJsLike | number | string
+    currency?: EnumExchangeCurrencyCodeFilter<"UserPromotion"> | $Enums.ExchangeCurrencyCode
     createdAt?: DateTimeFilter<"UserPromotion"> | Date | string
     updatedAt?: DateTimeFilter<"UserPromotion"> | Date | string
   }
@@ -79639,7 +81277,7 @@ export namespace Prisma {
     id?: bigint | number
     userId: bigint | number
     sourceType?: $Enums.RollingSourceType
-    userPromotionId?: number | null
+    userPromotionId?: bigint | number | null
     requiredAmount: Decimal | DecimalJsLike | number | string
     currentAmount?: Decimal | DecimalJsLike | number | string
     cancellationBalanceThreshold?: Decimal | DecimalJsLike | number | string | null
@@ -80427,531 +82065,6 @@ export namespace Prisma {
     loginAttempts?: LoginAttemptUncheckedUpdateManyWithoutUserNestedInput
   }
 
-  export type PromotionTranslationCreateWithoutPromotionInput = {
-    language: $Enums.Language
-    name: string
-    description?: string | null
-    createdAt?: Date | string
-    updatedAt?: Date | string
-  }
-
-  export type PromotionTranslationUncheckedCreateWithoutPromotionInput = {
-    id?: number
-    language: $Enums.Language
-    name: string
-    description?: string | null
-    createdAt?: Date | string
-    updatedAt?: Date | string
-  }
-
-  export type PromotionTranslationCreateOrConnectWithoutPromotionInput = {
-    where: PromotionTranslationWhereUniqueInput
-    create: XOR<PromotionTranslationCreateWithoutPromotionInput, PromotionTranslationUncheckedCreateWithoutPromotionInput>
-  }
-
-  export type PromotionTranslationCreateManyPromotionInputEnvelope = {
-    data: PromotionTranslationCreateManyPromotionInput | PromotionTranslationCreateManyPromotionInput[]
-    skipDuplicates?: boolean
-  }
-
-  export type UserPromotionCreateWithoutPromotionInput = {
-    status?: $Enums.UserPromotionStatus
-    bonusGranted?: boolean
-    bonusGrantedAt?: Date | string | null
-    bonusAmount?: Decimal | DecimalJsLike | number | string | null
-    createdAt?: Date | string
-    updatedAt?: Date | string
-    Rolling?: RollingCreateNestedManyWithoutUserPromotionInput
-    user: UserCreateNestedOneWithoutUserPromotionInput
-  }
-
-  export type UserPromotionUncheckedCreateWithoutPromotionInput = {
-    id?: number
-    userId: bigint | number
-    status?: $Enums.UserPromotionStatus
-    bonusGranted?: boolean
-    bonusGrantedAt?: Date | string | null
-    bonusAmount?: Decimal | DecimalJsLike | number | string | null
-    createdAt?: Date | string
-    updatedAt?: Date | string
-    Rolling?: RollingUncheckedCreateNestedManyWithoutUserPromotionInput
-  }
-
-  export type UserPromotionCreateOrConnectWithoutPromotionInput = {
-    where: UserPromotionWhereUniqueInput
-    create: XOR<UserPromotionCreateWithoutPromotionInput, UserPromotionUncheckedCreateWithoutPromotionInput>
-  }
-
-  export type UserPromotionCreateManyPromotionInputEnvelope = {
-    data: UserPromotionCreateManyPromotionInput | UserPromotionCreateManyPromotionInput[]
-    skipDuplicates?: boolean
-  }
-
-  export type PromotionTranslationUpsertWithWhereUniqueWithoutPromotionInput = {
-    where: PromotionTranslationWhereUniqueInput
-    update: XOR<PromotionTranslationUpdateWithoutPromotionInput, PromotionTranslationUncheckedUpdateWithoutPromotionInput>
-    create: XOR<PromotionTranslationCreateWithoutPromotionInput, PromotionTranslationUncheckedCreateWithoutPromotionInput>
-  }
-
-  export type PromotionTranslationUpdateWithWhereUniqueWithoutPromotionInput = {
-    where: PromotionTranslationWhereUniqueInput
-    data: XOR<PromotionTranslationUpdateWithoutPromotionInput, PromotionTranslationUncheckedUpdateWithoutPromotionInput>
-  }
-
-  export type PromotionTranslationUpdateManyWithWhereWithoutPromotionInput = {
-    where: PromotionTranslationScalarWhereInput
-    data: XOR<PromotionTranslationUpdateManyMutationInput, PromotionTranslationUncheckedUpdateManyWithoutPromotionInput>
-  }
-
-  export type PromotionTranslationScalarWhereInput = {
-    AND?: PromotionTranslationScalarWhereInput | PromotionTranslationScalarWhereInput[]
-    OR?: PromotionTranslationScalarWhereInput[]
-    NOT?: PromotionTranslationScalarWhereInput | PromotionTranslationScalarWhereInput[]
-    id?: IntFilter<"PromotionTranslation"> | number
-    promotionId?: IntFilter<"PromotionTranslation"> | number
-    language?: EnumLanguageFilter<"PromotionTranslation"> | $Enums.Language
-    name?: StringFilter<"PromotionTranslation"> | string
-    description?: StringNullableFilter<"PromotionTranslation"> | string | null
-    createdAt?: DateTimeFilter<"PromotionTranslation"> | Date | string
-    updatedAt?: DateTimeFilter<"PromotionTranslation"> | Date | string
-  }
-
-  export type UserPromotionUpsertWithWhereUniqueWithoutPromotionInput = {
-    where: UserPromotionWhereUniqueInput
-    update: XOR<UserPromotionUpdateWithoutPromotionInput, UserPromotionUncheckedUpdateWithoutPromotionInput>
-    create: XOR<UserPromotionCreateWithoutPromotionInput, UserPromotionUncheckedCreateWithoutPromotionInput>
-  }
-
-  export type UserPromotionUpdateWithWhereUniqueWithoutPromotionInput = {
-    where: UserPromotionWhereUniqueInput
-    data: XOR<UserPromotionUpdateWithoutPromotionInput, UserPromotionUncheckedUpdateWithoutPromotionInput>
-  }
-
-  export type UserPromotionUpdateManyWithWhereWithoutPromotionInput = {
-    where: UserPromotionScalarWhereInput
-    data: XOR<UserPromotionUpdateManyMutationInput, UserPromotionUncheckedUpdateManyWithoutPromotionInput>
-  }
-
-  export type PromotionCreateWithoutTranslationsInput = {
-    managementName: string
-    isActive?: boolean
-    startDate?: Date | string | null
-    endDate?: Date | string | null
-    targetType: $Enums.PromotionTargetType
-    bonusType: $Enums.PromotionBonusType
-    bonusRate?: Decimal | DecimalJsLike | number | string | null
-    minDepositAmount: Decimal | DecimalJsLike | number | string
-    maxBonusAmount?: Decimal | DecimalJsLike | number | string | null
-    rollingMultiplier?: Decimal | DecimalJsLike | number | string | null
-    qualificationMaintainCondition: $Enums.PromotionQualificationCondition
-    createdAt?: Date | string
-    updatedAt?: Date | string
-    UserPromotion?: UserPromotionCreateNestedManyWithoutPromotionInput
-  }
-
-  export type PromotionUncheckedCreateWithoutTranslationsInput = {
-    id?: number
-    managementName: string
-    isActive?: boolean
-    startDate?: Date | string | null
-    endDate?: Date | string | null
-    targetType: $Enums.PromotionTargetType
-    bonusType: $Enums.PromotionBonusType
-    bonusRate?: Decimal | DecimalJsLike | number | string | null
-    minDepositAmount: Decimal | DecimalJsLike | number | string
-    maxBonusAmount?: Decimal | DecimalJsLike | number | string | null
-    rollingMultiplier?: Decimal | DecimalJsLike | number | string | null
-    qualificationMaintainCondition: $Enums.PromotionQualificationCondition
-    createdAt?: Date | string
-    updatedAt?: Date | string
-    UserPromotion?: UserPromotionUncheckedCreateNestedManyWithoutPromotionInput
-  }
-
-  export type PromotionCreateOrConnectWithoutTranslationsInput = {
-    where: PromotionWhereUniqueInput
-    create: XOR<PromotionCreateWithoutTranslationsInput, PromotionUncheckedCreateWithoutTranslationsInput>
-  }
-
-  export type PromotionUpsertWithoutTranslationsInput = {
-    update: XOR<PromotionUpdateWithoutTranslationsInput, PromotionUncheckedUpdateWithoutTranslationsInput>
-    create: XOR<PromotionCreateWithoutTranslationsInput, PromotionUncheckedCreateWithoutTranslationsInput>
-    where?: PromotionWhereInput
-  }
-
-  export type PromotionUpdateToOneWithWhereWithoutTranslationsInput = {
-    where?: PromotionWhereInput
-    data: XOR<PromotionUpdateWithoutTranslationsInput, PromotionUncheckedUpdateWithoutTranslationsInput>
-  }
-
-  export type PromotionUpdateWithoutTranslationsInput = {
-    managementName?: StringFieldUpdateOperationsInput | string
-    isActive?: BoolFieldUpdateOperationsInput | boolean
-    startDate?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
-    endDate?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
-    targetType?: EnumPromotionTargetTypeFieldUpdateOperationsInput | $Enums.PromotionTargetType
-    bonusType?: EnumPromotionBonusTypeFieldUpdateOperationsInput | $Enums.PromotionBonusType
-    bonusRate?: NullableDecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string | null
-    minDepositAmount?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
-    maxBonusAmount?: NullableDecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string | null
-    rollingMultiplier?: NullableDecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string | null
-    qualificationMaintainCondition?: EnumPromotionQualificationConditionFieldUpdateOperationsInput | $Enums.PromotionQualificationCondition
-    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
-    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
-    UserPromotion?: UserPromotionUpdateManyWithoutPromotionNestedInput
-  }
-
-  export type PromotionUncheckedUpdateWithoutTranslationsInput = {
-    id?: IntFieldUpdateOperationsInput | number
-    managementName?: StringFieldUpdateOperationsInput | string
-    isActive?: BoolFieldUpdateOperationsInput | boolean
-    startDate?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
-    endDate?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
-    targetType?: EnumPromotionTargetTypeFieldUpdateOperationsInput | $Enums.PromotionTargetType
-    bonusType?: EnumPromotionBonusTypeFieldUpdateOperationsInput | $Enums.PromotionBonusType
-    bonusRate?: NullableDecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string | null
-    minDepositAmount?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
-    maxBonusAmount?: NullableDecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string | null
-    rollingMultiplier?: NullableDecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string | null
-    qualificationMaintainCondition?: EnumPromotionQualificationConditionFieldUpdateOperationsInput | $Enums.PromotionQualificationCondition
-    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
-    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
-    UserPromotion?: UserPromotionUncheckedUpdateManyWithoutPromotionNestedInput
-  }
-
-  export type RollingCreateWithoutUserPromotionInput = {
-    id?: bigint | number
-    sourceType?: $Enums.RollingSourceType
-    requiredAmount: Decimal | DecimalJsLike | number | string
-    currentAmount?: Decimal | DecimalJsLike | number | string
-    cancellationBalanceThreshold?: Decimal | DecimalJsLike | number | string | null
-    status?: $Enums.RollingStatus
-    depositAmount?: Decimal | DecimalJsLike | number | string | null
-    bonusAmount?: Decimal | DecimalJsLike | number | string | null
-    completedAt?: Date | string | null
-    cancelledAt?: Date | string | null
-    createdAt?: Date | string
-    updatedAt?: Date | string
-    DepositDetail?: DepositDetailCreateNestedOneWithoutRollingInput
-    user: UserCreateNestedOneWithoutRollingInput
-  }
-
-  export type RollingUncheckedCreateWithoutUserPromotionInput = {
-    id?: bigint | number
-    userId: bigint | number
-    sourceType?: $Enums.RollingSourceType
-    requiredAmount: Decimal | DecimalJsLike | number | string
-    currentAmount?: Decimal | DecimalJsLike | number | string
-    cancellationBalanceThreshold?: Decimal | DecimalJsLike | number | string | null
-    status?: $Enums.RollingStatus
-    depositAmount?: Decimal | DecimalJsLike | number | string | null
-    bonusAmount?: Decimal | DecimalJsLike | number | string | null
-    completedAt?: Date | string | null
-    cancelledAt?: Date | string | null
-    createdAt?: Date | string
-    updatedAt?: Date | string
-    depositDetailId?: bigint | number | null
-  }
-
-  export type RollingCreateOrConnectWithoutUserPromotionInput = {
-    where: RollingWhereUniqueInput
-    create: XOR<RollingCreateWithoutUserPromotionInput, RollingUncheckedCreateWithoutUserPromotionInput>
-  }
-
-  export type RollingCreateManyUserPromotionInputEnvelope = {
-    data: RollingCreateManyUserPromotionInput | RollingCreateManyUserPromotionInput[]
-    skipDuplicates?: boolean
-  }
-
-  export type PromotionCreateWithoutUserPromotionInput = {
-    managementName: string
-    isActive?: boolean
-    startDate?: Date | string | null
-    endDate?: Date | string | null
-    targetType: $Enums.PromotionTargetType
-    bonusType: $Enums.PromotionBonusType
-    bonusRate?: Decimal | DecimalJsLike | number | string | null
-    minDepositAmount: Decimal | DecimalJsLike | number | string
-    maxBonusAmount?: Decimal | DecimalJsLike | number | string | null
-    rollingMultiplier?: Decimal | DecimalJsLike | number | string | null
-    qualificationMaintainCondition: $Enums.PromotionQualificationCondition
-    createdAt?: Date | string
-    updatedAt?: Date | string
-    translations?: PromotionTranslationCreateNestedManyWithoutPromotionInput
-  }
-
-  export type PromotionUncheckedCreateWithoutUserPromotionInput = {
-    id?: number
-    managementName: string
-    isActive?: boolean
-    startDate?: Date | string | null
-    endDate?: Date | string | null
-    targetType: $Enums.PromotionTargetType
-    bonusType: $Enums.PromotionBonusType
-    bonusRate?: Decimal | DecimalJsLike | number | string | null
-    minDepositAmount: Decimal | DecimalJsLike | number | string
-    maxBonusAmount?: Decimal | DecimalJsLike | number | string | null
-    rollingMultiplier?: Decimal | DecimalJsLike | number | string | null
-    qualificationMaintainCondition: $Enums.PromotionQualificationCondition
-    createdAt?: Date | string
-    updatedAt?: Date | string
-    translations?: PromotionTranslationUncheckedCreateNestedManyWithoutPromotionInput
-  }
-
-  export type PromotionCreateOrConnectWithoutUserPromotionInput = {
-    where: PromotionWhereUniqueInput
-    create: XOR<PromotionCreateWithoutUserPromotionInput, PromotionUncheckedCreateWithoutUserPromotionInput>
-  }
-
-  export type UserCreateWithoutUserPromotionInput = {
-    id?: bigint | number
-    uid?: string
-    whitecliffId?: bigint | number | null
-    whitecliffSystemId?: bigint | number | null
-    whitecliffUsername?: string | null
-    dcsId?: string | null
-    email?: string | null
-    passwordHash?: string | null
-    socialType?: $Enums.SocialType | null
-    socialId?: string | null
-    role?: $Enums.UserRoleType
-    status?: $Enums.UserStatus
-    kycLevel?: $Enums.KycLevel
-    country?: string | null
-    language?: $Enums.Language | null
-    timezone?: string | null
-    timezoneOffset?: number | null
-    createdAt?: Date | string
-    updatedAt?: Date | string
-    affiliateCodes?: AffiliateCodeCreateNestedManyWithoutUserInput
-    affiliateCommissions?: AffiliateCommissionCreateNestedManyWithoutAffiliateInput
-    subUserCommissions?: AffiliateCommissionCreateNestedManyWithoutSubUserInput
-    affiliateTier?: AffiliateTierCreateNestedOneWithoutAffiliateInput
-    affiliateWallets?: AffiliateWalletCreateNestedManyWithoutAffiliateInput
-    CompTransaction?: CompTransactionCreateNestedManyWithoutUserInput
-    DailyCompEarning?: DailyCompEarningCreateNestedManyWithoutUserInput
-    EmailLog?: EmailLogCreateNestedManyWithoutUserInput
-    GameSession?: GameSessionCreateNestedManyWithoutUserInput
-    affiliateReferrals?: ReferralCreateNestedManyWithoutAffiliateInput
-    referredUsers?: ReferralCreateNestedManyWithoutSubUserInput
-    Rolling?: RollingCreateNestedManyWithoutUserInput
-    transactions?: TransactionCreateNestedManyWithoutUserInput
-    balances?: UserBalanceCreateNestedManyWithoutUserInput
-    UserBalanceStats?: UserBalanceStatsCreateNestedManyWithoutUserInput
-    UserSession?: UserSessionCreateNestedManyWithoutUserInput
-    RevokedSessions?: UserSessionCreateNestedManyWithoutRevokedByUserInput
-    UserToken?: UserTokenCreateNestedManyWithoutUserInput
-    VipHistory?: VipHistoryCreateNestedManyWithoutUserInput
-    VipMembership?: VipMembershipCreateNestedOneWithoutUserInput
-    loginAttempts?: LoginAttemptCreateNestedManyWithoutUserInput
-  }
-
-  export type UserUncheckedCreateWithoutUserPromotionInput = {
-    id?: bigint | number
-    uid?: string
-    whitecliffId?: bigint | number | null
-    whitecliffSystemId?: bigint | number | null
-    whitecliffUsername?: string | null
-    dcsId?: string | null
-    email?: string | null
-    passwordHash?: string | null
-    socialType?: $Enums.SocialType | null
-    socialId?: string | null
-    role?: $Enums.UserRoleType
-    status?: $Enums.UserStatus
-    kycLevel?: $Enums.KycLevel
-    country?: string | null
-    language?: $Enums.Language | null
-    timezone?: string | null
-    timezoneOffset?: number | null
-    createdAt?: Date | string
-    updatedAt?: Date | string
-    affiliateCodes?: AffiliateCodeUncheckedCreateNestedManyWithoutUserInput
-    affiliateCommissions?: AffiliateCommissionUncheckedCreateNestedManyWithoutAffiliateInput
-    subUserCommissions?: AffiliateCommissionUncheckedCreateNestedManyWithoutSubUserInput
-    affiliateTier?: AffiliateTierUncheckedCreateNestedOneWithoutAffiliateInput
-    affiliateWallets?: AffiliateWalletUncheckedCreateNestedManyWithoutAffiliateInput
-    CompTransaction?: CompTransactionUncheckedCreateNestedManyWithoutUserInput
-    DailyCompEarning?: DailyCompEarningUncheckedCreateNestedManyWithoutUserInput
-    EmailLog?: EmailLogUncheckedCreateNestedManyWithoutUserInput
-    GameSession?: GameSessionUncheckedCreateNestedManyWithoutUserInput
-    affiliateReferrals?: ReferralUncheckedCreateNestedManyWithoutAffiliateInput
-    referredUsers?: ReferralUncheckedCreateNestedManyWithoutSubUserInput
-    Rolling?: RollingUncheckedCreateNestedManyWithoutUserInput
-    transactions?: TransactionUncheckedCreateNestedManyWithoutUserInput
-    balances?: UserBalanceUncheckedCreateNestedManyWithoutUserInput
-    UserBalanceStats?: UserBalanceStatsUncheckedCreateNestedManyWithoutUserInput
-    UserSession?: UserSessionUncheckedCreateNestedManyWithoutUserInput
-    RevokedSessions?: UserSessionUncheckedCreateNestedManyWithoutRevokedByUserInput
-    UserToken?: UserTokenUncheckedCreateNestedManyWithoutUserInput
-    VipHistory?: VipHistoryUncheckedCreateNestedManyWithoutUserInput
-    VipMembership?: VipMembershipUncheckedCreateNestedOneWithoutUserInput
-    loginAttempts?: LoginAttemptUncheckedCreateNestedManyWithoutUserInput
-  }
-
-  export type UserCreateOrConnectWithoutUserPromotionInput = {
-    where: UserWhereUniqueInput
-    create: XOR<UserCreateWithoutUserPromotionInput, UserUncheckedCreateWithoutUserPromotionInput>
-  }
-
-  export type RollingUpsertWithWhereUniqueWithoutUserPromotionInput = {
-    where: RollingWhereUniqueInput
-    update: XOR<RollingUpdateWithoutUserPromotionInput, RollingUncheckedUpdateWithoutUserPromotionInput>
-    create: XOR<RollingCreateWithoutUserPromotionInput, RollingUncheckedCreateWithoutUserPromotionInput>
-  }
-
-  export type RollingUpdateWithWhereUniqueWithoutUserPromotionInput = {
-    where: RollingWhereUniqueInput
-    data: XOR<RollingUpdateWithoutUserPromotionInput, RollingUncheckedUpdateWithoutUserPromotionInput>
-  }
-
-  export type RollingUpdateManyWithWhereWithoutUserPromotionInput = {
-    where: RollingScalarWhereInput
-    data: XOR<RollingUpdateManyMutationInput, RollingUncheckedUpdateManyWithoutUserPromotionInput>
-  }
-
-  export type PromotionUpsertWithoutUserPromotionInput = {
-    update: XOR<PromotionUpdateWithoutUserPromotionInput, PromotionUncheckedUpdateWithoutUserPromotionInput>
-    create: XOR<PromotionCreateWithoutUserPromotionInput, PromotionUncheckedCreateWithoutUserPromotionInput>
-    where?: PromotionWhereInput
-  }
-
-  export type PromotionUpdateToOneWithWhereWithoutUserPromotionInput = {
-    where?: PromotionWhereInput
-    data: XOR<PromotionUpdateWithoutUserPromotionInput, PromotionUncheckedUpdateWithoutUserPromotionInput>
-  }
-
-  export type PromotionUpdateWithoutUserPromotionInput = {
-    managementName?: StringFieldUpdateOperationsInput | string
-    isActive?: BoolFieldUpdateOperationsInput | boolean
-    startDate?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
-    endDate?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
-    targetType?: EnumPromotionTargetTypeFieldUpdateOperationsInput | $Enums.PromotionTargetType
-    bonusType?: EnumPromotionBonusTypeFieldUpdateOperationsInput | $Enums.PromotionBonusType
-    bonusRate?: NullableDecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string | null
-    minDepositAmount?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
-    maxBonusAmount?: NullableDecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string | null
-    rollingMultiplier?: NullableDecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string | null
-    qualificationMaintainCondition?: EnumPromotionQualificationConditionFieldUpdateOperationsInput | $Enums.PromotionQualificationCondition
-    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
-    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
-    translations?: PromotionTranslationUpdateManyWithoutPromotionNestedInput
-  }
-
-  export type PromotionUncheckedUpdateWithoutUserPromotionInput = {
-    id?: IntFieldUpdateOperationsInput | number
-    managementName?: StringFieldUpdateOperationsInput | string
-    isActive?: BoolFieldUpdateOperationsInput | boolean
-    startDate?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
-    endDate?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
-    targetType?: EnumPromotionTargetTypeFieldUpdateOperationsInput | $Enums.PromotionTargetType
-    bonusType?: EnumPromotionBonusTypeFieldUpdateOperationsInput | $Enums.PromotionBonusType
-    bonusRate?: NullableDecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string | null
-    minDepositAmount?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
-    maxBonusAmount?: NullableDecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string | null
-    rollingMultiplier?: NullableDecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string | null
-    qualificationMaintainCondition?: EnumPromotionQualificationConditionFieldUpdateOperationsInput | $Enums.PromotionQualificationCondition
-    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
-    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
-    translations?: PromotionTranslationUncheckedUpdateManyWithoutPromotionNestedInput
-  }
-
-  export type UserUpsertWithoutUserPromotionInput = {
-    update: XOR<UserUpdateWithoutUserPromotionInput, UserUncheckedUpdateWithoutUserPromotionInput>
-    create: XOR<UserCreateWithoutUserPromotionInput, UserUncheckedCreateWithoutUserPromotionInput>
-    where?: UserWhereInput
-  }
-
-  export type UserUpdateToOneWithWhereWithoutUserPromotionInput = {
-    where?: UserWhereInput
-    data: XOR<UserUpdateWithoutUserPromotionInput, UserUncheckedUpdateWithoutUserPromotionInput>
-  }
-
-  export type UserUpdateWithoutUserPromotionInput = {
-    id?: BigIntFieldUpdateOperationsInput | bigint | number
-    uid?: StringFieldUpdateOperationsInput | string
-    whitecliffId?: NullableBigIntFieldUpdateOperationsInput | bigint | number | null
-    whitecliffSystemId?: NullableBigIntFieldUpdateOperationsInput | bigint | number | null
-    whitecliffUsername?: NullableStringFieldUpdateOperationsInput | string | null
-    dcsId?: NullableStringFieldUpdateOperationsInput | string | null
-    email?: NullableStringFieldUpdateOperationsInput | string | null
-    passwordHash?: NullableStringFieldUpdateOperationsInput | string | null
-    socialType?: NullableEnumSocialTypeFieldUpdateOperationsInput | $Enums.SocialType | null
-    socialId?: NullableStringFieldUpdateOperationsInput | string | null
-    role?: EnumUserRoleTypeFieldUpdateOperationsInput | $Enums.UserRoleType
-    status?: EnumUserStatusFieldUpdateOperationsInput | $Enums.UserStatus
-    kycLevel?: EnumKycLevelFieldUpdateOperationsInput | $Enums.KycLevel
-    country?: NullableStringFieldUpdateOperationsInput | string | null
-    language?: NullableEnumLanguageFieldUpdateOperationsInput | $Enums.Language | null
-    timezone?: NullableStringFieldUpdateOperationsInput | string | null
-    timezoneOffset?: NullableIntFieldUpdateOperationsInput | number | null
-    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
-    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
-    affiliateCodes?: AffiliateCodeUpdateManyWithoutUserNestedInput
-    affiliateCommissions?: AffiliateCommissionUpdateManyWithoutAffiliateNestedInput
-    subUserCommissions?: AffiliateCommissionUpdateManyWithoutSubUserNestedInput
-    affiliateTier?: AffiliateTierUpdateOneWithoutAffiliateNestedInput
-    affiliateWallets?: AffiliateWalletUpdateManyWithoutAffiliateNestedInput
-    CompTransaction?: CompTransactionUpdateManyWithoutUserNestedInput
-    DailyCompEarning?: DailyCompEarningUpdateManyWithoutUserNestedInput
-    EmailLog?: EmailLogUpdateManyWithoutUserNestedInput
-    GameSession?: GameSessionUpdateManyWithoutUserNestedInput
-    affiliateReferrals?: ReferralUpdateManyWithoutAffiliateNestedInput
-    referredUsers?: ReferralUpdateManyWithoutSubUserNestedInput
-    Rolling?: RollingUpdateManyWithoutUserNestedInput
-    transactions?: TransactionUpdateManyWithoutUserNestedInput
-    balances?: UserBalanceUpdateManyWithoutUserNestedInput
-    UserBalanceStats?: UserBalanceStatsUpdateManyWithoutUserNestedInput
-    UserSession?: UserSessionUpdateManyWithoutUserNestedInput
-    RevokedSessions?: UserSessionUpdateManyWithoutRevokedByUserNestedInput
-    UserToken?: UserTokenUpdateManyWithoutUserNestedInput
-    VipHistory?: VipHistoryUpdateManyWithoutUserNestedInput
-    VipMembership?: VipMembershipUpdateOneWithoutUserNestedInput
-    loginAttempts?: LoginAttemptUpdateManyWithoutUserNestedInput
-  }
-
-  export type UserUncheckedUpdateWithoutUserPromotionInput = {
-    id?: BigIntFieldUpdateOperationsInput | bigint | number
-    uid?: StringFieldUpdateOperationsInput | string
-    whitecliffId?: NullableBigIntFieldUpdateOperationsInput | bigint | number | null
-    whitecliffSystemId?: NullableBigIntFieldUpdateOperationsInput | bigint | number | null
-    whitecliffUsername?: NullableStringFieldUpdateOperationsInput | string | null
-    dcsId?: NullableStringFieldUpdateOperationsInput | string | null
-    email?: NullableStringFieldUpdateOperationsInput | string | null
-    passwordHash?: NullableStringFieldUpdateOperationsInput | string | null
-    socialType?: NullableEnumSocialTypeFieldUpdateOperationsInput | $Enums.SocialType | null
-    socialId?: NullableStringFieldUpdateOperationsInput | string | null
-    role?: EnumUserRoleTypeFieldUpdateOperationsInput | $Enums.UserRoleType
-    status?: EnumUserStatusFieldUpdateOperationsInput | $Enums.UserStatus
-    kycLevel?: EnumKycLevelFieldUpdateOperationsInput | $Enums.KycLevel
-    country?: NullableStringFieldUpdateOperationsInput | string | null
-    language?: NullableEnumLanguageFieldUpdateOperationsInput | $Enums.Language | null
-    timezone?: NullableStringFieldUpdateOperationsInput | string | null
-    timezoneOffset?: NullableIntFieldUpdateOperationsInput | number | null
-    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
-    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
-    affiliateCodes?: AffiliateCodeUncheckedUpdateManyWithoutUserNestedInput
-    affiliateCommissions?: AffiliateCommissionUncheckedUpdateManyWithoutAffiliateNestedInput
-    subUserCommissions?: AffiliateCommissionUncheckedUpdateManyWithoutSubUserNestedInput
-    affiliateTier?: AffiliateTierUncheckedUpdateOneWithoutAffiliateNestedInput
-    affiliateWallets?: AffiliateWalletUncheckedUpdateManyWithoutAffiliateNestedInput
-    CompTransaction?: CompTransactionUncheckedUpdateManyWithoutUserNestedInput
-    DailyCompEarning?: DailyCompEarningUncheckedUpdateManyWithoutUserNestedInput
-    EmailLog?: EmailLogUncheckedUpdateManyWithoutUserNestedInput
-    GameSession?: GameSessionUncheckedUpdateManyWithoutUserNestedInput
-    affiliateReferrals?: ReferralUncheckedUpdateManyWithoutAffiliateNestedInput
-    referredUsers?: ReferralUncheckedUpdateManyWithoutSubUserNestedInput
-    Rolling?: RollingUncheckedUpdateManyWithoutUserNestedInput
-    transactions?: TransactionUncheckedUpdateManyWithoutUserNestedInput
-    balances?: UserBalanceUncheckedUpdateManyWithoutUserNestedInput
-    UserBalanceStats?: UserBalanceStatsUncheckedUpdateManyWithoutUserNestedInput
-    UserSession?: UserSessionUncheckedUpdateManyWithoutUserNestedInput
-    RevokedSessions?: UserSessionUncheckedUpdateManyWithoutRevokedByUserNestedInput
-    UserToken?: UserTokenUncheckedUpdateManyWithoutUserNestedInput
-    VipHistory?: VipHistoryUncheckedUpdateManyWithoutUserNestedInput
-    VipMembership?: VipMembershipUncheckedUpdateOneWithoutUserNestedInput
-    loginAttempts?: LoginAttemptUncheckedUpdateManyWithoutUserNestedInput
-  }
-
   export type VipMembershipCreateWithoutVipLevelInput = {
     accumulatedRolling?: Decimal | DecimalJsLike | number | string
     totalRewardsPaid?: Decimal | DecimalJsLike | number | string
@@ -81723,10 +82836,13 @@ export namespace Prisma {
   }
 
   export type UserPromotionCreateWithoutRollingInput = {
+    id?: bigint | number
     status?: $Enums.UserPromotionStatus
-    bonusGranted?: boolean
-    bonusGrantedAt?: Date | string | null
-    bonusAmount?: Decimal | DecimalJsLike | number | string | null
+    depositAmount: Decimal | DecimalJsLike | number | string
+    bonusAmount: Decimal | DecimalJsLike | number | string
+    targetRollingAmount: Decimal | DecimalJsLike | number | string
+    currentRollingAmount?: Decimal | DecimalJsLike | number | string
+    currency: $Enums.ExchangeCurrencyCode
     createdAt?: Date | string
     updatedAt?: Date | string
     promotion: PromotionCreateNestedOneWithoutUserPromotionInput
@@ -81734,13 +82850,15 @@ export namespace Prisma {
   }
 
   export type UserPromotionUncheckedCreateWithoutRollingInput = {
-    id?: number
+    id?: bigint | number
     userId: bigint | number
-    promotionId: number
+    promotionId: bigint | number
     status?: $Enums.UserPromotionStatus
-    bonusGranted?: boolean
-    bonusGrantedAt?: Date | string | null
-    bonusAmount?: Decimal | DecimalJsLike | number | string | null
+    depositAmount: Decimal | DecimalJsLike | number | string
+    bonusAmount: Decimal | DecimalJsLike | number | string
+    targetRollingAmount: Decimal | DecimalJsLike | number | string
+    currentRollingAmount?: Decimal | DecimalJsLike | number | string
+    currency: $Enums.ExchangeCurrencyCode
     createdAt?: Date | string
     updatedAt?: Date | string
   }
@@ -81928,10 +83046,13 @@ export namespace Prisma {
   }
 
   export type UserPromotionUpdateWithoutRollingInput = {
+    id?: BigIntFieldUpdateOperationsInput | bigint | number
     status?: EnumUserPromotionStatusFieldUpdateOperationsInput | $Enums.UserPromotionStatus
-    bonusGranted?: BoolFieldUpdateOperationsInput | boolean
-    bonusGrantedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
-    bonusAmount?: NullableDecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string | null
+    depositAmount?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
+    bonusAmount?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
+    targetRollingAmount?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
+    currentRollingAmount?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
+    currency?: EnumExchangeCurrencyCodeFieldUpdateOperationsInput | $Enums.ExchangeCurrencyCode
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
     promotion?: PromotionUpdateOneRequiredWithoutUserPromotionNestedInput
@@ -81939,13 +83060,15 @@ export namespace Prisma {
   }
 
   export type UserPromotionUncheckedUpdateWithoutRollingInput = {
-    id?: IntFieldUpdateOperationsInput | number
+    id?: BigIntFieldUpdateOperationsInput | bigint | number
     userId?: BigIntFieldUpdateOperationsInput | bigint | number
-    promotionId?: IntFieldUpdateOperationsInput | number
+    promotionId?: BigIntFieldUpdateOperationsInput | bigint | number
     status?: EnumUserPromotionStatusFieldUpdateOperationsInput | $Enums.UserPromotionStatus
-    bonusGranted?: BoolFieldUpdateOperationsInput | boolean
-    bonusGrantedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
-    bonusAmount?: NullableDecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string | null
+    depositAmount?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
+    bonusAmount?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
+    targetRollingAmount?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
+    currentRollingAmount?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
+    currency?: EnumExchangeCurrencyCodeFieldUpdateOperationsInput | $Enums.ExchangeCurrencyCode
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
   }
@@ -84582,6 +85705,710 @@ export namespace Prisma {
     VipMembership?: VipMembershipUncheckedUpdateOneWithoutUserNestedInput
   }
 
+  export type PromotionTranslationCreateWithoutPromotionInput = {
+    id?: bigint | number
+    language: $Enums.Language
+    name: string
+    description?: string | null
+    createdAt?: Date | string
+    updatedAt?: Date | string
+  }
+
+  export type PromotionTranslationUncheckedCreateWithoutPromotionInput = {
+    id?: bigint | number
+    language: $Enums.Language
+    name: string
+    description?: string | null
+    createdAt?: Date | string
+    updatedAt?: Date | string
+  }
+
+  export type PromotionTranslationCreateOrConnectWithoutPromotionInput = {
+    where: PromotionTranslationWhereUniqueInput
+    create: XOR<PromotionTranslationCreateWithoutPromotionInput, PromotionTranslationUncheckedCreateWithoutPromotionInput>
+  }
+
+  export type PromotionTranslationCreateManyPromotionInputEnvelope = {
+    data: PromotionTranslationCreateManyPromotionInput | PromotionTranslationCreateManyPromotionInput[]
+    skipDuplicates?: boolean
+  }
+
+  export type PromotionCurrencyCreateWithoutPromotionInput = {
+    id?: bigint | number
+    currency: $Enums.ExchangeCurrencyCode
+    minDepositAmount: Decimal | DecimalJsLike | number | string
+    maxBonusAmount?: Decimal | DecimalJsLike | number | string | null
+    createdAt?: Date | string
+    updatedAt?: Date | string
+  }
+
+  export type PromotionCurrencyUncheckedCreateWithoutPromotionInput = {
+    id?: bigint | number
+    currency: $Enums.ExchangeCurrencyCode
+    minDepositAmount: Decimal | DecimalJsLike | number | string
+    maxBonusAmount?: Decimal | DecimalJsLike | number | string | null
+    createdAt?: Date | string
+    updatedAt?: Date | string
+  }
+
+  export type PromotionCurrencyCreateOrConnectWithoutPromotionInput = {
+    where: PromotionCurrencyWhereUniqueInput
+    create: XOR<PromotionCurrencyCreateWithoutPromotionInput, PromotionCurrencyUncheckedCreateWithoutPromotionInput>
+  }
+
+  export type PromotionCurrencyCreateManyPromotionInputEnvelope = {
+    data: PromotionCurrencyCreateManyPromotionInput | PromotionCurrencyCreateManyPromotionInput[]
+    skipDuplicates?: boolean
+  }
+
+  export type UserPromotionCreateWithoutPromotionInput = {
+    id?: bigint | number
+    status?: $Enums.UserPromotionStatus
+    depositAmount: Decimal | DecimalJsLike | number | string
+    bonusAmount: Decimal | DecimalJsLike | number | string
+    targetRollingAmount: Decimal | DecimalJsLike | number | string
+    currentRollingAmount?: Decimal | DecimalJsLike | number | string
+    currency: $Enums.ExchangeCurrencyCode
+    createdAt?: Date | string
+    updatedAt?: Date | string
+    Rolling?: RollingCreateNestedManyWithoutUserPromotionInput
+    user: UserCreateNestedOneWithoutUserPromotionInput
+  }
+
+  export type UserPromotionUncheckedCreateWithoutPromotionInput = {
+    id?: bigint | number
+    userId: bigint | number
+    status?: $Enums.UserPromotionStatus
+    depositAmount: Decimal | DecimalJsLike | number | string
+    bonusAmount: Decimal | DecimalJsLike | number | string
+    targetRollingAmount: Decimal | DecimalJsLike | number | string
+    currentRollingAmount?: Decimal | DecimalJsLike | number | string
+    currency: $Enums.ExchangeCurrencyCode
+    createdAt?: Date | string
+    updatedAt?: Date | string
+    Rolling?: RollingUncheckedCreateNestedManyWithoutUserPromotionInput
+  }
+
+  export type UserPromotionCreateOrConnectWithoutPromotionInput = {
+    where: UserPromotionWhereUniqueInput
+    create: XOR<UserPromotionCreateWithoutPromotionInput, UserPromotionUncheckedCreateWithoutPromotionInput>
+  }
+
+  export type UserPromotionCreateManyPromotionInputEnvelope = {
+    data: UserPromotionCreateManyPromotionInput | UserPromotionCreateManyPromotionInput[]
+    skipDuplicates?: boolean
+  }
+
+  export type PromotionTranslationUpsertWithWhereUniqueWithoutPromotionInput = {
+    where: PromotionTranslationWhereUniqueInput
+    update: XOR<PromotionTranslationUpdateWithoutPromotionInput, PromotionTranslationUncheckedUpdateWithoutPromotionInput>
+    create: XOR<PromotionTranslationCreateWithoutPromotionInput, PromotionTranslationUncheckedCreateWithoutPromotionInput>
+  }
+
+  export type PromotionTranslationUpdateWithWhereUniqueWithoutPromotionInput = {
+    where: PromotionTranslationWhereUniqueInput
+    data: XOR<PromotionTranslationUpdateWithoutPromotionInput, PromotionTranslationUncheckedUpdateWithoutPromotionInput>
+  }
+
+  export type PromotionTranslationUpdateManyWithWhereWithoutPromotionInput = {
+    where: PromotionTranslationScalarWhereInput
+    data: XOR<PromotionTranslationUpdateManyMutationInput, PromotionTranslationUncheckedUpdateManyWithoutPromotionInput>
+  }
+
+  export type PromotionTranslationScalarWhereInput = {
+    AND?: PromotionTranslationScalarWhereInput | PromotionTranslationScalarWhereInput[]
+    OR?: PromotionTranslationScalarWhereInput[]
+    NOT?: PromotionTranslationScalarWhereInput | PromotionTranslationScalarWhereInput[]
+    id?: BigIntFilter<"PromotionTranslation"> | bigint | number
+    promotionId?: BigIntFilter<"PromotionTranslation"> | bigint | number
+    language?: EnumLanguageFilter<"PromotionTranslation"> | $Enums.Language
+    name?: StringFilter<"PromotionTranslation"> | string
+    description?: StringNullableFilter<"PromotionTranslation"> | string | null
+    createdAt?: DateTimeFilter<"PromotionTranslation"> | Date | string
+    updatedAt?: DateTimeFilter<"PromotionTranslation"> | Date | string
+  }
+
+  export type PromotionCurrencyUpsertWithWhereUniqueWithoutPromotionInput = {
+    where: PromotionCurrencyWhereUniqueInput
+    update: XOR<PromotionCurrencyUpdateWithoutPromotionInput, PromotionCurrencyUncheckedUpdateWithoutPromotionInput>
+    create: XOR<PromotionCurrencyCreateWithoutPromotionInput, PromotionCurrencyUncheckedCreateWithoutPromotionInput>
+  }
+
+  export type PromotionCurrencyUpdateWithWhereUniqueWithoutPromotionInput = {
+    where: PromotionCurrencyWhereUniqueInput
+    data: XOR<PromotionCurrencyUpdateWithoutPromotionInput, PromotionCurrencyUncheckedUpdateWithoutPromotionInput>
+  }
+
+  export type PromotionCurrencyUpdateManyWithWhereWithoutPromotionInput = {
+    where: PromotionCurrencyScalarWhereInput
+    data: XOR<PromotionCurrencyUpdateManyMutationInput, PromotionCurrencyUncheckedUpdateManyWithoutPromotionInput>
+  }
+
+  export type PromotionCurrencyScalarWhereInput = {
+    AND?: PromotionCurrencyScalarWhereInput | PromotionCurrencyScalarWhereInput[]
+    OR?: PromotionCurrencyScalarWhereInput[]
+    NOT?: PromotionCurrencyScalarWhereInput | PromotionCurrencyScalarWhereInput[]
+    id?: BigIntFilter<"PromotionCurrency"> | bigint | number
+    promotionId?: BigIntFilter<"PromotionCurrency"> | bigint | number
+    currency?: EnumExchangeCurrencyCodeFilter<"PromotionCurrency"> | $Enums.ExchangeCurrencyCode
+    minDepositAmount?: DecimalFilter<"PromotionCurrency"> | Decimal | DecimalJsLike | number | string
+    maxBonusAmount?: DecimalNullableFilter<"PromotionCurrency"> | Decimal | DecimalJsLike | number | string | null
+    createdAt?: DateTimeFilter<"PromotionCurrency"> | Date | string
+    updatedAt?: DateTimeFilter<"PromotionCurrency"> | Date | string
+  }
+
+  export type UserPromotionUpsertWithWhereUniqueWithoutPromotionInput = {
+    where: UserPromotionWhereUniqueInput
+    update: XOR<UserPromotionUpdateWithoutPromotionInput, UserPromotionUncheckedUpdateWithoutPromotionInput>
+    create: XOR<UserPromotionCreateWithoutPromotionInput, UserPromotionUncheckedCreateWithoutPromotionInput>
+  }
+
+  export type UserPromotionUpdateWithWhereUniqueWithoutPromotionInput = {
+    where: UserPromotionWhereUniqueInput
+    data: XOR<UserPromotionUpdateWithoutPromotionInput, UserPromotionUncheckedUpdateWithoutPromotionInput>
+  }
+
+  export type UserPromotionUpdateManyWithWhereWithoutPromotionInput = {
+    where: UserPromotionScalarWhereInput
+    data: XOR<UserPromotionUpdateManyMutationInput, UserPromotionUncheckedUpdateManyWithoutPromotionInput>
+  }
+
+  export type PromotionCreateWithoutTranslationsInput = {
+    id?: bigint | number
+    uid: string
+    managementName: string
+    isActive?: boolean
+    startDate?: Date | string | null
+    endDate?: Date | string | null
+    deletedAt?: Date | string | null
+    targetType: $Enums.PromotionTargetType
+    bonusType: $Enums.PromotionBonusType
+    bonusRate?: Decimal | DecimalJsLike | number | string | null
+    rollingMultiplier?: Decimal | DecimalJsLike | number | string | null
+    qualificationMaintainCondition: $Enums.PromotionQualificationCondition
+    isOneTime?: boolean
+    createdAt?: Date | string
+    updatedAt?: Date | string
+    currencies?: PromotionCurrencyCreateNestedManyWithoutPromotionInput
+    UserPromotion?: UserPromotionCreateNestedManyWithoutPromotionInput
+  }
+
+  export type PromotionUncheckedCreateWithoutTranslationsInput = {
+    id?: bigint | number
+    uid: string
+    managementName: string
+    isActive?: boolean
+    startDate?: Date | string | null
+    endDate?: Date | string | null
+    deletedAt?: Date | string | null
+    targetType: $Enums.PromotionTargetType
+    bonusType: $Enums.PromotionBonusType
+    bonusRate?: Decimal | DecimalJsLike | number | string | null
+    rollingMultiplier?: Decimal | DecimalJsLike | number | string | null
+    qualificationMaintainCondition: $Enums.PromotionQualificationCondition
+    isOneTime?: boolean
+    createdAt?: Date | string
+    updatedAt?: Date | string
+    currencies?: PromotionCurrencyUncheckedCreateNestedManyWithoutPromotionInput
+    UserPromotion?: UserPromotionUncheckedCreateNestedManyWithoutPromotionInput
+  }
+
+  export type PromotionCreateOrConnectWithoutTranslationsInput = {
+    where: PromotionWhereUniqueInput
+    create: XOR<PromotionCreateWithoutTranslationsInput, PromotionUncheckedCreateWithoutTranslationsInput>
+  }
+
+  export type PromotionUpsertWithoutTranslationsInput = {
+    update: XOR<PromotionUpdateWithoutTranslationsInput, PromotionUncheckedUpdateWithoutTranslationsInput>
+    create: XOR<PromotionCreateWithoutTranslationsInput, PromotionUncheckedCreateWithoutTranslationsInput>
+    where?: PromotionWhereInput
+  }
+
+  export type PromotionUpdateToOneWithWhereWithoutTranslationsInput = {
+    where?: PromotionWhereInput
+    data: XOR<PromotionUpdateWithoutTranslationsInput, PromotionUncheckedUpdateWithoutTranslationsInput>
+  }
+
+  export type PromotionUpdateWithoutTranslationsInput = {
+    id?: BigIntFieldUpdateOperationsInput | bigint | number
+    uid?: StringFieldUpdateOperationsInput | string
+    managementName?: StringFieldUpdateOperationsInput | string
+    isActive?: BoolFieldUpdateOperationsInput | boolean
+    startDate?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    endDate?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    deletedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    targetType?: EnumPromotionTargetTypeFieldUpdateOperationsInput | $Enums.PromotionTargetType
+    bonusType?: EnumPromotionBonusTypeFieldUpdateOperationsInput | $Enums.PromotionBonusType
+    bonusRate?: NullableDecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string | null
+    rollingMultiplier?: NullableDecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string | null
+    qualificationMaintainCondition?: EnumPromotionQualificationConditionFieldUpdateOperationsInput | $Enums.PromotionQualificationCondition
+    isOneTime?: BoolFieldUpdateOperationsInput | boolean
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    currencies?: PromotionCurrencyUpdateManyWithoutPromotionNestedInput
+    UserPromotion?: UserPromotionUpdateManyWithoutPromotionNestedInput
+  }
+
+  export type PromotionUncheckedUpdateWithoutTranslationsInput = {
+    id?: BigIntFieldUpdateOperationsInput | bigint | number
+    uid?: StringFieldUpdateOperationsInput | string
+    managementName?: StringFieldUpdateOperationsInput | string
+    isActive?: BoolFieldUpdateOperationsInput | boolean
+    startDate?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    endDate?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    deletedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    targetType?: EnumPromotionTargetTypeFieldUpdateOperationsInput | $Enums.PromotionTargetType
+    bonusType?: EnumPromotionBonusTypeFieldUpdateOperationsInput | $Enums.PromotionBonusType
+    bonusRate?: NullableDecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string | null
+    rollingMultiplier?: NullableDecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string | null
+    qualificationMaintainCondition?: EnumPromotionQualificationConditionFieldUpdateOperationsInput | $Enums.PromotionQualificationCondition
+    isOneTime?: BoolFieldUpdateOperationsInput | boolean
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    currencies?: PromotionCurrencyUncheckedUpdateManyWithoutPromotionNestedInput
+    UserPromotion?: UserPromotionUncheckedUpdateManyWithoutPromotionNestedInput
+  }
+
+  export type PromotionCreateWithoutCurrenciesInput = {
+    id?: bigint | number
+    uid: string
+    managementName: string
+    isActive?: boolean
+    startDate?: Date | string | null
+    endDate?: Date | string | null
+    deletedAt?: Date | string | null
+    targetType: $Enums.PromotionTargetType
+    bonusType: $Enums.PromotionBonusType
+    bonusRate?: Decimal | DecimalJsLike | number | string | null
+    rollingMultiplier?: Decimal | DecimalJsLike | number | string | null
+    qualificationMaintainCondition: $Enums.PromotionQualificationCondition
+    isOneTime?: boolean
+    createdAt?: Date | string
+    updatedAt?: Date | string
+    translations?: PromotionTranslationCreateNestedManyWithoutPromotionInput
+    UserPromotion?: UserPromotionCreateNestedManyWithoutPromotionInput
+  }
+
+  export type PromotionUncheckedCreateWithoutCurrenciesInput = {
+    id?: bigint | number
+    uid: string
+    managementName: string
+    isActive?: boolean
+    startDate?: Date | string | null
+    endDate?: Date | string | null
+    deletedAt?: Date | string | null
+    targetType: $Enums.PromotionTargetType
+    bonusType: $Enums.PromotionBonusType
+    bonusRate?: Decimal | DecimalJsLike | number | string | null
+    rollingMultiplier?: Decimal | DecimalJsLike | number | string | null
+    qualificationMaintainCondition: $Enums.PromotionQualificationCondition
+    isOneTime?: boolean
+    createdAt?: Date | string
+    updatedAt?: Date | string
+    translations?: PromotionTranslationUncheckedCreateNestedManyWithoutPromotionInput
+    UserPromotion?: UserPromotionUncheckedCreateNestedManyWithoutPromotionInput
+  }
+
+  export type PromotionCreateOrConnectWithoutCurrenciesInput = {
+    where: PromotionWhereUniqueInput
+    create: XOR<PromotionCreateWithoutCurrenciesInput, PromotionUncheckedCreateWithoutCurrenciesInput>
+  }
+
+  export type PromotionUpsertWithoutCurrenciesInput = {
+    update: XOR<PromotionUpdateWithoutCurrenciesInput, PromotionUncheckedUpdateWithoutCurrenciesInput>
+    create: XOR<PromotionCreateWithoutCurrenciesInput, PromotionUncheckedCreateWithoutCurrenciesInput>
+    where?: PromotionWhereInput
+  }
+
+  export type PromotionUpdateToOneWithWhereWithoutCurrenciesInput = {
+    where?: PromotionWhereInput
+    data: XOR<PromotionUpdateWithoutCurrenciesInput, PromotionUncheckedUpdateWithoutCurrenciesInput>
+  }
+
+  export type PromotionUpdateWithoutCurrenciesInput = {
+    id?: BigIntFieldUpdateOperationsInput | bigint | number
+    uid?: StringFieldUpdateOperationsInput | string
+    managementName?: StringFieldUpdateOperationsInput | string
+    isActive?: BoolFieldUpdateOperationsInput | boolean
+    startDate?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    endDate?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    deletedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    targetType?: EnumPromotionTargetTypeFieldUpdateOperationsInput | $Enums.PromotionTargetType
+    bonusType?: EnumPromotionBonusTypeFieldUpdateOperationsInput | $Enums.PromotionBonusType
+    bonusRate?: NullableDecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string | null
+    rollingMultiplier?: NullableDecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string | null
+    qualificationMaintainCondition?: EnumPromotionQualificationConditionFieldUpdateOperationsInput | $Enums.PromotionQualificationCondition
+    isOneTime?: BoolFieldUpdateOperationsInput | boolean
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    translations?: PromotionTranslationUpdateManyWithoutPromotionNestedInput
+    UserPromotion?: UserPromotionUpdateManyWithoutPromotionNestedInput
+  }
+
+  export type PromotionUncheckedUpdateWithoutCurrenciesInput = {
+    id?: BigIntFieldUpdateOperationsInput | bigint | number
+    uid?: StringFieldUpdateOperationsInput | string
+    managementName?: StringFieldUpdateOperationsInput | string
+    isActive?: BoolFieldUpdateOperationsInput | boolean
+    startDate?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    endDate?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    deletedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    targetType?: EnumPromotionTargetTypeFieldUpdateOperationsInput | $Enums.PromotionTargetType
+    bonusType?: EnumPromotionBonusTypeFieldUpdateOperationsInput | $Enums.PromotionBonusType
+    bonusRate?: NullableDecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string | null
+    rollingMultiplier?: NullableDecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string | null
+    qualificationMaintainCondition?: EnumPromotionQualificationConditionFieldUpdateOperationsInput | $Enums.PromotionQualificationCondition
+    isOneTime?: BoolFieldUpdateOperationsInput | boolean
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    translations?: PromotionTranslationUncheckedUpdateManyWithoutPromotionNestedInput
+    UserPromotion?: UserPromotionUncheckedUpdateManyWithoutPromotionNestedInput
+  }
+
+  export type RollingCreateWithoutUserPromotionInput = {
+    id?: bigint | number
+    sourceType?: $Enums.RollingSourceType
+    requiredAmount: Decimal | DecimalJsLike | number | string
+    currentAmount?: Decimal | DecimalJsLike | number | string
+    cancellationBalanceThreshold?: Decimal | DecimalJsLike | number | string | null
+    status?: $Enums.RollingStatus
+    depositAmount?: Decimal | DecimalJsLike | number | string | null
+    bonusAmount?: Decimal | DecimalJsLike | number | string | null
+    completedAt?: Date | string | null
+    cancelledAt?: Date | string | null
+    createdAt?: Date | string
+    updatedAt?: Date | string
+    DepositDetail?: DepositDetailCreateNestedOneWithoutRollingInput
+    user: UserCreateNestedOneWithoutRollingInput
+  }
+
+  export type RollingUncheckedCreateWithoutUserPromotionInput = {
+    id?: bigint | number
+    userId: bigint | number
+    sourceType?: $Enums.RollingSourceType
+    requiredAmount: Decimal | DecimalJsLike | number | string
+    currentAmount?: Decimal | DecimalJsLike | number | string
+    cancellationBalanceThreshold?: Decimal | DecimalJsLike | number | string | null
+    status?: $Enums.RollingStatus
+    depositAmount?: Decimal | DecimalJsLike | number | string | null
+    bonusAmount?: Decimal | DecimalJsLike | number | string | null
+    completedAt?: Date | string | null
+    cancelledAt?: Date | string | null
+    createdAt?: Date | string
+    updatedAt?: Date | string
+    depositDetailId?: bigint | number | null
+  }
+
+  export type RollingCreateOrConnectWithoutUserPromotionInput = {
+    where: RollingWhereUniqueInput
+    create: XOR<RollingCreateWithoutUserPromotionInput, RollingUncheckedCreateWithoutUserPromotionInput>
+  }
+
+  export type RollingCreateManyUserPromotionInputEnvelope = {
+    data: RollingCreateManyUserPromotionInput | RollingCreateManyUserPromotionInput[]
+    skipDuplicates?: boolean
+  }
+
+  export type PromotionCreateWithoutUserPromotionInput = {
+    id?: bigint | number
+    uid: string
+    managementName: string
+    isActive?: boolean
+    startDate?: Date | string | null
+    endDate?: Date | string | null
+    deletedAt?: Date | string | null
+    targetType: $Enums.PromotionTargetType
+    bonusType: $Enums.PromotionBonusType
+    bonusRate?: Decimal | DecimalJsLike | number | string | null
+    rollingMultiplier?: Decimal | DecimalJsLike | number | string | null
+    qualificationMaintainCondition: $Enums.PromotionQualificationCondition
+    isOneTime?: boolean
+    createdAt?: Date | string
+    updatedAt?: Date | string
+    translations?: PromotionTranslationCreateNestedManyWithoutPromotionInput
+    currencies?: PromotionCurrencyCreateNestedManyWithoutPromotionInput
+  }
+
+  export type PromotionUncheckedCreateWithoutUserPromotionInput = {
+    id?: bigint | number
+    uid: string
+    managementName: string
+    isActive?: boolean
+    startDate?: Date | string | null
+    endDate?: Date | string | null
+    deletedAt?: Date | string | null
+    targetType: $Enums.PromotionTargetType
+    bonusType: $Enums.PromotionBonusType
+    bonusRate?: Decimal | DecimalJsLike | number | string | null
+    rollingMultiplier?: Decimal | DecimalJsLike | number | string | null
+    qualificationMaintainCondition: $Enums.PromotionQualificationCondition
+    isOneTime?: boolean
+    createdAt?: Date | string
+    updatedAt?: Date | string
+    translations?: PromotionTranslationUncheckedCreateNestedManyWithoutPromotionInput
+    currencies?: PromotionCurrencyUncheckedCreateNestedManyWithoutPromotionInput
+  }
+
+  export type PromotionCreateOrConnectWithoutUserPromotionInput = {
+    where: PromotionWhereUniqueInput
+    create: XOR<PromotionCreateWithoutUserPromotionInput, PromotionUncheckedCreateWithoutUserPromotionInput>
+  }
+
+  export type UserCreateWithoutUserPromotionInput = {
+    id?: bigint | number
+    uid?: string
+    whitecliffId?: bigint | number | null
+    whitecliffSystemId?: bigint | number | null
+    whitecliffUsername?: string | null
+    dcsId?: string | null
+    email?: string | null
+    passwordHash?: string | null
+    socialType?: $Enums.SocialType | null
+    socialId?: string | null
+    role?: $Enums.UserRoleType
+    status?: $Enums.UserStatus
+    kycLevel?: $Enums.KycLevel
+    country?: string | null
+    language?: $Enums.Language | null
+    timezone?: string | null
+    timezoneOffset?: number | null
+    createdAt?: Date | string
+    updatedAt?: Date | string
+    affiliateCodes?: AffiliateCodeCreateNestedManyWithoutUserInput
+    affiliateCommissions?: AffiliateCommissionCreateNestedManyWithoutAffiliateInput
+    subUserCommissions?: AffiliateCommissionCreateNestedManyWithoutSubUserInput
+    affiliateTier?: AffiliateTierCreateNestedOneWithoutAffiliateInput
+    affiliateWallets?: AffiliateWalletCreateNestedManyWithoutAffiliateInput
+    CompTransaction?: CompTransactionCreateNestedManyWithoutUserInput
+    DailyCompEarning?: DailyCompEarningCreateNestedManyWithoutUserInput
+    EmailLog?: EmailLogCreateNestedManyWithoutUserInput
+    GameSession?: GameSessionCreateNestedManyWithoutUserInput
+    affiliateReferrals?: ReferralCreateNestedManyWithoutAffiliateInput
+    referredUsers?: ReferralCreateNestedManyWithoutSubUserInput
+    Rolling?: RollingCreateNestedManyWithoutUserInput
+    transactions?: TransactionCreateNestedManyWithoutUserInput
+    balances?: UserBalanceCreateNestedManyWithoutUserInput
+    UserBalanceStats?: UserBalanceStatsCreateNestedManyWithoutUserInput
+    UserSession?: UserSessionCreateNestedManyWithoutUserInput
+    RevokedSessions?: UserSessionCreateNestedManyWithoutRevokedByUserInput
+    UserToken?: UserTokenCreateNestedManyWithoutUserInput
+    VipHistory?: VipHistoryCreateNestedManyWithoutUserInput
+    VipMembership?: VipMembershipCreateNestedOneWithoutUserInput
+    loginAttempts?: LoginAttemptCreateNestedManyWithoutUserInput
+  }
+
+  export type UserUncheckedCreateWithoutUserPromotionInput = {
+    id?: bigint | number
+    uid?: string
+    whitecliffId?: bigint | number | null
+    whitecliffSystemId?: bigint | number | null
+    whitecliffUsername?: string | null
+    dcsId?: string | null
+    email?: string | null
+    passwordHash?: string | null
+    socialType?: $Enums.SocialType | null
+    socialId?: string | null
+    role?: $Enums.UserRoleType
+    status?: $Enums.UserStatus
+    kycLevel?: $Enums.KycLevel
+    country?: string | null
+    language?: $Enums.Language | null
+    timezone?: string | null
+    timezoneOffset?: number | null
+    createdAt?: Date | string
+    updatedAt?: Date | string
+    affiliateCodes?: AffiliateCodeUncheckedCreateNestedManyWithoutUserInput
+    affiliateCommissions?: AffiliateCommissionUncheckedCreateNestedManyWithoutAffiliateInput
+    subUserCommissions?: AffiliateCommissionUncheckedCreateNestedManyWithoutSubUserInput
+    affiliateTier?: AffiliateTierUncheckedCreateNestedOneWithoutAffiliateInput
+    affiliateWallets?: AffiliateWalletUncheckedCreateNestedManyWithoutAffiliateInput
+    CompTransaction?: CompTransactionUncheckedCreateNestedManyWithoutUserInput
+    DailyCompEarning?: DailyCompEarningUncheckedCreateNestedManyWithoutUserInput
+    EmailLog?: EmailLogUncheckedCreateNestedManyWithoutUserInput
+    GameSession?: GameSessionUncheckedCreateNestedManyWithoutUserInput
+    affiliateReferrals?: ReferralUncheckedCreateNestedManyWithoutAffiliateInput
+    referredUsers?: ReferralUncheckedCreateNestedManyWithoutSubUserInput
+    Rolling?: RollingUncheckedCreateNestedManyWithoutUserInput
+    transactions?: TransactionUncheckedCreateNestedManyWithoutUserInput
+    balances?: UserBalanceUncheckedCreateNestedManyWithoutUserInput
+    UserBalanceStats?: UserBalanceStatsUncheckedCreateNestedManyWithoutUserInput
+    UserSession?: UserSessionUncheckedCreateNestedManyWithoutUserInput
+    RevokedSessions?: UserSessionUncheckedCreateNestedManyWithoutRevokedByUserInput
+    UserToken?: UserTokenUncheckedCreateNestedManyWithoutUserInput
+    VipHistory?: VipHistoryUncheckedCreateNestedManyWithoutUserInput
+    VipMembership?: VipMembershipUncheckedCreateNestedOneWithoutUserInput
+    loginAttempts?: LoginAttemptUncheckedCreateNestedManyWithoutUserInput
+  }
+
+  export type UserCreateOrConnectWithoutUserPromotionInput = {
+    where: UserWhereUniqueInput
+    create: XOR<UserCreateWithoutUserPromotionInput, UserUncheckedCreateWithoutUserPromotionInput>
+  }
+
+  export type RollingUpsertWithWhereUniqueWithoutUserPromotionInput = {
+    where: RollingWhereUniqueInput
+    update: XOR<RollingUpdateWithoutUserPromotionInput, RollingUncheckedUpdateWithoutUserPromotionInput>
+    create: XOR<RollingCreateWithoutUserPromotionInput, RollingUncheckedCreateWithoutUserPromotionInput>
+  }
+
+  export type RollingUpdateWithWhereUniqueWithoutUserPromotionInput = {
+    where: RollingWhereUniqueInput
+    data: XOR<RollingUpdateWithoutUserPromotionInput, RollingUncheckedUpdateWithoutUserPromotionInput>
+  }
+
+  export type RollingUpdateManyWithWhereWithoutUserPromotionInput = {
+    where: RollingScalarWhereInput
+    data: XOR<RollingUpdateManyMutationInput, RollingUncheckedUpdateManyWithoutUserPromotionInput>
+  }
+
+  export type PromotionUpsertWithoutUserPromotionInput = {
+    update: XOR<PromotionUpdateWithoutUserPromotionInput, PromotionUncheckedUpdateWithoutUserPromotionInput>
+    create: XOR<PromotionCreateWithoutUserPromotionInput, PromotionUncheckedCreateWithoutUserPromotionInput>
+    where?: PromotionWhereInput
+  }
+
+  export type PromotionUpdateToOneWithWhereWithoutUserPromotionInput = {
+    where?: PromotionWhereInput
+    data: XOR<PromotionUpdateWithoutUserPromotionInput, PromotionUncheckedUpdateWithoutUserPromotionInput>
+  }
+
+  export type PromotionUpdateWithoutUserPromotionInput = {
+    id?: BigIntFieldUpdateOperationsInput | bigint | number
+    uid?: StringFieldUpdateOperationsInput | string
+    managementName?: StringFieldUpdateOperationsInput | string
+    isActive?: BoolFieldUpdateOperationsInput | boolean
+    startDate?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    endDate?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    deletedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    targetType?: EnumPromotionTargetTypeFieldUpdateOperationsInput | $Enums.PromotionTargetType
+    bonusType?: EnumPromotionBonusTypeFieldUpdateOperationsInput | $Enums.PromotionBonusType
+    bonusRate?: NullableDecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string | null
+    rollingMultiplier?: NullableDecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string | null
+    qualificationMaintainCondition?: EnumPromotionQualificationConditionFieldUpdateOperationsInput | $Enums.PromotionQualificationCondition
+    isOneTime?: BoolFieldUpdateOperationsInput | boolean
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    translations?: PromotionTranslationUpdateManyWithoutPromotionNestedInput
+    currencies?: PromotionCurrencyUpdateManyWithoutPromotionNestedInput
+  }
+
+  export type PromotionUncheckedUpdateWithoutUserPromotionInput = {
+    id?: BigIntFieldUpdateOperationsInput | bigint | number
+    uid?: StringFieldUpdateOperationsInput | string
+    managementName?: StringFieldUpdateOperationsInput | string
+    isActive?: BoolFieldUpdateOperationsInput | boolean
+    startDate?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    endDate?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    deletedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    targetType?: EnumPromotionTargetTypeFieldUpdateOperationsInput | $Enums.PromotionTargetType
+    bonusType?: EnumPromotionBonusTypeFieldUpdateOperationsInput | $Enums.PromotionBonusType
+    bonusRate?: NullableDecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string | null
+    rollingMultiplier?: NullableDecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string | null
+    qualificationMaintainCondition?: EnumPromotionQualificationConditionFieldUpdateOperationsInput | $Enums.PromotionQualificationCondition
+    isOneTime?: BoolFieldUpdateOperationsInput | boolean
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    translations?: PromotionTranslationUncheckedUpdateManyWithoutPromotionNestedInput
+    currencies?: PromotionCurrencyUncheckedUpdateManyWithoutPromotionNestedInput
+  }
+
+  export type UserUpsertWithoutUserPromotionInput = {
+    update: XOR<UserUpdateWithoutUserPromotionInput, UserUncheckedUpdateWithoutUserPromotionInput>
+    create: XOR<UserCreateWithoutUserPromotionInput, UserUncheckedCreateWithoutUserPromotionInput>
+    where?: UserWhereInput
+  }
+
+  export type UserUpdateToOneWithWhereWithoutUserPromotionInput = {
+    where?: UserWhereInput
+    data: XOR<UserUpdateWithoutUserPromotionInput, UserUncheckedUpdateWithoutUserPromotionInput>
+  }
+
+  export type UserUpdateWithoutUserPromotionInput = {
+    id?: BigIntFieldUpdateOperationsInput | bigint | number
+    uid?: StringFieldUpdateOperationsInput | string
+    whitecliffId?: NullableBigIntFieldUpdateOperationsInput | bigint | number | null
+    whitecliffSystemId?: NullableBigIntFieldUpdateOperationsInput | bigint | number | null
+    whitecliffUsername?: NullableStringFieldUpdateOperationsInput | string | null
+    dcsId?: NullableStringFieldUpdateOperationsInput | string | null
+    email?: NullableStringFieldUpdateOperationsInput | string | null
+    passwordHash?: NullableStringFieldUpdateOperationsInput | string | null
+    socialType?: NullableEnumSocialTypeFieldUpdateOperationsInput | $Enums.SocialType | null
+    socialId?: NullableStringFieldUpdateOperationsInput | string | null
+    role?: EnumUserRoleTypeFieldUpdateOperationsInput | $Enums.UserRoleType
+    status?: EnumUserStatusFieldUpdateOperationsInput | $Enums.UserStatus
+    kycLevel?: EnumKycLevelFieldUpdateOperationsInput | $Enums.KycLevel
+    country?: NullableStringFieldUpdateOperationsInput | string | null
+    language?: NullableEnumLanguageFieldUpdateOperationsInput | $Enums.Language | null
+    timezone?: NullableStringFieldUpdateOperationsInput | string | null
+    timezoneOffset?: NullableIntFieldUpdateOperationsInput | number | null
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    affiliateCodes?: AffiliateCodeUpdateManyWithoutUserNestedInput
+    affiliateCommissions?: AffiliateCommissionUpdateManyWithoutAffiliateNestedInput
+    subUserCommissions?: AffiliateCommissionUpdateManyWithoutSubUserNestedInput
+    affiliateTier?: AffiliateTierUpdateOneWithoutAffiliateNestedInput
+    affiliateWallets?: AffiliateWalletUpdateManyWithoutAffiliateNestedInput
+    CompTransaction?: CompTransactionUpdateManyWithoutUserNestedInput
+    DailyCompEarning?: DailyCompEarningUpdateManyWithoutUserNestedInput
+    EmailLog?: EmailLogUpdateManyWithoutUserNestedInput
+    GameSession?: GameSessionUpdateManyWithoutUserNestedInput
+    affiliateReferrals?: ReferralUpdateManyWithoutAffiliateNestedInput
+    referredUsers?: ReferralUpdateManyWithoutSubUserNestedInput
+    Rolling?: RollingUpdateManyWithoutUserNestedInput
+    transactions?: TransactionUpdateManyWithoutUserNestedInput
+    balances?: UserBalanceUpdateManyWithoutUserNestedInput
+    UserBalanceStats?: UserBalanceStatsUpdateManyWithoutUserNestedInput
+    UserSession?: UserSessionUpdateManyWithoutUserNestedInput
+    RevokedSessions?: UserSessionUpdateManyWithoutRevokedByUserNestedInput
+    UserToken?: UserTokenUpdateManyWithoutUserNestedInput
+    VipHistory?: VipHistoryUpdateManyWithoutUserNestedInput
+    VipMembership?: VipMembershipUpdateOneWithoutUserNestedInput
+    loginAttempts?: LoginAttemptUpdateManyWithoutUserNestedInput
+  }
+
+  export type UserUncheckedUpdateWithoutUserPromotionInput = {
+    id?: BigIntFieldUpdateOperationsInput | bigint | number
+    uid?: StringFieldUpdateOperationsInput | string
+    whitecliffId?: NullableBigIntFieldUpdateOperationsInput | bigint | number | null
+    whitecliffSystemId?: NullableBigIntFieldUpdateOperationsInput | bigint | number | null
+    whitecliffUsername?: NullableStringFieldUpdateOperationsInput | string | null
+    dcsId?: NullableStringFieldUpdateOperationsInput | string | null
+    email?: NullableStringFieldUpdateOperationsInput | string | null
+    passwordHash?: NullableStringFieldUpdateOperationsInput | string | null
+    socialType?: NullableEnumSocialTypeFieldUpdateOperationsInput | $Enums.SocialType | null
+    socialId?: NullableStringFieldUpdateOperationsInput | string | null
+    role?: EnumUserRoleTypeFieldUpdateOperationsInput | $Enums.UserRoleType
+    status?: EnumUserStatusFieldUpdateOperationsInput | $Enums.UserStatus
+    kycLevel?: EnumKycLevelFieldUpdateOperationsInput | $Enums.KycLevel
+    country?: NullableStringFieldUpdateOperationsInput | string | null
+    language?: NullableEnumLanguageFieldUpdateOperationsInput | $Enums.Language | null
+    timezone?: NullableStringFieldUpdateOperationsInput | string | null
+    timezoneOffset?: NullableIntFieldUpdateOperationsInput | number | null
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    affiliateCodes?: AffiliateCodeUncheckedUpdateManyWithoutUserNestedInput
+    affiliateCommissions?: AffiliateCommissionUncheckedUpdateManyWithoutAffiliateNestedInput
+    subUserCommissions?: AffiliateCommissionUncheckedUpdateManyWithoutSubUserNestedInput
+    affiliateTier?: AffiliateTierUncheckedUpdateOneWithoutAffiliateNestedInput
+    affiliateWallets?: AffiliateWalletUncheckedUpdateManyWithoutAffiliateNestedInput
+    CompTransaction?: CompTransactionUncheckedUpdateManyWithoutUserNestedInput
+    DailyCompEarning?: DailyCompEarningUncheckedUpdateManyWithoutUserNestedInput
+    EmailLog?: EmailLogUncheckedUpdateManyWithoutUserNestedInput
+    GameSession?: GameSessionUncheckedUpdateManyWithoutUserNestedInput
+    affiliateReferrals?: ReferralUncheckedUpdateManyWithoutAffiliateNestedInput
+    referredUsers?: ReferralUncheckedUpdateManyWithoutSubUserNestedInput
+    Rolling?: RollingUncheckedUpdateManyWithoutUserNestedInput
+    transactions?: TransactionUncheckedUpdateManyWithoutUserNestedInput
+    balances?: UserBalanceUncheckedUpdateManyWithoutUserNestedInput
+    UserBalanceStats?: UserBalanceStatsUncheckedUpdateManyWithoutUserNestedInput
+    UserSession?: UserSessionUncheckedUpdateManyWithoutUserNestedInput
+    RevokedSessions?: UserSessionUncheckedUpdateManyWithoutRevokedByUserNestedInput
+    UserToken?: UserTokenUncheckedUpdateManyWithoutUserNestedInput
+    VipHistory?: VipHistoryUncheckedUpdateManyWithoutUserNestedInput
+    VipMembership?: VipMembershipUncheckedUpdateOneWithoutUserNestedInput
+    loginAttempts?: LoginAttemptUncheckedUpdateManyWithoutUserNestedInput
+  }
+
   export type UserCreateWithoutUserSessionInput = {
     id?: bigint | number
     uid?: string
@@ -85090,7 +86917,7 @@ export namespace Prisma {
   export type RollingCreateManyUserInput = {
     id?: bigint | number
     sourceType?: $Enums.RollingSourceType
-    userPromotionId?: number | null
+    userPromotionId?: bigint | number | null
     requiredAmount: Decimal | DecimalJsLike | number | string
     currentAmount?: Decimal | DecimalJsLike | number | string
     cancellationBalanceThreshold?: Decimal | DecimalJsLike | number | string | null
@@ -85138,12 +86965,14 @@ export namespace Prisma {
   }
 
   export type UserPromotionCreateManyUserInput = {
-    id?: number
-    promotionId: number
+    id?: bigint | number
+    promotionId: bigint | number
     status?: $Enums.UserPromotionStatus
-    bonusGranted?: boolean
-    bonusGrantedAt?: Date | string | null
-    bonusAmount?: Decimal | DecimalJsLike | number | string | null
+    depositAmount: Decimal | DecimalJsLike | number | string
+    bonusAmount: Decimal | DecimalJsLike | number | string
+    targetRollingAmount: Decimal | DecimalJsLike | number | string
+    currentRollingAmount?: Decimal | DecimalJsLike | number | string
+    currency: $Enums.ExchangeCurrencyCode
     createdAt?: Date | string
     updatedAt?: Date | string
   }
@@ -85641,7 +87470,7 @@ export namespace Prisma {
   export type RollingUncheckedUpdateWithoutUserInput = {
     id?: BigIntFieldUpdateOperationsInput | bigint | number
     sourceType?: EnumRollingSourceTypeFieldUpdateOperationsInput | $Enums.RollingSourceType
-    userPromotionId?: NullableIntFieldUpdateOperationsInput | number | null
+    userPromotionId?: NullableBigIntFieldUpdateOperationsInput | bigint | number | null
     requiredAmount?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
     currentAmount?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
     cancellationBalanceThreshold?: NullableDecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string | null
@@ -85658,7 +87487,7 @@ export namespace Prisma {
   export type RollingUncheckedUpdateManyWithoutUserInput = {
     id?: BigIntFieldUpdateOperationsInput | bigint | number
     sourceType?: EnumRollingSourceTypeFieldUpdateOperationsInput | $Enums.RollingSourceType
-    userPromotionId?: NullableIntFieldUpdateOperationsInput | number | null
+    userPromotionId?: NullableBigIntFieldUpdateOperationsInput | bigint | number | null
     requiredAmount?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
     currentAmount?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
     cancellationBalanceThreshold?: NullableDecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string | null
@@ -85784,10 +87613,13 @@ export namespace Prisma {
   }
 
   export type UserPromotionUpdateWithoutUserInput = {
+    id?: BigIntFieldUpdateOperationsInput | bigint | number
     status?: EnumUserPromotionStatusFieldUpdateOperationsInput | $Enums.UserPromotionStatus
-    bonusGranted?: BoolFieldUpdateOperationsInput | boolean
-    bonusGrantedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
-    bonusAmount?: NullableDecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string | null
+    depositAmount?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
+    bonusAmount?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
+    targetRollingAmount?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
+    currentRollingAmount?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
+    currency?: EnumExchangeCurrencyCodeFieldUpdateOperationsInput | $Enums.ExchangeCurrencyCode
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
     Rolling?: RollingUpdateManyWithoutUserPromotionNestedInput
@@ -85795,24 +87627,28 @@ export namespace Prisma {
   }
 
   export type UserPromotionUncheckedUpdateWithoutUserInput = {
-    id?: IntFieldUpdateOperationsInput | number
-    promotionId?: IntFieldUpdateOperationsInput | number
+    id?: BigIntFieldUpdateOperationsInput | bigint | number
+    promotionId?: BigIntFieldUpdateOperationsInput | bigint | number
     status?: EnumUserPromotionStatusFieldUpdateOperationsInput | $Enums.UserPromotionStatus
-    bonusGranted?: BoolFieldUpdateOperationsInput | boolean
-    bonusGrantedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
-    bonusAmount?: NullableDecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string | null
+    depositAmount?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
+    bonusAmount?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
+    targetRollingAmount?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
+    currentRollingAmount?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
+    currency?: EnumExchangeCurrencyCodeFieldUpdateOperationsInput | $Enums.ExchangeCurrencyCode
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
     Rolling?: RollingUncheckedUpdateManyWithoutUserPromotionNestedInput
   }
 
   export type UserPromotionUncheckedUpdateManyWithoutUserInput = {
-    id?: IntFieldUpdateOperationsInput | number
-    promotionId?: IntFieldUpdateOperationsInput | number
+    id?: BigIntFieldUpdateOperationsInput | bigint | number
+    promotionId?: BigIntFieldUpdateOperationsInput | bigint | number
     status?: EnumUserPromotionStatusFieldUpdateOperationsInput | $Enums.UserPromotionStatus
-    bonusGranted?: BoolFieldUpdateOperationsInput | boolean
-    bonusGrantedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
-    bonusAmount?: NullableDecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string | null
+    depositAmount?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
+    bonusAmount?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
+    targetRollingAmount?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
+    currentRollingAmount?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
+    currency?: EnumExchangeCurrencyCodeFieldUpdateOperationsInput | $Enums.ExchangeCurrencyCode
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
   }
@@ -86588,7 +88424,7 @@ export namespace Prisma {
     id?: bigint | number
     userId: bigint | number
     sourceType?: $Enums.RollingSourceType
-    userPromotionId?: number | null
+    userPromotionId?: bigint | number | null
     requiredAmount: Decimal | DecimalJsLike | number | string
     currentAmount?: Decimal | DecimalJsLike | number | string
     cancellationBalanceThreshold?: Decimal | DecimalJsLike | number | string | null
@@ -86622,7 +88458,7 @@ export namespace Prisma {
     id?: BigIntFieldUpdateOperationsInput | bigint | number
     userId?: BigIntFieldUpdateOperationsInput | bigint | number
     sourceType?: EnumRollingSourceTypeFieldUpdateOperationsInput | $Enums.RollingSourceType
-    userPromotionId?: NullableIntFieldUpdateOperationsInput | number | null
+    userPromotionId?: NullableBigIntFieldUpdateOperationsInput | bigint | number | null
     requiredAmount?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
     currentAmount?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
     cancellationBalanceThreshold?: NullableDecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string | null
@@ -86639,7 +88475,7 @@ export namespace Prisma {
     id?: BigIntFieldUpdateOperationsInput | bigint | number
     userId?: BigIntFieldUpdateOperationsInput | bigint | number
     sourceType?: EnumRollingSourceTypeFieldUpdateOperationsInput | $Enums.RollingSourceType
-    userPromotionId?: NullableIntFieldUpdateOperationsInput | number | null
+    userPromotionId?: NullableBigIntFieldUpdateOperationsInput | bigint | number | null
     requiredAmount?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
     currentAmount?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
     cancellationBalanceThreshold?: NullableDecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string | null
@@ -86686,154 +88522,6 @@ export namespace Prisma {
     transactionId?: BigIntFieldUpdateOperationsInput | bigint | number
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
-  }
-
-  export type PromotionTranslationCreateManyPromotionInput = {
-    id?: number
-    language: $Enums.Language
-    name: string
-    description?: string | null
-    createdAt?: Date | string
-    updatedAt?: Date | string
-  }
-
-  export type UserPromotionCreateManyPromotionInput = {
-    id?: number
-    userId: bigint | number
-    status?: $Enums.UserPromotionStatus
-    bonusGranted?: boolean
-    bonusGrantedAt?: Date | string | null
-    bonusAmount?: Decimal | DecimalJsLike | number | string | null
-    createdAt?: Date | string
-    updatedAt?: Date | string
-  }
-
-  export type PromotionTranslationUpdateWithoutPromotionInput = {
-    language?: EnumLanguageFieldUpdateOperationsInput | $Enums.Language
-    name?: StringFieldUpdateOperationsInput | string
-    description?: NullableStringFieldUpdateOperationsInput | string | null
-    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
-    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
-  }
-
-  export type PromotionTranslationUncheckedUpdateWithoutPromotionInput = {
-    id?: IntFieldUpdateOperationsInput | number
-    language?: EnumLanguageFieldUpdateOperationsInput | $Enums.Language
-    name?: StringFieldUpdateOperationsInput | string
-    description?: NullableStringFieldUpdateOperationsInput | string | null
-    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
-    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
-  }
-
-  export type PromotionTranslationUncheckedUpdateManyWithoutPromotionInput = {
-    id?: IntFieldUpdateOperationsInput | number
-    language?: EnumLanguageFieldUpdateOperationsInput | $Enums.Language
-    name?: StringFieldUpdateOperationsInput | string
-    description?: NullableStringFieldUpdateOperationsInput | string | null
-    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
-    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
-  }
-
-  export type UserPromotionUpdateWithoutPromotionInput = {
-    status?: EnumUserPromotionStatusFieldUpdateOperationsInput | $Enums.UserPromotionStatus
-    bonusGranted?: BoolFieldUpdateOperationsInput | boolean
-    bonusGrantedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
-    bonusAmount?: NullableDecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string | null
-    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
-    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
-    Rolling?: RollingUpdateManyWithoutUserPromotionNestedInput
-    user?: UserUpdateOneRequiredWithoutUserPromotionNestedInput
-  }
-
-  export type UserPromotionUncheckedUpdateWithoutPromotionInput = {
-    id?: IntFieldUpdateOperationsInput | number
-    userId?: BigIntFieldUpdateOperationsInput | bigint | number
-    status?: EnumUserPromotionStatusFieldUpdateOperationsInput | $Enums.UserPromotionStatus
-    bonusGranted?: BoolFieldUpdateOperationsInput | boolean
-    bonusGrantedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
-    bonusAmount?: NullableDecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string | null
-    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
-    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
-    Rolling?: RollingUncheckedUpdateManyWithoutUserPromotionNestedInput
-  }
-
-  export type UserPromotionUncheckedUpdateManyWithoutPromotionInput = {
-    id?: IntFieldUpdateOperationsInput | number
-    userId?: BigIntFieldUpdateOperationsInput | bigint | number
-    status?: EnumUserPromotionStatusFieldUpdateOperationsInput | $Enums.UserPromotionStatus
-    bonusGranted?: BoolFieldUpdateOperationsInput | boolean
-    bonusGrantedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
-    bonusAmount?: NullableDecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string | null
-    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
-    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
-  }
-
-  export type RollingCreateManyUserPromotionInput = {
-    id?: bigint | number
-    userId: bigint | number
-    sourceType?: $Enums.RollingSourceType
-    requiredAmount: Decimal | DecimalJsLike | number | string
-    currentAmount?: Decimal | DecimalJsLike | number | string
-    cancellationBalanceThreshold?: Decimal | DecimalJsLike | number | string | null
-    status?: $Enums.RollingStatus
-    depositAmount?: Decimal | DecimalJsLike | number | string | null
-    bonusAmount?: Decimal | DecimalJsLike | number | string | null
-    completedAt?: Date | string | null
-    cancelledAt?: Date | string | null
-    createdAt?: Date | string
-    updatedAt?: Date | string
-    depositDetailId?: bigint | number | null
-  }
-
-  export type RollingUpdateWithoutUserPromotionInput = {
-    id?: BigIntFieldUpdateOperationsInput | bigint | number
-    sourceType?: EnumRollingSourceTypeFieldUpdateOperationsInput | $Enums.RollingSourceType
-    requiredAmount?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
-    currentAmount?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
-    cancellationBalanceThreshold?: NullableDecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string | null
-    status?: EnumRollingStatusFieldUpdateOperationsInput | $Enums.RollingStatus
-    depositAmount?: NullableDecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string | null
-    bonusAmount?: NullableDecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string | null
-    completedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
-    cancelledAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
-    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
-    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
-    DepositDetail?: DepositDetailUpdateOneWithoutRollingNestedInput
-    user?: UserUpdateOneRequiredWithoutRollingNestedInput
-  }
-
-  export type RollingUncheckedUpdateWithoutUserPromotionInput = {
-    id?: BigIntFieldUpdateOperationsInput | bigint | number
-    userId?: BigIntFieldUpdateOperationsInput | bigint | number
-    sourceType?: EnumRollingSourceTypeFieldUpdateOperationsInput | $Enums.RollingSourceType
-    requiredAmount?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
-    currentAmount?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
-    cancellationBalanceThreshold?: NullableDecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string | null
-    status?: EnumRollingStatusFieldUpdateOperationsInput | $Enums.RollingStatus
-    depositAmount?: NullableDecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string | null
-    bonusAmount?: NullableDecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string | null
-    completedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
-    cancelledAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
-    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
-    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
-    depositDetailId?: NullableBigIntFieldUpdateOperationsInput | bigint | number | null
-  }
-
-  export type RollingUncheckedUpdateManyWithoutUserPromotionInput = {
-    id?: BigIntFieldUpdateOperationsInput | bigint | number
-    userId?: BigIntFieldUpdateOperationsInput | bigint | number
-    sourceType?: EnumRollingSourceTypeFieldUpdateOperationsInput | $Enums.RollingSourceType
-    requiredAmount?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
-    currentAmount?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
-    cancellationBalanceThreshold?: NullableDecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string | null
-    status?: EnumRollingStatusFieldUpdateOperationsInput | $Enums.RollingStatus
-    depositAmount?: NullableDecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string | null
-    bonusAmount?: NullableDecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string | null
-    completedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
-    cancelledAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
-    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
-    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
-    depositDetailId?: NullableBigIntFieldUpdateOperationsInput | bigint | number | null
   }
 
   export type VipMembershipCreateManyVipLevelInput = {
@@ -87198,6 +88886,200 @@ export namespace Prisma {
     userAgent?: NullableStringFieldUpdateOperationsInput | string | null
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+  }
+
+  export type PromotionTranslationCreateManyPromotionInput = {
+    id?: bigint | number
+    language: $Enums.Language
+    name: string
+    description?: string | null
+    createdAt?: Date | string
+    updatedAt?: Date | string
+  }
+
+  export type PromotionCurrencyCreateManyPromotionInput = {
+    id?: bigint | number
+    currency: $Enums.ExchangeCurrencyCode
+    minDepositAmount: Decimal | DecimalJsLike | number | string
+    maxBonusAmount?: Decimal | DecimalJsLike | number | string | null
+    createdAt?: Date | string
+    updatedAt?: Date | string
+  }
+
+  export type UserPromotionCreateManyPromotionInput = {
+    id?: bigint | number
+    userId: bigint | number
+    status?: $Enums.UserPromotionStatus
+    depositAmount: Decimal | DecimalJsLike | number | string
+    bonusAmount: Decimal | DecimalJsLike | number | string
+    targetRollingAmount: Decimal | DecimalJsLike | number | string
+    currentRollingAmount?: Decimal | DecimalJsLike | number | string
+    currency: $Enums.ExchangeCurrencyCode
+    createdAt?: Date | string
+    updatedAt?: Date | string
+  }
+
+  export type PromotionTranslationUpdateWithoutPromotionInput = {
+    id?: BigIntFieldUpdateOperationsInput | bigint | number
+    language?: EnumLanguageFieldUpdateOperationsInput | $Enums.Language
+    name?: StringFieldUpdateOperationsInput | string
+    description?: NullableStringFieldUpdateOperationsInput | string | null
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+  }
+
+  export type PromotionTranslationUncheckedUpdateWithoutPromotionInput = {
+    id?: BigIntFieldUpdateOperationsInput | bigint | number
+    language?: EnumLanguageFieldUpdateOperationsInput | $Enums.Language
+    name?: StringFieldUpdateOperationsInput | string
+    description?: NullableStringFieldUpdateOperationsInput | string | null
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+  }
+
+  export type PromotionTranslationUncheckedUpdateManyWithoutPromotionInput = {
+    id?: BigIntFieldUpdateOperationsInput | bigint | number
+    language?: EnumLanguageFieldUpdateOperationsInput | $Enums.Language
+    name?: StringFieldUpdateOperationsInput | string
+    description?: NullableStringFieldUpdateOperationsInput | string | null
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+  }
+
+  export type PromotionCurrencyUpdateWithoutPromotionInput = {
+    id?: BigIntFieldUpdateOperationsInput | bigint | number
+    currency?: EnumExchangeCurrencyCodeFieldUpdateOperationsInput | $Enums.ExchangeCurrencyCode
+    minDepositAmount?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
+    maxBonusAmount?: NullableDecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string | null
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+  }
+
+  export type PromotionCurrencyUncheckedUpdateWithoutPromotionInput = {
+    id?: BigIntFieldUpdateOperationsInput | bigint | number
+    currency?: EnumExchangeCurrencyCodeFieldUpdateOperationsInput | $Enums.ExchangeCurrencyCode
+    minDepositAmount?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
+    maxBonusAmount?: NullableDecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string | null
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+  }
+
+  export type PromotionCurrencyUncheckedUpdateManyWithoutPromotionInput = {
+    id?: BigIntFieldUpdateOperationsInput | bigint | number
+    currency?: EnumExchangeCurrencyCodeFieldUpdateOperationsInput | $Enums.ExchangeCurrencyCode
+    minDepositAmount?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
+    maxBonusAmount?: NullableDecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string | null
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+  }
+
+  export type UserPromotionUpdateWithoutPromotionInput = {
+    id?: BigIntFieldUpdateOperationsInput | bigint | number
+    status?: EnumUserPromotionStatusFieldUpdateOperationsInput | $Enums.UserPromotionStatus
+    depositAmount?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
+    bonusAmount?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
+    targetRollingAmount?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
+    currentRollingAmount?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
+    currency?: EnumExchangeCurrencyCodeFieldUpdateOperationsInput | $Enums.ExchangeCurrencyCode
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    Rolling?: RollingUpdateManyWithoutUserPromotionNestedInput
+    user?: UserUpdateOneRequiredWithoutUserPromotionNestedInput
+  }
+
+  export type UserPromotionUncheckedUpdateWithoutPromotionInput = {
+    id?: BigIntFieldUpdateOperationsInput | bigint | number
+    userId?: BigIntFieldUpdateOperationsInput | bigint | number
+    status?: EnumUserPromotionStatusFieldUpdateOperationsInput | $Enums.UserPromotionStatus
+    depositAmount?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
+    bonusAmount?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
+    targetRollingAmount?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
+    currentRollingAmount?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
+    currency?: EnumExchangeCurrencyCodeFieldUpdateOperationsInput | $Enums.ExchangeCurrencyCode
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    Rolling?: RollingUncheckedUpdateManyWithoutUserPromotionNestedInput
+  }
+
+  export type UserPromotionUncheckedUpdateManyWithoutPromotionInput = {
+    id?: BigIntFieldUpdateOperationsInput | bigint | number
+    userId?: BigIntFieldUpdateOperationsInput | bigint | number
+    status?: EnumUserPromotionStatusFieldUpdateOperationsInput | $Enums.UserPromotionStatus
+    depositAmount?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
+    bonusAmount?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
+    targetRollingAmount?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
+    currentRollingAmount?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
+    currency?: EnumExchangeCurrencyCodeFieldUpdateOperationsInput | $Enums.ExchangeCurrencyCode
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+  }
+
+  export type RollingCreateManyUserPromotionInput = {
+    id?: bigint | number
+    userId: bigint | number
+    sourceType?: $Enums.RollingSourceType
+    requiredAmount: Decimal | DecimalJsLike | number | string
+    currentAmount?: Decimal | DecimalJsLike | number | string
+    cancellationBalanceThreshold?: Decimal | DecimalJsLike | number | string | null
+    status?: $Enums.RollingStatus
+    depositAmount?: Decimal | DecimalJsLike | number | string | null
+    bonusAmount?: Decimal | DecimalJsLike | number | string | null
+    completedAt?: Date | string | null
+    cancelledAt?: Date | string | null
+    createdAt?: Date | string
+    updatedAt?: Date | string
+    depositDetailId?: bigint | number | null
+  }
+
+  export type RollingUpdateWithoutUserPromotionInput = {
+    id?: BigIntFieldUpdateOperationsInput | bigint | number
+    sourceType?: EnumRollingSourceTypeFieldUpdateOperationsInput | $Enums.RollingSourceType
+    requiredAmount?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
+    currentAmount?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
+    cancellationBalanceThreshold?: NullableDecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string | null
+    status?: EnumRollingStatusFieldUpdateOperationsInput | $Enums.RollingStatus
+    depositAmount?: NullableDecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string | null
+    bonusAmount?: NullableDecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string | null
+    completedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    cancelledAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    DepositDetail?: DepositDetailUpdateOneWithoutRollingNestedInput
+    user?: UserUpdateOneRequiredWithoutRollingNestedInput
+  }
+
+  export type RollingUncheckedUpdateWithoutUserPromotionInput = {
+    id?: BigIntFieldUpdateOperationsInput | bigint | number
+    userId?: BigIntFieldUpdateOperationsInput | bigint | number
+    sourceType?: EnumRollingSourceTypeFieldUpdateOperationsInput | $Enums.RollingSourceType
+    requiredAmount?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
+    currentAmount?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
+    cancellationBalanceThreshold?: NullableDecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string | null
+    status?: EnumRollingStatusFieldUpdateOperationsInput | $Enums.RollingStatus
+    depositAmount?: NullableDecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string | null
+    bonusAmount?: NullableDecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string | null
+    completedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    cancelledAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    depositDetailId?: NullableBigIntFieldUpdateOperationsInput | bigint | number | null
+  }
+
+  export type RollingUncheckedUpdateManyWithoutUserPromotionInput = {
+    id?: BigIntFieldUpdateOperationsInput | bigint | number
+    userId?: BigIntFieldUpdateOperationsInput | bigint | number
+    sourceType?: EnumRollingSourceTypeFieldUpdateOperationsInput | $Enums.RollingSourceType
+    requiredAmount?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
+    currentAmount?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
+    cancellationBalanceThreshold?: NullableDecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string | null
+    status?: EnumRollingStatusFieldUpdateOperationsInput | $Enums.RollingStatus
+    depositAmount?: NullableDecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string | null
+    bonusAmount?: NullableDecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string | null
+    completedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    cancelledAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    depositDetailId?: NullableBigIntFieldUpdateOperationsInput | bigint | number | null
   }
 
 

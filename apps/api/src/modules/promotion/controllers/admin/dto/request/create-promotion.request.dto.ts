@@ -1,0 +1,186 @@
+// src/modules/promotion/controllers/admin/dto/request/create-promotion.request.dto.ts
+import { ApiProperty, ApiPropertyOptional } from '@nestjs/swagger';
+import {
+  IsString,
+  IsOptional,
+  IsBoolean,
+  IsDateString,
+  IsEnum,
+  IsArray,
+  ValidateNested,
+  IsNotEmpty,
+} from 'class-validator';
+import { Type } from 'class-transformer';
+import {
+  PromotionQualificationCondition,
+  PromotionTargetType,
+  PromotionBonusType,
+  ExchangeCurrencyCode,
+  Language,
+} from '@repo/database';
+
+export class CurrencySettingDto {
+  @ApiProperty({
+    description: '통화 코드',
+    example: ExchangeCurrencyCode.USDT,
+    enum: ExchangeCurrencyCode,
+  })
+  @IsNotEmpty()
+  @IsEnum(ExchangeCurrencyCode)
+  currency: ExchangeCurrencyCode;
+
+  @ApiProperty({
+    description: '최소 입금 금액',
+    example: '10.00',
+    type: String,
+  })
+  @IsNotEmpty()
+  @IsString()
+  minDepositAmount: string;
+
+  @ApiPropertyOptional({
+    description: '최대 보너스 금액',
+    example: '1000.00',
+    type: String,
+  })
+  @IsOptional()
+  @IsString()
+  maxBonusAmount?: string;
+}
+
+export class TranslationDto {
+  @ApiProperty({
+    description: '언어 코드',
+    example: Language.KO,
+    enum: Language,
+  })
+  @IsNotEmpty()
+  @IsEnum(Language)
+  language: Language;
+
+  @ApiProperty({
+    description: '프로모션 이름',
+    example: '첫 충전 100% 보너스',
+  })
+  @IsNotEmpty()
+  @IsString()
+  name: string;
+
+  @ApiPropertyOptional({
+    description: '프로모션 설명',
+    example: '첫 충전 시 100% 보너스를 받으세요!',
+    nullable: true,
+  })
+  @IsOptional()
+  @IsString()
+  description?: string | null;
+}
+
+export class CreatePromotionRequestDto {
+  @ApiProperty({
+    description: '관리용 프로모션 이름',
+    example: '첫 충전 100% 보너스',
+  })
+  @IsNotEmpty()
+  @IsString()
+  managementName: string;
+
+  @ApiPropertyOptional({
+    description: '활성화 여부',
+    example: true,
+    default: true,
+  })
+  @IsOptional()
+  @IsBoolean()
+  isActive?: boolean;
+
+  @ApiPropertyOptional({
+    description: '프로모션 시작일',
+    example: '2024-01-01T00:00:00Z',
+    nullable: true,
+  })
+  @IsOptional()
+  @IsDateString()
+  startDate?: string | null;
+
+  @ApiPropertyOptional({
+    description: '프로모션 종료일',
+    example: '2024-12-31T23:59:59Z',
+    nullable: true,
+  })
+  @IsOptional()
+  @IsDateString()
+  endDate?: string | null;
+
+  @ApiProperty({
+    description: '프로모션 타겟 타입',
+    example: PromotionTargetType.NEW_USER_FIRST_DEPOSIT,
+    enum: PromotionTargetType,
+  })
+  @IsEnum(PromotionTargetType)
+  targetType: PromotionTargetType;
+
+  @ApiProperty({
+    description: '보너스 타입',
+    example: PromotionBonusType.PERCENTAGE,
+    enum: PromotionBonusType,
+  })
+  @IsEnum(PromotionBonusType)
+  bonusType: PromotionBonusType;
+
+  @ApiPropertyOptional({
+    description: '보너스 비율 (PERCENTAGE 타입인 경우)',
+    example: '1.0',
+    type: String,
+  })
+  @IsOptional()
+  @IsString()
+  bonusRate?: string;
+
+  @ApiPropertyOptional({
+    description: '롤링 배수',
+    example: '20.0',
+    type: String,
+  })
+  @IsOptional()
+  @IsString()
+  rollingMultiplier?: string;
+
+  @ApiProperty({
+    description: '자격 유지 조건',
+    example: PromotionQualificationCondition.UNTIL_FIRST_WITHDRAWAL,
+    enum: PromotionQualificationCondition,
+  })
+  @IsEnum(PromotionQualificationCondition)
+  qualificationMaintainCondition: PromotionQualificationCondition;
+
+  @ApiPropertyOptional({
+    description: '1회성 프로모션 여부',
+    example: false,
+    default: false,
+  })
+  @IsOptional()
+  @IsBoolean()
+  isOneTime?: boolean;
+
+  @ApiPropertyOptional({
+    description: '통화별 설정 목록',
+    type: [CurrencySettingDto],
+  })
+  @IsOptional()
+  @IsArray()
+  @ValidateNested({ each: true })
+  @Type(() => CurrencySettingDto)
+  currencies?: CurrencySettingDto[];
+
+  @ApiPropertyOptional({
+    description: '번역 정보 목록',
+    type: [TranslationDto],
+  })
+  @IsOptional()
+  @IsArray()
+  @ValidateNested({ each: true })
+    @Type(() => TranslationDto)
+    translations?: TranslationDto[];
+}
+
