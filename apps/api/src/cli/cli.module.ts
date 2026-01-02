@@ -5,7 +5,6 @@ import { RedisModule } from 'src/infrastructure/redis/redis.module';
 import { PrismaModule } from 'src/infrastructure/prisma/prisma.module';
 import { PaymentModule } from 'src/modules/payment/payment.module';
 import { NowPaymentCommand } from './commands/nowpayment.command';
-import { BankAccountCommand } from './commands/bank-account.command';
 import { CreateAdminCommand } from './commands/create-admin.command';
 
 @Module({
@@ -13,7 +12,6 @@ import { CreateAdminCommand } from './commands/create-admin.command';
   providers: [
     BaseCommand,
     NowPaymentCommand,
-    BankAccountCommand,
     CreateAdminCommand,
   ],
   exports: [BaseCommand],

@@ -164,11 +164,6 @@ export type EmailLog = $Result.DefaultSelection<Prisma.$EmailLogPayload>
  */
 export type GameSession = $Result.DefaultSelection<Prisma.$GameSessionPayload>
 /**
- * Model BankAccount
- * 
- */
-export type BankAccount = $Result.DefaultSelection<Prisma.$BankAccountPayload>
-/**
  * Model AffiliateCode
  * 
  */
@@ -212,6 +207,27 @@ export type LoginAttempt = $Result.DefaultSelection<Prisma.$LoginAttemptPayload>
  *  * - 수수료 및 실제 입금 금액 추적
  */
 export type DepositDetail = $Result.DefaultSelection<Prisma.$DepositDetailPayload>
+/**
+ * Model CryptoConfig
+ * *
+ *  * 암호화폐 입금 설정 모델
+ *  * 암호화폐별 입금 설정을 관리합니다.
+ *  * - symbol과 network 조합으로 고유하게 관리
+ *  * - 최소 입금 금액, 수수료율, 승인 필요 블록 수 등 설정
+ *  * - 토큰의 경우 contractAddress 저장
+ */
+export type CryptoConfig = $Result.DefaultSelection<Prisma.$CryptoConfigPayload>
+/**
+ * Model BankConfig
+ * *
+ *  * 은행 계좌 입금 설정 모델
+ *  * 은행 계좌별 입금 설정 및 계좌 정보를 관리합니다.
+ *  * - 은행 계좌 정보 (은행명, 계좌번호, 예금주 등)
+ *  * - 입금 설정 (최소/최대 금액, 우선순위 등)
+ *  * - 통계 정보 (총 입금 횟수, 총 입금 금액)
+ *  * - 소프트 삭제 지원
+ */
+export type BankConfig = $Result.DefaultSelection<Prisma.$BankConfigPayload>
 /**
  * Model Promotion
  * 
@@ -1150,16 +1166,6 @@ export class PrismaClient<
   get gameSession(): Prisma.GameSessionDelegate<ExtArgs, ClientOptions>;
 
   /**
-   * `prisma.bankAccount`: Exposes CRUD operations for the **BankAccount** model.
-    * Example usage:
-    * ```ts
-    * // Fetch zero or more BankAccounts
-    * const bankAccounts = await prisma.bankAccount.findMany()
-    * ```
-    */
-  get bankAccount(): Prisma.BankAccountDelegate<ExtArgs, ClientOptions>;
-
-  /**
    * `prisma.affiliateCode`: Exposes CRUD operations for the **AffiliateCode** model.
     * Example usage:
     * ```ts
@@ -1228,6 +1234,26 @@ export class PrismaClient<
     * ```
     */
   get depositDetail(): Prisma.DepositDetailDelegate<ExtArgs, ClientOptions>;
+
+  /**
+   * `prisma.cryptoConfig`: Exposes CRUD operations for the **CryptoConfig** model.
+    * Example usage:
+    * ```ts
+    * // Fetch zero or more CryptoConfigs
+    * const cryptoConfigs = await prisma.cryptoConfig.findMany()
+    * ```
+    */
+  get cryptoConfig(): Prisma.CryptoConfigDelegate<ExtArgs, ClientOptions>;
+
+  /**
+   * `prisma.bankConfig`: Exposes CRUD operations for the **BankConfig** model.
+    * Example usage:
+    * ```ts
+    * // Fetch zero or more BankConfigs
+    * const bankConfigs = await prisma.bankConfig.findMany()
+    * ```
+    */
+  get bankConfig(): Prisma.BankConfigDelegate<ExtArgs, ClientOptions>;
 
   /**
    * `prisma.promotion`: Exposes CRUD operations for the **Promotion** model.
@@ -1742,7 +1768,6 @@ export namespace Prisma {
     UserToken: 'UserToken',
     EmailLog: 'EmailLog',
     GameSession: 'GameSession',
-    BankAccount: 'BankAccount',
     AffiliateCode: 'AffiliateCode',
     Referral: 'Referral',
     AffiliateWallet: 'AffiliateWallet',
@@ -1750,6 +1775,8 @@ export namespace Prisma {
     AffiliateTier: 'AffiliateTier',
     LoginAttempt: 'LoginAttempt',
     DepositDetail: 'DepositDetail',
+    CryptoConfig: 'CryptoConfig',
+    BankConfig: 'BankConfig',
     Promotion: 'Promotion',
     PromotionTranslation: 'PromotionTranslation',
     PromotionCurrency: 'PromotionCurrency',
@@ -1770,7 +1797,7 @@ export namespace Prisma {
       omit: GlobalOmitOptions
     }
     meta: {
-      modelProps: "authAuditLog" | "activityLog" | "systemErrorLog" | "integrationLog" | "unifiedLog" | "user" | "userBalance" | "userBalanceStats" | "game" | "gameTranslation" | "whitecliffApiLog" | "dcsApiLog" | "transaction" | "gameRound" | "gameBet" | "gameWin" | "transactionBalanceDetail" | "bonusDetail" | "withdrawDetail" | "compTransaction" | "dailyCompEarning" | "nowPaymentCallbackLog" | "exchangeRate" | "vipLevel" | "vipMembership" | "vipHistory" | "rolling" | "userToken" | "emailLog" | "gameSession" | "bankAccount" | "affiliateCode" | "referral" | "affiliateWallet" | "affiliateCommission" | "affiliateTier" | "loginAttempt" | "depositDetail" | "promotion" | "promotionTranslation" | "promotionCurrency" | "userPromotion" | "userSession"
+      modelProps: "authAuditLog" | "activityLog" | "systemErrorLog" | "integrationLog" | "unifiedLog" | "user" | "userBalance" | "userBalanceStats" | "game" | "gameTranslation" | "whitecliffApiLog" | "dcsApiLog" | "transaction" | "gameRound" | "gameBet" | "gameWin" | "transactionBalanceDetail" | "bonusDetail" | "withdrawDetail" | "compTransaction" | "dailyCompEarning" | "nowPaymentCallbackLog" | "exchangeRate" | "vipLevel" | "vipMembership" | "vipHistory" | "rolling" | "userToken" | "emailLog" | "gameSession" | "affiliateCode" | "referral" | "affiliateWallet" | "affiliateCommission" | "affiliateTier" | "loginAttempt" | "depositDetail" | "cryptoConfig" | "bankConfig" | "promotion" | "promotionTranslation" | "promotionCurrency" | "userPromotion" | "userSession"
       txIsolationLevel: Prisma.TransactionIsolationLevel
     }
     model: {
@@ -3994,80 +4021,6 @@ export namespace Prisma {
           }
         }
       }
-      BankAccount: {
-        payload: Prisma.$BankAccountPayload<ExtArgs>
-        fields: Prisma.BankAccountFieldRefs
-        operations: {
-          findUnique: {
-            args: Prisma.BankAccountFindUniqueArgs<ExtArgs>
-            result: $Utils.PayloadToResult<Prisma.$BankAccountPayload> | null
-          }
-          findUniqueOrThrow: {
-            args: Prisma.BankAccountFindUniqueOrThrowArgs<ExtArgs>
-            result: $Utils.PayloadToResult<Prisma.$BankAccountPayload>
-          }
-          findFirst: {
-            args: Prisma.BankAccountFindFirstArgs<ExtArgs>
-            result: $Utils.PayloadToResult<Prisma.$BankAccountPayload> | null
-          }
-          findFirstOrThrow: {
-            args: Prisma.BankAccountFindFirstOrThrowArgs<ExtArgs>
-            result: $Utils.PayloadToResult<Prisma.$BankAccountPayload>
-          }
-          findMany: {
-            args: Prisma.BankAccountFindManyArgs<ExtArgs>
-            result: $Utils.PayloadToResult<Prisma.$BankAccountPayload>[]
-          }
-          create: {
-            args: Prisma.BankAccountCreateArgs<ExtArgs>
-            result: $Utils.PayloadToResult<Prisma.$BankAccountPayload>
-          }
-          createMany: {
-            args: Prisma.BankAccountCreateManyArgs<ExtArgs>
-            result: BatchPayload
-          }
-          createManyAndReturn: {
-            args: Prisma.BankAccountCreateManyAndReturnArgs<ExtArgs>
-            result: $Utils.PayloadToResult<Prisma.$BankAccountPayload>[]
-          }
-          delete: {
-            args: Prisma.BankAccountDeleteArgs<ExtArgs>
-            result: $Utils.PayloadToResult<Prisma.$BankAccountPayload>
-          }
-          update: {
-            args: Prisma.BankAccountUpdateArgs<ExtArgs>
-            result: $Utils.PayloadToResult<Prisma.$BankAccountPayload>
-          }
-          deleteMany: {
-            args: Prisma.BankAccountDeleteManyArgs<ExtArgs>
-            result: BatchPayload
-          }
-          updateMany: {
-            args: Prisma.BankAccountUpdateManyArgs<ExtArgs>
-            result: BatchPayload
-          }
-          updateManyAndReturn: {
-            args: Prisma.BankAccountUpdateManyAndReturnArgs<ExtArgs>
-            result: $Utils.PayloadToResult<Prisma.$BankAccountPayload>[]
-          }
-          upsert: {
-            args: Prisma.BankAccountUpsertArgs<ExtArgs>
-            result: $Utils.PayloadToResult<Prisma.$BankAccountPayload>
-          }
-          aggregate: {
-            args: Prisma.BankAccountAggregateArgs<ExtArgs>
-            result: $Utils.Optional<AggregateBankAccount>
-          }
-          groupBy: {
-            args: Prisma.BankAccountGroupByArgs<ExtArgs>
-            result: $Utils.Optional<BankAccountGroupByOutputType>[]
-          }
-          count: {
-            args: Prisma.BankAccountCountArgs<ExtArgs>
-            result: $Utils.Optional<BankAccountCountAggregateOutputType> | number
-          }
-        }
-      }
       AffiliateCode: {
         payload: Prisma.$AffiliateCodePayload<ExtArgs>
         fields: Prisma.AffiliateCodeFieldRefs
@@ -4586,6 +4539,154 @@ export namespace Prisma {
           }
         }
       }
+      CryptoConfig: {
+        payload: Prisma.$CryptoConfigPayload<ExtArgs>
+        fields: Prisma.CryptoConfigFieldRefs
+        operations: {
+          findUnique: {
+            args: Prisma.CryptoConfigFindUniqueArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$CryptoConfigPayload> | null
+          }
+          findUniqueOrThrow: {
+            args: Prisma.CryptoConfigFindUniqueOrThrowArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$CryptoConfigPayload>
+          }
+          findFirst: {
+            args: Prisma.CryptoConfigFindFirstArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$CryptoConfigPayload> | null
+          }
+          findFirstOrThrow: {
+            args: Prisma.CryptoConfigFindFirstOrThrowArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$CryptoConfigPayload>
+          }
+          findMany: {
+            args: Prisma.CryptoConfigFindManyArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$CryptoConfigPayload>[]
+          }
+          create: {
+            args: Prisma.CryptoConfigCreateArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$CryptoConfigPayload>
+          }
+          createMany: {
+            args: Prisma.CryptoConfigCreateManyArgs<ExtArgs>
+            result: BatchPayload
+          }
+          createManyAndReturn: {
+            args: Prisma.CryptoConfigCreateManyAndReturnArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$CryptoConfigPayload>[]
+          }
+          delete: {
+            args: Prisma.CryptoConfigDeleteArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$CryptoConfigPayload>
+          }
+          update: {
+            args: Prisma.CryptoConfigUpdateArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$CryptoConfigPayload>
+          }
+          deleteMany: {
+            args: Prisma.CryptoConfigDeleteManyArgs<ExtArgs>
+            result: BatchPayload
+          }
+          updateMany: {
+            args: Prisma.CryptoConfigUpdateManyArgs<ExtArgs>
+            result: BatchPayload
+          }
+          updateManyAndReturn: {
+            args: Prisma.CryptoConfigUpdateManyAndReturnArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$CryptoConfigPayload>[]
+          }
+          upsert: {
+            args: Prisma.CryptoConfigUpsertArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$CryptoConfigPayload>
+          }
+          aggregate: {
+            args: Prisma.CryptoConfigAggregateArgs<ExtArgs>
+            result: $Utils.Optional<AggregateCryptoConfig>
+          }
+          groupBy: {
+            args: Prisma.CryptoConfigGroupByArgs<ExtArgs>
+            result: $Utils.Optional<CryptoConfigGroupByOutputType>[]
+          }
+          count: {
+            args: Prisma.CryptoConfigCountArgs<ExtArgs>
+            result: $Utils.Optional<CryptoConfigCountAggregateOutputType> | number
+          }
+        }
+      }
+      BankConfig: {
+        payload: Prisma.$BankConfigPayload<ExtArgs>
+        fields: Prisma.BankConfigFieldRefs
+        operations: {
+          findUnique: {
+            args: Prisma.BankConfigFindUniqueArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$BankConfigPayload> | null
+          }
+          findUniqueOrThrow: {
+            args: Prisma.BankConfigFindUniqueOrThrowArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$BankConfigPayload>
+          }
+          findFirst: {
+            args: Prisma.BankConfigFindFirstArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$BankConfigPayload> | null
+          }
+          findFirstOrThrow: {
+            args: Prisma.BankConfigFindFirstOrThrowArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$BankConfigPayload>
+          }
+          findMany: {
+            args: Prisma.BankConfigFindManyArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$BankConfigPayload>[]
+          }
+          create: {
+            args: Prisma.BankConfigCreateArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$BankConfigPayload>
+          }
+          createMany: {
+            args: Prisma.BankConfigCreateManyArgs<ExtArgs>
+            result: BatchPayload
+          }
+          createManyAndReturn: {
+            args: Prisma.BankConfigCreateManyAndReturnArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$BankConfigPayload>[]
+          }
+          delete: {
+            args: Prisma.BankConfigDeleteArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$BankConfigPayload>
+          }
+          update: {
+            args: Prisma.BankConfigUpdateArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$BankConfigPayload>
+          }
+          deleteMany: {
+            args: Prisma.BankConfigDeleteManyArgs<ExtArgs>
+            result: BatchPayload
+          }
+          updateMany: {
+            args: Prisma.BankConfigUpdateManyArgs<ExtArgs>
+            result: BatchPayload
+          }
+          updateManyAndReturn: {
+            args: Prisma.BankConfigUpdateManyAndReturnArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$BankConfigPayload>[]
+          }
+          upsert: {
+            args: Prisma.BankConfigUpsertArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$BankConfigPayload>
+          }
+          aggregate: {
+            args: Prisma.BankConfigAggregateArgs<ExtArgs>
+            result: $Utils.Optional<AggregateBankConfig>
+          }
+          groupBy: {
+            args: Prisma.BankConfigGroupByArgs<ExtArgs>
+            result: $Utils.Optional<BankConfigGroupByOutputType>[]
+          }
+          count: {
+            args: Prisma.BankConfigCountArgs<ExtArgs>
+            result: $Utils.Optional<BankConfigCountAggregateOutputType> | number
+          }
+        }
+      }
       Promotion: {
         payload: Prisma.$PromotionPayload<ExtArgs>
         fields: Prisma.PromotionFieldRefs
@@ -5094,7 +5195,6 @@ export namespace Prisma {
     userToken?: UserTokenOmit
     emailLog?: EmailLogOmit
     gameSession?: GameSessionOmit
-    bankAccount?: BankAccountOmit
     affiliateCode?: AffiliateCodeOmit
     referral?: ReferralOmit
     affiliateWallet?: AffiliateWalletOmit
@@ -5102,6 +5202,8 @@ export namespace Prisma {
     affiliateTier?: AffiliateTierOmit
     loginAttempt?: LoginAttemptOmit
     depositDetail?: DepositDetailOmit
+    cryptoConfig?: CryptoConfigOmit
+    bankConfig?: BankConfigOmit
     promotion?: PromotionOmit
     promotionTranslation?: PromotionTranslationOmit
     promotionCurrency?: PromotionCurrencyOmit
@@ -5647,37 +5749,6 @@ export namespace Prisma {
 
 
   /**
-   * Count Type BankAccountCountOutputType
-   */
-
-  export type BankAccountCountOutputType = {
-    depositDetails: number
-  }
-
-  export type BankAccountCountOutputTypeSelect<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
-    depositDetails?: boolean | BankAccountCountOutputTypeCountDepositDetailsArgs
-  }
-
-  // Custom InputTypes
-  /**
-   * BankAccountCountOutputType without action
-   */
-  export type BankAccountCountOutputTypeDefaultArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
-    /**
-     * Select specific fields to fetch from the BankAccountCountOutputType
-     */
-    select?: BankAccountCountOutputTypeSelect<ExtArgs> | null
-  }
-
-  /**
-   * BankAccountCountOutputType without action
-   */
-  export type BankAccountCountOutputTypeCountDepositDetailsArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
-    where?: DepositDetailWhereInput
-  }
-
-
-  /**
    * Count Type AffiliateCodeCountOutputType
    */
 
@@ -5736,6 +5807,68 @@ export namespace Prisma {
    */
   export type DepositDetailCountOutputTypeCountRollingArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
     where?: RollingWhereInput
+  }
+
+
+  /**
+   * Count Type CryptoConfigCountOutputType
+   */
+
+  export type CryptoConfigCountOutputType = {
+    depositDetails: number
+  }
+
+  export type CryptoConfigCountOutputTypeSelect<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    depositDetails?: boolean | CryptoConfigCountOutputTypeCountDepositDetailsArgs
+  }
+
+  // Custom InputTypes
+  /**
+   * CryptoConfigCountOutputType without action
+   */
+  export type CryptoConfigCountOutputTypeDefaultArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the CryptoConfigCountOutputType
+     */
+    select?: CryptoConfigCountOutputTypeSelect<ExtArgs> | null
+  }
+
+  /**
+   * CryptoConfigCountOutputType without action
+   */
+  export type CryptoConfigCountOutputTypeCountDepositDetailsArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    where?: DepositDetailWhereInput
+  }
+
+
+  /**
+   * Count Type BankConfigCountOutputType
+   */
+
+  export type BankConfigCountOutputType = {
+    depositDetails: number
+  }
+
+  export type BankConfigCountOutputTypeSelect<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    depositDetails?: boolean | BankConfigCountOutputTypeCountDepositDetailsArgs
+  }
+
+  // Custom InputTypes
+  /**
+   * BankConfigCountOutputType without action
+   */
+  export type BankConfigCountOutputTypeDefaultArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the BankConfigCountOutputType
+     */
+    select?: BankConfigCountOutputTypeSelect<ExtArgs> | null
+  }
+
+  /**
+   * BankConfigCountOutputType without action
+   */
+  export type BankConfigCountOutputTypeCountDepositDetailsArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    where?: DepositDetailWhereInput
   }
 
 
@@ -42578,1239 +42711,6 @@ export namespace Prisma {
 
 
   /**
-   * Model BankAccount
-   */
-
-  export type AggregateBankAccount = {
-    _count: BankAccountCountAggregateOutputType | null
-    _avg: BankAccountAvgAggregateOutputType | null
-    _sum: BankAccountSumAggregateOutputType | null
-    _min: BankAccountMinAggregateOutputType | null
-    _max: BankAccountMaxAggregateOutputType | null
-  }
-
-  export type BankAccountAvgAggregateOutputType = {
-    id: number | null
-    priority: number | null
-    totalDeposits: number | null
-    totalDepositAmount: Decimal | null
-  }
-
-  export type BankAccountSumAggregateOutputType = {
-    id: number | null
-    priority: number | null
-    totalDeposits: number | null
-    totalDepositAmount: Decimal | null
-  }
-
-  export type BankAccountMinAggregateOutputType = {
-    id: number | null
-    currency: $Enums.ExchangeCurrencyCode | null
-    bankName: string | null
-    accountNumber: string | null
-    accountHolder: string | null
-    isActive: boolean | null
-    priority: number | null
-    description: string | null
-    notes: string | null
-    totalDeposits: number | null
-    totalDepositAmount: Decimal | null
-    createdAt: Date | null
-    updatedAt: Date | null
-    deletedAt: Date | null
-  }
-
-  export type BankAccountMaxAggregateOutputType = {
-    id: number | null
-    currency: $Enums.ExchangeCurrencyCode | null
-    bankName: string | null
-    accountNumber: string | null
-    accountHolder: string | null
-    isActive: boolean | null
-    priority: number | null
-    description: string | null
-    notes: string | null
-    totalDeposits: number | null
-    totalDepositAmount: Decimal | null
-    createdAt: Date | null
-    updatedAt: Date | null
-    deletedAt: Date | null
-  }
-
-  export type BankAccountCountAggregateOutputType = {
-    id: number
-    currency: number
-    bankName: number
-    accountNumber: number
-    accountHolder: number
-    isActive: number
-    priority: number
-    description: number
-    notes: number
-    totalDeposits: number
-    totalDepositAmount: number
-    createdAt: number
-    updatedAt: number
-    deletedAt: number
-    _all: number
-  }
-
-
-  export type BankAccountAvgAggregateInputType = {
-    id?: true
-    priority?: true
-    totalDeposits?: true
-    totalDepositAmount?: true
-  }
-
-  export type BankAccountSumAggregateInputType = {
-    id?: true
-    priority?: true
-    totalDeposits?: true
-    totalDepositAmount?: true
-  }
-
-  export type BankAccountMinAggregateInputType = {
-    id?: true
-    currency?: true
-    bankName?: true
-    accountNumber?: true
-    accountHolder?: true
-    isActive?: true
-    priority?: true
-    description?: true
-    notes?: true
-    totalDeposits?: true
-    totalDepositAmount?: true
-    createdAt?: true
-    updatedAt?: true
-    deletedAt?: true
-  }
-
-  export type BankAccountMaxAggregateInputType = {
-    id?: true
-    currency?: true
-    bankName?: true
-    accountNumber?: true
-    accountHolder?: true
-    isActive?: true
-    priority?: true
-    description?: true
-    notes?: true
-    totalDeposits?: true
-    totalDepositAmount?: true
-    createdAt?: true
-    updatedAt?: true
-    deletedAt?: true
-  }
-
-  export type BankAccountCountAggregateInputType = {
-    id?: true
-    currency?: true
-    bankName?: true
-    accountNumber?: true
-    accountHolder?: true
-    isActive?: true
-    priority?: true
-    description?: true
-    notes?: true
-    totalDeposits?: true
-    totalDepositAmount?: true
-    createdAt?: true
-    updatedAt?: true
-    deletedAt?: true
-    _all?: true
-  }
-
-  export type BankAccountAggregateArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
-    /**
-     * Filter which BankAccount to aggregate.
-     */
-    where?: BankAccountWhereInput
-    /**
-     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/sorting Sorting Docs}
-     * 
-     * Determine the order of BankAccounts to fetch.
-     */
-    orderBy?: BankAccountOrderByWithRelationInput | BankAccountOrderByWithRelationInput[]
-    /**
-     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination#cursor-based-pagination Cursor Docs}
-     * 
-     * Sets the start position
-     */
-    cursor?: BankAccountWhereUniqueInput
-    /**
-     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
-     * 
-     * Take `±n` BankAccounts from the position of the cursor.
-     */
-    take?: number
-    /**
-     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
-     * 
-     * Skip the first `n` BankAccounts.
-     */
-    skip?: number
-    /**
-     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
-     * 
-     * Count returned BankAccounts
-    **/
-    _count?: true | BankAccountCountAggregateInputType
-    /**
-     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
-     * 
-     * Select which fields to average
-    **/
-    _avg?: BankAccountAvgAggregateInputType
-    /**
-     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
-     * 
-     * Select which fields to sum
-    **/
-    _sum?: BankAccountSumAggregateInputType
-    /**
-     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
-     * 
-     * Select which fields to find the minimum value
-    **/
-    _min?: BankAccountMinAggregateInputType
-    /**
-     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
-     * 
-     * Select which fields to find the maximum value
-    **/
-    _max?: BankAccountMaxAggregateInputType
-  }
-
-  export type GetBankAccountAggregateType<T extends BankAccountAggregateArgs> = {
-        [P in keyof T & keyof AggregateBankAccount]: P extends '_count' | 'count'
-      ? T[P] extends true
-        ? number
-        : GetScalarType<T[P], AggregateBankAccount[P]>
-      : GetScalarType<T[P], AggregateBankAccount[P]>
-  }
-
-
-
-
-  export type BankAccountGroupByArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
-    where?: BankAccountWhereInput
-    orderBy?: BankAccountOrderByWithAggregationInput | BankAccountOrderByWithAggregationInput[]
-    by: BankAccountScalarFieldEnum[] | BankAccountScalarFieldEnum
-    having?: BankAccountScalarWhereWithAggregatesInput
-    take?: number
-    skip?: number
-    _count?: BankAccountCountAggregateInputType | true
-    _avg?: BankAccountAvgAggregateInputType
-    _sum?: BankAccountSumAggregateInputType
-    _min?: BankAccountMinAggregateInputType
-    _max?: BankAccountMaxAggregateInputType
-  }
-
-  export type BankAccountGroupByOutputType = {
-    id: number
-    currency: $Enums.ExchangeCurrencyCode
-    bankName: string
-    accountNumber: string
-    accountHolder: string
-    isActive: boolean
-    priority: number
-    description: string | null
-    notes: string | null
-    totalDeposits: number
-    totalDepositAmount: Decimal
-    createdAt: Date
-    updatedAt: Date
-    deletedAt: Date | null
-    _count: BankAccountCountAggregateOutputType | null
-    _avg: BankAccountAvgAggregateOutputType | null
-    _sum: BankAccountSumAggregateOutputType | null
-    _min: BankAccountMinAggregateOutputType | null
-    _max: BankAccountMaxAggregateOutputType | null
-  }
-
-  type GetBankAccountGroupByPayload<T extends BankAccountGroupByArgs> = Prisma.PrismaPromise<
-    Array<
-      PickEnumerable<BankAccountGroupByOutputType, T['by']> &
-        {
-          [P in ((keyof T) & (keyof BankAccountGroupByOutputType))]: P extends '_count'
-            ? T[P] extends boolean
-              ? number
-              : GetScalarType<T[P], BankAccountGroupByOutputType[P]>
-            : GetScalarType<T[P], BankAccountGroupByOutputType[P]>
-        }
-      >
-    >
-
-
-  export type BankAccountSelect<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetSelect<{
-    id?: boolean
-    currency?: boolean
-    bankName?: boolean
-    accountNumber?: boolean
-    accountHolder?: boolean
-    isActive?: boolean
-    priority?: boolean
-    description?: boolean
-    notes?: boolean
-    totalDeposits?: boolean
-    totalDepositAmount?: boolean
-    createdAt?: boolean
-    updatedAt?: boolean
-    deletedAt?: boolean
-    depositDetails?: boolean | BankAccount$depositDetailsArgs<ExtArgs>
-    _count?: boolean | BankAccountCountOutputTypeDefaultArgs<ExtArgs>
-  }, ExtArgs["result"]["bankAccount"]>
-
-  export type BankAccountSelectCreateManyAndReturn<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetSelect<{
-    id?: boolean
-    currency?: boolean
-    bankName?: boolean
-    accountNumber?: boolean
-    accountHolder?: boolean
-    isActive?: boolean
-    priority?: boolean
-    description?: boolean
-    notes?: boolean
-    totalDeposits?: boolean
-    totalDepositAmount?: boolean
-    createdAt?: boolean
-    updatedAt?: boolean
-    deletedAt?: boolean
-  }, ExtArgs["result"]["bankAccount"]>
-
-  export type BankAccountSelectUpdateManyAndReturn<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetSelect<{
-    id?: boolean
-    currency?: boolean
-    bankName?: boolean
-    accountNumber?: boolean
-    accountHolder?: boolean
-    isActive?: boolean
-    priority?: boolean
-    description?: boolean
-    notes?: boolean
-    totalDeposits?: boolean
-    totalDepositAmount?: boolean
-    createdAt?: boolean
-    updatedAt?: boolean
-    deletedAt?: boolean
-  }, ExtArgs["result"]["bankAccount"]>
-
-  export type BankAccountSelectScalar = {
-    id?: boolean
-    currency?: boolean
-    bankName?: boolean
-    accountNumber?: boolean
-    accountHolder?: boolean
-    isActive?: boolean
-    priority?: boolean
-    description?: boolean
-    notes?: boolean
-    totalDeposits?: boolean
-    totalDepositAmount?: boolean
-    createdAt?: boolean
-    updatedAt?: boolean
-    deletedAt?: boolean
-  }
-
-  export type BankAccountOmit<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetOmit<"id" | "currency" | "bankName" | "accountNumber" | "accountHolder" | "isActive" | "priority" | "description" | "notes" | "totalDeposits" | "totalDepositAmount" | "createdAt" | "updatedAt" | "deletedAt", ExtArgs["result"]["bankAccount"]>
-  export type BankAccountInclude<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
-    depositDetails?: boolean | BankAccount$depositDetailsArgs<ExtArgs>
-    _count?: boolean | BankAccountCountOutputTypeDefaultArgs<ExtArgs>
-  }
-  export type BankAccountIncludeCreateManyAndReturn<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {}
-  export type BankAccountIncludeUpdateManyAndReturn<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {}
-
-  export type $BankAccountPayload<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
-    name: "BankAccount"
-    objects: {
-      depositDetails: Prisma.$DepositDetailPayload<ExtArgs>[]
-    }
-    scalars: $Extensions.GetPayloadResult<{
-      id: number
-      currency: $Enums.ExchangeCurrencyCode
-      bankName: string
-      accountNumber: string
-      accountHolder: string
-      isActive: boolean
-      priority: number
-      description: string | null
-      notes: string | null
-      totalDeposits: number
-      totalDepositAmount: Prisma.Decimal
-      createdAt: Date
-      updatedAt: Date
-      deletedAt: Date | null
-    }, ExtArgs["result"]["bankAccount"]>
-    composites: {}
-  }
-
-  type BankAccountGetPayload<S extends boolean | null | undefined | BankAccountDefaultArgs> = $Result.GetResult<Prisma.$BankAccountPayload, S>
-
-  type BankAccountCountArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> =
-    Omit<BankAccountFindManyArgs, 'select' | 'include' | 'distinct' | 'omit'> & {
-      select?: BankAccountCountAggregateInputType | true
-    }
-
-  export interface BankAccountDelegate<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs, GlobalOmitOptions = {}> {
-    [K: symbol]: { types: Prisma.TypeMap<ExtArgs>['model']['BankAccount'], meta: { name: 'BankAccount' } }
-    /**
-     * Find zero or one BankAccount that matches the filter.
-     * @param {BankAccountFindUniqueArgs} args - Arguments to find a BankAccount
-     * @example
-     * // Get one BankAccount
-     * const bankAccount = await prisma.bankAccount.findUnique({
-     *   where: {
-     *     // ... provide filter here
-     *   }
-     * })
-     */
-    findUnique<T extends BankAccountFindUniqueArgs>(args: SelectSubset<T, BankAccountFindUniqueArgs<ExtArgs>>): Prisma__BankAccountClient<$Result.GetResult<Prisma.$BankAccountPayload<ExtArgs>, T, "findUnique", GlobalOmitOptions> | null, null, ExtArgs, GlobalOmitOptions>
-
-    /**
-     * Find one BankAccount that matches the filter or throw an error with `error.code='P2025'`
-     * if no matches were found.
-     * @param {BankAccountFindUniqueOrThrowArgs} args - Arguments to find a BankAccount
-     * @example
-     * // Get one BankAccount
-     * const bankAccount = await prisma.bankAccount.findUniqueOrThrow({
-     *   where: {
-     *     // ... provide filter here
-     *   }
-     * })
-     */
-    findUniqueOrThrow<T extends BankAccountFindUniqueOrThrowArgs>(args: SelectSubset<T, BankAccountFindUniqueOrThrowArgs<ExtArgs>>): Prisma__BankAccountClient<$Result.GetResult<Prisma.$BankAccountPayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
-
-    /**
-     * Find the first BankAccount that matches the filter.
-     * Note, that providing `undefined` is treated as the value not being there.
-     * Read more here: https://pris.ly/d/null-undefined
-     * @param {BankAccountFindFirstArgs} args - Arguments to find a BankAccount
-     * @example
-     * // Get one BankAccount
-     * const bankAccount = await prisma.bankAccount.findFirst({
-     *   where: {
-     *     // ... provide filter here
-     *   }
-     * })
-     */
-    findFirst<T extends BankAccountFindFirstArgs>(args?: SelectSubset<T, BankAccountFindFirstArgs<ExtArgs>>): Prisma__BankAccountClient<$Result.GetResult<Prisma.$BankAccountPayload<ExtArgs>, T, "findFirst", GlobalOmitOptions> | null, null, ExtArgs, GlobalOmitOptions>
-
-    /**
-     * Find the first BankAccount that matches the filter or
-     * throw `PrismaKnownClientError` with `P2025` code if no matches were found.
-     * Note, that providing `undefined` is treated as the value not being there.
-     * Read more here: https://pris.ly/d/null-undefined
-     * @param {BankAccountFindFirstOrThrowArgs} args - Arguments to find a BankAccount
-     * @example
-     * // Get one BankAccount
-     * const bankAccount = await prisma.bankAccount.findFirstOrThrow({
-     *   where: {
-     *     // ... provide filter here
-     *   }
-     * })
-     */
-    findFirstOrThrow<T extends BankAccountFindFirstOrThrowArgs>(args?: SelectSubset<T, BankAccountFindFirstOrThrowArgs<ExtArgs>>): Prisma__BankAccountClient<$Result.GetResult<Prisma.$BankAccountPayload<ExtArgs>, T, "findFirstOrThrow", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
-
-    /**
-     * Find zero or more BankAccounts that matches the filter.
-     * Note, that providing `undefined` is treated as the value not being there.
-     * Read more here: https://pris.ly/d/null-undefined
-     * @param {BankAccountFindManyArgs} args - Arguments to filter and select certain fields only.
-     * @example
-     * // Get all BankAccounts
-     * const bankAccounts = await prisma.bankAccount.findMany()
-     * 
-     * // Get first 10 BankAccounts
-     * const bankAccounts = await prisma.bankAccount.findMany({ take: 10 })
-     * 
-     * // Only select the `id`
-     * const bankAccountWithIdOnly = await prisma.bankAccount.findMany({ select: { id: true } })
-     * 
-     */
-    findMany<T extends BankAccountFindManyArgs>(args?: SelectSubset<T, BankAccountFindManyArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$BankAccountPayload<ExtArgs>, T, "findMany", GlobalOmitOptions>>
-
-    /**
-     * Create a BankAccount.
-     * @param {BankAccountCreateArgs} args - Arguments to create a BankAccount.
-     * @example
-     * // Create one BankAccount
-     * const BankAccount = await prisma.bankAccount.create({
-     *   data: {
-     *     // ... data to create a BankAccount
-     *   }
-     * })
-     * 
-     */
-    create<T extends BankAccountCreateArgs>(args: SelectSubset<T, BankAccountCreateArgs<ExtArgs>>): Prisma__BankAccountClient<$Result.GetResult<Prisma.$BankAccountPayload<ExtArgs>, T, "create", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
-
-    /**
-     * Create many BankAccounts.
-     * @param {BankAccountCreateManyArgs} args - Arguments to create many BankAccounts.
-     * @example
-     * // Create many BankAccounts
-     * const bankAccount = await prisma.bankAccount.createMany({
-     *   data: [
-     *     // ... provide data here
-     *   ]
-     * })
-     *     
-     */
-    createMany<T extends BankAccountCreateManyArgs>(args?: SelectSubset<T, BankAccountCreateManyArgs<ExtArgs>>): Prisma.PrismaPromise<BatchPayload>
-
-    /**
-     * Create many BankAccounts and returns the data saved in the database.
-     * @param {BankAccountCreateManyAndReturnArgs} args - Arguments to create many BankAccounts.
-     * @example
-     * // Create many BankAccounts
-     * const bankAccount = await prisma.bankAccount.createManyAndReturn({
-     *   data: [
-     *     // ... provide data here
-     *   ]
-     * })
-     * 
-     * // Create many BankAccounts and only return the `id`
-     * const bankAccountWithIdOnly = await prisma.bankAccount.createManyAndReturn({
-     *   select: { id: true },
-     *   data: [
-     *     // ... provide data here
-     *   ]
-     * })
-     * Note, that providing `undefined` is treated as the value not being there.
-     * Read more here: https://pris.ly/d/null-undefined
-     * 
-     */
-    createManyAndReturn<T extends BankAccountCreateManyAndReturnArgs>(args?: SelectSubset<T, BankAccountCreateManyAndReturnArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$BankAccountPayload<ExtArgs>, T, "createManyAndReturn", GlobalOmitOptions>>
-
-    /**
-     * Delete a BankAccount.
-     * @param {BankAccountDeleteArgs} args - Arguments to delete one BankAccount.
-     * @example
-     * // Delete one BankAccount
-     * const BankAccount = await prisma.bankAccount.delete({
-     *   where: {
-     *     // ... filter to delete one BankAccount
-     *   }
-     * })
-     * 
-     */
-    delete<T extends BankAccountDeleteArgs>(args: SelectSubset<T, BankAccountDeleteArgs<ExtArgs>>): Prisma__BankAccountClient<$Result.GetResult<Prisma.$BankAccountPayload<ExtArgs>, T, "delete", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
-
-    /**
-     * Update one BankAccount.
-     * @param {BankAccountUpdateArgs} args - Arguments to update one BankAccount.
-     * @example
-     * // Update one BankAccount
-     * const bankAccount = await prisma.bankAccount.update({
-     *   where: {
-     *     // ... provide filter here
-     *   },
-     *   data: {
-     *     // ... provide data here
-     *   }
-     * })
-     * 
-     */
-    update<T extends BankAccountUpdateArgs>(args: SelectSubset<T, BankAccountUpdateArgs<ExtArgs>>): Prisma__BankAccountClient<$Result.GetResult<Prisma.$BankAccountPayload<ExtArgs>, T, "update", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
-
-    /**
-     * Delete zero or more BankAccounts.
-     * @param {BankAccountDeleteManyArgs} args - Arguments to filter BankAccounts to delete.
-     * @example
-     * // Delete a few BankAccounts
-     * const { count } = await prisma.bankAccount.deleteMany({
-     *   where: {
-     *     // ... provide filter here
-     *   }
-     * })
-     * 
-     */
-    deleteMany<T extends BankAccountDeleteManyArgs>(args?: SelectSubset<T, BankAccountDeleteManyArgs<ExtArgs>>): Prisma.PrismaPromise<BatchPayload>
-
-    /**
-     * Update zero or more BankAccounts.
-     * Note, that providing `undefined` is treated as the value not being there.
-     * Read more here: https://pris.ly/d/null-undefined
-     * @param {BankAccountUpdateManyArgs} args - Arguments to update one or more rows.
-     * @example
-     * // Update many BankAccounts
-     * const bankAccount = await prisma.bankAccount.updateMany({
-     *   where: {
-     *     // ... provide filter here
-     *   },
-     *   data: {
-     *     // ... provide data here
-     *   }
-     * })
-     * 
-     */
-    updateMany<T extends BankAccountUpdateManyArgs>(args: SelectSubset<T, BankAccountUpdateManyArgs<ExtArgs>>): Prisma.PrismaPromise<BatchPayload>
-
-    /**
-     * Update zero or more BankAccounts and returns the data updated in the database.
-     * @param {BankAccountUpdateManyAndReturnArgs} args - Arguments to update many BankAccounts.
-     * @example
-     * // Update many BankAccounts
-     * const bankAccount = await prisma.bankAccount.updateManyAndReturn({
-     *   where: {
-     *     // ... provide filter here
-     *   },
-     *   data: [
-     *     // ... provide data here
-     *   ]
-     * })
-     * 
-     * // Update zero or more BankAccounts and only return the `id`
-     * const bankAccountWithIdOnly = await prisma.bankAccount.updateManyAndReturn({
-     *   select: { id: true },
-     *   where: {
-     *     // ... provide filter here
-     *   },
-     *   data: [
-     *     // ... provide data here
-     *   ]
-     * })
-     * Note, that providing `undefined` is treated as the value not being there.
-     * Read more here: https://pris.ly/d/null-undefined
-     * 
-     */
-    updateManyAndReturn<T extends BankAccountUpdateManyAndReturnArgs>(args: SelectSubset<T, BankAccountUpdateManyAndReturnArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$BankAccountPayload<ExtArgs>, T, "updateManyAndReturn", GlobalOmitOptions>>
-
-    /**
-     * Create or update one BankAccount.
-     * @param {BankAccountUpsertArgs} args - Arguments to update or create a BankAccount.
-     * @example
-     * // Update or create a BankAccount
-     * const bankAccount = await prisma.bankAccount.upsert({
-     *   create: {
-     *     // ... data to create a BankAccount
-     *   },
-     *   update: {
-     *     // ... in case it already exists, update
-     *   },
-     *   where: {
-     *     // ... the filter for the BankAccount we want to update
-     *   }
-     * })
-     */
-    upsert<T extends BankAccountUpsertArgs>(args: SelectSubset<T, BankAccountUpsertArgs<ExtArgs>>): Prisma__BankAccountClient<$Result.GetResult<Prisma.$BankAccountPayload<ExtArgs>, T, "upsert", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
-
-
-    /**
-     * Count the number of BankAccounts.
-     * Note, that providing `undefined` is treated as the value not being there.
-     * Read more here: https://pris.ly/d/null-undefined
-     * @param {BankAccountCountArgs} args - Arguments to filter BankAccounts to count.
-     * @example
-     * // Count the number of BankAccounts
-     * const count = await prisma.bankAccount.count({
-     *   where: {
-     *     // ... the filter for the BankAccounts we want to count
-     *   }
-     * })
-    **/
-    count<T extends BankAccountCountArgs>(
-      args?: Subset<T, BankAccountCountArgs>,
-    ): Prisma.PrismaPromise<
-      T extends $Utils.Record<'select', any>
-        ? T['select'] extends true
-          ? number
-          : GetScalarType<T['select'], BankAccountCountAggregateOutputType>
-        : number
-    >
-
-    /**
-     * Allows you to perform aggregations operations on a BankAccount.
-     * Note, that providing `undefined` is treated as the value not being there.
-     * Read more here: https://pris.ly/d/null-undefined
-     * @param {BankAccountAggregateArgs} args - Select which aggregations you would like to apply and on what fields.
-     * @example
-     * // Ordered by age ascending
-     * // Where email contains prisma.io
-     * // Limited to the 10 users
-     * const aggregations = await prisma.user.aggregate({
-     *   _avg: {
-     *     age: true,
-     *   },
-     *   where: {
-     *     email: {
-     *       contains: "prisma.io",
-     *     },
-     *   },
-     *   orderBy: {
-     *     age: "asc",
-     *   },
-     *   take: 10,
-     * })
-    **/
-    aggregate<T extends BankAccountAggregateArgs>(args: Subset<T, BankAccountAggregateArgs>): Prisma.PrismaPromise<GetBankAccountAggregateType<T>>
-
-    /**
-     * Group by BankAccount.
-     * Note, that providing `undefined` is treated as the value not being there.
-     * Read more here: https://pris.ly/d/null-undefined
-     * @param {BankAccountGroupByArgs} args - Group by arguments.
-     * @example
-     * // Group by city, order by createdAt, get count
-     * const result = await prisma.user.groupBy({
-     *   by: ['city', 'createdAt'],
-     *   orderBy: {
-     *     createdAt: true
-     *   },
-     *   _count: {
-     *     _all: true
-     *   },
-     * })
-     * 
-    **/
-    groupBy<
-      T extends BankAccountGroupByArgs,
-      HasSelectOrTake extends Or<
-        Extends<'skip', Keys<T>>,
-        Extends<'take', Keys<T>>
-      >,
-      OrderByArg extends True extends HasSelectOrTake
-        ? { orderBy: BankAccountGroupByArgs['orderBy'] }
-        : { orderBy?: BankAccountGroupByArgs['orderBy'] },
-      OrderFields extends ExcludeUnderscoreKeys<Keys<MaybeTupleToUnion<T['orderBy']>>>,
-      ByFields extends MaybeTupleToUnion<T['by']>,
-      ByValid extends Has<ByFields, OrderFields>,
-      HavingFields extends GetHavingFields<T['having']>,
-      HavingValid extends Has<ByFields, HavingFields>,
-      ByEmpty extends T['by'] extends never[] ? True : False,
-      InputErrors extends ByEmpty extends True
-      ? `Error: "by" must not be empty.`
-      : HavingValid extends False
-      ? {
-          [P in HavingFields]: P extends ByFields
-            ? never
-            : P extends string
-            ? `Error: Field "${P}" used in "having" needs to be provided in "by".`
-            : [
-                Error,
-                'Field ',
-                P,
-                ` in "having" needs to be provided in "by"`,
-              ]
-        }[HavingFields]
-      : 'take' extends Keys<T>
-      ? 'orderBy' extends Keys<T>
-        ? ByValid extends True
-          ? {}
-          : {
-              [P in OrderFields]: P extends ByFields
-                ? never
-                : `Error: Field "${P}" in "orderBy" needs to be provided in "by"`
-            }[OrderFields]
-        : 'Error: If you provide "take", you also need to provide "orderBy"'
-      : 'skip' extends Keys<T>
-      ? 'orderBy' extends Keys<T>
-        ? ByValid extends True
-          ? {}
-          : {
-              [P in OrderFields]: P extends ByFields
-                ? never
-                : `Error: Field "${P}" in "orderBy" needs to be provided in "by"`
-            }[OrderFields]
-        : 'Error: If you provide "skip", you also need to provide "orderBy"'
-      : ByValid extends True
-      ? {}
-      : {
-          [P in OrderFields]: P extends ByFields
-            ? never
-            : `Error: Field "${P}" in "orderBy" needs to be provided in "by"`
-        }[OrderFields]
-    >(args: SubsetIntersection<T, BankAccountGroupByArgs, OrderByArg> & InputErrors): {} extends InputErrors ? GetBankAccountGroupByPayload<T> : Prisma.PrismaPromise<InputErrors>
-  /**
-   * Fields of the BankAccount model
-   */
-  readonly fields: BankAccountFieldRefs;
-  }
-
-  /**
-   * The delegate class that acts as a "Promise-like" for BankAccount.
-   * Why is this prefixed with `Prisma__`?
-   * Because we want to prevent naming conflicts as mentioned in
-   * https://github.com/prisma/prisma-client-js/issues/707
-   */
-  export interface Prisma__BankAccountClient<T, Null = never, ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs, GlobalOmitOptions = {}> extends Prisma.PrismaPromise<T> {
-    readonly [Symbol.toStringTag]: "PrismaPromise"
-    depositDetails<T extends BankAccount$depositDetailsArgs<ExtArgs> = {}>(args?: Subset<T, BankAccount$depositDetailsArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$DepositDetailPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
-    /**
-     * Attaches callbacks for the resolution and/or rejection of the Promise.
-     * @param onfulfilled The callback to execute when the Promise is resolved.
-     * @param onrejected The callback to execute when the Promise is rejected.
-     * @returns A Promise for the completion of which ever callback is executed.
-     */
-    then<TResult1 = T, TResult2 = never>(onfulfilled?: ((value: T) => TResult1 | PromiseLike<TResult1>) | undefined | null, onrejected?: ((reason: any) => TResult2 | PromiseLike<TResult2>) | undefined | null): $Utils.JsPromise<TResult1 | TResult2>
-    /**
-     * Attaches a callback for only the rejection of the Promise.
-     * @param onrejected The callback to execute when the Promise is rejected.
-     * @returns A Promise for the completion of the callback.
-     */
-    catch<TResult = never>(onrejected?: ((reason: any) => TResult | PromiseLike<TResult>) | undefined | null): $Utils.JsPromise<T | TResult>
-    /**
-     * Attaches a callback that is invoked when the Promise is settled (fulfilled or rejected). The
-     * resolved value cannot be modified from the callback.
-     * @param onfinally The callback to execute when the Promise is settled (fulfilled or rejected).
-     * @returns A Promise for the completion of the callback.
-     */
-    finally(onfinally?: (() => void) | undefined | null): $Utils.JsPromise<T>
-  }
-
-
-
-
-  /**
-   * Fields of the BankAccount model
-   */
-  interface BankAccountFieldRefs {
-    readonly id: FieldRef<"BankAccount", 'Int'>
-    readonly currency: FieldRef<"BankAccount", 'ExchangeCurrencyCode'>
-    readonly bankName: FieldRef<"BankAccount", 'String'>
-    readonly accountNumber: FieldRef<"BankAccount", 'String'>
-    readonly accountHolder: FieldRef<"BankAccount", 'String'>
-    readonly isActive: FieldRef<"BankAccount", 'Boolean'>
-    readonly priority: FieldRef<"BankAccount", 'Int'>
-    readonly description: FieldRef<"BankAccount", 'String'>
-    readonly notes: FieldRef<"BankAccount", 'String'>
-    readonly totalDeposits: FieldRef<"BankAccount", 'Int'>
-    readonly totalDepositAmount: FieldRef<"BankAccount", 'Decimal'>
-    readonly createdAt: FieldRef<"BankAccount", 'DateTime'>
-    readonly updatedAt: FieldRef<"BankAccount", 'DateTime'>
-    readonly deletedAt: FieldRef<"BankAccount", 'DateTime'>
-  }
-    
-
-  // Custom InputTypes
-  /**
-   * BankAccount findUnique
-   */
-  export type BankAccountFindUniqueArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
-    /**
-     * Select specific fields to fetch from the BankAccount
-     */
-    select?: BankAccountSelect<ExtArgs> | null
-    /**
-     * Omit specific fields from the BankAccount
-     */
-    omit?: BankAccountOmit<ExtArgs> | null
-    /**
-     * Choose, which related nodes to fetch as well
-     */
-    include?: BankAccountInclude<ExtArgs> | null
-    /**
-     * Filter, which BankAccount to fetch.
-     */
-    where: BankAccountWhereUniqueInput
-  }
-
-  /**
-   * BankAccount findUniqueOrThrow
-   */
-  export type BankAccountFindUniqueOrThrowArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
-    /**
-     * Select specific fields to fetch from the BankAccount
-     */
-    select?: BankAccountSelect<ExtArgs> | null
-    /**
-     * Omit specific fields from the BankAccount
-     */
-    omit?: BankAccountOmit<ExtArgs> | null
-    /**
-     * Choose, which related nodes to fetch as well
-     */
-    include?: BankAccountInclude<ExtArgs> | null
-    /**
-     * Filter, which BankAccount to fetch.
-     */
-    where: BankAccountWhereUniqueInput
-  }
-
-  /**
-   * BankAccount findFirst
-   */
-  export type BankAccountFindFirstArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
-    /**
-     * Select specific fields to fetch from the BankAccount
-     */
-    select?: BankAccountSelect<ExtArgs> | null
-    /**
-     * Omit specific fields from the BankAccount
-     */
-    omit?: BankAccountOmit<ExtArgs> | null
-    /**
-     * Choose, which related nodes to fetch as well
-     */
-    include?: BankAccountInclude<ExtArgs> | null
-    /**
-     * Filter, which BankAccount to fetch.
-     */
-    where?: BankAccountWhereInput
-    /**
-     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/sorting Sorting Docs}
-     * 
-     * Determine the order of BankAccounts to fetch.
-     */
-    orderBy?: BankAccountOrderByWithRelationInput | BankAccountOrderByWithRelationInput[]
-    /**
-     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination#cursor-based-pagination Cursor Docs}
-     * 
-     * Sets the position for searching for BankAccounts.
-     */
-    cursor?: BankAccountWhereUniqueInput
-    /**
-     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
-     * 
-     * Take `±n` BankAccounts from the position of the cursor.
-     */
-    take?: number
-    /**
-     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
-     * 
-     * Skip the first `n` BankAccounts.
-     */
-    skip?: number
-    /**
-     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/distinct Distinct Docs}
-     * 
-     * Filter by unique combinations of BankAccounts.
-     */
-    distinct?: BankAccountScalarFieldEnum | BankAccountScalarFieldEnum[]
-  }
-
-  /**
-   * BankAccount findFirstOrThrow
-   */
-  export type BankAccountFindFirstOrThrowArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
-    /**
-     * Select specific fields to fetch from the BankAccount
-     */
-    select?: BankAccountSelect<ExtArgs> | null
-    /**
-     * Omit specific fields from the BankAccount
-     */
-    omit?: BankAccountOmit<ExtArgs> | null
-    /**
-     * Choose, which related nodes to fetch as well
-     */
-    include?: BankAccountInclude<ExtArgs> | null
-    /**
-     * Filter, which BankAccount to fetch.
-     */
-    where?: BankAccountWhereInput
-    /**
-     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/sorting Sorting Docs}
-     * 
-     * Determine the order of BankAccounts to fetch.
-     */
-    orderBy?: BankAccountOrderByWithRelationInput | BankAccountOrderByWithRelationInput[]
-    /**
-     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination#cursor-based-pagination Cursor Docs}
-     * 
-     * Sets the position for searching for BankAccounts.
-     */
-    cursor?: BankAccountWhereUniqueInput
-    /**
-     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
-     * 
-     * Take `±n` BankAccounts from the position of the cursor.
-     */
-    take?: number
-    /**
-     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
-     * 
-     * Skip the first `n` BankAccounts.
-     */
-    skip?: number
-    /**
-     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/distinct Distinct Docs}
-     * 
-     * Filter by unique combinations of BankAccounts.
-     */
-    distinct?: BankAccountScalarFieldEnum | BankAccountScalarFieldEnum[]
-  }
-
-  /**
-   * BankAccount findMany
-   */
-  export type BankAccountFindManyArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
-    /**
-     * Select specific fields to fetch from the BankAccount
-     */
-    select?: BankAccountSelect<ExtArgs> | null
-    /**
-     * Omit specific fields from the BankAccount
-     */
-    omit?: BankAccountOmit<ExtArgs> | null
-    /**
-     * Choose, which related nodes to fetch as well
-     */
-    include?: BankAccountInclude<ExtArgs> | null
-    /**
-     * Filter, which BankAccounts to fetch.
-     */
-    where?: BankAccountWhereInput
-    /**
-     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/sorting Sorting Docs}
-     * 
-     * Determine the order of BankAccounts to fetch.
-     */
-    orderBy?: BankAccountOrderByWithRelationInput | BankAccountOrderByWithRelationInput[]
-    /**
-     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination#cursor-based-pagination Cursor Docs}
-     * 
-     * Sets the position for listing BankAccounts.
-     */
-    cursor?: BankAccountWhereUniqueInput
-    /**
-     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
-     * 
-     * Take `±n` BankAccounts from the position of the cursor.
-     */
-    take?: number
-    /**
-     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
-     * 
-     * Skip the first `n` BankAccounts.
-     */
-    skip?: number
-    distinct?: BankAccountScalarFieldEnum | BankAccountScalarFieldEnum[]
-  }
-
-  /**
-   * BankAccount create
-   */
-  export type BankAccountCreateArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
-    /**
-     * Select specific fields to fetch from the BankAccount
-     */
-    select?: BankAccountSelect<ExtArgs> | null
-    /**
-     * Omit specific fields from the BankAccount
-     */
-    omit?: BankAccountOmit<ExtArgs> | null
-    /**
-     * Choose, which related nodes to fetch as well
-     */
-    include?: BankAccountInclude<ExtArgs> | null
-    /**
-     * The data needed to create a BankAccount.
-     */
-    data: XOR<BankAccountCreateInput, BankAccountUncheckedCreateInput>
-  }
-
-  /**
-   * BankAccount createMany
-   */
-  export type BankAccountCreateManyArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
-    /**
-     * The data used to create many BankAccounts.
-     */
-    data: BankAccountCreateManyInput | BankAccountCreateManyInput[]
-    skipDuplicates?: boolean
-  }
-
-  /**
-   * BankAccount createManyAndReturn
-   */
-  export type BankAccountCreateManyAndReturnArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
-    /**
-     * Select specific fields to fetch from the BankAccount
-     */
-    select?: BankAccountSelectCreateManyAndReturn<ExtArgs> | null
-    /**
-     * Omit specific fields from the BankAccount
-     */
-    omit?: BankAccountOmit<ExtArgs> | null
-    /**
-     * The data used to create many BankAccounts.
-     */
-    data: BankAccountCreateManyInput | BankAccountCreateManyInput[]
-    skipDuplicates?: boolean
-  }
-
-  /**
-   * BankAccount update
-   */
-  export type BankAccountUpdateArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
-    /**
-     * Select specific fields to fetch from the BankAccount
-     */
-    select?: BankAccountSelect<ExtArgs> | null
-    /**
-     * Omit specific fields from the BankAccount
-     */
-    omit?: BankAccountOmit<ExtArgs> | null
-    /**
-     * Choose, which related nodes to fetch as well
-     */
-    include?: BankAccountInclude<ExtArgs> | null
-    /**
-     * The data needed to update a BankAccount.
-     */
-    data: XOR<BankAccountUpdateInput, BankAccountUncheckedUpdateInput>
-    /**
-     * Choose, which BankAccount to update.
-     */
-    where: BankAccountWhereUniqueInput
-  }
-
-  /**
-   * BankAccount updateMany
-   */
-  export type BankAccountUpdateManyArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
-    /**
-     * The data used to update BankAccounts.
-     */
-    data: XOR<BankAccountUpdateManyMutationInput, BankAccountUncheckedUpdateManyInput>
-    /**
-     * Filter which BankAccounts to update
-     */
-    where?: BankAccountWhereInput
-    /**
-     * Limit how many BankAccounts to update.
-     */
-    limit?: number
-  }
-
-  /**
-   * BankAccount updateManyAndReturn
-   */
-  export type BankAccountUpdateManyAndReturnArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
-    /**
-     * Select specific fields to fetch from the BankAccount
-     */
-    select?: BankAccountSelectUpdateManyAndReturn<ExtArgs> | null
-    /**
-     * Omit specific fields from the BankAccount
-     */
-    omit?: BankAccountOmit<ExtArgs> | null
-    /**
-     * The data used to update BankAccounts.
-     */
-    data: XOR<BankAccountUpdateManyMutationInput, BankAccountUncheckedUpdateManyInput>
-    /**
-     * Filter which BankAccounts to update
-     */
-    where?: BankAccountWhereInput
-    /**
-     * Limit how many BankAccounts to update.
-     */
-    limit?: number
-  }
-
-  /**
-   * BankAccount upsert
-   */
-  export type BankAccountUpsertArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
-    /**
-     * Select specific fields to fetch from the BankAccount
-     */
-    select?: BankAccountSelect<ExtArgs> | null
-    /**
-     * Omit specific fields from the BankAccount
-     */
-    omit?: BankAccountOmit<ExtArgs> | null
-    /**
-     * Choose, which related nodes to fetch as well
-     */
-    include?: BankAccountInclude<ExtArgs> | null
-    /**
-     * The filter to search for the BankAccount to update in case it exists.
-     */
-    where: BankAccountWhereUniqueInput
-    /**
-     * In case the BankAccount found by the `where` argument doesn't exist, create a new BankAccount with this data.
-     */
-    create: XOR<BankAccountCreateInput, BankAccountUncheckedCreateInput>
-    /**
-     * In case the BankAccount was found with the provided `where` argument, update it with this data.
-     */
-    update: XOR<BankAccountUpdateInput, BankAccountUncheckedUpdateInput>
-  }
-
-  /**
-   * BankAccount delete
-   */
-  export type BankAccountDeleteArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
-    /**
-     * Select specific fields to fetch from the BankAccount
-     */
-    select?: BankAccountSelect<ExtArgs> | null
-    /**
-     * Omit specific fields from the BankAccount
-     */
-    omit?: BankAccountOmit<ExtArgs> | null
-    /**
-     * Choose, which related nodes to fetch as well
-     */
-    include?: BankAccountInclude<ExtArgs> | null
-    /**
-     * Filter which BankAccount to delete.
-     */
-    where: BankAccountWhereUniqueInput
-  }
-
-  /**
-   * BankAccount deleteMany
-   */
-  export type BankAccountDeleteManyArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
-    /**
-     * Filter which BankAccounts to delete
-     */
-    where?: BankAccountWhereInput
-    /**
-     * Limit how many BankAccounts to delete.
-     */
-    limit?: number
-  }
-
-  /**
-   * BankAccount.depositDetails
-   */
-  export type BankAccount$depositDetailsArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
-    /**
-     * Select specific fields to fetch from the DepositDetail
-     */
-    select?: DepositDetailSelect<ExtArgs> | null
-    /**
-     * Omit specific fields from the DepositDetail
-     */
-    omit?: DepositDetailOmit<ExtArgs> | null
-    /**
-     * Choose, which related nodes to fetch as well
-     */
-    include?: DepositDetailInclude<ExtArgs> | null
-    where?: DepositDetailWhereInput
-    orderBy?: DepositDetailOrderByWithRelationInput | DepositDetailOrderByWithRelationInput[]
-    cursor?: DepositDetailWhereUniqueInput
-    take?: number
-    skip?: number
-    distinct?: DepositDetailScalarFieldEnum | DepositDetailScalarFieldEnum[]
-  }
-
-  /**
-   * BankAccount without action
-   */
-  export type BankAccountDefaultArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
-    /**
-     * Select specific fields to fetch from the BankAccount
-     */
-    select?: BankAccountSelect<ExtArgs> | null
-    /**
-     * Omit specific fields from the BankAccount
-     */
-    omit?: BankAccountOmit<ExtArgs> | null
-    /**
-     * Choose, which related nodes to fetch as well
-     */
-    include?: BankAccountInclude<ExtArgs> | null
-  }
-
-
-  /**
    * Model AffiliateCode
    */
 
@@ -51031,7 +49931,8 @@ export namespace Prisma {
     actuallyPaid: Decimal | null
     processedBy: number | null
     feeAmount: Decimal | null
-    bankAccountId: number | null
+    bankConfigId: number | null
+    cryptoConfigId: number | null
   }
 
   export type DepositDetailSumAggregateOutputType = {
@@ -51041,7 +49942,8 @@ export namespace Prisma {
     actuallyPaid: Decimal | null
     processedBy: bigint | null
     feeAmount: Decimal | null
-    bankAccountId: number | null
+    bankConfigId: bigint | null
+    cryptoConfigId: bigint | null
   }
 
   export type DepositDetailMinAggregateOutputType = {
@@ -51060,9 +49962,6 @@ export namespace Prisma {
     depositNetwork: string | null
     walletAddress: string | null
     walletAddressExtraId: string | null
-    bankName: string | null
-    accountNumber: string | null
-    accountHolder: string | null
     depositorName: string | null
     transactionHash: string | null
     requestedAmount: Decimal | null
@@ -51075,7 +49974,8 @@ export namespace Prisma {
     feeCurrency: string | null
     feePaidBy: $Enums.FeePaidByType | null
     failureReason: string | null
-    bankAccountId: number | null
+    bankConfigId: bigint | null
+    cryptoConfigId: bigint | null
   }
 
   export type DepositDetailMaxAggregateOutputType = {
@@ -51094,9 +49994,6 @@ export namespace Prisma {
     depositNetwork: string | null
     walletAddress: string | null
     walletAddressExtraId: string | null
-    bankName: string | null
-    accountNumber: string | null
-    accountHolder: string | null
     depositorName: string | null
     transactionHash: string | null
     requestedAmount: Decimal | null
@@ -51109,7 +50006,8 @@ export namespace Prisma {
     feeCurrency: string | null
     feePaidBy: $Enums.FeePaidByType | null
     failureReason: string | null
-    bankAccountId: number | null
+    bankConfigId: bigint | null
+    cryptoConfigId: bigint | null
   }
 
   export type DepositDetailCountAggregateOutputType = {
@@ -51128,9 +50026,6 @@ export namespace Prisma {
     depositNetwork: number
     walletAddress: number
     walletAddressExtraId: number
-    bankName: number
-    accountNumber: number
-    accountHolder: number
     depositorName: number
     transactionHash: number
     requestedAmount: number
@@ -51144,7 +50039,8 @@ export namespace Prisma {
     feePaidBy: number
     failureReason: number
     providerMetadata: number
-    bankAccountId: number
+    bankConfigId: number
+    cryptoConfigId: number
     _all: number
   }
 
@@ -51156,7 +50052,8 @@ export namespace Prisma {
     actuallyPaid?: true
     processedBy?: true
     feeAmount?: true
-    bankAccountId?: true
+    bankConfigId?: true
+    cryptoConfigId?: true
   }
 
   export type DepositDetailSumAggregateInputType = {
@@ -51166,7 +50063,8 @@ export namespace Prisma {
     actuallyPaid?: true
     processedBy?: true
     feeAmount?: true
-    bankAccountId?: true
+    bankConfigId?: true
+    cryptoConfigId?: true
   }
 
   export type DepositDetailMinAggregateInputType = {
@@ -51185,9 +50083,6 @@ export namespace Prisma {
     depositNetwork?: true
     walletAddress?: true
     walletAddressExtraId?: true
-    bankName?: true
-    accountNumber?: true
-    accountHolder?: true
     depositorName?: true
     transactionHash?: true
     requestedAmount?: true
@@ -51200,7 +50095,8 @@ export namespace Prisma {
     feeCurrency?: true
     feePaidBy?: true
     failureReason?: true
-    bankAccountId?: true
+    bankConfigId?: true
+    cryptoConfigId?: true
   }
 
   export type DepositDetailMaxAggregateInputType = {
@@ -51219,9 +50115,6 @@ export namespace Prisma {
     depositNetwork?: true
     walletAddress?: true
     walletAddressExtraId?: true
-    bankName?: true
-    accountNumber?: true
-    accountHolder?: true
     depositorName?: true
     transactionHash?: true
     requestedAmount?: true
@@ -51234,7 +50127,8 @@ export namespace Prisma {
     feeCurrency?: true
     feePaidBy?: true
     failureReason?: true
-    bankAccountId?: true
+    bankConfigId?: true
+    cryptoConfigId?: true
   }
 
   export type DepositDetailCountAggregateInputType = {
@@ -51253,9 +50147,6 @@ export namespace Prisma {
     depositNetwork?: true
     walletAddress?: true
     walletAddressExtraId?: true
-    bankName?: true
-    accountNumber?: true
-    accountHolder?: true
     depositorName?: true
     transactionHash?: true
     requestedAmount?: true
@@ -51269,7 +50160,8 @@ export namespace Prisma {
     feePaidBy?: true
     failureReason?: true
     providerMetadata?: true
-    bankAccountId?: true
+    bankConfigId?: true
+    cryptoConfigId?: true
     _all?: true
   }
 
@@ -51375,9 +50267,6 @@ export namespace Prisma {
     depositNetwork: string | null
     walletAddress: string | null
     walletAddressExtraId: string | null
-    bankName: string | null
-    accountNumber: string | null
-    accountHolder: string | null
     depositorName: string | null
     transactionHash: string | null
     requestedAmount: Decimal
@@ -51391,7 +50280,8 @@ export namespace Prisma {
     feePaidBy: $Enums.FeePaidByType | null
     failureReason: string | null
     providerMetadata: JsonValue | null
-    bankAccountId: number | null
+    bankConfigId: bigint | null
+    cryptoConfigId: bigint | null
     _count: DepositDetailCountAggregateOutputType | null
     _avg: DepositDetailAvgAggregateOutputType | null
     _sum: DepositDetailSumAggregateOutputType | null
@@ -51429,9 +50319,6 @@ export namespace Prisma {
     depositNetwork?: boolean
     walletAddress?: boolean
     walletAddressExtraId?: boolean
-    bankName?: boolean
-    accountNumber?: boolean
-    accountHolder?: boolean
     depositorName?: boolean
     transactionHash?: boolean
     requestedAmount?: boolean
@@ -51445,8 +50332,10 @@ export namespace Prisma {
     feePaidBy?: boolean
     failureReason?: boolean
     providerMetadata?: boolean
-    bankAccountId?: boolean
-    BankAccount?: boolean | DepositDetail$BankAccountArgs<ExtArgs>
+    bankConfigId?: boolean
+    cryptoConfigId?: boolean
+    BankConfig?: boolean | DepositDetail$BankConfigArgs<ExtArgs>
+    CryptoConfig?: boolean | DepositDetail$CryptoConfigArgs<ExtArgs>
     transaction?: boolean | TransactionDefaultArgs<ExtArgs>
     Rolling?: boolean | DepositDetail$RollingArgs<ExtArgs>
     _count?: boolean | DepositDetailCountOutputTypeDefaultArgs<ExtArgs>
@@ -51468,9 +50357,6 @@ export namespace Prisma {
     depositNetwork?: boolean
     walletAddress?: boolean
     walletAddressExtraId?: boolean
-    bankName?: boolean
-    accountNumber?: boolean
-    accountHolder?: boolean
     depositorName?: boolean
     transactionHash?: boolean
     requestedAmount?: boolean
@@ -51484,8 +50370,10 @@ export namespace Prisma {
     feePaidBy?: boolean
     failureReason?: boolean
     providerMetadata?: boolean
-    bankAccountId?: boolean
-    BankAccount?: boolean | DepositDetail$BankAccountArgs<ExtArgs>
+    bankConfigId?: boolean
+    cryptoConfigId?: boolean
+    BankConfig?: boolean | DepositDetail$BankConfigArgs<ExtArgs>
+    CryptoConfig?: boolean | DepositDetail$CryptoConfigArgs<ExtArgs>
     transaction?: boolean | TransactionDefaultArgs<ExtArgs>
   }, ExtArgs["result"]["depositDetail"]>
 
@@ -51505,9 +50393,6 @@ export namespace Prisma {
     depositNetwork?: boolean
     walletAddress?: boolean
     walletAddressExtraId?: boolean
-    bankName?: boolean
-    accountNumber?: boolean
-    accountHolder?: boolean
     depositorName?: boolean
     transactionHash?: boolean
     requestedAmount?: boolean
@@ -51521,8 +50406,10 @@ export namespace Prisma {
     feePaidBy?: boolean
     failureReason?: boolean
     providerMetadata?: boolean
-    bankAccountId?: boolean
-    BankAccount?: boolean | DepositDetail$BankAccountArgs<ExtArgs>
+    bankConfigId?: boolean
+    cryptoConfigId?: boolean
+    BankConfig?: boolean | DepositDetail$BankConfigArgs<ExtArgs>
+    CryptoConfig?: boolean | DepositDetail$CryptoConfigArgs<ExtArgs>
     transaction?: boolean | TransactionDefaultArgs<ExtArgs>
   }, ExtArgs["result"]["depositDetail"]>
 
@@ -51542,9 +50429,6 @@ export namespace Prisma {
     depositNetwork?: boolean
     walletAddress?: boolean
     walletAddressExtraId?: boolean
-    bankName?: boolean
-    accountNumber?: boolean
-    accountHolder?: boolean
     depositorName?: boolean
     transactionHash?: boolean
     requestedAmount?: boolean
@@ -51558,29 +50442,34 @@ export namespace Prisma {
     feePaidBy?: boolean
     failureReason?: boolean
     providerMetadata?: boolean
-    bankAccountId?: boolean
+    bankConfigId?: boolean
+    cryptoConfigId?: boolean
   }
 
-  export type DepositDetailOmit<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetOmit<"id" | "uid" | "confirmedAt" | "failedAt" | "createdAt" | "updatedAt" | "status" | "transactionId" | "methodType" | "provider" | "providerPaymentId" | "depositCurrency" | "depositNetwork" | "walletAddress" | "walletAddressExtraId" | "bankName" | "accountNumber" | "accountHolder" | "depositorName" | "transactionHash" | "requestedAmount" | "actuallyPaid" | "processedBy" | "adminNote" | "ipAddress" | "deviceFingerprint" | "feeAmount" | "feeCurrency" | "feePaidBy" | "failureReason" | "providerMetadata" | "bankAccountId", ExtArgs["result"]["depositDetail"]>
+  export type DepositDetailOmit<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetOmit<"id" | "uid" | "confirmedAt" | "failedAt" | "createdAt" | "updatedAt" | "status" | "transactionId" | "methodType" | "provider" | "providerPaymentId" | "depositCurrency" | "depositNetwork" | "walletAddress" | "walletAddressExtraId" | "depositorName" | "transactionHash" | "requestedAmount" | "actuallyPaid" | "processedBy" | "adminNote" | "ipAddress" | "deviceFingerprint" | "feeAmount" | "feeCurrency" | "feePaidBy" | "failureReason" | "providerMetadata" | "bankConfigId" | "cryptoConfigId", ExtArgs["result"]["depositDetail"]>
   export type DepositDetailInclude<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
-    BankAccount?: boolean | DepositDetail$BankAccountArgs<ExtArgs>
+    BankConfig?: boolean | DepositDetail$BankConfigArgs<ExtArgs>
+    CryptoConfig?: boolean | DepositDetail$CryptoConfigArgs<ExtArgs>
     transaction?: boolean | TransactionDefaultArgs<ExtArgs>
     Rolling?: boolean | DepositDetail$RollingArgs<ExtArgs>
     _count?: boolean | DepositDetailCountOutputTypeDefaultArgs<ExtArgs>
   }
   export type DepositDetailIncludeCreateManyAndReturn<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
-    BankAccount?: boolean | DepositDetail$BankAccountArgs<ExtArgs>
+    BankConfig?: boolean | DepositDetail$BankConfigArgs<ExtArgs>
+    CryptoConfig?: boolean | DepositDetail$CryptoConfigArgs<ExtArgs>
     transaction?: boolean | TransactionDefaultArgs<ExtArgs>
   }
   export type DepositDetailIncludeUpdateManyAndReturn<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
-    BankAccount?: boolean | DepositDetail$BankAccountArgs<ExtArgs>
+    BankConfig?: boolean | DepositDetail$BankConfigArgs<ExtArgs>
+    CryptoConfig?: boolean | DepositDetail$CryptoConfigArgs<ExtArgs>
     transaction?: boolean | TransactionDefaultArgs<ExtArgs>
   }
 
   export type $DepositDetailPayload<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
     name: "DepositDetail"
     objects: {
-      BankAccount: Prisma.$BankAccountPayload<ExtArgs> | null
+      BankConfig: Prisma.$BankConfigPayload<ExtArgs> | null
+      CryptoConfig: Prisma.$CryptoConfigPayload<ExtArgs> | null
       transaction: Prisma.$TransactionPayload<ExtArgs>
       Rolling: Prisma.$RollingPayload<ExtArgs>[]
     }
@@ -51600,9 +50489,6 @@ export namespace Prisma {
       depositNetwork: string | null
       walletAddress: string | null
       walletAddressExtraId: string | null
-      bankName: string | null
-      accountNumber: string | null
-      accountHolder: string | null
       depositorName: string | null
       transactionHash: string | null
       requestedAmount: Prisma.Decimal
@@ -51616,7 +50502,8 @@ export namespace Prisma {
       feePaidBy: $Enums.FeePaidByType | null
       failureReason: string | null
       providerMetadata: Prisma.JsonValue | null
-      bankAccountId: number | null
+      bankConfigId: bigint | null
+      cryptoConfigId: bigint | null
     }, ExtArgs["result"]["depositDetail"]>
     composites: {}
   }
@@ -52011,7 +50898,8 @@ export namespace Prisma {
    */
   export interface Prisma__DepositDetailClient<T, Null = never, ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs, GlobalOmitOptions = {}> extends Prisma.PrismaPromise<T> {
     readonly [Symbol.toStringTag]: "PrismaPromise"
-    BankAccount<T extends DepositDetail$BankAccountArgs<ExtArgs> = {}>(args?: Subset<T, DepositDetail$BankAccountArgs<ExtArgs>>): Prisma__BankAccountClient<$Result.GetResult<Prisma.$BankAccountPayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions> | null, null, ExtArgs, GlobalOmitOptions>
+    BankConfig<T extends DepositDetail$BankConfigArgs<ExtArgs> = {}>(args?: Subset<T, DepositDetail$BankConfigArgs<ExtArgs>>): Prisma__BankConfigClient<$Result.GetResult<Prisma.$BankConfigPayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions> | null, null, ExtArgs, GlobalOmitOptions>
+    CryptoConfig<T extends DepositDetail$CryptoConfigArgs<ExtArgs> = {}>(args?: Subset<T, DepositDetail$CryptoConfigArgs<ExtArgs>>): Prisma__CryptoConfigClient<$Result.GetResult<Prisma.$CryptoConfigPayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions> | null, null, ExtArgs, GlobalOmitOptions>
     transaction<T extends TransactionDefaultArgs<ExtArgs> = {}>(args?: Subset<T, TransactionDefaultArgs<ExtArgs>>): Prisma__TransactionClient<$Result.GetResult<Prisma.$TransactionPayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions> | Null, Null, ExtArgs, GlobalOmitOptions>
     Rolling<T extends DepositDetail$RollingArgs<ExtArgs> = {}>(args?: Subset<T, DepositDetail$RollingArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$RollingPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
     /**
@@ -52058,9 +50946,6 @@ export namespace Prisma {
     readonly depositNetwork: FieldRef<"DepositDetail", 'String'>
     readonly walletAddress: FieldRef<"DepositDetail", 'String'>
     readonly walletAddressExtraId: FieldRef<"DepositDetail", 'String'>
-    readonly bankName: FieldRef<"DepositDetail", 'String'>
-    readonly accountNumber: FieldRef<"DepositDetail", 'String'>
-    readonly accountHolder: FieldRef<"DepositDetail", 'String'>
     readonly depositorName: FieldRef<"DepositDetail", 'String'>
     readonly transactionHash: FieldRef<"DepositDetail", 'String'>
     readonly requestedAmount: FieldRef<"DepositDetail", 'Decimal'>
@@ -52074,7 +50959,8 @@ export namespace Prisma {
     readonly feePaidBy: FieldRef<"DepositDetail", 'FeePaidByType'>
     readonly failureReason: FieldRef<"DepositDetail", 'String'>
     readonly providerMetadata: FieldRef<"DepositDetail", 'Json'>
-    readonly bankAccountId: FieldRef<"DepositDetail", 'Int'>
+    readonly bankConfigId: FieldRef<"DepositDetail", 'BigInt'>
+    readonly cryptoConfigId: FieldRef<"DepositDetail", 'BigInt'>
   }
     
 
@@ -52471,22 +51357,41 @@ export namespace Prisma {
   }
 
   /**
-   * DepositDetail.BankAccount
+   * DepositDetail.BankConfig
    */
-  export type DepositDetail$BankAccountArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+  export type DepositDetail$BankConfigArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
     /**
-     * Select specific fields to fetch from the BankAccount
+     * Select specific fields to fetch from the BankConfig
      */
-    select?: BankAccountSelect<ExtArgs> | null
+    select?: BankConfigSelect<ExtArgs> | null
     /**
-     * Omit specific fields from the BankAccount
+     * Omit specific fields from the BankConfig
      */
-    omit?: BankAccountOmit<ExtArgs> | null
+    omit?: BankConfigOmit<ExtArgs> | null
     /**
      * Choose, which related nodes to fetch as well
      */
-    include?: BankAccountInclude<ExtArgs> | null
-    where?: BankAccountWhereInput
+    include?: BankConfigInclude<ExtArgs> | null
+    where?: BankConfigWhereInput
+  }
+
+  /**
+   * DepositDetail.CryptoConfig
+   */
+  export type DepositDetail$CryptoConfigArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the CryptoConfig
+     */
+    select?: CryptoConfigSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the CryptoConfig
+     */
+    omit?: CryptoConfigOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: CryptoConfigInclude<ExtArgs> | null
+    where?: CryptoConfigWhereInput
   }
 
   /**
@@ -52529,6 +51434,2480 @@ export namespace Prisma {
      * Choose, which related nodes to fetch as well
      */
     include?: DepositDetailInclude<ExtArgs> | null
+  }
+
+
+  /**
+   * Model CryptoConfig
+   */
+
+  export type AggregateCryptoConfig = {
+    _count: CryptoConfigCountAggregateOutputType | null
+    _avg: CryptoConfigAvgAggregateOutputType | null
+    _sum: CryptoConfigSumAggregateOutputType | null
+    _min: CryptoConfigMinAggregateOutputType | null
+    _max: CryptoConfigMaxAggregateOutputType | null
+  }
+
+  export type CryptoConfigAvgAggregateOutputType = {
+    id: number | null
+    minDepositAmount: Decimal | null
+    depositFeeRate: Decimal | null
+    confirmations: number | null
+  }
+
+  export type CryptoConfigSumAggregateOutputType = {
+    id: bigint | null
+    minDepositAmount: Decimal | null
+    depositFeeRate: Decimal | null
+    confirmations: number | null
+  }
+
+  export type CryptoConfigMinAggregateOutputType = {
+    id: bigint | null
+    uid: string | null
+    symbol: string | null
+    network: string | null
+    isActive: boolean | null
+    minDepositAmount: Decimal | null
+    depositFeeRate: Decimal | null
+    confirmations: number | null
+    contractAddress: string | null
+    createdAt: Date | null
+    updatedAt: Date | null
+  }
+
+  export type CryptoConfigMaxAggregateOutputType = {
+    id: bigint | null
+    uid: string | null
+    symbol: string | null
+    network: string | null
+    isActive: boolean | null
+    minDepositAmount: Decimal | null
+    depositFeeRate: Decimal | null
+    confirmations: number | null
+    contractAddress: string | null
+    createdAt: Date | null
+    updatedAt: Date | null
+  }
+
+  export type CryptoConfigCountAggregateOutputType = {
+    id: number
+    uid: number
+    symbol: number
+    network: number
+    isActive: number
+    minDepositAmount: number
+    depositFeeRate: number
+    confirmations: number
+    contractAddress: number
+    createdAt: number
+    updatedAt: number
+    _all: number
+  }
+
+
+  export type CryptoConfigAvgAggregateInputType = {
+    id?: true
+    minDepositAmount?: true
+    depositFeeRate?: true
+    confirmations?: true
+  }
+
+  export type CryptoConfigSumAggregateInputType = {
+    id?: true
+    minDepositAmount?: true
+    depositFeeRate?: true
+    confirmations?: true
+  }
+
+  export type CryptoConfigMinAggregateInputType = {
+    id?: true
+    uid?: true
+    symbol?: true
+    network?: true
+    isActive?: true
+    minDepositAmount?: true
+    depositFeeRate?: true
+    confirmations?: true
+    contractAddress?: true
+    createdAt?: true
+    updatedAt?: true
+  }
+
+  export type CryptoConfigMaxAggregateInputType = {
+    id?: true
+    uid?: true
+    symbol?: true
+    network?: true
+    isActive?: true
+    minDepositAmount?: true
+    depositFeeRate?: true
+    confirmations?: true
+    contractAddress?: true
+    createdAt?: true
+    updatedAt?: true
+  }
+
+  export type CryptoConfigCountAggregateInputType = {
+    id?: true
+    uid?: true
+    symbol?: true
+    network?: true
+    isActive?: true
+    minDepositAmount?: true
+    depositFeeRate?: true
+    confirmations?: true
+    contractAddress?: true
+    createdAt?: true
+    updatedAt?: true
+    _all?: true
+  }
+
+  export type CryptoConfigAggregateArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Filter which CryptoConfig to aggregate.
+     */
+    where?: CryptoConfigWhereInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/sorting Sorting Docs}
+     * 
+     * Determine the order of CryptoConfigs to fetch.
+     */
+    orderBy?: CryptoConfigOrderByWithRelationInput | CryptoConfigOrderByWithRelationInput[]
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination#cursor-based-pagination Cursor Docs}
+     * 
+     * Sets the start position
+     */
+    cursor?: CryptoConfigWhereUniqueInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Take `±n` CryptoConfigs from the position of the cursor.
+     */
+    take?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Skip the first `n` CryptoConfigs.
+     */
+    skip?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
+     * 
+     * Count returned CryptoConfigs
+    **/
+    _count?: true | CryptoConfigCountAggregateInputType
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
+     * 
+     * Select which fields to average
+    **/
+    _avg?: CryptoConfigAvgAggregateInputType
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
+     * 
+     * Select which fields to sum
+    **/
+    _sum?: CryptoConfigSumAggregateInputType
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
+     * 
+     * Select which fields to find the minimum value
+    **/
+    _min?: CryptoConfigMinAggregateInputType
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
+     * 
+     * Select which fields to find the maximum value
+    **/
+    _max?: CryptoConfigMaxAggregateInputType
+  }
+
+  export type GetCryptoConfigAggregateType<T extends CryptoConfigAggregateArgs> = {
+        [P in keyof T & keyof AggregateCryptoConfig]: P extends '_count' | 'count'
+      ? T[P] extends true
+        ? number
+        : GetScalarType<T[P], AggregateCryptoConfig[P]>
+      : GetScalarType<T[P], AggregateCryptoConfig[P]>
+  }
+
+
+
+
+  export type CryptoConfigGroupByArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    where?: CryptoConfigWhereInput
+    orderBy?: CryptoConfigOrderByWithAggregationInput | CryptoConfigOrderByWithAggregationInput[]
+    by: CryptoConfigScalarFieldEnum[] | CryptoConfigScalarFieldEnum
+    having?: CryptoConfigScalarWhereWithAggregatesInput
+    take?: number
+    skip?: number
+    _count?: CryptoConfigCountAggregateInputType | true
+    _avg?: CryptoConfigAvgAggregateInputType
+    _sum?: CryptoConfigSumAggregateInputType
+    _min?: CryptoConfigMinAggregateInputType
+    _max?: CryptoConfigMaxAggregateInputType
+  }
+
+  export type CryptoConfigGroupByOutputType = {
+    id: bigint
+    uid: string
+    symbol: string
+    network: string
+    isActive: boolean
+    minDepositAmount: Decimal
+    depositFeeRate: Decimal
+    confirmations: number
+    contractAddress: string | null
+    createdAt: Date
+    updatedAt: Date
+    _count: CryptoConfigCountAggregateOutputType | null
+    _avg: CryptoConfigAvgAggregateOutputType | null
+    _sum: CryptoConfigSumAggregateOutputType | null
+    _min: CryptoConfigMinAggregateOutputType | null
+    _max: CryptoConfigMaxAggregateOutputType | null
+  }
+
+  type GetCryptoConfigGroupByPayload<T extends CryptoConfigGroupByArgs> = Prisma.PrismaPromise<
+    Array<
+      PickEnumerable<CryptoConfigGroupByOutputType, T['by']> &
+        {
+          [P in ((keyof T) & (keyof CryptoConfigGroupByOutputType))]: P extends '_count'
+            ? T[P] extends boolean
+              ? number
+              : GetScalarType<T[P], CryptoConfigGroupByOutputType[P]>
+            : GetScalarType<T[P], CryptoConfigGroupByOutputType[P]>
+        }
+      >
+    >
+
+
+  export type CryptoConfigSelect<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetSelect<{
+    id?: boolean
+    uid?: boolean
+    symbol?: boolean
+    network?: boolean
+    isActive?: boolean
+    minDepositAmount?: boolean
+    depositFeeRate?: boolean
+    confirmations?: boolean
+    contractAddress?: boolean
+    createdAt?: boolean
+    updatedAt?: boolean
+    depositDetails?: boolean | CryptoConfig$depositDetailsArgs<ExtArgs>
+    _count?: boolean | CryptoConfigCountOutputTypeDefaultArgs<ExtArgs>
+  }, ExtArgs["result"]["cryptoConfig"]>
+
+  export type CryptoConfigSelectCreateManyAndReturn<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetSelect<{
+    id?: boolean
+    uid?: boolean
+    symbol?: boolean
+    network?: boolean
+    isActive?: boolean
+    minDepositAmount?: boolean
+    depositFeeRate?: boolean
+    confirmations?: boolean
+    contractAddress?: boolean
+    createdAt?: boolean
+    updatedAt?: boolean
+  }, ExtArgs["result"]["cryptoConfig"]>
+
+  export type CryptoConfigSelectUpdateManyAndReturn<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetSelect<{
+    id?: boolean
+    uid?: boolean
+    symbol?: boolean
+    network?: boolean
+    isActive?: boolean
+    minDepositAmount?: boolean
+    depositFeeRate?: boolean
+    confirmations?: boolean
+    contractAddress?: boolean
+    createdAt?: boolean
+    updatedAt?: boolean
+  }, ExtArgs["result"]["cryptoConfig"]>
+
+  export type CryptoConfigSelectScalar = {
+    id?: boolean
+    uid?: boolean
+    symbol?: boolean
+    network?: boolean
+    isActive?: boolean
+    minDepositAmount?: boolean
+    depositFeeRate?: boolean
+    confirmations?: boolean
+    contractAddress?: boolean
+    createdAt?: boolean
+    updatedAt?: boolean
+  }
+
+  export type CryptoConfigOmit<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetOmit<"id" | "uid" | "symbol" | "network" | "isActive" | "minDepositAmount" | "depositFeeRate" | "confirmations" | "contractAddress" | "createdAt" | "updatedAt", ExtArgs["result"]["cryptoConfig"]>
+  export type CryptoConfigInclude<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    depositDetails?: boolean | CryptoConfig$depositDetailsArgs<ExtArgs>
+    _count?: boolean | CryptoConfigCountOutputTypeDefaultArgs<ExtArgs>
+  }
+  export type CryptoConfigIncludeCreateManyAndReturn<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {}
+  export type CryptoConfigIncludeUpdateManyAndReturn<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {}
+
+  export type $CryptoConfigPayload<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    name: "CryptoConfig"
+    objects: {
+      depositDetails: Prisma.$DepositDetailPayload<ExtArgs>[]
+    }
+    scalars: $Extensions.GetPayloadResult<{
+      id: bigint
+      uid: string
+      symbol: string
+      network: string
+      isActive: boolean
+      minDepositAmount: Prisma.Decimal
+      depositFeeRate: Prisma.Decimal
+      confirmations: number
+      contractAddress: string | null
+      createdAt: Date
+      updatedAt: Date
+    }, ExtArgs["result"]["cryptoConfig"]>
+    composites: {}
+  }
+
+  type CryptoConfigGetPayload<S extends boolean | null | undefined | CryptoConfigDefaultArgs> = $Result.GetResult<Prisma.$CryptoConfigPayload, S>
+
+  type CryptoConfigCountArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> =
+    Omit<CryptoConfigFindManyArgs, 'select' | 'include' | 'distinct' | 'omit'> & {
+      select?: CryptoConfigCountAggregateInputType | true
+    }
+
+  export interface CryptoConfigDelegate<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs, GlobalOmitOptions = {}> {
+    [K: symbol]: { types: Prisma.TypeMap<ExtArgs>['model']['CryptoConfig'], meta: { name: 'CryptoConfig' } }
+    /**
+     * Find zero or one CryptoConfig that matches the filter.
+     * @param {CryptoConfigFindUniqueArgs} args - Arguments to find a CryptoConfig
+     * @example
+     * // Get one CryptoConfig
+     * const cryptoConfig = await prisma.cryptoConfig.findUnique({
+     *   where: {
+     *     // ... provide filter here
+     *   }
+     * })
+     */
+    findUnique<T extends CryptoConfigFindUniqueArgs>(args: SelectSubset<T, CryptoConfigFindUniqueArgs<ExtArgs>>): Prisma__CryptoConfigClient<$Result.GetResult<Prisma.$CryptoConfigPayload<ExtArgs>, T, "findUnique", GlobalOmitOptions> | null, null, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Find one CryptoConfig that matches the filter or throw an error with `error.code='P2025'`
+     * if no matches were found.
+     * @param {CryptoConfigFindUniqueOrThrowArgs} args - Arguments to find a CryptoConfig
+     * @example
+     * // Get one CryptoConfig
+     * const cryptoConfig = await prisma.cryptoConfig.findUniqueOrThrow({
+     *   where: {
+     *     // ... provide filter here
+     *   }
+     * })
+     */
+    findUniqueOrThrow<T extends CryptoConfigFindUniqueOrThrowArgs>(args: SelectSubset<T, CryptoConfigFindUniqueOrThrowArgs<ExtArgs>>): Prisma__CryptoConfigClient<$Result.GetResult<Prisma.$CryptoConfigPayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Find the first CryptoConfig that matches the filter.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {CryptoConfigFindFirstArgs} args - Arguments to find a CryptoConfig
+     * @example
+     * // Get one CryptoConfig
+     * const cryptoConfig = await prisma.cryptoConfig.findFirst({
+     *   where: {
+     *     // ... provide filter here
+     *   }
+     * })
+     */
+    findFirst<T extends CryptoConfigFindFirstArgs>(args?: SelectSubset<T, CryptoConfigFindFirstArgs<ExtArgs>>): Prisma__CryptoConfigClient<$Result.GetResult<Prisma.$CryptoConfigPayload<ExtArgs>, T, "findFirst", GlobalOmitOptions> | null, null, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Find the first CryptoConfig that matches the filter or
+     * throw `PrismaKnownClientError` with `P2025` code if no matches were found.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {CryptoConfigFindFirstOrThrowArgs} args - Arguments to find a CryptoConfig
+     * @example
+     * // Get one CryptoConfig
+     * const cryptoConfig = await prisma.cryptoConfig.findFirstOrThrow({
+     *   where: {
+     *     // ... provide filter here
+     *   }
+     * })
+     */
+    findFirstOrThrow<T extends CryptoConfigFindFirstOrThrowArgs>(args?: SelectSubset<T, CryptoConfigFindFirstOrThrowArgs<ExtArgs>>): Prisma__CryptoConfigClient<$Result.GetResult<Prisma.$CryptoConfigPayload<ExtArgs>, T, "findFirstOrThrow", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Find zero or more CryptoConfigs that matches the filter.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {CryptoConfigFindManyArgs} args - Arguments to filter and select certain fields only.
+     * @example
+     * // Get all CryptoConfigs
+     * const cryptoConfigs = await prisma.cryptoConfig.findMany()
+     * 
+     * // Get first 10 CryptoConfigs
+     * const cryptoConfigs = await prisma.cryptoConfig.findMany({ take: 10 })
+     * 
+     * // Only select the `id`
+     * const cryptoConfigWithIdOnly = await prisma.cryptoConfig.findMany({ select: { id: true } })
+     * 
+     */
+    findMany<T extends CryptoConfigFindManyArgs>(args?: SelectSubset<T, CryptoConfigFindManyArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$CryptoConfigPayload<ExtArgs>, T, "findMany", GlobalOmitOptions>>
+
+    /**
+     * Create a CryptoConfig.
+     * @param {CryptoConfigCreateArgs} args - Arguments to create a CryptoConfig.
+     * @example
+     * // Create one CryptoConfig
+     * const CryptoConfig = await prisma.cryptoConfig.create({
+     *   data: {
+     *     // ... data to create a CryptoConfig
+     *   }
+     * })
+     * 
+     */
+    create<T extends CryptoConfigCreateArgs>(args: SelectSubset<T, CryptoConfigCreateArgs<ExtArgs>>): Prisma__CryptoConfigClient<$Result.GetResult<Prisma.$CryptoConfigPayload<ExtArgs>, T, "create", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Create many CryptoConfigs.
+     * @param {CryptoConfigCreateManyArgs} args - Arguments to create many CryptoConfigs.
+     * @example
+     * // Create many CryptoConfigs
+     * const cryptoConfig = await prisma.cryptoConfig.createMany({
+     *   data: [
+     *     // ... provide data here
+     *   ]
+     * })
+     *     
+     */
+    createMany<T extends CryptoConfigCreateManyArgs>(args?: SelectSubset<T, CryptoConfigCreateManyArgs<ExtArgs>>): Prisma.PrismaPromise<BatchPayload>
+
+    /**
+     * Create many CryptoConfigs and returns the data saved in the database.
+     * @param {CryptoConfigCreateManyAndReturnArgs} args - Arguments to create many CryptoConfigs.
+     * @example
+     * // Create many CryptoConfigs
+     * const cryptoConfig = await prisma.cryptoConfig.createManyAndReturn({
+     *   data: [
+     *     // ... provide data here
+     *   ]
+     * })
+     * 
+     * // Create many CryptoConfigs and only return the `id`
+     * const cryptoConfigWithIdOnly = await prisma.cryptoConfig.createManyAndReturn({
+     *   select: { id: true },
+     *   data: [
+     *     // ... provide data here
+     *   ]
+     * })
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * 
+     */
+    createManyAndReturn<T extends CryptoConfigCreateManyAndReturnArgs>(args?: SelectSubset<T, CryptoConfigCreateManyAndReturnArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$CryptoConfigPayload<ExtArgs>, T, "createManyAndReturn", GlobalOmitOptions>>
+
+    /**
+     * Delete a CryptoConfig.
+     * @param {CryptoConfigDeleteArgs} args - Arguments to delete one CryptoConfig.
+     * @example
+     * // Delete one CryptoConfig
+     * const CryptoConfig = await prisma.cryptoConfig.delete({
+     *   where: {
+     *     // ... filter to delete one CryptoConfig
+     *   }
+     * })
+     * 
+     */
+    delete<T extends CryptoConfigDeleteArgs>(args: SelectSubset<T, CryptoConfigDeleteArgs<ExtArgs>>): Prisma__CryptoConfigClient<$Result.GetResult<Prisma.$CryptoConfigPayload<ExtArgs>, T, "delete", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Update one CryptoConfig.
+     * @param {CryptoConfigUpdateArgs} args - Arguments to update one CryptoConfig.
+     * @example
+     * // Update one CryptoConfig
+     * const cryptoConfig = await prisma.cryptoConfig.update({
+     *   where: {
+     *     // ... provide filter here
+     *   },
+     *   data: {
+     *     // ... provide data here
+     *   }
+     * })
+     * 
+     */
+    update<T extends CryptoConfigUpdateArgs>(args: SelectSubset<T, CryptoConfigUpdateArgs<ExtArgs>>): Prisma__CryptoConfigClient<$Result.GetResult<Prisma.$CryptoConfigPayload<ExtArgs>, T, "update", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Delete zero or more CryptoConfigs.
+     * @param {CryptoConfigDeleteManyArgs} args - Arguments to filter CryptoConfigs to delete.
+     * @example
+     * // Delete a few CryptoConfigs
+     * const { count } = await prisma.cryptoConfig.deleteMany({
+     *   where: {
+     *     // ... provide filter here
+     *   }
+     * })
+     * 
+     */
+    deleteMany<T extends CryptoConfigDeleteManyArgs>(args?: SelectSubset<T, CryptoConfigDeleteManyArgs<ExtArgs>>): Prisma.PrismaPromise<BatchPayload>
+
+    /**
+     * Update zero or more CryptoConfigs.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {CryptoConfigUpdateManyArgs} args - Arguments to update one or more rows.
+     * @example
+     * // Update many CryptoConfigs
+     * const cryptoConfig = await prisma.cryptoConfig.updateMany({
+     *   where: {
+     *     // ... provide filter here
+     *   },
+     *   data: {
+     *     // ... provide data here
+     *   }
+     * })
+     * 
+     */
+    updateMany<T extends CryptoConfigUpdateManyArgs>(args: SelectSubset<T, CryptoConfigUpdateManyArgs<ExtArgs>>): Prisma.PrismaPromise<BatchPayload>
+
+    /**
+     * Update zero or more CryptoConfigs and returns the data updated in the database.
+     * @param {CryptoConfigUpdateManyAndReturnArgs} args - Arguments to update many CryptoConfigs.
+     * @example
+     * // Update many CryptoConfigs
+     * const cryptoConfig = await prisma.cryptoConfig.updateManyAndReturn({
+     *   where: {
+     *     // ... provide filter here
+     *   },
+     *   data: [
+     *     // ... provide data here
+     *   ]
+     * })
+     * 
+     * // Update zero or more CryptoConfigs and only return the `id`
+     * const cryptoConfigWithIdOnly = await prisma.cryptoConfig.updateManyAndReturn({
+     *   select: { id: true },
+     *   where: {
+     *     // ... provide filter here
+     *   },
+     *   data: [
+     *     // ... provide data here
+     *   ]
+     * })
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * 
+     */
+    updateManyAndReturn<T extends CryptoConfigUpdateManyAndReturnArgs>(args: SelectSubset<T, CryptoConfigUpdateManyAndReturnArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$CryptoConfigPayload<ExtArgs>, T, "updateManyAndReturn", GlobalOmitOptions>>
+
+    /**
+     * Create or update one CryptoConfig.
+     * @param {CryptoConfigUpsertArgs} args - Arguments to update or create a CryptoConfig.
+     * @example
+     * // Update or create a CryptoConfig
+     * const cryptoConfig = await prisma.cryptoConfig.upsert({
+     *   create: {
+     *     // ... data to create a CryptoConfig
+     *   },
+     *   update: {
+     *     // ... in case it already exists, update
+     *   },
+     *   where: {
+     *     // ... the filter for the CryptoConfig we want to update
+     *   }
+     * })
+     */
+    upsert<T extends CryptoConfigUpsertArgs>(args: SelectSubset<T, CryptoConfigUpsertArgs<ExtArgs>>): Prisma__CryptoConfigClient<$Result.GetResult<Prisma.$CryptoConfigPayload<ExtArgs>, T, "upsert", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
+
+
+    /**
+     * Count the number of CryptoConfigs.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {CryptoConfigCountArgs} args - Arguments to filter CryptoConfigs to count.
+     * @example
+     * // Count the number of CryptoConfigs
+     * const count = await prisma.cryptoConfig.count({
+     *   where: {
+     *     // ... the filter for the CryptoConfigs we want to count
+     *   }
+     * })
+    **/
+    count<T extends CryptoConfigCountArgs>(
+      args?: Subset<T, CryptoConfigCountArgs>,
+    ): Prisma.PrismaPromise<
+      T extends $Utils.Record<'select', any>
+        ? T['select'] extends true
+          ? number
+          : GetScalarType<T['select'], CryptoConfigCountAggregateOutputType>
+        : number
+    >
+
+    /**
+     * Allows you to perform aggregations operations on a CryptoConfig.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {CryptoConfigAggregateArgs} args - Select which aggregations you would like to apply and on what fields.
+     * @example
+     * // Ordered by age ascending
+     * // Where email contains prisma.io
+     * // Limited to the 10 users
+     * const aggregations = await prisma.user.aggregate({
+     *   _avg: {
+     *     age: true,
+     *   },
+     *   where: {
+     *     email: {
+     *       contains: "prisma.io",
+     *     },
+     *   },
+     *   orderBy: {
+     *     age: "asc",
+     *   },
+     *   take: 10,
+     * })
+    **/
+    aggregate<T extends CryptoConfigAggregateArgs>(args: Subset<T, CryptoConfigAggregateArgs>): Prisma.PrismaPromise<GetCryptoConfigAggregateType<T>>
+
+    /**
+     * Group by CryptoConfig.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {CryptoConfigGroupByArgs} args - Group by arguments.
+     * @example
+     * // Group by city, order by createdAt, get count
+     * const result = await prisma.user.groupBy({
+     *   by: ['city', 'createdAt'],
+     *   orderBy: {
+     *     createdAt: true
+     *   },
+     *   _count: {
+     *     _all: true
+     *   },
+     * })
+     * 
+    **/
+    groupBy<
+      T extends CryptoConfigGroupByArgs,
+      HasSelectOrTake extends Or<
+        Extends<'skip', Keys<T>>,
+        Extends<'take', Keys<T>>
+      >,
+      OrderByArg extends True extends HasSelectOrTake
+        ? { orderBy: CryptoConfigGroupByArgs['orderBy'] }
+        : { orderBy?: CryptoConfigGroupByArgs['orderBy'] },
+      OrderFields extends ExcludeUnderscoreKeys<Keys<MaybeTupleToUnion<T['orderBy']>>>,
+      ByFields extends MaybeTupleToUnion<T['by']>,
+      ByValid extends Has<ByFields, OrderFields>,
+      HavingFields extends GetHavingFields<T['having']>,
+      HavingValid extends Has<ByFields, HavingFields>,
+      ByEmpty extends T['by'] extends never[] ? True : False,
+      InputErrors extends ByEmpty extends True
+      ? `Error: "by" must not be empty.`
+      : HavingValid extends False
+      ? {
+          [P in HavingFields]: P extends ByFields
+            ? never
+            : P extends string
+            ? `Error: Field "${P}" used in "having" needs to be provided in "by".`
+            : [
+                Error,
+                'Field ',
+                P,
+                ` in "having" needs to be provided in "by"`,
+              ]
+        }[HavingFields]
+      : 'take' extends Keys<T>
+      ? 'orderBy' extends Keys<T>
+        ? ByValid extends True
+          ? {}
+          : {
+              [P in OrderFields]: P extends ByFields
+                ? never
+                : `Error: Field "${P}" in "orderBy" needs to be provided in "by"`
+            }[OrderFields]
+        : 'Error: If you provide "take", you also need to provide "orderBy"'
+      : 'skip' extends Keys<T>
+      ? 'orderBy' extends Keys<T>
+        ? ByValid extends True
+          ? {}
+          : {
+              [P in OrderFields]: P extends ByFields
+                ? never
+                : `Error: Field "${P}" in "orderBy" needs to be provided in "by"`
+            }[OrderFields]
+        : 'Error: If you provide "skip", you also need to provide "orderBy"'
+      : ByValid extends True
+      ? {}
+      : {
+          [P in OrderFields]: P extends ByFields
+            ? never
+            : `Error: Field "${P}" in "orderBy" needs to be provided in "by"`
+        }[OrderFields]
+    >(args: SubsetIntersection<T, CryptoConfigGroupByArgs, OrderByArg> & InputErrors): {} extends InputErrors ? GetCryptoConfigGroupByPayload<T> : Prisma.PrismaPromise<InputErrors>
+  /**
+   * Fields of the CryptoConfig model
+   */
+  readonly fields: CryptoConfigFieldRefs;
+  }
+
+  /**
+   * The delegate class that acts as a "Promise-like" for CryptoConfig.
+   * Why is this prefixed with `Prisma__`?
+   * Because we want to prevent naming conflicts as mentioned in
+   * https://github.com/prisma/prisma-client-js/issues/707
+   */
+  export interface Prisma__CryptoConfigClient<T, Null = never, ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs, GlobalOmitOptions = {}> extends Prisma.PrismaPromise<T> {
+    readonly [Symbol.toStringTag]: "PrismaPromise"
+    depositDetails<T extends CryptoConfig$depositDetailsArgs<ExtArgs> = {}>(args?: Subset<T, CryptoConfig$depositDetailsArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$DepositDetailPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
+    /**
+     * Attaches callbacks for the resolution and/or rejection of the Promise.
+     * @param onfulfilled The callback to execute when the Promise is resolved.
+     * @param onrejected The callback to execute when the Promise is rejected.
+     * @returns A Promise for the completion of which ever callback is executed.
+     */
+    then<TResult1 = T, TResult2 = never>(onfulfilled?: ((value: T) => TResult1 | PromiseLike<TResult1>) | undefined | null, onrejected?: ((reason: any) => TResult2 | PromiseLike<TResult2>) | undefined | null): $Utils.JsPromise<TResult1 | TResult2>
+    /**
+     * Attaches a callback for only the rejection of the Promise.
+     * @param onrejected The callback to execute when the Promise is rejected.
+     * @returns A Promise for the completion of the callback.
+     */
+    catch<TResult = never>(onrejected?: ((reason: any) => TResult | PromiseLike<TResult>) | undefined | null): $Utils.JsPromise<T | TResult>
+    /**
+     * Attaches a callback that is invoked when the Promise is settled (fulfilled or rejected). The
+     * resolved value cannot be modified from the callback.
+     * @param onfinally The callback to execute when the Promise is settled (fulfilled or rejected).
+     * @returns A Promise for the completion of the callback.
+     */
+    finally(onfinally?: (() => void) | undefined | null): $Utils.JsPromise<T>
+  }
+
+
+
+
+  /**
+   * Fields of the CryptoConfig model
+   */
+  interface CryptoConfigFieldRefs {
+    readonly id: FieldRef<"CryptoConfig", 'BigInt'>
+    readonly uid: FieldRef<"CryptoConfig", 'String'>
+    readonly symbol: FieldRef<"CryptoConfig", 'String'>
+    readonly network: FieldRef<"CryptoConfig", 'String'>
+    readonly isActive: FieldRef<"CryptoConfig", 'Boolean'>
+    readonly minDepositAmount: FieldRef<"CryptoConfig", 'Decimal'>
+    readonly depositFeeRate: FieldRef<"CryptoConfig", 'Decimal'>
+    readonly confirmations: FieldRef<"CryptoConfig", 'Int'>
+    readonly contractAddress: FieldRef<"CryptoConfig", 'String'>
+    readonly createdAt: FieldRef<"CryptoConfig", 'DateTime'>
+    readonly updatedAt: FieldRef<"CryptoConfig", 'DateTime'>
+  }
+    
+
+  // Custom InputTypes
+  /**
+   * CryptoConfig findUnique
+   */
+  export type CryptoConfigFindUniqueArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the CryptoConfig
+     */
+    select?: CryptoConfigSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the CryptoConfig
+     */
+    omit?: CryptoConfigOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: CryptoConfigInclude<ExtArgs> | null
+    /**
+     * Filter, which CryptoConfig to fetch.
+     */
+    where: CryptoConfigWhereUniqueInput
+  }
+
+  /**
+   * CryptoConfig findUniqueOrThrow
+   */
+  export type CryptoConfigFindUniqueOrThrowArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the CryptoConfig
+     */
+    select?: CryptoConfigSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the CryptoConfig
+     */
+    omit?: CryptoConfigOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: CryptoConfigInclude<ExtArgs> | null
+    /**
+     * Filter, which CryptoConfig to fetch.
+     */
+    where: CryptoConfigWhereUniqueInput
+  }
+
+  /**
+   * CryptoConfig findFirst
+   */
+  export type CryptoConfigFindFirstArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the CryptoConfig
+     */
+    select?: CryptoConfigSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the CryptoConfig
+     */
+    omit?: CryptoConfigOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: CryptoConfigInclude<ExtArgs> | null
+    /**
+     * Filter, which CryptoConfig to fetch.
+     */
+    where?: CryptoConfigWhereInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/sorting Sorting Docs}
+     * 
+     * Determine the order of CryptoConfigs to fetch.
+     */
+    orderBy?: CryptoConfigOrderByWithRelationInput | CryptoConfigOrderByWithRelationInput[]
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination#cursor-based-pagination Cursor Docs}
+     * 
+     * Sets the position for searching for CryptoConfigs.
+     */
+    cursor?: CryptoConfigWhereUniqueInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Take `±n` CryptoConfigs from the position of the cursor.
+     */
+    take?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Skip the first `n` CryptoConfigs.
+     */
+    skip?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/distinct Distinct Docs}
+     * 
+     * Filter by unique combinations of CryptoConfigs.
+     */
+    distinct?: CryptoConfigScalarFieldEnum | CryptoConfigScalarFieldEnum[]
+  }
+
+  /**
+   * CryptoConfig findFirstOrThrow
+   */
+  export type CryptoConfigFindFirstOrThrowArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the CryptoConfig
+     */
+    select?: CryptoConfigSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the CryptoConfig
+     */
+    omit?: CryptoConfigOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: CryptoConfigInclude<ExtArgs> | null
+    /**
+     * Filter, which CryptoConfig to fetch.
+     */
+    where?: CryptoConfigWhereInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/sorting Sorting Docs}
+     * 
+     * Determine the order of CryptoConfigs to fetch.
+     */
+    orderBy?: CryptoConfigOrderByWithRelationInput | CryptoConfigOrderByWithRelationInput[]
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination#cursor-based-pagination Cursor Docs}
+     * 
+     * Sets the position for searching for CryptoConfigs.
+     */
+    cursor?: CryptoConfigWhereUniqueInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Take `±n` CryptoConfigs from the position of the cursor.
+     */
+    take?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Skip the first `n` CryptoConfigs.
+     */
+    skip?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/distinct Distinct Docs}
+     * 
+     * Filter by unique combinations of CryptoConfigs.
+     */
+    distinct?: CryptoConfigScalarFieldEnum | CryptoConfigScalarFieldEnum[]
+  }
+
+  /**
+   * CryptoConfig findMany
+   */
+  export type CryptoConfigFindManyArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the CryptoConfig
+     */
+    select?: CryptoConfigSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the CryptoConfig
+     */
+    omit?: CryptoConfigOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: CryptoConfigInclude<ExtArgs> | null
+    /**
+     * Filter, which CryptoConfigs to fetch.
+     */
+    where?: CryptoConfigWhereInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/sorting Sorting Docs}
+     * 
+     * Determine the order of CryptoConfigs to fetch.
+     */
+    orderBy?: CryptoConfigOrderByWithRelationInput | CryptoConfigOrderByWithRelationInput[]
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination#cursor-based-pagination Cursor Docs}
+     * 
+     * Sets the position for listing CryptoConfigs.
+     */
+    cursor?: CryptoConfigWhereUniqueInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Take `±n` CryptoConfigs from the position of the cursor.
+     */
+    take?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Skip the first `n` CryptoConfigs.
+     */
+    skip?: number
+    distinct?: CryptoConfigScalarFieldEnum | CryptoConfigScalarFieldEnum[]
+  }
+
+  /**
+   * CryptoConfig create
+   */
+  export type CryptoConfigCreateArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the CryptoConfig
+     */
+    select?: CryptoConfigSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the CryptoConfig
+     */
+    omit?: CryptoConfigOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: CryptoConfigInclude<ExtArgs> | null
+    /**
+     * The data needed to create a CryptoConfig.
+     */
+    data: XOR<CryptoConfigCreateInput, CryptoConfigUncheckedCreateInput>
+  }
+
+  /**
+   * CryptoConfig createMany
+   */
+  export type CryptoConfigCreateManyArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * The data used to create many CryptoConfigs.
+     */
+    data: CryptoConfigCreateManyInput | CryptoConfigCreateManyInput[]
+    skipDuplicates?: boolean
+  }
+
+  /**
+   * CryptoConfig createManyAndReturn
+   */
+  export type CryptoConfigCreateManyAndReturnArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the CryptoConfig
+     */
+    select?: CryptoConfigSelectCreateManyAndReturn<ExtArgs> | null
+    /**
+     * Omit specific fields from the CryptoConfig
+     */
+    omit?: CryptoConfigOmit<ExtArgs> | null
+    /**
+     * The data used to create many CryptoConfigs.
+     */
+    data: CryptoConfigCreateManyInput | CryptoConfigCreateManyInput[]
+    skipDuplicates?: boolean
+  }
+
+  /**
+   * CryptoConfig update
+   */
+  export type CryptoConfigUpdateArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the CryptoConfig
+     */
+    select?: CryptoConfigSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the CryptoConfig
+     */
+    omit?: CryptoConfigOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: CryptoConfigInclude<ExtArgs> | null
+    /**
+     * The data needed to update a CryptoConfig.
+     */
+    data: XOR<CryptoConfigUpdateInput, CryptoConfigUncheckedUpdateInput>
+    /**
+     * Choose, which CryptoConfig to update.
+     */
+    where: CryptoConfigWhereUniqueInput
+  }
+
+  /**
+   * CryptoConfig updateMany
+   */
+  export type CryptoConfigUpdateManyArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * The data used to update CryptoConfigs.
+     */
+    data: XOR<CryptoConfigUpdateManyMutationInput, CryptoConfigUncheckedUpdateManyInput>
+    /**
+     * Filter which CryptoConfigs to update
+     */
+    where?: CryptoConfigWhereInput
+    /**
+     * Limit how many CryptoConfigs to update.
+     */
+    limit?: number
+  }
+
+  /**
+   * CryptoConfig updateManyAndReturn
+   */
+  export type CryptoConfigUpdateManyAndReturnArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the CryptoConfig
+     */
+    select?: CryptoConfigSelectUpdateManyAndReturn<ExtArgs> | null
+    /**
+     * Omit specific fields from the CryptoConfig
+     */
+    omit?: CryptoConfigOmit<ExtArgs> | null
+    /**
+     * The data used to update CryptoConfigs.
+     */
+    data: XOR<CryptoConfigUpdateManyMutationInput, CryptoConfigUncheckedUpdateManyInput>
+    /**
+     * Filter which CryptoConfigs to update
+     */
+    where?: CryptoConfigWhereInput
+    /**
+     * Limit how many CryptoConfigs to update.
+     */
+    limit?: number
+  }
+
+  /**
+   * CryptoConfig upsert
+   */
+  export type CryptoConfigUpsertArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the CryptoConfig
+     */
+    select?: CryptoConfigSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the CryptoConfig
+     */
+    omit?: CryptoConfigOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: CryptoConfigInclude<ExtArgs> | null
+    /**
+     * The filter to search for the CryptoConfig to update in case it exists.
+     */
+    where: CryptoConfigWhereUniqueInput
+    /**
+     * In case the CryptoConfig found by the `where` argument doesn't exist, create a new CryptoConfig with this data.
+     */
+    create: XOR<CryptoConfigCreateInput, CryptoConfigUncheckedCreateInput>
+    /**
+     * In case the CryptoConfig was found with the provided `where` argument, update it with this data.
+     */
+    update: XOR<CryptoConfigUpdateInput, CryptoConfigUncheckedUpdateInput>
+  }
+
+  /**
+   * CryptoConfig delete
+   */
+  export type CryptoConfigDeleteArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the CryptoConfig
+     */
+    select?: CryptoConfigSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the CryptoConfig
+     */
+    omit?: CryptoConfigOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: CryptoConfigInclude<ExtArgs> | null
+    /**
+     * Filter which CryptoConfig to delete.
+     */
+    where: CryptoConfigWhereUniqueInput
+  }
+
+  /**
+   * CryptoConfig deleteMany
+   */
+  export type CryptoConfigDeleteManyArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Filter which CryptoConfigs to delete
+     */
+    where?: CryptoConfigWhereInput
+    /**
+     * Limit how many CryptoConfigs to delete.
+     */
+    limit?: number
+  }
+
+  /**
+   * CryptoConfig.depositDetails
+   */
+  export type CryptoConfig$depositDetailsArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the DepositDetail
+     */
+    select?: DepositDetailSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the DepositDetail
+     */
+    omit?: DepositDetailOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: DepositDetailInclude<ExtArgs> | null
+    where?: DepositDetailWhereInput
+    orderBy?: DepositDetailOrderByWithRelationInput | DepositDetailOrderByWithRelationInput[]
+    cursor?: DepositDetailWhereUniqueInput
+    take?: number
+    skip?: number
+    distinct?: DepositDetailScalarFieldEnum | DepositDetailScalarFieldEnum[]
+  }
+
+  /**
+   * CryptoConfig without action
+   */
+  export type CryptoConfigDefaultArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the CryptoConfig
+     */
+    select?: CryptoConfigSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the CryptoConfig
+     */
+    omit?: CryptoConfigOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: CryptoConfigInclude<ExtArgs> | null
+  }
+
+
+  /**
+   * Model BankConfig
+   */
+
+  export type AggregateBankConfig = {
+    _count: BankConfigCountAggregateOutputType | null
+    _avg: BankConfigAvgAggregateOutputType | null
+    _sum: BankConfigSumAggregateOutputType | null
+    _min: BankConfigMinAggregateOutputType | null
+    _max: BankConfigMaxAggregateOutputType | null
+  }
+
+  export type BankConfigAvgAggregateOutputType = {
+    id: number | null
+    priority: number | null
+    minAmount: Decimal | null
+    maxAmount: Decimal | null
+    totalDeposits: number | null
+    totalDepositAmount: Decimal | null
+  }
+
+  export type BankConfigSumAggregateOutputType = {
+    id: bigint | null
+    priority: number | null
+    minAmount: Decimal | null
+    maxAmount: Decimal | null
+    totalDeposits: number | null
+    totalDepositAmount: Decimal | null
+  }
+
+  export type BankConfigMinAggregateOutputType = {
+    id: bigint | null
+    uid: string | null
+    currency: $Enums.ExchangeCurrencyCode | null
+    bankName: string | null
+    accountNumber: string | null
+    accountHolder: string | null
+    isActive: boolean | null
+    priority: number | null
+    description: string | null
+    notes: string | null
+    minAmount: Decimal | null
+    maxAmount: Decimal | null
+    totalDeposits: number | null
+    totalDepositAmount: Decimal | null
+    createdAt: Date | null
+    updatedAt: Date | null
+    deletedAt: Date | null
+  }
+
+  export type BankConfigMaxAggregateOutputType = {
+    id: bigint | null
+    uid: string | null
+    currency: $Enums.ExchangeCurrencyCode | null
+    bankName: string | null
+    accountNumber: string | null
+    accountHolder: string | null
+    isActive: boolean | null
+    priority: number | null
+    description: string | null
+    notes: string | null
+    minAmount: Decimal | null
+    maxAmount: Decimal | null
+    totalDeposits: number | null
+    totalDepositAmount: Decimal | null
+    createdAt: Date | null
+    updatedAt: Date | null
+    deletedAt: Date | null
+  }
+
+  export type BankConfigCountAggregateOutputType = {
+    id: number
+    uid: number
+    currency: number
+    bankName: number
+    accountNumber: number
+    accountHolder: number
+    isActive: number
+    priority: number
+    description: number
+    notes: number
+    minAmount: number
+    maxAmount: number
+    totalDeposits: number
+    totalDepositAmount: number
+    createdAt: number
+    updatedAt: number
+    deletedAt: number
+    _all: number
+  }
+
+
+  export type BankConfigAvgAggregateInputType = {
+    id?: true
+    priority?: true
+    minAmount?: true
+    maxAmount?: true
+    totalDeposits?: true
+    totalDepositAmount?: true
+  }
+
+  export type BankConfigSumAggregateInputType = {
+    id?: true
+    priority?: true
+    minAmount?: true
+    maxAmount?: true
+    totalDeposits?: true
+    totalDepositAmount?: true
+  }
+
+  export type BankConfigMinAggregateInputType = {
+    id?: true
+    uid?: true
+    currency?: true
+    bankName?: true
+    accountNumber?: true
+    accountHolder?: true
+    isActive?: true
+    priority?: true
+    description?: true
+    notes?: true
+    minAmount?: true
+    maxAmount?: true
+    totalDeposits?: true
+    totalDepositAmount?: true
+    createdAt?: true
+    updatedAt?: true
+    deletedAt?: true
+  }
+
+  export type BankConfigMaxAggregateInputType = {
+    id?: true
+    uid?: true
+    currency?: true
+    bankName?: true
+    accountNumber?: true
+    accountHolder?: true
+    isActive?: true
+    priority?: true
+    description?: true
+    notes?: true
+    minAmount?: true
+    maxAmount?: true
+    totalDeposits?: true
+    totalDepositAmount?: true
+    createdAt?: true
+    updatedAt?: true
+    deletedAt?: true
+  }
+
+  export type BankConfigCountAggregateInputType = {
+    id?: true
+    uid?: true
+    currency?: true
+    bankName?: true
+    accountNumber?: true
+    accountHolder?: true
+    isActive?: true
+    priority?: true
+    description?: true
+    notes?: true
+    minAmount?: true
+    maxAmount?: true
+    totalDeposits?: true
+    totalDepositAmount?: true
+    createdAt?: true
+    updatedAt?: true
+    deletedAt?: true
+    _all?: true
+  }
+
+  export type BankConfigAggregateArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Filter which BankConfig to aggregate.
+     */
+    where?: BankConfigWhereInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/sorting Sorting Docs}
+     * 
+     * Determine the order of BankConfigs to fetch.
+     */
+    orderBy?: BankConfigOrderByWithRelationInput | BankConfigOrderByWithRelationInput[]
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination#cursor-based-pagination Cursor Docs}
+     * 
+     * Sets the start position
+     */
+    cursor?: BankConfigWhereUniqueInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Take `±n` BankConfigs from the position of the cursor.
+     */
+    take?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Skip the first `n` BankConfigs.
+     */
+    skip?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
+     * 
+     * Count returned BankConfigs
+    **/
+    _count?: true | BankConfigCountAggregateInputType
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
+     * 
+     * Select which fields to average
+    **/
+    _avg?: BankConfigAvgAggregateInputType
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
+     * 
+     * Select which fields to sum
+    **/
+    _sum?: BankConfigSumAggregateInputType
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
+     * 
+     * Select which fields to find the minimum value
+    **/
+    _min?: BankConfigMinAggregateInputType
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
+     * 
+     * Select which fields to find the maximum value
+    **/
+    _max?: BankConfigMaxAggregateInputType
+  }
+
+  export type GetBankConfigAggregateType<T extends BankConfigAggregateArgs> = {
+        [P in keyof T & keyof AggregateBankConfig]: P extends '_count' | 'count'
+      ? T[P] extends true
+        ? number
+        : GetScalarType<T[P], AggregateBankConfig[P]>
+      : GetScalarType<T[P], AggregateBankConfig[P]>
+  }
+
+
+
+
+  export type BankConfigGroupByArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    where?: BankConfigWhereInput
+    orderBy?: BankConfigOrderByWithAggregationInput | BankConfigOrderByWithAggregationInput[]
+    by: BankConfigScalarFieldEnum[] | BankConfigScalarFieldEnum
+    having?: BankConfigScalarWhereWithAggregatesInput
+    take?: number
+    skip?: number
+    _count?: BankConfigCountAggregateInputType | true
+    _avg?: BankConfigAvgAggregateInputType
+    _sum?: BankConfigSumAggregateInputType
+    _min?: BankConfigMinAggregateInputType
+    _max?: BankConfigMaxAggregateInputType
+  }
+
+  export type BankConfigGroupByOutputType = {
+    id: bigint
+    uid: string
+    currency: $Enums.ExchangeCurrencyCode
+    bankName: string
+    accountNumber: string
+    accountHolder: string
+    isActive: boolean
+    priority: number
+    description: string | null
+    notes: string | null
+    minAmount: Decimal
+    maxAmount: Decimal | null
+    totalDeposits: number
+    totalDepositAmount: Decimal
+    createdAt: Date
+    updatedAt: Date
+    deletedAt: Date | null
+    _count: BankConfigCountAggregateOutputType | null
+    _avg: BankConfigAvgAggregateOutputType | null
+    _sum: BankConfigSumAggregateOutputType | null
+    _min: BankConfigMinAggregateOutputType | null
+    _max: BankConfigMaxAggregateOutputType | null
+  }
+
+  type GetBankConfigGroupByPayload<T extends BankConfigGroupByArgs> = Prisma.PrismaPromise<
+    Array<
+      PickEnumerable<BankConfigGroupByOutputType, T['by']> &
+        {
+          [P in ((keyof T) & (keyof BankConfigGroupByOutputType))]: P extends '_count'
+            ? T[P] extends boolean
+              ? number
+              : GetScalarType<T[P], BankConfigGroupByOutputType[P]>
+            : GetScalarType<T[P], BankConfigGroupByOutputType[P]>
+        }
+      >
+    >
+
+
+  export type BankConfigSelect<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetSelect<{
+    id?: boolean
+    uid?: boolean
+    currency?: boolean
+    bankName?: boolean
+    accountNumber?: boolean
+    accountHolder?: boolean
+    isActive?: boolean
+    priority?: boolean
+    description?: boolean
+    notes?: boolean
+    minAmount?: boolean
+    maxAmount?: boolean
+    totalDeposits?: boolean
+    totalDepositAmount?: boolean
+    createdAt?: boolean
+    updatedAt?: boolean
+    deletedAt?: boolean
+    depositDetails?: boolean | BankConfig$depositDetailsArgs<ExtArgs>
+    _count?: boolean | BankConfigCountOutputTypeDefaultArgs<ExtArgs>
+  }, ExtArgs["result"]["bankConfig"]>
+
+  export type BankConfigSelectCreateManyAndReturn<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetSelect<{
+    id?: boolean
+    uid?: boolean
+    currency?: boolean
+    bankName?: boolean
+    accountNumber?: boolean
+    accountHolder?: boolean
+    isActive?: boolean
+    priority?: boolean
+    description?: boolean
+    notes?: boolean
+    minAmount?: boolean
+    maxAmount?: boolean
+    totalDeposits?: boolean
+    totalDepositAmount?: boolean
+    createdAt?: boolean
+    updatedAt?: boolean
+    deletedAt?: boolean
+  }, ExtArgs["result"]["bankConfig"]>
+
+  export type BankConfigSelectUpdateManyAndReturn<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetSelect<{
+    id?: boolean
+    uid?: boolean
+    currency?: boolean
+    bankName?: boolean
+    accountNumber?: boolean
+    accountHolder?: boolean
+    isActive?: boolean
+    priority?: boolean
+    description?: boolean
+    notes?: boolean
+    minAmount?: boolean
+    maxAmount?: boolean
+    totalDeposits?: boolean
+    totalDepositAmount?: boolean
+    createdAt?: boolean
+    updatedAt?: boolean
+    deletedAt?: boolean
+  }, ExtArgs["result"]["bankConfig"]>
+
+  export type BankConfigSelectScalar = {
+    id?: boolean
+    uid?: boolean
+    currency?: boolean
+    bankName?: boolean
+    accountNumber?: boolean
+    accountHolder?: boolean
+    isActive?: boolean
+    priority?: boolean
+    description?: boolean
+    notes?: boolean
+    minAmount?: boolean
+    maxAmount?: boolean
+    totalDeposits?: boolean
+    totalDepositAmount?: boolean
+    createdAt?: boolean
+    updatedAt?: boolean
+    deletedAt?: boolean
+  }
+
+  export type BankConfigOmit<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetOmit<"id" | "uid" | "currency" | "bankName" | "accountNumber" | "accountHolder" | "isActive" | "priority" | "description" | "notes" | "minAmount" | "maxAmount" | "totalDeposits" | "totalDepositAmount" | "createdAt" | "updatedAt" | "deletedAt", ExtArgs["result"]["bankConfig"]>
+  export type BankConfigInclude<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    depositDetails?: boolean | BankConfig$depositDetailsArgs<ExtArgs>
+    _count?: boolean | BankConfigCountOutputTypeDefaultArgs<ExtArgs>
+  }
+  export type BankConfigIncludeCreateManyAndReturn<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {}
+  export type BankConfigIncludeUpdateManyAndReturn<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {}
+
+  export type $BankConfigPayload<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    name: "BankConfig"
+    objects: {
+      depositDetails: Prisma.$DepositDetailPayload<ExtArgs>[]
+    }
+    scalars: $Extensions.GetPayloadResult<{
+      id: bigint
+      uid: string
+      currency: $Enums.ExchangeCurrencyCode
+      bankName: string
+      accountNumber: string
+      accountHolder: string
+      isActive: boolean
+      priority: number
+      description: string | null
+      notes: string | null
+      minAmount: Prisma.Decimal
+      maxAmount: Prisma.Decimal | null
+      totalDeposits: number
+      totalDepositAmount: Prisma.Decimal
+      createdAt: Date
+      updatedAt: Date
+      deletedAt: Date | null
+    }, ExtArgs["result"]["bankConfig"]>
+    composites: {}
+  }
+
+  type BankConfigGetPayload<S extends boolean | null | undefined | BankConfigDefaultArgs> = $Result.GetResult<Prisma.$BankConfigPayload, S>
+
+  type BankConfigCountArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> =
+    Omit<BankConfigFindManyArgs, 'select' | 'include' | 'distinct' | 'omit'> & {
+      select?: BankConfigCountAggregateInputType | true
+    }
+
+  export interface BankConfigDelegate<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs, GlobalOmitOptions = {}> {
+    [K: symbol]: { types: Prisma.TypeMap<ExtArgs>['model']['BankConfig'], meta: { name: 'BankConfig' } }
+    /**
+     * Find zero or one BankConfig that matches the filter.
+     * @param {BankConfigFindUniqueArgs} args - Arguments to find a BankConfig
+     * @example
+     * // Get one BankConfig
+     * const bankConfig = await prisma.bankConfig.findUnique({
+     *   where: {
+     *     // ... provide filter here
+     *   }
+     * })
+     */
+    findUnique<T extends BankConfigFindUniqueArgs>(args: SelectSubset<T, BankConfigFindUniqueArgs<ExtArgs>>): Prisma__BankConfigClient<$Result.GetResult<Prisma.$BankConfigPayload<ExtArgs>, T, "findUnique", GlobalOmitOptions> | null, null, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Find one BankConfig that matches the filter or throw an error with `error.code='P2025'`
+     * if no matches were found.
+     * @param {BankConfigFindUniqueOrThrowArgs} args - Arguments to find a BankConfig
+     * @example
+     * // Get one BankConfig
+     * const bankConfig = await prisma.bankConfig.findUniqueOrThrow({
+     *   where: {
+     *     // ... provide filter here
+     *   }
+     * })
+     */
+    findUniqueOrThrow<T extends BankConfigFindUniqueOrThrowArgs>(args: SelectSubset<T, BankConfigFindUniqueOrThrowArgs<ExtArgs>>): Prisma__BankConfigClient<$Result.GetResult<Prisma.$BankConfigPayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Find the first BankConfig that matches the filter.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {BankConfigFindFirstArgs} args - Arguments to find a BankConfig
+     * @example
+     * // Get one BankConfig
+     * const bankConfig = await prisma.bankConfig.findFirst({
+     *   where: {
+     *     // ... provide filter here
+     *   }
+     * })
+     */
+    findFirst<T extends BankConfigFindFirstArgs>(args?: SelectSubset<T, BankConfigFindFirstArgs<ExtArgs>>): Prisma__BankConfigClient<$Result.GetResult<Prisma.$BankConfigPayload<ExtArgs>, T, "findFirst", GlobalOmitOptions> | null, null, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Find the first BankConfig that matches the filter or
+     * throw `PrismaKnownClientError` with `P2025` code if no matches were found.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {BankConfigFindFirstOrThrowArgs} args - Arguments to find a BankConfig
+     * @example
+     * // Get one BankConfig
+     * const bankConfig = await prisma.bankConfig.findFirstOrThrow({
+     *   where: {
+     *     // ... provide filter here
+     *   }
+     * })
+     */
+    findFirstOrThrow<T extends BankConfigFindFirstOrThrowArgs>(args?: SelectSubset<T, BankConfigFindFirstOrThrowArgs<ExtArgs>>): Prisma__BankConfigClient<$Result.GetResult<Prisma.$BankConfigPayload<ExtArgs>, T, "findFirstOrThrow", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Find zero or more BankConfigs that matches the filter.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {BankConfigFindManyArgs} args - Arguments to filter and select certain fields only.
+     * @example
+     * // Get all BankConfigs
+     * const bankConfigs = await prisma.bankConfig.findMany()
+     * 
+     * // Get first 10 BankConfigs
+     * const bankConfigs = await prisma.bankConfig.findMany({ take: 10 })
+     * 
+     * // Only select the `id`
+     * const bankConfigWithIdOnly = await prisma.bankConfig.findMany({ select: { id: true } })
+     * 
+     */
+    findMany<T extends BankConfigFindManyArgs>(args?: SelectSubset<T, BankConfigFindManyArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$BankConfigPayload<ExtArgs>, T, "findMany", GlobalOmitOptions>>
+
+    /**
+     * Create a BankConfig.
+     * @param {BankConfigCreateArgs} args - Arguments to create a BankConfig.
+     * @example
+     * // Create one BankConfig
+     * const BankConfig = await prisma.bankConfig.create({
+     *   data: {
+     *     // ... data to create a BankConfig
+     *   }
+     * })
+     * 
+     */
+    create<T extends BankConfigCreateArgs>(args: SelectSubset<T, BankConfigCreateArgs<ExtArgs>>): Prisma__BankConfigClient<$Result.GetResult<Prisma.$BankConfigPayload<ExtArgs>, T, "create", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Create many BankConfigs.
+     * @param {BankConfigCreateManyArgs} args - Arguments to create many BankConfigs.
+     * @example
+     * // Create many BankConfigs
+     * const bankConfig = await prisma.bankConfig.createMany({
+     *   data: [
+     *     // ... provide data here
+     *   ]
+     * })
+     *     
+     */
+    createMany<T extends BankConfigCreateManyArgs>(args?: SelectSubset<T, BankConfigCreateManyArgs<ExtArgs>>): Prisma.PrismaPromise<BatchPayload>
+
+    /**
+     * Create many BankConfigs and returns the data saved in the database.
+     * @param {BankConfigCreateManyAndReturnArgs} args - Arguments to create many BankConfigs.
+     * @example
+     * // Create many BankConfigs
+     * const bankConfig = await prisma.bankConfig.createManyAndReturn({
+     *   data: [
+     *     // ... provide data here
+     *   ]
+     * })
+     * 
+     * // Create many BankConfigs and only return the `id`
+     * const bankConfigWithIdOnly = await prisma.bankConfig.createManyAndReturn({
+     *   select: { id: true },
+     *   data: [
+     *     // ... provide data here
+     *   ]
+     * })
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * 
+     */
+    createManyAndReturn<T extends BankConfigCreateManyAndReturnArgs>(args?: SelectSubset<T, BankConfigCreateManyAndReturnArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$BankConfigPayload<ExtArgs>, T, "createManyAndReturn", GlobalOmitOptions>>
+
+    /**
+     * Delete a BankConfig.
+     * @param {BankConfigDeleteArgs} args - Arguments to delete one BankConfig.
+     * @example
+     * // Delete one BankConfig
+     * const BankConfig = await prisma.bankConfig.delete({
+     *   where: {
+     *     // ... filter to delete one BankConfig
+     *   }
+     * })
+     * 
+     */
+    delete<T extends BankConfigDeleteArgs>(args: SelectSubset<T, BankConfigDeleteArgs<ExtArgs>>): Prisma__BankConfigClient<$Result.GetResult<Prisma.$BankConfigPayload<ExtArgs>, T, "delete", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Update one BankConfig.
+     * @param {BankConfigUpdateArgs} args - Arguments to update one BankConfig.
+     * @example
+     * // Update one BankConfig
+     * const bankConfig = await prisma.bankConfig.update({
+     *   where: {
+     *     // ... provide filter here
+     *   },
+     *   data: {
+     *     // ... provide data here
+     *   }
+     * })
+     * 
+     */
+    update<T extends BankConfigUpdateArgs>(args: SelectSubset<T, BankConfigUpdateArgs<ExtArgs>>): Prisma__BankConfigClient<$Result.GetResult<Prisma.$BankConfigPayload<ExtArgs>, T, "update", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Delete zero or more BankConfigs.
+     * @param {BankConfigDeleteManyArgs} args - Arguments to filter BankConfigs to delete.
+     * @example
+     * // Delete a few BankConfigs
+     * const { count } = await prisma.bankConfig.deleteMany({
+     *   where: {
+     *     // ... provide filter here
+     *   }
+     * })
+     * 
+     */
+    deleteMany<T extends BankConfigDeleteManyArgs>(args?: SelectSubset<T, BankConfigDeleteManyArgs<ExtArgs>>): Prisma.PrismaPromise<BatchPayload>
+
+    /**
+     * Update zero or more BankConfigs.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {BankConfigUpdateManyArgs} args - Arguments to update one or more rows.
+     * @example
+     * // Update many BankConfigs
+     * const bankConfig = await prisma.bankConfig.updateMany({
+     *   where: {
+     *     // ... provide filter here
+     *   },
+     *   data: {
+     *     // ... provide data here
+     *   }
+     * })
+     * 
+     */
+    updateMany<T extends BankConfigUpdateManyArgs>(args: SelectSubset<T, BankConfigUpdateManyArgs<ExtArgs>>): Prisma.PrismaPromise<BatchPayload>
+
+    /**
+     * Update zero or more BankConfigs and returns the data updated in the database.
+     * @param {BankConfigUpdateManyAndReturnArgs} args - Arguments to update many BankConfigs.
+     * @example
+     * // Update many BankConfigs
+     * const bankConfig = await prisma.bankConfig.updateManyAndReturn({
+     *   where: {
+     *     // ... provide filter here
+     *   },
+     *   data: [
+     *     // ... provide data here
+     *   ]
+     * })
+     * 
+     * // Update zero or more BankConfigs and only return the `id`
+     * const bankConfigWithIdOnly = await prisma.bankConfig.updateManyAndReturn({
+     *   select: { id: true },
+     *   where: {
+     *     // ... provide filter here
+     *   },
+     *   data: [
+     *     // ... provide data here
+     *   ]
+     * })
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * 
+     */
+    updateManyAndReturn<T extends BankConfigUpdateManyAndReturnArgs>(args: SelectSubset<T, BankConfigUpdateManyAndReturnArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$BankConfigPayload<ExtArgs>, T, "updateManyAndReturn", GlobalOmitOptions>>
+
+    /**
+     * Create or update one BankConfig.
+     * @param {BankConfigUpsertArgs} args - Arguments to update or create a BankConfig.
+     * @example
+     * // Update or create a BankConfig
+     * const bankConfig = await prisma.bankConfig.upsert({
+     *   create: {
+     *     // ... data to create a BankConfig
+     *   },
+     *   update: {
+     *     // ... in case it already exists, update
+     *   },
+     *   where: {
+     *     // ... the filter for the BankConfig we want to update
+     *   }
+     * })
+     */
+    upsert<T extends BankConfigUpsertArgs>(args: SelectSubset<T, BankConfigUpsertArgs<ExtArgs>>): Prisma__BankConfigClient<$Result.GetResult<Prisma.$BankConfigPayload<ExtArgs>, T, "upsert", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
+
+
+    /**
+     * Count the number of BankConfigs.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {BankConfigCountArgs} args - Arguments to filter BankConfigs to count.
+     * @example
+     * // Count the number of BankConfigs
+     * const count = await prisma.bankConfig.count({
+     *   where: {
+     *     // ... the filter for the BankConfigs we want to count
+     *   }
+     * })
+    **/
+    count<T extends BankConfigCountArgs>(
+      args?: Subset<T, BankConfigCountArgs>,
+    ): Prisma.PrismaPromise<
+      T extends $Utils.Record<'select', any>
+        ? T['select'] extends true
+          ? number
+          : GetScalarType<T['select'], BankConfigCountAggregateOutputType>
+        : number
+    >
+
+    /**
+     * Allows you to perform aggregations operations on a BankConfig.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {BankConfigAggregateArgs} args - Select which aggregations you would like to apply and on what fields.
+     * @example
+     * // Ordered by age ascending
+     * // Where email contains prisma.io
+     * // Limited to the 10 users
+     * const aggregations = await prisma.user.aggregate({
+     *   _avg: {
+     *     age: true,
+     *   },
+     *   where: {
+     *     email: {
+     *       contains: "prisma.io",
+     *     },
+     *   },
+     *   orderBy: {
+     *     age: "asc",
+     *   },
+     *   take: 10,
+     * })
+    **/
+    aggregate<T extends BankConfigAggregateArgs>(args: Subset<T, BankConfigAggregateArgs>): Prisma.PrismaPromise<GetBankConfigAggregateType<T>>
+
+    /**
+     * Group by BankConfig.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {BankConfigGroupByArgs} args - Group by arguments.
+     * @example
+     * // Group by city, order by createdAt, get count
+     * const result = await prisma.user.groupBy({
+     *   by: ['city', 'createdAt'],
+     *   orderBy: {
+     *     createdAt: true
+     *   },
+     *   _count: {
+     *     _all: true
+     *   },
+     * })
+     * 
+    **/
+    groupBy<
+      T extends BankConfigGroupByArgs,
+      HasSelectOrTake extends Or<
+        Extends<'skip', Keys<T>>,
+        Extends<'take', Keys<T>>
+      >,
+      OrderByArg extends True extends HasSelectOrTake
+        ? { orderBy: BankConfigGroupByArgs['orderBy'] }
+        : { orderBy?: BankConfigGroupByArgs['orderBy'] },
+      OrderFields extends ExcludeUnderscoreKeys<Keys<MaybeTupleToUnion<T['orderBy']>>>,
+      ByFields extends MaybeTupleToUnion<T['by']>,
+      ByValid extends Has<ByFields, OrderFields>,
+      HavingFields extends GetHavingFields<T['having']>,
+      HavingValid extends Has<ByFields, HavingFields>,
+      ByEmpty extends T['by'] extends never[] ? True : False,
+      InputErrors extends ByEmpty extends True
+      ? `Error: "by" must not be empty.`
+      : HavingValid extends False
+      ? {
+          [P in HavingFields]: P extends ByFields
+            ? never
+            : P extends string
+            ? `Error: Field "${P}" used in "having" needs to be provided in "by".`
+            : [
+                Error,
+                'Field ',
+                P,
+                ` in "having" needs to be provided in "by"`,
+              ]
+        }[HavingFields]
+      : 'take' extends Keys<T>
+      ? 'orderBy' extends Keys<T>
+        ? ByValid extends True
+          ? {}
+          : {
+              [P in OrderFields]: P extends ByFields
+                ? never
+                : `Error: Field "${P}" in "orderBy" needs to be provided in "by"`
+            }[OrderFields]
+        : 'Error: If you provide "take", you also need to provide "orderBy"'
+      : 'skip' extends Keys<T>
+      ? 'orderBy' extends Keys<T>
+        ? ByValid extends True
+          ? {}
+          : {
+              [P in OrderFields]: P extends ByFields
+                ? never
+                : `Error: Field "${P}" in "orderBy" needs to be provided in "by"`
+            }[OrderFields]
+        : 'Error: If you provide "skip", you also need to provide "orderBy"'
+      : ByValid extends True
+      ? {}
+      : {
+          [P in OrderFields]: P extends ByFields
+            ? never
+            : `Error: Field "${P}" in "orderBy" needs to be provided in "by"`
+        }[OrderFields]
+    >(args: SubsetIntersection<T, BankConfigGroupByArgs, OrderByArg> & InputErrors): {} extends InputErrors ? GetBankConfigGroupByPayload<T> : Prisma.PrismaPromise<InputErrors>
+  /**
+   * Fields of the BankConfig model
+   */
+  readonly fields: BankConfigFieldRefs;
+  }
+
+  /**
+   * The delegate class that acts as a "Promise-like" for BankConfig.
+   * Why is this prefixed with `Prisma__`?
+   * Because we want to prevent naming conflicts as mentioned in
+   * https://github.com/prisma/prisma-client-js/issues/707
+   */
+  export interface Prisma__BankConfigClient<T, Null = never, ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs, GlobalOmitOptions = {}> extends Prisma.PrismaPromise<T> {
+    readonly [Symbol.toStringTag]: "PrismaPromise"
+    depositDetails<T extends BankConfig$depositDetailsArgs<ExtArgs> = {}>(args?: Subset<T, BankConfig$depositDetailsArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$DepositDetailPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
+    /**
+     * Attaches callbacks for the resolution and/or rejection of the Promise.
+     * @param onfulfilled The callback to execute when the Promise is resolved.
+     * @param onrejected The callback to execute when the Promise is rejected.
+     * @returns A Promise for the completion of which ever callback is executed.
+     */
+    then<TResult1 = T, TResult2 = never>(onfulfilled?: ((value: T) => TResult1 | PromiseLike<TResult1>) | undefined | null, onrejected?: ((reason: any) => TResult2 | PromiseLike<TResult2>) | undefined | null): $Utils.JsPromise<TResult1 | TResult2>
+    /**
+     * Attaches a callback for only the rejection of the Promise.
+     * @param onrejected The callback to execute when the Promise is rejected.
+     * @returns A Promise for the completion of the callback.
+     */
+    catch<TResult = never>(onrejected?: ((reason: any) => TResult | PromiseLike<TResult>) | undefined | null): $Utils.JsPromise<T | TResult>
+    /**
+     * Attaches a callback that is invoked when the Promise is settled (fulfilled or rejected). The
+     * resolved value cannot be modified from the callback.
+     * @param onfinally The callback to execute when the Promise is settled (fulfilled or rejected).
+     * @returns A Promise for the completion of the callback.
+     */
+    finally(onfinally?: (() => void) | undefined | null): $Utils.JsPromise<T>
+  }
+
+
+
+
+  /**
+   * Fields of the BankConfig model
+   */
+  interface BankConfigFieldRefs {
+    readonly id: FieldRef<"BankConfig", 'BigInt'>
+    readonly uid: FieldRef<"BankConfig", 'String'>
+    readonly currency: FieldRef<"BankConfig", 'ExchangeCurrencyCode'>
+    readonly bankName: FieldRef<"BankConfig", 'String'>
+    readonly accountNumber: FieldRef<"BankConfig", 'String'>
+    readonly accountHolder: FieldRef<"BankConfig", 'String'>
+    readonly isActive: FieldRef<"BankConfig", 'Boolean'>
+    readonly priority: FieldRef<"BankConfig", 'Int'>
+    readonly description: FieldRef<"BankConfig", 'String'>
+    readonly notes: FieldRef<"BankConfig", 'String'>
+    readonly minAmount: FieldRef<"BankConfig", 'Decimal'>
+    readonly maxAmount: FieldRef<"BankConfig", 'Decimal'>
+    readonly totalDeposits: FieldRef<"BankConfig", 'Int'>
+    readonly totalDepositAmount: FieldRef<"BankConfig", 'Decimal'>
+    readonly createdAt: FieldRef<"BankConfig", 'DateTime'>
+    readonly updatedAt: FieldRef<"BankConfig", 'DateTime'>
+    readonly deletedAt: FieldRef<"BankConfig", 'DateTime'>
+  }
+    
+
+  // Custom InputTypes
+  /**
+   * BankConfig findUnique
+   */
+  export type BankConfigFindUniqueArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the BankConfig
+     */
+    select?: BankConfigSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the BankConfig
+     */
+    omit?: BankConfigOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: BankConfigInclude<ExtArgs> | null
+    /**
+     * Filter, which BankConfig to fetch.
+     */
+    where: BankConfigWhereUniqueInput
+  }
+
+  /**
+   * BankConfig findUniqueOrThrow
+   */
+  export type BankConfigFindUniqueOrThrowArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the BankConfig
+     */
+    select?: BankConfigSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the BankConfig
+     */
+    omit?: BankConfigOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: BankConfigInclude<ExtArgs> | null
+    /**
+     * Filter, which BankConfig to fetch.
+     */
+    where: BankConfigWhereUniqueInput
+  }
+
+  /**
+   * BankConfig findFirst
+   */
+  export type BankConfigFindFirstArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the BankConfig
+     */
+    select?: BankConfigSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the BankConfig
+     */
+    omit?: BankConfigOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: BankConfigInclude<ExtArgs> | null
+    /**
+     * Filter, which BankConfig to fetch.
+     */
+    where?: BankConfigWhereInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/sorting Sorting Docs}
+     * 
+     * Determine the order of BankConfigs to fetch.
+     */
+    orderBy?: BankConfigOrderByWithRelationInput | BankConfigOrderByWithRelationInput[]
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination#cursor-based-pagination Cursor Docs}
+     * 
+     * Sets the position for searching for BankConfigs.
+     */
+    cursor?: BankConfigWhereUniqueInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Take `±n` BankConfigs from the position of the cursor.
+     */
+    take?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Skip the first `n` BankConfigs.
+     */
+    skip?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/distinct Distinct Docs}
+     * 
+     * Filter by unique combinations of BankConfigs.
+     */
+    distinct?: BankConfigScalarFieldEnum | BankConfigScalarFieldEnum[]
+  }
+
+  /**
+   * BankConfig findFirstOrThrow
+   */
+  export type BankConfigFindFirstOrThrowArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the BankConfig
+     */
+    select?: BankConfigSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the BankConfig
+     */
+    omit?: BankConfigOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: BankConfigInclude<ExtArgs> | null
+    /**
+     * Filter, which BankConfig to fetch.
+     */
+    where?: BankConfigWhereInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/sorting Sorting Docs}
+     * 
+     * Determine the order of BankConfigs to fetch.
+     */
+    orderBy?: BankConfigOrderByWithRelationInput | BankConfigOrderByWithRelationInput[]
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination#cursor-based-pagination Cursor Docs}
+     * 
+     * Sets the position for searching for BankConfigs.
+     */
+    cursor?: BankConfigWhereUniqueInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Take `±n` BankConfigs from the position of the cursor.
+     */
+    take?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Skip the first `n` BankConfigs.
+     */
+    skip?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/distinct Distinct Docs}
+     * 
+     * Filter by unique combinations of BankConfigs.
+     */
+    distinct?: BankConfigScalarFieldEnum | BankConfigScalarFieldEnum[]
+  }
+
+  /**
+   * BankConfig findMany
+   */
+  export type BankConfigFindManyArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the BankConfig
+     */
+    select?: BankConfigSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the BankConfig
+     */
+    omit?: BankConfigOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: BankConfigInclude<ExtArgs> | null
+    /**
+     * Filter, which BankConfigs to fetch.
+     */
+    where?: BankConfigWhereInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/sorting Sorting Docs}
+     * 
+     * Determine the order of BankConfigs to fetch.
+     */
+    orderBy?: BankConfigOrderByWithRelationInput | BankConfigOrderByWithRelationInput[]
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination#cursor-based-pagination Cursor Docs}
+     * 
+     * Sets the position for listing BankConfigs.
+     */
+    cursor?: BankConfigWhereUniqueInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Take `±n` BankConfigs from the position of the cursor.
+     */
+    take?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Skip the first `n` BankConfigs.
+     */
+    skip?: number
+    distinct?: BankConfigScalarFieldEnum | BankConfigScalarFieldEnum[]
+  }
+
+  /**
+   * BankConfig create
+   */
+  export type BankConfigCreateArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the BankConfig
+     */
+    select?: BankConfigSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the BankConfig
+     */
+    omit?: BankConfigOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: BankConfigInclude<ExtArgs> | null
+    /**
+     * The data needed to create a BankConfig.
+     */
+    data: XOR<BankConfigCreateInput, BankConfigUncheckedCreateInput>
+  }
+
+  /**
+   * BankConfig createMany
+   */
+  export type BankConfigCreateManyArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * The data used to create many BankConfigs.
+     */
+    data: BankConfigCreateManyInput | BankConfigCreateManyInput[]
+    skipDuplicates?: boolean
+  }
+
+  /**
+   * BankConfig createManyAndReturn
+   */
+  export type BankConfigCreateManyAndReturnArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the BankConfig
+     */
+    select?: BankConfigSelectCreateManyAndReturn<ExtArgs> | null
+    /**
+     * Omit specific fields from the BankConfig
+     */
+    omit?: BankConfigOmit<ExtArgs> | null
+    /**
+     * The data used to create many BankConfigs.
+     */
+    data: BankConfigCreateManyInput | BankConfigCreateManyInput[]
+    skipDuplicates?: boolean
+  }
+
+  /**
+   * BankConfig update
+   */
+  export type BankConfigUpdateArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the BankConfig
+     */
+    select?: BankConfigSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the BankConfig
+     */
+    omit?: BankConfigOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: BankConfigInclude<ExtArgs> | null
+    /**
+     * The data needed to update a BankConfig.
+     */
+    data: XOR<BankConfigUpdateInput, BankConfigUncheckedUpdateInput>
+    /**
+     * Choose, which BankConfig to update.
+     */
+    where: BankConfigWhereUniqueInput
+  }
+
+  /**
+   * BankConfig updateMany
+   */
+  export type BankConfigUpdateManyArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * The data used to update BankConfigs.
+     */
+    data: XOR<BankConfigUpdateManyMutationInput, BankConfigUncheckedUpdateManyInput>
+    /**
+     * Filter which BankConfigs to update
+     */
+    where?: BankConfigWhereInput
+    /**
+     * Limit how many BankConfigs to update.
+     */
+    limit?: number
+  }
+
+  /**
+   * BankConfig updateManyAndReturn
+   */
+  export type BankConfigUpdateManyAndReturnArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the BankConfig
+     */
+    select?: BankConfigSelectUpdateManyAndReturn<ExtArgs> | null
+    /**
+     * Omit specific fields from the BankConfig
+     */
+    omit?: BankConfigOmit<ExtArgs> | null
+    /**
+     * The data used to update BankConfigs.
+     */
+    data: XOR<BankConfigUpdateManyMutationInput, BankConfigUncheckedUpdateManyInput>
+    /**
+     * Filter which BankConfigs to update
+     */
+    where?: BankConfigWhereInput
+    /**
+     * Limit how many BankConfigs to update.
+     */
+    limit?: number
+  }
+
+  /**
+   * BankConfig upsert
+   */
+  export type BankConfigUpsertArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the BankConfig
+     */
+    select?: BankConfigSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the BankConfig
+     */
+    omit?: BankConfigOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: BankConfigInclude<ExtArgs> | null
+    /**
+     * The filter to search for the BankConfig to update in case it exists.
+     */
+    where: BankConfigWhereUniqueInput
+    /**
+     * In case the BankConfig found by the `where` argument doesn't exist, create a new BankConfig with this data.
+     */
+    create: XOR<BankConfigCreateInput, BankConfigUncheckedCreateInput>
+    /**
+     * In case the BankConfig was found with the provided `where` argument, update it with this data.
+     */
+    update: XOR<BankConfigUpdateInput, BankConfigUncheckedUpdateInput>
+  }
+
+  /**
+   * BankConfig delete
+   */
+  export type BankConfigDeleteArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the BankConfig
+     */
+    select?: BankConfigSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the BankConfig
+     */
+    omit?: BankConfigOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: BankConfigInclude<ExtArgs> | null
+    /**
+     * Filter which BankConfig to delete.
+     */
+    where: BankConfigWhereUniqueInput
+  }
+
+  /**
+   * BankConfig deleteMany
+   */
+  export type BankConfigDeleteManyArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Filter which BankConfigs to delete
+     */
+    where?: BankConfigWhereInput
+    /**
+     * Limit how many BankConfigs to delete.
+     */
+    limit?: number
+  }
+
+  /**
+   * BankConfig.depositDetails
+   */
+  export type BankConfig$depositDetailsArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the DepositDetail
+     */
+    select?: DepositDetailSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the DepositDetail
+     */
+    omit?: DepositDetailOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: DepositDetailInclude<ExtArgs> | null
+    where?: DepositDetailWhereInput
+    orderBy?: DepositDetailOrderByWithRelationInput | DepositDetailOrderByWithRelationInput[]
+    cursor?: DepositDetailWhereUniqueInput
+    take?: number
+    skip?: number
+    distinct?: DepositDetailScalarFieldEnum | DepositDetailScalarFieldEnum[]
+  }
+
+  /**
+   * BankConfig without action
+   */
+  export type BankConfigDefaultArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the BankConfig
+     */
+    select?: BankConfigSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the BankConfig
+     */
+    omit?: BankConfigOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: BankConfigInclude<ExtArgs> | null
   }
 
 
@@ -59267,26 +60646,6 @@ export namespace Prisma {
   export type GameSessionScalarFieldEnum = (typeof GameSessionScalarFieldEnum)[keyof typeof GameSessionScalarFieldEnum]
 
 
-  export const BankAccountScalarFieldEnum: {
-    id: 'id',
-    currency: 'currency',
-    bankName: 'bankName',
-    accountNumber: 'accountNumber',
-    accountHolder: 'accountHolder',
-    isActive: 'isActive',
-    priority: 'priority',
-    description: 'description',
-    notes: 'notes',
-    totalDeposits: 'totalDeposits',
-    totalDepositAmount: 'totalDepositAmount',
-    createdAt: 'createdAt',
-    updatedAt: 'updatedAt',
-    deletedAt: 'deletedAt'
-  };
-
-  export type BankAccountScalarFieldEnum = (typeof BankAccountScalarFieldEnum)[keyof typeof BankAccountScalarFieldEnum]
-
-
   export const AffiliateCodeScalarFieldEnum: {
     id: 'id',
     userId: 'userId',
@@ -59406,9 +60765,6 @@ export namespace Prisma {
     depositNetwork: 'depositNetwork',
     walletAddress: 'walletAddress',
     walletAddressExtraId: 'walletAddressExtraId',
-    bankName: 'bankName',
-    accountNumber: 'accountNumber',
-    accountHolder: 'accountHolder',
     depositorName: 'depositorName',
     transactionHash: 'transactionHash',
     requestedAmount: 'requestedAmount',
@@ -59422,10 +60778,51 @@ export namespace Prisma {
     feePaidBy: 'feePaidBy',
     failureReason: 'failureReason',
     providerMetadata: 'providerMetadata',
-    bankAccountId: 'bankAccountId'
+    bankConfigId: 'bankConfigId',
+    cryptoConfigId: 'cryptoConfigId'
   };
 
   export type DepositDetailScalarFieldEnum = (typeof DepositDetailScalarFieldEnum)[keyof typeof DepositDetailScalarFieldEnum]
+
+
+  export const CryptoConfigScalarFieldEnum: {
+    id: 'id',
+    uid: 'uid',
+    symbol: 'symbol',
+    network: 'network',
+    isActive: 'isActive',
+    minDepositAmount: 'minDepositAmount',
+    depositFeeRate: 'depositFeeRate',
+    confirmations: 'confirmations',
+    contractAddress: 'contractAddress',
+    createdAt: 'createdAt',
+    updatedAt: 'updatedAt'
+  };
+
+  export type CryptoConfigScalarFieldEnum = (typeof CryptoConfigScalarFieldEnum)[keyof typeof CryptoConfigScalarFieldEnum]
+
+
+  export const BankConfigScalarFieldEnum: {
+    id: 'id',
+    uid: 'uid',
+    currency: 'currency',
+    bankName: 'bankName',
+    accountNumber: 'accountNumber',
+    accountHolder: 'accountHolder',
+    isActive: 'isActive',
+    priority: 'priority',
+    description: 'description',
+    notes: 'notes',
+    minAmount: 'minAmount',
+    maxAmount: 'maxAmount',
+    totalDeposits: 'totalDeposits',
+    totalDepositAmount: 'totalDepositAmount',
+    createdAt: 'createdAt',
+    updatedAt: 'updatedAt',
+    deletedAt: 'deletedAt'
+  };
+
+  export type BankConfigScalarFieldEnum = (typeof BankConfigScalarFieldEnum)[keyof typeof BankConfigScalarFieldEnum]
 
 
   export const PromotionScalarFieldEnum: {
@@ -63163,108 +64560,6 @@ export namespace Prisma {
     gameId?: IntNullableWithAggregatesFilter<"GameSession"> | number | null
   }
 
-  export type BankAccountWhereInput = {
-    AND?: BankAccountWhereInput | BankAccountWhereInput[]
-    OR?: BankAccountWhereInput[]
-    NOT?: BankAccountWhereInput | BankAccountWhereInput[]
-    id?: IntFilter<"BankAccount"> | number
-    currency?: EnumExchangeCurrencyCodeFilter<"BankAccount"> | $Enums.ExchangeCurrencyCode
-    bankName?: StringFilter<"BankAccount"> | string
-    accountNumber?: StringFilter<"BankAccount"> | string
-    accountHolder?: StringFilter<"BankAccount"> | string
-    isActive?: BoolFilter<"BankAccount"> | boolean
-    priority?: IntFilter<"BankAccount"> | number
-    description?: StringNullableFilter<"BankAccount"> | string | null
-    notes?: StringNullableFilter<"BankAccount"> | string | null
-    totalDeposits?: IntFilter<"BankAccount"> | number
-    totalDepositAmount?: DecimalFilter<"BankAccount"> | Decimal | DecimalJsLike | number | string
-    createdAt?: DateTimeFilter<"BankAccount"> | Date | string
-    updatedAt?: DateTimeFilter<"BankAccount"> | Date | string
-    deletedAt?: DateTimeNullableFilter<"BankAccount"> | Date | string | null
-    depositDetails?: DepositDetailListRelationFilter
-  }
-
-  export type BankAccountOrderByWithRelationInput = {
-    id?: SortOrder
-    currency?: SortOrder
-    bankName?: SortOrder
-    accountNumber?: SortOrder
-    accountHolder?: SortOrder
-    isActive?: SortOrder
-    priority?: SortOrder
-    description?: SortOrderInput | SortOrder
-    notes?: SortOrderInput | SortOrder
-    totalDeposits?: SortOrder
-    totalDepositAmount?: SortOrder
-    createdAt?: SortOrder
-    updatedAt?: SortOrder
-    deletedAt?: SortOrderInput | SortOrder
-    depositDetails?: DepositDetailOrderByRelationAggregateInput
-  }
-
-  export type BankAccountWhereUniqueInput = Prisma.AtLeast<{
-    id?: number
-    AND?: BankAccountWhereInput | BankAccountWhereInput[]
-    OR?: BankAccountWhereInput[]
-    NOT?: BankAccountWhereInput | BankAccountWhereInput[]
-    currency?: EnumExchangeCurrencyCodeFilter<"BankAccount"> | $Enums.ExchangeCurrencyCode
-    bankName?: StringFilter<"BankAccount"> | string
-    accountNumber?: StringFilter<"BankAccount"> | string
-    accountHolder?: StringFilter<"BankAccount"> | string
-    isActive?: BoolFilter<"BankAccount"> | boolean
-    priority?: IntFilter<"BankAccount"> | number
-    description?: StringNullableFilter<"BankAccount"> | string | null
-    notes?: StringNullableFilter<"BankAccount"> | string | null
-    totalDeposits?: IntFilter<"BankAccount"> | number
-    totalDepositAmount?: DecimalFilter<"BankAccount"> | Decimal | DecimalJsLike | number | string
-    createdAt?: DateTimeFilter<"BankAccount"> | Date | string
-    updatedAt?: DateTimeFilter<"BankAccount"> | Date | string
-    deletedAt?: DateTimeNullableFilter<"BankAccount"> | Date | string | null
-    depositDetails?: DepositDetailListRelationFilter
-  }, "id">
-
-  export type BankAccountOrderByWithAggregationInput = {
-    id?: SortOrder
-    currency?: SortOrder
-    bankName?: SortOrder
-    accountNumber?: SortOrder
-    accountHolder?: SortOrder
-    isActive?: SortOrder
-    priority?: SortOrder
-    description?: SortOrderInput | SortOrder
-    notes?: SortOrderInput | SortOrder
-    totalDeposits?: SortOrder
-    totalDepositAmount?: SortOrder
-    createdAt?: SortOrder
-    updatedAt?: SortOrder
-    deletedAt?: SortOrderInput | SortOrder
-    _count?: BankAccountCountOrderByAggregateInput
-    _avg?: BankAccountAvgOrderByAggregateInput
-    _max?: BankAccountMaxOrderByAggregateInput
-    _min?: BankAccountMinOrderByAggregateInput
-    _sum?: BankAccountSumOrderByAggregateInput
-  }
-
-  export type BankAccountScalarWhereWithAggregatesInput = {
-    AND?: BankAccountScalarWhereWithAggregatesInput | BankAccountScalarWhereWithAggregatesInput[]
-    OR?: BankAccountScalarWhereWithAggregatesInput[]
-    NOT?: BankAccountScalarWhereWithAggregatesInput | BankAccountScalarWhereWithAggregatesInput[]
-    id?: IntWithAggregatesFilter<"BankAccount"> | number
-    currency?: EnumExchangeCurrencyCodeWithAggregatesFilter<"BankAccount"> | $Enums.ExchangeCurrencyCode
-    bankName?: StringWithAggregatesFilter<"BankAccount"> | string
-    accountNumber?: StringWithAggregatesFilter<"BankAccount"> | string
-    accountHolder?: StringWithAggregatesFilter<"BankAccount"> | string
-    isActive?: BoolWithAggregatesFilter<"BankAccount"> | boolean
-    priority?: IntWithAggregatesFilter<"BankAccount"> | number
-    description?: StringNullableWithAggregatesFilter<"BankAccount"> | string | null
-    notes?: StringNullableWithAggregatesFilter<"BankAccount"> | string | null
-    totalDeposits?: IntWithAggregatesFilter<"BankAccount"> | number
-    totalDepositAmount?: DecimalWithAggregatesFilter<"BankAccount"> | Decimal | DecimalJsLike | number | string
-    createdAt?: DateTimeWithAggregatesFilter<"BankAccount"> | Date | string
-    updatedAt?: DateTimeWithAggregatesFilter<"BankAccount"> | Date | string
-    deletedAt?: DateTimeNullableWithAggregatesFilter<"BankAccount"> | Date | string | null
-  }
-
   export type AffiliateCodeWhereInput = {
     AND?: AffiliateCodeWhereInput | AffiliateCodeWhereInput[]
     OR?: AffiliateCodeWhereInput[]
@@ -63828,9 +65123,6 @@ export namespace Prisma {
     depositNetwork?: StringNullableFilter<"DepositDetail"> | string | null
     walletAddress?: StringNullableFilter<"DepositDetail"> | string | null
     walletAddressExtraId?: StringNullableFilter<"DepositDetail"> | string | null
-    bankName?: StringNullableFilter<"DepositDetail"> | string | null
-    accountNumber?: StringNullableFilter<"DepositDetail"> | string | null
-    accountHolder?: StringNullableFilter<"DepositDetail"> | string | null
     depositorName?: StringNullableFilter<"DepositDetail"> | string | null
     transactionHash?: StringNullableFilter<"DepositDetail"> | string | null
     requestedAmount?: DecimalFilter<"DepositDetail"> | Decimal | DecimalJsLike | number | string
@@ -63844,8 +65136,10 @@ export namespace Prisma {
     feePaidBy?: EnumFeePaidByTypeNullableFilter<"DepositDetail"> | $Enums.FeePaidByType | null
     failureReason?: StringNullableFilter<"DepositDetail"> | string | null
     providerMetadata?: JsonNullableFilter<"DepositDetail">
-    bankAccountId?: IntNullableFilter<"DepositDetail"> | number | null
-    BankAccount?: XOR<BankAccountNullableScalarRelationFilter, BankAccountWhereInput> | null
+    bankConfigId?: BigIntNullableFilter<"DepositDetail"> | bigint | number | null
+    cryptoConfigId?: BigIntNullableFilter<"DepositDetail"> | bigint | number | null
+    BankConfig?: XOR<BankConfigNullableScalarRelationFilter, BankConfigWhereInput> | null
+    CryptoConfig?: XOR<CryptoConfigNullableScalarRelationFilter, CryptoConfigWhereInput> | null
     transaction?: XOR<TransactionScalarRelationFilter, TransactionWhereInput>
     Rolling?: RollingListRelationFilter
   }
@@ -63866,9 +65160,6 @@ export namespace Prisma {
     depositNetwork?: SortOrderInput | SortOrder
     walletAddress?: SortOrderInput | SortOrder
     walletAddressExtraId?: SortOrderInput | SortOrder
-    bankName?: SortOrderInput | SortOrder
-    accountNumber?: SortOrderInput | SortOrder
-    accountHolder?: SortOrderInput | SortOrder
     depositorName?: SortOrderInput | SortOrder
     transactionHash?: SortOrderInput | SortOrder
     requestedAmount?: SortOrder
@@ -63882,8 +65173,10 @@ export namespace Prisma {
     feePaidBy?: SortOrderInput | SortOrder
     failureReason?: SortOrderInput | SortOrder
     providerMetadata?: SortOrderInput | SortOrder
-    bankAccountId?: SortOrderInput | SortOrder
-    BankAccount?: BankAccountOrderByWithRelationInput
+    bankConfigId?: SortOrderInput | SortOrder
+    cryptoConfigId?: SortOrderInput | SortOrder
+    BankConfig?: BankConfigOrderByWithRelationInput
+    CryptoConfig?: CryptoConfigOrderByWithRelationInput
     transaction?: TransactionOrderByWithRelationInput
     Rolling?: RollingOrderByRelationAggregateInput
   }
@@ -63907,9 +65200,6 @@ export namespace Prisma {
     depositNetwork?: StringNullableFilter<"DepositDetail"> | string | null
     walletAddress?: StringNullableFilter<"DepositDetail"> | string | null
     walletAddressExtraId?: StringNullableFilter<"DepositDetail"> | string | null
-    bankName?: StringNullableFilter<"DepositDetail"> | string | null
-    accountNumber?: StringNullableFilter<"DepositDetail"> | string | null
-    accountHolder?: StringNullableFilter<"DepositDetail"> | string | null
     depositorName?: StringNullableFilter<"DepositDetail"> | string | null
     transactionHash?: StringNullableFilter<"DepositDetail"> | string | null
     requestedAmount?: DecimalFilter<"DepositDetail"> | Decimal | DecimalJsLike | number | string
@@ -63923,8 +65213,10 @@ export namespace Prisma {
     feePaidBy?: EnumFeePaidByTypeNullableFilter<"DepositDetail"> | $Enums.FeePaidByType | null
     failureReason?: StringNullableFilter<"DepositDetail"> | string | null
     providerMetadata?: JsonNullableFilter<"DepositDetail">
-    bankAccountId?: IntNullableFilter<"DepositDetail"> | number | null
-    BankAccount?: XOR<BankAccountNullableScalarRelationFilter, BankAccountWhereInput> | null
+    bankConfigId?: BigIntNullableFilter<"DepositDetail"> | bigint | number | null
+    cryptoConfigId?: BigIntNullableFilter<"DepositDetail"> | bigint | number | null
+    BankConfig?: XOR<BankConfigNullableScalarRelationFilter, BankConfigWhereInput> | null
+    CryptoConfig?: XOR<CryptoConfigNullableScalarRelationFilter, CryptoConfigWhereInput> | null
     transaction?: XOR<TransactionScalarRelationFilter, TransactionWhereInput>
     Rolling?: RollingListRelationFilter
   }, "id" | "uid" | "transactionId" | "providerPaymentId">
@@ -63945,9 +65237,6 @@ export namespace Prisma {
     depositNetwork?: SortOrderInput | SortOrder
     walletAddress?: SortOrderInput | SortOrder
     walletAddressExtraId?: SortOrderInput | SortOrder
-    bankName?: SortOrderInput | SortOrder
-    accountNumber?: SortOrderInput | SortOrder
-    accountHolder?: SortOrderInput | SortOrder
     depositorName?: SortOrderInput | SortOrder
     transactionHash?: SortOrderInput | SortOrder
     requestedAmount?: SortOrder
@@ -63961,7 +65250,8 @@ export namespace Prisma {
     feePaidBy?: SortOrderInput | SortOrder
     failureReason?: SortOrderInput | SortOrder
     providerMetadata?: SortOrderInput | SortOrder
-    bankAccountId?: SortOrderInput | SortOrder
+    bankConfigId?: SortOrderInput | SortOrder
+    cryptoConfigId?: SortOrderInput | SortOrder
     _count?: DepositDetailCountOrderByAggregateInput
     _avg?: DepositDetailAvgOrderByAggregateInput
     _max?: DepositDetailMaxOrderByAggregateInput
@@ -63988,9 +65278,6 @@ export namespace Prisma {
     depositNetwork?: StringNullableWithAggregatesFilter<"DepositDetail"> | string | null
     walletAddress?: StringNullableWithAggregatesFilter<"DepositDetail"> | string | null
     walletAddressExtraId?: StringNullableWithAggregatesFilter<"DepositDetail"> | string | null
-    bankName?: StringNullableWithAggregatesFilter<"DepositDetail"> | string | null
-    accountNumber?: StringNullableWithAggregatesFilter<"DepositDetail"> | string | null
-    accountHolder?: StringNullableWithAggregatesFilter<"DepositDetail"> | string | null
     depositorName?: StringNullableWithAggregatesFilter<"DepositDetail"> | string | null
     transactionHash?: StringNullableWithAggregatesFilter<"DepositDetail"> | string | null
     requestedAmount?: DecimalWithAggregatesFilter<"DepositDetail"> | Decimal | DecimalJsLike | number | string
@@ -64004,7 +65291,213 @@ export namespace Prisma {
     feePaidBy?: EnumFeePaidByTypeNullableWithAggregatesFilter<"DepositDetail"> | $Enums.FeePaidByType | null
     failureReason?: StringNullableWithAggregatesFilter<"DepositDetail"> | string | null
     providerMetadata?: JsonNullableWithAggregatesFilter<"DepositDetail">
-    bankAccountId?: IntNullableWithAggregatesFilter<"DepositDetail"> | number | null
+    bankConfigId?: BigIntNullableWithAggregatesFilter<"DepositDetail"> | bigint | number | null
+    cryptoConfigId?: BigIntNullableWithAggregatesFilter<"DepositDetail"> | bigint | number | null
+  }
+
+  export type CryptoConfigWhereInput = {
+    AND?: CryptoConfigWhereInput | CryptoConfigWhereInput[]
+    OR?: CryptoConfigWhereInput[]
+    NOT?: CryptoConfigWhereInput | CryptoConfigWhereInput[]
+    id?: BigIntFilter<"CryptoConfig"> | bigint | number
+    uid?: StringFilter<"CryptoConfig"> | string
+    symbol?: StringFilter<"CryptoConfig"> | string
+    network?: StringFilter<"CryptoConfig"> | string
+    isActive?: BoolFilter<"CryptoConfig"> | boolean
+    minDepositAmount?: DecimalFilter<"CryptoConfig"> | Decimal | DecimalJsLike | number | string
+    depositFeeRate?: DecimalFilter<"CryptoConfig"> | Decimal | DecimalJsLike | number | string
+    confirmations?: IntFilter<"CryptoConfig"> | number
+    contractAddress?: StringNullableFilter<"CryptoConfig"> | string | null
+    createdAt?: DateTimeFilter<"CryptoConfig"> | Date | string
+    updatedAt?: DateTimeFilter<"CryptoConfig"> | Date | string
+    depositDetails?: DepositDetailListRelationFilter
+  }
+
+  export type CryptoConfigOrderByWithRelationInput = {
+    id?: SortOrder
+    uid?: SortOrder
+    symbol?: SortOrder
+    network?: SortOrder
+    isActive?: SortOrder
+    minDepositAmount?: SortOrder
+    depositFeeRate?: SortOrder
+    confirmations?: SortOrder
+    contractAddress?: SortOrderInput | SortOrder
+    createdAt?: SortOrder
+    updatedAt?: SortOrder
+    depositDetails?: DepositDetailOrderByRelationAggregateInput
+  }
+
+  export type CryptoConfigWhereUniqueInput = Prisma.AtLeast<{
+    id?: bigint | number
+    uid?: string
+    symbol_network?: CryptoConfigSymbolNetworkCompoundUniqueInput
+    AND?: CryptoConfigWhereInput | CryptoConfigWhereInput[]
+    OR?: CryptoConfigWhereInput[]
+    NOT?: CryptoConfigWhereInput | CryptoConfigWhereInput[]
+    symbol?: StringFilter<"CryptoConfig"> | string
+    network?: StringFilter<"CryptoConfig"> | string
+    isActive?: BoolFilter<"CryptoConfig"> | boolean
+    minDepositAmount?: DecimalFilter<"CryptoConfig"> | Decimal | DecimalJsLike | number | string
+    depositFeeRate?: DecimalFilter<"CryptoConfig"> | Decimal | DecimalJsLike | number | string
+    confirmations?: IntFilter<"CryptoConfig"> | number
+    contractAddress?: StringNullableFilter<"CryptoConfig"> | string | null
+    createdAt?: DateTimeFilter<"CryptoConfig"> | Date | string
+    updatedAt?: DateTimeFilter<"CryptoConfig"> | Date | string
+    depositDetails?: DepositDetailListRelationFilter
+  }, "id" | "uid" | "symbol_network">
+
+  export type CryptoConfigOrderByWithAggregationInput = {
+    id?: SortOrder
+    uid?: SortOrder
+    symbol?: SortOrder
+    network?: SortOrder
+    isActive?: SortOrder
+    minDepositAmount?: SortOrder
+    depositFeeRate?: SortOrder
+    confirmations?: SortOrder
+    contractAddress?: SortOrderInput | SortOrder
+    createdAt?: SortOrder
+    updatedAt?: SortOrder
+    _count?: CryptoConfigCountOrderByAggregateInput
+    _avg?: CryptoConfigAvgOrderByAggregateInput
+    _max?: CryptoConfigMaxOrderByAggregateInput
+    _min?: CryptoConfigMinOrderByAggregateInput
+    _sum?: CryptoConfigSumOrderByAggregateInput
+  }
+
+  export type CryptoConfigScalarWhereWithAggregatesInput = {
+    AND?: CryptoConfigScalarWhereWithAggregatesInput | CryptoConfigScalarWhereWithAggregatesInput[]
+    OR?: CryptoConfigScalarWhereWithAggregatesInput[]
+    NOT?: CryptoConfigScalarWhereWithAggregatesInput | CryptoConfigScalarWhereWithAggregatesInput[]
+    id?: BigIntWithAggregatesFilter<"CryptoConfig"> | bigint | number
+    uid?: StringWithAggregatesFilter<"CryptoConfig"> | string
+    symbol?: StringWithAggregatesFilter<"CryptoConfig"> | string
+    network?: StringWithAggregatesFilter<"CryptoConfig"> | string
+    isActive?: BoolWithAggregatesFilter<"CryptoConfig"> | boolean
+    minDepositAmount?: DecimalWithAggregatesFilter<"CryptoConfig"> | Decimal | DecimalJsLike | number | string
+    depositFeeRate?: DecimalWithAggregatesFilter<"CryptoConfig"> | Decimal | DecimalJsLike | number | string
+    confirmations?: IntWithAggregatesFilter<"CryptoConfig"> | number
+    contractAddress?: StringNullableWithAggregatesFilter<"CryptoConfig"> | string | null
+    createdAt?: DateTimeWithAggregatesFilter<"CryptoConfig"> | Date | string
+    updatedAt?: DateTimeWithAggregatesFilter<"CryptoConfig"> | Date | string
+  }
+
+  export type BankConfigWhereInput = {
+    AND?: BankConfigWhereInput | BankConfigWhereInput[]
+    OR?: BankConfigWhereInput[]
+    NOT?: BankConfigWhereInput | BankConfigWhereInput[]
+    id?: BigIntFilter<"BankConfig"> | bigint | number
+    uid?: StringFilter<"BankConfig"> | string
+    currency?: EnumExchangeCurrencyCodeFilter<"BankConfig"> | $Enums.ExchangeCurrencyCode
+    bankName?: StringFilter<"BankConfig"> | string
+    accountNumber?: StringFilter<"BankConfig"> | string
+    accountHolder?: StringFilter<"BankConfig"> | string
+    isActive?: BoolFilter<"BankConfig"> | boolean
+    priority?: IntFilter<"BankConfig"> | number
+    description?: StringNullableFilter<"BankConfig"> | string | null
+    notes?: StringNullableFilter<"BankConfig"> | string | null
+    minAmount?: DecimalFilter<"BankConfig"> | Decimal | DecimalJsLike | number | string
+    maxAmount?: DecimalNullableFilter<"BankConfig"> | Decimal | DecimalJsLike | number | string | null
+    totalDeposits?: IntFilter<"BankConfig"> | number
+    totalDepositAmount?: DecimalFilter<"BankConfig"> | Decimal | DecimalJsLike | number | string
+    createdAt?: DateTimeFilter<"BankConfig"> | Date | string
+    updatedAt?: DateTimeFilter<"BankConfig"> | Date | string
+    deletedAt?: DateTimeNullableFilter<"BankConfig"> | Date | string | null
+    depositDetails?: DepositDetailListRelationFilter
+  }
+
+  export type BankConfigOrderByWithRelationInput = {
+    id?: SortOrder
+    uid?: SortOrder
+    currency?: SortOrder
+    bankName?: SortOrder
+    accountNumber?: SortOrder
+    accountHolder?: SortOrder
+    isActive?: SortOrder
+    priority?: SortOrder
+    description?: SortOrderInput | SortOrder
+    notes?: SortOrderInput | SortOrder
+    minAmount?: SortOrder
+    maxAmount?: SortOrderInput | SortOrder
+    totalDeposits?: SortOrder
+    totalDepositAmount?: SortOrder
+    createdAt?: SortOrder
+    updatedAt?: SortOrder
+    deletedAt?: SortOrderInput | SortOrder
+    depositDetails?: DepositDetailOrderByRelationAggregateInput
+  }
+
+  export type BankConfigWhereUniqueInput = Prisma.AtLeast<{
+    id?: bigint | number
+    uid?: string
+    AND?: BankConfigWhereInput | BankConfigWhereInput[]
+    OR?: BankConfigWhereInput[]
+    NOT?: BankConfigWhereInput | BankConfigWhereInput[]
+    currency?: EnumExchangeCurrencyCodeFilter<"BankConfig"> | $Enums.ExchangeCurrencyCode
+    bankName?: StringFilter<"BankConfig"> | string
+    accountNumber?: StringFilter<"BankConfig"> | string
+    accountHolder?: StringFilter<"BankConfig"> | string
+    isActive?: BoolFilter<"BankConfig"> | boolean
+    priority?: IntFilter<"BankConfig"> | number
+    description?: StringNullableFilter<"BankConfig"> | string | null
+    notes?: StringNullableFilter<"BankConfig"> | string | null
+    minAmount?: DecimalFilter<"BankConfig"> | Decimal | DecimalJsLike | number | string
+    maxAmount?: DecimalNullableFilter<"BankConfig"> | Decimal | DecimalJsLike | number | string | null
+    totalDeposits?: IntFilter<"BankConfig"> | number
+    totalDepositAmount?: DecimalFilter<"BankConfig"> | Decimal | DecimalJsLike | number | string
+    createdAt?: DateTimeFilter<"BankConfig"> | Date | string
+    updatedAt?: DateTimeFilter<"BankConfig"> | Date | string
+    deletedAt?: DateTimeNullableFilter<"BankConfig"> | Date | string | null
+    depositDetails?: DepositDetailListRelationFilter
+  }, "id" | "uid">
+
+  export type BankConfigOrderByWithAggregationInput = {
+    id?: SortOrder
+    uid?: SortOrder
+    currency?: SortOrder
+    bankName?: SortOrder
+    accountNumber?: SortOrder
+    accountHolder?: SortOrder
+    isActive?: SortOrder
+    priority?: SortOrder
+    description?: SortOrderInput | SortOrder
+    notes?: SortOrderInput | SortOrder
+    minAmount?: SortOrder
+    maxAmount?: SortOrderInput | SortOrder
+    totalDeposits?: SortOrder
+    totalDepositAmount?: SortOrder
+    createdAt?: SortOrder
+    updatedAt?: SortOrder
+    deletedAt?: SortOrderInput | SortOrder
+    _count?: BankConfigCountOrderByAggregateInput
+    _avg?: BankConfigAvgOrderByAggregateInput
+    _max?: BankConfigMaxOrderByAggregateInput
+    _min?: BankConfigMinOrderByAggregateInput
+    _sum?: BankConfigSumOrderByAggregateInput
+  }
+
+  export type BankConfigScalarWhereWithAggregatesInput = {
+    AND?: BankConfigScalarWhereWithAggregatesInput | BankConfigScalarWhereWithAggregatesInput[]
+    OR?: BankConfigScalarWhereWithAggregatesInput[]
+    NOT?: BankConfigScalarWhereWithAggregatesInput | BankConfigScalarWhereWithAggregatesInput[]
+    id?: BigIntWithAggregatesFilter<"BankConfig"> | bigint | number
+    uid?: StringWithAggregatesFilter<"BankConfig"> | string
+    currency?: EnumExchangeCurrencyCodeWithAggregatesFilter<"BankConfig"> | $Enums.ExchangeCurrencyCode
+    bankName?: StringWithAggregatesFilter<"BankConfig"> | string
+    accountNumber?: StringWithAggregatesFilter<"BankConfig"> | string
+    accountHolder?: StringWithAggregatesFilter<"BankConfig"> | string
+    isActive?: BoolWithAggregatesFilter<"BankConfig"> | boolean
+    priority?: IntWithAggregatesFilter<"BankConfig"> | number
+    description?: StringNullableWithAggregatesFilter<"BankConfig"> | string | null
+    notes?: StringNullableWithAggregatesFilter<"BankConfig"> | string | null
+    minAmount?: DecimalWithAggregatesFilter<"BankConfig"> | Decimal | DecimalJsLike | number | string
+    maxAmount?: DecimalNullableWithAggregatesFilter<"BankConfig"> | Decimal | DecimalJsLike | number | string | null
+    totalDeposits?: IntWithAggregatesFilter<"BankConfig"> | number
+    totalDepositAmount?: DecimalWithAggregatesFilter<"BankConfig"> | Decimal | DecimalJsLike | number | string
+    createdAt?: DateTimeWithAggregatesFilter<"BankConfig"> | Date | string
+    updatedAt?: DateTimeWithAggregatesFilter<"BankConfig"> | Date | string
+    deletedAt?: DateTimeNullableWithAggregatesFilter<"BankConfig"> | Date | string | null
   }
 
   export type PromotionWhereInput = {
@@ -67873,126 +69366,6 @@ export namespace Prisma {
     gameId?: NullableIntFieldUpdateOperationsInput | number | null
   }
 
-  export type BankAccountCreateInput = {
-    currency: $Enums.ExchangeCurrencyCode
-    bankName: string
-    accountNumber: string
-    accountHolder: string
-    isActive?: boolean
-    priority?: number
-    description?: string | null
-    notes?: string | null
-    totalDeposits?: number
-    totalDepositAmount?: Decimal | DecimalJsLike | number | string
-    createdAt?: Date | string
-    updatedAt?: Date | string
-    deletedAt?: Date | string | null
-    depositDetails?: DepositDetailCreateNestedManyWithoutBankAccountInput
-  }
-
-  export type BankAccountUncheckedCreateInput = {
-    id?: number
-    currency: $Enums.ExchangeCurrencyCode
-    bankName: string
-    accountNumber: string
-    accountHolder: string
-    isActive?: boolean
-    priority?: number
-    description?: string | null
-    notes?: string | null
-    totalDeposits?: number
-    totalDepositAmount?: Decimal | DecimalJsLike | number | string
-    createdAt?: Date | string
-    updatedAt?: Date | string
-    deletedAt?: Date | string | null
-    depositDetails?: DepositDetailUncheckedCreateNestedManyWithoutBankAccountInput
-  }
-
-  export type BankAccountUpdateInput = {
-    currency?: EnumExchangeCurrencyCodeFieldUpdateOperationsInput | $Enums.ExchangeCurrencyCode
-    bankName?: StringFieldUpdateOperationsInput | string
-    accountNumber?: StringFieldUpdateOperationsInput | string
-    accountHolder?: StringFieldUpdateOperationsInput | string
-    isActive?: BoolFieldUpdateOperationsInput | boolean
-    priority?: IntFieldUpdateOperationsInput | number
-    description?: NullableStringFieldUpdateOperationsInput | string | null
-    notes?: NullableStringFieldUpdateOperationsInput | string | null
-    totalDeposits?: IntFieldUpdateOperationsInput | number
-    totalDepositAmount?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
-    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
-    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
-    deletedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
-    depositDetails?: DepositDetailUpdateManyWithoutBankAccountNestedInput
-  }
-
-  export type BankAccountUncheckedUpdateInput = {
-    id?: IntFieldUpdateOperationsInput | number
-    currency?: EnumExchangeCurrencyCodeFieldUpdateOperationsInput | $Enums.ExchangeCurrencyCode
-    bankName?: StringFieldUpdateOperationsInput | string
-    accountNumber?: StringFieldUpdateOperationsInput | string
-    accountHolder?: StringFieldUpdateOperationsInput | string
-    isActive?: BoolFieldUpdateOperationsInput | boolean
-    priority?: IntFieldUpdateOperationsInput | number
-    description?: NullableStringFieldUpdateOperationsInput | string | null
-    notes?: NullableStringFieldUpdateOperationsInput | string | null
-    totalDeposits?: IntFieldUpdateOperationsInput | number
-    totalDepositAmount?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
-    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
-    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
-    deletedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
-    depositDetails?: DepositDetailUncheckedUpdateManyWithoutBankAccountNestedInput
-  }
-
-  export type BankAccountCreateManyInput = {
-    id?: number
-    currency: $Enums.ExchangeCurrencyCode
-    bankName: string
-    accountNumber: string
-    accountHolder: string
-    isActive?: boolean
-    priority?: number
-    description?: string | null
-    notes?: string | null
-    totalDeposits?: number
-    totalDepositAmount?: Decimal | DecimalJsLike | number | string
-    createdAt?: Date | string
-    updatedAt?: Date | string
-    deletedAt?: Date | string | null
-  }
-
-  export type BankAccountUpdateManyMutationInput = {
-    currency?: EnumExchangeCurrencyCodeFieldUpdateOperationsInput | $Enums.ExchangeCurrencyCode
-    bankName?: StringFieldUpdateOperationsInput | string
-    accountNumber?: StringFieldUpdateOperationsInput | string
-    accountHolder?: StringFieldUpdateOperationsInput | string
-    isActive?: BoolFieldUpdateOperationsInput | boolean
-    priority?: IntFieldUpdateOperationsInput | number
-    description?: NullableStringFieldUpdateOperationsInput | string | null
-    notes?: NullableStringFieldUpdateOperationsInput | string | null
-    totalDeposits?: IntFieldUpdateOperationsInput | number
-    totalDepositAmount?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
-    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
-    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
-    deletedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
-  }
-
-  export type BankAccountUncheckedUpdateManyInput = {
-    id?: IntFieldUpdateOperationsInput | number
-    currency?: EnumExchangeCurrencyCodeFieldUpdateOperationsInput | $Enums.ExchangeCurrencyCode
-    bankName?: StringFieldUpdateOperationsInput | string
-    accountNumber?: StringFieldUpdateOperationsInput | string
-    accountHolder?: StringFieldUpdateOperationsInput | string
-    isActive?: BoolFieldUpdateOperationsInput | boolean
-    priority?: IntFieldUpdateOperationsInput | number
-    description?: NullableStringFieldUpdateOperationsInput | string | null
-    notes?: NullableStringFieldUpdateOperationsInput | string | null
-    totalDeposits?: IntFieldUpdateOperationsInput | number
-    totalDepositAmount?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
-    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
-    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
-    deletedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
-  }
-
   export type AffiliateCodeCreateInput = {
     id?: string
     code: string
@@ -68597,9 +69970,6 @@ export namespace Prisma {
     depositNetwork?: string | null
     walletAddress?: string | null
     walletAddressExtraId?: string | null
-    bankName?: string | null
-    accountNumber?: string | null
-    accountHolder?: string | null
     depositorName?: string | null
     transactionHash?: string | null
     requestedAmount: Decimal | DecimalJsLike | number | string
@@ -68613,7 +69983,8 @@ export namespace Prisma {
     feePaidBy?: $Enums.FeePaidByType | null
     failureReason?: string | null
     providerMetadata?: NullableJsonNullValueInput | InputJsonValue
-    BankAccount?: BankAccountCreateNestedOneWithoutDepositDetailsInput
+    BankConfig?: BankConfigCreateNestedOneWithoutDepositDetailsInput
+    CryptoConfig?: CryptoConfigCreateNestedOneWithoutDepositDetailsInput
     transaction: TransactionCreateNestedOneWithoutDepositDetailInput
     Rolling?: RollingCreateNestedManyWithoutDepositDetailInput
   }
@@ -68634,9 +70005,6 @@ export namespace Prisma {
     depositNetwork?: string | null
     walletAddress?: string | null
     walletAddressExtraId?: string | null
-    bankName?: string | null
-    accountNumber?: string | null
-    accountHolder?: string | null
     depositorName?: string | null
     transactionHash?: string | null
     requestedAmount: Decimal | DecimalJsLike | number | string
@@ -68650,7 +70018,8 @@ export namespace Prisma {
     feePaidBy?: $Enums.FeePaidByType | null
     failureReason?: string | null
     providerMetadata?: NullableJsonNullValueInput | InputJsonValue
-    bankAccountId?: number | null
+    bankConfigId?: bigint | number | null
+    cryptoConfigId?: bigint | number | null
     Rolling?: RollingUncheckedCreateNestedManyWithoutDepositDetailInput
   }
 
@@ -68669,9 +70038,6 @@ export namespace Prisma {
     depositNetwork?: NullableStringFieldUpdateOperationsInput | string | null
     walletAddress?: NullableStringFieldUpdateOperationsInput | string | null
     walletAddressExtraId?: NullableStringFieldUpdateOperationsInput | string | null
-    bankName?: NullableStringFieldUpdateOperationsInput | string | null
-    accountNumber?: NullableStringFieldUpdateOperationsInput | string | null
-    accountHolder?: NullableStringFieldUpdateOperationsInput | string | null
     depositorName?: NullableStringFieldUpdateOperationsInput | string | null
     transactionHash?: NullableStringFieldUpdateOperationsInput | string | null
     requestedAmount?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
@@ -68685,7 +70051,8 @@ export namespace Prisma {
     feePaidBy?: NullableEnumFeePaidByTypeFieldUpdateOperationsInput | $Enums.FeePaidByType | null
     failureReason?: NullableStringFieldUpdateOperationsInput | string | null
     providerMetadata?: NullableJsonNullValueInput | InputJsonValue
-    BankAccount?: BankAccountUpdateOneWithoutDepositDetailsNestedInput
+    BankConfig?: BankConfigUpdateOneWithoutDepositDetailsNestedInput
+    CryptoConfig?: CryptoConfigUpdateOneWithoutDepositDetailsNestedInput
     transaction?: TransactionUpdateOneRequiredWithoutDepositDetailNestedInput
     Rolling?: RollingUpdateManyWithoutDepositDetailNestedInput
   }
@@ -68706,9 +70073,6 @@ export namespace Prisma {
     depositNetwork?: NullableStringFieldUpdateOperationsInput | string | null
     walletAddress?: NullableStringFieldUpdateOperationsInput | string | null
     walletAddressExtraId?: NullableStringFieldUpdateOperationsInput | string | null
-    bankName?: NullableStringFieldUpdateOperationsInput | string | null
-    accountNumber?: NullableStringFieldUpdateOperationsInput | string | null
-    accountHolder?: NullableStringFieldUpdateOperationsInput | string | null
     depositorName?: NullableStringFieldUpdateOperationsInput | string | null
     transactionHash?: NullableStringFieldUpdateOperationsInput | string | null
     requestedAmount?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
@@ -68722,7 +70086,8 @@ export namespace Prisma {
     feePaidBy?: NullableEnumFeePaidByTypeFieldUpdateOperationsInput | $Enums.FeePaidByType | null
     failureReason?: NullableStringFieldUpdateOperationsInput | string | null
     providerMetadata?: NullableJsonNullValueInput | InputJsonValue
-    bankAccountId?: NullableIntFieldUpdateOperationsInput | number | null
+    bankConfigId?: NullableBigIntFieldUpdateOperationsInput | bigint | number | null
+    cryptoConfigId?: NullableBigIntFieldUpdateOperationsInput | bigint | number | null
     Rolling?: RollingUncheckedUpdateManyWithoutDepositDetailNestedInput
   }
 
@@ -68742,9 +70107,6 @@ export namespace Prisma {
     depositNetwork?: string | null
     walletAddress?: string | null
     walletAddressExtraId?: string | null
-    bankName?: string | null
-    accountNumber?: string | null
-    accountHolder?: string | null
     depositorName?: string | null
     transactionHash?: string | null
     requestedAmount: Decimal | DecimalJsLike | number | string
@@ -68758,7 +70120,8 @@ export namespace Prisma {
     feePaidBy?: $Enums.FeePaidByType | null
     failureReason?: string | null
     providerMetadata?: NullableJsonNullValueInput | InputJsonValue
-    bankAccountId?: number | null
+    bankConfigId?: bigint | number | null
+    cryptoConfigId?: bigint | number | null
   }
 
   export type DepositDetailUpdateManyMutationInput = {
@@ -68776,9 +70139,6 @@ export namespace Prisma {
     depositNetwork?: NullableStringFieldUpdateOperationsInput | string | null
     walletAddress?: NullableStringFieldUpdateOperationsInput | string | null
     walletAddressExtraId?: NullableStringFieldUpdateOperationsInput | string | null
-    bankName?: NullableStringFieldUpdateOperationsInput | string | null
-    accountNumber?: NullableStringFieldUpdateOperationsInput | string | null
-    accountHolder?: NullableStringFieldUpdateOperationsInput | string | null
     depositorName?: NullableStringFieldUpdateOperationsInput | string | null
     transactionHash?: NullableStringFieldUpdateOperationsInput | string | null
     requestedAmount?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
@@ -68810,9 +70170,6 @@ export namespace Prisma {
     depositNetwork?: NullableStringFieldUpdateOperationsInput | string | null
     walletAddress?: NullableStringFieldUpdateOperationsInput | string | null
     walletAddressExtraId?: NullableStringFieldUpdateOperationsInput | string | null
-    bankName?: NullableStringFieldUpdateOperationsInput | string | null
-    accountNumber?: NullableStringFieldUpdateOperationsInput | string | null
-    accountHolder?: NullableStringFieldUpdateOperationsInput | string | null
     depositorName?: NullableStringFieldUpdateOperationsInput | string | null
     transactionHash?: NullableStringFieldUpdateOperationsInput | string | null
     requestedAmount?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
@@ -68826,7 +70183,254 @@ export namespace Prisma {
     feePaidBy?: NullableEnumFeePaidByTypeFieldUpdateOperationsInput | $Enums.FeePaidByType | null
     failureReason?: NullableStringFieldUpdateOperationsInput | string | null
     providerMetadata?: NullableJsonNullValueInput | InputJsonValue
-    bankAccountId?: NullableIntFieldUpdateOperationsInput | number | null
+    bankConfigId?: NullableBigIntFieldUpdateOperationsInput | bigint | number | null
+    cryptoConfigId?: NullableBigIntFieldUpdateOperationsInput | bigint | number | null
+  }
+
+  export type CryptoConfigCreateInput = {
+    id?: bigint | number
+    uid: string
+    symbol: string
+    network: string
+    isActive?: boolean
+    minDepositAmount: Decimal | DecimalJsLike | number | string
+    depositFeeRate?: Decimal | DecimalJsLike | number | string
+    confirmations?: number
+    contractAddress?: string | null
+    createdAt?: Date | string
+    updatedAt?: Date | string
+    depositDetails?: DepositDetailCreateNestedManyWithoutCryptoConfigInput
+  }
+
+  export type CryptoConfigUncheckedCreateInput = {
+    id?: bigint | number
+    uid: string
+    symbol: string
+    network: string
+    isActive?: boolean
+    minDepositAmount: Decimal | DecimalJsLike | number | string
+    depositFeeRate?: Decimal | DecimalJsLike | number | string
+    confirmations?: number
+    contractAddress?: string | null
+    createdAt?: Date | string
+    updatedAt?: Date | string
+    depositDetails?: DepositDetailUncheckedCreateNestedManyWithoutCryptoConfigInput
+  }
+
+  export type CryptoConfigUpdateInput = {
+    id?: BigIntFieldUpdateOperationsInput | bigint | number
+    uid?: StringFieldUpdateOperationsInput | string
+    symbol?: StringFieldUpdateOperationsInput | string
+    network?: StringFieldUpdateOperationsInput | string
+    isActive?: BoolFieldUpdateOperationsInput | boolean
+    minDepositAmount?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
+    depositFeeRate?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
+    confirmations?: IntFieldUpdateOperationsInput | number
+    contractAddress?: NullableStringFieldUpdateOperationsInput | string | null
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    depositDetails?: DepositDetailUpdateManyWithoutCryptoConfigNestedInput
+  }
+
+  export type CryptoConfigUncheckedUpdateInput = {
+    id?: BigIntFieldUpdateOperationsInput | bigint | number
+    uid?: StringFieldUpdateOperationsInput | string
+    symbol?: StringFieldUpdateOperationsInput | string
+    network?: StringFieldUpdateOperationsInput | string
+    isActive?: BoolFieldUpdateOperationsInput | boolean
+    minDepositAmount?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
+    depositFeeRate?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
+    confirmations?: IntFieldUpdateOperationsInput | number
+    contractAddress?: NullableStringFieldUpdateOperationsInput | string | null
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    depositDetails?: DepositDetailUncheckedUpdateManyWithoutCryptoConfigNestedInput
+  }
+
+  export type CryptoConfigCreateManyInput = {
+    id?: bigint | number
+    uid: string
+    symbol: string
+    network: string
+    isActive?: boolean
+    minDepositAmount: Decimal | DecimalJsLike | number | string
+    depositFeeRate?: Decimal | DecimalJsLike | number | string
+    confirmations?: number
+    contractAddress?: string | null
+    createdAt?: Date | string
+    updatedAt?: Date | string
+  }
+
+  export type CryptoConfigUpdateManyMutationInput = {
+    id?: BigIntFieldUpdateOperationsInput | bigint | number
+    uid?: StringFieldUpdateOperationsInput | string
+    symbol?: StringFieldUpdateOperationsInput | string
+    network?: StringFieldUpdateOperationsInput | string
+    isActive?: BoolFieldUpdateOperationsInput | boolean
+    minDepositAmount?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
+    depositFeeRate?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
+    confirmations?: IntFieldUpdateOperationsInput | number
+    contractAddress?: NullableStringFieldUpdateOperationsInput | string | null
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+  }
+
+  export type CryptoConfigUncheckedUpdateManyInput = {
+    id?: BigIntFieldUpdateOperationsInput | bigint | number
+    uid?: StringFieldUpdateOperationsInput | string
+    symbol?: StringFieldUpdateOperationsInput | string
+    network?: StringFieldUpdateOperationsInput | string
+    isActive?: BoolFieldUpdateOperationsInput | boolean
+    minDepositAmount?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
+    depositFeeRate?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
+    confirmations?: IntFieldUpdateOperationsInput | number
+    contractAddress?: NullableStringFieldUpdateOperationsInput | string | null
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+  }
+
+  export type BankConfigCreateInput = {
+    id?: bigint | number
+    uid: string
+    currency: $Enums.ExchangeCurrencyCode
+    bankName: string
+    accountNumber: string
+    accountHolder: string
+    isActive?: boolean
+    priority?: number
+    description?: string | null
+    notes?: string | null
+    minAmount: Decimal | DecimalJsLike | number | string
+    maxAmount?: Decimal | DecimalJsLike | number | string | null
+    totalDeposits?: number
+    totalDepositAmount?: Decimal | DecimalJsLike | number | string
+    createdAt?: Date | string
+    updatedAt?: Date | string
+    deletedAt?: Date | string | null
+    depositDetails?: DepositDetailCreateNestedManyWithoutBankConfigInput
+  }
+
+  export type BankConfigUncheckedCreateInput = {
+    id?: bigint | number
+    uid: string
+    currency: $Enums.ExchangeCurrencyCode
+    bankName: string
+    accountNumber: string
+    accountHolder: string
+    isActive?: boolean
+    priority?: number
+    description?: string | null
+    notes?: string | null
+    minAmount: Decimal | DecimalJsLike | number | string
+    maxAmount?: Decimal | DecimalJsLike | number | string | null
+    totalDeposits?: number
+    totalDepositAmount?: Decimal | DecimalJsLike | number | string
+    createdAt?: Date | string
+    updatedAt?: Date | string
+    deletedAt?: Date | string | null
+    depositDetails?: DepositDetailUncheckedCreateNestedManyWithoutBankConfigInput
+  }
+
+  export type BankConfigUpdateInput = {
+    id?: BigIntFieldUpdateOperationsInput | bigint | number
+    uid?: StringFieldUpdateOperationsInput | string
+    currency?: EnumExchangeCurrencyCodeFieldUpdateOperationsInput | $Enums.ExchangeCurrencyCode
+    bankName?: StringFieldUpdateOperationsInput | string
+    accountNumber?: StringFieldUpdateOperationsInput | string
+    accountHolder?: StringFieldUpdateOperationsInput | string
+    isActive?: BoolFieldUpdateOperationsInput | boolean
+    priority?: IntFieldUpdateOperationsInput | number
+    description?: NullableStringFieldUpdateOperationsInput | string | null
+    notes?: NullableStringFieldUpdateOperationsInput | string | null
+    minAmount?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
+    maxAmount?: NullableDecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string | null
+    totalDeposits?: IntFieldUpdateOperationsInput | number
+    totalDepositAmount?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    deletedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    depositDetails?: DepositDetailUpdateManyWithoutBankConfigNestedInput
+  }
+
+  export type BankConfigUncheckedUpdateInput = {
+    id?: BigIntFieldUpdateOperationsInput | bigint | number
+    uid?: StringFieldUpdateOperationsInput | string
+    currency?: EnumExchangeCurrencyCodeFieldUpdateOperationsInput | $Enums.ExchangeCurrencyCode
+    bankName?: StringFieldUpdateOperationsInput | string
+    accountNumber?: StringFieldUpdateOperationsInput | string
+    accountHolder?: StringFieldUpdateOperationsInput | string
+    isActive?: BoolFieldUpdateOperationsInput | boolean
+    priority?: IntFieldUpdateOperationsInput | number
+    description?: NullableStringFieldUpdateOperationsInput | string | null
+    notes?: NullableStringFieldUpdateOperationsInput | string | null
+    minAmount?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
+    maxAmount?: NullableDecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string | null
+    totalDeposits?: IntFieldUpdateOperationsInput | number
+    totalDepositAmount?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    deletedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    depositDetails?: DepositDetailUncheckedUpdateManyWithoutBankConfigNestedInput
+  }
+
+  export type BankConfigCreateManyInput = {
+    id?: bigint | number
+    uid: string
+    currency: $Enums.ExchangeCurrencyCode
+    bankName: string
+    accountNumber: string
+    accountHolder: string
+    isActive?: boolean
+    priority?: number
+    description?: string | null
+    notes?: string | null
+    minAmount: Decimal | DecimalJsLike | number | string
+    maxAmount?: Decimal | DecimalJsLike | number | string | null
+    totalDeposits?: number
+    totalDepositAmount?: Decimal | DecimalJsLike | number | string
+    createdAt?: Date | string
+    updatedAt?: Date | string
+    deletedAt?: Date | string | null
+  }
+
+  export type BankConfigUpdateManyMutationInput = {
+    id?: BigIntFieldUpdateOperationsInput | bigint | number
+    uid?: StringFieldUpdateOperationsInput | string
+    currency?: EnumExchangeCurrencyCodeFieldUpdateOperationsInput | $Enums.ExchangeCurrencyCode
+    bankName?: StringFieldUpdateOperationsInput | string
+    accountNumber?: StringFieldUpdateOperationsInput | string
+    accountHolder?: StringFieldUpdateOperationsInput | string
+    isActive?: BoolFieldUpdateOperationsInput | boolean
+    priority?: IntFieldUpdateOperationsInput | number
+    description?: NullableStringFieldUpdateOperationsInput | string | null
+    notes?: NullableStringFieldUpdateOperationsInput | string | null
+    minAmount?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
+    maxAmount?: NullableDecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string | null
+    totalDeposits?: IntFieldUpdateOperationsInput | number
+    totalDepositAmount?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    deletedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  }
+
+  export type BankConfigUncheckedUpdateManyInput = {
+    id?: BigIntFieldUpdateOperationsInput | bigint | number
+    uid?: StringFieldUpdateOperationsInput | string
+    currency?: EnumExchangeCurrencyCodeFieldUpdateOperationsInput | $Enums.ExchangeCurrencyCode
+    bankName?: StringFieldUpdateOperationsInput | string
+    accountNumber?: StringFieldUpdateOperationsInput | string
+    accountHolder?: StringFieldUpdateOperationsInput | string
+    isActive?: BoolFieldUpdateOperationsInput | boolean
+    priority?: IntFieldUpdateOperationsInput | number
+    description?: NullableStringFieldUpdateOperationsInput | string | null
+    notes?: NullableStringFieldUpdateOperationsInput | string | null
+    minAmount?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
+    maxAmount?: NullableDecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string | null
+    totalDeposits?: IntFieldUpdateOperationsInput | number
+    totalDepositAmount?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    deletedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   }
 
   export type PromotionCreateInput = {
@@ -72418,81 +74022,6 @@ export namespace Prisma {
     gameId?: SortOrder
   }
 
-  export type DepositDetailListRelationFilter = {
-    every?: DepositDetailWhereInput
-    some?: DepositDetailWhereInput
-    none?: DepositDetailWhereInput
-  }
-
-  export type DepositDetailOrderByRelationAggregateInput = {
-    _count?: SortOrder
-  }
-
-  export type BankAccountCountOrderByAggregateInput = {
-    id?: SortOrder
-    currency?: SortOrder
-    bankName?: SortOrder
-    accountNumber?: SortOrder
-    accountHolder?: SortOrder
-    isActive?: SortOrder
-    priority?: SortOrder
-    description?: SortOrder
-    notes?: SortOrder
-    totalDeposits?: SortOrder
-    totalDepositAmount?: SortOrder
-    createdAt?: SortOrder
-    updatedAt?: SortOrder
-    deletedAt?: SortOrder
-  }
-
-  export type BankAccountAvgOrderByAggregateInput = {
-    id?: SortOrder
-    priority?: SortOrder
-    totalDeposits?: SortOrder
-    totalDepositAmount?: SortOrder
-  }
-
-  export type BankAccountMaxOrderByAggregateInput = {
-    id?: SortOrder
-    currency?: SortOrder
-    bankName?: SortOrder
-    accountNumber?: SortOrder
-    accountHolder?: SortOrder
-    isActive?: SortOrder
-    priority?: SortOrder
-    description?: SortOrder
-    notes?: SortOrder
-    totalDeposits?: SortOrder
-    totalDepositAmount?: SortOrder
-    createdAt?: SortOrder
-    updatedAt?: SortOrder
-    deletedAt?: SortOrder
-  }
-
-  export type BankAccountMinOrderByAggregateInput = {
-    id?: SortOrder
-    currency?: SortOrder
-    bankName?: SortOrder
-    accountNumber?: SortOrder
-    accountHolder?: SortOrder
-    isActive?: SortOrder
-    priority?: SortOrder
-    description?: SortOrder
-    notes?: SortOrder
-    totalDeposits?: SortOrder
-    totalDepositAmount?: SortOrder
-    createdAt?: SortOrder
-    updatedAt?: SortOrder
-    deletedAt?: SortOrder
-  }
-
-  export type BankAccountSumOrderByAggregateInput = {
-    id?: SortOrder
-    priority?: SortOrder
-    totalDeposits?: SortOrder
-    totalDepositAmount?: SortOrder
-  }
-
   export type AffiliateCodeCountOrderByAggregateInput = {
     id?: SortOrder
     userId?: SortOrder
@@ -72942,9 +74471,14 @@ export namespace Prisma {
     not?: NestedEnumDepositMethodTypeFilter<$PrismaModel> | $Enums.DepositMethodType
   }
 
-  export type BankAccountNullableScalarRelationFilter = {
-    is?: BankAccountWhereInput | null
-    isNot?: BankAccountWhereInput | null
+  export type BankConfigNullableScalarRelationFilter = {
+    is?: BankConfigWhereInput | null
+    isNot?: BankConfigWhereInput | null
+  }
+
+  export type CryptoConfigNullableScalarRelationFilter = {
+    is?: CryptoConfigWhereInput | null
+    isNot?: CryptoConfigWhereInput | null
   }
 
   export type DepositDetailCountOrderByAggregateInput = {
@@ -72963,9 +74497,6 @@ export namespace Prisma {
     depositNetwork?: SortOrder
     walletAddress?: SortOrder
     walletAddressExtraId?: SortOrder
-    bankName?: SortOrder
-    accountNumber?: SortOrder
-    accountHolder?: SortOrder
     depositorName?: SortOrder
     transactionHash?: SortOrder
     requestedAmount?: SortOrder
@@ -72979,7 +74510,8 @@ export namespace Prisma {
     feePaidBy?: SortOrder
     failureReason?: SortOrder
     providerMetadata?: SortOrder
-    bankAccountId?: SortOrder
+    bankConfigId?: SortOrder
+    cryptoConfigId?: SortOrder
   }
 
   export type DepositDetailAvgOrderByAggregateInput = {
@@ -72989,7 +74521,8 @@ export namespace Prisma {
     actuallyPaid?: SortOrder
     processedBy?: SortOrder
     feeAmount?: SortOrder
-    bankAccountId?: SortOrder
+    bankConfigId?: SortOrder
+    cryptoConfigId?: SortOrder
   }
 
   export type DepositDetailMaxOrderByAggregateInput = {
@@ -73008,9 +74541,6 @@ export namespace Prisma {
     depositNetwork?: SortOrder
     walletAddress?: SortOrder
     walletAddressExtraId?: SortOrder
-    bankName?: SortOrder
-    accountNumber?: SortOrder
-    accountHolder?: SortOrder
     depositorName?: SortOrder
     transactionHash?: SortOrder
     requestedAmount?: SortOrder
@@ -73023,7 +74553,8 @@ export namespace Prisma {
     feeCurrency?: SortOrder
     feePaidBy?: SortOrder
     failureReason?: SortOrder
-    bankAccountId?: SortOrder
+    bankConfigId?: SortOrder
+    cryptoConfigId?: SortOrder
   }
 
   export type DepositDetailMinOrderByAggregateInput = {
@@ -73042,9 +74573,6 @@ export namespace Prisma {
     depositNetwork?: SortOrder
     walletAddress?: SortOrder
     walletAddressExtraId?: SortOrder
-    bankName?: SortOrder
-    accountNumber?: SortOrder
-    accountHolder?: SortOrder
     depositorName?: SortOrder
     transactionHash?: SortOrder
     requestedAmount?: SortOrder
@@ -73057,7 +74585,8 @@ export namespace Prisma {
     feeCurrency?: SortOrder
     feePaidBy?: SortOrder
     failureReason?: SortOrder
-    bankAccountId?: SortOrder
+    bankConfigId?: SortOrder
+    cryptoConfigId?: SortOrder
   }
 
   export type DepositDetailSumOrderByAggregateInput = {
@@ -73067,7 +74596,8 @@ export namespace Prisma {
     actuallyPaid?: SortOrder
     processedBy?: SortOrder
     feeAmount?: SortOrder
-    bankAccountId?: SortOrder
+    bankConfigId?: SortOrder
+    cryptoConfigId?: SortOrder
   }
 
   export type EnumDepositDetailStatusWithAggregatesFilter<$PrismaModel = never> = {
@@ -73088,6 +74618,155 @@ export namespace Prisma {
     _count?: NestedIntFilter<$PrismaModel>
     _min?: NestedEnumDepositMethodTypeFilter<$PrismaModel>
     _max?: NestedEnumDepositMethodTypeFilter<$PrismaModel>
+  }
+
+  export type DepositDetailListRelationFilter = {
+    every?: DepositDetailWhereInput
+    some?: DepositDetailWhereInput
+    none?: DepositDetailWhereInput
+  }
+
+  export type DepositDetailOrderByRelationAggregateInput = {
+    _count?: SortOrder
+  }
+
+  export type CryptoConfigSymbolNetworkCompoundUniqueInput = {
+    symbol: string
+    network: string
+  }
+
+  export type CryptoConfigCountOrderByAggregateInput = {
+    id?: SortOrder
+    uid?: SortOrder
+    symbol?: SortOrder
+    network?: SortOrder
+    isActive?: SortOrder
+    minDepositAmount?: SortOrder
+    depositFeeRate?: SortOrder
+    confirmations?: SortOrder
+    contractAddress?: SortOrder
+    createdAt?: SortOrder
+    updatedAt?: SortOrder
+  }
+
+  export type CryptoConfigAvgOrderByAggregateInput = {
+    id?: SortOrder
+    minDepositAmount?: SortOrder
+    depositFeeRate?: SortOrder
+    confirmations?: SortOrder
+  }
+
+  export type CryptoConfigMaxOrderByAggregateInput = {
+    id?: SortOrder
+    uid?: SortOrder
+    symbol?: SortOrder
+    network?: SortOrder
+    isActive?: SortOrder
+    minDepositAmount?: SortOrder
+    depositFeeRate?: SortOrder
+    confirmations?: SortOrder
+    contractAddress?: SortOrder
+    createdAt?: SortOrder
+    updatedAt?: SortOrder
+  }
+
+  export type CryptoConfigMinOrderByAggregateInput = {
+    id?: SortOrder
+    uid?: SortOrder
+    symbol?: SortOrder
+    network?: SortOrder
+    isActive?: SortOrder
+    minDepositAmount?: SortOrder
+    depositFeeRate?: SortOrder
+    confirmations?: SortOrder
+    contractAddress?: SortOrder
+    createdAt?: SortOrder
+    updatedAt?: SortOrder
+  }
+
+  export type CryptoConfigSumOrderByAggregateInput = {
+    id?: SortOrder
+    minDepositAmount?: SortOrder
+    depositFeeRate?: SortOrder
+    confirmations?: SortOrder
+  }
+
+  export type BankConfigCountOrderByAggregateInput = {
+    id?: SortOrder
+    uid?: SortOrder
+    currency?: SortOrder
+    bankName?: SortOrder
+    accountNumber?: SortOrder
+    accountHolder?: SortOrder
+    isActive?: SortOrder
+    priority?: SortOrder
+    description?: SortOrder
+    notes?: SortOrder
+    minAmount?: SortOrder
+    maxAmount?: SortOrder
+    totalDeposits?: SortOrder
+    totalDepositAmount?: SortOrder
+    createdAt?: SortOrder
+    updatedAt?: SortOrder
+    deletedAt?: SortOrder
+  }
+
+  export type BankConfigAvgOrderByAggregateInput = {
+    id?: SortOrder
+    priority?: SortOrder
+    minAmount?: SortOrder
+    maxAmount?: SortOrder
+    totalDeposits?: SortOrder
+    totalDepositAmount?: SortOrder
+  }
+
+  export type BankConfigMaxOrderByAggregateInput = {
+    id?: SortOrder
+    uid?: SortOrder
+    currency?: SortOrder
+    bankName?: SortOrder
+    accountNumber?: SortOrder
+    accountHolder?: SortOrder
+    isActive?: SortOrder
+    priority?: SortOrder
+    description?: SortOrder
+    notes?: SortOrder
+    minAmount?: SortOrder
+    maxAmount?: SortOrder
+    totalDeposits?: SortOrder
+    totalDepositAmount?: SortOrder
+    createdAt?: SortOrder
+    updatedAt?: SortOrder
+    deletedAt?: SortOrder
+  }
+
+  export type BankConfigMinOrderByAggregateInput = {
+    id?: SortOrder
+    uid?: SortOrder
+    currency?: SortOrder
+    bankName?: SortOrder
+    accountNumber?: SortOrder
+    accountHolder?: SortOrder
+    isActive?: SortOrder
+    priority?: SortOrder
+    description?: SortOrder
+    notes?: SortOrder
+    minAmount?: SortOrder
+    maxAmount?: SortOrder
+    totalDeposits?: SortOrder
+    totalDepositAmount?: SortOrder
+    createdAt?: SortOrder
+    updatedAt?: SortOrder
+    deletedAt?: SortOrder
+  }
+
+  export type BankConfigSumOrderByAggregateInput = {
+    id?: SortOrder
+    priority?: SortOrder
+    minAmount?: SortOrder
+    maxAmount?: SortOrder
+    totalDeposits?: SortOrder
+    totalDepositAmount?: SortOrder
   }
 
   export type EnumPromotionTargetTypeFilter<$PrismaModel = never> = {
@@ -75667,48 +77346,6 @@ export namespace Prisma {
     deleteMany?: GameRoundScalarWhereInput | GameRoundScalarWhereInput[]
   }
 
-  export type DepositDetailCreateNestedManyWithoutBankAccountInput = {
-    create?: XOR<DepositDetailCreateWithoutBankAccountInput, DepositDetailUncheckedCreateWithoutBankAccountInput> | DepositDetailCreateWithoutBankAccountInput[] | DepositDetailUncheckedCreateWithoutBankAccountInput[]
-    connectOrCreate?: DepositDetailCreateOrConnectWithoutBankAccountInput | DepositDetailCreateOrConnectWithoutBankAccountInput[]
-    createMany?: DepositDetailCreateManyBankAccountInputEnvelope
-    connect?: DepositDetailWhereUniqueInput | DepositDetailWhereUniqueInput[]
-  }
-
-  export type DepositDetailUncheckedCreateNestedManyWithoutBankAccountInput = {
-    create?: XOR<DepositDetailCreateWithoutBankAccountInput, DepositDetailUncheckedCreateWithoutBankAccountInput> | DepositDetailCreateWithoutBankAccountInput[] | DepositDetailUncheckedCreateWithoutBankAccountInput[]
-    connectOrCreate?: DepositDetailCreateOrConnectWithoutBankAccountInput | DepositDetailCreateOrConnectWithoutBankAccountInput[]
-    createMany?: DepositDetailCreateManyBankAccountInputEnvelope
-    connect?: DepositDetailWhereUniqueInput | DepositDetailWhereUniqueInput[]
-  }
-
-  export type DepositDetailUpdateManyWithoutBankAccountNestedInput = {
-    create?: XOR<DepositDetailCreateWithoutBankAccountInput, DepositDetailUncheckedCreateWithoutBankAccountInput> | DepositDetailCreateWithoutBankAccountInput[] | DepositDetailUncheckedCreateWithoutBankAccountInput[]
-    connectOrCreate?: DepositDetailCreateOrConnectWithoutBankAccountInput | DepositDetailCreateOrConnectWithoutBankAccountInput[]
-    upsert?: DepositDetailUpsertWithWhereUniqueWithoutBankAccountInput | DepositDetailUpsertWithWhereUniqueWithoutBankAccountInput[]
-    createMany?: DepositDetailCreateManyBankAccountInputEnvelope
-    set?: DepositDetailWhereUniqueInput | DepositDetailWhereUniqueInput[]
-    disconnect?: DepositDetailWhereUniqueInput | DepositDetailWhereUniqueInput[]
-    delete?: DepositDetailWhereUniqueInput | DepositDetailWhereUniqueInput[]
-    connect?: DepositDetailWhereUniqueInput | DepositDetailWhereUniqueInput[]
-    update?: DepositDetailUpdateWithWhereUniqueWithoutBankAccountInput | DepositDetailUpdateWithWhereUniqueWithoutBankAccountInput[]
-    updateMany?: DepositDetailUpdateManyWithWhereWithoutBankAccountInput | DepositDetailUpdateManyWithWhereWithoutBankAccountInput[]
-    deleteMany?: DepositDetailScalarWhereInput | DepositDetailScalarWhereInput[]
-  }
-
-  export type DepositDetailUncheckedUpdateManyWithoutBankAccountNestedInput = {
-    create?: XOR<DepositDetailCreateWithoutBankAccountInput, DepositDetailUncheckedCreateWithoutBankAccountInput> | DepositDetailCreateWithoutBankAccountInput[] | DepositDetailUncheckedCreateWithoutBankAccountInput[]
-    connectOrCreate?: DepositDetailCreateOrConnectWithoutBankAccountInput | DepositDetailCreateOrConnectWithoutBankAccountInput[]
-    upsert?: DepositDetailUpsertWithWhereUniqueWithoutBankAccountInput | DepositDetailUpsertWithWhereUniqueWithoutBankAccountInput[]
-    createMany?: DepositDetailCreateManyBankAccountInputEnvelope
-    set?: DepositDetailWhereUniqueInput | DepositDetailWhereUniqueInput[]
-    disconnect?: DepositDetailWhereUniqueInput | DepositDetailWhereUniqueInput[]
-    delete?: DepositDetailWhereUniqueInput | DepositDetailWhereUniqueInput[]
-    connect?: DepositDetailWhereUniqueInput | DepositDetailWhereUniqueInput[]
-    update?: DepositDetailUpdateWithWhereUniqueWithoutBankAccountInput | DepositDetailUpdateWithWhereUniqueWithoutBankAccountInput[]
-    updateMany?: DepositDetailUpdateManyWithWhereWithoutBankAccountInput | DepositDetailUpdateManyWithWhereWithoutBankAccountInput[]
-    deleteMany?: DepositDetailScalarWhereInput | DepositDetailScalarWhereInput[]
-  }
-
   export type UserCreateNestedOneWithoutAffiliateCodesInput = {
     create?: XOR<UserCreateWithoutAffiliateCodesInput, UserUncheckedCreateWithoutAffiliateCodesInput>
     connectOrCreate?: UserCreateOrConnectWithoutAffiliateCodesInput
@@ -75915,10 +77552,16 @@ export namespace Prisma {
     update?: XOR<XOR<UserUpdateToOneWithWhereWithoutLoginAttemptsInput, UserUpdateWithoutLoginAttemptsInput>, UserUncheckedUpdateWithoutLoginAttemptsInput>
   }
 
-  export type BankAccountCreateNestedOneWithoutDepositDetailsInput = {
-    create?: XOR<BankAccountCreateWithoutDepositDetailsInput, BankAccountUncheckedCreateWithoutDepositDetailsInput>
-    connectOrCreate?: BankAccountCreateOrConnectWithoutDepositDetailsInput
-    connect?: BankAccountWhereUniqueInput
+  export type BankConfigCreateNestedOneWithoutDepositDetailsInput = {
+    create?: XOR<BankConfigCreateWithoutDepositDetailsInput, BankConfigUncheckedCreateWithoutDepositDetailsInput>
+    connectOrCreate?: BankConfigCreateOrConnectWithoutDepositDetailsInput
+    connect?: BankConfigWhereUniqueInput
+  }
+
+  export type CryptoConfigCreateNestedOneWithoutDepositDetailsInput = {
+    create?: XOR<CryptoConfigCreateWithoutDepositDetailsInput, CryptoConfigUncheckedCreateWithoutDepositDetailsInput>
+    connectOrCreate?: CryptoConfigCreateOrConnectWithoutDepositDetailsInput
+    connect?: CryptoConfigWhereUniqueInput
   }
 
   export type TransactionCreateNestedOneWithoutDepositDetailInput = {
@@ -75949,14 +77592,24 @@ export namespace Prisma {
     set?: $Enums.DepositMethodType
   }
 
-  export type BankAccountUpdateOneWithoutDepositDetailsNestedInput = {
-    create?: XOR<BankAccountCreateWithoutDepositDetailsInput, BankAccountUncheckedCreateWithoutDepositDetailsInput>
-    connectOrCreate?: BankAccountCreateOrConnectWithoutDepositDetailsInput
-    upsert?: BankAccountUpsertWithoutDepositDetailsInput
-    disconnect?: BankAccountWhereInput | boolean
-    delete?: BankAccountWhereInput | boolean
-    connect?: BankAccountWhereUniqueInput
-    update?: XOR<XOR<BankAccountUpdateToOneWithWhereWithoutDepositDetailsInput, BankAccountUpdateWithoutDepositDetailsInput>, BankAccountUncheckedUpdateWithoutDepositDetailsInput>
+  export type BankConfigUpdateOneWithoutDepositDetailsNestedInput = {
+    create?: XOR<BankConfigCreateWithoutDepositDetailsInput, BankConfigUncheckedCreateWithoutDepositDetailsInput>
+    connectOrCreate?: BankConfigCreateOrConnectWithoutDepositDetailsInput
+    upsert?: BankConfigUpsertWithoutDepositDetailsInput
+    disconnect?: BankConfigWhereInput | boolean
+    delete?: BankConfigWhereInput | boolean
+    connect?: BankConfigWhereUniqueInput
+    update?: XOR<XOR<BankConfigUpdateToOneWithWhereWithoutDepositDetailsInput, BankConfigUpdateWithoutDepositDetailsInput>, BankConfigUncheckedUpdateWithoutDepositDetailsInput>
+  }
+
+  export type CryptoConfigUpdateOneWithoutDepositDetailsNestedInput = {
+    create?: XOR<CryptoConfigCreateWithoutDepositDetailsInput, CryptoConfigUncheckedCreateWithoutDepositDetailsInput>
+    connectOrCreate?: CryptoConfigCreateOrConnectWithoutDepositDetailsInput
+    upsert?: CryptoConfigUpsertWithoutDepositDetailsInput
+    disconnect?: CryptoConfigWhereInput | boolean
+    delete?: CryptoConfigWhereInput | boolean
+    connect?: CryptoConfigWhereUniqueInput
+    update?: XOR<XOR<CryptoConfigUpdateToOneWithWhereWithoutDepositDetailsInput, CryptoConfigUpdateWithoutDepositDetailsInput>, CryptoConfigUncheckedUpdateWithoutDepositDetailsInput>
   }
 
   export type TransactionUpdateOneRequiredWithoutDepositDetailNestedInput = {
@@ -75993,6 +77646,90 @@ export namespace Prisma {
     update?: RollingUpdateWithWhereUniqueWithoutDepositDetailInput | RollingUpdateWithWhereUniqueWithoutDepositDetailInput[]
     updateMany?: RollingUpdateManyWithWhereWithoutDepositDetailInput | RollingUpdateManyWithWhereWithoutDepositDetailInput[]
     deleteMany?: RollingScalarWhereInput | RollingScalarWhereInput[]
+  }
+
+  export type DepositDetailCreateNestedManyWithoutCryptoConfigInput = {
+    create?: XOR<DepositDetailCreateWithoutCryptoConfigInput, DepositDetailUncheckedCreateWithoutCryptoConfigInput> | DepositDetailCreateWithoutCryptoConfigInput[] | DepositDetailUncheckedCreateWithoutCryptoConfigInput[]
+    connectOrCreate?: DepositDetailCreateOrConnectWithoutCryptoConfigInput | DepositDetailCreateOrConnectWithoutCryptoConfigInput[]
+    createMany?: DepositDetailCreateManyCryptoConfigInputEnvelope
+    connect?: DepositDetailWhereUniqueInput | DepositDetailWhereUniqueInput[]
+  }
+
+  export type DepositDetailUncheckedCreateNestedManyWithoutCryptoConfigInput = {
+    create?: XOR<DepositDetailCreateWithoutCryptoConfigInput, DepositDetailUncheckedCreateWithoutCryptoConfigInput> | DepositDetailCreateWithoutCryptoConfigInput[] | DepositDetailUncheckedCreateWithoutCryptoConfigInput[]
+    connectOrCreate?: DepositDetailCreateOrConnectWithoutCryptoConfigInput | DepositDetailCreateOrConnectWithoutCryptoConfigInput[]
+    createMany?: DepositDetailCreateManyCryptoConfigInputEnvelope
+    connect?: DepositDetailWhereUniqueInput | DepositDetailWhereUniqueInput[]
+  }
+
+  export type DepositDetailUpdateManyWithoutCryptoConfigNestedInput = {
+    create?: XOR<DepositDetailCreateWithoutCryptoConfigInput, DepositDetailUncheckedCreateWithoutCryptoConfigInput> | DepositDetailCreateWithoutCryptoConfigInput[] | DepositDetailUncheckedCreateWithoutCryptoConfigInput[]
+    connectOrCreate?: DepositDetailCreateOrConnectWithoutCryptoConfigInput | DepositDetailCreateOrConnectWithoutCryptoConfigInput[]
+    upsert?: DepositDetailUpsertWithWhereUniqueWithoutCryptoConfigInput | DepositDetailUpsertWithWhereUniqueWithoutCryptoConfigInput[]
+    createMany?: DepositDetailCreateManyCryptoConfigInputEnvelope
+    set?: DepositDetailWhereUniqueInput | DepositDetailWhereUniqueInput[]
+    disconnect?: DepositDetailWhereUniqueInput | DepositDetailWhereUniqueInput[]
+    delete?: DepositDetailWhereUniqueInput | DepositDetailWhereUniqueInput[]
+    connect?: DepositDetailWhereUniqueInput | DepositDetailWhereUniqueInput[]
+    update?: DepositDetailUpdateWithWhereUniqueWithoutCryptoConfigInput | DepositDetailUpdateWithWhereUniqueWithoutCryptoConfigInput[]
+    updateMany?: DepositDetailUpdateManyWithWhereWithoutCryptoConfigInput | DepositDetailUpdateManyWithWhereWithoutCryptoConfigInput[]
+    deleteMany?: DepositDetailScalarWhereInput | DepositDetailScalarWhereInput[]
+  }
+
+  export type DepositDetailUncheckedUpdateManyWithoutCryptoConfigNestedInput = {
+    create?: XOR<DepositDetailCreateWithoutCryptoConfigInput, DepositDetailUncheckedCreateWithoutCryptoConfigInput> | DepositDetailCreateWithoutCryptoConfigInput[] | DepositDetailUncheckedCreateWithoutCryptoConfigInput[]
+    connectOrCreate?: DepositDetailCreateOrConnectWithoutCryptoConfigInput | DepositDetailCreateOrConnectWithoutCryptoConfigInput[]
+    upsert?: DepositDetailUpsertWithWhereUniqueWithoutCryptoConfigInput | DepositDetailUpsertWithWhereUniqueWithoutCryptoConfigInput[]
+    createMany?: DepositDetailCreateManyCryptoConfigInputEnvelope
+    set?: DepositDetailWhereUniqueInput | DepositDetailWhereUniqueInput[]
+    disconnect?: DepositDetailWhereUniqueInput | DepositDetailWhereUniqueInput[]
+    delete?: DepositDetailWhereUniqueInput | DepositDetailWhereUniqueInput[]
+    connect?: DepositDetailWhereUniqueInput | DepositDetailWhereUniqueInput[]
+    update?: DepositDetailUpdateWithWhereUniqueWithoutCryptoConfigInput | DepositDetailUpdateWithWhereUniqueWithoutCryptoConfigInput[]
+    updateMany?: DepositDetailUpdateManyWithWhereWithoutCryptoConfigInput | DepositDetailUpdateManyWithWhereWithoutCryptoConfigInput[]
+    deleteMany?: DepositDetailScalarWhereInput | DepositDetailScalarWhereInput[]
+  }
+
+  export type DepositDetailCreateNestedManyWithoutBankConfigInput = {
+    create?: XOR<DepositDetailCreateWithoutBankConfigInput, DepositDetailUncheckedCreateWithoutBankConfigInput> | DepositDetailCreateWithoutBankConfigInput[] | DepositDetailUncheckedCreateWithoutBankConfigInput[]
+    connectOrCreate?: DepositDetailCreateOrConnectWithoutBankConfigInput | DepositDetailCreateOrConnectWithoutBankConfigInput[]
+    createMany?: DepositDetailCreateManyBankConfigInputEnvelope
+    connect?: DepositDetailWhereUniqueInput | DepositDetailWhereUniqueInput[]
+  }
+
+  export type DepositDetailUncheckedCreateNestedManyWithoutBankConfigInput = {
+    create?: XOR<DepositDetailCreateWithoutBankConfigInput, DepositDetailUncheckedCreateWithoutBankConfigInput> | DepositDetailCreateWithoutBankConfigInput[] | DepositDetailUncheckedCreateWithoutBankConfigInput[]
+    connectOrCreate?: DepositDetailCreateOrConnectWithoutBankConfigInput | DepositDetailCreateOrConnectWithoutBankConfigInput[]
+    createMany?: DepositDetailCreateManyBankConfigInputEnvelope
+    connect?: DepositDetailWhereUniqueInput | DepositDetailWhereUniqueInput[]
+  }
+
+  export type DepositDetailUpdateManyWithoutBankConfigNestedInput = {
+    create?: XOR<DepositDetailCreateWithoutBankConfigInput, DepositDetailUncheckedCreateWithoutBankConfigInput> | DepositDetailCreateWithoutBankConfigInput[] | DepositDetailUncheckedCreateWithoutBankConfigInput[]
+    connectOrCreate?: DepositDetailCreateOrConnectWithoutBankConfigInput | DepositDetailCreateOrConnectWithoutBankConfigInput[]
+    upsert?: DepositDetailUpsertWithWhereUniqueWithoutBankConfigInput | DepositDetailUpsertWithWhereUniqueWithoutBankConfigInput[]
+    createMany?: DepositDetailCreateManyBankConfigInputEnvelope
+    set?: DepositDetailWhereUniqueInput | DepositDetailWhereUniqueInput[]
+    disconnect?: DepositDetailWhereUniqueInput | DepositDetailWhereUniqueInput[]
+    delete?: DepositDetailWhereUniqueInput | DepositDetailWhereUniqueInput[]
+    connect?: DepositDetailWhereUniqueInput | DepositDetailWhereUniqueInput[]
+    update?: DepositDetailUpdateWithWhereUniqueWithoutBankConfigInput | DepositDetailUpdateWithWhereUniqueWithoutBankConfigInput[]
+    updateMany?: DepositDetailUpdateManyWithWhereWithoutBankConfigInput | DepositDetailUpdateManyWithWhereWithoutBankConfigInput[]
+    deleteMany?: DepositDetailScalarWhereInput | DepositDetailScalarWhereInput[]
+  }
+
+  export type DepositDetailUncheckedUpdateManyWithoutBankConfigNestedInput = {
+    create?: XOR<DepositDetailCreateWithoutBankConfigInput, DepositDetailUncheckedCreateWithoutBankConfigInput> | DepositDetailCreateWithoutBankConfigInput[] | DepositDetailUncheckedCreateWithoutBankConfigInput[]
+    connectOrCreate?: DepositDetailCreateOrConnectWithoutBankConfigInput | DepositDetailCreateOrConnectWithoutBankConfigInput[]
+    upsert?: DepositDetailUpsertWithWhereUniqueWithoutBankConfigInput | DepositDetailUpsertWithWhereUniqueWithoutBankConfigInput[]
+    createMany?: DepositDetailCreateManyBankConfigInputEnvelope
+    set?: DepositDetailWhereUniqueInput | DepositDetailWhereUniqueInput[]
+    disconnect?: DepositDetailWhereUniqueInput | DepositDetailWhereUniqueInput[]
+    delete?: DepositDetailWhereUniqueInput | DepositDetailWhereUniqueInput[]
+    connect?: DepositDetailWhereUniqueInput | DepositDetailWhereUniqueInput[]
+    update?: DepositDetailUpdateWithWhereUniqueWithoutBankConfigInput | DepositDetailUpdateWithWhereUniqueWithoutBankConfigInput[]
+    updateMany?: DepositDetailUpdateManyWithWhereWithoutBankConfigInput | DepositDetailUpdateManyWithWhereWithoutBankConfigInput[]
+    deleteMany?: DepositDetailScalarWhereInput | DepositDetailScalarWhereInput[]
   }
 
   export type PromotionTranslationCreateNestedManyWithoutPromotionInput = {
@@ -79666,9 +81403,6 @@ export namespace Prisma {
     depositNetwork?: string | null
     walletAddress?: string | null
     walletAddressExtraId?: string | null
-    bankName?: string | null
-    accountNumber?: string | null
-    accountHolder?: string | null
     depositorName?: string | null
     transactionHash?: string | null
     requestedAmount: Decimal | DecimalJsLike | number | string
@@ -79682,7 +81416,8 @@ export namespace Prisma {
     feePaidBy?: $Enums.FeePaidByType | null
     failureReason?: string | null
     providerMetadata?: NullableJsonNullValueInput | InputJsonValue
-    BankAccount?: BankAccountCreateNestedOneWithoutDepositDetailsInput
+    BankConfig?: BankConfigCreateNestedOneWithoutDepositDetailsInput
+    CryptoConfig?: CryptoConfigCreateNestedOneWithoutDepositDetailsInput
     Rolling?: RollingCreateNestedManyWithoutDepositDetailInput
   }
 
@@ -79701,9 +81436,6 @@ export namespace Prisma {
     depositNetwork?: string | null
     walletAddress?: string | null
     walletAddressExtraId?: string | null
-    bankName?: string | null
-    accountNumber?: string | null
-    accountHolder?: string | null
     depositorName?: string | null
     transactionHash?: string | null
     requestedAmount: Decimal | DecimalJsLike | number | string
@@ -79717,7 +81449,8 @@ export namespace Prisma {
     feePaidBy?: $Enums.FeePaidByType | null
     failureReason?: string | null
     providerMetadata?: NullableJsonNullValueInput | InputJsonValue
-    bankAccountId?: number | null
+    bankConfigId?: bigint | number | null
+    cryptoConfigId?: bigint | number | null
     Rolling?: RollingUncheckedCreateNestedManyWithoutDepositDetailInput
   }
 
@@ -80067,9 +81800,6 @@ export namespace Prisma {
     depositNetwork?: NullableStringFieldUpdateOperationsInput | string | null
     walletAddress?: NullableStringFieldUpdateOperationsInput | string | null
     walletAddressExtraId?: NullableStringFieldUpdateOperationsInput | string | null
-    bankName?: NullableStringFieldUpdateOperationsInput | string | null
-    accountNumber?: NullableStringFieldUpdateOperationsInput | string | null
-    accountHolder?: NullableStringFieldUpdateOperationsInput | string | null
     depositorName?: NullableStringFieldUpdateOperationsInput | string | null
     transactionHash?: NullableStringFieldUpdateOperationsInput | string | null
     requestedAmount?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
@@ -80083,7 +81813,8 @@ export namespace Prisma {
     feePaidBy?: NullableEnumFeePaidByTypeFieldUpdateOperationsInput | $Enums.FeePaidByType | null
     failureReason?: NullableStringFieldUpdateOperationsInput | string | null
     providerMetadata?: NullableJsonNullValueInput | InputJsonValue
-    BankAccount?: BankAccountUpdateOneWithoutDepositDetailsNestedInput
+    BankConfig?: BankConfigUpdateOneWithoutDepositDetailsNestedInput
+    CryptoConfig?: CryptoConfigUpdateOneWithoutDepositDetailsNestedInput
     Rolling?: RollingUpdateManyWithoutDepositDetailNestedInput
   }
 
@@ -80102,9 +81833,6 @@ export namespace Prisma {
     depositNetwork?: NullableStringFieldUpdateOperationsInput | string | null
     walletAddress?: NullableStringFieldUpdateOperationsInput | string | null
     walletAddressExtraId?: NullableStringFieldUpdateOperationsInput | string | null
-    bankName?: NullableStringFieldUpdateOperationsInput | string | null
-    accountNumber?: NullableStringFieldUpdateOperationsInput | string | null
-    accountHolder?: NullableStringFieldUpdateOperationsInput | string | null
     depositorName?: NullableStringFieldUpdateOperationsInput | string | null
     transactionHash?: NullableStringFieldUpdateOperationsInput | string | null
     requestedAmount?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
@@ -80118,7 +81846,8 @@ export namespace Prisma {
     feePaidBy?: NullableEnumFeePaidByTypeFieldUpdateOperationsInput | $Enums.FeePaidByType | null
     failureReason?: NullableStringFieldUpdateOperationsInput | string | null
     providerMetadata?: NullableJsonNullValueInput | InputJsonValue
-    bankAccountId?: NullableIntFieldUpdateOperationsInput | number | null
+    bankConfigId?: NullableBigIntFieldUpdateOperationsInput | bigint | number | null
+    cryptoConfigId?: NullableBigIntFieldUpdateOperationsInput | bigint | number | null
     Rolling?: RollingUncheckedUpdateManyWithoutDepositDetailNestedInput
   }
 
@@ -82686,9 +84415,6 @@ export namespace Prisma {
     depositNetwork?: string | null
     walletAddress?: string | null
     walletAddressExtraId?: string | null
-    bankName?: string | null
-    accountNumber?: string | null
-    accountHolder?: string | null
     depositorName?: string | null
     transactionHash?: string | null
     requestedAmount: Decimal | DecimalJsLike | number | string
@@ -82702,7 +84428,8 @@ export namespace Prisma {
     feePaidBy?: $Enums.FeePaidByType | null
     failureReason?: string | null
     providerMetadata?: NullableJsonNullValueInput | InputJsonValue
-    BankAccount?: BankAccountCreateNestedOneWithoutDepositDetailsInput
+    BankConfig?: BankConfigCreateNestedOneWithoutDepositDetailsInput
+    CryptoConfig?: CryptoConfigCreateNestedOneWithoutDepositDetailsInput
     transaction: TransactionCreateNestedOneWithoutDepositDetailInput
   }
 
@@ -82722,9 +84449,6 @@ export namespace Prisma {
     depositNetwork?: string | null
     walletAddress?: string | null
     walletAddressExtraId?: string | null
-    bankName?: string | null
-    accountNumber?: string | null
-    accountHolder?: string | null
     depositorName?: string | null
     transactionHash?: string | null
     requestedAmount: Decimal | DecimalJsLike | number | string
@@ -82738,7 +84462,8 @@ export namespace Prisma {
     feePaidBy?: $Enums.FeePaidByType | null
     failureReason?: string | null
     providerMetadata?: NullableJsonNullValueInput | InputJsonValue
-    bankAccountId?: number | null
+    bankConfigId?: bigint | number | null
+    cryptoConfigId?: bigint | number | null
   }
 
   export type DepositDetailCreateOrConnectWithoutRollingInput = {
@@ -82896,9 +84621,6 @@ export namespace Prisma {
     depositNetwork?: NullableStringFieldUpdateOperationsInput | string | null
     walletAddress?: NullableStringFieldUpdateOperationsInput | string | null
     walletAddressExtraId?: NullableStringFieldUpdateOperationsInput | string | null
-    bankName?: NullableStringFieldUpdateOperationsInput | string | null
-    accountNumber?: NullableStringFieldUpdateOperationsInput | string | null
-    accountHolder?: NullableStringFieldUpdateOperationsInput | string | null
     depositorName?: NullableStringFieldUpdateOperationsInput | string | null
     transactionHash?: NullableStringFieldUpdateOperationsInput | string | null
     requestedAmount?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
@@ -82912,7 +84634,8 @@ export namespace Prisma {
     feePaidBy?: NullableEnumFeePaidByTypeFieldUpdateOperationsInput | $Enums.FeePaidByType | null
     failureReason?: NullableStringFieldUpdateOperationsInput | string | null
     providerMetadata?: NullableJsonNullValueInput | InputJsonValue
-    BankAccount?: BankAccountUpdateOneWithoutDepositDetailsNestedInput
+    BankConfig?: BankConfigUpdateOneWithoutDepositDetailsNestedInput
+    CryptoConfig?: CryptoConfigUpdateOneWithoutDepositDetailsNestedInput
     transaction?: TransactionUpdateOneRequiredWithoutDepositDetailNestedInput
   }
 
@@ -82932,9 +84655,6 @@ export namespace Prisma {
     depositNetwork?: NullableStringFieldUpdateOperationsInput | string | null
     walletAddress?: NullableStringFieldUpdateOperationsInput | string | null
     walletAddressExtraId?: NullableStringFieldUpdateOperationsInput | string | null
-    bankName?: NullableStringFieldUpdateOperationsInput | string | null
-    accountNumber?: NullableStringFieldUpdateOperationsInput | string | null
-    accountHolder?: NullableStringFieldUpdateOperationsInput | string | null
     depositorName?: NullableStringFieldUpdateOperationsInput | string | null
     transactionHash?: NullableStringFieldUpdateOperationsInput | string | null
     requestedAmount?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
@@ -82948,7 +84668,8 @@ export namespace Prisma {
     feePaidBy?: NullableEnumFeePaidByTypeFieldUpdateOperationsInput | $Enums.FeePaidByType | null
     failureReason?: NullableStringFieldUpdateOperationsInput | string | null
     providerMetadata?: NullableJsonNullValueInput | InputJsonValue
-    bankAccountId?: NullableIntFieldUpdateOperationsInput | number | null
+    bankConfigId?: NullableBigIntFieldUpdateOperationsInput | bigint | number | null
+    cryptoConfigId?: NullableBigIntFieldUpdateOperationsInput | bigint | number | null
   }
 
   export type UserUpsertWithoutRollingInput = {
@@ -83833,140 +85554,6 @@ export namespace Prisma {
     VipHistory?: VipHistoryUncheckedUpdateManyWithoutUserNestedInput
     VipMembership?: VipMembershipUncheckedUpdateOneWithoutUserNestedInput
     loginAttempts?: LoginAttemptUncheckedUpdateManyWithoutUserNestedInput
-  }
-
-  export type DepositDetailCreateWithoutBankAccountInput = {
-    id?: bigint | number
-    uid: string
-    confirmedAt?: Date | string | null
-    failedAt?: Date | string | null
-    createdAt?: Date | string
-    updatedAt?: Date | string
-    status: $Enums.DepositDetailStatus
-    methodType: $Enums.DepositMethodType
-    provider: $Enums.PaymentProvider
-    providerPaymentId?: string | null
-    depositCurrency: $Enums.ExchangeCurrencyCode
-    depositNetwork?: string | null
-    walletAddress?: string | null
-    walletAddressExtraId?: string | null
-    bankName?: string | null
-    accountNumber?: string | null
-    accountHolder?: string | null
-    depositorName?: string | null
-    transactionHash?: string | null
-    requestedAmount: Decimal | DecimalJsLike | number | string
-    actuallyPaid?: Decimal | DecimalJsLike | number | string | null
-    processedBy?: bigint | number | null
-    adminNote?: string | null
-    ipAddress?: string | null
-    deviceFingerprint?: string | null
-    feeAmount?: Decimal | DecimalJsLike | number | string | null
-    feeCurrency?: string | null
-    feePaidBy?: $Enums.FeePaidByType | null
-    failureReason?: string | null
-    providerMetadata?: NullableJsonNullValueInput | InputJsonValue
-    transaction: TransactionCreateNestedOneWithoutDepositDetailInput
-    Rolling?: RollingCreateNestedManyWithoutDepositDetailInput
-  }
-
-  export type DepositDetailUncheckedCreateWithoutBankAccountInput = {
-    id?: bigint | number
-    uid: string
-    confirmedAt?: Date | string | null
-    failedAt?: Date | string | null
-    createdAt?: Date | string
-    updatedAt?: Date | string
-    status: $Enums.DepositDetailStatus
-    transactionId: bigint | number
-    methodType: $Enums.DepositMethodType
-    provider: $Enums.PaymentProvider
-    providerPaymentId?: string | null
-    depositCurrency: $Enums.ExchangeCurrencyCode
-    depositNetwork?: string | null
-    walletAddress?: string | null
-    walletAddressExtraId?: string | null
-    bankName?: string | null
-    accountNumber?: string | null
-    accountHolder?: string | null
-    depositorName?: string | null
-    transactionHash?: string | null
-    requestedAmount: Decimal | DecimalJsLike | number | string
-    actuallyPaid?: Decimal | DecimalJsLike | number | string | null
-    processedBy?: bigint | number | null
-    adminNote?: string | null
-    ipAddress?: string | null
-    deviceFingerprint?: string | null
-    feeAmount?: Decimal | DecimalJsLike | number | string | null
-    feeCurrency?: string | null
-    feePaidBy?: $Enums.FeePaidByType | null
-    failureReason?: string | null
-    providerMetadata?: NullableJsonNullValueInput | InputJsonValue
-    Rolling?: RollingUncheckedCreateNestedManyWithoutDepositDetailInput
-  }
-
-  export type DepositDetailCreateOrConnectWithoutBankAccountInput = {
-    where: DepositDetailWhereUniqueInput
-    create: XOR<DepositDetailCreateWithoutBankAccountInput, DepositDetailUncheckedCreateWithoutBankAccountInput>
-  }
-
-  export type DepositDetailCreateManyBankAccountInputEnvelope = {
-    data: DepositDetailCreateManyBankAccountInput | DepositDetailCreateManyBankAccountInput[]
-    skipDuplicates?: boolean
-  }
-
-  export type DepositDetailUpsertWithWhereUniqueWithoutBankAccountInput = {
-    where: DepositDetailWhereUniqueInput
-    update: XOR<DepositDetailUpdateWithoutBankAccountInput, DepositDetailUncheckedUpdateWithoutBankAccountInput>
-    create: XOR<DepositDetailCreateWithoutBankAccountInput, DepositDetailUncheckedCreateWithoutBankAccountInput>
-  }
-
-  export type DepositDetailUpdateWithWhereUniqueWithoutBankAccountInput = {
-    where: DepositDetailWhereUniqueInput
-    data: XOR<DepositDetailUpdateWithoutBankAccountInput, DepositDetailUncheckedUpdateWithoutBankAccountInput>
-  }
-
-  export type DepositDetailUpdateManyWithWhereWithoutBankAccountInput = {
-    where: DepositDetailScalarWhereInput
-    data: XOR<DepositDetailUpdateManyMutationInput, DepositDetailUncheckedUpdateManyWithoutBankAccountInput>
-  }
-
-  export type DepositDetailScalarWhereInput = {
-    AND?: DepositDetailScalarWhereInput | DepositDetailScalarWhereInput[]
-    OR?: DepositDetailScalarWhereInput[]
-    NOT?: DepositDetailScalarWhereInput | DepositDetailScalarWhereInput[]
-    id?: BigIntFilter<"DepositDetail"> | bigint | number
-    uid?: StringFilter<"DepositDetail"> | string
-    confirmedAt?: DateTimeNullableFilter<"DepositDetail"> | Date | string | null
-    failedAt?: DateTimeNullableFilter<"DepositDetail"> | Date | string | null
-    createdAt?: DateTimeFilter<"DepositDetail"> | Date | string
-    updatedAt?: DateTimeFilter<"DepositDetail"> | Date | string
-    status?: EnumDepositDetailStatusFilter<"DepositDetail"> | $Enums.DepositDetailStatus
-    transactionId?: BigIntFilter<"DepositDetail"> | bigint | number
-    methodType?: EnumDepositMethodTypeFilter<"DepositDetail"> | $Enums.DepositMethodType
-    provider?: EnumPaymentProviderFilter<"DepositDetail"> | $Enums.PaymentProvider
-    providerPaymentId?: StringNullableFilter<"DepositDetail"> | string | null
-    depositCurrency?: EnumExchangeCurrencyCodeFilter<"DepositDetail"> | $Enums.ExchangeCurrencyCode
-    depositNetwork?: StringNullableFilter<"DepositDetail"> | string | null
-    walletAddress?: StringNullableFilter<"DepositDetail"> | string | null
-    walletAddressExtraId?: StringNullableFilter<"DepositDetail"> | string | null
-    bankName?: StringNullableFilter<"DepositDetail"> | string | null
-    accountNumber?: StringNullableFilter<"DepositDetail"> | string | null
-    accountHolder?: StringNullableFilter<"DepositDetail"> | string | null
-    depositorName?: StringNullableFilter<"DepositDetail"> | string | null
-    transactionHash?: StringNullableFilter<"DepositDetail"> | string | null
-    requestedAmount?: DecimalFilter<"DepositDetail"> | Decimal | DecimalJsLike | number | string
-    actuallyPaid?: DecimalNullableFilter<"DepositDetail"> | Decimal | DecimalJsLike | number | string | null
-    processedBy?: BigIntNullableFilter<"DepositDetail"> | bigint | number | null
-    adminNote?: StringNullableFilter<"DepositDetail"> | string | null
-    ipAddress?: StringNullableFilter<"DepositDetail"> | string | null
-    deviceFingerprint?: StringNullableFilter<"DepositDetail"> | string | null
-    feeAmount?: DecimalNullableFilter<"DepositDetail"> | Decimal | DecimalJsLike | number | string | null
-    feeCurrency?: StringNullableFilter<"DepositDetail"> | string | null
-    feePaidBy?: EnumFeePaidByTypeNullableFilter<"DepositDetail"> | $Enums.FeePaidByType | null
-    failureReason?: StringNullableFilter<"DepositDetail"> | string | null
-    providerMetadata?: JsonNullableFilter<"DepositDetail">
-    bankAccountId?: IntNullableFilter<"DepositDetail"> | number | null
   }
 
   export type UserCreateWithoutAffiliateCodesInput = {
@@ -85737,7 +87324,9 @@ export namespace Prisma {
     VipMembership?: VipMembershipUncheckedUpdateOneWithoutUserNestedInput
   }
 
-  export type BankAccountCreateWithoutDepositDetailsInput = {
+  export type BankConfigCreateWithoutDepositDetailsInput = {
+    id?: bigint | number
+    uid: string
     currency: $Enums.ExchangeCurrencyCode
     bankName: string
     accountNumber: string
@@ -85746,6 +87335,8 @@ export namespace Prisma {
     priority?: number
     description?: string | null
     notes?: string | null
+    minAmount: Decimal | DecimalJsLike | number | string
+    maxAmount?: Decimal | DecimalJsLike | number | string | null
     totalDeposits?: number
     totalDepositAmount?: Decimal | DecimalJsLike | number | string
     createdAt?: Date | string
@@ -85753,8 +87344,9 @@ export namespace Prisma {
     deletedAt?: Date | string | null
   }
 
-  export type BankAccountUncheckedCreateWithoutDepositDetailsInput = {
-    id?: number
+  export type BankConfigUncheckedCreateWithoutDepositDetailsInput = {
+    id?: bigint | number
+    uid: string
     currency: $Enums.ExchangeCurrencyCode
     bankName: string
     accountNumber: string
@@ -85763,6 +87355,8 @@ export namespace Prisma {
     priority?: number
     description?: string | null
     notes?: string | null
+    minAmount: Decimal | DecimalJsLike | number | string
+    maxAmount?: Decimal | DecimalJsLike | number | string | null
     totalDeposits?: number
     totalDepositAmount?: Decimal | DecimalJsLike | number | string
     createdAt?: Date | string
@@ -85770,9 +87364,42 @@ export namespace Prisma {
     deletedAt?: Date | string | null
   }
 
-  export type BankAccountCreateOrConnectWithoutDepositDetailsInput = {
-    where: BankAccountWhereUniqueInput
-    create: XOR<BankAccountCreateWithoutDepositDetailsInput, BankAccountUncheckedCreateWithoutDepositDetailsInput>
+  export type BankConfigCreateOrConnectWithoutDepositDetailsInput = {
+    where: BankConfigWhereUniqueInput
+    create: XOR<BankConfigCreateWithoutDepositDetailsInput, BankConfigUncheckedCreateWithoutDepositDetailsInput>
+  }
+
+  export type CryptoConfigCreateWithoutDepositDetailsInput = {
+    id?: bigint | number
+    uid: string
+    symbol: string
+    network: string
+    isActive?: boolean
+    minDepositAmount: Decimal | DecimalJsLike | number | string
+    depositFeeRate?: Decimal | DecimalJsLike | number | string
+    confirmations?: number
+    contractAddress?: string | null
+    createdAt?: Date | string
+    updatedAt?: Date | string
+  }
+
+  export type CryptoConfigUncheckedCreateWithoutDepositDetailsInput = {
+    id?: bigint | number
+    uid: string
+    symbol: string
+    network: string
+    isActive?: boolean
+    minDepositAmount: Decimal | DecimalJsLike | number | string
+    depositFeeRate?: Decimal | DecimalJsLike | number | string
+    confirmations?: number
+    contractAddress?: string | null
+    createdAt?: Date | string
+    updatedAt?: Date | string
+  }
+
+  export type CryptoConfigCreateOrConnectWithoutDepositDetailsInput = {
+    where: CryptoConfigWhereUniqueInput
+    create: XOR<CryptoConfigCreateWithoutDepositDetailsInput, CryptoConfigUncheckedCreateWithoutDepositDetailsInput>
   }
 
   export type TransactionCreateWithoutDepositDetailInput = {
@@ -85860,18 +87487,20 @@ export namespace Prisma {
     skipDuplicates?: boolean
   }
 
-  export type BankAccountUpsertWithoutDepositDetailsInput = {
-    update: XOR<BankAccountUpdateWithoutDepositDetailsInput, BankAccountUncheckedUpdateWithoutDepositDetailsInput>
-    create: XOR<BankAccountCreateWithoutDepositDetailsInput, BankAccountUncheckedCreateWithoutDepositDetailsInput>
-    where?: BankAccountWhereInput
+  export type BankConfigUpsertWithoutDepositDetailsInput = {
+    update: XOR<BankConfigUpdateWithoutDepositDetailsInput, BankConfigUncheckedUpdateWithoutDepositDetailsInput>
+    create: XOR<BankConfigCreateWithoutDepositDetailsInput, BankConfigUncheckedCreateWithoutDepositDetailsInput>
+    where?: BankConfigWhereInput
   }
 
-  export type BankAccountUpdateToOneWithWhereWithoutDepositDetailsInput = {
-    where?: BankAccountWhereInput
-    data: XOR<BankAccountUpdateWithoutDepositDetailsInput, BankAccountUncheckedUpdateWithoutDepositDetailsInput>
+  export type BankConfigUpdateToOneWithWhereWithoutDepositDetailsInput = {
+    where?: BankConfigWhereInput
+    data: XOR<BankConfigUpdateWithoutDepositDetailsInput, BankConfigUncheckedUpdateWithoutDepositDetailsInput>
   }
 
-  export type BankAccountUpdateWithoutDepositDetailsInput = {
+  export type BankConfigUpdateWithoutDepositDetailsInput = {
+    id?: BigIntFieldUpdateOperationsInput | bigint | number
+    uid?: StringFieldUpdateOperationsInput | string
     currency?: EnumExchangeCurrencyCodeFieldUpdateOperationsInput | $Enums.ExchangeCurrencyCode
     bankName?: StringFieldUpdateOperationsInput | string
     accountNumber?: StringFieldUpdateOperationsInput | string
@@ -85880,6 +87509,8 @@ export namespace Prisma {
     priority?: IntFieldUpdateOperationsInput | number
     description?: NullableStringFieldUpdateOperationsInput | string | null
     notes?: NullableStringFieldUpdateOperationsInput | string | null
+    minAmount?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
+    maxAmount?: NullableDecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string | null
     totalDeposits?: IntFieldUpdateOperationsInput | number
     totalDepositAmount?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
@@ -85887,8 +87518,9 @@ export namespace Prisma {
     deletedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   }
 
-  export type BankAccountUncheckedUpdateWithoutDepositDetailsInput = {
-    id?: IntFieldUpdateOperationsInput | number
+  export type BankConfigUncheckedUpdateWithoutDepositDetailsInput = {
+    id?: BigIntFieldUpdateOperationsInput | bigint | number
+    uid?: StringFieldUpdateOperationsInput | string
     currency?: EnumExchangeCurrencyCodeFieldUpdateOperationsInput | $Enums.ExchangeCurrencyCode
     bankName?: StringFieldUpdateOperationsInput | string
     accountNumber?: StringFieldUpdateOperationsInput | string
@@ -85897,11 +87529,52 @@ export namespace Prisma {
     priority?: IntFieldUpdateOperationsInput | number
     description?: NullableStringFieldUpdateOperationsInput | string | null
     notes?: NullableStringFieldUpdateOperationsInput | string | null
+    minAmount?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
+    maxAmount?: NullableDecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string | null
     totalDeposits?: IntFieldUpdateOperationsInput | number
     totalDepositAmount?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
     deletedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  }
+
+  export type CryptoConfigUpsertWithoutDepositDetailsInput = {
+    update: XOR<CryptoConfigUpdateWithoutDepositDetailsInput, CryptoConfigUncheckedUpdateWithoutDepositDetailsInput>
+    create: XOR<CryptoConfigCreateWithoutDepositDetailsInput, CryptoConfigUncheckedCreateWithoutDepositDetailsInput>
+    where?: CryptoConfigWhereInput
+  }
+
+  export type CryptoConfigUpdateToOneWithWhereWithoutDepositDetailsInput = {
+    where?: CryptoConfigWhereInput
+    data: XOR<CryptoConfigUpdateWithoutDepositDetailsInput, CryptoConfigUncheckedUpdateWithoutDepositDetailsInput>
+  }
+
+  export type CryptoConfigUpdateWithoutDepositDetailsInput = {
+    id?: BigIntFieldUpdateOperationsInput | bigint | number
+    uid?: StringFieldUpdateOperationsInput | string
+    symbol?: StringFieldUpdateOperationsInput | string
+    network?: StringFieldUpdateOperationsInput | string
+    isActive?: BoolFieldUpdateOperationsInput | boolean
+    minDepositAmount?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
+    depositFeeRate?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
+    confirmations?: IntFieldUpdateOperationsInput | number
+    contractAddress?: NullableStringFieldUpdateOperationsInput | string | null
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+  }
+
+  export type CryptoConfigUncheckedUpdateWithoutDepositDetailsInput = {
+    id?: BigIntFieldUpdateOperationsInput | bigint | number
+    uid?: StringFieldUpdateOperationsInput | string
+    symbol?: StringFieldUpdateOperationsInput | string
+    network?: StringFieldUpdateOperationsInput | string
+    isActive?: BoolFieldUpdateOperationsInput | boolean
+    minDepositAmount?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
+    depositFeeRate?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
+    confirmations?: IntFieldUpdateOperationsInput | number
+    contractAddress?: NullableStringFieldUpdateOperationsInput | string | null
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
   }
 
   export type TransactionUpsertWithoutDepositDetailInput = {
@@ -85965,6 +87638,226 @@ export namespace Prisma {
   export type RollingUpdateManyWithWhereWithoutDepositDetailInput = {
     where: RollingScalarWhereInput
     data: XOR<RollingUpdateManyMutationInput, RollingUncheckedUpdateManyWithoutDepositDetailInput>
+  }
+
+  export type DepositDetailCreateWithoutCryptoConfigInput = {
+    id?: bigint | number
+    uid: string
+    confirmedAt?: Date | string | null
+    failedAt?: Date | string | null
+    createdAt?: Date | string
+    updatedAt?: Date | string
+    status: $Enums.DepositDetailStatus
+    methodType: $Enums.DepositMethodType
+    provider: $Enums.PaymentProvider
+    providerPaymentId?: string | null
+    depositCurrency: $Enums.ExchangeCurrencyCode
+    depositNetwork?: string | null
+    walletAddress?: string | null
+    walletAddressExtraId?: string | null
+    depositorName?: string | null
+    transactionHash?: string | null
+    requestedAmount: Decimal | DecimalJsLike | number | string
+    actuallyPaid?: Decimal | DecimalJsLike | number | string | null
+    processedBy?: bigint | number | null
+    adminNote?: string | null
+    ipAddress?: string | null
+    deviceFingerprint?: string | null
+    feeAmount?: Decimal | DecimalJsLike | number | string | null
+    feeCurrency?: string | null
+    feePaidBy?: $Enums.FeePaidByType | null
+    failureReason?: string | null
+    providerMetadata?: NullableJsonNullValueInput | InputJsonValue
+    BankConfig?: BankConfigCreateNestedOneWithoutDepositDetailsInput
+    transaction: TransactionCreateNestedOneWithoutDepositDetailInput
+    Rolling?: RollingCreateNestedManyWithoutDepositDetailInput
+  }
+
+  export type DepositDetailUncheckedCreateWithoutCryptoConfigInput = {
+    id?: bigint | number
+    uid: string
+    confirmedAt?: Date | string | null
+    failedAt?: Date | string | null
+    createdAt?: Date | string
+    updatedAt?: Date | string
+    status: $Enums.DepositDetailStatus
+    transactionId: bigint | number
+    methodType: $Enums.DepositMethodType
+    provider: $Enums.PaymentProvider
+    providerPaymentId?: string | null
+    depositCurrency: $Enums.ExchangeCurrencyCode
+    depositNetwork?: string | null
+    walletAddress?: string | null
+    walletAddressExtraId?: string | null
+    depositorName?: string | null
+    transactionHash?: string | null
+    requestedAmount: Decimal | DecimalJsLike | number | string
+    actuallyPaid?: Decimal | DecimalJsLike | number | string | null
+    processedBy?: bigint | number | null
+    adminNote?: string | null
+    ipAddress?: string | null
+    deviceFingerprint?: string | null
+    feeAmount?: Decimal | DecimalJsLike | number | string | null
+    feeCurrency?: string | null
+    feePaidBy?: $Enums.FeePaidByType | null
+    failureReason?: string | null
+    providerMetadata?: NullableJsonNullValueInput | InputJsonValue
+    bankConfigId?: bigint | number | null
+    Rolling?: RollingUncheckedCreateNestedManyWithoutDepositDetailInput
+  }
+
+  export type DepositDetailCreateOrConnectWithoutCryptoConfigInput = {
+    where: DepositDetailWhereUniqueInput
+    create: XOR<DepositDetailCreateWithoutCryptoConfigInput, DepositDetailUncheckedCreateWithoutCryptoConfigInput>
+  }
+
+  export type DepositDetailCreateManyCryptoConfigInputEnvelope = {
+    data: DepositDetailCreateManyCryptoConfigInput | DepositDetailCreateManyCryptoConfigInput[]
+    skipDuplicates?: boolean
+  }
+
+  export type DepositDetailUpsertWithWhereUniqueWithoutCryptoConfigInput = {
+    where: DepositDetailWhereUniqueInput
+    update: XOR<DepositDetailUpdateWithoutCryptoConfigInput, DepositDetailUncheckedUpdateWithoutCryptoConfigInput>
+    create: XOR<DepositDetailCreateWithoutCryptoConfigInput, DepositDetailUncheckedCreateWithoutCryptoConfigInput>
+  }
+
+  export type DepositDetailUpdateWithWhereUniqueWithoutCryptoConfigInput = {
+    where: DepositDetailWhereUniqueInput
+    data: XOR<DepositDetailUpdateWithoutCryptoConfigInput, DepositDetailUncheckedUpdateWithoutCryptoConfigInput>
+  }
+
+  export type DepositDetailUpdateManyWithWhereWithoutCryptoConfigInput = {
+    where: DepositDetailScalarWhereInput
+    data: XOR<DepositDetailUpdateManyMutationInput, DepositDetailUncheckedUpdateManyWithoutCryptoConfigInput>
+  }
+
+  export type DepositDetailScalarWhereInput = {
+    AND?: DepositDetailScalarWhereInput | DepositDetailScalarWhereInput[]
+    OR?: DepositDetailScalarWhereInput[]
+    NOT?: DepositDetailScalarWhereInput | DepositDetailScalarWhereInput[]
+    id?: BigIntFilter<"DepositDetail"> | bigint | number
+    uid?: StringFilter<"DepositDetail"> | string
+    confirmedAt?: DateTimeNullableFilter<"DepositDetail"> | Date | string | null
+    failedAt?: DateTimeNullableFilter<"DepositDetail"> | Date | string | null
+    createdAt?: DateTimeFilter<"DepositDetail"> | Date | string
+    updatedAt?: DateTimeFilter<"DepositDetail"> | Date | string
+    status?: EnumDepositDetailStatusFilter<"DepositDetail"> | $Enums.DepositDetailStatus
+    transactionId?: BigIntFilter<"DepositDetail"> | bigint | number
+    methodType?: EnumDepositMethodTypeFilter<"DepositDetail"> | $Enums.DepositMethodType
+    provider?: EnumPaymentProviderFilter<"DepositDetail"> | $Enums.PaymentProvider
+    providerPaymentId?: StringNullableFilter<"DepositDetail"> | string | null
+    depositCurrency?: EnumExchangeCurrencyCodeFilter<"DepositDetail"> | $Enums.ExchangeCurrencyCode
+    depositNetwork?: StringNullableFilter<"DepositDetail"> | string | null
+    walletAddress?: StringNullableFilter<"DepositDetail"> | string | null
+    walletAddressExtraId?: StringNullableFilter<"DepositDetail"> | string | null
+    depositorName?: StringNullableFilter<"DepositDetail"> | string | null
+    transactionHash?: StringNullableFilter<"DepositDetail"> | string | null
+    requestedAmount?: DecimalFilter<"DepositDetail"> | Decimal | DecimalJsLike | number | string
+    actuallyPaid?: DecimalNullableFilter<"DepositDetail"> | Decimal | DecimalJsLike | number | string | null
+    processedBy?: BigIntNullableFilter<"DepositDetail"> | bigint | number | null
+    adminNote?: StringNullableFilter<"DepositDetail"> | string | null
+    ipAddress?: StringNullableFilter<"DepositDetail"> | string | null
+    deviceFingerprint?: StringNullableFilter<"DepositDetail"> | string | null
+    feeAmount?: DecimalNullableFilter<"DepositDetail"> | Decimal | DecimalJsLike | number | string | null
+    feeCurrency?: StringNullableFilter<"DepositDetail"> | string | null
+    feePaidBy?: EnumFeePaidByTypeNullableFilter<"DepositDetail"> | $Enums.FeePaidByType | null
+    failureReason?: StringNullableFilter<"DepositDetail"> | string | null
+    providerMetadata?: JsonNullableFilter<"DepositDetail">
+    bankConfigId?: BigIntNullableFilter<"DepositDetail"> | bigint | number | null
+    cryptoConfigId?: BigIntNullableFilter<"DepositDetail"> | bigint | number | null
+  }
+
+  export type DepositDetailCreateWithoutBankConfigInput = {
+    id?: bigint | number
+    uid: string
+    confirmedAt?: Date | string | null
+    failedAt?: Date | string | null
+    createdAt?: Date | string
+    updatedAt?: Date | string
+    status: $Enums.DepositDetailStatus
+    methodType: $Enums.DepositMethodType
+    provider: $Enums.PaymentProvider
+    providerPaymentId?: string | null
+    depositCurrency: $Enums.ExchangeCurrencyCode
+    depositNetwork?: string | null
+    walletAddress?: string | null
+    walletAddressExtraId?: string | null
+    depositorName?: string | null
+    transactionHash?: string | null
+    requestedAmount: Decimal | DecimalJsLike | number | string
+    actuallyPaid?: Decimal | DecimalJsLike | number | string | null
+    processedBy?: bigint | number | null
+    adminNote?: string | null
+    ipAddress?: string | null
+    deviceFingerprint?: string | null
+    feeAmount?: Decimal | DecimalJsLike | number | string | null
+    feeCurrency?: string | null
+    feePaidBy?: $Enums.FeePaidByType | null
+    failureReason?: string | null
+    providerMetadata?: NullableJsonNullValueInput | InputJsonValue
+    CryptoConfig?: CryptoConfigCreateNestedOneWithoutDepositDetailsInput
+    transaction: TransactionCreateNestedOneWithoutDepositDetailInput
+    Rolling?: RollingCreateNestedManyWithoutDepositDetailInput
+  }
+
+  export type DepositDetailUncheckedCreateWithoutBankConfigInput = {
+    id?: bigint | number
+    uid: string
+    confirmedAt?: Date | string | null
+    failedAt?: Date | string | null
+    createdAt?: Date | string
+    updatedAt?: Date | string
+    status: $Enums.DepositDetailStatus
+    transactionId: bigint | number
+    methodType: $Enums.DepositMethodType
+    provider: $Enums.PaymentProvider
+    providerPaymentId?: string | null
+    depositCurrency: $Enums.ExchangeCurrencyCode
+    depositNetwork?: string | null
+    walletAddress?: string | null
+    walletAddressExtraId?: string | null
+    depositorName?: string | null
+    transactionHash?: string | null
+    requestedAmount: Decimal | DecimalJsLike | number | string
+    actuallyPaid?: Decimal | DecimalJsLike | number | string | null
+    processedBy?: bigint | number | null
+    adminNote?: string | null
+    ipAddress?: string | null
+    deviceFingerprint?: string | null
+    feeAmount?: Decimal | DecimalJsLike | number | string | null
+    feeCurrency?: string | null
+    feePaidBy?: $Enums.FeePaidByType | null
+    failureReason?: string | null
+    providerMetadata?: NullableJsonNullValueInput | InputJsonValue
+    cryptoConfigId?: bigint | number | null
+    Rolling?: RollingUncheckedCreateNestedManyWithoutDepositDetailInput
+  }
+
+  export type DepositDetailCreateOrConnectWithoutBankConfigInput = {
+    where: DepositDetailWhereUniqueInput
+    create: XOR<DepositDetailCreateWithoutBankConfigInput, DepositDetailUncheckedCreateWithoutBankConfigInput>
+  }
+
+  export type DepositDetailCreateManyBankConfigInputEnvelope = {
+    data: DepositDetailCreateManyBankConfigInput | DepositDetailCreateManyBankConfigInput[]
+    skipDuplicates?: boolean
+  }
+
+  export type DepositDetailUpsertWithWhereUniqueWithoutBankConfigInput = {
+    where: DepositDetailWhereUniqueInput
+    update: XOR<DepositDetailUpdateWithoutBankConfigInput, DepositDetailUncheckedUpdateWithoutBankConfigInput>
+    create: XOR<DepositDetailCreateWithoutBankConfigInput, DepositDetailUncheckedCreateWithoutBankConfigInput>
+  }
+
+  export type DepositDetailUpdateWithWhereUniqueWithoutBankConfigInput = {
+    where: DepositDetailWhereUniqueInput
+    data: XOR<DepositDetailUpdateWithoutBankConfigInput, DepositDetailUncheckedUpdateWithoutBankConfigInput>
+  }
+
+  export type DepositDetailUpdateManyWithWhereWithoutBankConfigInput = {
+    where: DepositDetailScalarWhereInput
+    data: XOR<DepositDetailUpdateManyMutationInput, DepositDetailUncheckedUpdateManyWithoutBankConfigInput>
   }
 
   export type PromotionTranslationCreateWithoutPromotionInput = {
@@ -88924,144 +90817,6 @@ export namespace Prisma {
     gameId?: NullableIntFieldUpdateOperationsInput | number | null
   }
 
-  export type DepositDetailCreateManyBankAccountInput = {
-    id?: bigint | number
-    uid: string
-    confirmedAt?: Date | string | null
-    failedAt?: Date | string | null
-    createdAt?: Date | string
-    updatedAt?: Date | string
-    status: $Enums.DepositDetailStatus
-    transactionId: bigint | number
-    methodType: $Enums.DepositMethodType
-    provider: $Enums.PaymentProvider
-    providerPaymentId?: string | null
-    depositCurrency: $Enums.ExchangeCurrencyCode
-    depositNetwork?: string | null
-    walletAddress?: string | null
-    walletAddressExtraId?: string | null
-    bankName?: string | null
-    accountNumber?: string | null
-    accountHolder?: string | null
-    depositorName?: string | null
-    transactionHash?: string | null
-    requestedAmount: Decimal | DecimalJsLike | number | string
-    actuallyPaid?: Decimal | DecimalJsLike | number | string | null
-    processedBy?: bigint | number | null
-    adminNote?: string | null
-    ipAddress?: string | null
-    deviceFingerprint?: string | null
-    feeAmount?: Decimal | DecimalJsLike | number | string | null
-    feeCurrency?: string | null
-    feePaidBy?: $Enums.FeePaidByType | null
-    failureReason?: string | null
-    providerMetadata?: NullableJsonNullValueInput | InputJsonValue
-  }
-
-  export type DepositDetailUpdateWithoutBankAccountInput = {
-    id?: BigIntFieldUpdateOperationsInput | bigint | number
-    uid?: StringFieldUpdateOperationsInput | string
-    confirmedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
-    failedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
-    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
-    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
-    status?: EnumDepositDetailStatusFieldUpdateOperationsInput | $Enums.DepositDetailStatus
-    methodType?: EnumDepositMethodTypeFieldUpdateOperationsInput | $Enums.DepositMethodType
-    provider?: EnumPaymentProviderFieldUpdateOperationsInput | $Enums.PaymentProvider
-    providerPaymentId?: NullableStringFieldUpdateOperationsInput | string | null
-    depositCurrency?: EnumExchangeCurrencyCodeFieldUpdateOperationsInput | $Enums.ExchangeCurrencyCode
-    depositNetwork?: NullableStringFieldUpdateOperationsInput | string | null
-    walletAddress?: NullableStringFieldUpdateOperationsInput | string | null
-    walletAddressExtraId?: NullableStringFieldUpdateOperationsInput | string | null
-    bankName?: NullableStringFieldUpdateOperationsInput | string | null
-    accountNumber?: NullableStringFieldUpdateOperationsInput | string | null
-    accountHolder?: NullableStringFieldUpdateOperationsInput | string | null
-    depositorName?: NullableStringFieldUpdateOperationsInput | string | null
-    transactionHash?: NullableStringFieldUpdateOperationsInput | string | null
-    requestedAmount?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
-    actuallyPaid?: NullableDecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string | null
-    processedBy?: NullableBigIntFieldUpdateOperationsInput | bigint | number | null
-    adminNote?: NullableStringFieldUpdateOperationsInput | string | null
-    ipAddress?: NullableStringFieldUpdateOperationsInput | string | null
-    deviceFingerprint?: NullableStringFieldUpdateOperationsInput | string | null
-    feeAmount?: NullableDecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string | null
-    feeCurrency?: NullableStringFieldUpdateOperationsInput | string | null
-    feePaidBy?: NullableEnumFeePaidByTypeFieldUpdateOperationsInput | $Enums.FeePaidByType | null
-    failureReason?: NullableStringFieldUpdateOperationsInput | string | null
-    providerMetadata?: NullableJsonNullValueInput | InputJsonValue
-    transaction?: TransactionUpdateOneRequiredWithoutDepositDetailNestedInput
-    Rolling?: RollingUpdateManyWithoutDepositDetailNestedInput
-  }
-
-  export type DepositDetailUncheckedUpdateWithoutBankAccountInput = {
-    id?: BigIntFieldUpdateOperationsInput | bigint | number
-    uid?: StringFieldUpdateOperationsInput | string
-    confirmedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
-    failedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
-    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
-    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
-    status?: EnumDepositDetailStatusFieldUpdateOperationsInput | $Enums.DepositDetailStatus
-    transactionId?: BigIntFieldUpdateOperationsInput | bigint | number
-    methodType?: EnumDepositMethodTypeFieldUpdateOperationsInput | $Enums.DepositMethodType
-    provider?: EnumPaymentProviderFieldUpdateOperationsInput | $Enums.PaymentProvider
-    providerPaymentId?: NullableStringFieldUpdateOperationsInput | string | null
-    depositCurrency?: EnumExchangeCurrencyCodeFieldUpdateOperationsInput | $Enums.ExchangeCurrencyCode
-    depositNetwork?: NullableStringFieldUpdateOperationsInput | string | null
-    walletAddress?: NullableStringFieldUpdateOperationsInput | string | null
-    walletAddressExtraId?: NullableStringFieldUpdateOperationsInput | string | null
-    bankName?: NullableStringFieldUpdateOperationsInput | string | null
-    accountNumber?: NullableStringFieldUpdateOperationsInput | string | null
-    accountHolder?: NullableStringFieldUpdateOperationsInput | string | null
-    depositorName?: NullableStringFieldUpdateOperationsInput | string | null
-    transactionHash?: NullableStringFieldUpdateOperationsInput | string | null
-    requestedAmount?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
-    actuallyPaid?: NullableDecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string | null
-    processedBy?: NullableBigIntFieldUpdateOperationsInput | bigint | number | null
-    adminNote?: NullableStringFieldUpdateOperationsInput | string | null
-    ipAddress?: NullableStringFieldUpdateOperationsInput | string | null
-    deviceFingerprint?: NullableStringFieldUpdateOperationsInput | string | null
-    feeAmount?: NullableDecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string | null
-    feeCurrency?: NullableStringFieldUpdateOperationsInput | string | null
-    feePaidBy?: NullableEnumFeePaidByTypeFieldUpdateOperationsInput | $Enums.FeePaidByType | null
-    failureReason?: NullableStringFieldUpdateOperationsInput | string | null
-    providerMetadata?: NullableJsonNullValueInput | InputJsonValue
-    Rolling?: RollingUncheckedUpdateManyWithoutDepositDetailNestedInput
-  }
-
-  export type DepositDetailUncheckedUpdateManyWithoutBankAccountInput = {
-    id?: BigIntFieldUpdateOperationsInput | bigint | number
-    uid?: StringFieldUpdateOperationsInput | string
-    confirmedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
-    failedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
-    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
-    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
-    status?: EnumDepositDetailStatusFieldUpdateOperationsInput | $Enums.DepositDetailStatus
-    transactionId?: BigIntFieldUpdateOperationsInput | bigint | number
-    methodType?: EnumDepositMethodTypeFieldUpdateOperationsInput | $Enums.DepositMethodType
-    provider?: EnumPaymentProviderFieldUpdateOperationsInput | $Enums.PaymentProvider
-    providerPaymentId?: NullableStringFieldUpdateOperationsInput | string | null
-    depositCurrency?: EnumExchangeCurrencyCodeFieldUpdateOperationsInput | $Enums.ExchangeCurrencyCode
-    depositNetwork?: NullableStringFieldUpdateOperationsInput | string | null
-    walletAddress?: NullableStringFieldUpdateOperationsInput | string | null
-    walletAddressExtraId?: NullableStringFieldUpdateOperationsInput | string | null
-    bankName?: NullableStringFieldUpdateOperationsInput | string | null
-    accountNumber?: NullableStringFieldUpdateOperationsInput | string | null
-    accountHolder?: NullableStringFieldUpdateOperationsInput | string | null
-    depositorName?: NullableStringFieldUpdateOperationsInput | string | null
-    transactionHash?: NullableStringFieldUpdateOperationsInput | string | null
-    requestedAmount?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
-    actuallyPaid?: NullableDecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string | null
-    processedBy?: NullableBigIntFieldUpdateOperationsInput | bigint | number | null
-    adminNote?: NullableStringFieldUpdateOperationsInput | string | null
-    ipAddress?: NullableStringFieldUpdateOperationsInput | string | null
-    deviceFingerprint?: NullableStringFieldUpdateOperationsInput | string | null
-    feeAmount?: NullableDecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string | null
-    feeCurrency?: NullableStringFieldUpdateOperationsInput | string | null
-    feePaidBy?: NullableEnumFeePaidByTypeFieldUpdateOperationsInput | $Enums.FeePaidByType | null
-    failureReason?: NullableStringFieldUpdateOperationsInput | string | null
-    providerMetadata?: NullableJsonNullValueInput | InputJsonValue
-  }
-
   export type ReferralCreateManyCodeInput = {
     id?: string
     affiliateId: bigint | number
@@ -89172,6 +90927,266 @@ export namespace Prisma {
     cancelledAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+  }
+
+  export type DepositDetailCreateManyCryptoConfigInput = {
+    id?: bigint | number
+    uid: string
+    confirmedAt?: Date | string | null
+    failedAt?: Date | string | null
+    createdAt?: Date | string
+    updatedAt?: Date | string
+    status: $Enums.DepositDetailStatus
+    transactionId: bigint | number
+    methodType: $Enums.DepositMethodType
+    provider: $Enums.PaymentProvider
+    providerPaymentId?: string | null
+    depositCurrency: $Enums.ExchangeCurrencyCode
+    depositNetwork?: string | null
+    walletAddress?: string | null
+    walletAddressExtraId?: string | null
+    depositorName?: string | null
+    transactionHash?: string | null
+    requestedAmount: Decimal | DecimalJsLike | number | string
+    actuallyPaid?: Decimal | DecimalJsLike | number | string | null
+    processedBy?: bigint | number | null
+    adminNote?: string | null
+    ipAddress?: string | null
+    deviceFingerprint?: string | null
+    feeAmount?: Decimal | DecimalJsLike | number | string | null
+    feeCurrency?: string | null
+    feePaidBy?: $Enums.FeePaidByType | null
+    failureReason?: string | null
+    providerMetadata?: NullableJsonNullValueInput | InputJsonValue
+    bankConfigId?: bigint | number | null
+  }
+
+  export type DepositDetailUpdateWithoutCryptoConfigInput = {
+    id?: BigIntFieldUpdateOperationsInput | bigint | number
+    uid?: StringFieldUpdateOperationsInput | string
+    confirmedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    failedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    status?: EnumDepositDetailStatusFieldUpdateOperationsInput | $Enums.DepositDetailStatus
+    methodType?: EnumDepositMethodTypeFieldUpdateOperationsInput | $Enums.DepositMethodType
+    provider?: EnumPaymentProviderFieldUpdateOperationsInput | $Enums.PaymentProvider
+    providerPaymentId?: NullableStringFieldUpdateOperationsInput | string | null
+    depositCurrency?: EnumExchangeCurrencyCodeFieldUpdateOperationsInput | $Enums.ExchangeCurrencyCode
+    depositNetwork?: NullableStringFieldUpdateOperationsInput | string | null
+    walletAddress?: NullableStringFieldUpdateOperationsInput | string | null
+    walletAddressExtraId?: NullableStringFieldUpdateOperationsInput | string | null
+    depositorName?: NullableStringFieldUpdateOperationsInput | string | null
+    transactionHash?: NullableStringFieldUpdateOperationsInput | string | null
+    requestedAmount?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
+    actuallyPaid?: NullableDecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string | null
+    processedBy?: NullableBigIntFieldUpdateOperationsInput | bigint | number | null
+    adminNote?: NullableStringFieldUpdateOperationsInput | string | null
+    ipAddress?: NullableStringFieldUpdateOperationsInput | string | null
+    deviceFingerprint?: NullableStringFieldUpdateOperationsInput | string | null
+    feeAmount?: NullableDecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string | null
+    feeCurrency?: NullableStringFieldUpdateOperationsInput | string | null
+    feePaidBy?: NullableEnumFeePaidByTypeFieldUpdateOperationsInput | $Enums.FeePaidByType | null
+    failureReason?: NullableStringFieldUpdateOperationsInput | string | null
+    providerMetadata?: NullableJsonNullValueInput | InputJsonValue
+    BankConfig?: BankConfigUpdateOneWithoutDepositDetailsNestedInput
+    transaction?: TransactionUpdateOneRequiredWithoutDepositDetailNestedInput
+    Rolling?: RollingUpdateManyWithoutDepositDetailNestedInput
+  }
+
+  export type DepositDetailUncheckedUpdateWithoutCryptoConfigInput = {
+    id?: BigIntFieldUpdateOperationsInput | bigint | number
+    uid?: StringFieldUpdateOperationsInput | string
+    confirmedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    failedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    status?: EnumDepositDetailStatusFieldUpdateOperationsInput | $Enums.DepositDetailStatus
+    transactionId?: BigIntFieldUpdateOperationsInput | bigint | number
+    methodType?: EnumDepositMethodTypeFieldUpdateOperationsInput | $Enums.DepositMethodType
+    provider?: EnumPaymentProviderFieldUpdateOperationsInput | $Enums.PaymentProvider
+    providerPaymentId?: NullableStringFieldUpdateOperationsInput | string | null
+    depositCurrency?: EnumExchangeCurrencyCodeFieldUpdateOperationsInput | $Enums.ExchangeCurrencyCode
+    depositNetwork?: NullableStringFieldUpdateOperationsInput | string | null
+    walletAddress?: NullableStringFieldUpdateOperationsInput | string | null
+    walletAddressExtraId?: NullableStringFieldUpdateOperationsInput | string | null
+    depositorName?: NullableStringFieldUpdateOperationsInput | string | null
+    transactionHash?: NullableStringFieldUpdateOperationsInput | string | null
+    requestedAmount?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
+    actuallyPaid?: NullableDecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string | null
+    processedBy?: NullableBigIntFieldUpdateOperationsInput | bigint | number | null
+    adminNote?: NullableStringFieldUpdateOperationsInput | string | null
+    ipAddress?: NullableStringFieldUpdateOperationsInput | string | null
+    deviceFingerprint?: NullableStringFieldUpdateOperationsInput | string | null
+    feeAmount?: NullableDecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string | null
+    feeCurrency?: NullableStringFieldUpdateOperationsInput | string | null
+    feePaidBy?: NullableEnumFeePaidByTypeFieldUpdateOperationsInput | $Enums.FeePaidByType | null
+    failureReason?: NullableStringFieldUpdateOperationsInput | string | null
+    providerMetadata?: NullableJsonNullValueInput | InputJsonValue
+    bankConfigId?: NullableBigIntFieldUpdateOperationsInput | bigint | number | null
+    Rolling?: RollingUncheckedUpdateManyWithoutDepositDetailNestedInput
+  }
+
+  export type DepositDetailUncheckedUpdateManyWithoutCryptoConfigInput = {
+    id?: BigIntFieldUpdateOperationsInput | bigint | number
+    uid?: StringFieldUpdateOperationsInput | string
+    confirmedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    failedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    status?: EnumDepositDetailStatusFieldUpdateOperationsInput | $Enums.DepositDetailStatus
+    transactionId?: BigIntFieldUpdateOperationsInput | bigint | number
+    methodType?: EnumDepositMethodTypeFieldUpdateOperationsInput | $Enums.DepositMethodType
+    provider?: EnumPaymentProviderFieldUpdateOperationsInput | $Enums.PaymentProvider
+    providerPaymentId?: NullableStringFieldUpdateOperationsInput | string | null
+    depositCurrency?: EnumExchangeCurrencyCodeFieldUpdateOperationsInput | $Enums.ExchangeCurrencyCode
+    depositNetwork?: NullableStringFieldUpdateOperationsInput | string | null
+    walletAddress?: NullableStringFieldUpdateOperationsInput | string | null
+    walletAddressExtraId?: NullableStringFieldUpdateOperationsInput | string | null
+    depositorName?: NullableStringFieldUpdateOperationsInput | string | null
+    transactionHash?: NullableStringFieldUpdateOperationsInput | string | null
+    requestedAmount?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
+    actuallyPaid?: NullableDecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string | null
+    processedBy?: NullableBigIntFieldUpdateOperationsInput | bigint | number | null
+    adminNote?: NullableStringFieldUpdateOperationsInput | string | null
+    ipAddress?: NullableStringFieldUpdateOperationsInput | string | null
+    deviceFingerprint?: NullableStringFieldUpdateOperationsInput | string | null
+    feeAmount?: NullableDecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string | null
+    feeCurrency?: NullableStringFieldUpdateOperationsInput | string | null
+    feePaidBy?: NullableEnumFeePaidByTypeFieldUpdateOperationsInput | $Enums.FeePaidByType | null
+    failureReason?: NullableStringFieldUpdateOperationsInput | string | null
+    providerMetadata?: NullableJsonNullValueInput | InputJsonValue
+    bankConfigId?: NullableBigIntFieldUpdateOperationsInput | bigint | number | null
+  }
+
+  export type DepositDetailCreateManyBankConfigInput = {
+    id?: bigint | number
+    uid: string
+    confirmedAt?: Date | string | null
+    failedAt?: Date | string | null
+    createdAt?: Date | string
+    updatedAt?: Date | string
+    status: $Enums.DepositDetailStatus
+    transactionId: bigint | number
+    methodType: $Enums.DepositMethodType
+    provider: $Enums.PaymentProvider
+    providerPaymentId?: string | null
+    depositCurrency: $Enums.ExchangeCurrencyCode
+    depositNetwork?: string | null
+    walletAddress?: string | null
+    walletAddressExtraId?: string | null
+    depositorName?: string | null
+    transactionHash?: string | null
+    requestedAmount: Decimal | DecimalJsLike | number | string
+    actuallyPaid?: Decimal | DecimalJsLike | number | string | null
+    processedBy?: bigint | number | null
+    adminNote?: string | null
+    ipAddress?: string | null
+    deviceFingerprint?: string | null
+    feeAmount?: Decimal | DecimalJsLike | number | string | null
+    feeCurrency?: string | null
+    feePaidBy?: $Enums.FeePaidByType | null
+    failureReason?: string | null
+    providerMetadata?: NullableJsonNullValueInput | InputJsonValue
+    cryptoConfigId?: bigint | number | null
+  }
+
+  export type DepositDetailUpdateWithoutBankConfigInput = {
+    id?: BigIntFieldUpdateOperationsInput | bigint | number
+    uid?: StringFieldUpdateOperationsInput | string
+    confirmedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    failedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    status?: EnumDepositDetailStatusFieldUpdateOperationsInput | $Enums.DepositDetailStatus
+    methodType?: EnumDepositMethodTypeFieldUpdateOperationsInput | $Enums.DepositMethodType
+    provider?: EnumPaymentProviderFieldUpdateOperationsInput | $Enums.PaymentProvider
+    providerPaymentId?: NullableStringFieldUpdateOperationsInput | string | null
+    depositCurrency?: EnumExchangeCurrencyCodeFieldUpdateOperationsInput | $Enums.ExchangeCurrencyCode
+    depositNetwork?: NullableStringFieldUpdateOperationsInput | string | null
+    walletAddress?: NullableStringFieldUpdateOperationsInput | string | null
+    walletAddressExtraId?: NullableStringFieldUpdateOperationsInput | string | null
+    depositorName?: NullableStringFieldUpdateOperationsInput | string | null
+    transactionHash?: NullableStringFieldUpdateOperationsInput | string | null
+    requestedAmount?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
+    actuallyPaid?: NullableDecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string | null
+    processedBy?: NullableBigIntFieldUpdateOperationsInput | bigint | number | null
+    adminNote?: NullableStringFieldUpdateOperationsInput | string | null
+    ipAddress?: NullableStringFieldUpdateOperationsInput | string | null
+    deviceFingerprint?: NullableStringFieldUpdateOperationsInput | string | null
+    feeAmount?: NullableDecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string | null
+    feeCurrency?: NullableStringFieldUpdateOperationsInput | string | null
+    feePaidBy?: NullableEnumFeePaidByTypeFieldUpdateOperationsInput | $Enums.FeePaidByType | null
+    failureReason?: NullableStringFieldUpdateOperationsInput | string | null
+    providerMetadata?: NullableJsonNullValueInput | InputJsonValue
+    CryptoConfig?: CryptoConfigUpdateOneWithoutDepositDetailsNestedInput
+    transaction?: TransactionUpdateOneRequiredWithoutDepositDetailNestedInput
+    Rolling?: RollingUpdateManyWithoutDepositDetailNestedInput
+  }
+
+  export type DepositDetailUncheckedUpdateWithoutBankConfigInput = {
+    id?: BigIntFieldUpdateOperationsInput | bigint | number
+    uid?: StringFieldUpdateOperationsInput | string
+    confirmedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    failedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    status?: EnumDepositDetailStatusFieldUpdateOperationsInput | $Enums.DepositDetailStatus
+    transactionId?: BigIntFieldUpdateOperationsInput | bigint | number
+    methodType?: EnumDepositMethodTypeFieldUpdateOperationsInput | $Enums.DepositMethodType
+    provider?: EnumPaymentProviderFieldUpdateOperationsInput | $Enums.PaymentProvider
+    providerPaymentId?: NullableStringFieldUpdateOperationsInput | string | null
+    depositCurrency?: EnumExchangeCurrencyCodeFieldUpdateOperationsInput | $Enums.ExchangeCurrencyCode
+    depositNetwork?: NullableStringFieldUpdateOperationsInput | string | null
+    walletAddress?: NullableStringFieldUpdateOperationsInput | string | null
+    walletAddressExtraId?: NullableStringFieldUpdateOperationsInput | string | null
+    depositorName?: NullableStringFieldUpdateOperationsInput | string | null
+    transactionHash?: NullableStringFieldUpdateOperationsInput | string | null
+    requestedAmount?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
+    actuallyPaid?: NullableDecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string | null
+    processedBy?: NullableBigIntFieldUpdateOperationsInput | bigint | number | null
+    adminNote?: NullableStringFieldUpdateOperationsInput | string | null
+    ipAddress?: NullableStringFieldUpdateOperationsInput | string | null
+    deviceFingerprint?: NullableStringFieldUpdateOperationsInput | string | null
+    feeAmount?: NullableDecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string | null
+    feeCurrency?: NullableStringFieldUpdateOperationsInput | string | null
+    feePaidBy?: NullableEnumFeePaidByTypeFieldUpdateOperationsInput | $Enums.FeePaidByType | null
+    failureReason?: NullableStringFieldUpdateOperationsInput | string | null
+    providerMetadata?: NullableJsonNullValueInput | InputJsonValue
+    cryptoConfigId?: NullableBigIntFieldUpdateOperationsInput | bigint | number | null
+    Rolling?: RollingUncheckedUpdateManyWithoutDepositDetailNestedInput
+  }
+
+  export type DepositDetailUncheckedUpdateManyWithoutBankConfigInput = {
+    id?: BigIntFieldUpdateOperationsInput | bigint | number
+    uid?: StringFieldUpdateOperationsInput | string
+    confirmedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    failedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    status?: EnumDepositDetailStatusFieldUpdateOperationsInput | $Enums.DepositDetailStatus
+    transactionId?: BigIntFieldUpdateOperationsInput | bigint | number
+    methodType?: EnumDepositMethodTypeFieldUpdateOperationsInput | $Enums.DepositMethodType
+    provider?: EnumPaymentProviderFieldUpdateOperationsInput | $Enums.PaymentProvider
+    providerPaymentId?: NullableStringFieldUpdateOperationsInput | string | null
+    depositCurrency?: EnumExchangeCurrencyCodeFieldUpdateOperationsInput | $Enums.ExchangeCurrencyCode
+    depositNetwork?: NullableStringFieldUpdateOperationsInput | string | null
+    walletAddress?: NullableStringFieldUpdateOperationsInput | string | null
+    walletAddressExtraId?: NullableStringFieldUpdateOperationsInput | string | null
+    depositorName?: NullableStringFieldUpdateOperationsInput | string | null
+    transactionHash?: NullableStringFieldUpdateOperationsInput | string | null
+    requestedAmount?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
+    actuallyPaid?: NullableDecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string | null
+    processedBy?: NullableBigIntFieldUpdateOperationsInput | bigint | number | null
+    adminNote?: NullableStringFieldUpdateOperationsInput | string | null
+    ipAddress?: NullableStringFieldUpdateOperationsInput | string | null
+    deviceFingerprint?: NullableStringFieldUpdateOperationsInput | string | null
+    feeAmount?: NullableDecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string | null
+    feeCurrency?: NullableStringFieldUpdateOperationsInput | string | null
+    feePaidBy?: NullableEnumFeePaidByTypeFieldUpdateOperationsInput | $Enums.FeePaidByType | null
+    failureReason?: NullableStringFieldUpdateOperationsInput | string | null
+    providerMetadata?: NullableJsonNullValueInput | InputJsonValue
+    cryptoConfigId?: NullableBigIntFieldUpdateOperationsInput | bigint | number | null
   }
 
   export type PromotionTranslationCreateManyPromotionInput = {

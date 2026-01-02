@@ -672,29 +672,6 @@ model GameSession {
   user                   User                 @relation(fields: [userId], references: [id])
 }
 
-model BankAccount {
-  id                 Int                  @id @default(autoincrement())
-  currency           ExchangeCurrencyCode
-  bankName           String
-  accountNumber      String
-  accountHolder      String
-  isActive           Boolean              @default(true)
-  priority           Int                  @default(0)
-  description        String?
-  notes              String?
-  totalDeposits      Int                  @default(0)
-  totalDepositAmount Decimal              @default(0) @db.Decimal(32, 18)
-  createdAt          DateTime             @default(now())
-  updatedAt          DateTime             @updatedAt
-  deletedAt          DateTime?
-  depositDetails     DepositDetail[]
-
-  @@index([currency, isActive, priority])
-  @@index([isActive])
-  @@index([currency])
-  @@index([priority])
-}
-
 model AffiliateCode {
   id           String     @id @default(cuid())
   userId       BigInt
@@ -1034,9 +1011,6 @@ model DepositDetail {
   depositNetwork       String?              @map("deposit_network")
   walletAddress        String?              @map("wallet_address")
   walletAddressExtraId String?              @map("wallet_address_extra_id")
-  bankName             String?              @map("bank_name")
-  accountNumber        String?              @map("account_number")
-  accountHolder        String?              @map("account_holder")
   depositorName        String?              @map("depositor_name")
   transactionHash      String?              @map("transaction_hash")
 
@@ -1059,8 +1033,10 @@ model DepositDetail {
   feePaidBy        FeePaidByType? @map("fee_paid_by")
   failureReason    String?        @map("failure_reason")
   providerMetadata Json?          @default("{}") @map("provider_metadata")
-  bankAccountId    Int?           @map("bank_account_id")
-  BankAccount      BankAccount?   @relation(fields: [bankAccountId], references: [id])
+  bankConfigId     BigInt?        @map("bank_config_id")
+  cryptoConfigId   BigInt?        @map("crypto_config_id")
+  BankConfig       BankConfig?    @relation(fields: [bankConfigId], references: [id])
+  CryptoConfig     CryptoConfig?  @relation(fields: [cryptoConfigId], references: [id])
   transaction      Transaction    @relation(fields: [transactionId], references: [id])
   Rolling          Rolling[]
 
@@ -1074,6 +1050,8 @@ model DepositDetail {
   @@index([ipAddress, deviceFingerprint])
   @@index([ipAddress])
   @@index([deviceFingerprint])
+  @@index([bankConfigId])
+  @@index([cryptoConfigId])
   @@map("deposit_details")
 }
 
@@ -1129,6 +1107,69 @@ enum FeePaidByType {
   USER
   /// 시스템 부담 - 수수료를 시스템이 부담
   SYSTEM
+}
+
+/**
+ * 암호화폐 입금 설정 모델
+ * 암호화폐별 입금 설정을 관리합니다.
+ * - symbol과 network 조합으로 고유하게 관리
+ * - 최소 입금 금액, 수수료율, 승인 필요 블록 수 등 설정
+ * - 토큰의 경우 contractAddress 저장
+ */
+model CryptoConfig {
+  id               BigInt          @id @default(autoincrement())
+  uid              String          @unique
+  symbol           String // BTC, ETH, USDT 등
+  network          String // Mainnet, ERC20, TRC20 등
+  isActive         Boolean         @default(true)
+  minDepositAmount Decimal         @map("min_deposit_amount") @db.Decimal(32, 18)
+  depositFeeRate   Decimal         @default(0) @map("deposit_fee_rate") @db.Decimal(8, 4) // 입금 수수료율 (예: 0.001 = 0.1%)
+  confirmations    Int             @default(3) // 승인 필요한 블록 수
+  contractAddress  String?         @map("contract_address") // 토큰일 경우 컨트랙트 주소
+  createdAt        DateTime        @default(now()) @map("created_at")
+  updatedAt        DateTime        @updatedAt @map("updated_at")
+  depositDetails   DepositDetail[]
+
+  @@unique([symbol, network])
+  @@index([symbol, network, isActive])
+  @@index([isActive])
+  @@map("crypto_configs")
+}
+
+/**
+ * 은행 계좌 입금 설정 모델
+ * 은행 계좌별 입금 설정 및 계좌 정보를 관리합니다.
+ * - 은행 계좌 정보 (은행명, 계좌번호, 예금주 등)
+ * - 입금 설정 (최소/최대 금액, 우선순위 등)
+ * - 통계 정보 (총 입금 횟수, 총 입금 금액)
+ * - 소프트 삭제 지원
+ */
+model BankConfig {
+  id                 BigInt               @id @default(autoincrement())
+  uid                String               @unique
+  currency           ExchangeCurrencyCode
+  bankName           String               @map("bank_name")
+  accountNumber      String               @map("account_number")
+  accountHolder      String               @map("account_holder")
+  isActive           Boolean              @default(true) @map("is_active")
+  priority           Int                  @default(0)
+  description        String?              @db.Text // 유저에게 보여줄 안내 사항 (예: "반드시 본인 성함으로 입금")
+  notes              String?              @db.Text // 관리자용 메모
+  minAmount          Decimal              @map("min_amount") @db.Decimal(32, 18)
+  maxAmount          Decimal?             @map("max_amount") @db.Decimal(32, 18) // null이면 제한 없음
+  totalDeposits      Int                  @default(0) @map("total_deposits")
+  totalDepositAmount Decimal              @default(0) @map("total_deposit_amount") @db.Decimal(32, 18)
+  createdAt          DateTime             @default(now()) @map("created_at")
+  updatedAt          DateTime             @updatedAt @map("updated_at")
+  deletedAt          DateTime?            @map("deleted_at")
+  depositDetails     DepositDetail[]
+
+  @@index([currency, isActive, priority])
+  @@index([isActive])
+  @@index([currency])
+  @@index([priority])
+  @@index([deletedAt])
+  @@map("bank_configs")
 }
 
 model Promotion {

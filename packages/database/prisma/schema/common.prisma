@@ -505,29 +505,6 @@ model GameSession {
   user                   User                 @relation(fields: [userId], references: [id])
 }
 
-model BankAccount {
-  id                 Int                  @id @default(autoincrement())
-  currency           ExchangeCurrencyCode
-  bankName           String
-  accountNumber      String
-  accountHolder      String
-  isActive           Boolean              @default(true)
-  priority           Int                  @default(0)
-  description        String?
-  notes              String?
-  totalDeposits      Int                  @default(0)
-  totalDepositAmount Decimal              @default(0) @db.Decimal(32, 18)
-  createdAt          DateTime             @default(now())
-  updatedAt          DateTime             @updatedAt
-  deletedAt          DateTime?
-  depositDetails     DepositDetail[]
-
-  @@index([currency, isActive, priority])
-  @@index([isActive])
-  @@index([currency])
-  @@index([priority])
-}
-
 model AffiliateCode {
   id           String     @id @default(cuid())
   userId       BigInt

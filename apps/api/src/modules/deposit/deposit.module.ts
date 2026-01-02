@@ -1,9 +1,5 @@
 // src/modules/deposit/deposit.module.ts
 import { Module } from '@nestjs/common';
-import { DepositService } from './application/deposit.service';
-import { BankTransferDepositService } from './application/bank-transfer-deposit.service';
-import { CryptoDepositService } from './application/crypto-deposit.service';
-import { AdminDepositService } from './application/admin-deposit.service';
 import { DepositController } from './controllers/user/deposit.controller';
 import { AdminDepositController } from './controllers/admin/deposit.controller';
 import { ConcurrencyModule } from '../../common/concurrency/concurrency.module';
@@ -25,18 +21,12 @@ import { PaymentModule } from '../payment/payment.module';
     PaymentModule, // NowPaymentApiService 사용을 위해
   ],
   providers: [
-    DepositService,
-    BankTransferDepositService,
-    CryptoDepositService,
-    AdminDepositService,
   ],
   controllers: [
     DepositController,
     AdminDepositController,
   ],
   exports: [
-    DepositService,
-    AdminDepositService,
   ],
 })
 export class DepositModule {}

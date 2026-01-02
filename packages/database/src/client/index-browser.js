@@ -589,23 +589,6 @@ exports.Prisma.GameSessionScalarFieldEnum = {
   gameId: 'gameId'
 };
 
-exports.Prisma.BankAccountScalarFieldEnum = {
-  id: 'id',
-  currency: 'currency',
-  bankName: 'bankName',
-  accountNumber: 'accountNumber',
-  accountHolder: 'accountHolder',
-  isActive: 'isActive',
-  priority: 'priority',
-  description: 'description',
-  notes: 'notes',
-  totalDeposits: 'totalDeposits',
-  totalDepositAmount: 'totalDepositAmount',
-  createdAt: 'createdAt',
-  updatedAt: 'updatedAt',
-  deletedAt: 'deletedAt'
-};
-
 exports.Prisma.AffiliateCodeScalarFieldEnum = {
   id: 'id',
   userId: 'userId',
@@ -707,9 +690,6 @@ exports.Prisma.DepositDetailScalarFieldEnum = {
   depositNetwork: 'depositNetwork',
   walletAddress: 'walletAddress',
   walletAddressExtraId: 'walletAddressExtraId',
-  bankName: 'bankName',
-  accountNumber: 'accountNumber',
-  accountHolder: 'accountHolder',
   depositorName: 'depositorName',
   transactionHash: 'transactionHash',
   requestedAmount: 'requestedAmount',
@@ -723,7 +703,42 @@ exports.Prisma.DepositDetailScalarFieldEnum = {
   feePaidBy: 'feePaidBy',
   failureReason: 'failureReason',
   providerMetadata: 'providerMetadata',
-  bankAccountId: 'bankAccountId'
+  bankConfigId: 'bankConfigId',
+  cryptoConfigId: 'cryptoConfigId'
+};
+
+exports.Prisma.CryptoConfigScalarFieldEnum = {
+  id: 'id',
+  uid: 'uid',
+  symbol: 'symbol',
+  network: 'network',
+  isActive: 'isActive',
+  minDepositAmount: 'minDepositAmount',
+  depositFeeRate: 'depositFeeRate',
+  confirmations: 'confirmations',
+  contractAddress: 'contractAddress',
+  createdAt: 'createdAt',
+  updatedAt: 'updatedAt'
+};
+
+exports.Prisma.BankConfigScalarFieldEnum = {
+  id: 'id',
+  uid: 'uid',
+  currency: 'currency',
+  bankName: 'bankName',
+  accountNumber: 'accountNumber',
+  accountHolder: 'accountHolder',
+  isActive: 'isActive',
+  priority: 'priority',
+  description: 'description',
+  notes: 'notes',
+  minAmount: 'minAmount',
+  maxAmount: 'maxAmount',
+  totalDeposits: 'totalDeposits',
+  totalDepositAmount: 'totalDepositAmount',
+  createdAt: 'createdAt',
+  updatedAt: 'updatedAt',
+  deletedAt: 'deletedAt'
 };
 
 exports.Prisma.PromotionScalarFieldEnum = {
@@ -1093,7 +1108,6 @@ exports.Prisma.ModelName = {
   UserToken: 'UserToken',
   EmailLog: 'EmailLog',
   GameSession: 'GameSession',
-  BankAccount: 'BankAccount',
   AffiliateCode: 'AffiliateCode',
   Referral: 'Referral',
   AffiliateWallet: 'AffiliateWallet',
@@ -1101,6 +1115,8 @@ exports.Prisma.ModelName = {
   AffiliateTier: 'AffiliateTier',
   LoginAttempt: 'LoginAttempt',
   DepositDetail: 'DepositDetail',
+  CryptoConfig: 'CryptoConfig',
+  BankConfig: 'BankConfig',
   Promotion: 'Promotion',
   PromotionTranslation: 'PromotionTranslation',
   PromotionCurrency: 'PromotionCurrency',
