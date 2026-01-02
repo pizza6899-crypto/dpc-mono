@@ -19,6 +19,8 @@ import { AdminBankConfigService } from './application/admin-bank-config.service'
 import { AdminCryptoConfigService } from './application/admin-crypto-config.service';
 import { GetAvailableDepositMethodsService } from './application/get-available-deposit-methods.service';
 import { CreateBankConfigService } from './application/create-bank-config.service';
+import { GetBankDepositAddressService } from './application/get-bank-deposit-address.service';
+import { GetCryptoDepositAddressService } from './application/get-crypto-deposit-address.service';
 import { DepositDetailMapper } from './infrastructure/deposit-detail.mapper';
 import { DepositDetailRepository } from './infrastructure/deposit-detail.repository';
 import { BankConfigMapper } from './infrastructure/bank-config.mapper';
@@ -72,6 +74,8 @@ import {
     AdminCryptoConfigService,
     GetAvailableDepositMethodsService,
     CreateBankConfigService,
+    GetBankDepositAddressService,
+    GetCryptoDepositAddressService,
   ],
   controllers: [
     DepositController,
@@ -87,6 +91,8 @@ import {
     AdminCryptoConfigService,
     GetAvailableDepositMethodsService,
     CreateBankConfigService,
+    GetBankDepositAddressService,
+    GetCryptoDepositAddressService,
   ],
 })
 export class DepositModule { }

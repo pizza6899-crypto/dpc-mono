@@ -7,4 +7,6 @@ export interface CryptoConfigRepositoryPort {
     getByUid(uid: string): Promise<CryptoConfig>;
     findById(id: bigint): Promise<CryptoConfig | null>;
     getById(id: bigint): Promise<CryptoConfig>;
+    findBySymbolAndNetwork(symbol: string, network: string): Promise<CryptoConfig | null>;
+    getBySymbolAndNetwork(symbol: string, network: string): Promise<CryptoConfig>;
 }

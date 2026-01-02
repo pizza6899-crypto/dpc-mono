@@ -9,29 +9,8 @@ import type {
     CryptoConfigRepositoryPort,
 } from '../ports/out';
 import { BankConfig, CryptoConfig } from '../domain';
-
-export interface GetAvailableDepositMethodsResponse {
-    bankTransfer: {
-        uid: string;
-        bankName: string;
-        accountHolder: string;
-        accountNumber: string;
-        currency: string;
-        minAmount: string;
-        maxAmount: string | null;
-        description: string | null;
-        notes: string | null;
-    }[];
-    crypto: {
-        uid: string;
-        symbol: string;
-        network: string;
-        minDepositAmount: string;
-        depositFeeRate: string;
-        confirmations: number;
-        contractAddress: string | null;
-    }[];
-}
+import { GetAvailableDepositMethodsResponseDto } from '../dtos/deposit-method-user.dto';
+import { ExchangeCurrencyCode } from '@repo/database';
 
 @Injectable()
 export class GetAvailableDepositMethodsService {
@@ -42,7 +21,7 @@ export class GetAvailableDepositMethodsService {
         private readonly cryptoConfigRepository: CryptoConfigRepositoryPort,
     ) { }
 
-    async execute(): Promise<GetAvailableDepositMethodsResponse> {
+    async execute(): Promise<GetAvailableDepositMethodsResponseDto> {
         const [bankConfigs, cryptoConfigs] = await Promise.all([
             this.bankConfigRepository.listActive(),
             this.cryptoConfigRepository.listActive(),
@@ -54,7 +33,7 @@ export class GetAvailableDepositMethodsService {
                 bankName: config.bankName,
                 accountHolder: config.accountHolder,
                 accountNumber: config.accountNumber,
-                currency: config.currency,
+                currency: config.currency as ExchangeCurrencyCode,
                 minAmount: config.minAmount.toString(),
                 maxAmount: config.maxAmount?.toString() ?? null,
                 description: config.description,
@@ -62,7 +41,7 @@ export class GetAvailableDepositMethodsService {
             })),
             crypto: cryptoConfigs.map((config: CryptoConfig) => ({
                 uid: config.uid,
-                symbol: config.symbol,
+                symbol: config.symbol as ExchangeCurrencyCode,
                 network: config.network,
                 minDepositAmount: config.minDepositAmount.toString(),
                 depositFeeRate: config.depositFeeRate.toString(),

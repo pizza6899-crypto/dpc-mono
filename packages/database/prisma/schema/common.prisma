@@ -41,6 +41,7 @@ model User {
   referredUsers        Referral[]            @relation("ReferredUsers")
   Rolling              Rolling[]
   transactions         Transaction[]
+  depositDetails       DepositDetail[]
   balances             UserBalance[]
   UserBalanceStats     UserBalanceStats[]
   UserPromotion        UserPromotion[]

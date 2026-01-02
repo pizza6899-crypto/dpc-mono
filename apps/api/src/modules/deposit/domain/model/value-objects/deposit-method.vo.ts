@@ -9,7 +9,11 @@ export class DepositMethod {
   private constructor(
     public readonly methodType: DepositMethodType,
     public readonly provider: PaymentProvider,
-  ) {}
+  ) { }
+
+  static create(methodType: DepositMethodType, provider: PaymentProvider): DepositMethod {
+    return new DepositMethod(methodType, provider);
+  }
 
   static fromPersistence(data: {
     methodType: DepositMethodType;

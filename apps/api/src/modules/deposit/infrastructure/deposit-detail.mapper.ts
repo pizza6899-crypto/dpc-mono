@@ -20,7 +20,8 @@ export class DepositDetailMapper {
   toDomain(prismaModel: {
     id: bigint;
     uid: string;
-    transactionId: bigint;
+    userId: bigint;
+    transactionId: bigint | null;
     status: DepositDetailStatus;
     methodType: any;
     provider: any;
@@ -52,6 +53,7 @@ export class DepositDetailMapper {
     return DepositDetail.fromPersistence({
       id: prismaModel.id,
       uid: prismaModel.uid,
+      userId: prismaModel.userId,
       transactionId: prismaModel.transactionId,
       status: prismaModel.status,
       methodType: prismaModel.methodType,
@@ -86,17 +88,7 @@ export class DepositDetailMapper {
   /**
    * Domain 엔티티 → Prisma 모델 변환 (업데이트용)
    */
-  toPrismaUpdate(domain: DepositDetail): {
-    status: DepositDetailStatus;
-    actuallyPaid: Prisma.Decimal | null;
-    transactionHash: string | null;
-    adminNote: string | null;
-    processedBy: bigint | null;
-    confirmedAt: Date | null;
-    updatedAt: Date;
-    failureReason?: string | null;
-    failedAt?: Date | null;
-  } {
+  toPrismaUpdate(domain: DepositDetail): any {
     const persistence = domain.toPersistence();
     return {
       status: persistence.status,
@@ -107,6 +99,47 @@ export class DepositDetailMapper {
       confirmedAt: persistence.confirmedAt,
       updatedAt: persistence.updatedAt,
       failureReason: persistence.failureReason,
+      failedAt: persistence.failedAt,
+      transactionId: persistence.transactionId,
+      walletAddress: persistence.walletAddress,
+      walletAddressExtraId: persistence.walletAddressExtraId,
+      providerPaymentId: persistence.providerPaymentId,
+    };
+  }
+
+  /**
+   * Domain 엔티티 → Prisma 모델 변환 (생성용)
+   */
+  toPrismaCreate(domain: DepositDetail): any {
+    const persistence = domain.toPersistence();
+    return {
+      status: persistence.status,
+      methodType: persistence.methodType,
+      provider: persistence.provider,
+      requestedAmount: persistence.requestedAmount,
+      actuallyPaid: persistence.actuallyPaid,
+      feeAmount: persistence.feeAmount,
+      feeCurrency: persistence.feeCurrency,
+      feePaidBy: persistence.feePaidBy,
+      depositCurrency: persistence.depositCurrency,
+      walletAddress: persistence.walletAddress,
+      walletAddressExtraId: persistence.walletAddressExtraId,
+      depositNetwork: persistence.depositNetwork,
+      depositorName: persistence.depositorName,
+      providerPaymentId: persistence.providerPaymentId,
+      transactionHash: persistence.transactionHash,
+      bankConfigId: persistence.bankConfigId,
+      cryptoConfigId: persistence.cryptoConfigId,
+      processedBy: persistence.processedBy,
+      adminNote: persistence.adminNote,
+      ipAddress: persistence.ipAddress,
+      deviceFingerprint: persistence.deviceFingerprint,
+      failureReason: persistence.failureReason,
+      userId: persistence.userId,
+      providerMetadata: persistence.providerMetadata ?? {},
+      createdAt: persistence.createdAt,
+      updatedAt: persistence.updatedAt,
+      confirmedAt: persistence.confirmedAt,
       failedAt: persistence.failedAt,
     };
   }

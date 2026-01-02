@@ -208,6 +208,7 @@ model User {
   referredUsers        Referral[]            @relation("ReferredUsers")
   Rolling              Rolling[]
   transactions         Transaction[]
+  depositDetails       DepositDetail[]
   balances             UserBalance[]
   UserBalanceStats     UserBalanceStats[]
   UserPromotion        UserPromotion[]
@@ -1003,7 +1004,9 @@ model DepositDetail {
   createdAt            DateTime             @default(now()) @map("created_at")
   updatedAt            DateTime             @updatedAt @map("updated_at")
   status               DepositDetailStatus
-  transactionId        BigInt               @unique @map("transaction_id")
+  userId               BigInt               @map("user_id")
+  transactionId        BigInt?              @unique @map("transaction_id")
+  user                 User                 @relation(fields: [userId], references: [id])
   methodType           DepositMethodType    @map("method_type")
   provider             PaymentProvider
   providerPaymentId    String?              @unique @map("provider_payment_id")
@@ -1037,7 +1040,7 @@ model DepositDetail {
   cryptoConfigId   BigInt?        @map("crypto_config_id")
   BankConfig       BankConfig?    @relation(fields: [bankConfigId], references: [id])
   CryptoConfig     CryptoConfig?  @relation(fields: [cryptoConfigId], references: [id])
-  transaction      Transaction    @relation(fields: [transactionId], references: [id])
+  transaction      Transaction?   @relation(fields: [transactionId], references: [id])
   Rolling          Rolling[]
 
   @@index([provider, providerPaymentId])

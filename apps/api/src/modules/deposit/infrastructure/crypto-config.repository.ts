@@ -61,4 +61,23 @@ export class CryptoConfigRepository implements CryptoConfigRepositoryPort {
         }
         return config;
     }
+
+    async findBySymbolAndNetwork(symbol: string, network: string): Promise<CryptoConfig | null> {
+        const config = await this.tx.cryptoConfig.findFirst({
+            where: {
+                symbol,
+                network,
+                deletedAt: null,
+            },
+        });
+        return config ? this.mapper.toDomain(config) : null;
+    }
+
+    async getBySymbolAndNetwork(symbol: string, network: string): Promise<CryptoConfig> {
+        const config = await this.findBySymbolAndNetwork(symbol, network);
+        if (!config) {
+            throw new CryptoConfigNotFoundException(`${symbol}/${network}`);
+        }
+        return config;
+    }
 }

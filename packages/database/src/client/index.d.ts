@@ -5301,6 +5301,7 @@ export namespace Prisma {
     referredUsers: number
     Rolling: number
     transactions: number
+    depositDetails: number
     balances: number
     UserBalanceStats: number
     UserPromotion: number
@@ -5324,6 +5325,7 @@ export namespace Prisma {
     referredUsers?: boolean | UserCountOutputTypeCountReferredUsersArgs
     Rolling?: boolean | UserCountOutputTypeCountRollingArgs
     transactions?: boolean | UserCountOutputTypeCountTransactionsArgs
+    depositDetails?: boolean | UserCountOutputTypeCountDepositDetailsArgs
     balances?: boolean | UserCountOutputTypeCountBalancesArgs
     UserBalanceStats?: boolean | UserCountOutputTypeCountUserBalanceStatsArgs
     UserPromotion?: boolean | UserCountOutputTypeCountUserPromotionArgs
@@ -5427,6 +5429,13 @@ export namespace Prisma {
    */
   export type UserCountOutputTypeCountTransactionsArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
     where?: TransactionWhereInput
+  }
+
+  /**
+   * UserCountOutputType without action
+   */
+  export type UserCountOutputTypeCountDepositDetailsArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    where?: DepositDetailWhereInput
   }
 
   /**
@@ -12178,6 +12187,7 @@ export namespace Prisma {
     referredUsers?: boolean | User$referredUsersArgs<ExtArgs>
     Rolling?: boolean | User$RollingArgs<ExtArgs>
     transactions?: boolean | User$transactionsArgs<ExtArgs>
+    depositDetails?: boolean | User$depositDetailsArgs<ExtArgs>
     balances?: boolean | User$balancesArgs<ExtArgs>
     UserBalanceStats?: boolean | User$UserBalanceStatsArgs<ExtArgs>
     UserPromotion?: boolean | User$UserPromotionArgs<ExtArgs>
@@ -12271,6 +12281,7 @@ export namespace Prisma {
     referredUsers?: boolean | User$referredUsersArgs<ExtArgs>
     Rolling?: boolean | User$RollingArgs<ExtArgs>
     transactions?: boolean | User$transactionsArgs<ExtArgs>
+    depositDetails?: boolean | User$depositDetailsArgs<ExtArgs>
     balances?: boolean | User$balancesArgs<ExtArgs>
     UserBalanceStats?: boolean | User$UserBalanceStatsArgs<ExtArgs>
     UserPromotion?: boolean | User$UserPromotionArgs<ExtArgs>
@@ -12301,6 +12312,7 @@ export namespace Prisma {
       referredUsers: Prisma.$ReferralPayload<ExtArgs>[]
       Rolling: Prisma.$RollingPayload<ExtArgs>[]
       transactions: Prisma.$TransactionPayload<ExtArgs>[]
+      depositDetails: Prisma.$DepositDetailPayload<ExtArgs>[]
       balances: Prisma.$UserBalancePayload<ExtArgs>[]
       UserBalanceStats: Prisma.$UserBalanceStatsPayload<ExtArgs>[]
       UserPromotion: Prisma.$UserPromotionPayload<ExtArgs>[]
@@ -12738,6 +12750,7 @@ export namespace Prisma {
     referredUsers<T extends User$referredUsersArgs<ExtArgs> = {}>(args?: Subset<T, User$referredUsersArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$ReferralPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
     Rolling<T extends User$RollingArgs<ExtArgs> = {}>(args?: Subset<T, User$RollingArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$RollingPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
     transactions<T extends User$transactionsArgs<ExtArgs> = {}>(args?: Subset<T, User$transactionsArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$TransactionPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
+    depositDetails<T extends User$depositDetailsArgs<ExtArgs> = {}>(args?: Subset<T, User$depositDetailsArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$DepositDetailPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
     balances<T extends User$balancesArgs<ExtArgs> = {}>(args?: Subset<T, User$balancesArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$UserBalancePayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
     UserBalanceStats<T extends User$UserBalanceStatsArgs<ExtArgs> = {}>(args?: Subset<T, User$UserBalanceStatsArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$UserBalanceStatsPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
     UserPromotion<T extends User$UserPromotionArgs<ExtArgs> = {}>(args?: Subset<T, User$UserPromotionArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$UserPromotionPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
@@ -13487,6 +13500,30 @@ export namespace Prisma {
     take?: number
     skip?: number
     distinct?: TransactionScalarFieldEnum | TransactionScalarFieldEnum[]
+  }
+
+  /**
+   * User.depositDetails
+   */
+  export type User$depositDetailsArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the DepositDetail
+     */
+    select?: DepositDetailSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the DepositDetail
+     */
+    omit?: DepositDetailOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: DepositDetailInclude<ExtArgs> | null
+    where?: DepositDetailWhereInput
+    orderBy?: DepositDetailOrderByWithRelationInput | DepositDetailOrderByWithRelationInput[]
+    cursor?: DepositDetailWhereUniqueInput
+    take?: number
+    skip?: number
+    distinct?: DepositDetailScalarFieldEnum | DepositDetailScalarFieldEnum[]
   }
 
   /**
@@ -49926,6 +49963,7 @@ export namespace Prisma {
 
   export type DepositDetailAvgAggregateOutputType = {
     id: number | null
+    userId: number | null
     transactionId: number | null
     requestedAmount: Decimal | null
     actuallyPaid: Decimal | null
@@ -49937,6 +49975,7 @@ export namespace Prisma {
 
   export type DepositDetailSumAggregateOutputType = {
     id: bigint | null
+    userId: bigint | null
     transactionId: bigint | null
     requestedAmount: Decimal | null
     actuallyPaid: Decimal | null
@@ -49954,6 +49993,7 @@ export namespace Prisma {
     createdAt: Date | null
     updatedAt: Date | null
     status: $Enums.DepositDetailStatus | null
+    userId: bigint | null
     transactionId: bigint | null
     methodType: $Enums.DepositMethodType | null
     provider: $Enums.PaymentProvider | null
@@ -49986,6 +50026,7 @@ export namespace Prisma {
     createdAt: Date | null
     updatedAt: Date | null
     status: $Enums.DepositDetailStatus | null
+    userId: bigint | null
     transactionId: bigint | null
     methodType: $Enums.DepositMethodType | null
     provider: $Enums.PaymentProvider | null
@@ -50018,6 +50059,7 @@ export namespace Prisma {
     createdAt: number
     updatedAt: number
     status: number
+    userId: number
     transactionId: number
     methodType: number
     provider: number
@@ -50047,6 +50089,7 @@ export namespace Prisma {
 
   export type DepositDetailAvgAggregateInputType = {
     id?: true
+    userId?: true
     transactionId?: true
     requestedAmount?: true
     actuallyPaid?: true
@@ -50058,6 +50101,7 @@ export namespace Prisma {
 
   export type DepositDetailSumAggregateInputType = {
     id?: true
+    userId?: true
     transactionId?: true
     requestedAmount?: true
     actuallyPaid?: true
@@ -50075,6 +50119,7 @@ export namespace Prisma {
     createdAt?: true
     updatedAt?: true
     status?: true
+    userId?: true
     transactionId?: true
     methodType?: true
     provider?: true
@@ -50107,6 +50152,7 @@ export namespace Prisma {
     createdAt?: true
     updatedAt?: true
     status?: true
+    userId?: true
     transactionId?: true
     methodType?: true
     provider?: true
@@ -50139,6 +50185,7 @@ export namespace Prisma {
     createdAt?: true
     updatedAt?: true
     status?: true
+    userId?: true
     transactionId?: true
     methodType?: true
     provider?: true
@@ -50259,7 +50306,8 @@ export namespace Prisma {
     createdAt: Date
     updatedAt: Date
     status: $Enums.DepositDetailStatus
-    transactionId: bigint
+    userId: bigint
+    transactionId: bigint | null
     methodType: $Enums.DepositMethodType
     provider: $Enums.PaymentProvider
     providerPaymentId: string | null
@@ -50311,6 +50359,7 @@ export namespace Prisma {
     createdAt?: boolean
     updatedAt?: boolean
     status?: boolean
+    userId?: boolean
     transactionId?: boolean
     methodType?: boolean
     provider?: boolean
@@ -50334,9 +50383,10 @@ export namespace Prisma {
     providerMetadata?: boolean
     bankConfigId?: boolean
     cryptoConfigId?: boolean
+    user?: boolean | UserDefaultArgs<ExtArgs>
     BankConfig?: boolean | DepositDetail$BankConfigArgs<ExtArgs>
     CryptoConfig?: boolean | DepositDetail$CryptoConfigArgs<ExtArgs>
-    transaction?: boolean | TransactionDefaultArgs<ExtArgs>
+    transaction?: boolean | DepositDetail$transactionArgs<ExtArgs>
     Rolling?: boolean | DepositDetail$RollingArgs<ExtArgs>
     _count?: boolean | DepositDetailCountOutputTypeDefaultArgs<ExtArgs>
   }, ExtArgs["result"]["depositDetail"]>
@@ -50349,6 +50399,7 @@ export namespace Prisma {
     createdAt?: boolean
     updatedAt?: boolean
     status?: boolean
+    userId?: boolean
     transactionId?: boolean
     methodType?: boolean
     provider?: boolean
@@ -50372,9 +50423,10 @@ export namespace Prisma {
     providerMetadata?: boolean
     bankConfigId?: boolean
     cryptoConfigId?: boolean
+    user?: boolean | UserDefaultArgs<ExtArgs>
     BankConfig?: boolean | DepositDetail$BankConfigArgs<ExtArgs>
     CryptoConfig?: boolean | DepositDetail$CryptoConfigArgs<ExtArgs>
-    transaction?: boolean | TransactionDefaultArgs<ExtArgs>
+    transaction?: boolean | DepositDetail$transactionArgs<ExtArgs>
   }, ExtArgs["result"]["depositDetail"]>
 
   export type DepositDetailSelectUpdateManyAndReturn<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetSelect<{
@@ -50385,6 +50437,7 @@ export namespace Prisma {
     createdAt?: boolean
     updatedAt?: boolean
     status?: boolean
+    userId?: boolean
     transactionId?: boolean
     methodType?: boolean
     provider?: boolean
@@ -50408,9 +50461,10 @@ export namespace Prisma {
     providerMetadata?: boolean
     bankConfigId?: boolean
     cryptoConfigId?: boolean
+    user?: boolean | UserDefaultArgs<ExtArgs>
     BankConfig?: boolean | DepositDetail$BankConfigArgs<ExtArgs>
     CryptoConfig?: boolean | DepositDetail$CryptoConfigArgs<ExtArgs>
-    transaction?: boolean | TransactionDefaultArgs<ExtArgs>
+    transaction?: boolean | DepositDetail$transactionArgs<ExtArgs>
   }, ExtArgs["result"]["depositDetail"]>
 
   export type DepositDetailSelectScalar = {
@@ -50421,6 +50475,7 @@ export namespace Prisma {
     createdAt?: boolean
     updatedAt?: boolean
     status?: boolean
+    userId?: boolean
     transactionId?: boolean
     methodType?: boolean
     provider?: boolean
@@ -50446,31 +50501,35 @@ export namespace Prisma {
     cryptoConfigId?: boolean
   }
 
-  export type DepositDetailOmit<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetOmit<"id" | "uid" | "confirmedAt" | "failedAt" | "createdAt" | "updatedAt" | "status" | "transactionId" | "methodType" | "provider" | "providerPaymentId" | "depositCurrency" | "depositNetwork" | "walletAddress" | "walletAddressExtraId" | "depositorName" | "transactionHash" | "requestedAmount" | "actuallyPaid" | "processedBy" | "adminNote" | "ipAddress" | "deviceFingerprint" | "feeAmount" | "feeCurrency" | "feePaidBy" | "failureReason" | "providerMetadata" | "bankConfigId" | "cryptoConfigId", ExtArgs["result"]["depositDetail"]>
+  export type DepositDetailOmit<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetOmit<"id" | "uid" | "confirmedAt" | "failedAt" | "createdAt" | "updatedAt" | "status" | "userId" | "transactionId" | "methodType" | "provider" | "providerPaymentId" | "depositCurrency" | "depositNetwork" | "walletAddress" | "walletAddressExtraId" | "depositorName" | "transactionHash" | "requestedAmount" | "actuallyPaid" | "processedBy" | "adminNote" | "ipAddress" | "deviceFingerprint" | "feeAmount" | "feeCurrency" | "feePaidBy" | "failureReason" | "providerMetadata" | "bankConfigId" | "cryptoConfigId", ExtArgs["result"]["depositDetail"]>
   export type DepositDetailInclude<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    user?: boolean | UserDefaultArgs<ExtArgs>
     BankConfig?: boolean | DepositDetail$BankConfigArgs<ExtArgs>
     CryptoConfig?: boolean | DepositDetail$CryptoConfigArgs<ExtArgs>
-    transaction?: boolean | TransactionDefaultArgs<ExtArgs>
+    transaction?: boolean | DepositDetail$transactionArgs<ExtArgs>
     Rolling?: boolean | DepositDetail$RollingArgs<ExtArgs>
     _count?: boolean | DepositDetailCountOutputTypeDefaultArgs<ExtArgs>
   }
   export type DepositDetailIncludeCreateManyAndReturn<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    user?: boolean | UserDefaultArgs<ExtArgs>
     BankConfig?: boolean | DepositDetail$BankConfigArgs<ExtArgs>
     CryptoConfig?: boolean | DepositDetail$CryptoConfigArgs<ExtArgs>
-    transaction?: boolean | TransactionDefaultArgs<ExtArgs>
+    transaction?: boolean | DepositDetail$transactionArgs<ExtArgs>
   }
   export type DepositDetailIncludeUpdateManyAndReturn<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    user?: boolean | UserDefaultArgs<ExtArgs>
     BankConfig?: boolean | DepositDetail$BankConfigArgs<ExtArgs>
     CryptoConfig?: boolean | DepositDetail$CryptoConfigArgs<ExtArgs>
-    transaction?: boolean | TransactionDefaultArgs<ExtArgs>
+    transaction?: boolean | DepositDetail$transactionArgs<ExtArgs>
   }
 
   export type $DepositDetailPayload<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
     name: "DepositDetail"
     objects: {
+      user: Prisma.$UserPayload<ExtArgs>
       BankConfig: Prisma.$BankConfigPayload<ExtArgs> | null
       CryptoConfig: Prisma.$CryptoConfigPayload<ExtArgs> | null
-      transaction: Prisma.$TransactionPayload<ExtArgs>
+      transaction: Prisma.$TransactionPayload<ExtArgs> | null
       Rolling: Prisma.$RollingPayload<ExtArgs>[]
     }
     scalars: $Extensions.GetPayloadResult<{
@@ -50481,7 +50540,8 @@ export namespace Prisma {
       createdAt: Date
       updatedAt: Date
       status: $Enums.DepositDetailStatus
-      transactionId: bigint
+      userId: bigint
+      transactionId: bigint | null
       methodType: $Enums.DepositMethodType
       provider: $Enums.PaymentProvider
       providerPaymentId: string | null
@@ -50898,9 +50958,10 @@ export namespace Prisma {
    */
   export interface Prisma__DepositDetailClient<T, Null = never, ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs, GlobalOmitOptions = {}> extends Prisma.PrismaPromise<T> {
     readonly [Symbol.toStringTag]: "PrismaPromise"
+    user<T extends UserDefaultArgs<ExtArgs> = {}>(args?: Subset<T, UserDefaultArgs<ExtArgs>>): Prisma__UserClient<$Result.GetResult<Prisma.$UserPayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions> | Null, Null, ExtArgs, GlobalOmitOptions>
     BankConfig<T extends DepositDetail$BankConfigArgs<ExtArgs> = {}>(args?: Subset<T, DepositDetail$BankConfigArgs<ExtArgs>>): Prisma__BankConfigClient<$Result.GetResult<Prisma.$BankConfigPayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions> | null, null, ExtArgs, GlobalOmitOptions>
     CryptoConfig<T extends DepositDetail$CryptoConfigArgs<ExtArgs> = {}>(args?: Subset<T, DepositDetail$CryptoConfigArgs<ExtArgs>>): Prisma__CryptoConfigClient<$Result.GetResult<Prisma.$CryptoConfigPayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions> | null, null, ExtArgs, GlobalOmitOptions>
-    transaction<T extends TransactionDefaultArgs<ExtArgs> = {}>(args?: Subset<T, TransactionDefaultArgs<ExtArgs>>): Prisma__TransactionClient<$Result.GetResult<Prisma.$TransactionPayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions> | Null, Null, ExtArgs, GlobalOmitOptions>
+    transaction<T extends DepositDetail$transactionArgs<ExtArgs> = {}>(args?: Subset<T, DepositDetail$transactionArgs<ExtArgs>>): Prisma__TransactionClient<$Result.GetResult<Prisma.$TransactionPayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions> | null, null, ExtArgs, GlobalOmitOptions>
     Rolling<T extends DepositDetail$RollingArgs<ExtArgs> = {}>(args?: Subset<T, DepositDetail$RollingArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$RollingPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
     /**
      * Attaches callbacks for the resolution and/or rejection of the Promise.
@@ -50938,6 +50999,7 @@ export namespace Prisma {
     readonly createdAt: FieldRef<"DepositDetail", 'DateTime'>
     readonly updatedAt: FieldRef<"DepositDetail", 'DateTime'>
     readonly status: FieldRef<"DepositDetail", 'DepositDetailStatus'>
+    readonly userId: FieldRef<"DepositDetail", 'BigInt'>
     readonly transactionId: FieldRef<"DepositDetail", 'BigInt'>
     readonly methodType: FieldRef<"DepositDetail", 'DepositMethodType'>
     readonly provider: FieldRef<"DepositDetail", 'PaymentProvider'>
@@ -51392,6 +51454,25 @@ export namespace Prisma {
      */
     include?: CryptoConfigInclude<ExtArgs> | null
     where?: CryptoConfigWhereInput
+  }
+
+  /**
+   * DepositDetail.transaction
+   */
+  export type DepositDetail$transactionArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the Transaction
+     */
+    select?: TransactionSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the Transaction
+     */
+    omit?: TransactionOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: TransactionInclude<ExtArgs> | null
+    where?: TransactionWhereInput
   }
 
   /**
@@ -60770,6 +60851,7 @@ export namespace Prisma {
     createdAt: 'createdAt',
     updatedAt: 'updatedAt',
     status: 'status',
+    userId: 'userId',
     transactionId: 'transactionId',
     methodType: 'methodType',
     provider: 'provider',
@@ -62195,6 +62277,7 @@ export namespace Prisma {
     referredUsers?: ReferralListRelationFilter
     Rolling?: RollingListRelationFilter
     transactions?: TransactionListRelationFilter
+    depositDetails?: DepositDetailListRelationFilter
     balances?: UserBalanceListRelationFilter
     UserBalanceStats?: UserBalanceStatsListRelationFilter
     UserPromotion?: UserPromotionListRelationFilter
@@ -62239,6 +62322,7 @@ export namespace Prisma {
     referredUsers?: ReferralOrderByRelationAggregateInput
     Rolling?: RollingOrderByRelationAggregateInput
     transactions?: TransactionOrderByRelationAggregateInput
+    depositDetails?: DepositDetailOrderByRelationAggregateInput
     balances?: UserBalanceOrderByRelationAggregateInput
     UserBalanceStats?: UserBalanceStatsOrderByRelationAggregateInput
     UserPromotion?: UserPromotionOrderByRelationAggregateInput
@@ -62286,6 +62370,7 @@ export namespace Prisma {
     referredUsers?: ReferralListRelationFilter
     Rolling?: RollingListRelationFilter
     transactions?: TransactionListRelationFilter
+    depositDetails?: DepositDetailListRelationFilter
     balances?: UserBalanceListRelationFilter
     UserBalanceStats?: UserBalanceStatsListRelationFilter
     UserPromotion?: UserPromotionListRelationFilter
@@ -65129,7 +65214,8 @@ export namespace Prisma {
     createdAt?: DateTimeFilter<"DepositDetail"> | Date | string
     updatedAt?: DateTimeFilter<"DepositDetail"> | Date | string
     status?: EnumDepositDetailStatusFilter<"DepositDetail"> | $Enums.DepositDetailStatus
-    transactionId?: BigIntFilter<"DepositDetail"> | bigint | number
+    userId?: BigIntFilter<"DepositDetail"> | bigint | number
+    transactionId?: BigIntNullableFilter<"DepositDetail"> | bigint | number | null
     methodType?: EnumDepositMethodTypeFilter<"DepositDetail"> | $Enums.DepositMethodType
     provider?: EnumPaymentProviderFilter<"DepositDetail"> | $Enums.PaymentProvider
     providerPaymentId?: StringNullableFilter<"DepositDetail"> | string | null
@@ -65152,9 +65238,10 @@ export namespace Prisma {
     providerMetadata?: JsonNullableFilter<"DepositDetail">
     bankConfigId?: BigIntNullableFilter<"DepositDetail"> | bigint | number | null
     cryptoConfigId?: BigIntNullableFilter<"DepositDetail"> | bigint | number | null
+    user?: XOR<UserScalarRelationFilter, UserWhereInput>
     BankConfig?: XOR<BankConfigNullableScalarRelationFilter, BankConfigWhereInput> | null
     CryptoConfig?: XOR<CryptoConfigNullableScalarRelationFilter, CryptoConfigWhereInput> | null
-    transaction?: XOR<TransactionScalarRelationFilter, TransactionWhereInput>
+    transaction?: XOR<TransactionNullableScalarRelationFilter, TransactionWhereInput> | null
     Rolling?: RollingListRelationFilter
   }
 
@@ -65166,7 +65253,8 @@ export namespace Prisma {
     createdAt?: SortOrder
     updatedAt?: SortOrder
     status?: SortOrder
-    transactionId?: SortOrder
+    userId?: SortOrder
+    transactionId?: SortOrderInput | SortOrder
     methodType?: SortOrder
     provider?: SortOrder
     providerPaymentId?: SortOrderInput | SortOrder
@@ -65189,6 +65277,7 @@ export namespace Prisma {
     providerMetadata?: SortOrderInput | SortOrder
     bankConfigId?: SortOrderInput | SortOrder
     cryptoConfigId?: SortOrderInput | SortOrder
+    user?: UserOrderByWithRelationInput
     BankConfig?: BankConfigOrderByWithRelationInput
     CryptoConfig?: CryptoConfigOrderByWithRelationInput
     transaction?: TransactionOrderByWithRelationInput
@@ -65208,6 +65297,7 @@ export namespace Prisma {
     createdAt?: DateTimeFilter<"DepositDetail"> | Date | string
     updatedAt?: DateTimeFilter<"DepositDetail"> | Date | string
     status?: EnumDepositDetailStatusFilter<"DepositDetail"> | $Enums.DepositDetailStatus
+    userId?: BigIntFilter<"DepositDetail"> | bigint | number
     methodType?: EnumDepositMethodTypeFilter<"DepositDetail"> | $Enums.DepositMethodType
     provider?: EnumPaymentProviderFilter<"DepositDetail"> | $Enums.PaymentProvider
     depositCurrency?: EnumExchangeCurrencyCodeFilter<"DepositDetail"> | $Enums.ExchangeCurrencyCode
@@ -65229,9 +65319,10 @@ export namespace Prisma {
     providerMetadata?: JsonNullableFilter<"DepositDetail">
     bankConfigId?: BigIntNullableFilter<"DepositDetail"> | bigint | number | null
     cryptoConfigId?: BigIntNullableFilter<"DepositDetail"> | bigint | number | null
+    user?: XOR<UserScalarRelationFilter, UserWhereInput>
     BankConfig?: XOR<BankConfigNullableScalarRelationFilter, BankConfigWhereInput> | null
     CryptoConfig?: XOR<CryptoConfigNullableScalarRelationFilter, CryptoConfigWhereInput> | null
-    transaction?: XOR<TransactionScalarRelationFilter, TransactionWhereInput>
+    transaction?: XOR<TransactionNullableScalarRelationFilter, TransactionWhereInput> | null
     Rolling?: RollingListRelationFilter
   }, "id" | "uid" | "transactionId" | "providerPaymentId">
 
@@ -65243,7 +65334,8 @@ export namespace Prisma {
     createdAt?: SortOrder
     updatedAt?: SortOrder
     status?: SortOrder
-    transactionId?: SortOrder
+    userId?: SortOrder
+    transactionId?: SortOrderInput | SortOrder
     methodType?: SortOrder
     provider?: SortOrder
     providerPaymentId?: SortOrderInput | SortOrder
@@ -65284,7 +65376,8 @@ export namespace Prisma {
     createdAt?: DateTimeWithAggregatesFilter<"DepositDetail"> | Date | string
     updatedAt?: DateTimeWithAggregatesFilter<"DepositDetail"> | Date | string
     status?: EnumDepositDetailStatusWithAggregatesFilter<"DepositDetail"> | $Enums.DepositDetailStatus
-    transactionId?: BigIntWithAggregatesFilter<"DepositDetail"> | bigint | number
+    userId?: BigIntWithAggregatesFilter<"DepositDetail"> | bigint | number
+    transactionId?: BigIntNullableWithAggregatesFilter<"DepositDetail"> | bigint | number | null
     methodType?: EnumDepositMethodTypeWithAggregatesFilter<"DepositDetail"> | $Enums.DepositMethodType
     provider?: EnumPaymentProviderWithAggregatesFilter<"DepositDetail"> | $Enums.PaymentProvider
     providerPaymentId?: StringNullableWithAggregatesFilter<"DepositDetail"> | string | null
@@ -66720,6 +66813,7 @@ export namespace Prisma {
     referredUsers?: ReferralCreateNestedManyWithoutSubUserInput
     Rolling?: RollingCreateNestedManyWithoutUserInput
     transactions?: TransactionCreateNestedManyWithoutUserInput
+    depositDetails?: DepositDetailCreateNestedManyWithoutUserInput
     balances?: UserBalanceCreateNestedManyWithoutUserInput
     UserBalanceStats?: UserBalanceStatsCreateNestedManyWithoutUserInput
     UserPromotion?: UserPromotionCreateNestedManyWithoutUserInput
@@ -66764,6 +66858,7 @@ export namespace Prisma {
     referredUsers?: ReferralUncheckedCreateNestedManyWithoutSubUserInput
     Rolling?: RollingUncheckedCreateNestedManyWithoutUserInput
     transactions?: TransactionUncheckedCreateNestedManyWithoutUserInput
+    depositDetails?: DepositDetailUncheckedCreateNestedManyWithoutUserInput
     balances?: UserBalanceUncheckedCreateNestedManyWithoutUserInput
     UserBalanceStats?: UserBalanceStatsUncheckedCreateNestedManyWithoutUserInput
     UserPromotion?: UserPromotionUncheckedCreateNestedManyWithoutUserInput
@@ -66808,6 +66903,7 @@ export namespace Prisma {
     referredUsers?: ReferralUpdateManyWithoutSubUserNestedInput
     Rolling?: RollingUpdateManyWithoutUserNestedInput
     transactions?: TransactionUpdateManyWithoutUserNestedInput
+    depositDetails?: DepositDetailUpdateManyWithoutUserNestedInput
     balances?: UserBalanceUpdateManyWithoutUserNestedInput
     UserBalanceStats?: UserBalanceStatsUpdateManyWithoutUserNestedInput
     UserPromotion?: UserPromotionUpdateManyWithoutUserNestedInput
@@ -66852,6 +66948,7 @@ export namespace Prisma {
     referredUsers?: ReferralUncheckedUpdateManyWithoutSubUserNestedInput
     Rolling?: RollingUncheckedUpdateManyWithoutUserNestedInput
     transactions?: TransactionUncheckedUpdateManyWithoutUserNestedInput
+    depositDetails?: DepositDetailUncheckedUpdateManyWithoutUserNestedInput
     balances?: UserBalanceUncheckedUpdateManyWithoutUserNestedInput
     UserBalanceStats?: UserBalanceStatsUncheckedUpdateManyWithoutUserNestedInput
     UserPromotion?: UserPromotionUncheckedUpdateManyWithoutUserNestedInput
@@ -70002,9 +70099,10 @@ export namespace Prisma {
     feePaidBy?: $Enums.FeePaidByType | null
     failureReason?: string | null
     providerMetadata?: NullableJsonNullValueInput | InputJsonValue
+    user: UserCreateNestedOneWithoutDepositDetailsInput
     BankConfig?: BankConfigCreateNestedOneWithoutDepositDetailsInput
     CryptoConfig?: CryptoConfigCreateNestedOneWithoutDepositDetailsInput
-    transaction: TransactionCreateNestedOneWithoutDepositDetailInput
+    transaction?: TransactionCreateNestedOneWithoutDepositDetailInput
     Rolling?: RollingCreateNestedManyWithoutDepositDetailInput
   }
 
@@ -70016,7 +70114,8 @@ export namespace Prisma {
     createdAt?: Date | string
     updatedAt?: Date | string
     status: $Enums.DepositDetailStatus
-    transactionId: bigint | number
+    userId: bigint | number
+    transactionId?: bigint | number | null
     methodType: $Enums.DepositMethodType
     provider: $Enums.PaymentProvider
     providerPaymentId?: string | null
@@ -70070,9 +70169,10 @@ export namespace Prisma {
     feePaidBy?: NullableEnumFeePaidByTypeFieldUpdateOperationsInput | $Enums.FeePaidByType | null
     failureReason?: NullableStringFieldUpdateOperationsInput | string | null
     providerMetadata?: NullableJsonNullValueInput | InputJsonValue
+    user?: UserUpdateOneRequiredWithoutDepositDetailsNestedInput
     BankConfig?: BankConfigUpdateOneWithoutDepositDetailsNestedInput
     CryptoConfig?: CryptoConfigUpdateOneWithoutDepositDetailsNestedInput
-    transaction?: TransactionUpdateOneRequiredWithoutDepositDetailNestedInput
+    transaction?: TransactionUpdateOneWithoutDepositDetailNestedInput
     Rolling?: RollingUpdateManyWithoutDepositDetailNestedInput
   }
 
@@ -70084,7 +70184,8 @@ export namespace Prisma {
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
     status?: EnumDepositDetailStatusFieldUpdateOperationsInput | $Enums.DepositDetailStatus
-    transactionId?: BigIntFieldUpdateOperationsInput | bigint | number
+    userId?: BigIntFieldUpdateOperationsInput | bigint | number
+    transactionId?: NullableBigIntFieldUpdateOperationsInput | bigint | number | null
     methodType?: EnumDepositMethodTypeFieldUpdateOperationsInput | $Enums.DepositMethodType
     provider?: EnumPaymentProviderFieldUpdateOperationsInput | $Enums.PaymentProvider
     providerPaymentId?: NullableStringFieldUpdateOperationsInput | string | null
@@ -70118,7 +70219,8 @@ export namespace Prisma {
     createdAt?: Date | string
     updatedAt?: Date | string
     status: $Enums.DepositDetailStatus
-    transactionId: bigint | number
+    userId: bigint | number
+    transactionId?: bigint | number | null
     methodType: $Enums.DepositMethodType
     provider: $Enums.PaymentProvider
     providerPaymentId?: string | null
@@ -70181,7 +70283,8 @@ export namespace Prisma {
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
     status?: EnumDepositDetailStatusFieldUpdateOperationsInput | $Enums.DepositDetailStatus
-    transactionId?: BigIntFieldUpdateOperationsInput | bigint | number
+    userId?: BigIntFieldUpdateOperationsInput | bigint | number
+    transactionId?: NullableBigIntFieldUpdateOperationsInput | bigint | number | null
     methodType?: EnumDepositMethodTypeFieldUpdateOperationsInput | $Enums.DepositMethodType
     provider?: EnumPaymentProviderFieldUpdateOperationsInput | $Enums.PaymentProvider
     providerPaymentId?: NullableStringFieldUpdateOperationsInput | string | null
@@ -71737,6 +71840,12 @@ export namespace Prisma {
     none?: TransactionWhereInput
   }
 
+  export type DepositDetailListRelationFilter = {
+    every?: DepositDetailWhereInput
+    some?: DepositDetailWhereInput
+    none?: DepositDetailWhereInput
+  }
+
   export type UserBalanceListRelationFilter = {
     every?: UserBalanceWhereInput
     some?: UserBalanceWhereInput
@@ -71821,6 +71930,10 @@ export namespace Prisma {
   }
 
   export type TransactionOrderByRelationAggregateInput = {
+    _count?: SortOrder
+  }
+
+  export type DepositDetailOrderByRelationAggregateInput = {
     _count?: SortOrder
   }
 
@@ -74507,6 +74620,11 @@ export namespace Prisma {
     isNot?: CryptoConfigWhereInput | null
   }
 
+  export type TransactionNullableScalarRelationFilter = {
+    is?: TransactionWhereInput | null
+    isNot?: TransactionWhereInput | null
+  }
+
   export type DepositDetailCountOrderByAggregateInput = {
     id?: SortOrder
     uid?: SortOrder
@@ -74515,6 +74633,7 @@ export namespace Prisma {
     createdAt?: SortOrder
     updatedAt?: SortOrder
     status?: SortOrder
+    userId?: SortOrder
     transactionId?: SortOrder
     methodType?: SortOrder
     provider?: SortOrder
@@ -74542,6 +74661,7 @@ export namespace Prisma {
 
   export type DepositDetailAvgOrderByAggregateInput = {
     id?: SortOrder
+    userId?: SortOrder
     transactionId?: SortOrder
     requestedAmount?: SortOrder
     actuallyPaid?: SortOrder
@@ -74559,6 +74679,7 @@ export namespace Prisma {
     createdAt?: SortOrder
     updatedAt?: SortOrder
     status?: SortOrder
+    userId?: SortOrder
     transactionId?: SortOrder
     methodType?: SortOrder
     provider?: SortOrder
@@ -74591,6 +74712,7 @@ export namespace Prisma {
     createdAt?: SortOrder
     updatedAt?: SortOrder
     status?: SortOrder
+    userId?: SortOrder
     transactionId?: SortOrder
     methodType?: SortOrder
     provider?: SortOrder
@@ -74617,6 +74739,7 @@ export namespace Prisma {
 
   export type DepositDetailSumOrderByAggregateInput = {
     id?: SortOrder
+    userId?: SortOrder
     transactionId?: SortOrder
     requestedAmount?: SortOrder
     actuallyPaid?: SortOrder
@@ -74644,16 +74767,6 @@ export namespace Prisma {
     _count?: NestedIntFilter<$PrismaModel>
     _min?: NestedEnumDepositMethodTypeFilter<$PrismaModel>
     _max?: NestedEnumDepositMethodTypeFilter<$PrismaModel>
-  }
-
-  export type DepositDetailListRelationFilter = {
-    every?: DepositDetailWhereInput
-    some?: DepositDetailWhereInput
-    none?: DepositDetailWhereInput
-  }
-
-  export type DepositDetailOrderByRelationAggregateInput = {
-    _count?: SortOrder
   }
 
   export type CryptoConfigSymbolNetworkCompoundUniqueInput = {
@@ -75367,6 +75480,13 @@ export namespace Prisma {
     connect?: TransactionWhereUniqueInput | TransactionWhereUniqueInput[]
   }
 
+  export type DepositDetailCreateNestedManyWithoutUserInput = {
+    create?: XOR<DepositDetailCreateWithoutUserInput, DepositDetailUncheckedCreateWithoutUserInput> | DepositDetailCreateWithoutUserInput[] | DepositDetailUncheckedCreateWithoutUserInput[]
+    connectOrCreate?: DepositDetailCreateOrConnectWithoutUserInput | DepositDetailCreateOrConnectWithoutUserInput[]
+    createMany?: DepositDetailCreateManyUserInputEnvelope
+    connect?: DepositDetailWhereUniqueInput | DepositDetailWhereUniqueInput[]
+  }
+
   export type UserBalanceCreateNestedManyWithoutUserInput = {
     create?: XOR<UserBalanceCreateWithoutUserInput, UserBalanceUncheckedCreateWithoutUserInput> | UserBalanceCreateWithoutUserInput[] | UserBalanceUncheckedCreateWithoutUserInput[]
     connectOrCreate?: UserBalanceCreateOrConnectWithoutUserInput | UserBalanceCreateOrConnectWithoutUserInput[]
@@ -75517,6 +75637,13 @@ export namespace Prisma {
     connectOrCreate?: TransactionCreateOrConnectWithoutUserInput | TransactionCreateOrConnectWithoutUserInput[]
     createMany?: TransactionCreateManyUserInputEnvelope
     connect?: TransactionWhereUniqueInput | TransactionWhereUniqueInput[]
+  }
+
+  export type DepositDetailUncheckedCreateNestedManyWithoutUserInput = {
+    create?: XOR<DepositDetailCreateWithoutUserInput, DepositDetailUncheckedCreateWithoutUserInput> | DepositDetailCreateWithoutUserInput[] | DepositDetailUncheckedCreateWithoutUserInput[]
+    connectOrCreate?: DepositDetailCreateOrConnectWithoutUserInput | DepositDetailCreateOrConnectWithoutUserInput[]
+    createMany?: DepositDetailCreateManyUserInputEnvelope
+    connect?: DepositDetailWhereUniqueInput | DepositDetailWhereUniqueInput[]
   }
 
   export type UserBalanceUncheckedCreateNestedManyWithoutUserInput = {
@@ -75785,6 +75912,20 @@ export namespace Prisma {
     update?: TransactionUpdateWithWhereUniqueWithoutUserInput | TransactionUpdateWithWhereUniqueWithoutUserInput[]
     updateMany?: TransactionUpdateManyWithWhereWithoutUserInput | TransactionUpdateManyWithWhereWithoutUserInput[]
     deleteMany?: TransactionScalarWhereInput | TransactionScalarWhereInput[]
+  }
+
+  export type DepositDetailUpdateManyWithoutUserNestedInput = {
+    create?: XOR<DepositDetailCreateWithoutUserInput, DepositDetailUncheckedCreateWithoutUserInput> | DepositDetailCreateWithoutUserInput[] | DepositDetailUncheckedCreateWithoutUserInput[]
+    connectOrCreate?: DepositDetailCreateOrConnectWithoutUserInput | DepositDetailCreateOrConnectWithoutUserInput[]
+    upsert?: DepositDetailUpsertWithWhereUniqueWithoutUserInput | DepositDetailUpsertWithWhereUniqueWithoutUserInput[]
+    createMany?: DepositDetailCreateManyUserInputEnvelope
+    set?: DepositDetailWhereUniqueInput | DepositDetailWhereUniqueInput[]
+    disconnect?: DepositDetailWhereUniqueInput | DepositDetailWhereUniqueInput[]
+    delete?: DepositDetailWhereUniqueInput | DepositDetailWhereUniqueInput[]
+    connect?: DepositDetailWhereUniqueInput | DepositDetailWhereUniqueInput[]
+    update?: DepositDetailUpdateWithWhereUniqueWithoutUserInput | DepositDetailUpdateWithWhereUniqueWithoutUserInput[]
+    updateMany?: DepositDetailUpdateManyWithWhereWithoutUserInput | DepositDetailUpdateManyWithWhereWithoutUserInput[]
+    deleteMany?: DepositDetailScalarWhereInput | DepositDetailScalarWhereInput[]
   }
 
   export type UserBalanceUpdateManyWithoutUserNestedInput = {
@@ -76085,6 +76226,20 @@ export namespace Prisma {
     update?: TransactionUpdateWithWhereUniqueWithoutUserInput | TransactionUpdateWithWhereUniqueWithoutUserInput[]
     updateMany?: TransactionUpdateManyWithWhereWithoutUserInput | TransactionUpdateManyWithWhereWithoutUserInput[]
     deleteMany?: TransactionScalarWhereInput | TransactionScalarWhereInput[]
+  }
+
+  export type DepositDetailUncheckedUpdateManyWithoutUserNestedInput = {
+    create?: XOR<DepositDetailCreateWithoutUserInput, DepositDetailUncheckedCreateWithoutUserInput> | DepositDetailCreateWithoutUserInput[] | DepositDetailUncheckedCreateWithoutUserInput[]
+    connectOrCreate?: DepositDetailCreateOrConnectWithoutUserInput | DepositDetailCreateOrConnectWithoutUserInput[]
+    upsert?: DepositDetailUpsertWithWhereUniqueWithoutUserInput | DepositDetailUpsertWithWhereUniqueWithoutUserInput[]
+    createMany?: DepositDetailCreateManyUserInputEnvelope
+    set?: DepositDetailWhereUniqueInput | DepositDetailWhereUniqueInput[]
+    disconnect?: DepositDetailWhereUniqueInput | DepositDetailWhereUniqueInput[]
+    delete?: DepositDetailWhereUniqueInput | DepositDetailWhereUniqueInput[]
+    connect?: DepositDetailWhereUniqueInput | DepositDetailWhereUniqueInput[]
+    update?: DepositDetailUpdateWithWhereUniqueWithoutUserInput | DepositDetailUpdateWithWhereUniqueWithoutUserInput[]
+    updateMany?: DepositDetailUpdateManyWithWhereWithoutUserInput | DepositDetailUpdateManyWithWhereWithoutUserInput[]
+    deleteMany?: DepositDetailScalarWhereInput | DepositDetailScalarWhereInput[]
   }
 
   export type UserBalanceUncheckedUpdateManyWithoutUserNestedInput = {
@@ -77581,6 +77736,12 @@ export namespace Prisma {
     update?: XOR<XOR<UserUpdateToOneWithWhereWithoutLoginAttemptsInput, UserUpdateWithoutLoginAttemptsInput>, UserUncheckedUpdateWithoutLoginAttemptsInput>
   }
 
+  export type UserCreateNestedOneWithoutDepositDetailsInput = {
+    create?: XOR<UserCreateWithoutDepositDetailsInput, UserUncheckedCreateWithoutDepositDetailsInput>
+    connectOrCreate?: UserCreateOrConnectWithoutDepositDetailsInput
+    connect?: UserWhereUniqueInput
+  }
+
   export type BankConfigCreateNestedOneWithoutDepositDetailsInput = {
     create?: XOR<BankConfigCreateWithoutDepositDetailsInput, BankConfigUncheckedCreateWithoutDepositDetailsInput>
     connectOrCreate?: BankConfigCreateOrConnectWithoutDepositDetailsInput
@@ -77621,6 +77782,14 @@ export namespace Prisma {
     set?: $Enums.DepositMethodType
   }
 
+  export type UserUpdateOneRequiredWithoutDepositDetailsNestedInput = {
+    create?: XOR<UserCreateWithoutDepositDetailsInput, UserUncheckedCreateWithoutDepositDetailsInput>
+    connectOrCreate?: UserCreateOrConnectWithoutDepositDetailsInput
+    upsert?: UserUpsertWithoutDepositDetailsInput
+    connect?: UserWhereUniqueInput
+    update?: XOR<XOR<UserUpdateToOneWithWhereWithoutDepositDetailsInput, UserUpdateWithoutDepositDetailsInput>, UserUncheckedUpdateWithoutDepositDetailsInput>
+  }
+
   export type BankConfigUpdateOneWithoutDepositDetailsNestedInput = {
     create?: XOR<BankConfigCreateWithoutDepositDetailsInput, BankConfigUncheckedCreateWithoutDepositDetailsInput>
     connectOrCreate?: BankConfigCreateOrConnectWithoutDepositDetailsInput
@@ -77641,10 +77810,12 @@ export namespace Prisma {
     update?: XOR<XOR<CryptoConfigUpdateToOneWithWhereWithoutDepositDetailsInput, CryptoConfigUpdateWithoutDepositDetailsInput>, CryptoConfigUncheckedUpdateWithoutDepositDetailsInput>
   }
 
-  export type TransactionUpdateOneRequiredWithoutDepositDetailNestedInput = {
+  export type TransactionUpdateOneWithoutDepositDetailNestedInput = {
     create?: XOR<TransactionCreateWithoutDepositDetailInput, TransactionUncheckedCreateWithoutDepositDetailInput>
     connectOrCreate?: TransactionCreateOrConnectWithoutDepositDetailInput
     upsert?: TransactionUpsertWithoutDepositDetailInput
+    disconnect?: TransactionWhereInput | boolean
+    delete?: TransactionWhereInput | boolean
     connect?: TransactionWhereUniqueInput
     update?: XOR<XOR<TransactionUpdateToOneWithWhereWithoutDepositDetailInput, TransactionUpdateWithoutDepositDetailInput>, TransactionUncheckedUpdateWithoutDepositDetailInput>
   }
@@ -79538,6 +79709,84 @@ export namespace Prisma {
     skipDuplicates?: boolean
   }
 
+  export type DepositDetailCreateWithoutUserInput = {
+    id?: bigint | number
+    uid: string
+    confirmedAt?: Date | string | null
+    failedAt?: Date | string | null
+    createdAt?: Date | string
+    updatedAt?: Date | string
+    status: $Enums.DepositDetailStatus
+    methodType: $Enums.DepositMethodType
+    provider: $Enums.PaymentProvider
+    providerPaymentId?: string | null
+    depositCurrency: $Enums.ExchangeCurrencyCode
+    depositNetwork?: string | null
+    walletAddress?: string | null
+    walletAddressExtraId?: string | null
+    depositorName?: string | null
+    transactionHash?: string | null
+    requestedAmount: Decimal | DecimalJsLike | number | string
+    actuallyPaid?: Decimal | DecimalJsLike | number | string | null
+    processedBy?: bigint | number | null
+    adminNote?: string | null
+    ipAddress?: string | null
+    deviceFingerprint?: string | null
+    feeAmount?: Decimal | DecimalJsLike | number | string | null
+    feeCurrency?: string | null
+    feePaidBy?: $Enums.FeePaidByType | null
+    failureReason?: string | null
+    providerMetadata?: NullableJsonNullValueInput | InputJsonValue
+    BankConfig?: BankConfigCreateNestedOneWithoutDepositDetailsInput
+    CryptoConfig?: CryptoConfigCreateNestedOneWithoutDepositDetailsInput
+    transaction?: TransactionCreateNestedOneWithoutDepositDetailInput
+    Rolling?: RollingCreateNestedManyWithoutDepositDetailInput
+  }
+
+  export type DepositDetailUncheckedCreateWithoutUserInput = {
+    id?: bigint | number
+    uid: string
+    confirmedAt?: Date | string | null
+    failedAt?: Date | string | null
+    createdAt?: Date | string
+    updatedAt?: Date | string
+    status: $Enums.DepositDetailStatus
+    transactionId?: bigint | number | null
+    methodType: $Enums.DepositMethodType
+    provider: $Enums.PaymentProvider
+    providerPaymentId?: string | null
+    depositCurrency: $Enums.ExchangeCurrencyCode
+    depositNetwork?: string | null
+    walletAddress?: string | null
+    walletAddressExtraId?: string | null
+    depositorName?: string | null
+    transactionHash?: string | null
+    requestedAmount: Decimal | DecimalJsLike | number | string
+    actuallyPaid?: Decimal | DecimalJsLike | number | string | null
+    processedBy?: bigint | number | null
+    adminNote?: string | null
+    ipAddress?: string | null
+    deviceFingerprint?: string | null
+    feeAmount?: Decimal | DecimalJsLike | number | string | null
+    feeCurrency?: string | null
+    feePaidBy?: $Enums.FeePaidByType | null
+    failureReason?: string | null
+    providerMetadata?: NullableJsonNullValueInput | InputJsonValue
+    bankConfigId?: bigint | number | null
+    cryptoConfigId?: bigint | number | null
+    Rolling?: RollingUncheckedCreateNestedManyWithoutDepositDetailInput
+  }
+
+  export type DepositDetailCreateOrConnectWithoutUserInput = {
+    where: DepositDetailWhereUniqueInput
+    create: XOR<DepositDetailCreateWithoutUserInput, DepositDetailUncheckedCreateWithoutUserInput>
+  }
+
+  export type DepositDetailCreateManyUserInputEnvelope = {
+    data: DepositDetailCreateManyUserInput | DepositDetailCreateManyUserInput[]
+    skipDuplicates?: boolean
+  }
+
   export type UserBalanceCreateWithoutUserInput = {
     currency: $Enums.ExchangeCurrencyCode
     mainBalance?: Decimal | DecimalJsLike | number | string
@@ -80275,6 +80524,59 @@ export namespace Prisma {
     updatedAt?: DateTimeFilter<"Transaction"> | Date | string
   }
 
+  export type DepositDetailUpsertWithWhereUniqueWithoutUserInput = {
+    where: DepositDetailWhereUniqueInput
+    update: XOR<DepositDetailUpdateWithoutUserInput, DepositDetailUncheckedUpdateWithoutUserInput>
+    create: XOR<DepositDetailCreateWithoutUserInput, DepositDetailUncheckedCreateWithoutUserInput>
+  }
+
+  export type DepositDetailUpdateWithWhereUniqueWithoutUserInput = {
+    where: DepositDetailWhereUniqueInput
+    data: XOR<DepositDetailUpdateWithoutUserInput, DepositDetailUncheckedUpdateWithoutUserInput>
+  }
+
+  export type DepositDetailUpdateManyWithWhereWithoutUserInput = {
+    where: DepositDetailScalarWhereInput
+    data: XOR<DepositDetailUpdateManyMutationInput, DepositDetailUncheckedUpdateManyWithoutUserInput>
+  }
+
+  export type DepositDetailScalarWhereInput = {
+    AND?: DepositDetailScalarWhereInput | DepositDetailScalarWhereInput[]
+    OR?: DepositDetailScalarWhereInput[]
+    NOT?: DepositDetailScalarWhereInput | DepositDetailScalarWhereInput[]
+    id?: BigIntFilter<"DepositDetail"> | bigint | number
+    uid?: StringFilter<"DepositDetail"> | string
+    confirmedAt?: DateTimeNullableFilter<"DepositDetail"> | Date | string | null
+    failedAt?: DateTimeNullableFilter<"DepositDetail"> | Date | string | null
+    createdAt?: DateTimeFilter<"DepositDetail"> | Date | string
+    updatedAt?: DateTimeFilter<"DepositDetail"> | Date | string
+    status?: EnumDepositDetailStatusFilter<"DepositDetail"> | $Enums.DepositDetailStatus
+    userId?: BigIntFilter<"DepositDetail"> | bigint | number
+    transactionId?: BigIntNullableFilter<"DepositDetail"> | bigint | number | null
+    methodType?: EnumDepositMethodTypeFilter<"DepositDetail"> | $Enums.DepositMethodType
+    provider?: EnumPaymentProviderFilter<"DepositDetail"> | $Enums.PaymentProvider
+    providerPaymentId?: StringNullableFilter<"DepositDetail"> | string | null
+    depositCurrency?: EnumExchangeCurrencyCodeFilter<"DepositDetail"> | $Enums.ExchangeCurrencyCode
+    depositNetwork?: StringNullableFilter<"DepositDetail"> | string | null
+    walletAddress?: StringNullableFilter<"DepositDetail"> | string | null
+    walletAddressExtraId?: StringNullableFilter<"DepositDetail"> | string | null
+    depositorName?: StringNullableFilter<"DepositDetail"> | string | null
+    transactionHash?: StringNullableFilter<"DepositDetail"> | string | null
+    requestedAmount?: DecimalFilter<"DepositDetail"> | Decimal | DecimalJsLike | number | string
+    actuallyPaid?: DecimalNullableFilter<"DepositDetail"> | Decimal | DecimalJsLike | number | string | null
+    processedBy?: BigIntNullableFilter<"DepositDetail"> | bigint | number | null
+    adminNote?: StringNullableFilter<"DepositDetail"> | string | null
+    ipAddress?: StringNullableFilter<"DepositDetail"> | string | null
+    deviceFingerprint?: StringNullableFilter<"DepositDetail"> | string | null
+    feeAmount?: DecimalNullableFilter<"DepositDetail"> | Decimal | DecimalJsLike | number | string | null
+    feeCurrency?: StringNullableFilter<"DepositDetail"> | string | null
+    feePaidBy?: EnumFeePaidByTypeNullableFilter<"DepositDetail"> | $Enums.FeePaidByType | null
+    failureReason?: StringNullableFilter<"DepositDetail"> | string | null
+    providerMetadata?: JsonNullableFilter<"DepositDetail">
+    bankConfigId?: BigIntNullableFilter<"DepositDetail"> | bigint | number | null
+    cryptoConfigId?: BigIntNullableFilter<"DepositDetail"> | bigint | number | null
+  }
+
   export type UserBalanceUpsertWithWhereUniqueWithoutUserInput = {
     where: UserBalanceWhereUniqueInput
     update: XOR<UserBalanceUpdateWithoutUserInput, UserBalanceUncheckedUpdateWithoutUserInput>
@@ -80589,6 +80891,7 @@ export namespace Prisma {
     referredUsers?: ReferralCreateNestedManyWithoutSubUserInput
     Rolling?: RollingCreateNestedManyWithoutUserInput
     transactions?: TransactionCreateNestedManyWithoutUserInput
+    depositDetails?: DepositDetailCreateNestedManyWithoutUserInput
     UserBalanceStats?: UserBalanceStatsCreateNestedManyWithoutUserInput
     UserPromotion?: UserPromotionCreateNestedManyWithoutUserInput
     UserSession?: UserSessionCreateNestedManyWithoutUserInput
@@ -80632,6 +80935,7 @@ export namespace Prisma {
     referredUsers?: ReferralUncheckedCreateNestedManyWithoutSubUserInput
     Rolling?: RollingUncheckedCreateNestedManyWithoutUserInput
     transactions?: TransactionUncheckedCreateNestedManyWithoutUserInput
+    depositDetails?: DepositDetailUncheckedCreateNestedManyWithoutUserInput
     UserBalanceStats?: UserBalanceStatsUncheckedCreateNestedManyWithoutUserInput
     UserPromotion?: UserPromotionUncheckedCreateNestedManyWithoutUserInput
     UserSession?: UserSessionUncheckedCreateNestedManyWithoutUserInput
@@ -80691,6 +80995,7 @@ export namespace Prisma {
     referredUsers?: ReferralUpdateManyWithoutSubUserNestedInput
     Rolling?: RollingUpdateManyWithoutUserNestedInput
     transactions?: TransactionUpdateManyWithoutUserNestedInput
+    depositDetails?: DepositDetailUpdateManyWithoutUserNestedInput
     UserBalanceStats?: UserBalanceStatsUpdateManyWithoutUserNestedInput
     UserPromotion?: UserPromotionUpdateManyWithoutUserNestedInput
     UserSession?: UserSessionUpdateManyWithoutUserNestedInput
@@ -80734,6 +81039,7 @@ export namespace Prisma {
     referredUsers?: ReferralUncheckedUpdateManyWithoutSubUserNestedInput
     Rolling?: RollingUncheckedUpdateManyWithoutUserNestedInput
     transactions?: TransactionUncheckedUpdateManyWithoutUserNestedInput
+    depositDetails?: DepositDetailUncheckedUpdateManyWithoutUserNestedInput
     UserBalanceStats?: UserBalanceStatsUncheckedUpdateManyWithoutUserNestedInput
     UserPromotion?: UserPromotionUncheckedUpdateManyWithoutUserNestedInput
     UserSession?: UserSessionUncheckedUpdateManyWithoutUserNestedInput
@@ -80777,6 +81083,7 @@ export namespace Prisma {
     referredUsers?: ReferralCreateNestedManyWithoutSubUserInput
     Rolling?: RollingCreateNestedManyWithoutUserInput
     transactions?: TransactionCreateNestedManyWithoutUserInput
+    depositDetails?: DepositDetailCreateNestedManyWithoutUserInput
     balances?: UserBalanceCreateNestedManyWithoutUserInput
     UserPromotion?: UserPromotionCreateNestedManyWithoutUserInput
     UserSession?: UserSessionCreateNestedManyWithoutUserInput
@@ -80820,6 +81127,7 @@ export namespace Prisma {
     referredUsers?: ReferralUncheckedCreateNestedManyWithoutSubUserInput
     Rolling?: RollingUncheckedCreateNestedManyWithoutUserInput
     transactions?: TransactionUncheckedCreateNestedManyWithoutUserInput
+    depositDetails?: DepositDetailUncheckedCreateNestedManyWithoutUserInput
     balances?: UserBalanceUncheckedCreateNestedManyWithoutUserInput
     UserPromotion?: UserPromotionUncheckedCreateNestedManyWithoutUserInput
     UserSession?: UserSessionUncheckedCreateNestedManyWithoutUserInput
@@ -80879,6 +81187,7 @@ export namespace Prisma {
     referredUsers?: ReferralUpdateManyWithoutSubUserNestedInput
     Rolling?: RollingUpdateManyWithoutUserNestedInput
     transactions?: TransactionUpdateManyWithoutUserNestedInput
+    depositDetails?: DepositDetailUpdateManyWithoutUserNestedInput
     balances?: UserBalanceUpdateManyWithoutUserNestedInput
     UserPromotion?: UserPromotionUpdateManyWithoutUserNestedInput
     UserSession?: UserSessionUpdateManyWithoutUserNestedInput
@@ -80922,6 +81231,7 @@ export namespace Prisma {
     referredUsers?: ReferralUncheckedUpdateManyWithoutSubUserNestedInput
     Rolling?: RollingUncheckedUpdateManyWithoutUserNestedInput
     transactions?: TransactionUncheckedUpdateManyWithoutUserNestedInput
+    depositDetails?: DepositDetailUncheckedUpdateManyWithoutUserNestedInput
     balances?: UserBalanceUncheckedUpdateManyWithoutUserNestedInput
     UserPromotion?: UserPromotionUncheckedUpdateManyWithoutUserNestedInput
     UserSession?: UserSessionUncheckedUpdateManyWithoutUserNestedInput
@@ -81445,6 +81755,7 @@ export namespace Prisma {
     feePaidBy?: $Enums.FeePaidByType | null
     failureReason?: string | null
     providerMetadata?: NullableJsonNullValueInput | InputJsonValue
+    user: UserCreateNestedOneWithoutDepositDetailsInput
     BankConfig?: BankConfigCreateNestedOneWithoutDepositDetailsInput
     CryptoConfig?: CryptoConfigCreateNestedOneWithoutDepositDetailsInput
     Rolling?: RollingCreateNestedManyWithoutDepositDetailInput
@@ -81458,6 +81769,7 @@ export namespace Prisma {
     createdAt?: Date | string
     updatedAt?: Date | string
     status: $Enums.DepositDetailStatus
+    userId: bigint | number
     methodType: $Enums.DepositMethodType
     provider: $Enums.PaymentProvider
     providerPaymentId?: string | null
@@ -81589,6 +81901,7 @@ export namespace Prisma {
     affiliateReferrals?: ReferralCreateNestedManyWithoutAffiliateInput
     referredUsers?: ReferralCreateNestedManyWithoutSubUserInput
     Rolling?: RollingCreateNestedManyWithoutUserInput
+    depositDetails?: DepositDetailCreateNestedManyWithoutUserInput
     balances?: UserBalanceCreateNestedManyWithoutUserInput
     UserBalanceStats?: UserBalanceStatsCreateNestedManyWithoutUserInput
     UserPromotion?: UserPromotionCreateNestedManyWithoutUserInput
@@ -81632,6 +81945,7 @@ export namespace Prisma {
     affiliateReferrals?: ReferralUncheckedCreateNestedManyWithoutAffiliateInput
     referredUsers?: ReferralUncheckedCreateNestedManyWithoutSubUserInput
     Rolling?: RollingUncheckedCreateNestedManyWithoutUserInput
+    depositDetails?: DepositDetailUncheckedCreateNestedManyWithoutUserInput
     balances?: UserBalanceUncheckedCreateNestedManyWithoutUserInput
     UserBalanceStats?: UserBalanceStatsUncheckedCreateNestedManyWithoutUserInput
     UserPromotion?: UserPromotionUncheckedCreateNestedManyWithoutUserInput
@@ -81842,6 +82156,7 @@ export namespace Prisma {
     feePaidBy?: NullableEnumFeePaidByTypeFieldUpdateOperationsInput | $Enums.FeePaidByType | null
     failureReason?: NullableStringFieldUpdateOperationsInput | string | null
     providerMetadata?: NullableJsonNullValueInput | InputJsonValue
+    user?: UserUpdateOneRequiredWithoutDepositDetailsNestedInput
     BankConfig?: BankConfigUpdateOneWithoutDepositDetailsNestedInput
     CryptoConfig?: CryptoConfigUpdateOneWithoutDepositDetailsNestedInput
     Rolling?: RollingUpdateManyWithoutDepositDetailNestedInput
@@ -81855,6 +82170,7 @@ export namespace Prisma {
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
     status?: EnumDepositDetailStatusFieldUpdateOperationsInput | $Enums.DepositDetailStatus
+    userId?: BigIntFieldUpdateOperationsInput | bigint | number
     methodType?: EnumDepositMethodTypeFieldUpdateOperationsInput | $Enums.DepositMethodType
     provider?: EnumPaymentProviderFieldUpdateOperationsInput | $Enums.PaymentProvider
     providerPaymentId?: NullableStringFieldUpdateOperationsInput | string | null
@@ -81998,6 +82314,7 @@ export namespace Prisma {
     affiliateReferrals?: ReferralUpdateManyWithoutAffiliateNestedInput
     referredUsers?: ReferralUpdateManyWithoutSubUserNestedInput
     Rolling?: RollingUpdateManyWithoutUserNestedInput
+    depositDetails?: DepositDetailUpdateManyWithoutUserNestedInput
     balances?: UserBalanceUpdateManyWithoutUserNestedInput
     UserBalanceStats?: UserBalanceStatsUpdateManyWithoutUserNestedInput
     UserPromotion?: UserPromotionUpdateManyWithoutUserNestedInput
@@ -82041,6 +82358,7 @@ export namespace Prisma {
     affiliateReferrals?: ReferralUncheckedUpdateManyWithoutAffiliateNestedInput
     referredUsers?: ReferralUncheckedUpdateManyWithoutSubUserNestedInput
     Rolling?: RollingUncheckedUpdateManyWithoutUserNestedInput
+    depositDetails?: DepositDetailUncheckedUpdateManyWithoutUserNestedInput
     balances?: UserBalanceUncheckedUpdateManyWithoutUserNestedInput
     UserBalanceStats?: UserBalanceStatsUncheckedUpdateManyWithoutUserNestedInput
     UserPromotion?: UserPromotionUncheckedUpdateManyWithoutUserNestedInput
@@ -83344,6 +83662,7 @@ export namespace Prisma {
     referredUsers?: ReferralCreateNestedManyWithoutSubUserInput
     Rolling?: RollingCreateNestedManyWithoutUserInput
     transactions?: TransactionCreateNestedManyWithoutUserInput
+    depositDetails?: DepositDetailCreateNestedManyWithoutUserInput
     balances?: UserBalanceCreateNestedManyWithoutUserInput
     UserBalanceStats?: UserBalanceStatsCreateNestedManyWithoutUserInput
     UserPromotion?: UserPromotionCreateNestedManyWithoutUserInput
@@ -83387,6 +83706,7 @@ export namespace Prisma {
     referredUsers?: ReferralUncheckedCreateNestedManyWithoutSubUserInput
     Rolling?: RollingUncheckedCreateNestedManyWithoutUserInput
     transactions?: TransactionUncheckedCreateNestedManyWithoutUserInput
+    depositDetails?: DepositDetailUncheckedCreateNestedManyWithoutUserInput
     balances?: UserBalanceUncheckedCreateNestedManyWithoutUserInput
     UserBalanceStats?: UserBalanceStatsUncheckedCreateNestedManyWithoutUserInput
     UserPromotion?: UserPromotionUncheckedCreateNestedManyWithoutUserInput
@@ -83527,6 +83847,7 @@ export namespace Prisma {
     referredUsers?: ReferralUpdateManyWithoutSubUserNestedInput
     Rolling?: RollingUpdateManyWithoutUserNestedInput
     transactions?: TransactionUpdateManyWithoutUserNestedInput
+    depositDetails?: DepositDetailUpdateManyWithoutUserNestedInput
     balances?: UserBalanceUpdateManyWithoutUserNestedInput
     UserBalanceStats?: UserBalanceStatsUpdateManyWithoutUserNestedInput
     UserPromotion?: UserPromotionUpdateManyWithoutUserNestedInput
@@ -83570,6 +83891,7 @@ export namespace Prisma {
     referredUsers?: ReferralUncheckedUpdateManyWithoutSubUserNestedInput
     Rolling?: RollingUncheckedUpdateManyWithoutUserNestedInput
     transactions?: TransactionUncheckedUpdateManyWithoutUserNestedInput
+    depositDetails?: DepositDetailUncheckedUpdateManyWithoutUserNestedInput
     balances?: UserBalanceUncheckedUpdateManyWithoutUserNestedInput
     UserBalanceStats?: UserBalanceStatsUncheckedUpdateManyWithoutUserNestedInput
     UserPromotion?: UserPromotionUncheckedUpdateManyWithoutUserNestedInput
@@ -83641,6 +83963,7 @@ export namespace Prisma {
     referredUsers?: ReferralCreateNestedManyWithoutSubUserInput
     Rolling?: RollingCreateNestedManyWithoutUserInput
     transactions?: TransactionCreateNestedManyWithoutUserInput
+    depositDetails?: DepositDetailCreateNestedManyWithoutUserInput
     balances?: UserBalanceCreateNestedManyWithoutUserInput
     UserBalanceStats?: UserBalanceStatsCreateNestedManyWithoutUserInput
     UserPromotion?: UserPromotionCreateNestedManyWithoutUserInput
@@ -83684,6 +84007,7 @@ export namespace Prisma {
     referredUsers?: ReferralUncheckedCreateNestedManyWithoutSubUserInput
     Rolling?: RollingUncheckedCreateNestedManyWithoutUserInput
     transactions?: TransactionUncheckedCreateNestedManyWithoutUserInput
+    depositDetails?: DepositDetailUncheckedCreateNestedManyWithoutUserInput
     balances?: UserBalanceUncheckedCreateNestedManyWithoutUserInput
     UserBalanceStats?: UserBalanceStatsUncheckedCreateNestedManyWithoutUserInput
     UserPromotion?: UserPromotionUncheckedCreateNestedManyWithoutUserInput
@@ -83759,6 +84083,7 @@ export namespace Prisma {
     referredUsers?: ReferralUpdateManyWithoutSubUserNestedInput
     Rolling?: RollingUpdateManyWithoutUserNestedInput
     transactions?: TransactionUpdateManyWithoutUserNestedInput
+    depositDetails?: DepositDetailUpdateManyWithoutUserNestedInput
     balances?: UserBalanceUpdateManyWithoutUserNestedInput
     UserBalanceStats?: UserBalanceStatsUpdateManyWithoutUserNestedInput
     UserPromotion?: UserPromotionUpdateManyWithoutUserNestedInput
@@ -83802,6 +84127,7 @@ export namespace Prisma {
     referredUsers?: ReferralUncheckedUpdateManyWithoutSubUserNestedInput
     Rolling?: RollingUncheckedUpdateManyWithoutUserNestedInput
     transactions?: TransactionUncheckedUpdateManyWithoutUserNestedInput
+    depositDetails?: DepositDetailUncheckedUpdateManyWithoutUserNestedInput
     balances?: UserBalanceUncheckedUpdateManyWithoutUserNestedInput
     UserBalanceStats?: UserBalanceStatsUncheckedUpdateManyWithoutUserNestedInput
     UserPromotion?: UserPromotionUncheckedUpdateManyWithoutUserNestedInput
@@ -83938,6 +84264,7 @@ export namespace Prisma {
     referredUsers?: ReferralCreateNestedManyWithoutSubUserInput
     Rolling?: RollingCreateNestedManyWithoutUserInput
     transactions?: TransactionCreateNestedManyWithoutUserInput
+    depositDetails?: DepositDetailCreateNestedManyWithoutUserInput
     balances?: UserBalanceCreateNestedManyWithoutUserInput
     UserBalanceStats?: UserBalanceStatsCreateNestedManyWithoutUserInput
     UserPromotion?: UserPromotionCreateNestedManyWithoutUserInput
@@ -83981,6 +84308,7 @@ export namespace Prisma {
     referredUsers?: ReferralUncheckedCreateNestedManyWithoutSubUserInput
     Rolling?: RollingUncheckedCreateNestedManyWithoutUserInput
     transactions?: TransactionUncheckedCreateNestedManyWithoutUserInput
+    depositDetails?: DepositDetailUncheckedCreateNestedManyWithoutUserInput
     balances?: UserBalanceUncheckedCreateNestedManyWithoutUserInput
     UserBalanceStats?: UserBalanceStatsUncheckedCreateNestedManyWithoutUserInput
     UserPromotion?: UserPromotionUncheckedCreateNestedManyWithoutUserInput
@@ -84090,6 +84418,7 @@ export namespace Prisma {
     referredUsers?: ReferralUpdateManyWithoutSubUserNestedInput
     Rolling?: RollingUpdateManyWithoutUserNestedInput
     transactions?: TransactionUpdateManyWithoutUserNestedInput
+    depositDetails?: DepositDetailUpdateManyWithoutUserNestedInput
     balances?: UserBalanceUpdateManyWithoutUserNestedInput
     UserBalanceStats?: UserBalanceStatsUpdateManyWithoutUserNestedInput
     UserPromotion?: UserPromotionUpdateManyWithoutUserNestedInput
@@ -84133,6 +84462,7 @@ export namespace Prisma {
     referredUsers?: ReferralUncheckedUpdateManyWithoutSubUserNestedInput
     Rolling?: RollingUncheckedUpdateManyWithoutUserNestedInput
     transactions?: TransactionUncheckedUpdateManyWithoutUserNestedInput
+    depositDetails?: DepositDetailUncheckedUpdateManyWithoutUserNestedInput
     balances?: UserBalanceUncheckedUpdateManyWithoutUserNestedInput
     UserBalanceStats?: UserBalanceStatsUncheckedUpdateManyWithoutUserNestedInput
     UserPromotion?: UserPromotionUncheckedUpdateManyWithoutUserNestedInput
@@ -84216,6 +84546,7 @@ export namespace Prisma {
     referredUsers?: ReferralCreateNestedManyWithoutSubUserInput
     Rolling?: RollingCreateNestedManyWithoutUserInput
     transactions?: TransactionCreateNestedManyWithoutUserInput
+    depositDetails?: DepositDetailCreateNestedManyWithoutUserInput
     balances?: UserBalanceCreateNestedManyWithoutUserInput
     UserBalanceStats?: UserBalanceStatsCreateNestedManyWithoutUserInput
     UserPromotion?: UserPromotionCreateNestedManyWithoutUserInput
@@ -84259,6 +84590,7 @@ export namespace Prisma {
     referredUsers?: ReferralUncheckedCreateNestedManyWithoutSubUserInput
     Rolling?: RollingUncheckedCreateNestedManyWithoutUserInput
     transactions?: TransactionUncheckedCreateNestedManyWithoutUserInput
+    depositDetails?: DepositDetailUncheckedCreateNestedManyWithoutUserInput
     balances?: UserBalanceUncheckedCreateNestedManyWithoutUserInput
     UserBalanceStats?: UserBalanceStatsUncheckedCreateNestedManyWithoutUserInput
     UserPromotion?: UserPromotionUncheckedCreateNestedManyWithoutUserInput
@@ -84344,6 +84676,7 @@ export namespace Prisma {
     referredUsers?: ReferralUpdateManyWithoutSubUserNestedInput
     Rolling?: RollingUpdateManyWithoutUserNestedInput
     transactions?: TransactionUpdateManyWithoutUserNestedInput
+    depositDetails?: DepositDetailUpdateManyWithoutUserNestedInput
     balances?: UserBalanceUpdateManyWithoutUserNestedInput
     UserBalanceStats?: UserBalanceStatsUpdateManyWithoutUserNestedInput
     UserPromotion?: UserPromotionUpdateManyWithoutUserNestedInput
@@ -84387,6 +84720,7 @@ export namespace Prisma {
     referredUsers?: ReferralUncheckedUpdateManyWithoutSubUserNestedInput
     Rolling?: RollingUncheckedUpdateManyWithoutUserNestedInput
     transactions?: TransactionUncheckedUpdateManyWithoutUserNestedInput
+    depositDetails?: DepositDetailUncheckedUpdateManyWithoutUserNestedInput
     balances?: UserBalanceUncheckedUpdateManyWithoutUserNestedInput
     UserBalanceStats?: UserBalanceStatsUncheckedUpdateManyWithoutUserNestedInput
     UserPromotion?: UserPromotionUncheckedUpdateManyWithoutUserNestedInput
@@ -84457,9 +84791,10 @@ export namespace Prisma {
     feePaidBy?: $Enums.FeePaidByType | null
     failureReason?: string | null
     providerMetadata?: NullableJsonNullValueInput | InputJsonValue
+    user: UserCreateNestedOneWithoutDepositDetailsInput
     BankConfig?: BankConfigCreateNestedOneWithoutDepositDetailsInput
     CryptoConfig?: CryptoConfigCreateNestedOneWithoutDepositDetailsInput
-    transaction: TransactionCreateNestedOneWithoutDepositDetailInput
+    transaction?: TransactionCreateNestedOneWithoutDepositDetailInput
   }
 
   export type DepositDetailUncheckedCreateWithoutRollingInput = {
@@ -84470,7 +84805,8 @@ export namespace Prisma {
     createdAt?: Date | string
     updatedAt?: Date | string
     status: $Enums.DepositDetailStatus
-    transactionId: bigint | number
+    userId: bigint | number
+    transactionId?: bigint | number | null
     methodType: $Enums.DepositMethodType
     provider: $Enums.PaymentProvider
     providerPaymentId?: string | null
@@ -84532,6 +84868,7 @@ export namespace Prisma {
     affiliateReferrals?: ReferralCreateNestedManyWithoutAffiliateInput
     referredUsers?: ReferralCreateNestedManyWithoutSubUserInput
     transactions?: TransactionCreateNestedManyWithoutUserInput
+    depositDetails?: DepositDetailCreateNestedManyWithoutUserInput
     balances?: UserBalanceCreateNestedManyWithoutUserInput
     UserBalanceStats?: UserBalanceStatsCreateNestedManyWithoutUserInput
     UserPromotion?: UserPromotionCreateNestedManyWithoutUserInput
@@ -84575,6 +84912,7 @@ export namespace Prisma {
     affiliateReferrals?: ReferralUncheckedCreateNestedManyWithoutAffiliateInput
     referredUsers?: ReferralUncheckedCreateNestedManyWithoutSubUserInput
     transactions?: TransactionUncheckedCreateNestedManyWithoutUserInput
+    depositDetails?: DepositDetailUncheckedCreateNestedManyWithoutUserInput
     balances?: UserBalanceUncheckedCreateNestedManyWithoutUserInput
     UserBalanceStats?: UserBalanceStatsUncheckedCreateNestedManyWithoutUserInput
     UserPromotion?: UserPromotionUncheckedCreateNestedManyWithoutUserInput
@@ -84663,9 +85001,10 @@ export namespace Prisma {
     feePaidBy?: NullableEnumFeePaidByTypeFieldUpdateOperationsInput | $Enums.FeePaidByType | null
     failureReason?: NullableStringFieldUpdateOperationsInput | string | null
     providerMetadata?: NullableJsonNullValueInput | InputJsonValue
+    user?: UserUpdateOneRequiredWithoutDepositDetailsNestedInput
     BankConfig?: BankConfigUpdateOneWithoutDepositDetailsNestedInput
     CryptoConfig?: CryptoConfigUpdateOneWithoutDepositDetailsNestedInput
-    transaction?: TransactionUpdateOneRequiredWithoutDepositDetailNestedInput
+    transaction?: TransactionUpdateOneWithoutDepositDetailNestedInput
   }
 
   export type DepositDetailUncheckedUpdateWithoutRollingInput = {
@@ -84676,7 +85015,8 @@ export namespace Prisma {
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
     status?: EnumDepositDetailStatusFieldUpdateOperationsInput | $Enums.DepositDetailStatus
-    transactionId?: BigIntFieldUpdateOperationsInput | bigint | number
+    userId?: BigIntFieldUpdateOperationsInput | bigint | number
+    transactionId?: NullableBigIntFieldUpdateOperationsInput | bigint | number | null
     methodType?: EnumDepositMethodTypeFieldUpdateOperationsInput | $Enums.DepositMethodType
     provider?: EnumPaymentProviderFieldUpdateOperationsInput | $Enums.PaymentProvider
     providerPaymentId?: NullableStringFieldUpdateOperationsInput | string | null
@@ -84744,6 +85084,7 @@ export namespace Prisma {
     affiliateReferrals?: ReferralUpdateManyWithoutAffiliateNestedInput
     referredUsers?: ReferralUpdateManyWithoutSubUserNestedInput
     transactions?: TransactionUpdateManyWithoutUserNestedInput
+    depositDetails?: DepositDetailUpdateManyWithoutUserNestedInput
     balances?: UserBalanceUpdateManyWithoutUserNestedInput
     UserBalanceStats?: UserBalanceStatsUpdateManyWithoutUserNestedInput
     UserPromotion?: UserPromotionUpdateManyWithoutUserNestedInput
@@ -84787,6 +85128,7 @@ export namespace Prisma {
     affiliateReferrals?: ReferralUncheckedUpdateManyWithoutAffiliateNestedInput
     referredUsers?: ReferralUncheckedUpdateManyWithoutSubUserNestedInput
     transactions?: TransactionUncheckedUpdateManyWithoutUserNestedInput
+    depositDetails?: DepositDetailUncheckedUpdateManyWithoutUserNestedInput
     balances?: UserBalanceUncheckedUpdateManyWithoutUserNestedInput
     UserBalanceStats?: UserBalanceStatsUncheckedUpdateManyWithoutUserNestedInput
     UserPromotion?: UserPromotionUncheckedUpdateManyWithoutUserNestedInput
@@ -84870,6 +85212,7 @@ export namespace Prisma {
     referredUsers?: ReferralCreateNestedManyWithoutSubUserInput
     Rolling?: RollingCreateNestedManyWithoutUserInput
     transactions?: TransactionCreateNestedManyWithoutUserInput
+    depositDetails?: DepositDetailCreateNestedManyWithoutUserInput
     balances?: UserBalanceCreateNestedManyWithoutUserInput
     UserBalanceStats?: UserBalanceStatsCreateNestedManyWithoutUserInput
     UserPromotion?: UserPromotionCreateNestedManyWithoutUserInput
@@ -84913,6 +85256,7 @@ export namespace Prisma {
     referredUsers?: ReferralUncheckedCreateNestedManyWithoutSubUserInput
     Rolling?: RollingUncheckedCreateNestedManyWithoutUserInput
     transactions?: TransactionUncheckedCreateNestedManyWithoutUserInput
+    depositDetails?: DepositDetailUncheckedCreateNestedManyWithoutUserInput
     balances?: UserBalanceUncheckedCreateNestedManyWithoutUserInput
     UserBalanceStats?: UserBalanceStatsUncheckedCreateNestedManyWithoutUserInput
     UserPromotion?: UserPromotionUncheckedCreateNestedManyWithoutUserInput
@@ -84972,6 +85316,7 @@ export namespace Prisma {
     referredUsers?: ReferralUpdateManyWithoutSubUserNestedInput
     Rolling?: RollingUpdateManyWithoutUserNestedInput
     transactions?: TransactionUpdateManyWithoutUserNestedInput
+    depositDetails?: DepositDetailUpdateManyWithoutUserNestedInput
     balances?: UserBalanceUpdateManyWithoutUserNestedInput
     UserBalanceStats?: UserBalanceStatsUpdateManyWithoutUserNestedInput
     UserPromotion?: UserPromotionUpdateManyWithoutUserNestedInput
@@ -85015,6 +85360,7 @@ export namespace Prisma {
     referredUsers?: ReferralUncheckedUpdateManyWithoutSubUserNestedInput
     Rolling?: RollingUncheckedUpdateManyWithoutUserNestedInput
     transactions?: TransactionUncheckedUpdateManyWithoutUserNestedInput
+    depositDetails?: DepositDetailUncheckedUpdateManyWithoutUserNestedInput
     balances?: UserBalanceUncheckedUpdateManyWithoutUserNestedInput
     UserBalanceStats?: UserBalanceStatsUncheckedUpdateManyWithoutUserNestedInput
     UserPromotion?: UserPromotionUncheckedUpdateManyWithoutUserNestedInput
@@ -85057,6 +85403,7 @@ export namespace Prisma {
     referredUsers?: ReferralCreateNestedManyWithoutSubUserInput
     Rolling?: RollingCreateNestedManyWithoutUserInput
     transactions?: TransactionCreateNestedManyWithoutUserInput
+    depositDetails?: DepositDetailCreateNestedManyWithoutUserInput
     balances?: UserBalanceCreateNestedManyWithoutUserInput
     UserBalanceStats?: UserBalanceStatsCreateNestedManyWithoutUserInput
     UserPromotion?: UserPromotionCreateNestedManyWithoutUserInput
@@ -85100,6 +85447,7 @@ export namespace Prisma {
     referredUsers?: ReferralUncheckedCreateNestedManyWithoutSubUserInput
     Rolling?: RollingUncheckedCreateNestedManyWithoutUserInput
     transactions?: TransactionUncheckedCreateNestedManyWithoutUserInput
+    depositDetails?: DepositDetailUncheckedCreateNestedManyWithoutUserInput
     balances?: UserBalanceUncheckedCreateNestedManyWithoutUserInput
     UserBalanceStats?: UserBalanceStatsUncheckedCreateNestedManyWithoutUserInput
     UserPromotion?: UserPromotionUncheckedCreateNestedManyWithoutUserInput
@@ -85159,6 +85507,7 @@ export namespace Prisma {
     referredUsers?: ReferralUpdateManyWithoutSubUserNestedInput
     Rolling?: RollingUpdateManyWithoutUserNestedInput
     transactions?: TransactionUpdateManyWithoutUserNestedInput
+    depositDetails?: DepositDetailUpdateManyWithoutUserNestedInput
     balances?: UserBalanceUpdateManyWithoutUserNestedInput
     UserBalanceStats?: UserBalanceStatsUpdateManyWithoutUserNestedInput
     UserPromotion?: UserPromotionUpdateManyWithoutUserNestedInput
@@ -85202,6 +85551,7 @@ export namespace Prisma {
     referredUsers?: ReferralUncheckedUpdateManyWithoutSubUserNestedInput
     Rolling?: RollingUncheckedUpdateManyWithoutUserNestedInput
     transactions?: TransactionUncheckedUpdateManyWithoutUserNestedInput
+    depositDetails?: DepositDetailUncheckedUpdateManyWithoutUserNestedInput
     balances?: UserBalanceUncheckedUpdateManyWithoutUserNestedInput
     UserBalanceStats?: UserBalanceStatsUncheckedUpdateManyWithoutUserNestedInput
     UserPromotion?: UserPromotionUncheckedUpdateManyWithoutUserNestedInput
@@ -85363,6 +85713,7 @@ export namespace Prisma {
     referredUsers?: ReferralCreateNestedManyWithoutSubUserInput
     Rolling?: RollingCreateNestedManyWithoutUserInput
     transactions?: TransactionCreateNestedManyWithoutUserInput
+    depositDetails?: DepositDetailCreateNestedManyWithoutUserInput
     balances?: UserBalanceCreateNestedManyWithoutUserInput
     UserBalanceStats?: UserBalanceStatsCreateNestedManyWithoutUserInput
     UserPromotion?: UserPromotionCreateNestedManyWithoutUserInput
@@ -85406,6 +85757,7 @@ export namespace Prisma {
     referredUsers?: ReferralUncheckedCreateNestedManyWithoutSubUserInput
     Rolling?: RollingUncheckedCreateNestedManyWithoutUserInput
     transactions?: TransactionUncheckedCreateNestedManyWithoutUserInput
+    depositDetails?: DepositDetailUncheckedCreateNestedManyWithoutUserInput
     balances?: UserBalanceUncheckedCreateNestedManyWithoutUserInput
     UserBalanceStats?: UserBalanceStatsUncheckedCreateNestedManyWithoutUserInput
     UserPromotion?: UserPromotionUncheckedCreateNestedManyWithoutUserInput
@@ -85531,6 +85883,7 @@ export namespace Prisma {
     referredUsers?: ReferralUpdateManyWithoutSubUserNestedInput
     Rolling?: RollingUpdateManyWithoutUserNestedInput
     transactions?: TransactionUpdateManyWithoutUserNestedInput
+    depositDetails?: DepositDetailUpdateManyWithoutUserNestedInput
     balances?: UserBalanceUpdateManyWithoutUserNestedInput
     UserBalanceStats?: UserBalanceStatsUpdateManyWithoutUserNestedInput
     UserPromotion?: UserPromotionUpdateManyWithoutUserNestedInput
@@ -85574,6 +85927,7 @@ export namespace Prisma {
     referredUsers?: ReferralUncheckedUpdateManyWithoutSubUserNestedInput
     Rolling?: RollingUncheckedUpdateManyWithoutUserNestedInput
     transactions?: TransactionUncheckedUpdateManyWithoutUserNestedInput
+    depositDetails?: DepositDetailUncheckedUpdateManyWithoutUserNestedInput
     balances?: UserBalanceUncheckedUpdateManyWithoutUserNestedInput
     UserBalanceStats?: UserBalanceStatsUncheckedUpdateManyWithoutUserNestedInput
     UserPromotion?: UserPromotionUncheckedUpdateManyWithoutUserNestedInput
@@ -85617,6 +85971,7 @@ export namespace Prisma {
     referredUsers?: ReferralCreateNestedManyWithoutSubUserInput
     Rolling?: RollingCreateNestedManyWithoutUserInput
     transactions?: TransactionCreateNestedManyWithoutUserInput
+    depositDetails?: DepositDetailCreateNestedManyWithoutUserInput
     balances?: UserBalanceCreateNestedManyWithoutUserInput
     UserBalanceStats?: UserBalanceStatsCreateNestedManyWithoutUserInput
     UserPromotion?: UserPromotionCreateNestedManyWithoutUserInput
@@ -85660,6 +86015,7 @@ export namespace Prisma {
     referredUsers?: ReferralUncheckedCreateNestedManyWithoutSubUserInput
     Rolling?: RollingUncheckedCreateNestedManyWithoutUserInput
     transactions?: TransactionUncheckedCreateNestedManyWithoutUserInput
+    depositDetails?: DepositDetailUncheckedCreateNestedManyWithoutUserInput
     balances?: UserBalanceUncheckedCreateNestedManyWithoutUserInput
     UserBalanceStats?: UserBalanceStatsUncheckedCreateNestedManyWithoutUserInput
     UserPromotion?: UserPromotionUncheckedCreateNestedManyWithoutUserInput
@@ -85751,6 +86107,7 @@ export namespace Prisma {
     referredUsers?: ReferralUpdateManyWithoutSubUserNestedInput
     Rolling?: RollingUpdateManyWithoutUserNestedInput
     transactions?: TransactionUpdateManyWithoutUserNestedInput
+    depositDetails?: DepositDetailUpdateManyWithoutUserNestedInput
     balances?: UserBalanceUpdateManyWithoutUserNestedInput
     UserBalanceStats?: UserBalanceStatsUpdateManyWithoutUserNestedInput
     UserPromotion?: UserPromotionUpdateManyWithoutUserNestedInput
@@ -85794,6 +86151,7 @@ export namespace Prisma {
     referredUsers?: ReferralUncheckedUpdateManyWithoutSubUserNestedInput
     Rolling?: RollingUncheckedUpdateManyWithoutUserNestedInput
     transactions?: TransactionUncheckedUpdateManyWithoutUserNestedInput
+    depositDetails?: DepositDetailUncheckedUpdateManyWithoutUserNestedInput
     balances?: UserBalanceUncheckedUpdateManyWithoutUserNestedInput
     UserBalanceStats?: UserBalanceStatsUncheckedUpdateManyWithoutUserNestedInput
     UserPromotion?: UserPromotionUncheckedUpdateManyWithoutUserNestedInput
@@ -85853,6 +86211,7 @@ export namespace Prisma {
     referredUsers?: ReferralCreateNestedManyWithoutSubUserInput
     Rolling?: RollingCreateNestedManyWithoutUserInput
     transactions?: TransactionCreateNestedManyWithoutUserInput
+    depositDetails?: DepositDetailCreateNestedManyWithoutUserInput
     balances?: UserBalanceCreateNestedManyWithoutUserInput
     UserBalanceStats?: UserBalanceStatsCreateNestedManyWithoutUserInput
     UserPromotion?: UserPromotionCreateNestedManyWithoutUserInput
@@ -85896,6 +86255,7 @@ export namespace Prisma {
     referredUsers?: ReferralUncheckedCreateNestedManyWithoutSubUserInput
     Rolling?: RollingUncheckedCreateNestedManyWithoutUserInput
     transactions?: TransactionUncheckedCreateNestedManyWithoutUserInput
+    depositDetails?: DepositDetailUncheckedCreateNestedManyWithoutUserInput
     balances?: UserBalanceUncheckedCreateNestedManyWithoutUserInput
     UserBalanceStats?: UserBalanceStatsUncheckedCreateNestedManyWithoutUserInput
     UserPromotion?: UserPromotionUncheckedCreateNestedManyWithoutUserInput
@@ -85977,6 +86337,7 @@ export namespace Prisma {
     affiliateReferrals?: ReferralCreateNestedManyWithoutAffiliateInput
     Rolling?: RollingCreateNestedManyWithoutUserInput
     transactions?: TransactionCreateNestedManyWithoutUserInput
+    depositDetails?: DepositDetailCreateNestedManyWithoutUserInput
     balances?: UserBalanceCreateNestedManyWithoutUserInput
     UserBalanceStats?: UserBalanceStatsCreateNestedManyWithoutUserInput
     UserPromotion?: UserPromotionCreateNestedManyWithoutUserInput
@@ -86020,6 +86381,7 @@ export namespace Prisma {
     affiliateReferrals?: ReferralUncheckedCreateNestedManyWithoutAffiliateInput
     Rolling?: RollingUncheckedCreateNestedManyWithoutUserInput
     transactions?: TransactionUncheckedCreateNestedManyWithoutUserInput
+    depositDetails?: DepositDetailUncheckedCreateNestedManyWithoutUserInput
     balances?: UserBalanceUncheckedCreateNestedManyWithoutUserInput
     UserBalanceStats?: UserBalanceStatsUncheckedCreateNestedManyWithoutUserInput
     UserPromotion?: UserPromotionUncheckedCreateNestedManyWithoutUserInput
@@ -86079,6 +86441,7 @@ export namespace Prisma {
     referredUsers?: ReferralUpdateManyWithoutSubUserNestedInput
     Rolling?: RollingUpdateManyWithoutUserNestedInput
     transactions?: TransactionUpdateManyWithoutUserNestedInput
+    depositDetails?: DepositDetailUpdateManyWithoutUserNestedInput
     balances?: UserBalanceUpdateManyWithoutUserNestedInput
     UserBalanceStats?: UserBalanceStatsUpdateManyWithoutUserNestedInput
     UserPromotion?: UserPromotionUpdateManyWithoutUserNestedInput
@@ -86122,6 +86485,7 @@ export namespace Prisma {
     referredUsers?: ReferralUncheckedUpdateManyWithoutSubUserNestedInput
     Rolling?: RollingUncheckedUpdateManyWithoutUserNestedInput
     transactions?: TransactionUncheckedUpdateManyWithoutUserNestedInput
+    depositDetails?: DepositDetailUncheckedUpdateManyWithoutUserNestedInput
     balances?: UserBalanceUncheckedUpdateManyWithoutUserNestedInput
     UserBalanceStats?: UserBalanceStatsUncheckedUpdateManyWithoutUserNestedInput
     UserPromotion?: UserPromotionUncheckedUpdateManyWithoutUserNestedInput
@@ -86215,6 +86579,7 @@ export namespace Prisma {
     affiliateReferrals?: ReferralUpdateManyWithoutAffiliateNestedInput
     Rolling?: RollingUpdateManyWithoutUserNestedInput
     transactions?: TransactionUpdateManyWithoutUserNestedInput
+    depositDetails?: DepositDetailUpdateManyWithoutUserNestedInput
     balances?: UserBalanceUpdateManyWithoutUserNestedInput
     UserBalanceStats?: UserBalanceStatsUpdateManyWithoutUserNestedInput
     UserPromotion?: UserPromotionUpdateManyWithoutUserNestedInput
@@ -86258,6 +86623,7 @@ export namespace Prisma {
     affiliateReferrals?: ReferralUncheckedUpdateManyWithoutAffiliateNestedInput
     Rolling?: RollingUncheckedUpdateManyWithoutUserNestedInput
     transactions?: TransactionUncheckedUpdateManyWithoutUserNestedInput
+    depositDetails?: DepositDetailUncheckedUpdateManyWithoutUserNestedInput
     balances?: UserBalanceUncheckedUpdateManyWithoutUserNestedInput
     UserBalanceStats?: UserBalanceStatsUncheckedUpdateManyWithoutUserNestedInput
     UserPromotion?: UserPromotionUncheckedUpdateManyWithoutUserNestedInput
@@ -86301,6 +86667,7 @@ export namespace Prisma {
     referredUsers?: ReferralCreateNestedManyWithoutSubUserInput
     Rolling?: RollingCreateNestedManyWithoutUserInput
     transactions?: TransactionCreateNestedManyWithoutUserInput
+    depositDetails?: DepositDetailCreateNestedManyWithoutUserInput
     balances?: UserBalanceCreateNestedManyWithoutUserInput
     UserBalanceStats?: UserBalanceStatsCreateNestedManyWithoutUserInput
     UserPromotion?: UserPromotionCreateNestedManyWithoutUserInput
@@ -86344,6 +86711,7 @@ export namespace Prisma {
     referredUsers?: ReferralUncheckedCreateNestedManyWithoutSubUserInput
     Rolling?: RollingUncheckedCreateNestedManyWithoutUserInput
     transactions?: TransactionUncheckedCreateNestedManyWithoutUserInput
+    depositDetails?: DepositDetailUncheckedCreateNestedManyWithoutUserInput
     balances?: UserBalanceUncheckedCreateNestedManyWithoutUserInput
     UserBalanceStats?: UserBalanceStatsUncheckedCreateNestedManyWithoutUserInput
     UserPromotion?: UserPromotionUncheckedCreateNestedManyWithoutUserInput
@@ -86403,6 +86771,7 @@ export namespace Prisma {
     referredUsers?: ReferralUpdateManyWithoutSubUserNestedInput
     Rolling?: RollingUpdateManyWithoutUserNestedInput
     transactions?: TransactionUpdateManyWithoutUserNestedInput
+    depositDetails?: DepositDetailUpdateManyWithoutUserNestedInput
     balances?: UserBalanceUpdateManyWithoutUserNestedInput
     UserBalanceStats?: UserBalanceStatsUpdateManyWithoutUserNestedInput
     UserPromotion?: UserPromotionUpdateManyWithoutUserNestedInput
@@ -86446,6 +86815,7 @@ export namespace Prisma {
     referredUsers?: ReferralUncheckedUpdateManyWithoutSubUserNestedInput
     Rolling?: RollingUncheckedUpdateManyWithoutUserNestedInput
     transactions?: TransactionUncheckedUpdateManyWithoutUserNestedInput
+    depositDetails?: DepositDetailUncheckedUpdateManyWithoutUserNestedInput
     balances?: UserBalanceUncheckedUpdateManyWithoutUserNestedInput
     UserBalanceStats?: UserBalanceStatsUncheckedUpdateManyWithoutUserNestedInput
     UserPromotion?: UserPromotionUncheckedUpdateManyWithoutUserNestedInput
@@ -86489,6 +86859,7 @@ export namespace Prisma {
     referredUsers?: ReferralCreateNestedManyWithoutSubUserInput
     Rolling?: RollingCreateNestedManyWithoutUserInput
     transactions?: TransactionCreateNestedManyWithoutUserInput
+    depositDetails?: DepositDetailCreateNestedManyWithoutUserInput
     balances?: UserBalanceCreateNestedManyWithoutUserInput
     UserBalanceStats?: UserBalanceStatsCreateNestedManyWithoutUserInput
     UserPromotion?: UserPromotionCreateNestedManyWithoutUserInput
@@ -86532,6 +86903,7 @@ export namespace Prisma {
     referredUsers?: ReferralUncheckedCreateNestedManyWithoutSubUserInput
     Rolling?: RollingUncheckedCreateNestedManyWithoutUserInput
     transactions?: TransactionUncheckedCreateNestedManyWithoutUserInput
+    depositDetails?: DepositDetailUncheckedCreateNestedManyWithoutUserInput
     balances?: UserBalanceUncheckedCreateNestedManyWithoutUserInput
     UserBalanceStats?: UserBalanceStatsUncheckedCreateNestedManyWithoutUserInput
     UserPromotion?: UserPromotionUncheckedCreateNestedManyWithoutUserInput
@@ -86649,6 +87021,7 @@ export namespace Prisma {
     referredUsers?: ReferralCreateNestedManyWithoutSubUserInput
     Rolling?: RollingCreateNestedManyWithoutUserInput
     transactions?: TransactionCreateNestedManyWithoutUserInput
+    depositDetails?: DepositDetailCreateNestedManyWithoutUserInput
     balances?: UserBalanceCreateNestedManyWithoutUserInput
     UserBalanceStats?: UserBalanceStatsCreateNestedManyWithoutUserInput
     UserPromotion?: UserPromotionCreateNestedManyWithoutUserInput
@@ -86692,6 +87065,7 @@ export namespace Prisma {
     referredUsers?: ReferralUncheckedCreateNestedManyWithoutSubUserInput
     Rolling?: RollingUncheckedCreateNestedManyWithoutUserInput
     transactions?: TransactionUncheckedCreateNestedManyWithoutUserInput
+    depositDetails?: DepositDetailUncheckedCreateNestedManyWithoutUserInput
     balances?: UserBalanceUncheckedCreateNestedManyWithoutUserInput
     UserBalanceStats?: UserBalanceStatsUncheckedCreateNestedManyWithoutUserInput
     UserPromotion?: UserPromotionUncheckedCreateNestedManyWithoutUserInput
@@ -86751,6 +87125,7 @@ export namespace Prisma {
     referredUsers?: ReferralUpdateManyWithoutSubUserNestedInput
     Rolling?: RollingUpdateManyWithoutUserNestedInput
     transactions?: TransactionUpdateManyWithoutUserNestedInput
+    depositDetails?: DepositDetailUpdateManyWithoutUserNestedInput
     balances?: UserBalanceUpdateManyWithoutUserNestedInput
     UserBalanceStats?: UserBalanceStatsUpdateManyWithoutUserNestedInput
     UserPromotion?: UserPromotionUpdateManyWithoutUserNestedInput
@@ -86794,6 +87169,7 @@ export namespace Prisma {
     referredUsers?: ReferralUncheckedUpdateManyWithoutSubUserNestedInput
     Rolling?: RollingUncheckedUpdateManyWithoutUserNestedInput
     transactions?: TransactionUncheckedUpdateManyWithoutUserNestedInput
+    depositDetails?: DepositDetailUncheckedUpdateManyWithoutUserNestedInput
     balances?: UserBalanceUncheckedUpdateManyWithoutUserNestedInput
     UserBalanceStats?: UserBalanceStatsUncheckedUpdateManyWithoutUserNestedInput
     UserPromotion?: UserPromotionUncheckedUpdateManyWithoutUserNestedInput
@@ -86923,6 +87299,7 @@ export namespace Prisma {
     referredUsers?: ReferralUpdateManyWithoutSubUserNestedInput
     Rolling?: RollingUpdateManyWithoutUserNestedInput
     transactions?: TransactionUpdateManyWithoutUserNestedInput
+    depositDetails?: DepositDetailUpdateManyWithoutUserNestedInput
     balances?: UserBalanceUpdateManyWithoutUserNestedInput
     UserBalanceStats?: UserBalanceStatsUpdateManyWithoutUserNestedInput
     UserPromotion?: UserPromotionUpdateManyWithoutUserNestedInput
@@ -86966,6 +87343,7 @@ export namespace Prisma {
     referredUsers?: ReferralUncheckedUpdateManyWithoutSubUserNestedInput
     Rolling?: RollingUncheckedUpdateManyWithoutUserNestedInput
     transactions?: TransactionUncheckedUpdateManyWithoutUserNestedInput
+    depositDetails?: DepositDetailUncheckedUpdateManyWithoutUserNestedInput
     balances?: UserBalanceUncheckedUpdateManyWithoutUserNestedInput
     UserBalanceStats?: UserBalanceStatsUncheckedUpdateManyWithoutUserNestedInput
     UserPromotion?: UserPromotionUncheckedUpdateManyWithoutUserNestedInput
@@ -87009,6 +87387,7 @@ export namespace Prisma {
     referredUsers?: ReferralCreateNestedManyWithoutSubUserInput
     Rolling?: RollingCreateNestedManyWithoutUserInput
     transactions?: TransactionCreateNestedManyWithoutUserInput
+    depositDetails?: DepositDetailCreateNestedManyWithoutUserInput
     balances?: UserBalanceCreateNestedManyWithoutUserInput
     UserBalanceStats?: UserBalanceStatsCreateNestedManyWithoutUserInput
     UserPromotion?: UserPromotionCreateNestedManyWithoutUserInput
@@ -87052,6 +87431,7 @@ export namespace Prisma {
     referredUsers?: ReferralUncheckedCreateNestedManyWithoutSubUserInput
     Rolling?: RollingUncheckedCreateNestedManyWithoutUserInput
     transactions?: TransactionUncheckedCreateNestedManyWithoutUserInput
+    depositDetails?: DepositDetailUncheckedCreateNestedManyWithoutUserInput
     balances?: UserBalanceUncheckedCreateNestedManyWithoutUserInput
     UserBalanceStats?: UserBalanceStatsUncheckedCreateNestedManyWithoutUserInput
     UserPromotion?: UserPromotionUncheckedCreateNestedManyWithoutUserInput
@@ -87111,6 +87491,7 @@ export namespace Prisma {
     referredUsers?: ReferralUpdateManyWithoutSubUserNestedInput
     Rolling?: RollingUpdateManyWithoutUserNestedInput
     transactions?: TransactionUpdateManyWithoutUserNestedInput
+    depositDetails?: DepositDetailUpdateManyWithoutUserNestedInput
     balances?: UserBalanceUpdateManyWithoutUserNestedInput
     UserBalanceStats?: UserBalanceStatsUpdateManyWithoutUserNestedInput
     UserPromotion?: UserPromotionUpdateManyWithoutUserNestedInput
@@ -87154,6 +87535,7 @@ export namespace Prisma {
     referredUsers?: ReferralUncheckedUpdateManyWithoutSubUserNestedInput
     Rolling?: RollingUncheckedUpdateManyWithoutUserNestedInput
     transactions?: TransactionUncheckedUpdateManyWithoutUserNestedInput
+    depositDetails?: DepositDetailUncheckedUpdateManyWithoutUserNestedInput
     balances?: UserBalanceUncheckedUpdateManyWithoutUserNestedInput
     UserBalanceStats?: UserBalanceStatsUncheckedUpdateManyWithoutUserNestedInput
     UserPromotion?: UserPromotionUncheckedUpdateManyWithoutUserNestedInput
@@ -87198,6 +87580,7 @@ export namespace Prisma {
     referredUsers?: ReferralCreateNestedManyWithoutSubUserInput
     Rolling?: RollingCreateNestedManyWithoutUserInput
     transactions?: TransactionCreateNestedManyWithoutUserInput
+    depositDetails?: DepositDetailCreateNestedManyWithoutUserInput
     balances?: UserBalanceCreateNestedManyWithoutUserInput
     UserBalanceStats?: UserBalanceStatsCreateNestedManyWithoutUserInput
     UserPromotion?: UserPromotionCreateNestedManyWithoutUserInput
@@ -87241,6 +87624,7 @@ export namespace Prisma {
     referredUsers?: ReferralUncheckedCreateNestedManyWithoutSubUserInput
     Rolling?: RollingUncheckedCreateNestedManyWithoutUserInput
     transactions?: TransactionUncheckedCreateNestedManyWithoutUserInput
+    depositDetails?: DepositDetailUncheckedCreateNestedManyWithoutUserInput
     balances?: UserBalanceUncheckedCreateNestedManyWithoutUserInput
     UserBalanceStats?: UserBalanceStatsUncheckedCreateNestedManyWithoutUserInput
     UserPromotion?: UserPromotionUncheckedCreateNestedManyWithoutUserInput
@@ -87300,6 +87684,7 @@ export namespace Prisma {
     referredUsers?: ReferralUpdateManyWithoutSubUserNestedInput
     Rolling?: RollingUpdateManyWithoutUserNestedInput
     transactions?: TransactionUpdateManyWithoutUserNestedInput
+    depositDetails?: DepositDetailUpdateManyWithoutUserNestedInput
     balances?: UserBalanceUpdateManyWithoutUserNestedInput
     UserBalanceStats?: UserBalanceStatsUpdateManyWithoutUserNestedInput
     UserPromotion?: UserPromotionUpdateManyWithoutUserNestedInput
@@ -87343,6 +87728,7 @@ export namespace Prisma {
     referredUsers?: ReferralUncheckedUpdateManyWithoutSubUserNestedInput
     Rolling?: RollingUncheckedUpdateManyWithoutUserNestedInput
     transactions?: TransactionUncheckedUpdateManyWithoutUserNestedInput
+    depositDetails?: DepositDetailUncheckedUpdateManyWithoutUserNestedInput
     balances?: UserBalanceUncheckedUpdateManyWithoutUserNestedInput
     UserBalanceStats?: UserBalanceStatsUncheckedUpdateManyWithoutUserNestedInput
     UserPromotion?: UserPromotionUncheckedUpdateManyWithoutUserNestedInput
@@ -87351,6 +87737,99 @@ export namespace Prisma {
     UserToken?: UserTokenUncheckedUpdateManyWithoutUserNestedInput
     VipHistory?: VipHistoryUncheckedUpdateManyWithoutUserNestedInput
     VipMembership?: VipMembershipUncheckedUpdateOneWithoutUserNestedInput
+  }
+
+  export type UserCreateWithoutDepositDetailsInput = {
+    id?: bigint | number
+    uid?: string
+    whitecliffId?: bigint | number | null
+    whitecliffSystemId?: bigint | number | null
+    whitecliffUsername?: string | null
+    dcsId?: string | null
+    email?: string | null
+    passwordHash?: string | null
+    socialType?: $Enums.SocialType | null
+    socialId?: string | null
+    role?: $Enums.UserRoleType
+    status?: $Enums.UserStatus
+    kycLevel?: $Enums.KycLevel
+    country?: string | null
+    language?: $Enums.Language | null
+    timezone?: string | null
+    timezoneOffset?: number | null
+    createdAt?: Date | string
+    updatedAt?: Date | string
+    affiliateCodes?: AffiliateCodeCreateNestedManyWithoutUserInput
+    affiliateCommissions?: AffiliateCommissionCreateNestedManyWithoutAffiliateInput
+    subUserCommissions?: AffiliateCommissionCreateNestedManyWithoutSubUserInput
+    affiliateTier?: AffiliateTierCreateNestedOneWithoutAffiliateInput
+    affiliateWallets?: AffiliateWalletCreateNestedManyWithoutAffiliateInput
+    CompTransaction?: CompTransactionCreateNestedManyWithoutUserInput
+    DailyCompEarning?: DailyCompEarningCreateNestedManyWithoutUserInput
+    EmailLog?: EmailLogCreateNestedManyWithoutUserInput
+    GameSession?: GameSessionCreateNestedManyWithoutUserInput
+    affiliateReferrals?: ReferralCreateNestedManyWithoutAffiliateInput
+    referredUsers?: ReferralCreateNestedManyWithoutSubUserInput
+    Rolling?: RollingCreateNestedManyWithoutUserInput
+    transactions?: TransactionCreateNestedManyWithoutUserInput
+    balances?: UserBalanceCreateNestedManyWithoutUserInput
+    UserBalanceStats?: UserBalanceStatsCreateNestedManyWithoutUserInput
+    UserPromotion?: UserPromotionCreateNestedManyWithoutUserInput
+    UserSession?: UserSessionCreateNestedManyWithoutUserInput
+    RevokedSessions?: UserSessionCreateNestedManyWithoutRevokedByUserInput
+    UserToken?: UserTokenCreateNestedManyWithoutUserInput
+    VipHistory?: VipHistoryCreateNestedManyWithoutUserInput
+    VipMembership?: VipMembershipCreateNestedOneWithoutUserInput
+    loginAttempts?: LoginAttemptCreateNestedManyWithoutUserInput
+  }
+
+  export type UserUncheckedCreateWithoutDepositDetailsInput = {
+    id?: bigint | number
+    uid?: string
+    whitecliffId?: bigint | number | null
+    whitecliffSystemId?: bigint | number | null
+    whitecliffUsername?: string | null
+    dcsId?: string | null
+    email?: string | null
+    passwordHash?: string | null
+    socialType?: $Enums.SocialType | null
+    socialId?: string | null
+    role?: $Enums.UserRoleType
+    status?: $Enums.UserStatus
+    kycLevel?: $Enums.KycLevel
+    country?: string | null
+    language?: $Enums.Language | null
+    timezone?: string | null
+    timezoneOffset?: number | null
+    createdAt?: Date | string
+    updatedAt?: Date | string
+    affiliateCodes?: AffiliateCodeUncheckedCreateNestedManyWithoutUserInput
+    affiliateCommissions?: AffiliateCommissionUncheckedCreateNestedManyWithoutAffiliateInput
+    subUserCommissions?: AffiliateCommissionUncheckedCreateNestedManyWithoutSubUserInput
+    affiliateTier?: AffiliateTierUncheckedCreateNestedOneWithoutAffiliateInput
+    affiliateWallets?: AffiliateWalletUncheckedCreateNestedManyWithoutAffiliateInput
+    CompTransaction?: CompTransactionUncheckedCreateNestedManyWithoutUserInput
+    DailyCompEarning?: DailyCompEarningUncheckedCreateNestedManyWithoutUserInput
+    EmailLog?: EmailLogUncheckedCreateNestedManyWithoutUserInput
+    GameSession?: GameSessionUncheckedCreateNestedManyWithoutUserInput
+    affiliateReferrals?: ReferralUncheckedCreateNestedManyWithoutAffiliateInput
+    referredUsers?: ReferralUncheckedCreateNestedManyWithoutSubUserInput
+    Rolling?: RollingUncheckedCreateNestedManyWithoutUserInput
+    transactions?: TransactionUncheckedCreateNestedManyWithoutUserInput
+    balances?: UserBalanceUncheckedCreateNestedManyWithoutUserInput
+    UserBalanceStats?: UserBalanceStatsUncheckedCreateNestedManyWithoutUserInput
+    UserPromotion?: UserPromotionUncheckedCreateNestedManyWithoutUserInput
+    UserSession?: UserSessionUncheckedCreateNestedManyWithoutUserInput
+    RevokedSessions?: UserSessionUncheckedCreateNestedManyWithoutRevokedByUserInput
+    UserToken?: UserTokenUncheckedCreateNestedManyWithoutUserInput
+    VipHistory?: VipHistoryUncheckedCreateNestedManyWithoutUserInput
+    VipMembership?: VipMembershipUncheckedCreateNestedOneWithoutUserInput
+    loginAttempts?: LoginAttemptUncheckedCreateNestedManyWithoutUserInput
+  }
+
+  export type UserCreateOrConnectWithoutDepositDetailsInput = {
+    where: UserWhereUniqueInput
+    create: XOR<UserCreateWithoutDepositDetailsInput, UserUncheckedCreateWithoutDepositDetailsInput>
   }
 
   export type BankConfigCreateWithoutDepositDetailsInput = {
@@ -87516,6 +87995,105 @@ export namespace Prisma {
   export type RollingCreateManyDepositDetailInputEnvelope = {
     data: RollingCreateManyDepositDetailInput | RollingCreateManyDepositDetailInput[]
     skipDuplicates?: boolean
+  }
+
+  export type UserUpsertWithoutDepositDetailsInput = {
+    update: XOR<UserUpdateWithoutDepositDetailsInput, UserUncheckedUpdateWithoutDepositDetailsInput>
+    create: XOR<UserCreateWithoutDepositDetailsInput, UserUncheckedCreateWithoutDepositDetailsInput>
+    where?: UserWhereInput
+  }
+
+  export type UserUpdateToOneWithWhereWithoutDepositDetailsInput = {
+    where?: UserWhereInput
+    data: XOR<UserUpdateWithoutDepositDetailsInput, UserUncheckedUpdateWithoutDepositDetailsInput>
+  }
+
+  export type UserUpdateWithoutDepositDetailsInput = {
+    id?: BigIntFieldUpdateOperationsInput | bigint | number
+    uid?: StringFieldUpdateOperationsInput | string
+    whitecliffId?: NullableBigIntFieldUpdateOperationsInput | bigint | number | null
+    whitecliffSystemId?: NullableBigIntFieldUpdateOperationsInput | bigint | number | null
+    whitecliffUsername?: NullableStringFieldUpdateOperationsInput | string | null
+    dcsId?: NullableStringFieldUpdateOperationsInput | string | null
+    email?: NullableStringFieldUpdateOperationsInput | string | null
+    passwordHash?: NullableStringFieldUpdateOperationsInput | string | null
+    socialType?: NullableEnumSocialTypeFieldUpdateOperationsInput | $Enums.SocialType | null
+    socialId?: NullableStringFieldUpdateOperationsInput | string | null
+    role?: EnumUserRoleTypeFieldUpdateOperationsInput | $Enums.UserRoleType
+    status?: EnumUserStatusFieldUpdateOperationsInput | $Enums.UserStatus
+    kycLevel?: EnumKycLevelFieldUpdateOperationsInput | $Enums.KycLevel
+    country?: NullableStringFieldUpdateOperationsInput | string | null
+    language?: NullableEnumLanguageFieldUpdateOperationsInput | $Enums.Language | null
+    timezone?: NullableStringFieldUpdateOperationsInput | string | null
+    timezoneOffset?: NullableIntFieldUpdateOperationsInput | number | null
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    affiliateCodes?: AffiliateCodeUpdateManyWithoutUserNestedInput
+    affiliateCommissions?: AffiliateCommissionUpdateManyWithoutAffiliateNestedInput
+    subUserCommissions?: AffiliateCommissionUpdateManyWithoutSubUserNestedInput
+    affiliateTier?: AffiliateTierUpdateOneWithoutAffiliateNestedInput
+    affiliateWallets?: AffiliateWalletUpdateManyWithoutAffiliateNestedInput
+    CompTransaction?: CompTransactionUpdateManyWithoutUserNestedInput
+    DailyCompEarning?: DailyCompEarningUpdateManyWithoutUserNestedInput
+    EmailLog?: EmailLogUpdateManyWithoutUserNestedInput
+    GameSession?: GameSessionUpdateManyWithoutUserNestedInput
+    affiliateReferrals?: ReferralUpdateManyWithoutAffiliateNestedInput
+    referredUsers?: ReferralUpdateManyWithoutSubUserNestedInput
+    Rolling?: RollingUpdateManyWithoutUserNestedInput
+    transactions?: TransactionUpdateManyWithoutUserNestedInput
+    balances?: UserBalanceUpdateManyWithoutUserNestedInput
+    UserBalanceStats?: UserBalanceStatsUpdateManyWithoutUserNestedInput
+    UserPromotion?: UserPromotionUpdateManyWithoutUserNestedInput
+    UserSession?: UserSessionUpdateManyWithoutUserNestedInput
+    RevokedSessions?: UserSessionUpdateManyWithoutRevokedByUserNestedInput
+    UserToken?: UserTokenUpdateManyWithoutUserNestedInput
+    VipHistory?: VipHistoryUpdateManyWithoutUserNestedInput
+    VipMembership?: VipMembershipUpdateOneWithoutUserNestedInput
+    loginAttempts?: LoginAttemptUpdateManyWithoutUserNestedInput
+  }
+
+  export type UserUncheckedUpdateWithoutDepositDetailsInput = {
+    id?: BigIntFieldUpdateOperationsInput | bigint | number
+    uid?: StringFieldUpdateOperationsInput | string
+    whitecliffId?: NullableBigIntFieldUpdateOperationsInput | bigint | number | null
+    whitecliffSystemId?: NullableBigIntFieldUpdateOperationsInput | bigint | number | null
+    whitecliffUsername?: NullableStringFieldUpdateOperationsInput | string | null
+    dcsId?: NullableStringFieldUpdateOperationsInput | string | null
+    email?: NullableStringFieldUpdateOperationsInput | string | null
+    passwordHash?: NullableStringFieldUpdateOperationsInput | string | null
+    socialType?: NullableEnumSocialTypeFieldUpdateOperationsInput | $Enums.SocialType | null
+    socialId?: NullableStringFieldUpdateOperationsInput | string | null
+    role?: EnumUserRoleTypeFieldUpdateOperationsInput | $Enums.UserRoleType
+    status?: EnumUserStatusFieldUpdateOperationsInput | $Enums.UserStatus
+    kycLevel?: EnumKycLevelFieldUpdateOperationsInput | $Enums.KycLevel
+    country?: NullableStringFieldUpdateOperationsInput | string | null
+    language?: NullableEnumLanguageFieldUpdateOperationsInput | $Enums.Language | null
+    timezone?: NullableStringFieldUpdateOperationsInput | string | null
+    timezoneOffset?: NullableIntFieldUpdateOperationsInput | number | null
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    affiliateCodes?: AffiliateCodeUncheckedUpdateManyWithoutUserNestedInput
+    affiliateCommissions?: AffiliateCommissionUncheckedUpdateManyWithoutAffiliateNestedInput
+    subUserCommissions?: AffiliateCommissionUncheckedUpdateManyWithoutSubUserNestedInput
+    affiliateTier?: AffiliateTierUncheckedUpdateOneWithoutAffiliateNestedInput
+    affiliateWallets?: AffiliateWalletUncheckedUpdateManyWithoutAffiliateNestedInput
+    CompTransaction?: CompTransactionUncheckedUpdateManyWithoutUserNestedInput
+    DailyCompEarning?: DailyCompEarningUncheckedUpdateManyWithoutUserNestedInput
+    EmailLog?: EmailLogUncheckedUpdateManyWithoutUserNestedInput
+    GameSession?: GameSessionUncheckedUpdateManyWithoutUserNestedInput
+    affiliateReferrals?: ReferralUncheckedUpdateManyWithoutAffiliateNestedInput
+    referredUsers?: ReferralUncheckedUpdateManyWithoutSubUserNestedInput
+    Rolling?: RollingUncheckedUpdateManyWithoutUserNestedInput
+    transactions?: TransactionUncheckedUpdateManyWithoutUserNestedInput
+    balances?: UserBalanceUncheckedUpdateManyWithoutUserNestedInput
+    UserBalanceStats?: UserBalanceStatsUncheckedUpdateManyWithoutUserNestedInput
+    UserPromotion?: UserPromotionUncheckedUpdateManyWithoutUserNestedInput
+    UserSession?: UserSessionUncheckedUpdateManyWithoutUserNestedInput
+    RevokedSessions?: UserSessionUncheckedUpdateManyWithoutRevokedByUserNestedInput
+    UserToken?: UserTokenUncheckedUpdateManyWithoutUserNestedInput
+    VipHistory?: VipHistoryUncheckedUpdateManyWithoutUserNestedInput
+    VipMembership?: VipMembershipUncheckedUpdateOneWithoutUserNestedInput
+    loginAttempts?: LoginAttemptUncheckedUpdateManyWithoutUserNestedInput
   }
 
   export type BankConfigUpsertWithoutDepositDetailsInput = {
@@ -87701,8 +88279,9 @@ export namespace Prisma {
     feePaidBy?: $Enums.FeePaidByType | null
     failureReason?: string | null
     providerMetadata?: NullableJsonNullValueInput | InputJsonValue
+    user: UserCreateNestedOneWithoutDepositDetailsInput
     BankConfig?: BankConfigCreateNestedOneWithoutDepositDetailsInput
-    transaction: TransactionCreateNestedOneWithoutDepositDetailInput
+    transaction?: TransactionCreateNestedOneWithoutDepositDetailInput
     Rolling?: RollingCreateNestedManyWithoutDepositDetailInput
   }
 
@@ -87714,7 +88293,8 @@ export namespace Prisma {
     createdAt?: Date | string
     updatedAt?: Date | string
     status: $Enums.DepositDetailStatus
-    transactionId: bigint | number
+    userId: bigint | number
+    transactionId?: bigint | number | null
     methodType: $Enums.DepositMethodType
     provider: $Enums.PaymentProvider
     providerPaymentId?: string | null
@@ -87765,42 +88345,6 @@ export namespace Prisma {
     data: XOR<DepositDetailUpdateManyMutationInput, DepositDetailUncheckedUpdateManyWithoutCryptoConfigInput>
   }
 
-  export type DepositDetailScalarWhereInput = {
-    AND?: DepositDetailScalarWhereInput | DepositDetailScalarWhereInput[]
-    OR?: DepositDetailScalarWhereInput[]
-    NOT?: DepositDetailScalarWhereInput | DepositDetailScalarWhereInput[]
-    id?: BigIntFilter<"DepositDetail"> | bigint | number
-    uid?: StringFilter<"DepositDetail"> | string
-    confirmedAt?: DateTimeNullableFilter<"DepositDetail"> | Date | string | null
-    failedAt?: DateTimeNullableFilter<"DepositDetail"> | Date | string | null
-    createdAt?: DateTimeFilter<"DepositDetail"> | Date | string
-    updatedAt?: DateTimeFilter<"DepositDetail"> | Date | string
-    status?: EnumDepositDetailStatusFilter<"DepositDetail"> | $Enums.DepositDetailStatus
-    transactionId?: BigIntFilter<"DepositDetail"> | bigint | number
-    methodType?: EnumDepositMethodTypeFilter<"DepositDetail"> | $Enums.DepositMethodType
-    provider?: EnumPaymentProviderFilter<"DepositDetail"> | $Enums.PaymentProvider
-    providerPaymentId?: StringNullableFilter<"DepositDetail"> | string | null
-    depositCurrency?: EnumExchangeCurrencyCodeFilter<"DepositDetail"> | $Enums.ExchangeCurrencyCode
-    depositNetwork?: StringNullableFilter<"DepositDetail"> | string | null
-    walletAddress?: StringNullableFilter<"DepositDetail"> | string | null
-    walletAddressExtraId?: StringNullableFilter<"DepositDetail"> | string | null
-    depositorName?: StringNullableFilter<"DepositDetail"> | string | null
-    transactionHash?: StringNullableFilter<"DepositDetail"> | string | null
-    requestedAmount?: DecimalFilter<"DepositDetail"> | Decimal | DecimalJsLike | number | string
-    actuallyPaid?: DecimalNullableFilter<"DepositDetail"> | Decimal | DecimalJsLike | number | string | null
-    processedBy?: BigIntNullableFilter<"DepositDetail"> | bigint | number | null
-    adminNote?: StringNullableFilter<"DepositDetail"> | string | null
-    ipAddress?: StringNullableFilter<"DepositDetail"> | string | null
-    deviceFingerprint?: StringNullableFilter<"DepositDetail"> | string | null
-    feeAmount?: DecimalNullableFilter<"DepositDetail"> | Decimal | DecimalJsLike | number | string | null
-    feeCurrency?: StringNullableFilter<"DepositDetail"> | string | null
-    feePaidBy?: EnumFeePaidByTypeNullableFilter<"DepositDetail"> | $Enums.FeePaidByType | null
-    failureReason?: StringNullableFilter<"DepositDetail"> | string | null
-    providerMetadata?: JsonNullableFilter<"DepositDetail">
-    bankConfigId?: BigIntNullableFilter<"DepositDetail"> | bigint | number | null
-    cryptoConfigId?: BigIntNullableFilter<"DepositDetail"> | bigint | number | null
-  }
-
   export type DepositDetailCreateWithoutBankConfigInput = {
     id?: bigint | number
     uid: string
@@ -87829,8 +88373,9 @@ export namespace Prisma {
     feePaidBy?: $Enums.FeePaidByType | null
     failureReason?: string | null
     providerMetadata?: NullableJsonNullValueInput | InputJsonValue
+    user: UserCreateNestedOneWithoutDepositDetailsInput
     CryptoConfig?: CryptoConfigCreateNestedOneWithoutDepositDetailsInput
-    transaction: TransactionCreateNestedOneWithoutDepositDetailInput
+    transaction?: TransactionCreateNestedOneWithoutDepositDetailInput
     Rolling?: RollingCreateNestedManyWithoutDepositDetailInput
   }
 
@@ -87842,7 +88387,8 @@ export namespace Prisma {
     createdAt?: Date | string
     updatedAt?: Date | string
     status: $Enums.DepositDetailStatus
-    transactionId: bigint | number
+    userId: bigint | number
+    transactionId?: bigint | number | null
     methodType: $Enums.DepositMethodType
     provider: $Enums.PaymentProvider
     providerPaymentId?: string | null
@@ -88375,6 +88921,7 @@ export namespace Prisma {
     referredUsers?: ReferralCreateNestedManyWithoutSubUserInput
     Rolling?: RollingCreateNestedManyWithoutUserInput
     transactions?: TransactionCreateNestedManyWithoutUserInput
+    depositDetails?: DepositDetailCreateNestedManyWithoutUserInput
     balances?: UserBalanceCreateNestedManyWithoutUserInput
     UserBalanceStats?: UserBalanceStatsCreateNestedManyWithoutUserInput
     UserSession?: UserSessionCreateNestedManyWithoutUserInput
@@ -88418,6 +88965,7 @@ export namespace Prisma {
     referredUsers?: ReferralUncheckedCreateNestedManyWithoutSubUserInput
     Rolling?: RollingUncheckedCreateNestedManyWithoutUserInput
     transactions?: TransactionUncheckedCreateNestedManyWithoutUserInput
+    depositDetails?: DepositDetailUncheckedCreateNestedManyWithoutUserInput
     balances?: UserBalanceUncheckedCreateNestedManyWithoutUserInput
     UserBalanceStats?: UserBalanceStatsUncheckedCreateNestedManyWithoutUserInput
     UserSession?: UserSessionUncheckedCreateNestedManyWithoutUserInput
@@ -88544,6 +89092,7 @@ export namespace Prisma {
     referredUsers?: ReferralUpdateManyWithoutSubUserNestedInput
     Rolling?: RollingUpdateManyWithoutUserNestedInput
     transactions?: TransactionUpdateManyWithoutUserNestedInput
+    depositDetails?: DepositDetailUpdateManyWithoutUserNestedInput
     balances?: UserBalanceUpdateManyWithoutUserNestedInput
     UserBalanceStats?: UserBalanceStatsUpdateManyWithoutUserNestedInput
     UserSession?: UserSessionUpdateManyWithoutUserNestedInput
@@ -88587,6 +89136,7 @@ export namespace Prisma {
     referredUsers?: ReferralUncheckedUpdateManyWithoutSubUserNestedInput
     Rolling?: RollingUncheckedUpdateManyWithoutUserNestedInput
     transactions?: TransactionUncheckedUpdateManyWithoutUserNestedInput
+    depositDetails?: DepositDetailUncheckedUpdateManyWithoutUserNestedInput
     balances?: UserBalanceUncheckedUpdateManyWithoutUserNestedInput
     UserBalanceStats?: UserBalanceStatsUncheckedUpdateManyWithoutUserNestedInput
     UserSession?: UserSessionUncheckedUpdateManyWithoutUserNestedInput
@@ -88630,6 +89180,7 @@ export namespace Prisma {
     referredUsers?: ReferralCreateNestedManyWithoutSubUserInput
     Rolling?: RollingCreateNestedManyWithoutUserInput
     transactions?: TransactionCreateNestedManyWithoutUserInput
+    depositDetails?: DepositDetailCreateNestedManyWithoutUserInput
     balances?: UserBalanceCreateNestedManyWithoutUserInput
     UserBalanceStats?: UserBalanceStatsCreateNestedManyWithoutUserInput
     UserPromotion?: UserPromotionCreateNestedManyWithoutUserInput
@@ -88673,6 +89224,7 @@ export namespace Prisma {
     referredUsers?: ReferralUncheckedCreateNestedManyWithoutSubUserInput
     Rolling?: RollingUncheckedCreateNestedManyWithoutUserInput
     transactions?: TransactionUncheckedCreateNestedManyWithoutUserInput
+    depositDetails?: DepositDetailUncheckedCreateNestedManyWithoutUserInput
     balances?: UserBalanceUncheckedCreateNestedManyWithoutUserInput
     UserBalanceStats?: UserBalanceStatsUncheckedCreateNestedManyWithoutUserInput
     UserPromotion?: UserPromotionUncheckedCreateNestedManyWithoutUserInput
@@ -88721,6 +89273,7 @@ export namespace Prisma {
     referredUsers?: ReferralCreateNestedManyWithoutSubUserInput
     Rolling?: RollingCreateNestedManyWithoutUserInput
     transactions?: TransactionCreateNestedManyWithoutUserInput
+    depositDetails?: DepositDetailCreateNestedManyWithoutUserInput
     balances?: UserBalanceCreateNestedManyWithoutUserInput
     UserBalanceStats?: UserBalanceStatsCreateNestedManyWithoutUserInput
     UserPromotion?: UserPromotionCreateNestedManyWithoutUserInput
@@ -88764,6 +89317,7 @@ export namespace Prisma {
     referredUsers?: ReferralUncheckedCreateNestedManyWithoutSubUserInput
     Rolling?: RollingUncheckedCreateNestedManyWithoutUserInput
     transactions?: TransactionUncheckedCreateNestedManyWithoutUserInput
+    depositDetails?: DepositDetailUncheckedCreateNestedManyWithoutUserInput
     balances?: UserBalanceUncheckedCreateNestedManyWithoutUserInput
     UserBalanceStats?: UserBalanceStatsUncheckedCreateNestedManyWithoutUserInput
     UserPromotion?: UserPromotionUncheckedCreateNestedManyWithoutUserInput
@@ -88823,6 +89377,7 @@ export namespace Prisma {
     referredUsers?: ReferralUpdateManyWithoutSubUserNestedInput
     Rolling?: RollingUpdateManyWithoutUserNestedInput
     transactions?: TransactionUpdateManyWithoutUserNestedInput
+    depositDetails?: DepositDetailUpdateManyWithoutUserNestedInput
     balances?: UserBalanceUpdateManyWithoutUserNestedInput
     UserBalanceStats?: UserBalanceStatsUpdateManyWithoutUserNestedInput
     UserPromotion?: UserPromotionUpdateManyWithoutUserNestedInput
@@ -88866,6 +89421,7 @@ export namespace Prisma {
     referredUsers?: ReferralUncheckedUpdateManyWithoutSubUserNestedInput
     Rolling?: RollingUncheckedUpdateManyWithoutUserNestedInput
     transactions?: TransactionUncheckedUpdateManyWithoutUserNestedInput
+    depositDetails?: DepositDetailUncheckedUpdateManyWithoutUserNestedInput
     balances?: UserBalanceUncheckedUpdateManyWithoutUserNestedInput
     UserBalanceStats?: UserBalanceStatsUncheckedUpdateManyWithoutUserNestedInput
     UserPromotion?: UserPromotionUncheckedUpdateManyWithoutUserNestedInput
@@ -88920,6 +89476,7 @@ export namespace Prisma {
     referredUsers?: ReferralUpdateManyWithoutSubUserNestedInput
     Rolling?: RollingUpdateManyWithoutUserNestedInput
     transactions?: TransactionUpdateManyWithoutUserNestedInput
+    depositDetails?: DepositDetailUpdateManyWithoutUserNestedInput
     balances?: UserBalanceUpdateManyWithoutUserNestedInput
     UserBalanceStats?: UserBalanceStatsUpdateManyWithoutUserNestedInput
     UserPromotion?: UserPromotionUpdateManyWithoutUserNestedInput
@@ -88963,6 +89520,7 @@ export namespace Prisma {
     referredUsers?: ReferralUncheckedUpdateManyWithoutSubUserNestedInput
     Rolling?: RollingUncheckedUpdateManyWithoutUserNestedInput
     transactions?: TransactionUncheckedUpdateManyWithoutUserNestedInput
+    depositDetails?: DepositDetailUncheckedUpdateManyWithoutUserNestedInput
     balances?: UserBalanceUncheckedUpdateManyWithoutUserNestedInput
     UserBalanceStats?: UserBalanceStatsUncheckedUpdateManyWithoutUserNestedInput
     UserPromotion?: UserPromotionUncheckedUpdateManyWithoutUserNestedInput
@@ -89129,6 +89687,39 @@ export namespace Prisma {
     afterAmount: Decimal | DecimalJsLike | number | string
     createdAt?: Date | string
     updatedAt?: Date | string
+  }
+
+  export type DepositDetailCreateManyUserInput = {
+    id?: bigint | number
+    uid: string
+    confirmedAt?: Date | string | null
+    failedAt?: Date | string | null
+    createdAt?: Date | string
+    updatedAt?: Date | string
+    status: $Enums.DepositDetailStatus
+    transactionId?: bigint | number | null
+    methodType: $Enums.DepositMethodType
+    provider: $Enums.PaymentProvider
+    providerPaymentId?: string | null
+    depositCurrency: $Enums.ExchangeCurrencyCode
+    depositNetwork?: string | null
+    walletAddress?: string | null
+    walletAddressExtraId?: string | null
+    depositorName?: string | null
+    transactionHash?: string | null
+    requestedAmount: Decimal | DecimalJsLike | number | string
+    actuallyPaid?: Decimal | DecimalJsLike | number | string | null
+    processedBy?: bigint | number | null
+    adminNote?: string | null
+    ipAddress?: string | null
+    deviceFingerprint?: string | null
+    feeAmount?: Decimal | DecimalJsLike | number | string | null
+    feeCurrency?: string | null
+    feePaidBy?: $Enums.FeePaidByType | null
+    failureReason?: string | null
+    providerMetadata?: NullableJsonNullValueInput | InputJsonValue
+    bankConfigId?: bigint | number | null
+    cryptoConfigId?: bigint | number | null
   }
 
   export type UserBalanceCreateManyUserInput = {
@@ -89735,6 +90326,107 @@ export namespace Prisma {
     afterAmount?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+  }
+
+  export type DepositDetailUpdateWithoutUserInput = {
+    id?: BigIntFieldUpdateOperationsInput | bigint | number
+    uid?: StringFieldUpdateOperationsInput | string
+    confirmedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    failedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    status?: EnumDepositDetailStatusFieldUpdateOperationsInput | $Enums.DepositDetailStatus
+    methodType?: EnumDepositMethodTypeFieldUpdateOperationsInput | $Enums.DepositMethodType
+    provider?: EnumPaymentProviderFieldUpdateOperationsInput | $Enums.PaymentProvider
+    providerPaymentId?: NullableStringFieldUpdateOperationsInput | string | null
+    depositCurrency?: EnumExchangeCurrencyCodeFieldUpdateOperationsInput | $Enums.ExchangeCurrencyCode
+    depositNetwork?: NullableStringFieldUpdateOperationsInput | string | null
+    walletAddress?: NullableStringFieldUpdateOperationsInput | string | null
+    walletAddressExtraId?: NullableStringFieldUpdateOperationsInput | string | null
+    depositorName?: NullableStringFieldUpdateOperationsInput | string | null
+    transactionHash?: NullableStringFieldUpdateOperationsInput | string | null
+    requestedAmount?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
+    actuallyPaid?: NullableDecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string | null
+    processedBy?: NullableBigIntFieldUpdateOperationsInput | bigint | number | null
+    adminNote?: NullableStringFieldUpdateOperationsInput | string | null
+    ipAddress?: NullableStringFieldUpdateOperationsInput | string | null
+    deviceFingerprint?: NullableStringFieldUpdateOperationsInput | string | null
+    feeAmount?: NullableDecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string | null
+    feeCurrency?: NullableStringFieldUpdateOperationsInput | string | null
+    feePaidBy?: NullableEnumFeePaidByTypeFieldUpdateOperationsInput | $Enums.FeePaidByType | null
+    failureReason?: NullableStringFieldUpdateOperationsInput | string | null
+    providerMetadata?: NullableJsonNullValueInput | InputJsonValue
+    BankConfig?: BankConfigUpdateOneWithoutDepositDetailsNestedInput
+    CryptoConfig?: CryptoConfigUpdateOneWithoutDepositDetailsNestedInput
+    transaction?: TransactionUpdateOneWithoutDepositDetailNestedInput
+    Rolling?: RollingUpdateManyWithoutDepositDetailNestedInput
+  }
+
+  export type DepositDetailUncheckedUpdateWithoutUserInput = {
+    id?: BigIntFieldUpdateOperationsInput | bigint | number
+    uid?: StringFieldUpdateOperationsInput | string
+    confirmedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    failedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    status?: EnumDepositDetailStatusFieldUpdateOperationsInput | $Enums.DepositDetailStatus
+    transactionId?: NullableBigIntFieldUpdateOperationsInput | bigint | number | null
+    methodType?: EnumDepositMethodTypeFieldUpdateOperationsInput | $Enums.DepositMethodType
+    provider?: EnumPaymentProviderFieldUpdateOperationsInput | $Enums.PaymentProvider
+    providerPaymentId?: NullableStringFieldUpdateOperationsInput | string | null
+    depositCurrency?: EnumExchangeCurrencyCodeFieldUpdateOperationsInput | $Enums.ExchangeCurrencyCode
+    depositNetwork?: NullableStringFieldUpdateOperationsInput | string | null
+    walletAddress?: NullableStringFieldUpdateOperationsInput | string | null
+    walletAddressExtraId?: NullableStringFieldUpdateOperationsInput | string | null
+    depositorName?: NullableStringFieldUpdateOperationsInput | string | null
+    transactionHash?: NullableStringFieldUpdateOperationsInput | string | null
+    requestedAmount?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
+    actuallyPaid?: NullableDecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string | null
+    processedBy?: NullableBigIntFieldUpdateOperationsInput | bigint | number | null
+    adminNote?: NullableStringFieldUpdateOperationsInput | string | null
+    ipAddress?: NullableStringFieldUpdateOperationsInput | string | null
+    deviceFingerprint?: NullableStringFieldUpdateOperationsInput | string | null
+    feeAmount?: NullableDecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string | null
+    feeCurrency?: NullableStringFieldUpdateOperationsInput | string | null
+    feePaidBy?: NullableEnumFeePaidByTypeFieldUpdateOperationsInput | $Enums.FeePaidByType | null
+    failureReason?: NullableStringFieldUpdateOperationsInput | string | null
+    providerMetadata?: NullableJsonNullValueInput | InputJsonValue
+    bankConfigId?: NullableBigIntFieldUpdateOperationsInput | bigint | number | null
+    cryptoConfigId?: NullableBigIntFieldUpdateOperationsInput | bigint | number | null
+    Rolling?: RollingUncheckedUpdateManyWithoutDepositDetailNestedInput
+  }
+
+  export type DepositDetailUncheckedUpdateManyWithoutUserInput = {
+    id?: BigIntFieldUpdateOperationsInput | bigint | number
+    uid?: StringFieldUpdateOperationsInput | string
+    confirmedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    failedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    status?: EnumDepositDetailStatusFieldUpdateOperationsInput | $Enums.DepositDetailStatus
+    transactionId?: NullableBigIntFieldUpdateOperationsInput | bigint | number | null
+    methodType?: EnumDepositMethodTypeFieldUpdateOperationsInput | $Enums.DepositMethodType
+    provider?: EnumPaymentProviderFieldUpdateOperationsInput | $Enums.PaymentProvider
+    providerPaymentId?: NullableStringFieldUpdateOperationsInput | string | null
+    depositCurrency?: EnumExchangeCurrencyCodeFieldUpdateOperationsInput | $Enums.ExchangeCurrencyCode
+    depositNetwork?: NullableStringFieldUpdateOperationsInput | string | null
+    walletAddress?: NullableStringFieldUpdateOperationsInput | string | null
+    walletAddressExtraId?: NullableStringFieldUpdateOperationsInput | string | null
+    depositorName?: NullableStringFieldUpdateOperationsInput | string | null
+    transactionHash?: NullableStringFieldUpdateOperationsInput | string | null
+    requestedAmount?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
+    actuallyPaid?: NullableDecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string | null
+    processedBy?: NullableBigIntFieldUpdateOperationsInput | bigint | number | null
+    adminNote?: NullableStringFieldUpdateOperationsInput | string | null
+    ipAddress?: NullableStringFieldUpdateOperationsInput | string | null
+    deviceFingerprint?: NullableStringFieldUpdateOperationsInput | string | null
+    feeAmount?: NullableDecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string | null
+    feeCurrency?: NullableStringFieldUpdateOperationsInput | string | null
+    feePaidBy?: NullableEnumFeePaidByTypeFieldUpdateOperationsInput | $Enums.FeePaidByType | null
+    failureReason?: NullableStringFieldUpdateOperationsInput | string | null
+    providerMetadata?: NullableJsonNullValueInput | InputJsonValue
+    bankConfigId?: NullableBigIntFieldUpdateOperationsInput | bigint | number | null
+    cryptoConfigId?: NullableBigIntFieldUpdateOperationsInput | bigint | number | null
   }
 
   export type UserBalanceUpdateWithoutUserInput = {
@@ -90970,7 +91662,8 @@ export namespace Prisma {
     createdAt?: Date | string
     updatedAt?: Date | string
     status: $Enums.DepositDetailStatus
-    transactionId: bigint | number
+    userId: bigint | number
+    transactionId?: bigint | number | null
     methodType: $Enums.DepositMethodType
     provider: $Enums.PaymentProvider
     providerPaymentId?: string | null
@@ -91022,8 +91715,9 @@ export namespace Prisma {
     feePaidBy?: NullableEnumFeePaidByTypeFieldUpdateOperationsInput | $Enums.FeePaidByType | null
     failureReason?: NullableStringFieldUpdateOperationsInput | string | null
     providerMetadata?: NullableJsonNullValueInput | InputJsonValue
+    user?: UserUpdateOneRequiredWithoutDepositDetailsNestedInput
     BankConfig?: BankConfigUpdateOneWithoutDepositDetailsNestedInput
-    transaction?: TransactionUpdateOneRequiredWithoutDepositDetailNestedInput
+    transaction?: TransactionUpdateOneWithoutDepositDetailNestedInput
     Rolling?: RollingUpdateManyWithoutDepositDetailNestedInput
   }
 
@@ -91035,7 +91729,8 @@ export namespace Prisma {
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
     status?: EnumDepositDetailStatusFieldUpdateOperationsInput | $Enums.DepositDetailStatus
-    transactionId?: BigIntFieldUpdateOperationsInput | bigint | number
+    userId?: BigIntFieldUpdateOperationsInput | bigint | number
+    transactionId?: NullableBigIntFieldUpdateOperationsInput | bigint | number | null
     methodType?: EnumDepositMethodTypeFieldUpdateOperationsInput | $Enums.DepositMethodType
     provider?: EnumPaymentProviderFieldUpdateOperationsInput | $Enums.PaymentProvider
     providerPaymentId?: NullableStringFieldUpdateOperationsInput | string | null
@@ -91068,7 +91763,8 @@ export namespace Prisma {
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
     status?: EnumDepositDetailStatusFieldUpdateOperationsInput | $Enums.DepositDetailStatus
-    transactionId?: BigIntFieldUpdateOperationsInput | bigint | number
+    userId?: BigIntFieldUpdateOperationsInput | bigint | number
+    transactionId?: NullableBigIntFieldUpdateOperationsInput | bigint | number | null
     methodType?: EnumDepositMethodTypeFieldUpdateOperationsInput | $Enums.DepositMethodType
     provider?: EnumPaymentProviderFieldUpdateOperationsInput | $Enums.PaymentProvider
     providerPaymentId?: NullableStringFieldUpdateOperationsInput | string | null
@@ -91100,7 +91796,8 @@ export namespace Prisma {
     createdAt?: Date | string
     updatedAt?: Date | string
     status: $Enums.DepositDetailStatus
-    transactionId: bigint | number
+    userId: bigint | number
+    transactionId?: bigint | number | null
     methodType: $Enums.DepositMethodType
     provider: $Enums.PaymentProvider
     providerPaymentId?: string | null
@@ -91152,8 +91849,9 @@ export namespace Prisma {
     feePaidBy?: NullableEnumFeePaidByTypeFieldUpdateOperationsInput | $Enums.FeePaidByType | null
     failureReason?: NullableStringFieldUpdateOperationsInput | string | null
     providerMetadata?: NullableJsonNullValueInput | InputJsonValue
+    user?: UserUpdateOneRequiredWithoutDepositDetailsNestedInput
     CryptoConfig?: CryptoConfigUpdateOneWithoutDepositDetailsNestedInput
-    transaction?: TransactionUpdateOneRequiredWithoutDepositDetailNestedInput
+    transaction?: TransactionUpdateOneWithoutDepositDetailNestedInput
     Rolling?: RollingUpdateManyWithoutDepositDetailNestedInput
   }
 
@@ -91165,7 +91863,8 @@ export namespace Prisma {
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
     status?: EnumDepositDetailStatusFieldUpdateOperationsInput | $Enums.DepositDetailStatus
-    transactionId?: BigIntFieldUpdateOperationsInput | bigint | number
+    userId?: BigIntFieldUpdateOperationsInput | bigint | number
+    transactionId?: NullableBigIntFieldUpdateOperationsInput | bigint | number | null
     methodType?: EnumDepositMethodTypeFieldUpdateOperationsInput | $Enums.DepositMethodType
     provider?: EnumPaymentProviderFieldUpdateOperationsInput | $Enums.PaymentProvider
     providerPaymentId?: NullableStringFieldUpdateOperationsInput | string | null
@@ -91198,7 +91897,8 @@ export namespace Prisma {
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
     status?: EnumDepositDetailStatusFieldUpdateOperationsInput | $Enums.DepositDetailStatus
-    transactionId?: BigIntFieldUpdateOperationsInput | bigint | number
+    userId?: BigIntFieldUpdateOperationsInput | bigint | number
+    transactionId?: NullableBigIntFieldUpdateOperationsInput | bigint | number | null
     methodType?: EnumDepositMethodTypeFieldUpdateOperationsInput | $Enums.DepositMethodType
     provider?: EnumPaymentProviderFieldUpdateOperationsInput | $Enums.PaymentProvider
     providerPaymentId?: NullableStringFieldUpdateOperationsInput | string | null

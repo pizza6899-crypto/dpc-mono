@@ -14,7 +14,6 @@ import {
 import {
   ApiTags,
   ApiOperation,
-  ApiResponse,
   ApiBearerAuth,
   ApiParam,
 } from '@nestjs/swagger';
@@ -31,8 +30,21 @@ import { CurrentUser } from 'src/common/auth/decorators/current-user.decorator';
 import type { CurrentUserWithSession } from 'src/common/auth/decorators/current-user.decorator';
 import { RequestClientInfoParam } from 'src/common/auth/decorators/request-info.decorator';
 import { AuditLog } from 'src/modules/audit-log/infrastructure';
+import { Prisma } from '@repo/database';
 import { LogType } from 'src/modules/audit-log/domain';
 import { GetAvailableDepositMethodsService } from '../../application/get-available-deposit-methods.service';
+import { GetBankDepositAddressService } from '../../application/get-bank-deposit-address.service';
+import { GetCryptoDepositAddressService } from '../../application/get-crypto-deposit-address.service';
+import {
+  GetCryptoDepositAddressRequestDto,
+  CryptoDepositAddressResponseDto,
+  GetBankDepositAddressRequestDto,
+  BankDepositAddressResponseDto,
+  UserDepositResponseDto,
+  CancelDepositResponseDto,
+} from '../../dtos/deposit-address-user.dto';
+import { GetAvailableDepositMethodsResponseDto } from '../../dtos/deposit-method-user.dto';
+import { GetDepositsQueryDto } from '../../dtos/get-deposits-query.dto';
 
 @ApiTags('입금 (Deposit)')
 @Controller('deposits')
@@ -41,6 +53,8 @@ import { GetAvailableDepositMethodsService } from '../../application/get-availab
 export class DepositController {
   constructor(
     private readonly getAvailableMethodsService: GetAvailableDepositMethodsService,
+    private readonly getCryptoDepositAddressService: GetCryptoDepositAddressService,
+    private readonly getBankDepositAddressService: GetBankDepositAddressService,
   ) { }
 
   // ============================================
@@ -54,7 +68,7 @@ export class DepositController {
     description:
       'Retrieve list of available deposit methods (crypto, bank transfer). (사용 가능한 입금 수단 목록을 조회합니다.)',
   })
-  @ApiStandardResponse(Object, {
+  @ApiStandardResponse(GetAvailableDepositMethodsResponseDto, {
     status: 200,
     description: 'Deposit methods retrieved successfully / 입금 수단 조회 성공',
   })
@@ -66,7 +80,7 @@ export class DepositController {
   async getAvailableMethods(
     @CurrentUser() user: CurrentUserWithSession,
     @RequestClientInfoParam() requestInfo: RequestClientInfo,
-  ) {
+  ): Promise<GetAvailableDepositMethodsResponseDto> {
     return this.getAvailableMethodsService.execute();
   }
 
@@ -81,7 +95,7 @@ export class DepositController {
     description:
       'Request a cryptocurrency deposit address for the specified currency and network. (지정된 통화 및 네트워크에 대한 암호화폐 입금 주소를 요청합니다.)',
   })
-  @ApiStandardResponse(Object, {
+  @ApiStandardResponse(CryptoDepositAddressResponseDto, {
     status: 200,
     description: 'Crypto deposit address retrieved successfully / 암호화폐 입금 주소 조회 성공',
   })
@@ -92,15 +106,22 @@ export class DepositController {
     extractMetadata: (args) => ({
       currency: args[0]?.currency,
       network: args[0]?.network,
+      amount: args[0]?.amount,
     }),
   })
   async getCryptoDepositAddress(
-    @Query('currency') currency: string,
-    @Query('network') network: string,
+    @Query() dto: GetCryptoDepositAddressRequestDto,
     @CurrentUser() user: CurrentUserWithSession,
     @RequestClientInfoParam() requestInfo: RequestClientInfo,
-  ) {
-    throw new NotImplementedException('서비스 구현 필요');
+  ): Promise<CryptoDepositAddressResponseDto> {
+    return await this.getCryptoDepositAddressService.execute({
+      symbol: dto.currency,
+      network: dto.network,
+      userId: user.id,
+      amount: dto.amount ? new Prisma.Decimal(dto.amount) : undefined,
+      ipAddress: requestInfo.ip,
+      deviceFingerprint: requestInfo.userAgent,
+    });
   }
 
   @Get('bank/address')
@@ -110,7 +131,7 @@ export class DepositController {
     description:
       'Request bank account information for bank transfer deposit. (계좌 이체 입금을 위한 은행 계좌 정보를 요청합니다.)',
   })
-  @ApiStandardResponse(Object, {
+  @ApiStandardResponse(BankDepositAddressResponseDto, {
     status: 200,
     description: 'Bank deposit account retrieved successfully / 계좌 이체 입금 계좌 정보 조회 성공',
   })
@@ -120,14 +141,21 @@ export class DepositController {
     category: 'DEPOSIT',
     extractMetadata: (args) => ({
       currency: args[0]?.currency,
+      amount: args[0]?.amount,
     }),
   })
   async getBankDepositAddress(
-    @Query('currency') currency: string,
+    @Query() dto: GetBankDepositAddressRequestDto,
     @CurrentUser() user: CurrentUserWithSession,
     @RequestClientInfoParam() requestInfo: RequestClientInfo,
-  ) {
-    throw new NotImplementedException('서비스 구현 필요');
+  ): Promise<BankDepositAddressResponseDto> {
+    return await this.getBankDepositAddressService.execute({
+      currency: dto.currency,
+      userId: user.id,
+      amount: dto.amount ? new Prisma.Decimal(dto.amount) : undefined,
+      ipAddress: requestInfo.ip,
+      deviceFingerprint: requestInfo.userAgent,
+    });
   }
 
   // ============================================
@@ -142,7 +170,7 @@ export class DepositController {
     description:
       'Retrieve my deposit history with pagination. (내 입금 내역을 페이징하여 조회합니다.)',
   })
-  @ApiPaginatedResponse(Object, {
+  @ApiPaginatedResponse(UserDepositResponseDto, {
     status: 200,
     description: 'Deposit list retrieved successfully / 입금 목록 조회 성공',
   })
@@ -152,14 +180,14 @@ export class DepositController {
     category: 'DEPOSIT',
   })
   async getMyDeposits(
-    @Query() query: any,
+    @Query() query: GetDepositsQueryDto,
     @CurrentUser() user: CurrentUserWithSession,
     @RequestClientInfoParam() requestInfo: RequestClientInfo,
-  ): Promise<PaginatedData<any>> {
+  ): Promise<PaginatedData<UserDepositResponseDto>> {
     throw new NotImplementedException('서비스 구현 필요');
   }
 
-  @Get(':id')
+  @Get(':uid')
   @HttpCode(HttpStatus.OK)
   @ApiOperation({
     summary: 'Get deposit detail / 입금 상세 조회',
@@ -167,11 +195,11 @@ export class DepositController {
       'Retrieve detailed information of a specific deposit. (특정 입금의 상세 정보를 조회합니다.)',
   })
   @ApiParam({
-    name: 'id',
-    description: 'DepositDetail ID / 입금 상세 ID',
+    name: 'uid',
+    description: 'DepositDetail UID / 입금 상세 UID',
     type: String,
   })
-  @ApiStandardResponse(Object, {
+  @ApiStandardResponse(UserDepositResponseDto, {
     status: 200,
     description: 'Deposit detail retrieved successfully / 입금 상세 조회 성공',
   })
@@ -180,14 +208,14 @@ export class DepositController {
     action: 'VIEW_DEPOSIT_DETAIL',
     category: 'DEPOSIT',
     extractMetadata: (args) => ({
-      depositId: args[0]?.id || args[0],
+      depositUid: args[0],
     }),
   })
   async getDepositDetail(
-    @Param('id') id: string,
+    @Param('uid') uid: string,
     @CurrentUser() user: CurrentUserWithSession,
     @RequestClientInfoParam() requestInfo: RequestClientInfo,
-  ) {
+  ): Promise<UserDepositResponseDto> {
     throw new NotImplementedException('서비스 구현 필요');
   }
 
@@ -220,7 +248,7 @@ export class DepositController {
     throw new NotImplementedException('서비스 구현 필요');
   }
 
-  @Delete(':id')
+  @Delete(':uid')
   @HttpCode(HttpStatus.OK)
   @ApiOperation({
     summary: 'Cancel deposit request / 입금 신청 취소',
@@ -228,11 +256,11 @@ export class DepositController {
       'Cancel a pending deposit request. (대기 중인 입금 요청을 취소합니다.)',
   })
   @ApiParam({
-    name: 'id',
-    description: 'DepositDetail ID / 입금 상세 ID',
+    name: 'uid',
+    description: 'DepositDetail UID / 입금 상세 UID',
     type: String,
   })
-  @ApiStandardResponse(Object, {
+  @ApiStandardResponse(CancelDepositResponseDto, {
     status: 200,
     description: 'Deposit request cancelled successfully / 입금 신청 취소 성공',
   })
@@ -241,15 +269,14 @@ export class DepositController {
     action: 'CANCEL_DEPOSIT_REQUEST',
     category: 'DEPOSIT',
     extractMetadata: (args) => ({
-      depositId: args[0]?.id || args[0],
+      depositUid: args[0],
     }),
   })
   async cancelDeposit(
-    @Param('id') id: string,
+    @Param('uid') uid: string,
     @CurrentUser() user: CurrentUserWithSession,
     @RequestClientInfoParam() requestInfo: RequestClientInfo,
-  ) {
+  ): Promise<CancelDepositResponseDto> {
     throw new NotImplementedException('서비스 구현 필요');
   }
 }
-

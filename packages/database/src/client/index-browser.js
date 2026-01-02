@@ -682,6 +682,7 @@ exports.Prisma.DepositDetailScalarFieldEnum = {
   createdAt: 'createdAt',
   updatedAt: 'updatedAt',
   status: 'status',
+  userId: 'userId',
   transactionId: 'transactionId',
   methodType: 'methodType',
   provider: 'provider',

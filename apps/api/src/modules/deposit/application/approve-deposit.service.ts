@@ -2,7 +2,7 @@
 import { Inject, Injectable, Logger } from '@nestjs/common';
 import { Transactional } from '@nestjs-cls/transactional';
 import { Prisma } from '@repo/database';
-import { TransactionStatus } from '@repo/database';
+import { TransactionStatus, TransactionType } from '@repo/database';
 import type { RequestClientInfo } from 'src/common/http/types';
 import { ApproveDepositResponseDto } from '../dtos/admin-deposit-response.dto';
 import { UpdateUserBalanceAdminService } from '../../wallet/application/update-user-balance-admin.service';
@@ -23,7 +23,7 @@ interface ApproveDepositParams {
   requestInfo: RequestClientInfo;
 }
 
-interface ApproveDepositResult extends ApproveDepositResponseDto {}
+interface ApproveDepositResult extends ApproveDepositResponseDto { }
 
 @Injectable()
 export class ApproveDepositService {
@@ -34,7 +34,7 @@ export class ApproveDepositService {
     private readonly depositRepository: DepositDetailRepositoryPort,
     private readonly updateUserBalanceAdminService: UpdateUserBalanceAdminService,
     private readonly userStatsService: UserStatsService,
-  ) {}
+  ) { }
 
   @Transactional()
   async execute(params: ApproveDepositParams): Promise<ApproveDepositResult> {
@@ -47,52 +47,47 @@ export class ApproveDepositService {
       BankConfig: true,
     });
 
-    // 2. 엔티티 비즈니스 로직 실행 (승인 처리)
-    deposit.approve(actuallyPaid, adminId, transactionHash, memo);
-
-    // 3. Transaction의 userId 조회
-    const userId = await this.depositRepository.getTransactionUserId(
-      deposit.transactionId,
-    );
-
-    if (!userId) {
-      throw new Error('Transaction information not found');
+    // 2. 엔티티 비즈니스 로직 실행 전 검증 (이미 처리된 경우 등)
+    if (!deposit.canBeProcessed()) {
+      throw new Error(`Deposit ${id} already processed with status ${deposit.status}`);
     }
 
-    // 4. 잔액 업데이트
-
+    // 3. 잔액 업데이트
     const balanceUpdate = await this.updateUserBalanceAdminService.execute({
-      userId,
+      userId: deposit.userId,
       currency: deposit.depositCurrency,
       balanceType: BalanceType.MAIN,
       operation: UpdateOperation.ADD,
       amount: actuallyPaid,
     });
 
-    // 5. DepositDetail 상태 업데이트 (엔티티의 변경사항 반영)
+    // 4. Transaction 생성 (지연 생성)
+    // 기존에 트랜잭션이 없었다면 새로 생성, 있었다면 상태만 업데이트 (현 시나리오는 지연 생성이므로 새로 생성)
+    let transactionId = deposit.transactionId;
+    if (!transactionId) {
+      transactionId = await this.depositRepository.createTransaction({
+        userId: deposit.userId,
+        type: TransactionType.DEPOSIT,
+        status: TransactionStatus.COMPLETED,
+        currency: deposit.depositCurrency,
+        amount: actuallyPaid,
+        beforeAmount: balanceUpdate.beforeMainBalance,
+        afterAmount: balanceUpdate.afterMainBalance,
+      });
+    } else {
+      // 만약 이미 트랜잭션이 있다면 (예: CONFIRMING 상태에서 미리 생성된 경우 - 현재는 없음)
+      // TODO: 기존 트랜잭션 상태 업데이트 로직 필요 시 추가
+    }
+
+    // 5. 엔티티 승인 처리 (상태 변경 및 트랜잭션 링크)
+    deposit.approve(actuallyPaid, adminId, transactionHash, memo, transactionId);
+
+    // 6. DepositDetail 상태 업데이트 (엔티티의 변경사항 반영)
     await this.depositRepository.update(deposit);
-
-    // 6. UserStats 업데이트
-    // TODO: UserStatsService가 tx를 받는지 확인 필요
-    // await this.userStatsService.updateDepositStats(
-    //   userId,
-    //   deposit.depositCurrency,
-    //   actuallyPaid,
-    // );
-
-    // 7. Transaction 상태 업데이트
-    // TODO: Transaction Repository 또는 서비스 필요
-    // await transactionService.updateStatus(...)
-
-    // 8. BankConfig 통계 업데이트
-    // TODO: BankConfig Repository 또는 서비스 필요
-    // if (deposit.bankConfigId) {
-    //   await bankConfigService.incrementStats(...)
-    // }
 
     return {
       success: true,
-      transactionId: deposit.transactionId.toString(),
+      transactionId: transactionId.toString(),
       actuallyPaid: actuallyPaid.toString(),
       bonusAmount: '0', // TODO: 보너스 계산 로직 추가
     };

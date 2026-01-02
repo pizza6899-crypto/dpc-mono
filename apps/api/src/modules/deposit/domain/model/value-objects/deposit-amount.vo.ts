@@ -13,7 +13,22 @@ export class DepositAmount {
     public readonly feeAmount: Prisma.Decimal | null,
     public readonly feeCurrency: string | null,
     public readonly feePaidBy: FeePaidByType | null,
-  ) {}
+  ) { }
+
+  static create(params: {
+    requestedAmount: Prisma.Decimal;
+    feeAmount?: Prisma.Decimal;
+    feeCurrency?: string;
+    feePaidBy?: FeePaidByType;
+  }): DepositAmount {
+    return new DepositAmount(
+      params.requestedAmount,
+      null,
+      params.feeAmount ?? null,
+      params.feeCurrency ?? null,
+      params.feePaidBy ?? null,
+    );
+  }
 
   static fromPersistence(data: {
     requestedAmount: Prisma.Decimal;

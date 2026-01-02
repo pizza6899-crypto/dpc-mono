@@ -6,6 +6,8 @@ import type { TransactionalAdapterPrisma } from '@nestjs-cls/transactional-adapt
 import { DepositDetail, DepositNotFoundException } from '../domain';
 import type { DepositDetailRepositoryPort } from '../ports/out/deposit-detail.repository.port';
 import { DepositDetailMapper } from './deposit-detail.mapper';
+import { TransactionStatus, TransactionType, ExchangeCurrencyCode, Prisma } from '@repo/database';
+import { generateUid } from 'src/utils/id.util';
 
 /**
  * DepositDetail Repository Implementation
@@ -18,7 +20,7 @@ export class DepositDetailRepository implements DepositDetailRepositoryPort {
     @InjectTransaction()
     private readonly tx: Transaction<TransactionalAdapterPrisma>,
     private readonly mapper: DepositDetailMapper,
-  ) {}
+  ) { }
 
   async findById(
     id: bigint,
@@ -73,6 +75,34 @@ export class DepositDetailRepository implements DepositDetailRepositoryPort {
     });
 
     return transaction?.userId ?? null;
+  }
+
+  async createTransaction(data: {
+    userId: bigint;
+    type: TransactionType;
+    status: TransactionStatus;
+    currency: ExchangeCurrencyCode;
+    amount: Prisma.Decimal;
+    beforeAmount: Prisma.Decimal;
+    afterAmount: Prisma.Decimal;
+  }): Promise<bigint> {
+    const result = await this.tx.transaction.create({
+      data,
+    });
+    return result.id;
+  }
+
+  async create(deposit: DepositDetail): Promise<DepositDetail> {
+    const data = this.mapper.toPrismaCreate(deposit);
+    const result = await this.tx.depositDetail.create({
+      data: {
+        ...data,
+        uid: generateUid(),
+        transactionId: null, // 초기 생성 시에는 트랜잭션 없음
+      },
+    });
+
+    return this.mapper.toDomain(result);
   }
 }
 

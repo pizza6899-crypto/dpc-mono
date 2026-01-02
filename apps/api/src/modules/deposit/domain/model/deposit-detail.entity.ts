@@ -22,9 +22,10 @@ import { DepositAlreadyProcessedException } from '../deposit.exception';
  */
 export class DepositDetail {
   private constructor(
-    public readonly id: bigint,
+    public readonly id: bigint | null,
     public readonly uid: string,
-    public readonly transactionId: bigint,
+    public readonly userId: bigint,
+    private _transactionId: bigint | null,
     private _status: DepositDetailStatus,
     private method: DepositMethod,
     private amount: DepositAmount,
@@ -47,7 +48,57 @@ export class DepositDetail {
     private _updatedAt: Date,
     private _confirmedAt: Date | null,
     private _failedAt: Date | null,
-  ) {}
+  ) { }
+
+  /**
+   * 새로운 입금 요청 엔티티 생성
+   */
+  static create(params: {
+    uid: string;
+    userId: bigint;
+    depositCurrency: ExchangeCurrencyCode;
+    method: DepositMethod;
+    amount: DepositAmount;
+    bankConfigId?: bigint | null;
+    cryptoConfigId?: bigint | null;
+    walletAddress?: string | null;
+    walletAddressExtraId?: string | null;
+    depositNetwork?: string | null;
+    depositorName?: string | null;
+    providerPaymentId?: string | null;
+    ipAddress?: string | null;
+    deviceFingerprint?: string | null;
+    providerMetadata?: Record<string, any> | null;
+  }): DepositDetail {
+    return new DepositDetail(
+      null,
+      params.uid,
+      params.userId,
+      null,
+      DepositDetailStatus.PENDING,
+      params.method,
+      params.amount,
+      params.depositCurrency,
+      params.walletAddress ?? null,
+      params.walletAddressExtraId ?? null,
+      params.depositNetwork ?? null,
+      params.depositorName ?? null,
+      params.providerPaymentId ?? null,
+      null,
+      params.bankConfigId ?? null,
+      params.cryptoConfigId ?? null,
+      null,
+      null,
+      params.ipAddress ?? null,
+      params.deviceFingerprint ?? null,
+      null,
+      params.providerMetadata ?? null,
+      new Date(),
+      new Date(),
+      null,
+      null,
+    );
+  }
 
   /**
    * DB에서 조회한 데이터로부터 엔티티 생성
@@ -55,7 +106,8 @@ export class DepositDetail {
   static fromPersistence(data: {
     id: bigint;
     uid: string;
-    transactionId: bigint;
+    userId: bigint;
+    transactionId: bigint | null;
     status: DepositDetailStatus;
     methodType: any;
     provider: any;
@@ -87,6 +139,7 @@ export class DepositDetail {
     return new DepositDetail(
       data.id,
       data.uid,
+      data.userId,
       data.transactionId,
       data.status,
       DepositMethod.fromPersistence({
@@ -126,9 +179,10 @@ export class DepositDetail {
    * Domain 엔티티를 Persistence 레이어로 변환
    */
   toPersistence(): {
-    id: bigint;
+    id: bigint | null;
     uid: string;
-    transactionId: bigint;
+    userId: bigint;
+    transactionId: bigint | null;
     status: DepositDetailStatus;
     methodType: any;
     provider: any;
@@ -163,6 +217,7 @@ export class DepositDetail {
     return {
       id: this.id,
       uid: this.uid,
+      userId: this.userId,
       transactionId: this.transactionId,
       status: this._status,
       methodType: methodData.methodType,
@@ -296,6 +351,10 @@ export class DepositDetail {
     return this._transactionHash;
   }
 
+  get transactionId(): bigint | null {
+    return this._transactionId;
+  }
+
   get processedBy(): bigint | null {
     return this._processedBy;
   }
@@ -333,9 +392,15 @@ export class DepositDetail {
     adminId: bigint,
     transactionHash?: string | null,
     adminNote?: string | null,
+    transactionId?: bigint | null,
   ): void {
+    if (!this.id) throw new Error('Entity must be persisted before approval');
     if (!this.canBeProcessed()) {
       throw new DepositAlreadyProcessedException(this.id, this._status);
+    }
+
+    if (transactionId) {
+      this._transactionId = transactionId;
     }
 
     // 실제 입금 금액 설정
@@ -363,6 +428,7 @@ export class DepositDetail {
    * @throws {DepositAlreadyProcessedException} 이미 처리된 입금인 경우
    */
   reject(failureReason: string, adminId: bigint): void {
+    if (!this.id) throw new Error('Entity must be persisted before rejection');
     if (!this.canBeProcessed()) {
       throw new DepositAlreadyProcessedException(this.id, this._status);
     }
