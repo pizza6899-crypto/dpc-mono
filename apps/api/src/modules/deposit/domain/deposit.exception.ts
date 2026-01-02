@@ -61,6 +61,24 @@ export class DepositAlreadyProcessedException extends DepositException {
 }
 
 /**
+ * 이미 대기 중인 입금 신청이 있을 때 발생하는 예외
+ *
+ * @errorCode MessageCode.DEPOSIT_REQUEST_ALREADY_EXISTS
+ * @httpStatus 409
+ */
+export class PendingDepositExistsException extends DepositException {
+  constructor(userId: bigint | string) {
+    const idStr = typeof userId === 'bigint' ? userId.toString() : userId;
+    super(
+      `Pending deposit request already exists for user: ${idStr}`,
+      MessageCode.DEPOSIT_REQUEST_ALREADY_EXISTS,
+      HttpStatus.CONFLICT,
+    );
+    this.name = 'PendingDepositExistsException';
+  }
+}
+
+/**
  * Deposit 상태가 유효하지 않을 때 발생하는 예외
  *
  * @errorCode MessageCode.DEPOSIT_INVALID_STATUS
@@ -155,6 +173,23 @@ export class BankConfigNotFoundException extends DepositException {
 }
 
 /**
+ * 활성화된 BankConfig가 없을 때 발생하는 예외
+ *
+ * @errorCode MessageCode.BANK_CONFIG_NOT_FOUND
+ * @httpStatus 404
+ */
+export class NoActiveBankConfigException extends DepositException {
+  constructor(currency: string) {
+    super(
+      `No active bank accounts found for currency: ${currency}`,
+      MessageCode.BANK_CONFIG_NOT_FOUND,
+      HttpStatus.NOT_FOUND,
+    );
+    this.name = 'NoActiveBankConfigException';
+  }
+}
+
+/**
  * BankConfig가 비활성화되어 있을 때 발생하는 예외
  *
  * @errorCode MessageCode.BANK_CONFIG_INACTIVE
@@ -205,5 +240,40 @@ export class CryptoConfigInactiveException extends DepositException {
       HttpStatus.BAD_REQUEST,
     );
     this.name = 'CryptoConfigInactiveException';
+  }
+}
+
+/**
+ * 암호화폐 설정을 사용할 수 없을 때 발생하는 예외 (미지원 통화/네트워크 혹은 비활성화)
+ *
+ * @errorCode MessageCode.CRYPTO_CONFIG_NOT_FOUND
+ * @httpStatus 400
+ */
+export class UnavailableCryptoConfigException extends DepositException {
+  constructor(symbol: string, network: string) {
+    super(
+      `Crypto deposit not available for ${symbol} on ${network}`,
+      MessageCode.CRYPTO_CONFIG_NOT_FOUND,
+      HttpStatus.BAD_REQUEST,
+    );
+    this.name = 'UnavailableCryptoConfigException';
+  }
+}
+
+/**
+ * 선택한 프로모션이 유효하지 않을 때 발생하는 예외
+ * 
+ * @errorCode MessageCode.PROMOTION_NOT_FOUND
+ * @httpStatus 400
+ */
+export class InvalidPromotionSelectionException extends DepositException {
+  constructor(promotionId: bigint | string | number) {
+    const idStr = promotionId.toString();
+    super(
+      `Invalid or ineligible promotion selected: ${idStr}`,
+      MessageCode.PROMOTION_NOT_FOUND,
+      HttpStatus.BAD_REQUEST,
+    );
+    this.name = 'InvalidPromotionSelectionException';
   }
 }

@@ -1,4 +1,4 @@
-import { Injectable, Inject, BadRequestException, ConflictException } from '@nestjs/common';
+import { Injectable, Inject } from '@nestjs/common';
 import { Prisma, DepositMethodType, ExchangeCurrencyCode, PaymentProvider } from '@repo/database';
 import { createId } from '@paralleldrive/cuid2';
 import {
@@ -9,7 +9,14 @@ import type {
     DepositDetailRepositoryPort,
     CryptoConfigRepositoryPort,
 } from '../ports/out';
-import { DepositDetail, DepositMethod, DepositAmount } from '../domain';
+import {
+    DepositDetail,
+    DepositMethod,
+    DepositAmount,
+    PendingDepositExistsException,
+    InvalidPromotionSelectionException,
+    UnavailableCryptoConfigException,
+} from '../domain';
 import { CreateDepositResponseDto } from '../dtos/create-deposit-response.dto';
 import { CreateCryptoDepositRequestDto } from '../dtos/create-crypto-deposit-request.dto';
 import { CheckEligiblePromotionsService } from '../../promotion/application/check-eligible-promotions.service';
@@ -44,9 +51,7 @@ export class CreateCryptoDepositService {
         // 0. 중복 입금 신청 확인 (Pending 상태인 입금이 있으면 차단)
         const hasPendingDeposit = await this.depositRepository.existsPendingByUserId(userId);
         if (hasPendingDeposit) {
-            throw new ConflictException(
-                'You already have a pending deposit request. Please complete or cancel it first.',
-            );
+            throw new PendingDepositExistsException(userId);
         }
 
         // 1. 프로모션 유효성 검사
@@ -59,7 +64,7 @@ export class CreateCryptoDepositService {
 
             const isEligible = eligiblePromotions.some((p) => Number(p.id) === Number(depositPromotionId));
             if (!isEligible) {
-                throw new BadRequestException('Invalid or ineligible promotion selected.');
+                throw new InvalidPromotionSelectionException(depositPromotionId);
             }
         }
 
@@ -70,9 +75,7 @@ export class CreateCryptoDepositService {
         );
 
         if (!cryptoConfig || !cryptoConfig.isActive) {
-            throw new BadRequestException(
-                `Crypto deposit not available for ${payCurrency} on ${payNetwork}`,
-            );
+            throw new UnavailableCryptoConfigException(payCurrency, payNetwork);
         }
 
         // TODO: 주소 생성 로직 (Wallet Module 연동 필요)

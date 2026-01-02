@@ -1,4 +1,4 @@
-import { Injectable, Inject, BadRequestException, NotFoundException, ConflictException } from '@nestjs/common';
+import { Injectable, Inject } from '@nestjs/common';
 import { Prisma, DepositMethodType, ExchangeCurrencyCode, PaymentProvider } from '@repo/database';
 import { createId } from '@paralleldrive/cuid2';
 import {
@@ -9,7 +9,15 @@ import type {
     DepositDetailRepositoryPort,
     BankConfigRepositoryPort,
 } from '../ports/out';
-import { DepositDetail, DepositMethod, DepositAmount } from '../domain';
+import {
+    DepositDetail,
+    DepositMethod,
+    DepositAmount,
+    PendingDepositExistsException,
+    InvalidPromotionSelectionException,
+    NoActiveBankConfigException,
+    InvalidDepositAmountException,
+} from '../domain';
 import { CreateDepositResponseDto } from '../dtos/create-deposit-response.dto';
 import { CreateBankDepositRequestDto } from '../dtos/create-bank-deposit-request.dto';
 import { CheckEligiblePromotionsService } from '../../promotion/application/check-eligible-promotions.service';
@@ -44,9 +52,7 @@ export class CreateBankDepositService {
         // 0. 중복 입금 신청 확인
         const hasPendingDeposit = await this.depositRepository.existsPendingByUserId(userId);
         if (hasPendingDeposit) {
-            throw new ConflictException(
-                'You already have a pending deposit request. Please complete or cancel it first.',
-            );
+            throw new PendingDepositExistsException(userId);
         }
 
         // 1. 프로모션 유효성 검사
@@ -59,7 +65,7 @@ export class CreateBankDepositService {
 
             const isEligible = eligiblePromotions.some((p) => Number(p.id) === Number(depositPromotionId));
             if (!isEligible) {
-                throw new BadRequestException('Invalid or ineligible promotion selected.');
+                throw new InvalidPromotionSelectionException(depositPromotionId);
             }
         }
 
@@ -67,7 +73,7 @@ export class CreateBankDepositService {
         const activeBanks = await this.bankConfigRepository.listActive(payCurrency as ExchangeCurrencyCode);
 
         if (activeBanks.length === 0) {
-            throw new NotFoundException(`No active bank accounts found for ${payCurrency}`);
+            throw new NoActiveBankConfigException(payCurrency);
         }
 
         // 로드 밸런싱/우선순위 로직 (여기선 단순 첫 번째 선택)
@@ -75,8 +81,9 @@ export class CreateBankDepositService {
         const decimalAmount = new Prisma.Decimal(amount);
 
         if (!selectedBank.isAmountValid(decimalAmount)) {
-            throw new BadRequestException(
-                `Amount must be between ${selectedBank.minAmount} and ${selectedBank.maxAmount ?? 'unlimited'}`,
+            throw new InvalidDepositAmountException(
+                amount,
+                `Must be between ${selectedBank.minAmount} and ${selectedBank.maxAmount ?? 'unlimited'}`,
             );
         }
 
