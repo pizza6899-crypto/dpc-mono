@@ -206,6 +206,9 @@ export type LoginAttempt = $Result.DefaultSelection<Prisma.$LoginAttemptPayload>
  *  * - 암호화폐 지갑 입금 및 계좌 이체 입금 지원
  *  * - 입금 상태 추적 (대기, 확인 중, 완료, 실패 등)
  *  * - 프로바이더별 입금 정보 관리
+ *  * - 신청 금액과 실제 입금 금액 분리 추적
+ *  * - 관리자 수동 처리 추적 (MANUAL 프로바이더용)
+ *  * - 보안 및 어뷰징 방지 (핵심 정보만 저장, 상세 정보는 ActivityLog 참조)
  *  * - 수수료 및 실제 입금 금액 추적
  */
 export type DepositDetail = $Result.DefaultSelection<Prisma.$DepositDetailPayload>
@@ -51024,7 +51027,9 @@ export namespace Prisma {
   export type DepositDetailAvgAggregateOutputType = {
     id: number | null
     transactionId: number | null
+    requestedAmount: Decimal | null
     actuallyPaid: Decimal | null
+    processedBy: number | null
     feeAmount: Decimal | null
     bankAccountId: number | null
   }
@@ -51032,13 +51037,16 @@ export namespace Prisma {
   export type DepositDetailSumAggregateOutputType = {
     id: bigint | null
     transactionId: bigint | null
+    requestedAmount: Decimal | null
     actuallyPaid: Decimal | null
+    processedBy: bigint | null
     feeAmount: Decimal | null
     bankAccountId: number | null
   }
 
   export type DepositDetailMinAggregateOutputType = {
     id: bigint | null
+    uid: string | null
     confirmedAt: Date | null
     failedAt: Date | null
     createdAt: Date | null
@@ -51057,7 +51065,12 @@ export namespace Prisma {
     accountHolder: string | null
     depositorName: string | null
     transactionHash: string | null
+    requestedAmount: Decimal | null
     actuallyPaid: Decimal | null
+    processedBy: bigint | null
+    adminNote: string | null
+    ipAddress: string | null
+    deviceFingerprint: string | null
     feeAmount: Decimal | null
     feeCurrency: string | null
     feePaidBy: $Enums.FeePaidByType | null
@@ -51067,6 +51080,7 @@ export namespace Prisma {
 
   export type DepositDetailMaxAggregateOutputType = {
     id: bigint | null
+    uid: string | null
     confirmedAt: Date | null
     failedAt: Date | null
     createdAt: Date | null
@@ -51085,7 +51099,12 @@ export namespace Prisma {
     accountHolder: string | null
     depositorName: string | null
     transactionHash: string | null
+    requestedAmount: Decimal | null
     actuallyPaid: Decimal | null
+    processedBy: bigint | null
+    adminNote: string | null
+    ipAddress: string | null
+    deviceFingerprint: string | null
     feeAmount: Decimal | null
     feeCurrency: string | null
     feePaidBy: $Enums.FeePaidByType | null
@@ -51095,6 +51114,7 @@ export namespace Prisma {
 
   export type DepositDetailCountAggregateOutputType = {
     id: number
+    uid: number
     confirmedAt: number
     failedAt: number
     createdAt: number
@@ -51113,7 +51133,12 @@ export namespace Prisma {
     accountHolder: number
     depositorName: number
     transactionHash: number
+    requestedAmount: number
     actuallyPaid: number
+    processedBy: number
+    adminNote: number
+    ipAddress: number
+    deviceFingerprint: number
     feeAmount: number
     feeCurrency: number
     feePaidBy: number
@@ -51127,7 +51152,9 @@ export namespace Prisma {
   export type DepositDetailAvgAggregateInputType = {
     id?: true
     transactionId?: true
+    requestedAmount?: true
     actuallyPaid?: true
+    processedBy?: true
     feeAmount?: true
     bankAccountId?: true
   }
@@ -51135,13 +51162,16 @@ export namespace Prisma {
   export type DepositDetailSumAggregateInputType = {
     id?: true
     transactionId?: true
+    requestedAmount?: true
     actuallyPaid?: true
+    processedBy?: true
     feeAmount?: true
     bankAccountId?: true
   }
 
   export type DepositDetailMinAggregateInputType = {
     id?: true
+    uid?: true
     confirmedAt?: true
     failedAt?: true
     createdAt?: true
@@ -51160,7 +51190,12 @@ export namespace Prisma {
     accountHolder?: true
     depositorName?: true
     transactionHash?: true
+    requestedAmount?: true
     actuallyPaid?: true
+    processedBy?: true
+    adminNote?: true
+    ipAddress?: true
+    deviceFingerprint?: true
     feeAmount?: true
     feeCurrency?: true
     feePaidBy?: true
@@ -51170,6 +51205,7 @@ export namespace Prisma {
 
   export type DepositDetailMaxAggregateInputType = {
     id?: true
+    uid?: true
     confirmedAt?: true
     failedAt?: true
     createdAt?: true
@@ -51188,7 +51224,12 @@ export namespace Prisma {
     accountHolder?: true
     depositorName?: true
     transactionHash?: true
+    requestedAmount?: true
     actuallyPaid?: true
+    processedBy?: true
+    adminNote?: true
+    ipAddress?: true
+    deviceFingerprint?: true
     feeAmount?: true
     feeCurrency?: true
     feePaidBy?: true
@@ -51198,6 +51239,7 @@ export namespace Prisma {
 
   export type DepositDetailCountAggregateInputType = {
     id?: true
+    uid?: true
     confirmedAt?: true
     failedAt?: true
     createdAt?: true
@@ -51216,7 +51258,12 @@ export namespace Prisma {
     accountHolder?: true
     depositorName?: true
     transactionHash?: true
+    requestedAmount?: true
     actuallyPaid?: true
+    processedBy?: true
+    adminNote?: true
+    ipAddress?: true
+    deviceFingerprint?: true
     feeAmount?: true
     feeCurrency?: true
     feePaidBy?: true
@@ -51314,6 +51361,7 @@ export namespace Prisma {
 
   export type DepositDetailGroupByOutputType = {
     id: bigint
+    uid: string
     confirmedAt: Date | null
     failedAt: Date | null
     createdAt: Date
@@ -51332,7 +51380,12 @@ export namespace Prisma {
     accountHolder: string | null
     depositorName: string | null
     transactionHash: string | null
+    requestedAmount: Decimal
     actuallyPaid: Decimal | null
+    processedBy: bigint | null
+    adminNote: string | null
+    ipAddress: string | null
+    deviceFingerprint: string | null
     feeAmount: Decimal | null
     feeCurrency: string | null
     feePaidBy: $Enums.FeePaidByType | null
@@ -51362,6 +51415,7 @@ export namespace Prisma {
 
   export type DepositDetailSelect<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetSelect<{
     id?: boolean
+    uid?: boolean
     confirmedAt?: boolean
     failedAt?: boolean
     createdAt?: boolean
@@ -51380,7 +51434,12 @@ export namespace Prisma {
     accountHolder?: boolean
     depositorName?: boolean
     transactionHash?: boolean
+    requestedAmount?: boolean
     actuallyPaid?: boolean
+    processedBy?: boolean
+    adminNote?: boolean
+    ipAddress?: boolean
+    deviceFingerprint?: boolean
     feeAmount?: boolean
     feeCurrency?: boolean
     feePaidBy?: boolean
@@ -51395,6 +51454,7 @@ export namespace Prisma {
 
   export type DepositDetailSelectCreateManyAndReturn<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetSelect<{
     id?: boolean
+    uid?: boolean
     confirmedAt?: boolean
     failedAt?: boolean
     createdAt?: boolean
@@ -51413,7 +51473,12 @@ export namespace Prisma {
     accountHolder?: boolean
     depositorName?: boolean
     transactionHash?: boolean
+    requestedAmount?: boolean
     actuallyPaid?: boolean
+    processedBy?: boolean
+    adminNote?: boolean
+    ipAddress?: boolean
+    deviceFingerprint?: boolean
     feeAmount?: boolean
     feeCurrency?: boolean
     feePaidBy?: boolean
@@ -51426,6 +51491,7 @@ export namespace Prisma {
 
   export type DepositDetailSelectUpdateManyAndReturn<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetSelect<{
     id?: boolean
+    uid?: boolean
     confirmedAt?: boolean
     failedAt?: boolean
     createdAt?: boolean
@@ -51444,7 +51510,12 @@ export namespace Prisma {
     accountHolder?: boolean
     depositorName?: boolean
     transactionHash?: boolean
+    requestedAmount?: boolean
     actuallyPaid?: boolean
+    processedBy?: boolean
+    adminNote?: boolean
+    ipAddress?: boolean
+    deviceFingerprint?: boolean
     feeAmount?: boolean
     feeCurrency?: boolean
     feePaidBy?: boolean
@@ -51457,6 +51528,7 @@ export namespace Prisma {
 
   export type DepositDetailSelectScalar = {
     id?: boolean
+    uid?: boolean
     confirmedAt?: boolean
     failedAt?: boolean
     createdAt?: boolean
@@ -51475,7 +51547,12 @@ export namespace Prisma {
     accountHolder?: boolean
     depositorName?: boolean
     transactionHash?: boolean
+    requestedAmount?: boolean
     actuallyPaid?: boolean
+    processedBy?: boolean
+    adminNote?: boolean
+    ipAddress?: boolean
+    deviceFingerprint?: boolean
     feeAmount?: boolean
     feeCurrency?: boolean
     feePaidBy?: boolean
@@ -51484,7 +51561,7 @@ export namespace Prisma {
     bankAccountId?: boolean
   }
 
-  export type DepositDetailOmit<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetOmit<"id" | "confirmedAt" | "failedAt" | "createdAt" | "updatedAt" | "status" | "transactionId" | "methodType" | "provider" | "providerPaymentId" | "depositCurrency" | "depositNetwork" | "walletAddress" | "walletAddressExtraId" | "bankName" | "accountNumber" | "accountHolder" | "depositorName" | "transactionHash" | "actuallyPaid" | "feeAmount" | "feeCurrency" | "feePaidBy" | "failureReason" | "providerMetadata" | "bankAccountId", ExtArgs["result"]["depositDetail"]>
+  export type DepositDetailOmit<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetOmit<"id" | "uid" | "confirmedAt" | "failedAt" | "createdAt" | "updatedAt" | "status" | "transactionId" | "methodType" | "provider" | "providerPaymentId" | "depositCurrency" | "depositNetwork" | "walletAddress" | "walletAddressExtraId" | "bankName" | "accountNumber" | "accountHolder" | "depositorName" | "transactionHash" | "requestedAmount" | "actuallyPaid" | "processedBy" | "adminNote" | "ipAddress" | "deviceFingerprint" | "feeAmount" | "feeCurrency" | "feePaidBy" | "failureReason" | "providerMetadata" | "bankAccountId", ExtArgs["result"]["depositDetail"]>
   export type DepositDetailInclude<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
     BankAccount?: boolean | DepositDetail$BankAccountArgs<ExtArgs>
     transaction?: boolean | TransactionDefaultArgs<ExtArgs>
@@ -51509,6 +51586,7 @@ export namespace Prisma {
     }
     scalars: $Extensions.GetPayloadResult<{
       id: bigint
+      uid: string
       confirmedAt: Date | null
       failedAt: Date | null
       createdAt: Date
@@ -51527,7 +51605,12 @@ export namespace Prisma {
       accountHolder: string | null
       depositorName: string | null
       transactionHash: string | null
+      requestedAmount: Prisma.Decimal
       actuallyPaid: Prisma.Decimal | null
+      processedBy: bigint | null
+      adminNote: string | null
+      ipAddress: string | null
+      deviceFingerprint: string | null
       feeAmount: Prisma.Decimal | null
       feeCurrency: string | null
       feePaidBy: $Enums.FeePaidByType | null
@@ -51961,6 +52044,7 @@ export namespace Prisma {
    */
   interface DepositDetailFieldRefs {
     readonly id: FieldRef<"DepositDetail", 'BigInt'>
+    readonly uid: FieldRef<"DepositDetail", 'String'>
     readonly confirmedAt: FieldRef<"DepositDetail", 'DateTime'>
     readonly failedAt: FieldRef<"DepositDetail", 'DateTime'>
     readonly createdAt: FieldRef<"DepositDetail", 'DateTime'>
@@ -51979,7 +52063,12 @@ export namespace Prisma {
     readonly accountHolder: FieldRef<"DepositDetail", 'String'>
     readonly depositorName: FieldRef<"DepositDetail", 'String'>
     readonly transactionHash: FieldRef<"DepositDetail", 'String'>
+    readonly requestedAmount: FieldRef<"DepositDetail", 'Decimal'>
     readonly actuallyPaid: FieldRef<"DepositDetail", 'Decimal'>
+    readonly processedBy: FieldRef<"DepositDetail", 'BigInt'>
+    readonly adminNote: FieldRef<"DepositDetail", 'String'>
+    readonly ipAddress: FieldRef<"DepositDetail", 'String'>
+    readonly deviceFingerprint: FieldRef<"DepositDetail", 'String'>
     readonly feeAmount: FieldRef<"DepositDetail", 'Decimal'>
     readonly feeCurrency: FieldRef<"DepositDetail", 'String'>
     readonly feePaidBy: FieldRef<"DepositDetail", 'FeePaidByType'>
@@ -59303,6 +59392,7 @@ export namespace Prisma {
 
   export const DepositDetailScalarFieldEnum: {
     id: 'id',
+    uid: 'uid',
     confirmedAt: 'confirmedAt',
     failedAt: 'failedAt',
     createdAt: 'createdAt',
@@ -59321,7 +59411,12 @@ export namespace Prisma {
     accountHolder: 'accountHolder',
     depositorName: 'depositorName',
     transactionHash: 'transactionHash',
+    requestedAmount: 'requestedAmount',
     actuallyPaid: 'actuallyPaid',
+    processedBy: 'processedBy',
+    adminNote: 'adminNote',
+    ipAddress: 'ipAddress',
+    deviceFingerprint: 'deviceFingerprint',
     feeAmount: 'feeAmount',
     feeCurrency: 'feeCurrency',
     feePaidBy: 'feePaidBy',
@@ -63719,6 +63814,7 @@ export namespace Prisma {
     OR?: DepositDetailWhereInput[]
     NOT?: DepositDetailWhereInput | DepositDetailWhereInput[]
     id?: BigIntFilter<"DepositDetail"> | bigint | number
+    uid?: StringFilter<"DepositDetail"> | string
     confirmedAt?: DateTimeNullableFilter<"DepositDetail"> | Date | string | null
     failedAt?: DateTimeNullableFilter<"DepositDetail"> | Date | string | null
     createdAt?: DateTimeFilter<"DepositDetail"> | Date | string
@@ -63737,7 +63833,12 @@ export namespace Prisma {
     accountHolder?: StringNullableFilter<"DepositDetail"> | string | null
     depositorName?: StringNullableFilter<"DepositDetail"> | string | null
     transactionHash?: StringNullableFilter<"DepositDetail"> | string | null
+    requestedAmount?: DecimalFilter<"DepositDetail"> | Decimal | DecimalJsLike | number | string
     actuallyPaid?: DecimalNullableFilter<"DepositDetail"> | Decimal | DecimalJsLike | number | string | null
+    processedBy?: BigIntNullableFilter<"DepositDetail"> | bigint | number | null
+    adminNote?: StringNullableFilter<"DepositDetail"> | string | null
+    ipAddress?: StringNullableFilter<"DepositDetail"> | string | null
+    deviceFingerprint?: StringNullableFilter<"DepositDetail"> | string | null
     feeAmount?: DecimalNullableFilter<"DepositDetail"> | Decimal | DecimalJsLike | number | string | null
     feeCurrency?: StringNullableFilter<"DepositDetail"> | string | null
     feePaidBy?: EnumFeePaidByTypeNullableFilter<"DepositDetail"> | $Enums.FeePaidByType | null
@@ -63751,6 +63852,7 @@ export namespace Prisma {
 
   export type DepositDetailOrderByWithRelationInput = {
     id?: SortOrder
+    uid?: SortOrder
     confirmedAt?: SortOrderInput | SortOrder
     failedAt?: SortOrderInput | SortOrder
     createdAt?: SortOrder
@@ -63769,7 +63871,12 @@ export namespace Prisma {
     accountHolder?: SortOrderInput | SortOrder
     depositorName?: SortOrderInput | SortOrder
     transactionHash?: SortOrderInput | SortOrder
+    requestedAmount?: SortOrder
     actuallyPaid?: SortOrderInput | SortOrder
+    processedBy?: SortOrderInput | SortOrder
+    adminNote?: SortOrderInput | SortOrder
+    ipAddress?: SortOrderInput | SortOrder
+    deviceFingerprint?: SortOrderInput | SortOrder
     feeAmount?: SortOrderInput | SortOrder
     feeCurrency?: SortOrderInput | SortOrder
     feePaidBy?: SortOrderInput | SortOrder
@@ -63783,6 +63890,7 @@ export namespace Prisma {
 
   export type DepositDetailWhereUniqueInput = Prisma.AtLeast<{
     id?: bigint | number
+    uid?: string
     transactionId?: bigint | number
     providerPaymentId?: string
     AND?: DepositDetailWhereInput | DepositDetailWhereInput[]
@@ -63804,7 +63912,12 @@ export namespace Prisma {
     accountHolder?: StringNullableFilter<"DepositDetail"> | string | null
     depositorName?: StringNullableFilter<"DepositDetail"> | string | null
     transactionHash?: StringNullableFilter<"DepositDetail"> | string | null
+    requestedAmount?: DecimalFilter<"DepositDetail"> | Decimal | DecimalJsLike | number | string
     actuallyPaid?: DecimalNullableFilter<"DepositDetail"> | Decimal | DecimalJsLike | number | string | null
+    processedBy?: BigIntNullableFilter<"DepositDetail"> | bigint | number | null
+    adminNote?: StringNullableFilter<"DepositDetail"> | string | null
+    ipAddress?: StringNullableFilter<"DepositDetail"> | string | null
+    deviceFingerprint?: StringNullableFilter<"DepositDetail"> | string | null
     feeAmount?: DecimalNullableFilter<"DepositDetail"> | Decimal | DecimalJsLike | number | string | null
     feeCurrency?: StringNullableFilter<"DepositDetail"> | string | null
     feePaidBy?: EnumFeePaidByTypeNullableFilter<"DepositDetail"> | $Enums.FeePaidByType | null
@@ -63814,10 +63927,11 @@ export namespace Prisma {
     BankAccount?: XOR<BankAccountNullableScalarRelationFilter, BankAccountWhereInput> | null
     transaction?: XOR<TransactionScalarRelationFilter, TransactionWhereInput>
     Rolling?: RollingListRelationFilter
-  }, "id" | "transactionId" | "providerPaymentId">
+  }, "id" | "uid" | "transactionId" | "providerPaymentId">
 
   export type DepositDetailOrderByWithAggregationInput = {
     id?: SortOrder
+    uid?: SortOrder
     confirmedAt?: SortOrderInput | SortOrder
     failedAt?: SortOrderInput | SortOrder
     createdAt?: SortOrder
@@ -63836,7 +63950,12 @@ export namespace Prisma {
     accountHolder?: SortOrderInput | SortOrder
     depositorName?: SortOrderInput | SortOrder
     transactionHash?: SortOrderInput | SortOrder
+    requestedAmount?: SortOrder
     actuallyPaid?: SortOrderInput | SortOrder
+    processedBy?: SortOrderInput | SortOrder
+    adminNote?: SortOrderInput | SortOrder
+    ipAddress?: SortOrderInput | SortOrder
+    deviceFingerprint?: SortOrderInput | SortOrder
     feeAmount?: SortOrderInput | SortOrder
     feeCurrency?: SortOrderInput | SortOrder
     feePaidBy?: SortOrderInput | SortOrder
@@ -63855,6 +63974,7 @@ export namespace Prisma {
     OR?: DepositDetailScalarWhereWithAggregatesInput[]
     NOT?: DepositDetailScalarWhereWithAggregatesInput | DepositDetailScalarWhereWithAggregatesInput[]
     id?: BigIntWithAggregatesFilter<"DepositDetail"> | bigint | number
+    uid?: StringWithAggregatesFilter<"DepositDetail"> | string
     confirmedAt?: DateTimeNullableWithAggregatesFilter<"DepositDetail"> | Date | string | null
     failedAt?: DateTimeNullableWithAggregatesFilter<"DepositDetail"> | Date | string | null
     createdAt?: DateTimeWithAggregatesFilter<"DepositDetail"> | Date | string
@@ -63873,7 +63993,12 @@ export namespace Prisma {
     accountHolder?: StringNullableWithAggregatesFilter<"DepositDetail"> | string | null
     depositorName?: StringNullableWithAggregatesFilter<"DepositDetail"> | string | null
     transactionHash?: StringNullableWithAggregatesFilter<"DepositDetail"> | string | null
+    requestedAmount?: DecimalWithAggregatesFilter<"DepositDetail"> | Decimal | DecimalJsLike | number | string
     actuallyPaid?: DecimalNullableWithAggregatesFilter<"DepositDetail"> | Decimal | DecimalJsLike | number | string | null
+    processedBy?: BigIntNullableWithAggregatesFilter<"DepositDetail"> | bigint | number | null
+    adminNote?: StringNullableWithAggregatesFilter<"DepositDetail"> | string | null
+    ipAddress?: StringNullableWithAggregatesFilter<"DepositDetail"> | string | null
+    deviceFingerprint?: StringNullableWithAggregatesFilter<"DepositDetail"> | string | null
     feeAmount?: DecimalNullableWithAggregatesFilter<"DepositDetail"> | Decimal | DecimalJsLike | number | string | null
     feeCurrency?: StringNullableWithAggregatesFilter<"DepositDetail"> | string | null
     feePaidBy?: EnumFeePaidByTypeNullableWithAggregatesFilter<"DepositDetail"> | $Enums.FeePaidByType | null
@@ -68459,6 +68584,7 @@ export namespace Prisma {
 
   export type DepositDetailCreateInput = {
     id?: bigint | number
+    uid: string
     confirmedAt?: Date | string | null
     failedAt?: Date | string | null
     createdAt?: Date | string
@@ -68476,7 +68602,12 @@ export namespace Prisma {
     accountHolder?: string | null
     depositorName?: string | null
     transactionHash?: string | null
+    requestedAmount: Decimal | DecimalJsLike | number | string
     actuallyPaid?: Decimal | DecimalJsLike | number | string | null
+    processedBy?: bigint | number | null
+    adminNote?: string | null
+    ipAddress?: string | null
+    deviceFingerprint?: string | null
     feeAmount?: Decimal | DecimalJsLike | number | string | null
     feeCurrency?: string | null
     feePaidBy?: $Enums.FeePaidByType | null
@@ -68489,6 +68620,7 @@ export namespace Prisma {
 
   export type DepositDetailUncheckedCreateInput = {
     id?: bigint | number
+    uid: string
     confirmedAt?: Date | string | null
     failedAt?: Date | string | null
     createdAt?: Date | string
@@ -68507,7 +68639,12 @@ export namespace Prisma {
     accountHolder?: string | null
     depositorName?: string | null
     transactionHash?: string | null
+    requestedAmount: Decimal | DecimalJsLike | number | string
     actuallyPaid?: Decimal | DecimalJsLike | number | string | null
+    processedBy?: bigint | number | null
+    adminNote?: string | null
+    ipAddress?: string | null
+    deviceFingerprint?: string | null
     feeAmount?: Decimal | DecimalJsLike | number | string | null
     feeCurrency?: string | null
     feePaidBy?: $Enums.FeePaidByType | null
@@ -68519,6 +68656,7 @@ export namespace Prisma {
 
   export type DepositDetailUpdateInput = {
     id?: BigIntFieldUpdateOperationsInput | bigint | number
+    uid?: StringFieldUpdateOperationsInput | string
     confirmedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     failedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
@@ -68536,7 +68674,12 @@ export namespace Prisma {
     accountHolder?: NullableStringFieldUpdateOperationsInput | string | null
     depositorName?: NullableStringFieldUpdateOperationsInput | string | null
     transactionHash?: NullableStringFieldUpdateOperationsInput | string | null
+    requestedAmount?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
     actuallyPaid?: NullableDecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string | null
+    processedBy?: NullableBigIntFieldUpdateOperationsInput | bigint | number | null
+    adminNote?: NullableStringFieldUpdateOperationsInput | string | null
+    ipAddress?: NullableStringFieldUpdateOperationsInput | string | null
+    deviceFingerprint?: NullableStringFieldUpdateOperationsInput | string | null
     feeAmount?: NullableDecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string | null
     feeCurrency?: NullableStringFieldUpdateOperationsInput | string | null
     feePaidBy?: NullableEnumFeePaidByTypeFieldUpdateOperationsInput | $Enums.FeePaidByType | null
@@ -68549,6 +68692,7 @@ export namespace Prisma {
 
   export type DepositDetailUncheckedUpdateInput = {
     id?: BigIntFieldUpdateOperationsInput | bigint | number
+    uid?: StringFieldUpdateOperationsInput | string
     confirmedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     failedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
@@ -68567,7 +68711,12 @@ export namespace Prisma {
     accountHolder?: NullableStringFieldUpdateOperationsInput | string | null
     depositorName?: NullableStringFieldUpdateOperationsInput | string | null
     transactionHash?: NullableStringFieldUpdateOperationsInput | string | null
+    requestedAmount?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
     actuallyPaid?: NullableDecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string | null
+    processedBy?: NullableBigIntFieldUpdateOperationsInput | bigint | number | null
+    adminNote?: NullableStringFieldUpdateOperationsInput | string | null
+    ipAddress?: NullableStringFieldUpdateOperationsInput | string | null
+    deviceFingerprint?: NullableStringFieldUpdateOperationsInput | string | null
     feeAmount?: NullableDecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string | null
     feeCurrency?: NullableStringFieldUpdateOperationsInput | string | null
     feePaidBy?: NullableEnumFeePaidByTypeFieldUpdateOperationsInput | $Enums.FeePaidByType | null
@@ -68579,6 +68728,7 @@ export namespace Prisma {
 
   export type DepositDetailCreateManyInput = {
     id?: bigint | number
+    uid: string
     confirmedAt?: Date | string | null
     failedAt?: Date | string | null
     createdAt?: Date | string
@@ -68597,7 +68747,12 @@ export namespace Prisma {
     accountHolder?: string | null
     depositorName?: string | null
     transactionHash?: string | null
+    requestedAmount: Decimal | DecimalJsLike | number | string
     actuallyPaid?: Decimal | DecimalJsLike | number | string | null
+    processedBy?: bigint | number | null
+    adminNote?: string | null
+    ipAddress?: string | null
+    deviceFingerprint?: string | null
     feeAmount?: Decimal | DecimalJsLike | number | string | null
     feeCurrency?: string | null
     feePaidBy?: $Enums.FeePaidByType | null
@@ -68608,6 +68763,7 @@ export namespace Prisma {
 
   export type DepositDetailUpdateManyMutationInput = {
     id?: BigIntFieldUpdateOperationsInput | bigint | number
+    uid?: StringFieldUpdateOperationsInput | string
     confirmedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     failedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
@@ -68625,7 +68781,12 @@ export namespace Prisma {
     accountHolder?: NullableStringFieldUpdateOperationsInput | string | null
     depositorName?: NullableStringFieldUpdateOperationsInput | string | null
     transactionHash?: NullableStringFieldUpdateOperationsInput | string | null
+    requestedAmount?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
     actuallyPaid?: NullableDecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string | null
+    processedBy?: NullableBigIntFieldUpdateOperationsInput | bigint | number | null
+    adminNote?: NullableStringFieldUpdateOperationsInput | string | null
+    ipAddress?: NullableStringFieldUpdateOperationsInput | string | null
+    deviceFingerprint?: NullableStringFieldUpdateOperationsInput | string | null
     feeAmount?: NullableDecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string | null
     feeCurrency?: NullableStringFieldUpdateOperationsInput | string | null
     feePaidBy?: NullableEnumFeePaidByTypeFieldUpdateOperationsInput | $Enums.FeePaidByType | null
@@ -68635,6 +68796,7 @@ export namespace Prisma {
 
   export type DepositDetailUncheckedUpdateManyInput = {
     id?: BigIntFieldUpdateOperationsInput | bigint | number
+    uid?: StringFieldUpdateOperationsInput | string
     confirmedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     failedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
@@ -68653,7 +68815,12 @@ export namespace Prisma {
     accountHolder?: NullableStringFieldUpdateOperationsInput | string | null
     depositorName?: NullableStringFieldUpdateOperationsInput | string | null
     transactionHash?: NullableStringFieldUpdateOperationsInput | string | null
+    requestedAmount?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
     actuallyPaid?: NullableDecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string | null
+    processedBy?: NullableBigIntFieldUpdateOperationsInput | bigint | number | null
+    adminNote?: NullableStringFieldUpdateOperationsInput | string | null
+    ipAddress?: NullableStringFieldUpdateOperationsInput | string | null
+    deviceFingerprint?: NullableStringFieldUpdateOperationsInput | string | null
     feeAmount?: NullableDecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string | null
     feeCurrency?: NullableStringFieldUpdateOperationsInput | string | null
     feePaidBy?: NullableEnumFeePaidByTypeFieldUpdateOperationsInput | $Enums.FeePaidByType | null
@@ -72782,6 +72949,7 @@ export namespace Prisma {
 
   export type DepositDetailCountOrderByAggregateInput = {
     id?: SortOrder
+    uid?: SortOrder
     confirmedAt?: SortOrder
     failedAt?: SortOrder
     createdAt?: SortOrder
@@ -72800,7 +72968,12 @@ export namespace Prisma {
     accountHolder?: SortOrder
     depositorName?: SortOrder
     transactionHash?: SortOrder
+    requestedAmount?: SortOrder
     actuallyPaid?: SortOrder
+    processedBy?: SortOrder
+    adminNote?: SortOrder
+    ipAddress?: SortOrder
+    deviceFingerprint?: SortOrder
     feeAmount?: SortOrder
     feeCurrency?: SortOrder
     feePaidBy?: SortOrder
@@ -72812,13 +72985,16 @@ export namespace Prisma {
   export type DepositDetailAvgOrderByAggregateInput = {
     id?: SortOrder
     transactionId?: SortOrder
+    requestedAmount?: SortOrder
     actuallyPaid?: SortOrder
+    processedBy?: SortOrder
     feeAmount?: SortOrder
     bankAccountId?: SortOrder
   }
 
   export type DepositDetailMaxOrderByAggregateInput = {
     id?: SortOrder
+    uid?: SortOrder
     confirmedAt?: SortOrder
     failedAt?: SortOrder
     createdAt?: SortOrder
@@ -72837,7 +73013,12 @@ export namespace Prisma {
     accountHolder?: SortOrder
     depositorName?: SortOrder
     transactionHash?: SortOrder
+    requestedAmount?: SortOrder
     actuallyPaid?: SortOrder
+    processedBy?: SortOrder
+    adminNote?: SortOrder
+    ipAddress?: SortOrder
+    deviceFingerprint?: SortOrder
     feeAmount?: SortOrder
     feeCurrency?: SortOrder
     feePaidBy?: SortOrder
@@ -72847,6 +73028,7 @@ export namespace Prisma {
 
   export type DepositDetailMinOrderByAggregateInput = {
     id?: SortOrder
+    uid?: SortOrder
     confirmedAt?: SortOrder
     failedAt?: SortOrder
     createdAt?: SortOrder
@@ -72865,7 +73047,12 @@ export namespace Prisma {
     accountHolder?: SortOrder
     depositorName?: SortOrder
     transactionHash?: SortOrder
+    requestedAmount?: SortOrder
     actuallyPaid?: SortOrder
+    processedBy?: SortOrder
+    adminNote?: SortOrder
+    ipAddress?: SortOrder
+    deviceFingerprint?: SortOrder
     feeAmount?: SortOrder
     feeCurrency?: SortOrder
     feePaidBy?: SortOrder
@@ -72876,7 +73063,9 @@ export namespace Prisma {
   export type DepositDetailSumOrderByAggregateInput = {
     id?: SortOrder
     transactionId?: SortOrder
+    requestedAmount?: SortOrder
     actuallyPaid?: SortOrder
+    processedBy?: SortOrder
     feeAmount?: SortOrder
     bankAccountId?: SortOrder
   }
@@ -79464,6 +79653,7 @@ export namespace Prisma {
 
   export type DepositDetailCreateWithoutTransactionInput = {
     id?: bigint | number
+    uid: string
     confirmedAt?: Date | string | null
     failedAt?: Date | string | null
     createdAt?: Date | string
@@ -79481,7 +79671,12 @@ export namespace Prisma {
     accountHolder?: string | null
     depositorName?: string | null
     transactionHash?: string | null
+    requestedAmount: Decimal | DecimalJsLike | number | string
     actuallyPaid?: Decimal | DecimalJsLike | number | string | null
+    processedBy?: bigint | number | null
+    adminNote?: string | null
+    ipAddress?: string | null
+    deviceFingerprint?: string | null
     feeAmount?: Decimal | DecimalJsLike | number | string | null
     feeCurrency?: string | null
     feePaidBy?: $Enums.FeePaidByType | null
@@ -79493,6 +79688,7 @@ export namespace Prisma {
 
   export type DepositDetailUncheckedCreateWithoutTransactionInput = {
     id?: bigint | number
+    uid: string
     confirmedAt?: Date | string | null
     failedAt?: Date | string | null
     createdAt?: Date | string
@@ -79510,7 +79706,12 @@ export namespace Prisma {
     accountHolder?: string | null
     depositorName?: string | null
     transactionHash?: string | null
+    requestedAmount: Decimal | DecimalJsLike | number | string
     actuallyPaid?: Decimal | DecimalJsLike | number | string | null
+    processedBy?: bigint | number | null
+    adminNote?: string | null
+    ipAddress?: string | null
+    deviceFingerprint?: string | null
     feeAmount?: Decimal | DecimalJsLike | number | string | null
     feeCurrency?: string | null
     feePaidBy?: $Enums.FeePaidByType | null
@@ -79853,6 +80054,7 @@ export namespace Prisma {
 
   export type DepositDetailUpdateWithoutTransactionInput = {
     id?: BigIntFieldUpdateOperationsInput | bigint | number
+    uid?: StringFieldUpdateOperationsInput | string
     confirmedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     failedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
@@ -79870,7 +80072,12 @@ export namespace Prisma {
     accountHolder?: NullableStringFieldUpdateOperationsInput | string | null
     depositorName?: NullableStringFieldUpdateOperationsInput | string | null
     transactionHash?: NullableStringFieldUpdateOperationsInput | string | null
+    requestedAmount?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
     actuallyPaid?: NullableDecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string | null
+    processedBy?: NullableBigIntFieldUpdateOperationsInput | bigint | number | null
+    adminNote?: NullableStringFieldUpdateOperationsInput | string | null
+    ipAddress?: NullableStringFieldUpdateOperationsInput | string | null
+    deviceFingerprint?: NullableStringFieldUpdateOperationsInput | string | null
     feeAmount?: NullableDecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string | null
     feeCurrency?: NullableStringFieldUpdateOperationsInput | string | null
     feePaidBy?: NullableEnumFeePaidByTypeFieldUpdateOperationsInput | $Enums.FeePaidByType | null
@@ -79882,6 +80089,7 @@ export namespace Prisma {
 
   export type DepositDetailUncheckedUpdateWithoutTransactionInput = {
     id?: BigIntFieldUpdateOperationsInput | bigint | number
+    uid?: StringFieldUpdateOperationsInput | string
     confirmedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     failedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
@@ -79899,7 +80107,12 @@ export namespace Prisma {
     accountHolder?: NullableStringFieldUpdateOperationsInput | string | null
     depositorName?: NullableStringFieldUpdateOperationsInput | string | null
     transactionHash?: NullableStringFieldUpdateOperationsInput | string | null
+    requestedAmount?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
     actuallyPaid?: NullableDecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string | null
+    processedBy?: NullableBigIntFieldUpdateOperationsInput | bigint | number | null
+    adminNote?: NullableStringFieldUpdateOperationsInput | string | null
+    ipAddress?: NullableStringFieldUpdateOperationsInput | string | null
+    deviceFingerprint?: NullableStringFieldUpdateOperationsInput | string | null
     feeAmount?: NullableDecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string | null
     feeCurrency?: NullableStringFieldUpdateOperationsInput | string | null
     feePaidBy?: NullableEnumFeePaidByTypeFieldUpdateOperationsInput | $Enums.FeePaidByType | null
@@ -82460,6 +82673,7 @@ export namespace Prisma {
 
   export type DepositDetailCreateWithoutRollingInput = {
     id?: bigint | number
+    uid: string
     confirmedAt?: Date | string | null
     failedAt?: Date | string | null
     createdAt?: Date | string
@@ -82477,7 +82691,12 @@ export namespace Prisma {
     accountHolder?: string | null
     depositorName?: string | null
     transactionHash?: string | null
+    requestedAmount: Decimal | DecimalJsLike | number | string
     actuallyPaid?: Decimal | DecimalJsLike | number | string | null
+    processedBy?: bigint | number | null
+    adminNote?: string | null
+    ipAddress?: string | null
+    deviceFingerprint?: string | null
     feeAmount?: Decimal | DecimalJsLike | number | string | null
     feeCurrency?: string | null
     feePaidBy?: $Enums.FeePaidByType | null
@@ -82489,6 +82708,7 @@ export namespace Prisma {
 
   export type DepositDetailUncheckedCreateWithoutRollingInput = {
     id?: bigint | number
+    uid: string
     confirmedAt?: Date | string | null
     failedAt?: Date | string | null
     createdAt?: Date | string
@@ -82507,7 +82727,12 @@ export namespace Prisma {
     accountHolder?: string | null
     depositorName?: string | null
     transactionHash?: string | null
+    requestedAmount: Decimal | DecimalJsLike | number | string
     actuallyPaid?: Decimal | DecimalJsLike | number | string | null
+    processedBy?: bigint | number | null
+    adminNote?: string | null
+    ipAddress?: string | null
+    deviceFingerprint?: string | null
     feeAmount?: Decimal | DecimalJsLike | number | string | null
     feeCurrency?: string | null
     feePaidBy?: $Enums.FeePaidByType | null
@@ -82658,6 +82883,7 @@ export namespace Prisma {
 
   export type DepositDetailUpdateWithoutRollingInput = {
     id?: BigIntFieldUpdateOperationsInput | bigint | number
+    uid?: StringFieldUpdateOperationsInput | string
     confirmedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     failedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
@@ -82675,7 +82901,12 @@ export namespace Prisma {
     accountHolder?: NullableStringFieldUpdateOperationsInput | string | null
     depositorName?: NullableStringFieldUpdateOperationsInput | string | null
     transactionHash?: NullableStringFieldUpdateOperationsInput | string | null
+    requestedAmount?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
     actuallyPaid?: NullableDecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string | null
+    processedBy?: NullableBigIntFieldUpdateOperationsInput | bigint | number | null
+    adminNote?: NullableStringFieldUpdateOperationsInput | string | null
+    ipAddress?: NullableStringFieldUpdateOperationsInput | string | null
+    deviceFingerprint?: NullableStringFieldUpdateOperationsInput | string | null
     feeAmount?: NullableDecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string | null
     feeCurrency?: NullableStringFieldUpdateOperationsInput | string | null
     feePaidBy?: NullableEnumFeePaidByTypeFieldUpdateOperationsInput | $Enums.FeePaidByType | null
@@ -82687,6 +82918,7 @@ export namespace Prisma {
 
   export type DepositDetailUncheckedUpdateWithoutRollingInput = {
     id?: BigIntFieldUpdateOperationsInput | bigint | number
+    uid?: StringFieldUpdateOperationsInput | string
     confirmedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     failedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
@@ -82705,7 +82937,12 @@ export namespace Prisma {
     accountHolder?: NullableStringFieldUpdateOperationsInput | string | null
     depositorName?: NullableStringFieldUpdateOperationsInput | string | null
     transactionHash?: NullableStringFieldUpdateOperationsInput | string | null
+    requestedAmount?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
     actuallyPaid?: NullableDecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string | null
+    processedBy?: NullableBigIntFieldUpdateOperationsInput | bigint | number | null
+    adminNote?: NullableStringFieldUpdateOperationsInput | string | null
+    ipAddress?: NullableStringFieldUpdateOperationsInput | string | null
+    deviceFingerprint?: NullableStringFieldUpdateOperationsInput | string | null
     feeAmount?: NullableDecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string | null
     feeCurrency?: NullableStringFieldUpdateOperationsInput | string | null
     feePaidBy?: NullableEnumFeePaidByTypeFieldUpdateOperationsInput | $Enums.FeePaidByType | null
@@ -83600,6 +83837,7 @@ export namespace Prisma {
 
   export type DepositDetailCreateWithoutBankAccountInput = {
     id?: bigint | number
+    uid: string
     confirmedAt?: Date | string | null
     failedAt?: Date | string | null
     createdAt?: Date | string
@@ -83617,7 +83855,12 @@ export namespace Prisma {
     accountHolder?: string | null
     depositorName?: string | null
     transactionHash?: string | null
+    requestedAmount: Decimal | DecimalJsLike | number | string
     actuallyPaid?: Decimal | DecimalJsLike | number | string | null
+    processedBy?: bigint | number | null
+    adminNote?: string | null
+    ipAddress?: string | null
+    deviceFingerprint?: string | null
     feeAmount?: Decimal | DecimalJsLike | number | string | null
     feeCurrency?: string | null
     feePaidBy?: $Enums.FeePaidByType | null
@@ -83629,6 +83872,7 @@ export namespace Prisma {
 
   export type DepositDetailUncheckedCreateWithoutBankAccountInput = {
     id?: bigint | number
+    uid: string
     confirmedAt?: Date | string | null
     failedAt?: Date | string | null
     createdAt?: Date | string
@@ -83647,7 +83891,12 @@ export namespace Prisma {
     accountHolder?: string | null
     depositorName?: string | null
     transactionHash?: string | null
+    requestedAmount: Decimal | DecimalJsLike | number | string
     actuallyPaid?: Decimal | DecimalJsLike | number | string | null
+    processedBy?: bigint | number | null
+    adminNote?: string | null
+    ipAddress?: string | null
+    deviceFingerprint?: string | null
     feeAmount?: Decimal | DecimalJsLike | number | string | null
     feeCurrency?: string | null
     feePaidBy?: $Enums.FeePaidByType | null
@@ -83687,6 +83936,7 @@ export namespace Prisma {
     OR?: DepositDetailScalarWhereInput[]
     NOT?: DepositDetailScalarWhereInput | DepositDetailScalarWhereInput[]
     id?: BigIntFilter<"DepositDetail"> | bigint | number
+    uid?: StringFilter<"DepositDetail"> | string
     confirmedAt?: DateTimeNullableFilter<"DepositDetail"> | Date | string | null
     failedAt?: DateTimeNullableFilter<"DepositDetail"> | Date | string | null
     createdAt?: DateTimeFilter<"DepositDetail"> | Date | string
@@ -83705,7 +83955,12 @@ export namespace Prisma {
     accountHolder?: StringNullableFilter<"DepositDetail"> | string | null
     depositorName?: StringNullableFilter<"DepositDetail"> | string | null
     transactionHash?: StringNullableFilter<"DepositDetail"> | string | null
+    requestedAmount?: DecimalFilter<"DepositDetail"> | Decimal | DecimalJsLike | number | string
     actuallyPaid?: DecimalNullableFilter<"DepositDetail"> | Decimal | DecimalJsLike | number | string | null
+    processedBy?: BigIntNullableFilter<"DepositDetail"> | bigint | number | null
+    adminNote?: StringNullableFilter<"DepositDetail"> | string | null
+    ipAddress?: StringNullableFilter<"DepositDetail"> | string | null
+    deviceFingerprint?: StringNullableFilter<"DepositDetail"> | string | null
     feeAmount?: DecimalNullableFilter<"DepositDetail"> | Decimal | DecimalJsLike | number | string | null
     feeCurrency?: StringNullableFilter<"DepositDetail"> | string | null
     feePaidBy?: EnumFeePaidByTypeNullableFilter<"DepositDetail"> | $Enums.FeePaidByType | null
@@ -88671,6 +88926,7 @@ export namespace Prisma {
 
   export type DepositDetailCreateManyBankAccountInput = {
     id?: bigint | number
+    uid: string
     confirmedAt?: Date | string | null
     failedAt?: Date | string | null
     createdAt?: Date | string
@@ -88689,7 +88945,12 @@ export namespace Prisma {
     accountHolder?: string | null
     depositorName?: string | null
     transactionHash?: string | null
+    requestedAmount: Decimal | DecimalJsLike | number | string
     actuallyPaid?: Decimal | DecimalJsLike | number | string | null
+    processedBy?: bigint | number | null
+    adminNote?: string | null
+    ipAddress?: string | null
+    deviceFingerprint?: string | null
     feeAmount?: Decimal | DecimalJsLike | number | string | null
     feeCurrency?: string | null
     feePaidBy?: $Enums.FeePaidByType | null
@@ -88699,6 +88960,7 @@ export namespace Prisma {
 
   export type DepositDetailUpdateWithoutBankAccountInput = {
     id?: BigIntFieldUpdateOperationsInput | bigint | number
+    uid?: StringFieldUpdateOperationsInput | string
     confirmedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     failedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
@@ -88716,7 +88978,12 @@ export namespace Prisma {
     accountHolder?: NullableStringFieldUpdateOperationsInput | string | null
     depositorName?: NullableStringFieldUpdateOperationsInput | string | null
     transactionHash?: NullableStringFieldUpdateOperationsInput | string | null
+    requestedAmount?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
     actuallyPaid?: NullableDecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string | null
+    processedBy?: NullableBigIntFieldUpdateOperationsInput | bigint | number | null
+    adminNote?: NullableStringFieldUpdateOperationsInput | string | null
+    ipAddress?: NullableStringFieldUpdateOperationsInput | string | null
+    deviceFingerprint?: NullableStringFieldUpdateOperationsInput | string | null
     feeAmount?: NullableDecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string | null
     feeCurrency?: NullableStringFieldUpdateOperationsInput | string | null
     feePaidBy?: NullableEnumFeePaidByTypeFieldUpdateOperationsInput | $Enums.FeePaidByType | null
@@ -88728,6 +88995,7 @@ export namespace Prisma {
 
   export type DepositDetailUncheckedUpdateWithoutBankAccountInput = {
     id?: BigIntFieldUpdateOperationsInput | bigint | number
+    uid?: StringFieldUpdateOperationsInput | string
     confirmedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     failedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
@@ -88746,7 +89014,12 @@ export namespace Prisma {
     accountHolder?: NullableStringFieldUpdateOperationsInput | string | null
     depositorName?: NullableStringFieldUpdateOperationsInput | string | null
     transactionHash?: NullableStringFieldUpdateOperationsInput | string | null
+    requestedAmount?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
     actuallyPaid?: NullableDecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string | null
+    processedBy?: NullableBigIntFieldUpdateOperationsInput | bigint | number | null
+    adminNote?: NullableStringFieldUpdateOperationsInput | string | null
+    ipAddress?: NullableStringFieldUpdateOperationsInput | string | null
+    deviceFingerprint?: NullableStringFieldUpdateOperationsInput | string | null
     feeAmount?: NullableDecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string | null
     feeCurrency?: NullableStringFieldUpdateOperationsInput | string | null
     feePaidBy?: NullableEnumFeePaidByTypeFieldUpdateOperationsInput | $Enums.FeePaidByType | null
@@ -88757,6 +89030,7 @@ export namespace Prisma {
 
   export type DepositDetailUncheckedUpdateManyWithoutBankAccountInput = {
     id?: BigIntFieldUpdateOperationsInput | bigint | number
+    uid?: StringFieldUpdateOperationsInput | string
     confirmedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     failedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
@@ -88775,7 +89049,12 @@ export namespace Prisma {
     accountHolder?: NullableStringFieldUpdateOperationsInput | string | null
     depositorName?: NullableStringFieldUpdateOperationsInput | string | null
     transactionHash?: NullableStringFieldUpdateOperationsInput | string | null
+    requestedAmount?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
     actuallyPaid?: NullableDecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string | null
+    processedBy?: NullableBigIntFieldUpdateOperationsInput | bigint | number | null
+    adminNote?: NullableStringFieldUpdateOperationsInput | string | null
+    ipAddress?: NullableStringFieldUpdateOperationsInput | string | null
+    deviceFingerprint?: NullableStringFieldUpdateOperationsInput | string | null
     feeAmount?: NullableDecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string | null
     feeCurrency?: NullableStringFieldUpdateOperationsInput | string | null
     feePaidBy?: NullableEnumFeePaidByTypeFieldUpdateOperationsInput | $Enums.FeePaidByType | null

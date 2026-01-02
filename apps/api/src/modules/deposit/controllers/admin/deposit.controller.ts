@@ -21,17 +21,17 @@ import type { CurrentUserWithSession } from 'src/common/auth/decorators/current-
 import { RequestClientInfoParam } from 'src/common/auth/decorators/request-info.decorator';
 import type { PaginatedData, RequestClientInfo } from 'src/common/http/types';
 import { Paginated } from 'src/common/http/decorators/paginated.decorator';
-import { AdminDepositService } from '../application/admin-deposit.service';
-import { GetDepositsQueryDto } from '../dtos/get-deposits-query.dto';
-import { ApproveBankDepositDto } from '../dtos/approve-bank-deposit.dto';
-import { RejectDepositDto } from '../dtos/reject-deposit.dto';
+import { AdminDepositService } from '../../application/admin-deposit.service';
+import { GetDepositsQueryDto } from '../../dtos/get-deposits-query.dto';
+import { ApproveBankDepositDto } from '../../dtos/approve-bank-deposit.dto';
+import { RejectDepositDto } from '../../dtos/reject-deposit.dto';
 import {
   AdminDepositListItemDto,
   ApproveDepositResponseDto,
   RejectDepositResponseDto,
-} from '../dtos/admin-deposit-response.dto';
+} from '../../dtos/admin-deposit-response.dto';
 
-@Controller('admin/payment/deposits')
+@Controller('admin/deposits')
 @ApiTags('Admin Deposit Management (관리자 입금 관리)')
 @ApiStandardErrors()
 @RequireRoles(UserRoleType.ADMIN, UserRoleType.SUPER_ADMIN)
@@ -123,3 +123,4 @@ export class AdminDepositController {
     );
   }
 }
+

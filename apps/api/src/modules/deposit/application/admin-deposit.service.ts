@@ -1,4 +1,4 @@
-// src/modules/payment/application/admin-deposit.service.ts
+// src/modules/deposit/application/admin-deposit.service.ts
 import { Injectable, HttpStatus, Logger } from '@nestjs/common';
 import { Inject } from '@nestjs/common';
 import { PrismaService } from 'src/infrastructure/prisma/prisma.service';
@@ -398,3 +398,4 @@ export class AdminDepositService {
     }
   }
 }
+

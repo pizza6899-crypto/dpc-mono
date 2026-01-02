@@ -693,6 +693,7 @@ exports.Prisma.LoginAttemptScalarFieldEnum = {
 
 exports.Prisma.DepositDetailScalarFieldEnum = {
   id: 'id',
+  uid: 'uid',
   confirmedAt: 'confirmedAt',
   failedAt: 'failedAt',
   createdAt: 'createdAt',
@@ -711,7 +712,12 @@ exports.Prisma.DepositDetailScalarFieldEnum = {
   accountHolder: 'accountHolder',
   depositorName: 'depositorName',
   transactionHash: 'transactionHash',
+  requestedAmount: 'requestedAmount',
   actuallyPaid: 'actuallyPaid',
+  processedBy: 'processedBy',
+  adminNote: 'adminNote',
+  ipAddress: 'ipAddress',
+  deviceFingerprint: 'deviceFingerprint',
   feeAmount: 'feeAmount',
   feeCurrency: 'feeCurrency',
   feePaidBy: 'feePaidBy',

@@ -56,3 +56,4 @@ export class RejectDepositResponseDto {
   @ApiProperty({ description: 'Success status' })
   success: boolean;
 }
+

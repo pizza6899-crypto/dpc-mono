@@ -1,4 +1,4 @@
-// src/modules/payment/dtos/create-deposit-response.dto.ts
+// src/modules/deposit/dtos/create-deposit-response.dto.ts
 import { ApiProperty, ApiPropertyOptional } from '@nestjs/swagger';
 
 export class CreateDepositResponseDto {
@@ -60,3 +60,4 @@ export class CreateDepositResponseDto {
   })
   isDuplicate?: boolean;
 }
+

@@ -9,17 +9,8 @@ import { PrismaModule } from 'src/infrastructure/prisma/prisma.module';
 import { QueueModule } from 'src/infrastructure/queue/queue.module';
 import { HttpModule } from '@nestjs/axios';
 import { NowPaymentCallbackLogService } from './application/now-payment-callback-log.service';
-import { DepositService } from './application/deposit.service';
-import { DepositController } from './controllers/deposit.controller';
 import { WithdrawService } from './application/withdraw.service';
 import { WithdrawController } from './controllers/withdraw.controller';
-import { UserValidationModule } from 'src/common/user-validation/user-validation.module';
-import { BankTransferDepositService } from './application/bank-transfer-deposit.service';
-import { CryptoDepositService } from './application/crypto-deposit.service';
-import { AdminDepositController } from './controllers/admin-deposit.controller';
-import { AdminDepositService } from './application/admin-deposit.service';
-import { RollingModule } from '../rolling/rolling.module';
-import { UserStatsModule } from '../user-stats/user-stats.module';
 
 @Module({
   imports: [
@@ -29,25 +20,16 @@ import { UserStatsModule } from '../user-stats/user-stats.module';
     PrismaModule,
     QueueModule,
     HttpModule,
-    UserValidationModule,
-    RollingModule,
-    UserStatsModule,
   ],
   controllers: [
     NowPaymentCallbackController,
-    DepositController,
     WithdrawController,
-    AdminDepositController,
   ],
   providers: [
     NowPaymentApiService,
     NowPaymentCallbackService,
     NowPaymentCallbackLogService,
-    DepositService,
     WithdrawService,
-    BankTransferDepositService,
-    CryptoDepositService,
-    AdminDepositService,
   ],
   exports: [NowPaymentApiService, NowPaymentCallbackService, WithdrawService],
 })

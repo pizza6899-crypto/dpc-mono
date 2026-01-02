@@ -1,4 +1,4 @@
-// src/modules/payment/controllers/deposit.controller.ts
+// src/modules/deposit/controllers/user/deposit.controller.ts
 import {
   Controller,
   Post,
@@ -17,9 +17,9 @@ import {
   ApiResponse,
   ApiBearerAuth,
 } from '@nestjs/swagger';
-import { DepositService } from '../application/deposit.service';
-import { CreateDepositResponseDto } from '../dtos/create-deposit-response.dto';
-import { CreateDepositRequestDto } from '../dtos/create-deposit-request.dto';
+import { DepositService } from '../../application/deposit.service';
+import { CreateDepositResponseDto } from '../../dtos/create-deposit-response.dto';
+import { CreateDepositRequestDto } from '../../dtos/create-deposit-request.dto';
 import { CurrentUser } from 'src/common/auth/decorators/current-user.decorator';
 import type { CurrentUserWithSession } from 'src/common/auth/decorators/current-user.decorator';
 import { Inject } from '@nestjs/common';
@@ -164,3 +164,4 @@ export class DepositController {
   //     }
   //   }
 }
+

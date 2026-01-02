@@ -6,6 +6,7 @@ import { PrismaModule } from 'src/infrastructure/prisma/prisma.module';
 import { CasinoModule } from './modules/casino/casino.module';
 import { ScheduleModule } from '@nestjs/schedule';
 import { PaymentModule } from './modules/payment/payment.module';
+import { DepositModule } from './modules/deposit/deposit.module';
 import { ExchangeModule } from './modules/exchange/exchange.module';
 import { SessionAuthGuard } from './common/auth/guards/session-auth.guard';
 import { VipModule } from './modules/vip/vip.module';
@@ -35,6 +36,7 @@ import { PromotionModule } from './modules/promotion/promotion.module';
     AuthModule,
     CasinoModule,
     PaymentModule,
+    DepositModule,
     ExchangeModule,
     VipModule,
     CompModule,

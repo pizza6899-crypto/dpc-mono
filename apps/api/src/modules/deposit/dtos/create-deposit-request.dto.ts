@@ -1,4 +1,4 @@
-// src/modules/payment/dtos/create-deposit-request.dto.ts
+// src/modules/deposit/dtos/create-deposit-request.dto.ts
 import {
   IsEnum,
   IsNotEmpty,
@@ -65,3 +65,4 @@ export class CreateDepositRequestDto {
   @IsString()
   depositorName?: string;
 }
+

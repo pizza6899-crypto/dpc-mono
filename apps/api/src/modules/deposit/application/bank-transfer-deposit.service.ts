@@ -1,4 +1,4 @@
-// src/modules/payment/application/bank-transfer-deposit.service.ts
+// src/modules/deposit/application/bank-transfer-deposit.service.ts
 import { Injectable, Logger, Inject, HttpStatus } from '@nestjs/common';
 import { PrismaService } from 'src/infrastructure/prisma/prisma.service';
 import { CreateDepositRequestDto } from '../dtos/create-deposit-request.dto';
@@ -17,6 +17,7 @@ import { ApiException } from 'src/common/http/exception/api.exception';
 import { MessageCode } from 'src/common/http/types';
 import type { RequestClientInfo } from 'src/common/http/types/client-info.types';
 import { EnvService } from 'src/common/env/env.service';
+import { generateUid } from 'src/utils/id.util';
 
 @Injectable()
 export class BankTransferDepositService {
@@ -147,6 +148,8 @@ export class BankTransferDepositService {
             afterAmount: beforeAmount,
             depositDetail: {
               create: {
+                uid: generateUid(),
+                requestedAmount: amount,
                 status: DepositDetailStatus.PENDING,
                 methodType: DepositMethodType.BANK_TRANSFER,
                 provider: PaymentProvider.MANUAL,
@@ -196,3 +199,4 @@ export class BankTransferDepositService {
     }
   }
 }
+

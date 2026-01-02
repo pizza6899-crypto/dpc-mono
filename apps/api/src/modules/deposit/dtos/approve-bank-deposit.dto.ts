@@ -33,3 +33,4 @@ export class ApproveBankDepositDto {
   @IsString()
   memo?: string;
 }
+

@@ -1,18 +1,42 @@
 // src/modules/deposit/deposit.module.ts
 import { Module } from '@nestjs/common';
+import { DepositService } from './application/deposit.service';
+import { BankTransferDepositService } from './application/bank-transfer-deposit.service';
+import { CryptoDepositService } from './application/crypto-deposit.service';
+import { AdminDepositService } from './application/admin-deposit.service';
+import { DepositController } from './controllers/user/deposit.controller';
+import { AdminDepositController } from './controllers/admin/deposit.controller';
+import { ConcurrencyModule } from '../../common/concurrency/concurrency.module';
+import { PrismaModule } from 'src/infrastructure/prisma/prisma.module';
+import { EnvModule } from 'src/common/env/env.module';
+import { UserValidationModule } from 'src/common/user-validation/user-validation.module';
+import { RollingModule } from '../rolling/rolling.module';
+import { UserStatsModule } from '../user-stats/user-stats.module';
+import { PaymentModule } from '../payment/payment.module';
 
 @Module({
   imports: [
-    // TODO: 필요한 모듈 import 추가
+    ConcurrencyModule,
+    PrismaModule,
+    EnvModule,
+    UserValidationModule,
+    RollingModule,
+    UserStatsModule,
+    PaymentModule, // NowPaymentApiService 사용을 위해
   ],
   providers: [
-    // TODO: Providers 추가
+    DepositService,
+    BankTransferDepositService,
+    CryptoDepositService,
+    AdminDepositService,
   ],
   controllers: [
-    // TODO: Controllers 추가
+    DepositController,
+    AdminDepositController,
   ],
   exports: [
-    // TODO: Exports 추가
+    DepositService,
+    AdminDepositService,
   ],
 })
 export class DepositModule {}

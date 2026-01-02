@@ -1,7 +1,7 @@
-// src/modules/payment/application/crypto-deposit.service.ts
+// src/modules/deposit/application/crypto-deposit.service.ts
 import { Injectable, Logger, Inject, HttpStatus } from '@nestjs/common';
 import { PrismaService } from 'src/infrastructure/prisma/prisma.service';
-import { NowPaymentApiService } from '../infrastructure/now-payment-api.service';
+import { NowPaymentApiService } from '../../payment/infrastructure/now-payment-api.service';
 import { CreateDepositRequestDto } from '../dtos/create-deposit-request.dto';
 import { CreateDepositResponseDto } from '../dtos/create-deposit-response.dto';
 import {
@@ -13,7 +13,7 @@ import {
   TransactionType,
 } from '@repo/database';
 import { nowUtcMinus } from 'src/utils/date.util';
-import { IdUtil } from 'src/utils/id.util';
+import { generateUid, IdUtil } from 'src/utils/id.util';
 import { ApiException } from 'src/common/http/exception/api.exception';
 import { MessageCode } from 'src/common/http/types';
 import type { RequestClientInfo } from 'src/common/http/types/client-info.types';
@@ -118,6 +118,8 @@ export class CryptoDepositService {
         afterAmount: beforeAmount,
         depositDetail: {
           create: {
+            uid: generateUid(),
+            requestedAmount: 5,
             status: DepositDetailStatus.PENDING,
             methodType: DepositMethodType.CRYPTO_WALLET,
             provider: PaymentProvider.NOWPAYMENT,
@@ -149,3 +151,4 @@ export class CryptoDepositService {
     return result;
   }
 }
+

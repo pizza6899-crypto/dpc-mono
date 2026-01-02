@@ -1,4 +1,4 @@
-// src/modules/payment/application/deposit.service.ts
+// src/modules/deposit/application/deposit.service.ts
 import { Injectable, Logger, HttpStatus } from '@nestjs/common';
 import { CreateDepositRequestDto } from '../dtos/create-deposit-request.dto';
 import { CreateDepositResponseDto } from '../dtos/create-deposit-response.dto';
@@ -80,3 +80,4 @@ export class DepositService {
     });
   }
 }
+

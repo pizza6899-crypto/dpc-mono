@@ -1,7 +1,7 @@
 import { ApiProperty } from '@nestjs/swagger';
 import { IsNotEmpty, IsString } from 'class-validator';
 
-// src/modules/payment/dtos/reject-deposit.dto.ts
+// src/modules/deposit/dtos/reject-deposit.dto.ts
 export class RejectDepositDto {
   @ApiProperty({
     description: '거부 사유 / Rejection reason',
@@ -11,3 +11,4 @@ export class RejectDepositDto {
   @IsString()
   failureReason: string; // 거부 사유
 }
+

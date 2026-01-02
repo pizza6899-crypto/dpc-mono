@@ -69,3 +69,4 @@ export class GetDepositsQueryDto extends createPaginationQueryDto<DepositSortFie
   @IsDateString()
   endDate?: string;
 }
+
