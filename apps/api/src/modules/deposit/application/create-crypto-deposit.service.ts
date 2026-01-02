@@ -1,4 +1,4 @@
-import { Injectable, Inject, BadRequestException } from '@nestjs/common';
+import { Injectable, Inject, BadRequestException, ConflictException } from '@nestjs/common';
 import { Prisma, DepositMethodType, ExchangeCurrencyCode, PaymentProvider } from '@repo/database';
 import { createId } from '@paralleldrive/cuid2';
 import {
@@ -12,6 +12,7 @@ import type {
 import { DepositDetail, DepositMethod, DepositAmount } from '../domain';
 import { CreateDepositResponseDto } from '../dtos/create-deposit-response.dto';
 import { CreateCryptoDepositRequestDto } from '../dtos/create-crypto-deposit-request.dto';
+import { CheckEligiblePromotionsService } from '../../promotion/application/check-eligible-promotions.service';
 
 interface CreateCryptoDepositParams extends CreateCryptoDepositRequestDto {
     userId: bigint;
@@ -26,6 +27,7 @@ export class CreateCryptoDepositService {
         private readonly depositRepository: DepositDetailRepositoryPort,
         @Inject(CRYPTO_CONFIG_REPOSITORY)
         private readonly cryptoConfigRepository: CryptoConfigRepositoryPort,
+        private readonly checkEligiblePromotionsService: CheckEligiblePromotionsService,
     ) { }
 
     async execute(params: CreateCryptoDepositParams): Promise<CreateDepositResponseDto> {
@@ -34,11 +36,34 @@ export class CreateCryptoDepositService {
             payCurrency,
             payNetwork,
             amount,
+            depositPromotionId,
             ipAddress,
             deviceFingerprint,
         } = params;
 
-        // 1. 암호화폐 설정 조회 및 검증
+        // 0. 중복 입금 신청 확인 (Pending 상태인 입금이 있으면 차단)
+        const hasPendingDeposit = await this.depositRepository.existsPendingByUserId(userId);
+        if (hasPendingDeposit) {
+            throw new ConflictException(
+                'You already have a pending deposit request. Please complete or cancel it first.',
+            );
+        }
+
+        // 1. 프로모션 유효성 검사
+        if (depositPromotionId) {
+            const eligiblePromotions = await this.checkEligiblePromotionsService.execute({
+                userId,
+                depositAmount: amount ? new Prisma.Decimal(amount) : new Prisma.Decimal(0),
+                currency: payCurrency as ExchangeCurrencyCode,
+            });
+
+            const isEligible = eligiblePromotions.some((p) => Number(p.id) === Number(depositPromotionId));
+            if (!isEligible) {
+                throw new BadRequestException('Invalid or ineligible promotion selected.');
+            }
+        }
+
+        // 2. 암호화폐 설정 조회 및 검증
         const cryptoConfig = await this.cryptoConfigRepository.findBySymbolAndNetwork(
             payCurrency,
             payNetwork,

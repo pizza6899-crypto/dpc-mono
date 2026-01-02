@@ -173,5 +173,17 @@ export class DepositDetailRepository implements DepositDetailRepositoryPort {
 
     return result ? this.mapper.toDomain(result) : null;
   }
+
+  async existsPendingByUserId(userId: bigint): Promise<boolean> {
+    const count = await this.tx.depositDetail.count({
+      where: {
+        userId,
+        status: {
+          in: ['PENDING', 'CONFIRMING'],
+        },
+      },
+    });
+    return count > 0;
+  }
 }
 

@@ -1,4 +1,4 @@
-import { Injectable, Inject, BadRequestException, NotFoundException } from '@nestjs/common';
+import { Injectable, Inject, BadRequestException, NotFoundException, ConflictException } from '@nestjs/common';
 import { Prisma, DepositMethodType, ExchangeCurrencyCode, PaymentProvider } from '@repo/database';
 import { createId } from '@paralleldrive/cuid2';
 import {
@@ -12,6 +12,7 @@ import type {
 import { DepositDetail, DepositMethod, DepositAmount } from '../domain';
 import { CreateDepositResponseDto } from '../dtos/create-deposit-response.dto';
 import { CreateBankDepositRequestDto } from '../dtos/create-bank-deposit-request.dto';
+import { CheckEligiblePromotionsService } from '../../promotion/application/check-eligible-promotions.service';
 
 interface CreateBankDepositParams extends CreateBankDepositRequestDto {
     userId: bigint;
@@ -26,6 +27,7 @@ export class CreateBankDepositService {
         private readonly depositRepository: DepositDetailRepositoryPort,
         @Inject(BANK_CONFIG_REPOSITORY)
         private readonly bankConfigRepository: BankConfigRepositoryPort,
+        private readonly promotionsService: CheckEligiblePromotionsService,
     ) { }
 
     async execute(params: CreateBankDepositParams): Promise<CreateDepositResponseDto> {
@@ -33,12 +35,35 @@ export class CreateBankDepositService {
             userId,
             payCurrency,
             amount,
+            depositPromotionId,
             depositorName,
             ipAddress,
             deviceFingerprint,
         } = params;
 
-        // 1. 활성화된 은행 계좌 조회
+        // 0. 중복 입금 신청 확인
+        const hasPendingDeposit = await this.depositRepository.existsPendingByUserId(userId);
+        if (hasPendingDeposit) {
+            throw new ConflictException(
+                'You already have a pending deposit request. Please complete or cancel it first.',
+            );
+        }
+
+        // 1. 프로모션 유효성 검사
+        if (depositPromotionId) {
+            const eligiblePromotions = await this.promotionsService.execute({
+                userId,
+                depositAmount: new Prisma.Decimal(amount),
+                currency: payCurrency as ExchangeCurrencyCode,
+            });
+
+            const isEligible = eligiblePromotions.some((p) => Number(p.id) === Number(depositPromotionId));
+            if (!isEligible) {
+                throw new BadRequestException('Invalid or ineligible promotion selected.');
+            }
+        }
+
+        // 2. 활성화된 은행 계좌 조회
         const activeBanks = await this.bankConfigRepository.listActive(payCurrency as ExchangeCurrencyCode);
 
         if (activeBanks.length === 0) {
