@@ -12,7 +12,7 @@ import {
 } from 'class-validator';
 import { Type } from 'class-transformer';
 import {
-  PromotionQualificationCondition,
+  PromotionQualification,
   PromotionTargetType,
   PromotionBonusType,
   ExchangeCurrencyCode,
@@ -148,11 +148,11 @@ export class CreatePromotionRequestDto {
 
   @ApiProperty({
     description: '자격 유지 조건',
-    example: PromotionQualificationCondition.UNTIL_FIRST_WITHDRAWAL,
-    enum: PromotionQualificationCondition,
+    example: PromotionQualification.UNTIL_FIRST_WITHDRAWAL,
+    enum: PromotionQualification,
   })
-  @IsEnum(PromotionQualificationCondition)
-  qualificationMaintainCondition: PromotionQualificationCondition;
+  @IsEnum(PromotionQualification)
+  qualificationMaintainCondition: PromotionQualification;
 
   @ApiPropertyOptional({
     description: '1회성 프로모션 여부',

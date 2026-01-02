@@ -1033,12 +1033,13 @@ exports.PromotionBonusType = exports.$Enums.PromotionBonusType = {
   PERCENTAGE: 'PERCENTAGE'
 };
 
-exports.PromotionQualificationCondition = exports.$Enums.PromotionQualificationCondition = {
+exports.PromotionQualification = exports.$Enums.PromotionQualification = {
   UNTIL_FIRST_WITHDRAWAL: 'UNTIL_FIRST_WITHDRAWAL'
 };
 
 exports.UserPromotionStatus = exports.$Enums.UserPromotionStatus = {
   ACTIVE: 'ACTIVE',
+  COMPLETED: 'COMPLETED',
   QUALIFICATION_LOST: 'QUALIFICATION_LOST',
   EXPIRED: 'EXPIRED',
   FAILED: 'FAILED'

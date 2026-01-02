@@ -3,7 +3,7 @@ import { Prisma } from '@repo/database';
 import {
   PromotionTargetType,
   PromotionBonusType,
-  PromotionQualificationCondition,
+  PromotionQualification,
 } from '@repo/database';
 import { PromotionCurrency } from './promotion-currency.entity';
 
@@ -29,7 +29,7 @@ export class Promotion {
     public readonly bonusType: PromotionBonusType,
     public readonly bonusRate: Prisma.Decimal | null,
     public readonly rollingMultiplier: Prisma.Decimal | null,
-    public readonly qualificationMaintainCondition: PromotionQualificationCondition,
+    public readonly qualificationMaintainCondition: PromotionQualification,
     public readonly isOneTime: boolean = false, // 1회성 여부 (기본값: false)
     public readonly createdAt: Date,
     public readonly updatedAt: Date,
@@ -49,7 +49,7 @@ export class Promotion {
     bonusType: PromotionBonusType;
     bonusRate: Prisma.Decimal | null;
     rollingMultiplier: Prisma.Decimal | null;
-    qualificationMaintainCondition: PromotionQualificationCondition;
+    qualificationMaintainCondition: PromotionQualification;
     isOneTime?: boolean; // 스키마에 없을 수 있으므로 optional
     createdAt: Date;
     updatedAt: Date;

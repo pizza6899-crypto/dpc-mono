@@ -2,7 +2,7 @@
 import {
   Prisma,
   PromotionTargetType,
-  PromotionQualificationCondition,
+  PromotionQualification,
 } from '@repo/database';
 import type { Promotion } from './model/promotion.entity';
 import type { UserPromotion } from './model/user-promotion.entity';
@@ -97,7 +97,7 @@ export class PromotionPolicy {
   ): void {
     if (
       promotion.qualificationMaintainCondition ===
-        PromotionQualificationCondition.UNTIL_FIRST_WITHDRAWAL &&
+        PromotionQualification.UNTIL_FIRST_WITHDRAWAL &&
       hasWithdrawn
     ) {
       throw new PromotionNotEligibleException(

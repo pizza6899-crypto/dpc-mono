@@ -543,15 +543,16 @@ export const PromotionBonusType: {
 export type PromotionBonusType = (typeof PromotionBonusType)[keyof typeof PromotionBonusType]
 
 
-export const PromotionQualificationCondition: {
+export const PromotionQualification: {
   UNTIL_FIRST_WITHDRAWAL: 'UNTIL_FIRST_WITHDRAWAL'
 };
 
-export type PromotionQualificationCondition = (typeof PromotionQualificationCondition)[keyof typeof PromotionQualificationCondition]
+export type PromotionQualification = (typeof PromotionQualification)[keyof typeof PromotionQualification]
 
 
 export const UserPromotionStatus: {
   ACTIVE: 'ACTIVE',
+  COMPLETED: 'COMPLETED',
   QUALIFICATION_LOST: 'QUALIFICATION_LOST',
   EXPIRED: 'EXPIRED',
   FAILED: 'FAILED'
@@ -706,9 +707,9 @@ export type PromotionBonusType = $Enums.PromotionBonusType
 
 export const PromotionBonusType: typeof $Enums.PromotionBonusType
 
-export type PromotionQualificationCondition = $Enums.PromotionQualificationCondition
+export type PromotionQualification = $Enums.PromotionQualification
 
-export const PromotionQualificationCondition: typeof $Enums.PromotionQualificationCondition
+export const PromotionQualification: typeof $Enums.PromotionQualification
 
 export type UserPromotionStatus = $Enums.UserPromotionStatus
 
@@ -52472,7 +52473,7 @@ export namespace Prisma {
     bonusType: $Enums.PromotionBonusType | null
     bonusRate: Decimal | null
     rollingMultiplier: Decimal | null
-    qualificationMaintainCondition: $Enums.PromotionQualificationCondition | null
+    qualificationMaintainCondition: $Enums.PromotionQualification | null
     isOneTime: boolean | null
     createdAt: Date | null
     updatedAt: Date | null
@@ -52490,7 +52491,7 @@ export namespace Prisma {
     bonusType: $Enums.PromotionBonusType | null
     bonusRate: Decimal | null
     rollingMultiplier: Decimal | null
-    qualificationMaintainCondition: $Enums.PromotionQualificationCondition | null
+    qualificationMaintainCondition: $Enums.PromotionQualification | null
     isOneTime: boolean | null
     createdAt: Date | null
     updatedAt: Date | null
@@ -52681,7 +52682,7 @@ export namespace Prisma {
     bonusType: $Enums.PromotionBonusType
     bonusRate: Decimal | null
     rollingMultiplier: Decimal | null
-    qualificationMaintainCondition: $Enums.PromotionQualificationCondition
+    qualificationMaintainCondition: $Enums.PromotionQualification
     isOneTime: boolean
     createdAt: Date
     updatedAt: Date
@@ -52811,7 +52812,7 @@ export namespace Prisma {
       bonusType: $Enums.PromotionBonusType
       bonusRate: Prisma.Decimal | null
       rollingMultiplier: Prisma.Decimal | null
-      qualificationMaintainCondition: $Enums.PromotionQualificationCondition
+      qualificationMaintainCondition: $Enums.PromotionQualification
       isOneTime: boolean
       createdAt: Date
       updatedAt: Date
@@ -53252,7 +53253,7 @@ export namespace Prisma {
     readonly bonusType: FieldRef<"Promotion", 'PromotionBonusType'>
     readonly bonusRate: FieldRef<"Promotion", 'Decimal'>
     readonly rollingMultiplier: FieldRef<"Promotion", 'Decimal'>
-    readonly qualificationMaintainCondition: FieldRef<"Promotion", 'PromotionQualificationCondition'>
+    readonly qualificationMaintainCondition: FieldRef<"Promotion", 'PromotionQualification'>
     readonly isOneTime: FieldRef<"Promotion", 'Boolean'>
     readonly createdAt: FieldRef<"Promotion", 'DateTime'>
     readonly updatedAt: FieldRef<"Promotion", 'DateTime'>
@@ -60010,16 +60011,16 @@ export namespace Prisma {
 
 
   /**
-   * Reference to a field of type 'PromotionQualificationCondition'
+   * Reference to a field of type 'PromotionQualification'
    */
-  export type EnumPromotionQualificationConditionFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaModel, 'PromotionQualificationCondition'>
+  export type EnumPromotionQualificationFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaModel, 'PromotionQualification'>
     
 
 
   /**
-   * Reference to a field of type 'PromotionQualificationCondition[]'
+   * Reference to a field of type 'PromotionQualification[]'
    */
-  export type ListEnumPromotionQualificationConditionFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaModel, 'PromotionQualificationCondition[]'>
+  export type ListEnumPromotionQualificationFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaModel, 'PromotionQualification[]'>
     
 
 
@@ -63890,7 +63891,7 @@ export namespace Prisma {
     bonusType?: EnumPromotionBonusTypeFilter<"Promotion"> | $Enums.PromotionBonusType
     bonusRate?: DecimalNullableFilter<"Promotion"> | Decimal | DecimalJsLike | number | string | null
     rollingMultiplier?: DecimalNullableFilter<"Promotion"> | Decimal | DecimalJsLike | number | string | null
-    qualificationMaintainCondition?: EnumPromotionQualificationConditionFilter<"Promotion"> | $Enums.PromotionQualificationCondition
+    qualificationMaintainCondition?: EnumPromotionQualificationFilter<"Promotion"> | $Enums.PromotionQualification
     isOneTime?: BoolFilter<"Promotion"> | boolean
     createdAt?: DateTimeFilter<"Promotion"> | Date | string
     updatedAt?: DateTimeFilter<"Promotion"> | Date | string
@@ -63935,7 +63936,7 @@ export namespace Prisma {
     bonusType?: EnumPromotionBonusTypeFilter<"Promotion"> | $Enums.PromotionBonusType
     bonusRate?: DecimalNullableFilter<"Promotion"> | Decimal | DecimalJsLike | number | string | null
     rollingMultiplier?: DecimalNullableFilter<"Promotion"> | Decimal | DecimalJsLike | number | string | null
-    qualificationMaintainCondition?: EnumPromotionQualificationConditionFilter<"Promotion"> | $Enums.PromotionQualificationCondition
+    qualificationMaintainCondition?: EnumPromotionQualificationFilter<"Promotion"> | $Enums.PromotionQualification
     isOneTime?: BoolFilter<"Promotion"> | boolean
     createdAt?: DateTimeFilter<"Promotion"> | Date | string
     updatedAt?: DateTimeFilter<"Promotion"> | Date | string
@@ -63982,7 +63983,7 @@ export namespace Prisma {
     bonusType?: EnumPromotionBonusTypeWithAggregatesFilter<"Promotion"> | $Enums.PromotionBonusType
     bonusRate?: DecimalNullableWithAggregatesFilter<"Promotion"> | Decimal | DecimalJsLike | number | string | null
     rollingMultiplier?: DecimalNullableWithAggregatesFilter<"Promotion"> | Decimal | DecimalJsLike | number | string | null
-    qualificationMaintainCondition?: EnumPromotionQualificationConditionWithAggregatesFilter<"Promotion"> | $Enums.PromotionQualificationCondition
+    qualificationMaintainCondition?: EnumPromotionQualificationWithAggregatesFilter<"Promotion"> | $Enums.PromotionQualification
     isOneTime?: BoolWithAggregatesFilter<"Promotion"> | boolean
     createdAt?: DateTimeWithAggregatesFilter<"Promotion"> | Date | string
     updatedAt?: DateTimeWithAggregatesFilter<"Promotion"> | Date | string
@@ -68667,7 +68668,7 @@ export namespace Prisma {
     bonusType: $Enums.PromotionBonusType
     bonusRate?: Decimal | DecimalJsLike | number | string | null
     rollingMultiplier?: Decimal | DecimalJsLike | number | string | null
-    qualificationMaintainCondition: $Enums.PromotionQualificationCondition
+    qualificationMaintainCondition: $Enums.PromotionQualification
     isOneTime?: boolean
     createdAt?: Date | string
     updatedAt?: Date | string
@@ -68688,7 +68689,7 @@ export namespace Prisma {
     bonusType: $Enums.PromotionBonusType
     bonusRate?: Decimal | DecimalJsLike | number | string | null
     rollingMultiplier?: Decimal | DecimalJsLike | number | string | null
-    qualificationMaintainCondition: $Enums.PromotionQualificationCondition
+    qualificationMaintainCondition: $Enums.PromotionQualification
     isOneTime?: boolean
     createdAt?: Date | string
     updatedAt?: Date | string
@@ -68709,7 +68710,7 @@ export namespace Prisma {
     bonusType?: EnumPromotionBonusTypeFieldUpdateOperationsInput | $Enums.PromotionBonusType
     bonusRate?: NullableDecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string | null
     rollingMultiplier?: NullableDecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string | null
-    qualificationMaintainCondition?: EnumPromotionQualificationConditionFieldUpdateOperationsInput | $Enums.PromotionQualificationCondition
+    qualificationMaintainCondition?: EnumPromotionQualificationFieldUpdateOperationsInput | $Enums.PromotionQualification
     isOneTime?: BoolFieldUpdateOperationsInput | boolean
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
@@ -68730,7 +68731,7 @@ export namespace Prisma {
     bonusType?: EnumPromotionBonusTypeFieldUpdateOperationsInput | $Enums.PromotionBonusType
     bonusRate?: NullableDecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string | null
     rollingMultiplier?: NullableDecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string | null
-    qualificationMaintainCondition?: EnumPromotionQualificationConditionFieldUpdateOperationsInput | $Enums.PromotionQualificationCondition
+    qualificationMaintainCondition?: EnumPromotionQualificationFieldUpdateOperationsInput | $Enums.PromotionQualification
     isOneTime?: BoolFieldUpdateOperationsInput | boolean
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
@@ -68751,7 +68752,7 @@ export namespace Prisma {
     bonusType: $Enums.PromotionBonusType
     bonusRate?: Decimal | DecimalJsLike | number | string | null
     rollingMultiplier?: Decimal | DecimalJsLike | number | string | null
-    qualificationMaintainCondition: $Enums.PromotionQualificationCondition
+    qualificationMaintainCondition: $Enums.PromotionQualification
     isOneTime?: boolean
     createdAt?: Date | string
     updatedAt?: Date | string
@@ -68769,7 +68770,7 @@ export namespace Prisma {
     bonusType?: EnumPromotionBonusTypeFieldUpdateOperationsInput | $Enums.PromotionBonusType
     bonusRate?: NullableDecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string | null
     rollingMultiplier?: NullableDecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string | null
-    qualificationMaintainCondition?: EnumPromotionQualificationConditionFieldUpdateOperationsInput | $Enums.PromotionQualificationCondition
+    qualificationMaintainCondition?: EnumPromotionQualificationFieldUpdateOperationsInput | $Enums.PromotionQualification
     isOneTime?: BoolFieldUpdateOperationsInput | boolean
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
@@ -68787,7 +68788,7 @@ export namespace Prisma {
     bonusType?: EnumPromotionBonusTypeFieldUpdateOperationsInput | $Enums.PromotionBonusType
     bonusRate?: NullableDecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string | null
     rollingMultiplier?: NullableDecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string | null
-    qualificationMaintainCondition?: EnumPromotionQualificationConditionFieldUpdateOperationsInput | $Enums.PromotionQualificationCondition
+    qualificationMaintainCondition?: EnumPromotionQualificationFieldUpdateOperationsInput | $Enums.PromotionQualification
     isOneTime?: BoolFieldUpdateOperationsInput | boolean
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
@@ -72908,11 +72909,11 @@ export namespace Prisma {
     not?: NestedEnumPromotionBonusTypeFilter<$PrismaModel> | $Enums.PromotionBonusType
   }
 
-  export type EnumPromotionQualificationConditionFilter<$PrismaModel = never> = {
-    equals?: $Enums.PromotionQualificationCondition | EnumPromotionQualificationConditionFieldRefInput<$PrismaModel>
-    in?: $Enums.PromotionQualificationCondition[] | ListEnumPromotionQualificationConditionFieldRefInput<$PrismaModel>
-    notIn?: $Enums.PromotionQualificationCondition[] | ListEnumPromotionQualificationConditionFieldRefInput<$PrismaModel>
-    not?: NestedEnumPromotionQualificationConditionFilter<$PrismaModel> | $Enums.PromotionQualificationCondition
+  export type EnumPromotionQualificationFilter<$PrismaModel = never> = {
+    equals?: $Enums.PromotionQualification | EnumPromotionQualificationFieldRefInput<$PrismaModel>
+    in?: $Enums.PromotionQualification[] | ListEnumPromotionQualificationFieldRefInput<$PrismaModel>
+    notIn?: $Enums.PromotionQualification[] | ListEnumPromotionQualificationFieldRefInput<$PrismaModel>
+    not?: NestedEnumPromotionQualificationFilter<$PrismaModel> | $Enums.PromotionQualification
   }
 
   export type PromotionTranslationListRelationFilter = {
@@ -73021,14 +73022,14 @@ export namespace Prisma {
     _max?: NestedEnumPromotionBonusTypeFilter<$PrismaModel>
   }
 
-  export type EnumPromotionQualificationConditionWithAggregatesFilter<$PrismaModel = never> = {
-    equals?: $Enums.PromotionQualificationCondition | EnumPromotionQualificationConditionFieldRefInput<$PrismaModel>
-    in?: $Enums.PromotionQualificationCondition[] | ListEnumPromotionQualificationConditionFieldRefInput<$PrismaModel>
-    notIn?: $Enums.PromotionQualificationCondition[] | ListEnumPromotionQualificationConditionFieldRefInput<$PrismaModel>
-    not?: NestedEnumPromotionQualificationConditionWithAggregatesFilter<$PrismaModel> | $Enums.PromotionQualificationCondition
+  export type EnumPromotionQualificationWithAggregatesFilter<$PrismaModel = never> = {
+    equals?: $Enums.PromotionQualification | EnumPromotionQualificationFieldRefInput<$PrismaModel>
+    in?: $Enums.PromotionQualification[] | ListEnumPromotionQualificationFieldRefInput<$PrismaModel>
+    notIn?: $Enums.PromotionQualification[] | ListEnumPromotionQualificationFieldRefInput<$PrismaModel>
+    not?: NestedEnumPromotionQualificationWithAggregatesFilter<$PrismaModel> | $Enums.PromotionQualification
     _count?: NestedIntFilter<$PrismaModel>
-    _min?: NestedEnumPromotionQualificationConditionFilter<$PrismaModel>
-    _max?: NestedEnumPromotionQualificationConditionFilter<$PrismaModel>
+    _min?: NestedEnumPromotionQualificationFilter<$PrismaModel>
+    _max?: NestedEnumPromotionQualificationFilter<$PrismaModel>
   }
 
   export type PromotionScalarRelationFilter = {
@@ -75849,8 +75850,8 @@ export namespace Prisma {
     set?: $Enums.PromotionBonusType
   }
 
-  export type EnumPromotionQualificationConditionFieldUpdateOperationsInput = {
-    set?: $Enums.PromotionQualificationCondition
+  export type EnumPromotionQualificationFieldUpdateOperationsInput = {
+    set?: $Enums.PromotionQualification
   }
 
   export type PromotionTranslationUpdateManyWithoutPromotionNestedInput = {
@@ -77003,11 +77004,11 @@ export namespace Prisma {
     not?: NestedEnumPromotionBonusTypeFilter<$PrismaModel> | $Enums.PromotionBonusType
   }
 
-  export type NestedEnumPromotionQualificationConditionFilter<$PrismaModel = never> = {
-    equals?: $Enums.PromotionQualificationCondition | EnumPromotionQualificationConditionFieldRefInput<$PrismaModel>
-    in?: $Enums.PromotionQualificationCondition[] | ListEnumPromotionQualificationConditionFieldRefInput<$PrismaModel>
-    notIn?: $Enums.PromotionQualificationCondition[] | ListEnumPromotionQualificationConditionFieldRefInput<$PrismaModel>
-    not?: NestedEnumPromotionQualificationConditionFilter<$PrismaModel> | $Enums.PromotionQualificationCondition
+  export type NestedEnumPromotionQualificationFilter<$PrismaModel = never> = {
+    equals?: $Enums.PromotionQualification | EnumPromotionQualificationFieldRefInput<$PrismaModel>
+    in?: $Enums.PromotionQualification[] | ListEnumPromotionQualificationFieldRefInput<$PrismaModel>
+    notIn?: $Enums.PromotionQualification[] | ListEnumPromotionQualificationFieldRefInput<$PrismaModel>
+    not?: NestedEnumPromotionQualificationFilter<$PrismaModel> | $Enums.PromotionQualification
   }
 
   export type NestedEnumPromotionTargetTypeWithAggregatesFilter<$PrismaModel = never> = {
@@ -77030,14 +77031,14 @@ export namespace Prisma {
     _max?: NestedEnumPromotionBonusTypeFilter<$PrismaModel>
   }
 
-  export type NestedEnumPromotionQualificationConditionWithAggregatesFilter<$PrismaModel = never> = {
-    equals?: $Enums.PromotionQualificationCondition | EnumPromotionQualificationConditionFieldRefInput<$PrismaModel>
-    in?: $Enums.PromotionQualificationCondition[] | ListEnumPromotionQualificationConditionFieldRefInput<$PrismaModel>
-    notIn?: $Enums.PromotionQualificationCondition[] | ListEnumPromotionQualificationConditionFieldRefInput<$PrismaModel>
-    not?: NestedEnumPromotionQualificationConditionWithAggregatesFilter<$PrismaModel> | $Enums.PromotionQualificationCondition
+  export type NestedEnumPromotionQualificationWithAggregatesFilter<$PrismaModel = never> = {
+    equals?: $Enums.PromotionQualification | EnumPromotionQualificationFieldRefInput<$PrismaModel>
+    in?: $Enums.PromotionQualification[] | ListEnumPromotionQualificationFieldRefInput<$PrismaModel>
+    notIn?: $Enums.PromotionQualification[] | ListEnumPromotionQualificationFieldRefInput<$PrismaModel>
+    not?: NestedEnumPromotionQualificationWithAggregatesFilter<$PrismaModel> | $Enums.PromotionQualification
     _count?: NestedIntFilter<$PrismaModel>
-    _min?: NestedEnumPromotionQualificationConditionFilter<$PrismaModel>
-    _max?: NestedEnumPromotionQualificationConditionFilter<$PrismaModel>
+    _min?: NestedEnumPromotionQualificationFilter<$PrismaModel>
+    _max?: NestedEnumPromotionQualificationFilter<$PrismaModel>
   }
 
   export type NestedEnumUserPromotionStatusFilter<$PrismaModel = never> = {
@@ -85885,7 +85886,7 @@ export namespace Prisma {
     bonusType: $Enums.PromotionBonusType
     bonusRate?: Decimal | DecimalJsLike | number | string | null
     rollingMultiplier?: Decimal | DecimalJsLike | number | string | null
-    qualificationMaintainCondition: $Enums.PromotionQualificationCondition
+    qualificationMaintainCondition: $Enums.PromotionQualification
     isOneTime?: boolean
     createdAt?: Date | string
     updatedAt?: Date | string
@@ -85905,7 +85906,7 @@ export namespace Prisma {
     bonusType: $Enums.PromotionBonusType
     bonusRate?: Decimal | DecimalJsLike | number | string | null
     rollingMultiplier?: Decimal | DecimalJsLike | number | string | null
-    qualificationMaintainCondition: $Enums.PromotionQualificationCondition
+    qualificationMaintainCondition: $Enums.PromotionQualification
     isOneTime?: boolean
     createdAt?: Date | string
     updatedAt?: Date | string
@@ -85941,7 +85942,7 @@ export namespace Prisma {
     bonusType?: EnumPromotionBonusTypeFieldUpdateOperationsInput | $Enums.PromotionBonusType
     bonusRate?: NullableDecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string | null
     rollingMultiplier?: NullableDecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string | null
-    qualificationMaintainCondition?: EnumPromotionQualificationConditionFieldUpdateOperationsInput | $Enums.PromotionQualificationCondition
+    qualificationMaintainCondition?: EnumPromotionQualificationFieldUpdateOperationsInput | $Enums.PromotionQualification
     isOneTime?: BoolFieldUpdateOperationsInput | boolean
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
@@ -85961,7 +85962,7 @@ export namespace Prisma {
     bonusType?: EnumPromotionBonusTypeFieldUpdateOperationsInput | $Enums.PromotionBonusType
     bonusRate?: NullableDecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string | null
     rollingMultiplier?: NullableDecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string | null
-    qualificationMaintainCondition?: EnumPromotionQualificationConditionFieldUpdateOperationsInput | $Enums.PromotionQualificationCondition
+    qualificationMaintainCondition?: EnumPromotionQualificationFieldUpdateOperationsInput | $Enums.PromotionQualification
     isOneTime?: BoolFieldUpdateOperationsInput | boolean
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
@@ -85981,7 +85982,7 @@ export namespace Prisma {
     bonusType: $Enums.PromotionBonusType
     bonusRate?: Decimal | DecimalJsLike | number | string | null
     rollingMultiplier?: Decimal | DecimalJsLike | number | string | null
-    qualificationMaintainCondition: $Enums.PromotionQualificationCondition
+    qualificationMaintainCondition: $Enums.PromotionQualification
     isOneTime?: boolean
     createdAt?: Date | string
     updatedAt?: Date | string
@@ -86001,7 +86002,7 @@ export namespace Prisma {
     bonusType: $Enums.PromotionBonusType
     bonusRate?: Decimal | DecimalJsLike | number | string | null
     rollingMultiplier?: Decimal | DecimalJsLike | number | string | null
-    qualificationMaintainCondition: $Enums.PromotionQualificationCondition
+    qualificationMaintainCondition: $Enums.PromotionQualification
     isOneTime?: boolean
     createdAt?: Date | string
     updatedAt?: Date | string
@@ -86037,7 +86038,7 @@ export namespace Prisma {
     bonusType?: EnumPromotionBonusTypeFieldUpdateOperationsInput | $Enums.PromotionBonusType
     bonusRate?: NullableDecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string | null
     rollingMultiplier?: NullableDecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string | null
-    qualificationMaintainCondition?: EnumPromotionQualificationConditionFieldUpdateOperationsInput | $Enums.PromotionQualificationCondition
+    qualificationMaintainCondition?: EnumPromotionQualificationFieldUpdateOperationsInput | $Enums.PromotionQualification
     isOneTime?: BoolFieldUpdateOperationsInput | boolean
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
@@ -86057,7 +86058,7 @@ export namespace Prisma {
     bonusType?: EnumPromotionBonusTypeFieldUpdateOperationsInput | $Enums.PromotionBonusType
     bonusRate?: NullableDecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string | null
     rollingMultiplier?: NullableDecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string | null
-    qualificationMaintainCondition?: EnumPromotionQualificationConditionFieldUpdateOperationsInput | $Enums.PromotionQualificationCondition
+    qualificationMaintainCondition?: EnumPromotionQualificationFieldUpdateOperationsInput | $Enums.PromotionQualification
     isOneTime?: BoolFieldUpdateOperationsInput | boolean
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
@@ -86121,7 +86122,7 @@ export namespace Prisma {
     bonusType: $Enums.PromotionBonusType
     bonusRate?: Decimal | DecimalJsLike | number | string | null
     rollingMultiplier?: Decimal | DecimalJsLike | number | string | null
-    qualificationMaintainCondition: $Enums.PromotionQualificationCondition
+    qualificationMaintainCondition: $Enums.PromotionQualification
     isOneTime?: boolean
     createdAt?: Date | string
     updatedAt?: Date | string
@@ -86141,7 +86142,7 @@ export namespace Prisma {
     bonusType: $Enums.PromotionBonusType
     bonusRate?: Decimal | DecimalJsLike | number | string | null
     rollingMultiplier?: Decimal | DecimalJsLike | number | string | null
-    qualificationMaintainCondition: $Enums.PromotionQualificationCondition
+    qualificationMaintainCondition: $Enums.PromotionQualification
     isOneTime?: boolean
     createdAt?: Date | string
     updatedAt?: Date | string
@@ -86284,7 +86285,7 @@ export namespace Prisma {
     bonusType?: EnumPromotionBonusTypeFieldUpdateOperationsInput | $Enums.PromotionBonusType
     bonusRate?: NullableDecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string | null
     rollingMultiplier?: NullableDecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string | null
-    qualificationMaintainCondition?: EnumPromotionQualificationConditionFieldUpdateOperationsInput | $Enums.PromotionQualificationCondition
+    qualificationMaintainCondition?: EnumPromotionQualificationFieldUpdateOperationsInput | $Enums.PromotionQualification
     isOneTime?: BoolFieldUpdateOperationsInput | boolean
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
@@ -86304,7 +86305,7 @@ export namespace Prisma {
     bonusType?: EnumPromotionBonusTypeFieldUpdateOperationsInput | $Enums.PromotionBonusType
     bonusRate?: NullableDecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string | null
     rollingMultiplier?: NullableDecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string | null
-    qualificationMaintainCondition?: EnumPromotionQualificationConditionFieldUpdateOperationsInput | $Enums.PromotionQualificationCondition
+    qualificationMaintainCondition?: EnumPromotionQualificationFieldUpdateOperationsInput | $Enums.PromotionQualification
     isOneTime?: BoolFieldUpdateOperationsInput | boolean
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string

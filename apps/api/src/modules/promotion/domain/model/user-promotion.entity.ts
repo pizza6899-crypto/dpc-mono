@@ -70,6 +70,10 @@ export class UserPromotion {
     return this._currentRollingAmount.gte(this.targetRollingAmount);
   }
 
+  markAsCompleted(): void {
+    this._status = UserPromotionStatus.COMPLETED;
+  }
+
   markAsQualificationLost(): void {
     this._status = UserPromotionStatus.QUALIFICATION_LOST;
   }
@@ -84,6 +88,10 @@ export class UserPromotion {
 
   isActive(): boolean {
     return this._status === UserPromotionStatus.ACTIVE;
+  }
+
+  isCompleted(): boolean {
+    return this._status === UserPromotionStatus.COMPLETED;
   }
 
   toPersistence() {
