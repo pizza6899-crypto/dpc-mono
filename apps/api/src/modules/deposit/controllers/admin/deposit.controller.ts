@@ -52,6 +52,7 @@ import {
   CryptoConfigResponseDto,
   GetCryptoConfigsQueryDto,
   UpdateCryptoConfigRequestDto,
+  CreateCryptoConfigRequestDto,
 } from '../../dtos/crypto-config-admin.dto';
 import { DepositStatsResponseDto } from '../../dtos/deposit-stats.dto';
 import { SuccessResponseDto } from 'src/common/dtos/success-response.dto';
@@ -538,6 +539,74 @@ export class AdminDepositController {
     return await this.adminCryptoConfigService.updateCryptoConfig(
       BigInt(id),
       dto,
+      admin.id,
+      requestInfo,
+    );
+  }
+
+  @Post('configs/crypto')
+  @HttpCode(HttpStatus.CREATED)
+  @ApiOperation({
+    summary: 'Create crypto config / 암호화폐 설정 생성',
+    description:
+      'Create a new cryptocurrency configuration. (새로운 암호화폐 설정을 생성합니다.)',
+  })
+  @ApiStandardResponse(CryptoConfigResponseDto, {
+    status: 201,
+    description: 'Crypto config created successfully / 암호화폐 설정 생성 성공',
+  })
+  @AuditLog({
+    type: LogType.ACTIVITY,
+    action: 'CREATE_CRYPTO_CONFIG',
+    category: 'DEPOSIT',
+    extractMetadata: (args) => ({
+      symbol: args[0]?.symbol,
+      network: args[0]?.network,
+    }),
+  })
+  async createCryptoConfig(
+    @Body() dto: CreateCryptoConfigRequestDto,
+    @CurrentUser() admin: CurrentUserWithSession,
+    @RequestClientInfoParam() requestInfo: RequestClientInfo,
+  ): Promise<CryptoConfigResponseDto> {
+    return await this.adminCryptoConfigService.createCryptoConfig(
+      dto,
+      admin.id,
+      requestInfo,
+    );
+  }
+
+  @Delete('configs/crypto/:id')
+  @HttpCode(HttpStatus.OK)
+  @ApiOperation({
+    summary: 'Delete crypto config / 암호화폐 설정 삭제',
+    description:
+      'Delete a cryptocurrency configuration. (암호화폐 설정을 삭제합니다.)',
+  })
+  @ApiParam({
+    name: 'id',
+    description: 'CryptoConfig ID / 암호화폐 설정 ID',
+    type: String,
+  })
+  @ApiStandardResponse(SuccessResponseDto, {
+    status: 200,
+    description: 'Crypto config deleted successfully / 암호화폐 설정 삭제 성공',
+  })
+  @AuditLog({
+    type: LogType.ACTIVITY,
+    action: 'DELETE_CRYPTO_CONFIG',
+    category: 'DEPOSIT',
+    extractMetadata: (args) => ({
+      cryptoConfigId: args[0]?.id || args[0],
+    }),
+  })
+  async deleteCryptoConfig(
+    @Param('id') id: string,
+    @CurrentUser() admin: CurrentUserWithSession,
+    @RequestClientInfoParam() requestInfo: RequestClientInfo,
+  ): Promise<SuccessResponseDto> {
+    return await this.adminCryptoConfigService.deleteCryptoConfig(
+      BigInt(id),
       admin.id,
       requestInfo,
     );

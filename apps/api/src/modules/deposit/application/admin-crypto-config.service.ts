@@ -9,6 +9,7 @@ import { generateUid } from 'src/utils/id.util';
 import { CryptoConfigNotFoundException } from '../domain';
 import {
   GetCryptoConfigsQueryDto,
+  CreateCryptoConfigRequestDto,
   UpdateCryptoConfigRequestDto,
   CryptoConfigResponseDto
 } from '../dtos/crypto-config-admin.dto';
@@ -79,6 +80,42 @@ export class AdminCryptoConfigService {
       page,
       limit,
       total,
+    };
+  }
+
+  /**
+   * 암호화폐 설정 등록
+   */
+  async createCryptoConfig(
+    dto: CreateCryptoConfigRequestDto,
+    adminId: bigint,
+    requestInfo: RequestClientInfo,
+  ): Promise<CryptoConfigResponseDto> {
+    const config = await this.tx.cryptoConfig.create({
+      data: {
+        uid: generateUid(),
+        symbol: dto.symbol,
+        network: dto.network,
+        isActive: dto.isActive ?? true,
+        minDepositAmount: new Prisma.Decimal(dto.minDepositAmount),
+        depositFeeRate: new Prisma.Decimal(dto.depositFeeRate),
+        confirmations: dto.confirmations,
+        contractAddress: dto.contractAddress || null,
+      },
+    });
+
+    return {
+      id: config.id.toString(),
+      uid: config.uid,
+      symbol: config.symbol,
+      network: config.network,
+      isActive: config.isActive,
+      minDepositAmount: config.minDepositAmount.toString(),
+      depositFeeRate: config.depositFeeRate.toString(),
+      confirmations: config.confirmations,
+      contractAddress: config.contractAddress,
+      createdAt: config.createdAt,
+      updatedAt: config.updatedAt,
     };
   }
 
@@ -161,6 +198,29 @@ export class AdminCryptoConfigService {
       createdAt: updated.createdAt,
       updatedAt: updated.updatedAt,
     };
+  }
+
+  /**
+   * 암호화폐 설정 삭제 (소프트 삭제)
+   */
+  async deleteCryptoConfig(
+    id: bigint,
+    adminId: bigint,
+    requestInfo: RequestClientInfo,
+  ): Promise<{ success: boolean }> {
+    const existing = await this.tx.cryptoConfig.findUnique({
+      where: { id },
+    });
+
+    if (!existing) {
+      throw new CryptoConfigNotFoundException(id);
+    }
+
+    await this.tx.cryptoConfig.delete({
+      where: { id },
+    });
+
+    return { success: true };
   }
 }
 
