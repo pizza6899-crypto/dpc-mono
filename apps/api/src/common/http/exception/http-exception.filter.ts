@@ -87,6 +87,21 @@ export class HttpExceptionFilter implements ExceptionFilter {
       }
     } else if (
       exception instanceof Error &&
+      'errorCode' in exception &&
+      'httpStatus' in exception
+    ) {
+      // Domain Exception 처리 (errorCode와 httpStatus를 가진 예외)
+      // DepositException 등이 이에 해당
+      const domainException = exception as {
+        errorCode: MessageCode;
+        httpStatus: HttpStatus;
+        message: string;
+      };
+      status = domainException.httpStatus;
+      messageCode = domainException.errorCode;
+      message = domainException.message;
+    } else if (
+      exception instanceof Error &&
       exception.constructor.name.includes('Referral')
     ) {
       // Domain Exception 처리 (Referral 관련)

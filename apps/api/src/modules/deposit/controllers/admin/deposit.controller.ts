@@ -13,7 +13,7 @@ import {
 } from '@nestjs/common';
 import { ApiTags, ApiOperation, ApiParam } from '@nestjs/swagger';
 import { RequireRoles } from 'src/common/auth/decorators/roles.decorator';
-import { UserRoleType } from '@repo/database';
+import { UserRoleType, Prisma } from '@repo/database';
 import {
   ApiStandardResponse,
   ApiStandardErrors,
@@ -34,12 +34,28 @@ import {
 } from '../../dtos/admin-deposit-response.dto';
 import { AuditLog } from 'src/modules/audit-log/infrastructure';
 import { LogType } from 'src/modules/audit-log/domain';
+import { GetDepositStatsService } from '../../application/get-deposit-stats.service';
+import { GetDepositsService } from '../../application/get-deposits.service';
+import { GetDepositDetailService } from '../../application/get-deposit-detail.service';
+import { ApproveDepositService } from '../../application/approve-deposit.service';
+import { RejectDepositService } from '../../application/reject-deposit.service';
+import { AdminBankConfigService } from '../../application/admin-bank-config.service';
+import { AdminCryptoConfigService } from '../../application/admin-crypto-config.service';
 
 @Controller('admin/deposits')
 @ApiTags('Admin Deposit Management (관리자 입금 관리)')
 @ApiStandardErrors()
 @RequireRoles(UserRoleType.ADMIN, UserRoleType.SUPER_ADMIN)
 export class AdminDepositController {
+  constructor(
+    private readonly getDepositStatsService: GetDepositStatsService,
+    private readonly getDepositsService: GetDepositsService,
+    private readonly getDepositDetailService: GetDepositDetailService,
+    private readonly approveDepositService: ApproveDepositService,
+    private readonly rejectDepositService: RejectDepositService,
+    private readonly adminBankConfigService: AdminBankConfigService,
+    private readonly adminCryptoConfigService: AdminCryptoConfigService,
+  ) {}
   // ============================================
   // 입금 관리 (Deposit Management)
   // ============================================
@@ -63,8 +79,18 @@ export class AdminDepositController {
   async getDepositStats(
     @CurrentUser() admin: CurrentUserWithSession,
     @RequestClientInfoParam() requestInfo: RequestClientInfo,
-  ) {
-    throw new NotImplementedException('서비스 구현 필요');
+  ): Promise<{
+    todayTotalAmount: string;
+    pendingCount: number;
+    methodDistribution: {
+      crypto: number;
+      bank: number;
+    };
+  }> {
+    return await this.getDepositStatsService.execute({
+      adminId: admin.id,
+      requestInfo,
+    });
   }
 
   @Get()
@@ -89,7 +115,11 @@ export class AdminDepositController {
     @CurrentUser() admin: CurrentUserWithSession,
     @RequestClientInfoParam() requestInfo: RequestClientInfo,
   ): Promise<PaginatedData<AdminDepositListItemDto>> {
-    throw new NotImplementedException('서비스 구현 필요');
+    return await this.getDepositsService.execute({
+      query,
+      adminId: admin.id,
+      requestInfo,
+    });
   }
 
   @Get(':id')
@@ -120,8 +150,12 @@ export class AdminDepositController {
     @Param('id') id: string,
     @CurrentUser() admin: CurrentUserWithSession,
     @RequestClientInfoParam() requestInfo: RequestClientInfo,
-  ) {
-    throw new NotImplementedException('서비스 구현 필요');
+  ): Promise<AdminDepositListItemDto> {
+    return await this.getDepositDetailService.execute({
+      id: BigInt(id),
+      adminId: admin.id,
+      requestInfo,
+    });
   }
 
   @Post(':id/approve')
@@ -154,8 +188,15 @@ export class AdminDepositController {
     @Body() dto: ApproveBankDepositDto,
     @CurrentUser() admin: CurrentUserWithSession,
     @RequestClientInfoParam() requestInfo: RequestClientInfo,
-  ) {
-    throw new NotImplementedException('서비스 구현 필요');
+  ): Promise<ApproveDepositResponseDto> {
+    return await this.approveDepositService.execute({
+      id: BigInt(id),
+      actuallyPaid: new Prisma.Decimal(dto.actuallyPaid),
+      transactionHash: dto.transactionHash,
+      memo: dto.memo,
+      adminId: admin.id,
+      requestInfo,
+    });
   }
 
   @Post(':id/reject')
@@ -186,8 +227,13 @@ export class AdminDepositController {
     @Body() dto: RejectDepositDto,
     @CurrentUser() admin: CurrentUserWithSession,
     @RequestClientInfoParam() requestInfo: RequestClientInfo,
-  ) {
-    throw new NotImplementedException('서비스 구현 필요');
+  ): Promise<RejectDepositResponseDto> {
+    return await this.rejectDepositService.execute({
+      id: BigInt(id),
+      failureReason: dto.failureReason,
+      adminId: admin.id,
+      requestInfo,
+    });
   }
 
   // ============================================
@@ -216,7 +262,11 @@ export class AdminDepositController {
     @CurrentUser() admin: CurrentUserWithSession,
     @RequestClientInfoParam() requestInfo: RequestClientInfo,
   ) {
-    throw new NotImplementedException('서비스 구현 필요');
+    return await this.adminBankConfigService.getBankConfigs(
+      query,
+      admin.id,
+      requestInfo,
+    );
   }
 
   @Post('configs/bank')
@@ -244,7 +294,11 @@ export class AdminDepositController {
     @CurrentUser() admin: CurrentUserWithSession,
     @RequestClientInfoParam() requestInfo: RequestClientInfo,
   ) {
-    throw new NotImplementedException('서비스 구현 필요');
+    return await this.adminBankConfigService.createBankConfig(
+      dto,
+      admin.id,
+      requestInfo,
+    );
   }
 
   @Get('configs/bank/:id')
@@ -276,7 +330,11 @@ export class AdminDepositController {
     @CurrentUser() admin: CurrentUserWithSession,
     @RequestClientInfoParam() requestInfo: RequestClientInfo,
   ) {
-    throw new NotImplementedException('서비스 구현 필요');
+    return await this.adminBankConfigService.getBankConfigDetail(
+      BigInt(id),
+      admin.id,
+      requestInfo,
+    );
   }
 
   @Patch('configs/bank/:id')
@@ -310,7 +368,12 @@ export class AdminDepositController {
     @CurrentUser() admin: CurrentUserWithSession,
     @RequestClientInfoParam() requestInfo: RequestClientInfo,
   ) {
-    throw new NotImplementedException('서비스 구현 필요');
+    return await this.adminBankConfigService.updateBankConfig(
+      BigInt(id),
+      dto,
+      admin.id,
+      requestInfo,
+    );
   }
 
   @Delete('configs/bank/:id')
@@ -342,7 +405,11 @@ export class AdminDepositController {
     @CurrentUser() admin: CurrentUserWithSession,
     @RequestClientInfoParam() requestInfo: RequestClientInfo,
   ) {
-    throw new NotImplementedException('서비스 구현 필요');
+    return await this.adminBankConfigService.deleteBankConfig(
+      BigInt(id),
+      admin.id,
+      requestInfo,
+    );
   }
 
   // ============================================
@@ -371,7 +438,11 @@ export class AdminDepositController {
     @CurrentUser() admin: CurrentUserWithSession,
     @RequestClientInfoParam() requestInfo: RequestClientInfo,
   ) {
-    throw new NotImplementedException('서비스 구현 필요');
+    return await this.adminCryptoConfigService.getCryptoConfigs(
+      query,
+      admin.id,
+      requestInfo,
+    );
   }
 
   @Get('configs/crypto/:id')
@@ -403,7 +474,11 @@ export class AdminDepositController {
     @CurrentUser() admin: CurrentUserWithSession,
     @RequestClientInfoParam() requestInfo: RequestClientInfo,
   ) {
-    throw new NotImplementedException('서비스 구현 필요');
+    return await this.adminCryptoConfigService.getCryptoConfigDetail(
+      BigInt(id),
+      admin.id,
+      requestInfo,
+    );
   }
 
   @Patch('configs/crypto/:id')
@@ -437,7 +512,12 @@ export class AdminDepositController {
     @CurrentUser() admin: CurrentUserWithSession,
     @RequestClientInfoParam() requestInfo: RequestClientInfo,
   ) {
-    throw new NotImplementedException('서비스 구현 필요');
+    return await this.adminCryptoConfigService.updateCryptoConfig(
+      BigInt(id),
+      dto,
+      admin.id,
+      requestInfo,
+    );
   }
 }
 

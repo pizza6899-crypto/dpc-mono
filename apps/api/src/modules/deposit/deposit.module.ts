@@ -9,6 +9,14 @@ import { UserValidationModule } from 'src/common/user-validation/user-validation
 import { RollingModule } from '../rolling/rolling.module';
 import { UserStatsModule } from '../user-stats/user-stats.module';
 import { PaymentModule } from '../payment/payment.module';
+import { WalletModule } from '../wallet/wallet.module';
+import { GetDepositStatsService } from './application/get-deposit-stats.service';
+import { GetDepositsService } from './application/get-deposits.service';
+import { GetDepositDetailService } from './application/get-deposit-detail.service';
+import { ApproveDepositService } from './application/approve-deposit.service';
+import { RejectDepositService } from './application/reject-deposit.service';
+import { AdminBankConfigService } from './application/admin-bank-config.service';
+import { AdminCryptoConfigService } from './application/admin-crypto-config.service';
 
 @Module({
   imports: [
@@ -19,14 +27,29 @@ import { PaymentModule } from '../payment/payment.module';
     RollingModule,
     UserStatsModule,
     PaymentModule, // NowPaymentApiService 사용을 위해
+    WalletModule, // UpdateUserBalanceAdminService 사용을 위해
   ],
   providers: [
+    GetDepositStatsService,
+    GetDepositsService,
+    GetDepositDetailService,
+    ApproveDepositService,
+    RejectDepositService,
+    AdminBankConfigService,
+    AdminCryptoConfigService,
   ],
   controllers: [
     DepositController,
     AdminDepositController,
   ],
   exports: [
+    GetDepositStatsService,
+    GetDepositsService,
+    GetDepositDetailService,
+    ApproveDepositService,
+    RejectDepositService,
+    AdminBankConfigService,
+    AdminCryptoConfigService,
   ],
 })
 export class DepositModule {}
