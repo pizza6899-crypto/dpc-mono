@@ -52,7 +52,7 @@ export class CredentialUserController {
     private readonly changePasswordService: ChangePasswordService,
     private readonly requestPasswordResetService: RequestPasswordResetService,
     private readonly resetPasswordService: ResetPasswordService,
-  ) {}
+  ) { }
 
   @Post('login')
   @Public()
@@ -246,9 +246,9 @@ export class CredentialUserController {
       user:
         isAuthenticated && user
           ? {
-              uid: user.uid,
-              email: user.email,
-            }
+            uid: user.uid,
+            email: user.email,
+          }
           : null,
     };
   }

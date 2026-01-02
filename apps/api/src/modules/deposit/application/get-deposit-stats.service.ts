@@ -1,6 +1,8 @@
 // src/modules/deposit/application/get-deposit-stats.service.ts
 import { Injectable, Logger } from '@nestjs/common';
-import { PrismaService } from 'src/infrastructure/prisma/prisma.service';
+import { InjectTransaction } from '@nestjs-cls/transactional';
+import type { Transaction } from '@nestjs-cls/transactional';
+import type { TransactionalAdapterPrisma } from '@nestjs-cls/transactional-adapter-prisma';
 import {
   DepositDetailStatus,
   DepositMethodType,
@@ -25,7 +27,10 @@ interface GetDepositStatsResult {
 export class GetDepositStatsService {
   private readonly logger = new Logger(GetDepositStatsService.name);
 
-  constructor(private readonly prismaService: PrismaService) {}
+  constructor(
+    @InjectTransaction()
+    private readonly tx: Transaction<TransactionalAdapterPrisma>,
+  ) {}
 
   async execute(
     params: GetDepositStatsParams,
@@ -37,7 +42,7 @@ export class GetDepositStatsService {
 
     const [todayDeposits, pendingDeposits, methodStats] = await Promise.all([
       // 오늘 총 입금액
-      this.prismaService.depositDetail.aggregate({
+      this.tx.depositDetail.aggregate({
         where: {
           status: DepositDetailStatus.COMPLETED,
           createdAt: {
@@ -49,7 +54,7 @@ export class GetDepositStatsService {
         },
       }),
       // 대기 중인 요청 수
-      this.prismaService.depositDetail.count({
+      this.tx.depositDetail.count({
         where: {
           status: {
             in: [DepositDetailStatus.PENDING, DepositDetailStatus.CONFIRMING],
@@ -57,7 +62,7 @@ export class GetDepositStatsService {
         },
       }),
       // 수단별 점유율
-      this.prismaService.depositDetail.groupBy({
+      this.tx.depositDetail.groupBy({
         by: ['methodType'],
         where: {
           status: DepositDetailStatus.COMPLETED,

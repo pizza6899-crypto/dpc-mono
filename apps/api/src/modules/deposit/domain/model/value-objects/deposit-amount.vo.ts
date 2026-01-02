@@ -74,5 +74,20 @@ export class DepositAmount {
   isFeePaidBySystem(): boolean {
     return this.feePaidBy === FeePaidByType.SYSTEM;
   }
+
+  /**
+   * 실제 입금 금액을 설정한 새로운 인스턴스 생성
+   * @param actuallyPaid - 실제 입금 금액
+   * @returns 새로운 DepositAmount 인스턴스
+   */
+  withActuallyPaid(actuallyPaid: Prisma.Decimal): DepositAmount {
+    return new DepositAmount(
+      this.requestedAmount,
+      actuallyPaid,
+      this.feeAmount,
+      this.feeCurrency,
+      this.feePaidBy,
+    );
+  }
 }
 

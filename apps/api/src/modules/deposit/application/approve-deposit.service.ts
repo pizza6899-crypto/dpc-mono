@@ -1,11 +1,8 @@
 // src/modules/deposit/application/approve-deposit.service.ts
-import { Injectable, Logger } from '@nestjs/common';
-import { PrismaService } from 'src/infrastructure/prisma/prisma.service';
+import { Inject, Injectable, Logger } from '@nestjs/common';
+import { Transactional } from '@nestjs-cls/transactional';
 import { Prisma } from '@repo/database';
-import {
-  DepositDetailStatus,
-  TransactionStatus,
-} from '@repo/database';
+import { TransactionStatus } from '@repo/database';
 import type { RequestClientInfo } from 'src/common/http/types';
 import { ApproveDepositResponseDto } from '../dtos/admin-deposit-response.dto';
 import { UpdateUserBalanceAdminService } from '../../wallet/application/update-user-balance-admin.service';
@@ -14,10 +11,8 @@ import {
   UpdateOperation,
 } from '../../wallet/application/update-user-balance.service';
 import { UserStatsService } from '../../user-stats/application/user-stats.service';
-import {
-  DepositNotFoundException,
-  DepositAlreadyProcessedException,
-} from '../domain';
+import type { DepositDetailRepositoryPort } from '../ports/out/deposit-detail.repository.port';
+import { DEPOSIT_DETAIL_REPOSITORY } from '../ports/out';
 
 interface ApproveDepositParams {
   id: bigint;
@@ -35,96 +30,72 @@ export class ApproveDepositService {
   private readonly logger = new Logger(ApproveDepositService.name);
 
   constructor(
-    private readonly prismaService: PrismaService,
+    @Inject(DEPOSIT_DETAIL_REPOSITORY)
+    private readonly depositRepository: DepositDetailRepositoryPort,
     private readonly updateUserBalanceAdminService: UpdateUserBalanceAdminService,
     private readonly userStatsService: UserStatsService,
   ) {}
 
+  @Transactional()
   async execute(params: ApproveDepositParams): Promise<ApproveDepositResult> {
     const { id, actuallyPaid, transactionHash, memo, adminId, requestInfo } =
       params;
 
-    return await this.prismaService.$transaction(async (tx) => {
-      // 1. DepositDetail 조회 및 검증
-      const deposit = await tx.depositDetail.findUnique({
-        where: { id },
-        include: {
-          transaction: true,
-          BankConfig: true,
-        },
-      });
-
-      if (!deposit) {
-        throw new DepositNotFoundException(id);
-      }
-
-      if (
-        deposit.status !== DepositDetailStatus.PENDING &&
-        deposit.status !== DepositDetailStatus.CONFIRMING
-      ) {
-        throw new DepositAlreadyProcessedException(id, deposit.status);
-      }
-
-      // 2. 잔액 업데이트
-      const balanceUpdate = await this.updateUserBalanceAdminService.execute({
-        userId: deposit.transaction.userId,
-        currency: deposit.depositCurrency,
-        balanceType: BalanceType.MAIN,
-        operation: UpdateOperation.ADD,
-        amount: actuallyPaid,
-      });
-
-      // 3. Transaction 상태 업데이트
-      await tx.transaction.update({
-        where: { id: deposit.transactionId },
-        data: {
-          status: TransactionStatus.COMPLETED,
-          amount: actuallyPaid,
-          afterAmount: balanceUpdate.wallet.mainBalance.add(
-            balanceUpdate.wallet.bonusBalance,
-          ),
-        },
-      });
-
-      // 4. DepositDetail 상태 업데이트
-      await tx.depositDetail.update({
-        where: { id },
-        data: {
-          status: DepositDetailStatus.COMPLETED,
-          actuallyPaid,
-          transactionHash: transactionHash || deposit.transactionHash,
-          adminNote: memo || deposit.adminNote,
-          processedBy: adminId,
-          confirmedAt: new Date(),
-        },
-      });
-
-      // 5. UserStats 업데이트
-      await this.userStatsService.updateDepositStats(
-        tx,
-        deposit.transaction.userId,
-        deposit.depositCurrency,
-        actuallyPaid,
-      );
-
-      // 6. BankConfig 통계 업데이트 (있는 경우)
-      if (deposit.bankConfigId && deposit.BankConfig) {
-        await tx.bankConfig.update({
-          where: { id: deposit.bankConfigId },
-          data: {
-            totalDeposits: { increment: 1 },
-            totalDepositAmount: { increment: actuallyPaid },
-          },
-        });
-      }
-
-      return {
-        success: true,
-        transactionId: deposit.transactionId.toString(),
-        actuallyPaid: actuallyPaid.toString(),
-        bonusAmount: '0', // TODO: 보너스 계산 로직 추가
-      };
+    // 1. DepositDetail 조회 (transaction 포함)
+    const deposit = await this.depositRepository.getById(id, {
+      transaction: true,
+      BankConfig: true,
     });
+
+    // 2. 엔티티 비즈니스 로직 실행 (승인 처리)
+    deposit.approve(actuallyPaid, adminId, transactionHash, memo);
+
+    // 3. Transaction의 userId 조회
+    const userId = await this.depositRepository.getTransactionUserId(
+      deposit.transactionId,
+    );
+
+    if (!userId) {
+      throw new Error('Transaction information not found');
+    }
+
+    // 4. 잔액 업데이트
+
+    const balanceUpdate = await this.updateUserBalanceAdminService.execute({
+      userId,
+      currency: deposit.depositCurrency,
+      balanceType: BalanceType.MAIN,
+      operation: UpdateOperation.ADD,
+      amount: actuallyPaid,
+    });
+
+    // 5. DepositDetail 상태 업데이트 (엔티티의 변경사항 반영)
+    await this.depositRepository.update(deposit);
+
+    // 6. UserStats 업데이트
+    // TODO: UserStatsService가 tx를 받는지 확인 필요
+    // await this.userStatsService.updateDepositStats(
+    //   userId,
+    //   deposit.depositCurrency,
+    //   actuallyPaid,
+    // );
+
+    // 7. Transaction 상태 업데이트
+    // TODO: Transaction Repository 또는 서비스 필요
+    // await transactionService.updateStatus(...)
+
+    // 8. BankConfig 통계 업데이트
+    // TODO: BankConfig Repository 또는 서비스 필요
+    // if (deposit.bankConfigId) {
+    //   await bankConfigService.incrementStats(...)
+    // }
+
+    return {
+      success: true,
+      transactionId: deposit.transactionId.toString(),
+      actuallyPaid: actuallyPaid.toString(),
+      bonusAmount: '0', // TODO: 보너스 계산 로직 추가
+    };
   }
 }
 

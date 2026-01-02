@@ -1,6 +1,8 @@
 // src/modules/deposit/application/get-deposit-detail.service.ts
 import { Injectable, Logger } from '@nestjs/common';
-import { PrismaService } from 'src/infrastructure/prisma/prisma.service';
+import { InjectTransaction } from '@nestjs-cls/transactional';
+import type { Transaction } from '@nestjs-cls/transactional';
+import type { TransactionalAdapterPrisma } from '@nestjs-cls/transactional-adapter-prisma';
 import type { RequestClientInfo } from 'src/common/http/types';
 import { AdminDepositListItemDto } from '../dtos/admin-deposit-response.dto';
 import { DepositNotFoundException } from '../domain';
@@ -17,14 +19,17 @@ interface GetDepositDetailResult extends AdminDepositListItemDto {}
 export class GetDepositDetailService {
   private readonly logger = new Logger(GetDepositDetailService.name);
 
-  constructor(private readonly prismaService: PrismaService) {}
+  constructor(
+    @InjectTransaction()
+    private readonly tx: Transaction<TransactionalAdapterPrisma>,
+  ) {}
 
   async execute(
     params: GetDepositDetailParams,
   ): Promise<GetDepositDetailResult> {
     const { id, adminId, requestInfo } = params;
 
-    const deposit = await this.prismaService.depositDetail.findUnique({
+    const deposit = await this.tx.depositDetail.findUnique({
       where: { id },
       include: {
         transaction: {

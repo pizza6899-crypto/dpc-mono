@@ -7,6 +7,7 @@ import {
 } from '@repo/database';
 import { DepositMethod } from './value-objects/deposit-method.vo';
 import { DepositAmount } from './value-objects/deposit-amount.vo';
+import { DepositAlreadyProcessedException } from '../deposit.exception';
 
 /**
  * DepositDetail 도메인 엔티티
@@ -33,19 +34,19 @@ export class DepositDetail {
     public readonly depositNetwork: string | null,
     public readonly depositorName: string | null,
     public readonly providerPaymentId: string | null,
-    public readonly transactionHash: string | null,
+    private _transactionHash: string | null,
     public readonly bankConfigId: bigint | null,
     public readonly cryptoConfigId: bigint | null,
-    public readonly processedBy: bigint | null,
-    public readonly adminNote: string | null,
+    private _processedBy: bigint | null,
+    private _adminNote: string | null,
     public readonly ipAddress: string | null,
     public readonly deviceFingerprint: string | null,
-    public readonly failureReason: string | null,
+    private _failureReason: string | null,
     public readonly providerMetadata: Record<string, any> | null,
     public readonly createdAt: Date,
-    public readonly updatedAt: Date,
-    public readonly confirmedAt: Date | null,
-    public readonly failedAt: Date | null,
+    private _updatedAt: Date,
+    private _confirmedAt: Date | null,
+    private _failedAt: Date | null,
   ) {}
 
   /**
@@ -177,19 +178,19 @@ export class DepositDetail {
       depositNetwork: this.depositNetwork,
       depositorName: this.depositorName,
       providerPaymentId: this.providerPaymentId,
-      transactionHash: this.transactionHash,
+      transactionHash: this._transactionHash,
       bankConfigId: this.bankConfigId,
       cryptoConfigId: this.cryptoConfigId,
-      processedBy: this.processedBy,
-      adminNote: this.adminNote,
+      processedBy: this._processedBy,
+      adminNote: this._adminNote,
       ipAddress: this.ipAddress,
       deviceFingerprint: this.deviceFingerprint,
-      failureReason: this.failureReason,
+      failureReason: this._failureReason,
       providerMetadata: this.providerMetadata,
       createdAt: this.createdAt,
-      updatedAt: this.updatedAt,
-      confirmedAt: this.confirmedAt,
-      failedAt: this.failedAt,
+      updatedAt: this._updatedAt,
+      confirmedAt: this._confirmedAt,
+      failedAt: this._failedAt,
     };
   }
 
@@ -287,6 +288,92 @@ export class DepositDetail {
    * 실패 사유가 있는지 확인
    */
   hasFailureReason(): boolean {
-    return this.failureReason !== null && this.failureReason.length > 0;
+    return this._failureReason !== null && this._failureReason.length > 0;
+  }
+
+  // Getters for mutable fields
+  get transactionHash(): string | null {
+    return this._transactionHash;
+  }
+
+  get processedBy(): bigint | null {
+    return this._processedBy;
+  }
+
+  get adminNote(): string | null {
+    return this._adminNote;
+  }
+
+  get failureReason(): string | null {
+    return this._failureReason;
+  }
+
+  get updatedAt(): Date {
+    return this._updatedAt;
+  }
+
+  get confirmedAt(): Date | null {
+    return this._confirmedAt;
+  }
+
+  get failedAt(): Date | null {
+    return this._failedAt;
+  }
+
+  /**
+   * 입금 승인 처리
+   * @param actuallyPaid - 실제 입금 금액
+   * @param adminId - 처리한 관리자 ID
+   * @param transactionHash - 트랜잭션 해시 (선택적)
+   * @param adminNote - 관리자 메모 (선택적)
+   * @throws {DepositAlreadyProcessedException} 이미 처리된 입금인 경우
+   */
+  approve(
+    actuallyPaid: Prisma.Decimal,
+    adminId: bigint,
+    transactionHash?: string | null,
+    adminNote?: string | null,
+  ): void {
+    if (!this.canBeProcessed()) {
+      throw new DepositAlreadyProcessedException(this.id, this._status);
+    }
+
+    // 실제 입금 금액 설정
+    this.amount = this.amount.withActuallyPaid(actuallyPaid);
+
+    // 상태 변경
+    this._status = DepositDetailStatus.COMPLETED;
+
+    // 메타데이터 업데이트
+    if (transactionHash !== undefined && transactionHash !== null) {
+      this._transactionHash = transactionHash;
+    }
+    if (adminNote !== undefined && adminNote !== null) {
+      this._adminNote = adminNote;
+    }
+    this._processedBy = adminId;
+    this._confirmedAt = new Date();
+    this._updatedAt = new Date();
+  }
+
+  /**
+   * 입금 거부 처리
+   * @param failureReason - 거부 사유
+   * @param adminId - 처리한 관리자 ID
+   * @throws {DepositAlreadyProcessedException} 이미 처리된 입금인 경우
+   */
+  reject(failureReason: string, adminId: bigint): void {
+    if (!this.canBeProcessed()) {
+      throw new DepositAlreadyProcessedException(this.id, this._status);
+    }
+
+    // 상태 변경
+    this._status = DepositDetailStatus.REJECTED;
+
+    // 메타데이터 업데이트
+    this._failureReason = failureReason;
+    this._processedBy = adminId;
+    this._failedAt = new Date();
+    this._updatedAt = new Date();
   }
 }

@@ -1,6 +1,8 @@
 // src/modules/deposit/application/get-deposits.service.ts
 import { Injectable, Logger } from '@nestjs/common';
-import { PrismaService } from 'src/infrastructure/prisma/prisma.service';
+import { InjectTransaction } from '@nestjs-cls/transactional';
+import type { Transaction } from '@nestjs-cls/transactional';
+import type { TransactionalAdapterPrisma } from '@nestjs-cls/transactional-adapter-prisma';
 import { Prisma } from '@repo/database';
 import type { PaginatedData, RequestClientInfo } from 'src/common/http/types';
 import { GetDepositsQueryDto } from '../dtos/get-deposits-query.dto';
@@ -18,7 +20,10 @@ interface GetDepositsResult extends PaginatedData<AdminDepositListItemDto> {}
 export class GetDepositsService {
   private readonly logger = new Logger(GetDepositsService.name);
 
-  constructor(private readonly prismaService: PrismaService) {}
+  constructor(
+    @InjectTransaction()
+    private readonly tx: Transaction<TransactionalAdapterPrisma>,
+  ) {}
 
   async execute(params: GetDepositsParams): Promise<GetDepositsResult> {
     const { query, adminId, requestInfo } = params;
@@ -61,7 +66,7 @@ export class GetDepositsService {
     };
 
     const [deposits, total] = await Promise.all([
-      this.prismaService.depositDetail.findMany({
+      this.tx.depositDetail.findMany({
         where,
         skip,
         take: limit,
@@ -79,7 +84,7 @@ export class GetDepositsService {
           },
         },
       }),
-      this.prismaService.depositDetail.count({ where }),
+      this.tx.depositDetail.count({ where }),
     ]);
 
     return {

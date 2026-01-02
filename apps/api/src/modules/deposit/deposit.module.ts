@@ -17,6 +17,9 @@ import { ApproveDepositService } from './application/approve-deposit.service';
 import { RejectDepositService } from './application/reject-deposit.service';
 import { AdminBankConfigService } from './application/admin-bank-config.service';
 import { AdminCryptoConfigService } from './application/admin-crypto-config.service';
+import { DepositDetailMapper } from './infrastructure/deposit-detail.mapper';
+import { DepositDetailRepository } from './infrastructure/deposit-detail.repository';
+import { DEPOSIT_DETAIL_REPOSITORY } from './ports/out';
 
 @Module({
   imports: [
@@ -30,6 +33,16 @@ import { AdminCryptoConfigService } from './application/admin-crypto-config.serv
     WalletModule, // UpdateUserBalanceAdminService 사용을 위해
   ],
   providers: [
+    // Infrastructure (Mapper)
+    DepositDetailMapper,
+
+    // Repository (Outbound Port 구현)
+    {
+      provide: DEPOSIT_DETAIL_REPOSITORY,
+      useClass: DepositDetailRepository,
+    },
+
+    // Use Case Services
     GetDepositStatsService,
     GetDepositsService,
     GetDepositDetailService,
