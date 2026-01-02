@@ -64,7 +64,7 @@ export class LoginService {
       ? this.envService.adminSession
       : this.envService.session;
 
-    const expiresAt = new Date(Date.now() + sessionConfig.maxAge);
+    const expiresAt = new Date(Date.now() + sessionConfig.maxAgeMs);
 
     await this.createSessionService.execute({
       userId: user.id,

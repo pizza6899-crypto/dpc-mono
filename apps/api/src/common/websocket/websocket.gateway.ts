@@ -151,7 +151,7 @@ export class WebsocketGateway
         ? this.envService.adminSession
         : this.envService.session;
 
-      const expiresAt = new Date(Date.now() + sessionConfig.maxAge);
+      const expiresAt = new Date(Date.now() + sessionConfig.maxAgeMs);
 
       const isAdmin = user.role === 'ADMIN' || user.role === 'SUPER_ADMIN';
 

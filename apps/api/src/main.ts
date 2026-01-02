@@ -91,7 +91,7 @@ async function bootstrap() {
       cookie: {
         secure: envService.session.secure,
         httpOnly: envService.session.httpOnly,
-        maxAge: envService.session.maxAge,
+        maxAge: envService.session.maxAgeMs,
         sameSite: envService.session.sameSite,
       },
       name: envService.session.name,
@@ -110,7 +110,7 @@ async function bootstrap() {
       cookie: {
         secure: envService.adminSession.secure,
         httpOnly: envService.adminSession.httpOnly,
-        maxAge: envService.adminSession.maxAge,
+        maxAge: envService.adminSession.maxAgeMs,
         sameSite: envService.adminSession.sameSite,
       },
       name: envService.adminSession.name,

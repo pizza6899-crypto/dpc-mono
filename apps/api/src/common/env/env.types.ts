@@ -73,7 +73,7 @@ export interface NowPaymentConfig {
 
 export interface SessionConfig {
   secret: string;
-  maxAge: number;
+  maxAgeMs: number;
   secure: boolean;
   httpOnly: boolean;
   sameSite: 'lax' | 'strict' | 'none';
@@ -82,7 +82,7 @@ export interface SessionConfig {
 
 export interface AdminSessionConfig {
   secret: string;
-  maxAge: number;
+  maxAgeMs: number;
   secure: boolean;
   httpOnly: boolean;
   sameSite: 'lax' | 'strict' | 'none';
@@ -95,7 +95,7 @@ export interface CsrfConfig {
   headerName: string;
   secure: boolean;
   sameSite: 'lax' | 'strict' | 'none';
-  maxAge: number;
+  maxAgeMs: number;
   httpOnly: boolean;
 }
 
