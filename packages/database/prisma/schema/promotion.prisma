@@ -1,19 +1,19 @@
 model Promotion {
-  id                             BigInt                    @id @default(autoincrement())
-  uid                            String                    @unique
-  managementName                 String                    @map("management_name")
-  isActive                       Boolean                   @default(true) @map("is_active")
-  startDate                      DateTime?                 @map("start_date")
-  endDate                        DateTime?                 @map("end_date")
-  deletedAt                      DateTime?                 @map("deleted_at")
-  targetType                     PromotionTargetType       @map("target_type")
-  bonusType                      PromotionBonusType        @map("bonus_type")
-  bonusRate                      Decimal?                  @db.Decimal(8, 4) @map("bonus_rate")
-  rollingMultiplier              Decimal?                  @db.Decimal(8, 4) @map("rolling_multiplier")
-  qualificationMaintainCondition PromotionQualification   @map("qualification_maintain_condition")
-  isOneTime                      Boolean                   @default(false) @map("is_one_time")
-  createdAt                      DateTime                  @default(now()) @map("created_at")
-  updatedAt                      DateTime                  @updatedAt @map("updated_at")
+  id                             BigInt                 @id @default(autoincrement())
+  uid                            String                 @unique
+  managementName                 String                 @map("management_name")
+  isActive                       Boolean                @default(true) @map("is_active")
+  startDate                      DateTime?              @map("start_date")
+  endDate                        DateTime?              @map("end_date")
+  deletedAt                      DateTime?              @map("deleted_at")
+  targetType                     PromotionTargetType    @map("target_type")
+  bonusType                      PromotionBonusType     @map("bonus_type")
+  bonusRate                      Decimal?               @map("bonus_rate") @db.Decimal(8, 4)
+  rollingMultiplier              Decimal?               @map("rolling_multiplier") @db.Decimal(8, 4)
+  qualificationMaintainCondition PromotionQualification @map("qualification_maintain_condition")
+  isOneTime                      Boolean                @default(false) @map("is_one_time")
+  createdAt                      DateTime               @default(now()) @map("created_at")
+  updatedAt                      DateTime               @updatedAt @map("updated_at")
   translations                   PromotionTranslation[]
   currencies                     PromotionCurrency[]
   UserPromotion                  UserPromotion[]
@@ -38,14 +38,14 @@ model PromotionTranslation {
 }
 
 model PromotionCurrency {
-  id               BigInt              @id @default(autoincrement())
-  promotionId      BigInt              @map("promotion_id")
+  id               BigInt               @id @default(autoincrement())
+  promotionId      BigInt               @map("promotion_id")
   currency         ExchangeCurrencyCode
-  minDepositAmount Decimal             @db.Decimal(32, 18) @map("min_deposit_amount")
-  maxBonusAmount   Decimal?            @db.Decimal(32, 18) @map("max_bonus_amount")
-  createdAt        DateTime            @default(now()) @map("created_at")
-  updatedAt        DateTime            @updatedAt @map("updated_at")
-  promotion        Promotion           @relation(fields: [promotionId], references: [id], onDelete: Cascade)
+  minDepositAmount Decimal              @map("min_deposit_amount") @db.Decimal(32, 18)
+  maxBonusAmount   Decimal?             @map("max_bonus_amount") @db.Decimal(32, 18)
+  createdAt        DateTime             @default(now()) @map("created_at")
+  updatedAt        DateTime             @updatedAt @map("updated_at")
+  promotion        Promotion            @relation(fields: [promotionId], references: [id], onDelete: Cascade)
 
   @@unique([promotionId, currency])
   @@index([promotionId])
@@ -54,20 +54,20 @@ model PromotionCurrency {
 }
 
 model UserPromotion {
-  id                  BigInt              @id @default(autoincrement())
-  userId              BigInt              @map("user_id")
-  promotionId         BigInt              @map("promotion_id")
-  status              UserPromotionStatus @default(ACTIVE)
-  depositAmount       Decimal             @db.Decimal(32, 18) @map("deposit_amount")
-  bonusAmount         Decimal             @db.Decimal(32, 18) @map("bonus_amount")
-  targetRollingAmount Decimal             @db.Decimal(32, 18) @map("target_rolling_amount")
-  currentRollingAmount Decimal            @default(0) @db.Decimal(32, 18) @map("current_rolling_amount")
-  currency            ExchangeCurrencyCode
-  createdAt           DateTime            @default(now()) @map("created_at")
-  updatedAt           DateTime            @updatedAt @map("updated_at")
-  Rolling             Rolling[]
-  promotion           Promotion           @relation(fields: [promotionId], references: [id])
-  user                User                @relation(fields: [userId], references: [id])
+  id                   BigInt               @id @default(autoincrement())
+  userId               BigInt               @map("user_id")
+  promotionId          BigInt               @map("promotion_id")
+  status               UserPromotionStatus  @default(ACTIVE)
+  depositAmount        Decimal              @map("deposit_amount") @db.Decimal(32, 18)
+  bonusAmount          Decimal              @map("bonus_amount") @db.Decimal(32, 18)
+  targetRollingAmount  Decimal              @map("target_rolling_amount") @db.Decimal(32, 18)
+  currentRollingAmount Decimal              @default(0) @map("current_rolling_amount") @db.Decimal(32, 18)
+  currency             ExchangeCurrencyCode
+  createdAt            DateTime             @default(now()) @map("created_at")
+  updatedAt            DateTime             @updatedAt @map("updated_at")
+  Rolling              Rolling[]
+  promotion            Promotion            @relation(fields: [promotionId], references: [id])
+  user                 User                 @relation(fields: [userId], references: [id])
 
   @@index([userId, status])
   @@map("user_promotions")

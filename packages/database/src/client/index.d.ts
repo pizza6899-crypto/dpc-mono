@@ -104,11 +104,6 @@ export type TransactionBalanceDetail = $Result.DefaultSelection<Prisma.$Transact
  */
 export type BonusDetail = $Result.DefaultSelection<Prisma.$BonusDetailPayload>
 /**
- * Model DepositDetail
- * 
- */
-export type DepositDetail = $Result.DefaultSelection<Prisma.$DepositDetailPayload>
-/**
  * Model WithdrawDetail
  * 
  */
@@ -203,6 +198,17 @@ export type AffiliateTier = $Result.DefaultSelection<Prisma.$AffiliateTierPayloa
  * 
  */
 export type LoginAttempt = $Result.DefaultSelection<Prisma.$LoginAttemptPayload>
+/**
+ * Model DepositDetail
+ * *
+ *  * 입금 상세 정보 모델
+ *  * 사용자의 입금 요청 및 처리 상태를 추적합니다.
+ *  * - 암호화폐 지갑 입금 및 계좌 이체 입금 지원
+ *  * - 입금 상태 추적 (대기, 확인 중, 완료, 실패 등)
+ *  * - 프로바이더별 입금 정보 관리
+ *  * - 수수료 및 실제 입금 금액 추적
+ */
+export type DepositDetail = $Result.DefaultSelection<Prisma.$DepositDetailPayload>
 /**
  * Model Promotion
  * 
@@ -389,43 +395,6 @@ export const BonusType: {
 export type BonusType = (typeof BonusType)[keyof typeof BonusType]
 
 
-export const PaymentProvider: {
-  NOWPAYMENT: 'NOWPAYMENT',
-  MANUAL: 'MANUAL'
-};
-
-export type PaymentProvider = (typeof PaymentProvider)[keyof typeof PaymentProvider]
-
-
-export const DepositMethodType: {
-  CRYPTO_WALLET: 'CRYPTO_WALLET',
-  BANK_TRANSFER: 'BANK_TRANSFER'
-};
-
-export type DepositMethodType = (typeof DepositMethodType)[keyof typeof DepositMethodType]
-
-
-export const DepositDetailStatus: {
-  PENDING: 'PENDING',
-  CONFIRMING: 'CONFIRMING',
-  COMPLETED: 'COMPLETED',
-  FAILED: 'FAILED',
-  CANCELLED: 'CANCELLED',
-  EXPIRED: 'EXPIRED',
-  REJECTED: 'REJECTED'
-};
-
-export type DepositDetailStatus = (typeof DepositDetailStatus)[keyof typeof DepositDetailStatus]
-
-
-export const FeePaidByType: {
-  USER: 'USER',
-  SYSTEM: 'SYSTEM'
-};
-
-export type FeePaidByType = (typeof FeePaidByType)[keyof typeof FeePaidByType]
-
-
 export const WithdrawDetailStatus: {
   PENDING: 'PENDING',
   PROCESSING: 'PROCESSING',
@@ -527,6 +496,43 @@ export const LoginFailureReason: {
 };
 
 export type LoginFailureReason = (typeof LoginFailureReason)[keyof typeof LoginFailureReason]
+
+
+export const DepositMethodType: {
+  CRYPTO_WALLET: 'CRYPTO_WALLET',
+  BANK_TRANSFER: 'BANK_TRANSFER'
+};
+
+export type DepositMethodType = (typeof DepositMethodType)[keyof typeof DepositMethodType]
+
+
+export const DepositDetailStatus: {
+  PENDING: 'PENDING',
+  CONFIRMING: 'CONFIRMING',
+  COMPLETED: 'COMPLETED',
+  FAILED: 'FAILED',
+  CANCELLED: 'CANCELLED',
+  EXPIRED: 'EXPIRED',
+  REJECTED: 'REJECTED'
+};
+
+export type DepositDetailStatus = (typeof DepositDetailStatus)[keyof typeof DepositDetailStatus]
+
+
+export const PaymentProvider: {
+  NOWPAYMENT: 'NOWPAYMENT',
+  MANUAL: 'MANUAL'
+};
+
+export type PaymentProvider = (typeof PaymentProvider)[keyof typeof PaymentProvider]
+
+
+export const FeePaidByType: {
+  USER: 'USER',
+  SYSTEM: 'SYSTEM'
+};
+
+export type FeePaidByType = (typeof FeePaidByType)[keyof typeof FeePaidByType]
 
 
 export const PromotionTargetType: {
@@ -639,22 +645,6 @@ export type BonusType = $Enums.BonusType
 
 export const BonusType: typeof $Enums.BonusType
 
-export type PaymentProvider = $Enums.PaymentProvider
-
-export const PaymentProvider: typeof $Enums.PaymentProvider
-
-export type DepositMethodType = $Enums.DepositMethodType
-
-export const DepositMethodType: typeof $Enums.DepositMethodType
-
-export type DepositDetailStatus = $Enums.DepositDetailStatus
-
-export const DepositDetailStatus: typeof $Enums.DepositDetailStatus
-
-export type FeePaidByType = $Enums.FeePaidByType
-
-export const FeePaidByType: typeof $Enums.FeePaidByType
-
 export type WithdrawDetailStatus = $Enums.WithdrawDetailStatus
 
 export const WithdrawDetailStatus: typeof $Enums.WithdrawDetailStatus
@@ -698,6 +688,22 @@ export const LoginAttemptResult: typeof $Enums.LoginAttemptResult
 export type LoginFailureReason = $Enums.LoginFailureReason
 
 export const LoginFailureReason: typeof $Enums.LoginFailureReason
+
+export type DepositMethodType = $Enums.DepositMethodType
+
+export const DepositMethodType: typeof $Enums.DepositMethodType
+
+export type DepositDetailStatus = $Enums.DepositDetailStatus
+
+export const DepositDetailStatus: typeof $Enums.DepositDetailStatus
+
+export type PaymentProvider = $Enums.PaymentProvider
+
+export const PaymentProvider: typeof $Enums.PaymentProvider
+
+export type FeePaidByType = $Enums.FeePaidByType
+
+export const FeePaidByType: typeof $Enums.FeePaidByType
 
 export type PromotionTargetType = $Enums.PromotionTargetType
 
@@ -1021,16 +1027,6 @@ export class PrismaClient<
   get bonusDetail(): Prisma.BonusDetailDelegate<ExtArgs, ClientOptions>;
 
   /**
-   * `prisma.depositDetail`: Exposes CRUD operations for the **DepositDetail** model.
-    * Example usage:
-    * ```ts
-    * // Fetch zero or more DepositDetails
-    * const depositDetails = await prisma.depositDetail.findMany()
-    * ```
-    */
-  get depositDetail(): Prisma.DepositDetailDelegate<ExtArgs, ClientOptions>;
-
-  /**
    * `prisma.withdrawDetail`: Exposes CRUD operations for the **WithdrawDetail** model.
     * Example usage:
     * ```ts
@@ -1219,6 +1215,16 @@ export class PrismaClient<
     * ```
     */
   get loginAttempt(): Prisma.LoginAttemptDelegate<ExtArgs, ClientOptions>;
+
+  /**
+   * `prisma.depositDetail`: Exposes CRUD operations for the **DepositDetail** model.
+    * Example usage:
+    * ```ts
+    * // Fetch zero or more DepositDetails
+    * const depositDetails = await prisma.depositDetail.findMany()
+    * ```
+    */
+  get depositDetail(): Prisma.DepositDetailDelegate<ExtArgs, ClientOptions>;
 
   /**
    * `prisma.promotion`: Exposes CRUD operations for the **Promotion** model.
@@ -1721,7 +1727,6 @@ export namespace Prisma {
     GameWin: 'GameWin',
     TransactionBalanceDetail: 'TransactionBalanceDetail',
     BonusDetail: 'BonusDetail',
-    DepositDetail: 'DepositDetail',
     WithdrawDetail: 'WithdrawDetail',
     CompTransaction: 'CompTransaction',
     DailyCompEarning: 'DailyCompEarning',
@@ -1741,6 +1746,7 @@ export namespace Prisma {
     AffiliateCommission: 'AffiliateCommission',
     AffiliateTier: 'AffiliateTier',
     LoginAttempt: 'LoginAttempt',
+    DepositDetail: 'DepositDetail',
     Promotion: 'Promotion',
     PromotionTranslation: 'PromotionTranslation',
     PromotionCurrency: 'PromotionCurrency',
@@ -1761,7 +1767,7 @@ export namespace Prisma {
       omit: GlobalOmitOptions
     }
     meta: {
-      modelProps: "authAuditLog" | "activityLog" | "systemErrorLog" | "integrationLog" | "unifiedLog" | "user" | "userBalance" | "userBalanceStats" | "game" | "gameTranslation" | "whitecliffApiLog" | "dcsApiLog" | "transaction" | "gameRound" | "gameBet" | "gameWin" | "transactionBalanceDetail" | "bonusDetail" | "depositDetail" | "withdrawDetail" | "compTransaction" | "dailyCompEarning" | "nowPaymentCallbackLog" | "exchangeRate" | "vipLevel" | "vipMembership" | "vipHistory" | "rolling" | "userToken" | "emailLog" | "gameSession" | "bankAccount" | "affiliateCode" | "referral" | "affiliateWallet" | "affiliateCommission" | "affiliateTier" | "loginAttempt" | "promotion" | "promotionTranslation" | "promotionCurrency" | "userPromotion" | "userSession"
+      modelProps: "authAuditLog" | "activityLog" | "systemErrorLog" | "integrationLog" | "unifiedLog" | "user" | "userBalance" | "userBalanceStats" | "game" | "gameTranslation" | "whitecliffApiLog" | "dcsApiLog" | "transaction" | "gameRound" | "gameBet" | "gameWin" | "transactionBalanceDetail" | "bonusDetail" | "withdrawDetail" | "compTransaction" | "dailyCompEarning" | "nowPaymentCallbackLog" | "exchangeRate" | "vipLevel" | "vipMembership" | "vipHistory" | "rolling" | "userToken" | "emailLog" | "gameSession" | "bankAccount" | "affiliateCode" | "referral" | "affiliateWallet" | "affiliateCommission" | "affiliateTier" | "loginAttempt" | "depositDetail" | "promotion" | "promotionTranslation" | "promotionCurrency" | "userPromotion" | "userSession"
       txIsolationLevel: Prisma.TransactionIsolationLevel
     }
     model: {
@@ -3094,80 +3100,6 @@ export namespace Prisma {
           count: {
             args: Prisma.BonusDetailCountArgs<ExtArgs>
             result: $Utils.Optional<BonusDetailCountAggregateOutputType> | number
-          }
-        }
-      }
-      DepositDetail: {
-        payload: Prisma.$DepositDetailPayload<ExtArgs>
-        fields: Prisma.DepositDetailFieldRefs
-        operations: {
-          findUnique: {
-            args: Prisma.DepositDetailFindUniqueArgs<ExtArgs>
-            result: $Utils.PayloadToResult<Prisma.$DepositDetailPayload> | null
-          }
-          findUniqueOrThrow: {
-            args: Prisma.DepositDetailFindUniqueOrThrowArgs<ExtArgs>
-            result: $Utils.PayloadToResult<Prisma.$DepositDetailPayload>
-          }
-          findFirst: {
-            args: Prisma.DepositDetailFindFirstArgs<ExtArgs>
-            result: $Utils.PayloadToResult<Prisma.$DepositDetailPayload> | null
-          }
-          findFirstOrThrow: {
-            args: Prisma.DepositDetailFindFirstOrThrowArgs<ExtArgs>
-            result: $Utils.PayloadToResult<Prisma.$DepositDetailPayload>
-          }
-          findMany: {
-            args: Prisma.DepositDetailFindManyArgs<ExtArgs>
-            result: $Utils.PayloadToResult<Prisma.$DepositDetailPayload>[]
-          }
-          create: {
-            args: Prisma.DepositDetailCreateArgs<ExtArgs>
-            result: $Utils.PayloadToResult<Prisma.$DepositDetailPayload>
-          }
-          createMany: {
-            args: Prisma.DepositDetailCreateManyArgs<ExtArgs>
-            result: BatchPayload
-          }
-          createManyAndReturn: {
-            args: Prisma.DepositDetailCreateManyAndReturnArgs<ExtArgs>
-            result: $Utils.PayloadToResult<Prisma.$DepositDetailPayload>[]
-          }
-          delete: {
-            args: Prisma.DepositDetailDeleteArgs<ExtArgs>
-            result: $Utils.PayloadToResult<Prisma.$DepositDetailPayload>
-          }
-          update: {
-            args: Prisma.DepositDetailUpdateArgs<ExtArgs>
-            result: $Utils.PayloadToResult<Prisma.$DepositDetailPayload>
-          }
-          deleteMany: {
-            args: Prisma.DepositDetailDeleteManyArgs<ExtArgs>
-            result: BatchPayload
-          }
-          updateMany: {
-            args: Prisma.DepositDetailUpdateManyArgs<ExtArgs>
-            result: BatchPayload
-          }
-          updateManyAndReturn: {
-            args: Prisma.DepositDetailUpdateManyAndReturnArgs<ExtArgs>
-            result: $Utils.PayloadToResult<Prisma.$DepositDetailPayload>[]
-          }
-          upsert: {
-            args: Prisma.DepositDetailUpsertArgs<ExtArgs>
-            result: $Utils.PayloadToResult<Prisma.$DepositDetailPayload>
-          }
-          aggregate: {
-            args: Prisma.DepositDetailAggregateArgs<ExtArgs>
-            result: $Utils.Optional<AggregateDepositDetail>
-          }
-          groupBy: {
-            args: Prisma.DepositDetailGroupByArgs<ExtArgs>
-            result: $Utils.Optional<DepositDetailGroupByOutputType>[]
-          }
-          count: {
-            args: Prisma.DepositDetailCountArgs<ExtArgs>
-            result: $Utils.Optional<DepositDetailCountAggregateOutputType> | number
           }
         }
       }
@@ -4577,6 +4509,80 @@ export namespace Prisma {
           }
         }
       }
+      DepositDetail: {
+        payload: Prisma.$DepositDetailPayload<ExtArgs>
+        fields: Prisma.DepositDetailFieldRefs
+        operations: {
+          findUnique: {
+            args: Prisma.DepositDetailFindUniqueArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$DepositDetailPayload> | null
+          }
+          findUniqueOrThrow: {
+            args: Prisma.DepositDetailFindUniqueOrThrowArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$DepositDetailPayload>
+          }
+          findFirst: {
+            args: Prisma.DepositDetailFindFirstArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$DepositDetailPayload> | null
+          }
+          findFirstOrThrow: {
+            args: Prisma.DepositDetailFindFirstOrThrowArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$DepositDetailPayload>
+          }
+          findMany: {
+            args: Prisma.DepositDetailFindManyArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$DepositDetailPayload>[]
+          }
+          create: {
+            args: Prisma.DepositDetailCreateArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$DepositDetailPayload>
+          }
+          createMany: {
+            args: Prisma.DepositDetailCreateManyArgs<ExtArgs>
+            result: BatchPayload
+          }
+          createManyAndReturn: {
+            args: Prisma.DepositDetailCreateManyAndReturnArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$DepositDetailPayload>[]
+          }
+          delete: {
+            args: Prisma.DepositDetailDeleteArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$DepositDetailPayload>
+          }
+          update: {
+            args: Prisma.DepositDetailUpdateArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$DepositDetailPayload>
+          }
+          deleteMany: {
+            args: Prisma.DepositDetailDeleteManyArgs<ExtArgs>
+            result: BatchPayload
+          }
+          updateMany: {
+            args: Prisma.DepositDetailUpdateManyArgs<ExtArgs>
+            result: BatchPayload
+          }
+          updateManyAndReturn: {
+            args: Prisma.DepositDetailUpdateManyAndReturnArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$DepositDetailPayload>[]
+          }
+          upsert: {
+            args: Prisma.DepositDetailUpsertArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$DepositDetailPayload>
+          }
+          aggregate: {
+            args: Prisma.DepositDetailAggregateArgs<ExtArgs>
+            result: $Utils.Optional<AggregateDepositDetail>
+          }
+          groupBy: {
+            args: Prisma.DepositDetailGroupByArgs<ExtArgs>
+            result: $Utils.Optional<DepositDetailGroupByOutputType>[]
+          }
+          count: {
+            args: Prisma.DepositDetailCountArgs<ExtArgs>
+            result: $Utils.Optional<DepositDetailCountAggregateOutputType> | number
+          }
+        }
+      }
       Promotion: {
         payload: Prisma.$PromotionPayload<ExtArgs>
         fields: Prisma.PromotionFieldRefs
@@ -5073,7 +5079,6 @@ export namespace Prisma {
     gameWin?: GameWinOmit
     transactionBalanceDetail?: TransactionBalanceDetailOmit
     bonusDetail?: BonusDetailOmit
-    depositDetail?: DepositDetailOmit
     withdrawDetail?: WithdrawDetailOmit
     compTransaction?: CompTransactionOmit
     dailyCompEarning?: DailyCompEarningOmit
@@ -5093,6 +5098,7 @@ export namespace Prisma {
     affiliateCommission?: AffiliateCommissionOmit
     affiliateTier?: AffiliateTierOmit
     loginAttempt?: LoginAttemptOmit
+    depositDetail?: DepositDetailOmit
     promotion?: PromotionOmit
     promotionTranslation?: PromotionTranslationOmit
     promotionCurrency?: PromotionCurrencyOmit
@@ -5514,37 +5520,6 @@ export namespace Prisma {
 
 
   /**
-   * Count Type DepositDetailCountOutputType
-   */
-
-  export type DepositDetailCountOutputType = {
-    Rolling: number
-  }
-
-  export type DepositDetailCountOutputTypeSelect<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
-    Rolling?: boolean | DepositDetailCountOutputTypeCountRollingArgs
-  }
-
-  // Custom InputTypes
-  /**
-   * DepositDetailCountOutputType without action
-   */
-  export type DepositDetailCountOutputTypeDefaultArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
-    /**
-     * Select specific fields to fetch from the DepositDetailCountOutputType
-     */
-    select?: DepositDetailCountOutputTypeSelect<ExtArgs> | null
-  }
-
-  /**
-   * DepositDetailCountOutputType without action
-   */
-  export type DepositDetailCountOutputTypeCountRollingArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
-    where?: RollingWhereInput
-  }
-
-
-  /**
    * Count Type DailyCompEarningCountOutputType
    */
 
@@ -5727,6 +5702,37 @@ export namespace Prisma {
    */
   export type AffiliateCodeCountOutputTypeCountReferralsArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
     where?: ReferralWhereInput
+  }
+
+
+  /**
+   * Count Type DepositDetailCountOutputType
+   */
+
+  export type DepositDetailCountOutputType = {
+    Rolling: number
+  }
+
+  export type DepositDetailCountOutputTypeSelect<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    Rolling?: boolean | DepositDetailCountOutputTypeCountRollingArgs
+  }
+
+  // Custom InputTypes
+  /**
+   * DepositDetailCountOutputType without action
+   */
+  export type DepositDetailCountOutputTypeDefaultArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the DepositDetailCountOutputType
+     */
+    select?: DepositDetailCountOutputTypeSelect<ExtArgs> | null
+  }
+
+  /**
+   * DepositDetailCountOutputType without action
+   */
+  export type DepositDetailCountOutputTypeCountRollingArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    where?: RollingWhereInput
   }
 
 
@@ -28258,1440 +28264,6 @@ export namespace Prisma {
      * Choose, which related nodes to fetch as well
      */
     include?: BonusDetailInclude<ExtArgs> | null
-  }
-
-
-  /**
-   * Model DepositDetail
-   */
-
-  export type AggregateDepositDetail = {
-    _count: DepositDetailCountAggregateOutputType | null
-    _avg: DepositDetailAvgAggregateOutputType | null
-    _sum: DepositDetailSumAggregateOutputType | null
-    _min: DepositDetailMinAggregateOutputType | null
-    _max: DepositDetailMaxAggregateOutputType | null
-  }
-
-  export type DepositDetailAvgAggregateOutputType = {
-    id: number | null
-    transactionId: number | null
-    actuallyPaid: Decimal | null
-    feeAmount: Decimal | null
-    bankAccountId: number | null
-  }
-
-  export type DepositDetailSumAggregateOutputType = {
-    id: bigint | null
-    transactionId: bigint | null
-    actuallyPaid: Decimal | null
-    feeAmount: Decimal | null
-    bankAccountId: number | null
-  }
-
-  export type DepositDetailMinAggregateOutputType = {
-    id: bigint | null
-    confirmedAt: Date | null
-    failedAt: Date | null
-    createdAt: Date | null
-    updatedAt: Date | null
-    status: $Enums.DepositDetailStatus | null
-    transactionId: bigint | null
-    methodType: $Enums.DepositMethodType | null
-    provider: $Enums.PaymentProvider | null
-    providerPaymentId: string | null
-    depositCurrency: $Enums.ExchangeCurrencyCode | null
-    depositNetwork: string | null
-    walletAddress: string | null
-    walletAddressExtraId: string | null
-    bankName: string | null
-    accountNumber: string | null
-    accountHolder: string | null
-    depositorName: string | null
-    transactionHash: string | null
-    actuallyPaid: Decimal | null
-    feeAmount: Decimal | null
-    feeCurrency: string | null
-    feePaidBy: $Enums.FeePaidByType | null
-    failureReason: string | null
-    bankAccountId: number | null
-  }
-
-  export type DepositDetailMaxAggregateOutputType = {
-    id: bigint | null
-    confirmedAt: Date | null
-    failedAt: Date | null
-    createdAt: Date | null
-    updatedAt: Date | null
-    status: $Enums.DepositDetailStatus | null
-    transactionId: bigint | null
-    methodType: $Enums.DepositMethodType | null
-    provider: $Enums.PaymentProvider | null
-    providerPaymentId: string | null
-    depositCurrency: $Enums.ExchangeCurrencyCode | null
-    depositNetwork: string | null
-    walletAddress: string | null
-    walletAddressExtraId: string | null
-    bankName: string | null
-    accountNumber: string | null
-    accountHolder: string | null
-    depositorName: string | null
-    transactionHash: string | null
-    actuallyPaid: Decimal | null
-    feeAmount: Decimal | null
-    feeCurrency: string | null
-    feePaidBy: $Enums.FeePaidByType | null
-    failureReason: string | null
-    bankAccountId: number | null
-  }
-
-  export type DepositDetailCountAggregateOutputType = {
-    id: number
-    confirmedAt: number
-    failedAt: number
-    createdAt: number
-    updatedAt: number
-    status: number
-    transactionId: number
-    methodType: number
-    provider: number
-    providerPaymentId: number
-    depositCurrency: number
-    depositNetwork: number
-    walletAddress: number
-    walletAddressExtraId: number
-    bankName: number
-    accountNumber: number
-    accountHolder: number
-    depositorName: number
-    transactionHash: number
-    actuallyPaid: number
-    feeAmount: number
-    feeCurrency: number
-    feePaidBy: number
-    failureReason: number
-    providerMetadata: number
-    bankAccountId: number
-    _all: number
-  }
-
-
-  export type DepositDetailAvgAggregateInputType = {
-    id?: true
-    transactionId?: true
-    actuallyPaid?: true
-    feeAmount?: true
-    bankAccountId?: true
-  }
-
-  export type DepositDetailSumAggregateInputType = {
-    id?: true
-    transactionId?: true
-    actuallyPaid?: true
-    feeAmount?: true
-    bankAccountId?: true
-  }
-
-  export type DepositDetailMinAggregateInputType = {
-    id?: true
-    confirmedAt?: true
-    failedAt?: true
-    createdAt?: true
-    updatedAt?: true
-    status?: true
-    transactionId?: true
-    methodType?: true
-    provider?: true
-    providerPaymentId?: true
-    depositCurrency?: true
-    depositNetwork?: true
-    walletAddress?: true
-    walletAddressExtraId?: true
-    bankName?: true
-    accountNumber?: true
-    accountHolder?: true
-    depositorName?: true
-    transactionHash?: true
-    actuallyPaid?: true
-    feeAmount?: true
-    feeCurrency?: true
-    feePaidBy?: true
-    failureReason?: true
-    bankAccountId?: true
-  }
-
-  export type DepositDetailMaxAggregateInputType = {
-    id?: true
-    confirmedAt?: true
-    failedAt?: true
-    createdAt?: true
-    updatedAt?: true
-    status?: true
-    transactionId?: true
-    methodType?: true
-    provider?: true
-    providerPaymentId?: true
-    depositCurrency?: true
-    depositNetwork?: true
-    walletAddress?: true
-    walletAddressExtraId?: true
-    bankName?: true
-    accountNumber?: true
-    accountHolder?: true
-    depositorName?: true
-    transactionHash?: true
-    actuallyPaid?: true
-    feeAmount?: true
-    feeCurrency?: true
-    feePaidBy?: true
-    failureReason?: true
-    bankAccountId?: true
-  }
-
-  export type DepositDetailCountAggregateInputType = {
-    id?: true
-    confirmedAt?: true
-    failedAt?: true
-    createdAt?: true
-    updatedAt?: true
-    status?: true
-    transactionId?: true
-    methodType?: true
-    provider?: true
-    providerPaymentId?: true
-    depositCurrency?: true
-    depositNetwork?: true
-    walletAddress?: true
-    walletAddressExtraId?: true
-    bankName?: true
-    accountNumber?: true
-    accountHolder?: true
-    depositorName?: true
-    transactionHash?: true
-    actuallyPaid?: true
-    feeAmount?: true
-    feeCurrency?: true
-    feePaidBy?: true
-    failureReason?: true
-    providerMetadata?: true
-    bankAccountId?: true
-    _all?: true
-  }
-
-  export type DepositDetailAggregateArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
-    /**
-     * Filter which DepositDetail to aggregate.
-     */
-    where?: DepositDetailWhereInput
-    /**
-     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/sorting Sorting Docs}
-     * 
-     * Determine the order of DepositDetails to fetch.
-     */
-    orderBy?: DepositDetailOrderByWithRelationInput | DepositDetailOrderByWithRelationInput[]
-    /**
-     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination#cursor-based-pagination Cursor Docs}
-     * 
-     * Sets the start position
-     */
-    cursor?: DepositDetailWhereUniqueInput
-    /**
-     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
-     * 
-     * Take `±n` DepositDetails from the position of the cursor.
-     */
-    take?: number
-    /**
-     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
-     * 
-     * Skip the first `n` DepositDetails.
-     */
-    skip?: number
-    /**
-     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
-     * 
-     * Count returned DepositDetails
-    **/
-    _count?: true | DepositDetailCountAggregateInputType
-    /**
-     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
-     * 
-     * Select which fields to average
-    **/
-    _avg?: DepositDetailAvgAggregateInputType
-    /**
-     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
-     * 
-     * Select which fields to sum
-    **/
-    _sum?: DepositDetailSumAggregateInputType
-    /**
-     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
-     * 
-     * Select which fields to find the minimum value
-    **/
-    _min?: DepositDetailMinAggregateInputType
-    /**
-     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
-     * 
-     * Select which fields to find the maximum value
-    **/
-    _max?: DepositDetailMaxAggregateInputType
-  }
-
-  export type GetDepositDetailAggregateType<T extends DepositDetailAggregateArgs> = {
-        [P in keyof T & keyof AggregateDepositDetail]: P extends '_count' | 'count'
-      ? T[P] extends true
-        ? number
-        : GetScalarType<T[P], AggregateDepositDetail[P]>
-      : GetScalarType<T[P], AggregateDepositDetail[P]>
-  }
-
-
-
-
-  export type DepositDetailGroupByArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
-    where?: DepositDetailWhereInput
-    orderBy?: DepositDetailOrderByWithAggregationInput | DepositDetailOrderByWithAggregationInput[]
-    by: DepositDetailScalarFieldEnum[] | DepositDetailScalarFieldEnum
-    having?: DepositDetailScalarWhereWithAggregatesInput
-    take?: number
-    skip?: number
-    _count?: DepositDetailCountAggregateInputType | true
-    _avg?: DepositDetailAvgAggregateInputType
-    _sum?: DepositDetailSumAggregateInputType
-    _min?: DepositDetailMinAggregateInputType
-    _max?: DepositDetailMaxAggregateInputType
-  }
-
-  export type DepositDetailGroupByOutputType = {
-    id: bigint
-    confirmedAt: Date | null
-    failedAt: Date | null
-    createdAt: Date
-    updatedAt: Date
-    status: $Enums.DepositDetailStatus
-    transactionId: bigint
-    methodType: $Enums.DepositMethodType
-    provider: $Enums.PaymentProvider
-    providerPaymentId: string | null
-    depositCurrency: $Enums.ExchangeCurrencyCode
-    depositNetwork: string | null
-    walletAddress: string | null
-    walletAddressExtraId: string | null
-    bankName: string | null
-    accountNumber: string | null
-    accountHolder: string | null
-    depositorName: string | null
-    transactionHash: string | null
-    actuallyPaid: Decimal | null
-    feeAmount: Decimal | null
-    feeCurrency: string | null
-    feePaidBy: $Enums.FeePaidByType | null
-    failureReason: string | null
-    providerMetadata: JsonValue | null
-    bankAccountId: number | null
-    _count: DepositDetailCountAggregateOutputType | null
-    _avg: DepositDetailAvgAggregateOutputType | null
-    _sum: DepositDetailSumAggregateOutputType | null
-    _min: DepositDetailMinAggregateOutputType | null
-    _max: DepositDetailMaxAggregateOutputType | null
-  }
-
-  type GetDepositDetailGroupByPayload<T extends DepositDetailGroupByArgs> = Prisma.PrismaPromise<
-    Array<
-      PickEnumerable<DepositDetailGroupByOutputType, T['by']> &
-        {
-          [P in ((keyof T) & (keyof DepositDetailGroupByOutputType))]: P extends '_count'
-            ? T[P] extends boolean
-              ? number
-              : GetScalarType<T[P], DepositDetailGroupByOutputType[P]>
-            : GetScalarType<T[P], DepositDetailGroupByOutputType[P]>
-        }
-      >
-    >
-
-
-  export type DepositDetailSelect<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetSelect<{
-    id?: boolean
-    confirmedAt?: boolean
-    failedAt?: boolean
-    createdAt?: boolean
-    updatedAt?: boolean
-    status?: boolean
-    transactionId?: boolean
-    methodType?: boolean
-    provider?: boolean
-    providerPaymentId?: boolean
-    depositCurrency?: boolean
-    depositNetwork?: boolean
-    walletAddress?: boolean
-    walletAddressExtraId?: boolean
-    bankName?: boolean
-    accountNumber?: boolean
-    accountHolder?: boolean
-    depositorName?: boolean
-    transactionHash?: boolean
-    actuallyPaid?: boolean
-    feeAmount?: boolean
-    feeCurrency?: boolean
-    feePaidBy?: boolean
-    failureReason?: boolean
-    providerMetadata?: boolean
-    bankAccountId?: boolean
-    BankAccount?: boolean | DepositDetail$BankAccountArgs<ExtArgs>
-    transaction?: boolean | TransactionDefaultArgs<ExtArgs>
-    Rolling?: boolean | DepositDetail$RollingArgs<ExtArgs>
-    _count?: boolean | DepositDetailCountOutputTypeDefaultArgs<ExtArgs>
-  }, ExtArgs["result"]["depositDetail"]>
-
-  export type DepositDetailSelectCreateManyAndReturn<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetSelect<{
-    id?: boolean
-    confirmedAt?: boolean
-    failedAt?: boolean
-    createdAt?: boolean
-    updatedAt?: boolean
-    status?: boolean
-    transactionId?: boolean
-    methodType?: boolean
-    provider?: boolean
-    providerPaymentId?: boolean
-    depositCurrency?: boolean
-    depositNetwork?: boolean
-    walletAddress?: boolean
-    walletAddressExtraId?: boolean
-    bankName?: boolean
-    accountNumber?: boolean
-    accountHolder?: boolean
-    depositorName?: boolean
-    transactionHash?: boolean
-    actuallyPaid?: boolean
-    feeAmount?: boolean
-    feeCurrency?: boolean
-    feePaidBy?: boolean
-    failureReason?: boolean
-    providerMetadata?: boolean
-    bankAccountId?: boolean
-    BankAccount?: boolean | DepositDetail$BankAccountArgs<ExtArgs>
-    transaction?: boolean | TransactionDefaultArgs<ExtArgs>
-  }, ExtArgs["result"]["depositDetail"]>
-
-  export type DepositDetailSelectUpdateManyAndReturn<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetSelect<{
-    id?: boolean
-    confirmedAt?: boolean
-    failedAt?: boolean
-    createdAt?: boolean
-    updatedAt?: boolean
-    status?: boolean
-    transactionId?: boolean
-    methodType?: boolean
-    provider?: boolean
-    providerPaymentId?: boolean
-    depositCurrency?: boolean
-    depositNetwork?: boolean
-    walletAddress?: boolean
-    walletAddressExtraId?: boolean
-    bankName?: boolean
-    accountNumber?: boolean
-    accountHolder?: boolean
-    depositorName?: boolean
-    transactionHash?: boolean
-    actuallyPaid?: boolean
-    feeAmount?: boolean
-    feeCurrency?: boolean
-    feePaidBy?: boolean
-    failureReason?: boolean
-    providerMetadata?: boolean
-    bankAccountId?: boolean
-    BankAccount?: boolean | DepositDetail$BankAccountArgs<ExtArgs>
-    transaction?: boolean | TransactionDefaultArgs<ExtArgs>
-  }, ExtArgs["result"]["depositDetail"]>
-
-  export type DepositDetailSelectScalar = {
-    id?: boolean
-    confirmedAt?: boolean
-    failedAt?: boolean
-    createdAt?: boolean
-    updatedAt?: boolean
-    status?: boolean
-    transactionId?: boolean
-    methodType?: boolean
-    provider?: boolean
-    providerPaymentId?: boolean
-    depositCurrency?: boolean
-    depositNetwork?: boolean
-    walletAddress?: boolean
-    walletAddressExtraId?: boolean
-    bankName?: boolean
-    accountNumber?: boolean
-    accountHolder?: boolean
-    depositorName?: boolean
-    transactionHash?: boolean
-    actuallyPaid?: boolean
-    feeAmount?: boolean
-    feeCurrency?: boolean
-    feePaidBy?: boolean
-    failureReason?: boolean
-    providerMetadata?: boolean
-    bankAccountId?: boolean
-  }
-
-  export type DepositDetailOmit<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetOmit<"id" | "confirmedAt" | "failedAt" | "createdAt" | "updatedAt" | "status" | "transactionId" | "methodType" | "provider" | "providerPaymentId" | "depositCurrency" | "depositNetwork" | "walletAddress" | "walletAddressExtraId" | "bankName" | "accountNumber" | "accountHolder" | "depositorName" | "transactionHash" | "actuallyPaid" | "feeAmount" | "feeCurrency" | "feePaidBy" | "failureReason" | "providerMetadata" | "bankAccountId", ExtArgs["result"]["depositDetail"]>
-  export type DepositDetailInclude<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
-    BankAccount?: boolean | DepositDetail$BankAccountArgs<ExtArgs>
-    transaction?: boolean | TransactionDefaultArgs<ExtArgs>
-    Rolling?: boolean | DepositDetail$RollingArgs<ExtArgs>
-    _count?: boolean | DepositDetailCountOutputTypeDefaultArgs<ExtArgs>
-  }
-  export type DepositDetailIncludeCreateManyAndReturn<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
-    BankAccount?: boolean | DepositDetail$BankAccountArgs<ExtArgs>
-    transaction?: boolean | TransactionDefaultArgs<ExtArgs>
-  }
-  export type DepositDetailIncludeUpdateManyAndReturn<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
-    BankAccount?: boolean | DepositDetail$BankAccountArgs<ExtArgs>
-    transaction?: boolean | TransactionDefaultArgs<ExtArgs>
-  }
-
-  export type $DepositDetailPayload<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
-    name: "DepositDetail"
-    objects: {
-      BankAccount: Prisma.$BankAccountPayload<ExtArgs> | null
-      transaction: Prisma.$TransactionPayload<ExtArgs>
-      Rolling: Prisma.$RollingPayload<ExtArgs>[]
-    }
-    scalars: $Extensions.GetPayloadResult<{
-      id: bigint
-      confirmedAt: Date | null
-      failedAt: Date | null
-      createdAt: Date
-      updatedAt: Date
-      status: $Enums.DepositDetailStatus
-      transactionId: bigint
-      methodType: $Enums.DepositMethodType
-      provider: $Enums.PaymentProvider
-      providerPaymentId: string | null
-      depositCurrency: $Enums.ExchangeCurrencyCode
-      depositNetwork: string | null
-      walletAddress: string | null
-      walletAddressExtraId: string | null
-      bankName: string | null
-      accountNumber: string | null
-      accountHolder: string | null
-      depositorName: string | null
-      transactionHash: string | null
-      actuallyPaid: Prisma.Decimal | null
-      feeAmount: Prisma.Decimal | null
-      feeCurrency: string | null
-      feePaidBy: $Enums.FeePaidByType | null
-      failureReason: string | null
-      providerMetadata: Prisma.JsonValue | null
-      bankAccountId: number | null
-    }, ExtArgs["result"]["depositDetail"]>
-    composites: {}
-  }
-
-  type DepositDetailGetPayload<S extends boolean | null | undefined | DepositDetailDefaultArgs> = $Result.GetResult<Prisma.$DepositDetailPayload, S>
-
-  type DepositDetailCountArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> =
-    Omit<DepositDetailFindManyArgs, 'select' | 'include' | 'distinct' | 'omit'> & {
-      select?: DepositDetailCountAggregateInputType | true
-    }
-
-  export interface DepositDetailDelegate<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs, GlobalOmitOptions = {}> {
-    [K: symbol]: { types: Prisma.TypeMap<ExtArgs>['model']['DepositDetail'], meta: { name: 'DepositDetail' } }
-    /**
-     * Find zero or one DepositDetail that matches the filter.
-     * @param {DepositDetailFindUniqueArgs} args - Arguments to find a DepositDetail
-     * @example
-     * // Get one DepositDetail
-     * const depositDetail = await prisma.depositDetail.findUnique({
-     *   where: {
-     *     // ... provide filter here
-     *   }
-     * })
-     */
-    findUnique<T extends DepositDetailFindUniqueArgs>(args: SelectSubset<T, DepositDetailFindUniqueArgs<ExtArgs>>): Prisma__DepositDetailClient<$Result.GetResult<Prisma.$DepositDetailPayload<ExtArgs>, T, "findUnique", GlobalOmitOptions> | null, null, ExtArgs, GlobalOmitOptions>
-
-    /**
-     * Find one DepositDetail that matches the filter or throw an error with `error.code='P2025'`
-     * if no matches were found.
-     * @param {DepositDetailFindUniqueOrThrowArgs} args - Arguments to find a DepositDetail
-     * @example
-     * // Get one DepositDetail
-     * const depositDetail = await prisma.depositDetail.findUniqueOrThrow({
-     *   where: {
-     *     // ... provide filter here
-     *   }
-     * })
-     */
-    findUniqueOrThrow<T extends DepositDetailFindUniqueOrThrowArgs>(args: SelectSubset<T, DepositDetailFindUniqueOrThrowArgs<ExtArgs>>): Prisma__DepositDetailClient<$Result.GetResult<Prisma.$DepositDetailPayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
-
-    /**
-     * Find the first DepositDetail that matches the filter.
-     * Note, that providing `undefined` is treated as the value not being there.
-     * Read more here: https://pris.ly/d/null-undefined
-     * @param {DepositDetailFindFirstArgs} args - Arguments to find a DepositDetail
-     * @example
-     * // Get one DepositDetail
-     * const depositDetail = await prisma.depositDetail.findFirst({
-     *   where: {
-     *     // ... provide filter here
-     *   }
-     * })
-     */
-    findFirst<T extends DepositDetailFindFirstArgs>(args?: SelectSubset<T, DepositDetailFindFirstArgs<ExtArgs>>): Prisma__DepositDetailClient<$Result.GetResult<Prisma.$DepositDetailPayload<ExtArgs>, T, "findFirst", GlobalOmitOptions> | null, null, ExtArgs, GlobalOmitOptions>
-
-    /**
-     * Find the first DepositDetail that matches the filter or
-     * throw `PrismaKnownClientError` with `P2025` code if no matches were found.
-     * Note, that providing `undefined` is treated as the value not being there.
-     * Read more here: https://pris.ly/d/null-undefined
-     * @param {DepositDetailFindFirstOrThrowArgs} args - Arguments to find a DepositDetail
-     * @example
-     * // Get one DepositDetail
-     * const depositDetail = await prisma.depositDetail.findFirstOrThrow({
-     *   where: {
-     *     // ... provide filter here
-     *   }
-     * })
-     */
-    findFirstOrThrow<T extends DepositDetailFindFirstOrThrowArgs>(args?: SelectSubset<T, DepositDetailFindFirstOrThrowArgs<ExtArgs>>): Prisma__DepositDetailClient<$Result.GetResult<Prisma.$DepositDetailPayload<ExtArgs>, T, "findFirstOrThrow", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
-
-    /**
-     * Find zero or more DepositDetails that matches the filter.
-     * Note, that providing `undefined` is treated as the value not being there.
-     * Read more here: https://pris.ly/d/null-undefined
-     * @param {DepositDetailFindManyArgs} args - Arguments to filter and select certain fields only.
-     * @example
-     * // Get all DepositDetails
-     * const depositDetails = await prisma.depositDetail.findMany()
-     * 
-     * // Get first 10 DepositDetails
-     * const depositDetails = await prisma.depositDetail.findMany({ take: 10 })
-     * 
-     * // Only select the `id`
-     * const depositDetailWithIdOnly = await prisma.depositDetail.findMany({ select: { id: true } })
-     * 
-     */
-    findMany<T extends DepositDetailFindManyArgs>(args?: SelectSubset<T, DepositDetailFindManyArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$DepositDetailPayload<ExtArgs>, T, "findMany", GlobalOmitOptions>>
-
-    /**
-     * Create a DepositDetail.
-     * @param {DepositDetailCreateArgs} args - Arguments to create a DepositDetail.
-     * @example
-     * // Create one DepositDetail
-     * const DepositDetail = await prisma.depositDetail.create({
-     *   data: {
-     *     // ... data to create a DepositDetail
-     *   }
-     * })
-     * 
-     */
-    create<T extends DepositDetailCreateArgs>(args: SelectSubset<T, DepositDetailCreateArgs<ExtArgs>>): Prisma__DepositDetailClient<$Result.GetResult<Prisma.$DepositDetailPayload<ExtArgs>, T, "create", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
-
-    /**
-     * Create many DepositDetails.
-     * @param {DepositDetailCreateManyArgs} args - Arguments to create many DepositDetails.
-     * @example
-     * // Create many DepositDetails
-     * const depositDetail = await prisma.depositDetail.createMany({
-     *   data: [
-     *     // ... provide data here
-     *   ]
-     * })
-     *     
-     */
-    createMany<T extends DepositDetailCreateManyArgs>(args?: SelectSubset<T, DepositDetailCreateManyArgs<ExtArgs>>): Prisma.PrismaPromise<BatchPayload>
-
-    /**
-     * Create many DepositDetails and returns the data saved in the database.
-     * @param {DepositDetailCreateManyAndReturnArgs} args - Arguments to create many DepositDetails.
-     * @example
-     * // Create many DepositDetails
-     * const depositDetail = await prisma.depositDetail.createManyAndReturn({
-     *   data: [
-     *     // ... provide data here
-     *   ]
-     * })
-     * 
-     * // Create many DepositDetails and only return the `id`
-     * const depositDetailWithIdOnly = await prisma.depositDetail.createManyAndReturn({
-     *   select: { id: true },
-     *   data: [
-     *     // ... provide data here
-     *   ]
-     * })
-     * Note, that providing `undefined` is treated as the value not being there.
-     * Read more here: https://pris.ly/d/null-undefined
-     * 
-     */
-    createManyAndReturn<T extends DepositDetailCreateManyAndReturnArgs>(args?: SelectSubset<T, DepositDetailCreateManyAndReturnArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$DepositDetailPayload<ExtArgs>, T, "createManyAndReturn", GlobalOmitOptions>>
-
-    /**
-     * Delete a DepositDetail.
-     * @param {DepositDetailDeleteArgs} args - Arguments to delete one DepositDetail.
-     * @example
-     * // Delete one DepositDetail
-     * const DepositDetail = await prisma.depositDetail.delete({
-     *   where: {
-     *     // ... filter to delete one DepositDetail
-     *   }
-     * })
-     * 
-     */
-    delete<T extends DepositDetailDeleteArgs>(args: SelectSubset<T, DepositDetailDeleteArgs<ExtArgs>>): Prisma__DepositDetailClient<$Result.GetResult<Prisma.$DepositDetailPayload<ExtArgs>, T, "delete", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
-
-    /**
-     * Update one DepositDetail.
-     * @param {DepositDetailUpdateArgs} args - Arguments to update one DepositDetail.
-     * @example
-     * // Update one DepositDetail
-     * const depositDetail = await prisma.depositDetail.update({
-     *   where: {
-     *     // ... provide filter here
-     *   },
-     *   data: {
-     *     // ... provide data here
-     *   }
-     * })
-     * 
-     */
-    update<T extends DepositDetailUpdateArgs>(args: SelectSubset<T, DepositDetailUpdateArgs<ExtArgs>>): Prisma__DepositDetailClient<$Result.GetResult<Prisma.$DepositDetailPayload<ExtArgs>, T, "update", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
-
-    /**
-     * Delete zero or more DepositDetails.
-     * @param {DepositDetailDeleteManyArgs} args - Arguments to filter DepositDetails to delete.
-     * @example
-     * // Delete a few DepositDetails
-     * const { count } = await prisma.depositDetail.deleteMany({
-     *   where: {
-     *     // ... provide filter here
-     *   }
-     * })
-     * 
-     */
-    deleteMany<T extends DepositDetailDeleteManyArgs>(args?: SelectSubset<T, DepositDetailDeleteManyArgs<ExtArgs>>): Prisma.PrismaPromise<BatchPayload>
-
-    /**
-     * Update zero or more DepositDetails.
-     * Note, that providing `undefined` is treated as the value not being there.
-     * Read more here: https://pris.ly/d/null-undefined
-     * @param {DepositDetailUpdateManyArgs} args - Arguments to update one or more rows.
-     * @example
-     * // Update many DepositDetails
-     * const depositDetail = await prisma.depositDetail.updateMany({
-     *   where: {
-     *     // ... provide filter here
-     *   },
-     *   data: {
-     *     // ... provide data here
-     *   }
-     * })
-     * 
-     */
-    updateMany<T extends DepositDetailUpdateManyArgs>(args: SelectSubset<T, DepositDetailUpdateManyArgs<ExtArgs>>): Prisma.PrismaPromise<BatchPayload>
-
-    /**
-     * Update zero or more DepositDetails and returns the data updated in the database.
-     * @param {DepositDetailUpdateManyAndReturnArgs} args - Arguments to update many DepositDetails.
-     * @example
-     * // Update many DepositDetails
-     * const depositDetail = await prisma.depositDetail.updateManyAndReturn({
-     *   where: {
-     *     // ... provide filter here
-     *   },
-     *   data: [
-     *     // ... provide data here
-     *   ]
-     * })
-     * 
-     * // Update zero or more DepositDetails and only return the `id`
-     * const depositDetailWithIdOnly = await prisma.depositDetail.updateManyAndReturn({
-     *   select: { id: true },
-     *   where: {
-     *     // ... provide filter here
-     *   },
-     *   data: [
-     *     // ... provide data here
-     *   ]
-     * })
-     * Note, that providing `undefined` is treated as the value not being there.
-     * Read more here: https://pris.ly/d/null-undefined
-     * 
-     */
-    updateManyAndReturn<T extends DepositDetailUpdateManyAndReturnArgs>(args: SelectSubset<T, DepositDetailUpdateManyAndReturnArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$DepositDetailPayload<ExtArgs>, T, "updateManyAndReturn", GlobalOmitOptions>>
-
-    /**
-     * Create or update one DepositDetail.
-     * @param {DepositDetailUpsertArgs} args - Arguments to update or create a DepositDetail.
-     * @example
-     * // Update or create a DepositDetail
-     * const depositDetail = await prisma.depositDetail.upsert({
-     *   create: {
-     *     // ... data to create a DepositDetail
-     *   },
-     *   update: {
-     *     // ... in case it already exists, update
-     *   },
-     *   where: {
-     *     // ... the filter for the DepositDetail we want to update
-     *   }
-     * })
-     */
-    upsert<T extends DepositDetailUpsertArgs>(args: SelectSubset<T, DepositDetailUpsertArgs<ExtArgs>>): Prisma__DepositDetailClient<$Result.GetResult<Prisma.$DepositDetailPayload<ExtArgs>, T, "upsert", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
-
-
-    /**
-     * Count the number of DepositDetails.
-     * Note, that providing `undefined` is treated as the value not being there.
-     * Read more here: https://pris.ly/d/null-undefined
-     * @param {DepositDetailCountArgs} args - Arguments to filter DepositDetails to count.
-     * @example
-     * // Count the number of DepositDetails
-     * const count = await prisma.depositDetail.count({
-     *   where: {
-     *     // ... the filter for the DepositDetails we want to count
-     *   }
-     * })
-    **/
-    count<T extends DepositDetailCountArgs>(
-      args?: Subset<T, DepositDetailCountArgs>,
-    ): Prisma.PrismaPromise<
-      T extends $Utils.Record<'select', any>
-        ? T['select'] extends true
-          ? number
-          : GetScalarType<T['select'], DepositDetailCountAggregateOutputType>
-        : number
-    >
-
-    /**
-     * Allows you to perform aggregations operations on a DepositDetail.
-     * Note, that providing `undefined` is treated as the value not being there.
-     * Read more here: https://pris.ly/d/null-undefined
-     * @param {DepositDetailAggregateArgs} args - Select which aggregations you would like to apply and on what fields.
-     * @example
-     * // Ordered by age ascending
-     * // Where email contains prisma.io
-     * // Limited to the 10 users
-     * const aggregations = await prisma.user.aggregate({
-     *   _avg: {
-     *     age: true,
-     *   },
-     *   where: {
-     *     email: {
-     *       contains: "prisma.io",
-     *     },
-     *   },
-     *   orderBy: {
-     *     age: "asc",
-     *   },
-     *   take: 10,
-     * })
-    **/
-    aggregate<T extends DepositDetailAggregateArgs>(args: Subset<T, DepositDetailAggregateArgs>): Prisma.PrismaPromise<GetDepositDetailAggregateType<T>>
-
-    /**
-     * Group by DepositDetail.
-     * Note, that providing `undefined` is treated as the value not being there.
-     * Read more here: https://pris.ly/d/null-undefined
-     * @param {DepositDetailGroupByArgs} args - Group by arguments.
-     * @example
-     * // Group by city, order by createdAt, get count
-     * const result = await prisma.user.groupBy({
-     *   by: ['city', 'createdAt'],
-     *   orderBy: {
-     *     createdAt: true
-     *   },
-     *   _count: {
-     *     _all: true
-     *   },
-     * })
-     * 
-    **/
-    groupBy<
-      T extends DepositDetailGroupByArgs,
-      HasSelectOrTake extends Or<
-        Extends<'skip', Keys<T>>,
-        Extends<'take', Keys<T>>
-      >,
-      OrderByArg extends True extends HasSelectOrTake
-        ? { orderBy: DepositDetailGroupByArgs['orderBy'] }
-        : { orderBy?: DepositDetailGroupByArgs['orderBy'] },
-      OrderFields extends ExcludeUnderscoreKeys<Keys<MaybeTupleToUnion<T['orderBy']>>>,
-      ByFields extends MaybeTupleToUnion<T['by']>,
-      ByValid extends Has<ByFields, OrderFields>,
-      HavingFields extends GetHavingFields<T['having']>,
-      HavingValid extends Has<ByFields, HavingFields>,
-      ByEmpty extends T['by'] extends never[] ? True : False,
-      InputErrors extends ByEmpty extends True
-      ? `Error: "by" must not be empty.`
-      : HavingValid extends False
-      ? {
-          [P in HavingFields]: P extends ByFields
-            ? never
-            : P extends string
-            ? `Error: Field "${P}" used in "having" needs to be provided in "by".`
-            : [
-                Error,
-                'Field ',
-                P,
-                ` in "having" needs to be provided in "by"`,
-              ]
-        }[HavingFields]
-      : 'take' extends Keys<T>
-      ? 'orderBy' extends Keys<T>
-        ? ByValid extends True
-          ? {}
-          : {
-              [P in OrderFields]: P extends ByFields
-                ? never
-                : `Error: Field "${P}" in "orderBy" needs to be provided in "by"`
-            }[OrderFields]
-        : 'Error: If you provide "take", you also need to provide "orderBy"'
-      : 'skip' extends Keys<T>
-      ? 'orderBy' extends Keys<T>
-        ? ByValid extends True
-          ? {}
-          : {
-              [P in OrderFields]: P extends ByFields
-                ? never
-                : `Error: Field "${P}" in "orderBy" needs to be provided in "by"`
-            }[OrderFields]
-        : 'Error: If you provide "skip", you also need to provide "orderBy"'
-      : ByValid extends True
-      ? {}
-      : {
-          [P in OrderFields]: P extends ByFields
-            ? never
-            : `Error: Field "${P}" in "orderBy" needs to be provided in "by"`
-        }[OrderFields]
-    >(args: SubsetIntersection<T, DepositDetailGroupByArgs, OrderByArg> & InputErrors): {} extends InputErrors ? GetDepositDetailGroupByPayload<T> : Prisma.PrismaPromise<InputErrors>
-  /**
-   * Fields of the DepositDetail model
-   */
-  readonly fields: DepositDetailFieldRefs;
-  }
-
-  /**
-   * The delegate class that acts as a "Promise-like" for DepositDetail.
-   * Why is this prefixed with `Prisma__`?
-   * Because we want to prevent naming conflicts as mentioned in
-   * https://github.com/prisma/prisma-client-js/issues/707
-   */
-  export interface Prisma__DepositDetailClient<T, Null = never, ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs, GlobalOmitOptions = {}> extends Prisma.PrismaPromise<T> {
-    readonly [Symbol.toStringTag]: "PrismaPromise"
-    BankAccount<T extends DepositDetail$BankAccountArgs<ExtArgs> = {}>(args?: Subset<T, DepositDetail$BankAccountArgs<ExtArgs>>): Prisma__BankAccountClient<$Result.GetResult<Prisma.$BankAccountPayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions> | null, null, ExtArgs, GlobalOmitOptions>
-    transaction<T extends TransactionDefaultArgs<ExtArgs> = {}>(args?: Subset<T, TransactionDefaultArgs<ExtArgs>>): Prisma__TransactionClient<$Result.GetResult<Prisma.$TransactionPayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions> | Null, Null, ExtArgs, GlobalOmitOptions>
-    Rolling<T extends DepositDetail$RollingArgs<ExtArgs> = {}>(args?: Subset<T, DepositDetail$RollingArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$RollingPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
-    /**
-     * Attaches callbacks for the resolution and/or rejection of the Promise.
-     * @param onfulfilled The callback to execute when the Promise is resolved.
-     * @param onrejected The callback to execute when the Promise is rejected.
-     * @returns A Promise for the completion of which ever callback is executed.
-     */
-    then<TResult1 = T, TResult2 = never>(onfulfilled?: ((value: T) => TResult1 | PromiseLike<TResult1>) | undefined | null, onrejected?: ((reason: any) => TResult2 | PromiseLike<TResult2>) | undefined | null): $Utils.JsPromise<TResult1 | TResult2>
-    /**
-     * Attaches a callback for only the rejection of the Promise.
-     * @param onrejected The callback to execute when the Promise is rejected.
-     * @returns A Promise for the completion of the callback.
-     */
-    catch<TResult = never>(onrejected?: ((reason: any) => TResult | PromiseLike<TResult>) | undefined | null): $Utils.JsPromise<T | TResult>
-    /**
-     * Attaches a callback that is invoked when the Promise is settled (fulfilled or rejected). The
-     * resolved value cannot be modified from the callback.
-     * @param onfinally The callback to execute when the Promise is settled (fulfilled or rejected).
-     * @returns A Promise for the completion of the callback.
-     */
-    finally(onfinally?: (() => void) | undefined | null): $Utils.JsPromise<T>
-  }
-
-
-
-
-  /**
-   * Fields of the DepositDetail model
-   */
-  interface DepositDetailFieldRefs {
-    readonly id: FieldRef<"DepositDetail", 'BigInt'>
-    readonly confirmedAt: FieldRef<"DepositDetail", 'DateTime'>
-    readonly failedAt: FieldRef<"DepositDetail", 'DateTime'>
-    readonly createdAt: FieldRef<"DepositDetail", 'DateTime'>
-    readonly updatedAt: FieldRef<"DepositDetail", 'DateTime'>
-    readonly status: FieldRef<"DepositDetail", 'DepositDetailStatus'>
-    readonly transactionId: FieldRef<"DepositDetail", 'BigInt'>
-    readonly methodType: FieldRef<"DepositDetail", 'DepositMethodType'>
-    readonly provider: FieldRef<"DepositDetail", 'PaymentProvider'>
-    readonly providerPaymentId: FieldRef<"DepositDetail", 'String'>
-    readonly depositCurrency: FieldRef<"DepositDetail", 'ExchangeCurrencyCode'>
-    readonly depositNetwork: FieldRef<"DepositDetail", 'String'>
-    readonly walletAddress: FieldRef<"DepositDetail", 'String'>
-    readonly walletAddressExtraId: FieldRef<"DepositDetail", 'String'>
-    readonly bankName: FieldRef<"DepositDetail", 'String'>
-    readonly accountNumber: FieldRef<"DepositDetail", 'String'>
-    readonly accountHolder: FieldRef<"DepositDetail", 'String'>
-    readonly depositorName: FieldRef<"DepositDetail", 'String'>
-    readonly transactionHash: FieldRef<"DepositDetail", 'String'>
-    readonly actuallyPaid: FieldRef<"DepositDetail", 'Decimal'>
-    readonly feeAmount: FieldRef<"DepositDetail", 'Decimal'>
-    readonly feeCurrency: FieldRef<"DepositDetail", 'String'>
-    readonly feePaidBy: FieldRef<"DepositDetail", 'FeePaidByType'>
-    readonly failureReason: FieldRef<"DepositDetail", 'String'>
-    readonly providerMetadata: FieldRef<"DepositDetail", 'Json'>
-    readonly bankAccountId: FieldRef<"DepositDetail", 'Int'>
-  }
-    
-
-  // Custom InputTypes
-  /**
-   * DepositDetail findUnique
-   */
-  export type DepositDetailFindUniqueArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
-    /**
-     * Select specific fields to fetch from the DepositDetail
-     */
-    select?: DepositDetailSelect<ExtArgs> | null
-    /**
-     * Omit specific fields from the DepositDetail
-     */
-    omit?: DepositDetailOmit<ExtArgs> | null
-    /**
-     * Choose, which related nodes to fetch as well
-     */
-    include?: DepositDetailInclude<ExtArgs> | null
-    /**
-     * Filter, which DepositDetail to fetch.
-     */
-    where: DepositDetailWhereUniqueInput
-  }
-
-  /**
-   * DepositDetail findUniqueOrThrow
-   */
-  export type DepositDetailFindUniqueOrThrowArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
-    /**
-     * Select specific fields to fetch from the DepositDetail
-     */
-    select?: DepositDetailSelect<ExtArgs> | null
-    /**
-     * Omit specific fields from the DepositDetail
-     */
-    omit?: DepositDetailOmit<ExtArgs> | null
-    /**
-     * Choose, which related nodes to fetch as well
-     */
-    include?: DepositDetailInclude<ExtArgs> | null
-    /**
-     * Filter, which DepositDetail to fetch.
-     */
-    where: DepositDetailWhereUniqueInput
-  }
-
-  /**
-   * DepositDetail findFirst
-   */
-  export type DepositDetailFindFirstArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
-    /**
-     * Select specific fields to fetch from the DepositDetail
-     */
-    select?: DepositDetailSelect<ExtArgs> | null
-    /**
-     * Omit specific fields from the DepositDetail
-     */
-    omit?: DepositDetailOmit<ExtArgs> | null
-    /**
-     * Choose, which related nodes to fetch as well
-     */
-    include?: DepositDetailInclude<ExtArgs> | null
-    /**
-     * Filter, which DepositDetail to fetch.
-     */
-    where?: DepositDetailWhereInput
-    /**
-     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/sorting Sorting Docs}
-     * 
-     * Determine the order of DepositDetails to fetch.
-     */
-    orderBy?: DepositDetailOrderByWithRelationInput | DepositDetailOrderByWithRelationInput[]
-    /**
-     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination#cursor-based-pagination Cursor Docs}
-     * 
-     * Sets the position for searching for DepositDetails.
-     */
-    cursor?: DepositDetailWhereUniqueInput
-    /**
-     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
-     * 
-     * Take `±n` DepositDetails from the position of the cursor.
-     */
-    take?: number
-    /**
-     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
-     * 
-     * Skip the first `n` DepositDetails.
-     */
-    skip?: number
-    /**
-     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/distinct Distinct Docs}
-     * 
-     * Filter by unique combinations of DepositDetails.
-     */
-    distinct?: DepositDetailScalarFieldEnum | DepositDetailScalarFieldEnum[]
-  }
-
-  /**
-   * DepositDetail findFirstOrThrow
-   */
-  export type DepositDetailFindFirstOrThrowArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
-    /**
-     * Select specific fields to fetch from the DepositDetail
-     */
-    select?: DepositDetailSelect<ExtArgs> | null
-    /**
-     * Omit specific fields from the DepositDetail
-     */
-    omit?: DepositDetailOmit<ExtArgs> | null
-    /**
-     * Choose, which related nodes to fetch as well
-     */
-    include?: DepositDetailInclude<ExtArgs> | null
-    /**
-     * Filter, which DepositDetail to fetch.
-     */
-    where?: DepositDetailWhereInput
-    /**
-     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/sorting Sorting Docs}
-     * 
-     * Determine the order of DepositDetails to fetch.
-     */
-    orderBy?: DepositDetailOrderByWithRelationInput | DepositDetailOrderByWithRelationInput[]
-    /**
-     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination#cursor-based-pagination Cursor Docs}
-     * 
-     * Sets the position for searching for DepositDetails.
-     */
-    cursor?: DepositDetailWhereUniqueInput
-    /**
-     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
-     * 
-     * Take `±n` DepositDetails from the position of the cursor.
-     */
-    take?: number
-    /**
-     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
-     * 
-     * Skip the first `n` DepositDetails.
-     */
-    skip?: number
-    /**
-     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/distinct Distinct Docs}
-     * 
-     * Filter by unique combinations of DepositDetails.
-     */
-    distinct?: DepositDetailScalarFieldEnum | DepositDetailScalarFieldEnum[]
-  }
-
-  /**
-   * DepositDetail findMany
-   */
-  export type DepositDetailFindManyArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
-    /**
-     * Select specific fields to fetch from the DepositDetail
-     */
-    select?: DepositDetailSelect<ExtArgs> | null
-    /**
-     * Omit specific fields from the DepositDetail
-     */
-    omit?: DepositDetailOmit<ExtArgs> | null
-    /**
-     * Choose, which related nodes to fetch as well
-     */
-    include?: DepositDetailInclude<ExtArgs> | null
-    /**
-     * Filter, which DepositDetails to fetch.
-     */
-    where?: DepositDetailWhereInput
-    /**
-     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/sorting Sorting Docs}
-     * 
-     * Determine the order of DepositDetails to fetch.
-     */
-    orderBy?: DepositDetailOrderByWithRelationInput | DepositDetailOrderByWithRelationInput[]
-    /**
-     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination#cursor-based-pagination Cursor Docs}
-     * 
-     * Sets the position for listing DepositDetails.
-     */
-    cursor?: DepositDetailWhereUniqueInput
-    /**
-     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
-     * 
-     * Take `±n` DepositDetails from the position of the cursor.
-     */
-    take?: number
-    /**
-     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
-     * 
-     * Skip the first `n` DepositDetails.
-     */
-    skip?: number
-    distinct?: DepositDetailScalarFieldEnum | DepositDetailScalarFieldEnum[]
-  }
-
-  /**
-   * DepositDetail create
-   */
-  export type DepositDetailCreateArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
-    /**
-     * Select specific fields to fetch from the DepositDetail
-     */
-    select?: DepositDetailSelect<ExtArgs> | null
-    /**
-     * Omit specific fields from the DepositDetail
-     */
-    omit?: DepositDetailOmit<ExtArgs> | null
-    /**
-     * Choose, which related nodes to fetch as well
-     */
-    include?: DepositDetailInclude<ExtArgs> | null
-    /**
-     * The data needed to create a DepositDetail.
-     */
-    data: XOR<DepositDetailCreateInput, DepositDetailUncheckedCreateInput>
-  }
-
-  /**
-   * DepositDetail createMany
-   */
-  export type DepositDetailCreateManyArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
-    /**
-     * The data used to create many DepositDetails.
-     */
-    data: DepositDetailCreateManyInput | DepositDetailCreateManyInput[]
-    skipDuplicates?: boolean
-  }
-
-  /**
-   * DepositDetail createManyAndReturn
-   */
-  export type DepositDetailCreateManyAndReturnArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
-    /**
-     * Select specific fields to fetch from the DepositDetail
-     */
-    select?: DepositDetailSelectCreateManyAndReturn<ExtArgs> | null
-    /**
-     * Omit specific fields from the DepositDetail
-     */
-    omit?: DepositDetailOmit<ExtArgs> | null
-    /**
-     * The data used to create many DepositDetails.
-     */
-    data: DepositDetailCreateManyInput | DepositDetailCreateManyInput[]
-    skipDuplicates?: boolean
-    /**
-     * Choose, which related nodes to fetch as well
-     */
-    include?: DepositDetailIncludeCreateManyAndReturn<ExtArgs> | null
-  }
-
-  /**
-   * DepositDetail update
-   */
-  export type DepositDetailUpdateArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
-    /**
-     * Select specific fields to fetch from the DepositDetail
-     */
-    select?: DepositDetailSelect<ExtArgs> | null
-    /**
-     * Omit specific fields from the DepositDetail
-     */
-    omit?: DepositDetailOmit<ExtArgs> | null
-    /**
-     * Choose, which related nodes to fetch as well
-     */
-    include?: DepositDetailInclude<ExtArgs> | null
-    /**
-     * The data needed to update a DepositDetail.
-     */
-    data: XOR<DepositDetailUpdateInput, DepositDetailUncheckedUpdateInput>
-    /**
-     * Choose, which DepositDetail to update.
-     */
-    where: DepositDetailWhereUniqueInput
-  }
-
-  /**
-   * DepositDetail updateMany
-   */
-  export type DepositDetailUpdateManyArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
-    /**
-     * The data used to update DepositDetails.
-     */
-    data: XOR<DepositDetailUpdateManyMutationInput, DepositDetailUncheckedUpdateManyInput>
-    /**
-     * Filter which DepositDetails to update
-     */
-    where?: DepositDetailWhereInput
-    /**
-     * Limit how many DepositDetails to update.
-     */
-    limit?: number
-  }
-
-  /**
-   * DepositDetail updateManyAndReturn
-   */
-  export type DepositDetailUpdateManyAndReturnArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
-    /**
-     * Select specific fields to fetch from the DepositDetail
-     */
-    select?: DepositDetailSelectUpdateManyAndReturn<ExtArgs> | null
-    /**
-     * Omit specific fields from the DepositDetail
-     */
-    omit?: DepositDetailOmit<ExtArgs> | null
-    /**
-     * The data used to update DepositDetails.
-     */
-    data: XOR<DepositDetailUpdateManyMutationInput, DepositDetailUncheckedUpdateManyInput>
-    /**
-     * Filter which DepositDetails to update
-     */
-    where?: DepositDetailWhereInput
-    /**
-     * Limit how many DepositDetails to update.
-     */
-    limit?: number
-    /**
-     * Choose, which related nodes to fetch as well
-     */
-    include?: DepositDetailIncludeUpdateManyAndReturn<ExtArgs> | null
-  }
-
-  /**
-   * DepositDetail upsert
-   */
-  export type DepositDetailUpsertArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
-    /**
-     * Select specific fields to fetch from the DepositDetail
-     */
-    select?: DepositDetailSelect<ExtArgs> | null
-    /**
-     * Omit specific fields from the DepositDetail
-     */
-    omit?: DepositDetailOmit<ExtArgs> | null
-    /**
-     * Choose, which related nodes to fetch as well
-     */
-    include?: DepositDetailInclude<ExtArgs> | null
-    /**
-     * The filter to search for the DepositDetail to update in case it exists.
-     */
-    where: DepositDetailWhereUniqueInput
-    /**
-     * In case the DepositDetail found by the `where` argument doesn't exist, create a new DepositDetail with this data.
-     */
-    create: XOR<DepositDetailCreateInput, DepositDetailUncheckedCreateInput>
-    /**
-     * In case the DepositDetail was found with the provided `where` argument, update it with this data.
-     */
-    update: XOR<DepositDetailUpdateInput, DepositDetailUncheckedUpdateInput>
-  }
-
-  /**
-   * DepositDetail delete
-   */
-  export type DepositDetailDeleteArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
-    /**
-     * Select specific fields to fetch from the DepositDetail
-     */
-    select?: DepositDetailSelect<ExtArgs> | null
-    /**
-     * Omit specific fields from the DepositDetail
-     */
-    omit?: DepositDetailOmit<ExtArgs> | null
-    /**
-     * Choose, which related nodes to fetch as well
-     */
-    include?: DepositDetailInclude<ExtArgs> | null
-    /**
-     * Filter which DepositDetail to delete.
-     */
-    where: DepositDetailWhereUniqueInput
-  }
-
-  /**
-   * DepositDetail deleteMany
-   */
-  export type DepositDetailDeleteManyArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
-    /**
-     * Filter which DepositDetails to delete
-     */
-    where?: DepositDetailWhereInput
-    /**
-     * Limit how many DepositDetails to delete.
-     */
-    limit?: number
-  }
-
-  /**
-   * DepositDetail.BankAccount
-   */
-  export type DepositDetail$BankAccountArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
-    /**
-     * Select specific fields to fetch from the BankAccount
-     */
-    select?: BankAccountSelect<ExtArgs> | null
-    /**
-     * Omit specific fields from the BankAccount
-     */
-    omit?: BankAccountOmit<ExtArgs> | null
-    /**
-     * Choose, which related nodes to fetch as well
-     */
-    include?: BankAccountInclude<ExtArgs> | null
-    where?: BankAccountWhereInput
-  }
-
-  /**
-   * DepositDetail.Rolling
-   */
-  export type DepositDetail$RollingArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
-    /**
-     * Select specific fields to fetch from the Rolling
-     */
-    select?: RollingSelect<ExtArgs> | null
-    /**
-     * Omit specific fields from the Rolling
-     */
-    omit?: RollingOmit<ExtArgs> | null
-    /**
-     * Choose, which related nodes to fetch as well
-     */
-    include?: RollingInclude<ExtArgs> | null
-    where?: RollingWhereInput
-    orderBy?: RollingOrderByWithRelationInput | RollingOrderByWithRelationInput[]
-    cursor?: RollingWhereUniqueInput
-    take?: number
-    skip?: number
-    distinct?: RollingScalarFieldEnum | RollingScalarFieldEnum[]
-  }
-
-  /**
-   * DepositDetail without action
-   */
-  export type DepositDetailDefaultArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
-    /**
-     * Select specific fields to fetch from the DepositDetail
-     */
-    select?: DepositDetailSelect<ExtArgs> | null
-    /**
-     * Omit specific fields from the DepositDetail
-     */
-    omit?: DepositDetailOmit<ExtArgs> | null
-    /**
-     * Choose, which related nodes to fetch as well
-     */
-    include?: DepositDetailInclude<ExtArgs> | null
   }
 
 
@@ -52438,6 +51010,1440 @@ export namespace Prisma {
 
 
   /**
+   * Model DepositDetail
+   */
+
+  export type AggregateDepositDetail = {
+    _count: DepositDetailCountAggregateOutputType | null
+    _avg: DepositDetailAvgAggregateOutputType | null
+    _sum: DepositDetailSumAggregateOutputType | null
+    _min: DepositDetailMinAggregateOutputType | null
+    _max: DepositDetailMaxAggregateOutputType | null
+  }
+
+  export type DepositDetailAvgAggregateOutputType = {
+    id: number | null
+    transactionId: number | null
+    actuallyPaid: Decimal | null
+    feeAmount: Decimal | null
+    bankAccountId: number | null
+  }
+
+  export type DepositDetailSumAggregateOutputType = {
+    id: bigint | null
+    transactionId: bigint | null
+    actuallyPaid: Decimal | null
+    feeAmount: Decimal | null
+    bankAccountId: number | null
+  }
+
+  export type DepositDetailMinAggregateOutputType = {
+    id: bigint | null
+    confirmedAt: Date | null
+    failedAt: Date | null
+    createdAt: Date | null
+    updatedAt: Date | null
+    status: $Enums.DepositDetailStatus | null
+    transactionId: bigint | null
+    methodType: $Enums.DepositMethodType | null
+    provider: $Enums.PaymentProvider | null
+    providerPaymentId: string | null
+    depositCurrency: $Enums.ExchangeCurrencyCode | null
+    depositNetwork: string | null
+    walletAddress: string | null
+    walletAddressExtraId: string | null
+    bankName: string | null
+    accountNumber: string | null
+    accountHolder: string | null
+    depositorName: string | null
+    transactionHash: string | null
+    actuallyPaid: Decimal | null
+    feeAmount: Decimal | null
+    feeCurrency: string | null
+    feePaidBy: $Enums.FeePaidByType | null
+    failureReason: string | null
+    bankAccountId: number | null
+  }
+
+  export type DepositDetailMaxAggregateOutputType = {
+    id: bigint | null
+    confirmedAt: Date | null
+    failedAt: Date | null
+    createdAt: Date | null
+    updatedAt: Date | null
+    status: $Enums.DepositDetailStatus | null
+    transactionId: bigint | null
+    methodType: $Enums.DepositMethodType | null
+    provider: $Enums.PaymentProvider | null
+    providerPaymentId: string | null
+    depositCurrency: $Enums.ExchangeCurrencyCode | null
+    depositNetwork: string | null
+    walletAddress: string | null
+    walletAddressExtraId: string | null
+    bankName: string | null
+    accountNumber: string | null
+    accountHolder: string | null
+    depositorName: string | null
+    transactionHash: string | null
+    actuallyPaid: Decimal | null
+    feeAmount: Decimal | null
+    feeCurrency: string | null
+    feePaidBy: $Enums.FeePaidByType | null
+    failureReason: string | null
+    bankAccountId: number | null
+  }
+
+  export type DepositDetailCountAggregateOutputType = {
+    id: number
+    confirmedAt: number
+    failedAt: number
+    createdAt: number
+    updatedAt: number
+    status: number
+    transactionId: number
+    methodType: number
+    provider: number
+    providerPaymentId: number
+    depositCurrency: number
+    depositNetwork: number
+    walletAddress: number
+    walletAddressExtraId: number
+    bankName: number
+    accountNumber: number
+    accountHolder: number
+    depositorName: number
+    transactionHash: number
+    actuallyPaid: number
+    feeAmount: number
+    feeCurrency: number
+    feePaidBy: number
+    failureReason: number
+    providerMetadata: number
+    bankAccountId: number
+    _all: number
+  }
+
+
+  export type DepositDetailAvgAggregateInputType = {
+    id?: true
+    transactionId?: true
+    actuallyPaid?: true
+    feeAmount?: true
+    bankAccountId?: true
+  }
+
+  export type DepositDetailSumAggregateInputType = {
+    id?: true
+    transactionId?: true
+    actuallyPaid?: true
+    feeAmount?: true
+    bankAccountId?: true
+  }
+
+  export type DepositDetailMinAggregateInputType = {
+    id?: true
+    confirmedAt?: true
+    failedAt?: true
+    createdAt?: true
+    updatedAt?: true
+    status?: true
+    transactionId?: true
+    methodType?: true
+    provider?: true
+    providerPaymentId?: true
+    depositCurrency?: true
+    depositNetwork?: true
+    walletAddress?: true
+    walletAddressExtraId?: true
+    bankName?: true
+    accountNumber?: true
+    accountHolder?: true
+    depositorName?: true
+    transactionHash?: true
+    actuallyPaid?: true
+    feeAmount?: true
+    feeCurrency?: true
+    feePaidBy?: true
+    failureReason?: true
+    bankAccountId?: true
+  }
+
+  export type DepositDetailMaxAggregateInputType = {
+    id?: true
+    confirmedAt?: true
+    failedAt?: true
+    createdAt?: true
+    updatedAt?: true
+    status?: true
+    transactionId?: true
+    methodType?: true
+    provider?: true
+    providerPaymentId?: true
+    depositCurrency?: true
+    depositNetwork?: true
+    walletAddress?: true
+    walletAddressExtraId?: true
+    bankName?: true
+    accountNumber?: true
+    accountHolder?: true
+    depositorName?: true
+    transactionHash?: true
+    actuallyPaid?: true
+    feeAmount?: true
+    feeCurrency?: true
+    feePaidBy?: true
+    failureReason?: true
+    bankAccountId?: true
+  }
+
+  export type DepositDetailCountAggregateInputType = {
+    id?: true
+    confirmedAt?: true
+    failedAt?: true
+    createdAt?: true
+    updatedAt?: true
+    status?: true
+    transactionId?: true
+    methodType?: true
+    provider?: true
+    providerPaymentId?: true
+    depositCurrency?: true
+    depositNetwork?: true
+    walletAddress?: true
+    walletAddressExtraId?: true
+    bankName?: true
+    accountNumber?: true
+    accountHolder?: true
+    depositorName?: true
+    transactionHash?: true
+    actuallyPaid?: true
+    feeAmount?: true
+    feeCurrency?: true
+    feePaidBy?: true
+    failureReason?: true
+    providerMetadata?: true
+    bankAccountId?: true
+    _all?: true
+  }
+
+  export type DepositDetailAggregateArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Filter which DepositDetail to aggregate.
+     */
+    where?: DepositDetailWhereInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/sorting Sorting Docs}
+     * 
+     * Determine the order of DepositDetails to fetch.
+     */
+    orderBy?: DepositDetailOrderByWithRelationInput | DepositDetailOrderByWithRelationInput[]
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination#cursor-based-pagination Cursor Docs}
+     * 
+     * Sets the start position
+     */
+    cursor?: DepositDetailWhereUniqueInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Take `±n` DepositDetails from the position of the cursor.
+     */
+    take?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Skip the first `n` DepositDetails.
+     */
+    skip?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
+     * 
+     * Count returned DepositDetails
+    **/
+    _count?: true | DepositDetailCountAggregateInputType
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
+     * 
+     * Select which fields to average
+    **/
+    _avg?: DepositDetailAvgAggregateInputType
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
+     * 
+     * Select which fields to sum
+    **/
+    _sum?: DepositDetailSumAggregateInputType
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
+     * 
+     * Select which fields to find the minimum value
+    **/
+    _min?: DepositDetailMinAggregateInputType
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
+     * 
+     * Select which fields to find the maximum value
+    **/
+    _max?: DepositDetailMaxAggregateInputType
+  }
+
+  export type GetDepositDetailAggregateType<T extends DepositDetailAggregateArgs> = {
+        [P in keyof T & keyof AggregateDepositDetail]: P extends '_count' | 'count'
+      ? T[P] extends true
+        ? number
+        : GetScalarType<T[P], AggregateDepositDetail[P]>
+      : GetScalarType<T[P], AggregateDepositDetail[P]>
+  }
+
+
+
+
+  export type DepositDetailGroupByArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    where?: DepositDetailWhereInput
+    orderBy?: DepositDetailOrderByWithAggregationInput | DepositDetailOrderByWithAggregationInput[]
+    by: DepositDetailScalarFieldEnum[] | DepositDetailScalarFieldEnum
+    having?: DepositDetailScalarWhereWithAggregatesInput
+    take?: number
+    skip?: number
+    _count?: DepositDetailCountAggregateInputType | true
+    _avg?: DepositDetailAvgAggregateInputType
+    _sum?: DepositDetailSumAggregateInputType
+    _min?: DepositDetailMinAggregateInputType
+    _max?: DepositDetailMaxAggregateInputType
+  }
+
+  export type DepositDetailGroupByOutputType = {
+    id: bigint
+    confirmedAt: Date | null
+    failedAt: Date | null
+    createdAt: Date
+    updatedAt: Date
+    status: $Enums.DepositDetailStatus
+    transactionId: bigint
+    methodType: $Enums.DepositMethodType
+    provider: $Enums.PaymentProvider
+    providerPaymentId: string | null
+    depositCurrency: $Enums.ExchangeCurrencyCode
+    depositNetwork: string | null
+    walletAddress: string | null
+    walletAddressExtraId: string | null
+    bankName: string | null
+    accountNumber: string | null
+    accountHolder: string | null
+    depositorName: string | null
+    transactionHash: string | null
+    actuallyPaid: Decimal | null
+    feeAmount: Decimal | null
+    feeCurrency: string | null
+    feePaidBy: $Enums.FeePaidByType | null
+    failureReason: string | null
+    providerMetadata: JsonValue | null
+    bankAccountId: number | null
+    _count: DepositDetailCountAggregateOutputType | null
+    _avg: DepositDetailAvgAggregateOutputType | null
+    _sum: DepositDetailSumAggregateOutputType | null
+    _min: DepositDetailMinAggregateOutputType | null
+    _max: DepositDetailMaxAggregateOutputType | null
+  }
+
+  type GetDepositDetailGroupByPayload<T extends DepositDetailGroupByArgs> = Prisma.PrismaPromise<
+    Array<
+      PickEnumerable<DepositDetailGroupByOutputType, T['by']> &
+        {
+          [P in ((keyof T) & (keyof DepositDetailGroupByOutputType))]: P extends '_count'
+            ? T[P] extends boolean
+              ? number
+              : GetScalarType<T[P], DepositDetailGroupByOutputType[P]>
+            : GetScalarType<T[P], DepositDetailGroupByOutputType[P]>
+        }
+      >
+    >
+
+
+  export type DepositDetailSelect<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetSelect<{
+    id?: boolean
+    confirmedAt?: boolean
+    failedAt?: boolean
+    createdAt?: boolean
+    updatedAt?: boolean
+    status?: boolean
+    transactionId?: boolean
+    methodType?: boolean
+    provider?: boolean
+    providerPaymentId?: boolean
+    depositCurrency?: boolean
+    depositNetwork?: boolean
+    walletAddress?: boolean
+    walletAddressExtraId?: boolean
+    bankName?: boolean
+    accountNumber?: boolean
+    accountHolder?: boolean
+    depositorName?: boolean
+    transactionHash?: boolean
+    actuallyPaid?: boolean
+    feeAmount?: boolean
+    feeCurrency?: boolean
+    feePaidBy?: boolean
+    failureReason?: boolean
+    providerMetadata?: boolean
+    bankAccountId?: boolean
+    BankAccount?: boolean | DepositDetail$BankAccountArgs<ExtArgs>
+    transaction?: boolean | TransactionDefaultArgs<ExtArgs>
+    Rolling?: boolean | DepositDetail$RollingArgs<ExtArgs>
+    _count?: boolean | DepositDetailCountOutputTypeDefaultArgs<ExtArgs>
+  }, ExtArgs["result"]["depositDetail"]>
+
+  export type DepositDetailSelectCreateManyAndReturn<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetSelect<{
+    id?: boolean
+    confirmedAt?: boolean
+    failedAt?: boolean
+    createdAt?: boolean
+    updatedAt?: boolean
+    status?: boolean
+    transactionId?: boolean
+    methodType?: boolean
+    provider?: boolean
+    providerPaymentId?: boolean
+    depositCurrency?: boolean
+    depositNetwork?: boolean
+    walletAddress?: boolean
+    walletAddressExtraId?: boolean
+    bankName?: boolean
+    accountNumber?: boolean
+    accountHolder?: boolean
+    depositorName?: boolean
+    transactionHash?: boolean
+    actuallyPaid?: boolean
+    feeAmount?: boolean
+    feeCurrency?: boolean
+    feePaidBy?: boolean
+    failureReason?: boolean
+    providerMetadata?: boolean
+    bankAccountId?: boolean
+    BankAccount?: boolean | DepositDetail$BankAccountArgs<ExtArgs>
+    transaction?: boolean | TransactionDefaultArgs<ExtArgs>
+  }, ExtArgs["result"]["depositDetail"]>
+
+  export type DepositDetailSelectUpdateManyAndReturn<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetSelect<{
+    id?: boolean
+    confirmedAt?: boolean
+    failedAt?: boolean
+    createdAt?: boolean
+    updatedAt?: boolean
+    status?: boolean
+    transactionId?: boolean
+    methodType?: boolean
+    provider?: boolean
+    providerPaymentId?: boolean
+    depositCurrency?: boolean
+    depositNetwork?: boolean
+    walletAddress?: boolean
+    walletAddressExtraId?: boolean
+    bankName?: boolean
+    accountNumber?: boolean
+    accountHolder?: boolean
+    depositorName?: boolean
+    transactionHash?: boolean
+    actuallyPaid?: boolean
+    feeAmount?: boolean
+    feeCurrency?: boolean
+    feePaidBy?: boolean
+    failureReason?: boolean
+    providerMetadata?: boolean
+    bankAccountId?: boolean
+    BankAccount?: boolean | DepositDetail$BankAccountArgs<ExtArgs>
+    transaction?: boolean | TransactionDefaultArgs<ExtArgs>
+  }, ExtArgs["result"]["depositDetail"]>
+
+  export type DepositDetailSelectScalar = {
+    id?: boolean
+    confirmedAt?: boolean
+    failedAt?: boolean
+    createdAt?: boolean
+    updatedAt?: boolean
+    status?: boolean
+    transactionId?: boolean
+    methodType?: boolean
+    provider?: boolean
+    providerPaymentId?: boolean
+    depositCurrency?: boolean
+    depositNetwork?: boolean
+    walletAddress?: boolean
+    walletAddressExtraId?: boolean
+    bankName?: boolean
+    accountNumber?: boolean
+    accountHolder?: boolean
+    depositorName?: boolean
+    transactionHash?: boolean
+    actuallyPaid?: boolean
+    feeAmount?: boolean
+    feeCurrency?: boolean
+    feePaidBy?: boolean
+    failureReason?: boolean
+    providerMetadata?: boolean
+    bankAccountId?: boolean
+  }
+
+  export type DepositDetailOmit<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetOmit<"id" | "confirmedAt" | "failedAt" | "createdAt" | "updatedAt" | "status" | "transactionId" | "methodType" | "provider" | "providerPaymentId" | "depositCurrency" | "depositNetwork" | "walletAddress" | "walletAddressExtraId" | "bankName" | "accountNumber" | "accountHolder" | "depositorName" | "transactionHash" | "actuallyPaid" | "feeAmount" | "feeCurrency" | "feePaidBy" | "failureReason" | "providerMetadata" | "bankAccountId", ExtArgs["result"]["depositDetail"]>
+  export type DepositDetailInclude<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    BankAccount?: boolean | DepositDetail$BankAccountArgs<ExtArgs>
+    transaction?: boolean | TransactionDefaultArgs<ExtArgs>
+    Rolling?: boolean | DepositDetail$RollingArgs<ExtArgs>
+    _count?: boolean | DepositDetailCountOutputTypeDefaultArgs<ExtArgs>
+  }
+  export type DepositDetailIncludeCreateManyAndReturn<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    BankAccount?: boolean | DepositDetail$BankAccountArgs<ExtArgs>
+    transaction?: boolean | TransactionDefaultArgs<ExtArgs>
+  }
+  export type DepositDetailIncludeUpdateManyAndReturn<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    BankAccount?: boolean | DepositDetail$BankAccountArgs<ExtArgs>
+    transaction?: boolean | TransactionDefaultArgs<ExtArgs>
+  }
+
+  export type $DepositDetailPayload<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    name: "DepositDetail"
+    objects: {
+      BankAccount: Prisma.$BankAccountPayload<ExtArgs> | null
+      transaction: Prisma.$TransactionPayload<ExtArgs>
+      Rolling: Prisma.$RollingPayload<ExtArgs>[]
+    }
+    scalars: $Extensions.GetPayloadResult<{
+      id: bigint
+      confirmedAt: Date | null
+      failedAt: Date | null
+      createdAt: Date
+      updatedAt: Date
+      status: $Enums.DepositDetailStatus
+      transactionId: bigint
+      methodType: $Enums.DepositMethodType
+      provider: $Enums.PaymentProvider
+      providerPaymentId: string | null
+      depositCurrency: $Enums.ExchangeCurrencyCode
+      depositNetwork: string | null
+      walletAddress: string | null
+      walletAddressExtraId: string | null
+      bankName: string | null
+      accountNumber: string | null
+      accountHolder: string | null
+      depositorName: string | null
+      transactionHash: string | null
+      actuallyPaid: Prisma.Decimal | null
+      feeAmount: Prisma.Decimal | null
+      feeCurrency: string | null
+      feePaidBy: $Enums.FeePaidByType | null
+      failureReason: string | null
+      providerMetadata: Prisma.JsonValue | null
+      bankAccountId: number | null
+    }, ExtArgs["result"]["depositDetail"]>
+    composites: {}
+  }
+
+  type DepositDetailGetPayload<S extends boolean | null | undefined | DepositDetailDefaultArgs> = $Result.GetResult<Prisma.$DepositDetailPayload, S>
+
+  type DepositDetailCountArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> =
+    Omit<DepositDetailFindManyArgs, 'select' | 'include' | 'distinct' | 'omit'> & {
+      select?: DepositDetailCountAggregateInputType | true
+    }
+
+  export interface DepositDetailDelegate<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs, GlobalOmitOptions = {}> {
+    [K: symbol]: { types: Prisma.TypeMap<ExtArgs>['model']['DepositDetail'], meta: { name: 'DepositDetail' } }
+    /**
+     * Find zero or one DepositDetail that matches the filter.
+     * @param {DepositDetailFindUniqueArgs} args - Arguments to find a DepositDetail
+     * @example
+     * // Get one DepositDetail
+     * const depositDetail = await prisma.depositDetail.findUnique({
+     *   where: {
+     *     // ... provide filter here
+     *   }
+     * })
+     */
+    findUnique<T extends DepositDetailFindUniqueArgs>(args: SelectSubset<T, DepositDetailFindUniqueArgs<ExtArgs>>): Prisma__DepositDetailClient<$Result.GetResult<Prisma.$DepositDetailPayload<ExtArgs>, T, "findUnique", GlobalOmitOptions> | null, null, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Find one DepositDetail that matches the filter or throw an error with `error.code='P2025'`
+     * if no matches were found.
+     * @param {DepositDetailFindUniqueOrThrowArgs} args - Arguments to find a DepositDetail
+     * @example
+     * // Get one DepositDetail
+     * const depositDetail = await prisma.depositDetail.findUniqueOrThrow({
+     *   where: {
+     *     // ... provide filter here
+     *   }
+     * })
+     */
+    findUniqueOrThrow<T extends DepositDetailFindUniqueOrThrowArgs>(args: SelectSubset<T, DepositDetailFindUniqueOrThrowArgs<ExtArgs>>): Prisma__DepositDetailClient<$Result.GetResult<Prisma.$DepositDetailPayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Find the first DepositDetail that matches the filter.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {DepositDetailFindFirstArgs} args - Arguments to find a DepositDetail
+     * @example
+     * // Get one DepositDetail
+     * const depositDetail = await prisma.depositDetail.findFirst({
+     *   where: {
+     *     // ... provide filter here
+     *   }
+     * })
+     */
+    findFirst<T extends DepositDetailFindFirstArgs>(args?: SelectSubset<T, DepositDetailFindFirstArgs<ExtArgs>>): Prisma__DepositDetailClient<$Result.GetResult<Prisma.$DepositDetailPayload<ExtArgs>, T, "findFirst", GlobalOmitOptions> | null, null, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Find the first DepositDetail that matches the filter or
+     * throw `PrismaKnownClientError` with `P2025` code if no matches were found.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {DepositDetailFindFirstOrThrowArgs} args - Arguments to find a DepositDetail
+     * @example
+     * // Get one DepositDetail
+     * const depositDetail = await prisma.depositDetail.findFirstOrThrow({
+     *   where: {
+     *     // ... provide filter here
+     *   }
+     * })
+     */
+    findFirstOrThrow<T extends DepositDetailFindFirstOrThrowArgs>(args?: SelectSubset<T, DepositDetailFindFirstOrThrowArgs<ExtArgs>>): Prisma__DepositDetailClient<$Result.GetResult<Prisma.$DepositDetailPayload<ExtArgs>, T, "findFirstOrThrow", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Find zero or more DepositDetails that matches the filter.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {DepositDetailFindManyArgs} args - Arguments to filter and select certain fields only.
+     * @example
+     * // Get all DepositDetails
+     * const depositDetails = await prisma.depositDetail.findMany()
+     * 
+     * // Get first 10 DepositDetails
+     * const depositDetails = await prisma.depositDetail.findMany({ take: 10 })
+     * 
+     * // Only select the `id`
+     * const depositDetailWithIdOnly = await prisma.depositDetail.findMany({ select: { id: true } })
+     * 
+     */
+    findMany<T extends DepositDetailFindManyArgs>(args?: SelectSubset<T, DepositDetailFindManyArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$DepositDetailPayload<ExtArgs>, T, "findMany", GlobalOmitOptions>>
+
+    /**
+     * Create a DepositDetail.
+     * @param {DepositDetailCreateArgs} args - Arguments to create a DepositDetail.
+     * @example
+     * // Create one DepositDetail
+     * const DepositDetail = await prisma.depositDetail.create({
+     *   data: {
+     *     // ... data to create a DepositDetail
+     *   }
+     * })
+     * 
+     */
+    create<T extends DepositDetailCreateArgs>(args: SelectSubset<T, DepositDetailCreateArgs<ExtArgs>>): Prisma__DepositDetailClient<$Result.GetResult<Prisma.$DepositDetailPayload<ExtArgs>, T, "create", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Create many DepositDetails.
+     * @param {DepositDetailCreateManyArgs} args - Arguments to create many DepositDetails.
+     * @example
+     * // Create many DepositDetails
+     * const depositDetail = await prisma.depositDetail.createMany({
+     *   data: [
+     *     // ... provide data here
+     *   ]
+     * })
+     *     
+     */
+    createMany<T extends DepositDetailCreateManyArgs>(args?: SelectSubset<T, DepositDetailCreateManyArgs<ExtArgs>>): Prisma.PrismaPromise<BatchPayload>
+
+    /**
+     * Create many DepositDetails and returns the data saved in the database.
+     * @param {DepositDetailCreateManyAndReturnArgs} args - Arguments to create many DepositDetails.
+     * @example
+     * // Create many DepositDetails
+     * const depositDetail = await prisma.depositDetail.createManyAndReturn({
+     *   data: [
+     *     // ... provide data here
+     *   ]
+     * })
+     * 
+     * // Create many DepositDetails and only return the `id`
+     * const depositDetailWithIdOnly = await prisma.depositDetail.createManyAndReturn({
+     *   select: { id: true },
+     *   data: [
+     *     // ... provide data here
+     *   ]
+     * })
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * 
+     */
+    createManyAndReturn<T extends DepositDetailCreateManyAndReturnArgs>(args?: SelectSubset<T, DepositDetailCreateManyAndReturnArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$DepositDetailPayload<ExtArgs>, T, "createManyAndReturn", GlobalOmitOptions>>
+
+    /**
+     * Delete a DepositDetail.
+     * @param {DepositDetailDeleteArgs} args - Arguments to delete one DepositDetail.
+     * @example
+     * // Delete one DepositDetail
+     * const DepositDetail = await prisma.depositDetail.delete({
+     *   where: {
+     *     // ... filter to delete one DepositDetail
+     *   }
+     * })
+     * 
+     */
+    delete<T extends DepositDetailDeleteArgs>(args: SelectSubset<T, DepositDetailDeleteArgs<ExtArgs>>): Prisma__DepositDetailClient<$Result.GetResult<Prisma.$DepositDetailPayload<ExtArgs>, T, "delete", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Update one DepositDetail.
+     * @param {DepositDetailUpdateArgs} args - Arguments to update one DepositDetail.
+     * @example
+     * // Update one DepositDetail
+     * const depositDetail = await prisma.depositDetail.update({
+     *   where: {
+     *     // ... provide filter here
+     *   },
+     *   data: {
+     *     // ... provide data here
+     *   }
+     * })
+     * 
+     */
+    update<T extends DepositDetailUpdateArgs>(args: SelectSubset<T, DepositDetailUpdateArgs<ExtArgs>>): Prisma__DepositDetailClient<$Result.GetResult<Prisma.$DepositDetailPayload<ExtArgs>, T, "update", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Delete zero or more DepositDetails.
+     * @param {DepositDetailDeleteManyArgs} args - Arguments to filter DepositDetails to delete.
+     * @example
+     * // Delete a few DepositDetails
+     * const { count } = await prisma.depositDetail.deleteMany({
+     *   where: {
+     *     // ... provide filter here
+     *   }
+     * })
+     * 
+     */
+    deleteMany<T extends DepositDetailDeleteManyArgs>(args?: SelectSubset<T, DepositDetailDeleteManyArgs<ExtArgs>>): Prisma.PrismaPromise<BatchPayload>
+
+    /**
+     * Update zero or more DepositDetails.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {DepositDetailUpdateManyArgs} args - Arguments to update one or more rows.
+     * @example
+     * // Update many DepositDetails
+     * const depositDetail = await prisma.depositDetail.updateMany({
+     *   where: {
+     *     // ... provide filter here
+     *   },
+     *   data: {
+     *     // ... provide data here
+     *   }
+     * })
+     * 
+     */
+    updateMany<T extends DepositDetailUpdateManyArgs>(args: SelectSubset<T, DepositDetailUpdateManyArgs<ExtArgs>>): Prisma.PrismaPromise<BatchPayload>
+
+    /**
+     * Update zero or more DepositDetails and returns the data updated in the database.
+     * @param {DepositDetailUpdateManyAndReturnArgs} args - Arguments to update many DepositDetails.
+     * @example
+     * // Update many DepositDetails
+     * const depositDetail = await prisma.depositDetail.updateManyAndReturn({
+     *   where: {
+     *     // ... provide filter here
+     *   },
+     *   data: [
+     *     // ... provide data here
+     *   ]
+     * })
+     * 
+     * // Update zero or more DepositDetails and only return the `id`
+     * const depositDetailWithIdOnly = await prisma.depositDetail.updateManyAndReturn({
+     *   select: { id: true },
+     *   where: {
+     *     // ... provide filter here
+     *   },
+     *   data: [
+     *     // ... provide data here
+     *   ]
+     * })
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * 
+     */
+    updateManyAndReturn<T extends DepositDetailUpdateManyAndReturnArgs>(args: SelectSubset<T, DepositDetailUpdateManyAndReturnArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$DepositDetailPayload<ExtArgs>, T, "updateManyAndReturn", GlobalOmitOptions>>
+
+    /**
+     * Create or update one DepositDetail.
+     * @param {DepositDetailUpsertArgs} args - Arguments to update or create a DepositDetail.
+     * @example
+     * // Update or create a DepositDetail
+     * const depositDetail = await prisma.depositDetail.upsert({
+     *   create: {
+     *     // ... data to create a DepositDetail
+     *   },
+     *   update: {
+     *     // ... in case it already exists, update
+     *   },
+     *   where: {
+     *     // ... the filter for the DepositDetail we want to update
+     *   }
+     * })
+     */
+    upsert<T extends DepositDetailUpsertArgs>(args: SelectSubset<T, DepositDetailUpsertArgs<ExtArgs>>): Prisma__DepositDetailClient<$Result.GetResult<Prisma.$DepositDetailPayload<ExtArgs>, T, "upsert", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
+
+
+    /**
+     * Count the number of DepositDetails.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {DepositDetailCountArgs} args - Arguments to filter DepositDetails to count.
+     * @example
+     * // Count the number of DepositDetails
+     * const count = await prisma.depositDetail.count({
+     *   where: {
+     *     // ... the filter for the DepositDetails we want to count
+     *   }
+     * })
+    **/
+    count<T extends DepositDetailCountArgs>(
+      args?: Subset<T, DepositDetailCountArgs>,
+    ): Prisma.PrismaPromise<
+      T extends $Utils.Record<'select', any>
+        ? T['select'] extends true
+          ? number
+          : GetScalarType<T['select'], DepositDetailCountAggregateOutputType>
+        : number
+    >
+
+    /**
+     * Allows you to perform aggregations operations on a DepositDetail.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {DepositDetailAggregateArgs} args - Select which aggregations you would like to apply and on what fields.
+     * @example
+     * // Ordered by age ascending
+     * // Where email contains prisma.io
+     * // Limited to the 10 users
+     * const aggregations = await prisma.user.aggregate({
+     *   _avg: {
+     *     age: true,
+     *   },
+     *   where: {
+     *     email: {
+     *       contains: "prisma.io",
+     *     },
+     *   },
+     *   orderBy: {
+     *     age: "asc",
+     *   },
+     *   take: 10,
+     * })
+    **/
+    aggregate<T extends DepositDetailAggregateArgs>(args: Subset<T, DepositDetailAggregateArgs>): Prisma.PrismaPromise<GetDepositDetailAggregateType<T>>
+
+    /**
+     * Group by DepositDetail.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {DepositDetailGroupByArgs} args - Group by arguments.
+     * @example
+     * // Group by city, order by createdAt, get count
+     * const result = await prisma.user.groupBy({
+     *   by: ['city', 'createdAt'],
+     *   orderBy: {
+     *     createdAt: true
+     *   },
+     *   _count: {
+     *     _all: true
+     *   },
+     * })
+     * 
+    **/
+    groupBy<
+      T extends DepositDetailGroupByArgs,
+      HasSelectOrTake extends Or<
+        Extends<'skip', Keys<T>>,
+        Extends<'take', Keys<T>>
+      >,
+      OrderByArg extends True extends HasSelectOrTake
+        ? { orderBy: DepositDetailGroupByArgs['orderBy'] }
+        : { orderBy?: DepositDetailGroupByArgs['orderBy'] },
+      OrderFields extends ExcludeUnderscoreKeys<Keys<MaybeTupleToUnion<T['orderBy']>>>,
+      ByFields extends MaybeTupleToUnion<T['by']>,
+      ByValid extends Has<ByFields, OrderFields>,
+      HavingFields extends GetHavingFields<T['having']>,
+      HavingValid extends Has<ByFields, HavingFields>,
+      ByEmpty extends T['by'] extends never[] ? True : False,
+      InputErrors extends ByEmpty extends True
+      ? `Error: "by" must not be empty.`
+      : HavingValid extends False
+      ? {
+          [P in HavingFields]: P extends ByFields
+            ? never
+            : P extends string
+            ? `Error: Field "${P}" used in "having" needs to be provided in "by".`
+            : [
+                Error,
+                'Field ',
+                P,
+                ` in "having" needs to be provided in "by"`,
+              ]
+        }[HavingFields]
+      : 'take' extends Keys<T>
+      ? 'orderBy' extends Keys<T>
+        ? ByValid extends True
+          ? {}
+          : {
+              [P in OrderFields]: P extends ByFields
+                ? never
+                : `Error: Field "${P}" in "orderBy" needs to be provided in "by"`
+            }[OrderFields]
+        : 'Error: If you provide "take", you also need to provide "orderBy"'
+      : 'skip' extends Keys<T>
+      ? 'orderBy' extends Keys<T>
+        ? ByValid extends True
+          ? {}
+          : {
+              [P in OrderFields]: P extends ByFields
+                ? never
+                : `Error: Field "${P}" in "orderBy" needs to be provided in "by"`
+            }[OrderFields]
+        : 'Error: If you provide "skip", you also need to provide "orderBy"'
+      : ByValid extends True
+      ? {}
+      : {
+          [P in OrderFields]: P extends ByFields
+            ? never
+            : `Error: Field "${P}" in "orderBy" needs to be provided in "by"`
+        }[OrderFields]
+    >(args: SubsetIntersection<T, DepositDetailGroupByArgs, OrderByArg> & InputErrors): {} extends InputErrors ? GetDepositDetailGroupByPayload<T> : Prisma.PrismaPromise<InputErrors>
+  /**
+   * Fields of the DepositDetail model
+   */
+  readonly fields: DepositDetailFieldRefs;
+  }
+
+  /**
+   * The delegate class that acts as a "Promise-like" for DepositDetail.
+   * Why is this prefixed with `Prisma__`?
+   * Because we want to prevent naming conflicts as mentioned in
+   * https://github.com/prisma/prisma-client-js/issues/707
+   */
+  export interface Prisma__DepositDetailClient<T, Null = never, ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs, GlobalOmitOptions = {}> extends Prisma.PrismaPromise<T> {
+    readonly [Symbol.toStringTag]: "PrismaPromise"
+    BankAccount<T extends DepositDetail$BankAccountArgs<ExtArgs> = {}>(args?: Subset<T, DepositDetail$BankAccountArgs<ExtArgs>>): Prisma__BankAccountClient<$Result.GetResult<Prisma.$BankAccountPayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions> | null, null, ExtArgs, GlobalOmitOptions>
+    transaction<T extends TransactionDefaultArgs<ExtArgs> = {}>(args?: Subset<T, TransactionDefaultArgs<ExtArgs>>): Prisma__TransactionClient<$Result.GetResult<Prisma.$TransactionPayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions> | Null, Null, ExtArgs, GlobalOmitOptions>
+    Rolling<T extends DepositDetail$RollingArgs<ExtArgs> = {}>(args?: Subset<T, DepositDetail$RollingArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$RollingPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
+    /**
+     * Attaches callbacks for the resolution and/or rejection of the Promise.
+     * @param onfulfilled The callback to execute when the Promise is resolved.
+     * @param onrejected The callback to execute when the Promise is rejected.
+     * @returns A Promise for the completion of which ever callback is executed.
+     */
+    then<TResult1 = T, TResult2 = never>(onfulfilled?: ((value: T) => TResult1 | PromiseLike<TResult1>) | undefined | null, onrejected?: ((reason: any) => TResult2 | PromiseLike<TResult2>) | undefined | null): $Utils.JsPromise<TResult1 | TResult2>
+    /**
+     * Attaches a callback for only the rejection of the Promise.
+     * @param onrejected The callback to execute when the Promise is rejected.
+     * @returns A Promise for the completion of the callback.
+     */
+    catch<TResult = never>(onrejected?: ((reason: any) => TResult | PromiseLike<TResult>) | undefined | null): $Utils.JsPromise<T | TResult>
+    /**
+     * Attaches a callback that is invoked when the Promise is settled (fulfilled or rejected). The
+     * resolved value cannot be modified from the callback.
+     * @param onfinally The callback to execute when the Promise is settled (fulfilled or rejected).
+     * @returns A Promise for the completion of the callback.
+     */
+    finally(onfinally?: (() => void) | undefined | null): $Utils.JsPromise<T>
+  }
+
+
+
+
+  /**
+   * Fields of the DepositDetail model
+   */
+  interface DepositDetailFieldRefs {
+    readonly id: FieldRef<"DepositDetail", 'BigInt'>
+    readonly confirmedAt: FieldRef<"DepositDetail", 'DateTime'>
+    readonly failedAt: FieldRef<"DepositDetail", 'DateTime'>
+    readonly createdAt: FieldRef<"DepositDetail", 'DateTime'>
+    readonly updatedAt: FieldRef<"DepositDetail", 'DateTime'>
+    readonly status: FieldRef<"DepositDetail", 'DepositDetailStatus'>
+    readonly transactionId: FieldRef<"DepositDetail", 'BigInt'>
+    readonly methodType: FieldRef<"DepositDetail", 'DepositMethodType'>
+    readonly provider: FieldRef<"DepositDetail", 'PaymentProvider'>
+    readonly providerPaymentId: FieldRef<"DepositDetail", 'String'>
+    readonly depositCurrency: FieldRef<"DepositDetail", 'ExchangeCurrencyCode'>
+    readonly depositNetwork: FieldRef<"DepositDetail", 'String'>
+    readonly walletAddress: FieldRef<"DepositDetail", 'String'>
+    readonly walletAddressExtraId: FieldRef<"DepositDetail", 'String'>
+    readonly bankName: FieldRef<"DepositDetail", 'String'>
+    readonly accountNumber: FieldRef<"DepositDetail", 'String'>
+    readonly accountHolder: FieldRef<"DepositDetail", 'String'>
+    readonly depositorName: FieldRef<"DepositDetail", 'String'>
+    readonly transactionHash: FieldRef<"DepositDetail", 'String'>
+    readonly actuallyPaid: FieldRef<"DepositDetail", 'Decimal'>
+    readonly feeAmount: FieldRef<"DepositDetail", 'Decimal'>
+    readonly feeCurrency: FieldRef<"DepositDetail", 'String'>
+    readonly feePaidBy: FieldRef<"DepositDetail", 'FeePaidByType'>
+    readonly failureReason: FieldRef<"DepositDetail", 'String'>
+    readonly providerMetadata: FieldRef<"DepositDetail", 'Json'>
+    readonly bankAccountId: FieldRef<"DepositDetail", 'Int'>
+  }
+    
+
+  // Custom InputTypes
+  /**
+   * DepositDetail findUnique
+   */
+  export type DepositDetailFindUniqueArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the DepositDetail
+     */
+    select?: DepositDetailSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the DepositDetail
+     */
+    omit?: DepositDetailOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: DepositDetailInclude<ExtArgs> | null
+    /**
+     * Filter, which DepositDetail to fetch.
+     */
+    where: DepositDetailWhereUniqueInput
+  }
+
+  /**
+   * DepositDetail findUniqueOrThrow
+   */
+  export type DepositDetailFindUniqueOrThrowArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the DepositDetail
+     */
+    select?: DepositDetailSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the DepositDetail
+     */
+    omit?: DepositDetailOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: DepositDetailInclude<ExtArgs> | null
+    /**
+     * Filter, which DepositDetail to fetch.
+     */
+    where: DepositDetailWhereUniqueInput
+  }
+
+  /**
+   * DepositDetail findFirst
+   */
+  export type DepositDetailFindFirstArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the DepositDetail
+     */
+    select?: DepositDetailSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the DepositDetail
+     */
+    omit?: DepositDetailOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: DepositDetailInclude<ExtArgs> | null
+    /**
+     * Filter, which DepositDetail to fetch.
+     */
+    where?: DepositDetailWhereInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/sorting Sorting Docs}
+     * 
+     * Determine the order of DepositDetails to fetch.
+     */
+    orderBy?: DepositDetailOrderByWithRelationInput | DepositDetailOrderByWithRelationInput[]
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination#cursor-based-pagination Cursor Docs}
+     * 
+     * Sets the position for searching for DepositDetails.
+     */
+    cursor?: DepositDetailWhereUniqueInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Take `±n` DepositDetails from the position of the cursor.
+     */
+    take?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Skip the first `n` DepositDetails.
+     */
+    skip?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/distinct Distinct Docs}
+     * 
+     * Filter by unique combinations of DepositDetails.
+     */
+    distinct?: DepositDetailScalarFieldEnum | DepositDetailScalarFieldEnum[]
+  }
+
+  /**
+   * DepositDetail findFirstOrThrow
+   */
+  export type DepositDetailFindFirstOrThrowArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the DepositDetail
+     */
+    select?: DepositDetailSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the DepositDetail
+     */
+    omit?: DepositDetailOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: DepositDetailInclude<ExtArgs> | null
+    /**
+     * Filter, which DepositDetail to fetch.
+     */
+    where?: DepositDetailWhereInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/sorting Sorting Docs}
+     * 
+     * Determine the order of DepositDetails to fetch.
+     */
+    orderBy?: DepositDetailOrderByWithRelationInput | DepositDetailOrderByWithRelationInput[]
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination#cursor-based-pagination Cursor Docs}
+     * 
+     * Sets the position for searching for DepositDetails.
+     */
+    cursor?: DepositDetailWhereUniqueInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Take `±n` DepositDetails from the position of the cursor.
+     */
+    take?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Skip the first `n` DepositDetails.
+     */
+    skip?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/distinct Distinct Docs}
+     * 
+     * Filter by unique combinations of DepositDetails.
+     */
+    distinct?: DepositDetailScalarFieldEnum | DepositDetailScalarFieldEnum[]
+  }
+
+  /**
+   * DepositDetail findMany
+   */
+  export type DepositDetailFindManyArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the DepositDetail
+     */
+    select?: DepositDetailSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the DepositDetail
+     */
+    omit?: DepositDetailOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: DepositDetailInclude<ExtArgs> | null
+    /**
+     * Filter, which DepositDetails to fetch.
+     */
+    where?: DepositDetailWhereInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/sorting Sorting Docs}
+     * 
+     * Determine the order of DepositDetails to fetch.
+     */
+    orderBy?: DepositDetailOrderByWithRelationInput | DepositDetailOrderByWithRelationInput[]
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination#cursor-based-pagination Cursor Docs}
+     * 
+     * Sets the position for listing DepositDetails.
+     */
+    cursor?: DepositDetailWhereUniqueInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Take `±n` DepositDetails from the position of the cursor.
+     */
+    take?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Skip the first `n` DepositDetails.
+     */
+    skip?: number
+    distinct?: DepositDetailScalarFieldEnum | DepositDetailScalarFieldEnum[]
+  }
+
+  /**
+   * DepositDetail create
+   */
+  export type DepositDetailCreateArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the DepositDetail
+     */
+    select?: DepositDetailSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the DepositDetail
+     */
+    omit?: DepositDetailOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: DepositDetailInclude<ExtArgs> | null
+    /**
+     * The data needed to create a DepositDetail.
+     */
+    data: XOR<DepositDetailCreateInput, DepositDetailUncheckedCreateInput>
+  }
+
+  /**
+   * DepositDetail createMany
+   */
+  export type DepositDetailCreateManyArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * The data used to create many DepositDetails.
+     */
+    data: DepositDetailCreateManyInput | DepositDetailCreateManyInput[]
+    skipDuplicates?: boolean
+  }
+
+  /**
+   * DepositDetail createManyAndReturn
+   */
+  export type DepositDetailCreateManyAndReturnArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the DepositDetail
+     */
+    select?: DepositDetailSelectCreateManyAndReturn<ExtArgs> | null
+    /**
+     * Omit specific fields from the DepositDetail
+     */
+    omit?: DepositDetailOmit<ExtArgs> | null
+    /**
+     * The data used to create many DepositDetails.
+     */
+    data: DepositDetailCreateManyInput | DepositDetailCreateManyInput[]
+    skipDuplicates?: boolean
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: DepositDetailIncludeCreateManyAndReturn<ExtArgs> | null
+  }
+
+  /**
+   * DepositDetail update
+   */
+  export type DepositDetailUpdateArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the DepositDetail
+     */
+    select?: DepositDetailSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the DepositDetail
+     */
+    omit?: DepositDetailOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: DepositDetailInclude<ExtArgs> | null
+    /**
+     * The data needed to update a DepositDetail.
+     */
+    data: XOR<DepositDetailUpdateInput, DepositDetailUncheckedUpdateInput>
+    /**
+     * Choose, which DepositDetail to update.
+     */
+    where: DepositDetailWhereUniqueInput
+  }
+
+  /**
+   * DepositDetail updateMany
+   */
+  export type DepositDetailUpdateManyArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * The data used to update DepositDetails.
+     */
+    data: XOR<DepositDetailUpdateManyMutationInput, DepositDetailUncheckedUpdateManyInput>
+    /**
+     * Filter which DepositDetails to update
+     */
+    where?: DepositDetailWhereInput
+    /**
+     * Limit how many DepositDetails to update.
+     */
+    limit?: number
+  }
+
+  /**
+   * DepositDetail updateManyAndReturn
+   */
+  export type DepositDetailUpdateManyAndReturnArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the DepositDetail
+     */
+    select?: DepositDetailSelectUpdateManyAndReturn<ExtArgs> | null
+    /**
+     * Omit specific fields from the DepositDetail
+     */
+    omit?: DepositDetailOmit<ExtArgs> | null
+    /**
+     * The data used to update DepositDetails.
+     */
+    data: XOR<DepositDetailUpdateManyMutationInput, DepositDetailUncheckedUpdateManyInput>
+    /**
+     * Filter which DepositDetails to update
+     */
+    where?: DepositDetailWhereInput
+    /**
+     * Limit how many DepositDetails to update.
+     */
+    limit?: number
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: DepositDetailIncludeUpdateManyAndReturn<ExtArgs> | null
+  }
+
+  /**
+   * DepositDetail upsert
+   */
+  export type DepositDetailUpsertArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the DepositDetail
+     */
+    select?: DepositDetailSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the DepositDetail
+     */
+    omit?: DepositDetailOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: DepositDetailInclude<ExtArgs> | null
+    /**
+     * The filter to search for the DepositDetail to update in case it exists.
+     */
+    where: DepositDetailWhereUniqueInput
+    /**
+     * In case the DepositDetail found by the `where` argument doesn't exist, create a new DepositDetail with this data.
+     */
+    create: XOR<DepositDetailCreateInput, DepositDetailUncheckedCreateInput>
+    /**
+     * In case the DepositDetail was found with the provided `where` argument, update it with this data.
+     */
+    update: XOR<DepositDetailUpdateInput, DepositDetailUncheckedUpdateInput>
+  }
+
+  /**
+   * DepositDetail delete
+   */
+  export type DepositDetailDeleteArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the DepositDetail
+     */
+    select?: DepositDetailSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the DepositDetail
+     */
+    omit?: DepositDetailOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: DepositDetailInclude<ExtArgs> | null
+    /**
+     * Filter which DepositDetail to delete.
+     */
+    where: DepositDetailWhereUniqueInput
+  }
+
+  /**
+   * DepositDetail deleteMany
+   */
+  export type DepositDetailDeleteManyArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Filter which DepositDetails to delete
+     */
+    where?: DepositDetailWhereInput
+    /**
+     * Limit how many DepositDetails to delete.
+     */
+    limit?: number
+  }
+
+  /**
+   * DepositDetail.BankAccount
+   */
+  export type DepositDetail$BankAccountArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the BankAccount
+     */
+    select?: BankAccountSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the BankAccount
+     */
+    omit?: BankAccountOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: BankAccountInclude<ExtArgs> | null
+    where?: BankAccountWhereInput
+  }
+
+  /**
+   * DepositDetail.Rolling
+   */
+  export type DepositDetail$RollingArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the Rolling
+     */
+    select?: RollingSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the Rolling
+     */
+    omit?: RollingOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: RollingInclude<ExtArgs> | null
+    where?: RollingWhereInput
+    orderBy?: RollingOrderByWithRelationInput | RollingOrderByWithRelationInput[]
+    cursor?: RollingWhereUniqueInput
+    take?: number
+    skip?: number
+    distinct?: RollingScalarFieldEnum | RollingScalarFieldEnum[]
+  }
+
+  /**
+   * DepositDetail without action
+   */
+  export type DepositDetailDefaultArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the DepositDetail
+     */
+    select?: DepositDetailSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the DepositDetail
+     */
+    omit?: DepositDetailOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: DepositDetailInclude<ExtArgs> | null
+  }
+
+
+  /**
    * Model Promotion
    */
 
@@ -58968,38 +58974,6 @@ export namespace Prisma {
   export type BonusDetailScalarFieldEnum = (typeof BonusDetailScalarFieldEnum)[keyof typeof BonusDetailScalarFieldEnum]
 
 
-  export const DepositDetailScalarFieldEnum: {
-    id: 'id',
-    confirmedAt: 'confirmedAt',
-    failedAt: 'failedAt',
-    createdAt: 'createdAt',
-    updatedAt: 'updatedAt',
-    status: 'status',
-    transactionId: 'transactionId',
-    methodType: 'methodType',
-    provider: 'provider',
-    providerPaymentId: 'providerPaymentId',
-    depositCurrency: 'depositCurrency',
-    depositNetwork: 'depositNetwork',
-    walletAddress: 'walletAddress',
-    walletAddressExtraId: 'walletAddressExtraId',
-    bankName: 'bankName',
-    accountNumber: 'accountNumber',
-    accountHolder: 'accountHolder',
-    depositorName: 'depositorName',
-    transactionHash: 'transactionHash',
-    actuallyPaid: 'actuallyPaid',
-    feeAmount: 'feeAmount',
-    feeCurrency: 'feeCurrency',
-    feePaidBy: 'feePaidBy',
-    failureReason: 'failureReason',
-    providerMetadata: 'providerMetadata',
-    bankAccountId: 'bankAccountId'
-  };
-
-  export type DepositDetailScalarFieldEnum = (typeof DepositDetailScalarFieldEnum)[keyof typeof DepositDetailScalarFieldEnum]
-
-
   export const WithdrawDetailScalarFieldEnum: {
     id: 'id',
     createdAt: 'createdAt',
@@ -59325,6 +59299,38 @@ export namespace Prisma {
   };
 
   export type LoginAttemptScalarFieldEnum = (typeof LoginAttemptScalarFieldEnum)[keyof typeof LoginAttemptScalarFieldEnum]
+
+
+  export const DepositDetailScalarFieldEnum: {
+    id: 'id',
+    confirmedAt: 'confirmedAt',
+    failedAt: 'failedAt',
+    createdAt: 'createdAt',
+    updatedAt: 'updatedAt',
+    status: 'status',
+    transactionId: 'transactionId',
+    methodType: 'methodType',
+    provider: 'provider',
+    providerPaymentId: 'providerPaymentId',
+    depositCurrency: 'depositCurrency',
+    depositNetwork: 'depositNetwork',
+    walletAddress: 'walletAddress',
+    walletAddressExtraId: 'walletAddressExtraId',
+    bankName: 'bankName',
+    accountNumber: 'accountNumber',
+    accountHolder: 'accountHolder',
+    depositorName: 'depositorName',
+    transactionHash: 'transactionHash',
+    actuallyPaid: 'actuallyPaid',
+    feeAmount: 'feeAmount',
+    feeCurrency: 'feeCurrency',
+    feePaidBy: 'feePaidBy',
+    failureReason: 'failureReason',
+    providerMetadata: 'providerMetadata',
+    bankAccountId: 'bankAccountId'
+  };
+
+  export type DepositDetailScalarFieldEnum = (typeof DepositDetailScalarFieldEnum)[keyof typeof DepositDetailScalarFieldEnum]
 
 
   export const PromotionScalarFieldEnum: {
@@ -59773,30 +59779,16 @@ export namespace Prisma {
 
 
   /**
-   * Reference to a field of type 'DepositDetailStatus'
+   * Reference to a field of type 'WithdrawDetailStatus'
    */
-  export type EnumDepositDetailStatusFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaModel, 'DepositDetailStatus'>
+  export type EnumWithdrawDetailStatusFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaModel, 'WithdrawDetailStatus'>
     
 
 
   /**
-   * Reference to a field of type 'DepositDetailStatus[]'
+   * Reference to a field of type 'WithdrawDetailStatus[]'
    */
-  export type ListEnumDepositDetailStatusFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaModel, 'DepositDetailStatus[]'>
-    
-
-
-  /**
-   * Reference to a field of type 'DepositMethodType'
-   */
-  export type EnumDepositMethodTypeFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaModel, 'DepositMethodType'>
-    
-
-
-  /**
-   * Reference to a field of type 'DepositMethodType[]'
-   */
-  export type ListEnumDepositMethodTypeFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaModel, 'DepositMethodType[]'>
+  export type ListEnumWithdrawDetailStatusFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaModel, 'WithdrawDetailStatus[]'>
     
 
 
@@ -59825,20 +59817,6 @@ export namespace Prisma {
    * Reference to a field of type 'FeePaidByType[]'
    */
   export type ListEnumFeePaidByTypeFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaModel, 'FeePaidByType[]'>
-    
-
-
-  /**
-   * Reference to a field of type 'WithdrawDetailStatus'
-   */
-  export type EnumWithdrawDetailStatusFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaModel, 'WithdrawDetailStatus'>
-    
-
-
-  /**
-   * Reference to a field of type 'WithdrawDetailStatus[]'
-   */
-  export type ListEnumWithdrawDetailStatusFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaModel, 'WithdrawDetailStatus[]'>
     
 
 
@@ -59979,6 +59957,34 @@ export namespace Prisma {
    * Reference to a field of type 'LoginFailureReason[]'
    */
   export type ListEnumLoginFailureReasonFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaModel, 'LoginFailureReason[]'>
+    
+
+
+  /**
+   * Reference to a field of type 'DepositDetailStatus'
+   */
+  export type EnumDepositDetailStatusFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaModel, 'DepositDetailStatus'>
+    
+
+
+  /**
+   * Reference to a field of type 'DepositDetailStatus[]'
+   */
+  export type ListEnumDepositDetailStatusFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaModel, 'DepositDetailStatus[]'>
+    
+
+
+  /**
+   * Reference to a field of type 'DepositMethodType'
+   */
+  export type EnumDepositMethodTypeFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaModel, 'DepositMethodType'>
+    
+
+
+  /**
+   * Reference to a field of type 'DepositMethodType[]'
+   */
+  export type ListEnumDepositMethodTypeFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaModel, 'DepositMethodType[]'>
     
 
 
@@ -61992,174 +61998,6 @@ export namespace Prisma {
     transactionId?: BigIntWithAggregatesFilter<"BonusDetail"> | bigint | number
   }
 
-  export type DepositDetailWhereInput = {
-    AND?: DepositDetailWhereInput | DepositDetailWhereInput[]
-    OR?: DepositDetailWhereInput[]
-    NOT?: DepositDetailWhereInput | DepositDetailWhereInput[]
-    id?: BigIntFilter<"DepositDetail"> | bigint | number
-    confirmedAt?: DateTimeNullableFilter<"DepositDetail"> | Date | string | null
-    failedAt?: DateTimeNullableFilter<"DepositDetail"> | Date | string | null
-    createdAt?: DateTimeFilter<"DepositDetail"> | Date | string
-    updatedAt?: DateTimeFilter<"DepositDetail"> | Date | string
-    status?: EnumDepositDetailStatusFilter<"DepositDetail"> | $Enums.DepositDetailStatus
-    transactionId?: BigIntFilter<"DepositDetail"> | bigint | number
-    methodType?: EnumDepositMethodTypeFilter<"DepositDetail"> | $Enums.DepositMethodType
-    provider?: EnumPaymentProviderFilter<"DepositDetail"> | $Enums.PaymentProvider
-    providerPaymentId?: StringNullableFilter<"DepositDetail"> | string | null
-    depositCurrency?: EnumExchangeCurrencyCodeFilter<"DepositDetail"> | $Enums.ExchangeCurrencyCode
-    depositNetwork?: StringNullableFilter<"DepositDetail"> | string | null
-    walletAddress?: StringNullableFilter<"DepositDetail"> | string | null
-    walletAddressExtraId?: StringNullableFilter<"DepositDetail"> | string | null
-    bankName?: StringNullableFilter<"DepositDetail"> | string | null
-    accountNumber?: StringNullableFilter<"DepositDetail"> | string | null
-    accountHolder?: StringNullableFilter<"DepositDetail"> | string | null
-    depositorName?: StringNullableFilter<"DepositDetail"> | string | null
-    transactionHash?: StringNullableFilter<"DepositDetail"> | string | null
-    actuallyPaid?: DecimalNullableFilter<"DepositDetail"> | Decimal | DecimalJsLike | number | string | null
-    feeAmount?: DecimalNullableFilter<"DepositDetail"> | Decimal | DecimalJsLike | number | string | null
-    feeCurrency?: StringNullableFilter<"DepositDetail"> | string | null
-    feePaidBy?: EnumFeePaidByTypeNullableFilter<"DepositDetail"> | $Enums.FeePaidByType | null
-    failureReason?: StringNullableFilter<"DepositDetail"> | string | null
-    providerMetadata?: JsonNullableFilter<"DepositDetail">
-    bankAccountId?: IntNullableFilter<"DepositDetail"> | number | null
-    BankAccount?: XOR<BankAccountNullableScalarRelationFilter, BankAccountWhereInput> | null
-    transaction?: XOR<TransactionScalarRelationFilter, TransactionWhereInput>
-    Rolling?: RollingListRelationFilter
-  }
-
-  export type DepositDetailOrderByWithRelationInput = {
-    id?: SortOrder
-    confirmedAt?: SortOrderInput | SortOrder
-    failedAt?: SortOrderInput | SortOrder
-    createdAt?: SortOrder
-    updatedAt?: SortOrder
-    status?: SortOrder
-    transactionId?: SortOrder
-    methodType?: SortOrder
-    provider?: SortOrder
-    providerPaymentId?: SortOrderInput | SortOrder
-    depositCurrency?: SortOrder
-    depositNetwork?: SortOrderInput | SortOrder
-    walletAddress?: SortOrderInput | SortOrder
-    walletAddressExtraId?: SortOrderInput | SortOrder
-    bankName?: SortOrderInput | SortOrder
-    accountNumber?: SortOrderInput | SortOrder
-    accountHolder?: SortOrderInput | SortOrder
-    depositorName?: SortOrderInput | SortOrder
-    transactionHash?: SortOrderInput | SortOrder
-    actuallyPaid?: SortOrderInput | SortOrder
-    feeAmount?: SortOrderInput | SortOrder
-    feeCurrency?: SortOrderInput | SortOrder
-    feePaidBy?: SortOrderInput | SortOrder
-    failureReason?: SortOrderInput | SortOrder
-    providerMetadata?: SortOrderInput | SortOrder
-    bankAccountId?: SortOrderInput | SortOrder
-    BankAccount?: BankAccountOrderByWithRelationInput
-    transaction?: TransactionOrderByWithRelationInput
-    Rolling?: RollingOrderByRelationAggregateInput
-  }
-
-  export type DepositDetailWhereUniqueInput = Prisma.AtLeast<{
-    id?: bigint | number
-    transactionId?: bigint | number
-    providerPaymentId?: string
-    AND?: DepositDetailWhereInput | DepositDetailWhereInput[]
-    OR?: DepositDetailWhereInput[]
-    NOT?: DepositDetailWhereInput | DepositDetailWhereInput[]
-    confirmedAt?: DateTimeNullableFilter<"DepositDetail"> | Date | string | null
-    failedAt?: DateTimeNullableFilter<"DepositDetail"> | Date | string | null
-    createdAt?: DateTimeFilter<"DepositDetail"> | Date | string
-    updatedAt?: DateTimeFilter<"DepositDetail"> | Date | string
-    status?: EnumDepositDetailStatusFilter<"DepositDetail"> | $Enums.DepositDetailStatus
-    methodType?: EnumDepositMethodTypeFilter<"DepositDetail"> | $Enums.DepositMethodType
-    provider?: EnumPaymentProviderFilter<"DepositDetail"> | $Enums.PaymentProvider
-    depositCurrency?: EnumExchangeCurrencyCodeFilter<"DepositDetail"> | $Enums.ExchangeCurrencyCode
-    depositNetwork?: StringNullableFilter<"DepositDetail"> | string | null
-    walletAddress?: StringNullableFilter<"DepositDetail"> | string | null
-    walletAddressExtraId?: StringNullableFilter<"DepositDetail"> | string | null
-    bankName?: StringNullableFilter<"DepositDetail"> | string | null
-    accountNumber?: StringNullableFilter<"DepositDetail"> | string | null
-    accountHolder?: StringNullableFilter<"DepositDetail"> | string | null
-    depositorName?: StringNullableFilter<"DepositDetail"> | string | null
-    transactionHash?: StringNullableFilter<"DepositDetail"> | string | null
-    actuallyPaid?: DecimalNullableFilter<"DepositDetail"> | Decimal | DecimalJsLike | number | string | null
-    feeAmount?: DecimalNullableFilter<"DepositDetail"> | Decimal | DecimalJsLike | number | string | null
-    feeCurrency?: StringNullableFilter<"DepositDetail"> | string | null
-    feePaidBy?: EnumFeePaidByTypeNullableFilter<"DepositDetail"> | $Enums.FeePaidByType | null
-    failureReason?: StringNullableFilter<"DepositDetail"> | string | null
-    providerMetadata?: JsonNullableFilter<"DepositDetail">
-    bankAccountId?: IntNullableFilter<"DepositDetail"> | number | null
-    BankAccount?: XOR<BankAccountNullableScalarRelationFilter, BankAccountWhereInput> | null
-    transaction?: XOR<TransactionScalarRelationFilter, TransactionWhereInput>
-    Rolling?: RollingListRelationFilter
-  }, "id" | "transactionId" | "providerPaymentId">
-
-  export type DepositDetailOrderByWithAggregationInput = {
-    id?: SortOrder
-    confirmedAt?: SortOrderInput | SortOrder
-    failedAt?: SortOrderInput | SortOrder
-    createdAt?: SortOrder
-    updatedAt?: SortOrder
-    status?: SortOrder
-    transactionId?: SortOrder
-    methodType?: SortOrder
-    provider?: SortOrder
-    providerPaymentId?: SortOrderInput | SortOrder
-    depositCurrency?: SortOrder
-    depositNetwork?: SortOrderInput | SortOrder
-    walletAddress?: SortOrderInput | SortOrder
-    walletAddressExtraId?: SortOrderInput | SortOrder
-    bankName?: SortOrderInput | SortOrder
-    accountNumber?: SortOrderInput | SortOrder
-    accountHolder?: SortOrderInput | SortOrder
-    depositorName?: SortOrderInput | SortOrder
-    transactionHash?: SortOrderInput | SortOrder
-    actuallyPaid?: SortOrderInput | SortOrder
-    feeAmount?: SortOrderInput | SortOrder
-    feeCurrency?: SortOrderInput | SortOrder
-    feePaidBy?: SortOrderInput | SortOrder
-    failureReason?: SortOrderInput | SortOrder
-    providerMetadata?: SortOrderInput | SortOrder
-    bankAccountId?: SortOrderInput | SortOrder
-    _count?: DepositDetailCountOrderByAggregateInput
-    _avg?: DepositDetailAvgOrderByAggregateInput
-    _max?: DepositDetailMaxOrderByAggregateInput
-    _min?: DepositDetailMinOrderByAggregateInput
-    _sum?: DepositDetailSumOrderByAggregateInput
-  }
-
-  export type DepositDetailScalarWhereWithAggregatesInput = {
-    AND?: DepositDetailScalarWhereWithAggregatesInput | DepositDetailScalarWhereWithAggregatesInput[]
-    OR?: DepositDetailScalarWhereWithAggregatesInput[]
-    NOT?: DepositDetailScalarWhereWithAggregatesInput | DepositDetailScalarWhereWithAggregatesInput[]
-    id?: BigIntWithAggregatesFilter<"DepositDetail"> | bigint | number
-    confirmedAt?: DateTimeNullableWithAggregatesFilter<"DepositDetail"> | Date | string | null
-    failedAt?: DateTimeNullableWithAggregatesFilter<"DepositDetail"> | Date | string | null
-    createdAt?: DateTimeWithAggregatesFilter<"DepositDetail"> | Date | string
-    updatedAt?: DateTimeWithAggregatesFilter<"DepositDetail"> | Date | string
-    status?: EnumDepositDetailStatusWithAggregatesFilter<"DepositDetail"> | $Enums.DepositDetailStatus
-    transactionId?: BigIntWithAggregatesFilter<"DepositDetail"> | bigint | number
-    methodType?: EnumDepositMethodTypeWithAggregatesFilter<"DepositDetail"> | $Enums.DepositMethodType
-    provider?: EnumPaymentProviderWithAggregatesFilter<"DepositDetail"> | $Enums.PaymentProvider
-    providerPaymentId?: StringNullableWithAggregatesFilter<"DepositDetail"> | string | null
-    depositCurrency?: EnumExchangeCurrencyCodeWithAggregatesFilter<"DepositDetail"> | $Enums.ExchangeCurrencyCode
-    depositNetwork?: StringNullableWithAggregatesFilter<"DepositDetail"> | string | null
-    walletAddress?: StringNullableWithAggregatesFilter<"DepositDetail"> | string | null
-    walletAddressExtraId?: StringNullableWithAggregatesFilter<"DepositDetail"> | string | null
-    bankName?: StringNullableWithAggregatesFilter<"DepositDetail"> | string | null
-    accountNumber?: StringNullableWithAggregatesFilter<"DepositDetail"> | string | null
-    accountHolder?: StringNullableWithAggregatesFilter<"DepositDetail"> | string | null
-    depositorName?: StringNullableWithAggregatesFilter<"DepositDetail"> | string | null
-    transactionHash?: StringNullableWithAggregatesFilter<"DepositDetail"> | string | null
-    actuallyPaid?: DecimalNullableWithAggregatesFilter<"DepositDetail"> | Decimal | DecimalJsLike | number | string | null
-    feeAmount?: DecimalNullableWithAggregatesFilter<"DepositDetail"> | Decimal | DecimalJsLike | number | string | null
-    feeCurrency?: StringNullableWithAggregatesFilter<"DepositDetail"> | string | null
-    feePaidBy?: EnumFeePaidByTypeNullableWithAggregatesFilter<"DepositDetail"> | $Enums.FeePaidByType | null
-    failureReason?: StringNullableWithAggregatesFilter<"DepositDetail"> | string | null
-    providerMetadata?: JsonNullableWithAggregatesFilter<"DepositDetail">
-    bankAccountId?: IntNullableWithAggregatesFilter<"DepositDetail"> | number | null
-  }
-
   export type WithdrawDetailWhereInput = {
     AND?: WithdrawDetailWhereInput | WithdrawDetailWhereInput[]
     OR?: WithdrawDetailWhereInput[]
@@ -63874,6 +63712,174 @@ export namespace Prisma {
     attemptedAt?: DateTimeWithAggregatesFilter<"LoginAttempt"> | Date | string
     email?: StringNullableWithAggregatesFilter<"LoginAttempt"> | string | null
     isAdmin?: BoolWithAggregatesFilter<"LoginAttempt"> | boolean
+  }
+
+  export type DepositDetailWhereInput = {
+    AND?: DepositDetailWhereInput | DepositDetailWhereInput[]
+    OR?: DepositDetailWhereInput[]
+    NOT?: DepositDetailWhereInput | DepositDetailWhereInput[]
+    id?: BigIntFilter<"DepositDetail"> | bigint | number
+    confirmedAt?: DateTimeNullableFilter<"DepositDetail"> | Date | string | null
+    failedAt?: DateTimeNullableFilter<"DepositDetail"> | Date | string | null
+    createdAt?: DateTimeFilter<"DepositDetail"> | Date | string
+    updatedAt?: DateTimeFilter<"DepositDetail"> | Date | string
+    status?: EnumDepositDetailStatusFilter<"DepositDetail"> | $Enums.DepositDetailStatus
+    transactionId?: BigIntFilter<"DepositDetail"> | bigint | number
+    methodType?: EnumDepositMethodTypeFilter<"DepositDetail"> | $Enums.DepositMethodType
+    provider?: EnumPaymentProviderFilter<"DepositDetail"> | $Enums.PaymentProvider
+    providerPaymentId?: StringNullableFilter<"DepositDetail"> | string | null
+    depositCurrency?: EnumExchangeCurrencyCodeFilter<"DepositDetail"> | $Enums.ExchangeCurrencyCode
+    depositNetwork?: StringNullableFilter<"DepositDetail"> | string | null
+    walletAddress?: StringNullableFilter<"DepositDetail"> | string | null
+    walletAddressExtraId?: StringNullableFilter<"DepositDetail"> | string | null
+    bankName?: StringNullableFilter<"DepositDetail"> | string | null
+    accountNumber?: StringNullableFilter<"DepositDetail"> | string | null
+    accountHolder?: StringNullableFilter<"DepositDetail"> | string | null
+    depositorName?: StringNullableFilter<"DepositDetail"> | string | null
+    transactionHash?: StringNullableFilter<"DepositDetail"> | string | null
+    actuallyPaid?: DecimalNullableFilter<"DepositDetail"> | Decimal | DecimalJsLike | number | string | null
+    feeAmount?: DecimalNullableFilter<"DepositDetail"> | Decimal | DecimalJsLike | number | string | null
+    feeCurrency?: StringNullableFilter<"DepositDetail"> | string | null
+    feePaidBy?: EnumFeePaidByTypeNullableFilter<"DepositDetail"> | $Enums.FeePaidByType | null
+    failureReason?: StringNullableFilter<"DepositDetail"> | string | null
+    providerMetadata?: JsonNullableFilter<"DepositDetail">
+    bankAccountId?: IntNullableFilter<"DepositDetail"> | number | null
+    BankAccount?: XOR<BankAccountNullableScalarRelationFilter, BankAccountWhereInput> | null
+    transaction?: XOR<TransactionScalarRelationFilter, TransactionWhereInput>
+    Rolling?: RollingListRelationFilter
+  }
+
+  export type DepositDetailOrderByWithRelationInput = {
+    id?: SortOrder
+    confirmedAt?: SortOrderInput | SortOrder
+    failedAt?: SortOrderInput | SortOrder
+    createdAt?: SortOrder
+    updatedAt?: SortOrder
+    status?: SortOrder
+    transactionId?: SortOrder
+    methodType?: SortOrder
+    provider?: SortOrder
+    providerPaymentId?: SortOrderInput | SortOrder
+    depositCurrency?: SortOrder
+    depositNetwork?: SortOrderInput | SortOrder
+    walletAddress?: SortOrderInput | SortOrder
+    walletAddressExtraId?: SortOrderInput | SortOrder
+    bankName?: SortOrderInput | SortOrder
+    accountNumber?: SortOrderInput | SortOrder
+    accountHolder?: SortOrderInput | SortOrder
+    depositorName?: SortOrderInput | SortOrder
+    transactionHash?: SortOrderInput | SortOrder
+    actuallyPaid?: SortOrderInput | SortOrder
+    feeAmount?: SortOrderInput | SortOrder
+    feeCurrency?: SortOrderInput | SortOrder
+    feePaidBy?: SortOrderInput | SortOrder
+    failureReason?: SortOrderInput | SortOrder
+    providerMetadata?: SortOrderInput | SortOrder
+    bankAccountId?: SortOrderInput | SortOrder
+    BankAccount?: BankAccountOrderByWithRelationInput
+    transaction?: TransactionOrderByWithRelationInput
+    Rolling?: RollingOrderByRelationAggregateInput
+  }
+
+  export type DepositDetailWhereUniqueInput = Prisma.AtLeast<{
+    id?: bigint | number
+    transactionId?: bigint | number
+    providerPaymentId?: string
+    AND?: DepositDetailWhereInput | DepositDetailWhereInput[]
+    OR?: DepositDetailWhereInput[]
+    NOT?: DepositDetailWhereInput | DepositDetailWhereInput[]
+    confirmedAt?: DateTimeNullableFilter<"DepositDetail"> | Date | string | null
+    failedAt?: DateTimeNullableFilter<"DepositDetail"> | Date | string | null
+    createdAt?: DateTimeFilter<"DepositDetail"> | Date | string
+    updatedAt?: DateTimeFilter<"DepositDetail"> | Date | string
+    status?: EnumDepositDetailStatusFilter<"DepositDetail"> | $Enums.DepositDetailStatus
+    methodType?: EnumDepositMethodTypeFilter<"DepositDetail"> | $Enums.DepositMethodType
+    provider?: EnumPaymentProviderFilter<"DepositDetail"> | $Enums.PaymentProvider
+    depositCurrency?: EnumExchangeCurrencyCodeFilter<"DepositDetail"> | $Enums.ExchangeCurrencyCode
+    depositNetwork?: StringNullableFilter<"DepositDetail"> | string | null
+    walletAddress?: StringNullableFilter<"DepositDetail"> | string | null
+    walletAddressExtraId?: StringNullableFilter<"DepositDetail"> | string | null
+    bankName?: StringNullableFilter<"DepositDetail"> | string | null
+    accountNumber?: StringNullableFilter<"DepositDetail"> | string | null
+    accountHolder?: StringNullableFilter<"DepositDetail"> | string | null
+    depositorName?: StringNullableFilter<"DepositDetail"> | string | null
+    transactionHash?: StringNullableFilter<"DepositDetail"> | string | null
+    actuallyPaid?: DecimalNullableFilter<"DepositDetail"> | Decimal | DecimalJsLike | number | string | null
+    feeAmount?: DecimalNullableFilter<"DepositDetail"> | Decimal | DecimalJsLike | number | string | null
+    feeCurrency?: StringNullableFilter<"DepositDetail"> | string | null
+    feePaidBy?: EnumFeePaidByTypeNullableFilter<"DepositDetail"> | $Enums.FeePaidByType | null
+    failureReason?: StringNullableFilter<"DepositDetail"> | string | null
+    providerMetadata?: JsonNullableFilter<"DepositDetail">
+    bankAccountId?: IntNullableFilter<"DepositDetail"> | number | null
+    BankAccount?: XOR<BankAccountNullableScalarRelationFilter, BankAccountWhereInput> | null
+    transaction?: XOR<TransactionScalarRelationFilter, TransactionWhereInput>
+    Rolling?: RollingListRelationFilter
+  }, "id" | "transactionId" | "providerPaymentId">
+
+  export type DepositDetailOrderByWithAggregationInput = {
+    id?: SortOrder
+    confirmedAt?: SortOrderInput | SortOrder
+    failedAt?: SortOrderInput | SortOrder
+    createdAt?: SortOrder
+    updatedAt?: SortOrder
+    status?: SortOrder
+    transactionId?: SortOrder
+    methodType?: SortOrder
+    provider?: SortOrder
+    providerPaymentId?: SortOrderInput | SortOrder
+    depositCurrency?: SortOrder
+    depositNetwork?: SortOrderInput | SortOrder
+    walletAddress?: SortOrderInput | SortOrder
+    walletAddressExtraId?: SortOrderInput | SortOrder
+    bankName?: SortOrderInput | SortOrder
+    accountNumber?: SortOrderInput | SortOrder
+    accountHolder?: SortOrderInput | SortOrder
+    depositorName?: SortOrderInput | SortOrder
+    transactionHash?: SortOrderInput | SortOrder
+    actuallyPaid?: SortOrderInput | SortOrder
+    feeAmount?: SortOrderInput | SortOrder
+    feeCurrency?: SortOrderInput | SortOrder
+    feePaidBy?: SortOrderInput | SortOrder
+    failureReason?: SortOrderInput | SortOrder
+    providerMetadata?: SortOrderInput | SortOrder
+    bankAccountId?: SortOrderInput | SortOrder
+    _count?: DepositDetailCountOrderByAggregateInput
+    _avg?: DepositDetailAvgOrderByAggregateInput
+    _max?: DepositDetailMaxOrderByAggregateInput
+    _min?: DepositDetailMinOrderByAggregateInput
+    _sum?: DepositDetailSumOrderByAggregateInput
+  }
+
+  export type DepositDetailScalarWhereWithAggregatesInput = {
+    AND?: DepositDetailScalarWhereWithAggregatesInput | DepositDetailScalarWhereWithAggregatesInput[]
+    OR?: DepositDetailScalarWhereWithAggregatesInput[]
+    NOT?: DepositDetailScalarWhereWithAggregatesInput | DepositDetailScalarWhereWithAggregatesInput[]
+    id?: BigIntWithAggregatesFilter<"DepositDetail"> | bigint | number
+    confirmedAt?: DateTimeNullableWithAggregatesFilter<"DepositDetail"> | Date | string | null
+    failedAt?: DateTimeNullableWithAggregatesFilter<"DepositDetail"> | Date | string | null
+    createdAt?: DateTimeWithAggregatesFilter<"DepositDetail"> | Date | string
+    updatedAt?: DateTimeWithAggregatesFilter<"DepositDetail"> | Date | string
+    status?: EnumDepositDetailStatusWithAggregatesFilter<"DepositDetail"> | $Enums.DepositDetailStatus
+    transactionId?: BigIntWithAggregatesFilter<"DepositDetail"> | bigint | number
+    methodType?: EnumDepositMethodTypeWithAggregatesFilter<"DepositDetail"> | $Enums.DepositMethodType
+    provider?: EnumPaymentProviderWithAggregatesFilter<"DepositDetail"> | $Enums.PaymentProvider
+    providerPaymentId?: StringNullableWithAggregatesFilter<"DepositDetail"> | string | null
+    depositCurrency?: EnumExchangeCurrencyCodeWithAggregatesFilter<"DepositDetail"> | $Enums.ExchangeCurrencyCode
+    depositNetwork?: StringNullableWithAggregatesFilter<"DepositDetail"> | string | null
+    walletAddress?: StringNullableWithAggregatesFilter<"DepositDetail"> | string | null
+    walletAddressExtraId?: StringNullableWithAggregatesFilter<"DepositDetail"> | string | null
+    bankName?: StringNullableWithAggregatesFilter<"DepositDetail"> | string | null
+    accountNumber?: StringNullableWithAggregatesFilter<"DepositDetail"> | string | null
+    accountHolder?: StringNullableWithAggregatesFilter<"DepositDetail"> | string | null
+    depositorName?: StringNullableWithAggregatesFilter<"DepositDetail"> | string | null
+    transactionHash?: StringNullableWithAggregatesFilter<"DepositDetail"> | string | null
+    actuallyPaid?: DecimalNullableWithAggregatesFilter<"DepositDetail"> | Decimal | DecimalJsLike | number | string | null
+    feeAmount?: DecimalNullableWithAggregatesFilter<"DepositDetail"> | Decimal | DecimalJsLike | number | string | null
+    feeCurrency?: StringNullableWithAggregatesFilter<"DepositDetail"> | string | null
+    feePaidBy?: EnumFeePaidByTypeNullableWithAggregatesFilter<"DepositDetail"> | $Enums.FeePaidByType | null
+    failureReason?: StringNullableWithAggregatesFilter<"DepositDetail"> | string | null
+    providerMetadata?: JsonNullableWithAggregatesFilter<"DepositDetail">
+    bankAccountId?: IntNullableWithAggregatesFilter<"DepositDetail"> | number | null
   }
 
   export type PromotionWhereInput = {
@@ -66587,211 +66593,6 @@ export namespace Prisma {
     transactionId?: BigIntFieldUpdateOperationsInput | bigint | number
   }
 
-  export type DepositDetailCreateInput = {
-    id?: bigint | number
-    confirmedAt?: Date | string | null
-    failedAt?: Date | string | null
-    createdAt?: Date | string
-    updatedAt?: Date | string
-    status: $Enums.DepositDetailStatus
-    methodType: $Enums.DepositMethodType
-    provider: $Enums.PaymentProvider
-    providerPaymentId?: string | null
-    depositCurrency: $Enums.ExchangeCurrencyCode
-    depositNetwork?: string | null
-    walletAddress?: string | null
-    walletAddressExtraId?: string | null
-    bankName?: string | null
-    accountNumber?: string | null
-    accountHolder?: string | null
-    depositorName?: string | null
-    transactionHash?: string | null
-    actuallyPaid?: Decimal | DecimalJsLike | number | string | null
-    feeAmount?: Decimal | DecimalJsLike | number | string | null
-    feeCurrency?: string | null
-    feePaidBy?: $Enums.FeePaidByType | null
-    failureReason?: string | null
-    providerMetadata?: NullableJsonNullValueInput | InputJsonValue
-    BankAccount?: BankAccountCreateNestedOneWithoutDepositDetailsInput
-    transaction: TransactionCreateNestedOneWithoutDepositDetailInput
-    Rolling?: RollingCreateNestedManyWithoutDepositDetailInput
-  }
-
-  export type DepositDetailUncheckedCreateInput = {
-    id?: bigint | number
-    confirmedAt?: Date | string | null
-    failedAt?: Date | string | null
-    createdAt?: Date | string
-    updatedAt?: Date | string
-    status: $Enums.DepositDetailStatus
-    transactionId: bigint | number
-    methodType: $Enums.DepositMethodType
-    provider: $Enums.PaymentProvider
-    providerPaymentId?: string | null
-    depositCurrency: $Enums.ExchangeCurrencyCode
-    depositNetwork?: string | null
-    walletAddress?: string | null
-    walletAddressExtraId?: string | null
-    bankName?: string | null
-    accountNumber?: string | null
-    accountHolder?: string | null
-    depositorName?: string | null
-    transactionHash?: string | null
-    actuallyPaid?: Decimal | DecimalJsLike | number | string | null
-    feeAmount?: Decimal | DecimalJsLike | number | string | null
-    feeCurrency?: string | null
-    feePaidBy?: $Enums.FeePaidByType | null
-    failureReason?: string | null
-    providerMetadata?: NullableJsonNullValueInput | InputJsonValue
-    bankAccountId?: number | null
-    Rolling?: RollingUncheckedCreateNestedManyWithoutDepositDetailInput
-  }
-
-  export type DepositDetailUpdateInput = {
-    id?: BigIntFieldUpdateOperationsInput | bigint | number
-    confirmedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
-    failedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
-    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
-    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
-    status?: EnumDepositDetailStatusFieldUpdateOperationsInput | $Enums.DepositDetailStatus
-    methodType?: EnumDepositMethodTypeFieldUpdateOperationsInput | $Enums.DepositMethodType
-    provider?: EnumPaymentProviderFieldUpdateOperationsInput | $Enums.PaymentProvider
-    providerPaymentId?: NullableStringFieldUpdateOperationsInput | string | null
-    depositCurrency?: EnumExchangeCurrencyCodeFieldUpdateOperationsInput | $Enums.ExchangeCurrencyCode
-    depositNetwork?: NullableStringFieldUpdateOperationsInput | string | null
-    walletAddress?: NullableStringFieldUpdateOperationsInput | string | null
-    walletAddressExtraId?: NullableStringFieldUpdateOperationsInput | string | null
-    bankName?: NullableStringFieldUpdateOperationsInput | string | null
-    accountNumber?: NullableStringFieldUpdateOperationsInput | string | null
-    accountHolder?: NullableStringFieldUpdateOperationsInput | string | null
-    depositorName?: NullableStringFieldUpdateOperationsInput | string | null
-    transactionHash?: NullableStringFieldUpdateOperationsInput | string | null
-    actuallyPaid?: NullableDecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string | null
-    feeAmount?: NullableDecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string | null
-    feeCurrency?: NullableStringFieldUpdateOperationsInput | string | null
-    feePaidBy?: NullableEnumFeePaidByTypeFieldUpdateOperationsInput | $Enums.FeePaidByType | null
-    failureReason?: NullableStringFieldUpdateOperationsInput | string | null
-    providerMetadata?: NullableJsonNullValueInput | InputJsonValue
-    BankAccount?: BankAccountUpdateOneWithoutDepositDetailsNestedInput
-    transaction?: TransactionUpdateOneRequiredWithoutDepositDetailNestedInput
-    Rolling?: RollingUpdateManyWithoutDepositDetailNestedInput
-  }
-
-  export type DepositDetailUncheckedUpdateInput = {
-    id?: BigIntFieldUpdateOperationsInput | bigint | number
-    confirmedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
-    failedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
-    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
-    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
-    status?: EnumDepositDetailStatusFieldUpdateOperationsInput | $Enums.DepositDetailStatus
-    transactionId?: BigIntFieldUpdateOperationsInput | bigint | number
-    methodType?: EnumDepositMethodTypeFieldUpdateOperationsInput | $Enums.DepositMethodType
-    provider?: EnumPaymentProviderFieldUpdateOperationsInput | $Enums.PaymentProvider
-    providerPaymentId?: NullableStringFieldUpdateOperationsInput | string | null
-    depositCurrency?: EnumExchangeCurrencyCodeFieldUpdateOperationsInput | $Enums.ExchangeCurrencyCode
-    depositNetwork?: NullableStringFieldUpdateOperationsInput | string | null
-    walletAddress?: NullableStringFieldUpdateOperationsInput | string | null
-    walletAddressExtraId?: NullableStringFieldUpdateOperationsInput | string | null
-    bankName?: NullableStringFieldUpdateOperationsInput | string | null
-    accountNumber?: NullableStringFieldUpdateOperationsInput | string | null
-    accountHolder?: NullableStringFieldUpdateOperationsInput | string | null
-    depositorName?: NullableStringFieldUpdateOperationsInput | string | null
-    transactionHash?: NullableStringFieldUpdateOperationsInput | string | null
-    actuallyPaid?: NullableDecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string | null
-    feeAmount?: NullableDecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string | null
-    feeCurrency?: NullableStringFieldUpdateOperationsInput | string | null
-    feePaidBy?: NullableEnumFeePaidByTypeFieldUpdateOperationsInput | $Enums.FeePaidByType | null
-    failureReason?: NullableStringFieldUpdateOperationsInput | string | null
-    providerMetadata?: NullableJsonNullValueInput | InputJsonValue
-    bankAccountId?: NullableIntFieldUpdateOperationsInput | number | null
-    Rolling?: RollingUncheckedUpdateManyWithoutDepositDetailNestedInput
-  }
-
-  export type DepositDetailCreateManyInput = {
-    id?: bigint | number
-    confirmedAt?: Date | string | null
-    failedAt?: Date | string | null
-    createdAt?: Date | string
-    updatedAt?: Date | string
-    status: $Enums.DepositDetailStatus
-    transactionId: bigint | number
-    methodType: $Enums.DepositMethodType
-    provider: $Enums.PaymentProvider
-    providerPaymentId?: string | null
-    depositCurrency: $Enums.ExchangeCurrencyCode
-    depositNetwork?: string | null
-    walletAddress?: string | null
-    walletAddressExtraId?: string | null
-    bankName?: string | null
-    accountNumber?: string | null
-    accountHolder?: string | null
-    depositorName?: string | null
-    transactionHash?: string | null
-    actuallyPaid?: Decimal | DecimalJsLike | number | string | null
-    feeAmount?: Decimal | DecimalJsLike | number | string | null
-    feeCurrency?: string | null
-    feePaidBy?: $Enums.FeePaidByType | null
-    failureReason?: string | null
-    providerMetadata?: NullableJsonNullValueInput | InputJsonValue
-    bankAccountId?: number | null
-  }
-
-  export type DepositDetailUpdateManyMutationInput = {
-    id?: BigIntFieldUpdateOperationsInput | bigint | number
-    confirmedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
-    failedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
-    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
-    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
-    status?: EnumDepositDetailStatusFieldUpdateOperationsInput | $Enums.DepositDetailStatus
-    methodType?: EnumDepositMethodTypeFieldUpdateOperationsInput | $Enums.DepositMethodType
-    provider?: EnumPaymentProviderFieldUpdateOperationsInput | $Enums.PaymentProvider
-    providerPaymentId?: NullableStringFieldUpdateOperationsInput | string | null
-    depositCurrency?: EnumExchangeCurrencyCodeFieldUpdateOperationsInput | $Enums.ExchangeCurrencyCode
-    depositNetwork?: NullableStringFieldUpdateOperationsInput | string | null
-    walletAddress?: NullableStringFieldUpdateOperationsInput | string | null
-    walletAddressExtraId?: NullableStringFieldUpdateOperationsInput | string | null
-    bankName?: NullableStringFieldUpdateOperationsInput | string | null
-    accountNumber?: NullableStringFieldUpdateOperationsInput | string | null
-    accountHolder?: NullableStringFieldUpdateOperationsInput | string | null
-    depositorName?: NullableStringFieldUpdateOperationsInput | string | null
-    transactionHash?: NullableStringFieldUpdateOperationsInput | string | null
-    actuallyPaid?: NullableDecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string | null
-    feeAmount?: NullableDecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string | null
-    feeCurrency?: NullableStringFieldUpdateOperationsInput | string | null
-    feePaidBy?: NullableEnumFeePaidByTypeFieldUpdateOperationsInput | $Enums.FeePaidByType | null
-    failureReason?: NullableStringFieldUpdateOperationsInput | string | null
-    providerMetadata?: NullableJsonNullValueInput | InputJsonValue
-  }
-
-  export type DepositDetailUncheckedUpdateManyInput = {
-    id?: BigIntFieldUpdateOperationsInput | bigint | number
-    confirmedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
-    failedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
-    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
-    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
-    status?: EnumDepositDetailStatusFieldUpdateOperationsInput | $Enums.DepositDetailStatus
-    transactionId?: BigIntFieldUpdateOperationsInput | bigint | number
-    methodType?: EnumDepositMethodTypeFieldUpdateOperationsInput | $Enums.DepositMethodType
-    provider?: EnumPaymentProviderFieldUpdateOperationsInput | $Enums.PaymentProvider
-    providerPaymentId?: NullableStringFieldUpdateOperationsInput | string | null
-    depositCurrency?: EnumExchangeCurrencyCodeFieldUpdateOperationsInput | $Enums.ExchangeCurrencyCode
-    depositNetwork?: NullableStringFieldUpdateOperationsInput | string | null
-    walletAddress?: NullableStringFieldUpdateOperationsInput | string | null
-    walletAddressExtraId?: NullableStringFieldUpdateOperationsInput | string | null
-    bankName?: NullableStringFieldUpdateOperationsInput | string | null
-    accountNumber?: NullableStringFieldUpdateOperationsInput | string | null
-    accountHolder?: NullableStringFieldUpdateOperationsInput | string | null
-    depositorName?: NullableStringFieldUpdateOperationsInput | string | null
-    transactionHash?: NullableStringFieldUpdateOperationsInput | string | null
-    actuallyPaid?: NullableDecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string | null
-    feeAmount?: NullableDecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string | null
-    feeCurrency?: NullableStringFieldUpdateOperationsInput | string | null
-    feePaidBy?: NullableEnumFeePaidByTypeFieldUpdateOperationsInput | $Enums.FeePaidByType | null
-    failureReason?: NullableStringFieldUpdateOperationsInput | string | null
-    providerMetadata?: NullableJsonNullValueInput | InputJsonValue
-    bankAccountId?: NullableIntFieldUpdateOperationsInput | number | null
-  }
-
   export type WithdrawDetailCreateInput = {
     id?: bigint | number
     createdAt?: Date | string
@@ -68654,6 +68455,211 @@ export namespace Prisma {
     attemptedAt?: DateTimeFieldUpdateOperationsInput | Date | string
     email?: NullableStringFieldUpdateOperationsInput | string | null
     isAdmin?: BoolFieldUpdateOperationsInput | boolean
+  }
+
+  export type DepositDetailCreateInput = {
+    id?: bigint | number
+    confirmedAt?: Date | string | null
+    failedAt?: Date | string | null
+    createdAt?: Date | string
+    updatedAt?: Date | string
+    status: $Enums.DepositDetailStatus
+    methodType: $Enums.DepositMethodType
+    provider: $Enums.PaymentProvider
+    providerPaymentId?: string | null
+    depositCurrency: $Enums.ExchangeCurrencyCode
+    depositNetwork?: string | null
+    walletAddress?: string | null
+    walletAddressExtraId?: string | null
+    bankName?: string | null
+    accountNumber?: string | null
+    accountHolder?: string | null
+    depositorName?: string | null
+    transactionHash?: string | null
+    actuallyPaid?: Decimal | DecimalJsLike | number | string | null
+    feeAmount?: Decimal | DecimalJsLike | number | string | null
+    feeCurrency?: string | null
+    feePaidBy?: $Enums.FeePaidByType | null
+    failureReason?: string | null
+    providerMetadata?: NullableJsonNullValueInput | InputJsonValue
+    BankAccount?: BankAccountCreateNestedOneWithoutDepositDetailsInput
+    transaction: TransactionCreateNestedOneWithoutDepositDetailInput
+    Rolling?: RollingCreateNestedManyWithoutDepositDetailInput
+  }
+
+  export type DepositDetailUncheckedCreateInput = {
+    id?: bigint | number
+    confirmedAt?: Date | string | null
+    failedAt?: Date | string | null
+    createdAt?: Date | string
+    updatedAt?: Date | string
+    status: $Enums.DepositDetailStatus
+    transactionId: bigint | number
+    methodType: $Enums.DepositMethodType
+    provider: $Enums.PaymentProvider
+    providerPaymentId?: string | null
+    depositCurrency: $Enums.ExchangeCurrencyCode
+    depositNetwork?: string | null
+    walletAddress?: string | null
+    walletAddressExtraId?: string | null
+    bankName?: string | null
+    accountNumber?: string | null
+    accountHolder?: string | null
+    depositorName?: string | null
+    transactionHash?: string | null
+    actuallyPaid?: Decimal | DecimalJsLike | number | string | null
+    feeAmount?: Decimal | DecimalJsLike | number | string | null
+    feeCurrency?: string | null
+    feePaidBy?: $Enums.FeePaidByType | null
+    failureReason?: string | null
+    providerMetadata?: NullableJsonNullValueInput | InputJsonValue
+    bankAccountId?: number | null
+    Rolling?: RollingUncheckedCreateNestedManyWithoutDepositDetailInput
+  }
+
+  export type DepositDetailUpdateInput = {
+    id?: BigIntFieldUpdateOperationsInput | bigint | number
+    confirmedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    failedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    status?: EnumDepositDetailStatusFieldUpdateOperationsInput | $Enums.DepositDetailStatus
+    methodType?: EnumDepositMethodTypeFieldUpdateOperationsInput | $Enums.DepositMethodType
+    provider?: EnumPaymentProviderFieldUpdateOperationsInput | $Enums.PaymentProvider
+    providerPaymentId?: NullableStringFieldUpdateOperationsInput | string | null
+    depositCurrency?: EnumExchangeCurrencyCodeFieldUpdateOperationsInput | $Enums.ExchangeCurrencyCode
+    depositNetwork?: NullableStringFieldUpdateOperationsInput | string | null
+    walletAddress?: NullableStringFieldUpdateOperationsInput | string | null
+    walletAddressExtraId?: NullableStringFieldUpdateOperationsInput | string | null
+    bankName?: NullableStringFieldUpdateOperationsInput | string | null
+    accountNumber?: NullableStringFieldUpdateOperationsInput | string | null
+    accountHolder?: NullableStringFieldUpdateOperationsInput | string | null
+    depositorName?: NullableStringFieldUpdateOperationsInput | string | null
+    transactionHash?: NullableStringFieldUpdateOperationsInput | string | null
+    actuallyPaid?: NullableDecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string | null
+    feeAmount?: NullableDecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string | null
+    feeCurrency?: NullableStringFieldUpdateOperationsInput | string | null
+    feePaidBy?: NullableEnumFeePaidByTypeFieldUpdateOperationsInput | $Enums.FeePaidByType | null
+    failureReason?: NullableStringFieldUpdateOperationsInput | string | null
+    providerMetadata?: NullableJsonNullValueInput | InputJsonValue
+    BankAccount?: BankAccountUpdateOneWithoutDepositDetailsNestedInput
+    transaction?: TransactionUpdateOneRequiredWithoutDepositDetailNestedInput
+    Rolling?: RollingUpdateManyWithoutDepositDetailNestedInput
+  }
+
+  export type DepositDetailUncheckedUpdateInput = {
+    id?: BigIntFieldUpdateOperationsInput | bigint | number
+    confirmedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    failedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    status?: EnumDepositDetailStatusFieldUpdateOperationsInput | $Enums.DepositDetailStatus
+    transactionId?: BigIntFieldUpdateOperationsInput | bigint | number
+    methodType?: EnumDepositMethodTypeFieldUpdateOperationsInput | $Enums.DepositMethodType
+    provider?: EnumPaymentProviderFieldUpdateOperationsInput | $Enums.PaymentProvider
+    providerPaymentId?: NullableStringFieldUpdateOperationsInput | string | null
+    depositCurrency?: EnumExchangeCurrencyCodeFieldUpdateOperationsInput | $Enums.ExchangeCurrencyCode
+    depositNetwork?: NullableStringFieldUpdateOperationsInput | string | null
+    walletAddress?: NullableStringFieldUpdateOperationsInput | string | null
+    walletAddressExtraId?: NullableStringFieldUpdateOperationsInput | string | null
+    bankName?: NullableStringFieldUpdateOperationsInput | string | null
+    accountNumber?: NullableStringFieldUpdateOperationsInput | string | null
+    accountHolder?: NullableStringFieldUpdateOperationsInput | string | null
+    depositorName?: NullableStringFieldUpdateOperationsInput | string | null
+    transactionHash?: NullableStringFieldUpdateOperationsInput | string | null
+    actuallyPaid?: NullableDecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string | null
+    feeAmount?: NullableDecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string | null
+    feeCurrency?: NullableStringFieldUpdateOperationsInput | string | null
+    feePaidBy?: NullableEnumFeePaidByTypeFieldUpdateOperationsInput | $Enums.FeePaidByType | null
+    failureReason?: NullableStringFieldUpdateOperationsInput | string | null
+    providerMetadata?: NullableJsonNullValueInput | InputJsonValue
+    bankAccountId?: NullableIntFieldUpdateOperationsInput | number | null
+    Rolling?: RollingUncheckedUpdateManyWithoutDepositDetailNestedInput
+  }
+
+  export type DepositDetailCreateManyInput = {
+    id?: bigint | number
+    confirmedAt?: Date | string | null
+    failedAt?: Date | string | null
+    createdAt?: Date | string
+    updatedAt?: Date | string
+    status: $Enums.DepositDetailStatus
+    transactionId: bigint | number
+    methodType: $Enums.DepositMethodType
+    provider: $Enums.PaymentProvider
+    providerPaymentId?: string | null
+    depositCurrency: $Enums.ExchangeCurrencyCode
+    depositNetwork?: string | null
+    walletAddress?: string | null
+    walletAddressExtraId?: string | null
+    bankName?: string | null
+    accountNumber?: string | null
+    accountHolder?: string | null
+    depositorName?: string | null
+    transactionHash?: string | null
+    actuallyPaid?: Decimal | DecimalJsLike | number | string | null
+    feeAmount?: Decimal | DecimalJsLike | number | string | null
+    feeCurrency?: string | null
+    feePaidBy?: $Enums.FeePaidByType | null
+    failureReason?: string | null
+    providerMetadata?: NullableJsonNullValueInput | InputJsonValue
+    bankAccountId?: number | null
+  }
+
+  export type DepositDetailUpdateManyMutationInput = {
+    id?: BigIntFieldUpdateOperationsInput | bigint | number
+    confirmedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    failedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    status?: EnumDepositDetailStatusFieldUpdateOperationsInput | $Enums.DepositDetailStatus
+    methodType?: EnumDepositMethodTypeFieldUpdateOperationsInput | $Enums.DepositMethodType
+    provider?: EnumPaymentProviderFieldUpdateOperationsInput | $Enums.PaymentProvider
+    providerPaymentId?: NullableStringFieldUpdateOperationsInput | string | null
+    depositCurrency?: EnumExchangeCurrencyCodeFieldUpdateOperationsInput | $Enums.ExchangeCurrencyCode
+    depositNetwork?: NullableStringFieldUpdateOperationsInput | string | null
+    walletAddress?: NullableStringFieldUpdateOperationsInput | string | null
+    walletAddressExtraId?: NullableStringFieldUpdateOperationsInput | string | null
+    bankName?: NullableStringFieldUpdateOperationsInput | string | null
+    accountNumber?: NullableStringFieldUpdateOperationsInput | string | null
+    accountHolder?: NullableStringFieldUpdateOperationsInput | string | null
+    depositorName?: NullableStringFieldUpdateOperationsInput | string | null
+    transactionHash?: NullableStringFieldUpdateOperationsInput | string | null
+    actuallyPaid?: NullableDecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string | null
+    feeAmount?: NullableDecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string | null
+    feeCurrency?: NullableStringFieldUpdateOperationsInput | string | null
+    feePaidBy?: NullableEnumFeePaidByTypeFieldUpdateOperationsInput | $Enums.FeePaidByType | null
+    failureReason?: NullableStringFieldUpdateOperationsInput | string | null
+    providerMetadata?: NullableJsonNullValueInput | InputJsonValue
+  }
+
+  export type DepositDetailUncheckedUpdateManyInput = {
+    id?: BigIntFieldUpdateOperationsInput | bigint | number
+    confirmedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    failedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    status?: EnumDepositDetailStatusFieldUpdateOperationsInput | $Enums.DepositDetailStatus
+    transactionId?: BigIntFieldUpdateOperationsInput | bigint | number
+    methodType?: EnumDepositMethodTypeFieldUpdateOperationsInput | $Enums.DepositMethodType
+    provider?: EnumPaymentProviderFieldUpdateOperationsInput | $Enums.PaymentProvider
+    providerPaymentId?: NullableStringFieldUpdateOperationsInput | string | null
+    depositCurrency?: EnumExchangeCurrencyCodeFieldUpdateOperationsInput | $Enums.ExchangeCurrencyCode
+    depositNetwork?: NullableStringFieldUpdateOperationsInput | string | null
+    walletAddress?: NullableStringFieldUpdateOperationsInput | string | null
+    walletAddressExtraId?: NullableStringFieldUpdateOperationsInput | string | null
+    bankName?: NullableStringFieldUpdateOperationsInput | string | null
+    accountNumber?: NullableStringFieldUpdateOperationsInput | string | null
+    accountHolder?: NullableStringFieldUpdateOperationsInput | string | null
+    depositorName?: NullableStringFieldUpdateOperationsInput | string | null
+    transactionHash?: NullableStringFieldUpdateOperationsInput | string | null
+    actuallyPaid?: NullableDecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string | null
+    feeAmount?: NullableDecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string | null
+    feeCurrency?: NullableStringFieldUpdateOperationsInput | string | null
+    feePaidBy?: NullableEnumFeePaidByTypeFieldUpdateOperationsInput | $Enums.FeePaidByType | null
+    failureReason?: NullableStringFieldUpdateOperationsInput | string | null
+    providerMetadata?: NullableJsonNullValueInput | InputJsonValue
+    bankAccountId?: NullableIntFieldUpdateOperationsInput | number | null
   }
 
   export type PromotionCreateInput = {
@@ -71381,18 +71387,11 @@ export namespace Prisma {
     _max?: NestedEnumBonusTypeFilter<$PrismaModel>
   }
 
-  export type EnumDepositDetailStatusFilter<$PrismaModel = never> = {
-    equals?: $Enums.DepositDetailStatus | EnumDepositDetailStatusFieldRefInput<$PrismaModel>
-    in?: $Enums.DepositDetailStatus[] | ListEnumDepositDetailStatusFieldRefInput<$PrismaModel>
-    notIn?: $Enums.DepositDetailStatus[] | ListEnumDepositDetailStatusFieldRefInput<$PrismaModel>
-    not?: NestedEnumDepositDetailStatusFilter<$PrismaModel> | $Enums.DepositDetailStatus
-  }
-
-  export type EnumDepositMethodTypeFilter<$PrismaModel = never> = {
-    equals?: $Enums.DepositMethodType | EnumDepositMethodTypeFieldRefInput<$PrismaModel>
-    in?: $Enums.DepositMethodType[] | ListEnumDepositMethodTypeFieldRefInput<$PrismaModel>
-    notIn?: $Enums.DepositMethodType[] | ListEnumDepositMethodTypeFieldRefInput<$PrismaModel>
-    not?: NestedEnumDepositMethodTypeFilter<$PrismaModel> | $Enums.DepositMethodType
+  export type EnumWithdrawDetailStatusFilter<$PrismaModel = never> = {
+    equals?: $Enums.WithdrawDetailStatus | EnumWithdrawDetailStatusFieldRefInput<$PrismaModel>
+    in?: $Enums.WithdrawDetailStatus[] | ListEnumWithdrawDetailStatusFieldRefInput<$PrismaModel>
+    notIn?: $Enums.WithdrawDetailStatus[] | ListEnumWithdrawDetailStatusFieldRefInput<$PrismaModel>
+    not?: NestedEnumWithdrawDetailStatusFilter<$PrismaModel> | $Enums.WithdrawDetailStatus
   }
 
   export type EnumPaymentProviderFilter<$PrismaModel = never> = {
@@ -71407,159 +71406,6 @@ export namespace Prisma {
     in?: $Enums.FeePaidByType[] | ListEnumFeePaidByTypeFieldRefInput<$PrismaModel> | null
     notIn?: $Enums.FeePaidByType[] | ListEnumFeePaidByTypeFieldRefInput<$PrismaModel> | null
     not?: NestedEnumFeePaidByTypeNullableFilter<$PrismaModel> | $Enums.FeePaidByType | null
-  }
-
-  export type BankAccountNullableScalarRelationFilter = {
-    is?: BankAccountWhereInput | null
-    isNot?: BankAccountWhereInput | null
-  }
-
-  export type DepositDetailCountOrderByAggregateInput = {
-    id?: SortOrder
-    confirmedAt?: SortOrder
-    failedAt?: SortOrder
-    createdAt?: SortOrder
-    updatedAt?: SortOrder
-    status?: SortOrder
-    transactionId?: SortOrder
-    methodType?: SortOrder
-    provider?: SortOrder
-    providerPaymentId?: SortOrder
-    depositCurrency?: SortOrder
-    depositNetwork?: SortOrder
-    walletAddress?: SortOrder
-    walletAddressExtraId?: SortOrder
-    bankName?: SortOrder
-    accountNumber?: SortOrder
-    accountHolder?: SortOrder
-    depositorName?: SortOrder
-    transactionHash?: SortOrder
-    actuallyPaid?: SortOrder
-    feeAmount?: SortOrder
-    feeCurrency?: SortOrder
-    feePaidBy?: SortOrder
-    failureReason?: SortOrder
-    providerMetadata?: SortOrder
-    bankAccountId?: SortOrder
-  }
-
-  export type DepositDetailAvgOrderByAggregateInput = {
-    id?: SortOrder
-    transactionId?: SortOrder
-    actuallyPaid?: SortOrder
-    feeAmount?: SortOrder
-    bankAccountId?: SortOrder
-  }
-
-  export type DepositDetailMaxOrderByAggregateInput = {
-    id?: SortOrder
-    confirmedAt?: SortOrder
-    failedAt?: SortOrder
-    createdAt?: SortOrder
-    updatedAt?: SortOrder
-    status?: SortOrder
-    transactionId?: SortOrder
-    methodType?: SortOrder
-    provider?: SortOrder
-    providerPaymentId?: SortOrder
-    depositCurrency?: SortOrder
-    depositNetwork?: SortOrder
-    walletAddress?: SortOrder
-    walletAddressExtraId?: SortOrder
-    bankName?: SortOrder
-    accountNumber?: SortOrder
-    accountHolder?: SortOrder
-    depositorName?: SortOrder
-    transactionHash?: SortOrder
-    actuallyPaid?: SortOrder
-    feeAmount?: SortOrder
-    feeCurrency?: SortOrder
-    feePaidBy?: SortOrder
-    failureReason?: SortOrder
-    bankAccountId?: SortOrder
-  }
-
-  export type DepositDetailMinOrderByAggregateInput = {
-    id?: SortOrder
-    confirmedAt?: SortOrder
-    failedAt?: SortOrder
-    createdAt?: SortOrder
-    updatedAt?: SortOrder
-    status?: SortOrder
-    transactionId?: SortOrder
-    methodType?: SortOrder
-    provider?: SortOrder
-    providerPaymentId?: SortOrder
-    depositCurrency?: SortOrder
-    depositNetwork?: SortOrder
-    walletAddress?: SortOrder
-    walletAddressExtraId?: SortOrder
-    bankName?: SortOrder
-    accountNumber?: SortOrder
-    accountHolder?: SortOrder
-    depositorName?: SortOrder
-    transactionHash?: SortOrder
-    actuallyPaid?: SortOrder
-    feeAmount?: SortOrder
-    feeCurrency?: SortOrder
-    feePaidBy?: SortOrder
-    failureReason?: SortOrder
-    bankAccountId?: SortOrder
-  }
-
-  export type DepositDetailSumOrderByAggregateInput = {
-    id?: SortOrder
-    transactionId?: SortOrder
-    actuallyPaid?: SortOrder
-    feeAmount?: SortOrder
-    bankAccountId?: SortOrder
-  }
-
-  export type EnumDepositDetailStatusWithAggregatesFilter<$PrismaModel = never> = {
-    equals?: $Enums.DepositDetailStatus | EnumDepositDetailStatusFieldRefInput<$PrismaModel>
-    in?: $Enums.DepositDetailStatus[] | ListEnumDepositDetailStatusFieldRefInput<$PrismaModel>
-    notIn?: $Enums.DepositDetailStatus[] | ListEnumDepositDetailStatusFieldRefInput<$PrismaModel>
-    not?: NestedEnumDepositDetailStatusWithAggregatesFilter<$PrismaModel> | $Enums.DepositDetailStatus
-    _count?: NestedIntFilter<$PrismaModel>
-    _min?: NestedEnumDepositDetailStatusFilter<$PrismaModel>
-    _max?: NestedEnumDepositDetailStatusFilter<$PrismaModel>
-  }
-
-  export type EnumDepositMethodTypeWithAggregatesFilter<$PrismaModel = never> = {
-    equals?: $Enums.DepositMethodType | EnumDepositMethodTypeFieldRefInput<$PrismaModel>
-    in?: $Enums.DepositMethodType[] | ListEnumDepositMethodTypeFieldRefInput<$PrismaModel>
-    notIn?: $Enums.DepositMethodType[] | ListEnumDepositMethodTypeFieldRefInput<$PrismaModel>
-    not?: NestedEnumDepositMethodTypeWithAggregatesFilter<$PrismaModel> | $Enums.DepositMethodType
-    _count?: NestedIntFilter<$PrismaModel>
-    _min?: NestedEnumDepositMethodTypeFilter<$PrismaModel>
-    _max?: NestedEnumDepositMethodTypeFilter<$PrismaModel>
-  }
-
-  export type EnumPaymentProviderWithAggregatesFilter<$PrismaModel = never> = {
-    equals?: $Enums.PaymentProvider | EnumPaymentProviderFieldRefInput<$PrismaModel>
-    in?: $Enums.PaymentProvider[] | ListEnumPaymentProviderFieldRefInput<$PrismaModel>
-    notIn?: $Enums.PaymentProvider[] | ListEnumPaymentProviderFieldRefInput<$PrismaModel>
-    not?: NestedEnumPaymentProviderWithAggregatesFilter<$PrismaModel> | $Enums.PaymentProvider
-    _count?: NestedIntFilter<$PrismaModel>
-    _min?: NestedEnumPaymentProviderFilter<$PrismaModel>
-    _max?: NestedEnumPaymentProviderFilter<$PrismaModel>
-  }
-
-  export type EnumFeePaidByTypeNullableWithAggregatesFilter<$PrismaModel = never> = {
-    equals?: $Enums.FeePaidByType | EnumFeePaidByTypeFieldRefInput<$PrismaModel> | null
-    in?: $Enums.FeePaidByType[] | ListEnumFeePaidByTypeFieldRefInput<$PrismaModel> | null
-    notIn?: $Enums.FeePaidByType[] | ListEnumFeePaidByTypeFieldRefInput<$PrismaModel> | null
-    not?: NestedEnumFeePaidByTypeNullableWithAggregatesFilter<$PrismaModel> | $Enums.FeePaidByType | null
-    _count?: NestedIntNullableFilter<$PrismaModel>
-    _min?: NestedEnumFeePaidByTypeNullableFilter<$PrismaModel>
-    _max?: NestedEnumFeePaidByTypeNullableFilter<$PrismaModel>
-  }
-
-  export type EnumWithdrawDetailStatusFilter<$PrismaModel = never> = {
-    equals?: $Enums.WithdrawDetailStatus | EnumWithdrawDetailStatusFieldRefInput<$PrismaModel>
-    in?: $Enums.WithdrawDetailStatus[] | ListEnumWithdrawDetailStatusFieldRefInput<$PrismaModel>
-    notIn?: $Enums.WithdrawDetailStatus[] | ListEnumWithdrawDetailStatusFieldRefInput<$PrismaModel>
-    not?: NestedEnumWithdrawDetailStatusFilter<$PrismaModel> | $Enums.WithdrawDetailStatus
   }
 
   export type WithdrawDetailCountOrderByAggregateInput = {
@@ -71645,6 +71491,26 @@ export namespace Prisma {
     _count?: NestedIntFilter<$PrismaModel>
     _min?: NestedEnumWithdrawDetailStatusFilter<$PrismaModel>
     _max?: NestedEnumWithdrawDetailStatusFilter<$PrismaModel>
+  }
+
+  export type EnumPaymentProviderWithAggregatesFilter<$PrismaModel = never> = {
+    equals?: $Enums.PaymentProvider | EnumPaymentProviderFieldRefInput<$PrismaModel>
+    in?: $Enums.PaymentProvider[] | ListEnumPaymentProviderFieldRefInput<$PrismaModel>
+    notIn?: $Enums.PaymentProvider[] | ListEnumPaymentProviderFieldRefInput<$PrismaModel>
+    not?: NestedEnumPaymentProviderWithAggregatesFilter<$PrismaModel> | $Enums.PaymentProvider
+    _count?: NestedIntFilter<$PrismaModel>
+    _min?: NestedEnumPaymentProviderFilter<$PrismaModel>
+    _max?: NestedEnumPaymentProviderFilter<$PrismaModel>
+  }
+
+  export type EnumFeePaidByTypeNullableWithAggregatesFilter<$PrismaModel = never> = {
+    equals?: $Enums.FeePaidByType | EnumFeePaidByTypeFieldRefInput<$PrismaModel> | null
+    in?: $Enums.FeePaidByType[] | ListEnumFeePaidByTypeFieldRefInput<$PrismaModel> | null
+    notIn?: $Enums.FeePaidByType[] | ListEnumFeePaidByTypeFieldRefInput<$PrismaModel> | null
+    not?: NestedEnumFeePaidByTypeNullableWithAggregatesFilter<$PrismaModel> | $Enums.FeePaidByType | null
+    _count?: NestedIntNullableFilter<$PrismaModel>
+    _min?: NestedEnumFeePaidByTypeNullableFilter<$PrismaModel>
+    _max?: NestedEnumFeePaidByTypeNullableFilter<$PrismaModel>
   }
 
   export type DailyCompEarningScalarRelationFilter = {
@@ -72893,6 +72759,146 @@ export namespace Prisma {
     _count?: NestedIntNullableFilter<$PrismaModel>
     _min?: NestedEnumLoginFailureReasonNullableFilter<$PrismaModel>
     _max?: NestedEnumLoginFailureReasonNullableFilter<$PrismaModel>
+  }
+
+  export type EnumDepositDetailStatusFilter<$PrismaModel = never> = {
+    equals?: $Enums.DepositDetailStatus | EnumDepositDetailStatusFieldRefInput<$PrismaModel>
+    in?: $Enums.DepositDetailStatus[] | ListEnumDepositDetailStatusFieldRefInput<$PrismaModel>
+    notIn?: $Enums.DepositDetailStatus[] | ListEnumDepositDetailStatusFieldRefInput<$PrismaModel>
+    not?: NestedEnumDepositDetailStatusFilter<$PrismaModel> | $Enums.DepositDetailStatus
+  }
+
+  export type EnumDepositMethodTypeFilter<$PrismaModel = never> = {
+    equals?: $Enums.DepositMethodType | EnumDepositMethodTypeFieldRefInput<$PrismaModel>
+    in?: $Enums.DepositMethodType[] | ListEnumDepositMethodTypeFieldRefInput<$PrismaModel>
+    notIn?: $Enums.DepositMethodType[] | ListEnumDepositMethodTypeFieldRefInput<$PrismaModel>
+    not?: NestedEnumDepositMethodTypeFilter<$PrismaModel> | $Enums.DepositMethodType
+  }
+
+  export type BankAccountNullableScalarRelationFilter = {
+    is?: BankAccountWhereInput | null
+    isNot?: BankAccountWhereInput | null
+  }
+
+  export type DepositDetailCountOrderByAggregateInput = {
+    id?: SortOrder
+    confirmedAt?: SortOrder
+    failedAt?: SortOrder
+    createdAt?: SortOrder
+    updatedAt?: SortOrder
+    status?: SortOrder
+    transactionId?: SortOrder
+    methodType?: SortOrder
+    provider?: SortOrder
+    providerPaymentId?: SortOrder
+    depositCurrency?: SortOrder
+    depositNetwork?: SortOrder
+    walletAddress?: SortOrder
+    walletAddressExtraId?: SortOrder
+    bankName?: SortOrder
+    accountNumber?: SortOrder
+    accountHolder?: SortOrder
+    depositorName?: SortOrder
+    transactionHash?: SortOrder
+    actuallyPaid?: SortOrder
+    feeAmount?: SortOrder
+    feeCurrency?: SortOrder
+    feePaidBy?: SortOrder
+    failureReason?: SortOrder
+    providerMetadata?: SortOrder
+    bankAccountId?: SortOrder
+  }
+
+  export type DepositDetailAvgOrderByAggregateInput = {
+    id?: SortOrder
+    transactionId?: SortOrder
+    actuallyPaid?: SortOrder
+    feeAmount?: SortOrder
+    bankAccountId?: SortOrder
+  }
+
+  export type DepositDetailMaxOrderByAggregateInput = {
+    id?: SortOrder
+    confirmedAt?: SortOrder
+    failedAt?: SortOrder
+    createdAt?: SortOrder
+    updatedAt?: SortOrder
+    status?: SortOrder
+    transactionId?: SortOrder
+    methodType?: SortOrder
+    provider?: SortOrder
+    providerPaymentId?: SortOrder
+    depositCurrency?: SortOrder
+    depositNetwork?: SortOrder
+    walletAddress?: SortOrder
+    walletAddressExtraId?: SortOrder
+    bankName?: SortOrder
+    accountNumber?: SortOrder
+    accountHolder?: SortOrder
+    depositorName?: SortOrder
+    transactionHash?: SortOrder
+    actuallyPaid?: SortOrder
+    feeAmount?: SortOrder
+    feeCurrency?: SortOrder
+    feePaidBy?: SortOrder
+    failureReason?: SortOrder
+    bankAccountId?: SortOrder
+  }
+
+  export type DepositDetailMinOrderByAggregateInput = {
+    id?: SortOrder
+    confirmedAt?: SortOrder
+    failedAt?: SortOrder
+    createdAt?: SortOrder
+    updatedAt?: SortOrder
+    status?: SortOrder
+    transactionId?: SortOrder
+    methodType?: SortOrder
+    provider?: SortOrder
+    providerPaymentId?: SortOrder
+    depositCurrency?: SortOrder
+    depositNetwork?: SortOrder
+    walletAddress?: SortOrder
+    walletAddressExtraId?: SortOrder
+    bankName?: SortOrder
+    accountNumber?: SortOrder
+    accountHolder?: SortOrder
+    depositorName?: SortOrder
+    transactionHash?: SortOrder
+    actuallyPaid?: SortOrder
+    feeAmount?: SortOrder
+    feeCurrency?: SortOrder
+    feePaidBy?: SortOrder
+    failureReason?: SortOrder
+    bankAccountId?: SortOrder
+  }
+
+  export type DepositDetailSumOrderByAggregateInput = {
+    id?: SortOrder
+    transactionId?: SortOrder
+    actuallyPaid?: SortOrder
+    feeAmount?: SortOrder
+    bankAccountId?: SortOrder
+  }
+
+  export type EnumDepositDetailStatusWithAggregatesFilter<$PrismaModel = never> = {
+    equals?: $Enums.DepositDetailStatus | EnumDepositDetailStatusFieldRefInput<$PrismaModel>
+    in?: $Enums.DepositDetailStatus[] | ListEnumDepositDetailStatusFieldRefInput<$PrismaModel>
+    notIn?: $Enums.DepositDetailStatus[] | ListEnumDepositDetailStatusFieldRefInput<$PrismaModel>
+    not?: NestedEnumDepositDetailStatusWithAggregatesFilter<$PrismaModel> | $Enums.DepositDetailStatus
+    _count?: NestedIntFilter<$PrismaModel>
+    _min?: NestedEnumDepositDetailStatusFilter<$PrismaModel>
+    _max?: NestedEnumDepositDetailStatusFilter<$PrismaModel>
+  }
+
+  export type EnumDepositMethodTypeWithAggregatesFilter<$PrismaModel = never> = {
+    equals?: $Enums.DepositMethodType | EnumDepositMethodTypeFieldRefInput<$PrismaModel>
+    in?: $Enums.DepositMethodType[] | ListEnumDepositMethodTypeFieldRefInput<$PrismaModel>
+    notIn?: $Enums.DepositMethodType[] | ListEnumDepositMethodTypeFieldRefInput<$PrismaModel>
+    not?: NestedEnumDepositMethodTypeWithAggregatesFilter<$PrismaModel> | $Enums.DepositMethodType
+    _count?: NestedIntFilter<$PrismaModel>
+    _min?: NestedEnumDepositMethodTypeFilter<$PrismaModel>
+    _max?: NestedEnumDepositMethodTypeFilter<$PrismaModel>
   }
 
   export type EnumPromotionTargetTypeFilter<$PrismaModel = never> = {
@@ -75034,94 +75040,6 @@ export namespace Prisma {
     update?: XOR<XOR<TransactionUpdateToOneWithWhereWithoutBonusDetailInput, TransactionUpdateWithoutBonusDetailInput>, TransactionUncheckedUpdateWithoutBonusDetailInput>
   }
 
-  export type BankAccountCreateNestedOneWithoutDepositDetailsInput = {
-    create?: XOR<BankAccountCreateWithoutDepositDetailsInput, BankAccountUncheckedCreateWithoutDepositDetailsInput>
-    connectOrCreate?: BankAccountCreateOrConnectWithoutDepositDetailsInput
-    connect?: BankAccountWhereUniqueInput
-  }
-
-  export type TransactionCreateNestedOneWithoutDepositDetailInput = {
-    create?: XOR<TransactionCreateWithoutDepositDetailInput, TransactionUncheckedCreateWithoutDepositDetailInput>
-    connectOrCreate?: TransactionCreateOrConnectWithoutDepositDetailInput
-    connect?: TransactionWhereUniqueInput
-  }
-
-  export type RollingCreateNestedManyWithoutDepositDetailInput = {
-    create?: XOR<RollingCreateWithoutDepositDetailInput, RollingUncheckedCreateWithoutDepositDetailInput> | RollingCreateWithoutDepositDetailInput[] | RollingUncheckedCreateWithoutDepositDetailInput[]
-    connectOrCreate?: RollingCreateOrConnectWithoutDepositDetailInput | RollingCreateOrConnectWithoutDepositDetailInput[]
-    createMany?: RollingCreateManyDepositDetailInputEnvelope
-    connect?: RollingWhereUniqueInput | RollingWhereUniqueInput[]
-  }
-
-  export type RollingUncheckedCreateNestedManyWithoutDepositDetailInput = {
-    create?: XOR<RollingCreateWithoutDepositDetailInput, RollingUncheckedCreateWithoutDepositDetailInput> | RollingCreateWithoutDepositDetailInput[] | RollingUncheckedCreateWithoutDepositDetailInput[]
-    connectOrCreate?: RollingCreateOrConnectWithoutDepositDetailInput | RollingCreateOrConnectWithoutDepositDetailInput[]
-    createMany?: RollingCreateManyDepositDetailInputEnvelope
-    connect?: RollingWhereUniqueInput | RollingWhereUniqueInput[]
-  }
-
-  export type EnumDepositDetailStatusFieldUpdateOperationsInput = {
-    set?: $Enums.DepositDetailStatus
-  }
-
-  export type EnumDepositMethodTypeFieldUpdateOperationsInput = {
-    set?: $Enums.DepositMethodType
-  }
-
-  export type EnumPaymentProviderFieldUpdateOperationsInput = {
-    set?: $Enums.PaymentProvider
-  }
-
-  export type NullableEnumFeePaidByTypeFieldUpdateOperationsInput = {
-    set?: $Enums.FeePaidByType | null
-  }
-
-  export type BankAccountUpdateOneWithoutDepositDetailsNestedInput = {
-    create?: XOR<BankAccountCreateWithoutDepositDetailsInput, BankAccountUncheckedCreateWithoutDepositDetailsInput>
-    connectOrCreate?: BankAccountCreateOrConnectWithoutDepositDetailsInput
-    upsert?: BankAccountUpsertWithoutDepositDetailsInput
-    disconnect?: BankAccountWhereInput | boolean
-    delete?: BankAccountWhereInput | boolean
-    connect?: BankAccountWhereUniqueInput
-    update?: XOR<XOR<BankAccountUpdateToOneWithWhereWithoutDepositDetailsInput, BankAccountUpdateWithoutDepositDetailsInput>, BankAccountUncheckedUpdateWithoutDepositDetailsInput>
-  }
-
-  export type TransactionUpdateOneRequiredWithoutDepositDetailNestedInput = {
-    create?: XOR<TransactionCreateWithoutDepositDetailInput, TransactionUncheckedCreateWithoutDepositDetailInput>
-    connectOrCreate?: TransactionCreateOrConnectWithoutDepositDetailInput
-    upsert?: TransactionUpsertWithoutDepositDetailInput
-    connect?: TransactionWhereUniqueInput
-    update?: XOR<XOR<TransactionUpdateToOneWithWhereWithoutDepositDetailInput, TransactionUpdateWithoutDepositDetailInput>, TransactionUncheckedUpdateWithoutDepositDetailInput>
-  }
-
-  export type RollingUpdateManyWithoutDepositDetailNestedInput = {
-    create?: XOR<RollingCreateWithoutDepositDetailInput, RollingUncheckedCreateWithoutDepositDetailInput> | RollingCreateWithoutDepositDetailInput[] | RollingUncheckedCreateWithoutDepositDetailInput[]
-    connectOrCreate?: RollingCreateOrConnectWithoutDepositDetailInput | RollingCreateOrConnectWithoutDepositDetailInput[]
-    upsert?: RollingUpsertWithWhereUniqueWithoutDepositDetailInput | RollingUpsertWithWhereUniqueWithoutDepositDetailInput[]
-    createMany?: RollingCreateManyDepositDetailInputEnvelope
-    set?: RollingWhereUniqueInput | RollingWhereUniqueInput[]
-    disconnect?: RollingWhereUniqueInput | RollingWhereUniqueInput[]
-    delete?: RollingWhereUniqueInput | RollingWhereUniqueInput[]
-    connect?: RollingWhereUniqueInput | RollingWhereUniqueInput[]
-    update?: RollingUpdateWithWhereUniqueWithoutDepositDetailInput | RollingUpdateWithWhereUniqueWithoutDepositDetailInput[]
-    updateMany?: RollingUpdateManyWithWhereWithoutDepositDetailInput | RollingUpdateManyWithWhereWithoutDepositDetailInput[]
-    deleteMany?: RollingScalarWhereInput | RollingScalarWhereInput[]
-  }
-
-  export type RollingUncheckedUpdateManyWithoutDepositDetailNestedInput = {
-    create?: XOR<RollingCreateWithoutDepositDetailInput, RollingUncheckedCreateWithoutDepositDetailInput> | RollingCreateWithoutDepositDetailInput[] | RollingUncheckedCreateWithoutDepositDetailInput[]
-    connectOrCreate?: RollingCreateOrConnectWithoutDepositDetailInput | RollingCreateOrConnectWithoutDepositDetailInput[]
-    upsert?: RollingUpsertWithWhereUniqueWithoutDepositDetailInput | RollingUpsertWithWhereUniqueWithoutDepositDetailInput[]
-    createMany?: RollingCreateManyDepositDetailInputEnvelope
-    set?: RollingWhereUniqueInput | RollingWhereUniqueInput[]
-    disconnect?: RollingWhereUniqueInput | RollingWhereUniqueInput[]
-    delete?: RollingWhereUniqueInput | RollingWhereUniqueInput[]
-    connect?: RollingWhereUniqueInput | RollingWhereUniqueInput[]
-    update?: RollingUpdateWithWhereUniqueWithoutDepositDetailInput | RollingUpdateWithWhereUniqueWithoutDepositDetailInput[]
-    updateMany?: RollingUpdateManyWithWhereWithoutDepositDetailInput | RollingUpdateManyWithWhereWithoutDepositDetailInput[]
-    deleteMany?: RollingScalarWhereInput | RollingScalarWhereInput[]
-  }
-
   export type TransactionCreateNestedOneWithoutWithdrawDetailInput = {
     create?: XOR<TransactionCreateWithoutWithdrawDetailInput, TransactionUncheckedCreateWithoutWithdrawDetailInput>
     connectOrCreate?: TransactionCreateOrConnectWithoutWithdrawDetailInput
@@ -75130,6 +75048,14 @@ export namespace Prisma {
 
   export type EnumWithdrawDetailStatusFieldUpdateOperationsInput = {
     set?: $Enums.WithdrawDetailStatus
+  }
+
+  export type EnumPaymentProviderFieldUpdateOperationsInput = {
+    set?: $Enums.PaymentProvider
+  }
+
+  export type NullableEnumFeePaidByTypeFieldUpdateOperationsInput = {
+    set?: $Enums.FeePaidByType | null
   }
 
   export type TransactionUpdateOneRequiredWithoutWithdrawDetailNestedInput = {
@@ -75798,6 +75724,86 @@ export namespace Prisma {
     delete?: UserWhereInput | boolean
     connect?: UserWhereUniqueInput
     update?: XOR<XOR<UserUpdateToOneWithWhereWithoutLoginAttemptsInput, UserUpdateWithoutLoginAttemptsInput>, UserUncheckedUpdateWithoutLoginAttemptsInput>
+  }
+
+  export type BankAccountCreateNestedOneWithoutDepositDetailsInput = {
+    create?: XOR<BankAccountCreateWithoutDepositDetailsInput, BankAccountUncheckedCreateWithoutDepositDetailsInput>
+    connectOrCreate?: BankAccountCreateOrConnectWithoutDepositDetailsInput
+    connect?: BankAccountWhereUniqueInput
+  }
+
+  export type TransactionCreateNestedOneWithoutDepositDetailInput = {
+    create?: XOR<TransactionCreateWithoutDepositDetailInput, TransactionUncheckedCreateWithoutDepositDetailInput>
+    connectOrCreate?: TransactionCreateOrConnectWithoutDepositDetailInput
+    connect?: TransactionWhereUniqueInput
+  }
+
+  export type RollingCreateNestedManyWithoutDepositDetailInput = {
+    create?: XOR<RollingCreateWithoutDepositDetailInput, RollingUncheckedCreateWithoutDepositDetailInput> | RollingCreateWithoutDepositDetailInput[] | RollingUncheckedCreateWithoutDepositDetailInput[]
+    connectOrCreate?: RollingCreateOrConnectWithoutDepositDetailInput | RollingCreateOrConnectWithoutDepositDetailInput[]
+    createMany?: RollingCreateManyDepositDetailInputEnvelope
+    connect?: RollingWhereUniqueInput | RollingWhereUniqueInput[]
+  }
+
+  export type RollingUncheckedCreateNestedManyWithoutDepositDetailInput = {
+    create?: XOR<RollingCreateWithoutDepositDetailInput, RollingUncheckedCreateWithoutDepositDetailInput> | RollingCreateWithoutDepositDetailInput[] | RollingUncheckedCreateWithoutDepositDetailInput[]
+    connectOrCreate?: RollingCreateOrConnectWithoutDepositDetailInput | RollingCreateOrConnectWithoutDepositDetailInput[]
+    createMany?: RollingCreateManyDepositDetailInputEnvelope
+    connect?: RollingWhereUniqueInput | RollingWhereUniqueInput[]
+  }
+
+  export type EnumDepositDetailStatusFieldUpdateOperationsInput = {
+    set?: $Enums.DepositDetailStatus
+  }
+
+  export type EnumDepositMethodTypeFieldUpdateOperationsInput = {
+    set?: $Enums.DepositMethodType
+  }
+
+  export type BankAccountUpdateOneWithoutDepositDetailsNestedInput = {
+    create?: XOR<BankAccountCreateWithoutDepositDetailsInput, BankAccountUncheckedCreateWithoutDepositDetailsInput>
+    connectOrCreate?: BankAccountCreateOrConnectWithoutDepositDetailsInput
+    upsert?: BankAccountUpsertWithoutDepositDetailsInput
+    disconnect?: BankAccountWhereInput | boolean
+    delete?: BankAccountWhereInput | boolean
+    connect?: BankAccountWhereUniqueInput
+    update?: XOR<XOR<BankAccountUpdateToOneWithWhereWithoutDepositDetailsInput, BankAccountUpdateWithoutDepositDetailsInput>, BankAccountUncheckedUpdateWithoutDepositDetailsInput>
+  }
+
+  export type TransactionUpdateOneRequiredWithoutDepositDetailNestedInput = {
+    create?: XOR<TransactionCreateWithoutDepositDetailInput, TransactionUncheckedCreateWithoutDepositDetailInput>
+    connectOrCreate?: TransactionCreateOrConnectWithoutDepositDetailInput
+    upsert?: TransactionUpsertWithoutDepositDetailInput
+    connect?: TransactionWhereUniqueInput
+    update?: XOR<XOR<TransactionUpdateToOneWithWhereWithoutDepositDetailInput, TransactionUpdateWithoutDepositDetailInput>, TransactionUncheckedUpdateWithoutDepositDetailInput>
+  }
+
+  export type RollingUpdateManyWithoutDepositDetailNestedInput = {
+    create?: XOR<RollingCreateWithoutDepositDetailInput, RollingUncheckedCreateWithoutDepositDetailInput> | RollingCreateWithoutDepositDetailInput[] | RollingUncheckedCreateWithoutDepositDetailInput[]
+    connectOrCreate?: RollingCreateOrConnectWithoutDepositDetailInput | RollingCreateOrConnectWithoutDepositDetailInput[]
+    upsert?: RollingUpsertWithWhereUniqueWithoutDepositDetailInput | RollingUpsertWithWhereUniqueWithoutDepositDetailInput[]
+    createMany?: RollingCreateManyDepositDetailInputEnvelope
+    set?: RollingWhereUniqueInput | RollingWhereUniqueInput[]
+    disconnect?: RollingWhereUniqueInput | RollingWhereUniqueInput[]
+    delete?: RollingWhereUniqueInput | RollingWhereUniqueInput[]
+    connect?: RollingWhereUniqueInput | RollingWhereUniqueInput[]
+    update?: RollingUpdateWithWhereUniqueWithoutDepositDetailInput | RollingUpdateWithWhereUniqueWithoutDepositDetailInput[]
+    updateMany?: RollingUpdateManyWithWhereWithoutDepositDetailInput | RollingUpdateManyWithWhereWithoutDepositDetailInput[]
+    deleteMany?: RollingScalarWhereInput | RollingScalarWhereInput[]
+  }
+
+  export type RollingUncheckedUpdateManyWithoutDepositDetailNestedInput = {
+    create?: XOR<RollingCreateWithoutDepositDetailInput, RollingUncheckedCreateWithoutDepositDetailInput> | RollingCreateWithoutDepositDetailInput[] | RollingUncheckedCreateWithoutDepositDetailInput[]
+    connectOrCreate?: RollingCreateOrConnectWithoutDepositDetailInput | RollingCreateOrConnectWithoutDepositDetailInput[]
+    upsert?: RollingUpsertWithWhereUniqueWithoutDepositDetailInput | RollingUpsertWithWhereUniqueWithoutDepositDetailInput[]
+    createMany?: RollingCreateManyDepositDetailInputEnvelope
+    set?: RollingWhereUniqueInput | RollingWhereUniqueInput[]
+    disconnect?: RollingWhereUniqueInput | RollingWhereUniqueInput[]
+    delete?: RollingWhereUniqueInput | RollingWhereUniqueInput[]
+    connect?: RollingWhereUniqueInput | RollingWhereUniqueInput[]
+    update?: RollingUpdateWithWhereUniqueWithoutDepositDetailInput | RollingUpdateWithWhereUniqueWithoutDepositDetailInput[]
+    updateMany?: RollingUpdateManyWithWhereWithoutDepositDetailInput | RollingUpdateManyWithWhereWithoutDepositDetailInput[]
+    deleteMany?: RollingScalarWhereInput | RollingScalarWhereInput[]
   }
 
   export type PromotionTranslationCreateNestedManyWithoutPromotionInput = {
@@ -76718,18 +76724,11 @@ export namespace Prisma {
     _max?: NestedEnumBonusTypeFilter<$PrismaModel>
   }
 
-  export type NestedEnumDepositDetailStatusFilter<$PrismaModel = never> = {
-    equals?: $Enums.DepositDetailStatus | EnumDepositDetailStatusFieldRefInput<$PrismaModel>
-    in?: $Enums.DepositDetailStatus[] | ListEnumDepositDetailStatusFieldRefInput<$PrismaModel>
-    notIn?: $Enums.DepositDetailStatus[] | ListEnumDepositDetailStatusFieldRefInput<$PrismaModel>
-    not?: NestedEnumDepositDetailStatusFilter<$PrismaModel> | $Enums.DepositDetailStatus
-  }
-
-  export type NestedEnumDepositMethodTypeFilter<$PrismaModel = never> = {
-    equals?: $Enums.DepositMethodType | EnumDepositMethodTypeFieldRefInput<$PrismaModel>
-    in?: $Enums.DepositMethodType[] | ListEnumDepositMethodTypeFieldRefInput<$PrismaModel>
-    notIn?: $Enums.DepositMethodType[] | ListEnumDepositMethodTypeFieldRefInput<$PrismaModel>
-    not?: NestedEnumDepositMethodTypeFilter<$PrismaModel> | $Enums.DepositMethodType
+  export type NestedEnumWithdrawDetailStatusFilter<$PrismaModel = never> = {
+    equals?: $Enums.WithdrawDetailStatus | EnumWithdrawDetailStatusFieldRefInput<$PrismaModel>
+    in?: $Enums.WithdrawDetailStatus[] | ListEnumWithdrawDetailStatusFieldRefInput<$PrismaModel>
+    notIn?: $Enums.WithdrawDetailStatus[] | ListEnumWithdrawDetailStatusFieldRefInput<$PrismaModel>
+    not?: NestedEnumWithdrawDetailStatusFilter<$PrismaModel> | $Enums.WithdrawDetailStatus
   }
 
   export type NestedEnumPaymentProviderFilter<$PrismaModel = never> = {
@@ -76746,24 +76745,14 @@ export namespace Prisma {
     not?: NestedEnumFeePaidByTypeNullableFilter<$PrismaModel> | $Enums.FeePaidByType | null
   }
 
-  export type NestedEnumDepositDetailStatusWithAggregatesFilter<$PrismaModel = never> = {
-    equals?: $Enums.DepositDetailStatus | EnumDepositDetailStatusFieldRefInput<$PrismaModel>
-    in?: $Enums.DepositDetailStatus[] | ListEnumDepositDetailStatusFieldRefInput<$PrismaModel>
-    notIn?: $Enums.DepositDetailStatus[] | ListEnumDepositDetailStatusFieldRefInput<$PrismaModel>
-    not?: NestedEnumDepositDetailStatusWithAggregatesFilter<$PrismaModel> | $Enums.DepositDetailStatus
+  export type NestedEnumWithdrawDetailStatusWithAggregatesFilter<$PrismaModel = never> = {
+    equals?: $Enums.WithdrawDetailStatus | EnumWithdrawDetailStatusFieldRefInput<$PrismaModel>
+    in?: $Enums.WithdrawDetailStatus[] | ListEnumWithdrawDetailStatusFieldRefInput<$PrismaModel>
+    notIn?: $Enums.WithdrawDetailStatus[] | ListEnumWithdrawDetailStatusFieldRefInput<$PrismaModel>
+    not?: NestedEnumWithdrawDetailStatusWithAggregatesFilter<$PrismaModel> | $Enums.WithdrawDetailStatus
     _count?: NestedIntFilter<$PrismaModel>
-    _min?: NestedEnumDepositDetailStatusFilter<$PrismaModel>
-    _max?: NestedEnumDepositDetailStatusFilter<$PrismaModel>
-  }
-
-  export type NestedEnumDepositMethodTypeWithAggregatesFilter<$PrismaModel = never> = {
-    equals?: $Enums.DepositMethodType | EnumDepositMethodTypeFieldRefInput<$PrismaModel>
-    in?: $Enums.DepositMethodType[] | ListEnumDepositMethodTypeFieldRefInput<$PrismaModel>
-    notIn?: $Enums.DepositMethodType[] | ListEnumDepositMethodTypeFieldRefInput<$PrismaModel>
-    not?: NestedEnumDepositMethodTypeWithAggregatesFilter<$PrismaModel> | $Enums.DepositMethodType
-    _count?: NestedIntFilter<$PrismaModel>
-    _min?: NestedEnumDepositMethodTypeFilter<$PrismaModel>
-    _max?: NestedEnumDepositMethodTypeFilter<$PrismaModel>
+    _min?: NestedEnumWithdrawDetailStatusFilter<$PrismaModel>
+    _max?: NestedEnumWithdrawDetailStatusFilter<$PrismaModel>
   }
 
   export type NestedEnumPaymentProviderWithAggregatesFilter<$PrismaModel = never> = {
@@ -76784,23 +76773,6 @@ export namespace Prisma {
     _count?: NestedIntNullableFilter<$PrismaModel>
     _min?: NestedEnumFeePaidByTypeNullableFilter<$PrismaModel>
     _max?: NestedEnumFeePaidByTypeNullableFilter<$PrismaModel>
-  }
-
-  export type NestedEnumWithdrawDetailStatusFilter<$PrismaModel = never> = {
-    equals?: $Enums.WithdrawDetailStatus | EnumWithdrawDetailStatusFieldRefInput<$PrismaModel>
-    in?: $Enums.WithdrawDetailStatus[] | ListEnumWithdrawDetailStatusFieldRefInput<$PrismaModel>
-    notIn?: $Enums.WithdrawDetailStatus[] | ListEnumWithdrawDetailStatusFieldRefInput<$PrismaModel>
-    not?: NestedEnumWithdrawDetailStatusFilter<$PrismaModel> | $Enums.WithdrawDetailStatus
-  }
-
-  export type NestedEnumWithdrawDetailStatusWithAggregatesFilter<$PrismaModel = never> = {
-    equals?: $Enums.WithdrawDetailStatus | EnumWithdrawDetailStatusFieldRefInput<$PrismaModel>
-    in?: $Enums.WithdrawDetailStatus[] | ListEnumWithdrawDetailStatusFieldRefInput<$PrismaModel>
-    notIn?: $Enums.WithdrawDetailStatus[] | ListEnumWithdrawDetailStatusFieldRefInput<$PrismaModel>
-    not?: NestedEnumWithdrawDetailStatusWithAggregatesFilter<$PrismaModel> | $Enums.WithdrawDetailStatus
-    _count?: NestedIntFilter<$PrismaModel>
-    _min?: NestedEnumWithdrawDetailStatusFilter<$PrismaModel>
-    _max?: NestedEnumWithdrawDetailStatusFilter<$PrismaModel>
   }
 
   export type NestedEnumExchangeRateProviderFilter<$PrismaModel = never> = {
@@ -76988,6 +76960,40 @@ export namespace Prisma {
     _count?: NestedIntNullableFilter<$PrismaModel>
     _min?: NestedEnumLoginFailureReasonNullableFilter<$PrismaModel>
     _max?: NestedEnumLoginFailureReasonNullableFilter<$PrismaModel>
+  }
+
+  export type NestedEnumDepositDetailStatusFilter<$PrismaModel = never> = {
+    equals?: $Enums.DepositDetailStatus | EnumDepositDetailStatusFieldRefInput<$PrismaModel>
+    in?: $Enums.DepositDetailStatus[] | ListEnumDepositDetailStatusFieldRefInput<$PrismaModel>
+    notIn?: $Enums.DepositDetailStatus[] | ListEnumDepositDetailStatusFieldRefInput<$PrismaModel>
+    not?: NestedEnumDepositDetailStatusFilter<$PrismaModel> | $Enums.DepositDetailStatus
+  }
+
+  export type NestedEnumDepositMethodTypeFilter<$PrismaModel = never> = {
+    equals?: $Enums.DepositMethodType | EnumDepositMethodTypeFieldRefInput<$PrismaModel>
+    in?: $Enums.DepositMethodType[] | ListEnumDepositMethodTypeFieldRefInput<$PrismaModel>
+    notIn?: $Enums.DepositMethodType[] | ListEnumDepositMethodTypeFieldRefInput<$PrismaModel>
+    not?: NestedEnumDepositMethodTypeFilter<$PrismaModel> | $Enums.DepositMethodType
+  }
+
+  export type NestedEnumDepositDetailStatusWithAggregatesFilter<$PrismaModel = never> = {
+    equals?: $Enums.DepositDetailStatus | EnumDepositDetailStatusFieldRefInput<$PrismaModel>
+    in?: $Enums.DepositDetailStatus[] | ListEnumDepositDetailStatusFieldRefInput<$PrismaModel>
+    notIn?: $Enums.DepositDetailStatus[] | ListEnumDepositDetailStatusFieldRefInput<$PrismaModel>
+    not?: NestedEnumDepositDetailStatusWithAggregatesFilter<$PrismaModel> | $Enums.DepositDetailStatus
+    _count?: NestedIntFilter<$PrismaModel>
+    _min?: NestedEnumDepositDetailStatusFilter<$PrismaModel>
+    _max?: NestedEnumDepositDetailStatusFilter<$PrismaModel>
+  }
+
+  export type NestedEnumDepositMethodTypeWithAggregatesFilter<$PrismaModel = never> = {
+    equals?: $Enums.DepositMethodType | EnumDepositMethodTypeFieldRefInput<$PrismaModel>
+    in?: $Enums.DepositMethodType[] | ListEnumDepositMethodTypeFieldRefInput<$PrismaModel>
+    notIn?: $Enums.DepositMethodType[] | ListEnumDepositMethodTypeFieldRefInput<$PrismaModel>
+    not?: NestedEnumDepositMethodTypeWithAggregatesFilter<$PrismaModel> | $Enums.DepositMethodType
+    _count?: NestedIntFilter<$PrismaModel>
+    _min?: NestedEnumDepositMethodTypeFilter<$PrismaModel>
+    _max?: NestedEnumDepositMethodTypeFilter<$PrismaModel>
   }
 
   export type NestedEnumPromotionTargetTypeFilter<$PrismaModel = never> = {
@@ -81176,236 +81182,6 @@ export namespace Prisma {
     gameRound?: GameRoundUncheckedUpdateOneWithoutTransactionNestedInput
     balanceDetails?: TransactionBalanceDetailUncheckedUpdateManyWithoutTransactionNestedInput
     withdrawDetail?: WithdrawDetailUncheckedUpdateOneWithoutTransactionNestedInput
-  }
-
-  export type BankAccountCreateWithoutDepositDetailsInput = {
-    currency: $Enums.ExchangeCurrencyCode
-    bankName: string
-    accountNumber: string
-    accountHolder: string
-    isActive?: boolean
-    priority?: number
-    description?: string | null
-    notes?: string | null
-    totalDeposits?: number
-    totalDepositAmount?: Decimal | DecimalJsLike | number | string
-    createdAt?: Date | string
-    updatedAt?: Date | string
-    deletedAt?: Date | string | null
-  }
-
-  export type BankAccountUncheckedCreateWithoutDepositDetailsInput = {
-    id?: number
-    currency: $Enums.ExchangeCurrencyCode
-    bankName: string
-    accountNumber: string
-    accountHolder: string
-    isActive?: boolean
-    priority?: number
-    description?: string | null
-    notes?: string | null
-    totalDeposits?: number
-    totalDepositAmount?: Decimal | DecimalJsLike | number | string
-    createdAt?: Date | string
-    updatedAt?: Date | string
-    deletedAt?: Date | string | null
-  }
-
-  export type BankAccountCreateOrConnectWithoutDepositDetailsInput = {
-    where: BankAccountWhereUniqueInput
-    create: XOR<BankAccountCreateWithoutDepositDetailsInput, BankAccountUncheckedCreateWithoutDepositDetailsInput>
-  }
-
-  export type TransactionCreateWithoutDepositDetailInput = {
-    id?: bigint | number
-    type: $Enums.TransactionType
-    status: $Enums.TransactionStatus
-    currency: $Enums.ExchangeCurrencyCode
-    amount: Decimal | DecimalJsLike | number | string
-    beforeAmount: Decimal | DecimalJsLike | number | string
-    afterAmount: Decimal | DecimalJsLike | number | string
-    createdAt?: Date | string
-    updatedAt?: Date | string
-    bonusDetail?: BonusDetailCreateNestedOneWithoutTransactionInput
-    compTransaction?: CompTransactionCreateNestedOneWithoutTransactionInput
-    gameRound?: GameRoundCreateNestedOneWithoutTransactionInput
-    user: UserCreateNestedOneWithoutTransactionsInput
-    balanceDetails?: TransactionBalanceDetailCreateNestedManyWithoutTransactionInput
-    withdrawDetail?: WithdrawDetailCreateNestedOneWithoutTransactionInput
-  }
-
-  export type TransactionUncheckedCreateWithoutDepositDetailInput = {
-    id?: bigint | number
-    userId: bigint | number
-    type: $Enums.TransactionType
-    status: $Enums.TransactionStatus
-    currency: $Enums.ExchangeCurrencyCode
-    amount: Decimal | DecimalJsLike | number | string
-    beforeAmount: Decimal | DecimalJsLike | number | string
-    afterAmount: Decimal | DecimalJsLike | number | string
-    createdAt?: Date | string
-    updatedAt?: Date | string
-    bonusDetail?: BonusDetailUncheckedCreateNestedOneWithoutTransactionInput
-    compTransaction?: CompTransactionUncheckedCreateNestedOneWithoutTransactionInput
-    gameRound?: GameRoundUncheckedCreateNestedOneWithoutTransactionInput
-    balanceDetails?: TransactionBalanceDetailUncheckedCreateNestedManyWithoutTransactionInput
-    withdrawDetail?: WithdrawDetailUncheckedCreateNestedOneWithoutTransactionInput
-  }
-
-  export type TransactionCreateOrConnectWithoutDepositDetailInput = {
-    where: TransactionWhereUniqueInput
-    create: XOR<TransactionCreateWithoutDepositDetailInput, TransactionUncheckedCreateWithoutDepositDetailInput>
-  }
-
-  export type RollingCreateWithoutDepositDetailInput = {
-    id?: bigint | number
-    sourceType?: $Enums.RollingSourceType
-    requiredAmount: Decimal | DecimalJsLike | number | string
-    currentAmount?: Decimal | DecimalJsLike | number | string
-    cancellationBalanceThreshold?: Decimal | DecimalJsLike | number | string | null
-    status?: $Enums.RollingStatus
-    depositAmount?: Decimal | DecimalJsLike | number | string | null
-    bonusAmount?: Decimal | DecimalJsLike | number | string | null
-    completedAt?: Date | string | null
-    cancelledAt?: Date | string | null
-    createdAt?: Date | string
-    updatedAt?: Date | string
-    user: UserCreateNestedOneWithoutRollingInput
-    userPromotion?: UserPromotionCreateNestedOneWithoutRollingInput
-  }
-
-  export type RollingUncheckedCreateWithoutDepositDetailInput = {
-    id?: bigint | number
-    userId: bigint | number
-    sourceType?: $Enums.RollingSourceType
-    userPromotionId?: bigint | number | null
-    requiredAmount: Decimal | DecimalJsLike | number | string
-    currentAmount?: Decimal | DecimalJsLike | number | string
-    cancellationBalanceThreshold?: Decimal | DecimalJsLike | number | string | null
-    status?: $Enums.RollingStatus
-    depositAmount?: Decimal | DecimalJsLike | number | string | null
-    bonusAmount?: Decimal | DecimalJsLike | number | string | null
-    completedAt?: Date | string | null
-    cancelledAt?: Date | string | null
-    createdAt?: Date | string
-    updatedAt?: Date | string
-  }
-
-  export type RollingCreateOrConnectWithoutDepositDetailInput = {
-    where: RollingWhereUniqueInput
-    create: XOR<RollingCreateWithoutDepositDetailInput, RollingUncheckedCreateWithoutDepositDetailInput>
-  }
-
-  export type RollingCreateManyDepositDetailInputEnvelope = {
-    data: RollingCreateManyDepositDetailInput | RollingCreateManyDepositDetailInput[]
-    skipDuplicates?: boolean
-  }
-
-  export type BankAccountUpsertWithoutDepositDetailsInput = {
-    update: XOR<BankAccountUpdateWithoutDepositDetailsInput, BankAccountUncheckedUpdateWithoutDepositDetailsInput>
-    create: XOR<BankAccountCreateWithoutDepositDetailsInput, BankAccountUncheckedCreateWithoutDepositDetailsInput>
-    where?: BankAccountWhereInput
-  }
-
-  export type BankAccountUpdateToOneWithWhereWithoutDepositDetailsInput = {
-    where?: BankAccountWhereInput
-    data: XOR<BankAccountUpdateWithoutDepositDetailsInput, BankAccountUncheckedUpdateWithoutDepositDetailsInput>
-  }
-
-  export type BankAccountUpdateWithoutDepositDetailsInput = {
-    currency?: EnumExchangeCurrencyCodeFieldUpdateOperationsInput | $Enums.ExchangeCurrencyCode
-    bankName?: StringFieldUpdateOperationsInput | string
-    accountNumber?: StringFieldUpdateOperationsInput | string
-    accountHolder?: StringFieldUpdateOperationsInput | string
-    isActive?: BoolFieldUpdateOperationsInput | boolean
-    priority?: IntFieldUpdateOperationsInput | number
-    description?: NullableStringFieldUpdateOperationsInput | string | null
-    notes?: NullableStringFieldUpdateOperationsInput | string | null
-    totalDeposits?: IntFieldUpdateOperationsInput | number
-    totalDepositAmount?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
-    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
-    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
-    deletedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
-  }
-
-  export type BankAccountUncheckedUpdateWithoutDepositDetailsInput = {
-    id?: IntFieldUpdateOperationsInput | number
-    currency?: EnumExchangeCurrencyCodeFieldUpdateOperationsInput | $Enums.ExchangeCurrencyCode
-    bankName?: StringFieldUpdateOperationsInput | string
-    accountNumber?: StringFieldUpdateOperationsInput | string
-    accountHolder?: StringFieldUpdateOperationsInput | string
-    isActive?: BoolFieldUpdateOperationsInput | boolean
-    priority?: IntFieldUpdateOperationsInput | number
-    description?: NullableStringFieldUpdateOperationsInput | string | null
-    notes?: NullableStringFieldUpdateOperationsInput | string | null
-    totalDeposits?: IntFieldUpdateOperationsInput | number
-    totalDepositAmount?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
-    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
-    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
-    deletedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
-  }
-
-  export type TransactionUpsertWithoutDepositDetailInput = {
-    update: XOR<TransactionUpdateWithoutDepositDetailInput, TransactionUncheckedUpdateWithoutDepositDetailInput>
-    create: XOR<TransactionCreateWithoutDepositDetailInput, TransactionUncheckedCreateWithoutDepositDetailInput>
-    where?: TransactionWhereInput
-  }
-
-  export type TransactionUpdateToOneWithWhereWithoutDepositDetailInput = {
-    where?: TransactionWhereInput
-    data: XOR<TransactionUpdateWithoutDepositDetailInput, TransactionUncheckedUpdateWithoutDepositDetailInput>
-  }
-
-  export type TransactionUpdateWithoutDepositDetailInput = {
-    id?: BigIntFieldUpdateOperationsInput | bigint | number
-    type?: EnumTransactionTypeFieldUpdateOperationsInput | $Enums.TransactionType
-    status?: EnumTransactionStatusFieldUpdateOperationsInput | $Enums.TransactionStatus
-    currency?: EnumExchangeCurrencyCodeFieldUpdateOperationsInput | $Enums.ExchangeCurrencyCode
-    amount?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
-    beforeAmount?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
-    afterAmount?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
-    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
-    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
-    bonusDetail?: BonusDetailUpdateOneWithoutTransactionNestedInput
-    compTransaction?: CompTransactionUpdateOneWithoutTransactionNestedInput
-    gameRound?: GameRoundUpdateOneWithoutTransactionNestedInput
-    user?: UserUpdateOneRequiredWithoutTransactionsNestedInput
-    balanceDetails?: TransactionBalanceDetailUpdateManyWithoutTransactionNestedInput
-    withdrawDetail?: WithdrawDetailUpdateOneWithoutTransactionNestedInput
-  }
-
-  export type TransactionUncheckedUpdateWithoutDepositDetailInput = {
-    id?: BigIntFieldUpdateOperationsInput | bigint | number
-    userId?: BigIntFieldUpdateOperationsInput | bigint | number
-    type?: EnumTransactionTypeFieldUpdateOperationsInput | $Enums.TransactionType
-    status?: EnumTransactionStatusFieldUpdateOperationsInput | $Enums.TransactionStatus
-    currency?: EnumExchangeCurrencyCodeFieldUpdateOperationsInput | $Enums.ExchangeCurrencyCode
-    amount?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
-    beforeAmount?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
-    afterAmount?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
-    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
-    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
-    bonusDetail?: BonusDetailUncheckedUpdateOneWithoutTransactionNestedInput
-    compTransaction?: CompTransactionUncheckedUpdateOneWithoutTransactionNestedInput
-    gameRound?: GameRoundUncheckedUpdateOneWithoutTransactionNestedInput
-    balanceDetails?: TransactionBalanceDetailUncheckedUpdateManyWithoutTransactionNestedInput
-    withdrawDetail?: WithdrawDetailUncheckedUpdateOneWithoutTransactionNestedInput
-  }
-
-  export type RollingUpsertWithWhereUniqueWithoutDepositDetailInput = {
-    where: RollingWhereUniqueInput
-    update: XOR<RollingUpdateWithoutDepositDetailInput, RollingUncheckedUpdateWithoutDepositDetailInput>
-    create: XOR<RollingCreateWithoutDepositDetailInput, RollingUncheckedCreateWithoutDepositDetailInput>
-  }
-
-  export type RollingUpdateWithWhereUniqueWithoutDepositDetailInput = {
-    where: RollingWhereUniqueInput
-    data: XOR<RollingUpdateWithoutDepositDetailInput, RollingUncheckedUpdateWithoutDepositDetailInput>
-  }
-
-  export type RollingUpdateManyWithWhereWithoutDepositDetailInput = {
-    where: RollingScalarWhereInput
-    data: XOR<RollingUpdateManyMutationInput, RollingUncheckedUpdateManyWithoutDepositDetailInput>
   }
 
   export type TransactionCreateWithoutWithdrawDetailInput = {
@@ -85706,6 +85482,236 @@ export namespace Prisma {
     VipMembership?: VipMembershipUncheckedUpdateOneWithoutUserNestedInput
   }
 
+  export type BankAccountCreateWithoutDepositDetailsInput = {
+    currency: $Enums.ExchangeCurrencyCode
+    bankName: string
+    accountNumber: string
+    accountHolder: string
+    isActive?: boolean
+    priority?: number
+    description?: string | null
+    notes?: string | null
+    totalDeposits?: number
+    totalDepositAmount?: Decimal | DecimalJsLike | number | string
+    createdAt?: Date | string
+    updatedAt?: Date | string
+    deletedAt?: Date | string | null
+  }
+
+  export type BankAccountUncheckedCreateWithoutDepositDetailsInput = {
+    id?: number
+    currency: $Enums.ExchangeCurrencyCode
+    bankName: string
+    accountNumber: string
+    accountHolder: string
+    isActive?: boolean
+    priority?: number
+    description?: string | null
+    notes?: string | null
+    totalDeposits?: number
+    totalDepositAmount?: Decimal | DecimalJsLike | number | string
+    createdAt?: Date | string
+    updatedAt?: Date | string
+    deletedAt?: Date | string | null
+  }
+
+  export type BankAccountCreateOrConnectWithoutDepositDetailsInput = {
+    where: BankAccountWhereUniqueInput
+    create: XOR<BankAccountCreateWithoutDepositDetailsInput, BankAccountUncheckedCreateWithoutDepositDetailsInput>
+  }
+
+  export type TransactionCreateWithoutDepositDetailInput = {
+    id?: bigint | number
+    type: $Enums.TransactionType
+    status: $Enums.TransactionStatus
+    currency: $Enums.ExchangeCurrencyCode
+    amount: Decimal | DecimalJsLike | number | string
+    beforeAmount: Decimal | DecimalJsLike | number | string
+    afterAmount: Decimal | DecimalJsLike | number | string
+    createdAt?: Date | string
+    updatedAt?: Date | string
+    bonusDetail?: BonusDetailCreateNestedOneWithoutTransactionInput
+    compTransaction?: CompTransactionCreateNestedOneWithoutTransactionInput
+    gameRound?: GameRoundCreateNestedOneWithoutTransactionInput
+    user: UserCreateNestedOneWithoutTransactionsInput
+    balanceDetails?: TransactionBalanceDetailCreateNestedManyWithoutTransactionInput
+    withdrawDetail?: WithdrawDetailCreateNestedOneWithoutTransactionInput
+  }
+
+  export type TransactionUncheckedCreateWithoutDepositDetailInput = {
+    id?: bigint | number
+    userId: bigint | number
+    type: $Enums.TransactionType
+    status: $Enums.TransactionStatus
+    currency: $Enums.ExchangeCurrencyCode
+    amount: Decimal | DecimalJsLike | number | string
+    beforeAmount: Decimal | DecimalJsLike | number | string
+    afterAmount: Decimal | DecimalJsLike | number | string
+    createdAt?: Date | string
+    updatedAt?: Date | string
+    bonusDetail?: BonusDetailUncheckedCreateNestedOneWithoutTransactionInput
+    compTransaction?: CompTransactionUncheckedCreateNestedOneWithoutTransactionInput
+    gameRound?: GameRoundUncheckedCreateNestedOneWithoutTransactionInput
+    balanceDetails?: TransactionBalanceDetailUncheckedCreateNestedManyWithoutTransactionInput
+    withdrawDetail?: WithdrawDetailUncheckedCreateNestedOneWithoutTransactionInput
+  }
+
+  export type TransactionCreateOrConnectWithoutDepositDetailInput = {
+    where: TransactionWhereUniqueInput
+    create: XOR<TransactionCreateWithoutDepositDetailInput, TransactionUncheckedCreateWithoutDepositDetailInput>
+  }
+
+  export type RollingCreateWithoutDepositDetailInput = {
+    id?: bigint | number
+    sourceType?: $Enums.RollingSourceType
+    requiredAmount: Decimal | DecimalJsLike | number | string
+    currentAmount?: Decimal | DecimalJsLike | number | string
+    cancellationBalanceThreshold?: Decimal | DecimalJsLike | number | string | null
+    status?: $Enums.RollingStatus
+    depositAmount?: Decimal | DecimalJsLike | number | string | null
+    bonusAmount?: Decimal | DecimalJsLike | number | string | null
+    completedAt?: Date | string | null
+    cancelledAt?: Date | string | null
+    createdAt?: Date | string
+    updatedAt?: Date | string
+    user: UserCreateNestedOneWithoutRollingInput
+    userPromotion?: UserPromotionCreateNestedOneWithoutRollingInput
+  }
+
+  export type RollingUncheckedCreateWithoutDepositDetailInput = {
+    id?: bigint | number
+    userId: bigint | number
+    sourceType?: $Enums.RollingSourceType
+    userPromotionId?: bigint | number | null
+    requiredAmount: Decimal | DecimalJsLike | number | string
+    currentAmount?: Decimal | DecimalJsLike | number | string
+    cancellationBalanceThreshold?: Decimal | DecimalJsLike | number | string | null
+    status?: $Enums.RollingStatus
+    depositAmount?: Decimal | DecimalJsLike | number | string | null
+    bonusAmount?: Decimal | DecimalJsLike | number | string | null
+    completedAt?: Date | string | null
+    cancelledAt?: Date | string | null
+    createdAt?: Date | string
+    updatedAt?: Date | string
+  }
+
+  export type RollingCreateOrConnectWithoutDepositDetailInput = {
+    where: RollingWhereUniqueInput
+    create: XOR<RollingCreateWithoutDepositDetailInput, RollingUncheckedCreateWithoutDepositDetailInput>
+  }
+
+  export type RollingCreateManyDepositDetailInputEnvelope = {
+    data: RollingCreateManyDepositDetailInput | RollingCreateManyDepositDetailInput[]
+    skipDuplicates?: boolean
+  }
+
+  export type BankAccountUpsertWithoutDepositDetailsInput = {
+    update: XOR<BankAccountUpdateWithoutDepositDetailsInput, BankAccountUncheckedUpdateWithoutDepositDetailsInput>
+    create: XOR<BankAccountCreateWithoutDepositDetailsInput, BankAccountUncheckedCreateWithoutDepositDetailsInput>
+    where?: BankAccountWhereInput
+  }
+
+  export type BankAccountUpdateToOneWithWhereWithoutDepositDetailsInput = {
+    where?: BankAccountWhereInput
+    data: XOR<BankAccountUpdateWithoutDepositDetailsInput, BankAccountUncheckedUpdateWithoutDepositDetailsInput>
+  }
+
+  export type BankAccountUpdateWithoutDepositDetailsInput = {
+    currency?: EnumExchangeCurrencyCodeFieldUpdateOperationsInput | $Enums.ExchangeCurrencyCode
+    bankName?: StringFieldUpdateOperationsInput | string
+    accountNumber?: StringFieldUpdateOperationsInput | string
+    accountHolder?: StringFieldUpdateOperationsInput | string
+    isActive?: BoolFieldUpdateOperationsInput | boolean
+    priority?: IntFieldUpdateOperationsInput | number
+    description?: NullableStringFieldUpdateOperationsInput | string | null
+    notes?: NullableStringFieldUpdateOperationsInput | string | null
+    totalDeposits?: IntFieldUpdateOperationsInput | number
+    totalDepositAmount?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    deletedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  }
+
+  export type BankAccountUncheckedUpdateWithoutDepositDetailsInput = {
+    id?: IntFieldUpdateOperationsInput | number
+    currency?: EnumExchangeCurrencyCodeFieldUpdateOperationsInput | $Enums.ExchangeCurrencyCode
+    bankName?: StringFieldUpdateOperationsInput | string
+    accountNumber?: StringFieldUpdateOperationsInput | string
+    accountHolder?: StringFieldUpdateOperationsInput | string
+    isActive?: BoolFieldUpdateOperationsInput | boolean
+    priority?: IntFieldUpdateOperationsInput | number
+    description?: NullableStringFieldUpdateOperationsInput | string | null
+    notes?: NullableStringFieldUpdateOperationsInput | string | null
+    totalDeposits?: IntFieldUpdateOperationsInput | number
+    totalDepositAmount?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    deletedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  }
+
+  export type TransactionUpsertWithoutDepositDetailInput = {
+    update: XOR<TransactionUpdateWithoutDepositDetailInput, TransactionUncheckedUpdateWithoutDepositDetailInput>
+    create: XOR<TransactionCreateWithoutDepositDetailInput, TransactionUncheckedCreateWithoutDepositDetailInput>
+    where?: TransactionWhereInput
+  }
+
+  export type TransactionUpdateToOneWithWhereWithoutDepositDetailInput = {
+    where?: TransactionWhereInput
+    data: XOR<TransactionUpdateWithoutDepositDetailInput, TransactionUncheckedUpdateWithoutDepositDetailInput>
+  }
+
+  export type TransactionUpdateWithoutDepositDetailInput = {
+    id?: BigIntFieldUpdateOperationsInput | bigint | number
+    type?: EnumTransactionTypeFieldUpdateOperationsInput | $Enums.TransactionType
+    status?: EnumTransactionStatusFieldUpdateOperationsInput | $Enums.TransactionStatus
+    currency?: EnumExchangeCurrencyCodeFieldUpdateOperationsInput | $Enums.ExchangeCurrencyCode
+    amount?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
+    beforeAmount?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
+    afterAmount?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    bonusDetail?: BonusDetailUpdateOneWithoutTransactionNestedInput
+    compTransaction?: CompTransactionUpdateOneWithoutTransactionNestedInput
+    gameRound?: GameRoundUpdateOneWithoutTransactionNestedInput
+    user?: UserUpdateOneRequiredWithoutTransactionsNestedInput
+    balanceDetails?: TransactionBalanceDetailUpdateManyWithoutTransactionNestedInput
+    withdrawDetail?: WithdrawDetailUpdateOneWithoutTransactionNestedInput
+  }
+
+  export type TransactionUncheckedUpdateWithoutDepositDetailInput = {
+    id?: BigIntFieldUpdateOperationsInput | bigint | number
+    userId?: BigIntFieldUpdateOperationsInput | bigint | number
+    type?: EnumTransactionTypeFieldUpdateOperationsInput | $Enums.TransactionType
+    status?: EnumTransactionStatusFieldUpdateOperationsInput | $Enums.TransactionStatus
+    currency?: EnumExchangeCurrencyCodeFieldUpdateOperationsInput | $Enums.ExchangeCurrencyCode
+    amount?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
+    beforeAmount?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
+    afterAmount?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    bonusDetail?: BonusDetailUncheckedUpdateOneWithoutTransactionNestedInput
+    compTransaction?: CompTransactionUncheckedUpdateOneWithoutTransactionNestedInput
+    gameRound?: GameRoundUncheckedUpdateOneWithoutTransactionNestedInput
+    balanceDetails?: TransactionBalanceDetailUncheckedUpdateManyWithoutTransactionNestedInput
+    withdrawDetail?: WithdrawDetailUncheckedUpdateOneWithoutTransactionNestedInput
+  }
+
+  export type RollingUpsertWithWhereUniqueWithoutDepositDetailInput = {
+    where: RollingWhereUniqueInput
+    update: XOR<RollingUpdateWithoutDepositDetailInput, RollingUncheckedUpdateWithoutDepositDetailInput>
+    create: XOR<RollingCreateWithoutDepositDetailInput, RollingUncheckedCreateWithoutDepositDetailInput>
+  }
+
+  export type RollingUpdateWithWhereUniqueWithoutDepositDetailInput = {
+    where: RollingWhereUniqueInput
+    data: XOR<RollingUpdateWithoutDepositDetailInput, RollingUncheckedUpdateWithoutDepositDetailInput>
+  }
+
+  export type RollingUpdateManyWithWhereWithoutDepositDetailInput = {
+    where: RollingScalarWhereInput
+    data: XOR<RollingUpdateManyMutationInput, RollingUncheckedUpdateManyWithoutDepositDetailInput>
+  }
+
   export type PromotionTranslationCreateWithoutPromotionInput = {
     id?: bigint | number
     language: $Enums.Language
@@ -88421,74 +88427,6 @@ export namespace Prisma {
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
   }
 
-  export type RollingCreateManyDepositDetailInput = {
-    id?: bigint | number
-    userId: bigint | number
-    sourceType?: $Enums.RollingSourceType
-    userPromotionId?: bigint | number | null
-    requiredAmount: Decimal | DecimalJsLike | number | string
-    currentAmount?: Decimal | DecimalJsLike | number | string
-    cancellationBalanceThreshold?: Decimal | DecimalJsLike | number | string | null
-    status?: $Enums.RollingStatus
-    depositAmount?: Decimal | DecimalJsLike | number | string | null
-    bonusAmount?: Decimal | DecimalJsLike | number | string | null
-    completedAt?: Date | string | null
-    cancelledAt?: Date | string | null
-    createdAt?: Date | string
-    updatedAt?: Date | string
-  }
-
-  export type RollingUpdateWithoutDepositDetailInput = {
-    id?: BigIntFieldUpdateOperationsInput | bigint | number
-    sourceType?: EnumRollingSourceTypeFieldUpdateOperationsInput | $Enums.RollingSourceType
-    requiredAmount?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
-    currentAmount?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
-    cancellationBalanceThreshold?: NullableDecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string | null
-    status?: EnumRollingStatusFieldUpdateOperationsInput | $Enums.RollingStatus
-    depositAmount?: NullableDecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string | null
-    bonusAmount?: NullableDecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string | null
-    completedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
-    cancelledAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
-    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
-    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
-    user?: UserUpdateOneRequiredWithoutRollingNestedInput
-    userPromotion?: UserPromotionUpdateOneWithoutRollingNestedInput
-  }
-
-  export type RollingUncheckedUpdateWithoutDepositDetailInput = {
-    id?: BigIntFieldUpdateOperationsInput | bigint | number
-    userId?: BigIntFieldUpdateOperationsInput | bigint | number
-    sourceType?: EnumRollingSourceTypeFieldUpdateOperationsInput | $Enums.RollingSourceType
-    userPromotionId?: NullableBigIntFieldUpdateOperationsInput | bigint | number | null
-    requiredAmount?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
-    currentAmount?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
-    cancellationBalanceThreshold?: NullableDecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string | null
-    status?: EnumRollingStatusFieldUpdateOperationsInput | $Enums.RollingStatus
-    depositAmount?: NullableDecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string | null
-    bonusAmount?: NullableDecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string | null
-    completedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
-    cancelledAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
-    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
-    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
-  }
-
-  export type RollingUncheckedUpdateManyWithoutDepositDetailInput = {
-    id?: BigIntFieldUpdateOperationsInput | bigint | number
-    userId?: BigIntFieldUpdateOperationsInput | bigint | number
-    sourceType?: EnumRollingSourceTypeFieldUpdateOperationsInput | $Enums.RollingSourceType
-    userPromotionId?: NullableBigIntFieldUpdateOperationsInput | bigint | number | null
-    requiredAmount?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
-    currentAmount?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
-    cancellationBalanceThreshold?: NullableDecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string | null
-    status?: EnumRollingStatusFieldUpdateOperationsInput | $Enums.RollingStatus
-    depositAmount?: NullableDecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string | null
-    bonusAmount?: NullableDecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string | null
-    completedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
-    cancelledAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
-    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
-    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
-  }
-
   export type CompTransactionCreateManyDailyCompEarningInput = {
     id?: bigint | number
     userId: bigint | number
@@ -88885,6 +88823,74 @@ export namespace Prisma {
     ipAddress?: NullableStringFieldUpdateOperationsInput | string | null
     deviceFingerprint?: NullableStringFieldUpdateOperationsInput | string | null
     userAgent?: NullableStringFieldUpdateOperationsInput | string | null
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+  }
+
+  export type RollingCreateManyDepositDetailInput = {
+    id?: bigint | number
+    userId: bigint | number
+    sourceType?: $Enums.RollingSourceType
+    userPromotionId?: bigint | number | null
+    requiredAmount: Decimal | DecimalJsLike | number | string
+    currentAmount?: Decimal | DecimalJsLike | number | string
+    cancellationBalanceThreshold?: Decimal | DecimalJsLike | number | string | null
+    status?: $Enums.RollingStatus
+    depositAmount?: Decimal | DecimalJsLike | number | string | null
+    bonusAmount?: Decimal | DecimalJsLike | number | string | null
+    completedAt?: Date | string | null
+    cancelledAt?: Date | string | null
+    createdAt?: Date | string
+    updatedAt?: Date | string
+  }
+
+  export type RollingUpdateWithoutDepositDetailInput = {
+    id?: BigIntFieldUpdateOperationsInput | bigint | number
+    sourceType?: EnumRollingSourceTypeFieldUpdateOperationsInput | $Enums.RollingSourceType
+    requiredAmount?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
+    currentAmount?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
+    cancellationBalanceThreshold?: NullableDecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string | null
+    status?: EnumRollingStatusFieldUpdateOperationsInput | $Enums.RollingStatus
+    depositAmount?: NullableDecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string | null
+    bonusAmount?: NullableDecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string | null
+    completedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    cancelledAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    user?: UserUpdateOneRequiredWithoutRollingNestedInput
+    userPromotion?: UserPromotionUpdateOneWithoutRollingNestedInput
+  }
+
+  export type RollingUncheckedUpdateWithoutDepositDetailInput = {
+    id?: BigIntFieldUpdateOperationsInput | bigint | number
+    userId?: BigIntFieldUpdateOperationsInput | bigint | number
+    sourceType?: EnumRollingSourceTypeFieldUpdateOperationsInput | $Enums.RollingSourceType
+    userPromotionId?: NullableBigIntFieldUpdateOperationsInput | bigint | number | null
+    requiredAmount?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
+    currentAmount?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
+    cancellationBalanceThreshold?: NullableDecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string | null
+    status?: EnumRollingStatusFieldUpdateOperationsInput | $Enums.RollingStatus
+    depositAmount?: NullableDecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string | null
+    bonusAmount?: NullableDecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string | null
+    completedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    cancelledAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+  }
+
+  export type RollingUncheckedUpdateManyWithoutDepositDetailInput = {
+    id?: BigIntFieldUpdateOperationsInput | bigint | number
+    userId?: BigIntFieldUpdateOperationsInput | bigint | number
+    sourceType?: EnumRollingSourceTypeFieldUpdateOperationsInput | $Enums.RollingSourceType
+    userPromotionId?: NullableBigIntFieldUpdateOperationsInput | bigint | number | null
+    requiredAmount?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
+    currentAmount?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
+    cancellationBalanceThreshold?: NullableDecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string | null
+    status?: EnumRollingStatusFieldUpdateOperationsInput | $Enums.RollingStatus
+    depositAmount?: NullableDecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string | null
+    bonusAmount?: NullableDecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string | null
+    completedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    cancelledAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
   }

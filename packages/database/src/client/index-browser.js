@@ -421,35 +421,6 @@ exports.Prisma.BonusDetailScalarFieldEnum = {
   transactionId: 'transactionId'
 };
 
-exports.Prisma.DepositDetailScalarFieldEnum = {
-  id: 'id',
-  confirmedAt: 'confirmedAt',
-  failedAt: 'failedAt',
-  createdAt: 'createdAt',
-  updatedAt: 'updatedAt',
-  status: 'status',
-  transactionId: 'transactionId',
-  methodType: 'methodType',
-  provider: 'provider',
-  providerPaymentId: 'providerPaymentId',
-  depositCurrency: 'depositCurrency',
-  depositNetwork: 'depositNetwork',
-  walletAddress: 'walletAddress',
-  walletAddressExtraId: 'walletAddressExtraId',
-  bankName: 'bankName',
-  accountNumber: 'accountNumber',
-  accountHolder: 'accountHolder',
-  depositorName: 'depositorName',
-  transactionHash: 'transactionHash',
-  actuallyPaid: 'actuallyPaid',
-  feeAmount: 'feeAmount',
-  feeCurrency: 'feeCurrency',
-  feePaidBy: 'feePaidBy',
-  failureReason: 'failureReason',
-  providerMetadata: 'providerMetadata',
-  bankAccountId: 'bankAccountId'
-};
-
 exports.Prisma.WithdrawDetailScalarFieldEnum = {
   id: 'id',
   createdAt: 'createdAt',
@@ -720,6 +691,35 @@ exports.Prisma.LoginAttemptScalarFieldEnum = {
   isAdmin: 'isAdmin'
 };
 
+exports.Prisma.DepositDetailScalarFieldEnum = {
+  id: 'id',
+  confirmedAt: 'confirmedAt',
+  failedAt: 'failedAt',
+  createdAt: 'createdAt',
+  updatedAt: 'updatedAt',
+  status: 'status',
+  transactionId: 'transactionId',
+  methodType: 'methodType',
+  provider: 'provider',
+  providerPaymentId: 'providerPaymentId',
+  depositCurrency: 'depositCurrency',
+  depositNetwork: 'depositNetwork',
+  walletAddress: 'walletAddress',
+  walletAddressExtraId: 'walletAddressExtraId',
+  bankName: 'bankName',
+  accountNumber: 'accountNumber',
+  accountHolder: 'accountHolder',
+  depositorName: 'depositorName',
+  transactionHash: 'transactionHash',
+  actuallyPaid: 'actuallyPaid',
+  feeAmount: 'feeAmount',
+  feeCurrency: 'feeCurrency',
+  feePaidBy: 'feePaidBy',
+  failureReason: 'failureReason',
+  providerMetadata: 'providerMetadata',
+  bankAccountId: 'bankAccountId'
+};
+
 exports.Prisma.PromotionScalarFieldEnum = {
   id: 'id',
   uid: 'uid',
@@ -930,19 +930,14 @@ exports.BonusType = exports.$Enums.BonusType = {
   IN_GAME_BONUS: 'IN_GAME_BONUS'
 };
 
-exports.DepositDetailStatus = exports.$Enums.DepositDetailStatus = {
+exports.WithdrawDetailStatus = exports.$Enums.WithdrawDetailStatus = {
   PENDING: 'PENDING',
-  CONFIRMING: 'CONFIRMING',
+  PROCESSING: 'PROCESSING',
+  SENDING: 'SENDING',
   COMPLETED: 'COMPLETED',
   FAILED: 'FAILED',
   CANCELLED: 'CANCELLED',
-  EXPIRED: 'EXPIRED',
   REJECTED: 'REJECTED'
-};
-
-exports.DepositMethodType = exports.$Enums.DepositMethodType = {
-  CRYPTO_WALLET: 'CRYPTO_WALLET',
-  BANK_TRANSFER: 'BANK_TRANSFER'
 };
 
 exports.PaymentProvider = exports.$Enums.PaymentProvider = {
@@ -953,16 +948,6 @@ exports.PaymentProvider = exports.$Enums.PaymentProvider = {
 exports.FeePaidByType = exports.$Enums.FeePaidByType = {
   USER: 'USER',
   SYSTEM: 'SYSTEM'
-};
-
-exports.WithdrawDetailStatus = exports.$Enums.WithdrawDetailStatus = {
-  PENDING: 'PENDING',
-  PROCESSING: 'PROCESSING',
-  SENDING: 'SENDING',
-  COMPLETED: 'COMPLETED',
-  FAILED: 'FAILED',
-  CANCELLED: 'CANCELLED',
-  REJECTED: 'REJECTED'
 };
 
 exports.ExchangeRateProvider = exports.$Enums.ExchangeRateProvider = {
@@ -1025,6 +1010,21 @@ exports.LoginFailureReason = exports.$Enums.LoginFailureReason = {
   UNKNOWN: 'UNKNOWN'
 };
 
+exports.DepositDetailStatus = exports.$Enums.DepositDetailStatus = {
+  PENDING: 'PENDING',
+  CONFIRMING: 'CONFIRMING',
+  COMPLETED: 'COMPLETED',
+  FAILED: 'FAILED',
+  CANCELLED: 'CANCELLED',
+  EXPIRED: 'EXPIRED',
+  REJECTED: 'REJECTED'
+};
+
+exports.DepositMethodType = exports.$Enums.DepositMethodType = {
+  CRYPTO_WALLET: 'CRYPTO_WALLET',
+  BANK_TRANSFER: 'BANK_TRANSFER'
+};
+
 exports.PromotionTargetType = exports.$Enums.PromotionTargetType = {
   NEW_USER_FIRST_DEPOSIT: 'NEW_USER_FIRST_DEPOSIT'
 };
@@ -1075,7 +1075,6 @@ exports.Prisma.ModelName = {
   GameWin: 'GameWin',
   TransactionBalanceDetail: 'TransactionBalanceDetail',
   BonusDetail: 'BonusDetail',
-  DepositDetail: 'DepositDetail',
   WithdrawDetail: 'WithdrawDetail',
   CompTransaction: 'CompTransaction',
   DailyCompEarning: 'DailyCompEarning',
@@ -1095,6 +1094,7 @@ exports.Prisma.ModelName = {
   AffiliateCommission: 'AffiliateCommission',
   AffiliateTier: 'AffiliateTier',
   LoginAttempt: 'LoginAttempt',
+  DepositDetail: 'DepositDetail',
   Promotion: 'Promotion',
   PromotionTranslation: 'PromotionTranslation',
   PromotionCurrency: 'PromotionCurrency',

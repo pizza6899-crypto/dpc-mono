@@ -1,0 +1,106 @@
+/**
+ * 입금 관련 스키마
+ * 입금 상세 정보 및 입금 방법, 상태 관리
+ */
+
+/**
+ * 입금 상세 정보 모델
+ * 사용자의 입금 요청 및 처리 상태를 추적합니다.
+ * - 암호화폐 지갑 입금 및 계좌 이체 입금 지원
+ * - 입금 상태 추적 (대기, 확인 중, 완료, 실패 등)
+ * - 프로바이더별 입금 정보 관리
+ * - 수수료 및 실제 입금 금액 추적
+ */
+model DepositDetail {
+  id                   BigInt               @id @default(autoincrement())
+  confirmedAt          DateTime?            @map("confirmed_at")
+  failedAt             DateTime?            @map("failed_at")
+  createdAt            DateTime             @default(now()) @map("created_at")
+  updatedAt            DateTime             @updatedAt @map("updated_at")
+  status               DepositDetailStatus
+  transactionId        BigInt               @unique @map("transaction_id")
+  methodType           DepositMethodType    @map("method_type")
+  provider             PaymentProvider
+  providerPaymentId    String?              @unique @map("provider_payment_id")
+  depositCurrency      ExchangeCurrencyCode @map("deposit_currency")
+  depositNetwork       String?              @map("deposit_network")
+  walletAddress        String?              @map("wallet_address")
+  walletAddressExtraId String?              @map("wallet_address_extra_id")
+  bankName             String?              @map("bank_name")
+  accountNumber        String?              @map("account_number")
+  accountHolder        String?              @map("account_holder")
+  depositorName        String?              @map("depositor_name")
+  transactionHash      String?              @map("transaction_hash")
+  actuallyPaid         Decimal?             @map("actually_paid") @db.Decimal(32, 18)
+  feeAmount            Decimal?             @map("fee_amount") @db.Decimal(32, 18)
+  feeCurrency          String?              @map("fee_currency")
+  feePaidBy            FeePaidByType?       @map("fee_paid_by")
+  failureReason        String?              @map("failure_reason")
+  providerMetadata     Json?                @default("{}") @map("provider_metadata")
+  bankAccountId        Int?                 @map("bank_account_id")
+  BankAccount          BankAccount?         @relation(fields: [bankAccountId], references: [id])
+  transaction          Transaction          @relation(fields: [transactionId], references: [id])
+  Rolling              Rolling[]
+
+  @@index([provider, providerPaymentId])
+  @@index([status, createdAt])
+  @@index([transactionId])
+  @@index([methodType, status])
+  @@index([depositCurrency, status])
+  @@index([createdAt])
+  @@map("deposit_details")
+}
+
+/**
+ * 입금 방법 타입
+ * 지원하는 입금 방법 유형
+ */
+enum DepositMethodType {
+  /// 암호화폐 지갑 입금 - 암호화폐를 지갑 주소로 입금
+  CRYPTO_WALLET
+  /// 계좌 이체 입금 - 은행 계좌로 입금
+  BANK_TRANSFER
+}
+
+/**
+ * 입금 상세 상태
+ * 입금 요청의 처리 상태
+ */
+enum DepositDetailStatus {
+  /// 대기 중 - 입금 요청이 생성되어 처리 대기 중
+  PENDING
+  /// 확인 중 - 입금이 확인되는 중 (블록체인 확인 등)
+  CONFIRMING
+  /// 완료 - 입금이 성공적으로 완료됨
+  COMPLETED
+  /// 실패 - 입금 처리 중 오류 발생
+  FAILED
+  /// 취소됨 - 입금 요청이 취소됨
+  CANCELLED
+  /// 만료됨 - 입금 요청이 만료됨
+  EXPIRED
+  /// 거부됨 - 관리자가 입금을 거부함
+  REJECTED
+}
+
+/**
+ * 결제 프로바이더
+ * 입금 및 출금에 사용되는 결제 프로바이더
+ */
+enum PaymentProvider {
+  /// NowPayment - 외부 결제 프로바이더
+  NOWPAYMENT
+  /// 수동 처리 - 관리자가 수동으로 처리하는 입출금
+  MANUAL
+}
+
+/**
+ * 수수료 부담 주체
+ * 입금 및 출금 시 수수료를 부담하는 주체
+ */
+enum FeePaidByType {
+  /// 사용자 부담 - 수수료를 사용자가 부담
+  USER
+  /// 시스템 부담 - 수수료를 시스템이 부담
+  SYSTEM
+}
