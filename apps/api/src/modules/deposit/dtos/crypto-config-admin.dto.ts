@@ -1,6 +1,6 @@
 // src/modules/deposit/dtos/crypto-config-admin.dto.ts
 import { ApiProperty, ApiPropertyOptional } from '@nestjs/swagger';
-import { IsEnum, IsString, IsNotEmpty, IsBoolean, IsOptional, IsInt, Min } from 'class-validator';
+import { IsEnum, IsString, IsNotEmpty, IsBoolean, IsOptional, IsInt, Min, IsNumberString } from 'class-validator';
 import { Type } from 'class-transformer';
 
 export class CreateCryptoConfigRequestDto {
@@ -59,12 +59,12 @@ export class UpdateCryptoConfigRequestDto {
     isActive?: boolean;
 
     @ApiPropertyOptional({ description: 'Minimum Deposit Amount' })
-    @IsString()
+    @IsNumberString()
     @IsOptional()
     minDepositAmount?: string;
 
     @ApiPropertyOptional({ description: 'Deposit Fee Rate' })
-    @IsString()
+    @IsNumberString()
     @IsOptional()
     depositFeeRate?: string;
 
@@ -77,7 +77,7 @@ export class UpdateCryptoConfigRequestDto {
     @ApiPropertyOptional({ description: 'Contract Address' })
     @IsString()
     @IsOptional()
-    contractAddress?: string | null;
+    contractAddress?: string;
 }
 
 export class GetCryptoConfigsQueryDto {
