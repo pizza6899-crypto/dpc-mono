@@ -42,7 +42,6 @@ export class AuthenticateCredentialService {
     private readonly policy: CredentialPolicy,
     @Inject(CREDENTIAL_USER_REPOSITORY)
     private readonly userRepository: CredentialUserRepositoryPort,
-    private readonly dispatchLogService: DispatchLogService,
   ) {}
 
   async execute({
@@ -103,36 +102,6 @@ export class AuthenticateCredentialService {
         isMobile: clientInfo.isMobile ?? null,
         isAdmin,
       });
-
-      // Audit 로그 기록 (로그인 실패)
-      try {
-        await this.dispatchLogService.dispatch(
-          {
-            type: LogType.AUTH,
-            data: {
-              userId: foundUser?.id?.toString(),
-              action: isAdmin ? 'ADMIN_LOGIN' : 'USER_LOGIN',
-              status: 'FAILURE',
-              ip: clientInfo.ip,
-              userAgent: clientInfo.userAgent,
-              metadata: {
-                isAdmin,
-                email,
-                failureReason: foundUser
-                  ? 'INVALID_CREDENTIALS'
-                  : 'USER_NOT_FOUND',
-              },
-            },
-          },
-          clientInfo,
-        );
-      } catch (error) {
-        // Audit 로그 실패는 로그인 실패 처리에 영향을 주지 않도록 처리
-        this.logger.error(
-          error,
-          `Audit log 기록 실패 (로그인 실패) - email: ${email}`,
-        );
-      }
 
       throw new ApiException(
         MessageCode.AUTH_INVALID_CREDENTIALS,

@@ -4,8 +4,6 @@ import { RecordLoginAttemptService } from './record-login-attempt.service';
 import { LoginAttemptResult } from '../domain';
 import type { AuthenticatedUser } from 'src/common/auth/types/auth.types';
 import type { RequestClientInfo } from 'src/common/http/types/client-info.types';
-import { DispatchLogService } from 'src/modules/audit-log/application/dispatch-log.service';
-import { LogType } from 'src/modules/audit-log/domain';
 import { CreateSessionService } from '../../session/application/create-session.service';
 import { SessionType, DeviceInfo } from '../../session/domain';
 import { EnvService } from 'src/common/env/env.service';
@@ -28,7 +26,6 @@ export class LoginService {
 
   constructor(
     private readonly recordService: RecordLoginAttemptService,
-    private readonly dispatchLogService: DispatchLogService,
     private readonly createSessionService: CreateSessionService,
     private readonly envService: EnvService,
   ) {}
@@ -77,32 +74,5 @@ export class LoginService {
       deviceInfo,
       expiresAt,
     });
-
-    // 3. Audit 로그 기록 (보안 로그)
-    try {
-      await this.dispatchLogService.dispatch(
-        {
-          type: LogType.AUTH,
-          data: {
-            userId: user.id.toString(),
-            action: isAdmin ? 'ADMIN_LOGIN' : 'USER_LOGIN',
-            status: 'SUCCESS',
-            ip: clientInfo.ip,
-            userAgent: clientInfo.userAgent,
-            metadata: {
-              isAdmin,
-              email: user.email,
-            },
-          },
-        },
-        clientInfo,
-      );
-    } catch (error) {
-      // Audit 로그 실패는 로그인 성공에 영향을 주지 않도록 처리
-      this.logger.error(
-        error,
-        `Audit log 기록 실패 (로그인은 성공) - userId: ${user.id}, isAdmin: ${isAdmin}`,
-      );
-    }
   }
 }

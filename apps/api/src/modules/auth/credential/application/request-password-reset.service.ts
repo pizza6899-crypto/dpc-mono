@@ -6,8 +6,6 @@ import { PASSWORD_RESET_TOKEN_REPOSITORY } from '../ports/out/password-reset-tok
 import type { PasswordResetTokenRepositoryPort } from '../ports/out/password-reset-token.repository.port';
 import { nanoid } from 'nanoid';
 import type { RequestClientInfo } from 'src/common/http/types/client-info.types';
-import { DispatchLogService } from 'src/modules/audit-log/application/dispatch-log.service';
-import { LogType } from 'src/modules/audit-log/domain';
 
 export interface RequestPasswordResetParams {
   email: string;
@@ -30,7 +28,6 @@ export class RequestPasswordResetService {
     private readonly userRepository: UserRepositoryPort,
     @Inject(PASSWORD_RESET_TOKEN_REPOSITORY)
     private readonly tokenRepository: PasswordResetTokenRepositoryPort,
-    private readonly dispatchLogService: DispatchLogService,
   ) {}
 
   @Transactional()
@@ -66,32 +63,6 @@ export class RequestPasswordResetService {
       token,
       expiresAt,
     });
-
-    // 6. Audit 로그 기록 (보안 로그)
-    try {
-      await this.dispatchLogService.dispatch(
-        {
-          type: LogType.AUTH,
-          data: {
-            userId: user.id.toString(),
-            action: 'PASSWORD_RESET_REQUEST',
-            status: 'SUCCESS',
-            ip: requestInfo.ip,
-            userAgent: requestInfo.userAgent,
-            metadata: {
-              email: user.email,
-            },
-          },
-        },
-        requestInfo,
-      );
-    } catch (error) {
-      // Audit 로그 실패는 비밀번호 재설정 요청 성공에 영향을 주지 않도록 처리
-      this.logger.error(
-        error,
-        `Audit log 기록 실패 (비밀번호 재설정 요청은 성공) - userId: ${user.id}`,
-      );
-    }
   }
 }
 

@@ -10,14 +10,12 @@ import type { RequestClientInfo } from 'src/common/http/types/client-info.types'
 import { UserRoleType } from '@repo/database';
 import { PrismaModule } from 'src/infrastructure/prisma/prisma.module';
 import { EnvModule } from 'src/common/env/env.module';
-import { DispatchLogService } from 'src/modules/audit-log/application/dispatch-log.service';
 import { CreateSessionService } from '../../session/application/create-session.service';
 
 describe('LoginService', () => {
   let module: TestingModule;
   let service: LoginService;
   let mockRecordService: jest.Mocked<RecordLoginAttemptService>;
-  let mockDispatchLogService: jest.Mocked<DispatchLogService>;
   let mockCreateSessionService: jest.Mocked<CreateSessionService>;
 
   const mockUser: AuthenticatedUser = {
@@ -72,13 +70,6 @@ describe('LoginService', () => {
       },
     };
 
-    const mockDispatchLogServiceProvider = {
-      provide: DispatchLogService,
-      useValue: {
-        dispatch: jest.fn().mockResolvedValue(undefined),
-      },
-    };
-
     const mockCreateSessionServiceProvider = {
       provide: CreateSessionService,
       useValue: {
@@ -91,7 +82,6 @@ describe('LoginService', () => {
       providers: [
         LoginService,
         mockRecordServiceProvider,
-        mockDispatchLogServiceProvider,
         mockCreateSessionServiceProvider,
       ],
     })
@@ -100,7 +90,6 @@ describe('LoginService', () => {
 
     service = module.get<LoginService>(LoginService);
     mockRecordService = module.get(RecordLoginAttemptService);
-    mockDispatchLogService = module.get(DispatchLogService);
     mockCreateSessionService = module.get(CreateSessionService);
 
     jest.clearAllMocks();
@@ -253,23 +242,6 @@ describe('LoginService', () => {
           isAdmin: false,
         }),
       );
-
-      expect(mockDispatchLogService.dispatch).toHaveBeenCalledWith(
-        expect.objectContaining({
-          type: 'AUTH',
-          data: expect.objectContaining({
-            action: 'USER_LOGIN',
-            status: 'SUCCESS',
-            ip: mockClientInfo.ip,
-            userAgent: mockClientInfo.userAgent,
-            metadata: {
-              isAdmin: false,
-              email: mockUser.email,
-            },
-          }),
-        }),
-        mockClientInfo,
-      );
     });
 
     it('recordService.execute가 실패하면 예외를 전파해야 함', async () => {
@@ -290,47 +262,6 @@ describe('LoginService', () => {
       expect(mockRecordService.execute).toHaveBeenCalledTimes(1);
     });
 
-    it('activityLog.logSuccess가 실패해도 로그인은 성공해야 함 (에러는 조용히 처리)', async () => {
-      // Arrange
-      const mockLoginAttempt = LoginAttempt.createSuccess({
-        uid: 'uid-123',
-        userId: mockUser.id,
-        ipAddress: mockClientInfo.ip,
-        userAgent: mockClientInfo.userAgent,
-        deviceFingerprint: mockClientInfo.fingerprint,
-        isMobile: mockClientInfo.isMobile,
-        email: mockUser.email,
-        isAdmin: false,
-      });
-
-      const activityLogError = new Error('Activity log failed');
-      mockRecordService.execute.mockResolvedValue(mockLoginAttempt);
-      mockDispatchLogService.dispatch.mockRejectedValue(activityLogError);
-
-      // Logger.error를 모킹하여 에러 로깅 확인
-      const loggerErrorSpy = jest
-        .spyOn(Logger.prototype, 'error')
-        .mockImplementation(() => {});
-
-      // Act
-      await service.execute({
-        user: mockUser,
-        clientInfo: mockClientInfo,
-        sessionId: 'session-123',
-        isAdmin: false,
-      });
-
-      // Assert
-      expect(mockRecordService.execute).toHaveBeenCalledTimes(1);
-      expect(mockDispatchLogService.dispatch).toHaveBeenCalledTimes(1);
-      // 에러가 조용히 처리되어 예외가 전파되지 않아야 함
-      expect(loggerErrorSpy).toHaveBeenCalledWith(
-        activityLogError,
-        expect.stringContaining('Audit log 기록 실패 (로그인은 성공)'),
-      );
-
-      loggerErrorSpy.mockRestore();
-    });
 
     it('모바일 기기에서 로그인 시 isMobile=true로 기록해야 함', async () => {
       // Arrange
@@ -351,7 +282,6 @@ describe('LoginService', () => {
       });
 
       mockRecordService.execute.mockResolvedValue(mockLoginAttempt);
-      mockDispatchLogService.dispatch.mockResolvedValue(undefined);
 
       // Act
       await service.execute({

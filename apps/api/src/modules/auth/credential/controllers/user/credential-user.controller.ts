@@ -38,6 +38,8 @@ import { ResetPasswordRequestDto } from './dto/request/reset-password.request.dt
 import { ResetPasswordResponseDto } from './dto/response/reset-password.response.dto';
 import { UserRoleType } from '@repo/database';
 import type { Request } from 'express';
+import { AuditLog } from 'src/modules/audit-log/infrastructure';
+import { LogType } from 'src/modules/audit-log/domain';
 
 @Controller('auth')
 @ApiTags('Auth(인증)')
@@ -66,6 +68,16 @@ export class CredentialUserController {
   @ApiStandardResponse(CredentialUserLoginResponseDto, {
     status: HttpStatus.OK,
     description: 'Login Success',
+  })
+  @AuditLog({
+    type: LogType.AUTH,
+    action: 'LOGIN',
+    extractMetadata: (args) => {
+      const [dto] = args;
+      return {
+        email: dto.email,
+      };
+    },
   })
   async login(
     @Body() dto: CredentialUserLoginRequestDto,
@@ -121,6 +133,12 @@ export class CredentialUserController {
   @ApiStandardResponse(CredentialUserLogoutResponseDto, {
     status: HttpStatus.OK,
     description: 'Logout Success',
+  })
+  @AuditLog({
+    type: LogType.AUTH,
+    action: 'LOGOUT',
+    logOnSuccess: true,
+    logOnError: false, // 로그아웃 실패는 기록하지 않음
   })
   async logout(
     @CurrentUser() user?: CurrentUserWithSession,
@@ -245,6 +263,18 @@ export class CredentialUserController {
     status: HttpStatus.OK,
     description: 'Password changed successfully / 비밀번호 변경 성공',
   })
+  @AuditLog({
+    type: LogType.AUTH,
+    action: 'PASSWORD_CHANGE',
+    extractMetadata: (args, result, error) => {
+      if (error) {
+        return {
+          failureReason: 'INVALID_CURRENT_PASSWORD',
+        };
+      }
+      return {};
+    },
+  })
   async changePassword(
     @CurrentUser() user: CurrentUserWithSession,
     @Body() dto: ChangePasswordRequestDto,
@@ -277,6 +307,16 @@ export class CredentialUserController {
     status: HttpStatus.OK,
     description: 'Password reset email sent / 비밀번호 재설정 이메일 발송 완료',
   })
+  @AuditLog({
+    type: LogType.AUTH,
+    action: 'PASSWORD_RESET_REQUEST',
+    extractMetadata: (args) => {
+      const [dto] = args;
+      return {
+        email: dto.email,
+      };
+    },
+  })
   async requestPasswordReset(
     @Body() dto: RequestPasswordResetRequestDto,
     @RequestClientInfoParam() requestInfo: RequestClientInfo,
@@ -307,6 +347,24 @@ export class CredentialUserController {
   @ApiStandardResponse(ResetPasswordResponseDto, {
     status: HttpStatus.OK,
     description: 'Password reset successfully / 비밀번호 재설정 성공',
+  })
+  @AuditLog({
+    type: LogType.AUTH,
+    action: 'PASSWORD_RESET',
+    extractMetadata: (args, result, error) => {
+      if (error) {
+        let failureReason = 'UNKNOWN_ERROR';
+        if (error.message?.includes('INVALID_TOKEN')) {
+          failureReason = 'INVALID_TOKEN';
+        } else if (error.message?.includes('USER_NOT_FOUND')) {
+          failureReason = 'USER_NOT_FOUND';
+        }
+        return {
+          failureReason,
+        };
+      }
+      return {};
+    },
   })
   async resetPassword(
     @Body() dto: ResetPasswordRequestDto,

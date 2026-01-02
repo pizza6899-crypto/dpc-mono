@@ -44,9 +44,10 @@ export class AuditLogInterceptor implements NestInterceptor {
     }
 
     const request = context.switchToHttp().getRequest<Request>();
-    const clientInfo = request.clientInfo as RequestClientInfo | undefined;
     const args = context.getArgs();
-
+    
+    // clientInfo 추출: request.clientInfo 또는 args에서 찾기
+    const clientInfo = this.extractClientInfo(request, args);
     const user = request.user as AuthenticatedUser | undefined;
 
     return next.handle().pipe(
@@ -114,6 +115,42 @@ export class AuditLogInterceptor implements NestInterceptor {
     await this.dispatchLogService.dispatch(payload, clientInfo);
   }
 
+  private extractClientInfo(
+    request: Request,
+    args: any[],
+  ): RequestClientInfo | undefined {
+    let clientInfo: RequestClientInfo | undefined;
+
+    // 1. request.clientInfo가 있으면 우선 사용
+    if (request.clientInfo) {
+      clientInfo = request.clientInfo as RequestClientInfo;
+    } else {
+      // 2. args에서 clientInfo 또는 requestInfo 찾기
+      for (const arg of args) {
+        if (typeof arg === 'object' && arg !== null) {
+          if (arg.clientInfo && typeof arg.clientInfo === 'object') {
+            clientInfo = arg.clientInfo as RequestClientInfo;
+            break;
+          }
+          if (arg.requestInfo && typeof arg.requestInfo === 'object') {
+            clientInfo = arg.requestInfo as RequestClientInfo;
+            break;
+          }
+        }
+      }
+    }
+
+    // 3. clientInfo가 있지만 sessionId가 없으면 request.sessionID 보완
+    if (clientInfo && !clientInfo.sessionId && request.sessionID) {
+      clientInfo = {
+        ...clientInfo,
+        sessionId: request.sessionID,
+      };
+    }
+
+    return clientInfo;
+  }
+
   private extractUserId(
     args: any[],
     result?: any,
@@ -161,10 +198,12 @@ export class AuditLogInterceptor implements NestInterceptor {
     user?: AuthenticatedUser,
   ): LogJobData {
     // 어드민 체크: role이 ADMIN 또는 SUPER_ADMIN이면 isAdmin 추가
-    const isAdmin = user?.role === 'ADMIN' || user?.role === 'SUPER_ADMIN';
+    // metadata에 이미 isAdmin이 있으면 덮어쓰지 않음 (로그인 시점 등)
+    const isAdminFromUser = user?.role === 'ADMIN' || user?.role === 'SUPER_ADMIN';
     const enrichedMetadata = {
       ...metadata,
-      ...(isAdmin && { isAdmin: true }),
+      // metadata에 isAdmin이 없고, user.role이 ADMIN이면 추가
+      ...(isAdminFromUser && !metadata?.isAdmin && { isAdmin: true }),
     };
     if (options.type === LogType.AUTH) {
       return {

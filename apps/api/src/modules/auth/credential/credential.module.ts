@@ -26,7 +26,6 @@ import {
   PASSWORD_RESET_TOKEN_REPOSITORY,
 } from './ports/out';
 import { PasswordResetTokenRepository } from './infrastructure/password-reset-token.repository';
-import { AuditLogModule } from 'src/modules/audit-log/audit-log.module';
 import { SessionModule } from '../session/session.module';
 import { EnvModule } from 'src/common/env/env.module';
 import { PassportModule } from '@nestjs/passport';
@@ -38,7 +37,6 @@ import { SessionSerializer } from 'src/common/auth/strategies/session.serializer
     EnvModule, // LoginService가 EnvService를 사용하기 위해 필요
     VipModule,
     AffiliateReferralModule,
-    AuditLogModule,
     UserModule, // UserRepository 사용을 위해 필요
     SessionModule, // CreateSessionService 사용을 위해 필요
   ],

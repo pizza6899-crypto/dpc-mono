@@ -11,8 +11,6 @@ import {
   CREDENTIAL_USER_REPOSITORY,
   type CredentialUserRepositoryPort,
 } from '../ports/out';
-import { DispatchLogService } from 'src/modules/audit-log/application/dispatch-log.service';
-import { LogType } from 'src/modules/audit-log/domain';
 import type { AuthenticatedUser } from 'src/common/auth/types/auth.types';
 import type { RequestClientInfo } from 'src/common/http/types/client-info.types';
 import { ApiException } from 'src/common/http/exception/api.exception';
@@ -34,7 +32,6 @@ describe('AuthenticateCredentialAdminService', () => {
   let mockRecordService: jest.Mocked<RecordLoginAttemptService>;
   let mockPolicy: jest.Mocked<CredentialPolicy>;
   let mockUserRepository: jest.Mocked<CredentialUserRepositoryPort>;
-  let mockDispatchLogService: jest.Mocked<DispatchLogService>;
 
   const mockEmail = 'admin@example.com';
   const mockPassword = 'password123';
@@ -105,13 +102,6 @@ describe('AuthenticateCredentialAdminService', () => {
       },
     };
 
-    const mockDispatchLogServiceProvider = {
-      provide: DispatchLogService,
-      useValue: {
-        dispatch: jest.fn().mockResolvedValue(undefined),
-      },
-    };
-
     module = await Test.createTestingModule({
       imports: [PrismaModule, EnvModule], // @Transactional() 데코레이터를 위해 필요
       providers: [
@@ -121,7 +111,6 @@ describe('AuthenticateCredentialAdminService', () => {
         mockRecordServiceProvider,
         mockPolicyProvider,
         mockUserRepositoryProvider,
-        mockDispatchLogServiceProvider,
       ],
     })
       .setLogger(new Logger())
@@ -135,7 +124,6 @@ describe('AuthenticateCredentialAdminService', () => {
     mockRecordService = module.get(RecordLoginAttemptService);
     mockPolicy = module.get(CredentialPolicy);
     mockUserRepository = module.get(CREDENTIAL_USER_REPOSITORY);
-    mockDispatchLogService = module.get(DispatchLogService);
 
     jest.clearAllMocks();
   });
@@ -171,7 +159,6 @@ describe('AuthenticateCredentialAdminService', () => {
         isAdmin: true,
       });
       expect(mockRecordService.execute).not.toHaveBeenCalled();
-      expect(mockDispatchLogService.dispatch).not.toHaveBeenCalled();
     });
 
     it('계정이 잠겨있으면 THROTTLE_TOO_MANY_REQUESTS 예외를 발생시켜야 함', async () => {
@@ -256,25 +243,6 @@ describe('AuthenticateCredentialAdminService', () => {
         isAdmin: true,
       });
 
-      expect(mockDispatchLogService.dispatch).toHaveBeenCalledWith(
-        {
-          type: LogType.AUTH,
-          data: {
-            userId: mockUserId.toString(),
-            action: 'ADMIN_LOGIN',
-            status: 'FAILURE',
-            ip: mockClientInfo.ip,
-            userAgent: mockClientInfo.userAgent,
-            metadata: {
-              isAdmin: true,
-              email: mockEmail,
-              failureReason: 'THROTTLE_LIMIT_EXCEEDED',
-            },
-          },
-        },
-        mockClientInfo,
-      );
-
       expect(mockVerifyService.execute).not.toHaveBeenCalled();
     });
 
@@ -302,63 +270,8 @@ describe('AuthenticateCredentialAdminService', () => {
         }),
       ).rejects.toThrow(ApiException);
 
-      expect(mockDispatchLogService.dispatch).toHaveBeenCalledWith(
-        {
-          type: LogType.AUTH,
-          data: {
-            userId: undefined,
-            action: 'ADMIN_LOGIN',
-            status: 'FAILURE',
-            ip: mockClientInfo.ip,
-            userAgent: mockClientInfo.userAgent,
-            metadata: {
-              isAdmin: true,
-              email: mockEmail,
-              failureReason: 'THROTTLE_LIMIT_EXCEEDED',
-            },
-          },
-        },
-        mockClientInfo,
-      );
     });
 
-    it('계정 잠금 시 audit 로그 실패해도 예외가 전파되지 않아야 함', async () => {
-      // Arrange
-      const recentAttempts = [
-        LoginAttempt.createFailure({
-          uid: 'uid-1',
-          failureReason: LoginFailureReason.INVALID_CREDENTIALS,
-          email: mockEmail,
-          isAdmin: true,
-        }),
-      ];
-
-      const auditLogError = new Error('Audit log failed');
-      const loggerErrorSpy = jest
-        .spyOn(Logger.prototype, 'error')
-        .mockImplementation(() => {});
-
-      mockFindAttemptsService.execute.mockResolvedValue(recentAttempts);
-      mockPolicy.isAccountLocked.mockReturnValue(true);
-      mockUserRepository.findByEmail.mockResolvedValue(null);
-      mockDispatchLogService.dispatch.mockRejectedValue(auditLogError);
-
-      // Act & Assert
-      await expect(
-        service.execute({
-          email: mockEmail,
-          password: mockPassword,
-          clientInfo: mockClientInfo,
-        }),
-      ).rejects.toThrow(ApiException);
-
-      expect(loggerErrorSpy).toHaveBeenCalledWith(
-        auditLogError,
-        expect.stringContaining('Audit log 기록 실패 (계정 잠금)'),
-      );
-
-      loggerErrorSpy.mockRestore();
-    });
 
     it('사용자가 없으면 USER_NOT_FOUND로 실패 기록 및 AUTH_INVALID_CREDENTIALS 예외를 발생시켜야 함', async () => {
       // Arrange
@@ -406,24 +319,6 @@ describe('AuthenticateCredentialAdminService', () => {
         isAdmin: true,
       });
 
-      expect(mockDispatchLogService.dispatch).toHaveBeenCalledWith(
-        {
-          type: LogType.AUTH,
-          data: {
-            userId: undefined,
-            action: 'ADMIN_LOGIN',
-            status: 'FAILURE',
-            ip: mockClientInfo.ip,
-            userAgent: mockClientInfo.userAgent,
-            metadata: {
-              isAdmin: true,
-              email: mockEmail,
-              failureReason: 'USER_NOT_FOUND',
-            },
-          },
-        },
-        mockClientInfo,
-      );
     });
 
     it('비밀번호가 틀리면 INVALID_CREDENTIALS로 실패 기록 및 AUTH_INVALID_CREDENTIALS 예외를 발생시켜야 함', async () => {
@@ -477,60 +372,8 @@ describe('AuthenticateCredentialAdminService', () => {
         isAdmin: true,
       });
 
-      expect(mockDispatchLogService.dispatch).toHaveBeenCalledWith(
-        {
-          type: LogType.AUTH,
-          data: {
-            userId: mockUserId.toString(),
-            action: 'ADMIN_LOGIN',
-            status: 'FAILURE',
-            ip: mockClientInfo.ip,
-            userAgent: mockClientInfo.userAgent,
-            metadata: {
-              isAdmin: true,
-              email: mockEmail,
-              failureReason: 'INVALID_CREDENTIALS',
-            },
-          },
-        },
-        mockClientInfo,
-      );
     });
 
-    it('로그인 실패 시 audit 로그 실패해도 예외가 전파되지 않아야 함', async () => {
-      // Arrange
-      const mockUser = {
-        id: mockUserId,
-        email: mockEmail,
-      };
-
-      const auditLogError = new Error('Audit log failed');
-      const loggerErrorSpy = jest
-        .spyOn(Logger.prototype, 'error')
-        .mockImplementation(() => {});
-
-      mockFindAttemptsService.execute.mockResolvedValue([]);
-      mockPolicy.isAccountLocked.mockReturnValue(false);
-      mockVerifyService.execute.mockResolvedValue(null);
-      mockUserRepository.findByEmail.mockResolvedValue(mockUser as any);
-      mockDispatchLogService.dispatch.mockRejectedValue(auditLogError);
-
-      // Act & Assert
-      await expect(
-        service.execute({
-          email: mockEmail,
-          password: 'wrongPassword',
-          clientInfo: mockClientInfo,
-        }),
-      ).rejects.toThrow(ApiException);
-
-      expect(loggerErrorSpy).toHaveBeenCalledWith(
-        auditLogError,
-        expect.stringContaining('Audit log 기록 실패 (로그인 실패)'),
-      );
-
-      loggerErrorSpy.mockRestore();
-    });
 
     it('관리자 로그인 시 isAdmin=true로 verifyService를 호출해야 함', async () => {
       // Arrange
@@ -568,7 +411,6 @@ describe('AuthenticateCredentialAdminService', () => {
 
       // Assert
       expect(mockRecordService.execute).not.toHaveBeenCalled();
-      expect(mockDispatchLogService.dispatch).not.toHaveBeenCalled();
     });
   });
 });

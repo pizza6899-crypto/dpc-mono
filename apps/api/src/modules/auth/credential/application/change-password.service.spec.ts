@@ -14,14 +14,12 @@ import { MessageCode } from 'src/common/http/types';
 import type { RequestClientInfo } from 'src/common/http/types/client-info.types';
 import { PrismaModule } from 'src/infrastructure/prisma/prisma.module';
 import { EnvModule } from 'src/common/env/env.module';
-import { DispatchLogService } from 'src/modules/audit-log/application/dispatch-log.service';
 
 describe('ChangePasswordService', () => {
   let module: TestingModule;
   let service: ChangePasswordService;
   let mockVerifyService: jest.Mocked<VerifyCredentialService>;
   let mockUserRepository: jest.Mocked<UserRepositoryPort>;
-  let mockDispatchLogService: jest.Mocked<DispatchLogService>;
 
   const mockUserId = BigInt(1);
   const mockEmail = 'user@example.com';
@@ -73,20 +71,12 @@ describe('ChangePasswordService', () => {
       },
     };
 
-    const mockDispatchLogServiceProvider = {
-      provide: DispatchLogService,
-      useValue: {
-        dispatch: jest.fn().mockResolvedValue(undefined),
-      },
-    };
-
     module = await Test.createTestingModule({
       imports: [PrismaModule, EnvModule], // @Transactional() 데코레이터를 위해 필요
       providers: [
         ChangePasswordService,
         mockVerifyServiceProvider,
         mockUserRepositoryProvider,
-        mockDispatchLogServiceProvider,
       ],
     })
       .setLogger(new Logger())
@@ -95,7 +85,6 @@ describe('ChangePasswordService', () => {
     service = module.get<ChangePasswordService>(ChangePasswordService);
     mockVerifyService = module.get(VerifyCredentialService);
     mockUserRepository = module.get(USER_REPOSITORY);
-    mockDispatchLogService = module.get(DispatchLogService);
 
     jest.clearAllMocks();
   });
@@ -408,7 +397,7 @@ describe('ChangePasswordService', () => {
       });
     });
 
-    it('Activity Log 실패 시에도 비밀번호 변경은 성공해야 함', async () => {
+    it('비밀번호 변경이 정상적으로 완료되어야 함', async () => {
       // Arrange
       const mockUser = createMockCredentialUser();
       const mockAuthenticatedUser = {
@@ -418,8 +407,6 @@ describe('ChangePasswordService', () => {
         role: UserRoleType.USER,
       };
 
-      const activityLogError = new Error('Activity log failed');
-
       mockUserRepository.findById.mockResolvedValue(mockUser);
       mockVerifyService.execute.mockResolvedValue(mockAuthenticatedUser);
       mockUserRepository.updatePassword.mockResolvedValue(
@@ -428,13 +415,6 @@ describe('ChangePasswordService', () => {
           passwordHash: mockNewPasswordHash,
         }),
       );
-      // Activity Log 실패 시뮬레이션
-      mockDispatchLogService.dispatch.mockRejectedValue(activityLogError);
-
-      // Logger.error를 모킹하여 에러 로깅 확인
-      const loggerErrorSpy = jest
-        .spyOn(Logger.prototype, 'error')
-        .mockImplementation(() => {});
 
       // Act
       await service.execute({
@@ -447,13 +427,6 @@ describe('ChangePasswordService', () => {
 
       // Assert
       expect(mockUserRepository.updatePassword).toHaveBeenCalledTimes(1);
-      // 에러가 조용히 처리되어 예외가 전파되지 않아야 함
-      expect(loggerErrorSpy).toHaveBeenCalledWith(
-        activityLogError,
-        expect.stringContaining('Audit log 기록 실패 (비밀번호 변경은 성공)'),
-      );
-
-      loggerErrorSpy.mockRestore();
     });
 
     it('isAdmin이 명시되지 않으면 기본값 false를 사용해야 함', async () => {

@@ -26,18 +26,25 @@ export interface AuditLogOptions {
  * Audit Log 데코레이터
  *
  * 메서드에 이 데코레이터를 붙이면 자동으로 audit log가 기록됩니다.
+ * 
+ * @important 컨트롤러 메서드에만 적용 가능합니다.
+ * NestJS 인터셉터는 HTTP 핸들러(컨트롤러 메서드)에만 적용되므로,
+ * 서비스 메서드에는 적용되지 않습니다.
  *
  * @example
  * ```typescript
- * @AuditLog({
- *   type: LogType.AUTH,
- *   action: 'LOGIN',
- * })
- * async execute({ user, clientInfo }: LoginParams): Promise<void> {
- *   // 로그인 로직
+ * @Controller('auth')
+ * export class AuthController {
+ *   @Post('login')
+ *   @AuditLog({
+ *     type: LogType.AUTH,
+ *     action: 'LOGIN',
+ *   })
+ *   async login(@Body() dto: LoginDto) {
+ *     // 로그인 로직
+ *   }
  * }
  * ```
  */
 export const AuditLog = (options: AuditLogOptions) =>
   SetMetadata(AUDIT_LOG_METADATA, options);
-

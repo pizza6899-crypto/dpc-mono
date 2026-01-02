@@ -5,7 +5,6 @@ import compression from 'compression';
 import { corsConfig } from './common/security/cors.config';
 import { helmetConfig } from './common/security/helmet.config';
 import { TransformInterceptor } from './common/http/interceptors/transform.interceptor';
-import { RequestInfoInterceptor } from './common/http/interceptors/request-info.interceptor';
 import { CustomValidationPipe } from './common/http/pipes/validation.pipe';
 import { EnvService } from './common/env/env.service';
 import { SwaggerModule, DocumentBuilder } from '@nestjs/swagger';
@@ -133,7 +132,6 @@ async function bootstrap() {
     });
 
     app.useGlobalInterceptors(
-      new RequestInfoInterceptor(),
       new TransformInterceptor(app.get(Reflector)),
     );
     app.useGlobalPipes(new CustomValidationPipe());

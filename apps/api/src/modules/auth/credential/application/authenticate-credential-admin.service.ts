@@ -16,8 +16,6 @@ import {
   LoginAttemptResult,
   LoginFailureReason,
 } from '../domain/model/login-attempt.entity';
-import { DispatchLogService } from 'src/modules/audit-log/application/dispatch-log.service';
-import { LogType } from 'src/modules/audit-log/domain';
 
 export interface AuthenticateCredentialAdminParams {
   email: string;
@@ -42,7 +40,6 @@ export class AuthenticateCredentialAdminService {
     private readonly policy: CredentialPolicy,
     @Inject(CREDENTIAL_USER_REPOSITORY)
     private readonly userRepository: CredentialUserRepositoryPort,
-    private readonly dispatchLogService: DispatchLogService,
   ) {}
 
   @Transactional()
@@ -69,35 +66,6 @@ export class AuthenticateCredentialAdminService {
         isMobile: clientInfo.isMobile ?? null,
         isAdmin: true,
       });
-
-      // Audit 로그 기록 (계정 잠금)
-      try {
-        const foundUser = await this.userRepository.findByEmail(email);
-        await this.dispatchLogService.dispatch(
-          {
-            type: LogType.AUTH,
-            data: {
-              userId: foundUser?.id?.toString(),
-              action: 'ADMIN_LOGIN',
-              status: 'FAILURE',
-              ip: clientInfo.ip,
-              userAgent: clientInfo.userAgent,
-              metadata: {
-                isAdmin: true,
-                email,
-                failureReason: 'THROTTLE_LIMIT_EXCEEDED',
-              },
-            },
-          },
-          clientInfo,
-        );
-      } catch (error) {
-        // Audit 로그 실패는 계정 잠금 처리에 영향을 주지 않도록 처리
-        this.logger.error(
-          error,
-          `Audit log 기록 실패 (계정 잠금) - email: ${email}`,
-        );
-      }
 
       throw new ApiException(
         MessageCode.THROTTLE_TOO_MANY_REQUESTS,
@@ -130,36 +98,6 @@ export class AuthenticateCredentialAdminService {
         isMobile: clientInfo.isMobile ?? null,
         isAdmin: true,
       });
-
-      // Audit 로그 기록 (로그인 실패)
-      try {
-        await this.dispatchLogService.dispatch(
-          {
-            type: LogType.AUTH,
-            data: {
-              userId: foundUser?.id?.toString(),
-              action: 'ADMIN_LOGIN',
-              status: 'FAILURE',
-              ip: clientInfo.ip,
-              userAgent: clientInfo.userAgent,
-              metadata: {
-                isAdmin: true,
-                email,
-                failureReason: foundUser
-                  ? 'INVALID_CREDENTIALS'
-                  : 'USER_NOT_FOUND',
-              },
-            },
-          },
-          clientInfo,
-        );
-      } catch (error) {
-        // Audit 로그 실패는 로그인 실패 처리에 영향을 주지 않도록 처리
-        this.logger.error(
-          error,
-          `Audit log 기록 실패 (로그인 실패) - email: ${email}`,
-        );
-      }
 
       throw new ApiException(
         MessageCode.AUTH_INVALID_CREDENTIALS,

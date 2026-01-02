@@ -21,6 +21,7 @@ import { WalletModule } from './modules/wallet/wallet.module';
 import { CommonLoggerModule } from './common/logger/logger.module';
 import { AuditLogModule } from './modules/audit-log/audit-log.module';
 import { AuditLogInterceptor } from './modules/audit-log/infrastructure/audit-log.interceptor';
+import { RequestInfoInterceptor } from './common/http/interceptors/request-info.interceptor';
 
 @Module({
   imports: [
@@ -58,7 +59,11 @@ import { AuditLogInterceptor } from './modules/audit-log/infrastructure/audit-lo
     },
     {
       provide: APP_INTERCEPTOR,
-      useClass: AuditLogInterceptor,
+      useClass: RequestInfoInterceptor, // 먼저 실행되어 request.clientInfo 설정
+    },
+    {
+      provide: APP_INTERCEPTOR,
+      useClass: AuditLogInterceptor, // RequestInfoInterceptor 이후 실행
     },
   ],
 })
