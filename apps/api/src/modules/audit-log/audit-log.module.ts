@@ -12,9 +12,24 @@
  * ## 사용 가이드
  * 자세한 사용 방법은 `AUDIT_LOG_USAGE_GUIDE.md`를 참고하세요.
  *
- * @example
+ * ## 사용 방법
+ *
+ * ### 방법 1: 인터셉터 사용 (권장)
  * ```typescript
- * // 로그인 성공
+ * import { AuditLog } from 'src/modules/audit-log/infrastructure/audit-log.decorator';
+ * import { LogType } from 'src/modules/audit-log/domain';
+ *
+ * @AuditLog({
+ *   type: LogType.AUTH,
+ *   action: 'LOGIN',
+ * })
+ * async execute({ user, clientInfo }: LoginParams): Promise<void> {
+ *   // 로그인 로직
+ * }
+ * ```
+ *
+ * ### 방법 2: 서비스 직접 사용
+ * ```typescript
  * await dispatchLogService.dispatch({
  *   type: LogType.AUTH,
  *   data: {
@@ -35,6 +50,7 @@ import {
   HeavyLogProcessor,
 } from './infrastructure/audit-log.processor';
 import { DispatchLogService } from './application/dispatch-log.service';
+import { AuditLogInterceptor } from './infrastructure/audit-log.interceptor';
 import { PrismaModule } from 'src/infrastructure/prisma/prisma.module';
 import { AUDIT_LOG_REPOSITORY } from './ports/out';
 import {
@@ -56,8 +72,13 @@ import {
     CriticalLogProcessor,
     HeavyLogProcessor,
     DispatchLogService,
+    AuditLogInterceptor,
   ],
-  exports: [AUDIT_LOG_REPOSITORY, DispatchLogService],
+  exports: [
+    AUDIT_LOG_REPOSITORY,
+    DispatchLogService,
+    AuditLogInterceptor,
+  ],
 })
 export class AuditLogModule {}
 

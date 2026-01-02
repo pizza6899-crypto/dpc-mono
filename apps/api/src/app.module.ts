@@ -1,7 +1,7 @@
 import { Module } from '@nestjs/common';
 import { AuthModule } from './modules/auth/auth.module';
 import { EnvModule } from './common/env/env.module';
-import { APP_FILTER, APP_GUARD, Reflector } from '@nestjs/core';
+import { APP_FILTER, APP_GUARD, APP_INTERCEPTOR, Reflector } from '@nestjs/core';
 import { PrismaModule } from 'src/infrastructure/prisma/prisma.module';
 import { CasinoModule } from './modules/casino/casino.module';
 import { ScheduleModule } from '@nestjs/schedule';
@@ -20,6 +20,7 @@ import { HttpExceptionFilter } from './common/http/exception/http-exception.filt
 import { WalletModule } from './modules/wallet/wallet.module';
 import { CommonLoggerModule } from './common/logger/logger.module';
 import { AuditLogModule } from './modules/audit-log/audit-log.module';
+import { AuditLogInterceptor } from './modules/audit-log/infrastructure/audit-log.interceptor';
 
 @Module({
   imports: [
@@ -54,6 +55,10 @@ import { AuditLogModule } from './modules/audit-log/audit-log.module';
     {
       provide: APP_GUARD,
       useClass: SessionAuthGuard,
+    },
+    {
+      provide: APP_INTERCEPTOR,
+      useClass: AuditLogInterceptor,
     },
   ],
 })
