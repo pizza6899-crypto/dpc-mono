@@ -11,7 +11,6 @@ import { SessionAuthGuard } from './common/auth/guards/session-auth.guard';
 import { VipModule } from './modules/vip/vip.module';
 import { CompModule } from './modules/comp/comp.module';
 import { RollingModule } from './modules/rolling/rolling.module';
-import { PromotionModule } from './modules/promotion/promotion.module';
 import { ThrottleModule } from './common/throttle/throttle.module';
 import { ThrottleGuard } from './common/throttle/throttle.guard';
 import { WebsocketModule } from './common/websocket/websocket.module';
@@ -39,7 +38,6 @@ import { RequestInfoInterceptor } from './common/http/interceptors/request-info.
     VipModule,
     CompModule,
     RollingModule,
-    PromotionModule,
     AffiliateModule,
     WalletModule,
   ],
