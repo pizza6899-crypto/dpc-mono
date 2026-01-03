@@ -506,48 +506,6 @@ model GameSession {
   user                   User                 @relation(fields: [userId], references: [id])
 }
 
-model AffiliateCode {
-  id           String     @id @default(cuid())
-  userId       BigInt
-  code         String     @unique
-  campaignName String?
-  description  String?
-  isActive     Boolean    @default(true)
-  isDefault    Boolean    @default(false)
-  expiresAt    DateTime?
-  createdAt    DateTime   @default(now())
-  updatedAt    DateTime   @updatedAt
-  lastUsedAt   DateTime?
-  user         User       @relation("AffiliateCodes", fields: [userId], references: [id], onDelete: Cascade)
-  referrals    Referral[]
-
-  @@index([userId])
-  @@index([userId, isActive])
-  @@index([code])
-}
-
-model Referral {
-  id                String        @id @default(cuid())
-  affiliateId       BigInt
-  subUserId         BigInt
-  ipAddress         String?
-  deviceFingerprint String?
-  userAgent         String?
-  createdAt         DateTime      @default(now())
-  updatedAt         DateTime      @updatedAt
-  codeId            String
-  affiliate         User          @relation("AffiliateReferrals", fields: [affiliateId], references: [id], onDelete: Cascade)
-  code              AffiliateCode @relation(fields: [codeId], references: [id], onDelete: Cascade)
-  subUser           User          @relation("ReferredUsers", fields: [subUserId], references: [id], onDelete: Cascade)
-
-  @@unique([affiliateId, subUserId])
-  @@index([affiliateId])
-  @@index([codeId])
-  @@index([subUserId])
-  @@index([affiliateId, codeId])
-  @@index([ipAddress, deviceFingerprint])
-}
-
 model AffiliateWallet {
   affiliateId      BigInt
   currency         ExchangeCurrencyCode

@@ -20,14 +20,14 @@ export class FindReferralByIdService {
     @Inject(REFERRAL_REPOSITORY)
     private readonly repository: ReferralRepositoryPort,
     private readonly dispatchLogService: DispatchLogService,
-  ) {}
+  ) { }
 
   async execute({
     id,
     userId,
     requestInfo,
   }: FindReferralByIdParams): Promise<Referral> {
-    const referral = await this.repository.findById(id);
+    const referral = await this.repository.findByUid(id);
     if (!referral) {
       throw new ReferralNotFoundException(id);
     }

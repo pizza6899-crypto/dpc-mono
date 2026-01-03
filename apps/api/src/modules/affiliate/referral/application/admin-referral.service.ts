@@ -21,7 +21,7 @@ export class AdminReferralService {
     private readonly prismaService: PrismaService,
     private readonly mapper: ReferralMapper,
     private readonly dispatchLogService: DispatchLogService,
-  ) {}
+  ) { }
 
   /**
    * 레퍼럴 목록 조회 (관리자용)
@@ -44,14 +44,14 @@ export class AdminReferralService {
       const where: Prisma.ReferralWhereInput = {
         ...(filters.affiliateId && { affiliateId: filters.affiliateId }),
         ...(filters.subUserId && { subUserId: filters.subUserId }),
-        ...(filters.codeId && { codeId: filters.codeId }),
+        ...(filters.codeId && { codeId: BigInt(filters.codeId) }),
         ...(filters.startDate &&
           filters.endDate && {
-            createdAt: {
-              gte: new Date(filters.startDate),
-              lte: new Date(filters.endDate),
-            },
-          }),
+          createdAt: {
+            gte: new Date(filters.startDate),
+            lte: new Date(filters.endDate),
+          },
+        }),
       };
 
       const orderBy: Prisma.ReferralOrderByWithRelationInput = {
@@ -115,12 +115,12 @@ export class AdminReferralService {
       );
 
       const data: AdminReferralListItemDto[] = referrals.map((referral) => ({
-        id: referral.id,
+        id: referral.id.toString(),
         affiliateId: referral.affiliateId,
         affiliateEmail: referral.affiliate.email,
         subUserId: referral.subUserId,
         subUserEmail: referral.subUser.email,
-        codeId: referral.codeId,
+        codeId: referral.codeId.toString(),
         code: referral.code.code,
         campaignName: referral.code.campaignName,
         ipAddress: referral.ipAddress,
@@ -161,7 +161,7 @@ export class AdminReferralService {
   ): Promise<AdminReferralListItemDto> {
     try {
       const referral = await this.prismaService.referral.findUnique({
-        where: { id },
+        where: { id: BigInt(id) },
         include: {
           affiliate: {
             select: {
@@ -206,12 +206,12 @@ export class AdminReferralService {
       );
 
       return {
-        id: referral.id,
+        id: referral.id.toString(),
         affiliateId: referral.affiliateId,
         affiliateEmail: referral.affiliate.email,
         subUserId: referral.subUserId,
         subUserEmail: referral.subUser.email,
-        codeId: referral.codeId,
+        codeId: referral.codeId.toString(),
         code: referral.code.code,
         campaignName: referral.code.campaignName,
         ipAddress: referral.ipAddress,

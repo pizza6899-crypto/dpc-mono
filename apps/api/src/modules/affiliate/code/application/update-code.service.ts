@@ -37,9 +37,8 @@ export class UpdateCodeService {
     // 트랜잭션 내에서 실행되므로 트랜잭션 종료 시 자동으로 해제됩니다.
     await this.repository.acquireLock(userId);
 
-    const code = await this.repository.findById(id, userId);
-
-    if (!code) {
+    const code = await this.repository.findByUid(id);
+    if (!code || code.userId !== userId) {
       throw new AffiliateCodeNotFoundException(id);
     }
 

@@ -3,7 +3,8 @@ import { AffiliateCodeValue } from './affiliate-code-value';
 
 export class AffiliateCode {
   private constructor(
-    public readonly id: string,
+    public readonly id: bigint | null,
+    public readonly uid: string,
     public readonly userId: bigint,
     private _code: AffiliateCodeValue,
     private _campaignName: string | null,
@@ -21,7 +22,8 @@ export class AffiliateCode {
    * ID는 Prisma의 @default(cuid())로 자동 생성되므로 별도로 받지 않음
    */
   static fromPersistence(data: {
-    id: string;
+    id: bigint;
+    uid: string;
     userId: bigint;
     code: string;
     campaignName: string | null;
@@ -34,6 +36,7 @@ export class AffiliateCode {
   }): AffiliateCode {
     return new AffiliateCode(
       data.id,
+      data.uid,
       data.userId,
       AffiliateCodeValue.create(data.code),
       data.campaignName,
@@ -123,6 +126,7 @@ export class AffiliateCode {
   toPersistence() {
     return {
       id: this.id,
+      uid: this.uid,
       userId: this.userId,
       code: this._code.value,
       campaignName: this._campaignName,

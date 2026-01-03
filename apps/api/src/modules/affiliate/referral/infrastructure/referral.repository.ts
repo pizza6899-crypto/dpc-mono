@@ -3,6 +3,7 @@ import { Injectable } from '@nestjs/common';
 import { InjectTransaction } from '@nestjs-cls/transactional';
 import type { Transaction } from '@nestjs-cls/transactional';
 import type { TransactionalAdapterPrisma } from '@nestjs-cls/transactional-adapter-prisma';
+import { createId } from '@paralleldrive/cuid2';
 import { Referral, ReferralNotFoundException } from '../domain';
 import type { ReferralRepositoryPort } from '../ports/out/referral.repository.port';
 import { ReferralMapper } from './referral.mapper';
@@ -13,18 +14,21 @@ export class ReferralRepository implements ReferralRepositoryPort {
     @InjectTransaction()
     private readonly tx: Transaction<TransactionalAdapterPrisma>,
     private readonly mapper: ReferralMapper,
-  ) {}
+  ) { }
 
   async create(params: {
     affiliateId: bigint;
-    codeId: string;
+    codeId: bigint;
     subUserId: bigint;
     ipAddress?: string | null;
     deviceFingerprint?: string | null;
     userAgent?: string | null;
   }): Promise<Referral> {
+    const uid = createId();
+
     const result = await this.tx.referral.create({
       data: {
+        uid,
         affiliateId: params.affiliateId,
         codeId: params.codeId,
         subUserId: params.subUserId,
@@ -37,9 +41,9 @@ export class ReferralRepository implements ReferralRepositoryPort {
     return this.mapper.toDomain(result);
   }
 
-  async findById(id: string): Promise<Referral | null> {
+  async findByUid(uid: string): Promise<Referral | null> {
     const result = await this.tx.referral.findUnique({
-      where: { id },
+      where: { uid },
     });
 
     if (!result) {
@@ -49,10 +53,10 @@ export class ReferralRepository implements ReferralRepositoryPort {
     return this.mapper.toDomain(result);
   }
 
-  async getById(id: string): Promise<Referral> {
-    const referral = await this.findById(id);
+  async getByUid(uid: string): Promise<Referral> {
+    const referral = await this.findByUid(uid);
     if (!referral) {
-      throw new ReferralNotFoundException(id);
+      throw new ReferralNotFoundException(uid);
     }
     return referral;
   }
@@ -78,7 +82,7 @@ export class ReferralRepository implements ReferralRepositoryPort {
     return this.mapper.toDomain(result);
   }
 
-  async findByCodeId(codeId: string): Promise<Referral[]> {
+  async findByCodeId(codeId: bigint): Promise<Referral[]> {
     const results = await this.tx.referral.findMany({
       where: { codeId },
       orderBy: { createdAt: 'desc' },

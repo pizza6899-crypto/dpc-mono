@@ -12,7 +12,8 @@ export class AffiliateCodeMapper {
    * Prisma 모델 → Domain 엔티티 변환
    */
   toDomain(prismaModel: {
-    id: string;
+    id: bigint;
+    uid: string;
     userId: bigint;
     code: string;
     campaignName: string | null;
@@ -25,6 +26,7 @@ export class AffiliateCodeMapper {
   }): AffiliateCode {
     return AffiliateCode.fromPersistence({
       id: prismaModel.id,
+      uid: prismaModel.uid,
       userId: prismaModel.userId,
       code: prismaModel.code,
       campaignName: prismaModel.campaignName,
@@ -41,7 +43,8 @@ export class AffiliateCodeMapper {
    * Domain 엔티티 → Prisma 모델 변환
    */
   toPrisma(domain: AffiliateCode): {
-    id: string;
+    id: bigint | null;
+    uid: string;
     userId: bigint;
     code: string;
     campaignName: string | null;
@@ -55,6 +58,7 @@ export class AffiliateCodeMapper {
     const persistence = domain.toPersistence();
     return {
       id: persistence.id,
+      uid: persistence.uid,
       userId: persistence.userId,
       code: persistence.code,
       campaignName: persistence.campaignName,

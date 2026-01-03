@@ -20,6 +20,7 @@ export class AffiliateCodeRepository implements AffiliateCodeRepositoryPort {
   ) { }
 
   async create(params: {
+    uid: string;
     userId: bigint;
     code: string;
     campaignName?: string | null;
@@ -28,6 +29,7 @@ export class AffiliateCodeRepository implements AffiliateCodeRepositoryPort {
   }): Promise<AffiliateCode> {
     const result = await this.tx.affiliateCode.create({
       data: {
+        uid: params.uid,
         userId: params.userId,
         code: params.code,
         campaignName: params.campaignName || null,
@@ -69,11 +71,10 @@ export class AffiliateCodeRepository implements AffiliateCodeRepositoryPort {
     return results.map((result) => this.mapper.toDomain(result));
   }
 
-  async findById(id: string, userId: bigint): Promise<AffiliateCode | null> {
+  async findByUid(uid: string): Promise<AffiliateCode | null> {
     const result = await this.tx.affiliateCode.findFirst({
       where: {
-        id,
-        userId,
+        uid,
       },
     });
 
@@ -131,8 +132,12 @@ export class AffiliateCodeRepository implements AffiliateCodeRepositoryPort {
   async update(code: AffiliateCode): Promise<AffiliateCode> {
     const data = this.mapper.toPrisma(code);
 
+    if (!data.id) {
+      throw new Error('Cannot update affiliate code without ID');
+    }
+
     const result = await this.tx.affiliateCode.update({
-      where: { id: code.id },
+      where: { id: data.id },
       data: {
         campaignName: data.campaignName,
         isActive: data.isActive,
@@ -146,23 +151,34 @@ export class AffiliateCodeRepository implements AffiliateCodeRepositoryPort {
     return this.mapper.toDomain(result);
   }
 
-  async delete(id: string, userId: bigint): Promise<void> {
-    await this.tx.affiliateCode.delete({
+  async delete(uid: string, userId: bigint): Promise<void> {
+    // Correction for delete logic above:
+    // Prisma `delete` requires a unique constraint in `where`.
+    // `uid` is unique. `userId` acts as an extra filter which `delete` does not support directly in `where` unless it's a compound unique.
+    // We should use `deleteMany` to include `userId` filter for safety.
+    // OR `findFirst` then `delete` by ID.
+    // Since we are implementing `delete(uid, userId)`, we should ensure the code belongs to user.
+    // Implementation:
+
+    // Check ownership or use deleteMany
+    await this.tx.affiliateCode.deleteMany({
       where: {
-        id,
+        uid,
         userId,
-      },
+      }
     });
   }
 
   async updateMany(
     updates: Array<{ code: AffiliateCode }>,
   ): Promise<AffiliateCode[]> {
+    // Note: This is inefficient in loop. Prisma doesn't support bulk update with different values easily.
     const results = await Promise.all(
       updates.map(async ({ code }) => {
         const data = this.mapper.toPrisma(code);
+        if (!data.id) throw new Error("Missing ID for update");
         return await this.tx.affiliateCode.update({
-          where: { id: code.id },
+          where: { id: data.id },
           data: {
             campaignName: data.campaignName,
             isActive: data.isActive,
@@ -249,6 +265,25 @@ export class AffiliateCodeRepository implements AffiliateCodeRepositoryPort {
       total,
     };
   }
+
+  async findByIdAdmin(id: bigint): Promise<AffiliateCode | null> {
+    const result = await this.tx.affiliateCode.findUnique({
+      where: { id },
+    });
+
+    if (!result) {
+      return null;
+    }
+
+    return this.mapper.toDomain(result);
+  }
+
+  async deleteById(id: bigint): Promise<void> {
+    await this.tx.affiliateCode.delete({
+      where: { id },
+    });
+  }
+
   async acquireLock(userId: bigint): Promise<void> {
     try {
       // 1. 현재 트랜잭션 세션에서만 유효한 락 대기 시간 설정 (3초)

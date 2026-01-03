@@ -2,16 +2,17 @@
 
 export class Referral {
   private constructor(
-    public readonly id: string,
+    public readonly id: bigint | null,
+    public readonly uid: string,
     public readonly affiliateId: bigint,
-    public readonly codeId: string,
+    public readonly codeId: bigint,
     public readonly subUserId: bigint,
     private readonly _ipAddress: string | null,
     private readonly _deviceFingerprint: string | null,
     private readonly _userAgent: string | null,
     public readonly createdAt: Date,
     public readonly updatedAt: Date,
-  ) {}
+  ) { }
 
   /**
    * DB에서 조회한 데이터로부터 엔티티 생성
@@ -21,9 +22,10 @@ export class Referral {
    * @returns Referral 엔티티 인스턴스
    */
   static fromPersistence(data: {
-    id: string;
+    id: bigint;
+    uid: string;
     affiliateId: bigint;
-    codeId: string;
+    codeId: bigint;
     subUserId: bigint;
     ipAddress: string | null;
     deviceFingerprint: string | null;
@@ -33,6 +35,7 @@ export class Referral {
   }): Referral {
     return new Referral(
       data.id,
+      data.uid,
       data.affiliateId,
       data.codeId,
       data.subUserId,
@@ -74,6 +77,7 @@ export class Referral {
   toPersistence() {
     return {
       id: this.id,
+      uid: this.uid,
       affiliateId: this.affiliateId,
       codeId: this.codeId,
       subUserId: this.subUserId,

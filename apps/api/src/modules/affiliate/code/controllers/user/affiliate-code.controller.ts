@@ -214,7 +214,7 @@ export class AffiliateCodeController {
    */
   private toResponse(code: AffiliateCode): AffiliateCodeResponseDto {
     return {
-      id: code.id,
+      id: code.uid,
       code: code.code,
       campaignName: code.campaignName,
       isActive: code.isActive,

@@ -30,7 +30,7 @@ export class LinkReferralService {
     private readonly findCodeByCodeService: FindCodeByCodeService,
     private readonly policy: ReferralPolicy,
     private readonly dispatchLogService: DispatchLogService,
-  ) {}
+  ) { }
 
   @Transactional()
   async execute({
@@ -58,10 +58,15 @@ export class LinkReferralService {
       throw new DuplicateReferralException();
     }
 
+    if (!code.id) {
+      // Should not happen for persisted code
+      throw new ReferralCodeNotFoundException(referralCode);
+    }
+
     // 4. 레퍼럴 관계 생성
     const referral = await this.repository.create({
       affiliateId: code.userId,
-      codeId: code.id,
+      codeId: code.id as bigint,
       subUserId,
       ipAddress,
       deviceFingerprint,
@@ -78,10 +83,10 @@ export class LinkReferralService {
             category: 'AFFILIATE',
             action: 'REFERRAL_LINKED',
             metadata: {
-              referralId: referral.id,
+              referralId: referral.id?.toString() ?? '',
               affiliateId: code.userId.toString(),
               referralCode: referralCode,
-              codeId: code.id,
+              codeId: code.id.toString(),
               codeCampaignName: code.campaignName || null,
             },
           },

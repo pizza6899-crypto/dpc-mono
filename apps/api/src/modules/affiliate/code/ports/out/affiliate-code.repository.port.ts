@@ -6,6 +6,7 @@ export interface AffiliateCodeRepositoryPort {
    * 코드 생성 (ID는 Repository에서 자동 생성)
    */
   create(params: {
+    uid: string;
     userId: bigint;
     code: string;
     campaignName?: string | null;
@@ -27,9 +28,9 @@ export interface AffiliateCodeRepositoryPort {
   ): Promise<AffiliateCode[]>;
 
   /**
-   * ID로 코드 조회
+   * UID로 코드 조회 (사용자용)
    */
-  findById(id: string, userId: bigint): Promise<AffiliateCode | null>;
+  findByUid(uid: string): Promise<AffiliateCode | null>;
 
   /**
    * 코드 문자열로 조회 (활성 코드만)
@@ -57,9 +58,9 @@ export interface AffiliateCodeRepositoryPort {
   update(code: AffiliateCode): Promise<AffiliateCode>;
 
   /**
-   * 코드 삭제
+   * 코드 삭제 (UID 기준)
    */
-  delete(id: string, userId: bigint): Promise<void>;
+  delete(uid: string, userId: bigint): Promise<void>;
 
   /**
    * 트랜잭션 내에서 여러 코드 업데이트
@@ -89,4 +90,14 @@ export interface AffiliateCodeRepositoryPort {
    * 사용자 기반 락 획득 (경합 방지)
    */
   acquireLock(userId: bigint): Promise<void>;
+
+  /**
+   * ID로 코드 조회 (관리자용 - userId 없이 조회)
+   */
+  findByIdAdmin(id: bigint): Promise<AffiliateCode | null>;
+
+  /**
+   * 코드 삭제 (관리자용 - ID 기준)
+   */
+  deleteById(id: bigint): Promise<void>;
 }

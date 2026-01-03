@@ -12,9 +12,10 @@ export class ReferralMapper {
    * Prisma 모델 → Domain 엔티티 변환
    */
   toDomain(prismaModel: {
-    id: string;
+    id: bigint;
+    uid: string;
     affiliateId: bigint;
-    codeId: string;
+    codeId: bigint;
     subUserId: bigint;
     ipAddress: string | null;
     deviceFingerprint: string | null;
@@ -24,6 +25,7 @@ export class ReferralMapper {
   }): Referral {
     return Referral.fromPersistence({
       id: prismaModel.id,
+      uid: prismaModel.uid,
       affiliateId: prismaModel.affiliateId,
       codeId: prismaModel.codeId,
       subUserId: prismaModel.subUserId,
@@ -39,9 +41,10 @@ export class ReferralMapper {
    * Domain 엔티티 → Prisma 모델 변환
    */
   toPrisma(domain: Referral): {
-    id: string;
+    id: bigint | null;
+    uid: string;
     affiliateId: bigint;
-    codeId: string;
+    codeId: bigint;
     subUserId: bigint;
     ipAddress: string | null;
     deviceFingerprint: string | null;
@@ -52,6 +55,7 @@ export class ReferralMapper {
     const persistence = domain.toPersistence();
     return {
       id: persistence.id,
+      uid: persistence.uid,
       affiliateId: persistence.affiliateId,
       codeId: persistence.codeId,
       subUserId: persistence.subUserId,

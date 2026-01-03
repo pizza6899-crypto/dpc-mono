@@ -120,6 +120,34 @@ exports.Prisma.TransactionIsolationLevel = makeStrictEnum({
   Serializable: 'Serializable'
 });
 
+exports.Prisma.AffiliateCodeScalarFieldEnum = {
+  id: 'id',
+  uid: 'uid',
+  userId: 'userId',
+  code: 'code',
+  campaignName: 'campaignName',
+  description: 'description',
+  isActive: 'isActive',
+  isDefault: 'isDefault',
+  expiresAt: 'expiresAt',
+  createdAt: 'createdAt',
+  updatedAt: 'updatedAt',
+  lastUsedAt: 'lastUsedAt'
+};
+
+exports.Prisma.ReferralScalarFieldEnum = {
+  id: 'id',
+  uid: 'uid',
+  affiliateId: 'affiliateId',
+  subUserId: 'subUserId',
+  ipAddress: 'ipAddress',
+  deviceFingerprint: 'deviceFingerprint',
+  userAgent: 'userAgent',
+  createdAt: 'createdAt',
+  updatedAt: 'updatedAt',
+  codeId: 'codeId'
+};
+
 exports.Prisma.AuthAuditLogScalarFieldEnum = {
   id: 'id',
   createdAt: 'createdAt',
@@ -589,32 +617,6 @@ exports.Prisma.GameSessionScalarFieldEnum = {
   gameId: 'gameId'
 };
 
-exports.Prisma.AffiliateCodeScalarFieldEnum = {
-  id: 'id',
-  userId: 'userId',
-  code: 'code',
-  campaignName: 'campaignName',
-  description: 'description',
-  isActive: 'isActive',
-  isDefault: 'isDefault',
-  expiresAt: 'expiresAt',
-  createdAt: 'createdAt',
-  updatedAt: 'updatedAt',
-  lastUsedAt: 'lastUsedAt'
-};
-
-exports.Prisma.ReferralScalarFieldEnum = {
-  id: 'id',
-  affiliateId: 'affiliateId',
-  subUserId: 'subUserId',
-  ipAddress: 'ipAddress',
-  deviceFingerprint: 'deviceFingerprint',
-  userAgent: 'userAgent',
-  createdAt: 'createdAt',
-  updatedAt: 'updatedAt',
-  codeId: 'codeId'
-};
-
 exports.Prisma.AffiliateWalletScalarFieldEnum = {
   affiliateId: 'affiliateId',
   currency: 'currency',
@@ -838,15 +840,15 @@ exports.Prisma.QueryMode = {
   insensitive: 'insensitive'
 };
 
+exports.Prisma.NullsOrder = {
+  first: 'first',
+  last: 'last'
+};
+
 exports.Prisma.JsonNullValueFilter = {
   DbNull: Prisma.DbNull,
   JsonNull: Prisma.JsonNull,
   AnyNull: Prisma.AnyNull
-};
-
-exports.Prisma.NullsOrder = {
-  first: 'first',
-  last: 'last'
 };
 exports.SocialType = exports.$Enums.SocialType = {
   GOOGLE: 'GOOGLE',
@@ -1080,6 +1082,8 @@ exports.SessionStatus = exports.$Enums.SessionStatus = {
 };
 
 exports.Prisma.ModelName = {
+  AffiliateCode: 'AffiliateCode',
+  Referral: 'Referral',
   AuthAuditLog: 'AuthAuditLog',
   ActivityLog: 'ActivityLog',
   SystemErrorLog: 'SystemErrorLog',
@@ -1110,8 +1114,6 @@ exports.Prisma.ModelName = {
   UserToken: 'UserToken',
   EmailLog: 'EmailLog',
   GameSession: 'GameSession',
-  AffiliateCode: 'AffiliateCode',
-  Referral: 'Referral',
   AffiliateWallet: 'AffiliateWallet',
   AffiliateCommission: 'AffiliateCommission',
   AffiliateTier: 'AffiliateTier',

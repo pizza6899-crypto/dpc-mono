@@ -7,7 +7,7 @@ export interface ReferralRepositoryPort {
    */
   create(params: {
     affiliateId: bigint;
-    codeId: string;
+    codeId: bigint;
     subUserId: bigint;
     ipAddress?: string | null;
     deviceFingerprint?: string | null;
@@ -15,14 +15,14 @@ export interface ReferralRepositoryPort {
   }): Promise<Referral>;
 
   /**
-   * ID로 레퍼럴 조회
+   * UID로 레퍼럴 조회 (사용자용)
    */
-  findById(id: string): Promise<Referral | null>;
+  findByUid(uid: string): Promise<Referral | null>;
 
   /**
-   * ID로 레퍼럴 조회 (없으면 예외 발생)
+   * UID로 레퍼럴 조회 (없으면 예외 발생)
    */
-  getById(id: string): Promise<Referral>;
+  getByUid(uid: string): Promise<Referral>;
 
   /**
    * 어플리에이트별 레퍼럴 목록 조회
@@ -37,7 +37,7 @@ export interface ReferralRepositoryPort {
   /**
    * 코드별 레퍼럴 목록 조회
    */
-  findByCodeId(codeId: string): Promise<Referral[]>;
+  findByCodeId(codeId: bigint): Promise<Referral[]>;
 
   /**
    * 어플리에이트와 피추천인으로 레퍼럴 조회 (중복 체크용)

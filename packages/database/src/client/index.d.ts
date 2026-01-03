@@ -14,6 +14,16 @@ export type PrismaPromise<T> = $Public.PrismaPromise<T>
 
 
 /**
+ * Model AffiliateCode
+ * 
+ */
+export type AffiliateCode = $Result.DefaultSelection<Prisma.$AffiliateCodePayload>
+/**
+ * Model Referral
+ * 
+ */
+export type Referral = $Result.DefaultSelection<Prisma.$ReferralPayload>
+/**
  * Model AuthAuditLog
  * 
  */
@@ -163,16 +173,6 @@ export type EmailLog = $Result.DefaultSelection<Prisma.$EmailLogPayload>
  * 
  */
 export type GameSession = $Result.DefaultSelection<Prisma.$GameSessionPayload>
-/**
- * Model AffiliateCode
- * 
- */
-export type AffiliateCode = $Result.DefaultSelection<Prisma.$AffiliateCodePayload>
-/**
- * Model Referral
- * 
- */
-export type Referral = $Result.DefaultSelection<Prisma.$ReferralPayload>
 /**
  * Model AffiliateWallet
  * 
@@ -755,8 +755,8 @@ export const SessionStatus: typeof $Enums.SessionStatus
  * @example
  * ```
  * const prisma = new PrismaClient()
- * // Fetch zero or more AuthAuditLogs
- * const authAuditLogs = await prisma.authAuditLog.findMany()
+ * // Fetch zero or more AffiliateCodes
+ * const affiliateCodes = await prisma.affiliateCode.findMany()
  * ```
  *
  *
@@ -776,8 +776,8 @@ export class PrismaClient<
    * @example
    * ```
    * const prisma = new PrismaClient()
-   * // Fetch zero or more AuthAuditLogs
-   * const authAuditLogs = await prisma.authAuditLog.findMany()
+   * // Fetch zero or more AffiliateCodes
+   * const affiliateCodes = await prisma.affiliateCode.findMany()
    * ```
    *
    *
@@ -866,6 +866,26 @@ export class PrismaClient<
   }>>
 
       /**
+   * `prisma.affiliateCode`: Exposes CRUD operations for the **AffiliateCode** model.
+    * Example usage:
+    * ```ts
+    * // Fetch zero or more AffiliateCodes
+    * const affiliateCodes = await prisma.affiliateCode.findMany()
+    * ```
+    */
+  get affiliateCode(): Prisma.AffiliateCodeDelegate<ExtArgs, ClientOptions>;
+
+  /**
+   * `prisma.referral`: Exposes CRUD operations for the **Referral** model.
+    * Example usage:
+    * ```ts
+    * // Fetch zero or more Referrals
+    * const referrals = await prisma.referral.findMany()
+    * ```
+    */
+  get referral(): Prisma.ReferralDelegate<ExtArgs, ClientOptions>;
+
+  /**
    * `prisma.authAuditLog`: Exposes CRUD operations for the **AuthAuditLog** model.
     * Example usage:
     * ```ts
@@ -1164,26 +1184,6 @@ export class PrismaClient<
     * ```
     */
   get gameSession(): Prisma.GameSessionDelegate<ExtArgs, ClientOptions>;
-
-  /**
-   * `prisma.affiliateCode`: Exposes CRUD operations for the **AffiliateCode** model.
-    * Example usage:
-    * ```ts
-    * // Fetch zero or more AffiliateCodes
-    * const affiliateCodes = await prisma.affiliateCode.findMany()
-    * ```
-    */
-  get affiliateCode(): Prisma.AffiliateCodeDelegate<ExtArgs, ClientOptions>;
-
-  /**
-   * `prisma.referral`: Exposes CRUD operations for the **Referral** model.
-    * Example usage:
-    * ```ts
-    * // Fetch zero or more Referrals
-    * const referrals = await prisma.referral.findMany()
-    * ```
-    */
-  get referral(): Prisma.ReferralDelegate<ExtArgs, ClientOptions>;
 
   /**
    * `prisma.affiliateWallet`: Exposes CRUD operations for the **AffiliateWallet** model.
@@ -1738,6 +1738,8 @@ export namespace Prisma {
 
 
   export const ModelName: {
+    AffiliateCode: 'AffiliateCode',
+    Referral: 'Referral',
     AuthAuditLog: 'AuthAuditLog',
     ActivityLog: 'ActivityLog',
     SystemErrorLog: 'SystemErrorLog',
@@ -1768,8 +1770,6 @@ export namespace Prisma {
     UserToken: 'UserToken',
     EmailLog: 'EmailLog',
     GameSession: 'GameSession',
-    AffiliateCode: 'AffiliateCode',
-    Referral: 'Referral',
     AffiliateWallet: 'AffiliateWallet',
     AffiliateCommission: 'AffiliateCommission',
     AffiliateTier: 'AffiliateTier',
@@ -1797,10 +1797,158 @@ export namespace Prisma {
       omit: GlobalOmitOptions
     }
     meta: {
-      modelProps: "authAuditLog" | "activityLog" | "systemErrorLog" | "integrationLog" | "unifiedLog" | "user" | "userBalance" | "userBalanceStats" | "game" | "gameTranslation" | "whitecliffApiLog" | "dcsApiLog" | "transaction" | "gameRound" | "gameBet" | "gameWin" | "transactionBalanceDetail" | "bonusDetail" | "withdrawDetail" | "compTransaction" | "dailyCompEarning" | "nowPaymentCallbackLog" | "exchangeRate" | "vipLevel" | "vipMembership" | "vipHistory" | "rolling" | "userToken" | "emailLog" | "gameSession" | "affiliateCode" | "referral" | "affiliateWallet" | "affiliateCommission" | "affiliateTier" | "loginAttempt" | "depositDetail" | "cryptoConfig" | "bankConfig" | "promotion" | "promotionTranslation" | "promotionCurrency" | "userPromotion" | "userSession"
+      modelProps: "affiliateCode" | "referral" | "authAuditLog" | "activityLog" | "systemErrorLog" | "integrationLog" | "unifiedLog" | "user" | "userBalance" | "userBalanceStats" | "game" | "gameTranslation" | "whitecliffApiLog" | "dcsApiLog" | "transaction" | "gameRound" | "gameBet" | "gameWin" | "transactionBalanceDetail" | "bonusDetail" | "withdrawDetail" | "compTransaction" | "dailyCompEarning" | "nowPaymentCallbackLog" | "exchangeRate" | "vipLevel" | "vipMembership" | "vipHistory" | "rolling" | "userToken" | "emailLog" | "gameSession" | "affiliateWallet" | "affiliateCommission" | "affiliateTier" | "loginAttempt" | "depositDetail" | "cryptoConfig" | "bankConfig" | "promotion" | "promotionTranslation" | "promotionCurrency" | "userPromotion" | "userSession"
       txIsolationLevel: Prisma.TransactionIsolationLevel
     }
     model: {
+      AffiliateCode: {
+        payload: Prisma.$AffiliateCodePayload<ExtArgs>
+        fields: Prisma.AffiliateCodeFieldRefs
+        operations: {
+          findUnique: {
+            args: Prisma.AffiliateCodeFindUniqueArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$AffiliateCodePayload> | null
+          }
+          findUniqueOrThrow: {
+            args: Prisma.AffiliateCodeFindUniqueOrThrowArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$AffiliateCodePayload>
+          }
+          findFirst: {
+            args: Prisma.AffiliateCodeFindFirstArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$AffiliateCodePayload> | null
+          }
+          findFirstOrThrow: {
+            args: Prisma.AffiliateCodeFindFirstOrThrowArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$AffiliateCodePayload>
+          }
+          findMany: {
+            args: Prisma.AffiliateCodeFindManyArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$AffiliateCodePayload>[]
+          }
+          create: {
+            args: Prisma.AffiliateCodeCreateArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$AffiliateCodePayload>
+          }
+          createMany: {
+            args: Prisma.AffiliateCodeCreateManyArgs<ExtArgs>
+            result: BatchPayload
+          }
+          createManyAndReturn: {
+            args: Prisma.AffiliateCodeCreateManyAndReturnArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$AffiliateCodePayload>[]
+          }
+          delete: {
+            args: Prisma.AffiliateCodeDeleteArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$AffiliateCodePayload>
+          }
+          update: {
+            args: Prisma.AffiliateCodeUpdateArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$AffiliateCodePayload>
+          }
+          deleteMany: {
+            args: Prisma.AffiliateCodeDeleteManyArgs<ExtArgs>
+            result: BatchPayload
+          }
+          updateMany: {
+            args: Prisma.AffiliateCodeUpdateManyArgs<ExtArgs>
+            result: BatchPayload
+          }
+          updateManyAndReturn: {
+            args: Prisma.AffiliateCodeUpdateManyAndReturnArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$AffiliateCodePayload>[]
+          }
+          upsert: {
+            args: Prisma.AffiliateCodeUpsertArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$AffiliateCodePayload>
+          }
+          aggregate: {
+            args: Prisma.AffiliateCodeAggregateArgs<ExtArgs>
+            result: $Utils.Optional<AggregateAffiliateCode>
+          }
+          groupBy: {
+            args: Prisma.AffiliateCodeGroupByArgs<ExtArgs>
+            result: $Utils.Optional<AffiliateCodeGroupByOutputType>[]
+          }
+          count: {
+            args: Prisma.AffiliateCodeCountArgs<ExtArgs>
+            result: $Utils.Optional<AffiliateCodeCountAggregateOutputType> | number
+          }
+        }
+      }
+      Referral: {
+        payload: Prisma.$ReferralPayload<ExtArgs>
+        fields: Prisma.ReferralFieldRefs
+        operations: {
+          findUnique: {
+            args: Prisma.ReferralFindUniqueArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$ReferralPayload> | null
+          }
+          findUniqueOrThrow: {
+            args: Prisma.ReferralFindUniqueOrThrowArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$ReferralPayload>
+          }
+          findFirst: {
+            args: Prisma.ReferralFindFirstArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$ReferralPayload> | null
+          }
+          findFirstOrThrow: {
+            args: Prisma.ReferralFindFirstOrThrowArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$ReferralPayload>
+          }
+          findMany: {
+            args: Prisma.ReferralFindManyArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$ReferralPayload>[]
+          }
+          create: {
+            args: Prisma.ReferralCreateArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$ReferralPayload>
+          }
+          createMany: {
+            args: Prisma.ReferralCreateManyArgs<ExtArgs>
+            result: BatchPayload
+          }
+          createManyAndReturn: {
+            args: Prisma.ReferralCreateManyAndReturnArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$ReferralPayload>[]
+          }
+          delete: {
+            args: Prisma.ReferralDeleteArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$ReferralPayload>
+          }
+          update: {
+            args: Prisma.ReferralUpdateArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$ReferralPayload>
+          }
+          deleteMany: {
+            args: Prisma.ReferralDeleteManyArgs<ExtArgs>
+            result: BatchPayload
+          }
+          updateMany: {
+            args: Prisma.ReferralUpdateManyArgs<ExtArgs>
+            result: BatchPayload
+          }
+          updateManyAndReturn: {
+            args: Prisma.ReferralUpdateManyAndReturnArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$ReferralPayload>[]
+          }
+          upsert: {
+            args: Prisma.ReferralUpsertArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$ReferralPayload>
+          }
+          aggregate: {
+            args: Prisma.ReferralAggregateArgs<ExtArgs>
+            result: $Utils.Optional<AggregateReferral>
+          }
+          groupBy: {
+            args: Prisma.ReferralGroupByArgs<ExtArgs>
+            result: $Utils.Optional<ReferralGroupByOutputType>[]
+          }
+          count: {
+            args: Prisma.ReferralCountArgs<ExtArgs>
+            result: $Utils.Optional<ReferralCountAggregateOutputType> | number
+          }
+        }
+      }
       AuthAuditLog: {
         payload: Prisma.$AuthAuditLogPayload<ExtArgs>
         fields: Prisma.AuthAuditLogFieldRefs
@@ -4021,154 +4169,6 @@ export namespace Prisma {
           }
         }
       }
-      AffiliateCode: {
-        payload: Prisma.$AffiliateCodePayload<ExtArgs>
-        fields: Prisma.AffiliateCodeFieldRefs
-        operations: {
-          findUnique: {
-            args: Prisma.AffiliateCodeFindUniqueArgs<ExtArgs>
-            result: $Utils.PayloadToResult<Prisma.$AffiliateCodePayload> | null
-          }
-          findUniqueOrThrow: {
-            args: Prisma.AffiliateCodeFindUniqueOrThrowArgs<ExtArgs>
-            result: $Utils.PayloadToResult<Prisma.$AffiliateCodePayload>
-          }
-          findFirst: {
-            args: Prisma.AffiliateCodeFindFirstArgs<ExtArgs>
-            result: $Utils.PayloadToResult<Prisma.$AffiliateCodePayload> | null
-          }
-          findFirstOrThrow: {
-            args: Prisma.AffiliateCodeFindFirstOrThrowArgs<ExtArgs>
-            result: $Utils.PayloadToResult<Prisma.$AffiliateCodePayload>
-          }
-          findMany: {
-            args: Prisma.AffiliateCodeFindManyArgs<ExtArgs>
-            result: $Utils.PayloadToResult<Prisma.$AffiliateCodePayload>[]
-          }
-          create: {
-            args: Prisma.AffiliateCodeCreateArgs<ExtArgs>
-            result: $Utils.PayloadToResult<Prisma.$AffiliateCodePayload>
-          }
-          createMany: {
-            args: Prisma.AffiliateCodeCreateManyArgs<ExtArgs>
-            result: BatchPayload
-          }
-          createManyAndReturn: {
-            args: Prisma.AffiliateCodeCreateManyAndReturnArgs<ExtArgs>
-            result: $Utils.PayloadToResult<Prisma.$AffiliateCodePayload>[]
-          }
-          delete: {
-            args: Prisma.AffiliateCodeDeleteArgs<ExtArgs>
-            result: $Utils.PayloadToResult<Prisma.$AffiliateCodePayload>
-          }
-          update: {
-            args: Prisma.AffiliateCodeUpdateArgs<ExtArgs>
-            result: $Utils.PayloadToResult<Prisma.$AffiliateCodePayload>
-          }
-          deleteMany: {
-            args: Prisma.AffiliateCodeDeleteManyArgs<ExtArgs>
-            result: BatchPayload
-          }
-          updateMany: {
-            args: Prisma.AffiliateCodeUpdateManyArgs<ExtArgs>
-            result: BatchPayload
-          }
-          updateManyAndReturn: {
-            args: Prisma.AffiliateCodeUpdateManyAndReturnArgs<ExtArgs>
-            result: $Utils.PayloadToResult<Prisma.$AffiliateCodePayload>[]
-          }
-          upsert: {
-            args: Prisma.AffiliateCodeUpsertArgs<ExtArgs>
-            result: $Utils.PayloadToResult<Prisma.$AffiliateCodePayload>
-          }
-          aggregate: {
-            args: Prisma.AffiliateCodeAggregateArgs<ExtArgs>
-            result: $Utils.Optional<AggregateAffiliateCode>
-          }
-          groupBy: {
-            args: Prisma.AffiliateCodeGroupByArgs<ExtArgs>
-            result: $Utils.Optional<AffiliateCodeGroupByOutputType>[]
-          }
-          count: {
-            args: Prisma.AffiliateCodeCountArgs<ExtArgs>
-            result: $Utils.Optional<AffiliateCodeCountAggregateOutputType> | number
-          }
-        }
-      }
-      Referral: {
-        payload: Prisma.$ReferralPayload<ExtArgs>
-        fields: Prisma.ReferralFieldRefs
-        operations: {
-          findUnique: {
-            args: Prisma.ReferralFindUniqueArgs<ExtArgs>
-            result: $Utils.PayloadToResult<Prisma.$ReferralPayload> | null
-          }
-          findUniqueOrThrow: {
-            args: Prisma.ReferralFindUniqueOrThrowArgs<ExtArgs>
-            result: $Utils.PayloadToResult<Prisma.$ReferralPayload>
-          }
-          findFirst: {
-            args: Prisma.ReferralFindFirstArgs<ExtArgs>
-            result: $Utils.PayloadToResult<Prisma.$ReferralPayload> | null
-          }
-          findFirstOrThrow: {
-            args: Prisma.ReferralFindFirstOrThrowArgs<ExtArgs>
-            result: $Utils.PayloadToResult<Prisma.$ReferralPayload>
-          }
-          findMany: {
-            args: Prisma.ReferralFindManyArgs<ExtArgs>
-            result: $Utils.PayloadToResult<Prisma.$ReferralPayload>[]
-          }
-          create: {
-            args: Prisma.ReferralCreateArgs<ExtArgs>
-            result: $Utils.PayloadToResult<Prisma.$ReferralPayload>
-          }
-          createMany: {
-            args: Prisma.ReferralCreateManyArgs<ExtArgs>
-            result: BatchPayload
-          }
-          createManyAndReturn: {
-            args: Prisma.ReferralCreateManyAndReturnArgs<ExtArgs>
-            result: $Utils.PayloadToResult<Prisma.$ReferralPayload>[]
-          }
-          delete: {
-            args: Prisma.ReferralDeleteArgs<ExtArgs>
-            result: $Utils.PayloadToResult<Prisma.$ReferralPayload>
-          }
-          update: {
-            args: Prisma.ReferralUpdateArgs<ExtArgs>
-            result: $Utils.PayloadToResult<Prisma.$ReferralPayload>
-          }
-          deleteMany: {
-            args: Prisma.ReferralDeleteManyArgs<ExtArgs>
-            result: BatchPayload
-          }
-          updateMany: {
-            args: Prisma.ReferralUpdateManyArgs<ExtArgs>
-            result: BatchPayload
-          }
-          updateManyAndReturn: {
-            args: Prisma.ReferralUpdateManyAndReturnArgs<ExtArgs>
-            result: $Utils.PayloadToResult<Prisma.$ReferralPayload>[]
-          }
-          upsert: {
-            args: Prisma.ReferralUpsertArgs<ExtArgs>
-            result: $Utils.PayloadToResult<Prisma.$ReferralPayload>
-          }
-          aggregate: {
-            args: Prisma.ReferralAggregateArgs<ExtArgs>
-            result: $Utils.Optional<AggregateReferral>
-          }
-          groupBy: {
-            args: Prisma.ReferralGroupByArgs<ExtArgs>
-            result: $Utils.Optional<ReferralGroupByOutputType>[]
-          }
-          count: {
-            args: Prisma.ReferralCountArgs<ExtArgs>
-            result: $Utils.Optional<ReferralCountAggregateOutputType> | number
-          }
-        }
-      }
       AffiliateWallet: {
         payload: Prisma.$AffiliateWalletPayload<ExtArgs>
         fields: Prisma.AffiliateWalletFieldRefs
@@ -5165,6 +5165,8 @@ export namespace Prisma {
     comments?: runtime.SqlCommenterPlugin[]
   }
   export type GlobalOmitConfig = {
+    affiliateCode?: AffiliateCodeOmit
+    referral?: ReferralOmit
     authAuditLog?: AuthAuditLogOmit
     activityLog?: ActivityLogOmit
     systemErrorLog?: SystemErrorLogOmit
@@ -5195,8 +5197,6 @@ export namespace Prisma {
     userToken?: UserTokenOmit
     emailLog?: EmailLogOmit
     gameSession?: GameSessionOmit
-    affiliateCode?: AffiliateCodeOmit
-    referral?: ReferralOmit
     affiliateWallet?: AffiliateWalletOmit
     affiliateCommission?: AffiliateCommissionOmit
     affiliateTier?: AffiliateTierOmit
@@ -5282,6 +5282,37 @@ export namespace Prisma {
   /**
    * Count Types
    */
+
+
+  /**
+   * Count Type AffiliateCodeCountOutputType
+   */
+
+  export type AffiliateCodeCountOutputType = {
+    referrals: number
+  }
+
+  export type AffiliateCodeCountOutputTypeSelect<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    referrals?: boolean | AffiliateCodeCountOutputTypeCountReferralsArgs
+  }
+
+  // Custom InputTypes
+  /**
+   * AffiliateCodeCountOutputType without action
+   */
+  export type AffiliateCodeCountOutputTypeDefaultArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the AffiliateCodeCountOutputType
+     */
+    select?: AffiliateCodeCountOutputTypeSelect<ExtArgs> | null
+  }
+
+  /**
+   * AffiliateCodeCountOutputType without action
+   */
+  export type AffiliateCodeCountOutputTypeCountReferralsArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    where?: ReferralWhereInput
+  }
 
 
   /**
@@ -5758,37 +5789,6 @@ export namespace Prisma {
 
 
   /**
-   * Count Type AffiliateCodeCountOutputType
-   */
-
-  export type AffiliateCodeCountOutputType = {
-    referrals: number
-  }
-
-  export type AffiliateCodeCountOutputTypeSelect<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
-    referrals?: boolean | AffiliateCodeCountOutputTypeCountReferralsArgs
-  }
-
-  // Custom InputTypes
-  /**
-   * AffiliateCodeCountOutputType without action
-   */
-  export type AffiliateCodeCountOutputTypeDefaultArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
-    /**
-     * Select specific fields to fetch from the AffiliateCodeCountOutputType
-     */
-    select?: AffiliateCodeCountOutputTypeSelect<ExtArgs> | null
-  }
-
-  /**
-   * AffiliateCodeCountOutputType without action
-   */
-  export type AffiliateCodeCountOutputTypeCountReferralsArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
-    where?: ReferralWhereInput
-  }
-
-
-  /**
    * Count Type DepositDetailCountOutputType
    */
 
@@ -5964,6 +5964,2408 @@ export namespace Prisma {
   /**
    * Models
    */
+
+  /**
+   * Model AffiliateCode
+   */
+
+  export type AggregateAffiliateCode = {
+    _count: AffiliateCodeCountAggregateOutputType | null
+    _avg: AffiliateCodeAvgAggregateOutputType | null
+    _sum: AffiliateCodeSumAggregateOutputType | null
+    _min: AffiliateCodeMinAggregateOutputType | null
+    _max: AffiliateCodeMaxAggregateOutputType | null
+  }
+
+  export type AffiliateCodeAvgAggregateOutputType = {
+    id: number | null
+    userId: number | null
+  }
+
+  export type AffiliateCodeSumAggregateOutputType = {
+    id: bigint | null
+    userId: bigint | null
+  }
+
+  export type AffiliateCodeMinAggregateOutputType = {
+    id: bigint | null
+    uid: string | null
+    userId: bigint | null
+    code: string | null
+    campaignName: string | null
+    description: string | null
+    isActive: boolean | null
+    isDefault: boolean | null
+    expiresAt: Date | null
+    createdAt: Date | null
+    updatedAt: Date | null
+    lastUsedAt: Date | null
+  }
+
+  export type AffiliateCodeMaxAggregateOutputType = {
+    id: bigint | null
+    uid: string | null
+    userId: bigint | null
+    code: string | null
+    campaignName: string | null
+    description: string | null
+    isActive: boolean | null
+    isDefault: boolean | null
+    expiresAt: Date | null
+    createdAt: Date | null
+    updatedAt: Date | null
+    lastUsedAt: Date | null
+  }
+
+  export type AffiliateCodeCountAggregateOutputType = {
+    id: number
+    uid: number
+    userId: number
+    code: number
+    campaignName: number
+    description: number
+    isActive: number
+    isDefault: number
+    expiresAt: number
+    createdAt: number
+    updatedAt: number
+    lastUsedAt: number
+    _all: number
+  }
+
+
+  export type AffiliateCodeAvgAggregateInputType = {
+    id?: true
+    userId?: true
+  }
+
+  export type AffiliateCodeSumAggregateInputType = {
+    id?: true
+    userId?: true
+  }
+
+  export type AffiliateCodeMinAggregateInputType = {
+    id?: true
+    uid?: true
+    userId?: true
+    code?: true
+    campaignName?: true
+    description?: true
+    isActive?: true
+    isDefault?: true
+    expiresAt?: true
+    createdAt?: true
+    updatedAt?: true
+    lastUsedAt?: true
+  }
+
+  export type AffiliateCodeMaxAggregateInputType = {
+    id?: true
+    uid?: true
+    userId?: true
+    code?: true
+    campaignName?: true
+    description?: true
+    isActive?: true
+    isDefault?: true
+    expiresAt?: true
+    createdAt?: true
+    updatedAt?: true
+    lastUsedAt?: true
+  }
+
+  export type AffiliateCodeCountAggregateInputType = {
+    id?: true
+    uid?: true
+    userId?: true
+    code?: true
+    campaignName?: true
+    description?: true
+    isActive?: true
+    isDefault?: true
+    expiresAt?: true
+    createdAt?: true
+    updatedAt?: true
+    lastUsedAt?: true
+    _all?: true
+  }
+
+  export type AffiliateCodeAggregateArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Filter which AffiliateCode to aggregate.
+     */
+    where?: AffiliateCodeWhereInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/sorting Sorting Docs}
+     * 
+     * Determine the order of AffiliateCodes to fetch.
+     */
+    orderBy?: AffiliateCodeOrderByWithRelationInput | AffiliateCodeOrderByWithRelationInput[]
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination#cursor-based-pagination Cursor Docs}
+     * 
+     * Sets the start position
+     */
+    cursor?: AffiliateCodeWhereUniqueInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Take `±n` AffiliateCodes from the position of the cursor.
+     */
+    take?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Skip the first `n` AffiliateCodes.
+     */
+    skip?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
+     * 
+     * Count returned AffiliateCodes
+    **/
+    _count?: true | AffiliateCodeCountAggregateInputType
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
+     * 
+     * Select which fields to average
+    **/
+    _avg?: AffiliateCodeAvgAggregateInputType
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
+     * 
+     * Select which fields to sum
+    **/
+    _sum?: AffiliateCodeSumAggregateInputType
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
+     * 
+     * Select which fields to find the minimum value
+    **/
+    _min?: AffiliateCodeMinAggregateInputType
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
+     * 
+     * Select which fields to find the maximum value
+    **/
+    _max?: AffiliateCodeMaxAggregateInputType
+  }
+
+  export type GetAffiliateCodeAggregateType<T extends AffiliateCodeAggregateArgs> = {
+        [P in keyof T & keyof AggregateAffiliateCode]: P extends '_count' | 'count'
+      ? T[P] extends true
+        ? number
+        : GetScalarType<T[P], AggregateAffiliateCode[P]>
+      : GetScalarType<T[P], AggregateAffiliateCode[P]>
+  }
+
+
+
+
+  export type AffiliateCodeGroupByArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    where?: AffiliateCodeWhereInput
+    orderBy?: AffiliateCodeOrderByWithAggregationInput | AffiliateCodeOrderByWithAggregationInput[]
+    by: AffiliateCodeScalarFieldEnum[] | AffiliateCodeScalarFieldEnum
+    having?: AffiliateCodeScalarWhereWithAggregatesInput
+    take?: number
+    skip?: number
+    _count?: AffiliateCodeCountAggregateInputType | true
+    _avg?: AffiliateCodeAvgAggregateInputType
+    _sum?: AffiliateCodeSumAggregateInputType
+    _min?: AffiliateCodeMinAggregateInputType
+    _max?: AffiliateCodeMaxAggregateInputType
+  }
+
+  export type AffiliateCodeGroupByOutputType = {
+    id: bigint
+    uid: string
+    userId: bigint
+    code: string
+    campaignName: string | null
+    description: string | null
+    isActive: boolean
+    isDefault: boolean
+    expiresAt: Date | null
+    createdAt: Date
+    updatedAt: Date
+    lastUsedAt: Date | null
+    _count: AffiliateCodeCountAggregateOutputType | null
+    _avg: AffiliateCodeAvgAggregateOutputType | null
+    _sum: AffiliateCodeSumAggregateOutputType | null
+    _min: AffiliateCodeMinAggregateOutputType | null
+    _max: AffiliateCodeMaxAggregateOutputType | null
+  }
+
+  type GetAffiliateCodeGroupByPayload<T extends AffiliateCodeGroupByArgs> = Prisma.PrismaPromise<
+    Array<
+      PickEnumerable<AffiliateCodeGroupByOutputType, T['by']> &
+        {
+          [P in ((keyof T) & (keyof AffiliateCodeGroupByOutputType))]: P extends '_count'
+            ? T[P] extends boolean
+              ? number
+              : GetScalarType<T[P], AffiliateCodeGroupByOutputType[P]>
+            : GetScalarType<T[P], AffiliateCodeGroupByOutputType[P]>
+        }
+      >
+    >
+
+
+  export type AffiliateCodeSelect<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetSelect<{
+    id?: boolean
+    uid?: boolean
+    userId?: boolean
+    code?: boolean
+    campaignName?: boolean
+    description?: boolean
+    isActive?: boolean
+    isDefault?: boolean
+    expiresAt?: boolean
+    createdAt?: boolean
+    updatedAt?: boolean
+    lastUsedAt?: boolean
+    user?: boolean | UserDefaultArgs<ExtArgs>
+    referrals?: boolean | AffiliateCode$referralsArgs<ExtArgs>
+    _count?: boolean | AffiliateCodeCountOutputTypeDefaultArgs<ExtArgs>
+  }, ExtArgs["result"]["affiliateCode"]>
+
+  export type AffiliateCodeSelectCreateManyAndReturn<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetSelect<{
+    id?: boolean
+    uid?: boolean
+    userId?: boolean
+    code?: boolean
+    campaignName?: boolean
+    description?: boolean
+    isActive?: boolean
+    isDefault?: boolean
+    expiresAt?: boolean
+    createdAt?: boolean
+    updatedAt?: boolean
+    lastUsedAt?: boolean
+    user?: boolean | UserDefaultArgs<ExtArgs>
+  }, ExtArgs["result"]["affiliateCode"]>
+
+  export type AffiliateCodeSelectUpdateManyAndReturn<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetSelect<{
+    id?: boolean
+    uid?: boolean
+    userId?: boolean
+    code?: boolean
+    campaignName?: boolean
+    description?: boolean
+    isActive?: boolean
+    isDefault?: boolean
+    expiresAt?: boolean
+    createdAt?: boolean
+    updatedAt?: boolean
+    lastUsedAt?: boolean
+    user?: boolean | UserDefaultArgs<ExtArgs>
+  }, ExtArgs["result"]["affiliateCode"]>
+
+  export type AffiliateCodeSelectScalar = {
+    id?: boolean
+    uid?: boolean
+    userId?: boolean
+    code?: boolean
+    campaignName?: boolean
+    description?: boolean
+    isActive?: boolean
+    isDefault?: boolean
+    expiresAt?: boolean
+    createdAt?: boolean
+    updatedAt?: boolean
+    lastUsedAt?: boolean
+  }
+
+  export type AffiliateCodeOmit<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetOmit<"id" | "uid" | "userId" | "code" | "campaignName" | "description" | "isActive" | "isDefault" | "expiresAt" | "createdAt" | "updatedAt" | "lastUsedAt", ExtArgs["result"]["affiliateCode"]>
+  export type AffiliateCodeInclude<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    user?: boolean | UserDefaultArgs<ExtArgs>
+    referrals?: boolean | AffiliateCode$referralsArgs<ExtArgs>
+    _count?: boolean | AffiliateCodeCountOutputTypeDefaultArgs<ExtArgs>
+  }
+  export type AffiliateCodeIncludeCreateManyAndReturn<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    user?: boolean | UserDefaultArgs<ExtArgs>
+  }
+  export type AffiliateCodeIncludeUpdateManyAndReturn<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    user?: boolean | UserDefaultArgs<ExtArgs>
+  }
+
+  export type $AffiliateCodePayload<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    name: "AffiliateCode"
+    objects: {
+      user: Prisma.$UserPayload<ExtArgs>
+      referrals: Prisma.$ReferralPayload<ExtArgs>[]
+    }
+    scalars: $Extensions.GetPayloadResult<{
+      id: bigint
+      uid: string
+      userId: bigint
+      code: string
+      campaignName: string | null
+      description: string | null
+      isActive: boolean
+      isDefault: boolean
+      expiresAt: Date | null
+      createdAt: Date
+      updatedAt: Date
+      lastUsedAt: Date | null
+    }, ExtArgs["result"]["affiliateCode"]>
+    composites: {}
+  }
+
+  type AffiliateCodeGetPayload<S extends boolean | null | undefined | AffiliateCodeDefaultArgs> = $Result.GetResult<Prisma.$AffiliateCodePayload, S>
+
+  type AffiliateCodeCountArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> =
+    Omit<AffiliateCodeFindManyArgs, 'select' | 'include' | 'distinct' | 'omit'> & {
+      select?: AffiliateCodeCountAggregateInputType | true
+    }
+
+  export interface AffiliateCodeDelegate<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs, GlobalOmitOptions = {}> {
+    [K: symbol]: { types: Prisma.TypeMap<ExtArgs>['model']['AffiliateCode'], meta: { name: 'AffiliateCode' } }
+    /**
+     * Find zero or one AffiliateCode that matches the filter.
+     * @param {AffiliateCodeFindUniqueArgs} args - Arguments to find a AffiliateCode
+     * @example
+     * // Get one AffiliateCode
+     * const affiliateCode = await prisma.affiliateCode.findUnique({
+     *   where: {
+     *     // ... provide filter here
+     *   }
+     * })
+     */
+    findUnique<T extends AffiliateCodeFindUniqueArgs>(args: SelectSubset<T, AffiliateCodeFindUniqueArgs<ExtArgs>>): Prisma__AffiliateCodeClient<$Result.GetResult<Prisma.$AffiliateCodePayload<ExtArgs>, T, "findUnique", GlobalOmitOptions> | null, null, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Find one AffiliateCode that matches the filter or throw an error with `error.code='P2025'`
+     * if no matches were found.
+     * @param {AffiliateCodeFindUniqueOrThrowArgs} args - Arguments to find a AffiliateCode
+     * @example
+     * // Get one AffiliateCode
+     * const affiliateCode = await prisma.affiliateCode.findUniqueOrThrow({
+     *   where: {
+     *     // ... provide filter here
+     *   }
+     * })
+     */
+    findUniqueOrThrow<T extends AffiliateCodeFindUniqueOrThrowArgs>(args: SelectSubset<T, AffiliateCodeFindUniqueOrThrowArgs<ExtArgs>>): Prisma__AffiliateCodeClient<$Result.GetResult<Prisma.$AffiliateCodePayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Find the first AffiliateCode that matches the filter.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {AffiliateCodeFindFirstArgs} args - Arguments to find a AffiliateCode
+     * @example
+     * // Get one AffiliateCode
+     * const affiliateCode = await prisma.affiliateCode.findFirst({
+     *   where: {
+     *     // ... provide filter here
+     *   }
+     * })
+     */
+    findFirst<T extends AffiliateCodeFindFirstArgs>(args?: SelectSubset<T, AffiliateCodeFindFirstArgs<ExtArgs>>): Prisma__AffiliateCodeClient<$Result.GetResult<Prisma.$AffiliateCodePayload<ExtArgs>, T, "findFirst", GlobalOmitOptions> | null, null, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Find the first AffiliateCode that matches the filter or
+     * throw `PrismaKnownClientError` with `P2025` code if no matches were found.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {AffiliateCodeFindFirstOrThrowArgs} args - Arguments to find a AffiliateCode
+     * @example
+     * // Get one AffiliateCode
+     * const affiliateCode = await prisma.affiliateCode.findFirstOrThrow({
+     *   where: {
+     *     // ... provide filter here
+     *   }
+     * })
+     */
+    findFirstOrThrow<T extends AffiliateCodeFindFirstOrThrowArgs>(args?: SelectSubset<T, AffiliateCodeFindFirstOrThrowArgs<ExtArgs>>): Prisma__AffiliateCodeClient<$Result.GetResult<Prisma.$AffiliateCodePayload<ExtArgs>, T, "findFirstOrThrow", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Find zero or more AffiliateCodes that matches the filter.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {AffiliateCodeFindManyArgs} args - Arguments to filter and select certain fields only.
+     * @example
+     * // Get all AffiliateCodes
+     * const affiliateCodes = await prisma.affiliateCode.findMany()
+     * 
+     * // Get first 10 AffiliateCodes
+     * const affiliateCodes = await prisma.affiliateCode.findMany({ take: 10 })
+     * 
+     * // Only select the `id`
+     * const affiliateCodeWithIdOnly = await prisma.affiliateCode.findMany({ select: { id: true } })
+     * 
+     */
+    findMany<T extends AffiliateCodeFindManyArgs>(args?: SelectSubset<T, AffiliateCodeFindManyArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$AffiliateCodePayload<ExtArgs>, T, "findMany", GlobalOmitOptions>>
+
+    /**
+     * Create a AffiliateCode.
+     * @param {AffiliateCodeCreateArgs} args - Arguments to create a AffiliateCode.
+     * @example
+     * // Create one AffiliateCode
+     * const AffiliateCode = await prisma.affiliateCode.create({
+     *   data: {
+     *     // ... data to create a AffiliateCode
+     *   }
+     * })
+     * 
+     */
+    create<T extends AffiliateCodeCreateArgs>(args: SelectSubset<T, AffiliateCodeCreateArgs<ExtArgs>>): Prisma__AffiliateCodeClient<$Result.GetResult<Prisma.$AffiliateCodePayload<ExtArgs>, T, "create", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Create many AffiliateCodes.
+     * @param {AffiliateCodeCreateManyArgs} args - Arguments to create many AffiliateCodes.
+     * @example
+     * // Create many AffiliateCodes
+     * const affiliateCode = await prisma.affiliateCode.createMany({
+     *   data: [
+     *     // ... provide data here
+     *   ]
+     * })
+     *     
+     */
+    createMany<T extends AffiliateCodeCreateManyArgs>(args?: SelectSubset<T, AffiliateCodeCreateManyArgs<ExtArgs>>): Prisma.PrismaPromise<BatchPayload>
+
+    /**
+     * Create many AffiliateCodes and returns the data saved in the database.
+     * @param {AffiliateCodeCreateManyAndReturnArgs} args - Arguments to create many AffiliateCodes.
+     * @example
+     * // Create many AffiliateCodes
+     * const affiliateCode = await prisma.affiliateCode.createManyAndReturn({
+     *   data: [
+     *     // ... provide data here
+     *   ]
+     * })
+     * 
+     * // Create many AffiliateCodes and only return the `id`
+     * const affiliateCodeWithIdOnly = await prisma.affiliateCode.createManyAndReturn({
+     *   select: { id: true },
+     *   data: [
+     *     // ... provide data here
+     *   ]
+     * })
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * 
+     */
+    createManyAndReturn<T extends AffiliateCodeCreateManyAndReturnArgs>(args?: SelectSubset<T, AffiliateCodeCreateManyAndReturnArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$AffiliateCodePayload<ExtArgs>, T, "createManyAndReturn", GlobalOmitOptions>>
+
+    /**
+     * Delete a AffiliateCode.
+     * @param {AffiliateCodeDeleteArgs} args - Arguments to delete one AffiliateCode.
+     * @example
+     * // Delete one AffiliateCode
+     * const AffiliateCode = await prisma.affiliateCode.delete({
+     *   where: {
+     *     // ... filter to delete one AffiliateCode
+     *   }
+     * })
+     * 
+     */
+    delete<T extends AffiliateCodeDeleteArgs>(args: SelectSubset<T, AffiliateCodeDeleteArgs<ExtArgs>>): Prisma__AffiliateCodeClient<$Result.GetResult<Prisma.$AffiliateCodePayload<ExtArgs>, T, "delete", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Update one AffiliateCode.
+     * @param {AffiliateCodeUpdateArgs} args - Arguments to update one AffiliateCode.
+     * @example
+     * // Update one AffiliateCode
+     * const affiliateCode = await prisma.affiliateCode.update({
+     *   where: {
+     *     // ... provide filter here
+     *   },
+     *   data: {
+     *     // ... provide data here
+     *   }
+     * })
+     * 
+     */
+    update<T extends AffiliateCodeUpdateArgs>(args: SelectSubset<T, AffiliateCodeUpdateArgs<ExtArgs>>): Prisma__AffiliateCodeClient<$Result.GetResult<Prisma.$AffiliateCodePayload<ExtArgs>, T, "update", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Delete zero or more AffiliateCodes.
+     * @param {AffiliateCodeDeleteManyArgs} args - Arguments to filter AffiliateCodes to delete.
+     * @example
+     * // Delete a few AffiliateCodes
+     * const { count } = await prisma.affiliateCode.deleteMany({
+     *   where: {
+     *     // ... provide filter here
+     *   }
+     * })
+     * 
+     */
+    deleteMany<T extends AffiliateCodeDeleteManyArgs>(args?: SelectSubset<T, AffiliateCodeDeleteManyArgs<ExtArgs>>): Prisma.PrismaPromise<BatchPayload>
+
+    /**
+     * Update zero or more AffiliateCodes.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {AffiliateCodeUpdateManyArgs} args - Arguments to update one or more rows.
+     * @example
+     * // Update many AffiliateCodes
+     * const affiliateCode = await prisma.affiliateCode.updateMany({
+     *   where: {
+     *     // ... provide filter here
+     *   },
+     *   data: {
+     *     // ... provide data here
+     *   }
+     * })
+     * 
+     */
+    updateMany<T extends AffiliateCodeUpdateManyArgs>(args: SelectSubset<T, AffiliateCodeUpdateManyArgs<ExtArgs>>): Prisma.PrismaPromise<BatchPayload>
+
+    /**
+     * Update zero or more AffiliateCodes and returns the data updated in the database.
+     * @param {AffiliateCodeUpdateManyAndReturnArgs} args - Arguments to update many AffiliateCodes.
+     * @example
+     * // Update many AffiliateCodes
+     * const affiliateCode = await prisma.affiliateCode.updateManyAndReturn({
+     *   where: {
+     *     // ... provide filter here
+     *   },
+     *   data: [
+     *     // ... provide data here
+     *   ]
+     * })
+     * 
+     * // Update zero or more AffiliateCodes and only return the `id`
+     * const affiliateCodeWithIdOnly = await prisma.affiliateCode.updateManyAndReturn({
+     *   select: { id: true },
+     *   where: {
+     *     // ... provide filter here
+     *   },
+     *   data: [
+     *     // ... provide data here
+     *   ]
+     * })
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * 
+     */
+    updateManyAndReturn<T extends AffiliateCodeUpdateManyAndReturnArgs>(args: SelectSubset<T, AffiliateCodeUpdateManyAndReturnArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$AffiliateCodePayload<ExtArgs>, T, "updateManyAndReturn", GlobalOmitOptions>>
+
+    /**
+     * Create or update one AffiliateCode.
+     * @param {AffiliateCodeUpsertArgs} args - Arguments to update or create a AffiliateCode.
+     * @example
+     * // Update or create a AffiliateCode
+     * const affiliateCode = await prisma.affiliateCode.upsert({
+     *   create: {
+     *     // ... data to create a AffiliateCode
+     *   },
+     *   update: {
+     *     // ... in case it already exists, update
+     *   },
+     *   where: {
+     *     // ... the filter for the AffiliateCode we want to update
+     *   }
+     * })
+     */
+    upsert<T extends AffiliateCodeUpsertArgs>(args: SelectSubset<T, AffiliateCodeUpsertArgs<ExtArgs>>): Prisma__AffiliateCodeClient<$Result.GetResult<Prisma.$AffiliateCodePayload<ExtArgs>, T, "upsert", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
+
+
+    /**
+     * Count the number of AffiliateCodes.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {AffiliateCodeCountArgs} args - Arguments to filter AffiliateCodes to count.
+     * @example
+     * // Count the number of AffiliateCodes
+     * const count = await prisma.affiliateCode.count({
+     *   where: {
+     *     // ... the filter for the AffiliateCodes we want to count
+     *   }
+     * })
+    **/
+    count<T extends AffiliateCodeCountArgs>(
+      args?: Subset<T, AffiliateCodeCountArgs>,
+    ): Prisma.PrismaPromise<
+      T extends $Utils.Record<'select', any>
+        ? T['select'] extends true
+          ? number
+          : GetScalarType<T['select'], AffiliateCodeCountAggregateOutputType>
+        : number
+    >
+
+    /**
+     * Allows you to perform aggregations operations on a AffiliateCode.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {AffiliateCodeAggregateArgs} args - Select which aggregations you would like to apply and on what fields.
+     * @example
+     * // Ordered by age ascending
+     * // Where email contains prisma.io
+     * // Limited to the 10 users
+     * const aggregations = await prisma.user.aggregate({
+     *   _avg: {
+     *     age: true,
+     *   },
+     *   where: {
+     *     email: {
+     *       contains: "prisma.io",
+     *     },
+     *   },
+     *   orderBy: {
+     *     age: "asc",
+     *   },
+     *   take: 10,
+     * })
+    **/
+    aggregate<T extends AffiliateCodeAggregateArgs>(args: Subset<T, AffiliateCodeAggregateArgs>): Prisma.PrismaPromise<GetAffiliateCodeAggregateType<T>>
+
+    /**
+     * Group by AffiliateCode.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {AffiliateCodeGroupByArgs} args - Group by arguments.
+     * @example
+     * // Group by city, order by createdAt, get count
+     * const result = await prisma.user.groupBy({
+     *   by: ['city', 'createdAt'],
+     *   orderBy: {
+     *     createdAt: true
+     *   },
+     *   _count: {
+     *     _all: true
+     *   },
+     * })
+     * 
+    **/
+    groupBy<
+      T extends AffiliateCodeGroupByArgs,
+      HasSelectOrTake extends Or<
+        Extends<'skip', Keys<T>>,
+        Extends<'take', Keys<T>>
+      >,
+      OrderByArg extends True extends HasSelectOrTake
+        ? { orderBy: AffiliateCodeGroupByArgs['orderBy'] }
+        : { orderBy?: AffiliateCodeGroupByArgs['orderBy'] },
+      OrderFields extends ExcludeUnderscoreKeys<Keys<MaybeTupleToUnion<T['orderBy']>>>,
+      ByFields extends MaybeTupleToUnion<T['by']>,
+      ByValid extends Has<ByFields, OrderFields>,
+      HavingFields extends GetHavingFields<T['having']>,
+      HavingValid extends Has<ByFields, HavingFields>,
+      ByEmpty extends T['by'] extends never[] ? True : False,
+      InputErrors extends ByEmpty extends True
+      ? `Error: "by" must not be empty.`
+      : HavingValid extends False
+      ? {
+          [P in HavingFields]: P extends ByFields
+            ? never
+            : P extends string
+            ? `Error: Field "${P}" used in "having" needs to be provided in "by".`
+            : [
+                Error,
+                'Field ',
+                P,
+                ` in "having" needs to be provided in "by"`,
+              ]
+        }[HavingFields]
+      : 'take' extends Keys<T>
+      ? 'orderBy' extends Keys<T>
+        ? ByValid extends True
+          ? {}
+          : {
+              [P in OrderFields]: P extends ByFields
+                ? never
+                : `Error: Field "${P}" in "orderBy" needs to be provided in "by"`
+            }[OrderFields]
+        : 'Error: If you provide "take", you also need to provide "orderBy"'
+      : 'skip' extends Keys<T>
+      ? 'orderBy' extends Keys<T>
+        ? ByValid extends True
+          ? {}
+          : {
+              [P in OrderFields]: P extends ByFields
+                ? never
+                : `Error: Field "${P}" in "orderBy" needs to be provided in "by"`
+            }[OrderFields]
+        : 'Error: If you provide "skip", you also need to provide "orderBy"'
+      : ByValid extends True
+      ? {}
+      : {
+          [P in OrderFields]: P extends ByFields
+            ? never
+            : `Error: Field "${P}" in "orderBy" needs to be provided in "by"`
+        }[OrderFields]
+    >(args: SubsetIntersection<T, AffiliateCodeGroupByArgs, OrderByArg> & InputErrors): {} extends InputErrors ? GetAffiliateCodeGroupByPayload<T> : Prisma.PrismaPromise<InputErrors>
+  /**
+   * Fields of the AffiliateCode model
+   */
+  readonly fields: AffiliateCodeFieldRefs;
+  }
+
+  /**
+   * The delegate class that acts as a "Promise-like" for AffiliateCode.
+   * Why is this prefixed with `Prisma__`?
+   * Because we want to prevent naming conflicts as mentioned in
+   * https://github.com/prisma/prisma-client-js/issues/707
+   */
+  export interface Prisma__AffiliateCodeClient<T, Null = never, ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs, GlobalOmitOptions = {}> extends Prisma.PrismaPromise<T> {
+    readonly [Symbol.toStringTag]: "PrismaPromise"
+    user<T extends UserDefaultArgs<ExtArgs> = {}>(args?: Subset<T, UserDefaultArgs<ExtArgs>>): Prisma__UserClient<$Result.GetResult<Prisma.$UserPayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions> | Null, Null, ExtArgs, GlobalOmitOptions>
+    referrals<T extends AffiliateCode$referralsArgs<ExtArgs> = {}>(args?: Subset<T, AffiliateCode$referralsArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$ReferralPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
+    /**
+     * Attaches callbacks for the resolution and/or rejection of the Promise.
+     * @param onfulfilled The callback to execute when the Promise is resolved.
+     * @param onrejected The callback to execute when the Promise is rejected.
+     * @returns A Promise for the completion of which ever callback is executed.
+     */
+    then<TResult1 = T, TResult2 = never>(onfulfilled?: ((value: T) => TResult1 | PromiseLike<TResult1>) | undefined | null, onrejected?: ((reason: any) => TResult2 | PromiseLike<TResult2>) | undefined | null): $Utils.JsPromise<TResult1 | TResult2>
+    /**
+     * Attaches a callback for only the rejection of the Promise.
+     * @param onrejected The callback to execute when the Promise is rejected.
+     * @returns A Promise for the completion of the callback.
+     */
+    catch<TResult = never>(onrejected?: ((reason: any) => TResult | PromiseLike<TResult>) | undefined | null): $Utils.JsPromise<T | TResult>
+    /**
+     * Attaches a callback that is invoked when the Promise is settled (fulfilled or rejected). The
+     * resolved value cannot be modified from the callback.
+     * @param onfinally The callback to execute when the Promise is settled (fulfilled or rejected).
+     * @returns A Promise for the completion of the callback.
+     */
+    finally(onfinally?: (() => void) | undefined | null): $Utils.JsPromise<T>
+  }
+
+
+
+
+  /**
+   * Fields of the AffiliateCode model
+   */
+  interface AffiliateCodeFieldRefs {
+    readonly id: FieldRef<"AffiliateCode", 'BigInt'>
+    readonly uid: FieldRef<"AffiliateCode", 'String'>
+    readonly userId: FieldRef<"AffiliateCode", 'BigInt'>
+    readonly code: FieldRef<"AffiliateCode", 'String'>
+    readonly campaignName: FieldRef<"AffiliateCode", 'String'>
+    readonly description: FieldRef<"AffiliateCode", 'String'>
+    readonly isActive: FieldRef<"AffiliateCode", 'Boolean'>
+    readonly isDefault: FieldRef<"AffiliateCode", 'Boolean'>
+    readonly expiresAt: FieldRef<"AffiliateCode", 'DateTime'>
+    readonly createdAt: FieldRef<"AffiliateCode", 'DateTime'>
+    readonly updatedAt: FieldRef<"AffiliateCode", 'DateTime'>
+    readonly lastUsedAt: FieldRef<"AffiliateCode", 'DateTime'>
+  }
+    
+
+  // Custom InputTypes
+  /**
+   * AffiliateCode findUnique
+   */
+  export type AffiliateCodeFindUniqueArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the AffiliateCode
+     */
+    select?: AffiliateCodeSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the AffiliateCode
+     */
+    omit?: AffiliateCodeOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: AffiliateCodeInclude<ExtArgs> | null
+    /**
+     * Filter, which AffiliateCode to fetch.
+     */
+    where: AffiliateCodeWhereUniqueInput
+  }
+
+  /**
+   * AffiliateCode findUniqueOrThrow
+   */
+  export type AffiliateCodeFindUniqueOrThrowArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the AffiliateCode
+     */
+    select?: AffiliateCodeSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the AffiliateCode
+     */
+    omit?: AffiliateCodeOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: AffiliateCodeInclude<ExtArgs> | null
+    /**
+     * Filter, which AffiliateCode to fetch.
+     */
+    where: AffiliateCodeWhereUniqueInput
+  }
+
+  /**
+   * AffiliateCode findFirst
+   */
+  export type AffiliateCodeFindFirstArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the AffiliateCode
+     */
+    select?: AffiliateCodeSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the AffiliateCode
+     */
+    omit?: AffiliateCodeOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: AffiliateCodeInclude<ExtArgs> | null
+    /**
+     * Filter, which AffiliateCode to fetch.
+     */
+    where?: AffiliateCodeWhereInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/sorting Sorting Docs}
+     * 
+     * Determine the order of AffiliateCodes to fetch.
+     */
+    orderBy?: AffiliateCodeOrderByWithRelationInput | AffiliateCodeOrderByWithRelationInput[]
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination#cursor-based-pagination Cursor Docs}
+     * 
+     * Sets the position for searching for AffiliateCodes.
+     */
+    cursor?: AffiliateCodeWhereUniqueInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Take `±n` AffiliateCodes from the position of the cursor.
+     */
+    take?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Skip the first `n` AffiliateCodes.
+     */
+    skip?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/distinct Distinct Docs}
+     * 
+     * Filter by unique combinations of AffiliateCodes.
+     */
+    distinct?: AffiliateCodeScalarFieldEnum | AffiliateCodeScalarFieldEnum[]
+  }
+
+  /**
+   * AffiliateCode findFirstOrThrow
+   */
+  export type AffiliateCodeFindFirstOrThrowArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the AffiliateCode
+     */
+    select?: AffiliateCodeSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the AffiliateCode
+     */
+    omit?: AffiliateCodeOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: AffiliateCodeInclude<ExtArgs> | null
+    /**
+     * Filter, which AffiliateCode to fetch.
+     */
+    where?: AffiliateCodeWhereInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/sorting Sorting Docs}
+     * 
+     * Determine the order of AffiliateCodes to fetch.
+     */
+    orderBy?: AffiliateCodeOrderByWithRelationInput | AffiliateCodeOrderByWithRelationInput[]
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination#cursor-based-pagination Cursor Docs}
+     * 
+     * Sets the position for searching for AffiliateCodes.
+     */
+    cursor?: AffiliateCodeWhereUniqueInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Take `±n` AffiliateCodes from the position of the cursor.
+     */
+    take?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Skip the first `n` AffiliateCodes.
+     */
+    skip?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/distinct Distinct Docs}
+     * 
+     * Filter by unique combinations of AffiliateCodes.
+     */
+    distinct?: AffiliateCodeScalarFieldEnum | AffiliateCodeScalarFieldEnum[]
+  }
+
+  /**
+   * AffiliateCode findMany
+   */
+  export type AffiliateCodeFindManyArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the AffiliateCode
+     */
+    select?: AffiliateCodeSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the AffiliateCode
+     */
+    omit?: AffiliateCodeOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: AffiliateCodeInclude<ExtArgs> | null
+    /**
+     * Filter, which AffiliateCodes to fetch.
+     */
+    where?: AffiliateCodeWhereInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/sorting Sorting Docs}
+     * 
+     * Determine the order of AffiliateCodes to fetch.
+     */
+    orderBy?: AffiliateCodeOrderByWithRelationInput | AffiliateCodeOrderByWithRelationInput[]
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination#cursor-based-pagination Cursor Docs}
+     * 
+     * Sets the position for listing AffiliateCodes.
+     */
+    cursor?: AffiliateCodeWhereUniqueInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Take `±n` AffiliateCodes from the position of the cursor.
+     */
+    take?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Skip the first `n` AffiliateCodes.
+     */
+    skip?: number
+    distinct?: AffiliateCodeScalarFieldEnum | AffiliateCodeScalarFieldEnum[]
+  }
+
+  /**
+   * AffiliateCode create
+   */
+  export type AffiliateCodeCreateArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the AffiliateCode
+     */
+    select?: AffiliateCodeSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the AffiliateCode
+     */
+    omit?: AffiliateCodeOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: AffiliateCodeInclude<ExtArgs> | null
+    /**
+     * The data needed to create a AffiliateCode.
+     */
+    data: XOR<AffiliateCodeCreateInput, AffiliateCodeUncheckedCreateInput>
+  }
+
+  /**
+   * AffiliateCode createMany
+   */
+  export type AffiliateCodeCreateManyArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * The data used to create many AffiliateCodes.
+     */
+    data: AffiliateCodeCreateManyInput | AffiliateCodeCreateManyInput[]
+    skipDuplicates?: boolean
+  }
+
+  /**
+   * AffiliateCode createManyAndReturn
+   */
+  export type AffiliateCodeCreateManyAndReturnArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the AffiliateCode
+     */
+    select?: AffiliateCodeSelectCreateManyAndReturn<ExtArgs> | null
+    /**
+     * Omit specific fields from the AffiliateCode
+     */
+    omit?: AffiliateCodeOmit<ExtArgs> | null
+    /**
+     * The data used to create many AffiliateCodes.
+     */
+    data: AffiliateCodeCreateManyInput | AffiliateCodeCreateManyInput[]
+    skipDuplicates?: boolean
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: AffiliateCodeIncludeCreateManyAndReturn<ExtArgs> | null
+  }
+
+  /**
+   * AffiliateCode update
+   */
+  export type AffiliateCodeUpdateArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the AffiliateCode
+     */
+    select?: AffiliateCodeSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the AffiliateCode
+     */
+    omit?: AffiliateCodeOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: AffiliateCodeInclude<ExtArgs> | null
+    /**
+     * The data needed to update a AffiliateCode.
+     */
+    data: XOR<AffiliateCodeUpdateInput, AffiliateCodeUncheckedUpdateInput>
+    /**
+     * Choose, which AffiliateCode to update.
+     */
+    where: AffiliateCodeWhereUniqueInput
+  }
+
+  /**
+   * AffiliateCode updateMany
+   */
+  export type AffiliateCodeUpdateManyArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * The data used to update AffiliateCodes.
+     */
+    data: XOR<AffiliateCodeUpdateManyMutationInput, AffiliateCodeUncheckedUpdateManyInput>
+    /**
+     * Filter which AffiliateCodes to update
+     */
+    where?: AffiliateCodeWhereInput
+    /**
+     * Limit how many AffiliateCodes to update.
+     */
+    limit?: number
+  }
+
+  /**
+   * AffiliateCode updateManyAndReturn
+   */
+  export type AffiliateCodeUpdateManyAndReturnArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the AffiliateCode
+     */
+    select?: AffiliateCodeSelectUpdateManyAndReturn<ExtArgs> | null
+    /**
+     * Omit specific fields from the AffiliateCode
+     */
+    omit?: AffiliateCodeOmit<ExtArgs> | null
+    /**
+     * The data used to update AffiliateCodes.
+     */
+    data: XOR<AffiliateCodeUpdateManyMutationInput, AffiliateCodeUncheckedUpdateManyInput>
+    /**
+     * Filter which AffiliateCodes to update
+     */
+    where?: AffiliateCodeWhereInput
+    /**
+     * Limit how many AffiliateCodes to update.
+     */
+    limit?: number
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: AffiliateCodeIncludeUpdateManyAndReturn<ExtArgs> | null
+  }
+
+  /**
+   * AffiliateCode upsert
+   */
+  export type AffiliateCodeUpsertArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the AffiliateCode
+     */
+    select?: AffiliateCodeSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the AffiliateCode
+     */
+    omit?: AffiliateCodeOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: AffiliateCodeInclude<ExtArgs> | null
+    /**
+     * The filter to search for the AffiliateCode to update in case it exists.
+     */
+    where: AffiliateCodeWhereUniqueInput
+    /**
+     * In case the AffiliateCode found by the `where` argument doesn't exist, create a new AffiliateCode with this data.
+     */
+    create: XOR<AffiliateCodeCreateInput, AffiliateCodeUncheckedCreateInput>
+    /**
+     * In case the AffiliateCode was found with the provided `where` argument, update it with this data.
+     */
+    update: XOR<AffiliateCodeUpdateInput, AffiliateCodeUncheckedUpdateInput>
+  }
+
+  /**
+   * AffiliateCode delete
+   */
+  export type AffiliateCodeDeleteArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the AffiliateCode
+     */
+    select?: AffiliateCodeSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the AffiliateCode
+     */
+    omit?: AffiliateCodeOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: AffiliateCodeInclude<ExtArgs> | null
+    /**
+     * Filter which AffiliateCode to delete.
+     */
+    where: AffiliateCodeWhereUniqueInput
+  }
+
+  /**
+   * AffiliateCode deleteMany
+   */
+  export type AffiliateCodeDeleteManyArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Filter which AffiliateCodes to delete
+     */
+    where?: AffiliateCodeWhereInput
+    /**
+     * Limit how many AffiliateCodes to delete.
+     */
+    limit?: number
+  }
+
+  /**
+   * AffiliateCode.referrals
+   */
+  export type AffiliateCode$referralsArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the Referral
+     */
+    select?: ReferralSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the Referral
+     */
+    omit?: ReferralOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: ReferralInclude<ExtArgs> | null
+    where?: ReferralWhereInput
+    orderBy?: ReferralOrderByWithRelationInput | ReferralOrderByWithRelationInput[]
+    cursor?: ReferralWhereUniqueInput
+    take?: number
+    skip?: number
+    distinct?: ReferralScalarFieldEnum | ReferralScalarFieldEnum[]
+  }
+
+  /**
+   * AffiliateCode without action
+   */
+  export type AffiliateCodeDefaultArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the AffiliateCode
+     */
+    select?: AffiliateCodeSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the AffiliateCode
+     */
+    omit?: AffiliateCodeOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: AffiliateCodeInclude<ExtArgs> | null
+  }
+
+
+  /**
+   * Model Referral
+   */
+
+  export type AggregateReferral = {
+    _count: ReferralCountAggregateOutputType | null
+    _avg: ReferralAvgAggregateOutputType | null
+    _sum: ReferralSumAggregateOutputType | null
+    _min: ReferralMinAggregateOutputType | null
+    _max: ReferralMaxAggregateOutputType | null
+  }
+
+  export type ReferralAvgAggregateOutputType = {
+    id: number | null
+    affiliateId: number | null
+    subUserId: number | null
+    codeId: number | null
+  }
+
+  export type ReferralSumAggregateOutputType = {
+    id: bigint | null
+    affiliateId: bigint | null
+    subUserId: bigint | null
+    codeId: bigint | null
+  }
+
+  export type ReferralMinAggregateOutputType = {
+    id: bigint | null
+    uid: string | null
+    affiliateId: bigint | null
+    subUserId: bigint | null
+    ipAddress: string | null
+    deviceFingerprint: string | null
+    userAgent: string | null
+    createdAt: Date | null
+    updatedAt: Date | null
+    codeId: bigint | null
+  }
+
+  export type ReferralMaxAggregateOutputType = {
+    id: bigint | null
+    uid: string | null
+    affiliateId: bigint | null
+    subUserId: bigint | null
+    ipAddress: string | null
+    deviceFingerprint: string | null
+    userAgent: string | null
+    createdAt: Date | null
+    updatedAt: Date | null
+    codeId: bigint | null
+  }
+
+  export type ReferralCountAggregateOutputType = {
+    id: number
+    uid: number
+    affiliateId: number
+    subUserId: number
+    ipAddress: number
+    deviceFingerprint: number
+    userAgent: number
+    createdAt: number
+    updatedAt: number
+    codeId: number
+    _all: number
+  }
+
+
+  export type ReferralAvgAggregateInputType = {
+    id?: true
+    affiliateId?: true
+    subUserId?: true
+    codeId?: true
+  }
+
+  export type ReferralSumAggregateInputType = {
+    id?: true
+    affiliateId?: true
+    subUserId?: true
+    codeId?: true
+  }
+
+  export type ReferralMinAggregateInputType = {
+    id?: true
+    uid?: true
+    affiliateId?: true
+    subUserId?: true
+    ipAddress?: true
+    deviceFingerprint?: true
+    userAgent?: true
+    createdAt?: true
+    updatedAt?: true
+    codeId?: true
+  }
+
+  export type ReferralMaxAggregateInputType = {
+    id?: true
+    uid?: true
+    affiliateId?: true
+    subUserId?: true
+    ipAddress?: true
+    deviceFingerprint?: true
+    userAgent?: true
+    createdAt?: true
+    updatedAt?: true
+    codeId?: true
+  }
+
+  export type ReferralCountAggregateInputType = {
+    id?: true
+    uid?: true
+    affiliateId?: true
+    subUserId?: true
+    ipAddress?: true
+    deviceFingerprint?: true
+    userAgent?: true
+    createdAt?: true
+    updatedAt?: true
+    codeId?: true
+    _all?: true
+  }
+
+  export type ReferralAggregateArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Filter which Referral to aggregate.
+     */
+    where?: ReferralWhereInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/sorting Sorting Docs}
+     * 
+     * Determine the order of Referrals to fetch.
+     */
+    orderBy?: ReferralOrderByWithRelationInput | ReferralOrderByWithRelationInput[]
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination#cursor-based-pagination Cursor Docs}
+     * 
+     * Sets the start position
+     */
+    cursor?: ReferralWhereUniqueInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Take `±n` Referrals from the position of the cursor.
+     */
+    take?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Skip the first `n` Referrals.
+     */
+    skip?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
+     * 
+     * Count returned Referrals
+    **/
+    _count?: true | ReferralCountAggregateInputType
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
+     * 
+     * Select which fields to average
+    **/
+    _avg?: ReferralAvgAggregateInputType
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
+     * 
+     * Select which fields to sum
+    **/
+    _sum?: ReferralSumAggregateInputType
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
+     * 
+     * Select which fields to find the minimum value
+    **/
+    _min?: ReferralMinAggregateInputType
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
+     * 
+     * Select which fields to find the maximum value
+    **/
+    _max?: ReferralMaxAggregateInputType
+  }
+
+  export type GetReferralAggregateType<T extends ReferralAggregateArgs> = {
+        [P in keyof T & keyof AggregateReferral]: P extends '_count' | 'count'
+      ? T[P] extends true
+        ? number
+        : GetScalarType<T[P], AggregateReferral[P]>
+      : GetScalarType<T[P], AggregateReferral[P]>
+  }
+
+
+
+
+  export type ReferralGroupByArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    where?: ReferralWhereInput
+    orderBy?: ReferralOrderByWithAggregationInput | ReferralOrderByWithAggregationInput[]
+    by: ReferralScalarFieldEnum[] | ReferralScalarFieldEnum
+    having?: ReferralScalarWhereWithAggregatesInput
+    take?: number
+    skip?: number
+    _count?: ReferralCountAggregateInputType | true
+    _avg?: ReferralAvgAggregateInputType
+    _sum?: ReferralSumAggregateInputType
+    _min?: ReferralMinAggregateInputType
+    _max?: ReferralMaxAggregateInputType
+  }
+
+  export type ReferralGroupByOutputType = {
+    id: bigint
+    uid: string
+    affiliateId: bigint
+    subUserId: bigint
+    ipAddress: string | null
+    deviceFingerprint: string | null
+    userAgent: string | null
+    createdAt: Date
+    updatedAt: Date
+    codeId: bigint
+    _count: ReferralCountAggregateOutputType | null
+    _avg: ReferralAvgAggregateOutputType | null
+    _sum: ReferralSumAggregateOutputType | null
+    _min: ReferralMinAggregateOutputType | null
+    _max: ReferralMaxAggregateOutputType | null
+  }
+
+  type GetReferralGroupByPayload<T extends ReferralGroupByArgs> = Prisma.PrismaPromise<
+    Array<
+      PickEnumerable<ReferralGroupByOutputType, T['by']> &
+        {
+          [P in ((keyof T) & (keyof ReferralGroupByOutputType))]: P extends '_count'
+            ? T[P] extends boolean
+              ? number
+              : GetScalarType<T[P], ReferralGroupByOutputType[P]>
+            : GetScalarType<T[P], ReferralGroupByOutputType[P]>
+        }
+      >
+    >
+
+
+  export type ReferralSelect<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetSelect<{
+    id?: boolean
+    uid?: boolean
+    affiliateId?: boolean
+    subUserId?: boolean
+    ipAddress?: boolean
+    deviceFingerprint?: boolean
+    userAgent?: boolean
+    createdAt?: boolean
+    updatedAt?: boolean
+    codeId?: boolean
+    affiliate?: boolean | UserDefaultArgs<ExtArgs>
+    code?: boolean | AffiliateCodeDefaultArgs<ExtArgs>
+    subUser?: boolean | UserDefaultArgs<ExtArgs>
+  }, ExtArgs["result"]["referral"]>
+
+  export type ReferralSelectCreateManyAndReturn<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetSelect<{
+    id?: boolean
+    uid?: boolean
+    affiliateId?: boolean
+    subUserId?: boolean
+    ipAddress?: boolean
+    deviceFingerprint?: boolean
+    userAgent?: boolean
+    createdAt?: boolean
+    updatedAt?: boolean
+    codeId?: boolean
+    affiliate?: boolean | UserDefaultArgs<ExtArgs>
+    code?: boolean | AffiliateCodeDefaultArgs<ExtArgs>
+    subUser?: boolean | UserDefaultArgs<ExtArgs>
+  }, ExtArgs["result"]["referral"]>
+
+  export type ReferralSelectUpdateManyAndReturn<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetSelect<{
+    id?: boolean
+    uid?: boolean
+    affiliateId?: boolean
+    subUserId?: boolean
+    ipAddress?: boolean
+    deviceFingerprint?: boolean
+    userAgent?: boolean
+    createdAt?: boolean
+    updatedAt?: boolean
+    codeId?: boolean
+    affiliate?: boolean | UserDefaultArgs<ExtArgs>
+    code?: boolean | AffiliateCodeDefaultArgs<ExtArgs>
+    subUser?: boolean | UserDefaultArgs<ExtArgs>
+  }, ExtArgs["result"]["referral"]>
+
+  export type ReferralSelectScalar = {
+    id?: boolean
+    uid?: boolean
+    affiliateId?: boolean
+    subUserId?: boolean
+    ipAddress?: boolean
+    deviceFingerprint?: boolean
+    userAgent?: boolean
+    createdAt?: boolean
+    updatedAt?: boolean
+    codeId?: boolean
+  }
+
+  export type ReferralOmit<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetOmit<"id" | "uid" | "affiliateId" | "subUserId" | "ipAddress" | "deviceFingerprint" | "userAgent" | "createdAt" | "updatedAt" | "codeId", ExtArgs["result"]["referral"]>
+  export type ReferralInclude<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    affiliate?: boolean | UserDefaultArgs<ExtArgs>
+    code?: boolean | AffiliateCodeDefaultArgs<ExtArgs>
+    subUser?: boolean | UserDefaultArgs<ExtArgs>
+  }
+  export type ReferralIncludeCreateManyAndReturn<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    affiliate?: boolean | UserDefaultArgs<ExtArgs>
+    code?: boolean | AffiliateCodeDefaultArgs<ExtArgs>
+    subUser?: boolean | UserDefaultArgs<ExtArgs>
+  }
+  export type ReferralIncludeUpdateManyAndReturn<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    affiliate?: boolean | UserDefaultArgs<ExtArgs>
+    code?: boolean | AffiliateCodeDefaultArgs<ExtArgs>
+    subUser?: boolean | UserDefaultArgs<ExtArgs>
+  }
+
+  export type $ReferralPayload<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    name: "Referral"
+    objects: {
+      affiliate: Prisma.$UserPayload<ExtArgs>
+      code: Prisma.$AffiliateCodePayload<ExtArgs>
+      subUser: Prisma.$UserPayload<ExtArgs>
+    }
+    scalars: $Extensions.GetPayloadResult<{
+      id: bigint
+      uid: string
+      affiliateId: bigint
+      subUserId: bigint
+      ipAddress: string | null
+      deviceFingerprint: string | null
+      userAgent: string | null
+      createdAt: Date
+      updatedAt: Date
+      codeId: bigint
+    }, ExtArgs["result"]["referral"]>
+    composites: {}
+  }
+
+  type ReferralGetPayload<S extends boolean | null | undefined | ReferralDefaultArgs> = $Result.GetResult<Prisma.$ReferralPayload, S>
+
+  type ReferralCountArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> =
+    Omit<ReferralFindManyArgs, 'select' | 'include' | 'distinct' | 'omit'> & {
+      select?: ReferralCountAggregateInputType | true
+    }
+
+  export interface ReferralDelegate<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs, GlobalOmitOptions = {}> {
+    [K: symbol]: { types: Prisma.TypeMap<ExtArgs>['model']['Referral'], meta: { name: 'Referral' } }
+    /**
+     * Find zero or one Referral that matches the filter.
+     * @param {ReferralFindUniqueArgs} args - Arguments to find a Referral
+     * @example
+     * // Get one Referral
+     * const referral = await prisma.referral.findUnique({
+     *   where: {
+     *     // ... provide filter here
+     *   }
+     * })
+     */
+    findUnique<T extends ReferralFindUniqueArgs>(args: SelectSubset<T, ReferralFindUniqueArgs<ExtArgs>>): Prisma__ReferralClient<$Result.GetResult<Prisma.$ReferralPayload<ExtArgs>, T, "findUnique", GlobalOmitOptions> | null, null, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Find one Referral that matches the filter or throw an error with `error.code='P2025'`
+     * if no matches were found.
+     * @param {ReferralFindUniqueOrThrowArgs} args - Arguments to find a Referral
+     * @example
+     * // Get one Referral
+     * const referral = await prisma.referral.findUniqueOrThrow({
+     *   where: {
+     *     // ... provide filter here
+     *   }
+     * })
+     */
+    findUniqueOrThrow<T extends ReferralFindUniqueOrThrowArgs>(args: SelectSubset<T, ReferralFindUniqueOrThrowArgs<ExtArgs>>): Prisma__ReferralClient<$Result.GetResult<Prisma.$ReferralPayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Find the first Referral that matches the filter.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {ReferralFindFirstArgs} args - Arguments to find a Referral
+     * @example
+     * // Get one Referral
+     * const referral = await prisma.referral.findFirst({
+     *   where: {
+     *     // ... provide filter here
+     *   }
+     * })
+     */
+    findFirst<T extends ReferralFindFirstArgs>(args?: SelectSubset<T, ReferralFindFirstArgs<ExtArgs>>): Prisma__ReferralClient<$Result.GetResult<Prisma.$ReferralPayload<ExtArgs>, T, "findFirst", GlobalOmitOptions> | null, null, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Find the first Referral that matches the filter or
+     * throw `PrismaKnownClientError` with `P2025` code if no matches were found.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {ReferralFindFirstOrThrowArgs} args - Arguments to find a Referral
+     * @example
+     * // Get one Referral
+     * const referral = await prisma.referral.findFirstOrThrow({
+     *   where: {
+     *     // ... provide filter here
+     *   }
+     * })
+     */
+    findFirstOrThrow<T extends ReferralFindFirstOrThrowArgs>(args?: SelectSubset<T, ReferralFindFirstOrThrowArgs<ExtArgs>>): Prisma__ReferralClient<$Result.GetResult<Prisma.$ReferralPayload<ExtArgs>, T, "findFirstOrThrow", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Find zero or more Referrals that matches the filter.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {ReferralFindManyArgs} args - Arguments to filter and select certain fields only.
+     * @example
+     * // Get all Referrals
+     * const referrals = await prisma.referral.findMany()
+     * 
+     * // Get first 10 Referrals
+     * const referrals = await prisma.referral.findMany({ take: 10 })
+     * 
+     * // Only select the `id`
+     * const referralWithIdOnly = await prisma.referral.findMany({ select: { id: true } })
+     * 
+     */
+    findMany<T extends ReferralFindManyArgs>(args?: SelectSubset<T, ReferralFindManyArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$ReferralPayload<ExtArgs>, T, "findMany", GlobalOmitOptions>>
+
+    /**
+     * Create a Referral.
+     * @param {ReferralCreateArgs} args - Arguments to create a Referral.
+     * @example
+     * // Create one Referral
+     * const Referral = await prisma.referral.create({
+     *   data: {
+     *     // ... data to create a Referral
+     *   }
+     * })
+     * 
+     */
+    create<T extends ReferralCreateArgs>(args: SelectSubset<T, ReferralCreateArgs<ExtArgs>>): Prisma__ReferralClient<$Result.GetResult<Prisma.$ReferralPayload<ExtArgs>, T, "create", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Create many Referrals.
+     * @param {ReferralCreateManyArgs} args - Arguments to create many Referrals.
+     * @example
+     * // Create many Referrals
+     * const referral = await prisma.referral.createMany({
+     *   data: [
+     *     // ... provide data here
+     *   ]
+     * })
+     *     
+     */
+    createMany<T extends ReferralCreateManyArgs>(args?: SelectSubset<T, ReferralCreateManyArgs<ExtArgs>>): Prisma.PrismaPromise<BatchPayload>
+
+    /**
+     * Create many Referrals and returns the data saved in the database.
+     * @param {ReferralCreateManyAndReturnArgs} args - Arguments to create many Referrals.
+     * @example
+     * // Create many Referrals
+     * const referral = await prisma.referral.createManyAndReturn({
+     *   data: [
+     *     // ... provide data here
+     *   ]
+     * })
+     * 
+     * // Create many Referrals and only return the `id`
+     * const referralWithIdOnly = await prisma.referral.createManyAndReturn({
+     *   select: { id: true },
+     *   data: [
+     *     // ... provide data here
+     *   ]
+     * })
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * 
+     */
+    createManyAndReturn<T extends ReferralCreateManyAndReturnArgs>(args?: SelectSubset<T, ReferralCreateManyAndReturnArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$ReferralPayload<ExtArgs>, T, "createManyAndReturn", GlobalOmitOptions>>
+
+    /**
+     * Delete a Referral.
+     * @param {ReferralDeleteArgs} args - Arguments to delete one Referral.
+     * @example
+     * // Delete one Referral
+     * const Referral = await prisma.referral.delete({
+     *   where: {
+     *     // ... filter to delete one Referral
+     *   }
+     * })
+     * 
+     */
+    delete<T extends ReferralDeleteArgs>(args: SelectSubset<T, ReferralDeleteArgs<ExtArgs>>): Prisma__ReferralClient<$Result.GetResult<Prisma.$ReferralPayload<ExtArgs>, T, "delete", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Update one Referral.
+     * @param {ReferralUpdateArgs} args - Arguments to update one Referral.
+     * @example
+     * // Update one Referral
+     * const referral = await prisma.referral.update({
+     *   where: {
+     *     // ... provide filter here
+     *   },
+     *   data: {
+     *     // ... provide data here
+     *   }
+     * })
+     * 
+     */
+    update<T extends ReferralUpdateArgs>(args: SelectSubset<T, ReferralUpdateArgs<ExtArgs>>): Prisma__ReferralClient<$Result.GetResult<Prisma.$ReferralPayload<ExtArgs>, T, "update", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Delete zero or more Referrals.
+     * @param {ReferralDeleteManyArgs} args - Arguments to filter Referrals to delete.
+     * @example
+     * // Delete a few Referrals
+     * const { count } = await prisma.referral.deleteMany({
+     *   where: {
+     *     // ... provide filter here
+     *   }
+     * })
+     * 
+     */
+    deleteMany<T extends ReferralDeleteManyArgs>(args?: SelectSubset<T, ReferralDeleteManyArgs<ExtArgs>>): Prisma.PrismaPromise<BatchPayload>
+
+    /**
+     * Update zero or more Referrals.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {ReferralUpdateManyArgs} args - Arguments to update one or more rows.
+     * @example
+     * // Update many Referrals
+     * const referral = await prisma.referral.updateMany({
+     *   where: {
+     *     // ... provide filter here
+     *   },
+     *   data: {
+     *     // ... provide data here
+     *   }
+     * })
+     * 
+     */
+    updateMany<T extends ReferralUpdateManyArgs>(args: SelectSubset<T, ReferralUpdateManyArgs<ExtArgs>>): Prisma.PrismaPromise<BatchPayload>
+
+    /**
+     * Update zero or more Referrals and returns the data updated in the database.
+     * @param {ReferralUpdateManyAndReturnArgs} args - Arguments to update many Referrals.
+     * @example
+     * // Update many Referrals
+     * const referral = await prisma.referral.updateManyAndReturn({
+     *   where: {
+     *     // ... provide filter here
+     *   },
+     *   data: [
+     *     // ... provide data here
+     *   ]
+     * })
+     * 
+     * // Update zero or more Referrals and only return the `id`
+     * const referralWithIdOnly = await prisma.referral.updateManyAndReturn({
+     *   select: { id: true },
+     *   where: {
+     *     // ... provide filter here
+     *   },
+     *   data: [
+     *     // ... provide data here
+     *   ]
+     * })
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * 
+     */
+    updateManyAndReturn<T extends ReferralUpdateManyAndReturnArgs>(args: SelectSubset<T, ReferralUpdateManyAndReturnArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$ReferralPayload<ExtArgs>, T, "updateManyAndReturn", GlobalOmitOptions>>
+
+    /**
+     * Create or update one Referral.
+     * @param {ReferralUpsertArgs} args - Arguments to update or create a Referral.
+     * @example
+     * // Update or create a Referral
+     * const referral = await prisma.referral.upsert({
+     *   create: {
+     *     // ... data to create a Referral
+     *   },
+     *   update: {
+     *     // ... in case it already exists, update
+     *   },
+     *   where: {
+     *     // ... the filter for the Referral we want to update
+     *   }
+     * })
+     */
+    upsert<T extends ReferralUpsertArgs>(args: SelectSubset<T, ReferralUpsertArgs<ExtArgs>>): Prisma__ReferralClient<$Result.GetResult<Prisma.$ReferralPayload<ExtArgs>, T, "upsert", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
+
+
+    /**
+     * Count the number of Referrals.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {ReferralCountArgs} args - Arguments to filter Referrals to count.
+     * @example
+     * // Count the number of Referrals
+     * const count = await prisma.referral.count({
+     *   where: {
+     *     // ... the filter for the Referrals we want to count
+     *   }
+     * })
+    **/
+    count<T extends ReferralCountArgs>(
+      args?: Subset<T, ReferralCountArgs>,
+    ): Prisma.PrismaPromise<
+      T extends $Utils.Record<'select', any>
+        ? T['select'] extends true
+          ? number
+          : GetScalarType<T['select'], ReferralCountAggregateOutputType>
+        : number
+    >
+
+    /**
+     * Allows you to perform aggregations operations on a Referral.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {ReferralAggregateArgs} args - Select which aggregations you would like to apply and on what fields.
+     * @example
+     * // Ordered by age ascending
+     * // Where email contains prisma.io
+     * // Limited to the 10 users
+     * const aggregations = await prisma.user.aggregate({
+     *   _avg: {
+     *     age: true,
+     *   },
+     *   where: {
+     *     email: {
+     *       contains: "prisma.io",
+     *     },
+     *   },
+     *   orderBy: {
+     *     age: "asc",
+     *   },
+     *   take: 10,
+     * })
+    **/
+    aggregate<T extends ReferralAggregateArgs>(args: Subset<T, ReferralAggregateArgs>): Prisma.PrismaPromise<GetReferralAggregateType<T>>
+
+    /**
+     * Group by Referral.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {ReferralGroupByArgs} args - Group by arguments.
+     * @example
+     * // Group by city, order by createdAt, get count
+     * const result = await prisma.user.groupBy({
+     *   by: ['city', 'createdAt'],
+     *   orderBy: {
+     *     createdAt: true
+     *   },
+     *   _count: {
+     *     _all: true
+     *   },
+     * })
+     * 
+    **/
+    groupBy<
+      T extends ReferralGroupByArgs,
+      HasSelectOrTake extends Or<
+        Extends<'skip', Keys<T>>,
+        Extends<'take', Keys<T>>
+      >,
+      OrderByArg extends True extends HasSelectOrTake
+        ? { orderBy: ReferralGroupByArgs['orderBy'] }
+        : { orderBy?: ReferralGroupByArgs['orderBy'] },
+      OrderFields extends ExcludeUnderscoreKeys<Keys<MaybeTupleToUnion<T['orderBy']>>>,
+      ByFields extends MaybeTupleToUnion<T['by']>,
+      ByValid extends Has<ByFields, OrderFields>,
+      HavingFields extends GetHavingFields<T['having']>,
+      HavingValid extends Has<ByFields, HavingFields>,
+      ByEmpty extends T['by'] extends never[] ? True : False,
+      InputErrors extends ByEmpty extends True
+      ? `Error: "by" must not be empty.`
+      : HavingValid extends False
+      ? {
+          [P in HavingFields]: P extends ByFields
+            ? never
+            : P extends string
+            ? `Error: Field "${P}" used in "having" needs to be provided in "by".`
+            : [
+                Error,
+                'Field ',
+                P,
+                ` in "having" needs to be provided in "by"`,
+              ]
+        }[HavingFields]
+      : 'take' extends Keys<T>
+      ? 'orderBy' extends Keys<T>
+        ? ByValid extends True
+          ? {}
+          : {
+              [P in OrderFields]: P extends ByFields
+                ? never
+                : `Error: Field "${P}" in "orderBy" needs to be provided in "by"`
+            }[OrderFields]
+        : 'Error: If you provide "take", you also need to provide "orderBy"'
+      : 'skip' extends Keys<T>
+      ? 'orderBy' extends Keys<T>
+        ? ByValid extends True
+          ? {}
+          : {
+              [P in OrderFields]: P extends ByFields
+                ? never
+                : `Error: Field "${P}" in "orderBy" needs to be provided in "by"`
+            }[OrderFields]
+        : 'Error: If you provide "skip", you also need to provide "orderBy"'
+      : ByValid extends True
+      ? {}
+      : {
+          [P in OrderFields]: P extends ByFields
+            ? never
+            : `Error: Field "${P}" in "orderBy" needs to be provided in "by"`
+        }[OrderFields]
+    >(args: SubsetIntersection<T, ReferralGroupByArgs, OrderByArg> & InputErrors): {} extends InputErrors ? GetReferralGroupByPayload<T> : Prisma.PrismaPromise<InputErrors>
+  /**
+   * Fields of the Referral model
+   */
+  readonly fields: ReferralFieldRefs;
+  }
+
+  /**
+   * The delegate class that acts as a "Promise-like" for Referral.
+   * Why is this prefixed with `Prisma__`?
+   * Because we want to prevent naming conflicts as mentioned in
+   * https://github.com/prisma/prisma-client-js/issues/707
+   */
+  export interface Prisma__ReferralClient<T, Null = never, ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs, GlobalOmitOptions = {}> extends Prisma.PrismaPromise<T> {
+    readonly [Symbol.toStringTag]: "PrismaPromise"
+    affiliate<T extends UserDefaultArgs<ExtArgs> = {}>(args?: Subset<T, UserDefaultArgs<ExtArgs>>): Prisma__UserClient<$Result.GetResult<Prisma.$UserPayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions> | Null, Null, ExtArgs, GlobalOmitOptions>
+    code<T extends AffiliateCodeDefaultArgs<ExtArgs> = {}>(args?: Subset<T, AffiliateCodeDefaultArgs<ExtArgs>>): Prisma__AffiliateCodeClient<$Result.GetResult<Prisma.$AffiliateCodePayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions> | Null, Null, ExtArgs, GlobalOmitOptions>
+    subUser<T extends UserDefaultArgs<ExtArgs> = {}>(args?: Subset<T, UserDefaultArgs<ExtArgs>>): Prisma__UserClient<$Result.GetResult<Prisma.$UserPayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions> | Null, Null, ExtArgs, GlobalOmitOptions>
+    /**
+     * Attaches callbacks for the resolution and/or rejection of the Promise.
+     * @param onfulfilled The callback to execute when the Promise is resolved.
+     * @param onrejected The callback to execute when the Promise is rejected.
+     * @returns A Promise for the completion of which ever callback is executed.
+     */
+    then<TResult1 = T, TResult2 = never>(onfulfilled?: ((value: T) => TResult1 | PromiseLike<TResult1>) | undefined | null, onrejected?: ((reason: any) => TResult2 | PromiseLike<TResult2>) | undefined | null): $Utils.JsPromise<TResult1 | TResult2>
+    /**
+     * Attaches a callback for only the rejection of the Promise.
+     * @param onrejected The callback to execute when the Promise is rejected.
+     * @returns A Promise for the completion of the callback.
+     */
+    catch<TResult = never>(onrejected?: ((reason: any) => TResult | PromiseLike<TResult>) | undefined | null): $Utils.JsPromise<T | TResult>
+    /**
+     * Attaches a callback that is invoked when the Promise is settled (fulfilled or rejected). The
+     * resolved value cannot be modified from the callback.
+     * @param onfinally The callback to execute when the Promise is settled (fulfilled or rejected).
+     * @returns A Promise for the completion of the callback.
+     */
+    finally(onfinally?: (() => void) | undefined | null): $Utils.JsPromise<T>
+  }
+
+
+
+
+  /**
+   * Fields of the Referral model
+   */
+  interface ReferralFieldRefs {
+    readonly id: FieldRef<"Referral", 'BigInt'>
+    readonly uid: FieldRef<"Referral", 'String'>
+    readonly affiliateId: FieldRef<"Referral", 'BigInt'>
+    readonly subUserId: FieldRef<"Referral", 'BigInt'>
+    readonly ipAddress: FieldRef<"Referral", 'String'>
+    readonly deviceFingerprint: FieldRef<"Referral", 'String'>
+    readonly userAgent: FieldRef<"Referral", 'String'>
+    readonly createdAt: FieldRef<"Referral", 'DateTime'>
+    readonly updatedAt: FieldRef<"Referral", 'DateTime'>
+    readonly codeId: FieldRef<"Referral", 'BigInt'>
+  }
+    
+
+  // Custom InputTypes
+  /**
+   * Referral findUnique
+   */
+  export type ReferralFindUniqueArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the Referral
+     */
+    select?: ReferralSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the Referral
+     */
+    omit?: ReferralOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: ReferralInclude<ExtArgs> | null
+    /**
+     * Filter, which Referral to fetch.
+     */
+    where: ReferralWhereUniqueInput
+  }
+
+  /**
+   * Referral findUniqueOrThrow
+   */
+  export type ReferralFindUniqueOrThrowArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the Referral
+     */
+    select?: ReferralSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the Referral
+     */
+    omit?: ReferralOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: ReferralInclude<ExtArgs> | null
+    /**
+     * Filter, which Referral to fetch.
+     */
+    where: ReferralWhereUniqueInput
+  }
+
+  /**
+   * Referral findFirst
+   */
+  export type ReferralFindFirstArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the Referral
+     */
+    select?: ReferralSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the Referral
+     */
+    omit?: ReferralOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: ReferralInclude<ExtArgs> | null
+    /**
+     * Filter, which Referral to fetch.
+     */
+    where?: ReferralWhereInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/sorting Sorting Docs}
+     * 
+     * Determine the order of Referrals to fetch.
+     */
+    orderBy?: ReferralOrderByWithRelationInput | ReferralOrderByWithRelationInput[]
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination#cursor-based-pagination Cursor Docs}
+     * 
+     * Sets the position for searching for Referrals.
+     */
+    cursor?: ReferralWhereUniqueInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Take `±n` Referrals from the position of the cursor.
+     */
+    take?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Skip the first `n` Referrals.
+     */
+    skip?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/distinct Distinct Docs}
+     * 
+     * Filter by unique combinations of Referrals.
+     */
+    distinct?: ReferralScalarFieldEnum | ReferralScalarFieldEnum[]
+  }
+
+  /**
+   * Referral findFirstOrThrow
+   */
+  export type ReferralFindFirstOrThrowArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the Referral
+     */
+    select?: ReferralSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the Referral
+     */
+    omit?: ReferralOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: ReferralInclude<ExtArgs> | null
+    /**
+     * Filter, which Referral to fetch.
+     */
+    where?: ReferralWhereInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/sorting Sorting Docs}
+     * 
+     * Determine the order of Referrals to fetch.
+     */
+    orderBy?: ReferralOrderByWithRelationInput | ReferralOrderByWithRelationInput[]
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination#cursor-based-pagination Cursor Docs}
+     * 
+     * Sets the position for searching for Referrals.
+     */
+    cursor?: ReferralWhereUniqueInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Take `±n` Referrals from the position of the cursor.
+     */
+    take?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Skip the first `n` Referrals.
+     */
+    skip?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/distinct Distinct Docs}
+     * 
+     * Filter by unique combinations of Referrals.
+     */
+    distinct?: ReferralScalarFieldEnum | ReferralScalarFieldEnum[]
+  }
+
+  /**
+   * Referral findMany
+   */
+  export type ReferralFindManyArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the Referral
+     */
+    select?: ReferralSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the Referral
+     */
+    omit?: ReferralOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: ReferralInclude<ExtArgs> | null
+    /**
+     * Filter, which Referrals to fetch.
+     */
+    where?: ReferralWhereInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/sorting Sorting Docs}
+     * 
+     * Determine the order of Referrals to fetch.
+     */
+    orderBy?: ReferralOrderByWithRelationInput | ReferralOrderByWithRelationInput[]
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination#cursor-based-pagination Cursor Docs}
+     * 
+     * Sets the position for listing Referrals.
+     */
+    cursor?: ReferralWhereUniqueInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Take `±n` Referrals from the position of the cursor.
+     */
+    take?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Skip the first `n` Referrals.
+     */
+    skip?: number
+    distinct?: ReferralScalarFieldEnum | ReferralScalarFieldEnum[]
+  }
+
+  /**
+   * Referral create
+   */
+  export type ReferralCreateArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the Referral
+     */
+    select?: ReferralSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the Referral
+     */
+    omit?: ReferralOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: ReferralInclude<ExtArgs> | null
+    /**
+     * The data needed to create a Referral.
+     */
+    data: XOR<ReferralCreateInput, ReferralUncheckedCreateInput>
+  }
+
+  /**
+   * Referral createMany
+   */
+  export type ReferralCreateManyArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * The data used to create many Referrals.
+     */
+    data: ReferralCreateManyInput | ReferralCreateManyInput[]
+    skipDuplicates?: boolean
+  }
+
+  /**
+   * Referral createManyAndReturn
+   */
+  export type ReferralCreateManyAndReturnArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the Referral
+     */
+    select?: ReferralSelectCreateManyAndReturn<ExtArgs> | null
+    /**
+     * Omit specific fields from the Referral
+     */
+    omit?: ReferralOmit<ExtArgs> | null
+    /**
+     * The data used to create many Referrals.
+     */
+    data: ReferralCreateManyInput | ReferralCreateManyInput[]
+    skipDuplicates?: boolean
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: ReferralIncludeCreateManyAndReturn<ExtArgs> | null
+  }
+
+  /**
+   * Referral update
+   */
+  export type ReferralUpdateArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the Referral
+     */
+    select?: ReferralSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the Referral
+     */
+    omit?: ReferralOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: ReferralInclude<ExtArgs> | null
+    /**
+     * The data needed to update a Referral.
+     */
+    data: XOR<ReferralUpdateInput, ReferralUncheckedUpdateInput>
+    /**
+     * Choose, which Referral to update.
+     */
+    where: ReferralWhereUniqueInput
+  }
+
+  /**
+   * Referral updateMany
+   */
+  export type ReferralUpdateManyArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * The data used to update Referrals.
+     */
+    data: XOR<ReferralUpdateManyMutationInput, ReferralUncheckedUpdateManyInput>
+    /**
+     * Filter which Referrals to update
+     */
+    where?: ReferralWhereInput
+    /**
+     * Limit how many Referrals to update.
+     */
+    limit?: number
+  }
+
+  /**
+   * Referral updateManyAndReturn
+   */
+  export type ReferralUpdateManyAndReturnArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the Referral
+     */
+    select?: ReferralSelectUpdateManyAndReturn<ExtArgs> | null
+    /**
+     * Omit specific fields from the Referral
+     */
+    omit?: ReferralOmit<ExtArgs> | null
+    /**
+     * The data used to update Referrals.
+     */
+    data: XOR<ReferralUpdateManyMutationInput, ReferralUncheckedUpdateManyInput>
+    /**
+     * Filter which Referrals to update
+     */
+    where?: ReferralWhereInput
+    /**
+     * Limit how many Referrals to update.
+     */
+    limit?: number
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: ReferralIncludeUpdateManyAndReturn<ExtArgs> | null
+  }
+
+  /**
+   * Referral upsert
+   */
+  export type ReferralUpsertArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the Referral
+     */
+    select?: ReferralSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the Referral
+     */
+    omit?: ReferralOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: ReferralInclude<ExtArgs> | null
+    /**
+     * The filter to search for the Referral to update in case it exists.
+     */
+    where: ReferralWhereUniqueInput
+    /**
+     * In case the Referral found by the `where` argument doesn't exist, create a new Referral with this data.
+     */
+    create: XOR<ReferralCreateInput, ReferralUncheckedCreateInput>
+    /**
+     * In case the Referral was found with the provided `where` argument, update it with this data.
+     */
+    update: XOR<ReferralUpdateInput, ReferralUncheckedUpdateInput>
+  }
+
+  /**
+   * Referral delete
+   */
+  export type ReferralDeleteArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the Referral
+     */
+    select?: ReferralSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the Referral
+     */
+    omit?: ReferralOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: ReferralInclude<ExtArgs> | null
+    /**
+     * Filter which Referral to delete.
+     */
+    where: ReferralWhereUniqueInput
+  }
+
+  /**
+   * Referral deleteMany
+   */
+  export type ReferralDeleteManyArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Filter which Referrals to delete
+     */
+    where?: ReferralWhereInput
+    /**
+     * Limit how many Referrals to delete.
+     */
+    limit?: number
+  }
+
+  /**
+   * Referral without action
+   */
+  export type ReferralDefaultArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the Referral
+     */
+    select?: ReferralSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the Referral
+     */
+    omit?: ReferralOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: ReferralInclude<ExtArgs> | null
+  }
+
 
   /**
    * Model AuthAuditLog
@@ -42748,2370 +45150,6 @@ export namespace Prisma {
 
 
   /**
-   * Model AffiliateCode
-   */
-
-  export type AggregateAffiliateCode = {
-    _count: AffiliateCodeCountAggregateOutputType | null
-    _avg: AffiliateCodeAvgAggregateOutputType | null
-    _sum: AffiliateCodeSumAggregateOutputType | null
-    _min: AffiliateCodeMinAggregateOutputType | null
-    _max: AffiliateCodeMaxAggregateOutputType | null
-  }
-
-  export type AffiliateCodeAvgAggregateOutputType = {
-    userId: number | null
-  }
-
-  export type AffiliateCodeSumAggregateOutputType = {
-    userId: bigint | null
-  }
-
-  export type AffiliateCodeMinAggregateOutputType = {
-    id: string | null
-    userId: bigint | null
-    code: string | null
-    campaignName: string | null
-    description: string | null
-    isActive: boolean | null
-    isDefault: boolean | null
-    expiresAt: Date | null
-    createdAt: Date | null
-    updatedAt: Date | null
-    lastUsedAt: Date | null
-  }
-
-  export type AffiliateCodeMaxAggregateOutputType = {
-    id: string | null
-    userId: bigint | null
-    code: string | null
-    campaignName: string | null
-    description: string | null
-    isActive: boolean | null
-    isDefault: boolean | null
-    expiresAt: Date | null
-    createdAt: Date | null
-    updatedAt: Date | null
-    lastUsedAt: Date | null
-  }
-
-  export type AffiliateCodeCountAggregateOutputType = {
-    id: number
-    userId: number
-    code: number
-    campaignName: number
-    description: number
-    isActive: number
-    isDefault: number
-    expiresAt: number
-    createdAt: number
-    updatedAt: number
-    lastUsedAt: number
-    _all: number
-  }
-
-
-  export type AffiliateCodeAvgAggregateInputType = {
-    userId?: true
-  }
-
-  export type AffiliateCodeSumAggregateInputType = {
-    userId?: true
-  }
-
-  export type AffiliateCodeMinAggregateInputType = {
-    id?: true
-    userId?: true
-    code?: true
-    campaignName?: true
-    description?: true
-    isActive?: true
-    isDefault?: true
-    expiresAt?: true
-    createdAt?: true
-    updatedAt?: true
-    lastUsedAt?: true
-  }
-
-  export type AffiliateCodeMaxAggregateInputType = {
-    id?: true
-    userId?: true
-    code?: true
-    campaignName?: true
-    description?: true
-    isActive?: true
-    isDefault?: true
-    expiresAt?: true
-    createdAt?: true
-    updatedAt?: true
-    lastUsedAt?: true
-  }
-
-  export type AffiliateCodeCountAggregateInputType = {
-    id?: true
-    userId?: true
-    code?: true
-    campaignName?: true
-    description?: true
-    isActive?: true
-    isDefault?: true
-    expiresAt?: true
-    createdAt?: true
-    updatedAt?: true
-    lastUsedAt?: true
-    _all?: true
-  }
-
-  export type AffiliateCodeAggregateArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
-    /**
-     * Filter which AffiliateCode to aggregate.
-     */
-    where?: AffiliateCodeWhereInput
-    /**
-     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/sorting Sorting Docs}
-     * 
-     * Determine the order of AffiliateCodes to fetch.
-     */
-    orderBy?: AffiliateCodeOrderByWithRelationInput | AffiliateCodeOrderByWithRelationInput[]
-    /**
-     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination#cursor-based-pagination Cursor Docs}
-     * 
-     * Sets the start position
-     */
-    cursor?: AffiliateCodeWhereUniqueInput
-    /**
-     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
-     * 
-     * Take `±n` AffiliateCodes from the position of the cursor.
-     */
-    take?: number
-    /**
-     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
-     * 
-     * Skip the first `n` AffiliateCodes.
-     */
-    skip?: number
-    /**
-     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
-     * 
-     * Count returned AffiliateCodes
-    **/
-    _count?: true | AffiliateCodeCountAggregateInputType
-    /**
-     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
-     * 
-     * Select which fields to average
-    **/
-    _avg?: AffiliateCodeAvgAggregateInputType
-    /**
-     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
-     * 
-     * Select which fields to sum
-    **/
-    _sum?: AffiliateCodeSumAggregateInputType
-    /**
-     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
-     * 
-     * Select which fields to find the minimum value
-    **/
-    _min?: AffiliateCodeMinAggregateInputType
-    /**
-     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
-     * 
-     * Select which fields to find the maximum value
-    **/
-    _max?: AffiliateCodeMaxAggregateInputType
-  }
-
-  export type GetAffiliateCodeAggregateType<T extends AffiliateCodeAggregateArgs> = {
-        [P in keyof T & keyof AggregateAffiliateCode]: P extends '_count' | 'count'
-      ? T[P] extends true
-        ? number
-        : GetScalarType<T[P], AggregateAffiliateCode[P]>
-      : GetScalarType<T[P], AggregateAffiliateCode[P]>
-  }
-
-
-
-
-  export type AffiliateCodeGroupByArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
-    where?: AffiliateCodeWhereInput
-    orderBy?: AffiliateCodeOrderByWithAggregationInput | AffiliateCodeOrderByWithAggregationInput[]
-    by: AffiliateCodeScalarFieldEnum[] | AffiliateCodeScalarFieldEnum
-    having?: AffiliateCodeScalarWhereWithAggregatesInput
-    take?: number
-    skip?: number
-    _count?: AffiliateCodeCountAggregateInputType | true
-    _avg?: AffiliateCodeAvgAggregateInputType
-    _sum?: AffiliateCodeSumAggregateInputType
-    _min?: AffiliateCodeMinAggregateInputType
-    _max?: AffiliateCodeMaxAggregateInputType
-  }
-
-  export type AffiliateCodeGroupByOutputType = {
-    id: string
-    userId: bigint
-    code: string
-    campaignName: string | null
-    description: string | null
-    isActive: boolean
-    isDefault: boolean
-    expiresAt: Date | null
-    createdAt: Date
-    updatedAt: Date
-    lastUsedAt: Date | null
-    _count: AffiliateCodeCountAggregateOutputType | null
-    _avg: AffiliateCodeAvgAggregateOutputType | null
-    _sum: AffiliateCodeSumAggregateOutputType | null
-    _min: AffiliateCodeMinAggregateOutputType | null
-    _max: AffiliateCodeMaxAggregateOutputType | null
-  }
-
-  type GetAffiliateCodeGroupByPayload<T extends AffiliateCodeGroupByArgs> = Prisma.PrismaPromise<
-    Array<
-      PickEnumerable<AffiliateCodeGroupByOutputType, T['by']> &
-        {
-          [P in ((keyof T) & (keyof AffiliateCodeGroupByOutputType))]: P extends '_count'
-            ? T[P] extends boolean
-              ? number
-              : GetScalarType<T[P], AffiliateCodeGroupByOutputType[P]>
-            : GetScalarType<T[P], AffiliateCodeGroupByOutputType[P]>
-        }
-      >
-    >
-
-
-  export type AffiliateCodeSelect<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetSelect<{
-    id?: boolean
-    userId?: boolean
-    code?: boolean
-    campaignName?: boolean
-    description?: boolean
-    isActive?: boolean
-    isDefault?: boolean
-    expiresAt?: boolean
-    createdAt?: boolean
-    updatedAt?: boolean
-    lastUsedAt?: boolean
-    user?: boolean | UserDefaultArgs<ExtArgs>
-    referrals?: boolean | AffiliateCode$referralsArgs<ExtArgs>
-    _count?: boolean | AffiliateCodeCountOutputTypeDefaultArgs<ExtArgs>
-  }, ExtArgs["result"]["affiliateCode"]>
-
-  export type AffiliateCodeSelectCreateManyAndReturn<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetSelect<{
-    id?: boolean
-    userId?: boolean
-    code?: boolean
-    campaignName?: boolean
-    description?: boolean
-    isActive?: boolean
-    isDefault?: boolean
-    expiresAt?: boolean
-    createdAt?: boolean
-    updatedAt?: boolean
-    lastUsedAt?: boolean
-    user?: boolean | UserDefaultArgs<ExtArgs>
-  }, ExtArgs["result"]["affiliateCode"]>
-
-  export type AffiliateCodeSelectUpdateManyAndReturn<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetSelect<{
-    id?: boolean
-    userId?: boolean
-    code?: boolean
-    campaignName?: boolean
-    description?: boolean
-    isActive?: boolean
-    isDefault?: boolean
-    expiresAt?: boolean
-    createdAt?: boolean
-    updatedAt?: boolean
-    lastUsedAt?: boolean
-    user?: boolean | UserDefaultArgs<ExtArgs>
-  }, ExtArgs["result"]["affiliateCode"]>
-
-  export type AffiliateCodeSelectScalar = {
-    id?: boolean
-    userId?: boolean
-    code?: boolean
-    campaignName?: boolean
-    description?: boolean
-    isActive?: boolean
-    isDefault?: boolean
-    expiresAt?: boolean
-    createdAt?: boolean
-    updatedAt?: boolean
-    lastUsedAt?: boolean
-  }
-
-  export type AffiliateCodeOmit<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetOmit<"id" | "userId" | "code" | "campaignName" | "description" | "isActive" | "isDefault" | "expiresAt" | "createdAt" | "updatedAt" | "lastUsedAt", ExtArgs["result"]["affiliateCode"]>
-  export type AffiliateCodeInclude<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
-    user?: boolean | UserDefaultArgs<ExtArgs>
-    referrals?: boolean | AffiliateCode$referralsArgs<ExtArgs>
-    _count?: boolean | AffiliateCodeCountOutputTypeDefaultArgs<ExtArgs>
-  }
-  export type AffiliateCodeIncludeCreateManyAndReturn<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
-    user?: boolean | UserDefaultArgs<ExtArgs>
-  }
-  export type AffiliateCodeIncludeUpdateManyAndReturn<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
-    user?: boolean | UserDefaultArgs<ExtArgs>
-  }
-
-  export type $AffiliateCodePayload<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
-    name: "AffiliateCode"
-    objects: {
-      user: Prisma.$UserPayload<ExtArgs>
-      referrals: Prisma.$ReferralPayload<ExtArgs>[]
-    }
-    scalars: $Extensions.GetPayloadResult<{
-      id: string
-      userId: bigint
-      code: string
-      campaignName: string | null
-      description: string | null
-      isActive: boolean
-      isDefault: boolean
-      expiresAt: Date | null
-      createdAt: Date
-      updatedAt: Date
-      lastUsedAt: Date | null
-    }, ExtArgs["result"]["affiliateCode"]>
-    composites: {}
-  }
-
-  type AffiliateCodeGetPayload<S extends boolean | null | undefined | AffiliateCodeDefaultArgs> = $Result.GetResult<Prisma.$AffiliateCodePayload, S>
-
-  type AffiliateCodeCountArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> =
-    Omit<AffiliateCodeFindManyArgs, 'select' | 'include' | 'distinct' | 'omit'> & {
-      select?: AffiliateCodeCountAggregateInputType | true
-    }
-
-  export interface AffiliateCodeDelegate<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs, GlobalOmitOptions = {}> {
-    [K: symbol]: { types: Prisma.TypeMap<ExtArgs>['model']['AffiliateCode'], meta: { name: 'AffiliateCode' } }
-    /**
-     * Find zero or one AffiliateCode that matches the filter.
-     * @param {AffiliateCodeFindUniqueArgs} args - Arguments to find a AffiliateCode
-     * @example
-     * // Get one AffiliateCode
-     * const affiliateCode = await prisma.affiliateCode.findUnique({
-     *   where: {
-     *     // ... provide filter here
-     *   }
-     * })
-     */
-    findUnique<T extends AffiliateCodeFindUniqueArgs>(args: SelectSubset<T, AffiliateCodeFindUniqueArgs<ExtArgs>>): Prisma__AffiliateCodeClient<$Result.GetResult<Prisma.$AffiliateCodePayload<ExtArgs>, T, "findUnique", GlobalOmitOptions> | null, null, ExtArgs, GlobalOmitOptions>
-
-    /**
-     * Find one AffiliateCode that matches the filter or throw an error with `error.code='P2025'`
-     * if no matches were found.
-     * @param {AffiliateCodeFindUniqueOrThrowArgs} args - Arguments to find a AffiliateCode
-     * @example
-     * // Get one AffiliateCode
-     * const affiliateCode = await prisma.affiliateCode.findUniqueOrThrow({
-     *   where: {
-     *     // ... provide filter here
-     *   }
-     * })
-     */
-    findUniqueOrThrow<T extends AffiliateCodeFindUniqueOrThrowArgs>(args: SelectSubset<T, AffiliateCodeFindUniqueOrThrowArgs<ExtArgs>>): Prisma__AffiliateCodeClient<$Result.GetResult<Prisma.$AffiliateCodePayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
-
-    /**
-     * Find the first AffiliateCode that matches the filter.
-     * Note, that providing `undefined` is treated as the value not being there.
-     * Read more here: https://pris.ly/d/null-undefined
-     * @param {AffiliateCodeFindFirstArgs} args - Arguments to find a AffiliateCode
-     * @example
-     * // Get one AffiliateCode
-     * const affiliateCode = await prisma.affiliateCode.findFirst({
-     *   where: {
-     *     // ... provide filter here
-     *   }
-     * })
-     */
-    findFirst<T extends AffiliateCodeFindFirstArgs>(args?: SelectSubset<T, AffiliateCodeFindFirstArgs<ExtArgs>>): Prisma__AffiliateCodeClient<$Result.GetResult<Prisma.$AffiliateCodePayload<ExtArgs>, T, "findFirst", GlobalOmitOptions> | null, null, ExtArgs, GlobalOmitOptions>
-
-    /**
-     * Find the first AffiliateCode that matches the filter or
-     * throw `PrismaKnownClientError` with `P2025` code if no matches were found.
-     * Note, that providing `undefined` is treated as the value not being there.
-     * Read more here: https://pris.ly/d/null-undefined
-     * @param {AffiliateCodeFindFirstOrThrowArgs} args - Arguments to find a AffiliateCode
-     * @example
-     * // Get one AffiliateCode
-     * const affiliateCode = await prisma.affiliateCode.findFirstOrThrow({
-     *   where: {
-     *     // ... provide filter here
-     *   }
-     * })
-     */
-    findFirstOrThrow<T extends AffiliateCodeFindFirstOrThrowArgs>(args?: SelectSubset<T, AffiliateCodeFindFirstOrThrowArgs<ExtArgs>>): Prisma__AffiliateCodeClient<$Result.GetResult<Prisma.$AffiliateCodePayload<ExtArgs>, T, "findFirstOrThrow", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
-
-    /**
-     * Find zero or more AffiliateCodes that matches the filter.
-     * Note, that providing `undefined` is treated as the value not being there.
-     * Read more here: https://pris.ly/d/null-undefined
-     * @param {AffiliateCodeFindManyArgs} args - Arguments to filter and select certain fields only.
-     * @example
-     * // Get all AffiliateCodes
-     * const affiliateCodes = await prisma.affiliateCode.findMany()
-     * 
-     * // Get first 10 AffiliateCodes
-     * const affiliateCodes = await prisma.affiliateCode.findMany({ take: 10 })
-     * 
-     * // Only select the `id`
-     * const affiliateCodeWithIdOnly = await prisma.affiliateCode.findMany({ select: { id: true } })
-     * 
-     */
-    findMany<T extends AffiliateCodeFindManyArgs>(args?: SelectSubset<T, AffiliateCodeFindManyArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$AffiliateCodePayload<ExtArgs>, T, "findMany", GlobalOmitOptions>>
-
-    /**
-     * Create a AffiliateCode.
-     * @param {AffiliateCodeCreateArgs} args - Arguments to create a AffiliateCode.
-     * @example
-     * // Create one AffiliateCode
-     * const AffiliateCode = await prisma.affiliateCode.create({
-     *   data: {
-     *     // ... data to create a AffiliateCode
-     *   }
-     * })
-     * 
-     */
-    create<T extends AffiliateCodeCreateArgs>(args: SelectSubset<T, AffiliateCodeCreateArgs<ExtArgs>>): Prisma__AffiliateCodeClient<$Result.GetResult<Prisma.$AffiliateCodePayload<ExtArgs>, T, "create", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
-
-    /**
-     * Create many AffiliateCodes.
-     * @param {AffiliateCodeCreateManyArgs} args - Arguments to create many AffiliateCodes.
-     * @example
-     * // Create many AffiliateCodes
-     * const affiliateCode = await prisma.affiliateCode.createMany({
-     *   data: [
-     *     // ... provide data here
-     *   ]
-     * })
-     *     
-     */
-    createMany<T extends AffiliateCodeCreateManyArgs>(args?: SelectSubset<T, AffiliateCodeCreateManyArgs<ExtArgs>>): Prisma.PrismaPromise<BatchPayload>
-
-    /**
-     * Create many AffiliateCodes and returns the data saved in the database.
-     * @param {AffiliateCodeCreateManyAndReturnArgs} args - Arguments to create many AffiliateCodes.
-     * @example
-     * // Create many AffiliateCodes
-     * const affiliateCode = await prisma.affiliateCode.createManyAndReturn({
-     *   data: [
-     *     // ... provide data here
-     *   ]
-     * })
-     * 
-     * // Create many AffiliateCodes and only return the `id`
-     * const affiliateCodeWithIdOnly = await prisma.affiliateCode.createManyAndReturn({
-     *   select: { id: true },
-     *   data: [
-     *     // ... provide data here
-     *   ]
-     * })
-     * Note, that providing `undefined` is treated as the value not being there.
-     * Read more here: https://pris.ly/d/null-undefined
-     * 
-     */
-    createManyAndReturn<T extends AffiliateCodeCreateManyAndReturnArgs>(args?: SelectSubset<T, AffiliateCodeCreateManyAndReturnArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$AffiliateCodePayload<ExtArgs>, T, "createManyAndReturn", GlobalOmitOptions>>
-
-    /**
-     * Delete a AffiliateCode.
-     * @param {AffiliateCodeDeleteArgs} args - Arguments to delete one AffiliateCode.
-     * @example
-     * // Delete one AffiliateCode
-     * const AffiliateCode = await prisma.affiliateCode.delete({
-     *   where: {
-     *     // ... filter to delete one AffiliateCode
-     *   }
-     * })
-     * 
-     */
-    delete<T extends AffiliateCodeDeleteArgs>(args: SelectSubset<T, AffiliateCodeDeleteArgs<ExtArgs>>): Prisma__AffiliateCodeClient<$Result.GetResult<Prisma.$AffiliateCodePayload<ExtArgs>, T, "delete", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
-
-    /**
-     * Update one AffiliateCode.
-     * @param {AffiliateCodeUpdateArgs} args - Arguments to update one AffiliateCode.
-     * @example
-     * // Update one AffiliateCode
-     * const affiliateCode = await prisma.affiliateCode.update({
-     *   where: {
-     *     // ... provide filter here
-     *   },
-     *   data: {
-     *     // ... provide data here
-     *   }
-     * })
-     * 
-     */
-    update<T extends AffiliateCodeUpdateArgs>(args: SelectSubset<T, AffiliateCodeUpdateArgs<ExtArgs>>): Prisma__AffiliateCodeClient<$Result.GetResult<Prisma.$AffiliateCodePayload<ExtArgs>, T, "update", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
-
-    /**
-     * Delete zero or more AffiliateCodes.
-     * @param {AffiliateCodeDeleteManyArgs} args - Arguments to filter AffiliateCodes to delete.
-     * @example
-     * // Delete a few AffiliateCodes
-     * const { count } = await prisma.affiliateCode.deleteMany({
-     *   where: {
-     *     // ... provide filter here
-     *   }
-     * })
-     * 
-     */
-    deleteMany<T extends AffiliateCodeDeleteManyArgs>(args?: SelectSubset<T, AffiliateCodeDeleteManyArgs<ExtArgs>>): Prisma.PrismaPromise<BatchPayload>
-
-    /**
-     * Update zero or more AffiliateCodes.
-     * Note, that providing `undefined` is treated as the value not being there.
-     * Read more here: https://pris.ly/d/null-undefined
-     * @param {AffiliateCodeUpdateManyArgs} args - Arguments to update one or more rows.
-     * @example
-     * // Update many AffiliateCodes
-     * const affiliateCode = await prisma.affiliateCode.updateMany({
-     *   where: {
-     *     // ... provide filter here
-     *   },
-     *   data: {
-     *     // ... provide data here
-     *   }
-     * })
-     * 
-     */
-    updateMany<T extends AffiliateCodeUpdateManyArgs>(args: SelectSubset<T, AffiliateCodeUpdateManyArgs<ExtArgs>>): Prisma.PrismaPromise<BatchPayload>
-
-    /**
-     * Update zero or more AffiliateCodes and returns the data updated in the database.
-     * @param {AffiliateCodeUpdateManyAndReturnArgs} args - Arguments to update many AffiliateCodes.
-     * @example
-     * // Update many AffiliateCodes
-     * const affiliateCode = await prisma.affiliateCode.updateManyAndReturn({
-     *   where: {
-     *     // ... provide filter here
-     *   },
-     *   data: [
-     *     // ... provide data here
-     *   ]
-     * })
-     * 
-     * // Update zero or more AffiliateCodes and only return the `id`
-     * const affiliateCodeWithIdOnly = await prisma.affiliateCode.updateManyAndReturn({
-     *   select: { id: true },
-     *   where: {
-     *     // ... provide filter here
-     *   },
-     *   data: [
-     *     // ... provide data here
-     *   ]
-     * })
-     * Note, that providing `undefined` is treated as the value not being there.
-     * Read more here: https://pris.ly/d/null-undefined
-     * 
-     */
-    updateManyAndReturn<T extends AffiliateCodeUpdateManyAndReturnArgs>(args: SelectSubset<T, AffiliateCodeUpdateManyAndReturnArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$AffiliateCodePayload<ExtArgs>, T, "updateManyAndReturn", GlobalOmitOptions>>
-
-    /**
-     * Create or update one AffiliateCode.
-     * @param {AffiliateCodeUpsertArgs} args - Arguments to update or create a AffiliateCode.
-     * @example
-     * // Update or create a AffiliateCode
-     * const affiliateCode = await prisma.affiliateCode.upsert({
-     *   create: {
-     *     // ... data to create a AffiliateCode
-     *   },
-     *   update: {
-     *     // ... in case it already exists, update
-     *   },
-     *   where: {
-     *     // ... the filter for the AffiliateCode we want to update
-     *   }
-     * })
-     */
-    upsert<T extends AffiliateCodeUpsertArgs>(args: SelectSubset<T, AffiliateCodeUpsertArgs<ExtArgs>>): Prisma__AffiliateCodeClient<$Result.GetResult<Prisma.$AffiliateCodePayload<ExtArgs>, T, "upsert", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
-
-
-    /**
-     * Count the number of AffiliateCodes.
-     * Note, that providing `undefined` is treated as the value not being there.
-     * Read more here: https://pris.ly/d/null-undefined
-     * @param {AffiliateCodeCountArgs} args - Arguments to filter AffiliateCodes to count.
-     * @example
-     * // Count the number of AffiliateCodes
-     * const count = await prisma.affiliateCode.count({
-     *   where: {
-     *     // ... the filter for the AffiliateCodes we want to count
-     *   }
-     * })
-    **/
-    count<T extends AffiliateCodeCountArgs>(
-      args?: Subset<T, AffiliateCodeCountArgs>,
-    ): Prisma.PrismaPromise<
-      T extends $Utils.Record<'select', any>
-        ? T['select'] extends true
-          ? number
-          : GetScalarType<T['select'], AffiliateCodeCountAggregateOutputType>
-        : number
-    >
-
-    /**
-     * Allows you to perform aggregations operations on a AffiliateCode.
-     * Note, that providing `undefined` is treated as the value not being there.
-     * Read more here: https://pris.ly/d/null-undefined
-     * @param {AffiliateCodeAggregateArgs} args - Select which aggregations you would like to apply and on what fields.
-     * @example
-     * // Ordered by age ascending
-     * // Where email contains prisma.io
-     * // Limited to the 10 users
-     * const aggregations = await prisma.user.aggregate({
-     *   _avg: {
-     *     age: true,
-     *   },
-     *   where: {
-     *     email: {
-     *       contains: "prisma.io",
-     *     },
-     *   },
-     *   orderBy: {
-     *     age: "asc",
-     *   },
-     *   take: 10,
-     * })
-    **/
-    aggregate<T extends AffiliateCodeAggregateArgs>(args: Subset<T, AffiliateCodeAggregateArgs>): Prisma.PrismaPromise<GetAffiliateCodeAggregateType<T>>
-
-    /**
-     * Group by AffiliateCode.
-     * Note, that providing `undefined` is treated as the value not being there.
-     * Read more here: https://pris.ly/d/null-undefined
-     * @param {AffiliateCodeGroupByArgs} args - Group by arguments.
-     * @example
-     * // Group by city, order by createdAt, get count
-     * const result = await prisma.user.groupBy({
-     *   by: ['city', 'createdAt'],
-     *   orderBy: {
-     *     createdAt: true
-     *   },
-     *   _count: {
-     *     _all: true
-     *   },
-     * })
-     * 
-    **/
-    groupBy<
-      T extends AffiliateCodeGroupByArgs,
-      HasSelectOrTake extends Or<
-        Extends<'skip', Keys<T>>,
-        Extends<'take', Keys<T>>
-      >,
-      OrderByArg extends True extends HasSelectOrTake
-        ? { orderBy: AffiliateCodeGroupByArgs['orderBy'] }
-        : { orderBy?: AffiliateCodeGroupByArgs['orderBy'] },
-      OrderFields extends ExcludeUnderscoreKeys<Keys<MaybeTupleToUnion<T['orderBy']>>>,
-      ByFields extends MaybeTupleToUnion<T['by']>,
-      ByValid extends Has<ByFields, OrderFields>,
-      HavingFields extends GetHavingFields<T['having']>,
-      HavingValid extends Has<ByFields, HavingFields>,
-      ByEmpty extends T['by'] extends never[] ? True : False,
-      InputErrors extends ByEmpty extends True
-      ? `Error: "by" must not be empty.`
-      : HavingValid extends False
-      ? {
-          [P in HavingFields]: P extends ByFields
-            ? never
-            : P extends string
-            ? `Error: Field "${P}" used in "having" needs to be provided in "by".`
-            : [
-                Error,
-                'Field ',
-                P,
-                ` in "having" needs to be provided in "by"`,
-              ]
-        }[HavingFields]
-      : 'take' extends Keys<T>
-      ? 'orderBy' extends Keys<T>
-        ? ByValid extends True
-          ? {}
-          : {
-              [P in OrderFields]: P extends ByFields
-                ? never
-                : `Error: Field "${P}" in "orderBy" needs to be provided in "by"`
-            }[OrderFields]
-        : 'Error: If you provide "take", you also need to provide "orderBy"'
-      : 'skip' extends Keys<T>
-      ? 'orderBy' extends Keys<T>
-        ? ByValid extends True
-          ? {}
-          : {
-              [P in OrderFields]: P extends ByFields
-                ? never
-                : `Error: Field "${P}" in "orderBy" needs to be provided in "by"`
-            }[OrderFields]
-        : 'Error: If you provide "skip", you also need to provide "orderBy"'
-      : ByValid extends True
-      ? {}
-      : {
-          [P in OrderFields]: P extends ByFields
-            ? never
-            : `Error: Field "${P}" in "orderBy" needs to be provided in "by"`
-        }[OrderFields]
-    >(args: SubsetIntersection<T, AffiliateCodeGroupByArgs, OrderByArg> & InputErrors): {} extends InputErrors ? GetAffiliateCodeGroupByPayload<T> : Prisma.PrismaPromise<InputErrors>
-  /**
-   * Fields of the AffiliateCode model
-   */
-  readonly fields: AffiliateCodeFieldRefs;
-  }
-
-  /**
-   * The delegate class that acts as a "Promise-like" for AffiliateCode.
-   * Why is this prefixed with `Prisma__`?
-   * Because we want to prevent naming conflicts as mentioned in
-   * https://github.com/prisma/prisma-client-js/issues/707
-   */
-  export interface Prisma__AffiliateCodeClient<T, Null = never, ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs, GlobalOmitOptions = {}> extends Prisma.PrismaPromise<T> {
-    readonly [Symbol.toStringTag]: "PrismaPromise"
-    user<T extends UserDefaultArgs<ExtArgs> = {}>(args?: Subset<T, UserDefaultArgs<ExtArgs>>): Prisma__UserClient<$Result.GetResult<Prisma.$UserPayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions> | Null, Null, ExtArgs, GlobalOmitOptions>
-    referrals<T extends AffiliateCode$referralsArgs<ExtArgs> = {}>(args?: Subset<T, AffiliateCode$referralsArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$ReferralPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
-    /**
-     * Attaches callbacks for the resolution and/or rejection of the Promise.
-     * @param onfulfilled The callback to execute when the Promise is resolved.
-     * @param onrejected The callback to execute when the Promise is rejected.
-     * @returns A Promise for the completion of which ever callback is executed.
-     */
-    then<TResult1 = T, TResult2 = never>(onfulfilled?: ((value: T) => TResult1 | PromiseLike<TResult1>) | undefined | null, onrejected?: ((reason: any) => TResult2 | PromiseLike<TResult2>) | undefined | null): $Utils.JsPromise<TResult1 | TResult2>
-    /**
-     * Attaches a callback for only the rejection of the Promise.
-     * @param onrejected The callback to execute when the Promise is rejected.
-     * @returns A Promise for the completion of the callback.
-     */
-    catch<TResult = never>(onrejected?: ((reason: any) => TResult | PromiseLike<TResult>) | undefined | null): $Utils.JsPromise<T | TResult>
-    /**
-     * Attaches a callback that is invoked when the Promise is settled (fulfilled or rejected). The
-     * resolved value cannot be modified from the callback.
-     * @param onfinally The callback to execute when the Promise is settled (fulfilled or rejected).
-     * @returns A Promise for the completion of the callback.
-     */
-    finally(onfinally?: (() => void) | undefined | null): $Utils.JsPromise<T>
-  }
-
-
-
-
-  /**
-   * Fields of the AffiliateCode model
-   */
-  interface AffiliateCodeFieldRefs {
-    readonly id: FieldRef<"AffiliateCode", 'String'>
-    readonly userId: FieldRef<"AffiliateCode", 'BigInt'>
-    readonly code: FieldRef<"AffiliateCode", 'String'>
-    readonly campaignName: FieldRef<"AffiliateCode", 'String'>
-    readonly description: FieldRef<"AffiliateCode", 'String'>
-    readonly isActive: FieldRef<"AffiliateCode", 'Boolean'>
-    readonly isDefault: FieldRef<"AffiliateCode", 'Boolean'>
-    readonly expiresAt: FieldRef<"AffiliateCode", 'DateTime'>
-    readonly createdAt: FieldRef<"AffiliateCode", 'DateTime'>
-    readonly updatedAt: FieldRef<"AffiliateCode", 'DateTime'>
-    readonly lastUsedAt: FieldRef<"AffiliateCode", 'DateTime'>
-  }
-    
-
-  // Custom InputTypes
-  /**
-   * AffiliateCode findUnique
-   */
-  export type AffiliateCodeFindUniqueArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
-    /**
-     * Select specific fields to fetch from the AffiliateCode
-     */
-    select?: AffiliateCodeSelect<ExtArgs> | null
-    /**
-     * Omit specific fields from the AffiliateCode
-     */
-    omit?: AffiliateCodeOmit<ExtArgs> | null
-    /**
-     * Choose, which related nodes to fetch as well
-     */
-    include?: AffiliateCodeInclude<ExtArgs> | null
-    /**
-     * Filter, which AffiliateCode to fetch.
-     */
-    where: AffiliateCodeWhereUniqueInput
-  }
-
-  /**
-   * AffiliateCode findUniqueOrThrow
-   */
-  export type AffiliateCodeFindUniqueOrThrowArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
-    /**
-     * Select specific fields to fetch from the AffiliateCode
-     */
-    select?: AffiliateCodeSelect<ExtArgs> | null
-    /**
-     * Omit specific fields from the AffiliateCode
-     */
-    omit?: AffiliateCodeOmit<ExtArgs> | null
-    /**
-     * Choose, which related nodes to fetch as well
-     */
-    include?: AffiliateCodeInclude<ExtArgs> | null
-    /**
-     * Filter, which AffiliateCode to fetch.
-     */
-    where: AffiliateCodeWhereUniqueInput
-  }
-
-  /**
-   * AffiliateCode findFirst
-   */
-  export type AffiliateCodeFindFirstArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
-    /**
-     * Select specific fields to fetch from the AffiliateCode
-     */
-    select?: AffiliateCodeSelect<ExtArgs> | null
-    /**
-     * Omit specific fields from the AffiliateCode
-     */
-    omit?: AffiliateCodeOmit<ExtArgs> | null
-    /**
-     * Choose, which related nodes to fetch as well
-     */
-    include?: AffiliateCodeInclude<ExtArgs> | null
-    /**
-     * Filter, which AffiliateCode to fetch.
-     */
-    where?: AffiliateCodeWhereInput
-    /**
-     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/sorting Sorting Docs}
-     * 
-     * Determine the order of AffiliateCodes to fetch.
-     */
-    orderBy?: AffiliateCodeOrderByWithRelationInput | AffiliateCodeOrderByWithRelationInput[]
-    /**
-     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination#cursor-based-pagination Cursor Docs}
-     * 
-     * Sets the position for searching for AffiliateCodes.
-     */
-    cursor?: AffiliateCodeWhereUniqueInput
-    /**
-     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
-     * 
-     * Take `±n` AffiliateCodes from the position of the cursor.
-     */
-    take?: number
-    /**
-     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
-     * 
-     * Skip the first `n` AffiliateCodes.
-     */
-    skip?: number
-    /**
-     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/distinct Distinct Docs}
-     * 
-     * Filter by unique combinations of AffiliateCodes.
-     */
-    distinct?: AffiliateCodeScalarFieldEnum | AffiliateCodeScalarFieldEnum[]
-  }
-
-  /**
-   * AffiliateCode findFirstOrThrow
-   */
-  export type AffiliateCodeFindFirstOrThrowArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
-    /**
-     * Select specific fields to fetch from the AffiliateCode
-     */
-    select?: AffiliateCodeSelect<ExtArgs> | null
-    /**
-     * Omit specific fields from the AffiliateCode
-     */
-    omit?: AffiliateCodeOmit<ExtArgs> | null
-    /**
-     * Choose, which related nodes to fetch as well
-     */
-    include?: AffiliateCodeInclude<ExtArgs> | null
-    /**
-     * Filter, which AffiliateCode to fetch.
-     */
-    where?: AffiliateCodeWhereInput
-    /**
-     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/sorting Sorting Docs}
-     * 
-     * Determine the order of AffiliateCodes to fetch.
-     */
-    orderBy?: AffiliateCodeOrderByWithRelationInput | AffiliateCodeOrderByWithRelationInput[]
-    /**
-     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination#cursor-based-pagination Cursor Docs}
-     * 
-     * Sets the position for searching for AffiliateCodes.
-     */
-    cursor?: AffiliateCodeWhereUniqueInput
-    /**
-     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
-     * 
-     * Take `±n` AffiliateCodes from the position of the cursor.
-     */
-    take?: number
-    /**
-     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
-     * 
-     * Skip the first `n` AffiliateCodes.
-     */
-    skip?: number
-    /**
-     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/distinct Distinct Docs}
-     * 
-     * Filter by unique combinations of AffiliateCodes.
-     */
-    distinct?: AffiliateCodeScalarFieldEnum | AffiliateCodeScalarFieldEnum[]
-  }
-
-  /**
-   * AffiliateCode findMany
-   */
-  export type AffiliateCodeFindManyArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
-    /**
-     * Select specific fields to fetch from the AffiliateCode
-     */
-    select?: AffiliateCodeSelect<ExtArgs> | null
-    /**
-     * Omit specific fields from the AffiliateCode
-     */
-    omit?: AffiliateCodeOmit<ExtArgs> | null
-    /**
-     * Choose, which related nodes to fetch as well
-     */
-    include?: AffiliateCodeInclude<ExtArgs> | null
-    /**
-     * Filter, which AffiliateCodes to fetch.
-     */
-    where?: AffiliateCodeWhereInput
-    /**
-     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/sorting Sorting Docs}
-     * 
-     * Determine the order of AffiliateCodes to fetch.
-     */
-    orderBy?: AffiliateCodeOrderByWithRelationInput | AffiliateCodeOrderByWithRelationInput[]
-    /**
-     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination#cursor-based-pagination Cursor Docs}
-     * 
-     * Sets the position for listing AffiliateCodes.
-     */
-    cursor?: AffiliateCodeWhereUniqueInput
-    /**
-     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
-     * 
-     * Take `±n` AffiliateCodes from the position of the cursor.
-     */
-    take?: number
-    /**
-     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
-     * 
-     * Skip the first `n` AffiliateCodes.
-     */
-    skip?: number
-    distinct?: AffiliateCodeScalarFieldEnum | AffiliateCodeScalarFieldEnum[]
-  }
-
-  /**
-   * AffiliateCode create
-   */
-  export type AffiliateCodeCreateArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
-    /**
-     * Select specific fields to fetch from the AffiliateCode
-     */
-    select?: AffiliateCodeSelect<ExtArgs> | null
-    /**
-     * Omit specific fields from the AffiliateCode
-     */
-    omit?: AffiliateCodeOmit<ExtArgs> | null
-    /**
-     * Choose, which related nodes to fetch as well
-     */
-    include?: AffiliateCodeInclude<ExtArgs> | null
-    /**
-     * The data needed to create a AffiliateCode.
-     */
-    data: XOR<AffiliateCodeCreateInput, AffiliateCodeUncheckedCreateInput>
-  }
-
-  /**
-   * AffiliateCode createMany
-   */
-  export type AffiliateCodeCreateManyArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
-    /**
-     * The data used to create many AffiliateCodes.
-     */
-    data: AffiliateCodeCreateManyInput | AffiliateCodeCreateManyInput[]
-    skipDuplicates?: boolean
-  }
-
-  /**
-   * AffiliateCode createManyAndReturn
-   */
-  export type AffiliateCodeCreateManyAndReturnArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
-    /**
-     * Select specific fields to fetch from the AffiliateCode
-     */
-    select?: AffiliateCodeSelectCreateManyAndReturn<ExtArgs> | null
-    /**
-     * Omit specific fields from the AffiliateCode
-     */
-    omit?: AffiliateCodeOmit<ExtArgs> | null
-    /**
-     * The data used to create many AffiliateCodes.
-     */
-    data: AffiliateCodeCreateManyInput | AffiliateCodeCreateManyInput[]
-    skipDuplicates?: boolean
-    /**
-     * Choose, which related nodes to fetch as well
-     */
-    include?: AffiliateCodeIncludeCreateManyAndReturn<ExtArgs> | null
-  }
-
-  /**
-   * AffiliateCode update
-   */
-  export type AffiliateCodeUpdateArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
-    /**
-     * Select specific fields to fetch from the AffiliateCode
-     */
-    select?: AffiliateCodeSelect<ExtArgs> | null
-    /**
-     * Omit specific fields from the AffiliateCode
-     */
-    omit?: AffiliateCodeOmit<ExtArgs> | null
-    /**
-     * Choose, which related nodes to fetch as well
-     */
-    include?: AffiliateCodeInclude<ExtArgs> | null
-    /**
-     * The data needed to update a AffiliateCode.
-     */
-    data: XOR<AffiliateCodeUpdateInput, AffiliateCodeUncheckedUpdateInput>
-    /**
-     * Choose, which AffiliateCode to update.
-     */
-    where: AffiliateCodeWhereUniqueInput
-  }
-
-  /**
-   * AffiliateCode updateMany
-   */
-  export type AffiliateCodeUpdateManyArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
-    /**
-     * The data used to update AffiliateCodes.
-     */
-    data: XOR<AffiliateCodeUpdateManyMutationInput, AffiliateCodeUncheckedUpdateManyInput>
-    /**
-     * Filter which AffiliateCodes to update
-     */
-    where?: AffiliateCodeWhereInput
-    /**
-     * Limit how many AffiliateCodes to update.
-     */
-    limit?: number
-  }
-
-  /**
-   * AffiliateCode updateManyAndReturn
-   */
-  export type AffiliateCodeUpdateManyAndReturnArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
-    /**
-     * Select specific fields to fetch from the AffiliateCode
-     */
-    select?: AffiliateCodeSelectUpdateManyAndReturn<ExtArgs> | null
-    /**
-     * Omit specific fields from the AffiliateCode
-     */
-    omit?: AffiliateCodeOmit<ExtArgs> | null
-    /**
-     * The data used to update AffiliateCodes.
-     */
-    data: XOR<AffiliateCodeUpdateManyMutationInput, AffiliateCodeUncheckedUpdateManyInput>
-    /**
-     * Filter which AffiliateCodes to update
-     */
-    where?: AffiliateCodeWhereInput
-    /**
-     * Limit how many AffiliateCodes to update.
-     */
-    limit?: number
-    /**
-     * Choose, which related nodes to fetch as well
-     */
-    include?: AffiliateCodeIncludeUpdateManyAndReturn<ExtArgs> | null
-  }
-
-  /**
-   * AffiliateCode upsert
-   */
-  export type AffiliateCodeUpsertArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
-    /**
-     * Select specific fields to fetch from the AffiliateCode
-     */
-    select?: AffiliateCodeSelect<ExtArgs> | null
-    /**
-     * Omit specific fields from the AffiliateCode
-     */
-    omit?: AffiliateCodeOmit<ExtArgs> | null
-    /**
-     * Choose, which related nodes to fetch as well
-     */
-    include?: AffiliateCodeInclude<ExtArgs> | null
-    /**
-     * The filter to search for the AffiliateCode to update in case it exists.
-     */
-    where: AffiliateCodeWhereUniqueInput
-    /**
-     * In case the AffiliateCode found by the `where` argument doesn't exist, create a new AffiliateCode with this data.
-     */
-    create: XOR<AffiliateCodeCreateInput, AffiliateCodeUncheckedCreateInput>
-    /**
-     * In case the AffiliateCode was found with the provided `where` argument, update it with this data.
-     */
-    update: XOR<AffiliateCodeUpdateInput, AffiliateCodeUncheckedUpdateInput>
-  }
-
-  /**
-   * AffiliateCode delete
-   */
-  export type AffiliateCodeDeleteArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
-    /**
-     * Select specific fields to fetch from the AffiliateCode
-     */
-    select?: AffiliateCodeSelect<ExtArgs> | null
-    /**
-     * Omit specific fields from the AffiliateCode
-     */
-    omit?: AffiliateCodeOmit<ExtArgs> | null
-    /**
-     * Choose, which related nodes to fetch as well
-     */
-    include?: AffiliateCodeInclude<ExtArgs> | null
-    /**
-     * Filter which AffiliateCode to delete.
-     */
-    where: AffiliateCodeWhereUniqueInput
-  }
-
-  /**
-   * AffiliateCode deleteMany
-   */
-  export type AffiliateCodeDeleteManyArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
-    /**
-     * Filter which AffiliateCodes to delete
-     */
-    where?: AffiliateCodeWhereInput
-    /**
-     * Limit how many AffiliateCodes to delete.
-     */
-    limit?: number
-  }
-
-  /**
-   * AffiliateCode.referrals
-   */
-  export type AffiliateCode$referralsArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
-    /**
-     * Select specific fields to fetch from the Referral
-     */
-    select?: ReferralSelect<ExtArgs> | null
-    /**
-     * Omit specific fields from the Referral
-     */
-    omit?: ReferralOmit<ExtArgs> | null
-    /**
-     * Choose, which related nodes to fetch as well
-     */
-    include?: ReferralInclude<ExtArgs> | null
-    where?: ReferralWhereInput
-    orderBy?: ReferralOrderByWithRelationInput | ReferralOrderByWithRelationInput[]
-    cursor?: ReferralWhereUniqueInput
-    take?: number
-    skip?: number
-    distinct?: ReferralScalarFieldEnum | ReferralScalarFieldEnum[]
-  }
-
-  /**
-   * AffiliateCode without action
-   */
-  export type AffiliateCodeDefaultArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
-    /**
-     * Select specific fields to fetch from the AffiliateCode
-     */
-    select?: AffiliateCodeSelect<ExtArgs> | null
-    /**
-     * Omit specific fields from the AffiliateCode
-     */
-    omit?: AffiliateCodeOmit<ExtArgs> | null
-    /**
-     * Choose, which related nodes to fetch as well
-     */
-    include?: AffiliateCodeInclude<ExtArgs> | null
-  }
-
-
-  /**
-   * Model Referral
-   */
-
-  export type AggregateReferral = {
-    _count: ReferralCountAggregateOutputType | null
-    _avg: ReferralAvgAggregateOutputType | null
-    _sum: ReferralSumAggregateOutputType | null
-    _min: ReferralMinAggregateOutputType | null
-    _max: ReferralMaxAggregateOutputType | null
-  }
-
-  export type ReferralAvgAggregateOutputType = {
-    affiliateId: number | null
-    subUserId: number | null
-  }
-
-  export type ReferralSumAggregateOutputType = {
-    affiliateId: bigint | null
-    subUserId: bigint | null
-  }
-
-  export type ReferralMinAggregateOutputType = {
-    id: string | null
-    affiliateId: bigint | null
-    subUserId: bigint | null
-    ipAddress: string | null
-    deviceFingerprint: string | null
-    userAgent: string | null
-    createdAt: Date | null
-    updatedAt: Date | null
-    codeId: string | null
-  }
-
-  export type ReferralMaxAggregateOutputType = {
-    id: string | null
-    affiliateId: bigint | null
-    subUserId: bigint | null
-    ipAddress: string | null
-    deviceFingerprint: string | null
-    userAgent: string | null
-    createdAt: Date | null
-    updatedAt: Date | null
-    codeId: string | null
-  }
-
-  export type ReferralCountAggregateOutputType = {
-    id: number
-    affiliateId: number
-    subUserId: number
-    ipAddress: number
-    deviceFingerprint: number
-    userAgent: number
-    createdAt: number
-    updatedAt: number
-    codeId: number
-    _all: number
-  }
-
-
-  export type ReferralAvgAggregateInputType = {
-    affiliateId?: true
-    subUserId?: true
-  }
-
-  export type ReferralSumAggregateInputType = {
-    affiliateId?: true
-    subUserId?: true
-  }
-
-  export type ReferralMinAggregateInputType = {
-    id?: true
-    affiliateId?: true
-    subUserId?: true
-    ipAddress?: true
-    deviceFingerprint?: true
-    userAgent?: true
-    createdAt?: true
-    updatedAt?: true
-    codeId?: true
-  }
-
-  export type ReferralMaxAggregateInputType = {
-    id?: true
-    affiliateId?: true
-    subUserId?: true
-    ipAddress?: true
-    deviceFingerprint?: true
-    userAgent?: true
-    createdAt?: true
-    updatedAt?: true
-    codeId?: true
-  }
-
-  export type ReferralCountAggregateInputType = {
-    id?: true
-    affiliateId?: true
-    subUserId?: true
-    ipAddress?: true
-    deviceFingerprint?: true
-    userAgent?: true
-    createdAt?: true
-    updatedAt?: true
-    codeId?: true
-    _all?: true
-  }
-
-  export type ReferralAggregateArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
-    /**
-     * Filter which Referral to aggregate.
-     */
-    where?: ReferralWhereInput
-    /**
-     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/sorting Sorting Docs}
-     * 
-     * Determine the order of Referrals to fetch.
-     */
-    orderBy?: ReferralOrderByWithRelationInput | ReferralOrderByWithRelationInput[]
-    /**
-     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination#cursor-based-pagination Cursor Docs}
-     * 
-     * Sets the start position
-     */
-    cursor?: ReferralWhereUniqueInput
-    /**
-     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
-     * 
-     * Take `±n` Referrals from the position of the cursor.
-     */
-    take?: number
-    /**
-     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
-     * 
-     * Skip the first `n` Referrals.
-     */
-    skip?: number
-    /**
-     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
-     * 
-     * Count returned Referrals
-    **/
-    _count?: true | ReferralCountAggregateInputType
-    /**
-     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
-     * 
-     * Select which fields to average
-    **/
-    _avg?: ReferralAvgAggregateInputType
-    /**
-     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
-     * 
-     * Select which fields to sum
-    **/
-    _sum?: ReferralSumAggregateInputType
-    /**
-     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
-     * 
-     * Select which fields to find the minimum value
-    **/
-    _min?: ReferralMinAggregateInputType
-    /**
-     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
-     * 
-     * Select which fields to find the maximum value
-    **/
-    _max?: ReferralMaxAggregateInputType
-  }
-
-  export type GetReferralAggregateType<T extends ReferralAggregateArgs> = {
-        [P in keyof T & keyof AggregateReferral]: P extends '_count' | 'count'
-      ? T[P] extends true
-        ? number
-        : GetScalarType<T[P], AggregateReferral[P]>
-      : GetScalarType<T[P], AggregateReferral[P]>
-  }
-
-
-
-
-  export type ReferralGroupByArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
-    where?: ReferralWhereInput
-    orderBy?: ReferralOrderByWithAggregationInput | ReferralOrderByWithAggregationInput[]
-    by: ReferralScalarFieldEnum[] | ReferralScalarFieldEnum
-    having?: ReferralScalarWhereWithAggregatesInput
-    take?: number
-    skip?: number
-    _count?: ReferralCountAggregateInputType | true
-    _avg?: ReferralAvgAggregateInputType
-    _sum?: ReferralSumAggregateInputType
-    _min?: ReferralMinAggregateInputType
-    _max?: ReferralMaxAggregateInputType
-  }
-
-  export type ReferralGroupByOutputType = {
-    id: string
-    affiliateId: bigint
-    subUserId: bigint
-    ipAddress: string | null
-    deviceFingerprint: string | null
-    userAgent: string | null
-    createdAt: Date
-    updatedAt: Date
-    codeId: string
-    _count: ReferralCountAggregateOutputType | null
-    _avg: ReferralAvgAggregateOutputType | null
-    _sum: ReferralSumAggregateOutputType | null
-    _min: ReferralMinAggregateOutputType | null
-    _max: ReferralMaxAggregateOutputType | null
-  }
-
-  type GetReferralGroupByPayload<T extends ReferralGroupByArgs> = Prisma.PrismaPromise<
-    Array<
-      PickEnumerable<ReferralGroupByOutputType, T['by']> &
-        {
-          [P in ((keyof T) & (keyof ReferralGroupByOutputType))]: P extends '_count'
-            ? T[P] extends boolean
-              ? number
-              : GetScalarType<T[P], ReferralGroupByOutputType[P]>
-            : GetScalarType<T[P], ReferralGroupByOutputType[P]>
-        }
-      >
-    >
-
-
-  export type ReferralSelect<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetSelect<{
-    id?: boolean
-    affiliateId?: boolean
-    subUserId?: boolean
-    ipAddress?: boolean
-    deviceFingerprint?: boolean
-    userAgent?: boolean
-    createdAt?: boolean
-    updatedAt?: boolean
-    codeId?: boolean
-    affiliate?: boolean | UserDefaultArgs<ExtArgs>
-    code?: boolean | AffiliateCodeDefaultArgs<ExtArgs>
-    subUser?: boolean | UserDefaultArgs<ExtArgs>
-  }, ExtArgs["result"]["referral"]>
-
-  export type ReferralSelectCreateManyAndReturn<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetSelect<{
-    id?: boolean
-    affiliateId?: boolean
-    subUserId?: boolean
-    ipAddress?: boolean
-    deviceFingerprint?: boolean
-    userAgent?: boolean
-    createdAt?: boolean
-    updatedAt?: boolean
-    codeId?: boolean
-    affiliate?: boolean | UserDefaultArgs<ExtArgs>
-    code?: boolean | AffiliateCodeDefaultArgs<ExtArgs>
-    subUser?: boolean | UserDefaultArgs<ExtArgs>
-  }, ExtArgs["result"]["referral"]>
-
-  export type ReferralSelectUpdateManyAndReturn<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetSelect<{
-    id?: boolean
-    affiliateId?: boolean
-    subUserId?: boolean
-    ipAddress?: boolean
-    deviceFingerprint?: boolean
-    userAgent?: boolean
-    createdAt?: boolean
-    updatedAt?: boolean
-    codeId?: boolean
-    affiliate?: boolean | UserDefaultArgs<ExtArgs>
-    code?: boolean | AffiliateCodeDefaultArgs<ExtArgs>
-    subUser?: boolean | UserDefaultArgs<ExtArgs>
-  }, ExtArgs["result"]["referral"]>
-
-  export type ReferralSelectScalar = {
-    id?: boolean
-    affiliateId?: boolean
-    subUserId?: boolean
-    ipAddress?: boolean
-    deviceFingerprint?: boolean
-    userAgent?: boolean
-    createdAt?: boolean
-    updatedAt?: boolean
-    codeId?: boolean
-  }
-
-  export type ReferralOmit<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetOmit<"id" | "affiliateId" | "subUserId" | "ipAddress" | "deviceFingerprint" | "userAgent" | "createdAt" | "updatedAt" | "codeId", ExtArgs["result"]["referral"]>
-  export type ReferralInclude<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
-    affiliate?: boolean | UserDefaultArgs<ExtArgs>
-    code?: boolean | AffiliateCodeDefaultArgs<ExtArgs>
-    subUser?: boolean | UserDefaultArgs<ExtArgs>
-  }
-  export type ReferralIncludeCreateManyAndReturn<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
-    affiliate?: boolean | UserDefaultArgs<ExtArgs>
-    code?: boolean | AffiliateCodeDefaultArgs<ExtArgs>
-    subUser?: boolean | UserDefaultArgs<ExtArgs>
-  }
-  export type ReferralIncludeUpdateManyAndReturn<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
-    affiliate?: boolean | UserDefaultArgs<ExtArgs>
-    code?: boolean | AffiliateCodeDefaultArgs<ExtArgs>
-    subUser?: boolean | UserDefaultArgs<ExtArgs>
-  }
-
-  export type $ReferralPayload<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
-    name: "Referral"
-    objects: {
-      affiliate: Prisma.$UserPayload<ExtArgs>
-      code: Prisma.$AffiliateCodePayload<ExtArgs>
-      subUser: Prisma.$UserPayload<ExtArgs>
-    }
-    scalars: $Extensions.GetPayloadResult<{
-      id: string
-      affiliateId: bigint
-      subUserId: bigint
-      ipAddress: string | null
-      deviceFingerprint: string | null
-      userAgent: string | null
-      createdAt: Date
-      updatedAt: Date
-      codeId: string
-    }, ExtArgs["result"]["referral"]>
-    composites: {}
-  }
-
-  type ReferralGetPayload<S extends boolean | null | undefined | ReferralDefaultArgs> = $Result.GetResult<Prisma.$ReferralPayload, S>
-
-  type ReferralCountArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> =
-    Omit<ReferralFindManyArgs, 'select' | 'include' | 'distinct' | 'omit'> & {
-      select?: ReferralCountAggregateInputType | true
-    }
-
-  export interface ReferralDelegate<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs, GlobalOmitOptions = {}> {
-    [K: symbol]: { types: Prisma.TypeMap<ExtArgs>['model']['Referral'], meta: { name: 'Referral' } }
-    /**
-     * Find zero or one Referral that matches the filter.
-     * @param {ReferralFindUniqueArgs} args - Arguments to find a Referral
-     * @example
-     * // Get one Referral
-     * const referral = await prisma.referral.findUnique({
-     *   where: {
-     *     // ... provide filter here
-     *   }
-     * })
-     */
-    findUnique<T extends ReferralFindUniqueArgs>(args: SelectSubset<T, ReferralFindUniqueArgs<ExtArgs>>): Prisma__ReferralClient<$Result.GetResult<Prisma.$ReferralPayload<ExtArgs>, T, "findUnique", GlobalOmitOptions> | null, null, ExtArgs, GlobalOmitOptions>
-
-    /**
-     * Find one Referral that matches the filter or throw an error with `error.code='P2025'`
-     * if no matches were found.
-     * @param {ReferralFindUniqueOrThrowArgs} args - Arguments to find a Referral
-     * @example
-     * // Get one Referral
-     * const referral = await prisma.referral.findUniqueOrThrow({
-     *   where: {
-     *     // ... provide filter here
-     *   }
-     * })
-     */
-    findUniqueOrThrow<T extends ReferralFindUniqueOrThrowArgs>(args: SelectSubset<T, ReferralFindUniqueOrThrowArgs<ExtArgs>>): Prisma__ReferralClient<$Result.GetResult<Prisma.$ReferralPayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
-
-    /**
-     * Find the first Referral that matches the filter.
-     * Note, that providing `undefined` is treated as the value not being there.
-     * Read more here: https://pris.ly/d/null-undefined
-     * @param {ReferralFindFirstArgs} args - Arguments to find a Referral
-     * @example
-     * // Get one Referral
-     * const referral = await prisma.referral.findFirst({
-     *   where: {
-     *     // ... provide filter here
-     *   }
-     * })
-     */
-    findFirst<T extends ReferralFindFirstArgs>(args?: SelectSubset<T, ReferralFindFirstArgs<ExtArgs>>): Prisma__ReferralClient<$Result.GetResult<Prisma.$ReferralPayload<ExtArgs>, T, "findFirst", GlobalOmitOptions> | null, null, ExtArgs, GlobalOmitOptions>
-
-    /**
-     * Find the first Referral that matches the filter or
-     * throw `PrismaKnownClientError` with `P2025` code if no matches were found.
-     * Note, that providing `undefined` is treated as the value not being there.
-     * Read more here: https://pris.ly/d/null-undefined
-     * @param {ReferralFindFirstOrThrowArgs} args - Arguments to find a Referral
-     * @example
-     * // Get one Referral
-     * const referral = await prisma.referral.findFirstOrThrow({
-     *   where: {
-     *     // ... provide filter here
-     *   }
-     * })
-     */
-    findFirstOrThrow<T extends ReferralFindFirstOrThrowArgs>(args?: SelectSubset<T, ReferralFindFirstOrThrowArgs<ExtArgs>>): Prisma__ReferralClient<$Result.GetResult<Prisma.$ReferralPayload<ExtArgs>, T, "findFirstOrThrow", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
-
-    /**
-     * Find zero or more Referrals that matches the filter.
-     * Note, that providing `undefined` is treated as the value not being there.
-     * Read more here: https://pris.ly/d/null-undefined
-     * @param {ReferralFindManyArgs} args - Arguments to filter and select certain fields only.
-     * @example
-     * // Get all Referrals
-     * const referrals = await prisma.referral.findMany()
-     * 
-     * // Get first 10 Referrals
-     * const referrals = await prisma.referral.findMany({ take: 10 })
-     * 
-     * // Only select the `id`
-     * const referralWithIdOnly = await prisma.referral.findMany({ select: { id: true } })
-     * 
-     */
-    findMany<T extends ReferralFindManyArgs>(args?: SelectSubset<T, ReferralFindManyArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$ReferralPayload<ExtArgs>, T, "findMany", GlobalOmitOptions>>
-
-    /**
-     * Create a Referral.
-     * @param {ReferralCreateArgs} args - Arguments to create a Referral.
-     * @example
-     * // Create one Referral
-     * const Referral = await prisma.referral.create({
-     *   data: {
-     *     // ... data to create a Referral
-     *   }
-     * })
-     * 
-     */
-    create<T extends ReferralCreateArgs>(args: SelectSubset<T, ReferralCreateArgs<ExtArgs>>): Prisma__ReferralClient<$Result.GetResult<Prisma.$ReferralPayload<ExtArgs>, T, "create", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
-
-    /**
-     * Create many Referrals.
-     * @param {ReferralCreateManyArgs} args - Arguments to create many Referrals.
-     * @example
-     * // Create many Referrals
-     * const referral = await prisma.referral.createMany({
-     *   data: [
-     *     // ... provide data here
-     *   ]
-     * })
-     *     
-     */
-    createMany<T extends ReferralCreateManyArgs>(args?: SelectSubset<T, ReferralCreateManyArgs<ExtArgs>>): Prisma.PrismaPromise<BatchPayload>
-
-    /**
-     * Create many Referrals and returns the data saved in the database.
-     * @param {ReferralCreateManyAndReturnArgs} args - Arguments to create many Referrals.
-     * @example
-     * // Create many Referrals
-     * const referral = await prisma.referral.createManyAndReturn({
-     *   data: [
-     *     // ... provide data here
-     *   ]
-     * })
-     * 
-     * // Create many Referrals and only return the `id`
-     * const referralWithIdOnly = await prisma.referral.createManyAndReturn({
-     *   select: { id: true },
-     *   data: [
-     *     // ... provide data here
-     *   ]
-     * })
-     * Note, that providing `undefined` is treated as the value not being there.
-     * Read more here: https://pris.ly/d/null-undefined
-     * 
-     */
-    createManyAndReturn<T extends ReferralCreateManyAndReturnArgs>(args?: SelectSubset<T, ReferralCreateManyAndReturnArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$ReferralPayload<ExtArgs>, T, "createManyAndReturn", GlobalOmitOptions>>
-
-    /**
-     * Delete a Referral.
-     * @param {ReferralDeleteArgs} args - Arguments to delete one Referral.
-     * @example
-     * // Delete one Referral
-     * const Referral = await prisma.referral.delete({
-     *   where: {
-     *     // ... filter to delete one Referral
-     *   }
-     * })
-     * 
-     */
-    delete<T extends ReferralDeleteArgs>(args: SelectSubset<T, ReferralDeleteArgs<ExtArgs>>): Prisma__ReferralClient<$Result.GetResult<Prisma.$ReferralPayload<ExtArgs>, T, "delete", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
-
-    /**
-     * Update one Referral.
-     * @param {ReferralUpdateArgs} args - Arguments to update one Referral.
-     * @example
-     * // Update one Referral
-     * const referral = await prisma.referral.update({
-     *   where: {
-     *     // ... provide filter here
-     *   },
-     *   data: {
-     *     // ... provide data here
-     *   }
-     * })
-     * 
-     */
-    update<T extends ReferralUpdateArgs>(args: SelectSubset<T, ReferralUpdateArgs<ExtArgs>>): Prisma__ReferralClient<$Result.GetResult<Prisma.$ReferralPayload<ExtArgs>, T, "update", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
-
-    /**
-     * Delete zero or more Referrals.
-     * @param {ReferralDeleteManyArgs} args - Arguments to filter Referrals to delete.
-     * @example
-     * // Delete a few Referrals
-     * const { count } = await prisma.referral.deleteMany({
-     *   where: {
-     *     // ... provide filter here
-     *   }
-     * })
-     * 
-     */
-    deleteMany<T extends ReferralDeleteManyArgs>(args?: SelectSubset<T, ReferralDeleteManyArgs<ExtArgs>>): Prisma.PrismaPromise<BatchPayload>
-
-    /**
-     * Update zero or more Referrals.
-     * Note, that providing `undefined` is treated as the value not being there.
-     * Read more here: https://pris.ly/d/null-undefined
-     * @param {ReferralUpdateManyArgs} args - Arguments to update one or more rows.
-     * @example
-     * // Update many Referrals
-     * const referral = await prisma.referral.updateMany({
-     *   where: {
-     *     // ... provide filter here
-     *   },
-     *   data: {
-     *     // ... provide data here
-     *   }
-     * })
-     * 
-     */
-    updateMany<T extends ReferralUpdateManyArgs>(args: SelectSubset<T, ReferralUpdateManyArgs<ExtArgs>>): Prisma.PrismaPromise<BatchPayload>
-
-    /**
-     * Update zero or more Referrals and returns the data updated in the database.
-     * @param {ReferralUpdateManyAndReturnArgs} args - Arguments to update many Referrals.
-     * @example
-     * // Update many Referrals
-     * const referral = await prisma.referral.updateManyAndReturn({
-     *   where: {
-     *     // ... provide filter here
-     *   },
-     *   data: [
-     *     // ... provide data here
-     *   ]
-     * })
-     * 
-     * // Update zero or more Referrals and only return the `id`
-     * const referralWithIdOnly = await prisma.referral.updateManyAndReturn({
-     *   select: { id: true },
-     *   where: {
-     *     // ... provide filter here
-     *   },
-     *   data: [
-     *     // ... provide data here
-     *   ]
-     * })
-     * Note, that providing `undefined` is treated as the value not being there.
-     * Read more here: https://pris.ly/d/null-undefined
-     * 
-     */
-    updateManyAndReturn<T extends ReferralUpdateManyAndReturnArgs>(args: SelectSubset<T, ReferralUpdateManyAndReturnArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$ReferralPayload<ExtArgs>, T, "updateManyAndReturn", GlobalOmitOptions>>
-
-    /**
-     * Create or update one Referral.
-     * @param {ReferralUpsertArgs} args - Arguments to update or create a Referral.
-     * @example
-     * // Update or create a Referral
-     * const referral = await prisma.referral.upsert({
-     *   create: {
-     *     // ... data to create a Referral
-     *   },
-     *   update: {
-     *     // ... in case it already exists, update
-     *   },
-     *   where: {
-     *     // ... the filter for the Referral we want to update
-     *   }
-     * })
-     */
-    upsert<T extends ReferralUpsertArgs>(args: SelectSubset<T, ReferralUpsertArgs<ExtArgs>>): Prisma__ReferralClient<$Result.GetResult<Prisma.$ReferralPayload<ExtArgs>, T, "upsert", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
-
-
-    /**
-     * Count the number of Referrals.
-     * Note, that providing `undefined` is treated as the value not being there.
-     * Read more here: https://pris.ly/d/null-undefined
-     * @param {ReferralCountArgs} args - Arguments to filter Referrals to count.
-     * @example
-     * // Count the number of Referrals
-     * const count = await prisma.referral.count({
-     *   where: {
-     *     // ... the filter for the Referrals we want to count
-     *   }
-     * })
-    **/
-    count<T extends ReferralCountArgs>(
-      args?: Subset<T, ReferralCountArgs>,
-    ): Prisma.PrismaPromise<
-      T extends $Utils.Record<'select', any>
-        ? T['select'] extends true
-          ? number
-          : GetScalarType<T['select'], ReferralCountAggregateOutputType>
-        : number
-    >
-
-    /**
-     * Allows you to perform aggregations operations on a Referral.
-     * Note, that providing `undefined` is treated as the value not being there.
-     * Read more here: https://pris.ly/d/null-undefined
-     * @param {ReferralAggregateArgs} args - Select which aggregations you would like to apply and on what fields.
-     * @example
-     * // Ordered by age ascending
-     * // Where email contains prisma.io
-     * // Limited to the 10 users
-     * const aggregations = await prisma.user.aggregate({
-     *   _avg: {
-     *     age: true,
-     *   },
-     *   where: {
-     *     email: {
-     *       contains: "prisma.io",
-     *     },
-     *   },
-     *   orderBy: {
-     *     age: "asc",
-     *   },
-     *   take: 10,
-     * })
-    **/
-    aggregate<T extends ReferralAggregateArgs>(args: Subset<T, ReferralAggregateArgs>): Prisma.PrismaPromise<GetReferralAggregateType<T>>
-
-    /**
-     * Group by Referral.
-     * Note, that providing `undefined` is treated as the value not being there.
-     * Read more here: https://pris.ly/d/null-undefined
-     * @param {ReferralGroupByArgs} args - Group by arguments.
-     * @example
-     * // Group by city, order by createdAt, get count
-     * const result = await prisma.user.groupBy({
-     *   by: ['city', 'createdAt'],
-     *   orderBy: {
-     *     createdAt: true
-     *   },
-     *   _count: {
-     *     _all: true
-     *   },
-     * })
-     * 
-    **/
-    groupBy<
-      T extends ReferralGroupByArgs,
-      HasSelectOrTake extends Or<
-        Extends<'skip', Keys<T>>,
-        Extends<'take', Keys<T>>
-      >,
-      OrderByArg extends True extends HasSelectOrTake
-        ? { orderBy: ReferralGroupByArgs['orderBy'] }
-        : { orderBy?: ReferralGroupByArgs['orderBy'] },
-      OrderFields extends ExcludeUnderscoreKeys<Keys<MaybeTupleToUnion<T['orderBy']>>>,
-      ByFields extends MaybeTupleToUnion<T['by']>,
-      ByValid extends Has<ByFields, OrderFields>,
-      HavingFields extends GetHavingFields<T['having']>,
-      HavingValid extends Has<ByFields, HavingFields>,
-      ByEmpty extends T['by'] extends never[] ? True : False,
-      InputErrors extends ByEmpty extends True
-      ? `Error: "by" must not be empty.`
-      : HavingValid extends False
-      ? {
-          [P in HavingFields]: P extends ByFields
-            ? never
-            : P extends string
-            ? `Error: Field "${P}" used in "having" needs to be provided in "by".`
-            : [
-                Error,
-                'Field ',
-                P,
-                ` in "having" needs to be provided in "by"`,
-              ]
-        }[HavingFields]
-      : 'take' extends Keys<T>
-      ? 'orderBy' extends Keys<T>
-        ? ByValid extends True
-          ? {}
-          : {
-              [P in OrderFields]: P extends ByFields
-                ? never
-                : `Error: Field "${P}" in "orderBy" needs to be provided in "by"`
-            }[OrderFields]
-        : 'Error: If you provide "take", you also need to provide "orderBy"'
-      : 'skip' extends Keys<T>
-      ? 'orderBy' extends Keys<T>
-        ? ByValid extends True
-          ? {}
-          : {
-              [P in OrderFields]: P extends ByFields
-                ? never
-                : `Error: Field "${P}" in "orderBy" needs to be provided in "by"`
-            }[OrderFields]
-        : 'Error: If you provide "skip", you also need to provide "orderBy"'
-      : ByValid extends True
-      ? {}
-      : {
-          [P in OrderFields]: P extends ByFields
-            ? never
-            : `Error: Field "${P}" in "orderBy" needs to be provided in "by"`
-        }[OrderFields]
-    >(args: SubsetIntersection<T, ReferralGroupByArgs, OrderByArg> & InputErrors): {} extends InputErrors ? GetReferralGroupByPayload<T> : Prisma.PrismaPromise<InputErrors>
-  /**
-   * Fields of the Referral model
-   */
-  readonly fields: ReferralFieldRefs;
-  }
-
-  /**
-   * The delegate class that acts as a "Promise-like" for Referral.
-   * Why is this prefixed with `Prisma__`?
-   * Because we want to prevent naming conflicts as mentioned in
-   * https://github.com/prisma/prisma-client-js/issues/707
-   */
-  export interface Prisma__ReferralClient<T, Null = never, ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs, GlobalOmitOptions = {}> extends Prisma.PrismaPromise<T> {
-    readonly [Symbol.toStringTag]: "PrismaPromise"
-    affiliate<T extends UserDefaultArgs<ExtArgs> = {}>(args?: Subset<T, UserDefaultArgs<ExtArgs>>): Prisma__UserClient<$Result.GetResult<Prisma.$UserPayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions> | Null, Null, ExtArgs, GlobalOmitOptions>
-    code<T extends AffiliateCodeDefaultArgs<ExtArgs> = {}>(args?: Subset<T, AffiliateCodeDefaultArgs<ExtArgs>>): Prisma__AffiliateCodeClient<$Result.GetResult<Prisma.$AffiliateCodePayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions> | Null, Null, ExtArgs, GlobalOmitOptions>
-    subUser<T extends UserDefaultArgs<ExtArgs> = {}>(args?: Subset<T, UserDefaultArgs<ExtArgs>>): Prisma__UserClient<$Result.GetResult<Prisma.$UserPayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions> | Null, Null, ExtArgs, GlobalOmitOptions>
-    /**
-     * Attaches callbacks for the resolution and/or rejection of the Promise.
-     * @param onfulfilled The callback to execute when the Promise is resolved.
-     * @param onrejected The callback to execute when the Promise is rejected.
-     * @returns A Promise for the completion of which ever callback is executed.
-     */
-    then<TResult1 = T, TResult2 = never>(onfulfilled?: ((value: T) => TResult1 | PromiseLike<TResult1>) | undefined | null, onrejected?: ((reason: any) => TResult2 | PromiseLike<TResult2>) | undefined | null): $Utils.JsPromise<TResult1 | TResult2>
-    /**
-     * Attaches a callback for only the rejection of the Promise.
-     * @param onrejected The callback to execute when the Promise is rejected.
-     * @returns A Promise for the completion of the callback.
-     */
-    catch<TResult = never>(onrejected?: ((reason: any) => TResult | PromiseLike<TResult>) | undefined | null): $Utils.JsPromise<T | TResult>
-    /**
-     * Attaches a callback that is invoked when the Promise is settled (fulfilled or rejected). The
-     * resolved value cannot be modified from the callback.
-     * @param onfinally The callback to execute when the Promise is settled (fulfilled or rejected).
-     * @returns A Promise for the completion of the callback.
-     */
-    finally(onfinally?: (() => void) | undefined | null): $Utils.JsPromise<T>
-  }
-
-
-
-
-  /**
-   * Fields of the Referral model
-   */
-  interface ReferralFieldRefs {
-    readonly id: FieldRef<"Referral", 'String'>
-    readonly affiliateId: FieldRef<"Referral", 'BigInt'>
-    readonly subUserId: FieldRef<"Referral", 'BigInt'>
-    readonly ipAddress: FieldRef<"Referral", 'String'>
-    readonly deviceFingerprint: FieldRef<"Referral", 'String'>
-    readonly userAgent: FieldRef<"Referral", 'String'>
-    readonly createdAt: FieldRef<"Referral", 'DateTime'>
-    readonly updatedAt: FieldRef<"Referral", 'DateTime'>
-    readonly codeId: FieldRef<"Referral", 'String'>
-  }
-    
-
-  // Custom InputTypes
-  /**
-   * Referral findUnique
-   */
-  export type ReferralFindUniqueArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
-    /**
-     * Select specific fields to fetch from the Referral
-     */
-    select?: ReferralSelect<ExtArgs> | null
-    /**
-     * Omit specific fields from the Referral
-     */
-    omit?: ReferralOmit<ExtArgs> | null
-    /**
-     * Choose, which related nodes to fetch as well
-     */
-    include?: ReferralInclude<ExtArgs> | null
-    /**
-     * Filter, which Referral to fetch.
-     */
-    where: ReferralWhereUniqueInput
-  }
-
-  /**
-   * Referral findUniqueOrThrow
-   */
-  export type ReferralFindUniqueOrThrowArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
-    /**
-     * Select specific fields to fetch from the Referral
-     */
-    select?: ReferralSelect<ExtArgs> | null
-    /**
-     * Omit specific fields from the Referral
-     */
-    omit?: ReferralOmit<ExtArgs> | null
-    /**
-     * Choose, which related nodes to fetch as well
-     */
-    include?: ReferralInclude<ExtArgs> | null
-    /**
-     * Filter, which Referral to fetch.
-     */
-    where: ReferralWhereUniqueInput
-  }
-
-  /**
-   * Referral findFirst
-   */
-  export type ReferralFindFirstArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
-    /**
-     * Select specific fields to fetch from the Referral
-     */
-    select?: ReferralSelect<ExtArgs> | null
-    /**
-     * Omit specific fields from the Referral
-     */
-    omit?: ReferralOmit<ExtArgs> | null
-    /**
-     * Choose, which related nodes to fetch as well
-     */
-    include?: ReferralInclude<ExtArgs> | null
-    /**
-     * Filter, which Referral to fetch.
-     */
-    where?: ReferralWhereInput
-    /**
-     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/sorting Sorting Docs}
-     * 
-     * Determine the order of Referrals to fetch.
-     */
-    orderBy?: ReferralOrderByWithRelationInput | ReferralOrderByWithRelationInput[]
-    /**
-     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination#cursor-based-pagination Cursor Docs}
-     * 
-     * Sets the position for searching for Referrals.
-     */
-    cursor?: ReferralWhereUniqueInput
-    /**
-     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
-     * 
-     * Take `±n` Referrals from the position of the cursor.
-     */
-    take?: number
-    /**
-     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
-     * 
-     * Skip the first `n` Referrals.
-     */
-    skip?: number
-    /**
-     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/distinct Distinct Docs}
-     * 
-     * Filter by unique combinations of Referrals.
-     */
-    distinct?: ReferralScalarFieldEnum | ReferralScalarFieldEnum[]
-  }
-
-  /**
-   * Referral findFirstOrThrow
-   */
-  export type ReferralFindFirstOrThrowArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
-    /**
-     * Select specific fields to fetch from the Referral
-     */
-    select?: ReferralSelect<ExtArgs> | null
-    /**
-     * Omit specific fields from the Referral
-     */
-    omit?: ReferralOmit<ExtArgs> | null
-    /**
-     * Choose, which related nodes to fetch as well
-     */
-    include?: ReferralInclude<ExtArgs> | null
-    /**
-     * Filter, which Referral to fetch.
-     */
-    where?: ReferralWhereInput
-    /**
-     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/sorting Sorting Docs}
-     * 
-     * Determine the order of Referrals to fetch.
-     */
-    orderBy?: ReferralOrderByWithRelationInput | ReferralOrderByWithRelationInput[]
-    /**
-     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination#cursor-based-pagination Cursor Docs}
-     * 
-     * Sets the position for searching for Referrals.
-     */
-    cursor?: ReferralWhereUniqueInput
-    /**
-     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
-     * 
-     * Take `±n` Referrals from the position of the cursor.
-     */
-    take?: number
-    /**
-     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
-     * 
-     * Skip the first `n` Referrals.
-     */
-    skip?: number
-    /**
-     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/distinct Distinct Docs}
-     * 
-     * Filter by unique combinations of Referrals.
-     */
-    distinct?: ReferralScalarFieldEnum | ReferralScalarFieldEnum[]
-  }
-
-  /**
-   * Referral findMany
-   */
-  export type ReferralFindManyArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
-    /**
-     * Select specific fields to fetch from the Referral
-     */
-    select?: ReferralSelect<ExtArgs> | null
-    /**
-     * Omit specific fields from the Referral
-     */
-    omit?: ReferralOmit<ExtArgs> | null
-    /**
-     * Choose, which related nodes to fetch as well
-     */
-    include?: ReferralInclude<ExtArgs> | null
-    /**
-     * Filter, which Referrals to fetch.
-     */
-    where?: ReferralWhereInput
-    /**
-     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/sorting Sorting Docs}
-     * 
-     * Determine the order of Referrals to fetch.
-     */
-    orderBy?: ReferralOrderByWithRelationInput | ReferralOrderByWithRelationInput[]
-    /**
-     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination#cursor-based-pagination Cursor Docs}
-     * 
-     * Sets the position for listing Referrals.
-     */
-    cursor?: ReferralWhereUniqueInput
-    /**
-     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
-     * 
-     * Take `±n` Referrals from the position of the cursor.
-     */
-    take?: number
-    /**
-     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
-     * 
-     * Skip the first `n` Referrals.
-     */
-    skip?: number
-    distinct?: ReferralScalarFieldEnum | ReferralScalarFieldEnum[]
-  }
-
-  /**
-   * Referral create
-   */
-  export type ReferralCreateArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
-    /**
-     * Select specific fields to fetch from the Referral
-     */
-    select?: ReferralSelect<ExtArgs> | null
-    /**
-     * Omit specific fields from the Referral
-     */
-    omit?: ReferralOmit<ExtArgs> | null
-    /**
-     * Choose, which related nodes to fetch as well
-     */
-    include?: ReferralInclude<ExtArgs> | null
-    /**
-     * The data needed to create a Referral.
-     */
-    data: XOR<ReferralCreateInput, ReferralUncheckedCreateInput>
-  }
-
-  /**
-   * Referral createMany
-   */
-  export type ReferralCreateManyArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
-    /**
-     * The data used to create many Referrals.
-     */
-    data: ReferralCreateManyInput | ReferralCreateManyInput[]
-    skipDuplicates?: boolean
-  }
-
-  /**
-   * Referral createManyAndReturn
-   */
-  export type ReferralCreateManyAndReturnArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
-    /**
-     * Select specific fields to fetch from the Referral
-     */
-    select?: ReferralSelectCreateManyAndReturn<ExtArgs> | null
-    /**
-     * Omit specific fields from the Referral
-     */
-    omit?: ReferralOmit<ExtArgs> | null
-    /**
-     * The data used to create many Referrals.
-     */
-    data: ReferralCreateManyInput | ReferralCreateManyInput[]
-    skipDuplicates?: boolean
-    /**
-     * Choose, which related nodes to fetch as well
-     */
-    include?: ReferralIncludeCreateManyAndReturn<ExtArgs> | null
-  }
-
-  /**
-   * Referral update
-   */
-  export type ReferralUpdateArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
-    /**
-     * Select specific fields to fetch from the Referral
-     */
-    select?: ReferralSelect<ExtArgs> | null
-    /**
-     * Omit specific fields from the Referral
-     */
-    omit?: ReferralOmit<ExtArgs> | null
-    /**
-     * Choose, which related nodes to fetch as well
-     */
-    include?: ReferralInclude<ExtArgs> | null
-    /**
-     * The data needed to update a Referral.
-     */
-    data: XOR<ReferralUpdateInput, ReferralUncheckedUpdateInput>
-    /**
-     * Choose, which Referral to update.
-     */
-    where: ReferralWhereUniqueInput
-  }
-
-  /**
-   * Referral updateMany
-   */
-  export type ReferralUpdateManyArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
-    /**
-     * The data used to update Referrals.
-     */
-    data: XOR<ReferralUpdateManyMutationInput, ReferralUncheckedUpdateManyInput>
-    /**
-     * Filter which Referrals to update
-     */
-    where?: ReferralWhereInput
-    /**
-     * Limit how many Referrals to update.
-     */
-    limit?: number
-  }
-
-  /**
-   * Referral updateManyAndReturn
-   */
-  export type ReferralUpdateManyAndReturnArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
-    /**
-     * Select specific fields to fetch from the Referral
-     */
-    select?: ReferralSelectUpdateManyAndReturn<ExtArgs> | null
-    /**
-     * Omit specific fields from the Referral
-     */
-    omit?: ReferralOmit<ExtArgs> | null
-    /**
-     * The data used to update Referrals.
-     */
-    data: XOR<ReferralUpdateManyMutationInput, ReferralUncheckedUpdateManyInput>
-    /**
-     * Filter which Referrals to update
-     */
-    where?: ReferralWhereInput
-    /**
-     * Limit how many Referrals to update.
-     */
-    limit?: number
-    /**
-     * Choose, which related nodes to fetch as well
-     */
-    include?: ReferralIncludeUpdateManyAndReturn<ExtArgs> | null
-  }
-
-  /**
-   * Referral upsert
-   */
-  export type ReferralUpsertArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
-    /**
-     * Select specific fields to fetch from the Referral
-     */
-    select?: ReferralSelect<ExtArgs> | null
-    /**
-     * Omit specific fields from the Referral
-     */
-    omit?: ReferralOmit<ExtArgs> | null
-    /**
-     * Choose, which related nodes to fetch as well
-     */
-    include?: ReferralInclude<ExtArgs> | null
-    /**
-     * The filter to search for the Referral to update in case it exists.
-     */
-    where: ReferralWhereUniqueInput
-    /**
-     * In case the Referral found by the `where` argument doesn't exist, create a new Referral with this data.
-     */
-    create: XOR<ReferralCreateInput, ReferralUncheckedCreateInput>
-    /**
-     * In case the Referral was found with the provided `where` argument, update it with this data.
-     */
-    update: XOR<ReferralUpdateInput, ReferralUncheckedUpdateInput>
-  }
-
-  /**
-   * Referral delete
-   */
-  export type ReferralDeleteArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
-    /**
-     * Select specific fields to fetch from the Referral
-     */
-    select?: ReferralSelect<ExtArgs> | null
-    /**
-     * Omit specific fields from the Referral
-     */
-    omit?: ReferralOmit<ExtArgs> | null
-    /**
-     * Choose, which related nodes to fetch as well
-     */
-    include?: ReferralInclude<ExtArgs> | null
-    /**
-     * Filter which Referral to delete.
-     */
-    where: ReferralWhereUniqueInput
-  }
-
-  /**
-   * Referral deleteMany
-   */
-  export type ReferralDeleteManyArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
-    /**
-     * Filter which Referrals to delete
-     */
-    where?: ReferralWhereInput
-    /**
-     * Limit how many Referrals to delete.
-     */
-    limit?: number
-  }
-
-  /**
-   * Referral without action
-   */
-  export type ReferralDefaultArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
-    /**
-     * Select specific fields to fetch from the Referral
-     */
-    select?: ReferralSelect<ExtArgs> | null
-    /**
-     * Omit specific fields from the Referral
-     */
-    omit?: ReferralOmit<ExtArgs> | null
-    /**
-     * Choose, which related nodes to fetch as well
-     */
-    include?: ReferralInclude<ExtArgs> | null
-  }
-
-
-  /**
    * Model AffiliateWallet
    */
 
@@ -60181,6 +60219,40 @@ export namespace Prisma {
   export type TransactionIsolationLevel = (typeof TransactionIsolationLevel)[keyof typeof TransactionIsolationLevel]
 
 
+  export const AffiliateCodeScalarFieldEnum: {
+    id: 'id',
+    uid: 'uid',
+    userId: 'userId',
+    code: 'code',
+    campaignName: 'campaignName',
+    description: 'description',
+    isActive: 'isActive',
+    isDefault: 'isDefault',
+    expiresAt: 'expiresAt',
+    createdAt: 'createdAt',
+    updatedAt: 'updatedAt',
+    lastUsedAt: 'lastUsedAt'
+  };
+
+  export type AffiliateCodeScalarFieldEnum = (typeof AffiliateCodeScalarFieldEnum)[keyof typeof AffiliateCodeScalarFieldEnum]
+
+
+  export const ReferralScalarFieldEnum: {
+    id: 'id',
+    uid: 'uid',
+    affiliateId: 'affiliateId',
+    subUserId: 'subUserId',
+    ipAddress: 'ipAddress',
+    deviceFingerprint: 'deviceFingerprint',
+    userAgent: 'userAgent',
+    createdAt: 'createdAt',
+    updatedAt: 'updatedAt',
+    codeId: 'codeId'
+  };
+
+  export type ReferralScalarFieldEnum = (typeof ReferralScalarFieldEnum)[keyof typeof ReferralScalarFieldEnum]
+
+
   export const AuthAuditLogScalarFieldEnum: {
     id: 'id',
     createdAt: 'createdAt',
@@ -60740,38 +60812,6 @@ export namespace Prisma {
   export type GameSessionScalarFieldEnum = (typeof GameSessionScalarFieldEnum)[keyof typeof GameSessionScalarFieldEnum]
 
 
-  export const AffiliateCodeScalarFieldEnum: {
-    id: 'id',
-    userId: 'userId',
-    code: 'code',
-    campaignName: 'campaignName',
-    description: 'description',
-    isActive: 'isActive',
-    isDefault: 'isDefault',
-    expiresAt: 'expiresAt',
-    createdAt: 'createdAt',
-    updatedAt: 'updatedAt',
-    lastUsedAt: 'lastUsedAt'
-  };
-
-  export type AffiliateCodeScalarFieldEnum = (typeof AffiliateCodeScalarFieldEnum)[keyof typeof AffiliateCodeScalarFieldEnum]
-
-
-  export const ReferralScalarFieldEnum: {
-    id: 'id',
-    affiliateId: 'affiliateId',
-    subUserId: 'subUserId',
-    ipAddress: 'ipAddress',
-    deviceFingerprint: 'deviceFingerprint',
-    userAgent: 'userAgent',
-    createdAt: 'createdAt',
-    updatedAt: 'updatedAt',
-    codeId: 'codeId'
-  };
-
-  export type ReferralScalarFieldEnum = (typeof ReferralScalarFieldEnum)[keyof typeof ReferralScalarFieldEnum]
-
-
   export const AffiliateWalletScalarFieldEnum: {
     affiliateId: 'affiliateId',
     currency: 'currency',
@@ -61043,6 +61083,14 @@ export namespace Prisma {
   export type QueryMode = (typeof QueryMode)[keyof typeof QueryMode]
 
 
+  export const NullsOrder: {
+    first: 'first',
+    last: 'last'
+  };
+
+  export type NullsOrder = (typeof NullsOrder)[keyof typeof NullsOrder]
+
+
   export const JsonNullValueFilter: {
     DbNull: typeof DbNull,
     JsonNull: typeof JsonNull,
@@ -61052,45 +61100,9 @@ export namespace Prisma {
   export type JsonNullValueFilter = (typeof JsonNullValueFilter)[keyof typeof JsonNullValueFilter]
 
 
-  export const NullsOrder: {
-    first: 'first',
-    last: 'last'
-  };
-
-  export type NullsOrder = (typeof NullsOrder)[keyof typeof NullsOrder]
-
-
   /**
    * Field references
    */
-
-
-  /**
-   * Reference to a field of type 'String'
-   */
-  export type StringFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaModel, 'String'>
-    
-
-
-  /**
-   * Reference to a field of type 'String[]'
-   */
-  export type ListStringFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaModel, 'String[]'>
-    
-
-
-  /**
-   * Reference to a field of type 'DateTime'
-   */
-  export type DateTimeFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaModel, 'DateTime'>
-    
-
-
-  /**
-   * Reference to a field of type 'DateTime[]'
-   */
-  export type ListDateTimeFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaModel, 'DateTime[]'>
-    
 
 
   /**
@@ -61108,9 +61120,37 @@ export namespace Prisma {
 
 
   /**
+   * Reference to a field of type 'String'
+   */
+  export type StringFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaModel, 'String'>
+    
+
+
+  /**
+   * Reference to a field of type 'String[]'
+   */
+  export type ListStringFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaModel, 'String[]'>
+    
+
+
+  /**
    * Reference to a field of type 'Boolean'
    */
   export type BooleanFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaModel, 'Boolean'>
+    
+
+
+  /**
+   * Reference to a field of type 'DateTime'
+   */
+  export type DateTimeFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaModel, 'DateTime'>
+    
+
+
+  /**
+   * Reference to a field of type 'DateTime[]'
+   */
+  export type ListDateTimeFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaModel, 'DateTime[]'>
     
 
 
@@ -61676,6 +61716,190 @@ export namespace Prisma {
    * Deep Input Types
    */
 
+
+  export type AffiliateCodeWhereInput = {
+    AND?: AffiliateCodeWhereInput | AffiliateCodeWhereInput[]
+    OR?: AffiliateCodeWhereInput[]
+    NOT?: AffiliateCodeWhereInput | AffiliateCodeWhereInput[]
+    id?: BigIntFilter<"AffiliateCode"> | bigint | number
+    uid?: StringFilter<"AffiliateCode"> | string
+    userId?: BigIntFilter<"AffiliateCode"> | bigint | number
+    code?: StringFilter<"AffiliateCode"> | string
+    campaignName?: StringNullableFilter<"AffiliateCode"> | string | null
+    description?: StringNullableFilter<"AffiliateCode"> | string | null
+    isActive?: BoolFilter<"AffiliateCode"> | boolean
+    isDefault?: BoolFilter<"AffiliateCode"> | boolean
+    expiresAt?: DateTimeNullableFilter<"AffiliateCode"> | Date | string | null
+    createdAt?: DateTimeFilter<"AffiliateCode"> | Date | string
+    updatedAt?: DateTimeFilter<"AffiliateCode"> | Date | string
+    lastUsedAt?: DateTimeNullableFilter<"AffiliateCode"> | Date | string | null
+    user?: XOR<UserScalarRelationFilter, UserWhereInput>
+    referrals?: ReferralListRelationFilter
+  }
+
+  export type AffiliateCodeOrderByWithRelationInput = {
+    id?: SortOrder
+    uid?: SortOrder
+    userId?: SortOrder
+    code?: SortOrder
+    campaignName?: SortOrderInput | SortOrder
+    description?: SortOrderInput | SortOrder
+    isActive?: SortOrder
+    isDefault?: SortOrder
+    expiresAt?: SortOrderInput | SortOrder
+    createdAt?: SortOrder
+    updatedAt?: SortOrder
+    lastUsedAt?: SortOrderInput | SortOrder
+    user?: UserOrderByWithRelationInput
+    referrals?: ReferralOrderByRelationAggregateInput
+  }
+
+  export type AffiliateCodeWhereUniqueInput = Prisma.AtLeast<{
+    id?: bigint | number
+    uid?: string
+    code?: string
+    AND?: AffiliateCodeWhereInput | AffiliateCodeWhereInput[]
+    OR?: AffiliateCodeWhereInput[]
+    NOT?: AffiliateCodeWhereInput | AffiliateCodeWhereInput[]
+    userId?: BigIntFilter<"AffiliateCode"> | bigint | number
+    campaignName?: StringNullableFilter<"AffiliateCode"> | string | null
+    description?: StringNullableFilter<"AffiliateCode"> | string | null
+    isActive?: BoolFilter<"AffiliateCode"> | boolean
+    isDefault?: BoolFilter<"AffiliateCode"> | boolean
+    expiresAt?: DateTimeNullableFilter<"AffiliateCode"> | Date | string | null
+    createdAt?: DateTimeFilter<"AffiliateCode"> | Date | string
+    updatedAt?: DateTimeFilter<"AffiliateCode"> | Date | string
+    lastUsedAt?: DateTimeNullableFilter<"AffiliateCode"> | Date | string | null
+    user?: XOR<UserScalarRelationFilter, UserWhereInput>
+    referrals?: ReferralListRelationFilter
+  }, "id" | "uid" | "code">
+
+  export type AffiliateCodeOrderByWithAggregationInput = {
+    id?: SortOrder
+    uid?: SortOrder
+    userId?: SortOrder
+    code?: SortOrder
+    campaignName?: SortOrderInput | SortOrder
+    description?: SortOrderInput | SortOrder
+    isActive?: SortOrder
+    isDefault?: SortOrder
+    expiresAt?: SortOrderInput | SortOrder
+    createdAt?: SortOrder
+    updatedAt?: SortOrder
+    lastUsedAt?: SortOrderInput | SortOrder
+    _count?: AffiliateCodeCountOrderByAggregateInput
+    _avg?: AffiliateCodeAvgOrderByAggregateInput
+    _max?: AffiliateCodeMaxOrderByAggregateInput
+    _min?: AffiliateCodeMinOrderByAggregateInput
+    _sum?: AffiliateCodeSumOrderByAggregateInput
+  }
+
+  export type AffiliateCodeScalarWhereWithAggregatesInput = {
+    AND?: AffiliateCodeScalarWhereWithAggregatesInput | AffiliateCodeScalarWhereWithAggregatesInput[]
+    OR?: AffiliateCodeScalarWhereWithAggregatesInput[]
+    NOT?: AffiliateCodeScalarWhereWithAggregatesInput | AffiliateCodeScalarWhereWithAggregatesInput[]
+    id?: BigIntWithAggregatesFilter<"AffiliateCode"> | bigint | number
+    uid?: StringWithAggregatesFilter<"AffiliateCode"> | string
+    userId?: BigIntWithAggregatesFilter<"AffiliateCode"> | bigint | number
+    code?: StringWithAggregatesFilter<"AffiliateCode"> | string
+    campaignName?: StringNullableWithAggregatesFilter<"AffiliateCode"> | string | null
+    description?: StringNullableWithAggregatesFilter<"AffiliateCode"> | string | null
+    isActive?: BoolWithAggregatesFilter<"AffiliateCode"> | boolean
+    isDefault?: BoolWithAggregatesFilter<"AffiliateCode"> | boolean
+    expiresAt?: DateTimeNullableWithAggregatesFilter<"AffiliateCode"> | Date | string | null
+    createdAt?: DateTimeWithAggregatesFilter<"AffiliateCode"> | Date | string
+    updatedAt?: DateTimeWithAggregatesFilter<"AffiliateCode"> | Date | string
+    lastUsedAt?: DateTimeNullableWithAggregatesFilter<"AffiliateCode"> | Date | string | null
+  }
+
+  export type ReferralWhereInput = {
+    AND?: ReferralWhereInput | ReferralWhereInput[]
+    OR?: ReferralWhereInput[]
+    NOT?: ReferralWhereInput | ReferralWhereInput[]
+    id?: BigIntFilter<"Referral"> | bigint | number
+    uid?: StringFilter<"Referral"> | string
+    affiliateId?: BigIntFilter<"Referral"> | bigint | number
+    subUserId?: BigIntFilter<"Referral"> | bigint | number
+    ipAddress?: StringNullableFilter<"Referral"> | string | null
+    deviceFingerprint?: StringNullableFilter<"Referral"> | string | null
+    userAgent?: StringNullableFilter<"Referral"> | string | null
+    createdAt?: DateTimeFilter<"Referral"> | Date | string
+    updatedAt?: DateTimeFilter<"Referral"> | Date | string
+    codeId?: BigIntFilter<"Referral"> | bigint | number
+    affiliate?: XOR<UserScalarRelationFilter, UserWhereInput>
+    code?: XOR<AffiliateCodeScalarRelationFilter, AffiliateCodeWhereInput>
+    subUser?: XOR<UserScalarRelationFilter, UserWhereInput>
+  }
+
+  export type ReferralOrderByWithRelationInput = {
+    id?: SortOrder
+    uid?: SortOrder
+    affiliateId?: SortOrder
+    subUserId?: SortOrder
+    ipAddress?: SortOrderInput | SortOrder
+    deviceFingerprint?: SortOrderInput | SortOrder
+    userAgent?: SortOrderInput | SortOrder
+    createdAt?: SortOrder
+    updatedAt?: SortOrder
+    codeId?: SortOrder
+    affiliate?: UserOrderByWithRelationInput
+    code?: AffiliateCodeOrderByWithRelationInput
+    subUser?: UserOrderByWithRelationInput
+  }
+
+  export type ReferralWhereUniqueInput = Prisma.AtLeast<{
+    id?: bigint | number
+    uid?: string
+    affiliateId_subUserId?: ReferralAffiliateIdSubUserIdCompoundUniqueInput
+    AND?: ReferralWhereInput | ReferralWhereInput[]
+    OR?: ReferralWhereInput[]
+    NOT?: ReferralWhereInput | ReferralWhereInput[]
+    affiliateId?: BigIntFilter<"Referral"> | bigint | number
+    subUserId?: BigIntFilter<"Referral"> | bigint | number
+    ipAddress?: StringNullableFilter<"Referral"> | string | null
+    deviceFingerprint?: StringNullableFilter<"Referral"> | string | null
+    userAgent?: StringNullableFilter<"Referral"> | string | null
+    createdAt?: DateTimeFilter<"Referral"> | Date | string
+    updatedAt?: DateTimeFilter<"Referral"> | Date | string
+    codeId?: BigIntFilter<"Referral"> | bigint | number
+    affiliate?: XOR<UserScalarRelationFilter, UserWhereInput>
+    code?: XOR<AffiliateCodeScalarRelationFilter, AffiliateCodeWhereInput>
+    subUser?: XOR<UserScalarRelationFilter, UserWhereInput>
+  }, "id" | "uid" | "affiliateId_subUserId">
+
+  export type ReferralOrderByWithAggregationInput = {
+    id?: SortOrder
+    uid?: SortOrder
+    affiliateId?: SortOrder
+    subUserId?: SortOrder
+    ipAddress?: SortOrderInput | SortOrder
+    deviceFingerprint?: SortOrderInput | SortOrder
+    userAgent?: SortOrderInput | SortOrder
+    createdAt?: SortOrder
+    updatedAt?: SortOrder
+    codeId?: SortOrder
+    _count?: ReferralCountOrderByAggregateInput
+    _avg?: ReferralAvgOrderByAggregateInput
+    _max?: ReferralMaxOrderByAggregateInput
+    _min?: ReferralMinOrderByAggregateInput
+    _sum?: ReferralSumOrderByAggregateInput
+  }
+
+  export type ReferralScalarWhereWithAggregatesInput = {
+    AND?: ReferralScalarWhereWithAggregatesInput | ReferralScalarWhereWithAggregatesInput[]
+    OR?: ReferralScalarWhereWithAggregatesInput[]
+    NOT?: ReferralScalarWhereWithAggregatesInput | ReferralScalarWhereWithAggregatesInput[]
+    id?: BigIntWithAggregatesFilter<"Referral"> | bigint | number
+    uid?: StringWithAggregatesFilter<"Referral"> | string
+    affiliateId?: BigIntWithAggregatesFilter<"Referral"> | bigint | number
+    subUserId?: BigIntWithAggregatesFilter<"Referral"> | bigint | number
+    ipAddress?: StringNullableWithAggregatesFilter<"Referral"> | string | null
+    deviceFingerprint?: StringNullableWithAggregatesFilter<"Referral"> | string | null
+    userAgent?: StringNullableWithAggregatesFilter<"Referral"> | string | null
+    createdAt?: DateTimeWithAggregatesFilter<"Referral"> | Date | string
+    updatedAt?: DateTimeWithAggregatesFilter<"Referral"> | Date | string
+    codeId?: BigIntWithAggregatesFilter<"Referral"> | bigint | number
+  }
 
   export type AuthAuditLogWhereInput = {
     AND?: AuthAuditLogWhereInput | AuthAuditLogWhereInput[]
@@ -64659,180 +64883,6 @@ export namespace Prisma {
     gameId?: IntNullableWithAggregatesFilter<"GameSession"> | number | null
   }
 
-  export type AffiliateCodeWhereInput = {
-    AND?: AffiliateCodeWhereInput | AffiliateCodeWhereInput[]
-    OR?: AffiliateCodeWhereInput[]
-    NOT?: AffiliateCodeWhereInput | AffiliateCodeWhereInput[]
-    id?: StringFilter<"AffiliateCode"> | string
-    userId?: BigIntFilter<"AffiliateCode"> | bigint | number
-    code?: StringFilter<"AffiliateCode"> | string
-    campaignName?: StringNullableFilter<"AffiliateCode"> | string | null
-    description?: StringNullableFilter<"AffiliateCode"> | string | null
-    isActive?: BoolFilter<"AffiliateCode"> | boolean
-    isDefault?: BoolFilter<"AffiliateCode"> | boolean
-    expiresAt?: DateTimeNullableFilter<"AffiliateCode"> | Date | string | null
-    createdAt?: DateTimeFilter<"AffiliateCode"> | Date | string
-    updatedAt?: DateTimeFilter<"AffiliateCode"> | Date | string
-    lastUsedAt?: DateTimeNullableFilter<"AffiliateCode"> | Date | string | null
-    user?: XOR<UserScalarRelationFilter, UserWhereInput>
-    referrals?: ReferralListRelationFilter
-  }
-
-  export type AffiliateCodeOrderByWithRelationInput = {
-    id?: SortOrder
-    userId?: SortOrder
-    code?: SortOrder
-    campaignName?: SortOrderInput | SortOrder
-    description?: SortOrderInput | SortOrder
-    isActive?: SortOrder
-    isDefault?: SortOrder
-    expiresAt?: SortOrderInput | SortOrder
-    createdAt?: SortOrder
-    updatedAt?: SortOrder
-    lastUsedAt?: SortOrderInput | SortOrder
-    user?: UserOrderByWithRelationInput
-    referrals?: ReferralOrderByRelationAggregateInput
-  }
-
-  export type AffiliateCodeWhereUniqueInput = Prisma.AtLeast<{
-    id?: string
-    code?: string
-    AND?: AffiliateCodeWhereInput | AffiliateCodeWhereInput[]
-    OR?: AffiliateCodeWhereInput[]
-    NOT?: AffiliateCodeWhereInput | AffiliateCodeWhereInput[]
-    userId?: BigIntFilter<"AffiliateCode"> | bigint | number
-    campaignName?: StringNullableFilter<"AffiliateCode"> | string | null
-    description?: StringNullableFilter<"AffiliateCode"> | string | null
-    isActive?: BoolFilter<"AffiliateCode"> | boolean
-    isDefault?: BoolFilter<"AffiliateCode"> | boolean
-    expiresAt?: DateTimeNullableFilter<"AffiliateCode"> | Date | string | null
-    createdAt?: DateTimeFilter<"AffiliateCode"> | Date | string
-    updatedAt?: DateTimeFilter<"AffiliateCode"> | Date | string
-    lastUsedAt?: DateTimeNullableFilter<"AffiliateCode"> | Date | string | null
-    user?: XOR<UserScalarRelationFilter, UserWhereInput>
-    referrals?: ReferralListRelationFilter
-  }, "id" | "code">
-
-  export type AffiliateCodeOrderByWithAggregationInput = {
-    id?: SortOrder
-    userId?: SortOrder
-    code?: SortOrder
-    campaignName?: SortOrderInput | SortOrder
-    description?: SortOrderInput | SortOrder
-    isActive?: SortOrder
-    isDefault?: SortOrder
-    expiresAt?: SortOrderInput | SortOrder
-    createdAt?: SortOrder
-    updatedAt?: SortOrder
-    lastUsedAt?: SortOrderInput | SortOrder
-    _count?: AffiliateCodeCountOrderByAggregateInput
-    _avg?: AffiliateCodeAvgOrderByAggregateInput
-    _max?: AffiliateCodeMaxOrderByAggregateInput
-    _min?: AffiliateCodeMinOrderByAggregateInput
-    _sum?: AffiliateCodeSumOrderByAggregateInput
-  }
-
-  export type AffiliateCodeScalarWhereWithAggregatesInput = {
-    AND?: AffiliateCodeScalarWhereWithAggregatesInput | AffiliateCodeScalarWhereWithAggregatesInput[]
-    OR?: AffiliateCodeScalarWhereWithAggregatesInput[]
-    NOT?: AffiliateCodeScalarWhereWithAggregatesInput | AffiliateCodeScalarWhereWithAggregatesInput[]
-    id?: StringWithAggregatesFilter<"AffiliateCode"> | string
-    userId?: BigIntWithAggregatesFilter<"AffiliateCode"> | bigint | number
-    code?: StringWithAggregatesFilter<"AffiliateCode"> | string
-    campaignName?: StringNullableWithAggregatesFilter<"AffiliateCode"> | string | null
-    description?: StringNullableWithAggregatesFilter<"AffiliateCode"> | string | null
-    isActive?: BoolWithAggregatesFilter<"AffiliateCode"> | boolean
-    isDefault?: BoolWithAggregatesFilter<"AffiliateCode"> | boolean
-    expiresAt?: DateTimeNullableWithAggregatesFilter<"AffiliateCode"> | Date | string | null
-    createdAt?: DateTimeWithAggregatesFilter<"AffiliateCode"> | Date | string
-    updatedAt?: DateTimeWithAggregatesFilter<"AffiliateCode"> | Date | string
-    lastUsedAt?: DateTimeNullableWithAggregatesFilter<"AffiliateCode"> | Date | string | null
-  }
-
-  export type ReferralWhereInput = {
-    AND?: ReferralWhereInput | ReferralWhereInput[]
-    OR?: ReferralWhereInput[]
-    NOT?: ReferralWhereInput | ReferralWhereInput[]
-    id?: StringFilter<"Referral"> | string
-    affiliateId?: BigIntFilter<"Referral"> | bigint | number
-    subUserId?: BigIntFilter<"Referral"> | bigint | number
-    ipAddress?: StringNullableFilter<"Referral"> | string | null
-    deviceFingerprint?: StringNullableFilter<"Referral"> | string | null
-    userAgent?: StringNullableFilter<"Referral"> | string | null
-    createdAt?: DateTimeFilter<"Referral"> | Date | string
-    updatedAt?: DateTimeFilter<"Referral"> | Date | string
-    codeId?: StringFilter<"Referral"> | string
-    affiliate?: XOR<UserScalarRelationFilter, UserWhereInput>
-    code?: XOR<AffiliateCodeScalarRelationFilter, AffiliateCodeWhereInput>
-    subUser?: XOR<UserScalarRelationFilter, UserWhereInput>
-  }
-
-  export type ReferralOrderByWithRelationInput = {
-    id?: SortOrder
-    affiliateId?: SortOrder
-    subUserId?: SortOrder
-    ipAddress?: SortOrderInput | SortOrder
-    deviceFingerprint?: SortOrderInput | SortOrder
-    userAgent?: SortOrderInput | SortOrder
-    createdAt?: SortOrder
-    updatedAt?: SortOrder
-    codeId?: SortOrder
-    affiliate?: UserOrderByWithRelationInput
-    code?: AffiliateCodeOrderByWithRelationInput
-    subUser?: UserOrderByWithRelationInput
-  }
-
-  export type ReferralWhereUniqueInput = Prisma.AtLeast<{
-    id?: string
-    affiliateId_subUserId?: ReferralAffiliateIdSubUserIdCompoundUniqueInput
-    AND?: ReferralWhereInput | ReferralWhereInput[]
-    OR?: ReferralWhereInput[]
-    NOT?: ReferralWhereInput | ReferralWhereInput[]
-    affiliateId?: BigIntFilter<"Referral"> | bigint | number
-    subUserId?: BigIntFilter<"Referral"> | bigint | number
-    ipAddress?: StringNullableFilter<"Referral"> | string | null
-    deviceFingerprint?: StringNullableFilter<"Referral"> | string | null
-    userAgent?: StringNullableFilter<"Referral"> | string | null
-    createdAt?: DateTimeFilter<"Referral"> | Date | string
-    updatedAt?: DateTimeFilter<"Referral"> | Date | string
-    codeId?: StringFilter<"Referral"> | string
-    affiliate?: XOR<UserScalarRelationFilter, UserWhereInput>
-    code?: XOR<AffiliateCodeScalarRelationFilter, AffiliateCodeWhereInput>
-    subUser?: XOR<UserScalarRelationFilter, UserWhereInput>
-  }, "id" | "affiliateId_subUserId">
-
-  export type ReferralOrderByWithAggregationInput = {
-    id?: SortOrder
-    affiliateId?: SortOrder
-    subUserId?: SortOrder
-    ipAddress?: SortOrderInput | SortOrder
-    deviceFingerprint?: SortOrderInput | SortOrder
-    userAgent?: SortOrderInput | SortOrder
-    createdAt?: SortOrder
-    updatedAt?: SortOrder
-    codeId?: SortOrder
-    _count?: ReferralCountOrderByAggregateInput
-    _avg?: ReferralAvgOrderByAggregateInput
-    _max?: ReferralMaxOrderByAggregateInput
-    _min?: ReferralMinOrderByAggregateInput
-    _sum?: ReferralSumOrderByAggregateInput
-  }
-
-  export type ReferralScalarWhereWithAggregatesInput = {
-    AND?: ReferralScalarWhereWithAggregatesInput | ReferralScalarWhereWithAggregatesInput[]
-    OR?: ReferralScalarWhereWithAggregatesInput[]
-    NOT?: ReferralScalarWhereWithAggregatesInput | ReferralScalarWhereWithAggregatesInput[]
-    id?: StringWithAggregatesFilter<"Referral"> | string
-    affiliateId?: BigIntWithAggregatesFilter<"Referral"> | bigint | number
-    subUserId?: BigIntWithAggregatesFilter<"Referral"> | bigint | number
-    ipAddress?: StringNullableWithAggregatesFilter<"Referral"> | string | null
-    deviceFingerprint?: StringNullableWithAggregatesFilter<"Referral"> | string | null
-    userAgent?: StringNullableWithAggregatesFilter<"Referral"> | string | null
-    createdAt?: DateTimeWithAggregatesFilter<"Referral"> | Date | string
-    updatedAt?: DateTimeWithAggregatesFilter<"Referral"> | Date | string
-    codeId?: StringWithAggregatesFilter<"Referral"> | string
-  }
-
   export type AffiliateWalletWhereInput = {
     AND?: AffiliateWalletWhereInput | AffiliateWalletWhereInput[]
     OR?: AffiliateWalletWhereInput[]
@@ -66092,6 +66142,202 @@ export namespace Prisma {
     revokedAt?: DateTimeNullableWithAggregatesFilter<"UserSession"> | Date | string | null
     revokedBy?: BigIntNullableWithAggregatesFilter<"UserSession"> | bigint | number | null
     metadata?: JsonNullableWithAggregatesFilter<"UserSession">
+  }
+
+  export type AffiliateCodeCreateInput = {
+    id?: bigint | number
+    uid: string
+    code: string
+    campaignName?: string | null
+    description?: string | null
+    isActive?: boolean
+    isDefault?: boolean
+    expiresAt?: Date | string | null
+    createdAt?: Date | string
+    updatedAt?: Date | string
+    lastUsedAt?: Date | string | null
+    user: UserCreateNestedOneWithoutAffiliateCodesInput
+    referrals?: ReferralCreateNestedManyWithoutCodeInput
+  }
+
+  export type AffiliateCodeUncheckedCreateInput = {
+    id?: bigint | number
+    uid: string
+    userId: bigint | number
+    code: string
+    campaignName?: string | null
+    description?: string | null
+    isActive?: boolean
+    isDefault?: boolean
+    expiresAt?: Date | string | null
+    createdAt?: Date | string
+    updatedAt?: Date | string
+    lastUsedAt?: Date | string | null
+    referrals?: ReferralUncheckedCreateNestedManyWithoutCodeInput
+  }
+
+  export type AffiliateCodeUpdateInput = {
+    id?: BigIntFieldUpdateOperationsInput | bigint | number
+    uid?: StringFieldUpdateOperationsInput | string
+    code?: StringFieldUpdateOperationsInput | string
+    campaignName?: NullableStringFieldUpdateOperationsInput | string | null
+    description?: NullableStringFieldUpdateOperationsInput | string | null
+    isActive?: BoolFieldUpdateOperationsInput | boolean
+    isDefault?: BoolFieldUpdateOperationsInput | boolean
+    expiresAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    lastUsedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    user?: UserUpdateOneRequiredWithoutAffiliateCodesNestedInput
+    referrals?: ReferralUpdateManyWithoutCodeNestedInput
+  }
+
+  export type AffiliateCodeUncheckedUpdateInput = {
+    id?: BigIntFieldUpdateOperationsInput | bigint | number
+    uid?: StringFieldUpdateOperationsInput | string
+    userId?: BigIntFieldUpdateOperationsInput | bigint | number
+    code?: StringFieldUpdateOperationsInput | string
+    campaignName?: NullableStringFieldUpdateOperationsInput | string | null
+    description?: NullableStringFieldUpdateOperationsInput | string | null
+    isActive?: BoolFieldUpdateOperationsInput | boolean
+    isDefault?: BoolFieldUpdateOperationsInput | boolean
+    expiresAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    lastUsedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    referrals?: ReferralUncheckedUpdateManyWithoutCodeNestedInput
+  }
+
+  export type AffiliateCodeCreateManyInput = {
+    id?: bigint | number
+    uid: string
+    userId: bigint | number
+    code: string
+    campaignName?: string | null
+    description?: string | null
+    isActive?: boolean
+    isDefault?: boolean
+    expiresAt?: Date | string | null
+    createdAt?: Date | string
+    updatedAt?: Date | string
+    lastUsedAt?: Date | string | null
+  }
+
+  export type AffiliateCodeUpdateManyMutationInput = {
+    id?: BigIntFieldUpdateOperationsInput | bigint | number
+    uid?: StringFieldUpdateOperationsInput | string
+    code?: StringFieldUpdateOperationsInput | string
+    campaignName?: NullableStringFieldUpdateOperationsInput | string | null
+    description?: NullableStringFieldUpdateOperationsInput | string | null
+    isActive?: BoolFieldUpdateOperationsInput | boolean
+    isDefault?: BoolFieldUpdateOperationsInput | boolean
+    expiresAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    lastUsedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  }
+
+  export type AffiliateCodeUncheckedUpdateManyInput = {
+    id?: BigIntFieldUpdateOperationsInput | bigint | number
+    uid?: StringFieldUpdateOperationsInput | string
+    userId?: BigIntFieldUpdateOperationsInput | bigint | number
+    code?: StringFieldUpdateOperationsInput | string
+    campaignName?: NullableStringFieldUpdateOperationsInput | string | null
+    description?: NullableStringFieldUpdateOperationsInput | string | null
+    isActive?: BoolFieldUpdateOperationsInput | boolean
+    isDefault?: BoolFieldUpdateOperationsInput | boolean
+    expiresAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    lastUsedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  }
+
+  export type ReferralCreateInput = {
+    id?: bigint | number
+    uid: string
+    ipAddress?: string | null
+    deviceFingerprint?: string | null
+    userAgent?: string | null
+    createdAt?: Date | string
+    updatedAt?: Date | string
+    affiliate: UserCreateNestedOneWithoutAffiliateReferralsInput
+    code: AffiliateCodeCreateNestedOneWithoutReferralsInput
+    subUser: UserCreateNestedOneWithoutReferredUsersInput
+  }
+
+  export type ReferralUncheckedCreateInput = {
+    id?: bigint | number
+    uid: string
+    affiliateId: bigint | number
+    subUserId: bigint | number
+    ipAddress?: string | null
+    deviceFingerprint?: string | null
+    userAgent?: string | null
+    createdAt?: Date | string
+    updatedAt?: Date | string
+    codeId: bigint | number
+  }
+
+  export type ReferralUpdateInput = {
+    id?: BigIntFieldUpdateOperationsInput | bigint | number
+    uid?: StringFieldUpdateOperationsInput | string
+    ipAddress?: NullableStringFieldUpdateOperationsInput | string | null
+    deviceFingerprint?: NullableStringFieldUpdateOperationsInput | string | null
+    userAgent?: NullableStringFieldUpdateOperationsInput | string | null
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    affiliate?: UserUpdateOneRequiredWithoutAffiliateReferralsNestedInput
+    code?: AffiliateCodeUpdateOneRequiredWithoutReferralsNestedInput
+    subUser?: UserUpdateOneRequiredWithoutReferredUsersNestedInput
+  }
+
+  export type ReferralUncheckedUpdateInput = {
+    id?: BigIntFieldUpdateOperationsInput | bigint | number
+    uid?: StringFieldUpdateOperationsInput | string
+    affiliateId?: BigIntFieldUpdateOperationsInput | bigint | number
+    subUserId?: BigIntFieldUpdateOperationsInput | bigint | number
+    ipAddress?: NullableStringFieldUpdateOperationsInput | string | null
+    deviceFingerprint?: NullableStringFieldUpdateOperationsInput | string | null
+    userAgent?: NullableStringFieldUpdateOperationsInput | string | null
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    codeId?: BigIntFieldUpdateOperationsInput | bigint | number
+  }
+
+  export type ReferralCreateManyInput = {
+    id?: bigint | number
+    uid: string
+    affiliateId: bigint | number
+    subUserId: bigint | number
+    ipAddress?: string | null
+    deviceFingerprint?: string | null
+    userAgent?: string | null
+    createdAt?: Date | string
+    updatedAt?: Date | string
+    codeId: bigint | number
+  }
+
+  export type ReferralUpdateManyMutationInput = {
+    id?: BigIntFieldUpdateOperationsInput | bigint | number
+    uid?: StringFieldUpdateOperationsInput | string
+    ipAddress?: NullableStringFieldUpdateOperationsInput | string | null
+    deviceFingerprint?: NullableStringFieldUpdateOperationsInput | string | null
+    userAgent?: NullableStringFieldUpdateOperationsInput | string | null
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+  }
+
+  export type ReferralUncheckedUpdateManyInput = {
+    id?: BigIntFieldUpdateOperationsInput | bigint | number
+    uid?: StringFieldUpdateOperationsInput | string
+    affiliateId?: BigIntFieldUpdateOperationsInput | bigint | number
+    subUserId?: BigIntFieldUpdateOperationsInput | bigint | number
+    ipAddress?: NullableStringFieldUpdateOperationsInput | string | null
+    deviceFingerprint?: NullableStringFieldUpdateOperationsInput | string | null
+    userAgent?: NullableStringFieldUpdateOperationsInput | string | null
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    codeId?: BigIntFieldUpdateOperationsInput | bigint | number
   }
 
   export type AuthAuditLogCreateInput = {
@@ -69482,188 +69728,6 @@ export namespace Prisma {
     gameId?: NullableIntFieldUpdateOperationsInput | number | null
   }
 
-  export type AffiliateCodeCreateInput = {
-    id?: string
-    code: string
-    campaignName?: string | null
-    description?: string | null
-    isActive?: boolean
-    isDefault?: boolean
-    expiresAt?: Date | string | null
-    createdAt?: Date | string
-    updatedAt?: Date | string
-    lastUsedAt?: Date | string | null
-    user: UserCreateNestedOneWithoutAffiliateCodesInput
-    referrals?: ReferralCreateNestedManyWithoutCodeInput
-  }
-
-  export type AffiliateCodeUncheckedCreateInput = {
-    id?: string
-    userId: bigint | number
-    code: string
-    campaignName?: string | null
-    description?: string | null
-    isActive?: boolean
-    isDefault?: boolean
-    expiresAt?: Date | string | null
-    createdAt?: Date | string
-    updatedAt?: Date | string
-    lastUsedAt?: Date | string | null
-    referrals?: ReferralUncheckedCreateNestedManyWithoutCodeInput
-  }
-
-  export type AffiliateCodeUpdateInput = {
-    id?: StringFieldUpdateOperationsInput | string
-    code?: StringFieldUpdateOperationsInput | string
-    campaignName?: NullableStringFieldUpdateOperationsInput | string | null
-    description?: NullableStringFieldUpdateOperationsInput | string | null
-    isActive?: BoolFieldUpdateOperationsInput | boolean
-    isDefault?: BoolFieldUpdateOperationsInput | boolean
-    expiresAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
-    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
-    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
-    lastUsedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
-    user?: UserUpdateOneRequiredWithoutAffiliateCodesNestedInput
-    referrals?: ReferralUpdateManyWithoutCodeNestedInput
-  }
-
-  export type AffiliateCodeUncheckedUpdateInput = {
-    id?: StringFieldUpdateOperationsInput | string
-    userId?: BigIntFieldUpdateOperationsInput | bigint | number
-    code?: StringFieldUpdateOperationsInput | string
-    campaignName?: NullableStringFieldUpdateOperationsInput | string | null
-    description?: NullableStringFieldUpdateOperationsInput | string | null
-    isActive?: BoolFieldUpdateOperationsInput | boolean
-    isDefault?: BoolFieldUpdateOperationsInput | boolean
-    expiresAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
-    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
-    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
-    lastUsedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
-    referrals?: ReferralUncheckedUpdateManyWithoutCodeNestedInput
-  }
-
-  export type AffiliateCodeCreateManyInput = {
-    id?: string
-    userId: bigint | number
-    code: string
-    campaignName?: string | null
-    description?: string | null
-    isActive?: boolean
-    isDefault?: boolean
-    expiresAt?: Date | string | null
-    createdAt?: Date | string
-    updatedAt?: Date | string
-    lastUsedAt?: Date | string | null
-  }
-
-  export type AffiliateCodeUpdateManyMutationInput = {
-    id?: StringFieldUpdateOperationsInput | string
-    code?: StringFieldUpdateOperationsInput | string
-    campaignName?: NullableStringFieldUpdateOperationsInput | string | null
-    description?: NullableStringFieldUpdateOperationsInput | string | null
-    isActive?: BoolFieldUpdateOperationsInput | boolean
-    isDefault?: BoolFieldUpdateOperationsInput | boolean
-    expiresAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
-    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
-    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
-    lastUsedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
-  }
-
-  export type AffiliateCodeUncheckedUpdateManyInput = {
-    id?: StringFieldUpdateOperationsInput | string
-    userId?: BigIntFieldUpdateOperationsInput | bigint | number
-    code?: StringFieldUpdateOperationsInput | string
-    campaignName?: NullableStringFieldUpdateOperationsInput | string | null
-    description?: NullableStringFieldUpdateOperationsInput | string | null
-    isActive?: BoolFieldUpdateOperationsInput | boolean
-    isDefault?: BoolFieldUpdateOperationsInput | boolean
-    expiresAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
-    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
-    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
-    lastUsedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
-  }
-
-  export type ReferralCreateInput = {
-    id?: string
-    ipAddress?: string | null
-    deviceFingerprint?: string | null
-    userAgent?: string | null
-    createdAt?: Date | string
-    updatedAt?: Date | string
-    affiliate: UserCreateNestedOneWithoutAffiliateReferralsInput
-    code: AffiliateCodeCreateNestedOneWithoutReferralsInput
-    subUser: UserCreateNestedOneWithoutReferredUsersInput
-  }
-
-  export type ReferralUncheckedCreateInput = {
-    id?: string
-    affiliateId: bigint | number
-    subUserId: bigint | number
-    ipAddress?: string | null
-    deviceFingerprint?: string | null
-    userAgent?: string | null
-    createdAt?: Date | string
-    updatedAt?: Date | string
-    codeId: string
-  }
-
-  export type ReferralUpdateInput = {
-    id?: StringFieldUpdateOperationsInput | string
-    ipAddress?: NullableStringFieldUpdateOperationsInput | string | null
-    deviceFingerprint?: NullableStringFieldUpdateOperationsInput | string | null
-    userAgent?: NullableStringFieldUpdateOperationsInput | string | null
-    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
-    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
-    affiliate?: UserUpdateOneRequiredWithoutAffiliateReferralsNestedInput
-    code?: AffiliateCodeUpdateOneRequiredWithoutReferralsNestedInput
-    subUser?: UserUpdateOneRequiredWithoutReferredUsersNestedInput
-  }
-
-  export type ReferralUncheckedUpdateInput = {
-    id?: StringFieldUpdateOperationsInput | string
-    affiliateId?: BigIntFieldUpdateOperationsInput | bigint | number
-    subUserId?: BigIntFieldUpdateOperationsInput | bigint | number
-    ipAddress?: NullableStringFieldUpdateOperationsInput | string | null
-    deviceFingerprint?: NullableStringFieldUpdateOperationsInput | string | null
-    userAgent?: NullableStringFieldUpdateOperationsInput | string | null
-    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
-    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
-    codeId?: StringFieldUpdateOperationsInput | string
-  }
-
-  export type ReferralCreateManyInput = {
-    id?: string
-    affiliateId: bigint | number
-    subUserId: bigint | number
-    ipAddress?: string | null
-    deviceFingerprint?: string | null
-    userAgent?: string | null
-    createdAt?: Date | string
-    updatedAt?: Date | string
-    codeId: string
-  }
-
-  export type ReferralUpdateManyMutationInput = {
-    id?: StringFieldUpdateOperationsInput | string
-    ipAddress?: NullableStringFieldUpdateOperationsInput | string | null
-    deviceFingerprint?: NullableStringFieldUpdateOperationsInput | string | null
-    userAgent?: NullableStringFieldUpdateOperationsInput | string | null
-    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
-    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
-  }
-
-  export type ReferralUncheckedUpdateManyInput = {
-    id?: StringFieldUpdateOperationsInput | string
-    affiliateId?: BigIntFieldUpdateOperationsInput | bigint | number
-    subUserId?: BigIntFieldUpdateOperationsInput | bigint | number
-    ipAddress?: NullableStringFieldUpdateOperationsInput | string | null
-    deviceFingerprint?: NullableStringFieldUpdateOperationsInput | string | null
-    userAgent?: NullableStringFieldUpdateOperationsInput | string | null
-    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
-    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
-    codeId?: StringFieldUpdateOperationsInput | string
-  }
-
   export type AffiliateWalletCreateInput = {
     currency: $Enums.ExchangeCurrencyCode
     availableBalance?: Decimal | DecimalJsLike | number | string
@@ -71104,6 +71168,17 @@ export namespace Prisma {
     metadata?: NullableJsonNullValueInput | InputJsonValue
   }
 
+  export type BigIntFilter<$PrismaModel = never> = {
+    equals?: bigint | number | BigIntFieldRefInput<$PrismaModel>
+    in?: bigint[] | number[] | ListBigIntFieldRefInput<$PrismaModel>
+    notIn?: bigint[] | number[] | ListBigIntFieldRefInput<$PrismaModel>
+    lt?: bigint | number | BigIntFieldRefInput<$PrismaModel>
+    lte?: bigint | number | BigIntFieldRefInput<$PrismaModel>
+    gt?: bigint | number | BigIntFieldRefInput<$PrismaModel>
+    gte?: bigint | number | BigIntFieldRefInput<$PrismaModel>
+    not?: NestedBigIntFilter<$PrismaModel> | bigint | number
+  }
+
   export type StringFilter<$PrismaModel = never> = {
     equals?: string | StringFieldRefInput<$PrismaModel>
     in?: string[] | ListStringFieldRefInput<$PrismaModel>
@@ -71119,28 +71194,6 @@ export namespace Prisma {
     not?: NestedStringFilter<$PrismaModel> | string
   }
 
-  export type DateTimeFilter<$PrismaModel = never> = {
-    equals?: Date | string | DateTimeFieldRefInput<$PrismaModel>
-    in?: Date[] | string[] | ListDateTimeFieldRefInput<$PrismaModel>
-    notIn?: Date[] | string[] | ListDateTimeFieldRefInput<$PrismaModel>
-    lt?: Date | string | DateTimeFieldRefInput<$PrismaModel>
-    lte?: Date | string | DateTimeFieldRefInput<$PrismaModel>
-    gt?: Date | string | DateTimeFieldRefInput<$PrismaModel>
-    gte?: Date | string | DateTimeFieldRefInput<$PrismaModel>
-    not?: NestedDateTimeFilter<$PrismaModel> | Date | string
-  }
-
-  export type BigIntNullableFilter<$PrismaModel = never> = {
-    equals?: bigint | number | BigIntFieldRefInput<$PrismaModel> | null
-    in?: bigint[] | number[] | ListBigIntFieldRefInput<$PrismaModel> | null
-    notIn?: bigint[] | number[] | ListBigIntFieldRefInput<$PrismaModel> | null
-    lt?: bigint | number | BigIntFieldRefInput<$PrismaModel>
-    lte?: bigint | number | BigIntFieldRefInput<$PrismaModel>
-    gt?: bigint | number | BigIntFieldRefInput<$PrismaModel>
-    gte?: bigint | number | BigIntFieldRefInput<$PrismaModel>
-    not?: NestedBigIntNullableFilter<$PrismaModel> | bigint | number | null
-  }
-
   export type StringNullableFilter<$PrismaModel = never> = {
     equals?: string | StringFieldRefInput<$PrismaModel> | null
     in?: string[] | ListStringFieldRefInput<$PrismaModel> | null
@@ -71154,6 +71207,270 @@ export namespace Prisma {
     endsWith?: string | StringFieldRefInput<$PrismaModel>
     mode?: QueryMode
     not?: NestedStringNullableFilter<$PrismaModel> | string | null
+  }
+
+  export type BoolFilter<$PrismaModel = never> = {
+    equals?: boolean | BooleanFieldRefInput<$PrismaModel>
+    not?: NestedBoolFilter<$PrismaModel> | boolean
+  }
+
+  export type DateTimeNullableFilter<$PrismaModel = never> = {
+    equals?: Date | string | DateTimeFieldRefInput<$PrismaModel> | null
+    in?: Date[] | string[] | ListDateTimeFieldRefInput<$PrismaModel> | null
+    notIn?: Date[] | string[] | ListDateTimeFieldRefInput<$PrismaModel> | null
+    lt?: Date | string | DateTimeFieldRefInput<$PrismaModel>
+    lte?: Date | string | DateTimeFieldRefInput<$PrismaModel>
+    gt?: Date | string | DateTimeFieldRefInput<$PrismaModel>
+    gte?: Date | string | DateTimeFieldRefInput<$PrismaModel>
+    not?: NestedDateTimeNullableFilter<$PrismaModel> | Date | string | null
+  }
+
+  export type DateTimeFilter<$PrismaModel = never> = {
+    equals?: Date | string | DateTimeFieldRefInput<$PrismaModel>
+    in?: Date[] | string[] | ListDateTimeFieldRefInput<$PrismaModel>
+    notIn?: Date[] | string[] | ListDateTimeFieldRefInput<$PrismaModel>
+    lt?: Date | string | DateTimeFieldRefInput<$PrismaModel>
+    lte?: Date | string | DateTimeFieldRefInput<$PrismaModel>
+    gt?: Date | string | DateTimeFieldRefInput<$PrismaModel>
+    gte?: Date | string | DateTimeFieldRefInput<$PrismaModel>
+    not?: NestedDateTimeFilter<$PrismaModel> | Date | string
+  }
+
+  export type UserScalarRelationFilter = {
+    is?: UserWhereInput
+    isNot?: UserWhereInput
+  }
+
+  export type ReferralListRelationFilter = {
+    every?: ReferralWhereInput
+    some?: ReferralWhereInput
+    none?: ReferralWhereInput
+  }
+
+  export type SortOrderInput = {
+    sort: SortOrder
+    nulls?: NullsOrder
+  }
+
+  export type ReferralOrderByRelationAggregateInput = {
+    _count?: SortOrder
+  }
+
+  export type AffiliateCodeCountOrderByAggregateInput = {
+    id?: SortOrder
+    uid?: SortOrder
+    userId?: SortOrder
+    code?: SortOrder
+    campaignName?: SortOrder
+    description?: SortOrder
+    isActive?: SortOrder
+    isDefault?: SortOrder
+    expiresAt?: SortOrder
+    createdAt?: SortOrder
+    updatedAt?: SortOrder
+    lastUsedAt?: SortOrder
+  }
+
+  export type AffiliateCodeAvgOrderByAggregateInput = {
+    id?: SortOrder
+    userId?: SortOrder
+  }
+
+  export type AffiliateCodeMaxOrderByAggregateInput = {
+    id?: SortOrder
+    uid?: SortOrder
+    userId?: SortOrder
+    code?: SortOrder
+    campaignName?: SortOrder
+    description?: SortOrder
+    isActive?: SortOrder
+    isDefault?: SortOrder
+    expiresAt?: SortOrder
+    createdAt?: SortOrder
+    updatedAt?: SortOrder
+    lastUsedAt?: SortOrder
+  }
+
+  export type AffiliateCodeMinOrderByAggregateInput = {
+    id?: SortOrder
+    uid?: SortOrder
+    userId?: SortOrder
+    code?: SortOrder
+    campaignName?: SortOrder
+    description?: SortOrder
+    isActive?: SortOrder
+    isDefault?: SortOrder
+    expiresAt?: SortOrder
+    createdAt?: SortOrder
+    updatedAt?: SortOrder
+    lastUsedAt?: SortOrder
+  }
+
+  export type AffiliateCodeSumOrderByAggregateInput = {
+    id?: SortOrder
+    userId?: SortOrder
+  }
+
+  export type BigIntWithAggregatesFilter<$PrismaModel = never> = {
+    equals?: bigint | number | BigIntFieldRefInput<$PrismaModel>
+    in?: bigint[] | number[] | ListBigIntFieldRefInput<$PrismaModel>
+    notIn?: bigint[] | number[] | ListBigIntFieldRefInput<$PrismaModel>
+    lt?: bigint | number | BigIntFieldRefInput<$PrismaModel>
+    lte?: bigint | number | BigIntFieldRefInput<$PrismaModel>
+    gt?: bigint | number | BigIntFieldRefInput<$PrismaModel>
+    gte?: bigint | number | BigIntFieldRefInput<$PrismaModel>
+    not?: NestedBigIntWithAggregatesFilter<$PrismaModel> | bigint | number
+    _count?: NestedIntFilter<$PrismaModel>
+    _avg?: NestedFloatFilter<$PrismaModel>
+    _sum?: NestedBigIntFilter<$PrismaModel>
+    _min?: NestedBigIntFilter<$PrismaModel>
+    _max?: NestedBigIntFilter<$PrismaModel>
+  }
+
+  export type StringWithAggregatesFilter<$PrismaModel = never> = {
+    equals?: string | StringFieldRefInput<$PrismaModel>
+    in?: string[] | ListStringFieldRefInput<$PrismaModel>
+    notIn?: string[] | ListStringFieldRefInput<$PrismaModel>
+    lt?: string | StringFieldRefInput<$PrismaModel>
+    lte?: string | StringFieldRefInput<$PrismaModel>
+    gt?: string | StringFieldRefInput<$PrismaModel>
+    gte?: string | StringFieldRefInput<$PrismaModel>
+    contains?: string | StringFieldRefInput<$PrismaModel>
+    startsWith?: string | StringFieldRefInput<$PrismaModel>
+    endsWith?: string | StringFieldRefInput<$PrismaModel>
+    mode?: QueryMode
+    not?: NestedStringWithAggregatesFilter<$PrismaModel> | string
+    _count?: NestedIntFilter<$PrismaModel>
+    _min?: NestedStringFilter<$PrismaModel>
+    _max?: NestedStringFilter<$PrismaModel>
+  }
+
+  export type StringNullableWithAggregatesFilter<$PrismaModel = never> = {
+    equals?: string | StringFieldRefInput<$PrismaModel> | null
+    in?: string[] | ListStringFieldRefInput<$PrismaModel> | null
+    notIn?: string[] | ListStringFieldRefInput<$PrismaModel> | null
+    lt?: string | StringFieldRefInput<$PrismaModel>
+    lte?: string | StringFieldRefInput<$PrismaModel>
+    gt?: string | StringFieldRefInput<$PrismaModel>
+    gte?: string | StringFieldRefInput<$PrismaModel>
+    contains?: string | StringFieldRefInput<$PrismaModel>
+    startsWith?: string | StringFieldRefInput<$PrismaModel>
+    endsWith?: string | StringFieldRefInput<$PrismaModel>
+    mode?: QueryMode
+    not?: NestedStringNullableWithAggregatesFilter<$PrismaModel> | string | null
+    _count?: NestedIntNullableFilter<$PrismaModel>
+    _min?: NestedStringNullableFilter<$PrismaModel>
+    _max?: NestedStringNullableFilter<$PrismaModel>
+  }
+
+  export type BoolWithAggregatesFilter<$PrismaModel = never> = {
+    equals?: boolean | BooleanFieldRefInput<$PrismaModel>
+    not?: NestedBoolWithAggregatesFilter<$PrismaModel> | boolean
+    _count?: NestedIntFilter<$PrismaModel>
+    _min?: NestedBoolFilter<$PrismaModel>
+    _max?: NestedBoolFilter<$PrismaModel>
+  }
+
+  export type DateTimeNullableWithAggregatesFilter<$PrismaModel = never> = {
+    equals?: Date | string | DateTimeFieldRefInput<$PrismaModel> | null
+    in?: Date[] | string[] | ListDateTimeFieldRefInput<$PrismaModel> | null
+    notIn?: Date[] | string[] | ListDateTimeFieldRefInput<$PrismaModel> | null
+    lt?: Date | string | DateTimeFieldRefInput<$PrismaModel>
+    lte?: Date | string | DateTimeFieldRefInput<$PrismaModel>
+    gt?: Date | string | DateTimeFieldRefInput<$PrismaModel>
+    gte?: Date | string | DateTimeFieldRefInput<$PrismaModel>
+    not?: NestedDateTimeNullableWithAggregatesFilter<$PrismaModel> | Date | string | null
+    _count?: NestedIntNullableFilter<$PrismaModel>
+    _min?: NestedDateTimeNullableFilter<$PrismaModel>
+    _max?: NestedDateTimeNullableFilter<$PrismaModel>
+  }
+
+  export type DateTimeWithAggregatesFilter<$PrismaModel = never> = {
+    equals?: Date | string | DateTimeFieldRefInput<$PrismaModel>
+    in?: Date[] | string[] | ListDateTimeFieldRefInput<$PrismaModel>
+    notIn?: Date[] | string[] | ListDateTimeFieldRefInput<$PrismaModel>
+    lt?: Date | string | DateTimeFieldRefInput<$PrismaModel>
+    lte?: Date | string | DateTimeFieldRefInput<$PrismaModel>
+    gt?: Date | string | DateTimeFieldRefInput<$PrismaModel>
+    gte?: Date | string | DateTimeFieldRefInput<$PrismaModel>
+    not?: NestedDateTimeWithAggregatesFilter<$PrismaModel> | Date | string
+    _count?: NestedIntFilter<$PrismaModel>
+    _min?: NestedDateTimeFilter<$PrismaModel>
+    _max?: NestedDateTimeFilter<$PrismaModel>
+  }
+
+  export type AffiliateCodeScalarRelationFilter = {
+    is?: AffiliateCodeWhereInput
+    isNot?: AffiliateCodeWhereInput
+  }
+
+  export type ReferralAffiliateIdSubUserIdCompoundUniqueInput = {
+    affiliateId: bigint | number
+    subUserId: bigint | number
+  }
+
+  export type ReferralCountOrderByAggregateInput = {
+    id?: SortOrder
+    uid?: SortOrder
+    affiliateId?: SortOrder
+    subUserId?: SortOrder
+    ipAddress?: SortOrder
+    deviceFingerprint?: SortOrder
+    userAgent?: SortOrder
+    createdAt?: SortOrder
+    updatedAt?: SortOrder
+    codeId?: SortOrder
+  }
+
+  export type ReferralAvgOrderByAggregateInput = {
+    id?: SortOrder
+    affiliateId?: SortOrder
+    subUserId?: SortOrder
+    codeId?: SortOrder
+  }
+
+  export type ReferralMaxOrderByAggregateInput = {
+    id?: SortOrder
+    uid?: SortOrder
+    affiliateId?: SortOrder
+    subUserId?: SortOrder
+    ipAddress?: SortOrder
+    deviceFingerprint?: SortOrder
+    userAgent?: SortOrder
+    createdAt?: SortOrder
+    updatedAt?: SortOrder
+    codeId?: SortOrder
+  }
+
+  export type ReferralMinOrderByAggregateInput = {
+    id?: SortOrder
+    uid?: SortOrder
+    affiliateId?: SortOrder
+    subUserId?: SortOrder
+    ipAddress?: SortOrder
+    deviceFingerprint?: SortOrder
+    userAgent?: SortOrder
+    createdAt?: SortOrder
+    updatedAt?: SortOrder
+    codeId?: SortOrder
+  }
+
+  export type ReferralSumOrderByAggregateInput = {
+    id?: SortOrder
+    affiliateId?: SortOrder
+    subUserId?: SortOrder
+    codeId?: SortOrder
+  }
+
+  export type BigIntNullableFilter<$PrismaModel = never> = {
+    equals?: bigint | number | BigIntFieldRefInput<$PrismaModel> | null
+    in?: bigint[] | number[] | ListBigIntFieldRefInput<$PrismaModel> | null
+    notIn?: bigint[] | number[] | ListBigIntFieldRefInput<$PrismaModel> | null
+    lt?: bigint | number | BigIntFieldRefInput<$PrismaModel>
+    lte?: bigint | number | BigIntFieldRefInput<$PrismaModel>
+    gt?: bigint | number | BigIntFieldRefInput<$PrismaModel>
+    gte?: bigint | number | BigIntFieldRefInput<$PrismaModel>
+    not?: NestedBigIntNullableFilter<$PrismaModel> | bigint | number | null
   }
 
   export type BoolNullableFilter<$PrismaModel = never> = {
@@ -71182,11 +71499,6 @@ export namespace Prisma {
     gt?: InputJsonValue | JsonFieldRefInput<$PrismaModel>
     gte?: InputJsonValue | JsonFieldRefInput<$PrismaModel>
     not?: InputJsonValue | JsonFieldRefInput<$PrismaModel> | JsonNullValueFilter
-  }
-
-  export type SortOrderInput = {
-    sort: SortOrder
-    nulls?: NullsOrder
   }
 
   export type AuthAuditLogIdCreatedAtCompoundUniqueInput = {
@@ -71257,38 +71569,6 @@ export namespace Prisma {
     userId?: SortOrder
   }
 
-  export type StringWithAggregatesFilter<$PrismaModel = never> = {
-    equals?: string | StringFieldRefInput<$PrismaModel>
-    in?: string[] | ListStringFieldRefInput<$PrismaModel>
-    notIn?: string[] | ListStringFieldRefInput<$PrismaModel>
-    lt?: string | StringFieldRefInput<$PrismaModel>
-    lte?: string | StringFieldRefInput<$PrismaModel>
-    gt?: string | StringFieldRefInput<$PrismaModel>
-    gte?: string | StringFieldRefInput<$PrismaModel>
-    contains?: string | StringFieldRefInput<$PrismaModel>
-    startsWith?: string | StringFieldRefInput<$PrismaModel>
-    endsWith?: string | StringFieldRefInput<$PrismaModel>
-    mode?: QueryMode
-    not?: NestedStringWithAggregatesFilter<$PrismaModel> | string
-    _count?: NestedIntFilter<$PrismaModel>
-    _min?: NestedStringFilter<$PrismaModel>
-    _max?: NestedStringFilter<$PrismaModel>
-  }
-
-  export type DateTimeWithAggregatesFilter<$PrismaModel = never> = {
-    equals?: Date | string | DateTimeFieldRefInput<$PrismaModel>
-    in?: Date[] | string[] | ListDateTimeFieldRefInput<$PrismaModel>
-    notIn?: Date[] | string[] | ListDateTimeFieldRefInput<$PrismaModel>
-    lt?: Date | string | DateTimeFieldRefInput<$PrismaModel>
-    lte?: Date | string | DateTimeFieldRefInput<$PrismaModel>
-    gt?: Date | string | DateTimeFieldRefInput<$PrismaModel>
-    gte?: Date | string | DateTimeFieldRefInput<$PrismaModel>
-    not?: NestedDateTimeWithAggregatesFilter<$PrismaModel> | Date | string
-    _count?: NestedIntFilter<$PrismaModel>
-    _min?: NestedDateTimeFilter<$PrismaModel>
-    _max?: NestedDateTimeFilter<$PrismaModel>
-  }
-
   export type BigIntNullableWithAggregatesFilter<$PrismaModel = never> = {
     equals?: bigint | number | BigIntFieldRefInput<$PrismaModel> | null
     in?: bigint[] | number[] | ListBigIntFieldRefInput<$PrismaModel> | null
@@ -71303,24 +71583,6 @@ export namespace Prisma {
     _sum?: NestedBigIntNullableFilter<$PrismaModel>
     _min?: NestedBigIntNullableFilter<$PrismaModel>
     _max?: NestedBigIntNullableFilter<$PrismaModel>
-  }
-
-  export type StringNullableWithAggregatesFilter<$PrismaModel = never> = {
-    equals?: string | StringFieldRefInput<$PrismaModel> | null
-    in?: string[] | ListStringFieldRefInput<$PrismaModel> | null
-    notIn?: string[] | ListStringFieldRefInput<$PrismaModel> | null
-    lt?: string | StringFieldRefInput<$PrismaModel>
-    lte?: string | StringFieldRefInput<$PrismaModel>
-    gt?: string | StringFieldRefInput<$PrismaModel>
-    gte?: string | StringFieldRefInput<$PrismaModel>
-    contains?: string | StringFieldRefInput<$PrismaModel>
-    startsWith?: string | StringFieldRefInput<$PrismaModel>
-    endsWith?: string | StringFieldRefInput<$PrismaModel>
-    mode?: QueryMode
-    not?: NestedStringNullableWithAggregatesFilter<$PrismaModel> | string | null
-    _count?: NestedIntNullableFilter<$PrismaModel>
-    _min?: NestedStringNullableFilter<$PrismaModel>
-    _max?: NestedStringNullableFilter<$PrismaModel>
   }
 
   export type BoolNullableWithAggregatesFilter<$PrismaModel = never> = {
@@ -71419,22 +71681,6 @@ export namespace Prisma {
     gt?: number | IntFieldRefInput<$PrismaModel>
     gte?: number | IntFieldRefInput<$PrismaModel>
     not?: NestedIntNullableFilter<$PrismaModel> | number | null
-  }
-
-  export type BoolFilter<$PrismaModel = never> = {
-    equals?: boolean | BooleanFieldRefInput<$PrismaModel>
-    not?: NestedBoolFilter<$PrismaModel> | boolean
-  }
-
-  export type DateTimeNullableFilter<$PrismaModel = never> = {
-    equals?: Date | string | DateTimeFieldRefInput<$PrismaModel> | null
-    in?: Date[] | string[] | ListDateTimeFieldRefInput<$PrismaModel> | null
-    notIn?: Date[] | string[] | ListDateTimeFieldRefInput<$PrismaModel> | null
-    lt?: Date | string | DateTimeFieldRefInput<$PrismaModel>
-    lte?: Date | string | DateTimeFieldRefInput<$PrismaModel>
-    gt?: Date | string | DateTimeFieldRefInput<$PrismaModel>
-    gte?: Date | string | DateTimeFieldRefInput<$PrismaModel>
-    not?: NestedDateTimeNullableFilter<$PrismaModel> | Date | string | null
   }
 
   export type SystemErrorLogIdCreatedAtCompoundUniqueInput = {
@@ -71539,28 +71785,6 @@ export namespace Prisma {
     _sum?: NestedIntNullableFilter<$PrismaModel>
     _min?: NestedIntNullableFilter<$PrismaModel>
     _max?: NestedIntNullableFilter<$PrismaModel>
-  }
-
-  export type BoolWithAggregatesFilter<$PrismaModel = never> = {
-    equals?: boolean | BooleanFieldRefInput<$PrismaModel>
-    not?: NestedBoolWithAggregatesFilter<$PrismaModel> | boolean
-    _count?: NestedIntFilter<$PrismaModel>
-    _min?: NestedBoolFilter<$PrismaModel>
-    _max?: NestedBoolFilter<$PrismaModel>
-  }
-
-  export type DateTimeNullableWithAggregatesFilter<$PrismaModel = never> = {
-    equals?: Date | string | DateTimeFieldRefInput<$PrismaModel> | null
-    in?: Date[] | string[] | ListDateTimeFieldRefInput<$PrismaModel> | null
-    notIn?: Date[] | string[] | ListDateTimeFieldRefInput<$PrismaModel> | null
-    lt?: Date | string | DateTimeFieldRefInput<$PrismaModel>
-    lte?: Date | string | DateTimeFieldRefInput<$PrismaModel>
-    gt?: Date | string | DateTimeFieldRefInput<$PrismaModel>
-    gte?: Date | string | DateTimeFieldRefInput<$PrismaModel>
-    not?: NestedDateTimeNullableWithAggregatesFilter<$PrismaModel> | Date | string | null
-    _count?: NestedIntNullableFilter<$PrismaModel>
-    _min?: NestedDateTimeNullableFilter<$PrismaModel>
-    _max?: NestedDateTimeNullableFilter<$PrismaModel>
   }
 
   export type IntFilter<$PrismaModel = never> = {
@@ -71729,17 +71953,6 @@ export namespace Prisma {
     userId?: SortOrder
   }
 
-  export type BigIntFilter<$PrismaModel = never> = {
-    equals?: bigint | number | BigIntFieldRefInput<$PrismaModel>
-    in?: bigint[] | number[] | ListBigIntFieldRefInput<$PrismaModel>
-    notIn?: bigint[] | number[] | ListBigIntFieldRefInput<$PrismaModel>
-    lt?: bigint | number | BigIntFieldRefInput<$PrismaModel>
-    lte?: bigint | number | BigIntFieldRefInput<$PrismaModel>
-    gt?: bigint | number | BigIntFieldRefInput<$PrismaModel>
-    gte?: bigint | number | BigIntFieldRefInput<$PrismaModel>
-    not?: NestedBigIntFilter<$PrismaModel> | bigint | number
-  }
-
   export type EnumSocialTypeNullableFilter<$PrismaModel = never> = {
     equals?: $Enums.SocialType | EnumSocialTypeFieldRefInput<$PrismaModel> | null
     in?: $Enums.SocialType[] | ListEnumSocialTypeFieldRefInput<$PrismaModel> | null
@@ -71820,12 +72033,6 @@ export namespace Prisma {
     every?: GameSessionWhereInput
     some?: GameSessionWhereInput
     none?: GameSessionWhereInput
-  }
-
-  export type ReferralListRelationFilter = {
-    every?: ReferralWhereInput
-    some?: ReferralWhereInput
-    none?: ReferralWhereInput
   }
 
   export type RollingListRelationFilter = {
@@ -71918,10 +72125,6 @@ export namespace Prisma {
   }
 
   export type GameSessionOrderByRelationAggregateInput = {
-    _count?: SortOrder
-  }
-
-  export type ReferralOrderByRelationAggregateInput = {
     _count?: SortOrder
   }
 
@@ -72045,22 +72248,6 @@ export namespace Prisma {
     timezoneOffset?: SortOrder
   }
 
-  export type BigIntWithAggregatesFilter<$PrismaModel = never> = {
-    equals?: bigint | number | BigIntFieldRefInput<$PrismaModel>
-    in?: bigint[] | number[] | ListBigIntFieldRefInput<$PrismaModel>
-    notIn?: bigint[] | number[] | ListBigIntFieldRefInput<$PrismaModel>
-    lt?: bigint | number | BigIntFieldRefInput<$PrismaModel>
-    lte?: bigint | number | BigIntFieldRefInput<$PrismaModel>
-    gt?: bigint | number | BigIntFieldRefInput<$PrismaModel>
-    gte?: bigint | number | BigIntFieldRefInput<$PrismaModel>
-    not?: NestedBigIntWithAggregatesFilter<$PrismaModel> | bigint | number
-    _count?: NestedIntFilter<$PrismaModel>
-    _avg?: NestedFloatFilter<$PrismaModel>
-    _sum?: NestedBigIntFilter<$PrismaModel>
-    _min?: NestedBigIntFilter<$PrismaModel>
-    _max?: NestedBigIntFilter<$PrismaModel>
-  }
-
   export type EnumSocialTypeNullableWithAggregatesFilter<$PrismaModel = never> = {
     equals?: $Enums.SocialType | EnumSocialTypeFieldRefInput<$PrismaModel> | null
     in?: $Enums.SocialType[] | ListEnumSocialTypeFieldRefInput<$PrismaModel> | null
@@ -72127,11 +72314,6 @@ export namespace Prisma {
     gt?: Decimal | DecimalJsLike | number | string | DecimalFieldRefInput<$PrismaModel>
     gte?: Decimal | DecimalJsLike | number | string | DecimalFieldRefInput<$PrismaModel>
     not?: NestedDecimalFilter<$PrismaModel> | Decimal | DecimalJsLike | number | string
-  }
-
-  export type UserScalarRelationFilter = {
-    is?: UserWhereInput
-    isNot?: UserWhereInput
   }
 
   export type UserBalanceUserIdCurrencyCompoundUniqueInput = {
@@ -74161,112 +74343,6 @@ export namespace Prisma {
     gameId?: SortOrder
   }
 
-  export type AffiliateCodeCountOrderByAggregateInput = {
-    id?: SortOrder
-    userId?: SortOrder
-    code?: SortOrder
-    campaignName?: SortOrder
-    description?: SortOrder
-    isActive?: SortOrder
-    isDefault?: SortOrder
-    expiresAt?: SortOrder
-    createdAt?: SortOrder
-    updatedAt?: SortOrder
-    lastUsedAt?: SortOrder
-  }
-
-  export type AffiliateCodeAvgOrderByAggregateInput = {
-    userId?: SortOrder
-  }
-
-  export type AffiliateCodeMaxOrderByAggregateInput = {
-    id?: SortOrder
-    userId?: SortOrder
-    code?: SortOrder
-    campaignName?: SortOrder
-    description?: SortOrder
-    isActive?: SortOrder
-    isDefault?: SortOrder
-    expiresAt?: SortOrder
-    createdAt?: SortOrder
-    updatedAt?: SortOrder
-    lastUsedAt?: SortOrder
-  }
-
-  export type AffiliateCodeMinOrderByAggregateInput = {
-    id?: SortOrder
-    userId?: SortOrder
-    code?: SortOrder
-    campaignName?: SortOrder
-    description?: SortOrder
-    isActive?: SortOrder
-    isDefault?: SortOrder
-    expiresAt?: SortOrder
-    createdAt?: SortOrder
-    updatedAt?: SortOrder
-    lastUsedAt?: SortOrder
-  }
-
-  export type AffiliateCodeSumOrderByAggregateInput = {
-    userId?: SortOrder
-  }
-
-  export type AffiliateCodeScalarRelationFilter = {
-    is?: AffiliateCodeWhereInput
-    isNot?: AffiliateCodeWhereInput
-  }
-
-  export type ReferralAffiliateIdSubUserIdCompoundUniqueInput = {
-    affiliateId: bigint | number
-    subUserId: bigint | number
-  }
-
-  export type ReferralCountOrderByAggregateInput = {
-    id?: SortOrder
-    affiliateId?: SortOrder
-    subUserId?: SortOrder
-    ipAddress?: SortOrder
-    deviceFingerprint?: SortOrder
-    userAgent?: SortOrder
-    createdAt?: SortOrder
-    updatedAt?: SortOrder
-    codeId?: SortOrder
-  }
-
-  export type ReferralAvgOrderByAggregateInput = {
-    affiliateId?: SortOrder
-    subUserId?: SortOrder
-  }
-
-  export type ReferralMaxOrderByAggregateInput = {
-    id?: SortOrder
-    affiliateId?: SortOrder
-    subUserId?: SortOrder
-    ipAddress?: SortOrder
-    deviceFingerprint?: SortOrder
-    userAgent?: SortOrder
-    createdAt?: SortOrder
-    updatedAt?: SortOrder
-    codeId?: SortOrder
-  }
-
-  export type ReferralMinOrderByAggregateInput = {
-    id?: SortOrder
-    affiliateId?: SortOrder
-    subUserId?: SortOrder
-    ipAddress?: SortOrder
-    deviceFingerprint?: SortOrder
-    userAgent?: SortOrder
-    createdAt?: SortOrder
-    updatedAt?: SortOrder
-    codeId?: SortOrder
-  }
-
-  export type ReferralSumOrderByAggregateInput = {
-    affiliateId?: SortOrder
-    subUserId?: SortOrder
-  }
-
   export type AffiliateWalletAffiliateIdCurrencyCompoundUniqueInput = {
     affiliateId: bigint | number
     currency: $Enums.ExchangeCurrencyCode
@@ -75342,12 +75418,130 @@ export namespace Prisma {
     _max?: NestedEnumSessionStatusFilter<$PrismaModel>
   }
 
+  export type UserCreateNestedOneWithoutAffiliateCodesInput = {
+    create?: XOR<UserCreateWithoutAffiliateCodesInput, UserUncheckedCreateWithoutAffiliateCodesInput>
+    connectOrCreate?: UserCreateOrConnectWithoutAffiliateCodesInput
+    connect?: UserWhereUniqueInput
+  }
+
+  export type ReferralCreateNestedManyWithoutCodeInput = {
+    create?: XOR<ReferralCreateWithoutCodeInput, ReferralUncheckedCreateWithoutCodeInput> | ReferralCreateWithoutCodeInput[] | ReferralUncheckedCreateWithoutCodeInput[]
+    connectOrCreate?: ReferralCreateOrConnectWithoutCodeInput | ReferralCreateOrConnectWithoutCodeInput[]
+    createMany?: ReferralCreateManyCodeInputEnvelope
+    connect?: ReferralWhereUniqueInput | ReferralWhereUniqueInput[]
+  }
+
+  export type ReferralUncheckedCreateNestedManyWithoutCodeInput = {
+    create?: XOR<ReferralCreateWithoutCodeInput, ReferralUncheckedCreateWithoutCodeInput> | ReferralCreateWithoutCodeInput[] | ReferralUncheckedCreateWithoutCodeInput[]
+    connectOrCreate?: ReferralCreateOrConnectWithoutCodeInput | ReferralCreateOrConnectWithoutCodeInput[]
+    createMany?: ReferralCreateManyCodeInputEnvelope
+    connect?: ReferralWhereUniqueInput | ReferralWhereUniqueInput[]
+  }
+
+  export type BigIntFieldUpdateOperationsInput = {
+    set?: bigint | number
+    increment?: bigint | number
+    decrement?: bigint | number
+    multiply?: bigint | number
+    divide?: bigint | number
+  }
+
   export type StringFieldUpdateOperationsInput = {
     set?: string
   }
 
+  export type NullableStringFieldUpdateOperationsInput = {
+    set?: string | null
+  }
+
+  export type BoolFieldUpdateOperationsInput = {
+    set?: boolean
+  }
+
+  export type NullableDateTimeFieldUpdateOperationsInput = {
+    set?: Date | string | null
+  }
+
   export type DateTimeFieldUpdateOperationsInput = {
     set?: Date | string
+  }
+
+  export type UserUpdateOneRequiredWithoutAffiliateCodesNestedInput = {
+    create?: XOR<UserCreateWithoutAffiliateCodesInput, UserUncheckedCreateWithoutAffiliateCodesInput>
+    connectOrCreate?: UserCreateOrConnectWithoutAffiliateCodesInput
+    upsert?: UserUpsertWithoutAffiliateCodesInput
+    connect?: UserWhereUniqueInput
+    update?: XOR<XOR<UserUpdateToOneWithWhereWithoutAffiliateCodesInput, UserUpdateWithoutAffiliateCodesInput>, UserUncheckedUpdateWithoutAffiliateCodesInput>
+  }
+
+  export type ReferralUpdateManyWithoutCodeNestedInput = {
+    create?: XOR<ReferralCreateWithoutCodeInput, ReferralUncheckedCreateWithoutCodeInput> | ReferralCreateWithoutCodeInput[] | ReferralUncheckedCreateWithoutCodeInput[]
+    connectOrCreate?: ReferralCreateOrConnectWithoutCodeInput | ReferralCreateOrConnectWithoutCodeInput[]
+    upsert?: ReferralUpsertWithWhereUniqueWithoutCodeInput | ReferralUpsertWithWhereUniqueWithoutCodeInput[]
+    createMany?: ReferralCreateManyCodeInputEnvelope
+    set?: ReferralWhereUniqueInput | ReferralWhereUniqueInput[]
+    disconnect?: ReferralWhereUniqueInput | ReferralWhereUniqueInput[]
+    delete?: ReferralWhereUniqueInput | ReferralWhereUniqueInput[]
+    connect?: ReferralWhereUniqueInput | ReferralWhereUniqueInput[]
+    update?: ReferralUpdateWithWhereUniqueWithoutCodeInput | ReferralUpdateWithWhereUniqueWithoutCodeInput[]
+    updateMany?: ReferralUpdateManyWithWhereWithoutCodeInput | ReferralUpdateManyWithWhereWithoutCodeInput[]
+    deleteMany?: ReferralScalarWhereInput | ReferralScalarWhereInput[]
+  }
+
+  export type ReferralUncheckedUpdateManyWithoutCodeNestedInput = {
+    create?: XOR<ReferralCreateWithoutCodeInput, ReferralUncheckedCreateWithoutCodeInput> | ReferralCreateWithoutCodeInput[] | ReferralUncheckedCreateWithoutCodeInput[]
+    connectOrCreate?: ReferralCreateOrConnectWithoutCodeInput | ReferralCreateOrConnectWithoutCodeInput[]
+    upsert?: ReferralUpsertWithWhereUniqueWithoutCodeInput | ReferralUpsertWithWhereUniqueWithoutCodeInput[]
+    createMany?: ReferralCreateManyCodeInputEnvelope
+    set?: ReferralWhereUniqueInput | ReferralWhereUniqueInput[]
+    disconnect?: ReferralWhereUniqueInput | ReferralWhereUniqueInput[]
+    delete?: ReferralWhereUniqueInput | ReferralWhereUniqueInput[]
+    connect?: ReferralWhereUniqueInput | ReferralWhereUniqueInput[]
+    update?: ReferralUpdateWithWhereUniqueWithoutCodeInput | ReferralUpdateWithWhereUniqueWithoutCodeInput[]
+    updateMany?: ReferralUpdateManyWithWhereWithoutCodeInput | ReferralUpdateManyWithWhereWithoutCodeInput[]
+    deleteMany?: ReferralScalarWhereInput | ReferralScalarWhereInput[]
+  }
+
+  export type UserCreateNestedOneWithoutAffiliateReferralsInput = {
+    create?: XOR<UserCreateWithoutAffiliateReferralsInput, UserUncheckedCreateWithoutAffiliateReferralsInput>
+    connectOrCreate?: UserCreateOrConnectWithoutAffiliateReferralsInput
+    connect?: UserWhereUniqueInput
+  }
+
+  export type AffiliateCodeCreateNestedOneWithoutReferralsInput = {
+    create?: XOR<AffiliateCodeCreateWithoutReferralsInput, AffiliateCodeUncheckedCreateWithoutReferralsInput>
+    connectOrCreate?: AffiliateCodeCreateOrConnectWithoutReferralsInput
+    connect?: AffiliateCodeWhereUniqueInput
+  }
+
+  export type UserCreateNestedOneWithoutReferredUsersInput = {
+    create?: XOR<UserCreateWithoutReferredUsersInput, UserUncheckedCreateWithoutReferredUsersInput>
+    connectOrCreate?: UserCreateOrConnectWithoutReferredUsersInput
+    connect?: UserWhereUniqueInput
+  }
+
+  export type UserUpdateOneRequiredWithoutAffiliateReferralsNestedInput = {
+    create?: XOR<UserCreateWithoutAffiliateReferralsInput, UserUncheckedCreateWithoutAffiliateReferralsInput>
+    connectOrCreate?: UserCreateOrConnectWithoutAffiliateReferralsInput
+    upsert?: UserUpsertWithoutAffiliateReferralsInput
+    connect?: UserWhereUniqueInput
+    update?: XOR<XOR<UserUpdateToOneWithWhereWithoutAffiliateReferralsInput, UserUpdateWithoutAffiliateReferralsInput>, UserUncheckedUpdateWithoutAffiliateReferralsInput>
+  }
+
+  export type AffiliateCodeUpdateOneRequiredWithoutReferralsNestedInput = {
+    create?: XOR<AffiliateCodeCreateWithoutReferralsInput, AffiliateCodeUncheckedCreateWithoutReferralsInput>
+    connectOrCreate?: AffiliateCodeCreateOrConnectWithoutReferralsInput
+    upsert?: AffiliateCodeUpsertWithoutReferralsInput
+    connect?: AffiliateCodeWhereUniqueInput
+    update?: XOR<XOR<AffiliateCodeUpdateToOneWithWhereWithoutReferralsInput, AffiliateCodeUpdateWithoutReferralsInput>, AffiliateCodeUncheckedUpdateWithoutReferralsInput>
+  }
+
+  export type UserUpdateOneRequiredWithoutReferredUsersNestedInput = {
+    create?: XOR<UserCreateWithoutReferredUsersInput, UserUncheckedCreateWithoutReferredUsersInput>
+    connectOrCreate?: UserCreateOrConnectWithoutReferredUsersInput
+    upsert?: UserUpsertWithoutReferredUsersInput
+    connect?: UserWhereUniqueInput
+    update?: XOR<XOR<UserUpdateToOneWithWhereWithoutReferredUsersInput, UserUpdateWithoutReferredUsersInput>, UserUncheckedUpdateWithoutReferredUsersInput>
   }
 
   export type NullableBigIntFieldUpdateOperationsInput = {
@@ -75356,10 +75550,6 @@ export namespace Prisma {
     decrement?: bigint | number
     multiply?: bigint | number
     divide?: bigint | number
-  }
-
-  export type NullableStringFieldUpdateOperationsInput = {
-    set?: string | null
   }
 
   export type NullableBoolFieldUpdateOperationsInput = {
@@ -75372,14 +75562,6 @@ export namespace Prisma {
     decrement?: number
     multiply?: number
     divide?: number
-  }
-
-  export type BoolFieldUpdateOperationsInput = {
-    set?: boolean
-  }
-
-  export type NullableDateTimeFieldUpdateOperationsInput = {
-    set?: Date | string | null
   }
 
   export type IntFieldUpdateOperationsInput = {
@@ -75706,14 +75888,6 @@ export namespace Prisma {
     connectOrCreate?: LoginAttemptCreateOrConnectWithoutUserInput | LoginAttemptCreateOrConnectWithoutUserInput[]
     createMany?: LoginAttemptCreateManyUserInputEnvelope
     connect?: LoginAttemptWhereUniqueInput | LoginAttemptWhereUniqueInput[]
-  }
-
-  export type BigIntFieldUpdateOperationsInput = {
-    set?: bigint | number
-    increment?: bigint | number
-    decrement?: bigint | number
-    multiply?: bigint | number
-    divide?: bigint | number
   }
 
   export type NullableEnumSocialTypeFieldUpdateOperationsInput = {
@@ -77530,104 +77704,6 @@ export namespace Prisma {
     deleteMany?: GameRoundScalarWhereInput | GameRoundScalarWhereInput[]
   }
 
-  export type UserCreateNestedOneWithoutAffiliateCodesInput = {
-    create?: XOR<UserCreateWithoutAffiliateCodesInput, UserUncheckedCreateWithoutAffiliateCodesInput>
-    connectOrCreate?: UserCreateOrConnectWithoutAffiliateCodesInput
-    connect?: UserWhereUniqueInput
-  }
-
-  export type ReferralCreateNestedManyWithoutCodeInput = {
-    create?: XOR<ReferralCreateWithoutCodeInput, ReferralUncheckedCreateWithoutCodeInput> | ReferralCreateWithoutCodeInput[] | ReferralUncheckedCreateWithoutCodeInput[]
-    connectOrCreate?: ReferralCreateOrConnectWithoutCodeInput | ReferralCreateOrConnectWithoutCodeInput[]
-    createMany?: ReferralCreateManyCodeInputEnvelope
-    connect?: ReferralWhereUniqueInput | ReferralWhereUniqueInput[]
-  }
-
-  export type ReferralUncheckedCreateNestedManyWithoutCodeInput = {
-    create?: XOR<ReferralCreateWithoutCodeInput, ReferralUncheckedCreateWithoutCodeInput> | ReferralCreateWithoutCodeInput[] | ReferralUncheckedCreateWithoutCodeInput[]
-    connectOrCreate?: ReferralCreateOrConnectWithoutCodeInput | ReferralCreateOrConnectWithoutCodeInput[]
-    createMany?: ReferralCreateManyCodeInputEnvelope
-    connect?: ReferralWhereUniqueInput | ReferralWhereUniqueInput[]
-  }
-
-  export type UserUpdateOneRequiredWithoutAffiliateCodesNestedInput = {
-    create?: XOR<UserCreateWithoutAffiliateCodesInput, UserUncheckedCreateWithoutAffiliateCodesInput>
-    connectOrCreate?: UserCreateOrConnectWithoutAffiliateCodesInput
-    upsert?: UserUpsertWithoutAffiliateCodesInput
-    connect?: UserWhereUniqueInput
-    update?: XOR<XOR<UserUpdateToOneWithWhereWithoutAffiliateCodesInput, UserUpdateWithoutAffiliateCodesInput>, UserUncheckedUpdateWithoutAffiliateCodesInput>
-  }
-
-  export type ReferralUpdateManyWithoutCodeNestedInput = {
-    create?: XOR<ReferralCreateWithoutCodeInput, ReferralUncheckedCreateWithoutCodeInput> | ReferralCreateWithoutCodeInput[] | ReferralUncheckedCreateWithoutCodeInput[]
-    connectOrCreate?: ReferralCreateOrConnectWithoutCodeInput | ReferralCreateOrConnectWithoutCodeInput[]
-    upsert?: ReferralUpsertWithWhereUniqueWithoutCodeInput | ReferralUpsertWithWhereUniqueWithoutCodeInput[]
-    createMany?: ReferralCreateManyCodeInputEnvelope
-    set?: ReferralWhereUniqueInput | ReferralWhereUniqueInput[]
-    disconnect?: ReferralWhereUniqueInput | ReferralWhereUniqueInput[]
-    delete?: ReferralWhereUniqueInput | ReferralWhereUniqueInput[]
-    connect?: ReferralWhereUniqueInput | ReferralWhereUniqueInput[]
-    update?: ReferralUpdateWithWhereUniqueWithoutCodeInput | ReferralUpdateWithWhereUniqueWithoutCodeInput[]
-    updateMany?: ReferralUpdateManyWithWhereWithoutCodeInput | ReferralUpdateManyWithWhereWithoutCodeInput[]
-    deleteMany?: ReferralScalarWhereInput | ReferralScalarWhereInput[]
-  }
-
-  export type ReferralUncheckedUpdateManyWithoutCodeNestedInput = {
-    create?: XOR<ReferralCreateWithoutCodeInput, ReferralUncheckedCreateWithoutCodeInput> | ReferralCreateWithoutCodeInput[] | ReferralUncheckedCreateWithoutCodeInput[]
-    connectOrCreate?: ReferralCreateOrConnectWithoutCodeInput | ReferralCreateOrConnectWithoutCodeInput[]
-    upsert?: ReferralUpsertWithWhereUniqueWithoutCodeInput | ReferralUpsertWithWhereUniqueWithoutCodeInput[]
-    createMany?: ReferralCreateManyCodeInputEnvelope
-    set?: ReferralWhereUniqueInput | ReferralWhereUniqueInput[]
-    disconnect?: ReferralWhereUniqueInput | ReferralWhereUniqueInput[]
-    delete?: ReferralWhereUniqueInput | ReferralWhereUniqueInput[]
-    connect?: ReferralWhereUniqueInput | ReferralWhereUniqueInput[]
-    update?: ReferralUpdateWithWhereUniqueWithoutCodeInput | ReferralUpdateWithWhereUniqueWithoutCodeInput[]
-    updateMany?: ReferralUpdateManyWithWhereWithoutCodeInput | ReferralUpdateManyWithWhereWithoutCodeInput[]
-    deleteMany?: ReferralScalarWhereInput | ReferralScalarWhereInput[]
-  }
-
-  export type UserCreateNestedOneWithoutAffiliateReferralsInput = {
-    create?: XOR<UserCreateWithoutAffiliateReferralsInput, UserUncheckedCreateWithoutAffiliateReferralsInput>
-    connectOrCreate?: UserCreateOrConnectWithoutAffiliateReferralsInput
-    connect?: UserWhereUniqueInput
-  }
-
-  export type AffiliateCodeCreateNestedOneWithoutReferralsInput = {
-    create?: XOR<AffiliateCodeCreateWithoutReferralsInput, AffiliateCodeUncheckedCreateWithoutReferralsInput>
-    connectOrCreate?: AffiliateCodeCreateOrConnectWithoutReferralsInput
-    connect?: AffiliateCodeWhereUniqueInput
-  }
-
-  export type UserCreateNestedOneWithoutReferredUsersInput = {
-    create?: XOR<UserCreateWithoutReferredUsersInput, UserUncheckedCreateWithoutReferredUsersInput>
-    connectOrCreate?: UserCreateOrConnectWithoutReferredUsersInput
-    connect?: UserWhereUniqueInput
-  }
-
-  export type UserUpdateOneRequiredWithoutAffiliateReferralsNestedInput = {
-    create?: XOR<UserCreateWithoutAffiliateReferralsInput, UserUncheckedCreateWithoutAffiliateReferralsInput>
-    connectOrCreate?: UserCreateOrConnectWithoutAffiliateReferralsInput
-    upsert?: UserUpsertWithoutAffiliateReferralsInput
-    connect?: UserWhereUniqueInput
-    update?: XOR<XOR<UserUpdateToOneWithWhereWithoutAffiliateReferralsInput, UserUpdateWithoutAffiliateReferralsInput>, UserUncheckedUpdateWithoutAffiliateReferralsInput>
-  }
-
-  export type AffiliateCodeUpdateOneRequiredWithoutReferralsNestedInput = {
-    create?: XOR<AffiliateCodeCreateWithoutReferralsInput, AffiliateCodeUncheckedCreateWithoutReferralsInput>
-    connectOrCreate?: AffiliateCodeCreateOrConnectWithoutReferralsInput
-    upsert?: AffiliateCodeUpsertWithoutReferralsInput
-    connect?: AffiliateCodeWhereUniqueInput
-    update?: XOR<XOR<AffiliateCodeUpdateToOneWithWhereWithoutReferralsInput, AffiliateCodeUpdateWithoutReferralsInput>, AffiliateCodeUncheckedUpdateWithoutReferralsInput>
-  }
-
-  export type UserUpdateOneRequiredWithoutReferredUsersNestedInput = {
-    create?: XOR<UserCreateWithoutReferredUsersInput, UserUncheckedCreateWithoutReferredUsersInput>
-    connectOrCreate?: UserCreateOrConnectWithoutReferredUsersInput
-    upsert?: UserUpsertWithoutReferredUsersInput
-    connect?: UserWhereUniqueInput
-    update?: XOR<XOR<UserUpdateToOneWithWhereWithoutReferredUsersInput, UserUpdateWithoutReferredUsersInput>, UserUncheckedUpdateWithoutReferredUsersInput>
-  }
-
   export type UserCreateNestedOneWithoutAffiliateWalletsInput = {
     create?: XOR<UserCreateWithoutAffiliateWalletsInput, UserUncheckedCreateWithoutAffiliateWalletsInput>
     connectOrCreate?: UserCreateOrConnectWithoutAffiliateWalletsInput
@@ -78210,6 +78286,17 @@ export namespace Prisma {
     update?: XOR<XOR<UserUpdateToOneWithWhereWithoutRevokedSessionsInput, UserUpdateWithoutRevokedSessionsInput>, UserUncheckedUpdateWithoutRevokedSessionsInput>
   }
 
+  export type NestedBigIntFilter<$PrismaModel = never> = {
+    equals?: bigint | number | BigIntFieldRefInput<$PrismaModel>
+    in?: bigint[] | number[] | ListBigIntFieldRefInput<$PrismaModel>
+    notIn?: bigint[] | number[] | ListBigIntFieldRefInput<$PrismaModel>
+    lt?: bigint | number | BigIntFieldRefInput<$PrismaModel>
+    lte?: bigint | number | BigIntFieldRefInput<$PrismaModel>
+    gt?: bigint | number | BigIntFieldRefInput<$PrismaModel>
+    gte?: bigint | number | BigIntFieldRefInput<$PrismaModel>
+    not?: NestedBigIntFilter<$PrismaModel> | bigint | number
+  }
+
   export type NestedStringFilter<$PrismaModel = never> = {
     equals?: string | StringFieldRefInput<$PrismaModel>
     in?: string[] | ListStringFieldRefInput<$PrismaModel>
@@ -78222,28 +78309,6 @@ export namespace Prisma {
     startsWith?: string | StringFieldRefInput<$PrismaModel>
     endsWith?: string | StringFieldRefInput<$PrismaModel>
     not?: NestedStringFilter<$PrismaModel> | string
-  }
-
-  export type NestedDateTimeFilter<$PrismaModel = never> = {
-    equals?: Date | string | DateTimeFieldRefInput<$PrismaModel>
-    in?: Date[] | string[] | ListDateTimeFieldRefInput<$PrismaModel>
-    notIn?: Date[] | string[] | ListDateTimeFieldRefInput<$PrismaModel>
-    lt?: Date | string | DateTimeFieldRefInput<$PrismaModel>
-    lte?: Date | string | DateTimeFieldRefInput<$PrismaModel>
-    gt?: Date | string | DateTimeFieldRefInput<$PrismaModel>
-    gte?: Date | string | DateTimeFieldRefInput<$PrismaModel>
-    not?: NestedDateTimeFilter<$PrismaModel> | Date | string
-  }
-
-  export type NestedBigIntNullableFilter<$PrismaModel = never> = {
-    equals?: bigint | number | BigIntFieldRefInput<$PrismaModel> | null
-    in?: bigint[] | number[] | ListBigIntFieldRefInput<$PrismaModel> | null
-    notIn?: bigint[] | number[] | ListBigIntFieldRefInput<$PrismaModel> | null
-    lt?: bigint | number | BigIntFieldRefInput<$PrismaModel>
-    lte?: bigint | number | BigIntFieldRefInput<$PrismaModel>
-    gt?: bigint | number | BigIntFieldRefInput<$PrismaModel>
-    gte?: bigint | number | BigIntFieldRefInput<$PrismaModel>
-    not?: NestedBigIntNullableFilter<$PrismaModel> | bigint | number | null
   }
 
   export type NestedStringNullableFilter<$PrismaModel = never> = {
@@ -78260,9 +78325,69 @@ export namespace Prisma {
     not?: NestedStringNullableFilter<$PrismaModel> | string | null
   }
 
-  export type NestedBoolNullableFilter<$PrismaModel = never> = {
-    equals?: boolean | BooleanFieldRefInput<$PrismaModel> | null
-    not?: NestedBoolNullableFilter<$PrismaModel> | boolean | null
+  export type NestedBoolFilter<$PrismaModel = never> = {
+    equals?: boolean | BooleanFieldRefInput<$PrismaModel>
+    not?: NestedBoolFilter<$PrismaModel> | boolean
+  }
+
+  export type NestedDateTimeNullableFilter<$PrismaModel = never> = {
+    equals?: Date | string | DateTimeFieldRefInput<$PrismaModel> | null
+    in?: Date[] | string[] | ListDateTimeFieldRefInput<$PrismaModel> | null
+    notIn?: Date[] | string[] | ListDateTimeFieldRefInput<$PrismaModel> | null
+    lt?: Date | string | DateTimeFieldRefInput<$PrismaModel>
+    lte?: Date | string | DateTimeFieldRefInput<$PrismaModel>
+    gt?: Date | string | DateTimeFieldRefInput<$PrismaModel>
+    gte?: Date | string | DateTimeFieldRefInput<$PrismaModel>
+    not?: NestedDateTimeNullableFilter<$PrismaModel> | Date | string | null
+  }
+
+  export type NestedDateTimeFilter<$PrismaModel = never> = {
+    equals?: Date | string | DateTimeFieldRefInput<$PrismaModel>
+    in?: Date[] | string[] | ListDateTimeFieldRefInput<$PrismaModel>
+    notIn?: Date[] | string[] | ListDateTimeFieldRefInput<$PrismaModel>
+    lt?: Date | string | DateTimeFieldRefInput<$PrismaModel>
+    lte?: Date | string | DateTimeFieldRefInput<$PrismaModel>
+    gt?: Date | string | DateTimeFieldRefInput<$PrismaModel>
+    gte?: Date | string | DateTimeFieldRefInput<$PrismaModel>
+    not?: NestedDateTimeFilter<$PrismaModel> | Date | string
+  }
+
+  export type NestedBigIntWithAggregatesFilter<$PrismaModel = never> = {
+    equals?: bigint | number | BigIntFieldRefInput<$PrismaModel>
+    in?: bigint[] | number[] | ListBigIntFieldRefInput<$PrismaModel>
+    notIn?: bigint[] | number[] | ListBigIntFieldRefInput<$PrismaModel>
+    lt?: bigint | number | BigIntFieldRefInput<$PrismaModel>
+    lte?: bigint | number | BigIntFieldRefInput<$PrismaModel>
+    gt?: bigint | number | BigIntFieldRefInput<$PrismaModel>
+    gte?: bigint | number | BigIntFieldRefInput<$PrismaModel>
+    not?: NestedBigIntWithAggregatesFilter<$PrismaModel> | bigint | number
+    _count?: NestedIntFilter<$PrismaModel>
+    _avg?: NestedFloatFilter<$PrismaModel>
+    _sum?: NestedBigIntFilter<$PrismaModel>
+    _min?: NestedBigIntFilter<$PrismaModel>
+    _max?: NestedBigIntFilter<$PrismaModel>
+  }
+
+  export type NestedIntFilter<$PrismaModel = never> = {
+    equals?: number | IntFieldRefInput<$PrismaModel>
+    in?: number[] | ListIntFieldRefInput<$PrismaModel>
+    notIn?: number[] | ListIntFieldRefInput<$PrismaModel>
+    lt?: number | IntFieldRefInput<$PrismaModel>
+    lte?: number | IntFieldRefInput<$PrismaModel>
+    gt?: number | IntFieldRefInput<$PrismaModel>
+    gte?: number | IntFieldRefInput<$PrismaModel>
+    not?: NestedIntFilter<$PrismaModel> | number
+  }
+
+  export type NestedFloatFilter<$PrismaModel = never> = {
+    equals?: number | FloatFieldRefInput<$PrismaModel>
+    in?: number[] | ListFloatFieldRefInput<$PrismaModel>
+    notIn?: number[] | ListFloatFieldRefInput<$PrismaModel>
+    lt?: number | FloatFieldRefInput<$PrismaModel>
+    lte?: number | FloatFieldRefInput<$PrismaModel>
+    gt?: number | FloatFieldRefInput<$PrismaModel>
+    gte?: number | FloatFieldRefInput<$PrismaModel>
+    not?: NestedFloatFilter<$PrismaModel> | number
   }
 
   export type NestedStringWithAggregatesFilter<$PrismaModel = never> = {
@@ -78282,15 +78407,54 @@ export namespace Prisma {
     _max?: NestedStringFilter<$PrismaModel>
   }
 
-  export type NestedIntFilter<$PrismaModel = never> = {
-    equals?: number | IntFieldRefInput<$PrismaModel>
-    in?: number[] | ListIntFieldRefInput<$PrismaModel>
-    notIn?: number[] | ListIntFieldRefInput<$PrismaModel>
+  export type NestedStringNullableWithAggregatesFilter<$PrismaModel = never> = {
+    equals?: string | StringFieldRefInput<$PrismaModel> | null
+    in?: string[] | ListStringFieldRefInput<$PrismaModel> | null
+    notIn?: string[] | ListStringFieldRefInput<$PrismaModel> | null
+    lt?: string | StringFieldRefInput<$PrismaModel>
+    lte?: string | StringFieldRefInput<$PrismaModel>
+    gt?: string | StringFieldRefInput<$PrismaModel>
+    gte?: string | StringFieldRefInput<$PrismaModel>
+    contains?: string | StringFieldRefInput<$PrismaModel>
+    startsWith?: string | StringFieldRefInput<$PrismaModel>
+    endsWith?: string | StringFieldRefInput<$PrismaModel>
+    not?: NestedStringNullableWithAggregatesFilter<$PrismaModel> | string | null
+    _count?: NestedIntNullableFilter<$PrismaModel>
+    _min?: NestedStringNullableFilter<$PrismaModel>
+    _max?: NestedStringNullableFilter<$PrismaModel>
+  }
+
+  export type NestedIntNullableFilter<$PrismaModel = never> = {
+    equals?: number | IntFieldRefInput<$PrismaModel> | null
+    in?: number[] | ListIntFieldRefInput<$PrismaModel> | null
+    notIn?: number[] | ListIntFieldRefInput<$PrismaModel> | null
     lt?: number | IntFieldRefInput<$PrismaModel>
     lte?: number | IntFieldRefInput<$PrismaModel>
     gt?: number | IntFieldRefInput<$PrismaModel>
     gte?: number | IntFieldRefInput<$PrismaModel>
-    not?: NestedIntFilter<$PrismaModel> | number
+    not?: NestedIntNullableFilter<$PrismaModel> | number | null
+  }
+
+  export type NestedBoolWithAggregatesFilter<$PrismaModel = never> = {
+    equals?: boolean | BooleanFieldRefInput<$PrismaModel>
+    not?: NestedBoolWithAggregatesFilter<$PrismaModel> | boolean
+    _count?: NestedIntFilter<$PrismaModel>
+    _min?: NestedBoolFilter<$PrismaModel>
+    _max?: NestedBoolFilter<$PrismaModel>
+  }
+
+  export type NestedDateTimeNullableWithAggregatesFilter<$PrismaModel = never> = {
+    equals?: Date | string | DateTimeFieldRefInput<$PrismaModel> | null
+    in?: Date[] | string[] | ListDateTimeFieldRefInput<$PrismaModel> | null
+    notIn?: Date[] | string[] | ListDateTimeFieldRefInput<$PrismaModel> | null
+    lt?: Date | string | DateTimeFieldRefInput<$PrismaModel>
+    lte?: Date | string | DateTimeFieldRefInput<$PrismaModel>
+    gt?: Date | string | DateTimeFieldRefInput<$PrismaModel>
+    gte?: Date | string | DateTimeFieldRefInput<$PrismaModel>
+    not?: NestedDateTimeNullableWithAggregatesFilter<$PrismaModel> | Date | string | null
+    _count?: NestedIntNullableFilter<$PrismaModel>
+    _min?: NestedDateTimeNullableFilter<$PrismaModel>
+    _max?: NestedDateTimeNullableFilter<$PrismaModel>
   }
 
   export type NestedDateTimeWithAggregatesFilter<$PrismaModel = never> = {
@@ -78305,6 +78469,22 @@ export namespace Prisma {
     _count?: NestedIntFilter<$PrismaModel>
     _min?: NestedDateTimeFilter<$PrismaModel>
     _max?: NestedDateTimeFilter<$PrismaModel>
+  }
+
+  export type NestedBigIntNullableFilter<$PrismaModel = never> = {
+    equals?: bigint | number | BigIntFieldRefInput<$PrismaModel> | null
+    in?: bigint[] | number[] | ListBigIntFieldRefInput<$PrismaModel> | null
+    notIn?: bigint[] | number[] | ListBigIntFieldRefInput<$PrismaModel> | null
+    lt?: bigint | number | BigIntFieldRefInput<$PrismaModel>
+    lte?: bigint | number | BigIntFieldRefInput<$PrismaModel>
+    gt?: bigint | number | BigIntFieldRefInput<$PrismaModel>
+    gte?: bigint | number | BigIntFieldRefInput<$PrismaModel>
+    not?: NestedBigIntNullableFilter<$PrismaModel> | bigint | number | null
+  }
+
+  export type NestedBoolNullableFilter<$PrismaModel = never> = {
+    equals?: boolean | BooleanFieldRefInput<$PrismaModel> | null
+    not?: NestedBoolNullableFilter<$PrismaModel> | boolean | null
   }
 
   export type NestedBigIntNullableWithAggregatesFilter<$PrismaModel = never> = {
@@ -78323,17 +78503,6 @@ export namespace Prisma {
     _max?: NestedBigIntNullableFilter<$PrismaModel>
   }
 
-  export type NestedIntNullableFilter<$PrismaModel = never> = {
-    equals?: number | IntFieldRefInput<$PrismaModel> | null
-    in?: number[] | ListIntFieldRefInput<$PrismaModel> | null
-    notIn?: number[] | ListIntFieldRefInput<$PrismaModel> | null
-    lt?: number | IntFieldRefInput<$PrismaModel>
-    lte?: number | IntFieldRefInput<$PrismaModel>
-    gt?: number | IntFieldRefInput<$PrismaModel>
-    gte?: number | IntFieldRefInput<$PrismaModel>
-    not?: NestedIntNullableFilter<$PrismaModel> | number | null
-  }
-
   export type NestedFloatNullableFilter<$PrismaModel = never> = {
     equals?: number | FloatFieldRefInput<$PrismaModel> | null
     in?: number[] | ListFloatFieldRefInput<$PrismaModel> | null
@@ -78343,23 +78512,6 @@ export namespace Prisma {
     gt?: number | FloatFieldRefInput<$PrismaModel>
     gte?: number | FloatFieldRefInput<$PrismaModel>
     not?: NestedFloatNullableFilter<$PrismaModel> | number | null
-  }
-
-  export type NestedStringNullableWithAggregatesFilter<$PrismaModel = never> = {
-    equals?: string | StringFieldRefInput<$PrismaModel> | null
-    in?: string[] | ListStringFieldRefInput<$PrismaModel> | null
-    notIn?: string[] | ListStringFieldRefInput<$PrismaModel> | null
-    lt?: string | StringFieldRefInput<$PrismaModel>
-    lte?: string | StringFieldRefInput<$PrismaModel>
-    gt?: string | StringFieldRefInput<$PrismaModel>
-    gte?: string | StringFieldRefInput<$PrismaModel>
-    contains?: string | StringFieldRefInput<$PrismaModel>
-    startsWith?: string | StringFieldRefInput<$PrismaModel>
-    endsWith?: string | StringFieldRefInput<$PrismaModel>
-    not?: NestedStringNullableWithAggregatesFilter<$PrismaModel> | string | null
-    _count?: NestedIntNullableFilter<$PrismaModel>
-    _min?: NestedStringNullableFilter<$PrismaModel>
-    _max?: NestedStringNullableFilter<$PrismaModel>
   }
 
   export type NestedBoolNullableWithAggregatesFilter<$PrismaModel = never> = {
@@ -78393,22 +78545,6 @@ export namespace Prisma {
     not?: InputJsonValue | JsonFieldRefInput<$PrismaModel> | JsonNullValueFilter
   }
 
-  export type NestedBoolFilter<$PrismaModel = never> = {
-    equals?: boolean | BooleanFieldRefInput<$PrismaModel>
-    not?: NestedBoolFilter<$PrismaModel> | boolean
-  }
-
-  export type NestedDateTimeNullableFilter<$PrismaModel = never> = {
-    equals?: Date | string | DateTimeFieldRefInput<$PrismaModel> | null
-    in?: Date[] | string[] | ListDateTimeFieldRefInput<$PrismaModel> | null
-    notIn?: Date[] | string[] | ListDateTimeFieldRefInput<$PrismaModel> | null
-    lt?: Date | string | DateTimeFieldRefInput<$PrismaModel>
-    lte?: Date | string | DateTimeFieldRefInput<$PrismaModel>
-    gt?: Date | string | DateTimeFieldRefInput<$PrismaModel>
-    gte?: Date | string | DateTimeFieldRefInput<$PrismaModel>
-    not?: NestedDateTimeNullableFilter<$PrismaModel> | Date | string | null
-  }
-
   export type NestedIntNullableWithAggregatesFilter<$PrismaModel = never> = {
     equals?: number | IntFieldRefInput<$PrismaModel> | null
     in?: number[] | ListIntFieldRefInput<$PrismaModel> | null
@@ -78425,28 +78561,6 @@ export namespace Prisma {
     _max?: NestedIntNullableFilter<$PrismaModel>
   }
 
-  export type NestedBoolWithAggregatesFilter<$PrismaModel = never> = {
-    equals?: boolean | BooleanFieldRefInput<$PrismaModel>
-    not?: NestedBoolWithAggregatesFilter<$PrismaModel> | boolean
-    _count?: NestedIntFilter<$PrismaModel>
-    _min?: NestedBoolFilter<$PrismaModel>
-    _max?: NestedBoolFilter<$PrismaModel>
-  }
-
-  export type NestedDateTimeNullableWithAggregatesFilter<$PrismaModel = never> = {
-    equals?: Date | string | DateTimeFieldRefInput<$PrismaModel> | null
-    in?: Date[] | string[] | ListDateTimeFieldRefInput<$PrismaModel> | null
-    notIn?: Date[] | string[] | ListDateTimeFieldRefInput<$PrismaModel> | null
-    lt?: Date | string | DateTimeFieldRefInput<$PrismaModel>
-    lte?: Date | string | DateTimeFieldRefInput<$PrismaModel>
-    gt?: Date | string | DateTimeFieldRefInput<$PrismaModel>
-    gte?: Date | string | DateTimeFieldRefInput<$PrismaModel>
-    not?: NestedDateTimeNullableWithAggregatesFilter<$PrismaModel> | Date | string | null
-    _count?: NestedIntNullableFilter<$PrismaModel>
-    _min?: NestedDateTimeNullableFilter<$PrismaModel>
-    _max?: NestedDateTimeNullableFilter<$PrismaModel>
-  }
-
   export type NestedIntWithAggregatesFilter<$PrismaModel = never> = {
     equals?: number | IntFieldRefInput<$PrismaModel>
     in?: number[] | ListIntFieldRefInput<$PrismaModel>
@@ -78461,28 +78575,6 @@ export namespace Prisma {
     _sum?: NestedIntFilter<$PrismaModel>
     _min?: NestedIntFilter<$PrismaModel>
     _max?: NestedIntFilter<$PrismaModel>
-  }
-
-  export type NestedFloatFilter<$PrismaModel = never> = {
-    equals?: number | FloatFieldRefInput<$PrismaModel>
-    in?: number[] | ListFloatFieldRefInput<$PrismaModel>
-    notIn?: number[] | ListFloatFieldRefInput<$PrismaModel>
-    lt?: number | FloatFieldRefInput<$PrismaModel>
-    lte?: number | FloatFieldRefInput<$PrismaModel>
-    gt?: number | FloatFieldRefInput<$PrismaModel>
-    gte?: number | FloatFieldRefInput<$PrismaModel>
-    not?: NestedFloatFilter<$PrismaModel> | number
-  }
-
-  export type NestedBigIntFilter<$PrismaModel = never> = {
-    equals?: bigint | number | BigIntFieldRefInput<$PrismaModel>
-    in?: bigint[] | number[] | ListBigIntFieldRefInput<$PrismaModel>
-    notIn?: bigint[] | number[] | ListBigIntFieldRefInput<$PrismaModel>
-    lt?: bigint | number | BigIntFieldRefInput<$PrismaModel>
-    lte?: bigint | number | BigIntFieldRefInput<$PrismaModel>
-    gt?: bigint | number | BigIntFieldRefInput<$PrismaModel>
-    gte?: bigint | number | BigIntFieldRefInput<$PrismaModel>
-    not?: NestedBigIntFilter<$PrismaModel> | bigint | number
   }
 
   export type NestedEnumSocialTypeNullableFilter<$PrismaModel = never> = {
@@ -78518,22 +78610,6 @@ export namespace Prisma {
     in?: $Enums.Language[] | ListEnumLanguageFieldRefInput<$PrismaModel> | null
     notIn?: $Enums.Language[] | ListEnumLanguageFieldRefInput<$PrismaModel> | null
     not?: NestedEnumLanguageNullableFilter<$PrismaModel> | $Enums.Language | null
-  }
-
-  export type NestedBigIntWithAggregatesFilter<$PrismaModel = never> = {
-    equals?: bigint | number | BigIntFieldRefInput<$PrismaModel>
-    in?: bigint[] | number[] | ListBigIntFieldRefInput<$PrismaModel>
-    notIn?: bigint[] | number[] | ListBigIntFieldRefInput<$PrismaModel>
-    lt?: bigint | number | BigIntFieldRefInput<$PrismaModel>
-    lte?: bigint | number | BigIntFieldRefInput<$PrismaModel>
-    gt?: bigint | number | BigIntFieldRefInput<$PrismaModel>
-    gte?: bigint | number | BigIntFieldRefInput<$PrismaModel>
-    not?: NestedBigIntWithAggregatesFilter<$PrismaModel> | bigint | number
-    _count?: NestedIntFilter<$PrismaModel>
-    _avg?: NestedFloatFilter<$PrismaModel>
-    _sum?: NestedBigIntFilter<$PrismaModel>
-    _min?: NestedBigIntFilter<$PrismaModel>
-    _max?: NestedBigIntFilter<$PrismaModel>
   }
 
   export type NestedEnumSocialTypeNullableWithAggregatesFilter<$PrismaModel = never> = {
@@ -79224,8 +79300,727 @@ export namespace Prisma {
     _max?: NestedEnumSessionStatusFilter<$PrismaModel>
   }
 
+  export type UserCreateWithoutAffiliateCodesInput = {
+    id?: bigint | number
+    uid?: string
+    whitecliffId?: bigint | number | null
+    whitecliffSystemId?: bigint | number | null
+    whitecliffUsername?: string | null
+    dcsId?: string | null
+    email?: string | null
+    passwordHash?: string | null
+    socialType?: $Enums.SocialType | null
+    socialId?: string | null
+    role?: $Enums.UserRoleType
+    status?: $Enums.UserStatus
+    kycLevel?: $Enums.KycLevel
+    country?: string | null
+    language?: $Enums.Language | null
+    timezone?: string | null
+    timezoneOffset?: number | null
+    createdAt?: Date | string
+    updatedAt?: Date | string
+    affiliateCommissions?: AffiliateCommissionCreateNestedManyWithoutAffiliateInput
+    subUserCommissions?: AffiliateCommissionCreateNestedManyWithoutSubUserInput
+    affiliateTier?: AffiliateTierCreateNestedOneWithoutAffiliateInput
+    affiliateWallets?: AffiliateWalletCreateNestedManyWithoutAffiliateInput
+    CompTransaction?: CompTransactionCreateNestedManyWithoutUserInput
+    DailyCompEarning?: DailyCompEarningCreateNestedManyWithoutUserInput
+    EmailLog?: EmailLogCreateNestedManyWithoutUserInput
+    GameSession?: GameSessionCreateNestedManyWithoutUserInput
+    affiliateReferrals?: ReferralCreateNestedManyWithoutAffiliateInput
+    referredUsers?: ReferralCreateNestedManyWithoutSubUserInput
+    Rolling?: RollingCreateNestedManyWithoutUserInput
+    transactions?: TransactionCreateNestedManyWithoutUserInput
+    depositDetails?: DepositDetailCreateNestedManyWithoutUserInput
+    balances?: UserBalanceCreateNestedManyWithoutUserInput
+    UserBalanceStats?: UserBalanceStatsCreateNestedManyWithoutUserInput
+    UserPromotion?: UserPromotionCreateNestedManyWithoutUserInput
+    UserSession?: UserSessionCreateNestedManyWithoutUserInput
+    RevokedSessions?: UserSessionCreateNestedManyWithoutRevokedByUserInput
+    UserToken?: UserTokenCreateNestedManyWithoutUserInput
+    VipHistory?: VipHistoryCreateNestedManyWithoutUserInput
+    VipMembership?: VipMembershipCreateNestedOneWithoutUserInput
+    loginAttempts?: LoginAttemptCreateNestedManyWithoutUserInput
+  }
+
+  export type UserUncheckedCreateWithoutAffiliateCodesInput = {
+    id?: bigint | number
+    uid?: string
+    whitecliffId?: bigint | number | null
+    whitecliffSystemId?: bigint | number | null
+    whitecliffUsername?: string | null
+    dcsId?: string | null
+    email?: string | null
+    passwordHash?: string | null
+    socialType?: $Enums.SocialType | null
+    socialId?: string | null
+    role?: $Enums.UserRoleType
+    status?: $Enums.UserStatus
+    kycLevel?: $Enums.KycLevel
+    country?: string | null
+    language?: $Enums.Language | null
+    timezone?: string | null
+    timezoneOffset?: number | null
+    createdAt?: Date | string
+    updatedAt?: Date | string
+    affiliateCommissions?: AffiliateCommissionUncheckedCreateNestedManyWithoutAffiliateInput
+    subUserCommissions?: AffiliateCommissionUncheckedCreateNestedManyWithoutSubUserInput
+    affiliateTier?: AffiliateTierUncheckedCreateNestedOneWithoutAffiliateInput
+    affiliateWallets?: AffiliateWalletUncheckedCreateNestedManyWithoutAffiliateInput
+    CompTransaction?: CompTransactionUncheckedCreateNestedManyWithoutUserInput
+    DailyCompEarning?: DailyCompEarningUncheckedCreateNestedManyWithoutUserInput
+    EmailLog?: EmailLogUncheckedCreateNestedManyWithoutUserInput
+    GameSession?: GameSessionUncheckedCreateNestedManyWithoutUserInput
+    affiliateReferrals?: ReferralUncheckedCreateNestedManyWithoutAffiliateInput
+    referredUsers?: ReferralUncheckedCreateNestedManyWithoutSubUserInput
+    Rolling?: RollingUncheckedCreateNestedManyWithoutUserInput
+    transactions?: TransactionUncheckedCreateNestedManyWithoutUserInput
+    depositDetails?: DepositDetailUncheckedCreateNestedManyWithoutUserInput
+    balances?: UserBalanceUncheckedCreateNestedManyWithoutUserInput
+    UserBalanceStats?: UserBalanceStatsUncheckedCreateNestedManyWithoutUserInput
+    UserPromotion?: UserPromotionUncheckedCreateNestedManyWithoutUserInput
+    UserSession?: UserSessionUncheckedCreateNestedManyWithoutUserInput
+    RevokedSessions?: UserSessionUncheckedCreateNestedManyWithoutRevokedByUserInput
+    UserToken?: UserTokenUncheckedCreateNestedManyWithoutUserInput
+    VipHistory?: VipHistoryUncheckedCreateNestedManyWithoutUserInput
+    VipMembership?: VipMembershipUncheckedCreateNestedOneWithoutUserInput
+    loginAttempts?: LoginAttemptUncheckedCreateNestedManyWithoutUserInput
+  }
+
+  export type UserCreateOrConnectWithoutAffiliateCodesInput = {
+    where: UserWhereUniqueInput
+    create: XOR<UserCreateWithoutAffiliateCodesInput, UserUncheckedCreateWithoutAffiliateCodesInput>
+  }
+
+  export type ReferralCreateWithoutCodeInput = {
+    id?: bigint | number
+    uid: string
+    ipAddress?: string | null
+    deviceFingerprint?: string | null
+    userAgent?: string | null
+    createdAt?: Date | string
+    updatedAt?: Date | string
+    affiliate: UserCreateNestedOneWithoutAffiliateReferralsInput
+    subUser: UserCreateNestedOneWithoutReferredUsersInput
+  }
+
+  export type ReferralUncheckedCreateWithoutCodeInput = {
+    id?: bigint | number
+    uid: string
+    affiliateId: bigint | number
+    subUserId: bigint | number
+    ipAddress?: string | null
+    deviceFingerprint?: string | null
+    userAgent?: string | null
+    createdAt?: Date | string
+    updatedAt?: Date | string
+  }
+
+  export type ReferralCreateOrConnectWithoutCodeInput = {
+    where: ReferralWhereUniqueInput
+    create: XOR<ReferralCreateWithoutCodeInput, ReferralUncheckedCreateWithoutCodeInput>
+  }
+
+  export type ReferralCreateManyCodeInputEnvelope = {
+    data: ReferralCreateManyCodeInput | ReferralCreateManyCodeInput[]
+    skipDuplicates?: boolean
+  }
+
+  export type UserUpsertWithoutAffiliateCodesInput = {
+    update: XOR<UserUpdateWithoutAffiliateCodesInput, UserUncheckedUpdateWithoutAffiliateCodesInput>
+    create: XOR<UserCreateWithoutAffiliateCodesInput, UserUncheckedCreateWithoutAffiliateCodesInput>
+    where?: UserWhereInput
+  }
+
+  export type UserUpdateToOneWithWhereWithoutAffiliateCodesInput = {
+    where?: UserWhereInput
+    data: XOR<UserUpdateWithoutAffiliateCodesInput, UserUncheckedUpdateWithoutAffiliateCodesInput>
+  }
+
+  export type UserUpdateWithoutAffiliateCodesInput = {
+    id?: BigIntFieldUpdateOperationsInput | bigint | number
+    uid?: StringFieldUpdateOperationsInput | string
+    whitecliffId?: NullableBigIntFieldUpdateOperationsInput | bigint | number | null
+    whitecliffSystemId?: NullableBigIntFieldUpdateOperationsInput | bigint | number | null
+    whitecliffUsername?: NullableStringFieldUpdateOperationsInput | string | null
+    dcsId?: NullableStringFieldUpdateOperationsInput | string | null
+    email?: NullableStringFieldUpdateOperationsInput | string | null
+    passwordHash?: NullableStringFieldUpdateOperationsInput | string | null
+    socialType?: NullableEnumSocialTypeFieldUpdateOperationsInput | $Enums.SocialType | null
+    socialId?: NullableStringFieldUpdateOperationsInput | string | null
+    role?: EnumUserRoleTypeFieldUpdateOperationsInput | $Enums.UserRoleType
+    status?: EnumUserStatusFieldUpdateOperationsInput | $Enums.UserStatus
+    kycLevel?: EnumKycLevelFieldUpdateOperationsInput | $Enums.KycLevel
+    country?: NullableStringFieldUpdateOperationsInput | string | null
+    language?: NullableEnumLanguageFieldUpdateOperationsInput | $Enums.Language | null
+    timezone?: NullableStringFieldUpdateOperationsInput | string | null
+    timezoneOffset?: NullableIntFieldUpdateOperationsInput | number | null
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    affiliateCommissions?: AffiliateCommissionUpdateManyWithoutAffiliateNestedInput
+    subUserCommissions?: AffiliateCommissionUpdateManyWithoutSubUserNestedInput
+    affiliateTier?: AffiliateTierUpdateOneWithoutAffiliateNestedInput
+    affiliateWallets?: AffiliateWalletUpdateManyWithoutAffiliateNestedInput
+    CompTransaction?: CompTransactionUpdateManyWithoutUserNestedInput
+    DailyCompEarning?: DailyCompEarningUpdateManyWithoutUserNestedInput
+    EmailLog?: EmailLogUpdateManyWithoutUserNestedInput
+    GameSession?: GameSessionUpdateManyWithoutUserNestedInput
+    affiliateReferrals?: ReferralUpdateManyWithoutAffiliateNestedInput
+    referredUsers?: ReferralUpdateManyWithoutSubUserNestedInput
+    Rolling?: RollingUpdateManyWithoutUserNestedInput
+    transactions?: TransactionUpdateManyWithoutUserNestedInput
+    depositDetails?: DepositDetailUpdateManyWithoutUserNestedInput
+    balances?: UserBalanceUpdateManyWithoutUserNestedInput
+    UserBalanceStats?: UserBalanceStatsUpdateManyWithoutUserNestedInput
+    UserPromotion?: UserPromotionUpdateManyWithoutUserNestedInput
+    UserSession?: UserSessionUpdateManyWithoutUserNestedInput
+    RevokedSessions?: UserSessionUpdateManyWithoutRevokedByUserNestedInput
+    UserToken?: UserTokenUpdateManyWithoutUserNestedInput
+    VipHistory?: VipHistoryUpdateManyWithoutUserNestedInput
+    VipMembership?: VipMembershipUpdateOneWithoutUserNestedInput
+    loginAttempts?: LoginAttemptUpdateManyWithoutUserNestedInput
+  }
+
+  export type UserUncheckedUpdateWithoutAffiliateCodesInput = {
+    id?: BigIntFieldUpdateOperationsInput | bigint | number
+    uid?: StringFieldUpdateOperationsInput | string
+    whitecliffId?: NullableBigIntFieldUpdateOperationsInput | bigint | number | null
+    whitecliffSystemId?: NullableBigIntFieldUpdateOperationsInput | bigint | number | null
+    whitecliffUsername?: NullableStringFieldUpdateOperationsInput | string | null
+    dcsId?: NullableStringFieldUpdateOperationsInput | string | null
+    email?: NullableStringFieldUpdateOperationsInput | string | null
+    passwordHash?: NullableStringFieldUpdateOperationsInput | string | null
+    socialType?: NullableEnumSocialTypeFieldUpdateOperationsInput | $Enums.SocialType | null
+    socialId?: NullableStringFieldUpdateOperationsInput | string | null
+    role?: EnumUserRoleTypeFieldUpdateOperationsInput | $Enums.UserRoleType
+    status?: EnumUserStatusFieldUpdateOperationsInput | $Enums.UserStatus
+    kycLevel?: EnumKycLevelFieldUpdateOperationsInput | $Enums.KycLevel
+    country?: NullableStringFieldUpdateOperationsInput | string | null
+    language?: NullableEnumLanguageFieldUpdateOperationsInput | $Enums.Language | null
+    timezone?: NullableStringFieldUpdateOperationsInput | string | null
+    timezoneOffset?: NullableIntFieldUpdateOperationsInput | number | null
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    affiliateCommissions?: AffiliateCommissionUncheckedUpdateManyWithoutAffiliateNestedInput
+    subUserCommissions?: AffiliateCommissionUncheckedUpdateManyWithoutSubUserNestedInput
+    affiliateTier?: AffiliateTierUncheckedUpdateOneWithoutAffiliateNestedInput
+    affiliateWallets?: AffiliateWalletUncheckedUpdateManyWithoutAffiliateNestedInput
+    CompTransaction?: CompTransactionUncheckedUpdateManyWithoutUserNestedInput
+    DailyCompEarning?: DailyCompEarningUncheckedUpdateManyWithoutUserNestedInput
+    EmailLog?: EmailLogUncheckedUpdateManyWithoutUserNestedInput
+    GameSession?: GameSessionUncheckedUpdateManyWithoutUserNestedInput
+    affiliateReferrals?: ReferralUncheckedUpdateManyWithoutAffiliateNestedInput
+    referredUsers?: ReferralUncheckedUpdateManyWithoutSubUserNestedInput
+    Rolling?: RollingUncheckedUpdateManyWithoutUserNestedInput
+    transactions?: TransactionUncheckedUpdateManyWithoutUserNestedInput
+    depositDetails?: DepositDetailUncheckedUpdateManyWithoutUserNestedInput
+    balances?: UserBalanceUncheckedUpdateManyWithoutUserNestedInput
+    UserBalanceStats?: UserBalanceStatsUncheckedUpdateManyWithoutUserNestedInput
+    UserPromotion?: UserPromotionUncheckedUpdateManyWithoutUserNestedInput
+    UserSession?: UserSessionUncheckedUpdateManyWithoutUserNestedInput
+    RevokedSessions?: UserSessionUncheckedUpdateManyWithoutRevokedByUserNestedInput
+    UserToken?: UserTokenUncheckedUpdateManyWithoutUserNestedInput
+    VipHistory?: VipHistoryUncheckedUpdateManyWithoutUserNestedInput
+    VipMembership?: VipMembershipUncheckedUpdateOneWithoutUserNestedInput
+    loginAttempts?: LoginAttemptUncheckedUpdateManyWithoutUserNestedInput
+  }
+
+  export type ReferralUpsertWithWhereUniqueWithoutCodeInput = {
+    where: ReferralWhereUniqueInput
+    update: XOR<ReferralUpdateWithoutCodeInput, ReferralUncheckedUpdateWithoutCodeInput>
+    create: XOR<ReferralCreateWithoutCodeInput, ReferralUncheckedCreateWithoutCodeInput>
+  }
+
+  export type ReferralUpdateWithWhereUniqueWithoutCodeInput = {
+    where: ReferralWhereUniqueInput
+    data: XOR<ReferralUpdateWithoutCodeInput, ReferralUncheckedUpdateWithoutCodeInput>
+  }
+
+  export type ReferralUpdateManyWithWhereWithoutCodeInput = {
+    where: ReferralScalarWhereInput
+    data: XOR<ReferralUpdateManyMutationInput, ReferralUncheckedUpdateManyWithoutCodeInput>
+  }
+
+  export type ReferralScalarWhereInput = {
+    AND?: ReferralScalarWhereInput | ReferralScalarWhereInput[]
+    OR?: ReferralScalarWhereInput[]
+    NOT?: ReferralScalarWhereInput | ReferralScalarWhereInput[]
+    id?: BigIntFilter<"Referral"> | bigint | number
+    uid?: StringFilter<"Referral"> | string
+    affiliateId?: BigIntFilter<"Referral"> | bigint | number
+    subUserId?: BigIntFilter<"Referral"> | bigint | number
+    ipAddress?: StringNullableFilter<"Referral"> | string | null
+    deviceFingerprint?: StringNullableFilter<"Referral"> | string | null
+    userAgent?: StringNullableFilter<"Referral"> | string | null
+    createdAt?: DateTimeFilter<"Referral"> | Date | string
+    updatedAt?: DateTimeFilter<"Referral"> | Date | string
+    codeId?: BigIntFilter<"Referral"> | bigint | number
+  }
+
+  export type UserCreateWithoutAffiliateReferralsInput = {
+    id?: bigint | number
+    uid?: string
+    whitecliffId?: bigint | number | null
+    whitecliffSystemId?: bigint | number | null
+    whitecliffUsername?: string | null
+    dcsId?: string | null
+    email?: string | null
+    passwordHash?: string | null
+    socialType?: $Enums.SocialType | null
+    socialId?: string | null
+    role?: $Enums.UserRoleType
+    status?: $Enums.UserStatus
+    kycLevel?: $Enums.KycLevel
+    country?: string | null
+    language?: $Enums.Language | null
+    timezone?: string | null
+    timezoneOffset?: number | null
+    createdAt?: Date | string
+    updatedAt?: Date | string
+    affiliateCodes?: AffiliateCodeCreateNestedManyWithoutUserInput
+    affiliateCommissions?: AffiliateCommissionCreateNestedManyWithoutAffiliateInput
+    subUserCommissions?: AffiliateCommissionCreateNestedManyWithoutSubUserInput
+    affiliateTier?: AffiliateTierCreateNestedOneWithoutAffiliateInput
+    affiliateWallets?: AffiliateWalletCreateNestedManyWithoutAffiliateInput
+    CompTransaction?: CompTransactionCreateNestedManyWithoutUserInput
+    DailyCompEarning?: DailyCompEarningCreateNestedManyWithoutUserInput
+    EmailLog?: EmailLogCreateNestedManyWithoutUserInput
+    GameSession?: GameSessionCreateNestedManyWithoutUserInput
+    referredUsers?: ReferralCreateNestedManyWithoutSubUserInput
+    Rolling?: RollingCreateNestedManyWithoutUserInput
+    transactions?: TransactionCreateNestedManyWithoutUserInput
+    depositDetails?: DepositDetailCreateNestedManyWithoutUserInput
+    balances?: UserBalanceCreateNestedManyWithoutUserInput
+    UserBalanceStats?: UserBalanceStatsCreateNestedManyWithoutUserInput
+    UserPromotion?: UserPromotionCreateNestedManyWithoutUserInput
+    UserSession?: UserSessionCreateNestedManyWithoutUserInput
+    RevokedSessions?: UserSessionCreateNestedManyWithoutRevokedByUserInput
+    UserToken?: UserTokenCreateNestedManyWithoutUserInput
+    VipHistory?: VipHistoryCreateNestedManyWithoutUserInput
+    VipMembership?: VipMembershipCreateNestedOneWithoutUserInput
+    loginAttempts?: LoginAttemptCreateNestedManyWithoutUserInput
+  }
+
+  export type UserUncheckedCreateWithoutAffiliateReferralsInput = {
+    id?: bigint | number
+    uid?: string
+    whitecliffId?: bigint | number | null
+    whitecliffSystemId?: bigint | number | null
+    whitecliffUsername?: string | null
+    dcsId?: string | null
+    email?: string | null
+    passwordHash?: string | null
+    socialType?: $Enums.SocialType | null
+    socialId?: string | null
+    role?: $Enums.UserRoleType
+    status?: $Enums.UserStatus
+    kycLevel?: $Enums.KycLevel
+    country?: string | null
+    language?: $Enums.Language | null
+    timezone?: string | null
+    timezoneOffset?: number | null
+    createdAt?: Date | string
+    updatedAt?: Date | string
+    affiliateCodes?: AffiliateCodeUncheckedCreateNestedManyWithoutUserInput
+    affiliateCommissions?: AffiliateCommissionUncheckedCreateNestedManyWithoutAffiliateInput
+    subUserCommissions?: AffiliateCommissionUncheckedCreateNestedManyWithoutSubUserInput
+    affiliateTier?: AffiliateTierUncheckedCreateNestedOneWithoutAffiliateInput
+    affiliateWallets?: AffiliateWalletUncheckedCreateNestedManyWithoutAffiliateInput
+    CompTransaction?: CompTransactionUncheckedCreateNestedManyWithoutUserInput
+    DailyCompEarning?: DailyCompEarningUncheckedCreateNestedManyWithoutUserInput
+    EmailLog?: EmailLogUncheckedCreateNestedManyWithoutUserInput
+    GameSession?: GameSessionUncheckedCreateNestedManyWithoutUserInput
+    referredUsers?: ReferralUncheckedCreateNestedManyWithoutSubUserInput
+    Rolling?: RollingUncheckedCreateNestedManyWithoutUserInput
+    transactions?: TransactionUncheckedCreateNestedManyWithoutUserInput
+    depositDetails?: DepositDetailUncheckedCreateNestedManyWithoutUserInput
+    balances?: UserBalanceUncheckedCreateNestedManyWithoutUserInput
+    UserBalanceStats?: UserBalanceStatsUncheckedCreateNestedManyWithoutUserInput
+    UserPromotion?: UserPromotionUncheckedCreateNestedManyWithoutUserInput
+    UserSession?: UserSessionUncheckedCreateNestedManyWithoutUserInput
+    RevokedSessions?: UserSessionUncheckedCreateNestedManyWithoutRevokedByUserInput
+    UserToken?: UserTokenUncheckedCreateNestedManyWithoutUserInput
+    VipHistory?: VipHistoryUncheckedCreateNestedManyWithoutUserInput
+    VipMembership?: VipMembershipUncheckedCreateNestedOneWithoutUserInput
+    loginAttempts?: LoginAttemptUncheckedCreateNestedManyWithoutUserInput
+  }
+
+  export type UserCreateOrConnectWithoutAffiliateReferralsInput = {
+    where: UserWhereUniqueInput
+    create: XOR<UserCreateWithoutAffiliateReferralsInput, UserUncheckedCreateWithoutAffiliateReferralsInput>
+  }
+
+  export type AffiliateCodeCreateWithoutReferralsInput = {
+    id?: bigint | number
+    uid: string
+    code: string
+    campaignName?: string | null
+    description?: string | null
+    isActive?: boolean
+    isDefault?: boolean
+    expiresAt?: Date | string | null
+    createdAt?: Date | string
+    updatedAt?: Date | string
+    lastUsedAt?: Date | string | null
+    user: UserCreateNestedOneWithoutAffiliateCodesInput
+  }
+
+  export type AffiliateCodeUncheckedCreateWithoutReferralsInput = {
+    id?: bigint | number
+    uid: string
+    userId: bigint | number
+    code: string
+    campaignName?: string | null
+    description?: string | null
+    isActive?: boolean
+    isDefault?: boolean
+    expiresAt?: Date | string | null
+    createdAt?: Date | string
+    updatedAt?: Date | string
+    lastUsedAt?: Date | string | null
+  }
+
+  export type AffiliateCodeCreateOrConnectWithoutReferralsInput = {
+    where: AffiliateCodeWhereUniqueInput
+    create: XOR<AffiliateCodeCreateWithoutReferralsInput, AffiliateCodeUncheckedCreateWithoutReferralsInput>
+  }
+
+  export type UserCreateWithoutReferredUsersInput = {
+    id?: bigint | number
+    uid?: string
+    whitecliffId?: bigint | number | null
+    whitecliffSystemId?: bigint | number | null
+    whitecliffUsername?: string | null
+    dcsId?: string | null
+    email?: string | null
+    passwordHash?: string | null
+    socialType?: $Enums.SocialType | null
+    socialId?: string | null
+    role?: $Enums.UserRoleType
+    status?: $Enums.UserStatus
+    kycLevel?: $Enums.KycLevel
+    country?: string | null
+    language?: $Enums.Language | null
+    timezone?: string | null
+    timezoneOffset?: number | null
+    createdAt?: Date | string
+    updatedAt?: Date | string
+    affiliateCodes?: AffiliateCodeCreateNestedManyWithoutUserInput
+    affiliateCommissions?: AffiliateCommissionCreateNestedManyWithoutAffiliateInput
+    subUserCommissions?: AffiliateCommissionCreateNestedManyWithoutSubUserInput
+    affiliateTier?: AffiliateTierCreateNestedOneWithoutAffiliateInput
+    affiliateWallets?: AffiliateWalletCreateNestedManyWithoutAffiliateInput
+    CompTransaction?: CompTransactionCreateNestedManyWithoutUserInput
+    DailyCompEarning?: DailyCompEarningCreateNestedManyWithoutUserInput
+    EmailLog?: EmailLogCreateNestedManyWithoutUserInput
+    GameSession?: GameSessionCreateNestedManyWithoutUserInput
+    affiliateReferrals?: ReferralCreateNestedManyWithoutAffiliateInput
+    Rolling?: RollingCreateNestedManyWithoutUserInput
+    transactions?: TransactionCreateNestedManyWithoutUserInput
+    depositDetails?: DepositDetailCreateNestedManyWithoutUserInput
+    balances?: UserBalanceCreateNestedManyWithoutUserInput
+    UserBalanceStats?: UserBalanceStatsCreateNestedManyWithoutUserInput
+    UserPromotion?: UserPromotionCreateNestedManyWithoutUserInput
+    UserSession?: UserSessionCreateNestedManyWithoutUserInput
+    RevokedSessions?: UserSessionCreateNestedManyWithoutRevokedByUserInput
+    UserToken?: UserTokenCreateNestedManyWithoutUserInput
+    VipHistory?: VipHistoryCreateNestedManyWithoutUserInput
+    VipMembership?: VipMembershipCreateNestedOneWithoutUserInput
+    loginAttempts?: LoginAttemptCreateNestedManyWithoutUserInput
+  }
+
+  export type UserUncheckedCreateWithoutReferredUsersInput = {
+    id?: bigint | number
+    uid?: string
+    whitecliffId?: bigint | number | null
+    whitecliffSystemId?: bigint | number | null
+    whitecliffUsername?: string | null
+    dcsId?: string | null
+    email?: string | null
+    passwordHash?: string | null
+    socialType?: $Enums.SocialType | null
+    socialId?: string | null
+    role?: $Enums.UserRoleType
+    status?: $Enums.UserStatus
+    kycLevel?: $Enums.KycLevel
+    country?: string | null
+    language?: $Enums.Language | null
+    timezone?: string | null
+    timezoneOffset?: number | null
+    createdAt?: Date | string
+    updatedAt?: Date | string
+    affiliateCodes?: AffiliateCodeUncheckedCreateNestedManyWithoutUserInput
+    affiliateCommissions?: AffiliateCommissionUncheckedCreateNestedManyWithoutAffiliateInput
+    subUserCommissions?: AffiliateCommissionUncheckedCreateNestedManyWithoutSubUserInput
+    affiliateTier?: AffiliateTierUncheckedCreateNestedOneWithoutAffiliateInput
+    affiliateWallets?: AffiliateWalletUncheckedCreateNestedManyWithoutAffiliateInput
+    CompTransaction?: CompTransactionUncheckedCreateNestedManyWithoutUserInput
+    DailyCompEarning?: DailyCompEarningUncheckedCreateNestedManyWithoutUserInput
+    EmailLog?: EmailLogUncheckedCreateNestedManyWithoutUserInput
+    GameSession?: GameSessionUncheckedCreateNestedManyWithoutUserInput
+    affiliateReferrals?: ReferralUncheckedCreateNestedManyWithoutAffiliateInput
+    Rolling?: RollingUncheckedCreateNestedManyWithoutUserInput
+    transactions?: TransactionUncheckedCreateNestedManyWithoutUserInput
+    depositDetails?: DepositDetailUncheckedCreateNestedManyWithoutUserInput
+    balances?: UserBalanceUncheckedCreateNestedManyWithoutUserInput
+    UserBalanceStats?: UserBalanceStatsUncheckedCreateNestedManyWithoutUserInput
+    UserPromotion?: UserPromotionUncheckedCreateNestedManyWithoutUserInput
+    UserSession?: UserSessionUncheckedCreateNestedManyWithoutUserInput
+    RevokedSessions?: UserSessionUncheckedCreateNestedManyWithoutRevokedByUserInput
+    UserToken?: UserTokenUncheckedCreateNestedManyWithoutUserInput
+    VipHistory?: VipHistoryUncheckedCreateNestedManyWithoutUserInput
+    VipMembership?: VipMembershipUncheckedCreateNestedOneWithoutUserInput
+    loginAttempts?: LoginAttemptUncheckedCreateNestedManyWithoutUserInput
+  }
+
+  export type UserCreateOrConnectWithoutReferredUsersInput = {
+    where: UserWhereUniqueInput
+    create: XOR<UserCreateWithoutReferredUsersInput, UserUncheckedCreateWithoutReferredUsersInput>
+  }
+
+  export type UserUpsertWithoutAffiliateReferralsInput = {
+    update: XOR<UserUpdateWithoutAffiliateReferralsInput, UserUncheckedUpdateWithoutAffiliateReferralsInput>
+    create: XOR<UserCreateWithoutAffiliateReferralsInput, UserUncheckedCreateWithoutAffiliateReferralsInput>
+    where?: UserWhereInput
+  }
+
+  export type UserUpdateToOneWithWhereWithoutAffiliateReferralsInput = {
+    where?: UserWhereInput
+    data: XOR<UserUpdateWithoutAffiliateReferralsInput, UserUncheckedUpdateWithoutAffiliateReferralsInput>
+  }
+
+  export type UserUpdateWithoutAffiliateReferralsInput = {
+    id?: BigIntFieldUpdateOperationsInput | bigint | number
+    uid?: StringFieldUpdateOperationsInput | string
+    whitecliffId?: NullableBigIntFieldUpdateOperationsInput | bigint | number | null
+    whitecliffSystemId?: NullableBigIntFieldUpdateOperationsInput | bigint | number | null
+    whitecliffUsername?: NullableStringFieldUpdateOperationsInput | string | null
+    dcsId?: NullableStringFieldUpdateOperationsInput | string | null
+    email?: NullableStringFieldUpdateOperationsInput | string | null
+    passwordHash?: NullableStringFieldUpdateOperationsInput | string | null
+    socialType?: NullableEnumSocialTypeFieldUpdateOperationsInput | $Enums.SocialType | null
+    socialId?: NullableStringFieldUpdateOperationsInput | string | null
+    role?: EnumUserRoleTypeFieldUpdateOperationsInput | $Enums.UserRoleType
+    status?: EnumUserStatusFieldUpdateOperationsInput | $Enums.UserStatus
+    kycLevel?: EnumKycLevelFieldUpdateOperationsInput | $Enums.KycLevel
+    country?: NullableStringFieldUpdateOperationsInput | string | null
+    language?: NullableEnumLanguageFieldUpdateOperationsInput | $Enums.Language | null
+    timezone?: NullableStringFieldUpdateOperationsInput | string | null
+    timezoneOffset?: NullableIntFieldUpdateOperationsInput | number | null
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    affiliateCodes?: AffiliateCodeUpdateManyWithoutUserNestedInput
+    affiliateCommissions?: AffiliateCommissionUpdateManyWithoutAffiliateNestedInput
+    subUserCommissions?: AffiliateCommissionUpdateManyWithoutSubUserNestedInput
+    affiliateTier?: AffiliateTierUpdateOneWithoutAffiliateNestedInput
+    affiliateWallets?: AffiliateWalletUpdateManyWithoutAffiliateNestedInput
+    CompTransaction?: CompTransactionUpdateManyWithoutUserNestedInput
+    DailyCompEarning?: DailyCompEarningUpdateManyWithoutUserNestedInput
+    EmailLog?: EmailLogUpdateManyWithoutUserNestedInput
+    GameSession?: GameSessionUpdateManyWithoutUserNestedInput
+    referredUsers?: ReferralUpdateManyWithoutSubUserNestedInput
+    Rolling?: RollingUpdateManyWithoutUserNestedInput
+    transactions?: TransactionUpdateManyWithoutUserNestedInput
+    depositDetails?: DepositDetailUpdateManyWithoutUserNestedInput
+    balances?: UserBalanceUpdateManyWithoutUserNestedInput
+    UserBalanceStats?: UserBalanceStatsUpdateManyWithoutUserNestedInput
+    UserPromotion?: UserPromotionUpdateManyWithoutUserNestedInput
+    UserSession?: UserSessionUpdateManyWithoutUserNestedInput
+    RevokedSessions?: UserSessionUpdateManyWithoutRevokedByUserNestedInput
+    UserToken?: UserTokenUpdateManyWithoutUserNestedInput
+    VipHistory?: VipHistoryUpdateManyWithoutUserNestedInput
+    VipMembership?: VipMembershipUpdateOneWithoutUserNestedInput
+    loginAttempts?: LoginAttemptUpdateManyWithoutUserNestedInput
+  }
+
+  export type UserUncheckedUpdateWithoutAffiliateReferralsInput = {
+    id?: BigIntFieldUpdateOperationsInput | bigint | number
+    uid?: StringFieldUpdateOperationsInput | string
+    whitecliffId?: NullableBigIntFieldUpdateOperationsInput | bigint | number | null
+    whitecliffSystemId?: NullableBigIntFieldUpdateOperationsInput | bigint | number | null
+    whitecliffUsername?: NullableStringFieldUpdateOperationsInput | string | null
+    dcsId?: NullableStringFieldUpdateOperationsInput | string | null
+    email?: NullableStringFieldUpdateOperationsInput | string | null
+    passwordHash?: NullableStringFieldUpdateOperationsInput | string | null
+    socialType?: NullableEnumSocialTypeFieldUpdateOperationsInput | $Enums.SocialType | null
+    socialId?: NullableStringFieldUpdateOperationsInput | string | null
+    role?: EnumUserRoleTypeFieldUpdateOperationsInput | $Enums.UserRoleType
+    status?: EnumUserStatusFieldUpdateOperationsInput | $Enums.UserStatus
+    kycLevel?: EnumKycLevelFieldUpdateOperationsInput | $Enums.KycLevel
+    country?: NullableStringFieldUpdateOperationsInput | string | null
+    language?: NullableEnumLanguageFieldUpdateOperationsInput | $Enums.Language | null
+    timezone?: NullableStringFieldUpdateOperationsInput | string | null
+    timezoneOffset?: NullableIntFieldUpdateOperationsInput | number | null
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    affiliateCodes?: AffiliateCodeUncheckedUpdateManyWithoutUserNestedInput
+    affiliateCommissions?: AffiliateCommissionUncheckedUpdateManyWithoutAffiliateNestedInput
+    subUserCommissions?: AffiliateCommissionUncheckedUpdateManyWithoutSubUserNestedInput
+    affiliateTier?: AffiliateTierUncheckedUpdateOneWithoutAffiliateNestedInput
+    affiliateWallets?: AffiliateWalletUncheckedUpdateManyWithoutAffiliateNestedInput
+    CompTransaction?: CompTransactionUncheckedUpdateManyWithoutUserNestedInput
+    DailyCompEarning?: DailyCompEarningUncheckedUpdateManyWithoutUserNestedInput
+    EmailLog?: EmailLogUncheckedUpdateManyWithoutUserNestedInput
+    GameSession?: GameSessionUncheckedUpdateManyWithoutUserNestedInput
+    referredUsers?: ReferralUncheckedUpdateManyWithoutSubUserNestedInput
+    Rolling?: RollingUncheckedUpdateManyWithoutUserNestedInput
+    transactions?: TransactionUncheckedUpdateManyWithoutUserNestedInput
+    depositDetails?: DepositDetailUncheckedUpdateManyWithoutUserNestedInput
+    balances?: UserBalanceUncheckedUpdateManyWithoutUserNestedInput
+    UserBalanceStats?: UserBalanceStatsUncheckedUpdateManyWithoutUserNestedInput
+    UserPromotion?: UserPromotionUncheckedUpdateManyWithoutUserNestedInput
+    UserSession?: UserSessionUncheckedUpdateManyWithoutUserNestedInput
+    RevokedSessions?: UserSessionUncheckedUpdateManyWithoutRevokedByUserNestedInput
+    UserToken?: UserTokenUncheckedUpdateManyWithoutUserNestedInput
+    VipHistory?: VipHistoryUncheckedUpdateManyWithoutUserNestedInput
+    VipMembership?: VipMembershipUncheckedUpdateOneWithoutUserNestedInput
+    loginAttempts?: LoginAttemptUncheckedUpdateManyWithoutUserNestedInput
+  }
+
+  export type AffiliateCodeUpsertWithoutReferralsInput = {
+    update: XOR<AffiliateCodeUpdateWithoutReferralsInput, AffiliateCodeUncheckedUpdateWithoutReferralsInput>
+    create: XOR<AffiliateCodeCreateWithoutReferralsInput, AffiliateCodeUncheckedCreateWithoutReferralsInput>
+    where?: AffiliateCodeWhereInput
+  }
+
+  export type AffiliateCodeUpdateToOneWithWhereWithoutReferralsInput = {
+    where?: AffiliateCodeWhereInput
+    data: XOR<AffiliateCodeUpdateWithoutReferralsInput, AffiliateCodeUncheckedUpdateWithoutReferralsInput>
+  }
+
+  export type AffiliateCodeUpdateWithoutReferralsInput = {
+    id?: BigIntFieldUpdateOperationsInput | bigint | number
+    uid?: StringFieldUpdateOperationsInput | string
+    code?: StringFieldUpdateOperationsInput | string
+    campaignName?: NullableStringFieldUpdateOperationsInput | string | null
+    description?: NullableStringFieldUpdateOperationsInput | string | null
+    isActive?: BoolFieldUpdateOperationsInput | boolean
+    isDefault?: BoolFieldUpdateOperationsInput | boolean
+    expiresAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    lastUsedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    user?: UserUpdateOneRequiredWithoutAffiliateCodesNestedInput
+  }
+
+  export type AffiliateCodeUncheckedUpdateWithoutReferralsInput = {
+    id?: BigIntFieldUpdateOperationsInput | bigint | number
+    uid?: StringFieldUpdateOperationsInput | string
+    userId?: BigIntFieldUpdateOperationsInput | bigint | number
+    code?: StringFieldUpdateOperationsInput | string
+    campaignName?: NullableStringFieldUpdateOperationsInput | string | null
+    description?: NullableStringFieldUpdateOperationsInput | string | null
+    isActive?: BoolFieldUpdateOperationsInput | boolean
+    isDefault?: BoolFieldUpdateOperationsInput | boolean
+    expiresAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    lastUsedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  }
+
+  export type UserUpsertWithoutReferredUsersInput = {
+    update: XOR<UserUpdateWithoutReferredUsersInput, UserUncheckedUpdateWithoutReferredUsersInput>
+    create: XOR<UserCreateWithoutReferredUsersInput, UserUncheckedCreateWithoutReferredUsersInput>
+    where?: UserWhereInput
+  }
+
+  export type UserUpdateToOneWithWhereWithoutReferredUsersInput = {
+    where?: UserWhereInput
+    data: XOR<UserUpdateWithoutReferredUsersInput, UserUncheckedUpdateWithoutReferredUsersInput>
+  }
+
+  export type UserUpdateWithoutReferredUsersInput = {
+    id?: BigIntFieldUpdateOperationsInput | bigint | number
+    uid?: StringFieldUpdateOperationsInput | string
+    whitecliffId?: NullableBigIntFieldUpdateOperationsInput | bigint | number | null
+    whitecliffSystemId?: NullableBigIntFieldUpdateOperationsInput | bigint | number | null
+    whitecliffUsername?: NullableStringFieldUpdateOperationsInput | string | null
+    dcsId?: NullableStringFieldUpdateOperationsInput | string | null
+    email?: NullableStringFieldUpdateOperationsInput | string | null
+    passwordHash?: NullableStringFieldUpdateOperationsInput | string | null
+    socialType?: NullableEnumSocialTypeFieldUpdateOperationsInput | $Enums.SocialType | null
+    socialId?: NullableStringFieldUpdateOperationsInput | string | null
+    role?: EnumUserRoleTypeFieldUpdateOperationsInput | $Enums.UserRoleType
+    status?: EnumUserStatusFieldUpdateOperationsInput | $Enums.UserStatus
+    kycLevel?: EnumKycLevelFieldUpdateOperationsInput | $Enums.KycLevel
+    country?: NullableStringFieldUpdateOperationsInput | string | null
+    language?: NullableEnumLanguageFieldUpdateOperationsInput | $Enums.Language | null
+    timezone?: NullableStringFieldUpdateOperationsInput | string | null
+    timezoneOffset?: NullableIntFieldUpdateOperationsInput | number | null
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    affiliateCodes?: AffiliateCodeUpdateManyWithoutUserNestedInput
+    affiliateCommissions?: AffiliateCommissionUpdateManyWithoutAffiliateNestedInput
+    subUserCommissions?: AffiliateCommissionUpdateManyWithoutSubUserNestedInput
+    affiliateTier?: AffiliateTierUpdateOneWithoutAffiliateNestedInput
+    affiliateWallets?: AffiliateWalletUpdateManyWithoutAffiliateNestedInput
+    CompTransaction?: CompTransactionUpdateManyWithoutUserNestedInput
+    DailyCompEarning?: DailyCompEarningUpdateManyWithoutUserNestedInput
+    EmailLog?: EmailLogUpdateManyWithoutUserNestedInput
+    GameSession?: GameSessionUpdateManyWithoutUserNestedInput
+    affiliateReferrals?: ReferralUpdateManyWithoutAffiliateNestedInput
+    Rolling?: RollingUpdateManyWithoutUserNestedInput
+    transactions?: TransactionUpdateManyWithoutUserNestedInput
+    depositDetails?: DepositDetailUpdateManyWithoutUserNestedInput
+    balances?: UserBalanceUpdateManyWithoutUserNestedInput
+    UserBalanceStats?: UserBalanceStatsUpdateManyWithoutUserNestedInput
+    UserPromotion?: UserPromotionUpdateManyWithoutUserNestedInput
+    UserSession?: UserSessionUpdateManyWithoutUserNestedInput
+    RevokedSessions?: UserSessionUpdateManyWithoutRevokedByUserNestedInput
+    UserToken?: UserTokenUpdateManyWithoutUserNestedInput
+    VipHistory?: VipHistoryUpdateManyWithoutUserNestedInput
+    VipMembership?: VipMembershipUpdateOneWithoutUserNestedInput
+    loginAttempts?: LoginAttemptUpdateManyWithoutUserNestedInput
+  }
+
+  export type UserUncheckedUpdateWithoutReferredUsersInput = {
+    id?: BigIntFieldUpdateOperationsInput | bigint | number
+    uid?: StringFieldUpdateOperationsInput | string
+    whitecliffId?: NullableBigIntFieldUpdateOperationsInput | bigint | number | null
+    whitecliffSystemId?: NullableBigIntFieldUpdateOperationsInput | bigint | number | null
+    whitecliffUsername?: NullableStringFieldUpdateOperationsInput | string | null
+    dcsId?: NullableStringFieldUpdateOperationsInput | string | null
+    email?: NullableStringFieldUpdateOperationsInput | string | null
+    passwordHash?: NullableStringFieldUpdateOperationsInput | string | null
+    socialType?: NullableEnumSocialTypeFieldUpdateOperationsInput | $Enums.SocialType | null
+    socialId?: NullableStringFieldUpdateOperationsInput | string | null
+    role?: EnumUserRoleTypeFieldUpdateOperationsInput | $Enums.UserRoleType
+    status?: EnumUserStatusFieldUpdateOperationsInput | $Enums.UserStatus
+    kycLevel?: EnumKycLevelFieldUpdateOperationsInput | $Enums.KycLevel
+    country?: NullableStringFieldUpdateOperationsInput | string | null
+    language?: NullableEnumLanguageFieldUpdateOperationsInput | $Enums.Language | null
+    timezone?: NullableStringFieldUpdateOperationsInput | string | null
+    timezoneOffset?: NullableIntFieldUpdateOperationsInput | number | null
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    affiliateCodes?: AffiliateCodeUncheckedUpdateManyWithoutUserNestedInput
+    affiliateCommissions?: AffiliateCommissionUncheckedUpdateManyWithoutAffiliateNestedInput
+    subUserCommissions?: AffiliateCommissionUncheckedUpdateManyWithoutSubUserNestedInput
+    affiliateTier?: AffiliateTierUncheckedUpdateOneWithoutAffiliateNestedInput
+    affiliateWallets?: AffiliateWalletUncheckedUpdateManyWithoutAffiliateNestedInput
+    CompTransaction?: CompTransactionUncheckedUpdateManyWithoutUserNestedInput
+    DailyCompEarning?: DailyCompEarningUncheckedUpdateManyWithoutUserNestedInput
+    EmailLog?: EmailLogUncheckedUpdateManyWithoutUserNestedInput
+    GameSession?: GameSessionUncheckedUpdateManyWithoutUserNestedInput
+    affiliateReferrals?: ReferralUncheckedUpdateManyWithoutAffiliateNestedInput
+    Rolling?: RollingUncheckedUpdateManyWithoutUserNestedInput
+    transactions?: TransactionUncheckedUpdateManyWithoutUserNestedInput
+    depositDetails?: DepositDetailUncheckedUpdateManyWithoutUserNestedInput
+    balances?: UserBalanceUncheckedUpdateManyWithoutUserNestedInput
+    UserBalanceStats?: UserBalanceStatsUncheckedUpdateManyWithoutUserNestedInput
+    UserPromotion?: UserPromotionUncheckedUpdateManyWithoutUserNestedInput
+    UserSession?: UserSessionUncheckedUpdateManyWithoutUserNestedInput
+    RevokedSessions?: UserSessionUncheckedUpdateManyWithoutRevokedByUserNestedInput
+    UserToken?: UserTokenUncheckedUpdateManyWithoutUserNestedInput
+    VipHistory?: VipHistoryUncheckedUpdateManyWithoutUserNestedInput
+    VipMembership?: VipMembershipUncheckedUpdateOneWithoutUserNestedInput
+    loginAttempts?: LoginAttemptUncheckedUpdateManyWithoutUserNestedInput
+  }
+
   export type AffiliateCodeCreateWithoutUserInput = {
-    id?: string
+    id?: bigint | number
+    uid: string
     code: string
     campaignName?: string | null
     description?: string | null
@@ -79239,7 +80034,8 @@ export namespace Prisma {
   }
 
   export type AffiliateCodeUncheckedCreateWithoutUserInput = {
-    id?: string
+    id?: bigint | number
+    uid: string
     code: string
     campaignName?: string | null
     description?: string | null
@@ -79556,7 +80352,8 @@ export namespace Prisma {
   }
 
   export type ReferralCreateWithoutAffiliateInput = {
-    id?: string
+    id?: bigint | number
+    uid: string
     ipAddress?: string | null
     deviceFingerprint?: string | null
     userAgent?: string | null
@@ -79567,14 +80364,15 @@ export namespace Prisma {
   }
 
   export type ReferralUncheckedCreateWithoutAffiliateInput = {
-    id?: string
+    id?: bigint | number
+    uid: string
     subUserId: bigint | number
     ipAddress?: string | null
     deviceFingerprint?: string | null
     userAgent?: string | null
     createdAt?: Date | string
     updatedAt?: Date | string
-    codeId: string
+    codeId: bigint | number
   }
 
   export type ReferralCreateOrConnectWithoutAffiliateInput = {
@@ -79588,7 +80386,8 @@ export namespace Prisma {
   }
 
   export type ReferralCreateWithoutSubUserInput = {
-    id?: string
+    id?: bigint | number
+    uid: string
     ipAddress?: string | null
     deviceFingerprint?: string | null
     userAgent?: string | null
@@ -79599,14 +80398,15 @@ export namespace Prisma {
   }
 
   export type ReferralUncheckedCreateWithoutSubUserInput = {
-    id?: string
+    id?: bigint | number
+    uid: string
     affiliateId: bigint | number
     ipAddress?: string | null
     deviceFingerprint?: string | null
     userAgent?: string | null
     createdAt?: Date | string
     updatedAt?: Date | string
-    codeId: string
+    codeId: bigint | number
   }
 
   export type ReferralCreateOrConnectWithoutSubUserInput = {
@@ -80145,7 +80945,8 @@ export namespace Prisma {
     AND?: AffiliateCodeScalarWhereInput | AffiliateCodeScalarWhereInput[]
     OR?: AffiliateCodeScalarWhereInput[]
     NOT?: AffiliateCodeScalarWhereInput | AffiliateCodeScalarWhereInput[]
-    id?: StringFilter<"AffiliateCode"> | string
+    id?: BigIntFilter<"AffiliateCode"> | bigint | number
+    uid?: StringFilter<"AffiliateCode"> | string
     userId?: BigIntFilter<"AffiliateCode"> | bigint | number
     code?: StringFilter<"AffiliateCode"> | string
     campaignName?: StringNullableFilter<"AffiliateCode"> | string | null
@@ -80422,21 +81223,6 @@ export namespace Prisma {
   export type ReferralUpdateManyWithWhereWithoutAffiliateInput = {
     where: ReferralScalarWhereInput
     data: XOR<ReferralUpdateManyMutationInput, ReferralUncheckedUpdateManyWithoutAffiliateInput>
-  }
-
-  export type ReferralScalarWhereInput = {
-    AND?: ReferralScalarWhereInput | ReferralScalarWhereInput[]
-    OR?: ReferralScalarWhereInput[]
-    NOT?: ReferralScalarWhereInput | ReferralScalarWhereInput[]
-    id?: StringFilter<"Referral"> | string
-    affiliateId?: BigIntFilter<"Referral"> | bigint | number
-    subUserId?: BigIntFilter<"Referral"> | bigint | number
-    ipAddress?: StringNullableFilter<"Referral"> | string | null
-    deviceFingerprint?: StringNullableFilter<"Referral"> | string | null
-    userAgent?: StringNullableFilter<"Referral"> | string | null
-    createdAt?: DateTimeFilter<"Referral"> | Date | string
-    updatedAt?: DateTimeFilter<"Referral"> | Date | string
-    codeId?: StringFilter<"Referral"> | string
   }
 
   export type ReferralUpsertWithWhereUniqueWithoutSubUserInput = {
@@ -85939,702 +86725,6 @@ export namespace Prisma {
     loginAttempts?: LoginAttemptUncheckedUpdateManyWithoutUserNestedInput
   }
 
-  export type UserCreateWithoutAffiliateCodesInput = {
-    id?: bigint | number
-    uid?: string
-    whitecliffId?: bigint | number | null
-    whitecliffSystemId?: bigint | number | null
-    whitecliffUsername?: string | null
-    dcsId?: string | null
-    email?: string | null
-    passwordHash?: string | null
-    socialType?: $Enums.SocialType | null
-    socialId?: string | null
-    role?: $Enums.UserRoleType
-    status?: $Enums.UserStatus
-    kycLevel?: $Enums.KycLevel
-    country?: string | null
-    language?: $Enums.Language | null
-    timezone?: string | null
-    timezoneOffset?: number | null
-    createdAt?: Date | string
-    updatedAt?: Date | string
-    affiliateCommissions?: AffiliateCommissionCreateNestedManyWithoutAffiliateInput
-    subUserCommissions?: AffiliateCommissionCreateNestedManyWithoutSubUserInput
-    affiliateTier?: AffiliateTierCreateNestedOneWithoutAffiliateInput
-    affiliateWallets?: AffiliateWalletCreateNestedManyWithoutAffiliateInput
-    CompTransaction?: CompTransactionCreateNestedManyWithoutUserInput
-    DailyCompEarning?: DailyCompEarningCreateNestedManyWithoutUserInput
-    EmailLog?: EmailLogCreateNestedManyWithoutUserInput
-    GameSession?: GameSessionCreateNestedManyWithoutUserInput
-    affiliateReferrals?: ReferralCreateNestedManyWithoutAffiliateInput
-    referredUsers?: ReferralCreateNestedManyWithoutSubUserInput
-    Rolling?: RollingCreateNestedManyWithoutUserInput
-    transactions?: TransactionCreateNestedManyWithoutUserInput
-    depositDetails?: DepositDetailCreateNestedManyWithoutUserInput
-    balances?: UserBalanceCreateNestedManyWithoutUserInput
-    UserBalanceStats?: UserBalanceStatsCreateNestedManyWithoutUserInput
-    UserPromotion?: UserPromotionCreateNestedManyWithoutUserInput
-    UserSession?: UserSessionCreateNestedManyWithoutUserInput
-    RevokedSessions?: UserSessionCreateNestedManyWithoutRevokedByUserInput
-    UserToken?: UserTokenCreateNestedManyWithoutUserInput
-    VipHistory?: VipHistoryCreateNestedManyWithoutUserInput
-    VipMembership?: VipMembershipCreateNestedOneWithoutUserInput
-    loginAttempts?: LoginAttemptCreateNestedManyWithoutUserInput
-  }
-
-  export type UserUncheckedCreateWithoutAffiliateCodesInput = {
-    id?: bigint | number
-    uid?: string
-    whitecliffId?: bigint | number | null
-    whitecliffSystemId?: bigint | number | null
-    whitecliffUsername?: string | null
-    dcsId?: string | null
-    email?: string | null
-    passwordHash?: string | null
-    socialType?: $Enums.SocialType | null
-    socialId?: string | null
-    role?: $Enums.UserRoleType
-    status?: $Enums.UserStatus
-    kycLevel?: $Enums.KycLevel
-    country?: string | null
-    language?: $Enums.Language | null
-    timezone?: string | null
-    timezoneOffset?: number | null
-    createdAt?: Date | string
-    updatedAt?: Date | string
-    affiliateCommissions?: AffiliateCommissionUncheckedCreateNestedManyWithoutAffiliateInput
-    subUserCommissions?: AffiliateCommissionUncheckedCreateNestedManyWithoutSubUserInput
-    affiliateTier?: AffiliateTierUncheckedCreateNestedOneWithoutAffiliateInput
-    affiliateWallets?: AffiliateWalletUncheckedCreateNestedManyWithoutAffiliateInput
-    CompTransaction?: CompTransactionUncheckedCreateNestedManyWithoutUserInput
-    DailyCompEarning?: DailyCompEarningUncheckedCreateNestedManyWithoutUserInput
-    EmailLog?: EmailLogUncheckedCreateNestedManyWithoutUserInput
-    GameSession?: GameSessionUncheckedCreateNestedManyWithoutUserInput
-    affiliateReferrals?: ReferralUncheckedCreateNestedManyWithoutAffiliateInput
-    referredUsers?: ReferralUncheckedCreateNestedManyWithoutSubUserInput
-    Rolling?: RollingUncheckedCreateNestedManyWithoutUserInput
-    transactions?: TransactionUncheckedCreateNestedManyWithoutUserInput
-    depositDetails?: DepositDetailUncheckedCreateNestedManyWithoutUserInput
-    balances?: UserBalanceUncheckedCreateNestedManyWithoutUserInput
-    UserBalanceStats?: UserBalanceStatsUncheckedCreateNestedManyWithoutUserInput
-    UserPromotion?: UserPromotionUncheckedCreateNestedManyWithoutUserInput
-    UserSession?: UserSessionUncheckedCreateNestedManyWithoutUserInput
-    RevokedSessions?: UserSessionUncheckedCreateNestedManyWithoutRevokedByUserInput
-    UserToken?: UserTokenUncheckedCreateNestedManyWithoutUserInput
-    VipHistory?: VipHistoryUncheckedCreateNestedManyWithoutUserInput
-    VipMembership?: VipMembershipUncheckedCreateNestedOneWithoutUserInput
-    loginAttempts?: LoginAttemptUncheckedCreateNestedManyWithoutUserInput
-  }
-
-  export type UserCreateOrConnectWithoutAffiliateCodesInput = {
-    where: UserWhereUniqueInput
-    create: XOR<UserCreateWithoutAffiliateCodesInput, UserUncheckedCreateWithoutAffiliateCodesInput>
-  }
-
-  export type ReferralCreateWithoutCodeInput = {
-    id?: string
-    ipAddress?: string | null
-    deviceFingerprint?: string | null
-    userAgent?: string | null
-    createdAt?: Date | string
-    updatedAt?: Date | string
-    affiliate: UserCreateNestedOneWithoutAffiliateReferralsInput
-    subUser: UserCreateNestedOneWithoutReferredUsersInput
-  }
-
-  export type ReferralUncheckedCreateWithoutCodeInput = {
-    id?: string
-    affiliateId: bigint | number
-    subUserId: bigint | number
-    ipAddress?: string | null
-    deviceFingerprint?: string | null
-    userAgent?: string | null
-    createdAt?: Date | string
-    updatedAt?: Date | string
-  }
-
-  export type ReferralCreateOrConnectWithoutCodeInput = {
-    where: ReferralWhereUniqueInput
-    create: XOR<ReferralCreateWithoutCodeInput, ReferralUncheckedCreateWithoutCodeInput>
-  }
-
-  export type ReferralCreateManyCodeInputEnvelope = {
-    data: ReferralCreateManyCodeInput | ReferralCreateManyCodeInput[]
-    skipDuplicates?: boolean
-  }
-
-  export type UserUpsertWithoutAffiliateCodesInput = {
-    update: XOR<UserUpdateWithoutAffiliateCodesInput, UserUncheckedUpdateWithoutAffiliateCodesInput>
-    create: XOR<UserCreateWithoutAffiliateCodesInput, UserUncheckedCreateWithoutAffiliateCodesInput>
-    where?: UserWhereInput
-  }
-
-  export type UserUpdateToOneWithWhereWithoutAffiliateCodesInput = {
-    where?: UserWhereInput
-    data: XOR<UserUpdateWithoutAffiliateCodesInput, UserUncheckedUpdateWithoutAffiliateCodesInput>
-  }
-
-  export type UserUpdateWithoutAffiliateCodesInput = {
-    id?: BigIntFieldUpdateOperationsInput | bigint | number
-    uid?: StringFieldUpdateOperationsInput | string
-    whitecliffId?: NullableBigIntFieldUpdateOperationsInput | bigint | number | null
-    whitecliffSystemId?: NullableBigIntFieldUpdateOperationsInput | bigint | number | null
-    whitecliffUsername?: NullableStringFieldUpdateOperationsInput | string | null
-    dcsId?: NullableStringFieldUpdateOperationsInput | string | null
-    email?: NullableStringFieldUpdateOperationsInput | string | null
-    passwordHash?: NullableStringFieldUpdateOperationsInput | string | null
-    socialType?: NullableEnumSocialTypeFieldUpdateOperationsInput | $Enums.SocialType | null
-    socialId?: NullableStringFieldUpdateOperationsInput | string | null
-    role?: EnumUserRoleTypeFieldUpdateOperationsInput | $Enums.UserRoleType
-    status?: EnumUserStatusFieldUpdateOperationsInput | $Enums.UserStatus
-    kycLevel?: EnumKycLevelFieldUpdateOperationsInput | $Enums.KycLevel
-    country?: NullableStringFieldUpdateOperationsInput | string | null
-    language?: NullableEnumLanguageFieldUpdateOperationsInput | $Enums.Language | null
-    timezone?: NullableStringFieldUpdateOperationsInput | string | null
-    timezoneOffset?: NullableIntFieldUpdateOperationsInput | number | null
-    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
-    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
-    affiliateCommissions?: AffiliateCommissionUpdateManyWithoutAffiliateNestedInput
-    subUserCommissions?: AffiliateCommissionUpdateManyWithoutSubUserNestedInput
-    affiliateTier?: AffiliateTierUpdateOneWithoutAffiliateNestedInput
-    affiliateWallets?: AffiliateWalletUpdateManyWithoutAffiliateNestedInput
-    CompTransaction?: CompTransactionUpdateManyWithoutUserNestedInput
-    DailyCompEarning?: DailyCompEarningUpdateManyWithoutUserNestedInput
-    EmailLog?: EmailLogUpdateManyWithoutUserNestedInput
-    GameSession?: GameSessionUpdateManyWithoutUserNestedInput
-    affiliateReferrals?: ReferralUpdateManyWithoutAffiliateNestedInput
-    referredUsers?: ReferralUpdateManyWithoutSubUserNestedInput
-    Rolling?: RollingUpdateManyWithoutUserNestedInput
-    transactions?: TransactionUpdateManyWithoutUserNestedInput
-    depositDetails?: DepositDetailUpdateManyWithoutUserNestedInput
-    balances?: UserBalanceUpdateManyWithoutUserNestedInput
-    UserBalanceStats?: UserBalanceStatsUpdateManyWithoutUserNestedInput
-    UserPromotion?: UserPromotionUpdateManyWithoutUserNestedInput
-    UserSession?: UserSessionUpdateManyWithoutUserNestedInput
-    RevokedSessions?: UserSessionUpdateManyWithoutRevokedByUserNestedInput
-    UserToken?: UserTokenUpdateManyWithoutUserNestedInput
-    VipHistory?: VipHistoryUpdateManyWithoutUserNestedInput
-    VipMembership?: VipMembershipUpdateOneWithoutUserNestedInput
-    loginAttempts?: LoginAttemptUpdateManyWithoutUserNestedInput
-  }
-
-  export type UserUncheckedUpdateWithoutAffiliateCodesInput = {
-    id?: BigIntFieldUpdateOperationsInput | bigint | number
-    uid?: StringFieldUpdateOperationsInput | string
-    whitecliffId?: NullableBigIntFieldUpdateOperationsInput | bigint | number | null
-    whitecliffSystemId?: NullableBigIntFieldUpdateOperationsInput | bigint | number | null
-    whitecliffUsername?: NullableStringFieldUpdateOperationsInput | string | null
-    dcsId?: NullableStringFieldUpdateOperationsInput | string | null
-    email?: NullableStringFieldUpdateOperationsInput | string | null
-    passwordHash?: NullableStringFieldUpdateOperationsInput | string | null
-    socialType?: NullableEnumSocialTypeFieldUpdateOperationsInput | $Enums.SocialType | null
-    socialId?: NullableStringFieldUpdateOperationsInput | string | null
-    role?: EnumUserRoleTypeFieldUpdateOperationsInput | $Enums.UserRoleType
-    status?: EnumUserStatusFieldUpdateOperationsInput | $Enums.UserStatus
-    kycLevel?: EnumKycLevelFieldUpdateOperationsInput | $Enums.KycLevel
-    country?: NullableStringFieldUpdateOperationsInput | string | null
-    language?: NullableEnumLanguageFieldUpdateOperationsInput | $Enums.Language | null
-    timezone?: NullableStringFieldUpdateOperationsInput | string | null
-    timezoneOffset?: NullableIntFieldUpdateOperationsInput | number | null
-    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
-    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
-    affiliateCommissions?: AffiliateCommissionUncheckedUpdateManyWithoutAffiliateNestedInput
-    subUserCommissions?: AffiliateCommissionUncheckedUpdateManyWithoutSubUserNestedInput
-    affiliateTier?: AffiliateTierUncheckedUpdateOneWithoutAffiliateNestedInput
-    affiliateWallets?: AffiliateWalletUncheckedUpdateManyWithoutAffiliateNestedInput
-    CompTransaction?: CompTransactionUncheckedUpdateManyWithoutUserNestedInput
-    DailyCompEarning?: DailyCompEarningUncheckedUpdateManyWithoutUserNestedInput
-    EmailLog?: EmailLogUncheckedUpdateManyWithoutUserNestedInput
-    GameSession?: GameSessionUncheckedUpdateManyWithoutUserNestedInput
-    affiliateReferrals?: ReferralUncheckedUpdateManyWithoutAffiliateNestedInput
-    referredUsers?: ReferralUncheckedUpdateManyWithoutSubUserNestedInput
-    Rolling?: RollingUncheckedUpdateManyWithoutUserNestedInput
-    transactions?: TransactionUncheckedUpdateManyWithoutUserNestedInput
-    depositDetails?: DepositDetailUncheckedUpdateManyWithoutUserNestedInput
-    balances?: UserBalanceUncheckedUpdateManyWithoutUserNestedInput
-    UserBalanceStats?: UserBalanceStatsUncheckedUpdateManyWithoutUserNestedInput
-    UserPromotion?: UserPromotionUncheckedUpdateManyWithoutUserNestedInput
-    UserSession?: UserSessionUncheckedUpdateManyWithoutUserNestedInput
-    RevokedSessions?: UserSessionUncheckedUpdateManyWithoutRevokedByUserNestedInput
-    UserToken?: UserTokenUncheckedUpdateManyWithoutUserNestedInput
-    VipHistory?: VipHistoryUncheckedUpdateManyWithoutUserNestedInput
-    VipMembership?: VipMembershipUncheckedUpdateOneWithoutUserNestedInput
-    loginAttempts?: LoginAttemptUncheckedUpdateManyWithoutUserNestedInput
-  }
-
-  export type ReferralUpsertWithWhereUniqueWithoutCodeInput = {
-    where: ReferralWhereUniqueInput
-    update: XOR<ReferralUpdateWithoutCodeInput, ReferralUncheckedUpdateWithoutCodeInput>
-    create: XOR<ReferralCreateWithoutCodeInput, ReferralUncheckedCreateWithoutCodeInput>
-  }
-
-  export type ReferralUpdateWithWhereUniqueWithoutCodeInput = {
-    where: ReferralWhereUniqueInput
-    data: XOR<ReferralUpdateWithoutCodeInput, ReferralUncheckedUpdateWithoutCodeInput>
-  }
-
-  export type ReferralUpdateManyWithWhereWithoutCodeInput = {
-    where: ReferralScalarWhereInput
-    data: XOR<ReferralUpdateManyMutationInput, ReferralUncheckedUpdateManyWithoutCodeInput>
-  }
-
-  export type UserCreateWithoutAffiliateReferralsInput = {
-    id?: bigint | number
-    uid?: string
-    whitecliffId?: bigint | number | null
-    whitecliffSystemId?: bigint | number | null
-    whitecliffUsername?: string | null
-    dcsId?: string | null
-    email?: string | null
-    passwordHash?: string | null
-    socialType?: $Enums.SocialType | null
-    socialId?: string | null
-    role?: $Enums.UserRoleType
-    status?: $Enums.UserStatus
-    kycLevel?: $Enums.KycLevel
-    country?: string | null
-    language?: $Enums.Language | null
-    timezone?: string | null
-    timezoneOffset?: number | null
-    createdAt?: Date | string
-    updatedAt?: Date | string
-    affiliateCodes?: AffiliateCodeCreateNestedManyWithoutUserInput
-    affiliateCommissions?: AffiliateCommissionCreateNestedManyWithoutAffiliateInput
-    subUserCommissions?: AffiliateCommissionCreateNestedManyWithoutSubUserInput
-    affiliateTier?: AffiliateTierCreateNestedOneWithoutAffiliateInput
-    affiliateWallets?: AffiliateWalletCreateNestedManyWithoutAffiliateInput
-    CompTransaction?: CompTransactionCreateNestedManyWithoutUserInput
-    DailyCompEarning?: DailyCompEarningCreateNestedManyWithoutUserInput
-    EmailLog?: EmailLogCreateNestedManyWithoutUserInput
-    GameSession?: GameSessionCreateNestedManyWithoutUserInput
-    referredUsers?: ReferralCreateNestedManyWithoutSubUserInput
-    Rolling?: RollingCreateNestedManyWithoutUserInput
-    transactions?: TransactionCreateNestedManyWithoutUserInput
-    depositDetails?: DepositDetailCreateNestedManyWithoutUserInput
-    balances?: UserBalanceCreateNestedManyWithoutUserInput
-    UserBalanceStats?: UserBalanceStatsCreateNestedManyWithoutUserInput
-    UserPromotion?: UserPromotionCreateNestedManyWithoutUserInput
-    UserSession?: UserSessionCreateNestedManyWithoutUserInput
-    RevokedSessions?: UserSessionCreateNestedManyWithoutRevokedByUserInput
-    UserToken?: UserTokenCreateNestedManyWithoutUserInput
-    VipHistory?: VipHistoryCreateNestedManyWithoutUserInput
-    VipMembership?: VipMembershipCreateNestedOneWithoutUserInput
-    loginAttempts?: LoginAttemptCreateNestedManyWithoutUserInput
-  }
-
-  export type UserUncheckedCreateWithoutAffiliateReferralsInput = {
-    id?: bigint | number
-    uid?: string
-    whitecliffId?: bigint | number | null
-    whitecliffSystemId?: bigint | number | null
-    whitecliffUsername?: string | null
-    dcsId?: string | null
-    email?: string | null
-    passwordHash?: string | null
-    socialType?: $Enums.SocialType | null
-    socialId?: string | null
-    role?: $Enums.UserRoleType
-    status?: $Enums.UserStatus
-    kycLevel?: $Enums.KycLevel
-    country?: string | null
-    language?: $Enums.Language | null
-    timezone?: string | null
-    timezoneOffset?: number | null
-    createdAt?: Date | string
-    updatedAt?: Date | string
-    affiliateCodes?: AffiliateCodeUncheckedCreateNestedManyWithoutUserInput
-    affiliateCommissions?: AffiliateCommissionUncheckedCreateNestedManyWithoutAffiliateInput
-    subUserCommissions?: AffiliateCommissionUncheckedCreateNestedManyWithoutSubUserInput
-    affiliateTier?: AffiliateTierUncheckedCreateNestedOneWithoutAffiliateInput
-    affiliateWallets?: AffiliateWalletUncheckedCreateNestedManyWithoutAffiliateInput
-    CompTransaction?: CompTransactionUncheckedCreateNestedManyWithoutUserInput
-    DailyCompEarning?: DailyCompEarningUncheckedCreateNestedManyWithoutUserInput
-    EmailLog?: EmailLogUncheckedCreateNestedManyWithoutUserInput
-    GameSession?: GameSessionUncheckedCreateNestedManyWithoutUserInput
-    referredUsers?: ReferralUncheckedCreateNestedManyWithoutSubUserInput
-    Rolling?: RollingUncheckedCreateNestedManyWithoutUserInput
-    transactions?: TransactionUncheckedCreateNestedManyWithoutUserInput
-    depositDetails?: DepositDetailUncheckedCreateNestedManyWithoutUserInput
-    balances?: UserBalanceUncheckedCreateNestedManyWithoutUserInput
-    UserBalanceStats?: UserBalanceStatsUncheckedCreateNestedManyWithoutUserInput
-    UserPromotion?: UserPromotionUncheckedCreateNestedManyWithoutUserInput
-    UserSession?: UserSessionUncheckedCreateNestedManyWithoutUserInput
-    RevokedSessions?: UserSessionUncheckedCreateNestedManyWithoutRevokedByUserInput
-    UserToken?: UserTokenUncheckedCreateNestedManyWithoutUserInput
-    VipHistory?: VipHistoryUncheckedCreateNestedManyWithoutUserInput
-    VipMembership?: VipMembershipUncheckedCreateNestedOneWithoutUserInput
-    loginAttempts?: LoginAttemptUncheckedCreateNestedManyWithoutUserInput
-  }
-
-  export type UserCreateOrConnectWithoutAffiliateReferralsInput = {
-    where: UserWhereUniqueInput
-    create: XOR<UserCreateWithoutAffiliateReferralsInput, UserUncheckedCreateWithoutAffiliateReferralsInput>
-  }
-
-  export type AffiliateCodeCreateWithoutReferralsInput = {
-    id?: string
-    code: string
-    campaignName?: string | null
-    description?: string | null
-    isActive?: boolean
-    isDefault?: boolean
-    expiresAt?: Date | string | null
-    createdAt?: Date | string
-    updatedAt?: Date | string
-    lastUsedAt?: Date | string | null
-    user: UserCreateNestedOneWithoutAffiliateCodesInput
-  }
-
-  export type AffiliateCodeUncheckedCreateWithoutReferralsInput = {
-    id?: string
-    userId: bigint | number
-    code: string
-    campaignName?: string | null
-    description?: string | null
-    isActive?: boolean
-    isDefault?: boolean
-    expiresAt?: Date | string | null
-    createdAt?: Date | string
-    updatedAt?: Date | string
-    lastUsedAt?: Date | string | null
-  }
-
-  export type AffiliateCodeCreateOrConnectWithoutReferralsInput = {
-    where: AffiliateCodeWhereUniqueInput
-    create: XOR<AffiliateCodeCreateWithoutReferralsInput, AffiliateCodeUncheckedCreateWithoutReferralsInput>
-  }
-
-  export type UserCreateWithoutReferredUsersInput = {
-    id?: bigint | number
-    uid?: string
-    whitecliffId?: bigint | number | null
-    whitecliffSystemId?: bigint | number | null
-    whitecliffUsername?: string | null
-    dcsId?: string | null
-    email?: string | null
-    passwordHash?: string | null
-    socialType?: $Enums.SocialType | null
-    socialId?: string | null
-    role?: $Enums.UserRoleType
-    status?: $Enums.UserStatus
-    kycLevel?: $Enums.KycLevel
-    country?: string | null
-    language?: $Enums.Language | null
-    timezone?: string | null
-    timezoneOffset?: number | null
-    createdAt?: Date | string
-    updatedAt?: Date | string
-    affiliateCodes?: AffiliateCodeCreateNestedManyWithoutUserInput
-    affiliateCommissions?: AffiliateCommissionCreateNestedManyWithoutAffiliateInput
-    subUserCommissions?: AffiliateCommissionCreateNestedManyWithoutSubUserInput
-    affiliateTier?: AffiliateTierCreateNestedOneWithoutAffiliateInput
-    affiliateWallets?: AffiliateWalletCreateNestedManyWithoutAffiliateInput
-    CompTransaction?: CompTransactionCreateNestedManyWithoutUserInput
-    DailyCompEarning?: DailyCompEarningCreateNestedManyWithoutUserInput
-    EmailLog?: EmailLogCreateNestedManyWithoutUserInput
-    GameSession?: GameSessionCreateNestedManyWithoutUserInput
-    affiliateReferrals?: ReferralCreateNestedManyWithoutAffiliateInput
-    Rolling?: RollingCreateNestedManyWithoutUserInput
-    transactions?: TransactionCreateNestedManyWithoutUserInput
-    depositDetails?: DepositDetailCreateNestedManyWithoutUserInput
-    balances?: UserBalanceCreateNestedManyWithoutUserInput
-    UserBalanceStats?: UserBalanceStatsCreateNestedManyWithoutUserInput
-    UserPromotion?: UserPromotionCreateNestedManyWithoutUserInput
-    UserSession?: UserSessionCreateNestedManyWithoutUserInput
-    RevokedSessions?: UserSessionCreateNestedManyWithoutRevokedByUserInput
-    UserToken?: UserTokenCreateNestedManyWithoutUserInput
-    VipHistory?: VipHistoryCreateNestedManyWithoutUserInput
-    VipMembership?: VipMembershipCreateNestedOneWithoutUserInput
-    loginAttempts?: LoginAttemptCreateNestedManyWithoutUserInput
-  }
-
-  export type UserUncheckedCreateWithoutReferredUsersInput = {
-    id?: bigint | number
-    uid?: string
-    whitecliffId?: bigint | number | null
-    whitecliffSystemId?: bigint | number | null
-    whitecliffUsername?: string | null
-    dcsId?: string | null
-    email?: string | null
-    passwordHash?: string | null
-    socialType?: $Enums.SocialType | null
-    socialId?: string | null
-    role?: $Enums.UserRoleType
-    status?: $Enums.UserStatus
-    kycLevel?: $Enums.KycLevel
-    country?: string | null
-    language?: $Enums.Language | null
-    timezone?: string | null
-    timezoneOffset?: number | null
-    createdAt?: Date | string
-    updatedAt?: Date | string
-    affiliateCodes?: AffiliateCodeUncheckedCreateNestedManyWithoutUserInput
-    affiliateCommissions?: AffiliateCommissionUncheckedCreateNestedManyWithoutAffiliateInput
-    subUserCommissions?: AffiliateCommissionUncheckedCreateNestedManyWithoutSubUserInput
-    affiliateTier?: AffiliateTierUncheckedCreateNestedOneWithoutAffiliateInput
-    affiliateWallets?: AffiliateWalletUncheckedCreateNestedManyWithoutAffiliateInput
-    CompTransaction?: CompTransactionUncheckedCreateNestedManyWithoutUserInput
-    DailyCompEarning?: DailyCompEarningUncheckedCreateNestedManyWithoutUserInput
-    EmailLog?: EmailLogUncheckedCreateNestedManyWithoutUserInput
-    GameSession?: GameSessionUncheckedCreateNestedManyWithoutUserInput
-    affiliateReferrals?: ReferralUncheckedCreateNestedManyWithoutAffiliateInput
-    Rolling?: RollingUncheckedCreateNestedManyWithoutUserInput
-    transactions?: TransactionUncheckedCreateNestedManyWithoutUserInput
-    depositDetails?: DepositDetailUncheckedCreateNestedManyWithoutUserInput
-    balances?: UserBalanceUncheckedCreateNestedManyWithoutUserInput
-    UserBalanceStats?: UserBalanceStatsUncheckedCreateNestedManyWithoutUserInput
-    UserPromotion?: UserPromotionUncheckedCreateNestedManyWithoutUserInput
-    UserSession?: UserSessionUncheckedCreateNestedManyWithoutUserInput
-    RevokedSessions?: UserSessionUncheckedCreateNestedManyWithoutRevokedByUserInput
-    UserToken?: UserTokenUncheckedCreateNestedManyWithoutUserInput
-    VipHistory?: VipHistoryUncheckedCreateNestedManyWithoutUserInput
-    VipMembership?: VipMembershipUncheckedCreateNestedOneWithoutUserInput
-    loginAttempts?: LoginAttemptUncheckedCreateNestedManyWithoutUserInput
-  }
-
-  export type UserCreateOrConnectWithoutReferredUsersInput = {
-    where: UserWhereUniqueInput
-    create: XOR<UserCreateWithoutReferredUsersInput, UserUncheckedCreateWithoutReferredUsersInput>
-  }
-
-  export type UserUpsertWithoutAffiliateReferralsInput = {
-    update: XOR<UserUpdateWithoutAffiliateReferralsInput, UserUncheckedUpdateWithoutAffiliateReferralsInput>
-    create: XOR<UserCreateWithoutAffiliateReferralsInput, UserUncheckedCreateWithoutAffiliateReferralsInput>
-    where?: UserWhereInput
-  }
-
-  export type UserUpdateToOneWithWhereWithoutAffiliateReferralsInput = {
-    where?: UserWhereInput
-    data: XOR<UserUpdateWithoutAffiliateReferralsInput, UserUncheckedUpdateWithoutAffiliateReferralsInput>
-  }
-
-  export type UserUpdateWithoutAffiliateReferralsInput = {
-    id?: BigIntFieldUpdateOperationsInput | bigint | number
-    uid?: StringFieldUpdateOperationsInput | string
-    whitecliffId?: NullableBigIntFieldUpdateOperationsInput | bigint | number | null
-    whitecliffSystemId?: NullableBigIntFieldUpdateOperationsInput | bigint | number | null
-    whitecliffUsername?: NullableStringFieldUpdateOperationsInput | string | null
-    dcsId?: NullableStringFieldUpdateOperationsInput | string | null
-    email?: NullableStringFieldUpdateOperationsInput | string | null
-    passwordHash?: NullableStringFieldUpdateOperationsInput | string | null
-    socialType?: NullableEnumSocialTypeFieldUpdateOperationsInput | $Enums.SocialType | null
-    socialId?: NullableStringFieldUpdateOperationsInput | string | null
-    role?: EnumUserRoleTypeFieldUpdateOperationsInput | $Enums.UserRoleType
-    status?: EnumUserStatusFieldUpdateOperationsInput | $Enums.UserStatus
-    kycLevel?: EnumKycLevelFieldUpdateOperationsInput | $Enums.KycLevel
-    country?: NullableStringFieldUpdateOperationsInput | string | null
-    language?: NullableEnumLanguageFieldUpdateOperationsInput | $Enums.Language | null
-    timezone?: NullableStringFieldUpdateOperationsInput | string | null
-    timezoneOffset?: NullableIntFieldUpdateOperationsInput | number | null
-    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
-    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
-    affiliateCodes?: AffiliateCodeUpdateManyWithoutUserNestedInput
-    affiliateCommissions?: AffiliateCommissionUpdateManyWithoutAffiliateNestedInput
-    subUserCommissions?: AffiliateCommissionUpdateManyWithoutSubUserNestedInput
-    affiliateTier?: AffiliateTierUpdateOneWithoutAffiliateNestedInput
-    affiliateWallets?: AffiliateWalletUpdateManyWithoutAffiliateNestedInput
-    CompTransaction?: CompTransactionUpdateManyWithoutUserNestedInput
-    DailyCompEarning?: DailyCompEarningUpdateManyWithoutUserNestedInput
-    EmailLog?: EmailLogUpdateManyWithoutUserNestedInput
-    GameSession?: GameSessionUpdateManyWithoutUserNestedInput
-    referredUsers?: ReferralUpdateManyWithoutSubUserNestedInput
-    Rolling?: RollingUpdateManyWithoutUserNestedInput
-    transactions?: TransactionUpdateManyWithoutUserNestedInput
-    depositDetails?: DepositDetailUpdateManyWithoutUserNestedInput
-    balances?: UserBalanceUpdateManyWithoutUserNestedInput
-    UserBalanceStats?: UserBalanceStatsUpdateManyWithoutUserNestedInput
-    UserPromotion?: UserPromotionUpdateManyWithoutUserNestedInput
-    UserSession?: UserSessionUpdateManyWithoutUserNestedInput
-    RevokedSessions?: UserSessionUpdateManyWithoutRevokedByUserNestedInput
-    UserToken?: UserTokenUpdateManyWithoutUserNestedInput
-    VipHistory?: VipHistoryUpdateManyWithoutUserNestedInput
-    VipMembership?: VipMembershipUpdateOneWithoutUserNestedInput
-    loginAttempts?: LoginAttemptUpdateManyWithoutUserNestedInput
-  }
-
-  export type UserUncheckedUpdateWithoutAffiliateReferralsInput = {
-    id?: BigIntFieldUpdateOperationsInput | bigint | number
-    uid?: StringFieldUpdateOperationsInput | string
-    whitecliffId?: NullableBigIntFieldUpdateOperationsInput | bigint | number | null
-    whitecliffSystemId?: NullableBigIntFieldUpdateOperationsInput | bigint | number | null
-    whitecliffUsername?: NullableStringFieldUpdateOperationsInput | string | null
-    dcsId?: NullableStringFieldUpdateOperationsInput | string | null
-    email?: NullableStringFieldUpdateOperationsInput | string | null
-    passwordHash?: NullableStringFieldUpdateOperationsInput | string | null
-    socialType?: NullableEnumSocialTypeFieldUpdateOperationsInput | $Enums.SocialType | null
-    socialId?: NullableStringFieldUpdateOperationsInput | string | null
-    role?: EnumUserRoleTypeFieldUpdateOperationsInput | $Enums.UserRoleType
-    status?: EnumUserStatusFieldUpdateOperationsInput | $Enums.UserStatus
-    kycLevel?: EnumKycLevelFieldUpdateOperationsInput | $Enums.KycLevel
-    country?: NullableStringFieldUpdateOperationsInput | string | null
-    language?: NullableEnumLanguageFieldUpdateOperationsInput | $Enums.Language | null
-    timezone?: NullableStringFieldUpdateOperationsInput | string | null
-    timezoneOffset?: NullableIntFieldUpdateOperationsInput | number | null
-    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
-    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
-    affiliateCodes?: AffiliateCodeUncheckedUpdateManyWithoutUserNestedInput
-    affiliateCommissions?: AffiliateCommissionUncheckedUpdateManyWithoutAffiliateNestedInput
-    subUserCommissions?: AffiliateCommissionUncheckedUpdateManyWithoutSubUserNestedInput
-    affiliateTier?: AffiliateTierUncheckedUpdateOneWithoutAffiliateNestedInput
-    affiliateWallets?: AffiliateWalletUncheckedUpdateManyWithoutAffiliateNestedInput
-    CompTransaction?: CompTransactionUncheckedUpdateManyWithoutUserNestedInput
-    DailyCompEarning?: DailyCompEarningUncheckedUpdateManyWithoutUserNestedInput
-    EmailLog?: EmailLogUncheckedUpdateManyWithoutUserNestedInput
-    GameSession?: GameSessionUncheckedUpdateManyWithoutUserNestedInput
-    referredUsers?: ReferralUncheckedUpdateManyWithoutSubUserNestedInput
-    Rolling?: RollingUncheckedUpdateManyWithoutUserNestedInput
-    transactions?: TransactionUncheckedUpdateManyWithoutUserNestedInput
-    depositDetails?: DepositDetailUncheckedUpdateManyWithoutUserNestedInput
-    balances?: UserBalanceUncheckedUpdateManyWithoutUserNestedInput
-    UserBalanceStats?: UserBalanceStatsUncheckedUpdateManyWithoutUserNestedInput
-    UserPromotion?: UserPromotionUncheckedUpdateManyWithoutUserNestedInput
-    UserSession?: UserSessionUncheckedUpdateManyWithoutUserNestedInput
-    RevokedSessions?: UserSessionUncheckedUpdateManyWithoutRevokedByUserNestedInput
-    UserToken?: UserTokenUncheckedUpdateManyWithoutUserNestedInput
-    VipHistory?: VipHistoryUncheckedUpdateManyWithoutUserNestedInput
-    VipMembership?: VipMembershipUncheckedUpdateOneWithoutUserNestedInput
-    loginAttempts?: LoginAttemptUncheckedUpdateManyWithoutUserNestedInput
-  }
-
-  export type AffiliateCodeUpsertWithoutReferralsInput = {
-    update: XOR<AffiliateCodeUpdateWithoutReferralsInput, AffiliateCodeUncheckedUpdateWithoutReferralsInput>
-    create: XOR<AffiliateCodeCreateWithoutReferralsInput, AffiliateCodeUncheckedCreateWithoutReferralsInput>
-    where?: AffiliateCodeWhereInput
-  }
-
-  export type AffiliateCodeUpdateToOneWithWhereWithoutReferralsInput = {
-    where?: AffiliateCodeWhereInput
-    data: XOR<AffiliateCodeUpdateWithoutReferralsInput, AffiliateCodeUncheckedUpdateWithoutReferralsInput>
-  }
-
-  export type AffiliateCodeUpdateWithoutReferralsInput = {
-    id?: StringFieldUpdateOperationsInput | string
-    code?: StringFieldUpdateOperationsInput | string
-    campaignName?: NullableStringFieldUpdateOperationsInput | string | null
-    description?: NullableStringFieldUpdateOperationsInput | string | null
-    isActive?: BoolFieldUpdateOperationsInput | boolean
-    isDefault?: BoolFieldUpdateOperationsInput | boolean
-    expiresAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
-    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
-    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
-    lastUsedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
-    user?: UserUpdateOneRequiredWithoutAffiliateCodesNestedInput
-  }
-
-  export type AffiliateCodeUncheckedUpdateWithoutReferralsInput = {
-    id?: StringFieldUpdateOperationsInput | string
-    userId?: BigIntFieldUpdateOperationsInput | bigint | number
-    code?: StringFieldUpdateOperationsInput | string
-    campaignName?: NullableStringFieldUpdateOperationsInput | string | null
-    description?: NullableStringFieldUpdateOperationsInput | string | null
-    isActive?: BoolFieldUpdateOperationsInput | boolean
-    isDefault?: BoolFieldUpdateOperationsInput | boolean
-    expiresAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
-    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
-    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
-    lastUsedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
-  }
-
-  export type UserUpsertWithoutReferredUsersInput = {
-    update: XOR<UserUpdateWithoutReferredUsersInput, UserUncheckedUpdateWithoutReferredUsersInput>
-    create: XOR<UserCreateWithoutReferredUsersInput, UserUncheckedCreateWithoutReferredUsersInput>
-    where?: UserWhereInput
-  }
-
-  export type UserUpdateToOneWithWhereWithoutReferredUsersInput = {
-    where?: UserWhereInput
-    data: XOR<UserUpdateWithoutReferredUsersInput, UserUncheckedUpdateWithoutReferredUsersInput>
-  }
-
-  export type UserUpdateWithoutReferredUsersInput = {
-    id?: BigIntFieldUpdateOperationsInput | bigint | number
-    uid?: StringFieldUpdateOperationsInput | string
-    whitecliffId?: NullableBigIntFieldUpdateOperationsInput | bigint | number | null
-    whitecliffSystemId?: NullableBigIntFieldUpdateOperationsInput | bigint | number | null
-    whitecliffUsername?: NullableStringFieldUpdateOperationsInput | string | null
-    dcsId?: NullableStringFieldUpdateOperationsInput | string | null
-    email?: NullableStringFieldUpdateOperationsInput | string | null
-    passwordHash?: NullableStringFieldUpdateOperationsInput | string | null
-    socialType?: NullableEnumSocialTypeFieldUpdateOperationsInput | $Enums.SocialType | null
-    socialId?: NullableStringFieldUpdateOperationsInput | string | null
-    role?: EnumUserRoleTypeFieldUpdateOperationsInput | $Enums.UserRoleType
-    status?: EnumUserStatusFieldUpdateOperationsInput | $Enums.UserStatus
-    kycLevel?: EnumKycLevelFieldUpdateOperationsInput | $Enums.KycLevel
-    country?: NullableStringFieldUpdateOperationsInput | string | null
-    language?: NullableEnumLanguageFieldUpdateOperationsInput | $Enums.Language | null
-    timezone?: NullableStringFieldUpdateOperationsInput | string | null
-    timezoneOffset?: NullableIntFieldUpdateOperationsInput | number | null
-    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
-    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
-    affiliateCodes?: AffiliateCodeUpdateManyWithoutUserNestedInput
-    affiliateCommissions?: AffiliateCommissionUpdateManyWithoutAffiliateNestedInput
-    subUserCommissions?: AffiliateCommissionUpdateManyWithoutSubUserNestedInput
-    affiliateTier?: AffiliateTierUpdateOneWithoutAffiliateNestedInput
-    affiliateWallets?: AffiliateWalletUpdateManyWithoutAffiliateNestedInput
-    CompTransaction?: CompTransactionUpdateManyWithoutUserNestedInput
-    DailyCompEarning?: DailyCompEarningUpdateManyWithoutUserNestedInput
-    EmailLog?: EmailLogUpdateManyWithoutUserNestedInput
-    GameSession?: GameSessionUpdateManyWithoutUserNestedInput
-    affiliateReferrals?: ReferralUpdateManyWithoutAffiliateNestedInput
-    Rolling?: RollingUpdateManyWithoutUserNestedInput
-    transactions?: TransactionUpdateManyWithoutUserNestedInput
-    depositDetails?: DepositDetailUpdateManyWithoutUserNestedInput
-    balances?: UserBalanceUpdateManyWithoutUserNestedInput
-    UserBalanceStats?: UserBalanceStatsUpdateManyWithoutUserNestedInput
-    UserPromotion?: UserPromotionUpdateManyWithoutUserNestedInput
-    UserSession?: UserSessionUpdateManyWithoutUserNestedInput
-    RevokedSessions?: UserSessionUpdateManyWithoutRevokedByUserNestedInput
-    UserToken?: UserTokenUpdateManyWithoutUserNestedInput
-    VipHistory?: VipHistoryUpdateManyWithoutUserNestedInput
-    VipMembership?: VipMembershipUpdateOneWithoutUserNestedInput
-    loginAttempts?: LoginAttemptUpdateManyWithoutUserNestedInput
-  }
-
-  export type UserUncheckedUpdateWithoutReferredUsersInput = {
-    id?: BigIntFieldUpdateOperationsInput | bigint | number
-    uid?: StringFieldUpdateOperationsInput | string
-    whitecliffId?: NullableBigIntFieldUpdateOperationsInput | bigint | number | null
-    whitecliffSystemId?: NullableBigIntFieldUpdateOperationsInput | bigint | number | null
-    whitecliffUsername?: NullableStringFieldUpdateOperationsInput | string | null
-    dcsId?: NullableStringFieldUpdateOperationsInput | string | null
-    email?: NullableStringFieldUpdateOperationsInput | string | null
-    passwordHash?: NullableStringFieldUpdateOperationsInput | string | null
-    socialType?: NullableEnumSocialTypeFieldUpdateOperationsInput | $Enums.SocialType | null
-    socialId?: NullableStringFieldUpdateOperationsInput | string | null
-    role?: EnumUserRoleTypeFieldUpdateOperationsInput | $Enums.UserRoleType
-    status?: EnumUserStatusFieldUpdateOperationsInput | $Enums.UserStatus
-    kycLevel?: EnumKycLevelFieldUpdateOperationsInput | $Enums.KycLevel
-    country?: NullableStringFieldUpdateOperationsInput | string | null
-    language?: NullableEnumLanguageFieldUpdateOperationsInput | $Enums.Language | null
-    timezone?: NullableStringFieldUpdateOperationsInput | string | null
-    timezoneOffset?: NullableIntFieldUpdateOperationsInput | number | null
-    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
-    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
-    affiliateCodes?: AffiliateCodeUncheckedUpdateManyWithoutUserNestedInput
-    affiliateCommissions?: AffiliateCommissionUncheckedUpdateManyWithoutAffiliateNestedInput
-    subUserCommissions?: AffiliateCommissionUncheckedUpdateManyWithoutSubUserNestedInput
-    affiliateTier?: AffiliateTierUncheckedUpdateOneWithoutAffiliateNestedInput
-    affiliateWallets?: AffiliateWalletUncheckedUpdateManyWithoutAffiliateNestedInput
-    CompTransaction?: CompTransactionUncheckedUpdateManyWithoutUserNestedInput
-    DailyCompEarning?: DailyCompEarningUncheckedUpdateManyWithoutUserNestedInput
-    EmailLog?: EmailLogUncheckedUpdateManyWithoutUserNestedInput
-    GameSession?: GameSessionUncheckedUpdateManyWithoutUserNestedInput
-    affiliateReferrals?: ReferralUncheckedUpdateManyWithoutAffiliateNestedInput
-    Rolling?: RollingUncheckedUpdateManyWithoutUserNestedInput
-    transactions?: TransactionUncheckedUpdateManyWithoutUserNestedInput
-    depositDetails?: DepositDetailUncheckedUpdateManyWithoutUserNestedInput
-    balances?: UserBalanceUncheckedUpdateManyWithoutUserNestedInput
-    UserBalanceStats?: UserBalanceStatsUncheckedUpdateManyWithoutUserNestedInput
-    UserPromotion?: UserPromotionUncheckedUpdateManyWithoutUserNestedInput
-    UserSession?: UserSessionUncheckedUpdateManyWithoutUserNestedInput
-    RevokedSessions?: UserSessionUncheckedUpdateManyWithoutRevokedByUserNestedInput
-    UserToken?: UserTokenUncheckedUpdateManyWithoutUserNestedInput
-    VipHistory?: VipHistoryUncheckedUpdateManyWithoutUserNestedInput
-    VipMembership?: VipMembershipUncheckedUpdateOneWithoutUserNestedInput
-    loginAttempts?: LoginAttemptUncheckedUpdateManyWithoutUserNestedInput
-  }
-
   export type UserCreateWithoutAffiliateWalletsInput = {
     id?: bigint | number
     uid?: string
@@ -89531,8 +89621,57 @@ export namespace Prisma {
     loginAttempts?: LoginAttemptUncheckedUpdateManyWithoutUserNestedInput
   }
 
+  export type ReferralCreateManyCodeInput = {
+    id?: bigint | number
+    uid: string
+    affiliateId: bigint | number
+    subUserId: bigint | number
+    ipAddress?: string | null
+    deviceFingerprint?: string | null
+    userAgent?: string | null
+    createdAt?: Date | string
+    updatedAt?: Date | string
+  }
+
+  export type ReferralUpdateWithoutCodeInput = {
+    id?: BigIntFieldUpdateOperationsInput | bigint | number
+    uid?: StringFieldUpdateOperationsInput | string
+    ipAddress?: NullableStringFieldUpdateOperationsInput | string | null
+    deviceFingerprint?: NullableStringFieldUpdateOperationsInput | string | null
+    userAgent?: NullableStringFieldUpdateOperationsInput | string | null
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    affiliate?: UserUpdateOneRequiredWithoutAffiliateReferralsNestedInput
+    subUser?: UserUpdateOneRequiredWithoutReferredUsersNestedInput
+  }
+
+  export type ReferralUncheckedUpdateWithoutCodeInput = {
+    id?: BigIntFieldUpdateOperationsInput | bigint | number
+    uid?: StringFieldUpdateOperationsInput | string
+    affiliateId?: BigIntFieldUpdateOperationsInput | bigint | number
+    subUserId?: BigIntFieldUpdateOperationsInput | bigint | number
+    ipAddress?: NullableStringFieldUpdateOperationsInput | string | null
+    deviceFingerprint?: NullableStringFieldUpdateOperationsInput | string | null
+    userAgent?: NullableStringFieldUpdateOperationsInput | string | null
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+  }
+
+  export type ReferralUncheckedUpdateManyWithoutCodeInput = {
+    id?: BigIntFieldUpdateOperationsInput | bigint | number
+    uid?: StringFieldUpdateOperationsInput | string
+    affiliateId?: BigIntFieldUpdateOperationsInput | bigint | number
+    subUserId?: BigIntFieldUpdateOperationsInput | bigint | number
+    ipAddress?: NullableStringFieldUpdateOperationsInput | string | null
+    deviceFingerprint?: NullableStringFieldUpdateOperationsInput | string | null
+    userAgent?: NullableStringFieldUpdateOperationsInput | string | null
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+  }
+
   export type AffiliateCodeCreateManyUserInput = {
-    id?: string
+    id?: bigint | number
+    uid: string
     code: string
     campaignName?: string | null
     description?: string | null
@@ -89639,25 +89778,27 @@ export namespace Prisma {
   }
 
   export type ReferralCreateManyAffiliateInput = {
-    id?: string
+    id?: bigint | number
+    uid: string
     subUserId: bigint | number
     ipAddress?: string | null
     deviceFingerprint?: string | null
     userAgent?: string | null
     createdAt?: Date | string
     updatedAt?: Date | string
-    codeId: string
+    codeId: bigint | number
   }
 
   export type ReferralCreateManySubUserInput = {
-    id?: string
+    id?: bigint | number
+    uid: string
     affiliateId: bigint | number
     ipAddress?: string | null
     deviceFingerprint?: string | null
     userAgent?: string | null
     createdAt?: Date | string
     updatedAt?: Date | string
-    codeId: string
+    codeId: bigint | number
   }
 
   export type RollingCreateManyUserInput = {
@@ -89839,7 +89980,8 @@ export namespace Prisma {
   }
 
   export type AffiliateCodeUpdateWithoutUserInput = {
-    id?: StringFieldUpdateOperationsInput | string
+    id?: BigIntFieldUpdateOperationsInput | bigint | number
+    uid?: StringFieldUpdateOperationsInput | string
     code?: StringFieldUpdateOperationsInput | string
     campaignName?: NullableStringFieldUpdateOperationsInput | string | null
     description?: NullableStringFieldUpdateOperationsInput | string | null
@@ -89853,7 +89995,8 @@ export namespace Prisma {
   }
 
   export type AffiliateCodeUncheckedUpdateWithoutUserInput = {
-    id?: StringFieldUpdateOperationsInput | string
+    id?: BigIntFieldUpdateOperationsInput | bigint | number
+    uid?: StringFieldUpdateOperationsInput | string
     code?: StringFieldUpdateOperationsInput | string
     campaignName?: NullableStringFieldUpdateOperationsInput | string | null
     description?: NullableStringFieldUpdateOperationsInput | string | null
@@ -89867,7 +90010,8 @@ export namespace Prisma {
   }
 
   export type AffiliateCodeUncheckedUpdateManyWithoutUserInput = {
-    id?: StringFieldUpdateOperationsInput | string
+    id?: BigIntFieldUpdateOperationsInput | bigint | number
+    uid?: StringFieldUpdateOperationsInput | string
     code?: StringFieldUpdateOperationsInput | string
     campaignName?: NullableStringFieldUpdateOperationsInput | string | null
     description?: NullableStringFieldUpdateOperationsInput | string | null
@@ -90164,7 +90308,8 @@ export namespace Prisma {
   }
 
   export type ReferralUpdateWithoutAffiliateInput = {
-    id?: StringFieldUpdateOperationsInput | string
+    id?: BigIntFieldUpdateOperationsInput | bigint | number
+    uid?: StringFieldUpdateOperationsInput | string
     ipAddress?: NullableStringFieldUpdateOperationsInput | string | null
     deviceFingerprint?: NullableStringFieldUpdateOperationsInput | string | null
     userAgent?: NullableStringFieldUpdateOperationsInput | string | null
@@ -90175,29 +90320,32 @@ export namespace Prisma {
   }
 
   export type ReferralUncheckedUpdateWithoutAffiliateInput = {
-    id?: StringFieldUpdateOperationsInput | string
+    id?: BigIntFieldUpdateOperationsInput | bigint | number
+    uid?: StringFieldUpdateOperationsInput | string
     subUserId?: BigIntFieldUpdateOperationsInput | bigint | number
     ipAddress?: NullableStringFieldUpdateOperationsInput | string | null
     deviceFingerprint?: NullableStringFieldUpdateOperationsInput | string | null
     userAgent?: NullableStringFieldUpdateOperationsInput | string | null
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
-    codeId?: StringFieldUpdateOperationsInput | string
+    codeId?: BigIntFieldUpdateOperationsInput | bigint | number
   }
 
   export type ReferralUncheckedUpdateManyWithoutAffiliateInput = {
-    id?: StringFieldUpdateOperationsInput | string
+    id?: BigIntFieldUpdateOperationsInput | bigint | number
+    uid?: StringFieldUpdateOperationsInput | string
     subUserId?: BigIntFieldUpdateOperationsInput | bigint | number
     ipAddress?: NullableStringFieldUpdateOperationsInput | string | null
     deviceFingerprint?: NullableStringFieldUpdateOperationsInput | string | null
     userAgent?: NullableStringFieldUpdateOperationsInput | string | null
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
-    codeId?: StringFieldUpdateOperationsInput | string
+    codeId?: BigIntFieldUpdateOperationsInput | bigint | number
   }
 
   export type ReferralUpdateWithoutSubUserInput = {
-    id?: StringFieldUpdateOperationsInput | string
+    id?: BigIntFieldUpdateOperationsInput | bigint | number
+    uid?: StringFieldUpdateOperationsInput | string
     ipAddress?: NullableStringFieldUpdateOperationsInput | string | null
     deviceFingerprint?: NullableStringFieldUpdateOperationsInput | string | null
     userAgent?: NullableStringFieldUpdateOperationsInput | string | null
@@ -90208,25 +90356,27 @@ export namespace Prisma {
   }
 
   export type ReferralUncheckedUpdateWithoutSubUserInput = {
-    id?: StringFieldUpdateOperationsInput | string
+    id?: BigIntFieldUpdateOperationsInput | bigint | number
+    uid?: StringFieldUpdateOperationsInput | string
     affiliateId?: BigIntFieldUpdateOperationsInput | bigint | number
     ipAddress?: NullableStringFieldUpdateOperationsInput | string | null
     deviceFingerprint?: NullableStringFieldUpdateOperationsInput | string | null
     userAgent?: NullableStringFieldUpdateOperationsInput | string | null
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
-    codeId?: StringFieldUpdateOperationsInput | string
+    codeId?: BigIntFieldUpdateOperationsInput | bigint | number
   }
 
   export type ReferralUncheckedUpdateManyWithoutSubUserInput = {
-    id?: StringFieldUpdateOperationsInput | string
+    id?: BigIntFieldUpdateOperationsInput | bigint | number
+    uid?: StringFieldUpdateOperationsInput | string
     affiliateId?: BigIntFieldUpdateOperationsInput | bigint | number
     ipAddress?: NullableStringFieldUpdateOperationsInput | string | null
     deviceFingerprint?: NullableStringFieldUpdateOperationsInput | string | null
     userAgent?: NullableStringFieldUpdateOperationsInput | string | null
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
-    codeId?: StringFieldUpdateOperationsInput | string
+    codeId?: BigIntFieldUpdateOperationsInput | bigint | number
   }
 
   export type RollingUpdateWithoutUserInput = {
@@ -91540,50 +91690,6 @@ export namespace Prisma {
     startedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     completedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     gameId?: NullableIntFieldUpdateOperationsInput | number | null
-  }
-
-  export type ReferralCreateManyCodeInput = {
-    id?: string
-    affiliateId: bigint | number
-    subUserId: bigint | number
-    ipAddress?: string | null
-    deviceFingerprint?: string | null
-    userAgent?: string | null
-    createdAt?: Date | string
-    updatedAt?: Date | string
-  }
-
-  export type ReferralUpdateWithoutCodeInput = {
-    id?: StringFieldUpdateOperationsInput | string
-    ipAddress?: NullableStringFieldUpdateOperationsInput | string | null
-    deviceFingerprint?: NullableStringFieldUpdateOperationsInput | string | null
-    userAgent?: NullableStringFieldUpdateOperationsInput | string | null
-    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
-    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
-    affiliate?: UserUpdateOneRequiredWithoutAffiliateReferralsNestedInput
-    subUser?: UserUpdateOneRequiredWithoutReferredUsersNestedInput
-  }
-
-  export type ReferralUncheckedUpdateWithoutCodeInput = {
-    id?: StringFieldUpdateOperationsInput | string
-    affiliateId?: BigIntFieldUpdateOperationsInput | bigint | number
-    subUserId?: BigIntFieldUpdateOperationsInput | bigint | number
-    ipAddress?: NullableStringFieldUpdateOperationsInput | string | null
-    deviceFingerprint?: NullableStringFieldUpdateOperationsInput | string | null
-    userAgent?: NullableStringFieldUpdateOperationsInput | string | null
-    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
-    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
-  }
-
-  export type ReferralUncheckedUpdateManyWithoutCodeInput = {
-    id?: StringFieldUpdateOperationsInput | string
-    affiliateId?: BigIntFieldUpdateOperationsInput | bigint | number
-    subUserId?: BigIntFieldUpdateOperationsInput | bigint | number
-    ipAddress?: NullableStringFieldUpdateOperationsInput | string | null
-    deviceFingerprint?: NullableStringFieldUpdateOperationsInput | string | null
-    userAgent?: NullableStringFieldUpdateOperationsInput | string | null
-    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
-    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
   }
 
   export type RollingCreateManyDepositDetailInput = {

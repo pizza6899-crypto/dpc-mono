@@ -8,6 +8,8 @@ import { UpdateCodeService } from './application/update-code.service';
 import { IncrementCodeUsageService } from './application/increment-code-usage.service';
 import { ValidateCodeFormatService } from './application/validate-code-format.service';
 import { FindCodesAdminService } from './application/find-codes-admin.service';
+import { FindCodeByIdAdminService } from './application/find-code-by-id-admin.service';
+import { DeleteCodeAdminService } from './application/delete-code-admin.service';
 import { AffiliateCodePolicy } from './domain';
 import { AFFILIATE_CODE_REPOSITORY } from './ports/out/affiliate-code.repository.token';
 import { AffiliateCodeRepository } from './infrastructure/affiliate-code.repository';
@@ -27,7 +29,10 @@ import { AuditLogModule } from 'src/modules/audit-log/audit-log.module';
     UpdateCodeService,
     IncrementCodeUsageService,
     ValidateCodeFormatService,
+
     FindCodesAdminService,
+    FindCodeByIdAdminService,
+    DeleteCodeAdminService,
     // Domain Policy
     AffiliateCodePolicy,
     // Infrastructure

@@ -9,6 +9,7 @@ import {
 } from '../domain';
 import { AFFILIATE_CODE_REPOSITORY } from '../ports/out/affiliate-code.repository.token';
 import type { AffiliateCodeRepositoryPort } from '../ports/out/affiliate-code.repository.port';
+import { generateUid } from 'src/utils/id.util';
 
 interface CreateCodeParams {
   userId: bigint;
@@ -44,8 +45,8 @@ export class CreateCodeService {
     // 고유한 코드 자동 생성 (중복 체크 포함)
     const code = await this.generateUniqueCode();
 
-    // Repository에서 ID 생성 및 저장
     return await this.repository.create({
+      uid: generateUid(),
       userId,
       code,
       campaignName,

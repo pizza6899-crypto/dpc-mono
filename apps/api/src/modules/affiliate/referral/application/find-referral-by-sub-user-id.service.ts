@@ -18,7 +18,7 @@ export class FindReferralBySubUserIdService {
     @Inject(REFERRAL_REPOSITORY)
     private readonly repository: ReferralRepositoryPort,
     private readonly dispatchLogService: DispatchLogService,
-  ) {}
+  ) { }
 
   async execute({
     subUserId,
@@ -36,7 +36,7 @@ export class FindReferralBySubUserIdService {
             category: 'AFFILIATE',
             action: 'REFERRAL_SELF_VIEW',
             metadata: {
-              referralId: referral.id,
+              referralId: referral.id?.toString() ?? '',
               affiliateId: referral.affiliateId.toString(),
               subUserId: subUserId.toString(),
             },
