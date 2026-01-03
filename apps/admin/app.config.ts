@@ -12,6 +12,11 @@ export default defineAppConfig({
                 ring: 'ring-1 ring-gray-200 dark:ring-gray-800',
                 divide: 'divide-y divide-gray-200 dark:divide-gray-800'
             }
+        },
+        toast: {
+            default: {
+                timeout: 2000
+            }
         }
     }
 })

@@ -45,7 +45,6 @@ const { t } = useI18n()
         <br>
         Crafted with precision for modern management.
       </p>
-       {{ t('login.description') }}
     </div>
   </div>
 </template>
