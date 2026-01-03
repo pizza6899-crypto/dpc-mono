@@ -20,7 +20,7 @@ useHead({
 
 const title = 'Admin'
 const description = 'Admin'
-const toaster = { duration: 2000 }
+const toaster = { duration: 2500 }
 
 useSeoMeta({
   title,
