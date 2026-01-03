@@ -9,14 +9,10 @@ import {
 } from '../domain';
 import { AFFILIATE_CODE_REPOSITORY } from '../ports/out/affiliate-code.repository.token';
 import type { AffiliateCodeRepositoryPort } from '../ports/out/affiliate-code.repository.port';
-import type { RequestClientInfo } from 'src/common/http/types/client-info.types';
-import { DispatchLogService } from 'src/modules/audit-log/application/dispatch-log.service';
-import { LogType } from 'src/modules/audit-log/domain';
 
 interface CreateCodeParams {
   userId: bigint;
   campaignName?: string;
-  requestInfo?: RequestClientInfo;
 }
 
 @Injectable()
@@ -25,14 +21,12 @@ export class CreateCodeService {
     @Inject(AFFILIATE_CODE_REPOSITORY)
     private readonly repository: AffiliateCodeRepositoryPort,
     private readonly policy: AffiliateCodePolicy,
-    private readonly dispatchLogService: DispatchLogService,
   ) { }
 
   @Transactional()
   async execute({
     userId,
     campaignName,
-    requestInfo,
   }: CreateCodeParams): Promise<AffiliateCode> {
     // 1. 사용자 기반 락 획득 (동시 요청 처리 방지)
     // 트랜잭션 내에서 실행되므로 트랜잭션 종료 시 자동으로 해제됩니다.
@@ -51,35 +45,12 @@ export class CreateCodeService {
     const code = await this.generateUniqueCode();
 
     // Repository에서 ID 생성 및 저장
-    const createdCode = await this.repository.create({
+    return await this.repository.create({
       userId,
       code,
       campaignName,
       isDefault: isFirstCode, // 첫 번째 코드는 기본 코드로 설정
     });
-
-    // Audit Log 기록
-    if (requestInfo) {
-      await this.dispatchLogService.dispatch(
-        {
-          type: LogType.ACTIVITY,
-          data: {
-            userId: userId.toString(),
-            category: 'AFFILIATE',
-            action: 'AFFILIATE_CODE_CREATE',
-            metadata: {
-              codeId: createdCode.id.toString(),
-              code,
-              campaignName: campaignName || null,
-              isDefault: isFirstCode,
-            },
-          },
-        },
-        requestInfo,
-      );
-    }
-
-    return createdCode;
   }
 
   /**

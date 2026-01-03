@@ -4,14 +4,10 @@ import { AffiliateCode, AffiliateCodeNotFoundException } from '../domain';
 import { AFFILIATE_CODE_REPOSITORY } from '../ports/out/affiliate-code.repository.token';
 import type { AffiliateCodeRepositoryPort } from '../ports/out/affiliate-code.repository.port';
 import { Transactional } from '@nestjs-cls/transactional';
-import type { RequestClientInfo } from 'src/common/http/types/client-info.types';
-import { DispatchLogService } from 'src/modules/audit-log/application/dispatch-log.service';
-import { LogType } from 'src/modules/audit-log/domain';
 
 interface SetCodeAsDefaultParams {
   id: string;
   userId: bigint;
-  requestInfo?: RequestClientInfo;
 }
 
 @Injectable()
@@ -19,14 +15,12 @@ export class SetCodeAsDefaultService {
   constructor(
     @Inject(AFFILIATE_CODE_REPOSITORY)
     private readonly repository: AffiliateCodeRepositoryPort,
-    private readonly dispatchLogService: DispatchLogService,
-  ) {}
+  ) { }
 
   @Transactional()
   async execute({
     id,
     userId,
-    requestInfo,
   }: SetCodeAsDefaultParams): Promise<AffiliateCode> {
     const code = await this.repository.findById(id, userId);
 
@@ -54,47 +48,6 @@ export class SetCodeAsDefaultService {
     const updatedCodes = await this.repository.updateMany(updates);
 
     // 새로 설정된 기본 코드 반환
-    const result = updatedCodes.find((c) => c.id === code.id) || code;
-
-    // Audit Log 기록
-    if (requestInfo) {
-      if (existingDefault && existingDefault.id !== code.id) {
-        await this.dispatchLogService.dispatch(
-          {
-            type: LogType.ACTIVITY,
-            data: {
-              userId: userId.toString(),
-              category: 'AFFILIATE',
-              action: 'AFFILIATE_CODE_SET_DEFAULT',
-              metadata: {
-                codeId: id,
-                code: code.code,
-                previousDefaultCodeId: existingDefault.id,
-                previousDefaultCode: existingDefault.code,
-              },
-            },
-          },
-          requestInfo,
-        );
-      } else {
-        await this.dispatchLogService.dispatch(
-          {
-            type: LogType.ACTIVITY,
-            data: {
-              userId: userId.toString(),
-              category: 'AFFILIATE',
-              action: 'AFFILIATE_CODE_SET_DEFAULT',
-              metadata: {
-                codeId: id,
-                code: code.code,
-              },
-            },
-          },
-          requestInfo,
-        );
-      }
-    }
-
-    return result;
+    return updatedCodes.find((c) => c.id === code.id) || code;
   }
 }

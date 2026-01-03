@@ -8,7 +8,7 @@ import {
   HttpCode,
   HttpStatus,
 } from '@nestjs/common';
-import { ApiTags, ApiOperation } from '@nestjs/swagger';
+import { ApiTags, ApiOperation, ApiParam } from '@nestjs/swagger';
 import {
   ApiStandardResponse,
   ApiStandardErrors,
@@ -38,7 +38,7 @@ export class AdminCommissionController {
     private readonly findCommissionByIdService: FindCommissionByIdService,
     private readonly setCustomRateService: SetCustomRateService,
     private readonly resetCustomRateService: ResetCustomRateService,
-  ) {}
+  ) { }
 
   /**
    * 커미션 상세 조회 (ID - 관리자용)
@@ -48,6 +48,7 @@ export class AdminCommissionController {
   @ApiOperation({
     summary: 'Get commission by ID / 커미션 ID로 조회 (관리자용)',
   })
+  @ApiParam({ name: 'id', description: 'Commission ID / 커미션 ID' })
   @ApiStandardResponse(CommissionResponseDto, {
     status: 200,
     description: 'Successfully retrieved commission / 커미션 조회 성공',

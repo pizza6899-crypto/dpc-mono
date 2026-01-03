@@ -22,6 +22,8 @@ import type { RequestClientInfo } from 'src/common/http/types/client-info.types'
 import { FindCodesAdminService } from '../../application/find-codes-admin.service';
 import { FindCodesQueryDto } from './dto/request/find-codes-query.dto';
 import { AdminCodeListItemDto } from './dto/response/admin-code-list.response.dto';
+import { LogType } from 'src/modules/audit-log/domain';
+import { AuditLog } from 'src/modules/audit-log/infrastructure/audit-log.decorator';
 
 @Controller('admin/affiliate-codes')
 @ApiTags('Admin Affiliate Codes (관리자 어플리에이트 코드 관리)')
@@ -30,13 +32,23 @@ import { AdminCodeListItemDto } from './dto/response/admin-code-list.response.dt
 export class AffiliateCodeAdminController {
   constructor(
     private readonly findCodesAdminService: FindCodesAdminService,
-  ) {}
+  ) { }
 
   /**
    * 어플리에이트 코드 목록 조회 (관리자용)
    */
   @Get()
   @HttpCode(HttpStatus.OK)
+  @AuditLog({
+    type: LogType.ACTIVITY,
+    category: 'AFFILIATE',
+    action: 'AFFILIATE_CODE_ADMIN_LIST_VIEW',
+    extractMetadata: (args, result) => ({
+      query: args[0], // FindCodesQueryDto
+      count: result?.data?.length ?? 0,
+      total: result?.total ?? 0,
+    }),
+  })
   @Paginated()
   @ApiOperation({
     summary: 'Get affiliate codes list / 어플리에이트 코드 목록 조회 (관리자용)',
@@ -64,8 +76,6 @@ export class AffiliateCodeAdminController {
       isDefault: query.isDefault,
       startDate: query.startDate,
       endDate: query.endDate,
-      adminId: admin.id,
-      requestInfo,
     });
 
     return {

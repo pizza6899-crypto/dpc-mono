@@ -9,7 +9,7 @@ import {
   HttpCode,
   HttpStatus,
 } from '@nestjs/common';
-import { ApiTags, ApiOperation } from '@nestjs/swagger';
+import { ApiTags, ApiOperation, ApiParam } from '@nestjs/swagger';
 import {
   ApiStandardResponse,
   ApiStandardErrors,
@@ -42,7 +42,7 @@ export class AffiliateCommissionController {
     private readonly getWalletBalanceService: GetWalletBalanceService,
     private readonly getCommissionRateService: GetCommissionRateService,
     private readonly withdrawCommissionService: WithdrawCommissionService,
-  ) {}
+  ) { }
 
   /**
    * 커미션 목록 조회
@@ -99,6 +99,7 @@ export class AffiliateCommissionController {
   @ApiOperation({
     summary: 'Get commission by UID / 커미션 UID로 조회',
   })
+  @ApiParam({ name: 'uid', description: 'Commission UID / 커미션 UID' })
   @ApiStandardResponse(CommissionResponseDto, {
     status: 200,
     description: 'Successfully retrieved commission / 커미션 조회 성공',
