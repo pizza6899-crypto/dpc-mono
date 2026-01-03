@@ -27,6 +27,8 @@
     "db:studio": "pnpm -F @repo/database studio",
     "db:create:unified-logs-view": "pnpm -F @repo/database create:unified-logs-view",
     "db:partition:audit-tables": "pnpm -F @repo/database partition:audit-tables",
+    "shared:build": "pnpm -F @repo/shared build",
+    "shared:dev": "pnpm -F @repo/shared dev",
     "package:deploy": "node scripts/package-for-deploy.js && open ."
   },
   "devDependencies": {

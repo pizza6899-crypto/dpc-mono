@@ -69,4 +69,4 @@ import { PromotionModule } from './modules/promotion/promotion.module';
     },
   ],
 })
-export class AppModule {}
+export class AppModule { }
