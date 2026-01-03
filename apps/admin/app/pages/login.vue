@@ -10,8 +10,8 @@ const toast = useToast()
 const { t } = useI18n()
 
 const state = reactive({
-  email: '',
-  password: ''
+  email: 'admin@dpc.com',
+  password: 'admin123!'
 })
 
 const schema = z.object({

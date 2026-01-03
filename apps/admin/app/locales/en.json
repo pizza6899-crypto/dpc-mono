@@ -1,4 +1,7 @@
 {
+    "app": {
+        "name": "Admin Portal"
+    },
     "login": {
         "title": "Admin Portal",
         "description": "Sign in to manage your application",
@@ -16,5 +19,8 @@
             "email": "Please enter a valid email address.",
             "password": "Password must be at least 8 characters."
         }
+    },
+    "api_errors": {
+        "AUTH_LOGIN_FAILED": "Login failed: Invalid admin credentials"
     }
 }

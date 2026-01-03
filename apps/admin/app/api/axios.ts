@@ -31,10 +31,36 @@ export const customInstance = <T>(config: AxiosRequestConfig): Promise<T> => {
     return promise
 }
 
-// 2. 전역 에러 처리 (세션 만료 대응)
+interface ApiErrorData {
+    success: boolean
+    messageCode: string
+    message: string
+    timestamp: string
+    statusCode: number
+}
+
+// 2. 전역 에러 처리 (세션 만료 대응 및 다국어 처리)
 AXIOS_INSTANCE.interceptors.response.use(
     (response) => response,
-    (error: AxiosError) => {
+    (error: AxiosError<ApiErrorData>) => {
+        const data = error.response?.data
+
+        // messageCode가 있으면 다국어 처리 시도
+        if (data?.messageCode) {
+            try {
+                const { $i18n } = useNuxtApp()
+                // @ts-ignore
+                const translatedMessage = $i18n.t(`api_errors.${data.messageCode}`)
+
+                // 번역 키가 존재할 경우에만 메시지 교체 (없으면 서버 메시지 유지)
+                if (translatedMessage && translatedMessage !== `api_errors.${data.messageCode}`) {
+                    data.message = translatedMessage
+                }
+            } catch (e) {
+                console.error('Failed to translate error message', e)
+            }
+        }
+
         if (error.response?.status === 401) {
             const authStore = useAuthStore()
             authStore.clearAuth() // 스토어 초기화
