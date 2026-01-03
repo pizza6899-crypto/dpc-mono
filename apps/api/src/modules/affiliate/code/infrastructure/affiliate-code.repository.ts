@@ -40,7 +40,6 @@ export class AffiliateCodeRepository implements AffiliateCodeRepositoryPort {
       },
     });
 
-    // 저장된 결과를 Domain 엔티티로 변환
     return this.mapper.toDomain(result);
   }
 

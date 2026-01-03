@@ -26,6 +26,7 @@ import { LogoutService } from '../../application/logout.service';
 import { ChangePasswordService } from '../../application/change-password.service';
 import { RequestPasswordResetService } from '../../application/request-password-reset.service';
 import { ResetPasswordService } from '../../application/reset-password.service';
+import { CheckUserStatusService } from '../../application/check-user-status.service';
 import { CredentialUserLoginRequestDto } from './dto/request/login.request.dto';
 import { CredentialUserLoginResponseDto } from './dto/response/login.response.dto';
 import { CredentialUserAuthStatusResponseDto } from './dto/response/auth-status.response.dto';
@@ -52,6 +53,7 @@ export class CredentialUserController {
     private readonly changePasswordService: ChangePasswordService,
     private readonly requestPasswordResetService: RequestPasswordResetService,
     private readonly resetPasswordService: ResetPasswordService,
+    private readonly checkUserStatusService: CheckUserStatusService,
   ) { }
 
   @Post('login')
@@ -230,7 +232,7 @@ export class CredentialUserController {
   })
   @ApiOperation({
     summary: 'Auth Status (인증 상태)',
-    description: '현재 로그인 세션 유효 여부 확인',
+    description: '현재 로그인 세션 유효 여부 확인 (DB 검증 포함)',
   })
   @ApiStandardResponse(CredentialUserAuthStatusResponseDto, {
     status: HttpStatus.OK,
@@ -239,7 +241,19 @@ export class CredentialUserController {
     @Req() req: Request,
     @CurrentUser() user?: CurrentUserWithSession,
   ): Promise<CredentialUserAuthStatusResponseDto> {
-    const isAuthenticated = req.isAuthenticated() && !!user;
+    let isAuthenticated = req.isAuthenticated() && !!user;
+
+    // 세션은 유효하지만 실제 DB에 유저가 존재하는지 확인 (DB Reset 대응 등)
+    if (isAuthenticated && user) {
+      const isValidUser = await this.checkUserStatusService.execute(user.id);
+      if (!isValidUser) {
+        isAuthenticated = false;
+        // 유효하지 않은 유저라면 로그아웃 처리 (세션 정리)
+        req.logout(() => {
+          req.session?.destroy(() => { });
+        });
+      }
+    }
 
     return {
       isAuthenticated,

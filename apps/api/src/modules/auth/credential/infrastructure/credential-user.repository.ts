@@ -12,11 +12,18 @@ export class CredentialUserRepository implements CredentialUserRepositoryPort {
     @InjectTransaction()
     private readonly tx: Transaction<TransactionalAdapterPrisma>,
     private readonly mapper: CredentialUserMapper,
-  ) {}
+  ) { }
 
   async findByEmail(email: string): Promise<CredentialUser | null> {
     const result = await this.tx.user.findFirst({
       where: { email },
+    });
+    return result ? this.mapper.toDomain(result) : null;
+  }
+
+  async findById(id: bigint): Promise<CredentialUser | null> {
+    const result = await this.tx.user.findUnique({
+      where: { id },
     });
     return result ? this.mapper.toDomain(result) : null;
   }

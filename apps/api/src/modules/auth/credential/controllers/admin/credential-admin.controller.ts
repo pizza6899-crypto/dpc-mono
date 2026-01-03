@@ -28,6 +28,7 @@ import { LogoutService } from '../../application/logout.service';
 import { FindLoginAttemptsService } from '../../application/find-login-attempts.service';
 import { ChangePasswordService } from '../../application/change-password.service';
 import { ResetUserPasswordAdminService } from '../../application/reset-user-password-admin.service';
+import { CheckUserStatusService } from '../../application/check-user-status.service';
 import { CredentialUserLoginRequestDto } from '../user/dto/request/login.request.dto';
 import { CredentialUserLoginResponseDto } from '../user/dto/response/login.response.dto';
 import { CredentialUserLogoutResponseDto } from '../user/dto/response/logout.response.dto';
@@ -54,6 +55,7 @@ export class CredentialAdminController {
     private readonly findAttemptsService: FindLoginAttemptsService,
     private readonly changePasswordService: ChangePasswordService,
     private readonly resetUserPasswordAdminService: ResetUserPasswordAdminService,
+    private readonly checkUserStatusService: CheckUserStatusService,
   ) { }
 
   @Post('login')
@@ -243,7 +245,7 @@ export class CredentialAdminController {
   })
   @ApiOperation({
     summary: 'Admin Auth Status (관리자 인증 상태)',
-    description: '현재 관리자 로그인 세션 유효 여부 확인',
+    description: '현재 관리자 로그인 세션 유효 여부 확인 (DB 검증 포함)',
   })
   @ApiStandardResponse(CredentialUserAuthStatusResponseDto, {
     status: HttpStatus.OK,
@@ -256,7 +258,19 @@ export class CredentialAdminController {
     const isAdmin =
       user?.role === UserRoleType.ADMIN ||
       user?.role === UserRoleType.SUPER_ADMIN;
-    const isAuthenticated = req.isAuthenticated() && !!user && isAdmin;
+    let isAuthenticated = req.isAuthenticated() && !!user && isAdmin;
+
+    // 세션은 유효하지만 실제 DB에 유저가 존재하는지 확인 (DB Reset 대응 등)
+    if (isAuthenticated && user) {
+      const isValidUser = await this.checkUserStatusService.execute(user.id);
+      if (!isValidUser) {
+        isAuthenticated = false;
+        // 유효하지 않은 유저라면 로그아웃 처리
+        req.logout(() => {
+          req.session?.destroy(() => { });
+        });
+      }
+    }
 
     return {
       isAuthenticated,

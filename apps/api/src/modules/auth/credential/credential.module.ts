@@ -20,6 +20,7 @@ import { ChangePasswordService } from './application/change-password.service';
 import { ResetUserPasswordAdminService } from './application/reset-user-password-admin.service';
 import { RequestPasswordResetService } from './application/request-password-reset.service';
 import { ResetPasswordService } from './application/reset-password.service';
+import { CheckUserStatusService } from './application/check-user-status.service';
 import {
   LOGIN_ATTEMPT_REPOSITORY,
   CREDENTIAL_USER_REPOSITORY,
@@ -54,6 +55,7 @@ import { SessionSerializer } from 'src/common/auth/strategies/session.serializer
     ResetUserPasswordAdminService,
     RequestPasswordResetService,
     ResetPasswordService,
+    CheckUserStatusService,
 
     // Domain Policies
     CredentialPolicy,
@@ -73,9 +75,9 @@ import { SessionSerializer } from 'src/common/auth/strategies/session.serializer
       provide: PASSWORD_RESET_TOKEN_REPOSITORY,
       useClass: PasswordResetTokenRepository,
     },
-    
+
     SessionSerializer,
   ],
   exports: [PassportModule, LoginService, LogoutService, VerifyCredentialService],
 })
-export class CredentialModule {}
+export class CredentialModule { }
