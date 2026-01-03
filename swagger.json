@@ -493,7 +493,35 @@
         },
         "responses": {
           "201": {
-            "description": ""
+            "description": "Successfully created affiliate code / 어플리에이트 코드 생성 성공",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "allOf": [
+                    {
+                      "$ref": "#/components/schemas/ApiResponseDto"
+                    },
+                    {
+                      "properties": {
+                        "data": {
+                          "$ref": "#/components/schemas/AffiliateCodeResponseDto"
+                        }
+                      }
+                    }
+                  ]
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Bad Request",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponseDto"
+                }
+              }
+            }
           }
         },
         "summary": "Create affiliate code / 어플리에이트 코드 생성",
@@ -502,11 +530,95 @@
         ]
       },
       "get": {
+        "description": "사용자의 어플리에이트 코드 목록을 조회합니다. 만약 코드가 하나도 없다면 자동으로 대표 코드를 하나 생성하여 반환합니다.",
         "operationId": "AffiliateCodeController_getCodes",
-        "parameters": [],
+        "parameters": [
+          {
+            "name": "page",
+            "required": false,
+            "in": "query",
+            "description": "페이지 번호 (기본값: 1)",
+            "schema": {
+              "minimum": 1,
+              "example": 1,
+              "type": "number"
+            }
+          },
+          {
+            "name": "limit",
+            "required": false,
+            "in": "query",
+            "description": "페이지당 항목 수 (기본값: 20, 최대: 50)",
+            "schema": {
+              "minimum": 1,
+              "maximum": 50,
+              "example": 20,
+              "type": "number"
+            }
+          },
+          {
+            "name": "sortBy",
+            "required": false,
+            "in": "query",
+            "description": "정렬 필드",
+            "schema": {
+              "example": "createdAt",
+              "type": "string",
+              "enum": [
+                "createdAt",
+                "lastUsedAt"
+              ]
+            }
+          },
+          {
+            "name": "sortOrder",
+            "required": false,
+            "in": "query",
+            "description": "정렬 방향 (asc, desc)",
+            "schema": {
+              "example": "desc",
+              "type": "string",
+              "enum": [
+                "asc",
+                "desc"
+              ]
+            }
+          }
+        ],
         "responses": {
           "200": {
-            "description": ""
+            "description": "Successfully retrieved affiliate codes / 어플리에이트 코드 목록 조회 성공",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "allOf": [
+                    {
+                      "$ref": "#/components/schemas/PaginatedResponseDto"
+                    },
+                    {
+                      "properties": {
+                        "data": {
+                          "type": "array",
+                          "items": {
+                            "$ref": "#/components/schemas/AffiliateCodeResponseDto"
+                          }
+                        }
+                      }
+                    }
+                  ]
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Bad Request",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponseDto"
+                }
+              }
+            }
           }
         },
         "summary": "Get affiliate codes / 어플리에이트 코드 목록 조회",
@@ -517,11 +629,40 @@
     },
     "/affiliate-codes/default": {
       "get": {
+        "description": "사용자의 대표 어플리에이트 코드를 조회합니다. 만약 코드가 없다면 자동으로 하나를 생성하여 반환합니다.",
         "operationId": "AffiliateCodeController_getDefaultCode",
         "parameters": [],
         "responses": {
           "200": {
-            "description": ""
+            "description": "Successfully retrieved default affiliate code / 대표 어플리에이트 코드 조회 성공",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "allOf": [
+                    {
+                      "$ref": "#/components/schemas/ApiResponseDto"
+                    },
+                    {
+                      "properties": {
+                        "data": {
+                          "$ref": "#/components/schemas/AffiliateCodeResponseDto"
+                        }
+                      }
+                    }
+                  ]
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Bad Request",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponseDto"
+                }
+              }
+            }
           }
         },
         "summary": "Get default affiliate code / 대표 어플리에이트 코드 조회",
@@ -538,6 +679,7 @@
             "name": "id",
             "required": true,
             "in": "path",
+            "description": "Code ID / 코드 ID",
             "schema": {
               "type": "string"
             }
@@ -555,58 +697,38 @@
         },
         "responses": {
           "200": {
-            "description": ""
+            "description": "Successfully updated affiliate code / 어플리에이트 코드 수정 성공",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "allOf": [
+                    {
+                      "$ref": "#/components/schemas/ApiResponseDto"
+                    },
+                    {
+                      "properties": {
+                        "data": {
+                          "$ref": "#/components/schemas/AffiliateCodeResponseDto"
+                        }
+                      }
+                    }
+                  ]
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Bad Request",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponseDto"
+                }
+              }
+            }
           }
         },
         "summary": "Update affiliate code / 어플리에이트 코드 수정",
-        "tags": [
-          "Affiliate Codes (어플리에이트 코드)"
-        ]
-      }
-    },
-    "/affiliate-codes/{id}/toggle-active": {
-      "patch": {
-        "operationId": "AffiliateCodeController_toggleActive",
-        "parameters": [
-          {
-            "name": "id",
-            "required": true,
-            "in": "path",
-            "schema": {
-              "type": "string"
-            }
-          }
-        ],
-        "responses": {
-          "200": {
-            "description": ""
-          }
-        },
-        "summary": "Toggle affiliate code active status / 어플리에이트 코드 활성화/비활성화 토글",
-        "tags": [
-          "Affiliate Codes (어플리에이트 코드)"
-        ]
-      }
-    },
-    "/affiliate-codes/{id}/set-default": {
-      "patch": {
-        "operationId": "AffiliateCodeController_setDefault",
-        "parameters": [
-          {
-            "name": "id",
-            "required": true,
-            "in": "path",
-            "schema": {
-              "type": "string"
-            }
-          }
-        ],
-        "responses": {
-          "200": {
-            "description": ""
-          }
-        },
-        "summary": "Set default affiliate code / 기본 어플리에이트 코드 설정",
         "tags": [
           "Affiliate Codes (어플리에이트 코드)"
         ]
@@ -628,7 +750,35 @@
         },
         "responses": {
           "200": {
-            "description": ""
+            "description": "Successfully validated code format / 코드 형식 검증 성공",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "allOf": [
+                    {
+                      "$ref": "#/components/schemas/ApiResponseDto"
+                    },
+                    {
+                      "properties": {
+                        "data": {
+                          "$ref": "#/components/schemas/ValidateCodeFormatResponseDto"
+                        }
+                      }
+                    }
+                  ]
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Bad Request",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponseDto"
+                }
+              }
+            }
           }
         },
         "summary": "Validate code format / 코드 형식 검증",
@@ -795,6 +945,223 @@
         "tags": [
           "Admin Affiliate Codes (관리자 어플리에이트 코드 관리)"
         ]
+      },
+      "post": {
+        "description": "관리자가 특정 사용자의 어플리에이트 코드를 생성합니다.",
+        "operationId": "AffiliateCodeAdminController_createCode",
+        "parameters": [],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/CreateCodeAdminRequestDto"
+              }
+            }
+          }
+        },
+        "responses": {
+          "201": {
+            "description": "Successfully created affiliate code / 코드 생성 성공",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "allOf": [
+                    {
+                      "$ref": "#/components/schemas/ApiResponseDto"
+                    },
+                    {
+                      "properties": {
+                        "data": {
+                          "$ref": "#/components/schemas/AdminCodeResponseDto"
+                        }
+                      }
+                    }
+                  ]
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Bad Request",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponseDto"
+                }
+              }
+            }
+          }
+        },
+        "summary": "Create affiliate code / 어플리에이트 코드 생성 (관리자용)",
+        "tags": [
+          "Admin Affiliate Codes (관리자 어플리에이트 코드 관리)"
+        ]
+      }
+    },
+    "/admin/affiliate-codes/{id}": {
+      "get": {
+        "description": "관리자가 특정 어플리에이트 코드의 상세 정보를 조회합니다.",
+        "operationId": "AffiliateCodeAdminController_getCode",
+        "parameters": [
+          {
+            "name": "id",
+            "required": true,
+            "in": "path",
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Successfully retrieved affiliate code detail / 상세 정보 조회 성공",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "allOf": [
+                    {
+                      "$ref": "#/components/schemas/ApiResponseDto"
+                    },
+                    {
+                      "properties": {
+                        "data": {
+                          "$ref": "#/components/schemas/AdminCodeResponseDto"
+                        }
+                      }
+                    }
+                  ]
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Bad Request",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponseDto"
+                }
+              }
+            }
+          }
+        },
+        "summary": "Get affiliate code detail / 어플리에이트 코드 상세 조회 (관리자용)",
+        "tags": [
+          "Admin Affiliate Codes (관리자 어플리에이트 코드 관리)"
+        ]
+      },
+      "patch": {
+        "description": "관리자가 어플리에이트 코드 정보를 수정합니다 (캠페인명, 활성상태, 기본코드설정).",
+        "operationId": "AffiliateCodeAdminController_updateCode",
+        "parameters": [
+          {
+            "name": "id",
+            "required": true,
+            "in": "path",
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/UpdateCodeAdminRequestDto"
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "Successfully updated affiliate code / 코드 수정 성공",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "allOf": [
+                    {
+                      "$ref": "#/components/schemas/ApiResponseDto"
+                    },
+                    {
+                      "properties": {
+                        "data": {
+                          "$ref": "#/components/schemas/AdminCodeResponseDto"
+                        }
+                      }
+                    }
+                  ]
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Bad Request",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponseDto"
+                }
+              }
+            }
+          }
+        },
+        "summary": "Update affiliate code / 어플리에이트 코드 수정 (관리자용)",
+        "tags": [
+          "Admin Affiliate Codes (관리자 어플리에이트 코드 관리)"
+        ]
+      },
+      "delete": {
+        "description": "관리자가 어플리에이트 코드를 삭제합니다.",
+        "operationId": "AffiliateCodeAdminController_deleteCode",
+        "parameters": [
+          {
+            "name": "id",
+            "required": true,
+            "in": "path",
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "204": {
+            "description": "Successfully deleted affiliate code / 코드 삭제 성공",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "allOf": [
+                    {
+                      "$ref": "#/components/schemas/ApiResponseDto"
+                    },
+                    {
+                      "properties": {
+                        "data": {
+                          "type": "object"
+                        }
+                      }
+                    }
+                  ]
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Bad Request",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponseDto"
+                }
+              }
+            }
+          }
+        },
+        "summary": "Delete affiliate code / 어플리에이트 코드 삭제 (관리자용)",
+        "tags": [
+          "Admin Affiliate Codes (관리자 어플리에이트 코드 관리)"
+        ]
       }
     },
     "/auth/login": {
@@ -897,7 +1264,7 @@
     },
     "/auth/status": {
       "get": {
-        "description": "현재 로그인 세션 유효 여부 확인",
+        "description": "현재 로그인 세션 유효 여부 확인 (DB 검증 포함)",
         "operationId": "CredentialUserController_checkStatus",
         "parameters": [],
         "responses": {
@@ -1201,7 +1568,7 @@
     },
     "/admin/auth/status": {
       "get": {
-        "description": "현재 관리자 로그인 세션 유효 여부 확인",
+        "description": "현재 관리자 로그인 세션 유효 여부 확인 (DB 검증 포함)",
         "operationId": "CredentialAdminController_checkStatus",
         "parameters": [],
         "responses": {
@@ -3708,49 +4075,6 @@
         ]
       }
     },
-    "/deposits": {
-      "post": {
-        "operationId": "DepositController_createDeposit",
-        "parameters": [],
-        "requestBody": {
-          "required": true,
-          "content": {
-            "application/json": {
-              "schema": {
-                "$ref": "#/components/schemas/CreateDepositRequestDto"
-              }
-            }
-          }
-        },
-        "responses": {
-          "201": {
-            "description": "입금 요청이 성공적으로 생성되었습니다.",
-            "content": {
-              "application/json": {
-                "schema": {
-                  "$ref": "#/components/schemas/CreateDepositResponseDto"
-                }
-              }
-            }
-          },
-          "400": {
-            "description": "잘못된 요청입니다."
-          },
-          "401": {
-            "description": "인증이 필요합니다."
-          }
-        },
-        "security": [
-          {
-            "bearer": []
-          }
-        ],
-        "summary": "입금 요청",
-        "tags": [
-          "입금 (Deposit)"
-        ]
-      }
-    },
     "/withdraws": {
       "post": {
         "operationId": "WithdrawController_createWithdraw",
@@ -3794,7 +4118,526 @@
         ]
       }
     },
-    "/admin/payment/deposits": {
+    "/deposits/methods": {
+      "get": {
+        "description": "Retrieve list of available deposit methods (crypto, bank transfer). (사용 가능한 입금 수단 목록을 조회합니다.)",
+        "operationId": "DepositController_getAvailableMethods",
+        "parameters": [],
+        "responses": {
+          "200": {
+            "description": "Deposit methods retrieved successfully / 입금 수단 조회 성공",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "allOf": [
+                    {
+                      "$ref": "#/components/schemas/ApiResponseDto"
+                    },
+                    {
+                      "properties": {
+                        "data": {
+                          "$ref": "#/components/schemas/GetAvailableDepositMethodsResponseDto"
+                        }
+                      }
+                    }
+                  ]
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Bad Request",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponseDto"
+                }
+              }
+            }
+          }
+        },
+        "security": [
+          {
+            "bearer": []
+          }
+        ],
+        "summary": "Get available deposit methods / 사용 가능한 입금 수단 조회",
+        "tags": [
+          "입금 (Deposit)"
+        ]
+      }
+    },
+    "/deposits": {
+      "get": {
+        "description": "Retrieve my deposit history with pagination. (내 입금 내역을 페이징하여 조회합니다.)",
+        "operationId": "DepositController_getMyDeposits",
+        "parameters": [
+          {
+            "name": "page",
+            "required": false,
+            "in": "query",
+            "description": "페이지 번호 (기본값: 1)",
+            "schema": {
+              "minimum": 1,
+              "example": 1,
+              "type": "number"
+            }
+          },
+          {
+            "name": "limit",
+            "required": false,
+            "in": "query",
+            "description": "페이지당 항목 수 (기본값: 20, 최대: 100)",
+            "schema": {
+              "minimum": 1,
+              "maximum": 100,
+              "example": 20,
+              "type": "number"
+            }
+          },
+          {
+            "name": "sortBy",
+            "required": false,
+            "in": "query",
+            "description": "정렬 필드",
+            "schema": {
+              "example": "createdAt",
+              "type": "string",
+              "enum": [
+                "createdAt",
+                "updatedAt",
+                "actuallyPaid",
+                "confirmedAt"
+              ]
+            }
+          },
+          {
+            "name": "sortOrder",
+            "required": false,
+            "in": "query",
+            "description": "정렬 방향 (asc, desc)",
+            "schema": {
+              "example": "desc",
+              "type": "string",
+              "enum": [
+                "asc",
+                "desc"
+              ]
+            }
+          },
+          {
+            "name": "status",
+            "required": false,
+            "in": "query",
+            "description": "입금 상태 필터",
+            "schema": {
+              "type": "string",
+              "enum": [
+                "PENDING",
+                "CONFIRMING",
+                "COMPLETED",
+                "FAILED",
+                "CANCELLED",
+                "EXPIRED",
+                "REJECTED"
+              ]
+            }
+          },
+          {
+            "name": "methodType",
+            "required": false,
+            "in": "query",
+            "description": "입금 방법 필터",
+            "schema": {
+              "type": "string",
+              "enum": [
+                "CRYPTO_WALLET",
+                "BANK_TRANSFER"
+              ]
+            }
+          },
+          {
+            "name": "userId",
+            "required": false,
+            "in": "query",
+            "description": "사용자 ID 필터",
+            "schema": {
+              "format": "int64",
+              "type": "integer"
+            }
+          },
+          {
+            "name": "currency",
+            "required": false,
+            "in": "query",
+            "description": "통화 필터",
+            "schema": {
+              "type": "string",
+              "enum": [
+                "USDT",
+                "USD",
+                "KRW",
+                "JPY",
+                "PHP",
+                "IDR",
+                "VND",
+                "BTC",
+                "ETH",
+                "SOL",
+                "XRP",
+                "DOGE",
+                "LTC",
+                "BCH",
+                "EOS",
+                "TRX"
+              ]
+            }
+          },
+          {
+            "name": "startDate",
+            "required": false,
+            "in": "query",
+            "description": "시작 날짜 (ISO 8601 형식)",
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "endDate",
+            "required": false,
+            "in": "query",
+            "description": "종료 날짜 (ISO 8601 형식)",
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Deposit list retrieved successfully / 입금 목록 조회 성공",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "allOf": [
+                    {
+                      "$ref": "#/components/schemas/PaginatedResponseDto"
+                    },
+                    {
+                      "properties": {
+                        "data": {
+                          "type": "array",
+                          "items": {
+                            "$ref": "#/components/schemas/UserDepositResponseDto"
+                          }
+                        }
+                      }
+                    }
+                  ]
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Bad Request",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponseDto"
+                }
+              }
+            }
+          }
+        },
+        "security": [
+          {
+            "bearer": []
+          }
+        ],
+        "summary": "Get my deposit list / 내 입금 목록 조회",
+        "tags": [
+          "입금 (Deposit)"
+        ]
+      }
+    },
+    "/deposits/{uid}": {
+      "get": {
+        "description": "Retrieve detailed information of a specific deposit. (특정 입금의 상세 정보를 조회합니다.)",
+        "operationId": "DepositController_getDepositDetail",
+        "parameters": [
+          {
+            "name": "uid",
+            "required": true,
+            "in": "path",
+            "description": "DepositDetail UID / 입금 상세 UID",
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Deposit detail retrieved successfully / 입금 상세 조회 성공",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "allOf": [
+                    {
+                      "$ref": "#/components/schemas/ApiResponseDto"
+                    },
+                    {
+                      "properties": {
+                        "data": {
+                          "$ref": "#/components/schemas/UserDepositResponseDto"
+                        }
+                      }
+                    }
+                  ]
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Bad Request",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponseDto"
+                }
+              }
+            }
+          }
+        },
+        "security": [
+          {
+            "bearer": []
+          }
+        ],
+        "summary": "Get deposit detail / 입금 상세 조회",
+        "tags": [
+          "입금 (Deposit)"
+        ]
+      },
+      "delete": {
+        "description": "Cancel a pending deposit request. (대기 중인 입금 요청을 취소합니다.)",
+        "operationId": "DepositController_cancelDeposit",
+        "parameters": [
+          {
+            "name": "uid",
+            "required": true,
+            "in": "path",
+            "description": "DepositDetail UID / 입금 상세 UID",
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Deposit request cancelled successfully / 입금 신청 취소 성공",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "allOf": [
+                    {
+                      "$ref": "#/components/schemas/ApiResponseDto"
+                    },
+                    {
+                      "properties": {
+                        "data": {
+                          "$ref": "#/components/schemas/CancelDepositResponseDto"
+                        }
+                      }
+                    }
+                  ]
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Bad Request",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponseDto"
+                }
+              }
+            }
+          }
+        },
+        "security": [
+          {
+            "bearer": []
+          }
+        ],
+        "summary": "Cancel deposit request / 입금 신청 취소",
+        "tags": [
+          "입금 (Deposit)"
+        ]
+      }
+    },
+    "/deposits/crypto": {
+      "post": {
+        "description": "Create a new cryptocurrency deposit request. (새로운 암호화폐 입금 요청을 생성합니다.)",
+        "operationId": "DepositController_createCryptoDeposit",
+        "parameters": [],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/CreateCryptoDepositRequestDto"
+              }
+            }
+          }
+        },
+        "responses": {
+          "201": {
+            "description": "Crypto deposit request created successfully / 암호화폐 입금 요청 생성 성공",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "allOf": [
+                    {
+                      "$ref": "#/components/schemas/ApiResponseDto"
+                    },
+                    {
+                      "properties": {
+                        "data": {
+                          "$ref": "#/components/schemas/CreateDepositResponseDto"
+                        }
+                      }
+                    }
+                  ]
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Bad Request",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponseDto"
+                }
+              }
+            }
+          }
+        },
+        "security": [
+          {
+            "bearer": []
+          }
+        ],
+        "summary": "Create crypto deposit request / 암호화폐 입금 요청 생성",
+        "tags": [
+          "입금 (Deposit)"
+        ]
+      }
+    },
+    "/deposits/bank": {
+      "post": {
+        "description": "Create a new bank transfer deposit request. (새로운 무통장 입금 요청을 생성합니다.)",
+        "operationId": "DepositController_createBankDeposit",
+        "parameters": [],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/CreateBankDepositRequestDto"
+              }
+            }
+          }
+        },
+        "responses": {
+          "201": {
+            "description": "Bank deposit request created successfully / 무통장 입금 요청 생성 성공",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "allOf": [
+                    {
+                      "$ref": "#/components/schemas/ApiResponseDto"
+                    },
+                    {
+                      "properties": {
+                        "data": {
+                          "$ref": "#/components/schemas/CreateDepositResponseDto"
+                        }
+                      }
+                    }
+                  ]
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Bad Request",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponseDto"
+                }
+              }
+            }
+          }
+        },
+        "security": [
+          {
+            "bearer": []
+          }
+        ],
+        "summary": "Create bank deposit request / 무통장 입금 요청 생성",
+        "tags": [
+          "입금 (Deposit)"
+        ]
+      }
+    },
+    "/admin/deposits/stats": {
+      "get": {
+        "description": "Get real-time deposit statistics including total deposit amount today, pending requests count, and method distribution. (실시간 입금 현황 요약: 오늘 총 입금액, 대기 중인 요청 수, 수단별 점유율을 조회합니다.)",
+        "operationId": "AdminDepositController_getDepositStats",
+        "parameters": [],
+        "responses": {
+          "200": {
+            "description": "Deposit statistics retrieved successfully / 입금 현황 요약 조회 성공",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "allOf": [
+                    {
+                      "$ref": "#/components/schemas/ApiResponseDto"
+                    },
+                    {
+                      "properties": {
+                        "data": {
+                          "$ref": "#/components/schemas/Object"
+                        }
+                      }
+                    }
+                  ]
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Bad Request",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponseDto"
+                }
+              }
+            }
+          }
+        },
+        "summary": "Get deposit statistics / 입금 현황 요약",
+        "tags": [
+          "Admin Deposit Management (관리자 입금 관리)"
+        ]
+      }
+    },
+    "/admin/deposits": {
       "get": {
         "description": "Retrieve deposit history with pagination and filtering support. (관리자가 입금 내역을 조회합니다. 페이징 및 필터링을 지원합니다.)",
         "operationId": "AdminDepositController_getDeposits",
@@ -3981,7 +4824,61 @@
         ]
       }
     },
-    "/admin/payment/deposits/{id}/approve": {
+    "/admin/deposits/{id}": {
+      "get": {
+        "description": "Retrieve detailed information of a specific deposit. (특정 입금의 상세 정보를 조회합니다.)",
+        "operationId": "AdminDepositController_getDepositDetail",
+        "parameters": [
+          {
+            "name": "id",
+            "required": true,
+            "in": "path",
+            "description": "DepositDetail ID / 입금 상세 ID",
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Deposit detail retrieved successfully / 입금 상세 조회 성공",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "allOf": [
+                    {
+                      "$ref": "#/components/schemas/ApiResponseDto"
+                    },
+                    {
+                      "properties": {
+                        "data": {
+                          "$ref": "#/components/schemas/AdminDepositListItemDto"
+                        }
+                      }
+                    }
+                  ]
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Bad Request",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponseDto"
+                }
+              }
+            }
+          }
+        },
+        "summary": "Get deposit detail / 입금 상세 조회",
+        "tags": [
+          "Admin Deposit Management (관리자 입금 관리)"
+        ]
+      }
+    },
+    "/admin/deposits/{id}/approve": {
       "post": {
         "description": "Approve a deposit and update user balance. (관리자가 입금을 승인하고 잔액을 업데이트합니다.)",
         "operationId": "AdminDepositController_approveDeposit",
@@ -4045,7 +4942,7 @@
         ]
       }
     },
-    "/admin/payment/deposits/{id}/reject": {
+    "/admin/deposits/{id}/reject": {
       "post": {
         "description": "Reject a deposit request. (관리자가 입금을 거부합니다.)",
         "operationId": "AdminDepositController_rejectDeposit",
@@ -4109,15 +5006,196 @@
         ]
       }
     },
-    "/promotions/active": {
+    "/admin/deposits/configs/bank": {
       "get": {
-        "description": "Retrieve active promotions available for the user. (사용자가 사용 가능한 활성 프로모션을 조회합니다.)",
-        "operationId": "PromotionController_getActivePromotions",
+        "description": "Retrieve list of bank account configurations. (은행 계좌 설정 목록을 조회합니다.)",
+        "operationId": "AdminDepositController_getBankConfigs",
         "parameters": [
           {
-            "name": "language",
-            "required": true,
+            "name": "page",
+            "required": false,
             "in": "query",
+            "description": "Page number",
+            "schema": {
+              "default": 1,
+              "type": "number"
+            }
+          },
+          {
+            "name": "limit",
+            "required": false,
+            "in": "query",
+            "description": "Limit per page",
+            "schema": {
+              "default": 20,
+              "type": "number"
+            }
+          },
+          {
+            "name": "sortBy",
+            "required": false,
+            "in": "query",
+            "description": "Sort by field",
+            "schema": {
+              "default": "createdAt",
+              "type": "string"
+            }
+          },
+          {
+            "name": "sortOrder",
+            "required": false,
+            "in": "query",
+            "description": "Sort order",
+            "schema": {
+              "default": "desc",
+              "type": "string",
+              "enum": [
+                "asc",
+                "desc"
+              ]
+            }
+          },
+          {
+            "name": "currency",
+            "required": false,
+            "in": "query",
+            "description": "Filter by currency",
+            "schema": {
+              "type": "string",
+              "enum": [
+                "USDT",
+                "USD",
+                "KRW",
+                "JPY",
+                "PHP",
+                "IDR",
+                "VND",
+                "BTC",
+                "ETH",
+                "SOL",
+                "XRP",
+                "DOGE",
+                "LTC",
+                "BCH",
+                "EOS",
+                "TRX"
+              ]
+            }
+          },
+          {
+            "name": "isActive",
+            "required": false,
+            "in": "query",
+            "description": "Filter by active status",
+            "schema": {
+              "type": "boolean"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Bank config list retrieved successfully / 은행 계좌 목록 조회 성공",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "allOf": [
+                    {
+                      "$ref": "#/components/schemas/PaginatedResponseDto"
+                    },
+                    {
+                      "properties": {
+                        "data": {
+                          "type": "array",
+                          "items": {
+                            "$ref": "#/components/schemas/BankConfigResponseDto"
+                          }
+                        }
+                      }
+                    }
+                  ]
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Bad Request",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponseDto"
+                }
+              }
+            }
+          }
+        },
+        "summary": "Get bank config list / 은행 계좌 목록 조회",
+        "tags": [
+          "Admin Deposit Management (관리자 입금 관리)"
+        ]
+      },
+      "post": {
+        "description": "Register a new bank account configuration. (새로운 은행 계좌 설정을 등록합니다.)",
+        "operationId": "AdminDepositController_createBankConfig",
+        "parameters": [],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/CreateBankConfigRequestDto"
+              }
+            }
+          }
+        },
+        "responses": {
+          "201": {
+            "description": "Bank config created successfully / 은행 계좌 등록 성공",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "allOf": [
+                    {
+                      "$ref": "#/components/schemas/ApiResponseDto"
+                    },
+                    {
+                      "properties": {
+                        "data": {
+                          "$ref": "#/components/schemas/BankConfigResponseDto"
+                        }
+                      }
+                    }
+                  ]
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Bad Request",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponseDto"
+                }
+              }
+            }
+          }
+        },
+        "summary": "Create bank config / 은행 계좌 등록",
+        "tags": [
+          "Admin Deposit Management (관리자 입금 관리)"
+        ]
+      }
+    },
+    "/admin/deposits/configs/bank/{id}": {
+      "get": {
+        "description": "Retrieve detailed information of a specific bank config. (특정 은행 계좌 설정의 상세 정보를 조회합니다.)",
+        "operationId": "AdminDepositController_getBankConfigDetail",
+        "parameters": [
+          {
+            "name": "id",
+            "required": true,
+            "in": "path",
+            "description": "BankConfig ID / 은행 계좌 설정 ID",
             "schema": {
               "type": "string"
             }
@@ -4125,13 +5203,794 @@
         ],
         "responses": {
           "200": {
-            "description": "Successfully retrieved active promotions / 활성 프로모션 조회 성공",
+            "description": "Bank config detail retrieved successfully / 은행 계좌 상세 조회 성공",
             "content": {
               "application/json": {
                 "schema": {
                   "allOf": [
                     {
                       "$ref": "#/components/schemas/ApiResponseDto"
+                    },
+                    {
+                      "properties": {
+                        "data": {
+                          "$ref": "#/components/schemas/BankConfigResponseDto"
+                        }
+                      }
+                    }
+                  ]
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Bad Request",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponseDto"
+                }
+              }
+            }
+          }
+        },
+        "summary": "Get bank config detail / 은행 계좌 상세 조회",
+        "tags": [
+          "Admin Deposit Management (관리자 입금 관리)"
+        ]
+      },
+      "patch": {
+        "description": "Update a bank account configuration. (은행 계좌 설정을 수정합니다.)",
+        "operationId": "AdminDepositController_updateBankConfig",
+        "parameters": [
+          {
+            "name": "id",
+            "required": true,
+            "in": "path",
+            "description": "BankConfig ID / 은행 계좌 설정 ID",
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/UpdateBankConfigRequestDto"
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "Bank config updated successfully / 은행 계좌 수정 성공",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "allOf": [
+                    {
+                      "$ref": "#/components/schemas/ApiResponseDto"
+                    },
+                    {
+                      "properties": {
+                        "data": {
+                          "$ref": "#/components/schemas/BankConfigResponseDto"
+                        }
+                      }
+                    }
+                  ]
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Bad Request",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponseDto"
+                }
+              }
+            }
+          }
+        },
+        "summary": "Update bank config / 은행 계좌 수정",
+        "tags": [
+          "Admin Deposit Management (관리자 입금 관리)"
+        ]
+      },
+      "delete": {
+        "description": "Soft delete a bank account configuration. (은행 계좌 설정을 소프트 삭제합니다.)",
+        "operationId": "AdminDepositController_deleteBankConfig",
+        "parameters": [
+          {
+            "name": "id",
+            "required": true,
+            "in": "path",
+            "description": "BankConfig ID / 은행 계좌 설정 ID",
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Bank config deleted successfully / 은행 계좌 삭제 성공",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "allOf": [
+                    {
+                      "$ref": "#/components/schemas/ApiResponseDto"
+                    },
+                    {
+                      "properties": {
+                        "data": {
+                          "$ref": "#/components/schemas/SuccessResponseDto"
+                        }
+                      }
+                    }
+                  ]
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Bad Request",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponseDto"
+                }
+              }
+            }
+          }
+        },
+        "summary": "Delete bank config / 은행 계좌 삭제",
+        "tags": [
+          "Admin Deposit Management (관리자 입금 관리)"
+        ]
+      }
+    },
+    "/admin/deposits/configs/crypto": {
+      "get": {
+        "description": "Retrieve list of cryptocurrency configurations. (암호화폐 설정 목록을 조회합니다.)",
+        "operationId": "AdminDepositController_getCryptoConfigs",
+        "parameters": [
+          {
+            "name": "page",
+            "required": false,
+            "in": "query",
+            "description": "Page number",
+            "schema": {
+              "default": 1,
+              "type": "number"
+            }
+          },
+          {
+            "name": "limit",
+            "required": false,
+            "in": "query",
+            "description": "Limit per page",
+            "schema": {
+              "default": 20,
+              "type": "number"
+            }
+          },
+          {
+            "name": "sortBy",
+            "required": false,
+            "in": "query",
+            "description": "Sort by field",
+            "schema": {
+              "default": "createdAt",
+              "type": "string"
+            }
+          },
+          {
+            "name": "sortOrder",
+            "required": false,
+            "in": "query",
+            "description": "Sort order",
+            "schema": {
+              "default": "desc",
+              "type": "string",
+              "enum": [
+                "asc",
+                "desc"
+              ]
+            }
+          },
+          {
+            "name": "symbol",
+            "required": false,
+            "in": "query",
+            "description": "Filter by symbol",
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "network",
+            "required": false,
+            "in": "query",
+            "description": "Filter by network",
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "isActive",
+            "required": false,
+            "in": "query",
+            "description": "Filter by active status",
+            "schema": {
+              "type": "boolean"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Crypto config list retrieved successfully / 암호화폐 설정 목록 조회 성공",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "allOf": [
+                    {
+                      "$ref": "#/components/schemas/PaginatedResponseDto"
+                    },
+                    {
+                      "properties": {
+                        "data": {
+                          "type": "array",
+                          "items": {
+                            "$ref": "#/components/schemas/CryptoConfigResponseDto"
+                          }
+                        }
+                      }
+                    }
+                  ]
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Bad Request",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponseDto"
+                }
+              }
+            }
+          }
+        },
+        "summary": "Get crypto config list / 암호화폐 설정 목록 조회",
+        "tags": [
+          "Admin Deposit Management (관리자 입금 관리)"
+        ]
+      },
+      "post": {
+        "description": "Create a new cryptocurrency configuration. (새로운 암호화폐 설정을 생성합니다.)",
+        "operationId": "AdminDepositController_createCryptoConfig",
+        "parameters": [],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/CreateCryptoConfigRequestDto"
+              }
+            }
+          }
+        },
+        "responses": {
+          "201": {
+            "description": "Crypto config created successfully / 암호화폐 설정 생성 성공",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "allOf": [
+                    {
+                      "$ref": "#/components/schemas/ApiResponseDto"
+                    },
+                    {
+                      "properties": {
+                        "data": {
+                          "$ref": "#/components/schemas/CryptoConfigResponseDto"
+                        }
+                      }
+                    }
+                  ]
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Bad Request",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponseDto"
+                }
+              }
+            }
+          }
+        },
+        "summary": "Create crypto config / 암호화폐 설정 생성",
+        "tags": [
+          "Admin Deposit Management (관리자 입금 관리)"
+        ]
+      }
+    },
+    "/admin/deposits/configs/crypto/{id}": {
+      "get": {
+        "description": "Retrieve detailed information of a specific crypto config. (특정 암호화폐 설정의 상세 정보를 조회합니다.)",
+        "operationId": "AdminDepositController_getCryptoConfigDetail",
+        "parameters": [
+          {
+            "name": "id",
+            "required": true,
+            "in": "path",
+            "description": "CryptoConfig ID / 암호화폐 설정 ID",
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Crypto config detail retrieved successfully / 암호화폐 설정 상세 조회 성공",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "allOf": [
+                    {
+                      "$ref": "#/components/schemas/ApiResponseDto"
+                    },
+                    {
+                      "properties": {
+                        "data": {
+                          "$ref": "#/components/schemas/CryptoConfigResponseDto"
+                        }
+                      }
+                    }
+                  ]
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Bad Request",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponseDto"
+                }
+              }
+            }
+          }
+        },
+        "summary": "Get crypto config detail / 암호화폐 설정 상세 조회",
+        "tags": [
+          "Admin Deposit Management (관리자 입금 관리)"
+        ]
+      },
+      "patch": {
+        "description": "Update a cryptocurrency configuration. (암호화폐 설정을 수정합니다.)",
+        "operationId": "AdminDepositController_updateCryptoConfig",
+        "parameters": [
+          {
+            "name": "id",
+            "required": true,
+            "in": "path",
+            "description": "CryptoConfig ID / 암호화폐 설정 ID",
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/UpdateCryptoConfigRequestDto"
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "Crypto config updated successfully / 암호화폐 설정 수정 성공",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "allOf": [
+                    {
+                      "$ref": "#/components/schemas/ApiResponseDto"
+                    },
+                    {
+                      "properties": {
+                        "data": {
+                          "$ref": "#/components/schemas/CryptoConfigResponseDto"
+                        }
+                      }
+                    }
+                  ]
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Bad Request",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponseDto"
+                }
+              }
+            }
+          }
+        },
+        "summary": "Update crypto config / 암호화폐 설정 수정",
+        "tags": [
+          "Admin Deposit Management (관리자 입금 관리)"
+        ]
+      },
+      "delete": {
+        "description": "Delete a cryptocurrency configuration. (암호화폐 설정을 삭제합니다.)",
+        "operationId": "AdminDepositController_deleteCryptoConfig",
+        "parameters": [
+          {
+            "name": "id",
+            "required": true,
+            "in": "path",
+            "description": "CryptoConfig ID / 암호화폐 설정 ID",
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Crypto config deleted successfully / 암호화폐 설정 삭제 성공",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "allOf": [
+                    {
+                      "$ref": "#/components/schemas/ApiResponseDto"
+                    },
+                    {
+                      "properties": {
+                        "data": {
+                          "$ref": "#/components/schemas/SuccessResponseDto"
+                        }
+                      }
+                    }
+                  ]
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Bad Request",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponseDto"
+                }
+              }
+            }
+          }
+        },
+        "summary": "Delete crypto config / 암호화폐 설정 삭제",
+        "tags": [
+          "Admin Deposit Management (관리자 입금 관리)"
+        ]
+      }
+    },
+    "/wallet/balance": {
+      "get": {
+        "description": "사용자가 본인의 잔액을 조회합니다. 통화를 지정하지 않으면 모든 통화의 잔액을 반환합니다.",
+        "operationId": "WalletController_getBalance",
+        "parameters": [
+          {
+            "name": "currency",
+            "required": false,
+            "in": "query",
+            "description": "통화 코드 (지정하지 않으면 모든 통화의 잔액을 반환)",
+            "schema": {
+              "example": "USD",
+              "type": "string",
+              "enum": [
+                "KRW"
+              ]
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Successfully retrieved user balance / 사용자 잔액 조회 성공",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "allOf": [
+                    {
+                      "$ref": "#/components/schemas/ApiResponseDto"
+                    },
+                    {
+                      "properties": {
+                        "data": {
+                          "$ref": "#/components/schemas/UserBalanceResponseDto"
+                        }
+                      }
+                    }
+                  ]
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Bad Request",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponseDto"
+                }
+              }
+            }
+          }
+        },
+        "summary": "Get user balance / 사용자 잔액 조회",
+        "tags": [
+          "Wallet (지갑)"
+        ]
+      }
+    },
+    "/admin/wallet/users/{userId}/balance": {
+      "get": {
+        "description": "관리자가 특정 사용자의 잔액을 조회합니다. 통화를 지정하지 않으면 모든 통화의 잔액을 반환합니다.",
+        "operationId": "WalletAdminController_getUserBalance",
+        "parameters": [
+          {
+            "name": "userId",
+            "required": true,
+            "in": "path",
+            "description": "사용자 ID",
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "currency",
+            "required": false,
+            "in": "query",
+            "description": "통화 코드 (지정하지 않으면 모든 통화의 잔액을 반환)",
+            "schema": {
+              "example": "USD",
+              "type": "string",
+              "enum": [
+                "KRW"
+              ]
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Successfully retrieved user balance / 사용자 잔액 조회 성공",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "allOf": [
+                    {
+                      "$ref": "#/components/schemas/ApiResponseDto"
+                    },
+                    {
+                      "properties": {
+                        "data": {
+                          "$ref": "#/components/schemas/AdminUserBalanceResponseDto"
+                        }
+                      }
+                    }
+                  ]
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Bad Request",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponseDto"
+                }
+              }
+            }
+          }
+        },
+        "summary": "Get user balance / 사용자 잔액 조회 (관리자용)",
+        "tags": [
+          "Admin Wallet (관리자 지갑 관리)"
+        ]
+      },
+      "patch": {
+        "description": "관리자가 특정 사용자의 잔액을 증가 또는 감소시킵니다. 메인 잔액, 보너스 잔액, 또는 총 잔액에 대해 추가 또는 차감 연산을 수행할 수 있습니다.",
+        "operationId": "WalletAdminController_updateUserBalance",
+        "parameters": [
+          {
+            "name": "userId",
+            "required": true,
+            "in": "path",
+            "description": "사용자 ID",
+            "schema": {
+              "example": "1234567890123456789",
+              "type": "string"
+            }
+          }
+        ],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/UpdateUserBalanceRequestDto"
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "Successfully updated user balance / 사용자 잔액 업데이트 성공",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "allOf": [
+                    {
+                      "$ref": "#/components/schemas/ApiResponseDto"
+                    },
+                    {
+                      "properties": {
+                        "data": {
+                          "$ref": "#/components/schemas/UpdateUserBalanceResponseDto"
+                        }
+                      }
+                    }
+                  ]
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Bad Request",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponseDto"
+                }
+              }
+            }
+          }
+        },
+        "summary": "Update user balance / 사용자 잔액 업데이트 (관리자용)",
+        "tags": [
+          "Admin Wallet (관리자 지갑 관리)"
+        ]
+      }
+    },
+    "/promotions": {
+      "get": {
+        "description": "현재 활성화된 프로모션 목록을 조회합니다. 페이지네이션 및 언어 파라미터 지원.",
+        "operationId": "PromotionUserController_getActivePromotions",
+        "parameters": [
+          {
+            "name": "page",
+            "required": false,
+            "in": "query",
+            "description": "페이지 번호 (기본값: 1)",
+            "schema": {
+              "minimum": 1,
+              "example": 1,
+              "type": "number"
+            }
+          },
+          {
+            "name": "limit",
+            "required": false,
+            "in": "query",
+            "description": "페이지당 항목 수 (기본값: 20, 최대: 100)",
+            "schema": {
+              "minimum": 1,
+              "maximum": 100,
+              "example": 20,
+              "type": "number"
+            }
+          },
+          {
+            "name": "sortBy",
+            "required": false,
+            "in": "query",
+            "description": "정렬 필드",
+            "schema": {
+              "example": "createdAt",
+              "type": "string",
+              "enum": [
+                "createdAt",
+                "updatedAt",
+                "id"
+              ]
+            }
+          },
+          {
+            "name": "sortOrder",
+            "required": false,
+            "in": "query",
+            "description": "정렬 방향 (asc, desc)",
+            "schema": {
+              "example": "desc",
+              "type": "string",
+              "enum": [
+                "asc",
+                "desc"
+              ]
+            }
+          },
+          {
+            "name": "language",
+            "required": false,
+            "in": "query",
+            "description": "언어 코드 (번역 정보 포함, 기본값: EN)",
+            "schema": {
+              "example": "EN",
+              "type": "string",
+              "enum": [
+                "EN",
+                "KO",
+                "JA"
+              ]
+            }
+          },
+          {
+            "name": "currency",
+            "required": false,
+            "in": "query",
+            "description": "통화 코드 (특정 통화의 프로모션만 조회)",
+            "schema": {
+              "example": "USDT",
+              "type": "string",
+              "enum": [
+                "USDT",
+                "USD",
+                "KRW",
+                "JPY",
+                "PHP",
+                "IDR",
+                "VND",
+                "BTC",
+                "ETH",
+                "SOL",
+                "XRP",
+                "DOGE",
+                "LTC",
+                "BCH",
+                "EOS",
+                "TRX"
+              ]
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Successfully retrieved active promotions / 활성 프로모션 목록 조회 성공",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "allOf": [
+                    {
+                      "$ref": "#/components/schemas/PaginatedResponseDto"
                     },
                     {
                       "properties": {
@@ -4159,7 +6018,7 @@
             }
           }
         },
-        "summary": "Get active promotions / 활성 프로모션 조회",
+        "summary": "Get active promotions / 활성 프로모션 목록 조회",
         "tags": [
           "Promotion (프로모션)"
         ]
@@ -4167,22 +6026,28 @@
     },
     "/promotions/{id}": {
       "get": {
-        "description": "Retrieve detailed information about a specific promotion. (특정 프로모션의 상세 정보를 조회합니다.)",
-        "operationId": "PromotionController_getPromotionById",
+        "description": "특정 프로모션의 상세 정보를 조회합니다. 언어 파라미터로 번역 정보를 받을 수 있습니다.",
+        "operationId": "PromotionUserController_getPromotionById",
         "parameters": [
           {
             "name": "id",
             "required": true,
             "in": "path",
             "schema": {
-              "type": "string"
+              "type": "number"
             }
           },
           {
             "name": "language",
-            "required": true,
+            "required": false,
             "in": "query",
+            "description": "언어 코드 (번역 정보 포함, 기본값: EN)",
             "schema": {
+              "enum": [
+                "EN",
+                "KO",
+                "JA"
+              ],
               "type": "string"
             }
           }
@@ -4220,26 +6085,89 @@
             }
           }
         },
-        "summary": "Get promotion details / 프로모션 상세 조회",
+        "summary": "Get promotion by ID / 프로모션 상세 조회",
         "tags": [
           "Promotion (프로모션)"
         ]
       }
     },
-    "/promotions/my/history": {
+    "/promotions/my": {
       "get": {
-        "description": "Retrieve the user's promotion application history. (사용자의 프로모션 신청 이력을 조회합니다.)",
-        "operationId": "PromotionController_getMyPromotions",
-        "parameters": [],
+        "description": "사용자가 참여한 프로모션 목록을 조회합니다. 페이지네이션 지원.",
+        "operationId": "PromotionUserController_getMyPromotions",
+        "parameters": [
+          {
+            "name": "page",
+            "required": false,
+            "in": "query",
+            "description": "페이지 번호 (기본값: 1)",
+            "schema": {
+              "minimum": 1,
+              "example": 1,
+              "type": "number"
+            }
+          },
+          {
+            "name": "limit",
+            "required": false,
+            "in": "query",
+            "description": "페이지당 항목 수 (기본값: 20, 최대: 100)",
+            "schema": {
+              "minimum": 1,
+              "maximum": 100,
+              "example": 20,
+              "type": "number"
+            }
+          },
+          {
+            "name": "sortBy",
+            "required": false,
+            "in": "query",
+            "description": "정렬 필드",
+            "schema": {
+              "example": "createdAt",
+              "type": "string",
+              "enum": [
+                "createdAt",
+                "updatedAt",
+                "id"
+              ]
+            }
+          },
+          {
+            "name": "sortOrder",
+            "required": false,
+            "in": "query",
+            "description": "정렬 방향 (asc, desc)",
+            "schema": {
+              "example": "desc",
+              "type": "string",
+              "enum": [
+                "asc",
+                "desc"
+              ]
+            }
+          },
+          {
+            "name": "status",
+            "required": false,
+            "in": "query",
+            "description": "프로모션 상태 필터",
+            "schema": {
+              "example": "ACTIVE",
+              "type": "string"
+            }
+          }
+        ],
         "responses": {
           "200": {
-            "description": "Successfully retrieved promotion history / 프로모션 이력 조회 성공",
+            "description": "Successfully retrieved user promotions / 사용자 프로모션 목록 조회 성공",
             "content": {
               "application/json": {
                 "schema": {
                   "allOf": [
                     {
-                      "$ref": "#/components/schemas/ApiResponseDto"
+                      "$ref": "#/components/schemas/PaginatedResponseDto"
                     },
                     {
                       "properties": {
@@ -4267,103 +6195,129 @@
             }
           }
         },
-        "summary": "Get my promotion history / 내 프로모션 이력 조회",
+        "summary": "Get my promotions / 내 프로모션 목록 조회",
         "tags": [
           "Promotion (프로모션)"
         ]
       }
     },
-    "/promotions/{promotionId}/translations": {
-      "post": {
-        "description": "Create or update a translation for a promotion. (프로모션의 번역을 생성하거나 업데이트합니다.)",
-        "operationId": "PromotionTranslationAdminController_upsertTranslation",
+    "/admin/promotions": {
+      "get": {
+        "description": "관리자가 프로모션 목록을 조회합니다. 페이징 및 필터링 지원.",
+        "operationId": "PromotionAdminController_getPromotions",
         "parameters": [
           {
-            "name": "promotionId",
-            "required": true,
-            "in": "path",
+            "name": "page",
+            "required": false,
+            "in": "query",
+            "description": "페이지 번호 (기본값: 1)",
             "schema": {
-              "type": "string"
-            }
-          }
-        ],
-        "requestBody": {
-          "required": true,
-          "content": {
-            "application/json": {
-              "schema": {
-                "$ref": "#/components/schemas/UpsertPromotionTranslationDto"
-              }
-            }
-          }
-        },
-        "responses": {
-          "201": {
-            "description": "Successfully created/updated promotion translation / 프로모션 번역 생성/업데이트 성공",
-            "content": {
-              "application/json": {
-                "schema": {
-                  "allOf": [
-                    {
-                      "$ref": "#/components/schemas/ApiResponseDto"
-                    },
-                    {
-                      "properties": {
-                        "data": {
-                          "$ref": "#/components/schemas/PromotionTranslationResponseDto"
-                        }
-                      }
-                    }
-                  ]
-                }
-              }
+              "minimum": 1,
+              "example": 1,
+              "type": "number"
             }
           },
-          "400": {
-            "description": "Bad Request",
-            "content": {
-              "application/json": {
-                "schema": {
-                  "$ref": "#/components/schemas/ErrorResponseDto"
-                }
-              }
-            }
-          }
-        },
-        "summary": "Create/Update promotion translation / 프로모션 번역 생성/수정",
-        "tags": [
-          "Promotion Translation Admin (프로모션 번역 관리)"
-        ]
-      },
-      "get": {
-        "description": "Retrieve all translations for a promotion. (프로모션의 모든 번역을 조회합니다.)",
-        "operationId": "PromotionTranslationAdminController_getTranslations",
-        "parameters": [
           {
-            "name": "promotionId",
-            "required": true,
-            "in": "path",
+            "name": "limit",
+            "required": false,
+            "in": "query",
+            "description": "페이지당 항목 수 (기본값: 20, 최대: 100)",
             "schema": {
+              "minimum": 1,
+              "maximum": 100,
+              "example": 20,
+              "type": "number"
+            }
+          },
+          {
+            "name": "sortBy",
+            "required": false,
+            "in": "query",
+            "description": "정렬 필드",
+            "schema": {
+              "example": "createdAt",
+              "type": "string",
+              "enum": [
+                "createdAt",
+                "updatedAt",
+                "id"
+              ]
+            }
+          },
+          {
+            "name": "sortOrder",
+            "required": false,
+            "in": "query",
+            "description": "정렬 방향 (asc, desc)",
+            "schema": {
+              "example": "desc",
+              "type": "string",
+              "enum": [
+                "asc",
+                "desc"
+              ]
+            }
+          },
+          {
+            "name": "isActive",
+            "required": false,
+            "in": "query",
+            "description": "활성화 여부 필터",
+            "schema": {
+              "example": true,
+              "type": "boolean"
+            }
+          },
+          {
+            "name": "targetType",
+            "required": false,
+            "in": "query",
+            "description": "프로모션 타겟 타입 필터",
+            "schema": {
+              "example": "NEW_USER_FIRST_DEPOSIT",
+              "type": "string",
+              "enum": [
+                "NEW_USER_FIRST_DEPOSIT"
+              ]
+            }
+          },
+          {
+            "name": "startDate",
+            "required": false,
+            "in": "query",
+            "description": "시작 날짜 (ISO 8601 형식) - 생성일 기준",
+            "schema": {
+              "example": "2024-01-01T00:00:00Z",
+              "type": "string"
+            }
+          },
+          {
+            "name": "endDate",
+            "required": false,
+            "in": "query",
+            "description": "종료 날짜 (ISO 8601 형식) - 생성일 기준",
+            "schema": {
+              "example": "2024-12-31T23:59:59Z",
               "type": "string"
             }
           }
         ],
         "responses": {
           "200": {
-            "description": "Successfully retrieved promotion translations / 프로모션 번역 목록 조회 성공",
+            "description": "Successfully retrieved promotions / 프로모션 목록 조회 성공",
             "content": {
               "application/json": {
                 "schema": {
                   "allOf": [
                     {
-                      "$ref": "#/components/schemas/ApiResponseDto"
+                      "$ref": "#/components/schemas/PaginatedResponseDto"
                     },
                     {
                       "properties": {
                         "data": {
                           "type": "array",
                           "items": {
-                            "$ref": "#/components/schemas/PromotionTranslationResponseDto"
+                            "$ref": "#/components/schemas/PromotionAdminResponseDto"
                           }
                         }
                       }
@@ -4384,9 +6338,818 @@
             }
           }
         },
-        "summary": "Get promotion translations / 프로모션 번역 목록 조회",
+        "summary": "Get promotions (Admin) / 프로모션 목록 조회 (관리자)",
         "tags": [
-          "Promotion Translation Admin (프로모션 번역 관리)"
+          "Admin - Promotion (관리자 - 프로모션)"
+        ]
+      },
+      "post": {
+        "description": "새로운 프로모션을 생성합니다.",
+        "operationId": "PromotionAdminController_createPromotion",
+        "parameters": [],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/CreatePromotionRequestDto"
+              }
+            }
+          }
+        },
+        "responses": {
+          "201": {
+            "description": "Promotion created successfully / 프로모션 생성 성공",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "allOf": [
+                    {
+                      "$ref": "#/components/schemas/ApiResponseDto"
+                    },
+                    {
+                      "properties": {
+                        "data": {
+                          "$ref": "#/components/schemas/PromotionAdminResponseDto"
+                        }
+                      }
+                    }
+                  ]
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Bad Request",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponseDto"
+                }
+              }
+            }
+          }
+        },
+        "summary": "Create promotion / 프로모션 생성",
+        "tags": [
+          "Admin - Promotion (관리자 - 프로모션)"
+        ]
+      }
+    },
+    "/admin/promotions/{id}": {
+      "put": {
+        "description": "프로모션 정보를 수정합니다.",
+        "operationId": "PromotionAdminController_updatePromotion",
+        "parameters": [
+          {
+            "name": "id",
+            "required": true,
+            "in": "path",
+            "schema": {
+              "type": "number"
+            }
+          }
+        ],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/UpdatePromotionRequestDto"
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "Promotion updated successfully / 프로모션 수정 성공",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "allOf": [
+                    {
+                      "$ref": "#/components/schemas/ApiResponseDto"
+                    },
+                    {
+                      "properties": {
+                        "data": {
+                          "$ref": "#/components/schemas/PromotionAdminResponseDto"
+                        }
+                      }
+                    }
+                  ]
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Bad Request",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponseDto"
+                }
+              }
+            }
+          }
+        },
+        "summary": "Update promotion / 프로모션 수정",
+        "tags": [
+          "Admin - Promotion (관리자 - 프로모션)"
+        ]
+      },
+      "delete": {
+        "description": "프로모션을 삭제합니다.",
+        "operationId": "PromotionAdminController_deletePromotion",
+        "parameters": [
+          {
+            "name": "id",
+            "required": true,
+            "in": "path",
+            "schema": {
+              "type": "number"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Promotion deleted successfully / 프로모션 삭제 성공",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "allOf": [
+                    {
+                      "$ref": "#/components/schemas/ApiResponseDto"
+                    },
+                    {
+                      "properties": {
+                        "data": {
+                          "$ref": "#/components/schemas/Object"
+                        }
+                      }
+                    }
+                  ]
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Bad Request",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponseDto"
+                }
+              }
+            }
+          }
+        },
+        "summary": "Delete promotion / 프로모션 삭제",
+        "tags": [
+          "Admin - Promotion (관리자 - 프로모션)"
+        ]
+      },
+      "get": {
+        "description": "관리자가 특정 프로모션의 상세 정보를 조회합니다.",
+        "operationId": "PromotionAdminController_getPromotionById",
+        "parameters": [
+          {
+            "name": "id",
+            "required": true,
+            "in": "path",
+            "schema": {
+              "type": "number"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Successfully retrieved promotion / 프로모션 조회 성공",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "allOf": [
+                    {
+                      "$ref": "#/components/schemas/ApiResponseDto"
+                    },
+                    {
+                      "properties": {
+                        "data": {
+                          "$ref": "#/components/schemas/PromotionAdminResponseDto"
+                        }
+                      }
+                    }
+                  ]
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Bad Request",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponseDto"
+                }
+              }
+            }
+          }
+        },
+        "summary": "Get promotion by ID / 프로모션 상세 조회",
+        "tags": [
+          "Admin - Promotion (관리자 - 프로모션)"
+        ]
+      }
+    },
+    "/admin/promotions/{id}/toggle-active": {
+      "patch": {
+        "description": "프로모션의 활성화 상태를 토글합니다.",
+        "operationId": "PromotionAdminController_togglePromotionActive",
+        "parameters": [
+          {
+            "name": "id",
+            "required": true,
+            "in": "path",
+            "schema": {
+              "type": "number"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Promotion status toggled successfully / 프로모션 상태 변경 성공",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "allOf": [
+                    {
+                      "$ref": "#/components/schemas/ApiResponseDto"
+                    },
+                    {
+                      "properties": {
+                        "data": {
+                          "$ref": "#/components/schemas/PromotionAdminResponseDto"
+                        }
+                      }
+                    }
+                  ]
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Bad Request",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponseDto"
+                }
+              }
+            }
+          }
+        },
+        "summary": "Toggle promotion active / 프로모션 활성화/비활성화",
+        "tags": [
+          "Admin - Promotion (관리자 - 프로모션)"
+        ]
+      }
+    },
+    "/admin/promotions/{id}/currencies": {
+      "get": {
+        "description": "프로모션의 모든 통화별 설정을 조회합니다.",
+        "operationId": "PromotionAdminController_getPromotionCurrencies",
+        "parameters": [
+          {
+            "name": "id",
+            "required": true,
+            "in": "path",
+            "schema": {
+              "type": "number"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Successfully retrieved currency settings / 통화별 설정 목록 조회 성공",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "allOf": [
+                    {
+                      "$ref": "#/components/schemas/ApiResponseDto"
+                    },
+                    {
+                      "properties": {
+                        "data": {
+                          "$ref": "#/components/schemas/PromotionCurrencyListResponseDto"
+                        }
+                      }
+                    }
+                  ]
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Bad Request",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponseDto"
+                }
+              }
+            }
+          }
+        },
+        "summary": "Get promotion currency settings / 프로모션 통화별 설정 목록 조회",
+        "tags": [
+          "Admin - Promotion (관리자 - 프로모션)"
+        ]
+      },
+      "post": {
+        "description": "프로모션의 통화별 설정을 생성하거나 수정합니다.",
+        "operationId": "PromotionAdminController_upsertPromotionCurrency",
+        "parameters": [
+          {
+            "name": "id",
+            "required": true,
+            "in": "path",
+            "schema": {
+              "type": "number"
+            }
+          }
+        ],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/UpsertCurrencySettingsRequestDto"
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "Currency settings upserted successfully / 통화별 설정 생성/수정 성공",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "allOf": [
+                    {
+                      "$ref": "#/components/schemas/ApiResponseDto"
+                    },
+                    {
+                      "properties": {
+                        "data": {
+                          "$ref": "#/components/schemas/Object"
+                        }
+                      }
+                    }
+                  ]
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Bad Request",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponseDto"
+                }
+              }
+            }
+          }
+        },
+        "summary": "Upsert promotion currency settings / 프로모션 통화별 설정 생성/수정",
+        "tags": [
+          "Admin - Promotion (관리자 - 프로모션)"
+        ]
+      }
+    },
+    "/admin/promotions/{id}/currencies/{currency}": {
+      "delete": {
+        "description": "프로모션의 특정 통화별 설정을 삭제합니다.",
+        "operationId": "PromotionAdminController_deletePromotionCurrency",
+        "parameters": [
+          {
+            "name": "id",
+            "required": true,
+            "in": "path",
+            "schema": {
+              "type": "number"
+            }
+          },
+          {
+            "name": "currency",
+            "required": true,
+            "in": "path",
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Currency settings deleted successfully / 통화별 설정 삭제 성공",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "allOf": [
+                    {
+                      "$ref": "#/components/schemas/ApiResponseDto"
+                    },
+                    {
+                      "properties": {
+                        "data": {
+                          "$ref": "#/components/schemas/Object"
+                        }
+                      }
+                    }
+                  ]
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Bad Request",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponseDto"
+                }
+              }
+            }
+          }
+        },
+        "summary": "Delete promotion currency settings / 프로모션 통화별 설정 삭제",
+        "tags": [
+          "Admin - Promotion (관리자 - 프로모션)"
+        ]
+      }
+    },
+    "/admin/promotions/{id}/translations": {
+      "get": {
+        "description": "프로모션의 모든 번역 정보를 조회합니다.",
+        "operationId": "PromotionAdminController_getPromotionTranslations",
+        "parameters": [
+          {
+            "name": "id",
+            "required": true,
+            "in": "path",
+            "schema": {
+              "type": "number"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Successfully retrieved translations / 번역 정보 목록 조회 성공",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "allOf": [
+                    {
+                      "$ref": "#/components/schemas/ApiResponseDto"
+                    },
+                    {
+                      "properties": {
+                        "data": {
+                          "$ref": "#/components/schemas/PromotionTranslationListResponseDto"
+                        }
+                      }
+                    }
+                  ]
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Bad Request",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponseDto"
+                }
+              }
+            }
+          }
+        },
+        "summary": "Get promotion translations / 프로모션 번역 정보 목록 조회",
+        "tags": [
+          "Admin - Promotion (관리자 - 프로모션)"
+        ]
+      },
+      "post": {
+        "description": "프로모션의 번역 정보를 생성하거나 수정합니다.",
+        "operationId": "PromotionAdminController_upsertPromotionTranslation",
+        "parameters": [
+          {
+            "name": "id",
+            "required": true,
+            "in": "path",
+            "schema": {
+              "type": "number"
+            }
+          }
+        ],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/UpsertTranslationRequestDto"
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "Translation upserted successfully / 번역 정보 생성/수정 성공",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "allOf": [
+                    {
+                      "$ref": "#/components/schemas/ApiResponseDto"
+                    },
+                    {
+                      "properties": {
+                        "data": {
+                          "$ref": "#/components/schemas/Object"
+                        }
+                      }
+                    }
+                  ]
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Bad Request",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponseDto"
+                }
+              }
+            }
+          }
+        },
+        "summary": "Upsert promotion translation / 프로모션 번역 정보 생성/수정",
+        "tags": [
+          "Admin - Promotion (관리자 - 프로모션)"
+        ]
+      }
+    },
+    "/admin/promotions/{id}/translations/{language}": {
+      "delete": {
+        "description": "프로모션의 특정 언어 번역 정보를 삭제합니다.",
+        "operationId": "PromotionAdminController_deletePromotionTranslation",
+        "parameters": [
+          {
+            "name": "id",
+            "required": true,
+            "in": "path",
+            "schema": {
+              "type": "number"
+            }
+          },
+          {
+            "name": "language",
+            "required": true,
+            "in": "path",
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Translation deleted successfully / 번역 정보 삭제 성공",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "allOf": [
+                    {
+                      "$ref": "#/components/schemas/ApiResponseDto"
+                    },
+                    {
+                      "properties": {
+                        "data": {
+                          "$ref": "#/components/schemas/Object"
+                        }
+                      }
+                    }
+                  ]
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Bad Request",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponseDto"
+                }
+              }
+            }
+          }
+        },
+        "summary": "Delete promotion translation / 프로모션 번역 정보 삭제",
+        "tags": [
+          "Admin - Promotion (관리자 - 프로모션)"
+        ]
+      }
+    },
+    "/admin/promotions/{id}/participants": {
+      "get": {
+        "description": "프로모션에 참가한 사용자 목록을 조회합니다. 페이징 및 필터링 지원.",
+        "operationId": "PromotionAdminController_getPromotionParticipants",
+        "parameters": [
+          {
+            "name": "id",
+            "required": true,
+            "in": "path",
+            "schema": {
+              "type": "number"
+            }
+          },
+          {
+            "name": "page",
+            "required": false,
+            "in": "query",
+            "description": "페이지 번호",
+            "schema": {
+              "default": 1,
+              "example": 1,
+              "type": "number"
+            }
+          },
+          {
+            "name": "limit",
+            "required": false,
+            "in": "query",
+            "description": "페이지당 항목 수",
+            "schema": {
+              "default": 20,
+              "example": 20,
+              "type": "number"
+            }
+          },
+          {
+            "name": "sortBy",
+            "required": false,
+            "in": "query",
+            "description": "정렬 기준",
+            "schema": {
+              "default": "createdAt",
+              "example": "createdAt",
+              "type": "string",
+              "enum": [
+                "createdAt",
+                "updatedAt",
+                "id"
+              ]
+            }
+          },
+          {
+            "name": "sortOrder",
+            "required": false,
+            "in": "query",
+            "description": "정렬 순서",
+            "schema": {
+              "default": "desc",
+              "example": "desc",
+              "type": "string",
+              "enum": [
+                "asc",
+                "desc"
+              ]
+            }
+          },
+          {
+            "name": "status",
+            "required": false,
+            "in": "query",
+            "description": "상태 필터",
+            "schema": {
+              "example": "ACTIVE",
+              "type": "string",
+              "enum": [
+                "ACTIVE",
+                "COMPLETED",
+                "QUALIFICATION_LOST",
+                "EXPIRED",
+                "FAILED"
+              ]
+            }
+          },
+          {
+            "name": "userId",
+            "required": false,
+            "in": "query",
+            "description": "사용자 ID 필터",
+            "schema": {
+              "example": "1234567890123456789",
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Successfully retrieved participants / 참가자 목록 조회 성공",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "allOf": [
+                    {
+                      "$ref": "#/components/schemas/PaginatedResponseDto"
+                    },
+                    {
+                      "properties": {
+                        "data": {
+                          "type": "array",
+                          "items": {
+                            "$ref": "#/components/schemas/PromotionParticipantResponseDto"
+                          }
+                        }
+                      }
+                    }
+                  ]
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Bad Request",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponseDto"
+                }
+              }
+            }
+          }
+        },
+        "summary": "Get promotion participants / 프로모션 참가자 목록 조회",
+        "tags": [
+          "Admin - Promotion (관리자 - 프로모션)"
+        ]
+      }
+    },
+    "/admin/promotions/{id}/statistics": {
+      "get": {
+        "description": "프로모션의 참가자 통계 정보를 조회합니다.",
+        "operationId": "PromotionAdminController_getPromotionStatistics",
+        "parameters": [
+          {
+            "name": "id",
+            "required": true,
+            "in": "path",
+            "schema": {
+              "type": "number"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Successfully retrieved statistics / 통계 조회 성공",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "allOf": [
+                    {
+                      "$ref": "#/components/schemas/ApiResponseDto"
+                    },
+                    {
+                      "properties": {
+                        "data": {
+                          "$ref": "#/components/schemas/PromotionStatisticsResponseDto"
+                        }
+                      }
+                    }
+                  ]
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Bad Request",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponseDto"
+                }
+              }
+            }
+          }
+        },
+        "summary": "Get promotion statistics / 프로모션 통계 조회",
+        "tags": [
+          "Admin - Promotion (관리자 - 프로모션)"
         ]
       }
     },
@@ -4560,6 +7323,7 @@
             "name": "uid",
             "required": true,
             "in": "path",
+            "description": "Commission UID / 커미션 UID",
             "schema": {
               "type": "string"
             }
@@ -4760,6 +7524,7 @@
             "name": "id",
             "required": true,
             "in": "path",
+            "description": "Commission ID / 커미션 ID",
             "schema": {
               "type": "string"
             }
@@ -4909,194 +7674,6 @@
           "Admin Commission Management (관리자 커미션 관리)"
         ]
       }
-    },
-    "/wallet/balance": {
-      "get": {
-        "description": "사용자가 본인의 잔액을 조회합니다. 통화를 지정하지 않으면 모든 통화의 잔액을 반환합니다.",
-        "operationId": "WalletController_getBalance",
-        "parameters": [
-          {
-            "name": "currency",
-            "required": false,
-            "in": "query",
-            "description": "통화 코드 (지정하지 않으면 모든 통화의 잔액을 반환)",
-            "schema": {
-              "example": "USD",
-              "type": "string",
-              "enum": [
-                "KRW"
-              ]
-            }
-          }
-        ],
-        "responses": {
-          "200": {
-            "description": "Successfully retrieved user balance / 사용자 잔액 조회 성공",
-            "content": {
-              "application/json": {
-                "schema": {
-                  "allOf": [
-                    {
-                      "$ref": "#/components/schemas/ApiResponseDto"
-                    },
-                    {
-                      "properties": {
-                        "data": {
-                          "$ref": "#/components/schemas/UserBalanceResponseDto"
-                        }
-                      }
-                    }
-                  ]
-                }
-              }
-            }
-          },
-          "400": {
-            "description": "Bad Request",
-            "content": {
-              "application/json": {
-                "schema": {
-                  "$ref": "#/components/schemas/ErrorResponseDto"
-                }
-              }
-            }
-          }
-        },
-        "summary": "Get user balance / 사용자 잔액 조회",
-        "tags": [
-          "Wallet (지갑)"
-        ]
-      }
-    },
-    "/admin/wallet/users/{userId}/balance": {
-      "get": {
-        "description": "관리자가 특정 사용자의 잔액을 조회합니다. 통화를 지정하지 않으면 모든 통화의 잔액을 반환합니다.",
-        "operationId": "WalletAdminController_getUserBalance",
-        "parameters": [
-          {
-            "name": "userId",
-            "required": true,
-            "in": "path",
-            "description": "사용자 ID",
-            "schema": {
-              "type": "string"
-            }
-          },
-          {
-            "name": "currency",
-            "required": false,
-            "in": "query",
-            "description": "통화 코드 (지정하지 않으면 모든 통화의 잔액을 반환)",
-            "schema": {
-              "example": "USD",
-              "type": "string",
-              "enum": [
-                "KRW"
-              ]
-            }
-          }
-        ],
-        "responses": {
-          "200": {
-            "description": "Successfully retrieved user balance / 사용자 잔액 조회 성공",
-            "content": {
-              "application/json": {
-                "schema": {
-                  "allOf": [
-                    {
-                      "$ref": "#/components/schemas/ApiResponseDto"
-                    },
-                    {
-                      "properties": {
-                        "data": {
-                          "$ref": "#/components/schemas/AdminUserBalanceResponseDto"
-                        }
-                      }
-                    }
-                  ]
-                }
-              }
-            }
-          },
-          "400": {
-            "description": "Bad Request",
-            "content": {
-              "application/json": {
-                "schema": {
-                  "$ref": "#/components/schemas/ErrorResponseDto"
-                }
-              }
-            }
-          }
-        },
-        "summary": "Get user balance / 사용자 잔액 조회 (관리자용)",
-        "tags": [
-          "Admin Wallet (관리자 지갑 관리)"
-        ]
-      },
-      "patch": {
-        "description": "관리자가 특정 사용자의 잔액을 증가 또는 감소시킵니다. 메인 잔액, 보너스 잔액, 또는 총 잔액에 대해 추가 또는 차감 연산을 수행할 수 있습니다.",
-        "operationId": "WalletAdminController_updateUserBalance",
-        "parameters": [
-          {
-            "name": "userId",
-            "required": true,
-            "in": "path",
-            "description": "사용자 ID",
-            "schema": {
-              "example": "1234567890123456789",
-              "type": "string"
-            }
-          }
-        ],
-        "requestBody": {
-          "required": true,
-          "content": {
-            "application/json": {
-              "schema": {
-                "$ref": "#/components/schemas/UpdateUserBalanceRequestDto"
-              }
-            }
-          }
-        },
-        "responses": {
-          "200": {
-            "description": "Successfully updated user balance / 사용자 잔액 업데이트 성공",
-            "content": {
-              "application/json": {
-                "schema": {
-                  "allOf": [
-                    {
-                      "$ref": "#/components/schemas/ApiResponseDto"
-                    },
-                    {
-                      "properties": {
-                        "data": {
-                          "$ref": "#/components/schemas/UpdateUserBalanceResponseDto"
-                        }
-                      }
-                    }
-                  ]
-                }
-              }
-            }
-          },
-          "400": {
-            "description": "Bad Request",
-            "content": {
-              "application/json": {
-                "schema": {
-                  "$ref": "#/components/schemas/ErrorResponseDto"
-                }
-              }
-            }
-          }
-        },
-        "summary": "Update user balance / 사용자 잔액 업데이트 (관리자용)",
-        "tags": [
-          "Admin Wallet (관리자 지갑 관리)"
-        ]
-      }
     }
   },
   "info": {
@@ -5127,10 +7704,24 @@
               "WITHDRAW_REQUEST_ALREADY_EXISTS",
               "DEPOSIT_NOT_FOUND",
               "DEPOSIT_ALREADY_PROCESSED",
+              "DEPOSIT_INVALID_STATUS",
+              "DEPOSIT_INVALID_AMOUNT",
+              "DEPOSIT_AMOUNT_BELOW_MINIMUM",
+              "DEPOSIT_AMOUNT_EXCEEDS_MAXIMUM",
+              "BANK_CONFIG_NOT_FOUND",
+              "BANK_CONFIG_INACTIVE",
+              "CRYPTO_CONFIG_NOT_FOUND",
+              "CRYPTO_CONFIG_INACTIVE",
               "AUTH_INVALID_TOKEN",
               "AUTH_TOKEN_EXPIRED",
               "AUTH_INVALID_CREDENTIALS",
               "AUTH_ACCOUNT_INACTIVE",
+              "AUTH_LOGIN_FAILED",
+              "AUTH_SESSION_NOT_FOUND",
+              "AUTH_SESSION_NOT_OWNER",
+              "AUTH_MULTIPLE_LOGIN_NOT_ALLOWED",
+              "AUTH_PASSWORD_MISMATCH",
+              "AUTH_PASSWORD_SAME_AS_OLD",
               "AUTH_ALREADY_AUTHENTICATED_USERS_CANNOT_ACCESS_THIS_ENDPOINT",
               "AUTH_INSUFFICIENT_PERMISSIONS",
               "USER_NOT_FOUND",
@@ -5158,6 +7749,9 @@
               "ROLLING_NOT_COMPLETED",
               "PROMOTION_NOT_FOUND",
               "PROMOTION_TRANSLATION_NOT_FOUND",
+              "PROMOTION_NOT_ACTIVE",
+              "PROMOTION_NOT_ELIGIBLE",
+              "PROMOTION_ALREADY_USED",
               "THROTTLE_TOO_MANY_REQUESTS",
               "REFERRAL_CODE_NOT_FOUND",
               "REFERRAL_CODE_INVALID_FORMAT",
@@ -5166,6 +7760,27 @@
               "REFERRAL_BONUS_NOT_FOUND",
               "REFERRAL_BONUS_ALREADY_CLAIMED",
               "REFERRAL_BONUS_INSUFFICIENT_AMOUNT",
+              "REFERRAL_NOT_FOUND",
+              "REFERRAL_SELF_REFERRAL",
+              "REFERRAL_DUPLICATE",
+              "REFERRAL_ACCESS_DENIED",
+              "REFERRAL_CODE_INACTIVE",
+              "REFERRAL_CODE_EXPIRED",
+              "REFERRAL_COMMISSION_NOT_FOUND",
+              "REFERRAL_COMMISSION_INVALID_STATUS",
+              "REFERRAL_MILESTONE_NOT_FOUND",
+              "REFERRAL_MILESTONE_ALREADY_CLAIMED",
+              "REFERRAL_STATS_NOT_FOUND",
+              "COMMISSION_INVALID_RATE",
+              "COMMISSION_INSUFFICIENT_BALANCE",
+              "COMMISSION_NOT_FOUND",
+              "COMMISSION_NOT_AVAILABLE",
+              "COMMISSION_WALLET_NOT_FOUND",
+              "COMMISSION_TIER_NOT_FOUND",
+              "COMMISSION_INVALID_CALCULATION",
+              "COMMISSION_INVALID_SETTLEMENT_DATE",
+              "COMMISSION_INVALID_WALLET_BALANCE",
+              "COMMISSION_INVALID_PARAMETER",
               "INVALID_LANGUAGE_CODE",
               "INVALID_GAME_PROVIDER",
               "NO_SUPPORT_GET_REPLAY",
@@ -5178,7 +7793,9 @@
               "AFFILIATE_CODE_CANNOT_DELETE",
               "AFFILIATE_CODE_INVALID_FORMAT",
               "AFFILIATE_LINK_NOT_FOUND",
-              "AFFILIATE_DEFAULT_LINK_CANNOT_DELETE"
+              "AFFILIATE_DEFAULT_LINK_CANNOT_DELETE",
+              "AFFILIATE_CODE_DEFAULT_MUST_EXIST",
+              "AFFILIATE_CODE_DEFAULT_CANNOT_BE_INACTIVE"
             ],
             "description": "\n    Error message code. (에러 메시지 코드)\n    The frontend receives this code and displays a translated message according to the user's locale using i18n. (프론트엔드에서는 이 코드값을 받아 유저의 로케일에 맞게 i18n 번역 처리하여 메시지를 출력합니다.)\n    "
           },
@@ -5584,6 +8201,72 @@
           "updatedAt"
         ]
       },
+      "AffiliateCodeResponseDto": {
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "string",
+            "description": "Code ID / 코드 ID",
+            "example": "clx1234567890"
+          },
+          "code": {
+            "type": "string",
+            "description": "Affiliate code / 어플리에이트 코드",
+            "example": "SUMMER2024"
+          },
+          "campaignName": {
+            "type": "object",
+            "description": "Campaign name / 캠페인 이름",
+            "example": "Summer Campaign",
+            "nullable": true
+          },
+          "isActive": {
+            "type": "boolean",
+            "description": "Is active / 활성화 여부",
+            "example": true
+          },
+          "isDefault": {
+            "type": "boolean",
+            "description": "Is default / 기본 코드 여부",
+            "example": false
+          },
+          "expiresAt": {
+            "type": "object",
+            "description": "Expires at / 만료일시",
+            "example": "2024-12-31T23:59:59.000Z",
+            "nullable": true
+          },
+          "createdAt": {
+            "format": "date-time",
+            "type": "string",
+            "description": "Created at / 생성일시",
+            "example": "2024-01-01T00:00:00.000Z"
+          },
+          "updatedAt": {
+            "format": "date-time",
+            "type": "string",
+            "description": "Updated at / 수정일시",
+            "example": "2024-01-01T00:00:00.000Z"
+          },
+          "lastUsedAt": {
+            "type": "object",
+            "description": "Last used at / 마지막 사용일시",
+            "example": "2024-01-15T10:30:00.000Z",
+            "nullable": true
+          }
+        },
+        "required": [
+          "id",
+          "code",
+          "campaignName",
+          "isActive",
+          "isDefault",
+          "expiresAt",
+          "createdAt",
+          "updatedAt",
+          "lastUsedAt"
+        ]
+      },
       "CreateAffiliateCodeDto": {
         "type": "object",
         "properties": {
@@ -5601,8 +8284,31 @@
             "type": "string",
             "description": "Campaign name / 캠페인 이름",
             "example": "Winter Campaign"
+          },
+          "isActive": {
+            "type": "boolean",
+            "description": "Is active / 활성화 여부",
+            "example": true
+          },
+          "isDefault": {
+            "type": "boolean",
+            "description": "Is default / 기본 코드 여부",
+            "example": true
           }
         }
+      },
+      "ValidateCodeFormatResponseDto": {
+        "type": "object",
+        "properties": {
+          "isValid": {
+            "type": "boolean",
+            "description": "Is valid / 유효한 코드인지 여부",
+            "example": true
+          }
+        },
+        "required": [
+          "isValid"
+        ]
       },
       "ValidateCodeFormatDto": {
         "type": "object",
@@ -5688,6 +8394,116 @@
           "updatedAt",
           "lastUsedAt"
         ]
+      },
+      "AdminCodeResponseDto": {
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "string",
+            "description": "Code ID / 코드 ID",
+            "example": "clx1234567890"
+          },
+          "userId": {
+            "type": "string",
+            "description": "User ID / 사용자 ID",
+            "example": "1234567890123456789"
+          },
+          "code": {
+            "type": "string",
+            "description": "Affiliate code / 어플리에이트 코드",
+            "example": "SUMMER2024"
+          },
+          "campaignName": {
+            "type": "object",
+            "description": "Campaign name / 캠페인 이름",
+            "example": "Summer Campaign",
+            "nullable": true
+          },
+          "isActive": {
+            "type": "boolean",
+            "description": "Is active / 활성화 여부",
+            "example": true
+          },
+          "isDefault": {
+            "type": "boolean",
+            "description": "Is default / 기본 코드 여부",
+            "example": false
+          },
+          "expiresAt": {
+            "type": "object",
+            "description": "Expires at / 만료일시",
+            "example": "2024-12-31T23:59:59.000Z",
+            "nullable": true
+          },
+          "createdAt": {
+            "format": "date-time",
+            "type": "string",
+            "description": "Created at / 생성일시",
+            "example": "2024-01-01T00:00:00.000Z"
+          },
+          "updatedAt": {
+            "format": "date-time",
+            "type": "string",
+            "description": "Updated at / 수정일시",
+            "example": "2024-01-01T00:00:00.000Z"
+          },
+          "lastUsedAt": {
+            "type": "object",
+            "description": "Last used at / 마지막 사용일시",
+            "example": "2024-01-15T10:30:00.000Z",
+            "nullable": true
+          }
+        },
+        "required": [
+          "id",
+          "userId",
+          "code",
+          "campaignName",
+          "isActive",
+          "isDefault",
+          "expiresAt",
+          "createdAt",
+          "updatedAt",
+          "lastUsedAt"
+        ]
+      },
+      "CreateCodeAdminRequestDto": {
+        "type": "object",
+        "properties": {
+          "userId": {
+            "type": "string",
+            "description": "Target User ID / 대상 사용자 ID",
+            "example": "1234567890123456789"
+          },
+          "campaignName": {
+            "type": "string",
+            "description": "Campaign name (optional) / 캠페인 이름 (선택)",
+            "example": "Twitter Campaign"
+          }
+        },
+        "required": [
+          "userId"
+        ]
+      },
+      "UpdateCodeAdminRequestDto": {
+        "type": "object",
+        "properties": {
+          "campaignName": {
+            "type": "string",
+            "description": "Campaign name (optional) / 캠페인 이름 (선택)",
+            "example": "Summer Promotion"
+          },
+          "isActive": {
+            "type": "boolean",
+            "description": "Is active status / 활성화 여부",
+            "example": true
+          },
+          "isDefault": {
+            "type": "boolean",
+            "description": "Is default code / 기본 코드 여부",
+            "example": false
+          }
+        }
       },
       "CredentialUserLoginUserResponseDto": {
         "type": "object",
@@ -7788,100 +10604,6 @@
           "convertedAmount"
         ]
       },
-      "CreateDepositRequestDto": {
-        "type": "object",
-        "properties": {
-          "depositPromotionId": {
-            "type": "number",
-            "description": "Deposit promotion ID (입금 프로모션 ID)"
-          },
-          "methodType": {
-            "type": "string",
-            "description": "Deposit method type (입금 방법)",
-            "example": "CRYPTO_WALLET",
-            "enum": [
-              "CRYPTO_WALLET",
-              "BANK_TRANSFER"
-            ],
-            "default": "CRYPTO_WALLET"
-          },
-          "payCurrency": {
-            "type": "string",
-            "description": "Currency to deposit (입금할 통화)",
-            "example": "USDT"
-          },
-          "payNetwork": {
-            "type": "string",
-            "description": "Network to use for deposit (입금 진행할 네트워크) - 암호화폐 입금 시 필수",
-            "example": "ethereum"
-          },
-          "amount": {
-            "type": "number",
-            "description": "Deposit amount (입금 금액) - 무통장 입금 시 필수",
-            "example": 100000
-          },
-          "depositorName": {
-            "type": "string",
-            "description": "Depositor name (입금자명) - 무통장 입금 시 필수",
-            "example": "김철수"
-          }
-        },
-        "required": [
-          "methodType",
-          "payCurrency"
-        ]
-      },
-      "CreateDepositResponseDto": {
-        "type": "object",
-        "properties": {
-          "payAddress": {
-            "type": "string",
-            "description": "Payment address (결제 주소, 암호화폐 입금 시)",
-            "example": "TJ8yt3x9AowmQ8WygeYKwUT9TajRE4iCPx"
-          },
-          "payCurrency": {
-            "type": "string",
-            "description": "Payment currency (결제 통화, 암호화폐 입금 시)",
-            "example": "trx"
-          },
-          "payAddressExtraId": {
-            "type": "object",
-            "description": "Payment address extra ID (추가 ID, 예: 태그, 메모 등 네트워크별 필요시 사용)",
-            "example": null,
-            "nullable": true
-          },
-          "payNetwork": {
-            "type": "string",
-            "description": "Payment network (네트워크, 암호화폐 입금 시)",
-            "example": "trx"
-          },
-          "bankName": {
-            "type": "string",
-            "description": "Bank name (은행명, 무통장 입금 시)",
-            "example": "KB국민은행"
-          },
-          "accountNumber": {
-            "type": "string",
-            "description": "Account number (계좌번호, 무통장 입금 시)",
-            "example": "123-456-789012"
-          },
-          "accountHolder": {
-            "type": "string",
-            "description": "Account holder name (예금주명, 무통장 입금 시)",
-            "example": "주식회사 DPC"
-          },
-          "transactionId": {
-            "type": "string",
-            "description": "Transaction ID (입금 대기 중인 거래 ID)",
-            "example": "1234567890"
-          },
-          "isDuplicate": {
-            "type": "boolean",
-            "description": "Whether this is a duplicate request (중복 요청 여부)",
-            "example": false
-          }
-        }
-      },
       "CreateWithdrawRequestDto": {
         "type": "object",
         "properties": {
@@ -7938,6 +10660,363 @@
           "currency",
           "address"
         ]
+      },
+      "BankGroupSimpleDto": {
+        "type": "object",
+        "properties": {
+          "currency": {
+            "type": "string",
+            "enum": [
+              "USDT",
+              "USD",
+              "KRW",
+              "JPY",
+              "PHP",
+              "IDR",
+              "VND",
+              "BTC",
+              "ETH",
+              "SOL",
+              "XRP",
+              "DOGE",
+              "LTC",
+              "BCH",
+              "EOS",
+              "TRX"
+            ],
+            "description": "Currency code",
+            "example": "KRW"
+          },
+          "minAmount": {
+            "type": "string",
+            "description": "Minimum deposit amount for this currency",
+            "example": "10000"
+          }
+        },
+        "required": [
+          "currency",
+          "minAmount"
+        ]
+      },
+      "CryptoNetworkSimpleDto": {
+        "type": "object",
+        "properties": {
+          "network": {
+            "type": "string",
+            "description": "Network name",
+            "example": "TRC20"
+          },
+          "minDepositAmount": {
+            "type": "string",
+            "description": "Minimum deposit amount",
+            "example": "10"
+          }
+        },
+        "required": [
+          "network",
+          "minDepositAmount"
+        ]
+      },
+      "CryptoGroupSimpleDto": {
+        "type": "object",
+        "properties": {
+          "symbol": {
+            "type": "string",
+            "enum": [
+              "USDT",
+              "USD",
+              "KRW",
+              "JPY",
+              "PHP",
+              "IDR",
+              "VND",
+              "BTC",
+              "ETH",
+              "SOL",
+              "XRP",
+              "DOGE",
+              "LTC",
+              "BCH",
+              "EOS",
+              "TRX"
+            ],
+            "description": "Currency symbol (Coin)",
+            "example": "USDT"
+          },
+          "networks": {
+            "description": "Supported networks",
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/CryptoNetworkSimpleDto"
+            }
+          }
+        },
+        "required": [
+          "symbol",
+          "networks"
+        ]
+      },
+      "GetAvailableDepositMethodsResponseDto": {
+        "type": "object",
+        "properties": {
+          "bank": {
+            "description": "Available bank currencies",
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/BankGroupSimpleDto"
+            }
+          },
+          "crypto": {
+            "description": "Available crypto methods",
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/CryptoGroupSimpleDto"
+            }
+          }
+        },
+        "required": [
+          "bank",
+          "crypto"
+        ]
+      },
+      "UserDepositResponseDto": {
+        "type": "object",
+        "properties": {
+          "uid": {
+            "type": "string",
+            "description": "Deposit Record UID"
+          },
+          "status": {
+            "type": "string",
+            "enum": [
+              "PENDING",
+              "CONFIRMING",
+              "COMPLETED",
+              "FAILED",
+              "CANCELLED",
+              "EXPIRED",
+              "REJECTED"
+            ],
+            "description": "Deposit status"
+          },
+          "methodType": {
+            "type": "string",
+            "enum": [
+              "CRYPTO_WALLET",
+              "BANK_TRANSFER"
+            ],
+            "description": "Deposit method type"
+          },
+          "depositCurrency": {
+            "type": "string",
+            "enum": [
+              "USDT",
+              "USD",
+              "KRW",
+              "JPY",
+              "PHP",
+              "IDR",
+              "VND",
+              "BTC",
+              "ETH",
+              "SOL",
+              "XRP",
+              "DOGE",
+              "LTC",
+              "BCH",
+              "EOS",
+              "TRX"
+            ],
+            "description": "Deposit currency"
+          },
+          "depositNetwork": {
+            "type": "object",
+            "description": "Network used (for crypto)",
+            "nullable": true
+          },
+          "requestedAmount": {
+            "type": "string",
+            "description": "Requested amount"
+          },
+          "actuallyPaid": {
+            "type": "object",
+            "description": "Actually paid amount",
+            "nullable": true
+          },
+          "feeAmount": {
+            "type": "object",
+            "description": "Deposit fee amount",
+            "nullable": true
+          },
+          "walletAddress": {
+            "type": "object",
+            "description": "Wallet address used (for crypto)",
+            "nullable": true
+          },
+          "bankName": {
+            "type": "object",
+            "description": "Bank name (for bank transfer)",
+            "nullable": true
+          },
+          "createdAt": {
+            "format": "date-time",
+            "type": "string",
+            "description": "Created at"
+          },
+          "confirmedAt": {
+            "type": "object",
+            "description": "Confirmed at",
+            "nullable": true
+          },
+          "failureReason": {
+            "type": "object",
+            "description": "Failure reason if failed",
+            "nullable": true
+          }
+        },
+        "required": [
+          "uid",
+          "status",
+          "methodType",
+          "depositCurrency",
+          "depositNetwork",
+          "requestedAmount",
+          "actuallyPaid",
+          "feeAmount",
+          "walletAddress",
+          "bankName",
+          "createdAt",
+          "confirmedAt",
+          "failureReason"
+        ]
+      },
+      "CreateDepositResponseDto": {
+        "type": "object",
+        "properties": {
+          "payAddress": {
+            "type": "string",
+            "description": "Payment address (결제 주소, 암호화폐 입금 시)",
+            "example": "TJ8yt3x9AowmQ8WygeYKwUT9TajRE4iCPx"
+          },
+          "payCurrency": {
+            "type": "string",
+            "description": "Payment currency (결제 통화, 암호화폐 입금 시)",
+            "example": "trx"
+          },
+          "payAddressExtraId": {
+            "type": "object",
+            "description": "Payment address extra ID (추가 ID, 예: 태그, 메모 등 네트워크별 필요시 사용)",
+            "example": null,
+            "nullable": true
+          },
+          "payNetwork": {
+            "type": "string",
+            "description": "Payment network (네트워크, 암호화폐 입금 시)",
+            "example": "trx"
+          },
+          "bankName": {
+            "type": "string",
+            "description": "Bank name (은행명, 무통장 입금 시)",
+            "example": "KB국민은행"
+          },
+          "accountNumber": {
+            "type": "string",
+            "description": "Account number (계좌번호, 무통장 입금 시)",
+            "example": "123-456-789012"
+          },
+          "accountHolder": {
+            "type": "string",
+            "description": "Account holder name (예금주명, 무통장 입금 시)",
+            "example": "주식회사 DPC"
+          },
+          "transactionId": {
+            "type": "string",
+            "description": "Transaction ID (입금 대기 중인 거래 ID)",
+            "example": "1234567890"
+          },
+          "isDuplicate": {
+            "type": "boolean",
+            "description": "Whether this is a duplicate request (중복 요청 여부)",
+            "example": false
+          },
+          "depositUid": {
+            "type": "string",
+            "description": "Deposit Record UID (입금 기록 UID)"
+          }
+        }
+      },
+      "CreateCryptoDepositRequestDto": {
+        "type": "object",
+        "properties": {
+          "depositPromotionId": {
+            "type": "number",
+            "description": "Deposit promotion ID (입금 프로모션 ID)"
+          },
+          "payCurrency": {
+            "type": "string",
+            "description": "Currency symbol (입금할 암호화폐 심볼)",
+            "example": "USDT"
+          },
+          "payNetwork": {
+            "type": "string",
+            "description": "Network (입금할 네트워크)",
+            "example": "ethereum"
+          },
+          "amount": {
+            "type": "number",
+            "description": "Expected deposit amount (입금 예정 금액)",
+            "example": 100
+          }
+        },
+        "required": [
+          "payCurrency",
+          "payNetwork"
+        ]
+      },
+      "CreateBankDepositRequestDto": {
+        "type": "object",
+        "properties": {
+          "depositPromotionId": {
+            "type": "number",
+            "description": "Deposit promotion ID (입금 프로모션 ID)"
+          },
+          "payCurrency": {
+            "type": "string",
+            "description": "Currency code (입금할 통화 코드)",
+            "example": "KRW"
+          },
+          "amount": {
+            "type": "number",
+            "description": "Deposit amount (입금 금액)",
+            "example": 100000
+          },
+          "depositorName": {
+            "type": "string",
+            "description": "Depositor name (입금자명)",
+            "example": "김철수"
+          }
+        },
+        "required": [
+          "payCurrency",
+          "amount",
+          "depositorName"
+        ]
+      },
+      "CancelDepositResponseDto": {
+        "type": "object",
+        "properties": {
+          "success": {
+            "type": "boolean",
+            "description": "Success status"
+          }
+        },
+        "required": [
+          "success"
+        ]
+      },
+      "Object": {
+        "type": "object",
+        "properties": {}
       },
       "AdminDepositListItemDto": {
         "type": "object",
@@ -8109,95 +11188,821 @@
           "failureReason"
         ]
       },
-      "PromotionResponseDto": {
+      "BankConfigResponseDto": {
         "type": "object",
         "properties": {
           "id": {
-            "type": "number"
+            "type": "string",
+            "description": "ID"
           },
-          "name": {
-            "type": "string"
+          "uid": {
+            "type": "string",
+            "description": "Business UID"
+          },
+          "currency": {
+            "type": "string",
+            "enum": [
+              "USDT",
+              "USD",
+              "KRW",
+              "JPY",
+              "PHP",
+              "IDR",
+              "VND",
+              "BTC",
+              "ETH",
+              "SOL",
+              "XRP",
+              "DOGE",
+              "LTC",
+              "BCH",
+              "EOS",
+              "TRX"
+            ],
+            "description": "Currency"
+          },
+          "bankName": {
+            "type": "string",
+            "description": "Bank Name"
+          },
+          "accountNumber": {
+            "type": "string",
+            "description": "Account Number"
+          },
+          "accountHolder": {
+            "type": "string",
+            "description": "Account Holder"
+          },
+          "isActive": {
+            "type": "boolean",
+            "description": "Active Status"
+          },
+          "priority": {
+            "type": "number",
+            "description": "Priority"
           },
           "description": {
             "type": "object",
-            "nullable": true
+            "description": "Description"
           },
-          "bonusType": {
+          "notes": {
+            "type": "object",
+            "description": "Notes"
+          },
+          "minAmount": {
             "type": "string",
-            "enum": [
-              "PERCENTAGE"
-            ]
+            "description": "Minimum Amount"
           },
-          "bonusRate": {
+          "maxAmount": {
             "type": "object",
-            "nullable": true
+            "description": "Maximum Amount"
           },
-          "minDepositAmount": {
-            "type": "string"
+          "totalDeposits": {
+            "type": "number",
+            "description": "Total Deposits count"
           },
-          "maxBonusAmount": {
-            "type": "object",
-            "nullable": true
-          },
-          "rollingMultiplier": {
-            "type": "object",
-            "nullable": true
-          },
-          "targetType": {
+          "totalDepositAmount": {
             "type": "string",
-            "enum": [
-              "NEW_USER_FIRST_DEPOSIT"
-            ]
+            "description": "Total Deposit Amount"
           },
-          "startDate": {
-            "type": "object",
-            "nullable": true
+          "createdAt": {
+            "format": "date-time",
+            "type": "string",
+            "description": "Created At"
           },
-          "endDate": {
-            "type": "object",
-            "nullable": true
+          "updatedAt": {
+            "format": "date-time",
+            "type": "string",
+            "description": "Updated At"
           }
         },
         "required": [
           "id",
-          "name",
-          "description",
-          "bonusType",
-          "bonusRate",
+          "uid",
+          "currency",
+          "bankName",
+          "accountNumber",
+          "accountHolder",
+          "isActive",
+          "priority",
+          "minAmount",
+          "totalDepositAmount",
+          "createdAt",
+          "updatedAt"
+        ]
+      },
+      "CreateBankConfigRequestDto": {
+        "type": "object",
+        "properties": {
+          "currency": {
+            "type": "string",
+            "enum": [
+              "USDT",
+              "USD",
+              "KRW",
+              "JPY",
+              "PHP",
+              "IDR",
+              "VND",
+              "BTC",
+              "ETH",
+              "SOL",
+              "XRP",
+              "DOGE",
+              "LTC",
+              "BCH",
+              "EOS",
+              "TRX"
+            ],
+            "description": "Currency code / 통화 코드",
+            "example": "KRW"
+          },
+          "bankName": {
+            "type": "string",
+            "description": "Bank name / 은행명",
+            "example": "Kookmin Bank"
+          },
+          "accountNumber": {
+            "type": "string",
+            "description": "Account number / 계좌 번호",
+            "example": "123-456-7890"
+          },
+          "accountHolder": {
+            "type": "string",
+            "description": "Account holder / 예금주",
+            "example": "John Doe"
+          },
+          "isActive": {
+            "type": "boolean",
+            "description": "Activity status / 활성화 여부",
+            "default": true
+          },
+          "priority": {
+            "type": "number",
+            "description": "Priority / 우선순위 (높을수록 상단 노출)",
+            "default": 0
+          },
+          "description": {
+            "type": "string",
+            "description": "Description / 설명"
+          },
+          "notes": {
+            "type": "string",
+            "description": "Notes / 비고"
+          },
+          "minAmount": {
+            "type": "string",
+            "description": "Minimum deposit amount / 최소 입금 금액",
+            "example": "10000"
+          },
+          "maxAmount": {
+            "type": "string",
+            "description": "Maximum deposit amount / 최대 입금 금액",
+            "example": "1000000"
+          }
+        },
+        "required": [
+          "currency",
+          "bankName",
+          "accountNumber",
+          "accountHolder",
+          "minAmount"
+        ]
+      },
+      "UpdateBankConfigRequestDto": {
+        "type": "object",
+        "properties": {
+          "currency": {
+            "type": "string",
+            "enum": [
+              "USDT",
+              "USD",
+              "KRW",
+              "JPY",
+              "PHP",
+              "IDR",
+              "VND",
+              "BTC",
+              "ETH",
+              "SOL",
+              "XRP",
+              "DOGE",
+              "LTC",
+              "BCH",
+              "EOS",
+              "TRX"
+            ],
+            "description": "Currency code / 통화 코드"
+          },
+          "bankName": {
+            "type": "string",
+            "description": "Bank name / 은행명",
+            "example": "Kookmin Bank"
+          },
+          "accountNumber": {
+            "type": "string",
+            "description": "Account number / 계좌 번호",
+            "example": "123-456-7890"
+          },
+          "accountHolder": {
+            "type": "string",
+            "description": "Account holder / 예금주",
+            "example": "John Doe"
+          },
+          "isActive": {
+            "type": "boolean",
+            "description": "Activity status / 활성화 여부"
+          },
+          "priority": {
+            "type": "number",
+            "description": "Priority / 우선순위 (높을수록 상단 노출)",
+            "example": 10
+          },
+          "description": {
+            "type": "string",
+            "description": "Description / 설명"
+          },
+          "notes": {
+            "type": "string",
+            "description": "Notes / 비고"
+          },
+          "minAmount": {
+            "type": "string",
+            "description": "Minimum deposit amount / 최소 입금 금액",
+            "example": "10000"
+          },
+          "maxAmount": {
+            "type": "string",
+            "description": "Maximum deposit amount / 최대 입금 금액",
+            "example": "1000000"
+          }
+        }
+      },
+      "SuccessResponseDto": {
+        "type": "object",
+        "properties": {
+          "success": {
+            "type": "boolean",
+            "description": "Operation successful",
+            "example": true
+          }
+        },
+        "required": [
+          "success"
+        ]
+      },
+      "CryptoConfigResponseDto": {
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "string",
+            "description": "ID"
+          },
+          "uid": {
+            "type": "string",
+            "description": "Business UID"
+          },
+          "symbol": {
+            "type": "string",
+            "description": "Symbol"
+          },
+          "network": {
+            "type": "string",
+            "description": "Network"
+          },
+          "isActive": {
+            "type": "boolean",
+            "description": "Active Status"
+          },
+          "minDepositAmount": {
+            "type": "string",
+            "description": "Minimum Deposit Amount"
+          },
+          "depositFeeRate": {
+            "type": "string",
+            "description": "Deposit Fee Rate"
+          },
+          "confirmations": {
+            "type": "number",
+            "description": "Confirmations Needed"
+          },
+          "contractAddress": {
+            "type": "object",
+            "description": "Contract Address"
+          },
+          "createdAt": {
+            "format": "date-time",
+            "type": "string",
+            "description": "Created At"
+          },
+          "updatedAt": {
+            "format": "date-time",
+            "type": "string",
+            "description": "Updated At"
+          }
+        },
+        "required": [
+          "id",
+          "uid",
+          "symbol",
+          "network",
+          "isActive",
           "minDepositAmount",
-          "maxBonusAmount",
-          "rollingMultiplier",
+          "depositFeeRate",
+          "confirmations",
+          "createdAt",
+          "updatedAt"
+        ]
+      },
+      "UpdateCryptoConfigRequestDto": {
+        "type": "object",
+        "properties": {
+          "symbol": {
+            "type": "string",
+            "description": "Symbol"
+          },
+          "network": {
+            "type": "string",
+            "description": "Network"
+          },
+          "isActive": {
+            "type": "boolean",
+            "description": "Active Status"
+          },
+          "minDepositAmount": {
+            "type": "string",
+            "description": "Minimum Deposit Amount"
+          },
+          "depositFeeRate": {
+            "type": "string",
+            "description": "Deposit Fee Rate"
+          },
+          "confirmations": {
+            "type": "number",
+            "description": "Confirmations Needed"
+          },
+          "contractAddress": {
+            "type": "string",
+            "description": "Contract Address"
+          }
+        }
+      },
+      "CreateCryptoConfigRequestDto": {
+        "type": "object",
+        "properties": {
+          "symbol": {
+            "type": "string",
+            "description": "Symbol / 심볼",
+            "example": "USDT"
+          },
+          "network": {
+            "type": "string",
+            "description": "Network / 네트워크",
+            "example": "ERC20"
+          },
+          "isActive": {
+            "type": "boolean",
+            "description": "Active Status / 활성화 여부",
+            "default": true
+          },
+          "minDepositAmount": {
+            "type": "string",
+            "description": "Minimum Deposit Amount / 최소 입금 금액",
+            "example": "10"
+          },
+          "depositFeeRate": {
+            "type": "string",
+            "description": "Deposit Fee Rate / 입금 수수료율",
+            "example": "0.01"
+          },
+          "confirmations": {
+            "type": "number",
+            "description": "Confirmations Needed / 필요 컨펌 수",
+            "example": 12
+          },
+          "contractAddress": {
+            "type": "string",
+            "description": "Contract Address / 컨트랙트 주소",
+            "example": "0x..."
+          }
+        },
+        "required": [
+          "symbol",
+          "network",
+          "minDepositAmount",
+          "depositFeeRate",
+          "confirmations"
+        ]
+      },
+      "UserBalanceItemDto": {
+        "type": "object",
+        "properties": {
+          "currency": {
+            "type": "string",
+            "description": "통화",
+            "enum": [
+              "KRW"
+            ],
+            "example": "USD"
+          },
+          "mainBalance": {
+            "type": "string",
+            "description": "메인 잔액",
+            "example": "1000.00"
+          },
+          "bonusBalance": {
+            "type": "string",
+            "description": "보너스 잔액",
+            "example": "500.00"
+          },
+          "totalBalance": {
+            "type": "string",
+            "description": "총 잔액 (메인 + 보너스)",
+            "example": "1500.00"
+          }
+        },
+        "required": [
+          "currency",
+          "mainBalance",
+          "bonusBalance",
+          "totalBalance"
+        ]
+      },
+      "UserBalanceResponseDto": {
+        "type": "object",
+        "properties": {
+          "wallets": {
+            "description": "사용자 잔액 정보",
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/UserBalanceItemDto"
+            }
+          }
+        },
+        "required": [
+          "wallets"
+        ]
+      },
+      "AdminUserBalanceItemDto": {
+        "type": "object",
+        "properties": {
+          "currency": {
+            "type": "string",
+            "description": "통화",
+            "enum": [
+              "USDT",
+              "USD",
+              "KRW",
+              "JPY",
+              "PHP",
+              "IDR",
+              "VND",
+              "BTC",
+              "ETH",
+              "SOL",
+              "XRP",
+              "DOGE",
+              "LTC",
+              "BCH",
+              "EOS",
+              "TRX"
+            ],
+            "example": "USD"
+          },
+          "mainBalance": {
+            "type": "string",
+            "description": "메인 잔액",
+            "example": "1000.00"
+          },
+          "bonusBalance": {
+            "type": "string",
+            "description": "보너스 잔액",
+            "example": "500.00"
+          },
+          "totalBalance": {
+            "type": "string",
+            "description": "총 잔액 (메인 + 보너스)",
+            "example": "1500.00"
+          },
+          "updatedAt": {
+            "format": "date-time",
+            "type": "string",
+            "description": "마지막 업데이트 시간",
+            "example": "2024-01-01T00:00:00Z"
+          }
+        },
+        "required": [
+          "currency",
+          "mainBalance",
+          "bonusBalance",
+          "totalBalance",
+          "updatedAt"
+        ]
+      },
+      "AdminUserBalanceResponseDto": {
+        "type": "object",
+        "properties": {
+          "userId": {
+            "type": "string",
+            "description": "사용자 ID",
+            "example": "123"
+          },
+          "wallets": {
+            "description": "사용자 잔액 정보",
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/AdminUserBalanceItemDto"
+            }
+          }
+        },
+        "required": [
+          "userId",
+          "wallets"
+        ]
+      },
+      "UpdateUserBalanceResponseDto": {
+        "type": "object",
+        "properties": {
+          "userId": {
+            "type": "string",
+            "description": "사용자 ID",
+            "example": "1234567890123456789"
+          },
+          "currency": {
+            "type": "string",
+            "description": "통화 코드",
+            "enum": [
+              "USDT",
+              "USD",
+              "KRW",
+              "JPY",
+              "PHP",
+              "IDR",
+              "VND",
+              "BTC",
+              "ETH",
+              "SOL",
+              "XRP",
+              "DOGE",
+              "LTC",
+              "BCH",
+              "EOS",
+              "TRX"
+            ],
+            "example": "USDT"
+          },
+          "beforeMainBalance": {
+            "type": "string",
+            "description": "업데이트 전 메인 잔액",
+            "example": "1000.00"
+          },
+          "afterMainBalance": {
+            "type": "string",
+            "description": "업데이트 후 메인 잔액",
+            "example": "1100.00"
+          },
+          "beforeBonusBalance": {
+            "type": "string",
+            "description": "업데이트 전 보너스 잔액",
+            "example": "500.00"
+          },
+          "afterBonusBalance": {
+            "type": "string",
+            "description": "업데이트 후 보너스 잔액",
+            "example": "500.00"
+          },
+          "mainBalanceChange": {
+            "type": "string",
+            "description": "메인 잔액 변경량 (after - before)",
+            "example": "100.00"
+          },
+          "bonusBalanceChange": {
+            "type": "string",
+            "description": "보너스 잔액 변경량 (after - before)",
+            "example": "0.00"
+          },
+          "totalBalance": {
+            "type": "string",
+            "description": "업데이트 후 총 잔액 (메인 + 보너스)",
+            "example": "1600.00"
+          },
+          "updatedAt": {
+            "format": "date-time",
+            "type": "string",
+            "description": "마지막 업데이트 시간",
+            "example": "2024-01-01T00:00:00Z"
+          }
+        },
+        "required": [
+          "userId",
+          "currency",
+          "beforeMainBalance",
+          "afterMainBalance",
+          "beforeBonusBalance",
+          "afterBonusBalance",
+          "mainBalanceChange",
+          "bonusBalanceChange",
+          "totalBalance",
+          "updatedAt"
+        ]
+      },
+      "UpdateUserBalanceRequestDto": {
+        "type": "object",
+        "properties": {
+          "currency": {
+            "type": "string",
+            "description": "통화 코드",
+            "enum": [
+              "USDT",
+              "USD",
+              "KRW",
+              "JPY",
+              "PHP",
+              "IDR",
+              "VND",
+              "BTC",
+              "ETH",
+              "SOL",
+              "XRP",
+              "DOGE",
+              "LTC",
+              "BCH",
+              "EOS",
+              "TRX"
+            ],
+            "example": "USDT"
+          },
+          "balanceType": {
+            "type": "string",
+            "description": "잔액 타입 (main: 메인 잔액, bonus: 보너스 잔액, total: 총 잔액)",
+            "enum": [
+              "main",
+              "bonus",
+              "total"
+            ],
+            "example": "main"
+          },
+          "operation": {
+            "type": "string",
+            "description": "업데이트 연산 (add: 증가, subtract: 감소)",
+            "enum": [
+              "add",
+              "subtract"
+            ],
+            "example": "add"
+          },
+          "amount": {
+            "type": "string",
+            "description": "변경할 금액 (양수, 소수점 포함 가능)",
+            "example": "100.50"
+          }
+        },
+        "required": [
+          "currency",
+          "balanceType",
+          "operation",
+          "amount"
+        ]
+      },
+      "PromotionResponseDto": {
+        "type": "object",
+        "properties": {
+          "uid": {
+            "type": "string",
+            "description": "프로모션 UID",
+            "example": "promo_abc123"
+          },
+          "name": {
+            "type": "string",
+            "description": "프로모션 이름 (현재 언어)",
+            "example": "첫 충전 100% 보너스"
+          },
+          "description": {
+            "type": "object",
+            "description": "프로모션 설명 (현재 언어)",
+            "example": "첫 충전 시 100% 보너스를 받으세요!",
+            "nullable": true
+          },
+          "language": {
+            "type": "string",
+            "description": "언어 코드",
+            "example": "KO"
+          },
+          "currency": {
+            "type": "string",
+            "description": "통화 코드",
+            "example": "USDT"
+          },
+          "minDepositAmount": {
+            "type": "string",
+            "description": "최소 입금 금액",
+            "example": "10.00"
+          },
+          "maxBonusAmount": {
+            "type": "string",
+            "description": "최대 보너스 금액",
+            "example": "1000.00",
+            "nullable": true
+          },
+          "targetType": {
+            "type": "string",
+            "description": "프로모션 타겟 타입",
+            "example": "NEW_USER_FIRST_DEPOSIT"
+          },
+          "bonusType": {
+            "type": "string",
+            "description": "보너스 타입",
+            "example": "PERCENTAGE"
+          },
+          "bonusRate": {
+            "type": "string",
+            "description": "보너스 비율 (PERCENTAGE 타입인 경우)",
+            "example": "1.0"
+          },
+          "rollingMultiplier": {
+            "type": "string",
+            "description": "롤링 배수",
+            "example": "20.0"
+          },
+          "isOneTime": {
+            "type": "boolean",
+            "description": "1회성 프로모션 여부",
+            "example": true
+          },
+          "startDate": {
+            "type": "object",
+            "description": "프로모션 시작일",
+            "example": "2024-01-01T00:00:00Z",
+            "nullable": true
+          },
+          "endDate": {
+            "type": "object",
+            "description": "프로모션 종료일",
+            "example": "2024-12-31T23:59:59Z",
+            "nullable": true
+          }
+        },
+        "required": [
+          "uid",
+          "name",
           "targetType",
-          "startDate",
-          "endDate"
+          "bonusType",
+          "isOneTime"
         ]
       },
       "UserPromotionResponseDto": {
         "type": "object",
         "properties": {
           "id": {
-            "type": "number"
+            "type": "number",
+            "description": "사용자 프로모션 ID",
+            "example": 1
           },
           "promotionId": {
-            "type": "number"
+            "type": "number",
+            "description": "프로모션 ID",
+            "example": 1
           },
           "status": {
-            "type": "string"
+            "type": "string",
+            "description": "프로모션 상태",
+            "example": "ACTIVE"
           },
           "bonusGranted": {
-            "type": "boolean"
+            "type": "boolean",
+            "description": "보너스 지급 여부",
+            "example": true
+          },
+          "depositAmount": {
+            "type": "string",
+            "description": "입금 금액 (스냅샷)",
+            "example": "100.00"
           },
           "bonusAmount": {
-            "type": "object",
-            "nullable": true
+            "type": "string",
+            "description": "보너스 금액 (스냅샷)",
+            "example": "100.00"
           },
-          "bonusGrantedAt": {
-            "type": "object",
-            "nullable": true
+          "targetRollingAmount": {
+            "type": "string",
+            "description": "목표 롤링 금액",
+            "example": "2000.00"
+          },
+          "currentRollingAmount": {
+            "type": "string",
+            "description": "현재 롤링 금액",
+            "example": "500.00"
+          },
+          "currency": {
+            "type": "string",
+            "description": "통화",
+            "example": "USDT"
           },
           "createdAt": {
             "format": "date-time",
-            "type": "string"
+            "type": "string",
+            "description": "생성일시",
+            "example": "2024-01-01T00:00:00Z"
           }
         },
         "required": [
@@ -8205,65 +12010,156 @@
           "promotionId",
           "status",
           "bonusGranted",
+          "depositAmount",
           "bonusAmount",
-          "bonusGrantedAt",
+          "targetRollingAmount",
+          "currentRollingAmount",
+          "currency",
           "createdAt"
         ]
       },
-      "PromotionTranslationResponseDto": {
+      "PromotionAdminResponseDto": {
         "type": "object",
         "properties": {
           "id": {
-            "type": "number"
+            "type": "number",
+            "description": "프로모션 ID",
+            "example": 1
           },
-          "promotionId": {
-            "type": "number"
+          "managementName": {
+            "type": "string",
+            "description": "관리용 프로모션 이름",
+            "example": "첫 충전 100% 보너스"
           },
-          "language": {
-            "type": "string"
+          "isActive": {
+            "type": "boolean",
+            "description": "활성화 여부",
+            "example": true
           },
-          "name": {
-            "type": "string"
+          "targetType": {
+            "type": "string",
+            "description": "프로모션 타겟 타입",
+            "example": "NEW_USER_FIRST_DEPOSIT"
           },
-          "description": {
+          "bonusType": {
+            "type": "string",
+            "description": "보너스 타입",
+            "example": "PERCENTAGE"
+          },
+          "bonusRate": {
+            "type": "string",
+            "description": "보너스 비율",
+            "example": "1.0"
+          },
+          "rollingMultiplier": {
+            "type": "string",
+            "description": "롤링 배수",
+            "example": "20.0"
+          },
+          "isOneTime": {
+            "type": "boolean",
+            "description": "1회성 프로모션 여부",
+            "example": true
+          },
+          "startDate": {
             "type": "object",
+            "description": "프로모션 시작일",
+            "example": "2024-01-01T00:00:00Z",
+            "nullable": true
+          },
+          "endDate": {
+            "type": "object",
+            "description": "프로모션 종료일",
+            "example": "2024-12-31T23:59:59Z",
             "nullable": true
           },
           "createdAt": {
             "format": "date-time",
-            "type": "string"
+            "type": "string",
+            "description": "생성일시",
+            "example": "2024-01-01T00:00:00Z"
           },
           "updatedAt": {
             "format": "date-time",
-            "type": "string"
+            "type": "string",
+            "description": "수정일시",
+            "example": "2024-01-01T00:00:00Z"
           }
         },
         "required": [
           "id",
-          "promotionId",
-          "language",
-          "name",
-          "description",
+          "managementName",
+          "isActive",
+          "targetType",
+          "bonusType",
+          "isOneTime",
           "createdAt",
           "updatedAt"
         ]
       },
-      "UpsertPromotionTranslationDto": {
+      "CurrencySettingDto": {
+        "type": "object",
+        "properties": {
+          "currency": {
+            "type": "string",
+            "description": "통화 코드",
+            "example": "USDT",
+            "enum": [
+              "USDT",
+              "USD",
+              "KRW",
+              "JPY",
+              "PHP",
+              "IDR",
+              "VND",
+              "BTC",
+              "ETH",
+              "SOL",
+              "XRP",
+              "DOGE",
+              "LTC",
+              "BCH",
+              "EOS",
+              "TRX"
+            ]
+          },
+          "minDepositAmount": {
+            "type": "string",
+            "description": "최소 입금 금액",
+            "example": "10.00"
+          },
+          "maxBonusAmount": {
+            "type": "string",
+            "description": "최대 보너스 금액",
+            "example": "1000.00"
+          }
+        },
+        "required": [
+          "currency",
+          "minDepositAmount"
+        ]
+      },
+      "TranslationDto": {
         "type": "object",
         "properties": {
           "language": {
             "type": "string",
-            "description": "Language code / 언어 코드",
-            "example": "ko"
+            "description": "언어 코드",
+            "example": "KO",
+            "enum": [
+              "EN",
+              "KO",
+              "JA"
+            ]
           },
           "name": {
             "type": "string",
-            "description": "Promotion name / 프로모션 이름",
-            "example": "첫 충전 보너스"
+            "description": "프로모션 이름",
+            "example": "첫 충전 100% 보너스"
           },
           "description": {
             "type": "object",
-            "description": "Promotion description / 프로모션 설명",
+            "description": "프로모션 설명",
             "example": "첫 충전 시 100% 보너스를 받으세요!",
             "nullable": true
           }
@@ -8271,6 +12167,467 @@
         "required": [
           "language",
           "name"
+        ]
+      },
+      "CreatePromotionRequestDto": {
+        "type": "object",
+        "properties": {
+          "managementName": {
+            "type": "string",
+            "description": "관리용 프로모션 이름",
+            "example": "첫 충전 100% 보너스"
+          },
+          "isActive": {
+            "type": "boolean",
+            "description": "활성화 여부",
+            "example": true,
+            "default": true
+          },
+          "startDate": {
+            "type": "object",
+            "description": "프로모션 시작일",
+            "example": "2024-01-01T00:00:00Z",
+            "nullable": true
+          },
+          "endDate": {
+            "type": "object",
+            "description": "프로모션 종료일",
+            "example": "2024-12-31T23:59:59Z",
+            "nullable": true
+          },
+          "targetType": {
+            "type": "string",
+            "description": "프로모션 타겟 타입",
+            "example": "NEW_USER_FIRST_DEPOSIT",
+            "enum": [
+              "NEW_USER_FIRST_DEPOSIT"
+            ]
+          },
+          "bonusType": {
+            "type": "string",
+            "description": "보너스 타입",
+            "example": "PERCENTAGE",
+            "enum": [
+              "PERCENTAGE"
+            ]
+          },
+          "bonusRate": {
+            "type": "string",
+            "description": "보너스 비율 (PERCENTAGE 타입인 경우)",
+            "example": "1.0"
+          },
+          "rollingMultiplier": {
+            "type": "string",
+            "description": "롤링 배수",
+            "example": "20.0"
+          },
+          "qualificationMaintainCondition": {
+            "type": "string",
+            "description": "자격 유지 조건",
+            "example": "UNTIL_FIRST_WITHDRAWAL",
+            "enum": [
+              "UNTIL_FIRST_WITHDRAWAL"
+            ]
+          },
+          "isOneTime": {
+            "type": "boolean",
+            "description": "1회성 프로모션 여부",
+            "example": false,
+            "default": false
+          },
+          "currencies": {
+            "description": "통화별 설정 목록",
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/CurrencySettingDto"
+            }
+          },
+          "translations": {
+            "description": "번역 정보 목록",
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/TranslationDto"
+            }
+          }
+        },
+        "required": [
+          "managementName",
+          "targetType",
+          "bonusType",
+          "qualificationMaintainCondition"
+        ]
+      },
+      "UpdatePromotionRequestDto": {
+        "type": "object",
+        "properties": {
+          "managementName": {
+            "type": "string",
+            "description": "관리용 프로모션 이름",
+            "example": "첫 충전 100% 보너스"
+          },
+          "isActive": {
+            "type": "boolean",
+            "description": "활성화 여부",
+            "example": true
+          },
+          "startDate": {
+            "type": "object",
+            "description": "프로모션 시작일",
+            "example": "2024-01-01T00:00:00Z",
+            "nullable": true
+          },
+          "endDate": {
+            "type": "object",
+            "description": "프로모션 종료일",
+            "example": "2024-12-31T23:59:59Z",
+            "nullable": true
+          },
+          "bonusRate": {
+            "type": "string",
+            "description": "보너스 비율",
+            "example": "1.0"
+          },
+          "rollingMultiplier": {
+            "type": "string",
+            "description": "롤링 배수",
+            "example": "20.0"
+          },
+          "isOneTime": {
+            "type": "boolean",
+            "description": "1회성 프로모션 여부",
+            "example": false
+          }
+        }
+      },
+      "PromotionCurrencyResponseDto": {
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "number",
+            "description": "통화별 설정 ID",
+            "example": 1
+          },
+          "promotionId": {
+            "type": "number",
+            "description": "프로모션 ID",
+            "example": 1
+          },
+          "currency": {
+            "type": "string",
+            "description": "통화 코드",
+            "example": "USDT"
+          },
+          "minDepositAmount": {
+            "type": "string",
+            "description": "최소 입금 금액",
+            "example": "10.00"
+          },
+          "maxBonusAmount": {
+            "type": "string",
+            "description": "최대 보너스 금액",
+            "example": "1000.00"
+          },
+          "createdAt": {
+            "format": "date-time",
+            "type": "string",
+            "description": "생성일시",
+            "example": "2024-01-01T00:00:00Z"
+          },
+          "updatedAt": {
+            "format": "date-time",
+            "type": "string",
+            "description": "수정일시",
+            "example": "2024-01-01T00:00:00Z"
+          }
+        },
+        "required": [
+          "id",
+          "promotionId",
+          "currency",
+          "minDepositAmount",
+          "createdAt",
+          "updatedAt"
+        ]
+      },
+      "PromotionCurrencyListResponseDto": {
+        "type": "object",
+        "properties": {
+          "currencies": {
+            "description": "통화별 설정 목록",
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/PromotionCurrencyResponseDto"
+            }
+          }
+        },
+        "required": [
+          "currencies"
+        ]
+      },
+      "UpsertCurrencySettingsRequestDto": {
+        "type": "object",
+        "properties": {
+          "currency": {
+            "type": "string",
+            "description": "통화 코드",
+            "example": "USDT",
+            "enum": [
+              "USDT",
+              "USD",
+              "KRW",
+              "JPY",
+              "PHP",
+              "IDR",
+              "VND",
+              "BTC",
+              "ETH",
+              "SOL",
+              "XRP",
+              "DOGE",
+              "LTC",
+              "BCH",
+              "EOS",
+              "TRX"
+            ]
+          },
+          "minDepositAmount": {
+            "type": "string",
+            "description": "최소 입금 금액",
+            "example": "10.00"
+          },
+          "maxBonusAmount": {
+            "type": "string",
+            "description": "최대 보너스 금액",
+            "example": "1000.00"
+          }
+        },
+        "required": [
+          "currency",
+          "minDepositAmount"
+        ]
+      },
+      "PromotionTranslationResponseDto": {
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "number",
+            "description": "번역 ID",
+            "example": 1
+          },
+          "promotionId": {
+            "type": "number",
+            "description": "프로모션 ID",
+            "example": 1
+          },
+          "language": {
+            "type": "string",
+            "description": "언어 코드",
+            "example": "KO"
+          },
+          "name": {
+            "type": "string",
+            "description": "프로모션 이름",
+            "example": "첫 충전 100% 보너스"
+          },
+          "description": {
+            "type": "object",
+            "description": "프로모션 설명",
+            "example": "첫 충전 시 100% 보너스를 받으세요!",
+            "nullable": true
+          },
+          "createdAt": {
+            "format": "date-time",
+            "type": "string",
+            "description": "생성일시",
+            "example": "2024-01-01T00:00:00Z"
+          },
+          "updatedAt": {
+            "format": "date-time",
+            "type": "string",
+            "description": "수정일시",
+            "example": "2024-01-01T00:00:00Z"
+          }
+        },
+        "required": [
+          "id",
+          "promotionId",
+          "language",
+          "name",
+          "createdAt",
+          "updatedAt"
+        ]
+      },
+      "PromotionTranslationListResponseDto": {
+        "type": "object",
+        "properties": {
+          "translations": {
+            "description": "번역 정보 목록",
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/PromotionTranslationResponseDto"
+            }
+          }
+        },
+        "required": [
+          "translations"
+        ]
+      },
+      "UpsertTranslationRequestDto": {
+        "type": "object",
+        "properties": {
+          "language": {
+            "type": "string",
+            "description": "언어 코드",
+            "example": "KO",
+            "enum": [
+              "EN",
+              "KO",
+              "JA"
+            ]
+          },
+          "name": {
+            "type": "string",
+            "description": "프로모션 이름",
+            "example": "첫 충전 100% 보너스"
+          },
+          "description": {
+            "type": "object",
+            "description": "프로모션 설명",
+            "example": "첫 충전 시 100% 보너스를 받으세요!",
+            "nullable": true
+          }
+        },
+        "required": [
+          "language",
+          "name"
+        ]
+      },
+      "PromotionParticipantResponseDto": {
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "number",
+            "description": "UserPromotion ID",
+            "example": 1
+          },
+          "userId": {
+            "type": "string",
+            "description": "사용자 ID",
+            "example": "1234567890123456789"
+          },
+          "userUid": {
+            "type": "object",
+            "description": "사용자 UID",
+            "example": "user-1234567890",
+            "nullable": true
+          },
+          "userEmail": {
+            "type": "object",
+            "description": "사용자 이메일",
+            "example": "user@example.com",
+            "nullable": true
+          },
+          "promotionId": {
+            "type": "number",
+            "description": "프로모션 ID",
+            "example": 1
+          },
+          "status": {
+            "type": "string",
+            "description": "상태",
+            "example": "ACTIVE"
+          },
+          "depositAmount": {
+            "type": "string",
+            "description": "입금 금액",
+            "example": "100.00"
+          },
+          "bonusAmount": {
+            "type": "string",
+            "description": "보너스 금액",
+            "example": "50.00"
+          },
+          "targetRollingAmount": {
+            "type": "string",
+            "description": "목표 롤링 금액",
+            "example": "1000.00"
+          },
+          "currentRollingAmount": {
+            "type": "string",
+            "description": "현재 롤링 금액",
+            "example": "500.00"
+          },
+          "currency": {
+            "type": "string",
+            "description": "통화 코드",
+            "example": "USDT"
+          },
+          "bonusGranted": {
+            "type": "boolean",
+            "description": "보너스 지급 여부",
+            "example": true
+          },
+          "rollingCompleted": {
+            "type": "boolean",
+            "description": "롤링 완료 여부",
+            "example": false
+          },
+          "createdAt": {
+            "format": "date-time",
+            "type": "string",
+            "description": "참가일시",
+            "example": "2024-01-01T00:00:00Z"
+          },
+          "updatedAt": {
+            "format": "date-time",
+            "type": "string",
+            "description": "수정일시",
+            "example": "2024-01-02T00:00:00Z"
+          }
+        },
+        "required": [
+          "id",
+          "userId",
+          "userUid",
+          "userEmail",
+          "promotionId",
+          "status",
+          "depositAmount",
+          "bonusAmount",
+          "targetRollingAmount",
+          "currentRollingAmount",
+          "currency",
+          "bonusGranted",
+          "rollingCompleted",
+          "createdAt",
+          "updatedAt"
+        ]
+      },
+      "PromotionStatisticsResponseDto": {
+        "type": "object",
+        "properties": {
+          "totalParticipants": {
+            "type": "number",
+            "description": "전체 참가자 수",
+            "example": 100
+          },
+          "statusCounts": {
+            "type": "object",
+            "description": "상태별 참가자 수",
+            "example": {
+              "ACTIVE": 50,
+              "QUALIFICATION_LOST": 20,
+              "EXPIRED": 20,
+              "FAILED": 10
+            },
+            "additionalProperties": {
+              "type": "number"
+            }
+          }
+        },
+        "required": [
+          "totalParticipants",
+          "statusCounts"
         ]
       },
       "CommissionResponseDto": {
@@ -8729,276 +13086,6 @@
         },
         "required": [
           "affiliateId"
-        ]
-      },
-      "UserBalanceItemDto": {
-        "type": "object",
-        "properties": {
-          "currency": {
-            "type": "string",
-            "description": "통화",
-            "enum": [
-              "KRW"
-            ],
-            "example": "USD"
-          },
-          "mainBalance": {
-            "type": "string",
-            "description": "메인 잔액",
-            "example": "1000.00"
-          },
-          "bonusBalance": {
-            "type": "string",
-            "description": "보너스 잔액",
-            "example": "500.00"
-          },
-          "totalBalance": {
-            "type": "string",
-            "description": "총 잔액 (메인 + 보너스)",
-            "example": "1500.00"
-          }
-        },
-        "required": [
-          "currency",
-          "mainBalance",
-          "bonusBalance",
-          "totalBalance"
-        ]
-      },
-      "UserBalanceResponseDto": {
-        "type": "object",
-        "properties": {
-          "wallets": {
-            "description": "사용자 잔액 정보",
-            "type": "array",
-            "items": {
-              "$ref": "#/components/schemas/UserBalanceItemDto"
-            }
-          }
-        },
-        "required": [
-          "wallets"
-        ]
-      },
-      "AdminUserBalanceItemDto": {
-        "type": "object",
-        "properties": {
-          "currency": {
-            "type": "string",
-            "description": "통화",
-            "enum": [
-              "USDT",
-              "USD",
-              "KRW",
-              "JPY",
-              "PHP",
-              "IDR",
-              "VND",
-              "BTC",
-              "ETH",
-              "SOL",
-              "XRP",
-              "DOGE",
-              "LTC",
-              "BCH",
-              "EOS",
-              "TRX"
-            ],
-            "example": "USD"
-          },
-          "mainBalance": {
-            "type": "string",
-            "description": "메인 잔액",
-            "example": "1000.00"
-          },
-          "bonusBalance": {
-            "type": "string",
-            "description": "보너스 잔액",
-            "example": "500.00"
-          },
-          "totalBalance": {
-            "type": "string",
-            "description": "총 잔액 (메인 + 보너스)",
-            "example": "1500.00"
-          },
-          "updatedAt": {
-            "format": "date-time",
-            "type": "string",
-            "description": "마지막 업데이트 시간",
-            "example": "2024-01-01T00:00:00Z"
-          }
-        },
-        "required": [
-          "currency",
-          "mainBalance",
-          "bonusBalance",
-          "totalBalance",
-          "updatedAt"
-        ]
-      },
-      "AdminUserBalanceResponseDto": {
-        "type": "object",
-        "properties": {
-          "userId": {
-            "type": "string",
-            "description": "사용자 ID",
-            "example": "123"
-          },
-          "wallets": {
-            "description": "사용자 잔액 정보",
-            "type": "array",
-            "items": {
-              "$ref": "#/components/schemas/AdminUserBalanceItemDto"
-            }
-          }
-        },
-        "required": [
-          "userId",
-          "wallets"
-        ]
-      },
-      "UpdateUserBalanceResponseDto": {
-        "type": "object",
-        "properties": {
-          "userId": {
-            "type": "string",
-            "description": "사용자 ID",
-            "example": "1234567890123456789"
-          },
-          "currency": {
-            "type": "string",
-            "description": "통화 코드",
-            "enum": [
-              "USDT",
-              "USD",
-              "KRW",
-              "JPY",
-              "PHP",
-              "IDR",
-              "VND",
-              "BTC",
-              "ETH",
-              "SOL",
-              "XRP",
-              "DOGE",
-              "LTC",
-              "BCH",
-              "EOS",
-              "TRX"
-            ],
-            "example": "USDT"
-          },
-          "beforeMainBalance": {
-            "type": "string",
-            "description": "업데이트 전 메인 잔액",
-            "example": "1000.00"
-          },
-          "afterMainBalance": {
-            "type": "string",
-            "description": "업데이트 후 메인 잔액",
-            "example": "1100.00"
-          },
-          "beforeBonusBalance": {
-            "type": "string",
-            "description": "업데이트 전 보너스 잔액",
-            "example": "500.00"
-          },
-          "afterBonusBalance": {
-            "type": "string",
-            "description": "업데이트 후 보너스 잔액",
-            "example": "500.00"
-          },
-          "mainBalanceChange": {
-            "type": "string",
-            "description": "메인 잔액 변경량 (after - before)",
-            "example": "100.00"
-          },
-          "bonusBalanceChange": {
-            "type": "string",
-            "description": "보너스 잔액 변경량 (after - before)",
-            "example": "0.00"
-          },
-          "totalBalance": {
-            "type": "string",
-            "description": "업데이트 후 총 잔액 (메인 + 보너스)",
-            "example": "1600.00"
-          },
-          "updatedAt": {
-            "format": "date-time",
-            "type": "string",
-            "description": "마지막 업데이트 시간",
-            "example": "2024-01-01T00:00:00Z"
-          }
-        },
-        "required": [
-          "userId",
-          "currency",
-          "beforeMainBalance",
-          "afterMainBalance",
-          "beforeBonusBalance",
-          "afterBonusBalance",
-          "mainBalanceChange",
-          "bonusBalanceChange",
-          "totalBalance",
-          "updatedAt"
-        ]
-      },
-      "UpdateUserBalanceRequestDto": {
-        "type": "object",
-        "properties": {
-          "currency": {
-            "type": "string",
-            "description": "통화 코드",
-            "enum": [
-              "USDT",
-              "USD",
-              "KRW",
-              "JPY",
-              "PHP",
-              "IDR",
-              "VND",
-              "BTC",
-              "ETH",
-              "SOL",
-              "XRP",
-              "DOGE",
-              "LTC",
-              "BCH",
-              "EOS",
-              "TRX"
-            ],
-            "example": "USDT"
-          },
-          "balanceType": {
-            "type": "string",
-            "description": "잔액 타입 (main: 메인 잔액, bonus: 보너스 잔액, total: 총 잔액)",
-            "enum": [
-              "main",
-              "bonus",
-              "total"
-            ],
-            "example": "main"
-          },
-          "operation": {
-            "type": "string",
-            "description": "업데이트 연산 (add: 증가, subtract: 감소)",
-            "enum": [
-              "add",
-              "subtract"
-            ],
-            "example": "add"
-          },
-          "amount": {
-            "type": "string",
-            "description": "변경할 금액 (양수, 소수점 포함 가능)",
-            "example": "100.50"
-          }
-        },
-        "required": [
-          "currency",
-          "balanceType",
-          "operation",
-          "amount"
         ]
       }
     }

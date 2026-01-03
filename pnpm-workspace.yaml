@@ -3,12 +3,14 @@ packages:
   - packages/*
 
 onlyBuiltDependencies:
+  - '@hebilicious/vue-query-nuxt'
   - '@nestjs/core'
   - '@prisma/client'
   - '@prisma/engines'
   - '@scarf/scarf'
   - bcrypt
   - esbuild
+  - maplibre-gl
   - msgpackr-extract
   - prisma
   - protobufjs

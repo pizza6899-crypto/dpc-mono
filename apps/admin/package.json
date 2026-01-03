@@ -8,22 +8,29 @@
     "preview": "nuxt preview",
     "postinstall": "nuxt prepare",
     "lint": "eslint .",
-    "typecheck": "nuxt typecheck"
+    "typecheck": "nuxt typecheck",
+    "api:generate": "orval"
   },
   "dependencies": {
+    "@hebilicious/vue-query-nuxt": "^0.3.0",
     "@iconify-json/lucide": "^1.2.82",
     "@iconify-json/simple-icons": "^1.2.63",
     "@nuxt/ui": "^4.3.0",
+    "@tailwindcss/vite": "^4.1.18",
+    "@tanstack/vue-query": "^5.92.5",
     "@unovis/ts": "^1.6.2",
     "@unovis/vue": "^1.6.2",
     "@vueuse/nuxt": "^14.1.0",
+    "axios": "^1.13.2",
     "date-fns": "^4.1.0",
     "nuxt": "^4.2.2",
+    "tailwindcss": "^4.1.18",
     "zod": "^4.2.1"
   },
   "devDependencies": {
     "@nuxt/eslint": "^1.12.1",
     "eslint": "^9.39.2",
+    "orval": "^7.17.2",
     "typescript": "^5.9.3",
     "vue-tsc": "^3.2.1"
   },

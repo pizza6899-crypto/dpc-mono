@@ -5,7 +5,8 @@ export default defineNuxtConfig({
   modules: [
     '@nuxt/eslint',
     '@nuxt/ui',
-    '@vueuse/nuxt'
+    '@vueuse/nuxt',
+    '@hebilicious/vue-query-nuxt'
   ],
 
   app: {
@@ -20,12 +21,6 @@ export default defineNuxtConfig({
   },
 
   css: ['~/assets/css/main.css'],
-
-  routeRules: {
-    '/api/**': {
-      cors: true
-    }
-  },
 
   compatibilityDate: '2024-07-11',
 
