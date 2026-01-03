@@ -26,7 +26,7 @@ export class CreateCodeService {
     private readonly repository: AffiliateCodeRepositoryPort,
     private readonly policy: AffiliateCodePolicy,
     private readonly dispatchLogService: DispatchLogService,
-  ) {}
+  ) { }
 
   @Transactional()
   async execute({
@@ -34,7 +34,11 @@ export class CreateCodeService {
     campaignName,
     requestInfo,
   }: CreateCodeParams): Promise<AffiliateCode> {
-    // 사용자별 기존 코드 조회 (개수 제한 및 첫 번째 코드 확인용)
+    // 1. 사용자 기반 락 획득 (동시 요청 처리 방지)
+    // 트랜잭션 내에서 실행되므로 트랜잭션 종료 시 자동으로 해제됩니다.
+    await this.repository.acquireLock(userId);
+
+    // 2. 사용자별 기존 코드 조회 (개수 제한 및 첫 번째 코드 확인용)
     const existingCodes = await this.repository.findByUserId(userId);
 
     // 정책 검증 (개수 제한)
@@ -56,22 +60,22 @@ export class CreateCodeService {
 
     // Audit Log 기록
     if (requestInfo) {
-        await this.dispatchLogService.dispatch(
-          {
-            type: LogType.ACTIVITY,
-            data: {
-              userId: userId.toString(),
-              category: 'AFFILIATE',
-              action: 'AFFILIATE_CODE_CREATE',
-              metadata: {
-                codeId: createdCode.id.toString(),
-                code,
-                campaignName: campaignName || null,
-                isDefault: isFirstCode,
-              },
+      await this.dispatchLogService.dispatch(
+        {
+          type: LogType.ACTIVITY,
+          data: {
+            userId: userId.toString(),
+            category: 'AFFILIATE',
+            action: 'AFFILIATE_CODE_CREATE',
+            metadata: {
+              codeId: createdCode.id.toString(),
+              code,
+              campaignName: campaignName || null,
+              isDefault: isFirstCode,
             },
           },
-          requestInfo,
+        },
+        requestInfo,
       );
     }
 

@@ -13,4 +13,4 @@ import { VipMembershipController } from './controllers/vip-membership.controller
   controllers: [VipLevelController, VipMembershipController],
   exports: [VipLevelService, VipMembershipService, VipRewardService],
 })
-export class VipModule {}
+export class VipModule { }

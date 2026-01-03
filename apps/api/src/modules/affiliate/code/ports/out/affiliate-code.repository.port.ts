@@ -76,4 +76,9 @@ export interface AffiliateCodeRepositoryPort {
     codes: AffiliateCode[];
     total: number;
   }>;
+
+  /**
+   * 사용자 기반 락 획득 (경합 방지)
+   */
+  acquireLock(userId: bigint): Promise<void>;
 }

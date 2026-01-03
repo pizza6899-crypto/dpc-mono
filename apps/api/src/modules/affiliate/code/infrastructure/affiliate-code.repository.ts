@@ -1,5 +1,7 @@
 // src/modules/affiliate/code/infrastructure/affiliate-code.repository.ts
-import { Injectable } from '@nestjs/common';
+import { Injectable, HttpStatus } from '@nestjs/common';
+import { MessageCode } from '@repo/shared';
+import { DomainException } from 'src/common/exception/domain.exception';
 import { InjectTransaction } from '@nestjs-cls/transactional';
 import type { Transaction } from '@nestjs-cls/transactional';
 import type { TransactionalAdapterPrisma } from '@nestjs-cls/transactional-adapter-prisma';
@@ -7,6 +9,7 @@ import { Prisma } from '@repo/database';
 import { AffiliateCode } from '../domain';
 import type { AffiliateCodeRepositoryPort } from '../ports/out/affiliate-code.repository.port';
 import { AffiliateCodeMapper } from './affiliate-code.mapper';
+import { LockNamespace } from 'src/common/concurrency/lock-namespace';
 
 @Injectable()
 export class AffiliateCodeRepository implements AffiliateCodeRepositoryPort {
@@ -14,7 +17,7 @@ export class AffiliateCodeRepository implements AffiliateCodeRepositoryPort {
     @InjectTransaction()
     private readonly tx: Transaction<TransactionalAdapterPrisma>,
     private readonly mapper: AffiliateCodeMapper,
-  ) {}
+  ) { }
 
   async create(params: {
     userId: bigint;
@@ -199,11 +202,11 @@ export class AffiliateCodeRepository implements AffiliateCodeRepositoryPort {
       ...(isDefault !== undefined && { isDefault }),
       ...(startDate &&
         endDate && {
-          createdAt: {
-            gte: startDate,
-            lte: endDate,
-          },
-        }),
+        createdAt: {
+          gte: startDate,
+          lte: endDate,
+        },
+      }),
     };
 
     // 정렬 조건 구성
@@ -226,5 +229,32 @@ export class AffiliateCodeRepository implements AffiliateCodeRepositoryPort {
       codes: results.map((result) => this.mapper.toDomain(result)),
       total,
     };
+  }
+  async acquireLock(userId: bigint): Promise<void> {
+    try {
+      // 1. 현재 트랜잭션 세션에서만 유효한 락 대기 시간 설정 (3초)
+      // 이 시간이 지나면 DB가 55P03 (lock_not_available) 에러를 발생시킵니다.
+      await this.tx.$executeRaw`SET LOCAL lock_timeout = '3s'`;
+
+      // 2. 락 획득 시도 (3초 동안 DB가 내부적으로 대기하며, 풀리는 즉시 획득)
+      await this.tx.$executeRaw`SELECT pg_advisory_xact_lock(${LockNamespace.AFFILIATE_CODE}, ${userId})`;
+    } catch (error: any) {
+      // PostgreSQL의 lock_not_available 에러 코드는 '55P03'입니다.
+      // Prisma는 이를 P2010(Raw query failed)으로 래핑할 수 있으므로 메시지도 함께 체크합니다.
+      const isLockTimeout =
+        error.code === '55P03' ||
+        error.meta?.code === '55P03' ||
+        error.message?.includes('55P03') ||
+        error.message?.includes('lock timeout');
+
+      if (isLockTimeout) {
+        throw new DomainException(
+          'Another request is being processed. Please try again in a moment.',
+          MessageCode.THROTTLE_TOO_MANY_REQUESTS,
+          HttpStatus.TOO_MANY_REQUESTS,
+        );
+      }
+      throw error;
+    }
   }
 }
