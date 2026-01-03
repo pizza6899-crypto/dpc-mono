@@ -1,26 +1,28 @@
-// src/modules/affiliate/code/domain/model/affiliate-code-value.ts
-import { AffiliateCodeException } from '../affiliate-code.exception';
+import {
+  AffiliateCodeException,
+  AffiliateCodeInvalidFormatException,
+} from '../affiliate-code.exception';
 
 const CODE_MIN_LENGTH = 6;
 const CODE_MAX_LENGTH = 12;
 const CODE_PATTERN = /^[A-Z0-9]+$/;
 
 export class AffiliateCodeValue {
-  private constructor(public readonly value: string) {}
+  private constructor(public readonly value: string) { }
 
   static create(code: string): AffiliateCodeValue {
     if (!code) {
-      throw new AffiliateCodeException('Code cannot be empty');
+      throw new AffiliateCodeInvalidFormatException('Empty code');
     }
 
     if (code.length < CODE_MIN_LENGTH || code.length > CODE_MAX_LENGTH) {
-      throw new AffiliateCodeException(
+      throw new AffiliateCodeInvalidFormatException(
         `Code must be between ${CODE_MIN_LENGTH} and ${CODE_MAX_LENGTH} characters`,
       );
     }
 
     if (!CODE_PATTERN.test(code)) {
-      throw new AffiliateCodeException(
+      throw new AffiliateCodeInvalidFormatException(
         'Code must contain only uppercase letters and numbers',
       );
     }

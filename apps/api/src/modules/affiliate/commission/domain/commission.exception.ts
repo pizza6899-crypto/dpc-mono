@@ -1,12 +1,25 @@
 // src/modules/affiliate/commission/domain/commission.exception.ts
 
+import { HttpStatus } from '@nestjs/common';
+import { MessageCode } from '@repo/shared';
+import { DomainException } from 'src/common/exception/domain.exception';
+
 /**
  * 커미션 도메인 예외 기본 클래스
  */
-export class CommissionException extends Error {
-  constructor(message: string) {
+export class CommissionException extends DomainException {
+  public readonly errorCode: MessageCode;
+  public readonly httpStatus: HttpStatus;
+
+  constructor(
+    message: string,
+    errorCode: MessageCode = MessageCode.VALIDATION_ERROR,
+    httpStatus: HttpStatus = HttpStatus.BAD_REQUEST,
+  ) {
     super(message);
     this.name = 'CommissionException';
+    this.errorCode = errorCode;
+    this.httpStatus = httpStatus;
   }
 }
 
@@ -17,6 +30,8 @@ export class InvalidCommissionRateException extends CommissionException {
   constructor(rate: bigint) {
     super(
       `Invalid commission rate: ${rate}. Rate must be between 1 and 10000 (0.01% - 100%)`,
+      MessageCode.COMMISSION_INVALID_RATE,
+      HttpStatus.BAD_REQUEST,
     );
     this.name = 'InvalidCommissionRateException';
   }
@@ -29,6 +44,8 @@ export class InsufficientBalanceException extends CommissionException {
   constructor(availableBalance: bigint, requestedAmount: bigint) {
     super(
       `Insufficient balance. Available: ${availableBalance}, Requested: ${requestedAmount}`,
+      MessageCode.COMMISSION_INSUFFICIENT_BALANCE,
+      HttpStatus.BAD_REQUEST,
     );
     this.name = 'InsufficientBalanceException';
   }
@@ -38,8 +55,12 @@ export class InsufficientBalanceException extends CommissionException {
  * 커미션을 찾을 수 없는 경우
  */
 export class CommissionNotFoundException extends CommissionException {
-  constructor(commissionId: string) {
-    super(`Commission not found: ${commissionId}`);
+  constructor(commissionId: string | bigint) {
+    super(
+      `Commission not found: ${commissionId}`,
+      MessageCode.COMMISSION_NOT_FOUND,
+      HttpStatus.NOT_FOUND,
+    );
     this.name = 'CommissionNotFoundException';
   }
 }
@@ -49,7 +70,11 @@ export class CommissionNotFoundException extends CommissionException {
  */
 export class CommissionNotAvailableException extends CommissionException {
   constructor(message: string) {
-    super(message);
+    super(
+      message,
+      MessageCode.COMMISSION_NOT_AVAILABLE,
+      HttpStatus.BAD_REQUEST,
+    );
     this.name = 'CommissionNotAvailableException';
   }
 }
@@ -61,6 +86,8 @@ export class WalletNotFoundException extends CommissionException {
   constructor(affiliateId: bigint, currency: string) {
     super(
       `Wallet not found for affiliate: ${affiliateId}, currency: ${currency}`,
+      MessageCode.COMMISSION_WALLET_NOT_FOUND,
+      HttpStatus.NOT_FOUND,
     );
     this.name = 'WalletNotFoundException';
   }
@@ -71,7 +98,11 @@ export class WalletNotFoundException extends CommissionException {
  */
 export class TierNotFoundException extends CommissionException {
   constructor(affiliateId: bigint) {
-    super(`Tier not found for affiliate: ${affiliateId}`);
+    super(
+      `Tier not found for affiliate: ${affiliateId}`,
+      MessageCode.COMMISSION_TIER_NOT_FOUND,
+      HttpStatus.NOT_FOUND,
+    );
     this.name = 'TierNotFoundException';
   }
 }
@@ -88,6 +119,8 @@ export class InvalidCommissionCalculationException extends CommissionException {
   ) {
     super(
       `Invalid commission calculation. wagerAmount: ${wagerAmount}, rateApplied: ${rateApplied}, expected: ${expectedCommission}, actual: ${actualCommission}`,
+      MessageCode.COMMISSION_INVALID_CALCULATION,
+      HttpStatus.BAD_REQUEST,
     );
     this.name = 'InvalidCommissionCalculationException';
   }
@@ -100,6 +133,8 @@ export class InvalidSettlementDateException extends CommissionException {
   constructor(settlementDate: Date, createdAt: Date) {
     super(
       `Settlement date (${settlementDate.toISOString()}) cannot be before creation date (${createdAt.toISOString()})`,
+      MessageCode.COMMISSION_INVALID_SETTLEMENT_DATE,
+      HttpStatus.BAD_REQUEST,
     );
     this.name = 'InvalidSettlementDateException';
   }
@@ -110,7 +145,11 @@ export class InvalidSettlementDateException extends CommissionException {
  */
 export class InvalidWalletBalanceException extends CommissionException {
   constructor(message: string) {
-    super(message);
+    super(
+      message,
+      MessageCode.COMMISSION_INVALID_WALLET_BALANCE,
+      HttpStatus.BAD_REQUEST,
+    );
     this.name = 'InvalidWalletBalanceException';
   }
 }
@@ -120,7 +159,11 @@ export class InvalidWalletBalanceException extends CommissionException {
  */
 export class InvalidParameterException extends CommissionException {
   constructor(message: string) {
-    super(message);
+    super(
+      message,
+      MessageCode.COMMISSION_INVALID_PARAMETER,
+      HttpStatus.BAD_REQUEST,
+    );
     this.name = 'InvalidParameterException';
   }
 }
