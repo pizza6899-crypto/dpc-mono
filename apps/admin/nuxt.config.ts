@@ -6,7 +6,8 @@ export default defineNuxtConfig({
     '@nuxt/eslint',
     '@nuxt/ui',
     '@vueuse/nuxt',
-    '@hebilicious/vue-query-nuxt'
+    '@hebilicious/vue-query-nuxt',
+    '@nuxtjs/i18n'
   ],
 
   app: {
@@ -23,6 +24,10 @@ export default defineNuxtConfig({
   css: ['~/assets/css/main.css'],
 
   compatibilityDate: '2024-07-11',
+
+  i18n: {
+
+  },
 
   eslint: {
     config: {
