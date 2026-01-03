@@ -4,8 +4,6 @@ import { hashPassword } from 'src/utils/password.util';
 import type { RequestClientInfo } from 'src/common/http/types/client-info.types';
 import { DispatchLogService } from 'src/modules/audit-log/application/dispatch-log.service';
 import { LogType } from 'src/modules/audit-log/domain';
-import { ApiException } from 'src/common/http/exception/api.exception';
-import { MessageCode } from 'src/common/http/types/message-codes';
 import { CountryUtil } from 'src/utils/country.util';
 import { VipMembershipService } from 'src/modules/vip/application/vip-membership.service';
 import { LinkReferralService } from 'src/modules/affiliate/referral/application/link-referral.service';
@@ -47,7 +45,7 @@ export class RegisterCredentialService {
     private readonly createUserService: CreateUserService,
     @Inject(USER_REPOSITORY)
     private readonly userRepository: UserRepositoryPort,
-  ) {}
+  ) { }
 
   @Transactional()
   async execute(
@@ -102,10 +100,7 @@ export class RegisterCredentialService {
       user = result.user;
     } catch (error) {
       if (error instanceof UserAlreadyExistsException) {
-        throw new ApiException(
-          MessageCode.USER_ALREADY_EXISTS,
-          HttpStatus.BAD_REQUEST,
-        );
+        throw error;
       }
       throw error;
     }

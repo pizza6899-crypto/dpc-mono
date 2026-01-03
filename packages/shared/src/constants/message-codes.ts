@@ -19,6 +19,12 @@ export enum MessageCode {
     AUTH_TOKEN_EXPIRED = 'AUTH_TOKEN_EXPIRED', // JWT 토큰이 만료되었을 때
     AUTH_INVALID_CREDENTIALS = 'AUTH_INVALID_CREDENTIALS', // 로그인 정보(ID, 비밀번호)가 틀렸을 때
     AUTH_ACCOUNT_INACTIVE = 'AUTH_ACCOUNT_INACTIVE', // 사용자 계정이 비활성화 상태일 때
+    AUTH_LOGIN_FAILED = 'AUTH_LOGIN_FAILED', // 로그인 실패
+    AUTH_SESSION_NOT_FOUND = 'AUTH_SESSION_NOT_FOUND', // 세션을 찾을 수 없을 때
+    AUTH_SESSION_NOT_OWNER = 'AUTH_SESSION_NOT_OWNER', // 세션 소유자가 아닐 때
+    AUTH_MULTIPLE_LOGIN_NOT_ALLOWED = 'AUTH_MULTIPLE_LOGIN_NOT_ALLOWED', // 다중 로그인 제한
+    AUTH_PASSWORD_MISMATCH = 'AUTH_PASSWORD_MISMATCH', // 비밀번호 불일치
+    AUTH_PASSWORD_SAME_AS_OLD = 'AUTH_PASSWORD_SAME_AS_OLD', // 새 비밀번호가 이전과 같을 때
 
     // --- 권한 관련 (Authorization) ---
     AUTH_ALREADY_AUTHENTICATED_USERS_CANNOT_ACCESS_THIS_ENDPOINT = 'AUTH_ALREADY_AUTHENTICATED_USERS_CANNOT_ACCESS_THIS_ENDPOINT', // 이미 로그인한 사용자가 접근할 수 없는 엔드포인트(예: 로그인, 회원가입)에 접근 시
@@ -72,6 +78,9 @@ export enum MessageCode {
     // --- 프로모션 관련 (Promotion) ---
     PROMOTION_NOT_FOUND = 'PROMOTION_NOT_FOUND', // 프로모션을 찾을 수 없을 때
     PROMOTION_TRANSLATION_NOT_FOUND = 'PROMOTION_TRANSLATION_NOT_FOUND', // 프로모션 번역을 찾을 수 없을 때
+    PROMOTION_NOT_ACTIVE = 'PROMOTION_NOT_ACTIVE', // 프로모션이 활성 상태가 아닐 때
+    PROMOTION_NOT_ELIGIBLE = 'PROMOTION_NOT_ELIGIBLE', // 프로모션 대상이 아닐 때
+    PROMOTION_ALREADY_USED = 'PROMOTION_ALREADY_USED', // 이미 사용된 프로모션일 때
 
     // --- 쓰로틀링 관련 (Throttle) ---
     THROTTLE_TOO_MANY_REQUESTS = 'THROTTLE_TOO_MANY_REQUESTS', // 요청 한도 초과

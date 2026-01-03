@@ -1,4 +1,4 @@
-import { Injectable, Inject, HttpStatus, Logger } from '@nestjs/common';
+import { Injectable, Inject, Logger } from '@nestjs/common';
 import { VerifyCredentialService } from './verify-credential.service';
 import { FindLoginAttemptsService } from './find-login-attempts.service';
 import { RecordLoginAttemptService } from './record-login-attempt.service';
@@ -9,8 +9,10 @@ import {
 } from '../ports/out';
 import type { AuthenticatedUser } from 'src/common/auth/types/auth.types';
 import type { RequestClientInfo } from 'src/common/http/types/client-info.types';
-import { ApiException } from 'src/common/http/exception/api.exception';
-import { MessageCode } from 'src/common/http/types';
+import {
+  AccountLockedException,
+  LoginFailedException,
+} from '../domain/exception';
 import {
   LoginAttemptResult,
   LoginFailureReason,
@@ -42,7 +44,7 @@ export class AuthenticateCredentialService {
     private readonly policy: CredentialPolicy,
     @Inject(CREDENTIAL_USER_REPOSITORY)
     private readonly userRepository: CredentialUserRepositoryPort,
-  ) {}
+  ) { }
 
   async execute({
     email,
@@ -70,10 +72,7 @@ export class AuthenticateCredentialService {
         isAdmin,
       });
 
-      throw new ApiException(
-        MessageCode.THROTTLE_TOO_MANY_REQUESTS,
-        HttpStatus.TOO_MANY_REQUESTS,
-      );
+      throw new AccountLockedException();
     }
 
     // 2. 자격 증명 검증
@@ -103,10 +102,7 @@ export class AuthenticateCredentialService {
         isAdmin,
       });
 
-      throw new ApiException(
-        MessageCode.AUTH_INVALID_CREDENTIALS,
-        HttpStatus.UNAUTHORIZED,
-      );
+      throw new LoginFailedException('Invalid credentials');
     }
 
     return user;

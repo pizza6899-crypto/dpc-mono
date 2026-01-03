@@ -3,18 +3,13 @@ import { MessageCode } from '@repo/shared';
 import { DomainException } from 'src/common/exception/domain.exception';
 
 export class AffiliateCodeException extends DomainException {
-  public readonly errorCode: MessageCode;
-  public readonly httpStatus: HttpStatus;
-
   constructor(
     message: string,
     errorCode: MessageCode = MessageCode.VALIDATION_ERROR,
     httpStatus: HttpStatus = HttpStatus.BAD_REQUEST,
   ) {
-    super(message);
+    super(message, errorCode, httpStatus);
     this.name = 'AffiliateCodeException';
-    this.errorCode = errorCode;
-    this.httpStatus = httpStatus;
   }
 }
 

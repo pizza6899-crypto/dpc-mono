@@ -1,3 +1,6 @@
+import { HttpStatus } from '@nestjs/common';
+import { MessageCode } from '@repo/shared';
+
 /**
  * 도메인 레이어의 기본 예외 클래스
  *
@@ -5,7 +8,11 @@
  * 글로벌 필터에서 적절한 HTTP 상태 코드로 변환됩니다.
  */
 export class DomainException extends Error {
-  constructor(message: string) {
+  constructor(
+    message: string,
+    public readonly errorCode: MessageCode = MessageCode.VALIDATION_ERROR,
+    public readonly httpStatus: HttpStatus = HttpStatus.BAD_REQUEST,
+  ) {
     super(message);
     this.name = this.constructor.name;
     Error.captureStackTrace(this, this.constructor);

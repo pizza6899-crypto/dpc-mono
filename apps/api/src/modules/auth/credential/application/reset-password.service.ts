@@ -1,4 +1,4 @@
-import { Injectable, Inject, Logger, HttpStatus } from '@nestjs/common';
+import { Injectable, Inject, Logger } from '@nestjs/common';
 import { Transactional } from '@nestjs-cls/transactional';
 import { USER_REPOSITORY } from 'src/modules/user/ports/out/user.repository.token';
 import type { UserRepositoryPort } from 'src/modules/user/ports/out/user.repository.port';
@@ -6,8 +6,8 @@ import { PASSWORD_RESET_TOKEN_REPOSITORY } from '../ports/out/password-reset-tok
 import type { PasswordResetTokenRepositoryPort } from '../ports/out/password-reset-token.repository.port';
 import { hashPassword } from 'src/utils/password.util';
 import type { RequestClientInfo } from 'src/common/http/types/client-info.types';
-import { ApiException } from 'src/common/http/exception/api.exception';
-import { MessageCode } from 'src/common/http/types';
+import { InvalidPasswordResetTokenException } from '../domain/exception';
+import { UserNotFoundException } from 'src/modules/user/domain/user.exception';
 
 export interface ResetPasswordParams {
   token: string;
@@ -29,7 +29,7 @@ export class ResetPasswordService {
     private readonly userRepository: UserRepositoryPort,
     @Inject(PASSWORD_RESET_TOKEN_REPOSITORY)
     private readonly tokenRepository: PasswordResetTokenRepositoryPort,
-  ) {}
+  ) { }
 
   @Transactional()
   async execute(params: ResetPasswordParams): Promise<void> {
@@ -38,27 +38,18 @@ export class ResetPasswordService {
     // 1. 토큰 조회 및 검증
     const tokenData = await this.tokenRepository.findByToken(token);
     if (!tokenData) {
-      throw new ApiException(
-        MessageCode.AUTH_INVALID_CREDENTIALS,
-        HttpStatus.BAD_REQUEST,
-      );
+      throw new InvalidPasswordResetTokenException();
     }
 
     // 2. 사용자 조회
     const user = await this.userRepository.findById(tokenData.userId);
     if (!user) {
-      throw new ApiException(
-        MessageCode.USER_NOT_FOUND,
-        HttpStatus.NOT_FOUND,
-      );
+      throw new UserNotFoundException(tokenData.userId.toString());
     }
 
     // 3. 일반 회원가입 사용자인지 확인
     if (!user.isCredentialUser()) {
-      throw new ApiException(
-        MessageCode.AUTH_INVALID_CREDENTIALS,
-        HttpStatus.BAD_REQUEST,
-      );
+      throw new InvalidPasswordResetTokenException();
     }
 
     // 4. 새 비밀번호 해싱

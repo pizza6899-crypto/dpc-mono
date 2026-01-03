@@ -1,24 +1,20 @@
 import { HttpStatus } from '@nestjs/common';
 import { MessageCode } from '@repo/shared';
+import { DomainException } from 'src/common/exception/domain.exception';
 
 /**
  * Deposit 도메인 예외 기본 클래스
  *
  * @errorCode MessageCode.VALIDATION_ERROR
  */
-export class DepositException extends Error {
-  public readonly errorCode: MessageCode;
-  public readonly httpStatus: HttpStatus;
-
+export class DepositException extends DomainException {
   constructor(
     message: string,
     errorCode: MessageCode = MessageCode.VALIDATION_ERROR,
     httpStatus: HttpStatus = HttpStatus.BAD_REQUEST,
   ) {
-    super(message);
+    super(message, errorCode, httpStatus);
     this.name = 'DepositException';
-    this.errorCode = errorCode;
-    this.httpStatus = httpStatus;
   }
 }
 

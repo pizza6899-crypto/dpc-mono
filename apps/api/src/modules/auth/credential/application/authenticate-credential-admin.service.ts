@@ -1,4 +1,4 @@
-import { Injectable, Inject, HttpStatus, Logger } from '@nestjs/common';
+import { Injectable, Inject, Logger } from '@nestjs/common';
 import { Transactional } from '@nestjs-cls/transactional';
 import { VerifyCredentialService } from './verify-credential.service';
 import { FindLoginAttemptsService } from './find-login-attempts.service';
@@ -10,8 +10,10 @@ import {
 } from '../ports/out';
 import type { AuthenticatedUser } from 'src/common/auth/types/auth.types';
 import type { RequestClientInfo } from 'src/common/http/types/client-info.types';
-import { ApiException } from 'src/common/http/exception/api.exception';
-import { MessageCode } from 'src/common/http/types';
+import {
+  AccountLockedException,
+  LoginFailedException,
+} from '../domain/exception';
 import {
   LoginAttemptResult,
   LoginFailureReason,
@@ -40,7 +42,7 @@ export class AuthenticateCredentialAdminService {
     private readonly policy: CredentialPolicy,
     @Inject(CREDENTIAL_USER_REPOSITORY)
     private readonly userRepository: CredentialUserRepositoryPort,
-  ) {}
+  ) { }
 
   @Transactional()
   async execute({
@@ -67,10 +69,7 @@ export class AuthenticateCredentialAdminService {
         isAdmin: true,
       });
 
-      throw new ApiException(
-        MessageCode.THROTTLE_TOO_MANY_REQUESTS,
-        HttpStatus.TOO_MANY_REQUESTS,
-      );
+      throw new AccountLockedException();
     }
 
     // 2. 자격 증명 검증 (관리자)
@@ -99,10 +98,7 @@ export class AuthenticateCredentialAdminService {
         isAdmin: true,
       });
 
-      throw new ApiException(
-        MessageCode.AUTH_INVALID_CREDENTIALS,
-        HttpStatus.UNAUTHORIZED,
-      );
+      throw new LoginFailedException('Invalid admin credentials');
     }
 
     return user;

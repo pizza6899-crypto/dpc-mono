@@ -1,11 +1,17 @@
-// src/modules/user/domain/user.exception.ts
+import { HttpStatus } from '@nestjs/common';
+import { MessageCode } from '@repo/shared';
+import { DomainException } from 'src/common/exception/domain.exception';
 
 /**
  * User 도메인 예외 기본 클래스
  */
-export class UserException extends Error {
-  constructor(message: string) {
-    super(message);
+export class UserException extends DomainException {
+  constructor(
+    message: string,
+    errorCode: MessageCode = MessageCode.VALIDATION_ERROR,
+    httpStatus: HttpStatus = HttpStatus.BAD_REQUEST,
+  ) {
+    super(message, errorCode, httpStatus);
     this.name = 'UserException';
   }
 }
@@ -16,7 +22,7 @@ export class UserException extends Error {
 export class UserNotFoundException extends UserException {
   constructor(identifier: string | bigint) {
     const id = typeof identifier === 'bigint' ? identifier.toString() : identifier;
-    super(`User not found: ${id}`);
+    super(`User not found: ${id}`, MessageCode.USER_NOT_FOUND, HttpStatus.NOT_FOUND);
     this.name = 'UserNotFoundException';
   }
 }
@@ -26,7 +32,7 @@ export class UserNotFoundException extends UserException {
  */
 export class UserAlreadyExistsException extends UserException {
   constructor(email: string) {
-    super(`User already exists: ${email}`);
+    super(`User already exists: ${email}`, MessageCode.USER_ALREADY_EXISTS, HttpStatus.BAD_REQUEST);
     this.name = 'UserAlreadyExistsException';
   }
 }

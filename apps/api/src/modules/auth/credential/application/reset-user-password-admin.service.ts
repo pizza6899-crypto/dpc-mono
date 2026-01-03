@@ -1,11 +1,11 @@
-import { Injectable, Inject, Logger, HttpStatus } from '@nestjs/common';
+import { Injectable, Inject, Logger } from '@nestjs/common';
 import { Transactional } from '@nestjs-cls/transactional';
 import { USER_REPOSITORY } from 'src/modules/user/ports/out/user.repository.token';
 import type { UserRepositoryPort } from 'src/modules/user/ports/out/user.repository.port';
 import { hashPassword } from 'src/utils/password.util';
 import type { RequestClientInfo } from 'src/common/http/types/client-info.types';
-import { ApiException } from 'src/common/http/exception/api.exception';
-import { MessageCode } from 'src/common/http/types';
+import { UserNotFoundException } from 'src/modules/user/domain/user.exception';
+import { LoginFailedException } from '../domain/exception';
 import { nanoid } from 'nanoid';
 
 export interface ResetUserPasswordAdminParams {
@@ -33,7 +33,7 @@ export class ResetUserPasswordAdminService {
   constructor(
     @Inject(USER_REPOSITORY)
     private readonly userRepository: UserRepositoryPort,
-  ) {}
+  ) { }
 
   @Transactional()
   async execute(
@@ -44,18 +44,12 @@ export class ResetUserPasswordAdminService {
     // 1. 대상 사용자 조회
     const targetUser = await this.userRepository.findById(targetUserId);
     if (!targetUser) {
-      throw new ApiException(
-        MessageCode.USER_NOT_FOUND,
-        HttpStatus.NOT_FOUND,
-      );
+      throw new UserNotFoundException(targetUserId.toString());
     }
 
     // 2. 일반 회원가입 사용자인지 확인
     if (!targetUser.isCredentialUser()) {
-      throw new ApiException(
-        MessageCode.AUTH_INVALID_CREDENTIALS,
-        HttpStatus.BAD_REQUEST,
-      );
+      throw new LoginFailedException('Target user is not a credential user');
     }
 
     // 3. 새 비밀번호 생성 또는 사용

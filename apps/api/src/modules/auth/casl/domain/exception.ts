@@ -1,3 +1,5 @@
+import { HttpStatus } from '@nestjs/common';
+import { MessageCode } from '@repo/shared';
 import { DomainException } from 'src/common/exception/domain.exception';
 
 /**
@@ -5,7 +7,12 @@ import { DomainException } from 'src/common/exception/domain.exception';
  */
 export class InsufficientPermissionException extends DomainException {
   constructor(action: string, subject: string) {
-    super(`Insufficient permission: cannot ${action} ${subject}`);
+    super(
+      `Insufficient permission: cannot ${action} ${subject}`,
+      MessageCode.AUTH_INSUFFICIENT_PERMISSIONS,
+      HttpStatus.FORBIDDEN,
+    );
+    this.name = 'InsufficientPermissionException';
   }
 }
 

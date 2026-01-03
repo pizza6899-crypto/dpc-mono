@@ -1,12 +1,12 @@
-import { Injectable, Inject, Logger, HttpStatus } from '@nestjs/common';
+import { Injectable, Inject, Logger } from '@nestjs/common';
 import { Transactional } from '@nestjs-cls/transactional';
 import { VerifyCredentialService } from './verify-credential.service';
 import { hashPassword } from 'src/utils/password.util';
 import type { RequestClientInfo } from 'src/common/http/types/client-info.types';
-import { ApiException } from 'src/common/http/exception/api.exception';
-import { MessageCode } from 'src/common/http/types';
 import type { UserRepositoryPort } from 'src/modules/user/ports/out/user.repository.port';
 import { USER_REPOSITORY } from 'src/modules/user/ports/out/user.repository.token';
+import { UserNotFoundException } from 'src/modules/user/domain/user.exception';
+import { PasswordMismatchException, LoginFailedException } from '../domain/exception';
 
 export interface ChangePasswordParams {
   userId: bigint;
@@ -29,7 +29,7 @@ export class ChangePasswordService {
     private readonly verifyService: VerifyCredentialService,
     @Inject(USER_REPOSITORY)
     private readonly userRepository: UserRepositoryPort,
-  ) {}
+  ) { }
 
   @Transactional()
   async execute(params: ChangePasswordParams): Promise<void> {
@@ -38,27 +38,18 @@ export class ChangePasswordService {
     // 1. 사용자 조회
     const user = await this.userRepository.findById(userId);
     if (!user) {
-      throw new ApiException(
-        MessageCode.USER_NOT_FOUND,
-        HttpStatus.NOT_FOUND,
-      );
+      throw new UserNotFoundException(userId.toString());
     }
 
     // 2. 일반 회원가입 사용자인지 확인
     if (!user.isCredentialUser()) {
-      throw new ApiException(
-        MessageCode.AUTH_INVALID_CREDENTIALS,
-        HttpStatus.BAD_REQUEST,
-      );
+      throw new LoginFailedException('User is not a credential user');
     }
 
     // 3. 현재 비밀번호 검증
     const authInfo = user.getAuthInfo();
     if (!authInfo.passwordHash) {
-      throw new ApiException(
-        MessageCode.AUTH_INVALID_CREDENTIALS,
-        HttpStatus.BAD_REQUEST,
-      );
+      throw new LoginFailedException('User has no password set');
     }
 
     const isValidPassword = await this.verifyService.execute({
@@ -68,10 +59,7 @@ export class ChangePasswordService {
     });
 
     if (!isValidPassword) {
-      throw new ApiException(
-        MessageCode.AUTH_INVALID_CREDENTIALS,
-        HttpStatus.UNAUTHORIZED,
-      );
+      throw new PasswordMismatchException();
     }
 
     // 4. 새 비밀번호 해싱

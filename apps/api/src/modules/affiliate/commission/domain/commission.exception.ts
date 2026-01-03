@@ -8,18 +8,13 @@ import { DomainException } from 'src/common/exception/domain.exception';
  * 커미션 도메인 예외 기본 클래스
  */
 export class CommissionException extends DomainException {
-  public readonly errorCode: MessageCode;
-  public readonly httpStatus: HttpStatus;
-
   constructor(
     message: string,
     errorCode: MessageCode = MessageCode.VALIDATION_ERROR,
     httpStatus: HttpStatus = HttpStatus.BAD_REQUEST,
   ) {
-    super(message);
+    super(message, errorCode, httpStatus);
     this.name = 'CommissionException';
-    this.errorCode = errorCode;
-    this.httpStatus = httpStatus;
   }
 }
 

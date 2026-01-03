@@ -6,9 +6,9 @@ import { DispatchLogService } from 'src/modules/audit-log/application/dispatch-l
 import { LogType } from 'src/modules/audit-log/domain';
 import { VipMembershipService } from 'src/modules/vip/application/vip-membership.service';
 import { SocialType, UserRoleType } from '@repo/database';
-import { ApiException } from 'src/common/http/exception/api.exception';
-import { MessageCode } from 'src/common/http/types/message-codes';
 import { User } from 'src/modules/user/domain';
+import { DomainException } from 'src/common/exception/domain.exception';
+import { MessageCode } from '@repo/shared';
 import { USER_REPOSITORY } from 'src/modules/user/ports/out/user.repository.token';
 import type { UserRepositoryPort } from 'src/modules/user/ports/out/user.repository.port';
 import { CreateUserService } from 'src/modules/user/application/create-user.service';
@@ -48,7 +48,7 @@ export class RegisterSocialService {
     private readonly createUserService: CreateUserService,
     @Inject(USER_REPOSITORY)
     private readonly userRepository: UserRepositoryPort,
-  ) {}
+  ) { }
 
   @Transactional()
   async execute(params: RegisterSocialParams): Promise<RegisterSocialResult> {
@@ -77,10 +77,7 @@ export class RegisterSocialService {
         isNewUser = true;
       } catch (error) {
         if (error instanceof UserAlreadyExistsException) {
-          throw new ApiException(
-            MessageCode.USER_ALREADY_EXISTS,
-            HttpStatus.BAD_REQUEST,
-          );
+          throw error;
         }
         throw error;
       }
@@ -129,9 +126,6 @@ export class RegisterSocialService {
       //     data: { socialId: socialUser.socialId, socialType: socialType },
       //   });
       // }
-      if (!existingUser) {
-        throw new ApiException(MessageCode.INTERNAL_SERVER_ERROR, 500);
-      }
       user = existingUser;
     }
 
