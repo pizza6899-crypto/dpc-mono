@@ -1,0 +1,32 @@
+{
+    "welcome": "환영합니다",
+    "dashboard": "대시보드",
+    "users": "회원 관리",
+    "payments": "입출금 관리",
+    "settings": "설정",
+    "logout": "로그아웃",
+    "logout_success": "성공적으로 로그아웃되었습니다.",
+    "login": {
+        "title": "관리자 로그인",
+        "description": "계정에 로그인하세요",
+        "email": "이메일",
+        "password": "비밀번호",
+        "submit": "로그인",
+        "processing": "로그인 중...",
+        "success_msg": "성공적으로 로그인되었습니다.",
+        "footer_copy": "DPC Admin Portal",
+        "footer_phrase": "현대적 관리를 위한 정밀한 설계",
+        "error": {
+            "invalid_email": "올바른 이메일 형식이 아닙니다.",
+            "password_too_short": "비밀번호는 최소 4자 이상이어야 합니다.",
+            "failed": "로그인에 실패했습니다. 이메일과 비밀번호를 확인해주세요."
+        }
+    },
+    "common": {
+        "save": "저장",
+        "cancel": "취소",
+        "delete": "삭제",
+        "error": "에러",
+        "success": "성공"
+    }
+}

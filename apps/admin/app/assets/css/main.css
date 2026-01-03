@@ -1,0 +1,28 @@
+/* Nuxt UI / Tailwind v4 Global Styles */
+@import "tailwindcss";
+@import "@nuxt/ui";
+
+@layer base {
+    body {
+        @apply antialiased font-sans text-gray-700 dark:text-gray-200 bg-white dark:bg-gray-950;
+    }
+
+    /* 스크롤바 다크모드 대응 */
+    ::-webkit-scrollbar {
+        width: 6px;
+        height: 6px;
+    }
+
+    ::-webkit-scrollbar-track {
+        @apply bg-transparent;
+    }
+
+    ::-webkit-scrollbar-thumb {
+        @apply bg-gray-300 dark:bg-gray-700 rounded-full hover:bg-gray-400 dark:hover:bg-gray-600;
+    }
+}
+
+/* 선택(Selection) 색상 최적화 */
+::selection {
+    @apply bg-primary-500/30;
+}

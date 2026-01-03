@@ -1,0 +1,32 @@
+{
+    "welcome": "Welcome",
+    "dashboard": "Dashboard",
+    "users": "User Management",
+    "payments": "Payment Management",
+    "settings": "Settings",
+    "logout": "Logout",
+    "logout_success": "Successfully logged out.",
+    "login": {
+        "title": "Admin Login",
+        "description": "Please sign in to your account",
+        "email": "Email",
+        "password": "Password",
+        "submit": "Sign In",
+        "processing": "Processing...",
+        "success_msg": "Successfully logged in.",
+        "footer_copy": "DPC Admin Portal",
+        "footer_phrase": "Crafted with precision for modern management.",
+        "error": {
+            "invalid_email": "Invalid email format.",
+            "password_too_short": "Password must be at least 4 characters.",
+            "failed": "Login failed. Please check your email and password."
+        }
+    },
+    "common": {
+        "save": "Save",
+        "cancel": "Cancel",
+        "delete": "Delete",
+        "error": "Error",
+        "success": "Success"
+    }
+}

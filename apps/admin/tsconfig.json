@@ -6,6 +6,15 @@
       // @apis 별칭이 Nuxt가 인식하는 별칭보다 우선순위를 갖게 합니다.
       "@apis/*": [
         "./apis/*"
+      ],
+      "@app/*": [
+        "./app/*"
+      ],
+      "@stores/*": [
+        "./app/stores/*"
+      ],
+      "@stores": [
+        "./app/stores"
       ]
     },
   },
