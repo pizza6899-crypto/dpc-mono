@@ -1,0 +1,20 @@
+{
+    "login": {
+        "title": "Admin Portal",
+        "description": "Sign in to manage your application",
+        "email": "Email",
+        "password": "Password",
+        "signIn": "Sign In",
+        "noAccount": "Don't have an account?",
+        "contactAdmin": "Contact your administrator",
+        "secureConnection": "Secure, encrypted connection",
+        "success": "Success",
+        "loginSuccess": "You have been successfully logged in.",
+        "error": "Error",
+        "invalidCredentials": "Invalid email or password.",
+        "validation": {
+            "email": "Please enter a valid email address.",
+            "password": "Password must be at least 8 characters."
+        }
+    }
+}

@@ -1,49 +1,26 @@
 import axios, { type AxiosRequestConfig, type AxiosError } from 'axios'
+import { useAuthStore } from '~/stores/auth'
 
-// 전역 설정
+// 1. axios 인스턴스 생성
 export const AXIOS_INSTANCE = axios.create({
-    baseURL: import.meta.env.VITE_API_BASE_URL || '/api', // nuxt.config.ts의 proxy 설정과 맞춤
     timeout: 10000,
+    withCredentials: true, // 💡 중요: 이 옵션이 있어야 쿠키가 서버로 전송됩니다.
     headers: {
         'Content-Type': 'application/json',
     },
 })
 
-// 💡 Request Interceptor: 요청 보낼 때 헤더에 토큰 자동 주입
-AXIOS_INSTANCE.interceptors.request.use(
-    (config) => {
-        // CSR 환경이므로 localStorage나 cookie에서 토큰 추출
-        // Pinia store를 여기서 직접 부르면 초기화 에러가 날 수 있으므로 필요 시 사용
-        const token = localStorage.getItem('auth_token')
-
-        if (token && config.headers) {
-            config.headers.Authorization = `Bearer ${token}`
-        }
-        return config
-    },
-    (error) => Promise.reject(error)
-)
-
-// 💡 Response Interceptor: 에러 공통 처리 (401 권한 없음 등)
-AXIOS_INSTANCE.interceptors.response.use(
-    (response) => response,
-    (error: AxiosError) => {
-        if (error.response?.status === 401) {
-            // 로그아웃 처리 및 로그인 페이지 이동 로직
-            console.error('인증이 만료되었습니다.')
-            localStorage.removeItem('auth_token')
-            window.location.href = '/login'
-        }
-        return Promise.reject(error)
-    }
-)
-
-// Orval mutator 전용 함수
 export const customInstance = <T>(config: AxiosRequestConfig): Promise<T> => {
+    const runConfig = useRuntimeConfig()
+    const baseURL = runConfig.public.apiBaseUrl || '/api'
+
     const source = axios.CancelToken.source()
+
     const promise = AXIOS_INSTANCE({
         ...config,
+        baseURL,
         cancelToken: source.token,
+        // 💡 이제 headers에서 Authorization 주입 로직을 삭제합니다. (브라우저가 자동 처리)
     }).then(({ data }) => data)
 
     // @ts-ignore
@@ -53,5 +30,20 @@ export const customInstance = <T>(config: AxiosRequestConfig): Promise<T> => {
 
     return promise
 }
+
+// 2. 전역 에러 처리 (세션 만료 대응)
+AXIOS_INSTANCE.interceptors.response.use(
+    (response) => response,
+    (error: AxiosError) => {
+        if (error.response?.status === 401) {
+            const authStore = useAuthStore()
+            authStore.clearAuth() // 스토어 초기화
+
+            // 세션이 만료되었으므로 로그인 페이지로 이동
+            navigateTo('/login')
+        }
+        return Promise.reject(error)
+    }
+)
 
 export default customInstance

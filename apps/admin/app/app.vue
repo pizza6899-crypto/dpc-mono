@@ -20,6 +20,7 @@ useHead({
 
 const title = 'Admin'
 const description = 'Admin'
+const toaster = { duration: 2000 }
 
 useSeoMeta({
   title,
@@ -28,7 +29,7 @@ useSeoMeta({
 </script>
 
 <template>
-  <UApp>
+  <UApp :toaster="toaster">
     <NuxtLoadingIndicator />
 
     <NuxtLayout>

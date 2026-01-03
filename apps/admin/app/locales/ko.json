@@ -1,0 +1,20 @@
+{
+    "login": {
+        "title": "관리자 포털",
+        "description": "애플리케이션 관리를 위해 로그인하세요",
+        "email": "이메일",
+        "password": "비밀번호",
+        "signIn": "로그인",
+        "noAccount": "계정이 없으신가요?",
+        "contactAdmin": "관리자에게 문의하세요",
+        "secureConnection": "안전한 암호화 연결",
+        "success": "성공",
+        "loginSuccess": "성공적으로 로그인되었습니다.",
+        "error": "오류",
+        "invalidCredentials": "이메일 또는 비밀번호가 올바르지 않습니다.",
+        "validation": {
+            "email": "유효한 이메일 주소를 입력해주세요.",
+            "password": "비밀번호는 최소 8자 이상이어야 합니다."
+        }
+    }
+}

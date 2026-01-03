@@ -6,9 +6,17 @@ export default defineNuxtConfig({
     '@nuxt/eslint',
     '@nuxt/ui',
     '@vueuse/nuxt',
-    '@hebilicious/vue-query-nuxt',
-    '@nuxtjs/i18n'
+    '@nuxtjs/i18n',
+    '@pinia/nuxt',
+    'pinia-plugin-persistedstate/nuxt',
   ],
+
+  runtimeConfig: {
+    public: {
+      apiBaseUrl: '',
+      appName: 'Default Admin'
+    }
+  },
 
   app: {
     head: {
@@ -26,7 +34,13 @@ export default defineNuxtConfig({
   compatibilityDate: '2024-07-11',
 
   i18n: {
-
+    locales: [
+      { code: 'en', file: 'en.json', name: 'English' },
+      { code: 'ko', file: 'ko.json', name: '한국어' }
+    ],
+    defaultLocale: 'en',
+    strategy: 'no_prefix',
+    langDir: '../app/locales'
   },
 
   eslint: {
@@ -36,5 +50,8 @@ export default defineNuxtConfig({
         braceStyle: '1tbs'
       }
     }
-  }
+  },
+
+  pinia: {
+  },
 })
