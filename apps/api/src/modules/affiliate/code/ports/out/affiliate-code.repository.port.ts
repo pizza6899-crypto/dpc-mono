@@ -14,9 +14,17 @@ export interface AffiliateCodeRepositoryPort {
   }): Promise<AffiliateCode>;
 
   /**
-   * 사용자별 코드 목록 조회
+   * 사용자별 코드 목록 조회 (페이징 지원)
    */
-  findByUserId(userId: bigint): Promise<AffiliateCode[]>;
+  findByUserId(
+    userId: bigint,
+    params?: {
+      page?: number;
+      limit?: number;
+      sortBy?: string;
+      sortOrder?: 'asc' | 'desc';
+    },
+  ): Promise<AffiliateCode[]>;
 
   /**
    * ID로 코드 조회

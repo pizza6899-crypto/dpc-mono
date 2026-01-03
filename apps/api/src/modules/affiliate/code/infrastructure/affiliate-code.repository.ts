@@ -41,10 +41,29 @@ export class AffiliateCodeRepository implements AffiliateCodeRepositoryPort {
     return this.mapper.toDomain(result);
   }
 
-  async findByUserId(userId: bigint): Promise<AffiliateCode[]> {
+  async findByUserId(
+    userId: bigint,
+    params?: {
+      page?: number;
+      limit?: number;
+      sortBy?: string;
+      sortOrder?: 'asc' | 'desc';
+    },
+  ): Promise<AffiliateCode[]> {
+    const {
+      page = 1,
+      limit = 20,
+      sortBy = 'createdAt',
+      sortOrder = 'desc',
+    } = params || {};
+
+    const skip = (page - 1) * limit;
+
     const results = await this.tx.affiliateCode.findMany({
       where: { userId },
-      orderBy: { createdAt: 'desc' },
+      orderBy: { [sortBy]: sortOrder },
+      skip,
+      take: limit,
     });
 
     return results.map((result) => this.mapper.toDomain(result));

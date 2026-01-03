@@ -6,6 +6,7 @@ import {
   Patch,
   Body,
   Param,
+  Query,
   HttpCode,
   HttpStatus,
 } from '@nestjs/common';
@@ -13,23 +14,21 @@ import { ApiTags, ApiOperation, ApiParam } from '@nestjs/swagger';
 import {
   ApiStandardResponse,
   ApiStandardErrors,
+  ApiPaginatedResponse,
 } from 'src/common/http/decorators/api-response.decorator';
+import { PaginatedResponseDto } from 'src/common/http/types/pagination.types';
 import { CurrentUser } from 'src/common/auth/decorators/current-user.decorator';
 import type { CurrentUserWithSession } from 'src/common/auth/decorators/current-user.decorator';
-import { RequestClientInfoParam } from 'src/common/auth/decorators/request-info.decorator';
-import type { RequestClientInfo } from 'src/common/http/types/client-info.types';
 import { CreateCodeService } from '../../application/create-code.service';
 import { FindCodesService } from '../../application/find-codes.service';
 import { FindDefaultCodeService } from '../../application/find-default-code.service';
 import { UpdateCodeService } from '../../application/update-code.service';
-import { ToggleCodeActiveService } from '../../application/toggle-code-active.service';
-import { SetCodeAsDefaultService } from '../../application/set-code-as-default.service';
 import { ValidateCodeFormatService } from '../../application/validate-code-format.service';
 import { CreateAffiliateCodeDto } from './dto/request/create-affiliate-code.dto';
 import { UpdateAffiliateCodeDto } from './dto/request/update-affiliate-code.dto';
 import { ValidateCodeFormatDto } from './dto/request/validate-code-format.dto';
+import { GetCodesRequestDto } from './dto/request/get-codes-request.dto';
 import { AffiliateCodeResponseDto } from './dto/response/affiliate-code.response.dto';
-import { GetCodesResponseDto } from './dto/response/get-codes.response.dto';
 import { ValidateCodeFormatResponseDto } from './dto/response/validate-code-format.response.dto';
 import { AffiliateCode } from '../../domain';
 import { LogType } from 'src/modules/audit-log/domain';
@@ -44,8 +43,6 @@ export class AffiliateCodeController {
     private readonly findCodesService: FindCodesService,
     private readonly findDefaultCodeService: FindDefaultCodeService,
     private readonly updateCodeService: UpdateCodeService,
-    private readonly toggleCodeActiveService: ToggleCodeActiveService,
-    private readonly setCodeAsDefaultService: SetCodeAsDefaultService,
     private readonly validateCodeFormatService: ValidateCodeFormatService,
   ) { }
 
@@ -91,45 +88,56 @@ export class AffiliateCodeController {
     category: 'AFFILIATE',
     action: 'AFFILIATE_CODE_LIST_VIEW',
     extractMetadata: (args, result) => ({
-      count: result?.codes?.length ?? 0,
+      count: result?.data?.length ?? 0,
       total: result?.total ?? 0,
     }),
   })
   @ApiOperation({
     summary: 'Get affiliate codes / 어플리에이트 코드 목록 조회',
+    description:
+      '사용자의 어플리에이트 코드 목록을 조회합니다. 만약 코드가 하나도 없다면 자동으로 대표 코드를 하나 생성하여 반환합니다.',
   })
-  @ApiStandardResponse(GetCodesResponseDto, {
+  @ApiPaginatedResponse(AffiliateCodeResponseDto, {
     status: HttpStatus.OK,
     description:
       'Successfully retrieved affiliate codes / 어플리에이트 코드 목록 조회 성공',
   })
   async getCodes(
     @CurrentUser() user: CurrentUserWithSession,
-  ): Promise<GetCodesResponseDto> {
+    @Query() query: GetCodesRequestDto,
+  ): Promise<PaginatedResponseDto<AffiliateCodeResponseDto>> {
     const result = await this.findCodesService.execute({
       userId: user.id,
+      page: query.page,
+      limit: query.limit,
+      sortBy: query.sortBy,
+      sortOrder: query.sortOrder,
     });
     return {
-      codes: result.codes.map((code) => this.toResponse(code)),
-      total: result.total,
-      limit: result.limit,
-    };
+      data: result.codes.map((code) => this.toResponse(code)),
+      pagination: {
+        page: result.page,
+        limit: result.limit,
+        total: result.total,
+      },
+    } as unknown as PaginatedResponseDto<AffiliateCodeResponseDto>;
   }
 
-  /**
-   * 대표 어플리에이트 코드 조회
-   */
   @Get('default')
   @HttpCode(HttpStatus.OK)
   @AuditLog({
     type: LogType.ACTIVITY,
     category: 'AFFILIATE',
     action: 'AFFILIATE_CODE_DEFAULT_VIEW',
-    extractMetadata: (args, result) =>
-      result ? { codeId: result.id, code: result.code } : undefined,
+    extractMetadata: (args, result) => ({
+      codeId: result?.id,
+      code: result?.code,
+    }),
   })
   @ApiOperation({
     summary: 'Get default affiliate code / 대표 어플리에이트 코드 조회',
+    description:
+      '사용자의 대표 어플리에이트 코드를 조회합니다. 만약 코드가 없다면 자동으로 하나를 생성하여 반환합니다.',
   })
   @ApiStandardResponse(AffiliateCodeResponseDto, {
     status: HttpStatus.OK,
@@ -138,11 +146,11 @@ export class AffiliateCodeController {
   })
   async getDefaultCode(
     @CurrentUser() user: CurrentUserWithSession,
-  ): Promise<AffiliateCodeResponseDto | null> {
+  ): Promise<AffiliateCodeResponseDto> {
     const code = await this.findDefaultCodeService.execute({
       userId: user.id,
     });
-    return code ? this.toResponse(code) : null;
+    return this.toResponse(code);
   }
 
   /**
@@ -175,80 +183,12 @@ export class AffiliateCodeController {
       id,
       userId: user.id,
       campaignName: dto.campaignName,
+      isActive: dto.isActive,
+      isDefault: dto.isDefault,
     });
     return this.toResponse(code);
   }
 
-  /**
-   * 어플리에이트 코드 활성화/비활성화 토글
-   */
-  @Patch(':id/toggle-active')
-  @HttpCode(HttpStatus.OK)
-  @AuditLog({
-    type: LogType.ACTIVITY,
-    category: 'AFFILIATE',
-    action: 'AFFILIATE_CODE_TOGGLE_ACTIVE',
-    extractMetadata: (args, result) => ({
-      codeId: result?.id,
-      code: result?.code,
-      isActive: result?.isActive,
-    }),
-  })
-  @ApiOperation({
-    summary:
-      'Toggle affiliate code active status / 어플리에이트 코드 활성화/비활성화 토글',
-  })
-  @ApiParam({ name: 'id', description: 'Code ID / 코드 ID' })
-  @ApiStandardResponse(AffiliateCodeResponseDto, {
-    status: HttpStatus.OK,
-    description:
-      'Successfully toggled affiliate code status / 어플리에이트 코드 활성화 토글 성공',
-  })
-  async toggleActive(
-    @CurrentUser() user: CurrentUserWithSession,
-    @Param('id') id: string,
-  ): Promise<AffiliateCodeResponseDto> {
-    const code = await this.toggleCodeActiveService.execute({
-      id,
-      userId: user.id,
-    });
-    return this.toResponse(code);
-  }
-
-  /**
-   * 기본 어플리에이트 코드 설정
-   */
-  @Patch(':id/set-default')
-  @HttpCode(HttpStatus.OK)
-  @AuditLog({
-    type: LogType.ACTIVITY,
-    category: 'AFFILIATE',
-    action: 'AFFILIATE_CODE_SET_DEFAULT',
-    extractMetadata: (args, result) => ({
-      codeId: result?.id,
-      code: result?.code,
-      isDefault: result?.isDefault,
-    }),
-  })
-  @ApiOperation({
-    summary: 'Set default affiliate code / 기본 어플리에이트 코드 설정',
-  })
-  @ApiParam({ name: 'id', description: 'Code ID / 코드 ID' })
-  @ApiStandardResponse(AffiliateCodeResponseDto, {
-    status: HttpStatus.OK,
-    description:
-      'Successfully set default affiliate code / 기본 어플리에이트 코드 설정 성공',
-  })
-  async setDefault(
-    @CurrentUser() user: CurrentUserWithSession,
-    @Param('id') id: string,
-  ): Promise<AffiliateCodeResponseDto> {
-    const code = await this.setCodeAsDefaultService.execute({
-      id,
-      userId: user.id,
-    });
-    return this.toResponse(code);
-  }
 
   /**
    * 코드 형식 검증

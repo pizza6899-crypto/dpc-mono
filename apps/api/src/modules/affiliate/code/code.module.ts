@@ -5,8 +5,6 @@ import { FindCodesService } from './application/find-codes.service';
 import { FindCodeByCodeService } from './application/find-code-by-code.service';
 import { FindDefaultCodeService } from './application/find-default-code.service';
 import { UpdateCodeService } from './application/update-code.service';
-import { ToggleCodeActiveService } from './application/toggle-code-active.service';
-import { SetCodeAsDefaultService } from './application/set-code-as-default.service';
 import { IncrementCodeUsageService } from './application/increment-code-usage.service';
 import { ValidateCodeFormatService } from './application/validate-code-format.service';
 import { FindCodesAdminService } from './application/find-codes-admin.service';
@@ -27,8 +25,6 @@ import { AuditLogModule } from 'src/modules/audit-log/audit-log.module';
     FindCodeByCodeService,
     FindDefaultCodeService,
     UpdateCodeService,
-    ToggleCodeActiveService,
-    SetCodeAsDefaultService,
     IncrementCodeUsageService,
     ValidateCodeFormatService,
     FindCodesAdminService,
@@ -50,11 +46,9 @@ import { AuditLogModule } from 'src/modules/audit-log/audit-log.module';
     FindCodeByCodeService,
     FindDefaultCodeService,
     UpdateCodeService,
-    ToggleCodeActiveService,
-    SetCodeAsDefaultService,
     IncrementCodeUsageService,
     ValidateCodeFormatService,
     FindCodesAdminService,
   ],
 })
-export class AffiliateCodeModule {}
+export class AffiliateCodeModule { }

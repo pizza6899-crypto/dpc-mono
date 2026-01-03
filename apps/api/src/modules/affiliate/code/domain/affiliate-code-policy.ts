@@ -1,8 +1,9 @@
-// src/modules/affiliate/code/domain/affiliate-code-policy.ts
-import type { AffiliateCode } from './model/affiliate-code.entity';
+import { AffiliateCode } from './model/affiliate-code.entity';
 import {
   AffiliateCodeLimitExceededException,
   AffiliateCodeCannotDeleteException,
+  AffiliateCodeDefaultMustExistException,
+  AffiliateCodeDefaultCannotBeInactiveException,
 } from './affiliate-code.exception';
 
 const MAX_CODES_PER_USER = 20;
@@ -37,6 +38,26 @@ export class AffiliateCodePolicy {
   canDeleteCode(code: AffiliateCode, totalCodes: number): void {
     if (!code.canBeDeleted(totalCodes)) {
       throw new AffiliateCodeCannotDeleteException();
+    }
+  }
+
+  /**
+   * 기본 코드 상태 변경 가능 여부 검증
+   * 기본 코드는 직접 해제할 수 없음 (다른 코드를 기본으로 설정하여 변경해야 함)
+   */
+  canUnsetDefault(code: AffiliateCode): void {
+    if (code.isDefault) {
+      throw new AffiliateCodeDefaultMustExistException();
+    }
+  }
+
+  /**
+   * 활성화 상태 변경 가능 여부 검증
+   * 기본 코드는 비활성화할 수 없음
+   */
+  canDeactivate(code: AffiliateCode): void {
+    if (code.isDefault) {
+      throw new AffiliateCodeDefaultCannotBeInactiveException();
     }
   }
 

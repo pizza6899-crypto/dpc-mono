@@ -67,3 +67,25 @@ export class AffiliateCodeInvalidFormatException extends AffiliateCodeException 
     this.name = 'AffiliateCodeInvalidFormatException';
   }
 }
+
+export class AffiliateCodeDefaultMustExistException extends AffiliateCodeException {
+  constructor() {
+    super(
+      'A default code must always exist. Please set another code as default instead.',
+      MessageCode.AFFILIATE_CODE_DEFAULT_MUST_EXIST,
+      HttpStatus.BAD_REQUEST,
+    );
+    this.name = 'AffiliateCodeDefaultMustExistException';
+  }
+}
+
+export class AffiliateCodeDefaultCannotBeInactiveException extends AffiliateCodeException {
+  constructor() {
+    super(
+      'A default code cannot be inactive.',
+      MessageCode.AFFILIATE_CODE_DEFAULT_CANNOT_BE_INACTIVE,
+      HttpStatus.BAD_REQUEST,
+    );
+    this.name = 'AffiliateCodeDefaultCannotBeInactiveException';
+  }
+}
