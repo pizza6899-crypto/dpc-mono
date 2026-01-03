@@ -5,6 +5,7 @@ import { EnvService } from 'src/common/env/env.service';
 import { ConcurrencyService } from 'src/common/concurrency/concurrency.service';
 import { SettleDailyCommissionsService } from '../application/settle-daily-commissions.service';
 import { nowUtc } from 'src/utils/date.util';
+import { ClsService } from 'nestjs-cls';
 
 @Injectable()
 export class SettleDailyCommissionsScheduler {
@@ -14,7 +15,8 @@ export class SettleDailyCommissionsScheduler {
     private readonly settleDailyCommissionsService: SettleDailyCommissionsService,
     private readonly envService: EnvService,
     private readonly concurrencyService: ConcurrencyService,
-  ) {}
+    private readonly cls: ClsService,
+  ) { }
 
   /**
    * 매일 새벽 1시에 전날 커미션 정산 처리
@@ -25,56 +27,58 @@ export class SettleDailyCommissionsScheduler {
    */
   @Cron(CronExpression.EVERY_DAY_AT_1AM)
   async settleDailyCommissions() {
-    // 스케줄러가 비활성화된 경우 실행하지 않음
-    if (!this.envService.scheduler.enabled) {
-      this.logger.debug('스케줄러가 비활성화되어 있습니다.');
-      return;
-    }
+    await this.cls.run(async () => {
+      // 스케줄러가 비활성화된 경우 실행하지 않음
+      if (!this.envService.scheduler.enabled) {
+        this.logger.debug('스케줄러가 비활성화되어 있습니다.');
+        return;
+      }
 
-    // 커미션 정산 스케줄러가 비활성화된 경우 실행하지 않음
-    if (!this.envService.scheduler.settleDailyCommissionsEnabled) {
-      this.logger.debug('커미션 정산 스케줄러가 비활성화되어 있습니다.');
-      return;
-    }
+      // 커미션 정산 스케줄러가 비활성화된 경우 실행하지 않음
+      if (!this.envService.scheduler.settleDailyCommissionsEnabled) {
+        this.logger.debug('커미션 정산 스케줄러가 비활성화되어 있습니다.');
+        return;
+      }
 
-    // 다중 인스턴스에서 중복 실행 방지용 글로벌 락
-    const lock = await this.concurrencyService.acquireGlobalLock(
-      'settle-daily-commissions-scheduler',
-      {
-        ttl: 3600, // 1시간 (정산 작업이 오래 걸릴 수 있음)
-        retryCount: 0, // 락 못 잡으면 바로 종료
-      },
-    );
-
-    if (!lock) {
-      this.logger.debug(
-        '다른 인스턴스에서 이미 커미션 정산 스케줄러가 실행 중입니다.',
-      );
-      return;
-    }
-
-    try {
-      // 전날 날짜 기준으로 정산 (UTC 기준)
-      const settlementDate = new Date(nowUtc());
-      settlementDate.setUTCDate(settlementDate.getUTCDate() - 1);
-      settlementDate.setUTCHours(0, 0, 0, 0); // 전날 00:00:00 UTC
-
-      this.logger.log(
-        `일일 커미션 정산 시작 - 정산 기준일: ${settlementDate.toISOString()}`,
+      // 다중 인스턴스에서 중복 실행 방지용 글로벌 락
+      const lock = await this.concurrencyService.acquireGlobalLock(
+        'settle-daily-commissions-scheduler',
+        {
+          ttl: 3600, // 1시간 (정산 작업이 오래 걸릴 수 있음)
+          retryCount: 0, // 락 못 잡으면 바로 종료
+        },
       );
 
-      const result = await this.settleDailyCommissionsService.execute({
-        settlementDate,
-      });
+      if (!lock) {
+        this.logger.debug(
+          '다른 인스턴스에서 이미 커미션 정산 스케줄러가 실행 중입니다.',
+        );
+        return;
+      }
 
-      this.logger.log(
-        `일일 커미션 정산 완료 - 정산 건수: ${result.settledCount}, 총 금액: ${result.totalAmount.toString()}`,
-      );
-    } catch (error) {
-      this.logger.error('일일 커미션 정산 중 오류 발생', error);
-      // 에러 발생 시 로깅하고 다음 실행까지 대기 (스케줄러는 계속 실행됨)
-    } finally {
-      await this.concurrencyService.releaseLock(lock);
-    }
+      try {
+        // 전날 날짜 기준으로 정산 (UTC 기준)
+        const settlementDate = new Date(nowUtc());
+        settlementDate.setUTCDate(settlementDate.getUTCDate() - 1);
+        settlementDate.setUTCHours(0, 0, 0, 0); // 전날 00:00:00 UTC
+
+        this.logger.log(
+          `일일 커미션 정산 시작 - 정산 기준일: ${settlementDate.toISOString()}`,
+        );
+
+        const result = await this.settleDailyCommissionsService.execute({
+          settlementDate,
+        });
+
+        this.logger.log(
+          `일일 커미션 정산 완료 - 정산 건수: ${result.settledCount}, 총 금액: ${result.totalAmount.toString()}`,
+        );
+      } catch (error) {
+        this.logger.error('일일 커미션 정산 중 오류 발생', error);
+        // 에러 발생 시 로깅하고 다음 실행까지 대기 (스케줄러는 계속 실행됨)
+      } finally {
+        await this.concurrencyService.releaseLock(lock);
+      }
+    });
   }
 }

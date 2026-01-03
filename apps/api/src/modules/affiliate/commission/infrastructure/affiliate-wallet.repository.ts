@@ -14,7 +14,7 @@ export class AffiliateWalletRepository implements AffiliateWalletRepositoryPort 
     @InjectTransaction()
     private readonly tx: Transaction<TransactionalAdapterPrisma>,
     private readonly mapper: AffiliateWalletMapper,
-  ) {}
+  ) { }
 
   async findByAffiliateIdAndCurrency(
     affiliateId: bigint,
@@ -83,7 +83,7 @@ export class AffiliateWalletRepository implements AffiliateWalletRepositoryPort 
   }
 
   async updateBalance(
-    affiliateId: string,
+    affiliateId: bigint,
     currency: ExchangeCurrencyCode,
     availableBalance: bigint,
     pendingBalance: bigint,

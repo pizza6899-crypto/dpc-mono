@@ -5,8 +5,6 @@ import { AffiliateWallet, CommissionException } from '../domain';
 import { AFFILIATE_WALLET_REPOSITORY } from '../ports/out/affiliate-wallet.repository.token';
 import type { AffiliateWalletRepositoryPort } from '../ports/out/affiliate-wallet.repository.port';
 import type { RequestClientInfo } from 'src/common/http/types/client-info.types';
-import { DispatchLogService } from 'src/modules/audit-log/application/dispatch-log.service';
-import { LogType } from 'src/modules/audit-log/domain';
 
 interface GetWalletBalanceParams {
   affiliateId: bigint;
@@ -21,8 +19,7 @@ export class GetWalletBalanceService {
   constructor(
     @Inject(AFFILIATE_WALLET_REPOSITORY)
     private readonly repository: AffiliateWalletRepositoryPort,
-    private readonly dispatchLogService: DispatchLogService,
-  ) {}
+  ) { }
 
   async execute({
     affiliateId,
@@ -54,25 +51,7 @@ export class GetWalletBalanceService {
       }
 
       // Audit Log 기록 (사용자가 월렛 잔액 조회)
-      if (requestInfo) {
-        const walletArray = Array.isArray(wallets) ? wallets : [wallets];
-        await this.dispatchLogService.dispatch(
-          {
-            type: LogType.ACTIVITY,
-            data: {
-              userId: affiliateId.toString(),
-              category: 'AFFILIATE',
-              action: 'COMMISSION_WALLET_BALANCE_VIEW',
-              metadata: {
-                affiliateId: affiliateId.toString(),
-                currency: currency || 'all',
-                walletCount: walletArray.length,
-              },
-            },
-          },
-          requestInfo,
-        );
-      }
+
 
       return wallets;
     } catch (error) {

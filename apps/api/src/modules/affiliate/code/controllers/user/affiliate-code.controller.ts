@@ -17,6 +17,7 @@ import {
   ApiPaginatedResponse,
 } from 'src/common/http/decorators/api-response.decorator';
 import { PaginatedResponseDto } from 'src/common/http/types/pagination.types';
+import { Paginated } from 'src/common/http/decorators/paginated.decorator';
 import { CurrentUser } from 'src/common/auth/decorators/current-user.decorator';
 import type { CurrentUserWithSession } from 'src/common/auth/decorators/current-user.decorator';
 import { CreateCodeService } from '../../application/create-code.service';
@@ -81,8 +82,10 @@ export class AffiliateCodeController {
   /**
    * 어플리에이트 코드 목록 조회
    */
+
   @Get()
   @HttpCode(HttpStatus.OK)
+  @Paginated()
   @AuditLog({
     type: LogType.ACTIVITY,
     category: 'AFFILIATE',
@@ -195,6 +198,15 @@ export class AffiliateCodeController {
    */
   @Post('validate')
   @HttpCode(HttpStatus.OK)
+  @AuditLog({
+    type: LogType.ACTIVITY,
+    category: 'AFFILIATE',
+    action: 'AFFILIATE_CODE_VALIDATE',
+    extractMetadata: (args, result) => ({
+      code: args[0]?.code,
+      isValid: result?.isValid,
+    }),
+  })
   @ApiOperation({ summary: 'Validate code format / 코드 형식 검증' })
   @ApiStandardResponse(ValidateCodeFormatResponseDto, {
     status: HttpStatus.OK,

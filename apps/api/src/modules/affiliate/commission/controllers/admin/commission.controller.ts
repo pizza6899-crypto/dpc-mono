@@ -28,6 +28,8 @@ import { ResetCustomRateDto } from './dto/request/reset-custom-rate.dto';
 import { CommissionResponseDto } from './dto/response/commission.response.dto';
 import { AffiliateTierResponseDto } from './dto/response/affiliate-tier.response.dto';
 import { AffiliateCommission, AffiliateTier } from '../../domain';
+import { AuditLog } from 'src/modules/audit-log/infrastructure/audit-log.decorator';
+import { LogType } from 'src/modules/audit-log/domain';
 
 @ApiTags('Admin Commission Management (관리자 커미션 관리)')
 @Controller('admin/commissions')
@@ -47,6 +49,15 @@ export class AdminCommissionController {
   @HttpCode(HttpStatus.OK)
   @ApiOperation({
     summary: 'Get commission by ID / 커미션 ID로 조회 (관리자용)',
+  })
+  @AuditLog({
+    type: LogType.ACTIVITY,
+    category: 'COMMISSION',
+    action: 'COMMISSION_DETAIL_VIEW',
+    extractMetadata: (args, result) => ({
+      commissionId: args[0],
+      affiliateId: result?.affiliateId?.toString(),
+    }),
   })
   @ApiParam({ name: 'id', description: 'Commission ID / 커미션 ID' })
   @ApiStandardResponse(CommissionResponseDto, {
@@ -75,6 +86,16 @@ export class AdminCommissionController {
   @ApiOperation({
     summary: 'Set custom commission rate / 수동 커미션 요율 설정',
   })
+  @AuditLog({
+    type: LogType.ACTIVITY,
+    category: 'COMMISSION',
+    action: 'COMMISSION_RATE_SET',
+    extractMetadata: (args, result) => ({
+      affiliateId: args[1]?.affiliateId?.toString(),
+      customRate: args[1]?.customRate,
+      setBy: args[0]?.id?.toString(),
+    }),
+  })
   @ApiStandardResponse(AffiliateTierResponseDto, {
     status: 200,
     description: 'Successfully set custom rate / 수동 요율 설정 성공',
@@ -101,6 +122,15 @@ export class AdminCommissionController {
   @HttpCode(HttpStatus.OK)
   @ApiOperation({
     summary: 'Reset custom commission rate / 수동 커미션 요율 해제',
+  })
+  @AuditLog({
+    type: LogType.ACTIVITY,
+    category: 'COMMISSION',
+    action: 'COMMISSION_RATE_RESET',
+    extractMetadata: (args, result) => ({
+      affiliateId: args[1]?.affiliateId?.toString(),
+      resetBy: args[0]?.id?.toString(),
+    }),
   })
   @ApiStandardResponse(AffiliateTierResponseDto, {
     status: 200,

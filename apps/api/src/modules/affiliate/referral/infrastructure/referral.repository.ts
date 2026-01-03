@@ -107,13 +107,110 @@ export class ReferralRepository implements ReferralRepositoryPort {
     if (!result) {
       return null;
     }
-
     return this.mapper.toDomain(result);
   }
 
+  async findManyForAdmin(params: {
+    page?: number;
+    limit?: number;
+    sortBy?: 'createdAt';
+    sortOrder?: 'asc' | 'desc';
+    affiliateId?: bigint;
+    subUserId?: bigint;
+    codeId?: bigint;
+    startDate?: Date;
+    endDate?: Date;
+  }): Promise<{
+    referrals: Array<Referral & {
+      affiliateEmail: string;
+      subUserEmail: string;
+      codeValue: string;
+      campaignName?: string | null;
+    }>;
+    total: number;
+  }> {
+    const {
+      page = 1,
+      limit = 20,
+      sortBy = 'createdAt',
+      sortOrder = 'desc',
+      affiliateId,
+      subUserId,
+      codeId,
+      startDate,
+      endDate,
+    } = params;
+
+    const skip = (page - 1) * limit;
+
+    const where: any = {
+      ...(affiliateId && { affiliateId }),
+      ...(subUserId && { subUserId }),
+      ...(codeId && { codeId }),
+    };
+
+    if (startDate || endDate) {
+      where.createdAt = {};
+      if (startDate) where.createdAt.gte = startDate;
+      if (endDate) where.createdAt.lte = endDate;
+    }
+
+    const [results, total] = await Promise.all([
+      this.tx.referral.findMany({
+        where,
+        skip,
+        take: limit,
+        orderBy: { [sortBy]: sortOrder },
+        include: {
+          affiliate: { select: { email: true } },
+          subUser: { select: { email: true } },
+          code: { select: { code: true, campaignName: true } },
+        },
+      }),
+      this.tx.referral.count({ where }),
+    ]);
+
+    const referrals = results.map((result) => {
+      const domain = this.mapper.toDomain(result);
+      return Object.assign(domain, {
+        affiliateEmail: result.affiliate.email,
+        subUserEmail: result.subUser.email,
+        codeValue: result.code.code,
+        campaignName: result.code.campaignName,
+      });
+    });
+
+    return { referrals, total };
+  }
   async countByAffiliateId(affiliateId: bigint): Promise<number> {
-    return await this.tx.referral.count({
+    return this.tx.referral.count({
       where: { affiliateId },
+    });
+  }
+
+  async findByIdForAdmin(id: bigint): Promise<(Referral & {
+    affiliateEmail: string;
+    subUserEmail: string;
+    codeValue: string;
+    campaignName?: string | null;
+  }) | null> {
+    const result = await this.tx.referral.findUnique({
+      where: { id },
+      include: {
+        affiliate: { select: { email: true } },
+        subUser: { select: { email: true } },
+        code: { select: { code: true, campaignName: true } },
+      },
+    });
+
+    if (!result) return null;
+
+    const domain = this.mapper.toDomain(result);
+    return Object.assign(domain, {
+      affiliateEmail: result.affiliate.email,
+      subUserEmail: result.subUser.email,
+      codeValue: result.code.code,
+      campaignName: result.code.campaignName,
     });
   }
 }

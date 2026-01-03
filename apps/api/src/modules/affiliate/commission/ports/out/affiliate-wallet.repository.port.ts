@@ -54,7 +54,7 @@ export interface AffiliateWalletRepositoryPort {
    * @returns 업데이트된 월렛 엔티티
    */
   updateBalance(
-    affiliateId: string,
+    affiliateId: bigint,
     currency: ExchangeCurrencyCode,
     availableBalance: bigint,
     pendingBalance: bigint,

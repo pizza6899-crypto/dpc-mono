@@ -28,8 +28,7 @@ export class FindCommissionsService {
   constructor(
     @Inject(AFFILIATE_COMMISSION_REPOSITORY)
     private readonly repository: AffiliateCommissionRepositoryPort,
-    private readonly dispatchLogService: DispatchLogService,
-  ) {}
+  ) { }
 
   async execute({
     affiliateId,
@@ -42,32 +41,7 @@ export class FindCommissionsService {
         options,
       );
 
-      // Audit Log 기록 (사용자가 커미션 목록 조회)
-      if (requestInfo) {
-        await this.dispatchLogService.dispatch(
-          {
-            type: LogType.ACTIVITY,
-            data: {
-              userId: affiliateId.toString(),
-              category: 'AFFILIATE',
-              action: 'COMMISSION_LIST_VIEW',
-              metadata: {
-                affiliateId: affiliateId.toString(),
-                count: commissions.length,
-                options: {
-                  status: options?.status,
-                  currency: options?.currency,
-                  startDate: options?.startDate?.toISOString(),
-                  endDate: options?.endDate?.toISOString(),
-                  limit: options?.limit,
-                  offset: options?.offset,
-                },
-              },
-            },
-          },
-          requestInfo,
-        );
-      }
+
 
       return commissions;
     } catch (error) {

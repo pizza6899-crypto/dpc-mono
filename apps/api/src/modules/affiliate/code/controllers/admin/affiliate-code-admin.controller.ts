@@ -18,6 +18,7 @@ import {
   ApiStandardResponse,
 } from 'src/common/http/decorators/api-response.decorator';
 import { PaginatedResponseDto } from 'src/common/http/types/pagination.types';
+import { Paginated } from 'src/common/http/decorators/paginated.decorator';
 import { RequireRoles } from 'src/common/auth/decorators/roles.decorator';
 import { UserRoleType } from '@repo/database';
 import { CurrentUser } from 'src/common/auth/decorators/current-user.decorator';
@@ -54,6 +55,7 @@ export class AffiliateCodeAdminController {
    */
   @Get()
   @HttpCode(HttpStatus.OK)
+  @Paginated()
   @AuditLog({
     type: LogType.ACTIVITY,
     category: 'AFFILIATE',

@@ -9,6 +9,7 @@ import { Prisma } from '@repo/database';
 import { AffiliateCode } from '../domain';
 import type { AffiliateCodeRepositoryPort } from '../ports/out/affiliate-code.repository.port';
 import { AffiliateCodeMapper } from './affiliate-code.mapper';
+
 import { LockNamespace } from 'src/common/concurrency/lock-namespace';
 
 @Injectable()
@@ -290,8 +291,11 @@ export class AffiliateCodeRepository implements AffiliateCodeRepositoryPort {
       // 이 시간이 지나면 DB가 55P03 (lock_not_available) 에러를 발생시킵니다.
       await this.tx.$executeRaw`SET LOCAL lock_timeout = '3s'`;
 
-      // 2. 락 획득 시도 (3초 동안 DB가 내부적으로 대기하며, 풀리는 즉시 획득)
-      await this.tx.$executeRaw`SELECT pg_advisory_xact_lock(${LockNamespace.AFFILIATE_CODE}, ${userId})`;
+      // 2. 락 획득 시도
+      // LockNamespace(1001)와 userId(BigInt)를 조합하여 64비트 락 키 생성
+      // 단순히 (int, int)를 사용하면 userId가 32비트를 초과할 때 에러가 발생하므로,
+      // 두 값을 조합한 문자열의 MD5 해시 앞 16자리를 64비트 정수로 변환하여 사용합니다.
+      await this.tx.$executeRaw`SELECT pg_advisory_xact_lock(('x' || substr(md5(${LockNamespace.AFFILIATE_CODE}::text || ${userId}::text), 1, 16))::bit(64)::bigint)`;
     } catch (error: any) {
       // PostgreSQL의 lock_not_available 에러 코드는 '55P03'입니다.
       // Prisma는 이를 P2010(Raw query failed)으로 래핑할 수 있으므로 메시지도 함께 체크합니다.

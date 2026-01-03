@@ -1,4 +1,3 @@
-// src/modules/affiliate/commission/controllers/user/commission.controller.ts
 import {
   Controller,
   Get,
@@ -31,6 +30,8 @@ import { WalletBalanceResponseDto } from './dto/response/wallet-balance.response
 import { CommissionRateResponseDto } from './dto/response/commission-rate.response.dto';
 import { WithdrawCommissionResponseDto } from './dto/response/withdraw-commission.response.dto';
 import { AffiliateCommission } from '../../domain';
+import { AuditLog } from 'src/modules/audit-log/infrastructure/audit-log.decorator';
+import { LogType } from 'src/modules/audit-log/domain';
 
 @ApiTags('Affiliate Commission (어필리에이트 커미션)')
 @Controller('commissions')
@@ -51,6 +52,15 @@ export class AffiliateCommissionController {
   @HttpCode(HttpStatus.OK)
   @ApiOperation({
     summary: 'Get commission list / 커미션 목록 조회',
+  })
+  @AuditLog({
+    type: LogType.ACTIVITY,
+    category: 'COMMISSION',
+    action: 'COMMISSION_LIST_VIEW',
+    extractMetadata: (args, result) => ({
+      count: result?.length ?? 0,
+      query: args[1], // query params
+    }),
   })
   @ApiStandardResponse(CommissionResponseDto, {
     status: 200,
@@ -99,6 +109,14 @@ export class AffiliateCommissionController {
   @ApiOperation({
     summary: 'Get commission by UID / 커미션 UID로 조회',
   })
+  @AuditLog({
+    type: LogType.ACTIVITY,
+    category: 'COMMISSION',
+    action: 'COMMISSION_DETAIL_VIEW',
+    extractMetadata: (args, result) => ({
+      commissionUid: args[1],
+    }),
+  })
   @ApiParam({ name: 'uid', description: 'Commission UID / 커미션 UID' })
   @ApiStandardResponse(CommissionResponseDto, {
     status: 200,
@@ -112,7 +130,6 @@ export class AffiliateCommissionController {
     const commission = await this.findCommissionByIdService.execute({
       uid,
       affiliateId: user.id,
-      requestInfo,
     });
 
     if (!commission) {
@@ -134,6 +151,14 @@ export class AffiliateCommissionController {
   @HttpCode(HttpStatus.OK)
   @ApiOperation({
     summary: 'Get wallet balance / 월렛 잔액 조회',
+  })
+  @AuditLog({
+    type: LogType.ACTIVITY,
+    category: 'COMMISSION',
+    action: 'WALLET_BALANCE_VIEW',
+    extractMetadata: (args, result) => ({
+      currency: args[1],
+    }),
   })
   @ApiStandardResponse(WalletBalanceResponseDto, {
     status: 200,
@@ -170,6 +195,15 @@ export class AffiliateCommissionController {
   @ApiOperation({
     summary: 'Get commission rate / 커미션 요율 조회',
   })
+  @AuditLog({
+    type: LogType.ACTIVITY,
+    category: 'COMMISSION',
+    action: 'COMMISSION_RATE_VIEW',
+    extractMetadata: (args, result) => ({
+      tier: result?.tier,
+      effectiveRate: result?.effectiveRate,
+    }),
+  })
   @ApiStandardResponse(CommissionRateResponseDto, {
     status: 200,
     description:
@@ -181,7 +215,6 @@ export class AffiliateCommissionController {
   ): Promise<CommissionRateResponseDto> {
     const rate = await this.getCommissionRateService.execute({
       affiliateId: user.id,
-      requestInfo,
     });
 
     return {
@@ -201,6 +234,15 @@ export class AffiliateCommissionController {
   @ApiOperation({
     summary: 'Withdraw commission / 커미션 출금',
   })
+  @AuditLog({
+    type: LogType.ACTIVITY,
+    category: 'COMMISSION',
+    action: 'COMMISSION_WITHDRAWAL',
+    extractMetadata: (args, result) => ({
+      currency: args[1]?.currency,
+      amount: args[1]?.amount,
+    }),
+  })
   @ApiStandardResponse(WithdrawCommissionResponseDto, {
     status: 200,
     description: 'Successfully withdrawn commission / 커미션 출금 성공',
@@ -214,7 +256,6 @@ export class AffiliateCommissionController {
       affiliateId: user.id,
       currency: dto.currency,
       amount: new Prisma.Decimal(dto.amount),
-      requestInfo,
     });
 
     return {

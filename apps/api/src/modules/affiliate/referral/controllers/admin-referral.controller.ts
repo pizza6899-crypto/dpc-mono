@@ -24,16 +24,29 @@ import { AdminReferralService } from '../application/admin-referral.service';
 import { GetReferralsQueryDto } from './dto/request/get-referrals-query.dto';
 import { AdminReferralListItemDto } from './dto/response/admin-referral-response.dto';
 
+import { LogType } from 'src/modules/audit-log/domain';
+import { AuditLog } from 'src/modules/audit-log/infrastructure/audit-log.decorator';
+
 @Controller('admin/affiliate/referrals')
 @ApiTags('Admin Referral Management (관리자 레퍼럴 관리)')
 @ApiStandardErrors()
 @RequireRoles(UserRoleType.ADMIN, UserRoleType.SUPER_ADMIN)
 export class AdminReferralController {
-  constructor(private readonly adminReferralService: AdminReferralService) {}
+  constructor(private readonly adminReferralService: AdminReferralService) { }
 
   @Get()
   @HttpCode(HttpStatus.OK)
   @Paginated()
+  @AuditLog({
+    type: LogType.ACTIVITY,
+    category: 'AFFILIATE',
+    action: 'ADMIN_REFERRAL_LIST_VIEW',
+    extractMetadata: (args, result) => ({
+      query: args[0], // GetReferralsQueryDto
+      count: result?.data?.length ?? 0,
+      total: result?.total ?? 0,
+    }),
+  })
   @ApiOperation({
     summary: 'Get referral list / 레퍼럴 목록 조회',
     description:
@@ -57,6 +70,15 @@ export class AdminReferralController {
 
   @Get(':id')
   @HttpCode(HttpStatus.OK)
+  @AuditLog({
+    type: LogType.ACTIVITY,
+    category: 'AFFILIATE',
+    action: 'ADMIN_REFERRAL_DETAIL_VIEW',
+    extractMetadata: (args, result) => ({
+      referralId: args[0],
+      affiliateId: result?.affiliateId,
+    }),
+  })
   @ApiOperation({
     summary: 'Get referral detail / 레퍼럴 상세 조회',
     description:
@@ -78,9 +100,8 @@ export class AdminReferralController {
     @RequestClientInfoParam() requestInfo: RequestClientInfo,
   ): Promise<AdminReferralListItemDto> {
     return await this.adminReferralService.getReferralById(
-      id,
+      BigInt(id),
       admin.id,
-      requestInfo,
     );
   }
 }
