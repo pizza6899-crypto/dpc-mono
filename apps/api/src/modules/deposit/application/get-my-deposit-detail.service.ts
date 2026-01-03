@@ -1,7 +1,8 @@
-import { Injectable, Inject, NotFoundException } from '@nestjs/common';
+import { Injectable, Inject } from '@nestjs/common';
 import { UserDepositResponseDto } from '../dtos/deposit-address-user.dto';
 import { DEPOSIT_DETAIL_REPOSITORY } from '../ports/out';
 import type { DepositDetailRepositoryPort } from '../ports/out/deposit-detail.repository.port';
+import { DepositNotFoundException } from '../domain';
 
 interface GetMyDepositDetailParams {
     uid: string;
@@ -21,7 +22,7 @@ export class GetMyDepositDetailService {
         const deposit = await this.depositRepository.findByUidAndUserId(uid, userId);
 
         if (!deposit) {
-            throw new NotFoundException(`Deposit not found or access denied`);
+            throw new DepositNotFoundException(uid);
         }
 
         const amount = deposit.getAmount();

@@ -11,6 +11,7 @@ import {
   UpdateOperation,
 } from '../../wallet/application/update-user-balance.service';
 import { UserStatsService } from '../../user-stats/application/user-stats.service';
+import { DepositAlreadyProcessedException } from '../domain';
 import type { DepositDetailRepositoryPort } from '../ports/out/deposit-detail.repository.port';
 import { DEPOSIT_DETAIL_REPOSITORY } from '../ports/out';
 
@@ -33,7 +34,6 @@ export class ApproveDepositService {
     @Inject(DEPOSIT_DETAIL_REPOSITORY)
     private readonly depositRepository: DepositDetailRepositoryPort,
     private readonly updateUserBalanceAdminService: UpdateUserBalanceAdminService,
-    private readonly userStatsService: UserStatsService,
   ) { }
 
   @Transactional()
@@ -49,7 +49,7 @@ export class ApproveDepositService {
 
     // 2. 엔티티 비즈니스 로직 실행 전 검증 (이미 처리된 경우 등)
     if (!deposit.canBeProcessed()) {
-      throw new Error(`Deposit ${id} already processed with status ${deposit.status}`);
+      throw new DepositAlreadyProcessedException(id, deposit.status);
     }
 
     // 3. 잔액 업데이트

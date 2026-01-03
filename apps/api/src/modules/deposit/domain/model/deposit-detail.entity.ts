@@ -7,7 +7,7 @@ import {
 } from '@repo/database';
 import { DepositMethod } from './value-objects/deposit-method.vo';
 import { DepositAmount } from './value-objects/deposit-amount.vo';
-import { DepositAlreadyProcessedException } from '../deposit.exception';
+import { DepositAlreadyProcessedException, DepositException } from '../deposit.exception';
 
 /**
  * DepositDetail 도메인 엔티티
@@ -394,7 +394,7 @@ export class DepositDetail {
     adminNote?: string | null,
     transactionId?: bigint | null,
   ): void {
-    if (!this.id) throw new Error('Entity must be persisted before approval');
+    if (!this.id) throw new DepositException('Entity must be persisted before approval');
     if (!this.canBeProcessed()) {
       throw new DepositAlreadyProcessedException(this.id, this._status);
     }
@@ -428,7 +428,7 @@ export class DepositDetail {
    * @throws {DepositAlreadyProcessedException} 이미 처리된 입금인 경우
    */
   reject(failureReason: string, adminId: bigint): void {
-    if (!this.id) throw new Error('Entity must be persisted before rejection');
+    if (!this.id) throw new DepositException('Entity must be persisted before rejection');
     if (!this.canBeProcessed()) {
       throw new DepositAlreadyProcessedException(this.id, this._status);
     }

@@ -1,6 +1,5 @@
-// src/modules/deposit/domain/deposit.exception.ts
 import { HttpStatus } from '@nestjs/common';
-import { MessageCode } from 'src/common/http/types/message-codes';
+import { MessageCode } from '@repo/shared';
 
 /**
  * Deposit 도메인 예외 기본 클래스
