@@ -18,4 +18,4 @@ import { AffiliateCommissionModule } from './commission/commission.module';
     AffiliateCommissionModule,
   ],
 })
-export class AffiliateModule {}
+export class AffiliateModule { }
