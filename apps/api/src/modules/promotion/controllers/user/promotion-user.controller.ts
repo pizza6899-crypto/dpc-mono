@@ -40,7 +40,7 @@ import { Inject } from '@nestjs/common';
 import { Language } from '@repo/database';
 
 @Controller('promotions')
-@ApiTags('Promotion (프로모션)')
+@ApiTags('Promotion')
 @ApiStandardErrors()
 export class PromotionUserController {
   constructor(
@@ -49,7 +49,7 @@ export class PromotionUserController {
     private readonly getPromotionByIdForUserService: GetPromotionByIdForUserService,
     @Inject(PROMOTION_REPOSITORY)
     private readonly repository: PromotionRepositoryPort,
-  ) {}
+  ) { }
 
   /**
    * 활성 프로모션 목록 조회

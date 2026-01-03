@@ -38,7 +38,7 @@ import { AuditLog } from 'src/modules/audit-log/infrastructure/audit-log.decorat
 import { AffiliateCode } from '../../domain';
 
 @Controller('admin/affiliate-codes')
-@ApiTags('Admin Affiliate Codes (관리자 어플리에이트 코드 관리)')
+@ApiTags('Admin - Affiliate Codes')
 @RequireRoles(UserRoleType.ADMIN, UserRoleType.SUPER_ADMIN)
 @ApiStandardErrors()
 export class AffiliateCodeAdminController {

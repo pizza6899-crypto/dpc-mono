@@ -1,3 +1,6 @@
+import { fileURLToPath } from 'node:url';
+import { defineNuxtConfig } from 'nuxt/config';
+
 // nuxt.config.ts
 export default defineNuxtConfig({
   compatibilityDate: '2025-07-15',
@@ -12,7 +15,7 @@ export default defineNuxtConfig({
   ],
 
   alias: {
-    '@apis': './apis',
+    '@apis': fileURLToPath(new URL('./apis', import.meta.url)),
   },
 
   imports: {
@@ -20,7 +23,7 @@ export default defineNuxtConfig({
       'constants/**',
       'stores/**',
       'composables/**',
-      'apis/**',
+      'apis/services/**' // API 서비스 함수들이 모여있는 곳을 명시
     ]
   },
   runtimeConfig: {

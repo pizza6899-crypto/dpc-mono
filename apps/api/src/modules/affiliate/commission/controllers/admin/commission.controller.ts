@@ -31,7 +31,7 @@ import { AffiliateCommission, AffiliateTier } from '../../domain';
 import { AuditLog } from 'src/modules/audit-log/infrastructure/audit-log.decorator';
 import { LogType } from 'src/modules/audit-log/domain';
 
-@ApiTags('Admin Commission Management (관리자 커미션 관리)')
+@ApiTags('Admin - Commission Management')
 @Controller('admin/commissions')
 @RequireRoles(UserRoleType.ADMIN, UserRoleType.SUPER_ADMIN)
 @ApiStandardErrors()

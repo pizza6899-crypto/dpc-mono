@@ -15,14 +15,14 @@ import { NowPaymentCallbackService } from '../application/now-payment-callback.s
 import { GuestOnly } from '../../../common/auth/decorators/roles.decorator';
 import { ObjectUtil } from '../../../utils/object.util';
 
-@ApiTags('NowPayment Callback(콜백)')
+@ApiTags('NowPayment Callback')
 @Controller('nowpayments')
 @GuestOnly()
 @UseFilters() // 글로벌 예외 필터 비활성화
 export class NowPaymentCallbackController {
   constructor(
     private readonly nowPaymentCallbackService: NowPaymentCallbackService,
-  ) {}
+  ) { }
 
   @Post('/callback')
   @HttpCode(HttpStatus.OK)

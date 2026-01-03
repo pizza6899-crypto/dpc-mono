@@ -11,11 +11,11 @@ import { UserRoleType } from '@repo/database';
 import { Throttle } from 'src/common/throttle/decorators/throttle.decorator';
 import { ThrottleScope } from 'src/common/throttle/types/throttle.types';
 
-@ApiTags('Admin Exchange Management (관리자 환율 관리)')
+@ApiTags('Admin - Exchange Management')
 @Controller('admin/exchange')
 @RequireRoles(UserRoleType.ADMIN, UserRoleType.SUPER_ADMIN)
 export class AdminExchangeController {
-  constructor(private readonly exchangeRateService: ExchangeRateService) {}
+  constructor(private readonly exchangeRateService: ExchangeRateService) { }
 
   @Post('cache/clear')
   @HttpCode(HttpStatus.OK)

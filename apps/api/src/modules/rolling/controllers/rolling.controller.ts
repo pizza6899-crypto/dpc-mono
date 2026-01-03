@@ -10,11 +10,11 @@ import type { CurrentUserWithSession } from 'src/common/auth/decorators/current-
 import { RollingService } from '../application/rolling.service';
 import { UserRollingSummaryDto, RollingResponseDto } from '../dtos/rolling.dto';
 
-@ApiTags('Rolling (롤링)')
+@ApiTags('Rolling')
 @Controller('rolling')
 @ApiStandardErrors()
 export class RollingController {
-  constructor(private readonly rollingService: RollingService) {}
+  constructor(private readonly rollingService: RollingService) { }
 
   @Get('summary')
   @HttpCode(HttpStatus.OK)

@@ -5,17 +5,26 @@
  * DPC Backend API 문서
  * OpenAPI spec version: 1.0
  */
-import type { UserPromotionResponseDtoBonusAmount } from './userPromotionResponseDtoBonusAmount';
-import type { UserPromotionResponseDtoBonusGrantedAt } from './userPromotionResponseDtoBonusGrantedAt';
 
 export interface UserPromotionResponseDto {
+  /** 사용자 프로모션 ID */
   id: number;
+  /** 프로모션 ID */
   promotionId: number;
+  /** 프로모션 상태 */
   status: string;
+  /** 보너스 지급 여부 */
   bonusGranted: boolean;
-  /** @nullable */
-  bonusAmount: UserPromotionResponseDtoBonusAmount;
-  /** @nullable */
-  bonusGrantedAt: UserPromotionResponseDtoBonusGrantedAt;
+  /** 입금 금액 (스냅샷) */
+  depositAmount: string;
+  /** 보너스 금액 (스냅샷) */
+  bonusAmount: string;
+  /** 목표 롤링 금액 */
+  targetRollingAmount: string;
+  /** 현재 롤링 금액 */
+  currentRollingAmount: string;
+  /** 통화 */
+  currency: string;
+  /** 생성일시 */
   createdAt: string;
 }

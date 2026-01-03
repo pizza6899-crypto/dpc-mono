@@ -32,7 +32,7 @@ import { RequestClientInfoParam } from 'src/common/auth/decorators/request-info.
 import type { RequestClientInfo } from 'src/common/http/types/client-info.types';
 
 @Controller('admin/sessions')
-@ApiTags('Admin Sessions (관리자 세션 관리)')
+@ApiTags('Admin - Sessions')
 @RequireRoles(UserRoleType.ADMIN, UserRoleType.SUPER_ADMIN)
 @ApiStandardErrors()
 export class SessionAdminController {
@@ -40,7 +40,7 @@ export class SessionAdminController {
     private readonly listSessionsService: ListSessionsService,
     private readonly revokeSessionService: RevokeSessionService,
     private readonly expireUserSessionsService: ExpireUserSessionsService,
-  ) {}
+  ) { }
 
   /**
    * 세션 목록 조회 (관리자용)

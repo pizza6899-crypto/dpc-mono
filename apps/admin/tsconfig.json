@@ -1,18 +1,18 @@
 {
-  // https://nuxt.com/docs/guide/concepts/typescript
-  "files": [],
-  "references": [
-    {
-      "path": "./.nuxt/tsconfig.app.json"
+  "extends": "./.nuxt/tsconfig.json",
+  "compilerOptions": {
+    "baseUrl": ".",
+    "paths": {
+      // @apis 별칭이 Nuxt가 인식하는 별칭보다 우선순위를 갖게 합니다.
+      "@apis/*": [
+        "./apis/*"
+      ]
     },
-    {
-      "path": "./.nuxt/tsconfig.server.json"
-    },
-    {
-      "path": "./.nuxt/tsconfig.shared.json"
-    },
-    {
-      "path": "./.nuxt/tsconfig.node.json"
-    }
+  },
+  "include": [
+    ".nuxt/nuxt.d.ts",
+    "./app/**/*",
+    "./apis/**/*",
+    "**/*"
   ]
 }

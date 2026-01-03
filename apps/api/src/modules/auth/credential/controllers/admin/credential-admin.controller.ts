@@ -45,7 +45,7 @@ import { AuditLog } from 'src/modules/audit-log/infrastructure';
 import { LogType } from 'src/modules/audit-log/domain';
 
 @Controller('admin/auth')
-@ApiTags('Admin Auth(관리자 인증)')
+@ApiTags('Admin - Auth')
 @ApiStandardErrors()
 export class CredentialAdminController {
   constructor(

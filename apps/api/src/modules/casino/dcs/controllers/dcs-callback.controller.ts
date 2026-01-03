@@ -31,13 +31,13 @@ import { GuestOnly } from 'src/common/auth/decorators/roles.decorator';
 import { DcsCallbackService } from '../application/dcs-callback.service';
 import { DcsLoggingInterceptor } from '../infrastructure/dcs-logging.interceptor';
 
-@ApiTags('DCS Callback(콜백)')
+@ApiTags('DCS Callback')
 @Controller('dopaminedev')
 @GuestOnly()
 @UseFilters() // 글로벌 예외 필터 비활성화
 @UseInterceptors(DcsLoggingInterceptor)
 export class DcsCallbackController {
-  constructor(private readonly dcsCallbackService: DcsCallbackService) {}
+  constructor(private readonly dcsCallbackService: DcsCallbackService) { }
 
   @Post('/login')
   @HttpCode(HttpStatus.OK)

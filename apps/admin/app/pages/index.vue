@@ -57,7 +57,7 @@
 </template>
 
 <script setup lang="ts">
-import { useAffiliateCodeAdminControllerListCodes } from '../../apis/services/admin-affiliate-codes-관리자-어플리에이트-코드-관리/admin-affiliate-codes-관리자-어플리에이트-코드-관리'
+ import { useAffiliateCodeAdminControllerListCodes } from '@apis/services/admin-affiliate-codes/admin-affiliate-codes'
 
 const config = useRuntimeConfig()
 const { data, status, error } = useAffiliateCodeAdminControllerListCodes({

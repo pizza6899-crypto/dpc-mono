@@ -35,7 +35,7 @@ import { AffiliateCode } from '../../domain';
 import { LogType } from 'src/modules/audit-log/domain';
 import { AuditLog } from 'src/modules/audit-log/infrastructure/audit-log.decorator';
 
-@ApiTags('Affiliate Codes (어플리에이트 코드)')
+@ApiTags('Affiliate Codes')
 @Controller('affiliate-codes')
 @ApiStandardErrors()
 export class AffiliateCodeController {

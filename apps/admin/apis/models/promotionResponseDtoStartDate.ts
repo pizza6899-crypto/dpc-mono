@@ -7,6 +7,7 @@
  */
 
 /**
+ * 프로모션 시작일
  * @nullable
  */
 export type PromotionResponseDtoStartDate = { [key: string]: unknown } | null;

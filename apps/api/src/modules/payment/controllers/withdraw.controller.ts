@@ -23,13 +23,13 @@ import type { CurrentUserWithSession } from 'src/common/auth/decorators/current-
 import { RequestClientInfoParam } from 'src/common/auth/decorators/request-info.decorator';
 import type { RequestClientInfo } from 'src/common/http/types';
 
-@ApiTags('출금 (Withdraw)')
+@ApiTags('Withdraw')
 @Controller('withdraws')
 @ApiBearerAuth()
 export class WithdrawController {
   constructor(
     private readonly withdrawService: WithdrawService,
-  ) {}
+  ) { }
 
   @Post()
   @HttpCode(HttpStatus.CREATED)

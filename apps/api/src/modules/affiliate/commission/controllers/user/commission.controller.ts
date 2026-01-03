@@ -33,7 +33,7 @@ import { AffiliateCommission } from '../../domain';
 import { AuditLog } from 'src/modules/audit-log/infrastructure/audit-log.decorator';
 import { LogType } from 'src/modules/audit-log/domain';
 
-@ApiTags('Affiliate Commission (어필리에이트 커미션)')
+@ApiTags('Affiliate Commission')
 @Controller('commissions')
 @ApiStandardErrors()
 export class AffiliateCommissionController {

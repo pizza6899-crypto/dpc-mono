@@ -43,7 +43,7 @@ import { AuditLog } from 'src/modules/audit-log/infrastructure';
 import { LogType } from 'src/modules/audit-log/domain';
 
 @Controller('auth')
-@ApiTags('Auth(인증)')
+@ApiTags('Auth')
 @ApiStandardErrors()
 export class CredentialUserController {
   constructor(

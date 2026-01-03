@@ -8,12 +8,21 @@
 import type { PromotionTranslationResponseDtoDescription } from './promotionTranslationResponseDtoDescription';
 
 export interface PromotionTranslationResponseDto {
+  /** 번역 ID */
   id: number;
+  /** 프로모션 ID */
   promotionId: number;
+  /** 언어 코드 */
   language: string;
+  /** 프로모션 이름 */
   name: string;
-  /** @nullable */
-  description: PromotionTranslationResponseDtoDescription;
+  /**
+   * 프로모션 설명
+   * @nullable
+   */
+  description?: PromotionTranslationResponseDtoDescription;
+  /** 생성일시 */
   createdAt: string;
+  /** 수정일시 */
   updatedAt: string;
 }

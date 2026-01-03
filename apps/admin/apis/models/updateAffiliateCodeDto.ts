@@ -9,4 +9,8 @@
 export interface UpdateAffiliateCodeDto {
   /** Campaign name / 캠페인 이름 */
   campaignName?: string;
+  /** Is active / 활성화 여부 */
+  isActive?: boolean;
+  /** Is default / 기본 코드 여부 */
+  isDefault?: boolean;
 }

@@ -28,7 +28,7 @@ import { LogType } from 'src/modules/audit-log/domain';
 import { AuditLog } from 'src/modules/audit-log/infrastructure/audit-log.decorator';
 
 @Controller('admin/affiliate/referrals')
-@ApiTags('Admin Referral Management (관리자 레퍼럴 관리)')
+@ApiTags('Admin - Referral Management')
 @ApiStandardErrors()
 @RequireRoles(UserRoleType.ADMIN, UserRoleType.SUPER_ADMIN)
 export class AdminReferralController {

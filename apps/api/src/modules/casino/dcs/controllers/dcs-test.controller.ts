@@ -8,14 +8,14 @@ import { GameProvider } from '@repo/database';
 import { GamingCurrencyCode } from 'src/utils/currency.util';
 
 @Controller('dcs/test')
-@ApiTags('DCS Test (임시 테스트용)')
+@ApiTags('DCS Test')
 @ApiStandardErrors()
 @Public()
 export class DcsTestController {
   constructor(
     private readonly dcsApiService: DcsApiService,
     private readonly dcsGameRefreshService: DcsGameRefreshService,
-  ) {}
+  ) { }
 
   @Post('loginGame')
   @ApiOperation({ summary: '게임 로그인 테스트' })

@@ -59,7 +59,7 @@ import { Inject } from '@nestjs/common';
 import { ExchangeCurrencyCode, Language, Prisma } from '@repo/database';
 
 @Controller('admin/promotions')
-@ApiTags('Admin - Promotion (관리자 - 프로모션)')
+@ApiTags('Admin - Promotion')
 @ApiStandardErrors()
 @RequireRoles(UserRoleType.ADMIN, UserRoleType.SUPER_ADMIN)
 export class PromotionAdminController {
@@ -73,7 +73,7 @@ export class PromotionAdminController {
     private readonly getPromotionStatisticsService: GetPromotionStatisticsService,
     @Inject(PROMOTION_REPOSITORY)
     private readonly repository: PromotionRepositoryPort,
-  ) {}
+  ) { }
 
   /**
    * 관리자용 프로모션 목록 조회

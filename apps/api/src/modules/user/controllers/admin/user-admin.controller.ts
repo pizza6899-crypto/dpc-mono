@@ -20,11 +20,11 @@ import { ListUsersQueryDto } from './dto/request/list-users-query.dto';
 import { UserListItemDto } from './dto/response/user-list.response.dto';
 
 @Controller('admin/users')
-@ApiTags('Admin Users (관리자 사용자 관리)')
+@ApiTags('Admin - Users')
 @RequireRoles(UserRoleType.ADMIN, UserRoleType.SUPER_ADMIN)
 @ApiStandardErrors()
 export class UserAdminController {
-  constructor(private readonly listUsersService: ListUsersService) {}
+  constructor(private readonly listUsersService: ListUsersService) { }
 
   /**
    * 사용자 목록 조회 (관리자용)

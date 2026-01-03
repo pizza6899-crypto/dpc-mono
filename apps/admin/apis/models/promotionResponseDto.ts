@@ -6,30 +6,48 @@
  * OpenAPI spec version: 1.0
  */
 import type { PromotionResponseDtoDescription } from './promotionResponseDtoDescription';
-import type { PromotionResponseDtoBonusType } from './promotionResponseDtoBonusType';
-import type { PromotionResponseDtoBonusRate } from './promotionResponseDtoBonusRate';
-import type { PromotionResponseDtoMaxBonusAmount } from './promotionResponseDtoMaxBonusAmount';
-import type { PromotionResponseDtoRollingMultiplier } from './promotionResponseDtoRollingMultiplier';
-import type { PromotionResponseDtoTargetType } from './promotionResponseDtoTargetType';
 import type { PromotionResponseDtoStartDate } from './promotionResponseDtoStartDate';
 import type { PromotionResponseDtoEndDate } from './promotionResponseDtoEndDate';
 
 export interface PromotionResponseDto {
-  id: number;
+  /** 프로모션 UID */
+  uid: string;
+  /** 프로모션 이름 (현재 언어) */
   name: string;
-  /** @nullable */
-  description: PromotionResponseDtoDescription;
-  bonusType: PromotionResponseDtoBonusType;
-  /** @nullable */
-  bonusRate: PromotionResponseDtoBonusRate;
-  minDepositAmount: string;
-  /** @nullable */
-  maxBonusAmount: PromotionResponseDtoMaxBonusAmount;
-  /** @nullable */
-  rollingMultiplier: PromotionResponseDtoRollingMultiplier;
-  targetType: PromotionResponseDtoTargetType;
-  /** @nullable */
-  startDate: PromotionResponseDtoStartDate;
-  /** @nullable */
-  endDate: PromotionResponseDtoEndDate;
+  /**
+   * 프로모션 설명 (현재 언어)
+   * @nullable
+   */
+  description?: PromotionResponseDtoDescription;
+  /** 언어 코드 */
+  language?: string;
+  /** 통화 코드 */
+  currency?: string;
+  /** 최소 입금 금액 */
+  minDepositAmount?: string;
+  /**
+   * 최대 보너스 금액
+   * @nullable
+   */
+  maxBonusAmount?: string | null;
+  /** 프로모션 타겟 타입 */
+  targetType: string;
+  /** 보너스 타입 */
+  bonusType: string;
+  /** 보너스 비율 (PERCENTAGE 타입인 경우) */
+  bonusRate?: string;
+  /** 롤링 배수 */
+  rollingMultiplier?: string;
+  /** 1회성 프로모션 여부 */
+  isOneTime: boolean;
+  /**
+   * 프로모션 시작일
+   * @nullable
+   */
+  startDate?: PromotionResponseDtoStartDate;
+  /**
+   * 프로모션 종료일
+   * @nullable
+   */
+  endDate?: PromotionResponseDtoEndDate;
 }

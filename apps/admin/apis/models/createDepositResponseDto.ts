@@ -29,4 +29,6 @@ export interface CreateDepositResponseDto {
   transactionId?: string;
   /** Whether this is a duplicate request (중복 요청 여부) */
   isDuplicate?: boolean;
+  /** Deposit Record UID (입금 기록 UID) */
+  depositUid?: string;
 }

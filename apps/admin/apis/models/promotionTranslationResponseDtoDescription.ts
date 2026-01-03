@@ -7,6 +7,7 @@
  */
 
 /**
+ * 프로모션 설명
  * @nullable
  */
 export type PromotionTranslationResponseDtoDescription = { [key: string]: unknown } | null;

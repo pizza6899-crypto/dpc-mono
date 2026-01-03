@@ -58,7 +58,7 @@ import { DepositStatsResponseDto } from '../../dtos/deposit-stats.dto';
 import { SuccessResponseDto } from 'src/common/dtos/success-response.dto';
 
 @Controller('admin/deposits')
-@ApiTags('Admin Deposit Management (관리자 입금 관리)')
+@ApiTags('Admin - Deposit Management')
 @ApiStandardErrors()
 @RequireRoles(UserRoleType.ADMIN, UserRoleType.SUPER_ADMIN)
 export class AdminDepositController {

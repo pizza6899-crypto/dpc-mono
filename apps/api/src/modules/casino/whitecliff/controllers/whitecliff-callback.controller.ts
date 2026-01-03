@@ -23,7 +23,7 @@ import { GuestOnly } from 'src/common/auth/decorators/roles.decorator';
 import { WhitecliffCallbackService } from '../application/whitecliff-callback.service';
 import { WhitecliffLoggingInterceptor } from '../infrastructure/whitecliff-logging.interceptor';
 
-@ApiTags('Whitecliff Callback(콜백)')
+@ApiTags('Whitecliff Callback')
 @Controller('dopaminedev')
 @GuestOnly()
 @UseFilters() // 글로벌 예외 필터 비활성화
@@ -31,7 +31,7 @@ import { WhitecliffLoggingInterceptor } from '../infrastructure/whitecliff-loggi
 export class WhitecliffCallbackController {
   constructor(
     private readonly whitecliffCallbackService: WhitecliffCallbackService,
-  ) {}
+  ) { }
 
   @Post('/balance')
   @HttpCode(HttpStatus.OK)

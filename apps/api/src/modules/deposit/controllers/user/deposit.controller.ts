@@ -44,7 +44,7 @@ import {
 import { GetAvailableDepositMethodsResponseDto } from '../../dtos/deposit-method-user.dto';
 import { GetDepositsQueryDto } from '../../dtos/get-deposits-query.dto';
 
-@ApiTags('입금 (Deposit)')
+@ApiTags('Deposit')
 @Controller('deposits')
 @ApiBearerAuth()
 @ApiStandardErrors()

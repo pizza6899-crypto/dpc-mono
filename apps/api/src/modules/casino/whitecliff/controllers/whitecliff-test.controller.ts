@@ -23,14 +23,14 @@ import { GAMING_CURRENCIES } from 'src/utils/currency.util';
 import type { GamingCurrencyCode } from 'src/utils/currency.util';
 
 @Controller('whitecliff/test')
-@ApiTags('Whitecliff Test (임시 테스트용)')
+@ApiTags('Whitecliff Test')
 @ApiStandardErrors()
 @Public()
 export class WhitecliffTestController {
   constructor(
     private readonly whitecliffApiService: WhitecliffApiService,
     private readonly whitecliffGameRefreshService: WhitecliffGameRefreshService,
-  ) {}
+  ) { }
   @Get('getBetResults')
   @ApiOperation({ summary: '베팅 결과 재확인 테스트' })
   @ApiQuery({
@@ -46,15 +46,15 @@ export class WhitecliffTestController {
     @Query('txnId') txnId: string,
   ): Promise<
     | {
-        status: number;
-        type: number;
-        game_id: number;
-        stake: number;
-        payout: number;
-        is_cancel: number;
-        credit_time: string;
-        error: string;
-      }
+      status: number;
+      type: number;
+      game_id: number;
+      stake: number;
+      payout: number;
+      is_cancel: number;
+      credit_time: string;
+      error: string;
+    }
     | { status: number; error: string; message?: string }
   > {
     return this.whitecliffApiService.getBetResults(gameCurrency, prdId, txnId);
