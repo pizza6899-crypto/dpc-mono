@@ -5,15 +5,10 @@
     "login": {
         "title": "관리자 포털",
         "description": "애플리케이션 관리를 위해 로그인하세요",
-        "email": "이메일",
-        "password": "비밀번호",
-        "signIn": "로그인",
-        "noAccount": "계정이 없으신가요?",
-        "contactAdmin": "관리자에게 문의하세요",
-        "secureConnection": "안전한 암호화 연결",
         "success": "성공",
         "loginSuccess": "성공적으로 로그인되었습니다.",
         "error": "오류",
+        "email": "이메일",
         "invalidCredentials": "이메일 또는 비밀번호가 올바르지 않습니다.",
         "validation": {
             "email": "유효한 이메일 주소를 입력해주세요.",
@@ -27,7 +22,31 @@
         "users": "사용자",
         "settings": "설정",
         "general": "일반",
-        "goTo": "이동"
+        "goTo": "이동",
+        "search": "검색...",
+        "total": "전체",
+        "viewDetails": "상세 보기",
+        "itemsPerPage": "페이지당 항목 수"
+    },
+    "users": {
+        "uid": "UID",
+        "email": "이메일",
+        "role": "권한",
+        "status": "상태",
+        "country": "국가",
+        "timezone": "타임존",
+        "joined": "가입일",
+        "roles": {
+            "super_admin": "최고 관리자",
+            "admin": "관리자",
+            "user": "사용자",
+            "agent": "에이전트"
+        },
+        "status_types": {
+            "active": "활성",
+            "suspended": "정지",
+            "closed": "탈퇴"
+        }
     },
     "user_menu": {
         "settings": "설정",

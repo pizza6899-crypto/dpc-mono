@@ -5,15 +5,10 @@
     "login": {
         "title": "Admin Portal",
         "description": "Sign in to manage your application",
-        "email": "Email",
-        "password": "Password",
-        "signIn": "Sign In",
-        "noAccount": "Don't have an account?",
-        "contactAdmin": "Contact your administrator",
-        "secureConnection": "Secure, encrypted connection",
         "success": "Success",
         "loginSuccess": "You have been successfully logged in.",
         "error": "Error",
+        "email": "Email",
         "invalidCredentials": "Invalid email or password.",
         "validation": {
             "email": "Please enter a valid email address.",
@@ -27,7 +22,31 @@
         "users": "Users",
         "settings": "Settings",
         "general": "General",
-        "goTo": "Go to"
+        "goTo": "Go to",
+        "search": "Search...",
+        "total": "Total",
+        "viewDetails": "View details",
+        "itemsPerPage": "Items per page"
+    },
+    "users": {
+        "uid": "UID",
+        "email": "Email",
+        "role": "Role",
+        "status": "Status",
+        "country": "Country",
+        "timezone": "Timezone",
+        "joined": "Joined",
+        "roles": {
+            "super_admin": "Super Admin",
+            "admin": "Admin",
+            "user": "User",
+            "agent": "Agent"
+        },
+        "status_types": {
+            "active": "Active",
+            "suspended": "Suspended",
+            "closed": "Closed"
+        }
     },
     "user_menu": {
         "settings": "Settings",
