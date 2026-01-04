@@ -18,6 +18,8 @@ import { USER_REPOSITORY } from 'src/modules/user/ports/out/user.repository.toke
 import type { UserRepositoryPort } from 'src/modules/user/ports/out/user.repository.port';
 import { CreateUserService } from 'src/modules/user/application/create-user.service';
 import { UserAlreadyExistsException } from 'src/modules/user/domain/user.exception';
+import { CreateWalletService } from 'src/modules/wallet/application/create-wallet.service';
+import { WALLET_CURRENCIES } from 'src/utils/currency.util';
 
 export interface RegisterCredentialAdminParams {
   email: string;
@@ -50,6 +52,7 @@ export class RegisterCredentialAdminService {
     private readonly linkReferralService: LinkReferralService,
     private readonly findCodeByCodeService: FindCodeByCodeService,
     private readonly createUserService: CreateUserService,
+    private readonly createWalletService: CreateWalletService,
     @Inject(USER_REPOSITORY)
     private readonly userRepository: UserRepositoryPort,
   ) { }
@@ -116,6 +119,17 @@ export class RegisterCredentialAdminService {
         timezone: countryConfig.timezone,
       });
       user = result.user;
+
+      // 모든 지원 통화에 대해 월렛 생성 (동기)
+      // WALLET_CURRENCIES에 정의된 모든 통화의 지갑을 생성합니다.
+      await Promise.all(
+        WALLET_CURRENCIES.map((currency) =>
+          this.createWalletService.execute({
+            userId: user.id,
+            currency,
+          }),
+        ),
+      );
     } catch (error) {
       if (error instanceof UserAlreadyExistsException) {
         throw error;

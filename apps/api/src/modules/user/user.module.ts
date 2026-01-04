@@ -25,5 +25,5 @@ import { UserAdminController } from './controllers/admin/user-admin.controller';
     USER_REPOSITORY, // registration 모듈에서 사용
   ],
 })
-export class UserModule {}
+export class UserModule { }
 

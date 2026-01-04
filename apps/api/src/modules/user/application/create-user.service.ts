@@ -33,7 +33,7 @@ export class CreateUserService {
   constructor(
     @Inject(USER_REPOSITORY)
     private readonly userRepository: UserRepositoryPort,
-  ) {}
+  ) { }
 
   @Transactional()
   async execute(
@@ -66,6 +66,8 @@ export class CreateUserService {
       country,
       timezone,
     });
+
+
 
     return {
       user,

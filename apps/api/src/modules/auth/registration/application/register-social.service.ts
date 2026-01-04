@@ -4,6 +4,7 @@ import { PrismaService } from 'src/infrastructure/prisma/prisma.service';
 import type { RequestClientInfo } from 'src/common/http/types/client-info.types';
 import { DispatchLogService } from 'src/modules/audit-log/application/dispatch-log.service';
 import { LogType } from 'src/modules/audit-log/domain';
+import { CountryUtil } from 'src/utils/country.util';
 import { VipMembershipService } from 'src/modules/vip/application/vip-membership.service';
 import { SocialType, UserRoleType } from '@repo/database';
 import { User } from 'src/modules/user/domain';
@@ -13,6 +14,8 @@ import { USER_REPOSITORY } from 'src/modules/user/ports/out/user.repository.toke
 import type { UserRepositoryPort } from 'src/modules/user/ports/out/user.repository.port';
 import { CreateUserService } from 'src/modules/user/application/create-user.service';
 import { UserAlreadyExistsException } from 'src/modules/user/domain/user.exception';
+import { CreateWalletService } from 'src/modules/wallet/application/create-wallet.service';
+import { WALLET_CURRENCIES } from 'src/utils/currency.util';
 
 export interface SocialUserInfo {
   socialId: string;
@@ -46,6 +49,7 @@ export class RegisterSocialService {
     private readonly dispatchLogService: DispatchLogService,
     private readonly vipMembershipService: VipMembershipService,
     private readonly createUserService: CreateUserService,
+    private readonly createWalletService: CreateWalletService,
     @Inject(USER_REPOSITORY)
     private readonly userRepository: UserRepositoryPort,
   ) { }
@@ -64,6 +68,11 @@ export class RegisterSocialService {
     if (!existingUser) {
       // 2. 새 사용자 생성 (user 모듈의 유즈케이스 사용)
       try {
+        const countryConfig = CountryUtil.getCountryConfig({
+          countryCode: requestInfo.country,
+          timezone: requestInfo.timezone,
+        });
+
         const result = await this.createUserService.execute({
           email: socialUser.email,
           passwordHash: null,
@@ -71,10 +80,21 @@ export class RegisterSocialService {
           socialType: socialType,
           role: UserRoleType.USER,
           country: requestInfo.country,
-          timezone: requestInfo.timezone,
+          timezone: countryConfig.timezone,
         });
         user = result.user;
         isNewUser = true;
+
+        // 3. 월렛 생성 (동기)
+        // WALLET_CURRENCIES에 정의된 모든 통화의 지갑을 생성합니다.
+        await Promise.all(
+          WALLET_CURRENCIES.map((currency) =>
+            this.createWalletService.execute({
+              userId: user.id,
+              currency,
+            }),
+          ),
+        );
       } catch (error) {
         if (error instanceof UserAlreadyExistsException) {
           throw error;

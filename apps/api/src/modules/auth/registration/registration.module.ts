@@ -11,6 +11,7 @@ import { AuditLogModule } from 'src/modules/audit-log/audit-log.module';
 import { PrismaModule } from 'src/infrastructure/prisma/prisma.module';
 import { EnvModule } from 'src/common/env/env.module';
 import { UserModule } from '../../user/user.module';
+import { WalletModule } from '../../wallet/wallet.module';
 
 @Module({
   imports: [
@@ -21,6 +22,7 @@ import { UserModule } from '../../user/user.module';
     AffiliateCodeModule, // 레퍼럴 코드 사전 검증을 위해 필요
     AuditLogModule,
     UserModule, // user 모듈의 CreateUserService 사용을 위해 추가
+    WalletModule, // 월렛 생성을 위해 추가
   ],
   controllers: [RegistrationController, RegistrationAdminController],
   providers: [
@@ -31,4 +33,4 @@ import { UserModule } from '../../user/user.module';
   ],
   exports: [RegisterCredentialService, RegisterSocialService],
 })
-export class RegistrationModule {}
+export class RegistrationModule { }

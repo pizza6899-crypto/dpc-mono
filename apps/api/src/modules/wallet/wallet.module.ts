@@ -1,5 +1,6 @@
 // src/modules/wallet/wallet.module.ts
 import { Module } from '@nestjs/common';
+import { CreateWalletService } from './application/create-wallet.service';
 import { GetUserBalanceService } from './application/get-user-balance.service';
 import { GetUserBalanceAdminService } from './application/get-user-balance-admin.service';
 import { UpdateUserBalanceService } from './application/update-user-balance.service';
@@ -36,6 +37,7 @@ import { UserModule } from '../user/user.module';
 @Module({
   imports: [UserModule],
   providers: [
+    CreateWalletService,
     GetUserBalanceService,
     GetUserBalanceAdminService,
     UpdateUserBalanceService,
@@ -48,10 +50,11 @@ import { UserModule } from '../user/user.module';
   ],
   controllers: [WalletController, WalletAdminController],
   exports: [
+    CreateWalletService,
     GetUserBalanceService,
     GetUserBalanceAdminService,
     UpdateUserBalanceService,
     UpdateUserBalanceAdminService,
   ],
 })
-export class WalletModule {}
+export class WalletModule { }

@@ -5,7 +5,6 @@ import type { RequestClientInfo } from 'src/common/http/types/client-info.types'
 import { DispatchLogService } from 'src/modules/audit-log/application/dispatch-log.service';
 import { LogType } from 'src/modules/audit-log/domain';
 import { CountryUtil } from 'src/utils/country.util';
-import { VipMembershipService } from 'src/modules/vip/application/vip-membership.service';
 import { LinkReferralService } from 'src/modules/affiliate/referral/application/link-referral.service';
 import { FindCodeByCodeService } from 'src/modules/affiliate/code/application/find-code-by-code.service';
 import {
@@ -13,11 +12,13 @@ import {
   ReferralCodeInactiveException,
   ReferralCodeExpiredException,
 } from 'src/modules/affiliate/referral/domain/referral.exception';
+import { WALLET_CURRENCIES } from 'src/utils/currency.util';
 import { UserRoleType } from '@repo/database';
 import { USER_REPOSITORY } from 'src/modules/user/ports/out/user.repository.token';
 import type { UserRepositoryPort } from 'src/modules/user/ports/out/user.repository.port';
 import { CreateUserService } from 'src/modules/user/application/create-user.service';
 import { UserAlreadyExistsException } from 'src/modules/user/domain/user.exception';
+import { CreateWalletService } from 'src/modules/wallet/application/create-wallet.service';
 
 export interface RegisterCredentialParams {
   email: string;
@@ -43,6 +44,7 @@ export class RegisterCredentialService {
     private readonly linkReferralService: LinkReferralService,
     private readonly findCodeByCodeService: FindCodeByCodeService,
     private readonly createUserService: CreateUserService,
+    private readonly createWalletService: CreateWalletService,
     @Inject(USER_REPOSITORY)
     private readonly userRepository: UserRepositoryPort,
   ) { }
@@ -98,6 +100,17 @@ export class RegisterCredentialService {
         timezone: countryConfig.timezone,
       });
       user = result.user;
+
+      // 모든 지원 통화에 대해 월렛 생성 (동기)
+      // WALLET_CURRENCIES에 정의된 모든 통화의 지갑을 생성합니다.
+      await Promise.all(
+        WALLET_CURRENCIES.map((currency) =>
+          this.createWalletService.execute({
+            userId: user.id,
+            currency,
+          }),
+        ),
+      );
     } catch (error) {
       if (error instanceof UserAlreadyExistsException) {
         throw error;
