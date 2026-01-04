@@ -9,6 +9,7 @@ const colorMode = useColorMode()
 const { locale, locales, setLocale, t } = useI18n()
 const authStore = useAuthStore()
 
+const isLogoutModalOpen = ref(false)
 
 const user = computed(() => ({
   name: authStore.user?.email || 'Admin',
@@ -69,9 +70,14 @@ const items = computed<DropdownMenuItem[][]>(() => ([[{
   label: t('user_menu.logout'),
   icon: 'i-lucide-log-out',
   onSelect: () => {
-    authStore.logout()
+    isLogoutModalOpen.value = true
   }
 }]]))
+
+async function handleLogout() {
+  await authStore.logout()
+  isLogoutModalOpen.value = false
+}
 </script>
 
 <template>
@@ -108,4 +114,26 @@ const items = computed<DropdownMenuItem[][]>(() => ([[{
       </div>
     </template>
   </UDropdownMenu>
+
+  <UModal
+    v-model:open="isLogoutModalOpen"
+    :title="t('user_menu.logout_confirm_title')"
+    :description="t('user_menu.logout_confirm_description')"
+  >
+    <template #footer>
+      <UButton
+        color="neutral"
+        variant="subtle"
+        @click="isLogoutModalOpen = false"
+      >
+        {{ t('common.cancel') }}
+      </UButton>
+      <UButton
+        color="error"
+        @click="handleLogout"
+      >
+        {{ t('user_menu.logout') }}
+      </UButton>
+    </template>
+  </UModal>
 </template>

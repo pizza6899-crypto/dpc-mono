@@ -20,13 +20,19 @@
             "password": "Password must be at least 8 characters."
         }
     },
+    "common": {
+        "confirm": "Confirm",
+        "cancel": "Cancel"
+    },
     "user_menu": {
         "settings": "Settings",
         "language": "Language",
         "appearance": "Appearance",
         "light": "Light",
         "dark": "Dark",
-        "logout": "Log out"
+        "logout": "Log out",
+        "logout_confirm_title": "Log out",
+        "logout_confirm_description": "Are you sure you want to log out?"
     },
     "api_errors": {
         "AUTH_LOGIN_FAILED": "Login failed: Invalid admin credentials"
