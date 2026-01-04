@@ -72,6 +72,11 @@ export enum MessageCode {
     // --- VIP 관련 (VIP) ---
     VIP_LEVEL_NOT_FOUND = 'VIP_LEVEL_NOT_FOUND', // VIP 레벨을 찾을 수 없을 때
 
+    // --- 티어 관련 (Tier) ---
+    TIER_NOT_FOUND = 'TIER_NOT_FOUND', // 티어를 찾을 수 없을 때
+    USER_TIER_NOT_FOUND = 'USER_TIER_NOT_FOUND', // 사용자 티어 정보를 찾을 수 없을 때
+    TIER_INVALID_ROLLING_AMOUNT = 'TIER_INVALID_ROLLING_AMOUNT', // 유효하지 않은 롤링 금액일 때
+
     // --- 롤링 관련 (Rolling) ---
     ROLLING_NOT_COMPLETED = 'ROLLING_NOT_COMPLETED', // 롤링 조건을 완료하지 않아 출금할 수 없을 때
 

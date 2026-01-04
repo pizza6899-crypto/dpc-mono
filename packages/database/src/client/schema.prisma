@@ -1356,7 +1356,7 @@ model UserSession {
 
 model Tier {
   id             BigInt  @id @default(autoincrement())
-  uid            String  @unique @default(cuid())
+  uid            String  @unique
   priority       Int     @unique // Lower value means lower tier (e.g., 1=Bronze, 2=Silver)
   code           String  @unique // e.g., "BRONZE", "SILVER"
   // requirement_usd: 승급에 필요한 누적 롤링액 (Cumulative Rolling Amount required for upgrade)
@@ -1381,7 +1381,7 @@ model Tier {
 
 model TierTranslation {
   id  BigInt @id @default(autoincrement())
-  uid String @unique @default(cuid())
+  uid String @unique
 
   tierId   BigInt   @map("tier_id")
   language Language
@@ -1396,7 +1396,7 @@ model TierTranslation {
 
 model UserTier {
   id     BigInt @id @default(autoincrement())
-  uid    String @unique @default(cuid())
+  uid    String @unique
   userId BigInt @unique @map("user_id")
   tierId BigInt @map("tier_id")
 
@@ -1420,7 +1420,7 @@ model UserTier {
 
 model TierHistory {
   id     BigInt @id @default(autoincrement())
-  uid    String @unique @default(cuid())
+  uid    String @unique
   userId BigInt @map("user_id")
 
   fromTierId BigInt?        @map("from_tier_id")

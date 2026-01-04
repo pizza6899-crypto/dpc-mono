@@ -69548,7 +69548,7 @@ export namespace Prisma {
 
   export type TierCreateInput = {
     id?: bigint | number
-    uid?: string
+    uid: string
     priority: number
     code: string
     requirementUsd: Decimal | DecimalJsLike | number | string
@@ -69565,7 +69565,7 @@ export namespace Prisma {
 
   export type TierUncheckedCreateInput = {
     id?: bigint | number
-    uid?: string
+    uid: string
     priority: number
     code: string
     requirementUsd: Decimal | DecimalJsLike | number | string
@@ -69616,7 +69616,7 @@ export namespace Prisma {
 
   export type TierCreateManyInput = {
     id?: bigint | number
-    uid?: string
+    uid: string
     priority: number
     code: string
     requirementUsd: Decimal | DecimalJsLike | number | string
@@ -69655,7 +69655,7 @@ export namespace Prisma {
 
   export type TierTranslationCreateInput = {
     id?: bigint | number
-    uid?: string
+    uid: string
     language: $Enums.Language
     name: string
     tier: TierCreateNestedOneWithoutTranslationsInput
@@ -69663,7 +69663,7 @@ export namespace Prisma {
 
   export type TierTranslationUncheckedCreateInput = {
     id?: bigint | number
-    uid?: string
+    uid: string
     tierId: bigint | number
     language: $Enums.Language
     name: string
@@ -69687,7 +69687,7 @@ export namespace Prisma {
 
   export type TierTranslationCreateManyInput = {
     id?: bigint | number
-    uid?: string
+    uid: string
     tierId: bigint | number
     language: $Enums.Language
     name: string
@@ -69710,7 +69710,7 @@ export namespace Prisma {
 
   export type UserTierCreateInput = {
     id?: bigint | number
-    uid?: string
+    uid: string
     cumulativeRollingUsd?: Decimal | DecimalJsLike | number | string
     highestPromotedPriority?: number
     isManualLock?: boolean
@@ -69723,7 +69723,7 @@ export namespace Prisma {
 
   export type UserTierUncheckedCreateInput = {
     id?: bigint | number
-    uid?: string
+    uid: string
     userId: bigint | number
     tierId: bigint | number
     cumulativeRollingUsd?: Decimal | DecimalJsLike | number | string
@@ -69762,7 +69762,7 @@ export namespace Prisma {
 
   export type UserTierCreateManyInput = {
     id?: bigint | number
-    uid?: string
+    uid: string
     userId: bigint | number
     tierId: bigint | number
     cumulativeRollingUsd?: Decimal | DecimalJsLike | number | string
@@ -69799,7 +69799,7 @@ export namespace Prisma {
 
   export type TierHistoryCreateInput = {
     id?: bigint | number
-    uid?: string
+    uid: string
     changeType: $Enums.TierChangeType
     reason?: string | null
     rollingAmountSnap: Decimal | DecimalJsLike | number | string
@@ -69813,7 +69813,7 @@ export namespace Prisma {
 
   export type TierHistoryUncheckedCreateInput = {
     id?: bigint | number
-    uid?: string
+    uid: string
     userId: bigint | number
     fromTierId?: bigint | number | null
     toTierId: bigint | number
@@ -69855,7 +69855,7 @@ export namespace Prisma {
 
   export type TierHistoryCreateManyInput = {
     id?: bigint | number
-    uid?: string
+    uid: string
     userId: bigint | number
     fromTierId?: bigint | number | null
     toTierId: bigint | number
@@ -79706,7 +79706,7 @@ export namespace Prisma {
 
   export type UserTierCreateWithoutUserInput = {
     id?: bigint | number
-    uid?: string
+    uid: string
     cumulativeRollingUsd?: Decimal | DecimalJsLike | number | string
     highestPromotedPriority?: number
     isManualLock?: boolean
@@ -79718,7 +79718,7 @@ export namespace Prisma {
 
   export type UserTierUncheckedCreateWithoutUserInput = {
     id?: bigint | number
-    uid?: string
+    uid: string
     tierId: bigint | number
     cumulativeRollingUsd?: Decimal | DecimalJsLike | number | string
     highestPromotedPriority?: number
@@ -79735,7 +79735,7 @@ export namespace Prisma {
 
   export type TierHistoryCreateWithoutUserInput = {
     id?: bigint | number
-    uid?: string
+    uid: string
     changeType: $Enums.TierChangeType
     reason?: string | null
     rollingAmountSnap: Decimal | DecimalJsLike | number | string
@@ -79748,7 +79748,7 @@ export namespace Prisma {
 
   export type TierHistoryUncheckedCreateWithoutUserInput = {
     id?: bigint | number
-    uid?: string
+    uid: string
     fromTierId?: bigint | number | null
     toTierId: bigint | number
     changeType: $Enums.TierChangeType
@@ -87848,7 +87848,7 @@ export namespace Prisma {
 
   export type UserTierCreateWithoutTierInput = {
     id?: bigint | number
-    uid?: string
+    uid: string
     cumulativeRollingUsd?: Decimal | DecimalJsLike | number | string
     highestPromotedPriority?: number
     isManualLock?: boolean
@@ -87860,7 +87860,7 @@ export namespace Prisma {
 
   export type UserTierUncheckedCreateWithoutTierInput = {
     id?: bigint | number
-    uid?: string
+    uid: string
     userId: bigint | number
     cumulativeRollingUsd?: Decimal | DecimalJsLike | number | string
     highestPromotedPriority?: number
@@ -87882,14 +87882,14 @@ export namespace Prisma {
 
   export type TierTranslationCreateWithoutTierInput = {
     id?: bigint | number
-    uid?: string
+    uid: string
     language: $Enums.Language
     name: string
   }
 
   export type TierTranslationUncheckedCreateWithoutTierInput = {
     id?: bigint | number
-    uid?: string
+    uid: string
     language: $Enums.Language
     name: string
   }
@@ -87906,7 +87906,7 @@ export namespace Prisma {
 
   export type TierHistoryCreateWithoutFromTierInput = {
     id?: bigint | number
-    uid?: string
+    uid: string
     changeType: $Enums.TierChangeType
     reason?: string | null
     rollingAmountSnap: Decimal | DecimalJsLike | number | string
@@ -87919,7 +87919,7 @@ export namespace Prisma {
 
   export type TierHistoryUncheckedCreateWithoutFromTierInput = {
     id?: bigint | number
-    uid?: string
+    uid: string
     userId: bigint | number
     toTierId: bigint | number
     changeType: $Enums.TierChangeType
@@ -87942,7 +87942,7 @@ export namespace Prisma {
 
   export type TierHistoryCreateWithoutToTierInput = {
     id?: bigint | number
-    uid?: string
+    uid: string
     changeType: $Enums.TierChangeType
     reason?: string | null
     rollingAmountSnap: Decimal | DecimalJsLike | number | string
@@ -87955,7 +87955,7 @@ export namespace Prisma {
 
   export type TierHistoryUncheckedCreateWithoutToTierInput = {
     id?: bigint | number
-    uid?: string
+    uid: string
     userId: bigint | number
     fromTierId?: bigint | number | null
     changeType: $Enums.TierChangeType
@@ -88069,7 +88069,7 @@ export namespace Prisma {
 
   export type TierCreateWithoutTranslationsInput = {
     id?: bigint | number
-    uid?: string
+    uid: string
     priority: number
     code: string
     requirementUsd: Decimal | DecimalJsLike | number | string
@@ -88085,7 +88085,7 @@ export namespace Prisma {
 
   export type TierUncheckedCreateWithoutTranslationsInput = {
     id?: bigint | number
-    uid?: string
+    uid: string
     priority: number
     code: string
     requirementUsd: Decimal | DecimalJsLike | number | string
@@ -88242,7 +88242,7 @@ export namespace Prisma {
 
   export type TierCreateWithoutUserTiersInput = {
     id?: bigint | number
-    uid?: string
+    uid: string
     priority: number
     code: string
     requirementUsd: Decimal | DecimalJsLike | number | string
@@ -88258,7 +88258,7 @@ export namespace Prisma {
 
   export type TierUncheckedCreateWithoutUserTiersInput = {
     id?: bigint | number
-    uid?: string
+    uid: string
     priority: number
     code: string
     requirementUsd: Decimal | DecimalJsLike | number | string
@@ -88514,7 +88514,7 @@ export namespace Prisma {
 
   export type TierCreateWithoutHistoryFromInput = {
     id?: bigint | number
-    uid?: string
+    uid: string
     priority: number
     code: string
     requirementUsd: Decimal | DecimalJsLike | number | string
@@ -88530,7 +88530,7 @@ export namespace Prisma {
 
   export type TierUncheckedCreateWithoutHistoryFromInput = {
     id?: bigint | number
-    uid?: string
+    uid: string
     priority: number
     code: string
     requirementUsd: Decimal | DecimalJsLike | number | string
@@ -88551,7 +88551,7 @@ export namespace Prisma {
 
   export type TierCreateWithoutHistoryToInput = {
     id?: bigint | number
-    uid?: string
+    uid: string
     priority: number
     code: string
     requirementUsd: Decimal | DecimalJsLike | number | string
@@ -88567,7 +88567,7 @@ export namespace Prisma {
 
   export type TierUncheckedCreateWithoutHistoryToInput = {
     id?: bigint | number
-    uid?: string
+    uid: string
     priority: number
     code: string
     requirementUsd: Decimal | DecimalJsLike | number | string
@@ -89120,7 +89120,7 @@ export namespace Prisma {
 
   export type TierHistoryCreateManyUserInput = {
     id?: bigint | number
-    uid?: string
+    uid: string
     fromTierId?: bigint | number | null
     toTierId: bigint | number
     changeType: $Enums.TierChangeType
@@ -91299,7 +91299,7 @@ export namespace Prisma {
 
   export type UserTierCreateManyTierInput = {
     id?: bigint | number
-    uid?: string
+    uid: string
     userId: bigint | number
     cumulativeRollingUsd?: Decimal | DecimalJsLike | number | string
     highestPromotedPriority?: number
@@ -91311,14 +91311,14 @@ export namespace Prisma {
 
   export type TierTranslationCreateManyTierInput = {
     id?: bigint | number
-    uid?: string
+    uid: string
     language: $Enums.Language
     name: string
   }
 
   export type TierHistoryCreateManyFromTierInput = {
     id?: bigint | number
-    uid?: string
+    uid: string
     userId: bigint | number
     toTierId: bigint | number
     changeType: $Enums.TierChangeType
@@ -91331,7 +91331,7 @@ export namespace Prisma {
 
   export type TierHistoryCreateManyToTierInput = {
     id?: bigint | number
-    uid?: string
+    uid: string
     userId: bigint | number
     fromTierId?: bigint | number | null
     changeType: $Enums.TierChangeType
