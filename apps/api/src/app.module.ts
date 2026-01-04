@@ -22,6 +22,7 @@ import { AuditLogModule } from './modules/audit-log/audit-log.module';
 import { AuditLogInterceptor } from './modules/audit-log/infrastructure/audit-log.interceptor';
 import { RequestInfoInterceptor } from './common/http/interceptors/request-info.interceptor';
 import { PromotionModule } from './modules/promotion/promotion.module';
+import { TierModule } from './modules/tier/tier.module';
 
 @Module({
   imports: [
@@ -42,6 +43,7 @@ import { PromotionModule } from './modules/promotion/promotion.module';
     AffiliateModule,
     WalletModule,
     PromotionModule,
+    TierModule,
   ],
   providers: [
     Reflector,

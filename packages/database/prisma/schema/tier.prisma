@@ -1,97 +1,96 @@
 model Tier {
-    id             BigInt  @id @default(autoincrement())
-    uid            String  @unique
-    priority       Int     @unique // Lower value means lower tier (e.g., 1=Bronze, 2=Silver)
-    code           String  @unique // e.g., "BRONZE", "SILVER"
-    // requirement_usd: 승급에 필요한 누적 롤링액 (Cumulative Rolling Amount required for upgrade)
-    requirementUsd Decimal @map("requirement_usd") @db.Decimal(32, 18)
+  id             BigInt  @id @default(autoincrement())
+  uid            String  @unique
+  priority       Int     @unique // Lower value means lower tier (e.g., 1=Bronze, 2=Silver)
+  code           String  @unique // e.g., "BRONZE", "SILVER"
+  // requirement_usd: 승급에 필요한 누적 롤링액 (Cumulative Rolling Amount required for upgrade)
+  requirementUsd Decimal @map("requirement_usd") @db.Decimal(32, 18)
 
-    // Benefits
-    levelUpBonus Decimal @default(0) @map("level_up_bonus") @db.Decimal(32, 18)
-    compRate     Decimal @default(0) @map("comp_rate") @db.Decimal(8, 4) // Integrated Comp Rate
-    benefits     Json?   @default("{}")
+  // Benefits
+  levelUpBonusUsd Decimal @default(0) @map("level_up_bonus") @db.Decimal(32, 18)
+  compRate        Decimal @default(0) @map("comp_rate") @db.Decimal(8, 4) // Integrated Comp Rate
 
-    createdAt DateTime @default(now()) @map("created_at")
-    updatedAt DateTime @updatedAt @map("updated_at")
+  createdAt DateTime @default(now()) @map("created_at")
+  updatedAt DateTime @updatedAt @map("updated_at")
 
-    userTiers    UserTier[]
-    translations TierTranslation[]
-    historyFrom  TierHistory[]     @relation("HistoryFrom")
-    historyTo    TierHistory[]     @relation("HistoryTo")
+  userTiers    UserTier[]
+  translations TierTranslation[]
+  historyFrom  TierHistory[]     @relation("HistoryFrom")
+  historyTo    TierHistory[]     @relation("HistoryTo")
 
-    @@index([priority])
-    @@map("tier")
+  @@index([priority])
+  @@map("tier")
 }
 
 model TierTranslation {
-    id  BigInt @id @default(autoincrement())
-    uid String @unique
+  id  BigInt @id @default(autoincrement())
+  uid String @unique
 
-    tierId   BigInt   @map("tier_id")
-    language Language
-    name     String // Display name (e.g., "브론즈", "Bronze")
+  tierId   BigInt   @map("tier_id")
+  language Language
+  name     String // Display name (e.g., "브론즈", "Bronze")
 
-    tier Tier @relation(fields: [tierId], references: [id], onDelete: Cascade)
+  tier Tier @relation(fields: [tierId], references: [id], onDelete: Cascade)
 
-    @@unique([tierId, language])
-    @@index([language])
-    @@map("tier_translation")
+  @@unique([tierId, language])
+  @@index([language])
+  @@map("tier_translation")
 }
 
 model UserTier {
-    id     BigInt @id @default(autoincrement())
-    uid    String @unique
-    userId BigInt @unique @map("user_id")
-    tierId BigInt @map("tier_id")
+  id     BigInt @id @default(autoincrement())
+  uid    String @unique
+  userId BigInt @unique @map("user_id")
+  tierId BigInt @map("tier_id")
 
-    // 상태 데이터
-    cumulativeRollingUsd Decimal @default(0) @map("cumulative_rolling_usd") @db.Decimal(32, 18)
+  // 상태 데이터
+  cumulativeRollingUsd Decimal @default(0) @map("cumulative_rolling_usd") @db.Decimal(32, 18)
 
-    // 승급/강등 제어
-    highestPromotedPriority Int      @default(0) @map("highest_promoted_priority") // 보너스 중복 지급 방지용
-    isManualLock            Boolean  @default(false) @map("is_manual_lock") // 관리자 강제 등급 고정
-    lastPromotedAt          DateTime @default(now()) @map("last_promoted_at")
+  // 승급/강등 제어
+  highestPromotedPriority Int      @default(0) @map("highest_promoted_priority") // 보너스 중복 지급 방지용
+  isManualLock            Boolean  @default(false) @map("is_manual_lock") // 관리자 강제 등급 고정
+  lastPromotedAt          DateTime @default(now()) @map("last_promoted_at")
 
-    createdAt DateTime @default(now()) @map("created_at")
-    updatedAt DateTime @updatedAt @map("updated_at")
+  createdAt DateTime @default(now()) @map("created_at")
+  updatedAt DateTime @updatedAt @map("updated_at")
 
-    user User @relation(fields: [userId], references: [id])
-    tier Tier @relation(fields: [tierId], references: [id])
+  user User @relation(fields: [userId], references: [id])
+  tier Tier @relation(fields: [tierId], references: [id])
 
-    @@index([tierId])
-    @@map("user_tier")
+  @@index([tierId])
+  @@map("user_tier")
 }
 
 model TierHistory {
-    id     BigInt @id @default(autoincrement())
-    uid    String @unique
-    userId BigInt @map("user_id")
+  id     BigInt @id @default(autoincrement())
+  uid    String @unique
+  userId BigInt @map("user_id")
 
-    fromTierId BigInt?        @map("from_tier_id")
-    toTierId   BigInt         @map("to_tier_id")
-    changeType TierChangeType @map("change_type") // UPGRADE, DOWNGRADE, MANUAL, INITIAL
-    reason     String? // "Rolling requirement met", "Admin manual update"
+  fromTierId BigInt?        @map("from_tier_id")
+  toTierId   BigInt         @map("to_tier_id")
+  changeType TierChangeType @map("change_type") // UPGRADE, DOWNGRADE, MANUAL, INITIAL
+  reason     String? // "Rolling requirement met", "Admin manual update"
 
-    // Snapshot data (변경 시점의 데이터 기록)
-    rollingAmountSnap Decimal @map("rolling_amount_snap") @db.Decimal(32, 18)
+  // Snapshot data (변경 시점의 데이터 기록)
+  rollingAmountSnap Decimal @map("rolling_amount_snap") @db.Decimal(32, 18)
 
-    bonusAmount Decimal? @map("bonus_amount") @db.Decimal(32, 18) // 지급된 승급 보너스 (없으면 null/0)
+  bonusAmount Decimal? @map("bonus_amount") @db.Decimal(32, 18) // 지급된 승급 보너스 (없으면 null/0)
 
-    changedAt DateTime @default(now()) @map("changed_at")
-    changeBy  String?  @map("change_by") // "SYSTEM", "admin_uid"
+  changedAt DateTime @default(now()) @map("changed_at")
+  changeBy  String?  @map("change_by") // "SYSTEM", "admin_uid"
 
-    user     User  @relation(fields: [userId], references: [id])
-    fromTier Tier? @relation("HistoryFrom", fields: [fromTierId], references: [id])
-    toTier   Tier  @relation("HistoryTo", fields: [toTierId], references: [id])
+  user     User  @relation(fields: [userId], references: [id])
+  fromTier Tier? @relation("HistoryFrom", fields: [fromTierId], references: [id])
+  toTier   Tier  @relation("HistoryTo", fields: [toTierId], references: [id])
 
-    @@index([userId])
-    @@index([changedAt])
-    @@map("tier_history")
+  @@index([userId])
+  @@index([changedAt])
+  @@map("tier_history")
 }
 
 enum TierChangeType {
-    INITIAL // 초기 등급
-    UPGRADE // 승급
-    DOWNGRADE // 강등
-    MANUAL_UPDATE // 관리자 수동 변경
+  INITIAL // 초기 등급
+  UPGRADE // 승급
+  DOWNGRADE // 강등
+  MANUAL_UPDATE // 관리자 수동 변경
 }

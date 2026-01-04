@@ -18,12 +18,14 @@ export class Tier {
         public readonly requirementUsd: Prisma.Decimal,
 
         // Benefits
-        public readonly levelUpBonus: Prisma.Decimal,
+        public readonly levelUpBonusUsd: Prisma.Decimal,
         public readonly compRate: Prisma.Decimal,
-        public readonly benefits: any, // JSON
 
         public readonly createdAt: Date,
         public readonly updatedAt: Date,
+
+        // Relation
+        public readonly translations: { language: string; name: string }[] = [],
 
         // Joined Data
         public readonly displayName?: string,
@@ -35,20 +37,20 @@ export class Tier {
         priority: number;
         code: string;
         requirementUsd: Prisma.Decimal | number;
-        levelUpBonus?: Prisma.Decimal | number;
+        levelUpBonusUsd?: Prisma.Decimal | number;
         compRate?: Prisma.Decimal | number;
-        benefits?: any;
         displayName?: string;
+        translations?: { language: string; name: string }[];
     }): Tier {
         const requirementUsd =
             params.requirementUsd instanceof Prisma.Decimal
                 ? params.requirementUsd
                 : new Prisma.Decimal(params.requirementUsd);
 
-        const levelUpBonus =
-            params.levelUpBonus instanceof Prisma.Decimal
-                ? params.levelUpBonus
-                : new Prisma.Decimal(params.levelUpBonus ?? 0);
+        const levelUpBonusUsd =
+            params.levelUpBonusUsd instanceof Prisma.Decimal
+                ? params.levelUpBonusUsd
+                : new Prisma.Decimal(params.levelUpBonusUsd ?? 0);
 
         const compRate =
             params.compRate instanceof Prisma.Decimal
@@ -61,17 +63,26 @@ export class Tier {
         const id = params.id ?? null;
         const uid = params.uid ?? generateUid();
 
+        const translations = params.translations ?? [];
+        const languages = new Set<string>();
+        for (const t of translations) {
+            if (languages.has(t.language)) {
+                throw new Error(`Duplicate language code in translations: ${t.language}`);
+            }
+            languages.add(t.language);
+        }
+
         return new Tier(
             id,
             uid,
             params.priority,
             params.code,
             requirementUsd,
-            levelUpBonus,
+            levelUpBonusUsd,
             compRate,
-            params.benefits ?? {},
             new Date(),
             new Date(),
+            params.translations ?? [],
             params.displayName
         );
     }
@@ -82,12 +93,11 @@ export class Tier {
         priority: number;
         code: string;
         requirementUsd: Prisma.Decimal;
-        levelUpBonus: Prisma.Decimal;
+        levelUpBonusUsd: Prisma.Decimal;
         compRate: Prisma.Decimal;
-        benefits: any;
         createdAt: Date;
         updatedAt: Date;
-        displayName?: string;
+        translations?: { language: string; name: string }[];
     }): Tier {
         return new Tier(
             data.id,
@@ -95,12 +105,11 @@ export class Tier {
             data.priority,
             data.code,
             data.requirementUsd,
-            data.levelUpBonus,
+            data.levelUpBonusUsd,
             data.compRate,
-            data.benefits,
             data.createdAt,
             data.updatedAt,
-            data.displayName
+            data.translations ?? [],
         );
     }
 
@@ -111,9 +120,8 @@ export class Tier {
             priority: this.priority,
             code: this.code,
             requirementUsd: this.requirementUsd,
-            levelUpBonus: this.levelUpBonus,
+            levelUpBonusUsd: this.levelUpBonusUsd,
             compRate: this.compRate,
-            benefits: this.benefits,
             createdAt: this.createdAt,
             updatedAt: this.updatedAt,
         };

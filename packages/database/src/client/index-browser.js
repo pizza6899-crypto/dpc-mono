@@ -763,9 +763,8 @@ exports.Prisma.TierScalarFieldEnum = {
   priority: 'priority',
   code: 'code',
   requirementUsd: 'requirementUsd',
-  levelUpBonus: 'levelUpBonus',
+  levelUpBonusUsd: 'levelUpBonusUsd',
   compRate: 'compRate',
-  benefits: 'benefits',
   createdAt: 'createdAt',
   updatedAt: 'updatedAt'
 };

@@ -1363,9 +1363,8 @@ model Tier {
   requirementUsd Decimal @map("requirement_usd") @db.Decimal(32, 18)
 
   // Benefits
-  levelUpBonus Decimal @default(0) @map("level_up_bonus") @db.Decimal(32, 18)
-  compRate     Decimal @default(0) @map("comp_rate") @db.Decimal(8, 4) // Integrated Comp Rate
-  benefits     Json?   @default("{}")
+  levelUpBonusUsd Decimal @default(0) @map("level_up_bonus") @db.Decimal(32, 18)
+  compRate        Decimal @default(0) @map("comp_rate") @db.Decimal(8, 4) // Integrated Comp Rate
 
   createdAt DateTime @default(now()) @map("created_at")
   updatedAt DateTime @updatedAt @map("updated_at")

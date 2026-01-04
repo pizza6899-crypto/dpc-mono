@@ -54361,7 +54361,7 @@ export namespace Prisma {
     id: number | null
     priority: number | null
     requirementUsd: Decimal | null
-    levelUpBonus: Decimal | null
+    levelUpBonusUsd: Decimal | null
     compRate: Decimal | null
   }
 
@@ -54369,7 +54369,7 @@ export namespace Prisma {
     id: bigint | null
     priority: number | null
     requirementUsd: Decimal | null
-    levelUpBonus: Decimal | null
+    levelUpBonusUsd: Decimal | null
     compRate: Decimal | null
   }
 
@@ -54379,7 +54379,7 @@ export namespace Prisma {
     priority: number | null
     code: string | null
     requirementUsd: Decimal | null
-    levelUpBonus: Decimal | null
+    levelUpBonusUsd: Decimal | null
     compRate: Decimal | null
     createdAt: Date | null
     updatedAt: Date | null
@@ -54391,7 +54391,7 @@ export namespace Prisma {
     priority: number | null
     code: string | null
     requirementUsd: Decimal | null
-    levelUpBonus: Decimal | null
+    levelUpBonusUsd: Decimal | null
     compRate: Decimal | null
     createdAt: Date | null
     updatedAt: Date | null
@@ -54403,9 +54403,8 @@ export namespace Prisma {
     priority: number
     code: number
     requirementUsd: number
-    levelUpBonus: number
+    levelUpBonusUsd: number
     compRate: number
-    benefits: number
     createdAt: number
     updatedAt: number
     _all: number
@@ -54416,7 +54415,7 @@ export namespace Prisma {
     id?: true
     priority?: true
     requirementUsd?: true
-    levelUpBonus?: true
+    levelUpBonusUsd?: true
     compRate?: true
   }
 
@@ -54424,7 +54423,7 @@ export namespace Prisma {
     id?: true
     priority?: true
     requirementUsd?: true
-    levelUpBonus?: true
+    levelUpBonusUsd?: true
     compRate?: true
   }
 
@@ -54434,7 +54433,7 @@ export namespace Prisma {
     priority?: true
     code?: true
     requirementUsd?: true
-    levelUpBonus?: true
+    levelUpBonusUsd?: true
     compRate?: true
     createdAt?: true
     updatedAt?: true
@@ -54446,7 +54445,7 @@ export namespace Prisma {
     priority?: true
     code?: true
     requirementUsd?: true
-    levelUpBonus?: true
+    levelUpBonusUsd?: true
     compRate?: true
     createdAt?: true
     updatedAt?: true
@@ -54458,9 +54457,8 @@ export namespace Prisma {
     priority?: true
     code?: true
     requirementUsd?: true
-    levelUpBonus?: true
+    levelUpBonusUsd?: true
     compRate?: true
-    benefits?: true
     createdAt?: true
     updatedAt?: true
     _all?: true
@@ -54558,9 +54556,8 @@ export namespace Prisma {
     priority: number
     code: string
     requirementUsd: Decimal
-    levelUpBonus: Decimal
+    levelUpBonusUsd: Decimal
     compRate: Decimal
-    benefits: JsonValue | null
     createdAt: Date
     updatedAt: Date
     _count: TierCountAggregateOutputType | null
@@ -54590,9 +54587,8 @@ export namespace Prisma {
     priority?: boolean
     code?: boolean
     requirementUsd?: boolean
-    levelUpBonus?: boolean
+    levelUpBonusUsd?: boolean
     compRate?: boolean
-    benefits?: boolean
     createdAt?: boolean
     updatedAt?: boolean
     userTiers?: boolean | Tier$userTiersArgs<ExtArgs>
@@ -54608,9 +54604,8 @@ export namespace Prisma {
     priority?: boolean
     code?: boolean
     requirementUsd?: boolean
-    levelUpBonus?: boolean
+    levelUpBonusUsd?: boolean
     compRate?: boolean
-    benefits?: boolean
     createdAt?: boolean
     updatedAt?: boolean
   }, ExtArgs["result"]["tier"]>
@@ -54621,9 +54616,8 @@ export namespace Prisma {
     priority?: boolean
     code?: boolean
     requirementUsd?: boolean
-    levelUpBonus?: boolean
+    levelUpBonusUsd?: boolean
     compRate?: boolean
-    benefits?: boolean
     createdAt?: boolean
     updatedAt?: boolean
   }, ExtArgs["result"]["tier"]>
@@ -54634,14 +54628,13 @@ export namespace Prisma {
     priority?: boolean
     code?: boolean
     requirementUsd?: boolean
-    levelUpBonus?: boolean
+    levelUpBonusUsd?: boolean
     compRate?: boolean
-    benefits?: boolean
     createdAt?: boolean
     updatedAt?: boolean
   }
 
-  export type TierOmit<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetOmit<"id" | "uid" | "priority" | "code" | "requirementUsd" | "levelUpBonus" | "compRate" | "benefits" | "createdAt" | "updatedAt", ExtArgs["result"]["tier"]>
+  export type TierOmit<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetOmit<"id" | "uid" | "priority" | "code" | "requirementUsd" | "levelUpBonusUsd" | "compRate" | "createdAt" | "updatedAt", ExtArgs["result"]["tier"]>
   export type TierInclude<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
     userTiers?: boolean | Tier$userTiersArgs<ExtArgs>
     translations?: boolean | Tier$translationsArgs<ExtArgs>
@@ -54666,9 +54659,8 @@ export namespace Prisma {
       priority: number
       code: string
       requirementUsd: Prisma.Decimal
-      levelUpBonus: Prisma.Decimal
+      levelUpBonusUsd: Prisma.Decimal
       compRate: Prisma.Decimal
-      benefits: Prisma.JsonValue | null
       createdAt: Date
       updatedAt: Date
     }, ExtArgs["result"]["tier"]>
@@ -55103,9 +55095,8 @@ export namespace Prisma {
     readonly priority: FieldRef<"Tier", 'Int'>
     readonly code: FieldRef<"Tier", 'String'>
     readonly requirementUsd: FieldRef<"Tier", 'Decimal'>
-    readonly levelUpBonus: FieldRef<"Tier", 'Decimal'>
+    readonly levelUpBonusUsd: FieldRef<"Tier", 'Decimal'>
     readonly compRate: FieldRef<"Tier", 'Decimal'>
-    readonly benefits: FieldRef<"Tier", 'Json'>
     readonly createdAt: FieldRef<"Tier", 'DateTime'>
     readonly updatedAt: FieldRef<"Tier", 'DateTime'>
   }
@@ -59886,9 +59877,8 @@ export namespace Prisma {
     priority: 'priority',
     code: 'code',
     requirementUsd: 'requirementUsd',
-    levelUpBonus: 'levelUpBonus',
+    levelUpBonusUsd: 'levelUpBonusUsd',
     compRate: 'compRate',
-    benefits: 'benefits',
     createdAt: 'createdAt',
     updatedAt: 'updatedAt'
   };
@@ -64647,9 +64637,8 @@ export namespace Prisma {
     priority?: IntFilter<"Tier"> | number
     code?: StringFilter<"Tier"> | string
     requirementUsd?: DecimalFilter<"Tier"> | Decimal | DecimalJsLike | number | string
-    levelUpBonus?: DecimalFilter<"Tier"> | Decimal | DecimalJsLike | number | string
+    levelUpBonusUsd?: DecimalFilter<"Tier"> | Decimal | DecimalJsLike | number | string
     compRate?: DecimalFilter<"Tier"> | Decimal | DecimalJsLike | number | string
-    benefits?: JsonNullableFilter<"Tier">
     createdAt?: DateTimeFilter<"Tier"> | Date | string
     updatedAt?: DateTimeFilter<"Tier"> | Date | string
     userTiers?: UserTierListRelationFilter
@@ -64664,9 +64653,8 @@ export namespace Prisma {
     priority?: SortOrder
     code?: SortOrder
     requirementUsd?: SortOrder
-    levelUpBonus?: SortOrder
+    levelUpBonusUsd?: SortOrder
     compRate?: SortOrder
-    benefits?: SortOrderInput | SortOrder
     createdAt?: SortOrder
     updatedAt?: SortOrder
     userTiers?: UserTierOrderByRelationAggregateInput
@@ -64684,9 +64672,8 @@ export namespace Prisma {
     OR?: TierWhereInput[]
     NOT?: TierWhereInput | TierWhereInput[]
     requirementUsd?: DecimalFilter<"Tier"> | Decimal | DecimalJsLike | number | string
-    levelUpBonus?: DecimalFilter<"Tier"> | Decimal | DecimalJsLike | number | string
+    levelUpBonusUsd?: DecimalFilter<"Tier"> | Decimal | DecimalJsLike | number | string
     compRate?: DecimalFilter<"Tier"> | Decimal | DecimalJsLike | number | string
-    benefits?: JsonNullableFilter<"Tier">
     createdAt?: DateTimeFilter<"Tier"> | Date | string
     updatedAt?: DateTimeFilter<"Tier"> | Date | string
     userTiers?: UserTierListRelationFilter
@@ -64701,9 +64688,8 @@ export namespace Prisma {
     priority?: SortOrder
     code?: SortOrder
     requirementUsd?: SortOrder
-    levelUpBonus?: SortOrder
+    levelUpBonusUsd?: SortOrder
     compRate?: SortOrder
-    benefits?: SortOrderInput | SortOrder
     createdAt?: SortOrder
     updatedAt?: SortOrder
     _count?: TierCountOrderByAggregateInput
@@ -64722,9 +64708,8 @@ export namespace Prisma {
     priority?: IntWithAggregatesFilter<"Tier"> | number
     code?: StringWithAggregatesFilter<"Tier"> | string
     requirementUsd?: DecimalWithAggregatesFilter<"Tier"> | Decimal | DecimalJsLike | number | string
-    levelUpBonus?: DecimalWithAggregatesFilter<"Tier"> | Decimal | DecimalJsLike | number | string
+    levelUpBonusUsd?: DecimalWithAggregatesFilter<"Tier"> | Decimal | DecimalJsLike | number | string
     compRate?: DecimalWithAggregatesFilter<"Tier"> | Decimal | DecimalJsLike | number | string
-    benefits?: JsonNullableWithAggregatesFilter<"Tier">
     createdAt?: DateTimeWithAggregatesFilter<"Tier"> | Date | string
     updatedAt?: DateTimeWithAggregatesFilter<"Tier"> | Date | string
   }
@@ -69552,9 +69537,8 @@ export namespace Prisma {
     priority: number
     code: string
     requirementUsd: Decimal | DecimalJsLike | number | string
-    levelUpBonus?: Decimal | DecimalJsLike | number | string
+    levelUpBonusUsd?: Decimal | DecimalJsLike | number | string
     compRate?: Decimal | DecimalJsLike | number | string
-    benefits?: NullableJsonNullValueInput | InputJsonValue
     createdAt?: Date | string
     updatedAt?: Date | string
     userTiers?: UserTierCreateNestedManyWithoutTierInput
@@ -69569,9 +69553,8 @@ export namespace Prisma {
     priority: number
     code: string
     requirementUsd: Decimal | DecimalJsLike | number | string
-    levelUpBonus?: Decimal | DecimalJsLike | number | string
+    levelUpBonusUsd?: Decimal | DecimalJsLike | number | string
     compRate?: Decimal | DecimalJsLike | number | string
-    benefits?: NullableJsonNullValueInput | InputJsonValue
     createdAt?: Date | string
     updatedAt?: Date | string
     userTiers?: UserTierUncheckedCreateNestedManyWithoutTierInput
@@ -69586,9 +69569,8 @@ export namespace Prisma {
     priority?: IntFieldUpdateOperationsInput | number
     code?: StringFieldUpdateOperationsInput | string
     requirementUsd?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
-    levelUpBonus?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
+    levelUpBonusUsd?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
     compRate?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
-    benefits?: NullableJsonNullValueInput | InputJsonValue
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
     userTiers?: UserTierUpdateManyWithoutTierNestedInput
@@ -69603,9 +69585,8 @@ export namespace Prisma {
     priority?: IntFieldUpdateOperationsInput | number
     code?: StringFieldUpdateOperationsInput | string
     requirementUsd?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
-    levelUpBonus?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
+    levelUpBonusUsd?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
     compRate?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
-    benefits?: NullableJsonNullValueInput | InputJsonValue
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
     userTiers?: UserTierUncheckedUpdateManyWithoutTierNestedInput
@@ -69620,9 +69601,8 @@ export namespace Prisma {
     priority: number
     code: string
     requirementUsd: Decimal | DecimalJsLike | number | string
-    levelUpBonus?: Decimal | DecimalJsLike | number | string
+    levelUpBonusUsd?: Decimal | DecimalJsLike | number | string
     compRate?: Decimal | DecimalJsLike | number | string
-    benefits?: NullableJsonNullValueInput | InputJsonValue
     createdAt?: Date | string
     updatedAt?: Date | string
   }
@@ -69633,9 +69613,8 @@ export namespace Prisma {
     priority?: IntFieldUpdateOperationsInput | number
     code?: StringFieldUpdateOperationsInput | string
     requirementUsd?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
-    levelUpBonus?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
+    levelUpBonusUsd?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
     compRate?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
-    benefits?: NullableJsonNullValueInput | InputJsonValue
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
   }
@@ -69646,9 +69625,8 @@ export namespace Prisma {
     priority?: IntFieldUpdateOperationsInput | number
     code?: StringFieldUpdateOperationsInput | string
     requirementUsd?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
-    levelUpBonus?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
+    levelUpBonusUsd?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
     compRate?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
-    benefits?: NullableJsonNullValueInput | InputJsonValue
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
   }
@@ -73893,9 +73871,8 @@ export namespace Prisma {
     priority?: SortOrder
     code?: SortOrder
     requirementUsd?: SortOrder
-    levelUpBonus?: SortOrder
+    levelUpBonusUsd?: SortOrder
     compRate?: SortOrder
-    benefits?: SortOrder
     createdAt?: SortOrder
     updatedAt?: SortOrder
   }
@@ -73904,7 +73881,7 @@ export namespace Prisma {
     id?: SortOrder
     priority?: SortOrder
     requirementUsd?: SortOrder
-    levelUpBonus?: SortOrder
+    levelUpBonusUsd?: SortOrder
     compRate?: SortOrder
   }
 
@@ -73914,7 +73891,7 @@ export namespace Prisma {
     priority?: SortOrder
     code?: SortOrder
     requirementUsd?: SortOrder
-    levelUpBonus?: SortOrder
+    levelUpBonusUsd?: SortOrder
     compRate?: SortOrder
     createdAt?: SortOrder
     updatedAt?: SortOrder
@@ -73926,7 +73903,7 @@ export namespace Prisma {
     priority?: SortOrder
     code?: SortOrder
     requirementUsd?: SortOrder
-    levelUpBonus?: SortOrder
+    levelUpBonusUsd?: SortOrder
     compRate?: SortOrder
     createdAt?: SortOrder
     updatedAt?: SortOrder
@@ -73936,7 +73913,7 @@ export namespace Prisma {
     id?: SortOrder
     priority?: SortOrder
     requirementUsd?: SortOrder
-    levelUpBonus?: SortOrder
+    levelUpBonusUsd?: SortOrder
     compRate?: SortOrder
   }
 
@@ -88073,9 +88050,8 @@ export namespace Prisma {
     priority: number
     code: string
     requirementUsd: Decimal | DecimalJsLike | number | string
-    levelUpBonus?: Decimal | DecimalJsLike | number | string
+    levelUpBonusUsd?: Decimal | DecimalJsLike | number | string
     compRate?: Decimal | DecimalJsLike | number | string
-    benefits?: NullableJsonNullValueInput | InputJsonValue
     createdAt?: Date | string
     updatedAt?: Date | string
     userTiers?: UserTierCreateNestedManyWithoutTierInput
@@ -88089,9 +88065,8 @@ export namespace Prisma {
     priority: number
     code: string
     requirementUsd: Decimal | DecimalJsLike | number | string
-    levelUpBonus?: Decimal | DecimalJsLike | number | string
+    levelUpBonusUsd?: Decimal | DecimalJsLike | number | string
     compRate?: Decimal | DecimalJsLike | number | string
-    benefits?: NullableJsonNullValueInput | InputJsonValue
     createdAt?: Date | string
     updatedAt?: Date | string
     userTiers?: UserTierUncheckedCreateNestedManyWithoutTierInput
@@ -88121,9 +88096,8 @@ export namespace Prisma {
     priority?: IntFieldUpdateOperationsInput | number
     code?: StringFieldUpdateOperationsInput | string
     requirementUsd?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
-    levelUpBonus?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
+    levelUpBonusUsd?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
     compRate?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
-    benefits?: NullableJsonNullValueInput | InputJsonValue
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
     userTiers?: UserTierUpdateManyWithoutTierNestedInput
@@ -88137,9 +88111,8 @@ export namespace Prisma {
     priority?: IntFieldUpdateOperationsInput | number
     code?: StringFieldUpdateOperationsInput | string
     requirementUsd?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
-    levelUpBonus?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
+    levelUpBonusUsd?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
     compRate?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
-    benefits?: NullableJsonNullValueInput | InputJsonValue
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
     userTiers?: UserTierUncheckedUpdateManyWithoutTierNestedInput
@@ -88246,9 +88219,8 @@ export namespace Prisma {
     priority: number
     code: string
     requirementUsd: Decimal | DecimalJsLike | number | string
-    levelUpBonus?: Decimal | DecimalJsLike | number | string
+    levelUpBonusUsd?: Decimal | DecimalJsLike | number | string
     compRate?: Decimal | DecimalJsLike | number | string
-    benefits?: NullableJsonNullValueInput | InputJsonValue
     createdAt?: Date | string
     updatedAt?: Date | string
     translations?: TierTranslationCreateNestedManyWithoutTierInput
@@ -88262,9 +88234,8 @@ export namespace Prisma {
     priority: number
     code: string
     requirementUsd: Decimal | DecimalJsLike | number | string
-    levelUpBonus?: Decimal | DecimalJsLike | number | string
+    levelUpBonusUsd?: Decimal | DecimalJsLike | number | string
     compRate?: Decimal | DecimalJsLike | number | string
-    benefits?: NullableJsonNullValueInput | InputJsonValue
     createdAt?: Date | string
     updatedAt?: Date | string
     translations?: TierTranslationUncheckedCreateNestedManyWithoutTierInput
@@ -88393,9 +88364,8 @@ export namespace Prisma {
     priority?: IntFieldUpdateOperationsInput | number
     code?: StringFieldUpdateOperationsInput | string
     requirementUsd?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
-    levelUpBonus?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
+    levelUpBonusUsd?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
     compRate?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
-    benefits?: NullableJsonNullValueInput | InputJsonValue
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
     translations?: TierTranslationUpdateManyWithoutTierNestedInput
@@ -88409,9 +88379,8 @@ export namespace Prisma {
     priority?: IntFieldUpdateOperationsInput | number
     code?: StringFieldUpdateOperationsInput | string
     requirementUsd?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
-    levelUpBonus?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
+    levelUpBonusUsd?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
     compRate?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
-    benefits?: NullableJsonNullValueInput | InputJsonValue
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
     translations?: TierTranslationUncheckedUpdateManyWithoutTierNestedInput
@@ -88518,9 +88487,8 @@ export namespace Prisma {
     priority: number
     code: string
     requirementUsd: Decimal | DecimalJsLike | number | string
-    levelUpBonus?: Decimal | DecimalJsLike | number | string
+    levelUpBonusUsd?: Decimal | DecimalJsLike | number | string
     compRate?: Decimal | DecimalJsLike | number | string
-    benefits?: NullableJsonNullValueInput | InputJsonValue
     createdAt?: Date | string
     updatedAt?: Date | string
     userTiers?: UserTierCreateNestedManyWithoutTierInput
@@ -88534,9 +88502,8 @@ export namespace Prisma {
     priority: number
     code: string
     requirementUsd: Decimal | DecimalJsLike | number | string
-    levelUpBonus?: Decimal | DecimalJsLike | number | string
+    levelUpBonusUsd?: Decimal | DecimalJsLike | number | string
     compRate?: Decimal | DecimalJsLike | number | string
-    benefits?: NullableJsonNullValueInput | InputJsonValue
     createdAt?: Date | string
     updatedAt?: Date | string
     userTiers?: UserTierUncheckedCreateNestedManyWithoutTierInput
@@ -88555,9 +88522,8 @@ export namespace Prisma {
     priority: number
     code: string
     requirementUsd: Decimal | DecimalJsLike | number | string
-    levelUpBonus?: Decimal | DecimalJsLike | number | string
+    levelUpBonusUsd?: Decimal | DecimalJsLike | number | string
     compRate?: Decimal | DecimalJsLike | number | string
-    benefits?: NullableJsonNullValueInput | InputJsonValue
     createdAt?: Date | string
     updatedAt?: Date | string
     userTiers?: UserTierCreateNestedManyWithoutTierInput
@@ -88571,9 +88537,8 @@ export namespace Prisma {
     priority: number
     code: string
     requirementUsd: Decimal | DecimalJsLike | number | string
-    levelUpBonus?: Decimal | DecimalJsLike | number | string
+    levelUpBonusUsd?: Decimal | DecimalJsLike | number | string
     compRate?: Decimal | DecimalJsLike | number | string
-    benefits?: NullableJsonNullValueInput | InputJsonValue
     createdAt?: Date | string
     updatedAt?: Date | string
     userTiers?: UserTierUncheckedCreateNestedManyWithoutTierInput
@@ -88702,9 +88667,8 @@ export namespace Prisma {
     priority?: IntFieldUpdateOperationsInput | number
     code?: StringFieldUpdateOperationsInput | string
     requirementUsd?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
-    levelUpBonus?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
+    levelUpBonusUsd?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
     compRate?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
-    benefits?: NullableJsonNullValueInput | InputJsonValue
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
     userTiers?: UserTierUpdateManyWithoutTierNestedInput
@@ -88718,9 +88682,8 @@ export namespace Prisma {
     priority?: IntFieldUpdateOperationsInput | number
     code?: StringFieldUpdateOperationsInput | string
     requirementUsd?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
-    levelUpBonus?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
+    levelUpBonusUsd?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
     compRate?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
-    benefits?: NullableJsonNullValueInput | InputJsonValue
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
     userTiers?: UserTierUncheckedUpdateManyWithoutTierNestedInput
@@ -88745,9 +88708,8 @@ export namespace Prisma {
     priority?: IntFieldUpdateOperationsInput | number
     code?: StringFieldUpdateOperationsInput | string
     requirementUsd?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
-    levelUpBonus?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
+    levelUpBonusUsd?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
     compRate?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
-    benefits?: NullableJsonNullValueInput | InputJsonValue
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
     userTiers?: UserTierUpdateManyWithoutTierNestedInput
@@ -88761,9 +88723,8 @@ export namespace Prisma {
     priority?: IntFieldUpdateOperationsInput | number
     code?: StringFieldUpdateOperationsInput | string
     requirementUsd?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
-    levelUpBonus?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
+    levelUpBonusUsd?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
     compRate?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
-    benefits?: NullableJsonNullValueInput | InputJsonValue
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
     userTiers?: UserTierUncheckedUpdateManyWithoutTierNestedInput

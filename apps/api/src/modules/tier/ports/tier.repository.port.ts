@@ -7,7 +7,9 @@ export interface TierRepositoryPort {
     findById(id: bigint): Promise<Tier | null>;
 
     // Admin / Init
+    // Admin / Init
     create(tier: Tier): Promise<Tier>;
     update(tier: Tier): Promise<Tier>;
+    acquireGlobalLock(): Promise<void>;
     // delete? usually hard to delete tiers if users are assigned. keep it simple for now.
 }

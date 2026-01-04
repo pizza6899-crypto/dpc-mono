@@ -1,0 +1,51 @@
+import { ApiProperty } from '@nestjs/swagger';
+import { Tier } from '../../../../domain';
+import { TierTranslationDto } from '../request/create-tier.dto';
+
+export class TierResponseDto {
+    @ApiProperty({ description: 'Tier ID / 티어 ID' })
+    id: string; // BigInt to String
+
+    @ApiProperty({ description: 'Tier UID / 티어 UID' })
+    uid: string;
+
+    @ApiProperty({ description: 'Priority / 우선순위' })
+    priority: number;
+
+    @ApiProperty({ description: 'Code / 코드' })
+    code: string;
+
+    @ApiProperty({ description: 'Requirement USD / 조건 금액 (문자열)' })
+    requirementUsd: string;
+
+    @ApiProperty({ description: 'Level Up Bonus / 승급 보너스 (문자열)' })
+    levelUpBonus: string;
+
+    @ApiProperty({ description: 'Comp Rate / 콤프율 (문자열)' })
+    compRate: string;
+
+    @ApiProperty({ description: 'Created At / 생성일' })
+    createdAt: Date;
+
+    @ApiProperty({ description: 'Updated At / 수정일' })
+    updatedAt: Date;
+
+    @ApiProperty({ description: 'Translations / 번역 정보', type: [TierTranslationDto] })
+    translations: TierTranslationDto[];
+
+    constructor(tier: Tier) {
+        this.id = tier.id?.toString() ?? '';
+        this.uid = tier.uid;
+        this.priority = tier.priority;
+        this.code = tier.code;
+        this.requirementUsd = tier.requirementUsd.toString();
+        this.levelUpBonus = tier.levelUpBonusUsd.toString();
+        this.compRate = tier.compRate.toString();
+        this.createdAt = tier.createdAt;
+        this.updatedAt = tier.updatedAt;
+        this.translations = tier.translations.map(t => ({
+            language: t.language as any,
+            name: t.name,
+        }));
+    }
+}

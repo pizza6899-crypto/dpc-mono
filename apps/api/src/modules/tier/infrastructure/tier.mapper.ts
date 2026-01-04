@@ -1,38 +1,46 @@
 import { Injectable } from '@nestjs/common';
 import { Tier as TierModel, Prisma } from '@repo/database';
+import { generateUid } from 'src/utils/id.util';
 import { Tier } from '../domain';
 
 @Injectable()
 export class TierMapper {
-    toDomain(model: TierModel): Tier {
+    toDomain(model: TierModel & { translations?: { language: string; name: string }[] }): Tier {
         return Tier.fromPersistence({
             id: model.id,
             uid: model.uid,
             priority: model.priority,
             code: model.code,
             requirementUsd: model.requirementUsd,
-            levelUpBonus: model.levelUpBonus,
+            levelUpBonusUsd: model.levelUpBonusUsd,
             compRate: model.compRate,
-            benefits: model.benefits,
             createdAt: model.createdAt,
             updatedAt: model.updatedAt,
-            // displayName: model.displayName ?? undefined, // Not in DB yet
+            translations: model.translations?.map(t => ({
+                language: t.language,
+                name: t.name,
+            })),
         });
     }
 
-    toPersistence(domain: Tier): Prisma.TierUncheckedCreateInput {
+    toPersistence(domain: Tier): Prisma.TierCreateInput {
         return {
             id: domain.id ?? undefined,
             uid: domain.uid,
             priority: domain.priority,
             code: domain.code,
             requirementUsd: domain.requirementUsd,
-            levelUpBonus: domain.levelUpBonus,
+            levelUpBonusUsd: domain.levelUpBonusUsd,
             compRate: domain.compRate,
-            benefits: domain.benefits ?? Prisma.JsonNull,
             createdAt: domain.createdAt,
             updatedAt: domain.updatedAt,
-            // displayName: domain.displayName,
+            translations: {
+                create: domain.translations.map(t => ({
+                    language: t.language as any, // Cast to Language enum if needed, or string
+                    name: t.name,
+                    uid: generateUid(), // TierTranslation needs uid
+                })),
+            },
         };
     }
 }
