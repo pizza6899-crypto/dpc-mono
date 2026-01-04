@@ -4,6 +4,7 @@ import {
     Post,
     Body,
     Patch,
+    Put,
     Param,
     Query,
     HttpCode,
@@ -22,9 +23,12 @@ import { AuditLog } from 'src/modules/audit-log/infrastructure/audit-log.decorat
 import { CreateTierService } from '../../application/create-tier.service';
 import { UpdateTierService } from '../../application/update-tier.service';
 import { FindTiersService } from '../../application/find-tiers.service';
+import { UpdateTierTranslationService } from '../../application/translation/update-tier-translation.service';
 import { CreateTierDto } from './dto/request/create-tier.dto';
 import { UpdateTierDto } from './dto/request/update-tier.dto';
 import { TierResponseDto } from './dto/response/tier.response.dto';
+import { UpdateTierTranslationDto } from './dto/request/translation/update-tier-translation.dto';
+import { TierParamDto, TierTranslationParamDto } from './dto/request/tier-param.dto';
 
 @ApiTags('Admin Tiers')
 @Controller('admin/tiers')
@@ -35,6 +39,7 @@ export class TierAdminController {
         private readonly createTierService: CreateTierService,
         private readonly updateTierService: UpdateTierService,
         private readonly findTiersService: FindTiersService,
+        private readonly updateTierTranslationService: UpdateTierTranslationService,
     ) { }
 
     @Post()
@@ -54,10 +59,7 @@ export class TierAdminController {
         description: 'Successfully created new tier / 티어 생성 성공',
     })
     async create(@Body() dto: CreateTierDto): Promise<TierResponseDto> {
-        const tier = await this.createTierService.execute({
-            ...dto,
-            translations: dto.translations.map(t => ({ language: t.language, name: t.name })),
-        });
+        const tier = await this.createTierService.execute(dto);
         return new TierResponseDto(tier);
     }
 
@@ -89,7 +91,7 @@ export class TierAdminController {
         category: 'TIER',
         action: 'TIER_UPDATE',
         extractMetadata: (_, args, result) => ({
-            tierId: args[0],
+            tierId: args[0]?.id,
             changes: args[1],
         }),
     })
@@ -99,10 +101,23 @@ export class TierAdminController {
         description: 'Successfully updated tier / 티어 수정 성공',
     })
     async update(
-        @Param('id') id: string,
+        @Param() params: TierParamDto,
         @Body() dto: UpdateTierDto,
     ): Promise<TierResponseDto> {
-        const tier = await this.updateTierService.execute({ ...dto, id: BigInt(id) });
+        const tier = await this.updateTierService.execute({
+            ...dto,
+            id: BigInt(params.id),
+        });
         return new TierResponseDto(tier);
+    }
+
+    @Put(':id/translations/:language')
+    @HttpCode(HttpStatus.OK)
+    @ApiOperation({ summary: 'Upsert tier translation / 티어 번역 등록 및 수정' })
+    async upsertTranslation(
+        @Param() params: TierTranslationParamDto,
+        @Body() dto: UpdateTierTranslationDto,
+    ): Promise<void> {
+        await this.updateTierTranslationService.execute(BigInt(params.id), params.language, dto.name);
     }
 }

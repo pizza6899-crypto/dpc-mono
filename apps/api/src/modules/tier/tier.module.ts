@@ -18,6 +18,7 @@ import { FindTiersService } from './application/find-tiers.service';
 import { GetUserTierService } from './application/get-user-tier.service';
 import { TierAdminController } from './controllers/admin/tier-admin.controller';
 import { TierUserController } from './controllers/user/tier-user.controller';
+import { UpdateTierTranslationService } from './application/translation/update-tier-translation.service';
 
 @Module({
   imports: [],
@@ -29,6 +30,7 @@ import { TierUserController } from './controllers/user/tier-user.controller';
     UpdateTierService,
     FindTiersService,
     GetUserTierService,
+    UpdateTierTranslationService,
     {
       provide: TIER_REPOSITORY,
       useClass: TierRepository,

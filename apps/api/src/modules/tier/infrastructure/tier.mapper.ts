@@ -34,13 +34,6 @@ export class TierMapper {
             compRate: domain.compRate,
             createdAt: domain.createdAt,
             updatedAt: domain.updatedAt,
-            translations: {
-                create: domain.translations.map(t => ({
-                    language: t.language as any, // Cast to Language enum if needed, or string
-                    name: t.name,
-                    uid: generateUid(), // TierTranslation needs uid
-                })),
-            },
         };
     }
 }

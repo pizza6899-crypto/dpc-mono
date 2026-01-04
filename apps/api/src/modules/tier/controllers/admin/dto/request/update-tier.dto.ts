@@ -23,20 +23,11 @@ export class UpdateTierDto {
     @IsOptional()
     @IsNumber()
     @Min(0)
-    levelUpBonus?: number;
+    levelUpBonusUsd?: number;
 
     @ApiProperty({ description: 'Comp rate / 콤프 적립율', required: false, example: 0.6 })
     @IsOptional()
     @IsNumber()
     @Min(0)
     compRate?: number;
-
-    @ApiProperty({ description: 'Benefits / 혜택', required: false })
-    @IsOptional()
-    benefits?: any;
-
-    @ApiProperty({ description: 'Display name / 표시 이름', required: false, example: 'Silver Tier' })
-    @IsOptional()
-    @IsString()
-    displayName?: string;
 }

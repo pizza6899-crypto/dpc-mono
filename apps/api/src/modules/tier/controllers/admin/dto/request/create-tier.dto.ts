@@ -28,13 +28,6 @@ export class CreateTierDto {
     @Min(0)
     requirementUsd: number;
 
-    @ApiProperty({ description: 'Multilingual tier names (min 1) / 다국어 티어 이름 (최소 1개)', type: [TierTranslationDto] })
-    @IsArray()
-    @ArrayMinSize(1)
-    @ValidateNested({ each: true })
-    @Type(() => TierTranslationDto)
-    translations: TierTranslationDto[];
-
     @ApiProperty({ description: 'Level up bonus amount / 승급 보너스 금액', required: false, example: 50 })
     @IsOptional()
     @IsNumber()

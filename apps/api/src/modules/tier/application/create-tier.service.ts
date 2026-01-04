@@ -11,7 +11,6 @@ interface CreateTierCommand {
     requirementUsd: number;
     levelUpBonusUsd?: number;
     compRate?: number;
-    translations: { language: string; name: string }[];
 }
 
 @Injectable()
@@ -36,23 +35,12 @@ export class CreateTierService {
             throw new TierException(`Tier with priority ${command.priority} already exists`);
         }
 
-        // Validate duplicate languages
-        const translations = command.translations;
-        const languages = new Set<string>();
-        for (const t of translations) {
-            if (languages.has(t.language)) {
-                throw new TierException(`Duplicate language code: ${t.language}`);
-            }
-            languages.add(t.language);
-        }
-
         const tier = Tier.create({
             priority: command.priority,
             code: command.code,
             requirementUsd: command.requirementUsd,
             levelUpBonusUsd: command.levelUpBonusUsd,
             compRate: command.compRate,
-            translations: command.translations,
         });
 
         return this.tierRepository.create(tier);

@@ -14,6 +14,8 @@ interface UpdateTierCommand {
     compRate?: number;
 }
 
+import { Transactional } from '@nestjs-cls/transactional';
+
 @Injectable()
 export class UpdateTierService {
     constructor(
@@ -21,7 +23,11 @@ export class UpdateTierService {
         private readonly tierRepository: TierRepositoryPort,
     ) { }
 
+    @Transactional()
     async execute(command: UpdateTierCommand): Promise<Tier> {
+        // Serializes tier updates to prevent concurrent duplicates/race conditions
+        await this.tierRepository.acquireGlobalLock();
+
         const tier = await this.tierRepository.findById(command.id);
         if (!tier) {
             throw new TierException(`Tier not found with ID ${command.id}`);
@@ -30,12 +36,12 @@ export class UpdateTierService {
         // Check conflicts if priority or code changed
         if (command.code && command.code !== tier.code) {
             const existing = await this.tierRepository.findByCode(command.code);
-            if (existing) throw new TierException(`Tier code ${command.code} is already in use`);
+            if (existing && existing.id !== tier.id) throw new TierException(`Tier code ${command.code} is already in use`);
         }
 
         if (command.priority !== undefined && command.priority !== tier.priority) {
             const existing = await this.tierRepository.findByPriority(command.priority);
-            if (existing) throw new TierException(`Tier priority ${command.priority} is already in use`);
+            if (existing && existing.id !== tier.id) throw new TierException(`Tier priority ${command.priority} is already in use`);
         }
 
         const updatedTier = Tier.fromPersistence({

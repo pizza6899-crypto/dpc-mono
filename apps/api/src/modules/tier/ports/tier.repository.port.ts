@@ -11,5 +11,7 @@ export interface TierRepositoryPort {
     create(tier: Tier): Promise<Tier>;
     update(tier: Tier): Promise<Tier>;
     acquireGlobalLock(): Promise<void>;
-    // delete? usually hard to delete tiers if users are assigned. keep it simple for now.
+
+    // Translations
+    saveTranslation(tierId: bigint, language: string, name: string): Promise<void>;
 }

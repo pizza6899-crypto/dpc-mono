@@ -4,6 +4,7 @@ import type { Transaction } from '@nestjs-cls/transactional';
 import type { TransactionalAdapterPrisma } from '@nestjs-cls/transactional-adapter-prisma';
 import { TierRepositoryPort } from '../ports/tier.repository.port';
 import { TierMapper } from './tier.mapper';
+import { generateUid } from 'src/utils/id.util';
 import { Tier } from '../domain';
 import { LockNamespace } from 'src/common/concurrency/lock-namespace';
 import { DomainException } from 'src/common/exception/domain.exception';
@@ -53,7 +54,6 @@ export class TierRepository implements TierRepositoryPort {
         const data = this.mapper.toPersistence(tier);
         const model = await this.tx.tier.create({
             data,
-            include: { translations: true },
         });
         return this.mapper.toDomain(model);
     }
@@ -61,6 +61,7 @@ export class TierRepository implements TierRepositoryPort {
     async update(tier: Tier): Promise<Tier> {
         if (!tier.id) throw new Error('Tier ID is required for update');
         const data = this.mapper.toPersistence(tier);
+
         const model = await this.tx.tier.update({
             where: { id: tier.id },
             data,
@@ -92,6 +93,31 @@ export class TierRepository implements TierRepositoryPort {
                 );
             }
             throw error;
+        }
+    }
+
+    async saveTranslation(tierId: bigint, language: string, name: string): Promise<void> {
+        const existing = await this.tx.tierTranslation.findFirst({
+            where: {
+                tierId,
+                language: language as any,
+            },
+        });
+
+        if (existing) {
+            await this.tx.tierTranslation.update({
+                where: { id: existing.id },
+                data: { name },
+            });
+        } else {
+            await this.tx.tierTranslation.create({
+                data: {
+                    uid: generateUid(),
+                    tierId,
+                    language: language as any,
+                    name,
+                },
+            });
         }
     }
 }
