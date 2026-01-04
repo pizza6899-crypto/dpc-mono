@@ -13,14 +13,27 @@
         "invalidCredentials": "Invalid email or password.",
         "validation": {
             "email": "Please enter a valid email address.",
-            "password": "Password must be at least 8 characters."
+            "password": "Password must be at least 8 characters.",
+            "required": "This field is required.",
+            "required_field": "{field} is required.",
+            "min_length": "Must be at least {min} characters.",
+            "exact_length": "Must be exactly {length} characters."
         }
+    },
+    "validation": {
+        "email": "Please enter a valid email address.",
+        "password": "Password must be at least 8 characters.",
+        "required": "This field is required.",
+        "required_field": "{field} is required.",
+        "min_length": "{field} must be at least {min} characters.",
+        "exact_length": "{field} must be exactly {length} characters."
     },
     "common": {
         "confirm": "Confirm",
         "cancel": "Cancel",
         "success": "Success",
         "error": "Error",
+        "field": "Field",
         "dashboard": "Dashboard",
         "users": "Users",
         "settings": "Settings",

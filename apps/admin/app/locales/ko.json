@@ -13,14 +13,27 @@
         "invalidCredentials": "이메일 또는 비밀번호가 올바르지 않습니다.",
         "validation": {
             "email": "유효한 이메일 주소를 입력해주세요.",
-            "password": "비밀번호는 최소 8자 이상이어야 합니다."
+            "password": "비밀번호는 최소 8자 이상이어야 합니다.",
+            "required": "필수 입력 항목입니다.",
+            "required_field": "{field} 입력은 필수입니다.",
+            "min_length": "{min}자 이상이어야 합니다.",
+            "exact_length": "{length}자여야 합니다."
         }
+    },
+    "validation": {
+        "email": "유효한 이메일 주소를 입력해주세요.",
+        "password": "비밀번호는 최소 8자 이상이어야 합니다.",
+        "required": "필수 입력 항목입니다.",
+        "required_field": "{field} 입력은 필수입니다.",
+        "min_length": "{field}은(는) {min}자 이상이어야 합니다.",
+        "exact_length": "{field}은(는) {length}자여야 합니다."
     },
     "common": {
         "confirm": "확인",
         "cancel": "취소",
         "success": "성공",
         "error": "오류",
+        "field": "필드",
         "dashboard": "대시보드",
         "users": "사용자",
         "settings": "설정",

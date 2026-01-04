@@ -6,13 +6,14 @@ import { RegisterAdminRequestDtoRole } from '~/api/generated/models'
 const emit = defineEmits(['close', 'success'])
 const { t } = useI18n()
 const toast = useToast()
+const validators = useValidators()
 
 const schema = z.object({
-  email: z.string().email(t('login.validation.email')),
-  password: z.string().min(8, t('login.validation.password')),
+  email: validators.email,
+  password: validators.password,
   role: z.nativeEnum(RegisterAdminRequestDtoRole).optional(),
-  country: z.string().length(2, t('users.validation.country_code')).optional(),
-  timezone: z.string().optional()
+  country: validators.exactLength(2, t('users.country')).optional(),
+  timezone: validators.optionalString
 })
 
 const state = reactive({
