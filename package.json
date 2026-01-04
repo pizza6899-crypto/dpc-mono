@@ -29,7 +29,7 @@
     "db:partition:audit-tables": "pnpm -F @repo/database partition:audit-tables",
     "shared:build": "pnpm -F @repo/shared build",
     "shared:dev": "pnpm -F @repo/shared dev",
-    "package:deploy": "node scripts/package-for-deploy.js && open ."
+    "zip": "node scripts/package-for-deploy.js && open ."
   },
   "devDependencies": {
     "@types/node": "^25.0.3",

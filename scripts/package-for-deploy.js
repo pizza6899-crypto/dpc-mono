@@ -4,7 +4,8 @@ const { execSync } = require('child_process');
 
 const ROOT_DIR = path.resolve(__dirname, '..');
 const OUTPUT_DIR = path.join(ROOT_DIR, 'deploy-package');
-const ZIP_NAME = `output-deploy-${new Date().toISOString().split('T')[0]}.zip`;
+// const ZIP_NAME = `output-deploy-${new Date().toISOString().split('T')[0]}.zip`;
+const ZIP_NAME = `output-deploy.zip`;
 
 // 제외할 파일/디렉토리 패턴
 const EXCLUDE_PATTERNS = [
@@ -115,8 +116,15 @@ const dbDest = path.join(OUTPUT_DIR, 'packages', 'database');
 copyDir(dbSrc, dbDest, 'packages/database', false);
 console.log('   ✓ packages/database 복사 완료');
 
-// 4. ZIP 파일 생성
-console.log('\n4. ZIP 파일 생성 중...');
+// 4. packages/shared 복사
+console.log('\n4. packages/shared 복사 중...');
+const sharedSrc = path.join(ROOT_DIR, 'packages', 'shared');
+const sharedDest = path.join(OUTPUT_DIR, 'packages', 'shared');
+copyDir(sharedSrc, sharedDest, 'packages/shared', false);
+console.log('   ✓ packages/shared 복사 완료');
+
+// 5. ZIP 파일 생성
+console.log('\n5. ZIP 파일 생성 중...');
 const zipPath = path.join(ROOT_DIR, ZIP_NAME);
 
 // 기존 ZIP 파일 삭제

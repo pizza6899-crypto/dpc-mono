@@ -3,8 +3,7 @@
     "tasks": {
         "build": {
             "dependsOn": [
-                "^build",
-                "db:generate"
+                "^build"
             ],
             "outputs": [
                 "dist/**",
