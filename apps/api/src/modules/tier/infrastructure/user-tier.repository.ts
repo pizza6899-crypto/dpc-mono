@@ -98,4 +98,21 @@ export class UserTierRepository implements UserTierRepositoryPort {
             throw error;
         }
     }
+
+    async findManyByTierId(tierId: bigint, skip: number, take: number): Promise<[UserTier[], number]> {
+        const [items, total] = await Promise.all([
+            this.tx.userTier.findMany({
+                where: { tierId },
+                include: { tier: true },
+                skip,
+                take,
+                orderBy: { createdAt: 'desc' },
+            }),
+            this.tx.userTier.count({
+                where: { tierId },
+            }),
+        ]);
+
+        return [items.map((item) => this.mapper.toDomain(item)), total];
+    }
 }

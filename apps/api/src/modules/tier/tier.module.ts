@@ -22,6 +22,8 @@ import { UpdateTierTranslationService } from './application/translation/update-t
 import { AssignDefaultTierService } from './application/assign-default-tier.service';
 import { ForceUpdateUserTierService } from './application/force-update-user-tier.service';
 import { CountUsersByTierService } from './application/count-users-by-tier.service';
+import { FindUserTierHistoryService } from './application/find-user-tier-history.service';
+import { FindUsersByTierService } from './application/find-users-by-tier.service';
 
 @Module({
   imports: [],
@@ -37,6 +39,8 @@ import { CountUsersByTierService } from './application/count-users-by-tier.servi
     AssignDefaultTierService,
     ForceUpdateUserTierService,
     CountUsersByTierService,
+    FindUserTierHistoryService,
+    FindUsersByTierService,
     {
       provide: TIER_REPOSITORY,
       useClass: TierRepository,
@@ -66,6 +70,8 @@ import { CountUsersByTierService } from './application/count-users-by-tier.servi
     AssignDefaultTierService,
     ForceUpdateUserTierService,
     CountUsersByTierService,
+    FindUserTierHistoryService,
+    FindUsersByTierService,
   ],
 })
 

@@ -16,7 +16,10 @@ import { UserRoleType } from '@repo/database';
 import {
     ApiStandardErrors,
     ApiStandardResponse,
+    ApiPaginatedResponse,
 } from 'src/common/http/decorators/api-response.decorator';
+import { Paginated } from 'src/common/http/decorators/paginated.decorator';
+import { PaginatedData } from 'src/common/http/types/pagination.types';
 import { LogType } from 'src/modules/audit-log/domain';
 import { AuditLog } from 'src/modules/audit-log/infrastructure/audit-log.decorator';
 
@@ -34,6 +37,11 @@ import { CountUsersByTierService } from '../../application/count-users-by-tier.s
 import { ForceUpdateUserTierDto } from './dto/request/force-update-user-tier.dto';
 import { TierUserCountResponseDto } from './dto/response/tier-user-count.response.dto';
 import { UserParamDto } from './dto/request/user-param.dto';
+import { FindUserTierHistoryService } from '../../application/find-user-tier-history.service';
+import { TierHistoryResponseDto } from './dto/response/tier-history.response.dto';
+import { FindUsersByTierService } from '../../application/find-users-by-tier.service';
+import { TierUserListQueryDto } from './dto/request/tier-user-list-query.dto';
+import { UserTierResponseDto } from '../user/dto/response/user-tier.response.dto';
 
 @ApiTags('Admin Tiers')
 @Controller('admin/tiers')
@@ -47,6 +55,8 @@ export class TierAdminController {
         private readonly updateTierTranslationService: UpdateTierTranslationService,
         private readonly forceUpdateUserTierService: ForceUpdateUserTierService,
         private readonly countUsersByTierService: CountUsersByTierService,
+        private readonly findUserTierHistoryService: FindUserTierHistoryService,
+        private readonly findUsersByTierService: FindUsersByTierService,
     ) { }
 
     @Post()
@@ -181,5 +191,60 @@ export class TierAdminController {
     })
     async getTierUserCounts(): Promise<TierUserCountResponseDto[]> {
         return this.countUsersByTierService.execute();
+    }
+
+    @Get('users/:userId/history')
+    @HttpCode(HttpStatus.OK)
+    @AuditLog({
+        type: LogType.ACTIVITY,
+        category: 'TIER',
+        action: 'USER_TIER_HISTORY_VIEW',
+        extractMetadata: (_, args) => ({
+            userId: args[0]?.userId,
+        }),
+    })
+    @ApiOperation({ summary: 'Get user tier history / 사용자의 티어 변경 이력 조회' })
+    @ApiStandardResponse(TierHistoryResponseDto, {
+        status: HttpStatus.OK,
+        description: 'Successfully retrieved user tier history / 티어 변경 이력 조회 성공',
+        isArray: true,
+    })
+    async getUserTierHistory(@Param() params: UserParamDto): Promise<TierHistoryResponseDto[]> {
+        const history = await this.findUserTierHistoryService.execute(BigInt(params.userId));
+        return history.map(h => new TierHistoryResponseDto(h));
+    }
+
+    @Get(':id/users')
+    @HttpCode(HttpStatus.OK)
+    @AuditLog({
+        type: LogType.ACTIVITY,
+        category: 'TIER',
+        action: 'TIER_USERS_VIEW',
+        extractMetadata: (_, args) => ({
+            tierId: args[0]?.id,
+            query: args[1],
+        }),
+    })
+    @ApiOperation({ summary: 'Get users by tier / 특정 티어의 사용자 목록 조회' })
+    @Paginated()
+    @ApiPaginatedResponse(UserTierResponseDto, {
+        description: 'Successfully retrieved users by tier / 티어별 사용자 목록 조회 성공',
+    })
+    async findUsersByTier(
+        @Param() params: TierParamDto,
+        @Query() query: TierUserListQueryDto,
+    ): Promise<PaginatedData<UserTierResponseDto>> {
+        const [users, total] = await this.findUsersByTierService.execute({
+            tierId: BigInt(params.id),
+            page: query.page ?? 1,
+            limit: query.limit ?? 20,
+        });
+
+        return {
+            data: users.map(user => new UserTierResponseDto(user)),
+            total,
+            page: query.page ?? 1,
+            limit: query.limit ?? 20,
+        };
     }
 }
