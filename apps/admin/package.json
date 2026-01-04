@@ -9,6 +9,7 @@
     "postinstall": "nuxt prepare",
     "lint": "eslint .",
     "typecheck": "nuxt typecheck",
+    "orval": "orval",
     "api:generate": "orval"
   },
   "dependencies": {

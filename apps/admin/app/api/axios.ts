@@ -1,5 +1,8 @@
 import axios, { type AxiosRequestConfig, type AxiosError } from 'axios'
 import { useAuthStore } from '~/stores/auth'
+import { useRuntimeConfig, useNuxtApp, navigateTo } from '#app'
+
+console.log('Axios instance module loaded')
 
 // 1. axios 인스턴스 생성
 export const AXIOS_INSTANCE = axios.create({
@@ -21,7 +24,13 @@ export const customInstance = <T>(config: AxiosRequestConfig): Promise<T> => {
         baseURL,
         cancelToken: source.token,
         // 💡 이제 headers에서 Authorization 주입 로직을 삭제합니다. (브라우저가 자동 처리)
-    }).then(({ data }) => data)
+    }).then(({ data }) => {
+        console.log(`[API] ${config.method?.toUpperCase()} ${config.url} success`, data)
+        return data
+    }).catch(err => {
+        console.error(`[API] ${config.method?.toUpperCase()} ${config.url} failed`, err)
+        throw err
+    })
 
     // @ts-ignore
     promise.cancel = () => {
