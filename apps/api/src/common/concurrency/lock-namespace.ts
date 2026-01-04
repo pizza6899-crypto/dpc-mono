@@ -7,5 +7,6 @@
 export enum LockNamespace {
     AFFILIATE_CODE = 1001,
     TIER_CREATION = 1002,
+    USER_TIER = 1003,
     // 향후 추가될 네임스페이스들
 }

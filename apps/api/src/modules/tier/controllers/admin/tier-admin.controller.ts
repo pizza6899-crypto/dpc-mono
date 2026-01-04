@@ -29,6 +29,11 @@ import { UpdateTierDto } from './dto/request/update-tier.dto';
 import { TierResponseDto } from './dto/response/tier.response.dto';
 import { UpdateTierTranslationDto } from './dto/request/translation/update-tier-translation.dto';
 import { TierParamDto, TierTranslationParamDto } from './dto/request/tier-param.dto';
+import { ForceUpdateUserTierService } from '../../application/force-update-user-tier.service';
+import { CountUsersByTierService } from '../../application/count-users-by-tier.service';
+import { ForceUpdateUserTierDto } from './dto/request/force-update-user-tier.dto';
+import { TierUserCountResponseDto } from './dto/response/tier-user-count.response.dto';
+import { UserParamDto } from './dto/request/user-param.dto';
 
 @ApiTags('Admin Tiers')
 @Controller('admin/tiers')
@@ -40,6 +45,8 @@ export class TierAdminController {
         private readonly updateTierService: UpdateTierService,
         private readonly findTiersService: FindTiersService,
         private readonly updateTierTranslationService: UpdateTierTranslationService,
+        private readonly forceUpdateUserTierService: ForceUpdateUserTierService,
+        private readonly countUsersByTierService: CountUsersByTierService,
     ) { }
 
     @Post()
@@ -113,11 +120,66 @@ export class TierAdminController {
 
     @Put(':id/translations/:language')
     @HttpCode(HttpStatus.OK)
+    @AuditLog({
+        type: LogType.ACTIVITY,
+        category: 'TIER',
+        action: 'TIER_TRANSLATION_UPSERT',
+        extractMetadata: (_, args) => ({
+            tierId: args[0]?.id,
+            language: args[0]?.language,
+            name: args[1]?.name,
+        }),
+    })
     @ApiOperation({ summary: 'Upsert tier translation / 티어 번역 등록 및 수정' })
+    @ApiStandardResponse(undefined, {
+        status: HttpStatus.OK,
+        description: 'Successfully upserted tier translation / 티어 번역 등록 성공',
+    })
     async upsertTranslation(
         @Param() params: TierTranslationParamDto,
         @Body() dto: UpdateTierTranslationDto,
     ): Promise<void> {
         await this.updateTierTranslationService.execute(BigInt(params.id), params.language, dto.name);
+    }
+
+    @Post('users/:userId/force')
+    @HttpCode(HttpStatus.OK)
+    @AuditLog({
+        type: LogType.ACTIVITY,
+        category: 'TIER',
+        action: 'TIER_FORCE_UPDATE',
+        extractMetadata: (_, args) => ({
+            userId: args[0],
+            tierCode: args[1]?.tierCode,
+            reason: args[1]?.reason,
+        }),
+    })
+    @ApiOperation({ summary: 'Force update user tier / 사용자 티어 강제 변경' })
+    @ApiStandardResponse(undefined, {
+        status: HttpStatus.OK,
+        description: 'Successfully forced updated user tier / 사용자 티어 강제 변경 성공',
+    })
+    async forceUpdateUserTier(
+        @Param() params: UserParamDto,
+        @Body() dto: ForceUpdateUserTierDto,
+    ): Promise<void> {
+        await this.forceUpdateUserTierService.execute(BigInt(params.userId), dto.tierCode, dto.reason ?? 'Admin forced update');
+    }
+
+    @Get('stats/counts')
+    @HttpCode(HttpStatus.OK)
+    @AuditLog({
+        type: LogType.ACTIVITY,
+        category: 'TIER',
+        action: 'TIER_USER_COUNTS_VIEW',
+    })
+    @ApiOperation({ summary: 'Get tier user counts / 티어별 사용자 수 조회' })
+    @ApiStandardResponse(TierUserCountResponseDto, {
+        status: HttpStatus.OK,
+        description: 'Successfully retrieved tier user counts / 티어별 사용자 수 조회 성공',
+        isArray: true,
+    })
+    async getTierUserCounts(): Promise<TierUserCountResponseDto[]> {
+        return this.countUsersByTierService.execute();
     }
 }

@@ -150,4 +150,21 @@ export class UserTier {
     isEligibleForLevelUpBonus(targetTier: Tier): boolean {
         return targetTier.priority > this._highestPromotedPriority;
     }
+
+    forceChangeTier(targetTier: Tier, isManualLock: boolean): void {
+        if (!targetTier.id) throw new TierException(`Cannot change to invalid tier: ${targetTier.code}`);
+
+        this._tierId = targetTier.id;
+        this._isManualLock = isManualLock;
+        // Don't necessarily change cumulativeRollingUsd, but maybe we should if requirement not met?
+        // User requested "force set", implying override.
+        // We preserve rolling amount unless explicitly asked (not in requirements yet).
+
+        // Update highest priority if this is a promotion
+        if (targetTier.priority > this._highestPromotedPriority) {
+            this._highestPromotedPriority = targetTier.priority;
+            // Also update lastPromotedAt? Yes.
+            this._lastPromotedAt = new Date();
+        }
+    }
 }

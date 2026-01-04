@@ -5,6 +5,8 @@ import type { UserTierRepositoryPort } from '../ports/user-tier.repository.port'
 import { UserTier } from '../domain/model/user-tier.entity';
 import { TierException } from '../domain/tier.exception';
 
+import { Transactional } from '@nestjs-cls/transactional';
+
 @Injectable()
 export class AssignDefaultTierService {
     constructor(
@@ -14,7 +16,11 @@ export class AssignDefaultTierService {
         private readonly userTierRepository: UserTierRepositoryPort,
     ) { }
 
+    @Transactional()
     async execute(userId: bigint): Promise<UserTier> {
+        // Lock to prevent concurrent creation for the same user
+        await this.userTierRepository.acquireLock(userId);
+
         // 1. Check if user already has a tier
         const existing = await this.userTierRepository.findByUserId(userId);
         if (existing) {

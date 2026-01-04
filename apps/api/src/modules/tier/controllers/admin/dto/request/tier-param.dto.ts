@@ -1,10 +1,10 @@
-import { IsEnum, IsString } from 'class-validator';
+import { IsEnum, IsNumberString, IsString } from 'class-validator';
 import { ApiProperty } from '@nestjs/swagger';
 import { Language } from '@repo/database';
 
 export class TierParamDto {
     @ApiProperty({ description: 'Tier ID / 티어 ID', example: '1' })
-    @IsString()
+    @IsNumberString()
     id: string;
 }
 

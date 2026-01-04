@@ -1,4 +1,4 @@
-import { IsNumber, IsString, IsOptional, Min, IsEnum } from 'class-validator';
+import { IsNumber, IsString, IsOptional, Min, IsEnum, IsNotEmpty } from 'class-validator';
 import { ApiProperty } from '@nestjs/swagger';
 import { Language } from '@repo/database';
 
@@ -9,6 +9,7 @@ export class TierTranslationDto {
 
     @ApiProperty({ description: 'Tier name / 티어 이름', example: 'Bronze' })
     @IsString()
+    @IsNotEmpty()
     name: string;
 }
 
@@ -20,6 +21,7 @@ export class CreateTierDto {
 
     @ApiProperty({ description: 'Unique tier code / 티어 코드 (고유)', example: 'BRONZE' })
     @IsString()
+    @IsNotEmpty()
     code: string;
 
     @ApiProperty({ description: 'Rolling requirement in USD / 승급 필요 롤링 금액 (USD)', example: 1000 })

@@ -6,4 +6,9 @@ export interface UserTierRepositoryPort {
 
     create(userTier: UserTier): Promise<UserTier>;
     update(userTier: UserTier): Promise<UserTier>;
+
+    countByTierId(tierId: bigint): Promise<number>;
+    getTierUserCounts(): Promise<{ tierId: bigint; count: number }[]>;
+
+    acquireLock(userId: bigint): Promise<void>;
 }
