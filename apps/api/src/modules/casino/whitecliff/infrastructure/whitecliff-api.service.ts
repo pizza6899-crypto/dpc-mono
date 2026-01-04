@@ -3,7 +3,7 @@ import { HttpService } from '@nestjs/axios';
 import { EnvService } from 'src/common/env/env.service';
 import { firstValueFrom } from 'rxjs';
 import { WhitecliffConfig } from 'src/common/env/env.types';
-import axios from 'axios';
+
 import { GameProvider, Language } from '@repo/database';
 import { WhitecliffMapperService } from './whitecliff-mapper.service';
 import { GamingCurrencyCode } from 'src/utils/currency.util';
@@ -111,6 +111,47 @@ export class WhitecliffApiService {
     return this.whitecliffConfig[0];
   }
 
+  private async request<T>(
+    currency: GamingCurrencyCode,
+    method: 'GET' | 'POST',
+    path: string,
+    data?: any,
+    description?: string, // 로깅용 설명
+  ): Promise<T | WhitecliffErrorResponse> {
+    const config = this.getConfigByCurrency(currency);
+    const url = `${config.endpoint}${path}`;
+
+    try {
+      this.logger.log(
+        `[Whitecliff] 요청 시작: ${description} (${method} ${path})`,
+      );
+
+      const response = await firstValueFrom(
+        this.httpService.request<T>({
+          method,
+          url,
+          data,
+          headers: {
+            'Content-Type': 'application/json',
+            'ag-code': config.agentCode,
+            'ag-token': config.token,
+          },
+          timeout: 10000,
+        }),
+      );
+
+      this.logger.log(`[Whitecliff] 요청 성공: ${description}`);
+      return response.data;
+    } catch (error) {
+      this.logger.error(`[Whitecliff] 요청 실패: ${description}`, error.stack);
+      return {
+        status: 0,
+        error: 'API_REQUEST_FAILED',
+        message: error.message,
+      };
+    }
+  }
+
   /**
    * 게임 실행 (회원가입 겸용)
    */
@@ -131,60 +172,34 @@ export class WhitecliffApiService {
       type?: number;
       is_mobile?: boolean;
       table_id?: string;
-      // category?: string;
     };
   }): Promise<WhitecliffGameLaunchResponse | WhitecliffErrorResponse> {
-    try {
-      const whitecliffConfig = this.getConfigByCurrency(user.gameCurrency);
+    const whitecliffConfig = this.getConfigByCurrency(user.gameCurrency);
+    const authData = {
+      user: {
+        id: user.id,
+        name: user.name,
+        balance: user.balance,
+        language: user.language || 'en',
+        sid: user.token || '',
+        currency: whitecliffConfig.currency,
+        home_url: whitecliffConfig.redirectHomeUrl,
+      },
+      prd: {
+        id: prd.id,
+        type: prd.type || 0,
+        is_mobile: prd.is_mobile || false,
+        table_id: prd.table_id || '',
+      },
+    };
 
-      const authData = {
-        user: {
-          id: user.id,
-          name: user.name,
-          balance: user.balance,
-          language: user.language || 'en',
-          sid: user.token || '',
-          currency: whitecliffConfig.currency,
-          home_url: whitecliffConfig.redirectHomeUrl,
-        },
-        prd: {
-          id: prd.id,
-          type: prd.type || 0, // 0: 라이브 게임, 1: 슬롯/미니게임 (게임사별 게임 번호)
-          is_mobile: prd.is_mobile || false,
-          table_id: prd.table_id || '',
-        },
-      };
-
-      this.logger.log(`게임 실행 요청: userId=${user.id}, prdId=${prd.id}`);
-
-      const response = await firstValueFrom(
-        this.httpService.post<WhitecliffGameLaunchResponse>(
-          `${whitecliffConfig.endpoint}/auth`,
-          authData,
-          {
-            headers: {
-              'Content-Type': 'application/json',
-              'ag-code': whitecliffConfig.agentCode,
-              'ag-token': whitecliffConfig.token,
-            },
-            timeout: 10000,
-          },
-        ),
-      );
-
-      this.logger.log(
-        `게임 실행 성공: userId=${user.id}, status=${response.data.status}`,
-      );
-
-      return response.data;
-    } catch (error) {
-      this.logger.error(error, `게임 실행 실패`);
-      return {
-        status: 0,
-        error: 'API_REQUEST_FAILED',
-        message: error.message,
-      };
-    }
+    return this.request<WhitecliffGameLaunchResponse>(
+      user.gameCurrency,
+      'POST',
+      '/auth',
+      authData,
+      `게임 실행 (userId=${user.id})`,
+    );
   }
 
   /**
@@ -199,36 +214,13 @@ export class WhitecliffApiService {
     prdId: number,
     txnId: string,
   ): Promise<BetResultsResponse | WhitecliffErrorResponse> {
-    try {
-      const whitecliffConfig = this.getConfigByCurrency(gameCurrency);
-      const url = `${whitecliffConfig.endpoint}/results/${prdId}/${txnId}`;
-
-      const response = await firstValueFrom(
-        this.httpService.get<BetResultsResponse>(url, {
-          headers: {
-            'Content-Type': 'application/json',
-            'ag-code': whitecliffConfig.agentCode,
-            'ag-token': whitecliffConfig.token,
-          },
-          timeout: 10000,
-        }),
-      );
-
-      this.logger.log(
-        `Bet Results 결과재확인 성공: prdId=${prdId}, txnId=${txnId}, status=${response.data.status}`,
-      );
-      return response.data;
-    } catch (error) {
-      this.logger.error(
-        `Bet Results 결과재확인 실패: prdId=${prdId}, txnId=${txnId}, error=${error.message}`,
-        error.stack,
-      );
-      return {
-        status: 0,
-        error: 'BET_RESULTS_REQUEST_FAILED',
-        message: error.message,
-      };
-    }
+    return this.request<BetResultsResponse>(
+      gameCurrency,
+      'GET',
+      `/results/${prdId}/${txnId}`,
+      undefined,
+      `Bet Results 결과재확인 (txnId=${txnId})`,
+    );
   }
 
   /**
@@ -249,57 +241,37 @@ export class WhitecliffApiService {
     provider: GameProvider;
     txn_id: string;
   }): Promise<TransactionResultsResponse | WhitecliffErrorResponse> {
-    try {
-      const whitecliffConfig = this.getConfigByCurrency(gameCurrency);
-      const url = `${whitecliffConfig.endpoint}/bet/results`;
+    // 기본적으로 맵핑을 통해서 enum -> int 변경
+    let prd_id = this.whitecliffMapperService.toWhitecliffProvider(provider);
 
-      // 기본적으로 맵핑을 통해서 enum -> int 변경
-      let prd_id = this.whitecliffMapperService.toWhitecliffProvider(provider);
-
-      // 에볼루션인 경우 currency에 따라 다르게 응답
-      if (provider === GameProvider.EVOLUTION) {
-        switch (gameCurrency) {
-          case 'KRW':
-            prd_id = 31;
-            break;
-          case 'IDR':
-            prd_id = 29;
-            break;
-          default:
-            prd_id = 1;
-            break;
-        }
+    // 에볼루션인 경우 currency에 따라 다르게 응답
+    if (provider === GameProvider.EVOLUTION) {
+      switch (gameCurrency) {
+        case 'KRW':
+          prd_id = 31;
+          break;
+        case 'IDR':
+          prd_id = 29;
+          break;
+        default:
+          prd_id = 1;
+          break;
       }
-
-      const body: any = {
-        lang,
-        prd_id,
-        txn_id,
-      };
-
-      const response = await firstValueFrom(
-        this.httpService.post<TransactionResultsResponse>(url, body, {
-          headers: {
-            'Content-Type': 'application/json',
-            'ag-code': whitecliffConfig.agentCode,
-            'ag-token': whitecliffConfig.token,
-          },
-          timeout: 10000,
-        }),
-      );
-
-      return response.data;
-    } catch (error) {
-      this.logger.error(
-        error,
-        `Transaction Results 베팅 정보 조회 실패: txnId=${txn_id}`,
-      );
-      return {
-        status: 0,
-        error: 'TRANSACTION_RESULTS_REQUEST_FAILED',
-        message: error.message,
-      };
     }
+
+    const body: any = {
+      lang,
+      prd_id,
+      txn_id,
+    };
+
+    return this.request<TransactionResultsResponse>(
+      gameCurrency,
+      'POST',
+      '/bet/results',
+      body,
+      `Transaction Results 베팅 정보 조회 (txnId=${txn_id})`,
+    );
   }
 
   /**
@@ -317,42 +289,30 @@ export class WhitecliffApiService {
     language: Language;
     prd_id?: number;
   }): Promise<ProductGameListResponse | WhitecliffErrorResponse> {
-    try {
-      const whitecliffConfig = this.getConfigByCurrency(gameCurrency);
-      const url = `${whitecliffConfig.endpoint}/gamelist`;
-      this.logger.log(`Product(s) Game List API 호출: ${url}`);
+    // 🎯 중앙 request 메서드 이용
+    const result = await this.request<ProductGameListResponse>(
+      gameCurrency,
+      'POST',
+      '/gamelist',
+      { language, prd_id },
+      'Product(s) Game List API',
+    );
 
-      const body = {
-        language,
-        prd_id,
-      };
-
-      const dedicatedAxios = axios.create();
-
-      const response = await dedicatedAxios.post(url, body, {
-        headers: {
-          'Content-Type': 'application/json',
-          'ag-code': whitecliffConfig.agentCode,
-          'ag-token': whitecliffConfig.token,
-        },
-      });
-
-      // 🎯 응답 크기 진단
-      const jsonStr = JSON.stringify(response.data);
-      const responseSize = Buffer.byteLength(jsonStr, 'utf8');
-      this.logger.log(
-        `직접 Axios - 응답 크기: ${this.formatBytes(responseSize)}, 게임 수: ${Object.keys(response.data?.game_list ?? {}).length}`,
-      );
-
-      return response.data;
-    } catch (error) {
-      this.logger.error(error, `Product(s) Game List API 실패`);
-      return {
-        status: 0,
-        error: 'PRODUCT_GAME_LIST_REQUEST_FAILED',
-        message: error.message,
-      };
+    // 에러 응답인 경우 (request 메서드에서 { status: 0, error: ... } 반환)
+    // WhitecliffErrorResponse는 status, error 필드를 가짐
+    if ('error' in result && result.status === 0) {
+      return result;
     }
+
+    // 성공한 경우 (데이터 타입이 ProductGameListResponse)
+    // 응답 크기 진단
+    const jsonStr = JSON.stringify(result);
+    const responseSize = Buffer.byteLength(jsonStr, 'utf8');
+    this.logger.log(
+      `응답 크기: ${this.formatBytes(responseSize)}, 게임 수: ${Object.keys((result as ProductGameListResponse)?.game_list ?? {}).length}`,
+    );
+
+    return result;
   }
 
   private formatBytes(bytes: number): string {
@@ -380,37 +340,12 @@ export class WhitecliffApiService {
     start_date: string;
     end_date: string;
   }): Promise<PushedBetHistoryResponse | WhitecliffErrorResponse> {
-    const whitecliffConfig = this.getConfigByCurrency(gameCurrency);
-    const url = `${whitecliffConfig.endpoint}/getpushbets`;
-    const body = {
-      prd_id,
-      start_date,
-      end_date,
-    };
-
-    try {
-      const response = await firstValueFrom(
-        this.httpService.post<PushedBetHistoryResponse>(url, body, {
-          headers: {
-            'Content-Type': 'application/json',
-            'ag-code': whitecliffConfig.agentCode,
-            'ag-token': whitecliffConfig.token,
-          },
-          timeout: 10000,
-        }),
-      );
-
-      this.logger.log(
-        `Pushed Bet History API 성공: status=${response.data?.status}, 데이터=${JSON.stringify(response.data?.data ?? {})}`,
-      );
-      return response.data;
-    } catch (error) {
-      this.logger.error(error, `Pushed Bet History API 실패`);
-      return {
-        status: 0,
-        error: 'PUSHED_BET_HISTORY_REQUEST_FAILED',
-        message: error.message,
-      };
-    }
+    return this.request<PushedBetHistoryResponse>(
+      gameCurrency,
+      'POST',
+      '/getpushbets',
+      { prd_id, start_date, end_date },
+      'Pushed Bet History API',
+    );
   }
 }
