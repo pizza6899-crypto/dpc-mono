@@ -26,7 +26,10 @@
         "required": "This field is required.",
         "required_field": "{field} is required.",
         "min_length": "{field} must be at least {min} characters.",
-        "exact_length": "{field} must be exactly {length} characters."
+        "max_length": "{field} must be at most {max} characters.",
+        "length_range": "{field} must be between {min} and {max} characters.",
+        "exact_length": "{field} must be exactly {length} characters.",
+        "password_complexity": "Password must include at least one letter and one number."
     },
     "common": {
         "confirm": "Confirm",
@@ -51,6 +54,7 @@
         "status": "Status",
         "country": "Country",
         "timezone": "Timezone",
+        "referral_code": "Referral Code",
         "joined": "Joined",
         "roles": {
             "super_admin": "Super Admin",

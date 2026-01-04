@@ -12,8 +12,9 @@ const schema = z.object({
   email: validators.email,
   password: validators.password,
   role: z.nativeEnum(RegisterAdminRequestDtoRole).optional(),
-  country: validators.exactLength(2, t('users.country')).optional(),
-  timezone: validators.optionalString
+  country: validators.countryCode,
+  timezone: validators.timezone,
+  referralCode: validators.referralCode
 })
 
 const state = reactive({
@@ -21,7 +22,8 @@ const state = reactive({
   password: '',
   role: RegisterAdminRequestDtoRole.USER,
   country: undefined as string | undefined,
-  timezone: undefined as string | undefined
+  timezone: undefined as string | undefined,
+  referralCode: undefined as string | undefined
 })
 
 const { mutate, isPending } = useRegistrationAdminControllerCreateUser({
@@ -51,6 +53,7 @@ function resetState() {
   state.role = RegisterAdminRequestDtoRole.USER
   state.country = undefined
   state.timezone = undefined
+  state.referralCode = undefined
 }
 
 async function onSubmit() {
@@ -60,7 +63,8 @@ async function onSubmit() {
       password: state.password,
       role: state.role,
       country: state.country,
-      timezone: state.timezone
+      timezone: state.timezone,
+      referralCode: state.referralCode || undefined
     }
   })
 }
@@ -94,6 +98,10 @@ const roleOptions = Object.values(RegisterAdminRequestDtoRole).map(role => ({
           <UInput v-model="state.timezone" placeholder="America/New_York" icon="i-lucide-globe" class="w-full" />
       </UFormField>
     </div>
+
+    <UFormField :label="t('users.referral_code')" name="referralCode">
+      <UInput v-model="state.referralCode" placeholder="REFERRAL123" class="w-full" />
+    </UFormField>
 
     <div class="flex justify-end gap-3 pt-4">
         <UButton :label="t('common.cancel')" color="neutral" variant="ghost" @click="emit('close')" />
