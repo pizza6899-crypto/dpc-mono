@@ -234,6 +234,26 @@ export type UserPromotion = $Result.DefaultSelection<Prisma.$UserPromotionPayloa
  *  * - 디바이스 정보 및 메타데이터 저장
  */
 export type UserSession = $Result.DefaultSelection<Prisma.$UserSessionPayload>
+/**
+ * Model Tier
+ * 
+ */
+export type Tier = $Result.DefaultSelection<Prisma.$TierPayload>
+/**
+ * Model TierTranslation
+ * 
+ */
+export type TierTranslation = $Result.DefaultSelection<Prisma.$TierTranslationPayload>
+/**
+ * Model UserTier
+ * 
+ */
+export type UserTier = $Result.DefaultSelection<Prisma.$UserTierPayload>
+/**
+ * Model TierHistory
+ * 
+ */
+export type TierHistory = $Result.DefaultSelection<Prisma.$TierHistoryPayload>
 
 /**
  * Enums
@@ -577,6 +597,16 @@ export const SessionStatus: {
 
 export type SessionStatus = (typeof SessionStatus)[keyof typeof SessionStatus]
 
+
+export const TierChangeType: {
+  INITIAL: 'INITIAL',
+  UPGRADE: 'UPGRADE',
+  DOWNGRADE: 'DOWNGRADE',
+  MANUAL_UPDATE: 'MANUAL_UPDATE'
+};
+
+export type TierChangeType = (typeof TierChangeType)[keyof typeof TierChangeType]
+
 }
 
 export type SocialType = $Enums.SocialType
@@ -722,6 +752,10 @@ export const SessionType: typeof $Enums.SessionType
 export type SessionStatus = $Enums.SessionStatus
 
 export const SessionStatus: typeof $Enums.SessionStatus
+
+export type TierChangeType = $Enums.TierChangeType
+
+export const TierChangeType: typeof $Enums.TierChangeType
 
 /**
  * ##  Prisma Client ʲˢ
@@ -1229,6 +1263,46 @@ export class PrismaClient<
     * ```
     */
   get userSession(): Prisma.UserSessionDelegate<ExtArgs, ClientOptions>;
+
+  /**
+   * `prisma.tier`: Exposes CRUD operations for the **Tier** model.
+    * Example usage:
+    * ```ts
+    * // Fetch zero or more Tiers
+    * const tiers = await prisma.tier.findMany()
+    * ```
+    */
+  get tier(): Prisma.TierDelegate<ExtArgs, ClientOptions>;
+
+  /**
+   * `prisma.tierTranslation`: Exposes CRUD operations for the **TierTranslation** model.
+    * Example usage:
+    * ```ts
+    * // Fetch zero or more TierTranslations
+    * const tierTranslations = await prisma.tierTranslation.findMany()
+    * ```
+    */
+  get tierTranslation(): Prisma.TierTranslationDelegate<ExtArgs, ClientOptions>;
+
+  /**
+   * `prisma.userTier`: Exposes CRUD operations for the **UserTier** model.
+    * Example usage:
+    * ```ts
+    * // Fetch zero or more UserTiers
+    * const userTiers = await prisma.userTier.findMany()
+    * ```
+    */
+  get userTier(): Prisma.UserTierDelegate<ExtArgs, ClientOptions>;
+
+  /**
+   * `prisma.tierHistory`: Exposes CRUD operations for the **TierHistory** model.
+    * Example usage:
+    * ```ts
+    * // Fetch zero or more TierHistories
+    * const tierHistories = await prisma.tierHistory.findMany()
+    * ```
+    */
+  get tierHistory(): Prisma.TierHistoryDelegate<ExtArgs, ClientOptions>;
 }
 
 export namespace Prisma {
@@ -1701,7 +1775,11 @@ export namespace Prisma {
     PromotionTranslation: 'PromotionTranslation',
     PromotionCurrency: 'PromotionCurrency',
     UserPromotion: 'UserPromotion',
-    UserSession: 'UserSession'
+    UserSession: 'UserSession',
+    Tier: 'Tier',
+    TierTranslation: 'TierTranslation',
+    UserTier: 'UserTier',
+    TierHistory: 'TierHistory'
   };
 
   export type ModelName = (typeof ModelName)[keyof typeof ModelName]
@@ -1717,7 +1795,7 @@ export namespace Prisma {
       omit: GlobalOmitOptions
     }
     meta: {
-      modelProps: "affiliateCode" | "referral" | "authAuditLog" | "activityLog" | "systemErrorLog" | "integrationLog" | "unifiedLog" | "user" | "userBalance" | "userBalanceStats" | "game" | "gameTranslation" | "transaction" | "gameRound" | "gameBet" | "gameWin" | "transactionBalanceDetail" | "bonusDetail" | "withdrawDetail" | "compTransaction" | "dailyCompEarning" | "nowPaymentCallbackLog" | "exchangeRate" | "rolling" | "userToken" | "emailLog" | "gameSession" | "affiliateWallet" | "affiliateCommission" | "affiliateTier" | "loginAttempt" | "depositDetail" | "cryptoConfig" | "bankConfig" | "promotion" | "promotionTranslation" | "promotionCurrency" | "userPromotion" | "userSession"
+      modelProps: "affiliateCode" | "referral" | "authAuditLog" | "activityLog" | "systemErrorLog" | "integrationLog" | "unifiedLog" | "user" | "userBalance" | "userBalanceStats" | "game" | "gameTranslation" | "transaction" | "gameRound" | "gameBet" | "gameWin" | "transactionBalanceDetail" | "bonusDetail" | "withdrawDetail" | "compTransaction" | "dailyCompEarning" | "nowPaymentCallbackLog" | "exchangeRate" | "rolling" | "userToken" | "emailLog" | "gameSession" | "affiliateWallet" | "affiliateCommission" | "affiliateTier" | "loginAttempt" | "depositDetail" | "cryptoConfig" | "bankConfig" | "promotion" | "promotionTranslation" | "promotionCurrency" | "userPromotion" | "userSession" | "tier" | "tierTranslation" | "userTier" | "tierHistory"
       txIsolationLevel: Prisma.TransactionIsolationLevel
     }
     model: {
@@ -4607,6 +4685,302 @@ export namespace Prisma {
           }
         }
       }
+      Tier: {
+        payload: Prisma.$TierPayload<ExtArgs>
+        fields: Prisma.TierFieldRefs
+        operations: {
+          findUnique: {
+            args: Prisma.TierFindUniqueArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$TierPayload> | null
+          }
+          findUniqueOrThrow: {
+            args: Prisma.TierFindUniqueOrThrowArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$TierPayload>
+          }
+          findFirst: {
+            args: Prisma.TierFindFirstArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$TierPayload> | null
+          }
+          findFirstOrThrow: {
+            args: Prisma.TierFindFirstOrThrowArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$TierPayload>
+          }
+          findMany: {
+            args: Prisma.TierFindManyArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$TierPayload>[]
+          }
+          create: {
+            args: Prisma.TierCreateArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$TierPayload>
+          }
+          createMany: {
+            args: Prisma.TierCreateManyArgs<ExtArgs>
+            result: BatchPayload
+          }
+          createManyAndReturn: {
+            args: Prisma.TierCreateManyAndReturnArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$TierPayload>[]
+          }
+          delete: {
+            args: Prisma.TierDeleteArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$TierPayload>
+          }
+          update: {
+            args: Prisma.TierUpdateArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$TierPayload>
+          }
+          deleteMany: {
+            args: Prisma.TierDeleteManyArgs<ExtArgs>
+            result: BatchPayload
+          }
+          updateMany: {
+            args: Prisma.TierUpdateManyArgs<ExtArgs>
+            result: BatchPayload
+          }
+          updateManyAndReturn: {
+            args: Prisma.TierUpdateManyAndReturnArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$TierPayload>[]
+          }
+          upsert: {
+            args: Prisma.TierUpsertArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$TierPayload>
+          }
+          aggregate: {
+            args: Prisma.TierAggregateArgs<ExtArgs>
+            result: $Utils.Optional<AggregateTier>
+          }
+          groupBy: {
+            args: Prisma.TierGroupByArgs<ExtArgs>
+            result: $Utils.Optional<TierGroupByOutputType>[]
+          }
+          count: {
+            args: Prisma.TierCountArgs<ExtArgs>
+            result: $Utils.Optional<TierCountAggregateOutputType> | number
+          }
+        }
+      }
+      TierTranslation: {
+        payload: Prisma.$TierTranslationPayload<ExtArgs>
+        fields: Prisma.TierTranslationFieldRefs
+        operations: {
+          findUnique: {
+            args: Prisma.TierTranslationFindUniqueArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$TierTranslationPayload> | null
+          }
+          findUniqueOrThrow: {
+            args: Prisma.TierTranslationFindUniqueOrThrowArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$TierTranslationPayload>
+          }
+          findFirst: {
+            args: Prisma.TierTranslationFindFirstArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$TierTranslationPayload> | null
+          }
+          findFirstOrThrow: {
+            args: Prisma.TierTranslationFindFirstOrThrowArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$TierTranslationPayload>
+          }
+          findMany: {
+            args: Prisma.TierTranslationFindManyArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$TierTranslationPayload>[]
+          }
+          create: {
+            args: Prisma.TierTranslationCreateArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$TierTranslationPayload>
+          }
+          createMany: {
+            args: Prisma.TierTranslationCreateManyArgs<ExtArgs>
+            result: BatchPayload
+          }
+          createManyAndReturn: {
+            args: Prisma.TierTranslationCreateManyAndReturnArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$TierTranslationPayload>[]
+          }
+          delete: {
+            args: Prisma.TierTranslationDeleteArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$TierTranslationPayload>
+          }
+          update: {
+            args: Prisma.TierTranslationUpdateArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$TierTranslationPayload>
+          }
+          deleteMany: {
+            args: Prisma.TierTranslationDeleteManyArgs<ExtArgs>
+            result: BatchPayload
+          }
+          updateMany: {
+            args: Prisma.TierTranslationUpdateManyArgs<ExtArgs>
+            result: BatchPayload
+          }
+          updateManyAndReturn: {
+            args: Prisma.TierTranslationUpdateManyAndReturnArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$TierTranslationPayload>[]
+          }
+          upsert: {
+            args: Prisma.TierTranslationUpsertArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$TierTranslationPayload>
+          }
+          aggregate: {
+            args: Prisma.TierTranslationAggregateArgs<ExtArgs>
+            result: $Utils.Optional<AggregateTierTranslation>
+          }
+          groupBy: {
+            args: Prisma.TierTranslationGroupByArgs<ExtArgs>
+            result: $Utils.Optional<TierTranslationGroupByOutputType>[]
+          }
+          count: {
+            args: Prisma.TierTranslationCountArgs<ExtArgs>
+            result: $Utils.Optional<TierTranslationCountAggregateOutputType> | number
+          }
+        }
+      }
+      UserTier: {
+        payload: Prisma.$UserTierPayload<ExtArgs>
+        fields: Prisma.UserTierFieldRefs
+        operations: {
+          findUnique: {
+            args: Prisma.UserTierFindUniqueArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$UserTierPayload> | null
+          }
+          findUniqueOrThrow: {
+            args: Prisma.UserTierFindUniqueOrThrowArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$UserTierPayload>
+          }
+          findFirst: {
+            args: Prisma.UserTierFindFirstArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$UserTierPayload> | null
+          }
+          findFirstOrThrow: {
+            args: Prisma.UserTierFindFirstOrThrowArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$UserTierPayload>
+          }
+          findMany: {
+            args: Prisma.UserTierFindManyArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$UserTierPayload>[]
+          }
+          create: {
+            args: Prisma.UserTierCreateArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$UserTierPayload>
+          }
+          createMany: {
+            args: Prisma.UserTierCreateManyArgs<ExtArgs>
+            result: BatchPayload
+          }
+          createManyAndReturn: {
+            args: Prisma.UserTierCreateManyAndReturnArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$UserTierPayload>[]
+          }
+          delete: {
+            args: Prisma.UserTierDeleteArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$UserTierPayload>
+          }
+          update: {
+            args: Prisma.UserTierUpdateArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$UserTierPayload>
+          }
+          deleteMany: {
+            args: Prisma.UserTierDeleteManyArgs<ExtArgs>
+            result: BatchPayload
+          }
+          updateMany: {
+            args: Prisma.UserTierUpdateManyArgs<ExtArgs>
+            result: BatchPayload
+          }
+          updateManyAndReturn: {
+            args: Prisma.UserTierUpdateManyAndReturnArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$UserTierPayload>[]
+          }
+          upsert: {
+            args: Prisma.UserTierUpsertArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$UserTierPayload>
+          }
+          aggregate: {
+            args: Prisma.UserTierAggregateArgs<ExtArgs>
+            result: $Utils.Optional<AggregateUserTier>
+          }
+          groupBy: {
+            args: Prisma.UserTierGroupByArgs<ExtArgs>
+            result: $Utils.Optional<UserTierGroupByOutputType>[]
+          }
+          count: {
+            args: Prisma.UserTierCountArgs<ExtArgs>
+            result: $Utils.Optional<UserTierCountAggregateOutputType> | number
+          }
+        }
+      }
+      TierHistory: {
+        payload: Prisma.$TierHistoryPayload<ExtArgs>
+        fields: Prisma.TierHistoryFieldRefs
+        operations: {
+          findUnique: {
+            args: Prisma.TierHistoryFindUniqueArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$TierHistoryPayload> | null
+          }
+          findUniqueOrThrow: {
+            args: Prisma.TierHistoryFindUniqueOrThrowArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$TierHistoryPayload>
+          }
+          findFirst: {
+            args: Prisma.TierHistoryFindFirstArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$TierHistoryPayload> | null
+          }
+          findFirstOrThrow: {
+            args: Prisma.TierHistoryFindFirstOrThrowArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$TierHistoryPayload>
+          }
+          findMany: {
+            args: Prisma.TierHistoryFindManyArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$TierHistoryPayload>[]
+          }
+          create: {
+            args: Prisma.TierHistoryCreateArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$TierHistoryPayload>
+          }
+          createMany: {
+            args: Prisma.TierHistoryCreateManyArgs<ExtArgs>
+            result: BatchPayload
+          }
+          createManyAndReturn: {
+            args: Prisma.TierHistoryCreateManyAndReturnArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$TierHistoryPayload>[]
+          }
+          delete: {
+            args: Prisma.TierHistoryDeleteArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$TierHistoryPayload>
+          }
+          update: {
+            args: Prisma.TierHistoryUpdateArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$TierHistoryPayload>
+          }
+          deleteMany: {
+            args: Prisma.TierHistoryDeleteManyArgs<ExtArgs>
+            result: BatchPayload
+          }
+          updateMany: {
+            args: Prisma.TierHistoryUpdateManyArgs<ExtArgs>
+            result: BatchPayload
+          }
+          updateManyAndReturn: {
+            args: Prisma.TierHistoryUpdateManyAndReturnArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$TierHistoryPayload>[]
+          }
+          upsert: {
+            args: Prisma.TierHistoryUpsertArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$TierHistoryPayload>
+          }
+          aggregate: {
+            args: Prisma.TierHistoryAggregateArgs<ExtArgs>
+            result: $Utils.Optional<AggregateTierHistory>
+          }
+          groupBy: {
+            args: Prisma.TierHistoryGroupByArgs<ExtArgs>
+            result: $Utils.Optional<TierHistoryGroupByOutputType>[]
+          }
+          count: {
+            args: Prisma.TierHistoryCountArgs<ExtArgs>
+            result: $Utils.Optional<TierHistoryCountAggregateOutputType> | number
+          }
+        }
+      }
     }
   } & {
     other: {
@@ -4754,6 +5128,10 @@ export namespace Prisma {
     promotionCurrency?: PromotionCurrencyOmit
     userPromotion?: UserPromotionOmit
     userSession?: UserSessionOmit
+    tier?: TierOmit
+    tierTranslation?: TierTranslationOmit
+    userTier?: UserTierOmit
+    tierHistory?: TierHistoryOmit
   }
 
   /* Types for Logging */
@@ -4885,6 +5263,7 @@ export namespace Prisma {
     RevokedSessions: number
     UserToken: number
     loginAttempts: number
+    tierHistory: number
   }
 
   export type UserCountOutputTypeSelect<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
@@ -4908,6 +5287,7 @@ export namespace Prisma {
     RevokedSessions?: boolean | UserCountOutputTypeCountRevokedSessionsArgs
     UserToken?: boolean | UserCountOutputTypeCountUserTokenArgs
     loginAttempts?: boolean | UserCountOutputTypeCountLoginAttemptsArgs
+    tierHistory?: boolean | UserCountOutputTypeCountTierHistoryArgs
   }
 
   // Custom InputTypes
@@ -5059,6 +5439,13 @@ export namespace Prisma {
    */
   export type UserCountOutputTypeCountLoginAttemptsArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
     where?: LoginAttemptWhereInput
+  }
+
+  /**
+   * UserCountOutputType without action
+   */
+  export type UserCountOutputTypeCountTierHistoryArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    where?: TierHistoryWhereInput
   }
 
 
@@ -5432,6 +5819,64 @@ export namespace Prisma {
    */
   export type UserPromotionCountOutputTypeCountRollingArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
     where?: RollingWhereInput
+  }
+
+
+  /**
+   * Count Type TierCountOutputType
+   */
+
+  export type TierCountOutputType = {
+    userTiers: number
+    translations: number
+    historyFrom: number
+    historyTo: number
+  }
+
+  export type TierCountOutputTypeSelect<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    userTiers?: boolean | TierCountOutputTypeCountUserTiersArgs
+    translations?: boolean | TierCountOutputTypeCountTranslationsArgs
+    historyFrom?: boolean | TierCountOutputTypeCountHistoryFromArgs
+    historyTo?: boolean | TierCountOutputTypeCountHistoryToArgs
+  }
+
+  // Custom InputTypes
+  /**
+   * TierCountOutputType without action
+   */
+  export type TierCountOutputTypeDefaultArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the TierCountOutputType
+     */
+    select?: TierCountOutputTypeSelect<ExtArgs> | null
+  }
+
+  /**
+   * TierCountOutputType without action
+   */
+  export type TierCountOutputTypeCountUserTiersArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    where?: UserTierWhereInput
+  }
+
+  /**
+   * TierCountOutputType without action
+   */
+  export type TierCountOutputTypeCountTranslationsArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    where?: TierTranslationWhereInput
+  }
+
+  /**
+   * TierCountOutputType without action
+   */
+  export type TierCountOutputTypeCountHistoryFromArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    where?: TierHistoryWhereInput
+  }
+
+  /**
+   * TierCountOutputType without action
+   */
+  export type TierCountOutputTypeCountHistoryToArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    where?: TierHistoryWhereInput
   }
 
 
@@ -14071,6 +14516,8 @@ export namespace Prisma {
     RevokedSessions?: boolean | User$RevokedSessionsArgs<ExtArgs>
     UserToken?: boolean | User$UserTokenArgs<ExtArgs>
     loginAttempts?: boolean | User$loginAttemptsArgs<ExtArgs>
+    userTier?: boolean | User$userTierArgs<ExtArgs>
+    tierHistory?: boolean | User$tierHistoryArgs<ExtArgs>
     _count?: boolean | UserCountOutputTypeDefaultArgs<ExtArgs>
   }, ExtArgs["result"]["user"]>
 
@@ -14163,6 +14610,8 @@ export namespace Prisma {
     RevokedSessions?: boolean | User$RevokedSessionsArgs<ExtArgs>
     UserToken?: boolean | User$UserTokenArgs<ExtArgs>
     loginAttempts?: boolean | User$loginAttemptsArgs<ExtArgs>
+    userTier?: boolean | User$userTierArgs<ExtArgs>
+    tierHistory?: boolean | User$tierHistoryArgs<ExtArgs>
     _count?: boolean | UserCountOutputTypeDefaultArgs<ExtArgs>
   }
   export type UserIncludeCreateManyAndReturn<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {}
@@ -14192,6 +14641,8 @@ export namespace Prisma {
       RevokedSessions: Prisma.$UserSessionPayload<ExtArgs>[]
       UserToken: Prisma.$UserTokenPayload<ExtArgs>[]
       loginAttempts: Prisma.$LoginAttemptPayload<ExtArgs>[]
+      userTier: Prisma.$UserTierPayload<ExtArgs> | null
+      tierHistory: Prisma.$TierHistoryPayload<ExtArgs>[]
     }
     scalars: $Extensions.GetPayloadResult<{
       id: bigint
@@ -14628,6 +15079,8 @@ export namespace Prisma {
     RevokedSessions<T extends User$RevokedSessionsArgs<ExtArgs> = {}>(args?: Subset<T, User$RevokedSessionsArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$UserSessionPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
     UserToken<T extends User$UserTokenArgs<ExtArgs> = {}>(args?: Subset<T, User$UserTokenArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$UserTokenPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
     loginAttempts<T extends User$loginAttemptsArgs<ExtArgs> = {}>(args?: Subset<T, User$loginAttemptsArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$LoginAttemptPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
+    userTier<T extends User$userTierArgs<ExtArgs> = {}>(args?: Subset<T, User$userTierArgs<ExtArgs>>): Prisma__UserTierClient<$Result.GetResult<Prisma.$UserTierPayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions> | null, null, ExtArgs, GlobalOmitOptions>
+    tierHistory<T extends User$tierHistoryArgs<ExtArgs> = {}>(args?: Subset<T, User$tierHistoryArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$TierHistoryPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
     /**
      * Attaches callbacks for the resolution and/or rejection of the Promise.
      * @param onfulfilled The callback to execute when the Promise is resolved.
@@ -15560,6 +16013,49 @@ export namespace Prisma {
     take?: number
     skip?: number
     distinct?: LoginAttemptScalarFieldEnum | LoginAttemptScalarFieldEnum[]
+  }
+
+  /**
+   * User.userTier
+   */
+  export type User$userTierArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the UserTier
+     */
+    select?: UserTierSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the UserTier
+     */
+    omit?: UserTierOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: UserTierInclude<ExtArgs> | null
+    where?: UserTierWhereInput
+  }
+
+  /**
+   * User.tierHistory
+   */
+  export type User$tierHistoryArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the TierHistory
+     */
+    select?: TierHistorySelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the TierHistory
+     */
+    omit?: TierHistoryOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: TierHistoryInclude<ExtArgs> | null
+    where?: TierHistoryWhereInput
+    orderBy?: TierHistoryOrderByWithRelationInput | TierHistoryOrderByWithRelationInput[]
+    cursor?: TierHistoryWhereUniqueInput
+    take?: number
+    skip?: number
+    distinct?: TierHistoryScalarFieldEnum | TierHistoryScalarFieldEnum[]
   }
 
   /**
@@ -53850,6 +54346,4773 @@ export namespace Prisma {
 
 
   /**
+   * Model Tier
+   */
+
+  export type AggregateTier = {
+    _count: TierCountAggregateOutputType | null
+    _avg: TierAvgAggregateOutputType | null
+    _sum: TierSumAggregateOutputType | null
+    _min: TierMinAggregateOutputType | null
+    _max: TierMaxAggregateOutputType | null
+  }
+
+  export type TierAvgAggregateOutputType = {
+    id: number | null
+    priority: number | null
+    requirementUsd: Decimal | null
+    levelUpBonus: Decimal | null
+    compRate: Decimal | null
+  }
+
+  export type TierSumAggregateOutputType = {
+    id: bigint | null
+    priority: number | null
+    requirementUsd: Decimal | null
+    levelUpBonus: Decimal | null
+    compRate: Decimal | null
+  }
+
+  export type TierMinAggregateOutputType = {
+    id: bigint | null
+    uid: string | null
+    priority: number | null
+    code: string | null
+    requirementUsd: Decimal | null
+    levelUpBonus: Decimal | null
+    compRate: Decimal | null
+    createdAt: Date | null
+    updatedAt: Date | null
+  }
+
+  export type TierMaxAggregateOutputType = {
+    id: bigint | null
+    uid: string | null
+    priority: number | null
+    code: string | null
+    requirementUsd: Decimal | null
+    levelUpBonus: Decimal | null
+    compRate: Decimal | null
+    createdAt: Date | null
+    updatedAt: Date | null
+  }
+
+  export type TierCountAggregateOutputType = {
+    id: number
+    uid: number
+    priority: number
+    code: number
+    requirementUsd: number
+    levelUpBonus: number
+    compRate: number
+    benefits: number
+    createdAt: number
+    updatedAt: number
+    _all: number
+  }
+
+
+  export type TierAvgAggregateInputType = {
+    id?: true
+    priority?: true
+    requirementUsd?: true
+    levelUpBonus?: true
+    compRate?: true
+  }
+
+  export type TierSumAggregateInputType = {
+    id?: true
+    priority?: true
+    requirementUsd?: true
+    levelUpBonus?: true
+    compRate?: true
+  }
+
+  export type TierMinAggregateInputType = {
+    id?: true
+    uid?: true
+    priority?: true
+    code?: true
+    requirementUsd?: true
+    levelUpBonus?: true
+    compRate?: true
+    createdAt?: true
+    updatedAt?: true
+  }
+
+  export type TierMaxAggregateInputType = {
+    id?: true
+    uid?: true
+    priority?: true
+    code?: true
+    requirementUsd?: true
+    levelUpBonus?: true
+    compRate?: true
+    createdAt?: true
+    updatedAt?: true
+  }
+
+  export type TierCountAggregateInputType = {
+    id?: true
+    uid?: true
+    priority?: true
+    code?: true
+    requirementUsd?: true
+    levelUpBonus?: true
+    compRate?: true
+    benefits?: true
+    createdAt?: true
+    updatedAt?: true
+    _all?: true
+  }
+
+  export type TierAggregateArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Filter which Tier to aggregate.
+     */
+    where?: TierWhereInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/sorting Sorting Docs}
+     * 
+     * Determine the order of Tiers to fetch.
+     */
+    orderBy?: TierOrderByWithRelationInput | TierOrderByWithRelationInput[]
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination#cursor-based-pagination Cursor Docs}
+     * 
+     * Sets the start position
+     */
+    cursor?: TierWhereUniqueInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Take `±n` Tiers from the position of the cursor.
+     */
+    take?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Skip the first `n` Tiers.
+     */
+    skip?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
+     * 
+     * Count returned Tiers
+    **/
+    _count?: true | TierCountAggregateInputType
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
+     * 
+     * Select which fields to average
+    **/
+    _avg?: TierAvgAggregateInputType
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
+     * 
+     * Select which fields to sum
+    **/
+    _sum?: TierSumAggregateInputType
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
+     * 
+     * Select which fields to find the minimum value
+    **/
+    _min?: TierMinAggregateInputType
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
+     * 
+     * Select which fields to find the maximum value
+    **/
+    _max?: TierMaxAggregateInputType
+  }
+
+  export type GetTierAggregateType<T extends TierAggregateArgs> = {
+        [P in keyof T & keyof AggregateTier]: P extends '_count' | 'count'
+      ? T[P] extends true
+        ? number
+        : GetScalarType<T[P], AggregateTier[P]>
+      : GetScalarType<T[P], AggregateTier[P]>
+  }
+
+
+
+
+  export type TierGroupByArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    where?: TierWhereInput
+    orderBy?: TierOrderByWithAggregationInput | TierOrderByWithAggregationInput[]
+    by: TierScalarFieldEnum[] | TierScalarFieldEnum
+    having?: TierScalarWhereWithAggregatesInput
+    take?: number
+    skip?: number
+    _count?: TierCountAggregateInputType | true
+    _avg?: TierAvgAggregateInputType
+    _sum?: TierSumAggregateInputType
+    _min?: TierMinAggregateInputType
+    _max?: TierMaxAggregateInputType
+  }
+
+  export type TierGroupByOutputType = {
+    id: bigint
+    uid: string
+    priority: number
+    code: string
+    requirementUsd: Decimal
+    levelUpBonus: Decimal
+    compRate: Decimal
+    benefits: JsonValue | null
+    createdAt: Date
+    updatedAt: Date
+    _count: TierCountAggregateOutputType | null
+    _avg: TierAvgAggregateOutputType | null
+    _sum: TierSumAggregateOutputType | null
+    _min: TierMinAggregateOutputType | null
+    _max: TierMaxAggregateOutputType | null
+  }
+
+  type GetTierGroupByPayload<T extends TierGroupByArgs> = Prisma.PrismaPromise<
+    Array<
+      PickEnumerable<TierGroupByOutputType, T['by']> &
+        {
+          [P in ((keyof T) & (keyof TierGroupByOutputType))]: P extends '_count'
+            ? T[P] extends boolean
+              ? number
+              : GetScalarType<T[P], TierGroupByOutputType[P]>
+            : GetScalarType<T[P], TierGroupByOutputType[P]>
+        }
+      >
+    >
+
+
+  export type TierSelect<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetSelect<{
+    id?: boolean
+    uid?: boolean
+    priority?: boolean
+    code?: boolean
+    requirementUsd?: boolean
+    levelUpBonus?: boolean
+    compRate?: boolean
+    benefits?: boolean
+    createdAt?: boolean
+    updatedAt?: boolean
+    userTiers?: boolean | Tier$userTiersArgs<ExtArgs>
+    translations?: boolean | Tier$translationsArgs<ExtArgs>
+    historyFrom?: boolean | Tier$historyFromArgs<ExtArgs>
+    historyTo?: boolean | Tier$historyToArgs<ExtArgs>
+    _count?: boolean | TierCountOutputTypeDefaultArgs<ExtArgs>
+  }, ExtArgs["result"]["tier"]>
+
+  export type TierSelectCreateManyAndReturn<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetSelect<{
+    id?: boolean
+    uid?: boolean
+    priority?: boolean
+    code?: boolean
+    requirementUsd?: boolean
+    levelUpBonus?: boolean
+    compRate?: boolean
+    benefits?: boolean
+    createdAt?: boolean
+    updatedAt?: boolean
+  }, ExtArgs["result"]["tier"]>
+
+  export type TierSelectUpdateManyAndReturn<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetSelect<{
+    id?: boolean
+    uid?: boolean
+    priority?: boolean
+    code?: boolean
+    requirementUsd?: boolean
+    levelUpBonus?: boolean
+    compRate?: boolean
+    benefits?: boolean
+    createdAt?: boolean
+    updatedAt?: boolean
+  }, ExtArgs["result"]["tier"]>
+
+  export type TierSelectScalar = {
+    id?: boolean
+    uid?: boolean
+    priority?: boolean
+    code?: boolean
+    requirementUsd?: boolean
+    levelUpBonus?: boolean
+    compRate?: boolean
+    benefits?: boolean
+    createdAt?: boolean
+    updatedAt?: boolean
+  }
+
+  export type TierOmit<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetOmit<"id" | "uid" | "priority" | "code" | "requirementUsd" | "levelUpBonus" | "compRate" | "benefits" | "createdAt" | "updatedAt", ExtArgs["result"]["tier"]>
+  export type TierInclude<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    userTiers?: boolean | Tier$userTiersArgs<ExtArgs>
+    translations?: boolean | Tier$translationsArgs<ExtArgs>
+    historyFrom?: boolean | Tier$historyFromArgs<ExtArgs>
+    historyTo?: boolean | Tier$historyToArgs<ExtArgs>
+    _count?: boolean | TierCountOutputTypeDefaultArgs<ExtArgs>
+  }
+  export type TierIncludeCreateManyAndReturn<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {}
+  export type TierIncludeUpdateManyAndReturn<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {}
+
+  export type $TierPayload<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    name: "Tier"
+    objects: {
+      userTiers: Prisma.$UserTierPayload<ExtArgs>[]
+      translations: Prisma.$TierTranslationPayload<ExtArgs>[]
+      historyFrom: Prisma.$TierHistoryPayload<ExtArgs>[]
+      historyTo: Prisma.$TierHistoryPayload<ExtArgs>[]
+    }
+    scalars: $Extensions.GetPayloadResult<{
+      id: bigint
+      uid: string
+      priority: number
+      code: string
+      requirementUsd: Prisma.Decimal
+      levelUpBonus: Prisma.Decimal
+      compRate: Prisma.Decimal
+      benefits: Prisma.JsonValue | null
+      createdAt: Date
+      updatedAt: Date
+    }, ExtArgs["result"]["tier"]>
+    composites: {}
+  }
+
+  type TierGetPayload<S extends boolean | null | undefined | TierDefaultArgs> = $Result.GetResult<Prisma.$TierPayload, S>
+
+  type TierCountArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> =
+    Omit<TierFindManyArgs, 'select' | 'include' | 'distinct' | 'omit'> & {
+      select?: TierCountAggregateInputType | true
+    }
+
+  export interface TierDelegate<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs, GlobalOmitOptions = {}> {
+    [K: symbol]: { types: Prisma.TypeMap<ExtArgs>['model']['Tier'], meta: { name: 'Tier' } }
+    /**
+     * Find zero or one Tier that matches the filter.
+     * @param {TierFindUniqueArgs} args - Arguments to find a Tier
+     * @example
+     * // Get one Tier
+     * const tier = await prisma.tier.findUnique({
+     *   where: {
+     *     // ... provide filter here
+     *   }
+     * })
+     */
+    findUnique<T extends TierFindUniqueArgs>(args: SelectSubset<T, TierFindUniqueArgs<ExtArgs>>): Prisma__TierClient<$Result.GetResult<Prisma.$TierPayload<ExtArgs>, T, "findUnique", GlobalOmitOptions> | null, null, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Find one Tier that matches the filter or throw an error with `error.code='P2025'`
+     * if no matches were found.
+     * @param {TierFindUniqueOrThrowArgs} args - Arguments to find a Tier
+     * @example
+     * // Get one Tier
+     * const tier = await prisma.tier.findUniqueOrThrow({
+     *   where: {
+     *     // ... provide filter here
+     *   }
+     * })
+     */
+    findUniqueOrThrow<T extends TierFindUniqueOrThrowArgs>(args: SelectSubset<T, TierFindUniqueOrThrowArgs<ExtArgs>>): Prisma__TierClient<$Result.GetResult<Prisma.$TierPayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Find the first Tier that matches the filter.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {TierFindFirstArgs} args - Arguments to find a Tier
+     * @example
+     * // Get one Tier
+     * const tier = await prisma.tier.findFirst({
+     *   where: {
+     *     // ... provide filter here
+     *   }
+     * })
+     */
+    findFirst<T extends TierFindFirstArgs>(args?: SelectSubset<T, TierFindFirstArgs<ExtArgs>>): Prisma__TierClient<$Result.GetResult<Prisma.$TierPayload<ExtArgs>, T, "findFirst", GlobalOmitOptions> | null, null, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Find the first Tier that matches the filter or
+     * throw `PrismaKnownClientError` with `P2025` code if no matches were found.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {TierFindFirstOrThrowArgs} args - Arguments to find a Tier
+     * @example
+     * // Get one Tier
+     * const tier = await prisma.tier.findFirstOrThrow({
+     *   where: {
+     *     // ... provide filter here
+     *   }
+     * })
+     */
+    findFirstOrThrow<T extends TierFindFirstOrThrowArgs>(args?: SelectSubset<T, TierFindFirstOrThrowArgs<ExtArgs>>): Prisma__TierClient<$Result.GetResult<Prisma.$TierPayload<ExtArgs>, T, "findFirstOrThrow", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Find zero or more Tiers that matches the filter.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {TierFindManyArgs} args - Arguments to filter and select certain fields only.
+     * @example
+     * // Get all Tiers
+     * const tiers = await prisma.tier.findMany()
+     * 
+     * // Get first 10 Tiers
+     * const tiers = await prisma.tier.findMany({ take: 10 })
+     * 
+     * // Only select the `id`
+     * const tierWithIdOnly = await prisma.tier.findMany({ select: { id: true } })
+     * 
+     */
+    findMany<T extends TierFindManyArgs>(args?: SelectSubset<T, TierFindManyArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$TierPayload<ExtArgs>, T, "findMany", GlobalOmitOptions>>
+
+    /**
+     * Create a Tier.
+     * @param {TierCreateArgs} args - Arguments to create a Tier.
+     * @example
+     * // Create one Tier
+     * const Tier = await prisma.tier.create({
+     *   data: {
+     *     // ... data to create a Tier
+     *   }
+     * })
+     * 
+     */
+    create<T extends TierCreateArgs>(args: SelectSubset<T, TierCreateArgs<ExtArgs>>): Prisma__TierClient<$Result.GetResult<Prisma.$TierPayload<ExtArgs>, T, "create", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Create many Tiers.
+     * @param {TierCreateManyArgs} args - Arguments to create many Tiers.
+     * @example
+     * // Create many Tiers
+     * const tier = await prisma.tier.createMany({
+     *   data: [
+     *     // ... provide data here
+     *   ]
+     * })
+     *     
+     */
+    createMany<T extends TierCreateManyArgs>(args?: SelectSubset<T, TierCreateManyArgs<ExtArgs>>): Prisma.PrismaPromise<BatchPayload>
+
+    /**
+     * Create many Tiers and returns the data saved in the database.
+     * @param {TierCreateManyAndReturnArgs} args - Arguments to create many Tiers.
+     * @example
+     * // Create many Tiers
+     * const tier = await prisma.tier.createManyAndReturn({
+     *   data: [
+     *     // ... provide data here
+     *   ]
+     * })
+     * 
+     * // Create many Tiers and only return the `id`
+     * const tierWithIdOnly = await prisma.tier.createManyAndReturn({
+     *   select: { id: true },
+     *   data: [
+     *     // ... provide data here
+     *   ]
+     * })
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * 
+     */
+    createManyAndReturn<T extends TierCreateManyAndReturnArgs>(args?: SelectSubset<T, TierCreateManyAndReturnArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$TierPayload<ExtArgs>, T, "createManyAndReturn", GlobalOmitOptions>>
+
+    /**
+     * Delete a Tier.
+     * @param {TierDeleteArgs} args - Arguments to delete one Tier.
+     * @example
+     * // Delete one Tier
+     * const Tier = await prisma.tier.delete({
+     *   where: {
+     *     // ... filter to delete one Tier
+     *   }
+     * })
+     * 
+     */
+    delete<T extends TierDeleteArgs>(args: SelectSubset<T, TierDeleteArgs<ExtArgs>>): Prisma__TierClient<$Result.GetResult<Prisma.$TierPayload<ExtArgs>, T, "delete", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Update one Tier.
+     * @param {TierUpdateArgs} args - Arguments to update one Tier.
+     * @example
+     * // Update one Tier
+     * const tier = await prisma.tier.update({
+     *   where: {
+     *     // ... provide filter here
+     *   },
+     *   data: {
+     *     // ... provide data here
+     *   }
+     * })
+     * 
+     */
+    update<T extends TierUpdateArgs>(args: SelectSubset<T, TierUpdateArgs<ExtArgs>>): Prisma__TierClient<$Result.GetResult<Prisma.$TierPayload<ExtArgs>, T, "update", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Delete zero or more Tiers.
+     * @param {TierDeleteManyArgs} args - Arguments to filter Tiers to delete.
+     * @example
+     * // Delete a few Tiers
+     * const { count } = await prisma.tier.deleteMany({
+     *   where: {
+     *     // ... provide filter here
+     *   }
+     * })
+     * 
+     */
+    deleteMany<T extends TierDeleteManyArgs>(args?: SelectSubset<T, TierDeleteManyArgs<ExtArgs>>): Prisma.PrismaPromise<BatchPayload>
+
+    /**
+     * Update zero or more Tiers.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {TierUpdateManyArgs} args - Arguments to update one or more rows.
+     * @example
+     * // Update many Tiers
+     * const tier = await prisma.tier.updateMany({
+     *   where: {
+     *     // ... provide filter here
+     *   },
+     *   data: {
+     *     // ... provide data here
+     *   }
+     * })
+     * 
+     */
+    updateMany<T extends TierUpdateManyArgs>(args: SelectSubset<T, TierUpdateManyArgs<ExtArgs>>): Prisma.PrismaPromise<BatchPayload>
+
+    /**
+     * Update zero or more Tiers and returns the data updated in the database.
+     * @param {TierUpdateManyAndReturnArgs} args - Arguments to update many Tiers.
+     * @example
+     * // Update many Tiers
+     * const tier = await prisma.tier.updateManyAndReturn({
+     *   where: {
+     *     // ... provide filter here
+     *   },
+     *   data: [
+     *     // ... provide data here
+     *   ]
+     * })
+     * 
+     * // Update zero or more Tiers and only return the `id`
+     * const tierWithIdOnly = await prisma.tier.updateManyAndReturn({
+     *   select: { id: true },
+     *   where: {
+     *     // ... provide filter here
+     *   },
+     *   data: [
+     *     // ... provide data here
+     *   ]
+     * })
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * 
+     */
+    updateManyAndReturn<T extends TierUpdateManyAndReturnArgs>(args: SelectSubset<T, TierUpdateManyAndReturnArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$TierPayload<ExtArgs>, T, "updateManyAndReturn", GlobalOmitOptions>>
+
+    /**
+     * Create or update one Tier.
+     * @param {TierUpsertArgs} args - Arguments to update or create a Tier.
+     * @example
+     * // Update or create a Tier
+     * const tier = await prisma.tier.upsert({
+     *   create: {
+     *     // ... data to create a Tier
+     *   },
+     *   update: {
+     *     // ... in case it already exists, update
+     *   },
+     *   where: {
+     *     // ... the filter for the Tier we want to update
+     *   }
+     * })
+     */
+    upsert<T extends TierUpsertArgs>(args: SelectSubset<T, TierUpsertArgs<ExtArgs>>): Prisma__TierClient<$Result.GetResult<Prisma.$TierPayload<ExtArgs>, T, "upsert", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
+
+
+    /**
+     * Count the number of Tiers.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {TierCountArgs} args - Arguments to filter Tiers to count.
+     * @example
+     * // Count the number of Tiers
+     * const count = await prisma.tier.count({
+     *   where: {
+     *     // ... the filter for the Tiers we want to count
+     *   }
+     * })
+    **/
+    count<T extends TierCountArgs>(
+      args?: Subset<T, TierCountArgs>,
+    ): Prisma.PrismaPromise<
+      T extends $Utils.Record<'select', any>
+        ? T['select'] extends true
+          ? number
+          : GetScalarType<T['select'], TierCountAggregateOutputType>
+        : number
+    >
+
+    /**
+     * Allows you to perform aggregations operations on a Tier.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {TierAggregateArgs} args - Select which aggregations you would like to apply and on what fields.
+     * @example
+     * // Ordered by age ascending
+     * // Where email contains prisma.io
+     * // Limited to the 10 users
+     * const aggregations = await prisma.user.aggregate({
+     *   _avg: {
+     *     age: true,
+     *   },
+     *   where: {
+     *     email: {
+     *       contains: "prisma.io",
+     *     },
+     *   },
+     *   orderBy: {
+     *     age: "asc",
+     *   },
+     *   take: 10,
+     * })
+    **/
+    aggregate<T extends TierAggregateArgs>(args: Subset<T, TierAggregateArgs>): Prisma.PrismaPromise<GetTierAggregateType<T>>
+
+    /**
+     * Group by Tier.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {TierGroupByArgs} args - Group by arguments.
+     * @example
+     * // Group by city, order by createdAt, get count
+     * const result = await prisma.user.groupBy({
+     *   by: ['city', 'createdAt'],
+     *   orderBy: {
+     *     createdAt: true
+     *   },
+     *   _count: {
+     *     _all: true
+     *   },
+     * })
+     * 
+    **/
+    groupBy<
+      T extends TierGroupByArgs,
+      HasSelectOrTake extends Or<
+        Extends<'skip', Keys<T>>,
+        Extends<'take', Keys<T>>
+      >,
+      OrderByArg extends True extends HasSelectOrTake
+        ? { orderBy: TierGroupByArgs['orderBy'] }
+        : { orderBy?: TierGroupByArgs['orderBy'] },
+      OrderFields extends ExcludeUnderscoreKeys<Keys<MaybeTupleToUnion<T['orderBy']>>>,
+      ByFields extends MaybeTupleToUnion<T['by']>,
+      ByValid extends Has<ByFields, OrderFields>,
+      HavingFields extends GetHavingFields<T['having']>,
+      HavingValid extends Has<ByFields, HavingFields>,
+      ByEmpty extends T['by'] extends never[] ? True : False,
+      InputErrors extends ByEmpty extends True
+      ? `Error: "by" must not be empty.`
+      : HavingValid extends False
+      ? {
+          [P in HavingFields]: P extends ByFields
+            ? never
+            : P extends string
+            ? `Error: Field "${P}" used in "having" needs to be provided in "by".`
+            : [
+                Error,
+                'Field ',
+                P,
+                ` in "having" needs to be provided in "by"`,
+              ]
+        }[HavingFields]
+      : 'take' extends Keys<T>
+      ? 'orderBy' extends Keys<T>
+        ? ByValid extends True
+          ? {}
+          : {
+              [P in OrderFields]: P extends ByFields
+                ? never
+                : `Error: Field "${P}" in "orderBy" needs to be provided in "by"`
+            }[OrderFields]
+        : 'Error: If you provide "take", you also need to provide "orderBy"'
+      : 'skip' extends Keys<T>
+      ? 'orderBy' extends Keys<T>
+        ? ByValid extends True
+          ? {}
+          : {
+              [P in OrderFields]: P extends ByFields
+                ? never
+                : `Error: Field "${P}" in "orderBy" needs to be provided in "by"`
+            }[OrderFields]
+        : 'Error: If you provide "skip", you also need to provide "orderBy"'
+      : ByValid extends True
+      ? {}
+      : {
+          [P in OrderFields]: P extends ByFields
+            ? never
+            : `Error: Field "${P}" in "orderBy" needs to be provided in "by"`
+        }[OrderFields]
+    >(args: SubsetIntersection<T, TierGroupByArgs, OrderByArg> & InputErrors): {} extends InputErrors ? GetTierGroupByPayload<T> : Prisma.PrismaPromise<InputErrors>
+  /**
+   * Fields of the Tier model
+   */
+  readonly fields: TierFieldRefs;
+  }
+
+  /**
+   * The delegate class that acts as a "Promise-like" for Tier.
+   * Why is this prefixed with `Prisma__`?
+   * Because we want to prevent naming conflicts as mentioned in
+   * https://github.com/prisma/prisma-client-js/issues/707
+   */
+  export interface Prisma__TierClient<T, Null = never, ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs, GlobalOmitOptions = {}> extends Prisma.PrismaPromise<T> {
+    readonly [Symbol.toStringTag]: "PrismaPromise"
+    userTiers<T extends Tier$userTiersArgs<ExtArgs> = {}>(args?: Subset<T, Tier$userTiersArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$UserTierPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
+    translations<T extends Tier$translationsArgs<ExtArgs> = {}>(args?: Subset<T, Tier$translationsArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$TierTranslationPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
+    historyFrom<T extends Tier$historyFromArgs<ExtArgs> = {}>(args?: Subset<T, Tier$historyFromArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$TierHistoryPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
+    historyTo<T extends Tier$historyToArgs<ExtArgs> = {}>(args?: Subset<T, Tier$historyToArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$TierHistoryPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
+    /**
+     * Attaches callbacks for the resolution and/or rejection of the Promise.
+     * @param onfulfilled The callback to execute when the Promise is resolved.
+     * @param onrejected The callback to execute when the Promise is rejected.
+     * @returns A Promise for the completion of which ever callback is executed.
+     */
+    then<TResult1 = T, TResult2 = never>(onfulfilled?: ((value: T) => TResult1 | PromiseLike<TResult1>) | undefined | null, onrejected?: ((reason: any) => TResult2 | PromiseLike<TResult2>) | undefined | null): $Utils.JsPromise<TResult1 | TResult2>
+    /**
+     * Attaches a callback for only the rejection of the Promise.
+     * @param onrejected The callback to execute when the Promise is rejected.
+     * @returns A Promise for the completion of the callback.
+     */
+    catch<TResult = never>(onrejected?: ((reason: any) => TResult | PromiseLike<TResult>) | undefined | null): $Utils.JsPromise<T | TResult>
+    /**
+     * Attaches a callback that is invoked when the Promise is settled (fulfilled or rejected). The
+     * resolved value cannot be modified from the callback.
+     * @param onfinally The callback to execute when the Promise is settled (fulfilled or rejected).
+     * @returns A Promise for the completion of the callback.
+     */
+    finally(onfinally?: (() => void) | undefined | null): $Utils.JsPromise<T>
+  }
+
+
+
+
+  /**
+   * Fields of the Tier model
+   */
+  interface TierFieldRefs {
+    readonly id: FieldRef<"Tier", 'BigInt'>
+    readonly uid: FieldRef<"Tier", 'String'>
+    readonly priority: FieldRef<"Tier", 'Int'>
+    readonly code: FieldRef<"Tier", 'String'>
+    readonly requirementUsd: FieldRef<"Tier", 'Decimal'>
+    readonly levelUpBonus: FieldRef<"Tier", 'Decimal'>
+    readonly compRate: FieldRef<"Tier", 'Decimal'>
+    readonly benefits: FieldRef<"Tier", 'Json'>
+    readonly createdAt: FieldRef<"Tier", 'DateTime'>
+    readonly updatedAt: FieldRef<"Tier", 'DateTime'>
+  }
+    
+
+  // Custom InputTypes
+  /**
+   * Tier findUnique
+   */
+  export type TierFindUniqueArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the Tier
+     */
+    select?: TierSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the Tier
+     */
+    omit?: TierOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: TierInclude<ExtArgs> | null
+    /**
+     * Filter, which Tier to fetch.
+     */
+    where: TierWhereUniqueInput
+  }
+
+  /**
+   * Tier findUniqueOrThrow
+   */
+  export type TierFindUniqueOrThrowArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the Tier
+     */
+    select?: TierSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the Tier
+     */
+    omit?: TierOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: TierInclude<ExtArgs> | null
+    /**
+     * Filter, which Tier to fetch.
+     */
+    where: TierWhereUniqueInput
+  }
+
+  /**
+   * Tier findFirst
+   */
+  export type TierFindFirstArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the Tier
+     */
+    select?: TierSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the Tier
+     */
+    omit?: TierOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: TierInclude<ExtArgs> | null
+    /**
+     * Filter, which Tier to fetch.
+     */
+    where?: TierWhereInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/sorting Sorting Docs}
+     * 
+     * Determine the order of Tiers to fetch.
+     */
+    orderBy?: TierOrderByWithRelationInput | TierOrderByWithRelationInput[]
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination#cursor-based-pagination Cursor Docs}
+     * 
+     * Sets the position for searching for Tiers.
+     */
+    cursor?: TierWhereUniqueInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Take `±n` Tiers from the position of the cursor.
+     */
+    take?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Skip the first `n` Tiers.
+     */
+    skip?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/distinct Distinct Docs}
+     * 
+     * Filter by unique combinations of Tiers.
+     */
+    distinct?: TierScalarFieldEnum | TierScalarFieldEnum[]
+  }
+
+  /**
+   * Tier findFirstOrThrow
+   */
+  export type TierFindFirstOrThrowArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the Tier
+     */
+    select?: TierSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the Tier
+     */
+    omit?: TierOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: TierInclude<ExtArgs> | null
+    /**
+     * Filter, which Tier to fetch.
+     */
+    where?: TierWhereInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/sorting Sorting Docs}
+     * 
+     * Determine the order of Tiers to fetch.
+     */
+    orderBy?: TierOrderByWithRelationInput | TierOrderByWithRelationInput[]
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination#cursor-based-pagination Cursor Docs}
+     * 
+     * Sets the position for searching for Tiers.
+     */
+    cursor?: TierWhereUniqueInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Take `±n` Tiers from the position of the cursor.
+     */
+    take?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Skip the first `n` Tiers.
+     */
+    skip?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/distinct Distinct Docs}
+     * 
+     * Filter by unique combinations of Tiers.
+     */
+    distinct?: TierScalarFieldEnum | TierScalarFieldEnum[]
+  }
+
+  /**
+   * Tier findMany
+   */
+  export type TierFindManyArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the Tier
+     */
+    select?: TierSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the Tier
+     */
+    omit?: TierOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: TierInclude<ExtArgs> | null
+    /**
+     * Filter, which Tiers to fetch.
+     */
+    where?: TierWhereInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/sorting Sorting Docs}
+     * 
+     * Determine the order of Tiers to fetch.
+     */
+    orderBy?: TierOrderByWithRelationInput | TierOrderByWithRelationInput[]
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination#cursor-based-pagination Cursor Docs}
+     * 
+     * Sets the position for listing Tiers.
+     */
+    cursor?: TierWhereUniqueInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Take `±n` Tiers from the position of the cursor.
+     */
+    take?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Skip the first `n` Tiers.
+     */
+    skip?: number
+    distinct?: TierScalarFieldEnum | TierScalarFieldEnum[]
+  }
+
+  /**
+   * Tier create
+   */
+  export type TierCreateArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the Tier
+     */
+    select?: TierSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the Tier
+     */
+    omit?: TierOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: TierInclude<ExtArgs> | null
+    /**
+     * The data needed to create a Tier.
+     */
+    data: XOR<TierCreateInput, TierUncheckedCreateInput>
+  }
+
+  /**
+   * Tier createMany
+   */
+  export type TierCreateManyArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * The data used to create many Tiers.
+     */
+    data: TierCreateManyInput | TierCreateManyInput[]
+    skipDuplicates?: boolean
+  }
+
+  /**
+   * Tier createManyAndReturn
+   */
+  export type TierCreateManyAndReturnArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the Tier
+     */
+    select?: TierSelectCreateManyAndReturn<ExtArgs> | null
+    /**
+     * Omit specific fields from the Tier
+     */
+    omit?: TierOmit<ExtArgs> | null
+    /**
+     * The data used to create many Tiers.
+     */
+    data: TierCreateManyInput | TierCreateManyInput[]
+    skipDuplicates?: boolean
+  }
+
+  /**
+   * Tier update
+   */
+  export type TierUpdateArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the Tier
+     */
+    select?: TierSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the Tier
+     */
+    omit?: TierOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: TierInclude<ExtArgs> | null
+    /**
+     * The data needed to update a Tier.
+     */
+    data: XOR<TierUpdateInput, TierUncheckedUpdateInput>
+    /**
+     * Choose, which Tier to update.
+     */
+    where: TierWhereUniqueInput
+  }
+
+  /**
+   * Tier updateMany
+   */
+  export type TierUpdateManyArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * The data used to update Tiers.
+     */
+    data: XOR<TierUpdateManyMutationInput, TierUncheckedUpdateManyInput>
+    /**
+     * Filter which Tiers to update
+     */
+    where?: TierWhereInput
+    /**
+     * Limit how many Tiers to update.
+     */
+    limit?: number
+  }
+
+  /**
+   * Tier updateManyAndReturn
+   */
+  export type TierUpdateManyAndReturnArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the Tier
+     */
+    select?: TierSelectUpdateManyAndReturn<ExtArgs> | null
+    /**
+     * Omit specific fields from the Tier
+     */
+    omit?: TierOmit<ExtArgs> | null
+    /**
+     * The data used to update Tiers.
+     */
+    data: XOR<TierUpdateManyMutationInput, TierUncheckedUpdateManyInput>
+    /**
+     * Filter which Tiers to update
+     */
+    where?: TierWhereInput
+    /**
+     * Limit how many Tiers to update.
+     */
+    limit?: number
+  }
+
+  /**
+   * Tier upsert
+   */
+  export type TierUpsertArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the Tier
+     */
+    select?: TierSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the Tier
+     */
+    omit?: TierOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: TierInclude<ExtArgs> | null
+    /**
+     * The filter to search for the Tier to update in case it exists.
+     */
+    where: TierWhereUniqueInput
+    /**
+     * In case the Tier found by the `where` argument doesn't exist, create a new Tier with this data.
+     */
+    create: XOR<TierCreateInput, TierUncheckedCreateInput>
+    /**
+     * In case the Tier was found with the provided `where` argument, update it with this data.
+     */
+    update: XOR<TierUpdateInput, TierUncheckedUpdateInput>
+  }
+
+  /**
+   * Tier delete
+   */
+  export type TierDeleteArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the Tier
+     */
+    select?: TierSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the Tier
+     */
+    omit?: TierOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: TierInclude<ExtArgs> | null
+    /**
+     * Filter which Tier to delete.
+     */
+    where: TierWhereUniqueInput
+  }
+
+  /**
+   * Tier deleteMany
+   */
+  export type TierDeleteManyArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Filter which Tiers to delete
+     */
+    where?: TierWhereInput
+    /**
+     * Limit how many Tiers to delete.
+     */
+    limit?: number
+  }
+
+  /**
+   * Tier.userTiers
+   */
+  export type Tier$userTiersArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the UserTier
+     */
+    select?: UserTierSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the UserTier
+     */
+    omit?: UserTierOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: UserTierInclude<ExtArgs> | null
+    where?: UserTierWhereInput
+    orderBy?: UserTierOrderByWithRelationInput | UserTierOrderByWithRelationInput[]
+    cursor?: UserTierWhereUniqueInput
+    take?: number
+    skip?: number
+    distinct?: UserTierScalarFieldEnum | UserTierScalarFieldEnum[]
+  }
+
+  /**
+   * Tier.translations
+   */
+  export type Tier$translationsArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the TierTranslation
+     */
+    select?: TierTranslationSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the TierTranslation
+     */
+    omit?: TierTranslationOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: TierTranslationInclude<ExtArgs> | null
+    where?: TierTranslationWhereInput
+    orderBy?: TierTranslationOrderByWithRelationInput | TierTranslationOrderByWithRelationInput[]
+    cursor?: TierTranslationWhereUniqueInput
+    take?: number
+    skip?: number
+    distinct?: TierTranslationScalarFieldEnum | TierTranslationScalarFieldEnum[]
+  }
+
+  /**
+   * Tier.historyFrom
+   */
+  export type Tier$historyFromArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the TierHistory
+     */
+    select?: TierHistorySelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the TierHistory
+     */
+    omit?: TierHistoryOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: TierHistoryInclude<ExtArgs> | null
+    where?: TierHistoryWhereInput
+    orderBy?: TierHistoryOrderByWithRelationInput | TierHistoryOrderByWithRelationInput[]
+    cursor?: TierHistoryWhereUniqueInput
+    take?: number
+    skip?: number
+    distinct?: TierHistoryScalarFieldEnum | TierHistoryScalarFieldEnum[]
+  }
+
+  /**
+   * Tier.historyTo
+   */
+  export type Tier$historyToArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the TierHistory
+     */
+    select?: TierHistorySelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the TierHistory
+     */
+    omit?: TierHistoryOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: TierHistoryInclude<ExtArgs> | null
+    where?: TierHistoryWhereInput
+    orderBy?: TierHistoryOrderByWithRelationInput | TierHistoryOrderByWithRelationInput[]
+    cursor?: TierHistoryWhereUniqueInput
+    take?: number
+    skip?: number
+    distinct?: TierHistoryScalarFieldEnum | TierHistoryScalarFieldEnum[]
+  }
+
+  /**
+   * Tier without action
+   */
+  export type TierDefaultArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the Tier
+     */
+    select?: TierSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the Tier
+     */
+    omit?: TierOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: TierInclude<ExtArgs> | null
+  }
+
+
+  /**
+   * Model TierTranslation
+   */
+
+  export type AggregateTierTranslation = {
+    _count: TierTranslationCountAggregateOutputType | null
+    _avg: TierTranslationAvgAggregateOutputType | null
+    _sum: TierTranslationSumAggregateOutputType | null
+    _min: TierTranslationMinAggregateOutputType | null
+    _max: TierTranslationMaxAggregateOutputType | null
+  }
+
+  export type TierTranslationAvgAggregateOutputType = {
+    id: number | null
+    tierId: number | null
+  }
+
+  export type TierTranslationSumAggregateOutputType = {
+    id: bigint | null
+    tierId: bigint | null
+  }
+
+  export type TierTranslationMinAggregateOutputType = {
+    id: bigint | null
+    uid: string | null
+    tierId: bigint | null
+    language: $Enums.Language | null
+    name: string | null
+  }
+
+  export type TierTranslationMaxAggregateOutputType = {
+    id: bigint | null
+    uid: string | null
+    tierId: bigint | null
+    language: $Enums.Language | null
+    name: string | null
+  }
+
+  export type TierTranslationCountAggregateOutputType = {
+    id: number
+    uid: number
+    tierId: number
+    language: number
+    name: number
+    _all: number
+  }
+
+
+  export type TierTranslationAvgAggregateInputType = {
+    id?: true
+    tierId?: true
+  }
+
+  export type TierTranslationSumAggregateInputType = {
+    id?: true
+    tierId?: true
+  }
+
+  export type TierTranslationMinAggregateInputType = {
+    id?: true
+    uid?: true
+    tierId?: true
+    language?: true
+    name?: true
+  }
+
+  export type TierTranslationMaxAggregateInputType = {
+    id?: true
+    uid?: true
+    tierId?: true
+    language?: true
+    name?: true
+  }
+
+  export type TierTranslationCountAggregateInputType = {
+    id?: true
+    uid?: true
+    tierId?: true
+    language?: true
+    name?: true
+    _all?: true
+  }
+
+  export type TierTranslationAggregateArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Filter which TierTranslation to aggregate.
+     */
+    where?: TierTranslationWhereInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/sorting Sorting Docs}
+     * 
+     * Determine the order of TierTranslations to fetch.
+     */
+    orderBy?: TierTranslationOrderByWithRelationInput | TierTranslationOrderByWithRelationInput[]
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination#cursor-based-pagination Cursor Docs}
+     * 
+     * Sets the start position
+     */
+    cursor?: TierTranslationWhereUniqueInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Take `±n` TierTranslations from the position of the cursor.
+     */
+    take?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Skip the first `n` TierTranslations.
+     */
+    skip?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
+     * 
+     * Count returned TierTranslations
+    **/
+    _count?: true | TierTranslationCountAggregateInputType
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
+     * 
+     * Select which fields to average
+    **/
+    _avg?: TierTranslationAvgAggregateInputType
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
+     * 
+     * Select which fields to sum
+    **/
+    _sum?: TierTranslationSumAggregateInputType
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
+     * 
+     * Select which fields to find the minimum value
+    **/
+    _min?: TierTranslationMinAggregateInputType
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
+     * 
+     * Select which fields to find the maximum value
+    **/
+    _max?: TierTranslationMaxAggregateInputType
+  }
+
+  export type GetTierTranslationAggregateType<T extends TierTranslationAggregateArgs> = {
+        [P in keyof T & keyof AggregateTierTranslation]: P extends '_count' | 'count'
+      ? T[P] extends true
+        ? number
+        : GetScalarType<T[P], AggregateTierTranslation[P]>
+      : GetScalarType<T[P], AggregateTierTranslation[P]>
+  }
+
+
+
+
+  export type TierTranslationGroupByArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    where?: TierTranslationWhereInput
+    orderBy?: TierTranslationOrderByWithAggregationInput | TierTranslationOrderByWithAggregationInput[]
+    by: TierTranslationScalarFieldEnum[] | TierTranslationScalarFieldEnum
+    having?: TierTranslationScalarWhereWithAggregatesInput
+    take?: number
+    skip?: number
+    _count?: TierTranslationCountAggregateInputType | true
+    _avg?: TierTranslationAvgAggregateInputType
+    _sum?: TierTranslationSumAggregateInputType
+    _min?: TierTranslationMinAggregateInputType
+    _max?: TierTranslationMaxAggregateInputType
+  }
+
+  export type TierTranslationGroupByOutputType = {
+    id: bigint
+    uid: string
+    tierId: bigint
+    language: $Enums.Language
+    name: string
+    _count: TierTranslationCountAggregateOutputType | null
+    _avg: TierTranslationAvgAggregateOutputType | null
+    _sum: TierTranslationSumAggregateOutputType | null
+    _min: TierTranslationMinAggregateOutputType | null
+    _max: TierTranslationMaxAggregateOutputType | null
+  }
+
+  type GetTierTranslationGroupByPayload<T extends TierTranslationGroupByArgs> = Prisma.PrismaPromise<
+    Array<
+      PickEnumerable<TierTranslationGroupByOutputType, T['by']> &
+        {
+          [P in ((keyof T) & (keyof TierTranslationGroupByOutputType))]: P extends '_count'
+            ? T[P] extends boolean
+              ? number
+              : GetScalarType<T[P], TierTranslationGroupByOutputType[P]>
+            : GetScalarType<T[P], TierTranslationGroupByOutputType[P]>
+        }
+      >
+    >
+
+
+  export type TierTranslationSelect<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetSelect<{
+    id?: boolean
+    uid?: boolean
+    tierId?: boolean
+    language?: boolean
+    name?: boolean
+    tier?: boolean | TierDefaultArgs<ExtArgs>
+  }, ExtArgs["result"]["tierTranslation"]>
+
+  export type TierTranslationSelectCreateManyAndReturn<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetSelect<{
+    id?: boolean
+    uid?: boolean
+    tierId?: boolean
+    language?: boolean
+    name?: boolean
+    tier?: boolean | TierDefaultArgs<ExtArgs>
+  }, ExtArgs["result"]["tierTranslation"]>
+
+  export type TierTranslationSelectUpdateManyAndReturn<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetSelect<{
+    id?: boolean
+    uid?: boolean
+    tierId?: boolean
+    language?: boolean
+    name?: boolean
+    tier?: boolean | TierDefaultArgs<ExtArgs>
+  }, ExtArgs["result"]["tierTranslation"]>
+
+  export type TierTranslationSelectScalar = {
+    id?: boolean
+    uid?: boolean
+    tierId?: boolean
+    language?: boolean
+    name?: boolean
+  }
+
+  export type TierTranslationOmit<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetOmit<"id" | "uid" | "tierId" | "language" | "name", ExtArgs["result"]["tierTranslation"]>
+  export type TierTranslationInclude<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    tier?: boolean | TierDefaultArgs<ExtArgs>
+  }
+  export type TierTranslationIncludeCreateManyAndReturn<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    tier?: boolean | TierDefaultArgs<ExtArgs>
+  }
+  export type TierTranslationIncludeUpdateManyAndReturn<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    tier?: boolean | TierDefaultArgs<ExtArgs>
+  }
+
+  export type $TierTranslationPayload<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    name: "TierTranslation"
+    objects: {
+      tier: Prisma.$TierPayload<ExtArgs>
+    }
+    scalars: $Extensions.GetPayloadResult<{
+      id: bigint
+      uid: string
+      tierId: bigint
+      language: $Enums.Language
+      name: string
+    }, ExtArgs["result"]["tierTranslation"]>
+    composites: {}
+  }
+
+  type TierTranslationGetPayload<S extends boolean | null | undefined | TierTranslationDefaultArgs> = $Result.GetResult<Prisma.$TierTranslationPayload, S>
+
+  type TierTranslationCountArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> =
+    Omit<TierTranslationFindManyArgs, 'select' | 'include' | 'distinct' | 'omit'> & {
+      select?: TierTranslationCountAggregateInputType | true
+    }
+
+  export interface TierTranslationDelegate<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs, GlobalOmitOptions = {}> {
+    [K: symbol]: { types: Prisma.TypeMap<ExtArgs>['model']['TierTranslation'], meta: { name: 'TierTranslation' } }
+    /**
+     * Find zero or one TierTranslation that matches the filter.
+     * @param {TierTranslationFindUniqueArgs} args - Arguments to find a TierTranslation
+     * @example
+     * // Get one TierTranslation
+     * const tierTranslation = await prisma.tierTranslation.findUnique({
+     *   where: {
+     *     // ... provide filter here
+     *   }
+     * })
+     */
+    findUnique<T extends TierTranslationFindUniqueArgs>(args: SelectSubset<T, TierTranslationFindUniqueArgs<ExtArgs>>): Prisma__TierTranslationClient<$Result.GetResult<Prisma.$TierTranslationPayload<ExtArgs>, T, "findUnique", GlobalOmitOptions> | null, null, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Find one TierTranslation that matches the filter or throw an error with `error.code='P2025'`
+     * if no matches were found.
+     * @param {TierTranslationFindUniqueOrThrowArgs} args - Arguments to find a TierTranslation
+     * @example
+     * // Get one TierTranslation
+     * const tierTranslation = await prisma.tierTranslation.findUniqueOrThrow({
+     *   where: {
+     *     // ... provide filter here
+     *   }
+     * })
+     */
+    findUniqueOrThrow<T extends TierTranslationFindUniqueOrThrowArgs>(args: SelectSubset<T, TierTranslationFindUniqueOrThrowArgs<ExtArgs>>): Prisma__TierTranslationClient<$Result.GetResult<Prisma.$TierTranslationPayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Find the first TierTranslation that matches the filter.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {TierTranslationFindFirstArgs} args - Arguments to find a TierTranslation
+     * @example
+     * // Get one TierTranslation
+     * const tierTranslation = await prisma.tierTranslation.findFirst({
+     *   where: {
+     *     // ... provide filter here
+     *   }
+     * })
+     */
+    findFirst<T extends TierTranslationFindFirstArgs>(args?: SelectSubset<T, TierTranslationFindFirstArgs<ExtArgs>>): Prisma__TierTranslationClient<$Result.GetResult<Prisma.$TierTranslationPayload<ExtArgs>, T, "findFirst", GlobalOmitOptions> | null, null, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Find the first TierTranslation that matches the filter or
+     * throw `PrismaKnownClientError` with `P2025` code if no matches were found.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {TierTranslationFindFirstOrThrowArgs} args - Arguments to find a TierTranslation
+     * @example
+     * // Get one TierTranslation
+     * const tierTranslation = await prisma.tierTranslation.findFirstOrThrow({
+     *   where: {
+     *     // ... provide filter here
+     *   }
+     * })
+     */
+    findFirstOrThrow<T extends TierTranslationFindFirstOrThrowArgs>(args?: SelectSubset<T, TierTranslationFindFirstOrThrowArgs<ExtArgs>>): Prisma__TierTranslationClient<$Result.GetResult<Prisma.$TierTranslationPayload<ExtArgs>, T, "findFirstOrThrow", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Find zero or more TierTranslations that matches the filter.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {TierTranslationFindManyArgs} args - Arguments to filter and select certain fields only.
+     * @example
+     * // Get all TierTranslations
+     * const tierTranslations = await prisma.tierTranslation.findMany()
+     * 
+     * // Get first 10 TierTranslations
+     * const tierTranslations = await prisma.tierTranslation.findMany({ take: 10 })
+     * 
+     * // Only select the `id`
+     * const tierTranslationWithIdOnly = await prisma.tierTranslation.findMany({ select: { id: true } })
+     * 
+     */
+    findMany<T extends TierTranslationFindManyArgs>(args?: SelectSubset<T, TierTranslationFindManyArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$TierTranslationPayload<ExtArgs>, T, "findMany", GlobalOmitOptions>>
+
+    /**
+     * Create a TierTranslation.
+     * @param {TierTranslationCreateArgs} args - Arguments to create a TierTranslation.
+     * @example
+     * // Create one TierTranslation
+     * const TierTranslation = await prisma.tierTranslation.create({
+     *   data: {
+     *     // ... data to create a TierTranslation
+     *   }
+     * })
+     * 
+     */
+    create<T extends TierTranslationCreateArgs>(args: SelectSubset<T, TierTranslationCreateArgs<ExtArgs>>): Prisma__TierTranslationClient<$Result.GetResult<Prisma.$TierTranslationPayload<ExtArgs>, T, "create", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Create many TierTranslations.
+     * @param {TierTranslationCreateManyArgs} args - Arguments to create many TierTranslations.
+     * @example
+     * // Create many TierTranslations
+     * const tierTranslation = await prisma.tierTranslation.createMany({
+     *   data: [
+     *     // ... provide data here
+     *   ]
+     * })
+     *     
+     */
+    createMany<T extends TierTranslationCreateManyArgs>(args?: SelectSubset<T, TierTranslationCreateManyArgs<ExtArgs>>): Prisma.PrismaPromise<BatchPayload>
+
+    /**
+     * Create many TierTranslations and returns the data saved in the database.
+     * @param {TierTranslationCreateManyAndReturnArgs} args - Arguments to create many TierTranslations.
+     * @example
+     * // Create many TierTranslations
+     * const tierTranslation = await prisma.tierTranslation.createManyAndReturn({
+     *   data: [
+     *     // ... provide data here
+     *   ]
+     * })
+     * 
+     * // Create many TierTranslations and only return the `id`
+     * const tierTranslationWithIdOnly = await prisma.tierTranslation.createManyAndReturn({
+     *   select: { id: true },
+     *   data: [
+     *     // ... provide data here
+     *   ]
+     * })
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * 
+     */
+    createManyAndReturn<T extends TierTranslationCreateManyAndReturnArgs>(args?: SelectSubset<T, TierTranslationCreateManyAndReturnArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$TierTranslationPayload<ExtArgs>, T, "createManyAndReturn", GlobalOmitOptions>>
+
+    /**
+     * Delete a TierTranslation.
+     * @param {TierTranslationDeleteArgs} args - Arguments to delete one TierTranslation.
+     * @example
+     * // Delete one TierTranslation
+     * const TierTranslation = await prisma.tierTranslation.delete({
+     *   where: {
+     *     // ... filter to delete one TierTranslation
+     *   }
+     * })
+     * 
+     */
+    delete<T extends TierTranslationDeleteArgs>(args: SelectSubset<T, TierTranslationDeleteArgs<ExtArgs>>): Prisma__TierTranslationClient<$Result.GetResult<Prisma.$TierTranslationPayload<ExtArgs>, T, "delete", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Update one TierTranslation.
+     * @param {TierTranslationUpdateArgs} args - Arguments to update one TierTranslation.
+     * @example
+     * // Update one TierTranslation
+     * const tierTranslation = await prisma.tierTranslation.update({
+     *   where: {
+     *     // ... provide filter here
+     *   },
+     *   data: {
+     *     // ... provide data here
+     *   }
+     * })
+     * 
+     */
+    update<T extends TierTranslationUpdateArgs>(args: SelectSubset<T, TierTranslationUpdateArgs<ExtArgs>>): Prisma__TierTranslationClient<$Result.GetResult<Prisma.$TierTranslationPayload<ExtArgs>, T, "update", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Delete zero or more TierTranslations.
+     * @param {TierTranslationDeleteManyArgs} args - Arguments to filter TierTranslations to delete.
+     * @example
+     * // Delete a few TierTranslations
+     * const { count } = await prisma.tierTranslation.deleteMany({
+     *   where: {
+     *     // ... provide filter here
+     *   }
+     * })
+     * 
+     */
+    deleteMany<T extends TierTranslationDeleteManyArgs>(args?: SelectSubset<T, TierTranslationDeleteManyArgs<ExtArgs>>): Prisma.PrismaPromise<BatchPayload>
+
+    /**
+     * Update zero or more TierTranslations.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {TierTranslationUpdateManyArgs} args - Arguments to update one or more rows.
+     * @example
+     * // Update many TierTranslations
+     * const tierTranslation = await prisma.tierTranslation.updateMany({
+     *   where: {
+     *     // ... provide filter here
+     *   },
+     *   data: {
+     *     // ... provide data here
+     *   }
+     * })
+     * 
+     */
+    updateMany<T extends TierTranslationUpdateManyArgs>(args: SelectSubset<T, TierTranslationUpdateManyArgs<ExtArgs>>): Prisma.PrismaPromise<BatchPayload>
+
+    /**
+     * Update zero or more TierTranslations and returns the data updated in the database.
+     * @param {TierTranslationUpdateManyAndReturnArgs} args - Arguments to update many TierTranslations.
+     * @example
+     * // Update many TierTranslations
+     * const tierTranslation = await prisma.tierTranslation.updateManyAndReturn({
+     *   where: {
+     *     // ... provide filter here
+     *   },
+     *   data: [
+     *     // ... provide data here
+     *   ]
+     * })
+     * 
+     * // Update zero or more TierTranslations and only return the `id`
+     * const tierTranslationWithIdOnly = await prisma.tierTranslation.updateManyAndReturn({
+     *   select: { id: true },
+     *   where: {
+     *     // ... provide filter here
+     *   },
+     *   data: [
+     *     // ... provide data here
+     *   ]
+     * })
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * 
+     */
+    updateManyAndReturn<T extends TierTranslationUpdateManyAndReturnArgs>(args: SelectSubset<T, TierTranslationUpdateManyAndReturnArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$TierTranslationPayload<ExtArgs>, T, "updateManyAndReturn", GlobalOmitOptions>>
+
+    /**
+     * Create or update one TierTranslation.
+     * @param {TierTranslationUpsertArgs} args - Arguments to update or create a TierTranslation.
+     * @example
+     * // Update or create a TierTranslation
+     * const tierTranslation = await prisma.tierTranslation.upsert({
+     *   create: {
+     *     // ... data to create a TierTranslation
+     *   },
+     *   update: {
+     *     // ... in case it already exists, update
+     *   },
+     *   where: {
+     *     // ... the filter for the TierTranslation we want to update
+     *   }
+     * })
+     */
+    upsert<T extends TierTranslationUpsertArgs>(args: SelectSubset<T, TierTranslationUpsertArgs<ExtArgs>>): Prisma__TierTranslationClient<$Result.GetResult<Prisma.$TierTranslationPayload<ExtArgs>, T, "upsert", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
+
+
+    /**
+     * Count the number of TierTranslations.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {TierTranslationCountArgs} args - Arguments to filter TierTranslations to count.
+     * @example
+     * // Count the number of TierTranslations
+     * const count = await prisma.tierTranslation.count({
+     *   where: {
+     *     // ... the filter for the TierTranslations we want to count
+     *   }
+     * })
+    **/
+    count<T extends TierTranslationCountArgs>(
+      args?: Subset<T, TierTranslationCountArgs>,
+    ): Prisma.PrismaPromise<
+      T extends $Utils.Record<'select', any>
+        ? T['select'] extends true
+          ? number
+          : GetScalarType<T['select'], TierTranslationCountAggregateOutputType>
+        : number
+    >
+
+    /**
+     * Allows you to perform aggregations operations on a TierTranslation.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {TierTranslationAggregateArgs} args - Select which aggregations you would like to apply and on what fields.
+     * @example
+     * // Ordered by age ascending
+     * // Where email contains prisma.io
+     * // Limited to the 10 users
+     * const aggregations = await prisma.user.aggregate({
+     *   _avg: {
+     *     age: true,
+     *   },
+     *   where: {
+     *     email: {
+     *       contains: "prisma.io",
+     *     },
+     *   },
+     *   orderBy: {
+     *     age: "asc",
+     *   },
+     *   take: 10,
+     * })
+    **/
+    aggregate<T extends TierTranslationAggregateArgs>(args: Subset<T, TierTranslationAggregateArgs>): Prisma.PrismaPromise<GetTierTranslationAggregateType<T>>
+
+    /**
+     * Group by TierTranslation.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {TierTranslationGroupByArgs} args - Group by arguments.
+     * @example
+     * // Group by city, order by createdAt, get count
+     * const result = await prisma.user.groupBy({
+     *   by: ['city', 'createdAt'],
+     *   orderBy: {
+     *     createdAt: true
+     *   },
+     *   _count: {
+     *     _all: true
+     *   },
+     * })
+     * 
+    **/
+    groupBy<
+      T extends TierTranslationGroupByArgs,
+      HasSelectOrTake extends Or<
+        Extends<'skip', Keys<T>>,
+        Extends<'take', Keys<T>>
+      >,
+      OrderByArg extends True extends HasSelectOrTake
+        ? { orderBy: TierTranslationGroupByArgs['orderBy'] }
+        : { orderBy?: TierTranslationGroupByArgs['orderBy'] },
+      OrderFields extends ExcludeUnderscoreKeys<Keys<MaybeTupleToUnion<T['orderBy']>>>,
+      ByFields extends MaybeTupleToUnion<T['by']>,
+      ByValid extends Has<ByFields, OrderFields>,
+      HavingFields extends GetHavingFields<T['having']>,
+      HavingValid extends Has<ByFields, HavingFields>,
+      ByEmpty extends T['by'] extends never[] ? True : False,
+      InputErrors extends ByEmpty extends True
+      ? `Error: "by" must not be empty.`
+      : HavingValid extends False
+      ? {
+          [P in HavingFields]: P extends ByFields
+            ? never
+            : P extends string
+            ? `Error: Field "${P}" used in "having" needs to be provided in "by".`
+            : [
+                Error,
+                'Field ',
+                P,
+                ` in "having" needs to be provided in "by"`,
+              ]
+        }[HavingFields]
+      : 'take' extends Keys<T>
+      ? 'orderBy' extends Keys<T>
+        ? ByValid extends True
+          ? {}
+          : {
+              [P in OrderFields]: P extends ByFields
+                ? never
+                : `Error: Field "${P}" in "orderBy" needs to be provided in "by"`
+            }[OrderFields]
+        : 'Error: If you provide "take", you also need to provide "orderBy"'
+      : 'skip' extends Keys<T>
+      ? 'orderBy' extends Keys<T>
+        ? ByValid extends True
+          ? {}
+          : {
+              [P in OrderFields]: P extends ByFields
+                ? never
+                : `Error: Field "${P}" in "orderBy" needs to be provided in "by"`
+            }[OrderFields]
+        : 'Error: If you provide "skip", you also need to provide "orderBy"'
+      : ByValid extends True
+      ? {}
+      : {
+          [P in OrderFields]: P extends ByFields
+            ? never
+            : `Error: Field "${P}" in "orderBy" needs to be provided in "by"`
+        }[OrderFields]
+    >(args: SubsetIntersection<T, TierTranslationGroupByArgs, OrderByArg> & InputErrors): {} extends InputErrors ? GetTierTranslationGroupByPayload<T> : Prisma.PrismaPromise<InputErrors>
+  /**
+   * Fields of the TierTranslation model
+   */
+  readonly fields: TierTranslationFieldRefs;
+  }
+
+  /**
+   * The delegate class that acts as a "Promise-like" for TierTranslation.
+   * Why is this prefixed with `Prisma__`?
+   * Because we want to prevent naming conflicts as mentioned in
+   * https://github.com/prisma/prisma-client-js/issues/707
+   */
+  export interface Prisma__TierTranslationClient<T, Null = never, ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs, GlobalOmitOptions = {}> extends Prisma.PrismaPromise<T> {
+    readonly [Symbol.toStringTag]: "PrismaPromise"
+    tier<T extends TierDefaultArgs<ExtArgs> = {}>(args?: Subset<T, TierDefaultArgs<ExtArgs>>): Prisma__TierClient<$Result.GetResult<Prisma.$TierPayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions> | Null, Null, ExtArgs, GlobalOmitOptions>
+    /**
+     * Attaches callbacks for the resolution and/or rejection of the Promise.
+     * @param onfulfilled The callback to execute when the Promise is resolved.
+     * @param onrejected The callback to execute when the Promise is rejected.
+     * @returns A Promise for the completion of which ever callback is executed.
+     */
+    then<TResult1 = T, TResult2 = never>(onfulfilled?: ((value: T) => TResult1 | PromiseLike<TResult1>) | undefined | null, onrejected?: ((reason: any) => TResult2 | PromiseLike<TResult2>) | undefined | null): $Utils.JsPromise<TResult1 | TResult2>
+    /**
+     * Attaches a callback for only the rejection of the Promise.
+     * @param onrejected The callback to execute when the Promise is rejected.
+     * @returns A Promise for the completion of the callback.
+     */
+    catch<TResult = never>(onrejected?: ((reason: any) => TResult | PromiseLike<TResult>) | undefined | null): $Utils.JsPromise<T | TResult>
+    /**
+     * Attaches a callback that is invoked when the Promise is settled (fulfilled or rejected). The
+     * resolved value cannot be modified from the callback.
+     * @param onfinally The callback to execute when the Promise is settled (fulfilled or rejected).
+     * @returns A Promise for the completion of the callback.
+     */
+    finally(onfinally?: (() => void) | undefined | null): $Utils.JsPromise<T>
+  }
+
+
+
+
+  /**
+   * Fields of the TierTranslation model
+   */
+  interface TierTranslationFieldRefs {
+    readonly id: FieldRef<"TierTranslation", 'BigInt'>
+    readonly uid: FieldRef<"TierTranslation", 'String'>
+    readonly tierId: FieldRef<"TierTranslation", 'BigInt'>
+    readonly language: FieldRef<"TierTranslation", 'Language'>
+    readonly name: FieldRef<"TierTranslation", 'String'>
+  }
+    
+
+  // Custom InputTypes
+  /**
+   * TierTranslation findUnique
+   */
+  export type TierTranslationFindUniqueArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the TierTranslation
+     */
+    select?: TierTranslationSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the TierTranslation
+     */
+    omit?: TierTranslationOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: TierTranslationInclude<ExtArgs> | null
+    /**
+     * Filter, which TierTranslation to fetch.
+     */
+    where: TierTranslationWhereUniqueInput
+  }
+
+  /**
+   * TierTranslation findUniqueOrThrow
+   */
+  export type TierTranslationFindUniqueOrThrowArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the TierTranslation
+     */
+    select?: TierTranslationSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the TierTranslation
+     */
+    omit?: TierTranslationOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: TierTranslationInclude<ExtArgs> | null
+    /**
+     * Filter, which TierTranslation to fetch.
+     */
+    where: TierTranslationWhereUniqueInput
+  }
+
+  /**
+   * TierTranslation findFirst
+   */
+  export type TierTranslationFindFirstArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the TierTranslation
+     */
+    select?: TierTranslationSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the TierTranslation
+     */
+    omit?: TierTranslationOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: TierTranslationInclude<ExtArgs> | null
+    /**
+     * Filter, which TierTranslation to fetch.
+     */
+    where?: TierTranslationWhereInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/sorting Sorting Docs}
+     * 
+     * Determine the order of TierTranslations to fetch.
+     */
+    orderBy?: TierTranslationOrderByWithRelationInput | TierTranslationOrderByWithRelationInput[]
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination#cursor-based-pagination Cursor Docs}
+     * 
+     * Sets the position for searching for TierTranslations.
+     */
+    cursor?: TierTranslationWhereUniqueInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Take `±n` TierTranslations from the position of the cursor.
+     */
+    take?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Skip the first `n` TierTranslations.
+     */
+    skip?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/distinct Distinct Docs}
+     * 
+     * Filter by unique combinations of TierTranslations.
+     */
+    distinct?: TierTranslationScalarFieldEnum | TierTranslationScalarFieldEnum[]
+  }
+
+  /**
+   * TierTranslation findFirstOrThrow
+   */
+  export type TierTranslationFindFirstOrThrowArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the TierTranslation
+     */
+    select?: TierTranslationSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the TierTranslation
+     */
+    omit?: TierTranslationOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: TierTranslationInclude<ExtArgs> | null
+    /**
+     * Filter, which TierTranslation to fetch.
+     */
+    where?: TierTranslationWhereInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/sorting Sorting Docs}
+     * 
+     * Determine the order of TierTranslations to fetch.
+     */
+    orderBy?: TierTranslationOrderByWithRelationInput | TierTranslationOrderByWithRelationInput[]
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination#cursor-based-pagination Cursor Docs}
+     * 
+     * Sets the position for searching for TierTranslations.
+     */
+    cursor?: TierTranslationWhereUniqueInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Take `±n` TierTranslations from the position of the cursor.
+     */
+    take?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Skip the first `n` TierTranslations.
+     */
+    skip?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/distinct Distinct Docs}
+     * 
+     * Filter by unique combinations of TierTranslations.
+     */
+    distinct?: TierTranslationScalarFieldEnum | TierTranslationScalarFieldEnum[]
+  }
+
+  /**
+   * TierTranslation findMany
+   */
+  export type TierTranslationFindManyArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the TierTranslation
+     */
+    select?: TierTranslationSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the TierTranslation
+     */
+    omit?: TierTranslationOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: TierTranslationInclude<ExtArgs> | null
+    /**
+     * Filter, which TierTranslations to fetch.
+     */
+    where?: TierTranslationWhereInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/sorting Sorting Docs}
+     * 
+     * Determine the order of TierTranslations to fetch.
+     */
+    orderBy?: TierTranslationOrderByWithRelationInput | TierTranslationOrderByWithRelationInput[]
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination#cursor-based-pagination Cursor Docs}
+     * 
+     * Sets the position for listing TierTranslations.
+     */
+    cursor?: TierTranslationWhereUniqueInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Take `±n` TierTranslations from the position of the cursor.
+     */
+    take?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Skip the first `n` TierTranslations.
+     */
+    skip?: number
+    distinct?: TierTranslationScalarFieldEnum | TierTranslationScalarFieldEnum[]
+  }
+
+  /**
+   * TierTranslation create
+   */
+  export type TierTranslationCreateArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the TierTranslation
+     */
+    select?: TierTranslationSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the TierTranslation
+     */
+    omit?: TierTranslationOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: TierTranslationInclude<ExtArgs> | null
+    /**
+     * The data needed to create a TierTranslation.
+     */
+    data: XOR<TierTranslationCreateInput, TierTranslationUncheckedCreateInput>
+  }
+
+  /**
+   * TierTranslation createMany
+   */
+  export type TierTranslationCreateManyArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * The data used to create many TierTranslations.
+     */
+    data: TierTranslationCreateManyInput | TierTranslationCreateManyInput[]
+    skipDuplicates?: boolean
+  }
+
+  /**
+   * TierTranslation createManyAndReturn
+   */
+  export type TierTranslationCreateManyAndReturnArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the TierTranslation
+     */
+    select?: TierTranslationSelectCreateManyAndReturn<ExtArgs> | null
+    /**
+     * Omit specific fields from the TierTranslation
+     */
+    omit?: TierTranslationOmit<ExtArgs> | null
+    /**
+     * The data used to create many TierTranslations.
+     */
+    data: TierTranslationCreateManyInput | TierTranslationCreateManyInput[]
+    skipDuplicates?: boolean
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: TierTranslationIncludeCreateManyAndReturn<ExtArgs> | null
+  }
+
+  /**
+   * TierTranslation update
+   */
+  export type TierTranslationUpdateArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the TierTranslation
+     */
+    select?: TierTranslationSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the TierTranslation
+     */
+    omit?: TierTranslationOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: TierTranslationInclude<ExtArgs> | null
+    /**
+     * The data needed to update a TierTranslation.
+     */
+    data: XOR<TierTranslationUpdateInput, TierTranslationUncheckedUpdateInput>
+    /**
+     * Choose, which TierTranslation to update.
+     */
+    where: TierTranslationWhereUniqueInput
+  }
+
+  /**
+   * TierTranslation updateMany
+   */
+  export type TierTranslationUpdateManyArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * The data used to update TierTranslations.
+     */
+    data: XOR<TierTranslationUpdateManyMutationInput, TierTranslationUncheckedUpdateManyInput>
+    /**
+     * Filter which TierTranslations to update
+     */
+    where?: TierTranslationWhereInput
+    /**
+     * Limit how many TierTranslations to update.
+     */
+    limit?: number
+  }
+
+  /**
+   * TierTranslation updateManyAndReturn
+   */
+  export type TierTranslationUpdateManyAndReturnArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the TierTranslation
+     */
+    select?: TierTranslationSelectUpdateManyAndReturn<ExtArgs> | null
+    /**
+     * Omit specific fields from the TierTranslation
+     */
+    omit?: TierTranslationOmit<ExtArgs> | null
+    /**
+     * The data used to update TierTranslations.
+     */
+    data: XOR<TierTranslationUpdateManyMutationInput, TierTranslationUncheckedUpdateManyInput>
+    /**
+     * Filter which TierTranslations to update
+     */
+    where?: TierTranslationWhereInput
+    /**
+     * Limit how many TierTranslations to update.
+     */
+    limit?: number
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: TierTranslationIncludeUpdateManyAndReturn<ExtArgs> | null
+  }
+
+  /**
+   * TierTranslation upsert
+   */
+  export type TierTranslationUpsertArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the TierTranslation
+     */
+    select?: TierTranslationSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the TierTranslation
+     */
+    omit?: TierTranslationOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: TierTranslationInclude<ExtArgs> | null
+    /**
+     * The filter to search for the TierTranslation to update in case it exists.
+     */
+    where: TierTranslationWhereUniqueInput
+    /**
+     * In case the TierTranslation found by the `where` argument doesn't exist, create a new TierTranslation with this data.
+     */
+    create: XOR<TierTranslationCreateInput, TierTranslationUncheckedCreateInput>
+    /**
+     * In case the TierTranslation was found with the provided `where` argument, update it with this data.
+     */
+    update: XOR<TierTranslationUpdateInput, TierTranslationUncheckedUpdateInput>
+  }
+
+  /**
+   * TierTranslation delete
+   */
+  export type TierTranslationDeleteArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the TierTranslation
+     */
+    select?: TierTranslationSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the TierTranslation
+     */
+    omit?: TierTranslationOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: TierTranslationInclude<ExtArgs> | null
+    /**
+     * Filter which TierTranslation to delete.
+     */
+    where: TierTranslationWhereUniqueInput
+  }
+
+  /**
+   * TierTranslation deleteMany
+   */
+  export type TierTranslationDeleteManyArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Filter which TierTranslations to delete
+     */
+    where?: TierTranslationWhereInput
+    /**
+     * Limit how many TierTranslations to delete.
+     */
+    limit?: number
+  }
+
+  /**
+   * TierTranslation without action
+   */
+  export type TierTranslationDefaultArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the TierTranslation
+     */
+    select?: TierTranslationSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the TierTranslation
+     */
+    omit?: TierTranslationOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: TierTranslationInclude<ExtArgs> | null
+  }
+
+
+  /**
+   * Model UserTier
+   */
+
+  export type AggregateUserTier = {
+    _count: UserTierCountAggregateOutputType | null
+    _avg: UserTierAvgAggregateOutputType | null
+    _sum: UserTierSumAggregateOutputType | null
+    _min: UserTierMinAggregateOutputType | null
+    _max: UserTierMaxAggregateOutputType | null
+  }
+
+  export type UserTierAvgAggregateOutputType = {
+    id: number | null
+    userId: number | null
+    tierId: number | null
+    cumulativeRollingUsd: Decimal | null
+    highestPromotedPriority: number | null
+  }
+
+  export type UserTierSumAggregateOutputType = {
+    id: bigint | null
+    userId: bigint | null
+    tierId: bigint | null
+    cumulativeRollingUsd: Decimal | null
+    highestPromotedPriority: number | null
+  }
+
+  export type UserTierMinAggregateOutputType = {
+    id: bigint | null
+    uid: string | null
+    userId: bigint | null
+    tierId: bigint | null
+    cumulativeRollingUsd: Decimal | null
+    highestPromotedPriority: number | null
+    isManualLock: boolean | null
+    lastPromotedAt: Date | null
+    createdAt: Date | null
+    updatedAt: Date | null
+  }
+
+  export type UserTierMaxAggregateOutputType = {
+    id: bigint | null
+    uid: string | null
+    userId: bigint | null
+    tierId: bigint | null
+    cumulativeRollingUsd: Decimal | null
+    highestPromotedPriority: number | null
+    isManualLock: boolean | null
+    lastPromotedAt: Date | null
+    createdAt: Date | null
+    updatedAt: Date | null
+  }
+
+  export type UserTierCountAggregateOutputType = {
+    id: number
+    uid: number
+    userId: number
+    tierId: number
+    cumulativeRollingUsd: number
+    highestPromotedPriority: number
+    isManualLock: number
+    lastPromotedAt: number
+    createdAt: number
+    updatedAt: number
+    _all: number
+  }
+
+
+  export type UserTierAvgAggregateInputType = {
+    id?: true
+    userId?: true
+    tierId?: true
+    cumulativeRollingUsd?: true
+    highestPromotedPriority?: true
+  }
+
+  export type UserTierSumAggregateInputType = {
+    id?: true
+    userId?: true
+    tierId?: true
+    cumulativeRollingUsd?: true
+    highestPromotedPriority?: true
+  }
+
+  export type UserTierMinAggregateInputType = {
+    id?: true
+    uid?: true
+    userId?: true
+    tierId?: true
+    cumulativeRollingUsd?: true
+    highestPromotedPriority?: true
+    isManualLock?: true
+    lastPromotedAt?: true
+    createdAt?: true
+    updatedAt?: true
+  }
+
+  export type UserTierMaxAggregateInputType = {
+    id?: true
+    uid?: true
+    userId?: true
+    tierId?: true
+    cumulativeRollingUsd?: true
+    highestPromotedPriority?: true
+    isManualLock?: true
+    lastPromotedAt?: true
+    createdAt?: true
+    updatedAt?: true
+  }
+
+  export type UserTierCountAggregateInputType = {
+    id?: true
+    uid?: true
+    userId?: true
+    tierId?: true
+    cumulativeRollingUsd?: true
+    highestPromotedPriority?: true
+    isManualLock?: true
+    lastPromotedAt?: true
+    createdAt?: true
+    updatedAt?: true
+    _all?: true
+  }
+
+  export type UserTierAggregateArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Filter which UserTier to aggregate.
+     */
+    where?: UserTierWhereInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/sorting Sorting Docs}
+     * 
+     * Determine the order of UserTiers to fetch.
+     */
+    orderBy?: UserTierOrderByWithRelationInput | UserTierOrderByWithRelationInput[]
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination#cursor-based-pagination Cursor Docs}
+     * 
+     * Sets the start position
+     */
+    cursor?: UserTierWhereUniqueInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Take `±n` UserTiers from the position of the cursor.
+     */
+    take?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Skip the first `n` UserTiers.
+     */
+    skip?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
+     * 
+     * Count returned UserTiers
+    **/
+    _count?: true | UserTierCountAggregateInputType
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
+     * 
+     * Select which fields to average
+    **/
+    _avg?: UserTierAvgAggregateInputType
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
+     * 
+     * Select which fields to sum
+    **/
+    _sum?: UserTierSumAggregateInputType
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
+     * 
+     * Select which fields to find the minimum value
+    **/
+    _min?: UserTierMinAggregateInputType
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
+     * 
+     * Select which fields to find the maximum value
+    **/
+    _max?: UserTierMaxAggregateInputType
+  }
+
+  export type GetUserTierAggregateType<T extends UserTierAggregateArgs> = {
+        [P in keyof T & keyof AggregateUserTier]: P extends '_count' | 'count'
+      ? T[P] extends true
+        ? number
+        : GetScalarType<T[P], AggregateUserTier[P]>
+      : GetScalarType<T[P], AggregateUserTier[P]>
+  }
+
+
+
+
+  export type UserTierGroupByArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    where?: UserTierWhereInput
+    orderBy?: UserTierOrderByWithAggregationInput | UserTierOrderByWithAggregationInput[]
+    by: UserTierScalarFieldEnum[] | UserTierScalarFieldEnum
+    having?: UserTierScalarWhereWithAggregatesInput
+    take?: number
+    skip?: number
+    _count?: UserTierCountAggregateInputType | true
+    _avg?: UserTierAvgAggregateInputType
+    _sum?: UserTierSumAggregateInputType
+    _min?: UserTierMinAggregateInputType
+    _max?: UserTierMaxAggregateInputType
+  }
+
+  export type UserTierGroupByOutputType = {
+    id: bigint
+    uid: string
+    userId: bigint
+    tierId: bigint
+    cumulativeRollingUsd: Decimal
+    highestPromotedPriority: number
+    isManualLock: boolean
+    lastPromotedAt: Date
+    createdAt: Date
+    updatedAt: Date
+    _count: UserTierCountAggregateOutputType | null
+    _avg: UserTierAvgAggregateOutputType | null
+    _sum: UserTierSumAggregateOutputType | null
+    _min: UserTierMinAggregateOutputType | null
+    _max: UserTierMaxAggregateOutputType | null
+  }
+
+  type GetUserTierGroupByPayload<T extends UserTierGroupByArgs> = Prisma.PrismaPromise<
+    Array<
+      PickEnumerable<UserTierGroupByOutputType, T['by']> &
+        {
+          [P in ((keyof T) & (keyof UserTierGroupByOutputType))]: P extends '_count'
+            ? T[P] extends boolean
+              ? number
+              : GetScalarType<T[P], UserTierGroupByOutputType[P]>
+            : GetScalarType<T[P], UserTierGroupByOutputType[P]>
+        }
+      >
+    >
+
+
+  export type UserTierSelect<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetSelect<{
+    id?: boolean
+    uid?: boolean
+    userId?: boolean
+    tierId?: boolean
+    cumulativeRollingUsd?: boolean
+    highestPromotedPriority?: boolean
+    isManualLock?: boolean
+    lastPromotedAt?: boolean
+    createdAt?: boolean
+    updatedAt?: boolean
+    user?: boolean | UserDefaultArgs<ExtArgs>
+    tier?: boolean | TierDefaultArgs<ExtArgs>
+  }, ExtArgs["result"]["userTier"]>
+
+  export type UserTierSelectCreateManyAndReturn<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetSelect<{
+    id?: boolean
+    uid?: boolean
+    userId?: boolean
+    tierId?: boolean
+    cumulativeRollingUsd?: boolean
+    highestPromotedPriority?: boolean
+    isManualLock?: boolean
+    lastPromotedAt?: boolean
+    createdAt?: boolean
+    updatedAt?: boolean
+    user?: boolean | UserDefaultArgs<ExtArgs>
+    tier?: boolean | TierDefaultArgs<ExtArgs>
+  }, ExtArgs["result"]["userTier"]>
+
+  export type UserTierSelectUpdateManyAndReturn<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetSelect<{
+    id?: boolean
+    uid?: boolean
+    userId?: boolean
+    tierId?: boolean
+    cumulativeRollingUsd?: boolean
+    highestPromotedPriority?: boolean
+    isManualLock?: boolean
+    lastPromotedAt?: boolean
+    createdAt?: boolean
+    updatedAt?: boolean
+    user?: boolean | UserDefaultArgs<ExtArgs>
+    tier?: boolean | TierDefaultArgs<ExtArgs>
+  }, ExtArgs["result"]["userTier"]>
+
+  export type UserTierSelectScalar = {
+    id?: boolean
+    uid?: boolean
+    userId?: boolean
+    tierId?: boolean
+    cumulativeRollingUsd?: boolean
+    highestPromotedPriority?: boolean
+    isManualLock?: boolean
+    lastPromotedAt?: boolean
+    createdAt?: boolean
+    updatedAt?: boolean
+  }
+
+  export type UserTierOmit<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetOmit<"id" | "uid" | "userId" | "tierId" | "cumulativeRollingUsd" | "highestPromotedPriority" | "isManualLock" | "lastPromotedAt" | "createdAt" | "updatedAt", ExtArgs["result"]["userTier"]>
+  export type UserTierInclude<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    user?: boolean | UserDefaultArgs<ExtArgs>
+    tier?: boolean | TierDefaultArgs<ExtArgs>
+  }
+  export type UserTierIncludeCreateManyAndReturn<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    user?: boolean | UserDefaultArgs<ExtArgs>
+    tier?: boolean | TierDefaultArgs<ExtArgs>
+  }
+  export type UserTierIncludeUpdateManyAndReturn<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    user?: boolean | UserDefaultArgs<ExtArgs>
+    tier?: boolean | TierDefaultArgs<ExtArgs>
+  }
+
+  export type $UserTierPayload<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    name: "UserTier"
+    objects: {
+      user: Prisma.$UserPayload<ExtArgs>
+      tier: Prisma.$TierPayload<ExtArgs>
+    }
+    scalars: $Extensions.GetPayloadResult<{
+      id: bigint
+      uid: string
+      userId: bigint
+      tierId: bigint
+      cumulativeRollingUsd: Prisma.Decimal
+      highestPromotedPriority: number
+      isManualLock: boolean
+      lastPromotedAt: Date
+      createdAt: Date
+      updatedAt: Date
+    }, ExtArgs["result"]["userTier"]>
+    composites: {}
+  }
+
+  type UserTierGetPayload<S extends boolean | null | undefined | UserTierDefaultArgs> = $Result.GetResult<Prisma.$UserTierPayload, S>
+
+  type UserTierCountArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> =
+    Omit<UserTierFindManyArgs, 'select' | 'include' | 'distinct' | 'omit'> & {
+      select?: UserTierCountAggregateInputType | true
+    }
+
+  export interface UserTierDelegate<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs, GlobalOmitOptions = {}> {
+    [K: symbol]: { types: Prisma.TypeMap<ExtArgs>['model']['UserTier'], meta: { name: 'UserTier' } }
+    /**
+     * Find zero or one UserTier that matches the filter.
+     * @param {UserTierFindUniqueArgs} args - Arguments to find a UserTier
+     * @example
+     * // Get one UserTier
+     * const userTier = await prisma.userTier.findUnique({
+     *   where: {
+     *     // ... provide filter here
+     *   }
+     * })
+     */
+    findUnique<T extends UserTierFindUniqueArgs>(args: SelectSubset<T, UserTierFindUniqueArgs<ExtArgs>>): Prisma__UserTierClient<$Result.GetResult<Prisma.$UserTierPayload<ExtArgs>, T, "findUnique", GlobalOmitOptions> | null, null, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Find one UserTier that matches the filter or throw an error with `error.code='P2025'`
+     * if no matches were found.
+     * @param {UserTierFindUniqueOrThrowArgs} args - Arguments to find a UserTier
+     * @example
+     * // Get one UserTier
+     * const userTier = await prisma.userTier.findUniqueOrThrow({
+     *   where: {
+     *     // ... provide filter here
+     *   }
+     * })
+     */
+    findUniqueOrThrow<T extends UserTierFindUniqueOrThrowArgs>(args: SelectSubset<T, UserTierFindUniqueOrThrowArgs<ExtArgs>>): Prisma__UserTierClient<$Result.GetResult<Prisma.$UserTierPayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Find the first UserTier that matches the filter.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {UserTierFindFirstArgs} args - Arguments to find a UserTier
+     * @example
+     * // Get one UserTier
+     * const userTier = await prisma.userTier.findFirst({
+     *   where: {
+     *     // ... provide filter here
+     *   }
+     * })
+     */
+    findFirst<T extends UserTierFindFirstArgs>(args?: SelectSubset<T, UserTierFindFirstArgs<ExtArgs>>): Prisma__UserTierClient<$Result.GetResult<Prisma.$UserTierPayload<ExtArgs>, T, "findFirst", GlobalOmitOptions> | null, null, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Find the first UserTier that matches the filter or
+     * throw `PrismaKnownClientError` with `P2025` code if no matches were found.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {UserTierFindFirstOrThrowArgs} args - Arguments to find a UserTier
+     * @example
+     * // Get one UserTier
+     * const userTier = await prisma.userTier.findFirstOrThrow({
+     *   where: {
+     *     // ... provide filter here
+     *   }
+     * })
+     */
+    findFirstOrThrow<T extends UserTierFindFirstOrThrowArgs>(args?: SelectSubset<T, UserTierFindFirstOrThrowArgs<ExtArgs>>): Prisma__UserTierClient<$Result.GetResult<Prisma.$UserTierPayload<ExtArgs>, T, "findFirstOrThrow", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Find zero or more UserTiers that matches the filter.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {UserTierFindManyArgs} args - Arguments to filter and select certain fields only.
+     * @example
+     * // Get all UserTiers
+     * const userTiers = await prisma.userTier.findMany()
+     * 
+     * // Get first 10 UserTiers
+     * const userTiers = await prisma.userTier.findMany({ take: 10 })
+     * 
+     * // Only select the `id`
+     * const userTierWithIdOnly = await prisma.userTier.findMany({ select: { id: true } })
+     * 
+     */
+    findMany<T extends UserTierFindManyArgs>(args?: SelectSubset<T, UserTierFindManyArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$UserTierPayload<ExtArgs>, T, "findMany", GlobalOmitOptions>>
+
+    /**
+     * Create a UserTier.
+     * @param {UserTierCreateArgs} args - Arguments to create a UserTier.
+     * @example
+     * // Create one UserTier
+     * const UserTier = await prisma.userTier.create({
+     *   data: {
+     *     // ... data to create a UserTier
+     *   }
+     * })
+     * 
+     */
+    create<T extends UserTierCreateArgs>(args: SelectSubset<T, UserTierCreateArgs<ExtArgs>>): Prisma__UserTierClient<$Result.GetResult<Prisma.$UserTierPayload<ExtArgs>, T, "create", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Create many UserTiers.
+     * @param {UserTierCreateManyArgs} args - Arguments to create many UserTiers.
+     * @example
+     * // Create many UserTiers
+     * const userTier = await prisma.userTier.createMany({
+     *   data: [
+     *     // ... provide data here
+     *   ]
+     * })
+     *     
+     */
+    createMany<T extends UserTierCreateManyArgs>(args?: SelectSubset<T, UserTierCreateManyArgs<ExtArgs>>): Prisma.PrismaPromise<BatchPayload>
+
+    /**
+     * Create many UserTiers and returns the data saved in the database.
+     * @param {UserTierCreateManyAndReturnArgs} args - Arguments to create many UserTiers.
+     * @example
+     * // Create many UserTiers
+     * const userTier = await prisma.userTier.createManyAndReturn({
+     *   data: [
+     *     // ... provide data here
+     *   ]
+     * })
+     * 
+     * // Create many UserTiers and only return the `id`
+     * const userTierWithIdOnly = await prisma.userTier.createManyAndReturn({
+     *   select: { id: true },
+     *   data: [
+     *     // ... provide data here
+     *   ]
+     * })
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * 
+     */
+    createManyAndReturn<T extends UserTierCreateManyAndReturnArgs>(args?: SelectSubset<T, UserTierCreateManyAndReturnArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$UserTierPayload<ExtArgs>, T, "createManyAndReturn", GlobalOmitOptions>>
+
+    /**
+     * Delete a UserTier.
+     * @param {UserTierDeleteArgs} args - Arguments to delete one UserTier.
+     * @example
+     * // Delete one UserTier
+     * const UserTier = await prisma.userTier.delete({
+     *   where: {
+     *     // ... filter to delete one UserTier
+     *   }
+     * })
+     * 
+     */
+    delete<T extends UserTierDeleteArgs>(args: SelectSubset<T, UserTierDeleteArgs<ExtArgs>>): Prisma__UserTierClient<$Result.GetResult<Prisma.$UserTierPayload<ExtArgs>, T, "delete", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Update one UserTier.
+     * @param {UserTierUpdateArgs} args - Arguments to update one UserTier.
+     * @example
+     * // Update one UserTier
+     * const userTier = await prisma.userTier.update({
+     *   where: {
+     *     // ... provide filter here
+     *   },
+     *   data: {
+     *     // ... provide data here
+     *   }
+     * })
+     * 
+     */
+    update<T extends UserTierUpdateArgs>(args: SelectSubset<T, UserTierUpdateArgs<ExtArgs>>): Prisma__UserTierClient<$Result.GetResult<Prisma.$UserTierPayload<ExtArgs>, T, "update", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Delete zero or more UserTiers.
+     * @param {UserTierDeleteManyArgs} args - Arguments to filter UserTiers to delete.
+     * @example
+     * // Delete a few UserTiers
+     * const { count } = await prisma.userTier.deleteMany({
+     *   where: {
+     *     // ... provide filter here
+     *   }
+     * })
+     * 
+     */
+    deleteMany<T extends UserTierDeleteManyArgs>(args?: SelectSubset<T, UserTierDeleteManyArgs<ExtArgs>>): Prisma.PrismaPromise<BatchPayload>
+
+    /**
+     * Update zero or more UserTiers.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {UserTierUpdateManyArgs} args - Arguments to update one or more rows.
+     * @example
+     * // Update many UserTiers
+     * const userTier = await prisma.userTier.updateMany({
+     *   where: {
+     *     // ... provide filter here
+     *   },
+     *   data: {
+     *     // ... provide data here
+     *   }
+     * })
+     * 
+     */
+    updateMany<T extends UserTierUpdateManyArgs>(args: SelectSubset<T, UserTierUpdateManyArgs<ExtArgs>>): Prisma.PrismaPromise<BatchPayload>
+
+    /**
+     * Update zero or more UserTiers and returns the data updated in the database.
+     * @param {UserTierUpdateManyAndReturnArgs} args - Arguments to update many UserTiers.
+     * @example
+     * // Update many UserTiers
+     * const userTier = await prisma.userTier.updateManyAndReturn({
+     *   where: {
+     *     // ... provide filter here
+     *   },
+     *   data: [
+     *     // ... provide data here
+     *   ]
+     * })
+     * 
+     * // Update zero or more UserTiers and only return the `id`
+     * const userTierWithIdOnly = await prisma.userTier.updateManyAndReturn({
+     *   select: { id: true },
+     *   where: {
+     *     // ... provide filter here
+     *   },
+     *   data: [
+     *     // ... provide data here
+     *   ]
+     * })
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * 
+     */
+    updateManyAndReturn<T extends UserTierUpdateManyAndReturnArgs>(args: SelectSubset<T, UserTierUpdateManyAndReturnArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$UserTierPayload<ExtArgs>, T, "updateManyAndReturn", GlobalOmitOptions>>
+
+    /**
+     * Create or update one UserTier.
+     * @param {UserTierUpsertArgs} args - Arguments to update or create a UserTier.
+     * @example
+     * // Update or create a UserTier
+     * const userTier = await prisma.userTier.upsert({
+     *   create: {
+     *     // ... data to create a UserTier
+     *   },
+     *   update: {
+     *     // ... in case it already exists, update
+     *   },
+     *   where: {
+     *     // ... the filter for the UserTier we want to update
+     *   }
+     * })
+     */
+    upsert<T extends UserTierUpsertArgs>(args: SelectSubset<T, UserTierUpsertArgs<ExtArgs>>): Prisma__UserTierClient<$Result.GetResult<Prisma.$UserTierPayload<ExtArgs>, T, "upsert", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
+
+
+    /**
+     * Count the number of UserTiers.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {UserTierCountArgs} args - Arguments to filter UserTiers to count.
+     * @example
+     * // Count the number of UserTiers
+     * const count = await prisma.userTier.count({
+     *   where: {
+     *     // ... the filter for the UserTiers we want to count
+     *   }
+     * })
+    **/
+    count<T extends UserTierCountArgs>(
+      args?: Subset<T, UserTierCountArgs>,
+    ): Prisma.PrismaPromise<
+      T extends $Utils.Record<'select', any>
+        ? T['select'] extends true
+          ? number
+          : GetScalarType<T['select'], UserTierCountAggregateOutputType>
+        : number
+    >
+
+    /**
+     * Allows you to perform aggregations operations on a UserTier.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {UserTierAggregateArgs} args - Select which aggregations you would like to apply and on what fields.
+     * @example
+     * // Ordered by age ascending
+     * // Where email contains prisma.io
+     * // Limited to the 10 users
+     * const aggregations = await prisma.user.aggregate({
+     *   _avg: {
+     *     age: true,
+     *   },
+     *   where: {
+     *     email: {
+     *       contains: "prisma.io",
+     *     },
+     *   },
+     *   orderBy: {
+     *     age: "asc",
+     *   },
+     *   take: 10,
+     * })
+    **/
+    aggregate<T extends UserTierAggregateArgs>(args: Subset<T, UserTierAggregateArgs>): Prisma.PrismaPromise<GetUserTierAggregateType<T>>
+
+    /**
+     * Group by UserTier.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {UserTierGroupByArgs} args - Group by arguments.
+     * @example
+     * // Group by city, order by createdAt, get count
+     * const result = await prisma.user.groupBy({
+     *   by: ['city', 'createdAt'],
+     *   orderBy: {
+     *     createdAt: true
+     *   },
+     *   _count: {
+     *     _all: true
+     *   },
+     * })
+     * 
+    **/
+    groupBy<
+      T extends UserTierGroupByArgs,
+      HasSelectOrTake extends Or<
+        Extends<'skip', Keys<T>>,
+        Extends<'take', Keys<T>>
+      >,
+      OrderByArg extends True extends HasSelectOrTake
+        ? { orderBy: UserTierGroupByArgs['orderBy'] }
+        : { orderBy?: UserTierGroupByArgs['orderBy'] },
+      OrderFields extends ExcludeUnderscoreKeys<Keys<MaybeTupleToUnion<T['orderBy']>>>,
+      ByFields extends MaybeTupleToUnion<T['by']>,
+      ByValid extends Has<ByFields, OrderFields>,
+      HavingFields extends GetHavingFields<T['having']>,
+      HavingValid extends Has<ByFields, HavingFields>,
+      ByEmpty extends T['by'] extends never[] ? True : False,
+      InputErrors extends ByEmpty extends True
+      ? `Error: "by" must not be empty.`
+      : HavingValid extends False
+      ? {
+          [P in HavingFields]: P extends ByFields
+            ? never
+            : P extends string
+            ? `Error: Field "${P}" used in "having" needs to be provided in "by".`
+            : [
+                Error,
+                'Field ',
+                P,
+                ` in "having" needs to be provided in "by"`,
+              ]
+        }[HavingFields]
+      : 'take' extends Keys<T>
+      ? 'orderBy' extends Keys<T>
+        ? ByValid extends True
+          ? {}
+          : {
+              [P in OrderFields]: P extends ByFields
+                ? never
+                : `Error: Field "${P}" in "orderBy" needs to be provided in "by"`
+            }[OrderFields]
+        : 'Error: If you provide "take", you also need to provide "orderBy"'
+      : 'skip' extends Keys<T>
+      ? 'orderBy' extends Keys<T>
+        ? ByValid extends True
+          ? {}
+          : {
+              [P in OrderFields]: P extends ByFields
+                ? never
+                : `Error: Field "${P}" in "orderBy" needs to be provided in "by"`
+            }[OrderFields]
+        : 'Error: If you provide "skip", you also need to provide "orderBy"'
+      : ByValid extends True
+      ? {}
+      : {
+          [P in OrderFields]: P extends ByFields
+            ? never
+            : `Error: Field "${P}" in "orderBy" needs to be provided in "by"`
+        }[OrderFields]
+    >(args: SubsetIntersection<T, UserTierGroupByArgs, OrderByArg> & InputErrors): {} extends InputErrors ? GetUserTierGroupByPayload<T> : Prisma.PrismaPromise<InputErrors>
+  /**
+   * Fields of the UserTier model
+   */
+  readonly fields: UserTierFieldRefs;
+  }
+
+  /**
+   * The delegate class that acts as a "Promise-like" for UserTier.
+   * Why is this prefixed with `Prisma__`?
+   * Because we want to prevent naming conflicts as mentioned in
+   * https://github.com/prisma/prisma-client-js/issues/707
+   */
+  export interface Prisma__UserTierClient<T, Null = never, ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs, GlobalOmitOptions = {}> extends Prisma.PrismaPromise<T> {
+    readonly [Symbol.toStringTag]: "PrismaPromise"
+    user<T extends UserDefaultArgs<ExtArgs> = {}>(args?: Subset<T, UserDefaultArgs<ExtArgs>>): Prisma__UserClient<$Result.GetResult<Prisma.$UserPayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions> | Null, Null, ExtArgs, GlobalOmitOptions>
+    tier<T extends TierDefaultArgs<ExtArgs> = {}>(args?: Subset<T, TierDefaultArgs<ExtArgs>>): Prisma__TierClient<$Result.GetResult<Prisma.$TierPayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions> | Null, Null, ExtArgs, GlobalOmitOptions>
+    /**
+     * Attaches callbacks for the resolution and/or rejection of the Promise.
+     * @param onfulfilled The callback to execute when the Promise is resolved.
+     * @param onrejected The callback to execute when the Promise is rejected.
+     * @returns A Promise for the completion of which ever callback is executed.
+     */
+    then<TResult1 = T, TResult2 = never>(onfulfilled?: ((value: T) => TResult1 | PromiseLike<TResult1>) | undefined | null, onrejected?: ((reason: any) => TResult2 | PromiseLike<TResult2>) | undefined | null): $Utils.JsPromise<TResult1 | TResult2>
+    /**
+     * Attaches a callback for only the rejection of the Promise.
+     * @param onrejected The callback to execute when the Promise is rejected.
+     * @returns A Promise for the completion of the callback.
+     */
+    catch<TResult = never>(onrejected?: ((reason: any) => TResult | PromiseLike<TResult>) | undefined | null): $Utils.JsPromise<T | TResult>
+    /**
+     * Attaches a callback that is invoked when the Promise is settled (fulfilled or rejected). The
+     * resolved value cannot be modified from the callback.
+     * @param onfinally The callback to execute when the Promise is settled (fulfilled or rejected).
+     * @returns A Promise for the completion of the callback.
+     */
+    finally(onfinally?: (() => void) | undefined | null): $Utils.JsPromise<T>
+  }
+
+
+
+
+  /**
+   * Fields of the UserTier model
+   */
+  interface UserTierFieldRefs {
+    readonly id: FieldRef<"UserTier", 'BigInt'>
+    readonly uid: FieldRef<"UserTier", 'String'>
+    readonly userId: FieldRef<"UserTier", 'BigInt'>
+    readonly tierId: FieldRef<"UserTier", 'BigInt'>
+    readonly cumulativeRollingUsd: FieldRef<"UserTier", 'Decimal'>
+    readonly highestPromotedPriority: FieldRef<"UserTier", 'Int'>
+    readonly isManualLock: FieldRef<"UserTier", 'Boolean'>
+    readonly lastPromotedAt: FieldRef<"UserTier", 'DateTime'>
+    readonly createdAt: FieldRef<"UserTier", 'DateTime'>
+    readonly updatedAt: FieldRef<"UserTier", 'DateTime'>
+  }
+    
+
+  // Custom InputTypes
+  /**
+   * UserTier findUnique
+   */
+  export type UserTierFindUniqueArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the UserTier
+     */
+    select?: UserTierSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the UserTier
+     */
+    omit?: UserTierOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: UserTierInclude<ExtArgs> | null
+    /**
+     * Filter, which UserTier to fetch.
+     */
+    where: UserTierWhereUniqueInput
+  }
+
+  /**
+   * UserTier findUniqueOrThrow
+   */
+  export type UserTierFindUniqueOrThrowArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the UserTier
+     */
+    select?: UserTierSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the UserTier
+     */
+    omit?: UserTierOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: UserTierInclude<ExtArgs> | null
+    /**
+     * Filter, which UserTier to fetch.
+     */
+    where: UserTierWhereUniqueInput
+  }
+
+  /**
+   * UserTier findFirst
+   */
+  export type UserTierFindFirstArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the UserTier
+     */
+    select?: UserTierSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the UserTier
+     */
+    omit?: UserTierOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: UserTierInclude<ExtArgs> | null
+    /**
+     * Filter, which UserTier to fetch.
+     */
+    where?: UserTierWhereInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/sorting Sorting Docs}
+     * 
+     * Determine the order of UserTiers to fetch.
+     */
+    orderBy?: UserTierOrderByWithRelationInput | UserTierOrderByWithRelationInput[]
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination#cursor-based-pagination Cursor Docs}
+     * 
+     * Sets the position for searching for UserTiers.
+     */
+    cursor?: UserTierWhereUniqueInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Take `±n` UserTiers from the position of the cursor.
+     */
+    take?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Skip the first `n` UserTiers.
+     */
+    skip?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/distinct Distinct Docs}
+     * 
+     * Filter by unique combinations of UserTiers.
+     */
+    distinct?: UserTierScalarFieldEnum | UserTierScalarFieldEnum[]
+  }
+
+  /**
+   * UserTier findFirstOrThrow
+   */
+  export type UserTierFindFirstOrThrowArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the UserTier
+     */
+    select?: UserTierSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the UserTier
+     */
+    omit?: UserTierOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: UserTierInclude<ExtArgs> | null
+    /**
+     * Filter, which UserTier to fetch.
+     */
+    where?: UserTierWhereInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/sorting Sorting Docs}
+     * 
+     * Determine the order of UserTiers to fetch.
+     */
+    orderBy?: UserTierOrderByWithRelationInput | UserTierOrderByWithRelationInput[]
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination#cursor-based-pagination Cursor Docs}
+     * 
+     * Sets the position for searching for UserTiers.
+     */
+    cursor?: UserTierWhereUniqueInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Take `±n` UserTiers from the position of the cursor.
+     */
+    take?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Skip the first `n` UserTiers.
+     */
+    skip?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/distinct Distinct Docs}
+     * 
+     * Filter by unique combinations of UserTiers.
+     */
+    distinct?: UserTierScalarFieldEnum | UserTierScalarFieldEnum[]
+  }
+
+  /**
+   * UserTier findMany
+   */
+  export type UserTierFindManyArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the UserTier
+     */
+    select?: UserTierSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the UserTier
+     */
+    omit?: UserTierOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: UserTierInclude<ExtArgs> | null
+    /**
+     * Filter, which UserTiers to fetch.
+     */
+    where?: UserTierWhereInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/sorting Sorting Docs}
+     * 
+     * Determine the order of UserTiers to fetch.
+     */
+    orderBy?: UserTierOrderByWithRelationInput | UserTierOrderByWithRelationInput[]
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination#cursor-based-pagination Cursor Docs}
+     * 
+     * Sets the position for listing UserTiers.
+     */
+    cursor?: UserTierWhereUniqueInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Take `±n` UserTiers from the position of the cursor.
+     */
+    take?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Skip the first `n` UserTiers.
+     */
+    skip?: number
+    distinct?: UserTierScalarFieldEnum | UserTierScalarFieldEnum[]
+  }
+
+  /**
+   * UserTier create
+   */
+  export type UserTierCreateArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the UserTier
+     */
+    select?: UserTierSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the UserTier
+     */
+    omit?: UserTierOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: UserTierInclude<ExtArgs> | null
+    /**
+     * The data needed to create a UserTier.
+     */
+    data: XOR<UserTierCreateInput, UserTierUncheckedCreateInput>
+  }
+
+  /**
+   * UserTier createMany
+   */
+  export type UserTierCreateManyArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * The data used to create many UserTiers.
+     */
+    data: UserTierCreateManyInput | UserTierCreateManyInput[]
+    skipDuplicates?: boolean
+  }
+
+  /**
+   * UserTier createManyAndReturn
+   */
+  export type UserTierCreateManyAndReturnArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the UserTier
+     */
+    select?: UserTierSelectCreateManyAndReturn<ExtArgs> | null
+    /**
+     * Omit specific fields from the UserTier
+     */
+    omit?: UserTierOmit<ExtArgs> | null
+    /**
+     * The data used to create many UserTiers.
+     */
+    data: UserTierCreateManyInput | UserTierCreateManyInput[]
+    skipDuplicates?: boolean
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: UserTierIncludeCreateManyAndReturn<ExtArgs> | null
+  }
+
+  /**
+   * UserTier update
+   */
+  export type UserTierUpdateArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the UserTier
+     */
+    select?: UserTierSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the UserTier
+     */
+    omit?: UserTierOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: UserTierInclude<ExtArgs> | null
+    /**
+     * The data needed to update a UserTier.
+     */
+    data: XOR<UserTierUpdateInput, UserTierUncheckedUpdateInput>
+    /**
+     * Choose, which UserTier to update.
+     */
+    where: UserTierWhereUniqueInput
+  }
+
+  /**
+   * UserTier updateMany
+   */
+  export type UserTierUpdateManyArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * The data used to update UserTiers.
+     */
+    data: XOR<UserTierUpdateManyMutationInput, UserTierUncheckedUpdateManyInput>
+    /**
+     * Filter which UserTiers to update
+     */
+    where?: UserTierWhereInput
+    /**
+     * Limit how many UserTiers to update.
+     */
+    limit?: number
+  }
+
+  /**
+   * UserTier updateManyAndReturn
+   */
+  export type UserTierUpdateManyAndReturnArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the UserTier
+     */
+    select?: UserTierSelectUpdateManyAndReturn<ExtArgs> | null
+    /**
+     * Omit specific fields from the UserTier
+     */
+    omit?: UserTierOmit<ExtArgs> | null
+    /**
+     * The data used to update UserTiers.
+     */
+    data: XOR<UserTierUpdateManyMutationInput, UserTierUncheckedUpdateManyInput>
+    /**
+     * Filter which UserTiers to update
+     */
+    where?: UserTierWhereInput
+    /**
+     * Limit how many UserTiers to update.
+     */
+    limit?: number
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: UserTierIncludeUpdateManyAndReturn<ExtArgs> | null
+  }
+
+  /**
+   * UserTier upsert
+   */
+  export type UserTierUpsertArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the UserTier
+     */
+    select?: UserTierSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the UserTier
+     */
+    omit?: UserTierOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: UserTierInclude<ExtArgs> | null
+    /**
+     * The filter to search for the UserTier to update in case it exists.
+     */
+    where: UserTierWhereUniqueInput
+    /**
+     * In case the UserTier found by the `where` argument doesn't exist, create a new UserTier with this data.
+     */
+    create: XOR<UserTierCreateInput, UserTierUncheckedCreateInput>
+    /**
+     * In case the UserTier was found with the provided `where` argument, update it with this data.
+     */
+    update: XOR<UserTierUpdateInput, UserTierUncheckedUpdateInput>
+  }
+
+  /**
+   * UserTier delete
+   */
+  export type UserTierDeleteArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the UserTier
+     */
+    select?: UserTierSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the UserTier
+     */
+    omit?: UserTierOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: UserTierInclude<ExtArgs> | null
+    /**
+     * Filter which UserTier to delete.
+     */
+    where: UserTierWhereUniqueInput
+  }
+
+  /**
+   * UserTier deleteMany
+   */
+  export type UserTierDeleteManyArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Filter which UserTiers to delete
+     */
+    where?: UserTierWhereInput
+    /**
+     * Limit how many UserTiers to delete.
+     */
+    limit?: number
+  }
+
+  /**
+   * UserTier without action
+   */
+  export type UserTierDefaultArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the UserTier
+     */
+    select?: UserTierSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the UserTier
+     */
+    omit?: UserTierOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: UserTierInclude<ExtArgs> | null
+  }
+
+
+  /**
+   * Model TierHistory
+   */
+
+  export type AggregateTierHistory = {
+    _count: TierHistoryCountAggregateOutputType | null
+    _avg: TierHistoryAvgAggregateOutputType | null
+    _sum: TierHistorySumAggregateOutputType | null
+    _min: TierHistoryMinAggregateOutputType | null
+    _max: TierHistoryMaxAggregateOutputType | null
+  }
+
+  export type TierHistoryAvgAggregateOutputType = {
+    id: number | null
+    userId: number | null
+    fromTierId: number | null
+    toTierId: number | null
+    rollingAmountSnap: Decimal | null
+    bonusAmount: Decimal | null
+  }
+
+  export type TierHistorySumAggregateOutputType = {
+    id: bigint | null
+    userId: bigint | null
+    fromTierId: bigint | null
+    toTierId: bigint | null
+    rollingAmountSnap: Decimal | null
+    bonusAmount: Decimal | null
+  }
+
+  export type TierHistoryMinAggregateOutputType = {
+    id: bigint | null
+    uid: string | null
+    userId: bigint | null
+    fromTierId: bigint | null
+    toTierId: bigint | null
+    changeType: $Enums.TierChangeType | null
+    reason: string | null
+    rollingAmountSnap: Decimal | null
+    bonusAmount: Decimal | null
+    changedAt: Date | null
+    changeBy: string | null
+  }
+
+  export type TierHistoryMaxAggregateOutputType = {
+    id: bigint | null
+    uid: string | null
+    userId: bigint | null
+    fromTierId: bigint | null
+    toTierId: bigint | null
+    changeType: $Enums.TierChangeType | null
+    reason: string | null
+    rollingAmountSnap: Decimal | null
+    bonusAmount: Decimal | null
+    changedAt: Date | null
+    changeBy: string | null
+  }
+
+  export type TierHistoryCountAggregateOutputType = {
+    id: number
+    uid: number
+    userId: number
+    fromTierId: number
+    toTierId: number
+    changeType: number
+    reason: number
+    rollingAmountSnap: number
+    bonusAmount: number
+    changedAt: number
+    changeBy: number
+    _all: number
+  }
+
+
+  export type TierHistoryAvgAggregateInputType = {
+    id?: true
+    userId?: true
+    fromTierId?: true
+    toTierId?: true
+    rollingAmountSnap?: true
+    bonusAmount?: true
+  }
+
+  export type TierHistorySumAggregateInputType = {
+    id?: true
+    userId?: true
+    fromTierId?: true
+    toTierId?: true
+    rollingAmountSnap?: true
+    bonusAmount?: true
+  }
+
+  export type TierHistoryMinAggregateInputType = {
+    id?: true
+    uid?: true
+    userId?: true
+    fromTierId?: true
+    toTierId?: true
+    changeType?: true
+    reason?: true
+    rollingAmountSnap?: true
+    bonusAmount?: true
+    changedAt?: true
+    changeBy?: true
+  }
+
+  export type TierHistoryMaxAggregateInputType = {
+    id?: true
+    uid?: true
+    userId?: true
+    fromTierId?: true
+    toTierId?: true
+    changeType?: true
+    reason?: true
+    rollingAmountSnap?: true
+    bonusAmount?: true
+    changedAt?: true
+    changeBy?: true
+  }
+
+  export type TierHistoryCountAggregateInputType = {
+    id?: true
+    uid?: true
+    userId?: true
+    fromTierId?: true
+    toTierId?: true
+    changeType?: true
+    reason?: true
+    rollingAmountSnap?: true
+    bonusAmount?: true
+    changedAt?: true
+    changeBy?: true
+    _all?: true
+  }
+
+  export type TierHistoryAggregateArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Filter which TierHistory to aggregate.
+     */
+    where?: TierHistoryWhereInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/sorting Sorting Docs}
+     * 
+     * Determine the order of TierHistories to fetch.
+     */
+    orderBy?: TierHistoryOrderByWithRelationInput | TierHistoryOrderByWithRelationInput[]
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination#cursor-based-pagination Cursor Docs}
+     * 
+     * Sets the start position
+     */
+    cursor?: TierHistoryWhereUniqueInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Take `±n` TierHistories from the position of the cursor.
+     */
+    take?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Skip the first `n` TierHistories.
+     */
+    skip?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
+     * 
+     * Count returned TierHistories
+    **/
+    _count?: true | TierHistoryCountAggregateInputType
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
+     * 
+     * Select which fields to average
+    **/
+    _avg?: TierHistoryAvgAggregateInputType
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
+     * 
+     * Select which fields to sum
+    **/
+    _sum?: TierHistorySumAggregateInputType
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
+     * 
+     * Select which fields to find the minimum value
+    **/
+    _min?: TierHistoryMinAggregateInputType
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
+     * 
+     * Select which fields to find the maximum value
+    **/
+    _max?: TierHistoryMaxAggregateInputType
+  }
+
+  export type GetTierHistoryAggregateType<T extends TierHistoryAggregateArgs> = {
+        [P in keyof T & keyof AggregateTierHistory]: P extends '_count' | 'count'
+      ? T[P] extends true
+        ? number
+        : GetScalarType<T[P], AggregateTierHistory[P]>
+      : GetScalarType<T[P], AggregateTierHistory[P]>
+  }
+
+
+
+
+  export type TierHistoryGroupByArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    where?: TierHistoryWhereInput
+    orderBy?: TierHistoryOrderByWithAggregationInput | TierHistoryOrderByWithAggregationInput[]
+    by: TierHistoryScalarFieldEnum[] | TierHistoryScalarFieldEnum
+    having?: TierHistoryScalarWhereWithAggregatesInput
+    take?: number
+    skip?: number
+    _count?: TierHistoryCountAggregateInputType | true
+    _avg?: TierHistoryAvgAggregateInputType
+    _sum?: TierHistorySumAggregateInputType
+    _min?: TierHistoryMinAggregateInputType
+    _max?: TierHistoryMaxAggregateInputType
+  }
+
+  export type TierHistoryGroupByOutputType = {
+    id: bigint
+    uid: string
+    userId: bigint
+    fromTierId: bigint | null
+    toTierId: bigint
+    changeType: $Enums.TierChangeType
+    reason: string | null
+    rollingAmountSnap: Decimal
+    bonusAmount: Decimal | null
+    changedAt: Date
+    changeBy: string | null
+    _count: TierHistoryCountAggregateOutputType | null
+    _avg: TierHistoryAvgAggregateOutputType | null
+    _sum: TierHistorySumAggregateOutputType | null
+    _min: TierHistoryMinAggregateOutputType | null
+    _max: TierHistoryMaxAggregateOutputType | null
+  }
+
+  type GetTierHistoryGroupByPayload<T extends TierHistoryGroupByArgs> = Prisma.PrismaPromise<
+    Array<
+      PickEnumerable<TierHistoryGroupByOutputType, T['by']> &
+        {
+          [P in ((keyof T) & (keyof TierHistoryGroupByOutputType))]: P extends '_count'
+            ? T[P] extends boolean
+              ? number
+              : GetScalarType<T[P], TierHistoryGroupByOutputType[P]>
+            : GetScalarType<T[P], TierHistoryGroupByOutputType[P]>
+        }
+      >
+    >
+
+
+  export type TierHistorySelect<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetSelect<{
+    id?: boolean
+    uid?: boolean
+    userId?: boolean
+    fromTierId?: boolean
+    toTierId?: boolean
+    changeType?: boolean
+    reason?: boolean
+    rollingAmountSnap?: boolean
+    bonusAmount?: boolean
+    changedAt?: boolean
+    changeBy?: boolean
+    user?: boolean | UserDefaultArgs<ExtArgs>
+    fromTier?: boolean | TierHistory$fromTierArgs<ExtArgs>
+    toTier?: boolean | TierDefaultArgs<ExtArgs>
+  }, ExtArgs["result"]["tierHistory"]>
+
+  export type TierHistorySelectCreateManyAndReturn<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetSelect<{
+    id?: boolean
+    uid?: boolean
+    userId?: boolean
+    fromTierId?: boolean
+    toTierId?: boolean
+    changeType?: boolean
+    reason?: boolean
+    rollingAmountSnap?: boolean
+    bonusAmount?: boolean
+    changedAt?: boolean
+    changeBy?: boolean
+    user?: boolean | UserDefaultArgs<ExtArgs>
+    fromTier?: boolean | TierHistory$fromTierArgs<ExtArgs>
+    toTier?: boolean | TierDefaultArgs<ExtArgs>
+  }, ExtArgs["result"]["tierHistory"]>
+
+  export type TierHistorySelectUpdateManyAndReturn<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetSelect<{
+    id?: boolean
+    uid?: boolean
+    userId?: boolean
+    fromTierId?: boolean
+    toTierId?: boolean
+    changeType?: boolean
+    reason?: boolean
+    rollingAmountSnap?: boolean
+    bonusAmount?: boolean
+    changedAt?: boolean
+    changeBy?: boolean
+    user?: boolean | UserDefaultArgs<ExtArgs>
+    fromTier?: boolean | TierHistory$fromTierArgs<ExtArgs>
+    toTier?: boolean | TierDefaultArgs<ExtArgs>
+  }, ExtArgs["result"]["tierHistory"]>
+
+  export type TierHistorySelectScalar = {
+    id?: boolean
+    uid?: boolean
+    userId?: boolean
+    fromTierId?: boolean
+    toTierId?: boolean
+    changeType?: boolean
+    reason?: boolean
+    rollingAmountSnap?: boolean
+    bonusAmount?: boolean
+    changedAt?: boolean
+    changeBy?: boolean
+  }
+
+  export type TierHistoryOmit<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetOmit<"id" | "uid" | "userId" | "fromTierId" | "toTierId" | "changeType" | "reason" | "rollingAmountSnap" | "bonusAmount" | "changedAt" | "changeBy", ExtArgs["result"]["tierHistory"]>
+  export type TierHistoryInclude<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    user?: boolean | UserDefaultArgs<ExtArgs>
+    fromTier?: boolean | TierHistory$fromTierArgs<ExtArgs>
+    toTier?: boolean | TierDefaultArgs<ExtArgs>
+  }
+  export type TierHistoryIncludeCreateManyAndReturn<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    user?: boolean | UserDefaultArgs<ExtArgs>
+    fromTier?: boolean | TierHistory$fromTierArgs<ExtArgs>
+    toTier?: boolean | TierDefaultArgs<ExtArgs>
+  }
+  export type TierHistoryIncludeUpdateManyAndReturn<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    user?: boolean | UserDefaultArgs<ExtArgs>
+    fromTier?: boolean | TierHistory$fromTierArgs<ExtArgs>
+    toTier?: boolean | TierDefaultArgs<ExtArgs>
+  }
+
+  export type $TierHistoryPayload<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    name: "TierHistory"
+    objects: {
+      user: Prisma.$UserPayload<ExtArgs>
+      fromTier: Prisma.$TierPayload<ExtArgs> | null
+      toTier: Prisma.$TierPayload<ExtArgs>
+    }
+    scalars: $Extensions.GetPayloadResult<{
+      id: bigint
+      uid: string
+      userId: bigint
+      fromTierId: bigint | null
+      toTierId: bigint
+      changeType: $Enums.TierChangeType
+      reason: string | null
+      rollingAmountSnap: Prisma.Decimal
+      bonusAmount: Prisma.Decimal | null
+      changedAt: Date
+      changeBy: string | null
+    }, ExtArgs["result"]["tierHistory"]>
+    composites: {}
+  }
+
+  type TierHistoryGetPayload<S extends boolean | null | undefined | TierHistoryDefaultArgs> = $Result.GetResult<Prisma.$TierHistoryPayload, S>
+
+  type TierHistoryCountArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> =
+    Omit<TierHistoryFindManyArgs, 'select' | 'include' | 'distinct' | 'omit'> & {
+      select?: TierHistoryCountAggregateInputType | true
+    }
+
+  export interface TierHistoryDelegate<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs, GlobalOmitOptions = {}> {
+    [K: symbol]: { types: Prisma.TypeMap<ExtArgs>['model']['TierHistory'], meta: { name: 'TierHistory' } }
+    /**
+     * Find zero or one TierHistory that matches the filter.
+     * @param {TierHistoryFindUniqueArgs} args - Arguments to find a TierHistory
+     * @example
+     * // Get one TierHistory
+     * const tierHistory = await prisma.tierHistory.findUnique({
+     *   where: {
+     *     // ... provide filter here
+     *   }
+     * })
+     */
+    findUnique<T extends TierHistoryFindUniqueArgs>(args: SelectSubset<T, TierHistoryFindUniqueArgs<ExtArgs>>): Prisma__TierHistoryClient<$Result.GetResult<Prisma.$TierHistoryPayload<ExtArgs>, T, "findUnique", GlobalOmitOptions> | null, null, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Find one TierHistory that matches the filter or throw an error with `error.code='P2025'`
+     * if no matches were found.
+     * @param {TierHistoryFindUniqueOrThrowArgs} args - Arguments to find a TierHistory
+     * @example
+     * // Get one TierHistory
+     * const tierHistory = await prisma.tierHistory.findUniqueOrThrow({
+     *   where: {
+     *     // ... provide filter here
+     *   }
+     * })
+     */
+    findUniqueOrThrow<T extends TierHistoryFindUniqueOrThrowArgs>(args: SelectSubset<T, TierHistoryFindUniqueOrThrowArgs<ExtArgs>>): Prisma__TierHistoryClient<$Result.GetResult<Prisma.$TierHistoryPayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Find the first TierHistory that matches the filter.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {TierHistoryFindFirstArgs} args - Arguments to find a TierHistory
+     * @example
+     * // Get one TierHistory
+     * const tierHistory = await prisma.tierHistory.findFirst({
+     *   where: {
+     *     // ... provide filter here
+     *   }
+     * })
+     */
+    findFirst<T extends TierHistoryFindFirstArgs>(args?: SelectSubset<T, TierHistoryFindFirstArgs<ExtArgs>>): Prisma__TierHistoryClient<$Result.GetResult<Prisma.$TierHistoryPayload<ExtArgs>, T, "findFirst", GlobalOmitOptions> | null, null, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Find the first TierHistory that matches the filter or
+     * throw `PrismaKnownClientError` with `P2025` code if no matches were found.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {TierHistoryFindFirstOrThrowArgs} args - Arguments to find a TierHistory
+     * @example
+     * // Get one TierHistory
+     * const tierHistory = await prisma.tierHistory.findFirstOrThrow({
+     *   where: {
+     *     // ... provide filter here
+     *   }
+     * })
+     */
+    findFirstOrThrow<T extends TierHistoryFindFirstOrThrowArgs>(args?: SelectSubset<T, TierHistoryFindFirstOrThrowArgs<ExtArgs>>): Prisma__TierHistoryClient<$Result.GetResult<Prisma.$TierHistoryPayload<ExtArgs>, T, "findFirstOrThrow", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Find zero or more TierHistories that matches the filter.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {TierHistoryFindManyArgs} args - Arguments to filter and select certain fields only.
+     * @example
+     * // Get all TierHistories
+     * const tierHistories = await prisma.tierHistory.findMany()
+     * 
+     * // Get first 10 TierHistories
+     * const tierHistories = await prisma.tierHistory.findMany({ take: 10 })
+     * 
+     * // Only select the `id`
+     * const tierHistoryWithIdOnly = await prisma.tierHistory.findMany({ select: { id: true } })
+     * 
+     */
+    findMany<T extends TierHistoryFindManyArgs>(args?: SelectSubset<T, TierHistoryFindManyArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$TierHistoryPayload<ExtArgs>, T, "findMany", GlobalOmitOptions>>
+
+    /**
+     * Create a TierHistory.
+     * @param {TierHistoryCreateArgs} args - Arguments to create a TierHistory.
+     * @example
+     * // Create one TierHistory
+     * const TierHistory = await prisma.tierHistory.create({
+     *   data: {
+     *     // ... data to create a TierHistory
+     *   }
+     * })
+     * 
+     */
+    create<T extends TierHistoryCreateArgs>(args: SelectSubset<T, TierHistoryCreateArgs<ExtArgs>>): Prisma__TierHistoryClient<$Result.GetResult<Prisma.$TierHistoryPayload<ExtArgs>, T, "create", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Create many TierHistories.
+     * @param {TierHistoryCreateManyArgs} args - Arguments to create many TierHistories.
+     * @example
+     * // Create many TierHistories
+     * const tierHistory = await prisma.tierHistory.createMany({
+     *   data: [
+     *     // ... provide data here
+     *   ]
+     * })
+     *     
+     */
+    createMany<T extends TierHistoryCreateManyArgs>(args?: SelectSubset<T, TierHistoryCreateManyArgs<ExtArgs>>): Prisma.PrismaPromise<BatchPayload>
+
+    /**
+     * Create many TierHistories and returns the data saved in the database.
+     * @param {TierHistoryCreateManyAndReturnArgs} args - Arguments to create many TierHistories.
+     * @example
+     * // Create many TierHistories
+     * const tierHistory = await prisma.tierHistory.createManyAndReturn({
+     *   data: [
+     *     // ... provide data here
+     *   ]
+     * })
+     * 
+     * // Create many TierHistories and only return the `id`
+     * const tierHistoryWithIdOnly = await prisma.tierHistory.createManyAndReturn({
+     *   select: { id: true },
+     *   data: [
+     *     // ... provide data here
+     *   ]
+     * })
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * 
+     */
+    createManyAndReturn<T extends TierHistoryCreateManyAndReturnArgs>(args?: SelectSubset<T, TierHistoryCreateManyAndReturnArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$TierHistoryPayload<ExtArgs>, T, "createManyAndReturn", GlobalOmitOptions>>
+
+    /**
+     * Delete a TierHistory.
+     * @param {TierHistoryDeleteArgs} args - Arguments to delete one TierHistory.
+     * @example
+     * // Delete one TierHistory
+     * const TierHistory = await prisma.tierHistory.delete({
+     *   where: {
+     *     // ... filter to delete one TierHistory
+     *   }
+     * })
+     * 
+     */
+    delete<T extends TierHistoryDeleteArgs>(args: SelectSubset<T, TierHistoryDeleteArgs<ExtArgs>>): Prisma__TierHistoryClient<$Result.GetResult<Prisma.$TierHistoryPayload<ExtArgs>, T, "delete", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Update one TierHistory.
+     * @param {TierHistoryUpdateArgs} args - Arguments to update one TierHistory.
+     * @example
+     * // Update one TierHistory
+     * const tierHistory = await prisma.tierHistory.update({
+     *   where: {
+     *     // ... provide filter here
+     *   },
+     *   data: {
+     *     // ... provide data here
+     *   }
+     * })
+     * 
+     */
+    update<T extends TierHistoryUpdateArgs>(args: SelectSubset<T, TierHistoryUpdateArgs<ExtArgs>>): Prisma__TierHistoryClient<$Result.GetResult<Prisma.$TierHistoryPayload<ExtArgs>, T, "update", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Delete zero or more TierHistories.
+     * @param {TierHistoryDeleteManyArgs} args - Arguments to filter TierHistories to delete.
+     * @example
+     * // Delete a few TierHistories
+     * const { count } = await prisma.tierHistory.deleteMany({
+     *   where: {
+     *     // ... provide filter here
+     *   }
+     * })
+     * 
+     */
+    deleteMany<T extends TierHistoryDeleteManyArgs>(args?: SelectSubset<T, TierHistoryDeleteManyArgs<ExtArgs>>): Prisma.PrismaPromise<BatchPayload>
+
+    /**
+     * Update zero or more TierHistories.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {TierHistoryUpdateManyArgs} args - Arguments to update one or more rows.
+     * @example
+     * // Update many TierHistories
+     * const tierHistory = await prisma.tierHistory.updateMany({
+     *   where: {
+     *     // ... provide filter here
+     *   },
+     *   data: {
+     *     // ... provide data here
+     *   }
+     * })
+     * 
+     */
+    updateMany<T extends TierHistoryUpdateManyArgs>(args: SelectSubset<T, TierHistoryUpdateManyArgs<ExtArgs>>): Prisma.PrismaPromise<BatchPayload>
+
+    /**
+     * Update zero or more TierHistories and returns the data updated in the database.
+     * @param {TierHistoryUpdateManyAndReturnArgs} args - Arguments to update many TierHistories.
+     * @example
+     * // Update many TierHistories
+     * const tierHistory = await prisma.tierHistory.updateManyAndReturn({
+     *   where: {
+     *     // ... provide filter here
+     *   },
+     *   data: [
+     *     // ... provide data here
+     *   ]
+     * })
+     * 
+     * // Update zero or more TierHistories and only return the `id`
+     * const tierHistoryWithIdOnly = await prisma.tierHistory.updateManyAndReturn({
+     *   select: { id: true },
+     *   where: {
+     *     // ... provide filter here
+     *   },
+     *   data: [
+     *     // ... provide data here
+     *   ]
+     * })
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * 
+     */
+    updateManyAndReturn<T extends TierHistoryUpdateManyAndReturnArgs>(args: SelectSubset<T, TierHistoryUpdateManyAndReturnArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$TierHistoryPayload<ExtArgs>, T, "updateManyAndReturn", GlobalOmitOptions>>
+
+    /**
+     * Create or update one TierHistory.
+     * @param {TierHistoryUpsertArgs} args - Arguments to update or create a TierHistory.
+     * @example
+     * // Update or create a TierHistory
+     * const tierHistory = await prisma.tierHistory.upsert({
+     *   create: {
+     *     // ... data to create a TierHistory
+     *   },
+     *   update: {
+     *     // ... in case it already exists, update
+     *   },
+     *   where: {
+     *     // ... the filter for the TierHistory we want to update
+     *   }
+     * })
+     */
+    upsert<T extends TierHistoryUpsertArgs>(args: SelectSubset<T, TierHistoryUpsertArgs<ExtArgs>>): Prisma__TierHistoryClient<$Result.GetResult<Prisma.$TierHistoryPayload<ExtArgs>, T, "upsert", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
+
+
+    /**
+     * Count the number of TierHistories.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {TierHistoryCountArgs} args - Arguments to filter TierHistories to count.
+     * @example
+     * // Count the number of TierHistories
+     * const count = await prisma.tierHistory.count({
+     *   where: {
+     *     // ... the filter for the TierHistories we want to count
+     *   }
+     * })
+    **/
+    count<T extends TierHistoryCountArgs>(
+      args?: Subset<T, TierHistoryCountArgs>,
+    ): Prisma.PrismaPromise<
+      T extends $Utils.Record<'select', any>
+        ? T['select'] extends true
+          ? number
+          : GetScalarType<T['select'], TierHistoryCountAggregateOutputType>
+        : number
+    >
+
+    /**
+     * Allows you to perform aggregations operations on a TierHistory.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {TierHistoryAggregateArgs} args - Select which aggregations you would like to apply and on what fields.
+     * @example
+     * // Ordered by age ascending
+     * // Where email contains prisma.io
+     * // Limited to the 10 users
+     * const aggregations = await prisma.user.aggregate({
+     *   _avg: {
+     *     age: true,
+     *   },
+     *   where: {
+     *     email: {
+     *       contains: "prisma.io",
+     *     },
+     *   },
+     *   orderBy: {
+     *     age: "asc",
+     *   },
+     *   take: 10,
+     * })
+    **/
+    aggregate<T extends TierHistoryAggregateArgs>(args: Subset<T, TierHistoryAggregateArgs>): Prisma.PrismaPromise<GetTierHistoryAggregateType<T>>
+
+    /**
+     * Group by TierHistory.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {TierHistoryGroupByArgs} args - Group by arguments.
+     * @example
+     * // Group by city, order by createdAt, get count
+     * const result = await prisma.user.groupBy({
+     *   by: ['city', 'createdAt'],
+     *   orderBy: {
+     *     createdAt: true
+     *   },
+     *   _count: {
+     *     _all: true
+     *   },
+     * })
+     * 
+    **/
+    groupBy<
+      T extends TierHistoryGroupByArgs,
+      HasSelectOrTake extends Or<
+        Extends<'skip', Keys<T>>,
+        Extends<'take', Keys<T>>
+      >,
+      OrderByArg extends True extends HasSelectOrTake
+        ? { orderBy: TierHistoryGroupByArgs['orderBy'] }
+        : { orderBy?: TierHistoryGroupByArgs['orderBy'] },
+      OrderFields extends ExcludeUnderscoreKeys<Keys<MaybeTupleToUnion<T['orderBy']>>>,
+      ByFields extends MaybeTupleToUnion<T['by']>,
+      ByValid extends Has<ByFields, OrderFields>,
+      HavingFields extends GetHavingFields<T['having']>,
+      HavingValid extends Has<ByFields, HavingFields>,
+      ByEmpty extends T['by'] extends never[] ? True : False,
+      InputErrors extends ByEmpty extends True
+      ? `Error: "by" must not be empty.`
+      : HavingValid extends False
+      ? {
+          [P in HavingFields]: P extends ByFields
+            ? never
+            : P extends string
+            ? `Error: Field "${P}" used in "having" needs to be provided in "by".`
+            : [
+                Error,
+                'Field ',
+                P,
+                ` in "having" needs to be provided in "by"`,
+              ]
+        }[HavingFields]
+      : 'take' extends Keys<T>
+      ? 'orderBy' extends Keys<T>
+        ? ByValid extends True
+          ? {}
+          : {
+              [P in OrderFields]: P extends ByFields
+                ? never
+                : `Error: Field "${P}" in "orderBy" needs to be provided in "by"`
+            }[OrderFields]
+        : 'Error: If you provide "take", you also need to provide "orderBy"'
+      : 'skip' extends Keys<T>
+      ? 'orderBy' extends Keys<T>
+        ? ByValid extends True
+          ? {}
+          : {
+              [P in OrderFields]: P extends ByFields
+                ? never
+                : `Error: Field "${P}" in "orderBy" needs to be provided in "by"`
+            }[OrderFields]
+        : 'Error: If you provide "skip", you also need to provide "orderBy"'
+      : ByValid extends True
+      ? {}
+      : {
+          [P in OrderFields]: P extends ByFields
+            ? never
+            : `Error: Field "${P}" in "orderBy" needs to be provided in "by"`
+        }[OrderFields]
+    >(args: SubsetIntersection<T, TierHistoryGroupByArgs, OrderByArg> & InputErrors): {} extends InputErrors ? GetTierHistoryGroupByPayload<T> : Prisma.PrismaPromise<InputErrors>
+  /**
+   * Fields of the TierHistory model
+   */
+  readonly fields: TierHistoryFieldRefs;
+  }
+
+  /**
+   * The delegate class that acts as a "Promise-like" for TierHistory.
+   * Why is this prefixed with `Prisma__`?
+   * Because we want to prevent naming conflicts as mentioned in
+   * https://github.com/prisma/prisma-client-js/issues/707
+   */
+  export interface Prisma__TierHistoryClient<T, Null = never, ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs, GlobalOmitOptions = {}> extends Prisma.PrismaPromise<T> {
+    readonly [Symbol.toStringTag]: "PrismaPromise"
+    user<T extends UserDefaultArgs<ExtArgs> = {}>(args?: Subset<T, UserDefaultArgs<ExtArgs>>): Prisma__UserClient<$Result.GetResult<Prisma.$UserPayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions> | Null, Null, ExtArgs, GlobalOmitOptions>
+    fromTier<T extends TierHistory$fromTierArgs<ExtArgs> = {}>(args?: Subset<T, TierHistory$fromTierArgs<ExtArgs>>): Prisma__TierClient<$Result.GetResult<Prisma.$TierPayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions> | null, null, ExtArgs, GlobalOmitOptions>
+    toTier<T extends TierDefaultArgs<ExtArgs> = {}>(args?: Subset<T, TierDefaultArgs<ExtArgs>>): Prisma__TierClient<$Result.GetResult<Prisma.$TierPayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions> | Null, Null, ExtArgs, GlobalOmitOptions>
+    /**
+     * Attaches callbacks for the resolution and/or rejection of the Promise.
+     * @param onfulfilled The callback to execute when the Promise is resolved.
+     * @param onrejected The callback to execute when the Promise is rejected.
+     * @returns A Promise for the completion of which ever callback is executed.
+     */
+    then<TResult1 = T, TResult2 = never>(onfulfilled?: ((value: T) => TResult1 | PromiseLike<TResult1>) | undefined | null, onrejected?: ((reason: any) => TResult2 | PromiseLike<TResult2>) | undefined | null): $Utils.JsPromise<TResult1 | TResult2>
+    /**
+     * Attaches a callback for only the rejection of the Promise.
+     * @param onrejected The callback to execute when the Promise is rejected.
+     * @returns A Promise for the completion of the callback.
+     */
+    catch<TResult = never>(onrejected?: ((reason: any) => TResult | PromiseLike<TResult>) | undefined | null): $Utils.JsPromise<T | TResult>
+    /**
+     * Attaches a callback that is invoked when the Promise is settled (fulfilled or rejected). The
+     * resolved value cannot be modified from the callback.
+     * @param onfinally The callback to execute when the Promise is settled (fulfilled or rejected).
+     * @returns A Promise for the completion of the callback.
+     */
+    finally(onfinally?: (() => void) | undefined | null): $Utils.JsPromise<T>
+  }
+
+
+
+
+  /**
+   * Fields of the TierHistory model
+   */
+  interface TierHistoryFieldRefs {
+    readonly id: FieldRef<"TierHistory", 'BigInt'>
+    readonly uid: FieldRef<"TierHistory", 'String'>
+    readonly userId: FieldRef<"TierHistory", 'BigInt'>
+    readonly fromTierId: FieldRef<"TierHistory", 'BigInt'>
+    readonly toTierId: FieldRef<"TierHistory", 'BigInt'>
+    readonly changeType: FieldRef<"TierHistory", 'TierChangeType'>
+    readonly reason: FieldRef<"TierHistory", 'String'>
+    readonly rollingAmountSnap: FieldRef<"TierHistory", 'Decimal'>
+    readonly bonusAmount: FieldRef<"TierHistory", 'Decimal'>
+    readonly changedAt: FieldRef<"TierHistory", 'DateTime'>
+    readonly changeBy: FieldRef<"TierHistory", 'String'>
+  }
+    
+
+  // Custom InputTypes
+  /**
+   * TierHistory findUnique
+   */
+  export type TierHistoryFindUniqueArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the TierHistory
+     */
+    select?: TierHistorySelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the TierHistory
+     */
+    omit?: TierHistoryOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: TierHistoryInclude<ExtArgs> | null
+    /**
+     * Filter, which TierHistory to fetch.
+     */
+    where: TierHistoryWhereUniqueInput
+  }
+
+  /**
+   * TierHistory findUniqueOrThrow
+   */
+  export type TierHistoryFindUniqueOrThrowArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the TierHistory
+     */
+    select?: TierHistorySelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the TierHistory
+     */
+    omit?: TierHistoryOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: TierHistoryInclude<ExtArgs> | null
+    /**
+     * Filter, which TierHistory to fetch.
+     */
+    where: TierHistoryWhereUniqueInput
+  }
+
+  /**
+   * TierHistory findFirst
+   */
+  export type TierHistoryFindFirstArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the TierHistory
+     */
+    select?: TierHistorySelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the TierHistory
+     */
+    omit?: TierHistoryOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: TierHistoryInclude<ExtArgs> | null
+    /**
+     * Filter, which TierHistory to fetch.
+     */
+    where?: TierHistoryWhereInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/sorting Sorting Docs}
+     * 
+     * Determine the order of TierHistories to fetch.
+     */
+    orderBy?: TierHistoryOrderByWithRelationInput | TierHistoryOrderByWithRelationInput[]
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination#cursor-based-pagination Cursor Docs}
+     * 
+     * Sets the position for searching for TierHistories.
+     */
+    cursor?: TierHistoryWhereUniqueInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Take `±n` TierHistories from the position of the cursor.
+     */
+    take?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Skip the first `n` TierHistories.
+     */
+    skip?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/distinct Distinct Docs}
+     * 
+     * Filter by unique combinations of TierHistories.
+     */
+    distinct?: TierHistoryScalarFieldEnum | TierHistoryScalarFieldEnum[]
+  }
+
+  /**
+   * TierHistory findFirstOrThrow
+   */
+  export type TierHistoryFindFirstOrThrowArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the TierHistory
+     */
+    select?: TierHistorySelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the TierHistory
+     */
+    omit?: TierHistoryOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: TierHistoryInclude<ExtArgs> | null
+    /**
+     * Filter, which TierHistory to fetch.
+     */
+    where?: TierHistoryWhereInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/sorting Sorting Docs}
+     * 
+     * Determine the order of TierHistories to fetch.
+     */
+    orderBy?: TierHistoryOrderByWithRelationInput | TierHistoryOrderByWithRelationInput[]
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination#cursor-based-pagination Cursor Docs}
+     * 
+     * Sets the position for searching for TierHistories.
+     */
+    cursor?: TierHistoryWhereUniqueInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Take `±n` TierHistories from the position of the cursor.
+     */
+    take?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Skip the first `n` TierHistories.
+     */
+    skip?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/distinct Distinct Docs}
+     * 
+     * Filter by unique combinations of TierHistories.
+     */
+    distinct?: TierHistoryScalarFieldEnum | TierHistoryScalarFieldEnum[]
+  }
+
+  /**
+   * TierHistory findMany
+   */
+  export type TierHistoryFindManyArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the TierHistory
+     */
+    select?: TierHistorySelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the TierHistory
+     */
+    omit?: TierHistoryOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: TierHistoryInclude<ExtArgs> | null
+    /**
+     * Filter, which TierHistories to fetch.
+     */
+    where?: TierHistoryWhereInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/sorting Sorting Docs}
+     * 
+     * Determine the order of TierHistories to fetch.
+     */
+    orderBy?: TierHistoryOrderByWithRelationInput | TierHistoryOrderByWithRelationInput[]
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination#cursor-based-pagination Cursor Docs}
+     * 
+     * Sets the position for listing TierHistories.
+     */
+    cursor?: TierHistoryWhereUniqueInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Take `±n` TierHistories from the position of the cursor.
+     */
+    take?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Skip the first `n` TierHistories.
+     */
+    skip?: number
+    distinct?: TierHistoryScalarFieldEnum | TierHistoryScalarFieldEnum[]
+  }
+
+  /**
+   * TierHistory create
+   */
+  export type TierHistoryCreateArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the TierHistory
+     */
+    select?: TierHistorySelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the TierHistory
+     */
+    omit?: TierHistoryOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: TierHistoryInclude<ExtArgs> | null
+    /**
+     * The data needed to create a TierHistory.
+     */
+    data: XOR<TierHistoryCreateInput, TierHistoryUncheckedCreateInput>
+  }
+
+  /**
+   * TierHistory createMany
+   */
+  export type TierHistoryCreateManyArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * The data used to create many TierHistories.
+     */
+    data: TierHistoryCreateManyInput | TierHistoryCreateManyInput[]
+    skipDuplicates?: boolean
+  }
+
+  /**
+   * TierHistory createManyAndReturn
+   */
+  export type TierHistoryCreateManyAndReturnArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the TierHistory
+     */
+    select?: TierHistorySelectCreateManyAndReturn<ExtArgs> | null
+    /**
+     * Omit specific fields from the TierHistory
+     */
+    omit?: TierHistoryOmit<ExtArgs> | null
+    /**
+     * The data used to create many TierHistories.
+     */
+    data: TierHistoryCreateManyInput | TierHistoryCreateManyInput[]
+    skipDuplicates?: boolean
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: TierHistoryIncludeCreateManyAndReturn<ExtArgs> | null
+  }
+
+  /**
+   * TierHistory update
+   */
+  export type TierHistoryUpdateArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the TierHistory
+     */
+    select?: TierHistorySelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the TierHistory
+     */
+    omit?: TierHistoryOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: TierHistoryInclude<ExtArgs> | null
+    /**
+     * The data needed to update a TierHistory.
+     */
+    data: XOR<TierHistoryUpdateInput, TierHistoryUncheckedUpdateInput>
+    /**
+     * Choose, which TierHistory to update.
+     */
+    where: TierHistoryWhereUniqueInput
+  }
+
+  /**
+   * TierHistory updateMany
+   */
+  export type TierHistoryUpdateManyArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * The data used to update TierHistories.
+     */
+    data: XOR<TierHistoryUpdateManyMutationInput, TierHistoryUncheckedUpdateManyInput>
+    /**
+     * Filter which TierHistories to update
+     */
+    where?: TierHistoryWhereInput
+    /**
+     * Limit how many TierHistories to update.
+     */
+    limit?: number
+  }
+
+  /**
+   * TierHistory updateManyAndReturn
+   */
+  export type TierHistoryUpdateManyAndReturnArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the TierHistory
+     */
+    select?: TierHistorySelectUpdateManyAndReturn<ExtArgs> | null
+    /**
+     * Omit specific fields from the TierHistory
+     */
+    omit?: TierHistoryOmit<ExtArgs> | null
+    /**
+     * The data used to update TierHistories.
+     */
+    data: XOR<TierHistoryUpdateManyMutationInput, TierHistoryUncheckedUpdateManyInput>
+    /**
+     * Filter which TierHistories to update
+     */
+    where?: TierHistoryWhereInput
+    /**
+     * Limit how many TierHistories to update.
+     */
+    limit?: number
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: TierHistoryIncludeUpdateManyAndReturn<ExtArgs> | null
+  }
+
+  /**
+   * TierHistory upsert
+   */
+  export type TierHistoryUpsertArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the TierHistory
+     */
+    select?: TierHistorySelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the TierHistory
+     */
+    omit?: TierHistoryOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: TierHistoryInclude<ExtArgs> | null
+    /**
+     * The filter to search for the TierHistory to update in case it exists.
+     */
+    where: TierHistoryWhereUniqueInput
+    /**
+     * In case the TierHistory found by the `where` argument doesn't exist, create a new TierHistory with this data.
+     */
+    create: XOR<TierHistoryCreateInput, TierHistoryUncheckedCreateInput>
+    /**
+     * In case the TierHistory was found with the provided `where` argument, update it with this data.
+     */
+    update: XOR<TierHistoryUpdateInput, TierHistoryUncheckedUpdateInput>
+  }
+
+  /**
+   * TierHistory delete
+   */
+  export type TierHistoryDeleteArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the TierHistory
+     */
+    select?: TierHistorySelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the TierHistory
+     */
+    omit?: TierHistoryOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: TierHistoryInclude<ExtArgs> | null
+    /**
+     * Filter which TierHistory to delete.
+     */
+    where: TierHistoryWhereUniqueInput
+  }
+
+  /**
+   * TierHistory deleteMany
+   */
+  export type TierHistoryDeleteManyArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Filter which TierHistories to delete
+     */
+    where?: TierHistoryWhereInput
+    /**
+     * Limit how many TierHistories to delete.
+     */
+    limit?: number
+  }
+
+  /**
+   * TierHistory.fromTier
+   */
+  export type TierHistory$fromTierArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the Tier
+     */
+    select?: TierSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the Tier
+     */
+    omit?: TierOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: TierInclude<ExtArgs> | null
+    where?: TierWhereInput
+  }
+
+  /**
+   * TierHistory without action
+   */
+  export type TierHistoryDefaultArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the TierHistory
+     */
+    select?: TierHistorySelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the TierHistory
+     */
+    omit?: TierHistoryOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: TierHistoryInclude<ExtArgs> | null
+  }
+
+
+  /**
    * Enums
    */
 
@@ -54617,6 +59880,66 @@ export namespace Prisma {
   export type UserSessionScalarFieldEnum = (typeof UserSessionScalarFieldEnum)[keyof typeof UserSessionScalarFieldEnum]
 
 
+  export const TierScalarFieldEnum: {
+    id: 'id',
+    uid: 'uid',
+    priority: 'priority',
+    code: 'code',
+    requirementUsd: 'requirementUsd',
+    levelUpBonus: 'levelUpBonus',
+    compRate: 'compRate',
+    benefits: 'benefits',
+    createdAt: 'createdAt',
+    updatedAt: 'updatedAt'
+  };
+
+  export type TierScalarFieldEnum = (typeof TierScalarFieldEnum)[keyof typeof TierScalarFieldEnum]
+
+
+  export const TierTranslationScalarFieldEnum: {
+    id: 'id',
+    uid: 'uid',
+    tierId: 'tierId',
+    language: 'language',
+    name: 'name'
+  };
+
+  export type TierTranslationScalarFieldEnum = (typeof TierTranslationScalarFieldEnum)[keyof typeof TierTranslationScalarFieldEnum]
+
+
+  export const UserTierScalarFieldEnum: {
+    id: 'id',
+    uid: 'uid',
+    userId: 'userId',
+    tierId: 'tierId',
+    cumulativeRollingUsd: 'cumulativeRollingUsd',
+    highestPromotedPriority: 'highestPromotedPriority',
+    isManualLock: 'isManualLock',
+    lastPromotedAt: 'lastPromotedAt',
+    createdAt: 'createdAt',
+    updatedAt: 'updatedAt'
+  };
+
+  export type UserTierScalarFieldEnum = (typeof UserTierScalarFieldEnum)[keyof typeof UserTierScalarFieldEnum]
+
+
+  export const TierHistoryScalarFieldEnum: {
+    id: 'id',
+    uid: 'uid',
+    userId: 'userId',
+    fromTierId: 'fromTierId',
+    toTierId: 'toTierId',
+    changeType: 'changeType',
+    reason: 'reason',
+    rollingAmountSnap: 'rollingAmountSnap',
+    bonusAmount: 'bonusAmount',
+    changedAt: 'changedAt',
+    changeBy: 'changeBy'
+  };
+
+  export type TierHistoryScalarFieldEnum = (typeof TierHistoryScalarFieldEnum)[keyof typeof TierHistoryScalarFieldEnum]
+
+
   export const SortOrder: {
     asc: 'asc',
     desc: 'desc'
@@ -55262,6 +60585,20 @@ export namespace Prisma {
    * Reference to a field of type 'SessionStatus[]'
    */
   export type ListEnumSessionStatusFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaModel, 'SessionStatus[]'>
+    
+
+
+  /**
+   * Reference to a field of type 'TierChangeType'
+   */
+  export type EnumTierChangeTypeFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaModel, 'TierChangeType'>
+    
+
+
+  /**
+   * Reference to a field of type 'TierChangeType[]'
+   */
+  export type ListEnumTierChangeTypeFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaModel, 'TierChangeType[]'>
     
 
 
@@ -56074,6 +61411,8 @@ export namespace Prisma {
     RevokedSessions?: UserSessionListRelationFilter
     UserToken?: UserTokenListRelationFilter
     loginAttempts?: LoginAttemptListRelationFilter
+    userTier?: XOR<UserTierNullableScalarRelationFilter, UserTierWhereInput> | null
+    tierHistory?: TierHistoryListRelationFilter
   }
 
   export type UserOrderByWithRelationInput = {
@@ -56117,6 +61456,8 @@ export namespace Prisma {
     RevokedSessions?: UserSessionOrderByRelationAggregateInput
     UserToken?: UserTokenOrderByRelationAggregateInput
     loginAttempts?: LoginAttemptOrderByRelationAggregateInput
+    userTier?: UserTierOrderByWithRelationInput
+    tierHistory?: TierHistoryOrderByRelationAggregateInput
   }
 
   export type UserWhereUniqueInput = Prisma.AtLeast<{
@@ -56163,6 +61504,8 @@ export namespace Prisma {
     RevokedSessions?: UserSessionListRelationFilter
     UserToken?: UserTokenListRelationFilter
     loginAttempts?: LoginAttemptListRelationFilter
+    userTier?: XOR<UserTierNullableScalarRelationFilter, UserTierWhereInput> | null
+    tierHistory?: TierHistoryListRelationFilter
   }, "id" | "uid" | "whitecliffId" | "whitecliffSystemId" | "whitecliffUsername" | "dcsId" | "email">
 
   export type UserOrderByWithAggregationInput = {
@@ -59295,6 +64638,333 @@ export namespace Prisma {
     metadata?: JsonNullableWithAggregatesFilter<"UserSession">
   }
 
+  export type TierWhereInput = {
+    AND?: TierWhereInput | TierWhereInput[]
+    OR?: TierWhereInput[]
+    NOT?: TierWhereInput | TierWhereInput[]
+    id?: BigIntFilter<"Tier"> | bigint | number
+    uid?: StringFilter<"Tier"> | string
+    priority?: IntFilter<"Tier"> | number
+    code?: StringFilter<"Tier"> | string
+    requirementUsd?: DecimalFilter<"Tier"> | Decimal | DecimalJsLike | number | string
+    levelUpBonus?: DecimalFilter<"Tier"> | Decimal | DecimalJsLike | number | string
+    compRate?: DecimalFilter<"Tier"> | Decimal | DecimalJsLike | number | string
+    benefits?: JsonNullableFilter<"Tier">
+    createdAt?: DateTimeFilter<"Tier"> | Date | string
+    updatedAt?: DateTimeFilter<"Tier"> | Date | string
+    userTiers?: UserTierListRelationFilter
+    translations?: TierTranslationListRelationFilter
+    historyFrom?: TierHistoryListRelationFilter
+    historyTo?: TierHistoryListRelationFilter
+  }
+
+  export type TierOrderByWithRelationInput = {
+    id?: SortOrder
+    uid?: SortOrder
+    priority?: SortOrder
+    code?: SortOrder
+    requirementUsd?: SortOrder
+    levelUpBonus?: SortOrder
+    compRate?: SortOrder
+    benefits?: SortOrderInput | SortOrder
+    createdAt?: SortOrder
+    updatedAt?: SortOrder
+    userTiers?: UserTierOrderByRelationAggregateInput
+    translations?: TierTranslationOrderByRelationAggregateInput
+    historyFrom?: TierHistoryOrderByRelationAggregateInput
+    historyTo?: TierHistoryOrderByRelationAggregateInput
+  }
+
+  export type TierWhereUniqueInput = Prisma.AtLeast<{
+    id?: bigint | number
+    uid?: string
+    priority?: number
+    code?: string
+    AND?: TierWhereInput | TierWhereInput[]
+    OR?: TierWhereInput[]
+    NOT?: TierWhereInput | TierWhereInput[]
+    requirementUsd?: DecimalFilter<"Tier"> | Decimal | DecimalJsLike | number | string
+    levelUpBonus?: DecimalFilter<"Tier"> | Decimal | DecimalJsLike | number | string
+    compRate?: DecimalFilter<"Tier"> | Decimal | DecimalJsLike | number | string
+    benefits?: JsonNullableFilter<"Tier">
+    createdAt?: DateTimeFilter<"Tier"> | Date | string
+    updatedAt?: DateTimeFilter<"Tier"> | Date | string
+    userTiers?: UserTierListRelationFilter
+    translations?: TierTranslationListRelationFilter
+    historyFrom?: TierHistoryListRelationFilter
+    historyTo?: TierHistoryListRelationFilter
+  }, "id" | "uid" | "priority" | "code">
+
+  export type TierOrderByWithAggregationInput = {
+    id?: SortOrder
+    uid?: SortOrder
+    priority?: SortOrder
+    code?: SortOrder
+    requirementUsd?: SortOrder
+    levelUpBonus?: SortOrder
+    compRate?: SortOrder
+    benefits?: SortOrderInput | SortOrder
+    createdAt?: SortOrder
+    updatedAt?: SortOrder
+    _count?: TierCountOrderByAggregateInput
+    _avg?: TierAvgOrderByAggregateInput
+    _max?: TierMaxOrderByAggregateInput
+    _min?: TierMinOrderByAggregateInput
+    _sum?: TierSumOrderByAggregateInput
+  }
+
+  export type TierScalarWhereWithAggregatesInput = {
+    AND?: TierScalarWhereWithAggregatesInput | TierScalarWhereWithAggregatesInput[]
+    OR?: TierScalarWhereWithAggregatesInput[]
+    NOT?: TierScalarWhereWithAggregatesInput | TierScalarWhereWithAggregatesInput[]
+    id?: BigIntWithAggregatesFilter<"Tier"> | bigint | number
+    uid?: StringWithAggregatesFilter<"Tier"> | string
+    priority?: IntWithAggregatesFilter<"Tier"> | number
+    code?: StringWithAggregatesFilter<"Tier"> | string
+    requirementUsd?: DecimalWithAggregatesFilter<"Tier"> | Decimal | DecimalJsLike | number | string
+    levelUpBonus?: DecimalWithAggregatesFilter<"Tier"> | Decimal | DecimalJsLike | number | string
+    compRate?: DecimalWithAggregatesFilter<"Tier"> | Decimal | DecimalJsLike | number | string
+    benefits?: JsonNullableWithAggregatesFilter<"Tier">
+    createdAt?: DateTimeWithAggregatesFilter<"Tier"> | Date | string
+    updatedAt?: DateTimeWithAggregatesFilter<"Tier"> | Date | string
+  }
+
+  export type TierTranslationWhereInput = {
+    AND?: TierTranslationWhereInput | TierTranslationWhereInput[]
+    OR?: TierTranslationWhereInput[]
+    NOT?: TierTranslationWhereInput | TierTranslationWhereInput[]
+    id?: BigIntFilter<"TierTranslation"> | bigint | number
+    uid?: StringFilter<"TierTranslation"> | string
+    tierId?: BigIntFilter<"TierTranslation"> | bigint | number
+    language?: EnumLanguageFilter<"TierTranslation"> | $Enums.Language
+    name?: StringFilter<"TierTranslation"> | string
+    tier?: XOR<TierScalarRelationFilter, TierWhereInput>
+  }
+
+  export type TierTranslationOrderByWithRelationInput = {
+    id?: SortOrder
+    uid?: SortOrder
+    tierId?: SortOrder
+    language?: SortOrder
+    name?: SortOrder
+    tier?: TierOrderByWithRelationInput
+  }
+
+  export type TierTranslationWhereUniqueInput = Prisma.AtLeast<{
+    id?: bigint | number
+    uid?: string
+    tierId_language?: TierTranslationTierIdLanguageCompoundUniqueInput
+    AND?: TierTranslationWhereInput | TierTranslationWhereInput[]
+    OR?: TierTranslationWhereInput[]
+    NOT?: TierTranslationWhereInput | TierTranslationWhereInput[]
+    tierId?: BigIntFilter<"TierTranslation"> | bigint | number
+    language?: EnumLanguageFilter<"TierTranslation"> | $Enums.Language
+    name?: StringFilter<"TierTranslation"> | string
+    tier?: XOR<TierScalarRelationFilter, TierWhereInput>
+  }, "id" | "uid" | "tierId_language">
+
+  export type TierTranslationOrderByWithAggregationInput = {
+    id?: SortOrder
+    uid?: SortOrder
+    tierId?: SortOrder
+    language?: SortOrder
+    name?: SortOrder
+    _count?: TierTranslationCountOrderByAggregateInput
+    _avg?: TierTranslationAvgOrderByAggregateInput
+    _max?: TierTranslationMaxOrderByAggregateInput
+    _min?: TierTranslationMinOrderByAggregateInput
+    _sum?: TierTranslationSumOrderByAggregateInput
+  }
+
+  export type TierTranslationScalarWhereWithAggregatesInput = {
+    AND?: TierTranslationScalarWhereWithAggregatesInput | TierTranslationScalarWhereWithAggregatesInput[]
+    OR?: TierTranslationScalarWhereWithAggregatesInput[]
+    NOT?: TierTranslationScalarWhereWithAggregatesInput | TierTranslationScalarWhereWithAggregatesInput[]
+    id?: BigIntWithAggregatesFilter<"TierTranslation"> | bigint | number
+    uid?: StringWithAggregatesFilter<"TierTranslation"> | string
+    tierId?: BigIntWithAggregatesFilter<"TierTranslation"> | bigint | number
+    language?: EnumLanguageWithAggregatesFilter<"TierTranslation"> | $Enums.Language
+    name?: StringWithAggregatesFilter<"TierTranslation"> | string
+  }
+
+  export type UserTierWhereInput = {
+    AND?: UserTierWhereInput | UserTierWhereInput[]
+    OR?: UserTierWhereInput[]
+    NOT?: UserTierWhereInput | UserTierWhereInput[]
+    id?: BigIntFilter<"UserTier"> | bigint | number
+    uid?: StringFilter<"UserTier"> | string
+    userId?: BigIntFilter<"UserTier"> | bigint | number
+    tierId?: BigIntFilter<"UserTier"> | bigint | number
+    cumulativeRollingUsd?: DecimalFilter<"UserTier"> | Decimal | DecimalJsLike | number | string
+    highestPromotedPriority?: IntFilter<"UserTier"> | number
+    isManualLock?: BoolFilter<"UserTier"> | boolean
+    lastPromotedAt?: DateTimeFilter<"UserTier"> | Date | string
+    createdAt?: DateTimeFilter<"UserTier"> | Date | string
+    updatedAt?: DateTimeFilter<"UserTier"> | Date | string
+    user?: XOR<UserScalarRelationFilter, UserWhereInput>
+    tier?: XOR<TierScalarRelationFilter, TierWhereInput>
+  }
+
+  export type UserTierOrderByWithRelationInput = {
+    id?: SortOrder
+    uid?: SortOrder
+    userId?: SortOrder
+    tierId?: SortOrder
+    cumulativeRollingUsd?: SortOrder
+    highestPromotedPriority?: SortOrder
+    isManualLock?: SortOrder
+    lastPromotedAt?: SortOrder
+    createdAt?: SortOrder
+    updatedAt?: SortOrder
+    user?: UserOrderByWithRelationInput
+    tier?: TierOrderByWithRelationInput
+  }
+
+  export type UserTierWhereUniqueInput = Prisma.AtLeast<{
+    id?: bigint | number
+    uid?: string
+    userId?: bigint | number
+    AND?: UserTierWhereInput | UserTierWhereInput[]
+    OR?: UserTierWhereInput[]
+    NOT?: UserTierWhereInput | UserTierWhereInput[]
+    tierId?: BigIntFilter<"UserTier"> | bigint | number
+    cumulativeRollingUsd?: DecimalFilter<"UserTier"> | Decimal | DecimalJsLike | number | string
+    highestPromotedPriority?: IntFilter<"UserTier"> | number
+    isManualLock?: BoolFilter<"UserTier"> | boolean
+    lastPromotedAt?: DateTimeFilter<"UserTier"> | Date | string
+    createdAt?: DateTimeFilter<"UserTier"> | Date | string
+    updatedAt?: DateTimeFilter<"UserTier"> | Date | string
+    user?: XOR<UserScalarRelationFilter, UserWhereInput>
+    tier?: XOR<TierScalarRelationFilter, TierWhereInput>
+  }, "id" | "uid" | "userId">
+
+  export type UserTierOrderByWithAggregationInput = {
+    id?: SortOrder
+    uid?: SortOrder
+    userId?: SortOrder
+    tierId?: SortOrder
+    cumulativeRollingUsd?: SortOrder
+    highestPromotedPriority?: SortOrder
+    isManualLock?: SortOrder
+    lastPromotedAt?: SortOrder
+    createdAt?: SortOrder
+    updatedAt?: SortOrder
+    _count?: UserTierCountOrderByAggregateInput
+    _avg?: UserTierAvgOrderByAggregateInput
+    _max?: UserTierMaxOrderByAggregateInput
+    _min?: UserTierMinOrderByAggregateInput
+    _sum?: UserTierSumOrderByAggregateInput
+  }
+
+  export type UserTierScalarWhereWithAggregatesInput = {
+    AND?: UserTierScalarWhereWithAggregatesInput | UserTierScalarWhereWithAggregatesInput[]
+    OR?: UserTierScalarWhereWithAggregatesInput[]
+    NOT?: UserTierScalarWhereWithAggregatesInput | UserTierScalarWhereWithAggregatesInput[]
+    id?: BigIntWithAggregatesFilter<"UserTier"> | bigint | number
+    uid?: StringWithAggregatesFilter<"UserTier"> | string
+    userId?: BigIntWithAggregatesFilter<"UserTier"> | bigint | number
+    tierId?: BigIntWithAggregatesFilter<"UserTier"> | bigint | number
+    cumulativeRollingUsd?: DecimalWithAggregatesFilter<"UserTier"> | Decimal | DecimalJsLike | number | string
+    highestPromotedPriority?: IntWithAggregatesFilter<"UserTier"> | number
+    isManualLock?: BoolWithAggregatesFilter<"UserTier"> | boolean
+    lastPromotedAt?: DateTimeWithAggregatesFilter<"UserTier"> | Date | string
+    createdAt?: DateTimeWithAggregatesFilter<"UserTier"> | Date | string
+    updatedAt?: DateTimeWithAggregatesFilter<"UserTier"> | Date | string
+  }
+
+  export type TierHistoryWhereInput = {
+    AND?: TierHistoryWhereInput | TierHistoryWhereInput[]
+    OR?: TierHistoryWhereInput[]
+    NOT?: TierHistoryWhereInput | TierHistoryWhereInput[]
+    id?: BigIntFilter<"TierHistory"> | bigint | number
+    uid?: StringFilter<"TierHistory"> | string
+    userId?: BigIntFilter<"TierHistory"> | bigint | number
+    fromTierId?: BigIntNullableFilter<"TierHistory"> | bigint | number | null
+    toTierId?: BigIntFilter<"TierHistory"> | bigint | number
+    changeType?: EnumTierChangeTypeFilter<"TierHistory"> | $Enums.TierChangeType
+    reason?: StringNullableFilter<"TierHistory"> | string | null
+    rollingAmountSnap?: DecimalFilter<"TierHistory"> | Decimal | DecimalJsLike | number | string
+    bonusAmount?: DecimalNullableFilter<"TierHistory"> | Decimal | DecimalJsLike | number | string | null
+    changedAt?: DateTimeFilter<"TierHistory"> | Date | string
+    changeBy?: StringNullableFilter<"TierHistory"> | string | null
+    user?: XOR<UserScalarRelationFilter, UserWhereInput>
+    fromTier?: XOR<TierNullableScalarRelationFilter, TierWhereInput> | null
+    toTier?: XOR<TierScalarRelationFilter, TierWhereInput>
+  }
+
+  export type TierHistoryOrderByWithRelationInput = {
+    id?: SortOrder
+    uid?: SortOrder
+    userId?: SortOrder
+    fromTierId?: SortOrderInput | SortOrder
+    toTierId?: SortOrder
+    changeType?: SortOrder
+    reason?: SortOrderInput | SortOrder
+    rollingAmountSnap?: SortOrder
+    bonusAmount?: SortOrderInput | SortOrder
+    changedAt?: SortOrder
+    changeBy?: SortOrderInput | SortOrder
+    user?: UserOrderByWithRelationInput
+    fromTier?: TierOrderByWithRelationInput
+    toTier?: TierOrderByWithRelationInput
+  }
+
+  export type TierHistoryWhereUniqueInput = Prisma.AtLeast<{
+    id?: bigint | number
+    uid?: string
+    AND?: TierHistoryWhereInput | TierHistoryWhereInput[]
+    OR?: TierHistoryWhereInput[]
+    NOT?: TierHistoryWhereInput | TierHistoryWhereInput[]
+    userId?: BigIntFilter<"TierHistory"> | bigint | number
+    fromTierId?: BigIntNullableFilter<"TierHistory"> | bigint | number | null
+    toTierId?: BigIntFilter<"TierHistory"> | bigint | number
+    changeType?: EnumTierChangeTypeFilter<"TierHistory"> | $Enums.TierChangeType
+    reason?: StringNullableFilter<"TierHistory"> | string | null
+    rollingAmountSnap?: DecimalFilter<"TierHistory"> | Decimal | DecimalJsLike | number | string
+    bonusAmount?: DecimalNullableFilter<"TierHistory"> | Decimal | DecimalJsLike | number | string | null
+    changedAt?: DateTimeFilter<"TierHistory"> | Date | string
+    changeBy?: StringNullableFilter<"TierHistory"> | string | null
+    user?: XOR<UserScalarRelationFilter, UserWhereInput>
+    fromTier?: XOR<TierNullableScalarRelationFilter, TierWhereInput> | null
+    toTier?: XOR<TierScalarRelationFilter, TierWhereInput>
+  }, "id" | "uid">
+
+  export type TierHistoryOrderByWithAggregationInput = {
+    id?: SortOrder
+    uid?: SortOrder
+    userId?: SortOrder
+    fromTierId?: SortOrderInput | SortOrder
+    toTierId?: SortOrder
+    changeType?: SortOrder
+    reason?: SortOrderInput | SortOrder
+    rollingAmountSnap?: SortOrder
+    bonusAmount?: SortOrderInput | SortOrder
+    changedAt?: SortOrder
+    changeBy?: SortOrderInput | SortOrder
+    _count?: TierHistoryCountOrderByAggregateInput
+    _avg?: TierHistoryAvgOrderByAggregateInput
+    _max?: TierHistoryMaxOrderByAggregateInput
+    _min?: TierHistoryMinOrderByAggregateInput
+    _sum?: TierHistorySumOrderByAggregateInput
+  }
+
+  export type TierHistoryScalarWhereWithAggregatesInput = {
+    AND?: TierHistoryScalarWhereWithAggregatesInput | TierHistoryScalarWhereWithAggregatesInput[]
+    OR?: TierHistoryScalarWhereWithAggregatesInput[]
+    NOT?: TierHistoryScalarWhereWithAggregatesInput | TierHistoryScalarWhereWithAggregatesInput[]
+    id?: BigIntWithAggregatesFilter<"TierHistory"> | bigint | number
+    uid?: StringWithAggregatesFilter<"TierHistory"> | string
+    userId?: BigIntWithAggregatesFilter<"TierHistory"> | bigint | number
+    fromTierId?: BigIntNullableWithAggregatesFilter<"TierHistory"> | bigint | number | null
+    toTierId?: BigIntWithAggregatesFilter<"TierHistory"> | bigint | number
+    changeType?: EnumTierChangeTypeWithAggregatesFilter<"TierHistory"> | $Enums.TierChangeType
+    reason?: StringNullableWithAggregatesFilter<"TierHistory"> | string | null
+    rollingAmountSnap?: DecimalWithAggregatesFilter<"TierHistory"> | Decimal | DecimalJsLike | number | string
+    bonusAmount?: DecimalNullableWithAggregatesFilter<"TierHistory"> | Decimal | DecimalJsLike | number | string | null
+    changedAt?: DateTimeWithAggregatesFilter<"TierHistory"> | Date | string
+    changeBy?: StringNullableWithAggregatesFilter<"TierHistory"> | string | null
+  }
+
   export type AffiliateCodeCreateInput = {
     id?: bigint | number
     uid: string
@@ -60218,6 +65888,8 @@ export namespace Prisma {
     RevokedSessions?: UserSessionCreateNestedManyWithoutRevokedByUserInput
     UserToken?: UserTokenCreateNestedManyWithoutUserInput
     loginAttempts?: LoginAttemptCreateNestedManyWithoutUserInput
+    userTier?: UserTierCreateNestedOneWithoutUserInput
+    tierHistory?: TierHistoryCreateNestedManyWithoutUserInput
   }
 
   export type UserUncheckedCreateInput = {
@@ -60261,6 +65933,8 @@ export namespace Prisma {
     RevokedSessions?: UserSessionUncheckedCreateNestedManyWithoutRevokedByUserInput
     UserToken?: UserTokenUncheckedCreateNestedManyWithoutUserInput
     loginAttempts?: LoginAttemptUncheckedCreateNestedManyWithoutUserInput
+    userTier?: UserTierUncheckedCreateNestedOneWithoutUserInput
+    tierHistory?: TierHistoryUncheckedCreateNestedManyWithoutUserInput
   }
 
   export type UserUpdateInput = {
@@ -60304,6 +65978,8 @@ export namespace Prisma {
     RevokedSessions?: UserSessionUpdateManyWithoutRevokedByUserNestedInput
     UserToken?: UserTokenUpdateManyWithoutUserNestedInput
     loginAttempts?: LoginAttemptUpdateManyWithoutUserNestedInput
+    userTier?: UserTierUpdateOneWithoutUserNestedInput
+    tierHistory?: TierHistoryUpdateManyWithoutUserNestedInput
   }
 
   export type UserUncheckedUpdateInput = {
@@ -60347,6 +66023,8 @@ export namespace Prisma {
     RevokedSessions?: UserSessionUncheckedUpdateManyWithoutRevokedByUserNestedInput
     UserToken?: UserTokenUncheckedUpdateManyWithoutUserNestedInput
     loginAttempts?: LoginAttemptUncheckedUpdateManyWithoutUserNestedInput
+    userTier?: UserTierUncheckedUpdateOneWithoutUserNestedInput
+    tierHistory?: TierHistoryUncheckedUpdateManyWithoutUserNestedInput
   }
 
   export type UserCreateManyInput = {
@@ -63868,6 +69546,352 @@ export namespace Prisma {
     metadata?: NullableJsonNullValueInput | InputJsonValue
   }
 
+  export type TierCreateInput = {
+    id?: bigint | number
+    uid?: string
+    priority: number
+    code: string
+    requirementUsd: Decimal | DecimalJsLike | number | string
+    levelUpBonus?: Decimal | DecimalJsLike | number | string
+    compRate?: Decimal | DecimalJsLike | number | string
+    benefits?: NullableJsonNullValueInput | InputJsonValue
+    createdAt?: Date | string
+    updatedAt?: Date | string
+    userTiers?: UserTierCreateNestedManyWithoutTierInput
+    translations?: TierTranslationCreateNestedManyWithoutTierInput
+    historyFrom?: TierHistoryCreateNestedManyWithoutFromTierInput
+    historyTo?: TierHistoryCreateNestedManyWithoutToTierInput
+  }
+
+  export type TierUncheckedCreateInput = {
+    id?: bigint | number
+    uid?: string
+    priority: number
+    code: string
+    requirementUsd: Decimal | DecimalJsLike | number | string
+    levelUpBonus?: Decimal | DecimalJsLike | number | string
+    compRate?: Decimal | DecimalJsLike | number | string
+    benefits?: NullableJsonNullValueInput | InputJsonValue
+    createdAt?: Date | string
+    updatedAt?: Date | string
+    userTiers?: UserTierUncheckedCreateNestedManyWithoutTierInput
+    translations?: TierTranslationUncheckedCreateNestedManyWithoutTierInput
+    historyFrom?: TierHistoryUncheckedCreateNestedManyWithoutFromTierInput
+    historyTo?: TierHistoryUncheckedCreateNestedManyWithoutToTierInput
+  }
+
+  export type TierUpdateInput = {
+    id?: BigIntFieldUpdateOperationsInput | bigint | number
+    uid?: StringFieldUpdateOperationsInput | string
+    priority?: IntFieldUpdateOperationsInput | number
+    code?: StringFieldUpdateOperationsInput | string
+    requirementUsd?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
+    levelUpBonus?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
+    compRate?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
+    benefits?: NullableJsonNullValueInput | InputJsonValue
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    userTiers?: UserTierUpdateManyWithoutTierNestedInput
+    translations?: TierTranslationUpdateManyWithoutTierNestedInput
+    historyFrom?: TierHistoryUpdateManyWithoutFromTierNestedInput
+    historyTo?: TierHistoryUpdateManyWithoutToTierNestedInput
+  }
+
+  export type TierUncheckedUpdateInput = {
+    id?: BigIntFieldUpdateOperationsInput | bigint | number
+    uid?: StringFieldUpdateOperationsInput | string
+    priority?: IntFieldUpdateOperationsInput | number
+    code?: StringFieldUpdateOperationsInput | string
+    requirementUsd?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
+    levelUpBonus?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
+    compRate?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
+    benefits?: NullableJsonNullValueInput | InputJsonValue
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    userTiers?: UserTierUncheckedUpdateManyWithoutTierNestedInput
+    translations?: TierTranslationUncheckedUpdateManyWithoutTierNestedInput
+    historyFrom?: TierHistoryUncheckedUpdateManyWithoutFromTierNestedInput
+    historyTo?: TierHistoryUncheckedUpdateManyWithoutToTierNestedInput
+  }
+
+  export type TierCreateManyInput = {
+    id?: bigint | number
+    uid?: string
+    priority: number
+    code: string
+    requirementUsd: Decimal | DecimalJsLike | number | string
+    levelUpBonus?: Decimal | DecimalJsLike | number | string
+    compRate?: Decimal | DecimalJsLike | number | string
+    benefits?: NullableJsonNullValueInput | InputJsonValue
+    createdAt?: Date | string
+    updatedAt?: Date | string
+  }
+
+  export type TierUpdateManyMutationInput = {
+    id?: BigIntFieldUpdateOperationsInput | bigint | number
+    uid?: StringFieldUpdateOperationsInput | string
+    priority?: IntFieldUpdateOperationsInput | number
+    code?: StringFieldUpdateOperationsInput | string
+    requirementUsd?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
+    levelUpBonus?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
+    compRate?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
+    benefits?: NullableJsonNullValueInput | InputJsonValue
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+  }
+
+  export type TierUncheckedUpdateManyInput = {
+    id?: BigIntFieldUpdateOperationsInput | bigint | number
+    uid?: StringFieldUpdateOperationsInput | string
+    priority?: IntFieldUpdateOperationsInput | number
+    code?: StringFieldUpdateOperationsInput | string
+    requirementUsd?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
+    levelUpBonus?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
+    compRate?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
+    benefits?: NullableJsonNullValueInput | InputJsonValue
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+  }
+
+  export type TierTranslationCreateInput = {
+    id?: bigint | number
+    uid?: string
+    language: $Enums.Language
+    name: string
+    tier: TierCreateNestedOneWithoutTranslationsInput
+  }
+
+  export type TierTranslationUncheckedCreateInput = {
+    id?: bigint | number
+    uid?: string
+    tierId: bigint | number
+    language: $Enums.Language
+    name: string
+  }
+
+  export type TierTranslationUpdateInput = {
+    id?: BigIntFieldUpdateOperationsInput | bigint | number
+    uid?: StringFieldUpdateOperationsInput | string
+    language?: EnumLanguageFieldUpdateOperationsInput | $Enums.Language
+    name?: StringFieldUpdateOperationsInput | string
+    tier?: TierUpdateOneRequiredWithoutTranslationsNestedInput
+  }
+
+  export type TierTranslationUncheckedUpdateInput = {
+    id?: BigIntFieldUpdateOperationsInput | bigint | number
+    uid?: StringFieldUpdateOperationsInput | string
+    tierId?: BigIntFieldUpdateOperationsInput | bigint | number
+    language?: EnumLanguageFieldUpdateOperationsInput | $Enums.Language
+    name?: StringFieldUpdateOperationsInput | string
+  }
+
+  export type TierTranslationCreateManyInput = {
+    id?: bigint | number
+    uid?: string
+    tierId: bigint | number
+    language: $Enums.Language
+    name: string
+  }
+
+  export type TierTranslationUpdateManyMutationInput = {
+    id?: BigIntFieldUpdateOperationsInput | bigint | number
+    uid?: StringFieldUpdateOperationsInput | string
+    language?: EnumLanguageFieldUpdateOperationsInput | $Enums.Language
+    name?: StringFieldUpdateOperationsInput | string
+  }
+
+  export type TierTranslationUncheckedUpdateManyInput = {
+    id?: BigIntFieldUpdateOperationsInput | bigint | number
+    uid?: StringFieldUpdateOperationsInput | string
+    tierId?: BigIntFieldUpdateOperationsInput | bigint | number
+    language?: EnumLanguageFieldUpdateOperationsInput | $Enums.Language
+    name?: StringFieldUpdateOperationsInput | string
+  }
+
+  export type UserTierCreateInput = {
+    id?: bigint | number
+    uid?: string
+    cumulativeRollingUsd?: Decimal | DecimalJsLike | number | string
+    highestPromotedPriority?: number
+    isManualLock?: boolean
+    lastPromotedAt?: Date | string
+    createdAt?: Date | string
+    updatedAt?: Date | string
+    user: UserCreateNestedOneWithoutUserTierInput
+    tier: TierCreateNestedOneWithoutUserTiersInput
+  }
+
+  export type UserTierUncheckedCreateInput = {
+    id?: bigint | number
+    uid?: string
+    userId: bigint | number
+    tierId: bigint | number
+    cumulativeRollingUsd?: Decimal | DecimalJsLike | number | string
+    highestPromotedPriority?: number
+    isManualLock?: boolean
+    lastPromotedAt?: Date | string
+    createdAt?: Date | string
+    updatedAt?: Date | string
+  }
+
+  export type UserTierUpdateInput = {
+    id?: BigIntFieldUpdateOperationsInput | bigint | number
+    uid?: StringFieldUpdateOperationsInput | string
+    cumulativeRollingUsd?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
+    highestPromotedPriority?: IntFieldUpdateOperationsInput | number
+    isManualLock?: BoolFieldUpdateOperationsInput | boolean
+    lastPromotedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    user?: UserUpdateOneRequiredWithoutUserTierNestedInput
+    tier?: TierUpdateOneRequiredWithoutUserTiersNestedInput
+  }
+
+  export type UserTierUncheckedUpdateInput = {
+    id?: BigIntFieldUpdateOperationsInput | bigint | number
+    uid?: StringFieldUpdateOperationsInput | string
+    userId?: BigIntFieldUpdateOperationsInput | bigint | number
+    tierId?: BigIntFieldUpdateOperationsInput | bigint | number
+    cumulativeRollingUsd?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
+    highestPromotedPriority?: IntFieldUpdateOperationsInput | number
+    isManualLock?: BoolFieldUpdateOperationsInput | boolean
+    lastPromotedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+  }
+
+  export type UserTierCreateManyInput = {
+    id?: bigint | number
+    uid?: string
+    userId: bigint | number
+    tierId: bigint | number
+    cumulativeRollingUsd?: Decimal | DecimalJsLike | number | string
+    highestPromotedPriority?: number
+    isManualLock?: boolean
+    lastPromotedAt?: Date | string
+    createdAt?: Date | string
+    updatedAt?: Date | string
+  }
+
+  export type UserTierUpdateManyMutationInput = {
+    id?: BigIntFieldUpdateOperationsInput | bigint | number
+    uid?: StringFieldUpdateOperationsInput | string
+    cumulativeRollingUsd?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
+    highestPromotedPriority?: IntFieldUpdateOperationsInput | number
+    isManualLock?: BoolFieldUpdateOperationsInput | boolean
+    lastPromotedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+  }
+
+  export type UserTierUncheckedUpdateManyInput = {
+    id?: BigIntFieldUpdateOperationsInput | bigint | number
+    uid?: StringFieldUpdateOperationsInput | string
+    userId?: BigIntFieldUpdateOperationsInput | bigint | number
+    tierId?: BigIntFieldUpdateOperationsInput | bigint | number
+    cumulativeRollingUsd?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
+    highestPromotedPriority?: IntFieldUpdateOperationsInput | number
+    isManualLock?: BoolFieldUpdateOperationsInput | boolean
+    lastPromotedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+  }
+
+  export type TierHistoryCreateInput = {
+    id?: bigint | number
+    uid?: string
+    changeType: $Enums.TierChangeType
+    reason?: string | null
+    rollingAmountSnap: Decimal | DecimalJsLike | number | string
+    bonusAmount?: Decimal | DecimalJsLike | number | string | null
+    changedAt?: Date | string
+    changeBy?: string | null
+    user: UserCreateNestedOneWithoutTierHistoryInput
+    fromTier?: TierCreateNestedOneWithoutHistoryFromInput
+    toTier: TierCreateNestedOneWithoutHistoryToInput
+  }
+
+  export type TierHistoryUncheckedCreateInput = {
+    id?: bigint | number
+    uid?: string
+    userId: bigint | number
+    fromTierId?: bigint | number | null
+    toTierId: bigint | number
+    changeType: $Enums.TierChangeType
+    reason?: string | null
+    rollingAmountSnap: Decimal | DecimalJsLike | number | string
+    bonusAmount?: Decimal | DecimalJsLike | number | string | null
+    changedAt?: Date | string
+    changeBy?: string | null
+  }
+
+  export type TierHistoryUpdateInput = {
+    id?: BigIntFieldUpdateOperationsInput | bigint | number
+    uid?: StringFieldUpdateOperationsInput | string
+    changeType?: EnumTierChangeTypeFieldUpdateOperationsInput | $Enums.TierChangeType
+    reason?: NullableStringFieldUpdateOperationsInput | string | null
+    rollingAmountSnap?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
+    bonusAmount?: NullableDecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string | null
+    changedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    changeBy?: NullableStringFieldUpdateOperationsInput | string | null
+    user?: UserUpdateOneRequiredWithoutTierHistoryNestedInput
+    fromTier?: TierUpdateOneWithoutHistoryFromNestedInput
+    toTier?: TierUpdateOneRequiredWithoutHistoryToNestedInput
+  }
+
+  export type TierHistoryUncheckedUpdateInput = {
+    id?: BigIntFieldUpdateOperationsInput | bigint | number
+    uid?: StringFieldUpdateOperationsInput | string
+    userId?: BigIntFieldUpdateOperationsInput | bigint | number
+    fromTierId?: NullableBigIntFieldUpdateOperationsInput | bigint | number | null
+    toTierId?: BigIntFieldUpdateOperationsInput | bigint | number
+    changeType?: EnumTierChangeTypeFieldUpdateOperationsInput | $Enums.TierChangeType
+    reason?: NullableStringFieldUpdateOperationsInput | string | null
+    rollingAmountSnap?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
+    bonusAmount?: NullableDecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string | null
+    changedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    changeBy?: NullableStringFieldUpdateOperationsInput | string | null
+  }
+
+  export type TierHistoryCreateManyInput = {
+    id?: bigint | number
+    uid?: string
+    userId: bigint | number
+    fromTierId?: bigint | number | null
+    toTierId: bigint | number
+    changeType: $Enums.TierChangeType
+    reason?: string | null
+    rollingAmountSnap: Decimal | DecimalJsLike | number | string
+    bonusAmount?: Decimal | DecimalJsLike | number | string | null
+    changedAt?: Date | string
+    changeBy?: string | null
+  }
+
+  export type TierHistoryUpdateManyMutationInput = {
+    id?: BigIntFieldUpdateOperationsInput | bigint | number
+    uid?: StringFieldUpdateOperationsInput | string
+    changeType?: EnumTierChangeTypeFieldUpdateOperationsInput | $Enums.TierChangeType
+    reason?: NullableStringFieldUpdateOperationsInput | string | null
+    rollingAmountSnap?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
+    bonusAmount?: NullableDecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string | null
+    changedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    changeBy?: NullableStringFieldUpdateOperationsInput | string | null
+  }
+
+  export type TierHistoryUncheckedUpdateManyInput = {
+    id?: BigIntFieldUpdateOperationsInput | bigint | number
+    uid?: StringFieldUpdateOperationsInput | string
+    userId?: BigIntFieldUpdateOperationsInput | bigint | number
+    fromTierId?: NullableBigIntFieldUpdateOperationsInput | bigint | number | null
+    toTierId?: BigIntFieldUpdateOperationsInput | bigint | number
+    changeType?: EnumTierChangeTypeFieldUpdateOperationsInput | $Enums.TierChangeType
+    reason?: NullableStringFieldUpdateOperationsInput | string | null
+    rollingAmountSnap?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
+    bonusAmount?: NullableDecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string | null
+    changedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    changeBy?: NullableStringFieldUpdateOperationsInput | string | null
+  }
+
   export type BigIntFilter<$PrismaModel = never> = {
     equals?: bigint | number | BigIntFieldRefInput<$PrismaModel>
     in?: bigint[] | number[] | ListBigIntFieldRefInput<$PrismaModel>
@@ -64789,6 +70813,17 @@ export namespace Prisma {
     none?: LoginAttemptWhereInput
   }
 
+  export type UserTierNullableScalarRelationFilter = {
+    is?: UserTierWhereInput | null
+    isNot?: UserTierWhereInput | null
+  }
+
+  export type TierHistoryListRelationFilter = {
+    every?: TierHistoryWhereInput
+    some?: TierHistoryWhereInput
+    none?: TierHistoryWhereInput
+  }
+
   export type AffiliateCodeOrderByRelationAggregateInput = {
     _count?: SortOrder
   }
@@ -64850,6 +70885,10 @@ export namespace Prisma {
   }
 
   export type LoginAttemptOrderByRelationAggregateInput = {
+    _count?: SortOrder
+  }
+
+  export type TierHistoryOrderByRelationAggregateInput = {
     _count?: SortOrder
   }
 
@@ -67828,6 +73867,260 @@ export namespace Prisma {
     _max?: NestedEnumSessionStatusFilter<$PrismaModel>
   }
 
+  export type UserTierListRelationFilter = {
+    every?: UserTierWhereInput
+    some?: UserTierWhereInput
+    none?: UserTierWhereInput
+  }
+
+  export type TierTranslationListRelationFilter = {
+    every?: TierTranslationWhereInput
+    some?: TierTranslationWhereInput
+    none?: TierTranslationWhereInput
+  }
+
+  export type UserTierOrderByRelationAggregateInput = {
+    _count?: SortOrder
+  }
+
+  export type TierTranslationOrderByRelationAggregateInput = {
+    _count?: SortOrder
+  }
+
+  export type TierCountOrderByAggregateInput = {
+    id?: SortOrder
+    uid?: SortOrder
+    priority?: SortOrder
+    code?: SortOrder
+    requirementUsd?: SortOrder
+    levelUpBonus?: SortOrder
+    compRate?: SortOrder
+    benefits?: SortOrder
+    createdAt?: SortOrder
+    updatedAt?: SortOrder
+  }
+
+  export type TierAvgOrderByAggregateInput = {
+    id?: SortOrder
+    priority?: SortOrder
+    requirementUsd?: SortOrder
+    levelUpBonus?: SortOrder
+    compRate?: SortOrder
+  }
+
+  export type TierMaxOrderByAggregateInput = {
+    id?: SortOrder
+    uid?: SortOrder
+    priority?: SortOrder
+    code?: SortOrder
+    requirementUsd?: SortOrder
+    levelUpBonus?: SortOrder
+    compRate?: SortOrder
+    createdAt?: SortOrder
+    updatedAt?: SortOrder
+  }
+
+  export type TierMinOrderByAggregateInput = {
+    id?: SortOrder
+    uid?: SortOrder
+    priority?: SortOrder
+    code?: SortOrder
+    requirementUsd?: SortOrder
+    levelUpBonus?: SortOrder
+    compRate?: SortOrder
+    createdAt?: SortOrder
+    updatedAt?: SortOrder
+  }
+
+  export type TierSumOrderByAggregateInput = {
+    id?: SortOrder
+    priority?: SortOrder
+    requirementUsd?: SortOrder
+    levelUpBonus?: SortOrder
+    compRate?: SortOrder
+  }
+
+  export type TierScalarRelationFilter = {
+    is?: TierWhereInput
+    isNot?: TierWhereInput
+  }
+
+  export type TierTranslationTierIdLanguageCompoundUniqueInput = {
+    tierId: bigint | number
+    language: $Enums.Language
+  }
+
+  export type TierTranslationCountOrderByAggregateInput = {
+    id?: SortOrder
+    uid?: SortOrder
+    tierId?: SortOrder
+    language?: SortOrder
+    name?: SortOrder
+  }
+
+  export type TierTranslationAvgOrderByAggregateInput = {
+    id?: SortOrder
+    tierId?: SortOrder
+  }
+
+  export type TierTranslationMaxOrderByAggregateInput = {
+    id?: SortOrder
+    uid?: SortOrder
+    tierId?: SortOrder
+    language?: SortOrder
+    name?: SortOrder
+  }
+
+  export type TierTranslationMinOrderByAggregateInput = {
+    id?: SortOrder
+    uid?: SortOrder
+    tierId?: SortOrder
+    language?: SortOrder
+    name?: SortOrder
+  }
+
+  export type TierTranslationSumOrderByAggregateInput = {
+    id?: SortOrder
+    tierId?: SortOrder
+  }
+
+  export type UserTierCountOrderByAggregateInput = {
+    id?: SortOrder
+    uid?: SortOrder
+    userId?: SortOrder
+    tierId?: SortOrder
+    cumulativeRollingUsd?: SortOrder
+    highestPromotedPriority?: SortOrder
+    isManualLock?: SortOrder
+    lastPromotedAt?: SortOrder
+    createdAt?: SortOrder
+    updatedAt?: SortOrder
+  }
+
+  export type UserTierAvgOrderByAggregateInput = {
+    id?: SortOrder
+    userId?: SortOrder
+    tierId?: SortOrder
+    cumulativeRollingUsd?: SortOrder
+    highestPromotedPriority?: SortOrder
+  }
+
+  export type UserTierMaxOrderByAggregateInput = {
+    id?: SortOrder
+    uid?: SortOrder
+    userId?: SortOrder
+    tierId?: SortOrder
+    cumulativeRollingUsd?: SortOrder
+    highestPromotedPriority?: SortOrder
+    isManualLock?: SortOrder
+    lastPromotedAt?: SortOrder
+    createdAt?: SortOrder
+    updatedAt?: SortOrder
+  }
+
+  export type UserTierMinOrderByAggregateInput = {
+    id?: SortOrder
+    uid?: SortOrder
+    userId?: SortOrder
+    tierId?: SortOrder
+    cumulativeRollingUsd?: SortOrder
+    highestPromotedPriority?: SortOrder
+    isManualLock?: SortOrder
+    lastPromotedAt?: SortOrder
+    createdAt?: SortOrder
+    updatedAt?: SortOrder
+  }
+
+  export type UserTierSumOrderByAggregateInput = {
+    id?: SortOrder
+    userId?: SortOrder
+    tierId?: SortOrder
+    cumulativeRollingUsd?: SortOrder
+    highestPromotedPriority?: SortOrder
+  }
+
+  export type EnumTierChangeTypeFilter<$PrismaModel = never> = {
+    equals?: $Enums.TierChangeType | EnumTierChangeTypeFieldRefInput<$PrismaModel>
+    in?: $Enums.TierChangeType[] | ListEnumTierChangeTypeFieldRefInput<$PrismaModel>
+    notIn?: $Enums.TierChangeType[] | ListEnumTierChangeTypeFieldRefInput<$PrismaModel>
+    not?: NestedEnumTierChangeTypeFilter<$PrismaModel> | $Enums.TierChangeType
+  }
+
+  export type TierNullableScalarRelationFilter = {
+    is?: TierWhereInput | null
+    isNot?: TierWhereInput | null
+  }
+
+  export type TierHistoryCountOrderByAggregateInput = {
+    id?: SortOrder
+    uid?: SortOrder
+    userId?: SortOrder
+    fromTierId?: SortOrder
+    toTierId?: SortOrder
+    changeType?: SortOrder
+    reason?: SortOrder
+    rollingAmountSnap?: SortOrder
+    bonusAmount?: SortOrder
+    changedAt?: SortOrder
+    changeBy?: SortOrder
+  }
+
+  export type TierHistoryAvgOrderByAggregateInput = {
+    id?: SortOrder
+    userId?: SortOrder
+    fromTierId?: SortOrder
+    toTierId?: SortOrder
+    rollingAmountSnap?: SortOrder
+    bonusAmount?: SortOrder
+  }
+
+  export type TierHistoryMaxOrderByAggregateInput = {
+    id?: SortOrder
+    uid?: SortOrder
+    userId?: SortOrder
+    fromTierId?: SortOrder
+    toTierId?: SortOrder
+    changeType?: SortOrder
+    reason?: SortOrder
+    rollingAmountSnap?: SortOrder
+    bonusAmount?: SortOrder
+    changedAt?: SortOrder
+    changeBy?: SortOrder
+  }
+
+  export type TierHistoryMinOrderByAggregateInput = {
+    id?: SortOrder
+    uid?: SortOrder
+    userId?: SortOrder
+    fromTierId?: SortOrder
+    toTierId?: SortOrder
+    changeType?: SortOrder
+    reason?: SortOrder
+    rollingAmountSnap?: SortOrder
+    bonusAmount?: SortOrder
+    changedAt?: SortOrder
+    changeBy?: SortOrder
+  }
+
+  export type TierHistorySumOrderByAggregateInput = {
+    id?: SortOrder
+    userId?: SortOrder
+    fromTierId?: SortOrder
+    toTierId?: SortOrder
+    rollingAmountSnap?: SortOrder
+    bonusAmount?: SortOrder
+  }
+
+  export type EnumTierChangeTypeWithAggregatesFilter<$PrismaModel = never> = {
+    equals?: $Enums.TierChangeType | EnumTierChangeTypeFieldRefInput<$PrismaModel>
+    in?: $Enums.TierChangeType[] | ListEnumTierChangeTypeFieldRefInput<$PrismaModel>
+    notIn?: $Enums.TierChangeType[] | ListEnumTierChangeTypeFieldRefInput<$PrismaModel>
+    not?: NestedEnumTierChangeTypeWithAggregatesFilter<$PrismaModel> | $Enums.TierChangeType
+    _count?: NestedIntFilter<$PrismaModel>
+    _min?: NestedEnumTierChangeTypeFilter<$PrismaModel>
+    _max?: NestedEnumTierChangeTypeFilter<$PrismaModel>
+  }
+
   export type UserCreateNestedOneWithoutAffiliateCodesInput = {
     create?: XOR<UserCreateWithoutAffiliateCodesInput, UserUncheckedCreateWithoutAffiliateCodesInput>
     connectOrCreate?: UserCreateOrConnectWithoutAffiliateCodesInput
@@ -68128,6 +74421,19 @@ export namespace Prisma {
     connect?: LoginAttemptWhereUniqueInput | LoginAttemptWhereUniqueInput[]
   }
 
+  export type UserTierCreateNestedOneWithoutUserInput = {
+    create?: XOR<UserTierCreateWithoutUserInput, UserTierUncheckedCreateWithoutUserInput>
+    connectOrCreate?: UserTierCreateOrConnectWithoutUserInput
+    connect?: UserTierWhereUniqueInput
+  }
+
+  export type TierHistoryCreateNestedManyWithoutUserInput = {
+    create?: XOR<TierHistoryCreateWithoutUserInput, TierHistoryUncheckedCreateWithoutUserInput> | TierHistoryCreateWithoutUserInput[] | TierHistoryUncheckedCreateWithoutUserInput[]
+    connectOrCreate?: TierHistoryCreateOrConnectWithoutUserInput | TierHistoryCreateOrConnectWithoutUserInput[]
+    createMany?: TierHistoryCreateManyUserInputEnvelope
+    connect?: TierHistoryWhereUniqueInput | TierHistoryWhereUniqueInput[]
+  }
+
   export type AffiliateCodeUncheckedCreateNestedManyWithoutUserInput = {
     create?: XOR<AffiliateCodeCreateWithoutUserInput, AffiliateCodeUncheckedCreateWithoutUserInput> | AffiliateCodeCreateWithoutUserInput[] | AffiliateCodeUncheckedCreateWithoutUserInput[]
     connectOrCreate?: AffiliateCodeCreateOrConnectWithoutUserInput | AffiliateCodeCreateOrConnectWithoutUserInput[]
@@ -68272,6 +74578,19 @@ export namespace Prisma {
     connectOrCreate?: LoginAttemptCreateOrConnectWithoutUserInput | LoginAttemptCreateOrConnectWithoutUserInput[]
     createMany?: LoginAttemptCreateManyUserInputEnvelope
     connect?: LoginAttemptWhereUniqueInput | LoginAttemptWhereUniqueInput[]
+  }
+
+  export type UserTierUncheckedCreateNestedOneWithoutUserInput = {
+    create?: XOR<UserTierCreateWithoutUserInput, UserTierUncheckedCreateWithoutUserInput>
+    connectOrCreate?: UserTierCreateOrConnectWithoutUserInput
+    connect?: UserTierWhereUniqueInput
+  }
+
+  export type TierHistoryUncheckedCreateNestedManyWithoutUserInput = {
+    create?: XOR<TierHistoryCreateWithoutUserInput, TierHistoryUncheckedCreateWithoutUserInput> | TierHistoryCreateWithoutUserInput[] | TierHistoryUncheckedCreateWithoutUserInput[]
+    connectOrCreate?: TierHistoryCreateOrConnectWithoutUserInput | TierHistoryCreateOrConnectWithoutUserInput[]
+    createMany?: TierHistoryCreateManyUserInputEnvelope
+    connect?: TierHistoryWhereUniqueInput | TierHistoryWhereUniqueInput[]
   }
 
   export type NullableEnumSocialTypeFieldUpdateOperationsInput = {
@@ -68584,6 +74903,30 @@ export namespace Prisma {
     deleteMany?: LoginAttemptScalarWhereInput | LoginAttemptScalarWhereInput[]
   }
 
+  export type UserTierUpdateOneWithoutUserNestedInput = {
+    create?: XOR<UserTierCreateWithoutUserInput, UserTierUncheckedCreateWithoutUserInput>
+    connectOrCreate?: UserTierCreateOrConnectWithoutUserInput
+    upsert?: UserTierUpsertWithoutUserInput
+    disconnect?: UserTierWhereInput | boolean
+    delete?: UserTierWhereInput | boolean
+    connect?: UserTierWhereUniqueInput
+    update?: XOR<XOR<UserTierUpdateToOneWithWhereWithoutUserInput, UserTierUpdateWithoutUserInput>, UserTierUncheckedUpdateWithoutUserInput>
+  }
+
+  export type TierHistoryUpdateManyWithoutUserNestedInput = {
+    create?: XOR<TierHistoryCreateWithoutUserInput, TierHistoryUncheckedCreateWithoutUserInput> | TierHistoryCreateWithoutUserInput[] | TierHistoryUncheckedCreateWithoutUserInput[]
+    connectOrCreate?: TierHistoryCreateOrConnectWithoutUserInput | TierHistoryCreateOrConnectWithoutUserInput[]
+    upsert?: TierHistoryUpsertWithWhereUniqueWithoutUserInput | TierHistoryUpsertWithWhereUniqueWithoutUserInput[]
+    createMany?: TierHistoryCreateManyUserInputEnvelope
+    set?: TierHistoryWhereUniqueInput | TierHistoryWhereUniqueInput[]
+    disconnect?: TierHistoryWhereUniqueInput | TierHistoryWhereUniqueInput[]
+    delete?: TierHistoryWhereUniqueInput | TierHistoryWhereUniqueInput[]
+    connect?: TierHistoryWhereUniqueInput | TierHistoryWhereUniqueInput[]
+    update?: TierHistoryUpdateWithWhereUniqueWithoutUserInput | TierHistoryUpdateWithWhereUniqueWithoutUserInput[]
+    updateMany?: TierHistoryUpdateManyWithWhereWithoutUserInput | TierHistoryUpdateManyWithWhereWithoutUserInput[]
+    deleteMany?: TierHistoryScalarWhereInput | TierHistoryScalarWhereInput[]
+  }
+
   export type AffiliateCodeUncheckedUpdateManyWithoutUserNestedInput = {
     create?: XOR<AffiliateCodeCreateWithoutUserInput, AffiliateCodeUncheckedCreateWithoutUserInput> | AffiliateCodeCreateWithoutUserInput[] | AffiliateCodeUncheckedCreateWithoutUserInput[]
     connectOrCreate?: AffiliateCodeCreateOrConnectWithoutUserInput | AffiliateCodeCreateOrConnectWithoutUserInput[]
@@ -68872,6 +75215,30 @@ export namespace Prisma {
     update?: LoginAttemptUpdateWithWhereUniqueWithoutUserInput | LoginAttemptUpdateWithWhereUniqueWithoutUserInput[]
     updateMany?: LoginAttemptUpdateManyWithWhereWithoutUserInput | LoginAttemptUpdateManyWithWhereWithoutUserInput[]
     deleteMany?: LoginAttemptScalarWhereInput | LoginAttemptScalarWhereInput[]
+  }
+
+  export type UserTierUncheckedUpdateOneWithoutUserNestedInput = {
+    create?: XOR<UserTierCreateWithoutUserInput, UserTierUncheckedCreateWithoutUserInput>
+    connectOrCreate?: UserTierCreateOrConnectWithoutUserInput
+    upsert?: UserTierUpsertWithoutUserInput
+    disconnect?: UserTierWhereInput | boolean
+    delete?: UserTierWhereInput | boolean
+    connect?: UserTierWhereUniqueInput
+    update?: XOR<XOR<UserTierUpdateToOneWithWhereWithoutUserInput, UserTierUpdateWithoutUserInput>, UserTierUncheckedUpdateWithoutUserInput>
+  }
+
+  export type TierHistoryUncheckedUpdateManyWithoutUserNestedInput = {
+    create?: XOR<TierHistoryCreateWithoutUserInput, TierHistoryUncheckedCreateWithoutUserInput> | TierHistoryCreateWithoutUserInput[] | TierHistoryUncheckedCreateWithoutUserInput[]
+    connectOrCreate?: TierHistoryCreateOrConnectWithoutUserInput | TierHistoryCreateOrConnectWithoutUserInput[]
+    upsert?: TierHistoryUpsertWithWhereUniqueWithoutUserInput | TierHistoryUpsertWithWhereUniqueWithoutUserInput[]
+    createMany?: TierHistoryCreateManyUserInputEnvelope
+    set?: TierHistoryWhereUniqueInput | TierHistoryWhereUniqueInput[]
+    disconnect?: TierHistoryWhereUniqueInput | TierHistoryWhereUniqueInput[]
+    delete?: TierHistoryWhereUniqueInput | TierHistoryWhereUniqueInput[]
+    connect?: TierHistoryWhereUniqueInput | TierHistoryWhereUniqueInput[]
+    update?: TierHistoryUpdateWithWhereUniqueWithoutUserInput | TierHistoryUpdateWithWhereUniqueWithoutUserInput[]
+    updateMany?: TierHistoryUpdateManyWithWhereWithoutUserInput | TierHistoryUpdateManyWithWhereWithoutUserInput[]
+    deleteMany?: TierHistoryScalarWhereInput | TierHistoryScalarWhereInput[]
   }
 
   export type UserCreateNestedOneWithoutBalancesInput = {
@@ -70480,6 +76847,264 @@ export namespace Prisma {
     update?: XOR<XOR<UserUpdateToOneWithWhereWithoutRevokedSessionsInput, UserUpdateWithoutRevokedSessionsInput>, UserUncheckedUpdateWithoutRevokedSessionsInput>
   }
 
+  export type UserTierCreateNestedManyWithoutTierInput = {
+    create?: XOR<UserTierCreateWithoutTierInput, UserTierUncheckedCreateWithoutTierInput> | UserTierCreateWithoutTierInput[] | UserTierUncheckedCreateWithoutTierInput[]
+    connectOrCreate?: UserTierCreateOrConnectWithoutTierInput | UserTierCreateOrConnectWithoutTierInput[]
+    createMany?: UserTierCreateManyTierInputEnvelope
+    connect?: UserTierWhereUniqueInput | UserTierWhereUniqueInput[]
+  }
+
+  export type TierTranslationCreateNestedManyWithoutTierInput = {
+    create?: XOR<TierTranslationCreateWithoutTierInput, TierTranslationUncheckedCreateWithoutTierInput> | TierTranslationCreateWithoutTierInput[] | TierTranslationUncheckedCreateWithoutTierInput[]
+    connectOrCreate?: TierTranslationCreateOrConnectWithoutTierInput | TierTranslationCreateOrConnectWithoutTierInput[]
+    createMany?: TierTranslationCreateManyTierInputEnvelope
+    connect?: TierTranslationWhereUniqueInput | TierTranslationWhereUniqueInput[]
+  }
+
+  export type TierHistoryCreateNestedManyWithoutFromTierInput = {
+    create?: XOR<TierHistoryCreateWithoutFromTierInput, TierHistoryUncheckedCreateWithoutFromTierInput> | TierHistoryCreateWithoutFromTierInput[] | TierHistoryUncheckedCreateWithoutFromTierInput[]
+    connectOrCreate?: TierHistoryCreateOrConnectWithoutFromTierInput | TierHistoryCreateOrConnectWithoutFromTierInput[]
+    createMany?: TierHistoryCreateManyFromTierInputEnvelope
+    connect?: TierHistoryWhereUniqueInput | TierHistoryWhereUniqueInput[]
+  }
+
+  export type TierHistoryCreateNestedManyWithoutToTierInput = {
+    create?: XOR<TierHistoryCreateWithoutToTierInput, TierHistoryUncheckedCreateWithoutToTierInput> | TierHistoryCreateWithoutToTierInput[] | TierHistoryUncheckedCreateWithoutToTierInput[]
+    connectOrCreate?: TierHistoryCreateOrConnectWithoutToTierInput | TierHistoryCreateOrConnectWithoutToTierInput[]
+    createMany?: TierHistoryCreateManyToTierInputEnvelope
+    connect?: TierHistoryWhereUniqueInput | TierHistoryWhereUniqueInput[]
+  }
+
+  export type UserTierUncheckedCreateNestedManyWithoutTierInput = {
+    create?: XOR<UserTierCreateWithoutTierInput, UserTierUncheckedCreateWithoutTierInput> | UserTierCreateWithoutTierInput[] | UserTierUncheckedCreateWithoutTierInput[]
+    connectOrCreate?: UserTierCreateOrConnectWithoutTierInput | UserTierCreateOrConnectWithoutTierInput[]
+    createMany?: UserTierCreateManyTierInputEnvelope
+    connect?: UserTierWhereUniqueInput | UserTierWhereUniqueInput[]
+  }
+
+  export type TierTranslationUncheckedCreateNestedManyWithoutTierInput = {
+    create?: XOR<TierTranslationCreateWithoutTierInput, TierTranslationUncheckedCreateWithoutTierInput> | TierTranslationCreateWithoutTierInput[] | TierTranslationUncheckedCreateWithoutTierInput[]
+    connectOrCreate?: TierTranslationCreateOrConnectWithoutTierInput | TierTranslationCreateOrConnectWithoutTierInput[]
+    createMany?: TierTranslationCreateManyTierInputEnvelope
+    connect?: TierTranslationWhereUniqueInput | TierTranslationWhereUniqueInput[]
+  }
+
+  export type TierHistoryUncheckedCreateNestedManyWithoutFromTierInput = {
+    create?: XOR<TierHistoryCreateWithoutFromTierInput, TierHistoryUncheckedCreateWithoutFromTierInput> | TierHistoryCreateWithoutFromTierInput[] | TierHistoryUncheckedCreateWithoutFromTierInput[]
+    connectOrCreate?: TierHistoryCreateOrConnectWithoutFromTierInput | TierHistoryCreateOrConnectWithoutFromTierInput[]
+    createMany?: TierHistoryCreateManyFromTierInputEnvelope
+    connect?: TierHistoryWhereUniqueInput | TierHistoryWhereUniqueInput[]
+  }
+
+  export type TierHistoryUncheckedCreateNestedManyWithoutToTierInput = {
+    create?: XOR<TierHistoryCreateWithoutToTierInput, TierHistoryUncheckedCreateWithoutToTierInput> | TierHistoryCreateWithoutToTierInput[] | TierHistoryUncheckedCreateWithoutToTierInput[]
+    connectOrCreate?: TierHistoryCreateOrConnectWithoutToTierInput | TierHistoryCreateOrConnectWithoutToTierInput[]
+    createMany?: TierHistoryCreateManyToTierInputEnvelope
+    connect?: TierHistoryWhereUniqueInput | TierHistoryWhereUniqueInput[]
+  }
+
+  export type UserTierUpdateManyWithoutTierNestedInput = {
+    create?: XOR<UserTierCreateWithoutTierInput, UserTierUncheckedCreateWithoutTierInput> | UserTierCreateWithoutTierInput[] | UserTierUncheckedCreateWithoutTierInput[]
+    connectOrCreate?: UserTierCreateOrConnectWithoutTierInput | UserTierCreateOrConnectWithoutTierInput[]
+    upsert?: UserTierUpsertWithWhereUniqueWithoutTierInput | UserTierUpsertWithWhereUniqueWithoutTierInput[]
+    createMany?: UserTierCreateManyTierInputEnvelope
+    set?: UserTierWhereUniqueInput | UserTierWhereUniqueInput[]
+    disconnect?: UserTierWhereUniqueInput | UserTierWhereUniqueInput[]
+    delete?: UserTierWhereUniqueInput | UserTierWhereUniqueInput[]
+    connect?: UserTierWhereUniqueInput | UserTierWhereUniqueInput[]
+    update?: UserTierUpdateWithWhereUniqueWithoutTierInput | UserTierUpdateWithWhereUniqueWithoutTierInput[]
+    updateMany?: UserTierUpdateManyWithWhereWithoutTierInput | UserTierUpdateManyWithWhereWithoutTierInput[]
+    deleteMany?: UserTierScalarWhereInput | UserTierScalarWhereInput[]
+  }
+
+  export type TierTranslationUpdateManyWithoutTierNestedInput = {
+    create?: XOR<TierTranslationCreateWithoutTierInput, TierTranslationUncheckedCreateWithoutTierInput> | TierTranslationCreateWithoutTierInput[] | TierTranslationUncheckedCreateWithoutTierInput[]
+    connectOrCreate?: TierTranslationCreateOrConnectWithoutTierInput | TierTranslationCreateOrConnectWithoutTierInput[]
+    upsert?: TierTranslationUpsertWithWhereUniqueWithoutTierInput | TierTranslationUpsertWithWhereUniqueWithoutTierInput[]
+    createMany?: TierTranslationCreateManyTierInputEnvelope
+    set?: TierTranslationWhereUniqueInput | TierTranslationWhereUniqueInput[]
+    disconnect?: TierTranslationWhereUniqueInput | TierTranslationWhereUniqueInput[]
+    delete?: TierTranslationWhereUniqueInput | TierTranslationWhereUniqueInput[]
+    connect?: TierTranslationWhereUniqueInput | TierTranslationWhereUniqueInput[]
+    update?: TierTranslationUpdateWithWhereUniqueWithoutTierInput | TierTranslationUpdateWithWhereUniqueWithoutTierInput[]
+    updateMany?: TierTranslationUpdateManyWithWhereWithoutTierInput | TierTranslationUpdateManyWithWhereWithoutTierInput[]
+    deleteMany?: TierTranslationScalarWhereInput | TierTranslationScalarWhereInput[]
+  }
+
+  export type TierHistoryUpdateManyWithoutFromTierNestedInput = {
+    create?: XOR<TierHistoryCreateWithoutFromTierInput, TierHistoryUncheckedCreateWithoutFromTierInput> | TierHistoryCreateWithoutFromTierInput[] | TierHistoryUncheckedCreateWithoutFromTierInput[]
+    connectOrCreate?: TierHistoryCreateOrConnectWithoutFromTierInput | TierHistoryCreateOrConnectWithoutFromTierInput[]
+    upsert?: TierHistoryUpsertWithWhereUniqueWithoutFromTierInput | TierHistoryUpsertWithWhereUniqueWithoutFromTierInput[]
+    createMany?: TierHistoryCreateManyFromTierInputEnvelope
+    set?: TierHistoryWhereUniqueInput | TierHistoryWhereUniqueInput[]
+    disconnect?: TierHistoryWhereUniqueInput | TierHistoryWhereUniqueInput[]
+    delete?: TierHistoryWhereUniqueInput | TierHistoryWhereUniqueInput[]
+    connect?: TierHistoryWhereUniqueInput | TierHistoryWhereUniqueInput[]
+    update?: TierHistoryUpdateWithWhereUniqueWithoutFromTierInput | TierHistoryUpdateWithWhereUniqueWithoutFromTierInput[]
+    updateMany?: TierHistoryUpdateManyWithWhereWithoutFromTierInput | TierHistoryUpdateManyWithWhereWithoutFromTierInput[]
+    deleteMany?: TierHistoryScalarWhereInput | TierHistoryScalarWhereInput[]
+  }
+
+  export type TierHistoryUpdateManyWithoutToTierNestedInput = {
+    create?: XOR<TierHistoryCreateWithoutToTierInput, TierHistoryUncheckedCreateWithoutToTierInput> | TierHistoryCreateWithoutToTierInput[] | TierHistoryUncheckedCreateWithoutToTierInput[]
+    connectOrCreate?: TierHistoryCreateOrConnectWithoutToTierInput | TierHistoryCreateOrConnectWithoutToTierInput[]
+    upsert?: TierHistoryUpsertWithWhereUniqueWithoutToTierInput | TierHistoryUpsertWithWhereUniqueWithoutToTierInput[]
+    createMany?: TierHistoryCreateManyToTierInputEnvelope
+    set?: TierHistoryWhereUniqueInput | TierHistoryWhereUniqueInput[]
+    disconnect?: TierHistoryWhereUniqueInput | TierHistoryWhereUniqueInput[]
+    delete?: TierHistoryWhereUniqueInput | TierHistoryWhereUniqueInput[]
+    connect?: TierHistoryWhereUniqueInput | TierHistoryWhereUniqueInput[]
+    update?: TierHistoryUpdateWithWhereUniqueWithoutToTierInput | TierHistoryUpdateWithWhereUniqueWithoutToTierInput[]
+    updateMany?: TierHistoryUpdateManyWithWhereWithoutToTierInput | TierHistoryUpdateManyWithWhereWithoutToTierInput[]
+    deleteMany?: TierHistoryScalarWhereInput | TierHistoryScalarWhereInput[]
+  }
+
+  export type UserTierUncheckedUpdateManyWithoutTierNestedInput = {
+    create?: XOR<UserTierCreateWithoutTierInput, UserTierUncheckedCreateWithoutTierInput> | UserTierCreateWithoutTierInput[] | UserTierUncheckedCreateWithoutTierInput[]
+    connectOrCreate?: UserTierCreateOrConnectWithoutTierInput | UserTierCreateOrConnectWithoutTierInput[]
+    upsert?: UserTierUpsertWithWhereUniqueWithoutTierInput | UserTierUpsertWithWhereUniqueWithoutTierInput[]
+    createMany?: UserTierCreateManyTierInputEnvelope
+    set?: UserTierWhereUniqueInput | UserTierWhereUniqueInput[]
+    disconnect?: UserTierWhereUniqueInput | UserTierWhereUniqueInput[]
+    delete?: UserTierWhereUniqueInput | UserTierWhereUniqueInput[]
+    connect?: UserTierWhereUniqueInput | UserTierWhereUniqueInput[]
+    update?: UserTierUpdateWithWhereUniqueWithoutTierInput | UserTierUpdateWithWhereUniqueWithoutTierInput[]
+    updateMany?: UserTierUpdateManyWithWhereWithoutTierInput | UserTierUpdateManyWithWhereWithoutTierInput[]
+    deleteMany?: UserTierScalarWhereInput | UserTierScalarWhereInput[]
+  }
+
+  export type TierTranslationUncheckedUpdateManyWithoutTierNestedInput = {
+    create?: XOR<TierTranslationCreateWithoutTierInput, TierTranslationUncheckedCreateWithoutTierInput> | TierTranslationCreateWithoutTierInput[] | TierTranslationUncheckedCreateWithoutTierInput[]
+    connectOrCreate?: TierTranslationCreateOrConnectWithoutTierInput | TierTranslationCreateOrConnectWithoutTierInput[]
+    upsert?: TierTranslationUpsertWithWhereUniqueWithoutTierInput | TierTranslationUpsertWithWhereUniqueWithoutTierInput[]
+    createMany?: TierTranslationCreateManyTierInputEnvelope
+    set?: TierTranslationWhereUniqueInput | TierTranslationWhereUniqueInput[]
+    disconnect?: TierTranslationWhereUniqueInput | TierTranslationWhereUniqueInput[]
+    delete?: TierTranslationWhereUniqueInput | TierTranslationWhereUniqueInput[]
+    connect?: TierTranslationWhereUniqueInput | TierTranslationWhereUniqueInput[]
+    update?: TierTranslationUpdateWithWhereUniqueWithoutTierInput | TierTranslationUpdateWithWhereUniqueWithoutTierInput[]
+    updateMany?: TierTranslationUpdateManyWithWhereWithoutTierInput | TierTranslationUpdateManyWithWhereWithoutTierInput[]
+    deleteMany?: TierTranslationScalarWhereInput | TierTranslationScalarWhereInput[]
+  }
+
+  export type TierHistoryUncheckedUpdateManyWithoutFromTierNestedInput = {
+    create?: XOR<TierHistoryCreateWithoutFromTierInput, TierHistoryUncheckedCreateWithoutFromTierInput> | TierHistoryCreateWithoutFromTierInput[] | TierHistoryUncheckedCreateWithoutFromTierInput[]
+    connectOrCreate?: TierHistoryCreateOrConnectWithoutFromTierInput | TierHistoryCreateOrConnectWithoutFromTierInput[]
+    upsert?: TierHistoryUpsertWithWhereUniqueWithoutFromTierInput | TierHistoryUpsertWithWhereUniqueWithoutFromTierInput[]
+    createMany?: TierHistoryCreateManyFromTierInputEnvelope
+    set?: TierHistoryWhereUniqueInput | TierHistoryWhereUniqueInput[]
+    disconnect?: TierHistoryWhereUniqueInput | TierHistoryWhereUniqueInput[]
+    delete?: TierHistoryWhereUniqueInput | TierHistoryWhereUniqueInput[]
+    connect?: TierHistoryWhereUniqueInput | TierHistoryWhereUniqueInput[]
+    update?: TierHistoryUpdateWithWhereUniqueWithoutFromTierInput | TierHistoryUpdateWithWhereUniqueWithoutFromTierInput[]
+    updateMany?: TierHistoryUpdateManyWithWhereWithoutFromTierInput | TierHistoryUpdateManyWithWhereWithoutFromTierInput[]
+    deleteMany?: TierHistoryScalarWhereInput | TierHistoryScalarWhereInput[]
+  }
+
+  export type TierHistoryUncheckedUpdateManyWithoutToTierNestedInput = {
+    create?: XOR<TierHistoryCreateWithoutToTierInput, TierHistoryUncheckedCreateWithoutToTierInput> | TierHistoryCreateWithoutToTierInput[] | TierHistoryUncheckedCreateWithoutToTierInput[]
+    connectOrCreate?: TierHistoryCreateOrConnectWithoutToTierInput | TierHistoryCreateOrConnectWithoutToTierInput[]
+    upsert?: TierHistoryUpsertWithWhereUniqueWithoutToTierInput | TierHistoryUpsertWithWhereUniqueWithoutToTierInput[]
+    createMany?: TierHistoryCreateManyToTierInputEnvelope
+    set?: TierHistoryWhereUniqueInput | TierHistoryWhereUniqueInput[]
+    disconnect?: TierHistoryWhereUniqueInput | TierHistoryWhereUniqueInput[]
+    delete?: TierHistoryWhereUniqueInput | TierHistoryWhereUniqueInput[]
+    connect?: TierHistoryWhereUniqueInput | TierHistoryWhereUniqueInput[]
+    update?: TierHistoryUpdateWithWhereUniqueWithoutToTierInput | TierHistoryUpdateWithWhereUniqueWithoutToTierInput[]
+    updateMany?: TierHistoryUpdateManyWithWhereWithoutToTierInput | TierHistoryUpdateManyWithWhereWithoutToTierInput[]
+    deleteMany?: TierHistoryScalarWhereInput | TierHistoryScalarWhereInput[]
+  }
+
+  export type TierCreateNestedOneWithoutTranslationsInput = {
+    create?: XOR<TierCreateWithoutTranslationsInput, TierUncheckedCreateWithoutTranslationsInput>
+    connectOrCreate?: TierCreateOrConnectWithoutTranslationsInput
+    connect?: TierWhereUniqueInput
+  }
+
+  export type TierUpdateOneRequiredWithoutTranslationsNestedInput = {
+    create?: XOR<TierCreateWithoutTranslationsInput, TierUncheckedCreateWithoutTranslationsInput>
+    connectOrCreate?: TierCreateOrConnectWithoutTranslationsInput
+    upsert?: TierUpsertWithoutTranslationsInput
+    connect?: TierWhereUniqueInput
+    update?: XOR<XOR<TierUpdateToOneWithWhereWithoutTranslationsInput, TierUpdateWithoutTranslationsInput>, TierUncheckedUpdateWithoutTranslationsInput>
+  }
+
+  export type UserCreateNestedOneWithoutUserTierInput = {
+    create?: XOR<UserCreateWithoutUserTierInput, UserUncheckedCreateWithoutUserTierInput>
+    connectOrCreate?: UserCreateOrConnectWithoutUserTierInput
+    connect?: UserWhereUniqueInput
+  }
+
+  export type TierCreateNestedOneWithoutUserTiersInput = {
+    create?: XOR<TierCreateWithoutUserTiersInput, TierUncheckedCreateWithoutUserTiersInput>
+    connectOrCreate?: TierCreateOrConnectWithoutUserTiersInput
+    connect?: TierWhereUniqueInput
+  }
+
+  export type UserUpdateOneRequiredWithoutUserTierNestedInput = {
+    create?: XOR<UserCreateWithoutUserTierInput, UserUncheckedCreateWithoutUserTierInput>
+    connectOrCreate?: UserCreateOrConnectWithoutUserTierInput
+    upsert?: UserUpsertWithoutUserTierInput
+    connect?: UserWhereUniqueInput
+    update?: XOR<XOR<UserUpdateToOneWithWhereWithoutUserTierInput, UserUpdateWithoutUserTierInput>, UserUncheckedUpdateWithoutUserTierInput>
+  }
+
+  export type TierUpdateOneRequiredWithoutUserTiersNestedInput = {
+    create?: XOR<TierCreateWithoutUserTiersInput, TierUncheckedCreateWithoutUserTiersInput>
+    connectOrCreate?: TierCreateOrConnectWithoutUserTiersInput
+    upsert?: TierUpsertWithoutUserTiersInput
+    connect?: TierWhereUniqueInput
+    update?: XOR<XOR<TierUpdateToOneWithWhereWithoutUserTiersInput, TierUpdateWithoutUserTiersInput>, TierUncheckedUpdateWithoutUserTiersInput>
+  }
+
+  export type UserCreateNestedOneWithoutTierHistoryInput = {
+    create?: XOR<UserCreateWithoutTierHistoryInput, UserUncheckedCreateWithoutTierHistoryInput>
+    connectOrCreate?: UserCreateOrConnectWithoutTierHistoryInput
+    connect?: UserWhereUniqueInput
+  }
+
+  export type TierCreateNestedOneWithoutHistoryFromInput = {
+    create?: XOR<TierCreateWithoutHistoryFromInput, TierUncheckedCreateWithoutHistoryFromInput>
+    connectOrCreate?: TierCreateOrConnectWithoutHistoryFromInput
+    connect?: TierWhereUniqueInput
+  }
+
+  export type TierCreateNestedOneWithoutHistoryToInput = {
+    create?: XOR<TierCreateWithoutHistoryToInput, TierUncheckedCreateWithoutHistoryToInput>
+    connectOrCreate?: TierCreateOrConnectWithoutHistoryToInput
+    connect?: TierWhereUniqueInput
+  }
+
+  export type EnumTierChangeTypeFieldUpdateOperationsInput = {
+    set?: $Enums.TierChangeType
+  }
+
+  export type UserUpdateOneRequiredWithoutTierHistoryNestedInput = {
+    create?: XOR<UserCreateWithoutTierHistoryInput, UserUncheckedCreateWithoutTierHistoryInput>
+    connectOrCreate?: UserCreateOrConnectWithoutTierHistoryInput
+    upsert?: UserUpsertWithoutTierHistoryInput
+    connect?: UserWhereUniqueInput
+    update?: XOR<XOR<UserUpdateToOneWithWhereWithoutTierHistoryInput, UserUpdateWithoutTierHistoryInput>, UserUncheckedUpdateWithoutTierHistoryInput>
+  }
+
+  export type TierUpdateOneWithoutHistoryFromNestedInput = {
+    create?: XOR<TierCreateWithoutHistoryFromInput, TierUncheckedCreateWithoutHistoryFromInput>
+    connectOrCreate?: TierCreateOrConnectWithoutHistoryFromInput
+    upsert?: TierUpsertWithoutHistoryFromInput
+    disconnect?: TierWhereInput | boolean
+    delete?: TierWhereInput | boolean
+    connect?: TierWhereUniqueInput
+    update?: XOR<XOR<TierUpdateToOneWithWhereWithoutHistoryFromInput, TierUpdateWithoutHistoryFromInput>, TierUncheckedUpdateWithoutHistoryFromInput>
+  }
+
+  export type TierUpdateOneRequiredWithoutHistoryToNestedInput = {
+    create?: XOR<TierCreateWithoutHistoryToInput, TierUncheckedCreateWithoutHistoryToInput>
+    connectOrCreate?: TierCreateOrConnectWithoutHistoryToInput
+    upsert?: TierUpsertWithoutHistoryToInput
+    connect?: TierWhereUniqueInput
+    update?: XOR<XOR<TierUpdateToOneWithWhereWithoutHistoryToInput, TierUpdateWithoutHistoryToInput>, TierUncheckedUpdateWithoutHistoryToInput>
+  }
+
   export type NestedBigIntFilter<$PrismaModel = never> = {
     equals?: bigint | number | BigIntFieldRefInput<$PrismaModel>
     in?: bigint[] | number[] | ListBigIntFieldRefInput<$PrismaModel>
@@ -71494,6 +78119,23 @@ export namespace Prisma {
     _max?: NestedEnumSessionStatusFilter<$PrismaModel>
   }
 
+  export type NestedEnumTierChangeTypeFilter<$PrismaModel = never> = {
+    equals?: $Enums.TierChangeType | EnumTierChangeTypeFieldRefInput<$PrismaModel>
+    in?: $Enums.TierChangeType[] | ListEnumTierChangeTypeFieldRefInput<$PrismaModel>
+    notIn?: $Enums.TierChangeType[] | ListEnumTierChangeTypeFieldRefInput<$PrismaModel>
+    not?: NestedEnumTierChangeTypeFilter<$PrismaModel> | $Enums.TierChangeType
+  }
+
+  export type NestedEnumTierChangeTypeWithAggregatesFilter<$PrismaModel = never> = {
+    equals?: $Enums.TierChangeType | EnumTierChangeTypeFieldRefInput<$PrismaModel>
+    in?: $Enums.TierChangeType[] | ListEnumTierChangeTypeFieldRefInput<$PrismaModel>
+    notIn?: $Enums.TierChangeType[] | ListEnumTierChangeTypeFieldRefInput<$PrismaModel>
+    not?: NestedEnumTierChangeTypeWithAggregatesFilter<$PrismaModel> | $Enums.TierChangeType
+    _count?: NestedIntFilter<$PrismaModel>
+    _min?: NestedEnumTierChangeTypeFilter<$PrismaModel>
+    _max?: NestedEnumTierChangeTypeFilter<$PrismaModel>
+  }
+
   export type UserCreateWithoutAffiliateCodesInput = {
     id?: bigint | number
     uid?: string
@@ -71534,6 +78176,8 @@ export namespace Prisma {
     RevokedSessions?: UserSessionCreateNestedManyWithoutRevokedByUserInput
     UserToken?: UserTokenCreateNestedManyWithoutUserInput
     loginAttempts?: LoginAttemptCreateNestedManyWithoutUserInput
+    userTier?: UserTierCreateNestedOneWithoutUserInput
+    tierHistory?: TierHistoryCreateNestedManyWithoutUserInput
   }
 
   export type UserUncheckedCreateWithoutAffiliateCodesInput = {
@@ -71576,6 +78220,8 @@ export namespace Prisma {
     RevokedSessions?: UserSessionUncheckedCreateNestedManyWithoutRevokedByUserInput
     UserToken?: UserTokenUncheckedCreateNestedManyWithoutUserInput
     loginAttempts?: LoginAttemptUncheckedCreateNestedManyWithoutUserInput
+    userTier?: UserTierUncheckedCreateNestedOneWithoutUserInput
+    tierHistory?: TierHistoryUncheckedCreateNestedManyWithoutUserInput
   }
 
   export type UserCreateOrConnectWithoutAffiliateCodesInput = {
@@ -71668,6 +78314,8 @@ export namespace Prisma {
     RevokedSessions?: UserSessionUpdateManyWithoutRevokedByUserNestedInput
     UserToken?: UserTokenUpdateManyWithoutUserNestedInput
     loginAttempts?: LoginAttemptUpdateManyWithoutUserNestedInput
+    userTier?: UserTierUpdateOneWithoutUserNestedInput
+    tierHistory?: TierHistoryUpdateManyWithoutUserNestedInput
   }
 
   export type UserUncheckedUpdateWithoutAffiliateCodesInput = {
@@ -71710,6 +78358,8 @@ export namespace Prisma {
     RevokedSessions?: UserSessionUncheckedUpdateManyWithoutRevokedByUserNestedInput
     UserToken?: UserTokenUncheckedUpdateManyWithoutUserNestedInput
     loginAttempts?: LoginAttemptUncheckedUpdateManyWithoutUserNestedInput
+    userTier?: UserTierUncheckedUpdateOneWithoutUserNestedInput
+    tierHistory?: TierHistoryUncheckedUpdateManyWithoutUserNestedInput
   }
 
   export type ReferralUpsertWithWhereUniqueWithoutCodeInput = {
@@ -71784,6 +78434,8 @@ export namespace Prisma {
     RevokedSessions?: UserSessionCreateNestedManyWithoutRevokedByUserInput
     UserToken?: UserTokenCreateNestedManyWithoutUserInput
     loginAttempts?: LoginAttemptCreateNestedManyWithoutUserInput
+    userTier?: UserTierCreateNestedOneWithoutUserInput
+    tierHistory?: TierHistoryCreateNestedManyWithoutUserInput
   }
 
   export type UserUncheckedCreateWithoutAffiliateReferralsInput = {
@@ -71826,6 +78478,8 @@ export namespace Prisma {
     RevokedSessions?: UserSessionUncheckedCreateNestedManyWithoutRevokedByUserInput
     UserToken?: UserTokenUncheckedCreateNestedManyWithoutUserInput
     loginAttempts?: LoginAttemptUncheckedCreateNestedManyWithoutUserInput
+    userTier?: UserTierUncheckedCreateNestedOneWithoutUserInput
+    tierHistory?: TierHistoryUncheckedCreateNestedManyWithoutUserInput
   }
 
   export type UserCreateOrConnectWithoutAffiliateReferralsInput = {
@@ -71908,6 +78562,8 @@ export namespace Prisma {
     RevokedSessions?: UserSessionCreateNestedManyWithoutRevokedByUserInput
     UserToken?: UserTokenCreateNestedManyWithoutUserInput
     loginAttempts?: LoginAttemptCreateNestedManyWithoutUserInput
+    userTier?: UserTierCreateNestedOneWithoutUserInput
+    tierHistory?: TierHistoryCreateNestedManyWithoutUserInput
   }
 
   export type UserUncheckedCreateWithoutReferredUsersInput = {
@@ -71950,6 +78606,8 @@ export namespace Prisma {
     RevokedSessions?: UserSessionUncheckedCreateNestedManyWithoutRevokedByUserInput
     UserToken?: UserTokenUncheckedCreateNestedManyWithoutUserInput
     loginAttempts?: LoginAttemptUncheckedCreateNestedManyWithoutUserInput
+    userTier?: UserTierUncheckedCreateNestedOneWithoutUserInput
+    tierHistory?: TierHistoryUncheckedCreateNestedManyWithoutUserInput
   }
 
   export type UserCreateOrConnectWithoutReferredUsersInput = {
@@ -72008,6 +78666,8 @@ export namespace Prisma {
     RevokedSessions?: UserSessionUpdateManyWithoutRevokedByUserNestedInput
     UserToken?: UserTokenUpdateManyWithoutUserNestedInput
     loginAttempts?: LoginAttemptUpdateManyWithoutUserNestedInput
+    userTier?: UserTierUpdateOneWithoutUserNestedInput
+    tierHistory?: TierHistoryUpdateManyWithoutUserNestedInput
   }
 
   export type UserUncheckedUpdateWithoutAffiliateReferralsInput = {
@@ -72050,6 +78710,8 @@ export namespace Prisma {
     RevokedSessions?: UserSessionUncheckedUpdateManyWithoutRevokedByUserNestedInput
     UserToken?: UserTokenUncheckedUpdateManyWithoutUserNestedInput
     loginAttempts?: LoginAttemptUncheckedUpdateManyWithoutUserNestedInput
+    userTier?: UserTierUncheckedUpdateOneWithoutUserNestedInput
+    tierHistory?: TierHistoryUncheckedUpdateManyWithoutUserNestedInput
   }
 
   export type AffiliateCodeUpsertWithoutReferralsInput = {
@@ -72144,6 +78806,8 @@ export namespace Prisma {
     RevokedSessions?: UserSessionUpdateManyWithoutRevokedByUserNestedInput
     UserToken?: UserTokenUpdateManyWithoutUserNestedInput
     loginAttempts?: LoginAttemptUpdateManyWithoutUserNestedInput
+    userTier?: UserTierUpdateOneWithoutUserNestedInput
+    tierHistory?: TierHistoryUpdateManyWithoutUserNestedInput
   }
 
   export type UserUncheckedUpdateWithoutReferredUsersInput = {
@@ -72186,6 +78850,8 @@ export namespace Prisma {
     RevokedSessions?: UserSessionUncheckedUpdateManyWithoutRevokedByUserNestedInput
     UserToken?: UserTokenUncheckedUpdateManyWithoutUserNestedInput
     loginAttempts?: LoginAttemptUncheckedUpdateManyWithoutUserNestedInput
+    userTier?: UserTierUncheckedUpdateOneWithoutUserNestedInput
+    tierHistory?: TierHistoryUncheckedUpdateManyWithoutUserNestedInput
   }
 
   export type AffiliateCodeCreateWithoutUserInput = {
@@ -73038,6 +79704,71 @@ export namespace Prisma {
     skipDuplicates?: boolean
   }
 
+  export type UserTierCreateWithoutUserInput = {
+    id?: bigint | number
+    uid?: string
+    cumulativeRollingUsd?: Decimal | DecimalJsLike | number | string
+    highestPromotedPriority?: number
+    isManualLock?: boolean
+    lastPromotedAt?: Date | string
+    createdAt?: Date | string
+    updatedAt?: Date | string
+    tier: TierCreateNestedOneWithoutUserTiersInput
+  }
+
+  export type UserTierUncheckedCreateWithoutUserInput = {
+    id?: bigint | number
+    uid?: string
+    tierId: bigint | number
+    cumulativeRollingUsd?: Decimal | DecimalJsLike | number | string
+    highestPromotedPriority?: number
+    isManualLock?: boolean
+    lastPromotedAt?: Date | string
+    createdAt?: Date | string
+    updatedAt?: Date | string
+  }
+
+  export type UserTierCreateOrConnectWithoutUserInput = {
+    where: UserTierWhereUniqueInput
+    create: XOR<UserTierCreateWithoutUserInput, UserTierUncheckedCreateWithoutUserInput>
+  }
+
+  export type TierHistoryCreateWithoutUserInput = {
+    id?: bigint | number
+    uid?: string
+    changeType: $Enums.TierChangeType
+    reason?: string | null
+    rollingAmountSnap: Decimal | DecimalJsLike | number | string
+    bonusAmount?: Decimal | DecimalJsLike | number | string | null
+    changedAt?: Date | string
+    changeBy?: string | null
+    fromTier?: TierCreateNestedOneWithoutHistoryFromInput
+    toTier: TierCreateNestedOneWithoutHistoryToInput
+  }
+
+  export type TierHistoryUncheckedCreateWithoutUserInput = {
+    id?: bigint | number
+    uid?: string
+    fromTierId?: bigint | number | null
+    toTierId: bigint | number
+    changeType: $Enums.TierChangeType
+    reason?: string | null
+    rollingAmountSnap: Decimal | DecimalJsLike | number | string
+    bonusAmount?: Decimal | DecimalJsLike | number | string | null
+    changedAt?: Date | string
+    changeBy?: string | null
+  }
+
+  export type TierHistoryCreateOrConnectWithoutUserInput = {
+    where: TierHistoryWhereUniqueInput
+    create: XOR<TierHistoryCreateWithoutUserInput, TierHistoryUncheckedCreateWithoutUserInput>
+  }
+
+  export type TierHistoryCreateManyUserInputEnvelope = {
+    data: TierHistoryCreateManyUserInput | TierHistoryCreateManyUserInput[]
+    skipDuplicates?: boolean
+  }
+
   export type AffiliateCodeUpsertWithWhereUniqueWithoutUserInput = {
     where: AffiliateCodeWhereUniqueInput
     update: XOR<AffiliateCodeUpdateWithoutUserInput, AffiliateCodeUncheckedUpdateWithoutUserInput>
@@ -73694,6 +80425,74 @@ export namespace Prisma {
     isAdmin?: BoolFilter<"LoginAttempt"> | boolean
   }
 
+  export type UserTierUpsertWithoutUserInput = {
+    update: XOR<UserTierUpdateWithoutUserInput, UserTierUncheckedUpdateWithoutUserInput>
+    create: XOR<UserTierCreateWithoutUserInput, UserTierUncheckedCreateWithoutUserInput>
+    where?: UserTierWhereInput
+  }
+
+  export type UserTierUpdateToOneWithWhereWithoutUserInput = {
+    where?: UserTierWhereInput
+    data: XOR<UserTierUpdateWithoutUserInput, UserTierUncheckedUpdateWithoutUserInput>
+  }
+
+  export type UserTierUpdateWithoutUserInput = {
+    id?: BigIntFieldUpdateOperationsInput | bigint | number
+    uid?: StringFieldUpdateOperationsInput | string
+    cumulativeRollingUsd?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
+    highestPromotedPriority?: IntFieldUpdateOperationsInput | number
+    isManualLock?: BoolFieldUpdateOperationsInput | boolean
+    lastPromotedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    tier?: TierUpdateOneRequiredWithoutUserTiersNestedInput
+  }
+
+  export type UserTierUncheckedUpdateWithoutUserInput = {
+    id?: BigIntFieldUpdateOperationsInput | bigint | number
+    uid?: StringFieldUpdateOperationsInput | string
+    tierId?: BigIntFieldUpdateOperationsInput | bigint | number
+    cumulativeRollingUsd?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
+    highestPromotedPriority?: IntFieldUpdateOperationsInput | number
+    isManualLock?: BoolFieldUpdateOperationsInput | boolean
+    lastPromotedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+  }
+
+  export type TierHistoryUpsertWithWhereUniqueWithoutUserInput = {
+    where: TierHistoryWhereUniqueInput
+    update: XOR<TierHistoryUpdateWithoutUserInput, TierHistoryUncheckedUpdateWithoutUserInput>
+    create: XOR<TierHistoryCreateWithoutUserInput, TierHistoryUncheckedCreateWithoutUserInput>
+  }
+
+  export type TierHistoryUpdateWithWhereUniqueWithoutUserInput = {
+    where: TierHistoryWhereUniqueInput
+    data: XOR<TierHistoryUpdateWithoutUserInput, TierHistoryUncheckedUpdateWithoutUserInput>
+  }
+
+  export type TierHistoryUpdateManyWithWhereWithoutUserInput = {
+    where: TierHistoryScalarWhereInput
+    data: XOR<TierHistoryUpdateManyMutationInput, TierHistoryUncheckedUpdateManyWithoutUserInput>
+  }
+
+  export type TierHistoryScalarWhereInput = {
+    AND?: TierHistoryScalarWhereInput | TierHistoryScalarWhereInput[]
+    OR?: TierHistoryScalarWhereInput[]
+    NOT?: TierHistoryScalarWhereInput | TierHistoryScalarWhereInput[]
+    id?: BigIntFilter<"TierHistory"> | bigint | number
+    uid?: StringFilter<"TierHistory"> | string
+    userId?: BigIntFilter<"TierHistory"> | bigint | number
+    fromTierId?: BigIntNullableFilter<"TierHistory"> | bigint | number | null
+    toTierId?: BigIntFilter<"TierHistory"> | bigint | number
+    changeType?: EnumTierChangeTypeFilter<"TierHistory"> | $Enums.TierChangeType
+    reason?: StringNullableFilter<"TierHistory"> | string | null
+    rollingAmountSnap?: DecimalFilter<"TierHistory"> | Decimal | DecimalJsLike | number | string
+    bonusAmount?: DecimalNullableFilter<"TierHistory"> | Decimal | DecimalJsLike | number | string | null
+    changedAt?: DateTimeFilter<"TierHistory"> | Date | string
+    changeBy?: StringNullableFilter<"TierHistory"> | string | null
+  }
+
   export type UserCreateWithoutBalancesInput = {
     id?: bigint | number
     uid?: string
@@ -73734,6 +80533,8 @@ export namespace Prisma {
     RevokedSessions?: UserSessionCreateNestedManyWithoutRevokedByUserInput
     UserToken?: UserTokenCreateNestedManyWithoutUserInput
     loginAttempts?: LoginAttemptCreateNestedManyWithoutUserInput
+    userTier?: UserTierCreateNestedOneWithoutUserInput
+    tierHistory?: TierHistoryCreateNestedManyWithoutUserInput
   }
 
   export type UserUncheckedCreateWithoutBalancesInput = {
@@ -73776,6 +80577,8 @@ export namespace Prisma {
     RevokedSessions?: UserSessionUncheckedCreateNestedManyWithoutRevokedByUserInput
     UserToken?: UserTokenUncheckedCreateNestedManyWithoutUserInput
     loginAttempts?: LoginAttemptUncheckedCreateNestedManyWithoutUserInput
+    userTier?: UserTierUncheckedCreateNestedOneWithoutUserInput
+    tierHistory?: TierHistoryUncheckedCreateNestedManyWithoutUserInput
   }
 
   export type UserCreateOrConnectWithoutBalancesInput = {
@@ -73834,6 +80637,8 @@ export namespace Prisma {
     RevokedSessions?: UserSessionUpdateManyWithoutRevokedByUserNestedInput
     UserToken?: UserTokenUpdateManyWithoutUserNestedInput
     loginAttempts?: LoginAttemptUpdateManyWithoutUserNestedInput
+    userTier?: UserTierUpdateOneWithoutUserNestedInput
+    tierHistory?: TierHistoryUpdateManyWithoutUserNestedInput
   }
 
   export type UserUncheckedUpdateWithoutBalancesInput = {
@@ -73876,6 +80681,8 @@ export namespace Prisma {
     RevokedSessions?: UserSessionUncheckedUpdateManyWithoutRevokedByUserNestedInput
     UserToken?: UserTokenUncheckedUpdateManyWithoutUserNestedInput
     loginAttempts?: LoginAttemptUncheckedUpdateManyWithoutUserNestedInput
+    userTier?: UserTierUncheckedUpdateOneWithoutUserNestedInput
+    tierHistory?: TierHistoryUncheckedUpdateManyWithoutUserNestedInput
   }
 
   export type UserCreateWithoutUserBalanceStatsInput = {
@@ -73918,6 +80725,8 @@ export namespace Prisma {
     RevokedSessions?: UserSessionCreateNestedManyWithoutRevokedByUserInput
     UserToken?: UserTokenCreateNestedManyWithoutUserInput
     loginAttempts?: LoginAttemptCreateNestedManyWithoutUserInput
+    userTier?: UserTierCreateNestedOneWithoutUserInput
+    tierHistory?: TierHistoryCreateNestedManyWithoutUserInput
   }
 
   export type UserUncheckedCreateWithoutUserBalanceStatsInput = {
@@ -73960,6 +80769,8 @@ export namespace Prisma {
     RevokedSessions?: UserSessionUncheckedCreateNestedManyWithoutRevokedByUserInput
     UserToken?: UserTokenUncheckedCreateNestedManyWithoutUserInput
     loginAttempts?: LoginAttemptUncheckedCreateNestedManyWithoutUserInput
+    userTier?: UserTierUncheckedCreateNestedOneWithoutUserInput
+    tierHistory?: TierHistoryUncheckedCreateNestedManyWithoutUserInput
   }
 
   export type UserCreateOrConnectWithoutUserBalanceStatsInput = {
@@ -74018,6 +80829,8 @@ export namespace Prisma {
     RevokedSessions?: UserSessionUpdateManyWithoutRevokedByUserNestedInput
     UserToken?: UserTokenUpdateManyWithoutUserNestedInput
     loginAttempts?: LoginAttemptUpdateManyWithoutUserNestedInput
+    userTier?: UserTierUpdateOneWithoutUserNestedInput
+    tierHistory?: TierHistoryUpdateManyWithoutUserNestedInput
   }
 
   export type UserUncheckedUpdateWithoutUserBalanceStatsInput = {
@@ -74060,6 +80873,8 @@ export namespace Prisma {
     RevokedSessions?: UserSessionUncheckedUpdateManyWithoutRevokedByUserNestedInput
     UserToken?: UserTokenUncheckedUpdateManyWithoutUserNestedInput
     loginAttempts?: LoginAttemptUncheckedUpdateManyWithoutUserNestedInput
+    userTier?: UserTierUncheckedUpdateOneWithoutUserNestedInput
+    tierHistory?: TierHistoryUncheckedUpdateManyWithoutUserNestedInput
   }
 
   export type BonusDetailCreateWithoutGameInput = {
@@ -74729,6 +81544,8 @@ export namespace Prisma {
     RevokedSessions?: UserSessionCreateNestedManyWithoutRevokedByUserInput
     UserToken?: UserTokenCreateNestedManyWithoutUserInput
     loginAttempts?: LoginAttemptCreateNestedManyWithoutUserInput
+    userTier?: UserTierCreateNestedOneWithoutUserInput
+    tierHistory?: TierHistoryCreateNestedManyWithoutUserInput
   }
 
   export type UserUncheckedCreateWithoutTransactionsInput = {
@@ -74771,6 +81588,8 @@ export namespace Prisma {
     RevokedSessions?: UserSessionUncheckedCreateNestedManyWithoutRevokedByUserInput
     UserToken?: UserTokenUncheckedCreateNestedManyWithoutUserInput
     loginAttempts?: LoginAttemptUncheckedCreateNestedManyWithoutUserInput
+    userTier?: UserTierUncheckedCreateNestedOneWithoutUserInput
+    tierHistory?: TierHistoryUncheckedCreateNestedManyWithoutUserInput
   }
 
   export type UserCreateOrConnectWithoutTransactionsInput = {
@@ -75138,6 +81957,8 @@ export namespace Prisma {
     RevokedSessions?: UserSessionUpdateManyWithoutRevokedByUserNestedInput
     UserToken?: UserTokenUpdateManyWithoutUserNestedInput
     loginAttempts?: LoginAttemptUpdateManyWithoutUserNestedInput
+    userTier?: UserTierUpdateOneWithoutUserNestedInput
+    tierHistory?: TierHistoryUpdateManyWithoutUserNestedInput
   }
 
   export type UserUncheckedUpdateWithoutTransactionsInput = {
@@ -75180,6 +82001,8 @@ export namespace Prisma {
     RevokedSessions?: UserSessionUncheckedUpdateManyWithoutRevokedByUserNestedInput
     UserToken?: UserTokenUncheckedUpdateManyWithoutUserNestedInput
     loginAttempts?: LoginAttemptUncheckedUpdateManyWithoutUserNestedInput
+    userTier?: UserTierUncheckedUpdateOneWithoutUserNestedInput
+    tierHistory?: TierHistoryUncheckedUpdateManyWithoutUserNestedInput
   }
 
   export type TransactionBalanceDetailUpsertWithWhereUniqueWithoutTransactionInput = {
@@ -76482,6 +83305,8 @@ export namespace Prisma {
     RevokedSessions?: UserSessionCreateNestedManyWithoutRevokedByUserInput
     UserToken?: UserTokenCreateNestedManyWithoutUserInput
     loginAttempts?: LoginAttemptCreateNestedManyWithoutUserInput
+    userTier?: UserTierCreateNestedOneWithoutUserInput
+    tierHistory?: TierHistoryCreateNestedManyWithoutUserInput
   }
 
   export type UserUncheckedCreateWithoutCompTransactionInput = {
@@ -76524,6 +83349,8 @@ export namespace Prisma {
     RevokedSessions?: UserSessionUncheckedCreateNestedManyWithoutRevokedByUserInput
     UserToken?: UserTokenUncheckedCreateNestedManyWithoutUserInput
     loginAttempts?: LoginAttemptUncheckedCreateNestedManyWithoutUserInput
+    userTier?: UserTierUncheckedCreateNestedOneWithoutUserInput
+    tierHistory?: TierHistoryUncheckedCreateNestedManyWithoutUserInput
   }
 
   export type UserCreateOrConnectWithoutCompTransactionInput = {
@@ -76663,6 +83490,8 @@ export namespace Prisma {
     RevokedSessions?: UserSessionUpdateManyWithoutRevokedByUserNestedInput
     UserToken?: UserTokenUpdateManyWithoutUserNestedInput
     loginAttempts?: LoginAttemptUpdateManyWithoutUserNestedInput
+    userTier?: UserTierUpdateOneWithoutUserNestedInput
+    tierHistory?: TierHistoryUpdateManyWithoutUserNestedInput
   }
 
   export type UserUncheckedUpdateWithoutCompTransactionInput = {
@@ -76705,6 +83534,8 @@ export namespace Prisma {
     RevokedSessions?: UserSessionUncheckedUpdateManyWithoutRevokedByUserNestedInput
     UserToken?: UserTokenUncheckedUpdateManyWithoutUserNestedInput
     loginAttempts?: LoginAttemptUncheckedUpdateManyWithoutUserNestedInput
+    userTier?: UserTierUncheckedUpdateOneWithoutUserNestedInput
+    tierHistory?: TierHistoryUncheckedUpdateManyWithoutUserNestedInput
   }
 
   export type CompTransactionCreateWithoutDailyCompEarningInput = {
@@ -76775,6 +83606,8 @@ export namespace Prisma {
     RevokedSessions?: UserSessionCreateNestedManyWithoutRevokedByUserInput
     UserToken?: UserTokenCreateNestedManyWithoutUserInput
     loginAttempts?: LoginAttemptCreateNestedManyWithoutUserInput
+    userTier?: UserTierCreateNestedOneWithoutUserInput
+    tierHistory?: TierHistoryCreateNestedManyWithoutUserInput
   }
 
   export type UserUncheckedCreateWithoutDailyCompEarningInput = {
@@ -76817,6 +83650,8 @@ export namespace Prisma {
     RevokedSessions?: UserSessionUncheckedCreateNestedManyWithoutRevokedByUserInput
     UserToken?: UserTokenUncheckedCreateNestedManyWithoutUserInput
     loginAttempts?: LoginAttemptUncheckedCreateNestedManyWithoutUserInput
+    userTier?: UserTierUncheckedCreateNestedOneWithoutUserInput
+    tierHistory?: TierHistoryUncheckedCreateNestedManyWithoutUserInput
   }
 
   export type UserCreateOrConnectWithoutDailyCompEarningInput = {
@@ -76891,6 +83726,8 @@ export namespace Prisma {
     RevokedSessions?: UserSessionUpdateManyWithoutRevokedByUserNestedInput
     UserToken?: UserTokenUpdateManyWithoutUserNestedInput
     loginAttempts?: LoginAttemptUpdateManyWithoutUserNestedInput
+    userTier?: UserTierUpdateOneWithoutUserNestedInput
+    tierHistory?: TierHistoryUpdateManyWithoutUserNestedInput
   }
 
   export type UserUncheckedUpdateWithoutDailyCompEarningInput = {
@@ -76933,6 +83770,8 @@ export namespace Prisma {
     RevokedSessions?: UserSessionUncheckedUpdateManyWithoutRevokedByUserNestedInput
     UserToken?: UserTokenUncheckedUpdateManyWithoutUserNestedInput
     loginAttempts?: LoginAttemptUncheckedUpdateManyWithoutUserNestedInput
+    userTier?: UserTierUncheckedUpdateOneWithoutUserNestedInput
+    tierHistory?: TierHistoryUncheckedUpdateManyWithoutUserNestedInput
   }
 
   export type DepositDetailCreateWithoutRollingInput = {
@@ -77048,6 +83887,8 @@ export namespace Prisma {
     RevokedSessions?: UserSessionCreateNestedManyWithoutRevokedByUserInput
     UserToken?: UserTokenCreateNestedManyWithoutUserInput
     loginAttempts?: LoginAttemptCreateNestedManyWithoutUserInput
+    userTier?: UserTierCreateNestedOneWithoutUserInput
+    tierHistory?: TierHistoryCreateNestedManyWithoutUserInput
   }
 
   export type UserUncheckedCreateWithoutRollingInput = {
@@ -77090,6 +83931,8 @@ export namespace Prisma {
     RevokedSessions?: UserSessionUncheckedCreateNestedManyWithoutRevokedByUserInput
     UserToken?: UserTokenUncheckedCreateNestedManyWithoutUserInput
     loginAttempts?: LoginAttemptUncheckedCreateNestedManyWithoutUserInput
+    userTier?: UserTierUncheckedCreateNestedOneWithoutUserInput
+    tierHistory?: TierHistoryUncheckedCreateNestedManyWithoutUserInput
   }
 
   export type UserCreateOrConnectWithoutRollingInput = {
@@ -77260,6 +84103,8 @@ export namespace Prisma {
     RevokedSessions?: UserSessionUpdateManyWithoutRevokedByUserNestedInput
     UserToken?: UserTokenUpdateManyWithoutUserNestedInput
     loginAttempts?: LoginAttemptUpdateManyWithoutUserNestedInput
+    userTier?: UserTierUpdateOneWithoutUserNestedInput
+    tierHistory?: TierHistoryUpdateManyWithoutUserNestedInput
   }
 
   export type UserUncheckedUpdateWithoutRollingInput = {
@@ -77302,6 +84147,8 @@ export namespace Prisma {
     RevokedSessions?: UserSessionUncheckedUpdateManyWithoutRevokedByUserNestedInput
     UserToken?: UserTokenUncheckedUpdateManyWithoutUserNestedInput
     loginAttempts?: LoginAttemptUncheckedUpdateManyWithoutUserNestedInput
+    userTier?: UserTierUncheckedUpdateOneWithoutUserNestedInput
+    tierHistory?: TierHistoryUncheckedUpdateManyWithoutUserNestedInput
   }
 
   export type UserPromotionUpsertWithoutRollingInput = {
@@ -77383,6 +84230,8 @@ export namespace Prisma {
     UserSession?: UserSessionCreateNestedManyWithoutUserInput
     RevokedSessions?: UserSessionCreateNestedManyWithoutRevokedByUserInput
     loginAttempts?: LoginAttemptCreateNestedManyWithoutUserInput
+    userTier?: UserTierCreateNestedOneWithoutUserInput
+    tierHistory?: TierHistoryCreateNestedManyWithoutUserInput
   }
 
   export type UserUncheckedCreateWithoutUserTokenInput = {
@@ -77425,6 +84274,8 @@ export namespace Prisma {
     UserSession?: UserSessionUncheckedCreateNestedManyWithoutUserInput
     RevokedSessions?: UserSessionUncheckedCreateNestedManyWithoutRevokedByUserInput
     loginAttempts?: LoginAttemptUncheckedCreateNestedManyWithoutUserInput
+    userTier?: UserTierUncheckedCreateNestedOneWithoutUserInput
+    tierHistory?: TierHistoryUncheckedCreateNestedManyWithoutUserInput
   }
 
   export type UserCreateOrConnectWithoutUserTokenInput = {
@@ -77483,6 +84334,8 @@ export namespace Prisma {
     UserSession?: UserSessionUpdateManyWithoutUserNestedInput
     RevokedSessions?: UserSessionUpdateManyWithoutRevokedByUserNestedInput
     loginAttempts?: LoginAttemptUpdateManyWithoutUserNestedInput
+    userTier?: UserTierUpdateOneWithoutUserNestedInput
+    tierHistory?: TierHistoryUpdateManyWithoutUserNestedInput
   }
 
   export type UserUncheckedUpdateWithoutUserTokenInput = {
@@ -77525,6 +84378,8 @@ export namespace Prisma {
     UserSession?: UserSessionUncheckedUpdateManyWithoutUserNestedInput
     RevokedSessions?: UserSessionUncheckedUpdateManyWithoutRevokedByUserNestedInput
     loginAttempts?: LoginAttemptUncheckedUpdateManyWithoutUserNestedInput
+    userTier?: UserTierUncheckedUpdateOneWithoutUserNestedInput
+    tierHistory?: TierHistoryUncheckedUpdateManyWithoutUserNestedInput
   }
 
   export type UserCreateWithoutEmailLogInput = {
@@ -77567,6 +84422,8 @@ export namespace Prisma {
     RevokedSessions?: UserSessionCreateNestedManyWithoutRevokedByUserInput
     UserToken?: UserTokenCreateNestedManyWithoutUserInput
     loginAttempts?: LoginAttemptCreateNestedManyWithoutUserInput
+    userTier?: UserTierCreateNestedOneWithoutUserInput
+    tierHistory?: TierHistoryCreateNestedManyWithoutUserInput
   }
 
   export type UserUncheckedCreateWithoutEmailLogInput = {
@@ -77609,6 +84466,8 @@ export namespace Prisma {
     RevokedSessions?: UserSessionUncheckedCreateNestedManyWithoutRevokedByUserInput
     UserToken?: UserTokenUncheckedCreateNestedManyWithoutUserInput
     loginAttempts?: LoginAttemptUncheckedCreateNestedManyWithoutUserInput
+    userTier?: UserTierUncheckedCreateNestedOneWithoutUserInput
+    tierHistory?: TierHistoryUncheckedCreateNestedManyWithoutUserInput
   }
 
   export type UserCreateOrConnectWithoutEmailLogInput = {
@@ -77667,6 +84526,8 @@ export namespace Prisma {
     RevokedSessions?: UserSessionUpdateManyWithoutRevokedByUserNestedInput
     UserToken?: UserTokenUpdateManyWithoutUserNestedInput
     loginAttempts?: LoginAttemptUpdateManyWithoutUserNestedInput
+    userTier?: UserTierUpdateOneWithoutUserNestedInput
+    tierHistory?: TierHistoryUpdateManyWithoutUserNestedInput
   }
 
   export type UserUncheckedUpdateWithoutEmailLogInput = {
@@ -77709,6 +84570,8 @@ export namespace Prisma {
     RevokedSessions?: UserSessionUncheckedUpdateManyWithoutRevokedByUserNestedInput
     UserToken?: UserTokenUncheckedUpdateManyWithoutUserNestedInput
     loginAttempts?: LoginAttemptUncheckedUpdateManyWithoutUserNestedInput
+    userTier?: UserTierUncheckedUpdateOneWithoutUserNestedInput
+    tierHistory?: TierHistoryUncheckedUpdateManyWithoutUserNestedInput
   }
 
   export type GameRoundCreateWithoutGameSessionInput = {
@@ -77869,6 +84732,8 @@ export namespace Prisma {
     RevokedSessions?: UserSessionCreateNestedManyWithoutRevokedByUserInput
     UserToken?: UserTokenCreateNestedManyWithoutUserInput
     loginAttempts?: LoginAttemptCreateNestedManyWithoutUserInput
+    userTier?: UserTierCreateNestedOneWithoutUserInput
+    tierHistory?: TierHistoryCreateNestedManyWithoutUserInput
   }
 
   export type UserUncheckedCreateWithoutGameSessionInput = {
@@ -77911,6 +84776,8 @@ export namespace Prisma {
     RevokedSessions?: UserSessionUncheckedCreateNestedManyWithoutRevokedByUserInput
     UserToken?: UserTokenUncheckedCreateNestedManyWithoutUserInput
     loginAttempts?: LoginAttemptUncheckedCreateNestedManyWithoutUserInput
+    userTier?: UserTierUncheckedCreateNestedOneWithoutUserInput
+    tierHistory?: TierHistoryUncheckedCreateNestedManyWithoutUserInput
   }
 
   export type UserCreateOrConnectWithoutGameSessionInput = {
@@ -78035,6 +84902,8 @@ export namespace Prisma {
     RevokedSessions?: UserSessionUpdateManyWithoutRevokedByUserNestedInput
     UserToken?: UserTokenUpdateManyWithoutUserNestedInput
     loginAttempts?: LoginAttemptUpdateManyWithoutUserNestedInput
+    userTier?: UserTierUpdateOneWithoutUserNestedInput
+    tierHistory?: TierHistoryUpdateManyWithoutUserNestedInput
   }
 
   export type UserUncheckedUpdateWithoutGameSessionInput = {
@@ -78077,6 +84946,8 @@ export namespace Prisma {
     RevokedSessions?: UserSessionUncheckedUpdateManyWithoutRevokedByUserNestedInput
     UserToken?: UserTokenUncheckedUpdateManyWithoutUserNestedInput
     loginAttempts?: LoginAttemptUncheckedUpdateManyWithoutUserNestedInput
+    userTier?: UserTierUncheckedUpdateOneWithoutUserNestedInput
+    tierHistory?: TierHistoryUncheckedUpdateManyWithoutUserNestedInput
   }
 
   export type UserCreateWithoutAffiliateWalletsInput = {
@@ -78119,6 +84990,8 @@ export namespace Prisma {
     RevokedSessions?: UserSessionCreateNestedManyWithoutRevokedByUserInput
     UserToken?: UserTokenCreateNestedManyWithoutUserInput
     loginAttempts?: LoginAttemptCreateNestedManyWithoutUserInput
+    userTier?: UserTierCreateNestedOneWithoutUserInput
+    tierHistory?: TierHistoryCreateNestedManyWithoutUserInput
   }
 
   export type UserUncheckedCreateWithoutAffiliateWalletsInput = {
@@ -78161,6 +85034,8 @@ export namespace Prisma {
     RevokedSessions?: UserSessionUncheckedCreateNestedManyWithoutRevokedByUserInput
     UserToken?: UserTokenUncheckedCreateNestedManyWithoutUserInput
     loginAttempts?: LoginAttemptUncheckedCreateNestedManyWithoutUserInput
+    userTier?: UserTierUncheckedCreateNestedOneWithoutUserInput
+    tierHistory?: TierHistoryUncheckedCreateNestedManyWithoutUserInput
   }
 
   export type UserCreateOrConnectWithoutAffiliateWalletsInput = {
@@ -78219,6 +85094,8 @@ export namespace Prisma {
     RevokedSessions?: UserSessionUpdateManyWithoutRevokedByUserNestedInput
     UserToken?: UserTokenUpdateManyWithoutUserNestedInput
     loginAttempts?: LoginAttemptUpdateManyWithoutUserNestedInput
+    userTier?: UserTierUpdateOneWithoutUserNestedInput
+    tierHistory?: TierHistoryUpdateManyWithoutUserNestedInput
   }
 
   export type UserUncheckedUpdateWithoutAffiliateWalletsInput = {
@@ -78261,6 +85138,8 @@ export namespace Prisma {
     RevokedSessions?: UserSessionUncheckedUpdateManyWithoutRevokedByUserNestedInput
     UserToken?: UserTokenUncheckedUpdateManyWithoutUserNestedInput
     loginAttempts?: LoginAttemptUncheckedUpdateManyWithoutUserNestedInput
+    userTier?: UserTierUncheckedUpdateOneWithoutUserNestedInput
+    tierHistory?: TierHistoryUncheckedUpdateManyWithoutUserNestedInput
   }
 
   export type UserCreateWithoutAffiliateCommissionsInput = {
@@ -78303,6 +85182,8 @@ export namespace Prisma {
     RevokedSessions?: UserSessionCreateNestedManyWithoutRevokedByUserInput
     UserToken?: UserTokenCreateNestedManyWithoutUserInput
     loginAttempts?: LoginAttemptCreateNestedManyWithoutUserInput
+    userTier?: UserTierCreateNestedOneWithoutUserInput
+    tierHistory?: TierHistoryCreateNestedManyWithoutUserInput
   }
 
   export type UserUncheckedCreateWithoutAffiliateCommissionsInput = {
@@ -78345,6 +85226,8 @@ export namespace Prisma {
     RevokedSessions?: UserSessionUncheckedCreateNestedManyWithoutRevokedByUserInput
     UserToken?: UserTokenUncheckedCreateNestedManyWithoutUserInput
     loginAttempts?: LoginAttemptUncheckedCreateNestedManyWithoutUserInput
+    userTier?: UserTierUncheckedCreateNestedOneWithoutUserInput
+    tierHistory?: TierHistoryUncheckedCreateNestedManyWithoutUserInput
   }
 
   export type UserCreateOrConnectWithoutAffiliateCommissionsInput = {
@@ -78461,6 +85344,8 @@ export namespace Prisma {
     RevokedSessions?: UserSessionCreateNestedManyWithoutRevokedByUserInput
     UserToken?: UserTokenCreateNestedManyWithoutUserInput
     loginAttempts?: LoginAttemptCreateNestedManyWithoutUserInput
+    userTier?: UserTierCreateNestedOneWithoutUserInput
+    tierHistory?: TierHistoryCreateNestedManyWithoutUserInput
   }
 
   export type UserUncheckedCreateWithoutSubUserCommissionsInput = {
@@ -78503,6 +85388,8 @@ export namespace Prisma {
     RevokedSessions?: UserSessionUncheckedCreateNestedManyWithoutRevokedByUserInput
     UserToken?: UserTokenUncheckedCreateNestedManyWithoutUserInput
     loginAttempts?: LoginAttemptUncheckedCreateNestedManyWithoutUserInput
+    userTier?: UserTierUncheckedCreateNestedOneWithoutUserInput
+    tierHistory?: TierHistoryUncheckedCreateNestedManyWithoutUserInput
   }
 
   export type UserCreateOrConnectWithoutSubUserCommissionsInput = {
@@ -78561,6 +85448,8 @@ export namespace Prisma {
     RevokedSessions?: UserSessionUpdateManyWithoutRevokedByUserNestedInput
     UserToken?: UserTokenUpdateManyWithoutUserNestedInput
     loginAttempts?: LoginAttemptUpdateManyWithoutUserNestedInput
+    userTier?: UserTierUpdateOneWithoutUserNestedInput
+    tierHistory?: TierHistoryUpdateManyWithoutUserNestedInput
   }
 
   export type UserUncheckedUpdateWithoutAffiliateCommissionsInput = {
@@ -78603,6 +85492,8 @@ export namespace Prisma {
     RevokedSessions?: UserSessionUncheckedUpdateManyWithoutRevokedByUserNestedInput
     UserToken?: UserTokenUncheckedUpdateManyWithoutUserNestedInput
     loginAttempts?: LoginAttemptUncheckedUpdateManyWithoutUserNestedInput
+    userTier?: UserTierUncheckedUpdateOneWithoutUserNestedInput
+    tierHistory?: TierHistoryUncheckedUpdateManyWithoutUserNestedInput
   }
 
   export type GameRoundUpsertWithoutAffiliateCommissionInput = {
@@ -78731,6 +85622,8 @@ export namespace Prisma {
     RevokedSessions?: UserSessionUpdateManyWithoutRevokedByUserNestedInput
     UserToken?: UserTokenUpdateManyWithoutUserNestedInput
     loginAttempts?: LoginAttemptUpdateManyWithoutUserNestedInput
+    userTier?: UserTierUpdateOneWithoutUserNestedInput
+    tierHistory?: TierHistoryUpdateManyWithoutUserNestedInput
   }
 
   export type UserUncheckedUpdateWithoutSubUserCommissionsInput = {
@@ -78773,6 +85666,8 @@ export namespace Prisma {
     RevokedSessions?: UserSessionUncheckedUpdateManyWithoutRevokedByUserNestedInput
     UserToken?: UserTokenUncheckedUpdateManyWithoutUserNestedInput
     loginAttempts?: LoginAttemptUncheckedUpdateManyWithoutUserNestedInput
+    userTier?: UserTierUncheckedUpdateOneWithoutUserNestedInput
+    tierHistory?: TierHistoryUncheckedUpdateManyWithoutUserNestedInput
   }
 
   export type UserCreateWithoutAffiliateTierInput = {
@@ -78815,6 +85710,8 @@ export namespace Prisma {
     RevokedSessions?: UserSessionCreateNestedManyWithoutRevokedByUserInput
     UserToken?: UserTokenCreateNestedManyWithoutUserInput
     loginAttempts?: LoginAttemptCreateNestedManyWithoutUserInput
+    userTier?: UserTierCreateNestedOneWithoutUserInput
+    tierHistory?: TierHistoryCreateNestedManyWithoutUserInput
   }
 
   export type UserUncheckedCreateWithoutAffiliateTierInput = {
@@ -78857,6 +85754,8 @@ export namespace Prisma {
     RevokedSessions?: UserSessionUncheckedCreateNestedManyWithoutRevokedByUserInput
     UserToken?: UserTokenUncheckedCreateNestedManyWithoutUserInput
     loginAttempts?: LoginAttemptUncheckedCreateNestedManyWithoutUserInput
+    userTier?: UserTierUncheckedCreateNestedOneWithoutUserInput
+    tierHistory?: TierHistoryUncheckedCreateNestedManyWithoutUserInput
   }
 
   export type UserCreateOrConnectWithoutAffiliateTierInput = {
@@ -78915,6 +85814,8 @@ export namespace Prisma {
     RevokedSessions?: UserSessionUpdateManyWithoutRevokedByUserNestedInput
     UserToken?: UserTokenUpdateManyWithoutUserNestedInput
     loginAttempts?: LoginAttemptUpdateManyWithoutUserNestedInput
+    userTier?: UserTierUpdateOneWithoutUserNestedInput
+    tierHistory?: TierHistoryUpdateManyWithoutUserNestedInput
   }
 
   export type UserUncheckedUpdateWithoutAffiliateTierInput = {
@@ -78957,6 +85858,8 @@ export namespace Prisma {
     RevokedSessions?: UserSessionUncheckedUpdateManyWithoutRevokedByUserNestedInput
     UserToken?: UserTokenUncheckedUpdateManyWithoutUserNestedInput
     loginAttempts?: LoginAttemptUncheckedUpdateManyWithoutUserNestedInput
+    userTier?: UserTierUncheckedUpdateOneWithoutUserNestedInput
+    tierHistory?: TierHistoryUncheckedUpdateManyWithoutUserNestedInput
   }
 
   export type UserCreateWithoutLoginAttemptsInput = {
@@ -78999,6 +85902,8 @@ export namespace Prisma {
     UserSession?: UserSessionCreateNestedManyWithoutUserInput
     RevokedSessions?: UserSessionCreateNestedManyWithoutRevokedByUserInput
     UserToken?: UserTokenCreateNestedManyWithoutUserInput
+    userTier?: UserTierCreateNestedOneWithoutUserInput
+    tierHistory?: TierHistoryCreateNestedManyWithoutUserInput
   }
 
   export type UserUncheckedCreateWithoutLoginAttemptsInput = {
@@ -79041,6 +85946,8 @@ export namespace Prisma {
     UserSession?: UserSessionUncheckedCreateNestedManyWithoutUserInput
     RevokedSessions?: UserSessionUncheckedCreateNestedManyWithoutRevokedByUserInput
     UserToken?: UserTokenUncheckedCreateNestedManyWithoutUserInput
+    userTier?: UserTierUncheckedCreateNestedOneWithoutUserInput
+    tierHistory?: TierHistoryUncheckedCreateNestedManyWithoutUserInput
   }
 
   export type UserCreateOrConnectWithoutLoginAttemptsInput = {
@@ -79099,6 +86006,8 @@ export namespace Prisma {
     UserSession?: UserSessionUpdateManyWithoutUserNestedInput
     RevokedSessions?: UserSessionUpdateManyWithoutRevokedByUserNestedInput
     UserToken?: UserTokenUpdateManyWithoutUserNestedInput
+    userTier?: UserTierUpdateOneWithoutUserNestedInput
+    tierHistory?: TierHistoryUpdateManyWithoutUserNestedInput
   }
 
   export type UserUncheckedUpdateWithoutLoginAttemptsInput = {
@@ -79141,6 +86050,8 @@ export namespace Prisma {
     UserSession?: UserSessionUncheckedUpdateManyWithoutUserNestedInput
     RevokedSessions?: UserSessionUncheckedUpdateManyWithoutRevokedByUserNestedInput
     UserToken?: UserTokenUncheckedUpdateManyWithoutUserNestedInput
+    userTier?: UserTierUncheckedUpdateOneWithoutUserNestedInput
+    tierHistory?: TierHistoryUncheckedUpdateManyWithoutUserNestedInput
   }
 
   export type UserCreateWithoutDepositDetailsInput = {
@@ -79183,6 +86094,8 @@ export namespace Prisma {
     RevokedSessions?: UserSessionCreateNestedManyWithoutRevokedByUserInput
     UserToken?: UserTokenCreateNestedManyWithoutUserInput
     loginAttempts?: LoginAttemptCreateNestedManyWithoutUserInput
+    userTier?: UserTierCreateNestedOneWithoutUserInput
+    tierHistory?: TierHistoryCreateNestedManyWithoutUserInput
   }
 
   export type UserUncheckedCreateWithoutDepositDetailsInput = {
@@ -79225,6 +86138,8 @@ export namespace Prisma {
     RevokedSessions?: UserSessionUncheckedCreateNestedManyWithoutRevokedByUserInput
     UserToken?: UserTokenUncheckedCreateNestedManyWithoutUserInput
     loginAttempts?: LoginAttemptUncheckedCreateNestedManyWithoutUserInput
+    userTier?: UserTierUncheckedCreateNestedOneWithoutUserInput
+    tierHistory?: TierHistoryUncheckedCreateNestedManyWithoutUserInput
   }
 
   export type UserCreateOrConnectWithoutDepositDetailsInput = {
@@ -79448,6 +86363,8 @@ export namespace Prisma {
     RevokedSessions?: UserSessionUpdateManyWithoutRevokedByUserNestedInput
     UserToken?: UserTokenUpdateManyWithoutUserNestedInput
     loginAttempts?: LoginAttemptUpdateManyWithoutUserNestedInput
+    userTier?: UserTierUpdateOneWithoutUserNestedInput
+    tierHistory?: TierHistoryUpdateManyWithoutUserNestedInput
   }
 
   export type UserUncheckedUpdateWithoutDepositDetailsInput = {
@@ -79490,6 +86407,8 @@ export namespace Prisma {
     RevokedSessions?: UserSessionUncheckedUpdateManyWithoutRevokedByUserNestedInput
     UserToken?: UserTokenUncheckedUpdateManyWithoutUserNestedInput
     loginAttempts?: LoginAttemptUncheckedUpdateManyWithoutUserNestedInput
+    userTier?: UserTierUncheckedUpdateOneWithoutUserNestedInput
+    tierHistory?: TierHistoryUncheckedUpdateManyWithoutUserNestedInput
   }
 
   export type BankConfigUpsertWithoutDepositDetailsInput = {
@@ -80324,6 +87243,8 @@ export namespace Prisma {
     RevokedSessions?: UserSessionCreateNestedManyWithoutRevokedByUserInput
     UserToken?: UserTokenCreateNestedManyWithoutUserInput
     loginAttempts?: LoginAttemptCreateNestedManyWithoutUserInput
+    userTier?: UserTierCreateNestedOneWithoutUserInput
+    tierHistory?: TierHistoryCreateNestedManyWithoutUserInput
   }
 
   export type UserUncheckedCreateWithoutUserPromotionInput = {
@@ -80366,6 +87287,8 @@ export namespace Prisma {
     RevokedSessions?: UserSessionUncheckedCreateNestedManyWithoutRevokedByUserInput
     UserToken?: UserTokenUncheckedCreateNestedManyWithoutUserInput
     loginAttempts?: LoginAttemptUncheckedCreateNestedManyWithoutUserInput
+    userTier?: UserTierUncheckedCreateNestedOneWithoutUserInput
+    tierHistory?: TierHistoryUncheckedCreateNestedManyWithoutUserInput
   }
 
   export type UserCreateOrConnectWithoutUserPromotionInput = {
@@ -80491,6 +87414,8 @@ export namespace Prisma {
     RevokedSessions?: UserSessionUpdateManyWithoutRevokedByUserNestedInput
     UserToken?: UserTokenUpdateManyWithoutUserNestedInput
     loginAttempts?: LoginAttemptUpdateManyWithoutUserNestedInput
+    userTier?: UserTierUpdateOneWithoutUserNestedInput
+    tierHistory?: TierHistoryUpdateManyWithoutUserNestedInput
   }
 
   export type UserUncheckedUpdateWithoutUserPromotionInput = {
@@ -80533,6 +87458,8 @@ export namespace Prisma {
     RevokedSessions?: UserSessionUncheckedUpdateManyWithoutRevokedByUserNestedInput
     UserToken?: UserTokenUncheckedUpdateManyWithoutUserNestedInput
     loginAttempts?: LoginAttemptUncheckedUpdateManyWithoutUserNestedInput
+    userTier?: UserTierUncheckedUpdateOneWithoutUserNestedInput
+    tierHistory?: TierHistoryUncheckedUpdateManyWithoutUserNestedInput
   }
 
   export type UserCreateWithoutUserSessionInput = {
@@ -80575,6 +87502,8 @@ export namespace Prisma {
     RevokedSessions?: UserSessionCreateNestedManyWithoutRevokedByUserInput
     UserToken?: UserTokenCreateNestedManyWithoutUserInput
     loginAttempts?: LoginAttemptCreateNestedManyWithoutUserInput
+    userTier?: UserTierCreateNestedOneWithoutUserInput
+    tierHistory?: TierHistoryCreateNestedManyWithoutUserInput
   }
 
   export type UserUncheckedCreateWithoutUserSessionInput = {
@@ -80617,6 +87546,8 @@ export namespace Prisma {
     RevokedSessions?: UserSessionUncheckedCreateNestedManyWithoutRevokedByUserInput
     UserToken?: UserTokenUncheckedCreateNestedManyWithoutUserInput
     loginAttempts?: LoginAttemptUncheckedCreateNestedManyWithoutUserInput
+    userTier?: UserTierUncheckedCreateNestedOneWithoutUserInput
+    tierHistory?: TierHistoryUncheckedCreateNestedManyWithoutUserInput
   }
 
   export type UserCreateOrConnectWithoutUserSessionInput = {
@@ -80664,6 +87595,8 @@ export namespace Prisma {
     UserSession?: UserSessionCreateNestedManyWithoutUserInput
     UserToken?: UserTokenCreateNestedManyWithoutUserInput
     loginAttempts?: LoginAttemptCreateNestedManyWithoutUserInput
+    userTier?: UserTierCreateNestedOneWithoutUserInput
+    tierHistory?: TierHistoryCreateNestedManyWithoutUserInput
   }
 
   export type UserUncheckedCreateWithoutRevokedSessionsInput = {
@@ -80706,6 +87639,8 @@ export namespace Prisma {
     UserSession?: UserSessionUncheckedCreateNestedManyWithoutUserInput
     UserToken?: UserTokenUncheckedCreateNestedManyWithoutUserInput
     loginAttempts?: LoginAttemptUncheckedCreateNestedManyWithoutUserInput
+    userTier?: UserTierUncheckedCreateNestedOneWithoutUserInput
+    tierHistory?: TierHistoryUncheckedCreateNestedManyWithoutUserInput
   }
 
   export type UserCreateOrConnectWithoutRevokedSessionsInput = {
@@ -80764,6 +87699,8 @@ export namespace Prisma {
     RevokedSessions?: UserSessionUpdateManyWithoutRevokedByUserNestedInput
     UserToken?: UserTokenUpdateManyWithoutUserNestedInput
     loginAttempts?: LoginAttemptUpdateManyWithoutUserNestedInput
+    userTier?: UserTierUpdateOneWithoutUserNestedInput
+    tierHistory?: TierHistoryUpdateManyWithoutUserNestedInput
   }
 
   export type UserUncheckedUpdateWithoutUserSessionInput = {
@@ -80806,6 +87743,8 @@ export namespace Prisma {
     RevokedSessions?: UserSessionUncheckedUpdateManyWithoutRevokedByUserNestedInput
     UserToken?: UserTokenUncheckedUpdateManyWithoutUserNestedInput
     loginAttempts?: LoginAttemptUncheckedUpdateManyWithoutUserNestedInput
+    userTier?: UserTierUncheckedUpdateOneWithoutUserNestedInput
+    tierHistory?: TierHistoryUncheckedUpdateManyWithoutUserNestedInput
   }
 
   export type UserUpsertWithoutRevokedSessionsInput = {
@@ -80859,6 +87798,8 @@ export namespace Prisma {
     UserSession?: UserSessionUpdateManyWithoutUserNestedInput
     UserToken?: UserTokenUpdateManyWithoutUserNestedInput
     loginAttempts?: LoginAttemptUpdateManyWithoutUserNestedInput
+    userTier?: UserTierUpdateOneWithoutUserNestedInput
+    tierHistory?: TierHistoryUpdateManyWithoutUserNestedInput
   }
 
   export type UserUncheckedUpdateWithoutRevokedSessionsInput = {
@@ -80901,6 +87842,933 @@ export namespace Prisma {
     UserSession?: UserSessionUncheckedUpdateManyWithoutUserNestedInput
     UserToken?: UserTokenUncheckedUpdateManyWithoutUserNestedInput
     loginAttempts?: LoginAttemptUncheckedUpdateManyWithoutUserNestedInput
+    userTier?: UserTierUncheckedUpdateOneWithoutUserNestedInput
+    tierHistory?: TierHistoryUncheckedUpdateManyWithoutUserNestedInput
+  }
+
+  export type UserTierCreateWithoutTierInput = {
+    id?: bigint | number
+    uid?: string
+    cumulativeRollingUsd?: Decimal | DecimalJsLike | number | string
+    highestPromotedPriority?: number
+    isManualLock?: boolean
+    lastPromotedAt?: Date | string
+    createdAt?: Date | string
+    updatedAt?: Date | string
+    user: UserCreateNestedOneWithoutUserTierInput
+  }
+
+  export type UserTierUncheckedCreateWithoutTierInput = {
+    id?: bigint | number
+    uid?: string
+    userId: bigint | number
+    cumulativeRollingUsd?: Decimal | DecimalJsLike | number | string
+    highestPromotedPriority?: number
+    isManualLock?: boolean
+    lastPromotedAt?: Date | string
+    createdAt?: Date | string
+    updatedAt?: Date | string
+  }
+
+  export type UserTierCreateOrConnectWithoutTierInput = {
+    where: UserTierWhereUniqueInput
+    create: XOR<UserTierCreateWithoutTierInput, UserTierUncheckedCreateWithoutTierInput>
+  }
+
+  export type UserTierCreateManyTierInputEnvelope = {
+    data: UserTierCreateManyTierInput | UserTierCreateManyTierInput[]
+    skipDuplicates?: boolean
+  }
+
+  export type TierTranslationCreateWithoutTierInput = {
+    id?: bigint | number
+    uid?: string
+    language: $Enums.Language
+    name: string
+  }
+
+  export type TierTranslationUncheckedCreateWithoutTierInput = {
+    id?: bigint | number
+    uid?: string
+    language: $Enums.Language
+    name: string
+  }
+
+  export type TierTranslationCreateOrConnectWithoutTierInput = {
+    where: TierTranslationWhereUniqueInput
+    create: XOR<TierTranslationCreateWithoutTierInput, TierTranslationUncheckedCreateWithoutTierInput>
+  }
+
+  export type TierTranslationCreateManyTierInputEnvelope = {
+    data: TierTranslationCreateManyTierInput | TierTranslationCreateManyTierInput[]
+    skipDuplicates?: boolean
+  }
+
+  export type TierHistoryCreateWithoutFromTierInput = {
+    id?: bigint | number
+    uid?: string
+    changeType: $Enums.TierChangeType
+    reason?: string | null
+    rollingAmountSnap: Decimal | DecimalJsLike | number | string
+    bonusAmount?: Decimal | DecimalJsLike | number | string | null
+    changedAt?: Date | string
+    changeBy?: string | null
+    user: UserCreateNestedOneWithoutTierHistoryInput
+    toTier: TierCreateNestedOneWithoutHistoryToInput
+  }
+
+  export type TierHistoryUncheckedCreateWithoutFromTierInput = {
+    id?: bigint | number
+    uid?: string
+    userId: bigint | number
+    toTierId: bigint | number
+    changeType: $Enums.TierChangeType
+    reason?: string | null
+    rollingAmountSnap: Decimal | DecimalJsLike | number | string
+    bonusAmount?: Decimal | DecimalJsLike | number | string | null
+    changedAt?: Date | string
+    changeBy?: string | null
+  }
+
+  export type TierHistoryCreateOrConnectWithoutFromTierInput = {
+    where: TierHistoryWhereUniqueInput
+    create: XOR<TierHistoryCreateWithoutFromTierInput, TierHistoryUncheckedCreateWithoutFromTierInput>
+  }
+
+  export type TierHistoryCreateManyFromTierInputEnvelope = {
+    data: TierHistoryCreateManyFromTierInput | TierHistoryCreateManyFromTierInput[]
+    skipDuplicates?: boolean
+  }
+
+  export type TierHistoryCreateWithoutToTierInput = {
+    id?: bigint | number
+    uid?: string
+    changeType: $Enums.TierChangeType
+    reason?: string | null
+    rollingAmountSnap: Decimal | DecimalJsLike | number | string
+    bonusAmount?: Decimal | DecimalJsLike | number | string | null
+    changedAt?: Date | string
+    changeBy?: string | null
+    user: UserCreateNestedOneWithoutTierHistoryInput
+    fromTier?: TierCreateNestedOneWithoutHistoryFromInput
+  }
+
+  export type TierHistoryUncheckedCreateWithoutToTierInput = {
+    id?: bigint | number
+    uid?: string
+    userId: bigint | number
+    fromTierId?: bigint | number | null
+    changeType: $Enums.TierChangeType
+    reason?: string | null
+    rollingAmountSnap: Decimal | DecimalJsLike | number | string
+    bonusAmount?: Decimal | DecimalJsLike | number | string | null
+    changedAt?: Date | string
+    changeBy?: string | null
+  }
+
+  export type TierHistoryCreateOrConnectWithoutToTierInput = {
+    where: TierHistoryWhereUniqueInput
+    create: XOR<TierHistoryCreateWithoutToTierInput, TierHistoryUncheckedCreateWithoutToTierInput>
+  }
+
+  export type TierHistoryCreateManyToTierInputEnvelope = {
+    data: TierHistoryCreateManyToTierInput | TierHistoryCreateManyToTierInput[]
+    skipDuplicates?: boolean
+  }
+
+  export type UserTierUpsertWithWhereUniqueWithoutTierInput = {
+    where: UserTierWhereUniqueInput
+    update: XOR<UserTierUpdateWithoutTierInput, UserTierUncheckedUpdateWithoutTierInput>
+    create: XOR<UserTierCreateWithoutTierInput, UserTierUncheckedCreateWithoutTierInput>
+  }
+
+  export type UserTierUpdateWithWhereUniqueWithoutTierInput = {
+    where: UserTierWhereUniqueInput
+    data: XOR<UserTierUpdateWithoutTierInput, UserTierUncheckedUpdateWithoutTierInput>
+  }
+
+  export type UserTierUpdateManyWithWhereWithoutTierInput = {
+    where: UserTierScalarWhereInput
+    data: XOR<UserTierUpdateManyMutationInput, UserTierUncheckedUpdateManyWithoutTierInput>
+  }
+
+  export type UserTierScalarWhereInput = {
+    AND?: UserTierScalarWhereInput | UserTierScalarWhereInput[]
+    OR?: UserTierScalarWhereInput[]
+    NOT?: UserTierScalarWhereInput | UserTierScalarWhereInput[]
+    id?: BigIntFilter<"UserTier"> | bigint | number
+    uid?: StringFilter<"UserTier"> | string
+    userId?: BigIntFilter<"UserTier"> | bigint | number
+    tierId?: BigIntFilter<"UserTier"> | bigint | number
+    cumulativeRollingUsd?: DecimalFilter<"UserTier"> | Decimal | DecimalJsLike | number | string
+    highestPromotedPriority?: IntFilter<"UserTier"> | number
+    isManualLock?: BoolFilter<"UserTier"> | boolean
+    lastPromotedAt?: DateTimeFilter<"UserTier"> | Date | string
+    createdAt?: DateTimeFilter<"UserTier"> | Date | string
+    updatedAt?: DateTimeFilter<"UserTier"> | Date | string
+  }
+
+  export type TierTranslationUpsertWithWhereUniqueWithoutTierInput = {
+    where: TierTranslationWhereUniqueInput
+    update: XOR<TierTranslationUpdateWithoutTierInput, TierTranslationUncheckedUpdateWithoutTierInput>
+    create: XOR<TierTranslationCreateWithoutTierInput, TierTranslationUncheckedCreateWithoutTierInput>
+  }
+
+  export type TierTranslationUpdateWithWhereUniqueWithoutTierInput = {
+    where: TierTranslationWhereUniqueInput
+    data: XOR<TierTranslationUpdateWithoutTierInput, TierTranslationUncheckedUpdateWithoutTierInput>
+  }
+
+  export type TierTranslationUpdateManyWithWhereWithoutTierInput = {
+    where: TierTranslationScalarWhereInput
+    data: XOR<TierTranslationUpdateManyMutationInput, TierTranslationUncheckedUpdateManyWithoutTierInput>
+  }
+
+  export type TierTranslationScalarWhereInput = {
+    AND?: TierTranslationScalarWhereInput | TierTranslationScalarWhereInput[]
+    OR?: TierTranslationScalarWhereInput[]
+    NOT?: TierTranslationScalarWhereInput | TierTranslationScalarWhereInput[]
+    id?: BigIntFilter<"TierTranslation"> | bigint | number
+    uid?: StringFilter<"TierTranslation"> | string
+    tierId?: BigIntFilter<"TierTranslation"> | bigint | number
+    language?: EnumLanguageFilter<"TierTranslation"> | $Enums.Language
+    name?: StringFilter<"TierTranslation"> | string
+  }
+
+  export type TierHistoryUpsertWithWhereUniqueWithoutFromTierInput = {
+    where: TierHistoryWhereUniqueInput
+    update: XOR<TierHistoryUpdateWithoutFromTierInput, TierHistoryUncheckedUpdateWithoutFromTierInput>
+    create: XOR<TierHistoryCreateWithoutFromTierInput, TierHistoryUncheckedCreateWithoutFromTierInput>
+  }
+
+  export type TierHistoryUpdateWithWhereUniqueWithoutFromTierInput = {
+    where: TierHistoryWhereUniqueInput
+    data: XOR<TierHistoryUpdateWithoutFromTierInput, TierHistoryUncheckedUpdateWithoutFromTierInput>
+  }
+
+  export type TierHistoryUpdateManyWithWhereWithoutFromTierInput = {
+    where: TierHistoryScalarWhereInput
+    data: XOR<TierHistoryUpdateManyMutationInput, TierHistoryUncheckedUpdateManyWithoutFromTierInput>
+  }
+
+  export type TierHistoryUpsertWithWhereUniqueWithoutToTierInput = {
+    where: TierHistoryWhereUniqueInput
+    update: XOR<TierHistoryUpdateWithoutToTierInput, TierHistoryUncheckedUpdateWithoutToTierInput>
+    create: XOR<TierHistoryCreateWithoutToTierInput, TierHistoryUncheckedCreateWithoutToTierInput>
+  }
+
+  export type TierHistoryUpdateWithWhereUniqueWithoutToTierInput = {
+    where: TierHistoryWhereUniqueInput
+    data: XOR<TierHistoryUpdateWithoutToTierInput, TierHistoryUncheckedUpdateWithoutToTierInput>
+  }
+
+  export type TierHistoryUpdateManyWithWhereWithoutToTierInput = {
+    where: TierHistoryScalarWhereInput
+    data: XOR<TierHistoryUpdateManyMutationInput, TierHistoryUncheckedUpdateManyWithoutToTierInput>
+  }
+
+  export type TierCreateWithoutTranslationsInput = {
+    id?: bigint | number
+    uid?: string
+    priority: number
+    code: string
+    requirementUsd: Decimal | DecimalJsLike | number | string
+    levelUpBonus?: Decimal | DecimalJsLike | number | string
+    compRate?: Decimal | DecimalJsLike | number | string
+    benefits?: NullableJsonNullValueInput | InputJsonValue
+    createdAt?: Date | string
+    updatedAt?: Date | string
+    userTiers?: UserTierCreateNestedManyWithoutTierInput
+    historyFrom?: TierHistoryCreateNestedManyWithoutFromTierInput
+    historyTo?: TierHistoryCreateNestedManyWithoutToTierInput
+  }
+
+  export type TierUncheckedCreateWithoutTranslationsInput = {
+    id?: bigint | number
+    uid?: string
+    priority: number
+    code: string
+    requirementUsd: Decimal | DecimalJsLike | number | string
+    levelUpBonus?: Decimal | DecimalJsLike | number | string
+    compRate?: Decimal | DecimalJsLike | number | string
+    benefits?: NullableJsonNullValueInput | InputJsonValue
+    createdAt?: Date | string
+    updatedAt?: Date | string
+    userTiers?: UserTierUncheckedCreateNestedManyWithoutTierInput
+    historyFrom?: TierHistoryUncheckedCreateNestedManyWithoutFromTierInput
+    historyTo?: TierHistoryUncheckedCreateNestedManyWithoutToTierInput
+  }
+
+  export type TierCreateOrConnectWithoutTranslationsInput = {
+    where: TierWhereUniqueInput
+    create: XOR<TierCreateWithoutTranslationsInput, TierUncheckedCreateWithoutTranslationsInput>
+  }
+
+  export type TierUpsertWithoutTranslationsInput = {
+    update: XOR<TierUpdateWithoutTranslationsInput, TierUncheckedUpdateWithoutTranslationsInput>
+    create: XOR<TierCreateWithoutTranslationsInput, TierUncheckedCreateWithoutTranslationsInput>
+    where?: TierWhereInput
+  }
+
+  export type TierUpdateToOneWithWhereWithoutTranslationsInput = {
+    where?: TierWhereInput
+    data: XOR<TierUpdateWithoutTranslationsInput, TierUncheckedUpdateWithoutTranslationsInput>
+  }
+
+  export type TierUpdateWithoutTranslationsInput = {
+    id?: BigIntFieldUpdateOperationsInput | bigint | number
+    uid?: StringFieldUpdateOperationsInput | string
+    priority?: IntFieldUpdateOperationsInput | number
+    code?: StringFieldUpdateOperationsInput | string
+    requirementUsd?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
+    levelUpBonus?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
+    compRate?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
+    benefits?: NullableJsonNullValueInput | InputJsonValue
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    userTiers?: UserTierUpdateManyWithoutTierNestedInput
+    historyFrom?: TierHistoryUpdateManyWithoutFromTierNestedInput
+    historyTo?: TierHistoryUpdateManyWithoutToTierNestedInput
+  }
+
+  export type TierUncheckedUpdateWithoutTranslationsInput = {
+    id?: BigIntFieldUpdateOperationsInput | bigint | number
+    uid?: StringFieldUpdateOperationsInput | string
+    priority?: IntFieldUpdateOperationsInput | number
+    code?: StringFieldUpdateOperationsInput | string
+    requirementUsd?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
+    levelUpBonus?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
+    compRate?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
+    benefits?: NullableJsonNullValueInput | InputJsonValue
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    userTiers?: UserTierUncheckedUpdateManyWithoutTierNestedInput
+    historyFrom?: TierHistoryUncheckedUpdateManyWithoutFromTierNestedInput
+    historyTo?: TierHistoryUncheckedUpdateManyWithoutToTierNestedInput
+  }
+
+  export type UserCreateWithoutUserTierInput = {
+    id?: bigint | number
+    uid?: string
+    whitecliffId?: bigint | number | null
+    whitecliffSystemId?: bigint | number | null
+    whitecliffUsername?: string | null
+    dcsId?: string | null
+    email?: string | null
+    passwordHash?: string | null
+    socialType?: $Enums.SocialType | null
+    socialId?: string | null
+    role?: $Enums.UserRoleType
+    status?: $Enums.UserStatus
+    kycLevel?: $Enums.KycLevel
+    country?: string | null
+    language?: $Enums.Language | null
+    timezone?: string | null
+    timezoneOffset?: number | null
+    createdAt?: Date | string
+    updatedAt?: Date | string
+    affiliateCodes?: AffiliateCodeCreateNestedManyWithoutUserInput
+    affiliateCommissions?: AffiliateCommissionCreateNestedManyWithoutAffiliateInput
+    subUserCommissions?: AffiliateCommissionCreateNestedManyWithoutSubUserInput
+    affiliateTier?: AffiliateTierCreateNestedOneWithoutAffiliateInput
+    affiliateWallets?: AffiliateWalletCreateNestedManyWithoutAffiliateInput
+    CompTransaction?: CompTransactionCreateNestedManyWithoutUserInput
+    DailyCompEarning?: DailyCompEarningCreateNestedManyWithoutUserInput
+    EmailLog?: EmailLogCreateNestedManyWithoutUserInput
+    GameSession?: GameSessionCreateNestedManyWithoutUserInput
+    affiliateReferrals?: ReferralCreateNestedManyWithoutAffiliateInput
+    referredUsers?: ReferralCreateNestedManyWithoutSubUserInput
+    Rolling?: RollingCreateNestedManyWithoutUserInput
+    transactions?: TransactionCreateNestedManyWithoutUserInput
+    depositDetails?: DepositDetailCreateNestedManyWithoutUserInput
+    balances?: UserBalanceCreateNestedManyWithoutUserInput
+    UserBalanceStats?: UserBalanceStatsCreateNestedManyWithoutUserInput
+    UserPromotion?: UserPromotionCreateNestedManyWithoutUserInput
+    UserSession?: UserSessionCreateNestedManyWithoutUserInput
+    RevokedSessions?: UserSessionCreateNestedManyWithoutRevokedByUserInput
+    UserToken?: UserTokenCreateNestedManyWithoutUserInput
+    loginAttempts?: LoginAttemptCreateNestedManyWithoutUserInput
+    tierHistory?: TierHistoryCreateNestedManyWithoutUserInput
+  }
+
+  export type UserUncheckedCreateWithoutUserTierInput = {
+    id?: bigint | number
+    uid?: string
+    whitecliffId?: bigint | number | null
+    whitecliffSystemId?: bigint | number | null
+    whitecliffUsername?: string | null
+    dcsId?: string | null
+    email?: string | null
+    passwordHash?: string | null
+    socialType?: $Enums.SocialType | null
+    socialId?: string | null
+    role?: $Enums.UserRoleType
+    status?: $Enums.UserStatus
+    kycLevel?: $Enums.KycLevel
+    country?: string | null
+    language?: $Enums.Language | null
+    timezone?: string | null
+    timezoneOffset?: number | null
+    createdAt?: Date | string
+    updatedAt?: Date | string
+    affiliateCodes?: AffiliateCodeUncheckedCreateNestedManyWithoutUserInput
+    affiliateCommissions?: AffiliateCommissionUncheckedCreateNestedManyWithoutAffiliateInput
+    subUserCommissions?: AffiliateCommissionUncheckedCreateNestedManyWithoutSubUserInput
+    affiliateTier?: AffiliateTierUncheckedCreateNestedOneWithoutAffiliateInput
+    affiliateWallets?: AffiliateWalletUncheckedCreateNestedManyWithoutAffiliateInput
+    CompTransaction?: CompTransactionUncheckedCreateNestedManyWithoutUserInput
+    DailyCompEarning?: DailyCompEarningUncheckedCreateNestedManyWithoutUserInput
+    EmailLog?: EmailLogUncheckedCreateNestedManyWithoutUserInput
+    GameSession?: GameSessionUncheckedCreateNestedManyWithoutUserInput
+    affiliateReferrals?: ReferralUncheckedCreateNestedManyWithoutAffiliateInput
+    referredUsers?: ReferralUncheckedCreateNestedManyWithoutSubUserInput
+    Rolling?: RollingUncheckedCreateNestedManyWithoutUserInput
+    transactions?: TransactionUncheckedCreateNestedManyWithoutUserInput
+    depositDetails?: DepositDetailUncheckedCreateNestedManyWithoutUserInput
+    balances?: UserBalanceUncheckedCreateNestedManyWithoutUserInput
+    UserBalanceStats?: UserBalanceStatsUncheckedCreateNestedManyWithoutUserInput
+    UserPromotion?: UserPromotionUncheckedCreateNestedManyWithoutUserInput
+    UserSession?: UserSessionUncheckedCreateNestedManyWithoutUserInput
+    RevokedSessions?: UserSessionUncheckedCreateNestedManyWithoutRevokedByUserInput
+    UserToken?: UserTokenUncheckedCreateNestedManyWithoutUserInput
+    loginAttempts?: LoginAttemptUncheckedCreateNestedManyWithoutUserInput
+    tierHistory?: TierHistoryUncheckedCreateNestedManyWithoutUserInput
+  }
+
+  export type UserCreateOrConnectWithoutUserTierInput = {
+    where: UserWhereUniqueInput
+    create: XOR<UserCreateWithoutUserTierInput, UserUncheckedCreateWithoutUserTierInput>
+  }
+
+  export type TierCreateWithoutUserTiersInput = {
+    id?: bigint | number
+    uid?: string
+    priority: number
+    code: string
+    requirementUsd: Decimal | DecimalJsLike | number | string
+    levelUpBonus?: Decimal | DecimalJsLike | number | string
+    compRate?: Decimal | DecimalJsLike | number | string
+    benefits?: NullableJsonNullValueInput | InputJsonValue
+    createdAt?: Date | string
+    updatedAt?: Date | string
+    translations?: TierTranslationCreateNestedManyWithoutTierInput
+    historyFrom?: TierHistoryCreateNestedManyWithoutFromTierInput
+    historyTo?: TierHistoryCreateNestedManyWithoutToTierInput
+  }
+
+  export type TierUncheckedCreateWithoutUserTiersInput = {
+    id?: bigint | number
+    uid?: string
+    priority: number
+    code: string
+    requirementUsd: Decimal | DecimalJsLike | number | string
+    levelUpBonus?: Decimal | DecimalJsLike | number | string
+    compRate?: Decimal | DecimalJsLike | number | string
+    benefits?: NullableJsonNullValueInput | InputJsonValue
+    createdAt?: Date | string
+    updatedAt?: Date | string
+    translations?: TierTranslationUncheckedCreateNestedManyWithoutTierInput
+    historyFrom?: TierHistoryUncheckedCreateNestedManyWithoutFromTierInput
+    historyTo?: TierHistoryUncheckedCreateNestedManyWithoutToTierInput
+  }
+
+  export type TierCreateOrConnectWithoutUserTiersInput = {
+    where: TierWhereUniqueInput
+    create: XOR<TierCreateWithoutUserTiersInput, TierUncheckedCreateWithoutUserTiersInput>
+  }
+
+  export type UserUpsertWithoutUserTierInput = {
+    update: XOR<UserUpdateWithoutUserTierInput, UserUncheckedUpdateWithoutUserTierInput>
+    create: XOR<UserCreateWithoutUserTierInput, UserUncheckedCreateWithoutUserTierInput>
+    where?: UserWhereInput
+  }
+
+  export type UserUpdateToOneWithWhereWithoutUserTierInput = {
+    where?: UserWhereInput
+    data: XOR<UserUpdateWithoutUserTierInput, UserUncheckedUpdateWithoutUserTierInput>
+  }
+
+  export type UserUpdateWithoutUserTierInput = {
+    id?: BigIntFieldUpdateOperationsInput | bigint | number
+    uid?: StringFieldUpdateOperationsInput | string
+    whitecliffId?: NullableBigIntFieldUpdateOperationsInput | bigint | number | null
+    whitecliffSystemId?: NullableBigIntFieldUpdateOperationsInput | bigint | number | null
+    whitecliffUsername?: NullableStringFieldUpdateOperationsInput | string | null
+    dcsId?: NullableStringFieldUpdateOperationsInput | string | null
+    email?: NullableStringFieldUpdateOperationsInput | string | null
+    passwordHash?: NullableStringFieldUpdateOperationsInput | string | null
+    socialType?: NullableEnumSocialTypeFieldUpdateOperationsInput | $Enums.SocialType | null
+    socialId?: NullableStringFieldUpdateOperationsInput | string | null
+    role?: EnumUserRoleTypeFieldUpdateOperationsInput | $Enums.UserRoleType
+    status?: EnumUserStatusFieldUpdateOperationsInput | $Enums.UserStatus
+    kycLevel?: EnumKycLevelFieldUpdateOperationsInput | $Enums.KycLevel
+    country?: NullableStringFieldUpdateOperationsInput | string | null
+    language?: NullableEnumLanguageFieldUpdateOperationsInput | $Enums.Language | null
+    timezone?: NullableStringFieldUpdateOperationsInput | string | null
+    timezoneOffset?: NullableIntFieldUpdateOperationsInput | number | null
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    affiliateCodes?: AffiliateCodeUpdateManyWithoutUserNestedInput
+    affiliateCommissions?: AffiliateCommissionUpdateManyWithoutAffiliateNestedInput
+    subUserCommissions?: AffiliateCommissionUpdateManyWithoutSubUserNestedInput
+    affiliateTier?: AffiliateTierUpdateOneWithoutAffiliateNestedInput
+    affiliateWallets?: AffiliateWalletUpdateManyWithoutAffiliateNestedInput
+    CompTransaction?: CompTransactionUpdateManyWithoutUserNestedInput
+    DailyCompEarning?: DailyCompEarningUpdateManyWithoutUserNestedInput
+    EmailLog?: EmailLogUpdateManyWithoutUserNestedInput
+    GameSession?: GameSessionUpdateManyWithoutUserNestedInput
+    affiliateReferrals?: ReferralUpdateManyWithoutAffiliateNestedInput
+    referredUsers?: ReferralUpdateManyWithoutSubUserNestedInput
+    Rolling?: RollingUpdateManyWithoutUserNestedInput
+    transactions?: TransactionUpdateManyWithoutUserNestedInput
+    depositDetails?: DepositDetailUpdateManyWithoutUserNestedInput
+    balances?: UserBalanceUpdateManyWithoutUserNestedInput
+    UserBalanceStats?: UserBalanceStatsUpdateManyWithoutUserNestedInput
+    UserPromotion?: UserPromotionUpdateManyWithoutUserNestedInput
+    UserSession?: UserSessionUpdateManyWithoutUserNestedInput
+    RevokedSessions?: UserSessionUpdateManyWithoutRevokedByUserNestedInput
+    UserToken?: UserTokenUpdateManyWithoutUserNestedInput
+    loginAttempts?: LoginAttemptUpdateManyWithoutUserNestedInput
+    tierHistory?: TierHistoryUpdateManyWithoutUserNestedInput
+  }
+
+  export type UserUncheckedUpdateWithoutUserTierInput = {
+    id?: BigIntFieldUpdateOperationsInput | bigint | number
+    uid?: StringFieldUpdateOperationsInput | string
+    whitecliffId?: NullableBigIntFieldUpdateOperationsInput | bigint | number | null
+    whitecliffSystemId?: NullableBigIntFieldUpdateOperationsInput | bigint | number | null
+    whitecliffUsername?: NullableStringFieldUpdateOperationsInput | string | null
+    dcsId?: NullableStringFieldUpdateOperationsInput | string | null
+    email?: NullableStringFieldUpdateOperationsInput | string | null
+    passwordHash?: NullableStringFieldUpdateOperationsInput | string | null
+    socialType?: NullableEnumSocialTypeFieldUpdateOperationsInput | $Enums.SocialType | null
+    socialId?: NullableStringFieldUpdateOperationsInput | string | null
+    role?: EnumUserRoleTypeFieldUpdateOperationsInput | $Enums.UserRoleType
+    status?: EnumUserStatusFieldUpdateOperationsInput | $Enums.UserStatus
+    kycLevel?: EnumKycLevelFieldUpdateOperationsInput | $Enums.KycLevel
+    country?: NullableStringFieldUpdateOperationsInput | string | null
+    language?: NullableEnumLanguageFieldUpdateOperationsInput | $Enums.Language | null
+    timezone?: NullableStringFieldUpdateOperationsInput | string | null
+    timezoneOffset?: NullableIntFieldUpdateOperationsInput | number | null
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    affiliateCodes?: AffiliateCodeUncheckedUpdateManyWithoutUserNestedInput
+    affiliateCommissions?: AffiliateCommissionUncheckedUpdateManyWithoutAffiliateNestedInput
+    subUserCommissions?: AffiliateCommissionUncheckedUpdateManyWithoutSubUserNestedInput
+    affiliateTier?: AffiliateTierUncheckedUpdateOneWithoutAffiliateNestedInput
+    affiliateWallets?: AffiliateWalletUncheckedUpdateManyWithoutAffiliateNestedInput
+    CompTransaction?: CompTransactionUncheckedUpdateManyWithoutUserNestedInput
+    DailyCompEarning?: DailyCompEarningUncheckedUpdateManyWithoutUserNestedInput
+    EmailLog?: EmailLogUncheckedUpdateManyWithoutUserNestedInput
+    GameSession?: GameSessionUncheckedUpdateManyWithoutUserNestedInput
+    affiliateReferrals?: ReferralUncheckedUpdateManyWithoutAffiliateNestedInput
+    referredUsers?: ReferralUncheckedUpdateManyWithoutSubUserNestedInput
+    Rolling?: RollingUncheckedUpdateManyWithoutUserNestedInput
+    transactions?: TransactionUncheckedUpdateManyWithoutUserNestedInput
+    depositDetails?: DepositDetailUncheckedUpdateManyWithoutUserNestedInput
+    balances?: UserBalanceUncheckedUpdateManyWithoutUserNestedInput
+    UserBalanceStats?: UserBalanceStatsUncheckedUpdateManyWithoutUserNestedInput
+    UserPromotion?: UserPromotionUncheckedUpdateManyWithoutUserNestedInput
+    UserSession?: UserSessionUncheckedUpdateManyWithoutUserNestedInput
+    RevokedSessions?: UserSessionUncheckedUpdateManyWithoutRevokedByUserNestedInput
+    UserToken?: UserTokenUncheckedUpdateManyWithoutUserNestedInput
+    loginAttempts?: LoginAttemptUncheckedUpdateManyWithoutUserNestedInput
+    tierHistory?: TierHistoryUncheckedUpdateManyWithoutUserNestedInput
+  }
+
+  export type TierUpsertWithoutUserTiersInput = {
+    update: XOR<TierUpdateWithoutUserTiersInput, TierUncheckedUpdateWithoutUserTiersInput>
+    create: XOR<TierCreateWithoutUserTiersInput, TierUncheckedCreateWithoutUserTiersInput>
+    where?: TierWhereInput
+  }
+
+  export type TierUpdateToOneWithWhereWithoutUserTiersInput = {
+    where?: TierWhereInput
+    data: XOR<TierUpdateWithoutUserTiersInput, TierUncheckedUpdateWithoutUserTiersInput>
+  }
+
+  export type TierUpdateWithoutUserTiersInput = {
+    id?: BigIntFieldUpdateOperationsInput | bigint | number
+    uid?: StringFieldUpdateOperationsInput | string
+    priority?: IntFieldUpdateOperationsInput | number
+    code?: StringFieldUpdateOperationsInput | string
+    requirementUsd?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
+    levelUpBonus?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
+    compRate?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
+    benefits?: NullableJsonNullValueInput | InputJsonValue
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    translations?: TierTranslationUpdateManyWithoutTierNestedInput
+    historyFrom?: TierHistoryUpdateManyWithoutFromTierNestedInput
+    historyTo?: TierHistoryUpdateManyWithoutToTierNestedInput
+  }
+
+  export type TierUncheckedUpdateWithoutUserTiersInput = {
+    id?: BigIntFieldUpdateOperationsInput | bigint | number
+    uid?: StringFieldUpdateOperationsInput | string
+    priority?: IntFieldUpdateOperationsInput | number
+    code?: StringFieldUpdateOperationsInput | string
+    requirementUsd?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
+    levelUpBonus?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
+    compRate?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
+    benefits?: NullableJsonNullValueInput | InputJsonValue
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    translations?: TierTranslationUncheckedUpdateManyWithoutTierNestedInput
+    historyFrom?: TierHistoryUncheckedUpdateManyWithoutFromTierNestedInput
+    historyTo?: TierHistoryUncheckedUpdateManyWithoutToTierNestedInput
+  }
+
+  export type UserCreateWithoutTierHistoryInput = {
+    id?: bigint | number
+    uid?: string
+    whitecliffId?: bigint | number | null
+    whitecliffSystemId?: bigint | number | null
+    whitecliffUsername?: string | null
+    dcsId?: string | null
+    email?: string | null
+    passwordHash?: string | null
+    socialType?: $Enums.SocialType | null
+    socialId?: string | null
+    role?: $Enums.UserRoleType
+    status?: $Enums.UserStatus
+    kycLevel?: $Enums.KycLevel
+    country?: string | null
+    language?: $Enums.Language | null
+    timezone?: string | null
+    timezoneOffset?: number | null
+    createdAt?: Date | string
+    updatedAt?: Date | string
+    affiliateCodes?: AffiliateCodeCreateNestedManyWithoutUserInput
+    affiliateCommissions?: AffiliateCommissionCreateNestedManyWithoutAffiliateInput
+    subUserCommissions?: AffiliateCommissionCreateNestedManyWithoutSubUserInput
+    affiliateTier?: AffiliateTierCreateNestedOneWithoutAffiliateInput
+    affiliateWallets?: AffiliateWalletCreateNestedManyWithoutAffiliateInput
+    CompTransaction?: CompTransactionCreateNestedManyWithoutUserInput
+    DailyCompEarning?: DailyCompEarningCreateNestedManyWithoutUserInput
+    EmailLog?: EmailLogCreateNestedManyWithoutUserInput
+    GameSession?: GameSessionCreateNestedManyWithoutUserInput
+    affiliateReferrals?: ReferralCreateNestedManyWithoutAffiliateInput
+    referredUsers?: ReferralCreateNestedManyWithoutSubUserInput
+    Rolling?: RollingCreateNestedManyWithoutUserInput
+    transactions?: TransactionCreateNestedManyWithoutUserInput
+    depositDetails?: DepositDetailCreateNestedManyWithoutUserInput
+    balances?: UserBalanceCreateNestedManyWithoutUserInput
+    UserBalanceStats?: UserBalanceStatsCreateNestedManyWithoutUserInput
+    UserPromotion?: UserPromotionCreateNestedManyWithoutUserInput
+    UserSession?: UserSessionCreateNestedManyWithoutUserInput
+    RevokedSessions?: UserSessionCreateNestedManyWithoutRevokedByUserInput
+    UserToken?: UserTokenCreateNestedManyWithoutUserInput
+    loginAttempts?: LoginAttemptCreateNestedManyWithoutUserInput
+    userTier?: UserTierCreateNestedOneWithoutUserInput
+  }
+
+  export type UserUncheckedCreateWithoutTierHistoryInput = {
+    id?: bigint | number
+    uid?: string
+    whitecliffId?: bigint | number | null
+    whitecliffSystemId?: bigint | number | null
+    whitecliffUsername?: string | null
+    dcsId?: string | null
+    email?: string | null
+    passwordHash?: string | null
+    socialType?: $Enums.SocialType | null
+    socialId?: string | null
+    role?: $Enums.UserRoleType
+    status?: $Enums.UserStatus
+    kycLevel?: $Enums.KycLevel
+    country?: string | null
+    language?: $Enums.Language | null
+    timezone?: string | null
+    timezoneOffset?: number | null
+    createdAt?: Date | string
+    updatedAt?: Date | string
+    affiliateCodes?: AffiliateCodeUncheckedCreateNestedManyWithoutUserInput
+    affiliateCommissions?: AffiliateCommissionUncheckedCreateNestedManyWithoutAffiliateInput
+    subUserCommissions?: AffiliateCommissionUncheckedCreateNestedManyWithoutSubUserInput
+    affiliateTier?: AffiliateTierUncheckedCreateNestedOneWithoutAffiliateInput
+    affiliateWallets?: AffiliateWalletUncheckedCreateNestedManyWithoutAffiliateInput
+    CompTransaction?: CompTransactionUncheckedCreateNestedManyWithoutUserInput
+    DailyCompEarning?: DailyCompEarningUncheckedCreateNestedManyWithoutUserInput
+    EmailLog?: EmailLogUncheckedCreateNestedManyWithoutUserInput
+    GameSession?: GameSessionUncheckedCreateNestedManyWithoutUserInput
+    affiliateReferrals?: ReferralUncheckedCreateNestedManyWithoutAffiliateInput
+    referredUsers?: ReferralUncheckedCreateNestedManyWithoutSubUserInput
+    Rolling?: RollingUncheckedCreateNestedManyWithoutUserInput
+    transactions?: TransactionUncheckedCreateNestedManyWithoutUserInput
+    depositDetails?: DepositDetailUncheckedCreateNestedManyWithoutUserInput
+    balances?: UserBalanceUncheckedCreateNestedManyWithoutUserInput
+    UserBalanceStats?: UserBalanceStatsUncheckedCreateNestedManyWithoutUserInput
+    UserPromotion?: UserPromotionUncheckedCreateNestedManyWithoutUserInput
+    UserSession?: UserSessionUncheckedCreateNestedManyWithoutUserInput
+    RevokedSessions?: UserSessionUncheckedCreateNestedManyWithoutRevokedByUserInput
+    UserToken?: UserTokenUncheckedCreateNestedManyWithoutUserInput
+    loginAttempts?: LoginAttemptUncheckedCreateNestedManyWithoutUserInput
+    userTier?: UserTierUncheckedCreateNestedOneWithoutUserInput
+  }
+
+  export type UserCreateOrConnectWithoutTierHistoryInput = {
+    where: UserWhereUniqueInput
+    create: XOR<UserCreateWithoutTierHistoryInput, UserUncheckedCreateWithoutTierHistoryInput>
+  }
+
+  export type TierCreateWithoutHistoryFromInput = {
+    id?: bigint | number
+    uid?: string
+    priority: number
+    code: string
+    requirementUsd: Decimal | DecimalJsLike | number | string
+    levelUpBonus?: Decimal | DecimalJsLike | number | string
+    compRate?: Decimal | DecimalJsLike | number | string
+    benefits?: NullableJsonNullValueInput | InputJsonValue
+    createdAt?: Date | string
+    updatedAt?: Date | string
+    userTiers?: UserTierCreateNestedManyWithoutTierInput
+    translations?: TierTranslationCreateNestedManyWithoutTierInput
+    historyTo?: TierHistoryCreateNestedManyWithoutToTierInput
+  }
+
+  export type TierUncheckedCreateWithoutHistoryFromInput = {
+    id?: bigint | number
+    uid?: string
+    priority: number
+    code: string
+    requirementUsd: Decimal | DecimalJsLike | number | string
+    levelUpBonus?: Decimal | DecimalJsLike | number | string
+    compRate?: Decimal | DecimalJsLike | number | string
+    benefits?: NullableJsonNullValueInput | InputJsonValue
+    createdAt?: Date | string
+    updatedAt?: Date | string
+    userTiers?: UserTierUncheckedCreateNestedManyWithoutTierInput
+    translations?: TierTranslationUncheckedCreateNestedManyWithoutTierInput
+    historyTo?: TierHistoryUncheckedCreateNestedManyWithoutToTierInput
+  }
+
+  export type TierCreateOrConnectWithoutHistoryFromInput = {
+    where: TierWhereUniqueInput
+    create: XOR<TierCreateWithoutHistoryFromInput, TierUncheckedCreateWithoutHistoryFromInput>
+  }
+
+  export type TierCreateWithoutHistoryToInput = {
+    id?: bigint | number
+    uid?: string
+    priority: number
+    code: string
+    requirementUsd: Decimal | DecimalJsLike | number | string
+    levelUpBonus?: Decimal | DecimalJsLike | number | string
+    compRate?: Decimal | DecimalJsLike | number | string
+    benefits?: NullableJsonNullValueInput | InputJsonValue
+    createdAt?: Date | string
+    updatedAt?: Date | string
+    userTiers?: UserTierCreateNestedManyWithoutTierInput
+    translations?: TierTranslationCreateNestedManyWithoutTierInput
+    historyFrom?: TierHistoryCreateNestedManyWithoutFromTierInput
+  }
+
+  export type TierUncheckedCreateWithoutHistoryToInput = {
+    id?: bigint | number
+    uid?: string
+    priority: number
+    code: string
+    requirementUsd: Decimal | DecimalJsLike | number | string
+    levelUpBonus?: Decimal | DecimalJsLike | number | string
+    compRate?: Decimal | DecimalJsLike | number | string
+    benefits?: NullableJsonNullValueInput | InputJsonValue
+    createdAt?: Date | string
+    updatedAt?: Date | string
+    userTiers?: UserTierUncheckedCreateNestedManyWithoutTierInput
+    translations?: TierTranslationUncheckedCreateNestedManyWithoutTierInput
+    historyFrom?: TierHistoryUncheckedCreateNestedManyWithoutFromTierInput
+  }
+
+  export type TierCreateOrConnectWithoutHistoryToInput = {
+    where: TierWhereUniqueInput
+    create: XOR<TierCreateWithoutHistoryToInput, TierUncheckedCreateWithoutHistoryToInput>
+  }
+
+  export type UserUpsertWithoutTierHistoryInput = {
+    update: XOR<UserUpdateWithoutTierHistoryInput, UserUncheckedUpdateWithoutTierHistoryInput>
+    create: XOR<UserCreateWithoutTierHistoryInput, UserUncheckedCreateWithoutTierHistoryInput>
+    where?: UserWhereInput
+  }
+
+  export type UserUpdateToOneWithWhereWithoutTierHistoryInput = {
+    where?: UserWhereInput
+    data: XOR<UserUpdateWithoutTierHistoryInput, UserUncheckedUpdateWithoutTierHistoryInput>
+  }
+
+  export type UserUpdateWithoutTierHistoryInput = {
+    id?: BigIntFieldUpdateOperationsInput | bigint | number
+    uid?: StringFieldUpdateOperationsInput | string
+    whitecliffId?: NullableBigIntFieldUpdateOperationsInput | bigint | number | null
+    whitecliffSystemId?: NullableBigIntFieldUpdateOperationsInput | bigint | number | null
+    whitecliffUsername?: NullableStringFieldUpdateOperationsInput | string | null
+    dcsId?: NullableStringFieldUpdateOperationsInput | string | null
+    email?: NullableStringFieldUpdateOperationsInput | string | null
+    passwordHash?: NullableStringFieldUpdateOperationsInput | string | null
+    socialType?: NullableEnumSocialTypeFieldUpdateOperationsInput | $Enums.SocialType | null
+    socialId?: NullableStringFieldUpdateOperationsInput | string | null
+    role?: EnumUserRoleTypeFieldUpdateOperationsInput | $Enums.UserRoleType
+    status?: EnumUserStatusFieldUpdateOperationsInput | $Enums.UserStatus
+    kycLevel?: EnumKycLevelFieldUpdateOperationsInput | $Enums.KycLevel
+    country?: NullableStringFieldUpdateOperationsInput | string | null
+    language?: NullableEnumLanguageFieldUpdateOperationsInput | $Enums.Language | null
+    timezone?: NullableStringFieldUpdateOperationsInput | string | null
+    timezoneOffset?: NullableIntFieldUpdateOperationsInput | number | null
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    affiliateCodes?: AffiliateCodeUpdateManyWithoutUserNestedInput
+    affiliateCommissions?: AffiliateCommissionUpdateManyWithoutAffiliateNestedInput
+    subUserCommissions?: AffiliateCommissionUpdateManyWithoutSubUserNestedInput
+    affiliateTier?: AffiliateTierUpdateOneWithoutAffiliateNestedInput
+    affiliateWallets?: AffiliateWalletUpdateManyWithoutAffiliateNestedInput
+    CompTransaction?: CompTransactionUpdateManyWithoutUserNestedInput
+    DailyCompEarning?: DailyCompEarningUpdateManyWithoutUserNestedInput
+    EmailLog?: EmailLogUpdateManyWithoutUserNestedInput
+    GameSession?: GameSessionUpdateManyWithoutUserNestedInput
+    affiliateReferrals?: ReferralUpdateManyWithoutAffiliateNestedInput
+    referredUsers?: ReferralUpdateManyWithoutSubUserNestedInput
+    Rolling?: RollingUpdateManyWithoutUserNestedInput
+    transactions?: TransactionUpdateManyWithoutUserNestedInput
+    depositDetails?: DepositDetailUpdateManyWithoutUserNestedInput
+    balances?: UserBalanceUpdateManyWithoutUserNestedInput
+    UserBalanceStats?: UserBalanceStatsUpdateManyWithoutUserNestedInput
+    UserPromotion?: UserPromotionUpdateManyWithoutUserNestedInput
+    UserSession?: UserSessionUpdateManyWithoutUserNestedInput
+    RevokedSessions?: UserSessionUpdateManyWithoutRevokedByUserNestedInput
+    UserToken?: UserTokenUpdateManyWithoutUserNestedInput
+    loginAttempts?: LoginAttemptUpdateManyWithoutUserNestedInput
+    userTier?: UserTierUpdateOneWithoutUserNestedInput
+  }
+
+  export type UserUncheckedUpdateWithoutTierHistoryInput = {
+    id?: BigIntFieldUpdateOperationsInput | bigint | number
+    uid?: StringFieldUpdateOperationsInput | string
+    whitecliffId?: NullableBigIntFieldUpdateOperationsInput | bigint | number | null
+    whitecliffSystemId?: NullableBigIntFieldUpdateOperationsInput | bigint | number | null
+    whitecliffUsername?: NullableStringFieldUpdateOperationsInput | string | null
+    dcsId?: NullableStringFieldUpdateOperationsInput | string | null
+    email?: NullableStringFieldUpdateOperationsInput | string | null
+    passwordHash?: NullableStringFieldUpdateOperationsInput | string | null
+    socialType?: NullableEnumSocialTypeFieldUpdateOperationsInput | $Enums.SocialType | null
+    socialId?: NullableStringFieldUpdateOperationsInput | string | null
+    role?: EnumUserRoleTypeFieldUpdateOperationsInput | $Enums.UserRoleType
+    status?: EnumUserStatusFieldUpdateOperationsInput | $Enums.UserStatus
+    kycLevel?: EnumKycLevelFieldUpdateOperationsInput | $Enums.KycLevel
+    country?: NullableStringFieldUpdateOperationsInput | string | null
+    language?: NullableEnumLanguageFieldUpdateOperationsInput | $Enums.Language | null
+    timezone?: NullableStringFieldUpdateOperationsInput | string | null
+    timezoneOffset?: NullableIntFieldUpdateOperationsInput | number | null
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    affiliateCodes?: AffiliateCodeUncheckedUpdateManyWithoutUserNestedInput
+    affiliateCommissions?: AffiliateCommissionUncheckedUpdateManyWithoutAffiliateNestedInput
+    subUserCommissions?: AffiliateCommissionUncheckedUpdateManyWithoutSubUserNestedInput
+    affiliateTier?: AffiliateTierUncheckedUpdateOneWithoutAffiliateNestedInput
+    affiliateWallets?: AffiliateWalletUncheckedUpdateManyWithoutAffiliateNestedInput
+    CompTransaction?: CompTransactionUncheckedUpdateManyWithoutUserNestedInput
+    DailyCompEarning?: DailyCompEarningUncheckedUpdateManyWithoutUserNestedInput
+    EmailLog?: EmailLogUncheckedUpdateManyWithoutUserNestedInput
+    GameSession?: GameSessionUncheckedUpdateManyWithoutUserNestedInput
+    affiliateReferrals?: ReferralUncheckedUpdateManyWithoutAffiliateNestedInput
+    referredUsers?: ReferralUncheckedUpdateManyWithoutSubUserNestedInput
+    Rolling?: RollingUncheckedUpdateManyWithoutUserNestedInput
+    transactions?: TransactionUncheckedUpdateManyWithoutUserNestedInput
+    depositDetails?: DepositDetailUncheckedUpdateManyWithoutUserNestedInput
+    balances?: UserBalanceUncheckedUpdateManyWithoutUserNestedInput
+    UserBalanceStats?: UserBalanceStatsUncheckedUpdateManyWithoutUserNestedInput
+    UserPromotion?: UserPromotionUncheckedUpdateManyWithoutUserNestedInput
+    UserSession?: UserSessionUncheckedUpdateManyWithoutUserNestedInput
+    RevokedSessions?: UserSessionUncheckedUpdateManyWithoutRevokedByUserNestedInput
+    UserToken?: UserTokenUncheckedUpdateManyWithoutUserNestedInput
+    loginAttempts?: LoginAttemptUncheckedUpdateManyWithoutUserNestedInput
+    userTier?: UserTierUncheckedUpdateOneWithoutUserNestedInput
+  }
+
+  export type TierUpsertWithoutHistoryFromInput = {
+    update: XOR<TierUpdateWithoutHistoryFromInput, TierUncheckedUpdateWithoutHistoryFromInput>
+    create: XOR<TierCreateWithoutHistoryFromInput, TierUncheckedCreateWithoutHistoryFromInput>
+    where?: TierWhereInput
+  }
+
+  export type TierUpdateToOneWithWhereWithoutHistoryFromInput = {
+    where?: TierWhereInput
+    data: XOR<TierUpdateWithoutHistoryFromInput, TierUncheckedUpdateWithoutHistoryFromInput>
+  }
+
+  export type TierUpdateWithoutHistoryFromInput = {
+    id?: BigIntFieldUpdateOperationsInput | bigint | number
+    uid?: StringFieldUpdateOperationsInput | string
+    priority?: IntFieldUpdateOperationsInput | number
+    code?: StringFieldUpdateOperationsInput | string
+    requirementUsd?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
+    levelUpBonus?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
+    compRate?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
+    benefits?: NullableJsonNullValueInput | InputJsonValue
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    userTiers?: UserTierUpdateManyWithoutTierNestedInput
+    translations?: TierTranslationUpdateManyWithoutTierNestedInput
+    historyTo?: TierHistoryUpdateManyWithoutToTierNestedInput
+  }
+
+  export type TierUncheckedUpdateWithoutHistoryFromInput = {
+    id?: BigIntFieldUpdateOperationsInput | bigint | number
+    uid?: StringFieldUpdateOperationsInput | string
+    priority?: IntFieldUpdateOperationsInput | number
+    code?: StringFieldUpdateOperationsInput | string
+    requirementUsd?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
+    levelUpBonus?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
+    compRate?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
+    benefits?: NullableJsonNullValueInput | InputJsonValue
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    userTiers?: UserTierUncheckedUpdateManyWithoutTierNestedInput
+    translations?: TierTranslationUncheckedUpdateManyWithoutTierNestedInput
+    historyTo?: TierHistoryUncheckedUpdateManyWithoutToTierNestedInput
+  }
+
+  export type TierUpsertWithoutHistoryToInput = {
+    update: XOR<TierUpdateWithoutHistoryToInput, TierUncheckedUpdateWithoutHistoryToInput>
+    create: XOR<TierCreateWithoutHistoryToInput, TierUncheckedCreateWithoutHistoryToInput>
+    where?: TierWhereInput
+  }
+
+  export type TierUpdateToOneWithWhereWithoutHistoryToInput = {
+    where?: TierWhereInput
+    data: XOR<TierUpdateWithoutHistoryToInput, TierUncheckedUpdateWithoutHistoryToInput>
+  }
+
+  export type TierUpdateWithoutHistoryToInput = {
+    id?: BigIntFieldUpdateOperationsInput | bigint | number
+    uid?: StringFieldUpdateOperationsInput | string
+    priority?: IntFieldUpdateOperationsInput | number
+    code?: StringFieldUpdateOperationsInput | string
+    requirementUsd?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
+    levelUpBonus?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
+    compRate?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
+    benefits?: NullableJsonNullValueInput | InputJsonValue
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    userTiers?: UserTierUpdateManyWithoutTierNestedInput
+    translations?: TierTranslationUpdateManyWithoutTierNestedInput
+    historyFrom?: TierHistoryUpdateManyWithoutFromTierNestedInput
+  }
+
+  export type TierUncheckedUpdateWithoutHistoryToInput = {
+    id?: BigIntFieldUpdateOperationsInput | bigint | number
+    uid?: StringFieldUpdateOperationsInput | string
+    priority?: IntFieldUpdateOperationsInput | number
+    code?: StringFieldUpdateOperationsInput | string
+    requirementUsd?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
+    levelUpBonus?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
+    compRate?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
+    benefits?: NullableJsonNullValueInput | InputJsonValue
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    userTiers?: UserTierUncheckedUpdateManyWithoutTierNestedInput
+    translations?: TierTranslationUncheckedUpdateManyWithoutTierNestedInput
+    historyFrom?: TierHistoryUncheckedUpdateManyWithoutFromTierNestedInput
   }
 
   export type ReferralCreateManyCodeInput = {
@@ -81248,6 +89116,19 @@ export namespace Prisma {
     attemptedAt?: Date | string
     email?: string | null
     isAdmin?: boolean
+  }
+
+  export type TierHistoryCreateManyUserInput = {
+    id?: bigint | number
+    uid?: string
+    fromTierId?: bigint | number | null
+    toTierId: bigint | number
+    changeType: $Enums.TierChangeType
+    reason?: string | null
+    rollingAmountSnap: Decimal | DecimalJsLike | number | string
+    bonusAmount?: Decimal | DecimalJsLike | number | string | null
+    changedAt?: Date | string
+    changeBy?: string | null
   }
 
   export type AffiliateCodeUpdateWithoutUserInput = {
@@ -82164,6 +90045,45 @@ export namespace Prisma {
     attemptedAt?: DateTimeFieldUpdateOperationsInput | Date | string
     email?: NullableStringFieldUpdateOperationsInput | string | null
     isAdmin?: BoolFieldUpdateOperationsInput | boolean
+  }
+
+  export type TierHistoryUpdateWithoutUserInput = {
+    id?: BigIntFieldUpdateOperationsInput | bigint | number
+    uid?: StringFieldUpdateOperationsInput | string
+    changeType?: EnumTierChangeTypeFieldUpdateOperationsInput | $Enums.TierChangeType
+    reason?: NullableStringFieldUpdateOperationsInput | string | null
+    rollingAmountSnap?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
+    bonusAmount?: NullableDecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string | null
+    changedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    changeBy?: NullableStringFieldUpdateOperationsInput | string | null
+    fromTier?: TierUpdateOneWithoutHistoryFromNestedInput
+    toTier?: TierUpdateOneRequiredWithoutHistoryToNestedInput
+  }
+
+  export type TierHistoryUncheckedUpdateWithoutUserInput = {
+    id?: BigIntFieldUpdateOperationsInput | bigint | number
+    uid?: StringFieldUpdateOperationsInput | string
+    fromTierId?: NullableBigIntFieldUpdateOperationsInput | bigint | number | null
+    toTierId?: BigIntFieldUpdateOperationsInput | bigint | number
+    changeType?: EnumTierChangeTypeFieldUpdateOperationsInput | $Enums.TierChangeType
+    reason?: NullableStringFieldUpdateOperationsInput | string | null
+    rollingAmountSnap?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
+    bonusAmount?: NullableDecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string | null
+    changedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    changeBy?: NullableStringFieldUpdateOperationsInput | string | null
+  }
+
+  export type TierHistoryUncheckedUpdateManyWithoutUserInput = {
+    id?: BigIntFieldUpdateOperationsInput | bigint | number
+    uid?: StringFieldUpdateOperationsInput | string
+    fromTierId?: NullableBigIntFieldUpdateOperationsInput | bigint | number | null
+    toTierId?: BigIntFieldUpdateOperationsInput | bigint | number
+    changeType?: EnumTierChangeTypeFieldUpdateOperationsInput | $Enums.TierChangeType
+    reason?: NullableStringFieldUpdateOperationsInput | string | null
+    rollingAmountSnap?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
+    bonusAmount?: NullableDecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string | null
+    changedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    changeBy?: NullableStringFieldUpdateOperationsInput | string | null
   }
 
   export type BonusDetailCreateManyGameInput = {
@@ -83375,6 +91295,186 @@ export namespace Prisma {
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
     depositDetailId?: NullableBigIntFieldUpdateOperationsInput | bigint | number | null
+  }
+
+  export type UserTierCreateManyTierInput = {
+    id?: bigint | number
+    uid?: string
+    userId: bigint | number
+    cumulativeRollingUsd?: Decimal | DecimalJsLike | number | string
+    highestPromotedPriority?: number
+    isManualLock?: boolean
+    lastPromotedAt?: Date | string
+    createdAt?: Date | string
+    updatedAt?: Date | string
+  }
+
+  export type TierTranslationCreateManyTierInput = {
+    id?: bigint | number
+    uid?: string
+    language: $Enums.Language
+    name: string
+  }
+
+  export type TierHistoryCreateManyFromTierInput = {
+    id?: bigint | number
+    uid?: string
+    userId: bigint | number
+    toTierId: bigint | number
+    changeType: $Enums.TierChangeType
+    reason?: string | null
+    rollingAmountSnap: Decimal | DecimalJsLike | number | string
+    bonusAmount?: Decimal | DecimalJsLike | number | string | null
+    changedAt?: Date | string
+    changeBy?: string | null
+  }
+
+  export type TierHistoryCreateManyToTierInput = {
+    id?: bigint | number
+    uid?: string
+    userId: bigint | number
+    fromTierId?: bigint | number | null
+    changeType: $Enums.TierChangeType
+    reason?: string | null
+    rollingAmountSnap: Decimal | DecimalJsLike | number | string
+    bonusAmount?: Decimal | DecimalJsLike | number | string | null
+    changedAt?: Date | string
+    changeBy?: string | null
+  }
+
+  export type UserTierUpdateWithoutTierInput = {
+    id?: BigIntFieldUpdateOperationsInput | bigint | number
+    uid?: StringFieldUpdateOperationsInput | string
+    cumulativeRollingUsd?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
+    highestPromotedPriority?: IntFieldUpdateOperationsInput | number
+    isManualLock?: BoolFieldUpdateOperationsInput | boolean
+    lastPromotedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    user?: UserUpdateOneRequiredWithoutUserTierNestedInput
+  }
+
+  export type UserTierUncheckedUpdateWithoutTierInput = {
+    id?: BigIntFieldUpdateOperationsInput | bigint | number
+    uid?: StringFieldUpdateOperationsInput | string
+    userId?: BigIntFieldUpdateOperationsInput | bigint | number
+    cumulativeRollingUsd?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
+    highestPromotedPriority?: IntFieldUpdateOperationsInput | number
+    isManualLock?: BoolFieldUpdateOperationsInput | boolean
+    lastPromotedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+  }
+
+  export type UserTierUncheckedUpdateManyWithoutTierInput = {
+    id?: BigIntFieldUpdateOperationsInput | bigint | number
+    uid?: StringFieldUpdateOperationsInput | string
+    userId?: BigIntFieldUpdateOperationsInput | bigint | number
+    cumulativeRollingUsd?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
+    highestPromotedPriority?: IntFieldUpdateOperationsInput | number
+    isManualLock?: BoolFieldUpdateOperationsInput | boolean
+    lastPromotedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+  }
+
+  export type TierTranslationUpdateWithoutTierInput = {
+    id?: BigIntFieldUpdateOperationsInput | bigint | number
+    uid?: StringFieldUpdateOperationsInput | string
+    language?: EnumLanguageFieldUpdateOperationsInput | $Enums.Language
+    name?: StringFieldUpdateOperationsInput | string
+  }
+
+  export type TierTranslationUncheckedUpdateWithoutTierInput = {
+    id?: BigIntFieldUpdateOperationsInput | bigint | number
+    uid?: StringFieldUpdateOperationsInput | string
+    language?: EnumLanguageFieldUpdateOperationsInput | $Enums.Language
+    name?: StringFieldUpdateOperationsInput | string
+  }
+
+  export type TierTranslationUncheckedUpdateManyWithoutTierInput = {
+    id?: BigIntFieldUpdateOperationsInput | bigint | number
+    uid?: StringFieldUpdateOperationsInput | string
+    language?: EnumLanguageFieldUpdateOperationsInput | $Enums.Language
+    name?: StringFieldUpdateOperationsInput | string
+  }
+
+  export type TierHistoryUpdateWithoutFromTierInput = {
+    id?: BigIntFieldUpdateOperationsInput | bigint | number
+    uid?: StringFieldUpdateOperationsInput | string
+    changeType?: EnumTierChangeTypeFieldUpdateOperationsInput | $Enums.TierChangeType
+    reason?: NullableStringFieldUpdateOperationsInput | string | null
+    rollingAmountSnap?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
+    bonusAmount?: NullableDecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string | null
+    changedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    changeBy?: NullableStringFieldUpdateOperationsInput | string | null
+    user?: UserUpdateOneRequiredWithoutTierHistoryNestedInput
+    toTier?: TierUpdateOneRequiredWithoutHistoryToNestedInput
+  }
+
+  export type TierHistoryUncheckedUpdateWithoutFromTierInput = {
+    id?: BigIntFieldUpdateOperationsInput | bigint | number
+    uid?: StringFieldUpdateOperationsInput | string
+    userId?: BigIntFieldUpdateOperationsInput | bigint | number
+    toTierId?: BigIntFieldUpdateOperationsInput | bigint | number
+    changeType?: EnumTierChangeTypeFieldUpdateOperationsInput | $Enums.TierChangeType
+    reason?: NullableStringFieldUpdateOperationsInput | string | null
+    rollingAmountSnap?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
+    bonusAmount?: NullableDecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string | null
+    changedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    changeBy?: NullableStringFieldUpdateOperationsInput | string | null
+  }
+
+  export type TierHistoryUncheckedUpdateManyWithoutFromTierInput = {
+    id?: BigIntFieldUpdateOperationsInput | bigint | number
+    uid?: StringFieldUpdateOperationsInput | string
+    userId?: BigIntFieldUpdateOperationsInput | bigint | number
+    toTierId?: BigIntFieldUpdateOperationsInput | bigint | number
+    changeType?: EnumTierChangeTypeFieldUpdateOperationsInput | $Enums.TierChangeType
+    reason?: NullableStringFieldUpdateOperationsInput | string | null
+    rollingAmountSnap?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
+    bonusAmount?: NullableDecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string | null
+    changedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    changeBy?: NullableStringFieldUpdateOperationsInput | string | null
+  }
+
+  export type TierHistoryUpdateWithoutToTierInput = {
+    id?: BigIntFieldUpdateOperationsInput | bigint | number
+    uid?: StringFieldUpdateOperationsInput | string
+    changeType?: EnumTierChangeTypeFieldUpdateOperationsInput | $Enums.TierChangeType
+    reason?: NullableStringFieldUpdateOperationsInput | string | null
+    rollingAmountSnap?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
+    bonusAmount?: NullableDecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string | null
+    changedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    changeBy?: NullableStringFieldUpdateOperationsInput | string | null
+    user?: UserUpdateOneRequiredWithoutTierHistoryNestedInput
+    fromTier?: TierUpdateOneWithoutHistoryFromNestedInput
+  }
+
+  export type TierHistoryUncheckedUpdateWithoutToTierInput = {
+    id?: BigIntFieldUpdateOperationsInput | bigint | number
+    uid?: StringFieldUpdateOperationsInput | string
+    userId?: BigIntFieldUpdateOperationsInput | bigint | number
+    fromTierId?: NullableBigIntFieldUpdateOperationsInput | bigint | number | null
+    changeType?: EnumTierChangeTypeFieldUpdateOperationsInput | $Enums.TierChangeType
+    reason?: NullableStringFieldUpdateOperationsInput | string | null
+    rollingAmountSnap?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
+    bonusAmount?: NullableDecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string | null
+    changedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    changeBy?: NullableStringFieldUpdateOperationsInput | string | null
+  }
+
+  export type TierHistoryUncheckedUpdateManyWithoutToTierInput = {
+    id?: BigIntFieldUpdateOperationsInput | bigint | number
+    uid?: StringFieldUpdateOperationsInput | string
+    userId?: BigIntFieldUpdateOperationsInput | bigint | number
+    fromTierId?: NullableBigIntFieldUpdateOperationsInput | bigint | number | null
+    changeType?: EnumTierChangeTypeFieldUpdateOperationsInput | $Enums.TierChangeType
+    reason?: NullableStringFieldUpdateOperationsInput | string | null
+    rollingAmountSnap?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
+    bonusAmount?: NullableDecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string | null
+    changedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    changeBy?: NullableStringFieldUpdateOperationsInput | string | null
   }
 
 

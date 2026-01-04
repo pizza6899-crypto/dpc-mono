@@ -757,6 +757,54 @@ exports.Prisma.UserSessionScalarFieldEnum = {
   metadata: 'metadata'
 };
 
+exports.Prisma.TierScalarFieldEnum = {
+  id: 'id',
+  uid: 'uid',
+  priority: 'priority',
+  code: 'code',
+  requirementUsd: 'requirementUsd',
+  levelUpBonus: 'levelUpBonus',
+  compRate: 'compRate',
+  benefits: 'benefits',
+  createdAt: 'createdAt',
+  updatedAt: 'updatedAt'
+};
+
+exports.Prisma.TierTranslationScalarFieldEnum = {
+  id: 'id',
+  uid: 'uid',
+  tierId: 'tierId',
+  language: 'language',
+  name: 'name'
+};
+
+exports.Prisma.UserTierScalarFieldEnum = {
+  id: 'id',
+  uid: 'uid',
+  userId: 'userId',
+  tierId: 'tierId',
+  cumulativeRollingUsd: 'cumulativeRollingUsd',
+  highestPromotedPriority: 'highestPromotedPriority',
+  isManualLock: 'isManualLock',
+  lastPromotedAt: 'lastPromotedAt',
+  createdAt: 'createdAt',
+  updatedAt: 'updatedAt'
+};
+
+exports.Prisma.TierHistoryScalarFieldEnum = {
+  id: 'id',
+  uid: 'uid',
+  userId: 'userId',
+  fromTierId: 'fromTierId',
+  toTierId: 'toTierId',
+  changeType: 'changeType',
+  reason: 'reason',
+  rollingAmountSnap: 'rollingAmountSnap',
+  bonusAmount: 'bonusAmount',
+  changedAt: 'changedAt',
+  changeBy: 'changeBy'
+};
+
 exports.Prisma.SortOrder = {
   asc: 'asc',
   desc: 'desc'
@@ -1017,6 +1065,13 @@ exports.SessionStatus = exports.$Enums.SessionStatus = {
   EXPIRED: 'EXPIRED'
 };
 
+exports.TierChangeType = exports.$Enums.TierChangeType = {
+  INITIAL: 'INITIAL',
+  UPGRADE: 'UPGRADE',
+  DOWNGRADE: 'DOWNGRADE',
+  MANUAL_UPDATE: 'MANUAL_UPDATE'
+};
+
 exports.Prisma.ModelName = {
   AffiliateCode: 'AffiliateCode',
   Referral: 'Referral',
@@ -1056,7 +1111,11 @@ exports.Prisma.ModelName = {
   PromotionTranslation: 'PromotionTranslation',
   PromotionCurrency: 'PromotionCurrency',
   UserPromotion: 'UserPromotion',
-  UserSession: 'UserSession'
+  UserSession: 'UserSession',
+  Tier: 'Tier',
+  TierTranslation: 'TierTranslation',
+  UserTier: 'UserTier',
+  TierHistory: 'TierHistory'
 };
 
 /**

@@ -49,6 +49,8 @@ model User {
   RevokedSessions      UserSession[]         @relation("RevokedSessions")
   UserToken            UserToken[]
   loginAttempts        LoginAttempt[]
+  userTier             UserTier?
+  tierHistory          TierHistory[]
 }
 
 model UserBalance {
