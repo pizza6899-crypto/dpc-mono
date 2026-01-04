@@ -80,5 +80,5 @@ import {
     AuditLogInterceptor,
   ],
 })
-export class AuditLogModule {}
+export class AuditLogModule { }
 

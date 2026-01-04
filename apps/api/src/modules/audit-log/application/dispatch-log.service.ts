@@ -12,6 +12,7 @@ import {
 } from '../infrastructure/queue.constants';
 import { generateUid } from 'src/utils/id.util';
 import type { RequestClientInfo } from 'src/common/http/types/client-info.types';
+import { sanitizeAndTruncate } from 'src/utils/log-sanitizer.util';
 
 interface LogQueueJobData {
   id: string;
@@ -32,7 +33,7 @@ export class DispatchLogService {
     private readonly criticalLogQueue: Queue<LogQueueJobData>,
     @InjectQueue(HEAVY_LOG_QUEUE_NAME)
     private readonly heavyLogQueue: Queue<LogQueueJobData>,
-  ) {}
+  ) { }
 
   /**
    * Cloudflare 정보를 로그 타입에 맞게 매핑
@@ -112,6 +113,36 @@ export class DispatchLogService {
   }
 
   /**
+   * 로그 데이터 정제 (길이 제한 및 민감 정보 마스킹)
+   */
+  private sanitizePayload<T extends LogJobData>(payload: T): T {
+    if (payload.type === LogType.INTEGRATION) {
+      return {
+        ...payload,
+        data: {
+          ...payload.data,
+          request: sanitizeAndTruncate(payload.data.request),
+          response: sanitizeAndTruncate(payload.data.response),
+          metadata: sanitizeAndTruncate(payload.data.metadata),
+        },
+      } as T;
+    }
+
+    // 다른 로그 타입도 필요시 추가 처리 (예: Error stack trace 길이 제한 등)
+    if (payload.type === LogType.ERROR) {
+      return {
+        ...payload,
+        data: {
+          ...payload.data,
+          stackTrace: sanitizeAndTruncate(payload.data.stackTrace, 2048), // 스택 트레이스도 너무 길면 자름
+        }
+      } as T;
+    }
+
+    return payload;
+  }
+
+  /**
    * 로그를 큐에 디스패치
    * 
    * @param payload 로그 데이터 (타입에 따라 분기 처리)
@@ -145,16 +176,19 @@ export class DispatchLogService {
         ? this.enrichPayloadWithClientInfo(payload, clientInfo)
         : payload;
 
+      // 데이터 정제 및 길이 제한 (특히 Integration 로그의 요청/응답 바디)
+      const sanitizedPayload = this.sanitizePayload(enrichedPayload);
+
       const id = generateUid();
-      const jobData: LogQueueJobData = { id, payload: enrichedPayload };
+      const jobData: LogQueueJobData = { id, payload: sanitizedPayload };
 
       // 로그 타입에 따라 적절한 큐에 추가
       if (
-        enrichedPayload.type === LogType.AUTH ||
-        enrichedPayload.type === LogType.INTEGRATION
+        sanitizedPayload.type === LogType.AUTH ||
+        sanitizedPayload.type === LogType.INTEGRATION
       ) {
         await this.criticalLogQueue.add(
-          `${enrichedPayload.type.toLowerCase()}-log`,
+          `${sanitizedPayload.type.toLowerCase()}-log`,
           jobData,
           {
             jobId: id,
