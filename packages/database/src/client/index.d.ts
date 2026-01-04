@@ -129,21 +129,6 @@ export type NowPaymentCallbackLog = $Result.DefaultSelection<Prisma.$NowPaymentC
  */
 export type ExchangeRate = $Result.DefaultSelection<Prisma.$ExchangeRatePayload>
 /**
- * Model VipLevel
- * 
- */
-export type VipLevel = $Result.DefaultSelection<Prisma.$VipLevelPayload>
-/**
- * Model VipMembership
- * 
- */
-export type VipMembership = $Result.DefaultSelection<Prisma.$VipMembershipPayload>
-/**
- * Model VipHistory
- * 
- */
-export type VipHistory = $Result.DefaultSelection<Prisma.$VipHistoryPayload>
-/**
  * Model Rolling
  * 
  */
@@ -1086,36 +1071,6 @@ export class PrismaClient<
   get exchangeRate(): Prisma.ExchangeRateDelegate<ExtArgs, ClientOptions>;
 
   /**
-   * `prisma.vipLevel`: Exposes CRUD operations for the **VipLevel** model.
-    * Example usage:
-    * ```ts
-    * // Fetch zero or more VipLevels
-    * const vipLevels = await prisma.vipLevel.findMany()
-    * ```
-    */
-  get vipLevel(): Prisma.VipLevelDelegate<ExtArgs, ClientOptions>;
-
-  /**
-   * `prisma.vipMembership`: Exposes CRUD operations for the **VipMembership** model.
-    * Example usage:
-    * ```ts
-    * // Fetch zero or more VipMemberships
-    * const vipMemberships = await prisma.vipMembership.findMany()
-    * ```
-    */
-  get vipMembership(): Prisma.VipMembershipDelegate<ExtArgs, ClientOptions>;
-
-  /**
-   * `prisma.vipHistory`: Exposes CRUD operations for the **VipHistory** model.
-    * Example usage:
-    * ```ts
-    * // Fetch zero or more VipHistories
-    * const vipHistories = await prisma.vipHistory.findMany()
-    * ```
-    */
-  get vipHistory(): Prisma.VipHistoryDelegate<ExtArgs, ClientOptions>;
-
-  /**
    * `prisma.rolling`: Exposes CRUD operations for the **Rolling** model.
     * Example usage:
     * ```ts
@@ -1731,9 +1686,6 @@ export namespace Prisma {
     DailyCompEarning: 'DailyCompEarning',
     NowPaymentCallbackLog: 'NowPaymentCallbackLog',
     ExchangeRate: 'ExchangeRate',
-    VipLevel: 'VipLevel',
-    VipMembership: 'VipMembership',
-    VipHistory: 'VipHistory',
     Rolling: 'Rolling',
     UserToken: 'UserToken',
     EmailLog: 'EmailLog',
@@ -1765,7 +1717,7 @@ export namespace Prisma {
       omit: GlobalOmitOptions
     }
     meta: {
-      modelProps: "affiliateCode" | "referral" | "authAuditLog" | "activityLog" | "systemErrorLog" | "integrationLog" | "unifiedLog" | "user" | "userBalance" | "userBalanceStats" | "game" | "gameTranslation" | "transaction" | "gameRound" | "gameBet" | "gameWin" | "transactionBalanceDetail" | "bonusDetail" | "withdrawDetail" | "compTransaction" | "dailyCompEarning" | "nowPaymentCallbackLog" | "exchangeRate" | "vipLevel" | "vipMembership" | "vipHistory" | "rolling" | "userToken" | "emailLog" | "gameSession" | "affiliateWallet" | "affiliateCommission" | "affiliateTier" | "loginAttempt" | "depositDetail" | "cryptoConfig" | "bankConfig" | "promotion" | "promotionTranslation" | "promotionCurrency" | "userPromotion" | "userSession"
+      modelProps: "affiliateCode" | "referral" | "authAuditLog" | "activityLog" | "systemErrorLog" | "integrationLog" | "unifiedLog" | "user" | "userBalance" | "userBalanceStats" | "game" | "gameTranslation" | "transaction" | "gameRound" | "gameBet" | "gameWin" | "transactionBalanceDetail" | "bonusDetail" | "withdrawDetail" | "compTransaction" | "dailyCompEarning" | "nowPaymentCallbackLog" | "exchangeRate" | "rolling" | "userToken" | "emailLog" | "gameSession" | "affiliateWallet" | "affiliateCommission" | "affiliateTier" | "loginAttempt" | "depositDetail" | "cryptoConfig" | "bankConfig" | "promotion" | "promotionTranslation" | "promotionCurrency" | "userPromotion" | "userSession"
       txIsolationLevel: Prisma.TransactionIsolationLevel
     }
     model: {
@@ -3471,228 +3423,6 @@ export namespace Prisma {
           }
         }
       }
-      VipLevel: {
-        payload: Prisma.$VipLevelPayload<ExtArgs>
-        fields: Prisma.VipLevelFieldRefs
-        operations: {
-          findUnique: {
-            args: Prisma.VipLevelFindUniqueArgs<ExtArgs>
-            result: $Utils.PayloadToResult<Prisma.$VipLevelPayload> | null
-          }
-          findUniqueOrThrow: {
-            args: Prisma.VipLevelFindUniqueOrThrowArgs<ExtArgs>
-            result: $Utils.PayloadToResult<Prisma.$VipLevelPayload>
-          }
-          findFirst: {
-            args: Prisma.VipLevelFindFirstArgs<ExtArgs>
-            result: $Utils.PayloadToResult<Prisma.$VipLevelPayload> | null
-          }
-          findFirstOrThrow: {
-            args: Prisma.VipLevelFindFirstOrThrowArgs<ExtArgs>
-            result: $Utils.PayloadToResult<Prisma.$VipLevelPayload>
-          }
-          findMany: {
-            args: Prisma.VipLevelFindManyArgs<ExtArgs>
-            result: $Utils.PayloadToResult<Prisma.$VipLevelPayload>[]
-          }
-          create: {
-            args: Prisma.VipLevelCreateArgs<ExtArgs>
-            result: $Utils.PayloadToResult<Prisma.$VipLevelPayload>
-          }
-          createMany: {
-            args: Prisma.VipLevelCreateManyArgs<ExtArgs>
-            result: BatchPayload
-          }
-          createManyAndReturn: {
-            args: Prisma.VipLevelCreateManyAndReturnArgs<ExtArgs>
-            result: $Utils.PayloadToResult<Prisma.$VipLevelPayload>[]
-          }
-          delete: {
-            args: Prisma.VipLevelDeleteArgs<ExtArgs>
-            result: $Utils.PayloadToResult<Prisma.$VipLevelPayload>
-          }
-          update: {
-            args: Prisma.VipLevelUpdateArgs<ExtArgs>
-            result: $Utils.PayloadToResult<Prisma.$VipLevelPayload>
-          }
-          deleteMany: {
-            args: Prisma.VipLevelDeleteManyArgs<ExtArgs>
-            result: BatchPayload
-          }
-          updateMany: {
-            args: Prisma.VipLevelUpdateManyArgs<ExtArgs>
-            result: BatchPayload
-          }
-          updateManyAndReturn: {
-            args: Prisma.VipLevelUpdateManyAndReturnArgs<ExtArgs>
-            result: $Utils.PayloadToResult<Prisma.$VipLevelPayload>[]
-          }
-          upsert: {
-            args: Prisma.VipLevelUpsertArgs<ExtArgs>
-            result: $Utils.PayloadToResult<Prisma.$VipLevelPayload>
-          }
-          aggregate: {
-            args: Prisma.VipLevelAggregateArgs<ExtArgs>
-            result: $Utils.Optional<AggregateVipLevel>
-          }
-          groupBy: {
-            args: Prisma.VipLevelGroupByArgs<ExtArgs>
-            result: $Utils.Optional<VipLevelGroupByOutputType>[]
-          }
-          count: {
-            args: Prisma.VipLevelCountArgs<ExtArgs>
-            result: $Utils.Optional<VipLevelCountAggregateOutputType> | number
-          }
-        }
-      }
-      VipMembership: {
-        payload: Prisma.$VipMembershipPayload<ExtArgs>
-        fields: Prisma.VipMembershipFieldRefs
-        operations: {
-          findUnique: {
-            args: Prisma.VipMembershipFindUniqueArgs<ExtArgs>
-            result: $Utils.PayloadToResult<Prisma.$VipMembershipPayload> | null
-          }
-          findUniqueOrThrow: {
-            args: Prisma.VipMembershipFindUniqueOrThrowArgs<ExtArgs>
-            result: $Utils.PayloadToResult<Prisma.$VipMembershipPayload>
-          }
-          findFirst: {
-            args: Prisma.VipMembershipFindFirstArgs<ExtArgs>
-            result: $Utils.PayloadToResult<Prisma.$VipMembershipPayload> | null
-          }
-          findFirstOrThrow: {
-            args: Prisma.VipMembershipFindFirstOrThrowArgs<ExtArgs>
-            result: $Utils.PayloadToResult<Prisma.$VipMembershipPayload>
-          }
-          findMany: {
-            args: Prisma.VipMembershipFindManyArgs<ExtArgs>
-            result: $Utils.PayloadToResult<Prisma.$VipMembershipPayload>[]
-          }
-          create: {
-            args: Prisma.VipMembershipCreateArgs<ExtArgs>
-            result: $Utils.PayloadToResult<Prisma.$VipMembershipPayload>
-          }
-          createMany: {
-            args: Prisma.VipMembershipCreateManyArgs<ExtArgs>
-            result: BatchPayload
-          }
-          createManyAndReturn: {
-            args: Prisma.VipMembershipCreateManyAndReturnArgs<ExtArgs>
-            result: $Utils.PayloadToResult<Prisma.$VipMembershipPayload>[]
-          }
-          delete: {
-            args: Prisma.VipMembershipDeleteArgs<ExtArgs>
-            result: $Utils.PayloadToResult<Prisma.$VipMembershipPayload>
-          }
-          update: {
-            args: Prisma.VipMembershipUpdateArgs<ExtArgs>
-            result: $Utils.PayloadToResult<Prisma.$VipMembershipPayload>
-          }
-          deleteMany: {
-            args: Prisma.VipMembershipDeleteManyArgs<ExtArgs>
-            result: BatchPayload
-          }
-          updateMany: {
-            args: Prisma.VipMembershipUpdateManyArgs<ExtArgs>
-            result: BatchPayload
-          }
-          updateManyAndReturn: {
-            args: Prisma.VipMembershipUpdateManyAndReturnArgs<ExtArgs>
-            result: $Utils.PayloadToResult<Prisma.$VipMembershipPayload>[]
-          }
-          upsert: {
-            args: Prisma.VipMembershipUpsertArgs<ExtArgs>
-            result: $Utils.PayloadToResult<Prisma.$VipMembershipPayload>
-          }
-          aggregate: {
-            args: Prisma.VipMembershipAggregateArgs<ExtArgs>
-            result: $Utils.Optional<AggregateVipMembership>
-          }
-          groupBy: {
-            args: Prisma.VipMembershipGroupByArgs<ExtArgs>
-            result: $Utils.Optional<VipMembershipGroupByOutputType>[]
-          }
-          count: {
-            args: Prisma.VipMembershipCountArgs<ExtArgs>
-            result: $Utils.Optional<VipMembershipCountAggregateOutputType> | number
-          }
-        }
-      }
-      VipHistory: {
-        payload: Prisma.$VipHistoryPayload<ExtArgs>
-        fields: Prisma.VipHistoryFieldRefs
-        operations: {
-          findUnique: {
-            args: Prisma.VipHistoryFindUniqueArgs<ExtArgs>
-            result: $Utils.PayloadToResult<Prisma.$VipHistoryPayload> | null
-          }
-          findUniqueOrThrow: {
-            args: Prisma.VipHistoryFindUniqueOrThrowArgs<ExtArgs>
-            result: $Utils.PayloadToResult<Prisma.$VipHistoryPayload>
-          }
-          findFirst: {
-            args: Prisma.VipHistoryFindFirstArgs<ExtArgs>
-            result: $Utils.PayloadToResult<Prisma.$VipHistoryPayload> | null
-          }
-          findFirstOrThrow: {
-            args: Prisma.VipHistoryFindFirstOrThrowArgs<ExtArgs>
-            result: $Utils.PayloadToResult<Prisma.$VipHistoryPayload>
-          }
-          findMany: {
-            args: Prisma.VipHistoryFindManyArgs<ExtArgs>
-            result: $Utils.PayloadToResult<Prisma.$VipHistoryPayload>[]
-          }
-          create: {
-            args: Prisma.VipHistoryCreateArgs<ExtArgs>
-            result: $Utils.PayloadToResult<Prisma.$VipHistoryPayload>
-          }
-          createMany: {
-            args: Prisma.VipHistoryCreateManyArgs<ExtArgs>
-            result: BatchPayload
-          }
-          createManyAndReturn: {
-            args: Prisma.VipHistoryCreateManyAndReturnArgs<ExtArgs>
-            result: $Utils.PayloadToResult<Prisma.$VipHistoryPayload>[]
-          }
-          delete: {
-            args: Prisma.VipHistoryDeleteArgs<ExtArgs>
-            result: $Utils.PayloadToResult<Prisma.$VipHistoryPayload>
-          }
-          update: {
-            args: Prisma.VipHistoryUpdateArgs<ExtArgs>
-            result: $Utils.PayloadToResult<Prisma.$VipHistoryPayload>
-          }
-          deleteMany: {
-            args: Prisma.VipHistoryDeleteManyArgs<ExtArgs>
-            result: BatchPayload
-          }
-          updateMany: {
-            args: Prisma.VipHistoryUpdateManyArgs<ExtArgs>
-            result: BatchPayload
-          }
-          updateManyAndReturn: {
-            args: Prisma.VipHistoryUpdateManyAndReturnArgs<ExtArgs>
-            result: $Utils.PayloadToResult<Prisma.$VipHistoryPayload>[]
-          }
-          upsert: {
-            args: Prisma.VipHistoryUpsertArgs<ExtArgs>
-            result: $Utils.PayloadToResult<Prisma.$VipHistoryPayload>
-          }
-          aggregate: {
-            args: Prisma.VipHistoryAggregateArgs<ExtArgs>
-            result: $Utils.Optional<AggregateVipHistory>
-          }
-          groupBy: {
-            args: Prisma.VipHistoryGroupByArgs<ExtArgs>
-            result: $Utils.Optional<VipHistoryGroupByOutputType>[]
-          }
-          count: {
-            args: Prisma.VipHistoryCountArgs<ExtArgs>
-            result: $Utils.Optional<VipHistoryCountAggregateOutputType> | number
-          }
-        }
-      }
       Rolling: {
         payload: Prisma.$RollingPayload<ExtArgs>
         fields: Prisma.RollingFieldRefs
@@ -5008,9 +4738,6 @@ export namespace Prisma {
     dailyCompEarning?: DailyCompEarningOmit
     nowPaymentCallbackLog?: NowPaymentCallbackLogOmit
     exchangeRate?: ExchangeRateOmit
-    vipLevel?: VipLevelOmit
-    vipMembership?: VipMembershipOmit
-    vipHistory?: VipHistoryOmit
     rolling?: RollingOmit
     userToken?: UserTokenOmit
     emailLog?: EmailLogOmit
@@ -5157,7 +4884,6 @@ export namespace Prisma {
     UserSession: number
     RevokedSessions: number
     UserToken: number
-    VipHistory: number
     loginAttempts: number
   }
 
@@ -5181,7 +4907,6 @@ export namespace Prisma {
     UserSession?: boolean | UserCountOutputTypeCountUserSessionArgs
     RevokedSessions?: boolean | UserCountOutputTypeCountRevokedSessionsArgs
     UserToken?: boolean | UserCountOutputTypeCountUserTokenArgs
-    VipHistory?: boolean | UserCountOutputTypeCountVipHistoryArgs
     loginAttempts?: boolean | UserCountOutputTypeCountLoginAttemptsArgs
   }
 
@@ -5327,13 +5052,6 @@ export namespace Prisma {
    */
   export type UserCountOutputTypeCountUserTokenArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
     where?: UserTokenWhereInput
-  }
-
-  /**
-   * UserCountOutputType without action
-   */
-  export type UserCountOutputTypeCountVipHistoryArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
-    where?: VipHistoryWhereInput
   }
 
   /**
@@ -5510,68 +5228,6 @@ export namespace Prisma {
    */
   export type DailyCompEarningCountOutputTypeCountCompTransactionArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
     where?: CompTransactionWhereInput
-  }
-
-
-  /**
-   * Count Type VipLevelCountOutputType
-   */
-
-  export type VipLevelCountOutputType = {
-    memberships: number
-  }
-
-  export type VipLevelCountOutputTypeSelect<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
-    memberships?: boolean | VipLevelCountOutputTypeCountMembershipsArgs
-  }
-
-  // Custom InputTypes
-  /**
-   * VipLevelCountOutputType without action
-   */
-  export type VipLevelCountOutputTypeDefaultArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
-    /**
-     * Select specific fields to fetch from the VipLevelCountOutputType
-     */
-    select?: VipLevelCountOutputTypeSelect<ExtArgs> | null
-  }
-
-  /**
-   * VipLevelCountOutputType without action
-   */
-  export type VipLevelCountOutputTypeCountMembershipsArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
-    where?: VipMembershipWhereInput
-  }
-
-
-  /**
-   * Count Type VipMembershipCountOutputType
-   */
-
-  export type VipMembershipCountOutputType = {
-    histories: number
-  }
-
-  export type VipMembershipCountOutputTypeSelect<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
-    histories?: boolean | VipMembershipCountOutputTypeCountHistoriesArgs
-  }
-
-  // Custom InputTypes
-  /**
-   * VipMembershipCountOutputType without action
-   */
-  export type VipMembershipCountOutputTypeDefaultArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
-    /**
-     * Select specific fields to fetch from the VipMembershipCountOutputType
-     */
-    select?: VipMembershipCountOutputTypeSelect<ExtArgs> | null
-  }
-
-  /**
-   * VipMembershipCountOutputType without action
-   */
-  export type VipMembershipCountOutputTypeCountHistoriesArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
-    where?: VipHistoryWhereInput
   }
 
 
@@ -14414,8 +14070,6 @@ export namespace Prisma {
     UserSession?: boolean | User$UserSessionArgs<ExtArgs>
     RevokedSessions?: boolean | User$RevokedSessionsArgs<ExtArgs>
     UserToken?: boolean | User$UserTokenArgs<ExtArgs>
-    VipHistory?: boolean | User$VipHistoryArgs<ExtArgs>
-    VipMembership?: boolean | User$VipMembershipArgs<ExtArgs>
     loginAttempts?: boolean | User$loginAttemptsArgs<ExtArgs>
     _count?: boolean | UserCountOutputTypeDefaultArgs<ExtArgs>
   }, ExtArgs["result"]["user"]>
@@ -14508,8 +14162,6 @@ export namespace Prisma {
     UserSession?: boolean | User$UserSessionArgs<ExtArgs>
     RevokedSessions?: boolean | User$RevokedSessionsArgs<ExtArgs>
     UserToken?: boolean | User$UserTokenArgs<ExtArgs>
-    VipHistory?: boolean | User$VipHistoryArgs<ExtArgs>
-    VipMembership?: boolean | User$VipMembershipArgs<ExtArgs>
     loginAttempts?: boolean | User$loginAttemptsArgs<ExtArgs>
     _count?: boolean | UserCountOutputTypeDefaultArgs<ExtArgs>
   }
@@ -14539,8 +14191,6 @@ export namespace Prisma {
       UserSession: Prisma.$UserSessionPayload<ExtArgs>[]
       RevokedSessions: Prisma.$UserSessionPayload<ExtArgs>[]
       UserToken: Prisma.$UserTokenPayload<ExtArgs>[]
-      VipHistory: Prisma.$VipHistoryPayload<ExtArgs>[]
-      VipMembership: Prisma.$VipMembershipPayload<ExtArgs> | null
       loginAttempts: Prisma.$LoginAttemptPayload<ExtArgs>[]
     }
     scalars: $Extensions.GetPayloadResult<{
@@ -14977,8 +14627,6 @@ export namespace Prisma {
     UserSession<T extends User$UserSessionArgs<ExtArgs> = {}>(args?: Subset<T, User$UserSessionArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$UserSessionPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
     RevokedSessions<T extends User$RevokedSessionsArgs<ExtArgs> = {}>(args?: Subset<T, User$RevokedSessionsArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$UserSessionPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
     UserToken<T extends User$UserTokenArgs<ExtArgs> = {}>(args?: Subset<T, User$UserTokenArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$UserTokenPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
-    VipHistory<T extends User$VipHistoryArgs<ExtArgs> = {}>(args?: Subset<T, User$VipHistoryArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$VipHistoryPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
-    VipMembership<T extends User$VipMembershipArgs<ExtArgs> = {}>(args?: Subset<T, User$VipMembershipArgs<ExtArgs>>): Prisma__VipMembershipClient<$Result.GetResult<Prisma.$VipMembershipPayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions> | null, null, ExtArgs, GlobalOmitOptions>
     loginAttempts<T extends User$loginAttemptsArgs<ExtArgs> = {}>(args?: Subset<T, User$loginAttemptsArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$LoginAttemptPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
     /**
      * Attaches callbacks for the resolution and/or rejection of the Promise.
@@ -15888,49 +15536,6 @@ export namespace Prisma {
     take?: number
     skip?: number
     distinct?: UserTokenScalarFieldEnum | UserTokenScalarFieldEnum[]
-  }
-
-  /**
-   * User.VipHistory
-   */
-  export type User$VipHistoryArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
-    /**
-     * Select specific fields to fetch from the VipHistory
-     */
-    select?: VipHistorySelect<ExtArgs> | null
-    /**
-     * Omit specific fields from the VipHistory
-     */
-    omit?: VipHistoryOmit<ExtArgs> | null
-    /**
-     * Choose, which related nodes to fetch as well
-     */
-    include?: VipHistoryInclude<ExtArgs> | null
-    where?: VipHistoryWhereInput
-    orderBy?: VipHistoryOrderByWithRelationInput | VipHistoryOrderByWithRelationInput[]
-    cursor?: VipHistoryWhereUniqueInput
-    take?: number
-    skip?: number
-    distinct?: VipHistoryScalarFieldEnum | VipHistoryScalarFieldEnum[]
-  }
-
-  /**
-   * User.VipMembership
-   */
-  export type User$VipMembershipArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
-    /**
-     * Select specific fields to fetch from the VipMembership
-     */
-    select?: VipMembershipSelect<ExtArgs> | null
-    /**
-     * Omit specific fields from the VipMembership
-     */
-    omit?: VipMembershipOmit<ExtArgs> | null
-    /**
-     * Choose, which related nodes to fetch as well
-     */
-    include?: VipMembershipInclude<ExtArgs> | null
-    where?: VipMembershipWhereInput
   }
 
   /**
@@ -34279,3597 +33884,6 @@ export namespace Prisma {
      * Omit specific fields from the ExchangeRate
      */
     omit?: ExchangeRateOmit<ExtArgs> | null
-  }
-
-
-  /**
-   * Model VipLevel
-   */
-
-  export type AggregateVipLevel = {
-    _count: VipLevelCountAggregateOutputType | null
-    _avg: VipLevelAvgAggregateOutputType | null
-    _sum: VipLevelSumAggregateOutputType | null
-    _min: VipLevelMinAggregateOutputType | null
-    _max: VipLevelMaxAggregateOutputType | null
-  }
-
-  export type VipLevelAvgAggregateOutputType = {
-    id: number | null
-    rank: number | null
-    requiredRolling: Decimal | null
-    levelUpBonus: Decimal | null
-    compRate: Decimal | null
-    paybackBasisRate: Decimal | null
-    weeklyBonusRate: Decimal | null
-    monthlyBonusRate: Decimal | null
-  }
-
-  export type VipLevelSumAggregateOutputType = {
-    id: number | null
-    rank: number | null
-    requiredRolling: Decimal | null
-    levelUpBonus: Decimal | null
-    compRate: Decimal | null
-    paybackBasisRate: Decimal | null
-    weeklyBonusRate: Decimal | null
-    monthlyBonusRate: Decimal | null
-  }
-
-  export type VipLevelMinAggregateOutputType = {
-    id: number | null
-    name: string | null
-    nameKey: string | null
-    rank: number | null
-    requiredRolling: Decimal | null
-    levelUpBonus: Decimal | null
-    compRate: Decimal | null
-    paybackBasisRate: Decimal | null
-    weeklyBonusRate: Decimal | null
-    monthlyBonusRate: Decimal | null
-    createdAt: Date | null
-    updatedAt: Date | null
-  }
-
-  export type VipLevelMaxAggregateOutputType = {
-    id: number | null
-    name: string | null
-    nameKey: string | null
-    rank: number | null
-    requiredRolling: Decimal | null
-    levelUpBonus: Decimal | null
-    compRate: Decimal | null
-    paybackBasisRate: Decimal | null
-    weeklyBonusRate: Decimal | null
-    monthlyBonusRate: Decimal | null
-    createdAt: Date | null
-    updatedAt: Date | null
-  }
-
-  export type VipLevelCountAggregateOutputType = {
-    id: number
-    name: number
-    nameKey: number
-    rank: number
-    requiredRolling: number
-    levelUpBonus: number
-    compRate: number
-    paybackBasisRate: number
-    weeklyBonusRate: number
-    monthlyBonusRate: number
-    createdAt: number
-    updatedAt: number
-    _all: number
-  }
-
-
-  export type VipLevelAvgAggregateInputType = {
-    id?: true
-    rank?: true
-    requiredRolling?: true
-    levelUpBonus?: true
-    compRate?: true
-    paybackBasisRate?: true
-    weeklyBonusRate?: true
-    monthlyBonusRate?: true
-  }
-
-  export type VipLevelSumAggregateInputType = {
-    id?: true
-    rank?: true
-    requiredRolling?: true
-    levelUpBonus?: true
-    compRate?: true
-    paybackBasisRate?: true
-    weeklyBonusRate?: true
-    monthlyBonusRate?: true
-  }
-
-  export type VipLevelMinAggregateInputType = {
-    id?: true
-    name?: true
-    nameKey?: true
-    rank?: true
-    requiredRolling?: true
-    levelUpBonus?: true
-    compRate?: true
-    paybackBasisRate?: true
-    weeklyBonusRate?: true
-    monthlyBonusRate?: true
-    createdAt?: true
-    updatedAt?: true
-  }
-
-  export type VipLevelMaxAggregateInputType = {
-    id?: true
-    name?: true
-    nameKey?: true
-    rank?: true
-    requiredRolling?: true
-    levelUpBonus?: true
-    compRate?: true
-    paybackBasisRate?: true
-    weeklyBonusRate?: true
-    monthlyBonusRate?: true
-    createdAt?: true
-    updatedAt?: true
-  }
-
-  export type VipLevelCountAggregateInputType = {
-    id?: true
-    name?: true
-    nameKey?: true
-    rank?: true
-    requiredRolling?: true
-    levelUpBonus?: true
-    compRate?: true
-    paybackBasisRate?: true
-    weeklyBonusRate?: true
-    monthlyBonusRate?: true
-    createdAt?: true
-    updatedAt?: true
-    _all?: true
-  }
-
-  export type VipLevelAggregateArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
-    /**
-     * Filter which VipLevel to aggregate.
-     */
-    where?: VipLevelWhereInput
-    /**
-     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/sorting Sorting Docs}
-     * 
-     * Determine the order of VipLevels to fetch.
-     */
-    orderBy?: VipLevelOrderByWithRelationInput | VipLevelOrderByWithRelationInput[]
-    /**
-     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination#cursor-based-pagination Cursor Docs}
-     * 
-     * Sets the start position
-     */
-    cursor?: VipLevelWhereUniqueInput
-    /**
-     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
-     * 
-     * Take `±n` VipLevels from the position of the cursor.
-     */
-    take?: number
-    /**
-     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
-     * 
-     * Skip the first `n` VipLevels.
-     */
-    skip?: number
-    /**
-     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
-     * 
-     * Count returned VipLevels
-    **/
-    _count?: true | VipLevelCountAggregateInputType
-    /**
-     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
-     * 
-     * Select which fields to average
-    **/
-    _avg?: VipLevelAvgAggregateInputType
-    /**
-     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
-     * 
-     * Select which fields to sum
-    **/
-    _sum?: VipLevelSumAggregateInputType
-    /**
-     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
-     * 
-     * Select which fields to find the minimum value
-    **/
-    _min?: VipLevelMinAggregateInputType
-    /**
-     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
-     * 
-     * Select which fields to find the maximum value
-    **/
-    _max?: VipLevelMaxAggregateInputType
-  }
-
-  export type GetVipLevelAggregateType<T extends VipLevelAggregateArgs> = {
-        [P in keyof T & keyof AggregateVipLevel]: P extends '_count' | 'count'
-      ? T[P] extends true
-        ? number
-        : GetScalarType<T[P], AggregateVipLevel[P]>
-      : GetScalarType<T[P], AggregateVipLevel[P]>
-  }
-
-
-
-
-  export type VipLevelGroupByArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
-    where?: VipLevelWhereInput
-    orderBy?: VipLevelOrderByWithAggregationInput | VipLevelOrderByWithAggregationInput[]
-    by: VipLevelScalarFieldEnum[] | VipLevelScalarFieldEnum
-    having?: VipLevelScalarWhereWithAggregatesInput
-    take?: number
-    skip?: number
-    _count?: VipLevelCountAggregateInputType | true
-    _avg?: VipLevelAvgAggregateInputType
-    _sum?: VipLevelSumAggregateInputType
-    _min?: VipLevelMinAggregateInputType
-    _max?: VipLevelMaxAggregateInputType
-  }
-
-  export type VipLevelGroupByOutputType = {
-    id: number
-    name: string
-    nameKey: string
-    rank: number
-    requiredRolling: Decimal
-    levelUpBonus: Decimal
-    compRate: Decimal
-    paybackBasisRate: Decimal
-    weeklyBonusRate: Decimal
-    monthlyBonusRate: Decimal
-    createdAt: Date
-    updatedAt: Date
-    _count: VipLevelCountAggregateOutputType | null
-    _avg: VipLevelAvgAggregateOutputType | null
-    _sum: VipLevelSumAggregateOutputType | null
-    _min: VipLevelMinAggregateOutputType | null
-    _max: VipLevelMaxAggregateOutputType | null
-  }
-
-  type GetVipLevelGroupByPayload<T extends VipLevelGroupByArgs> = Prisma.PrismaPromise<
-    Array<
-      PickEnumerable<VipLevelGroupByOutputType, T['by']> &
-        {
-          [P in ((keyof T) & (keyof VipLevelGroupByOutputType))]: P extends '_count'
-            ? T[P] extends boolean
-              ? number
-              : GetScalarType<T[P], VipLevelGroupByOutputType[P]>
-            : GetScalarType<T[P], VipLevelGroupByOutputType[P]>
-        }
-      >
-    >
-
-
-  export type VipLevelSelect<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetSelect<{
-    id?: boolean
-    name?: boolean
-    nameKey?: boolean
-    rank?: boolean
-    requiredRolling?: boolean
-    levelUpBonus?: boolean
-    compRate?: boolean
-    paybackBasisRate?: boolean
-    weeklyBonusRate?: boolean
-    monthlyBonusRate?: boolean
-    createdAt?: boolean
-    updatedAt?: boolean
-    memberships?: boolean | VipLevel$membershipsArgs<ExtArgs>
-    _count?: boolean | VipLevelCountOutputTypeDefaultArgs<ExtArgs>
-  }, ExtArgs["result"]["vipLevel"]>
-
-  export type VipLevelSelectCreateManyAndReturn<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetSelect<{
-    id?: boolean
-    name?: boolean
-    nameKey?: boolean
-    rank?: boolean
-    requiredRolling?: boolean
-    levelUpBonus?: boolean
-    compRate?: boolean
-    paybackBasisRate?: boolean
-    weeklyBonusRate?: boolean
-    monthlyBonusRate?: boolean
-    createdAt?: boolean
-    updatedAt?: boolean
-  }, ExtArgs["result"]["vipLevel"]>
-
-  export type VipLevelSelectUpdateManyAndReturn<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetSelect<{
-    id?: boolean
-    name?: boolean
-    nameKey?: boolean
-    rank?: boolean
-    requiredRolling?: boolean
-    levelUpBonus?: boolean
-    compRate?: boolean
-    paybackBasisRate?: boolean
-    weeklyBonusRate?: boolean
-    monthlyBonusRate?: boolean
-    createdAt?: boolean
-    updatedAt?: boolean
-  }, ExtArgs["result"]["vipLevel"]>
-
-  export type VipLevelSelectScalar = {
-    id?: boolean
-    name?: boolean
-    nameKey?: boolean
-    rank?: boolean
-    requiredRolling?: boolean
-    levelUpBonus?: boolean
-    compRate?: boolean
-    paybackBasisRate?: boolean
-    weeklyBonusRate?: boolean
-    monthlyBonusRate?: boolean
-    createdAt?: boolean
-    updatedAt?: boolean
-  }
-
-  export type VipLevelOmit<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetOmit<"id" | "name" | "nameKey" | "rank" | "requiredRolling" | "levelUpBonus" | "compRate" | "paybackBasisRate" | "weeklyBonusRate" | "monthlyBonusRate" | "createdAt" | "updatedAt", ExtArgs["result"]["vipLevel"]>
-  export type VipLevelInclude<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
-    memberships?: boolean | VipLevel$membershipsArgs<ExtArgs>
-    _count?: boolean | VipLevelCountOutputTypeDefaultArgs<ExtArgs>
-  }
-  export type VipLevelIncludeCreateManyAndReturn<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {}
-  export type VipLevelIncludeUpdateManyAndReturn<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {}
-
-  export type $VipLevelPayload<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
-    name: "VipLevel"
-    objects: {
-      memberships: Prisma.$VipMembershipPayload<ExtArgs>[]
-    }
-    scalars: $Extensions.GetPayloadResult<{
-      id: number
-      name: string
-      nameKey: string
-      rank: number
-      requiredRolling: Prisma.Decimal
-      levelUpBonus: Prisma.Decimal
-      compRate: Prisma.Decimal
-      paybackBasisRate: Prisma.Decimal
-      weeklyBonusRate: Prisma.Decimal
-      monthlyBonusRate: Prisma.Decimal
-      createdAt: Date
-      updatedAt: Date
-    }, ExtArgs["result"]["vipLevel"]>
-    composites: {}
-  }
-
-  type VipLevelGetPayload<S extends boolean | null | undefined | VipLevelDefaultArgs> = $Result.GetResult<Prisma.$VipLevelPayload, S>
-
-  type VipLevelCountArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> =
-    Omit<VipLevelFindManyArgs, 'select' | 'include' | 'distinct' | 'omit'> & {
-      select?: VipLevelCountAggregateInputType | true
-    }
-
-  export interface VipLevelDelegate<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs, GlobalOmitOptions = {}> {
-    [K: symbol]: { types: Prisma.TypeMap<ExtArgs>['model']['VipLevel'], meta: { name: 'VipLevel' } }
-    /**
-     * Find zero or one VipLevel that matches the filter.
-     * @param {VipLevelFindUniqueArgs} args - Arguments to find a VipLevel
-     * @example
-     * // Get one VipLevel
-     * const vipLevel = await prisma.vipLevel.findUnique({
-     *   where: {
-     *     // ... provide filter here
-     *   }
-     * })
-     */
-    findUnique<T extends VipLevelFindUniqueArgs>(args: SelectSubset<T, VipLevelFindUniqueArgs<ExtArgs>>): Prisma__VipLevelClient<$Result.GetResult<Prisma.$VipLevelPayload<ExtArgs>, T, "findUnique", GlobalOmitOptions> | null, null, ExtArgs, GlobalOmitOptions>
-
-    /**
-     * Find one VipLevel that matches the filter or throw an error with `error.code='P2025'`
-     * if no matches were found.
-     * @param {VipLevelFindUniqueOrThrowArgs} args - Arguments to find a VipLevel
-     * @example
-     * // Get one VipLevel
-     * const vipLevel = await prisma.vipLevel.findUniqueOrThrow({
-     *   where: {
-     *     // ... provide filter here
-     *   }
-     * })
-     */
-    findUniqueOrThrow<T extends VipLevelFindUniqueOrThrowArgs>(args: SelectSubset<T, VipLevelFindUniqueOrThrowArgs<ExtArgs>>): Prisma__VipLevelClient<$Result.GetResult<Prisma.$VipLevelPayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
-
-    /**
-     * Find the first VipLevel that matches the filter.
-     * Note, that providing `undefined` is treated as the value not being there.
-     * Read more here: https://pris.ly/d/null-undefined
-     * @param {VipLevelFindFirstArgs} args - Arguments to find a VipLevel
-     * @example
-     * // Get one VipLevel
-     * const vipLevel = await prisma.vipLevel.findFirst({
-     *   where: {
-     *     // ... provide filter here
-     *   }
-     * })
-     */
-    findFirst<T extends VipLevelFindFirstArgs>(args?: SelectSubset<T, VipLevelFindFirstArgs<ExtArgs>>): Prisma__VipLevelClient<$Result.GetResult<Prisma.$VipLevelPayload<ExtArgs>, T, "findFirst", GlobalOmitOptions> | null, null, ExtArgs, GlobalOmitOptions>
-
-    /**
-     * Find the first VipLevel that matches the filter or
-     * throw `PrismaKnownClientError` with `P2025` code if no matches were found.
-     * Note, that providing `undefined` is treated as the value not being there.
-     * Read more here: https://pris.ly/d/null-undefined
-     * @param {VipLevelFindFirstOrThrowArgs} args - Arguments to find a VipLevel
-     * @example
-     * // Get one VipLevel
-     * const vipLevel = await prisma.vipLevel.findFirstOrThrow({
-     *   where: {
-     *     // ... provide filter here
-     *   }
-     * })
-     */
-    findFirstOrThrow<T extends VipLevelFindFirstOrThrowArgs>(args?: SelectSubset<T, VipLevelFindFirstOrThrowArgs<ExtArgs>>): Prisma__VipLevelClient<$Result.GetResult<Prisma.$VipLevelPayload<ExtArgs>, T, "findFirstOrThrow", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
-
-    /**
-     * Find zero or more VipLevels that matches the filter.
-     * Note, that providing `undefined` is treated as the value not being there.
-     * Read more here: https://pris.ly/d/null-undefined
-     * @param {VipLevelFindManyArgs} args - Arguments to filter and select certain fields only.
-     * @example
-     * // Get all VipLevels
-     * const vipLevels = await prisma.vipLevel.findMany()
-     * 
-     * // Get first 10 VipLevels
-     * const vipLevels = await prisma.vipLevel.findMany({ take: 10 })
-     * 
-     * // Only select the `id`
-     * const vipLevelWithIdOnly = await prisma.vipLevel.findMany({ select: { id: true } })
-     * 
-     */
-    findMany<T extends VipLevelFindManyArgs>(args?: SelectSubset<T, VipLevelFindManyArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$VipLevelPayload<ExtArgs>, T, "findMany", GlobalOmitOptions>>
-
-    /**
-     * Create a VipLevel.
-     * @param {VipLevelCreateArgs} args - Arguments to create a VipLevel.
-     * @example
-     * // Create one VipLevel
-     * const VipLevel = await prisma.vipLevel.create({
-     *   data: {
-     *     // ... data to create a VipLevel
-     *   }
-     * })
-     * 
-     */
-    create<T extends VipLevelCreateArgs>(args: SelectSubset<T, VipLevelCreateArgs<ExtArgs>>): Prisma__VipLevelClient<$Result.GetResult<Prisma.$VipLevelPayload<ExtArgs>, T, "create", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
-
-    /**
-     * Create many VipLevels.
-     * @param {VipLevelCreateManyArgs} args - Arguments to create many VipLevels.
-     * @example
-     * // Create many VipLevels
-     * const vipLevel = await prisma.vipLevel.createMany({
-     *   data: [
-     *     // ... provide data here
-     *   ]
-     * })
-     *     
-     */
-    createMany<T extends VipLevelCreateManyArgs>(args?: SelectSubset<T, VipLevelCreateManyArgs<ExtArgs>>): Prisma.PrismaPromise<BatchPayload>
-
-    /**
-     * Create many VipLevels and returns the data saved in the database.
-     * @param {VipLevelCreateManyAndReturnArgs} args - Arguments to create many VipLevels.
-     * @example
-     * // Create many VipLevels
-     * const vipLevel = await prisma.vipLevel.createManyAndReturn({
-     *   data: [
-     *     // ... provide data here
-     *   ]
-     * })
-     * 
-     * // Create many VipLevels and only return the `id`
-     * const vipLevelWithIdOnly = await prisma.vipLevel.createManyAndReturn({
-     *   select: { id: true },
-     *   data: [
-     *     // ... provide data here
-     *   ]
-     * })
-     * Note, that providing `undefined` is treated as the value not being there.
-     * Read more here: https://pris.ly/d/null-undefined
-     * 
-     */
-    createManyAndReturn<T extends VipLevelCreateManyAndReturnArgs>(args?: SelectSubset<T, VipLevelCreateManyAndReturnArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$VipLevelPayload<ExtArgs>, T, "createManyAndReturn", GlobalOmitOptions>>
-
-    /**
-     * Delete a VipLevel.
-     * @param {VipLevelDeleteArgs} args - Arguments to delete one VipLevel.
-     * @example
-     * // Delete one VipLevel
-     * const VipLevel = await prisma.vipLevel.delete({
-     *   where: {
-     *     // ... filter to delete one VipLevel
-     *   }
-     * })
-     * 
-     */
-    delete<T extends VipLevelDeleteArgs>(args: SelectSubset<T, VipLevelDeleteArgs<ExtArgs>>): Prisma__VipLevelClient<$Result.GetResult<Prisma.$VipLevelPayload<ExtArgs>, T, "delete", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
-
-    /**
-     * Update one VipLevel.
-     * @param {VipLevelUpdateArgs} args - Arguments to update one VipLevel.
-     * @example
-     * // Update one VipLevel
-     * const vipLevel = await prisma.vipLevel.update({
-     *   where: {
-     *     // ... provide filter here
-     *   },
-     *   data: {
-     *     // ... provide data here
-     *   }
-     * })
-     * 
-     */
-    update<T extends VipLevelUpdateArgs>(args: SelectSubset<T, VipLevelUpdateArgs<ExtArgs>>): Prisma__VipLevelClient<$Result.GetResult<Prisma.$VipLevelPayload<ExtArgs>, T, "update", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
-
-    /**
-     * Delete zero or more VipLevels.
-     * @param {VipLevelDeleteManyArgs} args - Arguments to filter VipLevels to delete.
-     * @example
-     * // Delete a few VipLevels
-     * const { count } = await prisma.vipLevel.deleteMany({
-     *   where: {
-     *     // ... provide filter here
-     *   }
-     * })
-     * 
-     */
-    deleteMany<T extends VipLevelDeleteManyArgs>(args?: SelectSubset<T, VipLevelDeleteManyArgs<ExtArgs>>): Prisma.PrismaPromise<BatchPayload>
-
-    /**
-     * Update zero or more VipLevels.
-     * Note, that providing `undefined` is treated as the value not being there.
-     * Read more here: https://pris.ly/d/null-undefined
-     * @param {VipLevelUpdateManyArgs} args - Arguments to update one or more rows.
-     * @example
-     * // Update many VipLevels
-     * const vipLevel = await prisma.vipLevel.updateMany({
-     *   where: {
-     *     // ... provide filter here
-     *   },
-     *   data: {
-     *     // ... provide data here
-     *   }
-     * })
-     * 
-     */
-    updateMany<T extends VipLevelUpdateManyArgs>(args: SelectSubset<T, VipLevelUpdateManyArgs<ExtArgs>>): Prisma.PrismaPromise<BatchPayload>
-
-    /**
-     * Update zero or more VipLevels and returns the data updated in the database.
-     * @param {VipLevelUpdateManyAndReturnArgs} args - Arguments to update many VipLevels.
-     * @example
-     * // Update many VipLevels
-     * const vipLevel = await prisma.vipLevel.updateManyAndReturn({
-     *   where: {
-     *     // ... provide filter here
-     *   },
-     *   data: [
-     *     // ... provide data here
-     *   ]
-     * })
-     * 
-     * // Update zero or more VipLevels and only return the `id`
-     * const vipLevelWithIdOnly = await prisma.vipLevel.updateManyAndReturn({
-     *   select: { id: true },
-     *   where: {
-     *     // ... provide filter here
-     *   },
-     *   data: [
-     *     // ... provide data here
-     *   ]
-     * })
-     * Note, that providing `undefined` is treated as the value not being there.
-     * Read more here: https://pris.ly/d/null-undefined
-     * 
-     */
-    updateManyAndReturn<T extends VipLevelUpdateManyAndReturnArgs>(args: SelectSubset<T, VipLevelUpdateManyAndReturnArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$VipLevelPayload<ExtArgs>, T, "updateManyAndReturn", GlobalOmitOptions>>
-
-    /**
-     * Create or update one VipLevel.
-     * @param {VipLevelUpsertArgs} args - Arguments to update or create a VipLevel.
-     * @example
-     * // Update or create a VipLevel
-     * const vipLevel = await prisma.vipLevel.upsert({
-     *   create: {
-     *     // ... data to create a VipLevel
-     *   },
-     *   update: {
-     *     // ... in case it already exists, update
-     *   },
-     *   where: {
-     *     // ... the filter for the VipLevel we want to update
-     *   }
-     * })
-     */
-    upsert<T extends VipLevelUpsertArgs>(args: SelectSubset<T, VipLevelUpsertArgs<ExtArgs>>): Prisma__VipLevelClient<$Result.GetResult<Prisma.$VipLevelPayload<ExtArgs>, T, "upsert", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
-
-
-    /**
-     * Count the number of VipLevels.
-     * Note, that providing `undefined` is treated as the value not being there.
-     * Read more here: https://pris.ly/d/null-undefined
-     * @param {VipLevelCountArgs} args - Arguments to filter VipLevels to count.
-     * @example
-     * // Count the number of VipLevels
-     * const count = await prisma.vipLevel.count({
-     *   where: {
-     *     // ... the filter for the VipLevels we want to count
-     *   }
-     * })
-    **/
-    count<T extends VipLevelCountArgs>(
-      args?: Subset<T, VipLevelCountArgs>,
-    ): Prisma.PrismaPromise<
-      T extends $Utils.Record<'select', any>
-        ? T['select'] extends true
-          ? number
-          : GetScalarType<T['select'], VipLevelCountAggregateOutputType>
-        : number
-    >
-
-    /**
-     * Allows you to perform aggregations operations on a VipLevel.
-     * Note, that providing `undefined` is treated as the value not being there.
-     * Read more here: https://pris.ly/d/null-undefined
-     * @param {VipLevelAggregateArgs} args - Select which aggregations you would like to apply and on what fields.
-     * @example
-     * // Ordered by age ascending
-     * // Where email contains prisma.io
-     * // Limited to the 10 users
-     * const aggregations = await prisma.user.aggregate({
-     *   _avg: {
-     *     age: true,
-     *   },
-     *   where: {
-     *     email: {
-     *       contains: "prisma.io",
-     *     },
-     *   },
-     *   orderBy: {
-     *     age: "asc",
-     *   },
-     *   take: 10,
-     * })
-    **/
-    aggregate<T extends VipLevelAggregateArgs>(args: Subset<T, VipLevelAggregateArgs>): Prisma.PrismaPromise<GetVipLevelAggregateType<T>>
-
-    /**
-     * Group by VipLevel.
-     * Note, that providing `undefined` is treated as the value not being there.
-     * Read more here: https://pris.ly/d/null-undefined
-     * @param {VipLevelGroupByArgs} args - Group by arguments.
-     * @example
-     * // Group by city, order by createdAt, get count
-     * const result = await prisma.user.groupBy({
-     *   by: ['city', 'createdAt'],
-     *   orderBy: {
-     *     createdAt: true
-     *   },
-     *   _count: {
-     *     _all: true
-     *   },
-     * })
-     * 
-    **/
-    groupBy<
-      T extends VipLevelGroupByArgs,
-      HasSelectOrTake extends Or<
-        Extends<'skip', Keys<T>>,
-        Extends<'take', Keys<T>>
-      >,
-      OrderByArg extends True extends HasSelectOrTake
-        ? { orderBy: VipLevelGroupByArgs['orderBy'] }
-        : { orderBy?: VipLevelGroupByArgs['orderBy'] },
-      OrderFields extends ExcludeUnderscoreKeys<Keys<MaybeTupleToUnion<T['orderBy']>>>,
-      ByFields extends MaybeTupleToUnion<T['by']>,
-      ByValid extends Has<ByFields, OrderFields>,
-      HavingFields extends GetHavingFields<T['having']>,
-      HavingValid extends Has<ByFields, HavingFields>,
-      ByEmpty extends T['by'] extends never[] ? True : False,
-      InputErrors extends ByEmpty extends True
-      ? `Error: "by" must not be empty.`
-      : HavingValid extends False
-      ? {
-          [P in HavingFields]: P extends ByFields
-            ? never
-            : P extends string
-            ? `Error: Field "${P}" used in "having" needs to be provided in "by".`
-            : [
-                Error,
-                'Field ',
-                P,
-                ` in "having" needs to be provided in "by"`,
-              ]
-        }[HavingFields]
-      : 'take' extends Keys<T>
-      ? 'orderBy' extends Keys<T>
-        ? ByValid extends True
-          ? {}
-          : {
-              [P in OrderFields]: P extends ByFields
-                ? never
-                : `Error: Field "${P}" in "orderBy" needs to be provided in "by"`
-            }[OrderFields]
-        : 'Error: If you provide "take", you also need to provide "orderBy"'
-      : 'skip' extends Keys<T>
-      ? 'orderBy' extends Keys<T>
-        ? ByValid extends True
-          ? {}
-          : {
-              [P in OrderFields]: P extends ByFields
-                ? never
-                : `Error: Field "${P}" in "orderBy" needs to be provided in "by"`
-            }[OrderFields]
-        : 'Error: If you provide "skip", you also need to provide "orderBy"'
-      : ByValid extends True
-      ? {}
-      : {
-          [P in OrderFields]: P extends ByFields
-            ? never
-            : `Error: Field "${P}" in "orderBy" needs to be provided in "by"`
-        }[OrderFields]
-    >(args: SubsetIntersection<T, VipLevelGroupByArgs, OrderByArg> & InputErrors): {} extends InputErrors ? GetVipLevelGroupByPayload<T> : Prisma.PrismaPromise<InputErrors>
-  /**
-   * Fields of the VipLevel model
-   */
-  readonly fields: VipLevelFieldRefs;
-  }
-
-  /**
-   * The delegate class that acts as a "Promise-like" for VipLevel.
-   * Why is this prefixed with `Prisma__`?
-   * Because we want to prevent naming conflicts as mentioned in
-   * https://github.com/prisma/prisma-client-js/issues/707
-   */
-  export interface Prisma__VipLevelClient<T, Null = never, ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs, GlobalOmitOptions = {}> extends Prisma.PrismaPromise<T> {
-    readonly [Symbol.toStringTag]: "PrismaPromise"
-    memberships<T extends VipLevel$membershipsArgs<ExtArgs> = {}>(args?: Subset<T, VipLevel$membershipsArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$VipMembershipPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
-    /**
-     * Attaches callbacks for the resolution and/or rejection of the Promise.
-     * @param onfulfilled The callback to execute when the Promise is resolved.
-     * @param onrejected The callback to execute when the Promise is rejected.
-     * @returns A Promise for the completion of which ever callback is executed.
-     */
-    then<TResult1 = T, TResult2 = never>(onfulfilled?: ((value: T) => TResult1 | PromiseLike<TResult1>) | undefined | null, onrejected?: ((reason: any) => TResult2 | PromiseLike<TResult2>) | undefined | null): $Utils.JsPromise<TResult1 | TResult2>
-    /**
-     * Attaches a callback for only the rejection of the Promise.
-     * @param onrejected The callback to execute when the Promise is rejected.
-     * @returns A Promise for the completion of the callback.
-     */
-    catch<TResult = never>(onrejected?: ((reason: any) => TResult | PromiseLike<TResult>) | undefined | null): $Utils.JsPromise<T | TResult>
-    /**
-     * Attaches a callback that is invoked when the Promise is settled (fulfilled or rejected). The
-     * resolved value cannot be modified from the callback.
-     * @param onfinally The callback to execute when the Promise is settled (fulfilled or rejected).
-     * @returns A Promise for the completion of the callback.
-     */
-    finally(onfinally?: (() => void) | undefined | null): $Utils.JsPromise<T>
-  }
-
-
-
-
-  /**
-   * Fields of the VipLevel model
-   */
-  interface VipLevelFieldRefs {
-    readonly id: FieldRef<"VipLevel", 'Int'>
-    readonly name: FieldRef<"VipLevel", 'String'>
-    readonly nameKey: FieldRef<"VipLevel", 'String'>
-    readonly rank: FieldRef<"VipLevel", 'Int'>
-    readonly requiredRolling: FieldRef<"VipLevel", 'Decimal'>
-    readonly levelUpBonus: FieldRef<"VipLevel", 'Decimal'>
-    readonly compRate: FieldRef<"VipLevel", 'Decimal'>
-    readonly paybackBasisRate: FieldRef<"VipLevel", 'Decimal'>
-    readonly weeklyBonusRate: FieldRef<"VipLevel", 'Decimal'>
-    readonly monthlyBonusRate: FieldRef<"VipLevel", 'Decimal'>
-    readonly createdAt: FieldRef<"VipLevel", 'DateTime'>
-    readonly updatedAt: FieldRef<"VipLevel", 'DateTime'>
-  }
-    
-
-  // Custom InputTypes
-  /**
-   * VipLevel findUnique
-   */
-  export type VipLevelFindUniqueArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
-    /**
-     * Select specific fields to fetch from the VipLevel
-     */
-    select?: VipLevelSelect<ExtArgs> | null
-    /**
-     * Omit specific fields from the VipLevel
-     */
-    omit?: VipLevelOmit<ExtArgs> | null
-    /**
-     * Choose, which related nodes to fetch as well
-     */
-    include?: VipLevelInclude<ExtArgs> | null
-    /**
-     * Filter, which VipLevel to fetch.
-     */
-    where: VipLevelWhereUniqueInput
-  }
-
-  /**
-   * VipLevel findUniqueOrThrow
-   */
-  export type VipLevelFindUniqueOrThrowArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
-    /**
-     * Select specific fields to fetch from the VipLevel
-     */
-    select?: VipLevelSelect<ExtArgs> | null
-    /**
-     * Omit specific fields from the VipLevel
-     */
-    omit?: VipLevelOmit<ExtArgs> | null
-    /**
-     * Choose, which related nodes to fetch as well
-     */
-    include?: VipLevelInclude<ExtArgs> | null
-    /**
-     * Filter, which VipLevel to fetch.
-     */
-    where: VipLevelWhereUniqueInput
-  }
-
-  /**
-   * VipLevel findFirst
-   */
-  export type VipLevelFindFirstArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
-    /**
-     * Select specific fields to fetch from the VipLevel
-     */
-    select?: VipLevelSelect<ExtArgs> | null
-    /**
-     * Omit specific fields from the VipLevel
-     */
-    omit?: VipLevelOmit<ExtArgs> | null
-    /**
-     * Choose, which related nodes to fetch as well
-     */
-    include?: VipLevelInclude<ExtArgs> | null
-    /**
-     * Filter, which VipLevel to fetch.
-     */
-    where?: VipLevelWhereInput
-    /**
-     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/sorting Sorting Docs}
-     * 
-     * Determine the order of VipLevels to fetch.
-     */
-    orderBy?: VipLevelOrderByWithRelationInput | VipLevelOrderByWithRelationInput[]
-    /**
-     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination#cursor-based-pagination Cursor Docs}
-     * 
-     * Sets the position for searching for VipLevels.
-     */
-    cursor?: VipLevelWhereUniqueInput
-    /**
-     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
-     * 
-     * Take `±n` VipLevels from the position of the cursor.
-     */
-    take?: number
-    /**
-     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
-     * 
-     * Skip the first `n` VipLevels.
-     */
-    skip?: number
-    /**
-     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/distinct Distinct Docs}
-     * 
-     * Filter by unique combinations of VipLevels.
-     */
-    distinct?: VipLevelScalarFieldEnum | VipLevelScalarFieldEnum[]
-  }
-
-  /**
-   * VipLevel findFirstOrThrow
-   */
-  export type VipLevelFindFirstOrThrowArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
-    /**
-     * Select specific fields to fetch from the VipLevel
-     */
-    select?: VipLevelSelect<ExtArgs> | null
-    /**
-     * Omit specific fields from the VipLevel
-     */
-    omit?: VipLevelOmit<ExtArgs> | null
-    /**
-     * Choose, which related nodes to fetch as well
-     */
-    include?: VipLevelInclude<ExtArgs> | null
-    /**
-     * Filter, which VipLevel to fetch.
-     */
-    where?: VipLevelWhereInput
-    /**
-     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/sorting Sorting Docs}
-     * 
-     * Determine the order of VipLevels to fetch.
-     */
-    orderBy?: VipLevelOrderByWithRelationInput | VipLevelOrderByWithRelationInput[]
-    /**
-     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination#cursor-based-pagination Cursor Docs}
-     * 
-     * Sets the position for searching for VipLevels.
-     */
-    cursor?: VipLevelWhereUniqueInput
-    /**
-     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
-     * 
-     * Take `±n` VipLevels from the position of the cursor.
-     */
-    take?: number
-    /**
-     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
-     * 
-     * Skip the first `n` VipLevels.
-     */
-    skip?: number
-    /**
-     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/distinct Distinct Docs}
-     * 
-     * Filter by unique combinations of VipLevels.
-     */
-    distinct?: VipLevelScalarFieldEnum | VipLevelScalarFieldEnum[]
-  }
-
-  /**
-   * VipLevel findMany
-   */
-  export type VipLevelFindManyArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
-    /**
-     * Select specific fields to fetch from the VipLevel
-     */
-    select?: VipLevelSelect<ExtArgs> | null
-    /**
-     * Omit specific fields from the VipLevel
-     */
-    omit?: VipLevelOmit<ExtArgs> | null
-    /**
-     * Choose, which related nodes to fetch as well
-     */
-    include?: VipLevelInclude<ExtArgs> | null
-    /**
-     * Filter, which VipLevels to fetch.
-     */
-    where?: VipLevelWhereInput
-    /**
-     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/sorting Sorting Docs}
-     * 
-     * Determine the order of VipLevels to fetch.
-     */
-    orderBy?: VipLevelOrderByWithRelationInput | VipLevelOrderByWithRelationInput[]
-    /**
-     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination#cursor-based-pagination Cursor Docs}
-     * 
-     * Sets the position for listing VipLevels.
-     */
-    cursor?: VipLevelWhereUniqueInput
-    /**
-     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
-     * 
-     * Take `±n` VipLevels from the position of the cursor.
-     */
-    take?: number
-    /**
-     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
-     * 
-     * Skip the first `n` VipLevels.
-     */
-    skip?: number
-    distinct?: VipLevelScalarFieldEnum | VipLevelScalarFieldEnum[]
-  }
-
-  /**
-   * VipLevel create
-   */
-  export type VipLevelCreateArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
-    /**
-     * Select specific fields to fetch from the VipLevel
-     */
-    select?: VipLevelSelect<ExtArgs> | null
-    /**
-     * Omit specific fields from the VipLevel
-     */
-    omit?: VipLevelOmit<ExtArgs> | null
-    /**
-     * Choose, which related nodes to fetch as well
-     */
-    include?: VipLevelInclude<ExtArgs> | null
-    /**
-     * The data needed to create a VipLevel.
-     */
-    data: XOR<VipLevelCreateInput, VipLevelUncheckedCreateInput>
-  }
-
-  /**
-   * VipLevel createMany
-   */
-  export type VipLevelCreateManyArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
-    /**
-     * The data used to create many VipLevels.
-     */
-    data: VipLevelCreateManyInput | VipLevelCreateManyInput[]
-    skipDuplicates?: boolean
-  }
-
-  /**
-   * VipLevel createManyAndReturn
-   */
-  export type VipLevelCreateManyAndReturnArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
-    /**
-     * Select specific fields to fetch from the VipLevel
-     */
-    select?: VipLevelSelectCreateManyAndReturn<ExtArgs> | null
-    /**
-     * Omit specific fields from the VipLevel
-     */
-    omit?: VipLevelOmit<ExtArgs> | null
-    /**
-     * The data used to create many VipLevels.
-     */
-    data: VipLevelCreateManyInput | VipLevelCreateManyInput[]
-    skipDuplicates?: boolean
-  }
-
-  /**
-   * VipLevel update
-   */
-  export type VipLevelUpdateArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
-    /**
-     * Select specific fields to fetch from the VipLevel
-     */
-    select?: VipLevelSelect<ExtArgs> | null
-    /**
-     * Omit specific fields from the VipLevel
-     */
-    omit?: VipLevelOmit<ExtArgs> | null
-    /**
-     * Choose, which related nodes to fetch as well
-     */
-    include?: VipLevelInclude<ExtArgs> | null
-    /**
-     * The data needed to update a VipLevel.
-     */
-    data: XOR<VipLevelUpdateInput, VipLevelUncheckedUpdateInput>
-    /**
-     * Choose, which VipLevel to update.
-     */
-    where: VipLevelWhereUniqueInput
-  }
-
-  /**
-   * VipLevel updateMany
-   */
-  export type VipLevelUpdateManyArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
-    /**
-     * The data used to update VipLevels.
-     */
-    data: XOR<VipLevelUpdateManyMutationInput, VipLevelUncheckedUpdateManyInput>
-    /**
-     * Filter which VipLevels to update
-     */
-    where?: VipLevelWhereInput
-    /**
-     * Limit how many VipLevels to update.
-     */
-    limit?: number
-  }
-
-  /**
-   * VipLevel updateManyAndReturn
-   */
-  export type VipLevelUpdateManyAndReturnArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
-    /**
-     * Select specific fields to fetch from the VipLevel
-     */
-    select?: VipLevelSelectUpdateManyAndReturn<ExtArgs> | null
-    /**
-     * Omit specific fields from the VipLevel
-     */
-    omit?: VipLevelOmit<ExtArgs> | null
-    /**
-     * The data used to update VipLevels.
-     */
-    data: XOR<VipLevelUpdateManyMutationInput, VipLevelUncheckedUpdateManyInput>
-    /**
-     * Filter which VipLevels to update
-     */
-    where?: VipLevelWhereInput
-    /**
-     * Limit how many VipLevels to update.
-     */
-    limit?: number
-  }
-
-  /**
-   * VipLevel upsert
-   */
-  export type VipLevelUpsertArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
-    /**
-     * Select specific fields to fetch from the VipLevel
-     */
-    select?: VipLevelSelect<ExtArgs> | null
-    /**
-     * Omit specific fields from the VipLevel
-     */
-    omit?: VipLevelOmit<ExtArgs> | null
-    /**
-     * Choose, which related nodes to fetch as well
-     */
-    include?: VipLevelInclude<ExtArgs> | null
-    /**
-     * The filter to search for the VipLevel to update in case it exists.
-     */
-    where: VipLevelWhereUniqueInput
-    /**
-     * In case the VipLevel found by the `where` argument doesn't exist, create a new VipLevel with this data.
-     */
-    create: XOR<VipLevelCreateInput, VipLevelUncheckedCreateInput>
-    /**
-     * In case the VipLevel was found with the provided `where` argument, update it with this data.
-     */
-    update: XOR<VipLevelUpdateInput, VipLevelUncheckedUpdateInput>
-  }
-
-  /**
-   * VipLevel delete
-   */
-  export type VipLevelDeleteArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
-    /**
-     * Select specific fields to fetch from the VipLevel
-     */
-    select?: VipLevelSelect<ExtArgs> | null
-    /**
-     * Omit specific fields from the VipLevel
-     */
-    omit?: VipLevelOmit<ExtArgs> | null
-    /**
-     * Choose, which related nodes to fetch as well
-     */
-    include?: VipLevelInclude<ExtArgs> | null
-    /**
-     * Filter which VipLevel to delete.
-     */
-    where: VipLevelWhereUniqueInput
-  }
-
-  /**
-   * VipLevel deleteMany
-   */
-  export type VipLevelDeleteManyArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
-    /**
-     * Filter which VipLevels to delete
-     */
-    where?: VipLevelWhereInput
-    /**
-     * Limit how many VipLevels to delete.
-     */
-    limit?: number
-  }
-
-  /**
-   * VipLevel.memberships
-   */
-  export type VipLevel$membershipsArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
-    /**
-     * Select specific fields to fetch from the VipMembership
-     */
-    select?: VipMembershipSelect<ExtArgs> | null
-    /**
-     * Omit specific fields from the VipMembership
-     */
-    omit?: VipMembershipOmit<ExtArgs> | null
-    /**
-     * Choose, which related nodes to fetch as well
-     */
-    include?: VipMembershipInclude<ExtArgs> | null
-    where?: VipMembershipWhereInput
-    orderBy?: VipMembershipOrderByWithRelationInput | VipMembershipOrderByWithRelationInput[]
-    cursor?: VipMembershipWhereUniqueInput
-    take?: number
-    skip?: number
-    distinct?: VipMembershipScalarFieldEnum | VipMembershipScalarFieldEnum[]
-  }
-
-  /**
-   * VipLevel without action
-   */
-  export type VipLevelDefaultArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
-    /**
-     * Select specific fields to fetch from the VipLevel
-     */
-    select?: VipLevelSelect<ExtArgs> | null
-    /**
-     * Omit specific fields from the VipLevel
-     */
-    omit?: VipLevelOmit<ExtArgs> | null
-    /**
-     * Choose, which related nodes to fetch as well
-     */
-    include?: VipLevelInclude<ExtArgs> | null
-  }
-
-
-  /**
-   * Model VipMembership
-   */
-
-  export type AggregateVipMembership = {
-    _count: VipMembershipCountAggregateOutputType | null
-    _avg: VipMembershipAvgAggregateOutputType | null
-    _sum: VipMembershipSumAggregateOutputType | null
-    _min: VipMembershipMinAggregateOutputType | null
-    _max: VipMembershipMaxAggregateOutputType | null
-  }
-
-  export type VipMembershipAvgAggregateOutputType = {
-    id: number | null
-    userId: number | null
-    vipLevelId: number | null
-    accumulatedRolling: Decimal | null
-    totalRewardsPaid: Decimal | null
-  }
-
-  export type VipMembershipSumAggregateOutputType = {
-    id: number | null
-    userId: bigint | null
-    vipLevelId: number | null
-    accumulatedRolling: Decimal | null
-    totalRewardsPaid: Decimal | null
-  }
-
-  export type VipMembershipMinAggregateOutputType = {
-    id: number | null
-    userId: bigint | null
-    vipLevelId: number | null
-    accumulatedRolling: Decimal | null
-    totalRewardsPaid: Decimal | null
-    achievedAt: Date | null
-    createdAt: Date | null
-    updatedAt: Date | null
-  }
-
-  export type VipMembershipMaxAggregateOutputType = {
-    id: number | null
-    userId: bigint | null
-    vipLevelId: number | null
-    accumulatedRolling: Decimal | null
-    totalRewardsPaid: Decimal | null
-    achievedAt: Date | null
-    createdAt: Date | null
-    updatedAt: Date | null
-  }
-
-  export type VipMembershipCountAggregateOutputType = {
-    id: number
-    userId: number
-    vipLevelId: number
-    accumulatedRolling: number
-    totalRewardsPaid: number
-    achievedAt: number
-    createdAt: number
-    updatedAt: number
-    _all: number
-  }
-
-
-  export type VipMembershipAvgAggregateInputType = {
-    id?: true
-    userId?: true
-    vipLevelId?: true
-    accumulatedRolling?: true
-    totalRewardsPaid?: true
-  }
-
-  export type VipMembershipSumAggregateInputType = {
-    id?: true
-    userId?: true
-    vipLevelId?: true
-    accumulatedRolling?: true
-    totalRewardsPaid?: true
-  }
-
-  export type VipMembershipMinAggregateInputType = {
-    id?: true
-    userId?: true
-    vipLevelId?: true
-    accumulatedRolling?: true
-    totalRewardsPaid?: true
-    achievedAt?: true
-    createdAt?: true
-    updatedAt?: true
-  }
-
-  export type VipMembershipMaxAggregateInputType = {
-    id?: true
-    userId?: true
-    vipLevelId?: true
-    accumulatedRolling?: true
-    totalRewardsPaid?: true
-    achievedAt?: true
-    createdAt?: true
-    updatedAt?: true
-  }
-
-  export type VipMembershipCountAggregateInputType = {
-    id?: true
-    userId?: true
-    vipLevelId?: true
-    accumulatedRolling?: true
-    totalRewardsPaid?: true
-    achievedAt?: true
-    createdAt?: true
-    updatedAt?: true
-    _all?: true
-  }
-
-  export type VipMembershipAggregateArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
-    /**
-     * Filter which VipMembership to aggregate.
-     */
-    where?: VipMembershipWhereInput
-    /**
-     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/sorting Sorting Docs}
-     * 
-     * Determine the order of VipMemberships to fetch.
-     */
-    orderBy?: VipMembershipOrderByWithRelationInput | VipMembershipOrderByWithRelationInput[]
-    /**
-     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination#cursor-based-pagination Cursor Docs}
-     * 
-     * Sets the start position
-     */
-    cursor?: VipMembershipWhereUniqueInput
-    /**
-     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
-     * 
-     * Take `±n` VipMemberships from the position of the cursor.
-     */
-    take?: number
-    /**
-     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
-     * 
-     * Skip the first `n` VipMemberships.
-     */
-    skip?: number
-    /**
-     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
-     * 
-     * Count returned VipMemberships
-    **/
-    _count?: true | VipMembershipCountAggregateInputType
-    /**
-     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
-     * 
-     * Select which fields to average
-    **/
-    _avg?: VipMembershipAvgAggregateInputType
-    /**
-     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
-     * 
-     * Select which fields to sum
-    **/
-    _sum?: VipMembershipSumAggregateInputType
-    /**
-     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
-     * 
-     * Select which fields to find the minimum value
-    **/
-    _min?: VipMembershipMinAggregateInputType
-    /**
-     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
-     * 
-     * Select which fields to find the maximum value
-    **/
-    _max?: VipMembershipMaxAggregateInputType
-  }
-
-  export type GetVipMembershipAggregateType<T extends VipMembershipAggregateArgs> = {
-        [P in keyof T & keyof AggregateVipMembership]: P extends '_count' | 'count'
-      ? T[P] extends true
-        ? number
-        : GetScalarType<T[P], AggregateVipMembership[P]>
-      : GetScalarType<T[P], AggregateVipMembership[P]>
-  }
-
-
-
-
-  export type VipMembershipGroupByArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
-    where?: VipMembershipWhereInput
-    orderBy?: VipMembershipOrderByWithAggregationInput | VipMembershipOrderByWithAggregationInput[]
-    by: VipMembershipScalarFieldEnum[] | VipMembershipScalarFieldEnum
-    having?: VipMembershipScalarWhereWithAggregatesInput
-    take?: number
-    skip?: number
-    _count?: VipMembershipCountAggregateInputType | true
-    _avg?: VipMembershipAvgAggregateInputType
-    _sum?: VipMembershipSumAggregateInputType
-    _min?: VipMembershipMinAggregateInputType
-    _max?: VipMembershipMaxAggregateInputType
-  }
-
-  export type VipMembershipGroupByOutputType = {
-    id: number
-    userId: bigint
-    vipLevelId: number
-    accumulatedRolling: Decimal
-    totalRewardsPaid: Decimal
-    achievedAt: Date | null
-    createdAt: Date
-    updatedAt: Date
-    _count: VipMembershipCountAggregateOutputType | null
-    _avg: VipMembershipAvgAggregateOutputType | null
-    _sum: VipMembershipSumAggregateOutputType | null
-    _min: VipMembershipMinAggregateOutputType | null
-    _max: VipMembershipMaxAggregateOutputType | null
-  }
-
-  type GetVipMembershipGroupByPayload<T extends VipMembershipGroupByArgs> = Prisma.PrismaPromise<
-    Array<
-      PickEnumerable<VipMembershipGroupByOutputType, T['by']> &
-        {
-          [P in ((keyof T) & (keyof VipMembershipGroupByOutputType))]: P extends '_count'
-            ? T[P] extends boolean
-              ? number
-              : GetScalarType<T[P], VipMembershipGroupByOutputType[P]>
-            : GetScalarType<T[P], VipMembershipGroupByOutputType[P]>
-        }
-      >
-    >
-
-
-  export type VipMembershipSelect<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetSelect<{
-    id?: boolean
-    userId?: boolean
-    vipLevelId?: boolean
-    accumulatedRolling?: boolean
-    totalRewardsPaid?: boolean
-    achievedAt?: boolean
-    createdAt?: boolean
-    updatedAt?: boolean
-    histories?: boolean | VipMembership$historiesArgs<ExtArgs>
-    user?: boolean | UserDefaultArgs<ExtArgs>
-    vipLevel?: boolean | VipLevelDefaultArgs<ExtArgs>
-    _count?: boolean | VipMembershipCountOutputTypeDefaultArgs<ExtArgs>
-  }, ExtArgs["result"]["vipMembership"]>
-
-  export type VipMembershipSelectCreateManyAndReturn<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetSelect<{
-    id?: boolean
-    userId?: boolean
-    vipLevelId?: boolean
-    accumulatedRolling?: boolean
-    totalRewardsPaid?: boolean
-    achievedAt?: boolean
-    createdAt?: boolean
-    updatedAt?: boolean
-    user?: boolean | UserDefaultArgs<ExtArgs>
-    vipLevel?: boolean | VipLevelDefaultArgs<ExtArgs>
-  }, ExtArgs["result"]["vipMembership"]>
-
-  export type VipMembershipSelectUpdateManyAndReturn<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetSelect<{
-    id?: boolean
-    userId?: boolean
-    vipLevelId?: boolean
-    accumulatedRolling?: boolean
-    totalRewardsPaid?: boolean
-    achievedAt?: boolean
-    createdAt?: boolean
-    updatedAt?: boolean
-    user?: boolean | UserDefaultArgs<ExtArgs>
-    vipLevel?: boolean | VipLevelDefaultArgs<ExtArgs>
-  }, ExtArgs["result"]["vipMembership"]>
-
-  export type VipMembershipSelectScalar = {
-    id?: boolean
-    userId?: boolean
-    vipLevelId?: boolean
-    accumulatedRolling?: boolean
-    totalRewardsPaid?: boolean
-    achievedAt?: boolean
-    createdAt?: boolean
-    updatedAt?: boolean
-  }
-
-  export type VipMembershipOmit<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetOmit<"id" | "userId" | "vipLevelId" | "accumulatedRolling" | "totalRewardsPaid" | "achievedAt" | "createdAt" | "updatedAt", ExtArgs["result"]["vipMembership"]>
-  export type VipMembershipInclude<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
-    histories?: boolean | VipMembership$historiesArgs<ExtArgs>
-    user?: boolean | UserDefaultArgs<ExtArgs>
-    vipLevel?: boolean | VipLevelDefaultArgs<ExtArgs>
-    _count?: boolean | VipMembershipCountOutputTypeDefaultArgs<ExtArgs>
-  }
-  export type VipMembershipIncludeCreateManyAndReturn<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
-    user?: boolean | UserDefaultArgs<ExtArgs>
-    vipLevel?: boolean | VipLevelDefaultArgs<ExtArgs>
-  }
-  export type VipMembershipIncludeUpdateManyAndReturn<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
-    user?: boolean | UserDefaultArgs<ExtArgs>
-    vipLevel?: boolean | VipLevelDefaultArgs<ExtArgs>
-  }
-
-  export type $VipMembershipPayload<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
-    name: "VipMembership"
-    objects: {
-      histories: Prisma.$VipHistoryPayload<ExtArgs>[]
-      user: Prisma.$UserPayload<ExtArgs>
-      vipLevel: Prisma.$VipLevelPayload<ExtArgs>
-    }
-    scalars: $Extensions.GetPayloadResult<{
-      id: number
-      userId: bigint
-      vipLevelId: number
-      accumulatedRolling: Prisma.Decimal
-      totalRewardsPaid: Prisma.Decimal
-      achievedAt: Date | null
-      createdAt: Date
-      updatedAt: Date
-    }, ExtArgs["result"]["vipMembership"]>
-    composites: {}
-  }
-
-  type VipMembershipGetPayload<S extends boolean | null | undefined | VipMembershipDefaultArgs> = $Result.GetResult<Prisma.$VipMembershipPayload, S>
-
-  type VipMembershipCountArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> =
-    Omit<VipMembershipFindManyArgs, 'select' | 'include' | 'distinct' | 'omit'> & {
-      select?: VipMembershipCountAggregateInputType | true
-    }
-
-  export interface VipMembershipDelegate<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs, GlobalOmitOptions = {}> {
-    [K: symbol]: { types: Prisma.TypeMap<ExtArgs>['model']['VipMembership'], meta: { name: 'VipMembership' } }
-    /**
-     * Find zero or one VipMembership that matches the filter.
-     * @param {VipMembershipFindUniqueArgs} args - Arguments to find a VipMembership
-     * @example
-     * // Get one VipMembership
-     * const vipMembership = await prisma.vipMembership.findUnique({
-     *   where: {
-     *     // ... provide filter here
-     *   }
-     * })
-     */
-    findUnique<T extends VipMembershipFindUniqueArgs>(args: SelectSubset<T, VipMembershipFindUniqueArgs<ExtArgs>>): Prisma__VipMembershipClient<$Result.GetResult<Prisma.$VipMembershipPayload<ExtArgs>, T, "findUnique", GlobalOmitOptions> | null, null, ExtArgs, GlobalOmitOptions>
-
-    /**
-     * Find one VipMembership that matches the filter or throw an error with `error.code='P2025'`
-     * if no matches were found.
-     * @param {VipMembershipFindUniqueOrThrowArgs} args - Arguments to find a VipMembership
-     * @example
-     * // Get one VipMembership
-     * const vipMembership = await prisma.vipMembership.findUniqueOrThrow({
-     *   where: {
-     *     // ... provide filter here
-     *   }
-     * })
-     */
-    findUniqueOrThrow<T extends VipMembershipFindUniqueOrThrowArgs>(args: SelectSubset<T, VipMembershipFindUniqueOrThrowArgs<ExtArgs>>): Prisma__VipMembershipClient<$Result.GetResult<Prisma.$VipMembershipPayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
-
-    /**
-     * Find the first VipMembership that matches the filter.
-     * Note, that providing `undefined` is treated as the value not being there.
-     * Read more here: https://pris.ly/d/null-undefined
-     * @param {VipMembershipFindFirstArgs} args - Arguments to find a VipMembership
-     * @example
-     * // Get one VipMembership
-     * const vipMembership = await prisma.vipMembership.findFirst({
-     *   where: {
-     *     // ... provide filter here
-     *   }
-     * })
-     */
-    findFirst<T extends VipMembershipFindFirstArgs>(args?: SelectSubset<T, VipMembershipFindFirstArgs<ExtArgs>>): Prisma__VipMembershipClient<$Result.GetResult<Prisma.$VipMembershipPayload<ExtArgs>, T, "findFirst", GlobalOmitOptions> | null, null, ExtArgs, GlobalOmitOptions>
-
-    /**
-     * Find the first VipMembership that matches the filter or
-     * throw `PrismaKnownClientError` with `P2025` code if no matches were found.
-     * Note, that providing `undefined` is treated as the value not being there.
-     * Read more here: https://pris.ly/d/null-undefined
-     * @param {VipMembershipFindFirstOrThrowArgs} args - Arguments to find a VipMembership
-     * @example
-     * // Get one VipMembership
-     * const vipMembership = await prisma.vipMembership.findFirstOrThrow({
-     *   where: {
-     *     // ... provide filter here
-     *   }
-     * })
-     */
-    findFirstOrThrow<T extends VipMembershipFindFirstOrThrowArgs>(args?: SelectSubset<T, VipMembershipFindFirstOrThrowArgs<ExtArgs>>): Prisma__VipMembershipClient<$Result.GetResult<Prisma.$VipMembershipPayload<ExtArgs>, T, "findFirstOrThrow", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
-
-    /**
-     * Find zero or more VipMemberships that matches the filter.
-     * Note, that providing `undefined` is treated as the value not being there.
-     * Read more here: https://pris.ly/d/null-undefined
-     * @param {VipMembershipFindManyArgs} args - Arguments to filter and select certain fields only.
-     * @example
-     * // Get all VipMemberships
-     * const vipMemberships = await prisma.vipMembership.findMany()
-     * 
-     * // Get first 10 VipMemberships
-     * const vipMemberships = await prisma.vipMembership.findMany({ take: 10 })
-     * 
-     * // Only select the `id`
-     * const vipMembershipWithIdOnly = await prisma.vipMembership.findMany({ select: { id: true } })
-     * 
-     */
-    findMany<T extends VipMembershipFindManyArgs>(args?: SelectSubset<T, VipMembershipFindManyArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$VipMembershipPayload<ExtArgs>, T, "findMany", GlobalOmitOptions>>
-
-    /**
-     * Create a VipMembership.
-     * @param {VipMembershipCreateArgs} args - Arguments to create a VipMembership.
-     * @example
-     * // Create one VipMembership
-     * const VipMembership = await prisma.vipMembership.create({
-     *   data: {
-     *     // ... data to create a VipMembership
-     *   }
-     * })
-     * 
-     */
-    create<T extends VipMembershipCreateArgs>(args: SelectSubset<T, VipMembershipCreateArgs<ExtArgs>>): Prisma__VipMembershipClient<$Result.GetResult<Prisma.$VipMembershipPayload<ExtArgs>, T, "create", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
-
-    /**
-     * Create many VipMemberships.
-     * @param {VipMembershipCreateManyArgs} args - Arguments to create many VipMemberships.
-     * @example
-     * // Create many VipMemberships
-     * const vipMembership = await prisma.vipMembership.createMany({
-     *   data: [
-     *     // ... provide data here
-     *   ]
-     * })
-     *     
-     */
-    createMany<T extends VipMembershipCreateManyArgs>(args?: SelectSubset<T, VipMembershipCreateManyArgs<ExtArgs>>): Prisma.PrismaPromise<BatchPayload>
-
-    /**
-     * Create many VipMemberships and returns the data saved in the database.
-     * @param {VipMembershipCreateManyAndReturnArgs} args - Arguments to create many VipMemberships.
-     * @example
-     * // Create many VipMemberships
-     * const vipMembership = await prisma.vipMembership.createManyAndReturn({
-     *   data: [
-     *     // ... provide data here
-     *   ]
-     * })
-     * 
-     * // Create many VipMemberships and only return the `id`
-     * const vipMembershipWithIdOnly = await prisma.vipMembership.createManyAndReturn({
-     *   select: { id: true },
-     *   data: [
-     *     // ... provide data here
-     *   ]
-     * })
-     * Note, that providing `undefined` is treated as the value not being there.
-     * Read more here: https://pris.ly/d/null-undefined
-     * 
-     */
-    createManyAndReturn<T extends VipMembershipCreateManyAndReturnArgs>(args?: SelectSubset<T, VipMembershipCreateManyAndReturnArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$VipMembershipPayload<ExtArgs>, T, "createManyAndReturn", GlobalOmitOptions>>
-
-    /**
-     * Delete a VipMembership.
-     * @param {VipMembershipDeleteArgs} args - Arguments to delete one VipMembership.
-     * @example
-     * // Delete one VipMembership
-     * const VipMembership = await prisma.vipMembership.delete({
-     *   where: {
-     *     // ... filter to delete one VipMembership
-     *   }
-     * })
-     * 
-     */
-    delete<T extends VipMembershipDeleteArgs>(args: SelectSubset<T, VipMembershipDeleteArgs<ExtArgs>>): Prisma__VipMembershipClient<$Result.GetResult<Prisma.$VipMembershipPayload<ExtArgs>, T, "delete", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
-
-    /**
-     * Update one VipMembership.
-     * @param {VipMembershipUpdateArgs} args - Arguments to update one VipMembership.
-     * @example
-     * // Update one VipMembership
-     * const vipMembership = await prisma.vipMembership.update({
-     *   where: {
-     *     // ... provide filter here
-     *   },
-     *   data: {
-     *     // ... provide data here
-     *   }
-     * })
-     * 
-     */
-    update<T extends VipMembershipUpdateArgs>(args: SelectSubset<T, VipMembershipUpdateArgs<ExtArgs>>): Prisma__VipMembershipClient<$Result.GetResult<Prisma.$VipMembershipPayload<ExtArgs>, T, "update", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
-
-    /**
-     * Delete zero or more VipMemberships.
-     * @param {VipMembershipDeleteManyArgs} args - Arguments to filter VipMemberships to delete.
-     * @example
-     * // Delete a few VipMemberships
-     * const { count } = await prisma.vipMembership.deleteMany({
-     *   where: {
-     *     // ... provide filter here
-     *   }
-     * })
-     * 
-     */
-    deleteMany<T extends VipMembershipDeleteManyArgs>(args?: SelectSubset<T, VipMembershipDeleteManyArgs<ExtArgs>>): Prisma.PrismaPromise<BatchPayload>
-
-    /**
-     * Update zero or more VipMemberships.
-     * Note, that providing `undefined` is treated as the value not being there.
-     * Read more here: https://pris.ly/d/null-undefined
-     * @param {VipMembershipUpdateManyArgs} args - Arguments to update one or more rows.
-     * @example
-     * // Update many VipMemberships
-     * const vipMembership = await prisma.vipMembership.updateMany({
-     *   where: {
-     *     // ... provide filter here
-     *   },
-     *   data: {
-     *     // ... provide data here
-     *   }
-     * })
-     * 
-     */
-    updateMany<T extends VipMembershipUpdateManyArgs>(args: SelectSubset<T, VipMembershipUpdateManyArgs<ExtArgs>>): Prisma.PrismaPromise<BatchPayload>
-
-    /**
-     * Update zero or more VipMemberships and returns the data updated in the database.
-     * @param {VipMembershipUpdateManyAndReturnArgs} args - Arguments to update many VipMemberships.
-     * @example
-     * // Update many VipMemberships
-     * const vipMembership = await prisma.vipMembership.updateManyAndReturn({
-     *   where: {
-     *     // ... provide filter here
-     *   },
-     *   data: [
-     *     // ... provide data here
-     *   ]
-     * })
-     * 
-     * // Update zero or more VipMemberships and only return the `id`
-     * const vipMembershipWithIdOnly = await prisma.vipMembership.updateManyAndReturn({
-     *   select: { id: true },
-     *   where: {
-     *     // ... provide filter here
-     *   },
-     *   data: [
-     *     // ... provide data here
-     *   ]
-     * })
-     * Note, that providing `undefined` is treated as the value not being there.
-     * Read more here: https://pris.ly/d/null-undefined
-     * 
-     */
-    updateManyAndReturn<T extends VipMembershipUpdateManyAndReturnArgs>(args: SelectSubset<T, VipMembershipUpdateManyAndReturnArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$VipMembershipPayload<ExtArgs>, T, "updateManyAndReturn", GlobalOmitOptions>>
-
-    /**
-     * Create or update one VipMembership.
-     * @param {VipMembershipUpsertArgs} args - Arguments to update or create a VipMembership.
-     * @example
-     * // Update or create a VipMembership
-     * const vipMembership = await prisma.vipMembership.upsert({
-     *   create: {
-     *     // ... data to create a VipMembership
-     *   },
-     *   update: {
-     *     // ... in case it already exists, update
-     *   },
-     *   where: {
-     *     // ... the filter for the VipMembership we want to update
-     *   }
-     * })
-     */
-    upsert<T extends VipMembershipUpsertArgs>(args: SelectSubset<T, VipMembershipUpsertArgs<ExtArgs>>): Prisma__VipMembershipClient<$Result.GetResult<Prisma.$VipMembershipPayload<ExtArgs>, T, "upsert", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
-
-
-    /**
-     * Count the number of VipMemberships.
-     * Note, that providing `undefined` is treated as the value not being there.
-     * Read more here: https://pris.ly/d/null-undefined
-     * @param {VipMembershipCountArgs} args - Arguments to filter VipMemberships to count.
-     * @example
-     * // Count the number of VipMemberships
-     * const count = await prisma.vipMembership.count({
-     *   where: {
-     *     // ... the filter for the VipMemberships we want to count
-     *   }
-     * })
-    **/
-    count<T extends VipMembershipCountArgs>(
-      args?: Subset<T, VipMembershipCountArgs>,
-    ): Prisma.PrismaPromise<
-      T extends $Utils.Record<'select', any>
-        ? T['select'] extends true
-          ? number
-          : GetScalarType<T['select'], VipMembershipCountAggregateOutputType>
-        : number
-    >
-
-    /**
-     * Allows you to perform aggregations operations on a VipMembership.
-     * Note, that providing `undefined` is treated as the value not being there.
-     * Read more here: https://pris.ly/d/null-undefined
-     * @param {VipMembershipAggregateArgs} args - Select which aggregations you would like to apply and on what fields.
-     * @example
-     * // Ordered by age ascending
-     * // Where email contains prisma.io
-     * // Limited to the 10 users
-     * const aggregations = await prisma.user.aggregate({
-     *   _avg: {
-     *     age: true,
-     *   },
-     *   where: {
-     *     email: {
-     *       contains: "prisma.io",
-     *     },
-     *   },
-     *   orderBy: {
-     *     age: "asc",
-     *   },
-     *   take: 10,
-     * })
-    **/
-    aggregate<T extends VipMembershipAggregateArgs>(args: Subset<T, VipMembershipAggregateArgs>): Prisma.PrismaPromise<GetVipMembershipAggregateType<T>>
-
-    /**
-     * Group by VipMembership.
-     * Note, that providing `undefined` is treated as the value not being there.
-     * Read more here: https://pris.ly/d/null-undefined
-     * @param {VipMembershipGroupByArgs} args - Group by arguments.
-     * @example
-     * // Group by city, order by createdAt, get count
-     * const result = await prisma.user.groupBy({
-     *   by: ['city', 'createdAt'],
-     *   orderBy: {
-     *     createdAt: true
-     *   },
-     *   _count: {
-     *     _all: true
-     *   },
-     * })
-     * 
-    **/
-    groupBy<
-      T extends VipMembershipGroupByArgs,
-      HasSelectOrTake extends Or<
-        Extends<'skip', Keys<T>>,
-        Extends<'take', Keys<T>>
-      >,
-      OrderByArg extends True extends HasSelectOrTake
-        ? { orderBy: VipMembershipGroupByArgs['orderBy'] }
-        : { orderBy?: VipMembershipGroupByArgs['orderBy'] },
-      OrderFields extends ExcludeUnderscoreKeys<Keys<MaybeTupleToUnion<T['orderBy']>>>,
-      ByFields extends MaybeTupleToUnion<T['by']>,
-      ByValid extends Has<ByFields, OrderFields>,
-      HavingFields extends GetHavingFields<T['having']>,
-      HavingValid extends Has<ByFields, HavingFields>,
-      ByEmpty extends T['by'] extends never[] ? True : False,
-      InputErrors extends ByEmpty extends True
-      ? `Error: "by" must not be empty.`
-      : HavingValid extends False
-      ? {
-          [P in HavingFields]: P extends ByFields
-            ? never
-            : P extends string
-            ? `Error: Field "${P}" used in "having" needs to be provided in "by".`
-            : [
-                Error,
-                'Field ',
-                P,
-                ` in "having" needs to be provided in "by"`,
-              ]
-        }[HavingFields]
-      : 'take' extends Keys<T>
-      ? 'orderBy' extends Keys<T>
-        ? ByValid extends True
-          ? {}
-          : {
-              [P in OrderFields]: P extends ByFields
-                ? never
-                : `Error: Field "${P}" in "orderBy" needs to be provided in "by"`
-            }[OrderFields]
-        : 'Error: If you provide "take", you also need to provide "orderBy"'
-      : 'skip' extends Keys<T>
-      ? 'orderBy' extends Keys<T>
-        ? ByValid extends True
-          ? {}
-          : {
-              [P in OrderFields]: P extends ByFields
-                ? never
-                : `Error: Field "${P}" in "orderBy" needs to be provided in "by"`
-            }[OrderFields]
-        : 'Error: If you provide "skip", you also need to provide "orderBy"'
-      : ByValid extends True
-      ? {}
-      : {
-          [P in OrderFields]: P extends ByFields
-            ? never
-            : `Error: Field "${P}" in "orderBy" needs to be provided in "by"`
-        }[OrderFields]
-    >(args: SubsetIntersection<T, VipMembershipGroupByArgs, OrderByArg> & InputErrors): {} extends InputErrors ? GetVipMembershipGroupByPayload<T> : Prisma.PrismaPromise<InputErrors>
-  /**
-   * Fields of the VipMembership model
-   */
-  readonly fields: VipMembershipFieldRefs;
-  }
-
-  /**
-   * The delegate class that acts as a "Promise-like" for VipMembership.
-   * Why is this prefixed with `Prisma__`?
-   * Because we want to prevent naming conflicts as mentioned in
-   * https://github.com/prisma/prisma-client-js/issues/707
-   */
-  export interface Prisma__VipMembershipClient<T, Null = never, ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs, GlobalOmitOptions = {}> extends Prisma.PrismaPromise<T> {
-    readonly [Symbol.toStringTag]: "PrismaPromise"
-    histories<T extends VipMembership$historiesArgs<ExtArgs> = {}>(args?: Subset<T, VipMembership$historiesArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$VipHistoryPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
-    user<T extends UserDefaultArgs<ExtArgs> = {}>(args?: Subset<T, UserDefaultArgs<ExtArgs>>): Prisma__UserClient<$Result.GetResult<Prisma.$UserPayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions> | Null, Null, ExtArgs, GlobalOmitOptions>
-    vipLevel<T extends VipLevelDefaultArgs<ExtArgs> = {}>(args?: Subset<T, VipLevelDefaultArgs<ExtArgs>>): Prisma__VipLevelClient<$Result.GetResult<Prisma.$VipLevelPayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions> | Null, Null, ExtArgs, GlobalOmitOptions>
-    /**
-     * Attaches callbacks for the resolution and/or rejection of the Promise.
-     * @param onfulfilled The callback to execute when the Promise is resolved.
-     * @param onrejected The callback to execute when the Promise is rejected.
-     * @returns A Promise for the completion of which ever callback is executed.
-     */
-    then<TResult1 = T, TResult2 = never>(onfulfilled?: ((value: T) => TResult1 | PromiseLike<TResult1>) | undefined | null, onrejected?: ((reason: any) => TResult2 | PromiseLike<TResult2>) | undefined | null): $Utils.JsPromise<TResult1 | TResult2>
-    /**
-     * Attaches a callback for only the rejection of the Promise.
-     * @param onrejected The callback to execute when the Promise is rejected.
-     * @returns A Promise for the completion of the callback.
-     */
-    catch<TResult = never>(onrejected?: ((reason: any) => TResult | PromiseLike<TResult>) | undefined | null): $Utils.JsPromise<T | TResult>
-    /**
-     * Attaches a callback that is invoked when the Promise is settled (fulfilled or rejected). The
-     * resolved value cannot be modified from the callback.
-     * @param onfinally The callback to execute when the Promise is settled (fulfilled or rejected).
-     * @returns A Promise for the completion of the callback.
-     */
-    finally(onfinally?: (() => void) | undefined | null): $Utils.JsPromise<T>
-  }
-
-
-
-
-  /**
-   * Fields of the VipMembership model
-   */
-  interface VipMembershipFieldRefs {
-    readonly id: FieldRef<"VipMembership", 'Int'>
-    readonly userId: FieldRef<"VipMembership", 'BigInt'>
-    readonly vipLevelId: FieldRef<"VipMembership", 'Int'>
-    readonly accumulatedRolling: FieldRef<"VipMembership", 'Decimal'>
-    readonly totalRewardsPaid: FieldRef<"VipMembership", 'Decimal'>
-    readonly achievedAt: FieldRef<"VipMembership", 'DateTime'>
-    readonly createdAt: FieldRef<"VipMembership", 'DateTime'>
-    readonly updatedAt: FieldRef<"VipMembership", 'DateTime'>
-  }
-    
-
-  // Custom InputTypes
-  /**
-   * VipMembership findUnique
-   */
-  export type VipMembershipFindUniqueArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
-    /**
-     * Select specific fields to fetch from the VipMembership
-     */
-    select?: VipMembershipSelect<ExtArgs> | null
-    /**
-     * Omit specific fields from the VipMembership
-     */
-    omit?: VipMembershipOmit<ExtArgs> | null
-    /**
-     * Choose, which related nodes to fetch as well
-     */
-    include?: VipMembershipInclude<ExtArgs> | null
-    /**
-     * Filter, which VipMembership to fetch.
-     */
-    where: VipMembershipWhereUniqueInput
-  }
-
-  /**
-   * VipMembership findUniqueOrThrow
-   */
-  export type VipMembershipFindUniqueOrThrowArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
-    /**
-     * Select specific fields to fetch from the VipMembership
-     */
-    select?: VipMembershipSelect<ExtArgs> | null
-    /**
-     * Omit specific fields from the VipMembership
-     */
-    omit?: VipMembershipOmit<ExtArgs> | null
-    /**
-     * Choose, which related nodes to fetch as well
-     */
-    include?: VipMembershipInclude<ExtArgs> | null
-    /**
-     * Filter, which VipMembership to fetch.
-     */
-    where: VipMembershipWhereUniqueInput
-  }
-
-  /**
-   * VipMembership findFirst
-   */
-  export type VipMembershipFindFirstArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
-    /**
-     * Select specific fields to fetch from the VipMembership
-     */
-    select?: VipMembershipSelect<ExtArgs> | null
-    /**
-     * Omit specific fields from the VipMembership
-     */
-    omit?: VipMembershipOmit<ExtArgs> | null
-    /**
-     * Choose, which related nodes to fetch as well
-     */
-    include?: VipMembershipInclude<ExtArgs> | null
-    /**
-     * Filter, which VipMembership to fetch.
-     */
-    where?: VipMembershipWhereInput
-    /**
-     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/sorting Sorting Docs}
-     * 
-     * Determine the order of VipMemberships to fetch.
-     */
-    orderBy?: VipMembershipOrderByWithRelationInput | VipMembershipOrderByWithRelationInput[]
-    /**
-     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination#cursor-based-pagination Cursor Docs}
-     * 
-     * Sets the position for searching for VipMemberships.
-     */
-    cursor?: VipMembershipWhereUniqueInput
-    /**
-     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
-     * 
-     * Take `±n` VipMemberships from the position of the cursor.
-     */
-    take?: number
-    /**
-     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
-     * 
-     * Skip the first `n` VipMemberships.
-     */
-    skip?: number
-    /**
-     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/distinct Distinct Docs}
-     * 
-     * Filter by unique combinations of VipMemberships.
-     */
-    distinct?: VipMembershipScalarFieldEnum | VipMembershipScalarFieldEnum[]
-  }
-
-  /**
-   * VipMembership findFirstOrThrow
-   */
-  export type VipMembershipFindFirstOrThrowArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
-    /**
-     * Select specific fields to fetch from the VipMembership
-     */
-    select?: VipMembershipSelect<ExtArgs> | null
-    /**
-     * Omit specific fields from the VipMembership
-     */
-    omit?: VipMembershipOmit<ExtArgs> | null
-    /**
-     * Choose, which related nodes to fetch as well
-     */
-    include?: VipMembershipInclude<ExtArgs> | null
-    /**
-     * Filter, which VipMembership to fetch.
-     */
-    where?: VipMembershipWhereInput
-    /**
-     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/sorting Sorting Docs}
-     * 
-     * Determine the order of VipMemberships to fetch.
-     */
-    orderBy?: VipMembershipOrderByWithRelationInput | VipMembershipOrderByWithRelationInput[]
-    /**
-     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination#cursor-based-pagination Cursor Docs}
-     * 
-     * Sets the position for searching for VipMemberships.
-     */
-    cursor?: VipMembershipWhereUniqueInput
-    /**
-     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
-     * 
-     * Take `±n` VipMemberships from the position of the cursor.
-     */
-    take?: number
-    /**
-     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
-     * 
-     * Skip the first `n` VipMemberships.
-     */
-    skip?: number
-    /**
-     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/distinct Distinct Docs}
-     * 
-     * Filter by unique combinations of VipMemberships.
-     */
-    distinct?: VipMembershipScalarFieldEnum | VipMembershipScalarFieldEnum[]
-  }
-
-  /**
-   * VipMembership findMany
-   */
-  export type VipMembershipFindManyArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
-    /**
-     * Select specific fields to fetch from the VipMembership
-     */
-    select?: VipMembershipSelect<ExtArgs> | null
-    /**
-     * Omit specific fields from the VipMembership
-     */
-    omit?: VipMembershipOmit<ExtArgs> | null
-    /**
-     * Choose, which related nodes to fetch as well
-     */
-    include?: VipMembershipInclude<ExtArgs> | null
-    /**
-     * Filter, which VipMemberships to fetch.
-     */
-    where?: VipMembershipWhereInput
-    /**
-     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/sorting Sorting Docs}
-     * 
-     * Determine the order of VipMemberships to fetch.
-     */
-    orderBy?: VipMembershipOrderByWithRelationInput | VipMembershipOrderByWithRelationInput[]
-    /**
-     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination#cursor-based-pagination Cursor Docs}
-     * 
-     * Sets the position for listing VipMemberships.
-     */
-    cursor?: VipMembershipWhereUniqueInput
-    /**
-     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
-     * 
-     * Take `±n` VipMemberships from the position of the cursor.
-     */
-    take?: number
-    /**
-     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
-     * 
-     * Skip the first `n` VipMemberships.
-     */
-    skip?: number
-    distinct?: VipMembershipScalarFieldEnum | VipMembershipScalarFieldEnum[]
-  }
-
-  /**
-   * VipMembership create
-   */
-  export type VipMembershipCreateArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
-    /**
-     * Select specific fields to fetch from the VipMembership
-     */
-    select?: VipMembershipSelect<ExtArgs> | null
-    /**
-     * Omit specific fields from the VipMembership
-     */
-    omit?: VipMembershipOmit<ExtArgs> | null
-    /**
-     * Choose, which related nodes to fetch as well
-     */
-    include?: VipMembershipInclude<ExtArgs> | null
-    /**
-     * The data needed to create a VipMembership.
-     */
-    data: XOR<VipMembershipCreateInput, VipMembershipUncheckedCreateInput>
-  }
-
-  /**
-   * VipMembership createMany
-   */
-  export type VipMembershipCreateManyArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
-    /**
-     * The data used to create many VipMemberships.
-     */
-    data: VipMembershipCreateManyInput | VipMembershipCreateManyInput[]
-    skipDuplicates?: boolean
-  }
-
-  /**
-   * VipMembership createManyAndReturn
-   */
-  export type VipMembershipCreateManyAndReturnArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
-    /**
-     * Select specific fields to fetch from the VipMembership
-     */
-    select?: VipMembershipSelectCreateManyAndReturn<ExtArgs> | null
-    /**
-     * Omit specific fields from the VipMembership
-     */
-    omit?: VipMembershipOmit<ExtArgs> | null
-    /**
-     * The data used to create many VipMemberships.
-     */
-    data: VipMembershipCreateManyInput | VipMembershipCreateManyInput[]
-    skipDuplicates?: boolean
-    /**
-     * Choose, which related nodes to fetch as well
-     */
-    include?: VipMembershipIncludeCreateManyAndReturn<ExtArgs> | null
-  }
-
-  /**
-   * VipMembership update
-   */
-  export type VipMembershipUpdateArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
-    /**
-     * Select specific fields to fetch from the VipMembership
-     */
-    select?: VipMembershipSelect<ExtArgs> | null
-    /**
-     * Omit specific fields from the VipMembership
-     */
-    omit?: VipMembershipOmit<ExtArgs> | null
-    /**
-     * Choose, which related nodes to fetch as well
-     */
-    include?: VipMembershipInclude<ExtArgs> | null
-    /**
-     * The data needed to update a VipMembership.
-     */
-    data: XOR<VipMembershipUpdateInput, VipMembershipUncheckedUpdateInput>
-    /**
-     * Choose, which VipMembership to update.
-     */
-    where: VipMembershipWhereUniqueInput
-  }
-
-  /**
-   * VipMembership updateMany
-   */
-  export type VipMembershipUpdateManyArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
-    /**
-     * The data used to update VipMemberships.
-     */
-    data: XOR<VipMembershipUpdateManyMutationInput, VipMembershipUncheckedUpdateManyInput>
-    /**
-     * Filter which VipMemberships to update
-     */
-    where?: VipMembershipWhereInput
-    /**
-     * Limit how many VipMemberships to update.
-     */
-    limit?: number
-  }
-
-  /**
-   * VipMembership updateManyAndReturn
-   */
-  export type VipMembershipUpdateManyAndReturnArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
-    /**
-     * Select specific fields to fetch from the VipMembership
-     */
-    select?: VipMembershipSelectUpdateManyAndReturn<ExtArgs> | null
-    /**
-     * Omit specific fields from the VipMembership
-     */
-    omit?: VipMembershipOmit<ExtArgs> | null
-    /**
-     * The data used to update VipMemberships.
-     */
-    data: XOR<VipMembershipUpdateManyMutationInput, VipMembershipUncheckedUpdateManyInput>
-    /**
-     * Filter which VipMemberships to update
-     */
-    where?: VipMembershipWhereInput
-    /**
-     * Limit how many VipMemberships to update.
-     */
-    limit?: number
-    /**
-     * Choose, which related nodes to fetch as well
-     */
-    include?: VipMembershipIncludeUpdateManyAndReturn<ExtArgs> | null
-  }
-
-  /**
-   * VipMembership upsert
-   */
-  export type VipMembershipUpsertArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
-    /**
-     * Select specific fields to fetch from the VipMembership
-     */
-    select?: VipMembershipSelect<ExtArgs> | null
-    /**
-     * Omit specific fields from the VipMembership
-     */
-    omit?: VipMembershipOmit<ExtArgs> | null
-    /**
-     * Choose, which related nodes to fetch as well
-     */
-    include?: VipMembershipInclude<ExtArgs> | null
-    /**
-     * The filter to search for the VipMembership to update in case it exists.
-     */
-    where: VipMembershipWhereUniqueInput
-    /**
-     * In case the VipMembership found by the `where` argument doesn't exist, create a new VipMembership with this data.
-     */
-    create: XOR<VipMembershipCreateInput, VipMembershipUncheckedCreateInput>
-    /**
-     * In case the VipMembership was found with the provided `where` argument, update it with this data.
-     */
-    update: XOR<VipMembershipUpdateInput, VipMembershipUncheckedUpdateInput>
-  }
-
-  /**
-   * VipMembership delete
-   */
-  export type VipMembershipDeleteArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
-    /**
-     * Select specific fields to fetch from the VipMembership
-     */
-    select?: VipMembershipSelect<ExtArgs> | null
-    /**
-     * Omit specific fields from the VipMembership
-     */
-    omit?: VipMembershipOmit<ExtArgs> | null
-    /**
-     * Choose, which related nodes to fetch as well
-     */
-    include?: VipMembershipInclude<ExtArgs> | null
-    /**
-     * Filter which VipMembership to delete.
-     */
-    where: VipMembershipWhereUniqueInput
-  }
-
-  /**
-   * VipMembership deleteMany
-   */
-  export type VipMembershipDeleteManyArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
-    /**
-     * Filter which VipMemberships to delete
-     */
-    where?: VipMembershipWhereInput
-    /**
-     * Limit how many VipMemberships to delete.
-     */
-    limit?: number
-  }
-
-  /**
-   * VipMembership.histories
-   */
-  export type VipMembership$historiesArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
-    /**
-     * Select specific fields to fetch from the VipHistory
-     */
-    select?: VipHistorySelect<ExtArgs> | null
-    /**
-     * Omit specific fields from the VipHistory
-     */
-    omit?: VipHistoryOmit<ExtArgs> | null
-    /**
-     * Choose, which related nodes to fetch as well
-     */
-    include?: VipHistoryInclude<ExtArgs> | null
-    where?: VipHistoryWhereInput
-    orderBy?: VipHistoryOrderByWithRelationInput | VipHistoryOrderByWithRelationInput[]
-    cursor?: VipHistoryWhereUniqueInput
-    take?: number
-    skip?: number
-    distinct?: VipHistoryScalarFieldEnum | VipHistoryScalarFieldEnum[]
-  }
-
-  /**
-   * VipMembership without action
-   */
-  export type VipMembershipDefaultArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
-    /**
-     * Select specific fields to fetch from the VipMembership
-     */
-    select?: VipMembershipSelect<ExtArgs> | null
-    /**
-     * Omit specific fields from the VipMembership
-     */
-    omit?: VipMembershipOmit<ExtArgs> | null
-    /**
-     * Choose, which related nodes to fetch as well
-     */
-    include?: VipMembershipInclude<ExtArgs> | null
-  }
-
-
-  /**
-   * Model VipHistory
-   */
-
-  export type AggregateVipHistory = {
-    _count: VipHistoryCountAggregateOutputType | null
-    _avg: VipHistoryAvgAggregateOutputType | null
-    _sum: VipHistorySumAggregateOutputType | null
-    _min: VipHistoryMinAggregateOutputType | null
-    _max: VipHistoryMaxAggregateOutputType | null
-  }
-
-  export type VipHistoryAvgAggregateOutputType = {
-    id: number | null
-    userId: number | null
-    rewardAmount: Decimal | null
-    vipMembershipId: number | null
-  }
-
-  export type VipHistorySumAggregateOutputType = {
-    id: number | null
-    userId: bigint | null
-    rewardAmount: Decimal | null
-    vipMembershipId: number | null
-  }
-
-  export type VipHistoryMinAggregateOutputType = {
-    id: number | null
-    userId: bigint | null
-    previousLevelNameKey: string | null
-    newLevelNameKey: string | null
-    rewardAmount: Decimal | null
-    rewardPaid: boolean | null
-    paidAt: Date | null
-    createdAt: Date | null
-    vipMembershipId: number | null
-  }
-
-  export type VipHistoryMaxAggregateOutputType = {
-    id: number | null
-    userId: bigint | null
-    previousLevelNameKey: string | null
-    newLevelNameKey: string | null
-    rewardAmount: Decimal | null
-    rewardPaid: boolean | null
-    paidAt: Date | null
-    createdAt: Date | null
-    vipMembershipId: number | null
-  }
-
-  export type VipHistoryCountAggregateOutputType = {
-    id: number
-    userId: number
-    previousLevelNameKey: number
-    newLevelNameKey: number
-    rewardAmount: number
-    rewardPaid: number
-    paidAt: number
-    createdAt: number
-    vipMembershipId: number
-    _all: number
-  }
-
-
-  export type VipHistoryAvgAggregateInputType = {
-    id?: true
-    userId?: true
-    rewardAmount?: true
-    vipMembershipId?: true
-  }
-
-  export type VipHistorySumAggregateInputType = {
-    id?: true
-    userId?: true
-    rewardAmount?: true
-    vipMembershipId?: true
-  }
-
-  export type VipHistoryMinAggregateInputType = {
-    id?: true
-    userId?: true
-    previousLevelNameKey?: true
-    newLevelNameKey?: true
-    rewardAmount?: true
-    rewardPaid?: true
-    paidAt?: true
-    createdAt?: true
-    vipMembershipId?: true
-  }
-
-  export type VipHistoryMaxAggregateInputType = {
-    id?: true
-    userId?: true
-    previousLevelNameKey?: true
-    newLevelNameKey?: true
-    rewardAmount?: true
-    rewardPaid?: true
-    paidAt?: true
-    createdAt?: true
-    vipMembershipId?: true
-  }
-
-  export type VipHistoryCountAggregateInputType = {
-    id?: true
-    userId?: true
-    previousLevelNameKey?: true
-    newLevelNameKey?: true
-    rewardAmount?: true
-    rewardPaid?: true
-    paidAt?: true
-    createdAt?: true
-    vipMembershipId?: true
-    _all?: true
-  }
-
-  export type VipHistoryAggregateArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
-    /**
-     * Filter which VipHistory to aggregate.
-     */
-    where?: VipHistoryWhereInput
-    /**
-     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/sorting Sorting Docs}
-     * 
-     * Determine the order of VipHistories to fetch.
-     */
-    orderBy?: VipHistoryOrderByWithRelationInput | VipHistoryOrderByWithRelationInput[]
-    /**
-     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination#cursor-based-pagination Cursor Docs}
-     * 
-     * Sets the start position
-     */
-    cursor?: VipHistoryWhereUniqueInput
-    /**
-     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
-     * 
-     * Take `±n` VipHistories from the position of the cursor.
-     */
-    take?: number
-    /**
-     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
-     * 
-     * Skip the first `n` VipHistories.
-     */
-    skip?: number
-    /**
-     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
-     * 
-     * Count returned VipHistories
-    **/
-    _count?: true | VipHistoryCountAggregateInputType
-    /**
-     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
-     * 
-     * Select which fields to average
-    **/
-    _avg?: VipHistoryAvgAggregateInputType
-    /**
-     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
-     * 
-     * Select which fields to sum
-    **/
-    _sum?: VipHistorySumAggregateInputType
-    /**
-     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
-     * 
-     * Select which fields to find the minimum value
-    **/
-    _min?: VipHistoryMinAggregateInputType
-    /**
-     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
-     * 
-     * Select which fields to find the maximum value
-    **/
-    _max?: VipHistoryMaxAggregateInputType
-  }
-
-  export type GetVipHistoryAggregateType<T extends VipHistoryAggregateArgs> = {
-        [P in keyof T & keyof AggregateVipHistory]: P extends '_count' | 'count'
-      ? T[P] extends true
-        ? number
-        : GetScalarType<T[P], AggregateVipHistory[P]>
-      : GetScalarType<T[P], AggregateVipHistory[P]>
-  }
-
-
-
-
-  export type VipHistoryGroupByArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
-    where?: VipHistoryWhereInput
-    orderBy?: VipHistoryOrderByWithAggregationInput | VipHistoryOrderByWithAggregationInput[]
-    by: VipHistoryScalarFieldEnum[] | VipHistoryScalarFieldEnum
-    having?: VipHistoryScalarWhereWithAggregatesInput
-    take?: number
-    skip?: number
-    _count?: VipHistoryCountAggregateInputType | true
-    _avg?: VipHistoryAvgAggregateInputType
-    _sum?: VipHistorySumAggregateInputType
-    _min?: VipHistoryMinAggregateInputType
-    _max?: VipHistoryMaxAggregateInputType
-  }
-
-  export type VipHistoryGroupByOutputType = {
-    id: number
-    userId: bigint
-    previousLevelNameKey: string | null
-    newLevelNameKey: string
-    rewardAmount: Decimal
-    rewardPaid: boolean
-    paidAt: Date | null
-    createdAt: Date
-    vipMembershipId: number | null
-    _count: VipHistoryCountAggregateOutputType | null
-    _avg: VipHistoryAvgAggregateOutputType | null
-    _sum: VipHistorySumAggregateOutputType | null
-    _min: VipHistoryMinAggregateOutputType | null
-    _max: VipHistoryMaxAggregateOutputType | null
-  }
-
-  type GetVipHistoryGroupByPayload<T extends VipHistoryGroupByArgs> = Prisma.PrismaPromise<
-    Array<
-      PickEnumerable<VipHistoryGroupByOutputType, T['by']> &
-        {
-          [P in ((keyof T) & (keyof VipHistoryGroupByOutputType))]: P extends '_count'
-            ? T[P] extends boolean
-              ? number
-              : GetScalarType<T[P], VipHistoryGroupByOutputType[P]>
-            : GetScalarType<T[P], VipHistoryGroupByOutputType[P]>
-        }
-      >
-    >
-
-
-  export type VipHistorySelect<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetSelect<{
-    id?: boolean
-    userId?: boolean
-    previousLevelNameKey?: boolean
-    newLevelNameKey?: boolean
-    rewardAmount?: boolean
-    rewardPaid?: boolean
-    paidAt?: boolean
-    createdAt?: boolean
-    vipMembershipId?: boolean
-    user?: boolean | UserDefaultArgs<ExtArgs>
-    VipMembership?: boolean | VipHistory$VipMembershipArgs<ExtArgs>
-  }, ExtArgs["result"]["vipHistory"]>
-
-  export type VipHistorySelectCreateManyAndReturn<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetSelect<{
-    id?: boolean
-    userId?: boolean
-    previousLevelNameKey?: boolean
-    newLevelNameKey?: boolean
-    rewardAmount?: boolean
-    rewardPaid?: boolean
-    paidAt?: boolean
-    createdAt?: boolean
-    vipMembershipId?: boolean
-    user?: boolean | UserDefaultArgs<ExtArgs>
-    VipMembership?: boolean | VipHistory$VipMembershipArgs<ExtArgs>
-  }, ExtArgs["result"]["vipHistory"]>
-
-  export type VipHistorySelectUpdateManyAndReturn<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetSelect<{
-    id?: boolean
-    userId?: boolean
-    previousLevelNameKey?: boolean
-    newLevelNameKey?: boolean
-    rewardAmount?: boolean
-    rewardPaid?: boolean
-    paidAt?: boolean
-    createdAt?: boolean
-    vipMembershipId?: boolean
-    user?: boolean | UserDefaultArgs<ExtArgs>
-    VipMembership?: boolean | VipHistory$VipMembershipArgs<ExtArgs>
-  }, ExtArgs["result"]["vipHistory"]>
-
-  export type VipHistorySelectScalar = {
-    id?: boolean
-    userId?: boolean
-    previousLevelNameKey?: boolean
-    newLevelNameKey?: boolean
-    rewardAmount?: boolean
-    rewardPaid?: boolean
-    paidAt?: boolean
-    createdAt?: boolean
-    vipMembershipId?: boolean
-  }
-
-  export type VipHistoryOmit<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetOmit<"id" | "userId" | "previousLevelNameKey" | "newLevelNameKey" | "rewardAmount" | "rewardPaid" | "paidAt" | "createdAt" | "vipMembershipId", ExtArgs["result"]["vipHistory"]>
-  export type VipHistoryInclude<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
-    user?: boolean | UserDefaultArgs<ExtArgs>
-    VipMembership?: boolean | VipHistory$VipMembershipArgs<ExtArgs>
-  }
-  export type VipHistoryIncludeCreateManyAndReturn<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
-    user?: boolean | UserDefaultArgs<ExtArgs>
-    VipMembership?: boolean | VipHistory$VipMembershipArgs<ExtArgs>
-  }
-  export type VipHistoryIncludeUpdateManyAndReturn<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
-    user?: boolean | UserDefaultArgs<ExtArgs>
-    VipMembership?: boolean | VipHistory$VipMembershipArgs<ExtArgs>
-  }
-
-  export type $VipHistoryPayload<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
-    name: "VipHistory"
-    objects: {
-      user: Prisma.$UserPayload<ExtArgs>
-      VipMembership: Prisma.$VipMembershipPayload<ExtArgs> | null
-    }
-    scalars: $Extensions.GetPayloadResult<{
-      id: number
-      userId: bigint
-      previousLevelNameKey: string | null
-      newLevelNameKey: string
-      rewardAmount: Prisma.Decimal
-      rewardPaid: boolean
-      paidAt: Date | null
-      createdAt: Date
-      vipMembershipId: number | null
-    }, ExtArgs["result"]["vipHistory"]>
-    composites: {}
-  }
-
-  type VipHistoryGetPayload<S extends boolean | null | undefined | VipHistoryDefaultArgs> = $Result.GetResult<Prisma.$VipHistoryPayload, S>
-
-  type VipHistoryCountArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> =
-    Omit<VipHistoryFindManyArgs, 'select' | 'include' | 'distinct' | 'omit'> & {
-      select?: VipHistoryCountAggregateInputType | true
-    }
-
-  export interface VipHistoryDelegate<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs, GlobalOmitOptions = {}> {
-    [K: symbol]: { types: Prisma.TypeMap<ExtArgs>['model']['VipHistory'], meta: { name: 'VipHistory' } }
-    /**
-     * Find zero or one VipHistory that matches the filter.
-     * @param {VipHistoryFindUniqueArgs} args - Arguments to find a VipHistory
-     * @example
-     * // Get one VipHistory
-     * const vipHistory = await prisma.vipHistory.findUnique({
-     *   where: {
-     *     // ... provide filter here
-     *   }
-     * })
-     */
-    findUnique<T extends VipHistoryFindUniqueArgs>(args: SelectSubset<T, VipHistoryFindUniqueArgs<ExtArgs>>): Prisma__VipHistoryClient<$Result.GetResult<Prisma.$VipHistoryPayload<ExtArgs>, T, "findUnique", GlobalOmitOptions> | null, null, ExtArgs, GlobalOmitOptions>
-
-    /**
-     * Find one VipHistory that matches the filter or throw an error with `error.code='P2025'`
-     * if no matches were found.
-     * @param {VipHistoryFindUniqueOrThrowArgs} args - Arguments to find a VipHistory
-     * @example
-     * // Get one VipHistory
-     * const vipHistory = await prisma.vipHistory.findUniqueOrThrow({
-     *   where: {
-     *     // ... provide filter here
-     *   }
-     * })
-     */
-    findUniqueOrThrow<T extends VipHistoryFindUniqueOrThrowArgs>(args: SelectSubset<T, VipHistoryFindUniqueOrThrowArgs<ExtArgs>>): Prisma__VipHistoryClient<$Result.GetResult<Prisma.$VipHistoryPayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
-
-    /**
-     * Find the first VipHistory that matches the filter.
-     * Note, that providing `undefined` is treated as the value not being there.
-     * Read more here: https://pris.ly/d/null-undefined
-     * @param {VipHistoryFindFirstArgs} args - Arguments to find a VipHistory
-     * @example
-     * // Get one VipHistory
-     * const vipHistory = await prisma.vipHistory.findFirst({
-     *   where: {
-     *     // ... provide filter here
-     *   }
-     * })
-     */
-    findFirst<T extends VipHistoryFindFirstArgs>(args?: SelectSubset<T, VipHistoryFindFirstArgs<ExtArgs>>): Prisma__VipHistoryClient<$Result.GetResult<Prisma.$VipHistoryPayload<ExtArgs>, T, "findFirst", GlobalOmitOptions> | null, null, ExtArgs, GlobalOmitOptions>
-
-    /**
-     * Find the first VipHistory that matches the filter or
-     * throw `PrismaKnownClientError` with `P2025` code if no matches were found.
-     * Note, that providing `undefined` is treated as the value not being there.
-     * Read more here: https://pris.ly/d/null-undefined
-     * @param {VipHistoryFindFirstOrThrowArgs} args - Arguments to find a VipHistory
-     * @example
-     * // Get one VipHistory
-     * const vipHistory = await prisma.vipHistory.findFirstOrThrow({
-     *   where: {
-     *     // ... provide filter here
-     *   }
-     * })
-     */
-    findFirstOrThrow<T extends VipHistoryFindFirstOrThrowArgs>(args?: SelectSubset<T, VipHistoryFindFirstOrThrowArgs<ExtArgs>>): Prisma__VipHistoryClient<$Result.GetResult<Prisma.$VipHistoryPayload<ExtArgs>, T, "findFirstOrThrow", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
-
-    /**
-     * Find zero or more VipHistories that matches the filter.
-     * Note, that providing `undefined` is treated as the value not being there.
-     * Read more here: https://pris.ly/d/null-undefined
-     * @param {VipHistoryFindManyArgs} args - Arguments to filter and select certain fields only.
-     * @example
-     * // Get all VipHistories
-     * const vipHistories = await prisma.vipHistory.findMany()
-     * 
-     * // Get first 10 VipHistories
-     * const vipHistories = await prisma.vipHistory.findMany({ take: 10 })
-     * 
-     * // Only select the `id`
-     * const vipHistoryWithIdOnly = await prisma.vipHistory.findMany({ select: { id: true } })
-     * 
-     */
-    findMany<T extends VipHistoryFindManyArgs>(args?: SelectSubset<T, VipHistoryFindManyArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$VipHistoryPayload<ExtArgs>, T, "findMany", GlobalOmitOptions>>
-
-    /**
-     * Create a VipHistory.
-     * @param {VipHistoryCreateArgs} args - Arguments to create a VipHistory.
-     * @example
-     * // Create one VipHistory
-     * const VipHistory = await prisma.vipHistory.create({
-     *   data: {
-     *     // ... data to create a VipHistory
-     *   }
-     * })
-     * 
-     */
-    create<T extends VipHistoryCreateArgs>(args: SelectSubset<T, VipHistoryCreateArgs<ExtArgs>>): Prisma__VipHistoryClient<$Result.GetResult<Prisma.$VipHistoryPayload<ExtArgs>, T, "create", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
-
-    /**
-     * Create many VipHistories.
-     * @param {VipHistoryCreateManyArgs} args - Arguments to create many VipHistories.
-     * @example
-     * // Create many VipHistories
-     * const vipHistory = await prisma.vipHistory.createMany({
-     *   data: [
-     *     // ... provide data here
-     *   ]
-     * })
-     *     
-     */
-    createMany<T extends VipHistoryCreateManyArgs>(args?: SelectSubset<T, VipHistoryCreateManyArgs<ExtArgs>>): Prisma.PrismaPromise<BatchPayload>
-
-    /**
-     * Create many VipHistories and returns the data saved in the database.
-     * @param {VipHistoryCreateManyAndReturnArgs} args - Arguments to create many VipHistories.
-     * @example
-     * // Create many VipHistories
-     * const vipHistory = await prisma.vipHistory.createManyAndReturn({
-     *   data: [
-     *     // ... provide data here
-     *   ]
-     * })
-     * 
-     * // Create many VipHistories and only return the `id`
-     * const vipHistoryWithIdOnly = await prisma.vipHistory.createManyAndReturn({
-     *   select: { id: true },
-     *   data: [
-     *     // ... provide data here
-     *   ]
-     * })
-     * Note, that providing `undefined` is treated as the value not being there.
-     * Read more here: https://pris.ly/d/null-undefined
-     * 
-     */
-    createManyAndReturn<T extends VipHistoryCreateManyAndReturnArgs>(args?: SelectSubset<T, VipHistoryCreateManyAndReturnArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$VipHistoryPayload<ExtArgs>, T, "createManyAndReturn", GlobalOmitOptions>>
-
-    /**
-     * Delete a VipHistory.
-     * @param {VipHistoryDeleteArgs} args - Arguments to delete one VipHistory.
-     * @example
-     * // Delete one VipHistory
-     * const VipHistory = await prisma.vipHistory.delete({
-     *   where: {
-     *     // ... filter to delete one VipHistory
-     *   }
-     * })
-     * 
-     */
-    delete<T extends VipHistoryDeleteArgs>(args: SelectSubset<T, VipHistoryDeleteArgs<ExtArgs>>): Prisma__VipHistoryClient<$Result.GetResult<Prisma.$VipHistoryPayload<ExtArgs>, T, "delete", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
-
-    /**
-     * Update one VipHistory.
-     * @param {VipHistoryUpdateArgs} args - Arguments to update one VipHistory.
-     * @example
-     * // Update one VipHistory
-     * const vipHistory = await prisma.vipHistory.update({
-     *   where: {
-     *     // ... provide filter here
-     *   },
-     *   data: {
-     *     // ... provide data here
-     *   }
-     * })
-     * 
-     */
-    update<T extends VipHistoryUpdateArgs>(args: SelectSubset<T, VipHistoryUpdateArgs<ExtArgs>>): Prisma__VipHistoryClient<$Result.GetResult<Prisma.$VipHistoryPayload<ExtArgs>, T, "update", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
-
-    /**
-     * Delete zero or more VipHistories.
-     * @param {VipHistoryDeleteManyArgs} args - Arguments to filter VipHistories to delete.
-     * @example
-     * // Delete a few VipHistories
-     * const { count } = await prisma.vipHistory.deleteMany({
-     *   where: {
-     *     // ... provide filter here
-     *   }
-     * })
-     * 
-     */
-    deleteMany<T extends VipHistoryDeleteManyArgs>(args?: SelectSubset<T, VipHistoryDeleteManyArgs<ExtArgs>>): Prisma.PrismaPromise<BatchPayload>
-
-    /**
-     * Update zero or more VipHistories.
-     * Note, that providing `undefined` is treated as the value not being there.
-     * Read more here: https://pris.ly/d/null-undefined
-     * @param {VipHistoryUpdateManyArgs} args - Arguments to update one or more rows.
-     * @example
-     * // Update many VipHistories
-     * const vipHistory = await prisma.vipHistory.updateMany({
-     *   where: {
-     *     // ... provide filter here
-     *   },
-     *   data: {
-     *     // ... provide data here
-     *   }
-     * })
-     * 
-     */
-    updateMany<T extends VipHistoryUpdateManyArgs>(args: SelectSubset<T, VipHistoryUpdateManyArgs<ExtArgs>>): Prisma.PrismaPromise<BatchPayload>
-
-    /**
-     * Update zero or more VipHistories and returns the data updated in the database.
-     * @param {VipHistoryUpdateManyAndReturnArgs} args - Arguments to update many VipHistories.
-     * @example
-     * // Update many VipHistories
-     * const vipHistory = await prisma.vipHistory.updateManyAndReturn({
-     *   where: {
-     *     // ... provide filter here
-     *   },
-     *   data: [
-     *     // ... provide data here
-     *   ]
-     * })
-     * 
-     * // Update zero or more VipHistories and only return the `id`
-     * const vipHistoryWithIdOnly = await prisma.vipHistory.updateManyAndReturn({
-     *   select: { id: true },
-     *   where: {
-     *     // ... provide filter here
-     *   },
-     *   data: [
-     *     // ... provide data here
-     *   ]
-     * })
-     * Note, that providing `undefined` is treated as the value not being there.
-     * Read more here: https://pris.ly/d/null-undefined
-     * 
-     */
-    updateManyAndReturn<T extends VipHistoryUpdateManyAndReturnArgs>(args: SelectSubset<T, VipHistoryUpdateManyAndReturnArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$VipHistoryPayload<ExtArgs>, T, "updateManyAndReturn", GlobalOmitOptions>>
-
-    /**
-     * Create or update one VipHistory.
-     * @param {VipHistoryUpsertArgs} args - Arguments to update or create a VipHistory.
-     * @example
-     * // Update or create a VipHistory
-     * const vipHistory = await prisma.vipHistory.upsert({
-     *   create: {
-     *     // ... data to create a VipHistory
-     *   },
-     *   update: {
-     *     // ... in case it already exists, update
-     *   },
-     *   where: {
-     *     // ... the filter for the VipHistory we want to update
-     *   }
-     * })
-     */
-    upsert<T extends VipHistoryUpsertArgs>(args: SelectSubset<T, VipHistoryUpsertArgs<ExtArgs>>): Prisma__VipHistoryClient<$Result.GetResult<Prisma.$VipHistoryPayload<ExtArgs>, T, "upsert", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
-
-
-    /**
-     * Count the number of VipHistories.
-     * Note, that providing `undefined` is treated as the value not being there.
-     * Read more here: https://pris.ly/d/null-undefined
-     * @param {VipHistoryCountArgs} args - Arguments to filter VipHistories to count.
-     * @example
-     * // Count the number of VipHistories
-     * const count = await prisma.vipHistory.count({
-     *   where: {
-     *     // ... the filter for the VipHistories we want to count
-     *   }
-     * })
-    **/
-    count<T extends VipHistoryCountArgs>(
-      args?: Subset<T, VipHistoryCountArgs>,
-    ): Prisma.PrismaPromise<
-      T extends $Utils.Record<'select', any>
-        ? T['select'] extends true
-          ? number
-          : GetScalarType<T['select'], VipHistoryCountAggregateOutputType>
-        : number
-    >
-
-    /**
-     * Allows you to perform aggregations operations on a VipHistory.
-     * Note, that providing `undefined` is treated as the value not being there.
-     * Read more here: https://pris.ly/d/null-undefined
-     * @param {VipHistoryAggregateArgs} args - Select which aggregations you would like to apply and on what fields.
-     * @example
-     * // Ordered by age ascending
-     * // Where email contains prisma.io
-     * // Limited to the 10 users
-     * const aggregations = await prisma.user.aggregate({
-     *   _avg: {
-     *     age: true,
-     *   },
-     *   where: {
-     *     email: {
-     *       contains: "prisma.io",
-     *     },
-     *   },
-     *   orderBy: {
-     *     age: "asc",
-     *   },
-     *   take: 10,
-     * })
-    **/
-    aggregate<T extends VipHistoryAggregateArgs>(args: Subset<T, VipHistoryAggregateArgs>): Prisma.PrismaPromise<GetVipHistoryAggregateType<T>>
-
-    /**
-     * Group by VipHistory.
-     * Note, that providing `undefined` is treated as the value not being there.
-     * Read more here: https://pris.ly/d/null-undefined
-     * @param {VipHistoryGroupByArgs} args - Group by arguments.
-     * @example
-     * // Group by city, order by createdAt, get count
-     * const result = await prisma.user.groupBy({
-     *   by: ['city', 'createdAt'],
-     *   orderBy: {
-     *     createdAt: true
-     *   },
-     *   _count: {
-     *     _all: true
-     *   },
-     * })
-     * 
-    **/
-    groupBy<
-      T extends VipHistoryGroupByArgs,
-      HasSelectOrTake extends Or<
-        Extends<'skip', Keys<T>>,
-        Extends<'take', Keys<T>>
-      >,
-      OrderByArg extends True extends HasSelectOrTake
-        ? { orderBy: VipHistoryGroupByArgs['orderBy'] }
-        : { orderBy?: VipHistoryGroupByArgs['orderBy'] },
-      OrderFields extends ExcludeUnderscoreKeys<Keys<MaybeTupleToUnion<T['orderBy']>>>,
-      ByFields extends MaybeTupleToUnion<T['by']>,
-      ByValid extends Has<ByFields, OrderFields>,
-      HavingFields extends GetHavingFields<T['having']>,
-      HavingValid extends Has<ByFields, HavingFields>,
-      ByEmpty extends T['by'] extends never[] ? True : False,
-      InputErrors extends ByEmpty extends True
-      ? `Error: "by" must not be empty.`
-      : HavingValid extends False
-      ? {
-          [P in HavingFields]: P extends ByFields
-            ? never
-            : P extends string
-            ? `Error: Field "${P}" used in "having" needs to be provided in "by".`
-            : [
-                Error,
-                'Field ',
-                P,
-                ` in "having" needs to be provided in "by"`,
-              ]
-        }[HavingFields]
-      : 'take' extends Keys<T>
-      ? 'orderBy' extends Keys<T>
-        ? ByValid extends True
-          ? {}
-          : {
-              [P in OrderFields]: P extends ByFields
-                ? never
-                : `Error: Field "${P}" in "orderBy" needs to be provided in "by"`
-            }[OrderFields]
-        : 'Error: If you provide "take", you also need to provide "orderBy"'
-      : 'skip' extends Keys<T>
-      ? 'orderBy' extends Keys<T>
-        ? ByValid extends True
-          ? {}
-          : {
-              [P in OrderFields]: P extends ByFields
-                ? never
-                : `Error: Field "${P}" in "orderBy" needs to be provided in "by"`
-            }[OrderFields]
-        : 'Error: If you provide "skip", you also need to provide "orderBy"'
-      : ByValid extends True
-      ? {}
-      : {
-          [P in OrderFields]: P extends ByFields
-            ? never
-            : `Error: Field "${P}" in "orderBy" needs to be provided in "by"`
-        }[OrderFields]
-    >(args: SubsetIntersection<T, VipHistoryGroupByArgs, OrderByArg> & InputErrors): {} extends InputErrors ? GetVipHistoryGroupByPayload<T> : Prisma.PrismaPromise<InputErrors>
-  /**
-   * Fields of the VipHistory model
-   */
-  readonly fields: VipHistoryFieldRefs;
-  }
-
-  /**
-   * The delegate class that acts as a "Promise-like" for VipHistory.
-   * Why is this prefixed with `Prisma__`?
-   * Because we want to prevent naming conflicts as mentioned in
-   * https://github.com/prisma/prisma-client-js/issues/707
-   */
-  export interface Prisma__VipHistoryClient<T, Null = never, ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs, GlobalOmitOptions = {}> extends Prisma.PrismaPromise<T> {
-    readonly [Symbol.toStringTag]: "PrismaPromise"
-    user<T extends UserDefaultArgs<ExtArgs> = {}>(args?: Subset<T, UserDefaultArgs<ExtArgs>>): Prisma__UserClient<$Result.GetResult<Prisma.$UserPayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions> | Null, Null, ExtArgs, GlobalOmitOptions>
-    VipMembership<T extends VipHistory$VipMembershipArgs<ExtArgs> = {}>(args?: Subset<T, VipHistory$VipMembershipArgs<ExtArgs>>): Prisma__VipMembershipClient<$Result.GetResult<Prisma.$VipMembershipPayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions> | null, null, ExtArgs, GlobalOmitOptions>
-    /**
-     * Attaches callbacks for the resolution and/or rejection of the Promise.
-     * @param onfulfilled The callback to execute when the Promise is resolved.
-     * @param onrejected The callback to execute when the Promise is rejected.
-     * @returns A Promise for the completion of which ever callback is executed.
-     */
-    then<TResult1 = T, TResult2 = never>(onfulfilled?: ((value: T) => TResult1 | PromiseLike<TResult1>) | undefined | null, onrejected?: ((reason: any) => TResult2 | PromiseLike<TResult2>) | undefined | null): $Utils.JsPromise<TResult1 | TResult2>
-    /**
-     * Attaches a callback for only the rejection of the Promise.
-     * @param onrejected The callback to execute when the Promise is rejected.
-     * @returns A Promise for the completion of the callback.
-     */
-    catch<TResult = never>(onrejected?: ((reason: any) => TResult | PromiseLike<TResult>) | undefined | null): $Utils.JsPromise<T | TResult>
-    /**
-     * Attaches a callback that is invoked when the Promise is settled (fulfilled or rejected). The
-     * resolved value cannot be modified from the callback.
-     * @param onfinally The callback to execute when the Promise is settled (fulfilled or rejected).
-     * @returns A Promise for the completion of the callback.
-     */
-    finally(onfinally?: (() => void) | undefined | null): $Utils.JsPromise<T>
-  }
-
-
-
-
-  /**
-   * Fields of the VipHistory model
-   */
-  interface VipHistoryFieldRefs {
-    readonly id: FieldRef<"VipHistory", 'Int'>
-    readonly userId: FieldRef<"VipHistory", 'BigInt'>
-    readonly previousLevelNameKey: FieldRef<"VipHistory", 'String'>
-    readonly newLevelNameKey: FieldRef<"VipHistory", 'String'>
-    readonly rewardAmount: FieldRef<"VipHistory", 'Decimal'>
-    readonly rewardPaid: FieldRef<"VipHistory", 'Boolean'>
-    readonly paidAt: FieldRef<"VipHistory", 'DateTime'>
-    readonly createdAt: FieldRef<"VipHistory", 'DateTime'>
-    readonly vipMembershipId: FieldRef<"VipHistory", 'Int'>
-  }
-    
-
-  // Custom InputTypes
-  /**
-   * VipHistory findUnique
-   */
-  export type VipHistoryFindUniqueArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
-    /**
-     * Select specific fields to fetch from the VipHistory
-     */
-    select?: VipHistorySelect<ExtArgs> | null
-    /**
-     * Omit specific fields from the VipHistory
-     */
-    omit?: VipHistoryOmit<ExtArgs> | null
-    /**
-     * Choose, which related nodes to fetch as well
-     */
-    include?: VipHistoryInclude<ExtArgs> | null
-    /**
-     * Filter, which VipHistory to fetch.
-     */
-    where: VipHistoryWhereUniqueInput
-  }
-
-  /**
-   * VipHistory findUniqueOrThrow
-   */
-  export type VipHistoryFindUniqueOrThrowArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
-    /**
-     * Select specific fields to fetch from the VipHistory
-     */
-    select?: VipHistorySelect<ExtArgs> | null
-    /**
-     * Omit specific fields from the VipHistory
-     */
-    omit?: VipHistoryOmit<ExtArgs> | null
-    /**
-     * Choose, which related nodes to fetch as well
-     */
-    include?: VipHistoryInclude<ExtArgs> | null
-    /**
-     * Filter, which VipHistory to fetch.
-     */
-    where: VipHistoryWhereUniqueInput
-  }
-
-  /**
-   * VipHistory findFirst
-   */
-  export type VipHistoryFindFirstArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
-    /**
-     * Select specific fields to fetch from the VipHistory
-     */
-    select?: VipHistorySelect<ExtArgs> | null
-    /**
-     * Omit specific fields from the VipHistory
-     */
-    omit?: VipHistoryOmit<ExtArgs> | null
-    /**
-     * Choose, which related nodes to fetch as well
-     */
-    include?: VipHistoryInclude<ExtArgs> | null
-    /**
-     * Filter, which VipHistory to fetch.
-     */
-    where?: VipHistoryWhereInput
-    /**
-     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/sorting Sorting Docs}
-     * 
-     * Determine the order of VipHistories to fetch.
-     */
-    orderBy?: VipHistoryOrderByWithRelationInput | VipHistoryOrderByWithRelationInput[]
-    /**
-     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination#cursor-based-pagination Cursor Docs}
-     * 
-     * Sets the position for searching for VipHistories.
-     */
-    cursor?: VipHistoryWhereUniqueInput
-    /**
-     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
-     * 
-     * Take `±n` VipHistories from the position of the cursor.
-     */
-    take?: number
-    /**
-     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
-     * 
-     * Skip the first `n` VipHistories.
-     */
-    skip?: number
-    /**
-     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/distinct Distinct Docs}
-     * 
-     * Filter by unique combinations of VipHistories.
-     */
-    distinct?: VipHistoryScalarFieldEnum | VipHistoryScalarFieldEnum[]
-  }
-
-  /**
-   * VipHistory findFirstOrThrow
-   */
-  export type VipHistoryFindFirstOrThrowArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
-    /**
-     * Select specific fields to fetch from the VipHistory
-     */
-    select?: VipHistorySelect<ExtArgs> | null
-    /**
-     * Omit specific fields from the VipHistory
-     */
-    omit?: VipHistoryOmit<ExtArgs> | null
-    /**
-     * Choose, which related nodes to fetch as well
-     */
-    include?: VipHistoryInclude<ExtArgs> | null
-    /**
-     * Filter, which VipHistory to fetch.
-     */
-    where?: VipHistoryWhereInput
-    /**
-     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/sorting Sorting Docs}
-     * 
-     * Determine the order of VipHistories to fetch.
-     */
-    orderBy?: VipHistoryOrderByWithRelationInput | VipHistoryOrderByWithRelationInput[]
-    /**
-     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination#cursor-based-pagination Cursor Docs}
-     * 
-     * Sets the position for searching for VipHistories.
-     */
-    cursor?: VipHistoryWhereUniqueInput
-    /**
-     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
-     * 
-     * Take `±n` VipHistories from the position of the cursor.
-     */
-    take?: number
-    /**
-     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
-     * 
-     * Skip the first `n` VipHistories.
-     */
-    skip?: number
-    /**
-     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/distinct Distinct Docs}
-     * 
-     * Filter by unique combinations of VipHistories.
-     */
-    distinct?: VipHistoryScalarFieldEnum | VipHistoryScalarFieldEnum[]
-  }
-
-  /**
-   * VipHistory findMany
-   */
-  export type VipHistoryFindManyArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
-    /**
-     * Select specific fields to fetch from the VipHistory
-     */
-    select?: VipHistorySelect<ExtArgs> | null
-    /**
-     * Omit specific fields from the VipHistory
-     */
-    omit?: VipHistoryOmit<ExtArgs> | null
-    /**
-     * Choose, which related nodes to fetch as well
-     */
-    include?: VipHistoryInclude<ExtArgs> | null
-    /**
-     * Filter, which VipHistories to fetch.
-     */
-    where?: VipHistoryWhereInput
-    /**
-     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/sorting Sorting Docs}
-     * 
-     * Determine the order of VipHistories to fetch.
-     */
-    orderBy?: VipHistoryOrderByWithRelationInput | VipHistoryOrderByWithRelationInput[]
-    /**
-     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination#cursor-based-pagination Cursor Docs}
-     * 
-     * Sets the position for listing VipHistories.
-     */
-    cursor?: VipHistoryWhereUniqueInput
-    /**
-     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
-     * 
-     * Take `±n` VipHistories from the position of the cursor.
-     */
-    take?: number
-    /**
-     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
-     * 
-     * Skip the first `n` VipHistories.
-     */
-    skip?: number
-    distinct?: VipHistoryScalarFieldEnum | VipHistoryScalarFieldEnum[]
-  }
-
-  /**
-   * VipHistory create
-   */
-  export type VipHistoryCreateArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
-    /**
-     * Select specific fields to fetch from the VipHistory
-     */
-    select?: VipHistorySelect<ExtArgs> | null
-    /**
-     * Omit specific fields from the VipHistory
-     */
-    omit?: VipHistoryOmit<ExtArgs> | null
-    /**
-     * Choose, which related nodes to fetch as well
-     */
-    include?: VipHistoryInclude<ExtArgs> | null
-    /**
-     * The data needed to create a VipHistory.
-     */
-    data: XOR<VipHistoryCreateInput, VipHistoryUncheckedCreateInput>
-  }
-
-  /**
-   * VipHistory createMany
-   */
-  export type VipHistoryCreateManyArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
-    /**
-     * The data used to create many VipHistories.
-     */
-    data: VipHistoryCreateManyInput | VipHistoryCreateManyInput[]
-    skipDuplicates?: boolean
-  }
-
-  /**
-   * VipHistory createManyAndReturn
-   */
-  export type VipHistoryCreateManyAndReturnArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
-    /**
-     * Select specific fields to fetch from the VipHistory
-     */
-    select?: VipHistorySelectCreateManyAndReturn<ExtArgs> | null
-    /**
-     * Omit specific fields from the VipHistory
-     */
-    omit?: VipHistoryOmit<ExtArgs> | null
-    /**
-     * The data used to create many VipHistories.
-     */
-    data: VipHistoryCreateManyInput | VipHistoryCreateManyInput[]
-    skipDuplicates?: boolean
-    /**
-     * Choose, which related nodes to fetch as well
-     */
-    include?: VipHistoryIncludeCreateManyAndReturn<ExtArgs> | null
-  }
-
-  /**
-   * VipHistory update
-   */
-  export type VipHistoryUpdateArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
-    /**
-     * Select specific fields to fetch from the VipHistory
-     */
-    select?: VipHistorySelect<ExtArgs> | null
-    /**
-     * Omit specific fields from the VipHistory
-     */
-    omit?: VipHistoryOmit<ExtArgs> | null
-    /**
-     * Choose, which related nodes to fetch as well
-     */
-    include?: VipHistoryInclude<ExtArgs> | null
-    /**
-     * The data needed to update a VipHistory.
-     */
-    data: XOR<VipHistoryUpdateInput, VipHistoryUncheckedUpdateInput>
-    /**
-     * Choose, which VipHistory to update.
-     */
-    where: VipHistoryWhereUniqueInput
-  }
-
-  /**
-   * VipHistory updateMany
-   */
-  export type VipHistoryUpdateManyArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
-    /**
-     * The data used to update VipHistories.
-     */
-    data: XOR<VipHistoryUpdateManyMutationInput, VipHistoryUncheckedUpdateManyInput>
-    /**
-     * Filter which VipHistories to update
-     */
-    where?: VipHistoryWhereInput
-    /**
-     * Limit how many VipHistories to update.
-     */
-    limit?: number
-  }
-
-  /**
-   * VipHistory updateManyAndReturn
-   */
-  export type VipHistoryUpdateManyAndReturnArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
-    /**
-     * Select specific fields to fetch from the VipHistory
-     */
-    select?: VipHistorySelectUpdateManyAndReturn<ExtArgs> | null
-    /**
-     * Omit specific fields from the VipHistory
-     */
-    omit?: VipHistoryOmit<ExtArgs> | null
-    /**
-     * The data used to update VipHistories.
-     */
-    data: XOR<VipHistoryUpdateManyMutationInput, VipHistoryUncheckedUpdateManyInput>
-    /**
-     * Filter which VipHistories to update
-     */
-    where?: VipHistoryWhereInput
-    /**
-     * Limit how many VipHistories to update.
-     */
-    limit?: number
-    /**
-     * Choose, which related nodes to fetch as well
-     */
-    include?: VipHistoryIncludeUpdateManyAndReturn<ExtArgs> | null
-  }
-
-  /**
-   * VipHistory upsert
-   */
-  export type VipHistoryUpsertArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
-    /**
-     * Select specific fields to fetch from the VipHistory
-     */
-    select?: VipHistorySelect<ExtArgs> | null
-    /**
-     * Omit specific fields from the VipHistory
-     */
-    omit?: VipHistoryOmit<ExtArgs> | null
-    /**
-     * Choose, which related nodes to fetch as well
-     */
-    include?: VipHistoryInclude<ExtArgs> | null
-    /**
-     * The filter to search for the VipHistory to update in case it exists.
-     */
-    where: VipHistoryWhereUniqueInput
-    /**
-     * In case the VipHistory found by the `where` argument doesn't exist, create a new VipHistory with this data.
-     */
-    create: XOR<VipHistoryCreateInput, VipHistoryUncheckedCreateInput>
-    /**
-     * In case the VipHistory was found with the provided `where` argument, update it with this data.
-     */
-    update: XOR<VipHistoryUpdateInput, VipHistoryUncheckedUpdateInput>
-  }
-
-  /**
-   * VipHistory delete
-   */
-  export type VipHistoryDeleteArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
-    /**
-     * Select specific fields to fetch from the VipHistory
-     */
-    select?: VipHistorySelect<ExtArgs> | null
-    /**
-     * Omit specific fields from the VipHistory
-     */
-    omit?: VipHistoryOmit<ExtArgs> | null
-    /**
-     * Choose, which related nodes to fetch as well
-     */
-    include?: VipHistoryInclude<ExtArgs> | null
-    /**
-     * Filter which VipHistory to delete.
-     */
-    where: VipHistoryWhereUniqueInput
-  }
-
-  /**
-   * VipHistory deleteMany
-   */
-  export type VipHistoryDeleteManyArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
-    /**
-     * Filter which VipHistories to delete
-     */
-    where?: VipHistoryWhereInput
-    /**
-     * Limit how many VipHistories to delete.
-     */
-    limit?: number
-  }
-
-  /**
-   * VipHistory.VipMembership
-   */
-  export type VipHistory$VipMembershipArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
-    /**
-     * Select specific fields to fetch from the VipMembership
-     */
-    select?: VipMembershipSelect<ExtArgs> | null
-    /**
-     * Omit specific fields from the VipMembership
-     */
-    omit?: VipMembershipOmit<ExtArgs> | null
-    /**
-     * Choose, which related nodes to fetch as well
-     */
-    include?: VipMembershipInclude<ExtArgs> | null
-    where?: VipMembershipWhereInput
-  }
-
-  /**
-   * VipHistory without action
-   */
-  export type VipHistoryDefaultArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
-    /**
-     * Select specific fields to fetch from the VipHistory
-     */
-    select?: VipHistorySelect<ExtArgs> | null
-    /**
-     * Omit specific fields from the VipHistory
-     */
-    omit?: VipHistoryOmit<ExtArgs> | null
-    /**
-     * Choose, which related nodes to fetch as well
-     */
-    include?: VipHistoryInclude<ExtArgs> | null
   }
 
 
@@ -58291,53 +54305,6 @@ export namespace Prisma {
   export type ExchangeRateScalarFieldEnum = (typeof ExchangeRateScalarFieldEnum)[keyof typeof ExchangeRateScalarFieldEnum]
 
 
-  export const VipLevelScalarFieldEnum: {
-    id: 'id',
-    name: 'name',
-    nameKey: 'nameKey',
-    rank: 'rank',
-    requiredRolling: 'requiredRolling',
-    levelUpBonus: 'levelUpBonus',
-    compRate: 'compRate',
-    paybackBasisRate: 'paybackBasisRate',
-    weeklyBonusRate: 'weeklyBonusRate',
-    monthlyBonusRate: 'monthlyBonusRate',
-    createdAt: 'createdAt',
-    updatedAt: 'updatedAt'
-  };
-
-  export type VipLevelScalarFieldEnum = (typeof VipLevelScalarFieldEnum)[keyof typeof VipLevelScalarFieldEnum]
-
-
-  export const VipMembershipScalarFieldEnum: {
-    id: 'id',
-    userId: 'userId',
-    vipLevelId: 'vipLevelId',
-    accumulatedRolling: 'accumulatedRolling',
-    totalRewardsPaid: 'totalRewardsPaid',
-    achievedAt: 'achievedAt',
-    createdAt: 'createdAt',
-    updatedAt: 'updatedAt'
-  };
-
-  export type VipMembershipScalarFieldEnum = (typeof VipMembershipScalarFieldEnum)[keyof typeof VipMembershipScalarFieldEnum]
-
-
-  export const VipHistoryScalarFieldEnum: {
-    id: 'id',
-    userId: 'userId',
-    previousLevelNameKey: 'previousLevelNameKey',
-    newLevelNameKey: 'newLevelNameKey',
-    rewardAmount: 'rewardAmount',
-    rewardPaid: 'rewardPaid',
-    paidAt: 'paidAt',
-    createdAt: 'createdAt',
-    vipMembershipId: 'vipMembershipId'
-  };
-
-  export type VipHistoryScalarFieldEnum = (typeof VipHistoryScalarFieldEnum)[keyof typeof VipHistoryScalarFieldEnum]
-
-
   export const RollingScalarFieldEnum: {
     id: 'id',
     userId: 'userId',
@@ -60106,8 +56073,6 @@ export namespace Prisma {
     UserSession?: UserSessionListRelationFilter
     RevokedSessions?: UserSessionListRelationFilter
     UserToken?: UserTokenListRelationFilter
-    VipHistory?: VipHistoryListRelationFilter
-    VipMembership?: XOR<VipMembershipNullableScalarRelationFilter, VipMembershipWhereInput> | null
     loginAttempts?: LoginAttemptListRelationFilter
   }
 
@@ -60151,8 +56116,6 @@ export namespace Prisma {
     UserSession?: UserSessionOrderByRelationAggregateInput
     RevokedSessions?: UserSessionOrderByRelationAggregateInput
     UserToken?: UserTokenOrderByRelationAggregateInput
-    VipHistory?: VipHistoryOrderByRelationAggregateInput
-    VipMembership?: VipMembershipOrderByWithRelationInput
     loginAttempts?: LoginAttemptOrderByRelationAggregateInput
   }
 
@@ -60199,8 +56162,6 @@ export namespace Prisma {
     UserSession?: UserSessionListRelationFilter
     RevokedSessions?: UserSessionListRelationFilter
     UserToken?: UserTokenListRelationFilter
-    VipHistory?: VipHistoryListRelationFilter
-    VipMembership?: XOR<VipMembershipNullableScalarRelationFilter, VipMembershipWhereInput> | null
     loginAttempts?: LoginAttemptListRelationFilter
   }, "id" | "uid" | "whitecliffId" | "whitecliffSystemId" | "whitecliffUsername" | "dcsId" | "email">
 
@@ -61691,256 +57652,6 @@ export namespace Prisma {
     previousRate?: DecimalNullableWithAggregatesFilter<"ExchangeRate"> | Decimal | DecimalJsLike | number | string | null
     changeRate?: DecimalNullableWithAggregatesFilter<"ExchangeRate"> | Decimal | DecimalJsLike | number | string | null
     isValid?: BoolWithAggregatesFilter<"ExchangeRate"> | boolean
-  }
-
-  export type VipLevelWhereInput = {
-    AND?: VipLevelWhereInput | VipLevelWhereInput[]
-    OR?: VipLevelWhereInput[]
-    NOT?: VipLevelWhereInput | VipLevelWhereInput[]
-    id?: IntFilter<"VipLevel"> | number
-    name?: StringFilter<"VipLevel"> | string
-    nameKey?: StringFilter<"VipLevel"> | string
-    rank?: IntFilter<"VipLevel"> | number
-    requiredRolling?: DecimalFilter<"VipLevel"> | Decimal | DecimalJsLike | number | string
-    levelUpBonus?: DecimalFilter<"VipLevel"> | Decimal | DecimalJsLike | number | string
-    compRate?: DecimalFilter<"VipLevel"> | Decimal | DecimalJsLike | number | string
-    paybackBasisRate?: DecimalFilter<"VipLevel"> | Decimal | DecimalJsLike | number | string
-    weeklyBonusRate?: DecimalFilter<"VipLevel"> | Decimal | DecimalJsLike | number | string
-    monthlyBonusRate?: DecimalFilter<"VipLevel"> | Decimal | DecimalJsLike | number | string
-    createdAt?: DateTimeFilter<"VipLevel"> | Date | string
-    updatedAt?: DateTimeFilter<"VipLevel"> | Date | string
-    memberships?: VipMembershipListRelationFilter
-  }
-
-  export type VipLevelOrderByWithRelationInput = {
-    id?: SortOrder
-    name?: SortOrder
-    nameKey?: SortOrder
-    rank?: SortOrder
-    requiredRolling?: SortOrder
-    levelUpBonus?: SortOrder
-    compRate?: SortOrder
-    paybackBasisRate?: SortOrder
-    weeklyBonusRate?: SortOrder
-    monthlyBonusRate?: SortOrder
-    createdAt?: SortOrder
-    updatedAt?: SortOrder
-    memberships?: VipMembershipOrderByRelationAggregateInput
-  }
-
-  export type VipLevelWhereUniqueInput = Prisma.AtLeast<{
-    id?: number
-    name?: string
-    nameKey?: string
-    rank?: number
-    AND?: VipLevelWhereInput | VipLevelWhereInput[]
-    OR?: VipLevelWhereInput[]
-    NOT?: VipLevelWhereInput | VipLevelWhereInput[]
-    requiredRolling?: DecimalFilter<"VipLevel"> | Decimal | DecimalJsLike | number | string
-    levelUpBonus?: DecimalFilter<"VipLevel"> | Decimal | DecimalJsLike | number | string
-    compRate?: DecimalFilter<"VipLevel"> | Decimal | DecimalJsLike | number | string
-    paybackBasisRate?: DecimalFilter<"VipLevel"> | Decimal | DecimalJsLike | number | string
-    weeklyBonusRate?: DecimalFilter<"VipLevel"> | Decimal | DecimalJsLike | number | string
-    monthlyBonusRate?: DecimalFilter<"VipLevel"> | Decimal | DecimalJsLike | number | string
-    createdAt?: DateTimeFilter<"VipLevel"> | Date | string
-    updatedAt?: DateTimeFilter<"VipLevel"> | Date | string
-    memberships?: VipMembershipListRelationFilter
-  }, "id" | "name" | "nameKey" | "rank">
-
-  export type VipLevelOrderByWithAggregationInput = {
-    id?: SortOrder
-    name?: SortOrder
-    nameKey?: SortOrder
-    rank?: SortOrder
-    requiredRolling?: SortOrder
-    levelUpBonus?: SortOrder
-    compRate?: SortOrder
-    paybackBasisRate?: SortOrder
-    weeklyBonusRate?: SortOrder
-    monthlyBonusRate?: SortOrder
-    createdAt?: SortOrder
-    updatedAt?: SortOrder
-    _count?: VipLevelCountOrderByAggregateInput
-    _avg?: VipLevelAvgOrderByAggregateInput
-    _max?: VipLevelMaxOrderByAggregateInput
-    _min?: VipLevelMinOrderByAggregateInput
-    _sum?: VipLevelSumOrderByAggregateInput
-  }
-
-  export type VipLevelScalarWhereWithAggregatesInput = {
-    AND?: VipLevelScalarWhereWithAggregatesInput | VipLevelScalarWhereWithAggregatesInput[]
-    OR?: VipLevelScalarWhereWithAggregatesInput[]
-    NOT?: VipLevelScalarWhereWithAggregatesInput | VipLevelScalarWhereWithAggregatesInput[]
-    id?: IntWithAggregatesFilter<"VipLevel"> | number
-    name?: StringWithAggregatesFilter<"VipLevel"> | string
-    nameKey?: StringWithAggregatesFilter<"VipLevel"> | string
-    rank?: IntWithAggregatesFilter<"VipLevel"> | number
-    requiredRolling?: DecimalWithAggregatesFilter<"VipLevel"> | Decimal | DecimalJsLike | number | string
-    levelUpBonus?: DecimalWithAggregatesFilter<"VipLevel"> | Decimal | DecimalJsLike | number | string
-    compRate?: DecimalWithAggregatesFilter<"VipLevel"> | Decimal | DecimalJsLike | number | string
-    paybackBasisRate?: DecimalWithAggregatesFilter<"VipLevel"> | Decimal | DecimalJsLike | number | string
-    weeklyBonusRate?: DecimalWithAggregatesFilter<"VipLevel"> | Decimal | DecimalJsLike | number | string
-    monthlyBonusRate?: DecimalWithAggregatesFilter<"VipLevel"> | Decimal | DecimalJsLike | number | string
-    createdAt?: DateTimeWithAggregatesFilter<"VipLevel"> | Date | string
-    updatedAt?: DateTimeWithAggregatesFilter<"VipLevel"> | Date | string
-  }
-
-  export type VipMembershipWhereInput = {
-    AND?: VipMembershipWhereInput | VipMembershipWhereInput[]
-    OR?: VipMembershipWhereInput[]
-    NOT?: VipMembershipWhereInput | VipMembershipWhereInput[]
-    id?: IntFilter<"VipMembership"> | number
-    userId?: BigIntFilter<"VipMembership"> | bigint | number
-    vipLevelId?: IntFilter<"VipMembership"> | number
-    accumulatedRolling?: DecimalFilter<"VipMembership"> | Decimal | DecimalJsLike | number | string
-    totalRewardsPaid?: DecimalFilter<"VipMembership"> | Decimal | DecimalJsLike | number | string
-    achievedAt?: DateTimeNullableFilter<"VipMembership"> | Date | string | null
-    createdAt?: DateTimeFilter<"VipMembership"> | Date | string
-    updatedAt?: DateTimeFilter<"VipMembership"> | Date | string
-    histories?: VipHistoryListRelationFilter
-    user?: XOR<UserScalarRelationFilter, UserWhereInput>
-    vipLevel?: XOR<VipLevelScalarRelationFilter, VipLevelWhereInput>
-  }
-
-  export type VipMembershipOrderByWithRelationInput = {
-    id?: SortOrder
-    userId?: SortOrder
-    vipLevelId?: SortOrder
-    accumulatedRolling?: SortOrder
-    totalRewardsPaid?: SortOrder
-    achievedAt?: SortOrderInput | SortOrder
-    createdAt?: SortOrder
-    updatedAt?: SortOrder
-    histories?: VipHistoryOrderByRelationAggregateInput
-    user?: UserOrderByWithRelationInput
-    vipLevel?: VipLevelOrderByWithRelationInput
-  }
-
-  export type VipMembershipWhereUniqueInput = Prisma.AtLeast<{
-    id?: number
-    userId?: bigint | number
-    AND?: VipMembershipWhereInput | VipMembershipWhereInput[]
-    OR?: VipMembershipWhereInput[]
-    NOT?: VipMembershipWhereInput | VipMembershipWhereInput[]
-    vipLevelId?: IntFilter<"VipMembership"> | number
-    accumulatedRolling?: DecimalFilter<"VipMembership"> | Decimal | DecimalJsLike | number | string
-    totalRewardsPaid?: DecimalFilter<"VipMembership"> | Decimal | DecimalJsLike | number | string
-    achievedAt?: DateTimeNullableFilter<"VipMembership"> | Date | string | null
-    createdAt?: DateTimeFilter<"VipMembership"> | Date | string
-    updatedAt?: DateTimeFilter<"VipMembership"> | Date | string
-    histories?: VipHistoryListRelationFilter
-    user?: XOR<UserScalarRelationFilter, UserWhereInput>
-    vipLevel?: XOR<VipLevelScalarRelationFilter, VipLevelWhereInput>
-  }, "id" | "userId">
-
-  export type VipMembershipOrderByWithAggregationInput = {
-    id?: SortOrder
-    userId?: SortOrder
-    vipLevelId?: SortOrder
-    accumulatedRolling?: SortOrder
-    totalRewardsPaid?: SortOrder
-    achievedAt?: SortOrderInput | SortOrder
-    createdAt?: SortOrder
-    updatedAt?: SortOrder
-    _count?: VipMembershipCountOrderByAggregateInput
-    _avg?: VipMembershipAvgOrderByAggregateInput
-    _max?: VipMembershipMaxOrderByAggregateInput
-    _min?: VipMembershipMinOrderByAggregateInput
-    _sum?: VipMembershipSumOrderByAggregateInput
-  }
-
-  export type VipMembershipScalarWhereWithAggregatesInput = {
-    AND?: VipMembershipScalarWhereWithAggregatesInput | VipMembershipScalarWhereWithAggregatesInput[]
-    OR?: VipMembershipScalarWhereWithAggregatesInput[]
-    NOT?: VipMembershipScalarWhereWithAggregatesInput | VipMembershipScalarWhereWithAggregatesInput[]
-    id?: IntWithAggregatesFilter<"VipMembership"> | number
-    userId?: BigIntWithAggregatesFilter<"VipMembership"> | bigint | number
-    vipLevelId?: IntWithAggregatesFilter<"VipMembership"> | number
-    accumulatedRolling?: DecimalWithAggregatesFilter<"VipMembership"> | Decimal | DecimalJsLike | number | string
-    totalRewardsPaid?: DecimalWithAggregatesFilter<"VipMembership"> | Decimal | DecimalJsLike | number | string
-    achievedAt?: DateTimeNullableWithAggregatesFilter<"VipMembership"> | Date | string | null
-    createdAt?: DateTimeWithAggregatesFilter<"VipMembership"> | Date | string
-    updatedAt?: DateTimeWithAggregatesFilter<"VipMembership"> | Date | string
-  }
-
-  export type VipHistoryWhereInput = {
-    AND?: VipHistoryWhereInput | VipHistoryWhereInput[]
-    OR?: VipHistoryWhereInput[]
-    NOT?: VipHistoryWhereInput | VipHistoryWhereInput[]
-    id?: IntFilter<"VipHistory"> | number
-    userId?: BigIntFilter<"VipHistory"> | bigint | number
-    previousLevelNameKey?: StringNullableFilter<"VipHistory"> | string | null
-    newLevelNameKey?: StringFilter<"VipHistory"> | string
-    rewardAmount?: DecimalFilter<"VipHistory"> | Decimal | DecimalJsLike | number | string
-    rewardPaid?: BoolFilter<"VipHistory"> | boolean
-    paidAt?: DateTimeNullableFilter<"VipHistory"> | Date | string | null
-    createdAt?: DateTimeFilter<"VipHistory"> | Date | string
-    vipMembershipId?: IntNullableFilter<"VipHistory"> | number | null
-    user?: XOR<UserScalarRelationFilter, UserWhereInput>
-    VipMembership?: XOR<VipMembershipNullableScalarRelationFilter, VipMembershipWhereInput> | null
-  }
-
-  export type VipHistoryOrderByWithRelationInput = {
-    id?: SortOrder
-    userId?: SortOrder
-    previousLevelNameKey?: SortOrderInput | SortOrder
-    newLevelNameKey?: SortOrder
-    rewardAmount?: SortOrder
-    rewardPaid?: SortOrder
-    paidAt?: SortOrderInput | SortOrder
-    createdAt?: SortOrder
-    vipMembershipId?: SortOrderInput | SortOrder
-    user?: UserOrderByWithRelationInput
-    VipMembership?: VipMembershipOrderByWithRelationInput
-  }
-
-  export type VipHistoryWhereUniqueInput = Prisma.AtLeast<{
-    id?: number
-    AND?: VipHistoryWhereInput | VipHistoryWhereInput[]
-    OR?: VipHistoryWhereInput[]
-    NOT?: VipHistoryWhereInput | VipHistoryWhereInput[]
-    userId?: BigIntFilter<"VipHistory"> | bigint | number
-    previousLevelNameKey?: StringNullableFilter<"VipHistory"> | string | null
-    newLevelNameKey?: StringFilter<"VipHistory"> | string
-    rewardAmount?: DecimalFilter<"VipHistory"> | Decimal | DecimalJsLike | number | string
-    rewardPaid?: BoolFilter<"VipHistory"> | boolean
-    paidAt?: DateTimeNullableFilter<"VipHistory"> | Date | string | null
-    createdAt?: DateTimeFilter<"VipHistory"> | Date | string
-    vipMembershipId?: IntNullableFilter<"VipHistory"> | number | null
-    user?: XOR<UserScalarRelationFilter, UserWhereInput>
-    VipMembership?: XOR<VipMembershipNullableScalarRelationFilter, VipMembershipWhereInput> | null
-  }, "id">
-
-  export type VipHistoryOrderByWithAggregationInput = {
-    id?: SortOrder
-    userId?: SortOrder
-    previousLevelNameKey?: SortOrderInput | SortOrder
-    newLevelNameKey?: SortOrder
-    rewardAmount?: SortOrder
-    rewardPaid?: SortOrder
-    paidAt?: SortOrderInput | SortOrder
-    createdAt?: SortOrder
-    vipMembershipId?: SortOrderInput | SortOrder
-    _count?: VipHistoryCountOrderByAggregateInput
-    _avg?: VipHistoryAvgOrderByAggregateInput
-    _max?: VipHistoryMaxOrderByAggregateInput
-    _min?: VipHistoryMinOrderByAggregateInput
-    _sum?: VipHistorySumOrderByAggregateInput
-  }
-
-  export type VipHistoryScalarWhereWithAggregatesInput = {
-    AND?: VipHistoryScalarWhereWithAggregatesInput | VipHistoryScalarWhereWithAggregatesInput[]
-    OR?: VipHistoryScalarWhereWithAggregatesInput[]
-    NOT?: VipHistoryScalarWhereWithAggregatesInput | VipHistoryScalarWhereWithAggregatesInput[]
-    id?: IntWithAggregatesFilter<"VipHistory"> | number
-    userId?: BigIntWithAggregatesFilter<"VipHistory"> | bigint | number
-    previousLevelNameKey?: StringNullableWithAggregatesFilter<"VipHistory"> | string | null
-    newLevelNameKey?: StringWithAggregatesFilter<"VipHistory"> | string
-    rewardAmount?: DecimalWithAggregatesFilter<"VipHistory"> | Decimal | DecimalJsLike | number | string
-    rewardPaid?: BoolWithAggregatesFilter<"VipHistory"> | boolean
-    paidAt?: DateTimeNullableWithAggregatesFilter<"VipHistory"> | Date | string | null
-    createdAt?: DateTimeWithAggregatesFilter<"VipHistory"> | Date | string
-    vipMembershipId?: IntNullableWithAggregatesFilter<"VipHistory"> | number | null
   }
 
   export type RollingWhereInput = {
@@ -64506,8 +60217,6 @@ export namespace Prisma {
     UserSession?: UserSessionCreateNestedManyWithoutUserInput
     RevokedSessions?: UserSessionCreateNestedManyWithoutRevokedByUserInput
     UserToken?: UserTokenCreateNestedManyWithoutUserInput
-    VipHistory?: VipHistoryCreateNestedManyWithoutUserInput
-    VipMembership?: VipMembershipCreateNestedOneWithoutUserInput
     loginAttempts?: LoginAttemptCreateNestedManyWithoutUserInput
   }
 
@@ -64551,8 +60260,6 @@ export namespace Prisma {
     UserSession?: UserSessionUncheckedCreateNestedManyWithoutUserInput
     RevokedSessions?: UserSessionUncheckedCreateNestedManyWithoutRevokedByUserInput
     UserToken?: UserTokenUncheckedCreateNestedManyWithoutUserInput
-    VipHistory?: VipHistoryUncheckedCreateNestedManyWithoutUserInput
-    VipMembership?: VipMembershipUncheckedCreateNestedOneWithoutUserInput
     loginAttempts?: LoginAttemptUncheckedCreateNestedManyWithoutUserInput
   }
 
@@ -64596,8 +60303,6 @@ export namespace Prisma {
     UserSession?: UserSessionUpdateManyWithoutUserNestedInput
     RevokedSessions?: UserSessionUpdateManyWithoutRevokedByUserNestedInput
     UserToken?: UserTokenUpdateManyWithoutUserNestedInput
-    VipHistory?: VipHistoryUpdateManyWithoutUserNestedInput
-    VipMembership?: VipMembershipUpdateOneWithoutUserNestedInput
     loginAttempts?: LoginAttemptUpdateManyWithoutUserNestedInput
   }
 
@@ -64641,8 +60346,6 @@ export namespace Prisma {
     UserSession?: UserSessionUncheckedUpdateManyWithoutUserNestedInput
     RevokedSessions?: UserSessionUncheckedUpdateManyWithoutRevokedByUserNestedInput
     UserToken?: UserTokenUncheckedUpdateManyWithoutUserNestedInput
-    VipHistory?: VipHistoryUncheckedUpdateManyWithoutUserNestedInput
-    VipMembership?: VipMembershipUncheckedUpdateOneWithoutUserNestedInput
     loginAttempts?: LoginAttemptUncheckedUpdateManyWithoutUserNestedInput
   }
 
@@ -66312,267 +62015,6 @@ export namespace Prisma {
     previousRate?: NullableDecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string | null
     changeRate?: NullableDecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string | null
     isValid?: BoolFieldUpdateOperationsInput | boolean
-  }
-
-  export type VipLevelCreateInput = {
-    name: string
-    nameKey: string
-    rank: number
-    requiredRolling: Decimal | DecimalJsLike | number | string
-    levelUpBonus: Decimal | DecimalJsLike | number | string
-    compRate: Decimal | DecimalJsLike | number | string
-    paybackBasisRate: Decimal | DecimalJsLike | number | string
-    weeklyBonusRate: Decimal | DecimalJsLike | number | string
-    monthlyBonusRate: Decimal | DecimalJsLike | number | string
-    createdAt?: Date | string
-    updatedAt?: Date | string
-    memberships?: VipMembershipCreateNestedManyWithoutVipLevelInput
-  }
-
-  export type VipLevelUncheckedCreateInput = {
-    id?: number
-    name: string
-    nameKey: string
-    rank: number
-    requiredRolling: Decimal | DecimalJsLike | number | string
-    levelUpBonus: Decimal | DecimalJsLike | number | string
-    compRate: Decimal | DecimalJsLike | number | string
-    paybackBasisRate: Decimal | DecimalJsLike | number | string
-    weeklyBonusRate: Decimal | DecimalJsLike | number | string
-    monthlyBonusRate: Decimal | DecimalJsLike | number | string
-    createdAt?: Date | string
-    updatedAt?: Date | string
-    memberships?: VipMembershipUncheckedCreateNestedManyWithoutVipLevelInput
-  }
-
-  export type VipLevelUpdateInput = {
-    name?: StringFieldUpdateOperationsInput | string
-    nameKey?: StringFieldUpdateOperationsInput | string
-    rank?: IntFieldUpdateOperationsInput | number
-    requiredRolling?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
-    levelUpBonus?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
-    compRate?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
-    paybackBasisRate?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
-    weeklyBonusRate?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
-    monthlyBonusRate?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
-    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
-    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
-    memberships?: VipMembershipUpdateManyWithoutVipLevelNestedInput
-  }
-
-  export type VipLevelUncheckedUpdateInput = {
-    id?: IntFieldUpdateOperationsInput | number
-    name?: StringFieldUpdateOperationsInput | string
-    nameKey?: StringFieldUpdateOperationsInput | string
-    rank?: IntFieldUpdateOperationsInput | number
-    requiredRolling?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
-    levelUpBonus?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
-    compRate?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
-    paybackBasisRate?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
-    weeklyBonusRate?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
-    monthlyBonusRate?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
-    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
-    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
-    memberships?: VipMembershipUncheckedUpdateManyWithoutVipLevelNestedInput
-  }
-
-  export type VipLevelCreateManyInput = {
-    id?: number
-    name: string
-    nameKey: string
-    rank: number
-    requiredRolling: Decimal | DecimalJsLike | number | string
-    levelUpBonus: Decimal | DecimalJsLike | number | string
-    compRate: Decimal | DecimalJsLike | number | string
-    paybackBasisRate: Decimal | DecimalJsLike | number | string
-    weeklyBonusRate: Decimal | DecimalJsLike | number | string
-    monthlyBonusRate: Decimal | DecimalJsLike | number | string
-    createdAt?: Date | string
-    updatedAt?: Date | string
-  }
-
-  export type VipLevelUpdateManyMutationInput = {
-    name?: StringFieldUpdateOperationsInput | string
-    nameKey?: StringFieldUpdateOperationsInput | string
-    rank?: IntFieldUpdateOperationsInput | number
-    requiredRolling?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
-    levelUpBonus?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
-    compRate?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
-    paybackBasisRate?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
-    weeklyBonusRate?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
-    monthlyBonusRate?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
-    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
-    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
-  }
-
-  export type VipLevelUncheckedUpdateManyInput = {
-    id?: IntFieldUpdateOperationsInput | number
-    name?: StringFieldUpdateOperationsInput | string
-    nameKey?: StringFieldUpdateOperationsInput | string
-    rank?: IntFieldUpdateOperationsInput | number
-    requiredRolling?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
-    levelUpBonus?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
-    compRate?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
-    paybackBasisRate?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
-    weeklyBonusRate?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
-    monthlyBonusRate?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
-    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
-    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
-  }
-
-  export type VipMembershipCreateInput = {
-    accumulatedRolling?: Decimal | DecimalJsLike | number | string
-    totalRewardsPaid?: Decimal | DecimalJsLike | number | string
-    achievedAt?: Date | string | null
-    createdAt?: Date | string
-    updatedAt?: Date | string
-    histories?: VipHistoryCreateNestedManyWithoutVipMembershipInput
-    user: UserCreateNestedOneWithoutVipMembershipInput
-    vipLevel: VipLevelCreateNestedOneWithoutMembershipsInput
-  }
-
-  export type VipMembershipUncheckedCreateInput = {
-    id?: number
-    userId: bigint | number
-    vipLevelId: number
-    accumulatedRolling?: Decimal | DecimalJsLike | number | string
-    totalRewardsPaid?: Decimal | DecimalJsLike | number | string
-    achievedAt?: Date | string | null
-    createdAt?: Date | string
-    updatedAt?: Date | string
-    histories?: VipHistoryUncheckedCreateNestedManyWithoutVipMembershipInput
-  }
-
-  export type VipMembershipUpdateInput = {
-    accumulatedRolling?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
-    totalRewardsPaid?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
-    achievedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
-    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
-    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
-    histories?: VipHistoryUpdateManyWithoutVipMembershipNestedInput
-    user?: UserUpdateOneRequiredWithoutVipMembershipNestedInput
-    vipLevel?: VipLevelUpdateOneRequiredWithoutMembershipsNestedInput
-  }
-
-  export type VipMembershipUncheckedUpdateInput = {
-    id?: IntFieldUpdateOperationsInput | number
-    userId?: BigIntFieldUpdateOperationsInput | bigint | number
-    vipLevelId?: IntFieldUpdateOperationsInput | number
-    accumulatedRolling?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
-    totalRewardsPaid?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
-    achievedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
-    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
-    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
-    histories?: VipHistoryUncheckedUpdateManyWithoutVipMembershipNestedInput
-  }
-
-  export type VipMembershipCreateManyInput = {
-    id?: number
-    userId: bigint | number
-    vipLevelId: number
-    accumulatedRolling?: Decimal | DecimalJsLike | number | string
-    totalRewardsPaid?: Decimal | DecimalJsLike | number | string
-    achievedAt?: Date | string | null
-    createdAt?: Date | string
-    updatedAt?: Date | string
-  }
-
-  export type VipMembershipUpdateManyMutationInput = {
-    accumulatedRolling?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
-    totalRewardsPaid?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
-    achievedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
-    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
-    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
-  }
-
-  export type VipMembershipUncheckedUpdateManyInput = {
-    id?: IntFieldUpdateOperationsInput | number
-    userId?: BigIntFieldUpdateOperationsInput | bigint | number
-    vipLevelId?: IntFieldUpdateOperationsInput | number
-    accumulatedRolling?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
-    totalRewardsPaid?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
-    achievedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
-    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
-    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
-  }
-
-  export type VipHistoryCreateInput = {
-    previousLevelNameKey?: string | null
-    newLevelNameKey: string
-    rewardAmount: Decimal | DecimalJsLike | number | string
-    rewardPaid?: boolean
-    paidAt?: Date | string | null
-    createdAt?: Date | string
-    user: UserCreateNestedOneWithoutVipHistoryInput
-    VipMembership?: VipMembershipCreateNestedOneWithoutHistoriesInput
-  }
-
-  export type VipHistoryUncheckedCreateInput = {
-    id?: number
-    userId: bigint | number
-    previousLevelNameKey?: string | null
-    newLevelNameKey: string
-    rewardAmount: Decimal | DecimalJsLike | number | string
-    rewardPaid?: boolean
-    paidAt?: Date | string | null
-    createdAt?: Date | string
-    vipMembershipId?: number | null
-  }
-
-  export type VipHistoryUpdateInput = {
-    previousLevelNameKey?: NullableStringFieldUpdateOperationsInput | string | null
-    newLevelNameKey?: StringFieldUpdateOperationsInput | string
-    rewardAmount?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
-    rewardPaid?: BoolFieldUpdateOperationsInput | boolean
-    paidAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
-    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
-    user?: UserUpdateOneRequiredWithoutVipHistoryNestedInput
-    VipMembership?: VipMembershipUpdateOneWithoutHistoriesNestedInput
-  }
-
-  export type VipHistoryUncheckedUpdateInput = {
-    id?: IntFieldUpdateOperationsInput | number
-    userId?: BigIntFieldUpdateOperationsInput | bigint | number
-    previousLevelNameKey?: NullableStringFieldUpdateOperationsInput | string | null
-    newLevelNameKey?: StringFieldUpdateOperationsInput | string
-    rewardAmount?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
-    rewardPaid?: BoolFieldUpdateOperationsInput | boolean
-    paidAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
-    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
-    vipMembershipId?: NullableIntFieldUpdateOperationsInput | number | null
-  }
-
-  export type VipHistoryCreateManyInput = {
-    id?: number
-    userId: bigint | number
-    previousLevelNameKey?: string | null
-    newLevelNameKey: string
-    rewardAmount: Decimal | DecimalJsLike | number | string
-    rewardPaid?: boolean
-    paidAt?: Date | string | null
-    createdAt?: Date | string
-    vipMembershipId?: number | null
-  }
-
-  export type VipHistoryUpdateManyMutationInput = {
-    previousLevelNameKey?: NullableStringFieldUpdateOperationsInput | string | null
-    newLevelNameKey?: StringFieldUpdateOperationsInput | string
-    rewardAmount?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
-    rewardPaid?: BoolFieldUpdateOperationsInput | boolean
-    paidAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
-    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
-  }
-
-  export type VipHistoryUncheckedUpdateManyInput = {
-    id?: IntFieldUpdateOperationsInput | number
-    userId?: BigIntFieldUpdateOperationsInput | bigint | number
-    previousLevelNameKey?: NullableStringFieldUpdateOperationsInput | string | null
-    newLevelNameKey?: StringFieldUpdateOperationsInput | string
-    rewardAmount?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
-    rewardPaid?: BoolFieldUpdateOperationsInput | boolean
-    paidAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
-    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
-    vipMembershipId?: NullableIntFieldUpdateOperationsInput | number | null
   }
 
   export type RollingCreateInput = {
@@ -69341,17 +64783,6 @@ export namespace Prisma {
     none?: UserTokenWhereInput
   }
 
-  export type VipHistoryListRelationFilter = {
-    every?: VipHistoryWhereInput
-    some?: VipHistoryWhereInput
-    none?: VipHistoryWhereInput
-  }
-
-  export type VipMembershipNullableScalarRelationFilter = {
-    is?: VipMembershipWhereInput | null
-    isNot?: VipMembershipWhereInput | null
-  }
-
   export type LoginAttemptListRelationFilter = {
     every?: LoginAttemptWhereInput
     some?: LoginAttemptWhereInput
@@ -69415,10 +64846,6 @@ export namespace Prisma {
   }
 
   export type UserTokenOrderByRelationAggregateInput = {
-    _count?: SortOrder
-  }
-
-  export type VipHistoryOrderByRelationAggregateInput = {
     _count?: SortOrder
   }
 
@@ -70995,187 +66422,6 @@ export namespace Prisma {
     _count?: NestedIntFilter<$PrismaModel>
     _min?: NestedEnumExchangeRateProviderFilter<$PrismaModel>
     _max?: NestedEnumExchangeRateProviderFilter<$PrismaModel>
-  }
-
-  export type VipMembershipListRelationFilter = {
-    every?: VipMembershipWhereInput
-    some?: VipMembershipWhereInput
-    none?: VipMembershipWhereInput
-  }
-
-  export type VipMembershipOrderByRelationAggregateInput = {
-    _count?: SortOrder
-  }
-
-  export type VipLevelCountOrderByAggregateInput = {
-    id?: SortOrder
-    name?: SortOrder
-    nameKey?: SortOrder
-    rank?: SortOrder
-    requiredRolling?: SortOrder
-    levelUpBonus?: SortOrder
-    compRate?: SortOrder
-    paybackBasisRate?: SortOrder
-    weeklyBonusRate?: SortOrder
-    monthlyBonusRate?: SortOrder
-    createdAt?: SortOrder
-    updatedAt?: SortOrder
-  }
-
-  export type VipLevelAvgOrderByAggregateInput = {
-    id?: SortOrder
-    rank?: SortOrder
-    requiredRolling?: SortOrder
-    levelUpBonus?: SortOrder
-    compRate?: SortOrder
-    paybackBasisRate?: SortOrder
-    weeklyBonusRate?: SortOrder
-    monthlyBonusRate?: SortOrder
-  }
-
-  export type VipLevelMaxOrderByAggregateInput = {
-    id?: SortOrder
-    name?: SortOrder
-    nameKey?: SortOrder
-    rank?: SortOrder
-    requiredRolling?: SortOrder
-    levelUpBonus?: SortOrder
-    compRate?: SortOrder
-    paybackBasisRate?: SortOrder
-    weeklyBonusRate?: SortOrder
-    monthlyBonusRate?: SortOrder
-    createdAt?: SortOrder
-    updatedAt?: SortOrder
-  }
-
-  export type VipLevelMinOrderByAggregateInput = {
-    id?: SortOrder
-    name?: SortOrder
-    nameKey?: SortOrder
-    rank?: SortOrder
-    requiredRolling?: SortOrder
-    levelUpBonus?: SortOrder
-    compRate?: SortOrder
-    paybackBasisRate?: SortOrder
-    weeklyBonusRate?: SortOrder
-    monthlyBonusRate?: SortOrder
-    createdAt?: SortOrder
-    updatedAt?: SortOrder
-  }
-
-  export type VipLevelSumOrderByAggregateInput = {
-    id?: SortOrder
-    rank?: SortOrder
-    requiredRolling?: SortOrder
-    levelUpBonus?: SortOrder
-    compRate?: SortOrder
-    paybackBasisRate?: SortOrder
-    weeklyBonusRate?: SortOrder
-    monthlyBonusRate?: SortOrder
-  }
-
-  export type VipLevelScalarRelationFilter = {
-    is?: VipLevelWhereInput
-    isNot?: VipLevelWhereInput
-  }
-
-  export type VipMembershipCountOrderByAggregateInput = {
-    id?: SortOrder
-    userId?: SortOrder
-    vipLevelId?: SortOrder
-    accumulatedRolling?: SortOrder
-    totalRewardsPaid?: SortOrder
-    achievedAt?: SortOrder
-    createdAt?: SortOrder
-    updatedAt?: SortOrder
-  }
-
-  export type VipMembershipAvgOrderByAggregateInput = {
-    id?: SortOrder
-    userId?: SortOrder
-    vipLevelId?: SortOrder
-    accumulatedRolling?: SortOrder
-    totalRewardsPaid?: SortOrder
-  }
-
-  export type VipMembershipMaxOrderByAggregateInput = {
-    id?: SortOrder
-    userId?: SortOrder
-    vipLevelId?: SortOrder
-    accumulatedRolling?: SortOrder
-    totalRewardsPaid?: SortOrder
-    achievedAt?: SortOrder
-    createdAt?: SortOrder
-    updatedAt?: SortOrder
-  }
-
-  export type VipMembershipMinOrderByAggregateInput = {
-    id?: SortOrder
-    userId?: SortOrder
-    vipLevelId?: SortOrder
-    accumulatedRolling?: SortOrder
-    totalRewardsPaid?: SortOrder
-    achievedAt?: SortOrder
-    createdAt?: SortOrder
-    updatedAt?: SortOrder
-  }
-
-  export type VipMembershipSumOrderByAggregateInput = {
-    id?: SortOrder
-    userId?: SortOrder
-    vipLevelId?: SortOrder
-    accumulatedRolling?: SortOrder
-    totalRewardsPaid?: SortOrder
-  }
-
-  export type VipHistoryCountOrderByAggregateInput = {
-    id?: SortOrder
-    userId?: SortOrder
-    previousLevelNameKey?: SortOrder
-    newLevelNameKey?: SortOrder
-    rewardAmount?: SortOrder
-    rewardPaid?: SortOrder
-    paidAt?: SortOrder
-    createdAt?: SortOrder
-    vipMembershipId?: SortOrder
-  }
-
-  export type VipHistoryAvgOrderByAggregateInput = {
-    id?: SortOrder
-    userId?: SortOrder
-    rewardAmount?: SortOrder
-    vipMembershipId?: SortOrder
-  }
-
-  export type VipHistoryMaxOrderByAggregateInput = {
-    id?: SortOrder
-    userId?: SortOrder
-    previousLevelNameKey?: SortOrder
-    newLevelNameKey?: SortOrder
-    rewardAmount?: SortOrder
-    rewardPaid?: SortOrder
-    paidAt?: SortOrder
-    createdAt?: SortOrder
-    vipMembershipId?: SortOrder
-  }
-
-  export type VipHistoryMinOrderByAggregateInput = {
-    id?: SortOrder
-    userId?: SortOrder
-    previousLevelNameKey?: SortOrder
-    newLevelNameKey?: SortOrder
-    rewardAmount?: SortOrder
-    rewardPaid?: SortOrder
-    paidAt?: SortOrder
-    createdAt?: SortOrder
-    vipMembershipId?: SortOrder
-  }
-
-  export type VipHistorySumOrderByAggregateInput = {
-    id?: SortOrder
-    userId?: SortOrder
-    rewardAmount?: SortOrder
-    vipMembershipId?: SortOrder
   }
 
   export type EnumRollingSourceTypeFilter<$PrismaModel = never> = {
@@ -72875,19 +68121,6 @@ export namespace Prisma {
     connect?: UserTokenWhereUniqueInput | UserTokenWhereUniqueInput[]
   }
 
-  export type VipHistoryCreateNestedManyWithoutUserInput = {
-    create?: XOR<VipHistoryCreateWithoutUserInput, VipHistoryUncheckedCreateWithoutUserInput> | VipHistoryCreateWithoutUserInput[] | VipHistoryUncheckedCreateWithoutUserInput[]
-    connectOrCreate?: VipHistoryCreateOrConnectWithoutUserInput | VipHistoryCreateOrConnectWithoutUserInput[]
-    createMany?: VipHistoryCreateManyUserInputEnvelope
-    connect?: VipHistoryWhereUniqueInput | VipHistoryWhereUniqueInput[]
-  }
-
-  export type VipMembershipCreateNestedOneWithoutUserInput = {
-    create?: XOR<VipMembershipCreateWithoutUserInput, VipMembershipUncheckedCreateWithoutUserInput>
-    connectOrCreate?: VipMembershipCreateOrConnectWithoutUserInput
-    connect?: VipMembershipWhereUniqueInput
-  }
-
   export type LoginAttemptCreateNestedManyWithoutUserInput = {
     create?: XOR<LoginAttemptCreateWithoutUserInput, LoginAttemptUncheckedCreateWithoutUserInput> | LoginAttemptCreateWithoutUserInput[] | LoginAttemptUncheckedCreateWithoutUserInput[]
     connectOrCreate?: LoginAttemptCreateOrConnectWithoutUserInput | LoginAttemptCreateOrConnectWithoutUserInput[]
@@ -73032,19 +68265,6 @@ export namespace Prisma {
     connectOrCreate?: UserTokenCreateOrConnectWithoutUserInput | UserTokenCreateOrConnectWithoutUserInput[]
     createMany?: UserTokenCreateManyUserInputEnvelope
     connect?: UserTokenWhereUniqueInput | UserTokenWhereUniqueInput[]
-  }
-
-  export type VipHistoryUncheckedCreateNestedManyWithoutUserInput = {
-    create?: XOR<VipHistoryCreateWithoutUserInput, VipHistoryUncheckedCreateWithoutUserInput> | VipHistoryCreateWithoutUserInput[] | VipHistoryUncheckedCreateWithoutUserInput[]
-    connectOrCreate?: VipHistoryCreateOrConnectWithoutUserInput | VipHistoryCreateOrConnectWithoutUserInput[]
-    createMany?: VipHistoryCreateManyUserInputEnvelope
-    connect?: VipHistoryWhereUniqueInput | VipHistoryWhereUniqueInput[]
-  }
-
-  export type VipMembershipUncheckedCreateNestedOneWithoutUserInput = {
-    create?: XOR<VipMembershipCreateWithoutUserInput, VipMembershipUncheckedCreateWithoutUserInput>
-    connectOrCreate?: VipMembershipCreateOrConnectWithoutUserInput
-    connect?: VipMembershipWhereUniqueInput
   }
 
   export type LoginAttemptUncheckedCreateNestedManyWithoutUserInput = {
@@ -73350,30 +68570,6 @@ export namespace Prisma {
     deleteMany?: UserTokenScalarWhereInput | UserTokenScalarWhereInput[]
   }
 
-  export type VipHistoryUpdateManyWithoutUserNestedInput = {
-    create?: XOR<VipHistoryCreateWithoutUserInput, VipHistoryUncheckedCreateWithoutUserInput> | VipHistoryCreateWithoutUserInput[] | VipHistoryUncheckedCreateWithoutUserInput[]
-    connectOrCreate?: VipHistoryCreateOrConnectWithoutUserInput | VipHistoryCreateOrConnectWithoutUserInput[]
-    upsert?: VipHistoryUpsertWithWhereUniqueWithoutUserInput | VipHistoryUpsertWithWhereUniqueWithoutUserInput[]
-    createMany?: VipHistoryCreateManyUserInputEnvelope
-    set?: VipHistoryWhereUniqueInput | VipHistoryWhereUniqueInput[]
-    disconnect?: VipHistoryWhereUniqueInput | VipHistoryWhereUniqueInput[]
-    delete?: VipHistoryWhereUniqueInput | VipHistoryWhereUniqueInput[]
-    connect?: VipHistoryWhereUniqueInput | VipHistoryWhereUniqueInput[]
-    update?: VipHistoryUpdateWithWhereUniqueWithoutUserInput | VipHistoryUpdateWithWhereUniqueWithoutUserInput[]
-    updateMany?: VipHistoryUpdateManyWithWhereWithoutUserInput | VipHistoryUpdateManyWithWhereWithoutUserInput[]
-    deleteMany?: VipHistoryScalarWhereInput | VipHistoryScalarWhereInput[]
-  }
-
-  export type VipMembershipUpdateOneWithoutUserNestedInput = {
-    create?: XOR<VipMembershipCreateWithoutUserInput, VipMembershipUncheckedCreateWithoutUserInput>
-    connectOrCreate?: VipMembershipCreateOrConnectWithoutUserInput
-    upsert?: VipMembershipUpsertWithoutUserInput
-    disconnect?: VipMembershipWhereInput | boolean
-    delete?: VipMembershipWhereInput | boolean
-    connect?: VipMembershipWhereUniqueInput
-    update?: XOR<XOR<VipMembershipUpdateToOneWithWhereWithoutUserInput, VipMembershipUpdateWithoutUserInput>, VipMembershipUncheckedUpdateWithoutUserInput>
-  }
-
   export type LoginAttemptUpdateManyWithoutUserNestedInput = {
     create?: XOR<LoginAttemptCreateWithoutUserInput, LoginAttemptUncheckedCreateWithoutUserInput> | LoginAttemptCreateWithoutUserInput[] | LoginAttemptUncheckedCreateWithoutUserInput[]
     connectOrCreate?: LoginAttemptCreateOrConnectWithoutUserInput | LoginAttemptCreateOrConnectWithoutUserInput[]
@@ -73662,30 +68858,6 @@ export namespace Prisma {
     update?: UserTokenUpdateWithWhereUniqueWithoutUserInput | UserTokenUpdateWithWhereUniqueWithoutUserInput[]
     updateMany?: UserTokenUpdateManyWithWhereWithoutUserInput | UserTokenUpdateManyWithWhereWithoutUserInput[]
     deleteMany?: UserTokenScalarWhereInput | UserTokenScalarWhereInput[]
-  }
-
-  export type VipHistoryUncheckedUpdateManyWithoutUserNestedInput = {
-    create?: XOR<VipHistoryCreateWithoutUserInput, VipHistoryUncheckedCreateWithoutUserInput> | VipHistoryCreateWithoutUserInput[] | VipHistoryUncheckedCreateWithoutUserInput[]
-    connectOrCreate?: VipHistoryCreateOrConnectWithoutUserInput | VipHistoryCreateOrConnectWithoutUserInput[]
-    upsert?: VipHistoryUpsertWithWhereUniqueWithoutUserInput | VipHistoryUpsertWithWhereUniqueWithoutUserInput[]
-    createMany?: VipHistoryCreateManyUserInputEnvelope
-    set?: VipHistoryWhereUniqueInput | VipHistoryWhereUniqueInput[]
-    disconnect?: VipHistoryWhereUniqueInput | VipHistoryWhereUniqueInput[]
-    delete?: VipHistoryWhereUniqueInput | VipHistoryWhereUniqueInput[]
-    connect?: VipHistoryWhereUniqueInput | VipHistoryWhereUniqueInput[]
-    update?: VipHistoryUpdateWithWhereUniqueWithoutUserInput | VipHistoryUpdateWithWhereUniqueWithoutUserInput[]
-    updateMany?: VipHistoryUpdateManyWithWhereWithoutUserInput | VipHistoryUpdateManyWithWhereWithoutUserInput[]
-    deleteMany?: VipHistoryScalarWhereInput | VipHistoryScalarWhereInput[]
-  }
-
-  export type VipMembershipUncheckedUpdateOneWithoutUserNestedInput = {
-    create?: XOR<VipMembershipCreateWithoutUserInput, VipMembershipUncheckedCreateWithoutUserInput>
-    connectOrCreate?: VipMembershipCreateOrConnectWithoutUserInput
-    upsert?: VipMembershipUpsertWithoutUserInput
-    disconnect?: VipMembershipWhereInput | boolean
-    delete?: VipMembershipWhereInput | boolean
-    connect?: VipMembershipWhereUniqueInput
-    update?: XOR<XOR<VipMembershipUpdateToOneWithWhereWithoutUserInput, VipMembershipUpdateWithoutUserInput>, VipMembershipUncheckedUpdateWithoutUserInput>
   }
 
   export type LoginAttemptUncheckedUpdateManyWithoutUserNestedInput = {
@@ -74556,148 +69728,6 @@ export namespace Prisma {
 
   export type EnumExchangeRateProviderFieldUpdateOperationsInput = {
     set?: $Enums.ExchangeRateProvider
-  }
-
-  export type VipMembershipCreateNestedManyWithoutVipLevelInput = {
-    create?: XOR<VipMembershipCreateWithoutVipLevelInput, VipMembershipUncheckedCreateWithoutVipLevelInput> | VipMembershipCreateWithoutVipLevelInput[] | VipMembershipUncheckedCreateWithoutVipLevelInput[]
-    connectOrCreate?: VipMembershipCreateOrConnectWithoutVipLevelInput | VipMembershipCreateOrConnectWithoutVipLevelInput[]
-    createMany?: VipMembershipCreateManyVipLevelInputEnvelope
-    connect?: VipMembershipWhereUniqueInput | VipMembershipWhereUniqueInput[]
-  }
-
-  export type VipMembershipUncheckedCreateNestedManyWithoutVipLevelInput = {
-    create?: XOR<VipMembershipCreateWithoutVipLevelInput, VipMembershipUncheckedCreateWithoutVipLevelInput> | VipMembershipCreateWithoutVipLevelInput[] | VipMembershipUncheckedCreateWithoutVipLevelInput[]
-    connectOrCreate?: VipMembershipCreateOrConnectWithoutVipLevelInput | VipMembershipCreateOrConnectWithoutVipLevelInput[]
-    createMany?: VipMembershipCreateManyVipLevelInputEnvelope
-    connect?: VipMembershipWhereUniqueInput | VipMembershipWhereUniqueInput[]
-  }
-
-  export type VipMembershipUpdateManyWithoutVipLevelNestedInput = {
-    create?: XOR<VipMembershipCreateWithoutVipLevelInput, VipMembershipUncheckedCreateWithoutVipLevelInput> | VipMembershipCreateWithoutVipLevelInput[] | VipMembershipUncheckedCreateWithoutVipLevelInput[]
-    connectOrCreate?: VipMembershipCreateOrConnectWithoutVipLevelInput | VipMembershipCreateOrConnectWithoutVipLevelInput[]
-    upsert?: VipMembershipUpsertWithWhereUniqueWithoutVipLevelInput | VipMembershipUpsertWithWhereUniqueWithoutVipLevelInput[]
-    createMany?: VipMembershipCreateManyVipLevelInputEnvelope
-    set?: VipMembershipWhereUniqueInput | VipMembershipWhereUniqueInput[]
-    disconnect?: VipMembershipWhereUniqueInput | VipMembershipWhereUniqueInput[]
-    delete?: VipMembershipWhereUniqueInput | VipMembershipWhereUniqueInput[]
-    connect?: VipMembershipWhereUniqueInput | VipMembershipWhereUniqueInput[]
-    update?: VipMembershipUpdateWithWhereUniqueWithoutVipLevelInput | VipMembershipUpdateWithWhereUniqueWithoutVipLevelInput[]
-    updateMany?: VipMembershipUpdateManyWithWhereWithoutVipLevelInput | VipMembershipUpdateManyWithWhereWithoutVipLevelInput[]
-    deleteMany?: VipMembershipScalarWhereInput | VipMembershipScalarWhereInput[]
-  }
-
-  export type VipMembershipUncheckedUpdateManyWithoutVipLevelNestedInput = {
-    create?: XOR<VipMembershipCreateWithoutVipLevelInput, VipMembershipUncheckedCreateWithoutVipLevelInput> | VipMembershipCreateWithoutVipLevelInput[] | VipMembershipUncheckedCreateWithoutVipLevelInput[]
-    connectOrCreate?: VipMembershipCreateOrConnectWithoutVipLevelInput | VipMembershipCreateOrConnectWithoutVipLevelInput[]
-    upsert?: VipMembershipUpsertWithWhereUniqueWithoutVipLevelInput | VipMembershipUpsertWithWhereUniqueWithoutVipLevelInput[]
-    createMany?: VipMembershipCreateManyVipLevelInputEnvelope
-    set?: VipMembershipWhereUniqueInput | VipMembershipWhereUniqueInput[]
-    disconnect?: VipMembershipWhereUniqueInput | VipMembershipWhereUniqueInput[]
-    delete?: VipMembershipWhereUniqueInput | VipMembershipWhereUniqueInput[]
-    connect?: VipMembershipWhereUniqueInput | VipMembershipWhereUniqueInput[]
-    update?: VipMembershipUpdateWithWhereUniqueWithoutVipLevelInput | VipMembershipUpdateWithWhereUniqueWithoutVipLevelInput[]
-    updateMany?: VipMembershipUpdateManyWithWhereWithoutVipLevelInput | VipMembershipUpdateManyWithWhereWithoutVipLevelInput[]
-    deleteMany?: VipMembershipScalarWhereInput | VipMembershipScalarWhereInput[]
-  }
-
-  export type VipHistoryCreateNestedManyWithoutVipMembershipInput = {
-    create?: XOR<VipHistoryCreateWithoutVipMembershipInput, VipHistoryUncheckedCreateWithoutVipMembershipInput> | VipHistoryCreateWithoutVipMembershipInput[] | VipHistoryUncheckedCreateWithoutVipMembershipInput[]
-    connectOrCreate?: VipHistoryCreateOrConnectWithoutVipMembershipInput | VipHistoryCreateOrConnectWithoutVipMembershipInput[]
-    createMany?: VipHistoryCreateManyVipMembershipInputEnvelope
-    connect?: VipHistoryWhereUniqueInput | VipHistoryWhereUniqueInput[]
-  }
-
-  export type UserCreateNestedOneWithoutVipMembershipInput = {
-    create?: XOR<UserCreateWithoutVipMembershipInput, UserUncheckedCreateWithoutVipMembershipInput>
-    connectOrCreate?: UserCreateOrConnectWithoutVipMembershipInput
-    connect?: UserWhereUniqueInput
-  }
-
-  export type VipLevelCreateNestedOneWithoutMembershipsInput = {
-    create?: XOR<VipLevelCreateWithoutMembershipsInput, VipLevelUncheckedCreateWithoutMembershipsInput>
-    connectOrCreate?: VipLevelCreateOrConnectWithoutMembershipsInput
-    connect?: VipLevelWhereUniqueInput
-  }
-
-  export type VipHistoryUncheckedCreateNestedManyWithoutVipMembershipInput = {
-    create?: XOR<VipHistoryCreateWithoutVipMembershipInput, VipHistoryUncheckedCreateWithoutVipMembershipInput> | VipHistoryCreateWithoutVipMembershipInput[] | VipHistoryUncheckedCreateWithoutVipMembershipInput[]
-    connectOrCreate?: VipHistoryCreateOrConnectWithoutVipMembershipInput | VipHistoryCreateOrConnectWithoutVipMembershipInput[]
-    createMany?: VipHistoryCreateManyVipMembershipInputEnvelope
-    connect?: VipHistoryWhereUniqueInput | VipHistoryWhereUniqueInput[]
-  }
-
-  export type VipHistoryUpdateManyWithoutVipMembershipNestedInput = {
-    create?: XOR<VipHistoryCreateWithoutVipMembershipInput, VipHistoryUncheckedCreateWithoutVipMembershipInput> | VipHistoryCreateWithoutVipMembershipInput[] | VipHistoryUncheckedCreateWithoutVipMembershipInput[]
-    connectOrCreate?: VipHistoryCreateOrConnectWithoutVipMembershipInput | VipHistoryCreateOrConnectWithoutVipMembershipInput[]
-    upsert?: VipHistoryUpsertWithWhereUniqueWithoutVipMembershipInput | VipHistoryUpsertWithWhereUniqueWithoutVipMembershipInput[]
-    createMany?: VipHistoryCreateManyVipMembershipInputEnvelope
-    set?: VipHistoryWhereUniqueInput | VipHistoryWhereUniqueInput[]
-    disconnect?: VipHistoryWhereUniqueInput | VipHistoryWhereUniqueInput[]
-    delete?: VipHistoryWhereUniqueInput | VipHistoryWhereUniqueInput[]
-    connect?: VipHistoryWhereUniqueInput | VipHistoryWhereUniqueInput[]
-    update?: VipHistoryUpdateWithWhereUniqueWithoutVipMembershipInput | VipHistoryUpdateWithWhereUniqueWithoutVipMembershipInput[]
-    updateMany?: VipHistoryUpdateManyWithWhereWithoutVipMembershipInput | VipHistoryUpdateManyWithWhereWithoutVipMembershipInput[]
-    deleteMany?: VipHistoryScalarWhereInput | VipHistoryScalarWhereInput[]
-  }
-
-  export type UserUpdateOneRequiredWithoutVipMembershipNestedInput = {
-    create?: XOR<UserCreateWithoutVipMembershipInput, UserUncheckedCreateWithoutVipMembershipInput>
-    connectOrCreate?: UserCreateOrConnectWithoutVipMembershipInput
-    upsert?: UserUpsertWithoutVipMembershipInput
-    connect?: UserWhereUniqueInput
-    update?: XOR<XOR<UserUpdateToOneWithWhereWithoutVipMembershipInput, UserUpdateWithoutVipMembershipInput>, UserUncheckedUpdateWithoutVipMembershipInput>
-  }
-
-  export type VipLevelUpdateOneRequiredWithoutMembershipsNestedInput = {
-    create?: XOR<VipLevelCreateWithoutMembershipsInput, VipLevelUncheckedCreateWithoutMembershipsInput>
-    connectOrCreate?: VipLevelCreateOrConnectWithoutMembershipsInput
-    upsert?: VipLevelUpsertWithoutMembershipsInput
-    connect?: VipLevelWhereUniqueInput
-    update?: XOR<XOR<VipLevelUpdateToOneWithWhereWithoutMembershipsInput, VipLevelUpdateWithoutMembershipsInput>, VipLevelUncheckedUpdateWithoutMembershipsInput>
-  }
-
-  export type VipHistoryUncheckedUpdateManyWithoutVipMembershipNestedInput = {
-    create?: XOR<VipHistoryCreateWithoutVipMembershipInput, VipHistoryUncheckedCreateWithoutVipMembershipInput> | VipHistoryCreateWithoutVipMembershipInput[] | VipHistoryUncheckedCreateWithoutVipMembershipInput[]
-    connectOrCreate?: VipHistoryCreateOrConnectWithoutVipMembershipInput | VipHistoryCreateOrConnectWithoutVipMembershipInput[]
-    upsert?: VipHistoryUpsertWithWhereUniqueWithoutVipMembershipInput | VipHistoryUpsertWithWhereUniqueWithoutVipMembershipInput[]
-    createMany?: VipHistoryCreateManyVipMembershipInputEnvelope
-    set?: VipHistoryWhereUniqueInput | VipHistoryWhereUniqueInput[]
-    disconnect?: VipHistoryWhereUniqueInput | VipHistoryWhereUniqueInput[]
-    delete?: VipHistoryWhereUniqueInput | VipHistoryWhereUniqueInput[]
-    connect?: VipHistoryWhereUniqueInput | VipHistoryWhereUniqueInput[]
-    update?: VipHistoryUpdateWithWhereUniqueWithoutVipMembershipInput | VipHistoryUpdateWithWhereUniqueWithoutVipMembershipInput[]
-    updateMany?: VipHistoryUpdateManyWithWhereWithoutVipMembershipInput | VipHistoryUpdateManyWithWhereWithoutVipMembershipInput[]
-    deleteMany?: VipHistoryScalarWhereInput | VipHistoryScalarWhereInput[]
-  }
-
-  export type UserCreateNestedOneWithoutVipHistoryInput = {
-    create?: XOR<UserCreateWithoutVipHistoryInput, UserUncheckedCreateWithoutVipHistoryInput>
-    connectOrCreate?: UserCreateOrConnectWithoutVipHistoryInput
-    connect?: UserWhereUniqueInput
-  }
-
-  export type VipMembershipCreateNestedOneWithoutHistoriesInput = {
-    create?: XOR<VipMembershipCreateWithoutHistoriesInput, VipMembershipUncheckedCreateWithoutHistoriesInput>
-    connectOrCreate?: VipMembershipCreateOrConnectWithoutHistoriesInput
-    connect?: VipMembershipWhereUniqueInput
-  }
-
-  export type UserUpdateOneRequiredWithoutVipHistoryNestedInput = {
-    create?: XOR<UserCreateWithoutVipHistoryInput, UserUncheckedCreateWithoutVipHistoryInput>
-    connectOrCreate?: UserCreateOrConnectWithoutVipHistoryInput
-    upsert?: UserUpsertWithoutVipHistoryInput
-    connect?: UserWhereUniqueInput
-    update?: XOR<XOR<UserUpdateToOneWithWhereWithoutVipHistoryInput, UserUpdateWithoutVipHistoryInput>, UserUncheckedUpdateWithoutVipHistoryInput>
-  }
-
-  export type VipMembershipUpdateOneWithoutHistoriesNestedInput = {
-    create?: XOR<VipMembershipCreateWithoutHistoriesInput, VipMembershipUncheckedCreateWithoutHistoriesInput>
-    connectOrCreate?: VipMembershipCreateOrConnectWithoutHistoriesInput
-    upsert?: VipMembershipUpsertWithoutHistoriesInput
-    disconnect?: VipMembershipWhereInput | boolean
-    delete?: VipMembershipWhereInput | boolean
-    connect?: VipMembershipWhereUniqueInput
-    update?: XOR<XOR<VipMembershipUpdateToOneWithWhereWithoutHistoriesInput, VipMembershipUpdateWithoutHistoriesInput>, VipMembershipUncheckedUpdateWithoutHistoriesInput>
   }
 
   export type DepositDetailCreateNestedOneWithoutRollingInput = {
@@ -76503,8 +71533,6 @@ export namespace Prisma {
     UserSession?: UserSessionCreateNestedManyWithoutUserInput
     RevokedSessions?: UserSessionCreateNestedManyWithoutRevokedByUserInput
     UserToken?: UserTokenCreateNestedManyWithoutUserInput
-    VipHistory?: VipHistoryCreateNestedManyWithoutUserInput
-    VipMembership?: VipMembershipCreateNestedOneWithoutUserInput
     loginAttempts?: LoginAttemptCreateNestedManyWithoutUserInput
   }
 
@@ -76547,8 +71575,6 @@ export namespace Prisma {
     UserSession?: UserSessionUncheckedCreateNestedManyWithoutUserInput
     RevokedSessions?: UserSessionUncheckedCreateNestedManyWithoutRevokedByUserInput
     UserToken?: UserTokenUncheckedCreateNestedManyWithoutUserInput
-    VipHistory?: VipHistoryUncheckedCreateNestedManyWithoutUserInput
-    VipMembership?: VipMembershipUncheckedCreateNestedOneWithoutUserInput
     loginAttempts?: LoginAttemptUncheckedCreateNestedManyWithoutUserInput
   }
 
@@ -76641,8 +71667,6 @@ export namespace Prisma {
     UserSession?: UserSessionUpdateManyWithoutUserNestedInput
     RevokedSessions?: UserSessionUpdateManyWithoutRevokedByUserNestedInput
     UserToken?: UserTokenUpdateManyWithoutUserNestedInput
-    VipHistory?: VipHistoryUpdateManyWithoutUserNestedInput
-    VipMembership?: VipMembershipUpdateOneWithoutUserNestedInput
     loginAttempts?: LoginAttemptUpdateManyWithoutUserNestedInput
   }
 
@@ -76685,8 +71709,6 @@ export namespace Prisma {
     UserSession?: UserSessionUncheckedUpdateManyWithoutUserNestedInput
     RevokedSessions?: UserSessionUncheckedUpdateManyWithoutRevokedByUserNestedInput
     UserToken?: UserTokenUncheckedUpdateManyWithoutUserNestedInput
-    VipHistory?: VipHistoryUncheckedUpdateManyWithoutUserNestedInput
-    VipMembership?: VipMembershipUncheckedUpdateOneWithoutUserNestedInput
     loginAttempts?: LoginAttemptUncheckedUpdateManyWithoutUserNestedInput
   }
 
@@ -76761,8 +71783,6 @@ export namespace Prisma {
     UserSession?: UserSessionCreateNestedManyWithoutUserInput
     RevokedSessions?: UserSessionCreateNestedManyWithoutRevokedByUserInput
     UserToken?: UserTokenCreateNestedManyWithoutUserInput
-    VipHistory?: VipHistoryCreateNestedManyWithoutUserInput
-    VipMembership?: VipMembershipCreateNestedOneWithoutUserInput
     loginAttempts?: LoginAttemptCreateNestedManyWithoutUserInput
   }
 
@@ -76805,8 +71825,6 @@ export namespace Prisma {
     UserSession?: UserSessionUncheckedCreateNestedManyWithoutUserInput
     RevokedSessions?: UserSessionUncheckedCreateNestedManyWithoutRevokedByUserInput
     UserToken?: UserTokenUncheckedCreateNestedManyWithoutUserInput
-    VipHistory?: VipHistoryUncheckedCreateNestedManyWithoutUserInput
-    VipMembership?: VipMembershipUncheckedCreateNestedOneWithoutUserInput
     loginAttempts?: LoginAttemptUncheckedCreateNestedManyWithoutUserInput
   }
 
@@ -76889,8 +71907,6 @@ export namespace Prisma {
     UserSession?: UserSessionCreateNestedManyWithoutUserInput
     RevokedSessions?: UserSessionCreateNestedManyWithoutRevokedByUserInput
     UserToken?: UserTokenCreateNestedManyWithoutUserInput
-    VipHistory?: VipHistoryCreateNestedManyWithoutUserInput
-    VipMembership?: VipMembershipCreateNestedOneWithoutUserInput
     loginAttempts?: LoginAttemptCreateNestedManyWithoutUserInput
   }
 
@@ -76933,8 +71949,6 @@ export namespace Prisma {
     UserSession?: UserSessionUncheckedCreateNestedManyWithoutUserInput
     RevokedSessions?: UserSessionUncheckedCreateNestedManyWithoutRevokedByUserInput
     UserToken?: UserTokenUncheckedCreateNestedManyWithoutUserInput
-    VipHistory?: VipHistoryUncheckedCreateNestedManyWithoutUserInput
-    VipMembership?: VipMembershipUncheckedCreateNestedOneWithoutUserInput
     loginAttempts?: LoginAttemptUncheckedCreateNestedManyWithoutUserInput
   }
 
@@ -76993,8 +72007,6 @@ export namespace Prisma {
     UserSession?: UserSessionUpdateManyWithoutUserNestedInput
     RevokedSessions?: UserSessionUpdateManyWithoutRevokedByUserNestedInput
     UserToken?: UserTokenUpdateManyWithoutUserNestedInput
-    VipHistory?: VipHistoryUpdateManyWithoutUserNestedInput
-    VipMembership?: VipMembershipUpdateOneWithoutUserNestedInput
     loginAttempts?: LoginAttemptUpdateManyWithoutUserNestedInput
   }
 
@@ -77037,8 +72049,6 @@ export namespace Prisma {
     UserSession?: UserSessionUncheckedUpdateManyWithoutUserNestedInput
     RevokedSessions?: UserSessionUncheckedUpdateManyWithoutRevokedByUserNestedInput
     UserToken?: UserTokenUncheckedUpdateManyWithoutUserNestedInput
-    VipHistory?: VipHistoryUncheckedUpdateManyWithoutUserNestedInput
-    VipMembership?: VipMembershipUncheckedUpdateOneWithoutUserNestedInput
     loginAttempts?: LoginAttemptUncheckedUpdateManyWithoutUserNestedInput
   }
 
@@ -77133,8 +72143,6 @@ export namespace Prisma {
     UserSession?: UserSessionUpdateManyWithoutUserNestedInput
     RevokedSessions?: UserSessionUpdateManyWithoutRevokedByUserNestedInput
     UserToken?: UserTokenUpdateManyWithoutUserNestedInput
-    VipHistory?: VipHistoryUpdateManyWithoutUserNestedInput
-    VipMembership?: VipMembershipUpdateOneWithoutUserNestedInput
     loginAttempts?: LoginAttemptUpdateManyWithoutUserNestedInput
   }
 
@@ -77177,8 +72185,6 @@ export namespace Prisma {
     UserSession?: UserSessionUncheckedUpdateManyWithoutUserNestedInput
     RevokedSessions?: UserSessionUncheckedUpdateManyWithoutRevokedByUserNestedInput
     UserToken?: UserTokenUncheckedUpdateManyWithoutUserNestedInput
-    VipHistory?: VipHistoryUncheckedUpdateManyWithoutUserNestedInput
-    VipMembership?: VipMembershipUncheckedUpdateOneWithoutUserNestedInput
     loginAttempts?: LoginAttemptUncheckedUpdateManyWithoutUserNestedInput
   }
 
@@ -77994,63 +73000,6 @@ export namespace Prisma {
     skipDuplicates?: boolean
   }
 
-  export type VipHistoryCreateWithoutUserInput = {
-    previousLevelNameKey?: string | null
-    newLevelNameKey: string
-    rewardAmount: Decimal | DecimalJsLike | number | string
-    rewardPaid?: boolean
-    paidAt?: Date | string | null
-    createdAt?: Date | string
-    VipMembership?: VipMembershipCreateNestedOneWithoutHistoriesInput
-  }
-
-  export type VipHistoryUncheckedCreateWithoutUserInput = {
-    id?: number
-    previousLevelNameKey?: string | null
-    newLevelNameKey: string
-    rewardAmount: Decimal | DecimalJsLike | number | string
-    rewardPaid?: boolean
-    paidAt?: Date | string | null
-    createdAt?: Date | string
-    vipMembershipId?: number | null
-  }
-
-  export type VipHistoryCreateOrConnectWithoutUserInput = {
-    where: VipHistoryWhereUniqueInput
-    create: XOR<VipHistoryCreateWithoutUserInput, VipHistoryUncheckedCreateWithoutUserInput>
-  }
-
-  export type VipHistoryCreateManyUserInputEnvelope = {
-    data: VipHistoryCreateManyUserInput | VipHistoryCreateManyUserInput[]
-    skipDuplicates?: boolean
-  }
-
-  export type VipMembershipCreateWithoutUserInput = {
-    accumulatedRolling?: Decimal | DecimalJsLike | number | string
-    totalRewardsPaid?: Decimal | DecimalJsLike | number | string
-    achievedAt?: Date | string | null
-    createdAt?: Date | string
-    updatedAt?: Date | string
-    histories?: VipHistoryCreateNestedManyWithoutVipMembershipInput
-    vipLevel: VipLevelCreateNestedOneWithoutMembershipsInput
-  }
-
-  export type VipMembershipUncheckedCreateWithoutUserInput = {
-    id?: number
-    vipLevelId: number
-    accumulatedRolling?: Decimal | DecimalJsLike | number | string
-    totalRewardsPaid?: Decimal | DecimalJsLike | number | string
-    achievedAt?: Date | string | null
-    createdAt?: Date | string
-    updatedAt?: Date | string
-    histories?: VipHistoryUncheckedCreateNestedManyWithoutVipMembershipInput
-  }
-
-  export type VipMembershipCreateOrConnectWithoutUserInput = {
-    where: VipMembershipWhereUniqueInput
-    create: XOR<VipMembershipCreateWithoutUserInput, VipMembershipUncheckedCreateWithoutUserInput>
-  }
-
   export type LoginAttemptCreateWithoutUserInput = {
     id?: bigint | number
     uid: string
@@ -78711,69 +73660,6 @@ export namespace Prisma {
     updatedAt?: DateTimeFilter<"UserToken"> | Date | string
   }
 
-  export type VipHistoryUpsertWithWhereUniqueWithoutUserInput = {
-    where: VipHistoryWhereUniqueInput
-    update: XOR<VipHistoryUpdateWithoutUserInput, VipHistoryUncheckedUpdateWithoutUserInput>
-    create: XOR<VipHistoryCreateWithoutUserInput, VipHistoryUncheckedCreateWithoutUserInput>
-  }
-
-  export type VipHistoryUpdateWithWhereUniqueWithoutUserInput = {
-    where: VipHistoryWhereUniqueInput
-    data: XOR<VipHistoryUpdateWithoutUserInput, VipHistoryUncheckedUpdateWithoutUserInput>
-  }
-
-  export type VipHistoryUpdateManyWithWhereWithoutUserInput = {
-    where: VipHistoryScalarWhereInput
-    data: XOR<VipHistoryUpdateManyMutationInput, VipHistoryUncheckedUpdateManyWithoutUserInput>
-  }
-
-  export type VipHistoryScalarWhereInput = {
-    AND?: VipHistoryScalarWhereInput | VipHistoryScalarWhereInput[]
-    OR?: VipHistoryScalarWhereInput[]
-    NOT?: VipHistoryScalarWhereInput | VipHistoryScalarWhereInput[]
-    id?: IntFilter<"VipHistory"> | number
-    userId?: BigIntFilter<"VipHistory"> | bigint | number
-    previousLevelNameKey?: StringNullableFilter<"VipHistory"> | string | null
-    newLevelNameKey?: StringFilter<"VipHistory"> | string
-    rewardAmount?: DecimalFilter<"VipHistory"> | Decimal | DecimalJsLike | number | string
-    rewardPaid?: BoolFilter<"VipHistory"> | boolean
-    paidAt?: DateTimeNullableFilter<"VipHistory"> | Date | string | null
-    createdAt?: DateTimeFilter<"VipHistory"> | Date | string
-    vipMembershipId?: IntNullableFilter<"VipHistory"> | number | null
-  }
-
-  export type VipMembershipUpsertWithoutUserInput = {
-    update: XOR<VipMembershipUpdateWithoutUserInput, VipMembershipUncheckedUpdateWithoutUserInput>
-    create: XOR<VipMembershipCreateWithoutUserInput, VipMembershipUncheckedCreateWithoutUserInput>
-    where?: VipMembershipWhereInput
-  }
-
-  export type VipMembershipUpdateToOneWithWhereWithoutUserInput = {
-    where?: VipMembershipWhereInput
-    data: XOR<VipMembershipUpdateWithoutUserInput, VipMembershipUncheckedUpdateWithoutUserInput>
-  }
-
-  export type VipMembershipUpdateWithoutUserInput = {
-    accumulatedRolling?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
-    totalRewardsPaid?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
-    achievedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
-    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
-    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
-    histories?: VipHistoryUpdateManyWithoutVipMembershipNestedInput
-    vipLevel?: VipLevelUpdateOneRequiredWithoutMembershipsNestedInput
-  }
-
-  export type VipMembershipUncheckedUpdateWithoutUserInput = {
-    id?: IntFieldUpdateOperationsInput | number
-    vipLevelId?: IntFieldUpdateOperationsInput | number
-    accumulatedRolling?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
-    totalRewardsPaid?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
-    achievedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
-    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
-    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
-    histories?: VipHistoryUncheckedUpdateManyWithoutVipMembershipNestedInput
-  }
-
   export type LoginAttemptUpsertWithWhereUniqueWithoutUserInput = {
     where: LoginAttemptWhereUniqueInput
     update: XOR<LoginAttemptUpdateWithoutUserInput, LoginAttemptUncheckedUpdateWithoutUserInput>
@@ -78847,8 +73733,6 @@ export namespace Prisma {
     UserSession?: UserSessionCreateNestedManyWithoutUserInput
     RevokedSessions?: UserSessionCreateNestedManyWithoutRevokedByUserInput
     UserToken?: UserTokenCreateNestedManyWithoutUserInput
-    VipHistory?: VipHistoryCreateNestedManyWithoutUserInput
-    VipMembership?: VipMembershipCreateNestedOneWithoutUserInput
     loginAttempts?: LoginAttemptCreateNestedManyWithoutUserInput
   }
 
@@ -78891,8 +73775,6 @@ export namespace Prisma {
     UserSession?: UserSessionUncheckedCreateNestedManyWithoutUserInput
     RevokedSessions?: UserSessionUncheckedCreateNestedManyWithoutRevokedByUserInput
     UserToken?: UserTokenUncheckedCreateNestedManyWithoutUserInput
-    VipHistory?: VipHistoryUncheckedCreateNestedManyWithoutUserInput
-    VipMembership?: VipMembershipUncheckedCreateNestedOneWithoutUserInput
     loginAttempts?: LoginAttemptUncheckedCreateNestedManyWithoutUserInput
   }
 
@@ -78951,8 +73833,6 @@ export namespace Prisma {
     UserSession?: UserSessionUpdateManyWithoutUserNestedInput
     RevokedSessions?: UserSessionUpdateManyWithoutRevokedByUserNestedInput
     UserToken?: UserTokenUpdateManyWithoutUserNestedInput
-    VipHistory?: VipHistoryUpdateManyWithoutUserNestedInput
-    VipMembership?: VipMembershipUpdateOneWithoutUserNestedInput
     loginAttempts?: LoginAttemptUpdateManyWithoutUserNestedInput
   }
 
@@ -78995,8 +73875,6 @@ export namespace Prisma {
     UserSession?: UserSessionUncheckedUpdateManyWithoutUserNestedInput
     RevokedSessions?: UserSessionUncheckedUpdateManyWithoutRevokedByUserNestedInput
     UserToken?: UserTokenUncheckedUpdateManyWithoutUserNestedInput
-    VipHistory?: VipHistoryUncheckedUpdateManyWithoutUserNestedInput
-    VipMembership?: VipMembershipUncheckedUpdateOneWithoutUserNestedInput
     loginAttempts?: LoginAttemptUncheckedUpdateManyWithoutUserNestedInput
   }
 
@@ -79039,8 +73917,6 @@ export namespace Prisma {
     UserSession?: UserSessionCreateNestedManyWithoutUserInput
     RevokedSessions?: UserSessionCreateNestedManyWithoutRevokedByUserInput
     UserToken?: UserTokenCreateNestedManyWithoutUserInput
-    VipHistory?: VipHistoryCreateNestedManyWithoutUserInput
-    VipMembership?: VipMembershipCreateNestedOneWithoutUserInput
     loginAttempts?: LoginAttemptCreateNestedManyWithoutUserInput
   }
 
@@ -79083,8 +73959,6 @@ export namespace Prisma {
     UserSession?: UserSessionUncheckedCreateNestedManyWithoutUserInput
     RevokedSessions?: UserSessionUncheckedCreateNestedManyWithoutRevokedByUserInput
     UserToken?: UserTokenUncheckedCreateNestedManyWithoutUserInput
-    VipHistory?: VipHistoryUncheckedCreateNestedManyWithoutUserInput
-    VipMembership?: VipMembershipUncheckedCreateNestedOneWithoutUserInput
     loginAttempts?: LoginAttemptUncheckedCreateNestedManyWithoutUserInput
   }
 
@@ -79143,8 +74017,6 @@ export namespace Prisma {
     UserSession?: UserSessionUpdateManyWithoutUserNestedInput
     RevokedSessions?: UserSessionUpdateManyWithoutRevokedByUserNestedInput
     UserToken?: UserTokenUpdateManyWithoutUserNestedInput
-    VipHistory?: VipHistoryUpdateManyWithoutUserNestedInput
-    VipMembership?: VipMembershipUpdateOneWithoutUserNestedInput
     loginAttempts?: LoginAttemptUpdateManyWithoutUserNestedInput
   }
 
@@ -79187,8 +74059,6 @@ export namespace Prisma {
     UserSession?: UserSessionUncheckedUpdateManyWithoutUserNestedInput
     RevokedSessions?: UserSessionUncheckedUpdateManyWithoutRevokedByUserNestedInput
     UserToken?: UserTokenUncheckedUpdateManyWithoutUserNestedInput
-    VipHistory?: VipHistoryUncheckedUpdateManyWithoutUserNestedInput
-    VipMembership?: VipMembershipUncheckedUpdateOneWithoutUserNestedInput
     loginAttempts?: LoginAttemptUncheckedUpdateManyWithoutUserNestedInput
   }
 
@@ -79858,8 +74728,6 @@ export namespace Prisma {
     UserSession?: UserSessionCreateNestedManyWithoutUserInput
     RevokedSessions?: UserSessionCreateNestedManyWithoutRevokedByUserInput
     UserToken?: UserTokenCreateNestedManyWithoutUserInput
-    VipHistory?: VipHistoryCreateNestedManyWithoutUserInput
-    VipMembership?: VipMembershipCreateNestedOneWithoutUserInput
     loginAttempts?: LoginAttemptCreateNestedManyWithoutUserInput
   }
 
@@ -79902,8 +74770,6 @@ export namespace Prisma {
     UserSession?: UserSessionUncheckedCreateNestedManyWithoutUserInput
     RevokedSessions?: UserSessionUncheckedCreateNestedManyWithoutRevokedByUserInput
     UserToken?: UserTokenUncheckedCreateNestedManyWithoutUserInput
-    VipHistory?: VipHistoryUncheckedCreateNestedManyWithoutUserInput
-    VipMembership?: VipMembershipUncheckedCreateNestedOneWithoutUserInput
     loginAttempts?: LoginAttemptUncheckedCreateNestedManyWithoutUserInput
   }
 
@@ -80271,8 +75137,6 @@ export namespace Prisma {
     UserSession?: UserSessionUpdateManyWithoutUserNestedInput
     RevokedSessions?: UserSessionUpdateManyWithoutRevokedByUserNestedInput
     UserToken?: UserTokenUpdateManyWithoutUserNestedInput
-    VipHistory?: VipHistoryUpdateManyWithoutUserNestedInput
-    VipMembership?: VipMembershipUpdateOneWithoutUserNestedInput
     loginAttempts?: LoginAttemptUpdateManyWithoutUserNestedInput
   }
 
@@ -80315,8 +75179,6 @@ export namespace Prisma {
     UserSession?: UserSessionUncheckedUpdateManyWithoutUserNestedInput
     RevokedSessions?: UserSessionUncheckedUpdateManyWithoutRevokedByUserNestedInput
     UserToken?: UserTokenUncheckedUpdateManyWithoutUserNestedInput
-    VipHistory?: VipHistoryUncheckedUpdateManyWithoutUserNestedInput
-    VipMembership?: VipMembershipUncheckedUpdateOneWithoutUserNestedInput
     loginAttempts?: LoginAttemptUncheckedUpdateManyWithoutUserNestedInput
   }
 
@@ -81619,8 +76481,6 @@ export namespace Prisma {
     UserSession?: UserSessionCreateNestedManyWithoutUserInput
     RevokedSessions?: UserSessionCreateNestedManyWithoutRevokedByUserInput
     UserToken?: UserTokenCreateNestedManyWithoutUserInput
-    VipHistory?: VipHistoryCreateNestedManyWithoutUserInput
-    VipMembership?: VipMembershipCreateNestedOneWithoutUserInput
     loginAttempts?: LoginAttemptCreateNestedManyWithoutUserInput
   }
 
@@ -81663,8 +76523,6 @@ export namespace Prisma {
     UserSession?: UserSessionUncheckedCreateNestedManyWithoutUserInput
     RevokedSessions?: UserSessionUncheckedCreateNestedManyWithoutRevokedByUserInput
     UserToken?: UserTokenUncheckedCreateNestedManyWithoutUserInput
-    VipHistory?: VipHistoryUncheckedCreateNestedManyWithoutUserInput
-    VipMembership?: VipMembershipUncheckedCreateNestedOneWithoutUserInput
     loginAttempts?: LoginAttemptUncheckedCreateNestedManyWithoutUserInput
   }
 
@@ -81804,8 +76662,6 @@ export namespace Prisma {
     UserSession?: UserSessionUpdateManyWithoutUserNestedInput
     RevokedSessions?: UserSessionUpdateManyWithoutRevokedByUserNestedInput
     UserToken?: UserTokenUpdateManyWithoutUserNestedInput
-    VipHistory?: VipHistoryUpdateManyWithoutUserNestedInput
-    VipMembership?: VipMembershipUpdateOneWithoutUserNestedInput
     loginAttempts?: LoginAttemptUpdateManyWithoutUserNestedInput
   }
 
@@ -81848,8 +76704,6 @@ export namespace Prisma {
     UserSession?: UserSessionUncheckedUpdateManyWithoutUserNestedInput
     RevokedSessions?: UserSessionUncheckedUpdateManyWithoutRevokedByUserNestedInput
     UserToken?: UserTokenUncheckedUpdateManyWithoutUserNestedInput
-    VipHistory?: VipHistoryUncheckedUpdateManyWithoutUserNestedInput
-    VipMembership?: VipMembershipUncheckedUpdateOneWithoutUserNestedInput
     loginAttempts?: LoginAttemptUncheckedUpdateManyWithoutUserNestedInput
   }
 
@@ -81920,8 +76774,6 @@ export namespace Prisma {
     UserSession?: UserSessionCreateNestedManyWithoutUserInput
     RevokedSessions?: UserSessionCreateNestedManyWithoutRevokedByUserInput
     UserToken?: UserTokenCreateNestedManyWithoutUserInput
-    VipHistory?: VipHistoryCreateNestedManyWithoutUserInput
-    VipMembership?: VipMembershipCreateNestedOneWithoutUserInput
     loginAttempts?: LoginAttemptCreateNestedManyWithoutUserInput
   }
 
@@ -81964,8 +76816,6 @@ export namespace Prisma {
     UserSession?: UserSessionUncheckedCreateNestedManyWithoutUserInput
     RevokedSessions?: UserSessionUncheckedCreateNestedManyWithoutRevokedByUserInput
     UserToken?: UserTokenUncheckedCreateNestedManyWithoutUserInput
-    VipHistory?: VipHistoryUncheckedCreateNestedManyWithoutUserInput
-    VipMembership?: VipMembershipUncheckedCreateNestedOneWithoutUserInput
     loginAttempts?: LoginAttemptUncheckedCreateNestedManyWithoutUserInput
   }
 
@@ -82040,8 +76890,6 @@ export namespace Prisma {
     UserSession?: UserSessionUpdateManyWithoutUserNestedInput
     RevokedSessions?: UserSessionUpdateManyWithoutRevokedByUserNestedInput
     UserToken?: UserTokenUpdateManyWithoutUserNestedInput
-    VipHistory?: VipHistoryUpdateManyWithoutUserNestedInput
-    VipMembership?: VipMembershipUpdateOneWithoutUserNestedInput
     loginAttempts?: LoginAttemptUpdateManyWithoutUserNestedInput
   }
 
@@ -82084,633 +76932,7 @@ export namespace Prisma {
     UserSession?: UserSessionUncheckedUpdateManyWithoutUserNestedInput
     RevokedSessions?: UserSessionUncheckedUpdateManyWithoutRevokedByUserNestedInput
     UserToken?: UserTokenUncheckedUpdateManyWithoutUserNestedInput
-    VipHistory?: VipHistoryUncheckedUpdateManyWithoutUserNestedInput
-    VipMembership?: VipMembershipUncheckedUpdateOneWithoutUserNestedInput
     loginAttempts?: LoginAttemptUncheckedUpdateManyWithoutUserNestedInput
-  }
-
-  export type VipMembershipCreateWithoutVipLevelInput = {
-    accumulatedRolling?: Decimal | DecimalJsLike | number | string
-    totalRewardsPaid?: Decimal | DecimalJsLike | number | string
-    achievedAt?: Date | string | null
-    createdAt?: Date | string
-    updatedAt?: Date | string
-    histories?: VipHistoryCreateNestedManyWithoutVipMembershipInput
-    user: UserCreateNestedOneWithoutVipMembershipInput
-  }
-
-  export type VipMembershipUncheckedCreateWithoutVipLevelInput = {
-    id?: number
-    userId: bigint | number
-    accumulatedRolling?: Decimal | DecimalJsLike | number | string
-    totalRewardsPaid?: Decimal | DecimalJsLike | number | string
-    achievedAt?: Date | string | null
-    createdAt?: Date | string
-    updatedAt?: Date | string
-    histories?: VipHistoryUncheckedCreateNestedManyWithoutVipMembershipInput
-  }
-
-  export type VipMembershipCreateOrConnectWithoutVipLevelInput = {
-    where: VipMembershipWhereUniqueInput
-    create: XOR<VipMembershipCreateWithoutVipLevelInput, VipMembershipUncheckedCreateWithoutVipLevelInput>
-  }
-
-  export type VipMembershipCreateManyVipLevelInputEnvelope = {
-    data: VipMembershipCreateManyVipLevelInput | VipMembershipCreateManyVipLevelInput[]
-    skipDuplicates?: boolean
-  }
-
-  export type VipMembershipUpsertWithWhereUniqueWithoutVipLevelInput = {
-    where: VipMembershipWhereUniqueInput
-    update: XOR<VipMembershipUpdateWithoutVipLevelInput, VipMembershipUncheckedUpdateWithoutVipLevelInput>
-    create: XOR<VipMembershipCreateWithoutVipLevelInput, VipMembershipUncheckedCreateWithoutVipLevelInput>
-  }
-
-  export type VipMembershipUpdateWithWhereUniqueWithoutVipLevelInput = {
-    where: VipMembershipWhereUniqueInput
-    data: XOR<VipMembershipUpdateWithoutVipLevelInput, VipMembershipUncheckedUpdateWithoutVipLevelInput>
-  }
-
-  export type VipMembershipUpdateManyWithWhereWithoutVipLevelInput = {
-    where: VipMembershipScalarWhereInput
-    data: XOR<VipMembershipUpdateManyMutationInput, VipMembershipUncheckedUpdateManyWithoutVipLevelInput>
-  }
-
-  export type VipMembershipScalarWhereInput = {
-    AND?: VipMembershipScalarWhereInput | VipMembershipScalarWhereInput[]
-    OR?: VipMembershipScalarWhereInput[]
-    NOT?: VipMembershipScalarWhereInput | VipMembershipScalarWhereInput[]
-    id?: IntFilter<"VipMembership"> | number
-    userId?: BigIntFilter<"VipMembership"> | bigint | number
-    vipLevelId?: IntFilter<"VipMembership"> | number
-    accumulatedRolling?: DecimalFilter<"VipMembership"> | Decimal | DecimalJsLike | number | string
-    totalRewardsPaid?: DecimalFilter<"VipMembership"> | Decimal | DecimalJsLike | number | string
-    achievedAt?: DateTimeNullableFilter<"VipMembership"> | Date | string | null
-    createdAt?: DateTimeFilter<"VipMembership"> | Date | string
-    updatedAt?: DateTimeFilter<"VipMembership"> | Date | string
-  }
-
-  export type VipHistoryCreateWithoutVipMembershipInput = {
-    previousLevelNameKey?: string | null
-    newLevelNameKey: string
-    rewardAmount: Decimal | DecimalJsLike | number | string
-    rewardPaid?: boolean
-    paidAt?: Date | string | null
-    createdAt?: Date | string
-    user: UserCreateNestedOneWithoutVipHistoryInput
-  }
-
-  export type VipHistoryUncheckedCreateWithoutVipMembershipInput = {
-    id?: number
-    userId: bigint | number
-    previousLevelNameKey?: string | null
-    newLevelNameKey: string
-    rewardAmount: Decimal | DecimalJsLike | number | string
-    rewardPaid?: boolean
-    paidAt?: Date | string | null
-    createdAt?: Date | string
-  }
-
-  export type VipHistoryCreateOrConnectWithoutVipMembershipInput = {
-    where: VipHistoryWhereUniqueInput
-    create: XOR<VipHistoryCreateWithoutVipMembershipInput, VipHistoryUncheckedCreateWithoutVipMembershipInput>
-  }
-
-  export type VipHistoryCreateManyVipMembershipInputEnvelope = {
-    data: VipHistoryCreateManyVipMembershipInput | VipHistoryCreateManyVipMembershipInput[]
-    skipDuplicates?: boolean
-  }
-
-  export type UserCreateWithoutVipMembershipInput = {
-    id?: bigint | number
-    uid?: string
-    whitecliffId?: bigint | number | null
-    whitecliffSystemId?: bigint | number | null
-    whitecliffUsername?: string | null
-    dcsId?: string | null
-    email?: string | null
-    passwordHash?: string | null
-    socialType?: $Enums.SocialType | null
-    socialId?: string | null
-    role?: $Enums.UserRoleType
-    status?: $Enums.UserStatus
-    kycLevel?: $Enums.KycLevel
-    country?: string | null
-    language?: $Enums.Language | null
-    timezone?: string | null
-    timezoneOffset?: number | null
-    createdAt?: Date | string
-    updatedAt?: Date | string
-    affiliateCodes?: AffiliateCodeCreateNestedManyWithoutUserInput
-    affiliateCommissions?: AffiliateCommissionCreateNestedManyWithoutAffiliateInput
-    subUserCommissions?: AffiliateCommissionCreateNestedManyWithoutSubUserInput
-    affiliateTier?: AffiliateTierCreateNestedOneWithoutAffiliateInput
-    affiliateWallets?: AffiliateWalletCreateNestedManyWithoutAffiliateInput
-    CompTransaction?: CompTransactionCreateNestedManyWithoutUserInput
-    DailyCompEarning?: DailyCompEarningCreateNestedManyWithoutUserInput
-    EmailLog?: EmailLogCreateNestedManyWithoutUserInput
-    GameSession?: GameSessionCreateNestedManyWithoutUserInput
-    affiliateReferrals?: ReferralCreateNestedManyWithoutAffiliateInput
-    referredUsers?: ReferralCreateNestedManyWithoutSubUserInput
-    Rolling?: RollingCreateNestedManyWithoutUserInput
-    transactions?: TransactionCreateNestedManyWithoutUserInput
-    depositDetails?: DepositDetailCreateNestedManyWithoutUserInput
-    balances?: UserBalanceCreateNestedManyWithoutUserInput
-    UserBalanceStats?: UserBalanceStatsCreateNestedManyWithoutUserInput
-    UserPromotion?: UserPromotionCreateNestedManyWithoutUserInput
-    UserSession?: UserSessionCreateNestedManyWithoutUserInput
-    RevokedSessions?: UserSessionCreateNestedManyWithoutRevokedByUserInput
-    UserToken?: UserTokenCreateNestedManyWithoutUserInput
-    VipHistory?: VipHistoryCreateNestedManyWithoutUserInput
-    loginAttempts?: LoginAttemptCreateNestedManyWithoutUserInput
-  }
-
-  export type UserUncheckedCreateWithoutVipMembershipInput = {
-    id?: bigint | number
-    uid?: string
-    whitecliffId?: bigint | number | null
-    whitecliffSystemId?: bigint | number | null
-    whitecliffUsername?: string | null
-    dcsId?: string | null
-    email?: string | null
-    passwordHash?: string | null
-    socialType?: $Enums.SocialType | null
-    socialId?: string | null
-    role?: $Enums.UserRoleType
-    status?: $Enums.UserStatus
-    kycLevel?: $Enums.KycLevel
-    country?: string | null
-    language?: $Enums.Language | null
-    timezone?: string | null
-    timezoneOffset?: number | null
-    createdAt?: Date | string
-    updatedAt?: Date | string
-    affiliateCodes?: AffiliateCodeUncheckedCreateNestedManyWithoutUserInput
-    affiliateCommissions?: AffiliateCommissionUncheckedCreateNestedManyWithoutAffiliateInput
-    subUserCommissions?: AffiliateCommissionUncheckedCreateNestedManyWithoutSubUserInput
-    affiliateTier?: AffiliateTierUncheckedCreateNestedOneWithoutAffiliateInput
-    affiliateWallets?: AffiliateWalletUncheckedCreateNestedManyWithoutAffiliateInput
-    CompTransaction?: CompTransactionUncheckedCreateNestedManyWithoutUserInput
-    DailyCompEarning?: DailyCompEarningUncheckedCreateNestedManyWithoutUserInput
-    EmailLog?: EmailLogUncheckedCreateNestedManyWithoutUserInput
-    GameSession?: GameSessionUncheckedCreateNestedManyWithoutUserInput
-    affiliateReferrals?: ReferralUncheckedCreateNestedManyWithoutAffiliateInput
-    referredUsers?: ReferralUncheckedCreateNestedManyWithoutSubUserInput
-    Rolling?: RollingUncheckedCreateNestedManyWithoutUserInput
-    transactions?: TransactionUncheckedCreateNestedManyWithoutUserInput
-    depositDetails?: DepositDetailUncheckedCreateNestedManyWithoutUserInput
-    balances?: UserBalanceUncheckedCreateNestedManyWithoutUserInput
-    UserBalanceStats?: UserBalanceStatsUncheckedCreateNestedManyWithoutUserInput
-    UserPromotion?: UserPromotionUncheckedCreateNestedManyWithoutUserInput
-    UserSession?: UserSessionUncheckedCreateNestedManyWithoutUserInput
-    RevokedSessions?: UserSessionUncheckedCreateNestedManyWithoutRevokedByUserInput
-    UserToken?: UserTokenUncheckedCreateNestedManyWithoutUserInput
-    VipHistory?: VipHistoryUncheckedCreateNestedManyWithoutUserInput
-    loginAttempts?: LoginAttemptUncheckedCreateNestedManyWithoutUserInput
-  }
-
-  export type UserCreateOrConnectWithoutVipMembershipInput = {
-    where: UserWhereUniqueInput
-    create: XOR<UserCreateWithoutVipMembershipInput, UserUncheckedCreateWithoutVipMembershipInput>
-  }
-
-  export type VipLevelCreateWithoutMembershipsInput = {
-    name: string
-    nameKey: string
-    rank: number
-    requiredRolling: Decimal | DecimalJsLike | number | string
-    levelUpBonus: Decimal | DecimalJsLike | number | string
-    compRate: Decimal | DecimalJsLike | number | string
-    paybackBasisRate: Decimal | DecimalJsLike | number | string
-    weeklyBonusRate: Decimal | DecimalJsLike | number | string
-    monthlyBonusRate: Decimal | DecimalJsLike | number | string
-    createdAt?: Date | string
-    updatedAt?: Date | string
-  }
-
-  export type VipLevelUncheckedCreateWithoutMembershipsInput = {
-    id?: number
-    name: string
-    nameKey: string
-    rank: number
-    requiredRolling: Decimal | DecimalJsLike | number | string
-    levelUpBonus: Decimal | DecimalJsLike | number | string
-    compRate: Decimal | DecimalJsLike | number | string
-    paybackBasisRate: Decimal | DecimalJsLike | number | string
-    weeklyBonusRate: Decimal | DecimalJsLike | number | string
-    monthlyBonusRate: Decimal | DecimalJsLike | number | string
-    createdAt?: Date | string
-    updatedAt?: Date | string
-  }
-
-  export type VipLevelCreateOrConnectWithoutMembershipsInput = {
-    where: VipLevelWhereUniqueInput
-    create: XOR<VipLevelCreateWithoutMembershipsInput, VipLevelUncheckedCreateWithoutMembershipsInput>
-  }
-
-  export type VipHistoryUpsertWithWhereUniqueWithoutVipMembershipInput = {
-    where: VipHistoryWhereUniqueInput
-    update: XOR<VipHistoryUpdateWithoutVipMembershipInput, VipHistoryUncheckedUpdateWithoutVipMembershipInput>
-    create: XOR<VipHistoryCreateWithoutVipMembershipInput, VipHistoryUncheckedCreateWithoutVipMembershipInput>
-  }
-
-  export type VipHistoryUpdateWithWhereUniqueWithoutVipMembershipInput = {
-    where: VipHistoryWhereUniqueInput
-    data: XOR<VipHistoryUpdateWithoutVipMembershipInput, VipHistoryUncheckedUpdateWithoutVipMembershipInput>
-  }
-
-  export type VipHistoryUpdateManyWithWhereWithoutVipMembershipInput = {
-    where: VipHistoryScalarWhereInput
-    data: XOR<VipHistoryUpdateManyMutationInput, VipHistoryUncheckedUpdateManyWithoutVipMembershipInput>
-  }
-
-  export type UserUpsertWithoutVipMembershipInput = {
-    update: XOR<UserUpdateWithoutVipMembershipInput, UserUncheckedUpdateWithoutVipMembershipInput>
-    create: XOR<UserCreateWithoutVipMembershipInput, UserUncheckedCreateWithoutVipMembershipInput>
-    where?: UserWhereInput
-  }
-
-  export type UserUpdateToOneWithWhereWithoutVipMembershipInput = {
-    where?: UserWhereInput
-    data: XOR<UserUpdateWithoutVipMembershipInput, UserUncheckedUpdateWithoutVipMembershipInput>
-  }
-
-  export type UserUpdateWithoutVipMembershipInput = {
-    id?: BigIntFieldUpdateOperationsInput | bigint | number
-    uid?: StringFieldUpdateOperationsInput | string
-    whitecliffId?: NullableBigIntFieldUpdateOperationsInput | bigint | number | null
-    whitecliffSystemId?: NullableBigIntFieldUpdateOperationsInput | bigint | number | null
-    whitecliffUsername?: NullableStringFieldUpdateOperationsInput | string | null
-    dcsId?: NullableStringFieldUpdateOperationsInput | string | null
-    email?: NullableStringFieldUpdateOperationsInput | string | null
-    passwordHash?: NullableStringFieldUpdateOperationsInput | string | null
-    socialType?: NullableEnumSocialTypeFieldUpdateOperationsInput | $Enums.SocialType | null
-    socialId?: NullableStringFieldUpdateOperationsInput | string | null
-    role?: EnumUserRoleTypeFieldUpdateOperationsInput | $Enums.UserRoleType
-    status?: EnumUserStatusFieldUpdateOperationsInput | $Enums.UserStatus
-    kycLevel?: EnumKycLevelFieldUpdateOperationsInput | $Enums.KycLevel
-    country?: NullableStringFieldUpdateOperationsInput | string | null
-    language?: NullableEnumLanguageFieldUpdateOperationsInput | $Enums.Language | null
-    timezone?: NullableStringFieldUpdateOperationsInput | string | null
-    timezoneOffset?: NullableIntFieldUpdateOperationsInput | number | null
-    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
-    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
-    affiliateCodes?: AffiliateCodeUpdateManyWithoutUserNestedInput
-    affiliateCommissions?: AffiliateCommissionUpdateManyWithoutAffiliateNestedInput
-    subUserCommissions?: AffiliateCommissionUpdateManyWithoutSubUserNestedInput
-    affiliateTier?: AffiliateTierUpdateOneWithoutAffiliateNestedInput
-    affiliateWallets?: AffiliateWalletUpdateManyWithoutAffiliateNestedInput
-    CompTransaction?: CompTransactionUpdateManyWithoutUserNestedInput
-    DailyCompEarning?: DailyCompEarningUpdateManyWithoutUserNestedInput
-    EmailLog?: EmailLogUpdateManyWithoutUserNestedInput
-    GameSession?: GameSessionUpdateManyWithoutUserNestedInput
-    affiliateReferrals?: ReferralUpdateManyWithoutAffiliateNestedInput
-    referredUsers?: ReferralUpdateManyWithoutSubUserNestedInput
-    Rolling?: RollingUpdateManyWithoutUserNestedInput
-    transactions?: TransactionUpdateManyWithoutUserNestedInput
-    depositDetails?: DepositDetailUpdateManyWithoutUserNestedInput
-    balances?: UserBalanceUpdateManyWithoutUserNestedInput
-    UserBalanceStats?: UserBalanceStatsUpdateManyWithoutUserNestedInput
-    UserPromotion?: UserPromotionUpdateManyWithoutUserNestedInput
-    UserSession?: UserSessionUpdateManyWithoutUserNestedInput
-    RevokedSessions?: UserSessionUpdateManyWithoutRevokedByUserNestedInput
-    UserToken?: UserTokenUpdateManyWithoutUserNestedInput
-    VipHistory?: VipHistoryUpdateManyWithoutUserNestedInput
-    loginAttempts?: LoginAttemptUpdateManyWithoutUserNestedInput
-  }
-
-  export type UserUncheckedUpdateWithoutVipMembershipInput = {
-    id?: BigIntFieldUpdateOperationsInput | bigint | number
-    uid?: StringFieldUpdateOperationsInput | string
-    whitecliffId?: NullableBigIntFieldUpdateOperationsInput | bigint | number | null
-    whitecliffSystemId?: NullableBigIntFieldUpdateOperationsInput | bigint | number | null
-    whitecliffUsername?: NullableStringFieldUpdateOperationsInput | string | null
-    dcsId?: NullableStringFieldUpdateOperationsInput | string | null
-    email?: NullableStringFieldUpdateOperationsInput | string | null
-    passwordHash?: NullableStringFieldUpdateOperationsInput | string | null
-    socialType?: NullableEnumSocialTypeFieldUpdateOperationsInput | $Enums.SocialType | null
-    socialId?: NullableStringFieldUpdateOperationsInput | string | null
-    role?: EnumUserRoleTypeFieldUpdateOperationsInput | $Enums.UserRoleType
-    status?: EnumUserStatusFieldUpdateOperationsInput | $Enums.UserStatus
-    kycLevel?: EnumKycLevelFieldUpdateOperationsInput | $Enums.KycLevel
-    country?: NullableStringFieldUpdateOperationsInput | string | null
-    language?: NullableEnumLanguageFieldUpdateOperationsInput | $Enums.Language | null
-    timezone?: NullableStringFieldUpdateOperationsInput | string | null
-    timezoneOffset?: NullableIntFieldUpdateOperationsInput | number | null
-    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
-    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
-    affiliateCodes?: AffiliateCodeUncheckedUpdateManyWithoutUserNestedInput
-    affiliateCommissions?: AffiliateCommissionUncheckedUpdateManyWithoutAffiliateNestedInput
-    subUserCommissions?: AffiliateCommissionUncheckedUpdateManyWithoutSubUserNestedInput
-    affiliateTier?: AffiliateTierUncheckedUpdateOneWithoutAffiliateNestedInput
-    affiliateWallets?: AffiliateWalletUncheckedUpdateManyWithoutAffiliateNestedInput
-    CompTransaction?: CompTransactionUncheckedUpdateManyWithoutUserNestedInput
-    DailyCompEarning?: DailyCompEarningUncheckedUpdateManyWithoutUserNestedInput
-    EmailLog?: EmailLogUncheckedUpdateManyWithoutUserNestedInput
-    GameSession?: GameSessionUncheckedUpdateManyWithoutUserNestedInput
-    affiliateReferrals?: ReferralUncheckedUpdateManyWithoutAffiliateNestedInput
-    referredUsers?: ReferralUncheckedUpdateManyWithoutSubUserNestedInput
-    Rolling?: RollingUncheckedUpdateManyWithoutUserNestedInput
-    transactions?: TransactionUncheckedUpdateManyWithoutUserNestedInput
-    depositDetails?: DepositDetailUncheckedUpdateManyWithoutUserNestedInput
-    balances?: UserBalanceUncheckedUpdateManyWithoutUserNestedInput
-    UserBalanceStats?: UserBalanceStatsUncheckedUpdateManyWithoutUserNestedInput
-    UserPromotion?: UserPromotionUncheckedUpdateManyWithoutUserNestedInput
-    UserSession?: UserSessionUncheckedUpdateManyWithoutUserNestedInput
-    RevokedSessions?: UserSessionUncheckedUpdateManyWithoutRevokedByUserNestedInput
-    UserToken?: UserTokenUncheckedUpdateManyWithoutUserNestedInput
-    VipHistory?: VipHistoryUncheckedUpdateManyWithoutUserNestedInput
-    loginAttempts?: LoginAttemptUncheckedUpdateManyWithoutUserNestedInput
-  }
-
-  export type VipLevelUpsertWithoutMembershipsInput = {
-    update: XOR<VipLevelUpdateWithoutMembershipsInput, VipLevelUncheckedUpdateWithoutMembershipsInput>
-    create: XOR<VipLevelCreateWithoutMembershipsInput, VipLevelUncheckedCreateWithoutMembershipsInput>
-    where?: VipLevelWhereInput
-  }
-
-  export type VipLevelUpdateToOneWithWhereWithoutMembershipsInput = {
-    where?: VipLevelWhereInput
-    data: XOR<VipLevelUpdateWithoutMembershipsInput, VipLevelUncheckedUpdateWithoutMembershipsInput>
-  }
-
-  export type VipLevelUpdateWithoutMembershipsInput = {
-    name?: StringFieldUpdateOperationsInput | string
-    nameKey?: StringFieldUpdateOperationsInput | string
-    rank?: IntFieldUpdateOperationsInput | number
-    requiredRolling?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
-    levelUpBonus?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
-    compRate?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
-    paybackBasisRate?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
-    weeklyBonusRate?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
-    monthlyBonusRate?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
-    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
-    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
-  }
-
-  export type VipLevelUncheckedUpdateWithoutMembershipsInput = {
-    id?: IntFieldUpdateOperationsInput | number
-    name?: StringFieldUpdateOperationsInput | string
-    nameKey?: StringFieldUpdateOperationsInput | string
-    rank?: IntFieldUpdateOperationsInput | number
-    requiredRolling?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
-    levelUpBonus?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
-    compRate?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
-    paybackBasisRate?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
-    weeklyBonusRate?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
-    monthlyBonusRate?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
-    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
-    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
-  }
-
-  export type UserCreateWithoutVipHistoryInput = {
-    id?: bigint | number
-    uid?: string
-    whitecliffId?: bigint | number | null
-    whitecliffSystemId?: bigint | number | null
-    whitecliffUsername?: string | null
-    dcsId?: string | null
-    email?: string | null
-    passwordHash?: string | null
-    socialType?: $Enums.SocialType | null
-    socialId?: string | null
-    role?: $Enums.UserRoleType
-    status?: $Enums.UserStatus
-    kycLevel?: $Enums.KycLevel
-    country?: string | null
-    language?: $Enums.Language | null
-    timezone?: string | null
-    timezoneOffset?: number | null
-    createdAt?: Date | string
-    updatedAt?: Date | string
-    affiliateCodes?: AffiliateCodeCreateNestedManyWithoutUserInput
-    affiliateCommissions?: AffiliateCommissionCreateNestedManyWithoutAffiliateInput
-    subUserCommissions?: AffiliateCommissionCreateNestedManyWithoutSubUserInput
-    affiliateTier?: AffiliateTierCreateNestedOneWithoutAffiliateInput
-    affiliateWallets?: AffiliateWalletCreateNestedManyWithoutAffiliateInput
-    CompTransaction?: CompTransactionCreateNestedManyWithoutUserInput
-    DailyCompEarning?: DailyCompEarningCreateNestedManyWithoutUserInput
-    EmailLog?: EmailLogCreateNestedManyWithoutUserInput
-    GameSession?: GameSessionCreateNestedManyWithoutUserInput
-    affiliateReferrals?: ReferralCreateNestedManyWithoutAffiliateInput
-    referredUsers?: ReferralCreateNestedManyWithoutSubUserInput
-    Rolling?: RollingCreateNestedManyWithoutUserInput
-    transactions?: TransactionCreateNestedManyWithoutUserInput
-    depositDetails?: DepositDetailCreateNestedManyWithoutUserInput
-    balances?: UserBalanceCreateNestedManyWithoutUserInput
-    UserBalanceStats?: UserBalanceStatsCreateNestedManyWithoutUserInput
-    UserPromotion?: UserPromotionCreateNestedManyWithoutUserInput
-    UserSession?: UserSessionCreateNestedManyWithoutUserInput
-    RevokedSessions?: UserSessionCreateNestedManyWithoutRevokedByUserInput
-    UserToken?: UserTokenCreateNestedManyWithoutUserInput
-    VipMembership?: VipMembershipCreateNestedOneWithoutUserInput
-    loginAttempts?: LoginAttemptCreateNestedManyWithoutUserInput
-  }
-
-  export type UserUncheckedCreateWithoutVipHistoryInput = {
-    id?: bigint | number
-    uid?: string
-    whitecliffId?: bigint | number | null
-    whitecliffSystemId?: bigint | number | null
-    whitecliffUsername?: string | null
-    dcsId?: string | null
-    email?: string | null
-    passwordHash?: string | null
-    socialType?: $Enums.SocialType | null
-    socialId?: string | null
-    role?: $Enums.UserRoleType
-    status?: $Enums.UserStatus
-    kycLevel?: $Enums.KycLevel
-    country?: string | null
-    language?: $Enums.Language | null
-    timezone?: string | null
-    timezoneOffset?: number | null
-    createdAt?: Date | string
-    updatedAt?: Date | string
-    affiliateCodes?: AffiliateCodeUncheckedCreateNestedManyWithoutUserInput
-    affiliateCommissions?: AffiliateCommissionUncheckedCreateNestedManyWithoutAffiliateInput
-    subUserCommissions?: AffiliateCommissionUncheckedCreateNestedManyWithoutSubUserInput
-    affiliateTier?: AffiliateTierUncheckedCreateNestedOneWithoutAffiliateInput
-    affiliateWallets?: AffiliateWalletUncheckedCreateNestedManyWithoutAffiliateInput
-    CompTransaction?: CompTransactionUncheckedCreateNestedManyWithoutUserInput
-    DailyCompEarning?: DailyCompEarningUncheckedCreateNestedManyWithoutUserInput
-    EmailLog?: EmailLogUncheckedCreateNestedManyWithoutUserInput
-    GameSession?: GameSessionUncheckedCreateNestedManyWithoutUserInput
-    affiliateReferrals?: ReferralUncheckedCreateNestedManyWithoutAffiliateInput
-    referredUsers?: ReferralUncheckedCreateNestedManyWithoutSubUserInput
-    Rolling?: RollingUncheckedCreateNestedManyWithoutUserInput
-    transactions?: TransactionUncheckedCreateNestedManyWithoutUserInput
-    depositDetails?: DepositDetailUncheckedCreateNestedManyWithoutUserInput
-    balances?: UserBalanceUncheckedCreateNestedManyWithoutUserInput
-    UserBalanceStats?: UserBalanceStatsUncheckedCreateNestedManyWithoutUserInput
-    UserPromotion?: UserPromotionUncheckedCreateNestedManyWithoutUserInput
-    UserSession?: UserSessionUncheckedCreateNestedManyWithoutUserInput
-    RevokedSessions?: UserSessionUncheckedCreateNestedManyWithoutRevokedByUserInput
-    UserToken?: UserTokenUncheckedCreateNestedManyWithoutUserInput
-    VipMembership?: VipMembershipUncheckedCreateNestedOneWithoutUserInput
-    loginAttempts?: LoginAttemptUncheckedCreateNestedManyWithoutUserInput
-  }
-
-  export type UserCreateOrConnectWithoutVipHistoryInput = {
-    where: UserWhereUniqueInput
-    create: XOR<UserCreateWithoutVipHistoryInput, UserUncheckedCreateWithoutVipHistoryInput>
-  }
-
-  export type VipMembershipCreateWithoutHistoriesInput = {
-    accumulatedRolling?: Decimal | DecimalJsLike | number | string
-    totalRewardsPaid?: Decimal | DecimalJsLike | number | string
-    achievedAt?: Date | string | null
-    createdAt?: Date | string
-    updatedAt?: Date | string
-    user: UserCreateNestedOneWithoutVipMembershipInput
-    vipLevel: VipLevelCreateNestedOneWithoutMembershipsInput
-  }
-
-  export type VipMembershipUncheckedCreateWithoutHistoriesInput = {
-    id?: number
-    userId: bigint | number
-    vipLevelId: number
-    accumulatedRolling?: Decimal | DecimalJsLike | number | string
-    totalRewardsPaid?: Decimal | DecimalJsLike | number | string
-    achievedAt?: Date | string | null
-    createdAt?: Date | string
-    updatedAt?: Date | string
-  }
-
-  export type VipMembershipCreateOrConnectWithoutHistoriesInput = {
-    where: VipMembershipWhereUniqueInput
-    create: XOR<VipMembershipCreateWithoutHistoriesInput, VipMembershipUncheckedCreateWithoutHistoriesInput>
-  }
-
-  export type UserUpsertWithoutVipHistoryInput = {
-    update: XOR<UserUpdateWithoutVipHistoryInput, UserUncheckedUpdateWithoutVipHistoryInput>
-    create: XOR<UserCreateWithoutVipHistoryInput, UserUncheckedCreateWithoutVipHistoryInput>
-    where?: UserWhereInput
-  }
-
-  export type UserUpdateToOneWithWhereWithoutVipHistoryInput = {
-    where?: UserWhereInput
-    data: XOR<UserUpdateWithoutVipHistoryInput, UserUncheckedUpdateWithoutVipHistoryInput>
-  }
-
-  export type UserUpdateWithoutVipHistoryInput = {
-    id?: BigIntFieldUpdateOperationsInput | bigint | number
-    uid?: StringFieldUpdateOperationsInput | string
-    whitecliffId?: NullableBigIntFieldUpdateOperationsInput | bigint | number | null
-    whitecliffSystemId?: NullableBigIntFieldUpdateOperationsInput | bigint | number | null
-    whitecliffUsername?: NullableStringFieldUpdateOperationsInput | string | null
-    dcsId?: NullableStringFieldUpdateOperationsInput | string | null
-    email?: NullableStringFieldUpdateOperationsInput | string | null
-    passwordHash?: NullableStringFieldUpdateOperationsInput | string | null
-    socialType?: NullableEnumSocialTypeFieldUpdateOperationsInput | $Enums.SocialType | null
-    socialId?: NullableStringFieldUpdateOperationsInput | string | null
-    role?: EnumUserRoleTypeFieldUpdateOperationsInput | $Enums.UserRoleType
-    status?: EnumUserStatusFieldUpdateOperationsInput | $Enums.UserStatus
-    kycLevel?: EnumKycLevelFieldUpdateOperationsInput | $Enums.KycLevel
-    country?: NullableStringFieldUpdateOperationsInput | string | null
-    language?: NullableEnumLanguageFieldUpdateOperationsInput | $Enums.Language | null
-    timezone?: NullableStringFieldUpdateOperationsInput | string | null
-    timezoneOffset?: NullableIntFieldUpdateOperationsInput | number | null
-    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
-    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
-    affiliateCodes?: AffiliateCodeUpdateManyWithoutUserNestedInput
-    affiliateCommissions?: AffiliateCommissionUpdateManyWithoutAffiliateNestedInput
-    subUserCommissions?: AffiliateCommissionUpdateManyWithoutSubUserNestedInput
-    affiliateTier?: AffiliateTierUpdateOneWithoutAffiliateNestedInput
-    affiliateWallets?: AffiliateWalletUpdateManyWithoutAffiliateNestedInput
-    CompTransaction?: CompTransactionUpdateManyWithoutUserNestedInput
-    DailyCompEarning?: DailyCompEarningUpdateManyWithoutUserNestedInput
-    EmailLog?: EmailLogUpdateManyWithoutUserNestedInput
-    GameSession?: GameSessionUpdateManyWithoutUserNestedInput
-    affiliateReferrals?: ReferralUpdateManyWithoutAffiliateNestedInput
-    referredUsers?: ReferralUpdateManyWithoutSubUserNestedInput
-    Rolling?: RollingUpdateManyWithoutUserNestedInput
-    transactions?: TransactionUpdateManyWithoutUserNestedInput
-    depositDetails?: DepositDetailUpdateManyWithoutUserNestedInput
-    balances?: UserBalanceUpdateManyWithoutUserNestedInput
-    UserBalanceStats?: UserBalanceStatsUpdateManyWithoutUserNestedInput
-    UserPromotion?: UserPromotionUpdateManyWithoutUserNestedInput
-    UserSession?: UserSessionUpdateManyWithoutUserNestedInput
-    RevokedSessions?: UserSessionUpdateManyWithoutRevokedByUserNestedInput
-    UserToken?: UserTokenUpdateManyWithoutUserNestedInput
-    VipMembership?: VipMembershipUpdateOneWithoutUserNestedInput
-    loginAttempts?: LoginAttemptUpdateManyWithoutUserNestedInput
-  }
-
-  export type UserUncheckedUpdateWithoutVipHistoryInput = {
-    id?: BigIntFieldUpdateOperationsInput | bigint | number
-    uid?: StringFieldUpdateOperationsInput | string
-    whitecliffId?: NullableBigIntFieldUpdateOperationsInput | bigint | number | null
-    whitecliffSystemId?: NullableBigIntFieldUpdateOperationsInput | bigint | number | null
-    whitecliffUsername?: NullableStringFieldUpdateOperationsInput | string | null
-    dcsId?: NullableStringFieldUpdateOperationsInput | string | null
-    email?: NullableStringFieldUpdateOperationsInput | string | null
-    passwordHash?: NullableStringFieldUpdateOperationsInput | string | null
-    socialType?: NullableEnumSocialTypeFieldUpdateOperationsInput | $Enums.SocialType | null
-    socialId?: NullableStringFieldUpdateOperationsInput | string | null
-    role?: EnumUserRoleTypeFieldUpdateOperationsInput | $Enums.UserRoleType
-    status?: EnumUserStatusFieldUpdateOperationsInput | $Enums.UserStatus
-    kycLevel?: EnumKycLevelFieldUpdateOperationsInput | $Enums.KycLevel
-    country?: NullableStringFieldUpdateOperationsInput | string | null
-    language?: NullableEnumLanguageFieldUpdateOperationsInput | $Enums.Language | null
-    timezone?: NullableStringFieldUpdateOperationsInput | string | null
-    timezoneOffset?: NullableIntFieldUpdateOperationsInput | number | null
-    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
-    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
-    affiliateCodes?: AffiliateCodeUncheckedUpdateManyWithoutUserNestedInput
-    affiliateCommissions?: AffiliateCommissionUncheckedUpdateManyWithoutAffiliateNestedInput
-    subUserCommissions?: AffiliateCommissionUncheckedUpdateManyWithoutSubUserNestedInput
-    affiliateTier?: AffiliateTierUncheckedUpdateOneWithoutAffiliateNestedInput
-    affiliateWallets?: AffiliateWalletUncheckedUpdateManyWithoutAffiliateNestedInput
-    CompTransaction?: CompTransactionUncheckedUpdateManyWithoutUserNestedInput
-    DailyCompEarning?: DailyCompEarningUncheckedUpdateManyWithoutUserNestedInput
-    EmailLog?: EmailLogUncheckedUpdateManyWithoutUserNestedInput
-    GameSession?: GameSessionUncheckedUpdateManyWithoutUserNestedInput
-    affiliateReferrals?: ReferralUncheckedUpdateManyWithoutAffiliateNestedInput
-    referredUsers?: ReferralUncheckedUpdateManyWithoutSubUserNestedInput
-    Rolling?: RollingUncheckedUpdateManyWithoutUserNestedInput
-    transactions?: TransactionUncheckedUpdateManyWithoutUserNestedInput
-    depositDetails?: DepositDetailUncheckedUpdateManyWithoutUserNestedInput
-    balances?: UserBalanceUncheckedUpdateManyWithoutUserNestedInput
-    UserBalanceStats?: UserBalanceStatsUncheckedUpdateManyWithoutUserNestedInput
-    UserPromotion?: UserPromotionUncheckedUpdateManyWithoutUserNestedInput
-    UserSession?: UserSessionUncheckedUpdateManyWithoutUserNestedInput
-    RevokedSessions?: UserSessionUncheckedUpdateManyWithoutRevokedByUserNestedInput
-    UserToken?: UserTokenUncheckedUpdateManyWithoutUserNestedInput
-    VipMembership?: VipMembershipUncheckedUpdateOneWithoutUserNestedInput
-    loginAttempts?: LoginAttemptUncheckedUpdateManyWithoutUserNestedInput
-  }
-
-  export type VipMembershipUpsertWithoutHistoriesInput = {
-    update: XOR<VipMembershipUpdateWithoutHistoriesInput, VipMembershipUncheckedUpdateWithoutHistoriesInput>
-    create: XOR<VipMembershipCreateWithoutHistoriesInput, VipMembershipUncheckedCreateWithoutHistoriesInput>
-    where?: VipMembershipWhereInput
-  }
-
-  export type VipMembershipUpdateToOneWithWhereWithoutHistoriesInput = {
-    where?: VipMembershipWhereInput
-    data: XOR<VipMembershipUpdateWithoutHistoriesInput, VipMembershipUncheckedUpdateWithoutHistoriesInput>
-  }
-
-  export type VipMembershipUpdateWithoutHistoriesInput = {
-    accumulatedRolling?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
-    totalRewardsPaid?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
-    achievedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
-    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
-    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
-    user?: UserUpdateOneRequiredWithoutVipMembershipNestedInput
-    vipLevel?: VipLevelUpdateOneRequiredWithoutMembershipsNestedInput
-  }
-
-  export type VipMembershipUncheckedUpdateWithoutHistoriesInput = {
-    id?: IntFieldUpdateOperationsInput | number
-    userId?: BigIntFieldUpdateOperationsInput | bigint | number
-    vipLevelId?: IntFieldUpdateOperationsInput | number
-    accumulatedRolling?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
-    totalRewardsPaid?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
-    achievedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
-    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
-    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
   }
 
   export type DepositDetailCreateWithoutRollingInput = {
@@ -82825,8 +77047,6 @@ export namespace Prisma {
     UserSession?: UserSessionCreateNestedManyWithoutUserInput
     RevokedSessions?: UserSessionCreateNestedManyWithoutRevokedByUserInput
     UserToken?: UserTokenCreateNestedManyWithoutUserInput
-    VipHistory?: VipHistoryCreateNestedManyWithoutUserInput
-    VipMembership?: VipMembershipCreateNestedOneWithoutUserInput
     loginAttempts?: LoginAttemptCreateNestedManyWithoutUserInput
   }
 
@@ -82869,8 +77089,6 @@ export namespace Prisma {
     UserSession?: UserSessionUncheckedCreateNestedManyWithoutUserInput
     RevokedSessions?: UserSessionUncheckedCreateNestedManyWithoutRevokedByUserInput
     UserToken?: UserTokenUncheckedCreateNestedManyWithoutUserInput
-    VipHistory?: VipHistoryUncheckedCreateNestedManyWithoutUserInput
-    VipMembership?: VipMembershipUncheckedCreateNestedOneWithoutUserInput
     loginAttempts?: LoginAttemptUncheckedCreateNestedManyWithoutUserInput
   }
 
@@ -83041,8 +77259,6 @@ export namespace Prisma {
     UserSession?: UserSessionUpdateManyWithoutUserNestedInput
     RevokedSessions?: UserSessionUpdateManyWithoutRevokedByUserNestedInput
     UserToken?: UserTokenUpdateManyWithoutUserNestedInput
-    VipHistory?: VipHistoryUpdateManyWithoutUserNestedInput
-    VipMembership?: VipMembershipUpdateOneWithoutUserNestedInput
     loginAttempts?: LoginAttemptUpdateManyWithoutUserNestedInput
   }
 
@@ -83085,8 +77301,6 @@ export namespace Prisma {
     UserSession?: UserSessionUncheckedUpdateManyWithoutUserNestedInput
     RevokedSessions?: UserSessionUncheckedUpdateManyWithoutRevokedByUserNestedInput
     UserToken?: UserTokenUncheckedUpdateManyWithoutUserNestedInput
-    VipHistory?: VipHistoryUncheckedUpdateManyWithoutUserNestedInput
-    VipMembership?: VipMembershipUncheckedUpdateOneWithoutUserNestedInput
     loginAttempts?: LoginAttemptUncheckedUpdateManyWithoutUserNestedInput
   }
 
@@ -83168,8 +77382,6 @@ export namespace Prisma {
     UserPromotion?: UserPromotionCreateNestedManyWithoutUserInput
     UserSession?: UserSessionCreateNestedManyWithoutUserInput
     RevokedSessions?: UserSessionCreateNestedManyWithoutRevokedByUserInput
-    VipHistory?: VipHistoryCreateNestedManyWithoutUserInput
-    VipMembership?: VipMembershipCreateNestedOneWithoutUserInput
     loginAttempts?: LoginAttemptCreateNestedManyWithoutUserInput
   }
 
@@ -83212,8 +77424,6 @@ export namespace Prisma {
     UserPromotion?: UserPromotionUncheckedCreateNestedManyWithoutUserInput
     UserSession?: UserSessionUncheckedCreateNestedManyWithoutUserInput
     RevokedSessions?: UserSessionUncheckedCreateNestedManyWithoutRevokedByUserInput
-    VipHistory?: VipHistoryUncheckedCreateNestedManyWithoutUserInput
-    VipMembership?: VipMembershipUncheckedCreateNestedOneWithoutUserInput
     loginAttempts?: LoginAttemptUncheckedCreateNestedManyWithoutUserInput
   }
 
@@ -83272,8 +77482,6 @@ export namespace Prisma {
     UserPromotion?: UserPromotionUpdateManyWithoutUserNestedInput
     UserSession?: UserSessionUpdateManyWithoutUserNestedInput
     RevokedSessions?: UserSessionUpdateManyWithoutRevokedByUserNestedInput
-    VipHistory?: VipHistoryUpdateManyWithoutUserNestedInput
-    VipMembership?: VipMembershipUpdateOneWithoutUserNestedInput
     loginAttempts?: LoginAttemptUpdateManyWithoutUserNestedInput
   }
 
@@ -83316,8 +77524,6 @@ export namespace Prisma {
     UserPromotion?: UserPromotionUncheckedUpdateManyWithoutUserNestedInput
     UserSession?: UserSessionUncheckedUpdateManyWithoutUserNestedInput
     RevokedSessions?: UserSessionUncheckedUpdateManyWithoutRevokedByUserNestedInput
-    VipHistory?: VipHistoryUncheckedUpdateManyWithoutUserNestedInput
-    VipMembership?: VipMembershipUncheckedUpdateOneWithoutUserNestedInput
     loginAttempts?: LoginAttemptUncheckedUpdateManyWithoutUserNestedInput
   }
 
@@ -83360,8 +77566,6 @@ export namespace Prisma {
     UserSession?: UserSessionCreateNestedManyWithoutUserInput
     RevokedSessions?: UserSessionCreateNestedManyWithoutRevokedByUserInput
     UserToken?: UserTokenCreateNestedManyWithoutUserInput
-    VipHistory?: VipHistoryCreateNestedManyWithoutUserInput
-    VipMembership?: VipMembershipCreateNestedOneWithoutUserInput
     loginAttempts?: LoginAttemptCreateNestedManyWithoutUserInput
   }
 
@@ -83404,8 +77608,6 @@ export namespace Prisma {
     UserSession?: UserSessionUncheckedCreateNestedManyWithoutUserInput
     RevokedSessions?: UserSessionUncheckedCreateNestedManyWithoutRevokedByUserInput
     UserToken?: UserTokenUncheckedCreateNestedManyWithoutUserInput
-    VipHistory?: VipHistoryUncheckedCreateNestedManyWithoutUserInput
-    VipMembership?: VipMembershipUncheckedCreateNestedOneWithoutUserInput
     loginAttempts?: LoginAttemptUncheckedCreateNestedManyWithoutUserInput
   }
 
@@ -83464,8 +77666,6 @@ export namespace Prisma {
     UserSession?: UserSessionUpdateManyWithoutUserNestedInput
     RevokedSessions?: UserSessionUpdateManyWithoutRevokedByUserNestedInput
     UserToken?: UserTokenUpdateManyWithoutUserNestedInput
-    VipHistory?: VipHistoryUpdateManyWithoutUserNestedInput
-    VipMembership?: VipMembershipUpdateOneWithoutUserNestedInput
     loginAttempts?: LoginAttemptUpdateManyWithoutUserNestedInput
   }
 
@@ -83508,8 +77708,6 @@ export namespace Prisma {
     UserSession?: UserSessionUncheckedUpdateManyWithoutUserNestedInput
     RevokedSessions?: UserSessionUncheckedUpdateManyWithoutRevokedByUserNestedInput
     UserToken?: UserTokenUncheckedUpdateManyWithoutUserNestedInput
-    VipHistory?: VipHistoryUncheckedUpdateManyWithoutUserNestedInput
-    VipMembership?: VipMembershipUncheckedUpdateOneWithoutUserNestedInput
     loginAttempts?: LoginAttemptUncheckedUpdateManyWithoutUserNestedInput
   }
 
@@ -83670,8 +77868,6 @@ export namespace Prisma {
     UserSession?: UserSessionCreateNestedManyWithoutUserInput
     RevokedSessions?: UserSessionCreateNestedManyWithoutRevokedByUserInput
     UserToken?: UserTokenCreateNestedManyWithoutUserInput
-    VipHistory?: VipHistoryCreateNestedManyWithoutUserInput
-    VipMembership?: VipMembershipCreateNestedOneWithoutUserInput
     loginAttempts?: LoginAttemptCreateNestedManyWithoutUserInput
   }
 
@@ -83714,8 +77910,6 @@ export namespace Prisma {
     UserSession?: UserSessionUncheckedCreateNestedManyWithoutUserInput
     RevokedSessions?: UserSessionUncheckedCreateNestedManyWithoutRevokedByUserInput
     UserToken?: UserTokenUncheckedCreateNestedManyWithoutUserInput
-    VipHistory?: VipHistoryUncheckedCreateNestedManyWithoutUserInput
-    VipMembership?: VipMembershipUncheckedCreateNestedOneWithoutUserInput
     loginAttempts?: LoginAttemptUncheckedCreateNestedManyWithoutUserInput
   }
 
@@ -83840,8 +78034,6 @@ export namespace Prisma {
     UserSession?: UserSessionUpdateManyWithoutUserNestedInput
     RevokedSessions?: UserSessionUpdateManyWithoutRevokedByUserNestedInput
     UserToken?: UserTokenUpdateManyWithoutUserNestedInput
-    VipHistory?: VipHistoryUpdateManyWithoutUserNestedInput
-    VipMembership?: VipMembershipUpdateOneWithoutUserNestedInput
     loginAttempts?: LoginAttemptUpdateManyWithoutUserNestedInput
   }
 
@@ -83884,8 +78076,6 @@ export namespace Prisma {
     UserSession?: UserSessionUncheckedUpdateManyWithoutUserNestedInput
     RevokedSessions?: UserSessionUncheckedUpdateManyWithoutRevokedByUserNestedInput
     UserToken?: UserTokenUncheckedUpdateManyWithoutUserNestedInput
-    VipHistory?: VipHistoryUncheckedUpdateManyWithoutUserNestedInput
-    VipMembership?: VipMembershipUncheckedUpdateOneWithoutUserNestedInput
     loginAttempts?: LoginAttemptUncheckedUpdateManyWithoutUserNestedInput
   }
 
@@ -83928,8 +78118,6 @@ export namespace Prisma {
     UserSession?: UserSessionCreateNestedManyWithoutUserInput
     RevokedSessions?: UserSessionCreateNestedManyWithoutRevokedByUserInput
     UserToken?: UserTokenCreateNestedManyWithoutUserInput
-    VipHistory?: VipHistoryCreateNestedManyWithoutUserInput
-    VipMembership?: VipMembershipCreateNestedOneWithoutUserInput
     loginAttempts?: LoginAttemptCreateNestedManyWithoutUserInput
   }
 
@@ -83972,8 +78160,6 @@ export namespace Prisma {
     UserSession?: UserSessionUncheckedCreateNestedManyWithoutUserInput
     RevokedSessions?: UserSessionUncheckedCreateNestedManyWithoutRevokedByUserInput
     UserToken?: UserTokenUncheckedCreateNestedManyWithoutUserInput
-    VipHistory?: VipHistoryUncheckedCreateNestedManyWithoutUserInput
-    VipMembership?: VipMembershipUncheckedCreateNestedOneWithoutUserInput
     loginAttempts?: LoginAttemptUncheckedCreateNestedManyWithoutUserInput
   }
 
@@ -84032,8 +78218,6 @@ export namespace Prisma {
     UserSession?: UserSessionUpdateManyWithoutUserNestedInput
     RevokedSessions?: UserSessionUpdateManyWithoutRevokedByUserNestedInput
     UserToken?: UserTokenUpdateManyWithoutUserNestedInput
-    VipHistory?: VipHistoryUpdateManyWithoutUserNestedInput
-    VipMembership?: VipMembershipUpdateOneWithoutUserNestedInput
     loginAttempts?: LoginAttemptUpdateManyWithoutUserNestedInput
   }
 
@@ -84076,8 +78260,6 @@ export namespace Prisma {
     UserSession?: UserSessionUncheckedUpdateManyWithoutUserNestedInput
     RevokedSessions?: UserSessionUncheckedUpdateManyWithoutRevokedByUserNestedInput
     UserToken?: UserTokenUncheckedUpdateManyWithoutUserNestedInput
-    VipHistory?: VipHistoryUncheckedUpdateManyWithoutUserNestedInput
-    VipMembership?: VipMembershipUncheckedUpdateOneWithoutUserNestedInput
     loginAttempts?: LoginAttemptUncheckedUpdateManyWithoutUserNestedInput
   }
 
@@ -84120,8 +78302,6 @@ export namespace Prisma {
     UserSession?: UserSessionCreateNestedManyWithoutUserInput
     RevokedSessions?: UserSessionCreateNestedManyWithoutRevokedByUserInput
     UserToken?: UserTokenCreateNestedManyWithoutUserInput
-    VipHistory?: VipHistoryCreateNestedManyWithoutUserInput
-    VipMembership?: VipMembershipCreateNestedOneWithoutUserInput
     loginAttempts?: LoginAttemptCreateNestedManyWithoutUserInput
   }
 
@@ -84164,8 +78344,6 @@ export namespace Prisma {
     UserSession?: UserSessionUncheckedCreateNestedManyWithoutUserInput
     RevokedSessions?: UserSessionUncheckedCreateNestedManyWithoutRevokedByUserInput
     UserToken?: UserTokenUncheckedCreateNestedManyWithoutUserInput
-    VipHistory?: VipHistoryUncheckedCreateNestedManyWithoutUserInput
-    VipMembership?: VipMembershipUncheckedCreateNestedOneWithoutUserInput
     loginAttempts?: LoginAttemptUncheckedCreateNestedManyWithoutUserInput
   }
 
@@ -84282,8 +78460,6 @@ export namespace Prisma {
     UserSession?: UserSessionCreateNestedManyWithoutUserInput
     RevokedSessions?: UserSessionCreateNestedManyWithoutRevokedByUserInput
     UserToken?: UserTokenCreateNestedManyWithoutUserInput
-    VipHistory?: VipHistoryCreateNestedManyWithoutUserInput
-    VipMembership?: VipMembershipCreateNestedOneWithoutUserInput
     loginAttempts?: LoginAttemptCreateNestedManyWithoutUserInput
   }
 
@@ -84326,8 +78502,6 @@ export namespace Prisma {
     UserSession?: UserSessionUncheckedCreateNestedManyWithoutUserInput
     RevokedSessions?: UserSessionUncheckedCreateNestedManyWithoutRevokedByUserInput
     UserToken?: UserTokenUncheckedCreateNestedManyWithoutUserInput
-    VipHistory?: VipHistoryUncheckedCreateNestedManyWithoutUserInput
-    VipMembership?: VipMembershipUncheckedCreateNestedOneWithoutUserInput
     loginAttempts?: LoginAttemptUncheckedCreateNestedManyWithoutUserInput
   }
 
@@ -84386,8 +78560,6 @@ export namespace Prisma {
     UserSession?: UserSessionUpdateManyWithoutUserNestedInput
     RevokedSessions?: UserSessionUpdateManyWithoutRevokedByUserNestedInput
     UserToken?: UserTokenUpdateManyWithoutUserNestedInput
-    VipHistory?: VipHistoryUpdateManyWithoutUserNestedInput
-    VipMembership?: VipMembershipUpdateOneWithoutUserNestedInput
     loginAttempts?: LoginAttemptUpdateManyWithoutUserNestedInput
   }
 
@@ -84430,8 +78602,6 @@ export namespace Prisma {
     UserSession?: UserSessionUncheckedUpdateManyWithoutUserNestedInput
     RevokedSessions?: UserSessionUncheckedUpdateManyWithoutRevokedByUserNestedInput
     UserToken?: UserTokenUncheckedUpdateManyWithoutUserNestedInput
-    VipHistory?: VipHistoryUncheckedUpdateManyWithoutUserNestedInput
-    VipMembership?: VipMembershipUncheckedUpdateOneWithoutUserNestedInput
     loginAttempts?: LoginAttemptUncheckedUpdateManyWithoutUserNestedInput
   }
 
@@ -84560,8 +78730,6 @@ export namespace Prisma {
     UserSession?: UserSessionUpdateManyWithoutUserNestedInput
     RevokedSessions?: UserSessionUpdateManyWithoutRevokedByUserNestedInput
     UserToken?: UserTokenUpdateManyWithoutUserNestedInput
-    VipHistory?: VipHistoryUpdateManyWithoutUserNestedInput
-    VipMembership?: VipMembershipUpdateOneWithoutUserNestedInput
     loginAttempts?: LoginAttemptUpdateManyWithoutUserNestedInput
   }
 
@@ -84604,8 +78772,6 @@ export namespace Prisma {
     UserSession?: UserSessionUncheckedUpdateManyWithoutUserNestedInput
     RevokedSessions?: UserSessionUncheckedUpdateManyWithoutRevokedByUserNestedInput
     UserToken?: UserTokenUncheckedUpdateManyWithoutUserNestedInput
-    VipHistory?: VipHistoryUncheckedUpdateManyWithoutUserNestedInput
-    VipMembership?: VipMembershipUncheckedUpdateOneWithoutUserNestedInput
     loginAttempts?: LoginAttemptUncheckedUpdateManyWithoutUserNestedInput
   }
 
@@ -84648,8 +78814,6 @@ export namespace Prisma {
     UserSession?: UserSessionCreateNestedManyWithoutUserInput
     RevokedSessions?: UserSessionCreateNestedManyWithoutRevokedByUserInput
     UserToken?: UserTokenCreateNestedManyWithoutUserInput
-    VipHistory?: VipHistoryCreateNestedManyWithoutUserInput
-    VipMembership?: VipMembershipCreateNestedOneWithoutUserInput
     loginAttempts?: LoginAttemptCreateNestedManyWithoutUserInput
   }
 
@@ -84692,8 +78856,6 @@ export namespace Prisma {
     UserSession?: UserSessionUncheckedCreateNestedManyWithoutUserInput
     RevokedSessions?: UserSessionUncheckedCreateNestedManyWithoutRevokedByUserInput
     UserToken?: UserTokenUncheckedCreateNestedManyWithoutUserInput
-    VipHistory?: VipHistoryUncheckedCreateNestedManyWithoutUserInput
-    VipMembership?: VipMembershipUncheckedCreateNestedOneWithoutUserInput
     loginAttempts?: LoginAttemptUncheckedCreateNestedManyWithoutUserInput
   }
 
@@ -84752,8 +78914,6 @@ export namespace Prisma {
     UserSession?: UserSessionUpdateManyWithoutUserNestedInput
     RevokedSessions?: UserSessionUpdateManyWithoutRevokedByUserNestedInput
     UserToken?: UserTokenUpdateManyWithoutUserNestedInput
-    VipHistory?: VipHistoryUpdateManyWithoutUserNestedInput
-    VipMembership?: VipMembershipUpdateOneWithoutUserNestedInput
     loginAttempts?: LoginAttemptUpdateManyWithoutUserNestedInput
   }
 
@@ -84796,8 +78956,6 @@ export namespace Prisma {
     UserSession?: UserSessionUncheckedUpdateManyWithoutUserNestedInput
     RevokedSessions?: UserSessionUncheckedUpdateManyWithoutRevokedByUserNestedInput
     UserToken?: UserTokenUncheckedUpdateManyWithoutUserNestedInput
-    VipHistory?: VipHistoryUncheckedUpdateManyWithoutUserNestedInput
-    VipMembership?: VipMembershipUncheckedUpdateOneWithoutUserNestedInput
     loginAttempts?: LoginAttemptUncheckedUpdateManyWithoutUserNestedInput
   }
 
@@ -84841,8 +78999,6 @@ export namespace Prisma {
     UserSession?: UserSessionCreateNestedManyWithoutUserInput
     RevokedSessions?: UserSessionCreateNestedManyWithoutRevokedByUserInput
     UserToken?: UserTokenCreateNestedManyWithoutUserInput
-    VipHistory?: VipHistoryCreateNestedManyWithoutUserInput
-    VipMembership?: VipMembershipCreateNestedOneWithoutUserInput
   }
 
   export type UserUncheckedCreateWithoutLoginAttemptsInput = {
@@ -84885,8 +79041,6 @@ export namespace Prisma {
     UserSession?: UserSessionUncheckedCreateNestedManyWithoutUserInput
     RevokedSessions?: UserSessionUncheckedCreateNestedManyWithoutRevokedByUserInput
     UserToken?: UserTokenUncheckedCreateNestedManyWithoutUserInput
-    VipHistory?: VipHistoryUncheckedCreateNestedManyWithoutUserInput
-    VipMembership?: VipMembershipUncheckedCreateNestedOneWithoutUserInput
   }
 
   export type UserCreateOrConnectWithoutLoginAttemptsInput = {
@@ -84945,8 +79099,6 @@ export namespace Prisma {
     UserSession?: UserSessionUpdateManyWithoutUserNestedInput
     RevokedSessions?: UserSessionUpdateManyWithoutRevokedByUserNestedInput
     UserToken?: UserTokenUpdateManyWithoutUserNestedInput
-    VipHistory?: VipHistoryUpdateManyWithoutUserNestedInput
-    VipMembership?: VipMembershipUpdateOneWithoutUserNestedInput
   }
 
   export type UserUncheckedUpdateWithoutLoginAttemptsInput = {
@@ -84989,8 +79141,6 @@ export namespace Prisma {
     UserSession?: UserSessionUncheckedUpdateManyWithoutUserNestedInput
     RevokedSessions?: UserSessionUncheckedUpdateManyWithoutRevokedByUserNestedInput
     UserToken?: UserTokenUncheckedUpdateManyWithoutUserNestedInput
-    VipHistory?: VipHistoryUncheckedUpdateManyWithoutUserNestedInput
-    VipMembership?: VipMembershipUncheckedUpdateOneWithoutUserNestedInput
   }
 
   export type UserCreateWithoutDepositDetailsInput = {
@@ -85032,8 +79182,6 @@ export namespace Prisma {
     UserSession?: UserSessionCreateNestedManyWithoutUserInput
     RevokedSessions?: UserSessionCreateNestedManyWithoutRevokedByUserInput
     UserToken?: UserTokenCreateNestedManyWithoutUserInput
-    VipHistory?: VipHistoryCreateNestedManyWithoutUserInput
-    VipMembership?: VipMembershipCreateNestedOneWithoutUserInput
     loginAttempts?: LoginAttemptCreateNestedManyWithoutUserInput
   }
 
@@ -85076,8 +79224,6 @@ export namespace Prisma {
     UserSession?: UserSessionUncheckedCreateNestedManyWithoutUserInput
     RevokedSessions?: UserSessionUncheckedCreateNestedManyWithoutRevokedByUserInput
     UserToken?: UserTokenUncheckedCreateNestedManyWithoutUserInput
-    VipHistory?: VipHistoryUncheckedCreateNestedManyWithoutUserInput
-    VipMembership?: VipMembershipUncheckedCreateNestedOneWithoutUserInput
     loginAttempts?: LoginAttemptUncheckedCreateNestedManyWithoutUserInput
   }
 
@@ -85301,8 +79447,6 @@ export namespace Prisma {
     UserSession?: UserSessionUpdateManyWithoutUserNestedInput
     RevokedSessions?: UserSessionUpdateManyWithoutRevokedByUserNestedInput
     UserToken?: UserTokenUpdateManyWithoutUserNestedInput
-    VipHistory?: VipHistoryUpdateManyWithoutUserNestedInput
-    VipMembership?: VipMembershipUpdateOneWithoutUserNestedInput
     loginAttempts?: LoginAttemptUpdateManyWithoutUserNestedInput
   }
 
@@ -85345,8 +79489,6 @@ export namespace Prisma {
     UserSession?: UserSessionUncheckedUpdateManyWithoutUserNestedInput
     RevokedSessions?: UserSessionUncheckedUpdateManyWithoutRevokedByUserNestedInput
     UserToken?: UserTokenUncheckedUpdateManyWithoutUserNestedInput
-    VipHistory?: VipHistoryUncheckedUpdateManyWithoutUserNestedInput
-    VipMembership?: VipMembershipUncheckedUpdateOneWithoutUserNestedInput
     loginAttempts?: LoginAttemptUncheckedUpdateManyWithoutUserNestedInput
   }
 
@@ -86181,8 +80323,6 @@ export namespace Prisma {
     UserSession?: UserSessionCreateNestedManyWithoutUserInput
     RevokedSessions?: UserSessionCreateNestedManyWithoutRevokedByUserInput
     UserToken?: UserTokenCreateNestedManyWithoutUserInput
-    VipHistory?: VipHistoryCreateNestedManyWithoutUserInput
-    VipMembership?: VipMembershipCreateNestedOneWithoutUserInput
     loginAttempts?: LoginAttemptCreateNestedManyWithoutUserInput
   }
 
@@ -86225,8 +80365,6 @@ export namespace Prisma {
     UserSession?: UserSessionUncheckedCreateNestedManyWithoutUserInput
     RevokedSessions?: UserSessionUncheckedCreateNestedManyWithoutRevokedByUserInput
     UserToken?: UserTokenUncheckedCreateNestedManyWithoutUserInput
-    VipHistory?: VipHistoryUncheckedCreateNestedManyWithoutUserInput
-    VipMembership?: VipMembershipUncheckedCreateNestedOneWithoutUserInput
     loginAttempts?: LoginAttemptUncheckedCreateNestedManyWithoutUserInput
   }
 
@@ -86352,8 +80490,6 @@ export namespace Prisma {
     UserSession?: UserSessionUpdateManyWithoutUserNestedInput
     RevokedSessions?: UserSessionUpdateManyWithoutRevokedByUserNestedInput
     UserToken?: UserTokenUpdateManyWithoutUserNestedInput
-    VipHistory?: VipHistoryUpdateManyWithoutUserNestedInput
-    VipMembership?: VipMembershipUpdateOneWithoutUserNestedInput
     loginAttempts?: LoginAttemptUpdateManyWithoutUserNestedInput
   }
 
@@ -86396,8 +80532,6 @@ export namespace Prisma {
     UserSession?: UserSessionUncheckedUpdateManyWithoutUserNestedInput
     RevokedSessions?: UserSessionUncheckedUpdateManyWithoutRevokedByUserNestedInput
     UserToken?: UserTokenUncheckedUpdateManyWithoutUserNestedInput
-    VipHistory?: VipHistoryUncheckedUpdateManyWithoutUserNestedInput
-    VipMembership?: VipMembershipUncheckedUpdateOneWithoutUserNestedInput
     loginAttempts?: LoginAttemptUncheckedUpdateManyWithoutUserNestedInput
   }
 
@@ -86440,8 +80574,6 @@ export namespace Prisma {
     UserPromotion?: UserPromotionCreateNestedManyWithoutUserInput
     RevokedSessions?: UserSessionCreateNestedManyWithoutRevokedByUserInput
     UserToken?: UserTokenCreateNestedManyWithoutUserInput
-    VipHistory?: VipHistoryCreateNestedManyWithoutUserInput
-    VipMembership?: VipMembershipCreateNestedOneWithoutUserInput
     loginAttempts?: LoginAttemptCreateNestedManyWithoutUserInput
   }
 
@@ -86484,8 +80616,6 @@ export namespace Prisma {
     UserPromotion?: UserPromotionUncheckedCreateNestedManyWithoutUserInput
     RevokedSessions?: UserSessionUncheckedCreateNestedManyWithoutRevokedByUserInput
     UserToken?: UserTokenUncheckedCreateNestedManyWithoutUserInput
-    VipHistory?: VipHistoryUncheckedCreateNestedManyWithoutUserInput
-    VipMembership?: VipMembershipUncheckedCreateNestedOneWithoutUserInput
     loginAttempts?: LoginAttemptUncheckedCreateNestedManyWithoutUserInput
   }
 
@@ -86533,8 +80663,6 @@ export namespace Prisma {
     UserPromotion?: UserPromotionCreateNestedManyWithoutUserInput
     UserSession?: UserSessionCreateNestedManyWithoutUserInput
     UserToken?: UserTokenCreateNestedManyWithoutUserInput
-    VipHistory?: VipHistoryCreateNestedManyWithoutUserInput
-    VipMembership?: VipMembershipCreateNestedOneWithoutUserInput
     loginAttempts?: LoginAttemptCreateNestedManyWithoutUserInput
   }
 
@@ -86577,8 +80705,6 @@ export namespace Prisma {
     UserPromotion?: UserPromotionUncheckedCreateNestedManyWithoutUserInput
     UserSession?: UserSessionUncheckedCreateNestedManyWithoutUserInput
     UserToken?: UserTokenUncheckedCreateNestedManyWithoutUserInput
-    VipHistory?: VipHistoryUncheckedCreateNestedManyWithoutUserInput
-    VipMembership?: VipMembershipUncheckedCreateNestedOneWithoutUserInput
     loginAttempts?: LoginAttemptUncheckedCreateNestedManyWithoutUserInput
   }
 
@@ -86637,8 +80763,6 @@ export namespace Prisma {
     UserPromotion?: UserPromotionUpdateManyWithoutUserNestedInput
     RevokedSessions?: UserSessionUpdateManyWithoutRevokedByUserNestedInput
     UserToken?: UserTokenUpdateManyWithoutUserNestedInput
-    VipHistory?: VipHistoryUpdateManyWithoutUserNestedInput
-    VipMembership?: VipMembershipUpdateOneWithoutUserNestedInput
     loginAttempts?: LoginAttemptUpdateManyWithoutUserNestedInput
   }
 
@@ -86681,8 +80805,6 @@ export namespace Prisma {
     UserPromotion?: UserPromotionUncheckedUpdateManyWithoutUserNestedInput
     RevokedSessions?: UserSessionUncheckedUpdateManyWithoutRevokedByUserNestedInput
     UserToken?: UserTokenUncheckedUpdateManyWithoutUserNestedInput
-    VipHistory?: VipHistoryUncheckedUpdateManyWithoutUserNestedInput
-    VipMembership?: VipMembershipUncheckedUpdateOneWithoutUserNestedInput
     loginAttempts?: LoginAttemptUncheckedUpdateManyWithoutUserNestedInput
   }
 
@@ -86736,8 +80858,6 @@ export namespace Prisma {
     UserPromotion?: UserPromotionUpdateManyWithoutUserNestedInput
     UserSession?: UserSessionUpdateManyWithoutUserNestedInput
     UserToken?: UserTokenUpdateManyWithoutUserNestedInput
-    VipHistory?: VipHistoryUpdateManyWithoutUserNestedInput
-    VipMembership?: VipMembershipUpdateOneWithoutUserNestedInput
     loginAttempts?: LoginAttemptUpdateManyWithoutUserNestedInput
   }
 
@@ -86780,8 +80900,6 @@ export namespace Prisma {
     UserPromotion?: UserPromotionUncheckedUpdateManyWithoutUserNestedInput
     UserSession?: UserSessionUncheckedUpdateManyWithoutUserNestedInput
     UserToken?: UserTokenUncheckedUpdateManyWithoutUserNestedInput
-    VipHistory?: VipHistoryUncheckedUpdateManyWithoutUserNestedInput
-    VipMembership?: VipMembershipUncheckedUpdateOneWithoutUserNestedInput
     loginAttempts?: LoginAttemptUncheckedUpdateManyWithoutUserNestedInput
   }
 
@@ -87116,17 +81234,6 @@ export namespace Prisma {
     metadata?: NullableJsonNullValueInput | InputJsonValue
     createdAt?: Date | string
     updatedAt?: Date | string
-  }
-
-  export type VipHistoryCreateManyUserInput = {
-    id?: number
-    previousLevelNameKey?: string | null
-    newLevelNameKey: string
-    rewardAmount: Decimal | DecimalJsLike | number | string
-    rewardPaid?: boolean
-    paidAt?: Date | string | null
-    createdAt?: Date | string
-    vipMembershipId?: number | null
   }
 
   export type LoginAttemptCreateManyUserInput = {
@@ -88017,38 +82124,6 @@ export namespace Prisma {
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
   }
 
-  export type VipHistoryUpdateWithoutUserInput = {
-    previousLevelNameKey?: NullableStringFieldUpdateOperationsInput | string | null
-    newLevelNameKey?: StringFieldUpdateOperationsInput | string
-    rewardAmount?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
-    rewardPaid?: BoolFieldUpdateOperationsInput | boolean
-    paidAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
-    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
-    VipMembership?: VipMembershipUpdateOneWithoutHistoriesNestedInput
-  }
-
-  export type VipHistoryUncheckedUpdateWithoutUserInput = {
-    id?: IntFieldUpdateOperationsInput | number
-    previousLevelNameKey?: NullableStringFieldUpdateOperationsInput | string | null
-    newLevelNameKey?: StringFieldUpdateOperationsInput | string
-    rewardAmount?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
-    rewardPaid?: BoolFieldUpdateOperationsInput | boolean
-    paidAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
-    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
-    vipMembershipId?: NullableIntFieldUpdateOperationsInput | number | null
-  }
-
-  export type VipHistoryUncheckedUpdateManyWithoutUserInput = {
-    id?: IntFieldUpdateOperationsInput | number
-    previousLevelNameKey?: NullableStringFieldUpdateOperationsInput | string | null
-    newLevelNameKey?: StringFieldUpdateOperationsInput | string
-    rewardAmount?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
-    rewardPaid?: BoolFieldUpdateOperationsInput | boolean
-    paidAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
-    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
-    vipMembershipId?: NullableIntFieldUpdateOperationsInput | number | null
-  }
-
   export type LoginAttemptUpdateWithoutUserInput = {
     id?: BigIntFieldUpdateOperationsInput | bigint | number
     uid?: StringFieldUpdateOperationsInput | string
@@ -88648,90 +82723,6 @@ export namespace Prisma {
     transactionId?: BigIntFieldUpdateOperationsInput | bigint | number
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
-  }
-
-  export type VipMembershipCreateManyVipLevelInput = {
-    id?: number
-    userId: bigint | number
-    accumulatedRolling?: Decimal | DecimalJsLike | number | string
-    totalRewardsPaid?: Decimal | DecimalJsLike | number | string
-    achievedAt?: Date | string | null
-    createdAt?: Date | string
-    updatedAt?: Date | string
-  }
-
-  export type VipMembershipUpdateWithoutVipLevelInput = {
-    accumulatedRolling?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
-    totalRewardsPaid?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
-    achievedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
-    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
-    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
-    histories?: VipHistoryUpdateManyWithoutVipMembershipNestedInput
-    user?: UserUpdateOneRequiredWithoutVipMembershipNestedInput
-  }
-
-  export type VipMembershipUncheckedUpdateWithoutVipLevelInput = {
-    id?: IntFieldUpdateOperationsInput | number
-    userId?: BigIntFieldUpdateOperationsInput | bigint | number
-    accumulatedRolling?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
-    totalRewardsPaid?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
-    achievedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
-    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
-    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
-    histories?: VipHistoryUncheckedUpdateManyWithoutVipMembershipNestedInput
-  }
-
-  export type VipMembershipUncheckedUpdateManyWithoutVipLevelInput = {
-    id?: IntFieldUpdateOperationsInput | number
-    userId?: BigIntFieldUpdateOperationsInput | bigint | number
-    accumulatedRolling?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
-    totalRewardsPaid?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
-    achievedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
-    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
-    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
-  }
-
-  export type VipHistoryCreateManyVipMembershipInput = {
-    id?: number
-    userId: bigint | number
-    previousLevelNameKey?: string | null
-    newLevelNameKey: string
-    rewardAmount: Decimal | DecimalJsLike | number | string
-    rewardPaid?: boolean
-    paidAt?: Date | string | null
-    createdAt?: Date | string
-  }
-
-  export type VipHistoryUpdateWithoutVipMembershipInput = {
-    previousLevelNameKey?: NullableStringFieldUpdateOperationsInput | string | null
-    newLevelNameKey?: StringFieldUpdateOperationsInput | string
-    rewardAmount?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
-    rewardPaid?: BoolFieldUpdateOperationsInput | boolean
-    paidAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
-    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
-    user?: UserUpdateOneRequiredWithoutVipHistoryNestedInput
-  }
-
-  export type VipHistoryUncheckedUpdateWithoutVipMembershipInput = {
-    id?: IntFieldUpdateOperationsInput | number
-    userId?: BigIntFieldUpdateOperationsInput | bigint | number
-    previousLevelNameKey?: NullableStringFieldUpdateOperationsInput | string | null
-    newLevelNameKey?: StringFieldUpdateOperationsInput | string
-    rewardAmount?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
-    rewardPaid?: BoolFieldUpdateOperationsInput | boolean
-    paidAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
-    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
-  }
-
-  export type VipHistoryUncheckedUpdateManyWithoutVipMembershipInput = {
-    id?: IntFieldUpdateOperationsInput | number
-    userId?: BigIntFieldUpdateOperationsInput | bigint | number
-    previousLevelNameKey?: NullableStringFieldUpdateOperationsInput | string | null
-    newLevelNameKey?: StringFieldUpdateOperationsInput | string
-    rewardAmount?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
-    rewardPaid?: BoolFieldUpdateOperationsInput | boolean
-    paidAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
-    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
   }
 
   export type GameRoundCreateManyGameSessionInput = {

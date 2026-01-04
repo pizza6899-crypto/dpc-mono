@@ -6,23 +6,16 @@ import {
 } from 'src/infrastructure/queue/queue.types';
 import { PrismaService } from 'src/infrastructure/prisma/prisma.service';
 import { Logger, OnApplicationShutdown } from '@nestjs/common';
-import { CompService } from '../../comp/application/comp.service';
-import { RollingService } from '../../rolling/application/rolling.service';
-import { VipMembershipService } from '../../vip/application/vip-membership.service';
 import { Prisma, TransactionStatus } from '@repo/database';
 
 @Processor(QueueNames.GAME_POST_PROCESS)
 export class GamePostProcessProcessor
   extends WorkerHost
-  implements OnApplicationShutdown
-{
+  implements OnApplicationShutdown {
   private readonly logger = new Logger(GamePostProcessProcessor.name);
 
   constructor(
     private readonly prismaService: PrismaService,
-    private readonly compService: CompService,
-    private readonly rollingService: RollingService,
-    private readonly vipMembershipService: VipMembershipService,
   ) {
     super();
   }
@@ -187,29 +180,6 @@ export class GamePostProcessProcessor
     }
   }
 
-  /**
-   * 사용자의 콤프 비율 조회
-   */
-  private async getCompRate(userId: bigint): Promise<Prisma.Decimal | null> {
-    const userMembership = await this.prismaService.user.findUnique({
-      where: { id: userId },
-      select: {
-        VipMembership: {
-          select: {
-            vipLevel: {
-              select: {
-                compRate: true,
-              },
-            },
-          },
-        },
-      },
-    });
-
-    return userMembership?.VipMembership?.vipLevel?.compRate
-      ? new Prisma.Decimal(userMembership.VipMembership.vipLevel.compRate)
-      : null;
-  }
   async onApplicationShutdown(signal?: string) {
     try {
       if (!this.worker) {

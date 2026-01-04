@@ -493,44 +493,6 @@ exports.Prisma.ExchangeRateScalarFieldEnum = {
   isValid: 'isValid'
 };
 
-exports.Prisma.VipLevelScalarFieldEnum = {
-  id: 'id',
-  name: 'name',
-  nameKey: 'nameKey',
-  rank: 'rank',
-  requiredRolling: 'requiredRolling',
-  levelUpBonus: 'levelUpBonus',
-  compRate: 'compRate',
-  paybackBasisRate: 'paybackBasisRate',
-  weeklyBonusRate: 'weeklyBonusRate',
-  monthlyBonusRate: 'monthlyBonusRate',
-  createdAt: 'createdAt',
-  updatedAt: 'updatedAt'
-};
-
-exports.Prisma.VipMembershipScalarFieldEnum = {
-  id: 'id',
-  userId: 'userId',
-  vipLevelId: 'vipLevelId',
-  accumulatedRolling: 'accumulatedRolling',
-  totalRewardsPaid: 'totalRewardsPaid',
-  achievedAt: 'achievedAt',
-  createdAt: 'createdAt',
-  updatedAt: 'updatedAt'
-};
-
-exports.Prisma.VipHistoryScalarFieldEnum = {
-  id: 'id',
-  userId: 'userId',
-  previousLevelNameKey: 'previousLevelNameKey',
-  newLevelNameKey: 'newLevelNameKey',
-  rewardAmount: 'rewardAmount',
-  rewardPaid: 'rewardPaid',
-  paidAt: 'paidAt',
-  createdAt: 'createdAt',
-  vipMembershipId: 'vipMembershipId'
-};
-
 exports.Prisma.RollingScalarFieldEnum = {
   id: 'id',
   userId: 'userId',
@@ -1079,9 +1041,6 @@ exports.Prisma.ModelName = {
   DailyCompEarning: 'DailyCompEarning',
   NowPaymentCallbackLog: 'NowPaymentCallbackLog',
   ExchangeRate: 'ExchangeRate',
-  VipLevel: 'VipLevel',
-  VipMembership: 'VipMembership',
-  VipHistory: 'VipHistory',
   Rolling: 'Rolling',
   UserToken: 'UserToken',
   EmailLog: 'EmailLog',

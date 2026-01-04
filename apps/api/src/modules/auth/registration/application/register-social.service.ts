@@ -6,11 +6,8 @@ import { DispatchLogService } from 'src/modules/audit-log/application/dispatch-l
 import { LogType } from 'src/modules/audit-log/domain';
 import { CountryUtil } from 'src/utils/country.util';
 import { CreateCodeService } from 'src/modules/affiliate/code/application/create-code.service';
-import { VipMembershipService } from 'src/modules/vip/application/vip-membership.service';
 import { SocialType, UserRoleType } from '@repo/database';
 import { User } from 'src/modules/user/domain';
-import { DomainException } from 'src/common/exception/domain.exception';
-import { MessageCode } from '@repo/shared';
 import { USER_REPOSITORY } from 'src/modules/user/ports/out/user.repository.token';
 import type { UserRepositoryPort } from 'src/modules/user/ports/out/user.repository.port';
 import { CreateUserService } from 'src/modules/user/application/create-user.service';
@@ -46,9 +43,7 @@ export class RegisterSocialService {
   private readonly logger = new Logger(RegisterSocialService.name);
 
   constructor(
-    private readonly prisma: PrismaService,
     private readonly dispatchLogService: DispatchLogService,
-    private readonly vipMembershipService: VipMembershipService,
     private readonly createCodeService: CreateCodeService,
     private readonly createUserService: CreateUserService,
     private readonly createWalletService: CreateWalletService,
@@ -112,7 +107,7 @@ export class RegisterSocialService {
       }
 
       // 4. VIP 멤버십 생성
-      await this.vipMembershipService.getOrCreateMembership(user.id);
+      // await this.vipMembershipService.getOrCreateMembership(user.id);
 
       // 5. 신규 사용자 등록 Audit 로그 (부가 기능이므로 실패해도 회원가입은 성공 처리)
       try {

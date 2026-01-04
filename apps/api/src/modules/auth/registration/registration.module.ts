@@ -4,7 +4,6 @@ import { RegistrationAdminController } from './controllers/admin/registration-ad
 import { RegisterCredentialService } from './application/register-credential.service';
 import { RegisterCredentialAdminService } from './application/register-credential-admin.service';
 import { RegisterSocialService } from './application/register-social.service';
-import { VipModule } from '../../vip/vip.module';
 import { AffiliateReferralModule } from '../../affiliate/referral/referral.module';
 import { AffiliateCodeModule } from '../../affiliate/code/code.module';
 import { AuditLogModule } from 'src/modules/audit-log/audit-log.module';
@@ -17,7 +16,6 @@ import { WalletModule } from '../../wallet/wallet.module';
   imports: [
     PrismaModule,
     EnvModule,
-    VipModule,
     AffiliateReferralModule,
     AffiliateCodeModule, // 레퍼럴 코드 사전 검증을 위해 필요
     AuditLogModule,

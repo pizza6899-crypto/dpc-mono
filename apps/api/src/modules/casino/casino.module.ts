@@ -7,7 +7,6 @@ import { CasinoGameController } from './controllers/casino-game.controller';
 import { CasinoGameService } from './application/casino-game.service';
 import { CasinoBetService } from './application/casino-bet.service';
 import { ConcurrencyModule } from 'src/common/concurrency/concurrency.module';
-import { VipModule } from '../vip/vip.module';
 import { CompModule } from '../comp/comp.module';
 import { CasinoBonusService } from './application/casino-bonus.service';
 import { QueueModule } from 'src/infrastructure/queue/queue.module';
@@ -26,7 +25,6 @@ import { AuditLogModule } from '../audit-log/audit-log.module';
     forwardRef(() => WhitecliffModule),
     forwardRef(() => DcsModule),
     ConcurrencyModule,
-    VipModule,
     CompModule,
     QueueModule,
     RollingModule,

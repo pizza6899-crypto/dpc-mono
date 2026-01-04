@@ -13,7 +13,6 @@ import { CredentialUserRepository } from './infrastructure/credential-user.repos
 import { LoginAttemptMapper } from './infrastructure/mapper';
 import { CredentialUserMapper } from './infrastructure/credential-user.mapper';
 import { CredentialPolicy } from './domain/policy';
-import { VipModule } from '../../vip/vip.module';
 import { AffiliateReferralModule } from '../../affiliate/referral/referral.module';
 import { UserModule } from '../../user/user.module';
 import { ChangePasswordService } from './application/change-password.service';
@@ -36,7 +35,6 @@ import { SessionSerializer } from 'src/common/auth/strategies/session.serializer
   imports: [
     PassportModule.register({ session: true }),
     EnvModule, // LoginService가 EnvService를 사용하기 위해 필요
-    VipModule,
     AffiliateReferralModule,
     UserModule, // UserRepository 사용을 위해 필요
     SessionModule, // CreateSessionService 사용을 위해 필요

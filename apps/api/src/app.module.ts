@@ -9,7 +9,6 @@ import { PaymentModule } from './modules/payment/payment.module';
 import { DepositModule } from './modules/deposit/deposit.module';
 import { ExchangeModule } from './modules/exchange/exchange.module';
 import { SessionAuthGuard } from './common/auth/guards/session-auth.guard';
-import { VipModule } from './modules/vip/vip.module';
 import { CompModule } from './modules/comp/comp.module';
 import { RollingModule } from './modules/rolling/rolling.module';
 import { ThrottleModule } from './common/throttle/throttle.module';
@@ -38,7 +37,6 @@ import { PromotionModule } from './modules/promotion/promotion.module';
     PaymentModule,
     DepositModule,
     ExchangeModule,
-    VipModule,
     CompModule,
     RollingModule,
     AffiliateModule,

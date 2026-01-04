@@ -6,7 +6,6 @@ import { DispatchLogService } from 'src/modules/audit-log/application/dispatch-l
 import { LogType } from 'src/modules/audit-log/domain';
 import { CountryUtil } from 'src/utils/country.util';
 import { CreateCodeService } from 'src/modules/affiliate/code/application/create-code.service';
-import { VipMembershipService } from 'src/modules/vip/application/vip-membership.service';
 import { LinkReferralService } from 'src/modules/affiliate/referral/application/link-referral.service';
 import { FindCodeByCodeService } from 'src/modules/affiliate/code/application/find-code-by-code.service';
 import {
@@ -49,7 +48,6 @@ export class RegisterCredentialAdminService {
 
   constructor(
     private readonly dispatchLogService: DispatchLogService,
-    private readonly vipMembershipService: VipMembershipService,
     private readonly linkReferralService: LinkReferralService,
     private readonly findCodeByCodeService: FindCodeByCodeService,
     private readonly createCodeService: CreateCodeService,

@@ -48,8 +48,6 @@ model User {
   UserSession          UserSession[]         @relation("UserSessions")
   RevokedSessions      UserSession[]         @relation("RevokedSessions")
   UserToken            UserToken[]
-  VipHistory           VipHistory[]
-  VipMembership        VipMembership?
   loginAttempts        LoginAttempt[]
 }
 
@@ -349,52 +347,6 @@ model ExchangeRate {
   @@index([baseCurrency, quoteCurrency, provider])
   @@index([collectedAt])
   @@index([isActive, collectedAt])
-}
-
-model VipLevel {
-  id               Int             @id @default(autoincrement())
-  name             String          @unique
-  nameKey          String          @unique
-  rank             Int             @unique
-  requiredRolling  Decimal         @db.Decimal(32, 18)
-  levelUpBonus     Decimal         @db.Decimal(32, 18)
-  compRate         Decimal         @db.Decimal(8, 4)
-  paybackBasisRate Decimal         @db.Decimal(8, 4)
-  weeklyBonusRate  Decimal         @db.Decimal(8, 4)
-  monthlyBonusRate Decimal         @db.Decimal(8, 4)
-  createdAt        DateTime        @default(now())
-  updatedAt        DateTime        @updatedAt
-  memberships      VipMembership[]
-}
-
-model VipMembership {
-  id                 Int          @id @default(autoincrement())
-  userId             BigInt       @unique
-  vipLevelId         Int
-  accumulatedRolling Decimal      @default(0) @db.Decimal(32, 18)
-  totalRewardsPaid   Decimal      @default(0) @db.Decimal(32, 18)
-  achievedAt         DateTime?
-  createdAt          DateTime     @default(now())
-  updatedAt          DateTime     @updatedAt
-  histories          VipHistory[]
-  user               User         @relation(fields: [userId], references: [id])
-  vipLevel           VipLevel     @relation(fields: [vipLevelId], references: [id])
-}
-
-model VipHistory {
-  id                   Int            @id @default(autoincrement())
-  userId               BigInt
-  previousLevelNameKey String?
-  newLevelNameKey      String
-  rewardAmount         Decimal        @db.Decimal(32, 18)
-  rewardPaid           Boolean        @default(false)
-  paidAt               DateTime?
-  createdAt            DateTime       @default(now())
-  vipMembershipId      Int?
-  user                 User           @relation(fields: [userId], references: [id])
-  VipMembership        VipMembership? @relation(fields: [vipMembershipId], references: [id])
-
-  @@index([userId, createdAt])
 }
 
 model Rolling {

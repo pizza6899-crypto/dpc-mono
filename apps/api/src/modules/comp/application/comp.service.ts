@@ -15,7 +15,7 @@ export class CompService {
   constructor(
     private readonly prisma: PrismaService,
     private readonly concurrencyService: ConcurrencyService,
-  ) {}
+  ) { }
 
   /**
    * 콤프 적립 처리 (게임 베팅 시 호출)
@@ -31,15 +31,6 @@ export class CompService {
     const userMembership = await this.prisma.user.findUnique({
       where: { id: userId },
       select: {
-        VipMembership: {
-          select: {
-            vipLevel: {
-              select: {
-                compRate: true,
-              },
-            },
-          },
-        },
       },
     });
 
@@ -47,7 +38,7 @@ export class CompService {
       return;
     }
 
-    const compRate = userMembership.VipMembership?.vipLevel?.compRate || 0;
+    const compRate = 0;
 
     const compAmount = contributionAmount.mul(compRate);
 
