@@ -5,6 +5,7 @@ import { ConcurrencyModule } from 'src/common/concurrency/concurrency.module';
 import { RedisModule } from 'src/infrastructure/redis/redis.module';
 import { EnvModule } from 'src/common/env/env.module';
 import { HttpModule } from '@nestjs/axios';
+import { AuditLogModule } from '../audit-log/audit-log.module';
 import { OpenExchangeRatesApiService } from './infrastructure/open-exchange-rates-api.service';
 import { ExchangeRateUpdateScheduler } from './schedulers/exchange-rate-update.scheduler';
 import { ExchangeRateValidator } from './application/exchange-rate-validator.service';
@@ -18,6 +19,7 @@ import { AdminExchangeController } from './controllers/admin-exchange.controller
     RedisModule,
     EnvModule,
     HttpModule,
+    AuditLogModule,
   ],
   providers: [
     ExchangeRateService,
@@ -28,4 +30,4 @@ import { AdminExchangeController } from './controllers/admin-exchange.controller
   controllers: [ExchangeController, AdminExchangeController],
   exports: [ExchangeRateService],
 })
-export class ExchangeModule {}
+export class ExchangeModule { }

@@ -64,7 +64,7 @@ export class ExchangeRateValidator {
       if (changeRate.gte(this.STABLE_MAX_CHANGE_RATE)) {
         this.logger.warn(
           `환율 급격한 변동 감지: ${baseCurrency} → ${quoteCurrency}, ` +
-            `이전: ${previousRate}, 현재: ${newRate}, 변동률: ${changeRate.toString()}`,
+          `이전: ${previousRate}, 현재: ${newRate}, 변동률: ${changeRate.toString()}`,
         );
         return {
           isValid: false,

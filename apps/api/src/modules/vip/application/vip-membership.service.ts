@@ -13,7 +13,7 @@ import { Prisma } from '@repo/database';
 export class VipMembershipService {
   private readonly logger = new Logger(VipMembershipService.name);
 
-  constructor(private readonly prisma: PrismaService) {}
+  constructor(private readonly prisma: PrismaService) { }
 
   /**
    * 사용자 VIP 멤버십 조회/생성
@@ -113,13 +113,13 @@ export class VipMembershipService {
       achievedAt: membership.achievedAt,
       nextLevelRequiredRolling: nextLevel
         ? nextLevel.requiredRolling.toNumber() -
-          membership.accumulatedRolling.toNumber()
+        membership.accumulatedRolling.toNumber()
         : 0,
       nextLevel: nextLevel
         ? {
-            nameKey: nextLevel.nameKey,
-            rank: nextLevel.rank,
-          }
+          nameKey: nextLevel.nameKey,
+          rank: nextLevel.rank,
+        }
         : undefined,
     };
   }
