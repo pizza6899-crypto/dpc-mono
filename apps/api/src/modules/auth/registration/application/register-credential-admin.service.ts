@@ -20,6 +20,7 @@ import { CreateUserService } from 'src/modules/user/application/create-user.serv
 import { UserAlreadyExistsException } from 'src/modules/user/domain/user.exception';
 import { CreateWalletService } from 'src/modules/wallet/application/create-wallet.service';
 import { WALLET_CURRENCIES } from 'src/utils/currency.util';
+import { AssignDefaultTierService } from 'src/modules/tier/application/assign-default-tier.service';
 
 export interface RegisterCredentialAdminParams {
   email: string;
@@ -53,8 +54,7 @@ export class RegisterCredentialAdminService {
     private readonly createCodeService: CreateCodeService,
     private readonly createUserService: CreateUserService,
     private readonly createWalletService: CreateWalletService,
-    @Inject(USER_REPOSITORY)
-    private readonly userRepository: UserRepositoryPort,
+    private readonly assignDefaultTierService: AssignDefaultTierService,
   ) { }
 
   @Transactional()
@@ -145,9 +145,9 @@ export class RegisterCredentialAdminService {
     }
 
     // 5. VIP 멤버십 생성 (일반 사용자만)
-    // if (role === UserRoleType.USER) {
-    //   await this.vipMembershipService.getOrCreateMembership(user.id);
-    // }
+    if (role === UserRoleType.USER) {
+      await this.assignDefaultTierService.execute(user.id);
+    }
 
     // 6. 레퍼럴 코드가 제공된 경우 레퍼럴 관계 생성
     // 사전 검증을 통과했으므로 여기서는 셀프 추천 및 중복 레퍼럴만 체크됨

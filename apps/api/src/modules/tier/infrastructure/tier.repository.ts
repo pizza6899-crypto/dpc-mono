@@ -6,6 +6,7 @@ import { TierRepositoryPort } from '../ports/tier.repository.port';
 import { TierMapper } from './tier.mapper';
 import { generateUid } from 'src/utils/id.util';
 import { Tier } from '../domain';
+import { TierNotFoundException, TierException } from '../domain/tier.exception';
 import { LockNamespace } from 'src/common/concurrency/lock-namespace';
 import { DomainException } from 'src/common/exception/domain.exception';
 import { MessageCode } from '@repo/shared';
@@ -42,6 +43,14 @@ export class TierRepository implements TierRepositoryPort {
         return model ? this.mapper.toDomain(model) : null;
     }
 
+    async findLowestPriority(): Promise<Tier | null> {
+        const model = await this.tx.tier.findFirst({
+            orderBy: { priority: 'asc' },
+            include: { translations: true },
+        });
+        return model ? this.mapper.toDomain(model) : null;
+    }
+
     async findById(id: bigint): Promise<Tier | null> {
         const model = await this.tx.tier.findUnique({
             where: { id },
@@ -59,7 +68,7 @@ export class TierRepository implements TierRepositoryPort {
     }
 
     async update(tier: Tier): Promise<Tier> {
-        if (!tier.id) throw new Error('Tier ID is required for update');
+        if (!tier.id) throw new TierException('Tier ID is required for update');
         const data = this.mapper.toPersistence(tier);
 
         const model = await this.tx.tier.update({

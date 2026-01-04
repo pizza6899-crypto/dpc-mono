@@ -1,6 +1,5 @@
-import { IsNumber, IsString, IsOptional, Min, IsArray, ValidateNested, ArrayMinSize, IsEnum } from 'class-validator';
+import { IsNumber, IsString, IsOptional, Min, IsEnum } from 'class-validator';
 import { ApiProperty } from '@nestjs/swagger';
-import { Type } from 'class-transformer';
 import { Language } from '@repo/database';
 
 export class TierTranslationDto {

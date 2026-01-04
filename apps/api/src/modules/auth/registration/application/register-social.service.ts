@@ -14,6 +14,7 @@ import { CreateUserService } from 'src/modules/user/application/create-user.serv
 import { UserAlreadyExistsException } from 'src/modules/user/domain/user.exception';
 import { CreateWalletService } from 'src/modules/wallet/application/create-wallet.service';
 import { WALLET_CURRENCIES } from 'src/utils/currency.util';
+import { AssignDefaultTierService } from 'src/modules/tier/application/assign-default-tier.service';
 
 export interface SocialUserInfo {
   socialId: string;
@@ -47,6 +48,7 @@ export class RegisterSocialService {
     private readonly createCodeService: CreateCodeService,
     private readonly createUserService: CreateUserService,
     private readonly createWalletService: CreateWalletService,
+    private readonly assignDefaultTierService: AssignDefaultTierService,
     @Inject(USER_REPOSITORY)
     private readonly userRepository: UserRepositoryPort,
   ) { }
@@ -99,6 +101,9 @@ export class RegisterSocialService {
           userId: user.id,
           campaignName: 'Default',
         });
+
+        // 4. VIP 멤버십 생성 (기본 티어 할당)
+        await this.assignDefaultTierService.execute(user.id);
       } catch (error) {
         if (error instanceof UserAlreadyExistsException) {
           throw error;
@@ -106,8 +111,6 @@ export class RegisterSocialService {
         throw error;
       }
 
-      // 4. VIP 멤버십 생성
-      // await this.vipMembershipService.getOrCreateMembership(user.id);
 
       // 5. 신규 사용자 등록 Audit 로그 (부가 기능이므로 실패해도 회원가입은 성공 처리)
       try {

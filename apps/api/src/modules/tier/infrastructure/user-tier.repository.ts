@@ -5,6 +5,7 @@ import type { TransactionalAdapterPrisma } from '@nestjs-cls/transactional-adapt
 import { UserTierRepositoryPort } from '../ports/user-tier.repository.port';
 import { UserTierMapper } from './user-tier.mapper';
 import { UserTier } from '../domain';
+import { TierException } from '../domain/tier.exception';
 
 @Injectable()
 export class UserTierRepository implements UserTierRepositoryPort {
@@ -40,7 +41,7 @@ export class UserTierRepository implements UserTierRepositoryPort {
     }
 
     async update(userTier: UserTier): Promise<UserTier> {
-        if (!userTier.id) throw new Error('UserTier ID is required for update');
+        if (!userTier.id) throw new TierException('UserTier ID is required for update');
         const data = this.mapper.toPersistence(userTier);
         const model = await this.tx.userTier.update({
             where: { id: userTier.id },

@@ -3,7 +3,7 @@ import { Prisma } from '@repo/database';
 import { Tier } from '../domain';
 import type { TierRepositoryPort } from '../ports/tier.repository.port';
 import { TIER_REPOSITORY } from '../ports/repository.token';
-import { TierException } from '../domain/tier.exception';
+import { TierNotFoundException, TierException } from '../domain/tier.exception';
 
 interface UpdateTierCommand {
     id: bigint;
@@ -30,7 +30,7 @@ export class UpdateTierService {
 
         const tier = await this.tierRepository.findById(command.id);
         if (!tier) {
-            throw new TierException(`Tier not found with ID ${command.id}`);
+            throw new TierNotFoundException(command.id);
         }
 
         // Check conflicts if priority or code changed

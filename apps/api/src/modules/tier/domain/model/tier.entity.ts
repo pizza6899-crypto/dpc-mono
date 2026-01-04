@@ -1,5 +1,6 @@
 import { Prisma } from '@repo/database';
 import { generateUid } from 'src/utils/id.util';
+import { TierException } from '../tier.exception';
 
 /**
  * Tier Definition Entity
@@ -67,7 +68,7 @@ export class Tier {
         const languages = new Set<string>();
         for (const t of translations) {
             if (languages.has(t.language)) {
-                throw new Error(`Duplicate language code in translations: ${t.language}`);
+                throw new TierException(`Duplicate language code in translations: ${t.language}`);
             }
             languages.add(t.language);
         }

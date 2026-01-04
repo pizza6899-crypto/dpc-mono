@@ -15,11 +15,10 @@ import {
 } from 'src/modules/affiliate/referral/domain/referral.exception';
 import { WALLET_CURRENCIES } from 'src/utils/currency.util';
 import { UserRoleType } from '@repo/database';
-import { USER_REPOSITORY } from 'src/modules/user/ports/out/user.repository.token';
-import type { UserRepositoryPort } from 'src/modules/user/ports/out/user.repository.port';
 import { CreateUserService } from 'src/modules/user/application/create-user.service';
 import { UserAlreadyExistsException } from 'src/modules/user/domain/user.exception';
 import { CreateWalletService } from 'src/modules/wallet/application/create-wallet.service';
+import { AssignDefaultTierService } from 'src/modules/tier/application/assign-default-tier.service';
 
 export interface RegisterCredentialParams {
   email: string;
@@ -47,8 +46,7 @@ export class RegisterCredentialService {
     private readonly createCodeService: CreateCodeService,
     private readonly createUserService: CreateUserService,
     private readonly createWalletService: CreateWalletService,
-    @Inject(USER_REPOSITORY)
-    private readonly userRepository: UserRepositoryPort,
+    private readonly assignDefaultTierService: AssignDefaultTierService,
   ) { }
 
   @Transactional()
@@ -120,6 +118,9 @@ export class RegisterCredentialService {
         userId: user.id,
         campaignName: 'Default',
       });
+
+      // 4.1 VIP 멤버십 전용 티어 할당 (기본 티어)
+      await this.assignDefaultTierService.execute(user.id);
     } catch (error) {
       if (error instanceof UserAlreadyExistsException) {
         throw error;
