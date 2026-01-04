@@ -1,19 +1,42 @@
-// src/modules/tier/tier.module.ts
 import { Module } from '@nestjs/common';
+import {
+  TierMapper,
+  UserTierMapper,
+  TierHistoryMapper,
+  TierRepository,
+  UserTierRepository,
+  TierHistoryRepository
+} from './infrastructure';
+import {
+  TIER_REPOSITORY,
+  USER_TIER_REPOSITORY,
+  TIER_HISTORY_REPOSITORY
+} from './ports/repository.token';
 
 @Module({
-  imports: [
-    // TODO: 필요한 모듈 import 추가
-  ],
+  imports: [],
   providers: [
-    // TODO: Providers 추가
+    TierMapper,
+    UserTierMapper,
+    TierHistoryMapper,
+    {
+      provide: TIER_REPOSITORY,
+      useClass: TierRepository,
+    },
+    {
+      provide: USER_TIER_REPOSITORY,
+      useClass: UserTierRepository,
+    },
+    {
+      provide: TIER_HISTORY_REPOSITORY,
+      useClass: TierHistoryRepository,
+    },
   ],
-  controllers: [
-    // TODO: Controllers 추가
-  ],
+  controllers: [],
   exports: [
-    // TODO: Exports 추가
+    TIER_REPOSITORY,
+    USER_TIER_REPOSITORY,
+    TIER_HISTORY_REPOSITORY,
   ],
 })
-export class TierModule {}
-
+export class TierModule { }
