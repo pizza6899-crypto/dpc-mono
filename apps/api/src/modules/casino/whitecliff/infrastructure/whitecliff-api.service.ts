@@ -1,4 +1,4 @@
-import { Injectable, Logger } from '@nestjs/common';
+import { Injectable } from '@nestjs/common';
 import { HttpService } from '@nestjs/axios';
 import { EnvService } from 'src/common/env/env.service';
 import { firstValueFrom } from 'rxjs';
@@ -7,6 +7,8 @@ import { WhitecliffConfig } from 'src/common/env/env.types';
 import { GameProvider, Language } from '@repo/database';
 import { WhitecliffMapperService } from './whitecliff-mapper.service';
 import { GamingCurrencyCode } from 'src/utils/currency.util';
+import { DispatchLogService } from 'src/modules/audit-log/application/dispatch-log.service';
+import { LogType } from 'src/modules/audit-log/domain';
 
 // 공통 에러 응답 타입 정의
 interface WhitecliffErrorResponse {
@@ -76,13 +78,13 @@ export interface PushedBetHistoryResponse {
 
 @Injectable()
 export class WhitecliffApiService {
-  private readonly logger = new Logger(WhitecliffApiService.name);
   private readonly whitecliffConfig: WhitecliffConfig[];
 
   constructor(
     private readonly httpService: HttpService,
     private readonly envService: EnvService,
     private readonly whitecliffMapperService: WhitecliffMapperService,
+    private readonly dispatchLogService: DispatchLogService,
   ) {
     this.whitecliffConfig = this.envService.whitecliff;
   }
@@ -121,11 +123,13 @@ export class WhitecliffApiService {
     const config = this.getConfigByCurrency(currency);
     const url = `${config.endpoint}${path}`;
 
-    try {
-      this.logger.log(
-        `[Whitecliff] 요청 시작: ${description} (${method} ${path})`,
-      );
+    const startTime = Date.now();
+    let responseData: any;
+    let errorObj: any;
+    let success = false;
+    let statusCode = 0;
 
+    try {
       const response = await firstValueFrom(
         this.httpService.request<T>({
           method,
@@ -140,15 +144,51 @@ export class WhitecliffApiService {
         }),
       );
 
-      this.logger.log(`[Whitecliff] 요청 성공: ${description}`);
+      responseData = response.data;
+      statusCode = response.status;
+      success = true;
+
       return response.data;
     } catch (error) {
-      this.logger.error(`[Whitecliff] 요청 실패: ${description}`, error.stack);
+      errorObj = error;
+      statusCode = error.response?.status || 0;
+      success = false;
+
       return {
         status: 0,
         error: 'API_REQUEST_FAILED',
         message: error.message,
       };
+    } finally {
+      const duration = Date.now() - startTime;
+      await this.dispatchLogService.dispatch({
+        type: LogType.INTEGRATION,
+        data: {
+          provider: 'WHITECLIFF',
+          method,
+          endpoint: url,
+          statusCode,
+          duration,
+          success,
+          request: data,
+          response: responseData || (errorObj ? { message: errorObj.message } : null),
+          metadata: { description },
+        },
+      });
+
+      if (!success) {
+        await this.dispatchLogService.dispatch({
+          type: LogType.ERROR,
+          data: {
+            severity: 'ERROR',
+            errorCode: 'WHITECLIFF_API_ERROR',
+            errorMessage: errorObj?.message || 'Unknown error',
+            stackTrace: errorObj?.stack,
+            path: url,
+            method,
+          },
+        });
+      }
     }
   }
 
@@ -306,22 +346,13 @@ export class WhitecliffApiService {
 
     // 성공한 경우 (데이터 타입이 ProductGameListResponse)
     // 응답 크기 진단
-    const jsonStr = JSON.stringify(result);
-    const responseSize = Buffer.byteLength(jsonStr, 'utf8');
-    this.logger.log(
-      `응답 크기: ${this.formatBytes(responseSize)}, 게임 수: ${Object.keys((result as ProductGameListResponse)?.game_list ?? {}).length}`,
-    );
+    // 성공한 경우 (데이터 타입이 ProductGameListResponse)
+    // 응답 크기 진단 (생략 - Audit Log 확인)
 
     return result;
   }
 
-  private formatBytes(bytes: number): string {
-    if (bytes === 0) return '0 Bytes';
-    const k = 1024;
-    const sizes = ['Bytes', 'KB', 'MB', 'GB'];
-    const i = Math.floor(Math.log(bytes) / Math.log(k));
-    return parseFloat((bytes / Math.pow(k, i)).toFixed(2)) + ' ' + sizes[i];
-  }
+
 
   /**
    * 푸시 베팅 내역 조회 (Pushed Bet History)

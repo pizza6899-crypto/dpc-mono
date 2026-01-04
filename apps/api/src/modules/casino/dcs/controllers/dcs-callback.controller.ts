@@ -29,21 +29,33 @@ import {
 import { CasinoResponse } from 'src/common/http/decorators/casino-response.decorator';
 import { GuestOnly } from 'src/common/auth/decorators/roles.decorator';
 import { DcsCallbackService } from '../application/dcs-callback.service';
-import { DcsLoggingInterceptor } from '../infrastructure/dcs-logging.interceptor';
+import { AuditLog } from 'src/modules/audit-log/infrastructure/audit-log.decorator';
+import { LogType } from 'src/modules/audit-log/domain';
 
 @ApiTags('DCS Callback(콜백)')
 @Controller('dopaminedev')
 @GuestOnly()
 @UseFilters() // 글로벌 예외 필터 비활성화
-@UseInterceptors(DcsLoggingInterceptor)
 export class DcsCallbackController {
-  constructor(private readonly dcsCallbackService: DcsCallbackService) {}
+  constructor(private readonly dcsCallbackService: DcsCallbackService) { }
 
   @Post('/login')
   @HttpCode(HttpStatus.OK)
   @ApiOperation({ summary: '로그인 콜백' })
   @ApiBody({ type: LoginRequestDto })
   @CasinoResponse(DcsLoginResponseDto, { description: '로그인 성공' })
+  @AuditLog({
+    type: LogType.INTEGRATION,
+    action: 'DCS_CALLBACK_LOGIN',
+    extractMetadata: (req, args, result) => ({
+      provider: 'DCS',
+      method: 'POST',
+      endpoint: req.url,
+      request: req.body,
+      response: result,
+      statusCode: 200,
+    }),
+  })
   async login(@Body() body: LoginRequestDto): Promise<DcsLoginResponseDto> {
     const { brand_id, sign, token, brand_uid, currency } = body;
 
@@ -72,6 +84,18 @@ export class DcsCallbackController {
   @ApiOperation({ summary: '베팅 콜백' })
   @ApiBody({ type: WagerRequestDto })
   @CasinoResponse(WagerResponseDto, { description: '베팅 성공' })
+  @AuditLog({
+    type: LogType.INTEGRATION,
+    action: 'DCS_CALLBACK_WAGER',
+    extractMetadata: (req, args, result) => ({
+      provider: 'DCS',
+      method: 'POST',
+      endpoint: req.url,
+      request: req.body,
+      response: result,
+      statusCode: 200,
+    }),
+  })
   async wager(@Body() body: WagerRequestDto): Promise<WagerResponseDto> {
     const { brand_id, sign, wager_id } = body;
 
@@ -110,6 +134,18 @@ export class DcsCallbackController {
   @ApiOperation({ summary: '베팅 취소 콜백' })
   @ApiBody({ type: CancelWagerRequestDto })
   @CasinoResponse(CancelWagerResponseDto, { description: '베팅 취소 성공' })
+  @AuditLog({
+    type: LogType.INTEGRATION,
+    action: 'DCS_CALLBACK_CANCEL_WAGER',
+    extractMetadata: (req, args, result) => ({
+      provider: 'DCS',
+      method: 'POST',
+      endpoint: req.url,
+      request: req.body,
+      response: result,
+      statusCode: 200,
+    }),
+  })
   async cancelWager(
     @Body() body: CancelWagerRequestDto,
   ): Promise<CancelWagerResponseDto> {
@@ -145,6 +181,18 @@ export class DcsCallbackController {
   @ApiOperation({ summary: '추가 베팅 콜백' })
   @ApiBody({ type: AppendWagerRequestDto })
   @CasinoResponse(AppendWagerResponseDto, { description: '추가 베팅 성공' })
+  @AuditLog({
+    type: LogType.INTEGRATION,
+    action: 'DCS_CALLBACK_APPEND_WAGER',
+    extractMetadata: (req, args, result) => ({
+      provider: 'DCS',
+      method: 'POST',
+      endpoint: req.url,
+      request: req.body,
+      response: result,
+      statusCode: 200,
+    }),
+  })
   async appendWager(
     @Body() body: AppendWagerRequestDto,
   ): Promise<AppendWagerResponseDto> {
@@ -183,6 +231,18 @@ export class DcsCallbackController {
   @ApiOperation({ summary: '베팅 종료 및 지급 콜백' })
   @ApiBody({ type: EndWagerRequestDto })
   @CasinoResponse(EndWagerResponseDto, { description: '베팅 종료 성공' })
+  @AuditLog({
+    type: LogType.INTEGRATION,
+    action: 'DCS_CALLBACK_END_WAGER',
+    extractMetadata: (req, args, result) => ({
+      provider: 'DCS',
+      method: 'POST',
+      endpoint: req.url,
+      request: req.body,
+      response: result,
+      statusCode: 200,
+    }),
+  })
   async endWager(
     @Body() body: EndWagerRequestDto,
   ): Promise<EndWagerResponseDto> {
@@ -219,6 +279,18 @@ export class DcsCallbackController {
   @ApiBody({ type: FreeSpinResultRequestDto })
   @CasinoResponse(FreeSpinResultResponseDto, {
     description: '무료 스핀 결과 처리 성공',
+  })
+  @AuditLog({
+    type: LogType.INTEGRATION,
+    action: 'DCS_CALLBACK_FREE_SPIN_RESULT',
+    extractMetadata: (req, args, result) => ({
+      provider: 'DCS',
+      method: 'POST',
+      endpoint: req.url,
+      request: req.body,
+      response: result,
+      statusCode: 200,
+    }),
   })
   async freeSpinResult(
     @Body() body: FreeSpinResultRequestDto,
@@ -257,6 +329,18 @@ export class DcsCallbackController {
   @ApiOperation({ summary: '잔액 조회 콜백' })
   @ApiBody({ type: GetDcsBalanceRequestDto })
   @CasinoResponse(GetDcsBalanceResponseDto, { description: '잔액 조회 성공' })
+  @AuditLog({
+    type: LogType.INTEGRATION,
+    action: 'DCS_CALLBACK_GET_BALANCE',
+    extractMetadata: (req, args, result) => ({
+      provider: 'DCS',
+      method: 'POST',
+      endpoint: req.url,
+      request: args[0],
+      response: result,
+      statusCode: 200,
+    }),
+  })
   async getBalance(
     @Body() body: GetDcsBalanceRequestDto,
   ): Promise<GetDcsBalanceResponseDto> {
@@ -287,6 +371,18 @@ export class DcsCallbackController {
   @ApiOperation({ summary: '프로모션 지급 콜백' })
   @ApiBody({ type: PromoPayoutRequestDto })
   @CasinoResponse(PromoPayoutResponseDto, { description: '프로모션 지급 성공' })
+  @AuditLog({
+    type: LogType.INTEGRATION,
+    action: 'DCS_CALLBACK_PROMO_PAYOUT',
+    extractMetadata: (req, args, result) => ({
+      provider: 'DCS',
+      method: 'POST',
+      endpoint: req.url,
+      request: args[0],
+      response: result,
+      statusCode: 200,
+    }),
+  })
   async promoPayout(
     @Body() body: PromoPayoutRequestDto,
   ): Promise<PromoPayoutResponseDto> {

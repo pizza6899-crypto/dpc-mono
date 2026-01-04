@@ -19,7 +19,7 @@ export class DcsGameRefreshService {
   constructor(
     private readonly dcsApiService: DcsApiService,
     private readonly prismaService: PrismaService,
-  ) {}
+  ) { }
 
   /**
    * 게임 목록을 수동으로 업데이트합니다.
