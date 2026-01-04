@@ -5,6 +5,7 @@ import type { RequestClientInfo } from 'src/common/http/types/client-info.types'
 import { DispatchLogService } from 'src/modules/audit-log/application/dispatch-log.service';
 import { LogType } from 'src/modules/audit-log/domain';
 import { CountryUtil } from 'src/utils/country.util';
+import { CreateCodeService } from 'src/modules/affiliate/code/application/create-code.service';
 import { VipMembershipService } from 'src/modules/vip/application/vip-membership.service';
 import { SocialType, UserRoleType } from '@repo/database';
 import { User } from 'src/modules/user/domain';
@@ -48,6 +49,7 @@ export class RegisterSocialService {
     private readonly prisma: PrismaService,
     private readonly dispatchLogService: DispatchLogService,
     private readonly vipMembershipService: VipMembershipService,
+    private readonly createCodeService: CreateCodeService,
     private readonly createUserService: CreateUserService,
     private readonly createWalletService: CreateWalletService,
     @Inject(USER_REPOSITORY)
@@ -95,6 +97,13 @@ export class RegisterSocialService {
             }),
           ),
         );
+
+        // 본인만의 기본 레퍼럴 코드 생성 (동기)
+        // 첫 번째 코드이므로 자동으로 기본(default) 코드가 됨
+        await this.createCodeService.execute({
+          userId: user.id,
+          campaignName: 'Default',
+        });
       } catch (error) {
         if (error instanceof UserAlreadyExistsException) {
           throw error;
