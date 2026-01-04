@@ -56,7 +56,7 @@ export class AffiliateCodeController {
     type: LogType.ACTIVITY,
     category: 'AFFILIATE',
     action: 'AFFILIATE_CODE_CREATE',
-    extractMetadata: (args, result) => ({
+    extractMetadata: (_, args, result) => ({
       codeId: result?.id,
       code: result?.code,
       campaignName: result?.campaignName,
@@ -90,7 +90,7 @@ export class AffiliateCodeController {
     type: LogType.ACTIVITY,
     category: 'AFFILIATE',
     action: 'AFFILIATE_CODE_LIST_VIEW',
-    extractMetadata: (args, result) => ({
+    extractMetadata: (_, args, result) => ({
       count: result?.data?.length ?? 0,
       total: result?.total ?? 0,
     }),
@@ -132,7 +132,7 @@ export class AffiliateCodeController {
     type: LogType.ACTIVITY,
     category: 'AFFILIATE',
     action: 'AFFILIATE_CODE_DEFAULT_VIEW',
-    extractMetadata: (args, result) => ({
+    extractMetadata: (_, args, result) => ({
       codeId: result?.id,
       code: result?.code,
     }),
@@ -165,7 +165,7 @@ export class AffiliateCodeController {
     type: LogType.ACTIVITY,
     category: 'AFFILIATE',
     action: 'AFFILIATE_CODE_UPDATE',
-    extractMetadata: (args, result) => ({
+    extractMetadata: (_, args, result) => ({
       codeId: result?.id,
       code: result?.code,
       campaignName: result?.campaignName,
@@ -202,8 +202,8 @@ export class AffiliateCodeController {
     type: LogType.ACTIVITY,
     category: 'AFFILIATE',
     action: 'AFFILIATE_CODE_VALIDATE',
-    extractMetadata: (args, result) => ({
-      code: args[0]?.code,
+    extractMetadata: (_, args, result) => ({
+      code: args[0]?.code, // dto.code checks
       isValid: result?.isValid,
     }),
   })

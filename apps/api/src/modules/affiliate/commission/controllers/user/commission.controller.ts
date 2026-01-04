@@ -57,7 +57,7 @@ export class AffiliateCommissionController {
     type: LogType.ACTIVITY,
     category: 'COMMISSION',
     action: 'COMMISSION_LIST_VIEW',
-    extractMetadata: (args, result) => ({
+    extractMetadata: (_, args, result) => ({
       count: result?.length ?? 0,
       query: args[1], // query params
     }),
@@ -113,7 +113,7 @@ export class AffiliateCommissionController {
     type: LogType.ACTIVITY,
     category: 'COMMISSION',
     action: 'COMMISSION_DETAIL_VIEW',
-    extractMetadata: (args, result) => ({
+    extractMetadata: (_, args, result) => ({
       commissionUid: args[1],
     }),
   })
@@ -156,7 +156,7 @@ export class AffiliateCommissionController {
     type: LogType.ACTIVITY,
     category: 'COMMISSION',
     action: 'WALLET_BALANCE_VIEW',
-    extractMetadata: (args, result) => ({
+    extractMetadata: (_, args, result) => ({
       currency: args[1],
     }),
   })
@@ -199,7 +199,7 @@ export class AffiliateCommissionController {
     type: LogType.ACTIVITY,
     category: 'COMMISSION',
     action: 'COMMISSION_RATE_VIEW',
-    extractMetadata: (args, result) => ({
+    extractMetadata: (_, args, result) => ({
       tier: result?.tier,
       effectiveRate: result?.effectiveRate,
     }),
@@ -238,7 +238,7 @@ export class AffiliateCommissionController {
     type: LogType.ACTIVITY,
     category: 'COMMISSION',
     action: 'COMMISSION_WITHDRAWAL',
-    extractMetadata: (args, result) => ({
+    extractMetadata: (_, args, result) => ({
       currency: args[1]?.currency,
       amount: args[1]?.amount,
     }),

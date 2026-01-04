@@ -12,6 +12,7 @@ export interface AuditLogOptions {
   category?: string;
   /** 메타데이터 추출 함수 (옵션) */
   extractMetadata?: (
+    request: any,
     args: any[],
     result?: any,
     error?: Error,

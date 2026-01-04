@@ -73,7 +73,7 @@ export class PromotionAdminController {
     private readonly getPromotionStatisticsService: GetPromotionStatisticsService,
     @Inject(PROMOTION_REPOSITORY)
     private readonly repository: PromotionRepositoryPort,
-  ) {}
+  ) { }
 
   /**
    * 관리자용 프로모션 목록 조회
@@ -93,7 +93,7 @@ export class PromotionAdminController {
     type: LogType.ACTIVITY,
     action: 'VIEW_PROMOTIONS_ADMIN',
     category: 'PROMOTION',
-    extractMetadata: (args, result) => {
+    extractMetadata: (_, args, result) => {
       return {
         promotionCount: result?.data?.length || 0,
         total: result?.total || 0,
@@ -155,7 +155,7 @@ export class PromotionAdminController {
     type: LogType.ACTIVITY,
     action: 'CREATE_PROMOTION',
     category: 'PROMOTION',
-    extractMetadata: (args, result) => {
+    extractMetadata: (_, args, result) => {
       const [dto] = args;
       return {
         promotionId: result?.id,
@@ -227,7 +227,7 @@ export class PromotionAdminController {
     type: LogType.ACTIVITY,
     action: 'UPDATE_PROMOTION',
     category: 'PROMOTION',
-    extractMetadata: (args, result) => {
+    extractMetadata: (_, args, result) => {
       const [, dto] = args;
       return {
         promotionId: result?.id,
@@ -288,7 +288,7 @@ export class PromotionAdminController {
     type: LogType.ACTIVITY,
     action: 'DELETE_PROMOTION',
     category: 'PROMOTION',
-    extractMetadata: (args) => {
+    extractMetadata: (_, args) => {
       const [id] = args;
       return {
         promotionId: id,
@@ -319,7 +319,7 @@ export class PromotionAdminController {
     type: LogType.ACTIVITY,
     action: 'TOGGLE_PROMOTION_ACTIVE',
     category: 'PROMOTION',
-    extractMetadata: (args, result) => {
+    extractMetadata: (_, args, result) => {
       const [id] = args;
       return {
         promotionId: id,
@@ -366,7 +366,7 @@ export class PromotionAdminController {
     type: LogType.ACTIVITY,
     action: 'VIEW_PROMOTION_CURRENCIES_ADMIN',
     category: 'PROMOTION',
-    extractMetadata: (args) => {
+    extractMetadata: (_, args) => {
       const [id] = args;
       return {
         promotionId: id,
@@ -416,7 +416,7 @@ export class PromotionAdminController {
     type: LogType.ACTIVITY,
     action: 'UPSERT_PROMOTION_CURRENCY',
     category: 'PROMOTION',
-    extractMetadata: (args) => {
+    extractMetadata: (_, args) => {
       const [id, dto] = args;
       return {
         promotionId: id,
@@ -463,7 +463,7 @@ export class PromotionAdminController {
     type: LogType.ACTIVITY,
     action: 'DELETE_PROMOTION_CURRENCY',
     category: 'PROMOTION',
-    extractMetadata: (args) => {
+    extractMetadata: (_, args) => {
       const [id, currency] = args;
       return {
         promotionId: id,
@@ -497,7 +497,7 @@ export class PromotionAdminController {
     type: LogType.ACTIVITY,
     action: 'VIEW_PROMOTION_TRANSLATIONS_ADMIN',
     category: 'PROMOTION',
-    extractMetadata: (args) => {
+    extractMetadata: (_, args) => {
       const [id] = args;
       return {
         promotionId: id,
@@ -547,7 +547,7 @@ export class PromotionAdminController {
     type: LogType.ACTIVITY,
     action: 'UPSERT_PROMOTION_TRANSLATION',
     category: 'PROMOTION',
-    extractMetadata: (args) => {
+    extractMetadata: (_, args) => {
       const [id, dto] = args;
       return {
         promotionId: id,
@@ -591,7 +591,7 @@ export class PromotionAdminController {
     type: LogType.ACTIVITY,
     action: 'DELETE_PROMOTION_TRANSLATION',
     category: 'PROMOTION',
-    extractMetadata: (args) => {
+    extractMetadata: (_, args) => {
       const [id, language] = args;
       return {
         promotionId: id,
@@ -626,7 +626,7 @@ export class PromotionAdminController {
     type: LogType.ACTIVITY,
     action: 'VIEW_PROMOTION_PARTICIPANTS_ADMIN',
     category: 'PROMOTION',
-    extractMetadata: (args, result) => {
+    extractMetadata: (_, args, result) => {
       const [id] = args;
       return {
         promotionId: id,
@@ -692,7 +692,7 @@ export class PromotionAdminController {
     type: LogType.ACTIVITY,
     action: 'VIEW_PROMOTION_STATISTICS_ADMIN',
     category: 'PROMOTION',
-    extractMetadata: (args) => {
+    extractMetadata: (_, args) => {
       const [id] = args;
       return {
         promotionId: id,
@@ -729,7 +729,7 @@ export class PromotionAdminController {
     type: LogType.ACTIVITY,
     action: 'VIEW_PROMOTION_DETAIL_ADMIN',
     category: 'PROMOTION',
-    extractMetadata: (args) => {
+    extractMetadata: (_, args) => {
       const [id] = args;
       return {
         promotionId: id,

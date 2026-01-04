@@ -102,6 +102,9 @@ export interface IntegrationLogPayload {
   // Cloudflare 추적 정보 (디버깅용)
   cfRay?: string; // CF-Ray: 요청 추적 ID
   ip?: string; // 클라이언트 IP
+  request?: any; // 요청 데이터 (상세 로깅용)
+  response?: any; // 응답 데이터 (상세 로깅용)
+  metadata?: any; // 추가 메타데이터
 }
 
 export type LogJobData =

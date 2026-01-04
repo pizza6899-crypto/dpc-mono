@@ -80,7 +80,7 @@ export class LoginService {
 @AuditLog({
   type: LogType.AUTH,
   action: 'PASSWORD_CHANGE',
-  extractMetadata: (args, result, error) => {
+  extractMetadata: (_, args, result, error) => {
     const [params] = args;
     return {
       isAdmin: params.isAdmin,
@@ -103,7 +103,7 @@ async execute({ user, isAdmin, changedBy }: ChangePasswordParams): Promise<void>
   type: LogType.ACTIVITY,
   action: 'COMMISSION_WITHDRAW',
   category: 'AFFILIATE',
-  extractMetadata: (args) => {
+  extractMetadata: (_, args) => {
     const [params] = args;
     return {
       affiliateId: params.affiliateId.toString(),
@@ -206,7 +206,7 @@ export class LoginService {
 @AuditLog({
   type: LogType.AUTH,
   action: 'LOGIN',
-  extractMetadata: (args) => {
+  extractMetadata: (_, args) => {
     const [params] = args;
     return { isAdmin: params.isAdmin };
   },

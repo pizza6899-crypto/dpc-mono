@@ -60,7 +60,7 @@ export class AffiliateCodeAdminController {
     type: LogType.ACTIVITY,
     category: 'AFFILIATE',
     action: 'AFFILIATE_CODE_ADMIN_LIST_VIEW',
-    extractMetadata: (args, result) => ({
+    extractMetadata: (_, args, result) => ({
       query: args[0], // FindCodesQueryDto
       count: result?.data?.length ?? 0,
       total: result?.total ?? 0,
@@ -112,7 +112,7 @@ export class AffiliateCodeAdminController {
     type: LogType.ACTIVITY,
     category: 'AFFILIATE',
     action: 'AFFILIATE_CODE_ADMIN_DETAIL_VIEW',
-    extractMetadata: (args, result) => ({
+    extractMetadata: (_, args, result) => ({
       codeId: args[0],
       userId: result?.userId,
     }),
@@ -141,7 +141,7 @@ export class AffiliateCodeAdminController {
     type: LogType.ACTIVITY,
     category: 'AFFILIATE',
     action: 'AFFILIATE_CODE_ADMIN_CREATE',
-    extractMetadata: (args, result) => ({
+    extractMetadata: (_, args, result) => ({
       targetUserId: args[0]?.userId,
       createdCode: result?.code,
     }),
@@ -173,7 +173,7 @@ export class AffiliateCodeAdminController {
     type: LogType.ACTIVITY,
     category: 'AFFILIATE',
     action: 'AFFILIATE_CODE_ADMIN_UPDATE',
-    extractMetadata: (args, result) => ({
+    extractMetadata: (_, args, result) => ({
       codeId: args[0],
       changes: args[1],
       isDefault: result?.isDefault,
@@ -217,7 +217,7 @@ export class AffiliateCodeAdminController {
     type: LogType.ACTIVITY,
     category: 'AFFILIATE',
     action: 'AFFILIATE_CODE_ADMIN_DELETE',
-    extractMetadata: (args) => ({
+    extractMetadata: (_, args) => ({
       codeId: args[0],
     }),
   })

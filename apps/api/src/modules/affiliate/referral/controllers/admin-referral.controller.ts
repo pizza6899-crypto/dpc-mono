@@ -41,7 +41,7 @@ export class AdminReferralController {
     type: LogType.ACTIVITY,
     category: 'AFFILIATE',
     action: 'ADMIN_REFERRAL_LIST_VIEW',
-    extractMetadata: (args, result) => ({
+    extractMetadata: (_, args, result) => ({
       query: args[0], // GetReferralsQueryDto
       count: result?.data?.length ?? 0,
       total: result?.total ?? 0,
@@ -74,7 +74,7 @@ export class AdminReferralController {
     type: LogType.ACTIVITY,
     category: 'AFFILIATE',
     action: 'ADMIN_REFERRAL_DETAIL_VIEW',
-    extractMetadata: (args, result) => ({
+    extractMetadata: (_, args, result) => ({
       referralId: args[0],
       affiliateId: result?.affiliateId,
     }),

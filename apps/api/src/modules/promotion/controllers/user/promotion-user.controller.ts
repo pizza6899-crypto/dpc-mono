@@ -25,11 +25,9 @@ import { FindUserPromotionsService } from '../../application/find-user-promotion
 import { GetActivePromotionsForUserService } from '../../application/get-active-promotions-for-user.service';
 import { GetPromotionByIdForUserService } from '../../application/get-promotion-by-id-for-user.service';
 import {
-  ActivePromotionsResponseDto,
   PromotionResponseDto,
 } from './dto/response/promotion.response.dto';
 import {
-  MyPromotionsResponseDto,
   UserPromotionResponseDto,
 } from './dto/response/user-promotion.response.dto';
 import { ListActivePromotionsQueryDto } from './dto/request/list-active-promotions-query.dto';
@@ -49,7 +47,7 @@ export class PromotionUserController {
     private readonly getPromotionByIdForUserService: GetPromotionByIdForUserService,
     @Inject(PROMOTION_REPOSITORY)
     private readonly repository: PromotionRepositoryPort,
-  ) {}
+  ) { }
 
   /**
    * 활성 프로모션 목록 조회
@@ -69,7 +67,7 @@ export class PromotionUserController {
     type: LogType.ACTIVITY,
     action: 'VIEW_PROMOTIONS',
     category: 'PROMOTION',
-    extractMetadata: (args, result) => {
+    extractMetadata: (_, args, result) => {
       return {
         promotionCount: result?.data?.length || 0,
         total: result?.total || 0,
@@ -114,7 +112,7 @@ export class PromotionUserController {
     type: LogType.ACTIVITY,
     action: 'VIEW_PROMOTION_DETAIL',
     category: 'PROMOTION',
-    extractMetadata: (args) => {
+    extractMetadata: (_, args) => {
       const [id] = args;
       return {
         promotionId: id,
@@ -149,7 +147,7 @@ export class PromotionUserController {
     type: LogType.ACTIVITY,
     action: 'VIEW_MY_PROMOTIONS',
     category: 'PROMOTION',
-    extractMetadata: (args, result, error) => {
+    extractMetadata: (_, args, result, error) => {
       if (error) {
         return {
           failureReason: 'USER_NOT_AUTHENTICATED',

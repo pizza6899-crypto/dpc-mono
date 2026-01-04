@@ -8,8 +8,6 @@ import { ConcurrencyModule } from 'src/common/concurrency/concurrency.module';
 import { WhitecliffCallbackController } from './controllers/whitecliff-callback.controller';
 import { WhitecliffGameService } from './application/whitecliff-game.service';
 import { WhitecliffAdminController } from './controllers/whitecliff-admin.controller';
-import { WhitecliffLoggingInterceptor } from './infrastructure/whitecliff-logging.interceptor';
-import { WhitecliffApiLoggingInterceptor } from './infrastructure/whitecliff-api-logging.interceptor';
 import { WhitecliffGameRefreshService } from './application/whitecliff-game-refresh.service';
 import { RedisModule } from 'src/infrastructure/redis/redis.module';
 import { WhitecliffMapperService } from './infrastructure/whitecliff-mapper.service';
@@ -40,8 +38,6 @@ import { WhitecliffPushedBetHistoryScheduler } from './schedulers/whitecliff-pus
     WhitecliffCallbackService,
     WhitecliffApiService,
     WhitecliffGameService,
-    WhitecliffLoggingInterceptor,
-    WhitecliffApiLoggingInterceptor,
     WhitecliffGameRefreshService,
     WhitecliffMapperService,
     WhitecliffFetchGameResultUrlProcessor,
@@ -55,4 +51,4 @@ import { WhitecliffPushedBetHistoryScheduler } from './schedulers/whitecliff-pus
     WhitecliffMapperService,
   ],
 })
-export class WhitecliffModule {}
+export class WhitecliffModule { }

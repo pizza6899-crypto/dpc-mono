@@ -18,6 +18,7 @@ import { CasinoRefundService } from './application/casino-refund.service';
 import { ExchangeModule } from '../exchange/exchange.module';
 import { GameSessionService } from './application/game-session.service';
 import { UserStatsModule } from '../user-stats/user-stats.module';
+import { AuditLogModule } from '../audit-log/audit-log.module';
 
 @Module({
   imports: [
@@ -32,6 +33,7 @@ import { UserStatsModule } from '../user-stats/user-stats.module';
     EnvModule,
     ExchangeModule,
     UserStatsModule,
+    AuditLogModule,
   ],
   controllers: [CasinoGameController],
   providers: [
@@ -51,4 +53,4 @@ import { UserStatsModule } from '../user-stats/user-stats.module';
     GameSessionService,
   ],
 })
-export class CasinoModule {}
+export class CasinoModule { }

@@ -151,7 +151,7 @@ export class AdminDepositController {
     type: LogType.ACTIVITY,
     action: 'VIEW_DEPOSIT_DETAIL',
     category: 'DEPOSIT',
-    extractMetadata: (args) => ({
+    extractMetadata: (_, args) => ({
       depositId: args[0]?.id || args[0],
     }),
   })
@@ -186,7 +186,7 @@ export class AdminDepositController {
   @AuditLog({
     type: LogType.AUTH,
     action: 'APPROVE_DEPOSIT',
-    extractMetadata: (args) => ({
+    extractMetadata: (_, args) => ({
       depositId: args[0]?.id || args[0],
       actuallyPaid: args[1]?.actuallyPaid,
       transactionHash: args[1]?.transactionHash,
@@ -226,7 +226,7 @@ export class AdminDepositController {
   @AuditLog({
     type: LogType.AUTH,
     action: 'REJECT_DEPOSIT',
-    extractMetadata: (args) => ({
+    extractMetadata: (_, args) => ({
       depositId: args[0]?.id || args[0],
       failureReason: args[1]?.failureReason,
     }),
@@ -293,7 +293,7 @@ export class AdminDepositController {
     type: LogType.ACTIVITY,
     action: 'CREATE_BANK_CONFIG',
     category: 'DEPOSIT',
-    extractMetadata: (args) => ({
+    extractMetadata: (_, args) => ({
       currency: args[0]?.currency,
       bankName: args[0]?.bankName,
     }),
@@ -345,7 +345,7 @@ export class AdminDepositController {
     type: LogType.ACTIVITY,
     action: 'VIEW_BANK_CONFIG_DETAIL',
     category: 'DEPOSIT',
-    extractMetadata: (args) => ({
+    extractMetadata: (_, args) => ({
       bankConfigId: args[0]?.id || args[0],
     }),
   })
@@ -381,7 +381,7 @@ export class AdminDepositController {
     type: LogType.ACTIVITY,
     action: 'UPDATE_BANK_CONFIG',
     category: 'DEPOSIT',
-    extractMetadata: (args) => ({
+    extractMetadata: (_, args) => ({
       bankConfigId: args[0]?.id || args[0],
       updatedFields: Object.keys(args[1] || {}),
     }),
@@ -420,7 +420,7 @@ export class AdminDepositController {
     type: LogType.ACTIVITY,
     action: 'DELETE_BANK_CONFIG',
     category: 'DEPOSIT',
-    extractMetadata: (args) => ({
+    extractMetadata: (_, args) => ({
       bankConfigId: args[0]?.id || args[0],
     }),
   })
@@ -489,7 +489,7 @@ export class AdminDepositController {
     type: LogType.ACTIVITY,
     action: 'VIEW_CRYPTO_CONFIG_DETAIL',
     category: 'DEPOSIT',
-    extractMetadata: (args) => ({
+    extractMetadata: (_, args) => ({
       cryptoConfigId: args[0]?.id || args[0],
     }),
   })
@@ -525,7 +525,7 @@ export class AdminDepositController {
     type: LogType.ACTIVITY,
     action: 'UPDATE_CRYPTO_CONFIG',
     category: 'DEPOSIT',
-    extractMetadata: (args) => ({
+    extractMetadata: (_, args) => ({
       cryptoConfigId: args[0]?.id || args[0],
       updatedFields: Object.keys(args[1] || {}),
     }),
@@ -559,7 +559,7 @@ export class AdminDepositController {
     type: LogType.ACTIVITY,
     action: 'CREATE_CRYPTO_CONFIG',
     category: 'DEPOSIT',
-    extractMetadata: (args) => ({
+    extractMetadata: (_, args) => ({
       symbol: args[0]?.symbol,
       network: args[0]?.network,
     }),
@@ -596,7 +596,7 @@ export class AdminDepositController {
     type: LogType.ACTIVITY,
     action: 'DELETE_CRYPTO_CONFIG',
     category: 'DEPOSIT',
-    extractMetadata: (args) => ({
+    extractMetadata: (_, args) => ({
       cryptoConfigId: args[0]?.id || args[0],
     }),
   })

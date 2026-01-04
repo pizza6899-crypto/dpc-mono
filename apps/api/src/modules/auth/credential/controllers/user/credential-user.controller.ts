@@ -74,7 +74,7 @@ export class CredentialUserController {
   @AuditLog({
     type: LogType.AUTH,
     action: 'LOGIN',
-    extractMetadata: (args) => {
+    extractMetadata: (_, args) => {
       const [dto] = args;
       return {
         email: dto.email,
@@ -280,7 +280,7 @@ export class CredentialUserController {
   @AuditLog({
     type: LogType.AUTH,
     action: 'PASSWORD_CHANGE',
-    extractMetadata: (args, result, error) => {
+    extractMetadata: (_, args, result, error) => {
       if (error) {
         return {
           failureReason: 'INVALID_CURRENT_PASSWORD',
@@ -324,7 +324,7 @@ export class CredentialUserController {
   @AuditLog({
     type: LogType.AUTH,
     action: 'PASSWORD_RESET_REQUEST',
-    extractMetadata: (args) => {
+    extractMetadata: (_, args) => {
       const [dto] = args;
       return {
         email: dto.email,
@@ -365,7 +365,7 @@ export class CredentialUserController {
   @AuditLog({
     type: LogType.AUTH,
     action: 'PASSWORD_RESET',
-    extractMetadata: (args, result, error) => {
+    extractMetadata: (_, args, result, error) => {
       if (error) {
         let failureReason = 'UNKNOWN_ERROR';
         if (error.message?.includes('INVALID_TOKEN')) {

@@ -137,7 +137,7 @@ export class DepositController {
     type: LogType.ACTIVITY,
     action: 'VIEW_DEPOSIT_DETAIL',
     category: 'DEPOSIT',
-    extractMetadata: (args) => ({
+    extractMetadata: (_, args) => ({
       depositUid: args[0],
     }),
   })
@@ -167,7 +167,7 @@ export class DepositController {
     type: LogType.ACTIVITY,
     action: 'CREATE_CRYPTO_DEPOSIT_REQUEST',
     category: 'DEPOSIT',
-    extractMetadata: (args) => ({
+    extractMetadata: (_, args) => ({
       currency: args[0]?.payCurrency,
       network: args[0]?.payNetwork,
     }),
@@ -200,7 +200,7 @@ export class DepositController {
     type: LogType.ACTIVITY,
     action: 'CREATE_BANK_DEPOSIT_REQUEST',
     category: 'DEPOSIT',
-    extractMetadata: (args) => ({
+    extractMetadata: (_, args) => ({
       currency: args[0]?.payCurrency,
       amount: args[0]?.amount,
     }),
@@ -238,7 +238,7 @@ export class DepositController {
     type: LogType.ACTIVITY,
     action: 'CANCEL_DEPOSIT_REQUEST',
     category: 'DEPOSIT',
-    extractMetadata: (args) => ({
+    extractMetadata: (_, args) => ({
       depositUid: args[0],
     }),
   })

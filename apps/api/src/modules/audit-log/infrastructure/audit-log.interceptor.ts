@@ -30,7 +30,7 @@ export class AuditLogInterceptor implements NestInterceptor {
   constructor(
     private readonly reflector: Reflector,
     private readonly dispatchLogService: DispatchLogService,
-  ) {}
+  ) { }
 
   intercept(context: ExecutionContext, next: CallHandler): Observable<any> {
     const options = this.reflector.getAllAndOverride<AuditLogOptions>(
@@ -45,22 +45,25 @@ export class AuditLogInterceptor implements NestInterceptor {
 
     const request = context.switchToHttp().getRequest<Request>();
     const args = context.getArgs();
-    
+
     // clientInfo 추출: request.clientInfo 또는 args에서 찾기
     const clientInfo = this.extractClientInfo(request, args);
     const user = request.user as AuthenticatedUser | undefined;
 
+    const startTime = Date.now();
     return next.handle().pipe(
       tap((result) => {
+        const duration = Date.now() - startTime;
         // 성공 시 로그 기록
         if (options.logOnSuccess !== false) {
-          this.logSuccess(options, args, result, clientInfo, user);
+          this.logSuccess(options, request, args, result, duration, clientInfo, user);
         }
       }),
       catchError((error) => {
+        const duration = Date.now() - startTime;
         // 실패 시 로그 기록
         if (options.logOnError !== false) {
-          this.logError(options, args, error, clientInfo, user);
+          this.logError(options, request, args, error, duration, clientInfo, user);
         }
         return throwError(() => error);
       }),
@@ -69,19 +72,22 @@ export class AuditLogInterceptor implements NestInterceptor {
 
   private async logSuccess(
     options: AuditLogOptions,
+    request: Request,
     args: any[],
     result: any,
+    duration: number,
     clientInfo?: RequestClientInfo,
     user?: AuthenticatedUser,
   ): Promise<void> {
     const userId = this.extractUserId(args, result, user);
-    const metadata = options.extractMetadata?.(args, result);
+    const metadata = options.extractMetadata?.(request, args, result);
 
     const payload = this.buildLogPayload(
       options,
       userId,
       'SUCCESS',
       metadata,
+      duration,
       clientInfo,
       user,
     );
@@ -91,13 +97,15 @@ export class AuditLogInterceptor implements NestInterceptor {
 
   private async logError(
     options: AuditLogOptions,
+    request: Request,
     args: any[],
     error: Error,
+    duration: number,
     clientInfo?: RequestClientInfo,
     user?: AuthenticatedUser,
   ): Promise<void> {
     const userId = this.extractUserId(args, undefined, user);
-    const metadata = options.extractMetadata?.(args, undefined, error);
+    const metadata = options.extractMetadata?.(request, args, undefined, error);
 
     const payload = this.buildLogPayload(
       options,
@@ -108,6 +116,7 @@ export class AuditLogInterceptor implements NestInterceptor {
         error: error.message,
         errorName: error.name,
       },
+      duration,
       clientInfo,
       user,
     );
@@ -194,6 +203,7 @@ export class AuditLogInterceptor implements NestInterceptor {
     userId: string | undefined,
     status: string,
     metadata?: Record<string, any>,
+    duration: number = 0,
     clientInfo?: RequestClientInfo,
     user?: AuthenticatedUser,
   ): LogJobData {
@@ -269,6 +279,7 @@ export class AuditLogInterceptor implements NestInterceptor {
     }
 
     if (options.type === LogType.INTEGRATION) {
+      const { request, response, ...restMetadata } = metadata || {};
       return {
         type: LogType.INTEGRATION,
         data: {
@@ -277,7 +288,7 @@ export class AuditLogInterceptor implements NestInterceptor {
           method: metadata?.method || 'UNKNOWN',
           endpoint: metadata?.endpoint || '',
           statusCode: metadata?.statusCode,
-          duration: metadata?.duration || 0,
+          duration,
           success: status === 'SUCCESS',
           sessionId: clientInfo?.sessionId,
           country: clientInfo?.country,
@@ -286,6 +297,9 @@ export class AuditLogInterceptor implements NestInterceptor {
           threat: clientInfo?.threat,
           cfRay: clientInfo?.cfRay,
           ip: clientInfo?.ip,
+          request,
+          response,
+          metadata: restMetadata,
         },
       };
     }

@@ -76,7 +76,7 @@ export class CredentialAdminController {
   @AuditLog({
     type: LogType.AUTH,
     action: 'ADMIN_LOGIN',
-    extractMetadata: (args, result, error) => {
+    extractMetadata: (_, args, result, error) => {
       const [params] = args;
 
       if (error) {
@@ -329,7 +329,7 @@ export class CredentialAdminController {
   @AuditLog({
     type: LogType.AUTH,
     action: 'ADMIN_PASSWORD_CHANGE',
-    extractMetadata: (args, result, error) => {
+    extractMetadata: (_, args, result, error) => {
       if (error) {
         return {
           failureReason: 'INVALID_CURRENT_PASSWORD',
@@ -368,7 +368,7 @@ export class CredentialAdminController {
   @AuditLog({
     type: LogType.AUTH,
     action: 'ADMIN_PASSWORD_RESET',
-    extractMetadata: (args, result) => {
+    extractMetadata: (_, args, result) => {
       const [userId, dto] = args;
       return {
         targetUserId: userId,

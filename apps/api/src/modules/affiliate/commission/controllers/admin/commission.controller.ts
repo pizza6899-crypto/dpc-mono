@@ -54,7 +54,7 @@ export class AdminCommissionController {
     type: LogType.ACTIVITY,
     category: 'COMMISSION',
     action: 'COMMISSION_DETAIL_VIEW',
-    extractMetadata: (args, result) => ({
+    extractMetadata: (_, args, result) => ({
       commissionId: args[0],
       affiliateId: result?.affiliateId?.toString(),
     }),
@@ -90,7 +90,7 @@ export class AdminCommissionController {
     type: LogType.ACTIVITY,
     category: 'COMMISSION',
     action: 'COMMISSION_RATE_SET',
-    extractMetadata: (args, result) => ({
+    extractMetadata: (_, args, result) => ({
       affiliateId: args[1]?.affiliateId?.toString(),
       customRate: args[1]?.customRate,
       setBy: args[0]?.id?.toString(),
@@ -127,7 +127,7 @@ export class AdminCommissionController {
     type: LogType.ACTIVITY,
     category: 'COMMISSION',
     action: 'COMMISSION_RATE_RESET',
-    extractMetadata: (args, result) => ({
+    extractMetadata: (_, args, result) => ({
       affiliateId: args[1]?.affiliateId?.toString(),
       resetBy: args[0]?.id?.toString(),
     }),
