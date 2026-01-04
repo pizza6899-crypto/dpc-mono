@@ -319,32 +319,6 @@ exports.Prisma.GameTranslationScalarFieldEnum = {
   updatedAt: 'updatedAt'
 };
 
-exports.Prisma.WhitecliffApiLogScalarFieldEnum = {
-  id: 'id',
-  userId: 'userId',
-  action: 'action',
-  endpoint: 'endpoint',
-  httpMethod: 'httpMethod',
-  request: 'request',
-  response: 'response',
-  statusCode: 'statusCode',
-  success: 'success',
-  createdAt: 'createdAt'
-};
-
-exports.Prisma.DcsApiLogScalarFieldEnum = {
-  id: 'id',
-  userId: 'userId',
-  action: 'action',
-  endpoint: 'endpoint',
-  httpMethod: 'httpMethod',
-  request: 'request',
-  response: 'response',
-  statusCode: 'statusCode',
-  success: 'success',
-  createdAt: 'createdAt'
-};
-
 exports.Prisma.TransactionScalarFieldEnum = {
   id: 'id',
   userId: 'userId',
@@ -1094,8 +1068,6 @@ exports.Prisma.ModelName = {
   UserBalanceStats: 'UserBalanceStats',
   Game: 'Game',
   GameTranslation: 'GameTranslation',
-  WhitecliffApiLog: 'WhitecliffApiLog',
-  DcsApiLog: 'DcsApiLog',
   Transaction: 'Transaction',
   GameRound: 'GameRound',
   GameBet: 'GameBet',
