@@ -9,6 +9,7 @@
         "loginSuccess": "성공적으로 로그인되었습니다.",
         "error": "오류",
         "email": "이메일",
+        "password": "비밀번호",
         "invalidCredentials": "이메일 또는 비밀번호가 올바르지 않습니다.",
         "validation": {
             "email": "유효한 이메일 주소를 입력해주세요.",
@@ -18,6 +19,8 @@
     "common": {
         "confirm": "확인",
         "cancel": "취소",
+        "success": "성공",
+        "error": "오류",
         "dashboard": "대시보드",
         "users": "사용자",
         "settings": "설정",
@@ -46,6 +49,15 @@
             "active": "활성",
             "suspended": "정지",
             "closed": "탈퇴"
+        },
+        "add_user": "사용자 추가",
+        "messages": {
+            "create_success": "사용자가 성공적으로 생성되었습니다.",
+            "create_error": "사용자 생성에 실패했습니다.",
+            "add_user_desc": "새로운 사용자를 생성하기 위해 아래 정보를 입력해주세요."
+        },
+        "validation": {
+            "country_code": "국가 코드는 2자여야 합니다."
         }
     },
     "user_menu": {

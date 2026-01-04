@@ -9,6 +9,7 @@
         "loginSuccess": "You have been successfully logged in.",
         "error": "Error",
         "email": "Email",
+        "password": "Password",
         "invalidCredentials": "Invalid email or password.",
         "validation": {
             "email": "Please enter a valid email address.",
@@ -18,6 +19,8 @@
     "common": {
         "confirm": "Confirm",
         "cancel": "Cancel",
+        "success": "Success",
+        "error": "Error",
         "dashboard": "Dashboard",
         "users": "Users",
         "settings": "Settings",
@@ -46,6 +49,15 @@
             "active": "Active",
             "suspended": "Suspended",
             "closed": "Closed"
+        },
+        "add_user": "Add User",
+        "messages": {
+            "create_success": "User created successfully.",
+            "create_error": "Failed to create user.",
+            "add_user_desc": "Please enter the information below to create a new user."
+        },
+        "validation": {
+            "country_code": "Country code must be 2 characters."
         }
     },
     "user_menu": {
