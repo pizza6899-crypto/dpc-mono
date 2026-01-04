@@ -1,6 +1,6 @@
 import { defineStore } from 'pinia'
+import { CredentialAdminController_checkStatus, CredentialAdminController_logout } from '~/api/generated/endpoints/dPCBackendAPI'
 import type { CredentialUserLoginUserResponseDto } from '~/api/generated/models'
-import { credentialAdminControllerCheckStatus, credentialAdminControllerLogout } from '~/api/generated/endpoints/admin-auth-관리자-인증/admin-auth-관리자-인증'
 
 export const useAuthStore = defineStore('auth', () => {
     const user = ref<CredentialUserLoginUserResponseDto | null>(null)
@@ -11,7 +11,7 @@ export const useAuthStore = defineStore('auth', () => {
 
     async function fetchUserStatus() {
         try {
-            const response = await credentialAdminControllerCheckStatus()
+            const response = await CredentialAdminController_checkStatus()
             user.value = response.data?.user || null
             isAuthenticated.value = response.data?.isAuthenticated || false
         } catch (error) {
@@ -24,7 +24,7 @@ export const useAuthStore = defineStore('auth', () => {
 
     async function logout() {
         try {
-            await credentialAdminControllerLogout()
+            await CredentialAdminController_logout()
         } finally {
             user.value = null
             isAuthenticated.value = false
