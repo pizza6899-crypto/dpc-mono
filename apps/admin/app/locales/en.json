@@ -23,8 +23,7 @@
     "common": {
         "confirm": "Confirm",
         "cancel": "Cancel",
-        "home": "Home",
-        "inbox": "Inbox",
+        "dashboard": "Dashboard",
         "users": "Users",
         "settings": "Settings",
         "general": "General",

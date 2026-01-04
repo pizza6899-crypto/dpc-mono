@@ -9,17 +9,9 @@ const open = ref(false)
 const { t } = useI18n()
 
 const links = computed<NavigationMenuItem[][]>(() => [[{
-  label: t('common.home'),
+  label: t('common.dashboard'),
   icon: 'i-lucide-house',
   to: '/',
-  onSelect: () => {
-    open.value = false
-  }
-}, {
-  label: t('common.inbox'),
-  icon: 'i-lucide-inbox',
-  to: '/inbox',
-  badge: '4',
   onSelect: () => {
     open.value = false
   }

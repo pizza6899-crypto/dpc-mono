@@ -23,8 +23,7 @@
     "common": {
         "confirm": "확인",
         "cancel": "취소",
-        "home": "홈",
-        "inbox": "수신함",
+        "dashboard": "대시보드",
         "users": "사용자",
         "settings": "설정",
         "general": "일반",
