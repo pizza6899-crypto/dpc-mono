@@ -14,7 +14,7 @@ import type {
  */
 @Injectable()
 export class AuditLogAdapter implements AuditLogRepositoryPort {
-  constructor(private readonly prisma: PrismaService) {}
+  constructor(private readonly prisma: PrismaService) { }
 
   async saveAuthLog(id: string, payload: AuthLogPayload): Promise<void> {
     await this.prisma.authAuditLog.create({
@@ -117,8 +117,8 @@ export class AuditLogAdapter implements AuditLogRepositoryPort {
         method: payload.method,
         endpoint: payload.endpoint,
         statusCode: payload.statusCode || null,
-        requestBody: undefined,
-        responseBody: undefined,
+        requestBody: payload.request ?? undefined,
+        responseBody: payload.response ?? undefined,
         duration: payload.duration,
         success: payload.success,
         errorMessage: null,
