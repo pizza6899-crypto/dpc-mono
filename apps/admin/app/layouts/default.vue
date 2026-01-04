@@ -6,15 +6,17 @@ const toast = useToast()
 
 const open = ref(false)
 
-const links = [[{
-  label: 'Home',
+const { t } = useI18n()
+
+const links = computed<NavigationMenuItem[][]>(() => [[{
+  label: t('common.home'),
   icon: 'i-lucide-house',
   to: '/',
   onSelect: () => {
     open.value = false
   }
 }, {
-  label: 'Inbox',
+  label: t('common.inbox'),
   icon: 'i-lucide-inbox',
   to: '/inbox',
   badge: '4',
@@ -22,32 +24,32 @@ const links = [[{
     open.value = false
   }
 }, {
-  label: 'Customers',
-  icon: 'i-lucide-users',
-  to: '/customers',
+  label: t('common.users'),
+  icon: 'i-lucide-user',
+  to: '/users',
   onSelect: () => {
     open.value = false
   }
 }, {
-  label: 'Settings',
+  label: t('common.settings'),
   to: '/settings',
   icon: 'i-lucide-settings',
   defaultOpen: true,
   type: 'trigger',
   children: [{
-    label: 'General',
+    label: t('common.general'),
     to: '/settings',
     exact: true,
     onSelect: () => {
       open.value = false
     }
   }]
-}]] satisfies NavigationMenuItem[][]
+}]])
 
 const groups = computed(() => [{
   id: 'links',
-  label: 'Go to',
-  items: links.flat()
+  label: t('common.goTo'),
+  items: links.value.flat()
 }])
 
 </script>

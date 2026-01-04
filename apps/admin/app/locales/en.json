@@ -22,7 +22,13 @@
     },
     "common": {
         "confirm": "Confirm",
-        "cancel": "Cancel"
+        "cancel": "Cancel",
+        "home": "Home",
+        "inbox": "Inbox",
+        "users": "Users",
+        "settings": "Settings",
+        "general": "General",
+        "goTo": "Go to"
     },
     "user_menu": {
         "settings": "Settings",
