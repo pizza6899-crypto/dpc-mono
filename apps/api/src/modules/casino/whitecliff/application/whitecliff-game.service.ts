@@ -33,7 +33,7 @@ export class WhitecliffGameService {
     private readonly whitecliffMapperService: WhitecliffMapperService,
     private readonly gameSessionService: GameSessionService,
     private readonly exchangeRateService: ExchangeRateService,
-  ) {}
+  ) { }
 
   /**
    * 게임 실행 (회원가입 겸용)
@@ -95,6 +95,7 @@ export class WhitecliffGameService {
     const game = await this.prismaService.game.findUnique({
       where: { id: gameId },
       select: {
+        id: true,
         provider: true,
         gameId: true,
         category: true,
@@ -184,7 +185,7 @@ export class WhitecliffGameService {
 
     const gameSession = await this.gameSessionService.createGameSession({
       userId: user.id,
-      gameId: game.gameId,
+      gameId: game.id,
       aggregatorType: GameAggregatorType.WHITECLIFF,
       walletCurrency,
       gameCurrency,

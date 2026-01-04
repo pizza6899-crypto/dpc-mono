@@ -20,7 +20,7 @@ export class DcsGameService {
     private readonly prismaService: PrismaService,
     private readonly dcsApiService: DcsApiService,
     private readonly gameSessionService: GameSessionService,
-  ) {}
+  ) { }
 
   async launchGame({
     userId,
@@ -81,6 +81,7 @@ export class DcsGameService {
       const game = await this.prismaService.game.findUnique({
         where: { id: gameId },
         select: {
+          id: true,
           gameId: true,
         },
       });
@@ -114,7 +115,7 @@ export class DcsGameService {
 
       const gameSession = await this.gameSessionService.createGameSession({
         userId,
-        gameId: game.gameId,
+        gameId: game.id,
         aggregatorType: GameAggregatorType.DCS,
         walletCurrency,
         gameCurrency,

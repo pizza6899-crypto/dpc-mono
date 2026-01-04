@@ -15,7 +15,7 @@ export class GameSessionService {
   constructor(
     private readonly prismaService: PrismaService,
     private readonly exchangeRateService: ExchangeRateService,
-  ) {}
+  ) { }
 
   /**
    * 게임 세션 생성 (환율 고정 포함)
