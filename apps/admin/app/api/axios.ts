@@ -59,10 +59,12 @@ AXIOS_INSTANCE.interceptors.response.use(
             try {
                 const { $i18n } = useNuxtApp()
                 // @ts-ignore
-                const translatedMessage = $i18n.t(`api_errors.${data.messageCode}`)
+                const translationKey = `api_errors.${data.messageCode}`
+                // @ts-ignore
+                const translatedMessage = $i18n.t(translationKey)
 
                 // 번역 키가 존재할 경우에만 메시지 교체 (없으면 서버 메시지 유지)
-                if (translatedMessage && translatedMessage !== `api_errors.${data.messageCode}`) {
+                if (translatedMessage && translatedMessage !== translationKey) {
                     data.message = translatedMessage
                 }
             } catch (e) {

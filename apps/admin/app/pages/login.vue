@@ -1,6 +1,6 @@
 <script setup lang="ts">
 import { z } from 'zod'
-import { useCredentialAdminControllerLogin } from '~/api/generated/endpoints/admin-auth-관리자-인증/admin-auth-관리자-인증'
+import { useCredentialAdminControllerLogin } from '~/api/generated/endpoints/dPCBackendAPI'
 
 definePageMeta({
   layout: false
