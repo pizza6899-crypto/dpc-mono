@@ -1,6 +1,7 @@
 <script setup lang="ts">
 import { useUserAdminControllerFindOne } from '~/api/generated/endpoints/dPCBackendAPI'
 
+const router = useRouter()
 const route = useRoute()
 const { t } = useI18n()
 const userId = route.params.id as string
@@ -14,18 +15,32 @@ const refreshHistory = () => {
 
 const tabs = computed(() => [
   {
-    slot: 'overview',
+    value: 'overview',
     label: t('common.overview')
   },
   {
-    slot: 'tier-history',
+    value: 'tier-history',
     label: t('tiers.history.title')
   },
   {
-    slot: 'transaction-history',
+    value: 'transaction-history',
     label: t('users.wallet.transaction_history')
   }
 ])
+
+const active = computed({
+  get() {
+    return (route.query.tab as string) || 'overview'
+  },
+  set(tab) {
+    // Hash is specified here to prevent the page from scrolling to the top
+    router.push({
+      path: `/users/${userId}`,
+      query: { tab },
+    })
+  }
+})
+
 </script>
 
 <template>
@@ -54,33 +69,33 @@ const tabs = computed(() => [
       </div>
 
       <div v-else-if="user?.data" class="flex-1 flex flex-col h-full overflow-hidden">
-        <UTabs :items="tabs" variant="link" class="w-full h-full flex flex-col" :ui="{ root: 'h-full flex flex-col', content: 'flex-1 overflow-y-auto p-4', list: 'px-4 pt-4 border-b border-neutral-200 dark:border-neutral-800' }">
-          <template #overview>
-            <div class="space-y-6 max-w-6xl mx-auto pb-10">
-              <!-- Basic Info Grid -->
-              <div class="grid grid-cols-1 md:grid-cols-3 gap-6">
-                <div class="md:col-span-1 space-y-6">
-                  <UsersUserInfoCard :user="user.data" />
-                  <UsersUserWalletCard :user-id="user.data.id" />
-                </div>
-
-                <!-- Tier Info Card -->
-                <div class="md:col-span-2">
-                  <UsersUserTierCard :user-id="user.data.id" @refresh-history="refreshHistory" />
+        <UTabs v-model="active" :items="tabs" variant="link" class="w-full h-full flex flex-col" :ui="{ root: 'h-full flex flex-col', content: 'flex-1 overflow-y-auto p-4', list: 'px-4 pt-4 border-b border-neutral-200 dark:border-neutral-800' }">
+          <template #content="{ item }">
+            <div v-if="item.value === 'overview'">
+              <div class="space-y-6 max-w-6xl mx-auto pb-10">
+                <!-- Basic Info Grid -->
+                <div class="grid grid-cols-1 md:grid-cols-3 gap-6">
+                  <div class="md:col-span-1 space-y-6">
+                    <UsersUserInfoCard :user="user.data" />
+                    <UsersUserWalletCard :user-id="user.data.id" />
+                  </div>
+                  
+                  <!-- Tier Info Card -->
+                  <div class="md:col-span-2">
+                    <UsersUserTierCard :user-id="user.data.id" @refresh-history="refreshHistory" />
+                  </div>
                 </div>
               </div>
             </div>
-          </template>
-
-          <template #tier-history>
-            <div class="max-w-6xl mx-auto py-2">
-              <TiersTierHistoryTable :key="historyRefreshKey" :user-id="user.data.id" />
+            <div v-else-if="item.value === 'tier-history'">
+              <div class="max-w-6xl mx-auto py-2">
+                <TiersTierHistoryTable :key="historyRefreshKey" :user-id="user.data.id" />
+              </div>
             </div>
-          </template>
-          
-          <template #transaction-history>
-            <div class="max-w-6xl mx-auto py-2">
-              <UsersUserTransactionLogs :user-id="user.data.id" />
+            <div v-else-if="item.value === 'transaction-history'">
+              <div class="max-w-6xl mx-auto py-2">
+                <UsersUserTransactionLogs :user-id="user.data.id" />
+              </div>
             </div>
           </template>
         </UTabs>
