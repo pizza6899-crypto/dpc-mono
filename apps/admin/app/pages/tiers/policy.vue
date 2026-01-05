@@ -7,7 +7,6 @@ import {
 import type { TierUserCountResponseDto } from '~/api/generated/models'
 import TiersActionModals from '~/components/tiers/TiersActionModals.vue'
 import TiersTable from '~/components/tiers/TiersTable.vue'
-import TierHistoryTable from '~/components/tiers/TierHistoryTable.vue'
 
 const { t } = useI18n()
 const toast = useToast()
@@ -52,18 +51,6 @@ const { mutate: syncMissingUsers, isPending: isSyncing } = useTierAdminControlle
   }
 })
 
-const items = computed(() => [
-  {
-    slot: 'management',
-    label: t('common.management'),
-    icon: 'i-lucide-list-tree'
-  },
-  {
-    slot: 'history',
-    label: t('tiers.history.title'),
-    icon: 'i-lucide-history'
-  }
-])
 </script>
 
 <template>
@@ -98,23 +85,15 @@ const items = computed(() => [
         </div>
       </div>
 
-      <UTabs :items="items" class="w-full">
-        <template #management>
-          <TiersTable
-            :tiers="tiers"
-            :user-counts="userCounts"
-            :loading="isPending"
-            class="mt-4"
-            @edit="(tier) => modals?.openEdit(tier)"
-            @manage-translations="(tier) => modals?.openTranslation(tier)"
-            @create="() => modals?.openCreate()"
-          />
-        </template>
-
-        <template #history>
-          <TierHistoryTable class="mt-4" />
-        </template>
-      </UTabs>
+      <TiersTable
+        :tiers="tiers"
+        :user-counts="userCounts"
+        :loading="isPending"
+        class="mt-4"
+        @edit="(tier) => modals?.openEdit(tier)"
+        @manage-translations="(tier) => modals?.openTranslation(tier)"
+        @create="() => modals?.openCreate()"
+      />
 
       <TiersActionModals ref="modals" @success="refreshData" />
     </div>

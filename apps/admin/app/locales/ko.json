@@ -38,6 +38,8 @@
     "common": {
         "confirm": "확인",
         "cancel": "취소",
+        "edit": "수정",
+        "save": "저장",
         "success": "성공",
         "error": "오류",
         "field": "필드",
@@ -46,6 +48,9 @@
         "settings": "설정",
         "general": "일반",
         "tiers": "등급 관리",
+        "policy": "정책",
+        "date": "날짜",
+        "management": "관리",
         "goTo": "이동",
         "search": "검색...",
         "total": "전체",
@@ -201,13 +206,23 @@
         "requirement_usd": "요구 금액 (USD)",
         "level_up_bonus_usd": "승급 보너스 (USD)",
         "comp_rate": "콤프 비율",
+        "history": {
+            "title": "이력",
+            "old_tier": "이전 등급",
+            "new_tier": "변경 등급",
+            "reason": "변경 사유",
+            "changed_by": "변경자",
+            "no_history": "변경 이력이 없습니다."
+        },
         "add_tier": "티어 추가",
         "edit_tier": "티어 수정",
         "manage_translations": "명칭(언어) 관리",
         "sync_missing": "누락된 사용자 동기화",
         "save_all": "전체 저장",
         "messages": {
-            "add_tier_desc": "새로운 등급 정책을 생성합니다."
+            "add_tier_desc": "새로운 등급 정책을 생성합니다.",
+            "no_tiers_found": "등록된 티어가 없습니다.",
+            "empty_state_desc": "첫 번째 티어 정책을 생성하여 시작해보세요."
         }
     }
 }

@@ -4,9 +4,14 @@ import type { NavigationMenuItem } from '@nuxt/ui'
 const { t } = useI18n()
 
 const links = computed<NavigationMenuItem[][]>(() => [[{
-  label: t('common.general'),
-  icon: 'i-lucide-list',
-  to: '/tiers',
+  label: t('common.policy'),
+  icon: 'i-lucide-list-tree',
+  to: '/tiers/policy',
+  exact: true
+}, {
+  label: t('tiers.history.title'),
+  icon: 'i-lucide-history',
+  to: '/tiers/history',
   exact: true
 }]])
 </script>

@@ -25,10 +25,23 @@ const links = computed<NavigationMenuItem[][]>(() => [[{
 }, {
   label: t('common.tiers'),
   icon: 'i-lucide-layers',
-  to: '/tiers',
-  onSelect: () => {
-    open.value = false
-  }
+  to: '/tiers/policy',
+  defaultOpen: true,
+  children: [{
+    label: t('common.policy'),
+    to: '/tiers/policy',
+    exact: true,
+    onSelect: () => {
+      open.value = false
+    }
+  }, {
+    label: t('tiers.history.title'),
+    to: '/tiers/history',
+    exact: true,
+    onSelect: () => {
+      open.value = false
+    }
+  }]
 }, {
   label: t('common.settings'),
   to: '/settings',

@@ -38,6 +38,8 @@
     "common": {
         "confirm": "Confirm",
         "cancel": "Cancel",
+        "edit": "Edit",
+        "save": "Save",
         "success": "Success",
         "error": "Error",
         "field": "Field",
@@ -46,6 +48,9 @@
         "settings": "Settings",
         "general": "General",
         "tiers": "Tier management",
+        "policy": "Policy",
+        "date": "Date",
+        "management": "Management",
         "goTo": "Go to",
         "search": "Search...",
         "total": "Total",
@@ -201,13 +206,23 @@
         "requirement_usd": "Requirement (USD)",
         "level_up_bonus_usd": "Level Up Bonus (USD)",
         "comp_rate": "Comp Rate",
+        "history": {
+            "title": "History",
+            "old_tier": "Old Tier",
+            "new_tier": "New Tier",
+            "reason": "Reason",
+            "changed_by": "Changed By",
+            "no_history": "No history found."
+        },
         "add_tier": "Add Tier",
         "edit_tier": "Edit Tier",
         "manage_translations": "Manage Translations",
         "sync_missing": "Sync Missing Tiers",
         "save_all": "Save All",
         "messages": {
-            "add_tier_desc": "Create a new tier policy."
+            "add_tier_desc": "Create a new tier policy.",
+            "no_tiers_found": "No tiers found",
+            "empty_state_desc": "Start by creating your first tier policy."
         }
     }
 }

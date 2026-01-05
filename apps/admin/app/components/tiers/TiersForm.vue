@@ -18,7 +18,7 @@ const schema = z.object({
   code: z.string().min(1),
   requirementUsd: z.number().min(0),
   levelUpBonusUsd: z.number().optional().default(0),
-  compRate: z.number().min(0).max(1).optional().default(0)
+  compRate: z.number().min(0).max(100).optional().default(0)
 })
 
 type Schema = z.output<typeof schema>
@@ -28,7 +28,7 @@ const state = reactive({
   code: props.tier?.code ?? '',
   requirementUsd: Number(props.tier?.requirementUsd ?? 0),
   levelUpBonusUsd: Number(props.tier?.levelUpBonusUsd ?? 0),
-  compRate: Number(props.tier?.compRate ?? 0)
+  compRate: Number(props.tier?.compRate ?? 0) * 100
 })
 
 const { mutate: createTier, isPending: isCreating } = useTierAdminControllerCreate({
@@ -66,10 +66,15 @@ const { mutate: updateTier, isPending: isUpdating } = useTierAdminControllerUpda
 const isLoading = computed(() => isCreating.value || isUpdating.value)
 
 async function onSubmit(event: FormSubmitEvent<Schema>) {
+  const submitData = {
+    ...event.data,
+    compRate: (event.data.compRate || 0) / 100
+  }
+
   if (props.tier) {
-    updateTier({ id: props.tier.id.toString(), data: event.data })
+    updateTier({ id: props.tier.id.toString(), data: submitData })
   } else {
-    createTier({ data: event.data })
+    createTier({ data: submitData })
   }
 }
 </script>
@@ -81,7 +86,7 @@ async function onSubmit(event: FormSubmitEvent<Schema>) {
     </UFormField>
 
     <UFormField :label="t('tiers.code')" name="code">
-      <UInput v-model="state.code" :disabled="!!tier" class="w-full" />
+      <UInput v-model="state.code" class="w-full" />
     </UFormField>
 
     <UFormField :label="t('tiers.requirement_usd')" name="requirementUsd">
@@ -100,10 +105,10 @@ async function onSubmit(event: FormSubmitEvent<Schema>) {
       </UInput>
     </UFormField>
 
-    <UFormField :label="t('tiers.comp_rate')" name="compRate">
-      <UInput v-model.number="state.compRate" type="number" step="0.001" class="w-full">
+    <UFormField :label="t('tiers.comp_rate')" name="compRate" :description="`0.5% = 0.5` ">
+      <UInput v-model.number="state.compRate" type="number" step="0.01" class="w-full" placeholder="0.00">
         <template #trailing>
-          <span class="text-neutral-500">× 100%</span>
+          <span class="text-neutral-500 font-medium">%</span>
         </template>
       </UInput>
     </UFormField>
