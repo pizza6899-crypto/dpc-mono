@@ -9,48 +9,49 @@ datasource db {
 }
 
 model User {
-  id                   BigInt                @id @default(autoincrement())
-  uid                  String                @unique @default(cuid())
-  whitecliffId         BigInt?               @unique
-  whitecliffSystemId   BigInt?               @unique
-  whitecliffUsername   String?               @unique
-  dcsId                String?               @unique
-  email                String?               @unique
-  passwordHash         String?
-  socialType           SocialType?
-  socialId             String?
-  role                 UserRoleType          @default(USER)
-  status               UserStatus            @default(ACTIVE)
-  kycLevel             KycLevel              @default(NONE)
-  country              String?
-  language             Language?
-  timezone             String?
-  timezoneOffset       Int?
-  createdAt            DateTime              @default(now())
-  updatedAt            DateTime              @updatedAt
-  affiliateCodes       AffiliateCode[]       @relation("AffiliateCodes")
-  affiliateCommissions AffiliateCommission[] @relation("AffiliateCommissions")
-  subUserCommissions   AffiliateCommission[] @relation("SubUserCommissions")
-  affiliateTier        AffiliateTier?
-  affiliateWallets     AffiliateWallet[]     @relation("AffiliateWallets")
-  CompTransaction      CompTransaction[]
-  DailyCompEarning     DailyCompEarning[]
-  EmailLog             EmailLog[]
-  GameSession          GameSession[]
-  affiliateReferrals   Referral[]            @relation("AffiliateReferrals")
-  referredUsers        Referral[]            @relation("ReferredUsers")
-  Rolling              Rolling[]
-  transactions         Transaction[]
-  depositDetails       DepositDetail[]
-  balances             UserBalance[]
-  UserBalanceStats     UserBalanceStats[]
-  UserPromotion        UserPromotion[]
-  UserSession          UserSession[]         @relation("UserSessions")
-  RevokedSessions      UserSession[]         @relation("RevokedSessions")
-  UserToken            UserToken[]
-  loginAttempts        LoginAttempt[]
-  userTier             UserTier?
-  tierHistory          TierHistory[]
+  id                     BigInt                  @id @default(autoincrement())
+  uid                    String                  @unique @default(cuid())
+  whitecliffId           BigInt?                 @unique
+  whitecliffSystemId     BigInt?                 @unique
+  whitecliffUsername     String?                 @unique
+  dcsId                  String?                 @unique
+  email                  String?                 @unique
+  passwordHash           String?
+  socialType             SocialType?
+  socialId               String?
+  role                   UserRoleType            @default(USER)
+  status                 UserStatus              @default(ACTIVE)
+  kycLevel               KycLevel                @default(NONE)
+  country                String?
+  language               Language?
+  timezone               String?
+  timezoneOffset         Int?
+  createdAt              DateTime                @default(now())
+  updatedAt              DateTime                @updatedAt
+  affiliateCodes         AffiliateCode[]         @relation("AffiliateCodes")
+  affiliateCommissions   AffiliateCommission[]   @relation("AffiliateCommissions")
+  subUserCommissions     AffiliateCommission[]   @relation("SubUserCommissions")
+  affiliateTier          AffiliateTier?
+  affiliateWallets       AffiliateWallet[]       @relation("AffiliateWallets")
+  CompTransaction        CompTransaction[]
+  DailyCompEarning       DailyCompEarning[]
+  EmailLog               EmailLog[]
+  GameSession            GameSession[]
+  affiliateReferrals     Referral[]              @relation("AffiliateReferrals")
+  referredUsers          Referral[]              @relation("ReferredUsers")
+  Rolling                Rolling[]
+  transactions           Transaction[]
+  depositDetails         DepositDetail[]
+  balances               UserBalance[]
+  UserBalanceStats       UserBalanceStats[]
+  UserPromotion          UserPromotion[]
+  UserSession            UserSession[]           @relation("UserSessions")
+  RevokedSessions        UserSession[]           @relation("RevokedSessions")
+  UserToken              UserToken[]
+  loginAttempts          LoginAttempt[]
+  userTier               UserTier?
+  tierHistory            TierHistory[]
+  adminAdjustmentDetails AdminAdjustmentDetail[] @relation("AdminAdjustments")
 }
 
 model UserBalance {
@@ -126,23 +127,25 @@ model GameTranslation {
 }
 
 model Transaction {
-  id              BigInt                     @id @default(autoincrement())
-  userId          BigInt
-  type            TransactionType
-  status          TransactionStatus
-  currency        ExchangeCurrencyCode
-  amount          Decimal                    @db.Decimal(32, 18)
-  beforeAmount    Decimal                    @db.Decimal(32, 18)
-  afterAmount     Decimal                    @db.Decimal(32, 18)
-  createdAt       DateTime                   @default(now())
-  updatedAt       DateTime                   @updatedAt
-  bonusDetail     BonusDetail?
-  compTransaction CompTransaction?
-  depositDetail   DepositDetail?
-  gameRound       GameRound?
-  user            User                       @relation(fields: [userId], references: [id])
-  balanceDetails  TransactionBalanceDetail[]
-  withdrawDetail  WithdrawDetail?
+  id                     BigInt                     @id @default(autoincrement())
+  userId                 BigInt
+  type                   TransactionType
+  status                 TransactionStatus
+  currency               ExchangeCurrencyCode
+  amount                 Decimal                    @db.Decimal(32, 18)
+  beforeAmount           Decimal                    @db.Decimal(32, 18)
+  afterAmount            Decimal                    @db.Decimal(32, 18)
+  createdAt              DateTime                   @default(now())
+  updatedAt              DateTime                   @updatedAt
+  bonusDetail            BonusDetail?
+  compTransaction        CompTransaction?
+  depositDetail          DepositDetail?
+  gameRound              GameRound?
+  user                   User                       @relation(fields: [userId], references: [id])
+  balanceDetails         TransactionBalanceDetail[]
+  withdrawDetail         WithdrawDetail?
+  adminAdjustmentDetail  AdminAdjustmentDetail?
+  systemAdjustmentDetail SystemAdjustmentDetail?
 }
 
 model GameRound {
@@ -575,6 +578,8 @@ enum TransactionType {
   GAME
   BONUS
   COMP_CLAIM
+  SYSTEM // 시스템 자동 지급/차감 (이벤트 등)
+  ADMIN_ADJUST // 관리자가 어드민 패널에서 수동으로 지급/차감
 }
 
 enum TransactionStatus {

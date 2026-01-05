@@ -810,6 +810,23 @@ exports.Prisma.TierHistoryScalarFieldEnum = {
   changeBy: 'changeBy'
 };
 
+exports.Prisma.AdminAdjustmentDetailScalarFieldEnum = {
+  id: 'id',
+  transactionId: 'transactionId',
+  adminUserId: 'adminUserId',
+  reasonCode: 'reasonCode',
+  internalNote: 'internalNote'
+};
+
+exports.Prisma.SystemAdjustmentDetailScalarFieldEnum = {
+  id: 'id',
+  transactionId: 'transactionId',
+  serviceName: 'serviceName',
+  triggerId: 'triggerId',
+  actionName: 'actionName',
+  metadata: 'metadata'
+};
+
 exports.Prisma.SortOrder = {
   asc: 'asc',
   desc: 'desc'
@@ -913,7 +930,9 @@ exports.TransactionType = exports.$Enums.TransactionType = {
   WITHDRAW: 'WITHDRAW',
   GAME: 'GAME',
   BONUS: 'BONUS',
-  COMP_CLAIM: 'COMP_CLAIM'
+  COMP_CLAIM: 'COMP_CLAIM',
+  SYSTEM: 'SYSTEM',
+  ADMIN_ADJUST: 'ADMIN_ADJUST'
 };
 
 exports.TransactionStatus = exports.$Enums.TransactionStatus = {
@@ -1120,7 +1139,9 @@ exports.Prisma.ModelName = {
   Tier: 'Tier',
   TierTranslation: 'TierTranslation',
   UserTier: 'UserTier',
-  TierHistory: 'TierHistory'
+  TierHistory: 'TierHistory',
+  AdminAdjustmentDetail: 'AdminAdjustmentDetail',
+  SystemAdjustmentDetail: 'SystemAdjustmentDetail'
 };
 
 /**

@@ -254,6 +254,16 @@ export type UserTier = $Result.DefaultSelection<Prisma.$UserTierPayload>
  * 
  */
 export type TierHistory = $Result.DefaultSelection<Prisma.$TierHistoryPayload>
+/**
+ * Model AdminAdjustmentDetail
+ * 
+ */
+export type AdminAdjustmentDetail = $Result.DefaultSelection<Prisma.$AdminAdjustmentDetailPayload>
+/**
+ * Model SystemAdjustmentDetail
+ * 
+ */
+export type SystemAdjustmentDetail = $Result.DefaultSelection<Prisma.$SystemAdjustmentDetailPayload>
 
 /**
  * Enums
@@ -360,7 +370,9 @@ export const TransactionType: {
   WITHDRAW: 'WITHDRAW',
   GAME: 'GAME',
   BONUS: 'BONUS',
-  COMP_CLAIM: 'COMP_CLAIM'
+  COMP_CLAIM: 'COMP_CLAIM',
+  SYSTEM: 'SYSTEM',
+  ADMIN_ADJUST: 'ADMIN_ADJUST'
 };
 
 export type TransactionType = (typeof TransactionType)[keyof typeof TransactionType]
@@ -1303,6 +1315,26 @@ export class PrismaClient<
     * ```
     */
   get tierHistory(): Prisma.TierHistoryDelegate<ExtArgs, ClientOptions>;
+
+  /**
+   * `prisma.adminAdjustmentDetail`: Exposes CRUD operations for the **AdminAdjustmentDetail** model.
+    * Example usage:
+    * ```ts
+    * // Fetch zero or more AdminAdjustmentDetails
+    * const adminAdjustmentDetails = await prisma.adminAdjustmentDetail.findMany()
+    * ```
+    */
+  get adminAdjustmentDetail(): Prisma.AdminAdjustmentDetailDelegate<ExtArgs, ClientOptions>;
+
+  /**
+   * `prisma.systemAdjustmentDetail`: Exposes CRUD operations for the **SystemAdjustmentDetail** model.
+    * Example usage:
+    * ```ts
+    * // Fetch zero or more SystemAdjustmentDetails
+    * const systemAdjustmentDetails = await prisma.systemAdjustmentDetail.findMany()
+    * ```
+    */
+  get systemAdjustmentDetail(): Prisma.SystemAdjustmentDetailDelegate<ExtArgs, ClientOptions>;
 }
 
 export namespace Prisma {
@@ -1779,7 +1811,9 @@ export namespace Prisma {
     Tier: 'Tier',
     TierTranslation: 'TierTranslation',
     UserTier: 'UserTier',
-    TierHistory: 'TierHistory'
+    TierHistory: 'TierHistory',
+    AdminAdjustmentDetail: 'AdminAdjustmentDetail',
+    SystemAdjustmentDetail: 'SystemAdjustmentDetail'
   };
 
   export type ModelName = (typeof ModelName)[keyof typeof ModelName]
@@ -1795,7 +1829,7 @@ export namespace Prisma {
       omit: GlobalOmitOptions
     }
     meta: {
-      modelProps: "affiliateCode" | "referral" | "authAuditLog" | "activityLog" | "systemErrorLog" | "integrationLog" | "unifiedLog" | "user" | "userBalance" | "userBalanceStats" | "game" | "gameTranslation" | "transaction" | "gameRound" | "gameBet" | "gameWin" | "transactionBalanceDetail" | "bonusDetail" | "withdrawDetail" | "compTransaction" | "dailyCompEarning" | "nowPaymentCallbackLog" | "exchangeRate" | "rolling" | "userToken" | "emailLog" | "gameSession" | "affiliateWallet" | "affiliateCommission" | "affiliateTier" | "loginAttempt" | "depositDetail" | "cryptoConfig" | "bankConfig" | "promotion" | "promotionTranslation" | "promotionCurrency" | "userPromotion" | "userSession" | "tier" | "tierTranslation" | "userTier" | "tierHistory"
+      modelProps: "affiliateCode" | "referral" | "authAuditLog" | "activityLog" | "systemErrorLog" | "integrationLog" | "unifiedLog" | "user" | "userBalance" | "userBalanceStats" | "game" | "gameTranslation" | "transaction" | "gameRound" | "gameBet" | "gameWin" | "transactionBalanceDetail" | "bonusDetail" | "withdrawDetail" | "compTransaction" | "dailyCompEarning" | "nowPaymentCallbackLog" | "exchangeRate" | "rolling" | "userToken" | "emailLog" | "gameSession" | "affiliateWallet" | "affiliateCommission" | "affiliateTier" | "loginAttempt" | "depositDetail" | "cryptoConfig" | "bankConfig" | "promotion" | "promotionTranslation" | "promotionCurrency" | "userPromotion" | "userSession" | "tier" | "tierTranslation" | "userTier" | "tierHistory" | "adminAdjustmentDetail" | "systemAdjustmentDetail"
       txIsolationLevel: Prisma.TransactionIsolationLevel
     }
     model: {
@@ -4981,6 +5015,154 @@ export namespace Prisma {
           }
         }
       }
+      AdminAdjustmentDetail: {
+        payload: Prisma.$AdminAdjustmentDetailPayload<ExtArgs>
+        fields: Prisma.AdminAdjustmentDetailFieldRefs
+        operations: {
+          findUnique: {
+            args: Prisma.AdminAdjustmentDetailFindUniqueArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$AdminAdjustmentDetailPayload> | null
+          }
+          findUniqueOrThrow: {
+            args: Prisma.AdminAdjustmentDetailFindUniqueOrThrowArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$AdminAdjustmentDetailPayload>
+          }
+          findFirst: {
+            args: Prisma.AdminAdjustmentDetailFindFirstArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$AdminAdjustmentDetailPayload> | null
+          }
+          findFirstOrThrow: {
+            args: Prisma.AdminAdjustmentDetailFindFirstOrThrowArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$AdminAdjustmentDetailPayload>
+          }
+          findMany: {
+            args: Prisma.AdminAdjustmentDetailFindManyArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$AdminAdjustmentDetailPayload>[]
+          }
+          create: {
+            args: Prisma.AdminAdjustmentDetailCreateArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$AdminAdjustmentDetailPayload>
+          }
+          createMany: {
+            args: Prisma.AdminAdjustmentDetailCreateManyArgs<ExtArgs>
+            result: BatchPayload
+          }
+          createManyAndReturn: {
+            args: Prisma.AdminAdjustmentDetailCreateManyAndReturnArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$AdminAdjustmentDetailPayload>[]
+          }
+          delete: {
+            args: Prisma.AdminAdjustmentDetailDeleteArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$AdminAdjustmentDetailPayload>
+          }
+          update: {
+            args: Prisma.AdminAdjustmentDetailUpdateArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$AdminAdjustmentDetailPayload>
+          }
+          deleteMany: {
+            args: Prisma.AdminAdjustmentDetailDeleteManyArgs<ExtArgs>
+            result: BatchPayload
+          }
+          updateMany: {
+            args: Prisma.AdminAdjustmentDetailUpdateManyArgs<ExtArgs>
+            result: BatchPayload
+          }
+          updateManyAndReturn: {
+            args: Prisma.AdminAdjustmentDetailUpdateManyAndReturnArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$AdminAdjustmentDetailPayload>[]
+          }
+          upsert: {
+            args: Prisma.AdminAdjustmentDetailUpsertArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$AdminAdjustmentDetailPayload>
+          }
+          aggregate: {
+            args: Prisma.AdminAdjustmentDetailAggregateArgs<ExtArgs>
+            result: $Utils.Optional<AggregateAdminAdjustmentDetail>
+          }
+          groupBy: {
+            args: Prisma.AdminAdjustmentDetailGroupByArgs<ExtArgs>
+            result: $Utils.Optional<AdminAdjustmentDetailGroupByOutputType>[]
+          }
+          count: {
+            args: Prisma.AdminAdjustmentDetailCountArgs<ExtArgs>
+            result: $Utils.Optional<AdminAdjustmentDetailCountAggregateOutputType> | number
+          }
+        }
+      }
+      SystemAdjustmentDetail: {
+        payload: Prisma.$SystemAdjustmentDetailPayload<ExtArgs>
+        fields: Prisma.SystemAdjustmentDetailFieldRefs
+        operations: {
+          findUnique: {
+            args: Prisma.SystemAdjustmentDetailFindUniqueArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$SystemAdjustmentDetailPayload> | null
+          }
+          findUniqueOrThrow: {
+            args: Prisma.SystemAdjustmentDetailFindUniqueOrThrowArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$SystemAdjustmentDetailPayload>
+          }
+          findFirst: {
+            args: Prisma.SystemAdjustmentDetailFindFirstArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$SystemAdjustmentDetailPayload> | null
+          }
+          findFirstOrThrow: {
+            args: Prisma.SystemAdjustmentDetailFindFirstOrThrowArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$SystemAdjustmentDetailPayload>
+          }
+          findMany: {
+            args: Prisma.SystemAdjustmentDetailFindManyArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$SystemAdjustmentDetailPayload>[]
+          }
+          create: {
+            args: Prisma.SystemAdjustmentDetailCreateArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$SystemAdjustmentDetailPayload>
+          }
+          createMany: {
+            args: Prisma.SystemAdjustmentDetailCreateManyArgs<ExtArgs>
+            result: BatchPayload
+          }
+          createManyAndReturn: {
+            args: Prisma.SystemAdjustmentDetailCreateManyAndReturnArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$SystemAdjustmentDetailPayload>[]
+          }
+          delete: {
+            args: Prisma.SystemAdjustmentDetailDeleteArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$SystemAdjustmentDetailPayload>
+          }
+          update: {
+            args: Prisma.SystemAdjustmentDetailUpdateArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$SystemAdjustmentDetailPayload>
+          }
+          deleteMany: {
+            args: Prisma.SystemAdjustmentDetailDeleteManyArgs<ExtArgs>
+            result: BatchPayload
+          }
+          updateMany: {
+            args: Prisma.SystemAdjustmentDetailUpdateManyArgs<ExtArgs>
+            result: BatchPayload
+          }
+          updateManyAndReturn: {
+            args: Prisma.SystemAdjustmentDetailUpdateManyAndReturnArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$SystemAdjustmentDetailPayload>[]
+          }
+          upsert: {
+            args: Prisma.SystemAdjustmentDetailUpsertArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$SystemAdjustmentDetailPayload>
+          }
+          aggregate: {
+            args: Prisma.SystemAdjustmentDetailAggregateArgs<ExtArgs>
+            result: $Utils.Optional<AggregateSystemAdjustmentDetail>
+          }
+          groupBy: {
+            args: Prisma.SystemAdjustmentDetailGroupByArgs<ExtArgs>
+            result: $Utils.Optional<SystemAdjustmentDetailGroupByOutputType>[]
+          }
+          count: {
+            args: Prisma.SystemAdjustmentDetailCountArgs<ExtArgs>
+            result: $Utils.Optional<SystemAdjustmentDetailCountAggregateOutputType> | number
+          }
+        }
+      }
     }
   } & {
     other: {
@@ -5132,6 +5314,8 @@ export namespace Prisma {
     tierTranslation?: TierTranslationOmit
     userTier?: UserTierOmit
     tierHistory?: TierHistoryOmit
+    adminAdjustmentDetail?: AdminAdjustmentDetailOmit
+    systemAdjustmentDetail?: SystemAdjustmentDetailOmit
   }
 
   /* Types for Logging */
@@ -5264,6 +5448,7 @@ export namespace Prisma {
     UserToken: number
     loginAttempts: number
     tierHistory: number
+    adminAdjustmentDetails: number
   }
 
   export type UserCountOutputTypeSelect<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
@@ -5288,6 +5473,7 @@ export namespace Prisma {
     UserToken?: boolean | UserCountOutputTypeCountUserTokenArgs
     loginAttempts?: boolean | UserCountOutputTypeCountLoginAttemptsArgs
     tierHistory?: boolean | UserCountOutputTypeCountTierHistoryArgs
+    adminAdjustmentDetails?: boolean | UserCountOutputTypeCountAdminAdjustmentDetailsArgs
   }
 
   // Custom InputTypes
@@ -5446,6 +5632,13 @@ export namespace Prisma {
    */
   export type UserCountOutputTypeCountTierHistoryArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
     where?: TierHistoryWhereInput
+  }
+
+  /**
+   * UserCountOutputType without action
+   */
+  export type UserCountOutputTypeCountAdminAdjustmentDetailsArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    where?: AdminAdjustmentDetailWhereInput
   }
 
 
@@ -14596,6 +14789,7 @@ export namespace Prisma {
     loginAttempts?: boolean | User$loginAttemptsArgs<ExtArgs>
     userTier?: boolean | User$userTierArgs<ExtArgs>
     tierHistory?: boolean | User$tierHistoryArgs<ExtArgs>
+    adminAdjustmentDetails?: boolean | User$adminAdjustmentDetailsArgs<ExtArgs>
     _count?: boolean | UserCountOutputTypeDefaultArgs<ExtArgs>
   }, ExtArgs["result"]["user"]>
 
@@ -14690,6 +14884,7 @@ export namespace Prisma {
     loginAttempts?: boolean | User$loginAttemptsArgs<ExtArgs>
     userTier?: boolean | User$userTierArgs<ExtArgs>
     tierHistory?: boolean | User$tierHistoryArgs<ExtArgs>
+    adminAdjustmentDetails?: boolean | User$adminAdjustmentDetailsArgs<ExtArgs>
     _count?: boolean | UserCountOutputTypeDefaultArgs<ExtArgs>
   }
   export type UserIncludeCreateManyAndReturn<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {}
@@ -14721,6 +14916,7 @@ export namespace Prisma {
       loginAttempts: Prisma.$LoginAttemptPayload<ExtArgs>[]
       userTier: Prisma.$UserTierPayload<ExtArgs> | null
       tierHistory: Prisma.$TierHistoryPayload<ExtArgs>[]
+      adminAdjustmentDetails: Prisma.$AdminAdjustmentDetailPayload<ExtArgs>[]
     }
     scalars: $Extensions.GetPayloadResult<{
       id: bigint
@@ -15159,6 +15355,7 @@ export namespace Prisma {
     loginAttempts<T extends User$loginAttemptsArgs<ExtArgs> = {}>(args?: Subset<T, User$loginAttemptsArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$LoginAttemptPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
     userTier<T extends User$userTierArgs<ExtArgs> = {}>(args?: Subset<T, User$userTierArgs<ExtArgs>>): Prisma__UserTierClient<$Result.GetResult<Prisma.$UserTierPayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions> | null, null, ExtArgs, GlobalOmitOptions>
     tierHistory<T extends User$tierHistoryArgs<ExtArgs> = {}>(args?: Subset<T, User$tierHistoryArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$TierHistoryPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
+    adminAdjustmentDetails<T extends User$adminAdjustmentDetailsArgs<ExtArgs> = {}>(args?: Subset<T, User$adminAdjustmentDetailsArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$AdminAdjustmentDetailPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
     /**
      * Attaches callbacks for the resolution and/or rejection of the Promise.
      * @param onfulfilled The callback to execute when the Promise is resolved.
@@ -16134,6 +16331,30 @@ export namespace Prisma {
     take?: number
     skip?: number
     distinct?: TierHistoryScalarFieldEnum | TierHistoryScalarFieldEnum[]
+  }
+
+  /**
+   * User.adminAdjustmentDetails
+   */
+  export type User$adminAdjustmentDetailsArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the AdminAdjustmentDetail
+     */
+    select?: AdminAdjustmentDetailSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the AdminAdjustmentDetail
+     */
+    omit?: AdminAdjustmentDetailOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: AdminAdjustmentDetailInclude<ExtArgs> | null
+    where?: AdminAdjustmentDetailWhereInput
+    orderBy?: AdminAdjustmentDetailOrderByWithRelationInput | AdminAdjustmentDetailOrderByWithRelationInput[]
+    cursor?: AdminAdjustmentDetailWhereUniqueInput
+    take?: number
+    skip?: number
+    distinct?: AdminAdjustmentDetailScalarFieldEnum | AdminAdjustmentDetailScalarFieldEnum[]
   }
 
   /**
@@ -21187,6 +21408,8 @@ export namespace Prisma {
     user?: boolean | UserDefaultArgs<ExtArgs>
     balanceDetails?: boolean | Transaction$balanceDetailsArgs<ExtArgs>
     withdrawDetail?: boolean | Transaction$withdrawDetailArgs<ExtArgs>
+    adminAdjustmentDetail?: boolean | Transaction$adminAdjustmentDetailArgs<ExtArgs>
+    systemAdjustmentDetail?: boolean | Transaction$systemAdjustmentDetailArgs<ExtArgs>
     _count?: boolean | TransactionCountOutputTypeDefaultArgs<ExtArgs>
   }, ExtArgs["result"]["transaction"]>
 
@@ -21240,6 +21463,8 @@ export namespace Prisma {
     user?: boolean | UserDefaultArgs<ExtArgs>
     balanceDetails?: boolean | Transaction$balanceDetailsArgs<ExtArgs>
     withdrawDetail?: boolean | Transaction$withdrawDetailArgs<ExtArgs>
+    adminAdjustmentDetail?: boolean | Transaction$adminAdjustmentDetailArgs<ExtArgs>
+    systemAdjustmentDetail?: boolean | Transaction$systemAdjustmentDetailArgs<ExtArgs>
     _count?: boolean | TransactionCountOutputTypeDefaultArgs<ExtArgs>
   }
   export type TransactionIncludeCreateManyAndReturn<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
@@ -21259,6 +21484,8 @@ export namespace Prisma {
       user: Prisma.$UserPayload<ExtArgs>
       balanceDetails: Prisma.$TransactionBalanceDetailPayload<ExtArgs>[]
       withdrawDetail: Prisma.$WithdrawDetailPayload<ExtArgs> | null
+      adminAdjustmentDetail: Prisma.$AdminAdjustmentDetailPayload<ExtArgs> | null
+      systemAdjustmentDetail: Prisma.$SystemAdjustmentDetailPayload<ExtArgs> | null
     }
     scalars: $Extensions.GetPayloadResult<{
       id: bigint
@@ -21672,6 +21899,8 @@ export namespace Prisma {
     user<T extends UserDefaultArgs<ExtArgs> = {}>(args?: Subset<T, UserDefaultArgs<ExtArgs>>): Prisma__UserClient<$Result.GetResult<Prisma.$UserPayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions> | Null, Null, ExtArgs, GlobalOmitOptions>
     balanceDetails<T extends Transaction$balanceDetailsArgs<ExtArgs> = {}>(args?: Subset<T, Transaction$balanceDetailsArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$TransactionBalanceDetailPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
     withdrawDetail<T extends Transaction$withdrawDetailArgs<ExtArgs> = {}>(args?: Subset<T, Transaction$withdrawDetailArgs<ExtArgs>>): Prisma__WithdrawDetailClient<$Result.GetResult<Prisma.$WithdrawDetailPayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions> | null, null, ExtArgs, GlobalOmitOptions>
+    adminAdjustmentDetail<T extends Transaction$adminAdjustmentDetailArgs<ExtArgs> = {}>(args?: Subset<T, Transaction$adminAdjustmentDetailArgs<ExtArgs>>): Prisma__AdminAdjustmentDetailClient<$Result.GetResult<Prisma.$AdminAdjustmentDetailPayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions> | null, null, ExtArgs, GlobalOmitOptions>
+    systemAdjustmentDetail<T extends Transaction$systemAdjustmentDetailArgs<ExtArgs> = {}>(args?: Subset<T, Transaction$systemAdjustmentDetailArgs<ExtArgs>>): Prisma__SystemAdjustmentDetailClient<$Result.GetResult<Prisma.$SystemAdjustmentDetailPayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions> | null, null, ExtArgs, GlobalOmitOptions>
     /**
      * Attaches callbacks for the resolution and/or rejection of the Promise.
      * @param onfulfilled The callback to execute when the Promise is resolved.
@@ -22223,6 +22452,44 @@ export namespace Prisma {
      */
     include?: WithdrawDetailInclude<ExtArgs> | null
     where?: WithdrawDetailWhereInput
+  }
+
+  /**
+   * Transaction.adminAdjustmentDetail
+   */
+  export type Transaction$adminAdjustmentDetailArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the AdminAdjustmentDetail
+     */
+    select?: AdminAdjustmentDetailSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the AdminAdjustmentDetail
+     */
+    omit?: AdminAdjustmentDetailOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: AdminAdjustmentDetailInclude<ExtArgs> | null
+    where?: AdminAdjustmentDetailWhereInput
+  }
+
+  /**
+   * Transaction.systemAdjustmentDetail
+   */
+  export type Transaction$systemAdjustmentDetailArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the SystemAdjustmentDetail
+     */
+    select?: SystemAdjustmentDetailSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the SystemAdjustmentDetail
+     */
+    omit?: SystemAdjustmentDetailOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: SystemAdjustmentDetailInclude<ExtArgs> | null
+    where?: SystemAdjustmentDetailWhereInput
   }
 
   /**
@@ -59182,6 +59449,2219 @@ export namespace Prisma {
 
 
   /**
+   * Model AdminAdjustmentDetail
+   */
+
+  export type AggregateAdminAdjustmentDetail = {
+    _count: AdminAdjustmentDetailCountAggregateOutputType | null
+    _avg: AdminAdjustmentDetailAvgAggregateOutputType | null
+    _sum: AdminAdjustmentDetailSumAggregateOutputType | null
+    _min: AdminAdjustmentDetailMinAggregateOutputType | null
+    _max: AdminAdjustmentDetailMaxAggregateOutputType | null
+  }
+
+  export type AdminAdjustmentDetailAvgAggregateOutputType = {
+    id: number | null
+    transactionId: number | null
+    adminUserId: number | null
+  }
+
+  export type AdminAdjustmentDetailSumAggregateOutputType = {
+    id: bigint | null
+    transactionId: bigint | null
+    adminUserId: bigint | null
+  }
+
+  export type AdminAdjustmentDetailMinAggregateOutputType = {
+    id: bigint | null
+    transactionId: bigint | null
+    adminUserId: bigint | null
+    reasonCode: string | null
+    internalNote: string | null
+  }
+
+  export type AdminAdjustmentDetailMaxAggregateOutputType = {
+    id: bigint | null
+    transactionId: bigint | null
+    adminUserId: bigint | null
+    reasonCode: string | null
+    internalNote: string | null
+  }
+
+  export type AdminAdjustmentDetailCountAggregateOutputType = {
+    id: number
+    transactionId: number
+    adminUserId: number
+    reasonCode: number
+    internalNote: number
+    _all: number
+  }
+
+
+  export type AdminAdjustmentDetailAvgAggregateInputType = {
+    id?: true
+    transactionId?: true
+    adminUserId?: true
+  }
+
+  export type AdminAdjustmentDetailSumAggregateInputType = {
+    id?: true
+    transactionId?: true
+    adminUserId?: true
+  }
+
+  export type AdminAdjustmentDetailMinAggregateInputType = {
+    id?: true
+    transactionId?: true
+    adminUserId?: true
+    reasonCode?: true
+    internalNote?: true
+  }
+
+  export type AdminAdjustmentDetailMaxAggregateInputType = {
+    id?: true
+    transactionId?: true
+    adminUserId?: true
+    reasonCode?: true
+    internalNote?: true
+  }
+
+  export type AdminAdjustmentDetailCountAggregateInputType = {
+    id?: true
+    transactionId?: true
+    adminUserId?: true
+    reasonCode?: true
+    internalNote?: true
+    _all?: true
+  }
+
+  export type AdminAdjustmentDetailAggregateArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Filter which AdminAdjustmentDetail to aggregate.
+     */
+    where?: AdminAdjustmentDetailWhereInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/sorting Sorting Docs}
+     * 
+     * Determine the order of AdminAdjustmentDetails to fetch.
+     */
+    orderBy?: AdminAdjustmentDetailOrderByWithRelationInput | AdminAdjustmentDetailOrderByWithRelationInput[]
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination#cursor-based-pagination Cursor Docs}
+     * 
+     * Sets the start position
+     */
+    cursor?: AdminAdjustmentDetailWhereUniqueInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Take `±n` AdminAdjustmentDetails from the position of the cursor.
+     */
+    take?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Skip the first `n` AdminAdjustmentDetails.
+     */
+    skip?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
+     * 
+     * Count returned AdminAdjustmentDetails
+    **/
+    _count?: true | AdminAdjustmentDetailCountAggregateInputType
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
+     * 
+     * Select which fields to average
+    **/
+    _avg?: AdminAdjustmentDetailAvgAggregateInputType
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
+     * 
+     * Select which fields to sum
+    **/
+    _sum?: AdminAdjustmentDetailSumAggregateInputType
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
+     * 
+     * Select which fields to find the minimum value
+    **/
+    _min?: AdminAdjustmentDetailMinAggregateInputType
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
+     * 
+     * Select which fields to find the maximum value
+    **/
+    _max?: AdminAdjustmentDetailMaxAggregateInputType
+  }
+
+  export type GetAdminAdjustmentDetailAggregateType<T extends AdminAdjustmentDetailAggregateArgs> = {
+        [P in keyof T & keyof AggregateAdminAdjustmentDetail]: P extends '_count' | 'count'
+      ? T[P] extends true
+        ? number
+        : GetScalarType<T[P], AggregateAdminAdjustmentDetail[P]>
+      : GetScalarType<T[P], AggregateAdminAdjustmentDetail[P]>
+  }
+
+
+
+
+  export type AdminAdjustmentDetailGroupByArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    where?: AdminAdjustmentDetailWhereInput
+    orderBy?: AdminAdjustmentDetailOrderByWithAggregationInput | AdminAdjustmentDetailOrderByWithAggregationInput[]
+    by: AdminAdjustmentDetailScalarFieldEnum[] | AdminAdjustmentDetailScalarFieldEnum
+    having?: AdminAdjustmentDetailScalarWhereWithAggregatesInput
+    take?: number
+    skip?: number
+    _count?: AdminAdjustmentDetailCountAggregateInputType | true
+    _avg?: AdminAdjustmentDetailAvgAggregateInputType
+    _sum?: AdminAdjustmentDetailSumAggregateInputType
+    _min?: AdminAdjustmentDetailMinAggregateInputType
+    _max?: AdminAdjustmentDetailMaxAggregateInputType
+  }
+
+  export type AdminAdjustmentDetailGroupByOutputType = {
+    id: bigint
+    transactionId: bigint
+    adminUserId: bigint
+    reasonCode: string | null
+    internalNote: string | null
+    _count: AdminAdjustmentDetailCountAggregateOutputType | null
+    _avg: AdminAdjustmentDetailAvgAggregateOutputType | null
+    _sum: AdminAdjustmentDetailSumAggregateOutputType | null
+    _min: AdminAdjustmentDetailMinAggregateOutputType | null
+    _max: AdminAdjustmentDetailMaxAggregateOutputType | null
+  }
+
+  type GetAdminAdjustmentDetailGroupByPayload<T extends AdminAdjustmentDetailGroupByArgs> = Prisma.PrismaPromise<
+    Array<
+      PickEnumerable<AdminAdjustmentDetailGroupByOutputType, T['by']> &
+        {
+          [P in ((keyof T) & (keyof AdminAdjustmentDetailGroupByOutputType))]: P extends '_count'
+            ? T[P] extends boolean
+              ? number
+              : GetScalarType<T[P], AdminAdjustmentDetailGroupByOutputType[P]>
+            : GetScalarType<T[P], AdminAdjustmentDetailGroupByOutputType[P]>
+        }
+      >
+    >
+
+
+  export type AdminAdjustmentDetailSelect<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetSelect<{
+    id?: boolean
+    transactionId?: boolean
+    adminUserId?: boolean
+    reasonCode?: boolean
+    internalNote?: boolean
+    transaction?: boolean | TransactionDefaultArgs<ExtArgs>
+    adminUser?: boolean | UserDefaultArgs<ExtArgs>
+  }, ExtArgs["result"]["adminAdjustmentDetail"]>
+
+  export type AdminAdjustmentDetailSelectCreateManyAndReturn<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetSelect<{
+    id?: boolean
+    transactionId?: boolean
+    adminUserId?: boolean
+    reasonCode?: boolean
+    internalNote?: boolean
+    transaction?: boolean | TransactionDefaultArgs<ExtArgs>
+    adminUser?: boolean | UserDefaultArgs<ExtArgs>
+  }, ExtArgs["result"]["adminAdjustmentDetail"]>
+
+  export type AdminAdjustmentDetailSelectUpdateManyAndReturn<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetSelect<{
+    id?: boolean
+    transactionId?: boolean
+    adminUserId?: boolean
+    reasonCode?: boolean
+    internalNote?: boolean
+    transaction?: boolean | TransactionDefaultArgs<ExtArgs>
+    adminUser?: boolean | UserDefaultArgs<ExtArgs>
+  }, ExtArgs["result"]["adminAdjustmentDetail"]>
+
+  export type AdminAdjustmentDetailSelectScalar = {
+    id?: boolean
+    transactionId?: boolean
+    adminUserId?: boolean
+    reasonCode?: boolean
+    internalNote?: boolean
+  }
+
+  export type AdminAdjustmentDetailOmit<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetOmit<"id" | "transactionId" | "adminUserId" | "reasonCode" | "internalNote", ExtArgs["result"]["adminAdjustmentDetail"]>
+  export type AdminAdjustmentDetailInclude<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    transaction?: boolean | TransactionDefaultArgs<ExtArgs>
+    adminUser?: boolean | UserDefaultArgs<ExtArgs>
+  }
+  export type AdminAdjustmentDetailIncludeCreateManyAndReturn<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    transaction?: boolean | TransactionDefaultArgs<ExtArgs>
+    adminUser?: boolean | UserDefaultArgs<ExtArgs>
+  }
+  export type AdminAdjustmentDetailIncludeUpdateManyAndReturn<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    transaction?: boolean | TransactionDefaultArgs<ExtArgs>
+    adminUser?: boolean | UserDefaultArgs<ExtArgs>
+  }
+
+  export type $AdminAdjustmentDetailPayload<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    name: "AdminAdjustmentDetail"
+    objects: {
+      transaction: Prisma.$TransactionPayload<ExtArgs>
+      adminUser: Prisma.$UserPayload<ExtArgs>
+    }
+    scalars: $Extensions.GetPayloadResult<{
+      id: bigint
+      transactionId: bigint
+      adminUserId: bigint
+      reasonCode: string | null
+      internalNote: string | null
+    }, ExtArgs["result"]["adminAdjustmentDetail"]>
+    composites: {}
+  }
+
+  type AdminAdjustmentDetailGetPayload<S extends boolean | null | undefined | AdminAdjustmentDetailDefaultArgs> = $Result.GetResult<Prisma.$AdminAdjustmentDetailPayload, S>
+
+  type AdminAdjustmentDetailCountArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> =
+    Omit<AdminAdjustmentDetailFindManyArgs, 'select' | 'include' | 'distinct' | 'omit'> & {
+      select?: AdminAdjustmentDetailCountAggregateInputType | true
+    }
+
+  export interface AdminAdjustmentDetailDelegate<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs, GlobalOmitOptions = {}> {
+    [K: symbol]: { types: Prisma.TypeMap<ExtArgs>['model']['AdminAdjustmentDetail'], meta: { name: 'AdminAdjustmentDetail' } }
+    /**
+     * Find zero or one AdminAdjustmentDetail that matches the filter.
+     * @param {AdminAdjustmentDetailFindUniqueArgs} args - Arguments to find a AdminAdjustmentDetail
+     * @example
+     * // Get one AdminAdjustmentDetail
+     * const adminAdjustmentDetail = await prisma.adminAdjustmentDetail.findUnique({
+     *   where: {
+     *     // ... provide filter here
+     *   }
+     * })
+     */
+    findUnique<T extends AdminAdjustmentDetailFindUniqueArgs>(args: SelectSubset<T, AdminAdjustmentDetailFindUniqueArgs<ExtArgs>>): Prisma__AdminAdjustmentDetailClient<$Result.GetResult<Prisma.$AdminAdjustmentDetailPayload<ExtArgs>, T, "findUnique", GlobalOmitOptions> | null, null, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Find one AdminAdjustmentDetail that matches the filter or throw an error with `error.code='P2025'`
+     * if no matches were found.
+     * @param {AdminAdjustmentDetailFindUniqueOrThrowArgs} args - Arguments to find a AdminAdjustmentDetail
+     * @example
+     * // Get one AdminAdjustmentDetail
+     * const adminAdjustmentDetail = await prisma.adminAdjustmentDetail.findUniqueOrThrow({
+     *   where: {
+     *     // ... provide filter here
+     *   }
+     * })
+     */
+    findUniqueOrThrow<T extends AdminAdjustmentDetailFindUniqueOrThrowArgs>(args: SelectSubset<T, AdminAdjustmentDetailFindUniqueOrThrowArgs<ExtArgs>>): Prisma__AdminAdjustmentDetailClient<$Result.GetResult<Prisma.$AdminAdjustmentDetailPayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Find the first AdminAdjustmentDetail that matches the filter.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {AdminAdjustmentDetailFindFirstArgs} args - Arguments to find a AdminAdjustmentDetail
+     * @example
+     * // Get one AdminAdjustmentDetail
+     * const adminAdjustmentDetail = await prisma.adminAdjustmentDetail.findFirst({
+     *   where: {
+     *     // ... provide filter here
+     *   }
+     * })
+     */
+    findFirst<T extends AdminAdjustmentDetailFindFirstArgs>(args?: SelectSubset<T, AdminAdjustmentDetailFindFirstArgs<ExtArgs>>): Prisma__AdminAdjustmentDetailClient<$Result.GetResult<Prisma.$AdminAdjustmentDetailPayload<ExtArgs>, T, "findFirst", GlobalOmitOptions> | null, null, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Find the first AdminAdjustmentDetail that matches the filter or
+     * throw `PrismaKnownClientError` with `P2025` code if no matches were found.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {AdminAdjustmentDetailFindFirstOrThrowArgs} args - Arguments to find a AdminAdjustmentDetail
+     * @example
+     * // Get one AdminAdjustmentDetail
+     * const adminAdjustmentDetail = await prisma.adminAdjustmentDetail.findFirstOrThrow({
+     *   where: {
+     *     // ... provide filter here
+     *   }
+     * })
+     */
+    findFirstOrThrow<T extends AdminAdjustmentDetailFindFirstOrThrowArgs>(args?: SelectSubset<T, AdminAdjustmentDetailFindFirstOrThrowArgs<ExtArgs>>): Prisma__AdminAdjustmentDetailClient<$Result.GetResult<Prisma.$AdminAdjustmentDetailPayload<ExtArgs>, T, "findFirstOrThrow", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Find zero or more AdminAdjustmentDetails that matches the filter.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {AdminAdjustmentDetailFindManyArgs} args - Arguments to filter and select certain fields only.
+     * @example
+     * // Get all AdminAdjustmentDetails
+     * const adminAdjustmentDetails = await prisma.adminAdjustmentDetail.findMany()
+     * 
+     * // Get first 10 AdminAdjustmentDetails
+     * const adminAdjustmentDetails = await prisma.adminAdjustmentDetail.findMany({ take: 10 })
+     * 
+     * // Only select the `id`
+     * const adminAdjustmentDetailWithIdOnly = await prisma.adminAdjustmentDetail.findMany({ select: { id: true } })
+     * 
+     */
+    findMany<T extends AdminAdjustmentDetailFindManyArgs>(args?: SelectSubset<T, AdminAdjustmentDetailFindManyArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$AdminAdjustmentDetailPayload<ExtArgs>, T, "findMany", GlobalOmitOptions>>
+
+    /**
+     * Create a AdminAdjustmentDetail.
+     * @param {AdminAdjustmentDetailCreateArgs} args - Arguments to create a AdminAdjustmentDetail.
+     * @example
+     * // Create one AdminAdjustmentDetail
+     * const AdminAdjustmentDetail = await prisma.adminAdjustmentDetail.create({
+     *   data: {
+     *     // ... data to create a AdminAdjustmentDetail
+     *   }
+     * })
+     * 
+     */
+    create<T extends AdminAdjustmentDetailCreateArgs>(args: SelectSubset<T, AdminAdjustmentDetailCreateArgs<ExtArgs>>): Prisma__AdminAdjustmentDetailClient<$Result.GetResult<Prisma.$AdminAdjustmentDetailPayload<ExtArgs>, T, "create", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Create many AdminAdjustmentDetails.
+     * @param {AdminAdjustmentDetailCreateManyArgs} args - Arguments to create many AdminAdjustmentDetails.
+     * @example
+     * // Create many AdminAdjustmentDetails
+     * const adminAdjustmentDetail = await prisma.adminAdjustmentDetail.createMany({
+     *   data: [
+     *     // ... provide data here
+     *   ]
+     * })
+     *     
+     */
+    createMany<T extends AdminAdjustmentDetailCreateManyArgs>(args?: SelectSubset<T, AdminAdjustmentDetailCreateManyArgs<ExtArgs>>): Prisma.PrismaPromise<BatchPayload>
+
+    /**
+     * Create many AdminAdjustmentDetails and returns the data saved in the database.
+     * @param {AdminAdjustmentDetailCreateManyAndReturnArgs} args - Arguments to create many AdminAdjustmentDetails.
+     * @example
+     * // Create many AdminAdjustmentDetails
+     * const adminAdjustmentDetail = await prisma.adminAdjustmentDetail.createManyAndReturn({
+     *   data: [
+     *     // ... provide data here
+     *   ]
+     * })
+     * 
+     * // Create many AdminAdjustmentDetails and only return the `id`
+     * const adminAdjustmentDetailWithIdOnly = await prisma.adminAdjustmentDetail.createManyAndReturn({
+     *   select: { id: true },
+     *   data: [
+     *     // ... provide data here
+     *   ]
+     * })
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * 
+     */
+    createManyAndReturn<T extends AdminAdjustmentDetailCreateManyAndReturnArgs>(args?: SelectSubset<T, AdminAdjustmentDetailCreateManyAndReturnArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$AdminAdjustmentDetailPayload<ExtArgs>, T, "createManyAndReturn", GlobalOmitOptions>>
+
+    /**
+     * Delete a AdminAdjustmentDetail.
+     * @param {AdminAdjustmentDetailDeleteArgs} args - Arguments to delete one AdminAdjustmentDetail.
+     * @example
+     * // Delete one AdminAdjustmentDetail
+     * const AdminAdjustmentDetail = await prisma.adminAdjustmentDetail.delete({
+     *   where: {
+     *     // ... filter to delete one AdminAdjustmentDetail
+     *   }
+     * })
+     * 
+     */
+    delete<T extends AdminAdjustmentDetailDeleteArgs>(args: SelectSubset<T, AdminAdjustmentDetailDeleteArgs<ExtArgs>>): Prisma__AdminAdjustmentDetailClient<$Result.GetResult<Prisma.$AdminAdjustmentDetailPayload<ExtArgs>, T, "delete", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Update one AdminAdjustmentDetail.
+     * @param {AdminAdjustmentDetailUpdateArgs} args - Arguments to update one AdminAdjustmentDetail.
+     * @example
+     * // Update one AdminAdjustmentDetail
+     * const adminAdjustmentDetail = await prisma.adminAdjustmentDetail.update({
+     *   where: {
+     *     // ... provide filter here
+     *   },
+     *   data: {
+     *     // ... provide data here
+     *   }
+     * })
+     * 
+     */
+    update<T extends AdminAdjustmentDetailUpdateArgs>(args: SelectSubset<T, AdminAdjustmentDetailUpdateArgs<ExtArgs>>): Prisma__AdminAdjustmentDetailClient<$Result.GetResult<Prisma.$AdminAdjustmentDetailPayload<ExtArgs>, T, "update", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Delete zero or more AdminAdjustmentDetails.
+     * @param {AdminAdjustmentDetailDeleteManyArgs} args - Arguments to filter AdminAdjustmentDetails to delete.
+     * @example
+     * // Delete a few AdminAdjustmentDetails
+     * const { count } = await prisma.adminAdjustmentDetail.deleteMany({
+     *   where: {
+     *     // ... provide filter here
+     *   }
+     * })
+     * 
+     */
+    deleteMany<T extends AdminAdjustmentDetailDeleteManyArgs>(args?: SelectSubset<T, AdminAdjustmentDetailDeleteManyArgs<ExtArgs>>): Prisma.PrismaPromise<BatchPayload>
+
+    /**
+     * Update zero or more AdminAdjustmentDetails.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {AdminAdjustmentDetailUpdateManyArgs} args - Arguments to update one or more rows.
+     * @example
+     * // Update many AdminAdjustmentDetails
+     * const adminAdjustmentDetail = await prisma.adminAdjustmentDetail.updateMany({
+     *   where: {
+     *     // ... provide filter here
+     *   },
+     *   data: {
+     *     // ... provide data here
+     *   }
+     * })
+     * 
+     */
+    updateMany<T extends AdminAdjustmentDetailUpdateManyArgs>(args: SelectSubset<T, AdminAdjustmentDetailUpdateManyArgs<ExtArgs>>): Prisma.PrismaPromise<BatchPayload>
+
+    /**
+     * Update zero or more AdminAdjustmentDetails and returns the data updated in the database.
+     * @param {AdminAdjustmentDetailUpdateManyAndReturnArgs} args - Arguments to update many AdminAdjustmentDetails.
+     * @example
+     * // Update many AdminAdjustmentDetails
+     * const adminAdjustmentDetail = await prisma.adminAdjustmentDetail.updateManyAndReturn({
+     *   where: {
+     *     // ... provide filter here
+     *   },
+     *   data: [
+     *     // ... provide data here
+     *   ]
+     * })
+     * 
+     * // Update zero or more AdminAdjustmentDetails and only return the `id`
+     * const adminAdjustmentDetailWithIdOnly = await prisma.adminAdjustmentDetail.updateManyAndReturn({
+     *   select: { id: true },
+     *   where: {
+     *     // ... provide filter here
+     *   },
+     *   data: [
+     *     // ... provide data here
+     *   ]
+     * })
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * 
+     */
+    updateManyAndReturn<T extends AdminAdjustmentDetailUpdateManyAndReturnArgs>(args: SelectSubset<T, AdminAdjustmentDetailUpdateManyAndReturnArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$AdminAdjustmentDetailPayload<ExtArgs>, T, "updateManyAndReturn", GlobalOmitOptions>>
+
+    /**
+     * Create or update one AdminAdjustmentDetail.
+     * @param {AdminAdjustmentDetailUpsertArgs} args - Arguments to update or create a AdminAdjustmentDetail.
+     * @example
+     * // Update or create a AdminAdjustmentDetail
+     * const adminAdjustmentDetail = await prisma.adminAdjustmentDetail.upsert({
+     *   create: {
+     *     // ... data to create a AdminAdjustmentDetail
+     *   },
+     *   update: {
+     *     // ... in case it already exists, update
+     *   },
+     *   where: {
+     *     // ... the filter for the AdminAdjustmentDetail we want to update
+     *   }
+     * })
+     */
+    upsert<T extends AdminAdjustmentDetailUpsertArgs>(args: SelectSubset<T, AdminAdjustmentDetailUpsertArgs<ExtArgs>>): Prisma__AdminAdjustmentDetailClient<$Result.GetResult<Prisma.$AdminAdjustmentDetailPayload<ExtArgs>, T, "upsert", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
+
+
+    /**
+     * Count the number of AdminAdjustmentDetails.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {AdminAdjustmentDetailCountArgs} args - Arguments to filter AdminAdjustmentDetails to count.
+     * @example
+     * // Count the number of AdminAdjustmentDetails
+     * const count = await prisma.adminAdjustmentDetail.count({
+     *   where: {
+     *     // ... the filter for the AdminAdjustmentDetails we want to count
+     *   }
+     * })
+    **/
+    count<T extends AdminAdjustmentDetailCountArgs>(
+      args?: Subset<T, AdminAdjustmentDetailCountArgs>,
+    ): Prisma.PrismaPromise<
+      T extends $Utils.Record<'select', any>
+        ? T['select'] extends true
+          ? number
+          : GetScalarType<T['select'], AdminAdjustmentDetailCountAggregateOutputType>
+        : number
+    >
+
+    /**
+     * Allows you to perform aggregations operations on a AdminAdjustmentDetail.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {AdminAdjustmentDetailAggregateArgs} args - Select which aggregations you would like to apply and on what fields.
+     * @example
+     * // Ordered by age ascending
+     * // Where email contains prisma.io
+     * // Limited to the 10 users
+     * const aggregations = await prisma.user.aggregate({
+     *   _avg: {
+     *     age: true,
+     *   },
+     *   where: {
+     *     email: {
+     *       contains: "prisma.io",
+     *     },
+     *   },
+     *   orderBy: {
+     *     age: "asc",
+     *   },
+     *   take: 10,
+     * })
+    **/
+    aggregate<T extends AdminAdjustmentDetailAggregateArgs>(args: Subset<T, AdminAdjustmentDetailAggregateArgs>): Prisma.PrismaPromise<GetAdminAdjustmentDetailAggregateType<T>>
+
+    /**
+     * Group by AdminAdjustmentDetail.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {AdminAdjustmentDetailGroupByArgs} args - Group by arguments.
+     * @example
+     * // Group by city, order by createdAt, get count
+     * const result = await prisma.user.groupBy({
+     *   by: ['city', 'createdAt'],
+     *   orderBy: {
+     *     createdAt: true
+     *   },
+     *   _count: {
+     *     _all: true
+     *   },
+     * })
+     * 
+    **/
+    groupBy<
+      T extends AdminAdjustmentDetailGroupByArgs,
+      HasSelectOrTake extends Or<
+        Extends<'skip', Keys<T>>,
+        Extends<'take', Keys<T>>
+      >,
+      OrderByArg extends True extends HasSelectOrTake
+        ? { orderBy: AdminAdjustmentDetailGroupByArgs['orderBy'] }
+        : { orderBy?: AdminAdjustmentDetailGroupByArgs['orderBy'] },
+      OrderFields extends ExcludeUnderscoreKeys<Keys<MaybeTupleToUnion<T['orderBy']>>>,
+      ByFields extends MaybeTupleToUnion<T['by']>,
+      ByValid extends Has<ByFields, OrderFields>,
+      HavingFields extends GetHavingFields<T['having']>,
+      HavingValid extends Has<ByFields, HavingFields>,
+      ByEmpty extends T['by'] extends never[] ? True : False,
+      InputErrors extends ByEmpty extends True
+      ? `Error: "by" must not be empty.`
+      : HavingValid extends False
+      ? {
+          [P in HavingFields]: P extends ByFields
+            ? never
+            : P extends string
+            ? `Error: Field "${P}" used in "having" needs to be provided in "by".`
+            : [
+                Error,
+                'Field ',
+                P,
+                ` in "having" needs to be provided in "by"`,
+              ]
+        }[HavingFields]
+      : 'take' extends Keys<T>
+      ? 'orderBy' extends Keys<T>
+        ? ByValid extends True
+          ? {}
+          : {
+              [P in OrderFields]: P extends ByFields
+                ? never
+                : `Error: Field "${P}" in "orderBy" needs to be provided in "by"`
+            }[OrderFields]
+        : 'Error: If you provide "take", you also need to provide "orderBy"'
+      : 'skip' extends Keys<T>
+      ? 'orderBy' extends Keys<T>
+        ? ByValid extends True
+          ? {}
+          : {
+              [P in OrderFields]: P extends ByFields
+                ? never
+                : `Error: Field "${P}" in "orderBy" needs to be provided in "by"`
+            }[OrderFields]
+        : 'Error: If you provide "skip", you also need to provide "orderBy"'
+      : ByValid extends True
+      ? {}
+      : {
+          [P in OrderFields]: P extends ByFields
+            ? never
+            : `Error: Field "${P}" in "orderBy" needs to be provided in "by"`
+        }[OrderFields]
+    >(args: SubsetIntersection<T, AdminAdjustmentDetailGroupByArgs, OrderByArg> & InputErrors): {} extends InputErrors ? GetAdminAdjustmentDetailGroupByPayload<T> : Prisma.PrismaPromise<InputErrors>
+  /**
+   * Fields of the AdminAdjustmentDetail model
+   */
+  readonly fields: AdminAdjustmentDetailFieldRefs;
+  }
+
+  /**
+   * The delegate class that acts as a "Promise-like" for AdminAdjustmentDetail.
+   * Why is this prefixed with `Prisma__`?
+   * Because we want to prevent naming conflicts as mentioned in
+   * https://github.com/prisma/prisma-client-js/issues/707
+   */
+  export interface Prisma__AdminAdjustmentDetailClient<T, Null = never, ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs, GlobalOmitOptions = {}> extends Prisma.PrismaPromise<T> {
+    readonly [Symbol.toStringTag]: "PrismaPromise"
+    transaction<T extends TransactionDefaultArgs<ExtArgs> = {}>(args?: Subset<T, TransactionDefaultArgs<ExtArgs>>): Prisma__TransactionClient<$Result.GetResult<Prisma.$TransactionPayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions> | Null, Null, ExtArgs, GlobalOmitOptions>
+    adminUser<T extends UserDefaultArgs<ExtArgs> = {}>(args?: Subset<T, UserDefaultArgs<ExtArgs>>): Prisma__UserClient<$Result.GetResult<Prisma.$UserPayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions> | Null, Null, ExtArgs, GlobalOmitOptions>
+    /**
+     * Attaches callbacks for the resolution and/or rejection of the Promise.
+     * @param onfulfilled The callback to execute when the Promise is resolved.
+     * @param onrejected The callback to execute when the Promise is rejected.
+     * @returns A Promise for the completion of which ever callback is executed.
+     */
+    then<TResult1 = T, TResult2 = never>(onfulfilled?: ((value: T) => TResult1 | PromiseLike<TResult1>) | undefined | null, onrejected?: ((reason: any) => TResult2 | PromiseLike<TResult2>) | undefined | null): $Utils.JsPromise<TResult1 | TResult2>
+    /**
+     * Attaches a callback for only the rejection of the Promise.
+     * @param onrejected The callback to execute when the Promise is rejected.
+     * @returns A Promise for the completion of the callback.
+     */
+    catch<TResult = never>(onrejected?: ((reason: any) => TResult | PromiseLike<TResult>) | undefined | null): $Utils.JsPromise<T | TResult>
+    /**
+     * Attaches a callback that is invoked when the Promise is settled (fulfilled or rejected). The
+     * resolved value cannot be modified from the callback.
+     * @param onfinally The callback to execute when the Promise is settled (fulfilled or rejected).
+     * @returns A Promise for the completion of the callback.
+     */
+    finally(onfinally?: (() => void) | undefined | null): $Utils.JsPromise<T>
+  }
+
+
+
+
+  /**
+   * Fields of the AdminAdjustmentDetail model
+   */
+  interface AdminAdjustmentDetailFieldRefs {
+    readonly id: FieldRef<"AdminAdjustmentDetail", 'BigInt'>
+    readonly transactionId: FieldRef<"AdminAdjustmentDetail", 'BigInt'>
+    readonly adminUserId: FieldRef<"AdminAdjustmentDetail", 'BigInt'>
+    readonly reasonCode: FieldRef<"AdminAdjustmentDetail", 'String'>
+    readonly internalNote: FieldRef<"AdminAdjustmentDetail", 'String'>
+  }
+    
+
+  // Custom InputTypes
+  /**
+   * AdminAdjustmentDetail findUnique
+   */
+  export type AdminAdjustmentDetailFindUniqueArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the AdminAdjustmentDetail
+     */
+    select?: AdminAdjustmentDetailSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the AdminAdjustmentDetail
+     */
+    omit?: AdminAdjustmentDetailOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: AdminAdjustmentDetailInclude<ExtArgs> | null
+    /**
+     * Filter, which AdminAdjustmentDetail to fetch.
+     */
+    where: AdminAdjustmentDetailWhereUniqueInput
+  }
+
+  /**
+   * AdminAdjustmentDetail findUniqueOrThrow
+   */
+  export type AdminAdjustmentDetailFindUniqueOrThrowArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the AdminAdjustmentDetail
+     */
+    select?: AdminAdjustmentDetailSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the AdminAdjustmentDetail
+     */
+    omit?: AdminAdjustmentDetailOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: AdminAdjustmentDetailInclude<ExtArgs> | null
+    /**
+     * Filter, which AdminAdjustmentDetail to fetch.
+     */
+    where: AdminAdjustmentDetailWhereUniqueInput
+  }
+
+  /**
+   * AdminAdjustmentDetail findFirst
+   */
+  export type AdminAdjustmentDetailFindFirstArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the AdminAdjustmentDetail
+     */
+    select?: AdminAdjustmentDetailSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the AdminAdjustmentDetail
+     */
+    omit?: AdminAdjustmentDetailOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: AdminAdjustmentDetailInclude<ExtArgs> | null
+    /**
+     * Filter, which AdminAdjustmentDetail to fetch.
+     */
+    where?: AdminAdjustmentDetailWhereInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/sorting Sorting Docs}
+     * 
+     * Determine the order of AdminAdjustmentDetails to fetch.
+     */
+    orderBy?: AdminAdjustmentDetailOrderByWithRelationInput | AdminAdjustmentDetailOrderByWithRelationInput[]
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination#cursor-based-pagination Cursor Docs}
+     * 
+     * Sets the position for searching for AdminAdjustmentDetails.
+     */
+    cursor?: AdminAdjustmentDetailWhereUniqueInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Take `±n` AdminAdjustmentDetails from the position of the cursor.
+     */
+    take?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Skip the first `n` AdminAdjustmentDetails.
+     */
+    skip?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/distinct Distinct Docs}
+     * 
+     * Filter by unique combinations of AdminAdjustmentDetails.
+     */
+    distinct?: AdminAdjustmentDetailScalarFieldEnum | AdminAdjustmentDetailScalarFieldEnum[]
+  }
+
+  /**
+   * AdminAdjustmentDetail findFirstOrThrow
+   */
+  export type AdminAdjustmentDetailFindFirstOrThrowArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the AdminAdjustmentDetail
+     */
+    select?: AdminAdjustmentDetailSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the AdminAdjustmentDetail
+     */
+    omit?: AdminAdjustmentDetailOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: AdminAdjustmentDetailInclude<ExtArgs> | null
+    /**
+     * Filter, which AdminAdjustmentDetail to fetch.
+     */
+    where?: AdminAdjustmentDetailWhereInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/sorting Sorting Docs}
+     * 
+     * Determine the order of AdminAdjustmentDetails to fetch.
+     */
+    orderBy?: AdminAdjustmentDetailOrderByWithRelationInput | AdminAdjustmentDetailOrderByWithRelationInput[]
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination#cursor-based-pagination Cursor Docs}
+     * 
+     * Sets the position for searching for AdminAdjustmentDetails.
+     */
+    cursor?: AdminAdjustmentDetailWhereUniqueInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Take `±n` AdminAdjustmentDetails from the position of the cursor.
+     */
+    take?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Skip the first `n` AdminAdjustmentDetails.
+     */
+    skip?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/distinct Distinct Docs}
+     * 
+     * Filter by unique combinations of AdminAdjustmentDetails.
+     */
+    distinct?: AdminAdjustmentDetailScalarFieldEnum | AdminAdjustmentDetailScalarFieldEnum[]
+  }
+
+  /**
+   * AdminAdjustmentDetail findMany
+   */
+  export type AdminAdjustmentDetailFindManyArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the AdminAdjustmentDetail
+     */
+    select?: AdminAdjustmentDetailSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the AdminAdjustmentDetail
+     */
+    omit?: AdminAdjustmentDetailOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: AdminAdjustmentDetailInclude<ExtArgs> | null
+    /**
+     * Filter, which AdminAdjustmentDetails to fetch.
+     */
+    where?: AdminAdjustmentDetailWhereInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/sorting Sorting Docs}
+     * 
+     * Determine the order of AdminAdjustmentDetails to fetch.
+     */
+    orderBy?: AdminAdjustmentDetailOrderByWithRelationInput | AdminAdjustmentDetailOrderByWithRelationInput[]
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination#cursor-based-pagination Cursor Docs}
+     * 
+     * Sets the position for listing AdminAdjustmentDetails.
+     */
+    cursor?: AdminAdjustmentDetailWhereUniqueInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Take `±n` AdminAdjustmentDetails from the position of the cursor.
+     */
+    take?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Skip the first `n` AdminAdjustmentDetails.
+     */
+    skip?: number
+    distinct?: AdminAdjustmentDetailScalarFieldEnum | AdminAdjustmentDetailScalarFieldEnum[]
+  }
+
+  /**
+   * AdminAdjustmentDetail create
+   */
+  export type AdminAdjustmentDetailCreateArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the AdminAdjustmentDetail
+     */
+    select?: AdminAdjustmentDetailSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the AdminAdjustmentDetail
+     */
+    omit?: AdminAdjustmentDetailOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: AdminAdjustmentDetailInclude<ExtArgs> | null
+    /**
+     * The data needed to create a AdminAdjustmentDetail.
+     */
+    data: XOR<AdminAdjustmentDetailCreateInput, AdminAdjustmentDetailUncheckedCreateInput>
+  }
+
+  /**
+   * AdminAdjustmentDetail createMany
+   */
+  export type AdminAdjustmentDetailCreateManyArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * The data used to create many AdminAdjustmentDetails.
+     */
+    data: AdminAdjustmentDetailCreateManyInput | AdminAdjustmentDetailCreateManyInput[]
+    skipDuplicates?: boolean
+  }
+
+  /**
+   * AdminAdjustmentDetail createManyAndReturn
+   */
+  export type AdminAdjustmentDetailCreateManyAndReturnArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the AdminAdjustmentDetail
+     */
+    select?: AdminAdjustmentDetailSelectCreateManyAndReturn<ExtArgs> | null
+    /**
+     * Omit specific fields from the AdminAdjustmentDetail
+     */
+    omit?: AdminAdjustmentDetailOmit<ExtArgs> | null
+    /**
+     * The data used to create many AdminAdjustmentDetails.
+     */
+    data: AdminAdjustmentDetailCreateManyInput | AdminAdjustmentDetailCreateManyInput[]
+    skipDuplicates?: boolean
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: AdminAdjustmentDetailIncludeCreateManyAndReturn<ExtArgs> | null
+  }
+
+  /**
+   * AdminAdjustmentDetail update
+   */
+  export type AdminAdjustmentDetailUpdateArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the AdminAdjustmentDetail
+     */
+    select?: AdminAdjustmentDetailSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the AdminAdjustmentDetail
+     */
+    omit?: AdminAdjustmentDetailOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: AdminAdjustmentDetailInclude<ExtArgs> | null
+    /**
+     * The data needed to update a AdminAdjustmentDetail.
+     */
+    data: XOR<AdminAdjustmentDetailUpdateInput, AdminAdjustmentDetailUncheckedUpdateInput>
+    /**
+     * Choose, which AdminAdjustmentDetail to update.
+     */
+    where: AdminAdjustmentDetailWhereUniqueInput
+  }
+
+  /**
+   * AdminAdjustmentDetail updateMany
+   */
+  export type AdminAdjustmentDetailUpdateManyArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * The data used to update AdminAdjustmentDetails.
+     */
+    data: XOR<AdminAdjustmentDetailUpdateManyMutationInput, AdminAdjustmentDetailUncheckedUpdateManyInput>
+    /**
+     * Filter which AdminAdjustmentDetails to update
+     */
+    where?: AdminAdjustmentDetailWhereInput
+    /**
+     * Limit how many AdminAdjustmentDetails to update.
+     */
+    limit?: number
+  }
+
+  /**
+   * AdminAdjustmentDetail updateManyAndReturn
+   */
+  export type AdminAdjustmentDetailUpdateManyAndReturnArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the AdminAdjustmentDetail
+     */
+    select?: AdminAdjustmentDetailSelectUpdateManyAndReturn<ExtArgs> | null
+    /**
+     * Omit specific fields from the AdminAdjustmentDetail
+     */
+    omit?: AdminAdjustmentDetailOmit<ExtArgs> | null
+    /**
+     * The data used to update AdminAdjustmentDetails.
+     */
+    data: XOR<AdminAdjustmentDetailUpdateManyMutationInput, AdminAdjustmentDetailUncheckedUpdateManyInput>
+    /**
+     * Filter which AdminAdjustmentDetails to update
+     */
+    where?: AdminAdjustmentDetailWhereInput
+    /**
+     * Limit how many AdminAdjustmentDetails to update.
+     */
+    limit?: number
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: AdminAdjustmentDetailIncludeUpdateManyAndReturn<ExtArgs> | null
+  }
+
+  /**
+   * AdminAdjustmentDetail upsert
+   */
+  export type AdminAdjustmentDetailUpsertArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the AdminAdjustmentDetail
+     */
+    select?: AdminAdjustmentDetailSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the AdminAdjustmentDetail
+     */
+    omit?: AdminAdjustmentDetailOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: AdminAdjustmentDetailInclude<ExtArgs> | null
+    /**
+     * The filter to search for the AdminAdjustmentDetail to update in case it exists.
+     */
+    where: AdminAdjustmentDetailWhereUniqueInput
+    /**
+     * In case the AdminAdjustmentDetail found by the `where` argument doesn't exist, create a new AdminAdjustmentDetail with this data.
+     */
+    create: XOR<AdminAdjustmentDetailCreateInput, AdminAdjustmentDetailUncheckedCreateInput>
+    /**
+     * In case the AdminAdjustmentDetail was found with the provided `where` argument, update it with this data.
+     */
+    update: XOR<AdminAdjustmentDetailUpdateInput, AdminAdjustmentDetailUncheckedUpdateInput>
+  }
+
+  /**
+   * AdminAdjustmentDetail delete
+   */
+  export type AdminAdjustmentDetailDeleteArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the AdminAdjustmentDetail
+     */
+    select?: AdminAdjustmentDetailSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the AdminAdjustmentDetail
+     */
+    omit?: AdminAdjustmentDetailOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: AdminAdjustmentDetailInclude<ExtArgs> | null
+    /**
+     * Filter which AdminAdjustmentDetail to delete.
+     */
+    where: AdminAdjustmentDetailWhereUniqueInput
+  }
+
+  /**
+   * AdminAdjustmentDetail deleteMany
+   */
+  export type AdminAdjustmentDetailDeleteManyArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Filter which AdminAdjustmentDetails to delete
+     */
+    where?: AdminAdjustmentDetailWhereInput
+    /**
+     * Limit how many AdminAdjustmentDetails to delete.
+     */
+    limit?: number
+  }
+
+  /**
+   * AdminAdjustmentDetail without action
+   */
+  export type AdminAdjustmentDetailDefaultArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the AdminAdjustmentDetail
+     */
+    select?: AdminAdjustmentDetailSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the AdminAdjustmentDetail
+     */
+    omit?: AdminAdjustmentDetailOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: AdminAdjustmentDetailInclude<ExtArgs> | null
+  }
+
+
+  /**
+   * Model SystemAdjustmentDetail
+   */
+
+  export type AggregateSystemAdjustmentDetail = {
+    _count: SystemAdjustmentDetailCountAggregateOutputType | null
+    _avg: SystemAdjustmentDetailAvgAggregateOutputType | null
+    _sum: SystemAdjustmentDetailSumAggregateOutputType | null
+    _min: SystemAdjustmentDetailMinAggregateOutputType | null
+    _max: SystemAdjustmentDetailMaxAggregateOutputType | null
+  }
+
+  export type SystemAdjustmentDetailAvgAggregateOutputType = {
+    id: number | null
+    transactionId: number | null
+  }
+
+  export type SystemAdjustmentDetailSumAggregateOutputType = {
+    id: bigint | null
+    transactionId: bigint | null
+  }
+
+  export type SystemAdjustmentDetailMinAggregateOutputType = {
+    id: bigint | null
+    transactionId: bigint | null
+    serviceName: string | null
+    triggerId: string | null
+    actionName: string | null
+  }
+
+  export type SystemAdjustmentDetailMaxAggregateOutputType = {
+    id: bigint | null
+    transactionId: bigint | null
+    serviceName: string | null
+    triggerId: string | null
+    actionName: string | null
+  }
+
+  export type SystemAdjustmentDetailCountAggregateOutputType = {
+    id: number
+    transactionId: number
+    serviceName: number
+    triggerId: number
+    actionName: number
+    metadata: number
+    _all: number
+  }
+
+
+  export type SystemAdjustmentDetailAvgAggregateInputType = {
+    id?: true
+    transactionId?: true
+  }
+
+  export type SystemAdjustmentDetailSumAggregateInputType = {
+    id?: true
+    transactionId?: true
+  }
+
+  export type SystemAdjustmentDetailMinAggregateInputType = {
+    id?: true
+    transactionId?: true
+    serviceName?: true
+    triggerId?: true
+    actionName?: true
+  }
+
+  export type SystemAdjustmentDetailMaxAggregateInputType = {
+    id?: true
+    transactionId?: true
+    serviceName?: true
+    triggerId?: true
+    actionName?: true
+  }
+
+  export type SystemAdjustmentDetailCountAggregateInputType = {
+    id?: true
+    transactionId?: true
+    serviceName?: true
+    triggerId?: true
+    actionName?: true
+    metadata?: true
+    _all?: true
+  }
+
+  export type SystemAdjustmentDetailAggregateArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Filter which SystemAdjustmentDetail to aggregate.
+     */
+    where?: SystemAdjustmentDetailWhereInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/sorting Sorting Docs}
+     * 
+     * Determine the order of SystemAdjustmentDetails to fetch.
+     */
+    orderBy?: SystemAdjustmentDetailOrderByWithRelationInput | SystemAdjustmentDetailOrderByWithRelationInput[]
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination#cursor-based-pagination Cursor Docs}
+     * 
+     * Sets the start position
+     */
+    cursor?: SystemAdjustmentDetailWhereUniqueInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Take `±n` SystemAdjustmentDetails from the position of the cursor.
+     */
+    take?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Skip the first `n` SystemAdjustmentDetails.
+     */
+    skip?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
+     * 
+     * Count returned SystemAdjustmentDetails
+    **/
+    _count?: true | SystemAdjustmentDetailCountAggregateInputType
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
+     * 
+     * Select which fields to average
+    **/
+    _avg?: SystemAdjustmentDetailAvgAggregateInputType
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
+     * 
+     * Select which fields to sum
+    **/
+    _sum?: SystemAdjustmentDetailSumAggregateInputType
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
+     * 
+     * Select which fields to find the minimum value
+    **/
+    _min?: SystemAdjustmentDetailMinAggregateInputType
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
+     * 
+     * Select which fields to find the maximum value
+    **/
+    _max?: SystemAdjustmentDetailMaxAggregateInputType
+  }
+
+  export type GetSystemAdjustmentDetailAggregateType<T extends SystemAdjustmentDetailAggregateArgs> = {
+        [P in keyof T & keyof AggregateSystemAdjustmentDetail]: P extends '_count' | 'count'
+      ? T[P] extends true
+        ? number
+        : GetScalarType<T[P], AggregateSystemAdjustmentDetail[P]>
+      : GetScalarType<T[P], AggregateSystemAdjustmentDetail[P]>
+  }
+
+
+
+
+  export type SystemAdjustmentDetailGroupByArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    where?: SystemAdjustmentDetailWhereInput
+    orderBy?: SystemAdjustmentDetailOrderByWithAggregationInput | SystemAdjustmentDetailOrderByWithAggregationInput[]
+    by: SystemAdjustmentDetailScalarFieldEnum[] | SystemAdjustmentDetailScalarFieldEnum
+    having?: SystemAdjustmentDetailScalarWhereWithAggregatesInput
+    take?: number
+    skip?: number
+    _count?: SystemAdjustmentDetailCountAggregateInputType | true
+    _avg?: SystemAdjustmentDetailAvgAggregateInputType
+    _sum?: SystemAdjustmentDetailSumAggregateInputType
+    _min?: SystemAdjustmentDetailMinAggregateInputType
+    _max?: SystemAdjustmentDetailMaxAggregateInputType
+  }
+
+  export type SystemAdjustmentDetailGroupByOutputType = {
+    id: bigint
+    transactionId: bigint
+    serviceName: string
+    triggerId: string | null
+    actionName: string
+    metadata: JsonValue | null
+    _count: SystemAdjustmentDetailCountAggregateOutputType | null
+    _avg: SystemAdjustmentDetailAvgAggregateOutputType | null
+    _sum: SystemAdjustmentDetailSumAggregateOutputType | null
+    _min: SystemAdjustmentDetailMinAggregateOutputType | null
+    _max: SystemAdjustmentDetailMaxAggregateOutputType | null
+  }
+
+  type GetSystemAdjustmentDetailGroupByPayload<T extends SystemAdjustmentDetailGroupByArgs> = Prisma.PrismaPromise<
+    Array<
+      PickEnumerable<SystemAdjustmentDetailGroupByOutputType, T['by']> &
+        {
+          [P in ((keyof T) & (keyof SystemAdjustmentDetailGroupByOutputType))]: P extends '_count'
+            ? T[P] extends boolean
+              ? number
+              : GetScalarType<T[P], SystemAdjustmentDetailGroupByOutputType[P]>
+            : GetScalarType<T[P], SystemAdjustmentDetailGroupByOutputType[P]>
+        }
+      >
+    >
+
+
+  export type SystemAdjustmentDetailSelect<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetSelect<{
+    id?: boolean
+    transactionId?: boolean
+    serviceName?: boolean
+    triggerId?: boolean
+    actionName?: boolean
+    metadata?: boolean
+    transaction?: boolean | TransactionDefaultArgs<ExtArgs>
+  }, ExtArgs["result"]["systemAdjustmentDetail"]>
+
+  export type SystemAdjustmentDetailSelectCreateManyAndReturn<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetSelect<{
+    id?: boolean
+    transactionId?: boolean
+    serviceName?: boolean
+    triggerId?: boolean
+    actionName?: boolean
+    metadata?: boolean
+    transaction?: boolean | TransactionDefaultArgs<ExtArgs>
+  }, ExtArgs["result"]["systemAdjustmentDetail"]>
+
+  export type SystemAdjustmentDetailSelectUpdateManyAndReturn<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetSelect<{
+    id?: boolean
+    transactionId?: boolean
+    serviceName?: boolean
+    triggerId?: boolean
+    actionName?: boolean
+    metadata?: boolean
+    transaction?: boolean | TransactionDefaultArgs<ExtArgs>
+  }, ExtArgs["result"]["systemAdjustmentDetail"]>
+
+  export type SystemAdjustmentDetailSelectScalar = {
+    id?: boolean
+    transactionId?: boolean
+    serviceName?: boolean
+    triggerId?: boolean
+    actionName?: boolean
+    metadata?: boolean
+  }
+
+  export type SystemAdjustmentDetailOmit<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetOmit<"id" | "transactionId" | "serviceName" | "triggerId" | "actionName" | "metadata", ExtArgs["result"]["systemAdjustmentDetail"]>
+  export type SystemAdjustmentDetailInclude<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    transaction?: boolean | TransactionDefaultArgs<ExtArgs>
+  }
+  export type SystemAdjustmentDetailIncludeCreateManyAndReturn<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    transaction?: boolean | TransactionDefaultArgs<ExtArgs>
+  }
+  export type SystemAdjustmentDetailIncludeUpdateManyAndReturn<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    transaction?: boolean | TransactionDefaultArgs<ExtArgs>
+  }
+
+  export type $SystemAdjustmentDetailPayload<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    name: "SystemAdjustmentDetail"
+    objects: {
+      transaction: Prisma.$TransactionPayload<ExtArgs>
+    }
+    scalars: $Extensions.GetPayloadResult<{
+      id: bigint
+      transactionId: bigint
+      serviceName: string
+      triggerId: string | null
+      actionName: string
+      metadata: Prisma.JsonValue | null
+    }, ExtArgs["result"]["systemAdjustmentDetail"]>
+    composites: {}
+  }
+
+  type SystemAdjustmentDetailGetPayload<S extends boolean | null | undefined | SystemAdjustmentDetailDefaultArgs> = $Result.GetResult<Prisma.$SystemAdjustmentDetailPayload, S>
+
+  type SystemAdjustmentDetailCountArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> =
+    Omit<SystemAdjustmentDetailFindManyArgs, 'select' | 'include' | 'distinct' | 'omit'> & {
+      select?: SystemAdjustmentDetailCountAggregateInputType | true
+    }
+
+  export interface SystemAdjustmentDetailDelegate<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs, GlobalOmitOptions = {}> {
+    [K: symbol]: { types: Prisma.TypeMap<ExtArgs>['model']['SystemAdjustmentDetail'], meta: { name: 'SystemAdjustmentDetail' } }
+    /**
+     * Find zero or one SystemAdjustmentDetail that matches the filter.
+     * @param {SystemAdjustmentDetailFindUniqueArgs} args - Arguments to find a SystemAdjustmentDetail
+     * @example
+     * // Get one SystemAdjustmentDetail
+     * const systemAdjustmentDetail = await prisma.systemAdjustmentDetail.findUnique({
+     *   where: {
+     *     // ... provide filter here
+     *   }
+     * })
+     */
+    findUnique<T extends SystemAdjustmentDetailFindUniqueArgs>(args: SelectSubset<T, SystemAdjustmentDetailFindUniqueArgs<ExtArgs>>): Prisma__SystemAdjustmentDetailClient<$Result.GetResult<Prisma.$SystemAdjustmentDetailPayload<ExtArgs>, T, "findUnique", GlobalOmitOptions> | null, null, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Find one SystemAdjustmentDetail that matches the filter or throw an error with `error.code='P2025'`
+     * if no matches were found.
+     * @param {SystemAdjustmentDetailFindUniqueOrThrowArgs} args - Arguments to find a SystemAdjustmentDetail
+     * @example
+     * // Get one SystemAdjustmentDetail
+     * const systemAdjustmentDetail = await prisma.systemAdjustmentDetail.findUniqueOrThrow({
+     *   where: {
+     *     // ... provide filter here
+     *   }
+     * })
+     */
+    findUniqueOrThrow<T extends SystemAdjustmentDetailFindUniqueOrThrowArgs>(args: SelectSubset<T, SystemAdjustmentDetailFindUniqueOrThrowArgs<ExtArgs>>): Prisma__SystemAdjustmentDetailClient<$Result.GetResult<Prisma.$SystemAdjustmentDetailPayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Find the first SystemAdjustmentDetail that matches the filter.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {SystemAdjustmentDetailFindFirstArgs} args - Arguments to find a SystemAdjustmentDetail
+     * @example
+     * // Get one SystemAdjustmentDetail
+     * const systemAdjustmentDetail = await prisma.systemAdjustmentDetail.findFirst({
+     *   where: {
+     *     // ... provide filter here
+     *   }
+     * })
+     */
+    findFirst<T extends SystemAdjustmentDetailFindFirstArgs>(args?: SelectSubset<T, SystemAdjustmentDetailFindFirstArgs<ExtArgs>>): Prisma__SystemAdjustmentDetailClient<$Result.GetResult<Prisma.$SystemAdjustmentDetailPayload<ExtArgs>, T, "findFirst", GlobalOmitOptions> | null, null, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Find the first SystemAdjustmentDetail that matches the filter or
+     * throw `PrismaKnownClientError` with `P2025` code if no matches were found.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {SystemAdjustmentDetailFindFirstOrThrowArgs} args - Arguments to find a SystemAdjustmentDetail
+     * @example
+     * // Get one SystemAdjustmentDetail
+     * const systemAdjustmentDetail = await prisma.systemAdjustmentDetail.findFirstOrThrow({
+     *   where: {
+     *     // ... provide filter here
+     *   }
+     * })
+     */
+    findFirstOrThrow<T extends SystemAdjustmentDetailFindFirstOrThrowArgs>(args?: SelectSubset<T, SystemAdjustmentDetailFindFirstOrThrowArgs<ExtArgs>>): Prisma__SystemAdjustmentDetailClient<$Result.GetResult<Prisma.$SystemAdjustmentDetailPayload<ExtArgs>, T, "findFirstOrThrow", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Find zero or more SystemAdjustmentDetails that matches the filter.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {SystemAdjustmentDetailFindManyArgs} args - Arguments to filter and select certain fields only.
+     * @example
+     * // Get all SystemAdjustmentDetails
+     * const systemAdjustmentDetails = await prisma.systemAdjustmentDetail.findMany()
+     * 
+     * // Get first 10 SystemAdjustmentDetails
+     * const systemAdjustmentDetails = await prisma.systemAdjustmentDetail.findMany({ take: 10 })
+     * 
+     * // Only select the `id`
+     * const systemAdjustmentDetailWithIdOnly = await prisma.systemAdjustmentDetail.findMany({ select: { id: true } })
+     * 
+     */
+    findMany<T extends SystemAdjustmentDetailFindManyArgs>(args?: SelectSubset<T, SystemAdjustmentDetailFindManyArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$SystemAdjustmentDetailPayload<ExtArgs>, T, "findMany", GlobalOmitOptions>>
+
+    /**
+     * Create a SystemAdjustmentDetail.
+     * @param {SystemAdjustmentDetailCreateArgs} args - Arguments to create a SystemAdjustmentDetail.
+     * @example
+     * // Create one SystemAdjustmentDetail
+     * const SystemAdjustmentDetail = await prisma.systemAdjustmentDetail.create({
+     *   data: {
+     *     // ... data to create a SystemAdjustmentDetail
+     *   }
+     * })
+     * 
+     */
+    create<T extends SystemAdjustmentDetailCreateArgs>(args: SelectSubset<T, SystemAdjustmentDetailCreateArgs<ExtArgs>>): Prisma__SystemAdjustmentDetailClient<$Result.GetResult<Prisma.$SystemAdjustmentDetailPayload<ExtArgs>, T, "create", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Create many SystemAdjustmentDetails.
+     * @param {SystemAdjustmentDetailCreateManyArgs} args - Arguments to create many SystemAdjustmentDetails.
+     * @example
+     * // Create many SystemAdjustmentDetails
+     * const systemAdjustmentDetail = await prisma.systemAdjustmentDetail.createMany({
+     *   data: [
+     *     // ... provide data here
+     *   ]
+     * })
+     *     
+     */
+    createMany<T extends SystemAdjustmentDetailCreateManyArgs>(args?: SelectSubset<T, SystemAdjustmentDetailCreateManyArgs<ExtArgs>>): Prisma.PrismaPromise<BatchPayload>
+
+    /**
+     * Create many SystemAdjustmentDetails and returns the data saved in the database.
+     * @param {SystemAdjustmentDetailCreateManyAndReturnArgs} args - Arguments to create many SystemAdjustmentDetails.
+     * @example
+     * // Create many SystemAdjustmentDetails
+     * const systemAdjustmentDetail = await prisma.systemAdjustmentDetail.createManyAndReturn({
+     *   data: [
+     *     // ... provide data here
+     *   ]
+     * })
+     * 
+     * // Create many SystemAdjustmentDetails and only return the `id`
+     * const systemAdjustmentDetailWithIdOnly = await prisma.systemAdjustmentDetail.createManyAndReturn({
+     *   select: { id: true },
+     *   data: [
+     *     // ... provide data here
+     *   ]
+     * })
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * 
+     */
+    createManyAndReturn<T extends SystemAdjustmentDetailCreateManyAndReturnArgs>(args?: SelectSubset<T, SystemAdjustmentDetailCreateManyAndReturnArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$SystemAdjustmentDetailPayload<ExtArgs>, T, "createManyAndReturn", GlobalOmitOptions>>
+
+    /**
+     * Delete a SystemAdjustmentDetail.
+     * @param {SystemAdjustmentDetailDeleteArgs} args - Arguments to delete one SystemAdjustmentDetail.
+     * @example
+     * // Delete one SystemAdjustmentDetail
+     * const SystemAdjustmentDetail = await prisma.systemAdjustmentDetail.delete({
+     *   where: {
+     *     // ... filter to delete one SystemAdjustmentDetail
+     *   }
+     * })
+     * 
+     */
+    delete<T extends SystemAdjustmentDetailDeleteArgs>(args: SelectSubset<T, SystemAdjustmentDetailDeleteArgs<ExtArgs>>): Prisma__SystemAdjustmentDetailClient<$Result.GetResult<Prisma.$SystemAdjustmentDetailPayload<ExtArgs>, T, "delete", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Update one SystemAdjustmentDetail.
+     * @param {SystemAdjustmentDetailUpdateArgs} args - Arguments to update one SystemAdjustmentDetail.
+     * @example
+     * // Update one SystemAdjustmentDetail
+     * const systemAdjustmentDetail = await prisma.systemAdjustmentDetail.update({
+     *   where: {
+     *     // ... provide filter here
+     *   },
+     *   data: {
+     *     // ... provide data here
+     *   }
+     * })
+     * 
+     */
+    update<T extends SystemAdjustmentDetailUpdateArgs>(args: SelectSubset<T, SystemAdjustmentDetailUpdateArgs<ExtArgs>>): Prisma__SystemAdjustmentDetailClient<$Result.GetResult<Prisma.$SystemAdjustmentDetailPayload<ExtArgs>, T, "update", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Delete zero or more SystemAdjustmentDetails.
+     * @param {SystemAdjustmentDetailDeleteManyArgs} args - Arguments to filter SystemAdjustmentDetails to delete.
+     * @example
+     * // Delete a few SystemAdjustmentDetails
+     * const { count } = await prisma.systemAdjustmentDetail.deleteMany({
+     *   where: {
+     *     // ... provide filter here
+     *   }
+     * })
+     * 
+     */
+    deleteMany<T extends SystemAdjustmentDetailDeleteManyArgs>(args?: SelectSubset<T, SystemAdjustmentDetailDeleteManyArgs<ExtArgs>>): Prisma.PrismaPromise<BatchPayload>
+
+    /**
+     * Update zero or more SystemAdjustmentDetails.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {SystemAdjustmentDetailUpdateManyArgs} args - Arguments to update one or more rows.
+     * @example
+     * // Update many SystemAdjustmentDetails
+     * const systemAdjustmentDetail = await prisma.systemAdjustmentDetail.updateMany({
+     *   where: {
+     *     // ... provide filter here
+     *   },
+     *   data: {
+     *     // ... provide data here
+     *   }
+     * })
+     * 
+     */
+    updateMany<T extends SystemAdjustmentDetailUpdateManyArgs>(args: SelectSubset<T, SystemAdjustmentDetailUpdateManyArgs<ExtArgs>>): Prisma.PrismaPromise<BatchPayload>
+
+    /**
+     * Update zero or more SystemAdjustmentDetails and returns the data updated in the database.
+     * @param {SystemAdjustmentDetailUpdateManyAndReturnArgs} args - Arguments to update many SystemAdjustmentDetails.
+     * @example
+     * // Update many SystemAdjustmentDetails
+     * const systemAdjustmentDetail = await prisma.systemAdjustmentDetail.updateManyAndReturn({
+     *   where: {
+     *     // ... provide filter here
+     *   },
+     *   data: [
+     *     // ... provide data here
+     *   ]
+     * })
+     * 
+     * // Update zero or more SystemAdjustmentDetails and only return the `id`
+     * const systemAdjustmentDetailWithIdOnly = await prisma.systemAdjustmentDetail.updateManyAndReturn({
+     *   select: { id: true },
+     *   where: {
+     *     // ... provide filter here
+     *   },
+     *   data: [
+     *     // ... provide data here
+     *   ]
+     * })
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * 
+     */
+    updateManyAndReturn<T extends SystemAdjustmentDetailUpdateManyAndReturnArgs>(args: SelectSubset<T, SystemAdjustmentDetailUpdateManyAndReturnArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$SystemAdjustmentDetailPayload<ExtArgs>, T, "updateManyAndReturn", GlobalOmitOptions>>
+
+    /**
+     * Create or update one SystemAdjustmentDetail.
+     * @param {SystemAdjustmentDetailUpsertArgs} args - Arguments to update or create a SystemAdjustmentDetail.
+     * @example
+     * // Update or create a SystemAdjustmentDetail
+     * const systemAdjustmentDetail = await prisma.systemAdjustmentDetail.upsert({
+     *   create: {
+     *     // ... data to create a SystemAdjustmentDetail
+     *   },
+     *   update: {
+     *     // ... in case it already exists, update
+     *   },
+     *   where: {
+     *     // ... the filter for the SystemAdjustmentDetail we want to update
+     *   }
+     * })
+     */
+    upsert<T extends SystemAdjustmentDetailUpsertArgs>(args: SelectSubset<T, SystemAdjustmentDetailUpsertArgs<ExtArgs>>): Prisma__SystemAdjustmentDetailClient<$Result.GetResult<Prisma.$SystemAdjustmentDetailPayload<ExtArgs>, T, "upsert", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
+
+
+    /**
+     * Count the number of SystemAdjustmentDetails.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {SystemAdjustmentDetailCountArgs} args - Arguments to filter SystemAdjustmentDetails to count.
+     * @example
+     * // Count the number of SystemAdjustmentDetails
+     * const count = await prisma.systemAdjustmentDetail.count({
+     *   where: {
+     *     // ... the filter for the SystemAdjustmentDetails we want to count
+     *   }
+     * })
+    **/
+    count<T extends SystemAdjustmentDetailCountArgs>(
+      args?: Subset<T, SystemAdjustmentDetailCountArgs>,
+    ): Prisma.PrismaPromise<
+      T extends $Utils.Record<'select', any>
+        ? T['select'] extends true
+          ? number
+          : GetScalarType<T['select'], SystemAdjustmentDetailCountAggregateOutputType>
+        : number
+    >
+
+    /**
+     * Allows you to perform aggregations operations on a SystemAdjustmentDetail.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {SystemAdjustmentDetailAggregateArgs} args - Select which aggregations you would like to apply and on what fields.
+     * @example
+     * // Ordered by age ascending
+     * // Where email contains prisma.io
+     * // Limited to the 10 users
+     * const aggregations = await prisma.user.aggregate({
+     *   _avg: {
+     *     age: true,
+     *   },
+     *   where: {
+     *     email: {
+     *       contains: "prisma.io",
+     *     },
+     *   },
+     *   orderBy: {
+     *     age: "asc",
+     *   },
+     *   take: 10,
+     * })
+    **/
+    aggregate<T extends SystemAdjustmentDetailAggregateArgs>(args: Subset<T, SystemAdjustmentDetailAggregateArgs>): Prisma.PrismaPromise<GetSystemAdjustmentDetailAggregateType<T>>
+
+    /**
+     * Group by SystemAdjustmentDetail.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {SystemAdjustmentDetailGroupByArgs} args - Group by arguments.
+     * @example
+     * // Group by city, order by createdAt, get count
+     * const result = await prisma.user.groupBy({
+     *   by: ['city', 'createdAt'],
+     *   orderBy: {
+     *     createdAt: true
+     *   },
+     *   _count: {
+     *     _all: true
+     *   },
+     * })
+     * 
+    **/
+    groupBy<
+      T extends SystemAdjustmentDetailGroupByArgs,
+      HasSelectOrTake extends Or<
+        Extends<'skip', Keys<T>>,
+        Extends<'take', Keys<T>>
+      >,
+      OrderByArg extends True extends HasSelectOrTake
+        ? { orderBy: SystemAdjustmentDetailGroupByArgs['orderBy'] }
+        : { orderBy?: SystemAdjustmentDetailGroupByArgs['orderBy'] },
+      OrderFields extends ExcludeUnderscoreKeys<Keys<MaybeTupleToUnion<T['orderBy']>>>,
+      ByFields extends MaybeTupleToUnion<T['by']>,
+      ByValid extends Has<ByFields, OrderFields>,
+      HavingFields extends GetHavingFields<T['having']>,
+      HavingValid extends Has<ByFields, HavingFields>,
+      ByEmpty extends T['by'] extends never[] ? True : False,
+      InputErrors extends ByEmpty extends True
+      ? `Error: "by" must not be empty.`
+      : HavingValid extends False
+      ? {
+          [P in HavingFields]: P extends ByFields
+            ? never
+            : P extends string
+            ? `Error: Field "${P}" used in "having" needs to be provided in "by".`
+            : [
+                Error,
+                'Field ',
+                P,
+                ` in "having" needs to be provided in "by"`,
+              ]
+        }[HavingFields]
+      : 'take' extends Keys<T>
+      ? 'orderBy' extends Keys<T>
+        ? ByValid extends True
+          ? {}
+          : {
+              [P in OrderFields]: P extends ByFields
+                ? never
+                : `Error: Field "${P}" in "orderBy" needs to be provided in "by"`
+            }[OrderFields]
+        : 'Error: If you provide "take", you also need to provide "orderBy"'
+      : 'skip' extends Keys<T>
+      ? 'orderBy' extends Keys<T>
+        ? ByValid extends True
+          ? {}
+          : {
+              [P in OrderFields]: P extends ByFields
+                ? never
+                : `Error: Field "${P}" in "orderBy" needs to be provided in "by"`
+            }[OrderFields]
+        : 'Error: If you provide "skip", you also need to provide "orderBy"'
+      : ByValid extends True
+      ? {}
+      : {
+          [P in OrderFields]: P extends ByFields
+            ? never
+            : `Error: Field "${P}" in "orderBy" needs to be provided in "by"`
+        }[OrderFields]
+    >(args: SubsetIntersection<T, SystemAdjustmentDetailGroupByArgs, OrderByArg> & InputErrors): {} extends InputErrors ? GetSystemAdjustmentDetailGroupByPayload<T> : Prisma.PrismaPromise<InputErrors>
+  /**
+   * Fields of the SystemAdjustmentDetail model
+   */
+  readonly fields: SystemAdjustmentDetailFieldRefs;
+  }
+
+  /**
+   * The delegate class that acts as a "Promise-like" for SystemAdjustmentDetail.
+   * Why is this prefixed with `Prisma__`?
+   * Because we want to prevent naming conflicts as mentioned in
+   * https://github.com/prisma/prisma-client-js/issues/707
+   */
+  export interface Prisma__SystemAdjustmentDetailClient<T, Null = never, ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs, GlobalOmitOptions = {}> extends Prisma.PrismaPromise<T> {
+    readonly [Symbol.toStringTag]: "PrismaPromise"
+    transaction<T extends TransactionDefaultArgs<ExtArgs> = {}>(args?: Subset<T, TransactionDefaultArgs<ExtArgs>>): Prisma__TransactionClient<$Result.GetResult<Prisma.$TransactionPayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions> | Null, Null, ExtArgs, GlobalOmitOptions>
+    /**
+     * Attaches callbacks for the resolution and/or rejection of the Promise.
+     * @param onfulfilled The callback to execute when the Promise is resolved.
+     * @param onrejected The callback to execute when the Promise is rejected.
+     * @returns A Promise for the completion of which ever callback is executed.
+     */
+    then<TResult1 = T, TResult2 = never>(onfulfilled?: ((value: T) => TResult1 | PromiseLike<TResult1>) | undefined | null, onrejected?: ((reason: any) => TResult2 | PromiseLike<TResult2>) | undefined | null): $Utils.JsPromise<TResult1 | TResult2>
+    /**
+     * Attaches a callback for only the rejection of the Promise.
+     * @param onrejected The callback to execute when the Promise is rejected.
+     * @returns A Promise for the completion of the callback.
+     */
+    catch<TResult = never>(onrejected?: ((reason: any) => TResult | PromiseLike<TResult>) | undefined | null): $Utils.JsPromise<T | TResult>
+    /**
+     * Attaches a callback that is invoked when the Promise is settled (fulfilled or rejected). The
+     * resolved value cannot be modified from the callback.
+     * @param onfinally The callback to execute when the Promise is settled (fulfilled or rejected).
+     * @returns A Promise for the completion of the callback.
+     */
+    finally(onfinally?: (() => void) | undefined | null): $Utils.JsPromise<T>
+  }
+
+
+
+
+  /**
+   * Fields of the SystemAdjustmentDetail model
+   */
+  interface SystemAdjustmentDetailFieldRefs {
+    readonly id: FieldRef<"SystemAdjustmentDetail", 'BigInt'>
+    readonly transactionId: FieldRef<"SystemAdjustmentDetail", 'BigInt'>
+    readonly serviceName: FieldRef<"SystemAdjustmentDetail", 'String'>
+    readonly triggerId: FieldRef<"SystemAdjustmentDetail", 'String'>
+    readonly actionName: FieldRef<"SystemAdjustmentDetail", 'String'>
+    readonly metadata: FieldRef<"SystemAdjustmentDetail", 'Json'>
+  }
+    
+
+  // Custom InputTypes
+  /**
+   * SystemAdjustmentDetail findUnique
+   */
+  export type SystemAdjustmentDetailFindUniqueArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the SystemAdjustmentDetail
+     */
+    select?: SystemAdjustmentDetailSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the SystemAdjustmentDetail
+     */
+    omit?: SystemAdjustmentDetailOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: SystemAdjustmentDetailInclude<ExtArgs> | null
+    /**
+     * Filter, which SystemAdjustmentDetail to fetch.
+     */
+    where: SystemAdjustmentDetailWhereUniqueInput
+  }
+
+  /**
+   * SystemAdjustmentDetail findUniqueOrThrow
+   */
+  export type SystemAdjustmentDetailFindUniqueOrThrowArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the SystemAdjustmentDetail
+     */
+    select?: SystemAdjustmentDetailSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the SystemAdjustmentDetail
+     */
+    omit?: SystemAdjustmentDetailOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: SystemAdjustmentDetailInclude<ExtArgs> | null
+    /**
+     * Filter, which SystemAdjustmentDetail to fetch.
+     */
+    where: SystemAdjustmentDetailWhereUniqueInput
+  }
+
+  /**
+   * SystemAdjustmentDetail findFirst
+   */
+  export type SystemAdjustmentDetailFindFirstArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the SystemAdjustmentDetail
+     */
+    select?: SystemAdjustmentDetailSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the SystemAdjustmentDetail
+     */
+    omit?: SystemAdjustmentDetailOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: SystemAdjustmentDetailInclude<ExtArgs> | null
+    /**
+     * Filter, which SystemAdjustmentDetail to fetch.
+     */
+    where?: SystemAdjustmentDetailWhereInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/sorting Sorting Docs}
+     * 
+     * Determine the order of SystemAdjustmentDetails to fetch.
+     */
+    orderBy?: SystemAdjustmentDetailOrderByWithRelationInput | SystemAdjustmentDetailOrderByWithRelationInput[]
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination#cursor-based-pagination Cursor Docs}
+     * 
+     * Sets the position for searching for SystemAdjustmentDetails.
+     */
+    cursor?: SystemAdjustmentDetailWhereUniqueInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Take `±n` SystemAdjustmentDetails from the position of the cursor.
+     */
+    take?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Skip the first `n` SystemAdjustmentDetails.
+     */
+    skip?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/distinct Distinct Docs}
+     * 
+     * Filter by unique combinations of SystemAdjustmentDetails.
+     */
+    distinct?: SystemAdjustmentDetailScalarFieldEnum | SystemAdjustmentDetailScalarFieldEnum[]
+  }
+
+  /**
+   * SystemAdjustmentDetail findFirstOrThrow
+   */
+  export type SystemAdjustmentDetailFindFirstOrThrowArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the SystemAdjustmentDetail
+     */
+    select?: SystemAdjustmentDetailSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the SystemAdjustmentDetail
+     */
+    omit?: SystemAdjustmentDetailOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: SystemAdjustmentDetailInclude<ExtArgs> | null
+    /**
+     * Filter, which SystemAdjustmentDetail to fetch.
+     */
+    where?: SystemAdjustmentDetailWhereInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/sorting Sorting Docs}
+     * 
+     * Determine the order of SystemAdjustmentDetails to fetch.
+     */
+    orderBy?: SystemAdjustmentDetailOrderByWithRelationInput | SystemAdjustmentDetailOrderByWithRelationInput[]
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination#cursor-based-pagination Cursor Docs}
+     * 
+     * Sets the position for searching for SystemAdjustmentDetails.
+     */
+    cursor?: SystemAdjustmentDetailWhereUniqueInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Take `±n` SystemAdjustmentDetails from the position of the cursor.
+     */
+    take?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Skip the first `n` SystemAdjustmentDetails.
+     */
+    skip?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/distinct Distinct Docs}
+     * 
+     * Filter by unique combinations of SystemAdjustmentDetails.
+     */
+    distinct?: SystemAdjustmentDetailScalarFieldEnum | SystemAdjustmentDetailScalarFieldEnum[]
+  }
+
+  /**
+   * SystemAdjustmentDetail findMany
+   */
+  export type SystemAdjustmentDetailFindManyArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the SystemAdjustmentDetail
+     */
+    select?: SystemAdjustmentDetailSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the SystemAdjustmentDetail
+     */
+    omit?: SystemAdjustmentDetailOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: SystemAdjustmentDetailInclude<ExtArgs> | null
+    /**
+     * Filter, which SystemAdjustmentDetails to fetch.
+     */
+    where?: SystemAdjustmentDetailWhereInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/sorting Sorting Docs}
+     * 
+     * Determine the order of SystemAdjustmentDetails to fetch.
+     */
+    orderBy?: SystemAdjustmentDetailOrderByWithRelationInput | SystemAdjustmentDetailOrderByWithRelationInput[]
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination#cursor-based-pagination Cursor Docs}
+     * 
+     * Sets the position for listing SystemAdjustmentDetails.
+     */
+    cursor?: SystemAdjustmentDetailWhereUniqueInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Take `±n` SystemAdjustmentDetails from the position of the cursor.
+     */
+    take?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Skip the first `n` SystemAdjustmentDetails.
+     */
+    skip?: number
+    distinct?: SystemAdjustmentDetailScalarFieldEnum | SystemAdjustmentDetailScalarFieldEnum[]
+  }
+
+  /**
+   * SystemAdjustmentDetail create
+   */
+  export type SystemAdjustmentDetailCreateArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the SystemAdjustmentDetail
+     */
+    select?: SystemAdjustmentDetailSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the SystemAdjustmentDetail
+     */
+    omit?: SystemAdjustmentDetailOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: SystemAdjustmentDetailInclude<ExtArgs> | null
+    /**
+     * The data needed to create a SystemAdjustmentDetail.
+     */
+    data: XOR<SystemAdjustmentDetailCreateInput, SystemAdjustmentDetailUncheckedCreateInput>
+  }
+
+  /**
+   * SystemAdjustmentDetail createMany
+   */
+  export type SystemAdjustmentDetailCreateManyArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * The data used to create many SystemAdjustmentDetails.
+     */
+    data: SystemAdjustmentDetailCreateManyInput | SystemAdjustmentDetailCreateManyInput[]
+    skipDuplicates?: boolean
+  }
+
+  /**
+   * SystemAdjustmentDetail createManyAndReturn
+   */
+  export type SystemAdjustmentDetailCreateManyAndReturnArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the SystemAdjustmentDetail
+     */
+    select?: SystemAdjustmentDetailSelectCreateManyAndReturn<ExtArgs> | null
+    /**
+     * Omit specific fields from the SystemAdjustmentDetail
+     */
+    omit?: SystemAdjustmentDetailOmit<ExtArgs> | null
+    /**
+     * The data used to create many SystemAdjustmentDetails.
+     */
+    data: SystemAdjustmentDetailCreateManyInput | SystemAdjustmentDetailCreateManyInput[]
+    skipDuplicates?: boolean
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: SystemAdjustmentDetailIncludeCreateManyAndReturn<ExtArgs> | null
+  }
+
+  /**
+   * SystemAdjustmentDetail update
+   */
+  export type SystemAdjustmentDetailUpdateArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the SystemAdjustmentDetail
+     */
+    select?: SystemAdjustmentDetailSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the SystemAdjustmentDetail
+     */
+    omit?: SystemAdjustmentDetailOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: SystemAdjustmentDetailInclude<ExtArgs> | null
+    /**
+     * The data needed to update a SystemAdjustmentDetail.
+     */
+    data: XOR<SystemAdjustmentDetailUpdateInput, SystemAdjustmentDetailUncheckedUpdateInput>
+    /**
+     * Choose, which SystemAdjustmentDetail to update.
+     */
+    where: SystemAdjustmentDetailWhereUniqueInput
+  }
+
+  /**
+   * SystemAdjustmentDetail updateMany
+   */
+  export type SystemAdjustmentDetailUpdateManyArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * The data used to update SystemAdjustmentDetails.
+     */
+    data: XOR<SystemAdjustmentDetailUpdateManyMutationInput, SystemAdjustmentDetailUncheckedUpdateManyInput>
+    /**
+     * Filter which SystemAdjustmentDetails to update
+     */
+    where?: SystemAdjustmentDetailWhereInput
+    /**
+     * Limit how many SystemAdjustmentDetails to update.
+     */
+    limit?: number
+  }
+
+  /**
+   * SystemAdjustmentDetail updateManyAndReturn
+   */
+  export type SystemAdjustmentDetailUpdateManyAndReturnArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the SystemAdjustmentDetail
+     */
+    select?: SystemAdjustmentDetailSelectUpdateManyAndReturn<ExtArgs> | null
+    /**
+     * Omit specific fields from the SystemAdjustmentDetail
+     */
+    omit?: SystemAdjustmentDetailOmit<ExtArgs> | null
+    /**
+     * The data used to update SystemAdjustmentDetails.
+     */
+    data: XOR<SystemAdjustmentDetailUpdateManyMutationInput, SystemAdjustmentDetailUncheckedUpdateManyInput>
+    /**
+     * Filter which SystemAdjustmentDetails to update
+     */
+    where?: SystemAdjustmentDetailWhereInput
+    /**
+     * Limit how many SystemAdjustmentDetails to update.
+     */
+    limit?: number
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: SystemAdjustmentDetailIncludeUpdateManyAndReturn<ExtArgs> | null
+  }
+
+  /**
+   * SystemAdjustmentDetail upsert
+   */
+  export type SystemAdjustmentDetailUpsertArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the SystemAdjustmentDetail
+     */
+    select?: SystemAdjustmentDetailSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the SystemAdjustmentDetail
+     */
+    omit?: SystemAdjustmentDetailOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: SystemAdjustmentDetailInclude<ExtArgs> | null
+    /**
+     * The filter to search for the SystemAdjustmentDetail to update in case it exists.
+     */
+    where: SystemAdjustmentDetailWhereUniqueInput
+    /**
+     * In case the SystemAdjustmentDetail found by the `where` argument doesn't exist, create a new SystemAdjustmentDetail with this data.
+     */
+    create: XOR<SystemAdjustmentDetailCreateInput, SystemAdjustmentDetailUncheckedCreateInput>
+    /**
+     * In case the SystemAdjustmentDetail was found with the provided `where` argument, update it with this data.
+     */
+    update: XOR<SystemAdjustmentDetailUpdateInput, SystemAdjustmentDetailUncheckedUpdateInput>
+  }
+
+  /**
+   * SystemAdjustmentDetail delete
+   */
+  export type SystemAdjustmentDetailDeleteArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the SystemAdjustmentDetail
+     */
+    select?: SystemAdjustmentDetailSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the SystemAdjustmentDetail
+     */
+    omit?: SystemAdjustmentDetailOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: SystemAdjustmentDetailInclude<ExtArgs> | null
+    /**
+     * Filter which SystemAdjustmentDetail to delete.
+     */
+    where: SystemAdjustmentDetailWhereUniqueInput
+  }
+
+  /**
+   * SystemAdjustmentDetail deleteMany
+   */
+  export type SystemAdjustmentDetailDeleteManyArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Filter which SystemAdjustmentDetails to delete
+     */
+    where?: SystemAdjustmentDetailWhereInput
+    /**
+     * Limit how many SystemAdjustmentDetails to delete.
+     */
+    limit?: number
+  }
+
+  /**
+   * SystemAdjustmentDetail without action
+   */
+  export type SystemAdjustmentDetailDefaultArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the SystemAdjustmentDetail
+     */
+    select?: SystemAdjustmentDetailSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the SystemAdjustmentDetail
+     */
+    omit?: SystemAdjustmentDetailOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: SystemAdjustmentDetailInclude<ExtArgs> | null
+  }
+
+
+  /**
    * Enums
    */
 
@@ -60012,6 +62492,29 @@ export namespace Prisma {
   };
 
   export type TierHistoryScalarFieldEnum = (typeof TierHistoryScalarFieldEnum)[keyof typeof TierHistoryScalarFieldEnum]
+
+
+  export const AdminAdjustmentDetailScalarFieldEnum: {
+    id: 'id',
+    transactionId: 'transactionId',
+    adminUserId: 'adminUserId',
+    reasonCode: 'reasonCode',
+    internalNote: 'internalNote'
+  };
+
+  export type AdminAdjustmentDetailScalarFieldEnum = (typeof AdminAdjustmentDetailScalarFieldEnum)[keyof typeof AdminAdjustmentDetailScalarFieldEnum]
+
+
+  export const SystemAdjustmentDetailScalarFieldEnum: {
+    id: 'id',
+    transactionId: 'transactionId',
+    serviceName: 'serviceName',
+    triggerId: 'triggerId',
+    actionName: 'actionName',
+    metadata: 'metadata'
+  };
+
+  export type SystemAdjustmentDetailScalarFieldEnum = (typeof SystemAdjustmentDetailScalarFieldEnum)[keyof typeof SystemAdjustmentDetailScalarFieldEnum]
 
 
   export const SortOrder: {
@@ -61517,6 +64020,7 @@ export namespace Prisma {
     loginAttempts?: LoginAttemptListRelationFilter
     userTier?: XOR<UserTierNullableScalarRelationFilter, UserTierWhereInput> | null
     tierHistory?: TierHistoryListRelationFilter
+    adminAdjustmentDetails?: AdminAdjustmentDetailListRelationFilter
   }
 
   export type UserOrderByWithRelationInput = {
@@ -61562,6 +64066,7 @@ export namespace Prisma {
     loginAttempts?: LoginAttemptOrderByRelationAggregateInput
     userTier?: UserTierOrderByWithRelationInput
     tierHistory?: TierHistoryOrderByRelationAggregateInput
+    adminAdjustmentDetails?: AdminAdjustmentDetailOrderByRelationAggregateInput
   }
 
   export type UserWhereUniqueInput = Prisma.AtLeast<{
@@ -61610,6 +64115,7 @@ export namespace Prisma {
     loginAttempts?: LoginAttemptListRelationFilter
     userTier?: XOR<UserTierNullableScalarRelationFilter, UserTierWhereInput> | null
     tierHistory?: TierHistoryListRelationFilter
+    adminAdjustmentDetails?: AdminAdjustmentDetailListRelationFilter
   }, "id" | "uid" | "whitecliffId" | "whitecliffSystemId" | "whitecliffUsername" | "dcsId" | "email">
 
   export type UserOrderByWithAggregationInput = {
@@ -62021,6 +64527,8 @@ export namespace Prisma {
     user?: XOR<UserScalarRelationFilter, UserWhereInput>
     balanceDetails?: TransactionBalanceDetailListRelationFilter
     withdrawDetail?: XOR<WithdrawDetailNullableScalarRelationFilter, WithdrawDetailWhereInput> | null
+    adminAdjustmentDetail?: XOR<AdminAdjustmentDetailNullableScalarRelationFilter, AdminAdjustmentDetailWhereInput> | null
+    systemAdjustmentDetail?: XOR<SystemAdjustmentDetailNullableScalarRelationFilter, SystemAdjustmentDetailWhereInput> | null
   }
 
   export type TransactionOrderByWithRelationInput = {
@@ -62041,6 +64549,8 @@ export namespace Prisma {
     user?: UserOrderByWithRelationInput
     balanceDetails?: TransactionBalanceDetailOrderByRelationAggregateInput
     withdrawDetail?: WithdrawDetailOrderByWithRelationInput
+    adminAdjustmentDetail?: AdminAdjustmentDetailOrderByWithRelationInput
+    systemAdjustmentDetail?: SystemAdjustmentDetailOrderByWithRelationInput
   }
 
   export type TransactionWhereUniqueInput = Prisma.AtLeast<{
@@ -62064,6 +64574,8 @@ export namespace Prisma {
     user?: XOR<UserScalarRelationFilter, UserWhereInput>
     balanceDetails?: TransactionBalanceDetailListRelationFilter
     withdrawDetail?: XOR<WithdrawDetailNullableScalarRelationFilter, WithdrawDetailWhereInput> | null
+    adminAdjustmentDetail?: XOR<AdminAdjustmentDetailNullableScalarRelationFilter, AdminAdjustmentDetailWhereInput> | null
+    systemAdjustmentDetail?: XOR<SystemAdjustmentDetailNullableScalarRelationFilter, SystemAdjustmentDetailWhereInput> | null
   }, "id">
 
   export type TransactionOrderByWithAggregationInput = {
@@ -65064,6 +67576,128 @@ export namespace Prisma {
     changeBy?: StringNullableWithAggregatesFilter<"TierHistory"> | string | null
   }
 
+  export type AdminAdjustmentDetailWhereInput = {
+    AND?: AdminAdjustmentDetailWhereInput | AdminAdjustmentDetailWhereInput[]
+    OR?: AdminAdjustmentDetailWhereInput[]
+    NOT?: AdminAdjustmentDetailWhereInput | AdminAdjustmentDetailWhereInput[]
+    id?: BigIntFilter<"AdminAdjustmentDetail"> | bigint | number
+    transactionId?: BigIntFilter<"AdminAdjustmentDetail"> | bigint | number
+    adminUserId?: BigIntFilter<"AdminAdjustmentDetail"> | bigint | number
+    reasonCode?: StringNullableFilter<"AdminAdjustmentDetail"> | string | null
+    internalNote?: StringNullableFilter<"AdminAdjustmentDetail"> | string | null
+    transaction?: XOR<TransactionScalarRelationFilter, TransactionWhereInput>
+    adminUser?: XOR<UserScalarRelationFilter, UserWhereInput>
+  }
+
+  export type AdminAdjustmentDetailOrderByWithRelationInput = {
+    id?: SortOrder
+    transactionId?: SortOrder
+    adminUserId?: SortOrder
+    reasonCode?: SortOrderInput | SortOrder
+    internalNote?: SortOrderInput | SortOrder
+    transaction?: TransactionOrderByWithRelationInput
+    adminUser?: UserOrderByWithRelationInput
+  }
+
+  export type AdminAdjustmentDetailWhereUniqueInput = Prisma.AtLeast<{
+    id?: bigint | number
+    transactionId?: bigint | number
+    AND?: AdminAdjustmentDetailWhereInput | AdminAdjustmentDetailWhereInput[]
+    OR?: AdminAdjustmentDetailWhereInput[]
+    NOT?: AdminAdjustmentDetailWhereInput | AdminAdjustmentDetailWhereInput[]
+    adminUserId?: BigIntFilter<"AdminAdjustmentDetail"> | bigint | number
+    reasonCode?: StringNullableFilter<"AdminAdjustmentDetail"> | string | null
+    internalNote?: StringNullableFilter<"AdminAdjustmentDetail"> | string | null
+    transaction?: XOR<TransactionScalarRelationFilter, TransactionWhereInput>
+    adminUser?: XOR<UserScalarRelationFilter, UserWhereInput>
+  }, "id" | "transactionId">
+
+  export type AdminAdjustmentDetailOrderByWithAggregationInput = {
+    id?: SortOrder
+    transactionId?: SortOrder
+    adminUserId?: SortOrder
+    reasonCode?: SortOrderInput | SortOrder
+    internalNote?: SortOrderInput | SortOrder
+    _count?: AdminAdjustmentDetailCountOrderByAggregateInput
+    _avg?: AdminAdjustmentDetailAvgOrderByAggregateInput
+    _max?: AdminAdjustmentDetailMaxOrderByAggregateInput
+    _min?: AdminAdjustmentDetailMinOrderByAggregateInput
+    _sum?: AdminAdjustmentDetailSumOrderByAggregateInput
+  }
+
+  export type AdminAdjustmentDetailScalarWhereWithAggregatesInput = {
+    AND?: AdminAdjustmentDetailScalarWhereWithAggregatesInput | AdminAdjustmentDetailScalarWhereWithAggregatesInput[]
+    OR?: AdminAdjustmentDetailScalarWhereWithAggregatesInput[]
+    NOT?: AdminAdjustmentDetailScalarWhereWithAggregatesInput | AdminAdjustmentDetailScalarWhereWithAggregatesInput[]
+    id?: BigIntWithAggregatesFilter<"AdminAdjustmentDetail"> | bigint | number
+    transactionId?: BigIntWithAggregatesFilter<"AdminAdjustmentDetail"> | bigint | number
+    adminUserId?: BigIntWithAggregatesFilter<"AdminAdjustmentDetail"> | bigint | number
+    reasonCode?: StringNullableWithAggregatesFilter<"AdminAdjustmentDetail"> | string | null
+    internalNote?: StringNullableWithAggregatesFilter<"AdminAdjustmentDetail"> | string | null
+  }
+
+  export type SystemAdjustmentDetailWhereInput = {
+    AND?: SystemAdjustmentDetailWhereInput | SystemAdjustmentDetailWhereInput[]
+    OR?: SystemAdjustmentDetailWhereInput[]
+    NOT?: SystemAdjustmentDetailWhereInput | SystemAdjustmentDetailWhereInput[]
+    id?: BigIntFilter<"SystemAdjustmentDetail"> | bigint | number
+    transactionId?: BigIntFilter<"SystemAdjustmentDetail"> | bigint | number
+    serviceName?: StringFilter<"SystemAdjustmentDetail"> | string
+    triggerId?: StringNullableFilter<"SystemAdjustmentDetail"> | string | null
+    actionName?: StringFilter<"SystemAdjustmentDetail"> | string
+    metadata?: JsonNullableFilter<"SystemAdjustmentDetail">
+    transaction?: XOR<TransactionScalarRelationFilter, TransactionWhereInput>
+  }
+
+  export type SystemAdjustmentDetailOrderByWithRelationInput = {
+    id?: SortOrder
+    transactionId?: SortOrder
+    serviceName?: SortOrder
+    triggerId?: SortOrderInput | SortOrder
+    actionName?: SortOrder
+    metadata?: SortOrderInput | SortOrder
+    transaction?: TransactionOrderByWithRelationInput
+  }
+
+  export type SystemAdjustmentDetailWhereUniqueInput = Prisma.AtLeast<{
+    id?: bigint | number
+    transactionId?: bigint | number
+    AND?: SystemAdjustmentDetailWhereInput | SystemAdjustmentDetailWhereInput[]
+    OR?: SystemAdjustmentDetailWhereInput[]
+    NOT?: SystemAdjustmentDetailWhereInput | SystemAdjustmentDetailWhereInput[]
+    serviceName?: StringFilter<"SystemAdjustmentDetail"> | string
+    triggerId?: StringNullableFilter<"SystemAdjustmentDetail"> | string | null
+    actionName?: StringFilter<"SystemAdjustmentDetail"> | string
+    metadata?: JsonNullableFilter<"SystemAdjustmentDetail">
+    transaction?: XOR<TransactionScalarRelationFilter, TransactionWhereInput>
+  }, "id" | "transactionId">
+
+  export type SystemAdjustmentDetailOrderByWithAggregationInput = {
+    id?: SortOrder
+    transactionId?: SortOrder
+    serviceName?: SortOrder
+    triggerId?: SortOrderInput | SortOrder
+    actionName?: SortOrder
+    metadata?: SortOrderInput | SortOrder
+    _count?: SystemAdjustmentDetailCountOrderByAggregateInput
+    _avg?: SystemAdjustmentDetailAvgOrderByAggregateInput
+    _max?: SystemAdjustmentDetailMaxOrderByAggregateInput
+    _min?: SystemAdjustmentDetailMinOrderByAggregateInput
+    _sum?: SystemAdjustmentDetailSumOrderByAggregateInput
+  }
+
+  export type SystemAdjustmentDetailScalarWhereWithAggregatesInput = {
+    AND?: SystemAdjustmentDetailScalarWhereWithAggregatesInput | SystemAdjustmentDetailScalarWhereWithAggregatesInput[]
+    OR?: SystemAdjustmentDetailScalarWhereWithAggregatesInput[]
+    NOT?: SystemAdjustmentDetailScalarWhereWithAggregatesInput | SystemAdjustmentDetailScalarWhereWithAggregatesInput[]
+    id?: BigIntWithAggregatesFilter<"SystemAdjustmentDetail"> | bigint | number
+    transactionId?: BigIntWithAggregatesFilter<"SystemAdjustmentDetail"> | bigint | number
+    serviceName?: StringWithAggregatesFilter<"SystemAdjustmentDetail"> | string
+    triggerId?: StringNullableWithAggregatesFilter<"SystemAdjustmentDetail"> | string | null
+    actionName?: StringWithAggregatesFilter<"SystemAdjustmentDetail"> | string
+    metadata?: JsonNullableWithAggregatesFilter<"SystemAdjustmentDetail">
+  }
+
   export type AffiliateCodeCreateInput = {
     id?: bigint | number
     uid: string
@@ -66031,6 +68665,7 @@ export namespace Prisma {
     loginAttempts?: LoginAttemptCreateNestedManyWithoutUserInput
     userTier?: UserTierCreateNestedOneWithoutUserInput
     tierHistory?: TierHistoryCreateNestedManyWithoutUserInput
+    adminAdjustmentDetails?: AdminAdjustmentDetailCreateNestedManyWithoutAdminUserInput
   }
 
   export type UserUncheckedCreateInput = {
@@ -66076,6 +68711,7 @@ export namespace Prisma {
     loginAttempts?: LoginAttemptUncheckedCreateNestedManyWithoutUserInput
     userTier?: UserTierUncheckedCreateNestedOneWithoutUserInput
     tierHistory?: TierHistoryUncheckedCreateNestedManyWithoutUserInput
+    adminAdjustmentDetails?: AdminAdjustmentDetailUncheckedCreateNestedManyWithoutAdminUserInput
   }
 
   export type UserUpdateInput = {
@@ -66121,6 +68757,7 @@ export namespace Prisma {
     loginAttempts?: LoginAttemptUpdateManyWithoutUserNestedInput
     userTier?: UserTierUpdateOneWithoutUserNestedInput
     tierHistory?: TierHistoryUpdateManyWithoutUserNestedInput
+    adminAdjustmentDetails?: AdminAdjustmentDetailUpdateManyWithoutAdminUserNestedInput
   }
 
   export type UserUncheckedUpdateInput = {
@@ -66166,6 +68803,7 @@ export namespace Prisma {
     loginAttempts?: LoginAttemptUncheckedUpdateManyWithoutUserNestedInput
     userTier?: UserTierUncheckedUpdateOneWithoutUserNestedInput
     tierHistory?: TierHistoryUncheckedUpdateManyWithoutUserNestedInput
+    adminAdjustmentDetails?: AdminAdjustmentDetailUncheckedUpdateManyWithoutAdminUserNestedInput
   }
 
   export type UserCreateManyInput = {
@@ -66615,6 +69253,8 @@ export namespace Prisma {
     user: UserCreateNestedOneWithoutTransactionsInput
     balanceDetails?: TransactionBalanceDetailCreateNestedManyWithoutTransactionInput
     withdrawDetail?: WithdrawDetailCreateNestedOneWithoutTransactionInput
+    adminAdjustmentDetail?: AdminAdjustmentDetailCreateNestedOneWithoutTransactionInput
+    systemAdjustmentDetail?: SystemAdjustmentDetailCreateNestedOneWithoutTransactionInput
   }
 
   export type TransactionUncheckedCreateInput = {
@@ -66634,6 +69274,8 @@ export namespace Prisma {
     gameRound?: GameRoundUncheckedCreateNestedOneWithoutTransactionInput
     balanceDetails?: TransactionBalanceDetailUncheckedCreateNestedManyWithoutTransactionInput
     withdrawDetail?: WithdrawDetailUncheckedCreateNestedOneWithoutTransactionInput
+    adminAdjustmentDetail?: AdminAdjustmentDetailUncheckedCreateNestedOneWithoutTransactionInput
+    systemAdjustmentDetail?: SystemAdjustmentDetailUncheckedCreateNestedOneWithoutTransactionInput
   }
 
   export type TransactionUpdateInput = {
@@ -66653,6 +69295,8 @@ export namespace Prisma {
     user?: UserUpdateOneRequiredWithoutTransactionsNestedInput
     balanceDetails?: TransactionBalanceDetailUpdateManyWithoutTransactionNestedInput
     withdrawDetail?: WithdrawDetailUpdateOneWithoutTransactionNestedInput
+    adminAdjustmentDetail?: AdminAdjustmentDetailUpdateOneWithoutTransactionNestedInput
+    systemAdjustmentDetail?: SystemAdjustmentDetailUpdateOneWithoutTransactionNestedInput
   }
 
   export type TransactionUncheckedUpdateInput = {
@@ -66672,6 +69316,8 @@ export namespace Prisma {
     gameRound?: GameRoundUncheckedUpdateOneWithoutTransactionNestedInput
     balanceDetails?: TransactionBalanceDetailUncheckedUpdateManyWithoutTransactionNestedInput
     withdrawDetail?: WithdrawDetailUncheckedUpdateOneWithoutTransactionNestedInput
+    adminAdjustmentDetail?: AdminAdjustmentDetailUncheckedUpdateOneWithoutTransactionNestedInput
+    systemAdjustmentDetail?: SystemAdjustmentDetailUncheckedUpdateOneWithoutTransactionNestedInput
   }
 
   export type TransactionCreateManyInput = {
@@ -70026,6 +72672,122 @@ export namespace Prisma {
     changeBy?: NullableStringFieldUpdateOperationsInput | string | null
   }
 
+  export type AdminAdjustmentDetailCreateInput = {
+    id?: bigint | number
+    reasonCode?: string | null
+    internalNote?: string | null
+    transaction: TransactionCreateNestedOneWithoutAdminAdjustmentDetailInput
+    adminUser: UserCreateNestedOneWithoutAdminAdjustmentDetailsInput
+  }
+
+  export type AdminAdjustmentDetailUncheckedCreateInput = {
+    id?: bigint | number
+    transactionId: bigint | number
+    adminUserId: bigint | number
+    reasonCode?: string | null
+    internalNote?: string | null
+  }
+
+  export type AdminAdjustmentDetailUpdateInput = {
+    id?: BigIntFieldUpdateOperationsInput | bigint | number
+    reasonCode?: NullableStringFieldUpdateOperationsInput | string | null
+    internalNote?: NullableStringFieldUpdateOperationsInput | string | null
+    transaction?: TransactionUpdateOneRequiredWithoutAdminAdjustmentDetailNestedInput
+    adminUser?: UserUpdateOneRequiredWithoutAdminAdjustmentDetailsNestedInput
+  }
+
+  export type AdminAdjustmentDetailUncheckedUpdateInput = {
+    id?: BigIntFieldUpdateOperationsInput | bigint | number
+    transactionId?: BigIntFieldUpdateOperationsInput | bigint | number
+    adminUserId?: BigIntFieldUpdateOperationsInput | bigint | number
+    reasonCode?: NullableStringFieldUpdateOperationsInput | string | null
+    internalNote?: NullableStringFieldUpdateOperationsInput | string | null
+  }
+
+  export type AdminAdjustmentDetailCreateManyInput = {
+    id?: bigint | number
+    transactionId: bigint | number
+    adminUserId: bigint | number
+    reasonCode?: string | null
+    internalNote?: string | null
+  }
+
+  export type AdminAdjustmentDetailUpdateManyMutationInput = {
+    id?: BigIntFieldUpdateOperationsInput | bigint | number
+    reasonCode?: NullableStringFieldUpdateOperationsInput | string | null
+    internalNote?: NullableStringFieldUpdateOperationsInput | string | null
+  }
+
+  export type AdminAdjustmentDetailUncheckedUpdateManyInput = {
+    id?: BigIntFieldUpdateOperationsInput | bigint | number
+    transactionId?: BigIntFieldUpdateOperationsInput | bigint | number
+    adminUserId?: BigIntFieldUpdateOperationsInput | bigint | number
+    reasonCode?: NullableStringFieldUpdateOperationsInput | string | null
+    internalNote?: NullableStringFieldUpdateOperationsInput | string | null
+  }
+
+  export type SystemAdjustmentDetailCreateInput = {
+    id?: bigint | number
+    serviceName: string
+    triggerId?: string | null
+    actionName: string
+    metadata?: NullableJsonNullValueInput | InputJsonValue
+    transaction: TransactionCreateNestedOneWithoutSystemAdjustmentDetailInput
+  }
+
+  export type SystemAdjustmentDetailUncheckedCreateInput = {
+    id?: bigint | number
+    transactionId: bigint | number
+    serviceName: string
+    triggerId?: string | null
+    actionName: string
+    metadata?: NullableJsonNullValueInput | InputJsonValue
+  }
+
+  export type SystemAdjustmentDetailUpdateInput = {
+    id?: BigIntFieldUpdateOperationsInput | bigint | number
+    serviceName?: StringFieldUpdateOperationsInput | string
+    triggerId?: NullableStringFieldUpdateOperationsInput | string | null
+    actionName?: StringFieldUpdateOperationsInput | string
+    metadata?: NullableJsonNullValueInput | InputJsonValue
+    transaction?: TransactionUpdateOneRequiredWithoutSystemAdjustmentDetailNestedInput
+  }
+
+  export type SystemAdjustmentDetailUncheckedUpdateInput = {
+    id?: BigIntFieldUpdateOperationsInput | bigint | number
+    transactionId?: BigIntFieldUpdateOperationsInput | bigint | number
+    serviceName?: StringFieldUpdateOperationsInput | string
+    triggerId?: NullableStringFieldUpdateOperationsInput | string | null
+    actionName?: StringFieldUpdateOperationsInput | string
+    metadata?: NullableJsonNullValueInput | InputJsonValue
+  }
+
+  export type SystemAdjustmentDetailCreateManyInput = {
+    id?: bigint | number
+    transactionId: bigint | number
+    serviceName: string
+    triggerId?: string | null
+    actionName: string
+    metadata?: NullableJsonNullValueInput | InputJsonValue
+  }
+
+  export type SystemAdjustmentDetailUpdateManyMutationInput = {
+    id?: BigIntFieldUpdateOperationsInput | bigint | number
+    serviceName?: StringFieldUpdateOperationsInput | string
+    triggerId?: NullableStringFieldUpdateOperationsInput | string | null
+    actionName?: StringFieldUpdateOperationsInput | string
+    metadata?: NullableJsonNullValueInput | InputJsonValue
+  }
+
+  export type SystemAdjustmentDetailUncheckedUpdateManyInput = {
+    id?: BigIntFieldUpdateOperationsInput | bigint | number
+    transactionId?: BigIntFieldUpdateOperationsInput | bigint | number
+    serviceName?: StringFieldUpdateOperationsInput | string
+    triggerId?: NullableStringFieldUpdateOperationsInput | string | null
+    actionName?: StringFieldUpdateOperationsInput | string
+    metadata?: NullableJsonNullValueInput | InputJsonValue
+  }
+
   export type BigIntFilter<$PrismaModel = never> = {
     equals?: bigint | number | BigIntFieldRefInput<$PrismaModel>
     in?: bigint[] | number[] | ListBigIntFieldRefInput<$PrismaModel>
@@ -70976,6 +73738,12 @@ export namespace Prisma {
     none?: TierHistoryWhereInput
   }
 
+  export type AdminAdjustmentDetailListRelationFilter = {
+    every?: AdminAdjustmentDetailWhereInput
+    some?: AdminAdjustmentDetailWhereInput
+    none?: AdminAdjustmentDetailWhereInput
+  }
+
   export type AffiliateCodeOrderByRelationAggregateInput = {
     _count?: SortOrder
   }
@@ -71041,6 +73809,10 @@ export namespace Prisma {
   }
 
   export type TierHistoryOrderByRelationAggregateInput = {
+    _count?: SortOrder
+  }
+
+  export type AdminAdjustmentDetailOrderByRelationAggregateInput = {
     _count?: SortOrder
   }
 
@@ -71600,6 +74372,16 @@ export namespace Prisma {
   export type WithdrawDetailNullableScalarRelationFilter = {
     is?: WithdrawDetailWhereInput | null
     isNot?: WithdrawDetailWhereInput | null
+  }
+
+  export type AdminAdjustmentDetailNullableScalarRelationFilter = {
+    is?: AdminAdjustmentDetailWhereInput | null
+    isNot?: AdminAdjustmentDetailWhereInput | null
+  }
+
+  export type SystemAdjustmentDetailNullableScalarRelationFilter = {
+    is?: SystemAdjustmentDetailWhereInput | null
+    isNot?: SystemAdjustmentDetailWhereInput | null
   }
 
   export type TransactionBalanceDetailOrderByRelationAggregateInput = {
@@ -74272,6 +77054,77 @@ export namespace Prisma {
     _max?: NestedEnumTierChangeTypeFilter<$PrismaModel>
   }
 
+  export type AdminAdjustmentDetailCountOrderByAggregateInput = {
+    id?: SortOrder
+    transactionId?: SortOrder
+    adminUserId?: SortOrder
+    reasonCode?: SortOrder
+    internalNote?: SortOrder
+  }
+
+  export type AdminAdjustmentDetailAvgOrderByAggregateInput = {
+    id?: SortOrder
+    transactionId?: SortOrder
+    adminUserId?: SortOrder
+  }
+
+  export type AdminAdjustmentDetailMaxOrderByAggregateInput = {
+    id?: SortOrder
+    transactionId?: SortOrder
+    adminUserId?: SortOrder
+    reasonCode?: SortOrder
+    internalNote?: SortOrder
+  }
+
+  export type AdminAdjustmentDetailMinOrderByAggregateInput = {
+    id?: SortOrder
+    transactionId?: SortOrder
+    adminUserId?: SortOrder
+    reasonCode?: SortOrder
+    internalNote?: SortOrder
+  }
+
+  export type AdminAdjustmentDetailSumOrderByAggregateInput = {
+    id?: SortOrder
+    transactionId?: SortOrder
+    adminUserId?: SortOrder
+  }
+
+  export type SystemAdjustmentDetailCountOrderByAggregateInput = {
+    id?: SortOrder
+    transactionId?: SortOrder
+    serviceName?: SortOrder
+    triggerId?: SortOrder
+    actionName?: SortOrder
+    metadata?: SortOrder
+  }
+
+  export type SystemAdjustmentDetailAvgOrderByAggregateInput = {
+    id?: SortOrder
+    transactionId?: SortOrder
+  }
+
+  export type SystemAdjustmentDetailMaxOrderByAggregateInput = {
+    id?: SortOrder
+    transactionId?: SortOrder
+    serviceName?: SortOrder
+    triggerId?: SortOrder
+    actionName?: SortOrder
+  }
+
+  export type SystemAdjustmentDetailMinOrderByAggregateInput = {
+    id?: SortOrder
+    transactionId?: SortOrder
+    serviceName?: SortOrder
+    triggerId?: SortOrder
+    actionName?: SortOrder
+  }
+
+  export type SystemAdjustmentDetailSumOrderByAggregateInput = {
+    id?: SortOrder
+    transactionId?: SortOrder
+  }
+
   export type UserCreateNestedOneWithoutAffiliateCodesInput = {
     create?: XOR<UserCreateWithoutAffiliateCodesInput, UserUncheckedCreateWithoutAffiliateCodesInput>
     connectOrCreate?: UserCreateOrConnectWithoutAffiliateCodesInput
@@ -74585,6 +77438,13 @@ export namespace Prisma {
     connect?: TierHistoryWhereUniqueInput | TierHistoryWhereUniqueInput[]
   }
 
+  export type AdminAdjustmentDetailCreateNestedManyWithoutAdminUserInput = {
+    create?: XOR<AdminAdjustmentDetailCreateWithoutAdminUserInput, AdminAdjustmentDetailUncheckedCreateWithoutAdminUserInput> | AdminAdjustmentDetailCreateWithoutAdminUserInput[] | AdminAdjustmentDetailUncheckedCreateWithoutAdminUserInput[]
+    connectOrCreate?: AdminAdjustmentDetailCreateOrConnectWithoutAdminUserInput | AdminAdjustmentDetailCreateOrConnectWithoutAdminUserInput[]
+    createMany?: AdminAdjustmentDetailCreateManyAdminUserInputEnvelope
+    connect?: AdminAdjustmentDetailWhereUniqueInput | AdminAdjustmentDetailWhereUniqueInput[]
+  }
+
   export type AffiliateCodeUncheckedCreateNestedManyWithoutUserInput = {
     create?: XOR<AffiliateCodeCreateWithoutUserInput, AffiliateCodeUncheckedCreateWithoutUserInput> | AffiliateCodeCreateWithoutUserInput[] | AffiliateCodeUncheckedCreateWithoutUserInput[]
     connectOrCreate?: AffiliateCodeCreateOrConnectWithoutUserInput | AffiliateCodeCreateOrConnectWithoutUserInput[]
@@ -74742,6 +77602,13 @@ export namespace Prisma {
     connectOrCreate?: TierHistoryCreateOrConnectWithoutUserInput | TierHistoryCreateOrConnectWithoutUserInput[]
     createMany?: TierHistoryCreateManyUserInputEnvelope
     connect?: TierHistoryWhereUniqueInput | TierHistoryWhereUniqueInput[]
+  }
+
+  export type AdminAdjustmentDetailUncheckedCreateNestedManyWithoutAdminUserInput = {
+    create?: XOR<AdminAdjustmentDetailCreateWithoutAdminUserInput, AdminAdjustmentDetailUncheckedCreateWithoutAdminUserInput> | AdminAdjustmentDetailCreateWithoutAdminUserInput[] | AdminAdjustmentDetailUncheckedCreateWithoutAdminUserInput[]
+    connectOrCreate?: AdminAdjustmentDetailCreateOrConnectWithoutAdminUserInput | AdminAdjustmentDetailCreateOrConnectWithoutAdminUserInput[]
+    createMany?: AdminAdjustmentDetailCreateManyAdminUserInputEnvelope
+    connect?: AdminAdjustmentDetailWhereUniqueInput | AdminAdjustmentDetailWhereUniqueInput[]
   }
 
   export type NullableEnumSocialTypeFieldUpdateOperationsInput = {
@@ -75078,6 +77945,20 @@ export namespace Prisma {
     deleteMany?: TierHistoryScalarWhereInput | TierHistoryScalarWhereInput[]
   }
 
+  export type AdminAdjustmentDetailUpdateManyWithoutAdminUserNestedInput = {
+    create?: XOR<AdminAdjustmentDetailCreateWithoutAdminUserInput, AdminAdjustmentDetailUncheckedCreateWithoutAdminUserInput> | AdminAdjustmentDetailCreateWithoutAdminUserInput[] | AdminAdjustmentDetailUncheckedCreateWithoutAdminUserInput[]
+    connectOrCreate?: AdminAdjustmentDetailCreateOrConnectWithoutAdminUserInput | AdminAdjustmentDetailCreateOrConnectWithoutAdminUserInput[]
+    upsert?: AdminAdjustmentDetailUpsertWithWhereUniqueWithoutAdminUserInput | AdminAdjustmentDetailUpsertWithWhereUniqueWithoutAdminUserInput[]
+    createMany?: AdminAdjustmentDetailCreateManyAdminUserInputEnvelope
+    set?: AdminAdjustmentDetailWhereUniqueInput | AdminAdjustmentDetailWhereUniqueInput[]
+    disconnect?: AdminAdjustmentDetailWhereUniqueInput | AdminAdjustmentDetailWhereUniqueInput[]
+    delete?: AdminAdjustmentDetailWhereUniqueInput | AdminAdjustmentDetailWhereUniqueInput[]
+    connect?: AdminAdjustmentDetailWhereUniqueInput | AdminAdjustmentDetailWhereUniqueInput[]
+    update?: AdminAdjustmentDetailUpdateWithWhereUniqueWithoutAdminUserInput | AdminAdjustmentDetailUpdateWithWhereUniqueWithoutAdminUserInput[]
+    updateMany?: AdminAdjustmentDetailUpdateManyWithWhereWithoutAdminUserInput | AdminAdjustmentDetailUpdateManyWithWhereWithoutAdminUserInput[]
+    deleteMany?: AdminAdjustmentDetailScalarWhereInput | AdminAdjustmentDetailScalarWhereInput[]
+  }
+
   export type AffiliateCodeUncheckedUpdateManyWithoutUserNestedInput = {
     create?: XOR<AffiliateCodeCreateWithoutUserInput, AffiliateCodeUncheckedCreateWithoutUserInput> | AffiliateCodeCreateWithoutUserInput[] | AffiliateCodeUncheckedCreateWithoutUserInput[]
     connectOrCreate?: AffiliateCodeCreateOrConnectWithoutUserInput | AffiliateCodeCreateOrConnectWithoutUserInput[]
@@ -75392,6 +78273,20 @@ export namespace Prisma {
     deleteMany?: TierHistoryScalarWhereInput | TierHistoryScalarWhereInput[]
   }
 
+  export type AdminAdjustmentDetailUncheckedUpdateManyWithoutAdminUserNestedInput = {
+    create?: XOR<AdminAdjustmentDetailCreateWithoutAdminUserInput, AdminAdjustmentDetailUncheckedCreateWithoutAdminUserInput> | AdminAdjustmentDetailCreateWithoutAdminUserInput[] | AdminAdjustmentDetailUncheckedCreateWithoutAdminUserInput[]
+    connectOrCreate?: AdminAdjustmentDetailCreateOrConnectWithoutAdminUserInput | AdminAdjustmentDetailCreateOrConnectWithoutAdminUserInput[]
+    upsert?: AdminAdjustmentDetailUpsertWithWhereUniqueWithoutAdminUserInput | AdminAdjustmentDetailUpsertWithWhereUniqueWithoutAdminUserInput[]
+    createMany?: AdminAdjustmentDetailCreateManyAdminUserInputEnvelope
+    set?: AdminAdjustmentDetailWhereUniqueInput | AdminAdjustmentDetailWhereUniqueInput[]
+    disconnect?: AdminAdjustmentDetailWhereUniqueInput | AdminAdjustmentDetailWhereUniqueInput[]
+    delete?: AdminAdjustmentDetailWhereUniqueInput | AdminAdjustmentDetailWhereUniqueInput[]
+    connect?: AdminAdjustmentDetailWhereUniqueInput | AdminAdjustmentDetailWhereUniqueInput[]
+    update?: AdminAdjustmentDetailUpdateWithWhereUniqueWithoutAdminUserInput | AdminAdjustmentDetailUpdateWithWhereUniqueWithoutAdminUserInput[]
+    updateMany?: AdminAdjustmentDetailUpdateManyWithWhereWithoutAdminUserInput | AdminAdjustmentDetailUpdateManyWithWhereWithoutAdminUserInput[]
+    deleteMany?: AdminAdjustmentDetailScalarWhereInput | AdminAdjustmentDetailScalarWhereInput[]
+  }
+
   export type UserCreateNestedOneWithoutBalancesInput = {
     create?: XOR<UserCreateWithoutBalancesInput, UserUncheckedCreateWithoutBalancesInput>
     connectOrCreate?: UserCreateOrConnectWithoutBalancesInput
@@ -75673,6 +78568,18 @@ export namespace Prisma {
     connect?: WithdrawDetailWhereUniqueInput
   }
 
+  export type AdminAdjustmentDetailCreateNestedOneWithoutTransactionInput = {
+    create?: XOR<AdminAdjustmentDetailCreateWithoutTransactionInput, AdminAdjustmentDetailUncheckedCreateWithoutTransactionInput>
+    connectOrCreate?: AdminAdjustmentDetailCreateOrConnectWithoutTransactionInput
+    connect?: AdminAdjustmentDetailWhereUniqueInput
+  }
+
+  export type SystemAdjustmentDetailCreateNestedOneWithoutTransactionInput = {
+    create?: XOR<SystemAdjustmentDetailCreateWithoutTransactionInput, SystemAdjustmentDetailUncheckedCreateWithoutTransactionInput>
+    connectOrCreate?: SystemAdjustmentDetailCreateOrConnectWithoutTransactionInput
+    connect?: SystemAdjustmentDetailWhereUniqueInput
+  }
+
   export type BonusDetailUncheckedCreateNestedOneWithoutTransactionInput = {
     create?: XOR<BonusDetailCreateWithoutTransactionInput, BonusDetailUncheckedCreateWithoutTransactionInput>
     connectOrCreate?: BonusDetailCreateOrConnectWithoutTransactionInput
@@ -75708,6 +78615,18 @@ export namespace Prisma {
     create?: XOR<WithdrawDetailCreateWithoutTransactionInput, WithdrawDetailUncheckedCreateWithoutTransactionInput>
     connectOrCreate?: WithdrawDetailCreateOrConnectWithoutTransactionInput
     connect?: WithdrawDetailWhereUniqueInput
+  }
+
+  export type AdminAdjustmentDetailUncheckedCreateNestedOneWithoutTransactionInput = {
+    create?: XOR<AdminAdjustmentDetailCreateWithoutTransactionInput, AdminAdjustmentDetailUncheckedCreateWithoutTransactionInput>
+    connectOrCreate?: AdminAdjustmentDetailCreateOrConnectWithoutTransactionInput
+    connect?: AdminAdjustmentDetailWhereUniqueInput
+  }
+
+  export type SystemAdjustmentDetailUncheckedCreateNestedOneWithoutTransactionInput = {
+    create?: XOR<SystemAdjustmentDetailCreateWithoutTransactionInput, SystemAdjustmentDetailUncheckedCreateWithoutTransactionInput>
+    connectOrCreate?: SystemAdjustmentDetailCreateOrConnectWithoutTransactionInput
+    connect?: SystemAdjustmentDetailWhereUniqueInput
   }
 
   export type EnumTransactionTypeFieldUpdateOperationsInput = {
@@ -75790,6 +78709,26 @@ export namespace Prisma {
     update?: XOR<XOR<WithdrawDetailUpdateToOneWithWhereWithoutTransactionInput, WithdrawDetailUpdateWithoutTransactionInput>, WithdrawDetailUncheckedUpdateWithoutTransactionInput>
   }
 
+  export type AdminAdjustmentDetailUpdateOneWithoutTransactionNestedInput = {
+    create?: XOR<AdminAdjustmentDetailCreateWithoutTransactionInput, AdminAdjustmentDetailUncheckedCreateWithoutTransactionInput>
+    connectOrCreate?: AdminAdjustmentDetailCreateOrConnectWithoutTransactionInput
+    upsert?: AdminAdjustmentDetailUpsertWithoutTransactionInput
+    disconnect?: AdminAdjustmentDetailWhereInput | boolean
+    delete?: AdminAdjustmentDetailWhereInput | boolean
+    connect?: AdminAdjustmentDetailWhereUniqueInput
+    update?: XOR<XOR<AdminAdjustmentDetailUpdateToOneWithWhereWithoutTransactionInput, AdminAdjustmentDetailUpdateWithoutTransactionInput>, AdminAdjustmentDetailUncheckedUpdateWithoutTransactionInput>
+  }
+
+  export type SystemAdjustmentDetailUpdateOneWithoutTransactionNestedInput = {
+    create?: XOR<SystemAdjustmentDetailCreateWithoutTransactionInput, SystemAdjustmentDetailUncheckedCreateWithoutTransactionInput>
+    connectOrCreate?: SystemAdjustmentDetailCreateOrConnectWithoutTransactionInput
+    upsert?: SystemAdjustmentDetailUpsertWithoutTransactionInput
+    disconnect?: SystemAdjustmentDetailWhereInput | boolean
+    delete?: SystemAdjustmentDetailWhereInput | boolean
+    connect?: SystemAdjustmentDetailWhereUniqueInput
+    update?: XOR<XOR<SystemAdjustmentDetailUpdateToOneWithWhereWithoutTransactionInput, SystemAdjustmentDetailUpdateWithoutTransactionInput>, SystemAdjustmentDetailUncheckedUpdateWithoutTransactionInput>
+  }
+
   export type BonusDetailUncheckedUpdateOneWithoutTransactionNestedInput = {
     create?: XOR<BonusDetailCreateWithoutTransactionInput, BonusDetailUncheckedCreateWithoutTransactionInput>
     connectOrCreate?: BonusDetailCreateOrConnectWithoutTransactionInput
@@ -75852,6 +78791,26 @@ export namespace Prisma {
     delete?: WithdrawDetailWhereInput | boolean
     connect?: WithdrawDetailWhereUniqueInput
     update?: XOR<XOR<WithdrawDetailUpdateToOneWithWhereWithoutTransactionInput, WithdrawDetailUpdateWithoutTransactionInput>, WithdrawDetailUncheckedUpdateWithoutTransactionInput>
+  }
+
+  export type AdminAdjustmentDetailUncheckedUpdateOneWithoutTransactionNestedInput = {
+    create?: XOR<AdminAdjustmentDetailCreateWithoutTransactionInput, AdminAdjustmentDetailUncheckedCreateWithoutTransactionInput>
+    connectOrCreate?: AdminAdjustmentDetailCreateOrConnectWithoutTransactionInput
+    upsert?: AdminAdjustmentDetailUpsertWithoutTransactionInput
+    disconnect?: AdminAdjustmentDetailWhereInput | boolean
+    delete?: AdminAdjustmentDetailWhereInput | boolean
+    connect?: AdminAdjustmentDetailWhereUniqueInput
+    update?: XOR<XOR<AdminAdjustmentDetailUpdateToOneWithWhereWithoutTransactionInput, AdminAdjustmentDetailUpdateWithoutTransactionInput>, AdminAdjustmentDetailUncheckedUpdateWithoutTransactionInput>
+  }
+
+  export type SystemAdjustmentDetailUncheckedUpdateOneWithoutTransactionNestedInput = {
+    create?: XOR<SystemAdjustmentDetailCreateWithoutTransactionInput, SystemAdjustmentDetailUncheckedCreateWithoutTransactionInput>
+    connectOrCreate?: SystemAdjustmentDetailCreateOrConnectWithoutTransactionInput
+    upsert?: SystemAdjustmentDetailUpsertWithoutTransactionInput
+    disconnect?: SystemAdjustmentDetailWhereInput | boolean
+    delete?: SystemAdjustmentDetailWhereInput | boolean
+    connect?: SystemAdjustmentDetailWhereUniqueInput
+    update?: XOR<XOR<SystemAdjustmentDetailUpdateToOneWithWhereWithoutTransactionInput, SystemAdjustmentDetailUpdateWithoutTransactionInput>, SystemAdjustmentDetailUncheckedUpdateWithoutTransactionInput>
   }
 
   export type AffiliateCommissionCreateNestedManyWithoutGameRoundInput = {
@@ -77256,6 +80215,48 @@ export namespace Prisma {
     update?: XOR<XOR<TierUpdateToOneWithWhereWithoutHistoryToInput, TierUpdateWithoutHistoryToInput>, TierUncheckedUpdateWithoutHistoryToInput>
   }
 
+  export type TransactionCreateNestedOneWithoutAdminAdjustmentDetailInput = {
+    create?: XOR<TransactionCreateWithoutAdminAdjustmentDetailInput, TransactionUncheckedCreateWithoutAdminAdjustmentDetailInput>
+    connectOrCreate?: TransactionCreateOrConnectWithoutAdminAdjustmentDetailInput
+    connect?: TransactionWhereUniqueInput
+  }
+
+  export type UserCreateNestedOneWithoutAdminAdjustmentDetailsInput = {
+    create?: XOR<UserCreateWithoutAdminAdjustmentDetailsInput, UserUncheckedCreateWithoutAdminAdjustmentDetailsInput>
+    connectOrCreate?: UserCreateOrConnectWithoutAdminAdjustmentDetailsInput
+    connect?: UserWhereUniqueInput
+  }
+
+  export type TransactionUpdateOneRequiredWithoutAdminAdjustmentDetailNestedInput = {
+    create?: XOR<TransactionCreateWithoutAdminAdjustmentDetailInput, TransactionUncheckedCreateWithoutAdminAdjustmentDetailInput>
+    connectOrCreate?: TransactionCreateOrConnectWithoutAdminAdjustmentDetailInput
+    upsert?: TransactionUpsertWithoutAdminAdjustmentDetailInput
+    connect?: TransactionWhereUniqueInput
+    update?: XOR<XOR<TransactionUpdateToOneWithWhereWithoutAdminAdjustmentDetailInput, TransactionUpdateWithoutAdminAdjustmentDetailInput>, TransactionUncheckedUpdateWithoutAdminAdjustmentDetailInput>
+  }
+
+  export type UserUpdateOneRequiredWithoutAdminAdjustmentDetailsNestedInput = {
+    create?: XOR<UserCreateWithoutAdminAdjustmentDetailsInput, UserUncheckedCreateWithoutAdminAdjustmentDetailsInput>
+    connectOrCreate?: UserCreateOrConnectWithoutAdminAdjustmentDetailsInput
+    upsert?: UserUpsertWithoutAdminAdjustmentDetailsInput
+    connect?: UserWhereUniqueInput
+    update?: XOR<XOR<UserUpdateToOneWithWhereWithoutAdminAdjustmentDetailsInput, UserUpdateWithoutAdminAdjustmentDetailsInput>, UserUncheckedUpdateWithoutAdminAdjustmentDetailsInput>
+  }
+
+  export type TransactionCreateNestedOneWithoutSystemAdjustmentDetailInput = {
+    create?: XOR<TransactionCreateWithoutSystemAdjustmentDetailInput, TransactionUncheckedCreateWithoutSystemAdjustmentDetailInput>
+    connectOrCreate?: TransactionCreateOrConnectWithoutSystemAdjustmentDetailInput
+    connect?: TransactionWhereUniqueInput
+  }
+
+  export type TransactionUpdateOneRequiredWithoutSystemAdjustmentDetailNestedInput = {
+    create?: XOR<TransactionCreateWithoutSystemAdjustmentDetailInput, TransactionUncheckedCreateWithoutSystemAdjustmentDetailInput>
+    connectOrCreate?: TransactionCreateOrConnectWithoutSystemAdjustmentDetailInput
+    upsert?: TransactionUpsertWithoutSystemAdjustmentDetailInput
+    connect?: TransactionWhereUniqueInput
+    update?: XOR<XOR<TransactionUpdateToOneWithWhereWithoutSystemAdjustmentDetailInput, TransactionUpdateWithoutSystemAdjustmentDetailInput>, TransactionUncheckedUpdateWithoutSystemAdjustmentDetailInput>
+  }
+
   export type NestedBigIntFilter<$PrismaModel = never> = {
     equals?: bigint | number | BigIntFieldRefInput<$PrismaModel>
     in?: bigint[] | number[] | ListBigIntFieldRefInput<$PrismaModel>
@@ -78329,6 +81330,7 @@ export namespace Prisma {
     loginAttempts?: LoginAttemptCreateNestedManyWithoutUserInput
     userTier?: UserTierCreateNestedOneWithoutUserInput
     tierHistory?: TierHistoryCreateNestedManyWithoutUserInput
+    adminAdjustmentDetails?: AdminAdjustmentDetailCreateNestedManyWithoutAdminUserInput
   }
 
   export type UserUncheckedCreateWithoutAffiliateCodesInput = {
@@ -78373,6 +81375,7 @@ export namespace Prisma {
     loginAttempts?: LoginAttemptUncheckedCreateNestedManyWithoutUserInput
     userTier?: UserTierUncheckedCreateNestedOneWithoutUserInput
     tierHistory?: TierHistoryUncheckedCreateNestedManyWithoutUserInput
+    adminAdjustmentDetails?: AdminAdjustmentDetailUncheckedCreateNestedManyWithoutAdminUserInput
   }
 
   export type UserCreateOrConnectWithoutAffiliateCodesInput = {
@@ -78467,6 +81470,7 @@ export namespace Prisma {
     loginAttempts?: LoginAttemptUpdateManyWithoutUserNestedInput
     userTier?: UserTierUpdateOneWithoutUserNestedInput
     tierHistory?: TierHistoryUpdateManyWithoutUserNestedInput
+    adminAdjustmentDetails?: AdminAdjustmentDetailUpdateManyWithoutAdminUserNestedInput
   }
 
   export type UserUncheckedUpdateWithoutAffiliateCodesInput = {
@@ -78511,6 +81515,7 @@ export namespace Prisma {
     loginAttempts?: LoginAttemptUncheckedUpdateManyWithoutUserNestedInput
     userTier?: UserTierUncheckedUpdateOneWithoutUserNestedInput
     tierHistory?: TierHistoryUncheckedUpdateManyWithoutUserNestedInput
+    adminAdjustmentDetails?: AdminAdjustmentDetailUncheckedUpdateManyWithoutAdminUserNestedInput
   }
 
   export type ReferralUpsertWithWhereUniqueWithoutCodeInput = {
@@ -78587,6 +81592,7 @@ export namespace Prisma {
     loginAttempts?: LoginAttemptCreateNestedManyWithoutUserInput
     userTier?: UserTierCreateNestedOneWithoutUserInput
     tierHistory?: TierHistoryCreateNestedManyWithoutUserInput
+    adminAdjustmentDetails?: AdminAdjustmentDetailCreateNestedManyWithoutAdminUserInput
   }
 
   export type UserUncheckedCreateWithoutAffiliateReferralsInput = {
@@ -78631,6 +81637,7 @@ export namespace Prisma {
     loginAttempts?: LoginAttemptUncheckedCreateNestedManyWithoutUserInput
     userTier?: UserTierUncheckedCreateNestedOneWithoutUserInput
     tierHistory?: TierHistoryUncheckedCreateNestedManyWithoutUserInput
+    adminAdjustmentDetails?: AdminAdjustmentDetailUncheckedCreateNestedManyWithoutAdminUserInput
   }
 
   export type UserCreateOrConnectWithoutAffiliateReferralsInput = {
@@ -78715,6 +81722,7 @@ export namespace Prisma {
     loginAttempts?: LoginAttemptCreateNestedManyWithoutUserInput
     userTier?: UserTierCreateNestedOneWithoutUserInput
     tierHistory?: TierHistoryCreateNestedManyWithoutUserInput
+    adminAdjustmentDetails?: AdminAdjustmentDetailCreateNestedManyWithoutAdminUserInput
   }
 
   export type UserUncheckedCreateWithoutReferredUsersInput = {
@@ -78759,6 +81767,7 @@ export namespace Prisma {
     loginAttempts?: LoginAttemptUncheckedCreateNestedManyWithoutUserInput
     userTier?: UserTierUncheckedCreateNestedOneWithoutUserInput
     tierHistory?: TierHistoryUncheckedCreateNestedManyWithoutUserInput
+    adminAdjustmentDetails?: AdminAdjustmentDetailUncheckedCreateNestedManyWithoutAdminUserInput
   }
 
   export type UserCreateOrConnectWithoutReferredUsersInput = {
@@ -78819,6 +81828,7 @@ export namespace Prisma {
     loginAttempts?: LoginAttemptUpdateManyWithoutUserNestedInput
     userTier?: UserTierUpdateOneWithoutUserNestedInput
     tierHistory?: TierHistoryUpdateManyWithoutUserNestedInput
+    adminAdjustmentDetails?: AdminAdjustmentDetailUpdateManyWithoutAdminUserNestedInput
   }
 
   export type UserUncheckedUpdateWithoutAffiliateReferralsInput = {
@@ -78863,6 +81873,7 @@ export namespace Prisma {
     loginAttempts?: LoginAttemptUncheckedUpdateManyWithoutUserNestedInput
     userTier?: UserTierUncheckedUpdateOneWithoutUserNestedInput
     tierHistory?: TierHistoryUncheckedUpdateManyWithoutUserNestedInput
+    adminAdjustmentDetails?: AdminAdjustmentDetailUncheckedUpdateManyWithoutAdminUserNestedInput
   }
 
   export type AffiliateCodeUpsertWithoutReferralsInput = {
@@ -78959,6 +81970,7 @@ export namespace Prisma {
     loginAttempts?: LoginAttemptUpdateManyWithoutUserNestedInput
     userTier?: UserTierUpdateOneWithoutUserNestedInput
     tierHistory?: TierHistoryUpdateManyWithoutUserNestedInput
+    adminAdjustmentDetails?: AdminAdjustmentDetailUpdateManyWithoutAdminUserNestedInput
   }
 
   export type UserUncheckedUpdateWithoutReferredUsersInput = {
@@ -79003,6 +82015,7 @@ export namespace Prisma {
     loginAttempts?: LoginAttemptUncheckedUpdateManyWithoutUserNestedInput
     userTier?: UserTierUncheckedUpdateOneWithoutUserNestedInput
     tierHistory?: TierHistoryUncheckedUpdateManyWithoutUserNestedInput
+    adminAdjustmentDetails?: AdminAdjustmentDetailUncheckedUpdateManyWithoutAdminUserNestedInput
   }
 
   export type AffiliateCodeCreateWithoutUserInput = {
@@ -79466,6 +82479,8 @@ export namespace Prisma {
     gameRound?: GameRoundCreateNestedOneWithoutTransactionInput
     balanceDetails?: TransactionBalanceDetailCreateNestedManyWithoutTransactionInput
     withdrawDetail?: WithdrawDetailCreateNestedOneWithoutTransactionInput
+    adminAdjustmentDetail?: AdminAdjustmentDetailCreateNestedOneWithoutTransactionInput
+    systemAdjustmentDetail?: SystemAdjustmentDetailCreateNestedOneWithoutTransactionInput
   }
 
   export type TransactionUncheckedCreateWithoutUserInput = {
@@ -79484,6 +82499,8 @@ export namespace Prisma {
     gameRound?: GameRoundUncheckedCreateNestedOneWithoutTransactionInput
     balanceDetails?: TransactionBalanceDetailUncheckedCreateNestedManyWithoutTransactionInput
     withdrawDetail?: WithdrawDetailUncheckedCreateNestedOneWithoutTransactionInput
+    adminAdjustmentDetail?: AdminAdjustmentDetailUncheckedCreateNestedOneWithoutTransactionInput
+    systemAdjustmentDetail?: SystemAdjustmentDetailUncheckedCreateNestedOneWithoutTransactionInput
   }
 
   export type TransactionCreateOrConnectWithoutUserInput = {
@@ -79917,6 +82934,30 @@ export namespace Prisma {
 
   export type TierHistoryCreateManyUserInputEnvelope = {
     data: TierHistoryCreateManyUserInput | TierHistoryCreateManyUserInput[]
+    skipDuplicates?: boolean
+  }
+
+  export type AdminAdjustmentDetailCreateWithoutAdminUserInput = {
+    id?: bigint | number
+    reasonCode?: string | null
+    internalNote?: string | null
+    transaction: TransactionCreateNestedOneWithoutAdminAdjustmentDetailInput
+  }
+
+  export type AdminAdjustmentDetailUncheckedCreateWithoutAdminUserInput = {
+    id?: bigint | number
+    transactionId: bigint | number
+    reasonCode?: string | null
+    internalNote?: string | null
+  }
+
+  export type AdminAdjustmentDetailCreateOrConnectWithoutAdminUserInput = {
+    where: AdminAdjustmentDetailWhereUniqueInput
+    create: XOR<AdminAdjustmentDetailCreateWithoutAdminUserInput, AdminAdjustmentDetailUncheckedCreateWithoutAdminUserInput>
+  }
+
+  export type AdminAdjustmentDetailCreateManyAdminUserInputEnvelope = {
+    data: AdminAdjustmentDetailCreateManyAdminUserInput | AdminAdjustmentDetailCreateManyAdminUserInput[]
     skipDuplicates?: boolean
   }
 
@@ -80644,6 +83685,33 @@ export namespace Prisma {
     changeBy?: StringNullableFilter<"TierHistory"> | string | null
   }
 
+  export type AdminAdjustmentDetailUpsertWithWhereUniqueWithoutAdminUserInput = {
+    where: AdminAdjustmentDetailWhereUniqueInput
+    update: XOR<AdminAdjustmentDetailUpdateWithoutAdminUserInput, AdminAdjustmentDetailUncheckedUpdateWithoutAdminUserInput>
+    create: XOR<AdminAdjustmentDetailCreateWithoutAdminUserInput, AdminAdjustmentDetailUncheckedCreateWithoutAdminUserInput>
+  }
+
+  export type AdminAdjustmentDetailUpdateWithWhereUniqueWithoutAdminUserInput = {
+    where: AdminAdjustmentDetailWhereUniqueInput
+    data: XOR<AdminAdjustmentDetailUpdateWithoutAdminUserInput, AdminAdjustmentDetailUncheckedUpdateWithoutAdminUserInput>
+  }
+
+  export type AdminAdjustmentDetailUpdateManyWithWhereWithoutAdminUserInput = {
+    where: AdminAdjustmentDetailScalarWhereInput
+    data: XOR<AdminAdjustmentDetailUpdateManyMutationInput, AdminAdjustmentDetailUncheckedUpdateManyWithoutAdminUserInput>
+  }
+
+  export type AdminAdjustmentDetailScalarWhereInput = {
+    AND?: AdminAdjustmentDetailScalarWhereInput | AdminAdjustmentDetailScalarWhereInput[]
+    OR?: AdminAdjustmentDetailScalarWhereInput[]
+    NOT?: AdminAdjustmentDetailScalarWhereInput | AdminAdjustmentDetailScalarWhereInput[]
+    id?: BigIntFilter<"AdminAdjustmentDetail"> | bigint | number
+    transactionId?: BigIntFilter<"AdminAdjustmentDetail"> | bigint | number
+    adminUserId?: BigIntFilter<"AdminAdjustmentDetail"> | bigint | number
+    reasonCode?: StringNullableFilter<"AdminAdjustmentDetail"> | string | null
+    internalNote?: StringNullableFilter<"AdminAdjustmentDetail"> | string | null
+  }
+
   export type UserCreateWithoutBalancesInput = {
     id?: bigint | number
     uid?: string
@@ -80686,6 +83754,7 @@ export namespace Prisma {
     loginAttempts?: LoginAttemptCreateNestedManyWithoutUserInput
     userTier?: UserTierCreateNestedOneWithoutUserInput
     tierHistory?: TierHistoryCreateNestedManyWithoutUserInput
+    adminAdjustmentDetails?: AdminAdjustmentDetailCreateNestedManyWithoutAdminUserInput
   }
 
   export type UserUncheckedCreateWithoutBalancesInput = {
@@ -80730,6 +83799,7 @@ export namespace Prisma {
     loginAttempts?: LoginAttemptUncheckedCreateNestedManyWithoutUserInput
     userTier?: UserTierUncheckedCreateNestedOneWithoutUserInput
     tierHistory?: TierHistoryUncheckedCreateNestedManyWithoutUserInput
+    adminAdjustmentDetails?: AdminAdjustmentDetailUncheckedCreateNestedManyWithoutAdminUserInput
   }
 
   export type UserCreateOrConnectWithoutBalancesInput = {
@@ -80790,6 +83860,7 @@ export namespace Prisma {
     loginAttempts?: LoginAttemptUpdateManyWithoutUserNestedInput
     userTier?: UserTierUpdateOneWithoutUserNestedInput
     tierHistory?: TierHistoryUpdateManyWithoutUserNestedInput
+    adminAdjustmentDetails?: AdminAdjustmentDetailUpdateManyWithoutAdminUserNestedInput
   }
 
   export type UserUncheckedUpdateWithoutBalancesInput = {
@@ -80834,6 +83905,7 @@ export namespace Prisma {
     loginAttempts?: LoginAttemptUncheckedUpdateManyWithoutUserNestedInput
     userTier?: UserTierUncheckedUpdateOneWithoutUserNestedInput
     tierHistory?: TierHistoryUncheckedUpdateManyWithoutUserNestedInput
+    adminAdjustmentDetails?: AdminAdjustmentDetailUncheckedUpdateManyWithoutAdminUserNestedInput
   }
 
   export type UserCreateWithoutUserBalanceStatsInput = {
@@ -80878,6 +83950,7 @@ export namespace Prisma {
     loginAttempts?: LoginAttemptCreateNestedManyWithoutUserInput
     userTier?: UserTierCreateNestedOneWithoutUserInput
     tierHistory?: TierHistoryCreateNestedManyWithoutUserInput
+    adminAdjustmentDetails?: AdminAdjustmentDetailCreateNestedManyWithoutAdminUserInput
   }
 
   export type UserUncheckedCreateWithoutUserBalanceStatsInput = {
@@ -80922,6 +83995,7 @@ export namespace Prisma {
     loginAttempts?: LoginAttemptUncheckedCreateNestedManyWithoutUserInput
     userTier?: UserTierUncheckedCreateNestedOneWithoutUserInput
     tierHistory?: TierHistoryUncheckedCreateNestedManyWithoutUserInput
+    adminAdjustmentDetails?: AdminAdjustmentDetailUncheckedCreateNestedManyWithoutAdminUserInput
   }
 
   export type UserCreateOrConnectWithoutUserBalanceStatsInput = {
@@ -80982,6 +84056,7 @@ export namespace Prisma {
     loginAttempts?: LoginAttemptUpdateManyWithoutUserNestedInput
     userTier?: UserTierUpdateOneWithoutUserNestedInput
     tierHistory?: TierHistoryUpdateManyWithoutUserNestedInput
+    adminAdjustmentDetails?: AdminAdjustmentDetailUpdateManyWithoutAdminUserNestedInput
   }
 
   export type UserUncheckedUpdateWithoutUserBalanceStatsInput = {
@@ -81026,6 +84101,7 @@ export namespace Prisma {
     loginAttempts?: LoginAttemptUncheckedUpdateManyWithoutUserNestedInput
     userTier?: UserTierUncheckedUpdateOneWithoutUserNestedInput
     tierHistory?: TierHistoryUncheckedUpdateManyWithoutUserNestedInput
+    adminAdjustmentDetails?: AdminAdjustmentDetailUncheckedUpdateManyWithoutAdminUserNestedInput
   }
 
   export type BonusDetailCreateWithoutGameInput = {
@@ -81697,6 +84773,7 @@ export namespace Prisma {
     loginAttempts?: LoginAttemptCreateNestedManyWithoutUserInput
     userTier?: UserTierCreateNestedOneWithoutUserInput
     tierHistory?: TierHistoryCreateNestedManyWithoutUserInput
+    adminAdjustmentDetails?: AdminAdjustmentDetailCreateNestedManyWithoutAdminUserInput
   }
 
   export type UserUncheckedCreateWithoutTransactionsInput = {
@@ -81741,6 +84818,7 @@ export namespace Prisma {
     loginAttempts?: LoginAttemptUncheckedCreateNestedManyWithoutUserInput
     userTier?: UserTierUncheckedCreateNestedOneWithoutUserInput
     tierHistory?: TierHistoryUncheckedCreateNestedManyWithoutUserInput
+    adminAdjustmentDetails?: AdminAdjustmentDetailUncheckedCreateNestedManyWithoutAdminUserInput
   }
 
   export type UserCreateOrConnectWithoutTransactionsInput = {
@@ -81823,6 +84901,46 @@ export namespace Prisma {
   export type WithdrawDetailCreateOrConnectWithoutTransactionInput = {
     where: WithdrawDetailWhereUniqueInput
     create: XOR<WithdrawDetailCreateWithoutTransactionInput, WithdrawDetailUncheckedCreateWithoutTransactionInput>
+  }
+
+  export type AdminAdjustmentDetailCreateWithoutTransactionInput = {
+    id?: bigint | number
+    reasonCode?: string | null
+    internalNote?: string | null
+    adminUser: UserCreateNestedOneWithoutAdminAdjustmentDetailsInput
+  }
+
+  export type AdminAdjustmentDetailUncheckedCreateWithoutTransactionInput = {
+    id?: bigint | number
+    adminUserId: bigint | number
+    reasonCode?: string | null
+    internalNote?: string | null
+  }
+
+  export type AdminAdjustmentDetailCreateOrConnectWithoutTransactionInput = {
+    where: AdminAdjustmentDetailWhereUniqueInput
+    create: XOR<AdminAdjustmentDetailCreateWithoutTransactionInput, AdminAdjustmentDetailUncheckedCreateWithoutTransactionInput>
+  }
+
+  export type SystemAdjustmentDetailCreateWithoutTransactionInput = {
+    id?: bigint | number
+    serviceName: string
+    triggerId?: string | null
+    actionName: string
+    metadata?: NullableJsonNullValueInput | InputJsonValue
+  }
+
+  export type SystemAdjustmentDetailUncheckedCreateWithoutTransactionInput = {
+    id?: bigint | number
+    serviceName: string
+    triggerId?: string | null
+    actionName: string
+    metadata?: NullableJsonNullValueInput | InputJsonValue
+  }
+
+  export type SystemAdjustmentDetailCreateOrConnectWithoutTransactionInput = {
+    where: SystemAdjustmentDetailWhereUniqueInput
+    create: XOR<SystemAdjustmentDetailCreateWithoutTransactionInput, SystemAdjustmentDetailUncheckedCreateWithoutTransactionInput>
   }
 
   export type BonusDetailUpsertWithoutTransactionInput = {
@@ -82110,6 +85228,7 @@ export namespace Prisma {
     loginAttempts?: LoginAttemptUpdateManyWithoutUserNestedInput
     userTier?: UserTierUpdateOneWithoutUserNestedInput
     tierHistory?: TierHistoryUpdateManyWithoutUserNestedInput
+    adminAdjustmentDetails?: AdminAdjustmentDetailUpdateManyWithoutAdminUserNestedInput
   }
 
   export type UserUncheckedUpdateWithoutTransactionsInput = {
@@ -82154,6 +85273,7 @@ export namespace Prisma {
     loginAttempts?: LoginAttemptUncheckedUpdateManyWithoutUserNestedInput
     userTier?: UserTierUncheckedUpdateOneWithoutUserNestedInput
     tierHistory?: TierHistoryUncheckedUpdateManyWithoutUserNestedInput
+    adminAdjustmentDetails?: AdminAdjustmentDetailUncheckedUpdateManyWithoutAdminUserNestedInput
   }
 
   export type TransactionBalanceDetailUpsertWithWhereUniqueWithoutTransactionInput = {
@@ -82236,6 +85356,58 @@ export namespace Prisma {
     feeCurrency?: NullableStringFieldUpdateOperationsInput | string | null
     feePaidBy?: NullableEnumFeePaidByTypeFieldUpdateOperationsInput | $Enums.FeePaidByType | null
     providerMetadata?: NullableJsonNullValueInput | InputJsonValue
+  }
+
+  export type AdminAdjustmentDetailUpsertWithoutTransactionInput = {
+    update: XOR<AdminAdjustmentDetailUpdateWithoutTransactionInput, AdminAdjustmentDetailUncheckedUpdateWithoutTransactionInput>
+    create: XOR<AdminAdjustmentDetailCreateWithoutTransactionInput, AdminAdjustmentDetailUncheckedCreateWithoutTransactionInput>
+    where?: AdminAdjustmentDetailWhereInput
+  }
+
+  export type AdminAdjustmentDetailUpdateToOneWithWhereWithoutTransactionInput = {
+    where?: AdminAdjustmentDetailWhereInput
+    data: XOR<AdminAdjustmentDetailUpdateWithoutTransactionInput, AdminAdjustmentDetailUncheckedUpdateWithoutTransactionInput>
+  }
+
+  export type AdminAdjustmentDetailUpdateWithoutTransactionInput = {
+    id?: BigIntFieldUpdateOperationsInput | bigint | number
+    reasonCode?: NullableStringFieldUpdateOperationsInput | string | null
+    internalNote?: NullableStringFieldUpdateOperationsInput | string | null
+    adminUser?: UserUpdateOneRequiredWithoutAdminAdjustmentDetailsNestedInput
+  }
+
+  export type AdminAdjustmentDetailUncheckedUpdateWithoutTransactionInput = {
+    id?: BigIntFieldUpdateOperationsInput | bigint | number
+    adminUserId?: BigIntFieldUpdateOperationsInput | bigint | number
+    reasonCode?: NullableStringFieldUpdateOperationsInput | string | null
+    internalNote?: NullableStringFieldUpdateOperationsInput | string | null
+  }
+
+  export type SystemAdjustmentDetailUpsertWithoutTransactionInput = {
+    update: XOR<SystemAdjustmentDetailUpdateWithoutTransactionInput, SystemAdjustmentDetailUncheckedUpdateWithoutTransactionInput>
+    create: XOR<SystemAdjustmentDetailCreateWithoutTransactionInput, SystemAdjustmentDetailUncheckedCreateWithoutTransactionInput>
+    where?: SystemAdjustmentDetailWhereInput
+  }
+
+  export type SystemAdjustmentDetailUpdateToOneWithWhereWithoutTransactionInput = {
+    where?: SystemAdjustmentDetailWhereInput
+    data: XOR<SystemAdjustmentDetailUpdateWithoutTransactionInput, SystemAdjustmentDetailUncheckedUpdateWithoutTransactionInput>
+  }
+
+  export type SystemAdjustmentDetailUpdateWithoutTransactionInput = {
+    id?: BigIntFieldUpdateOperationsInput | bigint | number
+    serviceName?: StringFieldUpdateOperationsInput | string
+    triggerId?: NullableStringFieldUpdateOperationsInput | string | null
+    actionName?: StringFieldUpdateOperationsInput | string
+    metadata?: NullableJsonNullValueInput | InputJsonValue
+  }
+
+  export type SystemAdjustmentDetailUncheckedUpdateWithoutTransactionInput = {
+    id?: BigIntFieldUpdateOperationsInput | bigint | number
+    serviceName?: StringFieldUpdateOperationsInput | string
+    triggerId?: NullableStringFieldUpdateOperationsInput | string | null
+    actionName?: StringFieldUpdateOperationsInput | string
+    metadata?: NullableJsonNullValueInput | InputJsonValue
   }
 
   export type AffiliateCommissionCreateWithoutGameRoundInput = {
@@ -82419,6 +85591,8 @@ export namespace Prisma {
     user: UserCreateNestedOneWithoutTransactionsInput
     balanceDetails?: TransactionBalanceDetailCreateNestedManyWithoutTransactionInput
     withdrawDetail?: WithdrawDetailCreateNestedOneWithoutTransactionInput
+    adminAdjustmentDetail?: AdminAdjustmentDetailCreateNestedOneWithoutTransactionInput
+    systemAdjustmentDetail?: SystemAdjustmentDetailCreateNestedOneWithoutTransactionInput
   }
 
   export type TransactionUncheckedCreateWithoutGameRoundInput = {
@@ -82437,6 +85611,8 @@ export namespace Prisma {
     depositDetail?: DepositDetailUncheckedCreateNestedOneWithoutTransactionInput
     balanceDetails?: TransactionBalanceDetailUncheckedCreateNestedManyWithoutTransactionInput
     withdrawDetail?: WithdrawDetailUncheckedCreateNestedOneWithoutTransactionInput
+    adminAdjustmentDetail?: AdminAdjustmentDetailUncheckedCreateNestedOneWithoutTransactionInput
+    systemAdjustmentDetail?: SystemAdjustmentDetailUncheckedCreateNestedOneWithoutTransactionInput
   }
 
   export type TransactionCreateOrConnectWithoutGameRoundInput = {
@@ -82648,6 +85824,8 @@ export namespace Prisma {
     user?: UserUpdateOneRequiredWithoutTransactionsNestedInput
     balanceDetails?: TransactionBalanceDetailUpdateManyWithoutTransactionNestedInput
     withdrawDetail?: WithdrawDetailUpdateOneWithoutTransactionNestedInput
+    adminAdjustmentDetail?: AdminAdjustmentDetailUpdateOneWithoutTransactionNestedInput
+    systemAdjustmentDetail?: SystemAdjustmentDetailUpdateOneWithoutTransactionNestedInput
   }
 
   export type TransactionUncheckedUpdateWithoutGameRoundInput = {
@@ -82666,6 +85844,8 @@ export namespace Prisma {
     depositDetail?: DepositDetailUncheckedUpdateOneWithoutTransactionNestedInput
     balanceDetails?: TransactionBalanceDetailUncheckedUpdateManyWithoutTransactionNestedInput
     withdrawDetail?: WithdrawDetailUncheckedUpdateOneWithoutTransactionNestedInput
+    adminAdjustmentDetail?: AdminAdjustmentDetailUncheckedUpdateOneWithoutTransactionNestedInput
+    systemAdjustmentDetail?: SystemAdjustmentDetailUncheckedUpdateOneWithoutTransactionNestedInput
   }
 
   export type GameWinUpsertWithWhereUniqueWithoutGameRoundInput = {
@@ -83005,6 +86185,8 @@ export namespace Prisma {
     gameRound?: GameRoundCreateNestedOneWithoutTransactionInput
     user: UserCreateNestedOneWithoutTransactionsInput
     withdrawDetail?: WithdrawDetailCreateNestedOneWithoutTransactionInput
+    adminAdjustmentDetail?: AdminAdjustmentDetailCreateNestedOneWithoutTransactionInput
+    systemAdjustmentDetail?: SystemAdjustmentDetailCreateNestedOneWithoutTransactionInput
   }
 
   export type TransactionUncheckedCreateWithoutBalanceDetailsInput = {
@@ -83023,6 +86205,8 @@ export namespace Prisma {
     depositDetail?: DepositDetailUncheckedCreateNestedOneWithoutTransactionInput
     gameRound?: GameRoundUncheckedCreateNestedOneWithoutTransactionInput
     withdrawDetail?: WithdrawDetailUncheckedCreateNestedOneWithoutTransactionInput
+    adminAdjustmentDetail?: AdminAdjustmentDetailUncheckedCreateNestedOneWithoutTransactionInput
+    systemAdjustmentDetail?: SystemAdjustmentDetailUncheckedCreateNestedOneWithoutTransactionInput
   }
 
   export type TransactionCreateOrConnectWithoutBalanceDetailsInput = {
@@ -83057,6 +86241,8 @@ export namespace Prisma {
     gameRound?: GameRoundUpdateOneWithoutTransactionNestedInput
     user?: UserUpdateOneRequiredWithoutTransactionsNestedInput
     withdrawDetail?: WithdrawDetailUpdateOneWithoutTransactionNestedInput
+    adminAdjustmentDetail?: AdminAdjustmentDetailUpdateOneWithoutTransactionNestedInput
+    systemAdjustmentDetail?: SystemAdjustmentDetailUpdateOneWithoutTransactionNestedInput
   }
 
   export type TransactionUncheckedUpdateWithoutBalanceDetailsInput = {
@@ -83075,6 +86261,8 @@ export namespace Prisma {
     depositDetail?: DepositDetailUncheckedUpdateOneWithoutTransactionNestedInput
     gameRound?: GameRoundUncheckedUpdateOneWithoutTransactionNestedInput
     withdrawDetail?: WithdrawDetailUncheckedUpdateOneWithoutTransactionNestedInput
+    adminAdjustmentDetail?: AdminAdjustmentDetailUncheckedUpdateOneWithoutTransactionNestedInput
+    systemAdjustmentDetail?: SystemAdjustmentDetailUncheckedUpdateOneWithoutTransactionNestedInput
   }
 
   export type GameCreateWithoutBonusDetailsInput = {
@@ -83137,6 +86325,8 @@ export namespace Prisma {
     user: UserCreateNestedOneWithoutTransactionsInput
     balanceDetails?: TransactionBalanceDetailCreateNestedManyWithoutTransactionInput
     withdrawDetail?: WithdrawDetailCreateNestedOneWithoutTransactionInput
+    adminAdjustmentDetail?: AdminAdjustmentDetailCreateNestedOneWithoutTransactionInput
+    systemAdjustmentDetail?: SystemAdjustmentDetailCreateNestedOneWithoutTransactionInput
   }
 
   export type TransactionUncheckedCreateWithoutBonusDetailInput = {
@@ -83155,6 +86345,8 @@ export namespace Prisma {
     gameRound?: GameRoundUncheckedCreateNestedOneWithoutTransactionInput
     balanceDetails?: TransactionBalanceDetailUncheckedCreateNestedManyWithoutTransactionInput
     withdrawDetail?: WithdrawDetailUncheckedCreateNestedOneWithoutTransactionInput
+    adminAdjustmentDetail?: AdminAdjustmentDetailUncheckedCreateNestedOneWithoutTransactionInput
+    systemAdjustmentDetail?: SystemAdjustmentDetailUncheckedCreateNestedOneWithoutTransactionInput
   }
 
   export type TransactionCreateOrConnectWithoutBonusDetailInput = {
@@ -83239,6 +86431,8 @@ export namespace Prisma {
     user?: UserUpdateOneRequiredWithoutTransactionsNestedInput
     balanceDetails?: TransactionBalanceDetailUpdateManyWithoutTransactionNestedInput
     withdrawDetail?: WithdrawDetailUpdateOneWithoutTransactionNestedInput
+    adminAdjustmentDetail?: AdminAdjustmentDetailUpdateOneWithoutTransactionNestedInput
+    systemAdjustmentDetail?: SystemAdjustmentDetailUpdateOneWithoutTransactionNestedInput
   }
 
   export type TransactionUncheckedUpdateWithoutBonusDetailInput = {
@@ -83257,6 +86451,8 @@ export namespace Prisma {
     gameRound?: GameRoundUncheckedUpdateOneWithoutTransactionNestedInput
     balanceDetails?: TransactionBalanceDetailUncheckedUpdateManyWithoutTransactionNestedInput
     withdrawDetail?: WithdrawDetailUncheckedUpdateOneWithoutTransactionNestedInput
+    adminAdjustmentDetail?: AdminAdjustmentDetailUncheckedUpdateOneWithoutTransactionNestedInput
+    systemAdjustmentDetail?: SystemAdjustmentDetailUncheckedUpdateOneWithoutTransactionNestedInput
   }
 
   export type TransactionCreateWithoutWithdrawDetailInput = {
@@ -83275,6 +86471,8 @@ export namespace Prisma {
     gameRound?: GameRoundCreateNestedOneWithoutTransactionInput
     user: UserCreateNestedOneWithoutTransactionsInput
     balanceDetails?: TransactionBalanceDetailCreateNestedManyWithoutTransactionInput
+    adminAdjustmentDetail?: AdminAdjustmentDetailCreateNestedOneWithoutTransactionInput
+    systemAdjustmentDetail?: SystemAdjustmentDetailCreateNestedOneWithoutTransactionInput
   }
 
   export type TransactionUncheckedCreateWithoutWithdrawDetailInput = {
@@ -83293,6 +86491,8 @@ export namespace Prisma {
     depositDetail?: DepositDetailUncheckedCreateNestedOneWithoutTransactionInput
     gameRound?: GameRoundUncheckedCreateNestedOneWithoutTransactionInput
     balanceDetails?: TransactionBalanceDetailUncheckedCreateNestedManyWithoutTransactionInput
+    adminAdjustmentDetail?: AdminAdjustmentDetailUncheckedCreateNestedOneWithoutTransactionInput
+    systemAdjustmentDetail?: SystemAdjustmentDetailUncheckedCreateNestedOneWithoutTransactionInput
   }
 
   export type TransactionCreateOrConnectWithoutWithdrawDetailInput = {
@@ -83327,6 +86527,8 @@ export namespace Prisma {
     gameRound?: GameRoundUpdateOneWithoutTransactionNestedInput
     user?: UserUpdateOneRequiredWithoutTransactionsNestedInput
     balanceDetails?: TransactionBalanceDetailUpdateManyWithoutTransactionNestedInput
+    adminAdjustmentDetail?: AdminAdjustmentDetailUpdateOneWithoutTransactionNestedInput
+    systemAdjustmentDetail?: SystemAdjustmentDetailUpdateOneWithoutTransactionNestedInput
   }
 
   export type TransactionUncheckedUpdateWithoutWithdrawDetailInput = {
@@ -83345,6 +86547,8 @@ export namespace Prisma {
     depositDetail?: DepositDetailUncheckedUpdateOneWithoutTransactionNestedInput
     gameRound?: GameRoundUncheckedUpdateOneWithoutTransactionNestedInput
     balanceDetails?: TransactionBalanceDetailUncheckedUpdateManyWithoutTransactionNestedInput
+    adminAdjustmentDetail?: AdminAdjustmentDetailUncheckedUpdateOneWithoutTransactionNestedInput
+    systemAdjustmentDetail?: SystemAdjustmentDetailUncheckedUpdateOneWithoutTransactionNestedInput
   }
 
   export type DailyCompEarningCreateWithoutCompTransactionInput = {
@@ -83391,6 +86595,8 @@ export namespace Prisma {
     user: UserCreateNestedOneWithoutTransactionsInput
     balanceDetails?: TransactionBalanceDetailCreateNestedManyWithoutTransactionInput
     withdrawDetail?: WithdrawDetailCreateNestedOneWithoutTransactionInput
+    adminAdjustmentDetail?: AdminAdjustmentDetailCreateNestedOneWithoutTransactionInput
+    systemAdjustmentDetail?: SystemAdjustmentDetailCreateNestedOneWithoutTransactionInput
   }
 
   export type TransactionUncheckedCreateWithoutCompTransactionInput = {
@@ -83409,6 +86615,8 @@ export namespace Prisma {
     gameRound?: GameRoundUncheckedCreateNestedOneWithoutTransactionInput
     balanceDetails?: TransactionBalanceDetailUncheckedCreateNestedManyWithoutTransactionInput
     withdrawDetail?: WithdrawDetailUncheckedCreateNestedOneWithoutTransactionInput
+    adminAdjustmentDetail?: AdminAdjustmentDetailUncheckedCreateNestedOneWithoutTransactionInput
+    systemAdjustmentDetail?: SystemAdjustmentDetailUncheckedCreateNestedOneWithoutTransactionInput
   }
 
   export type TransactionCreateOrConnectWithoutCompTransactionInput = {
@@ -83458,6 +86666,7 @@ export namespace Prisma {
     loginAttempts?: LoginAttemptCreateNestedManyWithoutUserInput
     userTier?: UserTierCreateNestedOneWithoutUserInput
     tierHistory?: TierHistoryCreateNestedManyWithoutUserInput
+    adminAdjustmentDetails?: AdminAdjustmentDetailCreateNestedManyWithoutAdminUserInput
   }
 
   export type UserUncheckedCreateWithoutCompTransactionInput = {
@@ -83502,6 +86711,7 @@ export namespace Prisma {
     loginAttempts?: LoginAttemptUncheckedCreateNestedManyWithoutUserInput
     userTier?: UserTierUncheckedCreateNestedOneWithoutUserInput
     tierHistory?: TierHistoryUncheckedCreateNestedManyWithoutUserInput
+    adminAdjustmentDetails?: AdminAdjustmentDetailUncheckedCreateNestedManyWithoutAdminUserInput
   }
 
   export type UserCreateOrConnectWithoutCompTransactionInput = {
@@ -83570,6 +86780,8 @@ export namespace Prisma {
     user?: UserUpdateOneRequiredWithoutTransactionsNestedInput
     balanceDetails?: TransactionBalanceDetailUpdateManyWithoutTransactionNestedInput
     withdrawDetail?: WithdrawDetailUpdateOneWithoutTransactionNestedInput
+    adminAdjustmentDetail?: AdminAdjustmentDetailUpdateOneWithoutTransactionNestedInput
+    systemAdjustmentDetail?: SystemAdjustmentDetailUpdateOneWithoutTransactionNestedInput
   }
 
   export type TransactionUncheckedUpdateWithoutCompTransactionInput = {
@@ -83588,6 +86800,8 @@ export namespace Prisma {
     gameRound?: GameRoundUncheckedUpdateOneWithoutTransactionNestedInput
     balanceDetails?: TransactionBalanceDetailUncheckedUpdateManyWithoutTransactionNestedInput
     withdrawDetail?: WithdrawDetailUncheckedUpdateOneWithoutTransactionNestedInput
+    adminAdjustmentDetail?: AdminAdjustmentDetailUncheckedUpdateOneWithoutTransactionNestedInput
+    systemAdjustmentDetail?: SystemAdjustmentDetailUncheckedUpdateOneWithoutTransactionNestedInput
   }
 
   export type UserUpsertWithoutCompTransactionInput = {
@@ -83643,6 +86857,7 @@ export namespace Prisma {
     loginAttempts?: LoginAttemptUpdateManyWithoutUserNestedInput
     userTier?: UserTierUpdateOneWithoutUserNestedInput
     tierHistory?: TierHistoryUpdateManyWithoutUserNestedInput
+    adminAdjustmentDetails?: AdminAdjustmentDetailUpdateManyWithoutAdminUserNestedInput
   }
 
   export type UserUncheckedUpdateWithoutCompTransactionInput = {
@@ -83687,6 +86902,7 @@ export namespace Prisma {
     loginAttempts?: LoginAttemptUncheckedUpdateManyWithoutUserNestedInput
     userTier?: UserTierUncheckedUpdateOneWithoutUserNestedInput
     tierHistory?: TierHistoryUncheckedUpdateManyWithoutUserNestedInput
+    adminAdjustmentDetails?: AdminAdjustmentDetailUncheckedUpdateManyWithoutAdminUserNestedInput
   }
 
   export type CompTransactionCreateWithoutDailyCompEarningInput = {
@@ -83759,6 +86975,7 @@ export namespace Prisma {
     loginAttempts?: LoginAttemptCreateNestedManyWithoutUserInput
     userTier?: UserTierCreateNestedOneWithoutUserInput
     tierHistory?: TierHistoryCreateNestedManyWithoutUserInput
+    adminAdjustmentDetails?: AdminAdjustmentDetailCreateNestedManyWithoutAdminUserInput
   }
 
   export type UserUncheckedCreateWithoutDailyCompEarningInput = {
@@ -83803,6 +87020,7 @@ export namespace Prisma {
     loginAttempts?: LoginAttemptUncheckedCreateNestedManyWithoutUserInput
     userTier?: UserTierUncheckedCreateNestedOneWithoutUserInput
     tierHistory?: TierHistoryUncheckedCreateNestedManyWithoutUserInput
+    adminAdjustmentDetails?: AdminAdjustmentDetailUncheckedCreateNestedManyWithoutAdminUserInput
   }
 
   export type UserCreateOrConnectWithoutDailyCompEarningInput = {
@@ -83879,6 +87097,7 @@ export namespace Prisma {
     loginAttempts?: LoginAttemptUpdateManyWithoutUserNestedInput
     userTier?: UserTierUpdateOneWithoutUserNestedInput
     tierHistory?: TierHistoryUpdateManyWithoutUserNestedInput
+    adminAdjustmentDetails?: AdminAdjustmentDetailUpdateManyWithoutAdminUserNestedInput
   }
 
   export type UserUncheckedUpdateWithoutDailyCompEarningInput = {
@@ -83923,6 +87142,7 @@ export namespace Prisma {
     loginAttempts?: LoginAttemptUncheckedUpdateManyWithoutUserNestedInput
     userTier?: UserTierUncheckedUpdateOneWithoutUserNestedInput
     tierHistory?: TierHistoryUncheckedUpdateManyWithoutUserNestedInput
+    adminAdjustmentDetails?: AdminAdjustmentDetailUncheckedUpdateManyWithoutAdminUserNestedInput
   }
 
   export type DepositDetailCreateWithoutRollingInput = {
@@ -84040,6 +87260,7 @@ export namespace Prisma {
     loginAttempts?: LoginAttemptCreateNestedManyWithoutUserInput
     userTier?: UserTierCreateNestedOneWithoutUserInput
     tierHistory?: TierHistoryCreateNestedManyWithoutUserInput
+    adminAdjustmentDetails?: AdminAdjustmentDetailCreateNestedManyWithoutAdminUserInput
   }
 
   export type UserUncheckedCreateWithoutRollingInput = {
@@ -84084,6 +87305,7 @@ export namespace Prisma {
     loginAttempts?: LoginAttemptUncheckedCreateNestedManyWithoutUserInput
     userTier?: UserTierUncheckedCreateNestedOneWithoutUserInput
     tierHistory?: TierHistoryUncheckedCreateNestedManyWithoutUserInput
+    adminAdjustmentDetails?: AdminAdjustmentDetailUncheckedCreateNestedManyWithoutAdminUserInput
   }
 
   export type UserCreateOrConnectWithoutRollingInput = {
@@ -84256,6 +87478,7 @@ export namespace Prisma {
     loginAttempts?: LoginAttemptUpdateManyWithoutUserNestedInput
     userTier?: UserTierUpdateOneWithoutUserNestedInput
     tierHistory?: TierHistoryUpdateManyWithoutUserNestedInput
+    adminAdjustmentDetails?: AdminAdjustmentDetailUpdateManyWithoutAdminUserNestedInput
   }
 
   export type UserUncheckedUpdateWithoutRollingInput = {
@@ -84300,6 +87523,7 @@ export namespace Prisma {
     loginAttempts?: LoginAttemptUncheckedUpdateManyWithoutUserNestedInput
     userTier?: UserTierUncheckedUpdateOneWithoutUserNestedInput
     tierHistory?: TierHistoryUncheckedUpdateManyWithoutUserNestedInput
+    adminAdjustmentDetails?: AdminAdjustmentDetailUncheckedUpdateManyWithoutAdminUserNestedInput
   }
 
   export type UserPromotionUpsertWithoutRollingInput = {
@@ -84383,6 +87607,7 @@ export namespace Prisma {
     loginAttempts?: LoginAttemptCreateNestedManyWithoutUserInput
     userTier?: UserTierCreateNestedOneWithoutUserInput
     tierHistory?: TierHistoryCreateNestedManyWithoutUserInput
+    adminAdjustmentDetails?: AdminAdjustmentDetailCreateNestedManyWithoutAdminUserInput
   }
 
   export type UserUncheckedCreateWithoutUserTokenInput = {
@@ -84427,6 +87652,7 @@ export namespace Prisma {
     loginAttempts?: LoginAttemptUncheckedCreateNestedManyWithoutUserInput
     userTier?: UserTierUncheckedCreateNestedOneWithoutUserInput
     tierHistory?: TierHistoryUncheckedCreateNestedManyWithoutUserInput
+    adminAdjustmentDetails?: AdminAdjustmentDetailUncheckedCreateNestedManyWithoutAdminUserInput
   }
 
   export type UserCreateOrConnectWithoutUserTokenInput = {
@@ -84487,6 +87713,7 @@ export namespace Prisma {
     loginAttempts?: LoginAttemptUpdateManyWithoutUserNestedInput
     userTier?: UserTierUpdateOneWithoutUserNestedInput
     tierHistory?: TierHistoryUpdateManyWithoutUserNestedInput
+    adminAdjustmentDetails?: AdminAdjustmentDetailUpdateManyWithoutAdminUserNestedInput
   }
 
   export type UserUncheckedUpdateWithoutUserTokenInput = {
@@ -84531,6 +87758,7 @@ export namespace Prisma {
     loginAttempts?: LoginAttemptUncheckedUpdateManyWithoutUserNestedInput
     userTier?: UserTierUncheckedUpdateOneWithoutUserNestedInput
     tierHistory?: TierHistoryUncheckedUpdateManyWithoutUserNestedInput
+    adminAdjustmentDetails?: AdminAdjustmentDetailUncheckedUpdateManyWithoutAdminUserNestedInput
   }
 
   export type UserCreateWithoutEmailLogInput = {
@@ -84575,6 +87803,7 @@ export namespace Prisma {
     loginAttempts?: LoginAttemptCreateNestedManyWithoutUserInput
     userTier?: UserTierCreateNestedOneWithoutUserInput
     tierHistory?: TierHistoryCreateNestedManyWithoutUserInput
+    adminAdjustmentDetails?: AdminAdjustmentDetailCreateNestedManyWithoutAdminUserInput
   }
 
   export type UserUncheckedCreateWithoutEmailLogInput = {
@@ -84619,6 +87848,7 @@ export namespace Prisma {
     loginAttempts?: LoginAttemptUncheckedCreateNestedManyWithoutUserInput
     userTier?: UserTierUncheckedCreateNestedOneWithoutUserInput
     tierHistory?: TierHistoryUncheckedCreateNestedManyWithoutUserInput
+    adminAdjustmentDetails?: AdminAdjustmentDetailUncheckedCreateNestedManyWithoutAdminUserInput
   }
 
   export type UserCreateOrConnectWithoutEmailLogInput = {
@@ -84679,6 +87909,7 @@ export namespace Prisma {
     loginAttempts?: LoginAttemptUpdateManyWithoutUserNestedInput
     userTier?: UserTierUpdateOneWithoutUserNestedInput
     tierHistory?: TierHistoryUpdateManyWithoutUserNestedInput
+    adminAdjustmentDetails?: AdminAdjustmentDetailUpdateManyWithoutAdminUserNestedInput
   }
 
   export type UserUncheckedUpdateWithoutEmailLogInput = {
@@ -84723,6 +87954,7 @@ export namespace Prisma {
     loginAttempts?: LoginAttemptUncheckedUpdateManyWithoutUserNestedInput
     userTier?: UserTierUncheckedUpdateOneWithoutUserNestedInput
     tierHistory?: TierHistoryUncheckedUpdateManyWithoutUserNestedInput
+    adminAdjustmentDetails?: AdminAdjustmentDetailUncheckedUpdateManyWithoutAdminUserNestedInput
   }
 
   export type GameRoundCreateWithoutGameSessionInput = {
@@ -84885,6 +88117,7 @@ export namespace Prisma {
     loginAttempts?: LoginAttemptCreateNestedManyWithoutUserInput
     userTier?: UserTierCreateNestedOneWithoutUserInput
     tierHistory?: TierHistoryCreateNestedManyWithoutUserInput
+    adminAdjustmentDetails?: AdminAdjustmentDetailCreateNestedManyWithoutAdminUserInput
   }
 
   export type UserUncheckedCreateWithoutGameSessionInput = {
@@ -84929,6 +88162,7 @@ export namespace Prisma {
     loginAttempts?: LoginAttemptUncheckedCreateNestedManyWithoutUserInput
     userTier?: UserTierUncheckedCreateNestedOneWithoutUserInput
     tierHistory?: TierHistoryUncheckedCreateNestedManyWithoutUserInput
+    adminAdjustmentDetails?: AdminAdjustmentDetailUncheckedCreateNestedManyWithoutAdminUserInput
   }
 
   export type UserCreateOrConnectWithoutGameSessionInput = {
@@ -85055,6 +88289,7 @@ export namespace Prisma {
     loginAttempts?: LoginAttemptUpdateManyWithoutUserNestedInput
     userTier?: UserTierUpdateOneWithoutUserNestedInput
     tierHistory?: TierHistoryUpdateManyWithoutUserNestedInput
+    adminAdjustmentDetails?: AdminAdjustmentDetailUpdateManyWithoutAdminUserNestedInput
   }
 
   export type UserUncheckedUpdateWithoutGameSessionInput = {
@@ -85099,6 +88334,7 @@ export namespace Prisma {
     loginAttempts?: LoginAttemptUncheckedUpdateManyWithoutUserNestedInput
     userTier?: UserTierUncheckedUpdateOneWithoutUserNestedInput
     tierHistory?: TierHistoryUncheckedUpdateManyWithoutUserNestedInput
+    adminAdjustmentDetails?: AdminAdjustmentDetailUncheckedUpdateManyWithoutAdminUserNestedInput
   }
 
   export type UserCreateWithoutAffiliateWalletsInput = {
@@ -85143,6 +88379,7 @@ export namespace Prisma {
     loginAttempts?: LoginAttemptCreateNestedManyWithoutUserInput
     userTier?: UserTierCreateNestedOneWithoutUserInput
     tierHistory?: TierHistoryCreateNestedManyWithoutUserInput
+    adminAdjustmentDetails?: AdminAdjustmentDetailCreateNestedManyWithoutAdminUserInput
   }
 
   export type UserUncheckedCreateWithoutAffiliateWalletsInput = {
@@ -85187,6 +88424,7 @@ export namespace Prisma {
     loginAttempts?: LoginAttemptUncheckedCreateNestedManyWithoutUserInput
     userTier?: UserTierUncheckedCreateNestedOneWithoutUserInput
     tierHistory?: TierHistoryUncheckedCreateNestedManyWithoutUserInput
+    adminAdjustmentDetails?: AdminAdjustmentDetailUncheckedCreateNestedManyWithoutAdminUserInput
   }
 
   export type UserCreateOrConnectWithoutAffiliateWalletsInput = {
@@ -85247,6 +88485,7 @@ export namespace Prisma {
     loginAttempts?: LoginAttemptUpdateManyWithoutUserNestedInput
     userTier?: UserTierUpdateOneWithoutUserNestedInput
     tierHistory?: TierHistoryUpdateManyWithoutUserNestedInput
+    adminAdjustmentDetails?: AdminAdjustmentDetailUpdateManyWithoutAdminUserNestedInput
   }
 
   export type UserUncheckedUpdateWithoutAffiliateWalletsInput = {
@@ -85291,6 +88530,7 @@ export namespace Prisma {
     loginAttempts?: LoginAttemptUncheckedUpdateManyWithoutUserNestedInput
     userTier?: UserTierUncheckedUpdateOneWithoutUserNestedInput
     tierHistory?: TierHistoryUncheckedUpdateManyWithoutUserNestedInput
+    adminAdjustmentDetails?: AdminAdjustmentDetailUncheckedUpdateManyWithoutAdminUserNestedInput
   }
 
   export type UserCreateWithoutAffiliateCommissionsInput = {
@@ -85335,6 +88575,7 @@ export namespace Prisma {
     loginAttempts?: LoginAttemptCreateNestedManyWithoutUserInput
     userTier?: UserTierCreateNestedOneWithoutUserInput
     tierHistory?: TierHistoryCreateNestedManyWithoutUserInput
+    adminAdjustmentDetails?: AdminAdjustmentDetailCreateNestedManyWithoutAdminUserInput
   }
 
   export type UserUncheckedCreateWithoutAffiliateCommissionsInput = {
@@ -85379,6 +88620,7 @@ export namespace Prisma {
     loginAttempts?: LoginAttemptUncheckedCreateNestedManyWithoutUserInput
     userTier?: UserTierUncheckedCreateNestedOneWithoutUserInput
     tierHistory?: TierHistoryUncheckedCreateNestedManyWithoutUserInput
+    adminAdjustmentDetails?: AdminAdjustmentDetailUncheckedCreateNestedManyWithoutAdminUserInput
   }
 
   export type UserCreateOrConnectWithoutAffiliateCommissionsInput = {
@@ -85497,6 +88739,7 @@ export namespace Prisma {
     loginAttempts?: LoginAttemptCreateNestedManyWithoutUserInput
     userTier?: UserTierCreateNestedOneWithoutUserInput
     tierHistory?: TierHistoryCreateNestedManyWithoutUserInput
+    adminAdjustmentDetails?: AdminAdjustmentDetailCreateNestedManyWithoutAdminUserInput
   }
 
   export type UserUncheckedCreateWithoutSubUserCommissionsInput = {
@@ -85541,6 +88784,7 @@ export namespace Prisma {
     loginAttempts?: LoginAttemptUncheckedCreateNestedManyWithoutUserInput
     userTier?: UserTierUncheckedCreateNestedOneWithoutUserInput
     tierHistory?: TierHistoryUncheckedCreateNestedManyWithoutUserInput
+    adminAdjustmentDetails?: AdminAdjustmentDetailUncheckedCreateNestedManyWithoutAdminUserInput
   }
 
   export type UserCreateOrConnectWithoutSubUserCommissionsInput = {
@@ -85601,6 +88845,7 @@ export namespace Prisma {
     loginAttempts?: LoginAttemptUpdateManyWithoutUserNestedInput
     userTier?: UserTierUpdateOneWithoutUserNestedInput
     tierHistory?: TierHistoryUpdateManyWithoutUserNestedInput
+    adminAdjustmentDetails?: AdminAdjustmentDetailUpdateManyWithoutAdminUserNestedInput
   }
 
   export type UserUncheckedUpdateWithoutAffiliateCommissionsInput = {
@@ -85645,6 +88890,7 @@ export namespace Prisma {
     loginAttempts?: LoginAttemptUncheckedUpdateManyWithoutUserNestedInput
     userTier?: UserTierUncheckedUpdateOneWithoutUserNestedInput
     tierHistory?: TierHistoryUncheckedUpdateManyWithoutUserNestedInput
+    adminAdjustmentDetails?: AdminAdjustmentDetailUncheckedUpdateManyWithoutAdminUserNestedInput
   }
 
   export type GameRoundUpsertWithoutAffiliateCommissionInput = {
@@ -85775,6 +89021,7 @@ export namespace Prisma {
     loginAttempts?: LoginAttemptUpdateManyWithoutUserNestedInput
     userTier?: UserTierUpdateOneWithoutUserNestedInput
     tierHistory?: TierHistoryUpdateManyWithoutUserNestedInput
+    adminAdjustmentDetails?: AdminAdjustmentDetailUpdateManyWithoutAdminUserNestedInput
   }
 
   export type UserUncheckedUpdateWithoutSubUserCommissionsInput = {
@@ -85819,6 +89066,7 @@ export namespace Prisma {
     loginAttempts?: LoginAttemptUncheckedUpdateManyWithoutUserNestedInput
     userTier?: UserTierUncheckedUpdateOneWithoutUserNestedInput
     tierHistory?: TierHistoryUncheckedUpdateManyWithoutUserNestedInput
+    adminAdjustmentDetails?: AdminAdjustmentDetailUncheckedUpdateManyWithoutAdminUserNestedInput
   }
 
   export type UserCreateWithoutAffiliateTierInput = {
@@ -85863,6 +89111,7 @@ export namespace Prisma {
     loginAttempts?: LoginAttemptCreateNestedManyWithoutUserInput
     userTier?: UserTierCreateNestedOneWithoutUserInput
     tierHistory?: TierHistoryCreateNestedManyWithoutUserInput
+    adminAdjustmentDetails?: AdminAdjustmentDetailCreateNestedManyWithoutAdminUserInput
   }
 
   export type UserUncheckedCreateWithoutAffiliateTierInput = {
@@ -85907,6 +89156,7 @@ export namespace Prisma {
     loginAttempts?: LoginAttemptUncheckedCreateNestedManyWithoutUserInput
     userTier?: UserTierUncheckedCreateNestedOneWithoutUserInput
     tierHistory?: TierHistoryUncheckedCreateNestedManyWithoutUserInput
+    adminAdjustmentDetails?: AdminAdjustmentDetailUncheckedCreateNestedManyWithoutAdminUserInput
   }
 
   export type UserCreateOrConnectWithoutAffiliateTierInput = {
@@ -85967,6 +89217,7 @@ export namespace Prisma {
     loginAttempts?: LoginAttemptUpdateManyWithoutUserNestedInput
     userTier?: UserTierUpdateOneWithoutUserNestedInput
     tierHistory?: TierHistoryUpdateManyWithoutUserNestedInput
+    adminAdjustmentDetails?: AdminAdjustmentDetailUpdateManyWithoutAdminUserNestedInput
   }
 
   export type UserUncheckedUpdateWithoutAffiliateTierInput = {
@@ -86011,6 +89262,7 @@ export namespace Prisma {
     loginAttempts?: LoginAttemptUncheckedUpdateManyWithoutUserNestedInput
     userTier?: UserTierUncheckedUpdateOneWithoutUserNestedInput
     tierHistory?: TierHistoryUncheckedUpdateManyWithoutUserNestedInput
+    adminAdjustmentDetails?: AdminAdjustmentDetailUncheckedUpdateManyWithoutAdminUserNestedInput
   }
 
   export type UserCreateWithoutLoginAttemptsInput = {
@@ -86055,6 +89307,7 @@ export namespace Prisma {
     UserToken?: UserTokenCreateNestedManyWithoutUserInput
     userTier?: UserTierCreateNestedOneWithoutUserInput
     tierHistory?: TierHistoryCreateNestedManyWithoutUserInput
+    adminAdjustmentDetails?: AdminAdjustmentDetailCreateNestedManyWithoutAdminUserInput
   }
 
   export type UserUncheckedCreateWithoutLoginAttemptsInput = {
@@ -86099,6 +89352,7 @@ export namespace Prisma {
     UserToken?: UserTokenUncheckedCreateNestedManyWithoutUserInput
     userTier?: UserTierUncheckedCreateNestedOneWithoutUserInput
     tierHistory?: TierHistoryUncheckedCreateNestedManyWithoutUserInput
+    adminAdjustmentDetails?: AdminAdjustmentDetailUncheckedCreateNestedManyWithoutAdminUserInput
   }
 
   export type UserCreateOrConnectWithoutLoginAttemptsInput = {
@@ -86159,6 +89413,7 @@ export namespace Prisma {
     UserToken?: UserTokenUpdateManyWithoutUserNestedInput
     userTier?: UserTierUpdateOneWithoutUserNestedInput
     tierHistory?: TierHistoryUpdateManyWithoutUserNestedInput
+    adminAdjustmentDetails?: AdminAdjustmentDetailUpdateManyWithoutAdminUserNestedInput
   }
 
   export type UserUncheckedUpdateWithoutLoginAttemptsInput = {
@@ -86203,6 +89458,7 @@ export namespace Prisma {
     UserToken?: UserTokenUncheckedUpdateManyWithoutUserNestedInput
     userTier?: UserTierUncheckedUpdateOneWithoutUserNestedInput
     tierHistory?: TierHistoryUncheckedUpdateManyWithoutUserNestedInput
+    adminAdjustmentDetails?: AdminAdjustmentDetailUncheckedUpdateManyWithoutAdminUserNestedInput
   }
 
   export type UserCreateWithoutDepositDetailsInput = {
@@ -86247,6 +89503,7 @@ export namespace Prisma {
     loginAttempts?: LoginAttemptCreateNestedManyWithoutUserInput
     userTier?: UserTierCreateNestedOneWithoutUserInput
     tierHistory?: TierHistoryCreateNestedManyWithoutUserInput
+    adminAdjustmentDetails?: AdminAdjustmentDetailCreateNestedManyWithoutAdminUserInput
   }
 
   export type UserUncheckedCreateWithoutDepositDetailsInput = {
@@ -86291,6 +89548,7 @@ export namespace Prisma {
     loginAttempts?: LoginAttemptUncheckedCreateNestedManyWithoutUserInput
     userTier?: UserTierUncheckedCreateNestedOneWithoutUserInput
     tierHistory?: TierHistoryUncheckedCreateNestedManyWithoutUserInput
+    adminAdjustmentDetails?: AdminAdjustmentDetailUncheckedCreateNestedManyWithoutAdminUserInput
   }
 
   export type UserCreateOrConnectWithoutDepositDetailsInput = {
@@ -86394,6 +89652,8 @@ export namespace Prisma {
     user: UserCreateNestedOneWithoutTransactionsInput
     balanceDetails?: TransactionBalanceDetailCreateNestedManyWithoutTransactionInput
     withdrawDetail?: WithdrawDetailCreateNestedOneWithoutTransactionInput
+    adminAdjustmentDetail?: AdminAdjustmentDetailCreateNestedOneWithoutTransactionInput
+    systemAdjustmentDetail?: SystemAdjustmentDetailCreateNestedOneWithoutTransactionInput
   }
 
   export type TransactionUncheckedCreateWithoutDepositDetailInput = {
@@ -86412,6 +89672,8 @@ export namespace Prisma {
     gameRound?: GameRoundUncheckedCreateNestedOneWithoutTransactionInput
     balanceDetails?: TransactionBalanceDetailUncheckedCreateNestedManyWithoutTransactionInput
     withdrawDetail?: WithdrawDetailUncheckedCreateNestedOneWithoutTransactionInput
+    adminAdjustmentDetail?: AdminAdjustmentDetailUncheckedCreateNestedOneWithoutTransactionInput
+    systemAdjustmentDetail?: SystemAdjustmentDetailUncheckedCreateNestedOneWithoutTransactionInput
   }
 
   export type TransactionCreateOrConnectWithoutDepositDetailInput = {
@@ -86516,6 +89778,7 @@ export namespace Prisma {
     loginAttempts?: LoginAttemptUpdateManyWithoutUserNestedInput
     userTier?: UserTierUpdateOneWithoutUserNestedInput
     tierHistory?: TierHistoryUpdateManyWithoutUserNestedInput
+    adminAdjustmentDetails?: AdminAdjustmentDetailUpdateManyWithoutAdminUserNestedInput
   }
 
   export type UserUncheckedUpdateWithoutDepositDetailsInput = {
@@ -86560,6 +89823,7 @@ export namespace Prisma {
     loginAttempts?: LoginAttemptUncheckedUpdateManyWithoutUserNestedInput
     userTier?: UserTierUncheckedUpdateOneWithoutUserNestedInput
     tierHistory?: TierHistoryUncheckedUpdateManyWithoutUserNestedInput
+    adminAdjustmentDetails?: AdminAdjustmentDetailUncheckedUpdateManyWithoutAdminUserNestedInput
   }
 
   export type BankConfigUpsertWithoutDepositDetailsInput = {
@@ -86681,6 +89945,8 @@ export namespace Prisma {
     user?: UserUpdateOneRequiredWithoutTransactionsNestedInput
     balanceDetails?: TransactionBalanceDetailUpdateManyWithoutTransactionNestedInput
     withdrawDetail?: WithdrawDetailUpdateOneWithoutTransactionNestedInput
+    adminAdjustmentDetail?: AdminAdjustmentDetailUpdateOneWithoutTransactionNestedInput
+    systemAdjustmentDetail?: SystemAdjustmentDetailUpdateOneWithoutTransactionNestedInput
   }
 
   export type TransactionUncheckedUpdateWithoutDepositDetailInput = {
@@ -86699,6 +89965,8 @@ export namespace Prisma {
     gameRound?: GameRoundUncheckedUpdateOneWithoutTransactionNestedInput
     balanceDetails?: TransactionBalanceDetailUncheckedUpdateManyWithoutTransactionNestedInput
     withdrawDetail?: WithdrawDetailUncheckedUpdateOneWithoutTransactionNestedInput
+    adminAdjustmentDetail?: AdminAdjustmentDetailUncheckedUpdateOneWithoutTransactionNestedInput
+    systemAdjustmentDetail?: SystemAdjustmentDetailUncheckedUpdateOneWithoutTransactionNestedInput
   }
 
   export type RollingUpsertWithWhereUniqueWithoutDepositDetailInput = {
@@ -87396,6 +90664,7 @@ export namespace Prisma {
     loginAttempts?: LoginAttemptCreateNestedManyWithoutUserInput
     userTier?: UserTierCreateNestedOneWithoutUserInput
     tierHistory?: TierHistoryCreateNestedManyWithoutUserInput
+    adminAdjustmentDetails?: AdminAdjustmentDetailCreateNestedManyWithoutAdminUserInput
   }
 
   export type UserUncheckedCreateWithoutUserPromotionInput = {
@@ -87440,6 +90709,7 @@ export namespace Prisma {
     loginAttempts?: LoginAttemptUncheckedCreateNestedManyWithoutUserInput
     userTier?: UserTierUncheckedCreateNestedOneWithoutUserInput
     tierHistory?: TierHistoryUncheckedCreateNestedManyWithoutUserInput
+    adminAdjustmentDetails?: AdminAdjustmentDetailUncheckedCreateNestedManyWithoutAdminUserInput
   }
 
   export type UserCreateOrConnectWithoutUserPromotionInput = {
@@ -87567,6 +90837,7 @@ export namespace Prisma {
     loginAttempts?: LoginAttemptUpdateManyWithoutUserNestedInput
     userTier?: UserTierUpdateOneWithoutUserNestedInput
     tierHistory?: TierHistoryUpdateManyWithoutUserNestedInput
+    adminAdjustmentDetails?: AdminAdjustmentDetailUpdateManyWithoutAdminUserNestedInput
   }
 
   export type UserUncheckedUpdateWithoutUserPromotionInput = {
@@ -87611,6 +90882,7 @@ export namespace Prisma {
     loginAttempts?: LoginAttemptUncheckedUpdateManyWithoutUserNestedInput
     userTier?: UserTierUncheckedUpdateOneWithoutUserNestedInput
     tierHistory?: TierHistoryUncheckedUpdateManyWithoutUserNestedInput
+    adminAdjustmentDetails?: AdminAdjustmentDetailUncheckedUpdateManyWithoutAdminUserNestedInput
   }
 
   export type UserCreateWithoutUserSessionInput = {
@@ -87655,6 +90927,7 @@ export namespace Prisma {
     loginAttempts?: LoginAttemptCreateNestedManyWithoutUserInput
     userTier?: UserTierCreateNestedOneWithoutUserInput
     tierHistory?: TierHistoryCreateNestedManyWithoutUserInput
+    adminAdjustmentDetails?: AdminAdjustmentDetailCreateNestedManyWithoutAdminUserInput
   }
 
   export type UserUncheckedCreateWithoutUserSessionInput = {
@@ -87699,6 +90972,7 @@ export namespace Prisma {
     loginAttempts?: LoginAttemptUncheckedCreateNestedManyWithoutUserInput
     userTier?: UserTierUncheckedCreateNestedOneWithoutUserInput
     tierHistory?: TierHistoryUncheckedCreateNestedManyWithoutUserInput
+    adminAdjustmentDetails?: AdminAdjustmentDetailUncheckedCreateNestedManyWithoutAdminUserInput
   }
 
   export type UserCreateOrConnectWithoutUserSessionInput = {
@@ -87748,6 +91022,7 @@ export namespace Prisma {
     loginAttempts?: LoginAttemptCreateNestedManyWithoutUserInput
     userTier?: UserTierCreateNestedOneWithoutUserInput
     tierHistory?: TierHistoryCreateNestedManyWithoutUserInput
+    adminAdjustmentDetails?: AdminAdjustmentDetailCreateNestedManyWithoutAdminUserInput
   }
 
   export type UserUncheckedCreateWithoutRevokedSessionsInput = {
@@ -87792,6 +91067,7 @@ export namespace Prisma {
     loginAttempts?: LoginAttemptUncheckedCreateNestedManyWithoutUserInput
     userTier?: UserTierUncheckedCreateNestedOneWithoutUserInput
     tierHistory?: TierHistoryUncheckedCreateNestedManyWithoutUserInput
+    adminAdjustmentDetails?: AdminAdjustmentDetailUncheckedCreateNestedManyWithoutAdminUserInput
   }
 
   export type UserCreateOrConnectWithoutRevokedSessionsInput = {
@@ -87852,6 +91128,7 @@ export namespace Prisma {
     loginAttempts?: LoginAttemptUpdateManyWithoutUserNestedInput
     userTier?: UserTierUpdateOneWithoutUserNestedInput
     tierHistory?: TierHistoryUpdateManyWithoutUserNestedInput
+    adminAdjustmentDetails?: AdminAdjustmentDetailUpdateManyWithoutAdminUserNestedInput
   }
 
   export type UserUncheckedUpdateWithoutUserSessionInput = {
@@ -87896,6 +91173,7 @@ export namespace Prisma {
     loginAttempts?: LoginAttemptUncheckedUpdateManyWithoutUserNestedInput
     userTier?: UserTierUncheckedUpdateOneWithoutUserNestedInput
     tierHistory?: TierHistoryUncheckedUpdateManyWithoutUserNestedInput
+    adminAdjustmentDetails?: AdminAdjustmentDetailUncheckedUpdateManyWithoutAdminUserNestedInput
   }
 
   export type UserUpsertWithoutRevokedSessionsInput = {
@@ -87951,6 +91229,7 @@ export namespace Prisma {
     loginAttempts?: LoginAttemptUpdateManyWithoutUserNestedInput
     userTier?: UserTierUpdateOneWithoutUserNestedInput
     tierHistory?: TierHistoryUpdateManyWithoutUserNestedInput
+    adminAdjustmentDetails?: AdminAdjustmentDetailUpdateManyWithoutAdminUserNestedInput
   }
 
   export type UserUncheckedUpdateWithoutRevokedSessionsInput = {
@@ -87995,6 +91274,7 @@ export namespace Prisma {
     loginAttempts?: LoginAttemptUncheckedUpdateManyWithoutUserNestedInput
     userTier?: UserTierUncheckedUpdateOneWithoutUserNestedInput
     tierHistory?: TierHistoryUncheckedUpdateManyWithoutUserNestedInput
+    adminAdjustmentDetails?: AdminAdjustmentDetailUncheckedUpdateManyWithoutAdminUserNestedInput
   }
 
   export type UserTierCreateWithoutTierInput = {
@@ -88336,6 +91616,7 @@ export namespace Prisma {
     UserToken?: UserTokenCreateNestedManyWithoutUserInput
     loginAttempts?: LoginAttemptCreateNestedManyWithoutUserInput
     tierHistory?: TierHistoryCreateNestedManyWithoutUserInput
+    adminAdjustmentDetails?: AdminAdjustmentDetailCreateNestedManyWithoutAdminUserInput
   }
 
   export type UserUncheckedCreateWithoutUserTierInput = {
@@ -88380,6 +91661,7 @@ export namespace Prisma {
     UserToken?: UserTokenUncheckedCreateNestedManyWithoutUserInput
     loginAttempts?: LoginAttemptUncheckedCreateNestedManyWithoutUserInput
     tierHistory?: TierHistoryUncheckedCreateNestedManyWithoutUserInput
+    adminAdjustmentDetails?: AdminAdjustmentDetailUncheckedCreateNestedManyWithoutAdminUserInput
   }
 
   export type UserCreateOrConnectWithoutUserTierInput = {
@@ -88475,6 +91757,7 @@ export namespace Prisma {
     UserToken?: UserTokenUpdateManyWithoutUserNestedInput
     loginAttempts?: LoginAttemptUpdateManyWithoutUserNestedInput
     tierHistory?: TierHistoryUpdateManyWithoutUserNestedInput
+    adminAdjustmentDetails?: AdminAdjustmentDetailUpdateManyWithoutAdminUserNestedInput
   }
 
   export type UserUncheckedUpdateWithoutUserTierInput = {
@@ -88519,6 +91802,7 @@ export namespace Prisma {
     UserToken?: UserTokenUncheckedUpdateManyWithoutUserNestedInput
     loginAttempts?: LoginAttemptUncheckedUpdateManyWithoutUserNestedInput
     tierHistory?: TierHistoryUncheckedUpdateManyWithoutUserNestedInput
+    adminAdjustmentDetails?: AdminAdjustmentDetailUncheckedUpdateManyWithoutAdminUserNestedInput
   }
 
   export type TierUpsertWithoutUserTiersInput = {
@@ -88604,6 +91888,7 @@ export namespace Prisma {
     UserToken?: UserTokenCreateNestedManyWithoutUserInput
     loginAttempts?: LoginAttemptCreateNestedManyWithoutUserInput
     userTier?: UserTierCreateNestedOneWithoutUserInput
+    adminAdjustmentDetails?: AdminAdjustmentDetailCreateNestedManyWithoutAdminUserInput
   }
 
   export type UserUncheckedCreateWithoutTierHistoryInput = {
@@ -88648,6 +91933,7 @@ export namespace Prisma {
     UserToken?: UserTokenUncheckedCreateNestedManyWithoutUserInput
     loginAttempts?: LoginAttemptUncheckedCreateNestedManyWithoutUserInput
     userTier?: UserTierUncheckedCreateNestedOneWithoutUserInput
+    adminAdjustmentDetails?: AdminAdjustmentDetailUncheckedCreateNestedManyWithoutAdminUserInput
   }
 
   export type UserCreateOrConnectWithoutTierHistoryInput = {
@@ -88778,6 +92064,7 @@ export namespace Prisma {
     UserToken?: UserTokenUpdateManyWithoutUserNestedInput
     loginAttempts?: LoginAttemptUpdateManyWithoutUserNestedInput
     userTier?: UserTierUpdateOneWithoutUserNestedInput
+    adminAdjustmentDetails?: AdminAdjustmentDetailUpdateManyWithoutAdminUserNestedInput
   }
 
   export type UserUncheckedUpdateWithoutTierHistoryInput = {
@@ -88822,6 +92109,7 @@ export namespace Prisma {
     UserToken?: UserTokenUncheckedUpdateManyWithoutUserNestedInput
     loginAttempts?: LoginAttemptUncheckedUpdateManyWithoutUserNestedInput
     userTier?: UserTierUncheckedUpdateOneWithoutUserNestedInput
+    adminAdjustmentDetails?: AdminAdjustmentDetailUncheckedUpdateManyWithoutAdminUserNestedInput
   }
 
   export type TierUpsertWithoutHistoryFromInput = {
@@ -88904,6 +92192,394 @@ export namespace Prisma {
     userTiers?: UserTierUncheckedUpdateManyWithoutTierNestedInput
     translations?: TierTranslationUncheckedUpdateManyWithoutTierNestedInput
     historyFrom?: TierHistoryUncheckedUpdateManyWithoutFromTierNestedInput
+  }
+
+  export type TransactionCreateWithoutAdminAdjustmentDetailInput = {
+    id?: bigint | number
+    type: $Enums.TransactionType
+    status: $Enums.TransactionStatus
+    currency: $Enums.ExchangeCurrencyCode
+    amount: Decimal | DecimalJsLike | number | string
+    beforeAmount: Decimal | DecimalJsLike | number | string
+    afterAmount: Decimal | DecimalJsLike | number | string
+    createdAt?: Date | string
+    updatedAt?: Date | string
+    bonusDetail?: BonusDetailCreateNestedOneWithoutTransactionInput
+    compTransaction?: CompTransactionCreateNestedOneWithoutTransactionInput
+    depositDetail?: DepositDetailCreateNestedOneWithoutTransactionInput
+    gameRound?: GameRoundCreateNestedOneWithoutTransactionInput
+    user: UserCreateNestedOneWithoutTransactionsInput
+    balanceDetails?: TransactionBalanceDetailCreateNestedManyWithoutTransactionInput
+    withdrawDetail?: WithdrawDetailCreateNestedOneWithoutTransactionInput
+    systemAdjustmentDetail?: SystemAdjustmentDetailCreateNestedOneWithoutTransactionInput
+  }
+
+  export type TransactionUncheckedCreateWithoutAdminAdjustmentDetailInput = {
+    id?: bigint | number
+    userId: bigint | number
+    type: $Enums.TransactionType
+    status: $Enums.TransactionStatus
+    currency: $Enums.ExchangeCurrencyCode
+    amount: Decimal | DecimalJsLike | number | string
+    beforeAmount: Decimal | DecimalJsLike | number | string
+    afterAmount: Decimal | DecimalJsLike | number | string
+    createdAt?: Date | string
+    updatedAt?: Date | string
+    bonusDetail?: BonusDetailUncheckedCreateNestedOneWithoutTransactionInput
+    compTransaction?: CompTransactionUncheckedCreateNestedOneWithoutTransactionInput
+    depositDetail?: DepositDetailUncheckedCreateNestedOneWithoutTransactionInput
+    gameRound?: GameRoundUncheckedCreateNestedOneWithoutTransactionInput
+    balanceDetails?: TransactionBalanceDetailUncheckedCreateNestedManyWithoutTransactionInput
+    withdrawDetail?: WithdrawDetailUncheckedCreateNestedOneWithoutTransactionInput
+    systemAdjustmentDetail?: SystemAdjustmentDetailUncheckedCreateNestedOneWithoutTransactionInput
+  }
+
+  export type TransactionCreateOrConnectWithoutAdminAdjustmentDetailInput = {
+    where: TransactionWhereUniqueInput
+    create: XOR<TransactionCreateWithoutAdminAdjustmentDetailInput, TransactionUncheckedCreateWithoutAdminAdjustmentDetailInput>
+  }
+
+  export type UserCreateWithoutAdminAdjustmentDetailsInput = {
+    id?: bigint | number
+    uid?: string
+    whitecliffId?: bigint | number | null
+    whitecliffSystemId?: bigint | number | null
+    whitecliffUsername?: string | null
+    dcsId?: string | null
+    email?: string | null
+    passwordHash?: string | null
+    socialType?: $Enums.SocialType | null
+    socialId?: string | null
+    role?: $Enums.UserRoleType
+    status?: $Enums.UserStatus
+    kycLevel?: $Enums.KycLevel
+    country?: string | null
+    language?: $Enums.Language | null
+    timezone?: string | null
+    timezoneOffset?: number | null
+    createdAt?: Date | string
+    updatedAt?: Date | string
+    affiliateCodes?: AffiliateCodeCreateNestedManyWithoutUserInput
+    affiliateCommissions?: AffiliateCommissionCreateNestedManyWithoutAffiliateInput
+    subUserCommissions?: AffiliateCommissionCreateNestedManyWithoutSubUserInput
+    affiliateTier?: AffiliateTierCreateNestedOneWithoutAffiliateInput
+    affiliateWallets?: AffiliateWalletCreateNestedManyWithoutAffiliateInput
+    CompTransaction?: CompTransactionCreateNestedManyWithoutUserInput
+    DailyCompEarning?: DailyCompEarningCreateNestedManyWithoutUserInput
+    EmailLog?: EmailLogCreateNestedManyWithoutUserInput
+    GameSession?: GameSessionCreateNestedManyWithoutUserInput
+    affiliateReferrals?: ReferralCreateNestedManyWithoutAffiliateInput
+    referredUsers?: ReferralCreateNestedManyWithoutSubUserInput
+    Rolling?: RollingCreateNestedManyWithoutUserInput
+    transactions?: TransactionCreateNestedManyWithoutUserInput
+    depositDetails?: DepositDetailCreateNestedManyWithoutUserInput
+    balances?: UserBalanceCreateNestedManyWithoutUserInput
+    UserBalanceStats?: UserBalanceStatsCreateNestedManyWithoutUserInput
+    UserPromotion?: UserPromotionCreateNestedManyWithoutUserInput
+    UserSession?: UserSessionCreateNestedManyWithoutUserInput
+    RevokedSessions?: UserSessionCreateNestedManyWithoutRevokedByUserInput
+    UserToken?: UserTokenCreateNestedManyWithoutUserInput
+    loginAttempts?: LoginAttemptCreateNestedManyWithoutUserInput
+    userTier?: UserTierCreateNestedOneWithoutUserInput
+    tierHistory?: TierHistoryCreateNestedManyWithoutUserInput
+  }
+
+  export type UserUncheckedCreateWithoutAdminAdjustmentDetailsInput = {
+    id?: bigint | number
+    uid?: string
+    whitecliffId?: bigint | number | null
+    whitecliffSystemId?: bigint | number | null
+    whitecliffUsername?: string | null
+    dcsId?: string | null
+    email?: string | null
+    passwordHash?: string | null
+    socialType?: $Enums.SocialType | null
+    socialId?: string | null
+    role?: $Enums.UserRoleType
+    status?: $Enums.UserStatus
+    kycLevel?: $Enums.KycLevel
+    country?: string | null
+    language?: $Enums.Language | null
+    timezone?: string | null
+    timezoneOffset?: number | null
+    createdAt?: Date | string
+    updatedAt?: Date | string
+    affiliateCodes?: AffiliateCodeUncheckedCreateNestedManyWithoutUserInput
+    affiliateCommissions?: AffiliateCommissionUncheckedCreateNestedManyWithoutAffiliateInput
+    subUserCommissions?: AffiliateCommissionUncheckedCreateNestedManyWithoutSubUserInput
+    affiliateTier?: AffiliateTierUncheckedCreateNestedOneWithoutAffiliateInput
+    affiliateWallets?: AffiliateWalletUncheckedCreateNestedManyWithoutAffiliateInput
+    CompTransaction?: CompTransactionUncheckedCreateNestedManyWithoutUserInput
+    DailyCompEarning?: DailyCompEarningUncheckedCreateNestedManyWithoutUserInput
+    EmailLog?: EmailLogUncheckedCreateNestedManyWithoutUserInput
+    GameSession?: GameSessionUncheckedCreateNestedManyWithoutUserInput
+    affiliateReferrals?: ReferralUncheckedCreateNestedManyWithoutAffiliateInput
+    referredUsers?: ReferralUncheckedCreateNestedManyWithoutSubUserInput
+    Rolling?: RollingUncheckedCreateNestedManyWithoutUserInput
+    transactions?: TransactionUncheckedCreateNestedManyWithoutUserInput
+    depositDetails?: DepositDetailUncheckedCreateNestedManyWithoutUserInput
+    balances?: UserBalanceUncheckedCreateNestedManyWithoutUserInput
+    UserBalanceStats?: UserBalanceStatsUncheckedCreateNestedManyWithoutUserInput
+    UserPromotion?: UserPromotionUncheckedCreateNestedManyWithoutUserInput
+    UserSession?: UserSessionUncheckedCreateNestedManyWithoutUserInput
+    RevokedSessions?: UserSessionUncheckedCreateNestedManyWithoutRevokedByUserInput
+    UserToken?: UserTokenUncheckedCreateNestedManyWithoutUserInput
+    loginAttempts?: LoginAttemptUncheckedCreateNestedManyWithoutUserInput
+    userTier?: UserTierUncheckedCreateNestedOneWithoutUserInput
+    tierHistory?: TierHistoryUncheckedCreateNestedManyWithoutUserInput
+  }
+
+  export type UserCreateOrConnectWithoutAdminAdjustmentDetailsInput = {
+    where: UserWhereUniqueInput
+    create: XOR<UserCreateWithoutAdminAdjustmentDetailsInput, UserUncheckedCreateWithoutAdminAdjustmentDetailsInput>
+  }
+
+  export type TransactionUpsertWithoutAdminAdjustmentDetailInput = {
+    update: XOR<TransactionUpdateWithoutAdminAdjustmentDetailInput, TransactionUncheckedUpdateWithoutAdminAdjustmentDetailInput>
+    create: XOR<TransactionCreateWithoutAdminAdjustmentDetailInput, TransactionUncheckedCreateWithoutAdminAdjustmentDetailInput>
+    where?: TransactionWhereInput
+  }
+
+  export type TransactionUpdateToOneWithWhereWithoutAdminAdjustmentDetailInput = {
+    where?: TransactionWhereInput
+    data: XOR<TransactionUpdateWithoutAdminAdjustmentDetailInput, TransactionUncheckedUpdateWithoutAdminAdjustmentDetailInput>
+  }
+
+  export type TransactionUpdateWithoutAdminAdjustmentDetailInput = {
+    id?: BigIntFieldUpdateOperationsInput | bigint | number
+    type?: EnumTransactionTypeFieldUpdateOperationsInput | $Enums.TransactionType
+    status?: EnumTransactionStatusFieldUpdateOperationsInput | $Enums.TransactionStatus
+    currency?: EnumExchangeCurrencyCodeFieldUpdateOperationsInput | $Enums.ExchangeCurrencyCode
+    amount?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
+    beforeAmount?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
+    afterAmount?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    bonusDetail?: BonusDetailUpdateOneWithoutTransactionNestedInput
+    compTransaction?: CompTransactionUpdateOneWithoutTransactionNestedInput
+    depositDetail?: DepositDetailUpdateOneWithoutTransactionNestedInput
+    gameRound?: GameRoundUpdateOneWithoutTransactionNestedInput
+    user?: UserUpdateOneRequiredWithoutTransactionsNestedInput
+    balanceDetails?: TransactionBalanceDetailUpdateManyWithoutTransactionNestedInput
+    withdrawDetail?: WithdrawDetailUpdateOneWithoutTransactionNestedInput
+    systemAdjustmentDetail?: SystemAdjustmentDetailUpdateOneWithoutTransactionNestedInput
+  }
+
+  export type TransactionUncheckedUpdateWithoutAdminAdjustmentDetailInput = {
+    id?: BigIntFieldUpdateOperationsInput | bigint | number
+    userId?: BigIntFieldUpdateOperationsInput | bigint | number
+    type?: EnumTransactionTypeFieldUpdateOperationsInput | $Enums.TransactionType
+    status?: EnumTransactionStatusFieldUpdateOperationsInput | $Enums.TransactionStatus
+    currency?: EnumExchangeCurrencyCodeFieldUpdateOperationsInput | $Enums.ExchangeCurrencyCode
+    amount?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
+    beforeAmount?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
+    afterAmount?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    bonusDetail?: BonusDetailUncheckedUpdateOneWithoutTransactionNestedInput
+    compTransaction?: CompTransactionUncheckedUpdateOneWithoutTransactionNestedInput
+    depositDetail?: DepositDetailUncheckedUpdateOneWithoutTransactionNestedInput
+    gameRound?: GameRoundUncheckedUpdateOneWithoutTransactionNestedInput
+    balanceDetails?: TransactionBalanceDetailUncheckedUpdateManyWithoutTransactionNestedInput
+    withdrawDetail?: WithdrawDetailUncheckedUpdateOneWithoutTransactionNestedInput
+    systemAdjustmentDetail?: SystemAdjustmentDetailUncheckedUpdateOneWithoutTransactionNestedInput
+  }
+
+  export type UserUpsertWithoutAdminAdjustmentDetailsInput = {
+    update: XOR<UserUpdateWithoutAdminAdjustmentDetailsInput, UserUncheckedUpdateWithoutAdminAdjustmentDetailsInput>
+    create: XOR<UserCreateWithoutAdminAdjustmentDetailsInput, UserUncheckedCreateWithoutAdminAdjustmentDetailsInput>
+    where?: UserWhereInput
+  }
+
+  export type UserUpdateToOneWithWhereWithoutAdminAdjustmentDetailsInput = {
+    where?: UserWhereInput
+    data: XOR<UserUpdateWithoutAdminAdjustmentDetailsInput, UserUncheckedUpdateWithoutAdminAdjustmentDetailsInput>
+  }
+
+  export type UserUpdateWithoutAdminAdjustmentDetailsInput = {
+    id?: BigIntFieldUpdateOperationsInput | bigint | number
+    uid?: StringFieldUpdateOperationsInput | string
+    whitecliffId?: NullableBigIntFieldUpdateOperationsInput | bigint | number | null
+    whitecliffSystemId?: NullableBigIntFieldUpdateOperationsInput | bigint | number | null
+    whitecliffUsername?: NullableStringFieldUpdateOperationsInput | string | null
+    dcsId?: NullableStringFieldUpdateOperationsInput | string | null
+    email?: NullableStringFieldUpdateOperationsInput | string | null
+    passwordHash?: NullableStringFieldUpdateOperationsInput | string | null
+    socialType?: NullableEnumSocialTypeFieldUpdateOperationsInput | $Enums.SocialType | null
+    socialId?: NullableStringFieldUpdateOperationsInput | string | null
+    role?: EnumUserRoleTypeFieldUpdateOperationsInput | $Enums.UserRoleType
+    status?: EnumUserStatusFieldUpdateOperationsInput | $Enums.UserStatus
+    kycLevel?: EnumKycLevelFieldUpdateOperationsInput | $Enums.KycLevel
+    country?: NullableStringFieldUpdateOperationsInput | string | null
+    language?: NullableEnumLanguageFieldUpdateOperationsInput | $Enums.Language | null
+    timezone?: NullableStringFieldUpdateOperationsInput | string | null
+    timezoneOffset?: NullableIntFieldUpdateOperationsInput | number | null
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    affiliateCodes?: AffiliateCodeUpdateManyWithoutUserNestedInput
+    affiliateCommissions?: AffiliateCommissionUpdateManyWithoutAffiliateNestedInput
+    subUserCommissions?: AffiliateCommissionUpdateManyWithoutSubUserNestedInput
+    affiliateTier?: AffiliateTierUpdateOneWithoutAffiliateNestedInput
+    affiliateWallets?: AffiliateWalletUpdateManyWithoutAffiliateNestedInput
+    CompTransaction?: CompTransactionUpdateManyWithoutUserNestedInput
+    DailyCompEarning?: DailyCompEarningUpdateManyWithoutUserNestedInput
+    EmailLog?: EmailLogUpdateManyWithoutUserNestedInput
+    GameSession?: GameSessionUpdateManyWithoutUserNestedInput
+    affiliateReferrals?: ReferralUpdateManyWithoutAffiliateNestedInput
+    referredUsers?: ReferralUpdateManyWithoutSubUserNestedInput
+    Rolling?: RollingUpdateManyWithoutUserNestedInput
+    transactions?: TransactionUpdateManyWithoutUserNestedInput
+    depositDetails?: DepositDetailUpdateManyWithoutUserNestedInput
+    balances?: UserBalanceUpdateManyWithoutUserNestedInput
+    UserBalanceStats?: UserBalanceStatsUpdateManyWithoutUserNestedInput
+    UserPromotion?: UserPromotionUpdateManyWithoutUserNestedInput
+    UserSession?: UserSessionUpdateManyWithoutUserNestedInput
+    RevokedSessions?: UserSessionUpdateManyWithoutRevokedByUserNestedInput
+    UserToken?: UserTokenUpdateManyWithoutUserNestedInput
+    loginAttempts?: LoginAttemptUpdateManyWithoutUserNestedInput
+    userTier?: UserTierUpdateOneWithoutUserNestedInput
+    tierHistory?: TierHistoryUpdateManyWithoutUserNestedInput
+  }
+
+  export type UserUncheckedUpdateWithoutAdminAdjustmentDetailsInput = {
+    id?: BigIntFieldUpdateOperationsInput | bigint | number
+    uid?: StringFieldUpdateOperationsInput | string
+    whitecliffId?: NullableBigIntFieldUpdateOperationsInput | bigint | number | null
+    whitecliffSystemId?: NullableBigIntFieldUpdateOperationsInput | bigint | number | null
+    whitecliffUsername?: NullableStringFieldUpdateOperationsInput | string | null
+    dcsId?: NullableStringFieldUpdateOperationsInput | string | null
+    email?: NullableStringFieldUpdateOperationsInput | string | null
+    passwordHash?: NullableStringFieldUpdateOperationsInput | string | null
+    socialType?: NullableEnumSocialTypeFieldUpdateOperationsInput | $Enums.SocialType | null
+    socialId?: NullableStringFieldUpdateOperationsInput | string | null
+    role?: EnumUserRoleTypeFieldUpdateOperationsInput | $Enums.UserRoleType
+    status?: EnumUserStatusFieldUpdateOperationsInput | $Enums.UserStatus
+    kycLevel?: EnumKycLevelFieldUpdateOperationsInput | $Enums.KycLevel
+    country?: NullableStringFieldUpdateOperationsInput | string | null
+    language?: NullableEnumLanguageFieldUpdateOperationsInput | $Enums.Language | null
+    timezone?: NullableStringFieldUpdateOperationsInput | string | null
+    timezoneOffset?: NullableIntFieldUpdateOperationsInput | number | null
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    affiliateCodes?: AffiliateCodeUncheckedUpdateManyWithoutUserNestedInput
+    affiliateCommissions?: AffiliateCommissionUncheckedUpdateManyWithoutAffiliateNestedInput
+    subUserCommissions?: AffiliateCommissionUncheckedUpdateManyWithoutSubUserNestedInput
+    affiliateTier?: AffiliateTierUncheckedUpdateOneWithoutAffiliateNestedInput
+    affiliateWallets?: AffiliateWalletUncheckedUpdateManyWithoutAffiliateNestedInput
+    CompTransaction?: CompTransactionUncheckedUpdateManyWithoutUserNestedInput
+    DailyCompEarning?: DailyCompEarningUncheckedUpdateManyWithoutUserNestedInput
+    EmailLog?: EmailLogUncheckedUpdateManyWithoutUserNestedInput
+    GameSession?: GameSessionUncheckedUpdateManyWithoutUserNestedInput
+    affiliateReferrals?: ReferralUncheckedUpdateManyWithoutAffiliateNestedInput
+    referredUsers?: ReferralUncheckedUpdateManyWithoutSubUserNestedInput
+    Rolling?: RollingUncheckedUpdateManyWithoutUserNestedInput
+    transactions?: TransactionUncheckedUpdateManyWithoutUserNestedInput
+    depositDetails?: DepositDetailUncheckedUpdateManyWithoutUserNestedInput
+    balances?: UserBalanceUncheckedUpdateManyWithoutUserNestedInput
+    UserBalanceStats?: UserBalanceStatsUncheckedUpdateManyWithoutUserNestedInput
+    UserPromotion?: UserPromotionUncheckedUpdateManyWithoutUserNestedInput
+    UserSession?: UserSessionUncheckedUpdateManyWithoutUserNestedInput
+    RevokedSessions?: UserSessionUncheckedUpdateManyWithoutRevokedByUserNestedInput
+    UserToken?: UserTokenUncheckedUpdateManyWithoutUserNestedInput
+    loginAttempts?: LoginAttemptUncheckedUpdateManyWithoutUserNestedInput
+    userTier?: UserTierUncheckedUpdateOneWithoutUserNestedInput
+    tierHistory?: TierHistoryUncheckedUpdateManyWithoutUserNestedInput
+  }
+
+  export type TransactionCreateWithoutSystemAdjustmentDetailInput = {
+    id?: bigint | number
+    type: $Enums.TransactionType
+    status: $Enums.TransactionStatus
+    currency: $Enums.ExchangeCurrencyCode
+    amount: Decimal | DecimalJsLike | number | string
+    beforeAmount: Decimal | DecimalJsLike | number | string
+    afterAmount: Decimal | DecimalJsLike | number | string
+    createdAt?: Date | string
+    updatedAt?: Date | string
+    bonusDetail?: BonusDetailCreateNestedOneWithoutTransactionInput
+    compTransaction?: CompTransactionCreateNestedOneWithoutTransactionInput
+    depositDetail?: DepositDetailCreateNestedOneWithoutTransactionInput
+    gameRound?: GameRoundCreateNestedOneWithoutTransactionInput
+    user: UserCreateNestedOneWithoutTransactionsInput
+    balanceDetails?: TransactionBalanceDetailCreateNestedManyWithoutTransactionInput
+    withdrawDetail?: WithdrawDetailCreateNestedOneWithoutTransactionInput
+    adminAdjustmentDetail?: AdminAdjustmentDetailCreateNestedOneWithoutTransactionInput
+  }
+
+  export type TransactionUncheckedCreateWithoutSystemAdjustmentDetailInput = {
+    id?: bigint | number
+    userId: bigint | number
+    type: $Enums.TransactionType
+    status: $Enums.TransactionStatus
+    currency: $Enums.ExchangeCurrencyCode
+    amount: Decimal | DecimalJsLike | number | string
+    beforeAmount: Decimal | DecimalJsLike | number | string
+    afterAmount: Decimal | DecimalJsLike | number | string
+    createdAt?: Date | string
+    updatedAt?: Date | string
+    bonusDetail?: BonusDetailUncheckedCreateNestedOneWithoutTransactionInput
+    compTransaction?: CompTransactionUncheckedCreateNestedOneWithoutTransactionInput
+    depositDetail?: DepositDetailUncheckedCreateNestedOneWithoutTransactionInput
+    gameRound?: GameRoundUncheckedCreateNestedOneWithoutTransactionInput
+    balanceDetails?: TransactionBalanceDetailUncheckedCreateNestedManyWithoutTransactionInput
+    withdrawDetail?: WithdrawDetailUncheckedCreateNestedOneWithoutTransactionInput
+    adminAdjustmentDetail?: AdminAdjustmentDetailUncheckedCreateNestedOneWithoutTransactionInput
+  }
+
+  export type TransactionCreateOrConnectWithoutSystemAdjustmentDetailInput = {
+    where: TransactionWhereUniqueInput
+    create: XOR<TransactionCreateWithoutSystemAdjustmentDetailInput, TransactionUncheckedCreateWithoutSystemAdjustmentDetailInput>
+  }
+
+  export type TransactionUpsertWithoutSystemAdjustmentDetailInput = {
+    update: XOR<TransactionUpdateWithoutSystemAdjustmentDetailInput, TransactionUncheckedUpdateWithoutSystemAdjustmentDetailInput>
+    create: XOR<TransactionCreateWithoutSystemAdjustmentDetailInput, TransactionUncheckedCreateWithoutSystemAdjustmentDetailInput>
+    where?: TransactionWhereInput
+  }
+
+  export type TransactionUpdateToOneWithWhereWithoutSystemAdjustmentDetailInput = {
+    where?: TransactionWhereInput
+    data: XOR<TransactionUpdateWithoutSystemAdjustmentDetailInput, TransactionUncheckedUpdateWithoutSystemAdjustmentDetailInput>
+  }
+
+  export type TransactionUpdateWithoutSystemAdjustmentDetailInput = {
+    id?: BigIntFieldUpdateOperationsInput | bigint | number
+    type?: EnumTransactionTypeFieldUpdateOperationsInput | $Enums.TransactionType
+    status?: EnumTransactionStatusFieldUpdateOperationsInput | $Enums.TransactionStatus
+    currency?: EnumExchangeCurrencyCodeFieldUpdateOperationsInput | $Enums.ExchangeCurrencyCode
+    amount?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
+    beforeAmount?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
+    afterAmount?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    bonusDetail?: BonusDetailUpdateOneWithoutTransactionNestedInput
+    compTransaction?: CompTransactionUpdateOneWithoutTransactionNestedInput
+    depositDetail?: DepositDetailUpdateOneWithoutTransactionNestedInput
+    gameRound?: GameRoundUpdateOneWithoutTransactionNestedInput
+    user?: UserUpdateOneRequiredWithoutTransactionsNestedInput
+    balanceDetails?: TransactionBalanceDetailUpdateManyWithoutTransactionNestedInput
+    withdrawDetail?: WithdrawDetailUpdateOneWithoutTransactionNestedInput
+    adminAdjustmentDetail?: AdminAdjustmentDetailUpdateOneWithoutTransactionNestedInput
+  }
+
+  export type TransactionUncheckedUpdateWithoutSystemAdjustmentDetailInput = {
+    id?: BigIntFieldUpdateOperationsInput | bigint | number
+    userId?: BigIntFieldUpdateOperationsInput | bigint | number
+    type?: EnumTransactionTypeFieldUpdateOperationsInput | $Enums.TransactionType
+    status?: EnumTransactionStatusFieldUpdateOperationsInput | $Enums.TransactionStatus
+    currency?: EnumExchangeCurrencyCodeFieldUpdateOperationsInput | $Enums.ExchangeCurrencyCode
+    amount?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
+    beforeAmount?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
+    afterAmount?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    bonusDetail?: BonusDetailUncheckedUpdateOneWithoutTransactionNestedInput
+    compTransaction?: CompTransactionUncheckedUpdateOneWithoutTransactionNestedInput
+    depositDetail?: DepositDetailUncheckedUpdateOneWithoutTransactionNestedInput
+    gameRound?: GameRoundUncheckedUpdateOneWithoutTransactionNestedInput
+    balanceDetails?: TransactionBalanceDetailUncheckedUpdateManyWithoutTransactionNestedInput
+    withdrawDetail?: WithdrawDetailUncheckedUpdateOneWithoutTransactionNestedInput
+    adminAdjustmentDetail?: AdminAdjustmentDetailUncheckedUpdateOneWithoutTransactionNestedInput
   }
 
   export type ReferralCreateManyCodeInput = {
@@ -89264,6 +92940,13 @@ export namespace Prisma {
     bonusAmount?: Decimal | DecimalJsLike | number | string | null
     changedAt?: Date | string
     changeBy?: string | null
+  }
+
+  export type AdminAdjustmentDetailCreateManyAdminUserInput = {
+    id?: bigint | number
+    transactionId: bigint | number
+    reasonCode?: string | null
+    internalNote?: string | null
   }
 
   export type AffiliateCodeUpdateWithoutUserInput = {
@@ -89733,6 +93416,8 @@ export namespace Prisma {
     gameRound?: GameRoundUpdateOneWithoutTransactionNestedInput
     balanceDetails?: TransactionBalanceDetailUpdateManyWithoutTransactionNestedInput
     withdrawDetail?: WithdrawDetailUpdateOneWithoutTransactionNestedInput
+    adminAdjustmentDetail?: AdminAdjustmentDetailUpdateOneWithoutTransactionNestedInput
+    systemAdjustmentDetail?: SystemAdjustmentDetailUpdateOneWithoutTransactionNestedInput
   }
 
   export type TransactionUncheckedUpdateWithoutUserInput = {
@@ -89751,6 +93436,8 @@ export namespace Prisma {
     gameRound?: GameRoundUncheckedUpdateOneWithoutTransactionNestedInput
     balanceDetails?: TransactionBalanceDetailUncheckedUpdateManyWithoutTransactionNestedInput
     withdrawDetail?: WithdrawDetailUncheckedUpdateOneWithoutTransactionNestedInput
+    adminAdjustmentDetail?: AdminAdjustmentDetailUncheckedUpdateOneWithoutTransactionNestedInput
+    systemAdjustmentDetail?: SystemAdjustmentDetailUncheckedUpdateOneWithoutTransactionNestedInput
   }
 
   export type TransactionUncheckedUpdateManyWithoutUserInput = {
@@ -90219,6 +93906,27 @@ export namespace Prisma {
     bonusAmount?: NullableDecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string | null
     changedAt?: DateTimeFieldUpdateOperationsInput | Date | string
     changeBy?: NullableStringFieldUpdateOperationsInput | string | null
+  }
+
+  export type AdminAdjustmentDetailUpdateWithoutAdminUserInput = {
+    id?: BigIntFieldUpdateOperationsInput | bigint | number
+    reasonCode?: NullableStringFieldUpdateOperationsInput | string | null
+    internalNote?: NullableStringFieldUpdateOperationsInput | string | null
+    transaction?: TransactionUpdateOneRequiredWithoutAdminAdjustmentDetailNestedInput
+  }
+
+  export type AdminAdjustmentDetailUncheckedUpdateWithoutAdminUserInput = {
+    id?: BigIntFieldUpdateOperationsInput | bigint | number
+    transactionId?: BigIntFieldUpdateOperationsInput | bigint | number
+    reasonCode?: NullableStringFieldUpdateOperationsInput | string | null
+    internalNote?: NullableStringFieldUpdateOperationsInput | string | null
+  }
+
+  export type AdminAdjustmentDetailUncheckedUpdateManyWithoutAdminUserInput = {
+    id?: BigIntFieldUpdateOperationsInput | bigint | number
+    transactionId?: BigIntFieldUpdateOperationsInput | bigint | number
+    reasonCode?: NullableStringFieldUpdateOperationsInput | string | null
+    internalNote?: NullableStringFieldUpdateOperationsInput | string | null
   }
 
   export type BonusDetailCreateManyGameInput = {
