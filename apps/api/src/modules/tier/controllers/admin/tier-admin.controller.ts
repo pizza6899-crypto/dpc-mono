@@ -44,6 +44,8 @@ import { TierUserListQueryDto } from './dto/request/tier-user-list-query.dto';
 import { UserTierResponseDto } from '../user/dto/response/user-tier.response.dto';
 import { InitializeMissingUserTiersService } from '../../application/initialize-missing-user-tiers.service';
 import { SyncMissingUsersResponseDto } from './dto/response/sync-missing-users-response.dto';
+import { GetUserTierService } from '../../application/get-user-tier.service';
+import { UserTierNotFoundException } from '../../domain/tier.exception';
 
 @ApiTags('Admin Tiers')
 @Controller('admin/tiers')
@@ -60,7 +62,31 @@ export class TierAdminController {
         private readonly findUserTierHistoryService: FindUserTierHistoryService,
         private readonly findUsersByTierService: FindUsersByTierService,
         private readonly initializeMissingUserTiersService: InitializeMissingUserTiersService,
+        private readonly getUserTierService: GetUserTierService,
     ) { }
+
+    @Get('users/:userId')
+    @HttpCode(HttpStatus.OK)
+    @AuditLog({
+        type: LogType.ACTIVITY,
+        category: 'TIER',
+        action: 'USER_TIER_VIEW',
+        extractMetadata: (_, args) => ({
+            userId: args[0]?.userId,
+        }),
+    })
+    @ApiOperation({ summary: 'Get user tier / 사용자의 티어 조회' })
+    @ApiStandardResponse(UserTierResponseDto, {
+        status: HttpStatus.OK,
+        description: 'Successfully retrieved user tier / 티어 조회 성공',
+    })
+    async getUserTier(@Param() params: UserParamDto): Promise<UserTierResponseDto> {
+        const userTier = await this.getUserTierService.execute(BigInt(params.userId));
+        if (!userTier) {
+            throw new UserTierNotFoundException(params.userId);
+        }
+        return new UserTierResponseDto(userTier);
+    }
 
     @Post()
     @HttpCode(HttpStatus.CREATED)

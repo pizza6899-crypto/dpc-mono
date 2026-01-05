@@ -24,8 +24,8 @@ export class UserTierResponseDto {
     @ApiProperty({ description: 'Current Tier Requirement / 현재 티어 유지/달성 조건금액', required: false })
     tierRequirementUsd?: string;
 
-    @ApiProperty({ description: 'Current Tier Display Name / 현재 티어 표시 이름', required: false })
-    tierDisplayName?: string;
+    @ApiProperty({ description: 'Tier Translations / 티어 번역 정보', required: false, isArray: true })
+    tierTranslations?: { language: string, name: string }[];
 
     constructor(userTier: UserTier) {
         this.userId = userTier.userId.toString();
@@ -37,7 +37,7 @@ export class UserTierResponseDto {
 
         if (userTier.tier) {
             this.tierRequirementUsd = userTier.tier.requirementUsd.toString();
-            this.tierDisplayName = userTier.tier.displayName;
+            this.tierTranslations = userTier.tier.translations;
         }
     }
 }

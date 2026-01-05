@@ -45,6 +45,7 @@
         "users": "사용자",
         "settings": "설정",
         "general": "일반",
+        "tiers": "등급 관리",
         "goTo": "이동",
         "search": "검색...",
         "total": "전체",
@@ -189,5 +190,18 @@
         "AFFILIATE_DEFAULT_LINK_CANNOT_DELETE": "기본 제휴 링크는 삭제할 수 없습니다.",
         "AFFILIATE_CODE_DEFAULT_MUST_EXIST": "기본 제휴 코드는 반드시 하나 이상 존재해야 합니다.",
         "AFFILIATE_CODE_DEFAULT_CANNOT_BE_INACTIVE": "기본 제휴 코드는 비활성화할 수 없습니다."
+    },
+    "tiers": {
+        "priority": "우선순위",
+        "code": "코드",
+        "requirement_usd": "요구 금액 (USD)",
+        "level_up_bonus_usd": "승급 보너스 (USD)",
+        "comp_rate": "콤프 비율",
+        "add_tier": "티어 추가",
+        "edit_tier": "티어 수정",
+        "sync_missing": "누락된 티어 동기화",
+        "messages": {
+            "add_tier_desc": "새로운 등급 정책을 생성합니다."
+        }
     }
 }

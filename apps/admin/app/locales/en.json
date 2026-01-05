@@ -45,6 +45,7 @@
         "users": "Users",
         "settings": "Settings",
         "general": "General",
+        "tiers": "Tier management",
         "goTo": "Go to",
         "search": "Search...",
         "total": "Total",
@@ -189,5 +190,18 @@
         "AFFILIATE_DEFAULT_LINK_CANNOT_DELETE": "Cannot delete default affiliate link.",
         "AFFILIATE_CODE_DEFAULT_MUST_EXIST": "Default affiliate code must exist.",
         "AFFILIATE_CODE_DEFAULT_CANNOT_BE_INACTIVE": "Default affiliate code cannot be inactive."
+    },
+    "tiers": {
+        "priority": "Priority",
+        "code": "Code",
+        "requirement_usd": "Requirement (USD)",
+        "level_up_bonus_usd": "Level Up Bonus (USD)",
+        "comp_rate": "Comp Rate",
+        "add_tier": "Add Tier",
+        "edit_tier": "Edit Tier",
+        "sync_missing": "Sync Missing Tiers",
+        "messages": {
+            "add_tier_desc": "Create a new tier policy."
+        }
     }
 }

@@ -5,26 +5,50 @@ import {
   Query,
   HttpCode,
   HttpStatus,
+  Param,
 } from '@nestjs/common';
 import { ApiTags, ApiOperation } from '@nestjs/swagger';
 import {
   ApiStandardErrors,
   ApiPaginatedResponse,
+  ApiStandardResponse,
 } from 'src/common/http/decorators/api-response.decorator';
 import { Paginated } from 'src/common/http/decorators/paginated.decorator';
 import { RequireRoles } from 'src/common/auth/decorators/roles.decorator';
 import { UserRoleType } from '@repo/database';
 import type { PaginatedData } from 'src/common/http/types';
 import { ListUsersService } from '../../application/list-users.service';
+import { GetUserService } from '../../application/get-user.service';
 import { ListUsersQueryDto } from './dto/request/list-users-query.dto';
 import { UserListItemDto } from './dto/response/user-list.response.dto';
+import { UserDetailResponseDto } from './dto/response/user-detail.response.dto';
 
 @Controller('admin/users')
 @ApiTags('Admin Users (관리자 사용자 관리)')
 @RequireRoles(UserRoleType.ADMIN, UserRoleType.SUPER_ADMIN)
 @ApiStandardErrors()
 export class UserAdminController {
-  constructor(private readonly listUsersService: ListUsersService) {}
+  constructor(
+    private readonly listUsersService: ListUsersService,
+    private readonly getUserService: GetUserService,
+  ) { }
+
+  /**
+   * 사용자 상세 조회 (관리자용)
+   */
+  @Get(':id')
+  @HttpCode(HttpStatus.OK)
+  @ApiOperation({
+    summary: 'Get user details / 사용자 상세 조회 (관리자용)',
+  })
+  @ApiStandardResponse(UserDetailResponseDto, {
+    status: 200,
+    description: 'Successfully retrieved user details / 사용자 상세 조회 성공',
+  })
+  async findOne(@Param('id') id: string): Promise<UserDetailResponseDto> {
+    const user = await this.getUserService.getById(BigInt(id));
+    return new UserDetailResponseDto(user);
+  }
 
   /**
    * 사용자 목록 조회 (관리자용)
@@ -74,4 +98,3 @@ export class UserAdminController {
     };
   }
 }
-

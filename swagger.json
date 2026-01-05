@@ -1807,6 +1807,58 @@
         ]
       }
     },
+    "/admin/users/{id}": {
+      "get": {
+        "operationId": "UserAdminController_findOne",
+        "parameters": [
+          {
+            "name": "id",
+            "required": true,
+            "in": "path",
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Successfully retrieved user details / 사용자 상세 조회 성공",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "allOf": [
+                    {
+                      "$ref": "#/components/schemas/ApiResponseDto"
+                    },
+                    {
+                      "properties": {
+                        "data": {
+                          "$ref": "#/components/schemas/UserDetailResponseDto"
+                        }
+                      }
+                    }
+                  ]
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Bad Request",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponseDto"
+                }
+              }
+            }
+          }
+        },
+        "summary": "Get user details / 사용자 상세 조회 (관리자용)",
+        "tags": [
+          "Admin Users (관리자 사용자 관리)"
+        ]
+      }
+    },
     "/admin/users": {
       "get": {
         "description": "관리자가 등록된 사용자 목록을 조회합니다. 페이징, 필터링, 정렬 기능을 지원합니다.",
@@ -2261,6 +2313,60 @@
         "summary": "Update user balance / 사용자 잔액 업데이트 (관리자용)",
         "tags": [
           "Admin Wallet (관리자 지갑 관리)"
+        ]
+      }
+    },
+    "/admin/tiers/users/{userId}": {
+      "get": {
+        "operationId": "TierAdminController_getUserTier",
+        "parameters": [
+          {
+            "name": "userId",
+            "required": true,
+            "in": "path",
+            "description": "User ID / 사용자 ID",
+            "schema": {
+              "example": "1",
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Successfully retrieved user tier / 티어 조회 성공",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "allOf": [
+                    {
+                      "$ref": "#/components/schemas/ApiResponseDto"
+                    },
+                    {
+                      "properties": {
+                        "data": {
+                          "$ref": "#/components/schemas/UserTierResponseDto"
+                        }
+                      }
+                    }
+                  ]
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Bad Request",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponseDto"
+                }
+              }
+            }
+          }
+        },
+        "summary": "Get user tier / 사용자의 티어 조회",
+        "tags": [
+          "Admin Tiers"
         ]
       }
     },
@@ -9223,6 +9329,78 @@
           }
         }
       },
+      "UserDetailResponseDto": {
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "string",
+            "description": "사용자 ID",
+            "example": "1234567890..."
+          },
+          "uid": {
+            "type": "string",
+            "description": "사용자 UID",
+            "example": "user-..."
+          },
+          "email": {
+            "type": "string",
+            "description": "이메일",
+            "example": "user@example.com"
+          },
+          "role": {
+            "type": "string",
+            "description": "사용자 역할",
+            "enum": [
+              "USER",
+              "AGENT",
+              "ADMIN",
+              "SUPER_ADMIN"
+            ]
+          },
+          "status": {
+            "type": "string",
+            "description": "사용자 상태",
+            "enum": [
+              "ACTIVE",
+              "SUSPENDED",
+              "CLOSED"
+            ]
+          },
+          "country": {
+            "type": "object",
+            "description": "국가 코드",
+            "example": "KR",
+            "nullable": true
+          },
+          "timezone": {
+            "type": "object",
+            "description": "타임존",
+            "example": "Asia/Seoul",
+            "nullable": true
+          },
+          "createdAt": {
+            "format": "date-time",
+            "type": "string",
+            "description": "가입일"
+          },
+          "updatedAt": {
+            "format": "date-time",
+            "type": "string",
+            "description": "최종 수정일"
+          }
+        },
+        "required": [
+          "id",
+          "uid",
+          "email",
+          "role",
+          "status",
+          "country",
+          "timezone",
+          "createdAt",
+          "updatedAt"
+        ]
+      },
       "UserListItemDto": {
         "type": "object",
         "properties": {
@@ -9697,6 +9875,52 @@
           "amount"
         ]
       },
+      "UserTierResponseDto": {
+        "type": "object",
+        "properties": {
+          "userId": {
+            "type": "string",
+            "description": "User ID / 사용자 ID"
+          },
+          "tierCode": {
+            "type": "string",
+            "description": "Current Tier Code / 현재 티어 코드"
+          },
+          "totalRollingUsd": {
+            "type": "string",
+            "description": "Total Rolling Amount (USD) / 총 누적 롤링 금액"
+          },
+          "highestPromotedPriority": {
+            "type": "number",
+            "description": "Highest Promoted Priority / 최고 도달 우선순위"
+          },
+          "isManualLock": {
+            "type": "boolean",
+            "description": "Is Manual Lock / 수동 잠금 여부"
+          },
+          "lastPromotedAt": {
+            "format": "date-time",
+            "type": "string",
+            "description": "Last Promoted At / 마지막 승급일"
+          },
+          "tierRequirementUsd": {
+            "type": "string",
+            "description": "Current Tier Requirement / 현재 티어 유지/달성 조건금액"
+          },
+          "tierDisplayName": {
+            "type": "string",
+            "description": "Current Tier Display Name / 현재 티어 표시 이름"
+          }
+        },
+        "required": [
+          "userId",
+          "tierCode",
+          "totalRollingUsd",
+          "highestPromotedPriority",
+          "isManualLock",
+          "lastPromotedAt"
+        ]
+      },
       "TierTranslationDto": {
         "type": "object",
         "properties": {
@@ -9968,52 +10192,6 @@
           "rollingSnapshot",
           "bonusAmount",
           "createdAt"
-        ]
-      },
-      "UserTierResponseDto": {
-        "type": "object",
-        "properties": {
-          "userId": {
-            "type": "string",
-            "description": "User ID / 사용자 ID"
-          },
-          "tierCode": {
-            "type": "string",
-            "description": "Current Tier Code / 현재 티어 코드"
-          },
-          "totalRollingUsd": {
-            "type": "string",
-            "description": "Total Rolling Amount (USD) / 총 누적 롤링 금액"
-          },
-          "highestPromotedPriority": {
-            "type": "number",
-            "description": "Highest Promoted Priority / 최고 도달 우선순위"
-          },
-          "isManualLock": {
-            "type": "boolean",
-            "description": "Is Manual Lock / 수동 잠금 여부"
-          },
-          "lastPromotedAt": {
-            "format": "date-time",
-            "type": "string",
-            "description": "Last Promoted At / 마지막 승급일"
-          },
-          "tierRequirementUsd": {
-            "type": "string",
-            "description": "Current Tier Requirement / 현재 티어 유지/달성 조건금액"
-          },
-          "tierDisplayName": {
-            "type": "string",
-            "description": "Current Tier Display Name / 현재 티어 표시 이름"
-          }
-        },
-        "required": [
-          "userId",
-          "tierCode",
-          "totalRollingUsd",
-          "highestPromotedPriority",
-          "isManualLock",
-          "lastPromotedAt"
         ]
       },
       "SyncMissingUsersResponseDto": {

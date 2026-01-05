@@ -188,6 +188,7 @@ import type {
   TierAdminControllerFindUsersByTierParams,
   TierAdminControllerForceUpdateUserTier200,
   TierAdminControllerGetTierUserCounts200,
+  TierAdminControllerGetUserTier200,
   TierAdminControllerGetUserTierHistory200,
   TierAdminControllerSyncMissingUserTiers200,
   TierAdminControllerUpdate200,
@@ -204,6 +205,7 @@ import type {
   UpdateUserBalanceRequestDto,
   UpsertCurrencySettingsRequestDto,
   UpsertTranslationRequestDto,
+  UserAdminControllerFindOne200,
   UserAdminControllerListUsers200,
   UserAdminControllerListUsersParams,
   ValidateCodeFormatDto,
@@ -2039,6 +2041,75 @@ export const useCredentialAdminControllerResetUserPassword = <TError = ErrorResp
     }
     
 /**
+ * @summary Get user details / 사용자 상세 조회 (관리자용)
+ */
+export const UserAdminController_findOne = (
+    id: MaybeRef<string>,
+ signal?: AbortSignal
+) => {
+      id = unref(id);
+      
+      return customInstance<UserAdminControllerFindOne200>(
+      {url: `/admin/users/${id}`, method: 'GET', signal
+    },
+      );
+    }
+  
+
+
+
+export const getUserAdminControllerFindOneQueryKey = (id?: MaybeRef<string>,) => {
+    return [
+    'admin','users',id
+    ] as const;
+    }
+
+    
+export const getUserAdminControllerFindOneQueryOptions = <TData = Awaited<ReturnType<typeof UserAdminController_findOne>>, TError = ErrorResponseDto>(id: MaybeRef<string>, options?: { query?:Partial<UseQueryOptions<Awaited<ReturnType<typeof UserAdminController_findOne>>, TError, TData>>, }
+) => {
+
+const {query: queryOptions} = options ?? {};
+
+  const queryKey =  getUserAdminControllerFindOneQueryKey(id);
+
+  
+
+    const queryFn: QueryFunction<Awaited<ReturnType<typeof UserAdminController_findOne>>> = ({ signal }) => UserAdminController_findOne(id, signal);
+
+      
+
+      
+
+   return  { queryKey, queryFn, enabled: computed(() => !!(unref(id))), ...queryOptions} as UseQueryOptions<Awaited<ReturnType<typeof UserAdminController_findOne>>, TError, TData> 
+}
+
+export type UserAdminControllerFindOneQueryResult = NonNullable<Awaited<ReturnType<typeof UserAdminController_findOne>>>
+export type UserAdminControllerFindOneQueryError = ErrorResponseDto
+
+
+/**
+ * @summary Get user details / 사용자 상세 조회 (관리자용)
+ */
+
+export function useUserAdminControllerFindOne<TData = Awaited<ReturnType<typeof UserAdminController_findOne>>, TError = ErrorResponseDto>(
+ id: MaybeRef<string>, options?: { query?:Partial<UseQueryOptions<Awaited<ReturnType<typeof UserAdminController_findOne>>, TError, TData>>, }
+ , queryClient?: QueryClient 
+ ): UseQueryReturnType<TData, TError> & { queryKey: DataTag<QueryKey, TData, TError> } {
+
+  const queryOptions = getUserAdminControllerFindOneQueryOptions(id,options)
+
+  const query = useQuery(queryOptions, queryClient) as UseQueryReturnType<TData, TError> & { queryKey: DataTag<QueryKey, TData, TError> };
+
+  query.queryKey = unref(queryOptions).queryKey as DataTag<QueryKey, TData, TError>;
+
+  return query;
+}
+
+
+
+
+
+/**
  * 관리자가 등록된 사용자 목록을 조회합니다. 페이징, 필터링, 정렬 기능을 지원합니다.
  * @summary Get user list / 사용자 목록 조회 (관리자용)
  */
@@ -2455,6 +2526,75 @@ export const useWalletAdminControllerUpdateUserBalance = <TError = ErrorResponse
       return useMutation(mutationOptions, queryClient);
     }
     
+/**
+ * @summary Get user tier / 사용자의 티어 조회
+ */
+export const TierAdminController_getUserTier = (
+    userId: MaybeRef<string>,
+ signal?: AbortSignal
+) => {
+      userId = unref(userId);
+      
+      return customInstance<TierAdminControllerGetUserTier200>(
+      {url: `/admin/tiers/users/${userId}`, method: 'GET', signal
+    },
+      );
+    }
+  
+
+
+
+export const getTierAdminControllerGetUserTierQueryKey = (userId?: MaybeRef<string>,) => {
+    return [
+    'admin','tiers','users',userId
+    ] as const;
+    }
+
+    
+export const getTierAdminControllerGetUserTierQueryOptions = <TData = Awaited<ReturnType<typeof TierAdminController_getUserTier>>, TError = ErrorResponseDto>(userId: MaybeRef<string>, options?: { query?:Partial<UseQueryOptions<Awaited<ReturnType<typeof TierAdminController_getUserTier>>, TError, TData>>, }
+) => {
+
+const {query: queryOptions} = options ?? {};
+
+  const queryKey =  getTierAdminControllerGetUserTierQueryKey(userId);
+
+  
+
+    const queryFn: QueryFunction<Awaited<ReturnType<typeof TierAdminController_getUserTier>>> = ({ signal }) => TierAdminController_getUserTier(userId, signal);
+
+      
+
+      
+
+   return  { queryKey, queryFn, enabled: computed(() => !!(unref(userId))), ...queryOptions} as UseQueryOptions<Awaited<ReturnType<typeof TierAdminController_getUserTier>>, TError, TData> 
+}
+
+export type TierAdminControllerGetUserTierQueryResult = NonNullable<Awaited<ReturnType<typeof TierAdminController_getUserTier>>>
+export type TierAdminControllerGetUserTierQueryError = ErrorResponseDto
+
+
+/**
+ * @summary Get user tier / 사용자의 티어 조회
+ */
+
+export function useTierAdminControllerGetUserTier<TData = Awaited<ReturnType<typeof TierAdminController_getUserTier>>, TError = ErrorResponseDto>(
+ userId: MaybeRef<string>, options?: { query?:Partial<UseQueryOptions<Awaited<ReturnType<typeof TierAdminController_getUserTier>>, TError, TData>>, }
+ , queryClient?: QueryClient 
+ ): UseQueryReturnType<TData, TError> & { queryKey: DataTag<QueryKey, TData, TError> } {
+
+  const queryOptions = getTierAdminControllerGetUserTierQueryOptions(userId,options)
+
+  const query = useQuery(queryOptions, queryClient) as UseQueryReturnType<TData, TError> & { queryKey: DataTag<QueryKey, TData, TError> };
+
+  query.queryKey = unref(queryOptions).queryKey as DataTag<QueryKey, TData, TError>;
+
+  return query;
+}
+
+
+
+
+
 /**
  * @summary Create new tier / 새로운 티어 생성
  */
