@@ -8,6 +8,7 @@
 import type { UpdateUserBalanceRequestDtoCurrency } from './updateUserBalanceRequestDtoCurrency';
 import type { UpdateUserBalanceRequestDtoBalanceType } from './updateUserBalanceRequestDtoBalanceType';
 import type { UpdateUserBalanceRequestDtoOperation } from './updateUserBalanceRequestDtoOperation';
+import type { UpdateUserBalanceRequestDtoReasonCode } from './updateUserBalanceRequestDtoReasonCode';
 
 export interface UpdateUserBalanceRequestDto {
   /** 통화 코드 */
@@ -18,4 +19,8 @@ export interface UpdateUserBalanceRequestDto {
   operation: UpdateUserBalanceRequestDtoOperation;
   /** 변경할 금액 (양수, 소수점 포함 가능) */
   amount: string;
+  /** 조정 사유 코드 */
+  reasonCode: UpdateUserBalanceRequestDtoReasonCode;
+  /** 관리자 내부 메모 */
+  internalNote?: string;
 }

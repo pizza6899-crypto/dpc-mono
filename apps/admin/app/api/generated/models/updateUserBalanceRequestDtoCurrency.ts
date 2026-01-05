@@ -14,20 +14,5 @@ export type UpdateUserBalanceRequestDtoCurrency = typeof UpdateUserBalanceReques
 
 // eslint-disable-next-line @typescript-eslint/no-redeclare
 export const UpdateUserBalanceRequestDtoCurrency = {
-  USDT: 'USDT',
-  USD: 'USD',
   KRW: 'KRW',
-  JPY: 'JPY',
-  PHP: 'PHP',
-  IDR: 'IDR',
-  VND: 'VND',
-  BTC: 'BTC',
-  ETH: 'ETH',
-  SOL: 'SOL',
-  XRP: 'XRP',
-  DOGE: 'DOGE',
-  LTC: 'LTC',
-  BCH: 'BCH',
-  EOS: 'EOS',
-  TRX: 'TRX',
 } as const;

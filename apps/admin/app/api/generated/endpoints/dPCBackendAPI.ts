@@ -216,6 +216,8 @@ import type {
   ValidateCodeFormatDto,
   WagerRequestDto,
   WagerResponseDto,
+  WalletAdminControllerGetTransactionHistory200,
+  WalletAdminControllerGetTransactionHistoryParams,
   WalletAdminControllerGetUserBalance200,
   WalletAdminControllerGetUserBalanceParams,
   WalletAdminControllerUpdateUserBalance200,
@@ -2531,6 +2533,82 @@ export const useWalletAdminControllerUpdateUserBalance = <TError = ErrorResponse
       return useMutation(mutationOptions, queryClient);
     }
     
+/**
+ * 특정 사용자의 지갑 트랜잭션 이력을 조회합니다. 통화, 타입, 날짜 등의 필터링과 페이지네이션을 지원합니다.
+ * @summary Get wallet transaction history / 지갑 트랜잭션 이력 조회 (관리자용)
+ */
+export const WalletAdminController_getTransactionHistory = (
+    userId: MaybeRef<string>,
+    params?: MaybeRef<WalletAdminControllerGetTransactionHistoryParams>,
+ signal?: AbortSignal
+) => {
+      userId = unref(userId);
+params = unref(params);
+      
+      return customInstance<WalletAdminControllerGetTransactionHistory200>(
+      {url: `/admin/wallet/users/${userId}/transactions`, method: 'GET',
+        params: unref(params), signal
+    },
+      );
+    }
+  
+
+
+
+export const getWalletAdminControllerGetTransactionHistoryQueryKey = (userId?: MaybeRef<string>,
+    params?: MaybeRef<WalletAdminControllerGetTransactionHistoryParams>,) => {
+    return [
+    'admin','wallet','users',userId,'transactions', ...(params ? [params]: [])
+    ] as const;
+    }
+
+    
+export const getWalletAdminControllerGetTransactionHistoryQueryOptions = <TData = Awaited<ReturnType<typeof WalletAdminController_getTransactionHistory>>, TError = ErrorResponseDto>(userId: MaybeRef<string>,
+    params?: MaybeRef<WalletAdminControllerGetTransactionHistoryParams>, options?: { query?:Partial<UseQueryOptions<Awaited<ReturnType<typeof WalletAdminController_getTransactionHistory>>, TError, TData>>, }
+) => {
+
+const {query: queryOptions} = options ?? {};
+
+  const queryKey =  getWalletAdminControllerGetTransactionHistoryQueryKey(userId,params);
+
+  
+
+    const queryFn: QueryFunction<Awaited<ReturnType<typeof WalletAdminController_getTransactionHistory>>> = ({ signal }) => WalletAdminController_getTransactionHistory(userId,params, signal);
+
+      
+
+      
+
+   return  { queryKey, queryFn, enabled: computed(() => !!(unref(userId))), ...queryOptions} as UseQueryOptions<Awaited<ReturnType<typeof WalletAdminController_getTransactionHistory>>, TError, TData> 
+}
+
+export type WalletAdminControllerGetTransactionHistoryQueryResult = NonNullable<Awaited<ReturnType<typeof WalletAdminController_getTransactionHistory>>>
+export type WalletAdminControllerGetTransactionHistoryQueryError = ErrorResponseDto
+
+
+/**
+ * @summary Get wallet transaction history / 지갑 트랜잭션 이력 조회 (관리자용)
+ */
+
+export function useWalletAdminControllerGetTransactionHistory<TData = Awaited<ReturnType<typeof WalletAdminController_getTransactionHistory>>, TError = ErrorResponseDto>(
+ userId: MaybeRef<string>,
+    params?: MaybeRef<WalletAdminControllerGetTransactionHistoryParams>, options?: { query?:Partial<UseQueryOptions<Awaited<ReturnType<typeof WalletAdminController_getTransactionHistory>>, TError, TData>>, }
+ , queryClient?: QueryClient 
+ ): UseQueryReturnType<TData, TError> & { queryKey: DataTag<QueryKey, TData, TError> } {
+
+  const queryOptions = getWalletAdminControllerGetTransactionHistoryQueryOptions(userId,params,options)
+
+  const query = useQuery(queryOptions, queryClient) as UseQueryReturnType<TData, TError> & { queryKey: DataTag<QueryKey, TData, TError> };
+
+  query.queryKey = unref(queryOptions).queryKey as DataTag<QueryKey, TData, TError>;
+
+  return query;
+}
+
+
+
+
+
 /**
  * @summary Get user tier / 사용자의 티어 조회
  */

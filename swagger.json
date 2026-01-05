@@ -2182,7 +2182,7 @@
         },
         "summary": "Get user balance / 사용자 잔액 조회",
         "tags": [
-          "Wallet (지갑)"
+          "Wallet"
         ]
       }
     },
@@ -2249,7 +2249,7 @@
         },
         "summary": "Get user balance / 사용자 잔액 조회 (관리자용)",
         "tags": [
-          "Admin Wallet (관리자 지갑 관리)"
+          "Admin Wallet"
         ]
       },
       "patch": {
@@ -2312,7 +2312,134 @@
         },
         "summary": "Update user balance / 사용자 잔액 업데이트 (관리자용)",
         "tags": [
-          "Admin Wallet (관리자 지갑 관리)"
+          "Admin Wallet"
+        ]
+      }
+    },
+    "/admin/wallet/users/{userId}/transactions": {
+      "get": {
+        "description": "특정 사용자의 지갑 트랜잭션 이력을 조회합니다. 통화, 타입, 날짜 등의 필터링과 페이지네이션을 지원합니다.",
+        "operationId": "WalletAdminController_getTransactionHistory",
+        "parameters": [
+          {
+            "name": "userId",
+            "required": true,
+            "in": "path",
+            "description": "사용자 ID",
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "currency",
+            "required": false,
+            "in": "query",
+            "description": "통화 코드",
+            "schema": {
+              "type": "string",
+              "enum": [
+                "KRW"
+              ]
+            }
+          },
+          {
+            "name": "type",
+            "required": false,
+            "in": "query",
+            "description": "트랜잭션 타입",
+            "schema": {
+              "type": "string",
+              "enum": [
+                "DEPOSIT",
+                "WITHDRAW",
+                "GAME",
+                "BONUS",
+                "COMP_CLAIM",
+                "SYSTEM",
+                "ADMIN_ADJUST"
+              ]
+            }
+          },
+          {
+            "name": "startDate",
+            "required": false,
+            "in": "query",
+            "description": "조회 시작일 (ISO 8601)",
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "endDate",
+            "required": false,
+            "in": "query",
+            "description": "조회 종료일 (ISO 8601)",
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "page",
+            "required": false,
+            "in": "query",
+            "description": "페이지 번호 (기본값: 1)",
+            "schema": {
+              "minimum": 1,
+              "default": 1,
+              "type": "number"
+            }
+          },
+          {
+            "name": "limit",
+            "required": false,
+            "in": "query",
+            "description": "페이지 크기 (기본값: 20)",
+            "schema": {
+              "minimum": 1,
+              "default": 20,
+              "type": "number"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Successfully retrieved transaction history / 트랜잭션 이력 조회 성공",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "allOf": [
+                    {
+                      "$ref": "#/components/schemas/PaginatedResponseDto"
+                    },
+                    {
+                      "properties": {
+                        "data": {
+                          "type": "array",
+                          "items": {
+                            "$ref": "#/components/schemas/WalletTransactionResponseDto"
+                          }
+                        }
+                      }
+                    }
+                  ]
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Bad Request",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponseDto"
+                }
+              }
+            }
+          }
+        },
+        "summary": "Get wallet transaction history / 지갑 트랜잭션 이력 조회 (관리자용)",
+        "tags": [
+          "Admin Wallet"
         ]
       }
     },
@@ -9989,22 +10116,7 @@
             "type": "string",
             "description": "통화 코드",
             "enum": [
-              "USDT",
-              "USD",
-              "KRW",
-              "JPY",
-              "PHP",
-              "IDR",
-              "VND",
-              "BTC",
-              "ETH",
-              "SOL",
-              "XRP",
-              "DOGE",
-              "LTC",
-              "BCH",
-              "EOS",
-              "TRX"
+              "KRW"
             ],
             "example": "USDT"
           },
@@ -10031,13 +10143,236 @@
             "type": "string",
             "description": "변경할 금액 (양수, 소수점 포함 가능)",
             "example": "100.50"
+          },
+          "reasonCode": {
+            "type": "string",
+            "description": "조정 사유 코드",
+            "enum": [
+              "CS_RECOVERY",
+              "PROMOTION_REWARD",
+              "SYSTEM_ERROR_FIX",
+              "MANUAL_DEPOSIT",
+              "TEST_ACCOUNT",
+              "OTHER"
+            ],
+            "example": "CS_RECOVERY"
+          },
+          "internalNote": {
+            "type": "string",
+            "description": "관리자 내부 메모",
+            "example": "잘못된 배당에 따른 수동 조정"
           }
         },
         "required": [
           "currency",
           "balanceType",
           "operation",
-          "amount"
+          "amount",
+          "reasonCode"
+        ]
+      },
+      "WalletBalanceDetailResponseDto": {
+        "type": "object",
+        "properties": {
+          "mainBalanceChange": {
+            "type": "string",
+            "description": "메인 잔액 변경량"
+          },
+          "mainBeforeAmount": {
+            "type": "string",
+            "description": "변경 전 메인 잔액"
+          },
+          "mainAfterAmount": {
+            "type": "string",
+            "description": "변경 후 메인 잔액"
+          },
+          "bonusBalanceChange": {
+            "type": "string",
+            "description": "보너스 잔액 변경량"
+          },
+          "bonusBeforeAmount": {
+            "type": "string",
+            "description": "변경 전 보너스 잔액"
+          },
+          "bonusAfterAmount": {
+            "type": "string",
+            "description": "변경 후 보너스 잔액"
+          }
+        },
+        "required": [
+          "mainBalanceChange",
+          "mainBeforeAmount",
+          "mainAfterAmount",
+          "bonusBalanceChange",
+          "bonusBeforeAmount",
+          "bonusAfterAmount"
+        ]
+      },
+      "WalletAdminDetailResponseDto": {
+        "type": "object",
+        "properties": {
+          "adminUserId": {
+            "type": "string",
+            "description": "관리자 ID"
+          },
+          "reasonCode": {
+            "type": "string",
+            "description": "사유 코드",
+            "enum": [
+              "CS_RECOVERY",
+              "PROMOTION_REWARD",
+              "SYSTEM_ERROR_FIX",
+              "MANUAL_DEPOSIT",
+              "TEST_ACCOUNT",
+              "OTHER"
+            ]
+          },
+          "internalNote": {
+            "type": "string",
+            "description": "상세 메모"
+          }
+        },
+        "required": [
+          "adminUserId",
+          "reasonCode",
+          "internalNote"
+        ]
+      },
+      "WalletSystemDetailResponseDto": {
+        "type": "object",
+        "properties": {
+          "serviceName": {
+            "type": "string",
+            "description": "서비스명"
+          },
+          "triggerId": {
+            "type": "string",
+            "description": "트리거 ID"
+          },
+          "actionName": {
+            "type": "string",
+            "description": "액션명"
+          },
+          "metadata": {
+            "type": "object",
+            "description": "메타데이터"
+          }
+        },
+        "required": [
+          "serviceName",
+          "triggerId",
+          "actionName",
+          "metadata"
+        ]
+      },
+      "WalletTransactionResponseDto": {
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "string",
+            "description": "트랜잭션 ID"
+          },
+          "userId": {
+            "type": "string",
+            "description": "사용자 ID"
+          },
+          "type": {
+            "type": "string",
+            "description": "트랜잭션 타입",
+            "enum": [
+              "DEPOSIT",
+              "WITHDRAW",
+              "GAME",
+              "BONUS",
+              "COMP_CLAIM",
+              "SYSTEM",
+              "ADMIN_ADJUST"
+            ]
+          },
+          "status": {
+            "type": "string",
+            "description": "상태",
+            "enum": [
+              "PENDING",
+              "COMPLETED",
+              "CANCELLED"
+            ]
+          },
+          "currency": {
+            "type": "string",
+            "description": "통화",
+            "enum": [
+              "USDT",
+              "USD",
+              "KRW",
+              "JPY",
+              "PHP",
+              "IDR",
+              "VND",
+              "BTC",
+              "ETH",
+              "SOL",
+              "XRP",
+              "DOGE",
+              "LTC",
+              "BCH",
+              "EOS",
+              "TRX"
+            ]
+          },
+          "amount": {
+            "type": "string",
+            "description": "거래 금액 (절대값)"
+          },
+          "beforeAmount": {
+            "type": "string",
+            "description": "변경 전 총 잔액"
+          },
+          "afterAmount": {
+            "type": "string",
+            "description": "변경 후 총 잔액"
+          },
+          "balanceDetail": {
+            "description": "잔액 상세 내역 (메인/보너스 구분)",
+            "allOf": [
+              {
+                "$ref": "#/components/schemas/WalletBalanceDetailResponseDto"
+              }
+            ]
+          },
+          "adminDetail": {
+            "description": "관리자 수동 조작 상세",
+            "allOf": [
+              {
+                "$ref": "#/components/schemas/WalletAdminDetailResponseDto"
+              }
+            ]
+          },
+          "systemDetail": {
+            "description": "시스템 자동 처리 상세",
+            "allOf": [
+              {
+                "$ref": "#/components/schemas/WalletSystemDetailResponseDto"
+              }
+            ]
+          },
+          "createdAt": {
+            "format": "date-time",
+            "type": "string",
+            "description": "생성 일시"
+          }
+        },
+        "required": [
+          "id",
+          "userId",
+          "type",
+          "status",
+          "currency",
+          "amount",
+          "beforeAmount",
+          "afterAmount",
+          "balanceDetail",
+          "createdAt"
         ]
       },
       "TierTranslationDto": {
