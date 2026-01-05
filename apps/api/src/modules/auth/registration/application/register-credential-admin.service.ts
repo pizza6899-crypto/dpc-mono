@@ -145,9 +145,7 @@ export class RegisterCredentialAdminService {
     }
 
     // 5. VIP 멤버십 생성 (일반 사용자만)
-    if (role === UserRoleType.USER) {
-      await this.assignDefaultTierService.execute(user.id);
-    }
+    await this.assignDefaultTierService.execute(user.id);
 
     // 6. 레퍼럴 코드가 제공된 경우 레퍼럴 관계 생성
     // 사전 검증을 통과했으므로 여기서는 셀프 추천 및 중복 레퍼럴만 체크됨
