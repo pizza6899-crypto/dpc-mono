@@ -23,6 +23,7 @@ export class AuditLogAdapter implements AuditLogRepositoryPort {
         createdAt: new Date(),
         userId: payload.userId ? BigInt(payload.userId) : null,
         sessionId: payload.sessionId || null,
+        traceId: payload.traceId || null,
         action: payload.action,
         status: payload.status,
         ip: payload.ip || null,
@@ -53,6 +54,7 @@ export class AuditLogAdapter implements AuditLogRepositoryPort {
         createdAt: new Date(),
         userId: payload.userId ? BigInt(payload.userId) : null,
         sessionId: payload.sessionId || null,
+        traceId: payload.traceId || null,
         category: payload.category,
         action: payload.action,
         // Cloudflare 지리적 정보
@@ -62,6 +64,7 @@ export class AuditLogAdapter implements AuditLogRepositoryPort {
         isMobile: payload.isMobile ?? null,
         // Cloudflare 추적 정보
         cfRay: payload.cfRay || null,
+        ip: payload.ip || null,
         metadata: payload.metadata || undefined,
       },
     });
@@ -77,6 +80,7 @@ export class AuditLogAdapter implements AuditLogRepositoryPort {
         createdAt: new Date(),
         userId: payload.userId ? BigInt(payload.userId) : null,
         sessionId: payload.sessionId || null,
+        traceId: payload.traceId || null,
         errorCode: payload.errorCode || null,
         errorMessage: payload.errorMessage,
         stackTrace: payload.stackTrace || null,
@@ -113,6 +117,7 @@ export class AuditLogAdapter implements AuditLogRepositoryPort {
         createdAt: new Date(),
         userId: payload.userId ? BigInt(payload.userId) : null,
         sessionId: payload.sessionId || null,
+        traceId: payload.traceId || null,
         provider: payload.provider,
         method: payload.method,
         endpoint: payload.endpoint,

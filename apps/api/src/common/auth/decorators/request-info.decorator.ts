@@ -36,11 +36,9 @@ export const RequestClientInfoParam = createParamDecorator(
     const request = ctx.switchToHttp().getRequest<Request>();
     const clientInfo = request.clientInfo;
 
-    // 인터셉터에서 추출되지 않은 경우 (예: 인터셉터가 적용되지 않은 경로)
+    // 인터셉터에서 추출되지 않은 경우 undefined 반환
     if (!clientInfo) {
-      throw new Error(
-        'RequestClientInfo가 추출되지 않았습니다. RequestInfoInterceptor가 적용되었는지 확인하세요.',
-      );
+      return undefined;
     }
 
     // 특정 필드만 요청한 경우

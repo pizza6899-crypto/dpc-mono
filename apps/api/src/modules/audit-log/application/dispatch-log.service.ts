@@ -48,6 +48,7 @@ export class DispatchLogService {
         data: {
           ...payload.data,
           sessionId: clientInfo.sessionId || payload.data.sessionId,
+          traceId: clientInfo.traceId,
           ip: clientInfo.ip,
           userAgent: clientInfo.userAgent,
           deviceFingerprint: clientInfo.fingerprint,
@@ -67,10 +68,12 @@ export class DispatchLogService {
         data: {
           ...payload.data,
           sessionId: clientInfo.sessionId || payload.data.sessionId,
+          traceId: clientInfo.traceId,
           country: clientInfo.country,
           city: clientInfo.city,
           isMobile: clientInfo.isMobile,
           cfRay: clientInfo.cfRay,
+          ip: clientInfo.ip,
         },
       } as T;
     }
@@ -81,6 +84,7 @@ export class DispatchLogService {
         data: {
           ...payload.data,
           sessionId: clientInfo.sessionId || payload.data.sessionId,
+          traceId: clientInfo.traceId,
           country: clientInfo.country,
           city: clientInfo.city,
           bot: clientInfo.bot,
@@ -99,6 +103,7 @@ export class DispatchLogService {
         data: {
           ...payload.data,
           sessionId: clientInfo.sessionId || payload.data.sessionId,
+          traceId: clientInfo.traceId,
           country: clientInfo.country,
           city: clientInfo.city,
           bot: clientInfo.bot,

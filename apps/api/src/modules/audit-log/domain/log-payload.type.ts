@@ -15,6 +15,7 @@ export enum LogType {
 export interface AuthLogPayload {
   userId?: string;
   sessionId?: string; // 세션 ID
+  traceId?: string; // 분산 추적 ID
   action: string; // 예: 'LOGIN', 'LOGOUT', 'PASSWORD_CHANGE' 등
   status: string; // 예: 'SUCCESS', 'FAILURE' 등
   ip?: string;
@@ -43,6 +44,7 @@ export interface AuthLogPayload {
 export interface ActivityLogPayload {
   userId?: string;
   sessionId?: string; // 세션 ID
+  traceId?: string; // 분산 추적 ID
   category: string; // 예: 'AUTH', 'PAYMENT', 'GAME' 등
   action: string; // 예: 'USER_LOGIN', 'DEPOSIT_REQUEST' 등
   // Cloudflare 지리적 정보 (사용자 활동 추적용)
@@ -52,6 +54,7 @@ export interface ActivityLogPayload {
   isMobile?: boolean; // 모바일 여부
   // Cloudflare 추적 정보 (디버깅용)
   cfRay?: string; // CF-Ray: 요청 추적 ID
+  ip?: string; // 클라이언트 IP
   metadata?: any;
 }
 
@@ -64,6 +67,7 @@ export interface ActivityLogPayload {
 export interface SystemErrorLogPayload {
   userId?: string;
   sessionId?: string; // 세션 ID
+  traceId?: string; // 분산 추적 ID
   errorCode?: string; // 모듈별 에러 코드 (예: 'AUTH_INVALID_TOKEN', 'PAYMENT_INSUFFICIENT_BALANCE')
   errorMessage: string;
   stackTrace?: string;
@@ -87,6 +91,7 @@ export interface SystemErrorLogPayload {
 export interface IntegrationLogPayload {
   userId?: string;
   sessionId?: string; // 세션 ID
+  traceId?: string; // 분산 추적 ID
   provider: string;
   method: string;
   endpoint: string;

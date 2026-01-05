@@ -51,6 +51,16 @@ export function extractClientInfo(request: Request): RequestClientInfo {
     path: request.path, // 요청 경로
     timestamp: nowUtc(),
 
+    // 분산 추적 ID 추출
+    // 1. request.id: Pino 등 로거 미들웨어에서 생성/할당한 ID (최우선 - 로그 연결성 보장)
+    // 2. x-trace-id: 내부 표준 헤더
+    // 3. x-request-id: 일반적인 HTTP 요청 ID
+    // 4. traceparent: W3C Trace Context
+    traceId: ((request as any).id ||
+      request.headers['x-trace-id'] ||
+      request.headers['x-request-id'] ||
+      request.headers['traceparent']) as string | undefined,
+
     // Cloudflare 추적 정보
     cfRay: request.headers['cf-ray'] as string | undefined,
     cfRequestId: request.headers['cf-request-id'] as string | undefined,

@@ -12,6 +12,9 @@ export interface RequestClientInfo {
   path: string;
   timestamp: Date;
 
+  /** 분산 추적 ID */
+  traceId?: string;
+
   // Cloudflare 추적 정보
   /** Cloudflare 요청 추적 ID (CF-Ray) */
   cfRay?: string;

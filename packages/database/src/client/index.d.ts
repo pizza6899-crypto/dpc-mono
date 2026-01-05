@@ -8311,6 +8311,7 @@ export namespace Prisma {
     createdAt: Date | null
     userId: bigint | null
     sessionId: string | null
+    traceId: string | null
     action: string | null
     status: string | null
     ip: string | null
@@ -8329,6 +8330,7 @@ export namespace Prisma {
     createdAt: Date | null
     userId: bigint | null
     sessionId: string | null
+    traceId: string | null
     action: string | null
     status: string | null
     ip: string | null
@@ -8347,6 +8349,7 @@ export namespace Prisma {
     createdAt: number
     userId: number
     sessionId: number
+    traceId: number
     action: number
     status: number
     ip: number
@@ -8376,6 +8379,7 @@ export namespace Prisma {
     createdAt?: true
     userId?: true
     sessionId?: true
+    traceId?: true
     action?: true
     status?: true
     ip?: true
@@ -8394,6 +8398,7 @@ export namespace Prisma {
     createdAt?: true
     userId?: true
     sessionId?: true
+    traceId?: true
     action?: true
     status?: true
     ip?: true
@@ -8412,6 +8417,7 @@ export namespace Prisma {
     createdAt?: true
     userId?: true
     sessionId?: true
+    traceId?: true
     action?: true
     status?: true
     ip?: true
@@ -8518,6 +8524,7 @@ export namespace Prisma {
     createdAt: Date
     userId: bigint | null
     sessionId: string | null
+    traceId: string | null
     action: string
     status: string
     ip: string | null
@@ -8556,6 +8563,7 @@ export namespace Prisma {
     createdAt?: boolean
     userId?: boolean
     sessionId?: boolean
+    traceId?: boolean
     action?: boolean
     status?: boolean
     ip?: boolean
@@ -8575,6 +8583,7 @@ export namespace Prisma {
     createdAt?: boolean
     userId?: boolean
     sessionId?: boolean
+    traceId?: boolean
     action?: boolean
     status?: boolean
     ip?: boolean
@@ -8594,6 +8603,7 @@ export namespace Prisma {
     createdAt?: boolean
     userId?: boolean
     sessionId?: boolean
+    traceId?: boolean
     action?: boolean
     status?: boolean
     ip?: boolean
@@ -8613,6 +8623,7 @@ export namespace Prisma {
     createdAt?: boolean
     userId?: boolean
     sessionId?: boolean
+    traceId?: boolean
     action?: boolean
     status?: boolean
     ip?: boolean
@@ -8627,7 +8638,7 @@ export namespace Prisma {
     metadata?: boolean
   }
 
-  export type AuthAuditLogOmit<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetOmit<"id" | "createdAt" | "userId" | "sessionId" | "action" | "status" | "ip" | "userAgent" | "deviceFingerprint" | "country" | "city" | "bot" | "threat" | "isMobile" | "cfRay" | "metadata", ExtArgs["result"]["authAuditLog"]>
+  export type AuthAuditLogOmit<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetOmit<"id" | "createdAt" | "userId" | "sessionId" | "traceId" | "action" | "status" | "ip" | "userAgent" | "deviceFingerprint" | "country" | "city" | "bot" | "threat" | "isMobile" | "cfRay" | "metadata", ExtArgs["result"]["authAuditLog"]>
 
   export type $AuthAuditLogPayload<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
     name: "AuthAuditLog"
@@ -8637,6 +8648,7 @@ export namespace Prisma {
       createdAt: Date
       userId: bigint | null
       sessionId: string | null
+      traceId: string | null
       action: string
       status: string
       ip: string | null
@@ -9076,6 +9088,7 @@ export namespace Prisma {
     readonly createdAt: FieldRef<"AuthAuditLog", 'DateTime'>
     readonly userId: FieldRef<"AuthAuditLog", 'BigInt'>
     readonly sessionId: FieldRef<"AuthAuditLog", 'String'>
+    readonly traceId: FieldRef<"AuthAuditLog", 'String'>
     readonly action: FieldRef<"AuthAuditLog", 'String'>
     readonly status: FieldRef<"AuthAuditLog", 'String'>
     readonly ip: FieldRef<"AuthAuditLog", 'String'>
@@ -9479,12 +9492,14 @@ export namespace Prisma {
     createdAt: Date | null
     userId: bigint | null
     sessionId: string | null
+    traceId: string | null
     category: string | null
     action: string | null
     country: string | null
     city: string | null
     isMobile: boolean | null
     cfRay: string | null
+    ip: string | null
   }
 
   export type ActivityLogMaxAggregateOutputType = {
@@ -9492,12 +9507,14 @@ export namespace Prisma {
     createdAt: Date | null
     userId: bigint | null
     sessionId: string | null
+    traceId: string | null
     category: string | null
     action: string | null
     country: string | null
     city: string | null
     isMobile: boolean | null
     cfRay: string | null
+    ip: string | null
   }
 
   export type ActivityLogCountAggregateOutputType = {
@@ -9505,12 +9522,14 @@ export namespace Prisma {
     createdAt: number
     userId: number
     sessionId: number
+    traceId: number
     category: number
     action: number
     country: number
     city: number
     isMobile: number
     cfRay: number
+    ip: number
     metadata: number
     _all: number
   }
@@ -9529,12 +9548,14 @@ export namespace Prisma {
     createdAt?: true
     userId?: true
     sessionId?: true
+    traceId?: true
     category?: true
     action?: true
     country?: true
     city?: true
     isMobile?: true
     cfRay?: true
+    ip?: true
   }
 
   export type ActivityLogMaxAggregateInputType = {
@@ -9542,12 +9563,14 @@ export namespace Prisma {
     createdAt?: true
     userId?: true
     sessionId?: true
+    traceId?: true
     category?: true
     action?: true
     country?: true
     city?: true
     isMobile?: true
     cfRay?: true
+    ip?: true
   }
 
   export type ActivityLogCountAggregateInputType = {
@@ -9555,12 +9578,14 @@ export namespace Prisma {
     createdAt?: true
     userId?: true
     sessionId?: true
+    traceId?: true
     category?: true
     action?: true
     country?: true
     city?: true
     isMobile?: true
     cfRay?: true
+    ip?: true
     metadata?: true
     _all?: true
   }
@@ -9656,12 +9681,14 @@ export namespace Prisma {
     createdAt: Date
     userId: bigint | null
     sessionId: string | null
+    traceId: string | null
     category: string
     action: string
     country: string | null
     city: string | null
     isMobile: boolean | null
     cfRay: string | null
+    ip: string | null
     metadata: JsonValue | null
     _count: ActivityLogCountAggregateOutputType | null
     _avg: ActivityLogAvgAggregateOutputType | null
@@ -9689,12 +9716,14 @@ export namespace Prisma {
     createdAt?: boolean
     userId?: boolean
     sessionId?: boolean
+    traceId?: boolean
     category?: boolean
     action?: boolean
     country?: boolean
     city?: boolean
     isMobile?: boolean
     cfRay?: boolean
+    ip?: boolean
     metadata?: boolean
   }, ExtArgs["result"]["activityLog"]>
 
@@ -9703,12 +9732,14 @@ export namespace Prisma {
     createdAt?: boolean
     userId?: boolean
     sessionId?: boolean
+    traceId?: boolean
     category?: boolean
     action?: boolean
     country?: boolean
     city?: boolean
     isMobile?: boolean
     cfRay?: boolean
+    ip?: boolean
     metadata?: boolean
   }, ExtArgs["result"]["activityLog"]>
 
@@ -9717,12 +9748,14 @@ export namespace Prisma {
     createdAt?: boolean
     userId?: boolean
     sessionId?: boolean
+    traceId?: boolean
     category?: boolean
     action?: boolean
     country?: boolean
     city?: boolean
     isMobile?: boolean
     cfRay?: boolean
+    ip?: boolean
     metadata?: boolean
   }, ExtArgs["result"]["activityLog"]>
 
@@ -9731,16 +9764,18 @@ export namespace Prisma {
     createdAt?: boolean
     userId?: boolean
     sessionId?: boolean
+    traceId?: boolean
     category?: boolean
     action?: boolean
     country?: boolean
     city?: boolean
     isMobile?: boolean
     cfRay?: boolean
+    ip?: boolean
     metadata?: boolean
   }
 
-  export type ActivityLogOmit<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetOmit<"id" | "createdAt" | "userId" | "sessionId" | "category" | "action" | "country" | "city" | "isMobile" | "cfRay" | "metadata", ExtArgs["result"]["activityLog"]>
+  export type ActivityLogOmit<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetOmit<"id" | "createdAt" | "userId" | "sessionId" | "traceId" | "category" | "action" | "country" | "city" | "isMobile" | "cfRay" | "ip" | "metadata", ExtArgs["result"]["activityLog"]>
 
   export type $ActivityLogPayload<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
     name: "ActivityLog"
@@ -9750,12 +9785,14 @@ export namespace Prisma {
       createdAt: Date
       userId: bigint | null
       sessionId: string | null
+      traceId: string | null
       category: string
       action: string
       country: string | null
       city: string | null
       isMobile: boolean | null
       cfRay: string | null
+      ip: string | null
       metadata: Prisma.JsonValue | null
     }, ExtArgs["result"]["activityLog"]>
     composites: {}
@@ -10184,12 +10221,14 @@ export namespace Prisma {
     readonly createdAt: FieldRef<"ActivityLog", 'DateTime'>
     readonly userId: FieldRef<"ActivityLog", 'BigInt'>
     readonly sessionId: FieldRef<"ActivityLog", 'String'>
+    readonly traceId: FieldRef<"ActivityLog", 'String'>
     readonly category: FieldRef<"ActivityLog", 'String'>
     readonly action: FieldRef<"ActivityLog", 'String'>
     readonly country: FieldRef<"ActivityLog", 'String'>
     readonly city: FieldRef<"ActivityLog", 'String'>
     readonly isMobile: FieldRef<"ActivityLog", 'Boolean'>
     readonly cfRay: FieldRef<"ActivityLog", 'String'>
+    readonly ip: FieldRef<"ActivityLog", 'String'>
     readonly metadata: FieldRef<"ActivityLog", 'Json'>
   }
     
@@ -10584,6 +10623,7 @@ export namespace Prisma {
     createdAt: Date | null
     userId: bigint | null
     sessionId: string | null
+    traceId: string | null
     errorCode: string | null
     errorMessage: string | null
     stackTrace: string | null
@@ -10608,6 +10648,7 @@ export namespace Prisma {
     createdAt: Date | null
     userId: bigint | null
     sessionId: string | null
+    traceId: string | null
     errorCode: string | null
     errorMessage: string | null
     stackTrace: string | null
@@ -10632,6 +10673,7 @@ export namespace Prisma {
     createdAt: number
     userId: number
     sessionId: number
+    traceId: number
     errorCode: number
     errorMessage: number
     stackTrace: number
@@ -10669,6 +10711,7 @@ export namespace Prisma {
     createdAt?: true
     userId?: true
     sessionId?: true
+    traceId?: true
     errorCode?: true
     errorMessage?: true
     stackTrace?: true
@@ -10693,6 +10736,7 @@ export namespace Prisma {
     createdAt?: true
     userId?: true
     sessionId?: true
+    traceId?: true
     errorCode?: true
     errorMessage?: true
     stackTrace?: true
@@ -10717,6 +10761,7 @@ export namespace Prisma {
     createdAt?: true
     userId?: true
     sessionId?: true
+    traceId?: true
     errorCode?: true
     errorMessage?: true
     stackTrace?: true
@@ -10829,6 +10874,7 @@ export namespace Prisma {
     createdAt: Date
     userId: bigint | null
     sessionId: string | null
+    traceId: string | null
     errorCode: string | null
     errorMessage: string
     stackTrace: string | null
@@ -10873,6 +10919,7 @@ export namespace Prisma {
     createdAt?: boolean
     userId?: boolean
     sessionId?: boolean
+    traceId?: boolean
     errorCode?: boolean
     errorMessage?: boolean
     stackTrace?: boolean
@@ -10898,6 +10945,7 @@ export namespace Prisma {
     createdAt?: boolean
     userId?: boolean
     sessionId?: boolean
+    traceId?: boolean
     errorCode?: boolean
     errorMessage?: boolean
     stackTrace?: boolean
@@ -10923,6 +10971,7 @@ export namespace Prisma {
     createdAt?: boolean
     userId?: boolean
     sessionId?: boolean
+    traceId?: boolean
     errorCode?: boolean
     errorMessage?: boolean
     stackTrace?: boolean
@@ -10948,6 +10997,7 @@ export namespace Prisma {
     createdAt?: boolean
     userId?: boolean
     sessionId?: boolean
+    traceId?: boolean
     errorCode?: boolean
     errorMessage?: boolean
     stackTrace?: boolean
@@ -10968,7 +11018,7 @@ export namespace Prisma {
     userAgent?: boolean
   }
 
-  export type SystemErrorLogOmit<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetOmit<"id" | "createdAt" | "userId" | "sessionId" | "errorCode" | "errorMessage" | "stackTrace" | "metadata" | "path" | "method" | "statusCode" | "severity" | "resolved" | "resolvedAt" | "country" | "city" | "bot" | "threat" | "isMobile" | "cfRay" | "ip" | "userAgent", ExtArgs["result"]["systemErrorLog"]>
+  export type SystemErrorLogOmit<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetOmit<"id" | "createdAt" | "userId" | "sessionId" | "traceId" | "errorCode" | "errorMessage" | "stackTrace" | "metadata" | "path" | "method" | "statusCode" | "severity" | "resolved" | "resolvedAt" | "country" | "city" | "bot" | "threat" | "isMobile" | "cfRay" | "ip" | "userAgent", ExtArgs["result"]["systemErrorLog"]>
 
   export type $SystemErrorLogPayload<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
     name: "SystemErrorLog"
@@ -10978,6 +11028,7 @@ export namespace Prisma {
       createdAt: Date
       userId: bigint | null
       sessionId: string | null
+      traceId: string | null
       errorCode: string | null
       errorMessage: string
       stackTrace: string | null
@@ -11423,6 +11474,7 @@ export namespace Prisma {
     readonly createdAt: FieldRef<"SystemErrorLog", 'DateTime'>
     readonly userId: FieldRef<"SystemErrorLog", 'BigInt'>
     readonly sessionId: FieldRef<"SystemErrorLog", 'String'>
+    readonly traceId: FieldRef<"SystemErrorLog", 'String'>
     readonly errorCode: FieldRef<"SystemErrorLog", 'String'>
     readonly errorMessage: FieldRef<"SystemErrorLog", 'String'>
     readonly stackTrace: FieldRef<"SystemErrorLog", 'String'>
@@ -11836,6 +11888,7 @@ export namespace Prisma {
     createdAt: Date | null
     userId: bigint | null
     sessionId: string | null
+    traceId: string | null
     provider: string | null
     method: string | null
     endpoint: string | null
@@ -11856,6 +11909,7 @@ export namespace Prisma {
     createdAt: Date | null
     userId: bigint | null
     sessionId: string | null
+    traceId: string | null
     provider: string | null
     method: string | null
     endpoint: string | null
@@ -11876,6 +11930,7 @@ export namespace Prisma {
     createdAt: number
     userId: number
     sessionId: number
+    traceId: number
     provider: number
     method: number
     endpoint: number
@@ -11912,6 +11967,7 @@ export namespace Prisma {
     createdAt?: true
     userId?: true
     sessionId?: true
+    traceId?: true
     provider?: true
     method?: true
     endpoint?: true
@@ -11932,6 +11988,7 @@ export namespace Prisma {
     createdAt?: true
     userId?: true
     sessionId?: true
+    traceId?: true
     provider?: true
     method?: true
     endpoint?: true
@@ -11952,6 +12009,7 @@ export namespace Prisma {
     createdAt?: true
     userId?: true
     sessionId?: true
+    traceId?: true
     provider?: true
     method?: true
     endpoint?: true
@@ -12061,6 +12119,7 @@ export namespace Prisma {
     createdAt: Date
     userId: bigint | null
     sessionId: string | null
+    traceId: string | null
     provider: string
     method: string
     endpoint: string
@@ -12102,6 +12161,7 @@ export namespace Prisma {
     createdAt?: boolean
     userId?: boolean
     sessionId?: boolean
+    traceId?: boolean
     provider?: boolean
     method?: boolean
     endpoint?: boolean
@@ -12124,6 +12184,7 @@ export namespace Prisma {
     createdAt?: boolean
     userId?: boolean
     sessionId?: boolean
+    traceId?: boolean
     provider?: boolean
     method?: boolean
     endpoint?: boolean
@@ -12146,6 +12207,7 @@ export namespace Prisma {
     createdAt?: boolean
     userId?: boolean
     sessionId?: boolean
+    traceId?: boolean
     provider?: boolean
     method?: boolean
     endpoint?: boolean
@@ -12168,6 +12230,7 @@ export namespace Prisma {
     createdAt?: boolean
     userId?: boolean
     sessionId?: boolean
+    traceId?: boolean
     provider?: boolean
     method?: boolean
     endpoint?: boolean
@@ -12185,7 +12248,7 @@ export namespace Prisma {
     ip?: boolean
   }
 
-  export type IntegrationLogOmit<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetOmit<"id" | "createdAt" | "userId" | "sessionId" | "provider" | "method" | "endpoint" | "statusCode" | "requestBody" | "responseBody" | "duration" | "success" | "errorMessage" | "country" | "city" | "bot" | "threat" | "cfRay" | "ip", ExtArgs["result"]["integrationLog"]>
+  export type IntegrationLogOmit<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetOmit<"id" | "createdAt" | "userId" | "sessionId" | "traceId" | "provider" | "method" | "endpoint" | "statusCode" | "requestBody" | "responseBody" | "duration" | "success" | "errorMessage" | "country" | "city" | "bot" | "threat" | "cfRay" | "ip", ExtArgs["result"]["integrationLog"]>
 
   export type $IntegrationLogPayload<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
     name: "IntegrationLog"
@@ -12195,6 +12258,7 @@ export namespace Prisma {
       createdAt: Date
       userId: bigint | null
       sessionId: string | null
+      traceId: string | null
       provider: string
       method: string
       endpoint: string
@@ -12637,6 +12701,7 @@ export namespace Prisma {
     readonly createdAt: FieldRef<"IntegrationLog", 'DateTime'>
     readonly userId: FieldRef<"IntegrationLog", 'BigInt'>
     readonly sessionId: FieldRef<"IntegrationLog", 'String'>
+    readonly traceId: FieldRef<"IntegrationLog", 'String'>
     readonly provider: FieldRef<"IntegrationLog", 'String'>
     readonly method: FieldRef<"IntegrationLog", 'String'>
     readonly endpoint: FieldRef<"IntegrationLog", 'String'>
@@ -13043,6 +13108,7 @@ export namespace Prisma {
     createdAt: Date | null
     userId: bigint | null
     sessionId: string | null
+    traceId: string | null
     cfRay: string | null
     country: string | null
     city: string | null
@@ -13060,6 +13126,7 @@ export namespace Prisma {
     createdAt: Date | null
     userId: bigint | null
     sessionId: string | null
+    traceId: string | null
     cfRay: string | null
     country: string | null
     city: string | null
@@ -13077,6 +13144,7 @@ export namespace Prisma {
     createdAt: number
     userId: number
     sessionId: number
+    traceId: number
     cfRay: number
     country: number
     city: number
@@ -13105,6 +13173,7 @@ export namespace Prisma {
     createdAt?: true
     userId?: true
     sessionId?: true
+    traceId?: true
     cfRay?: true
     country?: true
     city?: true
@@ -13122,6 +13191,7 @@ export namespace Prisma {
     createdAt?: true
     userId?: true
     sessionId?: true
+    traceId?: true
     cfRay?: true
     country?: true
     city?: true
@@ -13139,6 +13209,7 @@ export namespace Prisma {
     createdAt?: true
     userId?: true
     sessionId?: true
+    traceId?: true
     cfRay?: true
     country?: true
     city?: true
@@ -13244,6 +13315,7 @@ export namespace Prisma {
     createdAt: Date
     userId: bigint | null
     sessionId: string | null
+    traceId: string | null
     cfRay: string | null
     country: string | null
     city: string | null
@@ -13281,6 +13353,7 @@ export namespace Prisma {
     createdAt?: boolean
     userId?: boolean
     sessionId?: boolean
+    traceId?: boolean
     cfRay?: boolean
     country?: boolean
     city?: boolean
@@ -13299,6 +13372,7 @@ export namespace Prisma {
     createdAt?: boolean
     userId?: boolean
     sessionId?: boolean
+    traceId?: boolean
     cfRay?: boolean
     country?: boolean
     city?: boolean
@@ -13317,6 +13391,7 @@ export namespace Prisma {
     createdAt?: boolean
     userId?: boolean
     sessionId?: boolean
+    traceId?: boolean
     cfRay?: boolean
     country?: boolean
     city?: boolean
@@ -13335,6 +13410,7 @@ export namespace Prisma {
     createdAt?: boolean
     userId?: boolean
     sessionId?: boolean
+    traceId?: boolean
     cfRay?: boolean
     country?: boolean
     city?: boolean
@@ -13348,7 +13424,7 @@ export namespace Prisma {
     metadata?: boolean
   }
 
-  export type UnifiedLogOmit<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetOmit<"id" | "createdAt" | "userId" | "sessionId" | "cfRay" | "country" | "city" | "bot" | "threat" | "isMobile" | "ip" | "logType" | "category" | "detail" | "metadata", ExtArgs["result"]["unifiedLog"]>
+  export type UnifiedLogOmit<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetOmit<"id" | "createdAt" | "userId" | "sessionId" | "traceId" | "cfRay" | "country" | "city" | "bot" | "threat" | "isMobile" | "ip" | "logType" | "category" | "detail" | "metadata", ExtArgs["result"]["unifiedLog"]>
 
   export type $UnifiedLogPayload<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
     name: "UnifiedLog"
@@ -13358,6 +13434,7 @@ export namespace Prisma {
       createdAt: Date
       userId: bigint | null
       sessionId: string | null
+      traceId: string | null
       cfRay: string | null
       country: string | null
       city: string | null
@@ -13796,6 +13873,7 @@ export namespace Prisma {
     readonly createdAt: FieldRef<"UnifiedLog", 'DateTime'>
     readonly userId: FieldRef<"UnifiedLog", 'BigInt'>
     readonly sessionId: FieldRef<"UnifiedLog", 'String'>
+    readonly traceId: FieldRef<"UnifiedLog", 'String'>
     readonly cfRay: FieldRef<"UnifiedLog", 'String'>
     readonly country: FieldRef<"UnifiedLog", 'String'>
     readonly city: FieldRef<"UnifiedLog", 'String'>
@@ -59156,6 +59234,7 @@ export namespace Prisma {
     createdAt: 'createdAt',
     userId: 'userId',
     sessionId: 'sessionId',
+    traceId: 'traceId',
     action: 'action',
     status: 'status',
     ip: 'ip',
@@ -59178,12 +59257,14 @@ export namespace Prisma {
     createdAt: 'createdAt',
     userId: 'userId',
     sessionId: 'sessionId',
+    traceId: 'traceId',
     category: 'category',
     action: 'action',
     country: 'country',
     city: 'city',
     isMobile: 'isMobile',
     cfRay: 'cfRay',
+    ip: 'ip',
     metadata: 'metadata'
   };
 
@@ -59195,6 +59276,7 @@ export namespace Prisma {
     createdAt: 'createdAt',
     userId: 'userId',
     sessionId: 'sessionId',
+    traceId: 'traceId',
     errorCode: 'errorCode',
     errorMessage: 'errorMessage',
     stackTrace: 'stackTrace',
@@ -59223,6 +59305,7 @@ export namespace Prisma {
     createdAt: 'createdAt',
     userId: 'userId',
     sessionId: 'sessionId',
+    traceId: 'traceId',
     provider: 'provider',
     method: 'method',
     endpoint: 'endpoint',
@@ -59248,6 +59331,7 @@ export namespace Prisma {
     createdAt: 'createdAt',
     userId: 'userId',
     sessionId: 'sessionId',
+    traceId: 'traceId',
     cfRay: 'cfRay',
     country: 'country',
     city: 'city',
@@ -60801,6 +60885,7 @@ export namespace Prisma {
     createdAt?: DateTimeFilter<"AuthAuditLog"> | Date | string
     userId?: BigIntNullableFilter<"AuthAuditLog"> | bigint | number | null
     sessionId?: StringNullableFilter<"AuthAuditLog"> | string | null
+    traceId?: StringNullableFilter<"AuthAuditLog"> | string | null
     action?: StringFilter<"AuthAuditLog"> | string
     status?: StringFilter<"AuthAuditLog"> | string
     ip?: StringNullableFilter<"AuthAuditLog"> | string | null
@@ -60820,6 +60905,7 @@ export namespace Prisma {
     createdAt?: SortOrder
     userId?: SortOrderInput | SortOrder
     sessionId?: SortOrderInput | SortOrder
+    traceId?: SortOrderInput | SortOrder
     action?: SortOrder
     status?: SortOrder
     ip?: SortOrderInput | SortOrder
@@ -60843,6 +60929,7 @@ export namespace Prisma {
     createdAt?: DateTimeFilter<"AuthAuditLog"> | Date | string
     userId?: BigIntNullableFilter<"AuthAuditLog"> | bigint | number | null
     sessionId?: StringNullableFilter<"AuthAuditLog"> | string | null
+    traceId?: StringNullableFilter<"AuthAuditLog"> | string | null
     action?: StringFilter<"AuthAuditLog"> | string
     status?: StringFilter<"AuthAuditLog"> | string
     ip?: StringNullableFilter<"AuthAuditLog"> | string | null
@@ -60862,6 +60949,7 @@ export namespace Prisma {
     createdAt?: SortOrder
     userId?: SortOrderInput | SortOrder
     sessionId?: SortOrderInput | SortOrder
+    traceId?: SortOrderInput | SortOrder
     action?: SortOrder
     status?: SortOrder
     ip?: SortOrderInput | SortOrder
@@ -60889,6 +60977,7 @@ export namespace Prisma {
     createdAt?: DateTimeWithAggregatesFilter<"AuthAuditLog"> | Date | string
     userId?: BigIntNullableWithAggregatesFilter<"AuthAuditLog"> | bigint | number | null
     sessionId?: StringNullableWithAggregatesFilter<"AuthAuditLog"> | string | null
+    traceId?: StringNullableWithAggregatesFilter<"AuthAuditLog"> | string | null
     action?: StringWithAggregatesFilter<"AuthAuditLog"> | string
     status?: StringWithAggregatesFilter<"AuthAuditLog"> | string
     ip?: StringNullableWithAggregatesFilter<"AuthAuditLog"> | string | null
@@ -60911,12 +61000,14 @@ export namespace Prisma {
     createdAt?: DateTimeFilter<"ActivityLog"> | Date | string
     userId?: BigIntNullableFilter<"ActivityLog"> | bigint | number | null
     sessionId?: StringNullableFilter<"ActivityLog"> | string | null
+    traceId?: StringNullableFilter<"ActivityLog"> | string | null
     category?: StringFilter<"ActivityLog"> | string
     action?: StringFilter<"ActivityLog"> | string
     country?: StringNullableFilter<"ActivityLog"> | string | null
     city?: StringNullableFilter<"ActivityLog"> | string | null
     isMobile?: BoolNullableFilter<"ActivityLog"> | boolean | null
     cfRay?: StringNullableFilter<"ActivityLog"> | string | null
+    ip?: StringNullableFilter<"ActivityLog"> | string | null
     metadata?: JsonNullableFilter<"ActivityLog">
   }
 
@@ -60925,12 +61016,14 @@ export namespace Prisma {
     createdAt?: SortOrder
     userId?: SortOrderInput | SortOrder
     sessionId?: SortOrderInput | SortOrder
+    traceId?: SortOrderInput | SortOrder
     category?: SortOrder
     action?: SortOrder
     country?: SortOrderInput | SortOrder
     city?: SortOrderInput | SortOrder
     isMobile?: SortOrderInput | SortOrder
     cfRay?: SortOrderInput | SortOrder
+    ip?: SortOrderInput | SortOrder
     metadata?: SortOrderInput | SortOrder
   }
 
@@ -60943,12 +61036,14 @@ export namespace Prisma {
     createdAt?: DateTimeFilter<"ActivityLog"> | Date | string
     userId?: BigIntNullableFilter<"ActivityLog"> | bigint | number | null
     sessionId?: StringNullableFilter<"ActivityLog"> | string | null
+    traceId?: StringNullableFilter<"ActivityLog"> | string | null
     category?: StringFilter<"ActivityLog"> | string
     action?: StringFilter<"ActivityLog"> | string
     country?: StringNullableFilter<"ActivityLog"> | string | null
     city?: StringNullableFilter<"ActivityLog"> | string | null
     isMobile?: BoolNullableFilter<"ActivityLog"> | boolean | null
     cfRay?: StringNullableFilter<"ActivityLog"> | string | null
+    ip?: StringNullableFilter<"ActivityLog"> | string | null
     metadata?: JsonNullableFilter<"ActivityLog">
   }, "id_createdAt">
 
@@ -60957,12 +61052,14 @@ export namespace Prisma {
     createdAt?: SortOrder
     userId?: SortOrderInput | SortOrder
     sessionId?: SortOrderInput | SortOrder
+    traceId?: SortOrderInput | SortOrder
     category?: SortOrder
     action?: SortOrder
     country?: SortOrderInput | SortOrder
     city?: SortOrderInput | SortOrder
     isMobile?: SortOrderInput | SortOrder
     cfRay?: SortOrderInput | SortOrder
+    ip?: SortOrderInput | SortOrder
     metadata?: SortOrderInput | SortOrder
     _count?: ActivityLogCountOrderByAggregateInput
     _avg?: ActivityLogAvgOrderByAggregateInput
@@ -60979,12 +61076,14 @@ export namespace Prisma {
     createdAt?: DateTimeWithAggregatesFilter<"ActivityLog"> | Date | string
     userId?: BigIntNullableWithAggregatesFilter<"ActivityLog"> | bigint | number | null
     sessionId?: StringNullableWithAggregatesFilter<"ActivityLog"> | string | null
+    traceId?: StringNullableWithAggregatesFilter<"ActivityLog"> | string | null
     category?: StringWithAggregatesFilter<"ActivityLog"> | string
     action?: StringWithAggregatesFilter<"ActivityLog"> | string
     country?: StringNullableWithAggregatesFilter<"ActivityLog"> | string | null
     city?: StringNullableWithAggregatesFilter<"ActivityLog"> | string | null
     isMobile?: BoolNullableWithAggregatesFilter<"ActivityLog"> | boolean | null
     cfRay?: StringNullableWithAggregatesFilter<"ActivityLog"> | string | null
+    ip?: StringNullableWithAggregatesFilter<"ActivityLog"> | string | null
     metadata?: JsonNullableWithAggregatesFilter<"ActivityLog">
   }
 
@@ -60996,6 +61095,7 @@ export namespace Prisma {
     createdAt?: DateTimeFilter<"SystemErrorLog"> | Date | string
     userId?: BigIntNullableFilter<"SystemErrorLog"> | bigint | number | null
     sessionId?: StringNullableFilter<"SystemErrorLog"> | string | null
+    traceId?: StringNullableFilter<"SystemErrorLog"> | string | null
     errorCode?: StringNullableFilter<"SystemErrorLog"> | string | null
     errorMessage?: StringFilter<"SystemErrorLog"> | string
     stackTrace?: StringNullableFilter<"SystemErrorLog"> | string | null
@@ -61021,6 +61121,7 @@ export namespace Prisma {
     createdAt?: SortOrder
     userId?: SortOrderInput | SortOrder
     sessionId?: SortOrderInput | SortOrder
+    traceId?: SortOrderInput | SortOrder
     errorCode?: SortOrderInput | SortOrder
     errorMessage?: SortOrder
     stackTrace?: SortOrderInput | SortOrder
@@ -61050,6 +61151,7 @@ export namespace Prisma {
     createdAt?: DateTimeFilter<"SystemErrorLog"> | Date | string
     userId?: BigIntNullableFilter<"SystemErrorLog"> | bigint | number | null
     sessionId?: StringNullableFilter<"SystemErrorLog"> | string | null
+    traceId?: StringNullableFilter<"SystemErrorLog"> | string | null
     errorCode?: StringNullableFilter<"SystemErrorLog"> | string | null
     errorMessage?: StringFilter<"SystemErrorLog"> | string
     stackTrace?: StringNullableFilter<"SystemErrorLog"> | string | null
@@ -61075,6 +61177,7 @@ export namespace Prisma {
     createdAt?: SortOrder
     userId?: SortOrderInput | SortOrder
     sessionId?: SortOrderInput | SortOrder
+    traceId?: SortOrderInput | SortOrder
     errorCode?: SortOrderInput | SortOrder
     errorMessage?: SortOrder
     stackTrace?: SortOrderInput | SortOrder
@@ -61108,6 +61211,7 @@ export namespace Prisma {
     createdAt?: DateTimeWithAggregatesFilter<"SystemErrorLog"> | Date | string
     userId?: BigIntNullableWithAggregatesFilter<"SystemErrorLog"> | bigint | number | null
     sessionId?: StringNullableWithAggregatesFilter<"SystemErrorLog"> | string | null
+    traceId?: StringNullableWithAggregatesFilter<"SystemErrorLog"> | string | null
     errorCode?: StringNullableWithAggregatesFilter<"SystemErrorLog"> | string | null
     errorMessage?: StringWithAggregatesFilter<"SystemErrorLog"> | string
     stackTrace?: StringNullableWithAggregatesFilter<"SystemErrorLog"> | string | null
@@ -61136,6 +61240,7 @@ export namespace Prisma {
     createdAt?: DateTimeFilter<"IntegrationLog"> | Date | string
     userId?: BigIntNullableFilter<"IntegrationLog"> | bigint | number | null
     sessionId?: StringNullableFilter<"IntegrationLog"> | string | null
+    traceId?: StringNullableFilter<"IntegrationLog"> | string | null
     provider?: StringFilter<"IntegrationLog"> | string
     method?: StringFilter<"IntegrationLog"> | string
     endpoint?: StringFilter<"IntegrationLog"> | string
@@ -61158,6 +61263,7 @@ export namespace Prisma {
     createdAt?: SortOrder
     userId?: SortOrderInput | SortOrder
     sessionId?: SortOrderInput | SortOrder
+    traceId?: SortOrderInput | SortOrder
     provider?: SortOrder
     method?: SortOrder
     endpoint?: SortOrder
@@ -61184,6 +61290,7 @@ export namespace Prisma {
     createdAt?: DateTimeFilter<"IntegrationLog"> | Date | string
     userId?: BigIntNullableFilter<"IntegrationLog"> | bigint | number | null
     sessionId?: StringNullableFilter<"IntegrationLog"> | string | null
+    traceId?: StringNullableFilter<"IntegrationLog"> | string | null
     provider?: StringFilter<"IntegrationLog"> | string
     method?: StringFilter<"IntegrationLog"> | string
     endpoint?: StringFilter<"IntegrationLog"> | string
@@ -61206,6 +61313,7 @@ export namespace Prisma {
     createdAt?: SortOrder
     userId?: SortOrderInput | SortOrder
     sessionId?: SortOrderInput | SortOrder
+    traceId?: SortOrderInput | SortOrder
     provider?: SortOrder
     method?: SortOrder
     endpoint?: SortOrder
@@ -61236,6 +61344,7 @@ export namespace Prisma {
     createdAt?: DateTimeWithAggregatesFilter<"IntegrationLog"> | Date | string
     userId?: BigIntNullableWithAggregatesFilter<"IntegrationLog"> | bigint | number | null
     sessionId?: StringNullableWithAggregatesFilter<"IntegrationLog"> | string | null
+    traceId?: StringNullableWithAggregatesFilter<"IntegrationLog"> | string | null
     provider?: StringWithAggregatesFilter<"IntegrationLog"> | string
     method?: StringWithAggregatesFilter<"IntegrationLog"> | string
     endpoint?: StringWithAggregatesFilter<"IntegrationLog"> | string
@@ -61261,6 +61370,7 @@ export namespace Prisma {
     createdAt?: DateTimeFilter<"UnifiedLog"> | Date | string
     userId?: BigIntNullableFilter<"UnifiedLog"> | bigint | number | null
     sessionId?: StringNullableFilter<"UnifiedLog"> | string | null
+    traceId?: StringNullableFilter<"UnifiedLog"> | string | null
     cfRay?: StringNullableFilter<"UnifiedLog"> | string | null
     country?: StringNullableFilter<"UnifiedLog"> | string | null
     city?: StringNullableFilter<"UnifiedLog"> | string | null
@@ -61279,6 +61389,7 @@ export namespace Prisma {
     createdAt?: SortOrder
     userId?: SortOrderInput | SortOrder
     sessionId?: SortOrderInput | SortOrder
+    traceId?: SortOrderInput | SortOrder
     cfRay?: SortOrderInput | SortOrder
     country?: SortOrderInput | SortOrder
     city?: SortOrderInput | SortOrder
@@ -61300,6 +61411,7 @@ export namespace Prisma {
     createdAt?: DateTimeFilter<"UnifiedLog"> | Date | string
     userId?: BigIntNullableFilter<"UnifiedLog"> | bigint | number | null
     sessionId?: StringNullableFilter<"UnifiedLog"> | string | null
+    traceId?: StringNullableFilter<"UnifiedLog"> | string | null
     cfRay?: StringNullableFilter<"UnifiedLog"> | string | null
     country?: StringNullableFilter<"UnifiedLog"> | string | null
     city?: StringNullableFilter<"UnifiedLog"> | string | null
@@ -61318,6 +61430,7 @@ export namespace Prisma {
     createdAt?: SortOrder
     userId?: SortOrderInput | SortOrder
     sessionId?: SortOrderInput | SortOrder
+    traceId?: SortOrderInput | SortOrder
     cfRay?: SortOrderInput | SortOrder
     country?: SortOrderInput | SortOrder
     city?: SortOrderInput | SortOrder
@@ -61344,6 +61457,7 @@ export namespace Prisma {
     createdAt?: DateTimeWithAggregatesFilter<"UnifiedLog"> | Date | string
     userId?: BigIntNullableWithAggregatesFilter<"UnifiedLog"> | bigint | number | null
     sessionId?: StringNullableWithAggregatesFilter<"UnifiedLog"> | string | null
+    traceId?: StringNullableWithAggregatesFilter<"UnifiedLog"> | string | null
     cfRay?: StringNullableWithAggregatesFilter<"UnifiedLog"> | string | null
     country?: StringNullableWithAggregatesFilter<"UnifiedLog"> | string | null
     city?: StringNullableWithAggregatesFilter<"UnifiedLog"> | string | null
@@ -65151,6 +65265,7 @@ export namespace Prisma {
     createdAt?: Date | string
     userId?: bigint | number | null
     sessionId?: string | null
+    traceId?: string | null
     action: string
     status: string
     ip?: string | null
@@ -65170,6 +65285,7 @@ export namespace Prisma {
     createdAt?: Date | string
     userId?: bigint | number | null
     sessionId?: string | null
+    traceId?: string | null
     action: string
     status: string
     ip?: string | null
@@ -65189,6 +65305,7 @@ export namespace Prisma {
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     userId?: NullableBigIntFieldUpdateOperationsInput | bigint | number | null
     sessionId?: NullableStringFieldUpdateOperationsInput | string | null
+    traceId?: NullableStringFieldUpdateOperationsInput | string | null
     action?: StringFieldUpdateOperationsInput | string
     status?: StringFieldUpdateOperationsInput | string
     ip?: NullableStringFieldUpdateOperationsInput | string | null
@@ -65208,6 +65325,7 @@ export namespace Prisma {
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     userId?: NullableBigIntFieldUpdateOperationsInput | bigint | number | null
     sessionId?: NullableStringFieldUpdateOperationsInput | string | null
+    traceId?: NullableStringFieldUpdateOperationsInput | string | null
     action?: StringFieldUpdateOperationsInput | string
     status?: StringFieldUpdateOperationsInput | string
     ip?: NullableStringFieldUpdateOperationsInput | string | null
@@ -65227,6 +65345,7 @@ export namespace Prisma {
     createdAt?: Date | string
     userId?: bigint | number | null
     sessionId?: string | null
+    traceId?: string | null
     action: string
     status: string
     ip?: string | null
@@ -65246,6 +65365,7 @@ export namespace Prisma {
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     userId?: NullableBigIntFieldUpdateOperationsInput | bigint | number | null
     sessionId?: NullableStringFieldUpdateOperationsInput | string | null
+    traceId?: NullableStringFieldUpdateOperationsInput | string | null
     action?: StringFieldUpdateOperationsInput | string
     status?: StringFieldUpdateOperationsInput | string
     ip?: NullableStringFieldUpdateOperationsInput | string | null
@@ -65265,6 +65385,7 @@ export namespace Prisma {
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     userId?: NullableBigIntFieldUpdateOperationsInput | bigint | number | null
     sessionId?: NullableStringFieldUpdateOperationsInput | string | null
+    traceId?: NullableStringFieldUpdateOperationsInput | string | null
     action?: StringFieldUpdateOperationsInput | string
     status?: StringFieldUpdateOperationsInput | string
     ip?: NullableStringFieldUpdateOperationsInput | string | null
@@ -65284,12 +65405,14 @@ export namespace Prisma {
     createdAt?: Date | string
     userId?: bigint | number | null
     sessionId?: string | null
+    traceId?: string | null
     category: string
     action: string
     country?: string | null
     city?: string | null
     isMobile?: boolean | null
     cfRay?: string | null
+    ip?: string | null
     metadata?: NullableJsonNullValueInput | InputJsonValue
   }
 
@@ -65298,12 +65421,14 @@ export namespace Prisma {
     createdAt?: Date | string
     userId?: bigint | number | null
     sessionId?: string | null
+    traceId?: string | null
     category: string
     action: string
     country?: string | null
     city?: string | null
     isMobile?: boolean | null
     cfRay?: string | null
+    ip?: string | null
     metadata?: NullableJsonNullValueInput | InputJsonValue
   }
 
@@ -65312,12 +65437,14 @@ export namespace Prisma {
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     userId?: NullableBigIntFieldUpdateOperationsInput | bigint | number | null
     sessionId?: NullableStringFieldUpdateOperationsInput | string | null
+    traceId?: NullableStringFieldUpdateOperationsInput | string | null
     category?: StringFieldUpdateOperationsInput | string
     action?: StringFieldUpdateOperationsInput | string
     country?: NullableStringFieldUpdateOperationsInput | string | null
     city?: NullableStringFieldUpdateOperationsInput | string | null
     isMobile?: NullableBoolFieldUpdateOperationsInput | boolean | null
     cfRay?: NullableStringFieldUpdateOperationsInput | string | null
+    ip?: NullableStringFieldUpdateOperationsInput | string | null
     metadata?: NullableJsonNullValueInput | InputJsonValue
   }
 
@@ -65326,12 +65453,14 @@ export namespace Prisma {
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     userId?: NullableBigIntFieldUpdateOperationsInput | bigint | number | null
     sessionId?: NullableStringFieldUpdateOperationsInput | string | null
+    traceId?: NullableStringFieldUpdateOperationsInput | string | null
     category?: StringFieldUpdateOperationsInput | string
     action?: StringFieldUpdateOperationsInput | string
     country?: NullableStringFieldUpdateOperationsInput | string | null
     city?: NullableStringFieldUpdateOperationsInput | string | null
     isMobile?: NullableBoolFieldUpdateOperationsInput | boolean | null
     cfRay?: NullableStringFieldUpdateOperationsInput | string | null
+    ip?: NullableStringFieldUpdateOperationsInput | string | null
     metadata?: NullableJsonNullValueInput | InputJsonValue
   }
 
@@ -65340,12 +65469,14 @@ export namespace Prisma {
     createdAt?: Date | string
     userId?: bigint | number | null
     sessionId?: string | null
+    traceId?: string | null
     category: string
     action: string
     country?: string | null
     city?: string | null
     isMobile?: boolean | null
     cfRay?: string | null
+    ip?: string | null
     metadata?: NullableJsonNullValueInput | InputJsonValue
   }
 
@@ -65354,12 +65485,14 @@ export namespace Prisma {
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     userId?: NullableBigIntFieldUpdateOperationsInput | bigint | number | null
     sessionId?: NullableStringFieldUpdateOperationsInput | string | null
+    traceId?: NullableStringFieldUpdateOperationsInput | string | null
     category?: StringFieldUpdateOperationsInput | string
     action?: StringFieldUpdateOperationsInput | string
     country?: NullableStringFieldUpdateOperationsInput | string | null
     city?: NullableStringFieldUpdateOperationsInput | string | null
     isMobile?: NullableBoolFieldUpdateOperationsInput | boolean | null
     cfRay?: NullableStringFieldUpdateOperationsInput | string | null
+    ip?: NullableStringFieldUpdateOperationsInput | string | null
     metadata?: NullableJsonNullValueInput | InputJsonValue
   }
 
@@ -65368,12 +65501,14 @@ export namespace Prisma {
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     userId?: NullableBigIntFieldUpdateOperationsInput | bigint | number | null
     sessionId?: NullableStringFieldUpdateOperationsInput | string | null
+    traceId?: NullableStringFieldUpdateOperationsInput | string | null
     category?: StringFieldUpdateOperationsInput | string
     action?: StringFieldUpdateOperationsInput | string
     country?: NullableStringFieldUpdateOperationsInput | string | null
     city?: NullableStringFieldUpdateOperationsInput | string | null
     isMobile?: NullableBoolFieldUpdateOperationsInput | boolean | null
     cfRay?: NullableStringFieldUpdateOperationsInput | string | null
+    ip?: NullableStringFieldUpdateOperationsInput | string | null
     metadata?: NullableJsonNullValueInput | InputJsonValue
   }
 
@@ -65382,6 +65517,7 @@ export namespace Prisma {
     createdAt?: Date | string
     userId?: bigint | number | null
     sessionId?: string | null
+    traceId?: string | null
     errorCode?: string | null
     errorMessage: string
     stackTrace?: string | null
@@ -65407,6 +65543,7 @@ export namespace Prisma {
     createdAt?: Date | string
     userId?: bigint | number | null
     sessionId?: string | null
+    traceId?: string | null
     errorCode?: string | null
     errorMessage: string
     stackTrace?: string | null
@@ -65432,6 +65569,7 @@ export namespace Prisma {
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     userId?: NullableBigIntFieldUpdateOperationsInput | bigint | number | null
     sessionId?: NullableStringFieldUpdateOperationsInput | string | null
+    traceId?: NullableStringFieldUpdateOperationsInput | string | null
     errorCode?: NullableStringFieldUpdateOperationsInput | string | null
     errorMessage?: StringFieldUpdateOperationsInput | string
     stackTrace?: NullableStringFieldUpdateOperationsInput | string | null
@@ -65457,6 +65595,7 @@ export namespace Prisma {
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     userId?: NullableBigIntFieldUpdateOperationsInput | bigint | number | null
     sessionId?: NullableStringFieldUpdateOperationsInput | string | null
+    traceId?: NullableStringFieldUpdateOperationsInput | string | null
     errorCode?: NullableStringFieldUpdateOperationsInput | string | null
     errorMessage?: StringFieldUpdateOperationsInput | string
     stackTrace?: NullableStringFieldUpdateOperationsInput | string | null
@@ -65482,6 +65621,7 @@ export namespace Prisma {
     createdAt?: Date | string
     userId?: bigint | number | null
     sessionId?: string | null
+    traceId?: string | null
     errorCode?: string | null
     errorMessage: string
     stackTrace?: string | null
@@ -65507,6 +65647,7 @@ export namespace Prisma {
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     userId?: NullableBigIntFieldUpdateOperationsInput | bigint | number | null
     sessionId?: NullableStringFieldUpdateOperationsInput | string | null
+    traceId?: NullableStringFieldUpdateOperationsInput | string | null
     errorCode?: NullableStringFieldUpdateOperationsInput | string | null
     errorMessage?: StringFieldUpdateOperationsInput | string
     stackTrace?: NullableStringFieldUpdateOperationsInput | string | null
@@ -65532,6 +65673,7 @@ export namespace Prisma {
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     userId?: NullableBigIntFieldUpdateOperationsInput | bigint | number | null
     sessionId?: NullableStringFieldUpdateOperationsInput | string | null
+    traceId?: NullableStringFieldUpdateOperationsInput | string | null
     errorCode?: NullableStringFieldUpdateOperationsInput | string | null
     errorMessage?: StringFieldUpdateOperationsInput | string
     stackTrace?: NullableStringFieldUpdateOperationsInput | string | null
@@ -65557,6 +65699,7 @@ export namespace Prisma {
     createdAt?: Date | string
     userId?: bigint | number | null
     sessionId?: string | null
+    traceId?: string | null
     provider: string
     method: string
     endpoint: string
@@ -65579,6 +65722,7 @@ export namespace Prisma {
     createdAt?: Date | string
     userId?: bigint | number | null
     sessionId?: string | null
+    traceId?: string | null
     provider: string
     method: string
     endpoint: string
@@ -65601,6 +65745,7 @@ export namespace Prisma {
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     userId?: NullableBigIntFieldUpdateOperationsInput | bigint | number | null
     sessionId?: NullableStringFieldUpdateOperationsInput | string | null
+    traceId?: NullableStringFieldUpdateOperationsInput | string | null
     provider?: StringFieldUpdateOperationsInput | string
     method?: StringFieldUpdateOperationsInput | string
     endpoint?: StringFieldUpdateOperationsInput | string
@@ -65623,6 +65768,7 @@ export namespace Prisma {
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     userId?: NullableBigIntFieldUpdateOperationsInput | bigint | number | null
     sessionId?: NullableStringFieldUpdateOperationsInput | string | null
+    traceId?: NullableStringFieldUpdateOperationsInput | string | null
     provider?: StringFieldUpdateOperationsInput | string
     method?: StringFieldUpdateOperationsInput | string
     endpoint?: StringFieldUpdateOperationsInput | string
@@ -65645,6 +65791,7 @@ export namespace Prisma {
     createdAt?: Date | string
     userId?: bigint | number | null
     sessionId?: string | null
+    traceId?: string | null
     provider: string
     method: string
     endpoint: string
@@ -65667,6 +65814,7 @@ export namespace Prisma {
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     userId?: NullableBigIntFieldUpdateOperationsInput | bigint | number | null
     sessionId?: NullableStringFieldUpdateOperationsInput | string | null
+    traceId?: NullableStringFieldUpdateOperationsInput | string | null
     provider?: StringFieldUpdateOperationsInput | string
     method?: StringFieldUpdateOperationsInput | string
     endpoint?: StringFieldUpdateOperationsInput | string
@@ -65689,6 +65837,7 @@ export namespace Prisma {
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     userId?: NullableBigIntFieldUpdateOperationsInput | bigint | number | null
     sessionId?: NullableStringFieldUpdateOperationsInput | string | null
+    traceId?: NullableStringFieldUpdateOperationsInput | string | null
     provider?: StringFieldUpdateOperationsInput | string
     method?: StringFieldUpdateOperationsInput | string
     endpoint?: StringFieldUpdateOperationsInput | string
@@ -65711,6 +65860,7 @@ export namespace Prisma {
     createdAt: Date | string
     userId?: bigint | number | null
     sessionId?: string | null
+    traceId?: string | null
     cfRay?: string | null
     country?: string | null
     city?: string | null
@@ -65729,6 +65879,7 @@ export namespace Prisma {
     createdAt: Date | string
     userId?: bigint | number | null
     sessionId?: string | null
+    traceId?: string | null
     cfRay?: string | null
     country?: string | null
     city?: string | null
@@ -65747,6 +65898,7 @@ export namespace Prisma {
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     userId?: NullableBigIntFieldUpdateOperationsInput | bigint | number | null
     sessionId?: NullableStringFieldUpdateOperationsInput | string | null
+    traceId?: NullableStringFieldUpdateOperationsInput | string | null
     cfRay?: NullableStringFieldUpdateOperationsInput | string | null
     country?: NullableStringFieldUpdateOperationsInput | string | null
     city?: NullableStringFieldUpdateOperationsInput | string | null
@@ -65765,6 +65917,7 @@ export namespace Prisma {
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     userId?: NullableBigIntFieldUpdateOperationsInput | bigint | number | null
     sessionId?: NullableStringFieldUpdateOperationsInput | string | null
+    traceId?: NullableStringFieldUpdateOperationsInput | string | null
     cfRay?: NullableStringFieldUpdateOperationsInput | string | null
     country?: NullableStringFieldUpdateOperationsInput | string | null
     city?: NullableStringFieldUpdateOperationsInput | string | null
@@ -65783,6 +65936,7 @@ export namespace Prisma {
     createdAt: Date | string
     userId?: bigint | number | null
     sessionId?: string | null
+    traceId?: string | null
     cfRay?: string | null
     country?: string | null
     city?: string | null
@@ -65801,6 +65955,7 @@ export namespace Prisma {
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     userId?: NullableBigIntFieldUpdateOperationsInput | bigint | number | null
     sessionId?: NullableStringFieldUpdateOperationsInput | string | null
+    traceId?: NullableStringFieldUpdateOperationsInput | string | null
     cfRay?: NullableStringFieldUpdateOperationsInput | string | null
     country?: NullableStringFieldUpdateOperationsInput | string | null
     city?: NullableStringFieldUpdateOperationsInput | string | null
@@ -65819,6 +65974,7 @@ export namespace Prisma {
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     userId?: NullableBigIntFieldUpdateOperationsInput | bigint | number | null
     sessionId?: NullableStringFieldUpdateOperationsInput | string | null
+    traceId?: NullableStringFieldUpdateOperationsInput | string | null
     cfRay?: NullableStringFieldUpdateOperationsInput | string | null
     country?: NullableStringFieldUpdateOperationsInput | string | null
     city?: NullableStringFieldUpdateOperationsInput | string | null
@@ -70213,6 +70369,7 @@ export namespace Prisma {
     createdAt?: SortOrder
     userId?: SortOrder
     sessionId?: SortOrder
+    traceId?: SortOrder
     action?: SortOrder
     status?: SortOrder
     ip?: SortOrder
@@ -70236,6 +70393,7 @@ export namespace Prisma {
     createdAt?: SortOrder
     userId?: SortOrder
     sessionId?: SortOrder
+    traceId?: SortOrder
     action?: SortOrder
     status?: SortOrder
     ip?: SortOrder
@@ -70254,6 +70412,7 @@ export namespace Prisma {
     createdAt?: SortOrder
     userId?: SortOrder
     sessionId?: SortOrder
+    traceId?: SortOrder
     action?: SortOrder
     status?: SortOrder
     ip?: SortOrder
@@ -70331,12 +70490,14 @@ export namespace Prisma {
     createdAt?: SortOrder
     userId?: SortOrder
     sessionId?: SortOrder
+    traceId?: SortOrder
     category?: SortOrder
     action?: SortOrder
     country?: SortOrder
     city?: SortOrder
     isMobile?: SortOrder
     cfRay?: SortOrder
+    ip?: SortOrder
     metadata?: SortOrder
   }
 
@@ -70349,12 +70510,14 @@ export namespace Prisma {
     createdAt?: SortOrder
     userId?: SortOrder
     sessionId?: SortOrder
+    traceId?: SortOrder
     category?: SortOrder
     action?: SortOrder
     country?: SortOrder
     city?: SortOrder
     isMobile?: SortOrder
     cfRay?: SortOrder
+    ip?: SortOrder
   }
 
   export type ActivityLogMinOrderByAggregateInput = {
@@ -70362,12 +70525,14 @@ export namespace Prisma {
     createdAt?: SortOrder
     userId?: SortOrder
     sessionId?: SortOrder
+    traceId?: SortOrder
     category?: SortOrder
     action?: SortOrder
     country?: SortOrder
     city?: SortOrder
     isMobile?: SortOrder
     cfRay?: SortOrder
+    ip?: SortOrder
   }
 
   export type ActivityLogSumOrderByAggregateInput = {
@@ -70395,6 +70560,7 @@ export namespace Prisma {
     createdAt?: SortOrder
     userId?: SortOrder
     sessionId?: SortOrder
+    traceId?: SortOrder
     errorCode?: SortOrder
     errorMessage?: SortOrder
     stackTrace?: SortOrder
@@ -70425,6 +70591,7 @@ export namespace Prisma {
     createdAt?: SortOrder
     userId?: SortOrder
     sessionId?: SortOrder
+    traceId?: SortOrder
     errorCode?: SortOrder
     errorMessage?: SortOrder
     stackTrace?: SortOrder
@@ -70449,6 +70616,7 @@ export namespace Prisma {
     createdAt?: SortOrder
     userId?: SortOrder
     sessionId?: SortOrder
+    traceId?: SortOrder
     errorCode?: SortOrder
     errorMessage?: SortOrder
     stackTrace?: SortOrder
@@ -70510,6 +70678,7 @@ export namespace Prisma {
     createdAt?: SortOrder
     userId?: SortOrder
     sessionId?: SortOrder
+    traceId?: SortOrder
     provider?: SortOrder
     method?: SortOrder
     endpoint?: SortOrder
@@ -70538,6 +70707,7 @@ export namespace Prisma {
     createdAt?: SortOrder
     userId?: SortOrder
     sessionId?: SortOrder
+    traceId?: SortOrder
     provider?: SortOrder
     method?: SortOrder
     endpoint?: SortOrder
@@ -70558,6 +70728,7 @@ export namespace Prisma {
     createdAt?: SortOrder
     userId?: SortOrder
     sessionId?: SortOrder
+    traceId?: SortOrder
     provider?: SortOrder
     method?: SortOrder
     endpoint?: SortOrder
@@ -70600,6 +70771,7 @@ export namespace Prisma {
     createdAt?: SortOrder
     userId?: SortOrder
     sessionId?: SortOrder
+    traceId?: SortOrder
     cfRay?: SortOrder
     country?: SortOrder
     city?: SortOrder
@@ -70622,6 +70794,7 @@ export namespace Prisma {
     createdAt?: SortOrder
     userId?: SortOrder
     sessionId?: SortOrder
+    traceId?: SortOrder
     cfRay?: SortOrder
     country?: SortOrder
     city?: SortOrder
@@ -70639,6 +70812,7 @@ export namespace Prisma {
     createdAt?: SortOrder
     userId?: SortOrder
     sessionId?: SortOrder
+    traceId?: SortOrder
     cfRay?: SortOrder
     country?: SortOrder
     city?: SortOrder
