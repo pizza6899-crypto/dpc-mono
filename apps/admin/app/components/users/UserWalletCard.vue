@@ -47,7 +47,7 @@ const { mutate: updateBalance, isPending: isUpdating } = useWalletAdminControlle
     onError: (err: any) => {
       toast.add({
         title: t('common.error'),
-        description: err.response?.data?.message || 'Failed to update balance',
+        description: err.response?.data?.message || t('users.wallet.update_failed'),
         color: 'error'
       })
     }
@@ -73,25 +73,25 @@ function onAdjust() {
   })
 }
 
-const balanceTypeOptions = [
-  { label: 'Main Balance', value: 'main' },
-  { label: 'Bonus Balance', value: 'bonus' },
-  { label: 'Total (Auto)', value: 'total' }
-]
+const balanceTypeOptions = computed(() => [
+  { label: t('users.wallet.balance_main'), value: 'main' },
+  { label: t('users.wallet.balance_bonus'), value: 'bonus' },
+  { label: t('users.wallet.balance_total'), value: 'total' }
+])
 
-const operationOptions = [
-  { label: 'Add (+)', value: 'add' },
-  { label: 'Subtract (-)', value: 'subtract' }
-]
+const operationOptions = computed(() => [
+  { label: t('users.wallet.operation_add'), value: 'add' },
+  { label: t('users.wallet.operation_subtract'), value: 'subtract' }
+])
 
-const reasonOptions = [
-  { label: 'CS Recovery', value: 'CS_RECOVERY' },
-  { label: 'Promotion Reward', value: 'PROMOTION_REWARD' },
-  { label: 'System Error Fix', value: 'SYSTEM_ERROR_FIX' },
-  { label: 'Manual Deposit', value: 'MANUAL_DEPOSIT' },
-  { label: 'Test Account', value: 'TEST_ACCOUNT' },
-  { label: 'Other', value: 'OTHER' }
-]
+const reasonOptions = computed(() => [
+  { label: t('users.wallet.reason.cs_recovery'), value: 'CS_RECOVERY' },
+  { label: t('users.wallet.reason.promotion_reward'), value: 'PROMOTION_REWARD' },
+  { label: t('users.wallet.reason.system_error'), value: 'SYSTEM_ERROR_FIX' },
+  { label: t('users.wallet.reason.manual_deposit'), value: 'MANUAL_DEPOSIT' },
+  { label: t('users.wallet.reason.test_account'), value: 'TEST_ACCOUNT' },
+  { label: t('users.wallet.reason.other'), value: 'OTHER' }
+])
 
 const getCurrencyTheme = (currency: string) => {
   const themes: Record<string, { color: any; dot: string; ping: string; text: string; bg: string; border: string; icon: string }> = {
@@ -158,9 +158,9 @@ const getCurrencyTheme = (currency: string) => {
     <template #header>
       <div class="flex items-center justify-between">
         <div class="flex items-center gap-2">
-          <h3 class="font-bold text-sm tracking-tight">User Wallets</h3>
+          <h3 class="font-bold text-sm tracking-tight">{{ t('users.wallet.title') }}</h3>
           <span class="text-[10px] text-neutral-400 font-medium">
-            Updated {{ format(lastRefreshedAt, 'HH:mm:ss') }}
+            {{ t('users.wallet.updated') }} {{ format(lastRefreshedAt, 'HH:mm:ss') }}
           </span>
         </div>
         <UButton
@@ -212,7 +212,7 @@ const getCurrencyTheme = (currency: string) => {
             <div class="flex items-center gap-2">
               <UButton
                 icon="i-lucide-pencil-line"
-                label="Adjust"
+                :label="t('users.wallet.adjust')"
                 size="xs"
                 color="neutral"
                 variant="subtle"
@@ -240,13 +240,13 @@ const getCurrencyTheme = (currency: string) => {
           <!-- Detailed Breakdown Box -->
           <div class="grid grid-cols-2 gap-2 p-2 bg-neutral-50 dark:bg-neutral-800/60 rounded-xl border border-neutral-100 dark:border-neutral-800">
             <div class="flex flex-col items-center py-1.5 tabular-nums">
-              <span class="text-[9px] font-bold uppercase text-neutral-500 tracking-wider mb-0.5">Main Account</span>
+              <span class="text-[9px] font-bold uppercase text-neutral-500 tracking-wider mb-0.5">{{ t('users.wallet.main_account') }}</span>
               <span class="text-xs font-black text-neutral-700 dark:text-neutral-200 font-mono">
                  {{ Number(wallet.mainBalance).toLocaleString(undefined, { minimumFractionDigits: 2 }) }}
               </span>
             </div>
             <div class="flex flex-col items-center py-1.5 tabular-nums border-l border-neutral-100 dark:border-neutral-700">
-              <span class="text-[9px] font-bold uppercase text-amber-600/80 dark:text-amber-500/80 tracking-wider mb-0.5">Bonus Fund</span>
+              <span class="text-[9px] font-bold uppercase text-amber-600/80 dark:text-amber-500/80 tracking-wider mb-0.5">{{ t('users.wallet.bonus_fund') }}</span>
               <span class="text-xs font-black text-amber-600 dark:text-amber-500 font-mono">
                  {{ Number(wallet.bonusBalance).toLocaleString(undefined, { minimumFractionDigits: 2 }) }}
               </span>
@@ -258,11 +258,11 @@ const getCurrencyTheme = (currency: string) => {
     </div>
 
     <div v-else class="p-12 text-center text-neutral-400 text-sm font-medium">
-      No wallet data available.
+      {{ t('users.wallet.no_data') }}
     </div>
 
     <!-- Adjust Balance Modal (UI Improvement) -->
-    <UModal v-model:open="isAdjustModalOpen" title="Asset Adjustment" :ui="{ content: 'max-w-md' }">
+    <UModal v-model:open="isAdjustModalOpen" :title="t('users.wallet.adjust_asset')" :ui="{ content: 'max-w-md' }">
       <template #body>
         <div class="space-y-4 p-1">
           <div 
@@ -280,21 +280,21 @@ const getCurrencyTheme = (currency: string) => {
                 class="text-xs font-bold uppercase"
                 :class="getCurrencyTheme(adjustState.currency).text"
               >
-                Selected Asset
+                {{ t('users.wallet.selected_asset') }}
               </span>
               <span class="text-lg font-black dark:text-white">{{ adjustState.currency }}</span>
             </div>
           </div>
 
           <div class="grid grid-cols-2 gap-4">
-            <UFormField label="Balance Target">
+            <UFormField :label="t('users.wallet.balance_target')">
               <USelect
                 v-model="adjustState.balanceType"
                 :items="balanceTypeOptions"
                 class="w-full"
               />
             </UFormField>
-            <UFormField label="Operation">
+            <UFormField :label="t('users.wallet.operation')">
               <USelect
                 v-model="adjustState.operation"
                 :items="operationOptions"
@@ -303,7 +303,7 @@ const getCurrencyTheme = (currency: string) => {
             </UFormField>
           </div>
 
-          <UFormField label="Amount">
+          <UFormField :label="t('users.wallet.amount')">
             <UInput
               v-model="adjustState.amount"
               placeholder="0.00"
@@ -313,7 +313,7 @@ const getCurrencyTheme = (currency: string) => {
             />
           </UFormField>
 
-          <UFormField label="Reason Category">
+          <UFormField :label="t('users.wallet.reason_category')">
             <USelect
                 v-model="adjustState.reasonCode"
                 :items="reasonOptions"
@@ -321,10 +321,10 @@ const getCurrencyTheme = (currency: string) => {
               />
           </UFormField>
 
-          <UFormField label="Audit Internal Note">
+          <UFormField :label="t('users.wallet.internal_note')">
             <UTextarea
               v-model="adjustState.internalNote"
-              placeholder="Provide a detailed reason for this adjustment for compliance audit trails..."
+              :placeholder="t('users.wallet.internal_note_placeholder')"
               :rows="4"
               class="text-xs"
             />
@@ -336,7 +336,7 @@ const getCurrencyTheme = (currency: string) => {
         <div class="flex justify-end gap-3 px-1 pb-1">
           <UButton :label="t('common.cancel')" color="neutral" variant="ghost" @click="isAdjustModalOpen = false" />
           <UButton
-            label="Execute Transaction"
+            :label="t('users.wallet.execute')"
             :icon="adjustState.operation === 'add' ? 'i-lucide-arrow-up-circle' : 'i-lucide-arrow-down-circle'"
             :color="adjustState.operation === 'add' ? 'success' : 'error'"
             :loading="isUpdating"
