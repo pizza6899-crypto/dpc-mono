@@ -33,7 +33,10 @@
         "max_length": "{field}은(는) {max}자 이하여야 합니다.",
         "length_range": "{field}은(는) {min}자 이상 {max}자 이하여야 합니다.",
         "exact_length": "{field}은(는) {length}자여야 합니다.",
-        "password_complexity": "비밀번호는 영문자와 숫자를 최소 하나씩 포함해야 합니다."
+        "password_complexity": "비밀번호는 영문자와 숫자를 최소 하나씩 포함해야 합니다.",
+        "min_value": "{field}은(는) {min} 이상이어야 합니다.",
+        "max_value": "{field}은(는) {max} 이하여야 합니다.",
+        "invalid_format": "잘못된 형식입니다."
     },
     "common": {
         "confirm": "확인",

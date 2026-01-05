@@ -9,12 +9,12 @@ const toast = useToast()
 const validators = useValidators()
 
 const schema = z.object({
-  email: validators.email,
-  password: validators.password,
+  email: validators.email(t('users.email')),
+  password: validators.password(t('login.password')),
   role: z.nativeEnum(RegisterAdminRequestDtoRole).optional(),
-  country: validators.countryCode,
-  timezone: validators.timezone,
-  referralCode: validators.referralCode
+  country: validators.countryCode(t('users.country')),
+  timezone: validators.timezone(t('users.timezone')),
+  referralCode: validators.referralCode(t('users.referral_code'))
 })
 
 const state = reactive({

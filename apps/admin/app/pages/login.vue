@@ -8,6 +8,7 @@ definePageMeta({
 
 const toast = useToast()
 const { t } = useI18n()
+const validators = useValidators()
 
 const state = reactive({
   email: 'admin@dpc.com',
@@ -15,8 +16,8 @@ const state = reactive({
 })
 
 const schema = z.object({
-  email: z.string().email(t('login.validation.email')),
-  password: z.string().min(8, t('login.validation.password'))
+  email: validators.email(t('login.email')),
+  password: validators.password(t('login.password'))
 })
 
 const form = ref()

@@ -13,12 +13,14 @@ const props = defineProps<{
 
 const emit = defineEmits(['success', 'close'])
 
+const v = useValidators()
+
 const schema = z.object({
-  priority: z.number().min(0),
-  code: z.string().min(1),
-  requirementUsd: z.number().min(0),
-  levelUpBonusUsd: z.number().optional().default(0),
-  compRate: z.number().min(0).max(100).optional().default(0)
+  priority: v.minNumber(0, t('tiers.priority')),
+  code: v.tierCode(t('tiers.code')),
+  requirementUsd: v.minNumber(0, t('tiers.requirement_usd')),
+  levelUpBonusUsd: v.minNumber(0, t('tiers.level_up_bonus_usd')).optional().default(0),
+  compRate: v.percentage(t('tiers.comp_rate'))
 })
 
 type Schema = z.output<typeof schema>

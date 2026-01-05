@@ -33,7 +33,10 @@
         "max_length": "{field} must be at most {max} characters.",
         "length_range": "{field} must be between {min} and {max} characters.",
         "exact_length": "{field} must be exactly {length} characters.",
-        "password_complexity": "Password must include at least one letter and one number."
+        "password_complexity": "Password must include at least one letter and one number.",
+        "min_value": "{field} must be at least {min}.",
+        "max_value": "{field} must be at most {max}.",
+        "invalid_format": "Invalid format."
     },
     "common": {
         "confirm": "Confirm",
