@@ -1,6 +1,6 @@
 // src/modules/wallet/controllers/admin/dto/request/get-user-balance-query.dto.ts
 import { ApiPropertyOptional } from '@nestjs/swagger';
-import { IsEnum, IsOptional } from 'class-validator';
+import { IsOptional, IsIn } from 'class-validator';
 import { ExchangeCurrencyCode } from '@repo/database';
 import { WALLET_CURRENCIES } from 'src/utils/currency.util';
 
@@ -11,8 +11,8 @@ export class GetUserBalanceQueryDto {
     example: 'USD',
   })
   @IsOptional()
-  @IsEnum(ExchangeCurrencyCode, {
-    message: 'Invalid currency code',
+  @IsIn(WALLET_CURRENCIES, {
+    message: 'Invalid currency code. Allowed values: ' + WALLET_CURRENCIES.join(', '),
   })
   currency?: ExchangeCurrencyCode;
 }

@@ -4,9 +4,11 @@ import {
   IsString,
   IsNotEmpty,
   Matches,
+  IsIn,
 } from 'class-validator';
 import { ApiProperty } from '@nestjs/swagger';
 import { ExchangeCurrencyCode } from '@repo/database';
+import { WALLET_CURRENCIES } from 'src/utils/currency.util';
 import {
   BalanceType,
   UpdateOperation,
@@ -15,11 +17,11 @@ import {
 export class UpdateUserBalanceRequestDto {
   @ApiProperty({
     description: '통화 코드',
-    enum: ExchangeCurrencyCode,
+    enum: WALLET_CURRENCIES,
     example: ExchangeCurrencyCode.USDT,
   })
-  @IsEnum(ExchangeCurrencyCode, {
-    message: 'Invalid currency code.',
+  @IsIn(WALLET_CURRENCIES, {
+    message: 'Invalid currency code. Allowed values: ' + WALLET_CURRENCIES.join(', '),
   })
   @IsNotEmpty()
   currency: ExchangeCurrencyCode;

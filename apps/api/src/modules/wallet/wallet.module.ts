@@ -5,13 +5,15 @@ import { GetUserBalanceService } from './application/get-user-balance.service';
 import { GetUserBalanceAdminService } from './application/get-user-balance-admin.service';
 import { UpdateUserBalanceService } from './application/update-user-balance.service';
 import { UpdateUserBalanceAdminService } from './application/update-user-balance-admin.service';
+import { GetWalletTransactionHistoryAdminService } from './application/get-wallet-transaction-history-admin.service';
 import { UserWalletRepository } from './infrastructure/user-wallet.repository';
 import { UserWalletMapper } from './infrastructure/user-wallet.mapper';
 import { USER_WALLET_REPOSITORY } from './ports/out/user-wallet.repository.token';
 import { WalletController } from './controllers/user/wallet.controller';
 import { WalletAdminController } from './controllers/admin/wallet-admin.controller';
 import { UserModule } from '../user/user.module';
-
+import { WALLET_TRANSACTION_REPOSITORY } from './ports/out/wallet-transaction.repository.token';
+import { WalletTransactionRepository } from './infrastructure/wallet-transaction.repository';
 /**
  * Wallet 모듈
  *
@@ -42,10 +44,15 @@ import { UserModule } from '../user/user.module';
     GetUserBalanceAdminService,
     UpdateUserBalanceService,
     UpdateUserBalanceAdminService,
+    GetWalletTransactionHistoryAdminService,
     UserWalletMapper,
     {
       provide: USER_WALLET_REPOSITORY,
       useClass: UserWalletRepository,
+    },
+    {
+      provide: WALLET_TRANSACTION_REPOSITORY,
+      useClass: WalletTransactionRepository,
     },
   ],
   controllers: [WalletController, WalletAdminController],
@@ -55,6 +62,7 @@ import { UserModule } from '../user/user.module';
     GetUserBalanceAdminService,
     UpdateUserBalanceService,
     UpdateUserBalanceAdminService,
+    GetWalletTransactionHistoryAdminService,
   ],
 })
 export class WalletModule { }

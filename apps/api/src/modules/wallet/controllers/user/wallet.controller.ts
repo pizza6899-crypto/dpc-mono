@@ -14,6 +14,8 @@ import {
 } from 'src/common/http/decorators/api-response.decorator';
 import { CurrentUser } from 'src/common/auth/decorators/current-user.decorator';
 import type { CurrentUserWithSession } from 'src/common/auth/decorators/current-user.decorator';
+import { AuditLog } from 'src/modules/audit-log/infrastructure/audit-log.decorator';
+import { LogType } from 'src/modules/audit-log/domain';
 import { GetUserBalanceService } from '../../application/get-user-balance.service';
 import { UserBalanceResponseDto } from './dto/response/user-balance.response.dto';
 import { GetBalanceQueryDto } from './dto/request/get-balance-query.dto';
@@ -38,6 +40,14 @@ export class WalletController {
   @ApiStandardResponse(UserBalanceResponseDto, {
     status: HttpStatus.OK,
     description: 'Successfully retrieved user balance / 사용자 잔액 조회 성공',
+  })
+  @AuditLog({
+    type: LogType.ACTIVITY,
+    category: 'WALLET',
+    action: 'VIEW_BALANCE',
+    extractMetadata: (req, args) => ({
+      currency: args[1]?.currency,
+    }),
   })
   async getBalance(
     @CurrentUser() user: CurrentUserWithSession,

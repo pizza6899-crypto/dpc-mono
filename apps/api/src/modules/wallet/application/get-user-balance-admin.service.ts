@@ -6,8 +6,8 @@ import { USER_REPOSITORY } from 'src/modules/user/ports/out/user.repository.toke
 import type { UserRepositoryPort } from 'src/modules/user/ports/out/user.repository.port';
 import { UserWallet } from '../domain';
 import { UserNotFoundException } from 'src/modules/user/domain/user.exception';
+import { WalletNotFoundException } from '../domain';
 import type { ExchangeCurrencyCode } from '@repo/database';
-import { WALLET_CURRENCIES } from 'src/utils/currency.util';
 
 interface GetUserBalanceAdminParams {
   userId: bigint;
@@ -35,81 +35,39 @@ export class GetUserBalanceAdminService {
     private readonly walletRepository: UserWalletRepositoryPort,
     @Inject(USER_REPOSITORY)
     private readonly userRepository: UserRepositoryPort,
-  ) {}
+  ) { }
 
   async execute(
     params: GetUserBalanceAdminParams,
   ): Promise<GetUserBalanceAdminResult> {
     const { userId, currency } = params;
 
-    try {
-      // 1. 사용자 존재 여부 확인
-      const user = await this.userRepository.findById(userId);
-      if (!user) {
-        throw new UserNotFoundException(userId);
-      }
-
-      // 2. 잔액 조회 (기존 로직과 동일)
-      if (currency) {
-        // 특정 통화 조회
-        let wallet = await this.walletRepository.findByUserIdAndCurrency(
-          userId,
-          currency,
-        );
-
-        // 월렛이 없으면 생성
-        if (!wallet) {
-          const newWallet = UserWallet.create({
-            userId,
-            currency,
-          });
-          wallet = await this.walletRepository.upsert(newWallet);
-        }
-
-        return { wallet };
-      }
-
-      // 모든 통화 반환
-      const existingWallets = await this.walletRepository.findByUserId(userId);
-      const existingCurrencies = new Set(
-        existingWallets.map((w) => w.currency),
-      );
-
-      // WALLET_CURRENCIES에 있는 통화 중 누락된 것이 있으면 생성
-      const missingCurrencies = WALLET_CURRENCIES.filter(
-        (c) => !existingCurrencies.has(c),
-      );
-
-      if (missingCurrencies.length > 0) {
-        const newWallets = await Promise.all(
-          missingCurrencies.map((c) => {
-            const newWallet = UserWallet.create({
-              userId,
-              currency: c,
-            });
-            return this.walletRepository.upsert(newWallet);
-          }),
-        );
-
-        // 기존 월렛과 새로 생성한 월렛을 합쳐서 반환
-        return { wallet: [...existingWallets, ...newWallets] };
-      }
-
-      // 모든 통화가 존재하는 경우
-      return { wallet: existingWallets };
-    } catch (error) {
-      // 도메인 예외는 그대로 재던지기
-      if (error instanceof UserNotFoundException) {
-        throw error;
-      }
-
-      // 예상치 못한 시스템 에러는 로깅 후 재던지기
-      this.logger.error(
-        `관리자 사용자 잔액 조회 실패 - userId: ${userId}, currency: ${currency || 'all'}`,
-        error,
-      );
-      throw error;
+    // 1. 사용자 존재 여부 확인
+    const user = await this.userRepository.findById(userId);
+    if (!user) {
+      throw new UserNotFoundException(userId);
     }
+
+    // 2. 잔액 조회
+    if (currency) {
+      // 특정 통화 조회
+      const wallet = await this.walletRepository.findByUserIdAndCurrency(
+        userId,
+        currency,
+      );
+
+      if (!wallet) {
+        // 동기 생성 정책으로 인해 지갑이 없으면 에러 처리
+        throw new WalletNotFoundException(userId, currency);
+      }
+
+      return { wallet };
+    }
+
+    // 모든 통화 반환
+    const existingWallets = await this.walletRepository.findByUserId(userId);
+
+    // 지갑이 하나도 없는 경우도 빈 배열 반환 (동기 생성 정책상 가입 시 생성되지만, 예외 상황 고려)
+    return { wallet: existingWallets };
   }
 }
-

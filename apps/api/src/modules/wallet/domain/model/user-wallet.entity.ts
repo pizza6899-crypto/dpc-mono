@@ -5,6 +5,7 @@ import {
   InvalidWalletBalanceException,
   InsufficientBalanceException,
 } from '../wallet.exception';
+import { BalanceType, UpdateOperation } from '../wallet.types';
 
 /**
  * UserWallet 도메인 엔티티
@@ -273,6 +274,57 @@ export class UserWallet {
     if (remaining.gt(0)) {
       this._bonusBalance = this._bonusBalance.sub(remaining);
     }
+  }
+
+  /**
+   * 잔액 업데이트 (통합 메서드)
+   * @param type 잔액 타입 (MAIN, BONUS, TOTAL)
+   * @param operation 연산 타입 (ADD, SUBTRACT)
+   * @param amount 금액
+   * @returns 변경된 잔액 정보 (변경량 및 변경 전/후 잔액)
+   */
+  updateBalance(
+    type: BalanceType,
+    operation: UpdateOperation,
+    amount: Prisma.Decimal,
+  ): {
+    mainChange: Prisma.Decimal;
+    bonusChange: Prisma.Decimal;
+    beforeMainBalance: Prisma.Decimal;
+    afterMainBalance: Prisma.Decimal;
+    beforeBonusBalance: Prisma.Decimal;
+    afterBonusBalance: Prisma.Decimal;
+  } {
+    const beforeMainBalance = this._mainBalance;
+    const beforeBonusBalance = this._bonusBalance;
+
+    if (operation === UpdateOperation.ADD) {
+      if (type === BalanceType.BONUS) {
+        this.addBonusBalance(amount);
+      } else {
+        // MAIN, TOTAL -> Add to Main (정책)
+        this.addMainBalance(amount);
+      }
+    } else {
+      // SUBTRACT
+      if (type === BalanceType.MAIN) {
+        this.subtractMainBalance(amount);
+      } else if (type === BalanceType.BONUS) {
+        this.subtractBonusBalance(amount);
+      } else {
+        // TOTAL: 메인 우선, 부족하면 보너스에서 차감
+        this.subtractFromTotal(amount);
+      }
+    }
+
+    return {
+      mainChange: this._mainBalance.sub(beforeMainBalance),
+      bonusChange: this._bonusBalance.sub(beforeBonusBalance),
+      beforeMainBalance,
+      afterMainBalance: this._mainBalance,
+      beforeBonusBalance,
+      afterBonusBalance: this._bonusBalance,
+    };
   }
 }
 

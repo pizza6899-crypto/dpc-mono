@@ -4,18 +4,18 @@ import { USER_WALLET_REPOSITORY } from '../ports/out/user-wallet.repository.toke
 import type { UserWalletRepositoryPort } from '../ports/out/user-wallet.repository.port';
 import { USER_REPOSITORY } from 'src/modules/user/ports/out/user.repository.token';
 import type { UserRepositoryPort } from 'src/modules/user/ports/out/user.repository.port';
+import { WALLET_TRANSACTION_REPOSITORY } from '../ports/out/wallet-transaction.repository.token';
+import type { WalletTransactionRepositoryPort } from '../ports/out/wallet-transaction.repository.port';
 import {
   UserWallet,
-  InsufficientBalanceException,
-  InvalidWalletBalanceException,
+  WalletTransaction,
+  WalletNotFoundException,
+  BalanceType,
+  UpdateOperation,
 } from '../domain';
 import { UserNotFoundException } from 'src/modules/user/domain/user.exception';
 import type { ExchangeCurrencyCode } from '@repo/database';
-import { Prisma } from '@repo/database';
-import {
-  BalanceType,
-  UpdateOperation,
-} from './update-user-balance.service';
+import { Prisma, TransactionType, TransactionStatus } from '@repo/database';
 import { Transactional } from '@nestjs-cls/transactional';
 
 interface UpdateUserBalanceAdminParams {
@@ -52,9 +52,11 @@ export class UpdateUserBalanceAdminService {
   constructor(
     @Inject(USER_WALLET_REPOSITORY)
     private readonly walletRepository: UserWalletRepositoryPort,
+    @Inject(WALLET_TRANSACTION_REPOSITORY)
+    private readonly transactionRepository: WalletTransactionRepositoryPort,
     @Inject(USER_REPOSITORY)
     private readonly userRepository: UserRepositoryPort,
-  ) {}
+  ) { }
 
   @Transactional()
   async execute(
@@ -62,88 +64,80 @@ export class UpdateUserBalanceAdminService {
   ): Promise<UpdateUserBalanceAdminResult> {
     const { userId, currency, balanceType, operation, amount } = params;
 
-    try {
-      // 1. 사용자 존재 여부 확인
-      const user = await this.userRepository.findById(userId);
-      if (!user) {
-        throw new UserNotFoundException(userId);
-      }
-
-      // 2. 월렛 조회 (없으면 생성)
-      let wallet = await this.walletRepository.findByUserIdAndCurrency(
-        userId,
-        currency,
-      );
-
-      if (!wallet) {
-        const newWallet = UserWallet.create({
-          userId,
-          currency,
-        });
-        wallet = await this.walletRepository.upsert(newWallet);
-      }
-
-      // 3. 변경 전 잔액 저장
-      const beforeMainBalance = wallet.mainBalance;
-      const beforeBonusBalance = wallet.bonusBalance;
-
-      // 4. 잔액 업데이트
-      if (operation === UpdateOperation.ADD) {
-        if (balanceType === BalanceType.MAIN) {
-          wallet.addMainBalance(amount);
-        } else if (balanceType === BalanceType.BONUS) {
-          wallet.addBonusBalance(amount);
-        } else {
-          // TOTAL은 ADD 시 메인 잔액에 추가
-          wallet.addMainBalance(amount);
-        }
-      } else {
-        // SUBTRACT
-        if (balanceType === BalanceType.MAIN) {
-          wallet.subtractMainBalance(amount);
-        } else if (balanceType === BalanceType.BONUS) {
-          wallet.subtractBonusBalance(amount);
-        } else {
-          // TOTAL: 메인 우선, 부족하면 보너스에서 차감
-          wallet.subtractFromTotal(amount);
-        }
-      }
-
-      // 5. 저장 (Prisma가 자동으로 updatedAt 업데이트)
-      const savedWallet = await this.walletRepository.upsert(wallet);
-
-      // 6. 변경량 계산
-      const mainBalanceChange = savedWallet.mainBalance.sub(beforeMainBalance);
-      const bonusBalanceChange = savedWallet.bonusBalance.sub(
-        beforeBonusBalance,
-      );
-
-      return {
-        wallet: savedWallet,
-        beforeMainBalance,
-        afterMainBalance: savedWallet.mainBalance,
-        beforeBonusBalance,
-        afterBonusBalance: savedWallet.bonusBalance,
-        mainBalanceChange,
-        bonusBalanceChange,
-      };
-    } catch (error) {
-      // 도메인 예외는 그대로 재던지기
-      if (
-        error instanceof UserNotFoundException ||
-        error instanceof InsufficientBalanceException ||
-        error instanceof InvalidWalletBalanceException
-      ) {
-        throw error;
-      }
-
-      // 예상치 못한 시스템 에러는 로깅 후 재던지기
-      this.logger.error(
-        `관리자 사용자 잔액 업데이트 실패 - userId: ${userId}, currency: ${currency}, balanceType: ${balanceType}, operation: ${operation}, amount: ${amount}`,
-        error,
-      );
-      throw error;
+    // 1. 사용자 존재 여부 확인
+    const user = await this.userRepository.findById(userId);
+    if (!user) {
+      throw new UserNotFoundException(userId);
     }
+
+    // 2. 락 획득 (동시성 제어 - Advisory Lock)
+    await this.walletRepository.acquireLock(userId);
+
+    // 3. 월렛 조회
+    const wallet = await this.walletRepository.findByUserIdAndCurrency(
+      userId,
+      currency,
+    );
+
+    if (!wallet) {
+      // 관리자가 수정하려는데 지갑이 없다면 에러 발생 (생성 로직 제거됨)
+      throw new WalletNotFoundException(userId, currency);
+    }
+
+    // 5. 잔액 업데이트
+    const {
+      mainChange,
+      bonusChange,
+      beforeMainBalance,
+      afterMainBalance,
+      beforeBonusBalance,
+      afterBonusBalance,
+    } = wallet.updateBalance(balanceType, operation, amount);
+
+    // 6. 저장
+    const savedWallet = await this.walletRepository.upsert(wallet);
+
+    // 7. 변경량 및 Total 계산
+    const totalChange = mainChange.add(bonusChange);
+    const beforeTotalAmount = beforeMainBalance.add(beforeBonusBalance);
+    const afterTotalAmount = afterMainBalance.add(afterBonusBalance);
+
+    // 8. 트랜잭션 기록
+    let transactionType: TransactionType = TransactionType.DEPOSIT;
+    if (operation === UpdateOperation.SUBTRACT) {
+      transactionType = TransactionType.WITHDRAW;
+    } else if (balanceType === BalanceType.BONUS) {
+      transactionType = TransactionType.BONUS;
+    }
+
+    const transaction = WalletTransaction.create({
+      userId,
+      type: transactionType,
+      status: TransactionStatus.COMPLETED,
+      currency,
+      amount: totalChange, // 부호 포함
+      beforeAmount: beforeTotalAmount,
+      afterAmount: afterTotalAmount,
+      detail: {
+        mainBalanceChange: mainChange,
+        mainBeforeAmount: beforeMainBalance,
+        mainAfterAmount: afterMainBalance,
+        bonusBalanceChange: bonusChange,
+        bonusBeforeAmount: beforeBonusBalance,
+        bonusAfterAmount: afterBonusBalance,
+      },
+    });
+
+    await this.transactionRepository.create(transaction);
+
+    return {
+      wallet: savedWallet,
+      beforeMainBalance,
+      afterMainBalance,
+      beforeBonusBalance,
+      afterBonusBalance,
+      mainBalanceChange: mainChange,
+      bonusBalanceChange: bonusChange,
+    };
   }
 }
-
