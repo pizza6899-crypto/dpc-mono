@@ -37,7 +37,8 @@ import { CountUsersByTierService } from '../../application/count-users-by-tier.s
 import { ForceUpdateUserTierDto } from './dto/request/force-update-user-tier.dto';
 import { TierUserCountResponseDto } from './dto/response/tier-user-count.response.dto';
 import { UserParamDto } from './dto/request/user-param.dto';
-import { FindUserTierHistoryService } from '../../application/find-user-tier-history.service';
+import { FindTierHistoryService } from '../../application/find-tier-history.service';
+import { FindTierHistoryRequestDto } from './dto/request/find-tier-history.request.dto';
 import { TierHistoryResponseDto } from './dto/response/tier-history.response.dto';
 import { FindUsersByTierService } from '../../application/find-users-by-tier.service';
 import { TierUserListQueryDto } from './dto/request/tier-user-list-query.dto';
@@ -59,10 +60,10 @@ export class TierAdminController {
         private readonly updateTierTranslationService: UpdateTierTranslationService,
         private readonly forceUpdateUserTierService: ForceUpdateUserTierService,
         private readonly countUsersByTierService: CountUsersByTierService,
-        private readonly findUserTierHistoryService: FindUserTierHistoryService,
         private readonly findUsersByTierService: FindUsersByTierService,
         private readonly initializeMissingUserTiersService: InitializeMissingUserTiersService,
         private readonly getUserTierService: GetUserTierService,
+        private readonly findTierHistoryService: FindTierHistoryService,
     ) { }
 
     @Get('users/:userId')
@@ -222,6 +223,35 @@ export class TierAdminController {
         return this.countUsersByTierService.execute();
     }
 
+    @Get('history')
+    @HttpCode(HttpStatus.OK)
+    @AuditLog({
+        type: LogType.ACTIVITY,
+        category: 'TIER',
+        action: 'TIER_HISTORY_VIEW',
+    })
+    @ApiOperation({ summary: 'Get tier history / 티어 변경 이력 조회' })
+    @Paginated()
+    @ApiPaginatedResponse(TierHistoryResponseDto, {
+        description: 'Successfully retrieved tier history / 티어 변경 이력 조회 성공',
+    })
+    async getTierHistory(
+        @Query() query: FindTierHistoryRequestDto,
+    ): Promise<PaginatedData<TierHistoryResponseDto>> {
+        const result = await this.findTierHistoryService.execute({
+            userId: query.userId ? BigInt(query.userId) : undefined,
+            page: query.page ?? 1,
+            limit: query.limit ?? 20,
+        });
+
+        return {
+            data: result.items.map(h => new TierHistoryResponseDto(h)),
+            total: result.total,
+            page: query.page ?? 1,
+            limit: query.limit ?? 20,
+        };
+    }
+
     @Get('users/:userId/history')
     @HttpCode(HttpStatus.OK)
     @AuditLog({
@@ -233,14 +263,26 @@ export class TierAdminController {
         }),
     })
     @ApiOperation({ summary: 'Get user tier history / 사용자의 티어 변경 이력 조회' })
-    @ApiStandardResponse(TierHistoryResponseDto, {
-        status: HttpStatus.OK,
+    @Paginated()
+    @ApiPaginatedResponse(TierHistoryResponseDto, {
         description: 'Successfully retrieved user tier history / 티어 변경 이력 조회 성공',
-        isArray: true,
     })
-    async getUserTierHistory(@Param() params: UserParamDto): Promise<TierHistoryResponseDto[]> {
-        const history = await this.findUserTierHistoryService.execute(BigInt(params.userId));
-        return history.map(h => new TierHistoryResponseDto(h));
+    async getUserTierHistory(
+        @Param() params: UserParamDto,
+        @Query() query: FindTierHistoryRequestDto,
+    ): Promise<PaginatedData<TierHistoryResponseDto>> {
+        const result = await this.findTierHistoryService.execute({
+            userId: BigInt(params.userId),
+            page: query.page ?? 1,
+            limit: query.limit ?? 20,
+        });
+
+        return {
+            data: result.items.map(h => new TierHistoryResponseDto(h)),
+            total: result.total,
+            page: query.page ?? 1,
+            limit: query.limit ?? 20,
+        };
     }
 
     @Get(':id/users')

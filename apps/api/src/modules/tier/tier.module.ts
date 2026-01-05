@@ -22,10 +22,10 @@ import { UpdateTierTranslationService } from './application/translation/update-t
 import { AssignDefaultTierService } from './application/assign-default-tier.service';
 import { ForceUpdateUserTierService } from './application/force-update-user-tier.service';
 import { CountUsersByTierService } from './application/count-users-by-tier.service';
-import { FindUserTierHistoryService } from './application/find-user-tier-history.service';
 import { FindUsersByTierService } from './application/find-users-by-tier.service';
 import { AddUserRollingService } from './application/add-user-rolling.service';
 import { InitializeMissingUserTiersService } from './application/initialize-missing-user-tiers.service';
+import { FindTierHistoryService } from './application/find-tier-history.service';
 
 @Module({
   imports: [],
@@ -41,10 +41,10 @@ import { InitializeMissingUserTiersService } from './application/initialize-miss
     AssignDefaultTierService,
     ForceUpdateUserTierService,
     CountUsersByTierService,
-    FindUserTierHistoryService,
     FindUsersByTierService,
     AddUserRollingService,
     InitializeMissingUserTiersService,
+    FindTierHistoryService,
     {
       provide: TIER_REPOSITORY,
       useClass: TierRepository,
@@ -74,10 +74,10 @@ import { InitializeMissingUserTiersService } from './application/initialize-miss
     AssignDefaultTierService,
     ForceUpdateUserTierService,
     CountUsersByTierService,
-    FindUserTierHistoryService,
     FindUsersByTierService,
     AddUserRollingService,
     InitializeMissingUserTiersService,
+    FindTierHistoryService,
   ],
 })
 
