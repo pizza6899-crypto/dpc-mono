@@ -6,10 +6,13 @@ export const useUIStore = defineStore('ui', () => {
     const tableSettings = reactive({
         users: {
             itemsPerPage: 10
+        },
+        tierHistory: {
+            itemsPerPage: 20
+        },
+        walletTransactions: {
+            itemsPerPage: 20
         }
-        // 추가될 페이지들:
-        // transactions: { itemsPerPage: 20 },
-        // auditLogs: { itemsPerPage: 50 }
     })
 
     // Global UI settings

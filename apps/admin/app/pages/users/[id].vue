@@ -12,20 +12,20 @@ const refreshHistory = () => {
     historyRefreshKey.value++
 }
 
-const tabs = [
+const tabs = computed(() => [
   {
     slot: 'overview',
-    label: 'Overview'
+    label: t('common.overview')
   },
   {
     slot: 'tier-history',
-    label: 'Tier History'
+    label: t('tiers.history.title')
   },
   {
     slot: 'transaction-history',
     label: t('users.wallet.transaction_history')
   }
-]
+])
 </script>
 
 <template>

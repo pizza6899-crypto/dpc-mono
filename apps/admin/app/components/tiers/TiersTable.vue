@@ -1,8 +1,10 @@
 <script setup lang="ts">
 import type { TableColumn } from '@nuxt/ui'
 import type { TierResponseDto } from '~/api/generated/models'
+import { UButton } from '#components'
 
-const { t } = useI18n()
+const { t, locale } = useI18n()
+const toast = useToast()
 
 const props = defineProps<{
   tiers: TierResponseDto[]
@@ -16,6 +18,15 @@ const emit = defineEmits<{
   (e: 'create'): void
 }>()
 
+const copyToClipboard = async (text: string) => {
+  try {
+    await navigator.clipboard.writeText(text)
+    toast.add({ title: t('common.clipboard.copy_success'), icon: 'i-lucide-check-circle', color: 'success' })
+  } catch (err) {
+    toast.add({ title: t('common.clipboard.copy_error'), color: 'error' })
+  }
+}
+
 const columns = computed<TableColumn<TierResponseDto>[]>(() => [
   {
     accessorKey: 'priority',
@@ -23,13 +34,28 @@ const columns = computed<TableColumn<TierResponseDto>[]>(() => [
   },
   {
     accessorKey: 'code',
-    header: t('tiers.code')
+    header: t('tiers.code'),
+    cell: ({ row }) => h('div', { 
+      class: 'flex items-center gap-2 group cursor-pointer hover:text-primary-500 transition-colors',
+      onClick: (e: MouseEvent) => {
+        e.stopPropagation()
+        copyToClipboard(row.original.code)
+      }
+    }, [
+      h('span', { class: 'font-mono text-xs' }, row.original.code),
+      h(UButton, {
+        icon: 'i-lucide-copy',
+        color: 'neutral',
+        variant: 'ghost',
+        size: 'xs',
+        class: 'opacity-0 group-hover:opacity-100 transition-opacity p-1 h-auto w-auto'
+      })
+    ])
   },
   {
     id: 'name',
     header: t('tiers.name'),
     cell: ({ row }) => {
-      const { locale } = useI18n()
       const currentLang = locale.value.toUpperCase()
       const translation = row.original.translations.find(tr => tr.language === currentLang)
         || row.original.translations.find(tr => tr.language === 'EN')

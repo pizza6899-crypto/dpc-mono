@@ -48,6 +48,7 @@
         "field": "Field",
         "dashboard": "Dashboard",
         "users": "Users",
+        "overview": "Overview",
         "settings": "Settings",
         "general": "General",
         "games": "Game management",
@@ -65,7 +66,8 @@
         "clipboard": {
             "copy_success": "Copied to clipboard",
             "copy_error": "Failed to copy"
-        }
+        },
+        "no_additional_data": "No additional data"
     },
     "users": {
         "uid": "UID",
@@ -231,6 +233,7 @@
         "comp_rate": "Comp Rate",
         "history": {
             "title": "History",
+            "type": "Type",
             "old_tier": "Old Tier",
             "new_tier": "New Tier",
             "reason": "Reason",

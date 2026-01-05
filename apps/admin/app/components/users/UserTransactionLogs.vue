@@ -10,8 +10,12 @@ const props = defineProps<{
   userId: string
 }>()
 
+const uiStore = useUIStore()
 const page = ref(1)
-const pageLimit = ref(20)
+const pageLimit = computed({
+  get: () => uiStore.tableSettings.walletTransactions.itemsPerPage,
+  set: (val) => uiStore.tableSettings.walletTransactions.itemsPerPage = val
+})
 
 const params = computed(() => ({
   page: page.value,
@@ -21,7 +25,7 @@ const params = computed(() => ({
 const { data: response, status } = useWalletAdminControllerGetTransactionHistory(props.userId, params)
 
 const transactions = computed(() => (response.value as any)?.data || [])
-const total = computed(() => (response.value as any)?.total || 0)
+const total = computed(() => (response.value as any)?.pagination?.total || 0)
 const loading = computed(() => status.value === 'pending')
 
 const getCurrencyTheme = (currency: string) => {
@@ -250,12 +254,11 @@ const columns = computed<TableColumn<WalletTransactionResponseDto>[]>(() => [
         {{ t('users.wallet.showing_items', { count: transactions.length, total }) }}
       </div>
       <UPagination
-        v-model="page"
-        :page-count="pageLimit"
+        v-model:page="page"
+        :items-per-page="pageLimit"
         :total="total"
-        :ui="{ 
-          root: 'font-bold'
-        }"
+        size="sm"
+        color="neutral"
       />
     </div>
   </UCard>

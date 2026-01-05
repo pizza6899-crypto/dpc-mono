@@ -48,6 +48,7 @@
         "field": "필드",
         "dashboard": "대시보드",
         "users": "사용자",
+        "overview": "개요",
         "settings": "설정",
         "general": "일반",
         "games": "게임 관리",
@@ -65,7 +66,8 @@
         "clipboard": {
             "copy_success": "클립보드에 복사되었습니다",
             "copy_error": "복사에 실패했습니다"
-        }
+        },
+        "no_additional_data": "추가된 데이터 없음"
     },
     "users": {
         "uid": "UID",
