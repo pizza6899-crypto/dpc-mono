@@ -13,6 +13,8 @@ const props = defineProps<{
 
 const { t, locale } = useI18n()
 const toast = useToast()
+const router = useRouter()
+const route = useRoute()
 
 // Data Fetching
 const { data: userTierResponse, isPending: isTierLoading, refetch: refetchTier } = useTierAdminControllerGetUserTier(props.userId)
@@ -20,6 +22,10 @@ const { data: allTiersResponse } = useTierAdminControllerFindAll()
 
 const userTier = computed(() => userTierResponse.value?.data)
 const tiers = computed(() => allTiersResponse.value?.data || [])
+
+const onViewLogs = () => {
+  router.replace({ query: { ...route.query, tab: 'tier-history' } })
+}
 
 // Force Update Modal
 const isForceUpdateModalOpen = ref(false)
@@ -99,12 +105,20 @@ function onUnlock() {
   <UCard>
     <template #header>
       <div class="flex items-center justify-between w-full">
-        <h3 class="font-semibold">Tier & VIP</h3>
+        <h3 class="font-semibold">{{ t('tiers.title') }}</h3>
         <div class="flex gap-2">
+            <UButton
+              icon="i-lucide-history"
+              :label="t('tiers.view_logs')"
+              size="xs"
+              color="neutral"
+              variant="subtle"
+              @click="onViewLogs"
+            />
             <UButton
             v-if="userTier?.isManualLock"
             icon="i-lucide-lock-open"
-            label="Unlock Tier"
+            :label="t('tiers.unlock_tier')"
             size="xs"
             color="success"
             variant="subtle"
@@ -113,7 +127,7 @@ function onUnlock() {
             <UButton
             v-else
             icon="i-lucide-shield-alert"
-            label="Force Update"
+            :label="t('tiers.force_update')"
             size="xs"
             color="warning"
             variant="subtle"
@@ -130,10 +144,10 @@ function onUnlock() {
     <div v-else-if="userTier" class="grid grid-cols-1 sm:grid-cols-2 gap-8">
       <div class="space-y-4">
         <div>
-          <label class="text-xs text-neutral-500 uppercase tracking-wider">Current Tier</label>
+          <label class="text-xs text-neutral-500 uppercase tracking-wider">{{ t('tiers.current_tier') }}</label>
           <div class="flex items-center gap-3 mt-1">
             <span class="text-3xl font-bold text-neutral-900 dark:text-white">{{ userTier.tierCode }}</span>
-            <UBadge v-if="userTier.isManualLock" color="warning" variant="subtle" icon="i-lucide-lock">Locked</UBadge>
+            <UBadge v-if="userTier.isManualLock" color="warning" variant="subtle" icon="i-lucide-lock">{{ t('tiers.locked') }}</UBadge>
           </div>
           <p class="text-sm text-neutral-500 mt-1">
             {{ userTier.tierTranslations?.find(t => t.language === (locale.toUpperCase()))?.name 
@@ -143,7 +157,7 @@ function onUnlock() {
         </div>
 
         <div>
-          <label class="text-xs text-neutral-500 uppercase tracking-wider">Total Rolling Progress</label>
+          <label class="text-xs text-neutral-500 uppercase tracking-wider">{{ t('tiers.total_rolling_progress') }}</label>
           <div class="mt-1">
             <span class="text-xl font-semibold">${{ Number(userTier.totalRollingUsd).toLocaleString() }}</span>
             <span class="text-neutral-400 mx-2">/</span>
@@ -163,16 +177,16 @@ function onUnlock() {
         <div class="p-4 bg-neutral-50 dark:bg-neutral-800/50 rounded-lg">
           <div class="flex items-center gap-2 text-sm font-medium mb-3">
             <UIcon name="i-lucide-info" class="w-4 h-4" />
-            Tier Details
+            {{ t('tiers.tier_details') }}
           </div>
           <ul class="text-xs space-y-2 text-neutral-600 dark:text-neutral-400">
             <li class="flex justify-between">
-              <span>Highest Reached:</span>
+              <span>{{ t('tiers.highest_reached') }}:</span>
               <span class="font-semibold">{{ userTier.highestPromotedPriority }}</span>
             </li>
             <li class="flex justify-between">
-              <span>Last Promoted:</span>
-              <span>{{ userTier.lastPromotedAt ? format(new Date(userTier.lastPromotedAt), 'yyyy-MM-dd') : 'Never' }}</span>
+              <span>{{ t('tiers.last_promoted') }}:</span>
+              <span>{{ userTier.lastPromotedAt ? format(new Date(userTier.lastPromotedAt), 'yyyy-MM-dd') : '-' }}</span>
             </li>
           </ul>
         </div>
@@ -180,53 +194,53 @@ function onUnlock() {
     </div>
 
     <div v-else class="p-8 text-center text-neutral-500">
-      No tier information found for this user.
+      {{ t('tiers.no_info') }}
       <div class="mt-4">
-         <UButton label="Initialize Tier" color="neutral" variant="outline" size="sm" />
+         <UButton :label="t('tiers.initialize')" color="neutral" variant="outline" size="sm" />
       </div>
     </div>
 
     <!-- Force Update Modal (Nested in Component) -->
-    <UModal v-model:open="isForceUpdateModalOpen" title="Force Update User Tier">
+    <UModal v-model:open="isForceUpdateModalOpen" :title="t('tiers.force_update_title')">
       <template #body>
         <div class="space-y-4">
-          <UFormField label="New Tier">
+          <UFormField :label="t('tiers.new_tier')">
             <USelect
               v-model="forceUpdateState.tierCode"
               :items="tiers.map(t => ({ label: t.code, value: t.code }))"
-              placeholder="Select a tier"
+              :placeholder="t('tiers.select_tier')"
               class="w-full"
             />
           </UFormField>
-          <UFormField label="Reason">
-            <UTextarea v-model="forceUpdateState.reason" placeholder="Enter reason for manual update" />
+          <UFormField :label="t('tiers.reason')">
+            <UTextarea v-model="forceUpdateState.reason" :placeholder="t('tiers.enter_reason')" />
           </UFormField>
         </div>
       </template>
       <template #footer>
         <div class="flex justify-end gap-3">
           <UButton :label="t('common.cancel')" color="neutral" variant="ghost" @click="isForceUpdateModalOpen = false" />
-          <UButton label="Update" color="warning" :loading="isForceUpdating" @click="onForceUpdate" />
+          <UButton :label="t('common.update')" color="warning" :loading="isForceUpdating" @click="onForceUpdate" />
         </div>
       </template>
     </UModal>
 
     <!-- Unlock Modal -->
-    <UModal v-model:open="isUnlockModalOpen" title="Unlock User Tier">
+    <UModal v-model:open="isUnlockModalOpen" :title="t('tiers.unlock_title')">
       <template #body>
         <div class="space-y-4">
           <p class="text-sm text-neutral-600 dark:text-neutral-400">
-            Are you sure you want to unlock this user's tier? The user will be subject to automatic tier adjustments based on their rolling amount.
+            {{ t('tiers.unlock_confirm_message') }}
           </p>
-          <UFormField label="Reason (Optional)">
-            <UTextarea v-model="unlockState.reason" placeholder="Enter reason for unlocking" />
+          <UFormField :label="t('tiers.reason_optional')">
+            <UTextarea v-model="unlockState.reason" :placeholder="t('tiers.enter_unlock_reason')" />
           </UFormField>
         </div>
       </template>
       <template #footer>
         <div class="flex justify-end gap-3">
           <UButton :label="t('common.cancel')" color="neutral" variant="ghost" @click="isUnlockModalOpen = false" />
-          <UButton label="Unlock" color="success" :loading="isUnlocking" @click="onUnlock" />
+          <UButton :label="t('common.unlock')" color="success" :loading="isUnlocking" @click="onUnlock" />
         </div>
       </template>
     </UModal>
