@@ -47,6 +47,8 @@
         "users": "Users",
         "settings": "Settings",
         "general": "General",
+        "games": "Game management",
+        "affiliates": "Affiliate management",
         "tiers": "Tier management",
         "policy": "Policy",
         "date": "Date",

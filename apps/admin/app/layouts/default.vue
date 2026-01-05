@@ -23,6 +23,20 @@ const links = computed<NavigationMenuItem[][]>(() => [[{
     open.value = false
   }
 }, {
+  label: t('common.games'),
+  icon: 'i-lucide-gamepad-2',
+  to: '/games',
+  onSelect: () => {
+    open.value = false
+  }
+}, {
+  label: t('common.affiliates'),
+  icon: 'i-lucide-handshake',
+  to: '/affiliates',
+  onSelect: () => {
+    open.value = false
+  }
+}, {
   label: t('common.tiers'),
   icon: 'i-lucide-layers',
   to: '/tiers',
