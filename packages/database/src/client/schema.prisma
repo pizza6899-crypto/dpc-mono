@@ -1,35 +1,36 @@
 model AffiliateCode {
   id           BigInt     @id @default(autoincrement())
   uid          String     @unique
-  userId       BigInt
+  userId       BigInt     @map("user_id")
   code         String     @unique
-  campaignName String?
+  campaignName String?    @map("campaign_name")
   description  String?
-  isActive     Boolean    @default(true)
-  isDefault    Boolean    @default(false)
-  expiresAt    DateTime?
-  createdAt    DateTime   @default(now())
-  updatedAt    DateTime   @updatedAt
-  lastUsedAt   DateTime?
+  isActive     Boolean    @default(true) @map("is_active")
+  isDefault    Boolean    @default(false) @map("is_default")
+  expiresAt    DateTime?  @map("expires_at")
+  createdAt    DateTime   @default(now()) @map("created_at")
+  updatedAt    DateTime   @updatedAt @map("updated_at")
+  lastUsedAt   DateTime?  @map("last_used_at")
   user         User       @relation("AffiliateCodes", fields: [userId], references: [id], onDelete: Cascade)
   referrals    Referral[]
 
   @@index([userId])
   @@index([userId, isActive])
   @@index([code])
+  @@map("affiliate_codes")
 }
 
 model Referral {
   id                BigInt        @id @default(autoincrement())
   uid               String        @unique
-  affiliateId       BigInt
-  subUserId         BigInt
-  ipAddress         String?
-  deviceFingerprint String?
-  userAgent         String?
-  createdAt         DateTime      @default(now())
-  updatedAt         DateTime      @updatedAt
-  codeId            BigInt
+  affiliateId       BigInt        @map("affiliate_id")
+  subUserId         BigInt        @map("sub_user_id")
+  ipAddress         String?       @map("ip_address")
+  deviceFingerprint String?       @map("device_fingerprint")
+  userAgent         String?       @map("user_agent")
+  createdAt         DateTime      @default(now()) @map("created_at")
+  updatedAt         DateTime      @updatedAt @map("updated_at")
+  codeId            BigInt        @map("code_id")
   affiliate         User          @relation("AffiliateReferrals", fields: [affiliateId], references: [id], onDelete: Cascade)
   code              AffiliateCode @relation(fields: [codeId], references: [id], onDelete: Cascade)
   subUser           User          @relation("ReferredUsers", fields: [subUserId], references: [id], onDelete: Cascade)
@@ -40,6 +41,7 @@ model Referral {
   @@index([subUserId])
   @@index([affiliateId, codeId])
   @@index([ipAddress, deviceFingerprint])
+  @@map("referrals")
 }
 
 // 1. 보안/인증 로그
