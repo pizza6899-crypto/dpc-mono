@@ -19,12 +19,12 @@ import { UserBalanceResponseDto } from './dto/response/user-balance.response.dto
 import { GetBalanceQueryDto } from './dto/request/get-balance-query.dto';
 
 @Controller('wallet')
-@ApiTags('Wallet (지갑)')
+@ApiTags('Wallet')
 @ApiStandardErrors()
 export class WalletController {
   constructor(
     private readonly getUserBalanceService: GetUserBalanceService,
-  ) {}
+  ) { }
 
   /**
    * 사용자 잔액 조회

@@ -33,14 +33,14 @@ import { MessageCode } from 'src/common/http/types/message-codes';
 import { Prisma } from '@repo/database';
 
 @Controller('admin/wallet')
-@ApiTags('Admin Wallet (관리자 지갑 관리)')
+@ApiTags('Admin Wallet')
 @RequireRoles(UserRoleType.ADMIN, UserRoleType.SUPER_ADMIN)
 @ApiStandardErrors()
 export class WalletAdminController {
   constructor(
     private readonly getUserBalanceAdminService: GetUserBalanceAdminService,
     private readonly updateUserBalanceAdminService: UpdateUserBalanceAdminService,
-  ) {}
+  ) { }
 
   /**
    * 사용자 잔액 조회 (관리자용)
