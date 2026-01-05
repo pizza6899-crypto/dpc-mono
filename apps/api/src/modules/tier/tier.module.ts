@@ -24,6 +24,7 @@ import { ForceUpdateUserTierService } from './application/force-update-user-tier
 import { CountUsersByTierService } from './application/count-users-by-tier.service';
 import { FindUserTierHistoryService } from './application/find-user-tier-history.service';
 import { FindUsersByTierService } from './application/find-users-by-tier.service';
+import { AddUserRollingService } from './application/add-user-rolling.service';
 
 @Module({
   imports: [],
@@ -41,6 +42,7 @@ import { FindUsersByTierService } from './application/find-users-by-tier.service
     CountUsersByTierService,
     FindUserTierHistoryService,
     FindUsersByTierService,
+    AddUserRollingService,
     {
       provide: TIER_REPOSITORY,
       useClass: TierRepository,
@@ -72,6 +74,7 @@ import { FindUsersByTierService } from './application/find-users-by-tier.service
     CountUsersByTierService,
     FindUserTierHistoryService,
     FindUsersByTierService,
+    AddUserRollingService,
   ],
 })
 

@@ -13,7 +13,7 @@ export class UserTierMapper {
             uid: model.uid,
             userId: model.userId,
             tierId: model.tierId,
-            cumulativeRollingUsd: model.cumulativeRollingUsd,
+            totalRollingUsd: model.cumulativeRollingUsd,
             highestPromotedPriority: model.highestPromotedPriority,
             isManualLock: model.isManualLock,
             lastPromotedAt: model.lastPromotedAt,
@@ -29,7 +29,7 @@ export class UserTierMapper {
             uid: domain.uid,
             userId: domain.userId,
             tierId: domain.tierId, // Changed from _tierId (getter accessor used)
-            cumulativeRollingUsd: domain.cumulativeRollingUsd,
+            cumulativeRollingUsd: domain.totalRollingUsd,
             highestPromotedPriority: domain.highestPromotedPriority,
             isManualLock: domain.isManualLock,
             lastPromotedAt: domain.lastPromotedAt,

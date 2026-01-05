@@ -18,8 +18,8 @@ export class TierResponseDto {
     @ApiProperty({ description: 'Requirement USD / 조건 금액 (문자열)' })
     requirementUsd: string;
 
-    @ApiProperty({ description: 'Level Up Bonus / 승급 보너스 (문자열)' })
-    levelUpBonus: string;
+    @ApiProperty({ description: 'Level Up Bonus / 승급 보너스 (USD)' })
+    levelUpBonusUsd: string;
 
     @ApiProperty({ description: 'Comp Rate / 콤프율 (문자열)' })
     compRate: string;
@@ -39,7 +39,7 @@ export class TierResponseDto {
         this.priority = tier.priority;
         this.code = tier.code;
         this.requirementUsd = tier.requirementUsd.toString();
-        this.levelUpBonus = tier.levelUpBonusUsd.toString();
+        this.levelUpBonusUsd = tier.levelUpBonusUsd.toString();
         this.compRate = tier.compRate.toString();
         this.createdAt = tier.createdAt;
         this.updatedAt = tier.updatedAt;

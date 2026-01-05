@@ -8,8 +8,8 @@ export class UserTierResponseDto {
     @ApiProperty({ description: 'Current Tier Code / 현재 티어 코드' })
     tierCode: string;
 
-    @ApiProperty({ description: 'Cumulative Rolling Amount (USD) / 누적 롤링 금액' })
-    cumulativeRollingUsd: string;
+    @ApiProperty({ description: 'Total Rolling Amount (USD) / 총 누적 롤링 금액' })
+    totalRollingUsd: string;
 
     @ApiProperty({ description: 'Highest Promoted Priority / 최고 도달 우선순위' })
     highestPromotedPriority: number;
@@ -30,7 +30,7 @@ export class UserTierResponseDto {
     constructor(userTier: UserTier) {
         this.userId = userTier.userId.toString();
         this.tierCode = userTier.tier?.code ?? 'UNKNOWN';
-        this.cumulativeRollingUsd = userTier.cumulativeRollingUsd.toString();
+        this.totalRollingUsd = userTier.totalRollingUsd.toString();
         this.highestPromotedPriority = userTier.highestPromotedPriority;
         this.isManualLock = userTier.isManualLock;
         this.lastPromotedAt = userTier.lastPromotedAt;

@@ -15,7 +15,7 @@ export class UserTier {
         private _tierId: bigint,
 
         // Status
-        private _cumulativeRollingUsd: Prisma.Decimal,
+        private _totalRollingUsd: Prisma.Decimal,
 
         // Control
         private _highestPromotedPriority: number,
@@ -34,16 +34,16 @@ export class UserTier {
         uid?: string;
         userId: bigint;
         tierId: bigint;
-        cumulativeRollingUsd?: Prisma.Decimal | number;
+        totalRollingUsd?: Prisma.Decimal | number;
         highestPromotedPriority?: number;
         isManualLock?: boolean;
         lastPromotedAt?: Date;
         tier?: Tier;
     }): UserTier {
         const rolling =
-            params.cumulativeRollingUsd instanceof Prisma.Decimal
-                ? params.cumulativeRollingUsd
-                : new Prisma.Decimal(params.cumulativeRollingUsd ?? 0);
+            params.totalRollingUsd instanceof Prisma.Decimal
+                ? params.totalRollingUsd
+                : new Prisma.Decimal(params.totalRollingUsd ?? 0);
 
         return new UserTier(
             params.id ?? null,
@@ -65,7 +65,7 @@ export class UserTier {
         uid: string;
         userId: bigint;
         tierId: bigint;
-        cumulativeRollingUsd: Prisma.Decimal;
+        totalRollingUsd: Prisma.Decimal;
         highestPromotedPriority: number;
         isManualLock: boolean;
         lastPromotedAt: Date;
@@ -78,7 +78,7 @@ export class UserTier {
             data.uid,
             data.userId,
             data.tierId,
-            data.cumulativeRollingUsd,
+            data.totalRollingUsd,
             data.highestPromotedPriority,
             data.isManualLock,
             data.lastPromotedAt,
@@ -90,7 +90,7 @@ export class UserTier {
 
     // Getters
     get tierId(): bigint { return this._tierId; }
-    get cumulativeRollingUsd(): Prisma.Decimal { return this._cumulativeRollingUsd; }
+    get totalRollingUsd(): Prisma.Decimal { return this._totalRollingUsd; }
     get highestPromotedPriority(): number { return this._highestPromotedPriority; }
     get isManualLock(): boolean { return this._isManualLock; }
     get lastPromotedAt(): Date { return this._lastPromotedAt; }
@@ -99,7 +99,7 @@ export class UserTier {
 
     addRolling(amount: Prisma.Decimal): void {
         if (amount.lte(0)) throw new InvalidRollingAmountException(amount.toString());
-        this._cumulativeRollingUsd = this._cumulativeRollingUsd.add(amount);
+        this._totalRollingUsd = this._totalRollingUsd.add(amount);
     }
 
     /**
@@ -114,7 +114,7 @@ export class UserTier {
         // Ensure accurate priority comparison if current tier loaded
         if (this.tier && targetTier.priority <= this.tier.priority) return false;
 
-        return this._cumulativeRollingUsd.gte(targetTier.requirementUsd);
+        return this._totalRollingUsd.gte(targetTier.requirementUsd);
     }
 
     /**
@@ -130,7 +130,7 @@ export class UserTier {
         if (!this.canUpgradeTo(targetTier, true)) { // Internal check
             // You might throw or just return. Throwing is safer for logic enforcement.
             throw new InvalidRollingAmountException(
-                `Cannot upgrade to ${targetTier.code}. Rolling ${this._cumulativeRollingUsd} < Req ${targetTier.requirementUsd}`
+                `Cannot upgrade to ${targetTier.code}. Rolling ${this._totalRollingUsd} < Req ${targetTier.requirementUsd}`
             );
         }
 
@@ -151,12 +151,12 @@ export class UserTier {
         return targetTier.priority > this._highestPromotedPriority;
     }
 
-    forceChangeTier(targetTier: Tier, isManualLock: boolean): void {
+    forceChangeTier(targetTier: Tier, shouldLock: boolean): void {
         if (!targetTier.id) throw new TierException(`Cannot change to invalid tier: ${targetTier.code}`);
 
         this._tierId = targetTier.id;
-        this._isManualLock = isManualLock;
-        // Don't necessarily change cumulativeRollingUsd, but maybe we should if requirement not met?
+        this._isManualLock = shouldLock;
+        // Don't necessarily change totalRollingUsd, but maybe we should if requirement not met?
         // User requested "force set", implying override.
         // We preserve rolling amount unless explicitly asked (not in requirements yet).
 
