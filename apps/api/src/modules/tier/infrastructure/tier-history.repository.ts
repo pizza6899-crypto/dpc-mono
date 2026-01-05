@@ -36,7 +36,7 @@ export class TierHistoryRepository implements TierHistoryRepositoryPort {
         const where: Prisma.TierHistoryWhereInput = {};
         if (userId) {
             // Find user id by uid
-            const user = await this.tx.user.findUnique({ where: { uid: userId } });
+            const user = await this.tx.user.findUnique({ where: { id: userId } });
             if (user) {
                 where.userId = user.id;
             } else {
