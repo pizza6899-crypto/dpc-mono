@@ -5,25 +5,17 @@
  * DPC Backend API 문서
  * OpenAPI spec version: 1.0
  */
-import type { TierHistoryResponseDtoChangeType } from './tierHistoryResponseDtoChangeType';
+import type { TierHistoryResponseDtoOldTierCode } from './tierHistoryResponseDtoOldTierCode';
+import type { TierHistoryResponseDtoReason } from './tierHistoryResponseDtoReason';
 
 export interface TierHistoryResponseDto {
-  /** History ID / 히스토리 ID */
   id: string;
-  /** User ID / 사용자 ID */
   userId: string;
-  /** Previous Tier ID / 이전 티어 ID */
-  fromTierId?: string;
-  /** Target Tier ID / 대상 티어 ID */
-  toTierId: string;
-  /** Change type / 변경 유형 */
-  changeType: TierHistoryResponseDtoChangeType;
-  /** Reason for change / 변경 사유 */
-  reason: string;
-  /** Rolling amount at the time of change / 변경 시점의 롤링 금액 */
-  rollingSnapshot: string;
-  /** Bonus amount awarded / 지급된 보너스 금액 */
-  bonusAmount: string;
-  /** Time of change / 변경 일시 */
+  userEmail: string;
+  /** @nullable */
+  oldTierCode: TierHistoryResponseDtoOldTierCode;
+  newTierCode: string;
+  /** @nullable */
+  reason: TierHistoryResponseDtoReason;
   createdAt: string;
 }

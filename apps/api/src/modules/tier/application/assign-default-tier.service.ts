@@ -1,10 +1,11 @@
 import { Inject, Injectable } from '@nestjs/common';
-import { TIER_REPOSITORY, USER_TIER_REPOSITORY } from '../ports/repository.token';
+import { TIER_REPOSITORY, USER_TIER_REPOSITORY, TIER_HISTORY_REPOSITORY } from '../ports/repository.token';
 import type { TierRepositoryPort } from '../ports/tier.repository.port';
 import type { UserTierRepositoryPort } from '../ports/user-tier.repository.port';
+import type { TierHistoryRepositoryPort } from '../ports/tier-history.repository.port';
 import { UserTier } from '../domain/model/user-tier.entity';
+import { TierHistory, TierChangeType } from '../domain/model/tier-history.entity';
 import { TierException } from '../domain/tier.exception';
-
 import { Transactional } from '@nestjs-cls/transactional';
 
 @Injectable()
@@ -14,6 +15,8 @@ export class AssignDefaultTierService {
         private readonly tierRepository: TierRepositoryPort,
         @Inject(USER_TIER_REPOSITORY)
         private readonly userTierRepository: UserTierRepositoryPort,
+        @Inject(TIER_HISTORY_REPOSITORY)
+        private readonly tierHistoryRepository: TierHistoryRepositoryPort,
     ) { }
 
     @Transactional()
@@ -40,6 +43,19 @@ export class AssignDefaultTierService {
             tier: defaultTier,
         });
 
-        return this.userTierRepository.create(userTier);
+        const savedUserTier = await this.userTierRepository.create(userTier);
+
+        // 4. Log History
+        const history = TierHistory.create({
+            userId,
+            toTierId: defaultTier.id,
+            changeType: TierChangeType.INITIAL,
+            reason: 'Initial Assignment',
+            rollingSnapshot: 0,
+            bonusAmount: 0,
+        });
+        await this.tierHistoryRepository.create(history);
+
+        return savedUserTier;
     }
 }

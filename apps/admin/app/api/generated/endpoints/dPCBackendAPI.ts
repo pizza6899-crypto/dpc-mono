@@ -187,9 +187,12 @@ import type {
   TierAdminControllerFindUsersByTier200,
   TierAdminControllerFindUsersByTierParams,
   TierAdminControllerForceUpdateUserTier200,
+  TierAdminControllerGetTierHistory200,
+  TierAdminControllerGetTierHistoryParams,
   TierAdminControllerGetTierUserCounts200,
   TierAdminControllerGetUserTier200,
   TierAdminControllerGetUserTierHistory200,
+  TierAdminControllerGetUserTierHistoryParams,
   TierAdminControllerSyncMissingUserTiers200,
   TierAdminControllerUpdate200,
   TierAdminControllerUpsertTranslation200,
@@ -3000,16 +3003,17 @@ export function useTierAdminControllerGetTierUserCounts<TData = Awaited<ReturnTy
 
 
 /**
- * @summary Get user tier history / 사용자의 티어 변경 이력 조회
+ * @summary Get tier history / 티어 변경 이력 조회
  */
-export const TierAdminController_getUserTierHistory = (
-    userId: MaybeRef<string>,
+export const TierAdminController_getTierHistory = (
+    params?: MaybeRef<TierAdminControllerGetTierHistoryParams>,
  signal?: AbortSignal
 ) => {
-      userId = unref(userId);
+      params = unref(params);
       
-      return customInstance<TierAdminControllerGetUserTierHistory200>(
-      {url: `/admin/tiers/users/${userId}/history`, method: 'GET', signal
+      return customInstance<TierAdminControllerGetTierHistory200>(
+      {url: `/admin/tiers/history`, method: 'GET',
+        params: unref(params), signal
     },
       );
     }
@@ -3017,23 +3021,97 @@ export const TierAdminController_getUserTierHistory = (
 
 
 
-export const getTierAdminControllerGetUserTierHistoryQueryKey = (userId?: MaybeRef<string>,) => {
+export const getTierAdminControllerGetTierHistoryQueryKey = (params?: MaybeRef<TierAdminControllerGetTierHistoryParams>,) => {
     return [
-    'admin','tiers','users',userId,'history'
+    'admin','tiers','history', ...(params ? [params]: [])
     ] as const;
     }
 
     
-export const getTierAdminControllerGetUserTierHistoryQueryOptions = <TData = Awaited<ReturnType<typeof TierAdminController_getUserTierHistory>>, TError = ErrorResponseDto>(userId: MaybeRef<string>, options?: { query?:Partial<UseQueryOptions<Awaited<ReturnType<typeof TierAdminController_getUserTierHistory>>, TError, TData>>, }
+export const getTierAdminControllerGetTierHistoryQueryOptions = <TData = Awaited<ReturnType<typeof TierAdminController_getTierHistory>>, TError = ErrorResponseDto>(params?: MaybeRef<TierAdminControllerGetTierHistoryParams>, options?: { query?:Partial<UseQueryOptions<Awaited<ReturnType<typeof TierAdminController_getTierHistory>>, TError, TData>>, }
 ) => {
 
 const {query: queryOptions} = options ?? {};
 
-  const queryKey =  getTierAdminControllerGetUserTierHistoryQueryKey(userId);
+  const queryKey =  getTierAdminControllerGetTierHistoryQueryKey(params);
 
   
 
-    const queryFn: QueryFunction<Awaited<ReturnType<typeof TierAdminController_getUserTierHistory>>> = ({ signal }) => TierAdminController_getUserTierHistory(userId, signal);
+    const queryFn: QueryFunction<Awaited<ReturnType<typeof TierAdminController_getTierHistory>>> = ({ signal }) => TierAdminController_getTierHistory(params, signal);
+
+      
+
+      
+
+   return  { queryKey, queryFn, ...queryOptions} as UseQueryOptions<Awaited<ReturnType<typeof TierAdminController_getTierHistory>>, TError, TData> 
+}
+
+export type TierAdminControllerGetTierHistoryQueryResult = NonNullable<Awaited<ReturnType<typeof TierAdminController_getTierHistory>>>
+export type TierAdminControllerGetTierHistoryQueryError = ErrorResponseDto
+
+
+/**
+ * @summary Get tier history / 티어 변경 이력 조회
+ */
+
+export function useTierAdminControllerGetTierHistory<TData = Awaited<ReturnType<typeof TierAdminController_getTierHistory>>, TError = ErrorResponseDto>(
+ params?: MaybeRef<TierAdminControllerGetTierHistoryParams>, options?: { query?:Partial<UseQueryOptions<Awaited<ReturnType<typeof TierAdminController_getTierHistory>>, TError, TData>>, }
+ , queryClient?: QueryClient 
+ ): UseQueryReturnType<TData, TError> & { queryKey: DataTag<QueryKey, TData, TError> } {
+
+  const queryOptions = getTierAdminControllerGetTierHistoryQueryOptions(params,options)
+
+  const query = useQuery(queryOptions, queryClient) as UseQueryReturnType<TData, TError> & { queryKey: DataTag<QueryKey, TData, TError> };
+
+  query.queryKey = unref(queryOptions).queryKey as DataTag<QueryKey, TData, TError>;
+
+  return query;
+}
+
+
+
+
+
+/**
+ * @summary Get user tier history / 사용자의 티어 변경 이력 조회
+ */
+export const TierAdminController_getUserTierHistory = (
+    userId: MaybeRef<string>,
+    params?: MaybeRef<TierAdminControllerGetUserTierHistoryParams>,
+ signal?: AbortSignal
+) => {
+      userId = unref(userId);
+params = unref(params);
+      
+      return customInstance<TierAdminControllerGetUserTierHistory200>(
+      {url: `/admin/tiers/users/${userId}/history`, method: 'GET',
+        params: unref(params), signal
+    },
+      );
+    }
+  
+
+
+
+export const getTierAdminControllerGetUserTierHistoryQueryKey = (userId?: MaybeRef<string>,
+    params?: MaybeRef<TierAdminControllerGetUserTierHistoryParams>,) => {
+    return [
+    'admin','tiers','users',userId,'history', ...(params ? [params]: [])
+    ] as const;
+    }
+
+    
+export const getTierAdminControllerGetUserTierHistoryQueryOptions = <TData = Awaited<ReturnType<typeof TierAdminController_getUserTierHistory>>, TError = ErrorResponseDto>(userId: MaybeRef<string>,
+    params?: MaybeRef<TierAdminControllerGetUserTierHistoryParams>, options?: { query?:Partial<UseQueryOptions<Awaited<ReturnType<typeof TierAdminController_getUserTierHistory>>, TError, TData>>, }
+) => {
+
+const {query: queryOptions} = options ?? {};
+
+  const queryKey =  getTierAdminControllerGetUserTierHistoryQueryKey(userId,params);
+
+  
+
+    const queryFn: QueryFunction<Awaited<ReturnType<typeof TierAdminController_getUserTierHistory>>> = ({ signal }) => TierAdminController_getUserTierHistory(userId,params, signal);
 
       
 
@@ -3051,11 +3129,12 @@ export type TierAdminControllerGetUserTierHistoryQueryError = ErrorResponseDto
  */
 
 export function useTierAdminControllerGetUserTierHistory<TData = Awaited<ReturnType<typeof TierAdminController_getUserTierHistory>>, TError = ErrorResponseDto>(
- userId: MaybeRef<string>, options?: { query?:Partial<UseQueryOptions<Awaited<ReturnType<typeof TierAdminController_getUserTierHistory>>, TError, TData>>, }
+ userId: MaybeRef<string>,
+    params?: MaybeRef<TierAdminControllerGetUserTierHistoryParams>, options?: { query?:Partial<UseQueryOptions<Awaited<ReturnType<typeof TierAdminController_getUserTierHistory>>, TError, TData>>, }
  , queryClient?: QueryClient 
  ): UseQueryReturnType<TData, TError> & { queryKey: DataTag<QueryKey, TData, TError> } {
 
-  const queryOptions = getTierAdminControllerGetUserTierHistoryQueryOptions(userId,options)
+  const queryOptions = getTierAdminControllerGetUserTierHistoryQueryOptions(userId,params,options)
 
   const query = useQuery(queryOptions, queryClient) as UseQueryReturnType<TData, TError> & { queryKey: DataTag<QueryKey, TData, TError> };
 

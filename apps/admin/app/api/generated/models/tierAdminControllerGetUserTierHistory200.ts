@@ -5,7 +5,7 @@
  * DPC Backend API 문서
  * OpenAPI spec version: 1.0
  */
-import type { ApiResponseDto } from './apiResponseDto';
+import type { PaginatedResponseDto } from './paginatedResponseDto';
 import type { TierAdminControllerGetUserTierHistory200AllOf } from './tierAdminControllerGetUserTierHistory200AllOf';
 
-export type TierAdminControllerGetUserTierHistory200 = ApiResponseDto & TierAdminControllerGetUserTierHistory200AllOf;
+export type TierAdminControllerGetUserTierHistory200 = PaginatedResponseDto & TierAdminControllerGetUserTierHistory200AllOf;

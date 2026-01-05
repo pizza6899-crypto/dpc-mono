@@ -2,10 +2,10 @@ import { Prisma } from '@repo/database';
 import { generateUid } from 'src/utils/id.util';
 
 export enum TierChangeType {
-    PROMOTION = 'PROMOTION',
-    DEMOTION = 'DEMOTION',
-    MAINTENANCE = 'MAINTENANCE',
-    MANUAL_ADJUSTMENT = 'MANUAL_ADJUSTMENT',
+    INITIAL = 'INITIAL',
+    UPGRADE = 'UPGRADE',
+    DOWNGRADE = 'DOWNGRADE',
+    MANUAL_UPDATE = 'MANUAL_UPDATE',
 }
 
 /**

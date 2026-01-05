@@ -2720,6 +2720,80 @@
         ]
       }
     },
+    "/admin/tiers/history": {
+      "get": {
+        "operationId": "TierAdminController_getTierHistory",
+        "parameters": [
+          {
+            "name": "userId",
+            "required": false,
+            "in": "query",
+            "description": "User ID",
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "page",
+            "required": false,
+            "in": "query",
+            "schema": {
+              "default": 1,
+              "type": "number"
+            }
+          },
+          {
+            "name": "limit",
+            "required": false,
+            "in": "query",
+            "schema": {
+              "default": 20,
+              "type": "number"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Successfully retrieved tier history / 티어 변경 이력 조회 성공",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "allOf": [
+                    {
+                      "$ref": "#/components/schemas/PaginatedResponseDto"
+                    },
+                    {
+                      "properties": {
+                        "data": {
+                          "type": "array",
+                          "items": {
+                            "$ref": "#/components/schemas/TierHistoryResponseDto"
+                          }
+                        }
+                      }
+                    }
+                  ]
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Bad Request",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponseDto"
+                }
+              }
+            }
+          }
+        },
+        "summary": "Get tier history / 티어 변경 이력 조회",
+        "tags": [
+          "Admin Tiers"
+        ]
+      }
+    },
     "/admin/tiers/users/{userId}/history": {
       "get": {
         "operationId": "TierAdminController_getUserTierHistory",
@@ -2733,6 +2807,33 @@
               "example": "1",
               "type": "string"
             }
+          },
+          {
+            "name": "userId",
+            "required": false,
+            "in": "query",
+            "description": "User ID",
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "page",
+            "required": false,
+            "in": "query",
+            "schema": {
+              "default": 1,
+              "type": "number"
+            }
+          },
+          {
+            "name": "limit",
+            "required": false,
+            "in": "query",
+            "schema": {
+              "default": 20,
+              "type": "number"
+            }
           }
         ],
         "responses": {
@@ -2743,7 +2844,7 @@
                 "schema": {
                   "allOf": [
                     {
-                      "$ref": "#/components/schemas/ApiResponseDto"
+                      "$ref": "#/components/schemas/PaginatedResponseDto"
                     },
                     {
                       "properties": {
@@ -10135,65 +10236,37 @@
         "type": "object",
         "properties": {
           "id": {
-            "type": "string",
-            "description": "History ID / 히스토리 ID",
-            "example": "1"
+            "type": "string"
           },
           "userId": {
-            "type": "string",
-            "description": "User ID / 사용자 ID",
-            "example": "1"
+            "type": "string"
           },
-          "fromTierId": {
-            "type": "string",
-            "description": "Previous Tier ID / 이전 티어 ID",
-            "example": "1"
+          "userEmail": {
+            "type": "string"
           },
-          "toTierId": {
-            "type": "string",
-            "description": "Target Tier ID / 대상 티어 ID",
-            "example": "2"
+          "oldTierCode": {
+            "type": "object",
+            "nullable": true
           },
-          "changeType": {
-            "type": "string",
-            "enum": [
-              "PROMOTION",
-              "DEMOTION",
-              "MAINTENANCE",
-              "MANUAL_ADJUSTMENT"
-            ],
-            "description": "Change type / 변경 유형",
-            "example": "PROMOTION"
+          "newTierCode": {
+            "type": "string"
           },
           "reason": {
-            "type": "string",
-            "description": "Reason for change / 변경 사유",
-            "example": "Auto Promotion"
-          },
-          "rollingSnapshot": {
-            "type": "string",
-            "description": "Rolling amount at the time of change / 변경 시점의 롤링 금액",
-            "example": "1000.00"
-          },
-          "bonusAmount": {
-            "type": "string",
-            "description": "Bonus amount awarded / 지급된 보너스 금액",
-            "example": "50.00"
+            "type": "object",
+            "nullable": true
           },
           "createdAt": {
             "format": "date-time",
-            "type": "string",
-            "description": "Time of change / 변경 일시"
+            "type": "string"
           }
         },
         "required": [
           "id",
           "userId",
-          "toTierId",
-          "changeType",
+          "userEmail",
+          "oldTierCode",
+          "newTierCode",
           "reason",
-          "rollingSnapshot",
-          "bonusAmount",
           "createdAt"
         ]
       },

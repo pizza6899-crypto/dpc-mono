@@ -80,7 +80,7 @@ export class AddUserRollingService {
                 userId,
                 fromTierId,
                 toTierId: targetTier.id!,
-                changeType: TierChangeType.PROMOTION,
+                changeType: TierChangeType.UPGRADE,
                 reason: 'Rolling accumulation',
                 rollingSnapshot,
                 bonusAmount,
