@@ -81,27 +81,27 @@ const getTypeColor = (type: string) => {
 const columns = computed<TableColumn<WalletTransactionResponseDto>[]>(() => [
   {
     accessorKey: 'createdAt',
-    header: 'Date & Time',
+    header: t('users.wallet.date_time'),
   },
   {
     accessorKey: 'type',
-    header: 'Type',
+    header: t('users.wallet.type'),
   },
   {
     accessorKey: 'currency',
-    header: 'Asset',
+    header: t('users.wallet.asset'),
   },
   {
     accessorKey: 'amount',
-    header: 'Transaction Amount',
+    header: t('users.wallet.transaction_amount'),
   },
   {
     accessorKey: 'afterAmount',
-    header: 'Balance After',
+    header: t('users.wallet.balance_after'),
   },
   {
     accessorKey: 'details',
-    header: 'Details',
+    header: t('users.wallet.details'),
   }
 ])
 </script>
@@ -113,11 +113,11 @@ const columns = computed<TableColumn<WalletTransactionResponseDto>[]>(() => [
         <div class="flex items-center gap-2">
            <UIcon name="i-lucide-history" class="w-5 h-5 text-neutral-500" />
            <h3 class="font-bold text-base tracking-tight text-neutral-900 dark:text-white">
-             Transaction History
+             {{ t('users.wallet.transaction_history') }}
            </h3>
         </div>
         <div class="flex items-center gap-2">
-          <UBadge variant="subtle" color="neutral">Total {{ total }} items</UBadge>
+          <UBadge variant="subtle" color="neutral">{{ t('users.wallet.total_items', { total }) }}</UBadge>
         </div>
       </div>
     </template>
@@ -226,7 +226,7 @@ const columns = computed<TableColumn<WalletTransactionResponseDto>[]>(() => [
              </p>
           </div>
           <div v-else class="text-[10px] text-neutral-400 italic">
-            No additional data
+            {{ t('common.no_additional_data') || 'No additional data' }}
           </div>
         </div>
       </template>
@@ -238,8 +238,8 @@ const columns = computed<TableColumn<WalletTransactionResponseDto>[]>(() => [
             <UIcon name="i-lucide-receipt" class="w-8 h-8 opacity-20" />
           </div>
           <div class="text-center">
-            <p class="text-base font-bold text-neutral-900 dark:text-white">No transactions found</p>
-            <p class="text-xs">There are no balance change records for this user.</p>
+            <p class="text-base font-bold text-neutral-900 dark:text-white">{{ t('users.wallet.no_transactions') }}</p>
+            <p class="text-xs">{{ t('users.wallet.no_transactions_desc') }}</p>
           </div>
         </div>
       </template>
@@ -247,7 +247,7 @@ const columns = computed<TableColumn<WalletTransactionResponseDto>[]>(() => [
 
     <div class="flex items-center justify-between p-4 border-t border-neutral-100 dark:border-neutral-800 bg-neutral-50/50 dark:bg-neutral-800/30">
       <div class="text-[11px] font-medium text-neutral-500">
-        Showing {{ transactions.length }} of {{ total }} transactions
+        {{ t('users.wallet.showing_items', { count: transactions.length, total }) }}
       </div>
       <UPagination
         v-model="page"

@@ -61,7 +61,11 @@
         "search_by_user_id": "Search by User ID...",
         "total": "Total",
         "viewDetails": "View details",
-        "itemsPerPage": "Items per page"
+        "itemsPerPage": "Items per page",
+        "clipboard": {
+            "copy_success": "Copied to clipboard",
+            "copy_error": "Failed to copy"
+        }
     },
     "users": {
         "uid": "UID",
@@ -91,6 +95,19 @@
         },
         "validation": {
             "country_code": "Country code must be 2 characters."
+        },
+        "wallet": {
+            "transaction_history": "Transaction History",
+            "total_items": "Total {total} items",
+            "date_time": "Date & Time",
+            "type": "Type",
+            "asset": "Asset",
+            "transaction_amount": "Transaction Amount",
+            "balance_after": "Balance After",
+            "details": "Details",
+            "no_transactions": "No transactions found",
+            "no_transactions_desc": "There are no balance change records for this user.",
+            "showing_items": "Showing {count} of {total} transactions"
         }
     },
     "user_menu": {

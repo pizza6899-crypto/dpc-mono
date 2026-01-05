@@ -7,6 +7,16 @@ import { UBadge, UDropdownMenu as _UDropdownMenu, UButton } from '#components'
 
 const UDropdownMenu = _UDropdownMenu as any
 const { t } = useI18n()
+const toast = useToast()
+
+const copyToClipboard = async (text: string) => {
+  try {
+    await navigator.clipboard.writeText(text)
+    toast.add({ title: t('common.clipboard.copy_success'), icon: 'i-lucide-check-circle', color: 'success' })
+  } catch (err) {
+    toast.add({ title: t('common.clipboard.copy_error'), color: 'error' })
+  }
+}
 
 interface Props {
   loading: boolean
@@ -22,15 +32,63 @@ const emit = defineEmits(['update:page', 'update:pageCount'])
 const columns = computed<TableColumn<UserListItemDto>[]>(() => [
   {
     accessorKey: 'id',
-    header: 'ID'
+    header: 'ID',
+    cell: ({ row }) => h('div', { 
+      class: 'flex items-center gap-2 group cursor-pointer hover:text-primary-500 transition-colors',
+      onClick: (e: MouseEvent) => {
+        e.stopPropagation()
+        copyToClipboard(row.original.id.toString())
+      }
+    }, [
+      h('span', { class: 'font-mono text-xs' }, row.original.id.toString()),
+      h(UButton, {
+        icon: 'i-lucide-copy',
+        color: 'neutral',
+        variant: 'ghost',
+        size: 'xs',
+        class: 'opacity-0 group-hover:opacity-100 transition-opacity p-1 h-auto w-auto'
+      })
+    ])
   },
   {
     accessorKey: 'uid',
-    header: t('users.uid')
+    header: t('users.uid'),
+    cell: ({ row }) => h('div', { 
+      class: 'flex items-center gap-2 group cursor-pointer hover:text-primary-500 transition-colors',
+      onClick: (e: MouseEvent) => {
+        e.stopPropagation()
+        copyToClipboard(row.original.uid)
+      }
+    }, [
+      h('span', { class: 'font-mono text-xs' }, row.original.uid),
+      h(UButton, {
+        icon: 'i-lucide-copy',
+        color: 'neutral',
+        variant: 'ghost',
+        size: 'xs',
+        class: 'opacity-0 group-hover:opacity-100 transition-opacity p-1 h-auto w-auto'
+      })
+    ])
   },
   {
     accessorKey: 'email',
-    header: t('users.email')
+    header: t('users.email'),
+    cell: ({ row }) => h('div', { 
+      class: 'flex items-center gap-2 group cursor-pointer hover:text-primary-500 transition-colors',
+      onClick: (e: MouseEvent) => {
+        e.stopPropagation()
+        copyToClipboard(String(row.original.email || ''))
+      }
+    }, [
+      h('span', { class: 'text-sm' }, String(row.original.email || '')),
+      h(UButton, {
+        icon: 'i-lucide-copy',
+        color: 'neutral',
+        variant: 'ghost',
+        size: 'xs',
+        class: 'opacity-0 group-hover:opacity-100 transition-opacity p-1 h-auto w-auto'
+      })
+    ])
   },
   {
     accessorKey: 'role',

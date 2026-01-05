@@ -2,6 +2,7 @@
 import { useUserAdminControllerFindOne } from '~/api/generated/endpoints/dPCBackendAPI'
 
 const route = useRoute()
+const { t } = useI18n()
 const userId = route.params.id as string
 
 const { data: user, isPending: isUserLoading } = useUserAdminControllerFindOne(userId)
@@ -22,7 +23,7 @@ const tabs = [
   },
   {
     slot: 'transaction-history',
-    label: 'Transaction History'
+    label: t('users.wallet.transaction_history')
   }
 ]
 </script>

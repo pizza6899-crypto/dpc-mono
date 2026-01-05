@@ -61,7 +61,11 @@
         "search_by_user_id": "사용자 ID로 검색...",
         "total": "전체",
         "viewDetails": "상세 보기",
-        "itemsPerPage": "페이지당 항목 수"
+        "itemsPerPage": "페이지당 항목 수",
+        "clipboard": {
+            "copy_success": "클립보드에 복사되었습니다",
+            "copy_error": "복사에 실패했습니다"
+        }
     },
     "users": {
         "uid": "UID",
@@ -91,6 +95,19 @@
         },
         "validation": {
             "country_code": "국가 코드는 2자여야 합니다."
+        },
+        "wallet": {
+            "transaction_history": "트랜잭션 내역",
+            "total_items": "전체 {total}개 항목",
+            "date_time": "일시",
+            "type": "유형",
+            "asset": "자산",
+            "transaction_amount": "거래 금액",
+            "balance_after": "거래 후 잔액",
+            "details": "상세",
+            "no_transactions": "트랜잭션 내역이 없습니다",
+            "no_transactions_desc": "이 사용자의 잔액 변경 기록이 존재하지 않습니다.",
+            "showing_items": "{total}건 중 {count}건 표시 중"
         }
     },
     "user_menu": {
