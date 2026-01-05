@@ -53,6 +53,7 @@
         "management": "Management",
         "goTo": "Go to",
         "search": "Search...",
+        "search_by_user_id": "Search by User ID...",
         "total": "Total",
         "viewDetails": "View details",
         "itemsPerPage": "Items per page"

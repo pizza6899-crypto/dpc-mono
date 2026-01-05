@@ -1,81 +1,70 @@
 <script setup lang="ts">
 import type { TableColumn } from '@nuxt/ui'
+import { useTierAdminControllerGetTierHistory } from '~/api/generated/endpoints/dPCBackendAPI'
+import type { TierHistoryResponseDto } from '~/api/generated/models'
 
 const { t } = useI18n()
 
-// Temporary mock type until API is ready
-interface TierHistoryDto {
-  id: string
-  user: {
-    email: string
-    id: string
-  }
-  oldTier: string | null
-  newTier: string
-  reason: string
-  createdAt: string
-  createdBy: string
-}
+const search = ref('')
+const debouncedSearch = refDebounced(search, 300)
 
-const props = defineProps<{
-  loading?: boolean
-}>()
+const page = ref(1)
+const pageLimit = ref(20)
 
-// TODO: Replace with real API call
-const histories = ref<TierHistoryDto[]>([
-  {
-    id: '1',
-    user: { email: 'user1@example.com', id: 'u1' },
-    oldTier: 'BRONZE',
-    newTier: 'SILVER',
-    reason: 'Requirements met',
-    createdAt: new Date(Date.now() - 86400000).toISOString(),
-    createdBy: 'SYSTEM'
-  },
-  {
-    id: '2',
-    user: { email: 'user2@example.com', id: 'u2' },
-    oldTier: 'SILVER',
-    newTier: 'GOLD',
-    reason: 'Manual upgrade by admin',
-    createdAt: new Date(Date.now() - 172800000).toISOString(),
-    createdBy: 'admin@example.com'
-  }
-])
+const params = computed(() => ({
+  page: page.value,
+  limit: pageLimit.value,
+  userId: debouncedSearch.value || undefined
+}))
 
-const columns = computed<TableColumn<TierHistoryDto>[]>(() => [
+const { data, status } = useTierAdminControllerGetTierHistory(params)
+
+const histories = computed(() => (data.value as any)?.data || [])
+const total = computed(() => (data.value as any)?.total || 0)
+const loading = computed(() => status.value === 'pending')
+
+const columns = computed<TableColumn<TierHistoryResponseDto>[]>(() => [
   {
     accessorKey: 'createdAt',
     header: t('common.date'),
     cell: ({ row }) => new Date(row.original.createdAt).toLocaleString()
   },
   {
-    id: 'user',
+    accessorKey: 'userEmail',
     header: t('common.users'),
-    cell: ({ row }) => row.original.user.email
   },
   {
-    accessorKey: 'oldTier',
+    accessorKey: 'oldTierCode',
     header: t('tiers.history.old_tier'),
-    cell: ({ row }) => row.original.oldTier || '-'
+    cell: ({ row }) => row.original.oldTierCode || '-'
   },
   {
-    accessorKey: 'newTier',
+    accessorKey: 'newTierCode',
     header: t('tiers.history.new_tier')
   },
   {
     accessorKey: 'reason',
     header: t('tiers.history.reason')
-  },
-  {
-    accessorKey: 'createdBy',
-    header: t('tiers.history.changed_by')
   }
 ])
 </script>
 
 <template>
-  <UCard :ui="{ body: 'p-0' }">
+  <UCard :ui="{ body: 'p-0', header: 'p-4 border-b border-gray-200 dark:border-gray-800' }">
+    <template #header>
+      <div class="flex items-center justify-between">
+        <h3 class="font-semibold text-gray-900 dark:text-white">
+          {{ t('tiers.history.title') }}
+        </h3>
+        <UInput
+          v-model="search"
+          icon="i-heroicons-magnifying-glass-20-solid"
+          :placeholder="t('common.search_by_user_id')"
+          class="w-64"
+        />
+      </div>
+    </template>
+
     <UTable
       :data="histories"
       :columns="columns"
@@ -99,5 +88,13 @@ const columns = computed<TableColumn<TierHistoryDto>[]>(() => [
         </div>
       </template>
     </UTable>
+
+    <div class="flex justify-end p-4 border-t border-gray-200 dark:border-gray-800">
+      <UPagination
+        v-model="page"
+        :page-count="pageLimit"
+        :total="total"
+      />
+    </div>
   </UCard>
 </template>

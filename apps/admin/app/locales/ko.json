@@ -53,6 +53,7 @@
         "management": "관리",
         "goTo": "이동",
         "search": "검색...",
+        "search_by_user_id": "사용자 ID로 검색...",
         "total": "전체",
         "viewDetails": "상세 보기",
         "itemsPerPage": "페이지당 항목 수"
