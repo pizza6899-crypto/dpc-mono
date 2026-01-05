@@ -3,7 +3,11 @@ import type { TableColumn } from '@nuxt/ui'
 import { useTierAdminControllerGetTierHistory } from '~/api/generated/endpoints/dPCBackendAPI'
 import type { TierHistoryResponseDto } from '~/api/generated/models'
 
-const { t } = useI18n()
+const { t, d } = useI18n()
+
+const props = defineProps<{
+  userId?: string
+}>()
 
 const search = ref('')
 const debouncedSearch = refDebounced(search, 300)
@@ -11,10 +15,15 @@ const debouncedSearch = refDebounced(search, 300)
 const page = ref(1)
 const pageLimit = ref(20)
 
+const effectiveUserId = computed(() => {
+  if (props.userId) return props.userId
+  return debouncedSearch.value || undefined
+})
+
 const params = computed(() => ({
   page: page.value,
   limit: pageLimit.value,
-  userId: debouncedSearch.value || undefined
+  userId: effectiveUserId.value
 }))
 
 const { data, status } = useTierAdminControllerGetTierHistory(params)
@@ -27,7 +36,7 @@ const columns = computed<TableColumn<TierHistoryResponseDto>[]>(() => [
   {
     accessorKey: 'createdAt',
     header: t('common.date'),
-    cell: ({ row }) => new Date(row.original.createdAt).toLocaleString()
+    cell: ({ row }) => d(new Date(row.original.createdAt), 'short')
   },
   {
     accessorKey: 'userEmail',
@@ -41,6 +50,11 @@ const columns = computed<TableColumn<TierHistoryResponseDto>[]>(() => [
   {
     accessorKey: 'newTierCode',
     header: t('tiers.history.new_tier')
+  },
+  {
+    id: 'changeType',
+    accessorKey: 'changeType',
+    header: t('tiers.history.type') || 'Type' 
   },
   {
     accessorKey: 'reason',
@@ -57,6 +71,7 @@ const columns = computed<TableColumn<TierHistoryResponseDto>[]>(() => [
           {{ t('tiers.history.title') }}
         </h3>
         <UInput
+          v-if="!userId"
           v-model="search"
           icon="i-heroicons-magnifying-glass-20-solid"
           :placeholder="t('common.search_by_user_id')"
@@ -79,6 +94,16 @@ const columns = computed<TableColumn<TierHistoryResponseDto>[]>(() => [
           separator: 'h-0'
       }"
     >
+      <template #changeType-data="{ row }">
+        <UBadge 
+          :color="row.original.changeType === 'UPGRADE' ? 'success' : row.original.changeType === 'DOWNGRADE' ? 'error' : row.original.changeType === 'MANUAL_UPDATE' ? 'warning' : 'neutral'" 
+          variant="subtle" 
+          size="sm"
+        >
+          {{ row.original.changeType }}
+        </UBadge>
+      </template>
+
       <template #empty-state>
         <div class="flex flex-col items-center justify-center py-12 gap-3">
           <UIcon name="i-lucide-history" class="w-12 h-12 text-neutral-400 dark:text-neutral-600" />

@@ -10324,6 +10324,9 @@
           "newTierCode": {
             "type": "string"
           },
+          "changeType": {
+            "type": "string"
+          },
           "reason": {
             "type": "object",
             "nullable": true
@@ -10339,6 +10342,7 @@
           "userEmail",
           "oldTierCode",
           "newTierCode",
+          "changeType",
           "reason",
           "createdAt"
         ]

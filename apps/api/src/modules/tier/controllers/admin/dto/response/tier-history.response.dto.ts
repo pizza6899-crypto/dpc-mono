@@ -16,6 +16,9 @@ export class TierHistoryResponseDto {
     @ApiProperty()
     newTierCode: string;
 
+    @ApiProperty()
+    changeType: string;
+
     @ApiProperty({ nullable: true })
     reason: string | null;
 
@@ -28,6 +31,7 @@ export class TierHistoryResponseDto {
         this.userEmail = history.userEmail;
         this.oldTierCode = history.oldTierCode;
         this.newTierCode = history.newTierCode;
+        this.changeType = history.changeType;
         this.reason = history.reason;
         this.createdAt = history.createdAt;
     }

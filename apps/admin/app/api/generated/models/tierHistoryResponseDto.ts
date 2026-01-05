@@ -15,6 +15,7 @@ export interface TierHistoryResponseDto {
   /** @nullable */
   oldTierCode: TierHistoryResponseDtoOldTierCode;
   newTierCode: string;
+  changeType: string;
   /** @nullable */
   reason: TierHistoryResponseDtoReason;
   createdAt: string;
