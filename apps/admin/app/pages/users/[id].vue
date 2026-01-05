@@ -34,7 +34,7 @@ const active = computed({
   },
   set(tab) {
     // Hash is specified here to prevent the page from scrolling to the top
-    router.push({
+    router.replace({
       path: `/users/${userId}`,
       query: { tab },
     })
@@ -71,7 +71,7 @@ const active = computed({
       <div v-else-if="user?.data" class="flex-1 flex flex-col h-full overflow-hidden">
         <UTabs v-model="active" :items="tabs" variant="link" class="w-full h-full flex flex-col" :ui="{ root: 'h-full flex flex-col', content: 'flex-1 overflow-y-auto p-4', list: 'px-4 pt-4 border-b border-neutral-200 dark:border-neutral-800' }">
           <template #content="{ item }">
-            <div v-if="item.value === 'overview'">
+            <div v-show="item.value === 'overview'">
               <div class="space-y-6 max-w-6xl mx-auto pb-10">
                 <!-- Basic Info Grid -->
                 <div class="grid grid-cols-1 md:grid-cols-3 gap-6">
@@ -87,12 +87,12 @@ const active = computed({
                 </div>
               </div>
             </div>
-            <div v-else-if="item.value === 'tier-history'">
+            <div v-show="item.value === 'tier-history'">
               <div class="max-w-6xl mx-auto py-2">
                 <TiersTierHistoryTable :key="historyRefreshKey" :user-id="user.data.id" />
               </div>
             </div>
-            <div v-else-if="item.value === 'transaction-history'">
+            <div v-show="item.value === 'transaction-history'">
               <div class="max-w-6xl mx-auto py-2">
                 <UsersUserTransactionLogs :user-id="user.data.id" />
               </div>
