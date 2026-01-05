@@ -10,6 +10,21 @@ const historyRefreshKey = ref(0)
 const refreshHistory = () => {
     historyRefreshKey.value++
 }
+
+const tabs = [
+  {
+    slot: 'overview',
+    label: 'Overview'
+  },
+  {
+    slot: 'tier-history',
+    label: 'Tier History'
+  },
+  {
+    slot: 'transaction-history',
+    label: 'Transaction History'
+  }
+]
 </script>
 
 <template>
@@ -37,23 +52,37 @@ const refreshHistory = () => {
         <UIcon name="i-lucide-loader-2" class="animate-spin w-8 h-8 text-neutral-400" />
       </div>
 
-      <div v-else-if="user?.data" class="p-4 space-y-6 max-w-6xl mx-auto">
-        <!-- Basic Info Grid -->
-        <div class="grid grid-cols-1 md:grid-cols-3 gap-6">
-          <div class="md:col-span-1">
-            <UsersUserInfoCard :user="user.data" />
-          </div>
+      <div v-else-if="user?.data" class="flex-1 flex flex-col h-full overflow-hidden">
+        <UTabs :items="tabs" variant="link" class="w-full h-full flex flex-col" :ui="{ root: 'h-full flex flex-col', content: 'flex-1 overflow-y-auto p-4', list: 'px-4 pt-4 border-b border-neutral-200 dark:border-neutral-800' }">
+          <template #overview>
+            <div class="space-y-6 max-w-6xl mx-auto pb-10">
+              <!-- Basic Info Grid -->
+              <div class="grid grid-cols-1 md:grid-cols-3 gap-6">
+                <div class="md:col-span-1 space-y-6">
+                  <UsersUserInfoCard :user="user.data" />
+                  <UsersUserWalletCard :user-id="user.data.id" />
+                </div>
 
-          <!-- Tier Info Card -->
-          <div class="md:col-span-2">
-            <UsersUserTierCard :user-id="user.data.id" @refresh-history="refreshHistory" />
-          </div>
-        </div>
+                <!-- Tier Info Card -->
+                <div class="md:col-span-2">
+                  <UsersUserTierCard :user-id="user.data.id" @refresh-history="refreshHistory" />
+                </div>
+              </div>
+            </div>
+          </template>
 
-        <!-- History Table -->
-        <div class="hidden md:block">
-          <TiersTierHistoryTable :key="historyRefreshKey" :user-id="user.data.id" />
-        </div>
+          <template #tier-history>
+            <div class="max-w-6xl mx-auto py-2">
+              <TiersTierHistoryTable :key="historyRefreshKey" :user-id="user.data.id" />
+            </div>
+          </template>
+          
+          <template #transaction-history>
+            <div class="max-w-6xl mx-auto py-2">
+              <UsersUserTransactionLogs :user-id="user.data.id" />
+            </div>
+          </template>
+        </UTabs>
       </div>
     </template>
   </UDashboardPanel>
