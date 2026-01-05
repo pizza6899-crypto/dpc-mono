@@ -9875,6 +9875,30 @@
           "amount"
         ]
       },
+      "TierTranslationDto": {
+        "type": "object",
+        "properties": {
+          "language": {
+            "type": "string",
+            "enum": [
+              "EN",
+              "KO",
+              "JA"
+            ],
+            "description": "Language code / 언어 코드",
+            "example": "EN"
+          },
+          "name": {
+            "type": "string",
+            "description": "Tier name / 티어 이름",
+            "example": "Bronze"
+          }
+        },
+        "required": [
+          "language",
+          "name"
+        ]
+      },
       "UserTierResponseDto": {
         "type": "object",
         "properties": {
@@ -9907,9 +9931,12 @@
             "type": "string",
             "description": "Current Tier Requirement / 현재 티어 유지/달성 조건금액"
           },
-          "tierDisplayName": {
-            "type": "string",
-            "description": "Current Tier Display Name / 현재 티어 표시 이름"
+          "tierTranslations": {
+            "description": "Tier Translations / 티어 번역 정보",
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/TierTranslationDto"
+            }
           }
         },
         "required": [
@@ -9919,30 +9946,6 @@
           "highestPromotedPriority",
           "isManualLock",
           "lastPromotedAt"
-        ]
-      },
-      "TierTranslationDto": {
-        "type": "object",
-        "properties": {
-          "language": {
-            "type": "string",
-            "enum": [
-              "EN",
-              "KO",
-              "JA"
-            ],
-            "description": "Language code / 언어 코드",
-            "example": "EN"
-          },
-          "name": {
-            "type": "string",
-            "description": "Tier name / 티어 이름",
-            "example": "Bronze"
-          }
-        },
-        "required": [
-          "language",
-          "name"
         ]
       },
       "TierResponseDto": {

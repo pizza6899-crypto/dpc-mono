@@ -193,13 +193,19 @@
     },
     "tiers": {
         "priority": "Priority",
+        "priority_help": "Determines the level of the tier. Higher values represent higher tiers.",
         "code": "Code",
+        "code_help": "Unique identification code used only internal to the administration.",
+        "name": "Name",
+        "description": "Manage your application tier policy and benefits.",
         "requirement_usd": "Requirement (USD)",
         "level_up_bonus_usd": "Level Up Bonus (USD)",
         "comp_rate": "Comp Rate",
         "add_tier": "Add Tier",
         "edit_tier": "Edit Tier",
+        "manage_translations": "Manage Translations",
         "sync_missing": "Sync Missing Tiers",
+        "save_all": "Save All",
         "messages": {
             "add_tier_desc": "Create a new tier policy."
         }

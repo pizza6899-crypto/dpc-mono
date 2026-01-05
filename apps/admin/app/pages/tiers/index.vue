@@ -85,8 +85,14 @@ const columns = computed<TableColumn<TierResponseDto>[]>(() => [
   },
   {
     id: 'name',
-    header: 'Name (EN)',
-    cell: ({ row }) => row.original.translations.find(tr => tr.language === 'EN')?.name || row.original.code
+    header: t('tiers.name'),
+    cell: ({ row }) => {
+      const { locale } = useI18n()
+      const currentLang = locale.value.toUpperCase()
+      const translation = row.original.translations.find(tr => tr.language === currentLang)
+        || row.original.translations.find(tr => tr.language === 'EN')
+      return translation?.name || row.original.code
+    }
   },
   {
     accessorKey: 'requirementUsd',
@@ -110,37 +116,7 @@ const columns = computed<TableColumn<TierResponseDto>[]>(() => [
   },
   {
     id: 'actions',
-    header: '',
-    cell: ({ row }) => {
-      const dropdownItems = [
-        [{
-          label: t('common.edit'),
-          icon: 'i-lucide-pencil',
-          onSelect: () => openEditModal(row.original)
-        }, {
-          label: 'Manage Translations',
-          icon: 'i-lucide-languages',
-          onSelect: () => openTranslationModal(row.original)
-        }]
-      ]
-
-      return h(
-        'div',
-        { class: 'flex justify-end' },
-        h(
-          'UDropdownMenu',
-          {
-            items: dropdownItems,
-            content: { align: 'end' }
-          },
-          () => h('UButton', {
-            icon: 'i-lucide-ellipsis-vertical',
-            color: 'neutral',
-            variant: 'ghost'
-          })
-        )
-      )
-    }
+    header: ''
   }
 ])
 </script>
@@ -154,7 +130,7 @@ const columns = computed<TableColumn<TierResponseDto>[]>(() => [
             {{ t('common.tiers') }}
           </h2>
           <p class="text-sm text-neutral-500 mt-1">
-            Manage your application tier policy and benefits.
+            {{ t('tiers.description') }}
           </p>
         </div>
         
@@ -191,7 +167,62 @@ const columns = computed<TableColumn<TierResponseDto>[]>(() => [
               td: 'py-3 border-b border-gray-200 dark:border-gray-800',
               separator: 'h-0'
           }"
-        />
+        >
+          <template #priority-header>
+            <div class="flex items-center gap-1">
+              {{ t('tiers.priority') }}
+              <UPopover mode="hover" :open-delay="200">
+                <UIcon name="i-lucide-circle-help" class="size-3.5 text-neutral-400 cursor-help" />
+                <template #content>
+                  <div class="p-2 text-xs max-w-48">
+                    {{ t('tiers.priority_help') }}
+                  </div>
+                </template>
+              </UPopover>
+            </div>
+          </template>
+          <template #code-header>
+            <div class="flex items-center gap-1">
+              {{ t('tiers.code') }}
+              <UPopover mode="hover" :open-delay="200">
+                <UIcon name="i-lucide-circle-help" class="size-3.5 text-neutral-400 cursor-help" />
+                <template #content>
+                  <div class="p-2 text-xs max-w-48">
+                    {{ t('tiers.code_help') }}
+                  </div>
+                </template>
+              </UPopover>
+            </div>
+          </template>
+
+          <template #actions-cell="{ row }">
+            <div class="flex justify-end">
+              <UDropdownMenu
+                :items="[
+                  [
+                    {
+                      label: t('common.edit'),
+                      icon: 'i-lucide-pencil',
+                      onSelect: () => openEditModal(row.original)
+                    },
+                    {
+                      label: t('tiers.manage_translations'),
+                      icon: 'i-lucide-languages',
+                      onSelect: () => openTranslationModal(row.original)
+                    }
+                  ]
+                ]"
+                :content="{ align: 'end' }"
+              >
+                <UButton
+                  icon="i-lucide-ellipsis-vertical"
+                  color="neutral"
+                  variant="ghost"
+                />
+              </UDropdownMenu>
+            </div>
+          </template>
+        </UTable>
       </UCard>
 
       <!-- Tier form modal -->
@@ -212,8 +243,8 @@ const columns = computed<TableColumn<TierResponseDto>[]>(() => [
       <!-- Translation modal -->
       <UModal
         v-model:open="isTranslationModalOpen"
-        title="Manage Translations"
-        :description="selectedTier ? `Update translations for tier: ${selectedTier.code}` : undefined"
+        :title="t('tiers.manage_translations')"
+        :description="selectedTier ? `${t('tiers.manage_translations')}: ${selectedTier.code}` : undefined"
       >
         <template #body>
           <TiersTranslationForm

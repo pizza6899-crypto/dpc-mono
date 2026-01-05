@@ -1,5 +1,6 @@
 import { ApiProperty } from '@nestjs/swagger';
 import { UserTier } from '../../../../domain';
+import { TierTranslationDto } from '../../../admin/dto/request/create-tier.dto';
 
 export class UserTierResponseDto {
     @ApiProperty({ description: 'User ID / 사용자 ID' })
@@ -24,8 +25,8 @@ export class UserTierResponseDto {
     @ApiProperty({ description: 'Current Tier Requirement / 현재 티어 유지/달성 조건금액', required: false })
     tierRequirementUsd?: string;
 
-    @ApiProperty({ description: 'Tier Translations / 티어 번역 정보', required: false, isArray: true })
-    tierTranslations?: { language: string, name: string }[];
+    @ApiProperty({ description: 'Tier Translations / 티어 번역 정보', required: false, type: [TierTranslationDto] })
+    tierTranslations?: TierTranslationDto[];
 
     constructor(userTier: UserTier) {
         this.userId = userTier.userId.toString();
@@ -37,7 +38,10 @@ export class UserTierResponseDto {
 
         if (userTier.tier) {
             this.tierRequirementUsd = userTier.tier.requirementUsd.toString();
-            this.tierTranslations = userTier.tier.translations;
+            this.tierTranslations = userTier.tier.translations.map(t => ({
+                language: t.language as any,
+                name: t.name
+            }));
         }
     }
 }

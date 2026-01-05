@@ -11,7 +11,7 @@ import {
 import type { TierHistoryResponseDto } from '~/api/generated/models'
 
 const route = useRoute()
-const { t } = useI18n()
+const { t, locale } = useI18n()
 const toast = useToast()
 const userId = route.params.id as string
 
@@ -151,7 +151,11 @@ const historyColumns: TableColumn<TierHistoryResponseDto>[] = [
                     <span class="text-3xl font-bold text-neutral-900 dark:text-white">{{ userTier.tierCode }}</span>
                     <UBadge v-if="userTier.isManualLock" color="warning" variant="subtle" icon="i-lucide-lock">Locked</UBadge>
                   </div>
-                  <p class="text-sm text-neutral-500 mt-1">{{ userTier.tierDisplayName || 'No Display Name' }}</p>
+                  <p class="text-sm text-neutral-500 mt-1">
+                    {{ userTier.tierTranslations?.find(t => t.language === (locale.toUpperCase()))?.name 
+                       || userTier.tierTranslations?.find(t => t.language === 'EN')?.name 
+                       || userTier.tierCode }}
+                  </p>
                 </div>
 
                 <div>

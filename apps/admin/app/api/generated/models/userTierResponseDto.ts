@@ -5,6 +5,7 @@
  * DPC Backend API 문서
  * OpenAPI spec version: 1.0
  */
+import type { TierTranslationDto } from './tierTranslationDto';
 
 export interface UserTierResponseDto {
   /** User ID / 사용자 ID */
@@ -21,6 +22,6 @@ export interface UserTierResponseDto {
   lastPromotedAt: string;
   /** Current Tier Requirement / 현재 티어 유지/달성 조건금액 */
   tierRequirementUsd?: string;
-  /** Current Tier Display Name / 현재 티어 표시 이름 */
-  tierDisplayName?: string;
+  /** Tier Translations / 티어 번역 정보 */
+  tierTranslations?: TierTranslationDto[];
 }
