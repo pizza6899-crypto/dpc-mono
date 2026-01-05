@@ -2674,6 +2674,70 @@
         ]
       }
     },
+    "/admin/tiers/users/{userId}/unlock": {
+      "post": {
+        "operationId": "TierAdminController_unlockUserTier",
+        "parameters": [
+          {
+            "name": "userId",
+            "required": true,
+            "in": "path",
+            "description": "User ID / 사용자 ID",
+            "schema": {
+              "example": "1",
+              "type": "string"
+            }
+          }
+        ],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/UnlockUserTierDto"
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "Successfully unlocked user tier / 사용자 티어 잠금 해제 성공",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "allOf": [
+                    {
+                      "$ref": "#/components/schemas/ApiResponseDto"
+                    },
+                    {
+                      "properties": {
+                        "data": {
+                          "type": "object"
+                        }
+                      }
+                    }
+                  ]
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Bad Request",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponseDto"
+                }
+              }
+            }
+          }
+        },
+        "summary": "Unlock user tier / 사용자 티어 잠금 해제",
+        "tags": [
+          "Admin Tiers"
+        ]
+      }
+    },
     "/admin/tiers/stats/counts": {
       "get": {
         "operationId": "TierAdminController_getTierUserCounts",
@@ -10206,6 +10270,15 @@
         "required": [
           "tierCode"
         ]
+      },
+      "UnlockUserTierDto": {
+        "type": "object",
+        "properties": {
+          "reason": {
+            "type": "string",
+            "description": "Reason for unlocking / 잠금 해제 사유"
+          }
+        }
       },
       "TierUserCountResponseDto": {
         "type": "object",

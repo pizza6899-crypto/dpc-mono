@@ -46,6 +46,8 @@ import { UserTierResponseDto } from '../user/dto/response/user-tier.response.dto
 import { InitializeMissingUserTiersService } from '../../application/initialize-missing-user-tiers.service';
 import { SyncMissingUsersResponseDto } from './dto/response/sync-missing-users-response.dto';
 import { GetUserTierService } from '../../application/get-user-tier.service';
+import { UnlockUserTierService } from '../../application/unlock-user-tier.service';
+import { UnlockUserTierDto } from './dto/request/unlock-user-tier.dto';
 import { UserTierNotFoundException } from '../../domain/tier.exception';
 
 @ApiTags('Admin Tiers')
@@ -63,6 +65,7 @@ export class TierAdminController {
         private readonly findUsersByTierService: FindUsersByTierService,
         private readonly initializeMissingUserTiersService: InitializeMissingUserTiersService,
         private readonly getUserTierService: GetUserTierService,
+        private readonly unlockUserTierService: UnlockUserTierService,
         private readonly findTierHistoryService: FindTierHistoryService,
     ) { }
 
@@ -204,6 +207,29 @@ export class TierAdminController {
         @Body() dto: ForceUpdateUserTierDto,
     ): Promise<void> {
         await this.forceUpdateUserTierService.execute(BigInt(params.userId), dto.tierCode, dto.reason ?? 'Admin forced update');
+    }
+
+    @Post('users/:userId/unlock')
+    @HttpCode(HttpStatus.OK)
+    @AuditLog({
+        type: LogType.ACTIVITY,
+        category: 'TIER',
+        action: 'TIER_UNLOCK',
+        extractMetadata: (_, args) => ({
+            userId: args[0],
+            reason: args[1]?.reason,
+        }),
+    })
+    @ApiOperation({ summary: 'Unlock user tier / 사용자 티어 잠금 해제' })
+    @ApiStandardResponse(undefined, {
+        status: HttpStatus.OK,
+        description: 'Successfully unlocked user tier / 사용자 티어 잠금 해제 성공',
+    })
+    async unlockUserTier(
+        @Param() params: UserParamDto,
+        @Body() dto: UnlockUserTierDto,
+    ): Promise<void> {
+        await this.unlockUserTierService.execute(BigInt(params.userId), dto.reason);
     }
 
     @Get('stats/counts')

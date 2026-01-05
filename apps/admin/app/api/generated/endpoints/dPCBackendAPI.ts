@@ -194,10 +194,12 @@ import type {
   TierAdminControllerGetUserTierHistory200,
   TierAdminControllerGetUserTierHistoryParams,
   TierAdminControllerSyncMissingUserTiers200,
+  TierAdminControllerUnlockUserTier200,
   TierAdminControllerUpdate200,
   TierAdminControllerUpsertTranslation200,
   TierUserControllerGetMyTier200,
   TransactionResponseDto,
+  UnlockUserTierDto,
   UpdateAffiliateCodeDto,
   UpdateBankConfigRequestDto,
   UpdateCodeAdminRequestDto,
@@ -2929,6 +2931,73 @@ export const useTierAdminControllerForceUpdateUserTier = <TError = ErrorResponse
       > => {
 
       const mutationOptions = getTierAdminControllerForceUpdateUserTierMutationOptions(options);
+
+      return useMutation(mutationOptions, queryClient);
+    }
+    
+/**
+ * @summary Unlock user tier / 사용자 티어 잠금 해제
+ */
+export const TierAdminController_unlockUserTier = (
+    userId: MaybeRef<string>,
+    unlockUserTierDto: MaybeRef<UnlockUserTierDto>,
+ signal?: AbortSignal
+) => {
+      userId = unref(userId);
+unlockUserTierDto = unref(unlockUserTierDto);
+      
+      return customInstance<TierAdminControllerUnlockUserTier200>(
+      {url: `/admin/tiers/users/${userId}/unlock`, method: 'POST',
+      headers: {'Content-Type': 'application/json', },
+      data: unlockUserTierDto, signal
+    },
+      );
+    }
+  
+
+
+export const getTierAdminControllerUnlockUserTierMutationOptions = <TError = ErrorResponseDto,
+    TContext = unknown>(options?: { mutation?:UseMutationOptions<Awaited<ReturnType<typeof TierAdminController_unlockUserTier>>, TError,{userId: string;data: UnlockUserTierDto}, TContext>, }
+): UseMutationOptions<Awaited<ReturnType<typeof TierAdminController_unlockUserTier>>, TError,{userId: string;data: UnlockUserTierDto}, TContext> => {
+
+const mutationKey = ['tierAdminControllerUnlockUserTier'];
+const {mutation: mutationOptions} = options ?
+      options.mutation && 'mutationKey' in options.mutation && options.mutation.mutationKey ?
+      options
+      : {...options, mutation: {...options.mutation, mutationKey}}
+      : {mutation: { mutationKey, }};
+
+      
+
+
+      const mutationFn: MutationFunction<Awaited<ReturnType<typeof TierAdminController_unlockUserTier>>, {userId: string;data: UnlockUserTierDto}> = (props) => {
+          const {userId,data} = props ?? {};
+
+          return  TierAdminController_unlockUserTier(userId,data,)
+        }
+
+        
+
+
+  return  { mutationFn, ...mutationOptions }}
+
+    export type TierAdminControllerUnlockUserTierMutationResult = NonNullable<Awaited<ReturnType<typeof TierAdminController_unlockUserTier>>>
+    export type TierAdminControllerUnlockUserTierMutationBody = UnlockUserTierDto
+    export type TierAdminControllerUnlockUserTierMutationError = ErrorResponseDto
+
+    /**
+ * @summary Unlock user tier / 사용자 티어 잠금 해제
+ */
+export const useTierAdminControllerUnlockUserTier = <TError = ErrorResponseDto,
+    TContext = unknown>(options?: { mutation?:UseMutationOptions<Awaited<ReturnType<typeof TierAdminController_unlockUserTier>>, TError,{userId: string;data: UnlockUserTierDto}, TContext>, }
+ , queryClient?: QueryClient): UseMutationReturnType<
+        Awaited<ReturnType<typeof TierAdminController_unlockUserTier>>,
+        TError,
+        {userId: string;data: UnlockUserTierDto},
+        TContext
+      > => {
+
+      const mutationOptions = getTierAdminControllerUnlockUserTierMutationOptions(options);
 
       return useMutation(mutationOptions, queryClient);
     }

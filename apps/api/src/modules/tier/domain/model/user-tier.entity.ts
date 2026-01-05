@@ -167,4 +167,8 @@ export class UserTier {
             this._lastPromotedAt = new Date();
         }
     }
+
+    unlock(): void {
+        this._isManualLock = false;
+    }
 }

@@ -26,6 +26,7 @@ import { FindUsersByTierService } from './application/find-users-by-tier.service
 import { AddUserRollingService } from './application/add-user-rolling.service';
 import { InitializeMissingUserTiersService } from './application/initialize-missing-user-tiers.service';
 import { FindTierHistoryService } from './application/find-tier-history.service';
+import { UnlockUserTierService } from './application/unlock-user-tier.service';
 
 @Module({
   imports: [],
@@ -45,6 +46,7 @@ import { FindTierHistoryService } from './application/find-tier-history.service'
     AddUserRollingService,
     InitializeMissingUserTiersService,
     FindTierHistoryService,
+    UnlockUserTierService,
     {
       provide: TIER_REPOSITORY,
       useClass: TierRepository,
@@ -78,6 +80,7 @@ import { FindTierHistoryService } from './application/find-tier-history.service'
     AddUserRollingService,
     InitializeMissingUserTiersService,
     FindTierHistoryService,
+    UnlockUserTierService,
   ],
 })
 
