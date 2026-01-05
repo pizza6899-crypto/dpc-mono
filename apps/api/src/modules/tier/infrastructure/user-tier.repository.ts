@@ -115,4 +115,19 @@ export class UserTierRepository implements UserTierRepositoryPort {
 
         return [items.map((item) => this.mapper.toDomain(item)), total];
     }
+
+    async findUserIdsWithoutTier(): Promise<bigint[]> {
+        const users = await this.tx.user.findMany({
+            where: {
+                userTier: {
+                    is: null,
+                },
+            },
+            select: {
+                id: true,
+            },
+        });
+
+        return users.map((user) => user.id);
+    }
 }

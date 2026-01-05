@@ -13,4 +13,5 @@ export interface UserTierRepositoryPort {
     acquireLock(userId: bigint): Promise<void>;
 
     findManyByTierId(tierId: bigint, skip: number, take: number): Promise<[UserTier[], number]>;
+    findUserIdsWithoutTier(): Promise<bigint[]>;
 }

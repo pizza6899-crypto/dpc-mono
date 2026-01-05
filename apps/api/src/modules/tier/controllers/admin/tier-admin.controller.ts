@@ -42,6 +42,8 @@ import { TierHistoryResponseDto } from './dto/response/tier-history.response.dto
 import { FindUsersByTierService } from '../../application/find-users-by-tier.service';
 import { TierUserListQueryDto } from './dto/request/tier-user-list-query.dto';
 import { UserTierResponseDto } from '../user/dto/response/user-tier.response.dto';
+import { InitializeMissingUserTiersService } from '../../application/initialize-missing-user-tiers.service';
+import { SyncMissingUsersResponseDto } from './dto/response/sync-missing-users-response.dto';
 
 @ApiTags('Admin Tiers')
 @Controller('admin/tiers')
@@ -57,6 +59,7 @@ export class TierAdminController {
         private readonly countUsersByTierService: CountUsersByTierService,
         private readonly findUserTierHistoryService: FindUserTierHistoryService,
         private readonly findUsersByTierService: FindUsersByTierService,
+        private readonly initializeMissingUserTiersService: InitializeMissingUserTiersService,
     ) { }
 
     @Post()
@@ -246,5 +249,22 @@ export class TierAdminController {
             page: query.page ?? 1,
             limit: query.limit ?? 20,
         };
+    }
+
+    @Post('sync-missing-users')
+    @HttpCode(HttpStatus.OK)
+    @AuditLog({
+        type: LogType.ACTIVITY,
+        category: 'TIER',
+        action: 'TIER_SYNC_MISSING_USERS',
+    })
+    @ApiOperation({ summary: 'Sync users without tiers / 티어가 없는 사용자 동기화' })
+    @ApiStandardResponse(SyncMissingUsersResponseDto, {
+        status: HttpStatus.OK,
+        description: 'Successfully synced users without tiers / 티어 없는 사용자 동기화 성공',
+    })
+    async syncMissingUserTiers(): Promise<SyncMissingUsersResponseDto> {
+        const result = await this.initializeMissingUserTiersService.execute();
+        return new SyncMissingUsersResponseDto(result);
     }
 }
