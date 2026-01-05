@@ -91,6 +91,7 @@ import type {
   CreateCryptoConfigRequestDto,
   CreateCryptoDepositRequestDto,
   CreatePromotionRequestDto,
+  CreateTierDto,
   CreateWithdrawRequestDto,
   CreateWithdrawResponseDto,
   CredentialAdminControllerChangePassword200,
@@ -128,6 +129,7 @@ import type {
   ErrorResponseDto,
   ExchangeControllerConvertParams,
   ExchangeControllerGetRatesParams,
+  ForceUpdateUserTierDto,
   FreeSpinResultRequestDto,
   FreeSpinResultResponseDto,
   GameLaunchRequestDto,
@@ -180,21 +182,31 @@ import type {
   SessionAdminControllerRevokeSession200,
   SessionAdminControllerRevokeUserSessions200,
   SetCustomRateDto,
+  TierAdminControllerCreate201,
+  TierAdminControllerFindAll200,
+  TierAdminControllerFindUsersByTier200,
+  TierAdminControllerFindUsersByTierParams,
+  TierAdminControllerForceUpdateUserTier200,
+  TierAdminControllerGetTierUserCounts200,
+  TierAdminControllerGetUserTierHistory200,
+  TierAdminControllerSyncMissingUserTiers200,
+  TierAdminControllerUpdate200,
+  TierAdminControllerUpsertTranslation200,
+  TierUserControllerGetMyTier200,
   TransactionResponseDto,
   UpdateAffiliateCodeDto,
   UpdateBankConfigRequestDto,
   UpdateCodeAdminRequestDto,
   UpdateCryptoConfigRequestDto,
   UpdatePromotionRequestDto,
+  UpdateTierDto,
+  UpdateTierTranslationDto,
   UpdateUserBalanceRequestDto,
   UpsertCurrencySettingsRequestDto,
   UpsertTranslationRequestDto,
   UserAdminControllerListUsers200,
   UserAdminControllerListUsersParams,
   ValidateCodeFormatDto,
-  VipLevelControllerGetAllLevels200,
-  VipLevelControllerGetLevelById200,
-  VipMembershipResponseDto,
   WagerRequestDto,
   WagerResponseDto,
   WalletAdminControllerGetUserBalance200,
@@ -2027,213 +2039,6 @@ export const useCredentialAdminControllerResetUserPassword = <TError = ErrorResp
     }
     
 /**
- * @summary Get all VIP levels / 모든 VIP 레벨 조회
- */
-export const VipLevelController_getAllLevels = (
-    
- signal?: AbortSignal
-) => {
-      
-      
-      return customInstance<VipLevelControllerGetAllLevels200>(
-      {url: `/vip/levels`, method: 'GET', signal
-    },
-      );
-    }
-  
-
-
-
-export const getVipLevelControllerGetAllLevelsQueryKey = () => {
-    return [
-    'vip','levels'
-    ] as const;
-    }
-
-    
-export const getVipLevelControllerGetAllLevelsQueryOptions = <TData = Awaited<ReturnType<typeof VipLevelController_getAllLevels>>, TError = ErrorResponseDto>( options?: { query?:Partial<UseQueryOptions<Awaited<ReturnType<typeof VipLevelController_getAllLevels>>, TError, TData>>, }
-) => {
-
-const {query: queryOptions} = options ?? {};
-
-  const queryKey =  getVipLevelControllerGetAllLevelsQueryKey();
-
-  
-
-    const queryFn: QueryFunction<Awaited<ReturnType<typeof VipLevelController_getAllLevels>>> = ({ signal }) => VipLevelController_getAllLevels(signal);
-
-      
-
-      
-
-   return  { queryKey, queryFn, ...queryOptions} as UseQueryOptions<Awaited<ReturnType<typeof VipLevelController_getAllLevels>>, TError, TData> 
-}
-
-export type VipLevelControllerGetAllLevelsQueryResult = NonNullable<Awaited<ReturnType<typeof VipLevelController_getAllLevels>>>
-export type VipLevelControllerGetAllLevelsQueryError = ErrorResponseDto
-
-
-/**
- * @summary Get all VIP levels / 모든 VIP 레벨 조회
- */
-
-export function useVipLevelControllerGetAllLevels<TData = Awaited<ReturnType<typeof VipLevelController_getAllLevels>>, TError = ErrorResponseDto>(
-  options?: { query?:Partial<UseQueryOptions<Awaited<ReturnType<typeof VipLevelController_getAllLevels>>, TError, TData>>, }
- , queryClient?: QueryClient 
- ): UseQueryReturnType<TData, TError> & { queryKey: DataTag<QueryKey, TData, TError> } {
-
-  const queryOptions = getVipLevelControllerGetAllLevelsQueryOptions(options)
-
-  const query = useQuery(queryOptions, queryClient) as UseQueryReturnType<TData, TError> & { queryKey: DataTag<QueryKey, TData, TError> };
-
-  query.queryKey = unref(queryOptions).queryKey as DataTag<QueryKey, TData, TError>;
-
-  return query;
-}
-
-
-
-
-
-/**
- * @summary Get specific VIP level / 특정 VIP 레벨 조회
- */
-export const VipLevelController_getLevelById = (
-    id: MaybeRef<number>,
- signal?: AbortSignal
-) => {
-      id = unref(id);
-      
-      return customInstance<VipLevelControllerGetLevelById200>(
-      {url: `/vip/levels/${id}`, method: 'GET', signal
-    },
-      );
-    }
-  
-
-
-
-export const getVipLevelControllerGetLevelByIdQueryKey = (id?: MaybeRef<number>,) => {
-    return [
-    'vip','levels',id
-    ] as const;
-    }
-
-    
-export const getVipLevelControllerGetLevelByIdQueryOptions = <TData = Awaited<ReturnType<typeof VipLevelController_getLevelById>>, TError = ErrorResponseDto>(id: MaybeRef<number>, options?: { query?:Partial<UseQueryOptions<Awaited<ReturnType<typeof VipLevelController_getLevelById>>, TError, TData>>, }
-) => {
-
-const {query: queryOptions} = options ?? {};
-
-  const queryKey =  getVipLevelControllerGetLevelByIdQueryKey(id);
-
-  
-
-    const queryFn: QueryFunction<Awaited<ReturnType<typeof VipLevelController_getLevelById>>> = ({ signal }) => VipLevelController_getLevelById(id, signal);
-
-      
-
-      
-
-   return  { queryKey, queryFn, enabled: computed(() => !!(unref(id))), ...queryOptions} as UseQueryOptions<Awaited<ReturnType<typeof VipLevelController_getLevelById>>, TError, TData> 
-}
-
-export type VipLevelControllerGetLevelByIdQueryResult = NonNullable<Awaited<ReturnType<typeof VipLevelController_getLevelById>>>
-export type VipLevelControllerGetLevelByIdQueryError = ErrorResponseDto
-
-
-/**
- * @summary Get specific VIP level / 특정 VIP 레벨 조회
- */
-
-export function useVipLevelControllerGetLevelById<TData = Awaited<ReturnType<typeof VipLevelController_getLevelById>>, TError = ErrorResponseDto>(
- id: MaybeRef<number>, options?: { query?:Partial<UseQueryOptions<Awaited<ReturnType<typeof VipLevelController_getLevelById>>, TError, TData>>, }
- , queryClient?: QueryClient 
- ): UseQueryReturnType<TData, TError> & { queryKey: DataTag<QueryKey, TData, TError> } {
-
-  const queryOptions = getVipLevelControllerGetLevelByIdQueryOptions(id,options)
-
-  const query = useQuery(queryOptions, queryClient) as UseQueryReturnType<TData, TError> & { queryKey: DataTag<QueryKey, TData, TError> };
-
-  query.queryKey = unref(queryOptions).queryKey as DataTag<QueryKey, TData, TError>;
-
-  return query;
-}
-
-
-
-
-
-/**
- * @summary 내 VIP 정보 조회
- */
-export const VipMembershipController_getMyVipInfo = (
-    
- signal?: AbortSignal
-) => {
-      
-      
-      return customInstance<VipMembershipResponseDto>(
-      {url: `/vip/membership`, method: 'GET', signal
-    },
-      );
-    }
-  
-
-
-
-export const getVipMembershipControllerGetMyVipInfoQueryKey = () => {
-    return [
-    'vip','membership'
-    ] as const;
-    }
-
-    
-export const getVipMembershipControllerGetMyVipInfoQueryOptions = <TData = Awaited<ReturnType<typeof VipMembershipController_getMyVipInfo>>, TError = unknown>( options?: { query?:Partial<UseQueryOptions<Awaited<ReturnType<typeof VipMembershipController_getMyVipInfo>>, TError, TData>>, }
-) => {
-
-const {query: queryOptions} = options ?? {};
-
-  const queryKey =  getVipMembershipControllerGetMyVipInfoQueryKey();
-
-  
-
-    const queryFn: QueryFunction<Awaited<ReturnType<typeof VipMembershipController_getMyVipInfo>>> = ({ signal }) => VipMembershipController_getMyVipInfo(signal);
-
-      
-
-      
-
-   return  { queryKey, queryFn, ...queryOptions} as UseQueryOptions<Awaited<ReturnType<typeof VipMembershipController_getMyVipInfo>>, TError, TData> 
-}
-
-export type VipMembershipControllerGetMyVipInfoQueryResult = NonNullable<Awaited<ReturnType<typeof VipMembershipController_getMyVipInfo>>>
-export type VipMembershipControllerGetMyVipInfoQueryError = unknown
-
-
-/**
- * @summary 내 VIP 정보 조회
- */
-
-export function useVipMembershipControllerGetMyVipInfo<TData = Awaited<ReturnType<typeof VipMembershipController_getMyVipInfo>>, TError = unknown>(
-  options?: { query?:Partial<UseQueryOptions<Awaited<ReturnType<typeof VipMembershipController_getMyVipInfo>>, TError, TData>>, }
- , queryClient?: QueryClient 
- ): UseQueryReturnType<TData, TError> & { queryKey: DataTag<QueryKey, TData, TError> } {
-
-  const queryOptions = getVipMembershipControllerGetMyVipInfoQueryOptions(options)
-
-  const query = useQuery(queryOptions, queryClient) as UseQueryReturnType<TData, TError> & { queryKey: DataTag<QueryKey, TData, TError> };
-
-  query.queryKey = unref(queryOptions).queryKey as DataTag<QueryKey, TData, TError>;
-
-  return query;
-}
-
-
-
-
-
-/**
  * 관리자가 등록된 사용자 목록을 조회합니다. 페이징, 필터링, 정렬 기능을 지원합니다.
  * @summary Get user list / 사용자 목록 조회 (관리자용)
  */
@@ -2436,6 +2241,900 @@ export const useRegistrationAdminControllerCreateUser = <TError = ErrorResponseD
       return useMutation(mutationOptions, queryClient);
     }
     
+/**
+ * 사용자가 본인의 잔액을 조회합니다. 통화를 지정하지 않으면 모든 통화의 잔액을 반환합니다.
+ * @summary Get user balance / 사용자 잔액 조회
+ */
+export const WalletController_getBalance = (
+    params?: MaybeRef<WalletControllerGetBalanceParams>,
+ signal?: AbortSignal
+) => {
+      params = unref(params);
+      
+      return customInstance<WalletControllerGetBalance200>(
+      {url: `/wallet/balance`, method: 'GET',
+        params: unref(params), signal
+    },
+      );
+    }
+  
+
+
+
+export const getWalletControllerGetBalanceQueryKey = (params?: MaybeRef<WalletControllerGetBalanceParams>,) => {
+    return [
+    'wallet','balance', ...(params ? [params]: [])
+    ] as const;
+    }
+
+    
+export const getWalletControllerGetBalanceQueryOptions = <TData = Awaited<ReturnType<typeof WalletController_getBalance>>, TError = ErrorResponseDto>(params?: MaybeRef<WalletControllerGetBalanceParams>, options?: { query?:Partial<UseQueryOptions<Awaited<ReturnType<typeof WalletController_getBalance>>, TError, TData>>, }
+) => {
+
+const {query: queryOptions} = options ?? {};
+
+  const queryKey =  getWalletControllerGetBalanceQueryKey(params);
+
+  
+
+    const queryFn: QueryFunction<Awaited<ReturnType<typeof WalletController_getBalance>>> = ({ signal }) => WalletController_getBalance(params, signal);
+
+      
+
+      
+
+   return  { queryKey, queryFn, ...queryOptions} as UseQueryOptions<Awaited<ReturnType<typeof WalletController_getBalance>>, TError, TData> 
+}
+
+export type WalletControllerGetBalanceQueryResult = NonNullable<Awaited<ReturnType<typeof WalletController_getBalance>>>
+export type WalletControllerGetBalanceQueryError = ErrorResponseDto
+
+
+/**
+ * @summary Get user balance / 사용자 잔액 조회
+ */
+
+export function useWalletControllerGetBalance<TData = Awaited<ReturnType<typeof WalletController_getBalance>>, TError = ErrorResponseDto>(
+ params?: MaybeRef<WalletControllerGetBalanceParams>, options?: { query?:Partial<UseQueryOptions<Awaited<ReturnType<typeof WalletController_getBalance>>, TError, TData>>, }
+ , queryClient?: QueryClient 
+ ): UseQueryReturnType<TData, TError> & { queryKey: DataTag<QueryKey, TData, TError> } {
+
+  const queryOptions = getWalletControllerGetBalanceQueryOptions(params,options)
+
+  const query = useQuery(queryOptions, queryClient) as UseQueryReturnType<TData, TError> & { queryKey: DataTag<QueryKey, TData, TError> };
+
+  query.queryKey = unref(queryOptions).queryKey as DataTag<QueryKey, TData, TError>;
+
+  return query;
+}
+
+
+
+
+
+/**
+ * 관리자가 특정 사용자의 잔액을 조회합니다. 통화를 지정하지 않으면 모든 통화의 잔액을 반환합니다.
+ * @summary Get user balance / 사용자 잔액 조회 (관리자용)
+ */
+export const WalletAdminController_getUserBalance = (
+    userId: MaybeRef<string>,
+    params?: MaybeRef<WalletAdminControllerGetUserBalanceParams>,
+ signal?: AbortSignal
+) => {
+      userId = unref(userId);
+params = unref(params);
+      
+      return customInstance<WalletAdminControllerGetUserBalance200>(
+      {url: `/admin/wallet/users/${userId}/balance`, method: 'GET',
+        params: unref(params), signal
+    },
+      );
+    }
+  
+
+
+
+export const getWalletAdminControllerGetUserBalanceQueryKey = (userId?: MaybeRef<string>,
+    params?: MaybeRef<WalletAdminControllerGetUserBalanceParams>,) => {
+    return [
+    'admin','wallet','users',userId,'balance', ...(params ? [params]: [])
+    ] as const;
+    }
+
+    
+export const getWalletAdminControllerGetUserBalanceQueryOptions = <TData = Awaited<ReturnType<typeof WalletAdminController_getUserBalance>>, TError = ErrorResponseDto>(userId: MaybeRef<string>,
+    params?: MaybeRef<WalletAdminControllerGetUserBalanceParams>, options?: { query?:Partial<UseQueryOptions<Awaited<ReturnType<typeof WalletAdminController_getUserBalance>>, TError, TData>>, }
+) => {
+
+const {query: queryOptions} = options ?? {};
+
+  const queryKey =  getWalletAdminControllerGetUserBalanceQueryKey(userId,params);
+
+  
+
+    const queryFn: QueryFunction<Awaited<ReturnType<typeof WalletAdminController_getUserBalance>>> = ({ signal }) => WalletAdminController_getUserBalance(userId,params, signal);
+
+      
+
+      
+
+   return  { queryKey, queryFn, enabled: computed(() => !!(unref(userId))), ...queryOptions} as UseQueryOptions<Awaited<ReturnType<typeof WalletAdminController_getUserBalance>>, TError, TData> 
+}
+
+export type WalletAdminControllerGetUserBalanceQueryResult = NonNullable<Awaited<ReturnType<typeof WalletAdminController_getUserBalance>>>
+export type WalletAdminControllerGetUserBalanceQueryError = ErrorResponseDto
+
+
+/**
+ * @summary Get user balance / 사용자 잔액 조회 (관리자용)
+ */
+
+export function useWalletAdminControllerGetUserBalance<TData = Awaited<ReturnType<typeof WalletAdminController_getUserBalance>>, TError = ErrorResponseDto>(
+ userId: MaybeRef<string>,
+    params?: MaybeRef<WalletAdminControllerGetUserBalanceParams>, options?: { query?:Partial<UseQueryOptions<Awaited<ReturnType<typeof WalletAdminController_getUserBalance>>, TError, TData>>, }
+ , queryClient?: QueryClient 
+ ): UseQueryReturnType<TData, TError> & { queryKey: DataTag<QueryKey, TData, TError> } {
+
+  const queryOptions = getWalletAdminControllerGetUserBalanceQueryOptions(userId,params,options)
+
+  const query = useQuery(queryOptions, queryClient) as UseQueryReturnType<TData, TError> & { queryKey: DataTag<QueryKey, TData, TError> };
+
+  query.queryKey = unref(queryOptions).queryKey as DataTag<QueryKey, TData, TError>;
+
+  return query;
+}
+
+
+
+
+
+/**
+ * 관리자가 특정 사용자의 잔액을 증가 또는 감소시킵니다. 메인 잔액, 보너스 잔액, 또는 총 잔액에 대해 추가 또는 차감 연산을 수행할 수 있습니다.
+ * @summary Update user balance / 사용자 잔액 업데이트 (관리자용)
+ */
+export const WalletAdminController_updateUserBalance = (
+    userId: MaybeRef<string>,
+    updateUserBalanceRequestDto: MaybeRef<UpdateUserBalanceRequestDto>,
+ ) => {
+      userId = unref(userId);
+updateUserBalanceRequestDto = unref(updateUserBalanceRequestDto);
+      
+      return customInstance<WalletAdminControllerUpdateUserBalance200>(
+      {url: `/admin/wallet/users/${userId}/balance`, method: 'PATCH',
+      headers: {'Content-Type': 'application/json', },
+      data: updateUserBalanceRequestDto
+    },
+      );
+    }
+  
+
+
+export const getWalletAdminControllerUpdateUserBalanceMutationOptions = <TError = ErrorResponseDto,
+    TContext = unknown>(options?: { mutation?:UseMutationOptions<Awaited<ReturnType<typeof WalletAdminController_updateUserBalance>>, TError,{userId: string;data: UpdateUserBalanceRequestDto}, TContext>, }
+): UseMutationOptions<Awaited<ReturnType<typeof WalletAdminController_updateUserBalance>>, TError,{userId: string;data: UpdateUserBalanceRequestDto}, TContext> => {
+
+const mutationKey = ['walletAdminControllerUpdateUserBalance'];
+const {mutation: mutationOptions} = options ?
+      options.mutation && 'mutationKey' in options.mutation && options.mutation.mutationKey ?
+      options
+      : {...options, mutation: {...options.mutation, mutationKey}}
+      : {mutation: { mutationKey, }};
+
+      
+
+
+      const mutationFn: MutationFunction<Awaited<ReturnType<typeof WalletAdminController_updateUserBalance>>, {userId: string;data: UpdateUserBalanceRequestDto}> = (props) => {
+          const {userId,data} = props ?? {};
+
+          return  WalletAdminController_updateUserBalance(userId,data,)
+        }
+
+        
+
+
+  return  { mutationFn, ...mutationOptions }}
+
+    export type WalletAdminControllerUpdateUserBalanceMutationResult = NonNullable<Awaited<ReturnType<typeof WalletAdminController_updateUserBalance>>>
+    export type WalletAdminControllerUpdateUserBalanceMutationBody = UpdateUserBalanceRequestDto
+    export type WalletAdminControllerUpdateUserBalanceMutationError = ErrorResponseDto
+
+    /**
+ * @summary Update user balance / 사용자 잔액 업데이트 (관리자용)
+ */
+export const useWalletAdminControllerUpdateUserBalance = <TError = ErrorResponseDto,
+    TContext = unknown>(options?: { mutation?:UseMutationOptions<Awaited<ReturnType<typeof WalletAdminController_updateUserBalance>>, TError,{userId: string;data: UpdateUserBalanceRequestDto}, TContext>, }
+ , queryClient?: QueryClient): UseMutationReturnType<
+        Awaited<ReturnType<typeof WalletAdminController_updateUserBalance>>,
+        TError,
+        {userId: string;data: UpdateUserBalanceRequestDto},
+        TContext
+      > => {
+
+      const mutationOptions = getWalletAdminControllerUpdateUserBalanceMutationOptions(options);
+
+      return useMutation(mutationOptions, queryClient);
+    }
+    
+/**
+ * @summary Create new tier / 새로운 티어 생성
+ */
+export const TierAdminController_create = (
+    createTierDto: MaybeRef<CreateTierDto>,
+ signal?: AbortSignal
+) => {
+      createTierDto = unref(createTierDto);
+      
+      return customInstance<TierAdminControllerCreate201>(
+      {url: `/admin/tiers`, method: 'POST',
+      headers: {'Content-Type': 'application/json', },
+      data: createTierDto, signal
+    },
+      );
+    }
+  
+
+
+export const getTierAdminControllerCreateMutationOptions = <TError = ErrorResponseDto,
+    TContext = unknown>(options?: { mutation?:UseMutationOptions<Awaited<ReturnType<typeof TierAdminController_create>>, TError,{data: CreateTierDto}, TContext>, }
+): UseMutationOptions<Awaited<ReturnType<typeof TierAdminController_create>>, TError,{data: CreateTierDto}, TContext> => {
+
+const mutationKey = ['tierAdminControllerCreate'];
+const {mutation: mutationOptions} = options ?
+      options.mutation && 'mutationKey' in options.mutation && options.mutation.mutationKey ?
+      options
+      : {...options, mutation: {...options.mutation, mutationKey}}
+      : {mutation: { mutationKey, }};
+
+      
+
+
+      const mutationFn: MutationFunction<Awaited<ReturnType<typeof TierAdminController_create>>, {data: CreateTierDto}> = (props) => {
+          const {data} = props ?? {};
+
+          return  TierAdminController_create(data,)
+        }
+
+        
+
+
+  return  { mutationFn, ...mutationOptions }}
+
+    export type TierAdminControllerCreateMutationResult = NonNullable<Awaited<ReturnType<typeof TierAdminController_create>>>
+    export type TierAdminControllerCreateMutationBody = CreateTierDto
+    export type TierAdminControllerCreateMutationError = ErrorResponseDto
+
+    /**
+ * @summary Create new tier / 새로운 티어 생성
+ */
+export const useTierAdminControllerCreate = <TError = ErrorResponseDto,
+    TContext = unknown>(options?: { mutation?:UseMutationOptions<Awaited<ReturnType<typeof TierAdminController_create>>, TError,{data: CreateTierDto}, TContext>, }
+ , queryClient?: QueryClient): UseMutationReturnType<
+        Awaited<ReturnType<typeof TierAdminController_create>>,
+        TError,
+        {data: CreateTierDto},
+        TContext
+      > => {
+
+      const mutationOptions = getTierAdminControllerCreateMutationOptions(options);
+
+      return useMutation(mutationOptions, queryClient);
+    }
+    
+/**
+ * @summary List all tiers / 모든 티어 목록 조회
+ */
+export const TierAdminController_findAll = (
+    
+ signal?: AbortSignal
+) => {
+      
+      
+      return customInstance<TierAdminControllerFindAll200>(
+      {url: `/admin/tiers`, method: 'GET', signal
+    },
+      );
+    }
+  
+
+
+
+export const getTierAdminControllerFindAllQueryKey = () => {
+    return [
+    'admin','tiers'
+    ] as const;
+    }
+
+    
+export const getTierAdminControllerFindAllQueryOptions = <TData = Awaited<ReturnType<typeof TierAdminController_findAll>>, TError = ErrorResponseDto>( options?: { query?:Partial<UseQueryOptions<Awaited<ReturnType<typeof TierAdminController_findAll>>, TError, TData>>, }
+) => {
+
+const {query: queryOptions} = options ?? {};
+
+  const queryKey =  getTierAdminControllerFindAllQueryKey();
+
+  
+
+    const queryFn: QueryFunction<Awaited<ReturnType<typeof TierAdminController_findAll>>> = ({ signal }) => TierAdminController_findAll(signal);
+
+      
+
+      
+
+   return  { queryKey, queryFn, ...queryOptions} as UseQueryOptions<Awaited<ReturnType<typeof TierAdminController_findAll>>, TError, TData> 
+}
+
+export type TierAdminControllerFindAllQueryResult = NonNullable<Awaited<ReturnType<typeof TierAdminController_findAll>>>
+export type TierAdminControllerFindAllQueryError = ErrorResponseDto
+
+
+/**
+ * @summary List all tiers / 모든 티어 목록 조회
+ */
+
+export function useTierAdminControllerFindAll<TData = Awaited<ReturnType<typeof TierAdminController_findAll>>, TError = ErrorResponseDto>(
+  options?: { query?:Partial<UseQueryOptions<Awaited<ReturnType<typeof TierAdminController_findAll>>, TError, TData>>, }
+ , queryClient?: QueryClient 
+ ): UseQueryReturnType<TData, TError> & { queryKey: DataTag<QueryKey, TData, TError> } {
+
+  const queryOptions = getTierAdminControllerFindAllQueryOptions(options)
+
+  const query = useQuery(queryOptions, queryClient) as UseQueryReturnType<TData, TError> & { queryKey: DataTag<QueryKey, TData, TError> };
+
+  query.queryKey = unref(queryOptions).queryKey as DataTag<QueryKey, TData, TError>;
+
+  return query;
+}
+
+
+
+
+
+/**
+ * @summary Update tier / 티어 수정
+ */
+export const TierAdminController_update = (
+    id: MaybeRef<string>,
+    updateTierDto: MaybeRef<UpdateTierDto>,
+ ) => {
+      id = unref(id);
+updateTierDto = unref(updateTierDto);
+      
+      return customInstance<TierAdminControllerUpdate200>(
+      {url: `/admin/tiers/${id}`, method: 'PATCH',
+      headers: {'Content-Type': 'application/json', },
+      data: updateTierDto
+    },
+      );
+    }
+  
+
+
+export const getTierAdminControllerUpdateMutationOptions = <TError = ErrorResponseDto,
+    TContext = unknown>(options?: { mutation?:UseMutationOptions<Awaited<ReturnType<typeof TierAdminController_update>>, TError,{id: string;data: UpdateTierDto}, TContext>, }
+): UseMutationOptions<Awaited<ReturnType<typeof TierAdminController_update>>, TError,{id: string;data: UpdateTierDto}, TContext> => {
+
+const mutationKey = ['tierAdminControllerUpdate'];
+const {mutation: mutationOptions} = options ?
+      options.mutation && 'mutationKey' in options.mutation && options.mutation.mutationKey ?
+      options
+      : {...options, mutation: {...options.mutation, mutationKey}}
+      : {mutation: { mutationKey, }};
+
+      
+
+
+      const mutationFn: MutationFunction<Awaited<ReturnType<typeof TierAdminController_update>>, {id: string;data: UpdateTierDto}> = (props) => {
+          const {id,data} = props ?? {};
+
+          return  TierAdminController_update(id,data,)
+        }
+
+        
+
+
+  return  { mutationFn, ...mutationOptions }}
+
+    export type TierAdminControllerUpdateMutationResult = NonNullable<Awaited<ReturnType<typeof TierAdminController_update>>>
+    export type TierAdminControllerUpdateMutationBody = UpdateTierDto
+    export type TierAdminControllerUpdateMutationError = ErrorResponseDto
+
+    /**
+ * @summary Update tier / 티어 수정
+ */
+export const useTierAdminControllerUpdate = <TError = ErrorResponseDto,
+    TContext = unknown>(options?: { mutation?:UseMutationOptions<Awaited<ReturnType<typeof TierAdminController_update>>, TError,{id: string;data: UpdateTierDto}, TContext>, }
+ , queryClient?: QueryClient): UseMutationReturnType<
+        Awaited<ReturnType<typeof TierAdminController_update>>,
+        TError,
+        {id: string;data: UpdateTierDto},
+        TContext
+      > => {
+
+      const mutationOptions = getTierAdminControllerUpdateMutationOptions(options);
+
+      return useMutation(mutationOptions, queryClient);
+    }
+    
+/**
+ * @summary Upsert tier translation / 티어 번역 등록 및 수정
+ */
+export const TierAdminController_upsertTranslation = (
+    id: MaybeRef<string>,
+    language: MaybeRef<'EN' | 'KO' | 'JA'>,
+    updateTierTranslationDto: MaybeRef<UpdateTierTranslationDto>,
+ ) => {
+      id = unref(id);
+language = unref(language);
+updateTierTranslationDto = unref(updateTierTranslationDto);
+      
+      return customInstance<TierAdminControllerUpsertTranslation200>(
+      {url: `/admin/tiers/${id}/translations/${language}`, method: 'PUT',
+      headers: {'Content-Type': 'application/json', },
+      data: updateTierTranslationDto
+    },
+      );
+    }
+  
+
+
+export const getTierAdminControllerUpsertTranslationMutationOptions = <TError = ErrorResponseDto,
+    TContext = unknown>(options?: { mutation?:UseMutationOptions<Awaited<ReturnType<typeof TierAdminController_upsertTranslation>>, TError,{id: string;language: 'EN' | 'KO' | 'JA';data: UpdateTierTranslationDto}, TContext>, }
+): UseMutationOptions<Awaited<ReturnType<typeof TierAdminController_upsertTranslation>>, TError,{id: string;language: 'EN' | 'KO' | 'JA';data: UpdateTierTranslationDto}, TContext> => {
+
+const mutationKey = ['tierAdminControllerUpsertTranslation'];
+const {mutation: mutationOptions} = options ?
+      options.mutation && 'mutationKey' in options.mutation && options.mutation.mutationKey ?
+      options
+      : {...options, mutation: {...options.mutation, mutationKey}}
+      : {mutation: { mutationKey, }};
+
+      
+
+
+      const mutationFn: MutationFunction<Awaited<ReturnType<typeof TierAdminController_upsertTranslation>>, {id: string;language: 'EN' | 'KO' | 'JA';data: UpdateTierTranslationDto}> = (props) => {
+          const {id,language,data} = props ?? {};
+
+          return  TierAdminController_upsertTranslation(id,language,data,)
+        }
+
+        
+
+
+  return  { mutationFn, ...mutationOptions }}
+
+    export type TierAdminControllerUpsertTranslationMutationResult = NonNullable<Awaited<ReturnType<typeof TierAdminController_upsertTranslation>>>
+    export type TierAdminControllerUpsertTranslationMutationBody = UpdateTierTranslationDto
+    export type TierAdminControllerUpsertTranslationMutationError = ErrorResponseDto
+
+    /**
+ * @summary Upsert tier translation / 티어 번역 등록 및 수정
+ */
+export const useTierAdminControllerUpsertTranslation = <TError = ErrorResponseDto,
+    TContext = unknown>(options?: { mutation?:UseMutationOptions<Awaited<ReturnType<typeof TierAdminController_upsertTranslation>>, TError,{id: string;language: 'EN' | 'KO' | 'JA';data: UpdateTierTranslationDto}, TContext>, }
+ , queryClient?: QueryClient): UseMutationReturnType<
+        Awaited<ReturnType<typeof TierAdminController_upsertTranslation>>,
+        TError,
+        {id: string;language: 'EN' | 'KO' | 'JA';data: UpdateTierTranslationDto},
+        TContext
+      > => {
+
+      const mutationOptions = getTierAdminControllerUpsertTranslationMutationOptions(options);
+
+      return useMutation(mutationOptions, queryClient);
+    }
+    
+/**
+ * @summary Force update user tier / 사용자 티어 강제 변경
+ */
+export const TierAdminController_forceUpdateUserTier = (
+    userId: MaybeRef<string>,
+    forceUpdateUserTierDto: MaybeRef<ForceUpdateUserTierDto>,
+ signal?: AbortSignal
+) => {
+      userId = unref(userId);
+forceUpdateUserTierDto = unref(forceUpdateUserTierDto);
+      
+      return customInstance<TierAdminControllerForceUpdateUserTier200>(
+      {url: `/admin/tiers/users/${userId}/force`, method: 'POST',
+      headers: {'Content-Type': 'application/json', },
+      data: forceUpdateUserTierDto, signal
+    },
+      );
+    }
+  
+
+
+export const getTierAdminControllerForceUpdateUserTierMutationOptions = <TError = ErrorResponseDto,
+    TContext = unknown>(options?: { mutation?:UseMutationOptions<Awaited<ReturnType<typeof TierAdminController_forceUpdateUserTier>>, TError,{userId: string;data: ForceUpdateUserTierDto}, TContext>, }
+): UseMutationOptions<Awaited<ReturnType<typeof TierAdminController_forceUpdateUserTier>>, TError,{userId: string;data: ForceUpdateUserTierDto}, TContext> => {
+
+const mutationKey = ['tierAdminControllerForceUpdateUserTier'];
+const {mutation: mutationOptions} = options ?
+      options.mutation && 'mutationKey' in options.mutation && options.mutation.mutationKey ?
+      options
+      : {...options, mutation: {...options.mutation, mutationKey}}
+      : {mutation: { mutationKey, }};
+
+      
+
+
+      const mutationFn: MutationFunction<Awaited<ReturnType<typeof TierAdminController_forceUpdateUserTier>>, {userId: string;data: ForceUpdateUserTierDto}> = (props) => {
+          const {userId,data} = props ?? {};
+
+          return  TierAdminController_forceUpdateUserTier(userId,data,)
+        }
+
+        
+
+
+  return  { mutationFn, ...mutationOptions }}
+
+    export type TierAdminControllerForceUpdateUserTierMutationResult = NonNullable<Awaited<ReturnType<typeof TierAdminController_forceUpdateUserTier>>>
+    export type TierAdminControllerForceUpdateUserTierMutationBody = ForceUpdateUserTierDto
+    export type TierAdminControllerForceUpdateUserTierMutationError = ErrorResponseDto
+
+    /**
+ * @summary Force update user tier / 사용자 티어 강제 변경
+ */
+export const useTierAdminControllerForceUpdateUserTier = <TError = ErrorResponseDto,
+    TContext = unknown>(options?: { mutation?:UseMutationOptions<Awaited<ReturnType<typeof TierAdminController_forceUpdateUserTier>>, TError,{userId: string;data: ForceUpdateUserTierDto}, TContext>, }
+ , queryClient?: QueryClient): UseMutationReturnType<
+        Awaited<ReturnType<typeof TierAdminController_forceUpdateUserTier>>,
+        TError,
+        {userId: string;data: ForceUpdateUserTierDto},
+        TContext
+      > => {
+
+      const mutationOptions = getTierAdminControllerForceUpdateUserTierMutationOptions(options);
+
+      return useMutation(mutationOptions, queryClient);
+    }
+    
+/**
+ * @summary Get tier user counts / 티어별 사용자 수 조회
+ */
+export const TierAdminController_getTierUserCounts = (
+    
+ signal?: AbortSignal
+) => {
+      
+      
+      return customInstance<TierAdminControllerGetTierUserCounts200>(
+      {url: `/admin/tiers/stats/counts`, method: 'GET', signal
+    },
+      );
+    }
+  
+
+
+
+export const getTierAdminControllerGetTierUserCountsQueryKey = () => {
+    return [
+    'admin','tiers','stats','counts'
+    ] as const;
+    }
+
+    
+export const getTierAdminControllerGetTierUserCountsQueryOptions = <TData = Awaited<ReturnType<typeof TierAdminController_getTierUserCounts>>, TError = ErrorResponseDto>( options?: { query?:Partial<UseQueryOptions<Awaited<ReturnType<typeof TierAdminController_getTierUserCounts>>, TError, TData>>, }
+) => {
+
+const {query: queryOptions} = options ?? {};
+
+  const queryKey =  getTierAdminControllerGetTierUserCountsQueryKey();
+
+  
+
+    const queryFn: QueryFunction<Awaited<ReturnType<typeof TierAdminController_getTierUserCounts>>> = ({ signal }) => TierAdminController_getTierUserCounts(signal);
+
+      
+
+      
+
+   return  { queryKey, queryFn, ...queryOptions} as UseQueryOptions<Awaited<ReturnType<typeof TierAdminController_getTierUserCounts>>, TError, TData> 
+}
+
+export type TierAdminControllerGetTierUserCountsQueryResult = NonNullable<Awaited<ReturnType<typeof TierAdminController_getTierUserCounts>>>
+export type TierAdminControllerGetTierUserCountsQueryError = ErrorResponseDto
+
+
+/**
+ * @summary Get tier user counts / 티어별 사용자 수 조회
+ */
+
+export function useTierAdminControllerGetTierUserCounts<TData = Awaited<ReturnType<typeof TierAdminController_getTierUserCounts>>, TError = ErrorResponseDto>(
+  options?: { query?:Partial<UseQueryOptions<Awaited<ReturnType<typeof TierAdminController_getTierUserCounts>>, TError, TData>>, }
+ , queryClient?: QueryClient 
+ ): UseQueryReturnType<TData, TError> & { queryKey: DataTag<QueryKey, TData, TError> } {
+
+  const queryOptions = getTierAdminControllerGetTierUserCountsQueryOptions(options)
+
+  const query = useQuery(queryOptions, queryClient) as UseQueryReturnType<TData, TError> & { queryKey: DataTag<QueryKey, TData, TError> };
+
+  query.queryKey = unref(queryOptions).queryKey as DataTag<QueryKey, TData, TError>;
+
+  return query;
+}
+
+
+
+
+
+/**
+ * @summary Get user tier history / 사용자의 티어 변경 이력 조회
+ */
+export const TierAdminController_getUserTierHistory = (
+    userId: MaybeRef<string>,
+ signal?: AbortSignal
+) => {
+      userId = unref(userId);
+      
+      return customInstance<TierAdminControllerGetUserTierHistory200>(
+      {url: `/admin/tiers/users/${userId}/history`, method: 'GET', signal
+    },
+      );
+    }
+  
+
+
+
+export const getTierAdminControllerGetUserTierHistoryQueryKey = (userId?: MaybeRef<string>,) => {
+    return [
+    'admin','tiers','users',userId,'history'
+    ] as const;
+    }
+
+    
+export const getTierAdminControllerGetUserTierHistoryQueryOptions = <TData = Awaited<ReturnType<typeof TierAdminController_getUserTierHistory>>, TError = ErrorResponseDto>(userId: MaybeRef<string>, options?: { query?:Partial<UseQueryOptions<Awaited<ReturnType<typeof TierAdminController_getUserTierHistory>>, TError, TData>>, }
+) => {
+
+const {query: queryOptions} = options ?? {};
+
+  const queryKey =  getTierAdminControllerGetUserTierHistoryQueryKey(userId);
+
+  
+
+    const queryFn: QueryFunction<Awaited<ReturnType<typeof TierAdminController_getUserTierHistory>>> = ({ signal }) => TierAdminController_getUserTierHistory(userId, signal);
+
+      
+
+      
+
+   return  { queryKey, queryFn, enabled: computed(() => !!(unref(userId))), ...queryOptions} as UseQueryOptions<Awaited<ReturnType<typeof TierAdminController_getUserTierHistory>>, TError, TData> 
+}
+
+export type TierAdminControllerGetUserTierHistoryQueryResult = NonNullable<Awaited<ReturnType<typeof TierAdminController_getUserTierHistory>>>
+export type TierAdminControllerGetUserTierHistoryQueryError = ErrorResponseDto
+
+
+/**
+ * @summary Get user tier history / 사용자의 티어 변경 이력 조회
+ */
+
+export function useTierAdminControllerGetUserTierHistory<TData = Awaited<ReturnType<typeof TierAdminController_getUserTierHistory>>, TError = ErrorResponseDto>(
+ userId: MaybeRef<string>, options?: { query?:Partial<UseQueryOptions<Awaited<ReturnType<typeof TierAdminController_getUserTierHistory>>, TError, TData>>, }
+ , queryClient?: QueryClient 
+ ): UseQueryReturnType<TData, TError> & { queryKey: DataTag<QueryKey, TData, TError> } {
+
+  const queryOptions = getTierAdminControllerGetUserTierHistoryQueryOptions(userId,options)
+
+  const query = useQuery(queryOptions, queryClient) as UseQueryReturnType<TData, TError> & { queryKey: DataTag<QueryKey, TData, TError> };
+
+  query.queryKey = unref(queryOptions).queryKey as DataTag<QueryKey, TData, TError>;
+
+  return query;
+}
+
+
+
+
+
+/**
+ * @summary Get users by tier / 특정 티어의 사용자 목록 조회
+ */
+export const TierAdminController_findUsersByTier = (
+    id: MaybeRef<string>,
+    params?: MaybeRef<TierAdminControllerFindUsersByTierParams>,
+ signal?: AbortSignal
+) => {
+      id = unref(id);
+params = unref(params);
+      
+      return customInstance<TierAdminControllerFindUsersByTier200>(
+      {url: `/admin/tiers/${id}/users`, method: 'GET',
+        params: unref(params), signal
+    },
+      );
+    }
+  
+
+
+
+export const getTierAdminControllerFindUsersByTierQueryKey = (id?: MaybeRef<string>,
+    params?: MaybeRef<TierAdminControllerFindUsersByTierParams>,) => {
+    return [
+    'admin','tiers',id,'users', ...(params ? [params]: [])
+    ] as const;
+    }
+
+    
+export const getTierAdminControllerFindUsersByTierQueryOptions = <TData = Awaited<ReturnType<typeof TierAdminController_findUsersByTier>>, TError = ErrorResponseDto>(id: MaybeRef<string>,
+    params?: MaybeRef<TierAdminControllerFindUsersByTierParams>, options?: { query?:Partial<UseQueryOptions<Awaited<ReturnType<typeof TierAdminController_findUsersByTier>>, TError, TData>>, }
+) => {
+
+const {query: queryOptions} = options ?? {};
+
+  const queryKey =  getTierAdminControllerFindUsersByTierQueryKey(id,params);
+
+  
+
+    const queryFn: QueryFunction<Awaited<ReturnType<typeof TierAdminController_findUsersByTier>>> = ({ signal }) => TierAdminController_findUsersByTier(id,params, signal);
+
+      
+
+      
+
+   return  { queryKey, queryFn, enabled: computed(() => !!(unref(id))), ...queryOptions} as UseQueryOptions<Awaited<ReturnType<typeof TierAdminController_findUsersByTier>>, TError, TData> 
+}
+
+export type TierAdminControllerFindUsersByTierQueryResult = NonNullable<Awaited<ReturnType<typeof TierAdminController_findUsersByTier>>>
+export type TierAdminControllerFindUsersByTierQueryError = ErrorResponseDto
+
+
+/**
+ * @summary Get users by tier / 특정 티어의 사용자 목록 조회
+ */
+
+export function useTierAdminControllerFindUsersByTier<TData = Awaited<ReturnType<typeof TierAdminController_findUsersByTier>>, TError = ErrorResponseDto>(
+ id: MaybeRef<string>,
+    params?: MaybeRef<TierAdminControllerFindUsersByTierParams>, options?: { query?:Partial<UseQueryOptions<Awaited<ReturnType<typeof TierAdminController_findUsersByTier>>, TError, TData>>, }
+ , queryClient?: QueryClient 
+ ): UseQueryReturnType<TData, TError> & { queryKey: DataTag<QueryKey, TData, TError> } {
+
+  const queryOptions = getTierAdminControllerFindUsersByTierQueryOptions(id,params,options)
+
+  const query = useQuery(queryOptions, queryClient) as UseQueryReturnType<TData, TError> & { queryKey: DataTag<QueryKey, TData, TError> };
+
+  query.queryKey = unref(queryOptions).queryKey as DataTag<QueryKey, TData, TError>;
+
+  return query;
+}
+
+
+
+
+
+/**
+ * @summary Sync users without tiers / 티어가 없는 사용자 동기화
+ */
+export const TierAdminController_syncMissingUserTiers = (
+    
+ signal?: AbortSignal
+) => {
+      
+      
+      return customInstance<TierAdminControllerSyncMissingUserTiers200>(
+      {url: `/admin/tiers/sync-missing-users`, method: 'POST', signal
+    },
+      );
+    }
+  
+
+
+export const getTierAdminControllerSyncMissingUserTiersMutationOptions = <TError = ErrorResponseDto,
+    TContext = unknown>(options?: { mutation?:UseMutationOptions<Awaited<ReturnType<typeof TierAdminController_syncMissingUserTiers>>, TError,void, TContext>, }
+): UseMutationOptions<Awaited<ReturnType<typeof TierAdminController_syncMissingUserTiers>>, TError,void, TContext> => {
+
+const mutationKey = ['tierAdminControllerSyncMissingUserTiers'];
+const {mutation: mutationOptions} = options ?
+      options.mutation && 'mutationKey' in options.mutation && options.mutation.mutationKey ?
+      options
+      : {...options, mutation: {...options.mutation, mutationKey}}
+      : {mutation: { mutationKey, }};
+
+      
+
+
+      const mutationFn: MutationFunction<Awaited<ReturnType<typeof TierAdminController_syncMissingUserTiers>>, void> = () => {
+          
+
+          return  TierAdminController_syncMissingUserTiers()
+        }
+
+        
+
+
+  return  { mutationFn, ...mutationOptions }}
+
+    export type TierAdminControllerSyncMissingUserTiersMutationResult = NonNullable<Awaited<ReturnType<typeof TierAdminController_syncMissingUserTiers>>>
+    
+    export type TierAdminControllerSyncMissingUserTiersMutationError = ErrorResponseDto
+
+    /**
+ * @summary Sync users without tiers / 티어가 없는 사용자 동기화
+ */
+export const useTierAdminControllerSyncMissingUserTiers = <TError = ErrorResponseDto,
+    TContext = unknown>(options?: { mutation?:UseMutationOptions<Awaited<ReturnType<typeof TierAdminController_syncMissingUserTiers>>, TError,void, TContext>, }
+ , queryClient?: QueryClient): UseMutationReturnType<
+        Awaited<ReturnType<typeof TierAdminController_syncMissingUserTiers>>,
+        TError,
+        void,
+        TContext
+      > => {
+
+      const mutationOptions = getTierAdminControllerSyncMissingUserTiersMutationOptions(options);
+
+      return useMutation(mutationOptions, queryClient);
+    }
+    
+/**
+ * @summary Get my tier info / 내 티어 정보 조회
+ */
+export const TierUserController_getMyTier = (
+    
+ signal?: AbortSignal
+) => {
+      
+      
+      return customInstance<TierUserControllerGetMyTier200>(
+      {url: `/user/my-tier`, method: 'GET', signal
+    },
+      );
+    }
+  
+
+
+
+export const getTierUserControllerGetMyTierQueryKey = () => {
+    return [
+    'user','my-tier'
+    ] as const;
+    }
+
+    
+export const getTierUserControllerGetMyTierQueryOptions = <TData = Awaited<ReturnType<typeof TierUserController_getMyTier>>, TError = ErrorResponseDto>( options?: { query?:Partial<UseQueryOptions<Awaited<ReturnType<typeof TierUserController_getMyTier>>, TError, TData>>, }
+) => {
+
+const {query: queryOptions} = options ?? {};
+
+  const queryKey =  getTierUserControllerGetMyTierQueryKey();
+
+  
+
+    const queryFn: QueryFunction<Awaited<ReturnType<typeof TierUserController_getMyTier>>> = ({ signal }) => TierUserController_getMyTier(signal);
+
+      
+
+      
+
+   return  { queryKey, queryFn, ...queryOptions} as UseQueryOptions<Awaited<ReturnType<typeof TierUserController_getMyTier>>, TError, TData> 
+}
+
+export type TierUserControllerGetMyTierQueryResult = NonNullable<Awaited<ReturnType<typeof TierUserController_getMyTier>>>
+export type TierUserControllerGetMyTierQueryError = ErrorResponseDto
+
+
+/**
+ * @summary Get my tier info / 내 티어 정보 조회
+ */
+
+export function useTierUserControllerGetMyTier<TData = Awaited<ReturnType<typeof TierUserController_getMyTier>>, TError = ErrorResponseDto>(
+  options?: { query?:Partial<UseQueryOptions<Awaited<ReturnType<typeof TierUserController_getMyTier>>, TError, TData>>, }
+ , queryClient?: QueryClient 
+ ): UseQueryReturnType<TData, TError> & { queryKey: DataTag<QueryKey, TData, TError> } {
+
+  const queryOptions = getTierUserControllerGetMyTierQueryOptions(options)
+
+  const query = useQuery(queryOptions, queryClient) as UseQueryReturnType<TData, TError> & { queryKey: DataTag<QueryKey, TData, TError> };
+
+  query.queryKey = unref(queryOptions).queryKey as DataTag<QueryKey, TData, TError>;
+
+  return query;
+}
+
+
+
+
+
 /**
  * @summary Launch Game (게임 실행)
  */
@@ -6509,220 +7208,6 @@ export const useAdminDepositControllerDeleteCryptoConfig = <TError = ErrorRespon
       > => {
 
       const mutationOptions = getAdminDepositControllerDeleteCryptoConfigMutationOptions(options);
-
-      return useMutation(mutationOptions, queryClient);
-    }
-    
-/**
- * 사용자가 본인의 잔액을 조회합니다. 통화를 지정하지 않으면 모든 통화의 잔액을 반환합니다.
- * @summary Get user balance / 사용자 잔액 조회
- */
-export const WalletController_getBalance = (
-    params?: MaybeRef<WalletControllerGetBalanceParams>,
- signal?: AbortSignal
-) => {
-      params = unref(params);
-      
-      return customInstance<WalletControllerGetBalance200>(
-      {url: `/wallet/balance`, method: 'GET',
-        params: unref(params), signal
-    },
-      );
-    }
-  
-
-
-
-export const getWalletControllerGetBalanceQueryKey = (params?: MaybeRef<WalletControllerGetBalanceParams>,) => {
-    return [
-    'wallet','balance', ...(params ? [params]: [])
-    ] as const;
-    }
-
-    
-export const getWalletControllerGetBalanceQueryOptions = <TData = Awaited<ReturnType<typeof WalletController_getBalance>>, TError = ErrorResponseDto>(params?: MaybeRef<WalletControllerGetBalanceParams>, options?: { query?:Partial<UseQueryOptions<Awaited<ReturnType<typeof WalletController_getBalance>>, TError, TData>>, }
-) => {
-
-const {query: queryOptions} = options ?? {};
-
-  const queryKey =  getWalletControllerGetBalanceQueryKey(params);
-
-  
-
-    const queryFn: QueryFunction<Awaited<ReturnType<typeof WalletController_getBalance>>> = ({ signal }) => WalletController_getBalance(params, signal);
-
-      
-
-      
-
-   return  { queryKey, queryFn, ...queryOptions} as UseQueryOptions<Awaited<ReturnType<typeof WalletController_getBalance>>, TError, TData> 
-}
-
-export type WalletControllerGetBalanceQueryResult = NonNullable<Awaited<ReturnType<typeof WalletController_getBalance>>>
-export type WalletControllerGetBalanceQueryError = ErrorResponseDto
-
-
-/**
- * @summary Get user balance / 사용자 잔액 조회
- */
-
-export function useWalletControllerGetBalance<TData = Awaited<ReturnType<typeof WalletController_getBalance>>, TError = ErrorResponseDto>(
- params?: MaybeRef<WalletControllerGetBalanceParams>, options?: { query?:Partial<UseQueryOptions<Awaited<ReturnType<typeof WalletController_getBalance>>, TError, TData>>, }
- , queryClient?: QueryClient 
- ): UseQueryReturnType<TData, TError> & { queryKey: DataTag<QueryKey, TData, TError> } {
-
-  const queryOptions = getWalletControllerGetBalanceQueryOptions(params,options)
-
-  const query = useQuery(queryOptions, queryClient) as UseQueryReturnType<TData, TError> & { queryKey: DataTag<QueryKey, TData, TError> };
-
-  query.queryKey = unref(queryOptions).queryKey as DataTag<QueryKey, TData, TError>;
-
-  return query;
-}
-
-
-
-
-
-/**
- * 관리자가 특정 사용자의 잔액을 조회합니다. 통화를 지정하지 않으면 모든 통화의 잔액을 반환합니다.
- * @summary Get user balance / 사용자 잔액 조회 (관리자용)
- */
-export const WalletAdminController_getUserBalance = (
-    userId: MaybeRef<string>,
-    params?: MaybeRef<WalletAdminControllerGetUserBalanceParams>,
- signal?: AbortSignal
-) => {
-      userId = unref(userId);
-params = unref(params);
-      
-      return customInstance<WalletAdminControllerGetUserBalance200>(
-      {url: `/admin/wallet/users/${userId}/balance`, method: 'GET',
-        params: unref(params), signal
-    },
-      );
-    }
-  
-
-
-
-export const getWalletAdminControllerGetUserBalanceQueryKey = (userId?: MaybeRef<string>,
-    params?: MaybeRef<WalletAdminControllerGetUserBalanceParams>,) => {
-    return [
-    'admin','wallet','users',userId,'balance', ...(params ? [params]: [])
-    ] as const;
-    }
-
-    
-export const getWalletAdminControllerGetUserBalanceQueryOptions = <TData = Awaited<ReturnType<typeof WalletAdminController_getUserBalance>>, TError = ErrorResponseDto>(userId: MaybeRef<string>,
-    params?: MaybeRef<WalletAdminControllerGetUserBalanceParams>, options?: { query?:Partial<UseQueryOptions<Awaited<ReturnType<typeof WalletAdminController_getUserBalance>>, TError, TData>>, }
-) => {
-
-const {query: queryOptions} = options ?? {};
-
-  const queryKey =  getWalletAdminControllerGetUserBalanceQueryKey(userId,params);
-
-  
-
-    const queryFn: QueryFunction<Awaited<ReturnType<typeof WalletAdminController_getUserBalance>>> = ({ signal }) => WalletAdminController_getUserBalance(userId,params, signal);
-
-      
-
-      
-
-   return  { queryKey, queryFn, enabled: computed(() => !!(unref(userId))), ...queryOptions} as UseQueryOptions<Awaited<ReturnType<typeof WalletAdminController_getUserBalance>>, TError, TData> 
-}
-
-export type WalletAdminControllerGetUserBalanceQueryResult = NonNullable<Awaited<ReturnType<typeof WalletAdminController_getUserBalance>>>
-export type WalletAdminControllerGetUserBalanceQueryError = ErrorResponseDto
-
-
-/**
- * @summary Get user balance / 사용자 잔액 조회 (관리자용)
- */
-
-export function useWalletAdminControllerGetUserBalance<TData = Awaited<ReturnType<typeof WalletAdminController_getUserBalance>>, TError = ErrorResponseDto>(
- userId: MaybeRef<string>,
-    params?: MaybeRef<WalletAdminControllerGetUserBalanceParams>, options?: { query?:Partial<UseQueryOptions<Awaited<ReturnType<typeof WalletAdminController_getUserBalance>>, TError, TData>>, }
- , queryClient?: QueryClient 
- ): UseQueryReturnType<TData, TError> & { queryKey: DataTag<QueryKey, TData, TError> } {
-
-  const queryOptions = getWalletAdminControllerGetUserBalanceQueryOptions(userId,params,options)
-
-  const query = useQuery(queryOptions, queryClient) as UseQueryReturnType<TData, TError> & { queryKey: DataTag<QueryKey, TData, TError> };
-
-  query.queryKey = unref(queryOptions).queryKey as DataTag<QueryKey, TData, TError>;
-
-  return query;
-}
-
-
-
-
-
-/**
- * 관리자가 특정 사용자의 잔액을 증가 또는 감소시킵니다. 메인 잔액, 보너스 잔액, 또는 총 잔액에 대해 추가 또는 차감 연산을 수행할 수 있습니다.
- * @summary Update user balance / 사용자 잔액 업데이트 (관리자용)
- */
-export const WalletAdminController_updateUserBalance = (
-    userId: MaybeRef<string>,
-    updateUserBalanceRequestDto: MaybeRef<UpdateUserBalanceRequestDto>,
- ) => {
-      userId = unref(userId);
-updateUserBalanceRequestDto = unref(updateUserBalanceRequestDto);
-      
-      return customInstance<WalletAdminControllerUpdateUserBalance200>(
-      {url: `/admin/wallet/users/${userId}/balance`, method: 'PATCH',
-      headers: {'Content-Type': 'application/json', },
-      data: updateUserBalanceRequestDto
-    },
-      );
-    }
-  
-
-
-export const getWalletAdminControllerUpdateUserBalanceMutationOptions = <TError = ErrorResponseDto,
-    TContext = unknown>(options?: { mutation?:UseMutationOptions<Awaited<ReturnType<typeof WalletAdminController_updateUserBalance>>, TError,{userId: string;data: UpdateUserBalanceRequestDto}, TContext>, }
-): UseMutationOptions<Awaited<ReturnType<typeof WalletAdminController_updateUserBalance>>, TError,{userId: string;data: UpdateUserBalanceRequestDto}, TContext> => {
-
-const mutationKey = ['walletAdminControllerUpdateUserBalance'];
-const {mutation: mutationOptions} = options ?
-      options.mutation && 'mutationKey' in options.mutation && options.mutation.mutationKey ?
-      options
-      : {...options, mutation: {...options.mutation, mutationKey}}
-      : {mutation: { mutationKey, }};
-
-      
-
-
-      const mutationFn: MutationFunction<Awaited<ReturnType<typeof WalletAdminController_updateUserBalance>>, {userId: string;data: UpdateUserBalanceRequestDto}> = (props) => {
-          const {userId,data} = props ?? {};
-
-          return  WalletAdminController_updateUserBalance(userId,data,)
-        }
-
-        
-
-
-  return  { mutationFn, ...mutationOptions }}
-
-    export type WalletAdminControllerUpdateUserBalanceMutationResult = NonNullable<Awaited<ReturnType<typeof WalletAdminController_updateUserBalance>>>
-    export type WalletAdminControllerUpdateUserBalanceMutationBody = UpdateUserBalanceRequestDto
-    export type WalletAdminControllerUpdateUserBalanceMutationError = ErrorResponseDto
-
-    /**
- * @summary Update user balance / 사용자 잔액 업데이트 (관리자용)
- */
-export const useWalletAdminControllerUpdateUserBalance = <TError = ErrorResponseDto,
-    TContext = unknown>(options?: { mutation?:UseMutationOptions<Awaited<ReturnType<typeof WalletAdminController_updateUserBalance>>, TError,{userId: string;data: UpdateUserBalanceRequestDto}, TContext>, }
- , queryClient?: QueryClient): UseMutationReturnType<
-        Awaited<ReturnType<typeof WalletAdminController_updateUserBalance>>,
-        TError,
-        {userId: string;data: UpdateUserBalanceRequestDto},
-        TContext
-      > => {
-
-      const mutationOptions = getWalletAdminControllerUpdateUserBalanceMutationOptions(options);
 
       return useMutation(mutationOptions, queryClient);
     }

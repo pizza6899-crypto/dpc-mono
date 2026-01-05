@@ -17,7 +17,6 @@
     "api:cli": "pnpm -F api cli",
     "api:zip": "pnpm -F api zip",
     "api:template": "pnpm -F api template:generate",
-    "api:swagger": "pnpm -F api swagger:generate",
     "db:generate": "pnpm -F @repo/database generate",
     "db:migrate": "pnpm -F @repo/database migrate",
     "db:format": "pnpm -F @repo/database format",
@@ -29,7 +28,8 @@
     "db:partition:audit-tables": "pnpm -F @repo/database partition:audit-tables",
     "shared:build": "pnpm -F @repo/shared build",
     "shared:dev": "pnpm -F @repo/shared dev",
-    "zip": "node scripts/package-for-deploy.js && open ."
+    "zip": "node scripts/package-for-deploy.js && open .",
+    "swagger": "pnpm -F api swagger && pnpm -F admin orval"
   },
   "devDependencies": {
     "@types/node": "^25.0.3",
