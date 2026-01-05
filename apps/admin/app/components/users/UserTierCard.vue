@@ -3,7 +3,8 @@ import { format } from 'date-fns'
 import {
   useTierAdminControllerGetUserTier,
   useTierAdminControllerFindAll,
-  useTierAdminControllerForceUpdateUserTier
+  useTierAdminControllerForceUpdateUserTier,
+  useTierAdminControllerUnlockUserTier
 } from '~/api/generated/endpoints/dPCBackendAPI'
 
 const props = defineProps<{
@@ -59,6 +60,39 @@ function onForceUpdate() {
     }
   })
 }
+
+// Unlock Modal
+const isUnlockModalOpen = ref(false)
+const unlockState = reactive({
+  reason: ''
+})
+
+const { mutate: unlockUserTier, isPending: isUnlocking } = useTierAdminControllerUnlockUserTier({
+  mutation: {
+    onSuccess: () => {
+      toast.add({ title: t('common.success'), icon: 'i-lucide-unlock' })
+      isUnlockModalOpen.value = false
+      refetchTier()
+      emit('refresh-history')
+    },
+    onError: (err: any) => {
+      toast.add({
+        title: t('common.error'),
+        description: err.response?.data?.message || 'Failed to unlock tier',
+        color: 'error'
+      })
+    }
+  }
+})
+
+function onUnlock() {
+  unlockUserTier({
+    userId: props.userId,
+    data: {
+      reason: unlockState.reason
+    }
+  })
+}
 </script>
 
 <template>
@@ -66,14 +100,26 @@ function onForceUpdate() {
     <template #header>
       <div class="flex items-center justify-between w-full">
         <h3 class="font-semibold">Tier & VIP</h3>
-        <UButton
-          icon="i-lucide-shield-alert"
-          label="Force Update"
-          size="xs"
-          color="warning"
-          variant="subtle"
-          @click="isForceUpdateModalOpen = true"
-        />
+        <div class="flex gap-2">
+            <UButton
+            v-if="userTier?.isManualLock"
+            icon="i-lucide-lock-open"
+            label="Unlock Tier"
+            size="xs"
+            color="success"
+            variant="subtle"
+            @click="isUnlockModalOpen = true"
+            />
+            <UButton
+            v-else
+            icon="i-lucide-shield-alert"
+            label="Force Update"
+            size="xs"
+            color="warning"
+            variant="subtle"
+            @click="isForceUpdateModalOpen = true"
+            />
+        </div>
       </div>
     </template>
     
@@ -161,6 +207,26 @@ function onForceUpdate() {
         <div class="flex justify-end gap-3">
           <UButton :label="t('common.cancel')" color="neutral" variant="ghost" @click="isForceUpdateModalOpen = false" />
           <UButton label="Update" color="warning" :loading="isForceUpdating" @click="onForceUpdate" />
+        </div>
+      </template>
+    </UModal>
+
+    <!-- Unlock Modal -->
+    <UModal v-model:open="isUnlockModalOpen" title="Unlock User Tier">
+      <template #body>
+        <div class="space-y-4">
+          <p class="text-sm text-neutral-600 dark:text-neutral-400">
+            Are you sure you want to unlock this user's tier? The user will be subject to automatic tier adjustments based on their rolling amount.
+          </p>
+          <UFormField label="Reason (Optional)">
+            <UTextarea v-model="unlockState.reason" placeholder="Enter reason for unlocking" />
+          </UFormField>
+        </div>
+      </template>
+      <template #footer>
+        <div class="flex justify-end gap-3">
+          <UButton :label="t('common.cancel')" color="neutral" variant="ghost" @click="isUnlockModalOpen = false" />
+          <UButton label="Unlock" color="success" :loading="isUnlocking" @click="onUnlock" />
         </div>
       </template>
     </UModal>

@@ -36,7 +36,7 @@ const columns = computed<TableColumn<TierHistoryResponseDto>[]>(() => [
   {
     accessorKey: 'createdAt',
     header: t('common.date'),
-    cell: ({ row }) => d(new Date(row.original.createdAt), 'short')
+    cell: ({ row }) => new Date(row.original.createdAt).toLocaleString()
   },
   {
     accessorKey: 'userEmail',
