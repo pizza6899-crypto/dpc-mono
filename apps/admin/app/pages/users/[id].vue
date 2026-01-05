@@ -51,7 +51,9 @@ const refreshHistory = () => {
         </div>
 
         <!-- History Table -->
-        <TiersTierHistoryTable :key="historyRefreshKey" :user-id="user.data.id" /> 
+        <div class="hidden md:block">
+          <TiersTierHistoryTable :key="historyRefreshKey" :user-id="user.data.id" />
+        </div>
       </div>
     </template>
   </UDashboardPanel>

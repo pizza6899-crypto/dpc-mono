@@ -21,25 +21,41 @@ defineProps<{
     </div>
 
     <div v-else class="space-y-4 text-sm">
-      <div class="flex justify-between">
+      <div class="flex justify-between items-center">
         <span class="text-neutral-500">ID</span>
-        <span class="font-mono">{{ user.id }}</span>
+        <span class="font-mono text-xs">{{ user.id }}</span>
       </div>
-      <div class="flex justify-between">
+      <div class="flex justify-between items-center">
         <span class="text-neutral-500">UID</span>
         <span class="font-mono text-xs">{{ user.uid }}</span>
       </div>
-      <div class="flex justify-between">
-        <span class="text-neutral-500">Role</span>
-        <UBadge variant="outline" size="sm">{{ user.role }}</UBadge>
+      <div class="flex justify-between items-center">
+        <span class="text-neutral-500">Email</span>
+        <span class="font-sans break-all">{{ user.email }}</span>
       </div>
-      <div class="flex justify-between">
+      <div class="flex justify-between items-center">
+        <span class="text-neutral-500">Role</span>
+        <UBadge variant="outline" size="xs">{{ user.role }}</UBadge>
+      </div>
+      <div class="flex justify-between items-center">
+        <span class="text-neutral-500">Status</span>
+        <UBadge :color="user.status === 'ACTIVE' ? 'success' : 'neutral'" variant="subtle" size="xs">{{ user.status }}</UBadge>
+      </div>
+      <div class="flex justify-between items-center">
         <span class="text-neutral-500">Country</span>
         <span>{{ user.country || 'N/A' }}</span>
       </div>
-      <div class="flex justify-between">
-        <span class="text-neutral-500">Joined</span>
+      <div class="flex justify-between items-center">
+        <span class="text-neutral-500">Timezone</span>
+        <span>{{ user.timezone || 'N/A' }}</span>
+      </div>
+      <div class="flex justify-between items-center">
+        <span class="text-neutral-500">Joined At</span>
         <span>{{ format(new Date(user.createdAt), 'yyyy-MM-dd HH:mm') }}</span>
+      </div>
+      <div class="flex justify-between items-center">
+        <span class="text-neutral-500">Last Updated</span>
+        <span>{{ format(new Date(user.updatedAt), 'yyyy-MM-dd HH:mm') }}</span>
       </div>
     </div>
   </UCard>

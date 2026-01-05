@@ -80,39 +80,41 @@ const columns = computed<TableColumn<TierHistoryResponseDto>[]>(() => [
       </div>
     </template>
 
-    <UTable
-      :data="histories"
-      :columns="columns"
-      :loading="loading"
-      class="flex-1"
-      :ui="{
-          base: 'min-w-full border-separate border-spacing-0',
-          thead: '[&>tr]:bg-gray-50 dark:[&>tr]:bg-gray-800/50 [&>tr]:after:content-none',
-          tbody: '[&>tr]:last:[&>td]:border-b-0',
-          th: 'py-3 text-gray-500 dark:text-gray-400 font-medium border-b border-gray-200 dark:border-gray-800',
-          td: 'py-3 border-b border-gray-200 dark:border-gray-800',
-          separator: 'h-0'
-      }"
-    >
-      <template #changeType-data="{ row }">
-        <UBadge 
-          :color="row.original.changeType === 'UPGRADE' ? 'success' : row.original.changeType === 'DOWNGRADE' ? 'error' : row.original.changeType === 'MANUAL_UPDATE' ? 'warning' : 'neutral'" 
-          variant="subtle" 
-          size="sm"
-        >
-          {{ row.original.changeType }}
-        </UBadge>
-      </template>
+    <div>
+      <UTable
+        :data="histories"
+        :columns="columns"
+        :loading="loading"
+        class="flex-1"
+        :ui="{
+            base: 'min-w-full border-separate border-spacing-0',
+            thead: '[&>tr]:bg-gray-50 dark:[&>tr]:bg-gray-800/50 [&>tr]:after:content-none',
+            tbody: '[&>tr]:last:[&>td]:border-b-0',
+            th: 'py-3 text-gray-500 dark:text-gray-400 font-medium border-b border-gray-200 dark:border-gray-800',
+            td: 'py-3 border-b border-gray-200 dark:border-gray-800',
+            separator: 'h-0'
+        }"
+      >
+        <template #changeType-cell="{ row }">
+          <UBadge 
+            :color="row.original.changeType === 'UPGRADE' ? 'success' : row.original.changeType === 'DOWNGRADE' ? 'error' : row.original.changeType === 'MANUAL_UPDATE' ? 'warning' : 'neutral'" 
+            variant="subtle" 
+            size="sm"
+          >
+            {{ row.original.changeType }}
+          </UBadge>
+        </template>
 
-      <template #empty-state>
-        <div class="flex flex-col items-center justify-center py-12 gap-3">
-          <UIcon name="i-lucide-history" class="w-12 h-12 text-neutral-400 dark:text-neutral-600" />
-          <div class="text-center">
-            <p class="text-neutral-900 dark:text-white font-medium">{{ t('tiers.history.no_history') }}</p>
+        <template #empty-state>
+          <div class="flex flex-col items-center justify-center py-12 gap-3">
+            <UIcon name="i-lucide-history" class="w-12 h-12 text-neutral-400 dark:text-neutral-600" />
+            <div class="text-center">
+              <p class="text-neutral-900 dark:text-white font-medium">{{ t('tiers.history.no_history') }}</p>
+            </div>
           </div>
-        </div>
-      </template>
-    </UTable>
+        </template>
+      </UTable>
+    </div>
 
     <div class="flex justify-end p-4 border-t border-gray-200 dark:border-gray-800">
       <UPagination
