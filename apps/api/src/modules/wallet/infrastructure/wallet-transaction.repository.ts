@@ -28,14 +28,33 @@ export class WalletTransactionRepository
                 createdAt: transaction.createdAt,
                 balanceDetails: {
                     create: {
-                        mainBalanceChange: transaction.detail.mainBalanceChange,
-                        mainBeforeAmount: transaction.detail.mainBeforeAmount,
-                        mainAfterAmount: transaction.detail.mainAfterAmount,
-                        bonusBalanceChange: transaction.detail.bonusBalanceChange,
-                        bonusBeforeAmount: transaction.detail.bonusBeforeAmount,
-                        bonusAfterAmount: transaction.detail.bonusAfterAmount,
+                        mainBalanceChange: transaction.balanceDetail.mainBalanceChange,
+                        mainBeforeAmount: transaction.balanceDetail.mainBeforeAmount,
+                        mainAfterAmount: transaction.balanceDetail.mainAfterAmount,
+                        bonusBalanceChange: transaction.balanceDetail.bonusBalanceChange,
+                        bonusBeforeAmount: transaction.balanceDetail.bonusBeforeAmount,
+                        bonusAfterAmount: transaction.balanceDetail.bonusAfterAmount,
                     },
                 },
+                adminAdjustmentDetail: transaction.adminDetail
+                    ? {
+                        create: {
+                            adminUserId: transaction.adminDetail.adminUserId,
+                            reasonCode: transaction.adminDetail.reasonCode,
+                            internalNote: transaction.adminDetail.internalNote,
+                        },
+                    }
+                    : undefined,
+                systemAdjustmentDetail: transaction.systemDetail
+                    ? {
+                        create: {
+                            serviceName: transaction.systemDetail.serviceName,
+                            triggerId: transaction.systemDetail.triggerId,
+                            actionName: transaction.systemDetail.actionName,
+                            metadata: transaction.systemDetail.metadata,
+                        },
+                    }
+                    : undefined,
             },
         });
     }
@@ -60,6 +79,8 @@ export class WalletTransactionRepository
                 where,
                 include: {
                     balanceDetails: true,
+                    adminAdjustmentDetail: true,
+                    systemAdjustmentDetail: true,
                 },
                 orderBy: {
                     createdAt: 'desc',
@@ -74,6 +95,8 @@ export class WalletTransactionRepository
 
         const transactions = items.map((item) => {
             const detail = item.balanceDetails[0];
+            const admin = item.adminAdjustmentDetail;
+            const system = item.systemAdjustmentDetail;
 
             return WalletTransaction.fromPersistence({
                 id: item.id,
@@ -85,14 +108,31 @@ export class WalletTransactionRepository
                 beforeAmount: item.beforeAmount,
                 afterAmount: item.afterAmount,
                 createdAt: item.createdAt,
-                detail: detail ? {
-                    mainBalanceChange: detail.mainBalanceChange,
-                    mainBeforeAmount: detail.mainBeforeAmount,
-                    mainAfterAmount: detail.mainAfterAmount,
-                    bonusBalanceChange: detail.bonusBalanceChange,
-                    bonusBeforeAmount: detail.bonusBeforeAmount,
-                    bonusAfterAmount: detail.bonusAfterAmount,
-                } : undefined,
+                balanceDetail: detail
+                    ? {
+                        mainBalanceChange: detail.mainBalanceChange,
+                        mainBeforeAmount: detail.mainBeforeAmount,
+                        mainAfterAmount: detail.mainAfterAmount,
+                        bonusBalanceChange: detail.bonusBalanceChange,
+                        bonusBeforeAmount: detail.bonusBeforeAmount,
+                        bonusAfterAmount: detail.bonusAfterAmount,
+                    }
+                    : undefined,
+                adminDetail: admin
+                    ? {
+                        adminUserId: admin.adminUserId,
+                        reasonCode: admin.reasonCode,
+                        internalNote: admin.internalNote,
+                    }
+                    : undefined,
+                systemDetail: system
+                    ? {
+                        serviceName: system.serviceName,
+                        triggerId: system.triggerId,
+                        actionName: system.actionName,
+                        metadata: system.metadata,
+                    }
+                    : undefined,
             });
         });
 

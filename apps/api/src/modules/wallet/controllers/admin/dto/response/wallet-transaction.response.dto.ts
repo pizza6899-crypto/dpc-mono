@@ -1,8 +1,8 @@
 import { ApiProperty } from '@nestjs/swagger';
-import { ExchangeCurrencyCode, TransactionStatus, TransactionType } from '@repo/database';
+import { ExchangeCurrencyCode, TransactionStatus, TransactionType, AdjustmentReasonCode } from '@repo/database';
 import { Prisma } from '@repo/database';
 
-export class WalletTransactionDetailResponseDto {
+export class WalletBalanceDetailResponseDto {
     @ApiProperty({ description: '메인 잔액 변경량' })
     mainBalanceChange: string;
 
@@ -20,6 +20,31 @@ export class WalletTransactionDetailResponseDto {
 
     @ApiProperty({ description: '변경 후 보너스 잔액' })
     bonusAfterAmount: string;
+}
+
+export class WalletAdminDetailResponseDto {
+    @ApiProperty({ description: '관리자 ID' })
+    adminUserId: string;
+
+    @ApiProperty({ description: '사유 코드', enum: AdjustmentReasonCode })
+    reasonCode: AdjustmentReasonCode;
+
+    @ApiProperty({ description: '상세 메모' })
+    internalNote?: string;
+}
+
+export class WalletSystemDetailResponseDto {
+    @ApiProperty({ description: '서비스명' })
+    serviceName: string;
+
+    @ApiProperty({ description: '트리거 ID' })
+    triggerId?: string;
+
+    @ApiProperty({ description: '액션명' })
+    actionName: string;
+
+    @ApiProperty({ description: '메타데이터' })
+    metadata?: any;
 }
 
 export class WalletTransactionResponseDto {
@@ -47,8 +72,14 @@ export class WalletTransactionResponseDto {
     @ApiProperty({ description: '변경 후 총 잔액' })
     afterAmount: string;
 
-    @ApiProperty({ description: '상세 내역 (메인/보너스 구분)' })
-    detail: WalletTransactionDetailResponseDto;
+    @ApiProperty({ description: '잔액 상세 내역 (메인/보너스 구분)' })
+    balanceDetail: WalletBalanceDetailResponseDto;
+
+    @ApiProperty({ description: '관리자 수동 조작 상세', required: false })
+    adminDetail?: WalletAdminDetailResponseDto;
+
+    @ApiProperty({ description: '시스템 자동 처리 상세', required: false })
+    systemDetail?: WalletSystemDetailResponseDto;
 
     @ApiProperty({ description: '생성 일시' })
     createdAt: Date;

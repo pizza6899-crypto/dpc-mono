@@ -1096,6 +1096,15 @@ exports.TierChangeType = exports.$Enums.TierChangeType = {
   MANUAL_UPDATE: 'MANUAL_UPDATE'
 };
 
+exports.AdjustmentReasonCode = exports.$Enums.AdjustmentReasonCode = {
+  CS_RECOVERY: 'CS_RECOVERY',
+  PROMOTION_REWARD: 'PROMOTION_REWARD',
+  SYSTEM_ERROR_FIX: 'SYSTEM_ERROR_FIX',
+  MANUAL_DEPOSIT: 'MANUAL_DEPOSIT',
+  TEST_ACCOUNT: 'TEST_ACCOUNT',
+  OTHER: 'OTHER'
+};
+
 exports.Prisma.ModelName = {
   AffiliateCode: 'AffiliateCode',
   Referral: 'Referral',

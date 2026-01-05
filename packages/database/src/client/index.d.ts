@@ -619,6 +619,18 @@ export const TierChangeType: {
 
 export type TierChangeType = (typeof TierChangeType)[keyof typeof TierChangeType]
 
+
+export const AdjustmentReasonCode: {
+  CS_RECOVERY: 'CS_RECOVERY',
+  PROMOTION_REWARD: 'PROMOTION_REWARD',
+  SYSTEM_ERROR_FIX: 'SYSTEM_ERROR_FIX',
+  MANUAL_DEPOSIT: 'MANUAL_DEPOSIT',
+  TEST_ACCOUNT: 'TEST_ACCOUNT',
+  OTHER: 'OTHER'
+};
+
+export type AdjustmentReasonCode = (typeof AdjustmentReasonCode)[keyof typeof AdjustmentReasonCode]
+
 }
 
 export type SocialType = $Enums.SocialType
@@ -768,6 +780,10 @@ export const SessionStatus: typeof $Enums.SessionStatus
 export type TierChangeType = $Enums.TierChangeType
 
 export const TierChangeType: typeof $Enums.TierChangeType
+
+export type AdjustmentReasonCode = $Enums.AdjustmentReasonCode
+
+export const AdjustmentReasonCode: typeof $Enums.AdjustmentReasonCode
 
 /**
  * ##  Prisma Client ʲˢ
@@ -59476,7 +59492,7 @@ export namespace Prisma {
     id: bigint | null
     transactionId: bigint | null
     adminUserId: bigint | null
-    reasonCode: string | null
+    reasonCode: $Enums.AdjustmentReasonCode | null
     internalNote: string | null
   }
 
@@ -59484,7 +59500,7 @@ export namespace Prisma {
     id: bigint | null
     transactionId: bigint | null
     adminUserId: bigint | null
-    reasonCode: string | null
+    reasonCode: $Enums.AdjustmentReasonCode | null
     internalNote: string | null
   }
 
@@ -59625,7 +59641,7 @@ export namespace Prisma {
     id: bigint
     transactionId: bigint
     adminUserId: bigint
-    reasonCode: string | null
+    reasonCode: $Enums.AdjustmentReasonCode
     internalNote: string | null
     _count: AdminAdjustmentDetailCountAggregateOutputType | null
     _avg: AdminAdjustmentDetailAvgAggregateOutputType | null
@@ -59710,7 +59726,7 @@ export namespace Prisma {
       id: bigint
       transactionId: bigint
       adminUserId: bigint
-      reasonCode: string | null
+      reasonCode: $Enums.AdjustmentReasonCode
       internalNote: string | null
     }, ExtArgs["result"]["adminAdjustmentDetail"]>
     composites: {}
@@ -60140,7 +60156,7 @@ export namespace Prisma {
     readonly id: FieldRef<"AdminAdjustmentDetail", 'BigInt'>
     readonly transactionId: FieldRef<"AdminAdjustmentDetail", 'BigInt'>
     readonly adminUserId: FieldRef<"AdminAdjustmentDetail", 'BigInt'>
-    readonly reasonCode: FieldRef<"AdminAdjustmentDetail", 'String'>
+    readonly reasonCode: FieldRef<"AdminAdjustmentDetail", 'AdjustmentReasonCode'>
     readonly internalNote: FieldRef<"AdminAdjustmentDetail", 'String'>
   }
     
@@ -63176,6 +63192,20 @@ export namespace Prisma {
    * Reference to a field of type 'TierChangeType[]'
    */
   export type ListEnumTierChangeTypeFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaModel, 'TierChangeType[]'>
+    
+
+
+  /**
+   * Reference to a field of type 'AdjustmentReasonCode'
+   */
+  export type EnumAdjustmentReasonCodeFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaModel, 'AdjustmentReasonCode'>
+    
+
+
+  /**
+   * Reference to a field of type 'AdjustmentReasonCode[]'
+   */
+  export type ListEnumAdjustmentReasonCodeFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaModel, 'AdjustmentReasonCode[]'>
     
 
 
@@ -67583,7 +67613,7 @@ export namespace Prisma {
     id?: BigIntFilter<"AdminAdjustmentDetail"> | bigint | number
     transactionId?: BigIntFilter<"AdminAdjustmentDetail"> | bigint | number
     adminUserId?: BigIntFilter<"AdminAdjustmentDetail"> | bigint | number
-    reasonCode?: StringNullableFilter<"AdminAdjustmentDetail"> | string | null
+    reasonCode?: EnumAdjustmentReasonCodeFilter<"AdminAdjustmentDetail"> | $Enums.AdjustmentReasonCode
     internalNote?: StringNullableFilter<"AdminAdjustmentDetail"> | string | null
     transaction?: XOR<TransactionScalarRelationFilter, TransactionWhereInput>
     adminUser?: XOR<UserScalarRelationFilter, UserWhereInput>
@@ -67593,7 +67623,7 @@ export namespace Prisma {
     id?: SortOrder
     transactionId?: SortOrder
     adminUserId?: SortOrder
-    reasonCode?: SortOrderInput | SortOrder
+    reasonCode?: SortOrder
     internalNote?: SortOrderInput | SortOrder
     transaction?: TransactionOrderByWithRelationInput
     adminUser?: UserOrderByWithRelationInput
@@ -67606,7 +67636,7 @@ export namespace Prisma {
     OR?: AdminAdjustmentDetailWhereInput[]
     NOT?: AdminAdjustmentDetailWhereInput | AdminAdjustmentDetailWhereInput[]
     adminUserId?: BigIntFilter<"AdminAdjustmentDetail"> | bigint | number
-    reasonCode?: StringNullableFilter<"AdminAdjustmentDetail"> | string | null
+    reasonCode?: EnumAdjustmentReasonCodeFilter<"AdminAdjustmentDetail"> | $Enums.AdjustmentReasonCode
     internalNote?: StringNullableFilter<"AdminAdjustmentDetail"> | string | null
     transaction?: XOR<TransactionScalarRelationFilter, TransactionWhereInput>
     adminUser?: XOR<UserScalarRelationFilter, UserWhereInput>
@@ -67616,7 +67646,7 @@ export namespace Prisma {
     id?: SortOrder
     transactionId?: SortOrder
     adminUserId?: SortOrder
-    reasonCode?: SortOrderInput | SortOrder
+    reasonCode?: SortOrder
     internalNote?: SortOrderInput | SortOrder
     _count?: AdminAdjustmentDetailCountOrderByAggregateInput
     _avg?: AdminAdjustmentDetailAvgOrderByAggregateInput
@@ -67632,7 +67662,7 @@ export namespace Prisma {
     id?: BigIntWithAggregatesFilter<"AdminAdjustmentDetail"> | bigint | number
     transactionId?: BigIntWithAggregatesFilter<"AdminAdjustmentDetail"> | bigint | number
     adminUserId?: BigIntWithAggregatesFilter<"AdminAdjustmentDetail"> | bigint | number
-    reasonCode?: StringNullableWithAggregatesFilter<"AdminAdjustmentDetail"> | string | null
+    reasonCode?: EnumAdjustmentReasonCodeWithAggregatesFilter<"AdminAdjustmentDetail"> | $Enums.AdjustmentReasonCode
     internalNote?: StringNullableWithAggregatesFilter<"AdminAdjustmentDetail"> | string | null
   }
 
@@ -72674,7 +72704,7 @@ export namespace Prisma {
 
   export type AdminAdjustmentDetailCreateInput = {
     id?: bigint | number
-    reasonCode?: string | null
+    reasonCode: $Enums.AdjustmentReasonCode
     internalNote?: string | null
     transaction: TransactionCreateNestedOneWithoutAdminAdjustmentDetailInput
     adminUser: UserCreateNestedOneWithoutAdminAdjustmentDetailsInput
@@ -72684,13 +72714,13 @@ export namespace Prisma {
     id?: bigint | number
     transactionId: bigint | number
     adminUserId: bigint | number
-    reasonCode?: string | null
+    reasonCode: $Enums.AdjustmentReasonCode
     internalNote?: string | null
   }
 
   export type AdminAdjustmentDetailUpdateInput = {
     id?: BigIntFieldUpdateOperationsInput | bigint | number
-    reasonCode?: NullableStringFieldUpdateOperationsInput | string | null
+    reasonCode?: EnumAdjustmentReasonCodeFieldUpdateOperationsInput | $Enums.AdjustmentReasonCode
     internalNote?: NullableStringFieldUpdateOperationsInput | string | null
     transaction?: TransactionUpdateOneRequiredWithoutAdminAdjustmentDetailNestedInput
     adminUser?: UserUpdateOneRequiredWithoutAdminAdjustmentDetailsNestedInput
@@ -72700,7 +72730,7 @@ export namespace Prisma {
     id?: BigIntFieldUpdateOperationsInput | bigint | number
     transactionId?: BigIntFieldUpdateOperationsInput | bigint | number
     adminUserId?: BigIntFieldUpdateOperationsInput | bigint | number
-    reasonCode?: NullableStringFieldUpdateOperationsInput | string | null
+    reasonCode?: EnumAdjustmentReasonCodeFieldUpdateOperationsInput | $Enums.AdjustmentReasonCode
     internalNote?: NullableStringFieldUpdateOperationsInput | string | null
   }
 
@@ -72708,13 +72738,13 @@ export namespace Prisma {
     id?: bigint | number
     transactionId: bigint | number
     adminUserId: bigint | number
-    reasonCode?: string | null
+    reasonCode: $Enums.AdjustmentReasonCode
     internalNote?: string | null
   }
 
   export type AdminAdjustmentDetailUpdateManyMutationInput = {
     id?: BigIntFieldUpdateOperationsInput | bigint | number
-    reasonCode?: NullableStringFieldUpdateOperationsInput | string | null
+    reasonCode?: EnumAdjustmentReasonCodeFieldUpdateOperationsInput | $Enums.AdjustmentReasonCode
     internalNote?: NullableStringFieldUpdateOperationsInput | string | null
   }
 
@@ -72722,7 +72752,7 @@ export namespace Prisma {
     id?: BigIntFieldUpdateOperationsInput | bigint | number
     transactionId?: BigIntFieldUpdateOperationsInput | bigint | number
     adminUserId?: BigIntFieldUpdateOperationsInput | bigint | number
-    reasonCode?: NullableStringFieldUpdateOperationsInput | string | null
+    reasonCode?: EnumAdjustmentReasonCodeFieldUpdateOperationsInput | $Enums.AdjustmentReasonCode
     internalNote?: NullableStringFieldUpdateOperationsInput | string | null
   }
 
@@ -77054,6 +77084,13 @@ export namespace Prisma {
     _max?: NestedEnumTierChangeTypeFilter<$PrismaModel>
   }
 
+  export type EnumAdjustmentReasonCodeFilter<$PrismaModel = never> = {
+    equals?: $Enums.AdjustmentReasonCode | EnumAdjustmentReasonCodeFieldRefInput<$PrismaModel>
+    in?: $Enums.AdjustmentReasonCode[] | ListEnumAdjustmentReasonCodeFieldRefInput<$PrismaModel>
+    notIn?: $Enums.AdjustmentReasonCode[] | ListEnumAdjustmentReasonCodeFieldRefInput<$PrismaModel>
+    not?: NestedEnumAdjustmentReasonCodeFilter<$PrismaModel> | $Enums.AdjustmentReasonCode
+  }
+
   export type AdminAdjustmentDetailCountOrderByAggregateInput = {
     id?: SortOrder
     transactionId?: SortOrder
@@ -77088,6 +77125,16 @@ export namespace Prisma {
     id?: SortOrder
     transactionId?: SortOrder
     adminUserId?: SortOrder
+  }
+
+  export type EnumAdjustmentReasonCodeWithAggregatesFilter<$PrismaModel = never> = {
+    equals?: $Enums.AdjustmentReasonCode | EnumAdjustmentReasonCodeFieldRefInput<$PrismaModel>
+    in?: $Enums.AdjustmentReasonCode[] | ListEnumAdjustmentReasonCodeFieldRefInput<$PrismaModel>
+    notIn?: $Enums.AdjustmentReasonCode[] | ListEnumAdjustmentReasonCodeFieldRefInput<$PrismaModel>
+    not?: NestedEnumAdjustmentReasonCodeWithAggregatesFilter<$PrismaModel> | $Enums.AdjustmentReasonCode
+    _count?: NestedIntFilter<$PrismaModel>
+    _min?: NestedEnumAdjustmentReasonCodeFilter<$PrismaModel>
+    _max?: NestedEnumAdjustmentReasonCodeFilter<$PrismaModel>
   }
 
   export type SystemAdjustmentDetailCountOrderByAggregateInput = {
@@ -80227,6 +80274,10 @@ export namespace Prisma {
     connect?: UserWhereUniqueInput
   }
 
+  export type EnumAdjustmentReasonCodeFieldUpdateOperationsInput = {
+    set?: $Enums.AdjustmentReasonCode
+  }
+
   export type TransactionUpdateOneRequiredWithoutAdminAdjustmentDetailNestedInput = {
     create?: XOR<TransactionCreateWithoutAdminAdjustmentDetailInput, TransactionUncheckedCreateWithoutAdminAdjustmentDetailInput>
     connectOrCreate?: TransactionCreateOrConnectWithoutAdminAdjustmentDetailInput
@@ -81286,6 +81337,23 @@ export namespace Prisma {
     _count?: NestedIntFilter<$PrismaModel>
     _min?: NestedEnumTierChangeTypeFilter<$PrismaModel>
     _max?: NestedEnumTierChangeTypeFilter<$PrismaModel>
+  }
+
+  export type NestedEnumAdjustmentReasonCodeFilter<$PrismaModel = never> = {
+    equals?: $Enums.AdjustmentReasonCode | EnumAdjustmentReasonCodeFieldRefInput<$PrismaModel>
+    in?: $Enums.AdjustmentReasonCode[] | ListEnumAdjustmentReasonCodeFieldRefInput<$PrismaModel>
+    notIn?: $Enums.AdjustmentReasonCode[] | ListEnumAdjustmentReasonCodeFieldRefInput<$PrismaModel>
+    not?: NestedEnumAdjustmentReasonCodeFilter<$PrismaModel> | $Enums.AdjustmentReasonCode
+  }
+
+  export type NestedEnumAdjustmentReasonCodeWithAggregatesFilter<$PrismaModel = never> = {
+    equals?: $Enums.AdjustmentReasonCode | EnumAdjustmentReasonCodeFieldRefInput<$PrismaModel>
+    in?: $Enums.AdjustmentReasonCode[] | ListEnumAdjustmentReasonCodeFieldRefInput<$PrismaModel>
+    notIn?: $Enums.AdjustmentReasonCode[] | ListEnumAdjustmentReasonCodeFieldRefInput<$PrismaModel>
+    not?: NestedEnumAdjustmentReasonCodeWithAggregatesFilter<$PrismaModel> | $Enums.AdjustmentReasonCode
+    _count?: NestedIntFilter<$PrismaModel>
+    _min?: NestedEnumAdjustmentReasonCodeFilter<$PrismaModel>
+    _max?: NestedEnumAdjustmentReasonCodeFilter<$PrismaModel>
   }
 
   export type UserCreateWithoutAffiliateCodesInput = {
@@ -82939,7 +83007,7 @@ export namespace Prisma {
 
   export type AdminAdjustmentDetailCreateWithoutAdminUserInput = {
     id?: bigint | number
-    reasonCode?: string | null
+    reasonCode: $Enums.AdjustmentReasonCode
     internalNote?: string | null
     transaction: TransactionCreateNestedOneWithoutAdminAdjustmentDetailInput
   }
@@ -82947,7 +83015,7 @@ export namespace Prisma {
   export type AdminAdjustmentDetailUncheckedCreateWithoutAdminUserInput = {
     id?: bigint | number
     transactionId: bigint | number
-    reasonCode?: string | null
+    reasonCode: $Enums.AdjustmentReasonCode
     internalNote?: string | null
   }
 
@@ -83708,7 +83776,7 @@ export namespace Prisma {
     id?: BigIntFilter<"AdminAdjustmentDetail"> | bigint | number
     transactionId?: BigIntFilter<"AdminAdjustmentDetail"> | bigint | number
     adminUserId?: BigIntFilter<"AdminAdjustmentDetail"> | bigint | number
-    reasonCode?: StringNullableFilter<"AdminAdjustmentDetail"> | string | null
+    reasonCode?: EnumAdjustmentReasonCodeFilter<"AdminAdjustmentDetail"> | $Enums.AdjustmentReasonCode
     internalNote?: StringNullableFilter<"AdminAdjustmentDetail"> | string | null
   }
 
@@ -84905,7 +84973,7 @@ export namespace Prisma {
 
   export type AdminAdjustmentDetailCreateWithoutTransactionInput = {
     id?: bigint | number
-    reasonCode?: string | null
+    reasonCode: $Enums.AdjustmentReasonCode
     internalNote?: string | null
     adminUser: UserCreateNestedOneWithoutAdminAdjustmentDetailsInput
   }
@@ -84913,7 +84981,7 @@ export namespace Prisma {
   export type AdminAdjustmentDetailUncheckedCreateWithoutTransactionInput = {
     id?: bigint | number
     adminUserId: bigint | number
-    reasonCode?: string | null
+    reasonCode: $Enums.AdjustmentReasonCode
     internalNote?: string | null
   }
 
@@ -85371,7 +85439,7 @@ export namespace Prisma {
 
   export type AdminAdjustmentDetailUpdateWithoutTransactionInput = {
     id?: BigIntFieldUpdateOperationsInput | bigint | number
-    reasonCode?: NullableStringFieldUpdateOperationsInput | string | null
+    reasonCode?: EnumAdjustmentReasonCodeFieldUpdateOperationsInput | $Enums.AdjustmentReasonCode
     internalNote?: NullableStringFieldUpdateOperationsInput | string | null
     adminUser?: UserUpdateOneRequiredWithoutAdminAdjustmentDetailsNestedInput
   }
@@ -85379,7 +85447,7 @@ export namespace Prisma {
   export type AdminAdjustmentDetailUncheckedUpdateWithoutTransactionInput = {
     id?: BigIntFieldUpdateOperationsInput | bigint | number
     adminUserId?: BigIntFieldUpdateOperationsInput | bigint | number
-    reasonCode?: NullableStringFieldUpdateOperationsInput | string | null
+    reasonCode?: EnumAdjustmentReasonCodeFieldUpdateOperationsInput | $Enums.AdjustmentReasonCode
     internalNote?: NullableStringFieldUpdateOperationsInput | string | null
   }
 
@@ -92945,7 +93013,7 @@ export namespace Prisma {
   export type AdminAdjustmentDetailCreateManyAdminUserInput = {
     id?: bigint | number
     transactionId: bigint | number
-    reasonCode?: string | null
+    reasonCode: $Enums.AdjustmentReasonCode
     internalNote?: string | null
   }
 
@@ -93910,7 +93978,7 @@ export namespace Prisma {
 
   export type AdminAdjustmentDetailUpdateWithoutAdminUserInput = {
     id?: BigIntFieldUpdateOperationsInput | bigint | number
-    reasonCode?: NullableStringFieldUpdateOperationsInput | string | null
+    reasonCode?: EnumAdjustmentReasonCodeFieldUpdateOperationsInput | $Enums.AdjustmentReasonCode
     internalNote?: NullableStringFieldUpdateOperationsInput | string | null
     transaction?: TransactionUpdateOneRequiredWithoutAdminAdjustmentDetailNestedInput
   }
@@ -93918,14 +93986,14 @@ export namespace Prisma {
   export type AdminAdjustmentDetailUncheckedUpdateWithoutAdminUserInput = {
     id?: BigIntFieldUpdateOperationsInput | bigint | number
     transactionId?: BigIntFieldUpdateOperationsInput | bigint | number
-    reasonCode?: NullableStringFieldUpdateOperationsInput | string | null
+    reasonCode?: EnumAdjustmentReasonCodeFieldUpdateOperationsInput | $Enums.AdjustmentReasonCode
     internalNote?: NullableStringFieldUpdateOperationsInput | string | null
   }
 
   export type AdminAdjustmentDetailUncheckedUpdateManyWithoutAdminUserInput = {
     id?: BigIntFieldUpdateOperationsInput | bigint | number
     transactionId?: BigIntFieldUpdateOperationsInput | bigint | number
-    reasonCode?: NullableStringFieldUpdateOperationsInput | string | null
+    reasonCode?: EnumAdjustmentReasonCodeFieldUpdateOperationsInput | $Enums.AdjustmentReasonCode
     internalNote?: NullableStringFieldUpdateOperationsInput | string | null
   }
 

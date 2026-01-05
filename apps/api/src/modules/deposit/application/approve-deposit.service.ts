@@ -1,19 +1,15 @@
 // src/modules/deposit/application/approve-deposit.service.ts
 import { Inject, Injectable, Logger } from '@nestjs/common';
 import { Transactional } from '@nestjs-cls/transactional';
-import { Prisma } from '@repo/database';
+import { Prisma, AdjustmentReasonCode } from '@repo/database';
 import { TransactionStatus, TransactionType } from '@repo/database';
 import type { RequestClientInfo } from 'src/common/http/types';
 import { ApproveDepositResponseDto } from '../dtos/admin-deposit-response.dto';
 import { UpdateUserBalanceAdminService } from '../../wallet/application/update-user-balance-admin.service';
-import {
-  BalanceType,
-  UpdateOperation,
-} from '../../wallet/application/update-user-balance.service';
-import { UserStatsService } from '../../user-stats/application/user-stats.service';
 import { DepositAlreadyProcessedException } from '../domain';
 import type { DepositDetailRepositoryPort } from '../ports/out/deposit-detail.repository.port';
 import { DEPOSIT_DETAIL_REPOSITORY } from '../ports/out';
+import { BalanceType, UpdateOperation } from 'src/modules/wallet/domain';
 
 interface ApproveDepositParams {
   id: bigint;
@@ -59,6 +55,9 @@ export class ApproveDepositService {
       balanceType: BalanceType.MAIN,
       operation: UpdateOperation.ADD,
       amount: actuallyPaid,
+      adminUserId: adminId,
+      reasonCode: AdjustmentReasonCode.MANUAL_DEPOSIT,
+      internalNote: memo,
     });
 
     // 4. Transaction 생성 (지연 생성)

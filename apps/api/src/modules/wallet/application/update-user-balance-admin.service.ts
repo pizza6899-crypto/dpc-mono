@@ -15,7 +15,7 @@ import {
 } from '../domain';
 import { UserNotFoundException } from 'src/modules/user/domain/user.exception';
 import type { ExchangeCurrencyCode } from '@repo/database';
-import { Prisma, TransactionType, TransactionStatus } from '@repo/database';
+import { Prisma, TransactionType, TransactionStatus, AdjustmentReasonCode } from '@repo/database';
 import { Transactional } from '@nestjs-cls/transactional';
 
 interface UpdateUserBalanceAdminParams {
@@ -24,6 +24,9 @@ interface UpdateUserBalanceAdminParams {
   balanceType: BalanceType;
   operation: UpdateOperation;
   amount: Prisma.Decimal;
+  adminUserId: bigint;
+  reasonCode: AdjustmentReasonCode;
+  internalNote?: string;
 }
 
 interface UpdateUserBalanceAdminResult {
@@ -62,7 +65,7 @@ export class UpdateUserBalanceAdminService {
   async execute(
     params: UpdateUserBalanceAdminParams,
   ): Promise<UpdateUserBalanceAdminResult> {
-    const { userId, currency, balanceType, operation, amount } = params;
+    const { userId, currency, balanceType, operation, amount, adminUserId, reasonCode, internalNote } = params;
 
     // 1. 사용자 존재 여부 확인
     const user = await this.userRepository.findById(userId);
@@ -102,29 +105,26 @@ export class UpdateUserBalanceAdminService {
     const beforeTotalAmount = beforeMainBalance.add(beforeBonusBalance);
     const afterTotalAmount = afterMainBalance.add(afterBonusBalance);
 
-    // 8. 트랜잭션 기록
-    let transactionType: TransactionType = TransactionType.DEPOSIT;
-    if (operation === UpdateOperation.SUBTRACT) {
-      transactionType = TransactionType.WITHDRAW;
-    } else if (balanceType === BalanceType.BONUS) {
-      transactionType = TransactionType.BONUS;
-    }
-
     const transaction = WalletTransaction.create({
       userId,
-      type: transactionType,
+      type: TransactionType.ADMIN_ADJUST,
       status: TransactionStatus.COMPLETED,
       currency,
       amount: totalChange, // 부호 포함
       beforeAmount: beforeTotalAmount,
       afterAmount: afterTotalAmount,
-      detail: {
+      balanceDetail: {
         mainBalanceChange: mainChange,
         mainBeforeAmount: beforeMainBalance,
         mainAfterAmount: afterMainBalance,
         bonusBalanceChange: bonusChange,
         bonusBeforeAmount: beforeBonusBalance,
         bonusAfterAmount: afterBonusBalance,
+      },
+      adminDetail: {
+        adminUserId,
+        reasonCode,
+        internalNote: internalNote || `Admin adjustment: ${balanceType} ${operation} ${amount}`,
       },
     });
 

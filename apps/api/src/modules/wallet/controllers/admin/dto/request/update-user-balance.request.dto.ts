@@ -7,12 +7,9 @@ import {
   IsIn,
 } from 'class-validator';
 import { ApiProperty } from '@nestjs/swagger';
-import { ExchangeCurrencyCode } from '@repo/database';
+import { ExchangeCurrencyCode, AdjustmentReasonCode } from '@repo/database';
 import { WALLET_CURRENCIES } from 'src/utils/currency.util';
-import {
-  BalanceType,
-  UpdateOperation,
-} from '../../../../application/update-user-balance.service';
+import { BalanceType, UpdateOperation } from 'src/modules/wallet/domain';
 
 export class UpdateUserBalanceRequestDto {
   @ApiProperty({
@@ -59,5 +56,23 @@ export class UpdateUserBalanceRequestDto {
     message: 'Amount must be a positive number (e.g., "100" or "100.50").',
   })
   amount: string;
+
+  @ApiProperty({
+    description: '조정 사유 코드',
+    enum: AdjustmentReasonCode,
+    example: AdjustmentReasonCode.CS_RECOVERY,
+  })
+  @IsEnum(AdjustmentReasonCode)
+  @IsNotEmpty()
+  reasonCode: AdjustmentReasonCode;
+
+  @ApiProperty({
+    description: '관리자 내부 메모',
+    example: '잘못된 배당에 따른 수동 조정',
+    required: false,
+  })
+  @IsString()
+  @IsNotEmpty()
+  internalNote?: string;
 }
 

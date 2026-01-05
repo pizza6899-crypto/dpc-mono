@@ -37,4 +37,3 @@ Thumbs.db
 .idea/
 
 deploy-package
-packages/database/src/client/*

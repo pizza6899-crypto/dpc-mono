@@ -31,6 +31,8 @@ import {
   WalletTransactionResponseDto,
 } from './dto/response/wallet-transaction.response.dto';
 import { GetWalletTransactionHistoryQueryDto } from './dto/request/get-wallet-transaction-history-query.dto';
+import { CurrentUser } from 'src/common/auth/decorators/current-user.decorator';
+import { User } from 'src/modules/user/domain';
 
 @Controller('admin/wallet')
 @ApiTags('Admin Wallet')
@@ -128,6 +130,7 @@ export class WalletAdminController {
   async updateUserBalance(
     @Param('userId') userId: string,
     @Body() updateDto: UpdateUserBalanceRequestDto,
+    @CurrentUser() admin: User,
   ): Promise<UpdateUserBalanceResponseDto> {
     const result = await this.updateUserBalanceAdminService.execute({
       userId: BigInt(userId),
@@ -135,6 +138,9 @@ export class WalletAdminController {
       balanceType: updateDto.balanceType,
       operation: updateDto.operation,
       amount: new Prisma.Decimal(updateDto.amount),
+      adminUserId: admin.id!,
+      reasonCode: updateDto.reasonCode,
+      internalNote: updateDto.internalNote,
     });
 
     return {
@@ -201,14 +207,29 @@ export class WalletAdminController {
         amount: tx.amount.toString(),
         beforeAmount: tx.beforeAmount.toString(),
         afterAmount: tx.afterAmount.toString(),
-        detail: {
-          mainBalanceChange: tx.detail.mainBalanceChange.toString(),
-          mainBeforeAmount: tx.detail.mainBeforeAmount.toString(),
-          mainAfterAmount: tx.detail.mainAfterAmount.toString(),
-          bonusBalanceChange: tx.detail.bonusBalanceChange.toString(),
-          bonusBeforeAmount: tx.detail.bonusBeforeAmount.toString(),
-          bonusAfterAmount: tx.detail.bonusAfterAmount.toString(),
+        balanceDetail: {
+          mainBalanceChange: tx.balanceDetail.mainBalanceChange.toString(),
+          mainBeforeAmount: tx.balanceDetail.mainBeforeAmount.toString(),
+          mainAfterAmount: tx.balanceDetail.mainAfterAmount.toString(),
+          bonusBalanceChange: tx.balanceDetail.bonusBalanceChange.toString(),
+          bonusBeforeAmount: tx.balanceDetail.bonusBeforeAmount.toString(),
+          bonusAfterAmount: tx.balanceDetail.bonusAfterAmount.toString(),
         },
+        adminDetail: tx.adminDetail
+          ? {
+            adminUserId: tx.adminDetail.adminUserId.toString(),
+            reasonCode: tx.adminDetail.reasonCode,
+            internalNote: tx.adminDetail.internalNote,
+          }
+          : undefined,
+        systemDetail: tx.systemDetail
+          ? {
+            serviceName: tx.systemDetail.serviceName,
+            triggerId: tx.systemDetail.triggerId,
+            actionName: tx.systemDetail.actionName,
+            metadata: tx.systemDetail.metadata,
+          }
+          : undefined,
         createdAt: tx.createdAt,
       })),
       total,
