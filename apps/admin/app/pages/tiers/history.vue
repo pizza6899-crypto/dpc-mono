@@ -5,7 +5,7 @@ const { t } = useI18n()
 </script>
 
 <template>
-  <UDashboardPanelContent>
+  <UDashboardPanel>
     <div class="flex flex-col gap-4">
       <div class="flex items-center justify-between">
         <div>
@@ -20,5 +20,5 @@ const { t } = useI18n()
 
       <TierHistoryTable class="mt-4" />
     </div>
-  </UDashboardPanelContent>
+  </UDashboardPanel>
 </template>

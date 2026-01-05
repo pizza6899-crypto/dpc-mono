@@ -54,7 +54,7 @@ const { mutate: syncMissingUsers, isPending: isSyncing } = useTierAdminControlle
 </script>
 
 <template>
-  <UDashboardPanelContent>
+  <UDashboardPanel>
     <div class="flex flex-col gap-4">
       <div class="flex items-center justify-between">
         <div>
@@ -97,5 +97,5 @@ const { mutate: syncMissingUsers, isPending: isSyncing } = useTierAdminControlle
 
       <TiersActionModals ref="modals" @success="refreshData" />
     </div>
-  </UDashboardPanelContent>
+  </UDashboardPanel>
 </template>

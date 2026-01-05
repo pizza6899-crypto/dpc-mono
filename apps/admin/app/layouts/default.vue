@@ -25,7 +25,7 @@ const links = computed<NavigationMenuItem[][]>(() => [[{
 }, {
   label: t('common.tiers'),
   icon: 'i-lucide-layers',
-  to: '/tiers/policy',
+  to: '/tiers',
   defaultOpen: true,
   children: [{
     label: t('common.policy'),
