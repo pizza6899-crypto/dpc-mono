@@ -1,5 +1,6 @@
 // src/modules/wallet/application/get-user-balance-admin.service.ts
 import { Inject, Injectable, Logger } from '@nestjs/common';
+import { WalletQueryService } from './wallet-query.service';
 import { USER_WALLET_REPOSITORY } from '../ports/out/user-wallet.repository.token';
 import type { UserWalletRepositoryPort } from '../ports/out/user-wallet.repository.port';
 import { USER_REPOSITORY } from 'src/modules/user/ports/out/user.repository.token';
@@ -31,8 +32,7 @@ export class GetUserBalanceAdminService {
   private readonly logger = new Logger(GetUserBalanceAdminService.name);
 
   constructor(
-    @Inject(USER_WALLET_REPOSITORY)
-    private readonly walletRepository: UserWalletRepositoryPort,
+    private readonly walletQueryService: WalletQueryService,
     @Inject(USER_REPOSITORY)
     private readonly userRepository: UserRepositoryPort,
   ) { }
@@ -50,11 +50,8 @@ export class GetUserBalanceAdminService {
 
     // 2. 잔액 조회
     if (currency) {
-      // 특정 통화 조회
-      const wallet = await this.walletRepository.findByUserIdAndCurrency(
-        userId,
-        currency,
-      );
+      // 특정 통화 조회 (자동 생성 안함)
+      const wallet = await this.walletQueryService.getWallet(userId, currency, false);
 
       if (!wallet) {
         // 동기 생성 정책으로 인해 지갑이 없으면 에러 처리
@@ -64,10 +61,10 @@ export class GetUserBalanceAdminService {
       return { wallet };
     }
 
-    // 모든 통화 반환
-    const existingWallets = await this.walletRepository.findByUserId(userId);
+    // 모든 통화 반환 (자동 생성 안함)
+    const wallets = await this.walletQueryService.getWallets(userId, false);
 
     // 지갑이 하나도 없는 경우도 빈 배열 반환 (동기 생성 정책상 가입 시 생성되지만, 예외 상황 고려)
-    return { wallet: existingWallets };
+    return { wallet: wallets };
   }
 }

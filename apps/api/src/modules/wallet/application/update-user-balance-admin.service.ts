@@ -1,5 +1,6 @@
 // src/modules/wallet/application/update-user-balance-admin.service.ts
 import { Inject, Injectable, Logger } from '@nestjs/common';
+import { WalletQueryService } from './wallet-query.service';
 import { USER_WALLET_REPOSITORY } from '../ports/out/user-wallet.repository.token';
 import type { UserWalletRepositoryPort } from '../ports/out/user-wallet.repository.port';
 import { USER_REPOSITORY } from 'src/modules/user/ports/out/user.repository.token';
@@ -55,6 +56,7 @@ export class UpdateUserBalanceAdminService {
   constructor(
     @Inject(USER_WALLET_REPOSITORY)
     private readonly walletRepository: UserWalletRepositoryPort,
+    private readonly walletQueryService: WalletQueryService,
     @Inject(WALLET_TRANSACTION_REPOSITORY)
     private readonly transactionRepository: WalletTransactionRepositoryPort,
     @Inject(USER_REPOSITORY)
@@ -76,10 +78,11 @@ export class UpdateUserBalanceAdminService {
     // 2. 락 획득 (동시성 제어 - Advisory Lock)
     await this.walletRepository.acquireLock(userId);
 
-    // 3. 월렛 조회
-    const wallet = await this.walletRepository.findByUserIdAndCurrency(
+    // 3. 월렛 조회 (자동 생성 안함)
+    const wallet = await this.walletQueryService.getWallet(
       userId,
       currency,
+      false,
     );
 
     if (!wallet) {

@@ -1,5 +1,6 @@
 // src/modules/wallet/application/get-user-balance.service.ts
 import { Inject, Injectable, Logger } from '@nestjs/common';
+import { WalletQueryService } from './wallet-query.service';
 import { USER_WALLET_REPOSITORY } from '../ports/out/user-wallet.repository.token';
 import type { UserWalletRepositoryPort } from '../ports/out/user-wallet.repository.port';
 import { UserWallet } from '../domain';
@@ -27,9 +28,8 @@ export class GetUserBalanceService {
   private readonly logger = new Logger(GetUserBalanceService.name);
 
   constructor(
-    @Inject(USER_WALLET_REPOSITORY)
-    private readonly repository: UserWalletRepositoryPort,
-  ) {}
+    private readonly walletQueryService: WalletQueryService,
+  ) { }
 
   async execute(
     params: GetUserBalanceParams,
@@ -39,51 +39,19 @@ export class GetUserBalanceService {
     try {
       if (currency) {
         // 특정 통화 조회
-        let wallet = await this.repository.findByUserIdAndCurrency(
-          userId,
-          currency,
-        );
+        const wallet = await this.walletQueryService.getWallet(userId, currency, false);
 
-        // 월렛이 없으면 생성
+        // autoCreate=true이므로 null일 수 없으나 타입 안전성을 위해 처리
         if (!wallet) {
-          const newWallet = UserWallet.create({
-            userId,
-            currency,
-          });
-          wallet = await this.repository.upsert(newWallet);
+          throw new Error('Failed to create wallet');
         }
 
         return { wallet };
       }
 
       // 모든 통화 반환
-      const existingWallets = await this.repository.findByUserId(userId);
-      const existingCurrencies = new Set(
-        existingWallets.map((w) => w.currency),
-      );
-
-      // WALLET_CURRENCIES에 있는 통화 중 누락된 것이 있으면 생성
-      const missingCurrencies = WALLET_CURRENCIES.filter(
-        (c) => !existingCurrencies.has(c),
-      );
-
-      if (missingCurrencies.length > 0) {
-        const newWallets = await Promise.all(
-          missingCurrencies.map((c) => {
-            const newWallet = UserWallet.create({
-              userId,
-              currency: c,
-            });
-            return this.repository.upsert(newWallet);
-          }),
-        );
-
-        // 기존 월렛과 새로 생성한 월렛을 합쳐서 반환
-        return { wallet: [...existingWallets, ...newWallets] };
-      }
-
-      // 모든 통화가 존재하는 경우
-      return { wallet: existingWallets };
+      const wallets = await this.walletQueryService.getWallets(userId, false);
+      return { wallet: wallets };
     } catch (error) {
       // 예상치 못한 시스템 에러는 로깅 후 재던지기
       this.logger.error(

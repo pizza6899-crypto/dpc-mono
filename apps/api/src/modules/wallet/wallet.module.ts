@@ -1,6 +1,7 @@
 // src/modules/wallet/wallet.module.ts
 import { Module } from '@nestjs/common';
 import { CreateWalletService } from './application/create-wallet.service';
+import { WalletQueryService } from './application/wallet-query.service';
 import { GetUserBalanceService } from './application/get-user-balance.service';
 import { GetUserBalanceAdminService } from './application/get-user-balance-admin.service';
 import { UpdateUserBalanceAdminService } from './application/update-user-balance-admin.service';
@@ -52,6 +53,7 @@ import { WalletTransactionRepository } from './infrastructure/wallet-transaction
       provide: WALLET_TRANSACTION_REPOSITORY,
       useClass: WalletTransactionRepository,
     },
+    WalletQueryService,
   ],
   controllers: [WalletController, WalletAdminController],
   exports: [
@@ -60,6 +62,7 @@ import { WalletTransactionRepository } from './infrastructure/wallet-transaction
     GetUserBalanceAdminService,
     UpdateUserBalanceAdminService,
     GetWalletTransactionHistoryAdminService,
+    WalletQueryService,
   ],
 })
 export class WalletModule { }
