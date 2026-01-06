@@ -1,5 +1,4 @@
 import { Injectable, Logger } from '@nestjs/common';
-import { PrismaService } from 'src/infrastructure/prisma/prisma.service';
 import { BetType, GameProvider, Prisma, WinType } from '@repo/database';
 import {
   GameAggregatorType,

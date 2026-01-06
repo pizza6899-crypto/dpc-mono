@@ -44,6 +44,7 @@ import { GetUserBalanceService } from 'src/modules/wallet/application/get-user-b
 import { InjectTransaction, Transactional } from '@nestjs-cls/transactional';
 import type { Transaction } from '@nestjs-cls/transactional';
 import { TransactionalAdapterPrisma } from '@nestjs-cls/transactional-adapter-prisma';
+import { InsufficientBalanceException } from 'src/modules/wallet/domain/wallet.exception';
 
 @Injectable()
 export class DcsCallbackService {
@@ -233,6 +234,14 @@ export class DcsCallbackService {
       let balance = new Prisma.Decimal(0);
       if (userWallet) {
         balance = gameSession.exchangeRate.mul(userWallet.totalBalance);
+      }
+
+      if (error instanceof InsufficientBalanceException) {
+        return getDcsResponse(DcsResponseCode.BALANCE_INSUFFICIENT, {
+          brand_uid,
+          currency,
+          balance,
+        });
       }
 
       switch (error.message) {
