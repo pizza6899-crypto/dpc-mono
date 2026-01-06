@@ -1,0 +1,62 @@
+model CasinoGame {
+    id               Int                @id @default(autoincrement())
+    aggregatorType   GameAggregatorType @map("aggregator_type")
+    provider         GameProvider
+    category         GameCategory
+    gameId           Int                @map("game_id")
+    gameType         String?            @map("game_type")
+    tableId          String?            @map("table_id")
+    iconLink         String?            @map("icon_link")
+    isEnabled        Boolean            @map("is_enabled")
+    isVisibleToUser  Boolean            @default(true) @map("is_visible_to_user")
+    houseEdge        Decimal            @default(0.04) @map("house_edge") @db.Decimal(8, 4)
+    contributionRate Decimal            @default(1.0) @map("contribution_rate") @db.Decimal(8, 4)
+    createdAt        DateTime           @default(now()) @map("created_at")
+    updatedAt        DateTime           @updatedAt @map("updated_at")
+    bonusDetails     BonusDetail[]
+    gameRounds       GameRound[]
+    gameSessions     GameSession[]
+    translations     GameTranslation[]
+
+    @@unique([aggregatorType, provider, gameId])
+    @@index([isEnabled])
+    @@map("casino_games")
+}
+
+model GameTranslation {
+    id           Int        @id @default(autoincrement())
+    gameId       Int        @map("game_id")
+    language     Language
+    providerName String     @map("provider_name")
+    categoryName String     @map("category_name")
+    gameName     String     @map("game_name")
+    createdAt    DateTime   @default(now()) @map("created_at")
+    updatedAt    DateTime   @updatedAt @map("updated_at")
+    casinoGame   CasinoGame @relation(fields: [gameId], references: [id], onDelete: Cascade)
+
+    @@unique([gameId, language])
+    @@index([language])
+    @@map("casino_game_translations")
+}
+
+model GameSession {
+    id                     BigInt               @id @default(autoincrement())
+    userId                 BigInt               @map("user_id")
+    createdAt              DateTime             @default(now()) @map("created_at")
+    updatedAt              DateTime             @updatedAt @map("updated_at")
+    lastAccessedAt         DateTime             @default(now()) @map("last_accessed_at")
+    aggregatorType         GameAggregatorType   @map("aggregator_type")
+    token                  String               @unique
+    walletCurrency         ExchangeCurrencyCode @map("wallet_currency")
+    gameCurrency           ExchangeCurrencyCode @map("game_currency")
+    exchangeRate           Decimal              @map("exchange_rate") @db.Decimal(32, 18)
+    exchangeRateSnapshotAt DateTime             @default(now()) @map("exchange_rate_snapshot_at")
+    gameId                 Int?                 @map("game_id")
+    gameRounds             GameRound[]
+    game                   CasinoGame?          @relation(fields: [gameId], references: [id])
+    user                   User                 @relation(fields: [userId], references: [id])
+
+    @@index([userId])
+    @@index([token])
+    @@map("casino_game_sessions")
+}

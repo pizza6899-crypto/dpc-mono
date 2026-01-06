@@ -87,45 +87,6 @@ model UserBalanceStats {
   @@index([currency])
 }
 
-model Game {
-  id               Int                @id @default(autoincrement())
-  aggregatorType   GameAggregatorType
-  provider         GameProvider
-  category         GameCategory
-  gameId           Int
-  gameType         String?
-  tableId          String?
-  iconLink         String?
-  isEnabled        Boolean
-  isVisibleToUser  Boolean            @default(true)
-  houseEdge        Decimal            @default(0.04) @db.Decimal(8, 4)
-  contributionRate Decimal            @default(1.0) @db.Decimal(8, 4)
-  createdAt        DateTime           @default(now())
-  updatedAt        DateTime           @updatedAt
-  bonusDetails     BonusDetail[]
-  gameRounds       GameRound[]
-  gameSessions     GameSession[]
-  translations     GameTranslation[]
-
-  @@unique([aggregatorType, provider, gameId])
-  @@index([isEnabled])
-}
-
-model GameTranslation {
-  id           Int      @id @default(autoincrement())
-  gameId       Int
-  language     Language
-  providerName String
-  categoryName String
-  gameName     String
-  createdAt    DateTime @default(now())
-  updatedAt    DateTime @updatedAt
-  game         Game     @relation(fields: [gameId], references: [id], onDelete: Cascade)
-
-  @@unique([gameId, language])
-  @@index([language])
-}
-
 model Transaction {
   id                     BigInt                     @id @default(autoincrement())
   userId                 BigInt
@@ -178,7 +139,7 @@ model GameRound {
   gameSessionId                  BigInt
   AffiliateCommission            AffiliateCommission[]
   bets                           GameBet[]
-  game                           Game?                 @relation(fields: [gameId], references: [id])
+  casinoGame                     CasinoGame?           @relation(fields: [gameId], references: [id])
   GameSession                    GameSession           @relation(fields: [gameSessionId], references: [id])
   transaction                    Transaction           @relation(fields: [transactionId], references: [id])
   wins                           GameWin[]
@@ -256,7 +217,7 @@ model BonusDetail {
   description             String?
   gameId                  Int?
   transactionId           BigInt             @unique
-  game                    Game?              @relation(fields: [gameId], references: [id])
+  casinoGame              CasinoGame?        @relation(fields: [gameId], references: [id])
   transaction             Transaction        @relation(fields: [transactionId], references: [id])
 }
 
@@ -417,24 +378,6 @@ model EmailLog {
   @@index([to, type, createdAt])
   @@index([status, createdAt])
   @@index([type, status])
-}
-
-model GameSession {
-  id                     BigInt               @id @default(autoincrement())
-  userId                 BigInt
-  createdAt              DateTime             @default(now())
-  updatedAt              DateTime             @updatedAt
-  lastAccessedAt         DateTime             @default(now())
-  aggregatorType         GameAggregatorType
-  token                  String               @unique
-  walletCurrency         ExchangeCurrencyCode
-  gameCurrency           ExchangeCurrencyCode
-  exchangeRate           Decimal              @db.Decimal(32, 18)
-  exchangeRateSnapshotAt DateTime             @default(now())
-  gameId                 Int?
-  gameRounds             GameRound[]
-  game                   Game?                @relation(fields: [gameId], references: [id])
-  user                   User                 @relation(fields: [userId], references: [id])
 }
 
 model AffiliateWallet {
