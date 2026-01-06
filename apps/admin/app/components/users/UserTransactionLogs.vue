@@ -2,7 +2,11 @@
 import type { TableColumn } from '@nuxt/ui'
 import { useWalletAdminControllerGetTransactionHistory } from '~/api/generated/endpoints/dPCBackendAPI'
 import type { WalletTransactionResponseDto } from '~/api/generated/models'
-import { format } from 'date-fns'
+import { WalletAdminControllerGetTransactionHistoryType } from '~/api/generated/models/walletAdminControllerGetTransactionHistoryType'
+import { WalletAdminControllerGetTransactionHistoryCurrency } from '~/api/generated/models/walletAdminControllerGetTransactionHistoryCurrency'
+import { format, subDays, startOfDay, endOfDay } from 'date-fns'
+import type { Range } from '~/types'
+import DateRangeFilter from '~/components/common/DateRangeFilter.vue'
 
 const { t } = useI18n()
 
@@ -17,10 +21,38 @@ const pageLimit = computed({
   set: (val) => uiStore.tableSettings.walletTransactions.itemsPerPage = val
 })
 
+const dateRange = ref<Range | undefined>({
+  start: subDays(new Date(), 30),
+  end: new Date()
+})
+
+const type = ref<WalletAdminControllerGetTransactionHistoryType>()
+const currency = ref<WalletAdminControllerGetTransactionHistoryCurrency>()
+
 const params = computed(() => ({
   page: page.value,
-  limit: pageLimit.value
+  limit: pageLimit.value,
+  type: type.value,
+  currency: currency.value,
+  startDate: dateRange.value?.start ? dateRange.value.start.toISOString() : undefined,
+  endDate: dateRange.value?.end ? dateRange.value.end.toISOString() : undefined
 }))
+
+const typeOptions = computed(() => [
+  { label: t('common.all'), value: undefined },
+  ...Object.values(WalletAdminControllerGetTransactionHistoryType).map(t => ({
+    label: t,
+    value: t
+  }))
+])
+
+const currencyOptions = computed(() => [
+  { label: t('common.all'), value: undefined },
+  ...Object.values(WalletAdminControllerGetTransactionHistoryCurrency).map(c => ({
+    label: c,
+    value: c
+  }))
+])
 
 const { data: response, status } = useWalletAdminControllerGetTransactionHistory(props.userId, params)
 
@@ -123,11 +155,27 @@ const columns = computed<TableColumn<WalletTransactionResponseDto>[]>(() => [
   >
     <template #header-right>
       <div class="flex items-center gap-2">
-         <!-- Removed Badge as it is duplicated in footer info or can be kept if desired, user had it in header before. -->
-         <!-- Keeping it for consistency with previous design if needed, but standard Table has count in footer. -->
-         <!-- Original code had: <UBadge variant="subtle" color="neutral">{{ t('users.wallet.total_items', { total }) }}</UBadge> -->
-         <!-- Let's keep it if user wants, but maybe cleaner without since footer has it. I'll omit based on modern designs usually having it in footer, but specific logic: user explicitly removed it in Step 199. So I will NOT add it back. -->
       </div>
+    </template>
+
+    <template #filters>
+      <DateRangeFilter v-model="dateRange" />
+      <USelectMenu
+        v-model="type"
+        :options="typeOptions"
+        :placeholder="t('users.wallet.type')"
+        value-attribute="value"
+        option-attribute="label"
+        class="w-40"
+      />
+      <USelectMenu
+        v-model="currency"
+        :options="currencyOptions"
+        :placeholder="t('users.wallet.asset')"
+        value-attribute="value"
+        option-attribute="label"
+        class="w-32"
+      />
     </template>
 
     <!-- Date Cell -->

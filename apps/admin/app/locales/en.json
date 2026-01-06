@@ -68,7 +68,21 @@
             "copy_error": "Failed to copy"
         },
         "no_additional_data": "No additional data",
-        "export": "Export"
+        "export": "Export",
+        "time": {
+            "all_time": "All Time",
+            "last_1_hour": "Last 1 Hour",
+            "last_6_hours": "Last 6 Hours",
+            "last_12_hours": "Last 12 Hours",
+            "last_24_hours": "Last 24 Hours",
+            "today": "Today",
+            "yesterday": "Yesterday",
+            "this_week": "This Week",
+            "last_7_days": "Last 7 Days",
+            "last_30_days": "Last 30 Days",
+            "this_month": "This Month",
+            "last_month": "Last Month"
+        }
     },
     "users": {
         "uid": "UID",
