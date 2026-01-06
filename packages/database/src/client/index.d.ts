@@ -16940,6 +16940,7 @@ export namespace Prisma {
 
   export type CasinoGameSessionMinAggregateOutputType = {
     id: bigint | null
+    uid: string | null
     userId: bigint | null
     createdAt: Date | null
     updatedAt: Date | null
@@ -16955,6 +16956,7 @@ export namespace Prisma {
 
   export type CasinoGameSessionMaxAggregateOutputType = {
     id: bigint | null
+    uid: string | null
     userId: bigint | null
     createdAt: Date | null
     updatedAt: Date | null
@@ -16970,6 +16972,7 @@ export namespace Prisma {
 
   export type CasinoGameSessionCountAggregateOutputType = {
     id: number
+    uid: number
     userId: number
     createdAt: number
     updatedAt: number
@@ -17001,6 +17004,7 @@ export namespace Prisma {
 
   export type CasinoGameSessionMinAggregateInputType = {
     id?: true
+    uid?: true
     userId?: true
     createdAt?: true
     updatedAt?: true
@@ -17016,6 +17020,7 @@ export namespace Prisma {
 
   export type CasinoGameSessionMaxAggregateInputType = {
     id?: true
+    uid?: true
     userId?: true
     createdAt?: true
     updatedAt?: true
@@ -17031,6 +17036,7 @@ export namespace Prisma {
 
   export type CasinoGameSessionCountAggregateInputType = {
     id?: true
+    uid?: true
     userId?: true
     createdAt?: true
     updatedAt?: true
@@ -17133,6 +17139,7 @@ export namespace Prisma {
 
   export type CasinoGameSessionGroupByOutputType = {
     id: bigint
+    uid: string
     userId: bigint
     createdAt: Date
     updatedAt: Date
@@ -17167,6 +17174,7 @@ export namespace Prisma {
 
   export type CasinoGameSessionSelect<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetSelect<{
     id?: boolean
+    uid?: boolean
     userId?: boolean
     createdAt?: boolean
     updatedAt?: boolean
@@ -17186,6 +17194,7 @@ export namespace Prisma {
 
   export type CasinoGameSessionSelectCreateManyAndReturn<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetSelect<{
     id?: boolean
+    uid?: boolean
     userId?: boolean
     createdAt?: boolean
     updatedAt?: boolean
@@ -17203,6 +17212,7 @@ export namespace Prisma {
 
   export type CasinoGameSessionSelectUpdateManyAndReturn<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetSelect<{
     id?: boolean
+    uid?: boolean
     userId?: boolean
     createdAt?: boolean
     updatedAt?: boolean
@@ -17220,6 +17230,7 @@ export namespace Prisma {
 
   export type CasinoGameSessionSelectScalar = {
     id?: boolean
+    uid?: boolean
     userId?: boolean
     createdAt?: boolean
     updatedAt?: boolean
@@ -17233,7 +17244,7 @@ export namespace Prisma {
     gameId?: boolean
   }
 
-  export type CasinoGameSessionOmit<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetOmit<"id" | "userId" | "createdAt" | "updatedAt" | "lastAccessedAt" | "aggregatorType" | "token" | "walletCurrency" | "gameCurrency" | "exchangeRate" | "exchangeRateSnapshotAt" | "gameId", ExtArgs["result"]["casinoGameSession"]>
+  export type CasinoGameSessionOmit<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetOmit<"id" | "uid" | "userId" | "createdAt" | "updatedAt" | "lastAccessedAt" | "aggregatorType" | "token" | "walletCurrency" | "gameCurrency" | "exchangeRate" | "exchangeRateSnapshotAt" | "gameId", ExtArgs["result"]["casinoGameSession"]>
   export type CasinoGameSessionInclude<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
     gameRounds?: boolean | CasinoGameSession$gameRoundsArgs<ExtArgs>
     game?: boolean | CasinoGameSession$gameArgs<ExtArgs>
@@ -17258,6 +17269,7 @@ export namespace Prisma {
     }
     scalars: $Extensions.GetPayloadResult<{
       id: bigint
+      uid: string
       userId: bigint
       createdAt: Date
       updatedAt: Date
@@ -17696,6 +17708,7 @@ export namespace Prisma {
    */
   interface CasinoGameSessionFieldRefs {
     readonly id: FieldRef<"CasinoGameSession", 'BigInt'>
+    readonly uid: FieldRef<"CasinoGameSession", 'String'>
     readonly userId: FieldRef<"CasinoGameSession", 'BigInt'>
     readonly createdAt: FieldRef<"CasinoGameSession", 'DateTime'>
     readonly updatedAt: FieldRef<"CasinoGameSession", 'DateTime'>
@@ -61880,6 +61893,7 @@ export namespace Prisma {
 
   export const CasinoGameSessionScalarFieldEnum: {
     id: 'id',
+    uid: 'uid',
     userId: 'userId',
     createdAt: 'createdAt',
     updatedAt: 'updatedAt',
@@ -64194,6 +64208,7 @@ export namespace Prisma {
     OR?: CasinoGameSessionWhereInput[]
     NOT?: CasinoGameSessionWhereInput | CasinoGameSessionWhereInput[]
     id?: BigIntFilter<"CasinoGameSession"> | bigint | number
+    uid?: StringFilter<"CasinoGameSession"> | string
     userId?: BigIntFilter<"CasinoGameSession"> | bigint | number
     createdAt?: DateTimeFilter<"CasinoGameSession"> | Date | string
     updatedAt?: DateTimeFilter<"CasinoGameSession"> | Date | string
@@ -64212,6 +64227,7 @@ export namespace Prisma {
 
   export type CasinoGameSessionOrderByWithRelationInput = {
     id?: SortOrder
+    uid?: SortOrder
     userId?: SortOrder
     createdAt?: SortOrder
     updatedAt?: SortOrder
@@ -64230,6 +64246,7 @@ export namespace Prisma {
 
   export type CasinoGameSessionWhereUniqueInput = Prisma.AtLeast<{
     id?: bigint | number
+    uid?: string
     token?: string
     AND?: CasinoGameSessionWhereInput | CasinoGameSessionWhereInput[]
     OR?: CasinoGameSessionWhereInput[]
@@ -64247,10 +64264,11 @@ export namespace Prisma {
     gameRounds?: GameRoundListRelationFilter
     game?: XOR<CasinoGameNullableScalarRelationFilter, CasinoGameWhereInput> | null
     user?: XOR<UserScalarRelationFilter, UserWhereInput>
-  }, "id" | "token">
+  }, "id" | "uid" | "token">
 
   export type CasinoGameSessionOrderByWithAggregationInput = {
     id?: SortOrder
+    uid?: SortOrder
     userId?: SortOrder
     createdAt?: SortOrder
     updatedAt?: SortOrder
@@ -64274,6 +64292,7 @@ export namespace Prisma {
     OR?: CasinoGameSessionScalarWhereWithAggregatesInput[]
     NOT?: CasinoGameSessionScalarWhereWithAggregatesInput | CasinoGameSessionScalarWhereWithAggregatesInput[]
     id?: BigIntWithAggregatesFilter<"CasinoGameSession"> | bigint | number
+    uid?: StringWithAggregatesFilter<"CasinoGameSession"> | string
     userId?: BigIntWithAggregatesFilter<"CasinoGameSession"> | bigint | number
     createdAt?: DateTimeWithAggregatesFilter<"CasinoGameSession"> | Date | string
     updatedAt?: DateTimeWithAggregatesFilter<"CasinoGameSession"> | Date | string
@@ -68862,6 +68881,7 @@ export namespace Prisma {
 
   export type CasinoGameSessionCreateInput = {
     id?: bigint | number
+    uid: string
     createdAt?: Date | string
     updatedAt?: Date | string
     lastAccessedAt?: Date | string
@@ -68878,6 +68898,7 @@ export namespace Prisma {
 
   export type CasinoGameSessionUncheckedCreateInput = {
     id?: bigint | number
+    uid: string
     userId: bigint | number
     createdAt?: Date | string
     updatedAt?: Date | string
@@ -68894,6 +68915,7 @@ export namespace Prisma {
 
   export type CasinoGameSessionUpdateInput = {
     id?: BigIntFieldUpdateOperationsInput | bigint | number
+    uid?: StringFieldUpdateOperationsInput | string
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
     lastAccessedAt?: DateTimeFieldUpdateOperationsInput | Date | string
@@ -68910,6 +68932,7 @@ export namespace Prisma {
 
   export type CasinoGameSessionUncheckedUpdateInput = {
     id?: BigIntFieldUpdateOperationsInput | bigint | number
+    uid?: StringFieldUpdateOperationsInput | string
     userId?: BigIntFieldUpdateOperationsInput | bigint | number
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
@@ -68926,6 +68949,7 @@ export namespace Prisma {
 
   export type CasinoGameSessionCreateManyInput = {
     id?: bigint | number
+    uid: string
     userId: bigint | number
     createdAt?: Date | string
     updatedAt?: Date | string
@@ -68941,6 +68965,7 @@ export namespace Prisma {
 
   export type CasinoGameSessionUpdateManyMutationInput = {
     id?: BigIntFieldUpdateOperationsInput | bigint | number
+    uid?: StringFieldUpdateOperationsInput | string
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
     lastAccessedAt?: DateTimeFieldUpdateOperationsInput | Date | string
@@ -68954,6 +68979,7 @@ export namespace Prisma {
 
   export type CasinoGameSessionUncheckedUpdateManyInput = {
     id?: BigIntFieldUpdateOperationsInput | bigint | number
+    uid?: StringFieldUpdateOperationsInput | string
     userId?: BigIntFieldUpdateOperationsInput | bigint | number
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
@@ -73897,6 +73923,7 @@ export namespace Prisma {
 
   export type CasinoGameSessionCountOrderByAggregateInput = {
     id?: SortOrder
+    uid?: SortOrder
     userId?: SortOrder
     createdAt?: SortOrder
     updatedAt?: SortOrder
@@ -73919,6 +73946,7 @@ export namespace Prisma {
 
   export type CasinoGameSessionMaxOrderByAggregateInput = {
     id?: SortOrder
+    uid?: SortOrder
     userId?: SortOrder
     createdAt?: SortOrder
     updatedAt?: SortOrder
@@ -73934,6 +73962,7 @@ export namespace Prisma {
 
   export type CasinoGameSessionMinOrderByAggregateInput = {
     id?: SortOrder
+    uid?: SortOrder
     userId?: SortOrder
     createdAt?: SortOrder
     updatedAt?: SortOrder
@@ -82213,6 +82242,7 @@ export namespace Prisma {
 
   export type CasinoGameSessionCreateWithoutGameInput = {
     id?: bigint | number
+    uid: string
     createdAt?: Date | string
     updatedAt?: Date | string
     lastAccessedAt?: Date | string
@@ -82228,6 +82258,7 @@ export namespace Prisma {
 
   export type CasinoGameSessionUncheckedCreateWithoutGameInput = {
     id?: bigint | number
+    uid: string
     userId: bigint | number
     createdAt?: Date | string
     updatedAt?: Date | string
@@ -82389,6 +82420,7 @@ export namespace Prisma {
     OR?: CasinoGameSessionScalarWhereInput[]
     NOT?: CasinoGameSessionScalarWhereInput | CasinoGameSessionScalarWhereInput[]
     id?: BigIntFilter<"CasinoGameSession"> | bigint | number
+    uid?: StringFilter<"CasinoGameSession"> | string
     userId?: BigIntFilter<"CasinoGameSession"> | bigint | number
     createdAt?: DateTimeFilter<"CasinoGameSession"> | Date | string
     updatedAt?: DateTimeFilter<"CasinoGameSession"> | Date | string
@@ -83205,6 +83237,7 @@ export namespace Prisma {
 
   export type CasinoGameSessionCreateWithoutUserInput = {
     id?: bigint | number
+    uid: string
     createdAt?: Date | string
     updatedAt?: Date | string
     lastAccessedAt?: Date | string
@@ -83220,6 +83253,7 @@ export namespace Prisma {
 
   export type CasinoGameSessionUncheckedCreateWithoutUserInput = {
     id?: bigint | number
+    uid: string
     createdAt?: Date | string
     updatedAt?: Date | string
     lastAccessedAt?: Date | string
@@ -85998,6 +86032,7 @@ export namespace Prisma {
 
   export type CasinoGameSessionCreateWithoutGameRoundsInput = {
     id?: bigint | number
+    uid: string
     createdAt?: Date | string
     updatedAt?: Date | string
     lastAccessedAt?: Date | string
@@ -86013,6 +86048,7 @@ export namespace Prisma {
 
   export type CasinoGameSessionUncheckedCreateWithoutGameRoundsInput = {
     id?: bigint | number
+    uid: string
     userId: bigint | number
     createdAt?: Date | string
     updatedAt?: Date | string
@@ -86226,6 +86262,7 @@ export namespace Prisma {
 
   export type CasinoGameSessionUpdateWithoutGameRoundsInput = {
     id?: BigIntFieldUpdateOperationsInput | bigint | number
+    uid?: StringFieldUpdateOperationsInput | string
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
     lastAccessedAt?: DateTimeFieldUpdateOperationsInput | Date | string
@@ -86241,6 +86278,7 @@ export namespace Prisma {
 
   export type CasinoGameSessionUncheckedUpdateWithoutGameRoundsInput = {
     id?: BigIntFieldUpdateOperationsInput | bigint | number
+    uid?: StringFieldUpdateOperationsInput | string
     userId?: BigIntFieldUpdateOperationsInput | bigint | number
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
@@ -92759,6 +92797,7 @@ export namespace Prisma {
 
   export type CasinoGameSessionCreateManyGameInput = {
     id?: bigint | number
+    uid: string
     userId: bigint | number
     createdAt?: Date | string
     updatedAt?: Date | string
@@ -92933,6 +92972,7 @@ export namespace Prisma {
 
   export type CasinoGameSessionUpdateWithoutGameInput = {
     id?: BigIntFieldUpdateOperationsInput | bigint | number
+    uid?: StringFieldUpdateOperationsInput | string
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
     lastAccessedAt?: DateTimeFieldUpdateOperationsInput | Date | string
@@ -92948,6 +92988,7 @@ export namespace Prisma {
 
   export type CasinoGameSessionUncheckedUpdateWithoutGameInput = {
     id?: BigIntFieldUpdateOperationsInput | bigint | number
+    uid?: StringFieldUpdateOperationsInput | string
     userId?: BigIntFieldUpdateOperationsInput | bigint | number
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
@@ -92963,6 +93004,7 @@ export namespace Prisma {
 
   export type CasinoGameSessionUncheckedUpdateManyWithoutGameInput = {
     id?: BigIntFieldUpdateOperationsInput | bigint | number
+    uid?: StringFieldUpdateOperationsInput | string
     userId?: BigIntFieldUpdateOperationsInput | bigint | number
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
@@ -93222,6 +93264,7 @@ export namespace Prisma {
 
   export type CasinoGameSessionCreateManyUserInput = {
     id?: bigint | number
+    uid: string
     createdAt?: Date | string
     updatedAt?: Date | string
     lastAccessedAt?: Date | string
@@ -93731,6 +93774,7 @@ export namespace Prisma {
 
   export type CasinoGameSessionUpdateWithoutUserInput = {
     id?: BigIntFieldUpdateOperationsInput | bigint | number
+    uid?: StringFieldUpdateOperationsInput | string
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
     lastAccessedAt?: DateTimeFieldUpdateOperationsInput | Date | string
@@ -93746,6 +93790,7 @@ export namespace Prisma {
 
   export type CasinoGameSessionUncheckedUpdateWithoutUserInput = {
     id?: BigIntFieldUpdateOperationsInput | bigint | number
+    uid?: StringFieldUpdateOperationsInput | string
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
     lastAccessedAt?: DateTimeFieldUpdateOperationsInput | Date | string
@@ -93761,6 +93806,7 @@ export namespace Prisma {
 
   export type CasinoGameSessionUncheckedUpdateManyWithoutUserInput = {
     id?: BigIntFieldUpdateOperationsInput | bigint | number
+    uid?: StringFieldUpdateOperationsInput | string
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
     lastAccessedAt?: DateTimeFieldUpdateOperationsInput | Date | string

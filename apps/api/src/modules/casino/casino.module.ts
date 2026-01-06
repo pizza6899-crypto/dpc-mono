@@ -19,6 +19,12 @@ import { GameSessionService } from './application/game-session.service';
 import { UserStatsModule } from '../user-stats/user-stats.module';
 import { AuditLogModule } from '../audit-log/audit-log.module';
 
+import { CasinoGameSessionMapper } from './infrastructure/mapper/casino-game-session.mapper';
+import { CasinoGameSessionRepository } from './infrastructure/repository/casino-game-session.repository';
+import { CASINO_GAME_SESSION_REPOSITORY } from './ports/out/casino-game-session.repository.token';
+import { CreateCasinoGameSessionService } from './application/create-casino-game-session.service';
+import { FindCasinoGameSessionService } from './application/find-casino-game-session.service';
+
 @Module({
   imports: [
     PrismaModule,
@@ -42,6 +48,13 @@ import { AuditLogModule } from '../audit-log/audit-log.module';
     CasinoRefundService,
     GamePostProcessProcessor,
     GameSessionService,
+    CasinoGameSessionMapper,
+    {
+      provide: CASINO_GAME_SESSION_REPOSITORY,
+      useClass: CasinoGameSessionRepository,
+    },
+    CreateCasinoGameSessionService,
+    FindCasinoGameSessionService,
   ],
   exports: [
     CasinoBalanceService,
@@ -49,6 +62,8 @@ import { AuditLogModule } from '../audit-log/audit-log.module';
     CasinoBonusService,
     CasinoRefundService,
     GameSessionService,
+    CreateCasinoGameSessionService,
+    FindCasinoGameSessionService,
   ],
 })
 export class CasinoModule { }

@@ -9,6 +9,7 @@ import {
 } from '@repo/database';
 import { CasinoGameSession } from '@repo/database';
 import { nowUtc } from 'src/utils/date.util';
+import { generateUid } from 'src/utils/id.util';
 
 @Injectable()
 export class GameSessionService {
@@ -48,6 +49,7 @@ export class GameSessionService {
     // 2. GameSession 생성
     return await tx.casinoGameSession.create({
       data: {
+        uid: generateUid(),
         userId,
         aggregatorType,
         walletCurrency,

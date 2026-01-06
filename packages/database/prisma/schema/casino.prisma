@@ -41,12 +41,13 @@ model CasinoGameTranslation {
 
 model CasinoGameSession {
   id                     BigInt               @id @default(autoincrement())
+  uid                    String               @unique
   userId                 BigInt               @map("user_id")
+  token                  String               @unique
   createdAt              DateTime             @default(now()) @map("created_at")
   updatedAt              DateTime             @updatedAt @map("updated_at")
   lastAccessedAt         DateTime             @default(now()) @map("last_accessed_at")
   aggregatorType         GameAggregatorType   @map("aggregator_type")
-  token                  String               @unique
   walletCurrency         ExchangeCurrencyCode @map("wallet_currency")
   gameCurrency           ExchangeCurrencyCode @map("game_currency")
   exchangeRate           Decimal              @map("exchange_rate") @db.Decimal(32, 18)
@@ -57,6 +58,5 @@ model CasinoGameSession {
   user                   User                 @relation(fields: [userId], references: [id])
 
   @@index([userId])
-  @@index([token])
   @@map("casino_game_sessions")
 }

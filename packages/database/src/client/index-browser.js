@@ -282,6 +282,7 @@ exports.Prisma.CasinoGameTranslationScalarFieldEnum = {
 
 exports.Prisma.CasinoGameSessionScalarFieldEnum = {
   id: 'id',
+  uid: 'uid',
   userId: 'userId',
   createdAt: 'createdAt',
   updatedAt: 'updatedAt',
