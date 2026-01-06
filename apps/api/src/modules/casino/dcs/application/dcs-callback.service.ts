@@ -41,8 +41,8 @@ import { parseDateStringOrThrow } from 'src/utils/date.util';
 import { CasinoBonusService } from '../../application/casino-bonus.service';
 import { WalletCurrencyCode } from 'src/utils/currency.util';
 import { CasinoErrorCode } from '../../constants/casino-error-codes';
-import { Transactional } from '@nestjs-cls/transactional';
 import { FindCasinoGameSessionService } from '../../application/find-casino-game-session.service';
+import { GetUserBalanceService } from 'src/modules/wallet/application/get-user-balance.service';
 
 @Injectable()
 export class DcsCallbackService {
@@ -60,6 +60,7 @@ export class DcsCallbackService {
     private readonly casinoRefundService: CasinoRefundService,
     private readonly casinoBonusService: CasinoBonusService,
     private readonly findCasinoGameSessionService: FindCasinoGameSessionService,
+    private readonly getUserBalanceService: GetUserBalanceService,
   ) {
     this.dcsConfig = this.envService.dcs;
   }
@@ -139,7 +140,6 @@ export class DcsCallbackService {
   /**
    * Wager 콜백 (베팅)
    */
-  @Transactional()
   async wager(body: WagerRequestDto): Promise<WagerResponseDto> {
     const {
       brand_uid,
@@ -288,14 +288,11 @@ export class DcsCallbackService {
       select: {
         GameSession: {
           select: {
+            uid: true,
             exchangeRate: true,
             walletCurrency: true,
-            user: {
-              select: {
-                id: true,
-                dcsId: true,
-              },
-            },
+            userId: true,
+            playerName: true,
           },
         },
       },
@@ -309,11 +306,11 @@ export class DcsCallbackService {
       const gameSession = gameRound.GameSession;
 
       // brand_uid 검증 (보안을 위해)
-      if (gameSession.user.dcsId !== brand_uid) {
+      if (gameSession.playerName !== brand_uid) {
         throw new Error(CasinoErrorCode.INVALID_TXN);
       }
       return await this.concurrencyService.withUserBalanceLock(
-        gameSession.user.id,
+        gameSession.userId,
         async () => {
           return await this.prismaService.$transaction(async (tx) => {
             // 1=cancelWager, 2=cancelEndWager
@@ -323,7 +320,7 @@ export class DcsCallbackService {
               const cancelTransactionResult =
                 await this.casinoRefundService.processCancel({
                   tx,
-                  userId: gameSession.user.id,
+                  userId: gameSession.userId,
                   gameCurrency: currencyEnum,
                   aggregatorTxId: round_id,
                   aggregatorBetId: wager_id,
@@ -347,7 +344,7 @@ export class DcsCallbackService {
               const cancelTransactionResult =
                 await this.casinoRefundService.processCancel({
                   tx,
-                  userId: gameSession.user.id,
+                  userId: gameSession.userId,
                   gameCurrency: currencyEnum,
                   aggregatorTxId: round_id,
                   aggregatorBetId: wager_id,
@@ -378,7 +375,7 @@ export class DcsCallbackService {
       if (gameSession) {
         const userBalance =
           await this.casinoBalanceService.getUserCasinoBalance({
-            userId: gameSession.user.id,
+            userId: gameSession.userId,
             currency: gameSession.walletCurrency,
           });
 
@@ -505,12 +502,8 @@ export class DcsCallbackService {
             id: true,
             exchangeRate: true,
             walletCurrency: true,
-            user: {
-              select: {
-                id: true,
-                dcsId: true,
-              },
-            },
+            userId: true,
+            playerName: true,
           },
         },
         casinoGame: {
@@ -532,7 +525,7 @@ export class DcsCallbackService {
     const gameSession = gameRound.GameSession;
 
     // brand_uid 검증 (보안을 위해)
-    if (gameSession.user.dcsId !== brand_uid) {
+    if (gameSession.playerName !== brand_uid) {
       return getDcsResponse(DcsResponseCode.PLAYER_NOT_EXIST);
     }
 
@@ -543,12 +536,12 @@ export class DcsCallbackService {
 
     try {
       return await this.concurrencyService.withUserBalanceLock(
-        gameSession.user.id,
+        gameSession.userId,
         async () => {
           const result = await this.prismaService.$transaction(async (tx) => {
             const bonusResult = await this.casinoBonusService.processBonus({
               tx,
-              userId: gameSession.user.id,
+              userId: gameSession.userId,
               gameCurrency: currencyEnum,
               transactionTime: parseDateStringOrThrow(transaction_time),
               aggregatorType: GameAggregatorType.DCS,
@@ -619,7 +612,7 @@ export class DcsCallbackService {
       if (gameSession) {
         const userBalance =
           await this.casinoBalanceService.getUserCasinoBalance({
-            userId: gameSession.user.id,
+            userId: gameSession.userId,
             currency: gameSession.walletCurrency,
           });
 
@@ -672,11 +665,7 @@ export class DcsCallbackService {
           select: {
             exchangeRate: true,
             walletCurrency: true,
-            user: {
-              select: {
-                id: true,
-              },
-            },
+            userId: true,
           },
         },
       },
@@ -694,13 +683,13 @@ export class DcsCallbackService {
       const gameSession = gameRound.GameSession;
 
       return await this.concurrencyService.withUserBalanceLock(
-        gameSession.user.id,
+        gameSession.userId,
         async () => {
           const result = await this.prismaService.$transaction(async (tx) => {
             const winTransactionResult = await this.casinoBetService.processWin(
               {
                 tx,
-                userId: gameSession.user.id,
+                userId: gameSession.userId,
                 gameCurrency: gameCurrencyEnum,
                 walletCurrency: gameSession.walletCurrency,
                 winAmountInWalletCurrency: new Prisma.Decimal(amount).div(
@@ -756,7 +745,7 @@ export class DcsCallbackService {
         // gameRound가 존재하는 경우 (DUPLICATE_CREDIT 등)
         const userBalance =
           await this.casinoBalanceService.getUserCasinoBalance({
-            userId: gameRound.GameSession.user.id,
+            userId: gameRound.GameSession.userId,
             currency: gameRound.GameSession.walletCurrency,
           });
 
@@ -894,12 +883,8 @@ export class DcsCallbackService {
         id: true,
         exchangeRate: true,
         walletCurrency: true,
-        user: {
-          select: {
-            id: true,
-            dcsId: true,
-          },
-        },
+        userId: true,
+        playerName: true,
       },
     });
 
@@ -908,18 +893,18 @@ export class DcsCallbackService {
     }
 
     // brand_uid 검증 (보안을 위해)
-    if (gameSession.user.dcsId !== brand_uid) {
+    if (gameSession.playerName !== brand_uid) {
       return getDcsResponse(DcsResponseCode.PLAYER_NOT_EXIST);
     }
 
     try {
       return await this.concurrencyService.withUserBalanceLock(
-        gameSession.user.id,
+        gameSession.userId,
         async () => {
           const result = await this.prismaService.$transaction(async (tx) => {
             const bonusResult = await this.casinoBonusService.processBonus({
               tx,
-              userId: gameSession.user.id,
+              userId: gameSession.userId,
               gameCurrency: gameCurrencyEnum,
               transactionTime: parseDateStringOrThrow(transaction_time),
               aggregatorType: GameAggregatorType.DCS,
@@ -1008,7 +993,7 @@ export class DcsCallbackService {
       if (gameSession) {
         const userBalance =
           await this.casinoBalanceService.getUserCasinoBalance({
-            userId: gameSession.user.id,
+            userId: gameSession.userId,
             currency: gameSession.walletCurrency,
           });
 
@@ -1039,23 +1024,7 @@ export class DcsCallbackService {
   ): Promise<GetDcsBalanceResponseDto> {
     const { brand_uid, token, currency } = body;
     try {
-      const gameSession = await this.prismaService.casinoGameSession.findFirst({
-        where: {
-          aggregatorType: GameAggregatorType.DCS,
-          token: token,
-        },
-        select: {
-          id: true,
-          exchangeRate: true,
-          walletCurrency: true,
-          user: {
-            select: {
-              id: true,
-              dcsId: true,
-            },
-          },
-        },
-      });
+      const gameSession = await this.findCasinoGameSessionService.findByToken(token);
 
       if (!gameSession) {
         this.logger.error(
@@ -1066,19 +1035,29 @@ export class DcsCallbackService {
 
       // token 불일치
       // 토큰이 다른 유저꺼임
-      if (gameSession.user.dcsId !== brand_uid) {
+      if (gameSession.playerName !== brand_uid) {
         this.logger.error(`❌ Get Balance API - 토큰 불일치: ${brand_uid}`);
         return getDcsResponse(DcsResponseCode.NOT_LOGGED_IN);
       }
 
-      const userBalance = await this.casinoBalanceService.getUserCasinoBalance({
-        userId: gameSession.user.id,
+      const balanceResult = await this.getUserBalanceService.execute({
+        userId: gameSession.userId,
         currency: gameSession.walletCurrency,
       });
 
-      // getUserCasinoBalance는 잔액이 없으면 에러를 throw하므로 null 체크 불필요
+      // currency를 지정했으므로 단일 UserWallet 반환됨
+      // Array.isArray 체크를 통해 타입 안전성 확보 (혹은 as UserWallet)
+      const userWallet = Array.isArray(balanceResult.wallet)
+        ? balanceResult.wallet[0]
+        : balanceResult.wallet;
+
+      if (!userWallet) {
+        this.logger.error(`❌ Get Balance API - 지갑 생성 실패: ${brand_uid}`);
+        return getDcsResponse(DcsResponseCode.SYSTEM_ERROR);
+      }
+
       const exchangeRateBalance = gameSession.exchangeRate.mul(
-        userBalance.mainBalance.add(userBalance.bonusBalance),
+        userWallet.totalBalance
       );
 
       return getDcsResponse(DcsResponseCode.SUCCESS, {

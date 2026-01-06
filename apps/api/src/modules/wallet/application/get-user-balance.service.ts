@@ -1,11 +1,8 @@
 // src/modules/wallet/application/get-user-balance.service.ts
-import { Inject, Injectable, Logger } from '@nestjs/common';
+import { Injectable, Logger } from '@nestjs/common';
 import { WalletQueryService } from './wallet-query.service';
-import { USER_WALLET_REPOSITORY } from '../ports/out/user-wallet.repository.token';
-import type { UserWalletRepositoryPort } from '../ports/out/user-wallet.repository.port';
 import { UserWallet } from '../domain';
 import type { ExchangeCurrencyCode } from '@repo/database';
-import { WALLET_CURRENCIES } from 'src/utils/currency.util';
 
 interface GetUserBalanceParams {
   userId: bigint;

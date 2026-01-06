@@ -15,6 +15,7 @@ import { DcsGameRefreshService } from './application/dcs-game-refresh.service';
 import { QueueModule } from 'src/infrastructure/queue/queue.module';
 import { DcsFetchGameReplayUrlProcessor } from './processors/dcs-fetch-game-replay-url.processor';
 import { AuditLogModule } from 'src/modules/audit-log/audit-log.module';
+import { WalletModule } from 'src/modules/wallet/wallet.module';
 
 @Module({
   imports: [
@@ -26,6 +27,7 @@ import { AuditLogModule } from 'src/modules/audit-log/audit-log.module';
     forwardRef(() => CasinoModule),
     QueueModule,
     AuditLogModule,
+    WalletModule,
   ],
   controllers: [DcsTestController, DcsCallbackController],
   providers: [
