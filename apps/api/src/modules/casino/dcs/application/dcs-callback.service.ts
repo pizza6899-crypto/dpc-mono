@@ -1,5 +1,4 @@
 import { Injectable, Logger } from '@nestjs/common';
-import { PrismaService } from 'src/infrastructure/prisma/prisma.service';
 import { EnvService } from 'src/common/env/env.service';
 import {
   WagerRequestDto,
@@ -18,7 +17,6 @@ import {
   PromoPayoutResponseDto,
   DcsCommonResponseDto,
 } from '../dtos/callback.dto';
-import { ConcurrencyService } from 'src/common/concurrency/concurrency.service';
 import { DcsConfig } from 'src/common/env/env.types';
 import * as crypto from 'crypto';
 import {
@@ -43,6 +41,9 @@ import { WalletCurrencyCode } from 'src/utils/currency.util';
 import { CasinoErrorCode } from '../../constants/casino-error-codes';
 import { FindCasinoGameSessionService } from '../../application/find-casino-game-session.service';
 import { GetUserBalanceService } from 'src/modules/wallet/application/get-user-balance.service';
+import { InjectTransaction, Transactional } from '@nestjs-cls/transactional';
+import type { Transaction } from '@nestjs-cls/transactional';
+import { TransactionalAdapterPrisma } from '@nestjs-cls/transactional-adapter-prisma';
 
 @Injectable()
 export class DcsCallbackService {
@@ -50,10 +51,9 @@ export class DcsCallbackService {
   private readonly dcsConfig: DcsConfig;
 
   constructor(
-
-    private readonly prismaService: PrismaService,
+    @InjectTransaction()
+    private readonly tx: Transaction<TransactionalAdapterPrisma>,
     private readonly envService: EnvService,
-    private readonly concurrencyService: ConcurrencyService,
     private readonly dcsMapperService: DcsMapperService,
     private readonly queueService: QueueService,
     private readonly casinoBetService: CasinoBetService,
@@ -140,6 +140,7 @@ export class DcsCallbackService {
   /**
    * Wager 콜백 (베팅)
    */
+  @Transactional()
   async wager(body: WagerRequestDto): Promise<WagerResponseDto> {
     const {
       brand_uid,
@@ -187,44 +188,36 @@ export class DcsCallbackService {
     }
 
     try {
-      return await this.concurrencyService.withUserBalanceLock(
-        gameSession.userId,
-        async () => {
-          return await this.prismaService.$transaction(async (tx) => {
-            const betTransactionResult = await this.casinoBetService.processBet(
-              {
-                tx,
-                userId: gameSession.userId,
-                betAmountInGameCurrency: new Prisma.Decimal(amount),
-                betAmountInWalletCurrency: new Prisma.Decimal(amount).div(
-                  gameSession.exchangeRate,
-                ),
-                walletCurrency: gameSession.walletCurrency,
-                gameSessionId: gameSession.id!,
-                aggregatorTxId: round_id,
-                aggregatorBetId: wager_id,
-                aggregatorType: GameAggregatorType.DCS,
-                aggregatorGameId: game_id,
-                provider: providerEnum,
-                gameId: gameSession.casinoGameId!,
-                betTime: transaction_time,
-                jackpotContributionAmount,
-                betType: bet_type === 1 ? BetType.NORMAL : BetType.TIP,
-              },
-            );
-
-            return getDcsResponse(DcsResponseCode.SUCCESS, {
-              balance: gameSession.exchangeRate.mul(
-                betTransactionResult.afterMainBalance.add(
-                  betTransactionResult.afterBonusBalance,
-                ),
-              ),
-              brand_uid,
-              currency,
-            });
-          });
+      const betTransactionResult = await this.casinoBetService.processBet(
+        {
+          userId: gameSession.userId,
+          betAmountInGameCurrency: new Prisma.Decimal(amount),
+          betAmountInWalletCurrency: new Prisma.Decimal(amount).div(
+            gameSession.exchangeRate,
+          ),
+          walletCurrency: gameSession.walletCurrency,
+          gameSessionId: gameSession.id!,
+          aggregatorTxId: round_id,
+          aggregatorBetId: wager_id,
+          aggregatorType: GameAggregatorType.DCS,
+          aggregatorGameId: game_id,
+          provider: providerEnum,
+          gameId: gameSession.casinoGameId!,
+          betTime: transaction_time,
+          jackpotContributionAmount,
+          betType: bet_type === 1 ? BetType.NORMAL : BetType.TIP,
         },
       );
+
+      return getDcsResponse(DcsResponseCode.SUCCESS, {
+        balance: gameSession.exchangeRate.mul(
+          betTransactionResult.afterMainBalance.add(
+            betTransactionResult.afterBonusBalance,
+          ),
+        ),
+        brand_uid,
+        currency,
+      });
     } catch (error) {
       this.logger.error(error, `Wager 콜백 실패`);
 
@@ -266,6 +259,7 @@ export class DcsCallbackService {
   /**
    * Cancel Wager 콜백 (베팅 취소)
    */
+  @Transactional()
   async cancelWager(
     body: CancelWagerRequestDto,
   ): Promise<CancelWagerResponseDto> {
@@ -283,7 +277,7 @@ export class DcsCallbackService {
       this.dcsMapperService.convertDcsCurrencyToGamingCurrency(currency);
 
     // round_id로 gameRound를 조회하여 GameSession을 통해 사용자 정보 가져오기
-    const gameRound = await this.prismaService.gameRound.findUnique({
+    const gameRound = await this.tx.gameRound.findUnique({
       where: {
         aggregatorTxId_aggregatorType: {
           aggregatorTxId: round_id,
@@ -314,62 +308,53 @@ export class DcsCallbackService {
       if (gameSession.playerName !== brand_uid) {
         throw new Error(CasinoErrorCode.INVALID_TXN);
       }
-      return await this.concurrencyService.withUserBalanceLock(
-        gameSession.userId,
-        async () => {
-          return await this.prismaService.$transaction(async (tx) => {
-            // 1=cancelWager, 2=cancelEndWager
-            if (wager_type == 1) {
-              // 게임 일반 취소
-              // 이전에 차감했던 베팅 금액을 플레이어의 지갑으로 돌려줍니다.
-              const cancelTransactionResult =
-                await this.casinoRefundService.processCancel({
-                  tx,
-                  userId: gameSession.userId,
-                  gameCurrency: currencyEnum,
-                  aggregatorTxId: round_id,
-                  aggregatorBetId: wager_id,
-                  aggregatorType: GameAggregatorType.DCS,
-                  cancelTime: parseDateStringOrThrow(transaction_time),
-                  isEndRound: is_endround,
-                });
-              return getDcsResponse(DcsResponseCode.SUCCESS, {
-                balance: gameSession.exchangeRate.mul(
-                  cancelTransactionResult.afterMainBalance.add(
-                    cancelTransactionResult.afterBonusBalance,
-                  ),
-                ),
-                brand_uid,
-                currency,
-              });
-            } else {
-              // 게임 종료 취소
-              // 플레이어의 지갑에서 금액을 다시 차감합니다.
-              // 보너스 콤프 이런거 지급했던거 다 롤백해야함.
-              const cancelTransactionResult =
-                await this.casinoRefundService.processCancel({
-                  tx,
-                  userId: gameSession.userId,
-                  gameCurrency: currencyEnum,
-                  aggregatorTxId: round_id,
-                  aggregatorBetId: wager_id,
-                  aggregatorType: GameAggregatorType.DCS,
-                  cancelTime: parseDateStringOrThrow(transaction_time),
-                  isEndRound: is_endround,
-                });
-              return getDcsResponse(DcsResponseCode.SUCCESS, {
-                balance: gameSession.exchangeRate.mul(
-                  cancelTransactionResult.afterMainBalance.add(
-                    cancelTransactionResult.afterBonusBalance,
-                  ),
-                ),
-                brand_uid,
-                currency,
-              });
-            }
+      // 1=cancelWager, 2=cancelEndWager
+      if (wager_type == 1) {
+        // 게임 일반 취소
+        // 이전에 차감했던 베팅 금액을 플레이어의 지갑으로 돌려줍니다.
+        const cancelTransactionResult =
+          await this.casinoRefundService.processCancel({
+            userId: gameSession.userId,
+            gameCurrency: currencyEnum,
+            aggregatorTxId: round_id,
+            aggregatorBetId: wager_id,
+            aggregatorType: GameAggregatorType.DCS,
+            cancelTime: parseDateStringOrThrow(transaction_time),
+            isEndRound: is_endround,
           });
-        },
-      );
+        return getDcsResponse(DcsResponseCode.SUCCESS, {
+          balance: gameSession.exchangeRate.mul(
+            cancelTransactionResult.afterMainBalance.add(
+              cancelTransactionResult.afterBonusBalance,
+            ),
+          ),
+          brand_uid,
+          currency,
+        });
+      } else {
+        // 게임 종료 취소
+        // 플레이어의 지갑에서 금액을 다시 차감합니다.
+        // 보너스 콤프 이런거 지급했던거 다 롤백해야함.
+        const cancelTransactionResult =
+          await this.casinoRefundService.processCancel({
+            userId: gameSession.userId,
+            gameCurrency: currencyEnum,
+            aggregatorTxId: round_id,
+            aggregatorBetId: wager_id,
+            aggregatorType: GameAggregatorType.DCS,
+            cancelTime: parseDateStringOrThrow(transaction_time),
+            isEndRound: is_endround,
+          });
+        return getDcsResponse(DcsResponseCode.SUCCESS, {
+          balance: gameSession.exchangeRate.mul(
+            cancelTransactionResult.afterMainBalance.add(
+              cancelTransactionResult.afterBonusBalance,
+            ),
+          ),
+          brand_uid,
+          currency,
+        });
+      }
     } catch (error) {
       this.logger.error(`❌ Cancel Wager API 실패:`, error);
 
@@ -396,7 +381,7 @@ export class DcsCallbackService {
         // 유저 월렛 중 잔액이 가장 큰 월렛 찾아서
         // 게임 커런시로 변환해서 반환 처리.
 
-        const user = await this.prismaService.user.findUnique({
+        const user = await this.tx.user.findUnique({
           where: {
             dcsId: brand_uid,
           },
@@ -431,7 +416,7 @@ export class DcsCallbackService {
           if (maxBalanceCurrency && maxBalance.gt(0)) {
             // 해당 currency로 gameSession 찾기
             const maxBalanceGameSession =
-              await this.prismaService.casinoGameSession.findFirst({
+              await this.tx.casinoGameSession.findFirst({
                 where: {
                   userId: user.id,
                   aggregatorType: GameAggregatorType.DCS,
@@ -475,6 +460,7 @@ export class DcsCallbackService {
   /**
    * Append Wager 콜백 (추가 베팅)
    */
+  @Transactional()
   async appendWager(
     body: AppendWagerRequestDto,
   ): Promise<AppendWagerResponseDto> {
@@ -497,7 +483,7 @@ export class DcsCallbackService {
     const isEndRound = is_endround === true;
 
     // round_id로 gameRound를 조회하여 GameSession을 통해 사용자 정보 가져오기
-    const gameRound = await this.prismaService.gameRound.findUnique({
+    const gameRound = await this.tx.gameRound.findUnique({
       where: {
         aggregatorTxId_aggregatorType: {
           aggregatorTxId: round_id,
@@ -543,74 +529,66 @@ export class DcsCallbackService {
     }
 
     try {
-      return await this.concurrencyService.withUserBalanceLock(
-        gameSession.userId,
-        async () => {
-          const result = await this.prismaService.$transaction(async (tx) => {
-            const bonusResult = await this.casinoBonusService.processBonus({
-              tx,
-              userId: gameSession.userId,
-              gameCurrency: currencyEnum,
-              transactionTime: parseDateStringOrThrow(transaction_time),
+      const bonusResult = await this.casinoBonusService.processBonus({
+        userId: gameSession.userId,
+        gameCurrency: currencyEnum,
+        transactionTime: parseDateStringOrThrow(transaction_time),
+        aggregatorType: GameAggregatorType.DCS,
+        provider: providerEnum,
+        bonusType: BonusType.PROMOTION,
+        bonusAmountInGameCurrency: new Prisma.Decimal(amount),
+        aggregatorRoundId: round_id,
+        aggregatorWagerId: wager_id,
+        isEndRound: isEndRound,
+        gameId: gameRound.casinoGame!.id,
+        description: description,
+        gameSessionId: gameRound.GameSession.id, // 추가
+      });
+
+      const result = {
+        response: getDcsResponse(DcsResponseCode.SUCCESS, {
+          balance: gameSession.exchangeRate.mul(
+            bonusResult.afterMainBalance.add(
+              bonusResult.afterBonusBalance,
+            ),
+          ),
+          brand_uid,
+          currency,
+        }),
+      };
+
+      if (isEndRound) {
+        const updatedGameRound = await this.tx.gameRound.update({
+          where: {
+            aggregatorTxId_aggregatorType: {
+              aggregatorTxId: round_id,
               aggregatorType: GameAggregatorType.DCS,
-              provider: providerEnum,
-              bonusType: BonusType.PROMOTION,
-              bonusAmountInGameCurrency: new Prisma.Decimal(amount),
-              aggregatorRoundId: round_id,
-              aggregatorWagerId: wager_id,
-              isEndRound: isEndRound,
-              gameId: gameRound.casinoGame!.id,
-              description: description,
-              gameSessionId: gameRound.GameSession.id, // 추가
-            });
-
-            return {
-              response: getDcsResponse(DcsResponseCode.SUCCESS, {
-                balance: gameSession.exchangeRate.mul(
-                  bonusResult.afterMainBalance.add(
-                    bonusResult.afterBonusBalance,
-                  ),
-                ),
-                brand_uid,
-                currency,
-              }),
-            };
-          });
-
-          if (isEndRound) {
-            const updatedGameRound = await this.prismaService.gameRound.update({
-              where: {
-                aggregatorTxId_aggregatorType: {
-                  aggregatorTxId: round_id,
-                  aggregatorType: GameAggregatorType.DCS,
-                },
+            },
+          },
+          data: {
+            completedAt: parseDateStringOrThrow(transaction_time),
+            transaction: {
+              update: {
+                status: TransactionStatus.COMPLETED,
               },
-              data: {
-                completedAt: parseDateStringOrThrow(transaction_time),
-                transaction: {
-                  update: {
-                    status: TransactionStatus.COMPLETED,
-                  },
-                },
-              },
-              select: {
-                id: true,
-              },
-            });
+            },
+          },
+          select: {
+            id: true,
+          },
+        });
 
-            await this.queueService.addDcsFetchGameReplayUrlJob({
-              gameRoundId: updatedGameRound.id.toString(),
-            });
+        await this.queueService.addDcsFetchGameReplayUrlJob({
+          gameRoundId: updatedGameRound.id.toString(),
+        });
 
-            await this.queueService.addGamePostProcessJob({
-              gameRoundId: updatedGameRound.id.toString(),
-              waitForPushBet: false,
-            });
-          }
+        await this.queueService.addGamePostProcessJob({
+          gameRoundId: updatedGameRound.id.toString(),
+          waitForPushBet: false,
+        });
+      }
 
-          return result.response;
-        },
-      );
+      return result.response;
     } catch (error) {
       this.logger.error(`❌ Append Wager API 실패:`, error);
 
@@ -649,6 +627,7 @@ export class DcsCallbackService {
   /**
    * End Wager 콜백 (베팅 종료 및 지급)
    */
+  @Transactional()
   async endWager(body: EndWagerRequestDto): Promise<EndWagerResponseDto> {
     const {
       brand_uid,
@@ -664,7 +643,7 @@ export class DcsCallbackService {
       this.dcsMapperService.convertDcsCurrencyToGamingCurrency(currency);
     const isEndRound = is_endround === true;
 
-    const gameRound = await this.prismaService.gameRound.findUnique({
+    const gameRound = await this.tx.gameRound.findUnique({
       where: {
         aggregatorTxId_aggregatorType: {
           aggregatorTxId: round_id,
@@ -693,59 +672,51 @@ export class DcsCallbackService {
 
       const gameSession = gameRound.GameSession;
 
-      return await this.concurrencyService.withUserBalanceLock(
-        gameSession.userId,
-        async () => {
-          const result = await this.prismaService.$transaction(async (tx) => {
-            const winTransactionResult = await this.casinoBetService.processWin(
-              {
-                tx,
-                userId: gameSession.userId,
-                gameCurrency: gameCurrencyEnum,
-                walletCurrency: gameSession.walletCurrency,
-                winAmountInWalletCurrency: new Prisma.Decimal(amount).div(
-                  gameSession.exchangeRate,
-                ),
-                aggregatorType: GameAggregatorType.DCS,
-                winAmountInGameCurrency: new Prisma.Decimal(amount),
-                winTime: transaction_time,
-                aggregatorTxId: round_id,
-                aggregatorWinId: wager_id,
-                isEndRound: isEndRound,
-              },
-            );
-
-            return {
-              response: getDcsResponse(DcsResponseCode.SUCCESS, {
-                balance: gameSession.exchangeRate.mul(
-                  winTransactionResult.afterMainBalance.add(
-                    winTransactionResult.afterBonusBalance,
-                  ),
-                ),
-                brand_uid,
-                currency,
-              }),
-              gameRoundId: winTransactionResult.gameRoundId,
-            };
-          });
-
-          // 게임 라운드가 종료된 경우에만 큐 추가
-          if (isEndRound && result.gameRoundId) {
-            // 1. 게임 리플레이 URL 조회 큐 추가
-            await this.queueService.addDcsFetchGameReplayUrlJob({
-              gameRoundId: result.gameRoundId.toString(),
-            });
-
-            // 2. 게임 후처리 큐 추가 (콤프, 롤링, VIP 등)
-            await this.queueService.addGamePostProcessJob({
-              gameRoundId: result.gameRoundId.toString(),
-              waitForPushBet: false,
-            });
-          }
-
-          return result.response;
+      const winTransactionResult = await this.casinoBetService.processWin(
+        {
+          userId: gameSession.userId,
+          gameCurrency: gameCurrencyEnum,
+          walletCurrency: gameSession.walletCurrency,
+          winAmountInWalletCurrency: new Prisma.Decimal(amount).div(
+            gameSession.exchangeRate,
+          ),
+          aggregatorType: GameAggregatorType.DCS,
+          winAmountInGameCurrency: new Prisma.Decimal(amount),
+          winTime: transaction_time,
+          aggregatorTxId: round_id,
+          aggregatorWinId: wager_id,
+          isEndRound: isEndRound,
         },
       );
+
+      const result = {
+        response: getDcsResponse(DcsResponseCode.SUCCESS, {
+          balance: gameSession.exchangeRate.mul(
+            winTransactionResult.afterMainBalance.add(
+              winTransactionResult.afterBonusBalance,
+            ),
+          ),
+          brand_uid,
+          currency,
+        }),
+        gameRoundId: winTransactionResult.gameRoundId,
+      };
+
+      // 게임 라운드가 종료된 경우에만 큐 추가
+      if (isEndRound && result.gameRoundId) {
+        // 1. 게임 리플레이 URL 조회 큐 추가
+        await this.queueService.addDcsFetchGameReplayUrlJob({
+          gameRoundId: result.gameRoundId.toString(),
+        });
+
+        // 2. 게임 후처리 큐 추가 (콤프, 롤링, VIP 등)
+        await this.queueService.addGamePostProcessJob({
+          gameRoundId: result.gameRoundId.toString(),
+          waitForPushBet: false,
+        });
+      }
+
+      return result.response;
     } catch (error) {
       this.logger.error(`❌ End Wager API 실패:`, error);
 
@@ -771,7 +742,7 @@ export class DcsCallbackService {
       } else {
         // gameRound가 없는 경우 (INVALID_TXN 등)
         // brand_uid로 사용자를 찾아서 밸런스를 가져옴
-        const user = await this.prismaService.user.findUnique({
+        const user = await this.tx.user.findUnique({
           where: { dcsId: brand_uid },
           select: {
             id: true,
@@ -781,7 +752,7 @@ export class DcsCallbackService {
         if (user) {
           // gameCurrency로 walletCurrency를 추론하거나, 기본값 사용
           // 또는 GameSession을 조회해서 exchangeRate와 walletCurrency를 가져올 수 있음
-          const gameSession = await this.prismaService.casinoGameSession.findFirst({
+          const gameSession = await this.tx.casinoGameSession.findFirst({
             where: {
               aggregatorType: GameAggregatorType.DCS,
               user: {
@@ -836,6 +807,7 @@ export class DcsCallbackService {
   /**
    * Free Spin Result 콜백 (무료 스핀 결과)
    */
+  @Transactional()
   async freeSpinResult(
     body: FreeSpinResultRequestDto,
   ): Promise<FreeSpinResultResponseDto> {
@@ -859,7 +831,7 @@ export class DcsCallbackService {
     const isEndRound = is_endround === true;
 
     // 1. 사용자 조회
-    const user = await this.prismaService.user.findUnique({
+    const user = await this.tx.user.findUnique({
       where: { dcsId: brand_uid },
       select: {
         id: true,
@@ -871,7 +843,7 @@ export class DcsCallbackService {
     }
 
     // 2. 게임 조회
-    const game = await this.prismaService.casinoGame.findFirst({
+    const game = await this.tx.casinoGame.findFirst({
       where: {
         aggregatorType: GameAggregatorType.DCS,
         provider: providerEnum,
@@ -888,7 +860,7 @@ export class DcsCallbackService {
     }
 
     // 3. 게임 세션 찾기 (최근 세션)
-    const gameSession = await this.prismaService.casinoGameSession.findFirst({
+    const gameSession = await this.tx.casinoGameSession.findFirst({
       where: {
         userId: user.id,
         aggregatorType: GameAggregatorType.DCS,
@@ -917,49 +889,65 @@ export class DcsCallbackService {
     }
 
     try {
-      return await this.concurrencyService.withUserBalanceLock(
-        gameSession.userId,
-        async () => {
-          const result = await this.prismaService.$transaction(async (tx) => {
-            const bonusResult = await this.casinoBonusService.processBonus({
-              tx,
-              userId: gameSession.userId,
-              gameCurrency: gameCurrencyEnum,
-              transactionTime: parseDateStringOrThrow(transaction_time),
+      const bonusResult = await this.casinoBonusService.processBonus({
+        userId: gameSession.userId,
+        gameCurrency: gameCurrencyEnum,
+        transactionTime: parseDateStringOrThrow(transaction_time),
+        aggregatorType: GameAggregatorType.DCS,
+        provider: providerEnum,
+        bonusType: BonusType.IN_GAME_BONUS,
+        bonusAmountInGameCurrency: new Prisma.Decimal(amount),
+        aggregatorFreespinId: freespin_id?.toString(),
+        aggregatorRoundId: round_id,
+        aggregatorWagerId: wager_id,
+        isEndRound: isEndRound,
+        gameId: game.id,
+        gameSessionId: gameSession.id,
+        description: freespin_description,
+      });
+
+      const result = {
+        response: getDcsResponse(DcsResponseCode.SUCCESS, {
+          balance: gameSession.exchangeRate.mul(
+            bonusResult.afterMainBalance.add(
+              bonusResult.afterBonusBalance,
+            ),
+          ),
+          brand_uid,
+          currency,
+        }),
+      };
+
+      // isEndRound일 때 게임 라운드 완료 처리 및 큐 작업 추가
+      // round_id로 gameRound를 찾아서 업데이트 (존재하는 경우에만)
+      if (isEndRound) {
+        const gameRound = await this.tx.gameRound.findUnique({
+          where: {
+            aggregatorTxId_aggregatorType: {
+              aggregatorTxId: round_id,
               aggregatorType: GameAggregatorType.DCS,
-              provider: providerEnum,
-              bonusType: BonusType.IN_GAME_BONUS,
-              bonusAmountInGameCurrency: new Prisma.Decimal(amount),
-              aggregatorFreespinId: freespin_id?.toString(),
-              aggregatorRoundId: round_id,
-              aggregatorWagerId: wager_id,
-              isEndRound: isEndRound,
-              gameId: game.id,
-              gameSessionId: gameSession.id,
-              description: freespin_description,
-            });
+            },
+          },
+          select: {
+            id: true,
+          },
+        });
 
-            return {
-              response: getDcsResponse(DcsResponseCode.SUCCESS, {
-                balance: gameSession.exchangeRate.mul(
-                  bonusResult.afterMainBalance.add(
-                    bonusResult.afterBonusBalance,
-                  ),
-                ),
-                brand_uid,
-                currency,
-              }),
-            };
-          });
-
-          // isEndRound일 때 게임 라운드 완료 처리 및 큐 작업 추가
-          // round_id로 gameRound를 찾아서 업데이트 (존재하는 경우에만)
-          if (isEndRound) {
-            const gameRound = await this.prismaService.gameRound.findUnique({
+        if (gameRound) {
+          const updatedGameRound =
+            await this.tx.gameRound.update({
               where: {
                 aggregatorTxId_aggregatorType: {
                   aggregatorTxId: round_id,
                   aggregatorType: GameAggregatorType.DCS,
+                },
+              },
+              data: {
+                completedAt: parseDateStringOrThrow(transaction_time),
+                transaction: {
+                  update: {
+                    status: TransactionStatus.COMPLETED,
+                  },
                 },
               },
               select: {
@@ -967,42 +955,18 @@ export class DcsCallbackService {
               },
             });
 
-            if (gameRound) {
-              const updatedGameRound =
-                await this.prismaService.gameRound.update({
-                  where: {
-                    aggregatorTxId_aggregatorType: {
-                      aggregatorTxId: round_id,
-                      aggregatorType: GameAggregatorType.DCS,
-                    },
-                  },
-                  data: {
-                    completedAt: parseDateStringOrThrow(transaction_time),
-                    transaction: {
-                      update: {
-                        status: TransactionStatus.COMPLETED,
-                      },
-                    },
-                  },
-                  select: {
-                    id: true,
-                  },
-                });
+          await this.queueService.addDcsFetchGameReplayUrlJob({
+            gameRoundId: updatedGameRound.id.toString(),
+          });
 
-              await this.queueService.addDcsFetchGameReplayUrlJob({
-                gameRoundId: updatedGameRound.id.toString(),
-              });
+          await this.queueService.addGamePostProcessJob({
+            gameRoundId: updatedGameRound.id.toString(),
+            waitForPushBet: false,
+          });
+        }
+      }
 
-              await this.queueService.addGamePostProcessJob({
-                gameRoundId: updatedGameRound.id.toString(),
-                waitForPushBet: false,
-              });
-            }
-          }
-
-          return result.response;
-        },
-      );
+      return result.response;
     } catch (error) {
       this.logger.error(`❌ Free Spin Result API 실패:`, error);
 
@@ -1101,6 +1065,7 @@ export class DcsCallbackService {
   /**
    * Promo Payout 콜백 (프로모션 지급)
    */
+  @Transactional()
   async promoPayout(
     body: PromoPayoutRequestDto,
   ): Promise<PromoPayoutResponseDto> {
@@ -1120,7 +1085,7 @@ export class DcsCallbackService {
     const transactionTime = parseDateStringOrThrow(transaction_time);
     const bonusAmount = new Prisma.Decimal(amount);
 
-    const user = await this.prismaService.user.findUnique({
+    const user = await this.tx.user.findUnique({
       where: { dcsId: brand_uid },
       select: {
         id: true,
@@ -1135,49 +1100,46 @@ export class DcsCallbackService {
     }
 
     try {
-      return await this.prismaService.$transaction(async (tx) => {
-        // gameSession을 먼저 조회하여 exchangeRate 가져오기
-        const gameSession = await tx.casinoGameSession.findFirst({
-          where: {
-            userId: user.id,
-            aggregatorType: GameAggregatorType.DCS,
-            gameCurrency: gameCurrencyEnum,
-          },
-          select: {
-            exchangeRate: true,
-            walletCurrency: true,
-          },
-          orderBy: {
-            createdAt: 'desc',
-          },
-        });
-
-        const bonusResult = await this.casinoBonusService.processBonus({
-          tx,
+      // gameSession을 먼저 조회하여 exchangeRate 가져오기
+      const gameSession = await this.tx.casinoGameSession.findFirst({
+        where: {
           userId: user.id,
-          gameCurrency: gameCurrencyEnum,
-          transactionTime: transactionTime,
           aggregatorType: GameAggregatorType.DCS,
-          provider: providerEnum,
-          bonusType: BonusType.PROMOTION,
-          bonusAmountInGameCurrency: bonusAmount,
-          aggregatorPromotionId: promotion_id,
-          aggregatorTransactionId: trans_id,
-        });
+          gameCurrency: gameCurrencyEnum,
+        },
+        select: {
+          exchangeRate: true,
+          walletCurrency: true,
+        },
+        orderBy: {
+          createdAt: 'desc',
+        },
+      });
 
-        // gameSession이 있으면 exchangeRate를 곱해서 게임 통화로 변환
-        // 없으면 월렛 통화 값 그대로 반환 (fallback)
-        const balance = gameSession
-          ? gameSession.exchangeRate.mul(
-            bonusResult.afterMainBalance.add(bonusResult.afterBonusBalance),
-          )
-          : bonusResult.afterMainBalance.add(bonusResult.afterBonusBalance);
+      const bonusResult = await this.casinoBonusService.processBonus({
+        userId: user.id,
+        gameCurrency: gameCurrencyEnum,
+        transactionTime: transactionTime,
+        aggregatorType: GameAggregatorType.DCS,
+        provider: providerEnum,
+        bonusType: BonusType.PROMOTION,
+        bonusAmountInGameCurrency: bonusAmount,
+        aggregatorPromotionId: promotion_id,
+        aggregatorTransactionId: trans_id,
+      });
 
-        return getDcsResponse(DcsResponseCode.SUCCESS, {
-          balance,
-          brand_uid,
-          currency,
-        });
+      // gameSession이 있으면 exchangeRate를 곱해서 게임 통화로 변환
+      // 없으면 월렛 통화 값 그대로 반환 (fallback)
+      const balance = gameSession
+        ? gameSession.exchangeRate.mul(
+          bonusResult.afterMainBalance.add(bonusResult.afterBonusBalance),
+        )
+        : bonusResult.afterMainBalance.add(bonusResult.afterBonusBalance);
+
+      return getDcsResponse(DcsResponseCode.SUCCESS, {
+        balance,
+        brand_uid,
+        currency,
       });
     } catch (error) {
       this.logger.error(`❌ Promo Payout API 실패:`, error);
@@ -1186,7 +1148,7 @@ export class DcsCallbackService {
         case 'BONUS_ALREADY_PROCESSED': {
           // 이미 처리된 보너스인 경우에도 실제 사용자 잔액 반환
           try {
-            const gameSession = await this.prismaService.casinoGameSession.findFirst({
+            const gameSession = await this.tx.casinoGameSession.findFirst({
               where: {
                 userId: user.id,
                 aggregatorType: GameAggregatorType.DCS,

@@ -1,5 +1,4 @@
 import { Injectable, Logger } from '@nestjs/common';
-import { PrismaService } from 'src/infrastructure/prisma/prisma.service';
 import { GameProvider, Prisma } from '@repo/database';
 import {
   GameAggregatorType,
@@ -14,9 +13,11 @@ import {
 } from 'src/utils/currency.util';
 import { UpdateUserBalanceService } from 'src/modules/wallet/application/update-user-balance.service';
 import { BalanceType, UpdateOperation } from 'src/modules/wallet/domain';
+import { TransactionalAdapterPrisma } from '@nestjs-cls/transactional-adapter-prisma';
+import { InjectTransaction } from '@nestjs-cls/transactional';
+import type { Transaction } from '@nestjs-cls/transactional';
 
 export interface ProcessBonusParams {
-  tx: Prisma.TransactionClient;
   userId: bigint;
   gameCurrency: GamingCurrencyCode;
   transactionTime: Date;
@@ -49,7 +50,8 @@ export interface ProcessBonusResult {
 export class CasinoBonusService {
 
   constructor(
-    private readonly prismaService: PrismaService,
+    @InjectTransaction()
+    private readonly tx: Transaction<TransactionalAdapterPrisma>,
     private readonly updateUserBalanceService: UpdateUserBalanceService,
   ) { }
 
@@ -61,7 +63,6 @@ export class CasinoBonusService {
    */
   async processBonus(params: ProcessBonusParams): Promise<ProcessBonusResult> {
     const {
-      tx = this.prismaService,
       userId,
       gameCurrency,
       transactionTime,
@@ -85,7 +86,7 @@ export class CasinoBonusService {
 
     if (aggregatorRoundId && aggregatorWagerId) {
       // appendWager 케이스: round_id + wager_id 조합으로 체크
-      existingBonusTransaction = await tx.bonusDetail.findFirst({
+      existingBonusTransaction = await this.tx.bonusDetail.findFirst({
         where: {
           aggregatorType,
           provider,
@@ -98,7 +99,7 @@ export class CasinoBonusService {
       });
     } else if (aggregatorRoundId) {
       // round_id만 있는 경우
-      existingBonusTransaction = await tx.bonusDetail.findFirst({
+      existingBonusTransaction = await this.tx.bonusDetail.findFirst({
         where: {
           aggregatorType,
           provider,
@@ -110,7 +111,7 @@ export class CasinoBonusService {
       });
     } else if (aggregatorWagerId) {
       // wager_id만 있는 경우
-      existingBonusTransaction = await tx.bonusDetail.findFirst({
+      existingBonusTransaction = await this.tx.bonusDetail.findFirst({
         where: {
           aggregatorType,
           provider,
@@ -122,7 +123,7 @@ export class CasinoBonusService {
       });
     } else if (aggregatorTransactionId) {
       // transaction_id가 있는 경우
-      existingBonusTransaction = await tx.bonusDetail.findFirst({
+      existingBonusTransaction = await this.tx.bonusDetail.findFirst({
         where: {
           aggregatorType,
           provider,
@@ -134,7 +135,7 @@ export class CasinoBonusService {
       });
     } else if (aggregatorPromotionId) {
       // promotion_id가 있는 경우
-      existingBonusTransaction = await tx.bonusDetail.findFirst({
+      existingBonusTransaction = await this.tx.bonusDetail.findFirst({
         where: {
           aggregatorType,
           provider,
@@ -156,7 +157,7 @@ export class CasinoBonusService {
 
     // gameSessionId가 있으면 직접 조회, 없으면 round_id로 찾기
     if (params.gameSessionId) {
-      gameSession = await tx.casinoGameSession.findUnique({
+      gameSession = await this.tx.casinoGameSession.findUnique({
         where: { id: params.gameSessionId },
         select: {
           walletCurrency: true,
@@ -165,7 +166,7 @@ export class CasinoBonusService {
       });
     } else if (aggregatorRoundId) {
       // round_id로 gameRound를 찾아서 gameSession 가져오기
-      const gameRound = await tx.gameRound.findUnique({
+      const gameRound = await this.tx.gameRound.findUnique({
         where: {
           aggregatorTxId_aggregatorType: {
             aggregatorTxId: aggregatorRoundId,
@@ -184,7 +185,7 @@ export class CasinoBonusService {
       gameSession = gameRound?.GameSession;
     } else {
       // 기존 로직 (fallback)
-      gameSession = await tx.casinoGameSession.findFirst({
+      gameSession = await this.tx.casinoGameSession.findFirst({
         where: {
           userId,
           aggregatorType: aggregatorType,
@@ -214,7 +215,7 @@ export class CasinoBonusService {
       });
 
     // 트랜잭션 생성
-    const transaction = await tx.transaction.create({
+    const transaction = await this.tx.transaction.create({
       data: {
         userId,
         type: TransactionType.BONUS,

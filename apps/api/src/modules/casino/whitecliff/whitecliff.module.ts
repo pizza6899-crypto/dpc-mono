@@ -2,7 +2,6 @@ import { forwardRef, Module } from '@nestjs/common';
 import { HttpModule } from '@nestjs/axios';
 import { WhitecliffCallbackService } from './application/whitecliff-callback.service';
 import { WhitecliffApiService } from './infrastructure/whitecliff-api.service';
-import { PrismaModule } from 'src/infrastructure/prisma/prisma.module';
 import { EnvModule } from 'src/common/env/env.module';
 import { ConcurrencyModule } from 'src/common/concurrency/concurrency.module';
 import { WhitecliffCallbackController } from './controllers/whitecliff-callback.controller';
@@ -23,7 +22,6 @@ import { WalletModule } from 'src/modules/wallet/wallet.module';
 @Module({
   imports: [
     HttpModule,
-    PrismaModule,
     EnvModule,
     ConcurrencyModule,
     RedisModule,

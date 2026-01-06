@@ -22,13 +22,16 @@ import {
 } from 'src/utils/currency.util';
 import { CreateCasinoGameSessionService } from '../../application/create-casino-game-session.service';
 import { ExchangeRateService } from 'src/modules/exchange/application/exchange-rate.service';
+import { InjectTransaction, type Transaction } from '@nestjs-cls/transactional';
+import { TransactionalAdapterPrisma } from '@nestjs-cls/transactional-adapter-prisma';
 
 @Injectable()
 export class WhitecliffGameService {
   private readonly logger = new Logger(WhitecliffGameService.name);
 
   constructor(
-    private readonly prismaService: PrismaService,
+    @InjectTransaction()
+    private readonly tx: Transaction<TransactionalAdapterPrisma>,
     private readonly whitecliffApiService: WhitecliffApiService,
     private readonly whitecliffMapperService: WhitecliffMapperService,
     private readonly createCasinoGameSessionService: CreateCasinoGameSessionService,
@@ -51,7 +54,7 @@ export class WhitecliffGameService {
     const { gameId, isMobile, walletCurrency, gameCurrency } = data;
     const token = IdUtil.generateUrlSafeNanoid(32);
 
-    const user = await this.prismaService.user.findUnique({
+    const user = await this.tx.user.findUnique({
       where: { id: authUser.id },
       select: {
         id: true,
@@ -74,7 +77,7 @@ export class WhitecliffGameService {
       toCurrency: gameCurrency,
     });
 
-    const userBalance = await this.prismaService.userBalance.findUnique({
+    const userBalance = await this.tx.userBalance.findUnique({
       where: { userId_currency: { userId: user.id, currency: walletCurrency } },
       select: { mainBalance: true, bonusBalance: true },
     });
@@ -92,7 +95,7 @@ export class WhitecliffGameService {
       .toNumber();
     const whitecliffUsername = user.whitecliffUsername;
 
-    const game = await this.prismaService.casinoGame.findUnique({
+    const game = await this.tx.casinoGame.findUnique({
       where: { id: gameId },
       select: {
         id: true,
@@ -146,11 +149,11 @@ export class WhitecliffGameService {
 
     if (gameUrl.status === 0 && gameUrl.error == 'INVALID_USER') {
       const whitecliffId = await IdUtil.generateNextWhitecliffId(
-        this.prismaService,
+        this.tx,
       );
       const whitecliffUsername = `wcf${whitecliffId}`;
 
-      await this.prismaService.user.update({
+      await this.tx.user.update({
         where: { id: user.id },
         data: {
           whitecliffId: whitecliffId,
@@ -175,7 +178,7 @@ export class WhitecliffGameService {
       user.whitecliffSystemId == null ||
       Number(user.whitecliffSystemId) !== result.user_id
     ) {
-      await this.prismaService.user.update({
+      await this.tx.user.update({
         where: { id: user.id },
         data: {
           whitecliffSystemId: result.user_id,

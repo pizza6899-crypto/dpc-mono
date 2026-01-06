@@ -1,6 +1,5 @@
 import { forwardRef, Module } from '@nestjs/common';
 import { HttpModule } from '@nestjs/axios';
-import { PrismaModule } from 'src/infrastructure/prisma/prisma.module';
 import { EnvModule } from 'src/common/env/env.module';
 import { ConcurrencyModule } from 'src/common/concurrency/concurrency.module';
 import { RedisModule } from 'src/infrastructure/redis/redis.module';
@@ -20,7 +19,6 @@ import { WalletModule } from 'src/modules/wallet/wallet.module';
 @Module({
   imports: [
     HttpModule,
-    PrismaModule,
     EnvModule,
     ConcurrencyModule,
     RedisModule,

@@ -1,10 +1,16 @@
 import { Processor, WorkerHost } from '@nestjs/bullmq';
 import { Job } from 'bullmq';
+import { ClsService } from 'nestjs-cls';
 import {
   QueueNames,
   GamePostProcessData,
 } from 'src/infrastructure/queue/queue.types';
-import { PrismaService } from 'src/infrastructure/prisma/prisma.service';
+import {
+  InjectTransaction,
+  type Transaction,
+  Transactional,
+} from '@nestjs-cls/transactional';
+import { TransactionalAdapterPrisma } from '@nestjs-cls/transactional-adapter-prisma';
 import { Logger, OnApplicationShutdown } from '@nestjs/common';
 import { Prisma, TransactionStatus } from '@repo/database';
 
@@ -15,165 +21,170 @@ export class GamePostProcessProcessor
   private readonly logger = new Logger(GamePostProcessProcessor.name);
 
   constructor(
-    private readonly prismaService: PrismaService,
+    @InjectTransaction()
+    private readonly tx: Transaction<TransactionalAdapterPrisma>,
+    private readonly cls: ClsService,
   ) {
     super();
   }
 
   async process(job: Job<GamePostProcessData>) {
+    return this.cls.run(() => this.processJob(job));
+  }
+
+  @Transactional()
+  private async processJob(job: Job<GamePostProcessData>) {
     const { gameRoundId, waitForPushBet } = job.data;
 
     try {
-      return await this.prismaService.$transaction(async (tx) => {
-        // 1. 트랜잭션 및 게임 트랜잭션 정보 조회
-        const gameRound = await tx.gameRound.findUnique({
-          where: {
-            id: BigInt(gameRoundId),
-          },
-          select: {
-            id: true,
-            userId: true,
-            totalBetAmountInGameCurrency: true,
-            totalPushAmount: true,
-            tieBetAmount: true,
-            transaction: {
-              select: {
-                currency: true,
-                status: true,
-              },
-            },
-            casinoGame: {
-              select: {
-                contributionRate: true,
-              },
+      // 1. 트랜잭션 및 게임 트랜잭션 정보 조회
+      const gameRound = await this.tx.gameRound.findUnique({
+        where: {
+          id: BigInt(gameRoundId),
+        },
+        select: {
+          id: true,
+          userId: true,
+          totalBetAmountInGameCurrency: true,
+          totalPushAmount: true,
+          tieBetAmount: true,
+          transaction: {
+            select: {
+              currency: true,
+              status: true,
             },
           },
-        });
+          casinoGame: {
+            select: {
+              contributionRate: true,
+            },
+          },
+        },
+      });
 
-        if (!gameRound) {
-          throw new Error(`게임 라운드를 찾을 수 없습니다: ${gameRoundId}`);
-        }
+      if (!gameRound) {
+        throw new Error(`게임 라운드를 찾을 수 없습니다: ${gameRoundId}`);
+      }
 
-        if (!gameRound.transaction) {
-          throw new Error(`게임 트랜잭션을 찾을 수 없습니다: ${gameRoundId}`);
-        }
+      if (!gameRound.transaction) {
+        throw new Error(`게임 트랜잭션을 찾을 수 없습니다: ${gameRoundId}`);
+      }
 
-        if (gameRound.transaction.status !== TransactionStatus.COMPLETED) {
-          this.logger.warn(
-            `게임 트랜잭션 상태가 완료가 아닙니다: ${gameRoundId}, status=${gameRound.transaction.status}`,
-          );
-          return {
-            success: true,
-            message: `게임 트랜잭션 상태가 완료가 아니므로 처리 건너뜀: ${gameRoundId}, status=${gameRound.transaction.status}`,
-          };
-        }
-
-        // waitForPushBet가 true이고 totalPushAmount 또는 tieBetAmount가 null이면 대기
-        if (
-          waitForPushBet &&
-          (!gameRound.totalPushAmount || !gameRound.tieBetAmount)
-        ) {
-          throw new Error(
-            `푸시 베팅 정보가 아직 준비되지 않음: ${gameRoundId}`,
-          );
-        }
-
-        const userId = gameRound.userId;
-        const currency = gameRound.transaction.currency;
-
-        // 2. 베팅 금액 계산 (푸시가 있으면 제외)
-        let betAmountForProcessing = gameRound.totalBetAmountInGameCurrency
-          ? new Prisma.Decimal(gameRound.totalBetAmountInGameCurrency)
-          : new Prisma.Decimal(0);
-
-        // 푸시 베팅이 있는 경우 제외
-        if (gameRound.totalPushAmount) {
-          betAmountForProcessing = betAmountForProcessing.sub(
-            gameRound.totalPushAmount,
-          );
-        }
-
-        // 베팅 금액이 0 이하이면 처리하지 않음
-        if (betAmountForProcessing.lte(0)) {
-          return {
-            success: true,
-            message: '베팅 금액이 0 이하여서 처리 건너뜀',
-          };
-        }
-
-        // 3. 기여도 금액 계산
-        const contributionRate =
-          gameRound.casinoGame?.contributionRate || new Prisma.Decimal(0);
-        const contributionAmount = betAmountForProcessing.mul(contributionRate);
-
-        // 4. 콤프 처리
-        //   if (contributionAmount.gt(0) && gameTransaction.betTime) {
-        //     // betTime을 동경시 기준 날짜로 변환
-        //     const betTimeUtc = DateTime.fromFormat(
-        //       gameTransaction.betTime,
-        //       'yyyy-MM-dd HH:mm:ss',
-        //       { zone: 'utc' },
-        //     );
-        //     const betTimeJst = betTimeUtc.setZone('Asia/Tokyo');
-        //     const earnDate = betTimeJst.startOf('day').toJSDate();
-
-        //     await this.compService.earnComp(userId, contributionAmount, earnDate);
-        //     this.logger.log(
-        //       `콤프 적립 완료: userId=${userId}, contributionAmount=${contributionAmount}, gameTransactionId=${gameTransactionId}`,
-        //     );
-        //   }
-
-        // 5. 롤링 처리
-        //   const userBalance = await this.prismaService.userBalance.findUnique({
-        //     where: {
-        //       userId_currency: {
-        //         userId,
-        //         currency,
-        //       },
-        //     },
-        //     select: {
-        //       mainBalance: true,
-        //     },
-        //   });
-
-        //   if (userBalance) {
-        //     await this.rollingService.processRolling(
-        //       userId,
-        //       betAmountForProcessing,
-        //       userBalance.mainBalance,
-        //     );
-        //     this.logger.log(
-        //       `롤링 처리 완료: userId=${userId}, rollingAmount=${betAmountForProcessing}, gameTransactionId=${gameTransactionId}`,
-        //     );
-        //   }
-
-        // 6. VIP 레벨 업데이트 (롤링 누적)
-        //   await this.vipMembershipService.updateAccumulatedRolling(
-        //     userId,
-        //     betAmountForProcessing,
-        //   );
-        //   this.logger.log(
-        //     `VIP 롤링 누적 완료: userId=${userId}, rollingAmount=${betAmountForProcessing}, transactionId=${transactionId}`,
-        //   );
-
-        // 7. 게임 트랜잭션에 기여도 및 콤프 정보 업데이트
-        //   await this.prismaService.gameTransaction.update({
-        //     where: { id: gameTransaction.id },
-        //     data: {
-        //       contributionAmount: contributionAmount,
-        //       compEarned: contributionAmount.gt(0)
-        //         ? contributionAmount.mul(
-        //             (await this.getCompRate(userId)) || new Decimal(0),
-        //           )
-        //         : new Decimal(0),
-        //     },
-        //   });
-
+      if (gameRound.transaction.status !== TransactionStatus.COMPLETED) {
+        this.logger.warn(
+          `게임 트랜잭션 상태가 완료가 아닙니다: ${gameRoundId}, status=${gameRound.transaction.status}`,
+        );
         return {
           success: true,
-          message: '게임 후처리 완료',
+          message: `게임 트랜잭션 상태가 완료가 아니므로 처리 건너뜀: ${gameRoundId}, status=${gameRound.transaction.status}`,
         };
-      });
+      }
+
+      // waitForPushBet가 true이고 totalPushAmount 또는 tieBetAmount가 null이면 대기
+      if (
+        waitForPushBet &&
+        (!gameRound.totalPushAmount || !gameRound.tieBetAmount)
+      ) {
+        throw new Error(
+          `푸시 베팅 정보가 아직 준비되지 않음: ${gameRoundId}`,
+        );
+      }
+
+      const userId = gameRound.userId;
+      const currency = gameRound.transaction.currency;
+
+      // 2. 베팅 금액 계산 (푸시가 있으면 제외)
+      let betAmountForProcessing = gameRound.totalBetAmountInGameCurrency
+        ? new Prisma.Decimal(gameRound.totalBetAmountInGameCurrency)
+        : new Prisma.Decimal(0);
+
+      // 푸시 베팅이 있는 경우 제외
+      if (gameRound.totalPushAmount) {
+        betAmountForProcessing = betAmountForProcessing.sub(
+          gameRound.totalPushAmount,
+        );
+      }
+
+      // 베팅 금액이 0 이하이면 처리하지 않음
+      if (betAmountForProcessing.lte(0)) {
+        return {
+          success: true,
+          message: '베팅 금액이 0 이하여서 처리 건너뜀',
+        };
+      }
+
+      // 3. 기여도 금액 계산
+      const contributionRate =
+        gameRound.casinoGame?.contributionRate || new Prisma.Decimal(0);
+      const contributionAmount = betAmountForProcessing.mul(contributionRate);
+
+      // 4. 콤프 처리
+      //   if (contributionAmount.gt(0) && gameTransaction.betTime) {
+      //     // betTime을 동경시 기준 날짜로 변환
+      //     const betTimeUtc = DateTime.fromFormat(
+      //       gameTransaction.betTime,
+      //       'yyyy-MM-dd HH:mm:ss',
+      //       { zone: 'utc' },
+      //     );
+      //     const betTimeJst = betTimeUtc.setZone('Asia/Tokyo');
+      //     const earnDate = betTimeJst.startOf('day').toJSDate();
+
+      //     await this.compService.earnComp(userId, contributionAmount, earnDate);
+      //     this.logger.log(
+      //       `콤프 적립 완료: userId=${userId}, contributionAmount=${contributionAmount}, gameTransactionId=${gameTransactionId}`,
+      //     );
+      //   }
+
+      // 5. 롤링 처리
+      //   const userBalance = await this.tx.userBalance.findUnique({
+      //     where: {
+      //       userId_currency: {
+      //         userId,
+      //         currency,
+      //       },
+      //     },
+      //     select: {
+      //       mainBalance: true,
+      //     },
+      //   });
+
+      //   if (userBalance) {
+      //     await this.rollingService.processRolling(
+      //       userId,
+      //       betAmountForProcessing,
+      //       userBalance.mainBalance,
+      //     );
+      //     this.logger.log(
+      //       `롤링 처리 완료: userId=${userId}, rollingAmount=${betAmountForProcessing}, gameTransactionId=${gameTransactionId}`,
+      //     );
+      //   }
+
+      // 6. VIP 레벨 업데이트 (롤링 누적)
+      //   await this.vipMembershipService.updateAccumulatedRolling(
+      //     userId,
+      //     betAmountForProcessing,
+      //   );
+      //   this.logger.log(
+      //     `VIP 롤링 누적 완료: userId=${userId}, rollingAmount=${betAmountForProcessing}, transactionId=${transactionId}`,
+      //   );
+
+      // 7. 게임 트랜잭션에 기여도 및 콤프 정보 업데이트
+      //   await this.tx.gameTransaction.update({
+      //     where: { id: gameTransaction.id },
+      //     data: {
+      //       contributionAmount: contributionAmount,
+      //       compEarned: contributionAmount.gt(0)
+      //         ? contributionAmount.mul(
+      //             (await this.getCompRate(userId)) || new Decimal(0),
+      //           )
+      //         : new Decimal(0),
+      //     },
+      //   });
+
+      return {
+        success: true,
+        message: '게임 후처리 완료',
+      };
     } catch (error) {
       this.logger.error(error, `게임 후처리 실패: gameRoundId=${gameRoundId}`);
       throw error;

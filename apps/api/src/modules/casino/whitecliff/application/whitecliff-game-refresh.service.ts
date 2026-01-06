@@ -3,7 +3,6 @@ import {
   ProductGameListResponse,
   WhitecliffApiService,
 } from '../infrastructure/whitecliff-api.service';
-import { PrismaService } from 'src/infrastructure/prisma/prisma.service';
 import { RedisService } from 'src/infrastructure/redis/redis.service';
 import { GameListUpdateStatusDto } from '../dtos/game-update.dto';
 import { nowUtc } from 'src/utils/date.util';
@@ -16,6 +15,8 @@ import {
 } from '@repo/database';
 import { toLanguageEnum } from 'src/utils/language.util';
 import { GAMING_CURRENCIES } from 'src/utils/currency.util';
+import { InjectTransaction, type Transaction } from '@nestjs-cls/transactional';
+import { TransactionalAdapterPrisma } from '@nestjs-cls/transactional-adapter-prisma';
 
 @Injectable()
 export class WhitecliffGameRefreshService {
@@ -23,8 +24,9 @@ export class WhitecliffGameRefreshService {
   private readonly STATUS_KEY = 'whitecliff:game-list:update-status';
 
   constructor(
+    @InjectTransaction()
+    private readonly tx: Transaction<TransactionalAdapterPrisma>,
     private readonly whitecliffApiService: WhitecliffApiService,
-    private readonly prismaService: PrismaService,
     private readonly redisService: RedisService,
     private readonly whitecliffMapperService: WhitecliffMapperService,
   ) { }
@@ -193,7 +195,7 @@ export class WhitecliffGameRefreshService {
     for (const [providerIdStr, games] of Object.entries(gameList)) {
       const providerId = parseInt(providerIdStr);
 
-      const existingGames = await this.prismaService.casinoGame.findMany({
+      const existingGames = await this.tx.casinoGame.findMany({
         where: {
           provider:
             this.whitecliffMapperService.fromWhitecliffProvider(providerId)!,
@@ -217,7 +219,7 @@ export class WhitecliffGameRefreshService {
         },
       });
 
-      const existingGameMap = new Map(
+      const existingGameMap = new Map<string, typeof existingGames[number]>(
         existingGames.map((game) => [`${game.gameId}`, game]),
       );
 
@@ -269,7 +271,7 @@ export class WhitecliffGameRefreshService {
 
       for (const game of toDisableGames) {
         try {
-          await this.prismaService.casinoGame.update({
+          await this.tx.casinoGame.update({
             where: { id: game.id },
             data: { isEnabled: false },
           });
@@ -328,13 +330,13 @@ export class WhitecliffGameRefreshService {
     lang: Language,
   ) {
     // provider 정보 가져오기
-    const existingGameWithProvider = await this.prismaService.casinoGame.findUnique({
+    const existingGameWithProvider = await this.tx.casinoGame.findUnique({
       where: { id: gameId },
       select: { provider: true },
     });
 
     // ✅ 올바른 필드명으로 게임 정보 업데이트
-    await this.prismaService.casinoGame.update({
+    await this.tx.casinoGame.update({
       where: { id: gameId },
       data: {
         tableId: gameData.table_id || null,
@@ -349,7 +351,7 @@ export class WhitecliffGameRefreshService {
 
     // ✅ 올바른 필드명으로 번역 정보 업데이트
     try {
-      await this.prismaService.casinoGameTranslation.upsert({
+      await this.tx.casinoGameTranslation.upsert({
         where: {
           gameId_language: {
             gameId: gameId,
@@ -387,7 +389,7 @@ export class WhitecliffGameRefreshService {
       this.whitecliffMapperService.fromWhitecliffProvider(providerId)!;
 
     // ✅ 올바른 필드명으로 게임 생성
-    const newGame = await this.prismaService.casinoGame.create({
+    const newGame = await this.tx.casinoGame.create({
       data: {
         aggregatorType: GameAggregatorType.WHITECLIFF,
         provider: provider,
@@ -405,7 +407,7 @@ export class WhitecliffGameRefreshService {
 
     // ✅ 올바른 필드명으로 번역 정보 생성
     try {
-      await this.prismaService.casinoGameTranslation.create({
+      await this.tx.casinoGameTranslation.create({
         data: {
           gameId: newGame.id,
           language: lang,

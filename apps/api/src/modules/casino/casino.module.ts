@@ -1,5 +1,4 @@
 import { forwardRef, Module } from '@nestjs/common';
-import { PrismaModule } from 'src/infrastructure/prisma/prisma.module';
 import { WhitecliffModule } from './whitecliff/whitecliff.module';
 import { DcsModule } from './dcs/dcs.module';
 import { CasinoGameUserController } from './controllers/user/casino-game-user.controller';
@@ -25,7 +24,6 @@ import { FindCasinoGameSessionService } from './application/find-casino-game-ses
 
 @Module({
   imports: [
-    PrismaModule,
     forwardRef(() => WhitecliffModule),
     forwardRef(() => DcsModule),
     ConcurrencyModule,

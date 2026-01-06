@@ -1,7 +1,6 @@
 import { Inject, Injectable } from '@nestjs/common';
 import { DcsApiService } from '../infrastructure/dcs-api.service';
 import { MessageCode, RequestClientInfo } from 'src/common/http/types';
-import { PrismaService } from 'src/infrastructure/prisma/prisma.service';
 import { ApiException } from 'src/common/http/exception/api.exception';
 import { HttpStatusCode } from 'axios';
 import { IdUtil } from 'src/utils/id.util';
@@ -13,11 +12,15 @@ import {
 } from 'src/utils/currency.util';
 import { CreateCasinoGameSessionService } from '../../application/create-casino-game-session.service';
 import { GameAggregatorType } from '@repo/database';
+import { InjectTransaction } from '@nestjs-cls/transactional';
+import type { Transaction } from '@nestjs-cls/transactional';
+import { TransactionalAdapterPrisma } from '@nestjs-cls/transactional-adapter-prisma';
 
 @Injectable()
 export class DcsGameService {
   constructor(
-    private readonly prismaService: PrismaService,
+    @InjectTransaction()
+    private readonly tx: Transaction<TransactionalAdapterPrisma>,
     private readonly dcsApiService: DcsApiService,
     private readonly createCasinoGameSessionService: CreateCasinoGameSessionService,
   ) { }
@@ -44,7 +47,7 @@ export class DcsGameService {
     const newDcsToken = IdUtil.generateUrlSafeNanoid(32);
 
     try {
-      const { updatedUser } = await this.prismaService.$transaction(
+      const { updatedUser } = await this.tx.$transaction(
         async (tx) => {
           const user = await tx.user.findUnique({
             where: { id: userId },
@@ -78,7 +81,7 @@ export class DcsGameService {
         },
       );
 
-      const game = await this.prismaService.casinoGame.findUnique({
+      const game = await this.tx.casinoGame.findUnique({
         where: { id: gameId },
         select: {
           id: true,

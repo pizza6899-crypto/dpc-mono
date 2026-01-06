@@ -5,13 +5,14 @@ import { GameAggregatorType, Prisma, TransactionStatus } from '@repo/database';
 import { CasinoErrorCode } from '../constants/casino-error-codes';
 import {
   GamingCurrencyCode,
-  WalletCurrencyCode,
 } from 'src/utils/currency.util';
 import { UpdateUserBalanceService } from 'src/modules/wallet/application/update-user-balance.service';
 import { BalanceType, UpdateOperation } from 'src/modules/wallet/domain';
+import { InjectTransaction } from '@nestjs-cls/transactional';
+import type { Transaction } from '@nestjs-cls/transactional';
+import { TransactionalAdapterPrisma } from '@nestjs-cls/transactional-adapter-prisma';
 
 export interface ProcessCancelParams {
-  tx: Prisma.TransactionClient;
   aggregatorTxId: string;
   aggregatorBetId: string;
   aggregatorType: GameAggregatorType;
@@ -32,9 +33,10 @@ export interface ProcessCancelResult {
 
 @Injectable()
 export class CasinoRefundService {
-  private readonly logger = new Logger(CasinoRefundService.name);
-
-  constructor(private readonly updateUserBalanceService: UpdateUserBalanceService) { }
+  constructor(
+    @InjectTransaction()
+    private readonly tx: Transaction<TransactionalAdapterPrisma>,
+    private readonly updateUserBalanceService: UpdateUserBalanceService) { }
 
   /**
    * 베팅 취소 처리
@@ -45,7 +47,6 @@ export class CasinoRefundService {
     params: ProcessCancelParams,
   ): Promise<ProcessCancelResult> {
     const {
-      tx,
       aggregatorBetId,
       aggregatorType,
       userId,
@@ -55,7 +56,7 @@ export class CasinoRefundService {
       aggregatorTxId,
     } = params;
 
-    const existingGameBet = await tx.gameBet.findUnique({
+    const existingGameBet = await this.tx.gameBet.findUnique({
       where: {
         aggregatorBetId_aggregatorType: {
           aggregatorBetId,
@@ -167,7 +168,7 @@ export class CasinoRefundService {
     });
 
     // 트랜잭션 업데이트
-    await tx.gameBet.update({
+    await this.tx.gameBet.update({
       where: { id: existingGameBet.id },
       data: {
         isCancelled: true,

@@ -14,9 +14,11 @@ import {
 } from 'src/utils/currency.util';
 import { UpdateUserBalanceService } from 'src/modules/wallet/application/update-user-balance.service';
 import { BalanceType, UpdateOperation } from 'src/modules/wallet/domain';
+import { InjectTransaction } from '@nestjs-cls/transactional';
+import type { Transaction } from '@nestjs-cls/transactional';
+import { TransactionalAdapterPrisma } from '@nestjs-cls/transactional-adapter-prisma';
 
 export interface ProcessBetParams {
-  tx: Prisma.TransactionClient;
   userId: bigint;
   aggregatorType: GameAggregatorType;
   provider: GameProvider;
@@ -43,7 +45,6 @@ export interface ProcessBetResult {
 }
 
 export interface ProcessWinParams {
-  tx: Prisma.TransactionClient;
   aggregatorType: GameAggregatorType;
   userId: bigint;
   gameCurrency: GamingCurrencyCode;
@@ -92,7 +93,8 @@ export class CasinoBetService {
   private readonly logger = new Logger(CasinoBetService.name);
 
   constructor(
-    private readonly prismaService: PrismaService,
+    @InjectTransaction()
+    private readonly tx: Transaction<TransactionalAdapterPrisma>,
     private readonly updateUserBalanceService: UpdateUserBalanceService,
   ) { }
 
@@ -103,7 +105,6 @@ export class CasinoBetService {
    */
   async processBet(params: ProcessBetParams): Promise<ProcessBetResult> {
     const {
-      tx = this.prismaService,
       userId,
       betAmountInGameCurrency,
       betAmountInWalletCurrency,
@@ -121,7 +122,7 @@ export class CasinoBetService {
     } = params;
 
     const betTimeDate = parseDateStringOrThrow(betTime);
-    const existingBet = await tx.gameBet.findFirst({
+    const existingBet = await this.tx.gameBet.findFirst({
       where: {
         aggregatorBetId,
         aggregatorType,
@@ -150,7 +151,7 @@ export class CasinoBetService {
     const beforeAmount = updatedUserBalance.beforeBonusBalance.add(updatedUserBalance.beforeMainBalance);
     const afterAmount = updatedUserBalance.afterBonusBalance.add(updatedUserBalance.afterMainBalance);
 
-    const existingGameRound = await tx.gameRound.findUnique({
+    const existingGameRound = await this.tx.gameRound.findUnique({
       where: {
         aggregatorTxId_aggregatorType: {
           aggregatorTxId,
@@ -165,7 +166,7 @@ export class CasinoBetService {
 
     if (existingGameRound) {
       // 기존 라운드에 추가 베팅
-      const updatedGameRound = await tx.gameRound.update({
+      const updatedGameRound = await this.tx.gameRound.update({
         where: {
           id: existingGameRound.id,
         },
@@ -239,7 +240,7 @@ export class CasinoBetService {
     } else {
       this.logger.debug(`[processBet] 새로운 GameRound 생성 시작`);
       // 새로운 라운드 생성
-      const transaction = await tx.transaction.create({
+      const transaction = await this.tx.transaction.create({
         data: {
           userId,
           type: TransactionType.GAME,
@@ -326,7 +327,6 @@ export class CasinoBetService {
    */
   async processWin(params: ProcessWinParams): Promise<ProcessWinResult> {
     const {
-      tx,
       winAmountInGameCurrency,
       winTime,
       gameCurrency,
@@ -344,7 +344,7 @@ export class CasinoBetService {
     // DCS의 경우: 같은 round_id에 대해 다른 wager_id로 여러 win이 올 수 있음
     // 따라서 같은 aggregatorWinId가 이미 존재하는지만 확인 (어느 round_id에 속해 있든 중복)
     // aggregatorWinId_aggregatorType은 unique constraint이므로 이 체크만으로 충분
-    const existingWin = await tx.gameWin.findUnique({
+    const existingWin = await this.tx.gameWin.findUnique({
       where: {
         aggregatorWinId_aggregatorType: {
           aggregatorWinId,
@@ -367,7 +367,7 @@ export class CasinoBetService {
     }
 
     // GameRound가 존재하는지 확인 (같은 round_id에 대해 여러 win이 올 수 있으므로)
-    const existingGameRound = await tx.gameRound.findUnique({
+    const existingGameRound = await this.tx.gameRound.findUnique({
       where: {
         aggregatorTxId_aggregatorType: {
           aggregatorTxId,
@@ -400,7 +400,7 @@ export class CasinoBetService {
 
     // 트랜잭션 상태 업데이트
     // 같은 round_id에 대해 여러 win이 올 수 있으므로 totalWinAmount는 increment로 처리
-    const updatedGameRound = await tx.gameRound.update({
+    const updatedGameRound = await this.tx.gameRound.update({
       where: {
         id: existingGameRound.id,
       },

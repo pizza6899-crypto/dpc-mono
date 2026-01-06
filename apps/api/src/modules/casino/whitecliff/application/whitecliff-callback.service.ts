@@ -1,5 +1,4 @@
 import { Injectable, Logger } from '@nestjs/common';
-import { PrismaService } from 'src/infrastructure/prisma/prisma.service';
 import { EnvService } from 'src/common/env/env.service';
 import {
   GetWhitecliffBalanceRequestDto,
@@ -10,7 +9,6 @@ import {
   GetBonusRequestDto,
   GetBonusResponseDto,
 } from '../dtos';
-import { ConcurrencyService } from 'src/common/concurrency/concurrency.service';
 import {
   BetType,
   BonusType,
@@ -28,19 +26,19 @@ import { CasinoErrorCode } from '../../constants/casino-error-codes';
 import { QueueService } from 'src/infrastructure/queue/queue.service';
 import { CasinoRefundService } from '../../application/casino-refund.service';
 import { nowUtc, parseDateStringOrThrow } from 'src/utils/date.util';
-import {
-  GAMING_CURRENCIES,
-  GamingCurrencyCode,
-} from 'src/utils/currency.util';
+import { InjectTransaction, Transactional } from '@nestjs-cls/transactional';
+import type { Transaction } from '@nestjs-cls/transactional';
+import { TransactionalAdapterPrisma } from '@nestjs-cls/transactional-adapter-prisma';
+import { GAMING_CURRENCIES, type GamingCurrencyCode } from 'src/utils/currency.util';
 
 @Injectable()
 export class WhitecliffCallbackService {
   private readonly logger = new Logger(WhitecliffCallbackService.name);
 
   constructor(
-    private readonly prismaService: PrismaService,
+    @InjectTransaction()
+    private readonly tx: Transaction<TransactionalAdapterPrisma>,
     private readonly envService: EnvService,
-    private readonly concurrencyService: ConcurrencyService,
     private readonly whitecliffMapperService: WhitecliffMapperService,
     private readonly getUserBalanceService: GetUserBalanceService,
     private readonly casinoBetService: CasinoBetService,
@@ -58,12 +56,11 @@ export class WhitecliffCallbackService {
    */
   async getBalance(
     body: GetWhitecliffBalanceRequestDto,
-    gameCurrency: GamingCurrencyCode,
   ): Promise<GetWhitecliffBalanceResponseDto> {
     const { user_id, prd_id, sid } = body;
 
     try {
-      const gameSession = await this.prismaService.casinoGameSession.findFirst({
+      const gameSession = await this.tx.casinoGameSession.findFirst({
         where: {
           aggregatorType: GameAggregatorType.WHITECLIFF,
           token: sid, // sid로 직접 찾기
@@ -138,9 +135,9 @@ export class WhitecliffCallbackService {
    * @param amount 차감할 금액
    * @returns 거래 결과
    */
+  @Transactional()
   async debit(
     body: DebitRequestDto,
-    gameCurrency: GamingCurrencyCode,
   ): Promise<TransactionResponseDto> {
     const {
       user_id,
@@ -162,7 +159,7 @@ export class WhitecliffCallbackService {
       const provider =
         this.whitecliffMapperService.fromWhitecliffProvider(prd_id)!;
 
-      const gameSession = await this.prismaService.casinoGameSession.findFirst({
+      const gameSession = await this.tx.casinoGameSession.findFirst({
         where: {
           aggregatorType: GameAggregatorType.WHITECLIFF,
           token: sid,
@@ -207,7 +204,7 @@ export class WhitecliffCallbackService {
       // 5. game 조회 (gameSession에 없으면 별도 조회)
       let gameId = gameSession.casinoGame?.id;
       if (!gameId) {
-        const game = await this.prismaService.casinoGame.findUnique({
+        const game = await this.tx.casinoGame.findUnique({
           where: {
             aggregatorType_provider_gameId: {
               aggregatorType: GameAggregatorType.WHITECLIFF,
@@ -231,122 +228,116 @@ export class WhitecliffCallbackService {
       const betAmountInWalletCurrency = new Prisma.Decimal(amount).div(
         gameSession.exchangeRate,
       );
+      let result;
 
-      return await this.concurrencyService.withUserBalanceLock(
-        gameSession.user.id,
-        async () => {
-          const result = await this.prismaService.$transaction(async (tx) => {
-            const betTransactionResult = await this.casinoBetService.processBet(
-              {
-                tx: tx,
-                provider: provider,
-                betTime: debit_time,
-                userId: gameSession.user.id,
-                walletCurrency: walletCurrency,
-                betAmountInGameCurrency: new Prisma.Decimal(amount),
-                betAmountInWalletCurrency: betAmountInWalletCurrency,
-                gameSessionId: gameSession.id,
-                aggregatorTxId: round_id || txn_id,
-                aggregatorBetId: txn_id,
-                aggregatorType: GameAggregatorType.WHITECLIFF,
-                aggregatorGameId: game_id,
-                gameId: gameId,
-                jackpotContributionAmount: new Prisma.Decimal(0),
-                betType: BetType.NORMAL,
-              },
-            );
-
-            // 특정 게임사에서 제공, 바로 win 처리
-            if (credit_amount !== undefined && credit_amount !== null) {
-              const winTransactionResult =
-                await this.casinoBetService.processWin({
-                  tx: tx,
-                  aggregatorType: GameAggregatorType.WHITECLIFF,
-                  userId: gameSession.user.id,
-                  gameCurrency: gameSession.gameCurrency as GamingCurrencyCode,
-                  walletCurrency: walletCurrency,
-                  winAmountInWalletCurrency: new Prisma.Decimal(
-                    credit_amount,
-                  ).div(gameSession.exchangeRate),
-                  winAmountInGameCurrency: new Prisma.Decimal(credit_amount),
-                  winTime: debit_time,
-                  aggregatorTxId: round_id || txn_id,
-                  aggregatorWinId: txn_id,
-                  isEndRound: true,
-                });
-
-              // 라운드 완료 처리 및 큐 작업 추가
-              if (winTransactionResult.gameRoundId) {
-                const gameRound = await tx.gameRound.findUnique({
-                  where: {
-                    id: winTransactionResult.gameRoundId,
-                  },
-                  select: {
-                    id: true,
-                  },
-                });
-
-                if (gameRound) {
-                  await tx.gameRound.update({
-                    where: {
-                      id: gameRound.id,
-                    },
-                    data: {
-                      completedAt: parseDateStringOrThrow(debit_time),
-                      transaction: {
-                        update: {
-                          status: TransactionStatus.COMPLETED,
-                        },
-                      },
-                    },
-                  });
-                }
-              }
-
-              // 당첨 처리 후 반환
-              return {
-                lastBalance: winTransactionResult.afterBonusBalance.add(
-                  winTransactionResult.afterMainBalance,
-                ), // walletCurrency 기준
-                gameRoundId: winTransactionResult.gameRoundId,
-              };
-            }
-
-            // 베팅 처리 후 반환
-            return {
-              lastBalance: betTransactionResult.afterBonusBalance.add(
-                betTransactionResult.afterMainBalance,
-              ),
-            };
-          });
-
-          // credit_amount 처리 시 큐 작업 추가 (트랜잭션 밖에서)
-          if (
-            credit_amount !== undefined &&
-            credit_amount !== null &&
-            result.gameRoundId
-          ) {
-            await this.queueService.addWhitecliffFetchGameResultUrlJob({
-              gameRoundId: result.gameRoundId.toString(),
-            });
-
-            const requiresPushBet = provider === GameProvider.EVOLUTION;
-
-            await this.queueService.addGamePostProcessJob({
-              gameRoundId: result.gameRoundId.toString(),
-              waitForPushBet: requiresPushBet,
-            });
-          }
-
-          return {
-            status: 1,
-            balance: gameSession.exchangeRate
-              .mul(result.lastBalance)
-              .toDecimalPlaces(2)
-              .toNumber(),
-          };
+      const betTransactionResult = await this.casinoBetService.processBet(
+        {
+          provider: provider,
+          betTime: debit_time,
+          userId: gameSession.user.id,
+          walletCurrency: walletCurrency,
+          betAmountInGameCurrency: new Prisma.Decimal(amount),
+          betAmountInWalletCurrency: betAmountInWalletCurrency,
+          gameSessionId: gameSession.id,
+          aggregatorTxId: round_id || txn_id,
+          aggregatorBetId: txn_id,
+          aggregatorType: GameAggregatorType.WHITECLIFF,
+          aggregatorGameId: game_id,
+          gameId: gameId,
+          jackpotContributionAmount: new Prisma.Decimal(0),
+          betType: BetType.NORMAL,
         },
       );
+
+      // 특정 게임사에서 제공, 바로 win 처리
+      if (credit_amount !== undefined && credit_amount !== null) {
+        const winTransactionResult =
+          await this.casinoBetService.processWin({
+            aggregatorType: GameAggregatorType.WHITECLIFF,
+            userId: gameSession.user.id,
+            gameCurrency: gameSession.gameCurrency as GamingCurrencyCode,
+            walletCurrency: walletCurrency,
+            winAmountInWalletCurrency: new Prisma.Decimal(
+              credit_amount,
+            ).div(gameSession.exchangeRate),
+            winAmountInGameCurrency: new Prisma.Decimal(credit_amount),
+            winTime: debit_time,
+            aggregatorTxId: round_id || txn_id,
+            aggregatorWinId: txn_id,
+            isEndRound: true,
+          });
+
+        // 라운드 완료 처리 및 큐 작업 추가
+        if (winTransactionResult.gameRoundId) {
+          const gameRound = await this.tx.gameRound.findUnique({
+            where: {
+              id: winTransactionResult.gameRoundId,
+            },
+            select: {
+              id: true,
+            },
+          });
+
+          if (gameRound) {
+            await this.tx.gameRound.update({
+              where: {
+                id: gameRound.id,
+              },
+              data: {
+                completedAt: parseDateStringOrThrow(debit_time),
+                transaction: {
+                  update: {
+                    status: TransactionStatus.COMPLETED,
+                  },
+                },
+              },
+            });
+          }
+        }
+
+        // 당첨 처리 후 반환
+        result = {
+          lastBalance: winTransactionResult.afterBonusBalance.add(
+            winTransactionResult.afterMainBalance,
+          ), // walletCurrency 기준
+          gameRoundId: winTransactionResult.gameRoundId,
+        };
+      }
+      else {
+        // 베팅 처리 후 반환
+        result = {
+          lastBalance: betTransactionResult.afterBonusBalance.add(
+            betTransactionResult.afterMainBalance,
+          ),
+        };
+      }
+
+
+      // credit_amount 처리 시 큐 작업 추가 (트랜잭션 밖에서)
+      if (
+        credit_amount !== undefined &&
+        credit_amount !== null &&
+        result.gameRoundId
+      ) {
+        await this.queueService.addWhitecliffFetchGameResultUrlJob({
+          gameRoundId: result.gameRoundId.toString(),
+        });
+
+        const requiresPushBet = provider === GameProvider.EVOLUTION;
+
+        await this.queueService.addGamePostProcessJob({
+          gameRoundId: result.gameRoundId.toString(),
+          waitForPushBet: requiresPushBet,
+        });
+      }
+
+      return {
+        status: 1,
+        balance: gameSession.exchangeRate
+          .mul(result.lastBalance)
+          .toDecimalPlaces(2)
+          .toNumber(),
+      };
     } catch (error) {
       this.logger.error(error, `잔액 차감 실패`);
       const errorMessage = getCasinoErrorCode(error);
@@ -364,9 +355,9 @@ export class WhitecliffCallbackService {
    * @param amount 추가할 금액
    * @returns 거래 결과
    */
+  @Transactional()
   async credit(
     body: CreditRequestDto,
-    gameCurrency: GamingCurrencyCode,
   ): Promise<TransactionResponseDto> {
     const {
       user_id,
@@ -387,7 +378,7 @@ export class WhitecliffCallbackService {
       // validateRequiredFields 호출 필요
 
       // 2. sid로 gameSession 우선 조회 (debit과 동일한 패턴)
-      const gameSession = await this.prismaService.casinoGameSession.findFirst({
+      const gameSession = await this.tx.casinoGameSession.findFirst({
         where: {
           aggregatorType: GameAggregatorType.WHITECLIFF,
           token: sid, // sid로 직접 찾기
@@ -428,115 +419,106 @@ export class WhitecliffCallbackService {
       }
 
       const walletCurrency = gameSession.walletCurrency;
+      let result;
+      const isCancel = is_cancel === 1; // 0 이면 지급 1 이면 취소
 
-      return await this.concurrencyService.withUserBalanceLock(
-        gameSession.user.id,
-        async () => {
-          const result = await this.prismaService.$transaction(async (tx) => {
-            const isCancel = is_cancel === 1; // 0 이면 지급 1 이면 취소
-
-            if (isCancel) {
-              // 취소처리
-              const updatedGameTransaction =
-                await this.casinoRefundService.processCancel({
-                  tx: tx,
-                  aggregatorTxId: round_id || txn_id, // round_id 우선 사용
-                  aggregatorBetId: txn_id,
-                  aggregatorType: GameAggregatorType.WHITECLIFF,
-                  userId: gameSession.user.id,
-                  gameCurrency: gameSession.gameCurrency as GamingCurrencyCode,
-                  cancelTime: parseDateStringOrThrow(credit_time || ''),
-                  isEndRound: true,
-                });
-
-              return {
-                status: 1,
-                lastBalance: updatedGameTransaction.afterBonusBalance.add(
-                  updatedGameTransaction.afterMainBalance,
-                ), // walletCurrency 기준
-              };
-            } else {
-              const updatedGameTransaction =
-                await this.casinoBetService.processWin({
-                  tx: tx,
-                  aggregatorType: GameAggregatorType.WHITECLIFF,
-                  userId: gameSession.user.id,
-                  gameCurrency: gameSession.gameCurrency as GamingCurrencyCode,
-                  walletCurrency: walletCurrency,
-                  winAmountInGameCurrency: new Prisma.Decimal(amount),
-                  winAmountInWalletCurrency: new Prisma.Decimal(amount).div(
-                    gameSession.exchangeRate,
-                  ),
-                  winTime: credit_time || '',
-                  aggregatorTxId: round_id || txn_id, // round_id 우선 사용
-                  aggregatorWinId: txn_id,
-                  isEndRound: true,
-                });
-
-              // 라운드 완료 처리 (debit과 동일)
-              if (updatedGameTransaction.gameRoundId) {
-                const gameRound = await tx.gameRound.findUnique({
-                  where: {
-                    id: updatedGameTransaction.gameRoundId,
-                  },
-                  select: {
-                    id: true,
-                  },
-                });
-
-                if (gameRound) {
-                  await tx.gameRound.update({
-                    where: {
-                      id: gameRound.id,
-                    },
-                    data: {
-                      completedAt: parseDateStringOrThrow(credit_time || ''),
-                      transaction: {
-                        update: {
-                          status: TransactionStatus.COMPLETED,
-                        },
-                      },
-                    },
-                  });
-                }
-              }
-
-              return {
-                status: 1,
-                lastBalance: updatedGameTransaction.afterBonusBalance.add(
-                  updatedGameTransaction.afterMainBalance,
-                ), // walletCurrency 기준
-                gameRoundId: updatedGameTransaction.gameRoundId,
-              };
-            }
+      if (isCancel) {
+        // 취소처리
+        const updatedGameTransaction =
+          await this.casinoRefundService.processCancel({
+            aggregatorTxId: round_id || txn_id, // round_id 우선 사용
+            aggregatorBetId: txn_id,
+            aggregatorType: GameAggregatorType.WHITECLIFF,
+            userId: gameSession.user.id,
+            gameCurrency: gameSession.gameCurrency as GamingCurrencyCode,
+            cancelTime: parseDateStringOrThrow(credit_time || ''),
+            isEndRound: true,
           });
 
-          // credit_amount 처리 시 큐 작업 추가 (트랜잭션 밖에서)
-          if (!is_cancel && result.gameRoundId) {
-            await this.queueService.addWhitecliffFetchGameResultUrlJob({
-              gameRoundId: result.gameRoundId.toString(),
-            });
+        result = {
+          status: 1,
+          lastBalance: updatedGameTransaction.afterBonusBalance.add(
+            updatedGameTransaction.afterMainBalance,
+          ), // walletCurrency 기준
+        };
+      } else {
+        const updatedGameTransaction =
+          await this.casinoBetService.processWin({
+            aggregatorType: GameAggregatorType.WHITECLIFF,
+            userId: gameSession.user.id,
+            gameCurrency: gameSession.gameCurrency as GamingCurrencyCode,
+            walletCurrency: walletCurrency,
+            winAmountInGameCurrency: new Prisma.Decimal(amount),
+            winAmountInWalletCurrency: new Prisma.Decimal(amount).div(
+              gameSession.exchangeRate,
+            ),
+            winTime: credit_time || '',
+            aggregatorTxId: round_id || txn_id, // round_id 우선 사용
+            aggregatorWinId: txn_id,
+            isEndRound: true,
+          });
 
-            const requiresPushBet =
-              this.whitecliffMapperService.fromWhitecliffProvider(prd_id) ===
-              GameProvider.EVOLUTION;
+        // 라운드 완료 처리 (debit과 동일)
+        if (updatedGameTransaction.gameRoundId) {
+          const gameRound = await this.tx.gameRound.findUnique({
+            where: {
+              id: updatedGameTransaction.gameRoundId,
+            },
+            select: {
+              id: true,
+            },
+          });
 
-            await this.queueService.addGamePostProcessJob({
-              gameRoundId: result.gameRoundId.toString(),
-              waitForPushBet: requiresPushBet,
+          if (gameRound) {
+            await this.tx.gameRound.update({
+              where: {
+                id: gameRound.id,
+              },
+              data: {
+                completedAt: parseDateStringOrThrow(credit_time || ''),
+                transaction: {
+                  update: {
+                    status: TransactionStatus.COMPLETED,
+                  },
+                },
+              },
             });
           }
+        }
 
-          // 환율 적용하여 gameCurrency 기준 잔액 반환 (debit과 동일)
-          return {
-            status: result.status,
-            balance: gameSession.exchangeRate
-              .mul(result.lastBalance)
-              .toDecimalPlaces(2)
-              .toNumber(),
-          };
-        },
-      );
+        result = {
+          status: 1,
+          lastBalance: updatedGameTransaction.afterBonusBalance.add(
+            updatedGameTransaction.afterMainBalance,
+          ), // walletCurrency 기준
+          gameRoundId: updatedGameTransaction.gameRoundId,
+        };
+      }
+
+      // credit_amount 처리 시 큐 작업 추가 (트랜잭션 밖에서)
+      if (!is_cancel && result.gameRoundId) {
+        await this.queueService.addWhitecliffFetchGameResultUrlJob({
+          gameRoundId: result.gameRoundId.toString(),
+        });
+
+        const requiresPushBet =
+          this.whitecliffMapperService.fromWhitecliffProvider(prd_id) ===
+          GameProvider.EVOLUTION;
+
+        await this.queueService.addGamePostProcessJob({
+          gameRoundId: result.gameRoundId.toString(),
+          waitForPushBet: requiresPushBet,
+        });
+      }
+
+      // 환율 적용하여 gameCurrency 기준 잔액 반환 (debit과 동일)
+      return {
+        status: result.status,
+        balance: gameSession.exchangeRate
+          .mul(result.lastBalance)
+          .toDecimalPlaces(2)
+          .toNumber(),
+      };
     } catch (error) {
       this.logger.error(error, `잔액 추가 실패`);
       const errorMessage = getCasinoErrorCode(error);
@@ -554,6 +536,7 @@ export class WhitecliffCallbackService {
    * @param userId 사용자 ID
    * @returns 보너스 정보
    */
+  @Transactional()
   async getBonus(
     body: GetBonusRequestDto,
     gameCurrency: GamingCurrencyCode,
@@ -581,7 +564,7 @@ export class WhitecliffCallbackService {
         this.whitecliffMapperService.fromWhitecliffProvider(prd_id)!;
 
       // 1. 게임 조회
-      const game = await this.prismaService.casinoGame.findUnique({
+      const game = await this.tx.casinoGame.findUnique({
         where: {
           aggregatorType_provider_gameId: {
             aggregatorType: GameAggregatorType.WHITECLIFF,
@@ -600,7 +583,7 @@ export class WhitecliffCallbackService {
       }
 
       // 2. sid로 gameSession 우선 조회 (debit, credit과 동일한 패턴)
-      const gameSession = await this.prismaService.casinoGameSession.findFirst({
+      const gameSession = await this.tx.casinoGameSession.findFirst({
         where: {
           aggregatorType: GameAggregatorType.WHITECLIFF,
           token: sid, // sid로 직접 찾기
@@ -651,105 +634,97 @@ export class WhitecliffCallbackService {
 
       const isEndRound = is_endround == true;
 
-      return await this.concurrencyService.withUserBalanceLock(
-        gameSession.user.id,
-        async () => {
-          const result = await this.prismaService.$transaction(async (tx) => {
-            // 0 = In Game Bonus 인 게임 보너스
-            // 1 = Promotion 프로모션 보너스
-            // 2 = Jackpot 잭팟 보너스
-            const bonusType =
-              type === 0
-                ? BonusType.IN_GAME_BONUS
-                : type === 1
-                  ? BonusType.PROMOTION
-                  : BonusType.JACKPOT;
+      // 0 = In Game Bonus 인 게임 보너스
+      // 1 = Promotion 프로모션 보너스
+      // 2 = Jackpot 잭팟 보너스
+      const bonusType =
+        type === 0
+          ? BonusType.IN_GAME_BONUS
+          : type === 1
+            ? BonusType.PROMOTION
+            : BonusType.JACKPOT;
 
-            const bonusTransactionResult =
-              await this.casinoBonusService.processBonus({
-                tx: tx,
-                userId: gameSession.user.id,
-                gameCurrency: gameSession.gameCurrency as GamingCurrencyCode,
-                transactionTime: nowUtc(), // Whitecliff는 시간 필드가 없으므로 현재 시간 사용
+      const bonusTransactionResult =
+        await this.casinoBonusService.processBonus({
+          userId: gameSession.user.id,
+          gameCurrency: gameSession.gameCurrency as GamingCurrencyCode,
+          transactionTime: nowUtc(), // Whitecliff는 시간 필드가 없으므로 현재 시간 사용
+          aggregatorType: GameAggregatorType.WHITECLIFF,
+          provider: provider,
+          bonusType: bonusType,
+          bonusAmountInGameCurrency: new Prisma.Decimal(amount),
+          aggregatorRoundId: round_id,
+          aggregatorTransactionId: txn_id,
+          isEndRound: isEndRound,
+          aggregatorFreespinId: freespin_id,
+          gameId: game.id,
+          gameSessionId: gameSession.id, // gameSessionId 전달
+        });
+
+      const result = {
+        status: 1,
+        lastBalance: bonusTransactionResult.afterMainBalance.add(
+          bonusTransactionResult.afterBonusBalance,
+        ), // walletCurrency 기준
+      };
+
+      // 라운드 완료 처리 (isEndRound일 때만 - DCS 패턴)
+      if (isEndRound && round_id) {
+        const gameRound = await this.tx.gameRound.findUnique({
+          where: {
+            aggregatorTxId_aggregatorType: {
+              aggregatorTxId: round_id,
+              aggregatorType: GameAggregatorType.WHITECLIFF,
+            },
+          },
+          select: {
+            id: true,
+          },
+        });
+
+        if (gameRound) {
+          await this.tx.gameRound.update({
+            where: {
+              aggregatorTxId_aggregatorType: {
+                aggregatorTxId: round_id,
                 aggregatorType: GameAggregatorType.WHITECLIFF,
-                provider: provider,
-                bonusType: bonusType,
-                bonusAmountInGameCurrency: new Prisma.Decimal(amount),
-                aggregatorRoundId: round_id,
-                aggregatorTransactionId: txn_id,
-                isEndRound: isEndRound,
-                aggregatorFreespinId: freespin_id,
-                gameId: game.id,
-                gameSessionId: gameSession.id, // gameSessionId 전달
-              });
-
-            return {
-              status: 1,
-              lastBalance: bonusTransactionResult.afterMainBalance.add(
-                bonusTransactionResult.afterBonusBalance,
-              ), // walletCurrency 기준
-            };
+              },
+            },
+            data: {
+              completedAt: nowUtc(),
+              transaction: {
+                update: {
+                  status: TransactionStatus.COMPLETED,
+                },
+              },
+            },
+            select: {
+              id: true,
+            },
           });
 
-          // 라운드 완료 처리 (isEndRound일 때만 - DCS 패턴)
-          if (isEndRound && round_id) {
-            const gameRound = await this.prismaService.gameRound.findUnique({
-              where: {
-                aggregatorTxId_aggregatorType: {
-                  aggregatorTxId: round_id,
-                  aggregatorType: GameAggregatorType.WHITECLIFF,
-                },
-              },
-              select: {
-                id: true,
-              },
-            });
+          // 큐 작업 추가 (DCS 패턴)
+          await this.queueService.addWhitecliffFetchGameResultUrlJob({
+            gameRoundId: gameRound.id.toString(),
+          });
 
-            if (gameRound) {
-              await this.prismaService.gameRound.update({
-                where: {
-                  aggregatorTxId_aggregatorType: {
-                    aggregatorTxId: round_id,
-                    aggregatorType: GameAggregatorType.WHITECLIFF,
-                  },
-                },
-                data: {
-                  completedAt: nowUtc(),
-                  transaction: {
-                    update: {
-                      status: TransactionStatus.COMPLETED,
-                    },
-                  },
-                },
-                select: {
-                  id: true,
-                },
-              });
+          const requiresPushBet = provider === GameProvider.EVOLUTION;
 
-              // 큐 작업 추가 (DCS 패턴)
-              await this.queueService.addWhitecliffFetchGameResultUrlJob({
-                gameRoundId: gameRound.id.toString(),
-              });
+          await this.queueService.addGamePostProcessJob({
+            gameRoundId: gameRound.id.toString(),
+            waitForPushBet: requiresPushBet,
+          });
+        }
+      }
 
-              const requiresPushBet = provider === GameProvider.EVOLUTION;
-
-              await this.queueService.addGamePostProcessJob({
-                gameRoundId: gameRound.id.toString(),
-                waitForPushBet: requiresPushBet,
-              });
-            }
-          }
-
-          // 환율 적용하여 gameCurrency 기준 잔액 반환 (debit, credit과 동일)
-          return {
-            status: result.status,
-            balance: gameSession.exchangeRate
-              .mul(result.lastBalance)
-              .toDecimalPlaces(2)
-              .toNumber(),
-          };
-        },
-      );
+      // 환율 적용하여 gameCurrency 기준 잔액 반환 (debit, credit과 동일)
+      return {
+        status: result.status,
+        balance: gameSession.exchangeRate
+          .mul(result.lastBalance)
+          .toDecimalPlaces(2)
+          .toNumber(),
+      };
     } catch (error) {
       this.logger.error(error, `보너스 조회 실패`);
       const errorMessage = getCasinoErrorCode(error);
