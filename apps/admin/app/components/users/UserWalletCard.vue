@@ -180,11 +180,11 @@ const getCurrencyTheme = (currency: string) => {
       <UIcon name="i-lucide-loader-2" class="animate-spin w-6 h-6 text-primary-500" />
     </div>
 
-    <div v-else-if="wallets.length > 0" class="divide-y divide-neutral-100 dark:divide-neutral-800">
+    <div v-else-if="wallets.length > 0" class="grid grid-cols-1 xl:grid-cols-2 gap-4">
       <div
         v-for="wallet in wallets"
         :key="wallet.currency"
-        class="p-4 bg-white dark:bg-transparent transition-colors"
+        class="p-4 bg-white dark:bg-transparent rounded-lg border border-neutral-200 dark:border-neutral-800 transition-colors"
       >
         <div class="flex flex-col gap-4">
           <!-- Header Area -->

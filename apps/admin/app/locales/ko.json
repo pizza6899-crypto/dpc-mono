@@ -67,7 +67,8 @@
             "copy_success": "클립보드에 복사되었습니다",
             "copy_error": "복사에 실패했습니다"
         },
-        "no_additional_data": "추가된 데이터 없음"
+        "no_additional_data": "추가된 데이터 없음",
+        "export": "내보내기"
     },
     "users": {
         "uid": "UID",

@@ -59,12 +59,12 @@ const active = computed({
           <div class="grid grid-cols-1 md:grid-cols-3 gap-6">
             <div class="md:col-span-1 space-y-6">
               <UsersUserInfoCard :user="props.user" />
-              <UsersUserWalletCard :user-id="props.user.id" />
             </div>
             
-            <!-- Tier Info Card -->
-            <div class="md:col-span-2">
+            <!-- Tier Info & Wallet Card -->
+            <div class="md:col-span-2 space-y-6">
               <UsersUserTierCard :user-id="props.user.id" @refresh-history="refreshHistory" />
+              <UsersUserWalletCard :user-id="props.user.id" />
             </div>
           </div>
         </div>

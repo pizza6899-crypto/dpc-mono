@@ -37,9 +37,9 @@ const items = computed(() => [
     <template #header>
       <div class="flex items-center justify-between">
         <h3 class="font-semibold">{{ t('users.info') }}</h3>
-        <UDropdown :items="items" :popper="{ placement: 'bottom-end' }">
+        <UDropdownMenu :items="items" :content="{ align: 'end' }">
           <UButton color="neutral" variant="ghost" icon="i-lucide-ellipsis-vertical" />
-        </UDropdown>
+        </UDropdownMenu>
       </div>
     </template>
     

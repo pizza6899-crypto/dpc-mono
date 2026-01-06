@@ -1,7 +1,6 @@
 <script setup lang="ts">
 import { useUserAdminControllerFindOne } from '~/api/generated/endpoints/dPCBackendAPI'
 
-const router = useRouter()
 const route = useRoute()
 const userId = route.params.id as string
 
@@ -34,7 +33,9 @@ const { data: user, isPending: isUserLoading } = useUserAdminControllerFindOne(u
       </div>
 
       <div v-else-if="user?.data" class="flex-1 flex flex-col h-full overflow-hidden">
-        <UsersDetailTabs :user="user.data" />
+        <div class="flex-1 overflow-hidden">
+          <UsersDetailTabs :user="user.data" />
+        </div>
       </div>
     </template>
   </UDashboardPanel>

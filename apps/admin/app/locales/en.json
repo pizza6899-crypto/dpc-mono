@@ -67,7 +67,8 @@
             "copy_success": "Copied to clipboard",
             "copy_error": "Failed to copy"
         },
-        "no_additional_data": "No additional data"
+        "no_additional_data": "No additional data",
+        "export": "Export"
     },
     "users": {
         "uid": "UID",
