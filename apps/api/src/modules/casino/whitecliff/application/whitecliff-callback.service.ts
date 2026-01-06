@@ -174,7 +174,7 @@ export class WhitecliffCallbackService {
               whitecliffSystemId: true,
             },
           },
-          game: {
+          casinoGame: {
             select: {
               id: true,
             },
@@ -201,7 +201,7 @@ export class WhitecliffCallbackService {
       }
 
       // 5. game 조회 (gameSession에 없으면 별도 조회)
-      let gameId = gameSession.game?.id;
+      let gameId = gameSession.casinoGame?.id;
       if (!gameId) {
         const game = await this.prismaService.casinoGame.findUnique({
           where: {
@@ -600,7 +600,7 @@ export class WhitecliffCallbackService {
         where: {
           aggregatorType: GameAggregatorType.WHITECLIFF,
           token: sid, // sid로 직접 찾기
-          gameId: game.id, // 게임 ID도 함께 확인 (DCS 패턴)
+          casinoGameId: game.id, // 게임 ID도 함께 확인 (DCS 패턴)
         },
         orderBy: {
           createdAt: 'desc',

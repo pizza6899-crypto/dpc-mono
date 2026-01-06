@@ -16,6 +16,7 @@ interface CreateSessionParams {
     walletCurrency: ExchangeCurrencyCode;
     gameCurrency: ExchangeCurrencyCode;
     token: string;
+    playerName: string;
 }
 
 @Injectable()
@@ -34,6 +35,7 @@ export class CreateCasinoGameSessionService {
             walletCurrency,
             gameCurrency,
             token,
+            playerName,
         } = params;
 
         // 1. 환율 조회 (세션 고정 환율)
@@ -46,12 +48,13 @@ export class CreateCasinoGameSessionService {
         const session = CasinoGameSession.create({
             uid: generateUid(),
             userId,
+            playerName, // playername 추가
             token,
             aggregatorType,
             walletCurrency,
             gameCurrency,
             exchangeRate,
-            gameId,
+            casinoGameId: gameId,
         });
 
         // 3. 저장

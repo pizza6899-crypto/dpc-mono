@@ -41,6 +41,8 @@ import { parseDateStringOrThrow } from 'src/utils/date.util';
 import { CasinoBonusService } from '../../application/casino-bonus.service';
 import { WalletCurrencyCode } from 'src/utils/currency.util';
 import { CasinoErrorCode } from '../../constants/casino-error-codes';
+import { Transactional } from '@nestjs-cls/transactional';
+import { FindCasinoGameSessionService } from '../../application/find-casino-game-session.service';
 
 @Injectable()
 export class DcsCallbackService {
@@ -57,6 +59,7 @@ export class DcsCallbackService {
     private readonly casinoBetService: CasinoBetService,
     private readonly casinoRefundService: CasinoRefundService,
     private readonly casinoBonusService: CasinoBonusService,
+    private readonly findCasinoGameSessionService: FindCasinoGameSessionService,
   ) {
     this.dcsConfig = this.envService.dcs;
   }
@@ -136,6 +139,7 @@ export class DcsCallbackService {
   /**
    * Wager 콜백 (베팅)
    */
+  @Transactional()
   async wager(body: WagerRequestDto): Promise<WagerResponseDto> {
     const {
       brand_uid,
@@ -161,62 +165,48 @@ export class DcsCallbackService {
       jackpot_contribution ?? 0,
     );
 
-    const gameSession = await this.prismaService.casinoGameSession.findFirst({
-      where: {
-        aggregatorType: GameAggregatorType.DCS,
-        token,
-      },
-      select: {
-        id: true,
-        exchangeRate: true,
-        walletCurrency: true,
-        user: {
-          select: {
-            id: true,
-            dcsId: true,
-          },
-        },
-        game: {
-          select: {
-            id: true,
-          },
-        },
-      },
-    });
+    const gameSession = await this.findCasinoGameSessionService.findByToken(token);
 
     if (!gameSession) {
       this.logger.error(`❌ Login API - 게임 세션 존재하지 않음: ${brand_uid}`);
       return getDcsResponse(DcsResponseCode.PLAYER_NOT_EXIST);
     }
 
+    if (gameSession.aggregatorType !== GameAggregatorType.DCS) {
+      this.logger.error(
+        `❌ Login API - 게임 세션 타입 불일치: ${gameSession.aggregatorType}`,
+      );
+      return getDcsResponse(DcsResponseCode.PLAYER_NOT_EXIST);
+    }
+
     // token 불일치
     // 토큰이 다른 유저꺼임
-    if (gameSession.user.dcsId !== brand_uid) {
+    if (gameSession.playerName !== brand_uid) {
       this.logger.error(`❌ Login API - 토큰 불일치: ${brand_uid}`);
       return getDcsResponse(DcsResponseCode.NOT_LOGGED_IN);
     }
 
     try {
       return await this.concurrencyService.withUserBalanceLock(
-        gameSession.user.id,
+        gameSession.userId,
         async () => {
           return await this.prismaService.$transaction(async (tx) => {
             const betTransactionResult = await this.casinoBetService.processBet(
               {
                 tx,
-                userId: gameSession.user.id,
+                userId: gameSession.userId,
                 betAmountInGameCurrency: new Prisma.Decimal(amount),
                 betAmountInWalletCurrency: new Prisma.Decimal(amount).div(
                   gameSession.exchangeRate,
                 ),
                 walletCurrency: gameSession.walletCurrency,
-                gameSessionId: gameSession.id,
+                gameSessionId: gameSession.id!,
                 aggregatorTxId: round_id,
                 aggregatorBetId: wager_id,
                 aggregatorType: GameAggregatorType.DCS,
                 aggregatorGameId: game_id,
                 provider: providerEnum,
-                gameId: gameSession.game!.id,
+                gameId: gameSession.casinoGameId!,
                 betTime: transaction_time,
                 jackpotContributionAmount,
                 betType: bet_type === 1 ? BetType.NORMAL : BetType.TIP,
@@ -239,7 +229,7 @@ export class DcsCallbackService {
       this.logger.error(error, `Wager 콜백 실패`);
 
       const userBalance = await this.casinoBalanceService.getUserCasinoBalance({
-        userId: gameSession.user.id,
+        userId: gameSession.userId,
         currency: gameSession.walletCurrency,
       });
 
@@ -895,7 +885,7 @@ export class DcsCallbackService {
         userId: user.id,
         aggregatorType: GameAggregatorType.DCS,
         gameCurrency: gameCurrencyEnum,
-        gameId: game.id,
+        casinoGameId: game.id,
       },
       orderBy: {
         createdAt: 'desc',

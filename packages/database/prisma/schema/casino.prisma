@@ -44,6 +44,7 @@ model CasinoGameSession {
   uid                    String               @unique
   userId                 BigInt               @map("user_id")
   token                  String               @unique
+  playerName             String               @map("player_name")
   createdAt              DateTime             @default(now()) @map("created_at")
   updatedAt              DateTime             @updatedAt @map("updated_at")
   lastAccessedAt         DateTime             @default(now()) @map("last_accessed_at")
@@ -52,9 +53,9 @@ model CasinoGameSession {
   gameCurrency           ExchangeCurrencyCode @map("game_currency")
   exchangeRate           Decimal              @map("exchange_rate") @db.Decimal(32, 18)
   exchangeRateSnapshotAt DateTime             @default(now()) @map("exchange_rate_snapshot_at")
-  gameId                 BigInt?              @map("game_id")
+  casinoGameId           BigInt?              @map("casino_game_id")
   gameRounds             GameRound[]
-  game                   CasinoGame?          @relation(fields: [gameId], references: [id])
+  casinoGame             CasinoGame?          @relation(fields: [casinoGameId], references: [id])
   user                   User                 @relation(fields: [userId], references: [id])
 
   @@index([userId])

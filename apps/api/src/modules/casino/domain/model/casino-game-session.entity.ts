@@ -9,13 +9,14 @@ export class CasinoGameSession {
         public readonly id: bigint | null,
         public readonly uid: string,
         public readonly userId: bigint,
+        public readonly playerName: string,
         public readonly token: string,
         public readonly aggregatorType: GameAggregatorType,
         public readonly walletCurrency: ExchangeCurrencyCode,
         public readonly gameCurrency: ExchangeCurrencyCode,
         public readonly exchangeRate: Prisma.Decimal,
         public readonly exchangeRateSnapshotAt: Date,
-        public readonly gameId: bigint | null,
+        public readonly casinoGameId: bigint | null,
         public readonly createdAt: Date,
         public readonly updatedAt: Date,
         public readonly lastAccessedAt: Date,
@@ -25,13 +26,14 @@ export class CasinoGameSession {
         id?: bigint;
         uid: string;
         userId: bigint;
+        playerName: string;
         token: string;
         aggregatorType: GameAggregatorType;
         walletCurrency: ExchangeCurrencyCode;
         gameCurrency: ExchangeCurrencyCode;
         exchangeRate: Prisma.Decimal;
         exchangeRateSnapshotAt?: Date;
-        gameId?: bigint | null;
+        casinoGameId?: bigint | null;
         createdAt?: Date;
         updatedAt?: Date;
         lastAccessedAt?: Date;
@@ -40,13 +42,14 @@ export class CasinoGameSession {
             params.id ?? null,
             params.uid,
             params.userId,
+            params.playerName,
             params.token,
             params.aggregatorType,
             params.walletCurrency,
             params.gameCurrency,
             params.exchangeRate,
             params.exchangeRateSnapshotAt ?? new Date(),
-            params.gameId ?? null,
+            params.casinoGameId ?? null,
             params.createdAt ?? new Date(),
             params.updatedAt ?? new Date(),
             params.lastAccessedAt ?? new Date(),

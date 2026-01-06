@@ -120,6 +120,7 @@ export class DcsGameService {
         walletCurrency,
         gameCurrency,
         token: newDcsToken,
+        playerName: updatedUser.dcsId!,
       });
 
 

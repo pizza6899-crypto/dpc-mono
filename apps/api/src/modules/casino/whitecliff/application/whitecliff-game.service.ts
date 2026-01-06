@@ -190,6 +190,7 @@ export class WhitecliffGameService {
       walletCurrency,
       gameCurrency,
       token: result.sid,
+      playerName: whitecliffUsername!,
     });
 
     return {

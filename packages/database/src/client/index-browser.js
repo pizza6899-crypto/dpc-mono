@@ -284,16 +284,17 @@ exports.Prisma.CasinoGameSessionScalarFieldEnum = {
   id: 'id',
   uid: 'uid',
   userId: 'userId',
+  token: 'token',
+  playerName: 'playerName',
   createdAt: 'createdAt',
   updatedAt: 'updatedAt',
   lastAccessedAt: 'lastAccessedAt',
   aggregatorType: 'aggregatorType',
-  token: 'token',
   walletCurrency: 'walletCurrency',
   gameCurrency: 'gameCurrency',
   exchangeRate: 'exchangeRate',
   exchangeRateSnapshotAt: 'exchangeRateSnapshotAt',
-  gameId: 'gameId'
+  casinoGameId: 'casinoGameId'
 };
 
 exports.Prisma.UserScalarFieldEnum = {

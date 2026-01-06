@@ -16928,62 +16928,65 @@ export namespace Prisma {
     id: number | null
     userId: number | null
     exchangeRate: Decimal | null
-    gameId: number | null
+    casinoGameId: number | null
   }
 
   export type CasinoGameSessionSumAggregateOutputType = {
     id: bigint | null
     userId: bigint | null
     exchangeRate: Decimal | null
-    gameId: bigint | null
+    casinoGameId: bigint | null
   }
 
   export type CasinoGameSessionMinAggregateOutputType = {
     id: bigint | null
     uid: string | null
     userId: bigint | null
+    token: string | null
+    playerName: string | null
     createdAt: Date | null
     updatedAt: Date | null
     lastAccessedAt: Date | null
     aggregatorType: $Enums.GameAggregatorType | null
-    token: string | null
     walletCurrency: $Enums.ExchangeCurrencyCode | null
     gameCurrency: $Enums.ExchangeCurrencyCode | null
     exchangeRate: Decimal | null
     exchangeRateSnapshotAt: Date | null
-    gameId: bigint | null
+    casinoGameId: bigint | null
   }
 
   export type CasinoGameSessionMaxAggregateOutputType = {
     id: bigint | null
     uid: string | null
     userId: bigint | null
+    token: string | null
+    playerName: string | null
     createdAt: Date | null
     updatedAt: Date | null
     lastAccessedAt: Date | null
     aggregatorType: $Enums.GameAggregatorType | null
-    token: string | null
     walletCurrency: $Enums.ExchangeCurrencyCode | null
     gameCurrency: $Enums.ExchangeCurrencyCode | null
     exchangeRate: Decimal | null
     exchangeRateSnapshotAt: Date | null
-    gameId: bigint | null
+    casinoGameId: bigint | null
   }
 
   export type CasinoGameSessionCountAggregateOutputType = {
     id: number
     uid: number
     userId: number
+    token: number
+    playerName: number
     createdAt: number
     updatedAt: number
     lastAccessedAt: number
     aggregatorType: number
-    token: number
     walletCurrency: number
     gameCurrency: number
     exchangeRate: number
     exchangeRateSnapshotAt: number
-    gameId: number
+    casinoGameId: number
     _all: number
   }
 
@@ -16992,62 +16995,65 @@ export namespace Prisma {
     id?: true
     userId?: true
     exchangeRate?: true
-    gameId?: true
+    casinoGameId?: true
   }
 
   export type CasinoGameSessionSumAggregateInputType = {
     id?: true
     userId?: true
     exchangeRate?: true
-    gameId?: true
+    casinoGameId?: true
   }
 
   export type CasinoGameSessionMinAggregateInputType = {
     id?: true
     uid?: true
     userId?: true
+    token?: true
+    playerName?: true
     createdAt?: true
     updatedAt?: true
     lastAccessedAt?: true
     aggregatorType?: true
-    token?: true
     walletCurrency?: true
     gameCurrency?: true
     exchangeRate?: true
     exchangeRateSnapshotAt?: true
-    gameId?: true
+    casinoGameId?: true
   }
 
   export type CasinoGameSessionMaxAggregateInputType = {
     id?: true
     uid?: true
     userId?: true
+    token?: true
+    playerName?: true
     createdAt?: true
     updatedAt?: true
     lastAccessedAt?: true
     aggregatorType?: true
-    token?: true
     walletCurrency?: true
     gameCurrency?: true
     exchangeRate?: true
     exchangeRateSnapshotAt?: true
-    gameId?: true
+    casinoGameId?: true
   }
 
   export type CasinoGameSessionCountAggregateInputType = {
     id?: true
     uid?: true
     userId?: true
+    token?: true
+    playerName?: true
     createdAt?: true
     updatedAt?: true
     lastAccessedAt?: true
     aggregatorType?: true
-    token?: true
     walletCurrency?: true
     gameCurrency?: true
     exchangeRate?: true
     exchangeRateSnapshotAt?: true
-    gameId?: true
+    casinoGameId?: true
     _all?: true
   }
 
@@ -17141,16 +17147,17 @@ export namespace Prisma {
     id: bigint
     uid: string
     userId: bigint
+    token: string
+    playerName: string
     createdAt: Date
     updatedAt: Date
     lastAccessedAt: Date
     aggregatorType: $Enums.GameAggregatorType
-    token: string
     walletCurrency: $Enums.ExchangeCurrencyCode
     gameCurrency: $Enums.ExchangeCurrencyCode
     exchangeRate: Decimal
     exchangeRateSnapshotAt: Date
-    gameId: bigint | null
+    casinoGameId: bigint | null
     _count: CasinoGameSessionCountAggregateOutputType | null
     _avg: CasinoGameSessionAvgAggregateOutputType | null
     _sum: CasinoGameSessionSumAggregateOutputType | null
@@ -17176,18 +17183,19 @@ export namespace Prisma {
     id?: boolean
     uid?: boolean
     userId?: boolean
+    token?: boolean
+    playerName?: boolean
     createdAt?: boolean
     updatedAt?: boolean
     lastAccessedAt?: boolean
     aggregatorType?: boolean
-    token?: boolean
     walletCurrency?: boolean
     gameCurrency?: boolean
     exchangeRate?: boolean
     exchangeRateSnapshotAt?: boolean
-    gameId?: boolean
+    casinoGameId?: boolean
     gameRounds?: boolean | CasinoGameSession$gameRoundsArgs<ExtArgs>
-    game?: boolean | CasinoGameSession$gameArgs<ExtArgs>
+    casinoGame?: boolean | CasinoGameSession$casinoGameArgs<ExtArgs>
     user?: boolean | UserDefaultArgs<ExtArgs>
     _count?: boolean | CasinoGameSessionCountOutputTypeDefaultArgs<ExtArgs>
   }, ExtArgs["result"]["casinoGameSession"]>
@@ -17196,17 +17204,18 @@ export namespace Prisma {
     id?: boolean
     uid?: boolean
     userId?: boolean
+    token?: boolean
+    playerName?: boolean
     createdAt?: boolean
     updatedAt?: boolean
     lastAccessedAt?: boolean
     aggregatorType?: boolean
-    token?: boolean
     walletCurrency?: boolean
     gameCurrency?: boolean
     exchangeRate?: boolean
     exchangeRateSnapshotAt?: boolean
-    gameId?: boolean
-    game?: boolean | CasinoGameSession$gameArgs<ExtArgs>
+    casinoGameId?: boolean
+    casinoGame?: boolean | CasinoGameSession$casinoGameArgs<ExtArgs>
     user?: boolean | UserDefaultArgs<ExtArgs>
   }, ExtArgs["result"]["casinoGameSession"]>
 
@@ -17214,17 +17223,18 @@ export namespace Prisma {
     id?: boolean
     uid?: boolean
     userId?: boolean
+    token?: boolean
+    playerName?: boolean
     createdAt?: boolean
     updatedAt?: boolean
     lastAccessedAt?: boolean
     aggregatorType?: boolean
-    token?: boolean
     walletCurrency?: boolean
     gameCurrency?: boolean
     exchangeRate?: boolean
     exchangeRateSnapshotAt?: boolean
-    gameId?: boolean
-    game?: boolean | CasinoGameSession$gameArgs<ExtArgs>
+    casinoGameId?: boolean
+    casinoGame?: boolean | CasinoGameSession$casinoGameArgs<ExtArgs>
     user?: boolean | UserDefaultArgs<ExtArgs>
   }, ExtArgs["result"]["casinoGameSession"]>
 
@@ -17232,31 +17242,32 @@ export namespace Prisma {
     id?: boolean
     uid?: boolean
     userId?: boolean
+    token?: boolean
+    playerName?: boolean
     createdAt?: boolean
     updatedAt?: boolean
     lastAccessedAt?: boolean
     aggregatorType?: boolean
-    token?: boolean
     walletCurrency?: boolean
     gameCurrency?: boolean
     exchangeRate?: boolean
     exchangeRateSnapshotAt?: boolean
-    gameId?: boolean
+    casinoGameId?: boolean
   }
 
-  export type CasinoGameSessionOmit<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetOmit<"id" | "uid" | "userId" | "createdAt" | "updatedAt" | "lastAccessedAt" | "aggregatorType" | "token" | "walletCurrency" | "gameCurrency" | "exchangeRate" | "exchangeRateSnapshotAt" | "gameId", ExtArgs["result"]["casinoGameSession"]>
+  export type CasinoGameSessionOmit<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetOmit<"id" | "uid" | "userId" | "token" | "playerName" | "createdAt" | "updatedAt" | "lastAccessedAt" | "aggregatorType" | "walletCurrency" | "gameCurrency" | "exchangeRate" | "exchangeRateSnapshotAt" | "casinoGameId", ExtArgs["result"]["casinoGameSession"]>
   export type CasinoGameSessionInclude<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
     gameRounds?: boolean | CasinoGameSession$gameRoundsArgs<ExtArgs>
-    game?: boolean | CasinoGameSession$gameArgs<ExtArgs>
+    casinoGame?: boolean | CasinoGameSession$casinoGameArgs<ExtArgs>
     user?: boolean | UserDefaultArgs<ExtArgs>
     _count?: boolean | CasinoGameSessionCountOutputTypeDefaultArgs<ExtArgs>
   }
   export type CasinoGameSessionIncludeCreateManyAndReturn<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
-    game?: boolean | CasinoGameSession$gameArgs<ExtArgs>
+    casinoGame?: boolean | CasinoGameSession$casinoGameArgs<ExtArgs>
     user?: boolean | UserDefaultArgs<ExtArgs>
   }
   export type CasinoGameSessionIncludeUpdateManyAndReturn<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
-    game?: boolean | CasinoGameSession$gameArgs<ExtArgs>
+    casinoGame?: boolean | CasinoGameSession$casinoGameArgs<ExtArgs>
     user?: boolean | UserDefaultArgs<ExtArgs>
   }
 
@@ -17264,23 +17275,24 @@ export namespace Prisma {
     name: "CasinoGameSession"
     objects: {
       gameRounds: Prisma.$GameRoundPayload<ExtArgs>[]
-      game: Prisma.$CasinoGamePayload<ExtArgs> | null
+      casinoGame: Prisma.$CasinoGamePayload<ExtArgs> | null
       user: Prisma.$UserPayload<ExtArgs>
     }
     scalars: $Extensions.GetPayloadResult<{
       id: bigint
       uid: string
       userId: bigint
+      token: string
+      playerName: string
       createdAt: Date
       updatedAt: Date
       lastAccessedAt: Date
       aggregatorType: $Enums.GameAggregatorType
-      token: string
       walletCurrency: $Enums.ExchangeCurrencyCode
       gameCurrency: $Enums.ExchangeCurrencyCode
       exchangeRate: Prisma.Decimal
       exchangeRateSnapshotAt: Date
-      gameId: bigint | null
+      casinoGameId: bigint | null
     }, ExtArgs["result"]["casinoGameSession"]>
     composites: {}
   }
@@ -17676,7 +17688,7 @@ export namespace Prisma {
   export interface Prisma__CasinoGameSessionClient<T, Null = never, ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs, GlobalOmitOptions = {}> extends Prisma.PrismaPromise<T> {
     readonly [Symbol.toStringTag]: "PrismaPromise"
     gameRounds<T extends CasinoGameSession$gameRoundsArgs<ExtArgs> = {}>(args?: Subset<T, CasinoGameSession$gameRoundsArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$GameRoundPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
-    game<T extends CasinoGameSession$gameArgs<ExtArgs> = {}>(args?: Subset<T, CasinoGameSession$gameArgs<ExtArgs>>): Prisma__CasinoGameClient<$Result.GetResult<Prisma.$CasinoGamePayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions> | null, null, ExtArgs, GlobalOmitOptions>
+    casinoGame<T extends CasinoGameSession$casinoGameArgs<ExtArgs> = {}>(args?: Subset<T, CasinoGameSession$casinoGameArgs<ExtArgs>>): Prisma__CasinoGameClient<$Result.GetResult<Prisma.$CasinoGamePayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions> | null, null, ExtArgs, GlobalOmitOptions>
     user<T extends UserDefaultArgs<ExtArgs> = {}>(args?: Subset<T, UserDefaultArgs<ExtArgs>>): Prisma__UserClient<$Result.GetResult<Prisma.$UserPayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions> | Null, Null, ExtArgs, GlobalOmitOptions>
     /**
      * Attaches callbacks for the resolution and/or rejection of the Promise.
@@ -17710,16 +17722,17 @@ export namespace Prisma {
     readonly id: FieldRef<"CasinoGameSession", 'BigInt'>
     readonly uid: FieldRef<"CasinoGameSession", 'String'>
     readonly userId: FieldRef<"CasinoGameSession", 'BigInt'>
+    readonly token: FieldRef<"CasinoGameSession", 'String'>
+    readonly playerName: FieldRef<"CasinoGameSession", 'String'>
     readonly createdAt: FieldRef<"CasinoGameSession", 'DateTime'>
     readonly updatedAt: FieldRef<"CasinoGameSession", 'DateTime'>
     readonly lastAccessedAt: FieldRef<"CasinoGameSession", 'DateTime'>
     readonly aggregatorType: FieldRef<"CasinoGameSession", 'GameAggregatorType'>
-    readonly token: FieldRef<"CasinoGameSession", 'String'>
     readonly walletCurrency: FieldRef<"CasinoGameSession", 'ExchangeCurrencyCode'>
     readonly gameCurrency: FieldRef<"CasinoGameSession", 'ExchangeCurrencyCode'>
     readonly exchangeRate: FieldRef<"CasinoGameSession", 'Decimal'>
     readonly exchangeRateSnapshotAt: FieldRef<"CasinoGameSession", 'DateTime'>
-    readonly gameId: FieldRef<"CasinoGameSession", 'BigInt'>
+    readonly casinoGameId: FieldRef<"CasinoGameSession", 'BigInt'>
   }
     
 
@@ -18140,9 +18153,9 @@ export namespace Prisma {
   }
 
   /**
-   * CasinoGameSession.game
+   * CasinoGameSession.casinoGame
    */
-  export type CasinoGameSession$gameArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+  export type CasinoGameSession$casinoGameArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
     /**
      * Select specific fields to fetch from the CasinoGame
      */
@@ -61895,16 +61908,17 @@ export namespace Prisma {
     id: 'id',
     uid: 'uid',
     userId: 'userId',
+    token: 'token',
+    playerName: 'playerName',
     createdAt: 'createdAt',
     updatedAt: 'updatedAt',
     lastAccessedAt: 'lastAccessedAt',
     aggregatorType: 'aggregatorType',
-    token: 'token',
     walletCurrency: 'walletCurrency',
     gameCurrency: 'gameCurrency',
     exchangeRate: 'exchangeRate',
     exchangeRateSnapshotAt: 'exchangeRateSnapshotAt',
-    gameId: 'gameId'
+    casinoGameId: 'casinoGameId'
   };
 
   export type CasinoGameSessionScalarFieldEnum = (typeof CasinoGameSessionScalarFieldEnum)[keyof typeof CasinoGameSessionScalarFieldEnum]
@@ -64210,18 +64224,19 @@ export namespace Prisma {
     id?: BigIntFilter<"CasinoGameSession"> | bigint | number
     uid?: StringFilter<"CasinoGameSession"> | string
     userId?: BigIntFilter<"CasinoGameSession"> | bigint | number
+    token?: StringFilter<"CasinoGameSession"> | string
+    playerName?: StringFilter<"CasinoGameSession"> | string
     createdAt?: DateTimeFilter<"CasinoGameSession"> | Date | string
     updatedAt?: DateTimeFilter<"CasinoGameSession"> | Date | string
     lastAccessedAt?: DateTimeFilter<"CasinoGameSession"> | Date | string
     aggregatorType?: EnumGameAggregatorTypeFilter<"CasinoGameSession"> | $Enums.GameAggregatorType
-    token?: StringFilter<"CasinoGameSession"> | string
     walletCurrency?: EnumExchangeCurrencyCodeFilter<"CasinoGameSession"> | $Enums.ExchangeCurrencyCode
     gameCurrency?: EnumExchangeCurrencyCodeFilter<"CasinoGameSession"> | $Enums.ExchangeCurrencyCode
     exchangeRate?: DecimalFilter<"CasinoGameSession"> | Decimal | DecimalJsLike | number | string
     exchangeRateSnapshotAt?: DateTimeFilter<"CasinoGameSession"> | Date | string
-    gameId?: BigIntNullableFilter<"CasinoGameSession"> | bigint | number | null
+    casinoGameId?: BigIntNullableFilter<"CasinoGameSession"> | bigint | number | null
     gameRounds?: GameRoundListRelationFilter
-    game?: XOR<CasinoGameNullableScalarRelationFilter, CasinoGameWhereInput> | null
+    casinoGame?: XOR<CasinoGameNullableScalarRelationFilter, CasinoGameWhereInput> | null
     user?: XOR<UserScalarRelationFilter, UserWhereInput>
   }
 
@@ -64229,18 +64244,19 @@ export namespace Prisma {
     id?: SortOrder
     uid?: SortOrder
     userId?: SortOrder
+    token?: SortOrder
+    playerName?: SortOrder
     createdAt?: SortOrder
     updatedAt?: SortOrder
     lastAccessedAt?: SortOrder
     aggregatorType?: SortOrder
-    token?: SortOrder
     walletCurrency?: SortOrder
     gameCurrency?: SortOrder
     exchangeRate?: SortOrder
     exchangeRateSnapshotAt?: SortOrder
-    gameId?: SortOrderInput | SortOrder
+    casinoGameId?: SortOrderInput | SortOrder
     gameRounds?: GameRoundOrderByRelationAggregateInput
-    game?: CasinoGameOrderByWithRelationInput
+    casinoGame?: CasinoGameOrderByWithRelationInput
     user?: UserOrderByWithRelationInput
   }
 
@@ -64252,6 +64268,7 @@ export namespace Prisma {
     OR?: CasinoGameSessionWhereInput[]
     NOT?: CasinoGameSessionWhereInput | CasinoGameSessionWhereInput[]
     userId?: BigIntFilter<"CasinoGameSession"> | bigint | number
+    playerName?: StringFilter<"CasinoGameSession"> | string
     createdAt?: DateTimeFilter<"CasinoGameSession"> | Date | string
     updatedAt?: DateTimeFilter<"CasinoGameSession"> | Date | string
     lastAccessedAt?: DateTimeFilter<"CasinoGameSession"> | Date | string
@@ -64260,9 +64277,9 @@ export namespace Prisma {
     gameCurrency?: EnumExchangeCurrencyCodeFilter<"CasinoGameSession"> | $Enums.ExchangeCurrencyCode
     exchangeRate?: DecimalFilter<"CasinoGameSession"> | Decimal | DecimalJsLike | number | string
     exchangeRateSnapshotAt?: DateTimeFilter<"CasinoGameSession"> | Date | string
-    gameId?: BigIntNullableFilter<"CasinoGameSession"> | bigint | number | null
+    casinoGameId?: BigIntNullableFilter<"CasinoGameSession"> | bigint | number | null
     gameRounds?: GameRoundListRelationFilter
-    game?: XOR<CasinoGameNullableScalarRelationFilter, CasinoGameWhereInput> | null
+    casinoGame?: XOR<CasinoGameNullableScalarRelationFilter, CasinoGameWhereInput> | null
     user?: XOR<UserScalarRelationFilter, UserWhereInput>
   }, "id" | "uid" | "token">
 
@@ -64270,16 +64287,17 @@ export namespace Prisma {
     id?: SortOrder
     uid?: SortOrder
     userId?: SortOrder
+    token?: SortOrder
+    playerName?: SortOrder
     createdAt?: SortOrder
     updatedAt?: SortOrder
     lastAccessedAt?: SortOrder
     aggregatorType?: SortOrder
-    token?: SortOrder
     walletCurrency?: SortOrder
     gameCurrency?: SortOrder
     exchangeRate?: SortOrder
     exchangeRateSnapshotAt?: SortOrder
-    gameId?: SortOrderInput | SortOrder
+    casinoGameId?: SortOrderInput | SortOrder
     _count?: CasinoGameSessionCountOrderByAggregateInput
     _avg?: CasinoGameSessionAvgOrderByAggregateInput
     _max?: CasinoGameSessionMaxOrderByAggregateInput
@@ -64294,16 +64312,17 @@ export namespace Prisma {
     id?: BigIntWithAggregatesFilter<"CasinoGameSession"> | bigint | number
     uid?: StringWithAggregatesFilter<"CasinoGameSession"> | string
     userId?: BigIntWithAggregatesFilter<"CasinoGameSession"> | bigint | number
+    token?: StringWithAggregatesFilter<"CasinoGameSession"> | string
+    playerName?: StringWithAggregatesFilter<"CasinoGameSession"> | string
     createdAt?: DateTimeWithAggregatesFilter<"CasinoGameSession"> | Date | string
     updatedAt?: DateTimeWithAggregatesFilter<"CasinoGameSession"> | Date | string
     lastAccessedAt?: DateTimeWithAggregatesFilter<"CasinoGameSession"> | Date | string
     aggregatorType?: EnumGameAggregatorTypeWithAggregatesFilter<"CasinoGameSession"> | $Enums.GameAggregatorType
-    token?: StringWithAggregatesFilter<"CasinoGameSession"> | string
     walletCurrency?: EnumExchangeCurrencyCodeWithAggregatesFilter<"CasinoGameSession"> | $Enums.ExchangeCurrencyCode
     gameCurrency?: EnumExchangeCurrencyCodeWithAggregatesFilter<"CasinoGameSession"> | $Enums.ExchangeCurrencyCode
     exchangeRate?: DecimalWithAggregatesFilter<"CasinoGameSession"> | Decimal | DecimalJsLike | number | string
     exchangeRateSnapshotAt?: DateTimeWithAggregatesFilter<"CasinoGameSession"> | Date | string
-    gameId?: BigIntNullableWithAggregatesFilter<"CasinoGameSession"> | bigint | number | null
+    casinoGameId?: BigIntNullableWithAggregatesFilter<"CasinoGameSession"> | bigint | number | null
   }
 
   export type UserWhereInput = {
@@ -68688,7 +68707,7 @@ export namespace Prisma {
     updatedAt?: Date | string
     bonusDetails?: BonusDetailCreateNestedManyWithoutCasinoGameInput
     gameRounds?: GameRoundCreateNestedManyWithoutCasinoGameInput
-    gameSessions?: CasinoGameSessionCreateNestedManyWithoutGameInput
+    gameSessions?: CasinoGameSessionCreateNestedManyWithoutCasinoGameInput
     translations?: CasinoGameTranslationCreateNestedManyWithoutCasinoGameInput
   }
 
@@ -68709,7 +68728,7 @@ export namespace Prisma {
     updatedAt?: Date | string
     bonusDetails?: BonusDetailUncheckedCreateNestedManyWithoutCasinoGameInput
     gameRounds?: GameRoundUncheckedCreateNestedManyWithoutCasinoGameInput
-    gameSessions?: CasinoGameSessionUncheckedCreateNestedManyWithoutGameInput
+    gameSessions?: CasinoGameSessionUncheckedCreateNestedManyWithoutCasinoGameInput
     translations?: CasinoGameTranslationUncheckedCreateNestedManyWithoutCasinoGameInput
   }
 
@@ -68730,7 +68749,7 @@ export namespace Prisma {
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
     bonusDetails?: BonusDetailUpdateManyWithoutCasinoGameNestedInput
     gameRounds?: GameRoundUpdateManyWithoutCasinoGameNestedInput
-    gameSessions?: CasinoGameSessionUpdateManyWithoutGameNestedInput
+    gameSessions?: CasinoGameSessionUpdateManyWithoutCasinoGameNestedInput
     translations?: CasinoGameTranslationUpdateManyWithoutCasinoGameNestedInput
   }
 
@@ -68751,7 +68770,7 @@ export namespace Prisma {
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
     bonusDetails?: BonusDetailUncheckedUpdateManyWithoutCasinoGameNestedInput
     gameRounds?: GameRoundUncheckedUpdateManyWithoutCasinoGameNestedInput
-    gameSessions?: CasinoGameSessionUncheckedUpdateManyWithoutGameNestedInput
+    gameSessions?: CasinoGameSessionUncheckedUpdateManyWithoutCasinoGameNestedInput
     translations?: CasinoGameTranslationUncheckedUpdateManyWithoutCasinoGameNestedInput
   }
 
@@ -68882,17 +68901,18 @@ export namespace Prisma {
   export type CasinoGameSessionCreateInput = {
     id?: bigint | number
     uid: string
+    token: string
+    playerName: string
     createdAt?: Date | string
     updatedAt?: Date | string
     lastAccessedAt?: Date | string
     aggregatorType: $Enums.GameAggregatorType
-    token: string
     walletCurrency: $Enums.ExchangeCurrencyCode
     gameCurrency: $Enums.ExchangeCurrencyCode
     exchangeRate: Decimal | DecimalJsLike | number | string
     exchangeRateSnapshotAt?: Date | string
     gameRounds?: GameRoundCreateNestedManyWithoutGameSessionInput
-    game?: CasinoGameCreateNestedOneWithoutGameSessionsInput
+    casinoGame?: CasinoGameCreateNestedOneWithoutGameSessionsInput
     user: UserCreateNestedOneWithoutGameSessionInput
   }
 
@@ -68900,33 +68920,35 @@ export namespace Prisma {
     id?: bigint | number
     uid: string
     userId: bigint | number
+    token: string
+    playerName: string
     createdAt?: Date | string
     updatedAt?: Date | string
     lastAccessedAt?: Date | string
     aggregatorType: $Enums.GameAggregatorType
-    token: string
     walletCurrency: $Enums.ExchangeCurrencyCode
     gameCurrency: $Enums.ExchangeCurrencyCode
     exchangeRate: Decimal | DecimalJsLike | number | string
     exchangeRateSnapshotAt?: Date | string
-    gameId?: bigint | number | null
+    casinoGameId?: bigint | number | null
     gameRounds?: GameRoundUncheckedCreateNestedManyWithoutGameSessionInput
   }
 
   export type CasinoGameSessionUpdateInput = {
     id?: BigIntFieldUpdateOperationsInput | bigint | number
     uid?: StringFieldUpdateOperationsInput | string
+    token?: StringFieldUpdateOperationsInput | string
+    playerName?: StringFieldUpdateOperationsInput | string
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
     lastAccessedAt?: DateTimeFieldUpdateOperationsInput | Date | string
     aggregatorType?: EnumGameAggregatorTypeFieldUpdateOperationsInput | $Enums.GameAggregatorType
-    token?: StringFieldUpdateOperationsInput | string
     walletCurrency?: EnumExchangeCurrencyCodeFieldUpdateOperationsInput | $Enums.ExchangeCurrencyCode
     gameCurrency?: EnumExchangeCurrencyCodeFieldUpdateOperationsInput | $Enums.ExchangeCurrencyCode
     exchangeRate?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
     exchangeRateSnapshotAt?: DateTimeFieldUpdateOperationsInput | Date | string
     gameRounds?: GameRoundUpdateManyWithoutGameSessionNestedInput
-    game?: CasinoGameUpdateOneWithoutGameSessionsNestedInput
+    casinoGame?: CasinoGameUpdateOneWithoutGameSessionsNestedInput
     user?: UserUpdateOneRequiredWithoutGameSessionNestedInput
   }
 
@@ -68934,16 +68956,17 @@ export namespace Prisma {
     id?: BigIntFieldUpdateOperationsInput | bigint | number
     uid?: StringFieldUpdateOperationsInput | string
     userId?: BigIntFieldUpdateOperationsInput | bigint | number
+    token?: StringFieldUpdateOperationsInput | string
+    playerName?: StringFieldUpdateOperationsInput | string
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
     lastAccessedAt?: DateTimeFieldUpdateOperationsInput | Date | string
     aggregatorType?: EnumGameAggregatorTypeFieldUpdateOperationsInput | $Enums.GameAggregatorType
-    token?: StringFieldUpdateOperationsInput | string
     walletCurrency?: EnumExchangeCurrencyCodeFieldUpdateOperationsInput | $Enums.ExchangeCurrencyCode
     gameCurrency?: EnumExchangeCurrencyCodeFieldUpdateOperationsInput | $Enums.ExchangeCurrencyCode
     exchangeRate?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
     exchangeRateSnapshotAt?: DateTimeFieldUpdateOperationsInput | Date | string
-    gameId?: NullableBigIntFieldUpdateOperationsInput | bigint | number | null
+    casinoGameId?: NullableBigIntFieldUpdateOperationsInput | bigint | number | null
     gameRounds?: GameRoundUncheckedUpdateManyWithoutGameSessionNestedInput
   }
 
@@ -68951,26 +68974,28 @@ export namespace Prisma {
     id?: bigint | number
     uid: string
     userId: bigint | number
+    token: string
+    playerName: string
     createdAt?: Date | string
     updatedAt?: Date | string
     lastAccessedAt?: Date | string
     aggregatorType: $Enums.GameAggregatorType
-    token: string
     walletCurrency: $Enums.ExchangeCurrencyCode
     gameCurrency: $Enums.ExchangeCurrencyCode
     exchangeRate: Decimal | DecimalJsLike | number | string
     exchangeRateSnapshotAt?: Date | string
-    gameId?: bigint | number | null
+    casinoGameId?: bigint | number | null
   }
 
   export type CasinoGameSessionUpdateManyMutationInput = {
     id?: BigIntFieldUpdateOperationsInput | bigint | number
     uid?: StringFieldUpdateOperationsInput | string
+    token?: StringFieldUpdateOperationsInput | string
+    playerName?: StringFieldUpdateOperationsInput | string
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
     lastAccessedAt?: DateTimeFieldUpdateOperationsInput | Date | string
     aggregatorType?: EnumGameAggregatorTypeFieldUpdateOperationsInput | $Enums.GameAggregatorType
-    token?: StringFieldUpdateOperationsInput | string
     walletCurrency?: EnumExchangeCurrencyCodeFieldUpdateOperationsInput | $Enums.ExchangeCurrencyCode
     gameCurrency?: EnumExchangeCurrencyCodeFieldUpdateOperationsInput | $Enums.ExchangeCurrencyCode
     exchangeRate?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
@@ -68981,16 +69006,17 @@ export namespace Prisma {
     id?: BigIntFieldUpdateOperationsInput | bigint | number
     uid?: StringFieldUpdateOperationsInput | string
     userId?: BigIntFieldUpdateOperationsInput | bigint | number
+    token?: StringFieldUpdateOperationsInput | string
+    playerName?: StringFieldUpdateOperationsInput | string
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
     lastAccessedAt?: DateTimeFieldUpdateOperationsInput | Date | string
     aggregatorType?: EnumGameAggregatorTypeFieldUpdateOperationsInput | $Enums.GameAggregatorType
-    token?: StringFieldUpdateOperationsInput | string
     walletCurrency?: EnumExchangeCurrencyCodeFieldUpdateOperationsInput | $Enums.ExchangeCurrencyCode
     gameCurrency?: EnumExchangeCurrencyCodeFieldUpdateOperationsInput | $Enums.ExchangeCurrencyCode
     exchangeRate?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
     exchangeRateSnapshotAt?: DateTimeFieldUpdateOperationsInput | Date | string
-    gameId?: NullableBigIntFieldUpdateOperationsInput | bigint | number | null
+    casinoGameId?: NullableBigIntFieldUpdateOperationsInput | bigint | number | null
   }
 
   export type UserCreateInput = {
@@ -73925,62 +73951,65 @@ export namespace Prisma {
     id?: SortOrder
     uid?: SortOrder
     userId?: SortOrder
+    token?: SortOrder
+    playerName?: SortOrder
     createdAt?: SortOrder
     updatedAt?: SortOrder
     lastAccessedAt?: SortOrder
     aggregatorType?: SortOrder
-    token?: SortOrder
     walletCurrency?: SortOrder
     gameCurrency?: SortOrder
     exchangeRate?: SortOrder
     exchangeRateSnapshotAt?: SortOrder
-    gameId?: SortOrder
+    casinoGameId?: SortOrder
   }
 
   export type CasinoGameSessionAvgOrderByAggregateInput = {
     id?: SortOrder
     userId?: SortOrder
     exchangeRate?: SortOrder
-    gameId?: SortOrder
+    casinoGameId?: SortOrder
   }
 
   export type CasinoGameSessionMaxOrderByAggregateInput = {
     id?: SortOrder
     uid?: SortOrder
     userId?: SortOrder
+    token?: SortOrder
+    playerName?: SortOrder
     createdAt?: SortOrder
     updatedAt?: SortOrder
     lastAccessedAt?: SortOrder
     aggregatorType?: SortOrder
-    token?: SortOrder
     walletCurrency?: SortOrder
     gameCurrency?: SortOrder
     exchangeRate?: SortOrder
     exchangeRateSnapshotAt?: SortOrder
-    gameId?: SortOrder
+    casinoGameId?: SortOrder
   }
 
   export type CasinoGameSessionMinOrderByAggregateInput = {
     id?: SortOrder
     uid?: SortOrder
     userId?: SortOrder
+    token?: SortOrder
+    playerName?: SortOrder
     createdAt?: SortOrder
     updatedAt?: SortOrder
     lastAccessedAt?: SortOrder
     aggregatorType?: SortOrder
-    token?: SortOrder
     walletCurrency?: SortOrder
     gameCurrency?: SortOrder
     exchangeRate?: SortOrder
     exchangeRateSnapshotAt?: SortOrder
-    gameId?: SortOrder
+    casinoGameId?: SortOrder
   }
 
   export type CasinoGameSessionSumOrderByAggregateInput = {
     id?: SortOrder
     userId?: SortOrder
     exchangeRate?: SortOrder
-    gameId?: SortOrder
+    casinoGameId?: SortOrder
   }
 
   export type EnumExchangeCurrencyCodeWithAggregatesFilter<$PrismaModel = never> = {
@@ -77372,10 +77401,10 @@ export namespace Prisma {
     connect?: GameRoundWhereUniqueInput | GameRoundWhereUniqueInput[]
   }
 
-  export type CasinoGameSessionCreateNestedManyWithoutGameInput = {
-    create?: XOR<CasinoGameSessionCreateWithoutGameInput, CasinoGameSessionUncheckedCreateWithoutGameInput> | CasinoGameSessionCreateWithoutGameInput[] | CasinoGameSessionUncheckedCreateWithoutGameInput[]
-    connectOrCreate?: CasinoGameSessionCreateOrConnectWithoutGameInput | CasinoGameSessionCreateOrConnectWithoutGameInput[]
-    createMany?: CasinoGameSessionCreateManyGameInputEnvelope
+  export type CasinoGameSessionCreateNestedManyWithoutCasinoGameInput = {
+    create?: XOR<CasinoGameSessionCreateWithoutCasinoGameInput, CasinoGameSessionUncheckedCreateWithoutCasinoGameInput> | CasinoGameSessionCreateWithoutCasinoGameInput[] | CasinoGameSessionUncheckedCreateWithoutCasinoGameInput[]
+    connectOrCreate?: CasinoGameSessionCreateOrConnectWithoutCasinoGameInput | CasinoGameSessionCreateOrConnectWithoutCasinoGameInput[]
+    createMany?: CasinoGameSessionCreateManyCasinoGameInputEnvelope
     connect?: CasinoGameSessionWhereUniqueInput | CasinoGameSessionWhereUniqueInput[]
   }
 
@@ -77400,10 +77429,10 @@ export namespace Prisma {
     connect?: GameRoundWhereUniqueInput | GameRoundWhereUniqueInput[]
   }
 
-  export type CasinoGameSessionUncheckedCreateNestedManyWithoutGameInput = {
-    create?: XOR<CasinoGameSessionCreateWithoutGameInput, CasinoGameSessionUncheckedCreateWithoutGameInput> | CasinoGameSessionCreateWithoutGameInput[] | CasinoGameSessionUncheckedCreateWithoutGameInput[]
-    connectOrCreate?: CasinoGameSessionCreateOrConnectWithoutGameInput | CasinoGameSessionCreateOrConnectWithoutGameInput[]
-    createMany?: CasinoGameSessionCreateManyGameInputEnvelope
+  export type CasinoGameSessionUncheckedCreateNestedManyWithoutCasinoGameInput = {
+    create?: XOR<CasinoGameSessionCreateWithoutCasinoGameInput, CasinoGameSessionUncheckedCreateWithoutCasinoGameInput> | CasinoGameSessionCreateWithoutCasinoGameInput[] | CasinoGameSessionUncheckedCreateWithoutCasinoGameInput[]
+    connectOrCreate?: CasinoGameSessionCreateOrConnectWithoutCasinoGameInput | CasinoGameSessionCreateOrConnectWithoutCasinoGameInput[]
+    createMany?: CasinoGameSessionCreateManyCasinoGameInputEnvelope
     connect?: CasinoGameSessionWhereUniqueInput | CasinoGameSessionWhereUniqueInput[]
   }
 
@@ -77462,17 +77491,17 @@ export namespace Prisma {
     deleteMany?: GameRoundScalarWhereInput | GameRoundScalarWhereInput[]
   }
 
-  export type CasinoGameSessionUpdateManyWithoutGameNestedInput = {
-    create?: XOR<CasinoGameSessionCreateWithoutGameInput, CasinoGameSessionUncheckedCreateWithoutGameInput> | CasinoGameSessionCreateWithoutGameInput[] | CasinoGameSessionUncheckedCreateWithoutGameInput[]
-    connectOrCreate?: CasinoGameSessionCreateOrConnectWithoutGameInput | CasinoGameSessionCreateOrConnectWithoutGameInput[]
-    upsert?: CasinoGameSessionUpsertWithWhereUniqueWithoutGameInput | CasinoGameSessionUpsertWithWhereUniqueWithoutGameInput[]
-    createMany?: CasinoGameSessionCreateManyGameInputEnvelope
+  export type CasinoGameSessionUpdateManyWithoutCasinoGameNestedInput = {
+    create?: XOR<CasinoGameSessionCreateWithoutCasinoGameInput, CasinoGameSessionUncheckedCreateWithoutCasinoGameInput> | CasinoGameSessionCreateWithoutCasinoGameInput[] | CasinoGameSessionUncheckedCreateWithoutCasinoGameInput[]
+    connectOrCreate?: CasinoGameSessionCreateOrConnectWithoutCasinoGameInput | CasinoGameSessionCreateOrConnectWithoutCasinoGameInput[]
+    upsert?: CasinoGameSessionUpsertWithWhereUniqueWithoutCasinoGameInput | CasinoGameSessionUpsertWithWhereUniqueWithoutCasinoGameInput[]
+    createMany?: CasinoGameSessionCreateManyCasinoGameInputEnvelope
     set?: CasinoGameSessionWhereUniqueInput | CasinoGameSessionWhereUniqueInput[]
     disconnect?: CasinoGameSessionWhereUniqueInput | CasinoGameSessionWhereUniqueInput[]
     delete?: CasinoGameSessionWhereUniqueInput | CasinoGameSessionWhereUniqueInput[]
     connect?: CasinoGameSessionWhereUniqueInput | CasinoGameSessionWhereUniqueInput[]
-    update?: CasinoGameSessionUpdateWithWhereUniqueWithoutGameInput | CasinoGameSessionUpdateWithWhereUniqueWithoutGameInput[]
-    updateMany?: CasinoGameSessionUpdateManyWithWhereWithoutGameInput | CasinoGameSessionUpdateManyWithWhereWithoutGameInput[]
+    update?: CasinoGameSessionUpdateWithWhereUniqueWithoutCasinoGameInput | CasinoGameSessionUpdateWithWhereUniqueWithoutCasinoGameInput[]
+    updateMany?: CasinoGameSessionUpdateManyWithWhereWithoutCasinoGameInput | CasinoGameSessionUpdateManyWithWhereWithoutCasinoGameInput[]
     deleteMany?: CasinoGameSessionScalarWhereInput | CasinoGameSessionScalarWhereInput[]
   }
 
@@ -77518,17 +77547,17 @@ export namespace Prisma {
     deleteMany?: GameRoundScalarWhereInput | GameRoundScalarWhereInput[]
   }
 
-  export type CasinoGameSessionUncheckedUpdateManyWithoutGameNestedInput = {
-    create?: XOR<CasinoGameSessionCreateWithoutGameInput, CasinoGameSessionUncheckedCreateWithoutGameInput> | CasinoGameSessionCreateWithoutGameInput[] | CasinoGameSessionUncheckedCreateWithoutGameInput[]
-    connectOrCreate?: CasinoGameSessionCreateOrConnectWithoutGameInput | CasinoGameSessionCreateOrConnectWithoutGameInput[]
-    upsert?: CasinoGameSessionUpsertWithWhereUniqueWithoutGameInput | CasinoGameSessionUpsertWithWhereUniqueWithoutGameInput[]
-    createMany?: CasinoGameSessionCreateManyGameInputEnvelope
+  export type CasinoGameSessionUncheckedUpdateManyWithoutCasinoGameNestedInput = {
+    create?: XOR<CasinoGameSessionCreateWithoutCasinoGameInput, CasinoGameSessionUncheckedCreateWithoutCasinoGameInput> | CasinoGameSessionCreateWithoutCasinoGameInput[] | CasinoGameSessionUncheckedCreateWithoutCasinoGameInput[]
+    connectOrCreate?: CasinoGameSessionCreateOrConnectWithoutCasinoGameInput | CasinoGameSessionCreateOrConnectWithoutCasinoGameInput[]
+    upsert?: CasinoGameSessionUpsertWithWhereUniqueWithoutCasinoGameInput | CasinoGameSessionUpsertWithWhereUniqueWithoutCasinoGameInput[]
+    createMany?: CasinoGameSessionCreateManyCasinoGameInputEnvelope
     set?: CasinoGameSessionWhereUniqueInput | CasinoGameSessionWhereUniqueInput[]
     disconnect?: CasinoGameSessionWhereUniqueInput | CasinoGameSessionWhereUniqueInput[]
     delete?: CasinoGameSessionWhereUniqueInput | CasinoGameSessionWhereUniqueInput[]
     connect?: CasinoGameSessionWhereUniqueInput | CasinoGameSessionWhereUniqueInput[]
-    update?: CasinoGameSessionUpdateWithWhereUniqueWithoutGameInput | CasinoGameSessionUpdateWithWhereUniqueWithoutGameInput[]
-    updateMany?: CasinoGameSessionUpdateManyWithWhereWithoutGameInput | CasinoGameSessionUpdateManyWithWhereWithoutGameInput[]
+    update?: CasinoGameSessionUpdateWithWhereUniqueWithoutCasinoGameInput | CasinoGameSessionUpdateWithWhereUniqueWithoutCasinoGameInput[]
+    updateMany?: CasinoGameSessionUpdateManyWithWhereWithoutCasinoGameInput | CasinoGameSessionUpdateManyWithWhereWithoutCasinoGameInput[]
     deleteMany?: CasinoGameSessionScalarWhereInput | CasinoGameSessionScalarWhereInput[]
   }
 
@@ -82240,14 +82269,15 @@ export namespace Prisma {
     skipDuplicates?: boolean
   }
 
-  export type CasinoGameSessionCreateWithoutGameInput = {
+  export type CasinoGameSessionCreateWithoutCasinoGameInput = {
     id?: bigint | number
     uid: string
+    token: string
+    playerName: string
     createdAt?: Date | string
     updatedAt?: Date | string
     lastAccessedAt?: Date | string
     aggregatorType: $Enums.GameAggregatorType
-    token: string
     walletCurrency: $Enums.ExchangeCurrencyCode
     gameCurrency: $Enums.ExchangeCurrencyCode
     exchangeRate: Decimal | DecimalJsLike | number | string
@@ -82256,15 +82286,16 @@ export namespace Prisma {
     user: UserCreateNestedOneWithoutGameSessionInput
   }
 
-  export type CasinoGameSessionUncheckedCreateWithoutGameInput = {
+  export type CasinoGameSessionUncheckedCreateWithoutCasinoGameInput = {
     id?: bigint | number
     uid: string
     userId: bigint | number
+    token: string
+    playerName: string
     createdAt?: Date | string
     updatedAt?: Date | string
     lastAccessedAt?: Date | string
     aggregatorType: $Enums.GameAggregatorType
-    token: string
     walletCurrency: $Enums.ExchangeCurrencyCode
     gameCurrency: $Enums.ExchangeCurrencyCode
     exchangeRate: Decimal | DecimalJsLike | number | string
@@ -82272,13 +82303,13 @@ export namespace Prisma {
     gameRounds?: GameRoundUncheckedCreateNestedManyWithoutGameSessionInput
   }
 
-  export type CasinoGameSessionCreateOrConnectWithoutGameInput = {
+  export type CasinoGameSessionCreateOrConnectWithoutCasinoGameInput = {
     where: CasinoGameSessionWhereUniqueInput
-    create: XOR<CasinoGameSessionCreateWithoutGameInput, CasinoGameSessionUncheckedCreateWithoutGameInput>
+    create: XOR<CasinoGameSessionCreateWithoutCasinoGameInput, CasinoGameSessionUncheckedCreateWithoutCasinoGameInput>
   }
 
-  export type CasinoGameSessionCreateManyGameInputEnvelope = {
-    data: CasinoGameSessionCreateManyGameInput | CasinoGameSessionCreateManyGameInput[]
+  export type CasinoGameSessionCreateManyCasinoGameInputEnvelope = {
+    data: CasinoGameSessionCreateManyCasinoGameInput | CasinoGameSessionCreateManyCasinoGameInput[]
     skipDuplicates?: boolean
   }
 
@@ -82399,20 +82430,20 @@ export namespace Prisma {
     gameSessionId?: BigIntFilter<"GameRound"> | bigint | number
   }
 
-  export type CasinoGameSessionUpsertWithWhereUniqueWithoutGameInput = {
+  export type CasinoGameSessionUpsertWithWhereUniqueWithoutCasinoGameInput = {
     where: CasinoGameSessionWhereUniqueInput
-    update: XOR<CasinoGameSessionUpdateWithoutGameInput, CasinoGameSessionUncheckedUpdateWithoutGameInput>
-    create: XOR<CasinoGameSessionCreateWithoutGameInput, CasinoGameSessionUncheckedCreateWithoutGameInput>
+    update: XOR<CasinoGameSessionUpdateWithoutCasinoGameInput, CasinoGameSessionUncheckedUpdateWithoutCasinoGameInput>
+    create: XOR<CasinoGameSessionCreateWithoutCasinoGameInput, CasinoGameSessionUncheckedCreateWithoutCasinoGameInput>
   }
 
-  export type CasinoGameSessionUpdateWithWhereUniqueWithoutGameInput = {
+  export type CasinoGameSessionUpdateWithWhereUniqueWithoutCasinoGameInput = {
     where: CasinoGameSessionWhereUniqueInput
-    data: XOR<CasinoGameSessionUpdateWithoutGameInput, CasinoGameSessionUncheckedUpdateWithoutGameInput>
+    data: XOR<CasinoGameSessionUpdateWithoutCasinoGameInput, CasinoGameSessionUncheckedUpdateWithoutCasinoGameInput>
   }
 
-  export type CasinoGameSessionUpdateManyWithWhereWithoutGameInput = {
+  export type CasinoGameSessionUpdateManyWithWhereWithoutCasinoGameInput = {
     where: CasinoGameSessionScalarWhereInput
-    data: XOR<CasinoGameSessionUpdateManyMutationInput, CasinoGameSessionUncheckedUpdateManyWithoutGameInput>
+    data: XOR<CasinoGameSessionUpdateManyMutationInput, CasinoGameSessionUncheckedUpdateManyWithoutCasinoGameInput>
   }
 
   export type CasinoGameSessionScalarWhereInput = {
@@ -82422,16 +82453,17 @@ export namespace Prisma {
     id?: BigIntFilter<"CasinoGameSession"> | bigint | number
     uid?: StringFilter<"CasinoGameSession"> | string
     userId?: BigIntFilter<"CasinoGameSession"> | bigint | number
+    token?: StringFilter<"CasinoGameSession"> | string
+    playerName?: StringFilter<"CasinoGameSession"> | string
     createdAt?: DateTimeFilter<"CasinoGameSession"> | Date | string
     updatedAt?: DateTimeFilter<"CasinoGameSession"> | Date | string
     lastAccessedAt?: DateTimeFilter<"CasinoGameSession"> | Date | string
     aggregatorType?: EnumGameAggregatorTypeFilter<"CasinoGameSession"> | $Enums.GameAggregatorType
-    token?: StringFilter<"CasinoGameSession"> | string
     walletCurrency?: EnumExchangeCurrencyCodeFilter<"CasinoGameSession"> | $Enums.ExchangeCurrencyCode
     gameCurrency?: EnumExchangeCurrencyCodeFilter<"CasinoGameSession"> | $Enums.ExchangeCurrencyCode
     exchangeRate?: DecimalFilter<"CasinoGameSession"> | Decimal | DecimalJsLike | number | string
     exchangeRateSnapshotAt?: DateTimeFilter<"CasinoGameSession"> | Date | string
-    gameId?: BigIntNullableFilter<"CasinoGameSession"> | bigint | number | null
+    casinoGameId?: BigIntNullableFilter<"CasinoGameSession"> | bigint | number | null
   }
 
   export type CasinoGameTranslationUpsertWithWhereUniqueWithoutCasinoGameInput = {
@@ -82481,7 +82513,7 @@ export namespace Prisma {
     updatedAt?: Date | string
     bonusDetails?: BonusDetailCreateNestedManyWithoutCasinoGameInput
     gameRounds?: GameRoundCreateNestedManyWithoutCasinoGameInput
-    gameSessions?: CasinoGameSessionCreateNestedManyWithoutGameInput
+    gameSessions?: CasinoGameSessionCreateNestedManyWithoutCasinoGameInput
   }
 
   export type CasinoGameUncheckedCreateWithoutTranslationsInput = {
@@ -82501,7 +82533,7 @@ export namespace Prisma {
     updatedAt?: Date | string
     bonusDetails?: BonusDetailUncheckedCreateNestedManyWithoutCasinoGameInput
     gameRounds?: GameRoundUncheckedCreateNestedManyWithoutCasinoGameInput
-    gameSessions?: CasinoGameSessionUncheckedCreateNestedManyWithoutGameInput
+    gameSessions?: CasinoGameSessionUncheckedCreateNestedManyWithoutCasinoGameInput
   }
 
   export type CasinoGameCreateOrConnectWithoutTranslationsInput = {
@@ -82537,7 +82569,7 @@ export namespace Prisma {
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
     bonusDetails?: BonusDetailUpdateManyWithoutCasinoGameNestedInput
     gameRounds?: GameRoundUpdateManyWithoutCasinoGameNestedInput
-    gameSessions?: CasinoGameSessionUpdateManyWithoutGameNestedInput
+    gameSessions?: CasinoGameSessionUpdateManyWithoutCasinoGameNestedInput
   }
 
   export type CasinoGameUncheckedUpdateWithoutTranslationsInput = {
@@ -82557,7 +82589,7 @@ export namespace Prisma {
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
     bonusDetails?: BonusDetailUncheckedUpdateManyWithoutCasinoGameNestedInput
     gameRounds?: GameRoundUncheckedUpdateManyWithoutCasinoGameNestedInput
-    gameSessions?: CasinoGameSessionUncheckedUpdateManyWithoutGameNestedInput
+    gameSessions?: CasinoGameSessionUncheckedUpdateManyWithoutCasinoGameNestedInput
   }
 
   export type GameRoundCreateWithoutGameSessionInput = {
@@ -83238,32 +83270,34 @@ export namespace Prisma {
   export type CasinoGameSessionCreateWithoutUserInput = {
     id?: bigint | number
     uid: string
+    token: string
+    playerName: string
     createdAt?: Date | string
     updatedAt?: Date | string
     lastAccessedAt?: Date | string
     aggregatorType: $Enums.GameAggregatorType
-    token: string
     walletCurrency: $Enums.ExchangeCurrencyCode
     gameCurrency: $Enums.ExchangeCurrencyCode
     exchangeRate: Decimal | DecimalJsLike | number | string
     exchangeRateSnapshotAt?: Date | string
     gameRounds?: GameRoundCreateNestedManyWithoutGameSessionInput
-    game?: CasinoGameCreateNestedOneWithoutGameSessionsInput
+    casinoGame?: CasinoGameCreateNestedOneWithoutGameSessionsInput
   }
 
   export type CasinoGameSessionUncheckedCreateWithoutUserInput = {
     id?: bigint | number
     uid: string
+    token: string
+    playerName: string
     createdAt?: Date | string
     updatedAt?: Date | string
     lastAccessedAt?: Date | string
     aggregatorType: $Enums.GameAggregatorType
-    token: string
     walletCurrency: $Enums.ExchangeCurrencyCode
     gameCurrency: $Enums.ExchangeCurrencyCode
     exchangeRate: Decimal | DecimalJsLike | number | string
     exchangeRateSnapshotAt?: Date | string
-    gameId?: bigint | number | null
+    casinoGameId?: bigint | number | null
     gameRounds?: GameRoundUncheckedCreateNestedManyWithoutGameSessionInput
   }
 
@@ -86001,7 +86035,7 @@ export namespace Prisma {
     createdAt?: Date | string
     updatedAt?: Date | string
     bonusDetails?: BonusDetailCreateNestedManyWithoutCasinoGameInput
-    gameSessions?: CasinoGameSessionCreateNestedManyWithoutGameInput
+    gameSessions?: CasinoGameSessionCreateNestedManyWithoutCasinoGameInput
     translations?: CasinoGameTranslationCreateNestedManyWithoutCasinoGameInput
   }
 
@@ -86021,7 +86055,7 @@ export namespace Prisma {
     createdAt?: Date | string
     updatedAt?: Date | string
     bonusDetails?: BonusDetailUncheckedCreateNestedManyWithoutCasinoGameInput
-    gameSessions?: CasinoGameSessionUncheckedCreateNestedManyWithoutGameInput
+    gameSessions?: CasinoGameSessionUncheckedCreateNestedManyWithoutCasinoGameInput
     translations?: CasinoGameTranslationUncheckedCreateNestedManyWithoutCasinoGameInput
   }
 
@@ -86033,16 +86067,17 @@ export namespace Prisma {
   export type CasinoGameSessionCreateWithoutGameRoundsInput = {
     id?: bigint | number
     uid: string
+    token: string
+    playerName: string
     createdAt?: Date | string
     updatedAt?: Date | string
     lastAccessedAt?: Date | string
     aggregatorType: $Enums.GameAggregatorType
-    token: string
     walletCurrency: $Enums.ExchangeCurrencyCode
     gameCurrency: $Enums.ExchangeCurrencyCode
     exchangeRate: Decimal | DecimalJsLike | number | string
     exchangeRateSnapshotAt?: Date | string
-    game?: CasinoGameCreateNestedOneWithoutGameSessionsInput
+    casinoGame?: CasinoGameCreateNestedOneWithoutGameSessionsInput
     user: UserCreateNestedOneWithoutGameSessionInput
   }
 
@@ -86050,16 +86085,17 @@ export namespace Prisma {
     id?: bigint | number
     uid: string
     userId: bigint | number
+    token: string
+    playerName: string
     createdAt?: Date | string
     updatedAt?: Date | string
     lastAccessedAt?: Date | string
     aggregatorType: $Enums.GameAggregatorType
-    token: string
     walletCurrency: $Enums.ExchangeCurrencyCode
     gameCurrency: $Enums.ExchangeCurrencyCode
     exchangeRate: Decimal | DecimalJsLike | number | string
     exchangeRateSnapshotAt?: Date | string
-    gameId?: bigint | number | null
+    casinoGameId?: bigint | number | null
   }
 
   export type CasinoGameSessionCreateOrConnectWithoutGameRoundsInput = {
@@ -86225,7 +86261,7 @@ export namespace Prisma {
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
     bonusDetails?: BonusDetailUpdateManyWithoutCasinoGameNestedInput
-    gameSessions?: CasinoGameSessionUpdateManyWithoutGameNestedInput
+    gameSessions?: CasinoGameSessionUpdateManyWithoutCasinoGameNestedInput
     translations?: CasinoGameTranslationUpdateManyWithoutCasinoGameNestedInput
   }
 
@@ -86245,7 +86281,7 @@ export namespace Prisma {
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
     bonusDetails?: BonusDetailUncheckedUpdateManyWithoutCasinoGameNestedInput
-    gameSessions?: CasinoGameSessionUncheckedUpdateManyWithoutGameNestedInput
+    gameSessions?: CasinoGameSessionUncheckedUpdateManyWithoutCasinoGameNestedInput
     translations?: CasinoGameTranslationUncheckedUpdateManyWithoutCasinoGameNestedInput
   }
 
@@ -86263,16 +86299,17 @@ export namespace Prisma {
   export type CasinoGameSessionUpdateWithoutGameRoundsInput = {
     id?: BigIntFieldUpdateOperationsInput | bigint | number
     uid?: StringFieldUpdateOperationsInput | string
+    token?: StringFieldUpdateOperationsInput | string
+    playerName?: StringFieldUpdateOperationsInput | string
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
     lastAccessedAt?: DateTimeFieldUpdateOperationsInput | Date | string
     aggregatorType?: EnumGameAggregatorTypeFieldUpdateOperationsInput | $Enums.GameAggregatorType
-    token?: StringFieldUpdateOperationsInput | string
     walletCurrency?: EnumExchangeCurrencyCodeFieldUpdateOperationsInput | $Enums.ExchangeCurrencyCode
     gameCurrency?: EnumExchangeCurrencyCodeFieldUpdateOperationsInput | $Enums.ExchangeCurrencyCode
     exchangeRate?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
     exchangeRateSnapshotAt?: DateTimeFieldUpdateOperationsInput | Date | string
-    game?: CasinoGameUpdateOneWithoutGameSessionsNestedInput
+    casinoGame?: CasinoGameUpdateOneWithoutGameSessionsNestedInput
     user?: UserUpdateOneRequiredWithoutGameSessionNestedInput
   }
 
@@ -86280,16 +86317,17 @@ export namespace Prisma {
     id?: BigIntFieldUpdateOperationsInput | bigint | number
     uid?: StringFieldUpdateOperationsInput | string
     userId?: BigIntFieldUpdateOperationsInput | bigint | number
+    token?: StringFieldUpdateOperationsInput | string
+    playerName?: StringFieldUpdateOperationsInput | string
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
     lastAccessedAt?: DateTimeFieldUpdateOperationsInput | Date | string
     aggregatorType?: EnumGameAggregatorTypeFieldUpdateOperationsInput | $Enums.GameAggregatorType
-    token?: StringFieldUpdateOperationsInput | string
     walletCurrency?: EnumExchangeCurrencyCodeFieldUpdateOperationsInput | $Enums.ExchangeCurrencyCode
     gameCurrency?: EnumExchangeCurrencyCodeFieldUpdateOperationsInput | $Enums.ExchangeCurrencyCode
     exchangeRate?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
     exchangeRateSnapshotAt?: DateTimeFieldUpdateOperationsInput | Date | string
-    gameId?: NullableBigIntFieldUpdateOperationsInput | bigint | number | null
+    casinoGameId?: NullableBigIntFieldUpdateOperationsInput | bigint | number | null
   }
 
   export type TransactionUpsertWithoutGameRoundInput = {
@@ -86776,7 +86814,7 @@ export namespace Prisma {
     createdAt?: Date | string
     updatedAt?: Date | string
     gameRounds?: GameRoundCreateNestedManyWithoutCasinoGameInput
-    gameSessions?: CasinoGameSessionCreateNestedManyWithoutGameInput
+    gameSessions?: CasinoGameSessionCreateNestedManyWithoutCasinoGameInput
     translations?: CasinoGameTranslationCreateNestedManyWithoutCasinoGameInput
   }
 
@@ -86796,7 +86834,7 @@ export namespace Prisma {
     createdAt?: Date | string
     updatedAt?: Date | string
     gameRounds?: GameRoundUncheckedCreateNestedManyWithoutCasinoGameInput
-    gameSessions?: CasinoGameSessionUncheckedCreateNestedManyWithoutGameInput
+    gameSessions?: CasinoGameSessionUncheckedCreateNestedManyWithoutCasinoGameInput
     translations?: CasinoGameTranslationUncheckedCreateNestedManyWithoutCasinoGameInput
   }
 
@@ -86877,7 +86915,7 @@ export namespace Prisma {
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
     gameRounds?: GameRoundUpdateManyWithoutCasinoGameNestedInput
-    gameSessions?: CasinoGameSessionUpdateManyWithoutGameNestedInput
+    gameSessions?: CasinoGameSessionUpdateManyWithoutCasinoGameNestedInput
     translations?: CasinoGameTranslationUpdateManyWithoutCasinoGameNestedInput
   }
 
@@ -86897,7 +86935,7 @@ export namespace Prisma {
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
     gameRounds?: GameRoundUncheckedUpdateManyWithoutCasinoGameNestedInput
-    gameSessions?: CasinoGameSessionUncheckedUpdateManyWithoutGameNestedInput
+    gameSessions?: CasinoGameSessionUncheckedUpdateManyWithoutCasinoGameNestedInput
     translations?: CasinoGameTranslationUncheckedUpdateManyWithoutCasinoGameNestedInput
   }
 
@@ -92795,15 +92833,16 @@ export namespace Prisma {
     gameSessionId: bigint | number
   }
 
-  export type CasinoGameSessionCreateManyGameInput = {
+  export type CasinoGameSessionCreateManyCasinoGameInput = {
     id?: bigint | number
     uid: string
     userId: bigint | number
+    token: string
+    playerName: string
     createdAt?: Date | string
     updatedAt?: Date | string
     lastAccessedAt?: Date | string
     aggregatorType: $Enums.GameAggregatorType
-    token: string
     walletCurrency: $Enums.ExchangeCurrencyCode
     gameCurrency: $Enums.ExchangeCurrencyCode
     exchangeRate: Decimal | DecimalJsLike | number | string
@@ -92970,14 +93009,15 @@ export namespace Prisma {
     gameSessionId?: BigIntFieldUpdateOperationsInput | bigint | number
   }
 
-  export type CasinoGameSessionUpdateWithoutGameInput = {
+  export type CasinoGameSessionUpdateWithoutCasinoGameInput = {
     id?: BigIntFieldUpdateOperationsInput | bigint | number
     uid?: StringFieldUpdateOperationsInput | string
+    token?: StringFieldUpdateOperationsInput | string
+    playerName?: StringFieldUpdateOperationsInput | string
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
     lastAccessedAt?: DateTimeFieldUpdateOperationsInput | Date | string
     aggregatorType?: EnumGameAggregatorTypeFieldUpdateOperationsInput | $Enums.GameAggregatorType
-    token?: StringFieldUpdateOperationsInput | string
     walletCurrency?: EnumExchangeCurrencyCodeFieldUpdateOperationsInput | $Enums.ExchangeCurrencyCode
     gameCurrency?: EnumExchangeCurrencyCodeFieldUpdateOperationsInput | $Enums.ExchangeCurrencyCode
     exchangeRate?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
@@ -92986,15 +93026,16 @@ export namespace Prisma {
     user?: UserUpdateOneRequiredWithoutGameSessionNestedInput
   }
 
-  export type CasinoGameSessionUncheckedUpdateWithoutGameInput = {
+  export type CasinoGameSessionUncheckedUpdateWithoutCasinoGameInput = {
     id?: BigIntFieldUpdateOperationsInput | bigint | number
     uid?: StringFieldUpdateOperationsInput | string
     userId?: BigIntFieldUpdateOperationsInput | bigint | number
+    token?: StringFieldUpdateOperationsInput | string
+    playerName?: StringFieldUpdateOperationsInput | string
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
     lastAccessedAt?: DateTimeFieldUpdateOperationsInput | Date | string
     aggregatorType?: EnumGameAggregatorTypeFieldUpdateOperationsInput | $Enums.GameAggregatorType
-    token?: StringFieldUpdateOperationsInput | string
     walletCurrency?: EnumExchangeCurrencyCodeFieldUpdateOperationsInput | $Enums.ExchangeCurrencyCode
     gameCurrency?: EnumExchangeCurrencyCodeFieldUpdateOperationsInput | $Enums.ExchangeCurrencyCode
     exchangeRate?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
@@ -93002,15 +93043,16 @@ export namespace Prisma {
     gameRounds?: GameRoundUncheckedUpdateManyWithoutGameSessionNestedInput
   }
 
-  export type CasinoGameSessionUncheckedUpdateManyWithoutGameInput = {
+  export type CasinoGameSessionUncheckedUpdateManyWithoutCasinoGameInput = {
     id?: BigIntFieldUpdateOperationsInput | bigint | number
     uid?: StringFieldUpdateOperationsInput | string
     userId?: BigIntFieldUpdateOperationsInput | bigint | number
+    token?: StringFieldUpdateOperationsInput | string
+    playerName?: StringFieldUpdateOperationsInput | string
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
     lastAccessedAt?: DateTimeFieldUpdateOperationsInput | Date | string
     aggregatorType?: EnumGameAggregatorTypeFieldUpdateOperationsInput | $Enums.GameAggregatorType
-    token?: StringFieldUpdateOperationsInput | string
     walletCurrency?: EnumExchangeCurrencyCodeFieldUpdateOperationsInput | $Enums.ExchangeCurrencyCode
     gameCurrency?: EnumExchangeCurrencyCodeFieldUpdateOperationsInput | $Enums.ExchangeCurrencyCode
     exchangeRate?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
@@ -93265,16 +93307,17 @@ export namespace Prisma {
   export type CasinoGameSessionCreateManyUserInput = {
     id?: bigint | number
     uid: string
+    token: string
+    playerName: string
     createdAt?: Date | string
     updatedAt?: Date | string
     lastAccessedAt?: Date | string
     aggregatorType: $Enums.GameAggregatorType
-    token: string
     walletCurrency: $Enums.ExchangeCurrencyCode
     gameCurrency: $Enums.ExchangeCurrencyCode
     exchangeRate: Decimal | DecimalJsLike | number | string
     exchangeRateSnapshotAt?: Date | string
-    gameId?: bigint | number | null
+    casinoGameId?: bigint | number | null
   }
 
   export type ReferralCreateManyAffiliateInput = {
@@ -93775,48 +93818,51 @@ export namespace Prisma {
   export type CasinoGameSessionUpdateWithoutUserInput = {
     id?: BigIntFieldUpdateOperationsInput | bigint | number
     uid?: StringFieldUpdateOperationsInput | string
+    token?: StringFieldUpdateOperationsInput | string
+    playerName?: StringFieldUpdateOperationsInput | string
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
     lastAccessedAt?: DateTimeFieldUpdateOperationsInput | Date | string
     aggregatorType?: EnumGameAggregatorTypeFieldUpdateOperationsInput | $Enums.GameAggregatorType
-    token?: StringFieldUpdateOperationsInput | string
     walletCurrency?: EnumExchangeCurrencyCodeFieldUpdateOperationsInput | $Enums.ExchangeCurrencyCode
     gameCurrency?: EnumExchangeCurrencyCodeFieldUpdateOperationsInput | $Enums.ExchangeCurrencyCode
     exchangeRate?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
     exchangeRateSnapshotAt?: DateTimeFieldUpdateOperationsInput | Date | string
     gameRounds?: GameRoundUpdateManyWithoutGameSessionNestedInput
-    game?: CasinoGameUpdateOneWithoutGameSessionsNestedInput
+    casinoGame?: CasinoGameUpdateOneWithoutGameSessionsNestedInput
   }
 
   export type CasinoGameSessionUncheckedUpdateWithoutUserInput = {
     id?: BigIntFieldUpdateOperationsInput | bigint | number
     uid?: StringFieldUpdateOperationsInput | string
+    token?: StringFieldUpdateOperationsInput | string
+    playerName?: StringFieldUpdateOperationsInput | string
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
     lastAccessedAt?: DateTimeFieldUpdateOperationsInput | Date | string
     aggregatorType?: EnumGameAggregatorTypeFieldUpdateOperationsInput | $Enums.GameAggregatorType
-    token?: StringFieldUpdateOperationsInput | string
     walletCurrency?: EnumExchangeCurrencyCodeFieldUpdateOperationsInput | $Enums.ExchangeCurrencyCode
     gameCurrency?: EnumExchangeCurrencyCodeFieldUpdateOperationsInput | $Enums.ExchangeCurrencyCode
     exchangeRate?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
     exchangeRateSnapshotAt?: DateTimeFieldUpdateOperationsInput | Date | string
-    gameId?: NullableBigIntFieldUpdateOperationsInput | bigint | number | null
+    casinoGameId?: NullableBigIntFieldUpdateOperationsInput | bigint | number | null
     gameRounds?: GameRoundUncheckedUpdateManyWithoutGameSessionNestedInput
   }
 
   export type CasinoGameSessionUncheckedUpdateManyWithoutUserInput = {
     id?: BigIntFieldUpdateOperationsInput | bigint | number
     uid?: StringFieldUpdateOperationsInput | string
+    token?: StringFieldUpdateOperationsInput | string
+    playerName?: StringFieldUpdateOperationsInput | string
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
     lastAccessedAt?: DateTimeFieldUpdateOperationsInput | Date | string
     aggregatorType?: EnumGameAggregatorTypeFieldUpdateOperationsInput | $Enums.GameAggregatorType
-    token?: StringFieldUpdateOperationsInput | string
     walletCurrency?: EnumExchangeCurrencyCodeFieldUpdateOperationsInput | $Enums.ExchangeCurrencyCode
     gameCurrency?: EnumExchangeCurrencyCodeFieldUpdateOperationsInput | $Enums.ExchangeCurrencyCode
     exchangeRate?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
     exchangeRateSnapshotAt?: DateTimeFieldUpdateOperationsInput | Date | string
-    gameId?: NullableBigIntFieldUpdateOperationsInput | bigint | number | null
+    casinoGameId?: NullableBigIntFieldUpdateOperationsInput | bigint | number | null
   }
 
   export type ReferralUpdateWithoutAffiliateInput = {
