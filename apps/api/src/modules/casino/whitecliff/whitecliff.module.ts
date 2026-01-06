@@ -18,6 +18,7 @@ import { WhitecliffFetchGameResultUrlProcessor } from './processors/whitecliff-g
 import { ExchangeModule } from 'src/modules/exchange/exchange.module';
 import { WhitecliffPushedBetHistoryScheduler } from './schedulers/whitecliff-pushed-bet-history.scheduler';
 import { AuditLogModule } from 'src/modules/audit-log/audit-log.module';
+import { WalletModule } from 'src/modules/wallet/wallet.module';
 
 @Module({
   imports: [
@@ -30,6 +31,7 @@ import { AuditLogModule } from 'src/modules/audit-log/audit-log.module';
     QueueModule,
     ExchangeModule,
     AuditLogModule,
+    WalletModule,
   ],
   controllers: [
     WhitecliffCallbackController,

@@ -12,37 +12,6 @@ export class CasinoBalanceService {
     private readonly userStatsService: UserStatsService,
   ) { }
 
-  /**
-   * 사용자의 실시간 카지노 잔액 및 주요 값을 조회한다.
-   * @param userId 사용자 ID
-   */
-  async getUserCasinoBalance({
-    userId,
-    currency,
-    tx = this.prismaService,
-  }: {
-    userId: bigint;
-    currency: WalletCurrencyCode;
-    tx?: Prisma.TransactionClient;
-  }): Promise<{ mainBalance: Prisma.Decimal; bonusBalance: Prisma.Decimal }> {
-    const balance = await tx.userBalance.findUnique({
-      where: { userId_currency: { userId, currency } },
-      select: {
-        mainBalance: true,
-        bonusBalance: true,
-      },
-    });
-
-    if (!balance) {
-      throw new Error(CasinoErrorCode.USER_BALANCE_NOT_FOUND);
-    }
-
-    return {
-      mainBalance: balance.mainBalance,
-      bonusBalance: balance.bonusBalance,
-    };
-  }
-
   async updateUserCasinoBalance({
     tx = this.prismaService,
     userId,

@@ -20,7 +20,7 @@ import {
   TransactionStatus,
 } from '@repo/database';
 import { WhitecliffMapperService } from '../infrastructure/whitecliff-mapper.service';
-import { CasinoBalanceService } from '../../application/casino-balance.service';
+import { GetUserBalanceService } from 'src/modules/wallet/application/get-user-balance.service';
 import { CasinoBetService } from '../../application/casino-bet.service';
 import { CasinoBonusService } from '../../application/casino-bonus.service';
 import { getCasinoErrorCode } from '../utils/whitecliff-error-response.util';
@@ -31,7 +31,6 @@ import { nowUtc, parseDateStringOrThrow } from 'src/utils/date.util';
 import {
   GAMING_CURRENCIES,
   GamingCurrencyCode,
-  WalletCurrencyCode,
 } from 'src/utils/currency.util';
 
 @Injectable()
@@ -43,7 +42,7 @@ export class WhitecliffCallbackService {
     private readonly envService: EnvService,
     private readonly concurrencyService: ConcurrencyService,
     private readonly whitecliffMapperService: WhitecliffMapperService,
-    private readonly casinoBalanceService: CasinoBalanceService,
+    private readonly getUserBalanceService: GetUserBalanceService,
     private readonly casinoBetService: CasinoBetService,
     private readonly casinoBonusService: CasinoBonusService,
     private readonly queueService: QueueService,
@@ -103,14 +102,19 @@ export class WhitecliffCallbackService {
         throw new Error(CasinoErrorCode.INVALID_USER);
       }
 
-      const userBalance = await this.casinoBalanceService.getUserCasinoBalance({
+      const balanceResult = await this.getUserBalanceService.execute({
         userId: gameSession.user.id,
         currency: gameSession.walletCurrency,
       });
 
-      // getUserCasinoBalance는 잔액이 없으면 에러를 throw하므로 null 체크 불필요
+      const userWallet = Array.isArray(balanceResult.wallet) ? balanceResult.wallet[0] : balanceResult.wallet;
+
+      if (!userWallet) {
+        throw new Error(CasinoErrorCode.INVALID_USER);
+      }
+
       const balance = gameSession.exchangeRate.mul(
-        userBalance.mainBalance.add(userBalance.bonusBalance),
+        userWallet.totalBalance,
       );
 
       return {
