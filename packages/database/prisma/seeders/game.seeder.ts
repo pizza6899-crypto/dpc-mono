@@ -10,7 +10,7 @@ export async function seedLobbyGames(prisma: PrismaClient) {
   console.log('🎮 로비 게임 시딩을 시작합니다...');
 
   // 1. 에볼루션 로비 게임
-  const evolutionLobby = await prisma.game.upsert({
+  const evolutionLobby = await prisma.casinoGame.upsert({
     where: {
       aggregatorType_provider_gameId: {
         aggregatorType: GameAggregatorType.WHITECLIFF,
@@ -57,7 +57,7 @@ export async function seedLobbyGames(prisma: PrismaClient) {
   console.log(`✅ 에볼루션 로비 게임 생성 완료 (ID: ${evolutionLobby.id})`);
 
   // 2. 프라그매틱 플레이 라이브 로비 게임
-  const pragmaticPlayLiveLobby = await prisma.game.upsert({
+  const pragmaticPlayLiveLobby = await prisma.casinoGame.upsert({
     where: {
       aggregatorType_provider_gameId: {
         aggregatorType: GameAggregatorType.WHITECLIFF,

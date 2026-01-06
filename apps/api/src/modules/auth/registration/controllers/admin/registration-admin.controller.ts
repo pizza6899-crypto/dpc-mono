@@ -19,7 +19,7 @@ import { RegisterAdminResponseDto } from './dto/response/register-admin.response
 export class RegistrationAdminController {
   constructor(
     private readonly registerCredentialAdminService: RegisterCredentialAdminService,
-  ) {}
+  ) { }
 
   @Post('users')
   @HttpCode(HttpStatus.CREATED)

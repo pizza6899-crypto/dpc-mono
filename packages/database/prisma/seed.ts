@@ -1,5 +1,6 @@
 import { seedUsers } from './seeders/user.seeder';
 import { seedLobbyGames } from './seeders/game.seeder';
+import { seedTiers } from './seeders/tier.seeder';
 import { PrismaClient } from '../src';
 import { PrismaPg } from '@prisma/adapter-pg';
 
@@ -23,6 +24,11 @@ async function main() {
     // 게임 시딩 처리
     await seedLobbyGames(prisma);
     console.log('✅ 게임 시딩이 완료되었습니다.');
+
+    // 티어 시딩 처리
+    await seedTiers(prisma);
+
+
 
   } catch (error) {
     console.error('❌ 시딩 중 오류가 발생했습니다:', error);
