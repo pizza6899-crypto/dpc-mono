@@ -7,13 +7,13 @@ import {
   TransactionStatus,
   BonusType,
 } from '@repo/database';
-import { CasinoBalanceService } from './casino-balance.service';
 import { CasinoErrorCode } from '../constants/casino-error-codes';
 import {
   GamingCurrencyCode,
   WalletCurrencyCode,
 } from 'src/utils/currency.util';
-import { ExchangeRateService } from 'src/modules/exchange/application/exchange-rate.service';
+import { UpdateUserBalanceService } from 'src/modules/wallet/application/update-user-balance.service';
+import { BalanceType, UpdateOperation } from 'src/modules/wallet/domain';
 
 export interface ProcessBonusParams {
   tx: Prisma.TransactionClient;
@@ -47,12 +47,10 @@ export interface ProcessBonusResult {
 
 @Injectable()
 export class CasinoBonusService {
-  private readonly logger = new Logger(CasinoBonusService.name);
 
   constructor(
     private readonly prismaService: PrismaService,
-    private readonly casinoBalanceService: CasinoBalanceService,
-    private readonly exchangeRateService: ExchangeRateService,
+    private readonly updateUserBalanceService: UpdateUserBalanceService,
   ) { }
 
   /**
@@ -207,11 +205,12 @@ export class CasinoBonusService {
     }
 
     const updatedUserBalance =
-      await this.casinoBalanceService.updateUserCasinoBalance({
-        tx,
+      await this.updateUserBalanceService.execute({
         userId,
         currency: walletCurrency,
         amount: bonusAmountInWalletCurrency,
+        balanceType: BalanceType.MAIN,
+        operation: UpdateOperation.ADD,
       });
 
     // 트랜잭션 생성
@@ -222,11 +221,11 @@ export class CasinoBonusService {
         status: TransactionStatus.COMPLETED,
         currency: walletCurrency,
         amount: bonusAmountInWalletCurrency,
-        beforeAmount: updatedUserBalance.mainBeforeBalance.add(
-          updatedUserBalance.bonusBeforeBalance,
+        beforeAmount: updatedUserBalance.beforeMainBalance.add(
+          updatedUserBalance.beforeBonusBalance,
         ),
-        afterAmount: updatedUserBalance.mainAfterBalance.add(
-          updatedUserBalance.bonusAfterBalance,
+        afterAmount: updatedUserBalance.afterMainBalance.add(
+          updatedUserBalance.afterBonusBalance,
         ),
         bonusDetail: {
           create: {
@@ -249,8 +248,8 @@ export class CasinoBonusService {
         balanceDetails: {
           create: {
             mainBalanceChange: updatedUserBalance.mainBalanceChange,
-            mainBeforeAmount: updatedUserBalance.mainBeforeBalance,
-            mainAfterAmount: updatedUserBalance.mainAfterBalance,
+            mainBeforeAmount: updatedUserBalance.beforeMainBalance,
+            mainAfterAmount: updatedUserBalance.afterMainBalance,
             bonusBalanceChange: null,
             bonusBeforeAmount: null,
             bonusAfterAmount: null,
@@ -270,10 +269,10 @@ export class CasinoBonusService {
     return {
       transactionId: transaction.id,
       bonusDetailId: transaction.bonusDetail!.id,
-      beforeMainBalance: updatedUserBalance.mainBeforeBalance,
-      beforeBonusBalance: updatedUserBalance.bonusBeforeBalance,
-      afterMainBalance: updatedUserBalance.mainAfterBalance,
-      afterBonusBalance: updatedUserBalance.bonusAfterBalance,
+      beforeMainBalance: updatedUserBalance.beforeMainBalance,
+      beforeBonusBalance: updatedUserBalance.beforeBonusBalance,
+      afterMainBalance: updatedUserBalance.afterMainBalance,
+      afterBonusBalance: updatedUserBalance.afterBonusBalance,
     };
   }
 }

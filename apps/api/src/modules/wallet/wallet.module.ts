@@ -5,6 +5,7 @@ import { WalletQueryService } from './application/wallet-query.service';
 import { GetUserBalanceService } from './application/get-user-balance.service';
 import { GetUserBalanceAdminService } from './application/get-user-balance-admin.service';
 import { UpdateUserBalanceAdminService } from './application/update-user-balance-admin.service';
+import { UpdateUserBalanceService } from './application/update-user-balance.service';
 import { GetWalletTransactionHistoryAdminService } from './application/get-wallet-transaction-history-admin.service';
 import { UserWalletRepository } from './infrastructure/user-wallet.repository';
 import { UserWalletMapper } from './infrastructure/user-wallet.mapper';
@@ -54,6 +55,7 @@ import { WalletTransactionRepository } from './infrastructure/wallet-transaction
       useClass: WalletTransactionRepository,
     },
     WalletQueryService,
+    UpdateUserBalanceService,
   ],
   controllers: [WalletController, WalletAdminController],
   exports: [
@@ -61,6 +63,7 @@ import { WalletTransactionRepository } from './infrastructure/wallet-transaction
     GetUserBalanceService,
     GetUserBalanceAdminService,
     UpdateUserBalanceAdminService,
+    UpdateUserBalanceService,
     GetWalletTransactionHistoryAdminService,
     WalletQueryService,
   ],

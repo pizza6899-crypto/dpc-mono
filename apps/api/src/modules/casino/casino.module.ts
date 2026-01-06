@@ -2,7 +2,6 @@ import { forwardRef, Module } from '@nestjs/common';
 import { PrismaModule } from 'src/infrastructure/prisma/prisma.module';
 import { WhitecliffModule } from './whitecliff/whitecliff.module';
 import { DcsModule } from './dcs/dcs.module';
-import { CasinoBalanceService } from './application/casino-balance.service';
 import { CasinoGameUserController } from './controllers/user/casino-game-user.controller';
 import { CasinoGameService } from './application/casino-game.service';
 import { CasinoBetService } from './application/casino-bet.service';
@@ -17,6 +16,7 @@ import { CasinoRefundService } from './application/casino-refund.service';
 import { ExchangeModule } from '../exchange/exchange.module';
 import { UserStatsModule } from '../user-stats/user-stats.module';
 import { AuditLogModule } from '../audit-log/audit-log.module';
+import { WalletModule } from '../wallet/wallet.module';
 import { CasinoGameSessionMapper } from './infrastructure/mapper/casino-game-session.mapper';
 import { CasinoGameSessionRepository } from './infrastructure/repository/casino-game-session.repository';
 import { CASINO_GAME_SESSION_REPOSITORY } from './ports/out/casino-game-session.repository.token';
@@ -36,10 +36,10 @@ import { FindCasinoGameSessionService } from './application/find-casino-game-ses
     ExchangeModule,
     UserStatsModule,
     AuditLogModule,
+    WalletModule,
   ],
   controllers: [CasinoGameUserController],
   providers: [
-    CasinoBalanceService,
     CasinoGameService,
     CasinoBetService,
     CasinoBonusService,
@@ -54,7 +54,6 @@ import { FindCasinoGameSessionService } from './application/find-casino-game-ses
     FindCasinoGameSessionService,
   ],
   exports: [
-    CasinoBalanceService,
     CasinoBetService,
     CasinoBonusService,
     CasinoRefundService,

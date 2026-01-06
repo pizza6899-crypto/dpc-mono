@@ -6,13 +6,14 @@ import {
   TransactionType,
   TransactionStatus,
 } from '@repo/database';
-import { CasinoBalanceService } from './casino-balance.service';
 import { CasinoErrorCode } from '../constants/casino-error-codes';
 import { parseDateStringOrThrow } from 'src/utils/date.util';
 import {
   GamingCurrencyCode,
   WalletCurrencyCode,
 } from 'src/utils/currency.util';
+import { UpdateUserBalanceService } from 'src/modules/wallet/application/update-user-balance.service';
+import { BalanceType, UpdateOperation } from 'src/modules/wallet/domain';
 
 export interface ProcessBetParams {
   tx: Prisma.TransactionClient;
@@ -92,7 +93,7 @@ export class CasinoBetService {
 
   constructor(
     private readonly prismaService: PrismaService,
-    private readonly casinoBalanceService: CasinoBalanceService,
+    private readonly updateUserBalanceService: UpdateUserBalanceService,
   ) { }
 
   /**
@@ -138,20 +139,16 @@ export class CasinoBetService {
       throw new Error(CasinoErrorCode.DUPLICATE_DEBIT);
     }
 
-    const updatedUserBalance =
-      await this.casinoBalanceService.updateUserCasinoBalance({
-        tx,
-        userId: userId,
-        currency: walletCurrency,
-        amount: betAmountInWalletCurrency.neg(),
-      });
+    const updatedUserBalance = await this.updateUserBalanceService.execute({
+      userId: userId,
+      currency: walletCurrency,
+      amount: betAmountInWalletCurrency,
+      balanceType: BalanceType.TOTAL,
+      operation: UpdateOperation.SUBTRACT,
+    });
 
-    const beforeAmount = updatedUserBalance.mainBeforeBalance.add(
-      updatedUserBalance.bonusBeforeBalance,
-    );
-    const afterAmount = updatedUserBalance.mainAfterBalance.add(
-      updatedUserBalance.bonusAfterBalance,
-    );
+    const beforeAmount = updatedUserBalance.beforeBonusBalance.add(updatedUserBalance.beforeMainBalance);
+    const afterAmount = updatedUserBalance.afterBonusBalance.add(updatedUserBalance.afterMainBalance);
 
     const existingGameRound = await tx.gameRound.findUnique({
       where: {
@@ -208,11 +205,11 @@ export class CasinoBetService {
               balanceDetails: {
                 create: {
                   mainBalanceChange: updatedUserBalance.mainBalanceChange,
-                  mainBeforeAmount: updatedUserBalance.mainBeforeBalance,
-                  mainAfterAmount: updatedUserBalance.mainAfterBalance,
+                  mainBeforeAmount: updatedUserBalance.beforeMainBalance,
+                  mainAfterAmount: updatedUserBalance.afterMainBalance,
                   bonusBalanceChange: updatedUserBalance.bonusBalanceChange,
-                  bonusBeforeAmount: updatedUserBalance.bonusBeforeBalance,
-                  bonusAfterAmount: updatedUserBalance.bonusAfterBalance,
+                  bonusBeforeAmount: updatedUserBalance.beforeBonusBalance,
+                  bonusAfterAmount: updatedUserBalance.afterBonusBalance,
                 },
               },
             },
@@ -230,10 +227,10 @@ export class CasinoBetService {
       const result = {
         transactionId: updatedGameRound.transactionId,
         gameRoundId: updatedGameRound.id,
-        beforeMainBalance: updatedUserBalance.mainBeforeBalance,
-        beforeBonusBalance: updatedUserBalance.bonusBeforeBalance,
-        afterMainBalance: updatedUserBalance.mainAfterBalance,
-        afterBonusBalance: updatedUserBalance.bonusAfterBalance,
+        beforeMainBalance: updatedUserBalance.beforeMainBalance,
+        beforeBonusBalance: updatedUserBalance.beforeBonusBalance,
+        afterMainBalance: updatedUserBalance.afterMainBalance,
+        afterBonusBalance: updatedUserBalance.afterBonusBalance,
       };
       this.logger.log(
         `[processBet] 성공 완료 (기존 라운드) - transactionId: ${result.transactionId}, gameRoundId: ${result.gameRoundId}`,
@@ -285,11 +282,11 @@ export class CasinoBetService {
           balanceDetails: {
             create: {
               mainBalanceChange: updatedUserBalance.mainBalanceChange,
-              mainBeforeAmount: updatedUserBalance.mainBeforeBalance,
-              mainAfterAmount: updatedUserBalance.mainAfterBalance,
+              mainBeforeAmount: updatedUserBalance.beforeMainBalance,
+              mainAfterAmount: updatedUserBalance.afterMainBalance,
               bonusBalanceChange: updatedUserBalance.bonusBalanceChange,
-              bonusBeforeAmount: updatedUserBalance.bonusBeforeBalance,
-              bonusAfterAmount: updatedUserBalance.bonusAfterBalance,
+              bonusBeforeAmount: updatedUserBalance.beforeBonusBalance,
+              bonusAfterAmount: updatedUserBalance.afterBonusBalance,
             },
           },
         },
@@ -309,10 +306,10 @@ export class CasinoBetService {
       const result = {
         transactionId: transaction.id,
         gameRoundId: transaction.gameRound!.id,
-        beforeMainBalance: updatedUserBalance.mainBeforeBalance,
-        beforeBonusBalance: updatedUserBalance.bonusBeforeBalance,
-        afterMainBalance: updatedUserBalance.mainAfterBalance,
-        afterBonusBalance: updatedUserBalance.bonusAfterBalance,
+        beforeMainBalance: updatedUserBalance.beforeMainBalance,
+        beforeBonusBalance: updatedUserBalance.beforeBonusBalance,
+        afterMainBalance: updatedUserBalance.afterMainBalance,
+        afterBonusBalance: updatedUserBalance.afterBonusBalance,
       };
       this.logger.log(
         `[processBet] 성공 완료 (새 라운드) - transactionId: ${result.transactionId}, gameRoundId: ${result.gameRoundId}`,
@@ -389,11 +386,12 @@ export class CasinoBetService {
 
     // 유저 밸런스 업데이트
     const updatedUserBalance =
-      await this.casinoBalanceService.updateUserCasinoBalance({
-        tx,
+      await this.updateUserBalanceService.execute({
         userId,
         currency: walletCurrency,
         amount: winAmountInWalletCurrency,
+        balanceType: BalanceType.MAIN,
+        operation: UpdateOperation.ADD,
       });
 
     if (!updatedUserBalance) {
@@ -439,11 +437,11 @@ export class CasinoBetService {
                 balanceDetails: {
                   create: {
                     mainBalanceChange: updatedUserBalance.mainBalanceChange,
-                    mainBeforeAmount: updatedUserBalance.mainBeforeBalance,
-                    mainAfterAmount: updatedUserBalance.mainAfterBalance,
+                    mainBeforeAmount: updatedUserBalance.beforeMainBalance,
+                    mainAfterAmount: updatedUserBalance.afterMainBalance,
                     bonusBalanceChange: updatedUserBalance.bonusBalanceChange,
-                    bonusBeforeAmount: updatedUserBalance.bonusBeforeBalance,
-                    bonusAfterAmount: updatedUserBalance.bonusAfterBalance,
+                    bonusBeforeAmount: updatedUserBalance.beforeBonusBalance,
+                    bonusAfterAmount: updatedUserBalance.afterBonusBalance,
                   },
                 },
               }
@@ -470,10 +468,10 @@ export class CasinoBetService {
 
     return {
       transactionId: updatedGameRound.transactionId,
-      beforeMainBalance: updatedUserBalance.mainBeforeBalance,
-      beforeBonusBalance: updatedUserBalance.bonusBeforeBalance,
-      afterMainBalance: updatedUserBalance.mainAfterBalance,
-      afterBonusBalance: updatedUserBalance.bonusAfterBalance,
+      beforeMainBalance: updatedUserBalance.beforeMainBalance,
+      beforeBonusBalance: updatedUserBalance.beforeBonusBalance,
+      afterMainBalance: updatedUserBalance.afterMainBalance,
+      afterBonusBalance: updatedUserBalance.afterBonusBalance,
       gameRoundId: updatedGameRound.id,
     };
   }
@@ -556,10 +554,11 @@ export class CasinoBetService {
 
     // 3. 유저 밸런스 업데이트
     const updatedUserBalance =
-      await this.casinoBalanceService.updateUserCasinoBalance({
-        tx,
+      await this.updateUserBalanceService.execute({
         userId,
         currency: walletCurrency,
+        balanceType: BalanceType.MAIN,
+        operation: UpdateOperation.ADD,
         amount: winAmountInWalletCurrency,
       });
 
@@ -605,11 +604,11 @@ export class CasinoBetService {
                 balanceDetails: {
                   create: {
                     mainBalanceChange: updatedUserBalance.mainBalanceChange,
-                    mainBeforeAmount: updatedUserBalance.mainBeforeBalance,
-                    mainAfterAmount: updatedUserBalance.mainAfterBalance,
+                    mainBeforeAmount: updatedUserBalance.beforeMainBalance,
+                    mainAfterAmount: updatedUserBalance.afterMainBalance,
                     bonusBalanceChange: updatedUserBalance.bonusBalanceChange,
-                    bonusBeforeAmount: updatedUserBalance.bonusBeforeBalance,
-                    bonusAfterAmount: updatedUserBalance.bonusAfterBalance,
+                    bonusBeforeAmount: updatedUserBalance.beforeBonusBalance,
+                    bonusAfterAmount: updatedUserBalance.afterBonusBalance,
                   },
                 },
               }
@@ -637,10 +636,10 @@ export class CasinoBetService {
 
     return {
       transactionId: updatedGameRound.transactionId,
-      beforeMainBalance: updatedUserBalance.mainBeforeBalance,
-      beforeBonusBalance: updatedUserBalance.bonusBeforeBalance,
-      afterMainBalance: updatedUserBalance.mainAfterBalance,
-      afterBonusBalance: updatedUserBalance.bonusAfterBalance,
+      beforeMainBalance: updatedUserBalance.beforeMainBalance,
+      beforeBonusBalance: updatedUserBalance.beforeBonusBalance,
+      afterMainBalance: updatedUserBalance.afterMainBalance,
+      afterBonusBalance: updatedUserBalance.afterBonusBalance,
       gameRoundId: updatedGameRound.id,
     };
   }
