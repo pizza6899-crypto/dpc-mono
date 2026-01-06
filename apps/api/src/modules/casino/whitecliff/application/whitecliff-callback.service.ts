@@ -48,7 +48,7 @@ export class WhitecliffCallbackService {
     private readonly casinoBonusService: CasinoBonusService,
     private readonly queueService: QueueService,
     private readonly casinoRefundService: CasinoRefundService,
-  ) {}
+  ) { }
 
   /**
    * 사용자 잔액 조회
@@ -203,7 +203,7 @@ export class WhitecliffCallbackService {
       // 5. game 조회 (gameSession에 없으면 별도 조회)
       let gameId = gameSession.game?.id;
       if (!gameId) {
-        const game = await this.prismaService.game.findUnique({
+        const game = await this.prismaService.casinoGame.findUnique({
           where: {
             aggregatorType_provider_gameId: {
               aggregatorType: GameAggregatorType.WHITECLIFF,
@@ -577,7 +577,7 @@ export class WhitecliffCallbackService {
         this.whitecliffMapperService.fromWhitecliffProvider(prd_id)!;
 
       // 1. 게임 조회
-      const game = await this.prismaService.game.findUnique({
+      const game = await this.prismaService.casinoGame.findUnique({
         where: {
           aggregatorType_provider_gameId: {
             aggregatorType: GameAggregatorType.WHITECLIFF,

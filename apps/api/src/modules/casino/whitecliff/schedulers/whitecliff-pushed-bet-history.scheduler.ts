@@ -34,7 +34,7 @@ export class WhitecliffPushedBetHistoryScheduler {
     private readonly concurrencyService: ConcurrencyService,
     private readonly whitecliffMapperService: WhitecliffMapperService,
     private readonly redisService: RedisService,
-  ) {}
+  ) { }
 
   /**
    * 1분마다 푸시 베팅 내역을 조회하여 게임 트랜잭션을 업데이트합니다.
@@ -275,7 +275,7 @@ export class WhitecliffPushedBetHistoryScheduler {
               lte: endDateObj,
             },
           },
-          game: {
+          casinoGame: {
             provider: GameProvider.EVOLUTION,
           },
         },

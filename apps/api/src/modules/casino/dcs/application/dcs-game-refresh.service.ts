@@ -51,7 +51,7 @@ export class DcsGameRefreshService {
     const apiGameIds = new Set(gameList.map((g) => g.game_id));
 
     // 기존 게임 목록 조회 (해당 프로바이더의 DCS 게임만)
-    const existingGames = await this.prismaService.game.findMany({
+    const existingGames = await this.prismaService.casinoGame.findMany({
       where: {
         aggregatorType: GameAggregatorType.DCS,
         provider: provider,
@@ -61,7 +61,7 @@ export class DcsGameRefreshService {
     // API 응답에 있는 게임들 처리
     for (const gameData of gameList) {
       // 게임 생성 또는 업데이트
-      const game = await this.prismaService.game.upsert({
+      const game = await this.prismaService.casinoGame.upsert({
         where: {
           aggregatorType_provider_gameId: {
             aggregatorType: GameAggregatorType.DCS,
@@ -155,7 +155,7 @@ export class DcsGameRefreshService {
 
     for (const game of toDisableGames) {
       try {
-        await this.prismaService.game.update({
+        await this.prismaService.casinoGame.update({
           where: { id: game.id },
           data: { isEnabled: false },
         });

@@ -49,6 +49,21 @@ export type IntegrationLog = $Result.DefaultSelection<Prisma.$IntegrationLogPayl
  */
 export type UnifiedLog = $Result.DefaultSelection<Prisma.$UnifiedLogPayload>
 /**
+ * Model CasinoGame
+ * 
+ */
+export type CasinoGame = $Result.DefaultSelection<Prisma.$CasinoGamePayload>
+/**
+ * Model GameTranslation
+ * 
+ */
+export type GameTranslation = $Result.DefaultSelection<Prisma.$GameTranslationPayload>
+/**
+ * Model GameSession
+ * 
+ */
+export type GameSession = $Result.DefaultSelection<Prisma.$GameSessionPayload>
+/**
  * Model User
  * 
  */
@@ -63,16 +78,6 @@ export type UserBalance = $Result.DefaultSelection<Prisma.$UserBalancePayload>
  * 
  */
 export type UserBalanceStats = $Result.DefaultSelection<Prisma.$UserBalanceStatsPayload>
-/**
- * Model Game
- * 
- */
-export type Game = $Result.DefaultSelection<Prisma.$GamePayload>
-/**
- * Model GameTranslation
- * 
- */
-export type GameTranslation = $Result.DefaultSelection<Prisma.$GameTranslationPayload>
 /**
  * Model Transaction
  * 
@@ -143,11 +148,6 @@ export type UserToken = $Result.DefaultSelection<Prisma.$UserTokenPayload>
  * 
  */
 export type EmailLog = $Result.DefaultSelection<Prisma.$EmailLogPayload>
-/**
- * Model GameSession
- * 
- */
-export type GameSession = $Result.DefaultSelection<Prisma.$GameSessionPayload>
 /**
  * Model AffiliateWallet
  * 
@@ -973,6 +973,36 @@ export class PrismaClient<
   get unifiedLog(): Prisma.UnifiedLogDelegate<ExtArgs, ClientOptions>;
 
   /**
+   * `prisma.casinoGame`: Exposes CRUD operations for the **CasinoGame** model.
+    * Example usage:
+    * ```ts
+    * // Fetch zero or more CasinoGames
+    * const casinoGames = await prisma.casinoGame.findMany()
+    * ```
+    */
+  get casinoGame(): Prisma.CasinoGameDelegate<ExtArgs, ClientOptions>;
+
+  /**
+   * `prisma.gameTranslation`: Exposes CRUD operations for the **GameTranslation** model.
+    * Example usage:
+    * ```ts
+    * // Fetch zero or more GameTranslations
+    * const gameTranslations = await prisma.gameTranslation.findMany()
+    * ```
+    */
+  get gameTranslation(): Prisma.GameTranslationDelegate<ExtArgs, ClientOptions>;
+
+  /**
+   * `prisma.gameSession`: Exposes CRUD operations for the **GameSession** model.
+    * Example usage:
+    * ```ts
+    * // Fetch zero or more GameSessions
+    * const gameSessions = await prisma.gameSession.findMany()
+    * ```
+    */
+  get gameSession(): Prisma.GameSessionDelegate<ExtArgs, ClientOptions>;
+
+  /**
    * `prisma.user`: Exposes CRUD operations for the **User** model.
     * Example usage:
     * ```ts
@@ -1001,26 +1031,6 @@ export class PrismaClient<
     * ```
     */
   get userBalanceStats(): Prisma.UserBalanceStatsDelegate<ExtArgs, ClientOptions>;
-
-  /**
-   * `prisma.game`: Exposes CRUD operations for the **Game** model.
-    * Example usage:
-    * ```ts
-    * // Fetch zero or more Games
-    * const games = await prisma.game.findMany()
-    * ```
-    */
-  get game(): Prisma.GameDelegate<ExtArgs, ClientOptions>;
-
-  /**
-   * `prisma.gameTranslation`: Exposes CRUD operations for the **GameTranslation** model.
-    * Example usage:
-    * ```ts
-    * // Fetch zero or more GameTranslations
-    * const gameTranslations = await prisma.gameTranslation.findMany()
-    * ```
-    */
-  get gameTranslation(): Prisma.GameTranslationDelegate<ExtArgs, ClientOptions>;
 
   /**
    * `prisma.transaction`: Exposes CRUD operations for the **Transaction** model.
@@ -1161,16 +1171,6 @@ export class PrismaClient<
     * ```
     */
   get emailLog(): Prisma.EmailLogDelegate<ExtArgs, ClientOptions>;
-
-  /**
-   * `prisma.gameSession`: Exposes CRUD operations for the **GameSession** model.
-    * Example usage:
-    * ```ts
-    * // Fetch zero or more GameSessions
-    * const gameSessions = await prisma.gameSession.findMany()
-    * ```
-    */
-  get gameSession(): Prisma.GameSessionDelegate<ExtArgs, ClientOptions>;
 
   /**
    * `prisma.affiliateWallet`: Exposes CRUD operations for the **AffiliateWallet** model.
@@ -1792,11 +1792,12 @@ export namespace Prisma {
     SystemErrorLog: 'SystemErrorLog',
     IntegrationLog: 'IntegrationLog',
     UnifiedLog: 'UnifiedLog',
+    CasinoGame: 'CasinoGame',
+    GameTranslation: 'GameTranslation',
+    GameSession: 'GameSession',
     User: 'User',
     UserBalance: 'UserBalance',
     UserBalanceStats: 'UserBalanceStats',
-    Game: 'Game',
-    GameTranslation: 'GameTranslation',
     Transaction: 'Transaction',
     GameRound: 'GameRound',
     GameBet: 'GameBet',
@@ -1811,7 +1812,6 @@ export namespace Prisma {
     Rolling: 'Rolling',
     UserToken: 'UserToken',
     EmailLog: 'EmailLog',
-    GameSession: 'GameSession',
     AffiliateWallet: 'AffiliateWallet',
     AffiliateCommission: 'AffiliateCommission',
     AffiliateTier: 'AffiliateTier',
@@ -1845,7 +1845,7 @@ export namespace Prisma {
       omit: GlobalOmitOptions
     }
     meta: {
-      modelProps: "affiliateCode" | "referral" | "authAuditLog" | "activityLog" | "systemErrorLog" | "integrationLog" | "unifiedLog" | "user" | "userBalance" | "userBalanceStats" | "game" | "gameTranslation" | "transaction" | "gameRound" | "gameBet" | "gameWin" | "transactionBalanceDetail" | "bonusDetail" | "withdrawDetail" | "compTransaction" | "dailyCompEarning" | "nowPaymentCallbackLog" | "exchangeRate" | "rolling" | "userToken" | "emailLog" | "gameSession" | "affiliateWallet" | "affiliateCommission" | "affiliateTier" | "loginAttempt" | "depositDetail" | "cryptoConfig" | "bankConfig" | "promotion" | "promotionTranslation" | "promotionCurrency" | "userPromotion" | "userSession" | "tier" | "tierTranslation" | "userTier" | "tierHistory" | "adminAdjustmentDetail" | "systemAdjustmentDetail"
+      modelProps: "affiliateCode" | "referral" | "authAuditLog" | "activityLog" | "systemErrorLog" | "integrationLog" | "unifiedLog" | "casinoGame" | "gameTranslation" | "gameSession" | "user" | "userBalance" | "userBalanceStats" | "transaction" | "gameRound" | "gameBet" | "gameWin" | "transactionBalanceDetail" | "bonusDetail" | "withdrawDetail" | "compTransaction" | "dailyCompEarning" | "nowPaymentCallbackLog" | "exchangeRate" | "rolling" | "userToken" | "emailLog" | "affiliateWallet" | "affiliateCommission" | "affiliateTier" | "loginAttempt" | "depositDetail" | "cryptoConfig" | "bankConfig" | "promotion" | "promotionTranslation" | "promotionCurrency" | "userPromotion" | "userSession" | "tier" | "tierTranslation" | "userTier" | "tierHistory" | "adminAdjustmentDetail" | "systemAdjustmentDetail"
       txIsolationLevel: Prisma.TransactionIsolationLevel
     }
     model: {
@@ -2367,6 +2367,228 @@ export namespace Prisma {
           }
         }
       }
+      CasinoGame: {
+        payload: Prisma.$CasinoGamePayload<ExtArgs>
+        fields: Prisma.CasinoGameFieldRefs
+        operations: {
+          findUnique: {
+            args: Prisma.CasinoGameFindUniqueArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$CasinoGamePayload> | null
+          }
+          findUniqueOrThrow: {
+            args: Prisma.CasinoGameFindUniqueOrThrowArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$CasinoGamePayload>
+          }
+          findFirst: {
+            args: Prisma.CasinoGameFindFirstArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$CasinoGamePayload> | null
+          }
+          findFirstOrThrow: {
+            args: Prisma.CasinoGameFindFirstOrThrowArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$CasinoGamePayload>
+          }
+          findMany: {
+            args: Prisma.CasinoGameFindManyArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$CasinoGamePayload>[]
+          }
+          create: {
+            args: Prisma.CasinoGameCreateArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$CasinoGamePayload>
+          }
+          createMany: {
+            args: Prisma.CasinoGameCreateManyArgs<ExtArgs>
+            result: BatchPayload
+          }
+          createManyAndReturn: {
+            args: Prisma.CasinoGameCreateManyAndReturnArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$CasinoGamePayload>[]
+          }
+          delete: {
+            args: Prisma.CasinoGameDeleteArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$CasinoGamePayload>
+          }
+          update: {
+            args: Prisma.CasinoGameUpdateArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$CasinoGamePayload>
+          }
+          deleteMany: {
+            args: Prisma.CasinoGameDeleteManyArgs<ExtArgs>
+            result: BatchPayload
+          }
+          updateMany: {
+            args: Prisma.CasinoGameUpdateManyArgs<ExtArgs>
+            result: BatchPayload
+          }
+          updateManyAndReturn: {
+            args: Prisma.CasinoGameUpdateManyAndReturnArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$CasinoGamePayload>[]
+          }
+          upsert: {
+            args: Prisma.CasinoGameUpsertArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$CasinoGamePayload>
+          }
+          aggregate: {
+            args: Prisma.CasinoGameAggregateArgs<ExtArgs>
+            result: $Utils.Optional<AggregateCasinoGame>
+          }
+          groupBy: {
+            args: Prisma.CasinoGameGroupByArgs<ExtArgs>
+            result: $Utils.Optional<CasinoGameGroupByOutputType>[]
+          }
+          count: {
+            args: Prisma.CasinoGameCountArgs<ExtArgs>
+            result: $Utils.Optional<CasinoGameCountAggregateOutputType> | number
+          }
+        }
+      }
+      GameTranslation: {
+        payload: Prisma.$GameTranslationPayload<ExtArgs>
+        fields: Prisma.GameTranslationFieldRefs
+        operations: {
+          findUnique: {
+            args: Prisma.GameTranslationFindUniqueArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$GameTranslationPayload> | null
+          }
+          findUniqueOrThrow: {
+            args: Prisma.GameTranslationFindUniqueOrThrowArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$GameTranslationPayload>
+          }
+          findFirst: {
+            args: Prisma.GameTranslationFindFirstArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$GameTranslationPayload> | null
+          }
+          findFirstOrThrow: {
+            args: Prisma.GameTranslationFindFirstOrThrowArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$GameTranslationPayload>
+          }
+          findMany: {
+            args: Prisma.GameTranslationFindManyArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$GameTranslationPayload>[]
+          }
+          create: {
+            args: Prisma.GameTranslationCreateArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$GameTranslationPayload>
+          }
+          createMany: {
+            args: Prisma.GameTranslationCreateManyArgs<ExtArgs>
+            result: BatchPayload
+          }
+          createManyAndReturn: {
+            args: Prisma.GameTranslationCreateManyAndReturnArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$GameTranslationPayload>[]
+          }
+          delete: {
+            args: Prisma.GameTranslationDeleteArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$GameTranslationPayload>
+          }
+          update: {
+            args: Prisma.GameTranslationUpdateArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$GameTranslationPayload>
+          }
+          deleteMany: {
+            args: Prisma.GameTranslationDeleteManyArgs<ExtArgs>
+            result: BatchPayload
+          }
+          updateMany: {
+            args: Prisma.GameTranslationUpdateManyArgs<ExtArgs>
+            result: BatchPayload
+          }
+          updateManyAndReturn: {
+            args: Prisma.GameTranslationUpdateManyAndReturnArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$GameTranslationPayload>[]
+          }
+          upsert: {
+            args: Prisma.GameTranslationUpsertArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$GameTranslationPayload>
+          }
+          aggregate: {
+            args: Prisma.GameTranslationAggregateArgs<ExtArgs>
+            result: $Utils.Optional<AggregateGameTranslation>
+          }
+          groupBy: {
+            args: Prisma.GameTranslationGroupByArgs<ExtArgs>
+            result: $Utils.Optional<GameTranslationGroupByOutputType>[]
+          }
+          count: {
+            args: Prisma.GameTranslationCountArgs<ExtArgs>
+            result: $Utils.Optional<GameTranslationCountAggregateOutputType> | number
+          }
+        }
+      }
+      GameSession: {
+        payload: Prisma.$GameSessionPayload<ExtArgs>
+        fields: Prisma.GameSessionFieldRefs
+        operations: {
+          findUnique: {
+            args: Prisma.GameSessionFindUniqueArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$GameSessionPayload> | null
+          }
+          findUniqueOrThrow: {
+            args: Prisma.GameSessionFindUniqueOrThrowArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$GameSessionPayload>
+          }
+          findFirst: {
+            args: Prisma.GameSessionFindFirstArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$GameSessionPayload> | null
+          }
+          findFirstOrThrow: {
+            args: Prisma.GameSessionFindFirstOrThrowArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$GameSessionPayload>
+          }
+          findMany: {
+            args: Prisma.GameSessionFindManyArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$GameSessionPayload>[]
+          }
+          create: {
+            args: Prisma.GameSessionCreateArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$GameSessionPayload>
+          }
+          createMany: {
+            args: Prisma.GameSessionCreateManyArgs<ExtArgs>
+            result: BatchPayload
+          }
+          createManyAndReturn: {
+            args: Prisma.GameSessionCreateManyAndReturnArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$GameSessionPayload>[]
+          }
+          delete: {
+            args: Prisma.GameSessionDeleteArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$GameSessionPayload>
+          }
+          update: {
+            args: Prisma.GameSessionUpdateArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$GameSessionPayload>
+          }
+          deleteMany: {
+            args: Prisma.GameSessionDeleteManyArgs<ExtArgs>
+            result: BatchPayload
+          }
+          updateMany: {
+            args: Prisma.GameSessionUpdateManyArgs<ExtArgs>
+            result: BatchPayload
+          }
+          updateManyAndReturn: {
+            args: Prisma.GameSessionUpdateManyAndReturnArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$GameSessionPayload>[]
+          }
+          upsert: {
+            args: Prisma.GameSessionUpsertArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$GameSessionPayload>
+          }
+          aggregate: {
+            args: Prisma.GameSessionAggregateArgs<ExtArgs>
+            result: $Utils.Optional<AggregateGameSession>
+          }
+          groupBy: {
+            args: Prisma.GameSessionGroupByArgs<ExtArgs>
+            result: $Utils.Optional<GameSessionGroupByOutputType>[]
+          }
+          count: {
+            args: Prisma.GameSessionCountArgs<ExtArgs>
+            result: $Utils.Optional<GameSessionCountAggregateOutputType> | number
+          }
+        }
+      }
       User: {
         payload: Prisma.$UserPayload<ExtArgs>
         fields: Prisma.UserFieldRefs
@@ -2586,154 +2808,6 @@ export namespace Prisma {
           count: {
             args: Prisma.UserBalanceStatsCountArgs<ExtArgs>
             result: $Utils.Optional<UserBalanceStatsCountAggregateOutputType> | number
-          }
-        }
-      }
-      Game: {
-        payload: Prisma.$GamePayload<ExtArgs>
-        fields: Prisma.GameFieldRefs
-        operations: {
-          findUnique: {
-            args: Prisma.GameFindUniqueArgs<ExtArgs>
-            result: $Utils.PayloadToResult<Prisma.$GamePayload> | null
-          }
-          findUniqueOrThrow: {
-            args: Prisma.GameFindUniqueOrThrowArgs<ExtArgs>
-            result: $Utils.PayloadToResult<Prisma.$GamePayload>
-          }
-          findFirst: {
-            args: Prisma.GameFindFirstArgs<ExtArgs>
-            result: $Utils.PayloadToResult<Prisma.$GamePayload> | null
-          }
-          findFirstOrThrow: {
-            args: Prisma.GameFindFirstOrThrowArgs<ExtArgs>
-            result: $Utils.PayloadToResult<Prisma.$GamePayload>
-          }
-          findMany: {
-            args: Prisma.GameFindManyArgs<ExtArgs>
-            result: $Utils.PayloadToResult<Prisma.$GamePayload>[]
-          }
-          create: {
-            args: Prisma.GameCreateArgs<ExtArgs>
-            result: $Utils.PayloadToResult<Prisma.$GamePayload>
-          }
-          createMany: {
-            args: Prisma.GameCreateManyArgs<ExtArgs>
-            result: BatchPayload
-          }
-          createManyAndReturn: {
-            args: Prisma.GameCreateManyAndReturnArgs<ExtArgs>
-            result: $Utils.PayloadToResult<Prisma.$GamePayload>[]
-          }
-          delete: {
-            args: Prisma.GameDeleteArgs<ExtArgs>
-            result: $Utils.PayloadToResult<Prisma.$GamePayload>
-          }
-          update: {
-            args: Prisma.GameUpdateArgs<ExtArgs>
-            result: $Utils.PayloadToResult<Prisma.$GamePayload>
-          }
-          deleteMany: {
-            args: Prisma.GameDeleteManyArgs<ExtArgs>
-            result: BatchPayload
-          }
-          updateMany: {
-            args: Prisma.GameUpdateManyArgs<ExtArgs>
-            result: BatchPayload
-          }
-          updateManyAndReturn: {
-            args: Prisma.GameUpdateManyAndReturnArgs<ExtArgs>
-            result: $Utils.PayloadToResult<Prisma.$GamePayload>[]
-          }
-          upsert: {
-            args: Prisma.GameUpsertArgs<ExtArgs>
-            result: $Utils.PayloadToResult<Prisma.$GamePayload>
-          }
-          aggregate: {
-            args: Prisma.GameAggregateArgs<ExtArgs>
-            result: $Utils.Optional<AggregateGame>
-          }
-          groupBy: {
-            args: Prisma.GameGroupByArgs<ExtArgs>
-            result: $Utils.Optional<GameGroupByOutputType>[]
-          }
-          count: {
-            args: Prisma.GameCountArgs<ExtArgs>
-            result: $Utils.Optional<GameCountAggregateOutputType> | number
-          }
-        }
-      }
-      GameTranslation: {
-        payload: Prisma.$GameTranslationPayload<ExtArgs>
-        fields: Prisma.GameTranslationFieldRefs
-        operations: {
-          findUnique: {
-            args: Prisma.GameTranslationFindUniqueArgs<ExtArgs>
-            result: $Utils.PayloadToResult<Prisma.$GameTranslationPayload> | null
-          }
-          findUniqueOrThrow: {
-            args: Prisma.GameTranslationFindUniqueOrThrowArgs<ExtArgs>
-            result: $Utils.PayloadToResult<Prisma.$GameTranslationPayload>
-          }
-          findFirst: {
-            args: Prisma.GameTranslationFindFirstArgs<ExtArgs>
-            result: $Utils.PayloadToResult<Prisma.$GameTranslationPayload> | null
-          }
-          findFirstOrThrow: {
-            args: Prisma.GameTranslationFindFirstOrThrowArgs<ExtArgs>
-            result: $Utils.PayloadToResult<Prisma.$GameTranslationPayload>
-          }
-          findMany: {
-            args: Prisma.GameTranslationFindManyArgs<ExtArgs>
-            result: $Utils.PayloadToResult<Prisma.$GameTranslationPayload>[]
-          }
-          create: {
-            args: Prisma.GameTranslationCreateArgs<ExtArgs>
-            result: $Utils.PayloadToResult<Prisma.$GameTranslationPayload>
-          }
-          createMany: {
-            args: Prisma.GameTranslationCreateManyArgs<ExtArgs>
-            result: BatchPayload
-          }
-          createManyAndReturn: {
-            args: Prisma.GameTranslationCreateManyAndReturnArgs<ExtArgs>
-            result: $Utils.PayloadToResult<Prisma.$GameTranslationPayload>[]
-          }
-          delete: {
-            args: Prisma.GameTranslationDeleteArgs<ExtArgs>
-            result: $Utils.PayloadToResult<Prisma.$GameTranslationPayload>
-          }
-          update: {
-            args: Prisma.GameTranslationUpdateArgs<ExtArgs>
-            result: $Utils.PayloadToResult<Prisma.$GameTranslationPayload>
-          }
-          deleteMany: {
-            args: Prisma.GameTranslationDeleteManyArgs<ExtArgs>
-            result: BatchPayload
-          }
-          updateMany: {
-            args: Prisma.GameTranslationUpdateManyArgs<ExtArgs>
-            result: BatchPayload
-          }
-          updateManyAndReturn: {
-            args: Prisma.GameTranslationUpdateManyAndReturnArgs<ExtArgs>
-            result: $Utils.PayloadToResult<Prisma.$GameTranslationPayload>[]
-          }
-          upsert: {
-            args: Prisma.GameTranslationUpsertArgs<ExtArgs>
-            result: $Utils.PayloadToResult<Prisma.$GameTranslationPayload>
-          }
-          aggregate: {
-            args: Prisma.GameTranslationAggregateArgs<ExtArgs>
-            result: $Utils.Optional<AggregateGameTranslation>
-          }
-          groupBy: {
-            args: Prisma.GameTranslationGroupByArgs<ExtArgs>
-            result: $Utils.Optional<GameTranslationGroupByOutputType>[]
-          }
-          count: {
-            args: Prisma.GameTranslationCountArgs<ExtArgs>
-            result: $Utils.Optional<GameTranslationCountAggregateOutputType> | number
           }
         }
       }
@@ -3770,80 +3844,6 @@ export namespace Prisma {
           count: {
             args: Prisma.EmailLogCountArgs<ExtArgs>
             result: $Utils.Optional<EmailLogCountAggregateOutputType> | number
-          }
-        }
-      }
-      GameSession: {
-        payload: Prisma.$GameSessionPayload<ExtArgs>
-        fields: Prisma.GameSessionFieldRefs
-        operations: {
-          findUnique: {
-            args: Prisma.GameSessionFindUniqueArgs<ExtArgs>
-            result: $Utils.PayloadToResult<Prisma.$GameSessionPayload> | null
-          }
-          findUniqueOrThrow: {
-            args: Prisma.GameSessionFindUniqueOrThrowArgs<ExtArgs>
-            result: $Utils.PayloadToResult<Prisma.$GameSessionPayload>
-          }
-          findFirst: {
-            args: Prisma.GameSessionFindFirstArgs<ExtArgs>
-            result: $Utils.PayloadToResult<Prisma.$GameSessionPayload> | null
-          }
-          findFirstOrThrow: {
-            args: Prisma.GameSessionFindFirstOrThrowArgs<ExtArgs>
-            result: $Utils.PayloadToResult<Prisma.$GameSessionPayload>
-          }
-          findMany: {
-            args: Prisma.GameSessionFindManyArgs<ExtArgs>
-            result: $Utils.PayloadToResult<Prisma.$GameSessionPayload>[]
-          }
-          create: {
-            args: Prisma.GameSessionCreateArgs<ExtArgs>
-            result: $Utils.PayloadToResult<Prisma.$GameSessionPayload>
-          }
-          createMany: {
-            args: Prisma.GameSessionCreateManyArgs<ExtArgs>
-            result: BatchPayload
-          }
-          createManyAndReturn: {
-            args: Prisma.GameSessionCreateManyAndReturnArgs<ExtArgs>
-            result: $Utils.PayloadToResult<Prisma.$GameSessionPayload>[]
-          }
-          delete: {
-            args: Prisma.GameSessionDeleteArgs<ExtArgs>
-            result: $Utils.PayloadToResult<Prisma.$GameSessionPayload>
-          }
-          update: {
-            args: Prisma.GameSessionUpdateArgs<ExtArgs>
-            result: $Utils.PayloadToResult<Prisma.$GameSessionPayload>
-          }
-          deleteMany: {
-            args: Prisma.GameSessionDeleteManyArgs<ExtArgs>
-            result: BatchPayload
-          }
-          updateMany: {
-            args: Prisma.GameSessionUpdateManyArgs<ExtArgs>
-            result: BatchPayload
-          }
-          updateManyAndReturn: {
-            args: Prisma.GameSessionUpdateManyAndReturnArgs<ExtArgs>
-            result: $Utils.PayloadToResult<Prisma.$GameSessionPayload>[]
-          }
-          upsert: {
-            args: Prisma.GameSessionUpsertArgs<ExtArgs>
-            result: $Utils.PayloadToResult<Prisma.$GameSessionPayload>
-          }
-          aggregate: {
-            args: Prisma.GameSessionAggregateArgs<ExtArgs>
-            result: $Utils.Optional<AggregateGameSession>
-          }
-          groupBy: {
-            args: Prisma.GameSessionGroupByArgs<ExtArgs>
-            result: $Utils.Optional<GameSessionGroupByOutputType>[]
-          }
-          count: {
-            args: Prisma.GameSessionCountArgs<ExtArgs>
-            result: $Utils.Optional<GameSessionCountAggregateOutputType> | number
           }
         }
       }
@@ -5294,11 +5294,12 @@ export namespace Prisma {
     systemErrorLog?: SystemErrorLogOmit
     integrationLog?: IntegrationLogOmit
     unifiedLog?: UnifiedLogOmit
+    casinoGame?: CasinoGameOmit
+    gameTranslation?: GameTranslationOmit
+    gameSession?: GameSessionOmit
     user?: UserOmit
     userBalance?: UserBalanceOmit
     userBalanceStats?: UserBalanceStatsOmit
-    game?: GameOmit
-    gameTranslation?: GameTranslationOmit
     transaction?: TransactionOmit
     gameRound?: GameRoundOmit
     gameBet?: GameBetOmit
@@ -5313,7 +5314,6 @@ export namespace Prisma {
     rolling?: RollingOmit
     userToken?: UserTokenOmit
     emailLog?: EmailLogOmit
-    gameSession?: GameSessionOmit
     affiliateWallet?: AffiliateWalletOmit
     affiliateCommission?: AffiliateCommissionOmit
     affiliateTier?: AffiliateTierOmit
@@ -5435,6 +5435,95 @@ export namespace Prisma {
    */
   export type AffiliateCodeCountOutputTypeCountReferralsArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
     where?: ReferralWhereInput
+  }
+
+
+  /**
+   * Count Type CasinoGameCountOutputType
+   */
+
+  export type CasinoGameCountOutputType = {
+    bonusDetails: number
+    gameRounds: number
+    gameSessions: number
+    translations: number
+  }
+
+  export type CasinoGameCountOutputTypeSelect<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    bonusDetails?: boolean | CasinoGameCountOutputTypeCountBonusDetailsArgs
+    gameRounds?: boolean | CasinoGameCountOutputTypeCountGameRoundsArgs
+    gameSessions?: boolean | CasinoGameCountOutputTypeCountGameSessionsArgs
+    translations?: boolean | CasinoGameCountOutputTypeCountTranslationsArgs
+  }
+
+  // Custom InputTypes
+  /**
+   * CasinoGameCountOutputType without action
+   */
+  export type CasinoGameCountOutputTypeDefaultArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the CasinoGameCountOutputType
+     */
+    select?: CasinoGameCountOutputTypeSelect<ExtArgs> | null
+  }
+
+  /**
+   * CasinoGameCountOutputType without action
+   */
+  export type CasinoGameCountOutputTypeCountBonusDetailsArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    where?: BonusDetailWhereInput
+  }
+
+  /**
+   * CasinoGameCountOutputType without action
+   */
+  export type CasinoGameCountOutputTypeCountGameRoundsArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    where?: GameRoundWhereInput
+  }
+
+  /**
+   * CasinoGameCountOutputType without action
+   */
+  export type CasinoGameCountOutputTypeCountGameSessionsArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    where?: GameSessionWhereInput
+  }
+
+  /**
+   * CasinoGameCountOutputType without action
+   */
+  export type CasinoGameCountOutputTypeCountTranslationsArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    where?: GameTranslationWhereInput
+  }
+
+
+  /**
+   * Count Type GameSessionCountOutputType
+   */
+
+  export type GameSessionCountOutputType = {
+    gameRounds: number
+  }
+
+  export type GameSessionCountOutputTypeSelect<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    gameRounds?: boolean | GameSessionCountOutputTypeCountGameRoundsArgs
+  }
+
+  // Custom InputTypes
+  /**
+   * GameSessionCountOutputType without action
+   */
+  export type GameSessionCountOutputTypeDefaultArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the GameSessionCountOutputType
+     */
+    select?: GameSessionCountOutputTypeSelect<ExtArgs> | null
+  }
+
+  /**
+   * GameSessionCountOutputType without action
+   */
+  export type GameSessionCountOutputTypeCountGameRoundsArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    where?: GameRoundWhereInput
   }
 
 
@@ -5659,64 +5748,6 @@ export namespace Prisma {
 
 
   /**
-   * Count Type GameCountOutputType
-   */
-
-  export type GameCountOutputType = {
-    bonusDetails: number
-    gameRounds: number
-    gameSessions: number
-    translations: number
-  }
-
-  export type GameCountOutputTypeSelect<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
-    bonusDetails?: boolean | GameCountOutputTypeCountBonusDetailsArgs
-    gameRounds?: boolean | GameCountOutputTypeCountGameRoundsArgs
-    gameSessions?: boolean | GameCountOutputTypeCountGameSessionsArgs
-    translations?: boolean | GameCountOutputTypeCountTranslationsArgs
-  }
-
-  // Custom InputTypes
-  /**
-   * GameCountOutputType without action
-   */
-  export type GameCountOutputTypeDefaultArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
-    /**
-     * Select specific fields to fetch from the GameCountOutputType
-     */
-    select?: GameCountOutputTypeSelect<ExtArgs> | null
-  }
-
-  /**
-   * GameCountOutputType without action
-   */
-  export type GameCountOutputTypeCountBonusDetailsArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
-    where?: BonusDetailWhereInput
-  }
-
-  /**
-   * GameCountOutputType without action
-   */
-  export type GameCountOutputTypeCountGameRoundsArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
-    where?: GameRoundWhereInput
-  }
-
-  /**
-   * GameCountOutputType without action
-   */
-  export type GameCountOutputTypeCountGameSessionsArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
-    where?: GameSessionWhereInput
-  }
-
-  /**
-   * GameCountOutputType without action
-   */
-  export type GameCountOutputTypeCountTranslationsArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
-    where?: GameTranslationWhereInput
-  }
-
-
-  /**
    * Count Type TransactionCountOutputType
    */
 
@@ -5824,37 +5855,6 @@ export namespace Prisma {
    */
   export type DailyCompEarningCountOutputTypeCountCompTransactionArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
     where?: CompTransactionWhereInput
-  }
-
-
-  /**
-   * Count Type GameSessionCountOutputType
-   */
-
-  export type GameSessionCountOutputType = {
-    gameRounds: number
-  }
-
-  export type GameSessionCountOutputTypeSelect<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
-    gameRounds?: boolean | GameSessionCountOutputTypeCountGameRoundsArgs
-  }
-
-  // Custom InputTypes
-  /**
-   * GameSessionCountOutputType without action
-   */
-  export type GameSessionCountOutputTypeDefaultArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
-    /**
-     * Select specific fields to fetch from the GameSessionCountOutputType
-     */
-    select?: GameSessionCountOutputTypeSelect<ExtArgs> | null
-  }
-
-  /**
-   * GameSessionCountOutputType without action
-   */
-  export type GameSessionCountOutputTypeCountGameRoundsArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
-    where?: GameRoundWhereInput
   }
 
 
@@ -14461,6 +14461,3710 @@ export namespace Prisma {
 
 
   /**
+   * Model CasinoGame
+   */
+
+  export type AggregateCasinoGame = {
+    _count: CasinoGameCountAggregateOutputType | null
+    _avg: CasinoGameAvgAggregateOutputType | null
+    _sum: CasinoGameSumAggregateOutputType | null
+    _min: CasinoGameMinAggregateOutputType | null
+    _max: CasinoGameMaxAggregateOutputType | null
+  }
+
+  export type CasinoGameAvgAggregateOutputType = {
+    id: number | null
+    gameId: number | null
+    houseEdge: Decimal | null
+    contributionRate: Decimal | null
+  }
+
+  export type CasinoGameSumAggregateOutputType = {
+    id: number | null
+    gameId: number | null
+    houseEdge: Decimal | null
+    contributionRate: Decimal | null
+  }
+
+  export type CasinoGameMinAggregateOutputType = {
+    id: number | null
+    aggregatorType: $Enums.GameAggregatorType | null
+    provider: $Enums.GameProvider | null
+    category: $Enums.GameCategory | null
+    gameId: number | null
+    gameType: string | null
+    tableId: string | null
+    iconLink: string | null
+    isEnabled: boolean | null
+    isVisibleToUser: boolean | null
+    houseEdge: Decimal | null
+    contributionRate: Decimal | null
+    createdAt: Date | null
+    updatedAt: Date | null
+  }
+
+  export type CasinoGameMaxAggregateOutputType = {
+    id: number | null
+    aggregatorType: $Enums.GameAggregatorType | null
+    provider: $Enums.GameProvider | null
+    category: $Enums.GameCategory | null
+    gameId: number | null
+    gameType: string | null
+    tableId: string | null
+    iconLink: string | null
+    isEnabled: boolean | null
+    isVisibleToUser: boolean | null
+    houseEdge: Decimal | null
+    contributionRate: Decimal | null
+    createdAt: Date | null
+    updatedAt: Date | null
+  }
+
+  export type CasinoGameCountAggregateOutputType = {
+    id: number
+    aggregatorType: number
+    provider: number
+    category: number
+    gameId: number
+    gameType: number
+    tableId: number
+    iconLink: number
+    isEnabled: number
+    isVisibleToUser: number
+    houseEdge: number
+    contributionRate: number
+    createdAt: number
+    updatedAt: number
+    _all: number
+  }
+
+
+  export type CasinoGameAvgAggregateInputType = {
+    id?: true
+    gameId?: true
+    houseEdge?: true
+    contributionRate?: true
+  }
+
+  export type CasinoGameSumAggregateInputType = {
+    id?: true
+    gameId?: true
+    houseEdge?: true
+    contributionRate?: true
+  }
+
+  export type CasinoGameMinAggregateInputType = {
+    id?: true
+    aggregatorType?: true
+    provider?: true
+    category?: true
+    gameId?: true
+    gameType?: true
+    tableId?: true
+    iconLink?: true
+    isEnabled?: true
+    isVisibleToUser?: true
+    houseEdge?: true
+    contributionRate?: true
+    createdAt?: true
+    updatedAt?: true
+  }
+
+  export type CasinoGameMaxAggregateInputType = {
+    id?: true
+    aggregatorType?: true
+    provider?: true
+    category?: true
+    gameId?: true
+    gameType?: true
+    tableId?: true
+    iconLink?: true
+    isEnabled?: true
+    isVisibleToUser?: true
+    houseEdge?: true
+    contributionRate?: true
+    createdAt?: true
+    updatedAt?: true
+  }
+
+  export type CasinoGameCountAggregateInputType = {
+    id?: true
+    aggregatorType?: true
+    provider?: true
+    category?: true
+    gameId?: true
+    gameType?: true
+    tableId?: true
+    iconLink?: true
+    isEnabled?: true
+    isVisibleToUser?: true
+    houseEdge?: true
+    contributionRate?: true
+    createdAt?: true
+    updatedAt?: true
+    _all?: true
+  }
+
+  export type CasinoGameAggregateArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Filter which CasinoGame to aggregate.
+     */
+    where?: CasinoGameWhereInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/sorting Sorting Docs}
+     * 
+     * Determine the order of CasinoGames to fetch.
+     */
+    orderBy?: CasinoGameOrderByWithRelationInput | CasinoGameOrderByWithRelationInput[]
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination#cursor-based-pagination Cursor Docs}
+     * 
+     * Sets the start position
+     */
+    cursor?: CasinoGameWhereUniqueInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Take `±n` CasinoGames from the position of the cursor.
+     */
+    take?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Skip the first `n` CasinoGames.
+     */
+    skip?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
+     * 
+     * Count returned CasinoGames
+    **/
+    _count?: true | CasinoGameCountAggregateInputType
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
+     * 
+     * Select which fields to average
+    **/
+    _avg?: CasinoGameAvgAggregateInputType
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
+     * 
+     * Select which fields to sum
+    **/
+    _sum?: CasinoGameSumAggregateInputType
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
+     * 
+     * Select which fields to find the minimum value
+    **/
+    _min?: CasinoGameMinAggregateInputType
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
+     * 
+     * Select which fields to find the maximum value
+    **/
+    _max?: CasinoGameMaxAggregateInputType
+  }
+
+  export type GetCasinoGameAggregateType<T extends CasinoGameAggregateArgs> = {
+        [P in keyof T & keyof AggregateCasinoGame]: P extends '_count' | 'count'
+      ? T[P] extends true
+        ? number
+        : GetScalarType<T[P], AggregateCasinoGame[P]>
+      : GetScalarType<T[P], AggregateCasinoGame[P]>
+  }
+
+
+
+
+  export type CasinoGameGroupByArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    where?: CasinoGameWhereInput
+    orderBy?: CasinoGameOrderByWithAggregationInput | CasinoGameOrderByWithAggregationInput[]
+    by: CasinoGameScalarFieldEnum[] | CasinoGameScalarFieldEnum
+    having?: CasinoGameScalarWhereWithAggregatesInput
+    take?: number
+    skip?: number
+    _count?: CasinoGameCountAggregateInputType | true
+    _avg?: CasinoGameAvgAggregateInputType
+    _sum?: CasinoGameSumAggregateInputType
+    _min?: CasinoGameMinAggregateInputType
+    _max?: CasinoGameMaxAggregateInputType
+  }
+
+  export type CasinoGameGroupByOutputType = {
+    id: number
+    aggregatorType: $Enums.GameAggregatorType
+    provider: $Enums.GameProvider
+    category: $Enums.GameCategory
+    gameId: number
+    gameType: string | null
+    tableId: string | null
+    iconLink: string | null
+    isEnabled: boolean
+    isVisibleToUser: boolean
+    houseEdge: Decimal
+    contributionRate: Decimal
+    createdAt: Date
+    updatedAt: Date
+    _count: CasinoGameCountAggregateOutputType | null
+    _avg: CasinoGameAvgAggregateOutputType | null
+    _sum: CasinoGameSumAggregateOutputType | null
+    _min: CasinoGameMinAggregateOutputType | null
+    _max: CasinoGameMaxAggregateOutputType | null
+  }
+
+  type GetCasinoGameGroupByPayload<T extends CasinoGameGroupByArgs> = Prisma.PrismaPromise<
+    Array<
+      PickEnumerable<CasinoGameGroupByOutputType, T['by']> &
+        {
+          [P in ((keyof T) & (keyof CasinoGameGroupByOutputType))]: P extends '_count'
+            ? T[P] extends boolean
+              ? number
+              : GetScalarType<T[P], CasinoGameGroupByOutputType[P]>
+            : GetScalarType<T[P], CasinoGameGroupByOutputType[P]>
+        }
+      >
+    >
+
+
+  export type CasinoGameSelect<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetSelect<{
+    id?: boolean
+    aggregatorType?: boolean
+    provider?: boolean
+    category?: boolean
+    gameId?: boolean
+    gameType?: boolean
+    tableId?: boolean
+    iconLink?: boolean
+    isEnabled?: boolean
+    isVisibleToUser?: boolean
+    houseEdge?: boolean
+    contributionRate?: boolean
+    createdAt?: boolean
+    updatedAt?: boolean
+    bonusDetails?: boolean | CasinoGame$bonusDetailsArgs<ExtArgs>
+    gameRounds?: boolean | CasinoGame$gameRoundsArgs<ExtArgs>
+    gameSessions?: boolean | CasinoGame$gameSessionsArgs<ExtArgs>
+    translations?: boolean | CasinoGame$translationsArgs<ExtArgs>
+    _count?: boolean | CasinoGameCountOutputTypeDefaultArgs<ExtArgs>
+  }, ExtArgs["result"]["casinoGame"]>
+
+  export type CasinoGameSelectCreateManyAndReturn<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetSelect<{
+    id?: boolean
+    aggregatorType?: boolean
+    provider?: boolean
+    category?: boolean
+    gameId?: boolean
+    gameType?: boolean
+    tableId?: boolean
+    iconLink?: boolean
+    isEnabled?: boolean
+    isVisibleToUser?: boolean
+    houseEdge?: boolean
+    contributionRate?: boolean
+    createdAt?: boolean
+    updatedAt?: boolean
+  }, ExtArgs["result"]["casinoGame"]>
+
+  export type CasinoGameSelectUpdateManyAndReturn<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetSelect<{
+    id?: boolean
+    aggregatorType?: boolean
+    provider?: boolean
+    category?: boolean
+    gameId?: boolean
+    gameType?: boolean
+    tableId?: boolean
+    iconLink?: boolean
+    isEnabled?: boolean
+    isVisibleToUser?: boolean
+    houseEdge?: boolean
+    contributionRate?: boolean
+    createdAt?: boolean
+    updatedAt?: boolean
+  }, ExtArgs["result"]["casinoGame"]>
+
+  export type CasinoGameSelectScalar = {
+    id?: boolean
+    aggregatorType?: boolean
+    provider?: boolean
+    category?: boolean
+    gameId?: boolean
+    gameType?: boolean
+    tableId?: boolean
+    iconLink?: boolean
+    isEnabled?: boolean
+    isVisibleToUser?: boolean
+    houseEdge?: boolean
+    contributionRate?: boolean
+    createdAt?: boolean
+    updatedAt?: boolean
+  }
+
+  export type CasinoGameOmit<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetOmit<"id" | "aggregatorType" | "provider" | "category" | "gameId" | "gameType" | "tableId" | "iconLink" | "isEnabled" | "isVisibleToUser" | "houseEdge" | "contributionRate" | "createdAt" | "updatedAt", ExtArgs["result"]["casinoGame"]>
+  export type CasinoGameInclude<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    bonusDetails?: boolean | CasinoGame$bonusDetailsArgs<ExtArgs>
+    gameRounds?: boolean | CasinoGame$gameRoundsArgs<ExtArgs>
+    gameSessions?: boolean | CasinoGame$gameSessionsArgs<ExtArgs>
+    translations?: boolean | CasinoGame$translationsArgs<ExtArgs>
+    _count?: boolean | CasinoGameCountOutputTypeDefaultArgs<ExtArgs>
+  }
+  export type CasinoGameIncludeCreateManyAndReturn<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {}
+  export type CasinoGameIncludeUpdateManyAndReturn<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {}
+
+  export type $CasinoGamePayload<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    name: "CasinoGame"
+    objects: {
+      bonusDetails: Prisma.$BonusDetailPayload<ExtArgs>[]
+      gameRounds: Prisma.$GameRoundPayload<ExtArgs>[]
+      gameSessions: Prisma.$GameSessionPayload<ExtArgs>[]
+      translations: Prisma.$GameTranslationPayload<ExtArgs>[]
+    }
+    scalars: $Extensions.GetPayloadResult<{
+      id: number
+      aggregatorType: $Enums.GameAggregatorType
+      provider: $Enums.GameProvider
+      category: $Enums.GameCategory
+      gameId: number
+      gameType: string | null
+      tableId: string | null
+      iconLink: string | null
+      isEnabled: boolean
+      isVisibleToUser: boolean
+      houseEdge: Prisma.Decimal
+      contributionRate: Prisma.Decimal
+      createdAt: Date
+      updatedAt: Date
+    }, ExtArgs["result"]["casinoGame"]>
+    composites: {}
+  }
+
+  type CasinoGameGetPayload<S extends boolean | null | undefined | CasinoGameDefaultArgs> = $Result.GetResult<Prisma.$CasinoGamePayload, S>
+
+  type CasinoGameCountArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> =
+    Omit<CasinoGameFindManyArgs, 'select' | 'include' | 'distinct' | 'omit'> & {
+      select?: CasinoGameCountAggregateInputType | true
+    }
+
+  export interface CasinoGameDelegate<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs, GlobalOmitOptions = {}> {
+    [K: symbol]: { types: Prisma.TypeMap<ExtArgs>['model']['CasinoGame'], meta: { name: 'CasinoGame' } }
+    /**
+     * Find zero or one CasinoGame that matches the filter.
+     * @param {CasinoGameFindUniqueArgs} args - Arguments to find a CasinoGame
+     * @example
+     * // Get one CasinoGame
+     * const casinoGame = await prisma.casinoGame.findUnique({
+     *   where: {
+     *     // ... provide filter here
+     *   }
+     * })
+     */
+    findUnique<T extends CasinoGameFindUniqueArgs>(args: SelectSubset<T, CasinoGameFindUniqueArgs<ExtArgs>>): Prisma__CasinoGameClient<$Result.GetResult<Prisma.$CasinoGamePayload<ExtArgs>, T, "findUnique", GlobalOmitOptions> | null, null, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Find one CasinoGame that matches the filter or throw an error with `error.code='P2025'`
+     * if no matches were found.
+     * @param {CasinoGameFindUniqueOrThrowArgs} args - Arguments to find a CasinoGame
+     * @example
+     * // Get one CasinoGame
+     * const casinoGame = await prisma.casinoGame.findUniqueOrThrow({
+     *   where: {
+     *     // ... provide filter here
+     *   }
+     * })
+     */
+    findUniqueOrThrow<T extends CasinoGameFindUniqueOrThrowArgs>(args: SelectSubset<T, CasinoGameFindUniqueOrThrowArgs<ExtArgs>>): Prisma__CasinoGameClient<$Result.GetResult<Prisma.$CasinoGamePayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Find the first CasinoGame that matches the filter.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {CasinoGameFindFirstArgs} args - Arguments to find a CasinoGame
+     * @example
+     * // Get one CasinoGame
+     * const casinoGame = await prisma.casinoGame.findFirst({
+     *   where: {
+     *     // ... provide filter here
+     *   }
+     * })
+     */
+    findFirst<T extends CasinoGameFindFirstArgs>(args?: SelectSubset<T, CasinoGameFindFirstArgs<ExtArgs>>): Prisma__CasinoGameClient<$Result.GetResult<Prisma.$CasinoGamePayload<ExtArgs>, T, "findFirst", GlobalOmitOptions> | null, null, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Find the first CasinoGame that matches the filter or
+     * throw `PrismaKnownClientError` with `P2025` code if no matches were found.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {CasinoGameFindFirstOrThrowArgs} args - Arguments to find a CasinoGame
+     * @example
+     * // Get one CasinoGame
+     * const casinoGame = await prisma.casinoGame.findFirstOrThrow({
+     *   where: {
+     *     // ... provide filter here
+     *   }
+     * })
+     */
+    findFirstOrThrow<T extends CasinoGameFindFirstOrThrowArgs>(args?: SelectSubset<T, CasinoGameFindFirstOrThrowArgs<ExtArgs>>): Prisma__CasinoGameClient<$Result.GetResult<Prisma.$CasinoGamePayload<ExtArgs>, T, "findFirstOrThrow", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Find zero or more CasinoGames that matches the filter.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {CasinoGameFindManyArgs} args - Arguments to filter and select certain fields only.
+     * @example
+     * // Get all CasinoGames
+     * const casinoGames = await prisma.casinoGame.findMany()
+     * 
+     * // Get first 10 CasinoGames
+     * const casinoGames = await prisma.casinoGame.findMany({ take: 10 })
+     * 
+     * // Only select the `id`
+     * const casinoGameWithIdOnly = await prisma.casinoGame.findMany({ select: { id: true } })
+     * 
+     */
+    findMany<T extends CasinoGameFindManyArgs>(args?: SelectSubset<T, CasinoGameFindManyArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$CasinoGamePayload<ExtArgs>, T, "findMany", GlobalOmitOptions>>
+
+    /**
+     * Create a CasinoGame.
+     * @param {CasinoGameCreateArgs} args - Arguments to create a CasinoGame.
+     * @example
+     * // Create one CasinoGame
+     * const CasinoGame = await prisma.casinoGame.create({
+     *   data: {
+     *     // ... data to create a CasinoGame
+     *   }
+     * })
+     * 
+     */
+    create<T extends CasinoGameCreateArgs>(args: SelectSubset<T, CasinoGameCreateArgs<ExtArgs>>): Prisma__CasinoGameClient<$Result.GetResult<Prisma.$CasinoGamePayload<ExtArgs>, T, "create", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Create many CasinoGames.
+     * @param {CasinoGameCreateManyArgs} args - Arguments to create many CasinoGames.
+     * @example
+     * // Create many CasinoGames
+     * const casinoGame = await prisma.casinoGame.createMany({
+     *   data: [
+     *     // ... provide data here
+     *   ]
+     * })
+     *     
+     */
+    createMany<T extends CasinoGameCreateManyArgs>(args?: SelectSubset<T, CasinoGameCreateManyArgs<ExtArgs>>): Prisma.PrismaPromise<BatchPayload>
+
+    /**
+     * Create many CasinoGames and returns the data saved in the database.
+     * @param {CasinoGameCreateManyAndReturnArgs} args - Arguments to create many CasinoGames.
+     * @example
+     * // Create many CasinoGames
+     * const casinoGame = await prisma.casinoGame.createManyAndReturn({
+     *   data: [
+     *     // ... provide data here
+     *   ]
+     * })
+     * 
+     * // Create many CasinoGames and only return the `id`
+     * const casinoGameWithIdOnly = await prisma.casinoGame.createManyAndReturn({
+     *   select: { id: true },
+     *   data: [
+     *     // ... provide data here
+     *   ]
+     * })
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * 
+     */
+    createManyAndReturn<T extends CasinoGameCreateManyAndReturnArgs>(args?: SelectSubset<T, CasinoGameCreateManyAndReturnArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$CasinoGamePayload<ExtArgs>, T, "createManyAndReturn", GlobalOmitOptions>>
+
+    /**
+     * Delete a CasinoGame.
+     * @param {CasinoGameDeleteArgs} args - Arguments to delete one CasinoGame.
+     * @example
+     * // Delete one CasinoGame
+     * const CasinoGame = await prisma.casinoGame.delete({
+     *   where: {
+     *     // ... filter to delete one CasinoGame
+     *   }
+     * })
+     * 
+     */
+    delete<T extends CasinoGameDeleteArgs>(args: SelectSubset<T, CasinoGameDeleteArgs<ExtArgs>>): Prisma__CasinoGameClient<$Result.GetResult<Prisma.$CasinoGamePayload<ExtArgs>, T, "delete", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Update one CasinoGame.
+     * @param {CasinoGameUpdateArgs} args - Arguments to update one CasinoGame.
+     * @example
+     * // Update one CasinoGame
+     * const casinoGame = await prisma.casinoGame.update({
+     *   where: {
+     *     // ... provide filter here
+     *   },
+     *   data: {
+     *     // ... provide data here
+     *   }
+     * })
+     * 
+     */
+    update<T extends CasinoGameUpdateArgs>(args: SelectSubset<T, CasinoGameUpdateArgs<ExtArgs>>): Prisma__CasinoGameClient<$Result.GetResult<Prisma.$CasinoGamePayload<ExtArgs>, T, "update", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Delete zero or more CasinoGames.
+     * @param {CasinoGameDeleteManyArgs} args - Arguments to filter CasinoGames to delete.
+     * @example
+     * // Delete a few CasinoGames
+     * const { count } = await prisma.casinoGame.deleteMany({
+     *   where: {
+     *     // ... provide filter here
+     *   }
+     * })
+     * 
+     */
+    deleteMany<T extends CasinoGameDeleteManyArgs>(args?: SelectSubset<T, CasinoGameDeleteManyArgs<ExtArgs>>): Prisma.PrismaPromise<BatchPayload>
+
+    /**
+     * Update zero or more CasinoGames.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {CasinoGameUpdateManyArgs} args - Arguments to update one or more rows.
+     * @example
+     * // Update many CasinoGames
+     * const casinoGame = await prisma.casinoGame.updateMany({
+     *   where: {
+     *     // ... provide filter here
+     *   },
+     *   data: {
+     *     // ... provide data here
+     *   }
+     * })
+     * 
+     */
+    updateMany<T extends CasinoGameUpdateManyArgs>(args: SelectSubset<T, CasinoGameUpdateManyArgs<ExtArgs>>): Prisma.PrismaPromise<BatchPayload>
+
+    /**
+     * Update zero or more CasinoGames and returns the data updated in the database.
+     * @param {CasinoGameUpdateManyAndReturnArgs} args - Arguments to update many CasinoGames.
+     * @example
+     * // Update many CasinoGames
+     * const casinoGame = await prisma.casinoGame.updateManyAndReturn({
+     *   where: {
+     *     // ... provide filter here
+     *   },
+     *   data: [
+     *     // ... provide data here
+     *   ]
+     * })
+     * 
+     * // Update zero or more CasinoGames and only return the `id`
+     * const casinoGameWithIdOnly = await prisma.casinoGame.updateManyAndReturn({
+     *   select: { id: true },
+     *   where: {
+     *     // ... provide filter here
+     *   },
+     *   data: [
+     *     // ... provide data here
+     *   ]
+     * })
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * 
+     */
+    updateManyAndReturn<T extends CasinoGameUpdateManyAndReturnArgs>(args: SelectSubset<T, CasinoGameUpdateManyAndReturnArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$CasinoGamePayload<ExtArgs>, T, "updateManyAndReturn", GlobalOmitOptions>>
+
+    /**
+     * Create or update one CasinoGame.
+     * @param {CasinoGameUpsertArgs} args - Arguments to update or create a CasinoGame.
+     * @example
+     * // Update or create a CasinoGame
+     * const casinoGame = await prisma.casinoGame.upsert({
+     *   create: {
+     *     // ... data to create a CasinoGame
+     *   },
+     *   update: {
+     *     // ... in case it already exists, update
+     *   },
+     *   where: {
+     *     // ... the filter for the CasinoGame we want to update
+     *   }
+     * })
+     */
+    upsert<T extends CasinoGameUpsertArgs>(args: SelectSubset<T, CasinoGameUpsertArgs<ExtArgs>>): Prisma__CasinoGameClient<$Result.GetResult<Prisma.$CasinoGamePayload<ExtArgs>, T, "upsert", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
+
+
+    /**
+     * Count the number of CasinoGames.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {CasinoGameCountArgs} args - Arguments to filter CasinoGames to count.
+     * @example
+     * // Count the number of CasinoGames
+     * const count = await prisma.casinoGame.count({
+     *   where: {
+     *     // ... the filter for the CasinoGames we want to count
+     *   }
+     * })
+    **/
+    count<T extends CasinoGameCountArgs>(
+      args?: Subset<T, CasinoGameCountArgs>,
+    ): Prisma.PrismaPromise<
+      T extends $Utils.Record<'select', any>
+        ? T['select'] extends true
+          ? number
+          : GetScalarType<T['select'], CasinoGameCountAggregateOutputType>
+        : number
+    >
+
+    /**
+     * Allows you to perform aggregations operations on a CasinoGame.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {CasinoGameAggregateArgs} args - Select which aggregations you would like to apply and on what fields.
+     * @example
+     * // Ordered by age ascending
+     * // Where email contains prisma.io
+     * // Limited to the 10 users
+     * const aggregations = await prisma.user.aggregate({
+     *   _avg: {
+     *     age: true,
+     *   },
+     *   where: {
+     *     email: {
+     *       contains: "prisma.io",
+     *     },
+     *   },
+     *   orderBy: {
+     *     age: "asc",
+     *   },
+     *   take: 10,
+     * })
+    **/
+    aggregate<T extends CasinoGameAggregateArgs>(args: Subset<T, CasinoGameAggregateArgs>): Prisma.PrismaPromise<GetCasinoGameAggregateType<T>>
+
+    /**
+     * Group by CasinoGame.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {CasinoGameGroupByArgs} args - Group by arguments.
+     * @example
+     * // Group by city, order by createdAt, get count
+     * const result = await prisma.user.groupBy({
+     *   by: ['city', 'createdAt'],
+     *   orderBy: {
+     *     createdAt: true
+     *   },
+     *   _count: {
+     *     _all: true
+     *   },
+     * })
+     * 
+    **/
+    groupBy<
+      T extends CasinoGameGroupByArgs,
+      HasSelectOrTake extends Or<
+        Extends<'skip', Keys<T>>,
+        Extends<'take', Keys<T>>
+      >,
+      OrderByArg extends True extends HasSelectOrTake
+        ? { orderBy: CasinoGameGroupByArgs['orderBy'] }
+        : { orderBy?: CasinoGameGroupByArgs['orderBy'] },
+      OrderFields extends ExcludeUnderscoreKeys<Keys<MaybeTupleToUnion<T['orderBy']>>>,
+      ByFields extends MaybeTupleToUnion<T['by']>,
+      ByValid extends Has<ByFields, OrderFields>,
+      HavingFields extends GetHavingFields<T['having']>,
+      HavingValid extends Has<ByFields, HavingFields>,
+      ByEmpty extends T['by'] extends never[] ? True : False,
+      InputErrors extends ByEmpty extends True
+      ? `Error: "by" must not be empty.`
+      : HavingValid extends False
+      ? {
+          [P in HavingFields]: P extends ByFields
+            ? never
+            : P extends string
+            ? `Error: Field "${P}" used in "having" needs to be provided in "by".`
+            : [
+                Error,
+                'Field ',
+                P,
+                ` in "having" needs to be provided in "by"`,
+              ]
+        }[HavingFields]
+      : 'take' extends Keys<T>
+      ? 'orderBy' extends Keys<T>
+        ? ByValid extends True
+          ? {}
+          : {
+              [P in OrderFields]: P extends ByFields
+                ? never
+                : `Error: Field "${P}" in "orderBy" needs to be provided in "by"`
+            }[OrderFields]
+        : 'Error: If you provide "take", you also need to provide "orderBy"'
+      : 'skip' extends Keys<T>
+      ? 'orderBy' extends Keys<T>
+        ? ByValid extends True
+          ? {}
+          : {
+              [P in OrderFields]: P extends ByFields
+                ? never
+                : `Error: Field "${P}" in "orderBy" needs to be provided in "by"`
+            }[OrderFields]
+        : 'Error: If you provide "skip", you also need to provide "orderBy"'
+      : ByValid extends True
+      ? {}
+      : {
+          [P in OrderFields]: P extends ByFields
+            ? never
+            : `Error: Field "${P}" in "orderBy" needs to be provided in "by"`
+        }[OrderFields]
+    >(args: SubsetIntersection<T, CasinoGameGroupByArgs, OrderByArg> & InputErrors): {} extends InputErrors ? GetCasinoGameGroupByPayload<T> : Prisma.PrismaPromise<InputErrors>
+  /**
+   * Fields of the CasinoGame model
+   */
+  readonly fields: CasinoGameFieldRefs;
+  }
+
+  /**
+   * The delegate class that acts as a "Promise-like" for CasinoGame.
+   * Why is this prefixed with `Prisma__`?
+   * Because we want to prevent naming conflicts as mentioned in
+   * https://github.com/prisma/prisma-client-js/issues/707
+   */
+  export interface Prisma__CasinoGameClient<T, Null = never, ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs, GlobalOmitOptions = {}> extends Prisma.PrismaPromise<T> {
+    readonly [Symbol.toStringTag]: "PrismaPromise"
+    bonusDetails<T extends CasinoGame$bonusDetailsArgs<ExtArgs> = {}>(args?: Subset<T, CasinoGame$bonusDetailsArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$BonusDetailPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
+    gameRounds<T extends CasinoGame$gameRoundsArgs<ExtArgs> = {}>(args?: Subset<T, CasinoGame$gameRoundsArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$GameRoundPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
+    gameSessions<T extends CasinoGame$gameSessionsArgs<ExtArgs> = {}>(args?: Subset<T, CasinoGame$gameSessionsArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$GameSessionPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
+    translations<T extends CasinoGame$translationsArgs<ExtArgs> = {}>(args?: Subset<T, CasinoGame$translationsArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$GameTranslationPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
+    /**
+     * Attaches callbacks for the resolution and/or rejection of the Promise.
+     * @param onfulfilled The callback to execute when the Promise is resolved.
+     * @param onrejected The callback to execute when the Promise is rejected.
+     * @returns A Promise for the completion of which ever callback is executed.
+     */
+    then<TResult1 = T, TResult2 = never>(onfulfilled?: ((value: T) => TResult1 | PromiseLike<TResult1>) | undefined | null, onrejected?: ((reason: any) => TResult2 | PromiseLike<TResult2>) | undefined | null): $Utils.JsPromise<TResult1 | TResult2>
+    /**
+     * Attaches a callback for only the rejection of the Promise.
+     * @param onrejected The callback to execute when the Promise is rejected.
+     * @returns A Promise for the completion of the callback.
+     */
+    catch<TResult = never>(onrejected?: ((reason: any) => TResult | PromiseLike<TResult>) | undefined | null): $Utils.JsPromise<T | TResult>
+    /**
+     * Attaches a callback that is invoked when the Promise is settled (fulfilled or rejected). The
+     * resolved value cannot be modified from the callback.
+     * @param onfinally The callback to execute when the Promise is settled (fulfilled or rejected).
+     * @returns A Promise for the completion of the callback.
+     */
+    finally(onfinally?: (() => void) | undefined | null): $Utils.JsPromise<T>
+  }
+
+
+
+
+  /**
+   * Fields of the CasinoGame model
+   */
+  interface CasinoGameFieldRefs {
+    readonly id: FieldRef<"CasinoGame", 'Int'>
+    readonly aggregatorType: FieldRef<"CasinoGame", 'GameAggregatorType'>
+    readonly provider: FieldRef<"CasinoGame", 'GameProvider'>
+    readonly category: FieldRef<"CasinoGame", 'GameCategory'>
+    readonly gameId: FieldRef<"CasinoGame", 'Int'>
+    readonly gameType: FieldRef<"CasinoGame", 'String'>
+    readonly tableId: FieldRef<"CasinoGame", 'String'>
+    readonly iconLink: FieldRef<"CasinoGame", 'String'>
+    readonly isEnabled: FieldRef<"CasinoGame", 'Boolean'>
+    readonly isVisibleToUser: FieldRef<"CasinoGame", 'Boolean'>
+    readonly houseEdge: FieldRef<"CasinoGame", 'Decimal'>
+    readonly contributionRate: FieldRef<"CasinoGame", 'Decimal'>
+    readonly createdAt: FieldRef<"CasinoGame", 'DateTime'>
+    readonly updatedAt: FieldRef<"CasinoGame", 'DateTime'>
+  }
+    
+
+  // Custom InputTypes
+  /**
+   * CasinoGame findUnique
+   */
+  export type CasinoGameFindUniqueArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the CasinoGame
+     */
+    select?: CasinoGameSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the CasinoGame
+     */
+    omit?: CasinoGameOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: CasinoGameInclude<ExtArgs> | null
+    /**
+     * Filter, which CasinoGame to fetch.
+     */
+    where: CasinoGameWhereUniqueInput
+  }
+
+  /**
+   * CasinoGame findUniqueOrThrow
+   */
+  export type CasinoGameFindUniqueOrThrowArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the CasinoGame
+     */
+    select?: CasinoGameSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the CasinoGame
+     */
+    omit?: CasinoGameOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: CasinoGameInclude<ExtArgs> | null
+    /**
+     * Filter, which CasinoGame to fetch.
+     */
+    where: CasinoGameWhereUniqueInput
+  }
+
+  /**
+   * CasinoGame findFirst
+   */
+  export type CasinoGameFindFirstArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the CasinoGame
+     */
+    select?: CasinoGameSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the CasinoGame
+     */
+    omit?: CasinoGameOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: CasinoGameInclude<ExtArgs> | null
+    /**
+     * Filter, which CasinoGame to fetch.
+     */
+    where?: CasinoGameWhereInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/sorting Sorting Docs}
+     * 
+     * Determine the order of CasinoGames to fetch.
+     */
+    orderBy?: CasinoGameOrderByWithRelationInput | CasinoGameOrderByWithRelationInput[]
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination#cursor-based-pagination Cursor Docs}
+     * 
+     * Sets the position for searching for CasinoGames.
+     */
+    cursor?: CasinoGameWhereUniqueInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Take `±n` CasinoGames from the position of the cursor.
+     */
+    take?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Skip the first `n` CasinoGames.
+     */
+    skip?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/distinct Distinct Docs}
+     * 
+     * Filter by unique combinations of CasinoGames.
+     */
+    distinct?: CasinoGameScalarFieldEnum | CasinoGameScalarFieldEnum[]
+  }
+
+  /**
+   * CasinoGame findFirstOrThrow
+   */
+  export type CasinoGameFindFirstOrThrowArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the CasinoGame
+     */
+    select?: CasinoGameSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the CasinoGame
+     */
+    omit?: CasinoGameOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: CasinoGameInclude<ExtArgs> | null
+    /**
+     * Filter, which CasinoGame to fetch.
+     */
+    where?: CasinoGameWhereInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/sorting Sorting Docs}
+     * 
+     * Determine the order of CasinoGames to fetch.
+     */
+    orderBy?: CasinoGameOrderByWithRelationInput | CasinoGameOrderByWithRelationInput[]
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination#cursor-based-pagination Cursor Docs}
+     * 
+     * Sets the position for searching for CasinoGames.
+     */
+    cursor?: CasinoGameWhereUniqueInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Take `±n` CasinoGames from the position of the cursor.
+     */
+    take?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Skip the first `n` CasinoGames.
+     */
+    skip?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/distinct Distinct Docs}
+     * 
+     * Filter by unique combinations of CasinoGames.
+     */
+    distinct?: CasinoGameScalarFieldEnum | CasinoGameScalarFieldEnum[]
+  }
+
+  /**
+   * CasinoGame findMany
+   */
+  export type CasinoGameFindManyArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the CasinoGame
+     */
+    select?: CasinoGameSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the CasinoGame
+     */
+    omit?: CasinoGameOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: CasinoGameInclude<ExtArgs> | null
+    /**
+     * Filter, which CasinoGames to fetch.
+     */
+    where?: CasinoGameWhereInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/sorting Sorting Docs}
+     * 
+     * Determine the order of CasinoGames to fetch.
+     */
+    orderBy?: CasinoGameOrderByWithRelationInput | CasinoGameOrderByWithRelationInput[]
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination#cursor-based-pagination Cursor Docs}
+     * 
+     * Sets the position for listing CasinoGames.
+     */
+    cursor?: CasinoGameWhereUniqueInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Take `±n` CasinoGames from the position of the cursor.
+     */
+    take?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Skip the first `n` CasinoGames.
+     */
+    skip?: number
+    distinct?: CasinoGameScalarFieldEnum | CasinoGameScalarFieldEnum[]
+  }
+
+  /**
+   * CasinoGame create
+   */
+  export type CasinoGameCreateArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the CasinoGame
+     */
+    select?: CasinoGameSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the CasinoGame
+     */
+    omit?: CasinoGameOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: CasinoGameInclude<ExtArgs> | null
+    /**
+     * The data needed to create a CasinoGame.
+     */
+    data: XOR<CasinoGameCreateInput, CasinoGameUncheckedCreateInput>
+  }
+
+  /**
+   * CasinoGame createMany
+   */
+  export type CasinoGameCreateManyArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * The data used to create many CasinoGames.
+     */
+    data: CasinoGameCreateManyInput | CasinoGameCreateManyInput[]
+    skipDuplicates?: boolean
+  }
+
+  /**
+   * CasinoGame createManyAndReturn
+   */
+  export type CasinoGameCreateManyAndReturnArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the CasinoGame
+     */
+    select?: CasinoGameSelectCreateManyAndReturn<ExtArgs> | null
+    /**
+     * Omit specific fields from the CasinoGame
+     */
+    omit?: CasinoGameOmit<ExtArgs> | null
+    /**
+     * The data used to create many CasinoGames.
+     */
+    data: CasinoGameCreateManyInput | CasinoGameCreateManyInput[]
+    skipDuplicates?: boolean
+  }
+
+  /**
+   * CasinoGame update
+   */
+  export type CasinoGameUpdateArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the CasinoGame
+     */
+    select?: CasinoGameSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the CasinoGame
+     */
+    omit?: CasinoGameOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: CasinoGameInclude<ExtArgs> | null
+    /**
+     * The data needed to update a CasinoGame.
+     */
+    data: XOR<CasinoGameUpdateInput, CasinoGameUncheckedUpdateInput>
+    /**
+     * Choose, which CasinoGame to update.
+     */
+    where: CasinoGameWhereUniqueInput
+  }
+
+  /**
+   * CasinoGame updateMany
+   */
+  export type CasinoGameUpdateManyArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * The data used to update CasinoGames.
+     */
+    data: XOR<CasinoGameUpdateManyMutationInput, CasinoGameUncheckedUpdateManyInput>
+    /**
+     * Filter which CasinoGames to update
+     */
+    where?: CasinoGameWhereInput
+    /**
+     * Limit how many CasinoGames to update.
+     */
+    limit?: number
+  }
+
+  /**
+   * CasinoGame updateManyAndReturn
+   */
+  export type CasinoGameUpdateManyAndReturnArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the CasinoGame
+     */
+    select?: CasinoGameSelectUpdateManyAndReturn<ExtArgs> | null
+    /**
+     * Omit specific fields from the CasinoGame
+     */
+    omit?: CasinoGameOmit<ExtArgs> | null
+    /**
+     * The data used to update CasinoGames.
+     */
+    data: XOR<CasinoGameUpdateManyMutationInput, CasinoGameUncheckedUpdateManyInput>
+    /**
+     * Filter which CasinoGames to update
+     */
+    where?: CasinoGameWhereInput
+    /**
+     * Limit how many CasinoGames to update.
+     */
+    limit?: number
+  }
+
+  /**
+   * CasinoGame upsert
+   */
+  export type CasinoGameUpsertArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the CasinoGame
+     */
+    select?: CasinoGameSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the CasinoGame
+     */
+    omit?: CasinoGameOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: CasinoGameInclude<ExtArgs> | null
+    /**
+     * The filter to search for the CasinoGame to update in case it exists.
+     */
+    where: CasinoGameWhereUniqueInput
+    /**
+     * In case the CasinoGame found by the `where` argument doesn't exist, create a new CasinoGame with this data.
+     */
+    create: XOR<CasinoGameCreateInput, CasinoGameUncheckedCreateInput>
+    /**
+     * In case the CasinoGame was found with the provided `where` argument, update it with this data.
+     */
+    update: XOR<CasinoGameUpdateInput, CasinoGameUncheckedUpdateInput>
+  }
+
+  /**
+   * CasinoGame delete
+   */
+  export type CasinoGameDeleteArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the CasinoGame
+     */
+    select?: CasinoGameSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the CasinoGame
+     */
+    omit?: CasinoGameOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: CasinoGameInclude<ExtArgs> | null
+    /**
+     * Filter which CasinoGame to delete.
+     */
+    where: CasinoGameWhereUniqueInput
+  }
+
+  /**
+   * CasinoGame deleteMany
+   */
+  export type CasinoGameDeleteManyArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Filter which CasinoGames to delete
+     */
+    where?: CasinoGameWhereInput
+    /**
+     * Limit how many CasinoGames to delete.
+     */
+    limit?: number
+  }
+
+  /**
+   * CasinoGame.bonusDetails
+   */
+  export type CasinoGame$bonusDetailsArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the BonusDetail
+     */
+    select?: BonusDetailSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the BonusDetail
+     */
+    omit?: BonusDetailOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: BonusDetailInclude<ExtArgs> | null
+    where?: BonusDetailWhereInput
+    orderBy?: BonusDetailOrderByWithRelationInput | BonusDetailOrderByWithRelationInput[]
+    cursor?: BonusDetailWhereUniqueInput
+    take?: number
+    skip?: number
+    distinct?: BonusDetailScalarFieldEnum | BonusDetailScalarFieldEnum[]
+  }
+
+  /**
+   * CasinoGame.gameRounds
+   */
+  export type CasinoGame$gameRoundsArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the GameRound
+     */
+    select?: GameRoundSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the GameRound
+     */
+    omit?: GameRoundOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: GameRoundInclude<ExtArgs> | null
+    where?: GameRoundWhereInput
+    orderBy?: GameRoundOrderByWithRelationInput | GameRoundOrderByWithRelationInput[]
+    cursor?: GameRoundWhereUniqueInput
+    take?: number
+    skip?: number
+    distinct?: GameRoundScalarFieldEnum | GameRoundScalarFieldEnum[]
+  }
+
+  /**
+   * CasinoGame.gameSessions
+   */
+  export type CasinoGame$gameSessionsArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the GameSession
+     */
+    select?: GameSessionSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the GameSession
+     */
+    omit?: GameSessionOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: GameSessionInclude<ExtArgs> | null
+    where?: GameSessionWhereInput
+    orderBy?: GameSessionOrderByWithRelationInput | GameSessionOrderByWithRelationInput[]
+    cursor?: GameSessionWhereUniqueInput
+    take?: number
+    skip?: number
+    distinct?: GameSessionScalarFieldEnum | GameSessionScalarFieldEnum[]
+  }
+
+  /**
+   * CasinoGame.translations
+   */
+  export type CasinoGame$translationsArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the GameTranslation
+     */
+    select?: GameTranslationSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the GameTranslation
+     */
+    omit?: GameTranslationOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: GameTranslationInclude<ExtArgs> | null
+    where?: GameTranslationWhereInput
+    orderBy?: GameTranslationOrderByWithRelationInput | GameTranslationOrderByWithRelationInput[]
+    cursor?: GameTranslationWhereUniqueInput
+    take?: number
+    skip?: number
+    distinct?: GameTranslationScalarFieldEnum | GameTranslationScalarFieldEnum[]
+  }
+
+  /**
+   * CasinoGame without action
+   */
+  export type CasinoGameDefaultArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the CasinoGame
+     */
+    select?: CasinoGameSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the CasinoGame
+     */
+    omit?: CasinoGameOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: CasinoGameInclude<ExtArgs> | null
+  }
+
+
+  /**
+   * Model GameTranslation
+   */
+
+  export type AggregateGameTranslation = {
+    _count: GameTranslationCountAggregateOutputType | null
+    _avg: GameTranslationAvgAggregateOutputType | null
+    _sum: GameTranslationSumAggregateOutputType | null
+    _min: GameTranslationMinAggregateOutputType | null
+    _max: GameTranslationMaxAggregateOutputType | null
+  }
+
+  export type GameTranslationAvgAggregateOutputType = {
+    id: number | null
+    gameId: number | null
+  }
+
+  export type GameTranslationSumAggregateOutputType = {
+    id: number | null
+    gameId: number | null
+  }
+
+  export type GameTranslationMinAggregateOutputType = {
+    id: number | null
+    gameId: number | null
+    language: $Enums.Language | null
+    providerName: string | null
+    categoryName: string | null
+    gameName: string | null
+    createdAt: Date | null
+    updatedAt: Date | null
+  }
+
+  export type GameTranslationMaxAggregateOutputType = {
+    id: number | null
+    gameId: number | null
+    language: $Enums.Language | null
+    providerName: string | null
+    categoryName: string | null
+    gameName: string | null
+    createdAt: Date | null
+    updatedAt: Date | null
+  }
+
+  export type GameTranslationCountAggregateOutputType = {
+    id: number
+    gameId: number
+    language: number
+    providerName: number
+    categoryName: number
+    gameName: number
+    createdAt: number
+    updatedAt: number
+    _all: number
+  }
+
+
+  export type GameTranslationAvgAggregateInputType = {
+    id?: true
+    gameId?: true
+  }
+
+  export type GameTranslationSumAggregateInputType = {
+    id?: true
+    gameId?: true
+  }
+
+  export type GameTranslationMinAggregateInputType = {
+    id?: true
+    gameId?: true
+    language?: true
+    providerName?: true
+    categoryName?: true
+    gameName?: true
+    createdAt?: true
+    updatedAt?: true
+  }
+
+  export type GameTranslationMaxAggregateInputType = {
+    id?: true
+    gameId?: true
+    language?: true
+    providerName?: true
+    categoryName?: true
+    gameName?: true
+    createdAt?: true
+    updatedAt?: true
+  }
+
+  export type GameTranslationCountAggregateInputType = {
+    id?: true
+    gameId?: true
+    language?: true
+    providerName?: true
+    categoryName?: true
+    gameName?: true
+    createdAt?: true
+    updatedAt?: true
+    _all?: true
+  }
+
+  export type GameTranslationAggregateArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Filter which GameTranslation to aggregate.
+     */
+    where?: GameTranslationWhereInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/sorting Sorting Docs}
+     * 
+     * Determine the order of GameTranslations to fetch.
+     */
+    orderBy?: GameTranslationOrderByWithRelationInput | GameTranslationOrderByWithRelationInput[]
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination#cursor-based-pagination Cursor Docs}
+     * 
+     * Sets the start position
+     */
+    cursor?: GameTranslationWhereUniqueInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Take `±n` GameTranslations from the position of the cursor.
+     */
+    take?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Skip the first `n` GameTranslations.
+     */
+    skip?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
+     * 
+     * Count returned GameTranslations
+    **/
+    _count?: true | GameTranslationCountAggregateInputType
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
+     * 
+     * Select which fields to average
+    **/
+    _avg?: GameTranslationAvgAggregateInputType
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
+     * 
+     * Select which fields to sum
+    **/
+    _sum?: GameTranslationSumAggregateInputType
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
+     * 
+     * Select which fields to find the minimum value
+    **/
+    _min?: GameTranslationMinAggregateInputType
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
+     * 
+     * Select which fields to find the maximum value
+    **/
+    _max?: GameTranslationMaxAggregateInputType
+  }
+
+  export type GetGameTranslationAggregateType<T extends GameTranslationAggregateArgs> = {
+        [P in keyof T & keyof AggregateGameTranslation]: P extends '_count' | 'count'
+      ? T[P] extends true
+        ? number
+        : GetScalarType<T[P], AggregateGameTranslation[P]>
+      : GetScalarType<T[P], AggregateGameTranslation[P]>
+  }
+
+
+
+
+  export type GameTranslationGroupByArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    where?: GameTranslationWhereInput
+    orderBy?: GameTranslationOrderByWithAggregationInput | GameTranslationOrderByWithAggregationInput[]
+    by: GameTranslationScalarFieldEnum[] | GameTranslationScalarFieldEnum
+    having?: GameTranslationScalarWhereWithAggregatesInput
+    take?: number
+    skip?: number
+    _count?: GameTranslationCountAggregateInputType | true
+    _avg?: GameTranslationAvgAggregateInputType
+    _sum?: GameTranslationSumAggregateInputType
+    _min?: GameTranslationMinAggregateInputType
+    _max?: GameTranslationMaxAggregateInputType
+  }
+
+  export type GameTranslationGroupByOutputType = {
+    id: number
+    gameId: number
+    language: $Enums.Language
+    providerName: string
+    categoryName: string
+    gameName: string
+    createdAt: Date
+    updatedAt: Date
+    _count: GameTranslationCountAggregateOutputType | null
+    _avg: GameTranslationAvgAggregateOutputType | null
+    _sum: GameTranslationSumAggregateOutputType | null
+    _min: GameTranslationMinAggregateOutputType | null
+    _max: GameTranslationMaxAggregateOutputType | null
+  }
+
+  type GetGameTranslationGroupByPayload<T extends GameTranslationGroupByArgs> = Prisma.PrismaPromise<
+    Array<
+      PickEnumerable<GameTranslationGroupByOutputType, T['by']> &
+        {
+          [P in ((keyof T) & (keyof GameTranslationGroupByOutputType))]: P extends '_count'
+            ? T[P] extends boolean
+              ? number
+              : GetScalarType<T[P], GameTranslationGroupByOutputType[P]>
+            : GetScalarType<T[P], GameTranslationGroupByOutputType[P]>
+        }
+      >
+    >
+
+
+  export type GameTranslationSelect<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetSelect<{
+    id?: boolean
+    gameId?: boolean
+    language?: boolean
+    providerName?: boolean
+    categoryName?: boolean
+    gameName?: boolean
+    createdAt?: boolean
+    updatedAt?: boolean
+    casinoGame?: boolean | CasinoGameDefaultArgs<ExtArgs>
+  }, ExtArgs["result"]["gameTranslation"]>
+
+  export type GameTranslationSelectCreateManyAndReturn<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetSelect<{
+    id?: boolean
+    gameId?: boolean
+    language?: boolean
+    providerName?: boolean
+    categoryName?: boolean
+    gameName?: boolean
+    createdAt?: boolean
+    updatedAt?: boolean
+    casinoGame?: boolean | CasinoGameDefaultArgs<ExtArgs>
+  }, ExtArgs["result"]["gameTranslation"]>
+
+  export type GameTranslationSelectUpdateManyAndReturn<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetSelect<{
+    id?: boolean
+    gameId?: boolean
+    language?: boolean
+    providerName?: boolean
+    categoryName?: boolean
+    gameName?: boolean
+    createdAt?: boolean
+    updatedAt?: boolean
+    casinoGame?: boolean | CasinoGameDefaultArgs<ExtArgs>
+  }, ExtArgs["result"]["gameTranslation"]>
+
+  export type GameTranslationSelectScalar = {
+    id?: boolean
+    gameId?: boolean
+    language?: boolean
+    providerName?: boolean
+    categoryName?: boolean
+    gameName?: boolean
+    createdAt?: boolean
+    updatedAt?: boolean
+  }
+
+  export type GameTranslationOmit<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetOmit<"id" | "gameId" | "language" | "providerName" | "categoryName" | "gameName" | "createdAt" | "updatedAt", ExtArgs["result"]["gameTranslation"]>
+  export type GameTranslationInclude<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    casinoGame?: boolean | CasinoGameDefaultArgs<ExtArgs>
+  }
+  export type GameTranslationIncludeCreateManyAndReturn<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    casinoGame?: boolean | CasinoGameDefaultArgs<ExtArgs>
+  }
+  export type GameTranslationIncludeUpdateManyAndReturn<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    casinoGame?: boolean | CasinoGameDefaultArgs<ExtArgs>
+  }
+
+  export type $GameTranslationPayload<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    name: "GameTranslation"
+    objects: {
+      casinoGame: Prisma.$CasinoGamePayload<ExtArgs>
+    }
+    scalars: $Extensions.GetPayloadResult<{
+      id: number
+      gameId: number
+      language: $Enums.Language
+      providerName: string
+      categoryName: string
+      gameName: string
+      createdAt: Date
+      updatedAt: Date
+    }, ExtArgs["result"]["gameTranslation"]>
+    composites: {}
+  }
+
+  type GameTranslationGetPayload<S extends boolean | null | undefined | GameTranslationDefaultArgs> = $Result.GetResult<Prisma.$GameTranslationPayload, S>
+
+  type GameTranslationCountArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> =
+    Omit<GameTranslationFindManyArgs, 'select' | 'include' | 'distinct' | 'omit'> & {
+      select?: GameTranslationCountAggregateInputType | true
+    }
+
+  export interface GameTranslationDelegate<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs, GlobalOmitOptions = {}> {
+    [K: symbol]: { types: Prisma.TypeMap<ExtArgs>['model']['GameTranslation'], meta: { name: 'GameTranslation' } }
+    /**
+     * Find zero or one GameTranslation that matches the filter.
+     * @param {GameTranslationFindUniqueArgs} args - Arguments to find a GameTranslation
+     * @example
+     * // Get one GameTranslation
+     * const gameTranslation = await prisma.gameTranslation.findUnique({
+     *   where: {
+     *     // ... provide filter here
+     *   }
+     * })
+     */
+    findUnique<T extends GameTranslationFindUniqueArgs>(args: SelectSubset<T, GameTranslationFindUniqueArgs<ExtArgs>>): Prisma__GameTranslationClient<$Result.GetResult<Prisma.$GameTranslationPayload<ExtArgs>, T, "findUnique", GlobalOmitOptions> | null, null, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Find one GameTranslation that matches the filter or throw an error with `error.code='P2025'`
+     * if no matches were found.
+     * @param {GameTranslationFindUniqueOrThrowArgs} args - Arguments to find a GameTranslation
+     * @example
+     * // Get one GameTranslation
+     * const gameTranslation = await prisma.gameTranslation.findUniqueOrThrow({
+     *   where: {
+     *     // ... provide filter here
+     *   }
+     * })
+     */
+    findUniqueOrThrow<T extends GameTranslationFindUniqueOrThrowArgs>(args: SelectSubset<T, GameTranslationFindUniqueOrThrowArgs<ExtArgs>>): Prisma__GameTranslationClient<$Result.GetResult<Prisma.$GameTranslationPayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Find the first GameTranslation that matches the filter.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {GameTranslationFindFirstArgs} args - Arguments to find a GameTranslation
+     * @example
+     * // Get one GameTranslation
+     * const gameTranslation = await prisma.gameTranslation.findFirst({
+     *   where: {
+     *     // ... provide filter here
+     *   }
+     * })
+     */
+    findFirst<T extends GameTranslationFindFirstArgs>(args?: SelectSubset<T, GameTranslationFindFirstArgs<ExtArgs>>): Prisma__GameTranslationClient<$Result.GetResult<Prisma.$GameTranslationPayload<ExtArgs>, T, "findFirst", GlobalOmitOptions> | null, null, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Find the first GameTranslation that matches the filter or
+     * throw `PrismaKnownClientError` with `P2025` code if no matches were found.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {GameTranslationFindFirstOrThrowArgs} args - Arguments to find a GameTranslation
+     * @example
+     * // Get one GameTranslation
+     * const gameTranslation = await prisma.gameTranslation.findFirstOrThrow({
+     *   where: {
+     *     // ... provide filter here
+     *   }
+     * })
+     */
+    findFirstOrThrow<T extends GameTranslationFindFirstOrThrowArgs>(args?: SelectSubset<T, GameTranslationFindFirstOrThrowArgs<ExtArgs>>): Prisma__GameTranslationClient<$Result.GetResult<Prisma.$GameTranslationPayload<ExtArgs>, T, "findFirstOrThrow", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Find zero or more GameTranslations that matches the filter.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {GameTranslationFindManyArgs} args - Arguments to filter and select certain fields only.
+     * @example
+     * // Get all GameTranslations
+     * const gameTranslations = await prisma.gameTranslation.findMany()
+     * 
+     * // Get first 10 GameTranslations
+     * const gameTranslations = await prisma.gameTranslation.findMany({ take: 10 })
+     * 
+     * // Only select the `id`
+     * const gameTranslationWithIdOnly = await prisma.gameTranslation.findMany({ select: { id: true } })
+     * 
+     */
+    findMany<T extends GameTranslationFindManyArgs>(args?: SelectSubset<T, GameTranslationFindManyArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$GameTranslationPayload<ExtArgs>, T, "findMany", GlobalOmitOptions>>
+
+    /**
+     * Create a GameTranslation.
+     * @param {GameTranslationCreateArgs} args - Arguments to create a GameTranslation.
+     * @example
+     * // Create one GameTranslation
+     * const GameTranslation = await prisma.gameTranslation.create({
+     *   data: {
+     *     // ... data to create a GameTranslation
+     *   }
+     * })
+     * 
+     */
+    create<T extends GameTranslationCreateArgs>(args: SelectSubset<T, GameTranslationCreateArgs<ExtArgs>>): Prisma__GameTranslationClient<$Result.GetResult<Prisma.$GameTranslationPayload<ExtArgs>, T, "create", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Create many GameTranslations.
+     * @param {GameTranslationCreateManyArgs} args - Arguments to create many GameTranslations.
+     * @example
+     * // Create many GameTranslations
+     * const gameTranslation = await prisma.gameTranslation.createMany({
+     *   data: [
+     *     // ... provide data here
+     *   ]
+     * })
+     *     
+     */
+    createMany<T extends GameTranslationCreateManyArgs>(args?: SelectSubset<T, GameTranslationCreateManyArgs<ExtArgs>>): Prisma.PrismaPromise<BatchPayload>
+
+    /**
+     * Create many GameTranslations and returns the data saved in the database.
+     * @param {GameTranslationCreateManyAndReturnArgs} args - Arguments to create many GameTranslations.
+     * @example
+     * // Create many GameTranslations
+     * const gameTranslation = await prisma.gameTranslation.createManyAndReturn({
+     *   data: [
+     *     // ... provide data here
+     *   ]
+     * })
+     * 
+     * // Create many GameTranslations and only return the `id`
+     * const gameTranslationWithIdOnly = await prisma.gameTranslation.createManyAndReturn({
+     *   select: { id: true },
+     *   data: [
+     *     // ... provide data here
+     *   ]
+     * })
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * 
+     */
+    createManyAndReturn<T extends GameTranslationCreateManyAndReturnArgs>(args?: SelectSubset<T, GameTranslationCreateManyAndReturnArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$GameTranslationPayload<ExtArgs>, T, "createManyAndReturn", GlobalOmitOptions>>
+
+    /**
+     * Delete a GameTranslation.
+     * @param {GameTranslationDeleteArgs} args - Arguments to delete one GameTranslation.
+     * @example
+     * // Delete one GameTranslation
+     * const GameTranslation = await prisma.gameTranslation.delete({
+     *   where: {
+     *     // ... filter to delete one GameTranslation
+     *   }
+     * })
+     * 
+     */
+    delete<T extends GameTranslationDeleteArgs>(args: SelectSubset<T, GameTranslationDeleteArgs<ExtArgs>>): Prisma__GameTranslationClient<$Result.GetResult<Prisma.$GameTranslationPayload<ExtArgs>, T, "delete", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Update one GameTranslation.
+     * @param {GameTranslationUpdateArgs} args - Arguments to update one GameTranslation.
+     * @example
+     * // Update one GameTranslation
+     * const gameTranslation = await prisma.gameTranslation.update({
+     *   where: {
+     *     // ... provide filter here
+     *   },
+     *   data: {
+     *     // ... provide data here
+     *   }
+     * })
+     * 
+     */
+    update<T extends GameTranslationUpdateArgs>(args: SelectSubset<T, GameTranslationUpdateArgs<ExtArgs>>): Prisma__GameTranslationClient<$Result.GetResult<Prisma.$GameTranslationPayload<ExtArgs>, T, "update", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Delete zero or more GameTranslations.
+     * @param {GameTranslationDeleteManyArgs} args - Arguments to filter GameTranslations to delete.
+     * @example
+     * // Delete a few GameTranslations
+     * const { count } = await prisma.gameTranslation.deleteMany({
+     *   where: {
+     *     // ... provide filter here
+     *   }
+     * })
+     * 
+     */
+    deleteMany<T extends GameTranslationDeleteManyArgs>(args?: SelectSubset<T, GameTranslationDeleteManyArgs<ExtArgs>>): Prisma.PrismaPromise<BatchPayload>
+
+    /**
+     * Update zero or more GameTranslations.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {GameTranslationUpdateManyArgs} args - Arguments to update one or more rows.
+     * @example
+     * // Update many GameTranslations
+     * const gameTranslation = await prisma.gameTranslation.updateMany({
+     *   where: {
+     *     // ... provide filter here
+     *   },
+     *   data: {
+     *     // ... provide data here
+     *   }
+     * })
+     * 
+     */
+    updateMany<T extends GameTranslationUpdateManyArgs>(args: SelectSubset<T, GameTranslationUpdateManyArgs<ExtArgs>>): Prisma.PrismaPromise<BatchPayload>
+
+    /**
+     * Update zero or more GameTranslations and returns the data updated in the database.
+     * @param {GameTranslationUpdateManyAndReturnArgs} args - Arguments to update many GameTranslations.
+     * @example
+     * // Update many GameTranslations
+     * const gameTranslation = await prisma.gameTranslation.updateManyAndReturn({
+     *   where: {
+     *     // ... provide filter here
+     *   },
+     *   data: [
+     *     // ... provide data here
+     *   ]
+     * })
+     * 
+     * // Update zero or more GameTranslations and only return the `id`
+     * const gameTranslationWithIdOnly = await prisma.gameTranslation.updateManyAndReturn({
+     *   select: { id: true },
+     *   where: {
+     *     // ... provide filter here
+     *   },
+     *   data: [
+     *     // ... provide data here
+     *   ]
+     * })
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * 
+     */
+    updateManyAndReturn<T extends GameTranslationUpdateManyAndReturnArgs>(args: SelectSubset<T, GameTranslationUpdateManyAndReturnArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$GameTranslationPayload<ExtArgs>, T, "updateManyAndReturn", GlobalOmitOptions>>
+
+    /**
+     * Create or update one GameTranslation.
+     * @param {GameTranslationUpsertArgs} args - Arguments to update or create a GameTranslation.
+     * @example
+     * // Update or create a GameTranslation
+     * const gameTranslation = await prisma.gameTranslation.upsert({
+     *   create: {
+     *     // ... data to create a GameTranslation
+     *   },
+     *   update: {
+     *     // ... in case it already exists, update
+     *   },
+     *   where: {
+     *     // ... the filter for the GameTranslation we want to update
+     *   }
+     * })
+     */
+    upsert<T extends GameTranslationUpsertArgs>(args: SelectSubset<T, GameTranslationUpsertArgs<ExtArgs>>): Prisma__GameTranslationClient<$Result.GetResult<Prisma.$GameTranslationPayload<ExtArgs>, T, "upsert", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
+
+
+    /**
+     * Count the number of GameTranslations.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {GameTranslationCountArgs} args - Arguments to filter GameTranslations to count.
+     * @example
+     * // Count the number of GameTranslations
+     * const count = await prisma.gameTranslation.count({
+     *   where: {
+     *     // ... the filter for the GameTranslations we want to count
+     *   }
+     * })
+    **/
+    count<T extends GameTranslationCountArgs>(
+      args?: Subset<T, GameTranslationCountArgs>,
+    ): Prisma.PrismaPromise<
+      T extends $Utils.Record<'select', any>
+        ? T['select'] extends true
+          ? number
+          : GetScalarType<T['select'], GameTranslationCountAggregateOutputType>
+        : number
+    >
+
+    /**
+     * Allows you to perform aggregations operations on a GameTranslation.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {GameTranslationAggregateArgs} args - Select which aggregations you would like to apply and on what fields.
+     * @example
+     * // Ordered by age ascending
+     * // Where email contains prisma.io
+     * // Limited to the 10 users
+     * const aggregations = await prisma.user.aggregate({
+     *   _avg: {
+     *     age: true,
+     *   },
+     *   where: {
+     *     email: {
+     *       contains: "prisma.io",
+     *     },
+     *   },
+     *   orderBy: {
+     *     age: "asc",
+     *   },
+     *   take: 10,
+     * })
+    **/
+    aggregate<T extends GameTranslationAggregateArgs>(args: Subset<T, GameTranslationAggregateArgs>): Prisma.PrismaPromise<GetGameTranslationAggregateType<T>>
+
+    /**
+     * Group by GameTranslation.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {GameTranslationGroupByArgs} args - Group by arguments.
+     * @example
+     * // Group by city, order by createdAt, get count
+     * const result = await prisma.user.groupBy({
+     *   by: ['city', 'createdAt'],
+     *   orderBy: {
+     *     createdAt: true
+     *   },
+     *   _count: {
+     *     _all: true
+     *   },
+     * })
+     * 
+    **/
+    groupBy<
+      T extends GameTranslationGroupByArgs,
+      HasSelectOrTake extends Or<
+        Extends<'skip', Keys<T>>,
+        Extends<'take', Keys<T>>
+      >,
+      OrderByArg extends True extends HasSelectOrTake
+        ? { orderBy: GameTranslationGroupByArgs['orderBy'] }
+        : { orderBy?: GameTranslationGroupByArgs['orderBy'] },
+      OrderFields extends ExcludeUnderscoreKeys<Keys<MaybeTupleToUnion<T['orderBy']>>>,
+      ByFields extends MaybeTupleToUnion<T['by']>,
+      ByValid extends Has<ByFields, OrderFields>,
+      HavingFields extends GetHavingFields<T['having']>,
+      HavingValid extends Has<ByFields, HavingFields>,
+      ByEmpty extends T['by'] extends never[] ? True : False,
+      InputErrors extends ByEmpty extends True
+      ? `Error: "by" must not be empty.`
+      : HavingValid extends False
+      ? {
+          [P in HavingFields]: P extends ByFields
+            ? never
+            : P extends string
+            ? `Error: Field "${P}" used in "having" needs to be provided in "by".`
+            : [
+                Error,
+                'Field ',
+                P,
+                ` in "having" needs to be provided in "by"`,
+              ]
+        }[HavingFields]
+      : 'take' extends Keys<T>
+      ? 'orderBy' extends Keys<T>
+        ? ByValid extends True
+          ? {}
+          : {
+              [P in OrderFields]: P extends ByFields
+                ? never
+                : `Error: Field "${P}" in "orderBy" needs to be provided in "by"`
+            }[OrderFields]
+        : 'Error: If you provide "take", you also need to provide "orderBy"'
+      : 'skip' extends Keys<T>
+      ? 'orderBy' extends Keys<T>
+        ? ByValid extends True
+          ? {}
+          : {
+              [P in OrderFields]: P extends ByFields
+                ? never
+                : `Error: Field "${P}" in "orderBy" needs to be provided in "by"`
+            }[OrderFields]
+        : 'Error: If you provide "skip", you also need to provide "orderBy"'
+      : ByValid extends True
+      ? {}
+      : {
+          [P in OrderFields]: P extends ByFields
+            ? never
+            : `Error: Field "${P}" in "orderBy" needs to be provided in "by"`
+        }[OrderFields]
+    >(args: SubsetIntersection<T, GameTranslationGroupByArgs, OrderByArg> & InputErrors): {} extends InputErrors ? GetGameTranslationGroupByPayload<T> : Prisma.PrismaPromise<InputErrors>
+  /**
+   * Fields of the GameTranslation model
+   */
+  readonly fields: GameTranslationFieldRefs;
+  }
+
+  /**
+   * The delegate class that acts as a "Promise-like" for GameTranslation.
+   * Why is this prefixed with `Prisma__`?
+   * Because we want to prevent naming conflicts as mentioned in
+   * https://github.com/prisma/prisma-client-js/issues/707
+   */
+  export interface Prisma__GameTranslationClient<T, Null = never, ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs, GlobalOmitOptions = {}> extends Prisma.PrismaPromise<T> {
+    readonly [Symbol.toStringTag]: "PrismaPromise"
+    casinoGame<T extends CasinoGameDefaultArgs<ExtArgs> = {}>(args?: Subset<T, CasinoGameDefaultArgs<ExtArgs>>): Prisma__CasinoGameClient<$Result.GetResult<Prisma.$CasinoGamePayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions> | Null, Null, ExtArgs, GlobalOmitOptions>
+    /**
+     * Attaches callbacks for the resolution and/or rejection of the Promise.
+     * @param onfulfilled The callback to execute when the Promise is resolved.
+     * @param onrejected The callback to execute when the Promise is rejected.
+     * @returns A Promise for the completion of which ever callback is executed.
+     */
+    then<TResult1 = T, TResult2 = never>(onfulfilled?: ((value: T) => TResult1 | PromiseLike<TResult1>) | undefined | null, onrejected?: ((reason: any) => TResult2 | PromiseLike<TResult2>) | undefined | null): $Utils.JsPromise<TResult1 | TResult2>
+    /**
+     * Attaches a callback for only the rejection of the Promise.
+     * @param onrejected The callback to execute when the Promise is rejected.
+     * @returns A Promise for the completion of the callback.
+     */
+    catch<TResult = never>(onrejected?: ((reason: any) => TResult | PromiseLike<TResult>) | undefined | null): $Utils.JsPromise<T | TResult>
+    /**
+     * Attaches a callback that is invoked when the Promise is settled (fulfilled or rejected). The
+     * resolved value cannot be modified from the callback.
+     * @param onfinally The callback to execute when the Promise is settled (fulfilled or rejected).
+     * @returns A Promise for the completion of the callback.
+     */
+    finally(onfinally?: (() => void) | undefined | null): $Utils.JsPromise<T>
+  }
+
+
+
+
+  /**
+   * Fields of the GameTranslation model
+   */
+  interface GameTranslationFieldRefs {
+    readonly id: FieldRef<"GameTranslation", 'Int'>
+    readonly gameId: FieldRef<"GameTranslation", 'Int'>
+    readonly language: FieldRef<"GameTranslation", 'Language'>
+    readonly providerName: FieldRef<"GameTranslation", 'String'>
+    readonly categoryName: FieldRef<"GameTranslation", 'String'>
+    readonly gameName: FieldRef<"GameTranslation", 'String'>
+    readonly createdAt: FieldRef<"GameTranslation", 'DateTime'>
+    readonly updatedAt: FieldRef<"GameTranslation", 'DateTime'>
+  }
+    
+
+  // Custom InputTypes
+  /**
+   * GameTranslation findUnique
+   */
+  export type GameTranslationFindUniqueArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the GameTranslation
+     */
+    select?: GameTranslationSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the GameTranslation
+     */
+    omit?: GameTranslationOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: GameTranslationInclude<ExtArgs> | null
+    /**
+     * Filter, which GameTranslation to fetch.
+     */
+    where: GameTranslationWhereUniqueInput
+  }
+
+  /**
+   * GameTranslation findUniqueOrThrow
+   */
+  export type GameTranslationFindUniqueOrThrowArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the GameTranslation
+     */
+    select?: GameTranslationSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the GameTranslation
+     */
+    omit?: GameTranslationOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: GameTranslationInclude<ExtArgs> | null
+    /**
+     * Filter, which GameTranslation to fetch.
+     */
+    where: GameTranslationWhereUniqueInput
+  }
+
+  /**
+   * GameTranslation findFirst
+   */
+  export type GameTranslationFindFirstArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the GameTranslation
+     */
+    select?: GameTranslationSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the GameTranslation
+     */
+    omit?: GameTranslationOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: GameTranslationInclude<ExtArgs> | null
+    /**
+     * Filter, which GameTranslation to fetch.
+     */
+    where?: GameTranslationWhereInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/sorting Sorting Docs}
+     * 
+     * Determine the order of GameTranslations to fetch.
+     */
+    orderBy?: GameTranslationOrderByWithRelationInput | GameTranslationOrderByWithRelationInput[]
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination#cursor-based-pagination Cursor Docs}
+     * 
+     * Sets the position for searching for GameTranslations.
+     */
+    cursor?: GameTranslationWhereUniqueInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Take `±n` GameTranslations from the position of the cursor.
+     */
+    take?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Skip the first `n` GameTranslations.
+     */
+    skip?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/distinct Distinct Docs}
+     * 
+     * Filter by unique combinations of GameTranslations.
+     */
+    distinct?: GameTranslationScalarFieldEnum | GameTranslationScalarFieldEnum[]
+  }
+
+  /**
+   * GameTranslation findFirstOrThrow
+   */
+  export type GameTranslationFindFirstOrThrowArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the GameTranslation
+     */
+    select?: GameTranslationSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the GameTranslation
+     */
+    omit?: GameTranslationOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: GameTranslationInclude<ExtArgs> | null
+    /**
+     * Filter, which GameTranslation to fetch.
+     */
+    where?: GameTranslationWhereInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/sorting Sorting Docs}
+     * 
+     * Determine the order of GameTranslations to fetch.
+     */
+    orderBy?: GameTranslationOrderByWithRelationInput | GameTranslationOrderByWithRelationInput[]
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination#cursor-based-pagination Cursor Docs}
+     * 
+     * Sets the position for searching for GameTranslations.
+     */
+    cursor?: GameTranslationWhereUniqueInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Take `±n` GameTranslations from the position of the cursor.
+     */
+    take?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Skip the first `n` GameTranslations.
+     */
+    skip?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/distinct Distinct Docs}
+     * 
+     * Filter by unique combinations of GameTranslations.
+     */
+    distinct?: GameTranslationScalarFieldEnum | GameTranslationScalarFieldEnum[]
+  }
+
+  /**
+   * GameTranslation findMany
+   */
+  export type GameTranslationFindManyArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the GameTranslation
+     */
+    select?: GameTranslationSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the GameTranslation
+     */
+    omit?: GameTranslationOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: GameTranslationInclude<ExtArgs> | null
+    /**
+     * Filter, which GameTranslations to fetch.
+     */
+    where?: GameTranslationWhereInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/sorting Sorting Docs}
+     * 
+     * Determine the order of GameTranslations to fetch.
+     */
+    orderBy?: GameTranslationOrderByWithRelationInput | GameTranslationOrderByWithRelationInput[]
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination#cursor-based-pagination Cursor Docs}
+     * 
+     * Sets the position for listing GameTranslations.
+     */
+    cursor?: GameTranslationWhereUniqueInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Take `±n` GameTranslations from the position of the cursor.
+     */
+    take?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Skip the first `n` GameTranslations.
+     */
+    skip?: number
+    distinct?: GameTranslationScalarFieldEnum | GameTranslationScalarFieldEnum[]
+  }
+
+  /**
+   * GameTranslation create
+   */
+  export type GameTranslationCreateArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the GameTranslation
+     */
+    select?: GameTranslationSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the GameTranslation
+     */
+    omit?: GameTranslationOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: GameTranslationInclude<ExtArgs> | null
+    /**
+     * The data needed to create a GameTranslation.
+     */
+    data: XOR<GameTranslationCreateInput, GameTranslationUncheckedCreateInput>
+  }
+
+  /**
+   * GameTranslation createMany
+   */
+  export type GameTranslationCreateManyArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * The data used to create many GameTranslations.
+     */
+    data: GameTranslationCreateManyInput | GameTranslationCreateManyInput[]
+    skipDuplicates?: boolean
+  }
+
+  /**
+   * GameTranslation createManyAndReturn
+   */
+  export type GameTranslationCreateManyAndReturnArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the GameTranslation
+     */
+    select?: GameTranslationSelectCreateManyAndReturn<ExtArgs> | null
+    /**
+     * Omit specific fields from the GameTranslation
+     */
+    omit?: GameTranslationOmit<ExtArgs> | null
+    /**
+     * The data used to create many GameTranslations.
+     */
+    data: GameTranslationCreateManyInput | GameTranslationCreateManyInput[]
+    skipDuplicates?: boolean
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: GameTranslationIncludeCreateManyAndReturn<ExtArgs> | null
+  }
+
+  /**
+   * GameTranslation update
+   */
+  export type GameTranslationUpdateArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the GameTranslation
+     */
+    select?: GameTranslationSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the GameTranslation
+     */
+    omit?: GameTranslationOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: GameTranslationInclude<ExtArgs> | null
+    /**
+     * The data needed to update a GameTranslation.
+     */
+    data: XOR<GameTranslationUpdateInput, GameTranslationUncheckedUpdateInput>
+    /**
+     * Choose, which GameTranslation to update.
+     */
+    where: GameTranslationWhereUniqueInput
+  }
+
+  /**
+   * GameTranslation updateMany
+   */
+  export type GameTranslationUpdateManyArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * The data used to update GameTranslations.
+     */
+    data: XOR<GameTranslationUpdateManyMutationInput, GameTranslationUncheckedUpdateManyInput>
+    /**
+     * Filter which GameTranslations to update
+     */
+    where?: GameTranslationWhereInput
+    /**
+     * Limit how many GameTranslations to update.
+     */
+    limit?: number
+  }
+
+  /**
+   * GameTranslation updateManyAndReturn
+   */
+  export type GameTranslationUpdateManyAndReturnArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the GameTranslation
+     */
+    select?: GameTranslationSelectUpdateManyAndReturn<ExtArgs> | null
+    /**
+     * Omit specific fields from the GameTranslation
+     */
+    omit?: GameTranslationOmit<ExtArgs> | null
+    /**
+     * The data used to update GameTranslations.
+     */
+    data: XOR<GameTranslationUpdateManyMutationInput, GameTranslationUncheckedUpdateManyInput>
+    /**
+     * Filter which GameTranslations to update
+     */
+    where?: GameTranslationWhereInput
+    /**
+     * Limit how many GameTranslations to update.
+     */
+    limit?: number
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: GameTranslationIncludeUpdateManyAndReturn<ExtArgs> | null
+  }
+
+  /**
+   * GameTranslation upsert
+   */
+  export type GameTranslationUpsertArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the GameTranslation
+     */
+    select?: GameTranslationSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the GameTranslation
+     */
+    omit?: GameTranslationOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: GameTranslationInclude<ExtArgs> | null
+    /**
+     * The filter to search for the GameTranslation to update in case it exists.
+     */
+    where: GameTranslationWhereUniqueInput
+    /**
+     * In case the GameTranslation found by the `where` argument doesn't exist, create a new GameTranslation with this data.
+     */
+    create: XOR<GameTranslationCreateInput, GameTranslationUncheckedCreateInput>
+    /**
+     * In case the GameTranslation was found with the provided `where` argument, update it with this data.
+     */
+    update: XOR<GameTranslationUpdateInput, GameTranslationUncheckedUpdateInput>
+  }
+
+  /**
+   * GameTranslation delete
+   */
+  export type GameTranslationDeleteArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the GameTranslation
+     */
+    select?: GameTranslationSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the GameTranslation
+     */
+    omit?: GameTranslationOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: GameTranslationInclude<ExtArgs> | null
+    /**
+     * Filter which GameTranslation to delete.
+     */
+    where: GameTranslationWhereUniqueInput
+  }
+
+  /**
+   * GameTranslation deleteMany
+   */
+  export type GameTranslationDeleteManyArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Filter which GameTranslations to delete
+     */
+    where?: GameTranslationWhereInput
+    /**
+     * Limit how many GameTranslations to delete.
+     */
+    limit?: number
+  }
+
+  /**
+   * GameTranslation without action
+   */
+  export type GameTranslationDefaultArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the GameTranslation
+     */
+    select?: GameTranslationSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the GameTranslation
+     */
+    omit?: GameTranslationOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: GameTranslationInclude<ExtArgs> | null
+  }
+
+
+  /**
+   * Model GameSession
+   */
+
+  export type AggregateGameSession = {
+    _count: GameSessionCountAggregateOutputType | null
+    _avg: GameSessionAvgAggregateOutputType | null
+    _sum: GameSessionSumAggregateOutputType | null
+    _min: GameSessionMinAggregateOutputType | null
+    _max: GameSessionMaxAggregateOutputType | null
+  }
+
+  export type GameSessionAvgAggregateOutputType = {
+    id: number | null
+    userId: number | null
+    exchangeRate: Decimal | null
+    gameId: number | null
+  }
+
+  export type GameSessionSumAggregateOutputType = {
+    id: bigint | null
+    userId: bigint | null
+    exchangeRate: Decimal | null
+    gameId: number | null
+  }
+
+  export type GameSessionMinAggregateOutputType = {
+    id: bigint | null
+    userId: bigint | null
+    createdAt: Date | null
+    updatedAt: Date | null
+    lastAccessedAt: Date | null
+    aggregatorType: $Enums.GameAggregatorType | null
+    token: string | null
+    walletCurrency: $Enums.ExchangeCurrencyCode | null
+    gameCurrency: $Enums.ExchangeCurrencyCode | null
+    exchangeRate: Decimal | null
+    exchangeRateSnapshotAt: Date | null
+    gameId: number | null
+  }
+
+  export type GameSessionMaxAggregateOutputType = {
+    id: bigint | null
+    userId: bigint | null
+    createdAt: Date | null
+    updatedAt: Date | null
+    lastAccessedAt: Date | null
+    aggregatorType: $Enums.GameAggregatorType | null
+    token: string | null
+    walletCurrency: $Enums.ExchangeCurrencyCode | null
+    gameCurrency: $Enums.ExchangeCurrencyCode | null
+    exchangeRate: Decimal | null
+    exchangeRateSnapshotAt: Date | null
+    gameId: number | null
+  }
+
+  export type GameSessionCountAggregateOutputType = {
+    id: number
+    userId: number
+    createdAt: number
+    updatedAt: number
+    lastAccessedAt: number
+    aggregatorType: number
+    token: number
+    walletCurrency: number
+    gameCurrency: number
+    exchangeRate: number
+    exchangeRateSnapshotAt: number
+    gameId: number
+    _all: number
+  }
+
+
+  export type GameSessionAvgAggregateInputType = {
+    id?: true
+    userId?: true
+    exchangeRate?: true
+    gameId?: true
+  }
+
+  export type GameSessionSumAggregateInputType = {
+    id?: true
+    userId?: true
+    exchangeRate?: true
+    gameId?: true
+  }
+
+  export type GameSessionMinAggregateInputType = {
+    id?: true
+    userId?: true
+    createdAt?: true
+    updatedAt?: true
+    lastAccessedAt?: true
+    aggregatorType?: true
+    token?: true
+    walletCurrency?: true
+    gameCurrency?: true
+    exchangeRate?: true
+    exchangeRateSnapshotAt?: true
+    gameId?: true
+  }
+
+  export type GameSessionMaxAggregateInputType = {
+    id?: true
+    userId?: true
+    createdAt?: true
+    updatedAt?: true
+    lastAccessedAt?: true
+    aggregatorType?: true
+    token?: true
+    walletCurrency?: true
+    gameCurrency?: true
+    exchangeRate?: true
+    exchangeRateSnapshotAt?: true
+    gameId?: true
+  }
+
+  export type GameSessionCountAggregateInputType = {
+    id?: true
+    userId?: true
+    createdAt?: true
+    updatedAt?: true
+    lastAccessedAt?: true
+    aggregatorType?: true
+    token?: true
+    walletCurrency?: true
+    gameCurrency?: true
+    exchangeRate?: true
+    exchangeRateSnapshotAt?: true
+    gameId?: true
+    _all?: true
+  }
+
+  export type GameSessionAggregateArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Filter which GameSession to aggregate.
+     */
+    where?: GameSessionWhereInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/sorting Sorting Docs}
+     * 
+     * Determine the order of GameSessions to fetch.
+     */
+    orderBy?: GameSessionOrderByWithRelationInput | GameSessionOrderByWithRelationInput[]
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination#cursor-based-pagination Cursor Docs}
+     * 
+     * Sets the start position
+     */
+    cursor?: GameSessionWhereUniqueInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Take `±n` GameSessions from the position of the cursor.
+     */
+    take?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Skip the first `n` GameSessions.
+     */
+    skip?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
+     * 
+     * Count returned GameSessions
+    **/
+    _count?: true | GameSessionCountAggregateInputType
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
+     * 
+     * Select which fields to average
+    **/
+    _avg?: GameSessionAvgAggregateInputType
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
+     * 
+     * Select which fields to sum
+    **/
+    _sum?: GameSessionSumAggregateInputType
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
+     * 
+     * Select which fields to find the minimum value
+    **/
+    _min?: GameSessionMinAggregateInputType
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
+     * 
+     * Select which fields to find the maximum value
+    **/
+    _max?: GameSessionMaxAggregateInputType
+  }
+
+  export type GetGameSessionAggregateType<T extends GameSessionAggregateArgs> = {
+        [P in keyof T & keyof AggregateGameSession]: P extends '_count' | 'count'
+      ? T[P] extends true
+        ? number
+        : GetScalarType<T[P], AggregateGameSession[P]>
+      : GetScalarType<T[P], AggregateGameSession[P]>
+  }
+
+
+
+
+  export type GameSessionGroupByArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    where?: GameSessionWhereInput
+    orderBy?: GameSessionOrderByWithAggregationInput | GameSessionOrderByWithAggregationInput[]
+    by: GameSessionScalarFieldEnum[] | GameSessionScalarFieldEnum
+    having?: GameSessionScalarWhereWithAggregatesInput
+    take?: number
+    skip?: number
+    _count?: GameSessionCountAggregateInputType | true
+    _avg?: GameSessionAvgAggregateInputType
+    _sum?: GameSessionSumAggregateInputType
+    _min?: GameSessionMinAggregateInputType
+    _max?: GameSessionMaxAggregateInputType
+  }
+
+  export type GameSessionGroupByOutputType = {
+    id: bigint
+    userId: bigint
+    createdAt: Date
+    updatedAt: Date
+    lastAccessedAt: Date
+    aggregatorType: $Enums.GameAggregatorType
+    token: string
+    walletCurrency: $Enums.ExchangeCurrencyCode
+    gameCurrency: $Enums.ExchangeCurrencyCode
+    exchangeRate: Decimal
+    exchangeRateSnapshotAt: Date
+    gameId: number | null
+    _count: GameSessionCountAggregateOutputType | null
+    _avg: GameSessionAvgAggregateOutputType | null
+    _sum: GameSessionSumAggregateOutputType | null
+    _min: GameSessionMinAggregateOutputType | null
+    _max: GameSessionMaxAggregateOutputType | null
+  }
+
+  type GetGameSessionGroupByPayload<T extends GameSessionGroupByArgs> = Prisma.PrismaPromise<
+    Array<
+      PickEnumerable<GameSessionGroupByOutputType, T['by']> &
+        {
+          [P in ((keyof T) & (keyof GameSessionGroupByOutputType))]: P extends '_count'
+            ? T[P] extends boolean
+              ? number
+              : GetScalarType<T[P], GameSessionGroupByOutputType[P]>
+            : GetScalarType<T[P], GameSessionGroupByOutputType[P]>
+        }
+      >
+    >
+
+
+  export type GameSessionSelect<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetSelect<{
+    id?: boolean
+    userId?: boolean
+    createdAt?: boolean
+    updatedAt?: boolean
+    lastAccessedAt?: boolean
+    aggregatorType?: boolean
+    token?: boolean
+    walletCurrency?: boolean
+    gameCurrency?: boolean
+    exchangeRate?: boolean
+    exchangeRateSnapshotAt?: boolean
+    gameId?: boolean
+    gameRounds?: boolean | GameSession$gameRoundsArgs<ExtArgs>
+    game?: boolean | GameSession$gameArgs<ExtArgs>
+    user?: boolean | UserDefaultArgs<ExtArgs>
+    _count?: boolean | GameSessionCountOutputTypeDefaultArgs<ExtArgs>
+  }, ExtArgs["result"]["gameSession"]>
+
+  export type GameSessionSelectCreateManyAndReturn<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetSelect<{
+    id?: boolean
+    userId?: boolean
+    createdAt?: boolean
+    updatedAt?: boolean
+    lastAccessedAt?: boolean
+    aggregatorType?: boolean
+    token?: boolean
+    walletCurrency?: boolean
+    gameCurrency?: boolean
+    exchangeRate?: boolean
+    exchangeRateSnapshotAt?: boolean
+    gameId?: boolean
+    game?: boolean | GameSession$gameArgs<ExtArgs>
+    user?: boolean | UserDefaultArgs<ExtArgs>
+  }, ExtArgs["result"]["gameSession"]>
+
+  export type GameSessionSelectUpdateManyAndReturn<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetSelect<{
+    id?: boolean
+    userId?: boolean
+    createdAt?: boolean
+    updatedAt?: boolean
+    lastAccessedAt?: boolean
+    aggregatorType?: boolean
+    token?: boolean
+    walletCurrency?: boolean
+    gameCurrency?: boolean
+    exchangeRate?: boolean
+    exchangeRateSnapshotAt?: boolean
+    gameId?: boolean
+    game?: boolean | GameSession$gameArgs<ExtArgs>
+    user?: boolean | UserDefaultArgs<ExtArgs>
+  }, ExtArgs["result"]["gameSession"]>
+
+  export type GameSessionSelectScalar = {
+    id?: boolean
+    userId?: boolean
+    createdAt?: boolean
+    updatedAt?: boolean
+    lastAccessedAt?: boolean
+    aggregatorType?: boolean
+    token?: boolean
+    walletCurrency?: boolean
+    gameCurrency?: boolean
+    exchangeRate?: boolean
+    exchangeRateSnapshotAt?: boolean
+    gameId?: boolean
+  }
+
+  export type GameSessionOmit<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetOmit<"id" | "userId" | "createdAt" | "updatedAt" | "lastAccessedAt" | "aggregatorType" | "token" | "walletCurrency" | "gameCurrency" | "exchangeRate" | "exchangeRateSnapshotAt" | "gameId", ExtArgs["result"]["gameSession"]>
+  export type GameSessionInclude<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    gameRounds?: boolean | GameSession$gameRoundsArgs<ExtArgs>
+    game?: boolean | GameSession$gameArgs<ExtArgs>
+    user?: boolean | UserDefaultArgs<ExtArgs>
+    _count?: boolean | GameSessionCountOutputTypeDefaultArgs<ExtArgs>
+  }
+  export type GameSessionIncludeCreateManyAndReturn<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    game?: boolean | GameSession$gameArgs<ExtArgs>
+    user?: boolean | UserDefaultArgs<ExtArgs>
+  }
+  export type GameSessionIncludeUpdateManyAndReturn<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    game?: boolean | GameSession$gameArgs<ExtArgs>
+    user?: boolean | UserDefaultArgs<ExtArgs>
+  }
+
+  export type $GameSessionPayload<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    name: "GameSession"
+    objects: {
+      gameRounds: Prisma.$GameRoundPayload<ExtArgs>[]
+      game: Prisma.$CasinoGamePayload<ExtArgs> | null
+      user: Prisma.$UserPayload<ExtArgs>
+    }
+    scalars: $Extensions.GetPayloadResult<{
+      id: bigint
+      userId: bigint
+      createdAt: Date
+      updatedAt: Date
+      lastAccessedAt: Date
+      aggregatorType: $Enums.GameAggregatorType
+      token: string
+      walletCurrency: $Enums.ExchangeCurrencyCode
+      gameCurrency: $Enums.ExchangeCurrencyCode
+      exchangeRate: Prisma.Decimal
+      exchangeRateSnapshotAt: Date
+      gameId: number | null
+    }, ExtArgs["result"]["gameSession"]>
+    composites: {}
+  }
+
+  type GameSessionGetPayload<S extends boolean | null | undefined | GameSessionDefaultArgs> = $Result.GetResult<Prisma.$GameSessionPayload, S>
+
+  type GameSessionCountArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> =
+    Omit<GameSessionFindManyArgs, 'select' | 'include' | 'distinct' | 'omit'> & {
+      select?: GameSessionCountAggregateInputType | true
+    }
+
+  export interface GameSessionDelegate<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs, GlobalOmitOptions = {}> {
+    [K: symbol]: { types: Prisma.TypeMap<ExtArgs>['model']['GameSession'], meta: { name: 'GameSession' } }
+    /**
+     * Find zero or one GameSession that matches the filter.
+     * @param {GameSessionFindUniqueArgs} args - Arguments to find a GameSession
+     * @example
+     * // Get one GameSession
+     * const gameSession = await prisma.gameSession.findUnique({
+     *   where: {
+     *     // ... provide filter here
+     *   }
+     * })
+     */
+    findUnique<T extends GameSessionFindUniqueArgs>(args: SelectSubset<T, GameSessionFindUniqueArgs<ExtArgs>>): Prisma__GameSessionClient<$Result.GetResult<Prisma.$GameSessionPayload<ExtArgs>, T, "findUnique", GlobalOmitOptions> | null, null, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Find one GameSession that matches the filter or throw an error with `error.code='P2025'`
+     * if no matches were found.
+     * @param {GameSessionFindUniqueOrThrowArgs} args - Arguments to find a GameSession
+     * @example
+     * // Get one GameSession
+     * const gameSession = await prisma.gameSession.findUniqueOrThrow({
+     *   where: {
+     *     // ... provide filter here
+     *   }
+     * })
+     */
+    findUniqueOrThrow<T extends GameSessionFindUniqueOrThrowArgs>(args: SelectSubset<T, GameSessionFindUniqueOrThrowArgs<ExtArgs>>): Prisma__GameSessionClient<$Result.GetResult<Prisma.$GameSessionPayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Find the first GameSession that matches the filter.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {GameSessionFindFirstArgs} args - Arguments to find a GameSession
+     * @example
+     * // Get one GameSession
+     * const gameSession = await prisma.gameSession.findFirst({
+     *   where: {
+     *     // ... provide filter here
+     *   }
+     * })
+     */
+    findFirst<T extends GameSessionFindFirstArgs>(args?: SelectSubset<T, GameSessionFindFirstArgs<ExtArgs>>): Prisma__GameSessionClient<$Result.GetResult<Prisma.$GameSessionPayload<ExtArgs>, T, "findFirst", GlobalOmitOptions> | null, null, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Find the first GameSession that matches the filter or
+     * throw `PrismaKnownClientError` with `P2025` code if no matches were found.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {GameSessionFindFirstOrThrowArgs} args - Arguments to find a GameSession
+     * @example
+     * // Get one GameSession
+     * const gameSession = await prisma.gameSession.findFirstOrThrow({
+     *   where: {
+     *     // ... provide filter here
+     *   }
+     * })
+     */
+    findFirstOrThrow<T extends GameSessionFindFirstOrThrowArgs>(args?: SelectSubset<T, GameSessionFindFirstOrThrowArgs<ExtArgs>>): Prisma__GameSessionClient<$Result.GetResult<Prisma.$GameSessionPayload<ExtArgs>, T, "findFirstOrThrow", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Find zero or more GameSessions that matches the filter.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {GameSessionFindManyArgs} args - Arguments to filter and select certain fields only.
+     * @example
+     * // Get all GameSessions
+     * const gameSessions = await prisma.gameSession.findMany()
+     * 
+     * // Get first 10 GameSessions
+     * const gameSessions = await prisma.gameSession.findMany({ take: 10 })
+     * 
+     * // Only select the `id`
+     * const gameSessionWithIdOnly = await prisma.gameSession.findMany({ select: { id: true } })
+     * 
+     */
+    findMany<T extends GameSessionFindManyArgs>(args?: SelectSubset<T, GameSessionFindManyArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$GameSessionPayload<ExtArgs>, T, "findMany", GlobalOmitOptions>>
+
+    /**
+     * Create a GameSession.
+     * @param {GameSessionCreateArgs} args - Arguments to create a GameSession.
+     * @example
+     * // Create one GameSession
+     * const GameSession = await prisma.gameSession.create({
+     *   data: {
+     *     // ... data to create a GameSession
+     *   }
+     * })
+     * 
+     */
+    create<T extends GameSessionCreateArgs>(args: SelectSubset<T, GameSessionCreateArgs<ExtArgs>>): Prisma__GameSessionClient<$Result.GetResult<Prisma.$GameSessionPayload<ExtArgs>, T, "create", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Create many GameSessions.
+     * @param {GameSessionCreateManyArgs} args - Arguments to create many GameSessions.
+     * @example
+     * // Create many GameSessions
+     * const gameSession = await prisma.gameSession.createMany({
+     *   data: [
+     *     // ... provide data here
+     *   ]
+     * })
+     *     
+     */
+    createMany<T extends GameSessionCreateManyArgs>(args?: SelectSubset<T, GameSessionCreateManyArgs<ExtArgs>>): Prisma.PrismaPromise<BatchPayload>
+
+    /**
+     * Create many GameSessions and returns the data saved in the database.
+     * @param {GameSessionCreateManyAndReturnArgs} args - Arguments to create many GameSessions.
+     * @example
+     * // Create many GameSessions
+     * const gameSession = await prisma.gameSession.createManyAndReturn({
+     *   data: [
+     *     // ... provide data here
+     *   ]
+     * })
+     * 
+     * // Create many GameSessions and only return the `id`
+     * const gameSessionWithIdOnly = await prisma.gameSession.createManyAndReturn({
+     *   select: { id: true },
+     *   data: [
+     *     // ... provide data here
+     *   ]
+     * })
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * 
+     */
+    createManyAndReturn<T extends GameSessionCreateManyAndReturnArgs>(args?: SelectSubset<T, GameSessionCreateManyAndReturnArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$GameSessionPayload<ExtArgs>, T, "createManyAndReturn", GlobalOmitOptions>>
+
+    /**
+     * Delete a GameSession.
+     * @param {GameSessionDeleteArgs} args - Arguments to delete one GameSession.
+     * @example
+     * // Delete one GameSession
+     * const GameSession = await prisma.gameSession.delete({
+     *   where: {
+     *     // ... filter to delete one GameSession
+     *   }
+     * })
+     * 
+     */
+    delete<T extends GameSessionDeleteArgs>(args: SelectSubset<T, GameSessionDeleteArgs<ExtArgs>>): Prisma__GameSessionClient<$Result.GetResult<Prisma.$GameSessionPayload<ExtArgs>, T, "delete", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Update one GameSession.
+     * @param {GameSessionUpdateArgs} args - Arguments to update one GameSession.
+     * @example
+     * // Update one GameSession
+     * const gameSession = await prisma.gameSession.update({
+     *   where: {
+     *     // ... provide filter here
+     *   },
+     *   data: {
+     *     // ... provide data here
+     *   }
+     * })
+     * 
+     */
+    update<T extends GameSessionUpdateArgs>(args: SelectSubset<T, GameSessionUpdateArgs<ExtArgs>>): Prisma__GameSessionClient<$Result.GetResult<Prisma.$GameSessionPayload<ExtArgs>, T, "update", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Delete zero or more GameSessions.
+     * @param {GameSessionDeleteManyArgs} args - Arguments to filter GameSessions to delete.
+     * @example
+     * // Delete a few GameSessions
+     * const { count } = await prisma.gameSession.deleteMany({
+     *   where: {
+     *     // ... provide filter here
+     *   }
+     * })
+     * 
+     */
+    deleteMany<T extends GameSessionDeleteManyArgs>(args?: SelectSubset<T, GameSessionDeleteManyArgs<ExtArgs>>): Prisma.PrismaPromise<BatchPayload>
+
+    /**
+     * Update zero or more GameSessions.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {GameSessionUpdateManyArgs} args - Arguments to update one or more rows.
+     * @example
+     * // Update many GameSessions
+     * const gameSession = await prisma.gameSession.updateMany({
+     *   where: {
+     *     // ... provide filter here
+     *   },
+     *   data: {
+     *     // ... provide data here
+     *   }
+     * })
+     * 
+     */
+    updateMany<T extends GameSessionUpdateManyArgs>(args: SelectSubset<T, GameSessionUpdateManyArgs<ExtArgs>>): Prisma.PrismaPromise<BatchPayload>
+
+    /**
+     * Update zero or more GameSessions and returns the data updated in the database.
+     * @param {GameSessionUpdateManyAndReturnArgs} args - Arguments to update many GameSessions.
+     * @example
+     * // Update many GameSessions
+     * const gameSession = await prisma.gameSession.updateManyAndReturn({
+     *   where: {
+     *     // ... provide filter here
+     *   },
+     *   data: [
+     *     // ... provide data here
+     *   ]
+     * })
+     * 
+     * // Update zero or more GameSessions and only return the `id`
+     * const gameSessionWithIdOnly = await prisma.gameSession.updateManyAndReturn({
+     *   select: { id: true },
+     *   where: {
+     *     // ... provide filter here
+     *   },
+     *   data: [
+     *     // ... provide data here
+     *   ]
+     * })
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * 
+     */
+    updateManyAndReturn<T extends GameSessionUpdateManyAndReturnArgs>(args: SelectSubset<T, GameSessionUpdateManyAndReturnArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$GameSessionPayload<ExtArgs>, T, "updateManyAndReturn", GlobalOmitOptions>>
+
+    /**
+     * Create or update one GameSession.
+     * @param {GameSessionUpsertArgs} args - Arguments to update or create a GameSession.
+     * @example
+     * // Update or create a GameSession
+     * const gameSession = await prisma.gameSession.upsert({
+     *   create: {
+     *     // ... data to create a GameSession
+     *   },
+     *   update: {
+     *     // ... in case it already exists, update
+     *   },
+     *   where: {
+     *     // ... the filter for the GameSession we want to update
+     *   }
+     * })
+     */
+    upsert<T extends GameSessionUpsertArgs>(args: SelectSubset<T, GameSessionUpsertArgs<ExtArgs>>): Prisma__GameSessionClient<$Result.GetResult<Prisma.$GameSessionPayload<ExtArgs>, T, "upsert", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
+
+
+    /**
+     * Count the number of GameSessions.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {GameSessionCountArgs} args - Arguments to filter GameSessions to count.
+     * @example
+     * // Count the number of GameSessions
+     * const count = await prisma.gameSession.count({
+     *   where: {
+     *     // ... the filter for the GameSessions we want to count
+     *   }
+     * })
+    **/
+    count<T extends GameSessionCountArgs>(
+      args?: Subset<T, GameSessionCountArgs>,
+    ): Prisma.PrismaPromise<
+      T extends $Utils.Record<'select', any>
+        ? T['select'] extends true
+          ? number
+          : GetScalarType<T['select'], GameSessionCountAggregateOutputType>
+        : number
+    >
+
+    /**
+     * Allows you to perform aggregations operations on a GameSession.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {GameSessionAggregateArgs} args - Select which aggregations you would like to apply and on what fields.
+     * @example
+     * // Ordered by age ascending
+     * // Where email contains prisma.io
+     * // Limited to the 10 users
+     * const aggregations = await prisma.user.aggregate({
+     *   _avg: {
+     *     age: true,
+     *   },
+     *   where: {
+     *     email: {
+     *       contains: "prisma.io",
+     *     },
+     *   },
+     *   orderBy: {
+     *     age: "asc",
+     *   },
+     *   take: 10,
+     * })
+    **/
+    aggregate<T extends GameSessionAggregateArgs>(args: Subset<T, GameSessionAggregateArgs>): Prisma.PrismaPromise<GetGameSessionAggregateType<T>>
+
+    /**
+     * Group by GameSession.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {GameSessionGroupByArgs} args - Group by arguments.
+     * @example
+     * // Group by city, order by createdAt, get count
+     * const result = await prisma.user.groupBy({
+     *   by: ['city', 'createdAt'],
+     *   orderBy: {
+     *     createdAt: true
+     *   },
+     *   _count: {
+     *     _all: true
+     *   },
+     * })
+     * 
+    **/
+    groupBy<
+      T extends GameSessionGroupByArgs,
+      HasSelectOrTake extends Or<
+        Extends<'skip', Keys<T>>,
+        Extends<'take', Keys<T>>
+      >,
+      OrderByArg extends True extends HasSelectOrTake
+        ? { orderBy: GameSessionGroupByArgs['orderBy'] }
+        : { orderBy?: GameSessionGroupByArgs['orderBy'] },
+      OrderFields extends ExcludeUnderscoreKeys<Keys<MaybeTupleToUnion<T['orderBy']>>>,
+      ByFields extends MaybeTupleToUnion<T['by']>,
+      ByValid extends Has<ByFields, OrderFields>,
+      HavingFields extends GetHavingFields<T['having']>,
+      HavingValid extends Has<ByFields, HavingFields>,
+      ByEmpty extends T['by'] extends never[] ? True : False,
+      InputErrors extends ByEmpty extends True
+      ? `Error: "by" must not be empty.`
+      : HavingValid extends False
+      ? {
+          [P in HavingFields]: P extends ByFields
+            ? never
+            : P extends string
+            ? `Error: Field "${P}" used in "having" needs to be provided in "by".`
+            : [
+                Error,
+                'Field ',
+                P,
+                ` in "having" needs to be provided in "by"`,
+              ]
+        }[HavingFields]
+      : 'take' extends Keys<T>
+      ? 'orderBy' extends Keys<T>
+        ? ByValid extends True
+          ? {}
+          : {
+              [P in OrderFields]: P extends ByFields
+                ? never
+                : `Error: Field "${P}" in "orderBy" needs to be provided in "by"`
+            }[OrderFields]
+        : 'Error: If you provide "take", you also need to provide "orderBy"'
+      : 'skip' extends Keys<T>
+      ? 'orderBy' extends Keys<T>
+        ? ByValid extends True
+          ? {}
+          : {
+              [P in OrderFields]: P extends ByFields
+                ? never
+                : `Error: Field "${P}" in "orderBy" needs to be provided in "by"`
+            }[OrderFields]
+        : 'Error: If you provide "skip", you also need to provide "orderBy"'
+      : ByValid extends True
+      ? {}
+      : {
+          [P in OrderFields]: P extends ByFields
+            ? never
+            : `Error: Field "${P}" in "orderBy" needs to be provided in "by"`
+        }[OrderFields]
+    >(args: SubsetIntersection<T, GameSessionGroupByArgs, OrderByArg> & InputErrors): {} extends InputErrors ? GetGameSessionGroupByPayload<T> : Prisma.PrismaPromise<InputErrors>
+  /**
+   * Fields of the GameSession model
+   */
+  readonly fields: GameSessionFieldRefs;
+  }
+
+  /**
+   * The delegate class that acts as a "Promise-like" for GameSession.
+   * Why is this prefixed with `Prisma__`?
+   * Because we want to prevent naming conflicts as mentioned in
+   * https://github.com/prisma/prisma-client-js/issues/707
+   */
+  export interface Prisma__GameSessionClient<T, Null = never, ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs, GlobalOmitOptions = {}> extends Prisma.PrismaPromise<T> {
+    readonly [Symbol.toStringTag]: "PrismaPromise"
+    gameRounds<T extends GameSession$gameRoundsArgs<ExtArgs> = {}>(args?: Subset<T, GameSession$gameRoundsArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$GameRoundPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
+    game<T extends GameSession$gameArgs<ExtArgs> = {}>(args?: Subset<T, GameSession$gameArgs<ExtArgs>>): Prisma__CasinoGameClient<$Result.GetResult<Prisma.$CasinoGamePayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions> | null, null, ExtArgs, GlobalOmitOptions>
+    user<T extends UserDefaultArgs<ExtArgs> = {}>(args?: Subset<T, UserDefaultArgs<ExtArgs>>): Prisma__UserClient<$Result.GetResult<Prisma.$UserPayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions> | Null, Null, ExtArgs, GlobalOmitOptions>
+    /**
+     * Attaches callbacks for the resolution and/or rejection of the Promise.
+     * @param onfulfilled The callback to execute when the Promise is resolved.
+     * @param onrejected The callback to execute when the Promise is rejected.
+     * @returns A Promise for the completion of which ever callback is executed.
+     */
+    then<TResult1 = T, TResult2 = never>(onfulfilled?: ((value: T) => TResult1 | PromiseLike<TResult1>) | undefined | null, onrejected?: ((reason: any) => TResult2 | PromiseLike<TResult2>) | undefined | null): $Utils.JsPromise<TResult1 | TResult2>
+    /**
+     * Attaches a callback for only the rejection of the Promise.
+     * @param onrejected The callback to execute when the Promise is rejected.
+     * @returns A Promise for the completion of the callback.
+     */
+    catch<TResult = never>(onrejected?: ((reason: any) => TResult | PromiseLike<TResult>) | undefined | null): $Utils.JsPromise<T | TResult>
+    /**
+     * Attaches a callback that is invoked when the Promise is settled (fulfilled or rejected). The
+     * resolved value cannot be modified from the callback.
+     * @param onfinally The callback to execute when the Promise is settled (fulfilled or rejected).
+     * @returns A Promise for the completion of the callback.
+     */
+    finally(onfinally?: (() => void) | undefined | null): $Utils.JsPromise<T>
+  }
+
+
+
+
+  /**
+   * Fields of the GameSession model
+   */
+  interface GameSessionFieldRefs {
+    readonly id: FieldRef<"GameSession", 'BigInt'>
+    readonly userId: FieldRef<"GameSession", 'BigInt'>
+    readonly createdAt: FieldRef<"GameSession", 'DateTime'>
+    readonly updatedAt: FieldRef<"GameSession", 'DateTime'>
+    readonly lastAccessedAt: FieldRef<"GameSession", 'DateTime'>
+    readonly aggregatorType: FieldRef<"GameSession", 'GameAggregatorType'>
+    readonly token: FieldRef<"GameSession", 'String'>
+    readonly walletCurrency: FieldRef<"GameSession", 'ExchangeCurrencyCode'>
+    readonly gameCurrency: FieldRef<"GameSession", 'ExchangeCurrencyCode'>
+    readonly exchangeRate: FieldRef<"GameSession", 'Decimal'>
+    readonly exchangeRateSnapshotAt: FieldRef<"GameSession", 'DateTime'>
+    readonly gameId: FieldRef<"GameSession", 'Int'>
+  }
+    
+
+  // Custom InputTypes
+  /**
+   * GameSession findUnique
+   */
+  export type GameSessionFindUniqueArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the GameSession
+     */
+    select?: GameSessionSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the GameSession
+     */
+    omit?: GameSessionOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: GameSessionInclude<ExtArgs> | null
+    /**
+     * Filter, which GameSession to fetch.
+     */
+    where: GameSessionWhereUniqueInput
+  }
+
+  /**
+   * GameSession findUniqueOrThrow
+   */
+  export type GameSessionFindUniqueOrThrowArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the GameSession
+     */
+    select?: GameSessionSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the GameSession
+     */
+    omit?: GameSessionOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: GameSessionInclude<ExtArgs> | null
+    /**
+     * Filter, which GameSession to fetch.
+     */
+    where: GameSessionWhereUniqueInput
+  }
+
+  /**
+   * GameSession findFirst
+   */
+  export type GameSessionFindFirstArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the GameSession
+     */
+    select?: GameSessionSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the GameSession
+     */
+    omit?: GameSessionOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: GameSessionInclude<ExtArgs> | null
+    /**
+     * Filter, which GameSession to fetch.
+     */
+    where?: GameSessionWhereInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/sorting Sorting Docs}
+     * 
+     * Determine the order of GameSessions to fetch.
+     */
+    orderBy?: GameSessionOrderByWithRelationInput | GameSessionOrderByWithRelationInput[]
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination#cursor-based-pagination Cursor Docs}
+     * 
+     * Sets the position for searching for GameSessions.
+     */
+    cursor?: GameSessionWhereUniqueInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Take `±n` GameSessions from the position of the cursor.
+     */
+    take?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Skip the first `n` GameSessions.
+     */
+    skip?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/distinct Distinct Docs}
+     * 
+     * Filter by unique combinations of GameSessions.
+     */
+    distinct?: GameSessionScalarFieldEnum | GameSessionScalarFieldEnum[]
+  }
+
+  /**
+   * GameSession findFirstOrThrow
+   */
+  export type GameSessionFindFirstOrThrowArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the GameSession
+     */
+    select?: GameSessionSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the GameSession
+     */
+    omit?: GameSessionOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: GameSessionInclude<ExtArgs> | null
+    /**
+     * Filter, which GameSession to fetch.
+     */
+    where?: GameSessionWhereInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/sorting Sorting Docs}
+     * 
+     * Determine the order of GameSessions to fetch.
+     */
+    orderBy?: GameSessionOrderByWithRelationInput | GameSessionOrderByWithRelationInput[]
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination#cursor-based-pagination Cursor Docs}
+     * 
+     * Sets the position for searching for GameSessions.
+     */
+    cursor?: GameSessionWhereUniqueInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Take `±n` GameSessions from the position of the cursor.
+     */
+    take?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Skip the first `n` GameSessions.
+     */
+    skip?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/distinct Distinct Docs}
+     * 
+     * Filter by unique combinations of GameSessions.
+     */
+    distinct?: GameSessionScalarFieldEnum | GameSessionScalarFieldEnum[]
+  }
+
+  /**
+   * GameSession findMany
+   */
+  export type GameSessionFindManyArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the GameSession
+     */
+    select?: GameSessionSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the GameSession
+     */
+    omit?: GameSessionOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: GameSessionInclude<ExtArgs> | null
+    /**
+     * Filter, which GameSessions to fetch.
+     */
+    where?: GameSessionWhereInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/sorting Sorting Docs}
+     * 
+     * Determine the order of GameSessions to fetch.
+     */
+    orderBy?: GameSessionOrderByWithRelationInput | GameSessionOrderByWithRelationInput[]
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination#cursor-based-pagination Cursor Docs}
+     * 
+     * Sets the position for listing GameSessions.
+     */
+    cursor?: GameSessionWhereUniqueInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Take `±n` GameSessions from the position of the cursor.
+     */
+    take?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Skip the first `n` GameSessions.
+     */
+    skip?: number
+    distinct?: GameSessionScalarFieldEnum | GameSessionScalarFieldEnum[]
+  }
+
+  /**
+   * GameSession create
+   */
+  export type GameSessionCreateArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the GameSession
+     */
+    select?: GameSessionSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the GameSession
+     */
+    omit?: GameSessionOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: GameSessionInclude<ExtArgs> | null
+    /**
+     * The data needed to create a GameSession.
+     */
+    data: XOR<GameSessionCreateInput, GameSessionUncheckedCreateInput>
+  }
+
+  /**
+   * GameSession createMany
+   */
+  export type GameSessionCreateManyArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * The data used to create many GameSessions.
+     */
+    data: GameSessionCreateManyInput | GameSessionCreateManyInput[]
+    skipDuplicates?: boolean
+  }
+
+  /**
+   * GameSession createManyAndReturn
+   */
+  export type GameSessionCreateManyAndReturnArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the GameSession
+     */
+    select?: GameSessionSelectCreateManyAndReturn<ExtArgs> | null
+    /**
+     * Omit specific fields from the GameSession
+     */
+    omit?: GameSessionOmit<ExtArgs> | null
+    /**
+     * The data used to create many GameSessions.
+     */
+    data: GameSessionCreateManyInput | GameSessionCreateManyInput[]
+    skipDuplicates?: boolean
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: GameSessionIncludeCreateManyAndReturn<ExtArgs> | null
+  }
+
+  /**
+   * GameSession update
+   */
+  export type GameSessionUpdateArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the GameSession
+     */
+    select?: GameSessionSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the GameSession
+     */
+    omit?: GameSessionOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: GameSessionInclude<ExtArgs> | null
+    /**
+     * The data needed to update a GameSession.
+     */
+    data: XOR<GameSessionUpdateInput, GameSessionUncheckedUpdateInput>
+    /**
+     * Choose, which GameSession to update.
+     */
+    where: GameSessionWhereUniqueInput
+  }
+
+  /**
+   * GameSession updateMany
+   */
+  export type GameSessionUpdateManyArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * The data used to update GameSessions.
+     */
+    data: XOR<GameSessionUpdateManyMutationInput, GameSessionUncheckedUpdateManyInput>
+    /**
+     * Filter which GameSessions to update
+     */
+    where?: GameSessionWhereInput
+    /**
+     * Limit how many GameSessions to update.
+     */
+    limit?: number
+  }
+
+  /**
+   * GameSession updateManyAndReturn
+   */
+  export type GameSessionUpdateManyAndReturnArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the GameSession
+     */
+    select?: GameSessionSelectUpdateManyAndReturn<ExtArgs> | null
+    /**
+     * Omit specific fields from the GameSession
+     */
+    omit?: GameSessionOmit<ExtArgs> | null
+    /**
+     * The data used to update GameSessions.
+     */
+    data: XOR<GameSessionUpdateManyMutationInput, GameSessionUncheckedUpdateManyInput>
+    /**
+     * Filter which GameSessions to update
+     */
+    where?: GameSessionWhereInput
+    /**
+     * Limit how many GameSessions to update.
+     */
+    limit?: number
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: GameSessionIncludeUpdateManyAndReturn<ExtArgs> | null
+  }
+
+  /**
+   * GameSession upsert
+   */
+  export type GameSessionUpsertArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the GameSession
+     */
+    select?: GameSessionSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the GameSession
+     */
+    omit?: GameSessionOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: GameSessionInclude<ExtArgs> | null
+    /**
+     * The filter to search for the GameSession to update in case it exists.
+     */
+    where: GameSessionWhereUniqueInput
+    /**
+     * In case the GameSession found by the `where` argument doesn't exist, create a new GameSession with this data.
+     */
+    create: XOR<GameSessionCreateInput, GameSessionUncheckedCreateInput>
+    /**
+     * In case the GameSession was found with the provided `where` argument, update it with this data.
+     */
+    update: XOR<GameSessionUpdateInput, GameSessionUncheckedUpdateInput>
+  }
+
+  /**
+   * GameSession delete
+   */
+  export type GameSessionDeleteArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the GameSession
+     */
+    select?: GameSessionSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the GameSession
+     */
+    omit?: GameSessionOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: GameSessionInclude<ExtArgs> | null
+    /**
+     * Filter which GameSession to delete.
+     */
+    where: GameSessionWhereUniqueInput
+  }
+
+  /**
+   * GameSession deleteMany
+   */
+  export type GameSessionDeleteManyArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Filter which GameSessions to delete
+     */
+    where?: GameSessionWhereInput
+    /**
+     * Limit how many GameSessions to delete.
+     */
+    limit?: number
+  }
+
+  /**
+   * GameSession.gameRounds
+   */
+  export type GameSession$gameRoundsArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the GameRound
+     */
+    select?: GameRoundSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the GameRound
+     */
+    omit?: GameRoundOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: GameRoundInclude<ExtArgs> | null
+    where?: GameRoundWhereInput
+    orderBy?: GameRoundOrderByWithRelationInput | GameRoundOrderByWithRelationInput[]
+    cursor?: GameRoundWhereUniqueInput
+    take?: number
+    skip?: number
+    distinct?: GameRoundScalarFieldEnum | GameRoundScalarFieldEnum[]
+  }
+
+  /**
+   * GameSession.game
+   */
+  export type GameSession$gameArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the CasinoGame
+     */
+    select?: CasinoGameSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the CasinoGame
+     */
+    omit?: CasinoGameOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: CasinoGameInclude<ExtArgs> | null
+    where?: CasinoGameWhereInput
+  }
+
+  /**
+   * GameSession without action
+   */
+  export type GameSessionDefaultArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the GameSession
+     */
+    select?: GameSessionSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the GameSession
+     */
+    omit?: GameSessionOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: GameSessionInclude<ExtArgs> | null
+  }
+
+
+  /**
    * Model User
    */
 
@@ -18712,2458 +22416,6 @@ export namespace Prisma {
 
 
   /**
-   * Model Game
-   */
-
-  export type AggregateGame = {
-    _count: GameCountAggregateOutputType | null
-    _avg: GameAvgAggregateOutputType | null
-    _sum: GameSumAggregateOutputType | null
-    _min: GameMinAggregateOutputType | null
-    _max: GameMaxAggregateOutputType | null
-  }
-
-  export type GameAvgAggregateOutputType = {
-    id: number | null
-    gameId: number | null
-    houseEdge: Decimal | null
-    contributionRate: Decimal | null
-  }
-
-  export type GameSumAggregateOutputType = {
-    id: number | null
-    gameId: number | null
-    houseEdge: Decimal | null
-    contributionRate: Decimal | null
-  }
-
-  export type GameMinAggregateOutputType = {
-    id: number | null
-    aggregatorType: $Enums.GameAggregatorType | null
-    provider: $Enums.GameProvider | null
-    category: $Enums.GameCategory | null
-    gameId: number | null
-    gameType: string | null
-    tableId: string | null
-    iconLink: string | null
-    isEnabled: boolean | null
-    isVisibleToUser: boolean | null
-    houseEdge: Decimal | null
-    contributionRate: Decimal | null
-    createdAt: Date | null
-    updatedAt: Date | null
-  }
-
-  export type GameMaxAggregateOutputType = {
-    id: number | null
-    aggregatorType: $Enums.GameAggregatorType | null
-    provider: $Enums.GameProvider | null
-    category: $Enums.GameCategory | null
-    gameId: number | null
-    gameType: string | null
-    tableId: string | null
-    iconLink: string | null
-    isEnabled: boolean | null
-    isVisibleToUser: boolean | null
-    houseEdge: Decimal | null
-    contributionRate: Decimal | null
-    createdAt: Date | null
-    updatedAt: Date | null
-  }
-
-  export type GameCountAggregateOutputType = {
-    id: number
-    aggregatorType: number
-    provider: number
-    category: number
-    gameId: number
-    gameType: number
-    tableId: number
-    iconLink: number
-    isEnabled: number
-    isVisibleToUser: number
-    houseEdge: number
-    contributionRate: number
-    createdAt: number
-    updatedAt: number
-    _all: number
-  }
-
-
-  export type GameAvgAggregateInputType = {
-    id?: true
-    gameId?: true
-    houseEdge?: true
-    contributionRate?: true
-  }
-
-  export type GameSumAggregateInputType = {
-    id?: true
-    gameId?: true
-    houseEdge?: true
-    contributionRate?: true
-  }
-
-  export type GameMinAggregateInputType = {
-    id?: true
-    aggregatorType?: true
-    provider?: true
-    category?: true
-    gameId?: true
-    gameType?: true
-    tableId?: true
-    iconLink?: true
-    isEnabled?: true
-    isVisibleToUser?: true
-    houseEdge?: true
-    contributionRate?: true
-    createdAt?: true
-    updatedAt?: true
-  }
-
-  export type GameMaxAggregateInputType = {
-    id?: true
-    aggregatorType?: true
-    provider?: true
-    category?: true
-    gameId?: true
-    gameType?: true
-    tableId?: true
-    iconLink?: true
-    isEnabled?: true
-    isVisibleToUser?: true
-    houseEdge?: true
-    contributionRate?: true
-    createdAt?: true
-    updatedAt?: true
-  }
-
-  export type GameCountAggregateInputType = {
-    id?: true
-    aggregatorType?: true
-    provider?: true
-    category?: true
-    gameId?: true
-    gameType?: true
-    tableId?: true
-    iconLink?: true
-    isEnabled?: true
-    isVisibleToUser?: true
-    houseEdge?: true
-    contributionRate?: true
-    createdAt?: true
-    updatedAt?: true
-    _all?: true
-  }
-
-  export type GameAggregateArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
-    /**
-     * Filter which Game to aggregate.
-     */
-    where?: GameWhereInput
-    /**
-     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/sorting Sorting Docs}
-     * 
-     * Determine the order of Games to fetch.
-     */
-    orderBy?: GameOrderByWithRelationInput | GameOrderByWithRelationInput[]
-    /**
-     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination#cursor-based-pagination Cursor Docs}
-     * 
-     * Sets the start position
-     */
-    cursor?: GameWhereUniqueInput
-    /**
-     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
-     * 
-     * Take `±n` Games from the position of the cursor.
-     */
-    take?: number
-    /**
-     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
-     * 
-     * Skip the first `n` Games.
-     */
-    skip?: number
-    /**
-     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
-     * 
-     * Count returned Games
-    **/
-    _count?: true | GameCountAggregateInputType
-    /**
-     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
-     * 
-     * Select which fields to average
-    **/
-    _avg?: GameAvgAggregateInputType
-    /**
-     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
-     * 
-     * Select which fields to sum
-    **/
-    _sum?: GameSumAggregateInputType
-    /**
-     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
-     * 
-     * Select which fields to find the minimum value
-    **/
-    _min?: GameMinAggregateInputType
-    /**
-     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
-     * 
-     * Select which fields to find the maximum value
-    **/
-    _max?: GameMaxAggregateInputType
-  }
-
-  export type GetGameAggregateType<T extends GameAggregateArgs> = {
-        [P in keyof T & keyof AggregateGame]: P extends '_count' | 'count'
-      ? T[P] extends true
-        ? number
-        : GetScalarType<T[P], AggregateGame[P]>
-      : GetScalarType<T[P], AggregateGame[P]>
-  }
-
-
-
-
-  export type GameGroupByArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
-    where?: GameWhereInput
-    orderBy?: GameOrderByWithAggregationInput | GameOrderByWithAggregationInput[]
-    by: GameScalarFieldEnum[] | GameScalarFieldEnum
-    having?: GameScalarWhereWithAggregatesInput
-    take?: number
-    skip?: number
-    _count?: GameCountAggregateInputType | true
-    _avg?: GameAvgAggregateInputType
-    _sum?: GameSumAggregateInputType
-    _min?: GameMinAggregateInputType
-    _max?: GameMaxAggregateInputType
-  }
-
-  export type GameGroupByOutputType = {
-    id: number
-    aggregatorType: $Enums.GameAggregatorType
-    provider: $Enums.GameProvider
-    category: $Enums.GameCategory
-    gameId: number
-    gameType: string | null
-    tableId: string | null
-    iconLink: string | null
-    isEnabled: boolean
-    isVisibleToUser: boolean
-    houseEdge: Decimal
-    contributionRate: Decimal
-    createdAt: Date
-    updatedAt: Date
-    _count: GameCountAggregateOutputType | null
-    _avg: GameAvgAggregateOutputType | null
-    _sum: GameSumAggregateOutputType | null
-    _min: GameMinAggregateOutputType | null
-    _max: GameMaxAggregateOutputType | null
-  }
-
-  type GetGameGroupByPayload<T extends GameGroupByArgs> = Prisma.PrismaPromise<
-    Array<
-      PickEnumerable<GameGroupByOutputType, T['by']> &
-        {
-          [P in ((keyof T) & (keyof GameGroupByOutputType))]: P extends '_count'
-            ? T[P] extends boolean
-              ? number
-              : GetScalarType<T[P], GameGroupByOutputType[P]>
-            : GetScalarType<T[P], GameGroupByOutputType[P]>
-        }
-      >
-    >
-
-
-  export type GameSelect<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetSelect<{
-    id?: boolean
-    aggregatorType?: boolean
-    provider?: boolean
-    category?: boolean
-    gameId?: boolean
-    gameType?: boolean
-    tableId?: boolean
-    iconLink?: boolean
-    isEnabled?: boolean
-    isVisibleToUser?: boolean
-    houseEdge?: boolean
-    contributionRate?: boolean
-    createdAt?: boolean
-    updatedAt?: boolean
-    bonusDetails?: boolean | Game$bonusDetailsArgs<ExtArgs>
-    gameRounds?: boolean | Game$gameRoundsArgs<ExtArgs>
-    gameSessions?: boolean | Game$gameSessionsArgs<ExtArgs>
-    translations?: boolean | Game$translationsArgs<ExtArgs>
-    _count?: boolean | GameCountOutputTypeDefaultArgs<ExtArgs>
-  }, ExtArgs["result"]["game"]>
-
-  export type GameSelectCreateManyAndReturn<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetSelect<{
-    id?: boolean
-    aggregatorType?: boolean
-    provider?: boolean
-    category?: boolean
-    gameId?: boolean
-    gameType?: boolean
-    tableId?: boolean
-    iconLink?: boolean
-    isEnabled?: boolean
-    isVisibleToUser?: boolean
-    houseEdge?: boolean
-    contributionRate?: boolean
-    createdAt?: boolean
-    updatedAt?: boolean
-  }, ExtArgs["result"]["game"]>
-
-  export type GameSelectUpdateManyAndReturn<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetSelect<{
-    id?: boolean
-    aggregatorType?: boolean
-    provider?: boolean
-    category?: boolean
-    gameId?: boolean
-    gameType?: boolean
-    tableId?: boolean
-    iconLink?: boolean
-    isEnabled?: boolean
-    isVisibleToUser?: boolean
-    houseEdge?: boolean
-    contributionRate?: boolean
-    createdAt?: boolean
-    updatedAt?: boolean
-  }, ExtArgs["result"]["game"]>
-
-  export type GameSelectScalar = {
-    id?: boolean
-    aggregatorType?: boolean
-    provider?: boolean
-    category?: boolean
-    gameId?: boolean
-    gameType?: boolean
-    tableId?: boolean
-    iconLink?: boolean
-    isEnabled?: boolean
-    isVisibleToUser?: boolean
-    houseEdge?: boolean
-    contributionRate?: boolean
-    createdAt?: boolean
-    updatedAt?: boolean
-  }
-
-  export type GameOmit<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetOmit<"id" | "aggregatorType" | "provider" | "category" | "gameId" | "gameType" | "tableId" | "iconLink" | "isEnabled" | "isVisibleToUser" | "houseEdge" | "contributionRate" | "createdAt" | "updatedAt", ExtArgs["result"]["game"]>
-  export type GameInclude<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
-    bonusDetails?: boolean | Game$bonusDetailsArgs<ExtArgs>
-    gameRounds?: boolean | Game$gameRoundsArgs<ExtArgs>
-    gameSessions?: boolean | Game$gameSessionsArgs<ExtArgs>
-    translations?: boolean | Game$translationsArgs<ExtArgs>
-    _count?: boolean | GameCountOutputTypeDefaultArgs<ExtArgs>
-  }
-  export type GameIncludeCreateManyAndReturn<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {}
-  export type GameIncludeUpdateManyAndReturn<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {}
-
-  export type $GamePayload<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
-    name: "Game"
-    objects: {
-      bonusDetails: Prisma.$BonusDetailPayload<ExtArgs>[]
-      gameRounds: Prisma.$GameRoundPayload<ExtArgs>[]
-      gameSessions: Prisma.$GameSessionPayload<ExtArgs>[]
-      translations: Prisma.$GameTranslationPayload<ExtArgs>[]
-    }
-    scalars: $Extensions.GetPayloadResult<{
-      id: number
-      aggregatorType: $Enums.GameAggregatorType
-      provider: $Enums.GameProvider
-      category: $Enums.GameCategory
-      gameId: number
-      gameType: string | null
-      tableId: string | null
-      iconLink: string | null
-      isEnabled: boolean
-      isVisibleToUser: boolean
-      houseEdge: Prisma.Decimal
-      contributionRate: Prisma.Decimal
-      createdAt: Date
-      updatedAt: Date
-    }, ExtArgs["result"]["game"]>
-    composites: {}
-  }
-
-  type GameGetPayload<S extends boolean | null | undefined | GameDefaultArgs> = $Result.GetResult<Prisma.$GamePayload, S>
-
-  type GameCountArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> =
-    Omit<GameFindManyArgs, 'select' | 'include' | 'distinct' | 'omit'> & {
-      select?: GameCountAggregateInputType | true
-    }
-
-  export interface GameDelegate<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs, GlobalOmitOptions = {}> {
-    [K: symbol]: { types: Prisma.TypeMap<ExtArgs>['model']['Game'], meta: { name: 'Game' } }
-    /**
-     * Find zero or one Game that matches the filter.
-     * @param {GameFindUniqueArgs} args - Arguments to find a Game
-     * @example
-     * // Get one Game
-     * const game = await prisma.game.findUnique({
-     *   where: {
-     *     // ... provide filter here
-     *   }
-     * })
-     */
-    findUnique<T extends GameFindUniqueArgs>(args: SelectSubset<T, GameFindUniqueArgs<ExtArgs>>): Prisma__GameClient<$Result.GetResult<Prisma.$GamePayload<ExtArgs>, T, "findUnique", GlobalOmitOptions> | null, null, ExtArgs, GlobalOmitOptions>
-
-    /**
-     * Find one Game that matches the filter or throw an error with `error.code='P2025'`
-     * if no matches were found.
-     * @param {GameFindUniqueOrThrowArgs} args - Arguments to find a Game
-     * @example
-     * // Get one Game
-     * const game = await prisma.game.findUniqueOrThrow({
-     *   where: {
-     *     // ... provide filter here
-     *   }
-     * })
-     */
-    findUniqueOrThrow<T extends GameFindUniqueOrThrowArgs>(args: SelectSubset<T, GameFindUniqueOrThrowArgs<ExtArgs>>): Prisma__GameClient<$Result.GetResult<Prisma.$GamePayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
-
-    /**
-     * Find the first Game that matches the filter.
-     * Note, that providing `undefined` is treated as the value not being there.
-     * Read more here: https://pris.ly/d/null-undefined
-     * @param {GameFindFirstArgs} args - Arguments to find a Game
-     * @example
-     * // Get one Game
-     * const game = await prisma.game.findFirst({
-     *   where: {
-     *     // ... provide filter here
-     *   }
-     * })
-     */
-    findFirst<T extends GameFindFirstArgs>(args?: SelectSubset<T, GameFindFirstArgs<ExtArgs>>): Prisma__GameClient<$Result.GetResult<Prisma.$GamePayload<ExtArgs>, T, "findFirst", GlobalOmitOptions> | null, null, ExtArgs, GlobalOmitOptions>
-
-    /**
-     * Find the first Game that matches the filter or
-     * throw `PrismaKnownClientError` with `P2025` code if no matches were found.
-     * Note, that providing `undefined` is treated as the value not being there.
-     * Read more here: https://pris.ly/d/null-undefined
-     * @param {GameFindFirstOrThrowArgs} args - Arguments to find a Game
-     * @example
-     * // Get one Game
-     * const game = await prisma.game.findFirstOrThrow({
-     *   where: {
-     *     // ... provide filter here
-     *   }
-     * })
-     */
-    findFirstOrThrow<T extends GameFindFirstOrThrowArgs>(args?: SelectSubset<T, GameFindFirstOrThrowArgs<ExtArgs>>): Prisma__GameClient<$Result.GetResult<Prisma.$GamePayload<ExtArgs>, T, "findFirstOrThrow", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
-
-    /**
-     * Find zero or more Games that matches the filter.
-     * Note, that providing `undefined` is treated as the value not being there.
-     * Read more here: https://pris.ly/d/null-undefined
-     * @param {GameFindManyArgs} args - Arguments to filter and select certain fields only.
-     * @example
-     * // Get all Games
-     * const games = await prisma.game.findMany()
-     * 
-     * // Get first 10 Games
-     * const games = await prisma.game.findMany({ take: 10 })
-     * 
-     * // Only select the `id`
-     * const gameWithIdOnly = await prisma.game.findMany({ select: { id: true } })
-     * 
-     */
-    findMany<T extends GameFindManyArgs>(args?: SelectSubset<T, GameFindManyArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$GamePayload<ExtArgs>, T, "findMany", GlobalOmitOptions>>
-
-    /**
-     * Create a Game.
-     * @param {GameCreateArgs} args - Arguments to create a Game.
-     * @example
-     * // Create one Game
-     * const Game = await prisma.game.create({
-     *   data: {
-     *     // ... data to create a Game
-     *   }
-     * })
-     * 
-     */
-    create<T extends GameCreateArgs>(args: SelectSubset<T, GameCreateArgs<ExtArgs>>): Prisma__GameClient<$Result.GetResult<Prisma.$GamePayload<ExtArgs>, T, "create", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
-
-    /**
-     * Create many Games.
-     * @param {GameCreateManyArgs} args - Arguments to create many Games.
-     * @example
-     * // Create many Games
-     * const game = await prisma.game.createMany({
-     *   data: [
-     *     // ... provide data here
-     *   ]
-     * })
-     *     
-     */
-    createMany<T extends GameCreateManyArgs>(args?: SelectSubset<T, GameCreateManyArgs<ExtArgs>>): Prisma.PrismaPromise<BatchPayload>
-
-    /**
-     * Create many Games and returns the data saved in the database.
-     * @param {GameCreateManyAndReturnArgs} args - Arguments to create many Games.
-     * @example
-     * // Create many Games
-     * const game = await prisma.game.createManyAndReturn({
-     *   data: [
-     *     // ... provide data here
-     *   ]
-     * })
-     * 
-     * // Create many Games and only return the `id`
-     * const gameWithIdOnly = await prisma.game.createManyAndReturn({
-     *   select: { id: true },
-     *   data: [
-     *     // ... provide data here
-     *   ]
-     * })
-     * Note, that providing `undefined` is treated as the value not being there.
-     * Read more here: https://pris.ly/d/null-undefined
-     * 
-     */
-    createManyAndReturn<T extends GameCreateManyAndReturnArgs>(args?: SelectSubset<T, GameCreateManyAndReturnArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$GamePayload<ExtArgs>, T, "createManyAndReturn", GlobalOmitOptions>>
-
-    /**
-     * Delete a Game.
-     * @param {GameDeleteArgs} args - Arguments to delete one Game.
-     * @example
-     * // Delete one Game
-     * const Game = await prisma.game.delete({
-     *   where: {
-     *     // ... filter to delete one Game
-     *   }
-     * })
-     * 
-     */
-    delete<T extends GameDeleteArgs>(args: SelectSubset<T, GameDeleteArgs<ExtArgs>>): Prisma__GameClient<$Result.GetResult<Prisma.$GamePayload<ExtArgs>, T, "delete", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
-
-    /**
-     * Update one Game.
-     * @param {GameUpdateArgs} args - Arguments to update one Game.
-     * @example
-     * // Update one Game
-     * const game = await prisma.game.update({
-     *   where: {
-     *     // ... provide filter here
-     *   },
-     *   data: {
-     *     // ... provide data here
-     *   }
-     * })
-     * 
-     */
-    update<T extends GameUpdateArgs>(args: SelectSubset<T, GameUpdateArgs<ExtArgs>>): Prisma__GameClient<$Result.GetResult<Prisma.$GamePayload<ExtArgs>, T, "update", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
-
-    /**
-     * Delete zero or more Games.
-     * @param {GameDeleteManyArgs} args - Arguments to filter Games to delete.
-     * @example
-     * // Delete a few Games
-     * const { count } = await prisma.game.deleteMany({
-     *   where: {
-     *     // ... provide filter here
-     *   }
-     * })
-     * 
-     */
-    deleteMany<T extends GameDeleteManyArgs>(args?: SelectSubset<T, GameDeleteManyArgs<ExtArgs>>): Prisma.PrismaPromise<BatchPayload>
-
-    /**
-     * Update zero or more Games.
-     * Note, that providing `undefined` is treated as the value not being there.
-     * Read more here: https://pris.ly/d/null-undefined
-     * @param {GameUpdateManyArgs} args - Arguments to update one or more rows.
-     * @example
-     * // Update many Games
-     * const game = await prisma.game.updateMany({
-     *   where: {
-     *     // ... provide filter here
-     *   },
-     *   data: {
-     *     // ... provide data here
-     *   }
-     * })
-     * 
-     */
-    updateMany<T extends GameUpdateManyArgs>(args: SelectSubset<T, GameUpdateManyArgs<ExtArgs>>): Prisma.PrismaPromise<BatchPayload>
-
-    /**
-     * Update zero or more Games and returns the data updated in the database.
-     * @param {GameUpdateManyAndReturnArgs} args - Arguments to update many Games.
-     * @example
-     * // Update many Games
-     * const game = await prisma.game.updateManyAndReturn({
-     *   where: {
-     *     // ... provide filter here
-     *   },
-     *   data: [
-     *     // ... provide data here
-     *   ]
-     * })
-     * 
-     * // Update zero or more Games and only return the `id`
-     * const gameWithIdOnly = await prisma.game.updateManyAndReturn({
-     *   select: { id: true },
-     *   where: {
-     *     // ... provide filter here
-     *   },
-     *   data: [
-     *     // ... provide data here
-     *   ]
-     * })
-     * Note, that providing `undefined` is treated as the value not being there.
-     * Read more here: https://pris.ly/d/null-undefined
-     * 
-     */
-    updateManyAndReturn<T extends GameUpdateManyAndReturnArgs>(args: SelectSubset<T, GameUpdateManyAndReturnArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$GamePayload<ExtArgs>, T, "updateManyAndReturn", GlobalOmitOptions>>
-
-    /**
-     * Create or update one Game.
-     * @param {GameUpsertArgs} args - Arguments to update or create a Game.
-     * @example
-     * // Update or create a Game
-     * const game = await prisma.game.upsert({
-     *   create: {
-     *     // ... data to create a Game
-     *   },
-     *   update: {
-     *     // ... in case it already exists, update
-     *   },
-     *   where: {
-     *     // ... the filter for the Game we want to update
-     *   }
-     * })
-     */
-    upsert<T extends GameUpsertArgs>(args: SelectSubset<T, GameUpsertArgs<ExtArgs>>): Prisma__GameClient<$Result.GetResult<Prisma.$GamePayload<ExtArgs>, T, "upsert", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
-
-
-    /**
-     * Count the number of Games.
-     * Note, that providing `undefined` is treated as the value not being there.
-     * Read more here: https://pris.ly/d/null-undefined
-     * @param {GameCountArgs} args - Arguments to filter Games to count.
-     * @example
-     * // Count the number of Games
-     * const count = await prisma.game.count({
-     *   where: {
-     *     // ... the filter for the Games we want to count
-     *   }
-     * })
-    **/
-    count<T extends GameCountArgs>(
-      args?: Subset<T, GameCountArgs>,
-    ): Prisma.PrismaPromise<
-      T extends $Utils.Record<'select', any>
-        ? T['select'] extends true
-          ? number
-          : GetScalarType<T['select'], GameCountAggregateOutputType>
-        : number
-    >
-
-    /**
-     * Allows you to perform aggregations operations on a Game.
-     * Note, that providing `undefined` is treated as the value not being there.
-     * Read more here: https://pris.ly/d/null-undefined
-     * @param {GameAggregateArgs} args - Select which aggregations you would like to apply and on what fields.
-     * @example
-     * // Ordered by age ascending
-     * // Where email contains prisma.io
-     * // Limited to the 10 users
-     * const aggregations = await prisma.user.aggregate({
-     *   _avg: {
-     *     age: true,
-     *   },
-     *   where: {
-     *     email: {
-     *       contains: "prisma.io",
-     *     },
-     *   },
-     *   orderBy: {
-     *     age: "asc",
-     *   },
-     *   take: 10,
-     * })
-    **/
-    aggregate<T extends GameAggregateArgs>(args: Subset<T, GameAggregateArgs>): Prisma.PrismaPromise<GetGameAggregateType<T>>
-
-    /**
-     * Group by Game.
-     * Note, that providing `undefined` is treated as the value not being there.
-     * Read more here: https://pris.ly/d/null-undefined
-     * @param {GameGroupByArgs} args - Group by arguments.
-     * @example
-     * // Group by city, order by createdAt, get count
-     * const result = await prisma.user.groupBy({
-     *   by: ['city', 'createdAt'],
-     *   orderBy: {
-     *     createdAt: true
-     *   },
-     *   _count: {
-     *     _all: true
-     *   },
-     * })
-     * 
-    **/
-    groupBy<
-      T extends GameGroupByArgs,
-      HasSelectOrTake extends Or<
-        Extends<'skip', Keys<T>>,
-        Extends<'take', Keys<T>>
-      >,
-      OrderByArg extends True extends HasSelectOrTake
-        ? { orderBy: GameGroupByArgs['orderBy'] }
-        : { orderBy?: GameGroupByArgs['orderBy'] },
-      OrderFields extends ExcludeUnderscoreKeys<Keys<MaybeTupleToUnion<T['orderBy']>>>,
-      ByFields extends MaybeTupleToUnion<T['by']>,
-      ByValid extends Has<ByFields, OrderFields>,
-      HavingFields extends GetHavingFields<T['having']>,
-      HavingValid extends Has<ByFields, HavingFields>,
-      ByEmpty extends T['by'] extends never[] ? True : False,
-      InputErrors extends ByEmpty extends True
-      ? `Error: "by" must not be empty.`
-      : HavingValid extends False
-      ? {
-          [P in HavingFields]: P extends ByFields
-            ? never
-            : P extends string
-            ? `Error: Field "${P}" used in "having" needs to be provided in "by".`
-            : [
-                Error,
-                'Field ',
-                P,
-                ` in "having" needs to be provided in "by"`,
-              ]
-        }[HavingFields]
-      : 'take' extends Keys<T>
-      ? 'orderBy' extends Keys<T>
-        ? ByValid extends True
-          ? {}
-          : {
-              [P in OrderFields]: P extends ByFields
-                ? never
-                : `Error: Field "${P}" in "orderBy" needs to be provided in "by"`
-            }[OrderFields]
-        : 'Error: If you provide "take", you also need to provide "orderBy"'
-      : 'skip' extends Keys<T>
-      ? 'orderBy' extends Keys<T>
-        ? ByValid extends True
-          ? {}
-          : {
-              [P in OrderFields]: P extends ByFields
-                ? never
-                : `Error: Field "${P}" in "orderBy" needs to be provided in "by"`
-            }[OrderFields]
-        : 'Error: If you provide "skip", you also need to provide "orderBy"'
-      : ByValid extends True
-      ? {}
-      : {
-          [P in OrderFields]: P extends ByFields
-            ? never
-            : `Error: Field "${P}" in "orderBy" needs to be provided in "by"`
-        }[OrderFields]
-    >(args: SubsetIntersection<T, GameGroupByArgs, OrderByArg> & InputErrors): {} extends InputErrors ? GetGameGroupByPayload<T> : Prisma.PrismaPromise<InputErrors>
-  /**
-   * Fields of the Game model
-   */
-  readonly fields: GameFieldRefs;
-  }
-
-  /**
-   * The delegate class that acts as a "Promise-like" for Game.
-   * Why is this prefixed with `Prisma__`?
-   * Because we want to prevent naming conflicts as mentioned in
-   * https://github.com/prisma/prisma-client-js/issues/707
-   */
-  export interface Prisma__GameClient<T, Null = never, ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs, GlobalOmitOptions = {}> extends Prisma.PrismaPromise<T> {
-    readonly [Symbol.toStringTag]: "PrismaPromise"
-    bonusDetails<T extends Game$bonusDetailsArgs<ExtArgs> = {}>(args?: Subset<T, Game$bonusDetailsArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$BonusDetailPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
-    gameRounds<T extends Game$gameRoundsArgs<ExtArgs> = {}>(args?: Subset<T, Game$gameRoundsArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$GameRoundPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
-    gameSessions<T extends Game$gameSessionsArgs<ExtArgs> = {}>(args?: Subset<T, Game$gameSessionsArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$GameSessionPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
-    translations<T extends Game$translationsArgs<ExtArgs> = {}>(args?: Subset<T, Game$translationsArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$GameTranslationPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
-    /**
-     * Attaches callbacks for the resolution and/or rejection of the Promise.
-     * @param onfulfilled The callback to execute when the Promise is resolved.
-     * @param onrejected The callback to execute when the Promise is rejected.
-     * @returns A Promise for the completion of which ever callback is executed.
-     */
-    then<TResult1 = T, TResult2 = never>(onfulfilled?: ((value: T) => TResult1 | PromiseLike<TResult1>) | undefined | null, onrejected?: ((reason: any) => TResult2 | PromiseLike<TResult2>) | undefined | null): $Utils.JsPromise<TResult1 | TResult2>
-    /**
-     * Attaches a callback for only the rejection of the Promise.
-     * @param onrejected The callback to execute when the Promise is rejected.
-     * @returns A Promise for the completion of the callback.
-     */
-    catch<TResult = never>(onrejected?: ((reason: any) => TResult | PromiseLike<TResult>) | undefined | null): $Utils.JsPromise<T | TResult>
-    /**
-     * Attaches a callback that is invoked when the Promise is settled (fulfilled or rejected). The
-     * resolved value cannot be modified from the callback.
-     * @param onfinally The callback to execute when the Promise is settled (fulfilled or rejected).
-     * @returns A Promise for the completion of the callback.
-     */
-    finally(onfinally?: (() => void) | undefined | null): $Utils.JsPromise<T>
-  }
-
-
-
-
-  /**
-   * Fields of the Game model
-   */
-  interface GameFieldRefs {
-    readonly id: FieldRef<"Game", 'Int'>
-    readonly aggregatorType: FieldRef<"Game", 'GameAggregatorType'>
-    readonly provider: FieldRef<"Game", 'GameProvider'>
-    readonly category: FieldRef<"Game", 'GameCategory'>
-    readonly gameId: FieldRef<"Game", 'Int'>
-    readonly gameType: FieldRef<"Game", 'String'>
-    readonly tableId: FieldRef<"Game", 'String'>
-    readonly iconLink: FieldRef<"Game", 'String'>
-    readonly isEnabled: FieldRef<"Game", 'Boolean'>
-    readonly isVisibleToUser: FieldRef<"Game", 'Boolean'>
-    readonly houseEdge: FieldRef<"Game", 'Decimal'>
-    readonly contributionRate: FieldRef<"Game", 'Decimal'>
-    readonly createdAt: FieldRef<"Game", 'DateTime'>
-    readonly updatedAt: FieldRef<"Game", 'DateTime'>
-  }
-    
-
-  // Custom InputTypes
-  /**
-   * Game findUnique
-   */
-  export type GameFindUniqueArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
-    /**
-     * Select specific fields to fetch from the Game
-     */
-    select?: GameSelect<ExtArgs> | null
-    /**
-     * Omit specific fields from the Game
-     */
-    omit?: GameOmit<ExtArgs> | null
-    /**
-     * Choose, which related nodes to fetch as well
-     */
-    include?: GameInclude<ExtArgs> | null
-    /**
-     * Filter, which Game to fetch.
-     */
-    where: GameWhereUniqueInput
-  }
-
-  /**
-   * Game findUniqueOrThrow
-   */
-  export type GameFindUniqueOrThrowArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
-    /**
-     * Select specific fields to fetch from the Game
-     */
-    select?: GameSelect<ExtArgs> | null
-    /**
-     * Omit specific fields from the Game
-     */
-    omit?: GameOmit<ExtArgs> | null
-    /**
-     * Choose, which related nodes to fetch as well
-     */
-    include?: GameInclude<ExtArgs> | null
-    /**
-     * Filter, which Game to fetch.
-     */
-    where: GameWhereUniqueInput
-  }
-
-  /**
-   * Game findFirst
-   */
-  export type GameFindFirstArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
-    /**
-     * Select specific fields to fetch from the Game
-     */
-    select?: GameSelect<ExtArgs> | null
-    /**
-     * Omit specific fields from the Game
-     */
-    omit?: GameOmit<ExtArgs> | null
-    /**
-     * Choose, which related nodes to fetch as well
-     */
-    include?: GameInclude<ExtArgs> | null
-    /**
-     * Filter, which Game to fetch.
-     */
-    where?: GameWhereInput
-    /**
-     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/sorting Sorting Docs}
-     * 
-     * Determine the order of Games to fetch.
-     */
-    orderBy?: GameOrderByWithRelationInput | GameOrderByWithRelationInput[]
-    /**
-     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination#cursor-based-pagination Cursor Docs}
-     * 
-     * Sets the position for searching for Games.
-     */
-    cursor?: GameWhereUniqueInput
-    /**
-     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
-     * 
-     * Take `±n` Games from the position of the cursor.
-     */
-    take?: number
-    /**
-     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
-     * 
-     * Skip the first `n` Games.
-     */
-    skip?: number
-    /**
-     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/distinct Distinct Docs}
-     * 
-     * Filter by unique combinations of Games.
-     */
-    distinct?: GameScalarFieldEnum | GameScalarFieldEnum[]
-  }
-
-  /**
-   * Game findFirstOrThrow
-   */
-  export type GameFindFirstOrThrowArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
-    /**
-     * Select specific fields to fetch from the Game
-     */
-    select?: GameSelect<ExtArgs> | null
-    /**
-     * Omit specific fields from the Game
-     */
-    omit?: GameOmit<ExtArgs> | null
-    /**
-     * Choose, which related nodes to fetch as well
-     */
-    include?: GameInclude<ExtArgs> | null
-    /**
-     * Filter, which Game to fetch.
-     */
-    where?: GameWhereInput
-    /**
-     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/sorting Sorting Docs}
-     * 
-     * Determine the order of Games to fetch.
-     */
-    orderBy?: GameOrderByWithRelationInput | GameOrderByWithRelationInput[]
-    /**
-     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination#cursor-based-pagination Cursor Docs}
-     * 
-     * Sets the position for searching for Games.
-     */
-    cursor?: GameWhereUniqueInput
-    /**
-     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
-     * 
-     * Take `±n` Games from the position of the cursor.
-     */
-    take?: number
-    /**
-     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
-     * 
-     * Skip the first `n` Games.
-     */
-    skip?: number
-    /**
-     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/distinct Distinct Docs}
-     * 
-     * Filter by unique combinations of Games.
-     */
-    distinct?: GameScalarFieldEnum | GameScalarFieldEnum[]
-  }
-
-  /**
-   * Game findMany
-   */
-  export type GameFindManyArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
-    /**
-     * Select specific fields to fetch from the Game
-     */
-    select?: GameSelect<ExtArgs> | null
-    /**
-     * Omit specific fields from the Game
-     */
-    omit?: GameOmit<ExtArgs> | null
-    /**
-     * Choose, which related nodes to fetch as well
-     */
-    include?: GameInclude<ExtArgs> | null
-    /**
-     * Filter, which Games to fetch.
-     */
-    where?: GameWhereInput
-    /**
-     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/sorting Sorting Docs}
-     * 
-     * Determine the order of Games to fetch.
-     */
-    orderBy?: GameOrderByWithRelationInput | GameOrderByWithRelationInput[]
-    /**
-     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination#cursor-based-pagination Cursor Docs}
-     * 
-     * Sets the position for listing Games.
-     */
-    cursor?: GameWhereUniqueInput
-    /**
-     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
-     * 
-     * Take `±n` Games from the position of the cursor.
-     */
-    take?: number
-    /**
-     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
-     * 
-     * Skip the first `n` Games.
-     */
-    skip?: number
-    distinct?: GameScalarFieldEnum | GameScalarFieldEnum[]
-  }
-
-  /**
-   * Game create
-   */
-  export type GameCreateArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
-    /**
-     * Select specific fields to fetch from the Game
-     */
-    select?: GameSelect<ExtArgs> | null
-    /**
-     * Omit specific fields from the Game
-     */
-    omit?: GameOmit<ExtArgs> | null
-    /**
-     * Choose, which related nodes to fetch as well
-     */
-    include?: GameInclude<ExtArgs> | null
-    /**
-     * The data needed to create a Game.
-     */
-    data: XOR<GameCreateInput, GameUncheckedCreateInput>
-  }
-
-  /**
-   * Game createMany
-   */
-  export type GameCreateManyArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
-    /**
-     * The data used to create many Games.
-     */
-    data: GameCreateManyInput | GameCreateManyInput[]
-    skipDuplicates?: boolean
-  }
-
-  /**
-   * Game createManyAndReturn
-   */
-  export type GameCreateManyAndReturnArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
-    /**
-     * Select specific fields to fetch from the Game
-     */
-    select?: GameSelectCreateManyAndReturn<ExtArgs> | null
-    /**
-     * Omit specific fields from the Game
-     */
-    omit?: GameOmit<ExtArgs> | null
-    /**
-     * The data used to create many Games.
-     */
-    data: GameCreateManyInput | GameCreateManyInput[]
-    skipDuplicates?: boolean
-  }
-
-  /**
-   * Game update
-   */
-  export type GameUpdateArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
-    /**
-     * Select specific fields to fetch from the Game
-     */
-    select?: GameSelect<ExtArgs> | null
-    /**
-     * Omit specific fields from the Game
-     */
-    omit?: GameOmit<ExtArgs> | null
-    /**
-     * Choose, which related nodes to fetch as well
-     */
-    include?: GameInclude<ExtArgs> | null
-    /**
-     * The data needed to update a Game.
-     */
-    data: XOR<GameUpdateInput, GameUncheckedUpdateInput>
-    /**
-     * Choose, which Game to update.
-     */
-    where: GameWhereUniqueInput
-  }
-
-  /**
-   * Game updateMany
-   */
-  export type GameUpdateManyArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
-    /**
-     * The data used to update Games.
-     */
-    data: XOR<GameUpdateManyMutationInput, GameUncheckedUpdateManyInput>
-    /**
-     * Filter which Games to update
-     */
-    where?: GameWhereInput
-    /**
-     * Limit how many Games to update.
-     */
-    limit?: number
-  }
-
-  /**
-   * Game updateManyAndReturn
-   */
-  export type GameUpdateManyAndReturnArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
-    /**
-     * Select specific fields to fetch from the Game
-     */
-    select?: GameSelectUpdateManyAndReturn<ExtArgs> | null
-    /**
-     * Omit specific fields from the Game
-     */
-    omit?: GameOmit<ExtArgs> | null
-    /**
-     * The data used to update Games.
-     */
-    data: XOR<GameUpdateManyMutationInput, GameUncheckedUpdateManyInput>
-    /**
-     * Filter which Games to update
-     */
-    where?: GameWhereInput
-    /**
-     * Limit how many Games to update.
-     */
-    limit?: number
-  }
-
-  /**
-   * Game upsert
-   */
-  export type GameUpsertArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
-    /**
-     * Select specific fields to fetch from the Game
-     */
-    select?: GameSelect<ExtArgs> | null
-    /**
-     * Omit specific fields from the Game
-     */
-    omit?: GameOmit<ExtArgs> | null
-    /**
-     * Choose, which related nodes to fetch as well
-     */
-    include?: GameInclude<ExtArgs> | null
-    /**
-     * The filter to search for the Game to update in case it exists.
-     */
-    where: GameWhereUniqueInput
-    /**
-     * In case the Game found by the `where` argument doesn't exist, create a new Game with this data.
-     */
-    create: XOR<GameCreateInput, GameUncheckedCreateInput>
-    /**
-     * In case the Game was found with the provided `where` argument, update it with this data.
-     */
-    update: XOR<GameUpdateInput, GameUncheckedUpdateInput>
-  }
-
-  /**
-   * Game delete
-   */
-  export type GameDeleteArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
-    /**
-     * Select specific fields to fetch from the Game
-     */
-    select?: GameSelect<ExtArgs> | null
-    /**
-     * Omit specific fields from the Game
-     */
-    omit?: GameOmit<ExtArgs> | null
-    /**
-     * Choose, which related nodes to fetch as well
-     */
-    include?: GameInclude<ExtArgs> | null
-    /**
-     * Filter which Game to delete.
-     */
-    where: GameWhereUniqueInput
-  }
-
-  /**
-   * Game deleteMany
-   */
-  export type GameDeleteManyArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
-    /**
-     * Filter which Games to delete
-     */
-    where?: GameWhereInput
-    /**
-     * Limit how many Games to delete.
-     */
-    limit?: number
-  }
-
-  /**
-   * Game.bonusDetails
-   */
-  export type Game$bonusDetailsArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
-    /**
-     * Select specific fields to fetch from the BonusDetail
-     */
-    select?: BonusDetailSelect<ExtArgs> | null
-    /**
-     * Omit specific fields from the BonusDetail
-     */
-    omit?: BonusDetailOmit<ExtArgs> | null
-    /**
-     * Choose, which related nodes to fetch as well
-     */
-    include?: BonusDetailInclude<ExtArgs> | null
-    where?: BonusDetailWhereInput
-    orderBy?: BonusDetailOrderByWithRelationInput | BonusDetailOrderByWithRelationInput[]
-    cursor?: BonusDetailWhereUniqueInput
-    take?: number
-    skip?: number
-    distinct?: BonusDetailScalarFieldEnum | BonusDetailScalarFieldEnum[]
-  }
-
-  /**
-   * Game.gameRounds
-   */
-  export type Game$gameRoundsArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
-    /**
-     * Select specific fields to fetch from the GameRound
-     */
-    select?: GameRoundSelect<ExtArgs> | null
-    /**
-     * Omit specific fields from the GameRound
-     */
-    omit?: GameRoundOmit<ExtArgs> | null
-    /**
-     * Choose, which related nodes to fetch as well
-     */
-    include?: GameRoundInclude<ExtArgs> | null
-    where?: GameRoundWhereInput
-    orderBy?: GameRoundOrderByWithRelationInput | GameRoundOrderByWithRelationInput[]
-    cursor?: GameRoundWhereUniqueInput
-    take?: number
-    skip?: number
-    distinct?: GameRoundScalarFieldEnum | GameRoundScalarFieldEnum[]
-  }
-
-  /**
-   * Game.gameSessions
-   */
-  export type Game$gameSessionsArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
-    /**
-     * Select specific fields to fetch from the GameSession
-     */
-    select?: GameSessionSelect<ExtArgs> | null
-    /**
-     * Omit specific fields from the GameSession
-     */
-    omit?: GameSessionOmit<ExtArgs> | null
-    /**
-     * Choose, which related nodes to fetch as well
-     */
-    include?: GameSessionInclude<ExtArgs> | null
-    where?: GameSessionWhereInput
-    orderBy?: GameSessionOrderByWithRelationInput | GameSessionOrderByWithRelationInput[]
-    cursor?: GameSessionWhereUniqueInput
-    take?: number
-    skip?: number
-    distinct?: GameSessionScalarFieldEnum | GameSessionScalarFieldEnum[]
-  }
-
-  /**
-   * Game.translations
-   */
-  export type Game$translationsArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
-    /**
-     * Select specific fields to fetch from the GameTranslation
-     */
-    select?: GameTranslationSelect<ExtArgs> | null
-    /**
-     * Omit specific fields from the GameTranslation
-     */
-    omit?: GameTranslationOmit<ExtArgs> | null
-    /**
-     * Choose, which related nodes to fetch as well
-     */
-    include?: GameTranslationInclude<ExtArgs> | null
-    where?: GameTranslationWhereInput
-    orderBy?: GameTranslationOrderByWithRelationInput | GameTranslationOrderByWithRelationInput[]
-    cursor?: GameTranslationWhereUniqueInput
-    take?: number
-    skip?: number
-    distinct?: GameTranslationScalarFieldEnum | GameTranslationScalarFieldEnum[]
-  }
-
-  /**
-   * Game without action
-   */
-  export type GameDefaultArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
-    /**
-     * Select specific fields to fetch from the Game
-     */
-    select?: GameSelect<ExtArgs> | null
-    /**
-     * Omit specific fields from the Game
-     */
-    omit?: GameOmit<ExtArgs> | null
-    /**
-     * Choose, which related nodes to fetch as well
-     */
-    include?: GameInclude<ExtArgs> | null
-  }
-
-
-  /**
-   * Model GameTranslation
-   */
-
-  export type AggregateGameTranslation = {
-    _count: GameTranslationCountAggregateOutputType | null
-    _avg: GameTranslationAvgAggregateOutputType | null
-    _sum: GameTranslationSumAggregateOutputType | null
-    _min: GameTranslationMinAggregateOutputType | null
-    _max: GameTranslationMaxAggregateOutputType | null
-  }
-
-  export type GameTranslationAvgAggregateOutputType = {
-    id: number | null
-    gameId: number | null
-  }
-
-  export type GameTranslationSumAggregateOutputType = {
-    id: number | null
-    gameId: number | null
-  }
-
-  export type GameTranslationMinAggregateOutputType = {
-    id: number | null
-    gameId: number | null
-    language: $Enums.Language | null
-    providerName: string | null
-    categoryName: string | null
-    gameName: string | null
-    createdAt: Date | null
-    updatedAt: Date | null
-  }
-
-  export type GameTranslationMaxAggregateOutputType = {
-    id: number | null
-    gameId: number | null
-    language: $Enums.Language | null
-    providerName: string | null
-    categoryName: string | null
-    gameName: string | null
-    createdAt: Date | null
-    updatedAt: Date | null
-  }
-
-  export type GameTranslationCountAggregateOutputType = {
-    id: number
-    gameId: number
-    language: number
-    providerName: number
-    categoryName: number
-    gameName: number
-    createdAt: number
-    updatedAt: number
-    _all: number
-  }
-
-
-  export type GameTranslationAvgAggregateInputType = {
-    id?: true
-    gameId?: true
-  }
-
-  export type GameTranslationSumAggregateInputType = {
-    id?: true
-    gameId?: true
-  }
-
-  export type GameTranslationMinAggregateInputType = {
-    id?: true
-    gameId?: true
-    language?: true
-    providerName?: true
-    categoryName?: true
-    gameName?: true
-    createdAt?: true
-    updatedAt?: true
-  }
-
-  export type GameTranslationMaxAggregateInputType = {
-    id?: true
-    gameId?: true
-    language?: true
-    providerName?: true
-    categoryName?: true
-    gameName?: true
-    createdAt?: true
-    updatedAt?: true
-  }
-
-  export type GameTranslationCountAggregateInputType = {
-    id?: true
-    gameId?: true
-    language?: true
-    providerName?: true
-    categoryName?: true
-    gameName?: true
-    createdAt?: true
-    updatedAt?: true
-    _all?: true
-  }
-
-  export type GameTranslationAggregateArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
-    /**
-     * Filter which GameTranslation to aggregate.
-     */
-    where?: GameTranslationWhereInput
-    /**
-     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/sorting Sorting Docs}
-     * 
-     * Determine the order of GameTranslations to fetch.
-     */
-    orderBy?: GameTranslationOrderByWithRelationInput | GameTranslationOrderByWithRelationInput[]
-    /**
-     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination#cursor-based-pagination Cursor Docs}
-     * 
-     * Sets the start position
-     */
-    cursor?: GameTranslationWhereUniqueInput
-    /**
-     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
-     * 
-     * Take `±n` GameTranslations from the position of the cursor.
-     */
-    take?: number
-    /**
-     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
-     * 
-     * Skip the first `n` GameTranslations.
-     */
-    skip?: number
-    /**
-     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
-     * 
-     * Count returned GameTranslations
-    **/
-    _count?: true | GameTranslationCountAggregateInputType
-    /**
-     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
-     * 
-     * Select which fields to average
-    **/
-    _avg?: GameTranslationAvgAggregateInputType
-    /**
-     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
-     * 
-     * Select which fields to sum
-    **/
-    _sum?: GameTranslationSumAggregateInputType
-    /**
-     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
-     * 
-     * Select which fields to find the minimum value
-    **/
-    _min?: GameTranslationMinAggregateInputType
-    /**
-     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
-     * 
-     * Select which fields to find the maximum value
-    **/
-    _max?: GameTranslationMaxAggregateInputType
-  }
-
-  export type GetGameTranslationAggregateType<T extends GameTranslationAggregateArgs> = {
-        [P in keyof T & keyof AggregateGameTranslation]: P extends '_count' | 'count'
-      ? T[P] extends true
-        ? number
-        : GetScalarType<T[P], AggregateGameTranslation[P]>
-      : GetScalarType<T[P], AggregateGameTranslation[P]>
-  }
-
-
-
-
-  export type GameTranslationGroupByArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
-    where?: GameTranslationWhereInput
-    orderBy?: GameTranslationOrderByWithAggregationInput | GameTranslationOrderByWithAggregationInput[]
-    by: GameTranslationScalarFieldEnum[] | GameTranslationScalarFieldEnum
-    having?: GameTranslationScalarWhereWithAggregatesInput
-    take?: number
-    skip?: number
-    _count?: GameTranslationCountAggregateInputType | true
-    _avg?: GameTranslationAvgAggregateInputType
-    _sum?: GameTranslationSumAggregateInputType
-    _min?: GameTranslationMinAggregateInputType
-    _max?: GameTranslationMaxAggregateInputType
-  }
-
-  export type GameTranslationGroupByOutputType = {
-    id: number
-    gameId: number
-    language: $Enums.Language
-    providerName: string
-    categoryName: string
-    gameName: string
-    createdAt: Date
-    updatedAt: Date
-    _count: GameTranslationCountAggregateOutputType | null
-    _avg: GameTranslationAvgAggregateOutputType | null
-    _sum: GameTranslationSumAggregateOutputType | null
-    _min: GameTranslationMinAggregateOutputType | null
-    _max: GameTranslationMaxAggregateOutputType | null
-  }
-
-  type GetGameTranslationGroupByPayload<T extends GameTranslationGroupByArgs> = Prisma.PrismaPromise<
-    Array<
-      PickEnumerable<GameTranslationGroupByOutputType, T['by']> &
-        {
-          [P in ((keyof T) & (keyof GameTranslationGroupByOutputType))]: P extends '_count'
-            ? T[P] extends boolean
-              ? number
-              : GetScalarType<T[P], GameTranslationGroupByOutputType[P]>
-            : GetScalarType<T[P], GameTranslationGroupByOutputType[P]>
-        }
-      >
-    >
-
-
-  export type GameTranslationSelect<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetSelect<{
-    id?: boolean
-    gameId?: boolean
-    language?: boolean
-    providerName?: boolean
-    categoryName?: boolean
-    gameName?: boolean
-    createdAt?: boolean
-    updatedAt?: boolean
-    game?: boolean | GameDefaultArgs<ExtArgs>
-  }, ExtArgs["result"]["gameTranslation"]>
-
-  export type GameTranslationSelectCreateManyAndReturn<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetSelect<{
-    id?: boolean
-    gameId?: boolean
-    language?: boolean
-    providerName?: boolean
-    categoryName?: boolean
-    gameName?: boolean
-    createdAt?: boolean
-    updatedAt?: boolean
-    game?: boolean | GameDefaultArgs<ExtArgs>
-  }, ExtArgs["result"]["gameTranslation"]>
-
-  export type GameTranslationSelectUpdateManyAndReturn<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetSelect<{
-    id?: boolean
-    gameId?: boolean
-    language?: boolean
-    providerName?: boolean
-    categoryName?: boolean
-    gameName?: boolean
-    createdAt?: boolean
-    updatedAt?: boolean
-    game?: boolean | GameDefaultArgs<ExtArgs>
-  }, ExtArgs["result"]["gameTranslation"]>
-
-  export type GameTranslationSelectScalar = {
-    id?: boolean
-    gameId?: boolean
-    language?: boolean
-    providerName?: boolean
-    categoryName?: boolean
-    gameName?: boolean
-    createdAt?: boolean
-    updatedAt?: boolean
-  }
-
-  export type GameTranslationOmit<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetOmit<"id" | "gameId" | "language" | "providerName" | "categoryName" | "gameName" | "createdAt" | "updatedAt", ExtArgs["result"]["gameTranslation"]>
-  export type GameTranslationInclude<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
-    game?: boolean | GameDefaultArgs<ExtArgs>
-  }
-  export type GameTranslationIncludeCreateManyAndReturn<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
-    game?: boolean | GameDefaultArgs<ExtArgs>
-  }
-  export type GameTranslationIncludeUpdateManyAndReturn<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
-    game?: boolean | GameDefaultArgs<ExtArgs>
-  }
-
-  export type $GameTranslationPayload<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
-    name: "GameTranslation"
-    objects: {
-      game: Prisma.$GamePayload<ExtArgs>
-    }
-    scalars: $Extensions.GetPayloadResult<{
-      id: number
-      gameId: number
-      language: $Enums.Language
-      providerName: string
-      categoryName: string
-      gameName: string
-      createdAt: Date
-      updatedAt: Date
-    }, ExtArgs["result"]["gameTranslation"]>
-    composites: {}
-  }
-
-  type GameTranslationGetPayload<S extends boolean | null | undefined | GameTranslationDefaultArgs> = $Result.GetResult<Prisma.$GameTranslationPayload, S>
-
-  type GameTranslationCountArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> =
-    Omit<GameTranslationFindManyArgs, 'select' | 'include' | 'distinct' | 'omit'> & {
-      select?: GameTranslationCountAggregateInputType | true
-    }
-
-  export interface GameTranslationDelegate<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs, GlobalOmitOptions = {}> {
-    [K: symbol]: { types: Prisma.TypeMap<ExtArgs>['model']['GameTranslation'], meta: { name: 'GameTranslation' } }
-    /**
-     * Find zero or one GameTranslation that matches the filter.
-     * @param {GameTranslationFindUniqueArgs} args - Arguments to find a GameTranslation
-     * @example
-     * // Get one GameTranslation
-     * const gameTranslation = await prisma.gameTranslation.findUnique({
-     *   where: {
-     *     // ... provide filter here
-     *   }
-     * })
-     */
-    findUnique<T extends GameTranslationFindUniqueArgs>(args: SelectSubset<T, GameTranslationFindUniqueArgs<ExtArgs>>): Prisma__GameTranslationClient<$Result.GetResult<Prisma.$GameTranslationPayload<ExtArgs>, T, "findUnique", GlobalOmitOptions> | null, null, ExtArgs, GlobalOmitOptions>
-
-    /**
-     * Find one GameTranslation that matches the filter or throw an error with `error.code='P2025'`
-     * if no matches were found.
-     * @param {GameTranslationFindUniqueOrThrowArgs} args - Arguments to find a GameTranslation
-     * @example
-     * // Get one GameTranslation
-     * const gameTranslation = await prisma.gameTranslation.findUniqueOrThrow({
-     *   where: {
-     *     // ... provide filter here
-     *   }
-     * })
-     */
-    findUniqueOrThrow<T extends GameTranslationFindUniqueOrThrowArgs>(args: SelectSubset<T, GameTranslationFindUniqueOrThrowArgs<ExtArgs>>): Prisma__GameTranslationClient<$Result.GetResult<Prisma.$GameTranslationPayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
-
-    /**
-     * Find the first GameTranslation that matches the filter.
-     * Note, that providing `undefined` is treated as the value not being there.
-     * Read more here: https://pris.ly/d/null-undefined
-     * @param {GameTranslationFindFirstArgs} args - Arguments to find a GameTranslation
-     * @example
-     * // Get one GameTranslation
-     * const gameTranslation = await prisma.gameTranslation.findFirst({
-     *   where: {
-     *     // ... provide filter here
-     *   }
-     * })
-     */
-    findFirst<T extends GameTranslationFindFirstArgs>(args?: SelectSubset<T, GameTranslationFindFirstArgs<ExtArgs>>): Prisma__GameTranslationClient<$Result.GetResult<Prisma.$GameTranslationPayload<ExtArgs>, T, "findFirst", GlobalOmitOptions> | null, null, ExtArgs, GlobalOmitOptions>
-
-    /**
-     * Find the first GameTranslation that matches the filter or
-     * throw `PrismaKnownClientError` with `P2025` code if no matches were found.
-     * Note, that providing `undefined` is treated as the value not being there.
-     * Read more here: https://pris.ly/d/null-undefined
-     * @param {GameTranslationFindFirstOrThrowArgs} args - Arguments to find a GameTranslation
-     * @example
-     * // Get one GameTranslation
-     * const gameTranslation = await prisma.gameTranslation.findFirstOrThrow({
-     *   where: {
-     *     // ... provide filter here
-     *   }
-     * })
-     */
-    findFirstOrThrow<T extends GameTranslationFindFirstOrThrowArgs>(args?: SelectSubset<T, GameTranslationFindFirstOrThrowArgs<ExtArgs>>): Prisma__GameTranslationClient<$Result.GetResult<Prisma.$GameTranslationPayload<ExtArgs>, T, "findFirstOrThrow", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
-
-    /**
-     * Find zero or more GameTranslations that matches the filter.
-     * Note, that providing `undefined` is treated as the value not being there.
-     * Read more here: https://pris.ly/d/null-undefined
-     * @param {GameTranslationFindManyArgs} args - Arguments to filter and select certain fields only.
-     * @example
-     * // Get all GameTranslations
-     * const gameTranslations = await prisma.gameTranslation.findMany()
-     * 
-     * // Get first 10 GameTranslations
-     * const gameTranslations = await prisma.gameTranslation.findMany({ take: 10 })
-     * 
-     * // Only select the `id`
-     * const gameTranslationWithIdOnly = await prisma.gameTranslation.findMany({ select: { id: true } })
-     * 
-     */
-    findMany<T extends GameTranslationFindManyArgs>(args?: SelectSubset<T, GameTranslationFindManyArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$GameTranslationPayload<ExtArgs>, T, "findMany", GlobalOmitOptions>>
-
-    /**
-     * Create a GameTranslation.
-     * @param {GameTranslationCreateArgs} args - Arguments to create a GameTranslation.
-     * @example
-     * // Create one GameTranslation
-     * const GameTranslation = await prisma.gameTranslation.create({
-     *   data: {
-     *     // ... data to create a GameTranslation
-     *   }
-     * })
-     * 
-     */
-    create<T extends GameTranslationCreateArgs>(args: SelectSubset<T, GameTranslationCreateArgs<ExtArgs>>): Prisma__GameTranslationClient<$Result.GetResult<Prisma.$GameTranslationPayload<ExtArgs>, T, "create", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
-
-    /**
-     * Create many GameTranslations.
-     * @param {GameTranslationCreateManyArgs} args - Arguments to create many GameTranslations.
-     * @example
-     * // Create many GameTranslations
-     * const gameTranslation = await prisma.gameTranslation.createMany({
-     *   data: [
-     *     // ... provide data here
-     *   ]
-     * })
-     *     
-     */
-    createMany<T extends GameTranslationCreateManyArgs>(args?: SelectSubset<T, GameTranslationCreateManyArgs<ExtArgs>>): Prisma.PrismaPromise<BatchPayload>
-
-    /**
-     * Create many GameTranslations and returns the data saved in the database.
-     * @param {GameTranslationCreateManyAndReturnArgs} args - Arguments to create many GameTranslations.
-     * @example
-     * // Create many GameTranslations
-     * const gameTranslation = await prisma.gameTranslation.createManyAndReturn({
-     *   data: [
-     *     // ... provide data here
-     *   ]
-     * })
-     * 
-     * // Create many GameTranslations and only return the `id`
-     * const gameTranslationWithIdOnly = await prisma.gameTranslation.createManyAndReturn({
-     *   select: { id: true },
-     *   data: [
-     *     // ... provide data here
-     *   ]
-     * })
-     * Note, that providing `undefined` is treated as the value not being there.
-     * Read more here: https://pris.ly/d/null-undefined
-     * 
-     */
-    createManyAndReturn<T extends GameTranslationCreateManyAndReturnArgs>(args?: SelectSubset<T, GameTranslationCreateManyAndReturnArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$GameTranslationPayload<ExtArgs>, T, "createManyAndReturn", GlobalOmitOptions>>
-
-    /**
-     * Delete a GameTranslation.
-     * @param {GameTranslationDeleteArgs} args - Arguments to delete one GameTranslation.
-     * @example
-     * // Delete one GameTranslation
-     * const GameTranslation = await prisma.gameTranslation.delete({
-     *   where: {
-     *     // ... filter to delete one GameTranslation
-     *   }
-     * })
-     * 
-     */
-    delete<T extends GameTranslationDeleteArgs>(args: SelectSubset<T, GameTranslationDeleteArgs<ExtArgs>>): Prisma__GameTranslationClient<$Result.GetResult<Prisma.$GameTranslationPayload<ExtArgs>, T, "delete", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
-
-    /**
-     * Update one GameTranslation.
-     * @param {GameTranslationUpdateArgs} args - Arguments to update one GameTranslation.
-     * @example
-     * // Update one GameTranslation
-     * const gameTranslation = await prisma.gameTranslation.update({
-     *   where: {
-     *     // ... provide filter here
-     *   },
-     *   data: {
-     *     // ... provide data here
-     *   }
-     * })
-     * 
-     */
-    update<T extends GameTranslationUpdateArgs>(args: SelectSubset<T, GameTranslationUpdateArgs<ExtArgs>>): Prisma__GameTranslationClient<$Result.GetResult<Prisma.$GameTranslationPayload<ExtArgs>, T, "update", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
-
-    /**
-     * Delete zero or more GameTranslations.
-     * @param {GameTranslationDeleteManyArgs} args - Arguments to filter GameTranslations to delete.
-     * @example
-     * // Delete a few GameTranslations
-     * const { count } = await prisma.gameTranslation.deleteMany({
-     *   where: {
-     *     // ... provide filter here
-     *   }
-     * })
-     * 
-     */
-    deleteMany<T extends GameTranslationDeleteManyArgs>(args?: SelectSubset<T, GameTranslationDeleteManyArgs<ExtArgs>>): Prisma.PrismaPromise<BatchPayload>
-
-    /**
-     * Update zero or more GameTranslations.
-     * Note, that providing `undefined` is treated as the value not being there.
-     * Read more here: https://pris.ly/d/null-undefined
-     * @param {GameTranslationUpdateManyArgs} args - Arguments to update one or more rows.
-     * @example
-     * // Update many GameTranslations
-     * const gameTranslation = await prisma.gameTranslation.updateMany({
-     *   where: {
-     *     // ... provide filter here
-     *   },
-     *   data: {
-     *     // ... provide data here
-     *   }
-     * })
-     * 
-     */
-    updateMany<T extends GameTranslationUpdateManyArgs>(args: SelectSubset<T, GameTranslationUpdateManyArgs<ExtArgs>>): Prisma.PrismaPromise<BatchPayload>
-
-    /**
-     * Update zero or more GameTranslations and returns the data updated in the database.
-     * @param {GameTranslationUpdateManyAndReturnArgs} args - Arguments to update many GameTranslations.
-     * @example
-     * // Update many GameTranslations
-     * const gameTranslation = await prisma.gameTranslation.updateManyAndReturn({
-     *   where: {
-     *     // ... provide filter here
-     *   },
-     *   data: [
-     *     // ... provide data here
-     *   ]
-     * })
-     * 
-     * // Update zero or more GameTranslations and only return the `id`
-     * const gameTranslationWithIdOnly = await prisma.gameTranslation.updateManyAndReturn({
-     *   select: { id: true },
-     *   where: {
-     *     // ... provide filter here
-     *   },
-     *   data: [
-     *     // ... provide data here
-     *   ]
-     * })
-     * Note, that providing `undefined` is treated as the value not being there.
-     * Read more here: https://pris.ly/d/null-undefined
-     * 
-     */
-    updateManyAndReturn<T extends GameTranslationUpdateManyAndReturnArgs>(args: SelectSubset<T, GameTranslationUpdateManyAndReturnArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$GameTranslationPayload<ExtArgs>, T, "updateManyAndReturn", GlobalOmitOptions>>
-
-    /**
-     * Create or update one GameTranslation.
-     * @param {GameTranslationUpsertArgs} args - Arguments to update or create a GameTranslation.
-     * @example
-     * // Update or create a GameTranslation
-     * const gameTranslation = await prisma.gameTranslation.upsert({
-     *   create: {
-     *     // ... data to create a GameTranslation
-     *   },
-     *   update: {
-     *     // ... in case it already exists, update
-     *   },
-     *   where: {
-     *     // ... the filter for the GameTranslation we want to update
-     *   }
-     * })
-     */
-    upsert<T extends GameTranslationUpsertArgs>(args: SelectSubset<T, GameTranslationUpsertArgs<ExtArgs>>): Prisma__GameTranslationClient<$Result.GetResult<Prisma.$GameTranslationPayload<ExtArgs>, T, "upsert", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
-
-
-    /**
-     * Count the number of GameTranslations.
-     * Note, that providing `undefined` is treated as the value not being there.
-     * Read more here: https://pris.ly/d/null-undefined
-     * @param {GameTranslationCountArgs} args - Arguments to filter GameTranslations to count.
-     * @example
-     * // Count the number of GameTranslations
-     * const count = await prisma.gameTranslation.count({
-     *   where: {
-     *     // ... the filter for the GameTranslations we want to count
-     *   }
-     * })
-    **/
-    count<T extends GameTranslationCountArgs>(
-      args?: Subset<T, GameTranslationCountArgs>,
-    ): Prisma.PrismaPromise<
-      T extends $Utils.Record<'select', any>
-        ? T['select'] extends true
-          ? number
-          : GetScalarType<T['select'], GameTranslationCountAggregateOutputType>
-        : number
-    >
-
-    /**
-     * Allows you to perform aggregations operations on a GameTranslation.
-     * Note, that providing `undefined` is treated as the value not being there.
-     * Read more here: https://pris.ly/d/null-undefined
-     * @param {GameTranslationAggregateArgs} args - Select which aggregations you would like to apply and on what fields.
-     * @example
-     * // Ordered by age ascending
-     * // Where email contains prisma.io
-     * // Limited to the 10 users
-     * const aggregations = await prisma.user.aggregate({
-     *   _avg: {
-     *     age: true,
-     *   },
-     *   where: {
-     *     email: {
-     *       contains: "prisma.io",
-     *     },
-     *   },
-     *   orderBy: {
-     *     age: "asc",
-     *   },
-     *   take: 10,
-     * })
-    **/
-    aggregate<T extends GameTranslationAggregateArgs>(args: Subset<T, GameTranslationAggregateArgs>): Prisma.PrismaPromise<GetGameTranslationAggregateType<T>>
-
-    /**
-     * Group by GameTranslation.
-     * Note, that providing `undefined` is treated as the value not being there.
-     * Read more here: https://pris.ly/d/null-undefined
-     * @param {GameTranslationGroupByArgs} args - Group by arguments.
-     * @example
-     * // Group by city, order by createdAt, get count
-     * const result = await prisma.user.groupBy({
-     *   by: ['city', 'createdAt'],
-     *   orderBy: {
-     *     createdAt: true
-     *   },
-     *   _count: {
-     *     _all: true
-     *   },
-     * })
-     * 
-    **/
-    groupBy<
-      T extends GameTranslationGroupByArgs,
-      HasSelectOrTake extends Or<
-        Extends<'skip', Keys<T>>,
-        Extends<'take', Keys<T>>
-      >,
-      OrderByArg extends True extends HasSelectOrTake
-        ? { orderBy: GameTranslationGroupByArgs['orderBy'] }
-        : { orderBy?: GameTranslationGroupByArgs['orderBy'] },
-      OrderFields extends ExcludeUnderscoreKeys<Keys<MaybeTupleToUnion<T['orderBy']>>>,
-      ByFields extends MaybeTupleToUnion<T['by']>,
-      ByValid extends Has<ByFields, OrderFields>,
-      HavingFields extends GetHavingFields<T['having']>,
-      HavingValid extends Has<ByFields, HavingFields>,
-      ByEmpty extends T['by'] extends never[] ? True : False,
-      InputErrors extends ByEmpty extends True
-      ? `Error: "by" must not be empty.`
-      : HavingValid extends False
-      ? {
-          [P in HavingFields]: P extends ByFields
-            ? never
-            : P extends string
-            ? `Error: Field "${P}" used in "having" needs to be provided in "by".`
-            : [
-                Error,
-                'Field ',
-                P,
-                ` in "having" needs to be provided in "by"`,
-              ]
-        }[HavingFields]
-      : 'take' extends Keys<T>
-      ? 'orderBy' extends Keys<T>
-        ? ByValid extends True
-          ? {}
-          : {
-              [P in OrderFields]: P extends ByFields
-                ? never
-                : `Error: Field "${P}" in "orderBy" needs to be provided in "by"`
-            }[OrderFields]
-        : 'Error: If you provide "take", you also need to provide "orderBy"'
-      : 'skip' extends Keys<T>
-      ? 'orderBy' extends Keys<T>
-        ? ByValid extends True
-          ? {}
-          : {
-              [P in OrderFields]: P extends ByFields
-                ? never
-                : `Error: Field "${P}" in "orderBy" needs to be provided in "by"`
-            }[OrderFields]
-        : 'Error: If you provide "skip", you also need to provide "orderBy"'
-      : ByValid extends True
-      ? {}
-      : {
-          [P in OrderFields]: P extends ByFields
-            ? never
-            : `Error: Field "${P}" in "orderBy" needs to be provided in "by"`
-        }[OrderFields]
-    >(args: SubsetIntersection<T, GameTranslationGroupByArgs, OrderByArg> & InputErrors): {} extends InputErrors ? GetGameTranslationGroupByPayload<T> : Prisma.PrismaPromise<InputErrors>
-  /**
-   * Fields of the GameTranslation model
-   */
-  readonly fields: GameTranslationFieldRefs;
-  }
-
-  /**
-   * The delegate class that acts as a "Promise-like" for GameTranslation.
-   * Why is this prefixed with `Prisma__`?
-   * Because we want to prevent naming conflicts as mentioned in
-   * https://github.com/prisma/prisma-client-js/issues/707
-   */
-  export interface Prisma__GameTranslationClient<T, Null = never, ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs, GlobalOmitOptions = {}> extends Prisma.PrismaPromise<T> {
-    readonly [Symbol.toStringTag]: "PrismaPromise"
-    game<T extends GameDefaultArgs<ExtArgs> = {}>(args?: Subset<T, GameDefaultArgs<ExtArgs>>): Prisma__GameClient<$Result.GetResult<Prisma.$GamePayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions> | Null, Null, ExtArgs, GlobalOmitOptions>
-    /**
-     * Attaches callbacks for the resolution and/or rejection of the Promise.
-     * @param onfulfilled The callback to execute when the Promise is resolved.
-     * @param onrejected The callback to execute when the Promise is rejected.
-     * @returns A Promise for the completion of which ever callback is executed.
-     */
-    then<TResult1 = T, TResult2 = never>(onfulfilled?: ((value: T) => TResult1 | PromiseLike<TResult1>) | undefined | null, onrejected?: ((reason: any) => TResult2 | PromiseLike<TResult2>) | undefined | null): $Utils.JsPromise<TResult1 | TResult2>
-    /**
-     * Attaches a callback for only the rejection of the Promise.
-     * @param onrejected The callback to execute when the Promise is rejected.
-     * @returns A Promise for the completion of the callback.
-     */
-    catch<TResult = never>(onrejected?: ((reason: any) => TResult | PromiseLike<TResult>) | undefined | null): $Utils.JsPromise<T | TResult>
-    /**
-     * Attaches a callback that is invoked when the Promise is settled (fulfilled or rejected). The
-     * resolved value cannot be modified from the callback.
-     * @param onfinally The callback to execute when the Promise is settled (fulfilled or rejected).
-     * @returns A Promise for the completion of the callback.
-     */
-    finally(onfinally?: (() => void) | undefined | null): $Utils.JsPromise<T>
-  }
-
-
-
-
-  /**
-   * Fields of the GameTranslation model
-   */
-  interface GameTranslationFieldRefs {
-    readonly id: FieldRef<"GameTranslation", 'Int'>
-    readonly gameId: FieldRef<"GameTranslation", 'Int'>
-    readonly language: FieldRef<"GameTranslation", 'Language'>
-    readonly providerName: FieldRef<"GameTranslation", 'String'>
-    readonly categoryName: FieldRef<"GameTranslation", 'String'>
-    readonly gameName: FieldRef<"GameTranslation", 'String'>
-    readonly createdAt: FieldRef<"GameTranslation", 'DateTime'>
-    readonly updatedAt: FieldRef<"GameTranslation", 'DateTime'>
-  }
-    
-
-  // Custom InputTypes
-  /**
-   * GameTranslation findUnique
-   */
-  export type GameTranslationFindUniqueArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
-    /**
-     * Select specific fields to fetch from the GameTranslation
-     */
-    select?: GameTranslationSelect<ExtArgs> | null
-    /**
-     * Omit specific fields from the GameTranslation
-     */
-    omit?: GameTranslationOmit<ExtArgs> | null
-    /**
-     * Choose, which related nodes to fetch as well
-     */
-    include?: GameTranslationInclude<ExtArgs> | null
-    /**
-     * Filter, which GameTranslation to fetch.
-     */
-    where: GameTranslationWhereUniqueInput
-  }
-
-  /**
-   * GameTranslation findUniqueOrThrow
-   */
-  export type GameTranslationFindUniqueOrThrowArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
-    /**
-     * Select specific fields to fetch from the GameTranslation
-     */
-    select?: GameTranslationSelect<ExtArgs> | null
-    /**
-     * Omit specific fields from the GameTranslation
-     */
-    omit?: GameTranslationOmit<ExtArgs> | null
-    /**
-     * Choose, which related nodes to fetch as well
-     */
-    include?: GameTranslationInclude<ExtArgs> | null
-    /**
-     * Filter, which GameTranslation to fetch.
-     */
-    where: GameTranslationWhereUniqueInput
-  }
-
-  /**
-   * GameTranslation findFirst
-   */
-  export type GameTranslationFindFirstArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
-    /**
-     * Select specific fields to fetch from the GameTranslation
-     */
-    select?: GameTranslationSelect<ExtArgs> | null
-    /**
-     * Omit specific fields from the GameTranslation
-     */
-    omit?: GameTranslationOmit<ExtArgs> | null
-    /**
-     * Choose, which related nodes to fetch as well
-     */
-    include?: GameTranslationInclude<ExtArgs> | null
-    /**
-     * Filter, which GameTranslation to fetch.
-     */
-    where?: GameTranslationWhereInput
-    /**
-     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/sorting Sorting Docs}
-     * 
-     * Determine the order of GameTranslations to fetch.
-     */
-    orderBy?: GameTranslationOrderByWithRelationInput | GameTranslationOrderByWithRelationInput[]
-    /**
-     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination#cursor-based-pagination Cursor Docs}
-     * 
-     * Sets the position for searching for GameTranslations.
-     */
-    cursor?: GameTranslationWhereUniqueInput
-    /**
-     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
-     * 
-     * Take `±n` GameTranslations from the position of the cursor.
-     */
-    take?: number
-    /**
-     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
-     * 
-     * Skip the first `n` GameTranslations.
-     */
-    skip?: number
-    /**
-     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/distinct Distinct Docs}
-     * 
-     * Filter by unique combinations of GameTranslations.
-     */
-    distinct?: GameTranslationScalarFieldEnum | GameTranslationScalarFieldEnum[]
-  }
-
-  /**
-   * GameTranslation findFirstOrThrow
-   */
-  export type GameTranslationFindFirstOrThrowArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
-    /**
-     * Select specific fields to fetch from the GameTranslation
-     */
-    select?: GameTranslationSelect<ExtArgs> | null
-    /**
-     * Omit specific fields from the GameTranslation
-     */
-    omit?: GameTranslationOmit<ExtArgs> | null
-    /**
-     * Choose, which related nodes to fetch as well
-     */
-    include?: GameTranslationInclude<ExtArgs> | null
-    /**
-     * Filter, which GameTranslation to fetch.
-     */
-    where?: GameTranslationWhereInput
-    /**
-     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/sorting Sorting Docs}
-     * 
-     * Determine the order of GameTranslations to fetch.
-     */
-    orderBy?: GameTranslationOrderByWithRelationInput | GameTranslationOrderByWithRelationInput[]
-    /**
-     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination#cursor-based-pagination Cursor Docs}
-     * 
-     * Sets the position for searching for GameTranslations.
-     */
-    cursor?: GameTranslationWhereUniqueInput
-    /**
-     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
-     * 
-     * Take `±n` GameTranslations from the position of the cursor.
-     */
-    take?: number
-    /**
-     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
-     * 
-     * Skip the first `n` GameTranslations.
-     */
-    skip?: number
-    /**
-     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/distinct Distinct Docs}
-     * 
-     * Filter by unique combinations of GameTranslations.
-     */
-    distinct?: GameTranslationScalarFieldEnum | GameTranslationScalarFieldEnum[]
-  }
-
-  /**
-   * GameTranslation findMany
-   */
-  export type GameTranslationFindManyArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
-    /**
-     * Select specific fields to fetch from the GameTranslation
-     */
-    select?: GameTranslationSelect<ExtArgs> | null
-    /**
-     * Omit specific fields from the GameTranslation
-     */
-    omit?: GameTranslationOmit<ExtArgs> | null
-    /**
-     * Choose, which related nodes to fetch as well
-     */
-    include?: GameTranslationInclude<ExtArgs> | null
-    /**
-     * Filter, which GameTranslations to fetch.
-     */
-    where?: GameTranslationWhereInput
-    /**
-     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/sorting Sorting Docs}
-     * 
-     * Determine the order of GameTranslations to fetch.
-     */
-    orderBy?: GameTranslationOrderByWithRelationInput | GameTranslationOrderByWithRelationInput[]
-    /**
-     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination#cursor-based-pagination Cursor Docs}
-     * 
-     * Sets the position for listing GameTranslations.
-     */
-    cursor?: GameTranslationWhereUniqueInput
-    /**
-     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
-     * 
-     * Take `±n` GameTranslations from the position of the cursor.
-     */
-    take?: number
-    /**
-     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
-     * 
-     * Skip the first `n` GameTranslations.
-     */
-    skip?: number
-    distinct?: GameTranslationScalarFieldEnum | GameTranslationScalarFieldEnum[]
-  }
-
-  /**
-   * GameTranslation create
-   */
-  export type GameTranslationCreateArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
-    /**
-     * Select specific fields to fetch from the GameTranslation
-     */
-    select?: GameTranslationSelect<ExtArgs> | null
-    /**
-     * Omit specific fields from the GameTranslation
-     */
-    omit?: GameTranslationOmit<ExtArgs> | null
-    /**
-     * Choose, which related nodes to fetch as well
-     */
-    include?: GameTranslationInclude<ExtArgs> | null
-    /**
-     * The data needed to create a GameTranslation.
-     */
-    data: XOR<GameTranslationCreateInput, GameTranslationUncheckedCreateInput>
-  }
-
-  /**
-   * GameTranslation createMany
-   */
-  export type GameTranslationCreateManyArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
-    /**
-     * The data used to create many GameTranslations.
-     */
-    data: GameTranslationCreateManyInput | GameTranslationCreateManyInput[]
-    skipDuplicates?: boolean
-  }
-
-  /**
-   * GameTranslation createManyAndReturn
-   */
-  export type GameTranslationCreateManyAndReturnArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
-    /**
-     * Select specific fields to fetch from the GameTranslation
-     */
-    select?: GameTranslationSelectCreateManyAndReturn<ExtArgs> | null
-    /**
-     * Omit specific fields from the GameTranslation
-     */
-    omit?: GameTranslationOmit<ExtArgs> | null
-    /**
-     * The data used to create many GameTranslations.
-     */
-    data: GameTranslationCreateManyInput | GameTranslationCreateManyInput[]
-    skipDuplicates?: boolean
-    /**
-     * Choose, which related nodes to fetch as well
-     */
-    include?: GameTranslationIncludeCreateManyAndReturn<ExtArgs> | null
-  }
-
-  /**
-   * GameTranslation update
-   */
-  export type GameTranslationUpdateArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
-    /**
-     * Select specific fields to fetch from the GameTranslation
-     */
-    select?: GameTranslationSelect<ExtArgs> | null
-    /**
-     * Omit specific fields from the GameTranslation
-     */
-    omit?: GameTranslationOmit<ExtArgs> | null
-    /**
-     * Choose, which related nodes to fetch as well
-     */
-    include?: GameTranslationInclude<ExtArgs> | null
-    /**
-     * The data needed to update a GameTranslation.
-     */
-    data: XOR<GameTranslationUpdateInput, GameTranslationUncheckedUpdateInput>
-    /**
-     * Choose, which GameTranslation to update.
-     */
-    where: GameTranslationWhereUniqueInput
-  }
-
-  /**
-   * GameTranslation updateMany
-   */
-  export type GameTranslationUpdateManyArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
-    /**
-     * The data used to update GameTranslations.
-     */
-    data: XOR<GameTranslationUpdateManyMutationInput, GameTranslationUncheckedUpdateManyInput>
-    /**
-     * Filter which GameTranslations to update
-     */
-    where?: GameTranslationWhereInput
-    /**
-     * Limit how many GameTranslations to update.
-     */
-    limit?: number
-  }
-
-  /**
-   * GameTranslation updateManyAndReturn
-   */
-  export type GameTranslationUpdateManyAndReturnArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
-    /**
-     * Select specific fields to fetch from the GameTranslation
-     */
-    select?: GameTranslationSelectUpdateManyAndReturn<ExtArgs> | null
-    /**
-     * Omit specific fields from the GameTranslation
-     */
-    omit?: GameTranslationOmit<ExtArgs> | null
-    /**
-     * The data used to update GameTranslations.
-     */
-    data: XOR<GameTranslationUpdateManyMutationInput, GameTranslationUncheckedUpdateManyInput>
-    /**
-     * Filter which GameTranslations to update
-     */
-    where?: GameTranslationWhereInput
-    /**
-     * Limit how many GameTranslations to update.
-     */
-    limit?: number
-    /**
-     * Choose, which related nodes to fetch as well
-     */
-    include?: GameTranslationIncludeUpdateManyAndReturn<ExtArgs> | null
-  }
-
-  /**
-   * GameTranslation upsert
-   */
-  export type GameTranslationUpsertArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
-    /**
-     * Select specific fields to fetch from the GameTranslation
-     */
-    select?: GameTranslationSelect<ExtArgs> | null
-    /**
-     * Omit specific fields from the GameTranslation
-     */
-    omit?: GameTranslationOmit<ExtArgs> | null
-    /**
-     * Choose, which related nodes to fetch as well
-     */
-    include?: GameTranslationInclude<ExtArgs> | null
-    /**
-     * The filter to search for the GameTranslation to update in case it exists.
-     */
-    where: GameTranslationWhereUniqueInput
-    /**
-     * In case the GameTranslation found by the `where` argument doesn't exist, create a new GameTranslation with this data.
-     */
-    create: XOR<GameTranslationCreateInput, GameTranslationUncheckedCreateInput>
-    /**
-     * In case the GameTranslation was found with the provided `where` argument, update it with this data.
-     */
-    update: XOR<GameTranslationUpdateInput, GameTranslationUncheckedUpdateInput>
-  }
-
-  /**
-   * GameTranslation delete
-   */
-  export type GameTranslationDeleteArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
-    /**
-     * Select specific fields to fetch from the GameTranslation
-     */
-    select?: GameTranslationSelect<ExtArgs> | null
-    /**
-     * Omit specific fields from the GameTranslation
-     */
-    omit?: GameTranslationOmit<ExtArgs> | null
-    /**
-     * Choose, which related nodes to fetch as well
-     */
-    include?: GameTranslationInclude<ExtArgs> | null
-    /**
-     * Filter which GameTranslation to delete.
-     */
-    where: GameTranslationWhereUniqueInput
-  }
-
-  /**
-   * GameTranslation deleteMany
-   */
-  export type GameTranslationDeleteManyArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
-    /**
-     * Filter which GameTranslations to delete
-     */
-    where?: GameTranslationWhereInput
-    /**
-     * Limit how many GameTranslations to delete.
-     */
-    limit?: number
-  }
-
-  /**
-   * GameTranslation without action
-   */
-  export type GameTranslationDefaultArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
-    /**
-     * Select specific fields to fetch from the GameTranslation
-     */
-    select?: GameTranslationSelect<ExtArgs> | null
-    /**
-     * Omit specific fields from the GameTranslation
-     */
-    omit?: GameTranslationOmit<ExtArgs> | null
-    /**
-     * Choose, which related nodes to fetch as well
-     */
-    include?: GameTranslationInclude<ExtArgs> | null
-  }
-
-
-  /**
    * Model Transaction
    */
 
@@ -22967,7 +24219,7 @@ export namespace Prisma {
     gameSessionId?: boolean
     AffiliateCommission?: boolean | GameRound$AffiliateCommissionArgs<ExtArgs>
     bets?: boolean | GameRound$betsArgs<ExtArgs>
-    game?: boolean | GameRound$gameArgs<ExtArgs>
+    casinoGame?: boolean | GameRound$casinoGameArgs<ExtArgs>
     GameSession?: boolean | GameSessionDefaultArgs<ExtArgs>
     transaction?: boolean | TransactionDefaultArgs<ExtArgs>
     wins?: boolean | GameRound$winsArgs<ExtArgs>
@@ -23002,7 +24254,7 @@ export namespace Prisma {
     completedAt?: boolean
     gameId?: boolean
     gameSessionId?: boolean
-    game?: boolean | GameRound$gameArgs<ExtArgs>
+    casinoGame?: boolean | GameRound$casinoGameArgs<ExtArgs>
     GameSession?: boolean | GameSessionDefaultArgs<ExtArgs>
     transaction?: boolean | TransactionDefaultArgs<ExtArgs>
   }, ExtArgs["result"]["gameRound"]>
@@ -23035,7 +24287,7 @@ export namespace Prisma {
     completedAt?: boolean
     gameId?: boolean
     gameSessionId?: boolean
-    game?: boolean | GameRound$gameArgs<ExtArgs>
+    casinoGame?: boolean | GameRound$casinoGameArgs<ExtArgs>
     GameSession?: boolean | GameSessionDefaultArgs<ExtArgs>
     transaction?: boolean | TransactionDefaultArgs<ExtArgs>
   }, ExtArgs["result"]["gameRound"]>
@@ -23074,19 +24326,19 @@ export namespace Prisma {
   export type GameRoundInclude<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
     AffiliateCommission?: boolean | GameRound$AffiliateCommissionArgs<ExtArgs>
     bets?: boolean | GameRound$betsArgs<ExtArgs>
-    game?: boolean | GameRound$gameArgs<ExtArgs>
+    casinoGame?: boolean | GameRound$casinoGameArgs<ExtArgs>
     GameSession?: boolean | GameSessionDefaultArgs<ExtArgs>
     transaction?: boolean | TransactionDefaultArgs<ExtArgs>
     wins?: boolean | GameRound$winsArgs<ExtArgs>
     _count?: boolean | GameRoundCountOutputTypeDefaultArgs<ExtArgs>
   }
   export type GameRoundIncludeCreateManyAndReturn<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
-    game?: boolean | GameRound$gameArgs<ExtArgs>
+    casinoGame?: boolean | GameRound$casinoGameArgs<ExtArgs>
     GameSession?: boolean | GameSessionDefaultArgs<ExtArgs>
     transaction?: boolean | TransactionDefaultArgs<ExtArgs>
   }
   export type GameRoundIncludeUpdateManyAndReturn<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
-    game?: boolean | GameRound$gameArgs<ExtArgs>
+    casinoGame?: boolean | GameRound$casinoGameArgs<ExtArgs>
     GameSession?: boolean | GameSessionDefaultArgs<ExtArgs>
     transaction?: boolean | TransactionDefaultArgs<ExtArgs>
   }
@@ -23096,7 +24348,7 @@ export namespace Prisma {
     objects: {
       AffiliateCommission: Prisma.$AffiliateCommissionPayload<ExtArgs>[]
       bets: Prisma.$GameBetPayload<ExtArgs>[]
-      game: Prisma.$GamePayload<ExtArgs> | null
+      casinoGame: Prisma.$CasinoGamePayload<ExtArgs> | null
       GameSession: Prisma.$GameSessionPayload<ExtArgs>
       transaction: Prisma.$TransactionPayload<ExtArgs>
       wins: Prisma.$GameWinPayload<ExtArgs>[]
@@ -23525,7 +24777,7 @@ export namespace Prisma {
     readonly [Symbol.toStringTag]: "PrismaPromise"
     AffiliateCommission<T extends GameRound$AffiliateCommissionArgs<ExtArgs> = {}>(args?: Subset<T, GameRound$AffiliateCommissionArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$AffiliateCommissionPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
     bets<T extends GameRound$betsArgs<ExtArgs> = {}>(args?: Subset<T, GameRound$betsArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$GameBetPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
-    game<T extends GameRound$gameArgs<ExtArgs> = {}>(args?: Subset<T, GameRound$gameArgs<ExtArgs>>): Prisma__GameClient<$Result.GetResult<Prisma.$GamePayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions> | null, null, ExtArgs, GlobalOmitOptions>
+    casinoGame<T extends GameRound$casinoGameArgs<ExtArgs> = {}>(args?: Subset<T, GameRound$casinoGameArgs<ExtArgs>>): Prisma__CasinoGameClient<$Result.GetResult<Prisma.$CasinoGamePayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions> | null, null, ExtArgs, GlobalOmitOptions>
     GameSession<T extends GameSessionDefaultArgs<ExtArgs> = {}>(args?: Subset<T, GameSessionDefaultArgs<ExtArgs>>): Prisma__GameSessionClient<$Result.GetResult<Prisma.$GameSessionPayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions> | Null, Null, ExtArgs, GlobalOmitOptions>
     transaction<T extends TransactionDefaultArgs<ExtArgs> = {}>(args?: Subset<T, TransactionDefaultArgs<ExtArgs>>): Prisma__TransactionClient<$Result.GetResult<Prisma.$TransactionPayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions> | Null, Null, ExtArgs, GlobalOmitOptions>
     wins<T extends GameRound$winsArgs<ExtArgs> = {}>(args?: Subset<T, GameRound$winsArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$GameWinPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
@@ -24029,22 +25281,22 @@ export namespace Prisma {
   }
 
   /**
-   * GameRound.game
+   * GameRound.casinoGame
    */
-  export type GameRound$gameArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+  export type GameRound$casinoGameArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
     /**
-     * Select specific fields to fetch from the Game
+     * Select specific fields to fetch from the CasinoGame
      */
-    select?: GameSelect<ExtArgs> | null
+    select?: CasinoGameSelect<ExtArgs> | null
     /**
-     * Omit specific fields from the Game
+     * Omit specific fields from the CasinoGame
      */
-    omit?: GameOmit<ExtArgs> | null
+    omit?: CasinoGameOmit<ExtArgs> | null
     /**
      * Choose, which related nodes to fetch as well
      */
-    include?: GameInclude<ExtArgs> | null
-    where?: GameWhereInput
+    include?: CasinoGameInclude<ExtArgs> | null
+    where?: CasinoGameWhereInput
   }
 
   /**
@@ -27953,7 +29205,7 @@ export namespace Prisma {
     description?: boolean
     gameId?: boolean
     transactionId?: boolean
-    game?: boolean | BonusDetail$gameArgs<ExtArgs>
+    casinoGame?: boolean | BonusDetail$casinoGameArgs<ExtArgs>
     transaction?: boolean | TransactionDefaultArgs<ExtArgs>
   }, ExtArgs["result"]["bonusDetail"]>
 
@@ -27975,7 +29227,7 @@ export namespace Prisma {
     description?: boolean
     gameId?: boolean
     transactionId?: boolean
-    game?: boolean | BonusDetail$gameArgs<ExtArgs>
+    casinoGame?: boolean | BonusDetail$casinoGameArgs<ExtArgs>
     transaction?: boolean | TransactionDefaultArgs<ExtArgs>
   }, ExtArgs["result"]["bonusDetail"]>
 
@@ -27997,7 +29249,7 @@ export namespace Prisma {
     description?: boolean
     gameId?: boolean
     transactionId?: boolean
-    game?: boolean | BonusDetail$gameArgs<ExtArgs>
+    casinoGame?: boolean | BonusDetail$casinoGameArgs<ExtArgs>
     transaction?: boolean | TransactionDefaultArgs<ExtArgs>
   }, ExtArgs["result"]["bonusDetail"]>
 
@@ -28023,22 +29275,22 @@ export namespace Prisma {
 
   export type BonusDetailOmit<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetOmit<"id" | "createdAt" | "transactionTime" | "aggregatorType" | "provider" | "bonusType" | "amount" | "aggregatorPromotionId" | "aggregatorRoundId" | "aggregatorWagerId" | "aggregatorTransactionId" | "aggregatorFreespinId" | "aggregatorSessionId" | "isEndRound" | "description" | "gameId" | "transactionId", ExtArgs["result"]["bonusDetail"]>
   export type BonusDetailInclude<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
-    game?: boolean | BonusDetail$gameArgs<ExtArgs>
+    casinoGame?: boolean | BonusDetail$casinoGameArgs<ExtArgs>
     transaction?: boolean | TransactionDefaultArgs<ExtArgs>
   }
   export type BonusDetailIncludeCreateManyAndReturn<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
-    game?: boolean | BonusDetail$gameArgs<ExtArgs>
+    casinoGame?: boolean | BonusDetail$casinoGameArgs<ExtArgs>
     transaction?: boolean | TransactionDefaultArgs<ExtArgs>
   }
   export type BonusDetailIncludeUpdateManyAndReturn<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
-    game?: boolean | BonusDetail$gameArgs<ExtArgs>
+    casinoGame?: boolean | BonusDetail$casinoGameArgs<ExtArgs>
     transaction?: boolean | TransactionDefaultArgs<ExtArgs>
   }
 
   export type $BonusDetailPayload<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
     name: "BonusDetail"
     objects: {
-      game: Prisma.$GamePayload<ExtArgs> | null
+      casinoGame: Prisma.$CasinoGamePayload<ExtArgs> | null
       transaction: Prisma.$TransactionPayload<ExtArgs>
     }
     scalars: $Extensions.GetPayloadResult<{
@@ -28453,7 +29705,7 @@ export namespace Prisma {
    */
   export interface Prisma__BonusDetailClient<T, Null = never, ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs, GlobalOmitOptions = {}> extends Prisma.PrismaPromise<T> {
     readonly [Symbol.toStringTag]: "PrismaPromise"
-    game<T extends BonusDetail$gameArgs<ExtArgs> = {}>(args?: Subset<T, BonusDetail$gameArgs<ExtArgs>>): Prisma__GameClient<$Result.GetResult<Prisma.$GamePayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions> | null, null, ExtArgs, GlobalOmitOptions>
+    casinoGame<T extends BonusDetail$casinoGameArgs<ExtArgs> = {}>(args?: Subset<T, BonusDetail$casinoGameArgs<ExtArgs>>): Prisma__CasinoGameClient<$Result.GetResult<Prisma.$CasinoGamePayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions> | null, null, ExtArgs, GlobalOmitOptions>
     transaction<T extends TransactionDefaultArgs<ExtArgs> = {}>(args?: Subset<T, TransactionDefaultArgs<ExtArgs>>): Prisma__TransactionClient<$Result.GetResult<Prisma.$TransactionPayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions> | Null, Null, ExtArgs, GlobalOmitOptions>
     /**
      * Attaches callbacks for the resolution and/or rejection of the Promise.
@@ -28897,22 +30149,22 @@ export namespace Prisma {
   }
 
   /**
-   * BonusDetail.game
+   * BonusDetail.casinoGame
    */
-  export type BonusDetail$gameArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+  export type BonusDetail$casinoGameArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
     /**
-     * Select specific fields to fetch from the Game
+     * Select specific fields to fetch from the CasinoGame
      */
-    select?: GameSelect<ExtArgs> | null
+    select?: CasinoGameSelect<ExtArgs> | null
     /**
-     * Omit specific fields from the Game
+     * Omit specific fields from the CasinoGame
      */
-    omit?: GameOmit<ExtArgs> | null
+    omit?: CasinoGameOmit<ExtArgs> | null
     /**
      * Choose, which related nodes to fetch as well
      */
-    include?: GameInclude<ExtArgs> | null
-    where?: GameWhereInput
+    include?: CasinoGameInclude<ExtArgs> | null
+    where?: CasinoGameWhereInput
   }
 
   /**
@@ -38395,1258 +39647,6 @@ export namespace Prisma {
      * Choose, which related nodes to fetch as well
      */
     include?: EmailLogInclude<ExtArgs> | null
-  }
-
-
-  /**
-   * Model GameSession
-   */
-
-  export type AggregateGameSession = {
-    _count: GameSessionCountAggregateOutputType | null
-    _avg: GameSessionAvgAggregateOutputType | null
-    _sum: GameSessionSumAggregateOutputType | null
-    _min: GameSessionMinAggregateOutputType | null
-    _max: GameSessionMaxAggregateOutputType | null
-  }
-
-  export type GameSessionAvgAggregateOutputType = {
-    id: number | null
-    userId: number | null
-    exchangeRate: Decimal | null
-    gameId: number | null
-  }
-
-  export type GameSessionSumAggregateOutputType = {
-    id: bigint | null
-    userId: bigint | null
-    exchangeRate: Decimal | null
-    gameId: number | null
-  }
-
-  export type GameSessionMinAggregateOutputType = {
-    id: bigint | null
-    userId: bigint | null
-    createdAt: Date | null
-    updatedAt: Date | null
-    lastAccessedAt: Date | null
-    aggregatorType: $Enums.GameAggregatorType | null
-    token: string | null
-    walletCurrency: $Enums.ExchangeCurrencyCode | null
-    gameCurrency: $Enums.ExchangeCurrencyCode | null
-    exchangeRate: Decimal | null
-    exchangeRateSnapshotAt: Date | null
-    gameId: number | null
-  }
-
-  export type GameSessionMaxAggregateOutputType = {
-    id: bigint | null
-    userId: bigint | null
-    createdAt: Date | null
-    updatedAt: Date | null
-    lastAccessedAt: Date | null
-    aggregatorType: $Enums.GameAggregatorType | null
-    token: string | null
-    walletCurrency: $Enums.ExchangeCurrencyCode | null
-    gameCurrency: $Enums.ExchangeCurrencyCode | null
-    exchangeRate: Decimal | null
-    exchangeRateSnapshotAt: Date | null
-    gameId: number | null
-  }
-
-  export type GameSessionCountAggregateOutputType = {
-    id: number
-    userId: number
-    createdAt: number
-    updatedAt: number
-    lastAccessedAt: number
-    aggregatorType: number
-    token: number
-    walletCurrency: number
-    gameCurrency: number
-    exchangeRate: number
-    exchangeRateSnapshotAt: number
-    gameId: number
-    _all: number
-  }
-
-
-  export type GameSessionAvgAggregateInputType = {
-    id?: true
-    userId?: true
-    exchangeRate?: true
-    gameId?: true
-  }
-
-  export type GameSessionSumAggregateInputType = {
-    id?: true
-    userId?: true
-    exchangeRate?: true
-    gameId?: true
-  }
-
-  export type GameSessionMinAggregateInputType = {
-    id?: true
-    userId?: true
-    createdAt?: true
-    updatedAt?: true
-    lastAccessedAt?: true
-    aggregatorType?: true
-    token?: true
-    walletCurrency?: true
-    gameCurrency?: true
-    exchangeRate?: true
-    exchangeRateSnapshotAt?: true
-    gameId?: true
-  }
-
-  export type GameSessionMaxAggregateInputType = {
-    id?: true
-    userId?: true
-    createdAt?: true
-    updatedAt?: true
-    lastAccessedAt?: true
-    aggregatorType?: true
-    token?: true
-    walletCurrency?: true
-    gameCurrency?: true
-    exchangeRate?: true
-    exchangeRateSnapshotAt?: true
-    gameId?: true
-  }
-
-  export type GameSessionCountAggregateInputType = {
-    id?: true
-    userId?: true
-    createdAt?: true
-    updatedAt?: true
-    lastAccessedAt?: true
-    aggregatorType?: true
-    token?: true
-    walletCurrency?: true
-    gameCurrency?: true
-    exchangeRate?: true
-    exchangeRateSnapshotAt?: true
-    gameId?: true
-    _all?: true
-  }
-
-  export type GameSessionAggregateArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
-    /**
-     * Filter which GameSession to aggregate.
-     */
-    where?: GameSessionWhereInput
-    /**
-     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/sorting Sorting Docs}
-     * 
-     * Determine the order of GameSessions to fetch.
-     */
-    orderBy?: GameSessionOrderByWithRelationInput | GameSessionOrderByWithRelationInput[]
-    /**
-     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination#cursor-based-pagination Cursor Docs}
-     * 
-     * Sets the start position
-     */
-    cursor?: GameSessionWhereUniqueInput
-    /**
-     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
-     * 
-     * Take `±n` GameSessions from the position of the cursor.
-     */
-    take?: number
-    /**
-     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
-     * 
-     * Skip the first `n` GameSessions.
-     */
-    skip?: number
-    /**
-     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
-     * 
-     * Count returned GameSessions
-    **/
-    _count?: true | GameSessionCountAggregateInputType
-    /**
-     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
-     * 
-     * Select which fields to average
-    **/
-    _avg?: GameSessionAvgAggregateInputType
-    /**
-     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
-     * 
-     * Select which fields to sum
-    **/
-    _sum?: GameSessionSumAggregateInputType
-    /**
-     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
-     * 
-     * Select which fields to find the minimum value
-    **/
-    _min?: GameSessionMinAggregateInputType
-    /**
-     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
-     * 
-     * Select which fields to find the maximum value
-    **/
-    _max?: GameSessionMaxAggregateInputType
-  }
-
-  export type GetGameSessionAggregateType<T extends GameSessionAggregateArgs> = {
-        [P in keyof T & keyof AggregateGameSession]: P extends '_count' | 'count'
-      ? T[P] extends true
-        ? number
-        : GetScalarType<T[P], AggregateGameSession[P]>
-      : GetScalarType<T[P], AggregateGameSession[P]>
-  }
-
-
-
-
-  export type GameSessionGroupByArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
-    where?: GameSessionWhereInput
-    orderBy?: GameSessionOrderByWithAggregationInput | GameSessionOrderByWithAggregationInput[]
-    by: GameSessionScalarFieldEnum[] | GameSessionScalarFieldEnum
-    having?: GameSessionScalarWhereWithAggregatesInput
-    take?: number
-    skip?: number
-    _count?: GameSessionCountAggregateInputType | true
-    _avg?: GameSessionAvgAggregateInputType
-    _sum?: GameSessionSumAggregateInputType
-    _min?: GameSessionMinAggregateInputType
-    _max?: GameSessionMaxAggregateInputType
-  }
-
-  export type GameSessionGroupByOutputType = {
-    id: bigint
-    userId: bigint
-    createdAt: Date
-    updatedAt: Date
-    lastAccessedAt: Date
-    aggregatorType: $Enums.GameAggregatorType
-    token: string
-    walletCurrency: $Enums.ExchangeCurrencyCode
-    gameCurrency: $Enums.ExchangeCurrencyCode
-    exchangeRate: Decimal
-    exchangeRateSnapshotAt: Date
-    gameId: number | null
-    _count: GameSessionCountAggregateOutputType | null
-    _avg: GameSessionAvgAggregateOutputType | null
-    _sum: GameSessionSumAggregateOutputType | null
-    _min: GameSessionMinAggregateOutputType | null
-    _max: GameSessionMaxAggregateOutputType | null
-  }
-
-  type GetGameSessionGroupByPayload<T extends GameSessionGroupByArgs> = Prisma.PrismaPromise<
-    Array<
-      PickEnumerable<GameSessionGroupByOutputType, T['by']> &
-        {
-          [P in ((keyof T) & (keyof GameSessionGroupByOutputType))]: P extends '_count'
-            ? T[P] extends boolean
-              ? number
-              : GetScalarType<T[P], GameSessionGroupByOutputType[P]>
-            : GetScalarType<T[P], GameSessionGroupByOutputType[P]>
-        }
-      >
-    >
-
-
-  export type GameSessionSelect<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetSelect<{
-    id?: boolean
-    userId?: boolean
-    createdAt?: boolean
-    updatedAt?: boolean
-    lastAccessedAt?: boolean
-    aggregatorType?: boolean
-    token?: boolean
-    walletCurrency?: boolean
-    gameCurrency?: boolean
-    exchangeRate?: boolean
-    exchangeRateSnapshotAt?: boolean
-    gameId?: boolean
-    gameRounds?: boolean | GameSession$gameRoundsArgs<ExtArgs>
-    game?: boolean | GameSession$gameArgs<ExtArgs>
-    user?: boolean | UserDefaultArgs<ExtArgs>
-    _count?: boolean | GameSessionCountOutputTypeDefaultArgs<ExtArgs>
-  }, ExtArgs["result"]["gameSession"]>
-
-  export type GameSessionSelectCreateManyAndReturn<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetSelect<{
-    id?: boolean
-    userId?: boolean
-    createdAt?: boolean
-    updatedAt?: boolean
-    lastAccessedAt?: boolean
-    aggregatorType?: boolean
-    token?: boolean
-    walletCurrency?: boolean
-    gameCurrency?: boolean
-    exchangeRate?: boolean
-    exchangeRateSnapshotAt?: boolean
-    gameId?: boolean
-    game?: boolean | GameSession$gameArgs<ExtArgs>
-    user?: boolean | UserDefaultArgs<ExtArgs>
-  }, ExtArgs["result"]["gameSession"]>
-
-  export type GameSessionSelectUpdateManyAndReturn<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetSelect<{
-    id?: boolean
-    userId?: boolean
-    createdAt?: boolean
-    updatedAt?: boolean
-    lastAccessedAt?: boolean
-    aggregatorType?: boolean
-    token?: boolean
-    walletCurrency?: boolean
-    gameCurrency?: boolean
-    exchangeRate?: boolean
-    exchangeRateSnapshotAt?: boolean
-    gameId?: boolean
-    game?: boolean | GameSession$gameArgs<ExtArgs>
-    user?: boolean | UserDefaultArgs<ExtArgs>
-  }, ExtArgs["result"]["gameSession"]>
-
-  export type GameSessionSelectScalar = {
-    id?: boolean
-    userId?: boolean
-    createdAt?: boolean
-    updatedAt?: boolean
-    lastAccessedAt?: boolean
-    aggregatorType?: boolean
-    token?: boolean
-    walletCurrency?: boolean
-    gameCurrency?: boolean
-    exchangeRate?: boolean
-    exchangeRateSnapshotAt?: boolean
-    gameId?: boolean
-  }
-
-  export type GameSessionOmit<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetOmit<"id" | "userId" | "createdAt" | "updatedAt" | "lastAccessedAt" | "aggregatorType" | "token" | "walletCurrency" | "gameCurrency" | "exchangeRate" | "exchangeRateSnapshotAt" | "gameId", ExtArgs["result"]["gameSession"]>
-  export type GameSessionInclude<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
-    gameRounds?: boolean | GameSession$gameRoundsArgs<ExtArgs>
-    game?: boolean | GameSession$gameArgs<ExtArgs>
-    user?: boolean | UserDefaultArgs<ExtArgs>
-    _count?: boolean | GameSessionCountOutputTypeDefaultArgs<ExtArgs>
-  }
-  export type GameSessionIncludeCreateManyAndReturn<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
-    game?: boolean | GameSession$gameArgs<ExtArgs>
-    user?: boolean | UserDefaultArgs<ExtArgs>
-  }
-  export type GameSessionIncludeUpdateManyAndReturn<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
-    game?: boolean | GameSession$gameArgs<ExtArgs>
-    user?: boolean | UserDefaultArgs<ExtArgs>
-  }
-
-  export type $GameSessionPayload<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
-    name: "GameSession"
-    objects: {
-      gameRounds: Prisma.$GameRoundPayload<ExtArgs>[]
-      game: Prisma.$GamePayload<ExtArgs> | null
-      user: Prisma.$UserPayload<ExtArgs>
-    }
-    scalars: $Extensions.GetPayloadResult<{
-      id: bigint
-      userId: bigint
-      createdAt: Date
-      updatedAt: Date
-      lastAccessedAt: Date
-      aggregatorType: $Enums.GameAggregatorType
-      token: string
-      walletCurrency: $Enums.ExchangeCurrencyCode
-      gameCurrency: $Enums.ExchangeCurrencyCode
-      exchangeRate: Prisma.Decimal
-      exchangeRateSnapshotAt: Date
-      gameId: number | null
-    }, ExtArgs["result"]["gameSession"]>
-    composites: {}
-  }
-
-  type GameSessionGetPayload<S extends boolean | null | undefined | GameSessionDefaultArgs> = $Result.GetResult<Prisma.$GameSessionPayload, S>
-
-  type GameSessionCountArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> =
-    Omit<GameSessionFindManyArgs, 'select' | 'include' | 'distinct' | 'omit'> & {
-      select?: GameSessionCountAggregateInputType | true
-    }
-
-  export interface GameSessionDelegate<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs, GlobalOmitOptions = {}> {
-    [K: symbol]: { types: Prisma.TypeMap<ExtArgs>['model']['GameSession'], meta: { name: 'GameSession' } }
-    /**
-     * Find zero or one GameSession that matches the filter.
-     * @param {GameSessionFindUniqueArgs} args - Arguments to find a GameSession
-     * @example
-     * // Get one GameSession
-     * const gameSession = await prisma.gameSession.findUnique({
-     *   where: {
-     *     // ... provide filter here
-     *   }
-     * })
-     */
-    findUnique<T extends GameSessionFindUniqueArgs>(args: SelectSubset<T, GameSessionFindUniqueArgs<ExtArgs>>): Prisma__GameSessionClient<$Result.GetResult<Prisma.$GameSessionPayload<ExtArgs>, T, "findUnique", GlobalOmitOptions> | null, null, ExtArgs, GlobalOmitOptions>
-
-    /**
-     * Find one GameSession that matches the filter or throw an error with `error.code='P2025'`
-     * if no matches were found.
-     * @param {GameSessionFindUniqueOrThrowArgs} args - Arguments to find a GameSession
-     * @example
-     * // Get one GameSession
-     * const gameSession = await prisma.gameSession.findUniqueOrThrow({
-     *   where: {
-     *     // ... provide filter here
-     *   }
-     * })
-     */
-    findUniqueOrThrow<T extends GameSessionFindUniqueOrThrowArgs>(args: SelectSubset<T, GameSessionFindUniqueOrThrowArgs<ExtArgs>>): Prisma__GameSessionClient<$Result.GetResult<Prisma.$GameSessionPayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
-
-    /**
-     * Find the first GameSession that matches the filter.
-     * Note, that providing `undefined` is treated as the value not being there.
-     * Read more here: https://pris.ly/d/null-undefined
-     * @param {GameSessionFindFirstArgs} args - Arguments to find a GameSession
-     * @example
-     * // Get one GameSession
-     * const gameSession = await prisma.gameSession.findFirst({
-     *   where: {
-     *     // ... provide filter here
-     *   }
-     * })
-     */
-    findFirst<T extends GameSessionFindFirstArgs>(args?: SelectSubset<T, GameSessionFindFirstArgs<ExtArgs>>): Prisma__GameSessionClient<$Result.GetResult<Prisma.$GameSessionPayload<ExtArgs>, T, "findFirst", GlobalOmitOptions> | null, null, ExtArgs, GlobalOmitOptions>
-
-    /**
-     * Find the first GameSession that matches the filter or
-     * throw `PrismaKnownClientError` with `P2025` code if no matches were found.
-     * Note, that providing `undefined` is treated as the value not being there.
-     * Read more here: https://pris.ly/d/null-undefined
-     * @param {GameSessionFindFirstOrThrowArgs} args - Arguments to find a GameSession
-     * @example
-     * // Get one GameSession
-     * const gameSession = await prisma.gameSession.findFirstOrThrow({
-     *   where: {
-     *     // ... provide filter here
-     *   }
-     * })
-     */
-    findFirstOrThrow<T extends GameSessionFindFirstOrThrowArgs>(args?: SelectSubset<T, GameSessionFindFirstOrThrowArgs<ExtArgs>>): Prisma__GameSessionClient<$Result.GetResult<Prisma.$GameSessionPayload<ExtArgs>, T, "findFirstOrThrow", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
-
-    /**
-     * Find zero or more GameSessions that matches the filter.
-     * Note, that providing `undefined` is treated as the value not being there.
-     * Read more here: https://pris.ly/d/null-undefined
-     * @param {GameSessionFindManyArgs} args - Arguments to filter and select certain fields only.
-     * @example
-     * // Get all GameSessions
-     * const gameSessions = await prisma.gameSession.findMany()
-     * 
-     * // Get first 10 GameSessions
-     * const gameSessions = await prisma.gameSession.findMany({ take: 10 })
-     * 
-     * // Only select the `id`
-     * const gameSessionWithIdOnly = await prisma.gameSession.findMany({ select: { id: true } })
-     * 
-     */
-    findMany<T extends GameSessionFindManyArgs>(args?: SelectSubset<T, GameSessionFindManyArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$GameSessionPayload<ExtArgs>, T, "findMany", GlobalOmitOptions>>
-
-    /**
-     * Create a GameSession.
-     * @param {GameSessionCreateArgs} args - Arguments to create a GameSession.
-     * @example
-     * // Create one GameSession
-     * const GameSession = await prisma.gameSession.create({
-     *   data: {
-     *     // ... data to create a GameSession
-     *   }
-     * })
-     * 
-     */
-    create<T extends GameSessionCreateArgs>(args: SelectSubset<T, GameSessionCreateArgs<ExtArgs>>): Prisma__GameSessionClient<$Result.GetResult<Prisma.$GameSessionPayload<ExtArgs>, T, "create", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
-
-    /**
-     * Create many GameSessions.
-     * @param {GameSessionCreateManyArgs} args - Arguments to create many GameSessions.
-     * @example
-     * // Create many GameSessions
-     * const gameSession = await prisma.gameSession.createMany({
-     *   data: [
-     *     // ... provide data here
-     *   ]
-     * })
-     *     
-     */
-    createMany<T extends GameSessionCreateManyArgs>(args?: SelectSubset<T, GameSessionCreateManyArgs<ExtArgs>>): Prisma.PrismaPromise<BatchPayload>
-
-    /**
-     * Create many GameSessions and returns the data saved in the database.
-     * @param {GameSessionCreateManyAndReturnArgs} args - Arguments to create many GameSessions.
-     * @example
-     * // Create many GameSessions
-     * const gameSession = await prisma.gameSession.createManyAndReturn({
-     *   data: [
-     *     // ... provide data here
-     *   ]
-     * })
-     * 
-     * // Create many GameSessions and only return the `id`
-     * const gameSessionWithIdOnly = await prisma.gameSession.createManyAndReturn({
-     *   select: { id: true },
-     *   data: [
-     *     // ... provide data here
-     *   ]
-     * })
-     * Note, that providing `undefined` is treated as the value not being there.
-     * Read more here: https://pris.ly/d/null-undefined
-     * 
-     */
-    createManyAndReturn<T extends GameSessionCreateManyAndReturnArgs>(args?: SelectSubset<T, GameSessionCreateManyAndReturnArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$GameSessionPayload<ExtArgs>, T, "createManyAndReturn", GlobalOmitOptions>>
-
-    /**
-     * Delete a GameSession.
-     * @param {GameSessionDeleteArgs} args - Arguments to delete one GameSession.
-     * @example
-     * // Delete one GameSession
-     * const GameSession = await prisma.gameSession.delete({
-     *   where: {
-     *     // ... filter to delete one GameSession
-     *   }
-     * })
-     * 
-     */
-    delete<T extends GameSessionDeleteArgs>(args: SelectSubset<T, GameSessionDeleteArgs<ExtArgs>>): Prisma__GameSessionClient<$Result.GetResult<Prisma.$GameSessionPayload<ExtArgs>, T, "delete", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
-
-    /**
-     * Update one GameSession.
-     * @param {GameSessionUpdateArgs} args - Arguments to update one GameSession.
-     * @example
-     * // Update one GameSession
-     * const gameSession = await prisma.gameSession.update({
-     *   where: {
-     *     // ... provide filter here
-     *   },
-     *   data: {
-     *     // ... provide data here
-     *   }
-     * })
-     * 
-     */
-    update<T extends GameSessionUpdateArgs>(args: SelectSubset<T, GameSessionUpdateArgs<ExtArgs>>): Prisma__GameSessionClient<$Result.GetResult<Prisma.$GameSessionPayload<ExtArgs>, T, "update", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
-
-    /**
-     * Delete zero or more GameSessions.
-     * @param {GameSessionDeleteManyArgs} args - Arguments to filter GameSessions to delete.
-     * @example
-     * // Delete a few GameSessions
-     * const { count } = await prisma.gameSession.deleteMany({
-     *   where: {
-     *     // ... provide filter here
-     *   }
-     * })
-     * 
-     */
-    deleteMany<T extends GameSessionDeleteManyArgs>(args?: SelectSubset<T, GameSessionDeleteManyArgs<ExtArgs>>): Prisma.PrismaPromise<BatchPayload>
-
-    /**
-     * Update zero or more GameSessions.
-     * Note, that providing `undefined` is treated as the value not being there.
-     * Read more here: https://pris.ly/d/null-undefined
-     * @param {GameSessionUpdateManyArgs} args - Arguments to update one or more rows.
-     * @example
-     * // Update many GameSessions
-     * const gameSession = await prisma.gameSession.updateMany({
-     *   where: {
-     *     // ... provide filter here
-     *   },
-     *   data: {
-     *     // ... provide data here
-     *   }
-     * })
-     * 
-     */
-    updateMany<T extends GameSessionUpdateManyArgs>(args: SelectSubset<T, GameSessionUpdateManyArgs<ExtArgs>>): Prisma.PrismaPromise<BatchPayload>
-
-    /**
-     * Update zero or more GameSessions and returns the data updated in the database.
-     * @param {GameSessionUpdateManyAndReturnArgs} args - Arguments to update many GameSessions.
-     * @example
-     * // Update many GameSessions
-     * const gameSession = await prisma.gameSession.updateManyAndReturn({
-     *   where: {
-     *     // ... provide filter here
-     *   },
-     *   data: [
-     *     // ... provide data here
-     *   ]
-     * })
-     * 
-     * // Update zero or more GameSessions and only return the `id`
-     * const gameSessionWithIdOnly = await prisma.gameSession.updateManyAndReturn({
-     *   select: { id: true },
-     *   where: {
-     *     // ... provide filter here
-     *   },
-     *   data: [
-     *     // ... provide data here
-     *   ]
-     * })
-     * Note, that providing `undefined` is treated as the value not being there.
-     * Read more here: https://pris.ly/d/null-undefined
-     * 
-     */
-    updateManyAndReturn<T extends GameSessionUpdateManyAndReturnArgs>(args: SelectSubset<T, GameSessionUpdateManyAndReturnArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$GameSessionPayload<ExtArgs>, T, "updateManyAndReturn", GlobalOmitOptions>>
-
-    /**
-     * Create or update one GameSession.
-     * @param {GameSessionUpsertArgs} args - Arguments to update or create a GameSession.
-     * @example
-     * // Update or create a GameSession
-     * const gameSession = await prisma.gameSession.upsert({
-     *   create: {
-     *     // ... data to create a GameSession
-     *   },
-     *   update: {
-     *     // ... in case it already exists, update
-     *   },
-     *   where: {
-     *     // ... the filter for the GameSession we want to update
-     *   }
-     * })
-     */
-    upsert<T extends GameSessionUpsertArgs>(args: SelectSubset<T, GameSessionUpsertArgs<ExtArgs>>): Prisma__GameSessionClient<$Result.GetResult<Prisma.$GameSessionPayload<ExtArgs>, T, "upsert", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
-
-
-    /**
-     * Count the number of GameSessions.
-     * Note, that providing `undefined` is treated as the value not being there.
-     * Read more here: https://pris.ly/d/null-undefined
-     * @param {GameSessionCountArgs} args - Arguments to filter GameSessions to count.
-     * @example
-     * // Count the number of GameSessions
-     * const count = await prisma.gameSession.count({
-     *   where: {
-     *     // ... the filter for the GameSessions we want to count
-     *   }
-     * })
-    **/
-    count<T extends GameSessionCountArgs>(
-      args?: Subset<T, GameSessionCountArgs>,
-    ): Prisma.PrismaPromise<
-      T extends $Utils.Record<'select', any>
-        ? T['select'] extends true
-          ? number
-          : GetScalarType<T['select'], GameSessionCountAggregateOutputType>
-        : number
-    >
-
-    /**
-     * Allows you to perform aggregations operations on a GameSession.
-     * Note, that providing `undefined` is treated as the value not being there.
-     * Read more here: https://pris.ly/d/null-undefined
-     * @param {GameSessionAggregateArgs} args - Select which aggregations you would like to apply and on what fields.
-     * @example
-     * // Ordered by age ascending
-     * // Where email contains prisma.io
-     * // Limited to the 10 users
-     * const aggregations = await prisma.user.aggregate({
-     *   _avg: {
-     *     age: true,
-     *   },
-     *   where: {
-     *     email: {
-     *       contains: "prisma.io",
-     *     },
-     *   },
-     *   orderBy: {
-     *     age: "asc",
-     *   },
-     *   take: 10,
-     * })
-    **/
-    aggregate<T extends GameSessionAggregateArgs>(args: Subset<T, GameSessionAggregateArgs>): Prisma.PrismaPromise<GetGameSessionAggregateType<T>>
-
-    /**
-     * Group by GameSession.
-     * Note, that providing `undefined` is treated as the value not being there.
-     * Read more here: https://pris.ly/d/null-undefined
-     * @param {GameSessionGroupByArgs} args - Group by arguments.
-     * @example
-     * // Group by city, order by createdAt, get count
-     * const result = await prisma.user.groupBy({
-     *   by: ['city', 'createdAt'],
-     *   orderBy: {
-     *     createdAt: true
-     *   },
-     *   _count: {
-     *     _all: true
-     *   },
-     * })
-     * 
-    **/
-    groupBy<
-      T extends GameSessionGroupByArgs,
-      HasSelectOrTake extends Or<
-        Extends<'skip', Keys<T>>,
-        Extends<'take', Keys<T>>
-      >,
-      OrderByArg extends True extends HasSelectOrTake
-        ? { orderBy: GameSessionGroupByArgs['orderBy'] }
-        : { orderBy?: GameSessionGroupByArgs['orderBy'] },
-      OrderFields extends ExcludeUnderscoreKeys<Keys<MaybeTupleToUnion<T['orderBy']>>>,
-      ByFields extends MaybeTupleToUnion<T['by']>,
-      ByValid extends Has<ByFields, OrderFields>,
-      HavingFields extends GetHavingFields<T['having']>,
-      HavingValid extends Has<ByFields, HavingFields>,
-      ByEmpty extends T['by'] extends never[] ? True : False,
-      InputErrors extends ByEmpty extends True
-      ? `Error: "by" must not be empty.`
-      : HavingValid extends False
-      ? {
-          [P in HavingFields]: P extends ByFields
-            ? never
-            : P extends string
-            ? `Error: Field "${P}" used in "having" needs to be provided in "by".`
-            : [
-                Error,
-                'Field ',
-                P,
-                ` in "having" needs to be provided in "by"`,
-              ]
-        }[HavingFields]
-      : 'take' extends Keys<T>
-      ? 'orderBy' extends Keys<T>
-        ? ByValid extends True
-          ? {}
-          : {
-              [P in OrderFields]: P extends ByFields
-                ? never
-                : `Error: Field "${P}" in "orderBy" needs to be provided in "by"`
-            }[OrderFields]
-        : 'Error: If you provide "take", you also need to provide "orderBy"'
-      : 'skip' extends Keys<T>
-      ? 'orderBy' extends Keys<T>
-        ? ByValid extends True
-          ? {}
-          : {
-              [P in OrderFields]: P extends ByFields
-                ? never
-                : `Error: Field "${P}" in "orderBy" needs to be provided in "by"`
-            }[OrderFields]
-        : 'Error: If you provide "skip", you also need to provide "orderBy"'
-      : ByValid extends True
-      ? {}
-      : {
-          [P in OrderFields]: P extends ByFields
-            ? never
-            : `Error: Field "${P}" in "orderBy" needs to be provided in "by"`
-        }[OrderFields]
-    >(args: SubsetIntersection<T, GameSessionGroupByArgs, OrderByArg> & InputErrors): {} extends InputErrors ? GetGameSessionGroupByPayload<T> : Prisma.PrismaPromise<InputErrors>
-  /**
-   * Fields of the GameSession model
-   */
-  readonly fields: GameSessionFieldRefs;
-  }
-
-  /**
-   * The delegate class that acts as a "Promise-like" for GameSession.
-   * Why is this prefixed with `Prisma__`?
-   * Because we want to prevent naming conflicts as mentioned in
-   * https://github.com/prisma/prisma-client-js/issues/707
-   */
-  export interface Prisma__GameSessionClient<T, Null = never, ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs, GlobalOmitOptions = {}> extends Prisma.PrismaPromise<T> {
-    readonly [Symbol.toStringTag]: "PrismaPromise"
-    gameRounds<T extends GameSession$gameRoundsArgs<ExtArgs> = {}>(args?: Subset<T, GameSession$gameRoundsArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$GameRoundPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
-    game<T extends GameSession$gameArgs<ExtArgs> = {}>(args?: Subset<T, GameSession$gameArgs<ExtArgs>>): Prisma__GameClient<$Result.GetResult<Prisma.$GamePayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions> | null, null, ExtArgs, GlobalOmitOptions>
-    user<T extends UserDefaultArgs<ExtArgs> = {}>(args?: Subset<T, UserDefaultArgs<ExtArgs>>): Prisma__UserClient<$Result.GetResult<Prisma.$UserPayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions> | Null, Null, ExtArgs, GlobalOmitOptions>
-    /**
-     * Attaches callbacks for the resolution and/or rejection of the Promise.
-     * @param onfulfilled The callback to execute when the Promise is resolved.
-     * @param onrejected The callback to execute when the Promise is rejected.
-     * @returns A Promise for the completion of which ever callback is executed.
-     */
-    then<TResult1 = T, TResult2 = never>(onfulfilled?: ((value: T) => TResult1 | PromiseLike<TResult1>) | undefined | null, onrejected?: ((reason: any) => TResult2 | PromiseLike<TResult2>) | undefined | null): $Utils.JsPromise<TResult1 | TResult2>
-    /**
-     * Attaches a callback for only the rejection of the Promise.
-     * @param onrejected The callback to execute when the Promise is rejected.
-     * @returns A Promise for the completion of the callback.
-     */
-    catch<TResult = never>(onrejected?: ((reason: any) => TResult | PromiseLike<TResult>) | undefined | null): $Utils.JsPromise<T | TResult>
-    /**
-     * Attaches a callback that is invoked when the Promise is settled (fulfilled or rejected). The
-     * resolved value cannot be modified from the callback.
-     * @param onfinally The callback to execute when the Promise is settled (fulfilled or rejected).
-     * @returns A Promise for the completion of the callback.
-     */
-    finally(onfinally?: (() => void) | undefined | null): $Utils.JsPromise<T>
-  }
-
-
-
-
-  /**
-   * Fields of the GameSession model
-   */
-  interface GameSessionFieldRefs {
-    readonly id: FieldRef<"GameSession", 'BigInt'>
-    readonly userId: FieldRef<"GameSession", 'BigInt'>
-    readonly createdAt: FieldRef<"GameSession", 'DateTime'>
-    readonly updatedAt: FieldRef<"GameSession", 'DateTime'>
-    readonly lastAccessedAt: FieldRef<"GameSession", 'DateTime'>
-    readonly aggregatorType: FieldRef<"GameSession", 'GameAggregatorType'>
-    readonly token: FieldRef<"GameSession", 'String'>
-    readonly walletCurrency: FieldRef<"GameSession", 'ExchangeCurrencyCode'>
-    readonly gameCurrency: FieldRef<"GameSession", 'ExchangeCurrencyCode'>
-    readonly exchangeRate: FieldRef<"GameSession", 'Decimal'>
-    readonly exchangeRateSnapshotAt: FieldRef<"GameSession", 'DateTime'>
-    readonly gameId: FieldRef<"GameSession", 'Int'>
-  }
-    
-
-  // Custom InputTypes
-  /**
-   * GameSession findUnique
-   */
-  export type GameSessionFindUniqueArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
-    /**
-     * Select specific fields to fetch from the GameSession
-     */
-    select?: GameSessionSelect<ExtArgs> | null
-    /**
-     * Omit specific fields from the GameSession
-     */
-    omit?: GameSessionOmit<ExtArgs> | null
-    /**
-     * Choose, which related nodes to fetch as well
-     */
-    include?: GameSessionInclude<ExtArgs> | null
-    /**
-     * Filter, which GameSession to fetch.
-     */
-    where: GameSessionWhereUniqueInput
-  }
-
-  /**
-   * GameSession findUniqueOrThrow
-   */
-  export type GameSessionFindUniqueOrThrowArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
-    /**
-     * Select specific fields to fetch from the GameSession
-     */
-    select?: GameSessionSelect<ExtArgs> | null
-    /**
-     * Omit specific fields from the GameSession
-     */
-    omit?: GameSessionOmit<ExtArgs> | null
-    /**
-     * Choose, which related nodes to fetch as well
-     */
-    include?: GameSessionInclude<ExtArgs> | null
-    /**
-     * Filter, which GameSession to fetch.
-     */
-    where: GameSessionWhereUniqueInput
-  }
-
-  /**
-   * GameSession findFirst
-   */
-  export type GameSessionFindFirstArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
-    /**
-     * Select specific fields to fetch from the GameSession
-     */
-    select?: GameSessionSelect<ExtArgs> | null
-    /**
-     * Omit specific fields from the GameSession
-     */
-    omit?: GameSessionOmit<ExtArgs> | null
-    /**
-     * Choose, which related nodes to fetch as well
-     */
-    include?: GameSessionInclude<ExtArgs> | null
-    /**
-     * Filter, which GameSession to fetch.
-     */
-    where?: GameSessionWhereInput
-    /**
-     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/sorting Sorting Docs}
-     * 
-     * Determine the order of GameSessions to fetch.
-     */
-    orderBy?: GameSessionOrderByWithRelationInput | GameSessionOrderByWithRelationInput[]
-    /**
-     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination#cursor-based-pagination Cursor Docs}
-     * 
-     * Sets the position for searching for GameSessions.
-     */
-    cursor?: GameSessionWhereUniqueInput
-    /**
-     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
-     * 
-     * Take `±n` GameSessions from the position of the cursor.
-     */
-    take?: number
-    /**
-     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
-     * 
-     * Skip the first `n` GameSessions.
-     */
-    skip?: number
-    /**
-     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/distinct Distinct Docs}
-     * 
-     * Filter by unique combinations of GameSessions.
-     */
-    distinct?: GameSessionScalarFieldEnum | GameSessionScalarFieldEnum[]
-  }
-
-  /**
-   * GameSession findFirstOrThrow
-   */
-  export type GameSessionFindFirstOrThrowArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
-    /**
-     * Select specific fields to fetch from the GameSession
-     */
-    select?: GameSessionSelect<ExtArgs> | null
-    /**
-     * Omit specific fields from the GameSession
-     */
-    omit?: GameSessionOmit<ExtArgs> | null
-    /**
-     * Choose, which related nodes to fetch as well
-     */
-    include?: GameSessionInclude<ExtArgs> | null
-    /**
-     * Filter, which GameSession to fetch.
-     */
-    where?: GameSessionWhereInput
-    /**
-     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/sorting Sorting Docs}
-     * 
-     * Determine the order of GameSessions to fetch.
-     */
-    orderBy?: GameSessionOrderByWithRelationInput | GameSessionOrderByWithRelationInput[]
-    /**
-     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination#cursor-based-pagination Cursor Docs}
-     * 
-     * Sets the position for searching for GameSessions.
-     */
-    cursor?: GameSessionWhereUniqueInput
-    /**
-     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
-     * 
-     * Take `±n` GameSessions from the position of the cursor.
-     */
-    take?: number
-    /**
-     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
-     * 
-     * Skip the first `n` GameSessions.
-     */
-    skip?: number
-    /**
-     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/distinct Distinct Docs}
-     * 
-     * Filter by unique combinations of GameSessions.
-     */
-    distinct?: GameSessionScalarFieldEnum | GameSessionScalarFieldEnum[]
-  }
-
-  /**
-   * GameSession findMany
-   */
-  export type GameSessionFindManyArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
-    /**
-     * Select specific fields to fetch from the GameSession
-     */
-    select?: GameSessionSelect<ExtArgs> | null
-    /**
-     * Omit specific fields from the GameSession
-     */
-    omit?: GameSessionOmit<ExtArgs> | null
-    /**
-     * Choose, which related nodes to fetch as well
-     */
-    include?: GameSessionInclude<ExtArgs> | null
-    /**
-     * Filter, which GameSessions to fetch.
-     */
-    where?: GameSessionWhereInput
-    /**
-     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/sorting Sorting Docs}
-     * 
-     * Determine the order of GameSessions to fetch.
-     */
-    orderBy?: GameSessionOrderByWithRelationInput | GameSessionOrderByWithRelationInput[]
-    /**
-     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination#cursor-based-pagination Cursor Docs}
-     * 
-     * Sets the position for listing GameSessions.
-     */
-    cursor?: GameSessionWhereUniqueInput
-    /**
-     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
-     * 
-     * Take `±n` GameSessions from the position of the cursor.
-     */
-    take?: number
-    /**
-     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
-     * 
-     * Skip the first `n` GameSessions.
-     */
-    skip?: number
-    distinct?: GameSessionScalarFieldEnum | GameSessionScalarFieldEnum[]
-  }
-
-  /**
-   * GameSession create
-   */
-  export type GameSessionCreateArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
-    /**
-     * Select specific fields to fetch from the GameSession
-     */
-    select?: GameSessionSelect<ExtArgs> | null
-    /**
-     * Omit specific fields from the GameSession
-     */
-    omit?: GameSessionOmit<ExtArgs> | null
-    /**
-     * Choose, which related nodes to fetch as well
-     */
-    include?: GameSessionInclude<ExtArgs> | null
-    /**
-     * The data needed to create a GameSession.
-     */
-    data: XOR<GameSessionCreateInput, GameSessionUncheckedCreateInput>
-  }
-
-  /**
-   * GameSession createMany
-   */
-  export type GameSessionCreateManyArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
-    /**
-     * The data used to create many GameSessions.
-     */
-    data: GameSessionCreateManyInput | GameSessionCreateManyInput[]
-    skipDuplicates?: boolean
-  }
-
-  /**
-   * GameSession createManyAndReturn
-   */
-  export type GameSessionCreateManyAndReturnArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
-    /**
-     * Select specific fields to fetch from the GameSession
-     */
-    select?: GameSessionSelectCreateManyAndReturn<ExtArgs> | null
-    /**
-     * Omit specific fields from the GameSession
-     */
-    omit?: GameSessionOmit<ExtArgs> | null
-    /**
-     * The data used to create many GameSessions.
-     */
-    data: GameSessionCreateManyInput | GameSessionCreateManyInput[]
-    skipDuplicates?: boolean
-    /**
-     * Choose, which related nodes to fetch as well
-     */
-    include?: GameSessionIncludeCreateManyAndReturn<ExtArgs> | null
-  }
-
-  /**
-   * GameSession update
-   */
-  export type GameSessionUpdateArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
-    /**
-     * Select specific fields to fetch from the GameSession
-     */
-    select?: GameSessionSelect<ExtArgs> | null
-    /**
-     * Omit specific fields from the GameSession
-     */
-    omit?: GameSessionOmit<ExtArgs> | null
-    /**
-     * Choose, which related nodes to fetch as well
-     */
-    include?: GameSessionInclude<ExtArgs> | null
-    /**
-     * The data needed to update a GameSession.
-     */
-    data: XOR<GameSessionUpdateInput, GameSessionUncheckedUpdateInput>
-    /**
-     * Choose, which GameSession to update.
-     */
-    where: GameSessionWhereUniqueInput
-  }
-
-  /**
-   * GameSession updateMany
-   */
-  export type GameSessionUpdateManyArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
-    /**
-     * The data used to update GameSessions.
-     */
-    data: XOR<GameSessionUpdateManyMutationInput, GameSessionUncheckedUpdateManyInput>
-    /**
-     * Filter which GameSessions to update
-     */
-    where?: GameSessionWhereInput
-    /**
-     * Limit how many GameSessions to update.
-     */
-    limit?: number
-  }
-
-  /**
-   * GameSession updateManyAndReturn
-   */
-  export type GameSessionUpdateManyAndReturnArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
-    /**
-     * Select specific fields to fetch from the GameSession
-     */
-    select?: GameSessionSelectUpdateManyAndReturn<ExtArgs> | null
-    /**
-     * Omit specific fields from the GameSession
-     */
-    omit?: GameSessionOmit<ExtArgs> | null
-    /**
-     * The data used to update GameSessions.
-     */
-    data: XOR<GameSessionUpdateManyMutationInput, GameSessionUncheckedUpdateManyInput>
-    /**
-     * Filter which GameSessions to update
-     */
-    where?: GameSessionWhereInput
-    /**
-     * Limit how many GameSessions to update.
-     */
-    limit?: number
-    /**
-     * Choose, which related nodes to fetch as well
-     */
-    include?: GameSessionIncludeUpdateManyAndReturn<ExtArgs> | null
-  }
-
-  /**
-   * GameSession upsert
-   */
-  export type GameSessionUpsertArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
-    /**
-     * Select specific fields to fetch from the GameSession
-     */
-    select?: GameSessionSelect<ExtArgs> | null
-    /**
-     * Omit specific fields from the GameSession
-     */
-    omit?: GameSessionOmit<ExtArgs> | null
-    /**
-     * Choose, which related nodes to fetch as well
-     */
-    include?: GameSessionInclude<ExtArgs> | null
-    /**
-     * The filter to search for the GameSession to update in case it exists.
-     */
-    where: GameSessionWhereUniqueInput
-    /**
-     * In case the GameSession found by the `where` argument doesn't exist, create a new GameSession with this data.
-     */
-    create: XOR<GameSessionCreateInput, GameSessionUncheckedCreateInput>
-    /**
-     * In case the GameSession was found with the provided `where` argument, update it with this data.
-     */
-    update: XOR<GameSessionUpdateInput, GameSessionUncheckedUpdateInput>
-  }
-
-  /**
-   * GameSession delete
-   */
-  export type GameSessionDeleteArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
-    /**
-     * Select specific fields to fetch from the GameSession
-     */
-    select?: GameSessionSelect<ExtArgs> | null
-    /**
-     * Omit specific fields from the GameSession
-     */
-    omit?: GameSessionOmit<ExtArgs> | null
-    /**
-     * Choose, which related nodes to fetch as well
-     */
-    include?: GameSessionInclude<ExtArgs> | null
-    /**
-     * Filter which GameSession to delete.
-     */
-    where: GameSessionWhereUniqueInput
-  }
-
-  /**
-   * GameSession deleteMany
-   */
-  export type GameSessionDeleteManyArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
-    /**
-     * Filter which GameSessions to delete
-     */
-    where?: GameSessionWhereInput
-    /**
-     * Limit how many GameSessions to delete.
-     */
-    limit?: number
-  }
-
-  /**
-   * GameSession.gameRounds
-   */
-  export type GameSession$gameRoundsArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
-    /**
-     * Select specific fields to fetch from the GameRound
-     */
-    select?: GameRoundSelect<ExtArgs> | null
-    /**
-     * Omit specific fields from the GameRound
-     */
-    omit?: GameRoundOmit<ExtArgs> | null
-    /**
-     * Choose, which related nodes to fetch as well
-     */
-    include?: GameRoundInclude<ExtArgs> | null
-    where?: GameRoundWhereInput
-    orderBy?: GameRoundOrderByWithRelationInput | GameRoundOrderByWithRelationInput[]
-    cursor?: GameRoundWhereUniqueInput
-    take?: number
-    skip?: number
-    distinct?: GameRoundScalarFieldEnum | GameRoundScalarFieldEnum[]
-  }
-
-  /**
-   * GameSession.game
-   */
-  export type GameSession$gameArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
-    /**
-     * Select specific fields to fetch from the Game
-     */
-    select?: GameSelect<ExtArgs> | null
-    /**
-     * Omit specific fields from the Game
-     */
-    omit?: GameOmit<ExtArgs> | null
-    /**
-     * Choose, which related nodes to fetch as well
-     */
-    include?: GameInclude<ExtArgs> | null
-    where?: GameWhereInput
-  }
-
-  /**
-   * GameSession without action
-   */
-  export type GameSessionDefaultArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
-    /**
-     * Select specific fields to fetch from the GameSession
-     */
-    select?: GameSessionSelect<ExtArgs> | null
-    /**
-     * Omit specific fields from the GameSession
-     */
-    omit?: GameSessionOmit<ExtArgs> | null
-    /**
-     * Choose, which related nodes to fetch as well
-     */
-    include?: GameSessionInclude<ExtArgs> | null
   }
 
 
@@ -61844,6 +61844,58 @@ export namespace Prisma {
   export type UnifiedLogScalarFieldEnum = (typeof UnifiedLogScalarFieldEnum)[keyof typeof UnifiedLogScalarFieldEnum]
 
 
+  export const CasinoGameScalarFieldEnum: {
+    id: 'id',
+    aggregatorType: 'aggregatorType',
+    provider: 'provider',
+    category: 'category',
+    gameId: 'gameId',
+    gameType: 'gameType',
+    tableId: 'tableId',
+    iconLink: 'iconLink',
+    isEnabled: 'isEnabled',
+    isVisibleToUser: 'isVisibleToUser',
+    houseEdge: 'houseEdge',
+    contributionRate: 'contributionRate',
+    createdAt: 'createdAt',
+    updatedAt: 'updatedAt'
+  };
+
+  export type CasinoGameScalarFieldEnum = (typeof CasinoGameScalarFieldEnum)[keyof typeof CasinoGameScalarFieldEnum]
+
+
+  export const GameTranslationScalarFieldEnum: {
+    id: 'id',
+    gameId: 'gameId',
+    language: 'language',
+    providerName: 'providerName',
+    categoryName: 'categoryName',
+    gameName: 'gameName',
+    createdAt: 'createdAt',
+    updatedAt: 'updatedAt'
+  };
+
+  export type GameTranslationScalarFieldEnum = (typeof GameTranslationScalarFieldEnum)[keyof typeof GameTranslationScalarFieldEnum]
+
+
+  export const GameSessionScalarFieldEnum: {
+    id: 'id',
+    userId: 'userId',
+    createdAt: 'createdAt',
+    updatedAt: 'updatedAt',
+    lastAccessedAt: 'lastAccessedAt',
+    aggregatorType: 'aggregatorType',
+    token: 'token',
+    walletCurrency: 'walletCurrency',
+    gameCurrency: 'gameCurrency',
+    exchangeRate: 'exchangeRate',
+    exchangeRateSnapshotAt: 'exchangeRateSnapshotAt',
+    gameId: 'gameId'
+  };
+
+  export type GameSessionScalarFieldEnum = (typeof GameSessionScalarFieldEnum)[keyof typeof GameSessionScalarFieldEnum]
+
+
   export const UserScalarFieldEnum: {
     id: 'id',
     uid: 'uid',
@@ -61896,40 +61948,6 @@ export namespace Prisma {
   };
 
   export type UserBalanceStatsScalarFieldEnum = (typeof UserBalanceStatsScalarFieldEnum)[keyof typeof UserBalanceStatsScalarFieldEnum]
-
-
-  export const GameScalarFieldEnum: {
-    id: 'id',
-    aggregatorType: 'aggregatorType',
-    provider: 'provider',
-    category: 'category',
-    gameId: 'gameId',
-    gameType: 'gameType',
-    tableId: 'tableId',
-    iconLink: 'iconLink',
-    isEnabled: 'isEnabled',
-    isVisibleToUser: 'isVisibleToUser',
-    houseEdge: 'houseEdge',
-    contributionRate: 'contributionRate',
-    createdAt: 'createdAt',
-    updatedAt: 'updatedAt'
-  };
-
-  export type GameScalarFieldEnum = (typeof GameScalarFieldEnum)[keyof typeof GameScalarFieldEnum]
-
-
-  export const GameTranslationScalarFieldEnum: {
-    id: 'id',
-    gameId: 'gameId',
-    language: 'language',
-    providerName: 'providerName',
-    categoryName: 'categoryName',
-    gameName: 'gameName',
-    createdAt: 'createdAt',
-    updatedAt: 'updatedAt'
-  };
-
-  export type GameTranslationScalarFieldEnum = (typeof GameTranslationScalarFieldEnum)[keyof typeof GameTranslationScalarFieldEnum]
 
 
   export const TransactionScalarFieldEnum: {
@@ -62191,24 +62209,6 @@ export namespace Prisma {
   };
 
   export type EmailLogScalarFieldEnum = (typeof EmailLogScalarFieldEnum)[keyof typeof EmailLogScalarFieldEnum]
-
-
-  export const GameSessionScalarFieldEnum: {
-    id: 'id',
-    userId: 'userId',
-    createdAt: 'createdAt',
-    updatedAt: 'updatedAt',
-    lastAccessedAt: 'lastAccessedAt',
-    aggregatorType: 'aggregatorType',
-    token: 'token',
-    walletCurrency: 'walletCurrency',
-    gameCurrency: 'gameCurrency',
-    exchangeRate: 'exchangeRate',
-    exchangeRateSnapshotAt: 'exchangeRateSnapshotAt',
-    gameId: 'gameId'
-  };
-
-  export type GameSessionScalarFieldEnum = (typeof GameSessionScalarFieldEnum)[keyof typeof GameSessionScalarFieldEnum]
 
 
   export const AffiliateWalletScalarFieldEnum: {
@@ -62664,6 +62664,90 @@ export namespace Prisma {
 
 
   /**
+   * Reference to a field of type 'GameAggregatorType'
+   */
+  export type EnumGameAggregatorTypeFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaModel, 'GameAggregatorType'>
+    
+
+
+  /**
+   * Reference to a field of type 'GameAggregatorType[]'
+   */
+  export type ListEnumGameAggregatorTypeFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaModel, 'GameAggregatorType[]'>
+    
+
+
+  /**
+   * Reference to a field of type 'GameProvider'
+   */
+  export type EnumGameProviderFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaModel, 'GameProvider'>
+    
+
+
+  /**
+   * Reference to a field of type 'GameProvider[]'
+   */
+  export type ListEnumGameProviderFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaModel, 'GameProvider[]'>
+    
+
+
+  /**
+   * Reference to a field of type 'GameCategory'
+   */
+  export type EnumGameCategoryFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaModel, 'GameCategory'>
+    
+
+
+  /**
+   * Reference to a field of type 'GameCategory[]'
+   */
+  export type ListEnumGameCategoryFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaModel, 'GameCategory[]'>
+    
+
+
+  /**
+   * Reference to a field of type 'Decimal'
+   */
+  export type DecimalFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaModel, 'Decimal'>
+    
+
+
+  /**
+   * Reference to a field of type 'Decimal[]'
+   */
+  export type ListDecimalFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaModel, 'Decimal[]'>
+    
+
+
+  /**
+   * Reference to a field of type 'Language'
+   */
+  export type EnumLanguageFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaModel, 'Language'>
+    
+
+
+  /**
+   * Reference to a field of type 'Language[]'
+   */
+  export type ListEnumLanguageFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaModel, 'Language[]'>
+    
+
+
+  /**
+   * Reference to a field of type 'ExchangeCurrencyCode'
+   */
+  export type EnumExchangeCurrencyCodeFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaModel, 'ExchangeCurrencyCode'>
+    
+
+
+  /**
+   * Reference to a field of type 'ExchangeCurrencyCode[]'
+   */
+  export type ListEnumExchangeCurrencyCodeFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaModel, 'ExchangeCurrencyCode[]'>
+    
+
+
+  /**
    * Reference to a field of type 'SocialType'
    */
   export type EnumSocialTypeFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaModel, 'SocialType'>
@@ -62716,90 +62800,6 @@ export namespace Prisma {
    * Reference to a field of type 'KycLevel[]'
    */
   export type ListEnumKycLevelFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaModel, 'KycLevel[]'>
-    
-
-
-  /**
-   * Reference to a field of type 'Language'
-   */
-  export type EnumLanguageFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaModel, 'Language'>
-    
-
-
-  /**
-   * Reference to a field of type 'Language[]'
-   */
-  export type ListEnumLanguageFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaModel, 'Language[]'>
-    
-
-
-  /**
-   * Reference to a field of type 'ExchangeCurrencyCode'
-   */
-  export type EnumExchangeCurrencyCodeFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaModel, 'ExchangeCurrencyCode'>
-    
-
-
-  /**
-   * Reference to a field of type 'ExchangeCurrencyCode[]'
-   */
-  export type ListEnumExchangeCurrencyCodeFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaModel, 'ExchangeCurrencyCode[]'>
-    
-
-
-  /**
-   * Reference to a field of type 'Decimal'
-   */
-  export type DecimalFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaModel, 'Decimal'>
-    
-
-
-  /**
-   * Reference to a field of type 'Decimal[]'
-   */
-  export type ListDecimalFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaModel, 'Decimal[]'>
-    
-
-
-  /**
-   * Reference to a field of type 'GameAggregatorType'
-   */
-  export type EnumGameAggregatorTypeFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaModel, 'GameAggregatorType'>
-    
-
-
-  /**
-   * Reference to a field of type 'GameAggregatorType[]'
-   */
-  export type ListEnumGameAggregatorTypeFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaModel, 'GameAggregatorType[]'>
-    
-
-
-  /**
-   * Reference to a field of type 'GameProvider'
-   */
-  export type EnumGameProviderFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaModel, 'GameProvider'>
-    
-
-
-  /**
-   * Reference to a field of type 'GameProvider[]'
-   */
-  export type ListEnumGameProviderFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaModel, 'GameProvider[]'>
-    
-
-
-  /**
-   * Reference to a field of type 'GameCategory'
-   */
-  export type EnumGameCategoryFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaModel, 'GameCategory'>
-    
-
-
-  /**
-   * Reference to a field of type 'GameCategory[]'
-   */
-  export type ListEnumGameCategoryFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaModel, 'GameCategory[]'>
     
 
 
@@ -64004,6 +64004,289 @@ export namespace Prisma {
     metadata?: JsonNullableWithAggregatesFilter<"UnifiedLog">
   }
 
+  export type CasinoGameWhereInput = {
+    AND?: CasinoGameWhereInput | CasinoGameWhereInput[]
+    OR?: CasinoGameWhereInput[]
+    NOT?: CasinoGameWhereInput | CasinoGameWhereInput[]
+    id?: IntFilter<"CasinoGame"> | number
+    aggregatorType?: EnumGameAggregatorTypeFilter<"CasinoGame"> | $Enums.GameAggregatorType
+    provider?: EnumGameProviderFilter<"CasinoGame"> | $Enums.GameProvider
+    category?: EnumGameCategoryFilter<"CasinoGame"> | $Enums.GameCategory
+    gameId?: IntFilter<"CasinoGame"> | number
+    gameType?: StringNullableFilter<"CasinoGame"> | string | null
+    tableId?: StringNullableFilter<"CasinoGame"> | string | null
+    iconLink?: StringNullableFilter<"CasinoGame"> | string | null
+    isEnabled?: BoolFilter<"CasinoGame"> | boolean
+    isVisibleToUser?: BoolFilter<"CasinoGame"> | boolean
+    houseEdge?: DecimalFilter<"CasinoGame"> | Decimal | DecimalJsLike | number | string
+    contributionRate?: DecimalFilter<"CasinoGame"> | Decimal | DecimalJsLike | number | string
+    createdAt?: DateTimeFilter<"CasinoGame"> | Date | string
+    updatedAt?: DateTimeFilter<"CasinoGame"> | Date | string
+    bonusDetails?: BonusDetailListRelationFilter
+    gameRounds?: GameRoundListRelationFilter
+    gameSessions?: GameSessionListRelationFilter
+    translations?: GameTranslationListRelationFilter
+  }
+
+  export type CasinoGameOrderByWithRelationInput = {
+    id?: SortOrder
+    aggregatorType?: SortOrder
+    provider?: SortOrder
+    category?: SortOrder
+    gameId?: SortOrder
+    gameType?: SortOrderInput | SortOrder
+    tableId?: SortOrderInput | SortOrder
+    iconLink?: SortOrderInput | SortOrder
+    isEnabled?: SortOrder
+    isVisibleToUser?: SortOrder
+    houseEdge?: SortOrder
+    contributionRate?: SortOrder
+    createdAt?: SortOrder
+    updatedAt?: SortOrder
+    bonusDetails?: BonusDetailOrderByRelationAggregateInput
+    gameRounds?: GameRoundOrderByRelationAggregateInput
+    gameSessions?: GameSessionOrderByRelationAggregateInput
+    translations?: GameTranslationOrderByRelationAggregateInput
+  }
+
+  export type CasinoGameWhereUniqueInput = Prisma.AtLeast<{
+    id?: number
+    aggregatorType_provider_gameId?: CasinoGameAggregatorTypeProviderGameIdCompoundUniqueInput
+    AND?: CasinoGameWhereInput | CasinoGameWhereInput[]
+    OR?: CasinoGameWhereInput[]
+    NOT?: CasinoGameWhereInput | CasinoGameWhereInput[]
+    aggregatorType?: EnumGameAggregatorTypeFilter<"CasinoGame"> | $Enums.GameAggregatorType
+    provider?: EnumGameProviderFilter<"CasinoGame"> | $Enums.GameProvider
+    category?: EnumGameCategoryFilter<"CasinoGame"> | $Enums.GameCategory
+    gameId?: IntFilter<"CasinoGame"> | number
+    gameType?: StringNullableFilter<"CasinoGame"> | string | null
+    tableId?: StringNullableFilter<"CasinoGame"> | string | null
+    iconLink?: StringNullableFilter<"CasinoGame"> | string | null
+    isEnabled?: BoolFilter<"CasinoGame"> | boolean
+    isVisibleToUser?: BoolFilter<"CasinoGame"> | boolean
+    houseEdge?: DecimalFilter<"CasinoGame"> | Decimal | DecimalJsLike | number | string
+    contributionRate?: DecimalFilter<"CasinoGame"> | Decimal | DecimalJsLike | number | string
+    createdAt?: DateTimeFilter<"CasinoGame"> | Date | string
+    updatedAt?: DateTimeFilter<"CasinoGame"> | Date | string
+    bonusDetails?: BonusDetailListRelationFilter
+    gameRounds?: GameRoundListRelationFilter
+    gameSessions?: GameSessionListRelationFilter
+    translations?: GameTranslationListRelationFilter
+  }, "id" | "aggregatorType_provider_gameId">
+
+  export type CasinoGameOrderByWithAggregationInput = {
+    id?: SortOrder
+    aggregatorType?: SortOrder
+    provider?: SortOrder
+    category?: SortOrder
+    gameId?: SortOrder
+    gameType?: SortOrderInput | SortOrder
+    tableId?: SortOrderInput | SortOrder
+    iconLink?: SortOrderInput | SortOrder
+    isEnabled?: SortOrder
+    isVisibleToUser?: SortOrder
+    houseEdge?: SortOrder
+    contributionRate?: SortOrder
+    createdAt?: SortOrder
+    updatedAt?: SortOrder
+    _count?: CasinoGameCountOrderByAggregateInput
+    _avg?: CasinoGameAvgOrderByAggregateInput
+    _max?: CasinoGameMaxOrderByAggregateInput
+    _min?: CasinoGameMinOrderByAggregateInput
+    _sum?: CasinoGameSumOrderByAggregateInput
+  }
+
+  export type CasinoGameScalarWhereWithAggregatesInput = {
+    AND?: CasinoGameScalarWhereWithAggregatesInput | CasinoGameScalarWhereWithAggregatesInput[]
+    OR?: CasinoGameScalarWhereWithAggregatesInput[]
+    NOT?: CasinoGameScalarWhereWithAggregatesInput | CasinoGameScalarWhereWithAggregatesInput[]
+    id?: IntWithAggregatesFilter<"CasinoGame"> | number
+    aggregatorType?: EnumGameAggregatorTypeWithAggregatesFilter<"CasinoGame"> | $Enums.GameAggregatorType
+    provider?: EnumGameProviderWithAggregatesFilter<"CasinoGame"> | $Enums.GameProvider
+    category?: EnumGameCategoryWithAggregatesFilter<"CasinoGame"> | $Enums.GameCategory
+    gameId?: IntWithAggregatesFilter<"CasinoGame"> | number
+    gameType?: StringNullableWithAggregatesFilter<"CasinoGame"> | string | null
+    tableId?: StringNullableWithAggregatesFilter<"CasinoGame"> | string | null
+    iconLink?: StringNullableWithAggregatesFilter<"CasinoGame"> | string | null
+    isEnabled?: BoolWithAggregatesFilter<"CasinoGame"> | boolean
+    isVisibleToUser?: BoolWithAggregatesFilter<"CasinoGame"> | boolean
+    houseEdge?: DecimalWithAggregatesFilter<"CasinoGame"> | Decimal | DecimalJsLike | number | string
+    contributionRate?: DecimalWithAggregatesFilter<"CasinoGame"> | Decimal | DecimalJsLike | number | string
+    createdAt?: DateTimeWithAggregatesFilter<"CasinoGame"> | Date | string
+    updatedAt?: DateTimeWithAggregatesFilter<"CasinoGame"> | Date | string
+  }
+
+  export type GameTranslationWhereInput = {
+    AND?: GameTranslationWhereInput | GameTranslationWhereInput[]
+    OR?: GameTranslationWhereInput[]
+    NOT?: GameTranslationWhereInput | GameTranslationWhereInput[]
+    id?: IntFilter<"GameTranslation"> | number
+    gameId?: IntFilter<"GameTranslation"> | number
+    language?: EnumLanguageFilter<"GameTranslation"> | $Enums.Language
+    providerName?: StringFilter<"GameTranslation"> | string
+    categoryName?: StringFilter<"GameTranslation"> | string
+    gameName?: StringFilter<"GameTranslation"> | string
+    createdAt?: DateTimeFilter<"GameTranslation"> | Date | string
+    updatedAt?: DateTimeFilter<"GameTranslation"> | Date | string
+    casinoGame?: XOR<CasinoGameScalarRelationFilter, CasinoGameWhereInput>
+  }
+
+  export type GameTranslationOrderByWithRelationInput = {
+    id?: SortOrder
+    gameId?: SortOrder
+    language?: SortOrder
+    providerName?: SortOrder
+    categoryName?: SortOrder
+    gameName?: SortOrder
+    createdAt?: SortOrder
+    updatedAt?: SortOrder
+    casinoGame?: CasinoGameOrderByWithRelationInput
+  }
+
+  export type GameTranslationWhereUniqueInput = Prisma.AtLeast<{
+    id?: number
+    gameId_language?: GameTranslationGameIdLanguageCompoundUniqueInput
+    AND?: GameTranslationWhereInput | GameTranslationWhereInput[]
+    OR?: GameTranslationWhereInput[]
+    NOT?: GameTranslationWhereInput | GameTranslationWhereInput[]
+    gameId?: IntFilter<"GameTranslation"> | number
+    language?: EnumLanguageFilter<"GameTranslation"> | $Enums.Language
+    providerName?: StringFilter<"GameTranslation"> | string
+    categoryName?: StringFilter<"GameTranslation"> | string
+    gameName?: StringFilter<"GameTranslation"> | string
+    createdAt?: DateTimeFilter<"GameTranslation"> | Date | string
+    updatedAt?: DateTimeFilter<"GameTranslation"> | Date | string
+    casinoGame?: XOR<CasinoGameScalarRelationFilter, CasinoGameWhereInput>
+  }, "id" | "gameId_language">
+
+  export type GameTranslationOrderByWithAggregationInput = {
+    id?: SortOrder
+    gameId?: SortOrder
+    language?: SortOrder
+    providerName?: SortOrder
+    categoryName?: SortOrder
+    gameName?: SortOrder
+    createdAt?: SortOrder
+    updatedAt?: SortOrder
+    _count?: GameTranslationCountOrderByAggregateInput
+    _avg?: GameTranslationAvgOrderByAggregateInput
+    _max?: GameTranslationMaxOrderByAggregateInput
+    _min?: GameTranslationMinOrderByAggregateInput
+    _sum?: GameTranslationSumOrderByAggregateInput
+  }
+
+  export type GameTranslationScalarWhereWithAggregatesInput = {
+    AND?: GameTranslationScalarWhereWithAggregatesInput | GameTranslationScalarWhereWithAggregatesInput[]
+    OR?: GameTranslationScalarWhereWithAggregatesInput[]
+    NOT?: GameTranslationScalarWhereWithAggregatesInput | GameTranslationScalarWhereWithAggregatesInput[]
+    id?: IntWithAggregatesFilter<"GameTranslation"> | number
+    gameId?: IntWithAggregatesFilter<"GameTranslation"> | number
+    language?: EnumLanguageWithAggregatesFilter<"GameTranslation"> | $Enums.Language
+    providerName?: StringWithAggregatesFilter<"GameTranslation"> | string
+    categoryName?: StringWithAggregatesFilter<"GameTranslation"> | string
+    gameName?: StringWithAggregatesFilter<"GameTranslation"> | string
+    createdAt?: DateTimeWithAggregatesFilter<"GameTranslation"> | Date | string
+    updatedAt?: DateTimeWithAggregatesFilter<"GameTranslation"> | Date | string
+  }
+
+  export type GameSessionWhereInput = {
+    AND?: GameSessionWhereInput | GameSessionWhereInput[]
+    OR?: GameSessionWhereInput[]
+    NOT?: GameSessionWhereInput | GameSessionWhereInput[]
+    id?: BigIntFilter<"GameSession"> | bigint | number
+    userId?: BigIntFilter<"GameSession"> | bigint | number
+    createdAt?: DateTimeFilter<"GameSession"> | Date | string
+    updatedAt?: DateTimeFilter<"GameSession"> | Date | string
+    lastAccessedAt?: DateTimeFilter<"GameSession"> | Date | string
+    aggregatorType?: EnumGameAggregatorTypeFilter<"GameSession"> | $Enums.GameAggregatorType
+    token?: StringFilter<"GameSession"> | string
+    walletCurrency?: EnumExchangeCurrencyCodeFilter<"GameSession"> | $Enums.ExchangeCurrencyCode
+    gameCurrency?: EnumExchangeCurrencyCodeFilter<"GameSession"> | $Enums.ExchangeCurrencyCode
+    exchangeRate?: DecimalFilter<"GameSession"> | Decimal | DecimalJsLike | number | string
+    exchangeRateSnapshotAt?: DateTimeFilter<"GameSession"> | Date | string
+    gameId?: IntNullableFilter<"GameSession"> | number | null
+    gameRounds?: GameRoundListRelationFilter
+    game?: XOR<CasinoGameNullableScalarRelationFilter, CasinoGameWhereInput> | null
+    user?: XOR<UserScalarRelationFilter, UserWhereInput>
+  }
+
+  export type GameSessionOrderByWithRelationInput = {
+    id?: SortOrder
+    userId?: SortOrder
+    createdAt?: SortOrder
+    updatedAt?: SortOrder
+    lastAccessedAt?: SortOrder
+    aggregatorType?: SortOrder
+    token?: SortOrder
+    walletCurrency?: SortOrder
+    gameCurrency?: SortOrder
+    exchangeRate?: SortOrder
+    exchangeRateSnapshotAt?: SortOrder
+    gameId?: SortOrderInput | SortOrder
+    gameRounds?: GameRoundOrderByRelationAggregateInput
+    game?: CasinoGameOrderByWithRelationInput
+    user?: UserOrderByWithRelationInput
+  }
+
+  export type GameSessionWhereUniqueInput = Prisma.AtLeast<{
+    id?: bigint | number
+    token?: string
+    AND?: GameSessionWhereInput | GameSessionWhereInput[]
+    OR?: GameSessionWhereInput[]
+    NOT?: GameSessionWhereInput | GameSessionWhereInput[]
+    userId?: BigIntFilter<"GameSession"> | bigint | number
+    createdAt?: DateTimeFilter<"GameSession"> | Date | string
+    updatedAt?: DateTimeFilter<"GameSession"> | Date | string
+    lastAccessedAt?: DateTimeFilter<"GameSession"> | Date | string
+    aggregatorType?: EnumGameAggregatorTypeFilter<"GameSession"> | $Enums.GameAggregatorType
+    walletCurrency?: EnumExchangeCurrencyCodeFilter<"GameSession"> | $Enums.ExchangeCurrencyCode
+    gameCurrency?: EnumExchangeCurrencyCodeFilter<"GameSession"> | $Enums.ExchangeCurrencyCode
+    exchangeRate?: DecimalFilter<"GameSession"> | Decimal | DecimalJsLike | number | string
+    exchangeRateSnapshotAt?: DateTimeFilter<"GameSession"> | Date | string
+    gameId?: IntNullableFilter<"GameSession"> | number | null
+    gameRounds?: GameRoundListRelationFilter
+    game?: XOR<CasinoGameNullableScalarRelationFilter, CasinoGameWhereInput> | null
+    user?: XOR<UserScalarRelationFilter, UserWhereInput>
+  }, "id" | "token">
+
+  export type GameSessionOrderByWithAggregationInput = {
+    id?: SortOrder
+    userId?: SortOrder
+    createdAt?: SortOrder
+    updatedAt?: SortOrder
+    lastAccessedAt?: SortOrder
+    aggregatorType?: SortOrder
+    token?: SortOrder
+    walletCurrency?: SortOrder
+    gameCurrency?: SortOrder
+    exchangeRate?: SortOrder
+    exchangeRateSnapshotAt?: SortOrder
+    gameId?: SortOrderInput | SortOrder
+    _count?: GameSessionCountOrderByAggregateInput
+    _avg?: GameSessionAvgOrderByAggregateInput
+    _max?: GameSessionMaxOrderByAggregateInput
+    _min?: GameSessionMinOrderByAggregateInput
+    _sum?: GameSessionSumOrderByAggregateInput
+  }
+
+  export type GameSessionScalarWhereWithAggregatesInput = {
+    AND?: GameSessionScalarWhereWithAggregatesInput | GameSessionScalarWhereWithAggregatesInput[]
+    OR?: GameSessionScalarWhereWithAggregatesInput[]
+    NOT?: GameSessionScalarWhereWithAggregatesInput | GameSessionScalarWhereWithAggregatesInput[]
+    id?: BigIntWithAggregatesFilter<"GameSession"> | bigint | number
+    userId?: BigIntWithAggregatesFilter<"GameSession"> | bigint | number
+    createdAt?: DateTimeWithAggregatesFilter<"GameSession"> | Date | string
+    updatedAt?: DateTimeWithAggregatesFilter<"GameSession"> | Date | string
+    lastAccessedAt?: DateTimeWithAggregatesFilter<"GameSession"> | Date | string
+    aggregatorType?: EnumGameAggregatorTypeWithAggregatesFilter<"GameSession"> | $Enums.GameAggregatorType
+    token?: StringWithAggregatesFilter<"GameSession"> | string
+    walletCurrency?: EnumExchangeCurrencyCodeWithAggregatesFilter<"GameSession"> | $Enums.ExchangeCurrencyCode
+    gameCurrency?: EnumExchangeCurrencyCodeWithAggregatesFilter<"GameSession"> | $Enums.ExchangeCurrencyCode
+    exchangeRate?: DecimalWithAggregatesFilter<"GameSession"> | Decimal | DecimalJsLike | number | string
+    exchangeRateSnapshotAt?: DateTimeWithAggregatesFilter<"GameSession"> | Date | string
+    gameId?: IntNullableWithAggregatesFilter<"GameSession"> | number | null
+  }
+
   export type UserWhereInput = {
     AND?: UserWhereInput | UserWhereInput[]
     OR?: UserWhereInput[]
@@ -64351,191 +64634,6 @@ export namespace Prisma {
     updatedAt?: DateTimeWithAggregatesFilter<"UserBalanceStats"> | Date | string
   }
 
-  export type GameWhereInput = {
-    AND?: GameWhereInput | GameWhereInput[]
-    OR?: GameWhereInput[]
-    NOT?: GameWhereInput | GameWhereInput[]
-    id?: IntFilter<"Game"> | number
-    aggregatorType?: EnumGameAggregatorTypeFilter<"Game"> | $Enums.GameAggregatorType
-    provider?: EnumGameProviderFilter<"Game"> | $Enums.GameProvider
-    category?: EnumGameCategoryFilter<"Game"> | $Enums.GameCategory
-    gameId?: IntFilter<"Game"> | number
-    gameType?: StringNullableFilter<"Game"> | string | null
-    tableId?: StringNullableFilter<"Game"> | string | null
-    iconLink?: StringNullableFilter<"Game"> | string | null
-    isEnabled?: BoolFilter<"Game"> | boolean
-    isVisibleToUser?: BoolFilter<"Game"> | boolean
-    houseEdge?: DecimalFilter<"Game"> | Decimal | DecimalJsLike | number | string
-    contributionRate?: DecimalFilter<"Game"> | Decimal | DecimalJsLike | number | string
-    createdAt?: DateTimeFilter<"Game"> | Date | string
-    updatedAt?: DateTimeFilter<"Game"> | Date | string
-    bonusDetails?: BonusDetailListRelationFilter
-    gameRounds?: GameRoundListRelationFilter
-    gameSessions?: GameSessionListRelationFilter
-    translations?: GameTranslationListRelationFilter
-  }
-
-  export type GameOrderByWithRelationInput = {
-    id?: SortOrder
-    aggregatorType?: SortOrder
-    provider?: SortOrder
-    category?: SortOrder
-    gameId?: SortOrder
-    gameType?: SortOrderInput | SortOrder
-    tableId?: SortOrderInput | SortOrder
-    iconLink?: SortOrderInput | SortOrder
-    isEnabled?: SortOrder
-    isVisibleToUser?: SortOrder
-    houseEdge?: SortOrder
-    contributionRate?: SortOrder
-    createdAt?: SortOrder
-    updatedAt?: SortOrder
-    bonusDetails?: BonusDetailOrderByRelationAggregateInput
-    gameRounds?: GameRoundOrderByRelationAggregateInput
-    gameSessions?: GameSessionOrderByRelationAggregateInput
-    translations?: GameTranslationOrderByRelationAggregateInput
-  }
-
-  export type GameWhereUniqueInput = Prisma.AtLeast<{
-    id?: number
-    aggregatorType_provider_gameId?: GameAggregatorTypeProviderGameIdCompoundUniqueInput
-    AND?: GameWhereInput | GameWhereInput[]
-    OR?: GameWhereInput[]
-    NOT?: GameWhereInput | GameWhereInput[]
-    aggregatorType?: EnumGameAggregatorTypeFilter<"Game"> | $Enums.GameAggregatorType
-    provider?: EnumGameProviderFilter<"Game"> | $Enums.GameProvider
-    category?: EnumGameCategoryFilter<"Game"> | $Enums.GameCategory
-    gameId?: IntFilter<"Game"> | number
-    gameType?: StringNullableFilter<"Game"> | string | null
-    tableId?: StringNullableFilter<"Game"> | string | null
-    iconLink?: StringNullableFilter<"Game"> | string | null
-    isEnabled?: BoolFilter<"Game"> | boolean
-    isVisibleToUser?: BoolFilter<"Game"> | boolean
-    houseEdge?: DecimalFilter<"Game"> | Decimal | DecimalJsLike | number | string
-    contributionRate?: DecimalFilter<"Game"> | Decimal | DecimalJsLike | number | string
-    createdAt?: DateTimeFilter<"Game"> | Date | string
-    updatedAt?: DateTimeFilter<"Game"> | Date | string
-    bonusDetails?: BonusDetailListRelationFilter
-    gameRounds?: GameRoundListRelationFilter
-    gameSessions?: GameSessionListRelationFilter
-    translations?: GameTranslationListRelationFilter
-  }, "id" | "aggregatorType_provider_gameId">
-
-  export type GameOrderByWithAggregationInput = {
-    id?: SortOrder
-    aggregatorType?: SortOrder
-    provider?: SortOrder
-    category?: SortOrder
-    gameId?: SortOrder
-    gameType?: SortOrderInput | SortOrder
-    tableId?: SortOrderInput | SortOrder
-    iconLink?: SortOrderInput | SortOrder
-    isEnabled?: SortOrder
-    isVisibleToUser?: SortOrder
-    houseEdge?: SortOrder
-    contributionRate?: SortOrder
-    createdAt?: SortOrder
-    updatedAt?: SortOrder
-    _count?: GameCountOrderByAggregateInput
-    _avg?: GameAvgOrderByAggregateInput
-    _max?: GameMaxOrderByAggregateInput
-    _min?: GameMinOrderByAggregateInput
-    _sum?: GameSumOrderByAggregateInput
-  }
-
-  export type GameScalarWhereWithAggregatesInput = {
-    AND?: GameScalarWhereWithAggregatesInput | GameScalarWhereWithAggregatesInput[]
-    OR?: GameScalarWhereWithAggregatesInput[]
-    NOT?: GameScalarWhereWithAggregatesInput | GameScalarWhereWithAggregatesInput[]
-    id?: IntWithAggregatesFilter<"Game"> | number
-    aggregatorType?: EnumGameAggregatorTypeWithAggregatesFilter<"Game"> | $Enums.GameAggregatorType
-    provider?: EnumGameProviderWithAggregatesFilter<"Game"> | $Enums.GameProvider
-    category?: EnumGameCategoryWithAggregatesFilter<"Game"> | $Enums.GameCategory
-    gameId?: IntWithAggregatesFilter<"Game"> | number
-    gameType?: StringNullableWithAggregatesFilter<"Game"> | string | null
-    tableId?: StringNullableWithAggregatesFilter<"Game"> | string | null
-    iconLink?: StringNullableWithAggregatesFilter<"Game"> | string | null
-    isEnabled?: BoolWithAggregatesFilter<"Game"> | boolean
-    isVisibleToUser?: BoolWithAggregatesFilter<"Game"> | boolean
-    houseEdge?: DecimalWithAggregatesFilter<"Game"> | Decimal | DecimalJsLike | number | string
-    contributionRate?: DecimalWithAggregatesFilter<"Game"> | Decimal | DecimalJsLike | number | string
-    createdAt?: DateTimeWithAggregatesFilter<"Game"> | Date | string
-    updatedAt?: DateTimeWithAggregatesFilter<"Game"> | Date | string
-  }
-
-  export type GameTranslationWhereInput = {
-    AND?: GameTranslationWhereInput | GameTranslationWhereInput[]
-    OR?: GameTranslationWhereInput[]
-    NOT?: GameTranslationWhereInput | GameTranslationWhereInput[]
-    id?: IntFilter<"GameTranslation"> | number
-    gameId?: IntFilter<"GameTranslation"> | number
-    language?: EnumLanguageFilter<"GameTranslation"> | $Enums.Language
-    providerName?: StringFilter<"GameTranslation"> | string
-    categoryName?: StringFilter<"GameTranslation"> | string
-    gameName?: StringFilter<"GameTranslation"> | string
-    createdAt?: DateTimeFilter<"GameTranslation"> | Date | string
-    updatedAt?: DateTimeFilter<"GameTranslation"> | Date | string
-    game?: XOR<GameScalarRelationFilter, GameWhereInput>
-  }
-
-  export type GameTranslationOrderByWithRelationInput = {
-    id?: SortOrder
-    gameId?: SortOrder
-    language?: SortOrder
-    providerName?: SortOrder
-    categoryName?: SortOrder
-    gameName?: SortOrder
-    createdAt?: SortOrder
-    updatedAt?: SortOrder
-    game?: GameOrderByWithRelationInput
-  }
-
-  export type GameTranslationWhereUniqueInput = Prisma.AtLeast<{
-    id?: number
-    gameId_language?: GameTranslationGameIdLanguageCompoundUniqueInput
-    AND?: GameTranslationWhereInput | GameTranslationWhereInput[]
-    OR?: GameTranslationWhereInput[]
-    NOT?: GameTranslationWhereInput | GameTranslationWhereInput[]
-    gameId?: IntFilter<"GameTranslation"> | number
-    language?: EnumLanguageFilter<"GameTranslation"> | $Enums.Language
-    providerName?: StringFilter<"GameTranslation"> | string
-    categoryName?: StringFilter<"GameTranslation"> | string
-    gameName?: StringFilter<"GameTranslation"> | string
-    createdAt?: DateTimeFilter<"GameTranslation"> | Date | string
-    updatedAt?: DateTimeFilter<"GameTranslation"> | Date | string
-    game?: XOR<GameScalarRelationFilter, GameWhereInput>
-  }, "id" | "gameId_language">
-
-  export type GameTranslationOrderByWithAggregationInput = {
-    id?: SortOrder
-    gameId?: SortOrder
-    language?: SortOrder
-    providerName?: SortOrder
-    categoryName?: SortOrder
-    gameName?: SortOrder
-    createdAt?: SortOrder
-    updatedAt?: SortOrder
-    _count?: GameTranslationCountOrderByAggregateInput
-    _avg?: GameTranslationAvgOrderByAggregateInput
-    _max?: GameTranslationMaxOrderByAggregateInput
-    _min?: GameTranslationMinOrderByAggregateInput
-    _sum?: GameTranslationSumOrderByAggregateInput
-  }
-
-  export type GameTranslationScalarWhereWithAggregatesInput = {
-    AND?: GameTranslationScalarWhereWithAggregatesInput | GameTranslationScalarWhereWithAggregatesInput[]
-    OR?: GameTranslationScalarWhereWithAggregatesInput[]
-    NOT?: GameTranslationScalarWhereWithAggregatesInput | GameTranslationScalarWhereWithAggregatesInput[]
-    id?: IntWithAggregatesFilter<"GameTranslation"> | number
-    gameId?: IntWithAggregatesFilter<"GameTranslation"> | number
-    language?: EnumLanguageWithAggregatesFilter<"GameTranslation"> | $Enums.Language
-    providerName?: StringWithAggregatesFilter<"GameTranslation"> | string
-    categoryName?: StringWithAggregatesFilter<"GameTranslation"> | string
-    gameName?: StringWithAggregatesFilter<"GameTranslation"> | string
-    createdAt?: DateTimeWithAggregatesFilter<"GameTranslation"> | Date | string
-    updatedAt?: DateTimeWithAggregatesFilter<"GameTranslation"> | Date | string
-  }
-
   export type TransactionWhereInput = {
     AND?: TransactionWhereInput | TransactionWhereInput[]
     OR?: TransactionWhereInput[]
@@ -64675,7 +64773,7 @@ export namespace Prisma {
     gameSessionId?: BigIntFilter<"GameRound"> | bigint | number
     AffiliateCommission?: AffiliateCommissionListRelationFilter
     bets?: GameBetListRelationFilter
-    game?: XOR<GameNullableScalarRelationFilter, GameWhereInput> | null
+    casinoGame?: XOR<CasinoGameNullableScalarRelationFilter, CasinoGameWhereInput> | null
     GameSession?: XOR<GameSessionScalarRelationFilter, GameSessionWhereInput>
     transaction?: XOR<TransactionScalarRelationFilter, TransactionWhereInput>
     wins?: GameWinListRelationFilter
@@ -64711,7 +64809,7 @@ export namespace Prisma {
     gameSessionId?: SortOrder
     AffiliateCommission?: AffiliateCommissionOrderByRelationAggregateInput
     bets?: GameBetOrderByRelationAggregateInput
-    game?: GameOrderByWithRelationInput
+    casinoGame?: CasinoGameOrderByWithRelationInput
     GameSession?: GameSessionOrderByWithRelationInput
     transaction?: TransactionOrderByWithRelationInput
     wins?: GameWinOrderByRelationAggregateInput
@@ -64751,7 +64849,7 @@ export namespace Prisma {
     gameSessionId?: BigIntFilter<"GameRound"> | bigint | number
     AffiliateCommission?: AffiliateCommissionListRelationFilter
     bets?: GameBetListRelationFilter
-    game?: XOR<GameNullableScalarRelationFilter, GameWhereInput> | null
+    casinoGame?: XOR<CasinoGameNullableScalarRelationFilter, CasinoGameWhereInput> | null
     GameSession?: XOR<GameSessionScalarRelationFilter, GameSessionWhereInput>
     transaction?: XOR<TransactionScalarRelationFilter, TransactionWhereInput>
     wins?: GameWinListRelationFilter
@@ -65104,7 +65202,7 @@ export namespace Prisma {
     description?: StringNullableFilter<"BonusDetail"> | string | null
     gameId?: IntNullableFilter<"BonusDetail"> | number | null
     transactionId?: BigIntFilter<"BonusDetail"> | bigint | number
-    game?: XOR<GameNullableScalarRelationFilter, GameWhereInput> | null
+    casinoGame?: XOR<CasinoGameNullableScalarRelationFilter, CasinoGameWhereInput> | null
     transaction?: XOR<TransactionScalarRelationFilter, TransactionWhereInput>
   }
 
@@ -65126,7 +65224,7 @@ export namespace Prisma {
     description?: SortOrderInput | SortOrder
     gameId?: SortOrderInput | SortOrder
     transactionId?: SortOrder
-    game?: GameOrderByWithRelationInput
+    casinoGame?: CasinoGameOrderByWithRelationInput
     transaction?: TransactionOrderByWithRelationInput
   }
 
@@ -65151,7 +65249,7 @@ export namespace Prisma {
     isEndRound?: BoolNullableFilter<"BonusDetail"> | boolean | null
     description?: StringNullableFilter<"BonusDetail"> | string | null
     gameId?: IntNullableFilter<"BonusDetail"> | number | null
-    game?: XOR<GameNullableScalarRelationFilter, GameWhereInput> | null
+    casinoGame?: XOR<CasinoGameNullableScalarRelationFilter, CasinoGameWhereInput> | null
     transaction?: XOR<TransactionScalarRelationFilter, TransactionWhereInput>
   }, "id" | "transactionId">
 
@@ -65923,104 +66021,6 @@ export namespace Prisma {
     metadata?: JsonNullableWithAggregatesFilter<"EmailLog">
     sentAt?: DateTimeNullableWithAggregatesFilter<"EmailLog"> | Date | string | null
     createdAt?: DateTimeWithAggregatesFilter<"EmailLog"> | Date | string
-  }
-
-  export type GameSessionWhereInput = {
-    AND?: GameSessionWhereInput | GameSessionWhereInput[]
-    OR?: GameSessionWhereInput[]
-    NOT?: GameSessionWhereInput | GameSessionWhereInput[]
-    id?: BigIntFilter<"GameSession"> | bigint | number
-    userId?: BigIntFilter<"GameSession"> | bigint | number
-    createdAt?: DateTimeFilter<"GameSession"> | Date | string
-    updatedAt?: DateTimeFilter<"GameSession"> | Date | string
-    lastAccessedAt?: DateTimeFilter<"GameSession"> | Date | string
-    aggregatorType?: EnumGameAggregatorTypeFilter<"GameSession"> | $Enums.GameAggregatorType
-    token?: StringFilter<"GameSession"> | string
-    walletCurrency?: EnumExchangeCurrencyCodeFilter<"GameSession"> | $Enums.ExchangeCurrencyCode
-    gameCurrency?: EnumExchangeCurrencyCodeFilter<"GameSession"> | $Enums.ExchangeCurrencyCode
-    exchangeRate?: DecimalFilter<"GameSession"> | Decimal | DecimalJsLike | number | string
-    exchangeRateSnapshotAt?: DateTimeFilter<"GameSession"> | Date | string
-    gameId?: IntNullableFilter<"GameSession"> | number | null
-    gameRounds?: GameRoundListRelationFilter
-    game?: XOR<GameNullableScalarRelationFilter, GameWhereInput> | null
-    user?: XOR<UserScalarRelationFilter, UserWhereInput>
-  }
-
-  export type GameSessionOrderByWithRelationInput = {
-    id?: SortOrder
-    userId?: SortOrder
-    createdAt?: SortOrder
-    updatedAt?: SortOrder
-    lastAccessedAt?: SortOrder
-    aggregatorType?: SortOrder
-    token?: SortOrder
-    walletCurrency?: SortOrder
-    gameCurrency?: SortOrder
-    exchangeRate?: SortOrder
-    exchangeRateSnapshotAt?: SortOrder
-    gameId?: SortOrderInput | SortOrder
-    gameRounds?: GameRoundOrderByRelationAggregateInput
-    game?: GameOrderByWithRelationInput
-    user?: UserOrderByWithRelationInput
-  }
-
-  export type GameSessionWhereUniqueInput = Prisma.AtLeast<{
-    id?: bigint | number
-    token?: string
-    AND?: GameSessionWhereInput | GameSessionWhereInput[]
-    OR?: GameSessionWhereInput[]
-    NOT?: GameSessionWhereInput | GameSessionWhereInput[]
-    userId?: BigIntFilter<"GameSession"> | bigint | number
-    createdAt?: DateTimeFilter<"GameSession"> | Date | string
-    updatedAt?: DateTimeFilter<"GameSession"> | Date | string
-    lastAccessedAt?: DateTimeFilter<"GameSession"> | Date | string
-    aggregatorType?: EnumGameAggregatorTypeFilter<"GameSession"> | $Enums.GameAggregatorType
-    walletCurrency?: EnumExchangeCurrencyCodeFilter<"GameSession"> | $Enums.ExchangeCurrencyCode
-    gameCurrency?: EnumExchangeCurrencyCodeFilter<"GameSession"> | $Enums.ExchangeCurrencyCode
-    exchangeRate?: DecimalFilter<"GameSession"> | Decimal | DecimalJsLike | number | string
-    exchangeRateSnapshotAt?: DateTimeFilter<"GameSession"> | Date | string
-    gameId?: IntNullableFilter<"GameSession"> | number | null
-    gameRounds?: GameRoundListRelationFilter
-    game?: XOR<GameNullableScalarRelationFilter, GameWhereInput> | null
-    user?: XOR<UserScalarRelationFilter, UserWhereInput>
-  }, "id" | "token">
-
-  export type GameSessionOrderByWithAggregationInput = {
-    id?: SortOrder
-    userId?: SortOrder
-    createdAt?: SortOrder
-    updatedAt?: SortOrder
-    lastAccessedAt?: SortOrder
-    aggregatorType?: SortOrder
-    token?: SortOrder
-    walletCurrency?: SortOrder
-    gameCurrency?: SortOrder
-    exchangeRate?: SortOrder
-    exchangeRateSnapshotAt?: SortOrder
-    gameId?: SortOrderInput | SortOrder
-    _count?: GameSessionCountOrderByAggregateInput
-    _avg?: GameSessionAvgOrderByAggregateInput
-    _max?: GameSessionMaxOrderByAggregateInput
-    _min?: GameSessionMinOrderByAggregateInput
-    _sum?: GameSessionSumOrderByAggregateInput
-  }
-
-  export type GameSessionScalarWhereWithAggregatesInput = {
-    AND?: GameSessionScalarWhereWithAggregatesInput | GameSessionScalarWhereWithAggregatesInput[]
-    OR?: GameSessionScalarWhereWithAggregatesInput[]
-    NOT?: GameSessionScalarWhereWithAggregatesInput | GameSessionScalarWhereWithAggregatesInput[]
-    id?: BigIntWithAggregatesFilter<"GameSession"> | bigint | number
-    userId?: BigIntWithAggregatesFilter<"GameSession"> | bigint | number
-    createdAt?: DateTimeWithAggregatesFilter<"GameSession"> | Date | string
-    updatedAt?: DateTimeWithAggregatesFilter<"GameSession"> | Date | string
-    lastAccessedAt?: DateTimeWithAggregatesFilter<"GameSession"> | Date | string
-    aggregatorType?: EnumGameAggregatorTypeWithAggregatesFilter<"GameSession"> | $Enums.GameAggregatorType
-    token?: StringWithAggregatesFilter<"GameSession"> | string
-    walletCurrency?: EnumExchangeCurrencyCodeWithAggregatesFilter<"GameSession"> | $Enums.ExchangeCurrencyCode
-    gameCurrency?: EnumExchangeCurrencyCodeWithAggregatesFilter<"GameSession"> | $Enums.ExchangeCurrencyCode
-    exchangeRate?: DecimalWithAggregatesFilter<"GameSession"> | Decimal | DecimalJsLike | number | string
-    exchangeRateSnapshotAt?: DateTimeWithAggregatesFilter<"GameSession"> | Date | string
-    gameId?: IntNullableWithAggregatesFilter<"GameSession"> | number | null
   }
 
   export type AffiliateWalletWhereInput = {
@@ -68652,6 +68652,318 @@ export namespace Prisma {
     metadata?: NullableJsonNullValueInput | InputJsonValue
   }
 
+  export type CasinoGameCreateInput = {
+    aggregatorType: $Enums.GameAggregatorType
+    provider: $Enums.GameProvider
+    category: $Enums.GameCategory
+    gameId: number
+    gameType?: string | null
+    tableId?: string | null
+    iconLink?: string | null
+    isEnabled: boolean
+    isVisibleToUser?: boolean
+    houseEdge?: Decimal | DecimalJsLike | number | string
+    contributionRate?: Decimal | DecimalJsLike | number | string
+    createdAt?: Date | string
+    updatedAt?: Date | string
+    bonusDetails?: BonusDetailCreateNestedManyWithoutCasinoGameInput
+    gameRounds?: GameRoundCreateNestedManyWithoutCasinoGameInput
+    gameSessions?: GameSessionCreateNestedManyWithoutGameInput
+    translations?: GameTranslationCreateNestedManyWithoutCasinoGameInput
+  }
+
+  export type CasinoGameUncheckedCreateInput = {
+    id?: number
+    aggregatorType: $Enums.GameAggregatorType
+    provider: $Enums.GameProvider
+    category: $Enums.GameCategory
+    gameId: number
+    gameType?: string | null
+    tableId?: string | null
+    iconLink?: string | null
+    isEnabled: boolean
+    isVisibleToUser?: boolean
+    houseEdge?: Decimal | DecimalJsLike | number | string
+    contributionRate?: Decimal | DecimalJsLike | number | string
+    createdAt?: Date | string
+    updatedAt?: Date | string
+    bonusDetails?: BonusDetailUncheckedCreateNestedManyWithoutCasinoGameInput
+    gameRounds?: GameRoundUncheckedCreateNestedManyWithoutCasinoGameInput
+    gameSessions?: GameSessionUncheckedCreateNestedManyWithoutGameInput
+    translations?: GameTranslationUncheckedCreateNestedManyWithoutCasinoGameInput
+  }
+
+  export type CasinoGameUpdateInput = {
+    aggregatorType?: EnumGameAggregatorTypeFieldUpdateOperationsInput | $Enums.GameAggregatorType
+    provider?: EnumGameProviderFieldUpdateOperationsInput | $Enums.GameProvider
+    category?: EnumGameCategoryFieldUpdateOperationsInput | $Enums.GameCategory
+    gameId?: IntFieldUpdateOperationsInput | number
+    gameType?: NullableStringFieldUpdateOperationsInput | string | null
+    tableId?: NullableStringFieldUpdateOperationsInput | string | null
+    iconLink?: NullableStringFieldUpdateOperationsInput | string | null
+    isEnabled?: BoolFieldUpdateOperationsInput | boolean
+    isVisibleToUser?: BoolFieldUpdateOperationsInput | boolean
+    houseEdge?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
+    contributionRate?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    bonusDetails?: BonusDetailUpdateManyWithoutCasinoGameNestedInput
+    gameRounds?: GameRoundUpdateManyWithoutCasinoGameNestedInput
+    gameSessions?: GameSessionUpdateManyWithoutGameNestedInput
+    translations?: GameTranslationUpdateManyWithoutCasinoGameNestedInput
+  }
+
+  export type CasinoGameUncheckedUpdateInput = {
+    id?: IntFieldUpdateOperationsInput | number
+    aggregatorType?: EnumGameAggregatorTypeFieldUpdateOperationsInput | $Enums.GameAggregatorType
+    provider?: EnumGameProviderFieldUpdateOperationsInput | $Enums.GameProvider
+    category?: EnumGameCategoryFieldUpdateOperationsInput | $Enums.GameCategory
+    gameId?: IntFieldUpdateOperationsInput | number
+    gameType?: NullableStringFieldUpdateOperationsInput | string | null
+    tableId?: NullableStringFieldUpdateOperationsInput | string | null
+    iconLink?: NullableStringFieldUpdateOperationsInput | string | null
+    isEnabled?: BoolFieldUpdateOperationsInput | boolean
+    isVisibleToUser?: BoolFieldUpdateOperationsInput | boolean
+    houseEdge?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
+    contributionRate?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    bonusDetails?: BonusDetailUncheckedUpdateManyWithoutCasinoGameNestedInput
+    gameRounds?: GameRoundUncheckedUpdateManyWithoutCasinoGameNestedInput
+    gameSessions?: GameSessionUncheckedUpdateManyWithoutGameNestedInput
+    translations?: GameTranslationUncheckedUpdateManyWithoutCasinoGameNestedInput
+  }
+
+  export type CasinoGameCreateManyInput = {
+    id?: number
+    aggregatorType: $Enums.GameAggregatorType
+    provider: $Enums.GameProvider
+    category: $Enums.GameCategory
+    gameId: number
+    gameType?: string | null
+    tableId?: string | null
+    iconLink?: string | null
+    isEnabled: boolean
+    isVisibleToUser?: boolean
+    houseEdge?: Decimal | DecimalJsLike | number | string
+    contributionRate?: Decimal | DecimalJsLike | number | string
+    createdAt?: Date | string
+    updatedAt?: Date | string
+  }
+
+  export type CasinoGameUpdateManyMutationInput = {
+    aggregatorType?: EnumGameAggregatorTypeFieldUpdateOperationsInput | $Enums.GameAggregatorType
+    provider?: EnumGameProviderFieldUpdateOperationsInput | $Enums.GameProvider
+    category?: EnumGameCategoryFieldUpdateOperationsInput | $Enums.GameCategory
+    gameId?: IntFieldUpdateOperationsInput | number
+    gameType?: NullableStringFieldUpdateOperationsInput | string | null
+    tableId?: NullableStringFieldUpdateOperationsInput | string | null
+    iconLink?: NullableStringFieldUpdateOperationsInput | string | null
+    isEnabled?: BoolFieldUpdateOperationsInput | boolean
+    isVisibleToUser?: BoolFieldUpdateOperationsInput | boolean
+    houseEdge?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
+    contributionRate?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+  }
+
+  export type CasinoGameUncheckedUpdateManyInput = {
+    id?: IntFieldUpdateOperationsInput | number
+    aggregatorType?: EnumGameAggregatorTypeFieldUpdateOperationsInput | $Enums.GameAggregatorType
+    provider?: EnumGameProviderFieldUpdateOperationsInput | $Enums.GameProvider
+    category?: EnumGameCategoryFieldUpdateOperationsInput | $Enums.GameCategory
+    gameId?: IntFieldUpdateOperationsInput | number
+    gameType?: NullableStringFieldUpdateOperationsInput | string | null
+    tableId?: NullableStringFieldUpdateOperationsInput | string | null
+    iconLink?: NullableStringFieldUpdateOperationsInput | string | null
+    isEnabled?: BoolFieldUpdateOperationsInput | boolean
+    isVisibleToUser?: BoolFieldUpdateOperationsInput | boolean
+    houseEdge?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
+    contributionRate?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+  }
+
+  export type GameTranslationCreateInput = {
+    language: $Enums.Language
+    providerName: string
+    categoryName: string
+    gameName: string
+    createdAt?: Date | string
+    updatedAt?: Date | string
+    casinoGame: CasinoGameCreateNestedOneWithoutTranslationsInput
+  }
+
+  export type GameTranslationUncheckedCreateInput = {
+    id?: number
+    gameId: number
+    language: $Enums.Language
+    providerName: string
+    categoryName: string
+    gameName: string
+    createdAt?: Date | string
+    updatedAt?: Date | string
+  }
+
+  export type GameTranslationUpdateInput = {
+    language?: EnumLanguageFieldUpdateOperationsInput | $Enums.Language
+    providerName?: StringFieldUpdateOperationsInput | string
+    categoryName?: StringFieldUpdateOperationsInput | string
+    gameName?: StringFieldUpdateOperationsInput | string
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    casinoGame?: CasinoGameUpdateOneRequiredWithoutTranslationsNestedInput
+  }
+
+  export type GameTranslationUncheckedUpdateInput = {
+    id?: IntFieldUpdateOperationsInput | number
+    gameId?: IntFieldUpdateOperationsInput | number
+    language?: EnumLanguageFieldUpdateOperationsInput | $Enums.Language
+    providerName?: StringFieldUpdateOperationsInput | string
+    categoryName?: StringFieldUpdateOperationsInput | string
+    gameName?: StringFieldUpdateOperationsInput | string
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+  }
+
+  export type GameTranslationCreateManyInput = {
+    id?: number
+    gameId: number
+    language: $Enums.Language
+    providerName: string
+    categoryName: string
+    gameName: string
+    createdAt?: Date | string
+    updatedAt?: Date | string
+  }
+
+  export type GameTranslationUpdateManyMutationInput = {
+    language?: EnumLanguageFieldUpdateOperationsInput | $Enums.Language
+    providerName?: StringFieldUpdateOperationsInput | string
+    categoryName?: StringFieldUpdateOperationsInput | string
+    gameName?: StringFieldUpdateOperationsInput | string
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+  }
+
+  export type GameTranslationUncheckedUpdateManyInput = {
+    id?: IntFieldUpdateOperationsInput | number
+    gameId?: IntFieldUpdateOperationsInput | number
+    language?: EnumLanguageFieldUpdateOperationsInput | $Enums.Language
+    providerName?: StringFieldUpdateOperationsInput | string
+    categoryName?: StringFieldUpdateOperationsInput | string
+    gameName?: StringFieldUpdateOperationsInput | string
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+  }
+
+  export type GameSessionCreateInput = {
+    id?: bigint | number
+    createdAt?: Date | string
+    updatedAt?: Date | string
+    lastAccessedAt?: Date | string
+    aggregatorType: $Enums.GameAggregatorType
+    token: string
+    walletCurrency: $Enums.ExchangeCurrencyCode
+    gameCurrency: $Enums.ExchangeCurrencyCode
+    exchangeRate: Decimal | DecimalJsLike | number | string
+    exchangeRateSnapshotAt?: Date | string
+    gameRounds?: GameRoundCreateNestedManyWithoutGameSessionInput
+    game?: CasinoGameCreateNestedOneWithoutGameSessionsInput
+    user: UserCreateNestedOneWithoutGameSessionInput
+  }
+
+  export type GameSessionUncheckedCreateInput = {
+    id?: bigint | number
+    userId: bigint | number
+    createdAt?: Date | string
+    updatedAt?: Date | string
+    lastAccessedAt?: Date | string
+    aggregatorType: $Enums.GameAggregatorType
+    token: string
+    walletCurrency: $Enums.ExchangeCurrencyCode
+    gameCurrency: $Enums.ExchangeCurrencyCode
+    exchangeRate: Decimal | DecimalJsLike | number | string
+    exchangeRateSnapshotAt?: Date | string
+    gameId?: number | null
+    gameRounds?: GameRoundUncheckedCreateNestedManyWithoutGameSessionInput
+  }
+
+  export type GameSessionUpdateInput = {
+    id?: BigIntFieldUpdateOperationsInput | bigint | number
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    lastAccessedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    aggregatorType?: EnumGameAggregatorTypeFieldUpdateOperationsInput | $Enums.GameAggregatorType
+    token?: StringFieldUpdateOperationsInput | string
+    walletCurrency?: EnumExchangeCurrencyCodeFieldUpdateOperationsInput | $Enums.ExchangeCurrencyCode
+    gameCurrency?: EnumExchangeCurrencyCodeFieldUpdateOperationsInput | $Enums.ExchangeCurrencyCode
+    exchangeRate?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
+    exchangeRateSnapshotAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    gameRounds?: GameRoundUpdateManyWithoutGameSessionNestedInput
+    game?: CasinoGameUpdateOneWithoutGameSessionsNestedInput
+    user?: UserUpdateOneRequiredWithoutGameSessionNestedInput
+  }
+
+  export type GameSessionUncheckedUpdateInput = {
+    id?: BigIntFieldUpdateOperationsInput | bigint | number
+    userId?: BigIntFieldUpdateOperationsInput | bigint | number
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    lastAccessedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    aggregatorType?: EnumGameAggregatorTypeFieldUpdateOperationsInput | $Enums.GameAggregatorType
+    token?: StringFieldUpdateOperationsInput | string
+    walletCurrency?: EnumExchangeCurrencyCodeFieldUpdateOperationsInput | $Enums.ExchangeCurrencyCode
+    gameCurrency?: EnumExchangeCurrencyCodeFieldUpdateOperationsInput | $Enums.ExchangeCurrencyCode
+    exchangeRate?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
+    exchangeRateSnapshotAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    gameId?: NullableIntFieldUpdateOperationsInput | number | null
+    gameRounds?: GameRoundUncheckedUpdateManyWithoutGameSessionNestedInput
+  }
+
+  export type GameSessionCreateManyInput = {
+    id?: bigint | number
+    userId: bigint | number
+    createdAt?: Date | string
+    updatedAt?: Date | string
+    lastAccessedAt?: Date | string
+    aggregatorType: $Enums.GameAggregatorType
+    token: string
+    walletCurrency: $Enums.ExchangeCurrencyCode
+    gameCurrency: $Enums.ExchangeCurrencyCode
+    exchangeRate: Decimal | DecimalJsLike | number | string
+    exchangeRateSnapshotAt?: Date | string
+    gameId?: number | null
+  }
+
+  export type GameSessionUpdateManyMutationInput = {
+    id?: BigIntFieldUpdateOperationsInput | bigint | number
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    lastAccessedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    aggregatorType?: EnumGameAggregatorTypeFieldUpdateOperationsInput | $Enums.GameAggregatorType
+    token?: StringFieldUpdateOperationsInput | string
+    walletCurrency?: EnumExchangeCurrencyCodeFieldUpdateOperationsInput | $Enums.ExchangeCurrencyCode
+    gameCurrency?: EnumExchangeCurrencyCodeFieldUpdateOperationsInput | $Enums.ExchangeCurrencyCode
+    exchangeRate?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
+    exchangeRateSnapshotAt?: DateTimeFieldUpdateOperationsInput | Date | string
+  }
+
+  export type GameSessionUncheckedUpdateManyInput = {
+    id?: BigIntFieldUpdateOperationsInput | bigint | number
+    userId?: BigIntFieldUpdateOperationsInput | bigint | number
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    lastAccessedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    aggregatorType?: EnumGameAggregatorTypeFieldUpdateOperationsInput | $Enums.GameAggregatorType
+    token?: StringFieldUpdateOperationsInput | string
+    walletCurrency?: EnumExchangeCurrencyCodeFieldUpdateOperationsInput | $Enums.ExchangeCurrencyCode
+    gameCurrency?: EnumExchangeCurrencyCodeFieldUpdateOperationsInput | $Enums.ExchangeCurrencyCode
+    exchangeRate?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
+    exchangeRateSnapshotAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    gameId?: NullableIntFieldUpdateOperationsInput | number | null
+  }
+
   export type UserCreateInput = {
     id?: bigint | number
     uid?: string
@@ -69061,211 +69373,6 @@ export namespace Prisma {
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
   }
 
-  export type GameCreateInput = {
-    aggregatorType: $Enums.GameAggregatorType
-    provider: $Enums.GameProvider
-    category: $Enums.GameCategory
-    gameId: number
-    gameType?: string | null
-    tableId?: string | null
-    iconLink?: string | null
-    isEnabled: boolean
-    isVisibleToUser?: boolean
-    houseEdge?: Decimal | DecimalJsLike | number | string
-    contributionRate?: Decimal | DecimalJsLike | number | string
-    createdAt?: Date | string
-    updatedAt?: Date | string
-    bonusDetails?: BonusDetailCreateNestedManyWithoutGameInput
-    gameRounds?: GameRoundCreateNestedManyWithoutGameInput
-    gameSessions?: GameSessionCreateNestedManyWithoutGameInput
-    translations?: GameTranslationCreateNestedManyWithoutGameInput
-  }
-
-  export type GameUncheckedCreateInput = {
-    id?: number
-    aggregatorType: $Enums.GameAggregatorType
-    provider: $Enums.GameProvider
-    category: $Enums.GameCategory
-    gameId: number
-    gameType?: string | null
-    tableId?: string | null
-    iconLink?: string | null
-    isEnabled: boolean
-    isVisibleToUser?: boolean
-    houseEdge?: Decimal | DecimalJsLike | number | string
-    contributionRate?: Decimal | DecimalJsLike | number | string
-    createdAt?: Date | string
-    updatedAt?: Date | string
-    bonusDetails?: BonusDetailUncheckedCreateNestedManyWithoutGameInput
-    gameRounds?: GameRoundUncheckedCreateNestedManyWithoutGameInput
-    gameSessions?: GameSessionUncheckedCreateNestedManyWithoutGameInput
-    translations?: GameTranslationUncheckedCreateNestedManyWithoutGameInput
-  }
-
-  export type GameUpdateInput = {
-    aggregatorType?: EnumGameAggregatorTypeFieldUpdateOperationsInput | $Enums.GameAggregatorType
-    provider?: EnumGameProviderFieldUpdateOperationsInput | $Enums.GameProvider
-    category?: EnumGameCategoryFieldUpdateOperationsInput | $Enums.GameCategory
-    gameId?: IntFieldUpdateOperationsInput | number
-    gameType?: NullableStringFieldUpdateOperationsInput | string | null
-    tableId?: NullableStringFieldUpdateOperationsInput | string | null
-    iconLink?: NullableStringFieldUpdateOperationsInput | string | null
-    isEnabled?: BoolFieldUpdateOperationsInput | boolean
-    isVisibleToUser?: BoolFieldUpdateOperationsInput | boolean
-    houseEdge?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
-    contributionRate?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
-    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
-    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
-    bonusDetails?: BonusDetailUpdateManyWithoutGameNestedInput
-    gameRounds?: GameRoundUpdateManyWithoutGameNestedInput
-    gameSessions?: GameSessionUpdateManyWithoutGameNestedInput
-    translations?: GameTranslationUpdateManyWithoutGameNestedInput
-  }
-
-  export type GameUncheckedUpdateInput = {
-    id?: IntFieldUpdateOperationsInput | number
-    aggregatorType?: EnumGameAggregatorTypeFieldUpdateOperationsInput | $Enums.GameAggregatorType
-    provider?: EnumGameProviderFieldUpdateOperationsInput | $Enums.GameProvider
-    category?: EnumGameCategoryFieldUpdateOperationsInput | $Enums.GameCategory
-    gameId?: IntFieldUpdateOperationsInput | number
-    gameType?: NullableStringFieldUpdateOperationsInput | string | null
-    tableId?: NullableStringFieldUpdateOperationsInput | string | null
-    iconLink?: NullableStringFieldUpdateOperationsInput | string | null
-    isEnabled?: BoolFieldUpdateOperationsInput | boolean
-    isVisibleToUser?: BoolFieldUpdateOperationsInput | boolean
-    houseEdge?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
-    contributionRate?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
-    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
-    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
-    bonusDetails?: BonusDetailUncheckedUpdateManyWithoutGameNestedInput
-    gameRounds?: GameRoundUncheckedUpdateManyWithoutGameNestedInput
-    gameSessions?: GameSessionUncheckedUpdateManyWithoutGameNestedInput
-    translations?: GameTranslationUncheckedUpdateManyWithoutGameNestedInput
-  }
-
-  export type GameCreateManyInput = {
-    id?: number
-    aggregatorType: $Enums.GameAggregatorType
-    provider: $Enums.GameProvider
-    category: $Enums.GameCategory
-    gameId: number
-    gameType?: string | null
-    tableId?: string | null
-    iconLink?: string | null
-    isEnabled: boolean
-    isVisibleToUser?: boolean
-    houseEdge?: Decimal | DecimalJsLike | number | string
-    contributionRate?: Decimal | DecimalJsLike | number | string
-    createdAt?: Date | string
-    updatedAt?: Date | string
-  }
-
-  export type GameUpdateManyMutationInput = {
-    aggregatorType?: EnumGameAggregatorTypeFieldUpdateOperationsInput | $Enums.GameAggregatorType
-    provider?: EnumGameProviderFieldUpdateOperationsInput | $Enums.GameProvider
-    category?: EnumGameCategoryFieldUpdateOperationsInput | $Enums.GameCategory
-    gameId?: IntFieldUpdateOperationsInput | number
-    gameType?: NullableStringFieldUpdateOperationsInput | string | null
-    tableId?: NullableStringFieldUpdateOperationsInput | string | null
-    iconLink?: NullableStringFieldUpdateOperationsInput | string | null
-    isEnabled?: BoolFieldUpdateOperationsInput | boolean
-    isVisibleToUser?: BoolFieldUpdateOperationsInput | boolean
-    houseEdge?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
-    contributionRate?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
-    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
-    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
-  }
-
-  export type GameUncheckedUpdateManyInput = {
-    id?: IntFieldUpdateOperationsInput | number
-    aggregatorType?: EnumGameAggregatorTypeFieldUpdateOperationsInput | $Enums.GameAggregatorType
-    provider?: EnumGameProviderFieldUpdateOperationsInput | $Enums.GameProvider
-    category?: EnumGameCategoryFieldUpdateOperationsInput | $Enums.GameCategory
-    gameId?: IntFieldUpdateOperationsInput | number
-    gameType?: NullableStringFieldUpdateOperationsInput | string | null
-    tableId?: NullableStringFieldUpdateOperationsInput | string | null
-    iconLink?: NullableStringFieldUpdateOperationsInput | string | null
-    isEnabled?: BoolFieldUpdateOperationsInput | boolean
-    isVisibleToUser?: BoolFieldUpdateOperationsInput | boolean
-    houseEdge?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
-    contributionRate?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
-    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
-    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
-  }
-
-  export type GameTranslationCreateInput = {
-    language: $Enums.Language
-    providerName: string
-    categoryName: string
-    gameName: string
-    createdAt?: Date | string
-    updatedAt?: Date | string
-    game: GameCreateNestedOneWithoutTranslationsInput
-  }
-
-  export type GameTranslationUncheckedCreateInput = {
-    id?: number
-    gameId: number
-    language: $Enums.Language
-    providerName: string
-    categoryName: string
-    gameName: string
-    createdAt?: Date | string
-    updatedAt?: Date | string
-  }
-
-  export type GameTranslationUpdateInput = {
-    language?: EnumLanguageFieldUpdateOperationsInput | $Enums.Language
-    providerName?: StringFieldUpdateOperationsInput | string
-    categoryName?: StringFieldUpdateOperationsInput | string
-    gameName?: StringFieldUpdateOperationsInput | string
-    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
-    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
-    game?: GameUpdateOneRequiredWithoutTranslationsNestedInput
-  }
-
-  export type GameTranslationUncheckedUpdateInput = {
-    id?: IntFieldUpdateOperationsInput | number
-    gameId?: IntFieldUpdateOperationsInput | number
-    language?: EnumLanguageFieldUpdateOperationsInput | $Enums.Language
-    providerName?: StringFieldUpdateOperationsInput | string
-    categoryName?: StringFieldUpdateOperationsInput | string
-    gameName?: StringFieldUpdateOperationsInput | string
-    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
-    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
-  }
-
-  export type GameTranslationCreateManyInput = {
-    id?: number
-    gameId: number
-    language: $Enums.Language
-    providerName: string
-    categoryName: string
-    gameName: string
-    createdAt?: Date | string
-    updatedAt?: Date | string
-  }
-
-  export type GameTranslationUpdateManyMutationInput = {
-    language?: EnumLanguageFieldUpdateOperationsInput | $Enums.Language
-    providerName?: StringFieldUpdateOperationsInput | string
-    categoryName?: StringFieldUpdateOperationsInput | string
-    gameName?: StringFieldUpdateOperationsInput | string
-    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
-    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
-  }
-
-  export type GameTranslationUncheckedUpdateManyInput = {
-    id?: IntFieldUpdateOperationsInput | number
-    gameId?: IntFieldUpdateOperationsInput | number
-    language?: EnumLanguageFieldUpdateOperationsInput | $Enums.Language
-    providerName?: StringFieldUpdateOperationsInput | string
-    categoryName?: StringFieldUpdateOperationsInput | string
-    gameName?: StringFieldUpdateOperationsInput | string
-    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
-    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
-  }
-
   export type TransactionCreateInput = {
     id?: bigint | number
     type: $Enums.TransactionType
@@ -69415,7 +69522,7 @@ export namespace Prisma {
     completedAt?: Date | string | null
     AffiliateCommission?: AffiliateCommissionCreateNestedManyWithoutGameRoundInput
     bets?: GameBetCreateNestedManyWithoutGameRoundInput
-    game?: GameCreateNestedOneWithoutGameRoundsInput
+    casinoGame?: CasinoGameCreateNestedOneWithoutGameRoundsInput
     GameSession: GameSessionCreateNestedOneWithoutGameRoundsInput
     transaction: TransactionCreateNestedOneWithoutGameRoundInput
     wins?: GameWinCreateNestedManyWithoutGameRoundInput
@@ -69481,7 +69588,7 @@ export namespace Prisma {
     completedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     AffiliateCommission?: AffiliateCommissionUpdateManyWithoutGameRoundNestedInput
     bets?: GameBetUpdateManyWithoutGameRoundNestedInput
-    game?: GameUpdateOneWithoutGameRoundsNestedInput
+    casinoGame?: CasinoGameUpdateOneWithoutGameRoundsNestedInput
     GameSession?: GameSessionUpdateOneRequiredWithoutGameRoundsNestedInput
     transaction?: TransactionUpdateOneRequiredWithoutGameRoundNestedInput
     wins?: GameWinUpdateManyWithoutGameRoundNestedInput
@@ -69907,7 +70014,7 @@ export namespace Prisma {
     aggregatorSessionId?: string | null
     isEndRound?: boolean | null
     description?: string | null
-    game?: GameCreateNestedOneWithoutBonusDetailsInput
+    casinoGame?: CasinoGameCreateNestedOneWithoutBonusDetailsInput
     transaction: TransactionCreateNestedOneWithoutBonusDetailInput
   }
 
@@ -69947,7 +70054,7 @@ export namespace Prisma {
     aggregatorSessionId?: NullableStringFieldUpdateOperationsInput | string | null
     isEndRound?: NullableBoolFieldUpdateOperationsInput | boolean | null
     description?: NullableStringFieldUpdateOperationsInput | string | null
-    game?: GameUpdateOneWithoutBonusDetailsNestedInput
+    casinoGame?: CasinoGameUpdateOneWithoutBonusDetailsNestedInput
     transaction?: TransactionUpdateOneRequiredWithoutBonusDetailNestedInput
   }
 
@@ -70814,113 +70921,6 @@ export namespace Prisma {
     metadata?: NullableJsonNullValueInput | InputJsonValue
     sentAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
-  }
-
-  export type GameSessionCreateInput = {
-    id?: bigint | number
-    createdAt?: Date | string
-    updatedAt?: Date | string
-    lastAccessedAt?: Date | string
-    aggregatorType: $Enums.GameAggregatorType
-    token: string
-    walletCurrency: $Enums.ExchangeCurrencyCode
-    gameCurrency: $Enums.ExchangeCurrencyCode
-    exchangeRate: Decimal | DecimalJsLike | number | string
-    exchangeRateSnapshotAt?: Date | string
-    gameRounds?: GameRoundCreateNestedManyWithoutGameSessionInput
-    game?: GameCreateNestedOneWithoutGameSessionsInput
-    user: UserCreateNestedOneWithoutGameSessionInput
-  }
-
-  export type GameSessionUncheckedCreateInput = {
-    id?: bigint | number
-    userId: bigint | number
-    createdAt?: Date | string
-    updatedAt?: Date | string
-    lastAccessedAt?: Date | string
-    aggregatorType: $Enums.GameAggregatorType
-    token: string
-    walletCurrency: $Enums.ExchangeCurrencyCode
-    gameCurrency: $Enums.ExchangeCurrencyCode
-    exchangeRate: Decimal | DecimalJsLike | number | string
-    exchangeRateSnapshotAt?: Date | string
-    gameId?: number | null
-    gameRounds?: GameRoundUncheckedCreateNestedManyWithoutGameSessionInput
-  }
-
-  export type GameSessionUpdateInput = {
-    id?: BigIntFieldUpdateOperationsInput | bigint | number
-    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
-    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
-    lastAccessedAt?: DateTimeFieldUpdateOperationsInput | Date | string
-    aggregatorType?: EnumGameAggregatorTypeFieldUpdateOperationsInput | $Enums.GameAggregatorType
-    token?: StringFieldUpdateOperationsInput | string
-    walletCurrency?: EnumExchangeCurrencyCodeFieldUpdateOperationsInput | $Enums.ExchangeCurrencyCode
-    gameCurrency?: EnumExchangeCurrencyCodeFieldUpdateOperationsInput | $Enums.ExchangeCurrencyCode
-    exchangeRate?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
-    exchangeRateSnapshotAt?: DateTimeFieldUpdateOperationsInput | Date | string
-    gameRounds?: GameRoundUpdateManyWithoutGameSessionNestedInput
-    game?: GameUpdateOneWithoutGameSessionsNestedInput
-    user?: UserUpdateOneRequiredWithoutGameSessionNestedInput
-  }
-
-  export type GameSessionUncheckedUpdateInput = {
-    id?: BigIntFieldUpdateOperationsInput | bigint | number
-    userId?: BigIntFieldUpdateOperationsInput | bigint | number
-    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
-    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
-    lastAccessedAt?: DateTimeFieldUpdateOperationsInput | Date | string
-    aggregatorType?: EnumGameAggregatorTypeFieldUpdateOperationsInput | $Enums.GameAggregatorType
-    token?: StringFieldUpdateOperationsInput | string
-    walletCurrency?: EnumExchangeCurrencyCodeFieldUpdateOperationsInput | $Enums.ExchangeCurrencyCode
-    gameCurrency?: EnumExchangeCurrencyCodeFieldUpdateOperationsInput | $Enums.ExchangeCurrencyCode
-    exchangeRate?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
-    exchangeRateSnapshotAt?: DateTimeFieldUpdateOperationsInput | Date | string
-    gameId?: NullableIntFieldUpdateOperationsInput | number | null
-    gameRounds?: GameRoundUncheckedUpdateManyWithoutGameSessionNestedInput
-  }
-
-  export type GameSessionCreateManyInput = {
-    id?: bigint | number
-    userId: bigint | number
-    createdAt?: Date | string
-    updatedAt?: Date | string
-    lastAccessedAt?: Date | string
-    aggregatorType: $Enums.GameAggregatorType
-    token: string
-    walletCurrency: $Enums.ExchangeCurrencyCode
-    gameCurrency: $Enums.ExchangeCurrencyCode
-    exchangeRate: Decimal | DecimalJsLike | number | string
-    exchangeRateSnapshotAt?: Date | string
-    gameId?: number | null
-  }
-
-  export type GameSessionUpdateManyMutationInput = {
-    id?: BigIntFieldUpdateOperationsInput | bigint | number
-    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
-    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
-    lastAccessedAt?: DateTimeFieldUpdateOperationsInput | Date | string
-    aggregatorType?: EnumGameAggregatorTypeFieldUpdateOperationsInput | $Enums.GameAggregatorType
-    token?: StringFieldUpdateOperationsInput | string
-    walletCurrency?: EnumExchangeCurrencyCodeFieldUpdateOperationsInput | $Enums.ExchangeCurrencyCode
-    gameCurrency?: EnumExchangeCurrencyCodeFieldUpdateOperationsInput | $Enums.ExchangeCurrencyCode
-    exchangeRate?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
-    exchangeRateSnapshotAt?: DateTimeFieldUpdateOperationsInput | Date | string
-  }
-
-  export type GameSessionUncheckedUpdateManyInput = {
-    id?: BigIntFieldUpdateOperationsInput | bigint | number
-    userId?: BigIntFieldUpdateOperationsInput | bigint | number
-    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
-    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
-    lastAccessedAt?: DateTimeFieldUpdateOperationsInput | Date | string
-    aggregatorType?: EnumGameAggregatorTypeFieldUpdateOperationsInput | $Enums.GameAggregatorType
-    token?: StringFieldUpdateOperationsInput | string
-    walletCurrency?: EnumExchangeCurrencyCodeFieldUpdateOperationsInput | $Enums.ExchangeCurrencyCode
-    gameCurrency?: EnumExchangeCurrencyCodeFieldUpdateOperationsInput | $Enums.ExchangeCurrencyCode
-    exchangeRate?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
-    exchangeRateSnapshotAt?: DateTimeFieldUpdateOperationsInput | Date | string
-    gameId?: NullableIntFieldUpdateOperationsInput | number | null
   }
 
   export type AffiliateWalletCreateInput = {
@@ -73621,6 +73621,346 @@ export namespace Prisma {
     userId?: SortOrder
   }
 
+  export type EnumGameAggregatorTypeFilter<$PrismaModel = never> = {
+    equals?: $Enums.GameAggregatorType | EnumGameAggregatorTypeFieldRefInput<$PrismaModel>
+    in?: $Enums.GameAggregatorType[] | ListEnumGameAggregatorTypeFieldRefInput<$PrismaModel>
+    notIn?: $Enums.GameAggregatorType[] | ListEnumGameAggregatorTypeFieldRefInput<$PrismaModel>
+    not?: NestedEnumGameAggregatorTypeFilter<$PrismaModel> | $Enums.GameAggregatorType
+  }
+
+  export type EnumGameProviderFilter<$PrismaModel = never> = {
+    equals?: $Enums.GameProvider | EnumGameProviderFieldRefInput<$PrismaModel>
+    in?: $Enums.GameProvider[] | ListEnumGameProviderFieldRefInput<$PrismaModel>
+    notIn?: $Enums.GameProvider[] | ListEnumGameProviderFieldRefInput<$PrismaModel>
+    not?: NestedEnumGameProviderFilter<$PrismaModel> | $Enums.GameProvider
+  }
+
+  export type EnumGameCategoryFilter<$PrismaModel = never> = {
+    equals?: $Enums.GameCategory | EnumGameCategoryFieldRefInput<$PrismaModel>
+    in?: $Enums.GameCategory[] | ListEnumGameCategoryFieldRefInput<$PrismaModel>
+    notIn?: $Enums.GameCategory[] | ListEnumGameCategoryFieldRefInput<$PrismaModel>
+    not?: NestedEnumGameCategoryFilter<$PrismaModel> | $Enums.GameCategory
+  }
+
+  export type DecimalFilter<$PrismaModel = never> = {
+    equals?: Decimal | DecimalJsLike | number | string | DecimalFieldRefInput<$PrismaModel>
+    in?: Decimal[] | DecimalJsLike[] | number[] | string[] | ListDecimalFieldRefInput<$PrismaModel>
+    notIn?: Decimal[] | DecimalJsLike[] | number[] | string[] | ListDecimalFieldRefInput<$PrismaModel>
+    lt?: Decimal | DecimalJsLike | number | string | DecimalFieldRefInput<$PrismaModel>
+    lte?: Decimal | DecimalJsLike | number | string | DecimalFieldRefInput<$PrismaModel>
+    gt?: Decimal | DecimalJsLike | number | string | DecimalFieldRefInput<$PrismaModel>
+    gte?: Decimal | DecimalJsLike | number | string | DecimalFieldRefInput<$PrismaModel>
+    not?: NestedDecimalFilter<$PrismaModel> | Decimal | DecimalJsLike | number | string
+  }
+
+  export type BonusDetailListRelationFilter = {
+    every?: BonusDetailWhereInput
+    some?: BonusDetailWhereInput
+    none?: BonusDetailWhereInput
+  }
+
+  export type GameRoundListRelationFilter = {
+    every?: GameRoundWhereInput
+    some?: GameRoundWhereInput
+    none?: GameRoundWhereInput
+  }
+
+  export type GameSessionListRelationFilter = {
+    every?: GameSessionWhereInput
+    some?: GameSessionWhereInput
+    none?: GameSessionWhereInput
+  }
+
+  export type GameTranslationListRelationFilter = {
+    every?: GameTranslationWhereInput
+    some?: GameTranslationWhereInput
+    none?: GameTranslationWhereInput
+  }
+
+  export type BonusDetailOrderByRelationAggregateInput = {
+    _count?: SortOrder
+  }
+
+  export type GameRoundOrderByRelationAggregateInput = {
+    _count?: SortOrder
+  }
+
+  export type GameSessionOrderByRelationAggregateInput = {
+    _count?: SortOrder
+  }
+
+  export type GameTranslationOrderByRelationAggregateInput = {
+    _count?: SortOrder
+  }
+
+  export type CasinoGameAggregatorTypeProviderGameIdCompoundUniqueInput = {
+    aggregatorType: $Enums.GameAggregatorType
+    provider: $Enums.GameProvider
+    gameId: number
+  }
+
+  export type CasinoGameCountOrderByAggregateInput = {
+    id?: SortOrder
+    aggregatorType?: SortOrder
+    provider?: SortOrder
+    category?: SortOrder
+    gameId?: SortOrder
+    gameType?: SortOrder
+    tableId?: SortOrder
+    iconLink?: SortOrder
+    isEnabled?: SortOrder
+    isVisibleToUser?: SortOrder
+    houseEdge?: SortOrder
+    contributionRate?: SortOrder
+    createdAt?: SortOrder
+    updatedAt?: SortOrder
+  }
+
+  export type CasinoGameAvgOrderByAggregateInput = {
+    id?: SortOrder
+    gameId?: SortOrder
+    houseEdge?: SortOrder
+    contributionRate?: SortOrder
+  }
+
+  export type CasinoGameMaxOrderByAggregateInput = {
+    id?: SortOrder
+    aggregatorType?: SortOrder
+    provider?: SortOrder
+    category?: SortOrder
+    gameId?: SortOrder
+    gameType?: SortOrder
+    tableId?: SortOrder
+    iconLink?: SortOrder
+    isEnabled?: SortOrder
+    isVisibleToUser?: SortOrder
+    houseEdge?: SortOrder
+    contributionRate?: SortOrder
+    createdAt?: SortOrder
+    updatedAt?: SortOrder
+  }
+
+  export type CasinoGameMinOrderByAggregateInput = {
+    id?: SortOrder
+    aggregatorType?: SortOrder
+    provider?: SortOrder
+    category?: SortOrder
+    gameId?: SortOrder
+    gameType?: SortOrder
+    tableId?: SortOrder
+    iconLink?: SortOrder
+    isEnabled?: SortOrder
+    isVisibleToUser?: SortOrder
+    houseEdge?: SortOrder
+    contributionRate?: SortOrder
+    createdAt?: SortOrder
+    updatedAt?: SortOrder
+  }
+
+  export type CasinoGameSumOrderByAggregateInput = {
+    id?: SortOrder
+    gameId?: SortOrder
+    houseEdge?: SortOrder
+    contributionRate?: SortOrder
+  }
+
+  export type EnumGameAggregatorTypeWithAggregatesFilter<$PrismaModel = never> = {
+    equals?: $Enums.GameAggregatorType | EnumGameAggregatorTypeFieldRefInput<$PrismaModel>
+    in?: $Enums.GameAggregatorType[] | ListEnumGameAggregatorTypeFieldRefInput<$PrismaModel>
+    notIn?: $Enums.GameAggregatorType[] | ListEnumGameAggregatorTypeFieldRefInput<$PrismaModel>
+    not?: NestedEnumGameAggregatorTypeWithAggregatesFilter<$PrismaModel> | $Enums.GameAggregatorType
+    _count?: NestedIntFilter<$PrismaModel>
+    _min?: NestedEnumGameAggregatorTypeFilter<$PrismaModel>
+    _max?: NestedEnumGameAggregatorTypeFilter<$PrismaModel>
+  }
+
+  export type EnumGameProviderWithAggregatesFilter<$PrismaModel = never> = {
+    equals?: $Enums.GameProvider | EnumGameProviderFieldRefInput<$PrismaModel>
+    in?: $Enums.GameProvider[] | ListEnumGameProviderFieldRefInput<$PrismaModel>
+    notIn?: $Enums.GameProvider[] | ListEnumGameProviderFieldRefInput<$PrismaModel>
+    not?: NestedEnumGameProviderWithAggregatesFilter<$PrismaModel> | $Enums.GameProvider
+    _count?: NestedIntFilter<$PrismaModel>
+    _min?: NestedEnumGameProviderFilter<$PrismaModel>
+    _max?: NestedEnumGameProviderFilter<$PrismaModel>
+  }
+
+  export type EnumGameCategoryWithAggregatesFilter<$PrismaModel = never> = {
+    equals?: $Enums.GameCategory | EnumGameCategoryFieldRefInput<$PrismaModel>
+    in?: $Enums.GameCategory[] | ListEnumGameCategoryFieldRefInput<$PrismaModel>
+    notIn?: $Enums.GameCategory[] | ListEnumGameCategoryFieldRefInput<$PrismaModel>
+    not?: NestedEnumGameCategoryWithAggregatesFilter<$PrismaModel> | $Enums.GameCategory
+    _count?: NestedIntFilter<$PrismaModel>
+    _min?: NestedEnumGameCategoryFilter<$PrismaModel>
+    _max?: NestedEnumGameCategoryFilter<$PrismaModel>
+  }
+
+  export type DecimalWithAggregatesFilter<$PrismaModel = never> = {
+    equals?: Decimal | DecimalJsLike | number | string | DecimalFieldRefInput<$PrismaModel>
+    in?: Decimal[] | DecimalJsLike[] | number[] | string[] | ListDecimalFieldRefInput<$PrismaModel>
+    notIn?: Decimal[] | DecimalJsLike[] | number[] | string[] | ListDecimalFieldRefInput<$PrismaModel>
+    lt?: Decimal | DecimalJsLike | number | string | DecimalFieldRefInput<$PrismaModel>
+    lte?: Decimal | DecimalJsLike | number | string | DecimalFieldRefInput<$PrismaModel>
+    gt?: Decimal | DecimalJsLike | number | string | DecimalFieldRefInput<$PrismaModel>
+    gte?: Decimal | DecimalJsLike | number | string | DecimalFieldRefInput<$PrismaModel>
+    not?: NestedDecimalWithAggregatesFilter<$PrismaModel> | Decimal | DecimalJsLike | number | string
+    _count?: NestedIntFilter<$PrismaModel>
+    _avg?: NestedDecimalFilter<$PrismaModel>
+    _sum?: NestedDecimalFilter<$PrismaModel>
+    _min?: NestedDecimalFilter<$PrismaModel>
+    _max?: NestedDecimalFilter<$PrismaModel>
+  }
+
+  export type EnumLanguageFilter<$PrismaModel = never> = {
+    equals?: $Enums.Language | EnumLanguageFieldRefInput<$PrismaModel>
+    in?: $Enums.Language[] | ListEnumLanguageFieldRefInput<$PrismaModel>
+    notIn?: $Enums.Language[] | ListEnumLanguageFieldRefInput<$PrismaModel>
+    not?: NestedEnumLanguageFilter<$PrismaModel> | $Enums.Language
+  }
+
+  export type CasinoGameScalarRelationFilter = {
+    is?: CasinoGameWhereInput
+    isNot?: CasinoGameWhereInput
+  }
+
+  export type GameTranslationGameIdLanguageCompoundUniqueInput = {
+    gameId: number
+    language: $Enums.Language
+  }
+
+  export type GameTranslationCountOrderByAggregateInput = {
+    id?: SortOrder
+    gameId?: SortOrder
+    language?: SortOrder
+    providerName?: SortOrder
+    categoryName?: SortOrder
+    gameName?: SortOrder
+    createdAt?: SortOrder
+    updatedAt?: SortOrder
+  }
+
+  export type GameTranslationAvgOrderByAggregateInput = {
+    id?: SortOrder
+    gameId?: SortOrder
+  }
+
+  export type GameTranslationMaxOrderByAggregateInput = {
+    id?: SortOrder
+    gameId?: SortOrder
+    language?: SortOrder
+    providerName?: SortOrder
+    categoryName?: SortOrder
+    gameName?: SortOrder
+    createdAt?: SortOrder
+    updatedAt?: SortOrder
+  }
+
+  export type GameTranslationMinOrderByAggregateInput = {
+    id?: SortOrder
+    gameId?: SortOrder
+    language?: SortOrder
+    providerName?: SortOrder
+    categoryName?: SortOrder
+    gameName?: SortOrder
+    createdAt?: SortOrder
+    updatedAt?: SortOrder
+  }
+
+  export type GameTranslationSumOrderByAggregateInput = {
+    id?: SortOrder
+    gameId?: SortOrder
+  }
+
+  export type EnumLanguageWithAggregatesFilter<$PrismaModel = never> = {
+    equals?: $Enums.Language | EnumLanguageFieldRefInput<$PrismaModel>
+    in?: $Enums.Language[] | ListEnumLanguageFieldRefInput<$PrismaModel>
+    notIn?: $Enums.Language[] | ListEnumLanguageFieldRefInput<$PrismaModel>
+    not?: NestedEnumLanguageWithAggregatesFilter<$PrismaModel> | $Enums.Language
+    _count?: NestedIntFilter<$PrismaModel>
+    _min?: NestedEnumLanguageFilter<$PrismaModel>
+    _max?: NestedEnumLanguageFilter<$PrismaModel>
+  }
+
+  export type EnumExchangeCurrencyCodeFilter<$PrismaModel = never> = {
+    equals?: $Enums.ExchangeCurrencyCode | EnumExchangeCurrencyCodeFieldRefInput<$PrismaModel>
+    in?: $Enums.ExchangeCurrencyCode[] | ListEnumExchangeCurrencyCodeFieldRefInput<$PrismaModel>
+    notIn?: $Enums.ExchangeCurrencyCode[] | ListEnumExchangeCurrencyCodeFieldRefInput<$PrismaModel>
+    not?: NestedEnumExchangeCurrencyCodeFilter<$PrismaModel> | $Enums.ExchangeCurrencyCode
+  }
+
+  export type CasinoGameNullableScalarRelationFilter = {
+    is?: CasinoGameWhereInput | null
+    isNot?: CasinoGameWhereInput | null
+  }
+
+  export type GameSessionCountOrderByAggregateInput = {
+    id?: SortOrder
+    userId?: SortOrder
+    createdAt?: SortOrder
+    updatedAt?: SortOrder
+    lastAccessedAt?: SortOrder
+    aggregatorType?: SortOrder
+    token?: SortOrder
+    walletCurrency?: SortOrder
+    gameCurrency?: SortOrder
+    exchangeRate?: SortOrder
+    exchangeRateSnapshotAt?: SortOrder
+    gameId?: SortOrder
+  }
+
+  export type GameSessionAvgOrderByAggregateInput = {
+    id?: SortOrder
+    userId?: SortOrder
+    exchangeRate?: SortOrder
+    gameId?: SortOrder
+  }
+
+  export type GameSessionMaxOrderByAggregateInput = {
+    id?: SortOrder
+    userId?: SortOrder
+    createdAt?: SortOrder
+    updatedAt?: SortOrder
+    lastAccessedAt?: SortOrder
+    aggregatorType?: SortOrder
+    token?: SortOrder
+    walletCurrency?: SortOrder
+    gameCurrency?: SortOrder
+    exchangeRate?: SortOrder
+    exchangeRateSnapshotAt?: SortOrder
+    gameId?: SortOrder
+  }
+
+  export type GameSessionMinOrderByAggregateInput = {
+    id?: SortOrder
+    userId?: SortOrder
+    createdAt?: SortOrder
+    updatedAt?: SortOrder
+    lastAccessedAt?: SortOrder
+    aggregatorType?: SortOrder
+    token?: SortOrder
+    walletCurrency?: SortOrder
+    gameCurrency?: SortOrder
+    exchangeRate?: SortOrder
+    exchangeRateSnapshotAt?: SortOrder
+    gameId?: SortOrder
+  }
+
+  export type GameSessionSumOrderByAggregateInput = {
+    id?: SortOrder
+    userId?: SortOrder
+    exchangeRate?: SortOrder
+    gameId?: SortOrder
+  }
+
+  export type EnumExchangeCurrencyCodeWithAggregatesFilter<$PrismaModel = never> = {
+    equals?: $Enums.ExchangeCurrencyCode | EnumExchangeCurrencyCodeFieldRefInput<$PrismaModel>
+    in?: $Enums.ExchangeCurrencyCode[] | ListEnumExchangeCurrencyCodeFieldRefInput<$PrismaModel>
+    notIn?: $Enums.ExchangeCurrencyCode[] | ListEnumExchangeCurrencyCodeFieldRefInput<$PrismaModel>
+    not?: NestedEnumExchangeCurrencyCodeWithAggregatesFilter<$PrismaModel> | $Enums.ExchangeCurrencyCode
+    _count?: NestedIntFilter<$PrismaModel>
+    _min?: NestedEnumExchangeCurrencyCodeFilter<$PrismaModel>
+    _max?: NestedEnumExchangeCurrencyCodeFilter<$PrismaModel>
+  }
+
   export type EnumSocialTypeNullableFilter<$PrismaModel = never> = {
     equals?: $Enums.SocialType | EnumSocialTypeFieldRefInput<$PrismaModel> | null
     in?: $Enums.SocialType[] | ListEnumSocialTypeFieldRefInput<$PrismaModel> | null
@@ -73695,12 +74035,6 @@ export namespace Prisma {
     every?: EmailLogWhereInput
     some?: EmailLogWhereInput
     none?: EmailLogWhereInput
-  }
-
-  export type GameSessionListRelationFilter = {
-    every?: GameSessionWhereInput
-    some?: GameSessionWhereInput
-    none?: GameSessionWhereInput
   }
 
   export type RollingListRelationFilter = {
@@ -73795,10 +74129,6 @@ export namespace Prisma {
   }
 
   export type EmailLogOrderByRelationAggregateInput = {
-    _count?: SortOrder
-  }
-
-  export type GameSessionOrderByRelationAggregateInput = {
     _count?: SortOrder
   }
 
@@ -73976,24 +74306,6 @@ export namespace Prisma {
     _max?: NestedEnumLanguageNullableFilter<$PrismaModel>
   }
 
-  export type EnumExchangeCurrencyCodeFilter<$PrismaModel = never> = {
-    equals?: $Enums.ExchangeCurrencyCode | EnumExchangeCurrencyCodeFieldRefInput<$PrismaModel>
-    in?: $Enums.ExchangeCurrencyCode[] | ListEnumExchangeCurrencyCodeFieldRefInput<$PrismaModel>
-    notIn?: $Enums.ExchangeCurrencyCode[] | ListEnumExchangeCurrencyCodeFieldRefInput<$PrismaModel>
-    not?: NestedEnumExchangeCurrencyCodeFilter<$PrismaModel> | $Enums.ExchangeCurrencyCode
-  }
-
-  export type DecimalFilter<$PrismaModel = never> = {
-    equals?: Decimal | DecimalJsLike | number | string | DecimalFieldRefInput<$PrismaModel>
-    in?: Decimal[] | DecimalJsLike[] | number[] | string[] | ListDecimalFieldRefInput<$PrismaModel>
-    notIn?: Decimal[] | DecimalJsLike[] | number[] | string[] | ListDecimalFieldRefInput<$PrismaModel>
-    lt?: Decimal | DecimalJsLike | number | string | DecimalFieldRefInput<$PrismaModel>
-    lte?: Decimal | DecimalJsLike | number | string | DecimalFieldRefInput<$PrismaModel>
-    gt?: Decimal | DecimalJsLike | number | string | DecimalFieldRefInput<$PrismaModel>
-    gte?: Decimal | DecimalJsLike | number | string | DecimalFieldRefInput<$PrismaModel>
-    not?: NestedDecimalFilter<$PrismaModel> | Decimal | DecimalJsLike | number | string
-  }
-
   export type UserBalanceUserIdCurrencyCompoundUniqueInput = {
     userId: bigint | number
     currency: $Enums.ExchangeCurrencyCode
@@ -74033,32 +74345,6 @@ export namespace Prisma {
     userId?: SortOrder
     mainBalance?: SortOrder
     bonusBalance?: SortOrder
-  }
-
-  export type EnumExchangeCurrencyCodeWithAggregatesFilter<$PrismaModel = never> = {
-    equals?: $Enums.ExchangeCurrencyCode | EnumExchangeCurrencyCodeFieldRefInput<$PrismaModel>
-    in?: $Enums.ExchangeCurrencyCode[] | ListEnumExchangeCurrencyCodeFieldRefInput<$PrismaModel>
-    notIn?: $Enums.ExchangeCurrencyCode[] | ListEnumExchangeCurrencyCodeFieldRefInput<$PrismaModel>
-    not?: NestedEnumExchangeCurrencyCodeWithAggregatesFilter<$PrismaModel> | $Enums.ExchangeCurrencyCode
-    _count?: NestedIntFilter<$PrismaModel>
-    _min?: NestedEnumExchangeCurrencyCodeFilter<$PrismaModel>
-    _max?: NestedEnumExchangeCurrencyCodeFilter<$PrismaModel>
-  }
-
-  export type DecimalWithAggregatesFilter<$PrismaModel = never> = {
-    equals?: Decimal | DecimalJsLike | number | string | DecimalFieldRefInput<$PrismaModel>
-    in?: Decimal[] | DecimalJsLike[] | number[] | string[] | ListDecimalFieldRefInput<$PrismaModel>
-    notIn?: Decimal[] | DecimalJsLike[] | number[] | string[] | ListDecimalFieldRefInput<$PrismaModel>
-    lt?: Decimal | DecimalJsLike | number | string | DecimalFieldRefInput<$PrismaModel>
-    lte?: Decimal | DecimalJsLike | number | string | DecimalFieldRefInput<$PrismaModel>
-    gt?: Decimal | DecimalJsLike | number | string | DecimalFieldRefInput<$PrismaModel>
-    gte?: Decimal | DecimalJsLike | number | string | DecimalFieldRefInput<$PrismaModel>
-    not?: NestedDecimalWithAggregatesFilter<$PrismaModel> | Decimal | DecimalJsLike | number | string
-    _count?: NestedIntFilter<$PrismaModel>
-    _avg?: NestedDecimalFilter<$PrismaModel>
-    _sum?: NestedDecimalFilter<$PrismaModel>
-    _min?: NestedDecimalFilter<$PrismaModel>
-    _max?: NestedDecimalFilter<$PrismaModel>
   }
 
   export type UserBalanceStatsUserIdCurrencyCompoundUniqueInput = {
@@ -74135,228 +74421,6 @@ export namespace Prisma {
     totalCompUsed?: SortOrder
     totalSettlementFromBet?: SortOrder
     totalSettlementFromVip?: SortOrder
-  }
-
-  export type EnumGameAggregatorTypeFilter<$PrismaModel = never> = {
-    equals?: $Enums.GameAggregatorType | EnumGameAggregatorTypeFieldRefInput<$PrismaModel>
-    in?: $Enums.GameAggregatorType[] | ListEnumGameAggregatorTypeFieldRefInput<$PrismaModel>
-    notIn?: $Enums.GameAggregatorType[] | ListEnumGameAggregatorTypeFieldRefInput<$PrismaModel>
-    not?: NestedEnumGameAggregatorTypeFilter<$PrismaModel> | $Enums.GameAggregatorType
-  }
-
-  export type EnumGameProviderFilter<$PrismaModel = never> = {
-    equals?: $Enums.GameProvider | EnumGameProviderFieldRefInput<$PrismaModel>
-    in?: $Enums.GameProvider[] | ListEnumGameProviderFieldRefInput<$PrismaModel>
-    notIn?: $Enums.GameProvider[] | ListEnumGameProviderFieldRefInput<$PrismaModel>
-    not?: NestedEnumGameProviderFilter<$PrismaModel> | $Enums.GameProvider
-  }
-
-  export type EnumGameCategoryFilter<$PrismaModel = never> = {
-    equals?: $Enums.GameCategory | EnumGameCategoryFieldRefInput<$PrismaModel>
-    in?: $Enums.GameCategory[] | ListEnumGameCategoryFieldRefInput<$PrismaModel>
-    notIn?: $Enums.GameCategory[] | ListEnumGameCategoryFieldRefInput<$PrismaModel>
-    not?: NestedEnumGameCategoryFilter<$PrismaModel> | $Enums.GameCategory
-  }
-
-  export type BonusDetailListRelationFilter = {
-    every?: BonusDetailWhereInput
-    some?: BonusDetailWhereInput
-    none?: BonusDetailWhereInput
-  }
-
-  export type GameRoundListRelationFilter = {
-    every?: GameRoundWhereInput
-    some?: GameRoundWhereInput
-    none?: GameRoundWhereInput
-  }
-
-  export type GameTranslationListRelationFilter = {
-    every?: GameTranslationWhereInput
-    some?: GameTranslationWhereInput
-    none?: GameTranslationWhereInput
-  }
-
-  export type BonusDetailOrderByRelationAggregateInput = {
-    _count?: SortOrder
-  }
-
-  export type GameRoundOrderByRelationAggregateInput = {
-    _count?: SortOrder
-  }
-
-  export type GameTranslationOrderByRelationAggregateInput = {
-    _count?: SortOrder
-  }
-
-  export type GameAggregatorTypeProviderGameIdCompoundUniqueInput = {
-    aggregatorType: $Enums.GameAggregatorType
-    provider: $Enums.GameProvider
-    gameId: number
-  }
-
-  export type GameCountOrderByAggregateInput = {
-    id?: SortOrder
-    aggregatorType?: SortOrder
-    provider?: SortOrder
-    category?: SortOrder
-    gameId?: SortOrder
-    gameType?: SortOrder
-    tableId?: SortOrder
-    iconLink?: SortOrder
-    isEnabled?: SortOrder
-    isVisibleToUser?: SortOrder
-    houseEdge?: SortOrder
-    contributionRate?: SortOrder
-    createdAt?: SortOrder
-    updatedAt?: SortOrder
-  }
-
-  export type GameAvgOrderByAggregateInput = {
-    id?: SortOrder
-    gameId?: SortOrder
-    houseEdge?: SortOrder
-    contributionRate?: SortOrder
-  }
-
-  export type GameMaxOrderByAggregateInput = {
-    id?: SortOrder
-    aggregatorType?: SortOrder
-    provider?: SortOrder
-    category?: SortOrder
-    gameId?: SortOrder
-    gameType?: SortOrder
-    tableId?: SortOrder
-    iconLink?: SortOrder
-    isEnabled?: SortOrder
-    isVisibleToUser?: SortOrder
-    houseEdge?: SortOrder
-    contributionRate?: SortOrder
-    createdAt?: SortOrder
-    updatedAt?: SortOrder
-  }
-
-  export type GameMinOrderByAggregateInput = {
-    id?: SortOrder
-    aggregatorType?: SortOrder
-    provider?: SortOrder
-    category?: SortOrder
-    gameId?: SortOrder
-    gameType?: SortOrder
-    tableId?: SortOrder
-    iconLink?: SortOrder
-    isEnabled?: SortOrder
-    isVisibleToUser?: SortOrder
-    houseEdge?: SortOrder
-    contributionRate?: SortOrder
-    createdAt?: SortOrder
-    updatedAt?: SortOrder
-  }
-
-  export type GameSumOrderByAggregateInput = {
-    id?: SortOrder
-    gameId?: SortOrder
-    houseEdge?: SortOrder
-    contributionRate?: SortOrder
-  }
-
-  export type EnumGameAggregatorTypeWithAggregatesFilter<$PrismaModel = never> = {
-    equals?: $Enums.GameAggregatorType | EnumGameAggregatorTypeFieldRefInput<$PrismaModel>
-    in?: $Enums.GameAggregatorType[] | ListEnumGameAggregatorTypeFieldRefInput<$PrismaModel>
-    notIn?: $Enums.GameAggregatorType[] | ListEnumGameAggregatorTypeFieldRefInput<$PrismaModel>
-    not?: NestedEnumGameAggregatorTypeWithAggregatesFilter<$PrismaModel> | $Enums.GameAggregatorType
-    _count?: NestedIntFilter<$PrismaModel>
-    _min?: NestedEnumGameAggregatorTypeFilter<$PrismaModel>
-    _max?: NestedEnumGameAggregatorTypeFilter<$PrismaModel>
-  }
-
-  export type EnumGameProviderWithAggregatesFilter<$PrismaModel = never> = {
-    equals?: $Enums.GameProvider | EnumGameProviderFieldRefInput<$PrismaModel>
-    in?: $Enums.GameProvider[] | ListEnumGameProviderFieldRefInput<$PrismaModel>
-    notIn?: $Enums.GameProvider[] | ListEnumGameProviderFieldRefInput<$PrismaModel>
-    not?: NestedEnumGameProviderWithAggregatesFilter<$PrismaModel> | $Enums.GameProvider
-    _count?: NestedIntFilter<$PrismaModel>
-    _min?: NestedEnumGameProviderFilter<$PrismaModel>
-    _max?: NestedEnumGameProviderFilter<$PrismaModel>
-  }
-
-  export type EnumGameCategoryWithAggregatesFilter<$PrismaModel = never> = {
-    equals?: $Enums.GameCategory | EnumGameCategoryFieldRefInput<$PrismaModel>
-    in?: $Enums.GameCategory[] | ListEnumGameCategoryFieldRefInput<$PrismaModel>
-    notIn?: $Enums.GameCategory[] | ListEnumGameCategoryFieldRefInput<$PrismaModel>
-    not?: NestedEnumGameCategoryWithAggregatesFilter<$PrismaModel> | $Enums.GameCategory
-    _count?: NestedIntFilter<$PrismaModel>
-    _min?: NestedEnumGameCategoryFilter<$PrismaModel>
-    _max?: NestedEnumGameCategoryFilter<$PrismaModel>
-  }
-
-  export type EnumLanguageFilter<$PrismaModel = never> = {
-    equals?: $Enums.Language | EnumLanguageFieldRefInput<$PrismaModel>
-    in?: $Enums.Language[] | ListEnumLanguageFieldRefInput<$PrismaModel>
-    notIn?: $Enums.Language[] | ListEnumLanguageFieldRefInput<$PrismaModel>
-    not?: NestedEnumLanguageFilter<$PrismaModel> | $Enums.Language
-  }
-
-  export type GameScalarRelationFilter = {
-    is?: GameWhereInput
-    isNot?: GameWhereInput
-  }
-
-  export type GameTranslationGameIdLanguageCompoundUniqueInput = {
-    gameId: number
-    language: $Enums.Language
-  }
-
-  export type GameTranslationCountOrderByAggregateInput = {
-    id?: SortOrder
-    gameId?: SortOrder
-    language?: SortOrder
-    providerName?: SortOrder
-    categoryName?: SortOrder
-    gameName?: SortOrder
-    createdAt?: SortOrder
-    updatedAt?: SortOrder
-  }
-
-  export type GameTranslationAvgOrderByAggregateInput = {
-    id?: SortOrder
-    gameId?: SortOrder
-  }
-
-  export type GameTranslationMaxOrderByAggregateInput = {
-    id?: SortOrder
-    gameId?: SortOrder
-    language?: SortOrder
-    providerName?: SortOrder
-    categoryName?: SortOrder
-    gameName?: SortOrder
-    createdAt?: SortOrder
-    updatedAt?: SortOrder
-  }
-
-  export type GameTranslationMinOrderByAggregateInput = {
-    id?: SortOrder
-    gameId?: SortOrder
-    language?: SortOrder
-    providerName?: SortOrder
-    categoryName?: SortOrder
-    gameName?: SortOrder
-    createdAt?: SortOrder
-    updatedAt?: SortOrder
-  }
-
-  export type GameTranslationSumOrderByAggregateInput = {
-    id?: SortOrder
-    gameId?: SortOrder
-  }
-
-  export type EnumLanguageWithAggregatesFilter<$PrismaModel = never> = {
-    equals?: $Enums.Language | EnumLanguageFieldRefInput<$PrismaModel>
-    in?: $Enums.Language[] | ListEnumLanguageFieldRefInput<$PrismaModel>
-    notIn?: $Enums.Language[] | ListEnumLanguageFieldRefInput<$PrismaModel>
-    not?: NestedEnumLanguageWithAggregatesFilter<$PrismaModel> | $Enums.Language
-    _count?: NestedIntFilter<$PrismaModel>
-    _min?: NestedEnumLanguageFilter<$PrismaModel>
-    _max?: NestedEnumLanguageFilter<$PrismaModel>
   }
 
   export type EnumTransactionTypeFilter<$PrismaModel = never> = {
@@ -74515,11 +74579,6 @@ export namespace Prisma {
     every?: GameBetWhereInput
     some?: GameBetWhereInput
     none?: GameBetWhereInput
-  }
-
-  export type GameNullableScalarRelationFilter = {
-    is?: GameWhereInput | null
-    isNot?: GameWhereInput | null
   }
 
   export type GameSessionScalarRelationFilter = {
@@ -75695,65 +75754,6 @@ export namespace Prisma {
     _count?: NestedIntFilter<$PrismaModel>
     _min?: NestedEnumEmailStatusFilter<$PrismaModel>
     _max?: NestedEnumEmailStatusFilter<$PrismaModel>
-  }
-
-  export type GameSessionCountOrderByAggregateInput = {
-    id?: SortOrder
-    userId?: SortOrder
-    createdAt?: SortOrder
-    updatedAt?: SortOrder
-    lastAccessedAt?: SortOrder
-    aggregatorType?: SortOrder
-    token?: SortOrder
-    walletCurrency?: SortOrder
-    gameCurrency?: SortOrder
-    exchangeRate?: SortOrder
-    exchangeRateSnapshotAt?: SortOrder
-    gameId?: SortOrder
-  }
-
-  export type GameSessionAvgOrderByAggregateInput = {
-    id?: SortOrder
-    userId?: SortOrder
-    exchangeRate?: SortOrder
-    gameId?: SortOrder
-  }
-
-  export type GameSessionMaxOrderByAggregateInput = {
-    id?: SortOrder
-    userId?: SortOrder
-    createdAt?: SortOrder
-    updatedAt?: SortOrder
-    lastAccessedAt?: SortOrder
-    aggregatorType?: SortOrder
-    token?: SortOrder
-    walletCurrency?: SortOrder
-    gameCurrency?: SortOrder
-    exchangeRate?: SortOrder
-    exchangeRateSnapshotAt?: SortOrder
-    gameId?: SortOrder
-  }
-
-  export type GameSessionMinOrderByAggregateInput = {
-    id?: SortOrder
-    userId?: SortOrder
-    createdAt?: SortOrder
-    updatedAt?: SortOrder
-    lastAccessedAt?: SortOrder
-    aggregatorType?: SortOrder
-    token?: SortOrder
-    walletCurrency?: SortOrder
-    gameCurrency?: SortOrder
-    exchangeRate?: SortOrder
-    exchangeRateSnapshotAt?: SortOrder
-    gameId?: SortOrder
-  }
-
-  export type GameSessionSumOrderByAggregateInput = {
-    id?: SortOrder
-    userId?: SortOrder
-    exchangeRate?: SortOrder
-    gameId?: SortOrder
   }
 
   export type AffiliateWalletAffiliateIdCurrencyCompoundUniqueInput = {
@@ -77326,6 +77326,288 @@ export namespace Prisma {
     divide?: number
   }
 
+  export type BonusDetailCreateNestedManyWithoutCasinoGameInput = {
+    create?: XOR<BonusDetailCreateWithoutCasinoGameInput, BonusDetailUncheckedCreateWithoutCasinoGameInput> | BonusDetailCreateWithoutCasinoGameInput[] | BonusDetailUncheckedCreateWithoutCasinoGameInput[]
+    connectOrCreate?: BonusDetailCreateOrConnectWithoutCasinoGameInput | BonusDetailCreateOrConnectWithoutCasinoGameInput[]
+    createMany?: BonusDetailCreateManyCasinoGameInputEnvelope
+    connect?: BonusDetailWhereUniqueInput | BonusDetailWhereUniqueInput[]
+  }
+
+  export type GameRoundCreateNestedManyWithoutCasinoGameInput = {
+    create?: XOR<GameRoundCreateWithoutCasinoGameInput, GameRoundUncheckedCreateWithoutCasinoGameInput> | GameRoundCreateWithoutCasinoGameInput[] | GameRoundUncheckedCreateWithoutCasinoGameInput[]
+    connectOrCreate?: GameRoundCreateOrConnectWithoutCasinoGameInput | GameRoundCreateOrConnectWithoutCasinoGameInput[]
+    createMany?: GameRoundCreateManyCasinoGameInputEnvelope
+    connect?: GameRoundWhereUniqueInput | GameRoundWhereUniqueInput[]
+  }
+
+  export type GameSessionCreateNestedManyWithoutGameInput = {
+    create?: XOR<GameSessionCreateWithoutGameInput, GameSessionUncheckedCreateWithoutGameInput> | GameSessionCreateWithoutGameInput[] | GameSessionUncheckedCreateWithoutGameInput[]
+    connectOrCreate?: GameSessionCreateOrConnectWithoutGameInput | GameSessionCreateOrConnectWithoutGameInput[]
+    createMany?: GameSessionCreateManyGameInputEnvelope
+    connect?: GameSessionWhereUniqueInput | GameSessionWhereUniqueInput[]
+  }
+
+  export type GameTranslationCreateNestedManyWithoutCasinoGameInput = {
+    create?: XOR<GameTranslationCreateWithoutCasinoGameInput, GameTranslationUncheckedCreateWithoutCasinoGameInput> | GameTranslationCreateWithoutCasinoGameInput[] | GameTranslationUncheckedCreateWithoutCasinoGameInput[]
+    connectOrCreate?: GameTranslationCreateOrConnectWithoutCasinoGameInput | GameTranslationCreateOrConnectWithoutCasinoGameInput[]
+    createMany?: GameTranslationCreateManyCasinoGameInputEnvelope
+    connect?: GameTranslationWhereUniqueInput | GameTranslationWhereUniqueInput[]
+  }
+
+  export type BonusDetailUncheckedCreateNestedManyWithoutCasinoGameInput = {
+    create?: XOR<BonusDetailCreateWithoutCasinoGameInput, BonusDetailUncheckedCreateWithoutCasinoGameInput> | BonusDetailCreateWithoutCasinoGameInput[] | BonusDetailUncheckedCreateWithoutCasinoGameInput[]
+    connectOrCreate?: BonusDetailCreateOrConnectWithoutCasinoGameInput | BonusDetailCreateOrConnectWithoutCasinoGameInput[]
+    createMany?: BonusDetailCreateManyCasinoGameInputEnvelope
+    connect?: BonusDetailWhereUniqueInput | BonusDetailWhereUniqueInput[]
+  }
+
+  export type GameRoundUncheckedCreateNestedManyWithoutCasinoGameInput = {
+    create?: XOR<GameRoundCreateWithoutCasinoGameInput, GameRoundUncheckedCreateWithoutCasinoGameInput> | GameRoundCreateWithoutCasinoGameInput[] | GameRoundUncheckedCreateWithoutCasinoGameInput[]
+    connectOrCreate?: GameRoundCreateOrConnectWithoutCasinoGameInput | GameRoundCreateOrConnectWithoutCasinoGameInput[]
+    createMany?: GameRoundCreateManyCasinoGameInputEnvelope
+    connect?: GameRoundWhereUniqueInput | GameRoundWhereUniqueInput[]
+  }
+
+  export type GameSessionUncheckedCreateNestedManyWithoutGameInput = {
+    create?: XOR<GameSessionCreateWithoutGameInput, GameSessionUncheckedCreateWithoutGameInput> | GameSessionCreateWithoutGameInput[] | GameSessionUncheckedCreateWithoutGameInput[]
+    connectOrCreate?: GameSessionCreateOrConnectWithoutGameInput | GameSessionCreateOrConnectWithoutGameInput[]
+    createMany?: GameSessionCreateManyGameInputEnvelope
+    connect?: GameSessionWhereUniqueInput | GameSessionWhereUniqueInput[]
+  }
+
+  export type GameTranslationUncheckedCreateNestedManyWithoutCasinoGameInput = {
+    create?: XOR<GameTranslationCreateWithoutCasinoGameInput, GameTranslationUncheckedCreateWithoutCasinoGameInput> | GameTranslationCreateWithoutCasinoGameInput[] | GameTranslationUncheckedCreateWithoutCasinoGameInput[]
+    connectOrCreate?: GameTranslationCreateOrConnectWithoutCasinoGameInput | GameTranslationCreateOrConnectWithoutCasinoGameInput[]
+    createMany?: GameTranslationCreateManyCasinoGameInputEnvelope
+    connect?: GameTranslationWhereUniqueInput | GameTranslationWhereUniqueInput[]
+  }
+
+  export type EnumGameAggregatorTypeFieldUpdateOperationsInput = {
+    set?: $Enums.GameAggregatorType
+  }
+
+  export type EnumGameProviderFieldUpdateOperationsInput = {
+    set?: $Enums.GameProvider
+  }
+
+  export type EnumGameCategoryFieldUpdateOperationsInput = {
+    set?: $Enums.GameCategory
+  }
+
+  export type DecimalFieldUpdateOperationsInput = {
+    set?: Decimal | DecimalJsLike | number | string
+    increment?: Decimal | DecimalJsLike | number | string
+    decrement?: Decimal | DecimalJsLike | number | string
+    multiply?: Decimal | DecimalJsLike | number | string
+    divide?: Decimal | DecimalJsLike | number | string
+  }
+
+  export type BonusDetailUpdateManyWithoutCasinoGameNestedInput = {
+    create?: XOR<BonusDetailCreateWithoutCasinoGameInput, BonusDetailUncheckedCreateWithoutCasinoGameInput> | BonusDetailCreateWithoutCasinoGameInput[] | BonusDetailUncheckedCreateWithoutCasinoGameInput[]
+    connectOrCreate?: BonusDetailCreateOrConnectWithoutCasinoGameInput | BonusDetailCreateOrConnectWithoutCasinoGameInput[]
+    upsert?: BonusDetailUpsertWithWhereUniqueWithoutCasinoGameInput | BonusDetailUpsertWithWhereUniqueWithoutCasinoGameInput[]
+    createMany?: BonusDetailCreateManyCasinoGameInputEnvelope
+    set?: BonusDetailWhereUniqueInput | BonusDetailWhereUniqueInput[]
+    disconnect?: BonusDetailWhereUniqueInput | BonusDetailWhereUniqueInput[]
+    delete?: BonusDetailWhereUniqueInput | BonusDetailWhereUniqueInput[]
+    connect?: BonusDetailWhereUniqueInput | BonusDetailWhereUniqueInput[]
+    update?: BonusDetailUpdateWithWhereUniqueWithoutCasinoGameInput | BonusDetailUpdateWithWhereUniqueWithoutCasinoGameInput[]
+    updateMany?: BonusDetailUpdateManyWithWhereWithoutCasinoGameInput | BonusDetailUpdateManyWithWhereWithoutCasinoGameInput[]
+    deleteMany?: BonusDetailScalarWhereInput | BonusDetailScalarWhereInput[]
+  }
+
+  export type GameRoundUpdateManyWithoutCasinoGameNestedInput = {
+    create?: XOR<GameRoundCreateWithoutCasinoGameInput, GameRoundUncheckedCreateWithoutCasinoGameInput> | GameRoundCreateWithoutCasinoGameInput[] | GameRoundUncheckedCreateWithoutCasinoGameInput[]
+    connectOrCreate?: GameRoundCreateOrConnectWithoutCasinoGameInput | GameRoundCreateOrConnectWithoutCasinoGameInput[]
+    upsert?: GameRoundUpsertWithWhereUniqueWithoutCasinoGameInput | GameRoundUpsertWithWhereUniqueWithoutCasinoGameInput[]
+    createMany?: GameRoundCreateManyCasinoGameInputEnvelope
+    set?: GameRoundWhereUniqueInput | GameRoundWhereUniqueInput[]
+    disconnect?: GameRoundWhereUniqueInput | GameRoundWhereUniqueInput[]
+    delete?: GameRoundWhereUniqueInput | GameRoundWhereUniqueInput[]
+    connect?: GameRoundWhereUniqueInput | GameRoundWhereUniqueInput[]
+    update?: GameRoundUpdateWithWhereUniqueWithoutCasinoGameInput | GameRoundUpdateWithWhereUniqueWithoutCasinoGameInput[]
+    updateMany?: GameRoundUpdateManyWithWhereWithoutCasinoGameInput | GameRoundUpdateManyWithWhereWithoutCasinoGameInput[]
+    deleteMany?: GameRoundScalarWhereInput | GameRoundScalarWhereInput[]
+  }
+
+  export type GameSessionUpdateManyWithoutGameNestedInput = {
+    create?: XOR<GameSessionCreateWithoutGameInput, GameSessionUncheckedCreateWithoutGameInput> | GameSessionCreateWithoutGameInput[] | GameSessionUncheckedCreateWithoutGameInput[]
+    connectOrCreate?: GameSessionCreateOrConnectWithoutGameInput | GameSessionCreateOrConnectWithoutGameInput[]
+    upsert?: GameSessionUpsertWithWhereUniqueWithoutGameInput | GameSessionUpsertWithWhereUniqueWithoutGameInput[]
+    createMany?: GameSessionCreateManyGameInputEnvelope
+    set?: GameSessionWhereUniqueInput | GameSessionWhereUniqueInput[]
+    disconnect?: GameSessionWhereUniqueInput | GameSessionWhereUniqueInput[]
+    delete?: GameSessionWhereUniqueInput | GameSessionWhereUniqueInput[]
+    connect?: GameSessionWhereUniqueInput | GameSessionWhereUniqueInput[]
+    update?: GameSessionUpdateWithWhereUniqueWithoutGameInput | GameSessionUpdateWithWhereUniqueWithoutGameInput[]
+    updateMany?: GameSessionUpdateManyWithWhereWithoutGameInput | GameSessionUpdateManyWithWhereWithoutGameInput[]
+    deleteMany?: GameSessionScalarWhereInput | GameSessionScalarWhereInput[]
+  }
+
+  export type GameTranslationUpdateManyWithoutCasinoGameNestedInput = {
+    create?: XOR<GameTranslationCreateWithoutCasinoGameInput, GameTranslationUncheckedCreateWithoutCasinoGameInput> | GameTranslationCreateWithoutCasinoGameInput[] | GameTranslationUncheckedCreateWithoutCasinoGameInput[]
+    connectOrCreate?: GameTranslationCreateOrConnectWithoutCasinoGameInput | GameTranslationCreateOrConnectWithoutCasinoGameInput[]
+    upsert?: GameTranslationUpsertWithWhereUniqueWithoutCasinoGameInput | GameTranslationUpsertWithWhereUniqueWithoutCasinoGameInput[]
+    createMany?: GameTranslationCreateManyCasinoGameInputEnvelope
+    set?: GameTranslationWhereUniqueInput | GameTranslationWhereUniqueInput[]
+    disconnect?: GameTranslationWhereUniqueInput | GameTranslationWhereUniqueInput[]
+    delete?: GameTranslationWhereUniqueInput | GameTranslationWhereUniqueInput[]
+    connect?: GameTranslationWhereUniqueInput | GameTranslationWhereUniqueInput[]
+    update?: GameTranslationUpdateWithWhereUniqueWithoutCasinoGameInput | GameTranslationUpdateWithWhereUniqueWithoutCasinoGameInput[]
+    updateMany?: GameTranslationUpdateManyWithWhereWithoutCasinoGameInput | GameTranslationUpdateManyWithWhereWithoutCasinoGameInput[]
+    deleteMany?: GameTranslationScalarWhereInput | GameTranslationScalarWhereInput[]
+  }
+
+  export type BonusDetailUncheckedUpdateManyWithoutCasinoGameNestedInput = {
+    create?: XOR<BonusDetailCreateWithoutCasinoGameInput, BonusDetailUncheckedCreateWithoutCasinoGameInput> | BonusDetailCreateWithoutCasinoGameInput[] | BonusDetailUncheckedCreateWithoutCasinoGameInput[]
+    connectOrCreate?: BonusDetailCreateOrConnectWithoutCasinoGameInput | BonusDetailCreateOrConnectWithoutCasinoGameInput[]
+    upsert?: BonusDetailUpsertWithWhereUniqueWithoutCasinoGameInput | BonusDetailUpsertWithWhereUniqueWithoutCasinoGameInput[]
+    createMany?: BonusDetailCreateManyCasinoGameInputEnvelope
+    set?: BonusDetailWhereUniqueInput | BonusDetailWhereUniqueInput[]
+    disconnect?: BonusDetailWhereUniqueInput | BonusDetailWhereUniqueInput[]
+    delete?: BonusDetailWhereUniqueInput | BonusDetailWhereUniqueInput[]
+    connect?: BonusDetailWhereUniqueInput | BonusDetailWhereUniqueInput[]
+    update?: BonusDetailUpdateWithWhereUniqueWithoutCasinoGameInput | BonusDetailUpdateWithWhereUniqueWithoutCasinoGameInput[]
+    updateMany?: BonusDetailUpdateManyWithWhereWithoutCasinoGameInput | BonusDetailUpdateManyWithWhereWithoutCasinoGameInput[]
+    deleteMany?: BonusDetailScalarWhereInput | BonusDetailScalarWhereInput[]
+  }
+
+  export type GameRoundUncheckedUpdateManyWithoutCasinoGameNestedInput = {
+    create?: XOR<GameRoundCreateWithoutCasinoGameInput, GameRoundUncheckedCreateWithoutCasinoGameInput> | GameRoundCreateWithoutCasinoGameInput[] | GameRoundUncheckedCreateWithoutCasinoGameInput[]
+    connectOrCreate?: GameRoundCreateOrConnectWithoutCasinoGameInput | GameRoundCreateOrConnectWithoutCasinoGameInput[]
+    upsert?: GameRoundUpsertWithWhereUniqueWithoutCasinoGameInput | GameRoundUpsertWithWhereUniqueWithoutCasinoGameInput[]
+    createMany?: GameRoundCreateManyCasinoGameInputEnvelope
+    set?: GameRoundWhereUniqueInput | GameRoundWhereUniqueInput[]
+    disconnect?: GameRoundWhereUniqueInput | GameRoundWhereUniqueInput[]
+    delete?: GameRoundWhereUniqueInput | GameRoundWhereUniqueInput[]
+    connect?: GameRoundWhereUniqueInput | GameRoundWhereUniqueInput[]
+    update?: GameRoundUpdateWithWhereUniqueWithoutCasinoGameInput | GameRoundUpdateWithWhereUniqueWithoutCasinoGameInput[]
+    updateMany?: GameRoundUpdateManyWithWhereWithoutCasinoGameInput | GameRoundUpdateManyWithWhereWithoutCasinoGameInput[]
+    deleteMany?: GameRoundScalarWhereInput | GameRoundScalarWhereInput[]
+  }
+
+  export type GameSessionUncheckedUpdateManyWithoutGameNestedInput = {
+    create?: XOR<GameSessionCreateWithoutGameInput, GameSessionUncheckedCreateWithoutGameInput> | GameSessionCreateWithoutGameInput[] | GameSessionUncheckedCreateWithoutGameInput[]
+    connectOrCreate?: GameSessionCreateOrConnectWithoutGameInput | GameSessionCreateOrConnectWithoutGameInput[]
+    upsert?: GameSessionUpsertWithWhereUniqueWithoutGameInput | GameSessionUpsertWithWhereUniqueWithoutGameInput[]
+    createMany?: GameSessionCreateManyGameInputEnvelope
+    set?: GameSessionWhereUniqueInput | GameSessionWhereUniqueInput[]
+    disconnect?: GameSessionWhereUniqueInput | GameSessionWhereUniqueInput[]
+    delete?: GameSessionWhereUniqueInput | GameSessionWhereUniqueInput[]
+    connect?: GameSessionWhereUniqueInput | GameSessionWhereUniqueInput[]
+    update?: GameSessionUpdateWithWhereUniqueWithoutGameInput | GameSessionUpdateWithWhereUniqueWithoutGameInput[]
+    updateMany?: GameSessionUpdateManyWithWhereWithoutGameInput | GameSessionUpdateManyWithWhereWithoutGameInput[]
+    deleteMany?: GameSessionScalarWhereInput | GameSessionScalarWhereInput[]
+  }
+
+  export type GameTranslationUncheckedUpdateManyWithoutCasinoGameNestedInput = {
+    create?: XOR<GameTranslationCreateWithoutCasinoGameInput, GameTranslationUncheckedCreateWithoutCasinoGameInput> | GameTranslationCreateWithoutCasinoGameInput[] | GameTranslationUncheckedCreateWithoutCasinoGameInput[]
+    connectOrCreate?: GameTranslationCreateOrConnectWithoutCasinoGameInput | GameTranslationCreateOrConnectWithoutCasinoGameInput[]
+    upsert?: GameTranslationUpsertWithWhereUniqueWithoutCasinoGameInput | GameTranslationUpsertWithWhereUniqueWithoutCasinoGameInput[]
+    createMany?: GameTranslationCreateManyCasinoGameInputEnvelope
+    set?: GameTranslationWhereUniqueInput | GameTranslationWhereUniqueInput[]
+    disconnect?: GameTranslationWhereUniqueInput | GameTranslationWhereUniqueInput[]
+    delete?: GameTranslationWhereUniqueInput | GameTranslationWhereUniqueInput[]
+    connect?: GameTranslationWhereUniqueInput | GameTranslationWhereUniqueInput[]
+    update?: GameTranslationUpdateWithWhereUniqueWithoutCasinoGameInput | GameTranslationUpdateWithWhereUniqueWithoutCasinoGameInput[]
+    updateMany?: GameTranslationUpdateManyWithWhereWithoutCasinoGameInput | GameTranslationUpdateManyWithWhereWithoutCasinoGameInput[]
+    deleteMany?: GameTranslationScalarWhereInput | GameTranslationScalarWhereInput[]
+  }
+
+  export type CasinoGameCreateNestedOneWithoutTranslationsInput = {
+    create?: XOR<CasinoGameCreateWithoutTranslationsInput, CasinoGameUncheckedCreateWithoutTranslationsInput>
+    connectOrCreate?: CasinoGameCreateOrConnectWithoutTranslationsInput
+    connect?: CasinoGameWhereUniqueInput
+  }
+
+  export type EnumLanguageFieldUpdateOperationsInput = {
+    set?: $Enums.Language
+  }
+
+  export type CasinoGameUpdateOneRequiredWithoutTranslationsNestedInput = {
+    create?: XOR<CasinoGameCreateWithoutTranslationsInput, CasinoGameUncheckedCreateWithoutTranslationsInput>
+    connectOrCreate?: CasinoGameCreateOrConnectWithoutTranslationsInput
+    upsert?: CasinoGameUpsertWithoutTranslationsInput
+    connect?: CasinoGameWhereUniqueInput
+    update?: XOR<XOR<CasinoGameUpdateToOneWithWhereWithoutTranslationsInput, CasinoGameUpdateWithoutTranslationsInput>, CasinoGameUncheckedUpdateWithoutTranslationsInput>
+  }
+
+  export type GameRoundCreateNestedManyWithoutGameSessionInput = {
+    create?: XOR<GameRoundCreateWithoutGameSessionInput, GameRoundUncheckedCreateWithoutGameSessionInput> | GameRoundCreateWithoutGameSessionInput[] | GameRoundUncheckedCreateWithoutGameSessionInput[]
+    connectOrCreate?: GameRoundCreateOrConnectWithoutGameSessionInput | GameRoundCreateOrConnectWithoutGameSessionInput[]
+    createMany?: GameRoundCreateManyGameSessionInputEnvelope
+    connect?: GameRoundWhereUniqueInput | GameRoundWhereUniqueInput[]
+  }
+
+  export type CasinoGameCreateNestedOneWithoutGameSessionsInput = {
+    create?: XOR<CasinoGameCreateWithoutGameSessionsInput, CasinoGameUncheckedCreateWithoutGameSessionsInput>
+    connectOrCreate?: CasinoGameCreateOrConnectWithoutGameSessionsInput
+    connect?: CasinoGameWhereUniqueInput
+  }
+
+  export type UserCreateNestedOneWithoutGameSessionInput = {
+    create?: XOR<UserCreateWithoutGameSessionInput, UserUncheckedCreateWithoutGameSessionInput>
+    connectOrCreate?: UserCreateOrConnectWithoutGameSessionInput
+    connect?: UserWhereUniqueInput
+  }
+
+  export type GameRoundUncheckedCreateNestedManyWithoutGameSessionInput = {
+    create?: XOR<GameRoundCreateWithoutGameSessionInput, GameRoundUncheckedCreateWithoutGameSessionInput> | GameRoundCreateWithoutGameSessionInput[] | GameRoundUncheckedCreateWithoutGameSessionInput[]
+    connectOrCreate?: GameRoundCreateOrConnectWithoutGameSessionInput | GameRoundCreateOrConnectWithoutGameSessionInput[]
+    createMany?: GameRoundCreateManyGameSessionInputEnvelope
+    connect?: GameRoundWhereUniqueInput | GameRoundWhereUniqueInput[]
+  }
+
+  export type EnumExchangeCurrencyCodeFieldUpdateOperationsInput = {
+    set?: $Enums.ExchangeCurrencyCode
+  }
+
+  export type GameRoundUpdateManyWithoutGameSessionNestedInput = {
+    create?: XOR<GameRoundCreateWithoutGameSessionInput, GameRoundUncheckedCreateWithoutGameSessionInput> | GameRoundCreateWithoutGameSessionInput[] | GameRoundUncheckedCreateWithoutGameSessionInput[]
+    connectOrCreate?: GameRoundCreateOrConnectWithoutGameSessionInput | GameRoundCreateOrConnectWithoutGameSessionInput[]
+    upsert?: GameRoundUpsertWithWhereUniqueWithoutGameSessionInput | GameRoundUpsertWithWhereUniqueWithoutGameSessionInput[]
+    createMany?: GameRoundCreateManyGameSessionInputEnvelope
+    set?: GameRoundWhereUniqueInput | GameRoundWhereUniqueInput[]
+    disconnect?: GameRoundWhereUniqueInput | GameRoundWhereUniqueInput[]
+    delete?: GameRoundWhereUniqueInput | GameRoundWhereUniqueInput[]
+    connect?: GameRoundWhereUniqueInput | GameRoundWhereUniqueInput[]
+    update?: GameRoundUpdateWithWhereUniqueWithoutGameSessionInput | GameRoundUpdateWithWhereUniqueWithoutGameSessionInput[]
+    updateMany?: GameRoundUpdateManyWithWhereWithoutGameSessionInput | GameRoundUpdateManyWithWhereWithoutGameSessionInput[]
+    deleteMany?: GameRoundScalarWhereInput | GameRoundScalarWhereInput[]
+  }
+
+  export type CasinoGameUpdateOneWithoutGameSessionsNestedInput = {
+    create?: XOR<CasinoGameCreateWithoutGameSessionsInput, CasinoGameUncheckedCreateWithoutGameSessionsInput>
+    connectOrCreate?: CasinoGameCreateOrConnectWithoutGameSessionsInput
+    upsert?: CasinoGameUpsertWithoutGameSessionsInput
+    disconnect?: CasinoGameWhereInput | boolean
+    delete?: CasinoGameWhereInput | boolean
+    connect?: CasinoGameWhereUniqueInput
+    update?: XOR<XOR<CasinoGameUpdateToOneWithWhereWithoutGameSessionsInput, CasinoGameUpdateWithoutGameSessionsInput>, CasinoGameUncheckedUpdateWithoutGameSessionsInput>
+  }
+
+  export type UserUpdateOneRequiredWithoutGameSessionNestedInput = {
+    create?: XOR<UserCreateWithoutGameSessionInput, UserUncheckedCreateWithoutGameSessionInput>
+    connectOrCreate?: UserCreateOrConnectWithoutGameSessionInput
+    upsert?: UserUpsertWithoutGameSessionInput
+    connect?: UserWhereUniqueInput
+    update?: XOR<XOR<UserUpdateToOneWithWhereWithoutGameSessionInput, UserUpdateWithoutGameSessionInput>, UserUncheckedUpdateWithoutGameSessionInput>
+  }
+
+  export type GameRoundUncheckedUpdateManyWithoutGameSessionNestedInput = {
+    create?: XOR<GameRoundCreateWithoutGameSessionInput, GameRoundUncheckedCreateWithoutGameSessionInput> | GameRoundCreateWithoutGameSessionInput[] | GameRoundUncheckedCreateWithoutGameSessionInput[]
+    connectOrCreate?: GameRoundCreateOrConnectWithoutGameSessionInput | GameRoundCreateOrConnectWithoutGameSessionInput[]
+    upsert?: GameRoundUpsertWithWhereUniqueWithoutGameSessionInput | GameRoundUpsertWithWhereUniqueWithoutGameSessionInput[]
+    createMany?: GameRoundCreateManyGameSessionInputEnvelope
+    set?: GameRoundWhereUniqueInput | GameRoundWhereUniqueInput[]
+    disconnect?: GameRoundWhereUniqueInput | GameRoundWhereUniqueInput[]
+    delete?: GameRoundWhereUniqueInput | GameRoundWhereUniqueInput[]
+    connect?: GameRoundWhereUniqueInput | GameRoundWhereUniqueInput[]
+    update?: GameRoundUpdateWithWhereUniqueWithoutGameSessionInput | GameRoundUpdateWithWhereUniqueWithoutGameSessionInput[]
+    updateMany?: GameRoundUpdateManyWithWhereWithoutGameSessionInput | GameRoundUpdateManyWithWhereWithoutGameSessionInput[]
+    deleteMany?: GameRoundScalarWhereInput | GameRoundScalarWhereInput[]
+  }
+
   export type AffiliateCodeCreateNestedManyWithoutUserInput = {
     create?: XOR<AffiliateCodeCreateWithoutUserInput, AffiliateCodeUncheckedCreateWithoutUserInput> | AffiliateCodeCreateWithoutUserInput[] | AffiliateCodeUncheckedCreateWithoutUserInput[]
     connectOrCreate?: AffiliateCodeCreateOrConnectWithoutUserInput | AffiliateCodeCreateOrConnectWithoutUserInput[]
@@ -78340,18 +78622,6 @@ export namespace Prisma {
     connect?: UserWhereUniqueInput
   }
 
-  export type EnumExchangeCurrencyCodeFieldUpdateOperationsInput = {
-    set?: $Enums.ExchangeCurrencyCode
-  }
-
-  export type DecimalFieldUpdateOperationsInput = {
-    set?: Decimal | DecimalJsLike | number | string
-    increment?: Decimal | DecimalJsLike | number | string
-    decrement?: Decimal | DecimalJsLike | number | string
-    multiply?: Decimal | DecimalJsLike | number | string
-    divide?: Decimal | DecimalJsLike | number | string
-  }
-
   export type UserUpdateOneRequiredWithoutBalancesNestedInput = {
     create?: XOR<UserCreateWithoutBalancesInput, UserUncheckedCreateWithoutBalancesInput>
     connectOrCreate?: UserCreateOrConnectWithoutBalancesInput
@@ -78372,204 +78642,6 @@ export namespace Prisma {
     upsert?: UserUpsertWithoutUserBalanceStatsInput
     connect?: UserWhereUniqueInput
     update?: XOR<XOR<UserUpdateToOneWithWhereWithoutUserBalanceStatsInput, UserUpdateWithoutUserBalanceStatsInput>, UserUncheckedUpdateWithoutUserBalanceStatsInput>
-  }
-
-  export type BonusDetailCreateNestedManyWithoutGameInput = {
-    create?: XOR<BonusDetailCreateWithoutGameInput, BonusDetailUncheckedCreateWithoutGameInput> | BonusDetailCreateWithoutGameInput[] | BonusDetailUncheckedCreateWithoutGameInput[]
-    connectOrCreate?: BonusDetailCreateOrConnectWithoutGameInput | BonusDetailCreateOrConnectWithoutGameInput[]
-    createMany?: BonusDetailCreateManyGameInputEnvelope
-    connect?: BonusDetailWhereUniqueInput | BonusDetailWhereUniqueInput[]
-  }
-
-  export type GameRoundCreateNestedManyWithoutGameInput = {
-    create?: XOR<GameRoundCreateWithoutGameInput, GameRoundUncheckedCreateWithoutGameInput> | GameRoundCreateWithoutGameInput[] | GameRoundUncheckedCreateWithoutGameInput[]
-    connectOrCreate?: GameRoundCreateOrConnectWithoutGameInput | GameRoundCreateOrConnectWithoutGameInput[]
-    createMany?: GameRoundCreateManyGameInputEnvelope
-    connect?: GameRoundWhereUniqueInput | GameRoundWhereUniqueInput[]
-  }
-
-  export type GameSessionCreateNestedManyWithoutGameInput = {
-    create?: XOR<GameSessionCreateWithoutGameInput, GameSessionUncheckedCreateWithoutGameInput> | GameSessionCreateWithoutGameInput[] | GameSessionUncheckedCreateWithoutGameInput[]
-    connectOrCreate?: GameSessionCreateOrConnectWithoutGameInput | GameSessionCreateOrConnectWithoutGameInput[]
-    createMany?: GameSessionCreateManyGameInputEnvelope
-    connect?: GameSessionWhereUniqueInput | GameSessionWhereUniqueInput[]
-  }
-
-  export type GameTranslationCreateNestedManyWithoutGameInput = {
-    create?: XOR<GameTranslationCreateWithoutGameInput, GameTranslationUncheckedCreateWithoutGameInput> | GameTranslationCreateWithoutGameInput[] | GameTranslationUncheckedCreateWithoutGameInput[]
-    connectOrCreate?: GameTranslationCreateOrConnectWithoutGameInput | GameTranslationCreateOrConnectWithoutGameInput[]
-    createMany?: GameTranslationCreateManyGameInputEnvelope
-    connect?: GameTranslationWhereUniqueInput | GameTranslationWhereUniqueInput[]
-  }
-
-  export type BonusDetailUncheckedCreateNestedManyWithoutGameInput = {
-    create?: XOR<BonusDetailCreateWithoutGameInput, BonusDetailUncheckedCreateWithoutGameInput> | BonusDetailCreateWithoutGameInput[] | BonusDetailUncheckedCreateWithoutGameInput[]
-    connectOrCreate?: BonusDetailCreateOrConnectWithoutGameInput | BonusDetailCreateOrConnectWithoutGameInput[]
-    createMany?: BonusDetailCreateManyGameInputEnvelope
-    connect?: BonusDetailWhereUniqueInput | BonusDetailWhereUniqueInput[]
-  }
-
-  export type GameRoundUncheckedCreateNestedManyWithoutGameInput = {
-    create?: XOR<GameRoundCreateWithoutGameInput, GameRoundUncheckedCreateWithoutGameInput> | GameRoundCreateWithoutGameInput[] | GameRoundUncheckedCreateWithoutGameInput[]
-    connectOrCreate?: GameRoundCreateOrConnectWithoutGameInput | GameRoundCreateOrConnectWithoutGameInput[]
-    createMany?: GameRoundCreateManyGameInputEnvelope
-    connect?: GameRoundWhereUniqueInput | GameRoundWhereUniqueInput[]
-  }
-
-  export type GameSessionUncheckedCreateNestedManyWithoutGameInput = {
-    create?: XOR<GameSessionCreateWithoutGameInput, GameSessionUncheckedCreateWithoutGameInput> | GameSessionCreateWithoutGameInput[] | GameSessionUncheckedCreateWithoutGameInput[]
-    connectOrCreate?: GameSessionCreateOrConnectWithoutGameInput | GameSessionCreateOrConnectWithoutGameInput[]
-    createMany?: GameSessionCreateManyGameInputEnvelope
-    connect?: GameSessionWhereUniqueInput | GameSessionWhereUniqueInput[]
-  }
-
-  export type GameTranslationUncheckedCreateNestedManyWithoutGameInput = {
-    create?: XOR<GameTranslationCreateWithoutGameInput, GameTranslationUncheckedCreateWithoutGameInput> | GameTranslationCreateWithoutGameInput[] | GameTranslationUncheckedCreateWithoutGameInput[]
-    connectOrCreate?: GameTranslationCreateOrConnectWithoutGameInput | GameTranslationCreateOrConnectWithoutGameInput[]
-    createMany?: GameTranslationCreateManyGameInputEnvelope
-    connect?: GameTranslationWhereUniqueInput | GameTranslationWhereUniqueInput[]
-  }
-
-  export type EnumGameAggregatorTypeFieldUpdateOperationsInput = {
-    set?: $Enums.GameAggregatorType
-  }
-
-  export type EnumGameProviderFieldUpdateOperationsInput = {
-    set?: $Enums.GameProvider
-  }
-
-  export type EnumGameCategoryFieldUpdateOperationsInput = {
-    set?: $Enums.GameCategory
-  }
-
-  export type BonusDetailUpdateManyWithoutGameNestedInput = {
-    create?: XOR<BonusDetailCreateWithoutGameInput, BonusDetailUncheckedCreateWithoutGameInput> | BonusDetailCreateWithoutGameInput[] | BonusDetailUncheckedCreateWithoutGameInput[]
-    connectOrCreate?: BonusDetailCreateOrConnectWithoutGameInput | BonusDetailCreateOrConnectWithoutGameInput[]
-    upsert?: BonusDetailUpsertWithWhereUniqueWithoutGameInput | BonusDetailUpsertWithWhereUniqueWithoutGameInput[]
-    createMany?: BonusDetailCreateManyGameInputEnvelope
-    set?: BonusDetailWhereUniqueInput | BonusDetailWhereUniqueInput[]
-    disconnect?: BonusDetailWhereUniqueInput | BonusDetailWhereUniqueInput[]
-    delete?: BonusDetailWhereUniqueInput | BonusDetailWhereUniqueInput[]
-    connect?: BonusDetailWhereUniqueInput | BonusDetailWhereUniqueInput[]
-    update?: BonusDetailUpdateWithWhereUniqueWithoutGameInput | BonusDetailUpdateWithWhereUniqueWithoutGameInput[]
-    updateMany?: BonusDetailUpdateManyWithWhereWithoutGameInput | BonusDetailUpdateManyWithWhereWithoutGameInput[]
-    deleteMany?: BonusDetailScalarWhereInput | BonusDetailScalarWhereInput[]
-  }
-
-  export type GameRoundUpdateManyWithoutGameNestedInput = {
-    create?: XOR<GameRoundCreateWithoutGameInput, GameRoundUncheckedCreateWithoutGameInput> | GameRoundCreateWithoutGameInput[] | GameRoundUncheckedCreateWithoutGameInput[]
-    connectOrCreate?: GameRoundCreateOrConnectWithoutGameInput | GameRoundCreateOrConnectWithoutGameInput[]
-    upsert?: GameRoundUpsertWithWhereUniqueWithoutGameInput | GameRoundUpsertWithWhereUniqueWithoutGameInput[]
-    createMany?: GameRoundCreateManyGameInputEnvelope
-    set?: GameRoundWhereUniqueInput | GameRoundWhereUniqueInput[]
-    disconnect?: GameRoundWhereUniqueInput | GameRoundWhereUniqueInput[]
-    delete?: GameRoundWhereUniqueInput | GameRoundWhereUniqueInput[]
-    connect?: GameRoundWhereUniqueInput | GameRoundWhereUniqueInput[]
-    update?: GameRoundUpdateWithWhereUniqueWithoutGameInput | GameRoundUpdateWithWhereUniqueWithoutGameInput[]
-    updateMany?: GameRoundUpdateManyWithWhereWithoutGameInput | GameRoundUpdateManyWithWhereWithoutGameInput[]
-    deleteMany?: GameRoundScalarWhereInput | GameRoundScalarWhereInput[]
-  }
-
-  export type GameSessionUpdateManyWithoutGameNestedInput = {
-    create?: XOR<GameSessionCreateWithoutGameInput, GameSessionUncheckedCreateWithoutGameInput> | GameSessionCreateWithoutGameInput[] | GameSessionUncheckedCreateWithoutGameInput[]
-    connectOrCreate?: GameSessionCreateOrConnectWithoutGameInput | GameSessionCreateOrConnectWithoutGameInput[]
-    upsert?: GameSessionUpsertWithWhereUniqueWithoutGameInput | GameSessionUpsertWithWhereUniqueWithoutGameInput[]
-    createMany?: GameSessionCreateManyGameInputEnvelope
-    set?: GameSessionWhereUniqueInput | GameSessionWhereUniqueInput[]
-    disconnect?: GameSessionWhereUniqueInput | GameSessionWhereUniqueInput[]
-    delete?: GameSessionWhereUniqueInput | GameSessionWhereUniqueInput[]
-    connect?: GameSessionWhereUniqueInput | GameSessionWhereUniqueInput[]
-    update?: GameSessionUpdateWithWhereUniqueWithoutGameInput | GameSessionUpdateWithWhereUniqueWithoutGameInput[]
-    updateMany?: GameSessionUpdateManyWithWhereWithoutGameInput | GameSessionUpdateManyWithWhereWithoutGameInput[]
-    deleteMany?: GameSessionScalarWhereInput | GameSessionScalarWhereInput[]
-  }
-
-  export type GameTranslationUpdateManyWithoutGameNestedInput = {
-    create?: XOR<GameTranslationCreateWithoutGameInput, GameTranslationUncheckedCreateWithoutGameInput> | GameTranslationCreateWithoutGameInput[] | GameTranslationUncheckedCreateWithoutGameInput[]
-    connectOrCreate?: GameTranslationCreateOrConnectWithoutGameInput | GameTranslationCreateOrConnectWithoutGameInput[]
-    upsert?: GameTranslationUpsertWithWhereUniqueWithoutGameInput | GameTranslationUpsertWithWhereUniqueWithoutGameInput[]
-    createMany?: GameTranslationCreateManyGameInputEnvelope
-    set?: GameTranslationWhereUniqueInput | GameTranslationWhereUniqueInput[]
-    disconnect?: GameTranslationWhereUniqueInput | GameTranslationWhereUniqueInput[]
-    delete?: GameTranslationWhereUniqueInput | GameTranslationWhereUniqueInput[]
-    connect?: GameTranslationWhereUniqueInput | GameTranslationWhereUniqueInput[]
-    update?: GameTranslationUpdateWithWhereUniqueWithoutGameInput | GameTranslationUpdateWithWhereUniqueWithoutGameInput[]
-    updateMany?: GameTranslationUpdateManyWithWhereWithoutGameInput | GameTranslationUpdateManyWithWhereWithoutGameInput[]
-    deleteMany?: GameTranslationScalarWhereInput | GameTranslationScalarWhereInput[]
-  }
-
-  export type BonusDetailUncheckedUpdateManyWithoutGameNestedInput = {
-    create?: XOR<BonusDetailCreateWithoutGameInput, BonusDetailUncheckedCreateWithoutGameInput> | BonusDetailCreateWithoutGameInput[] | BonusDetailUncheckedCreateWithoutGameInput[]
-    connectOrCreate?: BonusDetailCreateOrConnectWithoutGameInput | BonusDetailCreateOrConnectWithoutGameInput[]
-    upsert?: BonusDetailUpsertWithWhereUniqueWithoutGameInput | BonusDetailUpsertWithWhereUniqueWithoutGameInput[]
-    createMany?: BonusDetailCreateManyGameInputEnvelope
-    set?: BonusDetailWhereUniqueInput | BonusDetailWhereUniqueInput[]
-    disconnect?: BonusDetailWhereUniqueInput | BonusDetailWhereUniqueInput[]
-    delete?: BonusDetailWhereUniqueInput | BonusDetailWhereUniqueInput[]
-    connect?: BonusDetailWhereUniqueInput | BonusDetailWhereUniqueInput[]
-    update?: BonusDetailUpdateWithWhereUniqueWithoutGameInput | BonusDetailUpdateWithWhereUniqueWithoutGameInput[]
-    updateMany?: BonusDetailUpdateManyWithWhereWithoutGameInput | BonusDetailUpdateManyWithWhereWithoutGameInput[]
-    deleteMany?: BonusDetailScalarWhereInput | BonusDetailScalarWhereInput[]
-  }
-
-  export type GameRoundUncheckedUpdateManyWithoutGameNestedInput = {
-    create?: XOR<GameRoundCreateWithoutGameInput, GameRoundUncheckedCreateWithoutGameInput> | GameRoundCreateWithoutGameInput[] | GameRoundUncheckedCreateWithoutGameInput[]
-    connectOrCreate?: GameRoundCreateOrConnectWithoutGameInput | GameRoundCreateOrConnectWithoutGameInput[]
-    upsert?: GameRoundUpsertWithWhereUniqueWithoutGameInput | GameRoundUpsertWithWhereUniqueWithoutGameInput[]
-    createMany?: GameRoundCreateManyGameInputEnvelope
-    set?: GameRoundWhereUniqueInput | GameRoundWhereUniqueInput[]
-    disconnect?: GameRoundWhereUniqueInput | GameRoundWhereUniqueInput[]
-    delete?: GameRoundWhereUniqueInput | GameRoundWhereUniqueInput[]
-    connect?: GameRoundWhereUniqueInput | GameRoundWhereUniqueInput[]
-    update?: GameRoundUpdateWithWhereUniqueWithoutGameInput | GameRoundUpdateWithWhereUniqueWithoutGameInput[]
-    updateMany?: GameRoundUpdateManyWithWhereWithoutGameInput | GameRoundUpdateManyWithWhereWithoutGameInput[]
-    deleteMany?: GameRoundScalarWhereInput | GameRoundScalarWhereInput[]
-  }
-
-  export type GameSessionUncheckedUpdateManyWithoutGameNestedInput = {
-    create?: XOR<GameSessionCreateWithoutGameInput, GameSessionUncheckedCreateWithoutGameInput> | GameSessionCreateWithoutGameInput[] | GameSessionUncheckedCreateWithoutGameInput[]
-    connectOrCreate?: GameSessionCreateOrConnectWithoutGameInput | GameSessionCreateOrConnectWithoutGameInput[]
-    upsert?: GameSessionUpsertWithWhereUniqueWithoutGameInput | GameSessionUpsertWithWhereUniqueWithoutGameInput[]
-    createMany?: GameSessionCreateManyGameInputEnvelope
-    set?: GameSessionWhereUniqueInput | GameSessionWhereUniqueInput[]
-    disconnect?: GameSessionWhereUniqueInput | GameSessionWhereUniqueInput[]
-    delete?: GameSessionWhereUniqueInput | GameSessionWhereUniqueInput[]
-    connect?: GameSessionWhereUniqueInput | GameSessionWhereUniqueInput[]
-    update?: GameSessionUpdateWithWhereUniqueWithoutGameInput | GameSessionUpdateWithWhereUniqueWithoutGameInput[]
-    updateMany?: GameSessionUpdateManyWithWhereWithoutGameInput | GameSessionUpdateManyWithWhereWithoutGameInput[]
-    deleteMany?: GameSessionScalarWhereInput | GameSessionScalarWhereInput[]
-  }
-
-  export type GameTranslationUncheckedUpdateManyWithoutGameNestedInput = {
-    create?: XOR<GameTranslationCreateWithoutGameInput, GameTranslationUncheckedCreateWithoutGameInput> | GameTranslationCreateWithoutGameInput[] | GameTranslationUncheckedCreateWithoutGameInput[]
-    connectOrCreate?: GameTranslationCreateOrConnectWithoutGameInput | GameTranslationCreateOrConnectWithoutGameInput[]
-    upsert?: GameTranslationUpsertWithWhereUniqueWithoutGameInput | GameTranslationUpsertWithWhereUniqueWithoutGameInput[]
-    createMany?: GameTranslationCreateManyGameInputEnvelope
-    set?: GameTranslationWhereUniqueInput | GameTranslationWhereUniqueInput[]
-    disconnect?: GameTranslationWhereUniqueInput | GameTranslationWhereUniqueInput[]
-    delete?: GameTranslationWhereUniqueInput | GameTranslationWhereUniqueInput[]
-    connect?: GameTranslationWhereUniqueInput | GameTranslationWhereUniqueInput[]
-    update?: GameTranslationUpdateWithWhereUniqueWithoutGameInput | GameTranslationUpdateWithWhereUniqueWithoutGameInput[]
-    updateMany?: GameTranslationUpdateManyWithWhereWithoutGameInput | GameTranslationUpdateManyWithWhereWithoutGameInput[]
-    deleteMany?: GameTranslationScalarWhereInput | GameTranslationScalarWhereInput[]
-  }
-
-  export type GameCreateNestedOneWithoutTranslationsInput = {
-    create?: XOR<GameCreateWithoutTranslationsInput, GameUncheckedCreateWithoutTranslationsInput>
-    connectOrCreate?: GameCreateOrConnectWithoutTranslationsInput
-    connect?: GameWhereUniqueInput
-  }
-
-  export type EnumLanguageFieldUpdateOperationsInput = {
-    set?: $Enums.Language
-  }
-
-  export type GameUpdateOneRequiredWithoutTranslationsNestedInput = {
-    create?: XOR<GameCreateWithoutTranslationsInput, GameUncheckedCreateWithoutTranslationsInput>
-    connectOrCreate?: GameCreateOrConnectWithoutTranslationsInput
-    upsert?: GameUpsertWithoutTranslationsInput
-    connect?: GameWhereUniqueInput
-    update?: XOR<XOR<GameUpdateToOneWithWhereWithoutTranslationsInput, GameUpdateWithoutTranslationsInput>, GameUncheckedUpdateWithoutTranslationsInput>
   }
 
   export type BonusDetailCreateNestedOneWithoutTransactionInput = {
@@ -78874,10 +78946,10 @@ export namespace Prisma {
     connect?: GameBetWhereUniqueInput | GameBetWhereUniqueInput[]
   }
 
-  export type GameCreateNestedOneWithoutGameRoundsInput = {
-    create?: XOR<GameCreateWithoutGameRoundsInput, GameUncheckedCreateWithoutGameRoundsInput>
-    connectOrCreate?: GameCreateOrConnectWithoutGameRoundsInput
-    connect?: GameWhereUniqueInput
+  export type CasinoGameCreateNestedOneWithoutGameRoundsInput = {
+    create?: XOR<CasinoGameCreateWithoutGameRoundsInput, CasinoGameUncheckedCreateWithoutGameRoundsInput>
+    connectOrCreate?: CasinoGameCreateOrConnectWithoutGameRoundsInput
+    connect?: CasinoGameWhereUniqueInput
   }
 
   export type GameSessionCreateNestedOneWithoutGameRoundsInput = {
@@ -78960,14 +79032,14 @@ export namespace Prisma {
     deleteMany?: GameBetScalarWhereInput | GameBetScalarWhereInput[]
   }
 
-  export type GameUpdateOneWithoutGameRoundsNestedInput = {
-    create?: XOR<GameCreateWithoutGameRoundsInput, GameUncheckedCreateWithoutGameRoundsInput>
-    connectOrCreate?: GameCreateOrConnectWithoutGameRoundsInput
-    upsert?: GameUpsertWithoutGameRoundsInput
-    disconnect?: GameWhereInput | boolean
-    delete?: GameWhereInput | boolean
-    connect?: GameWhereUniqueInput
-    update?: XOR<XOR<GameUpdateToOneWithWhereWithoutGameRoundsInput, GameUpdateWithoutGameRoundsInput>, GameUncheckedUpdateWithoutGameRoundsInput>
+  export type CasinoGameUpdateOneWithoutGameRoundsNestedInput = {
+    create?: XOR<CasinoGameCreateWithoutGameRoundsInput, CasinoGameUncheckedCreateWithoutGameRoundsInput>
+    connectOrCreate?: CasinoGameCreateOrConnectWithoutGameRoundsInput
+    upsert?: CasinoGameUpsertWithoutGameRoundsInput
+    disconnect?: CasinoGameWhereInput | boolean
+    delete?: CasinoGameWhereInput | boolean
+    connect?: CasinoGameWhereUniqueInput
+    update?: XOR<XOR<CasinoGameUpdateToOneWithWhereWithoutGameRoundsInput, CasinoGameUpdateWithoutGameRoundsInput>, CasinoGameUncheckedUpdateWithoutGameRoundsInput>
   }
 
   export type GameSessionUpdateOneRequiredWithoutGameRoundsNestedInput = {
@@ -79092,10 +79164,10 @@ export namespace Prisma {
     update?: XOR<XOR<TransactionUpdateToOneWithWhereWithoutBalanceDetailsInput, TransactionUpdateWithoutBalanceDetailsInput>, TransactionUncheckedUpdateWithoutBalanceDetailsInput>
   }
 
-  export type GameCreateNestedOneWithoutBonusDetailsInput = {
-    create?: XOR<GameCreateWithoutBonusDetailsInput, GameUncheckedCreateWithoutBonusDetailsInput>
-    connectOrCreate?: GameCreateOrConnectWithoutBonusDetailsInput
-    connect?: GameWhereUniqueInput
+  export type CasinoGameCreateNestedOneWithoutBonusDetailsInput = {
+    create?: XOR<CasinoGameCreateWithoutBonusDetailsInput, CasinoGameUncheckedCreateWithoutBonusDetailsInput>
+    connectOrCreate?: CasinoGameCreateOrConnectWithoutBonusDetailsInput
+    connect?: CasinoGameWhereUniqueInput
   }
 
   export type TransactionCreateNestedOneWithoutBonusDetailInput = {
@@ -79108,14 +79180,14 @@ export namespace Prisma {
     set?: $Enums.BonusType
   }
 
-  export type GameUpdateOneWithoutBonusDetailsNestedInput = {
-    create?: XOR<GameCreateWithoutBonusDetailsInput, GameUncheckedCreateWithoutBonusDetailsInput>
-    connectOrCreate?: GameCreateOrConnectWithoutBonusDetailsInput
-    upsert?: GameUpsertWithoutBonusDetailsInput
-    disconnect?: GameWhereInput | boolean
-    delete?: GameWhereInput | boolean
-    connect?: GameWhereUniqueInput
-    update?: XOR<XOR<GameUpdateToOneWithWhereWithoutBonusDetailsInput, GameUpdateWithoutBonusDetailsInput>, GameUncheckedUpdateWithoutBonusDetailsInput>
+  export type CasinoGameUpdateOneWithoutBonusDetailsNestedInput = {
+    create?: XOR<CasinoGameCreateWithoutBonusDetailsInput, CasinoGameUncheckedCreateWithoutBonusDetailsInput>
+    connectOrCreate?: CasinoGameCreateOrConnectWithoutBonusDetailsInput
+    upsert?: CasinoGameUpsertWithoutBonusDetailsInput
+    disconnect?: CasinoGameWhereInput | boolean
+    delete?: CasinoGameWhereInput | boolean
+    connect?: CasinoGameWhereUniqueInput
+    update?: XOR<XOR<CasinoGameUpdateToOneWithWhereWithoutBonusDetailsInput, CasinoGameUpdateWithoutBonusDetailsInput>, CasinoGameUncheckedUpdateWithoutBonusDetailsInput>
   }
 
   export type TransactionUpdateOneRequiredWithoutBonusDetailNestedInput = {
@@ -79348,78 +79420,6 @@ export namespace Prisma {
     delete?: UserWhereInput | boolean
     connect?: UserWhereUniqueInput
     update?: XOR<XOR<UserUpdateToOneWithWhereWithoutEmailLogInput, UserUpdateWithoutEmailLogInput>, UserUncheckedUpdateWithoutEmailLogInput>
-  }
-
-  export type GameRoundCreateNestedManyWithoutGameSessionInput = {
-    create?: XOR<GameRoundCreateWithoutGameSessionInput, GameRoundUncheckedCreateWithoutGameSessionInput> | GameRoundCreateWithoutGameSessionInput[] | GameRoundUncheckedCreateWithoutGameSessionInput[]
-    connectOrCreate?: GameRoundCreateOrConnectWithoutGameSessionInput | GameRoundCreateOrConnectWithoutGameSessionInput[]
-    createMany?: GameRoundCreateManyGameSessionInputEnvelope
-    connect?: GameRoundWhereUniqueInput | GameRoundWhereUniqueInput[]
-  }
-
-  export type GameCreateNestedOneWithoutGameSessionsInput = {
-    create?: XOR<GameCreateWithoutGameSessionsInput, GameUncheckedCreateWithoutGameSessionsInput>
-    connectOrCreate?: GameCreateOrConnectWithoutGameSessionsInput
-    connect?: GameWhereUniqueInput
-  }
-
-  export type UserCreateNestedOneWithoutGameSessionInput = {
-    create?: XOR<UserCreateWithoutGameSessionInput, UserUncheckedCreateWithoutGameSessionInput>
-    connectOrCreate?: UserCreateOrConnectWithoutGameSessionInput
-    connect?: UserWhereUniqueInput
-  }
-
-  export type GameRoundUncheckedCreateNestedManyWithoutGameSessionInput = {
-    create?: XOR<GameRoundCreateWithoutGameSessionInput, GameRoundUncheckedCreateWithoutGameSessionInput> | GameRoundCreateWithoutGameSessionInput[] | GameRoundUncheckedCreateWithoutGameSessionInput[]
-    connectOrCreate?: GameRoundCreateOrConnectWithoutGameSessionInput | GameRoundCreateOrConnectWithoutGameSessionInput[]
-    createMany?: GameRoundCreateManyGameSessionInputEnvelope
-    connect?: GameRoundWhereUniqueInput | GameRoundWhereUniqueInput[]
-  }
-
-  export type GameRoundUpdateManyWithoutGameSessionNestedInput = {
-    create?: XOR<GameRoundCreateWithoutGameSessionInput, GameRoundUncheckedCreateWithoutGameSessionInput> | GameRoundCreateWithoutGameSessionInput[] | GameRoundUncheckedCreateWithoutGameSessionInput[]
-    connectOrCreate?: GameRoundCreateOrConnectWithoutGameSessionInput | GameRoundCreateOrConnectWithoutGameSessionInput[]
-    upsert?: GameRoundUpsertWithWhereUniqueWithoutGameSessionInput | GameRoundUpsertWithWhereUniqueWithoutGameSessionInput[]
-    createMany?: GameRoundCreateManyGameSessionInputEnvelope
-    set?: GameRoundWhereUniqueInput | GameRoundWhereUniqueInput[]
-    disconnect?: GameRoundWhereUniqueInput | GameRoundWhereUniqueInput[]
-    delete?: GameRoundWhereUniqueInput | GameRoundWhereUniqueInput[]
-    connect?: GameRoundWhereUniqueInput | GameRoundWhereUniqueInput[]
-    update?: GameRoundUpdateWithWhereUniqueWithoutGameSessionInput | GameRoundUpdateWithWhereUniqueWithoutGameSessionInput[]
-    updateMany?: GameRoundUpdateManyWithWhereWithoutGameSessionInput | GameRoundUpdateManyWithWhereWithoutGameSessionInput[]
-    deleteMany?: GameRoundScalarWhereInput | GameRoundScalarWhereInput[]
-  }
-
-  export type GameUpdateOneWithoutGameSessionsNestedInput = {
-    create?: XOR<GameCreateWithoutGameSessionsInput, GameUncheckedCreateWithoutGameSessionsInput>
-    connectOrCreate?: GameCreateOrConnectWithoutGameSessionsInput
-    upsert?: GameUpsertWithoutGameSessionsInput
-    disconnect?: GameWhereInput | boolean
-    delete?: GameWhereInput | boolean
-    connect?: GameWhereUniqueInput
-    update?: XOR<XOR<GameUpdateToOneWithWhereWithoutGameSessionsInput, GameUpdateWithoutGameSessionsInput>, GameUncheckedUpdateWithoutGameSessionsInput>
-  }
-
-  export type UserUpdateOneRequiredWithoutGameSessionNestedInput = {
-    create?: XOR<UserCreateWithoutGameSessionInput, UserUncheckedCreateWithoutGameSessionInput>
-    connectOrCreate?: UserCreateOrConnectWithoutGameSessionInput
-    upsert?: UserUpsertWithoutGameSessionInput
-    connect?: UserWhereUniqueInput
-    update?: XOR<XOR<UserUpdateToOneWithWhereWithoutGameSessionInput, UserUpdateWithoutGameSessionInput>, UserUncheckedUpdateWithoutGameSessionInput>
-  }
-
-  export type GameRoundUncheckedUpdateManyWithoutGameSessionNestedInput = {
-    create?: XOR<GameRoundCreateWithoutGameSessionInput, GameRoundUncheckedCreateWithoutGameSessionInput> | GameRoundCreateWithoutGameSessionInput[] | GameRoundUncheckedCreateWithoutGameSessionInput[]
-    connectOrCreate?: GameRoundCreateOrConnectWithoutGameSessionInput | GameRoundCreateOrConnectWithoutGameSessionInput[]
-    upsert?: GameRoundUpsertWithWhereUniqueWithoutGameSessionInput | GameRoundUpsertWithWhereUniqueWithoutGameSessionInput[]
-    createMany?: GameRoundCreateManyGameSessionInputEnvelope
-    set?: GameRoundWhereUniqueInput | GameRoundWhereUniqueInput[]
-    disconnect?: GameRoundWhereUniqueInput | GameRoundWhereUniqueInput[]
-    delete?: GameRoundWhereUniqueInput | GameRoundWhereUniqueInput[]
-    connect?: GameRoundWhereUniqueInput | GameRoundWhereUniqueInput[]
-    update?: GameRoundUpdateWithWhereUniqueWithoutGameSessionInput | GameRoundUpdateWithWhereUniqueWithoutGameSessionInput[]
-    updateMany?: GameRoundUpdateManyWithWhereWithoutGameSessionInput | GameRoundUpdateManyWithWhereWithoutGameSessionInput[]
-    deleteMany?: GameRoundScalarWhereInput | GameRoundScalarWhereInput[]
   }
 
   export type UserCreateNestedOneWithoutAffiliateWalletsInput = {
@@ -80599,6 +80599,118 @@ export namespace Prisma {
     _max?: NestedIntFilter<$PrismaModel>
   }
 
+  export type NestedEnumGameAggregatorTypeFilter<$PrismaModel = never> = {
+    equals?: $Enums.GameAggregatorType | EnumGameAggregatorTypeFieldRefInput<$PrismaModel>
+    in?: $Enums.GameAggregatorType[] | ListEnumGameAggregatorTypeFieldRefInput<$PrismaModel>
+    notIn?: $Enums.GameAggregatorType[] | ListEnumGameAggregatorTypeFieldRefInput<$PrismaModel>
+    not?: NestedEnumGameAggregatorTypeFilter<$PrismaModel> | $Enums.GameAggregatorType
+  }
+
+  export type NestedEnumGameProviderFilter<$PrismaModel = never> = {
+    equals?: $Enums.GameProvider | EnumGameProviderFieldRefInput<$PrismaModel>
+    in?: $Enums.GameProvider[] | ListEnumGameProviderFieldRefInput<$PrismaModel>
+    notIn?: $Enums.GameProvider[] | ListEnumGameProviderFieldRefInput<$PrismaModel>
+    not?: NestedEnumGameProviderFilter<$PrismaModel> | $Enums.GameProvider
+  }
+
+  export type NestedEnumGameCategoryFilter<$PrismaModel = never> = {
+    equals?: $Enums.GameCategory | EnumGameCategoryFieldRefInput<$PrismaModel>
+    in?: $Enums.GameCategory[] | ListEnumGameCategoryFieldRefInput<$PrismaModel>
+    notIn?: $Enums.GameCategory[] | ListEnumGameCategoryFieldRefInput<$PrismaModel>
+    not?: NestedEnumGameCategoryFilter<$PrismaModel> | $Enums.GameCategory
+  }
+
+  export type NestedDecimalFilter<$PrismaModel = never> = {
+    equals?: Decimal | DecimalJsLike | number | string | DecimalFieldRefInput<$PrismaModel>
+    in?: Decimal[] | DecimalJsLike[] | number[] | string[] | ListDecimalFieldRefInput<$PrismaModel>
+    notIn?: Decimal[] | DecimalJsLike[] | number[] | string[] | ListDecimalFieldRefInput<$PrismaModel>
+    lt?: Decimal | DecimalJsLike | number | string | DecimalFieldRefInput<$PrismaModel>
+    lte?: Decimal | DecimalJsLike | number | string | DecimalFieldRefInput<$PrismaModel>
+    gt?: Decimal | DecimalJsLike | number | string | DecimalFieldRefInput<$PrismaModel>
+    gte?: Decimal | DecimalJsLike | number | string | DecimalFieldRefInput<$PrismaModel>
+    not?: NestedDecimalFilter<$PrismaModel> | Decimal | DecimalJsLike | number | string
+  }
+
+  export type NestedEnumGameAggregatorTypeWithAggregatesFilter<$PrismaModel = never> = {
+    equals?: $Enums.GameAggregatorType | EnumGameAggregatorTypeFieldRefInput<$PrismaModel>
+    in?: $Enums.GameAggregatorType[] | ListEnumGameAggregatorTypeFieldRefInput<$PrismaModel>
+    notIn?: $Enums.GameAggregatorType[] | ListEnumGameAggregatorTypeFieldRefInput<$PrismaModel>
+    not?: NestedEnumGameAggregatorTypeWithAggregatesFilter<$PrismaModel> | $Enums.GameAggregatorType
+    _count?: NestedIntFilter<$PrismaModel>
+    _min?: NestedEnumGameAggregatorTypeFilter<$PrismaModel>
+    _max?: NestedEnumGameAggregatorTypeFilter<$PrismaModel>
+  }
+
+  export type NestedEnumGameProviderWithAggregatesFilter<$PrismaModel = never> = {
+    equals?: $Enums.GameProvider | EnumGameProviderFieldRefInput<$PrismaModel>
+    in?: $Enums.GameProvider[] | ListEnumGameProviderFieldRefInput<$PrismaModel>
+    notIn?: $Enums.GameProvider[] | ListEnumGameProviderFieldRefInput<$PrismaModel>
+    not?: NestedEnumGameProviderWithAggregatesFilter<$PrismaModel> | $Enums.GameProvider
+    _count?: NestedIntFilter<$PrismaModel>
+    _min?: NestedEnumGameProviderFilter<$PrismaModel>
+    _max?: NestedEnumGameProviderFilter<$PrismaModel>
+  }
+
+  export type NestedEnumGameCategoryWithAggregatesFilter<$PrismaModel = never> = {
+    equals?: $Enums.GameCategory | EnumGameCategoryFieldRefInput<$PrismaModel>
+    in?: $Enums.GameCategory[] | ListEnumGameCategoryFieldRefInput<$PrismaModel>
+    notIn?: $Enums.GameCategory[] | ListEnumGameCategoryFieldRefInput<$PrismaModel>
+    not?: NestedEnumGameCategoryWithAggregatesFilter<$PrismaModel> | $Enums.GameCategory
+    _count?: NestedIntFilter<$PrismaModel>
+    _min?: NestedEnumGameCategoryFilter<$PrismaModel>
+    _max?: NestedEnumGameCategoryFilter<$PrismaModel>
+  }
+
+  export type NestedDecimalWithAggregatesFilter<$PrismaModel = never> = {
+    equals?: Decimal | DecimalJsLike | number | string | DecimalFieldRefInput<$PrismaModel>
+    in?: Decimal[] | DecimalJsLike[] | number[] | string[] | ListDecimalFieldRefInput<$PrismaModel>
+    notIn?: Decimal[] | DecimalJsLike[] | number[] | string[] | ListDecimalFieldRefInput<$PrismaModel>
+    lt?: Decimal | DecimalJsLike | number | string | DecimalFieldRefInput<$PrismaModel>
+    lte?: Decimal | DecimalJsLike | number | string | DecimalFieldRefInput<$PrismaModel>
+    gt?: Decimal | DecimalJsLike | number | string | DecimalFieldRefInput<$PrismaModel>
+    gte?: Decimal | DecimalJsLike | number | string | DecimalFieldRefInput<$PrismaModel>
+    not?: NestedDecimalWithAggregatesFilter<$PrismaModel> | Decimal | DecimalJsLike | number | string
+    _count?: NestedIntFilter<$PrismaModel>
+    _avg?: NestedDecimalFilter<$PrismaModel>
+    _sum?: NestedDecimalFilter<$PrismaModel>
+    _min?: NestedDecimalFilter<$PrismaModel>
+    _max?: NestedDecimalFilter<$PrismaModel>
+  }
+
+  export type NestedEnumLanguageFilter<$PrismaModel = never> = {
+    equals?: $Enums.Language | EnumLanguageFieldRefInput<$PrismaModel>
+    in?: $Enums.Language[] | ListEnumLanguageFieldRefInput<$PrismaModel>
+    notIn?: $Enums.Language[] | ListEnumLanguageFieldRefInput<$PrismaModel>
+    not?: NestedEnumLanguageFilter<$PrismaModel> | $Enums.Language
+  }
+
+  export type NestedEnumLanguageWithAggregatesFilter<$PrismaModel = never> = {
+    equals?: $Enums.Language | EnumLanguageFieldRefInput<$PrismaModel>
+    in?: $Enums.Language[] | ListEnumLanguageFieldRefInput<$PrismaModel>
+    notIn?: $Enums.Language[] | ListEnumLanguageFieldRefInput<$PrismaModel>
+    not?: NestedEnumLanguageWithAggregatesFilter<$PrismaModel> | $Enums.Language
+    _count?: NestedIntFilter<$PrismaModel>
+    _min?: NestedEnumLanguageFilter<$PrismaModel>
+    _max?: NestedEnumLanguageFilter<$PrismaModel>
+  }
+
+  export type NestedEnumExchangeCurrencyCodeFilter<$PrismaModel = never> = {
+    equals?: $Enums.ExchangeCurrencyCode | EnumExchangeCurrencyCodeFieldRefInput<$PrismaModel>
+    in?: $Enums.ExchangeCurrencyCode[] | ListEnumExchangeCurrencyCodeFieldRefInput<$PrismaModel>
+    notIn?: $Enums.ExchangeCurrencyCode[] | ListEnumExchangeCurrencyCodeFieldRefInput<$PrismaModel>
+    not?: NestedEnumExchangeCurrencyCodeFilter<$PrismaModel> | $Enums.ExchangeCurrencyCode
+  }
+
+  export type NestedEnumExchangeCurrencyCodeWithAggregatesFilter<$PrismaModel = never> = {
+    equals?: $Enums.ExchangeCurrencyCode | EnumExchangeCurrencyCodeFieldRefInput<$PrismaModel>
+    in?: $Enums.ExchangeCurrencyCode[] | ListEnumExchangeCurrencyCodeFieldRefInput<$PrismaModel>
+    notIn?: $Enums.ExchangeCurrencyCode[] | ListEnumExchangeCurrencyCodeFieldRefInput<$PrismaModel>
+    not?: NestedEnumExchangeCurrencyCodeWithAggregatesFilter<$PrismaModel> | $Enums.ExchangeCurrencyCode
+    _count?: NestedIntFilter<$PrismaModel>
+    _min?: NestedEnumExchangeCurrencyCodeFilter<$PrismaModel>
+    _max?: NestedEnumExchangeCurrencyCodeFilter<$PrismaModel>
+  }
+
   export type NestedEnumSocialTypeNullableFilter<$PrismaModel = never> = {
     equals?: $Enums.SocialType | EnumSocialTypeFieldRefInput<$PrismaModel> | null
     in?: $Enums.SocialType[] | ListEnumSocialTypeFieldRefInput<$PrismaModel> | null
@@ -80682,118 +80794,6 @@ export namespace Prisma {
     _count?: NestedIntNullableFilter<$PrismaModel>
     _min?: NestedEnumLanguageNullableFilter<$PrismaModel>
     _max?: NestedEnumLanguageNullableFilter<$PrismaModel>
-  }
-
-  export type NestedEnumExchangeCurrencyCodeFilter<$PrismaModel = never> = {
-    equals?: $Enums.ExchangeCurrencyCode | EnumExchangeCurrencyCodeFieldRefInput<$PrismaModel>
-    in?: $Enums.ExchangeCurrencyCode[] | ListEnumExchangeCurrencyCodeFieldRefInput<$PrismaModel>
-    notIn?: $Enums.ExchangeCurrencyCode[] | ListEnumExchangeCurrencyCodeFieldRefInput<$PrismaModel>
-    not?: NestedEnumExchangeCurrencyCodeFilter<$PrismaModel> | $Enums.ExchangeCurrencyCode
-  }
-
-  export type NestedDecimalFilter<$PrismaModel = never> = {
-    equals?: Decimal | DecimalJsLike | number | string | DecimalFieldRefInput<$PrismaModel>
-    in?: Decimal[] | DecimalJsLike[] | number[] | string[] | ListDecimalFieldRefInput<$PrismaModel>
-    notIn?: Decimal[] | DecimalJsLike[] | number[] | string[] | ListDecimalFieldRefInput<$PrismaModel>
-    lt?: Decimal | DecimalJsLike | number | string | DecimalFieldRefInput<$PrismaModel>
-    lte?: Decimal | DecimalJsLike | number | string | DecimalFieldRefInput<$PrismaModel>
-    gt?: Decimal | DecimalJsLike | number | string | DecimalFieldRefInput<$PrismaModel>
-    gte?: Decimal | DecimalJsLike | number | string | DecimalFieldRefInput<$PrismaModel>
-    not?: NestedDecimalFilter<$PrismaModel> | Decimal | DecimalJsLike | number | string
-  }
-
-  export type NestedEnumExchangeCurrencyCodeWithAggregatesFilter<$PrismaModel = never> = {
-    equals?: $Enums.ExchangeCurrencyCode | EnumExchangeCurrencyCodeFieldRefInput<$PrismaModel>
-    in?: $Enums.ExchangeCurrencyCode[] | ListEnumExchangeCurrencyCodeFieldRefInput<$PrismaModel>
-    notIn?: $Enums.ExchangeCurrencyCode[] | ListEnumExchangeCurrencyCodeFieldRefInput<$PrismaModel>
-    not?: NestedEnumExchangeCurrencyCodeWithAggregatesFilter<$PrismaModel> | $Enums.ExchangeCurrencyCode
-    _count?: NestedIntFilter<$PrismaModel>
-    _min?: NestedEnumExchangeCurrencyCodeFilter<$PrismaModel>
-    _max?: NestedEnumExchangeCurrencyCodeFilter<$PrismaModel>
-  }
-
-  export type NestedDecimalWithAggregatesFilter<$PrismaModel = never> = {
-    equals?: Decimal | DecimalJsLike | number | string | DecimalFieldRefInput<$PrismaModel>
-    in?: Decimal[] | DecimalJsLike[] | number[] | string[] | ListDecimalFieldRefInput<$PrismaModel>
-    notIn?: Decimal[] | DecimalJsLike[] | number[] | string[] | ListDecimalFieldRefInput<$PrismaModel>
-    lt?: Decimal | DecimalJsLike | number | string | DecimalFieldRefInput<$PrismaModel>
-    lte?: Decimal | DecimalJsLike | number | string | DecimalFieldRefInput<$PrismaModel>
-    gt?: Decimal | DecimalJsLike | number | string | DecimalFieldRefInput<$PrismaModel>
-    gte?: Decimal | DecimalJsLike | number | string | DecimalFieldRefInput<$PrismaModel>
-    not?: NestedDecimalWithAggregatesFilter<$PrismaModel> | Decimal | DecimalJsLike | number | string
-    _count?: NestedIntFilter<$PrismaModel>
-    _avg?: NestedDecimalFilter<$PrismaModel>
-    _sum?: NestedDecimalFilter<$PrismaModel>
-    _min?: NestedDecimalFilter<$PrismaModel>
-    _max?: NestedDecimalFilter<$PrismaModel>
-  }
-
-  export type NestedEnumGameAggregatorTypeFilter<$PrismaModel = never> = {
-    equals?: $Enums.GameAggregatorType | EnumGameAggregatorTypeFieldRefInput<$PrismaModel>
-    in?: $Enums.GameAggregatorType[] | ListEnumGameAggregatorTypeFieldRefInput<$PrismaModel>
-    notIn?: $Enums.GameAggregatorType[] | ListEnumGameAggregatorTypeFieldRefInput<$PrismaModel>
-    not?: NestedEnumGameAggregatorTypeFilter<$PrismaModel> | $Enums.GameAggregatorType
-  }
-
-  export type NestedEnumGameProviderFilter<$PrismaModel = never> = {
-    equals?: $Enums.GameProvider | EnumGameProviderFieldRefInput<$PrismaModel>
-    in?: $Enums.GameProvider[] | ListEnumGameProviderFieldRefInput<$PrismaModel>
-    notIn?: $Enums.GameProvider[] | ListEnumGameProviderFieldRefInput<$PrismaModel>
-    not?: NestedEnumGameProviderFilter<$PrismaModel> | $Enums.GameProvider
-  }
-
-  export type NestedEnumGameCategoryFilter<$PrismaModel = never> = {
-    equals?: $Enums.GameCategory | EnumGameCategoryFieldRefInput<$PrismaModel>
-    in?: $Enums.GameCategory[] | ListEnumGameCategoryFieldRefInput<$PrismaModel>
-    notIn?: $Enums.GameCategory[] | ListEnumGameCategoryFieldRefInput<$PrismaModel>
-    not?: NestedEnumGameCategoryFilter<$PrismaModel> | $Enums.GameCategory
-  }
-
-  export type NestedEnumGameAggregatorTypeWithAggregatesFilter<$PrismaModel = never> = {
-    equals?: $Enums.GameAggregatorType | EnumGameAggregatorTypeFieldRefInput<$PrismaModel>
-    in?: $Enums.GameAggregatorType[] | ListEnumGameAggregatorTypeFieldRefInput<$PrismaModel>
-    notIn?: $Enums.GameAggregatorType[] | ListEnumGameAggregatorTypeFieldRefInput<$PrismaModel>
-    not?: NestedEnumGameAggregatorTypeWithAggregatesFilter<$PrismaModel> | $Enums.GameAggregatorType
-    _count?: NestedIntFilter<$PrismaModel>
-    _min?: NestedEnumGameAggregatorTypeFilter<$PrismaModel>
-    _max?: NestedEnumGameAggregatorTypeFilter<$PrismaModel>
-  }
-
-  export type NestedEnumGameProviderWithAggregatesFilter<$PrismaModel = never> = {
-    equals?: $Enums.GameProvider | EnumGameProviderFieldRefInput<$PrismaModel>
-    in?: $Enums.GameProvider[] | ListEnumGameProviderFieldRefInput<$PrismaModel>
-    notIn?: $Enums.GameProvider[] | ListEnumGameProviderFieldRefInput<$PrismaModel>
-    not?: NestedEnumGameProviderWithAggregatesFilter<$PrismaModel> | $Enums.GameProvider
-    _count?: NestedIntFilter<$PrismaModel>
-    _min?: NestedEnumGameProviderFilter<$PrismaModel>
-    _max?: NestedEnumGameProviderFilter<$PrismaModel>
-  }
-
-  export type NestedEnumGameCategoryWithAggregatesFilter<$PrismaModel = never> = {
-    equals?: $Enums.GameCategory | EnumGameCategoryFieldRefInput<$PrismaModel>
-    in?: $Enums.GameCategory[] | ListEnumGameCategoryFieldRefInput<$PrismaModel>
-    notIn?: $Enums.GameCategory[] | ListEnumGameCategoryFieldRefInput<$PrismaModel>
-    not?: NestedEnumGameCategoryWithAggregatesFilter<$PrismaModel> | $Enums.GameCategory
-    _count?: NestedIntFilter<$PrismaModel>
-    _min?: NestedEnumGameCategoryFilter<$PrismaModel>
-    _max?: NestedEnumGameCategoryFilter<$PrismaModel>
-  }
-
-  export type NestedEnumLanguageFilter<$PrismaModel = never> = {
-    equals?: $Enums.Language | EnumLanguageFieldRefInput<$PrismaModel>
-    in?: $Enums.Language[] | ListEnumLanguageFieldRefInput<$PrismaModel>
-    notIn?: $Enums.Language[] | ListEnumLanguageFieldRefInput<$PrismaModel>
-    not?: NestedEnumLanguageFilter<$PrismaModel> | $Enums.Language
-  }
-
-  export type NestedEnumLanguageWithAggregatesFilter<$PrismaModel = never> = {
-    equals?: $Enums.Language | EnumLanguageFieldRefInput<$PrismaModel>
-    in?: $Enums.Language[] | ListEnumLanguageFieldRefInput<$PrismaModel>
-    notIn?: $Enums.Language[] | ListEnumLanguageFieldRefInput<$PrismaModel>
-    not?: NestedEnumLanguageWithAggregatesFilter<$PrismaModel> | $Enums.Language
-    _count?: NestedIntFilter<$PrismaModel>
-    _min?: NestedEnumLanguageFilter<$PrismaModel>
-    _max?: NestedEnumLanguageFilter<$PrismaModel>
   }
 
   export type NestedEnumTransactionTypeFilter<$PrismaModel = never> = {
@@ -82086,6 +82086,823 @@ export namespace Prisma {
     adminAdjustmentDetails?: AdminAdjustmentDetailUncheckedUpdateManyWithoutAdminUserNestedInput
   }
 
+  export type BonusDetailCreateWithoutCasinoGameInput = {
+    id?: bigint | number
+    createdAt?: Date | string
+    transactionTime: Date | string
+    aggregatorType: $Enums.GameAggregatorType
+    provider: $Enums.GameProvider
+    bonusType: $Enums.BonusType
+    amount: Decimal | DecimalJsLike | number | string
+    aggregatorPromotionId?: string | null
+    aggregatorRoundId?: string | null
+    aggregatorWagerId?: string | null
+    aggregatorTransactionId?: string | null
+    aggregatorFreespinId?: string | null
+    aggregatorSessionId?: string | null
+    isEndRound?: boolean | null
+    description?: string | null
+    transaction: TransactionCreateNestedOneWithoutBonusDetailInput
+  }
+
+  export type BonusDetailUncheckedCreateWithoutCasinoGameInput = {
+    id?: bigint | number
+    createdAt?: Date | string
+    transactionTime: Date | string
+    aggregatorType: $Enums.GameAggregatorType
+    provider: $Enums.GameProvider
+    bonusType: $Enums.BonusType
+    amount: Decimal | DecimalJsLike | number | string
+    aggregatorPromotionId?: string | null
+    aggregatorRoundId?: string | null
+    aggregatorWagerId?: string | null
+    aggregatorTransactionId?: string | null
+    aggregatorFreespinId?: string | null
+    aggregatorSessionId?: string | null
+    isEndRound?: boolean | null
+    description?: string | null
+    transactionId: bigint | number
+  }
+
+  export type BonusDetailCreateOrConnectWithoutCasinoGameInput = {
+    where: BonusDetailWhereUniqueInput
+    create: XOR<BonusDetailCreateWithoutCasinoGameInput, BonusDetailUncheckedCreateWithoutCasinoGameInput>
+  }
+
+  export type BonusDetailCreateManyCasinoGameInputEnvelope = {
+    data: BonusDetailCreateManyCasinoGameInput | BonusDetailCreateManyCasinoGameInput[]
+    skipDuplicates?: boolean
+  }
+
+  export type GameRoundCreateWithoutCasinoGameInput = {
+    id?: bigint | number
+    userId: bigint | number
+    aggregatorType: $Enums.GameAggregatorType
+    provider: $Enums.GameProvider
+    aggregatorTxId: string
+    aggregatorGameId: number
+    totalBetAmountInGameCurrency?: Decimal | DecimalJsLike | number | string | null
+    totalWinAmountInGameCurrency?: Decimal | DecimalJsLike | number | string | null
+    netAmountInGameCurrency?: Decimal | DecimalJsLike | number | string | null
+    totalBetAmountInWalletCurrency?: Decimal | DecimalJsLike | number | string | null
+    totalWinAmountInWalletCurrency?: Decimal | DecimalJsLike | number | string | null
+    netAmountInWalletCurrency?: Decimal | DecimalJsLike | number | string | null
+    sessionId?: string | null
+    tableId?: string | null
+    roundId?: string | null
+    replayType?: $Enums.GameReplayType | null
+    replayData?: string | null
+    totalPushAmount?: Decimal | DecimalJsLike | number | string | null
+    tieBetAmount?: Decimal | DecimalJsLike | number | string | null
+    contributionAmount?: Decimal | DecimalJsLike | number | string | null
+    compEarned?: Decimal | DecimalJsLike | number | string | null
+    jackpotContributionAmount?: Decimal | DecimalJsLike | number | string
+    startedAt?: Date | string | null
+    completedAt?: Date | string | null
+    AffiliateCommission?: AffiliateCommissionCreateNestedManyWithoutGameRoundInput
+    bets?: GameBetCreateNestedManyWithoutGameRoundInput
+    GameSession: GameSessionCreateNestedOneWithoutGameRoundsInput
+    transaction: TransactionCreateNestedOneWithoutGameRoundInput
+    wins?: GameWinCreateNestedManyWithoutGameRoundInput
+  }
+
+  export type GameRoundUncheckedCreateWithoutCasinoGameInput = {
+    id?: bigint | number
+    userId: bigint | number
+    aggregatorType: $Enums.GameAggregatorType
+    provider: $Enums.GameProvider
+    aggregatorTxId: string
+    aggregatorGameId: number
+    totalBetAmountInGameCurrency?: Decimal | DecimalJsLike | number | string | null
+    totalWinAmountInGameCurrency?: Decimal | DecimalJsLike | number | string | null
+    netAmountInGameCurrency?: Decimal | DecimalJsLike | number | string | null
+    totalBetAmountInWalletCurrency?: Decimal | DecimalJsLike | number | string | null
+    totalWinAmountInWalletCurrency?: Decimal | DecimalJsLike | number | string | null
+    netAmountInWalletCurrency?: Decimal | DecimalJsLike | number | string | null
+    transactionId: bigint | number
+    sessionId?: string | null
+    tableId?: string | null
+    roundId?: string | null
+    replayType?: $Enums.GameReplayType | null
+    replayData?: string | null
+    totalPushAmount?: Decimal | DecimalJsLike | number | string | null
+    tieBetAmount?: Decimal | DecimalJsLike | number | string | null
+    contributionAmount?: Decimal | DecimalJsLike | number | string | null
+    compEarned?: Decimal | DecimalJsLike | number | string | null
+    jackpotContributionAmount?: Decimal | DecimalJsLike | number | string
+    startedAt?: Date | string | null
+    completedAt?: Date | string | null
+    gameSessionId: bigint | number
+    AffiliateCommission?: AffiliateCommissionUncheckedCreateNestedManyWithoutGameRoundInput
+    bets?: GameBetUncheckedCreateNestedManyWithoutGameRoundInput
+    wins?: GameWinUncheckedCreateNestedManyWithoutGameRoundInput
+  }
+
+  export type GameRoundCreateOrConnectWithoutCasinoGameInput = {
+    where: GameRoundWhereUniqueInput
+    create: XOR<GameRoundCreateWithoutCasinoGameInput, GameRoundUncheckedCreateWithoutCasinoGameInput>
+  }
+
+  export type GameRoundCreateManyCasinoGameInputEnvelope = {
+    data: GameRoundCreateManyCasinoGameInput | GameRoundCreateManyCasinoGameInput[]
+    skipDuplicates?: boolean
+  }
+
+  export type GameSessionCreateWithoutGameInput = {
+    id?: bigint | number
+    createdAt?: Date | string
+    updatedAt?: Date | string
+    lastAccessedAt?: Date | string
+    aggregatorType: $Enums.GameAggregatorType
+    token: string
+    walletCurrency: $Enums.ExchangeCurrencyCode
+    gameCurrency: $Enums.ExchangeCurrencyCode
+    exchangeRate: Decimal | DecimalJsLike | number | string
+    exchangeRateSnapshotAt?: Date | string
+    gameRounds?: GameRoundCreateNestedManyWithoutGameSessionInput
+    user: UserCreateNestedOneWithoutGameSessionInput
+  }
+
+  export type GameSessionUncheckedCreateWithoutGameInput = {
+    id?: bigint | number
+    userId: bigint | number
+    createdAt?: Date | string
+    updatedAt?: Date | string
+    lastAccessedAt?: Date | string
+    aggregatorType: $Enums.GameAggregatorType
+    token: string
+    walletCurrency: $Enums.ExchangeCurrencyCode
+    gameCurrency: $Enums.ExchangeCurrencyCode
+    exchangeRate: Decimal | DecimalJsLike | number | string
+    exchangeRateSnapshotAt?: Date | string
+    gameRounds?: GameRoundUncheckedCreateNestedManyWithoutGameSessionInput
+  }
+
+  export type GameSessionCreateOrConnectWithoutGameInput = {
+    where: GameSessionWhereUniqueInput
+    create: XOR<GameSessionCreateWithoutGameInput, GameSessionUncheckedCreateWithoutGameInput>
+  }
+
+  export type GameSessionCreateManyGameInputEnvelope = {
+    data: GameSessionCreateManyGameInput | GameSessionCreateManyGameInput[]
+    skipDuplicates?: boolean
+  }
+
+  export type GameTranslationCreateWithoutCasinoGameInput = {
+    language: $Enums.Language
+    providerName: string
+    categoryName: string
+    gameName: string
+    createdAt?: Date | string
+    updatedAt?: Date | string
+  }
+
+  export type GameTranslationUncheckedCreateWithoutCasinoGameInput = {
+    id?: number
+    language: $Enums.Language
+    providerName: string
+    categoryName: string
+    gameName: string
+    createdAt?: Date | string
+    updatedAt?: Date | string
+  }
+
+  export type GameTranslationCreateOrConnectWithoutCasinoGameInput = {
+    where: GameTranslationWhereUniqueInput
+    create: XOR<GameTranslationCreateWithoutCasinoGameInput, GameTranslationUncheckedCreateWithoutCasinoGameInput>
+  }
+
+  export type GameTranslationCreateManyCasinoGameInputEnvelope = {
+    data: GameTranslationCreateManyCasinoGameInput | GameTranslationCreateManyCasinoGameInput[]
+    skipDuplicates?: boolean
+  }
+
+  export type BonusDetailUpsertWithWhereUniqueWithoutCasinoGameInput = {
+    where: BonusDetailWhereUniqueInput
+    update: XOR<BonusDetailUpdateWithoutCasinoGameInput, BonusDetailUncheckedUpdateWithoutCasinoGameInput>
+    create: XOR<BonusDetailCreateWithoutCasinoGameInput, BonusDetailUncheckedCreateWithoutCasinoGameInput>
+  }
+
+  export type BonusDetailUpdateWithWhereUniqueWithoutCasinoGameInput = {
+    where: BonusDetailWhereUniqueInput
+    data: XOR<BonusDetailUpdateWithoutCasinoGameInput, BonusDetailUncheckedUpdateWithoutCasinoGameInput>
+  }
+
+  export type BonusDetailUpdateManyWithWhereWithoutCasinoGameInput = {
+    where: BonusDetailScalarWhereInput
+    data: XOR<BonusDetailUpdateManyMutationInput, BonusDetailUncheckedUpdateManyWithoutCasinoGameInput>
+  }
+
+  export type BonusDetailScalarWhereInput = {
+    AND?: BonusDetailScalarWhereInput | BonusDetailScalarWhereInput[]
+    OR?: BonusDetailScalarWhereInput[]
+    NOT?: BonusDetailScalarWhereInput | BonusDetailScalarWhereInput[]
+    id?: BigIntFilter<"BonusDetail"> | bigint | number
+    createdAt?: DateTimeFilter<"BonusDetail"> | Date | string
+    transactionTime?: DateTimeFilter<"BonusDetail"> | Date | string
+    aggregatorType?: EnumGameAggregatorTypeFilter<"BonusDetail"> | $Enums.GameAggregatorType
+    provider?: EnumGameProviderFilter<"BonusDetail"> | $Enums.GameProvider
+    bonusType?: EnumBonusTypeFilter<"BonusDetail"> | $Enums.BonusType
+    amount?: DecimalFilter<"BonusDetail"> | Decimal | DecimalJsLike | number | string
+    aggregatorPromotionId?: StringNullableFilter<"BonusDetail"> | string | null
+    aggregatorRoundId?: StringNullableFilter<"BonusDetail"> | string | null
+    aggregatorWagerId?: StringNullableFilter<"BonusDetail"> | string | null
+    aggregatorTransactionId?: StringNullableFilter<"BonusDetail"> | string | null
+    aggregatorFreespinId?: StringNullableFilter<"BonusDetail"> | string | null
+    aggregatorSessionId?: StringNullableFilter<"BonusDetail"> | string | null
+    isEndRound?: BoolNullableFilter<"BonusDetail"> | boolean | null
+    description?: StringNullableFilter<"BonusDetail"> | string | null
+    gameId?: IntNullableFilter<"BonusDetail"> | number | null
+    transactionId?: BigIntFilter<"BonusDetail"> | bigint | number
+  }
+
+  export type GameRoundUpsertWithWhereUniqueWithoutCasinoGameInput = {
+    where: GameRoundWhereUniqueInput
+    update: XOR<GameRoundUpdateWithoutCasinoGameInput, GameRoundUncheckedUpdateWithoutCasinoGameInput>
+    create: XOR<GameRoundCreateWithoutCasinoGameInput, GameRoundUncheckedCreateWithoutCasinoGameInput>
+  }
+
+  export type GameRoundUpdateWithWhereUniqueWithoutCasinoGameInput = {
+    where: GameRoundWhereUniqueInput
+    data: XOR<GameRoundUpdateWithoutCasinoGameInput, GameRoundUncheckedUpdateWithoutCasinoGameInput>
+  }
+
+  export type GameRoundUpdateManyWithWhereWithoutCasinoGameInput = {
+    where: GameRoundScalarWhereInput
+    data: XOR<GameRoundUpdateManyMutationInput, GameRoundUncheckedUpdateManyWithoutCasinoGameInput>
+  }
+
+  export type GameRoundScalarWhereInput = {
+    AND?: GameRoundScalarWhereInput | GameRoundScalarWhereInput[]
+    OR?: GameRoundScalarWhereInput[]
+    NOT?: GameRoundScalarWhereInput | GameRoundScalarWhereInput[]
+    id?: BigIntFilter<"GameRound"> | bigint | number
+    userId?: BigIntFilter<"GameRound"> | bigint | number
+    aggregatorType?: EnumGameAggregatorTypeFilter<"GameRound"> | $Enums.GameAggregatorType
+    provider?: EnumGameProviderFilter<"GameRound"> | $Enums.GameProvider
+    aggregatorTxId?: StringFilter<"GameRound"> | string
+    aggregatorGameId?: IntFilter<"GameRound"> | number
+    totalBetAmountInGameCurrency?: DecimalNullableFilter<"GameRound"> | Decimal | DecimalJsLike | number | string | null
+    totalWinAmountInGameCurrency?: DecimalNullableFilter<"GameRound"> | Decimal | DecimalJsLike | number | string | null
+    netAmountInGameCurrency?: DecimalNullableFilter<"GameRound"> | Decimal | DecimalJsLike | number | string | null
+    totalBetAmountInWalletCurrency?: DecimalNullableFilter<"GameRound"> | Decimal | DecimalJsLike | number | string | null
+    totalWinAmountInWalletCurrency?: DecimalNullableFilter<"GameRound"> | Decimal | DecimalJsLike | number | string | null
+    netAmountInWalletCurrency?: DecimalNullableFilter<"GameRound"> | Decimal | DecimalJsLike | number | string | null
+    transactionId?: BigIntFilter<"GameRound"> | bigint | number
+    sessionId?: StringNullableFilter<"GameRound"> | string | null
+    tableId?: StringNullableFilter<"GameRound"> | string | null
+    roundId?: StringNullableFilter<"GameRound"> | string | null
+    replayType?: EnumGameReplayTypeNullableFilter<"GameRound"> | $Enums.GameReplayType | null
+    replayData?: StringNullableFilter<"GameRound"> | string | null
+    totalPushAmount?: DecimalNullableFilter<"GameRound"> | Decimal | DecimalJsLike | number | string | null
+    tieBetAmount?: DecimalNullableFilter<"GameRound"> | Decimal | DecimalJsLike | number | string | null
+    contributionAmount?: DecimalNullableFilter<"GameRound"> | Decimal | DecimalJsLike | number | string | null
+    compEarned?: DecimalNullableFilter<"GameRound"> | Decimal | DecimalJsLike | number | string | null
+    jackpotContributionAmount?: DecimalFilter<"GameRound"> | Decimal | DecimalJsLike | number | string
+    startedAt?: DateTimeNullableFilter<"GameRound"> | Date | string | null
+    completedAt?: DateTimeNullableFilter<"GameRound"> | Date | string | null
+    gameId?: IntNullableFilter<"GameRound"> | number | null
+    gameSessionId?: BigIntFilter<"GameRound"> | bigint | number
+  }
+
+  export type GameSessionUpsertWithWhereUniqueWithoutGameInput = {
+    where: GameSessionWhereUniqueInput
+    update: XOR<GameSessionUpdateWithoutGameInput, GameSessionUncheckedUpdateWithoutGameInput>
+    create: XOR<GameSessionCreateWithoutGameInput, GameSessionUncheckedCreateWithoutGameInput>
+  }
+
+  export type GameSessionUpdateWithWhereUniqueWithoutGameInput = {
+    where: GameSessionWhereUniqueInput
+    data: XOR<GameSessionUpdateWithoutGameInput, GameSessionUncheckedUpdateWithoutGameInput>
+  }
+
+  export type GameSessionUpdateManyWithWhereWithoutGameInput = {
+    where: GameSessionScalarWhereInput
+    data: XOR<GameSessionUpdateManyMutationInput, GameSessionUncheckedUpdateManyWithoutGameInput>
+  }
+
+  export type GameSessionScalarWhereInput = {
+    AND?: GameSessionScalarWhereInput | GameSessionScalarWhereInput[]
+    OR?: GameSessionScalarWhereInput[]
+    NOT?: GameSessionScalarWhereInput | GameSessionScalarWhereInput[]
+    id?: BigIntFilter<"GameSession"> | bigint | number
+    userId?: BigIntFilter<"GameSession"> | bigint | number
+    createdAt?: DateTimeFilter<"GameSession"> | Date | string
+    updatedAt?: DateTimeFilter<"GameSession"> | Date | string
+    lastAccessedAt?: DateTimeFilter<"GameSession"> | Date | string
+    aggregatorType?: EnumGameAggregatorTypeFilter<"GameSession"> | $Enums.GameAggregatorType
+    token?: StringFilter<"GameSession"> | string
+    walletCurrency?: EnumExchangeCurrencyCodeFilter<"GameSession"> | $Enums.ExchangeCurrencyCode
+    gameCurrency?: EnumExchangeCurrencyCodeFilter<"GameSession"> | $Enums.ExchangeCurrencyCode
+    exchangeRate?: DecimalFilter<"GameSession"> | Decimal | DecimalJsLike | number | string
+    exchangeRateSnapshotAt?: DateTimeFilter<"GameSession"> | Date | string
+    gameId?: IntNullableFilter<"GameSession"> | number | null
+  }
+
+  export type GameTranslationUpsertWithWhereUniqueWithoutCasinoGameInput = {
+    where: GameTranslationWhereUniqueInput
+    update: XOR<GameTranslationUpdateWithoutCasinoGameInput, GameTranslationUncheckedUpdateWithoutCasinoGameInput>
+    create: XOR<GameTranslationCreateWithoutCasinoGameInput, GameTranslationUncheckedCreateWithoutCasinoGameInput>
+  }
+
+  export type GameTranslationUpdateWithWhereUniqueWithoutCasinoGameInput = {
+    where: GameTranslationWhereUniqueInput
+    data: XOR<GameTranslationUpdateWithoutCasinoGameInput, GameTranslationUncheckedUpdateWithoutCasinoGameInput>
+  }
+
+  export type GameTranslationUpdateManyWithWhereWithoutCasinoGameInput = {
+    where: GameTranslationScalarWhereInput
+    data: XOR<GameTranslationUpdateManyMutationInput, GameTranslationUncheckedUpdateManyWithoutCasinoGameInput>
+  }
+
+  export type GameTranslationScalarWhereInput = {
+    AND?: GameTranslationScalarWhereInput | GameTranslationScalarWhereInput[]
+    OR?: GameTranslationScalarWhereInput[]
+    NOT?: GameTranslationScalarWhereInput | GameTranslationScalarWhereInput[]
+    id?: IntFilter<"GameTranslation"> | number
+    gameId?: IntFilter<"GameTranslation"> | number
+    language?: EnumLanguageFilter<"GameTranslation"> | $Enums.Language
+    providerName?: StringFilter<"GameTranslation"> | string
+    categoryName?: StringFilter<"GameTranslation"> | string
+    gameName?: StringFilter<"GameTranslation"> | string
+    createdAt?: DateTimeFilter<"GameTranslation"> | Date | string
+    updatedAt?: DateTimeFilter<"GameTranslation"> | Date | string
+  }
+
+  export type CasinoGameCreateWithoutTranslationsInput = {
+    aggregatorType: $Enums.GameAggregatorType
+    provider: $Enums.GameProvider
+    category: $Enums.GameCategory
+    gameId: number
+    gameType?: string | null
+    tableId?: string | null
+    iconLink?: string | null
+    isEnabled: boolean
+    isVisibleToUser?: boolean
+    houseEdge?: Decimal | DecimalJsLike | number | string
+    contributionRate?: Decimal | DecimalJsLike | number | string
+    createdAt?: Date | string
+    updatedAt?: Date | string
+    bonusDetails?: BonusDetailCreateNestedManyWithoutCasinoGameInput
+    gameRounds?: GameRoundCreateNestedManyWithoutCasinoGameInput
+    gameSessions?: GameSessionCreateNestedManyWithoutGameInput
+  }
+
+  export type CasinoGameUncheckedCreateWithoutTranslationsInput = {
+    id?: number
+    aggregatorType: $Enums.GameAggregatorType
+    provider: $Enums.GameProvider
+    category: $Enums.GameCategory
+    gameId: number
+    gameType?: string | null
+    tableId?: string | null
+    iconLink?: string | null
+    isEnabled: boolean
+    isVisibleToUser?: boolean
+    houseEdge?: Decimal | DecimalJsLike | number | string
+    contributionRate?: Decimal | DecimalJsLike | number | string
+    createdAt?: Date | string
+    updatedAt?: Date | string
+    bonusDetails?: BonusDetailUncheckedCreateNestedManyWithoutCasinoGameInput
+    gameRounds?: GameRoundUncheckedCreateNestedManyWithoutCasinoGameInput
+    gameSessions?: GameSessionUncheckedCreateNestedManyWithoutGameInput
+  }
+
+  export type CasinoGameCreateOrConnectWithoutTranslationsInput = {
+    where: CasinoGameWhereUniqueInput
+    create: XOR<CasinoGameCreateWithoutTranslationsInput, CasinoGameUncheckedCreateWithoutTranslationsInput>
+  }
+
+  export type CasinoGameUpsertWithoutTranslationsInput = {
+    update: XOR<CasinoGameUpdateWithoutTranslationsInput, CasinoGameUncheckedUpdateWithoutTranslationsInput>
+    create: XOR<CasinoGameCreateWithoutTranslationsInput, CasinoGameUncheckedCreateWithoutTranslationsInput>
+    where?: CasinoGameWhereInput
+  }
+
+  export type CasinoGameUpdateToOneWithWhereWithoutTranslationsInput = {
+    where?: CasinoGameWhereInput
+    data: XOR<CasinoGameUpdateWithoutTranslationsInput, CasinoGameUncheckedUpdateWithoutTranslationsInput>
+  }
+
+  export type CasinoGameUpdateWithoutTranslationsInput = {
+    aggregatorType?: EnumGameAggregatorTypeFieldUpdateOperationsInput | $Enums.GameAggregatorType
+    provider?: EnumGameProviderFieldUpdateOperationsInput | $Enums.GameProvider
+    category?: EnumGameCategoryFieldUpdateOperationsInput | $Enums.GameCategory
+    gameId?: IntFieldUpdateOperationsInput | number
+    gameType?: NullableStringFieldUpdateOperationsInput | string | null
+    tableId?: NullableStringFieldUpdateOperationsInput | string | null
+    iconLink?: NullableStringFieldUpdateOperationsInput | string | null
+    isEnabled?: BoolFieldUpdateOperationsInput | boolean
+    isVisibleToUser?: BoolFieldUpdateOperationsInput | boolean
+    houseEdge?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
+    contributionRate?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    bonusDetails?: BonusDetailUpdateManyWithoutCasinoGameNestedInput
+    gameRounds?: GameRoundUpdateManyWithoutCasinoGameNestedInput
+    gameSessions?: GameSessionUpdateManyWithoutGameNestedInput
+  }
+
+  export type CasinoGameUncheckedUpdateWithoutTranslationsInput = {
+    id?: IntFieldUpdateOperationsInput | number
+    aggregatorType?: EnumGameAggregatorTypeFieldUpdateOperationsInput | $Enums.GameAggregatorType
+    provider?: EnumGameProviderFieldUpdateOperationsInput | $Enums.GameProvider
+    category?: EnumGameCategoryFieldUpdateOperationsInput | $Enums.GameCategory
+    gameId?: IntFieldUpdateOperationsInput | number
+    gameType?: NullableStringFieldUpdateOperationsInput | string | null
+    tableId?: NullableStringFieldUpdateOperationsInput | string | null
+    iconLink?: NullableStringFieldUpdateOperationsInput | string | null
+    isEnabled?: BoolFieldUpdateOperationsInput | boolean
+    isVisibleToUser?: BoolFieldUpdateOperationsInput | boolean
+    houseEdge?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
+    contributionRate?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    bonusDetails?: BonusDetailUncheckedUpdateManyWithoutCasinoGameNestedInput
+    gameRounds?: GameRoundUncheckedUpdateManyWithoutCasinoGameNestedInput
+    gameSessions?: GameSessionUncheckedUpdateManyWithoutGameNestedInput
+  }
+
+  export type GameRoundCreateWithoutGameSessionInput = {
+    id?: bigint | number
+    userId: bigint | number
+    aggregatorType: $Enums.GameAggregatorType
+    provider: $Enums.GameProvider
+    aggregatorTxId: string
+    aggregatorGameId: number
+    totalBetAmountInGameCurrency?: Decimal | DecimalJsLike | number | string | null
+    totalWinAmountInGameCurrency?: Decimal | DecimalJsLike | number | string | null
+    netAmountInGameCurrency?: Decimal | DecimalJsLike | number | string | null
+    totalBetAmountInWalletCurrency?: Decimal | DecimalJsLike | number | string | null
+    totalWinAmountInWalletCurrency?: Decimal | DecimalJsLike | number | string | null
+    netAmountInWalletCurrency?: Decimal | DecimalJsLike | number | string | null
+    sessionId?: string | null
+    tableId?: string | null
+    roundId?: string | null
+    replayType?: $Enums.GameReplayType | null
+    replayData?: string | null
+    totalPushAmount?: Decimal | DecimalJsLike | number | string | null
+    tieBetAmount?: Decimal | DecimalJsLike | number | string | null
+    contributionAmount?: Decimal | DecimalJsLike | number | string | null
+    compEarned?: Decimal | DecimalJsLike | number | string | null
+    jackpotContributionAmount?: Decimal | DecimalJsLike | number | string
+    startedAt?: Date | string | null
+    completedAt?: Date | string | null
+    AffiliateCommission?: AffiliateCommissionCreateNestedManyWithoutGameRoundInput
+    bets?: GameBetCreateNestedManyWithoutGameRoundInput
+    casinoGame?: CasinoGameCreateNestedOneWithoutGameRoundsInput
+    transaction: TransactionCreateNestedOneWithoutGameRoundInput
+    wins?: GameWinCreateNestedManyWithoutGameRoundInput
+  }
+
+  export type GameRoundUncheckedCreateWithoutGameSessionInput = {
+    id?: bigint | number
+    userId: bigint | number
+    aggregatorType: $Enums.GameAggregatorType
+    provider: $Enums.GameProvider
+    aggregatorTxId: string
+    aggregatorGameId: number
+    totalBetAmountInGameCurrency?: Decimal | DecimalJsLike | number | string | null
+    totalWinAmountInGameCurrency?: Decimal | DecimalJsLike | number | string | null
+    netAmountInGameCurrency?: Decimal | DecimalJsLike | number | string | null
+    totalBetAmountInWalletCurrency?: Decimal | DecimalJsLike | number | string | null
+    totalWinAmountInWalletCurrency?: Decimal | DecimalJsLike | number | string | null
+    netAmountInWalletCurrency?: Decimal | DecimalJsLike | number | string | null
+    transactionId: bigint | number
+    sessionId?: string | null
+    tableId?: string | null
+    roundId?: string | null
+    replayType?: $Enums.GameReplayType | null
+    replayData?: string | null
+    totalPushAmount?: Decimal | DecimalJsLike | number | string | null
+    tieBetAmount?: Decimal | DecimalJsLike | number | string | null
+    contributionAmount?: Decimal | DecimalJsLike | number | string | null
+    compEarned?: Decimal | DecimalJsLike | number | string | null
+    jackpotContributionAmount?: Decimal | DecimalJsLike | number | string
+    startedAt?: Date | string | null
+    completedAt?: Date | string | null
+    gameId?: number | null
+    AffiliateCommission?: AffiliateCommissionUncheckedCreateNestedManyWithoutGameRoundInput
+    bets?: GameBetUncheckedCreateNestedManyWithoutGameRoundInput
+    wins?: GameWinUncheckedCreateNestedManyWithoutGameRoundInput
+  }
+
+  export type GameRoundCreateOrConnectWithoutGameSessionInput = {
+    where: GameRoundWhereUniqueInput
+    create: XOR<GameRoundCreateWithoutGameSessionInput, GameRoundUncheckedCreateWithoutGameSessionInput>
+  }
+
+  export type GameRoundCreateManyGameSessionInputEnvelope = {
+    data: GameRoundCreateManyGameSessionInput | GameRoundCreateManyGameSessionInput[]
+    skipDuplicates?: boolean
+  }
+
+  export type CasinoGameCreateWithoutGameSessionsInput = {
+    aggregatorType: $Enums.GameAggregatorType
+    provider: $Enums.GameProvider
+    category: $Enums.GameCategory
+    gameId: number
+    gameType?: string | null
+    tableId?: string | null
+    iconLink?: string | null
+    isEnabled: boolean
+    isVisibleToUser?: boolean
+    houseEdge?: Decimal | DecimalJsLike | number | string
+    contributionRate?: Decimal | DecimalJsLike | number | string
+    createdAt?: Date | string
+    updatedAt?: Date | string
+    bonusDetails?: BonusDetailCreateNestedManyWithoutCasinoGameInput
+    gameRounds?: GameRoundCreateNestedManyWithoutCasinoGameInput
+    translations?: GameTranslationCreateNestedManyWithoutCasinoGameInput
+  }
+
+  export type CasinoGameUncheckedCreateWithoutGameSessionsInput = {
+    id?: number
+    aggregatorType: $Enums.GameAggregatorType
+    provider: $Enums.GameProvider
+    category: $Enums.GameCategory
+    gameId: number
+    gameType?: string | null
+    tableId?: string | null
+    iconLink?: string | null
+    isEnabled: boolean
+    isVisibleToUser?: boolean
+    houseEdge?: Decimal | DecimalJsLike | number | string
+    contributionRate?: Decimal | DecimalJsLike | number | string
+    createdAt?: Date | string
+    updatedAt?: Date | string
+    bonusDetails?: BonusDetailUncheckedCreateNestedManyWithoutCasinoGameInput
+    gameRounds?: GameRoundUncheckedCreateNestedManyWithoutCasinoGameInput
+    translations?: GameTranslationUncheckedCreateNestedManyWithoutCasinoGameInput
+  }
+
+  export type CasinoGameCreateOrConnectWithoutGameSessionsInput = {
+    where: CasinoGameWhereUniqueInput
+    create: XOR<CasinoGameCreateWithoutGameSessionsInput, CasinoGameUncheckedCreateWithoutGameSessionsInput>
+  }
+
+  export type UserCreateWithoutGameSessionInput = {
+    id?: bigint | number
+    uid?: string
+    whitecliffId?: bigint | number | null
+    whitecliffSystemId?: bigint | number | null
+    whitecliffUsername?: string | null
+    dcsId?: string | null
+    email?: string | null
+    passwordHash?: string | null
+    socialType?: $Enums.SocialType | null
+    socialId?: string | null
+    role?: $Enums.UserRoleType
+    status?: $Enums.UserStatus
+    kycLevel?: $Enums.KycLevel
+    country?: string | null
+    language?: $Enums.Language | null
+    timezone?: string | null
+    timezoneOffset?: number | null
+    createdAt?: Date | string
+    updatedAt?: Date | string
+    affiliateCodes?: AffiliateCodeCreateNestedManyWithoutUserInput
+    affiliateCommissions?: AffiliateCommissionCreateNestedManyWithoutAffiliateInput
+    subUserCommissions?: AffiliateCommissionCreateNestedManyWithoutSubUserInput
+    affiliateTier?: AffiliateTierCreateNestedOneWithoutAffiliateInput
+    affiliateWallets?: AffiliateWalletCreateNestedManyWithoutAffiliateInput
+    CompTransaction?: CompTransactionCreateNestedManyWithoutUserInput
+    DailyCompEarning?: DailyCompEarningCreateNestedManyWithoutUserInput
+    EmailLog?: EmailLogCreateNestedManyWithoutUserInput
+    affiliateReferrals?: ReferralCreateNestedManyWithoutAffiliateInput
+    referredUsers?: ReferralCreateNestedManyWithoutSubUserInput
+    Rolling?: RollingCreateNestedManyWithoutUserInput
+    transactions?: TransactionCreateNestedManyWithoutUserInput
+    depositDetails?: DepositDetailCreateNestedManyWithoutUserInput
+    balances?: UserBalanceCreateNestedManyWithoutUserInput
+    UserBalanceStats?: UserBalanceStatsCreateNestedManyWithoutUserInput
+    UserPromotion?: UserPromotionCreateNestedManyWithoutUserInput
+    UserSession?: UserSessionCreateNestedManyWithoutUserInput
+    RevokedSessions?: UserSessionCreateNestedManyWithoutRevokedByUserInput
+    UserToken?: UserTokenCreateNestedManyWithoutUserInput
+    loginAttempts?: LoginAttemptCreateNestedManyWithoutUserInput
+    userTier?: UserTierCreateNestedOneWithoutUserInput
+    tierHistory?: TierHistoryCreateNestedManyWithoutUserInput
+    adminAdjustmentDetails?: AdminAdjustmentDetailCreateNestedManyWithoutAdminUserInput
+  }
+
+  export type UserUncheckedCreateWithoutGameSessionInput = {
+    id?: bigint | number
+    uid?: string
+    whitecliffId?: bigint | number | null
+    whitecliffSystemId?: bigint | number | null
+    whitecliffUsername?: string | null
+    dcsId?: string | null
+    email?: string | null
+    passwordHash?: string | null
+    socialType?: $Enums.SocialType | null
+    socialId?: string | null
+    role?: $Enums.UserRoleType
+    status?: $Enums.UserStatus
+    kycLevel?: $Enums.KycLevel
+    country?: string | null
+    language?: $Enums.Language | null
+    timezone?: string | null
+    timezoneOffset?: number | null
+    createdAt?: Date | string
+    updatedAt?: Date | string
+    affiliateCodes?: AffiliateCodeUncheckedCreateNestedManyWithoutUserInput
+    affiliateCommissions?: AffiliateCommissionUncheckedCreateNestedManyWithoutAffiliateInput
+    subUserCommissions?: AffiliateCommissionUncheckedCreateNestedManyWithoutSubUserInput
+    affiliateTier?: AffiliateTierUncheckedCreateNestedOneWithoutAffiliateInput
+    affiliateWallets?: AffiliateWalletUncheckedCreateNestedManyWithoutAffiliateInput
+    CompTransaction?: CompTransactionUncheckedCreateNestedManyWithoutUserInput
+    DailyCompEarning?: DailyCompEarningUncheckedCreateNestedManyWithoutUserInput
+    EmailLog?: EmailLogUncheckedCreateNestedManyWithoutUserInput
+    affiliateReferrals?: ReferralUncheckedCreateNestedManyWithoutAffiliateInput
+    referredUsers?: ReferralUncheckedCreateNestedManyWithoutSubUserInput
+    Rolling?: RollingUncheckedCreateNestedManyWithoutUserInput
+    transactions?: TransactionUncheckedCreateNestedManyWithoutUserInput
+    depositDetails?: DepositDetailUncheckedCreateNestedManyWithoutUserInput
+    balances?: UserBalanceUncheckedCreateNestedManyWithoutUserInput
+    UserBalanceStats?: UserBalanceStatsUncheckedCreateNestedManyWithoutUserInput
+    UserPromotion?: UserPromotionUncheckedCreateNestedManyWithoutUserInput
+    UserSession?: UserSessionUncheckedCreateNestedManyWithoutUserInput
+    RevokedSessions?: UserSessionUncheckedCreateNestedManyWithoutRevokedByUserInput
+    UserToken?: UserTokenUncheckedCreateNestedManyWithoutUserInput
+    loginAttempts?: LoginAttemptUncheckedCreateNestedManyWithoutUserInput
+    userTier?: UserTierUncheckedCreateNestedOneWithoutUserInput
+    tierHistory?: TierHistoryUncheckedCreateNestedManyWithoutUserInput
+    adminAdjustmentDetails?: AdminAdjustmentDetailUncheckedCreateNestedManyWithoutAdminUserInput
+  }
+
+  export type UserCreateOrConnectWithoutGameSessionInput = {
+    where: UserWhereUniqueInput
+    create: XOR<UserCreateWithoutGameSessionInput, UserUncheckedCreateWithoutGameSessionInput>
+  }
+
+  export type GameRoundUpsertWithWhereUniqueWithoutGameSessionInput = {
+    where: GameRoundWhereUniqueInput
+    update: XOR<GameRoundUpdateWithoutGameSessionInput, GameRoundUncheckedUpdateWithoutGameSessionInput>
+    create: XOR<GameRoundCreateWithoutGameSessionInput, GameRoundUncheckedCreateWithoutGameSessionInput>
+  }
+
+  export type GameRoundUpdateWithWhereUniqueWithoutGameSessionInput = {
+    where: GameRoundWhereUniqueInput
+    data: XOR<GameRoundUpdateWithoutGameSessionInput, GameRoundUncheckedUpdateWithoutGameSessionInput>
+  }
+
+  export type GameRoundUpdateManyWithWhereWithoutGameSessionInput = {
+    where: GameRoundScalarWhereInput
+    data: XOR<GameRoundUpdateManyMutationInput, GameRoundUncheckedUpdateManyWithoutGameSessionInput>
+  }
+
+  export type CasinoGameUpsertWithoutGameSessionsInput = {
+    update: XOR<CasinoGameUpdateWithoutGameSessionsInput, CasinoGameUncheckedUpdateWithoutGameSessionsInput>
+    create: XOR<CasinoGameCreateWithoutGameSessionsInput, CasinoGameUncheckedCreateWithoutGameSessionsInput>
+    where?: CasinoGameWhereInput
+  }
+
+  export type CasinoGameUpdateToOneWithWhereWithoutGameSessionsInput = {
+    where?: CasinoGameWhereInput
+    data: XOR<CasinoGameUpdateWithoutGameSessionsInput, CasinoGameUncheckedUpdateWithoutGameSessionsInput>
+  }
+
+  export type CasinoGameUpdateWithoutGameSessionsInput = {
+    aggregatorType?: EnumGameAggregatorTypeFieldUpdateOperationsInput | $Enums.GameAggregatorType
+    provider?: EnumGameProviderFieldUpdateOperationsInput | $Enums.GameProvider
+    category?: EnumGameCategoryFieldUpdateOperationsInput | $Enums.GameCategory
+    gameId?: IntFieldUpdateOperationsInput | number
+    gameType?: NullableStringFieldUpdateOperationsInput | string | null
+    tableId?: NullableStringFieldUpdateOperationsInput | string | null
+    iconLink?: NullableStringFieldUpdateOperationsInput | string | null
+    isEnabled?: BoolFieldUpdateOperationsInput | boolean
+    isVisibleToUser?: BoolFieldUpdateOperationsInput | boolean
+    houseEdge?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
+    contributionRate?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    bonusDetails?: BonusDetailUpdateManyWithoutCasinoGameNestedInput
+    gameRounds?: GameRoundUpdateManyWithoutCasinoGameNestedInput
+    translations?: GameTranslationUpdateManyWithoutCasinoGameNestedInput
+  }
+
+  export type CasinoGameUncheckedUpdateWithoutGameSessionsInput = {
+    id?: IntFieldUpdateOperationsInput | number
+    aggregatorType?: EnumGameAggregatorTypeFieldUpdateOperationsInput | $Enums.GameAggregatorType
+    provider?: EnumGameProviderFieldUpdateOperationsInput | $Enums.GameProvider
+    category?: EnumGameCategoryFieldUpdateOperationsInput | $Enums.GameCategory
+    gameId?: IntFieldUpdateOperationsInput | number
+    gameType?: NullableStringFieldUpdateOperationsInput | string | null
+    tableId?: NullableStringFieldUpdateOperationsInput | string | null
+    iconLink?: NullableStringFieldUpdateOperationsInput | string | null
+    isEnabled?: BoolFieldUpdateOperationsInput | boolean
+    isVisibleToUser?: BoolFieldUpdateOperationsInput | boolean
+    houseEdge?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
+    contributionRate?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    bonusDetails?: BonusDetailUncheckedUpdateManyWithoutCasinoGameNestedInput
+    gameRounds?: GameRoundUncheckedUpdateManyWithoutCasinoGameNestedInput
+    translations?: GameTranslationUncheckedUpdateManyWithoutCasinoGameNestedInput
+  }
+
+  export type UserUpsertWithoutGameSessionInput = {
+    update: XOR<UserUpdateWithoutGameSessionInput, UserUncheckedUpdateWithoutGameSessionInput>
+    create: XOR<UserCreateWithoutGameSessionInput, UserUncheckedCreateWithoutGameSessionInput>
+    where?: UserWhereInput
+  }
+
+  export type UserUpdateToOneWithWhereWithoutGameSessionInput = {
+    where?: UserWhereInput
+    data: XOR<UserUpdateWithoutGameSessionInput, UserUncheckedUpdateWithoutGameSessionInput>
+  }
+
+  export type UserUpdateWithoutGameSessionInput = {
+    id?: BigIntFieldUpdateOperationsInput | bigint | number
+    uid?: StringFieldUpdateOperationsInput | string
+    whitecliffId?: NullableBigIntFieldUpdateOperationsInput | bigint | number | null
+    whitecliffSystemId?: NullableBigIntFieldUpdateOperationsInput | bigint | number | null
+    whitecliffUsername?: NullableStringFieldUpdateOperationsInput | string | null
+    dcsId?: NullableStringFieldUpdateOperationsInput | string | null
+    email?: NullableStringFieldUpdateOperationsInput | string | null
+    passwordHash?: NullableStringFieldUpdateOperationsInput | string | null
+    socialType?: NullableEnumSocialTypeFieldUpdateOperationsInput | $Enums.SocialType | null
+    socialId?: NullableStringFieldUpdateOperationsInput | string | null
+    role?: EnumUserRoleTypeFieldUpdateOperationsInput | $Enums.UserRoleType
+    status?: EnumUserStatusFieldUpdateOperationsInput | $Enums.UserStatus
+    kycLevel?: EnumKycLevelFieldUpdateOperationsInput | $Enums.KycLevel
+    country?: NullableStringFieldUpdateOperationsInput | string | null
+    language?: NullableEnumLanguageFieldUpdateOperationsInput | $Enums.Language | null
+    timezone?: NullableStringFieldUpdateOperationsInput | string | null
+    timezoneOffset?: NullableIntFieldUpdateOperationsInput | number | null
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    affiliateCodes?: AffiliateCodeUpdateManyWithoutUserNestedInput
+    affiliateCommissions?: AffiliateCommissionUpdateManyWithoutAffiliateNestedInput
+    subUserCommissions?: AffiliateCommissionUpdateManyWithoutSubUserNestedInput
+    affiliateTier?: AffiliateTierUpdateOneWithoutAffiliateNestedInput
+    affiliateWallets?: AffiliateWalletUpdateManyWithoutAffiliateNestedInput
+    CompTransaction?: CompTransactionUpdateManyWithoutUserNestedInput
+    DailyCompEarning?: DailyCompEarningUpdateManyWithoutUserNestedInput
+    EmailLog?: EmailLogUpdateManyWithoutUserNestedInput
+    affiliateReferrals?: ReferralUpdateManyWithoutAffiliateNestedInput
+    referredUsers?: ReferralUpdateManyWithoutSubUserNestedInput
+    Rolling?: RollingUpdateManyWithoutUserNestedInput
+    transactions?: TransactionUpdateManyWithoutUserNestedInput
+    depositDetails?: DepositDetailUpdateManyWithoutUserNestedInput
+    balances?: UserBalanceUpdateManyWithoutUserNestedInput
+    UserBalanceStats?: UserBalanceStatsUpdateManyWithoutUserNestedInput
+    UserPromotion?: UserPromotionUpdateManyWithoutUserNestedInput
+    UserSession?: UserSessionUpdateManyWithoutUserNestedInput
+    RevokedSessions?: UserSessionUpdateManyWithoutRevokedByUserNestedInput
+    UserToken?: UserTokenUpdateManyWithoutUserNestedInput
+    loginAttempts?: LoginAttemptUpdateManyWithoutUserNestedInput
+    userTier?: UserTierUpdateOneWithoutUserNestedInput
+    tierHistory?: TierHistoryUpdateManyWithoutUserNestedInput
+    adminAdjustmentDetails?: AdminAdjustmentDetailUpdateManyWithoutAdminUserNestedInput
+  }
+
+  export type UserUncheckedUpdateWithoutGameSessionInput = {
+    id?: BigIntFieldUpdateOperationsInput | bigint | number
+    uid?: StringFieldUpdateOperationsInput | string
+    whitecliffId?: NullableBigIntFieldUpdateOperationsInput | bigint | number | null
+    whitecliffSystemId?: NullableBigIntFieldUpdateOperationsInput | bigint | number | null
+    whitecliffUsername?: NullableStringFieldUpdateOperationsInput | string | null
+    dcsId?: NullableStringFieldUpdateOperationsInput | string | null
+    email?: NullableStringFieldUpdateOperationsInput | string | null
+    passwordHash?: NullableStringFieldUpdateOperationsInput | string | null
+    socialType?: NullableEnumSocialTypeFieldUpdateOperationsInput | $Enums.SocialType | null
+    socialId?: NullableStringFieldUpdateOperationsInput | string | null
+    role?: EnumUserRoleTypeFieldUpdateOperationsInput | $Enums.UserRoleType
+    status?: EnumUserStatusFieldUpdateOperationsInput | $Enums.UserStatus
+    kycLevel?: EnumKycLevelFieldUpdateOperationsInput | $Enums.KycLevel
+    country?: NullableStringFieldUpdateOperationsInput | string | null
+    language?: NullableEnumLanguageFieldUpdateOperationsInput | $Enums.Language | null
+    timezone?: NullableStringFieldUpdateOperationsInput | string | null
+    timezoneOffset?: NullableIntFieldUpdateOperationsInput | number | null
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    affiliateCodes?: AffiliateCodeUncheckedUpdateManyWithoutUserNestedInput
+    affiliateCommissions?: AffiliateCommissionUncheckedUpdateManyWithoutAffiliateNestedInput
+    subUserCommissions?: AffiliateCommissionUncheckedUpdateManyWithoutSubUserNestedInput
+    affiliateTier?: AffiliateTierUncheckedUpdateOneWithoutAffiliateNestedInput
+    affiliateWallets?: AffiliateWalletUncheckedUpdateManyWithoutAffiliateNestedInput
+    CompTransaction?: CompTransactionUncheckedUpdateManyWithoutUserNestedInput
+    DailyCompEarning?: DailyCompEarningUncheckedUpdateManyWithoutUserNestedInput
+    EmailLog?: EmailLogUncheckedUpdateManyWithoutUserNestedInput
+    affiliateReferrals?: ReferralUncheckedUpdateManyWithoutAffiliateNestedInput
+    referredUsers?: ReferralUncheckedUpdateManyWithoutSubUserNestedInput
+    Rolling?: RollingUncheckedUpdateManyWithoutUserNestedInput
+    transactions?: TransactionUncheckedUpdateManyWithoutUserNestedInput
+    depositDetails?: DepositDetailUncheckedUpdateManyWithoutUserNestedInput
+    balances?: UserBalanceUncheckedUpdateManyWithoutUserNestedInput
+    UserBalanceStats?: UserBalanceStatsUncheckedUpdateManyWithoutUserNestedInput
+    UserPromotion?: UserPromotionUncheckedUpdateManyWithoutUserNestedInput
+    UserSession?: UserSessionUncheckedUpdateManyWithoutUserNestedInput
+    RevokedSessions?: UserSessionUncheckedUpdateManyWithoutRevokedByUserNestedInput
+    UserToken?: UserTokenUncheckedUpdateManyWithoutUserNestedInput
+    loginAttempts?: LoginAttemptUncheckedUpdateManyWithoutUserNestedInput
+    userTier?: UserTierUncheckedUpdateOneWithoutUserNestedInput
+    tierHistory?: TierHistoryUncheckedUpdateManyWithoutUserNestedInput
+    adminAdjustmentDetails?: AdminAdjustmentDetailUncheckedUpdateManyWithoutAdminUserNestedInput
+  }
+
   export type AffiliateCodeCreateWithoutUserInput = {
     id?: bigint | number
     uid: string
@@ -82391,7 +83208,7 @@ export namespace Prisma {
     exchangeRate: Decimal | DecimalJsLike | number | string
     exchangeRateSnapshotAt?: Date | string
     gameRounds?: GameRoundCreateNestedManyWithoutGameSessionInput
-    game?: GameCreateNestedOneWithoutGameSessionsInput
+    game?: CasinoGameCreateNestedOneWithoutGameSessionsInput
   }
 
   export type GameSessionUncheckedCreateWithoutUserInput = {
@@ -83295,24 +84112,6 @@ export namespace Prisma {
     data: XOR<GameSessionUpdateManyMutationInput, GameSessionUncheckedUpdateManyWithoutUserInput>
   }
 
-  export type GameSessionScalarWhereInput = {
-    AND?: GameSessionScalarWhereInput | GameSessionScalarWhereInput[]
-    OR?: GameSessionScalarWhereInput[]
-    NOT?: GameSessionScalarWhereInput | GameSessionScalarWhereInput[]
-    id?: BigIntFilter<"GameSession"> | bigint | number
-    userId?: BigIntFilter<"GameSession"> | bigint | number
-    createdAt?: DateTimeFilter<"GameSession"> | Date | string
-    updatedAt?: DateTimeFilter<"GameSession"> | Date | string
-    lastAccessedAt?: DateTimeFilter<"GameSession"> | Date | string
-    aggregatorType?: EnumGameAggregatorTypeFilter<"GameSession"> | $Enums.GameAggregatorType
-    token?: StringFilter<"GameSession"> | string
-    walletCurrency?: EnumExchangeCurrencyCodeFilter<"GameSession"> | $Enums.ExchangeCurrencyCode
-    gameCurrency?: EnumExchangeCurrencyCodeFilter<"GameSession"> | $Enums.ExchangeCurrencyCode
-    exchangeRate?: DecimalFilter<"GameSession"> | Decimal | DecimalJsLike | number | string
-    exchangeRateSnapshotAt?: DateTimeFilter<"GameSession"> | Date | string
-    gameId?: IntNullableFilter<"GameSession"> | number | null
-  }
-
   export type ReferralUpsertWithWhereUniqueWithoutAffiliateInput = {
     where: ReferralWhereUniqueInput
     update: XOR<ReferralUpdateWithoutAffiliateInput, ReferralUncheckedUpdateWithoutAffiliateInput>
@@ -84172,425 +84971,6 @@ export namespace Prisma {
     adminAdjustmentDetails?: AdminAdjustmentDetailUncheckedUpdateManyWithoutAdminUserNestedInput
   }
 
-  export type BonusDetailCreateWithoutGameInput = {
-    id?: bigint | number
-    createdAt?: Date | string
-    transactionTime: Date | string
-    aggregatorType: $Enums.GameAggregatorType
-    provider: $Enums.GameProvider
-    bonusType: $Enums.BonusType
-    amount: Decimal | DecimalJsLike | number | string
-    aggregatorPromotionId?: string | null
-    aggregatorRoundId?: string | null
-    aggregatorWagerId?: string | null
-    aggregatorTransactionId?: string | null
-    aggregatorFreespinId?: string | null
-    aggregatorSessionId?: string | null
-    isEndRound?: boolean | null
-    description?: string | null
-    transaction: TransactionCreateNestedOneWithoutBonusDetailInput
-  }
-
-  export type BonusDetailUncheckedCreateWithoutGameInput = {
-    id?: bigint | number
-    createdAt?: Date | string
-    transactionTime: Date | string
-    aggregatorType: $Enums.GameAggregatorType
-    provider: $Enums.GameProvider
-    bonusType: $Enums.BonusType
-    amount: Decimal | DecimalJsLike | number | string
-    aggregatorPromotionId?: string | null
-    aggregatorRoundId?: string | null
-    aggregatorWagerId?: string | null
-    aggregatorTransactionId?: string | null
-    aggregatorFreespinId?: string | null
-    aggregatorSessionId?: string | null
-    isEndRound?: boolean | null
-    description?: string | null
-    transactionId: bigint | number
-  }
-
-  export type BonusDetailCreateOrConnectWithoutGameInput = {
-    where: BonusDetailWhereUniqueInput
-    create: XOR<BonusDetailCreateWithoutGameInput, BonusDetailUncheckedCreateWithoutGameInput>
-  }
-
-  export type BonusDetailCreateManyGameInputEnvelope = {
-    data: BonusDetailCreateManyGameInput | BonusDetailCreateManyGameInput[]
-    skipDuplicates?: boolean
-  }
-
-  export type GameRoundCreateWithoutGameInput = {
-    id?: bigint | number
-    userId: bigint | number
-    aggregatorType: $Enums.GameAggregatorType
-    provider: $Enums.GameProvider
-    aggregatorTxId: string
-    aggregatorGameId: number
-    totalBetAmountInGameCurrency?: Decimal | DecimalJsLike | number | string | null
-    totalWinAmountInGameCurrency?: Decimal | DecimalJsLike | number | string | null
-    netAmountInGameCurrency?: Decimal | DecimalJsLike | number | string | null
-    totalBetAmountInWalletCurrency?: Decimal | DecimalJsLike | number | string | null
-    totalWinAmountInWalletCurrency?: Decimal | DecimalJsLike | number | string | null
-    netAmountInWalletCurrency?: Decimal | DecimalJsLike | number | string | null
-    sessionId?: string | null
-    tableId?: string | null
-    roundId?: string | null
-    replayType?: $Enums.GameReplayType | null
-    replayData?: string | null
-    totalPushAmount?: Decimal | DecimalJsLike | number | string | null
-    tieBetAmount?: Decimal | DecimalJsLike | number | string | null
-    contributionAmount?: Decimal | DecimalJsLike | number | string | null
-    compEarned?: Decimal | DecimalJsLike | number | string | null
-    jackpotContributionAmount?: Decimal | DecimalJsLike | number | string
-    startedAt?: Date | string | null
-    completedAt?: Date | string | null
-    AffiliateCommission?: AffiliateCommissionCreateNestedManyWithoutGameRoundInput
-    bets?: GameBetCreateNestedManyWithoutGameRoundInput
-    GameSession: GameSessionCreateNestedOneWithoutGameRoundsInput
-    transaction: TransactionCreateNestedOneWithoutGameRoundInput
-    wins?: GameWinCreateNestedManyWithoutGameRoundInput
-  }
-
-  export type GameRoundUncheckedCreateWithoutGameInput = {
-    id?: bigint | number
-    userId: bigint | number
-    aggregatorType: $Enums.GameAggregatorType
-    provider: $Enums.GameProvider
-    aggregatorTxId: string
-    aggregatorGameId: number
-    totalBetAmountInGameCurrency?: Decimal | DecimalJsLike | number | string | null
-    totalWinAmountInGameCurrency?: Decimal | DecimalJsLike | number | string | null
-    netAmountInGameCurrency?: Decimal | DecimalJsLike | number | string | null
-    totalBetAmountInWalletCurrency?: Decimal | DecimalJsLike | number | string | null
-    totalWinAmountInWalletCurrency?: Decimal | DecimalJsLike | number | string | null
-    netAmountInWalletCurrency?: Decimal | DecimalJsLike | number | string | null
-    transactionId: bigint | number
-    sessionId?: string | null
-    tableId?: string | null
-    roundId?: string | null
-    replayType?: $Enums.GameReplayType | null
-    replayData?: string | null
-    totalPushAmount?: Decimal | DecimalJsLike | number | string | null
-    tieBetAmount?: Decimal | DecimalJsLike | number | string | null
-    contributionAmount?: Decimal | DecimalJsLike | number | string | null
-    compEarned?: Decimal | DecimalJsLike | number | string | null
-    jackpotContributionAmount?: Decimal | DecimalJsLike | number | string
-    startedAt?: Date | string | null
-    completedAt?: Date | string | null
-    gameSessionId: bigint | number
-    AffiliateCommission?: AffiliateCommissionUncheckedCreateNestedManyWithoutGameRoundInput
-    bets?: GameBetUncheckedCreateNestedManyWithoutGameRoundInput
-    wins?: GameWinUncheckedCreateNestedManyWithoutGameRoundInput
-  }
-
-  export type GameRoundCreateOrConnectWithoutGameInput = {
-    where: GameRoundWhereUniqueInput
-    create: XOR<GameRoundCreateWithoutGameInput, GameRoundUncheckedCreateWithoutGameInput>
-  }
-
-  export type GameRoundCreateManyGameInputEnvelope = {
-    data: GameRoundCreateManyGameInput | GameRoundCreateManyGameInput[]
-    skipDuplicates?: boolean
-  }
-
-  export type GameSessionCreateWithoutGameInput = {
-    id?: bigint | number
-    createdAt?: Date | string
-    updatedAt?: Date | string
-    lastAccessedAt?: Date | string
-    aggregatorType: $Enums.GameAggregatorType
-    token: string
-    walletCurrency: $Enums.ExchangeCurrencyCode
-    gameCurrency: $Enums.ExchangeCurrencyCode
-    exchangeRate: Decimal | DecimalJsLike | number | string
-    exchangeRateSnapshotAt?: Date | string
-    gameRounds?: GameRoundCreateNestedManyWithoutGameSessionInput
-    user: UserCreateNestedOneWithoutGameSessionInput
-  }
-
-  export type GameSessionUncheckedCreateWithoutGameInput = {
-    id?: bigint | number
-    userId: bigint | number
-    createdAt?: Date | string
-    updatedAt?: Date | string
-    lastAccessedAt?: Date | string
-    aggregatorType: $Enums.GameAggregatorType
-    token: string
-    walletCurrency: $Enums.ExchangeCurrencyCode
-    gameCurrency: $Enums.ExchangeCurrencyCode
-    exchangeRate: Decimal | DecimalJsLike | number | string
-    exchangeRateSnapshotAt?: Date | string
-    gameRounds?: GameRoundUncheckedCreateNestedManyWithoutGameSessionInput
-  }
-
-  export type GameSessionCreateOrConnectWithoutGameInput = {
-    where: GameSessionWhereUniqueInput
-    create: XOR<GameSessionCreateWithoutGameInput, GameSessionUncheckedCreateWithoutGameInput>
-  }
-
-  export type GameSessionCreateManyGameInputEnvelope = {
-    data: GameSessionCreateManyGameInput | GameSessionCreateManyGameInput[]
-    skipDuplicates?: boolean
-  }
-
-  export type GameTranslationCreateWithoutGameInput = {
-    language: $Enums.Language
-    providerName: string
-    categoryName: string
-    gameName: string
-    createdAt?: Date | string
-    updatedAt?: Date | string
-  }
-
-  export type GameTranslationUncheckedCreateWithoutGameInput = {
-    id?: number
-    language: $Enums.Language
-    providerName: string
-    categoryName: string
-    gameName: string
-    createdAt?: Date | string
-    updatedAt?: Date | string
-  }
-
-  export type GameTranslationCreateOrConnectWithoutGameInput = {
-    where: GameTranslationWhereUniqueInput
-    create: XOR<GameTranslationCreateWithoutGameInput, GameTranslationUncheckedCreateWithoutGameInput>
-  }
-
-  export type GameTranslationCreateManyGameInputEnvelope = {
-    data: GameTranslationCreateManyGameInput | GameTranslationCreateManyGameInput[]
-    skipDuplicates?: boolean
-  }
-
-  export type BonusDetailUpsertWithWhereUniqueWithoutGameInput = {
-    where: BonusDetailWhereUniqueInput
-    update: XOR<BonusDetailUpdateWithoutGameInput, BonusDetailUncheckedUpdateWithoutGameInput>
-    create: XOR<BonusDetailCreateWithoutGameInput, BonusDetailUncheckedCreateWithoutGameInput>
-  }
-
-  export type BonusDetailUpdateWithWhereUniqueWithoutGameInput = {
-    where: BonusDetailWhereUniqueInput
-    data: XOR<BonusDetailUpdateWithoutGameInput, BonusDetailUncheckedUpdateWithoutGameInput>
-  }
-
-  export type BonusDetailUpdateManyWithWhereWithoutGameInput = {
-    where: BonusDetailScalarWhereInput
-    data: XOR<BonusDetailUpdateManyMutationInput, BonusDetailUncheckedUpdateManyWithoutGameInput>
-  }
-
-  export type BonusDetailScalarWhereInput = {
-    AND?: BonusDetailScalarWhereInput | BonusDetailScalarWhereInput[]
-    OR?: BonusDetailScalarWhereInput[]
-    NOT?: BonusDetailScalarWhereInput | BonusDetailScalarWhereInput[]
-    id?: BigIntFilter<"BonusDetail"> | bigint | number
-    createdAt?: DateTimeFilter<"BonusDetail"> | Date | string
-    transactionTime?: DateTimeFilter<"BonusDetail"> | Date | string
-    aggregatorType?: EnumGameAggregatorTypeFilter<"BonusDetail"> | $Enums.GameAggregatorType
-    provider?: EnumGameProviderFilter<"BonusDetail"> | $Enums.GameProvider
-    bonusType?: EnumBonusTypeFilter<"BonusDetail"> | $Enums.BonusType
-    amount?: DecimalFilter<"BonusDetail"> | Decimal | DecimalJsLike | number | string
-    aggregatorPromotionId?: StringNullableFilter<"BonusDetail"> | string | null
-    aggregatorRoundId?: StringNullableFilter<"BonusDetail"> | string | null
-    aggregatorWagerId?: StringNullableFilter<"BonusDetail"> | string | null
-    aggregatorTransactionId?: StringNullableFilter<"BonusDetail"> | string | null
-    aggregatorFreespinId?: StringNullableFilter<"BonusDetail"> | string | null
-    aggregatorSessionId?: StringNullableFilter<"BonusDetail"> | string | null
-    isEndRound?: BoolNullableFilter<"BonusDetail"> | boolean | null
-    description?: StringNullableFilter<"BonusDetail"> | string | null
-    gameId?: IntNullableFilter<"BonusDetail"> | number | null
-    transactionId?: BigIntFilter<"BonusDetail"> | bigint | number
-  }
-
-  export type GameRoundUpsertWithWhereUniqueWithoutGameInput = {
-    where: GameRoundWhereUniqueInput
-    update: XOR<GameRoundUpdateWithoutGameInput, GameRoundUncheckedUpdateWithoutGameInput>
-    create: XOR<GameRoundCreateWithoutGameInput, GameRoundUncheckedCreateWithoutGameInput>
-  }
-
-  export type GameRoundUpdateWithWhereUniqueWithoutGameInput = {
-    where: GameRoundWhereUniqueInput
-    data: XOR<GameRoundUpdateWithoutGameInput, GameRoundUncheckedUpdateWithoutGameInput>
-  }
-
-  export type GameRoundUpdateManyWithWhereWithoutGameInput = {
-    where: GameRoundScalarWhereInput
-    data: XOR<GameRoundUpdateManyMutationInput, GameRoundUncheckedUpdateManyWithoutGameInput>
-  }
-
-  export type GameRoundScalarWhereInput = {
-    AND?: GameRoundScalarWhereInput | GameRoundScalarWhereInput[]
-    OR?: GameRoundScalarWhereInput[]
-    NOT?: GameRoundScalarWhereInput | GameRoundScalarWhereInput[]
-    id?: BigIntFilter<"GameRound"> | bigint | number
-    userId?: BigIntFilter<"GameRound"> | bigint | number
-    aggregatorType?: EnumGameAggregatorTypeFilter<"GameRound"> | $Enums.GameAggregatorType
-    provider?: EnumGameProviderFilter<"GameRound"> | $Enums.GameProvider
-    aggregatorTxId?: StringFilter<"GameRound"> | string
-    aggregatorGameId?: IntFilter<"GameRound"> | number
-    totalBetAmountInGameCurrency?: DecimalNullableFilter<"GameRound"> | Decimal | DecimalJsLike | number | string | null
-    totalWinAmountInGameCurrency?: DecimalNullableFilter<"GameRound"> | Decimal | DecimalJsLike | number | string | null
-    netAmountInGameCurrency?: DecimalNullableFilter<"GameRound"> | Decimal | DecimalJsLike | number | string | null
-    totalBetAmountInWalletCurrency?: DecimalNullableFilter<"GameRound"> | Decimal | DecimalJsLike | number | string | null
-    totalWinAmountInWalletCurrency?: DecimalNullableFilter<"GameRound"> | Decimal | DecimalJsLike | number | string | null
-    netAmountInWalletCurrency?: DecimalNullableFilter<"GameRound"> | Decimal | DecimalJsLike | number | string | null
-    transactionId?: BigIntFilter<"GameRound"> | bigint | number
-    sessionId?: StringNullableFilter<"GameRound"> | string | null
-    tableId?: StringNullableFilter<"GameRound"> | string | null
-    roundId?: StringNullableFilter<"GameRound"> | string | null
-    replayType?: EnumGameReplayTypeNullableFilter<"GameRound"> | $Enums.GameReplayType | null
-    replayData?: StringNullableFilter<"GameRound"> | string | null
-    totalPushAmount?: DecimalNullableFilter<"GameRound"> | Decimal | DecimalJsLike | number | string | null
-    tieBetAmount?: DecimalNullableFilter<"GameRound"> | Decimal | DecimalJsLike | number | string | null
-    contributionAmount?: DecimalNullableFilter<"GameRound"> | Decimal | DecimalJsLike | number | string | null
-    compEarned?: DecimalNullableFilter<"GameRound"> | Decimal | DecimalJsLike | number | string | null
-    jackpotContributionAmount?: DecimalFilter<"GameRound"> | Decimal | DecimalJsLike | number | string
-    startedAt?: DateTimeNullableFilter<"GameRound"> | Date | string | null
-    completedAt?: DateTimeNullableFilter<"GameRound"> | Date | string | null
-    gameId?: IntNullableFilter<"GameRound"> | number | null
-    gameSessionId?: BigIntFilter<"GameRound"> | bigint | number
-  }
-
-  export type GameSessionUpsertWithWhereUniqueWithoutGameInput = {
-    where: GameSessionWhereUniqueInput
-    update: XOR<GameSessionUpdateWithoutGameInput, GameSessionUncheckedUpdateWithoutGameInput>
-    create: XOR<GameSessionCreateWithoutGameInput, GameSessionUncheckedCreateWithoutGameInput>
-  }
-
-  export type GameSessionUpdateWithWhereUniqueWithoutGameInput = {
-    where: GameSessionWhereUniqueInput
-    data: XOR<GameSessionUpdateWithoutGameInput, GameSessionUncheckedUpdateWithoutGameInput>
-  }
-
-  export type GameSessionUpdateManyWithWhereWithoutGameInput = {
-    where: GameSessionScalarWhereInput
-    data: XOR<GameSessionUpdateManyMutationInput, GameSessionUncheckedUpdateManyWithoutGameInput>
-  }
-
-  export type GameTranslationUpsertWithWhereUniqueWithoutGameInput = {
-    where: GameTranslationWhereUniqueInput
-    update: XOR<GameTranslationUpdateWithoutGameInput, GameTranslationUncheckedUpdateWithoutGameInput>
-    create: XOR<GameTranslationCreateWithoutGameInput, GameTranslationUncheckedCreateWithoutGameInput>
-  }
-
-  export type GameTranslationUpdateWithWhereUniqueWithoutGameInput = {
-    where: GameTranslationWhereUniqueInput
-    data: XOR<GameTranslationUpdateWithoutGameInput, GameTranslationUncheckedUpdateWithoutGameInput>
-  }
-
-  export type GameTranslationUpdateManyWithWhereWithoutGameInput = {
-    where: GameTranslationScalarWhereInput
-    data: XOR<GameTranslationUpdateManyMutationInput, GameTranslationUncheckedUpdateManyWithoutGameInput>
-  }
-
-  export type GameTranslationScalarWhereInput = {
-    AND?: GameTranslationScalarWhereInput | GameTranslationScalarWhereInput[]
-    OR?: GameTranslationScalarWhereInput[]
-    NOT?: GameTranslationScalarWhereInput | GameTranslationScalarWhereInput[]
-    id?: IntFilter<"GameTranslation"> | number
-    gameId?: IntFilter<"GameTranslation"> | number
-    language?: EnumLanguageFilter<"GameTranslation"> | $Enums.Language
-    providerName?: StringFilter<"GameTranslation"> | string
-    categoryName?: StringFilter<"GameTranslation"> | string
-    gameName?: StringFilter<"GameTranslation"> | string
-    createdAt?: DateTimeFilter<"GameTranslation"> | Date | string
-    updatedAt?: DateTimeFilter<"GameTranslation"> | Date | string
-  }
-
-  export type GameCreateWithoutTranslationsInput = {
-    aggregatorType: $Enums.GameAggregatorType
-    provider: $Enums.GameProvider
-    category: $Enums.GameCategory
-    gameId: number
-    gameType?: string | null
-    tableId?: string | null
-    iconLink?: string | null
-    isEnabled: boolean
-    isVisibleToUser?: boolean
-    houseEdge?: Decimal | DecimalJsLike | number | string
-    contributionRate?: Decimal | DecimalJsLike | number | string
-    createdAt?: Date | string
-    updatedAt?: Date | string
-    bonusDetails?: BonusDetailCreateNestedManyWithoutGameInput
-    gameRounds?: GameRoundCreateNestedManyWithoutGameInput
-    gameSessions?: GameSessionCreateNestedManyWithoutGameInput
-  }
-
-  export type GameUncheckedCreateWithoutTranslationsInput = {
-    id?: number
-    aggregatorType: $Enums.GameAggregatorType
-    provider: $Enums.GameProvider
-    category: $Enums.GameCategory
-    gameId: number
-    gameType?: string | null
-    tableId?: string | null
-    iconLink?: string | null
-    isEnabled: boolean
-    isVisibleToUser?: boolean
-    houseEdge?: Decimal | DecimalJsLike | number | string
-    contributionRate?: Decimal | DecimalJsLike | number | string
-    createdAt?: Date | string
-    updatedAt?: Date | string
-    bonusDetails?: BonusDetailUncheckedCreateNestedManyWithoutGameInput
-    gameRounds?: GameRoundUncheckedCreateNestedManyWithoutGameInput
-    gameSessions?: GameSessionUncheckedCreateNestedManyWithoutGameInput
-  }
-
-  export type GameCreateOrConnectWithoutTranslationsInput = {
-    where: GameWhereUniqueInput
-    create: XOR<GameCreateWithoutTranslationsInput, GameUncheckedCreateWithoutTranslationsInput>
-  }
-
-  export type GameUpsertWithoutTranslationsInput = {
-    update: XOR<GameUpdateWithoutTranslationsInput, GameUncheckedUpdateWithoutTranslationsInput>
-    create: XOR<GameCreateWithoutTranslationsInput, GameUncheckedCreateWithoutTranslationsInput>
-    where?: GameWhereInput
-  }
-
-  export type GameUpdateToOneWithWhereWithoutTranslationsInput = {
-    where?: GameWhereInput
-    data: XOR<GameUpdateWithoutTranslationsInput, GameUncheckedUpdateWithoutTranslationsInput>
-  }
-
-  export type GameUpdateWithoutTranslationsInput = {
-    aggregatorType?: EnumGameAggregatorTypeFieldUpdateOperationsInput | $Enums.GameAggregatorType
-    provider?: EnumGameProviderFieldUpdateOperationsInput | $Enums.GameProvider
-    category?: EnumGameCategoryFieldUpdateOperationsInput | $Enums.GameCategory
-    gameId?: IntFieldUpdateOperationsInput | number
-    gameType?: NullableStringFieldUpdateOperationsInput | string | null
-    tableId?: NullableStringFieldUpdateOperationsInput | string | null
-    iconLink?: NullableStringFieldUpdateOperationsInput | string | null
-    isEnabled?: BoolFieldUpdateOperationsInput | boolean
-    isVisibleToUser?: BoolFieldUpdateOperationsInput | boolean
-    houseEdge?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
-    contributionRate?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
-    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
-    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
-    bonusDetails?: BonusDetailUpdateManyWithoutGameNestedInput
-    gameRounds?: GameRoundUpdateManyWithoutGameNestedInput
-    gameSessions?: GameSessionUpdateManyWithoutGameNestedInput
-  }
-
-  export type GameUncheckedUpdateWithoutTranslationsInput = {
-    id?: IntFieldUpdateOperationsInput | number
-    aggregatorType?: EnumGameAggregatorTypeFieldUpdateOperationsInput | $Enums.GameAggregatorType
-    provider?: EnumGameProviderFieldUpdateOperationsInput | $Enums.GameProvider
-    category?: EnumGameCategoryFieldUpdateOperationsInput | $Enums.GameCategory
-    gameId?: IntFieldUpdateOperationsInput | number
-    gameType?: NullableStringFieldUpdateOperationsInput | string | null
-    tableId?: NullableStringFieldUpdateOperationsInput | string | null
-    iconLink?: NullableStringFieldUpdateOperationsInput | string | null
-    isEnabled?: BoolFieldUpdateOperationsInput | boolean
-    isVisibleToUser?: BoolFieldUpdateOperationsInput | boolean
-    houseEdge?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
-    contributionRate?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
-    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
-    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
-    bonusDetails?: BonusDetailUncheckedUpdateManyWithoutGameNestedInput
-    gameRounds?: GameRoundUncheckedUpdateManyWithoutGameNestedInput
-    gameSessions?: GameSessionUncheckedUpdateManyWithoutGameNestedInput
-  }
-
   export type BonusDetailCreateWithoutTransactionInput = {
     id?: bigint | number
     createdAt?: Date | string
@@ -84607,7 +84987,7 @@ export namespace Prisma {
     aggregatorSessionId?: string | null
     isEndRound?: boolean | null
     description?: string | null
-    game?: GameCreateNestedOneWithoutBonusDetailsInput
+    casinoGame?: CasinoGameCreateNestedOneWithoutBonusDetailsInput
   }
 
   export type BonusDetailUncheckedCreateWithoutTransactionInput = {
@@ -84757,7 +85137,7 @@ export namespace Prisma {
     completedAt?: Date | string | null
     AffiliateCommission?: AffiliateCommissionCreateNestedManyWithoutGameRoundInput
     bets?: GameBetCreateNestedManyWithoutGameRoundInput
-    game?: GameCreateNestedOneWithoutGameRoundsInput
+    casinoGame?: CasinoGameCreateNestedOneWithoutGameRoundsInput
     GameSession: GameSessionCreateNestedOneWithoutGameRoundsInput
     wins?: GameWinCreateNestedManyWithoutGameRoundInput
   }
@@ -85038,7 +85418,7 @@ export namespace Prisma {
     aggregatorSessionId?: NullableStringFieldUpdateOperationsInput | string | null
     isEndRound?: NullableBoolFieldUpdateOperationsInput | boolean | null
     description?: NullableStringFieldUpdateOperationsInput | string | null
-    game?: GameUpdateOneWithoutBonusDetailsNestedInput
+    casinoGame?: CasinoGameUpdateOneWithoutBonusDetailsNestedInput
   }
 
   export type BonusDetailUncheckedUpdateWithoutTransactionInput = {
@@ -85206,7 +85586,7 @@ export namespace Prisma {
     completedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     AffiliateCommission?: AffiliateCommissionUpdateManyWithoutGameRoundNestedInput
     bets?: GameBetUpdateManyWithoutGameRoundNestedInput
-    game?: GameUpdateOneWithoutGameRoundsNestedInput
+    casinoGame?: CasinoGameUpdateOneWithoutGameRoundsNestedInput
     GameSession?: GameSessionUpdateOneRequiredWithoutGameRoundsNestedInput
     wins?: GameWinUpdateManyWithoutGameRoundNestedInput
   }
@@ -85564,7 +85944,7 @@ export namespace Prisma {
     skipDuplicates?: boolean
   }
 
-  export type GameCreateWithoutGameRoundsInput = {
+  export type CasinoGameCreateWithoutGameRoundsInput = {
     aggregatorType: $Enums.GameAggregatorType
     provider: $Enums.GameProvider
     category: $Enums.GameCategory
@@ -85578,12 +85958,12 @@ export namespace Prisma {
     contributionRate?: Decimal | DecimalJsLike | number | string
     createdAt?: Date | string
     updatedAt?: Date | string
-    bonusDetails?: BonusDetailCreateNestedManyWithoutGameInput
+    bonusDetails?: BonusDetailCreateNestedManyWithoutCasinoGameInput
     gameSessions?: GameSessionCreateNestedManyWithoutGameInput
-    translations?: GameTranslationCreateNestedManyWithoutGameInput
+    translations?: GameTranslationCreateNestedManyWithoutCasinoGameInput
   }
 
-  export type GameUncheckedCreateWithoutGameRoundsInput = {
+  export type CasinoGameUncheckedCreateWithoutGameRoundsInput = {
     id?: number
     aggregatorType: $Enums.GameAggregatorType
     provider: $Enums.GameProvider
@@ -85598,14 +85978,14 @@ export namespace Prisma {
     contributionRate?: Decimal | DecimalJsLike | number | string
     createdAt?: Date | string
     updatedAt?: Date | string
-    bonusDetails?: BonusDetailUncheckedCreateNestedManyWithoutGameInput
+    bonusDetails?: BonusDetailUncheckedCreateNestedManyWithoutCasinoGameInput
     gameSessions?: GameSessionUncheckedCreateNestedManyWithoutGameInput
-    translations?: GameTranslationUncheckedCreateNestedManyWithoutGameInput
+    translations?: GameTranslationUncheckedCreateNestedManyWithoutCasinoGameInput
   }
 
-  export type GameCreateOrConnectWithoutGameRoundsInput = {
-    where: GameWhereUniqueInput
-    create: XOR<GameCreateWithoutGameRoundsInput, GameUncheckedCreateWithoutGameRoundsInput>
+  export type CasinoGameCreateOrConnectWithoutGameRoundsInput = {
+    where: CasinoGameWhereUniqueInput
+    create: XOR<CasinoGameCreateWithoutGameRoundsInput, CasinoGameUncheckedCreateWithoutGameRoundsInput>
   }
 
   export type GameSessionCreateWithoutGameRoundsInput = {
@@ -85619,7 +85999,7 @@ export namespace Prisma {
     gameCurrency: $Enums.ExchangeCurrencyCode
     exchangeRate: Decimal | DecimalJsLike | number | string
     exchangeRateSnapshotAt?: Date | string
-    game?: GameCreateNestedOneWithoutGameSessionsInput
+    game?: CasinoGameCreateNestedOneWithoutGameSessionsInput
     user: UserCreateNestedOneWithoutGameSessionInput
   }
 
@@ -85774,18 +86154,18 @@ export namespace Prisma {
     cancelledAt?: DateTimeNullableFilter<"GameBet"> | Date | string | null
   }
 
-  export type GameUpsertWithoutGameRoundsInput = {
-    update: XOR<GameUpdateWithoutGameRoundsInput, GameUncheckedUpdateWithoutGameRoundsInput>
-    create: XOR<GameCreateWithoutGameRoundsInput, GameUncheckedCreateWithoutGameRoundsInput>
-    where?: GameWhereInput
+  export type CasinoGameUpsertWithoutGameRoundsInput = {
+    update: XOR<CasinoGameUpdateWithoutGameRoundsInput, CasinoGameUncheckedUpdateWithoutGameRoundsInput>
+    create: XOR<CasinoGameCreateWithoutGameRoundsInput, CasinoGameUncheckedCreateWithoutGameRoundsInput>
+    where?: CasinoGameWhereInput
   }
 
-  export type GameUpdateToOneWithWhereWithoutGameRoundsInput = {
-    where?: GameWhereInput
-    data: XOR<GameUpdateWithoutGameRoundsInput, GameUncheckedUpdateWithoutGameRoundsInput>
+  export type CasinoGameUpdateToOneWithWhereWithoutGameRoundsInput = {
+    where?: CasinoGameWhereInput
+    data: XOR<CasinoGameUpdateWithoutGameRoundsInput, CasinoGameUncheckedUpdateWithoutGameRoundsInput>
   }
 
-  export type GameUpdateWithoutGameRoundsInput = {
+  export type CasinoGameUpdateWithoutGameRoundsInput = {
     aggregatorType?: EnumGameAggregatorTypeFieldUpdateOperationsInput | $Enums.GameAggregatorType
     provider?: EnumGameProviderFieldUpdateOperationsInput | $Enums.GameProvider
     category?: EnumGameCategoryFieldUpdateOperationsInput | $Enums.GameCategory
@@ -85799,12 +86179,12 @@ export namespace Prisma {
     contributionRate?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
-    bonusDetails?: BonusDetailUpdateManyWithoutGameNestedInput
+    bonusDetails?: BonusDetailUpdateManyWithoutCasinoGameNestedInput
     gameSessions?: GameSessionUpdateManyWithoutGameNestedInput
-    translations?: GameTranslationUpdateManyWithoutGameNestedInput
+    translations?: GameTranslationUpdateManyWithoutCasinoGameNestedInput
   }
 
-  export type GameUncheckedUpdateWithoutGameRoundsInput = {
+  export type CasinoGameUncheckedUpdateWithoutGameRoundsInput = {
     id?: IntFieldUpdateOperationsInput | number
     aggregatorType?: EnumGameAggregatorTypeFieldUpdateOperationsInput | $Enums.GameAggregatorType
     provider?: EnumGameProviderFieldUpdateOperationsInput | $Enums.GameProvider
@@ -85819,9 +86199,9 @@ export namespace Prisma {
     contributionRate?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
-    bonusDetails?: BonusDetailUncheckedUpdateManyWithoutGameNestedInput
+    bonusDetails?: BonusDetailUncheckedUpdateManyWithoutCasinoGameNestedInput
     gameSessions?: GameSessionUncheckedUpdateManyWithoutGameNestedInput
-    translations?: GameTranslationUncheckedUpdateManyWithoutGameNestedInput
+    translations?: GameTranslationUncheckedUpdateManyWithoutCasinoGameNestedInput
   }
 
   export type GameSessionUpsertWithoutGameRoundsInput = {
@@ -85846,7 +86226,7 @@ export namespace Prisma {
     gameCurrency?: EnumExchangeCurrencyCodeFieldUpdateOperationsInput | $Enums.ExchangeCurrencyCode
     exchangeRate?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
     exchangeRateSnapshotAt?: DateTimeFieldUpdateOperationsInput | Date | string
-    game?: GameUpdateOneWithoutGameSessionsNestedInput
+    game?: CasinoGameUpdateOneWithoutGameSessionsNestedInput
     user?: UserUpdateOneRequiredWithoutGameSessionNestedInput
   }
 
@@ -85975,7 +86355,7 @@ export namespace Prisma {
     startedAt?: Date | string | null
     completedAt?: Date | string | null
     AffiliateCommission?: AffiliateCommissionCreateNestedManyWithoutGameRoundInput
-    game?: GameCreateNestedOneWithoutGameRoundsInput
+    casinoGame?: CasinoGameCreateNestedOneWithoutGameRoundsInput
     GameSession: GameSessionCreateNestedOneWithoutGameRoundsInput
     transaction: TransactionCreateNestedOneWithoutGameRoundInput
     wins?: GameWinCreateNestedManyWithoutGameRoundInput
@@ -86055,7 +86435,7 @@ export namespace Prisma {
     startedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     completedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     AffiliateCommission?: AffiliateCommissionUpdateManyWithoutGameRoundNestedInput
-    game?: GameUpdateOneWithoutGameRoundsNestedInput
+    casinoGame?: CasinoGameUpdateOneWithoutGameRoundsNestedInput
     GameSession?: GameSessionUpdateOneRequiredWithoutGameRoundsNestedInput
     transaction?: TransactionUpdateOneRequiredWithoutGameRoundNestedInput
     wins?: GameWinUpdateManyWithoutGameRoundNestedInput
@@ -86120,7 +86500,7 @@ export namespace Prisma {
     completedAt?: Date | string | null
     AffiliateCommission?: AffiliateCommissionCreateNestedManyWithoutGameRoundInput
     bets?: GameBetCreateNestedManyWithoutGameRoundInput
-    game?: GameCreateNestedOneWithoutGameRoundsInput
+    casinoGame?: CasinoGameCreateNestedOneWithoutGameRoundsInput
     GameSession: GameSessionCreateNestedOneWithoutGameRoundsInput
     transaction: TransactionCreateNestedOneWithoutGameRoundInput
   }
@@ -86200,7 +86580,7 @@ export namespace Prisma {
     completedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     AffiliateCommission?: AffiliateCommissionUpdateManyWithoutGameRoundNestedInput
     bets?: GameBetUpdateManyWithoutGameRoundNestedInput
-    game?: GameUpdateOneWithoutGameRoundsNestedInput
+    casinoGame?: CasinoGameUpdateOneWithoutGameRoundsNestedInput
     GameSession?: GameSessionUpdateOneRequiredWithoutGameRoundsNestedInput
     transaction?: TransactionUpdateOneRequiredWithoutGameRoundNestedInput
   }
@@ -86333,7 +86713,7 @@ export namespace Prisma {
     systemAdjustmentDetail?: SystemAdjustmentDetailUncheckedUpdateOneWithoutTransactionNestedInput
   }
 
-  export type GameCreateWithoutBonusDetailsInput = {
+  export type CasinoGameCreateWithoutBonusDetailsInput = {
     aggregatorType: $Enums.GameAggregatorType
     provider: $Enums.GameProvider
     category: $Enums.GameCategory
@@ -86347,12 +86727,12 @@ export namespace Prisma {
     contributionRate?: Decimal | DecimalJsLike | number | string
     createdAt?: Date | string
     updatedAt?: Date | string
-    gameRounds?: GameRoundCreateNestedManyWithoutGameInput
+    gameRounds?: GameRoundCreateNestedManyWithoutCasinoGameInput
     gameSessions?: GameSessionCreateNestedManyWithoutGameInput
-    translations?: GameTranslationCreateNestedManyWithoutGameInput
+    translations?: GameTranslationCreateNestedManyWithoutCasinoGameInput
   }
 
-  export type GameUncheckedCreateWithoutBonusDetailsInput = {
+  export type CasinoGameUncheckedCreateWithoutBonusDetailsInput = {
     id?: number
     aggregatorType: $Enums.GameAggregatorType
     provider: $Enums.GameProvider
@@ -86367,14 +86747,14 @@ export namespace Prisma {
     contributionRate?: Decimal | DecimalJsLike | number | string
     createdAt?: Date | string
     updatedAt?: Date | string
-    gameRounds?: GameRoundUncheckedCreateNestedManyWithoutGameInput
+    gameRounds?: GameRoundUncheckedCreateNestedManyWithoutCasinoGameInput
     gameSessions?: GameSessionUncheckedCreateNestedManyWithoutGameInput
-    translations?: GameTranslationUncheckedCreateNestedManyWithoutGameInput
+    translations?: GameTranslationUncheckedCreateNestedManyWithoutCasinoGameInput
   }
 
-  export type GameCreateOrConnectWithoutBonusDetailsInput = {
-    where: GameWhereUniqueInput
-    create: XOR<GameCreateWithoutBonusDetailsInput, GameUncheckedCreateWithoutBonusDetailsInput>
+  export type CasinoGameCreateOrConnectWithoutBonusDetailsInput = {
+    where: CasinoGameWhereUniqueInput
+    create: XOR<CasinoGameCreateWithoutBonusDetailsInput, CasinoGameUncheckedCreateWithoutBonusDetailsInput>
   }
 
   export type TransactionCreateWithoutBonusDetailInput = {
@@ -86422,18 +86802,18 @@ export namespace Prisma {
     create: XOR<TransactionCreateWithoutBonusDetailInput, TransactionUncheckedCreateWithoutBonusDetailInput>
   }
 
-  export type GameUpsertWithoutBonusDetailsInput = {
-    update: XOR<GameUpdateWithoutBonusDetailsInput, GameUncheckedUpdateWithoutBonusDetailsInput>
-    create: XOR<GameCreateWithoutBonusDetailsInput, GameUncheckedCreateWithoutBonusDetailsInput>
-    where?: GameWhereInput
+  export type CasinoGameUpsertWithoutBonusDetailsInput = {
+    update: XOR<CasinoGameUpdateWithoutBonusDetailsInput, CasinoGameUncheckedUpdateWithoutBonusDetailsInput>
+    create: XOR<CasinoGameCreateWithoutBonusDetailsInput, CasinoGameUncheckedCreateWithoutBonusDetailsInput>
+    where?: CasinoGameWhereInput
   }
 
-  export type GameUpdateToOneWithWhereWithoutBonusDetailsInput = {
-    where?: GameWhereInput
-    data: XOR<GameUpdateWithoutBonusDetailsInput, GameUncheckedUpdateWithoutBonusDetailsInput>
+  export type CasinoGameUpdateToOneWithWhereWithoutBonusDetailsInput = {
+    where?: CasinoGameWhereInput
+    data: XOR<CasinoGameUpdateWithoutBonusDetailsInput, CasinoGameUncheckedUpdateWithoutBonusDetailsInput>
   }
 
-  export type GameUpdateWithoutBonusDetailsInput = {
+  export type CasinoGameUpdateWithoutBonusDetailsInput = {
     aggregatorType?: EnumGameAggregatorTypeFieldUpdateOperationsInput | $Enums.GameAggregatorType
     provider?: EnumGameProviderFieldUpdateOperationsInput | $Enums.GameProvider
     category?: EnumGameCategoryFieldUpdateOperationsInput | $Enums.GameCategory
@@ -86447,12 +86827,12 @@ export namespace Prisma {
     contributionRate?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
-    gameRounds?: GameRoundUpdateManyWithoutGameNestedInput
+    gameRounds?: GameRoundUpdateManyWithoutCasinoGameNestedInput
     gameSessions?: GameSessionUpdateManyWithoutGameNestedInput
-    translations?: GameTranslationUpdateManyWithoutGameNestedInput
+    translations?: GameTranslationUpdateManyWithoutCasinoGameNestedInput
   }
 
-  export type GameUncheckedUpdateWithoutBonusDetailsInput = {
+  export type CasinoGameUncheckedUpdateWithoutBonusDetailsInput = {
     id?: IntFieldUpdateOperationsInput | number
     aggregatorType?: EnumGameAggregatorTypeFieldUpdateOperationsInput | $Enums.GameAggregatorType
     provider?: EnumGameProviderFieldUpdateOperationsInput | $Enums.GameProvider
@@ -86467,9 +86847,9 @@ export namespace Prisma {
     contributionRate?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
-    gameRounds?: GameRoundUncheckedUpdateManyWithoutGameNestedInput
+    gameRounds?: GameRoundUncheckedUpdateManyWithoutCasinoGameNestedInput
     gameSessions?: GameSessionUncheckedUpdateManyWithoutGameNestedInput
-    translations?: GameTranslationUncheckedUpdateManyWithoutGameNestedInput
+    translations?: GameTranslationUncheckedUpdateManyWithoutCasinoGameNestedInput
   }
 
   export type TransactionUpsertWithoutBonusDetailInput = {
@@ -88025,386 +88405,6 @@ export namespace Prisma {
     adminAdjustmentDetails?: AdminAdjustmentDetailUncheckedUpdateManyWithoutAdminUserNestedInput
   }
 
-  export type GameRoundCreateWithoutGameSessionInput = {
-    id?: bigint | number
-    userId: bigint | number
-    aggregatorType: $Enums.GameAggregatorType
-    provider: $Enums.GameProvider
-    aggregatorTxId: string
-    aggregatorGameId: number
-    totalBetAmountInGameCurrency?: Decimal | DecimalJsLike | number | string | null
-    totalWinAmountInGameCurrency?: Decimal | DecimalJsLike | number | string | null
-    netAmountInGameCurrency?: Decimal | DecimalJsLike | number | string | null
-    totalBetAmountInWalletCurrency?: Decimal | DecimalJsLike | number | string | null
-    totalWinAmountInWalletCurrency?: Decimal | DecimalJsLike | number | string | null
-    netAmountInWalletCurrency?: Decimal | DecimalJsLike | number | string | null
-    sessionId?: string | null
-    tableId?: string | null
-    roundId?: string | null
-    replayType?: $Enums.GameReplayType | null
-    replayData?: string | null
-    totalPushAmount?: Decimal | DecimalJsLike | number | string | null
-    tieBetAmount?: Decimal | DecimalJsLike | number | string | null
-    contributionAmount?: Decimal | DecimalJsLike | number | string | null
-    compEarned?: Decimal | DecimalJsLike | number | string | null
-    jackpotContributionAmount?: Decimal | DecimalJsLike | number | string
-    startedAt?: Date | string | null
-    completedAt?: Date | string | null
-    AffiliateCommission?: AffiliateCommissionCreateNestedManyWithoutGameRoundInput
-    bets?: GameBetCreateNestedManyWithoutGameRoundInput
-    game?: GameCreateNestedOneWithoutGameRoundsInput
-    transaction: TransactionCreateNestedOneWithoutGameRoundInput
-    wins?: GameWinCreateNestedManyWithoutGameRoundInput
-  }
-
-  export type GameRoundUncheckedCreateWithoutGameSessionInput = {
-    id?: bigint | number
-    userId: bigint | number
-    aggregatorType: $Enums.GameAggregatorType
-    provider: $Enums.GameProvider
-    aggregatorTxId: string
-    aggregatorGameId: number
-    totalBetAmountInGameCurrency?: Decimal | DecimalJsLike | number | string | null
-    totalWinAmountInGameCurrency?: Decimal | DecimalJsLike | number | string | null
-    netAmountInGameCurrency?: Decimal | DecimalJsLike | number | string | null
-    totalBetAmountInWalletCurrency?: Decimal | DecimalJsLike | number | string | null
-    totalWinAmountInWalletCurrency?: Decimal | DecimalJsLike | number | string | null
-    netAmountInWalletCurrency?: Decimal | DecimalJsLike | number | string | null
-    transactionId: bigint | number
-    sessionId?: string | null
-    tableId?: string | null
-    roundId?: string | null
-    replayType?: $Enums.GameReplayType | null
-    replayData?: string | null
-    totalPushAmount?: Decimal | DecimalJsLike | number | string | null
-    tieBetAmount?: Decimal | DecimalJsLike | number | string | null
-    contributionAmount?: Decimal | DecimalJsLike | number | string | null
-    compEarned?: Decimal | DecimalJsLike | number | string | null
-    jackpotContributionAmount?: Decimal | DecimalJsLike | number | string
-    startedAt?: Date | string | null
-    completedAt?: Date | string | null
-    gameId?: number | null
-    AffiliateCommission?: AffiliateCommissionUncheckedCreateNestedManyWithoutGameRoundInput
-    bets?: GameBetUncheckedCreateNestedManyWithoutGameRoundInput
-    wins?: GameWinUncheckedCreateNestedManyWithoutGameRoundInput
-  }
-
-  export type GameRoundCreateOrConnectWithoutGameSessionInput = {
-    where: GameRoundWhereUniqueInput
-    create: XOR<GameRoundCreateWithoutGameSessionInput, GameRoundUncheckedCreateWithoutGameSessionInput>
-  }
-
-  export type GameRoundCreateManyGameSessionInputEnvelope = {
-    data: GameRoundCreateManyGameSessionInput | GameRoundCreateManyGameSessionInput[]
-    skipDuplicates?: boolean
-  }
-
-  export type GameCreateWithoutGameSessionsInput = {
-    aggregatorType: $Enums.GameAggregatorType
-    provider: $Enums.GameProvider
-    category: $Enums.GameCategory
-    gameId: number
-    gameType?: string | null
-    tableId?: string | null
-    iconLink?: string | null
-    isEnabled: boolean
-    isVisibleToUser?: boolean
-    houseEdge?: Decimal | DecimalJsLike | number | string
-    contributionRate?: Decimal | DecimalJsLike | number | string
-    createdAt?: Date | string
-    updatedAt?: Date | string
-    bonusDetails?: BonusDetailCreateNestedManyWithoutGameInput
-    gameRounds?: GameRoundCreateNestedManyWithoutGameInput
-    translations?: GameTranslationCreateNestedManyWithoutGameInput
-  }
-
-  export type GameUncheckedCreateWithoutGameSessionsInput = {
-    id?: number
-    aggregatorType: $Enums.GameAggregatorType
-    provider: $Enums.GameProvider
-    category: $Enums.GameCategory
-    gameId: number
-    gameType?: string | null
-    tableId?: string | null
-    iconLink?: string | null
-    isEnabled: boolean
-    isVisibleToUser?: boolean
-    houseEdge?: Decimal | DecimalJsLike | number | string
-    contributionRate?: Decimal | DecimalJsLike | number | string
-    createdAt?: Date | string
-    updatedAt?: Date | string
-    bonusDetails?: BonusDetailUncheckedCreateNestedManyWithoutGameInput
-    gameRounds?: GameRoundUncheckedCreateNestedManyWithoutGameInput
-    translations?: GameTranslationUncheckedCreateNestedManyWithoutGameInput
-  }
-
-  export type GameCreateOrConnectWithoutGameSessionsInput = {
-    where: GameWhereUniqueInput
-    create: XOR<GameCreateWithoutGameSessionsInput, GameUncheckedCreateWithoutGameSessionsInput>
-  }
-
-  export type UserCreateWithoutGameSessionInput = {
-    id?: bigint | number
-    uid?: string
-    whitecliffId?: bigint | number | null
-    whitecliffSystemId?: bigint | number | null
-    whitecliffUsername?: string | null
-    dcsId?: string | null
-    email?: string | null
-    passwordHash?: string | null
-    socialType?: $Enums.SocialType | null
-    socialId?: string | null
-    role?: $Enums.UserRoleType
-    status?: $Enums.UserStatus
-    kycLevel?: $Enums.KycLevel
-    country?: string | null
-    language?: $Enums.Language | null
-    timezone?: string | null
-    timezoneOffset?: number | null
-    createdAt?: Date | string
-    updatedAt?: Date | string
-    affiliateCodes?: AffiliateCodeCreateNestedManyWithoutUserInput
-    affiliateCommissions?: AffiliateCommissionCreateNestedManyWithoutAffiliateInput
-    subUserCommissions?: AffiliateCommissionCreateNestedManyWithoutSubUserInput
-    affiliateTier?: AffiliateTierCreateNestedOneWithoutAffiliateInput
-    affiliateWallets?: AffiliateWalletCreateNestedManyWithoutAffiliateInput
-    CompTransaction?: CompTransactionCreateNestedManyWithoutUserInput
-    DailyCompEarning?: DailyCompEarningCreateNestedManyWithoutUserInput
-    EmailLog?: EmailLogCreateNestedManyWithoutUserInput
-    affiliateReferrals?: ReferralCreateNestedManyWithoutAffiliateInput
-    referredUsers?: ReferralCreateNestedManyWithoutSubUserInput
-    Rolling?: RollingCreateNestedManyWithoutUserInput
-    transactions?: TransactionCreateNestedManyWithoutUserInput
-    depositDetails?: DepositDetailCreateNestedManyWithoutUserInput
-    balances?: UserBalanceCreateNestedManyWithoutUserInput
-    UserBalanceStats?: UserBalanceStatsCreateNestedManyWithoutUserInput
-    UserPromotion?: UserPromotionCreateNestedManyWithoutUserInput
-    UserSession?: UserSessionCreateNestedManyWithoutUserInput
-    RevokedSessions?: UserSessionCreateNestedManyWithoutRevokedByUserInput
-    UserToken?: UserTokenCreateNestedManyWithoutUserInput
-    loginAttempts?: LoginAttemptCreateNestedManyWithoutUserInput
-    userTier?: UserTierCreateNestedOneWithoutUserInput
-    tierHistory?: TierHistoryCreateNestedManyWithoutUserInput
-    adminAdjustmentDetails?: AdminAdjustmentDetailCreateNestedManyWithoutAdminUserInput
-  }
-
-  export type UserUncheckedCreateWithoutGameSessionInput = {
-    id?: bigint | number
-    uid?: string
-    whitecliffId?: bigint | number | null
-    whitecliffSystemId?: bigint | number | null
-    whitecliffUsername?: string | null
-    dcsId?: string | null
-    email?: string | null
-    passwordHash?: string | null
-    socialType?: $Enums.SocialType | null
-    socialId?: string | null
-    role?: $Enums.UserRoleType
-    status?: $Enums.UserStatus
-    kycLevel?: $Enums.KycLevel
-    country?: string | null
-    language?: $Enums.Language | null
-    timezone?: string | null
-    timezoneOffset?: number | null
-    createdAt?: Date | string
-    updatedAt?: Date | string
-    affiliateCodes?: AffiliateCodeUncheckedCreateNestedManyWithoutUserInput
-    affiliateCommissions?: AffiliateCommissionUncheckedCreateNestedManyWithoutAffiliateInput
-    subUserCommissions?: AffiliateCommissionUncheckedCreateNestedManyWithoutSubUserInput
-    affiliateTier?: AffiliateTierUncheckedCreateNestedOneWithoutAffiliateInput
-    affiliateWallets?: AffiliateWalletUncheckedCreateNestedManyWithoutAffiliateInput
-    CompTransaction?: CompTransactionUncheckedCreateNestedManyWithoutUserInput
-    DailyCompEarning?: DailyCompEarningUncheckedCreateNestedManyWithoutUserInput
-    EmailLog?: EmailLogUncheckedCreateNestedManyWithoutUserInput
-    affiliateReferrals?: ReferralUncheckedCreateNestedManyWithoutAffiliateInput
-    referredUsers?: ReferralUncheckedCreateNestedManyWithoutSubUserInput
-    Rolling?: RollingUncheckedCreateNestedManyWithoutUserInput
-    transactions?: TransactionUncheckedCreateNestedManyWithoutUserInput
-    depositDetails?: DepositDetailUncheckedCreateNestedManyWithoutUserInput
-    balances?: UserBalanceUncheckedCreateNestedManyWithoutUserInput
-    UserBalanceStats?: UserBalanceStatsUncheckedCreateNestedManyWithoutUserInput
-    UserPromotion?: UserPromotionUncheckedCreateNestedManyWithoutUserInput
-    UserSession?: UserSessionUncheckedCreateNestedManyWithoutUserInput
-    RevokedSessions?: UserSessionUncheckedCreateNestedManyWithoutRevokedByUserInput
-    UserToken?: UserTokenUncheckedCreateNestedManyWithoutUserInput
-    loginAttempts?: LoginAttemptUncheckedCreateNestedManyWithoutUserInput
-    userTier?: UserTierUncheckedCreateNestedOneWithoutUserInput
-    tierHistory?: TierHistoryUncheckedCreateNestedManyWithoutUserInput
-    adminAdjustmentDetails?: AdminAdjustmentDetailUncheckedCreateNestedManyWithoutAdminUserInput
-  }
-
-  export type UserCreateOrConnectWithoutGameSessionInput = {
-    where: UserWhereUniqueInput
-    create: XOR<UserCreateWithoutGameSessionInput, UserUncheckedCreateWithoutGameSessionInput>
-  }
-
-  export type GameRoundUpsertWithWhereUniqueWithoutGameSessionInput = {
-    where: GameRoundWhereUniqueInput
-    update: XOR<GameRoundUpdateWithoutGameSessionInput, GameRoundUncheckedUpdateWithoutGameSessionInput>
-    create: XOR<GameRoundCreateWithoutGameSessionInput, GameRoundUncheckedCreateWithoutGameSessionInput>
-  }
-
-  export type GameRoundUpdateWithWhereUniqueWithoutGameSessionInput = {
-    where: GameRoundWhereUniqueInput
-    data: XOR<GameRoundUpdateWithoutGameSessionInput, GameRoundUncheckedUpdateWithoutGameSessionInput>
-  }
-
-  export type GameRoundUpdateManyWithWhereWithoutGameSessionInput = {
-    where: GameRoundScalarWhereInput
-    data: XOR<GameRoundUpdateManyMutationInput, GameRoundUncheckedUpdateManyWithoutGameSessionInput>
-  }
-
-  export type GameUpsertWithoutGameSessionsInput = {
-    update: XOR<GameUpdateWithoutGameSessionsInput, GameUncheckedUpdateWithoutGameSessionsInput>
-    create: XOR<GameCreateWithoutGameSessionsInput, GameUncheckedCreateWithoutGameSessionsInput>
-    where?: GameWhereInput
-  }
-
-  export type GameUpdateToOneWithWhereWithoutGameSessionsInput = {
-    where?: GameWhereInput
-    data: XOR<GameUpdateWithoutGameSessionsInput, GameUncheckedUpdateWithoutGameSessionsInput>
-  }
-
-  export type GameUpdateWithoutGameSessionsInput = {
-    aggregatorType?: EnumGameAggregatorTypeFieldUpdateOperationsInput | $Enums.GameAggregatorType
-    provider?: EnumGameProviderFieldUpdateOperationsInput | $Enums.GameProvider
-    category?: EnumGameCategoryFieldUpdateOperationsInput | $Enums.GameCategory
-    gameId?: IntFieldUpdateOperationsInput | number
-    gameType?: NullableStringFieldUpdateOperationsInput | string | null
-    tableId?: NullableStringFieldUpdateOperationsInput | string | null
-    iconLink?: NullableStringFieldUpdateOperationsInput | string | null
-    isEnabled?: BoolFieldUpdateOperationsInput | boolean
-    isVisibleToUser?: BoolFieldUpdateOperationsInput | boolean
-    houseEdge?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
-    contributionRate?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
-    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
-    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
-    bonusDetails?: BonusDetailUpdateManyWithoutGameNestedInput
-    gameRounds?: GameRoundUpdateManyWithoutGameNestedInput
-    translations?: GameTranslationUpdateManyWithoutGameNestedInput
-  }
-
-  export type GameUncheckedUpdateWithoutGameSessionsInput = {
-    id?: IntFieldUpdateOperationsInput | number
-    aggregatorType?: EnumGameAggregatorTypeFieldUpdateOperationsInput | $Enums.GameAggregatorType
-    provider?: EnumGameProviderFieldUpdateOperationsInput | $Enums.GameProvider
-    category?: EnumGameCategoryFieldUpdateOperationsInput | $Enums.GameCategory
-    gameId?: IntFieldUpdateOperationsInput | number
-    gameType?: NullableStringFieldUpdateOperationsInput | string | null
-    tableId?: NullableStringFieldUpdateOperationsInput | string | null
-    iconLink?: NullableStringFieldUpdateOperationsInput | string | null
-    isEnabled?: BoolFieldUpdateOperationsInput | boolean
-    isVisibleToUser?: BoolFieldUpdateOperationsInput | boolean
-    houseEdge?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
-    contributionRate?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
-    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
-    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
-    bonusDetails?: BonusDetailUncheckedUpdateManyWithoutGameNestedInput
-    gameRounds?: GameRoundUncheckedUpdateManyWithoutGameNestedInput
-    translations?: GameTranslationUncheckedUpdateManyWithoutGameNestedInput
-  }
-
-  export type UserUpsertWithoutGameSessionInput = {
-    update: XOR<UserUpdateWithoutGameSessionInput, UserUncheckedUpdateWithoutGameSessionInput>
-    create: XOR<UserCreateWithoutGameSessionInput, UserUncheckedCreateWithoutGameSessionInput>
-    where?: UserWhereInput
-  }
-
-  export type UserUpdateToOneWithWhereWithoutGameSessionInput = {
-    where?: UserWhereInput
-    data: XOR<UserUpdateWithoutGameSessionInput, UserUncheckedUpdateWithoutGameSessionInput>
-  }
-
-  export type UserUpdateWithoutGameSessionInput = {
-    id?: BigIntFieldUpdateOperationsInput | bigint | number
-    uid?: StringFieldUpdateOperationsInput | string
-    whitecliffId?: NullableBigIntFieldUpdateOperationsInput | bigint | number | null
-    whitecliffSystemId?: NullableBigIntFieldUpdateOperationsInput | bigint | number | null
-    whitecliffUsername?: NullableStringFieldUpdateOperationsInput | string | null
-    dcsId?: NullableStringFieldUpdateOperationsInput | string | null
-    email?: NullableStringFieldUpdateOperationsInput | string | null
-    passwordHash?: NullableStringFieldUpdateOperationsInput | string | null
-    socialType?: NullableEnumSocialTypeFieldUpdateOperationsInput | $Enums.SocialType | null
-    socialId?: NullableStringFieldUpdateOperationsInput | string | null
-    role?: EnumUserRoleTypeFieldUpdateOperationsInput | $Enums.UserRoleType
-    status?: EnumUserStatusFieldUpdateOperationsInput | $Enums.UserStatus
-    kycLevel?: EnumKycLevelFieldUpdateOperationsInput | $Enums.KycLevel
-    country?: NullableStringFieldUpdateOperationsInput | string | null
-    language?: NullableEnumLanguageFieldUpdateOperationsInput | $Enums.Language | null
-    timezone?: NullableStringFieldUpdateOperationsInput | string | null
-    timezoneOffset?: NullableIntFieldUpdateOperationsInput | number | null
-    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
-    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
-    affiliateCodes?: AffiliateCodeUpdateManyWithoutUserNestedInput
-    affiliateCommissions?: AffiliateCommissionUpdateManyWithoutAffiliateNestedInput
-    subUserCommissions?: AffiliateCommissionUpdateManyWithoutSubUserNestedInput
-    affiliateTier?: AffiliateTierUpdateOneWithoutAffiliateNestedInput
-    affiliateWallets?: AffiliateWalletUpdateManyWithoutAffiliateNestedInput
-    CompTransaction?: CompTransactionUpdateManyWithoutUserNestedInput
-    DailyCompEarning?: DailyCompEarningUpdateManyWithoutUserNestedInput
-    EmailLog?: EmailLogUpdateManyWithoutUserNestedInput
-    affiliateReferrals?: ReferralUpdateManyWithoutAffiliateNestedInput
-    referredUsers?: ReferralUpdateManyWithoutSubUserNestedInput
-    Rolling?: RollingUpdateManyWithoutUserNestedInput
-    transactions?: TransactionUpdateManyWithoutUserNestedInput
-    depositDetails?: DepositDetailUpdateManyWithoutUserNestedInput
-    balances?: UserBalanceUpdateManyWithoutUserNestedInput
-    UserBalanceStats?: UserBalanceStatsUpdateManyWithoutUserNestedInput
-    UserPromotion?: UserPromotionUpdateManyWithoutUserNestedInput
-    UserSession?: UserSessionUpdateManyWithoutUserNestedInput
-    RevokedSessions?: UserSessionUpdateManyWithoutRevokedByUserNestedInput
-    UserToken?: UserTokenUpdateManyWithoutUserNestedInput
-    loginAttempts?: LoginAttemptUpdateManyWithoutUserNestedInput
-    userTier?: UserTierUpdateOneWithoutUserNestedInput
-    tierHistory?: TierHistoryUpdateManyWithoutUserNestedInput
-    adminAdjustmentDetails?: AdminAdjustmentDetailUpdateManyWithoutAdminUserNestedInput
-  }
-
-  export type UserUncheckedUpdateWithoutGameSessionInput = {
-    id?: BigIntFieldUpdateOperationsInput | bigint | number
-    uid?: StringFieldUpdateOperationsInput | string
-    whitecliffId?: NullableBigIntFieldUpdateOperationsInput | bigint | number | null
-    whitecliffSystemId?: NullableBigIntFieldUpdateOperationsInput | bigint | number | null
-    whitecliffUsername?: NullableStringFieldUpdateOperationsInput | string | null
-    dcsId?: NullableStringFieldUpdateOperationsInput | string | null
-    email?: NullableStringFieldUpdateOperationsInput | string | null
-    passwordHash?: NullableStringFieldUpdateOperationsInput | string | null
-    socialType?: NullableEnumSocialTypeFieldUpdateOperationsInput | $Enums.SocialType | null
-    socialId?: NullableStringFieldUpdateOperationsInput | string | null
-    role?: EnumUserRoleTypeFieldUpdateOperationsInput | $Enums.UserRoleType
-    status?: EnumUserStatusFieldUpdateOperationsInput | $Enums.UserStatus
-    kycLevel?: EnumKycLevelFieldUpdateOperationsInput | $Enums.KycLevel
-    country?: NullableStringFieldUpdateOperationsInput | string | null
-    language?: NullableEnumLanguageFieldUpdateOperationsInput | $Enums.Language | null
-    timezone?: NullableStringFieldUpdateOperationsInput | string | null
-    timezoneOffset?: NullableIntFieldUpdateOperationsInput | number | null
-    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
-    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
-    affiliateCodes?: AffiliateCodeUncheckedUpdateManyWithoutUserNestedInput
-    affiliateCommissions?: AffiliateCommissionUncheckedUpdateManyWithoutAffiliateNestedInput
-    subUserCommissions?: AffiliateCommissionUncheckedUpdateManyWithoutSubUserNestedInput
-    affiliateTier?: AffiliateTierUncheckedUpdateOneWithoutAffiliateNestedInput
-    affiliateWallets?: AffiliateWalletUncheckedUpdateManyWithoutAffiliateNestedInput
-    CompTransaction?: CompTransactionUncheckedUpdateManyWithoutUserNestedInput
-    DailyCompEarning?: DailyCompEarningUncheckedUpdateManyWithoutUserNestedInput
-    EmailLog?: EmailLogUncheckedUpdateManyWithoutUserNestedInput
-    affiliateReferrals?: ReferralUncheckedUpdateManyWithoutAffiliateNestedInput
-    referredUsers?: ReferralUncheckedUpdateManyWithoutSubUserNestedInput
-    Rolling?: RollingUncheckedUpdateManyWithoutUserNestedInput
-    transactions?: TransactionUncheckedUpdateManyWithoutUserNestedInput
-    depositDetails?: DepositDetailUncheckedUpdateManyWithoutUserNestedInput
-    balances?: UserBalanceUncheckedUpdateManyWithoutUserNestedInput
-    UserBalanceStats?: UserBalanceStatsUncheckedUpdateManyWithoutUserNestedInput
-    UserPromotion?: UserPromotionUncheckedUpdateManyWithoutUserNestedInput
-    UserSession?: UserSessionUncheckedUpdateManyWithoutUserNestedInput
-    RevokedSessions?: UserSessionUncheckedUpdateManyWithoutRevokedByUserNestedInput
-    UserToken?: UserTokenUncheckedUpdateManyWithoutUserNestedInput
-    loginAttempts?: LoginAttemptUncheckedUpdateManyWithoutUserNestedInput
-    userTier?: UserTierUncheckedUpdateOneWithoutUserNestedInput
-    tierHistory?: TierHistoryUncheckedUpdateManyWithoutUserNestedInput
-    adminAdjustmentDetails?: AdminAdjustmentDetailUncheckedUpdateManyWithoutAdminUserNestedInput
-  }
-
   export type UserCreateWithoutAffiliateWalletsInput = {
     id?: bigint | number
     uid?: string
@@ -88722,7 +88722,7 @@ export namespace Prisma {
     startedAt?: Date | string | null
     completedAt?: Date | string | null
     bets?: GameBetCreateNestedManyWithoutGameRoundInput
-    game?: GameCreateNestedOneWithoutGameRoundsInput
+    casinoGame?: CasinoGameCreateNestedOneWithoutGameRoundsInput
     GameSession: GameSessionCreateNestedOneWithoutGameRoundsInput
     transaction: TransactionCreateNestedOneWithoutGameRoundInput
     wins?: GameWinCreateNestedManyWithoutGameRoundInput
@@ -88998,7 +88998,7 @@ export namespace Prisma {
     startedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     completedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     bets?: GameBetUpdateManyWithoutGameRoundNestedInput
-    game?: GameUpdateOneWithoutGameRoundsNestedInput
+    casinoGame?: CasinoGameUpdateOneWithoutGameRoundsNestedInput
     GameSession?: GameSessionUpdateOneRequiredWithoutGameRoundsNestedInput
     transaction?: TransactionUpdateOneRequiredWithoutGameRoundNestedInput
     wins?: GameWinUpdateManyWithoutGameRoundNestedInput
@@ -92698,6 +92698,423 @@ export namespace Prisma {
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
   }
 
+  export type BonusDetailCreateManyCasinoGameInput = {
+    id?: bigint | number
+    createdAt?: Date | string
+    transactionTime: Date | string
+    aggregatorType: $Enums.GameAggregatorType
+    provider: $Enums.GameProvider
+    bonusType: $Enums.BonusType
+    amount: Decimal | DecimalJsLike | number | string
+    aggregatorPromotionId?: string | null
+    aggregatorRoundId?: string | null
+    aggregatorWagerId?: string | null
+    aggregatorTransactionId?: string | null
+    aggregatorFreespinId?: string | null
+    aggregatorSessionId?: string | null
+    isEndRound?: boolean | null
+    description?: string | null
+    transactionId: bigint | number
+  }
+
+  export type GameRoundCreateManyCasinoGameInput = {
+    id?: bigint | number
+    userId: bigint | number
+    aggregatorType: $Enums.GameAggregatorType
+    provider: $Enums.GameProvider
+    aggregatorTxId: string
+    aggregatorGameId: number
+    totalBetAmountInGameCurrency?: Decimal | DecimalJsLike | number | string | null
+    totalWinAmountInGameCurrency?: Decimal | DecimalJsLike | number | string | null
+    netAmountInGameCurrency?: Decimal | DecimalJsLike | number | string | null
+    totalBetAmountInWalletCurrency?: Decimal | DecimalJsLike | number | string | null
+    totalWinAmountInWalletCurrency?: Decimal | DecimalJsLike | number | string | null
+    netAmountInWalletCurrency?: Decimal | DecimalJsLike | number | string | null
+    transactionId: bigint | number
+    sessionId?: string | null
+    tableId?: string | null
+    roundId?: string | null
+    replayType?: $Enums.GameReplayType | null
+    replayData?: string | null
+    totalPushAmount?: Decimal | DecimalJsLike | number | string | null
+    tieBetAmount?: Decimal | DecimalJsLike | number | string | null
+    contributionAmount?: Decimal | DecimalJsLike | number | string | null
+    compEarned?: Decimal | DecimalJsLike | number | string | null
+    jackpotContributionAmount?: Decimal | DecimalJsLike | number | string
+    startedAt?: Date | string | null
+    completedAt?: Date | string | null
+    gameSessionId: bigint | number
+  }
+
+  export type GameSessionCreateManyGameInput = {
+    id?: bigint | number
+    userId: bigint | number
+    createdAt?: Date | string
+    updatedAt?: Date | string
+    lastAccessedAt?: Date | string
+    aggregatorType: $Enums.GameAggregatorType
+    token: string
+    walletCurrency: $Enums.ExchangeCurrencyCode
+    gameCurrency: $Enums.ExchangeCurrencyCode
+    exchangeRate: Decimal | DecimalJsLike | number | string
+    exchangeRateSnapshotAt?: Date | string
+  }
+
+  export type GameTranslationCreateManyCasinoGameInput = {
+    id?: number
+    language: $Enums.Language
+    providerName: string
+    categoryName: string
+    gameName: string
+    createdAt?: Date | string
+    updatedAt?: Date | string
+  }
+
+  export type BonusDetailUpdateWithoutCasinoGameInput = {
+    id?: BigIntFieldUpdateOperationsInput | bigint | number
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    transactionTime?: DateTimeFieldUpdateOperationsInput | Date | string
+    aggregatorType?: EnumGameAggregatorTypeFieldUpdateOperationsInput | $Enums.GameAggregatorType
+    provider?: EnumGameProviderFieldUpdateOperationsInput | $Enums.GameProvider
+    bonusType?: EnumBonusTypeFieldUpdateOperationsInput | $Enums.BonusType
+    amount?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
+    aggregatorPromotionId?: NullableStringFieldUpdateOperationsInput | string | null
+    aggregatorRoundId?: NullableStringFieldUpdateOperationsInput | string | null
+    aggregatorWagerId?: NullableStringFieldUpdateOperationsInput | string | null
+    aggregatorTransactionId?: NullableStringFieldUpdateOperationsInput | string | null
+    aggregatorFreespinId?: NullableStringFieldUpdateOperationsInput | string | null
+    aggregatorSessionId?: NullableStringFieldUpdateOperationsInput | string | null
+    isEndRound?: NullableBoolFieldUpdateOperationsInput | boolean | null
+    description?: NullableStringFieldUpdateOperationsInput | string | null
+    transaction?: TransactionUpdateOneRequiredWithoutBonusDetailNestedInput
+  }
+
+  export type BonusDetailUncheckedUpdateWithoutCasinoGameInput = {
+    id?: BigIntFieldUpdateOperationsInput | bigint | number
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    transactionTime?: DateTimeFieldUpdateOperationsInput | Date | string
+    aggregatorType?: EnumGameAggregatorTypeFieldUpdateOperationsInput | $Enums.GameAggregatorType
+    provider?: EnumGameProviderFieldUpdateOperationsInput | $Enums.GameProvider
+    bonusType?: EnumBonusTypeFieldUpdateOperationsInput | $Enums.BonusType
+    amount?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
+    aggregatorPromotionId?: NullableStringFieldUpdateOperationsInput | string | null
+    aggregatorRoundId?: NullableStringFieldUpdateOperationsInput | string | null
+    aggregatorWagerId?: NullableStringFieldUpdateOperationsInput | string | null
+    aggregatorTransactionId?: NullableStringFieldUpdateOperationsInput | string | null
+    aggregatorFreespinId?: NullableStringFieldUpdateOperationsInput | string | null
+    aggregatorSessionId?: NullableStringFieldUpdateOperationsInput | string | null
+    isEndRound?: NullableBoolFieldUpdateOperationsInput | boolean | null
+    description?: NullableStringFieldUpdateOperationsInput | string | null
+    transactionId?: BigIntFieldUpdateOperationsInput | bigint | number
+  }
+
+  export type BonusDetailUncheckedUpdateManyWithoutCasinoGameInput = {
+    id?: BigIntFieldUpdateOperationsInput | bigint | number
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    transactionTime?: DateTimeFieldUpdateOperationsInput | Date | string
+    aggregatorType?: EnumGameAggregatorTypeFieldUpdateOperationsInput | $Enums.GameAggregatorType
+    provider?: EnumGameProviderFieldUpdateOperationsInput | $Enums.GameProvider
+    bonusType?: EnumBonusTypeFieldUpdateOperationsInput | $Enums.BonusType
+    amount?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
+    aggregatorPromotionId?: NullableStringFieldUpdateOperationsInput | string | null
+    aggregatorRoundId?: NullableStringFieldUpdateOperationsInput | string | null
+    aggregatorWagerId?: NullableStringFieldUpdateOperationsInput | string | null
+    aggregatorTransactionId?: NullableStringFieldUpdateOperationsInput | string | null
+    aggregatorFreespinId?: NullableStringFieldUpdateOperationsInput | string | null
+    aggregatorSessionId?: NullableStringFieldUpdateOperationsInput | string | null
+    isEndRound?: NullableBoolFieldUpdateOperationsInput | boolean | null
+    description?: NullableStringFieldUpdateOperationsInput | string | null
+    transactionId?: BigIntFieldUpdateOperationsInput | bigint | number
+  }
+
+  export type GameRoundUpdateWithoutCasinoGameInput = {
+    id?: BigIntFieldUpdateOperationsInput | bigint | number
+    userId?: BigIntFieldUpdateOperationsInput | bigint | number
+    aggregatorType?: EnumGameAggregatorTypeFieldUpdateOperationsInput | $Enums.GameAggregatorType
+    provider?: EnumGameProviderFieldUpdateOperationsInput | $Enums.GameProvider
+    aggregatorTxId?: StringFieldUpdateOperationsInput | string
+    aggregatorGameId?: IntFieldUpdateOperationsInput | number
+    totalBetAmountInGameCurrency?: NullableDecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string | null
+    totalWinAmountInGameCurrency?: NullableDecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string | null
+    netAmountInGameCurrency?: NullableDecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string | null
+    totalBetAmountInWalletCurrency?: NullableDecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string | null
+    totalWinAmountInWalletCurrency?: NullableDecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string | null
+    netAmountInWalletCurrency?: NullableDecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string | null
+    sessionId?: NullableStringFieldUpdateOperationsInput | string | null
+    tableId?: NullableStringFieldUpdateOperationsInput | string | null
+    roundId?: NullableStringFieldUpdateOperationsInput | string | null
+    replayType?: NullableEnumGameReplayTypeFieldUpdateOperationsInput | $Enums.GameReplayType | null
+    replayData?: NullableStringFieldUpdateOperationsInput | string | null
+    totalPushAmount?: NullableDecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string | null
+    tieBetAmount?: NullableDecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string | null
+    contributionAmount?: NullableDecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string | null
+    compEarned?: NullableDecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string | null
+    jackpotContributionAmount?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
+    startedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    completedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    AffiliateCommission?: AffiliateCommissionUpdateManyWithoutGameRoundNestedInput
+    bets?: GameBetUpdateManyWithoutGameRoundNestedInput
+    GameSession?: GameSessionUpdateOneRequiredWithoutGameRoundsNestedInput
+    transaction?: TransactionUpdateOneRequiredWithoutGameRoundNestedInput
+    wins?: GameWinUpdateManyWithoutGameRoundNestedInput
+  }
+
+  export type GameRoundUncheckedUpdateWithoutCasinoGameInput = {
+    id?: BigIntFieldUpdateOperationsInput | bigint | number
+    userId?: BigIntFieldUpdateOperationsInput | bigint | number
+    aggregatorType?: EnumGameAggregatorTypeFieldUpdateOperationsInput | $Enums.GameAggregatorType
+    provider?: EnumGameProviderFieldUpdateOperationsInput | $Enums.GameProvider
+    aggregatorTxId?: StringFieldUpdateOperationsInput | string
+    aggregatorGameId?: IntFieldUpdateOperationsInput | number
+    totalBetAmountInGameCurrency?: NullableDecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string | null
+    totalWinAmountInGameCurrency?: NullableDecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string | null
+    netAmountInGameCurrency?: NullableDecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string | null
+    totalBetAmountInWalletCurrency?: NullableDecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string | null
+    totalWinAmountInWalletCurrency?: NullableDecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string | null
+    netAmountInWalletCurrency?: NullableDecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string | null
+    transactionId?: BigIntFieldUpdateOperationsInput | bigint | number
+    sessionId?: NullableStringFieldUpdateOperationsInput | string | null
+    tableId?: NullableStringFieldUpdateOperationsInput | string | null
+    roundId?: NullableStringFieldUpdateOperationsInput | string | null
+    replayType?: NullableEnumGameReplayTypeFieldUpdateOperationsInput | $Enums.GameReplayType | null
+    replayData?: NullableStringFieldUpdateOperationsInput | string | null
+    totalPushAmount?: NullableDecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string | null
+    tieBetAmount?: NullableDecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string | null
+    contributionAmount?: NullableDecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string | null
+    compEarned?: NullableDecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string | null
+    jackpotContributionAmount?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
+    startedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    completedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    gameSessionId?: BigIntFieldUpdateOperationsInput | bigint | number
+    AffiliateCommission?: AffiliateCommissionUncheckedUpdateManyWithoutGameRoundNestedInput
+    bets?: GameBetUncheckedUpdateManyWithoutGameRoundNestedInput
+    wins?: GameWinUncheckedUpdateManyWithoutGameRoundNestedInput
+  }
+
+  export type GameRoundUncheckedUpdateManyWithoutCasinoGameInput = {
+    id?: BigIntFieldUpdateOperationsInput | bigint | number
+    userId?: BigIntFieldUpdateOperationsInput | bigint | number
+    aggregatorType?: EnumGameAggregatorTypeFieldUpdateOperationsInput | $Enums.GameAggregatorType
+    provider?: EnumGameProviderFieldUpdateOperationsInput | $Enums.GameProvider
+    aggregatorTxId?: StringFieldUpdateOperationsInput | string
+    aggregatorGameId?: IntFieldUpdateOperationsInput | number
+    totalBetAmountInGameCurrency?: NullableDecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string | null
+    totalWinAmountInGameCurrency?: NullableDecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string | null
+    netAmountInGameCurrency?: NullableDecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string | null
+    totalBetAmountInWalletCurrency?: NullableDecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string | null
+    totalWinAmountInWalletCurrency?: NullableDecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string | null
+    netAmountInWalletCurrency?: NullableDecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string | null
+    transactionId?: BigIntFieldUpdateOperationsInput | bigint | number
+    sessionId?: NullableStringFieldUpdateOperationsInput | string | null
+    tableId?: NullableStringFieldUpdateOperationsInput | string | null
+    roundId?: NullableStringFieldUpdateOperationsInput | string | null
+    replayType?: NullableEnumGameReplayTypeFieldUpdateOperationsInput | $Enums.GameReplayType | null
+    replayData?: NullableStringFieldUpdateOperationsInput | string | null
+    totalPushAmount?: NullableDecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string | null
+    tieBetAmount?: NullableDecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string | null
+    contributionAmount?: NullableDecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string | null
+    compEarned?: NullableDecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string | null
+    jackpotContributionAmount?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
+    startedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    completedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    gameSessionId?: BigIntFieldUpdateOperationsInput | bigint | number
+  }
+
+  export type GameSessionUpdateWithoutGameInput = {
+    id?: BigIntFieldUpdateOperationsInput | bigint | number
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    lastAccessedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    aggregatorType?: EnumGameAggregatorTypeFieldUpdateOperationsInput | $Enums.GameAggregatorType
+    token?: StringFieldUpdateOperationsInput | string
+    walletCurrency?: EnumExchangeCurrencyCodeFieldUpdateOperationsInput | $Enums.ExchangeCurrencyCode
+    gameCurrency?: EnumExchangeCurrencyCodeFieldUpdateOperationsInput | $Enums.ExchangeCurrencyCode
+    exchangeRate?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
+    exchangeRateSnapshotAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    gameRounds?: GameRoundUpdateManyWithoutGameSessionNestedInput
+    user?: UserUpdateOneRequiredWithoutGameSessionNestedInput
+  }
+
+  export type GameSessionUncheckedUpdateWithoutGameInput = {
+    id?: BigIntFieldUpdateOperationsInput | bigint | number
+    userId?: BigIntFieldUpdateOperationsInput | bigint | number
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    lastAccessedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    aggregatorType?: EnumGameAggregatorTypeFieldUpdateOperationsInput | $Enums.GameAggregatorType
+    token?: StringFieldUpdateOperationsInput | string
+    walletCurrency?: EnumExchangeCurrencyCodeFieldUpdateOperationsInput | $Enums.ExchangeCurrencyCode
+    gameCurrency?: EnumExchangeCurrencyCodeFieldUpdateOperationsInput | $Enums.ExchangeCurrencyCode
+    exchangeRate?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
+    exchangeRateSnapshotAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    gameRounds?: GameRoundUncheckedUpdateManyWithoutGameSessionNestedInput
+  }
+
+  export type GameSessionUncheckedUpdateManyWithoutGameInput = {
+    id?: BigIntFieldUpdateOperationsInput | bigint | number
+    userId?: BigIntFieldUpdateOperationsInput | bigint | number
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    lastAccessedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    aggregatorType?: EnumGameAggregatorTypeFieldUpdateOperationsInput | $Enums.GameAggregatorType
+    token?: StringFieldUpdateOperationsInput | string
+    walletCurrency?: EnumExchangeCurrencyCodeFieldUpdateOperationsInput | $Enums.ExchangeCurrencyCode
+    gameCurrency?: EnumExchangeCurrencyCodeFieldUpdateOperationsInput | $Enums.ExchangeCurrencyCode
+    exchangeRate?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
+    exchangeRateSnapshotAt?: DateTimeFieldUpdateOperationsInput | Date | string
+  }
+
+  export type GameTranslationUpdateWithoutCasinoGameInput = {
+    language?: EnumLanguageFieldUpdateOperationsInput | $Enums.Language
+    providerName?: StringFieldUpdateOperationsInput | string
+    categoryName?: StringFieldUpdateOperationsInput | string
+    gameName?: StringFieldUpdateOperationsInput | string
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+  }
+
+  export type GameTranslationUncheckedUpdateWithoutCasinoGameInput = {
+    id?: IntFieldUpdateOperationsInput | number
+    language?: EnumLanguageFieldUpdateOperationsInput | $Enums.Language
+    providerName?: StringFieldUpdateOperationsInput | string
+    categoryName?: StringFieldUpdateOperationsInput | string
+    gameName?: StringFieldUpdateOperationsInput | string
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+  }
+
+  export type GameTranslationUncheckedUpdateManyWithoutCasinoGameInput = {
+    id?: IntFieldUpdateOperationsInput | number
+    language?: EnumLanguageFieldUpdateOperationsInput | $Enums.Language
+    providerName?: StringFieldUpdateOperationsInput | string
+    categoryName?: StringFieldUpdateOperationsInput | string
+    gameName?: StringFieldUpdateOperationsInput | string
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+  }
+
+  export type GameRoundCreateManyGameSessionInput = {
+    id?: bigint | number
+    userId: bigint | number
+    aggregatorType: $Enums.GameAggregatorType
+    provider: $Enums.GameProvider
+    aggregatorTxId: string
+    aggregatorGameId: number
+    totalBetAmountInGameCurrency?: Decimal | DecimalJsLike | number | string | null
+    totalWinAmountInGameCurrency?: Decimal | DecimalJsLike | number | string | null
+    netAmountInGameCurrency?: Decimal | DecimalJsLike | number | string | null
+    totalBetAmountInWalletCurrency?: Decimal | DecimalJsLike | number | string | null
+    totalWinAmountInWalletCurrency?: Decimal | DecimalJsLike | number | string | null
+    netAmountInWalletCurrency?: Decimal | DecimalJsLike | number | string | null
+    transactionId: bigint | number
+    sessionId?: string | null
+    tableId?: string | null
+    roundId?: string | null
+    replayType?: $Enums.GameReplayType | null
+    replayData?: string | null
+    totalPushAmount?: Decimal | DecimalJsLike | number | string | null
+    tieBetAmount?: Decimal | DecimalJsLike | number | string | null
+    contributionAmount?: Decimal | DecimalJsLike | number | string | null
+    compEarned?: Decimal | DecimalJsLike | number | string | null
+    jackpotContributionAmount?: Decimal | DecimalJsLike | number | string
+    startedAt?: Date | string | null
+    completedAt?: Date | string | null
+    gameId?: number | null
+  }
+
+  export type GameRoundUpdateWithoutGameSessionInput = {
+    id?: BigIntFieldUpdateOperationsInput | bigint | number
+    userId?: BigIntFieldUpdateOperationsInput | bigint | number
+    aggregatorType?: EnumGameAggregatorTypeFieldUpdateOperationsInput | $Enums.GameAggregatorType
+    provider?: EnumGameProviderFieldUpdateOperationsInput | $Enums.GameProvider
+    aggregatorTxId?: StringFieldUpdateOperationsInput | string
+    aggregatorGameId?: IntFieldUpdateOperationsInput | number
+    totalBetAmountInGameCurrency?: NullableDecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string | null
+    totalWinAmountInGameCurrency?: NullableDecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string | null
+    netAmountInGameCurrency?: NullableDecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string | null
+    totalBetAmountInWalletCurrency?: NullableDecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string | null
+    totalWinAmountInWalletCurrency?: NullableDecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string | null
+    netAmountInWalletCurrency?: NullableDecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string | null
+    sessionId?: NullableStringFieldUpdateOperationsInput | string | null
+    tableId?: NullableStringFieldUpdateOperationsInput | string | null
+    roundId?: NullableStringFieldUpdateOperationsInput | string | null
+    replayType?: NullableEnumGameReplayTypeFieldUpdateOperationsInput | $Enums.GameReplayType | null
+    replayData?: NullableStringFieldUpdateOperationsInput | string | null
+    totalPushAmount?: NullableDecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string | null
+    tieBetAmount?: NullableDecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string | null
+    contributionAmount?: NullableDecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string | null
+    compEarned?: NullableDecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string | null
+    jackpotContributionAmount?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
+    startedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    completedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    AffiliateCommission?: AffiliateCommissionUpdateManyWithoutGameRoundNestedInput
+    bets?: GameBetUpdateManyWithoutGameRoundNestedInput
+    casinoGame?: CasinoGameUpdateOneWithoutGameRoundsNestedInput
+    transaction?: TransactionUpdateOneRequiredWithoutGameRoundNestedInput
+    wins?: GameWinUpdateManyWithoutGameRoundNestedInput
+  }
+
+  export type GameRoundUncheckedUpdateWithoutGameSessionInput = {
+    id?: BigIntFieldUpdateOperationsInput | bigint | number
+    userId?: BigIntFieldUpdateOperationsInput | bigint | number
+    aggregatorType?: EnumGameAggregatorTypeFieldUpdateOperationsInput | $Enums.GameAggregatorType
+    provider?: EnumGameProviderFieldUpdateOperationsInput | $Enums.GameProvider
+    aggregatorTxId?: StringFieldUpdateOperationsInput | string
+    aggregatorGameId?: IntFieldUpdateOperationsInput | number
+    totalBetAmountInGameCurrency?: NullableDecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string | null
+    totalWinAmountInGameCurrency?: NullableDecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string | null
+    netAmountInGameCurrency?: NullableDecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string | null
+    totalBetAmountInWalletCurrency?: NullableDecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string | null
+    totalWinAmountInWalletCurrency?: NullableDecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string | null
+    netAmountInWalletCurrency?: NullableDecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string | null
+    transactionId?: BigIntFieldUpdateOperationsInput | bigint | number
+    sessionId?: NullableStringFieldUpdateOperationsInput | string | null
+    tableId?: NullableStringFieldUpdateOperationsInput | string | null
+    roundId?: NullableStringFieldUpdateOperationsInput | string | null
+    replayType?: NullableEnumGameReplayTypeFieldUpdateOperationsInput | $Enums.GameReplayType | null
+    replayData?: NullableStringFieldUpdateOperationsInput | string | null
+    totalPushAmount?: NullableDecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string | null
+    tieBetAmount?: NullableDecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string | null
+    contributionAmount?: NullableDecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string | null
+    compEarned?: NullableDecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string | null
+    jackpotContributionAmount?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
+    startedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    completedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    gameId?: NullableIntFieldUpdateOperationsInput | number | null
+    AffiliateCommission?: AffiliateCommissionUncheckedUpdateManyWithoutGameRoundNestedInput
+    bets?: GameBetUncheckedUpdateManyWithoutGameRoundNestedInput
+    wins?: GameWinUncheckedUpdateManyWithoutGameRoundNestedInput
+  }
+
+  export type GameRoundUncheckedUpdateManyWithoutGameSessionInput = {
+    id?: BigIntFieldUpdateOperationsInput | bigint | number
+    userId?: BigIntFieldUpdateOperationsInput | bigint | number
+    aggregatorType?: EnumGameAggregatorTypeFieldUpdateOperationsInput | $Enums.GameAggregatorType
+    provider?: EnumGameProviderFieldUpdateOperationsInput | $Enums.GameProvider
+    aggregatorTxId?: StringFieldUpdateOperationsInput | string
+    aggregatorGameId?: IntFieldUpdateOperationsInput | number
+    totalBetAmountInGameCurrency?: NullableDecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string | null
+    totalWinAmountInGameCurrency?: NullableDecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string | null
+    netAmountInGameCurrency?: NullableDecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string | null
+    totalBetAmountInWalletCurrency?: NullableDecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string | null
+    totalWinAmountInWalletCurrency?: NullableDecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string | null
+    netAmountInWalletCurrency?: NullableDecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string | null
+    transactionId?: BigIntFieldUpdateOperationsInput | bigint | number
+    sessionId?: NullableStringFieldUpdateOperationsInput | string | null
+    tableId?: NullableStringFieldUpdateOperationsInput | string | null
+    roundId?: NullableStringFieldUpdateOperationsInput | string | null
+    replayType?: NullableEnumGameReplayTypeFieldUpdateOperationsInput | $Enums.GameReplayType | null
+    replayData?: NullableStringFieldUpdateOperationsInput | string | null
+    totalPushAmount?: NullableDecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string | null
+    tieBetAmount?: NullableDecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string | null
+    contributionAmount?: NullableDecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string | null
+    compEarned?: NullableDecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string | null
+    jackpotContributionAmount?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
+    startedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    completedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    gameId?: NullableIntFieldUpdateOperationsInput | number | null
+  }
+
   export type AffiliateCodeCreateManyUserInput = {
     id?: bigint | number
     uid: string
@@ -93313,7 +93730,7 @@ export namespace Prisma {
     exchangeRate?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
     exchangeRateSnapshotAt?: DateTimeFieldUpdateOperationsInput | Date | string
     gameRounds?: GameRoundUpdateManyWithoutGameSessionNestedInput
-    game?: GameUpdateOneWithoutGameSessionsNestedInput
+    game?: CasinoGameUpdateOneWithoutGameSessionsNestedInput
   }
 
   export type GameSessionUncheckedUpdateWithoutUserInput = {
@@ -93997,301 +94414,6 @@ export namespace Prisma {
     internalNote?: NullableStringFieldUpdateOperationsInput | string | null
   }
 
-  export type BonusDetailCreateManyGameInput = {
-    id?: bigint | number
-    createdAt?: Date | string
-    transactionTime: Date | string
-    aggregatorType: $Enums.GameAggregatorType
-    provider: $Enums.GameProvider
-    bonusType: $Enums.BonusType
-    amount: Decimal | DecimalJsLike | number | string
-    aggregatorPromotionId?: string | null
-    aggregatorRoundId?: string | null
-    aggregatorWagerId?: string | null
-    aggregatorTransactionId?: string | null
-    aggregatorFreespinId?: string | null
-    aggregatorSessionId?: string | null
-    isEndRound?: boolean | null
-    description?: string | null
-    transactionId: bigint | number
-  }
-
-  export type GameRoundCreateManyGameInput = {
-    id?: bigint | number
-    userId: bigint | number
-    aggregatorType: $Enums.GameAggregatorType
-    provider: $Enums.GameProvider
-    aggregatorTxId: string
-    aggregatorGameId: number
-    totalBetAmountInGameCurrency?: Decimal | DecimalJsLike | number | string | null
-    totalWinAmountInGameCurrency?: Decimal | DecimalJsLike | number | string | null
-    netAmountInGameCurrency?: Decimal | DecimalJsLike | number | string | null
-    totalBetAmountInWalletCurrency?: Decimal | DecimalJsLike | number | string | null
-    totalWinAmountInWalletCurrency?: Decimal | DecimalJsLike | number | string | null
-    netAmountInWalletCurrency?: Decimal | DecimalJsLike | number | string | null
-    transactionId: bigint | number
-    sessionId?: string | null
-    tableId?: string | null
-    roundId?: string | null
-    replayType?: $Enums.GameReplayType | null
-    replayData?: string | null
-    totalPushAmount?: Decimal | DecimalJsLike | number | string | null
-    tieBetAmount?: Decimal | DecimalJsLike | number | string | null
-    contributionAmount?: Decimal | DecimalJsLike | number | string | null
-    compEarned?: Decimal | DecimalJsLike | number | string | null
-    jackpotContributionAmount?: Decimal | DecimalJsLike | number | string
-    startedAt?: Date | string | null
-    completedAt?: Date | string | null
-    gameSessionId: bigint | number
-  }
-
-  export type GameSessionCreateManyGameInput = {
-    id?: bigint | number
-    userId: bigint | number
-    createdAt?: Date | string
-    updatedAt?: Date | string
-    lastAccessedAt?: Date | string
-    aggregatorType: $Enums.GameAggregatorType
-    token: string
-    walletCurrency: $Enums.ExchangeCurrencyCode
-    gameCurrency: $Enums.ExchangeCurrencyCode
-    exchangeRate: Decimal | DecimalJsLike | number | string
-    exchangeRateSnapshotAt?: Date | string
-  }
-
-  export type GameTranslationCreateManyGameInput = {
-    id?: number
-    language: $Enums.Language
-    providerName: string
-    categoryName: string
-    gameName: string
-    createdAt?: Date | string
-    updatedAt?: Date | string
-  }
-
-  export type BonusDetailUpdateWithoutGameInput = {
-    id?: BigIntFieldUpdateOperationsInput | bigint | number
-    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
-    transactionTime?: DateTimeFieldUpdateOperationsInput | Date | string
-    aggregatorType?: EnumGameAggregatorTypeFieldUpdateOperationsInput | $Enums.GameAggregatorType
-    provider?: EnumGameProviderFieldUpdateOperationsInput | $Enums.GameProvider
-    bonusType?: EnumBonusTypeFieldUpdateOperationsInput | $Enums.BonusType
-    amount?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
-    aggregatorPromotionId?: NullableStringFieldUpdateOperationsInput | string | null
-    aggregatorRoundId?: NullableStringFieldUpdateOperationsInput | string | null
-    aggregatorWagerId?: NullableStringFieldUpdateOperationsInput | string | null
-    aggregatorTransactionId?: NullableStringFieldUpdateOperationsInput | string | null
-    aggregatorFreespinId?: NullableStringFieldUpdateOperationsInput | string | null
-    aggregatorSessionId?: NullableStringFieldUpdateOperationsInput | string | null
-    isEndRound?: NullableBoolFieldUpdateOperationsInput | boolean | null
-    description?: NullableStringFieldUpdateOperationsInput | string | null
-    transaction?: TransactionUpdateOneRequiredWithoutBonusDetailNestedInput
-  }
-
-  export type BonusDetailUncheckedUpdateWithoutGameInput = {
-    id?: BigIntFieldUpdateOperationsInput | bigint | number
-    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
-    transactionTime?: DateTimeFieldUpdateOperationsInput | Date | string
-    aggregatorType?: EnumGameAggregatorTypeFieldUpdateOperationsInput | $Enums.GameAggregatorType
-    provider?: EnumGameProviderFieldUpdateOperationsInput | $Enums.GameProvider
-    bonusType?: EnumBonusTypeFieldUpdateOperationsInput | $Enums.BonusType
-    amount?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
-    aggregatorPromotionId?: NullableStringFieldUpdateOperationsInput | string | null
-    aggregatorRoundId?: NullableStringFieldUpdateOperationsInput | string | null
-    aggregatorWagerId?: NullableStringFieldUpdateOperationsInput | string | null
-    aggregatorTransactionId?: NullableStringFieldUpdateOperationsInput | string | null
-    aggregatorFreespinId?: NullableStringFieldUpdateOperationsInput | string | null
-    aggregatorSessionId?: NullableStringFieldUpdateOperationsInput | string | null
-    isEndRound?: NullableBoolFieldUpdateOperationsInput | boolean | null
-    description?: NullableStringFieldUpdateOperationsInput | string | null
-    transactionId?: BigIntFieldUpdateOperationsInput | bigint | number
-  }
-
-  export type BonusDetailUncheckedUpdateManyWithoutGameInput = {
-    id?: BigIntFieldUpdateOperationsInput | bigint | number
-    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
-    transactionTime?: DateTimeFieldUpdateOperationsInput | Date | string
-    aggregatorType?: EnumGameAggregatorTypeFieldUpdateOperationsInput | $Enums.GameAggregatorType
-    provider?: EnumGameProviderFieldUpdateOperationsInput | $Enums.GameProvider
-    bonusType?: EnumBonusTypeFieldUpdateOperationsInput | $Enums.BonusType
-    amount?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
-    aggregatorPromotionId?: NullableStringFieldUpdateOperationsInput | string | null
-    aggregatorRoundId?: NullableStringFieldUpdateOperationsInput | string | null
-    aggregatorWagerId?: NullableStringFieldUpdateOperationsInput | string | null
-    aggregatorTransactionId?: NullableStringFieldUpdateOperationsInput | string | null
-    aggregatorFreespinId?: NullableStringFieldUpdateOperationsInput | string | null
-    aggregatorSessionId?: NullableStringFieldUpdateOperationsInput | string | null
-    isEndRound?: NullableBoolFieldUpdateOperationsInput | boolean | null
-    description?: NullableStringFieldUpdateOperationsInput | string | null
-    transactionId?: BigIntFieldUpdateOperationsInput | bigint | number
-  }
-
-  export type GameRoundUpdateWithoutGameInput = {
-    id?: BigIntFieldUpdateOperationsInput | bigint | number
-    userId?: BigIntFieldUpdateOperationsInput | bigint | number
-    aggregatorType?: EnumGameAggregatorTypeFieldUpdateOperationsInput | $Enums.GameAggregatorType
-    provider?: EnumGameProviderFieldUpdateOperationsInput | $Enums.GameProvider
-    aggregatorTxId?: StringFieldUpdateOperationsInput | string
-    aggregatorGameId?: IntFieldUpdateOperationsInput | number
-    totalBetAmountInGameCurrency?: NullableDecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string | null
-    totalWinAmountInGameCurrency?: NullableDecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string | null
-    netAmountInGameCurrency?: NullableDecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string | null
-    totalBetAmountInWalletCurrency?: NullableDecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string | null
-    totalWinAmountInWalletCurrency?: NullableDecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string | null
-    netAmountInWalletCurrency?: NullableDecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string | null
-    sessionId?: NullableStringFieldUpdateOperationsInput | string | null
-    tableId?: NullableStringFieldUpdateOperationsInput | string | null
-    roundId?: NullableStringFieldUpdateOperationsInput | string | null
-    replayType?: NullableEnumGameReplayTypeFieldUpdateOperationsInput | $Enums.GameReplayType | null
-    replayData?: NullableStringFieldUpdateOperationsInput | string | null
-    totalPushAmount?: NullableDecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string | null
-    tieBetAmount?: NullableDecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string | null
-    contributionAmount?: NullableDecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string | null
-    compEarned?: NullableDecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string | null
-    jackpotContributionAmount?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
-    startedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
-    completedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
-    AffiliateCommission?: AffiliateCommissionUpdateManyWithoutGameRoundNestedInput
-    bets?: GameBetUpdateManyWithoutGameRoundNestedInput
-    GameSession?: GameSessionUpdateOneRequiredWithoutGameRoundsNestedInput
-    transaction?: TransactionUpdateOneRequiredWithoutGameRoundNestedInput
-    wins?: GameWinUpdateManyWithoutGameRoundNestedInput
-  }
-
-  export type GameRoundUncheckedUpdateWithoutGameInput = {
-    id?: BigIntFieldUpdateOperationsInput | bigint | number
-    userId?: BigIntFieldUpdateOperationsInput | bigint | number
-    aggregatorType?: EnumGameAggregatorTypeFieldUpdateOperationsInput | $Enums.GameAggregatorType
-    provider?: EnumGameProviderFieldUpdateOperationsInput | $Enums.GameProvider
-    aggregatorTxId?: StringFieldUpdateOperationsInput | string
-    aggregatorGameId?: IntFieldUpdateOperationsInput | number
-    totalBetAmountInGameCurrency?: NullableDecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string | null
-    totalWinAmountInGameCurrency?: NullableDecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string | null
-    netAmountInGameCurrency?: NullableDecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string | null
-    totalBetAmountInWalletCurrency?: NullableDecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string | null
-    totalWinAmountInWalletCurrency?: NullableDecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string | null
-    netAmountInWalletCurrency?: NullableDecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string | null
-    transactionId?: BigIntFieldUpdateOperationsInput | bigint | number
-    sessionId?: NullableStringFieldUpdateOperationsInput | string | null
-    tableId?: NullableStringFieldUpdateOperationsInput | string | null
-    roundId?: NullableStringFieldUpdateOperationsInput | string | null
-    replayType?: NullableEnumGameReplayTypeFieldUpdateOperationsInput | $Enums.GameReplayType | null
-    replayData?: NullableStringFieldUpdateOperationsInput | string | null
-    totalPushAmount?: NullableDecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string | null
-    tieBetAmount?: NullableDecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string | null
-    contributionAmount?: NullableDecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string | null
-    compEarned?: NullableDecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string | null
-    jackpotContributionAmount?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
-    startedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
-    completedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
-    gameSessionId?: BigIntFieldUpdateOperationsInput | bigint | number
-    AffiliateCommission?: AffiliateCommissionUncheckedUpdateManyWithoutGameRoundNestedInput
-    bets?: GameBetUncheckedUpdateManyWithoutGameRoundNestedInput
-    wins?: GameWinUncheckedUpdateManyWithoutGameRoundNestedInput
-  }
-
-  export type GameRoundUncheckedUpdateManyWithoutGameInput = {
-    id?: BigIntFieldUpdateOperationsInput | bigint | number
-    userId?: BigIntFieldUpdateOperationsInput | bigint | number
-    aggregatorType?: EnumGameAggregatorTypeFieldUpdateOperationsInput | $Enums.GameAggregatorType
-    provider?: EnumGameProviderFieldUpdateOperationsInput | $Enums.GameProvider
-    aggregatorTxId?: StringFieldUpdateOperationsInput | string
-    aggregatorGameId?: IntFieldUpdateOperationsInput | number
-    totalBetAmountInGameCurrency?: NullableDecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string | null
-    totalWinAmountInGameCurrency?: NullableDecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string | null
-    netAmountInGameCurrency?: NullableDecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string | null
-    totalBetAmountInWalletCurrency?: NullableDecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string | null
-    totalWinAmountInWalletCurrency?: NullableDecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string | null
-    netAmountInWalletCurrency?: NullableDecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string | null
-    transactionId?: BigIntFieldUpdateOperationsInput | bigint | number
-    sessionId?: NullableStringFieldUpdateOperationsInput | string | null
-    tableId?: NullableStringFieldUpdateOperationsInput | string | null
-    roundId?: NullableStringFieldUpdateOperationsInput | string | null
-    replayType?: NullableEnumGameReplayTypeFieldUpdateOperationsInput | $Enums.GameReplayType | null
-    replayData?: NullableStringFieldUpdateOperationsInput | string | null
-    totalPushAmount?: NullableDecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string | null
-    tieBetAmount?: NullableDecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string | null
-    contributionAmount?: NullableDecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string | null
-    compEarned?: NullableDecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string | null
-    jackpotContributionAmount?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
-    startedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
-    completedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
-    gameSessionId?: BigIntFieldUpdateOperationsInput | bigint | number
-  }
-
-  export type GameSessionUpdateWithoutGameInput = {
-    id?: BigIntFieldUpdateOperationsInput | bigint | number
-    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
-    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
-    lastAccessedAt?: DateTimeFieldUpdateOperationsInput | Date | string
-    aggregatorType?: EnumGameAggregatorTypeFieldUpdateOperationsInput | $Enums.GameAggregatorType
-    token?: StringFieldUpdateOperationsInput | string
-    walletCurrency?: EnumExchangeCurrencyCodeFieldUpdateOperationsInput | $Enums.ExchangeCurrencyCode
-    gameCurrency?: EnumExchangeCurrencyCodeFieldUpdateOperationsInput | $Enums.ExchangeCurrencyCode
-    exchangeRate?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
-    exchangeRateSnapshotAt?: DateTimeFieldUpdateOperationsInput | Date | string
-    gameRounds?: GameRoundUpdateManyWithoutGameSessionNestedInput
-    user?: UserUpdateOneRequiredWithoutGameSessionNestedInput
-  }
-
-  export type GameSessionUncheckedUpdateWithoutGameInput = {
-    id?: BigIntFieldUpdateOperationsInput | bigint | number
-    userId?: BigIntFieldUpdateOperationsInput | bigint | number
-    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
-    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
-    lastAccessedAt?: DateTimeFieldUpdateOperationsInput | Date | string
-    aggregatorType?: EnumGameAggregatorTypeFieldUpdateOperationsInput | $Enums.GameAggregatorType
-    token?: StringFieldUpdateOperationsInput | string
-    walletCurrency?: EnumExchangeCurrencyCodeFieldUpdateOperationsInput | $Enums.ExchangeCurrencyCode
-    gameCurrency?: EnumExchangeCurrencyCodeFieldUpdateOperationsInput | $Enums.ExchangeCurrencyCode
-    exchangeRate?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
-    exchangeRateSnapshotAt?: DateTimeFieldUpdateOperationsInput | Date | string
-    gameRounds?: GameRoundUncheckedUpdateManyWithoutGameSessionNestedInput
-  }
-
-  export type GameSessionUncheckedUpdateManyWithoutGameInput = {
-    id?: BigIntFieldUpdateOperationsInput | bigint | number
-    userId?: BigIntFieldUpdateOperationsInput | bigint | number
-    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
-    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
-    lastAccessedAt?: DateTimeFieldUpdateOperationsInput | Date | string
-    aggregatorType?: EnumGameAggregatorTypeFieldUpdateOperationsInput | $Enums.GameAggregatorType
-    token?: StringFieldUpdateOperationsInput | string
-    walletCurrency?: EnumExchangeCurrencyCodeFieldUpdateOperationsInput | $Enums.ExchangeCurrencyCode
-    gameCurrency?: EnumExchangeCurrencyCodeFieldUpdateOperationsInput | $Enums.ExchangeCurrencyCode
-    exchangeRate?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
-    exchangeRateSnapshotAt?: DateTimeFieldUpdateOperationsInput | Date | string
-  }
-
-  export type GameTranslationUpdateWithoutGameInput = {
-    language?: EnumLanguageFieldUpdateOperationsInput | $Enums.Language
-    providerName?: StringFieldUpdateOperationsInput | string
-    categoryName?: StringFieldUpdateOperationsInput | string
-    gameName?: StringFieldUpdateOperationsInput | string
-    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
-    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
-  }
-
-  export type GameTranslationUncheckedUpdateWithoutGameInput = {
-    id?: IntFieldUpdateOperationsInput | number
-    language?: EnumLanguageFieldUpdateOperationsInput | $Enums.Language
-    providerName?: StringFieldUpdateOperationsInput | string
-    categoryName?: StringFieldUpdateOperationsInput | string
-    gameName?: StringFieldUpdateOperationsInput | string
-    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
-    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
-  }
-
-  export type GameTranslationUncheckedUpdateManyWithoutGameInput = {
-    id?: IntFieldUpdateOperationsInput | number
-    language?: EnumLanguageFieldUpdateOperationsInput | $Enums.Language
-    providerName?: StringFieldUpdateOperationsInput | string
-    categoryName?: StringFieldUpdateOperationsInput | string
-    gameName?: StringFieldUpdateOperationsInput | string
-    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
-    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
-  }
-
   export type TransactionBalanceDetailCreateManyTransactionInput = {
     id?: bigint | number
     mainBalanceChange?: Decimal | DecimalJsLike | number | string | null
@@ -94554,128 +94676,6 @@ export namespace Prisma {
     transactionId?: BigIntFieldUpdateOperationsInput | bigint | number
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
-  }
-
-  export type GameRoundCreateManyGameSessionInput = {
-    id?: bigint | number
-    userId: bigint | number
-    aggregatorType: $Enums.GameAggregatorType
-    provider: $Enums.GameProvider
-    aggregatorTxId: string
-    aggregatorGameId: number
-    totalBetAmountInGameCurrency?: Decimal | DecimalJsLike | number | string | null
-    totalWinAmountInGameCurrency?: Decimal | DecimalJsLike | number | string | null
-    netAmountInGameCurrency?: Decimal | DecimalJsLike | number | string | null
-    totalBetAmountInWalletCurrency?: Decimal | DecimalJsLike | number | string | null
-    totalWinAmountInWalletCurrency?: Decimal | DecimalJsLike | number | string | null
-    netAmountInWalletCurrency?: Decimal | DecimalJsLike | number | string | null
-    transactionId: bigint | number
-    sessionId?: string | null
-    tableId?: string | null
-    roundId?: string | null
-    replayType?: $Enums.GameReplayType | null
-    replayData?: string | null
-    totalPushAmount?: Decimal | DecimalJsLike | number | string | null
-    tieBetAmount?: Decimal | DecimalJsLike | number | string | null
-    contributionAmount?: Decimal | DecimalJsLike | number | string | null
-    compEarned?: Decimal | DecimalJsLike | number | string | null
-    jackpotContributionAmount?: Decimal | DecimalJsLike | number | string
-    startedAt?: Date | string | null
-    completedAt?: Date | string | null
-    gameId?: number | null
-  }
-
-  export type GameRoundUpdateWithoutGameSessionInput = {
-    id?: BigIntFieldUpdateOperationsInput | bigint | number
-    userId?: BigIntFieldUpdateOperationsInput | bigint | number
-    aggregatorType?: EnumGameAggregatorTypeFieldUpdateOperationsInput | $Enums.GameAggregatorType
-    provider?: EnumGameProviderFieldUpdateOperationsInput | $Enums.GameProvider
-    aggregatorTxId?: StringFieldUpdateOperationsInput | string
-    aggregatorGameId?: IntFieldUpdateOperationsInput | number
-    totalBetAmountInGameCurrency?: NullableDecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string | null
-    totalWinAmountInGameCurrency?: NullableDecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string | null
-    netAmountInGameCurrency?: NullableDecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string | null
-    totalBetAmountInWalletCurrency?: NullableDecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string | null
-    totalWinAmountInWalletCurrency?: NullableDecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string | null
-    netAmountInWalletCurrency?: NullableDecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string | null
-    sessionId?: NullableStringFieldUpdateOperationsInput | string | null
-    tableId?: NullableStringFieldUpdateOperationsInput | string | null
-    roundId?: NullableStringFieldUpdateOperationsInput | string | null
-    replayType?: NullableEnumGameReplayTypeFieldUpdateOperationsInput | $Enums.GameReplayType | null
-    replayData?: NullableStringFieldUpdateOperationsInput | string | null
-    totalPushAmount?: NullableDecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string | null
-    tieBetAmount?: NullableDecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string | null
-    contributionAmount?: NullableDecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string | null
-    compEarned?: NullableDecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string | null
-    jackpotContributionAmount?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
-    startedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
-    completedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
-    AffiliateCommission?: AffiliateCommissionUpdateManyWithoutGameRoundNestedInput
-    bets?: GameBetUpdateManyWithoutGameRoundNestedInput
-    game?: GameUpdateOneWithoutGameRoundsNestedInput
-    transaction?: TransactionUpdateOneRequiredWithoutGameRoundNestedInput
-    wins?: GameWinUpdateManyWithoutGameRoundNestedInput
-  }
-
-  export type GameRoundUncheckedUpdateWithoutGameSessionInput = {
-    id?: BigIntFieldUpdateOperationsInput | bigint | number
-    userId?: BigIntFieldUpdateOperationsInput | bigint | number
-    aggregatorType?: EnumGameAggregatorTypeFieldUpdateOperationsInput | $Enums.GameAggregatorType
-    provider?: EnumGameProviderFieldUpdateOperationsInput | $Enums.GameProvider
-    aggregatorTxId?: StringFieldUpdateOperationsInput | string
-    aggregatorGameId?: IntFieldUpdateOperationsInput | number
-    totalBetAmountInGameCurrency?: NullableDecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string | null
-    totalWinAmountInGameCurrency?: NullableDecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string | null
-    netAmountInGameCurrency?: NullableDecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string | null
-    totalBetAmountInWalletCurrency?: NullableDecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string | null
-    totalWinAmountInWalletCurrency?: NullableDecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string | null
-    netAmountInWalletCurrency?: NullableDecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string | null
-    transactionId?: BigIntFieldUpdateOperationsInput | bigint | number
-    sessionId?: NullableStringFieldUpdateOperationsInput | string | null
-    tableId?: NullableStringFieldUpdateOperationsInput | string | null
-    roundId?: NullableStringFieldUpdateOperationsInput | string | null
-    replayType?: NullableEnumGameReplayTypeFieldUpdateOperationsInput | $Enums.GameReplayType | null
-    replayData?: NullableStringFieldUpdateOperationsInput | string | null
-    totalPushAmount?: NullableDecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string | null
-    tieBetAmount?: NullableDecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string | null
-    contributionAmount?: NullableDecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string | null
-    compEarned?: NullableDecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string | null
-    jackpotContributionAmount?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
-    startedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
-    completedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
-    gameId?: NullableIntFieldUpdateOperationsInput | number | null
-    AffiliateCommission?: AffiliateCommissionUncheckedUpdateManyWithoutGameRoundNestedInput
-    bets?: GameBetUncheckedUpdateManyWithoutGameRoundNestedInput
-    wins?: GameWinUncheckedUpdateManyWithoutGameRoundNestedInput
-  }
-
-  export type GameRoundUncheckedUpdateManyWithoutGameSessionInput = {
-    id?: BigIntFieldUpdateOperationsInput | bigint | number
-    userId?: BigIntFieldUpdateOperationsInput | bigint | number
-    aggregatorType?: EnumGameAggregatorTypeFieldUpdateOperationsInput | $Enums.GameAggregatorType
-    provider?: EnumGameProviderFieldUpdateOperationsInput | $Enums.GameProvider
-    aggregatorTxId?: StringFieldUpdateOperationsInput | string
-    aggregatorGameId?: IntFieldUpdateOperationsInput | number
-    totalBetAmountInGameCurrency?: NullableDecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string | null
-    totalWinAmountInGameCurrency?: NullableDecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string | null
-    netAmountInGameCurrency?: NullableDecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string | null
-    totalBetAmountInWalletCurrency?: NullableDecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string | null
-    totalWinAmountInWalletCurrency?: NullableDecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string | null
-    netAmountInWalletCurrency?: NullableDecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string | null
-    transactionId?: BigIntFieldUpdateOperationsInput | bigint | number
-    sessionId?: NullableStringFieldUpdateOperationsInput | string | null
-    tableId?: NullableStringFieldUpdateOperationsInput | string | null
-    roundId?: NullableStringFieldUpdateOperationsInput | string | null
-    replayType?: NullableEnumGameReplayTypeFieldUpdateOperationsInput | $Enums.GameReplayType | null
-    replayData?: NullableStringFieldUpdateOperationsInput | string | null
-    totalPushAmount?: NullableDecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string | null
-    tieBetAmount?: NullableDecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string | null
-    contributionAmount?: NullableDecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string | null
-    compEarned?: NullableDecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string | null
-    jackpotContributionAmount?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
-    startedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
-    completedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
-    gameId?: NullableIntFieldUpdateOperationsInput | number | null
   }
 
   export type RollingCreateManyDepositDetailInput = {

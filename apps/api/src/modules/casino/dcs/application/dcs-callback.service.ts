@@ -523,7 +523,7 @@ export class DcsCallbackService {
             },
           },
         },
-        game: {
+        casinoGame: {
           select: {
             id: true,
             gameId: true,
@@ -547,7 +547,7 @@ export class DcsCallbackService {
     }
 
     // 게임 ID 검증
-    if (!gameRound.game || gameRound.game.gameId !== game_id) {
+    if (!gameRound.casinoGame || gameRound.casinoGame.gameId !== game_id) {
       return getDcsResponse(DcsResponseCode.GAME_ID_NOT_EXIST);
     }
 
@@ -568,7 +568,7 @@ export class DcsCallbackService {
               aggregatorRoundId: round_id,
               aggregatorWagerId: wager_id,
               isEndRound: isEndRound,
-              gameId: gameRound.game!.id,
+              gameId: gameRound.casinoGame!.id,
               description: description,
               gameSessionId: gameRound.GameSession.id, // 추가
             });
@@ -873,7 +873,7 @@ export class DcsCallbackService {
     }
 
     // 2. 게임 조회
-    const game = await this.prismaService.game.findFirst({
+    const game = await this.prismaService.casinoGame.findFirst({
       where: {
         aggregatorType: GameAggregatorType.DCS,
         provider: providerEnum,

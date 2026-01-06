@@ -75,7 +75,7 @@ export class CasinoGameService {
     const { gameId, isMobile, walletCurrency, gameCurrency } = params;
 
     // 게임 정보 조회 (aggregatorType 포함)
-    const game = await this.prismaService.game.findUnique({
+    const game = await this.prismaService.casinoGame.findUnique({
       where: { id: gameId },
       select: {
         aggregatorType: true,
@@ -126,7 +126,7 @@ export class CasinoGameService {
     // Where 조건 구성
     const where: Prisma.GameTranslationWhereInput = {
       language,
-      game: {
+      casinoGame: {
         isEnabled: true, // 활성화된 게임만 조회
         isVisibleToUser: true, // 유저에게 표시 가능한 게임만 조회
         ...(category && category.length > 0 && { category: { in: category } }),
@@ -166,7 +166,7 @@ export class CasinoGameService {
       select: {
         id: true,
         gameName: true,
-        game: {
+        casinoGame: {
           select: {
             id: true,
             iconLink: true,
@@ -184,7 +184,7 @@ export class CasinoGameService {
     // 응답 데이터 매핑
     const data: GameInfo[] = games.map((game) => {
       const baseUrl = this.envService.app.staticAssetsBaseUrl || '/static';
-      const iconLink = game.game.iconLink || '';
+      const iconLink = game.casinoGame.iconLink || '';
 
       // 이미 전체 URL이면 그대로 사용, 상대 경로면 baseUrl 추가
       let imageUrl = iconLink;
@@ -196,10 +196,10 @@ export class CasinoGameService {
       }
 
       return {
-        gameId: game.game.id,
+        gameId: game.casinoGame.id,
         gameName: game.gameName,
-        category: game.game.category,
-        provider: game.game.provider,
+        category: game.casinoGame.category,
+        provider: game.casinoGame.provider,
         imageUrl: imageUrl || '',
       };
     });

@@ -92,7 +92,7 @@ export class WhitecliffGameService {
       .toNumber();
     const whitecliffUsername = user.whitecliffUsername;
 
-    const game = await this.prismaService.game.findUnique({
+    const game = await this.prismaService.casinoGame.findUnique({
       where: { id: gameId },
       select: {
         id: true,

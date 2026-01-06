@@ -42,7 +42,7 @@ export class GamePostProcessProcessor
                 status: true,
               },
             },
-            game: {
+            casinoGame: {
               select: {
                 contributionRate: true,
               },
@@ -103,7 +103,7 @@ export class GamePostProcessProcessor
 
         // 3. 기여도 금액 계산
         const contributionRate =
-          gameRound.game?.contributionRate || new Prisma.Decimal(0);
+          gameRound.casinoGame?.contributionRate || new Prisma.Decimal(0);
         const contributionAmount = betAmountForProcessing.mul(contributionRate);
 
         // 4. 콤프 처리

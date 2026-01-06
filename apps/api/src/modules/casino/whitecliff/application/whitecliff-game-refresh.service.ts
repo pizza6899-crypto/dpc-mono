@@ -27,7 +27,7 @@ export class WhitecliffGameRefreshService {
     private readonly prismaService: PrismaService,
     private readonly redisService: RedisService,
     private readonly whitecliffMapperService: WhitecliffMapperService,
-  ) {}
+  ) { }
 
   /**
    * 게임 목록을 수동으로 업데이트합니다.
@@ -193,7 +193,7 @@ export class WhitecliffGameRefreshService {
     for (const [providerIdStr, games] of Object.entries(gameList)) {
       const providerId = parseInt(providerIdStr);
 
-      const existingGames = await this.prismaService.game.findMany({
+      const existingGames = await this.prismaService.casinoGame.findMany({
         where: {
           provider:
             this.whitecliffMapperService.fromWhitecliffProvider(providerId)!,
@@ -269,7 +269,7 @@ export class WhitecliffGameRefreshService {
 
       for (const game of toDisableGames) {
         try {
-          await this.prismaService.game.update({
+          await this.prismaService.casinoGame.update({
             where: { id: game.id },
             data: { isEnabled: false },
           });
@@ -328,13 +328,13 @@ export class WhitecliffGameRefreshService {
     lang: Language,
   ) {
     // provider 정보 가져오기
-    const existingGameWithProvider = await this.prismaService.game.findUnique({
+    const existingGameWithProvider = await this.prismaService.casinoGame.findUnique({
       where: { id: gameId },
       select: { provider: true },
     });
 
     // ✅ 올바른 필드명으로 게임 정보 업데이트
-    await this.prismaService.game.update({
+    await this.prismaService.casinoGame.update({
       where: { id: gameId },
       data: {
         tableId: gameData.table_id || null,
@@ -387,7 +387,7 @@ export class WhitecliffGameRefreshService {
       this.whitecliffMapperService.fromWhitecliffProvider(providerId)!;
 
     // ✅ 올바른 필드명으로 게임 생성
-    const newGame = await this.prismaService.game.create({
+    const newGame = await this.prismaService.casinoGame.create({
       data: {
         aggregatorType: GameAggregatorType.WHITECLIFF,
         provider: provider,
