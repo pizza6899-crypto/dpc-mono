@@ -349,7 +349,7 @@ export class WhitecliffGameRefreshService {
 
     // ✅ 올바른 필드명으로 번역 정보 업데이트
     try {
-      await this.prismaService.gameTranslation.upsert({
+      await this.prismaService.casinoGameTranslation.upsert({
         where: {
           gameId_language: {
             gameId: gameId,
@@ -405,7 +405,7 @@ export class WhitecliffGameRefreshService {
 
     // ✅ 올바른 필드명으로 번역 정보 생성
     try {
-      await this.prismaService.gameTranslation.create({
+      await this.prismaService.casinoGameTranslation.create({
         data: {
           gameId: newGame.id,
           language: lang,

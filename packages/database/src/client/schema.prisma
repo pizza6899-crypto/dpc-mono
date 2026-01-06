@@ -226,31 +226,31 @@ model UnifiedLog {
 }
 
 model CasinoGame {
-  id               Int                @id @default(autoincrement())
-  aggregatorType   GameAggregatorType @map("aggregator_type")
+  id               Int                     @id @default(autoincrement())
+  aggregatorType   GameAggregatorType      @map("aggregator_type")
   provider         GameProvider
   category         GameCategory
-  gameId           Int                @map("game_id")
-  gameType         String?            @map("game_type")
-  tableId          String?            @map("table_id")
-  iconLink         String?            @map("icon_link")
-  isEnabled        Boolean            @map("is_enabled")
-  isVisibleToUser  Boolean            @default(true) @map("is_visible_to_user")
-  houseEdge        Decimal            @default(0.04) @map("house_edge") @db.Decimal(8, 4)
-  contributionRate Decimal            @default(1.0) @map("contribution_rate") @db.Decimal(8, 4)
-  createdAt        DateTime           @default(now()) @map("created_at")
-  updatedAt        DateTime           @updatedAt @map("updated_at")
+  gameId           Int                     @map("game_id")
+  gameType         String?                 @map("game_type")
+  tableId          String?                 @map("table_id")
+  iconLink         String?                 @map("icon_link")
+  isEnabled        Boolean                 @map("is_enabled")
+  isVisibleToUser  Boolean                 @default(true) @map("is_visible_to_user")
+  houseEdge        Decimal                 @default(0.04) @map("house_edge") @db.Decimal(8, 4)
+  contributionRate Decimal                 @default(1.0) @map("contribution_rate") @db.Decimal(8, 4)
+  createdAt        DateTime                @default(now()) @map("created_at")
+  updatedAt        DateTime                @updatedAt @map("updated_at")
   bonusDetails     BonusDetail[]
   gameRounds       GameRound[]
   gameSessions     GameSession[]
-  translations     GameTranslation[]
+  translations     CasinoGameTranslation[]
 
   @@unique([aggregatorType, provider, gameId])
   @@index([isEnabled])
   @@map("casino_games")
 }
 
-model GameTranslation {
+model CasinoGameTranslation {
   id           Int        @id @default(autoincrement())
   gameId       Int        @map("game_id")
   language     Language

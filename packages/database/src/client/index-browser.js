@@ -269,7 +269,7 @@ exports.Prisma.CasinoGameScalarFieldEnum = {
   updatedAt: 'updatedAt'
 };
 
-exports.Prisma.GameTranslationScalarFieldEnum = {
+exports.Prisma.CasinoGameTranslationScalarFieldEnum = {
   id: 'id',
   gameId: 'gameId',
   language: 'language',
@@ -1114,7 +1114,7 @@ exports.Prisma.ModelName = {
   IntegrationLog: 'IntegrationLog',
   UnifiedLog: 'UnifiedLog',
   CasinoGame: 'CasinoGame',
-  GameTranslation: 'GameTranslation',
+  CasinoGameTranslation: 'CasinoGameTranslation',
   GameSession: 'GameSession',
   User: 'User',
   UserBalance: 'UserBalance',

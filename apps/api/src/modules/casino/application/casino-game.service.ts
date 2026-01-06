@@ -124,7 +124,7 @@ export class CasinoGameService {
     } = query;
 
     // Where 조건 구성
-    const where: Prisma.GameTranslationWhereInput = {
+    const where: Prisma.CasinoGameTranslationWhereInput = {
       language,
       casinoGame: {
         isEnabled: true, // 활성화된 게임만 조회
@@ -142,7 +142,7 @@ export class CasinoGameService {
     };
 
     // 정렬 조건 구성
-    const orderBy: Prisma.GameTranslationOrderByWithRelationInput = (() => {
+    const orderBy: Prisma.CasinoGameTranslationOrderByWithRelationInput = (() => {
       switch (sortBy) {
         case 'gameName':
           return { gameName: sortOrder };
@@ -158,7 +158,7 @@ export class CasinoGameService {
     const skip = (page - 1) * limit;
 
     // 데이터 조회
-    const games = await this.prismaService.gameTranslation.findMany({
+    const games = await this.prismaService.casinoGameTranslation.findMany({
       where,
       orderBy,
       skip,
@@ -179,7 +179,7 @@ export class CasinoGameService {
     });
 
     // 전체 개수 조회
-    const total = await this.prismaService.gameTranslation.count({ where });
+    const total = await this.prismaService.casinoGameTranslation.count({ where });
 
     // 응답 데이터 매핑
     const data: GameInfo[] = games.map((game) => {

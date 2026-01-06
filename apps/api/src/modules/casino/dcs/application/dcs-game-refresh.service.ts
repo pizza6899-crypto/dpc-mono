@@ -114,7 +114,7 @@ export class DcsGameRefreshService {
       if (game) {
         // 기존 번역이 없으면 생성
         for (const lang of [Language.EN, Language.KO, Language.JA]) {
-          await this.prismaService.gameTranslation.upsert({
+          await this.prismaService.casinoGameTranslation.upsert({
             where: {
               gameId_language: {
                 gameId: game.id,

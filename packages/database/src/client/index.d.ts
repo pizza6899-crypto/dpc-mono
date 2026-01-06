@@ -54,10 +54,10 @@ export type UnifiedLog = $Result.DefaultSelection<Prisma.$UnifiedLogPayload>
  */
 export type CasinoGame = $Result.DefaultSelection<Prisma.$CasinoGamePayload>
 /**
- * Model GameTranslation
+ * Model CasinoGameTranslation
  * 
  */
-export type GameTranslation = $Result.DefaultSelection<Prisma.$GameTranslationPayload>
+export type CasinoGameTranslation = $Result.DefaultSelection<Prisma.$CasinoGameTranslationPayload>
 /**
  * Model GameSession
  * 
@@ -983,14 +983,14 @@ export class PrismaClient<
   get casinoGame(): Prisma.CasinoGameDelegate<ExtArgs, ClientOptions>;
 
   /**
-   * `prisma.gameTranslation`: Exposes CRUD operations for the **GameTranslation** model.
+   * `prisma.casinoGameTranslation`: Exposes CRUD operations for the **CasinoGameTranslation** model.
     * Example usage:
     * ```ts
-    * // Fetch zero or more GameTranslations
-    * const gameTranslations = await prisma.gameTranslation.findMany()
+    * // Fetch zero or more CasinoGameTranslations
+    * const casinoGameTranslations = await prisma.casinoGameTranslation.findMany()
     * ```
     */
-  get gameTranslation(): Prisma.GameTranslationDelegate<ExtArgs, ClientOptions>;
+  get casinoGameTranslation(): Prisma.CasinoGameTranslationDelegate<ExtArgs, ClientOptions>;
 
   /**
    * `prisma.gameSession`: Exposes CRUD operations for the **GameSession** model.
@@ -1793,7 +1793,7 @@ export namespace Prisma {
     IntegrationLog: 'IntegrationLog',
     UnifiedLog: 'UnifiedLog',
     CasinoGame: 'CasinoGame',
-    GameTranslation: 'GameTranslation',
+    CasinoGameTranslation: 'CasinoGameTranslation',
     GameSession: 'GameSession',
     User: 'User',
     UserBalance: 'UserBalance',
@@ -1845,7 +1845,7 @@ export namespace Prisma {
       omit: GlobalOmitOptions
     }
     meta: {
-      modelProps: "affiliateCode" | "referral" | "authAuditLog" | "activityLog" | "systemErrorLog" | "integrationLog" | "unifiedLog" | "casinoGame" | "gameTranslation" | "gameSession" | "user" | "userBalance" | "userBalanceStats" | "transaction" | "gameRound" | "gameBet" | "gameWin" | "transactionBalanceDetail" | "bonusDetail" | "withdrawDetail" | "compTransaction" | "dailyCompEarning" | "nowPaymentCallbackLog" | "exchangeRate" | "rolling" | "userToken" | "emailLog" | "affiliateWallet" | "affiliateCommission" | "affiliateTier" | "loginAttempt" | "depositDetail" | "cryptoConfig" | "bankConfig" | "promotion" | "promotionTranslation" | "promotionCurrency" | "userPromotion" | "userSession" | "tier" | "tierTranslation" | "userTier" | "tierHistory" | "adminAdjustmentDetail" | "systemAdjustmentDetail"
+      modelProps: "affiliateCode" | "referral" | "authAuditLog" | "activityLog" | "systemErrorLog" | "integrationLog" | "unifiedLog" | "casinoGame" | "casinoGameTranslation" | "gameSession" | "user" | "userBalance" | "userBalanceStats" | "transaction" | "gameRound" | "gameBet" | "gameWin" | "transactionBalanceDetail" | "bonusDetail" | "withdrawDetail" | "compTransaction" | "dailyCompEarning" | "nowPaymentCallbackLog" | "exchangeRate" | "rolling" | "userToken" | "emailLog" | "affiliateWallet" | "affiliateCommission" | "affiliateTier" | "loginAttempt" | "depositDetail" | "cryptoConfig" | "bankConfig" | "promotion" | "promotionTranslation" | "promotionCurrency" | "userPromotion" | "userSession" | "tier" | "tierTranslation" | "userTier" | "tierHistory" | "adminAdjustmentDetail" | "systemAdjustmentDetail"
       txIsolationLevel: Prisma.TransactionIsolationLevel
     }
     model: {
@@ -2441,77 +2441,77 @@ export namespace Prisma {
           }
         }
       }
-      GameTranslation: {
-        payload: Prisma.$GameTranslationPayload<ExtArgs>
-        fields: Prisma.GameTranslationFieldRefs
+      CasinoGameTranslation: {
+        payload: Prisma.$CasinoGameTranslationPayload<ExtArgs>
+        fields: Prisma.CasinoGameTranslationFieldRefs
         operations: {
           findUnique: {
-            args: Prisma.GameTranslationFindUniqueArgs<ExtArgs>
-            result: $Utils.PayloadToResult<Prisma.$GameTranslationPayload> | null
+            args: Prisma.CasinoGameTranslationFindUniqueArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$CasinoGameTranslationPayload> | null
           }
           findUniqueOrThrow: {
-            args: Prisma.GameTranslationFindUniqueOrThrowArgs<ExtArgs>
-            result: $Utils.PayloadToResult<Prisma.$GameTranslationPayload>
+            args: Prisma.CasinoGameTranslationFindUniqueOrThrowArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$CasinoGameTranslationPayload>
           }
           findFirst: {
-            args: Prisma.GameTranslationFindFirstArgs<ExtArgs>
-            result: $Utils.PayloadToResult<Prisma.$GameTranslationPayload> | null
+            args: Prisma.CasinoGameTranslationFindFirstArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$CasinoGameTranslationPayload> | null
           }
           findFirstOrThrow: {
-            args: Prisma.GameTranslationFindFirstOrThrowArgs<ExtArgs>
-            result: $Utils.PayloadToResult<Prisma.$GameTranslationPayload>
+            args: Prisma.CasinoGameTranslationFindFirstOrThrowArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$CasinoGameTranslationPayload>
           }
           findMany: {
-            args: Prisma.GameTranslationFindManyArgs<ExtArgs>
-            result: $Utils.PayloadToResult<Prisma.$GameTranslationPayload>[]
+            args: Prisma.CasinoGameTranslationFindManyArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$CasinoGameTranslationPayload>[]
           }
           create: {
-            args: Prisma.GameTranslationCreateArgs<ExtArgs>
-            result: $Utils.PayloadToResult<Prisma.$GameTranslationPayload>
+            args: Prisma.CasinoGameTranslationCreateArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$CasinoGameTranslationPayload>
           }
           createMany: {
-            args: Prisma.GameTranslationCreateManyArgs<ExtArgs>
+            args: Prisma.CasinoGameTranslationCreateManyArgs<ExtArgs>
             result: BatchPayload
           }
           createManyAndReturn: {
-            args: Prisma.GameTranslationCreateManyAndReturnArgs<ExtArgs>
-            result: $Utils.PayloadToResult<Prisma.$GameTranslationPayload>[]
+            args: Prisma.CasinoGameTranslationCreateManyAndReturnArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$CasinoGameTranslationPayload>[]
           }
           delete: {
-            args: Prisma.GameTranslationDeleteArgs<ExtArgs>
-            result: $Utils.PayloadToResult<Prisma.$GameTranslationPayload>
+            args: Prisma.CasinoGameTranslationDeleteArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$CasinoGameTranslationPayload>
           }
           update: {
-            args: Prisma.GameTranslationUpdateArgs<ExtArgs>
-            result: $Utils.PayloadToResult<Prisma.$GameTranslationPayload>
+            args: Prisma.CasinoGameTranslationUpdateArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$CasinoGameTranslationPayload>
           }
           deleteMany: {
-            args: Prisma.GameTranslationDeleteManyArgs<ExtArgs>
+            args: Prisma.CasinoGameTranslationDeleteManyArgs<ExtArgs>
             result: BatchPayload
           }
           updateMany: {
-            args: Prisma.GameTranslationUpdateManyArgs<ExtArgs>
+            args: Prisma.CasinoGameTranslationUpdateManyArgs<ExtArgs>
             result: BatchPayload
           }
           updateManyAndReturn: {
-            args: Prisma.GameTranslationUpdateManyAndReturnArgs<ExtArgs>
-            result: $Utils.PayloadToResult<Prisma.$GameTranslationPayload>[]
+            args: Prisma.CasinoGameTranslationUpdateManyAndReturnArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$CasinoGameTranslationPayload>[]
           }
           upsert: {
-            args: Prisma.GameTranslationUpsertArgs<ExtArgs>
-            result: $Utils.PayloadToResult<Prisma.$GameTranslationPayload>
+            args: Prisma.CasinoGameTranslationUpsertArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$CasinoGameTranslationPayload>
           }
           aggregate: {
-            args: Prisma.GameTranslationAggregateArgs<ExtArgs>
-            result: $Utils.Optional<AggregateGameTranslation>
+            args: Prisma.CasinoGameTranslationAggregateArgs<ExtArgs>
+            result: $Utils.Optional<AggregateCasinoGameTranslation>
           }
           groupBy: {
-            args: Prisma.GameTranslationGroupByArgs<ExtArgs>
-            result: $Utils.Optional<GameTranslationGroupByOutputType>[]
+            args: Prisma.CasinoGameTranslationGroupByArgs<ExtArgs>
+            result: $Utils.Optional<CasinoGameTranslationGroupByOutputType>[]
           }
           count: {
-            args: Prisma.GameTranslationCountArgs<ExtArgs>
-            result: $Utils.Optional<GameTranslationCountAggregateOutputType> | number
+            args: Prisma.CasinoGameTranslationCountArgs<ExtArgs>
+            result: $Utils.Optional<CasinoGameTranslationCountAggregateOutputType> | number
           }
         }
       }
@@ -5295,7 +5295,7 @@ export namespace Prisma {
     integrationLog?: IntegrationLogOmit
     unifiedLog?: UnifiedLogOmit
     casinoGame?: CasinoGameOmit
-    gameTranslation?: GameTranslationOmit
+    casinoGameTranslation?: CasinoGameTranslationOmit
     gameSession?: GameSessionOmit
     user?: UserOmit
     userBalance?: UserBalanceOmit
@@ -5492,7 +5492,7 @@ export namespace Prisma {
    * CasinoGameCountOutputType without action
    */
   export type CasinoGameCountOutputTypeCountTranslationsArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
-    where?: GameTranslationWhereInput
+    where?: CasinoGameTranslationWhereInput
   }
 
 
@@ -14817,7 +14817,7 @@ export namespace Prisma {
       bonusDetails: Prisma.$BonusDetailPayload<ExtArgs>[]
       gameRounds: Prisma.$GameRoundPayload<ExtArgs>[]
       gameSessions: Prisma.$GameSessionPayload<ExtArgs>[]
-      translations: Prisma.$GameTranslationPayload<ExtArgs>[]
+      translations: Prisma.$CasinoGameTranslationPayload<ExtArgs>[]
     }
     scalars: $Extensions.GetPayloadResult<{
       id: number
@@ -15231,7 +15231,7 @@ export namespace Prisma {
     bonusDetails<T extends CasinoGame$bonusDetailsArgs<ExtArgs> = {}>(args?: Subset<T, CasinoGame$bonusDetailsArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$BonusDetailPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
     gameRounds<T extends CasinoGame$gameRoundsArgs<ExtArgs> = {}>(args?: Subset<T, CasinoGame$gameRoundsArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$GameRoundPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
     gameSessions<T extends CasinoGame$gameSessionsArgs<ExtArgs> = {}>(args?: Subset<T, CasinoGame$gameSessionsArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$GameSessionPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
-    translations<T extends CasinoGame$translationsArgs<ExtArgs> = {}>(args?: Subset<T, CasinoGame$translationsArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$GameTranslationPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
+    translations<T extends CasinoGame$translationsArgs<ExtArgs> = {}>(args?: Subset<T, CasinoGame$translationsArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$CasinoGameTranslationPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
     /**
      * Attaches callbacks for the resolution and/or rejection of the Promise.
      * @param onfulfilled The callback to execute when the Promise is resolved.
@@ -15739,23 +15739,23 @@ export namespace Prisma {
    */
   export type CasinoGame$translationsArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
     /**
-     * Select specific fields to fetch from the GameTranslation
+     * Select specific fields to fetch from the CasinoGameTranslation
      */
-    select?: GameTranslationSelect<ExtArgs> | null
+    select?: CasinoGameTranslationSelect<ExtArgs> | null
     /**
-     * Omit specific fields from the GameTranslation
+     * Omit specific fields from the CasinoGameTranslation
      */
-    omit?: GameTranslationOmit<ExtArgs> | null
+    omit?: CasinoGameTranslationOmit<ExtArgs> | null
     /**
      * Choose, which related nodes to fetch as well
      */
-    include?: GameTranslationInclude<ExtArgs> | null
-    where?: GameTranslationWhereInput
-    orderBy?: GameTranslationOrderByWithRelationInput | GameTranslationOrderByWithRelationInput[]
-    cursor?: GameTranslationWhereUniqueInput
+    include?: CasinoGameTranslationInclude<ExtArgs> | null
+    where?: CasinoGameTranslationWhereInput
+    orderBy?: CasinoGameTranslationOrderByWithRelationInput | CasinoGameTranslationOrderByWithRelationInput[]
+    cursor?: CasinoGameTranslationWhereUniqueInput
     take?: number
     skip?: number
-    distinct?: GameTranslationScalarFieldEnum | GameTranslationScalarFieldEnum[]
+    distinct?: CasinoGameTranslationScalarFieldEnum | CasinoGameTranslationScalarFieldEnum[]
   }
 
   /**
@@ -15778,39 +15778,28 @@ export namespace Prisma {
 
 
   /**
-   * Model GameTranslation
+   * Model CasinoGameTranslation
    */
 
-  export type AggregateGameTranslation = {
-    _count: GameTranslationCountAggregateOutputType | null
-    _avg: GameTranslationAvgAggregateOutputType | null
-    _sum: GameTranslationSumAggregateOutputType | null
-    _min: GameTranslationMinAggregateOutputType | null
-    _max: GameTranslationMaxAggregateOutputType | null
+  export type AggregateCasinoGameTranslation = {
+    _count: CasinoGameTranslationCountAggregateOutputType | null
+    _avg: CasinoGameTranslationAvgAggregateOutputType | null
+    _sum: CasinoGameTranslationSumAggregateOutputType | null
+    _min: CasinoGameTranslationMinAggregateOutputType | null
+    _max: CasinoGameTranslationMaxAggregateOutputType | null
   }
 
-  export type GameTranslationAvgAggregateOutputType = {
+  export type CasinoGameTranslationAvgAggregateOutputType = {
     id: number | null
     gameId: number | null
   }
 
-  export type GameTranslationSumAggregateOutputType = {
+  export type CasinoGameTranslationSumAggregateOutputType = {
     id: number | null
     gameId: number | null
   }
 
-  export type GameTranslationMinAggregateOutputType = {
-    id: number | null
-    gameId: number | null
-    language: $Enums.Language | null
-    providerName: string | null
-    categoryName: string | null
-    gameName: string | null
-    createdAt: Date | null
-    updatedAt: Date | null
-  }
-
-  export type GameTranslationMaxAggregateOutputType = {
+  export type CasinoGameTranslationMinAggregateOutputType = {
     id: number | null
     gameId: number | null
     language: $Enums.Language | null
@@ -15821,7 +15810,18 @@ export namespace Prisma {
     updatedAt: Date | null
   }
 
-  export type GameTranslationCountAggregateOutputType = {
+  export type CasinoGameTranslationMaxAggregateOutputType = {
+    id: number | null
+    gameId: number | null
+    language: $Enums.Language | null
+    providerName: string | null
+    categoryName: string | null
+    gameName: string | null
+    createdAt: Date | null
+    updatedAt: Date | null
+  }
+
+  export type CasinoGameTranslationCountAggregateOutputType = {
     id: number
     gameId: number
     language: number
@@ -15834,28 +15834,17 @@ export namespace Prisma {
   }
 
 
-  export type GameTranslationAvgAggregateInputType = {
+  export type CasinoGameTranslationAvgAggregateInputType = {
     id?: true
     gameId?: true
   }
 
-  export type GameTranslationSumAggregateInputType = {
+  export type CasinoGameTranslationSumAggregateInputType = {
     id?: true
     gameId?: true
   }
 
-  export type GameTranslationMinAggregateInputType = {
-    id?: true
-    gameId?: true
-    language?: true
-    providerName?: true
-    categoryName?: true
-    gameName?: true
-    createdAt?: true
-    updatedAt?: true
-  }
-
-  export type GameTranslationMaxAggregateInputType = {
+  export type CasinoGameTranslationMinAggregateInputType = {
     id?: true
     gameId?: true
     language?: true
@@ -15866,7 +15855,18 @@ export namespace Prisma {
     updatedAt?: true
   }
 
-  export type GameTranslationCountAggregateInputType = {
+  export type CasinoGameTranslationMaxAggregateInputType = {
+    id?: true
+    gameId?: true
+    language?: true
+    providerName?: true
+    categoryName?: true
+    gameName?: true
+    createdAt?: true
+    updatedAt?: true
+  }
+
+  export type CasinoGameTranslationCountAggregateInputType = {
     id?: true
     gameId?: true
     language?: true
@@ -15878,93 +15878,93 @@ export namespace Prisma {
     _all?: true
   }
 
-  export type GameTranslationAggregateArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+  export type CasinoGameTranslationAggregateArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
     /**
-     * Filter which GameTranslation to aggregate.
+     * Filter which CasinoGameTranslation to aggregate.
      */
-    where?: GameTranslationWhereInput
+    where?: CasinoGameTranslationWhereInput
     /**
      * {@link https://www.prisma.io/docs/concepts/components/prisma-client/sorting Sorting Docs}
      * 
-     * Determine the order of GameTranslations to fetch.
+     * Determine the order of CasinoGameTranslations to fetch.
      */
-    orderBy?: GameTranslationOrderByWithRelationInput | GameTranslationOrderByWithRelationInput[]
+    orderBy?: CasinoGameTranslationOrderByWithRelationInput | CasinoGameTranslationOrderByWithRelationInput[]
     /**
      * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination#cursor-based-pagination Cursor Docs}
      * 
      * Sets the start position
      */
-    cursor?: GameTranslationWhereUniqueInput
+    cursor?: CasinoGameTranslationWhereUniqueInput
     /**
      * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
      * 
-     * Take `±n` GameTranslations from the position of the cursor.
+     * Take `±n` CasinoGameTranslations from the position of the cursor.
      */
     take?: number
     /**
      * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
      * 
-     * Skip the first `n` GameTranslations.
+     * Skip the first `n` CasinoGameTranslations.
      */
     skip?: number
     /**
      * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
      * 
-     * Count returned GameTranslations
+     * Count returned CasinoGameTranslations
     **/
-    _count?: true | GameTranslationCountAggregateInputType
+    _count?: true | CasinoGameTranslationCountAggregateInputType
     /**
      * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
      * 
      * Select which fields to average
     **/
-    _avg?: GameTranslationAvgAggregateInputType
+    _avg?: CasinoGameTranslationAvgAggregateInputType
     /**
      * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
      * 
      * Select which fields to sum
     **/
-    _sum?: GameTranslationSumAggregateInputType
+    _sum?: CasinoGameTranslationSumAggregateInputType
     /**
      * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
      * 
      * Select which fields to find the minimum value
     **/
-    _min?: GameTranslationMinAggregateInputType
+    _min?: CasinoGameTranslationMinAggregateInputType
     /**
      * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
      * 
      * Select which fields to find the maximum value
     **/
-    _max?: GameTranslationMaxAggregateInputType
+    _max?: CasinoGameTranslationMaxAggregateInputType
   }
 
-  export type GetGameTranslationAggregateType<T extends GameTranslationAggregateArgs> = {
-        [P in keyof T & keyof AggregateGameTranslation]: P extends '_count' | 'count'
+  export type GetCasinoGameTranslationAggregateType<T extends CasinoGameTranslationAggregateArgs> = {
+        [P in keyof T & keyof AggregateCasinoGameTranslation]: P extends '_count' | 'count'
       ? T[P] extends true
         ? number
-        : GetScalarType<T[P], AggregateGameTranslation[P]>
-      : GetScalarType<T[P], AggregateGameTranslation[P]>
+        : GetScalarType<T[P], AggregateCasinoGameTranslation[P]>
+      : GetScalarType<T[P], AggregateCasinoGameTranslation[P]>
   }
 
 
 
 
-  export type GameTranslationGroupByArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
-    where?: GameTranslationWhereInput
-    orderBy?: GameTranslationOrderByWithAggregationInput | GameTranslationOrderByWithAggregationInput[]
-    by: GameTranslationScalarFieldEnum[] | GameTranslationScalarFieldEnum
-    having?: GameTranslationScalarWhereWithAggregatesInput
+  export type CasinoGameTranslationGroupByArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    where?: CasinoGameTranslationWhereInput
+    orderBy?: CasinoGameTranslationOrderByWithAggregationInput | CasinoGameTranslationOrderByWithAggregationInput[]
+    by: CasinoGameTranslationScalarFieldEnum[] | CasinoGameTranslationScalarFieldEnum
+    having?: CasinoGameTranslationScalarWhereWithAggregatesInput
     take?: number
     skip?: number
-    _count?: GameTranslationCountAggregateInputType | true
-    _avg?: GameTranslationAvgAggregateInputType
-    _sum?: GameTranslationSumAggregateInputType
-    _min?: GameTranslationMinAggregateInputType
-    _max?: GameTranslationMaxAggregateInputType
+    _count?: CasinoGameTranslationCountAggregateInputType | true
+    _avg?: CasinoGameTranslationAvgAggregateInputType
+    _sum?: CasinoGameTranslationSumAggregateInputType
+    _min?: CasinoGameTranslationMinAggregateInputType
+    _max?: CasinoGameTranslationMaxAggregateInputType
   }
 
-  export type GameTranslationGroupByOutputType = {
+  export type CasinoGameTranslationGroupByOutputType = {
     id: number
     gameId: number
     language: $Enums.Language
@@ -15973,28 +15973,28 @@ export namespace Prisma {
     gameName: string
     createdAt: Date
     updatedAt: Date
-    _count: GameTranslationCountAggregateOutputType | null
-    _avg: GameTranslationAvgAggregateOutputType | null
-    _sum: GameTranslationSumAggregateOutputType | null
-    _min: GameTranslationMinAggregateOutputType | null
-    _max: GameTranslationMaxAggregateOutputType | null
+    _count: CasinoGameTranslationCountAggregateOutputType | null
+    _avg: CasinoGameTranslationAvgAggregateOutputType | null
+    _sum: CasinoGameTranslationSumAggregateOutputType | null
+    _min: CasinoGameTranslationMinAggregateOutputType | null
+    _max: CasinoGameTranslationMaxAggregateOutputType | null
   }
 
-  type GetGameTranslationGroupByPayload<T extends GameTranslationGroupByArgs> = Prisma.PrismaPromise<
+  type GetCasinoGameTranslationGroupByPayload<T extends CasinoGameTranslationGroupByArgs> = Prisma.PrismaPromise<
     Array<
-      PickEnumerable<GameTranslationGroupByOutputType, T['by']> &
+      PickEnumerable<CasinoGameTranslationGroupByOutputType, T['by']> &
         {
-          [P in ((keyof T) & (keyof GameTranslationGroupByOutputType))]: P extends '_count'
+          [P in ((keyof T) & (keyof CasinoGameTranslationGroupByOutputType))]: P extends '_count'
             ? T[P] extends boolean
               ? number
-              : GetScalarType<T[P], GameTranslationGroupByOutputType[P]>
-            : GetScalarType<T[P], GameTranslationGroupByOutputType[P]>
+              : GetScalarType<T[P], CasinoGameTranslationGroupByOutputType[P]>
+            : GetScalarType<T[P], CasinoGameTranslationGroupByOutputType[P]>
         }
       >
     >
 
 
-  export type GameTranslationSelect<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetSelect<{
+  export type CasinoGameTranslationSelect<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetSelect<{
     id?: boolean
     gameId?: boolean
     language?: boolean
@@ -16004,9 +16004,9 @@ export namespace Prisma {
     createdAt?: boolean
     updatedAt?: boolean
     casinoGame?: boolean | CasinoGameDefaultArgs<ExtArgs>
-  }, ExtArgs["result"]["gameTranslation"]>
+  }, ExtArgs["result"]["casinoGameTranslation"]>
 
-  export type GameTranslationSelectCreateManyAndReturn<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetSelect<{
+  export type CasinoGameTranslationSelectCreateManyAndReturn<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetSelect<{
     id?: boolean
     gameId?: boolean
     language?: boolean
@@ -16016,9 +16016,9 @@ export namespace Prisma {
     createdAt?: boolean
     updatedAt?: boolean
     casinoGame?: boolean | CasinoGameDefaultArgs<ExtArgs>
-  }, ExtArgs["result"]["gameTranslation"]>
+  }, ExtArgs["result"]["casinoGameTranslation"]>
 
-  export type GameTranslationSelectUpdateManyAndReturn<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetSelect<{
+  export type CasinoGameTranslationSelectUpdateManyAndReturn<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetSelect<{
     id?: boolean
     gameId?: boolean
     language?: boolean
@@ -16028,9 +16028,9 @@ export namespace Prisma {
     createdAt?: boolean
     updatedAt?: boolean
     casinoGame?: boolean | CasinoGameDefaultArgs<ExtArgs>
-  }, ExtArgs["result"]["gameTranslation"]>
+  }, ExtArgs["result"]["casinoGameTranslation"]>
 
-  export type GameTranslationSelectScalar = {
+  export type CasinoGameTranslationSelectScalar = {
     id?: boolean
     gameId?: boolean
     language?: boolean
@@ -16041,19 +16041,19 @@ export namespace Prisma {
     updatedAt?: boolean
   }
 
-  export type GameTranslationOmit<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetOmit<"id" | "gameId" | "language" | "providerName" | "categoryName" | "gameName" | "createdAt" | "updatedAt", ExtArgs["result"]["gameTranslation"]>
-  export type GameTranslationInclude<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+  export type CasinoGameTranslationOmit<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetOmit<"id" | "gameId" | "language" | "providerName" | "categoryName" | "gameName" | "createdAt" | "updatedAt", ExtArgs["result"]["casinoGameTranslation"]>
+  export type CasinoGameTranslationInclude<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
     casinoGame?: boolean | CasinoGameDefaultArgs<ExtArgs>
   }
-  export type GameTranslationIncludeCreateManyAndReturn<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+  export type CasinoGameTranslationIncludeCreateManyAndReturn<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
     casinoGame?: boolean | CasinoGameDefaultArgs<ExtArgs>
   }
-  export type GameTranslationIncludeUpdateManyAndReturn<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+  export type CasinoGameTranslationIncludeUpdateManyAndReturn<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
     casinoGame?: boolean | CasinoGameDefaultArgs<ExtArgs>
   }
 
-  export type $GameTranslationPayload<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
-    name: "GameTranslation"
+  export type $CasinoGameTranslationPayload<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    name: "CasinoGameTranslation"
     objects: {
       casinoGame: Prisma.$CasinoGamePayload<ExtArgs>
     }
@@ -16066,136 +16066,136 @@ export namespace Prisma {
       gameName: string
       createdAt: Date
       updatedAt: Date
-    }, ExtArgs["result"]["gameTranslation"]>
+    }, ExtArgs["result"]["casinoGameTranslation"]>
     composites: {}
   }
 
-  type GameTranslationGetPayload<S extends boolean | null | undefined | GameTranslationDefaultArgs> = $Result.GetResult<Prisma.$GameTranslationPayload, S>
+  type CasinoGameTranslationGetPayload<S extends boolean | null | undefined | CasinoGameTranslationDefaultArgs> = $Result.GetResult<Prisma.$CasinoGameTranslationPayload, S>
 
-  type GameTranslationCountArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> =
-    Omit<GameTranslationFindManyArgs, 'select' | 'include' | 'distinct' | 'omit'> & {
-      select?: GameTranslationCountAggregateInputType | true
+  type CasinoGameTranslationCountArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> =
+    Omit<CasinoGameTranslationFindManyArgs, 'select' | 'include' | 'distinct' | 'omit'> & {
+      select?: CasinoGameTranslationCountAggregateInputType | true
     }
 
-  export interface GameTranslationDelegate<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs, GlobalOmitOptions = {}> {
-    [K: symbol]: { types: Prisma.TypeMap<ExtArgs>['model']['GameTranslation'], meta: { name: 'GameTranslation' } }
+  export interface CasinoGameTranslationDelegate<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs, GlobalOmitOptions = {}> {
+    [K: symbol]: { types: Prisma.TypeMap<ExtArgs>['model']['CasinoGameTranslation'], meta: { name: 'CasinoGameTranslation' } }
     /**
-     * Find zero or one GameTranslation that matches the filter.
-     * @param {GameTranslationFindUniqueArgs} args - Arguments to find a GameTranslation
+     * Find zero or one CasinoGameTranslation that matches the filter.
+     * @param {CasinoGameTranslationFindUniqueArgs} args - Arguments to find a CasinoGameTranslation
      * @example
-     * // Get one GameTranslation
-     * const gameTranslation = await prisma.gameTranslation.findUnique({
+     * // Get one CasinoGameTranslation
+     * const casinoGameTranslation = await prisma.casinoGameTranslation.findUnique({
      *   where: {
      *     // ... provide filter here
      *   }
      * })
      */
-    findUnique<T extends GameTranslationFindUniqueArgs>(args: SelectSubset<T, GameTranslationFindUniqueArgs<ExtArgs>>): Prisma__GameTranslationClient<$Result.GetResult<Prisma.$GameTranslationPayload<ExtArgs>, T, "findUnique", GlobalOmitOptions> | null, null, ExtArgs, GlobalOmitOptions>
+    findUnique<T extends CasinoGameTranslationFindUniqueArgs>(args: SelectSubset<T, CasinoGameTranslationFindUniqueArgs<ExtArgs>>): Prisma__CasinoGameTranslationClient<$Result.GetResult<Prisma.$CasinoGameTranslationPayload<ExtArgs>, T, "findUnique", GlobalOmitOptions> | null, null, ExtArgs, GlobalOmitOptions>
 
     /**
-     * Find one GameTranslation that matches the filter or throw an error with `error.code='P2025'`
+     * Find one CasinoGameTranslation that matches the filter or throw an error with `error.code='P2025'`
      * if no matches were found.
-     * @param {GameTranslationFindUniqueOrThrowArgs} args - Arguments to find a GameTranslation
+     * @param {CasinoGameTranslationFindUniqueOrThrowArgs} args - Arguments to find a CasinoGameTranslation
      * @example
-     * // Get one GameTranslation
-     * const gameTranslation = await prisma.gameTranslation.findUniqueOrThrow({
+     * // Get one CasinoGameTranslation
+     * const casinoGameTranslation = await prisma.casinoGameTranslation.findUniqueOrThrow({
      *   where: {
      *     // ... provide filter here
      *   }
      * })
      */
-    findUniqueOrThrow<T extends GameTranslationFindUniqueOrThrowArgs>(args: SelectSubset<T, GameTranslationFindUniqueOrThrowArgs<ExtArgs>>): Prisma__GameTranslationClient<$Result.GetResult<Prisma.$GameTranslationPayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
+    findUniqueOrThrow<T extends CasinoGameTranslationFindUniqueOrThrowArgs>(args: SelectSubset<T, CasinoGameTranslationFindUniqueOrThrowArgs<ExtArgs>>): Prisma__CasinoGameTranslationClient<$Result.GetResult<Prisma.$CasinoGameTranslationPayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
 
     /**
-     * Find the first GameTranslation that matches the filter.
+     * Find the first CasinoGameTranslation that matches the filter.
      * Note, that providing `undefined` is treated as the value not being there.
      * Read more here: https://pris.ly/d/null-undefined
-     * @param {GameTranslationFindFirstArgs} args - Arguments to find a GameTranslation
+     * @param {CasinoGameTranslationFindFirstArgs} args - Arguments to find a CasinoGameTranslation
      * @example
-     * // Get one GameTranslation
-     * const gameTranslation = await prisma.gameTranslation.findFirst({
+     * // Get one CasinoGameTranslation
+     * const casinoGameTranslation = await prisma.casinoGameTranslation.findFirst({
      *   where: {
      *     // ... provide filter here
      *   }
      * })
      */
-    findFirst<T extends GameTranslationFindFirstArgs>(args?: SelectSubset<T, GameTranslationFindFirstArgs<ExtArgs>>): Prisma__GameTranslationClient<$Result.GetResult<Prisma.$GameTranslationPayload<ExtArgs>, T, "findFirst", GlobalOmitOptions> | null, null, ExtArgs, GlobalOmitOptions>
+    findFirst<T extends CasinoGameTranslationFindFirstArgs>(args?: SelectSubset<T, CasinoGameTranslationFindFirstArgs<ExtArgs>>): Prisma__CasinoGameTranslationClient<$Result.GetResult<Prisma.$CasinoGameTranslationPayload<ExtArgs>, T, "findFirst", GlobalOmitOptions> | null, null, ExtArgs, GlobalOmitOptions>
 
     /**
-     * Find the first GameTranslation that matches the filter or
+     * Find the first CasinoGameTranslation that matches the filter or
      * throw `PrismaKnownClientError` with `P2025` code if no matches were found.
      * Note, that providing `undefined` is treated as the value not being there.
      * Read more here: https://pris.ly/d/null-undefined
-     * @param {GameTranslationFindFirstOrThrowArgs} args - Arguments to find a GameTranslation
+     * @param {CasinoGameTranslationFindFirstOrThrowArgs} args - Arguments to find a CasinoGameTranslation
      * @example
-     * // Get one GameTranslation
-     * const gameTranslation = await prisma.gameTranslation.findFirstOrThrow({
+     * // Get one CasinoGameTranslation
+     * const casinoGameTranslation = await prisma.casinoGameTranslation.findFirstOrThrow({
      *   where: {
      *     // ... provide filter here
      *   }
      * })
      */
-    findFirstOrThrow<T extends GameTranslationFindFirstOrThrowArgs>(args?: SelectSubset<T, GameTranslationFindFirstOrThrowArgs<ExtArgs>>): Prisma__GameTranslationClient<$Result.GetResult<Prisma.$GameTranslationPayload<ExtArgs>, T, "findFirstOrThrow", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
+    findFirstOrThrow<T extends CasinoGameTranslationFindFirstOrThrowArgs>(args?: SelectSubset<T, CasinoGameTranslationFindFirstOrThrowArgs<ExtArgs>>): Prisma__CasinoGameTranslationClient<$Result.GetResult<Prisma.$CasinoGameTranslationPayload<ExtArgs>, T, "findFirstOrThrow", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
 
     /**
-     * Find zero or more GameTranslations that matches the filter.
+     * Find zero or more CasinoGameTranslations that matches the filter.
      * Note, that providing `undefined` is treated as the value not being there.
      * Read more here: https://pris.ly/d/null-undefined
-     * @param {GameTranslationFindManyArgs} args - Arguments to filter and select certain fields only.
+     * @param {CasinoGameTranslationFindManyArgs} args - Arguments to filter and select certain fields only.
      * @example
-     * // Get all GameTranslations
-     * const gameTranslations = await prisma.gameTranslation.findMany()
+     * // Get all CasinoGameTranslations
+     * const casinoGameTranslations = await prisma.casinoGameTranslation.findMany()
      * 
-     * // Get first 10 GameTranslations
-     * const gameTranslations = await prisma.gameTranslation.findMany({ take: 10 })
+     * // Get first 10 CasinoGameTranslations
+     * const casinoGameTranslations = await prisma.casinoGameTranslation.findMany({ take: 10 })
      * 
      * // Only select the `id`
-     * const gameTranslationWithIdOnly = await prisma.gameTranslation.findMany({ select: { id: true } })
+     * const casinoGameTranslationWithIdOnly = await prisma.casinoGameTranslation.findMany({ select: { id: true } })
      * 
      */
-    findMany<T extends GameTranslationFindManyArgs>(args?: SelectSubset<T, GameTranslationFindManyArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$GameTranslationPayload<ExtArgs>, T, "findMany", GlobalOmitOptions>>
+    findMany<T extends CasinoGameTranslationFindManyArgs>(args?: SelectSubset<T, CasinoGameTranslationFindManyArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$CasinoGameTranslationPayload<ExtArgs>, T, "findMany", GlobalOmitOptions>>
 
     /**
-     * Create a GameTranslation.
-     * @param {GameTranslationCreateArgs} args - Arguments to create a GameTranslation.
+     * Create a CasinoGameTranslation.
+     * @param {CasinoGameTranslationCreateArgs} args - Arguments to create a CasinoGameTranslation.
      * @example
-     * // Create one GameTranslation
-     * const GameTranslation = await prisma.gameTranslation.create({
+     * // Create one CasinoGameTranslation
+     * const CasinoGameTranslation = await prisma.casinoGameTranslation.create({
      *   data: {
-     *     // ... data to create a GameTranslation
+     *     // ... data to create a CasinoGameTranslation
      *   }
      * })
      * 
      */
-    create<T extends GameTranslationCreateArgs>(args: SelectSubset<T, GameTranslationCreateArgs<ExtArgs>>): Prisma__GameTranslationClient<$Result.GetResult<Prisma.$GameTranslationPayload<ExtArgs>, T, "create", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
+    create<T extends CasinoGameTranslationCreateArgs>(args: SelectSubset<T, CasinoGameTranslationCreateArgs<ExtArgs>>): Prisma__CasinoGameTranslationClient<$Result.GetResult<Prisma.$CasinoGameTranslationPayload<ExtArgs>, T, "create", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
 
     /**
-     * Create many GameTranslations.
-     * @param {GameTranslationCreateManyArgs} args - Arguments to create many GameTranslations.
+     * Create many CasinoGameTranslations.
+     * @param {CasinoGameTranslationCreateManyArgs} args - Arguments to create many CasinoGameTranslations.
      * @example
-     * // Create many GameTranslations
-     * const gameTranslation = await prisma.gameTranslation.createMany({
+     * // Create many CasinoGameTranslations
+     * const casinoGameTranslation = await prisma.casinoGameTranslation.createMany({
      *   data: [
      *     // ... provide data here
      *   ]
      * })
      *     
      */
-    createMany<T extends GameTranslationCreateManyArgs>(args?: SelectSubset<T, GameTranslationCreateManyArgs<ExtArgs>>): Prisma.PrismaPromise<BatchPayload>
+    createMany<T extends CasinoGameTranslationCreateManyArgs>(args?: SelectSubset<T, CasinoGameTranslationCreateManyArgs<ExtArgs>>): Prisma.PrismaPromise<BatchPayload>
 
     /**
-     * Create many GameTranslations and returns the data saved in the database.
-     * @param {GameTranslationCreateManyAndReturnArgs} args - Arguments to create many GameTranslations.
+     * Create many CasinoGameTranslations and returns the data saved in the database.
+     * @param {CasinoGameTranslationCreateManyAndReturnArgs} args - Arguments to create many CasinoGameTranslations.
      * @example
-     * // Create many GameTranslations
-     * const gameTranslation = await prisma.gameTranslation.createManyAndReturn({
+     * // Create many CasinoGameTranslations
+     * const casinoGameTranslation = await prisma.casinoGameTranslation.createManyAndReturn({
      *   data: [
      *     // ... provide data here
      *   ]
      * })
      * 
-     * // Create many GameTranslations and only return the `id`
-     * const gameTranslationWithIdOnly = await prisma.gameTranslation.createManyAndReturn({
+     * // Create many CasinoGameTranslations and only return the `id`
+     * const casinoGameTranslationWithIdOnly = await prisma.casinoGameTranslation.createManyAndReturn({
      *   select: { id: true },
      *   data: [
      *     // ... provide data here
@@ -16205,28 +16205,28 @@ export namespace Prisma {
      * Read more here: https://pris.ly/d/null-undefined
      * 
      */
-    createManyAndReturn<T extends GameTranslationCreateManyAndReturnArgs>(args?: SelectSubset<T, GameTranslationCreateManyAndReturnArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$GameTranslationPayload<ExtArgs>, T, "createManyAndReturn", GlobalOmitOptions>>
+    createManyAndReturn<T extends CasinoGameTranslationCreateManyAndReturnArgs>(args?: SelectSubset<T, CasinoGameTranslationCreateManyAndReturnArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$CasinoGameTranslationPayload<ExtArgs>, T, "createManyAndReturn", GlobalOmitOptions>>
 
     /**
-     * Delete a GameTranslation.
-     * @param {GameTranslationDeleteArgs} args - Arguments to delete one GameTranslation.
+     * Delete a CasinoGameTranslation.
+     * @param {CasinoGameTranslationDeleteArgs} args - Arguments to delete one CasinoGameTranslation.
      * @example
-     * // Delete one GameTranslation
-     * const GameTranslation = await prisma.gameTranslation.delete({
+     * // Delete one CasinoGameTranslation
+     * const CasinoGameTranslation = await prisma.casinoGameTranslation.delete({
      *   where: {
-     *     // ... filter to delete one GameTranslation
+     *     // ... filter to delete one CasinoGameTranslation
      *   }
      * })
      * 
      */
-    delete<T extends GameTranslationDeleteArgs>(args: SelectSubset<T, GameTranslationDeleteArgs<ExtArgs>>): Prisma__GameTranslationClient<$Result.GetResult<Prisma.$GameTranslationPayload<ExtArgs>, T, "delete", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
+    delete<T extends CasinoGameTranslationDeleteArgs>(args: SelectSubset<T, CasinoGameTranslationDeleteArgs<ExtArgs>>): Prisma__CasinoGameTranslationClient<$Result.GetResult<Prisma.$CasinoGameTranslationPayload<ExtArgs>, T, "delete", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
 
     /**
-     * Update one GameTranslation.
-     * @param {GameTranslationUpdateArgs} args - Arguments to update one GameTranslation.
+     * Update one CasinoGameTranslation.
+     * @param {CasinoGameTranslationUpdateArgs} args - Arguments to update one CasinoGameTranslation.
      * @example
-     * // Update one GameTranslation
-     * const gameTranslation = await prisma.gameTranslation.update({
+     * // Update one CasinoGameTranslation
+     * const casinoGameTranslation = await prisma.casinoGameTranslation.update({
      *   where: {
      *     // ... provide filter here
      *   },
@@ -16236,30 +16236,30 @@ export namespace Prisma {
      * })
      * 
      */
-    update<T extends GameTranslationUpdateArgs>(args: SelectSubset<T, GameTranslationUpdateArgs<ExtArgs>>): Prisma__GameTranslationClient<$Result.GetResult<Prisma.$GameTranslationPayload<ExtArgs>, T, "update", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
+    update<T extends CasinoGameTranslationUpdateArgs>(args: SelectSubset<T, CasinoGameTranslationUpdateArgs<ExtArgs>>): Prisma__CasinoGameTranslationClient<$Result.GetResult<Prisma.$CasinoGameTranslationPayload<ExtArgs>, T, "update", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
 
     /**
-     * Delete zero or more GameTranslations.
-     * @param {GameTranslationDeleteManyArgs} args - Arguments to filter GameTranslations to delete.
+     * Delete zero or more CasinoGameTranslations.
+     * @param {CasinoGameTranslationDeleteManyArgs} args - Arguments to filter CasinoGameTranslations to delete.
      * @example
-     * // Delete a few GameTranslations
-     * const { count } = await prisma.gameTranslation.deleteMany({
+     * // Delete a few CasinoGameTranslations
+     * const { count } = await prisma.casinoGameTranslation.deleteMany({
      *   where: {
      *     // ... provide filter here
      *   }
      * })
      * 
      */
-    deleteMany<T extends GameTranslationDeleteManyArgs>(args?: SelectSubset<T, GameTranslationDeleteManyArgs<ExtArgs>>): Prisma.PrismaPromise<BatchPayload>
+    deleteMany<T extends CasinoGameTranslationDeleteManyArgs>(args?: SelectSubset<T, CasinoGameTranslationDeleteManyArgs<ExtArgs>>): Prisma.PrismaPromise<BatchPayload>
 
     /**
-     * Update zero or more GameTranslations.
+     * Update zero or more CasinoGameTranslations.
      * Note, that providing `undefined` is treated as the value not being there.
      * Read more here: https://pris.ly/d/null-undefined
-     * @param {GameTranslationUpdateManyArgs} args - Arguments to update one or more rows.
+     * @param {CasinoGameTranslationUpdateManyArgs} args - Arguments to update one or more rows.
      * @example
-     * // Update many GameTranslations
-     * const gameTranslation = await prisma.gameTranslation.updateMany({
+     * // Update many CasinoGameTranslations
+     * const casinoGameTranslation = await prisma.casinoGameTranslation.updateMany({
      *   where: {
      *     // ... provide filter here
      *   },
@@ -16269,14 +16269,14 @@ export namespace Prisma {
      * })
      * 
      */
-    updateMany<T extends GameTranslationUpdateManyArgs>(args: SelectSubset<T, GameTranslationUpdateManyArgs<ExtArgs>>): Prisma.PrismaPromise<BatchPayload>
+    updateMany<T extends CasinoGameTranslationUpdateManyArgs>(args: SelectSubset<T, CasinoGameTranslationUpdateManyArgs<ExtArgs>>): Prisma.PrismaPromise<BatchPayload>
 
     /**
-     * Update zero or more GameTranslations and returns the data updated in the database.
-     * @param {GameTranslationUpdateManyAndReturnArgs} args - Arguments to update many GameTranslations.
+     * Update zero or more CasinoGameTranslations and returns the data updated in the database.
+     * @param {CasinoGameTranslationUpdateManyAndReturnArgs} args - Arguments to update many CasinoGameTranslations.
      * @example
-     * // Update many GameTranslations
-     * const gameTranslation = await prisma.gameTranslation.updateManyAndReturn({
+     * // Update many CasinoGameTranslations
+     * const casinoGameTranslation = await prisma.casinoGameTranslation.updateManyAndReturn({
      *   where: {
      *     // ... provide filter here
      *   },
@@ -16285,8 +16285,8 @@ export namespace Prisma {
      *   ]
      * })
      * 
-     * // Update zero or more GameTranslations and only return the `id`
-     * const gameTranslationWithIdOnly = await prisma.gameTranslation.updateManyAndReturn({
+     * // Update zero or more CasinoGameTranslations and only return the `id`
+     * const casinoGameTranslationWithIdOnly = await prisma.casinoGameTranslation.updateManyAndReturn({
      *   select: { id: true },
      *   where: {
      *     // ... provide filter here
@@ -16299,56 +16299,56 @@ export namespace Prisma {
      * Read more here: https://pris.ly/d/null-undefined
      * 
      */
-    updateManyAndReturn<T extends GameTranslationUpdateManyAndReturnArgs>(args: SelectSubset<T, GameTranslationUpdateManyAndReturnArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$GameTranslationPayload<ExtArgs>, T, "updateManyAndReturn", GlobalOmitOptions>>
+    updateManyAndReturn<T extends CasinoGameTranslationUpdateManyAndReturnArgs>(args: SelectSubset<T, CasinoGameTranslationUpdateManyAndReturnArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$CasinoGameTranslationPayload<ExtArgs>, T, "updateManyAndReturn", GlobalOmitOptions>>
 
     /**
-     * Create or update one GameTranslation.
-     * @param {GameTranslationUpsertArgs} args - Arguments to update or create a GameTranslation.
+     * Create or update one CasinoGameTranslation.
+     * @param {CasinoGameTranslationUpsertArgs} args - Arguments to update or create a CasinoGameTranslation.
      * @example
-     * // Update or create a GameTranslation
-     * const gameTranslation = await prisma.gameTranslation.upsert({
+     * // Update or create a CasinoGameTranslation
+     * const casinoGameTranslation = await prisma.casinoGameTranslation.upsert({
      *   create: {
-     *     // ... data to create a GameTranslation
+     *     // ... data to create a CasinoGameTranslation
      *   },
      *   update: {
      *     // ... in case it already exists, update
      *   },
      *   where: {
-     *     // ... the filter for the GameTranslation we want to update
+     *     // ... the filter for the CasinoGameTranslation we want to update
      *   }
      * })
      */
-    upsert<T extends GameTranslationUpsertArgs>(args: SelectSubset<T, GameTranslationUpsertArgs<ExtArgs>>): Prisma__GameTranslationClient<$Result.GetResult<Prisma.$GameTranslationPayload<ExtArgs>, T, "upsert", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
+    upsert<T extends CasinoGameTranslationUpsertArgs>(args: SelectSubset<T, CasinoGameTranslationUpsertArgs<ExtArgs>>): Prisma__CasinoGameTranslationClient<$Result.GetResult<Prisma.$CasinoGameTranslationPayload<ExtArgs>, T, "upsert", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
 
 
     /**
-     * Count the number of GameTranslations.
+     * Count the number of CasinoGameTranslations.
      * Note, that providing `undefined` is treated as the value not being there.
      * Read more here: https://pris.ly/d/null-undefined
-     * @param {GameTranslationCountArgs} args - Arguments to filter GameTranslations to count.
+     * @param {CasinoGameTranslationCountArgs} args - Arguments to filter CasinoGameTranslations to count.
      * @example
-     * // Count the number of GameTranslations
-     * const count = await prisma.gameTranslation.count({
+     * // Count the number of CasinoGameTranslations
+     * const count = await prisma.casinoGameTranslation.count({
      *   where: {
-     *     // ... the filter for the GameTranslations we want to count
+     *     // ... the filter for the CasinoGameTranslations we want to count
      *   }
      * })
     **/
-    count<T extends GameTranslationCountArgs>(
-      args?: Subset<T, GameTranslationCountArgs>,
+    count<T extends CasinoGameTranslationCountArgs>(
+      args?: Subset<T, CasinoGameTranslationCountArgs>,
     ): Prisma.PrismaPromise<
       T extends $Utils.Record<'select', any>
         ? T['select'] extends true
           ? number
-          : GetScalarType<T['select'], GameTranslationCountAggregateOutputType>
+          : GetScalarType<T['select'], CasinoGameTranslationCountAggregateOutputType>
         : number
     >
 
     /**
-     * Allows you to perform aggregations operations on a GameTranslation.
+     * Allows you to perform aggregations operations on a CasinoGameTranslation.
      * Note, that providing `undefined` is treated as the value not being there.
      * Read more here: https://pris.ly/d/null-undefined
-     * @param {GameTranslationAggregateArgs} args - Select which aggregations you would like to apply and on what fields.
+     * @param {CasinoGameTranslationAggregateArgs} args - Select which aggregations you would like to apply and on what fields.
      * @example
      * // Ordered by age ascending
      * // Where email contains prisma.io
@@ -16368,13 +16368,13 @@ export namespace Prisma {
      *   take: 10,
      * })
     **/
-    aggregate<T extends GameTranslationAggregateArgs>(args: Subset<T, GameTranslationAggregateArgs>): Prisma.PrismaPromise<GetGameTranslationAggregateType<T>>
+    aggregate<T extends CasinoGameTranslationAggregateArgs>(args: Subset<T, CasinoGameTranslationAggregateArgs>): Prisma.PrismaPromise<GetCasinoGameTranslationAggregateType<T>>
 
     /**
-     * Group by GameTranslation.
+     * Group by CasinoGameTranslation.
      * Note, that providing `undefined` is treated as the value not being there.
      * Read more here: https://pris.ly/d/null-undefined
-     * @param {GameTranslationGroupByArgs} args - Group by arguments.
+     * @param {CasinoGameTranslationGroupByArgs} args - Group by arguments.
      * @example
      * // Group by city, order by createdAt, get count
      * const result = await prisma.user.groupBy({
@@ -16389,14 +16389,14 @@ export namespace Prisma {
      * 
     **/
     groupBy<
-      T extends GameTranslationGroupByArgs,
+      T extends CasinoGameTranslationGroupByArgs,
       HasSelectOrTake extends Or<
         Extends<'skip', Keys<T>>,
         Extends<'take', Keys<T>>
       >,
       OrderByArg extends True extends HasSelectOrTake
-        ? { orderBy: GameTranslationGroupByArgs['orderBy'] }
-        : { orderBy?: GameTranslationGroupByArgs['orderBy'] },
+        ? { orderBy: CasinoGameTranslationGroupByArgs['orderBy'] }
+        : { orderBy?: CasinoGameTranslationGroupByArgs['orderBy'] },
       OrderFields extends ExcludeUnderscoreKeys<Keys<MaybeTupleToUnion<T['orderBy']>>>,
       ByFields extends MaybeTupleToUnion<T['by']>,
       ByValid extends Has<ByFields, OrderFields>,
@@ -16445,20 +16445,20 @@ export namespace Prisma {
             ? never
             : `Error: Field "${P}" in "orderBy" needs to be provided in "by"`
         }[OrderFields]
-    >(args: SubsetIntersection<T, GameTranslationGroupByArgs, OrderByArg> & InputErrors): {} extends InputErrors ? GetGameTranslationGroupByPayload<T> : Prisma.PrismaPromise<InputErrors>
+    >(args: SubsetIntersection<T, CasinoGameTranslationGroupByArgs, OrderByArg> & InputErrors): {} extends InputErrors ? GetCasinoGameTranslationGroupByPayload<T> : Prisma.PrismaPromise<InputErrors>
   /**
-   * Fields of the GameTranslation model
+   * Fields of the CasinoGameTranslation model
    */
-  readonly fields: GameTranslationFieldRefs;
+  readonly fields: CasinoGameTranslationFieldRefs;
   }
 
   /**
-   * The delegate class that acts as a "Promise-like" for GameTranslation.
+   * The delegate class that acts as a "Promise-like" for CasinoGameTranslation.
    * Why is this prefixed with `Prisma__`?
    * Because we want to prevent naming conflicts as mentioned in
    * https://github.com/prisma/prisma-client-js/issues/707
    */
-  export interface Prisma__GameTranslationClient<T, Null = never, ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs, GlobalOmitOptions = {}> extends Prisma.PrismaPromise<T> {
+  export interface Prisma__CasinoGameTranslationClient<T, Null = never, ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs, GlobalOmitOptions = {}> extends Prisma.PrismaPromise<T> {
     readonly [Symbol.toStringTag]: "PrismaPromise"
     casinoGame<T extends CasinoGameDefaultArgs<ExtArgs> = {}>(args?: Subset<T, CasinoGameDefaultArgs<ExtArgs>>): Prisma__CasinoGameClient<$Result.GetResult<Prisma.$CasinoGamePayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions> | Null, Null, ExtArgs, GlobalOmitOptions>
     /**
@@ -16487,428 +16487,428 @@ export namespace Prisma {
 
 
   /**
-   * Fields of the GameTranslation model
+   * Fields of the CasinoGameTranslation model
    */
-  interface GameTranslationFieldRefs {
-    readonly id: FieldRef<"GameTranslation", 'Int'>
-    readonly gameId: FieldRef<"GameTranslation", 'Int'>
-    readonly language: FieldRef<"GameTranslation", 'Language'>
-    readonly providerName: FieldRef<"GameTranslation", 'String'>
-    readonly categoryName: FieldRef<"GameTranslation", 'String'>
-    readonly gameName: FieldRef<"GameTranslation", 'String'>
-    readonly createdAt: FieldRef<"GameTranslation", 'DateTime'>
-    readonly updatedAt: FieldRef<"GameTranslation", 'DateTime'>
+  interface CasinoGameTranslationFieldRefs {
+    readonly id: FieldRef<"CasinoGameTranslation", 'Int'>
+    readonly gameId: FieldRef<"CasinoGameTranslation", 'Int'>
+    readonly language: FieldRef<"CasinoGameTranslation", 'Language'>
+    readonly providerName: FieldRef<"CasinoGameTranslation", 'String'>
+    readonly categoryName: FieldRef<"CasinoGameTranslation", 'String'>
+    readonly gameName: FieldRef<"CasinoGameTranslation", 'String'>
+    readonly createdAt: FieldRef<"CasinoGameTranslation", 'DateTime'>
+    readonly updatedAt: FieldRef<"CasinoGameTranslation", 'DateTime'>
   }
     
 
   // Custom InputTypes
   /**
-   * GameTranslation findUnique
+   * CasinoGameTranslation findUnique
    */
-  export type GameTranslationFindUniqueArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+  export type CasinoGameTranslationFindUniqueArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
     /**
-     * Select specific fields to fetch from the GameTranslation
+     * Select specific fields to fetch from the CasinoGameTranslation
      */
-    select?: GameTranslationSelect<ExtArgs> | null
+    select?: CasinoGameTranslationSelect<ExtArgs> | null
     /**
-     * Omit specific fields from the GameTranslation
+     * Omit specific fields from the CasinoGameTranslation
      */
-    omit?: GameTranslationOmit<ExtArgs> | null
+    omit?: CasinoGameTranslationOmit<ExtArgs> | null
     /**
      * Choose, which related nodes to fetch as well
      */
-    include?: GameTranslationInclude<ExtArgs> | null
+    include?: CasinoGameTranslationInclude<ExtArgs> | null
     /**
-     * Filter, which GameTranslation to fetch.
+     * Filter, which CasinoGameTranslation to fetch.
      */
-    where: GameTranslationWhereUniqueInput
+    where: CasinoGameTranslationWhereUniqueInput
   }
 
   /**
-   * GameTranslation findUniqueOrThrow
+   * CasinoGameTranslation findUniqueOrThrow
    */
-  export type GameTranslationFindUniqueOrThrowArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+  export type CasinoGameTranslationFindUniqueOrThrowArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
     /**
-     * Select specific fields to fetch from the GameTranslation
+     * Select specific fields to fetch from the CasinoGameTranslation
      */
-    select?: GameTranslationSelect<ExtArgs> | null
+    select?: CasinoGameTranslationSelect<ExtArgs> | null
     /**
-     * Omit specific fields from the GameTranslation
+     * Omit specific fields from the CasinoGameTranslation
      */
-    omit?: GameTranslationOmit<ExtArgs> | null
+    omit?: CasinoGameTranslationOmit<ExtArgs> | null
     /**
      * Choose, which related nodes to fetch as well
      */
-    include?: GameTranslationInclude<ExtArgs> | null
+    include?: CasinoGameTranslationInclude<ExtArgs> | null
     /**
-     * Filter, which GameTranslation to fetch.
+     * Filter, which CasinoGameTranslation to fetch.
      */
-    where: GameTranslationWhereUniqueInput
+    where: CasinoGameTranslationWhereUniqueInput
   }
 
   /**
-   * GameTranslation findFirst
+   * CasinoGameTranslation findFirst
    */
-  export type GameTranslationFindFirstArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+  export type CasinoGameTranslationFindFirstArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
     /**
-     * Select specific fields to fetch from the GameTranslation
+     * Select specific fields to fetch from the CasinoGameTranslation
      */
-    select?: GameTranslationSelect<ExtArgs> | null
+    select?: CasinoGameTranslationSelect<ExtArgs> | null
     /**
-     * Omit specific fields from the GameTranslation
+     * Omit specific fields from the CasinoGameTranslation
      */
-    omit?: GameTranslationOmit<ExtArgs> | null
+    omit?: CasinoGameTranslationOmit<ExtArgs> | null
     /**
      * Choose, which related nodes to fetch as well
      */
-    include?: GameTranslationInclude<ExtArgs> | null
+    include?: CasinoGameTranslationInclude<ExtArgs> | null
     /**
-     * Filter, which GameTranslation to fetch.
+     * Filter, which CasinoGameTranslation to fetch.
      */
-    where?: GameTranslationWhereInput
+    where?: CasinoGameTranslationWhereInput
     /**
      * {@link https://www.prisma.io/docs/concepts/components/prisma-client/sorting Sorting Docs}
      * 
-     * Determine the order of GameTranslations to fetch.
+     * Determine the order of CasinoGameTranslations to fetch.
      */
-    orderBy?: GameTranslationOrderByWithRelationInput | GameTranslationOrderByWithRelationInput[]
+    orderBy?: CasinoGameTranslationOrderByWithRelationInput | CasinoGameTranslationOrderByWithRelationInput[]
     /**
      * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination#cursor-based-pagination Cursor Docs}
      * 
-     * Sets the position for searching for GameTranslations.
+     * Sets the position for searching for CasinoGameTranslations.
      */
-    cursor?: GameTranslationWhereUniqueInput
+    cursor?: CasinoGameTranslationWhereUniqueInput
     /**
      * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
      * 
-     * Take `±n` GameTranslations from the position of the cursor.
+     * Take `±n` CasinoGameTranslations from the position of the cursor.
      */
     take?: number
     /**
      * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
      * 
-     * Skip the first `n` GameTranslations.
+     * Skip the first `n` CasinoGameTranslations.
      */
     skip?: number
     /**
      * {@link https://www.prisma.io/docs/concepts/components/prisma-client/distinct Distinct Docs}
      * 
-     * Filter by unique combinations of GameTranslations.
+     * Filter by unique combinations of CasinoGameTranslations.
      */
-    distinct?: GameTranslationScalarFieldEnum | GameTranslationScalarFieldEnum[]
+    distinct?: CasinoGameTranslationScalarFieldEnum | CasinoGameTranslationScalarFieldEnum[]
   }
 
   /**
-   * GameTranslation findFirstOrThrow
+   * CasinoGameTranslation findFirstOrThrow
    */
-  export type GameTranslationFindFirstOrThrowArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+  export type CasinoGameTranslationFindFirstOrThrowArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
     /**
-     * Select specific fields to fetch from the GameTranslation
+     * Select specific fields to fetch from the CasinoGameTranslation
      */
-    select?: GameTranslationSelect<ExtArgs> | null
+    select?: CasinoGameTranslationSelect<ExtArgs> | null
     /**
-     * Omit specific fields from the GameTranslation
+     * Omit specific fields from the CasinoGameTranslation
      */
-    omit?: GameTranslationOmit<ExtArgs> | null
+    omit?: CasinoGameTranslationOmit<ExtArgs> | null
     /**
      * Choose, which related nodes to fetch as well
      */
-    include?: GameTranslationInclude<ExtArgs> | null
+    include?: CasinoGameTranslationInclude<ExtArgs> | null
     /**
-     * Filter, which GameTranslation to fetch.
+     * Filter, which CasinoGameTranslation to fetch.
      */
-    where?: GameTranslationWhereInput
+    where?: CasinoGameTranslationWhereInput
     /**
      * {@link https://www.prisma.io/docs/concepts/components/prisma-client/sorting Sorting Docs}
      * 
-     * Determine the order of GameTranslations to fetch.
+     * Determine the order of CasinoGameTranslations to fetch.
      */
-    orderBy?: GameTranslationOrderByWithRelationInput | GameTranslationOrderByWithRelationInput[]
+    orderBy?: CasinoGameTranslationOrderByWithRelationInput | CasinoGameTranslationOrderByWithRelationInput[]
     /**
      * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination#cursor-based-pagination Cursor Docs}
      * 
-     * Sets the position for searching for GameTranslations.
+     * Sets the position for searching for CasinoGameTranslations.
      */
-    cursor?: GameTranslationWhereUniqueInput
+    cursor?: CasinoGameTranslationWhereUniqueInput
     /**
      * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
      * 
-     * Take `±n` GameTranslations from the position of the cursor.
+     * Take `±n` CasinoGameTranslations from the position of the cursor.
      */
     take?: number
     /**
      * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
      * 
-     * Skip the first `n` GameTranslations.
+     * Skip the first `n` CasinoGameTranslations.
      */
     skip?: number
     /**
      * {@link https://www.prisma.io/docs/concepts/components/prisma-client/distinct Distinct Docs}
      * 
-     * Filter by unique combinations of GameTranslations.
+     * Filter by unique combinations of CasinoGameTranslations.
      */
-    distinct?: GameTranslationScalarFieldEnum | GameTranslationScalarFieldEnum[]
+    distinct?: CasinoGameTranslationScalarFieldEnum | CasinoGameTranslationScalarFieldEnum[]
   }
 
   /**
-   * GameTranslation findMany
+   * CasinoGameTranslation findMany
    */
-  export type GameTranslationFindManyArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+  export type CasinoGameTranslationFindManyArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
     /**
-     * Select specific fields to fetch from the GameTranslation
+     * Select specific fields to fetch from the CasinoGameTranslation
      */
-    select?: GameTranslationSelect<ExtArgs> | null
+    select?: CasinoGameTranslationSelect<ExtArgs> | null
     /**
-     * Omit specific fields from the GameTranslation
+     * Omit specific fields from the CasinoGameTranslation
      */
-    omit?: GameTranslationOmit<ExtArgs> | null
+    omit?: CasinoGameTranslationOmit<ExtArgs> | null
     /**
      * Choose, which related nodes to fetch as well
      */
-    include?: GameTranslationInclude<ExtArgs> | null
+    include?: CasinoGameTranslationInclude<ExtArgs> | null
     /**
-     * Filter, which GameTranslations to fetch.
+     * Filter, which CasinoGameTranslations to fetch.
      */
-    where?: GameTranslationWhereInput
+    where?: CasinoGameTranslationWhereInput
     /**
      * {@link https://www.prisma.io/docs/concepts/components/prisma-client/sorting Sorting Docs}
      * 
-     * Determine the order of GameTranslations to fetch.
+     * Determine the order of CasinoGameTranslations to fetch.
      */
-    orderBy?: GameTranslationOrderByWithRelationInput | GameTranslationOrderByWithRelationInput[]
+    orderBy?: CasinoGameTranslationOrderByWithRelationInput | CasinoGameTranslationOrderByWithRelationInput[]
     /**
      * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination#cursor-based-pagination Cursor Docs}
      * 
-     * Sets the position for listing GameTranslations.
+     * Sets the position for listing CasinoGameTranslations.
      */
-    cursor?: GameTranslationWhereUniqueInput
+    cursor?: CasinoGameTranslationWhereUniqueInput
     /**
      * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
      * 
-     * Take `±n` GameTranslations from the position of the cursor.
+     * Take `±n` CasinoGameTranslations from the position of the cursor.
      */
     take?: number
     /**
      * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
      * 
-     * Skip the first `n` GameTranslations.
+     * Skip the first `n` CasinoGameTranslations.
      */
     skip?: number
-    distinct?: GameTranslationScalarFieldEnum | GameTranslationScalarFieldEnum[]
+    distinct?: CasinoGameTranslationScalarFieldEnum | CasinoGameTranslationScalarFieldEnum[]
   }
 
   /**
-   * GameTranslation create
+   * CasinoGameTranslation create
    */
-  export type GameTranslationCreateArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+  export type CasinoGameTranslationCreateArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
     /**
-     * Select specific fields to fetch from the GameTranslation
+     * Select specific fields to fetch from the CasinoGameTranslation
      */
-    select?: GameTranslationSelect<ExtArgs> | null
+    select?: CasinoGameTranslationSelect<ExtArgs> | null
     /**
-     * Omit specific fields from the GameTranslation
+     * Omit specific fields from the CasinoGameTranslation
      */
-    omit?: GameTranslationOmit<ExtArgs> | null
+    omit?: CasinoGameTranslationOmit<ExtArgs> | null
     /**
      * Choose, which related nodes to fetch as well
      */
-    include?: GameTranslationInclude<ExtArgs> | null
+    include?: CasinoGameTranslationInclude<ExtArgs> | null
     /**
-     * The data needed to create a GameTranslation.
+     * The data needed to create a CasinoGameTranslation.
      */
-    data: XOR<GameTranslationCreateInput, GameTranslationUncheckedCreateInput>
+    data: XOR<CasinoGameTranslationCreateInput, CasinoGameTranslationUncheckedCreateInput>
   }
 
   /**
-   * GameTranslation createMany
+   * CasinoGameTranslation createMany
    */
-  export type GameTranslationCreateManyArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+  export type CasinoGameTranslationCreateManyArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
     /**
-     * The data used to create many GameTranslations.
+     * The data used to create many CasinoGameTranslations.
      */
-    data: GameTranslationCreateManyInput | GameTranslationCreateManyInput[]
+    data: CasinoGameTranslationCreateManyInput | CasinoGameTranslationCreateManyInput[]
     skipDuplicates?: boolean
   }
 
   /**
-   * GameTranslation createManyAndReturn
+   * CasinoGameTranslation createManyAndReturn
    */
-  export type GameTranslationCreateManyAndReturnArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+  export type CasinoGameTranslationCreateManyAndReturnArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
     /**
-     * Select specific fields to fetch from the GameTranslation
+     * Select specific fields to fetch from the CasinoGameTranslation
      */
-    select?: GameTranslationSelectCreateManyAndReturn<ExtArgs> | null
+    select?: CasinoGameTranslationSelectCreateManyAndReturn<ExtArgs> | null
     /**
-     * Omit specific fields from the GameTranslation
+     * Omit specific fields from the CasinoGameTranslation
      */
-    omit?: GameTranslationOmit<ExtArgs> | null
+    omit?: CasinoGameTranslationOmit<ExtArgs> | null
     /**
-     * The data used to create many GameTranslations.
+     * The data used to create many CasinoGameTranslations.
      */
-    data: GameTranslationCreateManyInput | GameTranslationCreateManyInput[]
+    data: CasinoGameTranslationCreateManyInput | CasinoGameTranslationCreateManyInput[]
     skipDuplicates?: boolean
     /**
      * Choose, which related nodes to fetch as well
      */
-    include?: GameTranslationIncludeCreateManyAndReturn<ExtArgs> | null
+    include?: CasinoGameTranslationIncludeCreateManyAndReturn<ExtArgs> | null
   }
 
   /**
-   * GameTranslation update
+   * CasinoGameTranslation update
    */
-  export type GameTranslationUpdateArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+  export type CasinoGameTranslationUpdateArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
     /**
-     * Select specific fields to fetch from the GameTranslation
+     * Select specific fields to fetch from the CasinoGameTranslation
      */
-    select?: GameTranslationSelect<ExtArgs> | null
+    select?: CasinoGameTranslationSelect<ExtArgs> | null
     /**
-     * Omit specific fields from the GameTranslation
+     * Omit specific fields from the CasinoGameTranslation
      */
-    omit?: GameTranslationOmit<ExtArgs> | null
+    omit?: CasinoGameTranslationOmit<ExtArgs> | null
     /**
      * Choose, which related nodes to fetch as well
      */
-    include?: GameTranslationInclude<ExtArgs> | null
+    include?: CasinoGameTranslationInclude<ExtArgs> | null
     /**
-     * The data needed to update a GameTranslation.
+     * The data needed to update a CasinoGameTranslation.
      */
-    data: XOR<GameTranslationUpdateInput, GameTranslationUncheckedUpdateInput>
+    data: XOR<CasinoGameTranslationUpdateInput, CasinoGameTranslationUncheckedUpdateInput>
     /**
-     * Choose, which GameTranslation to update.
+     * Choose, which CasinoGameTranslation to update.
      */
-    where: GameTranslationWhereUniqueInput
+    where: CasinoGameTranslationWhereUniqueInput
   }
 
   /**
-   * GameTranslation updateMany
+   * CasinoGameTranslation updateMany
    */
-  export type GameTranslationUpdateManyArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+  export type CasinoGameTranslationUpdateManyArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
     /**
-     * The data used to update GameTranslations.
+     * The data used to update CasinoGameTranslations.
      */
-    data: XOR<GameTranslationUpdateManyMutationInput, GameTranslationUncheckedUpdateManyInput>
+    data: XOR<CasinoGameTranslationUpdateManyMutationInput, CasinoGameTranslationUncheckedUpdateManyInput>
     /**
-     * Filter which GameTranslations to update
+     * Filter which CasinoGameTranslations to update
      */
-    where?: GameTranslationWhereInput
+    where?: CasinoGameTranslationWhereInput
     /**
-     * Limit how many GameTranslations to update.
+     * Limit how many CasinoGameTranslations to update.
      */
     limit?: number
   }
 
   /**
-   * GameTranslation updateManyAndReturn
+   * CasinoGameTranslation updateManyAndReturn
    */
-  export type GameTranslationUpdateManyAndReturnArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+  export type CasinoGameTranslationUpdateManyAndReturnArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
     /**
-     * Select specific fields to fetch from the GameTranslation
+     * Select specific fields to fetch from the CasinoGameTranslation
      */
-    select?: GameTranslationSelectUpdateManyAndReturn<ExtArgs> | null
+    select?: CasinoGameTranslationSelectUpdateManyAndReturn<ExtArgs> | null
     /**
-     * Omit specific fields from the GameTranslation
+     * Omit specific fields from the CasinoGameTranslation
      */
-    omit?: GameTranslationOmit<ExtArgs> | null
+    omit?: CasinoGameTranslationOmit<ExtArgs> | null
     /**
-     * The data used to update GameTranslations.
+     * The data used to update CasinoGameTranslations.
      */
-    data: XOR<GameTranslationUpdateManyMutationInput, GameTranslationUncheckedUpdateManyInput>
+    data: XOR<CasinoGameTranslationUpdateManyMutationInput, CasinoGameTranslationUncheckedUpdateManyInput>
     /**
-     * Filter which GameTranslations to update
+     * Filter which CasinoGameTranslations to update
      */
-    where?: GameTranslationWhereInput
+    where?: CasinoGameTranslationWhereInput
     /**
-     * Limit how many GameTranslations to update.
+     * Limit how many CasinoGameTranslations to update.
      */
     limit?: number
     /**
      * Choose, which related nodes to fetch as well
      */
-    include?: GameTranslationIncludeUpdateManyAndReturn<ExtArgs> | null
+    include?: CasinoGameTranslationIncludeUpdateManyAndReturn<ExtArgs> | null
   }
 
   /**
-   * GameTranslation upsert
+   * CasinoGameTranslation upsert
    */
-  export type GameTranslationUpsertArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+  export type CasinoGameTranslationUpsertArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
     /**
-     * Select specific fields to fetch from the GameTranslation
+     * Select specific fields to fetch from the CasinoGameTranslation
      */
-    select?: GameTranslationSelect<ExtArgs> | null
+    select?: CasinoGameTranslationSelect<ExtArgs> | null
     /**
-     * Omit specific fields from the GameTranslation
+     * Omit specific fields from the CasinoGameTranslation
      */
-    omit?: GameTranslationOmit<ExtArgs> | null
+    omit?: CasinoGameTranslationOmit<ExtArgs> | null
     /**
      * Choose, which related nodes to fetch as well
      */
-    include?: GameTranslationInclude<ExtArgs> | null
+    include?: CasinoGameTranslationInclude<ExtArgs> | null
     /**
-     * The filter to search for the GameTranslation to update in case it exists.
+     * The filter to search for the CasinoGameTranslation to update in case it exists.
      */
-    where: GameTranslationWhereUniqueInput
+    where: CasinoGameTranslationWhereUniqueInput
     /**
-     * In case the GameTranslation found by the `where` argument doesn't exist, create a new GameTranslation with this data.
+     * In case the CasinoGameTranslation found by the `where` argument doesn't exist, create a new CasinoGameTranslation with this data.
      */
-    create: XOR<GameTranslationCreateInput, GameTranslationUncheckedCreateInput>
+    create: XOR<CasinoGameTranslationCreateInput, CasinoGameTranslationUncheckedCreateInput>
     /**
-     * In case the GameTranslation was found with the provided `where` argument, update it with this data.
+     * In case the CasinoGameTranslation was found with the provided `where` argument, update it with this data.
      */
-    update: XOR<GameTranslationUpdateInput, GameTranslationUncheckedUpdateInput>
+    update: XOR<CasinoGameTranslationUpdateInput, CasinoGameTranslationUncheckedUpdateInput>
   }
 
   /**
-   * GameTranslation delete
+   * CasinoGameTranslation delete
    */
-  export type GameTranslationDeleteArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+  export type CasinoGameTranslationDeleteArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
     /**
-     * Select specific fields to fetch from the GameTranslation
+     * Select specific fields to fetch from the CasinoGameTranslation
      */
-    select?: GameTranslationSelect<ExtArgs> | null
+    select?: CasinoGameTranslationSelect<ExtArgs> | null
     /**
-     * Omit specific fields from the GameTranslation
+     * Omit specific fields from the CasinoGameTranslation
      */
-    omit?: GameTranslationOmit<ExtArgs> | null
+    omit?: CasinoGameTranslationOmit<ExtArgs> | null
     /**
      * Choose, which related nodes to fetch as well
      */
-    include?: GameTranslationInclude<ExtArgs> | null
+    include?: CasinoGameTranslationInclude<ExtArgs> | null
     /**
-     * Filter which GameTranslation to delete.
+     * Filter which CasinoGameTranslation to delete.
      */
-    where: GameTranslationWhereUniqueInput
+    where: CasinoGameTranslationWhereUniqueInput
   }
 
   /**
-   * GameTranslation deleteMany
+   * CasinoGameTranslation deleteMany
    */
-  export type GameTranslationDeleteManyArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+  export type CasinoGameTranslationDeleteManyArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
     /**
-     * Filter which GameTranslations to delete
+     * Filter which CasinoGameTranslations to delete
      */
-    where?: GameTranslationWhereInput
+    where?: CasinoGameTranslationWhereInput
     /**
-     * Limit how many GameTranslations to delete.
+     * Limit how many CasinoGameTranslations to delete.
      */
     limit?: number
   }
 
   /**
-   * GameTranslation without action
+   * CasinoGameTranslation without action
    */
-  export type GameTranslationDefaultArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+  export type CasinoGameTranslationDefaultArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
     /**
-     * Select specific fields to fetch from the GameTranslation
+     * Select specific fields to fetch from the CasinoGameTranslation
      */
-    select?: GameTranslationSelect<ExtArgs> | null
+    select?: CasinoGameTranslationSelect<ExtArgs> | null
     /**
-     * Omit specific fields from the GameTranslation
+     * Omit specific fields from the CasinoGameTranslation
      */
-    omit?: GameTranslationOmit<ExtArgs> | null
+    omit?: CasinoGameTranslationOmit<ExtArgs> | null
     /**
      * Choose, which related nodes to fetch as well
      */
-    include?: GameTranslationInclude<ExtArgs> | null
+    include?: CasinoGameTranslationInclude<ExtArgs> | null
   }
 
 
@@ -61864,7 +61864,7 @@ export namespace Prisma {
   export type CasinoGameScalarFieldEnum = (typeof CasinoGameScalarFieldEnum)[keyof typeof CasinoGameScalarFieldEnum]
 
 
-  export const GameTranslationScalarFieldEnum: {
+  export const CasinoGameTranslationScalarFieldEnum: {
     id: 'id',
     gameId: 'gameId',
     language: 'language',
@@ -61875,7 +61875,7 @@ export namespace Prisma {
     updatedAt: 'updatedAt'
   };
 
-  export type GameTranslationScalarFieldEnum = (typeof GameTranslationScalarFieldEnum)[keyof typeof GameTranslationScalarFieldEnum]
+  export type CasinoGameTranslationScalarFieldEnum = (typeof CasinoGameTranslationScalarFieldEnum)[keyof typeof CasinoGameTranslationScalarFieldEnum]
 
 
   export const GameSessionScalarFieldEnum: {
@@ -64025,7 +64025,7 @@ export namespace Prisma {
     bonusDetails?: BonusDetailListRelationFilter
     gameRounds?: GameRoundListRelationFilter
     gameSessions?: GameSessionListRelationFilter
-    translations?: GameTranslationListRelationFilter
+    translations?: CasinoGameTranslationListRelationFilter
   }
 
   export type CasinoGameOrderByWithRelationInput = {
@@ -64046,7 +64046,7 @@ export namespace Prisma {
     bonusDetails?: BonusDetailOrderByRelationAggregateInput
     gameRounds?: GameRoundOrderByRelationAggregateInput
     gameSessions?: GameSessionOrderByRelationAggregateInput
-    translations?: GameTranslationOrderByRelationAggregateInput
+    translations?: CasinoGameTranslationOrderByRelationAggregateInput
   }
 
   export type CasinoGameWhereUniqueInput = Prisma.AtLeast<{
@@ -64071,7 +64071,7 @@ export namespace Prisma {
     bonusDetails?: BonusDetailListRelationFilter
     gameRounds?: GameRoundListRelationFilter
     gameSessions?: GameSessionListRelationFilter
-    translations?: GameTranslationListRelationFilter
+    translations?: CasinoGameTranslationListRelationFilter
   }, "id" | "aggregatorType_provider_gameId">
 
   export type CasinoGameOrderByWithAggregationInput = {
@@ -64116,22 +64116,22 @@ export namespace Prisma {
     updatedAt?: DateTimeWithAggregatesFilter<"CasinoGame"> | Date | string
   }
 
-  export type GameTranslationWhereInput = {
-    AND?: GameTranslationWhereInput | GameTranslationWhereInput[]
-    OR?: GameTranslationWhereInput[]
-    NOT?: GameTranslationWhereInput | GameTranslationWhereInput[]
-    id?: IntFilter<"GameTranslation"> | number
-    gameId?: IntFilter<"GameTranslation"> | number
-    language?: EnumLanguageFilter<"GameTranslation"> | $Enums.Language
-    providerName?: StringFilter<"GameTranslation"> | string
-    categoryName?: StringFilter<"GameTranslation"> | string
-    gameName?: StringFilter<"GameTranslation"> | string
-    createdAt?: DateTimeFilter<"GameTranslation"> | Date | string
-    updatedAt?: DateTimeFilter<"GameTranslation"> | Date | string
+  export type CasinoGameTranslationWhereInput = {
+    AND?: CasinoGameTranslationWhereInput | CasinoGameTranslationWhereInput[]
+    OR?: CasinoGameTranslationWhereInput[]
+    NOT?: CasinoGameTranslationWhereInput | CasinoGameTranslationWhereInput[]
+    id?: IntFilter<"CasinoGameTranslation"> | number
+    gameId?: IntFilter<"CasinoGameTranslation"> | number
+    language?: EnumLanguageFilter<"CasinoGameTranslation"> | $Enums.Language
+    providerName?: StringFilter<"CasinoGameTranslation"> | string
+    categoryName?: StringFilter<"CasinoGameTranslation"> | string
+    gameName?: StringFilter<"CasinoGameTranslation"> | string
+    createdAt?: DateTimeFilter<"CasinoGameTranslation"> | Date | string
+    updatedAt?: DateTimeFilter<"CasinoGameTranslation"> | Date | string
     casinoGame?: XOR<CasinoGameScalarRelationFilter, CasinoGameWhereInput>
   }
 
-  export type GameTranslationOrderByWithRelationInput = {
+  export type CasinoGameTranslationOrderByWithRelationInput = {
     id?: SortOrder
     gameId?: SortOrder
     language?: SortOrder
@@ -64143,23 +64143,23 @@ export namespace Prisma {
     casinoGame?: CasinoGameOrderByWithRelationInput
   }
 
-  export type GameTranslationWhereUniqueInput = Prisma.AtLeast<{
+  export type CasinoGameTranslationWhereUniqueInput = Prisma.AtLeast<{
     id?: number
-    gameId_language?: GameTranslationGameIdLanguageCompoundUniqueInput
-    AND?: GameTranslationWhereInput | GameTranslationWhereInput[]
-    OR?: GameTranslationWhereInput[]
-    NOT?: GameTranslationWhereInput | GameTranslationWhereInput[]
-    gameId?: IntFilter<"GameTranslation"> | number
-    language?: EnumLanguageFilter<"GameTranslation"> | $Enums.Language
-    providerName?: StringFilter<"GameTranslation"> | string
-    categoryName?: StringFilter<"GameTranslation"> | string
-    gameName?: StringFilter<"GameTranslation"> | string
-    createdAt?: DateTimeFilter<"GameTranslation"> | Date | string
-    updatedAt?: DateTimeFilter<"GameTranslation"> | Date | string
+    gameId_language?: CasinoGameTranslationGameIdLanguageCompoundUniqueInput
+    AND?: CasinoGameTranslationWhereInput | CasinoGameTranslationWhereInput[]
+    OR?: CasinoGameTranslationWhereInput[]
+    NOT?: CasinoGameTranslationWhereInput | CasinoGameTranslationWhereInput[]
+    gameId?: IntFilter<"CasinoGameTranslation"> | number
+    language?: EnumLanguageFilter<"CasinoGameTranslation"> | $Enums.Language
+    providerName?: StringFilter<"CasinoGameTranslation"> | string
+    categoryName?: StringFilter<"CasinoGameTranslation"> | string
+    gameName?: StringFilter<"CasinoGameTranslation"> | string
+    createdAt?: DateTimeFilter<"CasinoGameTranslation"> | Date | string
+    updatedAt?: DateTimeFilter<"CasinoGameTranslation"> | Date | string
     casinoGame?: XOR<CasinoGameScalarRelationFilter, CasinoGameWhereInput>
   }, "id" | "gameId_language">
 
-  export type GameTranslationOrderByWithAggregationInput = {
+  export type CasinoGameTranslationOrderByWithAggregationInput = {
     id?: SortOrder
     gameId?: SortOrder
     language?: SortOrder
@@ -64168,25 +64168,25 @@ export namespace Prisma {
     gameName?: SortOrder
     createdAt?: SortOrder
     updatedAt?: SortOrder
-    _count?: GameTranslationCountOrderByAggregateInput
-    _avg?: GameTranslationAvgOrderByAggregateInput
-    _max?: GameTranslationMaxOrderByAggregateInput
-    _min?: GameTranslationMinOrderByAggregateInput
-    _sum?: GameTranslationSumOrderByAggregateInput
+    _count?: CasinoGameTranslationCountOrderByAggregateInput
+    _avg?: CasinoGameTranslationAvgOrderByAggregateInput
+    _max?: CasinoGameTranslationMaxOrderByAggregateInput
+    _min?: CasinoGameTranslationMinOrderByAggregateInput
+    _sum?: CasinoGameTranslationSumOrderByAggregateInput
   }
 
-  export type GameTranslationScalarWhereWithAggregatesInput = {
-    AND?: GameTranslationScalarWhereWithAggregatesInput | GameTranslationScalarWhereWithAggregatesInput[]
-    OR?: GameTranslationScalarWhereWithAggregatesInput[]
-    NOT?: GameTranslationScalarWhereWithAggregatesInput | GameTranslationScalarWhereWithAggregatesInput[]
-    id?: IntWithAggregatesFilter<"GameTranslation"> | number
-    gameId?: IntWithAggregatesFilter<"GameTranslation"> | number
-    language?: EnumLanguageWithAggregatesFilter<"GameTranslation"> | $Enums.Language
-    providerName?: StringWithAggregatesFilter<"GameTranslation"> | string
-    categoryName?: StringWithAggregatesFilter<"GameTranslation"> | string
-    gameName?: StringWithAggregatesFilter<"GameTranslation"> | string
-    createdAt?: DateTimeWithAggregatesFilter<"GameTranslation"> | Date | string
-    updatedAt?: DateTimeWithAggregatesFilter<"GameTranslation"> | Date | string
+  export type CasinoGameTranslationScalarWhereWithAggregatesInput = {
+    AND?: CasinoGameTranslationScalarWhereWithAggregatesInput | CasinoGameTranslationScalarWhereWithAggregatesInput[]
+    OR?: CasinoGameTranslationScalarWhereWithAggregatesInput[]
+    NOT?: CasinoGameTranslationScalarWhereWithAggregatesInput | CasinoGameTranslationScalarWhereWithAggregatesInput[]
+    id?: IntWithAggregatesFilter<"CasinoGameTranslation"> | number
+    gameId?: IntWithAggregatesFilter<"CasinoGameTranslation"> | number
+    language?: EnumLanguageWithAggregatesFilter<"CasinoGameTranslation"> | $Enums.Language
+    providerName?: StringWithAggregatesFilter<"CasinoGameTranslation"> | string
+    categoryName?: StringWithAggregatesFilter<"CasinoGameTranslation"> | string
+    gameName?: StringWithAggregatesFilter<"CasinoGameTranslation"> | string
+    createdAt?: DateTimeWithAggregatesFilter<"CasinoGameTranslation"> | Date | string
+    updatedAt?: DateTimeWithAggregatesFilter<"CasinoGameTranslation"> | Date | string
   }
 
   export type GameSessionWhereInput = {
@@ -68669,7 +68669,7 @@ export namespace Prisma {
     bonusDetails?: BonusDetailCreateNestedManyWithoutCasinoGameInput
     gameRounds?: GameRoundCreateNestedManyWithoutCasinoGameInput
     gameSessions?: GameSessionCreateNestedManyWithoutGameInput
-    translations?: GameTranslationCreateNestedManyWithoutCasinoGameInput
+    translations?: CasinoGameTranslationCreateNestedManyWithoutCasinoGameInput
   }
 
   export type CasinoGameUncheckedCreateInput = {
@@ -68690,7 +68690,7 @@ export namespace Prisma {
     bonusDetails?: BonusDetailUncheckedCreateNestedManyWithoutCasinoGameInput
     gameRounds?: GameRoundUncheckedCreateNestedManyWithoutCasinoGameInput
     gameSessions?: GameSessionUncheckedCreateNestedManyWithoutGameInput
-    translations?: GameTranslationUncheckedCreateNestedManyWithoutCasinoGameInput
+    translations?: CasinoGameTranslationUncheckedCreateNestedManyWithoutCasinoGameInput
   }
 
   export type CasinoGameUpdateInput = {
@@ -68710,7 +68710,7 @@ export namespace Prisma {
     bonusDetails?: BonusDetailUpdateManyWithoutCasinoGameNestedInput
     gameRounds?: GameRoundUpdateManyWithoutCasinoGameNestedInput
     gameSessions?: GameSessionUpdateManyWithoutGameNestedInput
-    translations?: GameTranslationUpdateManyWithoutCasinoGameNestedInput
+    translations?: CasinoGameTranslationUpdateManyWithoutCasinoGameNestedInput
   }
 
   export type CasinoGameUncheckedUpdateInput = {
@@ -68731,7 +68731,7 @@ export namespace Prisma {
     bonusDetails?: BonusDetailUncheckedUpdateManyWithoutCasinoGameNestedInput
     gameRounds?: GameRoundUncheckedUpdateManyWithoutCasinoGameNestedInput
     gameSessions?: GameSessionUncheckedUpdateManyWithoutGameNestedInput
-    translations?: GameTranslationUncheckedUpdateManyWithoutCasinoGameNestedInput
+    translations?: CasinoGameTranslationUncheckedUpdateManyWithoutCasinoGameNestedInput
   }
 
   export type CasinoGameCreateManyInput = {
@@ -68784,7 +68784,7 @@ export namespace Prisma {
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
   }
 
-  export type GameTranslationCreateInput = {
+  export type CasinoGameTranslationCreateInput = {
     language: $Enums.Language
     providerName: string
     categoryName: string
@@ -68794,7 +68794,7 @@ export namespace Prisma {
     casinoGame: CasinoGameCreateNestedOneWithoutTranslationsInput
   }
 
-  export type GameTranslationUncheckedCreateInput = {
+  export type CasinoGameTranslationUncheckedCreateInput = {
     id?: number
     gameId: number
     language: $Enums.Language
@@ -68805,7 +68805,7 @@ export namespace Prisma {
     updatedAt?: Date | string
   }
 
-  export type GameTranslationUpdateInput = {
+  export type CasinoGameTranslationUpdateInput = {
     language?: EnumLanguageFieldUpdateOperationsInput | $Enums.Language
     providerName?: StringFieldUpdateOperationsInput | string
     categoryName?: StringFieldUpdateOperationsInput | string
@@ -68815,7 +68815,7 @@ export namespace Prisma {
     casinoGame?: CasinoGameUpdateOneRequiredWithoutTranslationsNestedInput
   }
 
-  export type GameTranslationUncheckedUpdateInput = {
+  export type CasinoGameTranslationUncheckedUpdateInput = {
     id?: IntFieldUpdateOperationsInput | number
     gameId?: IntFieldUpdateOperationsInput | number
     language?: EnumLanguageFieldUpdateOperationsInput | $Enums.Language
@@ -68826,7 +68826,7 @@ export namespace Prisma {
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
   }
 
-  export type GameTranslationCreateManyInput = {
+  export type CasinoGameTranslationCreateManyInput = {
     id?: number
     gameId: number
     language: $Enums.Language
@@ -68837,7 +68837,7 @@ export namespace Prisma {
     updatedAt?: Date | string
   }
 
-  export type GameTranslationUpdateManyMutationInput = {
+  export type CasinoGameTranslationUpdateManyMutationInput = {
     language?: EnumLanguageFieldUpdateOperationsInput | $Enums.Language
     providerName?: StringFieldUpdateOperationsInput | string
     categoryName?: StringFieldUpdateOperationsInput | string
@@ -68846,7 +68846,7 @@ export namespace Prisma {
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
   }
 
-  export type GameTranslationUncheckedUpdateManyInput = {
+  export type CasinoGameTranslationUncheckedUpdateManyInput = {
     id?: IntFieldUpdateOperationsInput | number
     gameId?: IntFieldUpdateOperationsInput | number
     language?: EnumLanguageFieldUpdateOperationsInput | $Enums.Language
@@ -73671,10 +73671,10 @@ export namespace Prisma {
     none?: GameSessionWhereInput
   }
 
-  export type GameTranslationListRelationFilter = {
-    every?: GameTranslationWhereInput
-    some?: GameTranslationWhereInput
-    none?: GameTranslationWhereInput
+  export type CasinoGameTranslationListRelationFilter = {
+    every?: CasinoGameTranslationWhereInput
+    some?: CasinoGameTranslationWhereInput
+    none?: CasinoGameTranslationWhereInput
   }
 
   export type BonusDetailOrderByRelationAggregateInput = {
@@ -73689,7 +73689,7 @@ export namespace Prisma {
     _count?: SortOrder
   }
 
-  export type GameTranslationOrderByRelationAggregateInput = {
+  export type CasinoGameTranslationOrderByRelationAggregateInput = {
     _count?: SortOrder
   }
 
@@ -73822,12 +73822,12 @@ export namespace Prisma {
     isNot?: CasinoGameWhereInput
   }
 
-  export type GameTranslationGameIdLanguageCompoundUniqueInput = {
+  export type CasinoGameTranslationGameIdLanguageCompoundUniqueInput = {
     gameId: number
     language: $Enums.Language
   }
 
-  export type GameTranslationCountOrderByAggregateInput = {
+  export type CasinoGameTranslationCountOrderByAggregateInput = {
     id?: SortOrder
     gameId?: SortOrder
     language?: SortOrder
@@ -73838,23 +73838,12 @@ export namespace Prisma {
     updatedAt?: SortOrder
   }
 
-  export type GameTranslationAvgOrderByAggregateInput = {
+  export type CasinoGameTranslationAvgOrderByAggregateInput = {
     id?: SortOrder
     gameId?: SortOrder
   }
 
-  export type GameTranslationMaxOrderByAggregateInput = {
-    id?: SortOrder
-    gameId?: SortOrder
-    language?: SortOrder
-    providerName?: SortOrder
-    categoryName?: SortOrder
-    gameName?: SortOrder
-    createdAt?: SortOrder
-    updatedAt?: SortOrder
-  }
-
-  export type GameTranslationMinOrderByAggregateInput = {
+  export type CasinoGameTranslationMaxOrderByAggregateInput = {
     id?: SortOrder
     gameId?: SortOrder
     language?: SortOrder
@@ -73865,7 +73854,18 @@ export namespace Prisma {
     updatedAt?: SortOrder
   }
 
-  export type GameTranslationSumOrderByAggregateInput = {
+  export type CasinoGameTranslationMinOrderByAggregateInput = {
+    id?: SortOrder
+    gameId?: SortOrder
+    language?: SortOrder
+    providerName?: SortOrder
+    categoryName?: SortOrder
+    gameName?: SortOrder
+    createdAt?: SortOrder
+    updatedAt?: SortOrder
+  }
+
+  export type CasinoGameTranslationSumOrderByAggregateInput = {
     id?: SortOrder
     gameId?: SortOrder
   }
@@ -77347,11 +77347,11 @@ export namespace Prisma {
     connect?: GameSessionWhereUniqueInput | GameSessionWhereUniqueInput[]
   }
 
-  export type GameTranslationCreateNestedManyWithoutCasinoGameInput = {
-    create?: XOR<GameTranslationCreateWithoutCasinoGameInput, GameTranslationUncheckedCreateWithoutCasinoGameInput> | GameTranslationCreateWithoutCasinoGameInput[] | GameTranslationUncheckedCreateWithoutCasinoGameInput[]
-    connectOrCreate?: GameTranslationCreateOrConnectWithoutCasinoGameInput | GameTranslationCreateOrConnectWithoutCasinoGameInput[]
-    createMany?: GameTranslationCreateManyCasinoGameInputEnvelope
-    connect?: GameTranslationWhereUniqueInput | GameTranslationWhereUniqueInput[]
+  export type CasinoGameTranslationCreateNestedManyWithoutCasinoGameInput = {
+    create?: XOR<CasinoGameTranslationCreateWithoutCasinoGameInput, CasinoGameTranslationUncheckedCreateWithoutCasinoGameInput> | CasinoGameTranslationCreateWithoutCasinoGameInput[] | CasinoGameTranslationUncheckedCreateWithoutCasinoGameInput[]
+    connectOrCreate?: CasinoGameTranslationCreateOrConnectWithoutCasinoGameInput | CasinoGameTranslationCreateOrConnectWithoutCasinoGameInput[]
+    createMany?: CasinoGameTranslationCreateManyCasinoGameInputEnvelope
+    connect?: CasinoGameTranslationWhereUniqueInput | CasinoGameTranslationWhereUniqueInput[]
   }
 
   export type BonusDetailUncheckedCreateNestedManyWithoutCasinoGameInput = {
@@ -77375,11 +77375,11 @@ export namespace Prisma {
     connect?: GameSessionWhereUniqueInput | GameSessionWhereUniqueInput[]
   }
 
-  export type GameTranslationUncheckedCreateNestedManyWithoutCasinoGameInput = {
-    create?: XOR<GameTranslationCreateWithoutCasinoGameInput, GameTranslationUncheckedCreateWithoutCasinoGameInput> | GameTranslationCreateWithoutCasinoGameInput[] | GameTranslationUncheckedCreateWithoutCasinoGameInput[]
-    connectOrCreate?: GameTranslationCreateOrConnectWithoutCasinoGameInput | GameTranslationCreateOrConnectWithoutCasinoGameInput[]
-    createMany?: GameTranslationCreateManyCasinoGameInputEnvelope
-    connect?: GameTranslationWhereUniqueInput | GameTranslationWhereUniqueInput[]
+  export type CasinoGameTranslationUncheckedCreateNestedManyWithoutCasinoGameInput = {
+    create?: XOR<CasinoGameTranslationCreateWithoutCasinoGameInput, CasinoGameTranslationUncheckedCreateWithoutCasinoGameInput> | CasinoGameTranslationCreateWithoutCasinoGameInput[] | CasinoGameTranslationUncheckedCreateWithoutCasinoGameInput[]
+    connectOrCreate?: CasinoGameTranslationCreateOrConnectWithoutCasinoGameInput | CasinoGameTranslationCreateOrConnectWithoutCasinoGameInput[]
+    createMany?: CasinoGameTranslationCreateManyCasinoGameInputEnvelope
+    connect?: CasinoGameTranslationWhereUniqueInput | CasinoGameTranslationWhereUniqueInput[]
   }
 
   export type EnumGameAggregatorTypeFieldUpdateOperationsInput = {
@@ -77444,18 +77444,18 @@ export namespace Prisma {
     deleteMany?: GameSessionScalarWhereInput | GameSessionScalarWhereInput[]
   }
 
-  export type GameTranslationUpdateManyWithoutCasinoGameNestedInput = {
-    create?: XOR<GameTranslationCreateWithoutCasinoGameInput, GameTranslationUncheckedCreateWithoutCasinoGameInput> | GameTranslationCreateWithoutCasinoGameInput[] | GameTranslationUncheckedCreateWithoutCasinoGameInput[]
-    connectOrCreate?: GameTranslationCreateOrConnectWithoutCasinoGameInput | GameTranslationCreateOrConnectWithoutCasinoGameInput[]
-    upsert?: GameTranslationUpsertWithWhereUniqueWithoutCasinoGameInput | GameTranslationUpsertWithWhereUniqueWithoutCasinoGameInput[]
-    createMany?: GameTranslationCreateManyCasinoGameInputEnvelope
-    set?: GameTranslationWhereUniqueInput | GameTranslationWhereUniqueInput[]
-    disconnect?: GameTranslationWhereUniqueInput | GameTranslationWhereUniqueInput[]
-    delete?: GameTranslationWhereUniqueInput | GameTranslationWhereUniqueInput[]
-    connect?: GameTranslationWhereUniqueInput | GameTranslationWhereUniqueInput[]
-    update?: GameTranslationUpdateWithWhereUniqueWithoutCasinoGameInput | GameTranslationUpdateWithWhereUniqueWithoutCasinoGameInput[]
-    updateMany?: GameTranslationUpdateManyWithWhereWithoutCasinoGameInput | GameTranslationUpdateManyWithWhereWithoutCasinoGameInput[]
-    deleteMany?: GameTranslationScalarWhereInput | GameTranslationScalarWhereInput[]
+  export type CasinoGameTranslationUpdateManyWithoutCasinoGameNestedInput = {
+    create?: XOR<CasinoGameTranslationCreateWithoutCasinoGameInput, CasinoGameTranslationUncheckedCreateWithoutCasinoGameInput> | CasinoGameTranslationCreateWithoutCasinoGameInput[] | CasinoGameTranslationUncheckedCreateWithoutCasinoGameInput[]
+    connectOrCreate?: CasinoGameTranslationCreateOrConnectWithoutCasinoGameInput | CasinoGameTranslationCreateOrConnectWithoutCasinoGameInput[]
+    upsert?: CasinoGameTranslationUpsertWithWhereUniqueWithoutCasinoGameInput | CasinoGameTranslationUpsertWithWhereUniqueWithoutCasinoGameInput[]
+    createMany?: CasinoGameTranslationCreateManyCasinoGameInputEnvelope
+    set?: CasinoGameTranslationWhereUniqueInput | CasinoGameTranslationWhereUniqueInput[]
+    disconnect?: CasinoGameTranslationWhereUniqueInput | CasinoGameTranslationWhereUniqueInput[]
+    delete?: CasinoGameTranslationWhereUniqueInput | CasinoGameTranslationWhereUniqueInput[]
+    connect?: CasinoGameTranslationWhereUniqueInput | CasinoGameTranslationWhereUniqueInput[]
+    update?: CasinoGameTranslationUpdateWithWhereUniqueWithoutCasinoGameInput | CasinoGameTranslationUpdateWithWhereUniqueWithoutCasinoGameInput[]
+    updateMany?: CasinoGameTranslationUpdateManyWithWhereWithoutCasinoGameInput | CasinoGameTranslationUpdateManyWithWhereWithoutCasinoGameInput[]
+    deleteMany?: CasinoGameTranslationScalarWhereInput | CasinoGameTranslationScalarWhereInput[]
   }
 
   export type BonusDetailUncheckedUpdateManyWithoutCasinoGameNestedInput = {
@@ -77500,18 +77500,18 @@ export namespace Prisma {
     deleteMany?: GameSessionScalarWhereInput | GameSessionScalarWhereInput[]
   }
 
-  export type GameTranslationUncheckedUpdateManyWithoutCasinoGameNestedInput = {
-    create?: XOR<GameTranslationCreateWithoutCasinoGameInput, GameTranslationUncheckedCreateWithoutCasinoGameInput> | GameTranslationCreateWithoutCasinoGameInput[] | GameTranslationUncheckedCreateWithoutCasinoGameInput[]
-    connectOrCreate?: GameTranslationCreateOrConnectWithoutCasinoGameInput | GameTranslationCreateOrConnectWithoutCasinoGameInput[]
-    upsert?: GameTranslationUpsertWithWhereUniqueWithoutCasinoGameInput | GameTranslationUpsertWithWhereUniqueWithoutCasinoGameInput[]
-    createMany?: GameTranslationCreateManyCasinoGameInputEnvelope
-    set?: GameTranslationWhereUniqueInput | GameTranslationWhereUniqueInput[]
-    disconnect?: GameTranslationWhereUniqueInput | GameTranslationWhereUniqueInput[]
-    delete?: GameTranslationWhereUniqueInput | GameTranslationWhereUniqueInput[]
-    connect?: GameTranslationWhereUniqueInput | GameTranslationWhereUniqueInput[]
-    update?: GameTranslationUpdateWithWhereUniqueWithoutCasinoGameInput | GameTranslationUpdateWithWhereUniqueWithoutCasinoGameInput[]
-    updateMany?: GameTranslationUpdateManyWithWhereWithoutCasinoGameInput | GameTranslationUpdateManyWithWhereWithoutCasinoGameInput[]
-    deleteMany?: GameTranslationScalarWhereInput | GameTranslationScalarWhereInput[]
+  export type CasinoGameTranslationUncheckedUpdateManyWithoutCasinoGameNestedInput = {
+    create?: XOR<CasinoGameTranslationCreateWithoutCasinoGameInput, CasinoGameTranslationUncheckedCreateWithoutCasinoGameInput> | CasinoGameTranslationCreateWithoutCasinoGameInput[] | CasinoGameTranslationUncheckedCreateWithoutCasinoGameInput[]
+    connectOrCreate?: CasinoGameTranslationCreateOrConnectWithoutCasinoGameInput | CasinoGameTranslationCreateOrConnectWithoutCasinoGameInput[]
+    upsert?: CasinoGameTranslationUpsertWithWhereUniqueWithoutCasinoGameInput | CasinoGameTranslationUpsertWithWhereUniqueWithoutCasinoGameInput[]
+    createMany?: CasinoGameTranslationCreateManyCasinoGameInputEnvelope
+    set?: CasinoGameTranslationWhereUniqueInput | CasinoGameTranslationWhereUniqueInput[]
+    disconnect?: CasinoGameTranslationWhereUniqueInput | CasinoGameTranslationWhereUniqueInput[]
+    delete?: CasinoGameTranslationWhereUniqueInput | CasinoGameTranslationWhereUniqueInput[]
+    connect?: CasinoGameTranslationWhereUniqueInput | CasinoGameTranslationWhereUniqueInput[]
+    update?: CasinoGameTranslationUpdateWithWhereUniqueWithoutCasinoGameInput | CasinoGameTranslationUpdateWithWhereUniqueWithoutCasinoGameInput[]
+    updateMany?: CasinoGameTranslationUpdateManyWithWhereWithoutCasinoGameInput | CasinoGameTranslationUpdateManyWithWhereWithoutCasinoGameInput[]
+    deleteMany?: CasinoGameTranslationScalarWhereInput | CasinoGameTranslationScalarWhereInput[]
   }
 
   export type CasinoGameCreateNestedOneWithoutTranslationsInput = {
@@ -82248,7 +82248,7 @@ export namespace Prisma {
     skipDuplicates?: boolean
   }
 
-  export type GameTranslationCreateWithoutCasinoGameInput = {
+  export type CasinoGameTranslationCreateWithoutCasinoGameInput = {
     language: $Enums.Language
     providerName: string
     categoryName: string
@@ -82257,7 +82257,7 @@ export namespace Prisma {
     updatedAt?: Date | string
   }
 
-  export type GameTranslationUncheckedCreateWithoutCasinoGameInput = {
+  export type CasinoGameTranslationUncheckedCreateWithoutCasinoGameInput = {
     id?: number
     language: $Enums.Language
     providerName: string
@@ -82267,13 +82267,13 @@ export namespace Prisma {
     updatedAt?: Date | string
   }
 
-  export type GameTranslationCreateOrConnectWithoutCasinoGameInput = {
-    where: GameTranslationWhereUniqueInput
-    create: XOR<GameTranslationCreateWithoutCasinoGameInput, GameTranslationUncheckedCreateWithoutCasinoGameInput>
+  export type CasinoGameTranslationCreateOrConnectWithoutCasinoGameInput = {
+    where: CasinoGameTranslationWhereUniqueInput
+    create: XOR<CasinoGameTranslationCreateWithoutCasinoGameInput, CasinoGameTranslationUncheckedCreateWithoutCasinoGameInput>
   }
 
-  export type GameTranslationCreateManyCasinoGameInputEnvelope = {
-    data: GameTranslationCreateManyCasinoGameInput | GameTranslationCreateManyCasinoGameInput[]
+  export type CasinoGameTranslationCreateManyCasinoGameInputEnvelope = {
+    data: CasinoGameTranslationCreateManyCasinoGameInput | CasinoGameTranslationCreateManyCasinoGameInput[]
     skipDuplicates?: boolean
   }
 
@@ -82399,34 +82399,34 @@ export namespace Prisma {
     gameId?: IntNullableFilter<"GameSession"> | number | null
   }
 
-  export type GameTranslationUpsertWithWhereUniqueWithoutCasinoGameInput = {
-    where: GameTranslationWhereUniqueInput
-    update: XOR<GameTranslationUpdateWithoutCasinoGameInput, GameTranslationUncheckedUpdateWithoutCasinoGameInput>
-    create: XOR<GameTranslationCreateWithoutCasinoGameInput, GameTranslationUncheckedCreateWithoutCasinoGameInput>
+  export type CasinoGameTranslationUpsertWithWhereUniqueWithoutCasinoGameInput = {
+    where: CasinoGameTranslationWhereUniqueInput
+    update: XOR<CasinoGameTranslationUpdateWithoutCasinoGameInput, CasinoGameTranslationUncheckedUpdateWithoutCasinoGameInput>
+    create: XOR<CasinoGameTranslationCreateWithoutCasinoGameInput, CasinoGameTranslationUncheckedCreateWithoutCasinoGameInput>
   }
 
-  export type GameTranslationUpdateWithWhereUniqueWithoutCasinoGameInput = {
-    where: GameTranslationWhereUniqueInput
-    data: XOR<GameTranslationUpdateWithoutCasinoGameInput, GameTranslationUncheckedUpdateWithoutCasinoGameInput>
+  export type CasinoGameTranslationUpdateWithWhereUniqueWithoutCasinoGameInput = {
+    where: CasinoGameTranslationWhereUniqueInput
+    data: XOR<CasinoGameTranslationUpdateWithoutCasinoGameInput, CasinoGameTranslationUncheckedUpdateWithoutCasinoGameInput>
   }
 
-  export type GameTranslationUpdateManyWithWhereWithoutCasinoGameInput = {
-    where: GameTranslationScalarWhereInput
-    data: XOR<GameTranslationUpdateManyMutationInput, GameTranslationUncheckedUpdateManyWithoutCasinoGameInput>
+  export type CasinoGameTranslationUpdateManyWithWhereWithoutCasinoGameInput = {
+    where: CasinoGameTranslationScalarWhereInput
+    data: XOR<CasinoGameTranslationUpdateManyMutationInput, CasinoGameTranslationUncheckedUpdateManyWithoutCasinoGameInput>
   }
 
-  export type GameTranslationScalarWhereInput = {
-    AND?: GameTranslationScalarWhereInput | GameTranslationScalarWhereInput[]
-    OR?: GameTranslationScalarWhereInput[]
-    NOT?: GameTranslationScalarWhereInput | GameTranslationScalarWhereInput[]
-    id?: IntFilter<"GameTranslation"> | number
-    gameId?: IntFilter<"GameTranslation"> | number
-    language?: EnumLanguageFilter<"GameTranslation"> | $Enums.Language
-    providerName?: StringFilter<"GameTranslation"> | string
-    categoryName?: StringFilter<"GameTranslation"> | string
-    gameName?: StringFilter<"GameTranslation"> | string
-    createdAt?: DateTimeFilter<"GameTranslation"> | Date | string
-    updatedAt?: DateTimeFilter<"GameTranslation"> | Date | string
+  export type CasinoGameTranslationScalarWhereInput = {
+    AND?: CasinoGameTranslationScalarWhereInput | CasinoGameTranslationScalarWhereInput[]
+    OR?: CasinoGameTranslationScalarWhereInput[]
+    NOT?: CasinoGameTranslationScalarWhereInput | CasinoGameTranslationScalarWhereInput[]
+    id?: IntFilter<"CasinoGameTranslation"> | number
+    gameId?: IntFilter<"CasinoGameTranslation"> | number
+    language?: EnumLanguageFilter<"CasinoGameTranslation"> | $Enums.Language
+    providerName?: StringFilter<"CasinoGameTranslation"> | string
+    categoryName?: StringFilter<"CasinoGameTranslation"> | string
+    gameName?: StringFilter<"CasinoGameTranslation"> | string
+    createdAt?: DateTimeFilter<"CasinoGameTranslation"> | Date | string
+    updatedAt?: DateTimeFilter<"CasinoGameTranslation"> | Date | string
   }
 
   export type CasinoGameCreateWithoutTranslationsInput = {
@@ -82613,7 +82613,7 @@ export namespace Prisma {
     updatedAt?: Date | string
     bonusDetails?: BonusDetailCreateNestedManyWithoutCasinoGameInput
     gameRounds?: GameRoundCreateNestedManyWithoutCasinoGameInput
-    translations?: GameTranslationCreateNestedManyWithoutCasinoGameInput
+    translations?: CasinoGameTranslationCreateNestedManyWithoutCasinoGameInput
   }
 
   export type CasinoGameUncheckedCreateWithoutGameSessionsInput = {
@@ -82633,7 +82633,7 @@ export namespace Prisma {
     updatedAt?: Date | string
     bonusDetails?: BonusDetailUncheckedCreateNestedManyWithoutCasinoGameInput
     gameRounds?: GameRoundUncheckedCreateNestedManyWithoutCasinoGameInput
-    translations?: GameTranslationUncheckedCreateNestedManyWithoutCasinoGameInput
+    translations?: CasinoGameTranslationUncheckedCreateNestedManyWithoutCasinoGameInput
   }
 
   export type CasinoGameCreateOrConnectWithoutGameSessionsInput = {
@@ -82779,7 +82779,7 @@ export namespace Prisma {
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
     bonusDetails?: BonusDetailUpdateManyWithoutCasinoGameNestedInput
     gameRounds?: GameRoundUpdateManyWithoutCasinoGameNestedInput
-    translations?: GameTranslationUpdateManyWithoutCasinoGameNestedInput
+    translations?: CasinoGameTranslationUpdateManyWithoutCasinoGameNestedInput
   }
 
   export type CasinoGameUncheckedUpdateWithoutGameSessionsInput = {
@@ -82799,7 +82799,7 @@ export namespace Prisma {
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
     bonusDetails?: BonusDetailUncheckedUpdateManyWithoutCasinoGameNestedInput
     gameRounds?: GameRoundUncheckedUpdateManyWithoutCasinoGameNestedInput
-    translations?: GameTranslationUncheckedUpdateManyWithoutCasinoGameNestedInput
+    translations?: CasinoGameTranslationUncheckedUpdateManyWithoutCasinoGameNestedInput
   }
 
   export type UserUpsertWithoutGameSessionInput = {
@@ -85960,7 +85960,7 @@ export namespace Prisma {
     updatedAt?: Date | string
     bonusDetails?: BonusDetailCreateNestedManyWithoutCasinoGameInput
     gameSessions?: GameSessionCreateNestedManyWithoutGameInput
-    translations?: GameTranslationCreateNestedManyWithoutCasinoGameInput
+    translations?: CasinoGameTranslationCreateNestedManyWithoutCasinoGameInput
   }
 
   export type CasinoGameUncheckedCreateWithoutGameRoundsInput = {
@@ -85980,7 +85980,7 @@ export namespace Prisma {
     updatedAt?: Date | string
     bonusDetails?: BonusDetailUncheckedCreateNestedManyWithoutCasinoGameInput
     gameSessions?: GameSessionUncheckedCreateNestedManyWithoutGameInput
-    translations?: GameTranslationUncheckedCreateNestedManyWithoutCasinoGameInput
+    translations?: CasinoGameTranslationUncheckedCreateNestedManyWithoutCasinoGameInput
   }
 
   export type CasinoGameCreateOrConnectWithoutGameRoundsInput = {
@@ -86181,7 +86181,7 @@ export namespace Prisma {
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
     bonusDetails?: BonusDetailUpdateManyWithoutCasinoGameNestedInput
     gameSessions?: GameSessionUpdateManyWithoutGameNestedInput
-    translations?: GameTranslationUpdateManyWithoutCasinoGameNestedInput
+    translations?: CasinoGameTranslationUpdateManyWithoutCasinoGameNestedInput
   }
 
   export type CasinoGameUncheckedUpdateWithoutGameRoundsInput = {
@@ -86201,7 +86201,7 @@ export namespace Prisma {
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
     bonusDetails?: BonusDetailUncheckedUpdateManyWithoutCasinoGameNestedInput
     gameSessions?: GameSessionUncheckedUpdateManyWithoutGameNestedInput
-    translations?: GameTranslationUncheckedUpdateManyWithoutCasinoGameNestedInput
+    translations?: CasinoGameTranslationUncheckedUpdateManyWithoutCasinoGameNestedInput
   }
 
   export type GameSessionUpsertWithoutGameRoundsInput = {
@@ -86729,7 +86729,7 @@ export namespace Prisma {
     updatedAt?: Date | string
     gameRounds?: GameRoundCreateNestedManyWithoutCasinoGameInput
     gameSessions?: GameSessionCreateNestedManyWithoutGameInput
-    translations?: GameTranslationCreateNestedManyWithoutCasinoGameInput
+    translations?: CasinoGameTranslationCreateNestedManyWithoutCasinoGameInput
   }
 
   export type CasinoGameUncheckedCreateWithoutBonusDetailsInput = {
@@ -86749,7 +86749,7 @@ export namespace Prisma {
     updatedAt?: Date | string
     gameRounds?: GameRoundUncheckedCreateNestedManyWithoutCasinoGameInput
     gameSessions?: GameSessionUncheckedCreateNestedManyWithoutGameInput
-    translations?: GameTranslationUncheckedCreateNestedManyWithoutCasinoGameInput
+    translations?: CasinoGameTranslationUncheckedCreateNestedManyWithoutCasinoGameInput
   }
 
   export type CasinoGameCreateOrConnectWithoutBonusDetailsInput = {
@@ -86829,7 +86829,7 @@ export namespace Prisma {
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
     gameRounds?: GameRoundUpdateManyWithoutCasinoGameNestedInput
     gameSessions?: GameSessionUpdateManyWithoutGameNestedInput
-    translations?: GameTranslationUpdateManyWithoutCasinoGameNestedInput
+    translations?: CasinoGameTranslationUpdateManyWithoutCasinoGameNestedInput
   }
 
   export type CasinoGameUncheckedUpdateWithoutBonusDetailsInput = {
@@ -86849,7 +86849,7 @@ export namespace Prisma {
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
     gameRounds?: GameRoundUncheckedUpdateManyWithoutCasinoGameNestedInput
     gameSessions?: GameSessionUncheckedUpdateManyWithoutGameNestedInput
-    translations?: GameTranslationUncheckedUpdateManyWithoutCasinoGameNestedInput
+    translations?: CasinoGameTranslationUncheckedUpdateManyWithoutCasinoGameNestedInput
   }
 
   export type TransactionUpsertWithoutBonusDetailInput = {
@@ -92760,7 +92760,7 @@ export namespace Prisma {
     exchangeRateSnapshotAt?: Date | string
   }
 
-  export type GameTranslationCreateManyCasinoGameInput = {
+  export type CasinoGameTranslationCreateManyCasinoGameInput = {
     id?: number
     language: $Enums.Language
     providerName: string
@@ -92964,7 +92964,7 @@ export namespace Prisma {
     exchangeRateSnapshotAt?: DateTimeFieldUpdateOperationsInput | Date | string
   }
 
-  export type GameTranslationUpdateWithoutCasinoGameInput = {
+  export type CasinoGameTranslationUpdateWithoutCasinoGameInput = {
     language?: EnumLanguageFieldUpdateOperationsInput | $Enums.Language
     providerName?: StringFieldUpdateOperationsInput | string
     categoryName?: StringFieldUpdateOperationsInput | string
@@ -92973,7 +92973,7 @@ export namespace Prisma {
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
   }
 
-  export type GameTranslationUncheckedUpdateWithoutCasinoGameInput = {
+  export type CasinoGameTranslationUncheckedUpdateWithoutCasinoGameInput = {
     id?: IntFieldUpdateOperationsInput | number
     language?: EnumLanguageFieldUpdateOperationsInput | $Enums.Language
     providerName?: StringFieldUpdateOperationsInput | string
@@ -92983,7 +92983,7 @@ export namespace Prisma {
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
   }
 
-  export type GameTranslationUncheckedUpdateManyWithoutCasinoGameInput = {
+  export type CasinoGameTranslationUncheckedUpdateManyWithoutCasinoGameInput = {
     id?: IntFieldUpdateOperationsInput | number
     language?: EnumLanguageFieldUpdateOperationsInput | $Enums.Language
     providerName?: StringFieldUpdateOperationsInput | string
