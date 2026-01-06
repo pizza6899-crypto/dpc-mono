@@ -181,7 +181,9 @@ export class UserWallet {
    * @throws {InvalidWalletBalanceException} 금액이 0 이하인 경우
    */
   addMainBalance(amount: Prisma.Decimal): void {
-    if (amount.lte(0)) {
+    if (amount.isZero()) return;
+
+    if (amount.isNegative()) {
       throw new InvalidWalletBalanceException(
         'Amount to be added must be greater than 0.',
       );
@@ -196,7 +198,9 @@ export class UserWallet {
    * @throws {InvalidWalletBalanceException} 금액이 0 이하인 경우
    */
   addBonusBalance(amount: Prisma.Decimal): void {
-    if (amount.lte(0)) {
+    if (amount.isZero()) return;
+
+    if (amount.isNegative()) {
       throw new InvalidWalletBalanceException(
         'Amount to be added must be greater than 0.',
       );
@@ -210,7 +214,9 @@ export class UserWallet {
    * @throws {InsufficientBalanceException} 잔액이 부족한 경우
    */
   subtractMainBalance(amount: Prisma.Decimal): void {
-    if (amount.lte(0)) {
+    if (amount.isZero()) return;
+
+    if (amount.isNegative()) {
       throw new InvalidWalletBalanceException(
         'Amount to be subtracted must be greater than 0.',
       );
@@ -230,7 +236,9 @@ export class UserWallet {
    * @throws {InsufficientBalanceException} 잔액이 부족한 경우
    */
   subtractBonusBalance(amount: Prisma.Decimal): void {
-    if (amount.lte(0)) {
+    if (amount.isZero()) return;
+
+    if (amount.isNegative()) {
       throw new InvalidWalletBalanceException(
         'Amount to be subtracted must be greater than 0.',
       );
@@ -251,7 +259,9 @@ export class UserWallet {
    * @throws {InsufficientBalanceException} 총 잔액이 부족한 경우
    */
   subtractFromTotal(amount: Prisma.Decimal): void {
-    if (amount.lte(0)) {
+    if (amount.isZero()) return;
+
+    if (amount.isNegative()) {
       throw new InvalidWalletBalanceException(
         'Amount to be subtracted must be greater than 0.',
       );
