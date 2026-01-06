@@ -739,30 +739,6 @@ exports.Prisma.UserPromotionScalarFieldEnum = {
   updatedAt: 'updatedAt'
 };
 
-exports.Prisma.UserSessionScalarFieldEnum = {
-  id: 'id',
-  uid: 'uid',
-  userId: 'userId',
-  sessionId: 'sessionId',
-  type: 'type',
-  status: 'status',
-  isAdmin: 'isAdmin',
-  ipAddress: 'ipAddress',
-  userAgent: 'userAgent',
-  deviceFingerprint: 'deviceFingerprint',
-  isMobile: 'isMobile',
-  deviceName: 'deviceName',
-  os: 'os',
-  browser: 'browser',
-  createdAt: 'createdAt',
-  updatedAt: 'updatedAt',
-  lastActiveAt: 'lastActiveAt',
-  expiresAt: 'expiresAt',
-  revokedAt: 'revokedAt',
-  revokedBy: 'revokedBy',
-  metadata: 'metadata'
-};
-
 exports.Prisma.TierScalarFieldEnum = {
   id: 'id',
   uid: 'uid',
@@ -824,6 +800,30 @@ exports.Prisma.SystemAdjustmentDetailScalarFieldEnum = {
   serviceName: 'serviceName',
   triggerId: 'triggerId',
   actionName: 'actionName',
+  metadata: 'metadata'
+};
+
+exports.Prisma.UserSessionScalarFieldEnum = {
+  id: 'id',
+  uid: 'uid',
+  userId: 'userId',
+  sessionId: 'sessionId',
+  type: 'type',
+  status: 'status',
+  isAdmin: 'isAdmin',
+  ipAddress: 'ipAddress',
+  userAgent: 'userAgent',
+  deviceFingerprint: 'deviceFingerprint',
+  isMobile: 'isMobile',
+  deviceName: 'deviceName',
+  os: 'os',
+  browser: 'browser',
+  createdAt: 'createdAt',
+  updatedAt: 'updatedAt',
+  lastActiveAt: 'lastActiveAt',
+  expiresAt: 'expiresAt',
+  revokedAt: 'revokedAt',
+  revokedBy: 'revokedBy',
   metadata: 'metadata'
 };
 
@@ -1078,17 +1078,6 @@ exports.UserPromotionStatus = exports.$Enums.UserPromotionStatus = {
   FAILED: 'FAILED'
 };
 
-exports.SessionType = exports.$Enums.SessionType = {
-  HTTP: 'HTTP',
-  WEBSOCKET: 'WEBSOCKET'
-};
-
-exports.SessionStatus = exports.$Enums.SessionStatus = {
-  ACTIVE: 'ACTIVE',
-  REVOKED: 'REVOKED',
-  EXPIRED: 'EXPIRED'
-};
-
 exports.TierChangeType = exports.$Enums.TierChangeType = {
   INITIAL: 'INITIAL',
   UPGRADE: 'UPGRADE',
@@ -1103,6 +1092,17 @@ exports.AdjustmentReasonCode = exports.$Enums.AdjustmentReasonCode = {
   MANUAL_DEPOSIT: 'MANUAL_DEPOSIT',
   TEST_ACCOUNT: 'TEST_ACCOUNT',
   OTHER: 'OTHER'
+};
+
+exports.SessionType = exports.$Enums.SessionType = {
+  HTTP: 'HTTP',
+  WEBSOCKET: 'WEBSOCKET'
+};
+
+exports.SessionStatus = exports.$Enums.SessionStatus = {
+  ACTIVE: 'ACTIVE',
+  REVOKED: 'REVOKED',
+  EXPIRED: 'EXPIRED'
 };
 
 exports.Prisma.ModelName = {
@@ -1144,13 +1144,13 @@ exports.Prisma.ModelName = {
   PromotionTranslation: 'PromotionTranslation',
   PromotionCurrency: 'PromotionCurrency',
   UserPromotion: 'UserPromotion',
-  UserSession: 'UserSession',
   Tier: 'Tier',
   TierTranslation: 'TierTranslation',
   UserTier: 'UserTier',
   TierHistory: 'TierHistory',
   AdminAdjustmentDetail: 'AdminAdjustmentDetail',
-  SystemAdjustmentDetail: 'SystemAdjustmentDetail'
+  SystemAdjustmentDetail: 'SystemAdjustmentDetail',
+  UserSession: 'UserSession'
 };
 
 /**

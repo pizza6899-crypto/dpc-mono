@@ -1,5 +1,5 @@
 model CasinoGame {
-  id               Int                     @id @default(autoincrement())
+  id               BigInt                  @id @default(autoincrement())
   aggregatorType   GameAggregatorType      @map("aggregator_type")
   provider         GameProvider
   category         GameCategory
@@ -25,7 +25,7 @@ model CasinoGame {
 
 model CasinoGameTranslation {
   id           Int        @id @default(autoincrement())
-  gameId       Int        @map("game_id")
+  gameId       BigInt     @map("game_id")
   language     Language
   providerName String     @map("provider_name")
   categoryName String     @map("category_name")
@@ -51,7 +51,7 @@ model CasinoGameSession {
   gameCurrency           ExchangeCurrencyCode @map("game_currency")
   exchangeRate           Decimal              @map("exchange_rate") @db.Decimal(32, 18)
   exchangeRateSnapshotAt DateTime             @default(now()) @map("exchange_rate_snapshot_at")
-  gameId                 Int?                 @map("game_id")
+  gameId                 BigInt?              @map("game_id")
   gameRounds             GameRound[]
   game                   CasinoGame?          @relation(fields: [gameId], references: [id])
   user                   User                 @relation(fields: [userId], references: [id])

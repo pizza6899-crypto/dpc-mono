@@ -224,17 +224,6 @@ export type PromotionCurrency = $Result.DefaultSelection<Prisma.$PromotionCurren
  */
 export type UserPromotion = $Result.DefaultSelection<Prisma.$UserPromotionPayload>
 /**
- * Model UserSession
- * *
- *  * 사용자 세션 모델
- *  * 사용자의 활성 세션을 추적하고 관리합니다.
- *  * - HTTP 세션 및 WebSocket 세션 모두 추적
- *  * - 여러 디바이스에서의 동시 로그인 지원
- *  * - 세션 생명주기 관리 (생성, 활성화, 만료, 종료)
- *  * - 디바이스 정보 및 메타데이터 저장
- */
-export type UserSession = $Result.DefaultSelection<Prisma.$UserSessionPayload>
-/**
  * Model Tier
  * 
  */
@@ -264,6 +253,17 @@ export type AdminAdjustmentDetail = $Result.DefaultSelection<Prisma.$AdminAdjust
  * 
  */
 export type SystemAdjustmentDetail = $Result.DefaultSelection<Prisma.$SystemAdjustmentDetailPayload>
+/**
+ * Model UserSession
+ * *
+ *  * 사용자 세션 모델
+ *  * 사용자의 활성 세션을 추적하고 관리합니다.
+ *  * - HTTP 세션 및 WebSocket 세션 모두 추적
+ *  * - 여러 디바이스에서의 동시 로그인 지원
+ *  * - 세션 생명주기 관리 (생성, 활성화, 만료, 종료)
+ *  * - 디바이스 정보 및 메타데이터 저장
+ */
+export type UserSession = $Result.DefaultSelection<Prisma.$UserSessionPayload>
 
 /**
  * Enums
@@ -593,23 +593,6 @@ export const UserPromotionStatus: {
 export type UserPromotionStatus = (typeof UserPromotionStatus)[keyof typeof UserPromotionStatus]
 
 
-export const SessionType: {
-  HTTP: 'HTTP',
-  WEBSOCKET: 'WEBSOCKET'
-};
-
-export type SessionType = (typeof SessionType)[keyof typeof SessionType]
-
-
-export const SessionStatus: {
-  ACTIVE: 'ACTIVE',
-  REVOKED: 'REVOKED',
-  EXPIRED: 'EXPIRED'
-};
-
-export type SessionStatus = (typeof SessionStatus)[keyof typeof SessionStatus]
-
-
 export const TierChangeType: {
   INITIAL: 'INITIAL',
   UPGRADE: 'UPGRADE',
@@ -630,6 +613,23 @@ export const AdjustmentReasonCode: {
 };
 
 export type AdjustmentReasonCode = (typeof AdjustmentReasonCode)[keyof typeof AdjustmentReasonCode]
+
+
+export const SessionType: {
+  HTTP: 'HTTP',
+  WEBSOCKET: 'WEBSOCKET'
+};
+
+export type SessionType = (typeof SessionType)[keyof typeof SessionType]
+
+
+export const SessionStatus: {
+  ACTIVE: 'ACTIVE',
+  REVOKED: 'REVOKED',
+  EXPIRED: 'EXPIRED'
+};
+
+export type SessionStatus = (typeof SessionStatus)[keyof typeof SessionStatus]
 
 }
 
@@ -769,14 +769,6 @@ export type UserPromotionStatus = $Enums.UserPromotionStatus
 
 export const UserPromotionStatus: typeof $Enums.UserPromotionStatus
 
-export type SessionType = $Enums.SessionType
-
-export const SessionType: typeof $Enums.SessionType
-
-export type SessionStatus = $Enums.SessionStatus
-
-export const SessionStatus: typeof $Enums.SessionStatus
-
 export type TierChangeType = $Enums.TierChangeType
 
 export const TierChangeType: typeof $Enums.TierChangeType
@@ -784,6 +776,14 @@ export const TierChangeType: typeof $Enums.TierChangeType
 export type AdjustmentReasonCode = $Enums.AdjustmentReasonCode
 
 export const AdjustmentReasonCode: typeof $Enums.AdjustmentReasonCode
+
+export type SessionType = $Enums.SessionType
+
+export const SessionType: typeof $Enums.SessionType
+
+export type SessionStatus = $Enums.SessionStatus
+
+export const SessionStatus: typeof $Enums.SessionStatus
 
 /**
  * ##  Prisma Client ʲˢ
@@ -1283,16 +1283,6 @@ export class PrismaClient<
   get userPromotion(): Prisma.UserPromotionDelegate<ExtArgs, ClientOptions>;
 
   /**
-   * `prisma.userSession`: Exposes CRUD operations for the **UserSession** model.
-    * Example usage:
-    * ```ts
-    * // Fetch zero or more UserSessions
-    * const userSessions = await prisma.userSession.findMany()
-    * ```
-    */
-  get userSession(): Prisma.UserSessionDelegate<ExtArgs, ClientOptions>;
-
-  /**
    * `prisma.tier`: Exposes CRUD operations for the **Tier** model.
     * Example usage:
     * ```ts
@@ -1351,6 +1341,16 @@ export class PrismaClient<
     * ```
     */
   get systemAdjustmentDetail(): Prisma.SystemAdjustmentDetailDelegate<ExtArgs, ClientOptions>;
+
+  /**
+   * `prisma.userSession`: Exposes CRUD operations for the **UserSession** model.
+    * Example usage:
+    * ```ts
+    * // Fetch zero or more UserSessions
+    * const userSessions = await prisma.userSession.findMany()
+    * ```
+    */
+  get userSession(): Prisma.UserSessionDelegate<ExtArgs, ClientOptions>;
 }
 
 export namespace Prisma {
@@ -1823,13 +1823,13 @@ export namespace Prisma {
     PromotionTranslation: 'PromotionTranslation',
     PromotionCurrency: 'PromotionCurrency',
     UserPromotion: 'UserPromotion',
-    UserSession: 'UserSession',
     Tier: 'Tier',
     TierTranslation: 'TierTranslation',
     UserTier: 'UserTier',
     TierHistory: 'TierHistory',
     AdminAdjustmentDetail: 'AdminAdjustmentDetail',
-    SystemAdjustmentDetail: 'SystemAdjustmentDetail'
+    SystemAdjustmentDetail: 'SystemAdjustmentDetail',
+    UserSession: 'UserSession'
   };
 
   export type ModelName = (typeof ModelName)[keyof typeof ModelName]
@@ -1845,7 +1845,7 @@ export namespace Prisma {
       omit: GlobalOmitOptions
     }
     meta: {
-      modelProps: "affiliateCode" | "referral" | "authAuditLog" | "activityLog" | "systemErrorLog" | "integrationLog" | "unifiedLog" | "casinoGame" | "casinoGameTranslation" | "casinoGameSession" | "user" | "userBalance" | "userBalanceStats" | "transaction" | "gameRound" | "gameBet" | "gameWin" | "transactionBalanceDetail" | "bonusDetail" | "withdrawDetail" | "compTransaction" | "dailyCompEarning" | "nowPaymentCallbackLog" | "exchangeRate" | "rolling" | "userToken" | "emailLog" | "affiliateWallet" | "affiliateCommission" | "affiliateTier" | "loginAttempt" | "depositDetail" | "cryptoConfig" | "bankConfig" | "promotion" | "promotionTranslation" | "promotionCurrency" | "userPromotion" | "userSession" | "tier" | "tierTranslation" | "userTier" | "tierHistory" | "adminAdjustmentDetail" | "systemAdjustmentDetail"
+      modelProps: "affiliateCode" | "referral" | "authAuditLog" | "activityLog" | "systemErrorLog" | "integrationLog" | "unifiedLog" | "casinoGame" | "casinoGameTranslation" | "casinoGameSession" | "user" | "userBalance" | "userBalanceStats" | "transaction" | "gameRound" | "gameBet" | "gameWin" | "transactionBalanceDetail" | "bonusDetail" | "withdrawDetail" | "compTransaction" | "dailyCompEarning" | "nowPaymentCallbackLog" | "exchangeRate" | "rolling" | "userToken" | "emailLog" | "affiliateWallet" | "affiliateCommission" | "affiliateTier" | "loginAttempt" | "depositDetail" | "cryptoConfig" | "bankConfig" | "promotion" | "promotionTranslation" | "promotionCurrency" | "userPromotion" | "tier" | "tierTranslation" | "userTier" | "tierHistory" | "adminAdjustmentDetail" | "systemAdjustmentDetail" | "userSession"
       txIsolationLevel: Prisma.TransactionIsolationLevel
     }
     model: {
@@ -4661,80 +4661,6 @@ export namespace Prisma {
           }
         }
       }
-      UserSession: {
-        payload: Prisma.$UserSessionPayload<ExtArgs>
-        fields: Prisma.UserSessionFieldRefs
-        operations: {
-          findUnique: {
-            args: Prisma.UserSessionFindUniqueArgs<ExtArgs>
-            result: $Utils.PayloadToResult<Prisma.$UserSessionPayload> | null
-          }
-          findUniqueOrThrow: {
-            args: Prisma.UserSessionFindUniqueOrThrowArgs<ExtArgs>
-            result: $Utils.PayloadToResult<Prisma.$UserSessionPayload>
-          }
-          findFirst: {
-            args: Prisma.UserSessionFindFirstArgs<ExtArgs>
-            result: $Utils.PayloadToResult<Prisma.$UserSessionPayload> | null
-          }
-          findFirstOrThrow: {
-            args: Prisma.UserSessionFindFirstOrThrowArgs<ExtArgs>
-            result: $Utils.PayloadToResult<Prisma.$UserSessionPayload>
-          }
-          findMany: {
-            args: Prisma.UserSessionFindManyArgs<ExtArgs>
-            result: $Utils.PayloadToResult<Prisma.$UserSessionPayload>[]
-          }
-          create: {
-            args: Prisma.UserSessionCreateArgs<ExtArgs>
-            result: $Utils.PayloadToResult<Prisma.$UserSessionPayload>
-          }
-          createMany: {
-            args: Prisma.UserSessionCreateManyArgs<ExtArgs>
-            result: BatchPayload
-          }
-          createManyAndReturn: {
-            args: Prisma.UserSessionCreateManyAndReturnArgs<ExtArgs>
-            result: $Utils.PayloadToResult<Prisma.$UserSessionPayload>[]
-          }
-          delete: {
-            args: Prisma.UserSessionDeleteArgs<ExtArgs>
-            result: $Utils.PayloadToResult<Prisma.$UserSessionPayload>
-          }
-          update: {
-            args: Prisma.UserSessionUpdateArgs<ExtArgs>
-            result: $Utils.PayloadToResult<Prisma.$UserSessionPayload>
-          }
-          deleteMany: {
-            args: Prisma.UserSessionDeleteManyArgs<ExtArgs>
-            result: BatchPayload
-          }
-          updateMany: {
-            args: Prisma.UserSessionUpdateManyArgs<ExtArgs>
-            result: BatchPayload
-          }
-          updateManyAndReturn: {
-            args: Prisma.UserSessionUpdateManyAndReturnArgs<ExtArgs>
-            result: $Utils.PayloadToResult<Prisma.$UserSessionPayload>[]
-          }
-          upsert: {
-            args: Prisma.UserSessionUpsertArgs<ExtArgs>
-            result: $Utils.PayloadToResult<Prisma.$UserSessionPayload>
-          }
-          aggregate: {
-            args: Prisma.UserSessionAggregateArgs<ExtArgs>
-            result: $Utils.Optional<AggregateUserSession>
-          }
-          groupBy: {
-            args: Prisma.UserSessionGroupByArgs<ExtArgs>
-            result: $Utils.Optional<UserSessionGroupByOutputType>[]
-          }
-          count: {
-            args: Prisma.UserSessionCountArgs<ExtArgs>
-            result: $Utils.Optional<UserSessionCountAggregateOutputType> | number
-          }
-        }
-      }
       Tier: {
         payload: Prisma.$TierPayload<ExtArgs>
         fields: Prisma.TierFieldRefs
@@ -5179,6 +5105,80 @@ export namespace Prisma {
           }
         }
       }
+      UserSession: {
+        payload: Prisma.$UserSessionPayload<ExtArgs>
+        fields: Prisma.UserSessionFieldRefs
+        operations: {
+          findUnique: {
+            args: Prisma.UserSessionFindUniqueArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$UserSessionPayload> | null
+          }
+          findUniqueOrThrow: {
+            args: Prisma.UserSessionFindUniqueOrThrowArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$UserSessionPayload>
+          }
+          findFirst: {
+            args: Prisma.UserSessionFindFirstArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$UserSessionPayload> | null
+          }
+          findFirstOrThrow: {
+            args: Prisma.UserSessionFindFirstOrThrowArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$UserSessionPayload>
+          }
+          findMany: {
+            args: Prisma.UserSessionFindManyArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$UserSessionPayload>[]
+          }
+          create: {
+            args: Prisma.UserSessionCreateArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$UserSessionPayload>
+          }
+          createMany: {
+            args: Prisma.UserSessionCreateManyArgs<ExtArgs>
+            result: BatchPayload
+          }
+          createManyAndReturn: {
+            args: Prisma.UserSessionCreateManyAndReturnArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$UserSessionPayload>[]
+          }
+          delete: {
+            args: Prisma.UserSessionDeleteArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$UserSessionPayload>
+          }
+          update: {
+            args: Prisma.UserSessionUpdateArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$UserSessionPayload>
+          }
+          deleteMany: {
+            args: Prisma.UserSessionDeleteManyArgs<ExtArgs>
+            result: BatchPayload
+          }
+          updateMany: {
+            args: Prisma.UserSessionUpdateManyArgs<ExtArgs>
+            result: BatchPayload
+          }
+          updateManyAndReturn: {
+            args: Prisma.UserSessionUpdateManyAndReturnArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$UserSessionPayload>[]
+          }
+          upsert: {
+            args: Prisma.UserSessionUpsertArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$UserSessionPayload>
+          }
+          aggregate: {
+            args: Prisma.UserSessionAggregateArgs<ExtArgs>
+            result: $Utils.Optional<AggregateUserSession>
+          }
+          groupBy: {
+            args: Prisma.UserSessionGroupByArgs<ExtArgs>
+            result: $Utils.Optional<UserSessionGroupByOutputType>[]
+          }
+          count: {
+            args: Prisma.UserSessionCountArgs<ExtArgs>
+            result: $Utils.Optional<UserSessionCountAggregateOutputType> | number
+          }
+        }
+      }
     }
   } & {
     other: {
@@ -5325,13 +5325,13 @@ export namespace Prisma {
     promotionTranslation?: PromotionTranslationOmit
     promotionCurrency?: PromotionCurrencyOmit
     userPromotion?: UserPromotionOmit
-    userSession?: UserSessionOmit
     tier?: TierOmit
     tierTranslation?: TierTranslationOmit
     userTier?: UserTierOmit
     tierHistory?: TierHistoryOmit
     adminAdjustmentDetail?: AdminAdjustmentDetailOmit
     systemAdjustmentDetail?: SystemAdjustmentDetailOmit
+    userSession?: UserSessionOmit
   }
 
   /* Types for Logging */
@@ -14480,14 +14480,14 @@ export namespace Prisma {
   }
 
   export type CasinoGameSumAggregateOutputType = {
-    id: number | null
+    id: bigint | null
     gameId: number | null
     houseEdge: Decimal | null
     contributionRate: Decimal | null
   }
 
   export type CasinoGameMinAggregateOutputType = {
-    id: number | null
+    id: bigint | null
     aggregatorType: $Enums.GameAggregatorType | null
     provider: $Enums.GameProvider | null
     category: $Enums.GameCategory | null
@@ -14504,7 +14504,7 @@ export namespace Prisma {
   }
 
   export type CasinoGameMaxAggregateOutputType = {
-    id: number | null
+    id: bigint | null
     aggregatorType: $Enums.GameAggregatorType | null
     provider: $Enums.GameProvider | null
     category: $Enums.GameCategory | null
@@ -14692,7 +14692,7 @@ export namespace Prisma {
   }
 
   export type CasinoGameGroupByOutputType = {
-    id: number
+    id: bigint
     aggregatorType: $Enums.GameAggregatorType
     provider: $Enums.GameProvider
     category: $Enums.GameCategory
@@ -14820,7 +14820,7 @@ export namespace Prisma {
       translations: Prisma.$CasinoGameTranslationPayload<ExtArgs>[]
     }
     scalars: $Extensions.GetPayloadResult<{
-      id: number
+      id: bigint
       aggregatorType: $Enums.GameAggregatorType
       provider: $Enums.GameProvider
       category: $Enums.GameCategory
@@ -15261,7 +15261,7 @@ export namespace Prisma {
    * Fields of the CasinoGame model
    */
   interface CasinoGameFieldRefs {
-    readonly id: FieldRef<"CasinoGame", 'Int'>
+    readonly id: FieldRef<"CasinoGame", 'BigInt'>
     readonly aggregatorType: FieldRef<"CasinoGame", 'GameAggregatorType'>
     readonly provider: FieldRef<"CasinoGame", 'GameProvider'>
     readonly category: FieldRef<"CasinoGame", 'GameCategory'>
@@ -15796,12 +15796,12 @@ export namespace Prisma {
 
   export type CasinoGameTranslationSumAggregateOutputType = {
     id: number | null
-    gameId: number | null
+    gameId: bigint | null
   }
 
   export type CasinoGameTranslationMinAggregateOutputType = {
     id: number | null
-    gameId: number | null
+    gameId: bigint | null
     language: $Enums.Language | null
     providerName: string | null
     categoryName: string | null
@@ -15812,7 +15812,7 @@ export namespace Prisma {
 
   export type CasinoGameTranslationMaxAggregateOutputType = {
     id: number | null
-    gameId: number | null
+    gameId: bigint | null
     language: $Enums.Language | null
     providerName: string | null
     categoryName: string | null
@@ -15966,7 +15966,7 @@ export namespace Prisma {
 
   export type CasinoGameTranslationGroupByOutputType = {
     id: number
-    gameId: number
+    gameId: bigint
     language: $Enums.Language
     providerName: string
     categoryName: string
@@ -16059,7 +16059,7 @@ export namespace Prisma {
     }
     scalars: $Extensions.GetPayloadResult<{
       id: number
-      gameId: number
+      gameId: bigint
       language: $Enums.Language
       providerName: string
       categoryName: string
@@ -16491,7 +16491,7 @@ export namespace Prisma {
    */
   interface CasinoGameTranslationFieldRefs {
     readonly id: FieldRef<"CasinoGameTranslation", 'Int'>
-    readonly gameId: FieldRef<"CasinoGameTranslation", 'Int'>
+    readonly gameId: FieldRef<"CasinoGameTranslation", 'BigInt'>
     readonly language: FieldRef<"CasinoGameTranslation", 'Language'>
     readonly providerName: FieldRef<"CasinoGameTranslation", 'String'>
     readonly categoryName: FieldRef<"CasinoGameTranslation", 'String'>
@@ -16935,7 +16935,7 @@ export namespace Prisma {
     id: bigint | null
     userId: bigint | null
     exchangeRate: Decimal | null
-    gameId: number | null
+    gameId: bigint | null
   }
 
   export type CasinoGameSessionMinAggregateOutputType = {
@@ -16950,7 +16950,7 @@ export namespace Prisma {
     gameCurrency: $Enums.ExchangeCurrencyCode | null
     exchangeRate: Decimal | null
     exchangeRateSnapshotAt: Date | null
-    gameId: number | null
+    gameId: bigint | null
   }
 
   export type CasinoGameSessionMaxAggregateOutputType = {
@@ -16965,7 +16965,7 @@ export namespace Prisma {
     gameCurrency: $Enums.ExchangeCurrencyCode | null
     exchangeRate: Decimal | null
     exchangeRateSnapshotAt: Date | null
-    gameId: number | null
+    gameId: bigint | null
   }
 
   export type CasinoGameSessionCountAggregateOutputType = {
@@ -17143,7 +17143,7 @@ export namespace Prisma {
     gameCurrency: $Enums.ExchangeCurrencyCode
     exchangeRate: Decimal
     exchangeRateSnapshotAt: Date
-    gameId: number | null
+    gameId: bigint | null
     _count: CasinoGameSessionCountAggregateOutputType | null
     _avg: CasinoGameSessionAvgAggregateOutputType | null
     _sum: CasinoGameSessionSumAggregateOutputType | null
@@ -17268,7 +17268,7 @@ export namespace Prisma {
       gameCurrency: $Enums.ExchangeCurrencyCode
       exchangeRate: Prisma.Decimal
       exchangeRateSnapshotAt: Date
-      gameId: number | null
+      gameId: bigint | null
     }, ExtArgs["result"]["casinoGameSession"]>
     composites: {}
   }
@@ -17706,7 +17706,7 @@ export namespace Prisma {
     readonly gameCurrency: FieldRef<"CasinoGameSession", 'ExchangeCurrencyCode'>
     readonly exchangeRate: FieldRef<"CasinoGameSession", 'Decimal'>
     readonly exchangeRateSnapshotAt: FieldRef<"CasinoGameSession", 'DateTime'>
-    readonly gameId: FieldRef<"CasinoGameSession", 'Int'>
+    readonly gameId: FieldRef<"CasinoGameSession", 'BigInt'>
   }
     
 
@@ -23827,7 +23827,7 @@ export namespace Prisma {
     contributionAmount: Decimal | null
     compEarned: Decimal | null
     jackpotContributionAmount: Decimal | null
-    gameId: number | null
+    gameId: bigint | null
     gameSessionId: bigint | null
   }
 
@@ -23857,7 +23857,7 @@ export namespace Prisma {
     jackpotContributionAmount: Decimal | null
     startedAt: Date | null
     completedAt: Date | null
-    gameId: number | null
+    gameId: bigint | null
     gameSessionId: bigint | null
   }
 
@@ -23887,7 +23887,7 @@ export namespace Prisma {
     jackpotContributionAmount: Decimal | null
     startedAt: Date | null
     completedAt: Date | null
-    gameId: number | null
+    gameId: bigint | null
     gameSessionId: bigint | null
   }
 
@@ -24166,7 +24166,7 @@ export namespace Prisma {
     jackpotContributionAmount: Decimal
     startedAt: Date | null
     completedAt: Date | null
-    gameId: number | null
+    gameId: bigint | null
     gameSessionId: bigint
     _count: GameRoundCountAggregateOutputType | null
     _avg: GameRoundAvgAggregateOutputType | null
@@ -24379,7 +24379,7 @@ export namespace Prisma {
       jackpotContributionAmount: Prisma.Decimal
       startedAt: Date | null
       completedAt: Date | null
-      gameId: number | null
+      gameId: bigint | null
       gameSessionId: bigint
     }, ExtArgs["result"]["gameRound"]>
     composites: {}
@@ -24835,7 +24835,7 @@ export namespace Prisma {
     readonly jackpotContributionAmount: FieldRef<"GameRound", 'Decimal'>
     readonly startedAt: FieldRef<"GameRound", 'DateTime'>
     readonly completedAt: FieldRef<"GameRound", 'DateTime'>
-    readonly gameId: FieldRef<"GameRound", 'Int'>
+    readonly gameId: FieldRef<"GameRound", 'BigInt'>
     readonly gameSessionId: FieldRef<"GameRound", 'BigInt'>
   }
     
@@ -28921,7 +28921,7 @@ export namespace Prisma {
   export type BonusDetailSumAggregateOutputType = {
     id: bigint | null
     amount: Decimal | null
-    gameId: number | null
+    gameId: bigint | null
     transactionId: bigint | null
   }
 
@@ -28941,7 +28941,7 @@ export namespace Prisma {
     aggregatorSessionId: string | null
     isEndRound: boolean | null
     description: string | null
-    gameId: number | null
+    gameId: bigint | null
     transactionId: bigint | null
   }
 
@@ -28961,7 +28961,7 @@ export namespace Prisma {
     aggregatorSessionId: string | null
     isEndRound: boolean | null
     description: string | null
-    gameId: number | null
+    gameId: bigint | null
     transactionId: bigint | null
   }
 
@@ -29164,7 +29164,7 @@ export namespace Prisma {
     aggregatorSessionId: string | null
     isEndRound: boolean | null
     description: string | null
-    gameId: number | null
+    gameId: bigint | null
     transactionId: bigint
     _count: BonusDetailCountAggregateOutputType | null
     _avg: BonusDetailAvgAggregateOutputType | null
@@ -29309,7 +29309,7 @@ export namespace Prisma {
       aggregatorSessionId: string | null
       isEndRound: boolean | null
       description: string | null
-      gameId: number | null
+      gameId: bigint | null
       transactionId: bigint
     }, ExtArgs["result"]["bonusDetail"]>
     composites: {}
@@ -29751,7 +29751,7 @@ export namespace Prisma {
     readonly aggregatorSessionId: FieldRef<"BonusDetail", 'String'>
     readonly isEndRound: FieldRef<"BonusDetail", 'Boolean'>
     readonly description: FieldRef<"BonusDetail", 'String'>
-    readonly gameId: FieldRef<"BonusDetail", 'Int'>
+    readonly gameId: FieldRef<"BonusDetail", 'BigInt'>
     readonly transactionId: FieldRef<"BonusDetail", 'BigInt'>
   }
     
@@ -53327,1386 +53327,6 @@ export namespace Prisma {
 
 
   /**
-   * Model UserSession
-   */
-
-  export type AggregateUserSession = {
-    _count: UserSessionCountAggregateOutputType | null
-    _avg: UserSessionAvgAggregateOutputType | null
-    _sum: UserSessionSumAggregateOutputType | null
-    _min: UserSessionMinAggregateOutputType | null
-    _max: UserSessionMaxAggregateOutputType | null
-  }
-
-  export type UserSessionAvgAggregateOutputType = {
-    id: number | null
-    userId: number | null
-    revokedBy: number | null
-  }
-
-  export type UserSessionSumAggregateOutputType = {
-    id: bigint | null
-    userId: bigint | null
-    revokedBy: bigint | null
-  }
-
-  export type UserSessionMinAggregateOutputType = {
-    id: bigint | null
-    uid: string | null
-    userId: bigint | null
-    sessionId: string | null
-    type: $Enums.SessionType | null
-    status: $Enums.SessionStatus | null
-    isAdmin: boolean | null
-    ipAddress: string | null
-    userAgent: string | null
-    deviceFingerprint: string | null
-    isMobile: boolean | null
-    deviceName: string | null
-    os: string | null
-    browser: string | null
-    createdAt: Date | null
-    updatedAt: Date | null
-    lastActiveAt: Date | null
-    expiresAt: Date | null
-    revokedAt: Date | null
-    revokedBy: bigint | null
-  }
-
-  export type UserSessionMaxAggregateOutputType = {
-    id: bigint | null
-    uid: string | null
-    userId: bigint | null
-    sessionId: string | null
-    type: $Enums.SessionType | null
-    status: $Enums.SessionStatus | null
-    isAdmin: boolean | null
-    ipAddress: string | null
-    userAgent: string | null
-    deviceFingerprint: string | null
-    isMobile: boolean | null
-    deviceName: string | null
-    os: string | null
-    browser: string | null
-    createdAt: Date | null
-    updatedAt: Date | null
-    lastActiveAt: Date | null
-    expiresAt: Date | null
-    revokedAt: Date | null
-    revokedBy: bigint | null
-  }
-
-  export type UserSessionCountAggregateOutputType = {
-    id: number
-    uid: number
-    userId: number
-    sessionId: number
-    type: number
-    status: number
-    isAdmin: number
-    ipAddress: number
-    userAgent: number
-    deviceFingerprint: number
-    isMobile: number
-    deviceName: number
-    os: number
-    browser: number
-    createdAt: number
-    updatedAt: number
-    lastActiveAt: number
-    expiresAt: number
-    revokedAt: number
-    revokedBy: number
-    metadata: number
-    _all: number
-  }
-
-
-  export type UserSessionAvgAggregateInputType = {
-    id?: true
-    userId?: true
-    revokedBy?: true
-  }
-
-  export type UserSessionSumAggregateInputType = {
-    id?: true
-    userId?: true
-    revokedBy?: true
-  }
-
-  export type UserSessionMinAggregateInputType = {
-    id?: true
-    uid?: true
-    userId?: true
-    sessionId?: true
-    type?: true
-    status?: true
-    isAdmin?: true
-    ipAddress?: true
-    userAgent?: true
-    deviceFingerprint?: true
-    isMobile?: true
-    deviceName?: true
-    os?: true
-    browser?: true
-    createdAt?: true
-    updatedAt?: true
-    lastActiveAt?: true
-    expiresAt?: true
-    revokedAt?: true
-    revokedBy?: true
-  }
-
-  export type UserSessionMaxAggregateInputType = {
-    id?: true
-    uid?: true
-    userId?: true
-    sessionId?: true
-    type?: true
-    status?: true
-    isAdmin?: true
-    ipAddress?: true
-    userAgent?: true
-    deviceFingerprint?: true
-    isMobile?: true
-    deviceName?: true
-    os?: true
-    browser?: true
-    createdAt?: true
-    updatedAt?: true
-    lastActiveAt?: true
-    expiresAt?: true
-    revokedAt?: true
-    revokedBy?: true
-  }
-
-  export type UserSessionCountAggregateInputType = {
-    id?: true
-    uid?: true
-    userId?: true
-    sessionId?: true
-    type?: true
-    status?: true
-    isAdmin?: true
-    ipAddress?: true
-    userAgent?: true
-    deviceFingerprint?: true
-    isMobile?: true
-    deviceName?: true
-    os?: true
-    browser?: true
-    createdAt?: true
-    updatedAt?: true
-    lastActiveAt?: true
-    expiresAt?: true
-    revokedAt?: true
-    revokedBy?: true
-    metadata?: true
-    _all?: true
-  }
-
-  export type UserSessionAggregateArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
-    /**
-     * Filter which UserSession to aggregate.
-     */
-    where?: UserSessionWhereInput
-    /**
-     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/sorting Sorting Docs}
-     * 
-     * Determine the order of UserSessions to fetch.
-     */
-    orderBy?: UserSessionOrderByWithRelationInput | UserSessionOrderByWithRelationInput[]
-    /**
-     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination#cursor-based-pagination Cursor Docs}
-     * 
-     * Sets the start position
-     */
-    cursor?: UserSessionWhereUniqueInput
-    /**
-     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
-     * 
-     * Take `±n` UserSessions from the position of the cursor.
-     */
-    take?: number
-    /**
-     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
-     * 
-     * Skip the first `n` UserSessions.
-     */
-    skip?: number
-    /**
-     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
-     * 
-     * Count returned UserSessions
-    **/
-    _count?: true | UserSessionCountAggregateInputType
-    /**
-     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
-     * 
-     * Select which fields to average
-    **/
-    _avg?: UserSessionAvgAggregateInputType
-    /**
-     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
-     * 
-     * Select which fields to sum
-    **/
-    _sum?: UserSessionSumAggregateInputType
-    /**
-     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
-     * 
-     * Select which fields to find the minimum value
-    **/
-    _min?: UserSessionMinAggregateInputType
-    /**
-     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
-     * 
-     * Select which fields to find the maximum value
-    **/
-    _max?: UserSessionMaxAggregateInputType
-  }
-
-  export type GetUserSessionAggregateType<T extends UserSessionAggregateArgs> = {
-        [P in keyof T & keyof AggregateUserSession]: P extends '_count' | 'count'
-      ? T[P] extends true
-        ? number
-        : GetScalarType<T[P], AggregateUserSession[P]>
-      : GetScalarType<T[P], AggregateUserSession[P]>
-  }
-
-
-
-
-  export type UserSessionGroupByArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
-    where?: UserSessionWhereInput
-    orderBy?: UserSessionOrderByWithAggregationInput | UserSessionOrderByWithAggregationInput[]
-    by: UserSessionScalarFieldEnum[] | UserSessionScalarFieldEnum
-    having?: UserSessionScalarWhereWithAggregatesInput
-    take?: number
-    skip?: number
-    _count?: UserSessionCountAggregateInputType | true
-    _avg?: UserSessionAvgAggregateInputType
-    _sum?: UserSessionSumAggregateInputType
-    _min?: UserSessionMinAggregateInputType
-    _max?: UserSessionMaxAggregateInputType
-  }
-
-  export type UserSessionGroupByOutputType = {
-    id: bigint
-    uid: string
-    userId: bigint
-    sessionId: string
-    type: $Enums.SessionType
-    status: $Enums.SessionStatus
-    isAdmin: boolean
-    ipAddress: string | null
-    userAgent: string | null
-    deviceFingerprint: string | null
-    isMobile: boolean | null
-    deviceName: string | null
-    os: string | null
-    browser: string | null
-    createdAt: Date
-    updatedAt: Date
-    lastActiveAt: Date
-    expiresAt: Date
-    revokedAt: Date | null
-    revokedBy: bigint | null
-    metadata: JsonValue | null
-    _count: UserSessionCountAggregateOutputType | null
-    _avg: UserSessionAvgAggregateOutputType | null
-    _sum: UserSessionSumAggregateOutputType | null
-    _min: UserSessionMinAggregateOutputType | null
-    _max: UserSessionMaxAggregateOutputType | null
-  }
-
-  type GetUserSessionGroupByPayload<T extends UserSessionGroupByArgs> = Prisma.PrismaPromise<
-    Array<
-      PickEnumerable<UserSessionGroupByOutputType, T['by']> &
-        {
-          [P in ((keyof T) & (keyof UserSessionGroupByOutputType))]: P extends '_count'
-            ? T[P] extends boolean
-              ? number
-              : GetScalarType<T[P], UserSessionGroupByOutputType[P]>
-            : GetScalarType<T[P], UserSessionGroupByOutputType[P]>
-        }
-      >
-    >
-
-
-  export type UserSessionSelect<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetSelect<{
-    id?: boolean
-    uid?: boolean
-    userId?: boolean
-    sessionId?: boolean
-    type?: boolean
-    status?: boolean
-    isAdmin?: boolean
-    ipAddress?: boolean
-    userAgent?: boolean
-    deviceFingerprint?: boolean
-    isMobile?: boolean
-    deviceName?: boolean
-    os?: boolean
-    browser?: boolean
-    createdAt?: boolean
-    updatedAt?: boolean
-    lastActiveAt?: boolean
-    expiresAt?: boolean
-    revokedAt?: boolean
-    revokedBy?: boolean
-    metadata?: boolean
-    user?: boolean | UserDefaultArgs<ExtArgs>
-    revokedByUser?: boolean | UserSession$revokedByUserArgs<ExtArgs>
-  }, ExtArgs["result"]["userSession"]>
-
-  export type UserSessionSelectCreateManyAndReturn<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetSelect<{
-    id?: boolean
-    uid?: boolean
-    userId?: boolean
-    sessionId?: boolean
-    type?: boolean
-    status?: boolean
-    isAdmin?: boolean
-    ipAddress?: boolean
-    userAgent?: boolean
-    deviceFingerprint?: boolean
-    isMobile?: boolean
-    deviceName?: boolean
-    os?: boolean
-    browser?: boolean
-    createdAt?: boolean
-    updatedAt?: boolean
-    lastActiveAt?: boolean
-    expiresAt?: boolean
-    revokedAt?: boolean
-    revokedBy?: boolean
-    metadata?: boolean
-    user?: boolean | UserDefaultArgs<ExtArgs>
-    revokedByUser?: boolean | UserSession$revokedByUserArgs<ExtArgs>
-  }, ExtArgs["result"]["userSession"]>
-
-  export type UserSessionSelectUpdateManyAndReturn<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetSelect<{
-    id?: boolean
-    uid?: boolean
-    userId?: boolean
-    sessionId?: boolean
-    type?: boolean
-    status?: boolean
-    isAdmin?: boolean
-    ipAddress?: boolean
-    userAgent?: boolean
-    deviceFingerprint?: boolean
-    isMobile?: boolean
-    deviceName?: boolean
-    os?: boolean
-    browser?: boolean
-    createdAt?: boolean
-    updatedAt?: boolean
-    lastActiveAt?: boolean
-    expiresAt?: boolean
-    revokedAt?: boolean
-    revokedBy?: boolean
-    metadata?: boolean
-    user?: boolean | UserDefaultArgs<ExtArgs>
-    revokedByUser?: boolean | UserSession$revokedByUserArgs<ExtArgs>
-  }, ExtArgs["result"]["userSession"]>
-
-  export type UserSessionSelectScalar = {
-    id?: boolean
-    uid?: boolean
-    userId?: boolean
-    sessionId?: boolean
-    type?: boolean
-    status?: boolean
-    isAdmin?: boolean
-    ipAddress?: boolean
-    userAgent?: boolean
-    deviceFingerprint?: boolean
-    isMobile?: boolean
-    deviceName?: boolean
-    os?: boolean
-    browser?: boolean
-    createdAt?: boolean
-    updatedAt?: boolean
-    lastActiveAt?: boolean
-    expiresAt?: boolean
-    revokedAt?: boolean
-    revokedBy?: boolean
-    metadata?: boolean
-  }
-
-  export type UserSessionOmit<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetOmit<"id" | "uid" | "userId" | "sessionId" | "type" | "status" | "isAdmin" | "ipAddress" | "userAgent" | "deviceFingerprint" | "isMobile" | "deviceName" | "os" | "browser" | "createdAt" | "updatedAt" | "lastActiveAt" | "expiresAt" | "revokedAt" | "revokedBy" | "metadata", ExtArgs["result"]["userSession"]>
-  export type UserSessionInclude<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
-    user?: boolean | UserDefaultArgs<ExtArgs>
-    revokedByUser?: boolean | UserSession$revokedByUserArgs<ExtArgs>
-  }
-  export type UserSessionIncludeCreateManyAndReturn<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
-    user?: boolean | UserDefaultArgs<ExtArgs>
-    revokedByUser?: boolean | UserSession$revokedByUserArgs<ExtArgs>
-  }
-  export type UserSessionIncludeUpdateManyAndReturn<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
-    user?: boolean | UserDefaultArgs<ExtArgs>
-    revokedByUser?: boolean | UserSession$revokedByUserArgs<ExtArgs>
-  }
-
-  export type $UserSessionPayload<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
-    name: "UserSession"
-    objects: {
-      /**
-       * 관계
-       */
-      user: Prisma.$UserPayload<ExtArgs>
-      revokedByUser: Prisma.$UserPayload<ExtArgs> | null
-    }
-    scalars: $Extensions.GetPayloadResult<{
-      /**
-       * 내부 관리용 ID (DB 저장 시 자동 생성)
-       */
-      id: bigint
-      /**
-       * 비즈니스용 고유 식별자 (CUID2)
-       */
-      uid: string
-      /**
-       * 세션 소유자 사용자 ID
-       */
-      userId: bigint
-      /**
-       * 실제 세션 ID (Express session ID 또는 Socket.io socket ID)
-       */
-      sessionId: string
-      /**
-       * 세션 타입 (HTTP, WEBSOCKET 등)
-       */
-      type: $Enums.SessionType
-      /**
-       * 세션 상태 (ACTIVE, REVOKED, EXPIRED)
-       */
-      status: $Enums.SessionStatus
-      /**
-       * 관리자 세션 여부 (HTTP 세션인 경우 Redis 키 prefix 결정에 사용)
-       */
-      isAdmin: boolean
-      /**
-       * 디바이스 정보
-       */
-      ipAddress: string | null
-      userAgent: string | null
-      deviceFingerprint: string | null
-      isMobile: boolean | null
-      /**
-       * 예: "iPhone 14 Pro", "Chrome on Windows"
-       */
-      deviceName: string | null
-      /**
-       * 예: "iOS 17.0", "Windows 11"
-       */
-      os: string | null
-      /**
-       * 예: "Chrome 120", "Safari 17"
-       */
-      browser: string | null
-      /**
-       * 타임스탬프
-       */
-      createdAt: Date
-      updatedAt: Date
-      lastActiveAt: Date
-      expiresAt: Date
-      /**
-       * 세션 종료 정보
-       * 세션 종료 시간 (REVOKED 상태일 때)
-       */
-      revokedAt: Date | null
-      /**
-       * 세션을 종료한 사용자 ID (관리자가 종료한 경우)
-       */
-      revokedBy: bigint | null
-      /**
-       * 추가 메타데이터 (JSON)
-       */
-      metadata: Prisma.JsonValue | null
-    }, ExtArgs["result"]["userSession"]>
-    composites: {}
-  }
-
-  type UserSessionGetPayload<S extends boolean | null | undefined | UserSessionDefaultArgs> = $Result.GetResult<Prisma.$UserSessionPayload, S>
-
-  type UserSessionCountArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> =
-    Omit<UserSessionFindManyArgs, 'select' | 'include' | 'distinct' | 'omit'> & {
-      select?: UserSessionCountAggregateInputType | true
-    }
-
-  export interface UserSessionDelegate<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs, GlobalOmitOptions = {}> {
-    [K: symbol]: { types: Prisma.TypeMap<ExtArgs>['model']['UserSession'], meta: { name: 'UserSession' } }
-    /**
-     * Find zero or one UserSession that matches the filter.
-     * @param {UserSessionFindUniqueArgs} args - Arguments to find a UserSession
-     * @example
-     * // Get one UserSession
-     * const userSession = await prisma.userSession.findUnique({
-     *   where: {
-     *     // ... provide filter here
-     *   }
-     * })
-     */
-    findUnique<T extends UserSessionFindUniqueArgs>(args: SelectSubset<T, UserSessionFindUniqueArgs<ExtArgs>>): Prisma__UserSessionClient<$Result.GetResult<Prisma.$UserSessionPayload<ExtArgs>, T, "findUnique", GlobalOmitOptions> | null, null, ExtArgs, GlobalOmitOptions>
-
-    /**
-     * Find one UserSession that matches the filter or throw an error with `error.code='P2025'`
-     * if no matches were found.
-     * @param {UserSessionFindUniqueOrThrowArgs} args - Arguments to find a UserSession
-     * @example
-     * // Get one UserSession
-     * const userSession = await prisma.userSession.findUniqueOrThrow({
-     *   where: {
-     *     // ... provide filter here
-     *   }
-     * })
-     */
-    findUniqueOrThrow<T extends UserSessionFindUniqueOrThrowArgs>(args: SelectSubset<T, UserSessionFindUniqueOrThrowArgs<ExtArgs>>): Prisma__UserSessionClient<$Result.GetResult<Prisma.$UserSessionPayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
-
-    /**
-     * Find the first UserSession that matches the filter.
-     * Note, that providing `undefined` is treated as the value not being there.
-     * Read more here: https://pris.ly/d/null-undefined
-     * @param {UserSessionFindFirstArgs} args - Arguments to find a UserSession
-     * @example
-     * // Get one UserSession
-     * const userSession = await prisma.userSession.findFirst({
-     *   where: {
-     *     // ... provide filter here
-     *   }
-     * })
-     */
-    findFirst<T extends UserSessionFindFirstArgs>(args?: SelectSubset<T, UserSessionFindFirstArgs<ExtArgs>>): Prisma__UserSessionClient<$Result.GetResult<Prisma.$UserSessionPayload<ExtArgs>, T, "findFirst", GlobalOmitOptions> | null, null, ExtArgs, GlobalOmitOptions>
-
-    /**
-     * Find the first UserSession that matches the filter or
-     * throw `PrismaKnownClientError` with `P2025` code if no matches were found.
-     * Note, that providing `undefined` is treated as the value not being there.
-     * Read more here: https://pris.ly/d/null-undefined
-     * @param {UserSessionFindFirstOrThrowArgs} args - Arguments to find a UserSession
-     * @example
-     * // Get one UserSession
-     * const userSession = await prisma.userSession.findFirstOrThrow({
-     *   where: {
-     *     // ... provide filter here
-     *   }
-     * })
-     */
-    findFirstOrThrow<T extends UserSessionFindFirstOrThrowArgs>(args?: SelectSubset<T, UserSessionFindFirstOrThrowArgs<ExtArgs>>): Prisma__UserSessionClient<$Result.GetResult<Prisma.$UserSessionPayload<ExtArgs>, T, "findFirstOrThrow", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
-
-    /**
-     * Find zero or more UserSessions that matches the filter.
-     * Note, that providing `undefined` is treated as the value not being there.
-     * Read more here: https://pris.ly/d/null-undefined
-     * @param {UserSessionFindManyArgs} args - Arguments to filter and select certain fields only.
-     * @example
-     * // Get all UserSessions
-     * const userSessions = await prisma.userSession.findMany()
-     * 
-     * // Get first 10 UserSessions
-     * const userSessions = await prisma.userSession.findMany({ take: 10 })
-     * 
-     * // Only select the `id`
-     * const userSessionWithIdOnly = await prisma.userSession.findMany({ select: { id: true } })
-     * 
-     */
-    findMany<T extends UserSessionFindManyArgs>(args?: SelectSubset<T, UserSessionFindManyArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$UserSessionPayload<ExtArgs>, T, "findMany", GlobalOmitOptions>>
-
-    /**
-     * Create a UserSession.
-     * @param {UserSessionCreateArgs} args - Arguments to create a UserSession.
-     * @example
-     * // Create one UserSession
-     * const UserSession = await prisma.userSession.create({
-     *   data: {
-     *     // ... data to create a UserSession
-     *   }
-     * })
-     * 
-     */
-    create<T extends UserSessionCreateArgs>(args: SelectSubset<T, UserSessionCreateArgs<ExtArgs>>): Prisma__UserSessionClient<$Result.GetResult<Prisma.$UserSessionPayload<ExtArgs>, T, "create", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
-
-    /**
-     * Create many UserSessions.
-     * @param {UserSessionCreateManyArgs} args - Arguments to create many UserSessions.
-     * @example
-     * // Create many UserSessions
-     * const userSession = await prisma.userSession.createMany({
-     *   data: [
-     *     // ... provide data here
-     *   ]
-     * })
-     *     
-     */
-    createMany<T extends UserSessionCreateManyArgs>(args?: SelectSubset<T, UserSessionCreateManyArgs<ExtArgs>>): Prisma.PrismaPromise<BatchPayload>
-
-    /**
-     * Create many UserSessions and returns the data saved in the database.
-     * @param {UserSessionCreateManyAndReturnArgs} args - Arguments to create many UserSessions.
-     * @example
-     * // Create many UserSessions
-     * const userSession = await prisma.userSession.createManyAndReturn({
-     *   data: [
-     *     // ... provide data here
-     *   ]
-     * })
-     * 
-     * // Create many UserSessions and only return the `id`
-     * const userSessionWithIdOnly = await prisma.userSession.createManyAndReturn({
-     *   select: { id: true },
-     *   data: [
-     *     // ... provide data here
-     *   ]
-     * })
-     * Note, that providing `undefined` is treated as the value not being there.
-     * Read more here: https://pris.ly/d/null-undefined
-     * 
-     */
-    createManyAndReturn<T extends UserSessionCreateManyAndReturnArgs>(args?: SelectSubset<T, UserSessionCreateManyAndReturnArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$UserSessionPayload<ExtArgs>, T, "createManyAndReturn", GlobalOmitOptions>>
-
-    /**
-     * Delete a UserSession.
-     * @param {UserSessionDeleteArgs} args - Arguments to delete one UserSession.
-     * @example
-     * // Delete one UserSession
-     * const UserSession = await prisma.userSession.delete({
-     *   where: {
-     *     // ... filter to delete one UserSession
-     *   }
-     * })
-     * 
-     */
-    delete<T extends UserSessionDeleteArgs>(args: SelectSubset<T, UserSessionDeleteArgs<ExtArgs>>): Prisma__UserSessionClient<$Result.GetResult<Prisma.$UserSessionPayload<ExtArgs>, T, "delete", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
-
-    /**
-     * Update one UserSession.
-     * @param {UserSessionUpdateArgs} args - Arguments to update one UserSession.
-     * @example
-     * // Update one UserSession
-     * const userSession = await prisma.userSession.update({
-     *   where: {
-     *     // ... provide filter here
-     *   },
-     *   data: {
-     *     // ... provide data here
-     *   }
-     * })
-     * 
-     */
-    update<T extends UserSessionUpdateArgs>(args: SelectSubset<T, UserSessionUpdateArgs<ExtArgs>>): Prisma__UserSessionClient<$Result.GetResult<Prisma.$UserSessionPayload<ExtArgs>, T, "update", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
-
-    /**
-     * Delete zero or more UserSessions.
-     * @param {UserSessionDeleteManyArgs} args - Arguments to filter UserSessions to delete.
-     * @example
-     * // Delete a few UserSessions
-     * const { count } = await prisma.userSession.deleteMany({
-     *   where: {
-     *     // ... provide filter here
-     *   }
-     * })
-     * 
-     */
-    deleteMany<T extends UserSessionDeleteManyArgs>(args?: SelectSubset<T, UserSessionDeleteManyArgs<ExtArgs>>): Prisma.PrismaPromise<BatchPayload>
-
-    /**
-     * Update zero or more UserSessions.
-     * Note, that providing `undefined` is treated as the value not being there.
-     * Read more here: https://pris.ly/d/null-undefined
-     * @param {UserSessionUpdateManyArgs} args - Arguments to update one or more rows.
-     * @example
-     * // Update many UserSessions
-     * const userSession = await prisma.userSession.updateMany({
-     *   where: {
-     *     // ... provide filter here
-     *   },
-     *   data: {
-     *     // ... provide data here
-     *   }
-     * })
-     * 
-     */
-    updateMany<T extends UserSessionUpdateManyArgs>(args: SelectSubset<T, UserSessionUpdateManyArgs<ExtArgs>>): Prisma.PrismaPromise<BatchPayload>
-
-    /**
-     * Update zero or more UserSessions and returns the data updated in the database.
-     * @param {UserSessionUpdateManyAndReturnArgs} args - Arguments to update many UserSessions.
-     * @example
-     * // Update many UserSessions
-     * const userSession = await prisma.userSession.updateManyAndReturn({
-     *   where: {
-     *     // ... provide filter here
-     *   },
-     *   data: [
-     *     // ... provide data here
-     *   ]
-     * })
-     * 
-     * // Update zero or more UserSessions and only return the `id`
-     * const userSessionWithIdOnly = await prisma.userSession.updateManyAndReturn({
-     *   select: { id: true },
-     *   where: {
-     *     // ... provide filter here
-     *   },
-     *   data: [
-     *     // ... provide data here
-     *   ]
-     * })
-     * Note, that providing `undefined` is treated as the value not being there.
-     * Read more here: https://pris.ly/d/null-undefined
-     * 
-     */
-    updateManyAndReturn<T extends UserSessionUpdateManyAndReturnArgs>(args: SelectSubset<T, UserSessionUpdateManyAndReturnArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$UserSessionPayload<ExtArgs>, T, "updateManyAndReturn", GlobalOmitOptions>>
-
-    /**
-     * Create or update one UserSession.
-     * @param {UserSessionUpsertArgs} args - Arguments to update or create a UserSession.
-     * @example
-     * // Update or create a UserSession
-     * const userSession = await prisma.userSession.upsert({
-     *   create: {
-     *     // ... data to create a UserSession
-     *   },
-     *   update: {
-     *     // ... in case it already exists, update
-     *   },
-     *   where: {
-     *     // ... the filter for the UserSession we want to update
-     *   }
-     * })
-     */
-    upsert<T extends UserSessionUpsertArgs>(args: SelectSubset<T, UserSessionUpsertArgs<ExtArgs>>): Prisma__UserSessionClient<$Result.GetResult<Prisma.$UserSessionPayload<ExtArgs>, T, "upsert", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
-
-
-    /**
-     * Count the number of UserSessions.
-     * Note, that providing `undefined` is treated as the value not being there.
-     * Read more here: https://pris.ly/d/null-undefined
-     * @param {UserSessionCountArgs} args - Arguments to filter UserSessions to count.
-     * @example
-     * // Count the number of UserSessions
-     * const count = await prisma.userSession.count({
-     *   where: {
-     *     // ... the filter for the UserSessions we want to count
-     *   }
-     * })
-    **/
-    count<T extends UserSessionCountArgs>(
-      args?: Subset<T, UserSessionCountArgs>,
-    ): Prisma.PrismaPromise<
-      T extends $Utils.Record<'select', any>
-        ? T['select'] extends true
-          ? number
-          : GetScalarType<T['select'], UserSessionCountAggregateOutputType>
-        : number
-    >
-
-    /**
-     * Allows you to perform aggregations operations on a UserSession.
-     * Note, that providing `undefined` is treated as the value not being there.
-     * Read more here: https://pris.ly/d/null-undefined
-     * @param {UserSessionAggregateArgs} args - Select which aggregations you would like to apply and on what fields.
-     * @example
-     * // Ordered by age ascending
-     * // Where email contains prisma.io
-     * // Limited to the 10 users
-     * const aggregations = await prisma.user.aggregate({
-     *   _avg: {
-     *     age: true,
-     *   },
-     *   where: {
-     *     email: {
-     *       contains: "prisma.io",
-     *     },
-     *   },
-     *   orderBy: {
-     *     age: "asc",
-     *   },
-     *   take: 10,
-     * })
-    **/
-    aggregate<T extends UserSessionAggregateArgs>(args: Subset<T, UserSessionAggregateArgs>): Prisma.PrismaPromise<GetUserSessionAggregateType<T>>
-
-    /**
-     * Group by UserSession.
-     * Note, that providing `undefined` is treated as the value not being there.
-     * Read more here: https://pris.ly/d/null-undefined
-     * @param {UserSessionGroupByArgs} args - Group by arguments.
-     * @example
-     * // Group by city, order by createdAt, get count
-     * const result = await prisma.user.groupBy({
-     *   by: ['city', 'createdAt'],
-     *   orderBy: {
-     *     createdAt: true
-     *   },
-     *   _count: {
-     *     _all: true
-     *   },
-     * })
-     * 
-    **/
-    groupBy<
-      T extends UserSessionGroupByArgs,
-      HasSelectOrTake extends Or<
-        Extends<'skip', Keys<T>>,
-        Extends<'take', Keys<T>>
-      >,
-      OrderByArg extends True extends HasSelectOrTake
-        ? { orderBy: UserSessionGroupByArgs['orderBy'] }
-        : { orderBy?: UserSessionGroupByArgs['orderBy'] },
-      OrderFields extends ExcludeUnderscoreKeys<Keys<MaybeTupleToUnion<T['orderBy']>>>,
-      ByFields extends MaybeTupleToUnion<T['by']>,
-      ByValid extends Has<ByFields, OrderFields>,
-      HavingFields extends GetHavingFields<T['having']>,
-      HavingValid extends Has<ByFields, HavingFields>,
-      ByEmpty extends T['by'] extends never[] ? True : False,
-      InputErrors extends ByEmpty extends True
-      ? `Error: "by" must not be empty.`
-      : HavingValid extends False
-      ? {
-          [P in HavingFields]: P extends ByFields
-            ? never
-            : P extends string
-            ? `Error: Field "${P}" used in "having" needs to be provided in "by".`
-            : [
-                Error,
-                'Field ',
-                P,
-                ` in "having" needs to be provided in "by"`,
-              ]
-        }[HavingFields]
-      : 'take' extends Keys<T>
-      ? 'orderBy' extends Keys<T>
-        ? ByValid extends True
-          ? {}
-          : {
-              [P in OrderFields]: P extends ByFields
-                ? never
-                : `Error: Field "${P}" in "orderBy" needs to be provided in "by"`
-            }[OrderFields]
-        : 'Error: If you provide "take", you also need to provide "orderBy"'
-      : 'skip' extends Keys<T>
-      ? 'orderBy' extends Keys<T>
-        ? ByValid extends True
-          ? {}
-          : {
-              [P in OrderFields]: P extends ByFields
-                ? never
-                : `Error: Field "${P}" in "orderBy" needs to be provided in "by"`
-            }[OrderFields]
-        : 'Error: If you provide "skip", you also need to provide "orderBy"'
-      : ByValid extends True
-      ? {}
-      : {
-          [P in OrderFields]: P extends ByFields
-            ? never
-            : `Error: Field "${P}" in "orderBy" needs to be provided in "by"`
-        }[OrderFields]
-    >(args: SubsetIntersection<T, UserSessionGroupByArgs, OrderByArg> & InputErrors): {} extends InputErrors ? GetUserSessionGroupByPayload<T> : Prisma.PrismaPromise<InputErrors>
-  /**
-   * Fields of the UserSession model
-   */
-  readonly fields: UserSessionFieldRefs;
-  }
-
-  /**
-   * The delegate class that acts as a "Promise-like" for UserSession.
-   * Why is this prefixed with `Prisma__`?
-   * Because we want to prevent naming conflicts as mentioned in
-   * https://github.com/prisma/prisma-client-js/issues/707
-   */
-  export interface Prisma__UserSessionClient<T, Null = never, ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs, GlobalOmitOptions = {}> extends Prisma.PrismaPromise<T> {
-    readonly [Symbol.toStringTag]: "PrismaPromise"
-    user<T extends UserDefaultArgs<ExtArgs> = {}>(args?: Subset<T, UserDefaultArgs<ExtArgs>>): Prisma__UserClient<$Result.GetResult<Prisma.$UserPayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions> | Null, Null, ExtArgs, GlobalOmitOptions>
-    revokedByUser<T extends UserSession$revokedByUserArgs<ExtArgs> = {}>(args?: Subset<T, UserSession$revokedByUserArgs<ExtArgs>>): Prisma__UserClient<$Result.GetResult<Prisma.$UserPayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions> | null, null, ExtArgs, GlobalOmitOptions>
-    /**
-     * Attaches callbacks for the resolution and/or rejection of the Promise.
-     * @param onfulfilled The callback to execute when the Promise is resolved.
-     * @param onrejected The callback to execute when the Promise is rejected.
-     * @returns A Promise for the completion of which ever callback is executed.
-     */
-    then<TResult1 = T, TResult2 = never>(onfulfilled?: ((value: T) => TResult1 | PromiseLike<TResult1>) | undefined | null, onrejected?: ((reason: any) => TResult2 | PromiseLike<TResult2>) | undefined | null): $Utils.JsPromise<TResult1 | TResult2>
-    /**
-     * Attaches a callback for only the rejection of the Promise.
-     * @param onrejected The callback to execute when the Promise is rejected.
-     * @returns A Promise for the completion of the callback.
-     */
-    catch<TResult = never>(onrejected?: ((reason: any) => TResult | PromiseLike<TResult>) | undefined | null): $Utils.JsPromise<T | TResult>
-    /**
-     * Attaches a callback that is invoked when the Promise is settled (fulfilled or rejected). The
-     * resolved value cannot be modified from the callback.
-     * @param onfinally The callback to execute when the Promise is settled (fulfilled or rejected).
-     * @returns A Promise for the completion of the callback.
-     */
-    finally(onfinally?: (() => void) | undefined | null): $Utils.JsPromise<T>
-  }
-
-
-
-
-  /**
-   * Fields of the UserSession model
-   */
-  interface UserSessionFieldRefs {
-    readonly id: FieldRef<"UserSession", 'BigInt'>
-    readonly uid: FieldRef<"UserSession", 'String'>
-    readonly userId: FieldRef<"UserSession", 'BigInt'>
-    readonly sessionId: FieldRef<"UserSession", 'String'>
-    readonly type: FieldRef<"UserSession", 'SessionType'>
-    readonly status: FieldRef<"UserSession", 'SessionStatus'>
-    readonly isAdmin: FieldRef<"UserSession", 'Boolean'>
-    readonly ipAddress: FieldRef<"UserSession", 'String'>
-    readonly userAgent: FieldRef<"UserSession", 'String'>
-    readonly deviceFingerprint: FieldRef<"UserSession", 'String'>
-    readonly isMobile: FieldRef<"UserSession", 'Boolean'>
-    readonly deviceName: FieldRef<"UserSession", 'String'>
-    readonly os: FieldRef<"UserSession", 'String'>
-    readonly browser: FieldRef<"UserSession", 'String'>
-    readonly createdAt: FieldRef<"UserSession", 'DateTime'>
-    readonly updatedAt: FieldRef<"UserSession", 'DateTime'>
-    readonly lastActiveAt: FieldRef<"UserSession", 'DateTime'>
-    readonly expiresAt: FieldRef<"UserSession", 'DateTime'>
-    readonly revokedAt: FieldRef<"UserSession", 'DateTime'>
-    readonly revokedBy: FieldRef<"UserSession", 'BigInt'>
-    readonly metadata: FieldRef<"UserSession", 'Json'>
-  }
-    
-
-  // Custom InputTypes
-  /**
-   * UserSession findUnique
-   */
-  export type UserSessionFindUniqueArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
-    /**
-     * Select specific fields to fetch from the UserSession
-     */
-    select?: UserSessionSelect<ExtArgs> | null
-    /**
-     * Omit specific fields from the UserSession
-     */
-    omit?: UserSessionOmit<ExtArgs> | null
-    /**
-     * Choose, which related nodes to fetch as well
-     */
-    include?: UserSessionInclude<ExtArgs> | null
-    /**
-     * Filter, which UserSession to fetch.
-     */
-    where: UserSessionWhereUniqueInput
-  }
-
-  /**
-   * UserSession findUniqueOrThrow
-   */
-  export type UserSessionFindUniqueOrThrowArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
-    /**
-     * Select specific fields to fetch from the UserSession
-     */
-    select?: UserSessionSelect<ExtArgs> | null
-    /**
-     * Omit specific fields from the UserSession
-     */
-    omit?: UserSessionOmit<ExtArgs> | null
-    /**
-     * Choose, which related nodes to fetch as well
-     */
-    include?: UserSessionInclude<ExtArgs> | null
-    /**
-     * Filter, which UserSession to fetch.
-     */
-    where: UserSessionWhereUniqueInput
-  }
-
-  /**
-   * UserSession findFirst
-   */
-  export type UserSessionFindFirstArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
-    /**
-     * Select specific fields to fetch from the UserSession
-     */
-    select?: UserSessionSelect<ExtArgs> | null
-    /**
-     * Omit specific fields from the UserSession
-     */
-    omit?: UserSessionOmit<ExtArgs> | null
-    /**
-     * Choose, which related nodes to fetch as well
-     */
-    include?: UserSessionInclude<ExtArgs> | null
-    /**
-     * Filter, which UserSession to fetch.
-     */
-    where?: UserSessionWhereInput
-    /**
-     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/sorting Sorting Docs}
-     * 
-     * Determine the order of UserSessions to fetch.
-     */
-    orderBy?: UserSessionOrderByWithRelationInput | UserSessionOrderByWithRelationInput[]
-    /**
-     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination#cursor-based-pagination Cursor Docs}
-     * 
-     * Sets the position for searching for UserSessions.
-     */
-    cursor?: UserSessionWhereUniqueInput
-    /**
-     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
-     * 
-     * Take `±n` UserSessions from the position of the cursor.
-     */
-    take?: number
-    /**
-     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
-     * 
-     * Skip the first `n` UserSessions.
-     */
-    skip?: number
-    /**
-     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/distinct Distinct Docs}
-     * 
-     * Filter by unique combinations of UserSessions.
-     */
-    distinct?: UserSessionScalarFieldEnum | UserSessionScalarFieldEnum[]
-  }
-
-  /**
-   * UserSession findFirstOrThrow
-   */
-  export type UserSessionFindFirstOrThrowArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
-    /**
-     * Select specific fields to fetch from the UserSession
-     */
-    select?: UserSessionSelect<ExtArgs> | null
-    /**
-     * Omit specific fields from the UserSession
-     */
-    omit?: UserSessionOmit<ExtArgs> | null
-    /**
-     * Choose, which related nodes to fetch as well
-     */
-    include?: UserSessionInclude<ExtArgs> | null
-    /**
-     * Filter, which UserSession to fetch.
-     */
-    where?: UserSessionWhereInput
-    /**
-     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/sorting Sorting Docs}
-     * 
-     * Determine the order of UserSessions to fetch.
-     */
-    orderBy?: UserSessionOrderByWithRelationInput | UserSessionOrderByWithRelationInput[]
-    /**
-     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination#cursor-based-pagination Cursor Docs}
-     * 
-     * Sets the position for searching for UserSessions.
-     */
-    cursor?: UserSessionWhereUniqueInput
-    /**
-     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
-     * 
-     * Take `±n` UserSessions from the position of the cursor.
-     */
-    take?: number
-    /**
-     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
-     * 
-     * Skip the first `n` UserSessions.
-     */
-    skip?: number
-    /**
-     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/distinct Distinct Docs}
-     * 
-     * Filter by unique combinations of UserSessions.
-     */
-    distinct?: UserSessionScalarFieldEnum | UserSessionScalarFieldEnum[]
-  }
-
-  /**
-   * UserSession findMany
-   */
-  export type UserSessionFindManyArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
-    /**
-     * Select specific fields to fetch from the UserSession
-     */
-    select?: UserSessionSelect<ExtArgs> | null
-    /**
-     * Omit specific fields from the UserSession
-     */
-    omit?: UserSessionOmit<ExtArgs> | null
-    /**
-     * Choose, which related nodes to fetch as well
-     */
-    include?: UserSessionInclude<ExtArgs> | null
-    /**
-     * Filter, which UserSessions to fetch.
-     */
-    where?: UserSessionWhereInput
-    /**
-     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/sorting Sorting Docs}
-     * 
-     * Determine the order of UserSessions to fetch.
-     */
-    orderBy?: UserSessionOrderByWithRelationInput | UserSessionOrderByWithRelationInput[]
-    /**
-     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination#cursor-based-pagination Cursor Docs}
-     * 
-     * Sets the position for listing UserSessions.
-     */
-    cursor?: UserSessionWhereUniqueInput
-    /**
-     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
-     * 
-     * Take `±n` UserSessions from the position of the cursor.
-     */
-    take?: number
-    /**
-     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
-     * 
-     * Skip the first `n` UserSessions.
-     */
-    skip?: number
-    distinct?: UserSessionScalarFieldEnum | UserSessionScalarFieldEnum[]
-  }
-
-  /**
-   * UserSession create
-   */
-  export type UserSessionCreateArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
-    /**
-     * Select specific fields to fetch from the UserSession
-     */
-    select?: UserSessionSelect<ExtArgs> | null
-    /**
-     * Omit specific fields from the UserSession
-     */
-    omit?: UserSessionOmit<ExtArgs> | null
-    /**
-     * Choose, which related nodes to fetch as well
-     */
-    include?: UserSessionInclude<ExtArgs> | null
-    /**
-     * The data needed to create a UserSession.
-     */
-    data: XOR<UserSessionCreateInput, UserSessionUncheckedCreateInput>
-  }
-
-  /**
-   * UserSession createMany
-   */
-  export type UserSessionCreateManyArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
-    /**
-     * The data used to create many UserSessions.
-     */
-    data: UserSessionCreateManyInput | UserSessionCreateManyInput[]
-    skipDuplicates?: boolean
-  }
-
-  /**
-   * UserSession createManyAndReturn
-   */
-  export type UserSessionCreateManyAndReturnArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
-    /**
-     * Select specific fields to fetch from the UserSession
-     */
-    select?: UserSessionSelectCreateManyAndReturn<ExtArgs> | null
-    /**
-     * Omit specific fields from the UserSession
-     */
-    omit?: UserSessionOmit<ExtArgs> | null
-    /**
-     * The data used to create many UserSessions.
-     */
-    data: UserSessionCreateManyInput | UserSessionCreateManyInput[]
-    skipDuplicates?: boolean
-    /**
-     * Choose, which related nodes to fetch as well
-     */
-    include?: UserSessionIncludeCreateManyAndReturn<ExtArgs> | null
-  }
-
-  /**
-   * UserSession update
-   */
-  export type UserSessionUpdateArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
-    /**
-     * Select specific fields to fetch from the UserSession
-     */
-    select?: UserSessionSelect<ExtArgs> | null
-    /**
-     * Omit specific fields from the UserSession
-     */
-    omit?: UserSessionOmit<ExtArgs> | null
-    /**
-     * Choose, which related nodes to fetch as well
-     */
-    include?: UserSessionInclude<ExtArgs> | null
-    /**
-     * The data needed to update a UserSession.
-     */
-    data: XOR<UserSessionUpdateInput, UserSessionUncheckedUpdateInput>
-    /**
-     * Choose, which UserSession to update.
-     */
-    where: UserSessionWhereUniqueInput
-  }
-
-  /**
-   * UserSession updateMany
-   */
-  export type UserSessionUpdateManyArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
-    /**
-     * The data used to update UserSessions.
-     */
-    data: XOR<UserSessionUpdateManyMutationInput, UserSessionUncheckedUpdateManyInput>
-    /**
-     * Filter which UserSessions to update
-     */
-    where?: UserSessionWhereInput
-    /**
-     * Limit how many UserSessions to update.
-     */
-    limit?: number
-  }
-
-  /**
-   * UserSession updateManyAndReturn
-   */
-  export type UserSessionUpdateManyAndReturnArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
-    /**
-     * Select specific fields to fetch from the UserSession
-     */
-    select?: UserSessionSelectUpdateManyAndReturn<ExtArgs> | null
-    /**
-     * Omit specific fields from the UserSession
-     */
-    omit?: UserSessionOmit<ExtArgs> | null
-    /**
-     * The data used to update UserSessions.
-     */
-    data: XOR<UserSessionUpdateManyMutationInput, UserSessionUncheckedUpdateManyInput>
-    /**
-     * Filter which UserSessions to update
-     */
-    where?: UserSessionWhereInput
-    /**
-     * Limit how many UserSessions to update.
-     */
-    limit?: number
-    /**
-     * Choose, which related nodes to fetch as well
-     */
-    include?: UserSessionIncludeUpdateManyAndReturn<ExtArgs> | null
-  }
-
-  /**
-   * UserSession upsert
-   */
-  export type UserSessionUpsertArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
-    /**
-     * Select specific fields to fetch from the UserSession
-     */
-    select?: UserSessionSelect<ExtArgs> | null
-    /**
-     * Omit specific fields from the UserSession
-     */
-    omit?: UserSessionOmit<ExtArgs> | null
-    /**
-     * Choose, which related nodes to fetch as well
-     */
-    include?: UserSessionInclude<ExtArgs> | null
-    /**
-     * The filter to search for the UserSession to update in case it exists.
-     */
-    where: UserSessionWhereUniqueInput
-    /**
-     * In case the UserSession found by the `where` argument doesn't exist, create a new UserSession with this data.
-     */
-    create: XOR<UserSessionCreateInput, UserSessionUncheckedCreateInput>
-    /**
-     * In case the UserSession was found with the provided `where` argument, update it with this data.
-     */
-    update: XOR<UserSessionUpdateInput, UserSessionUncheckedUpdateInput>
-  }
-
-  /**
-   * UserSession delete
-   */
-  export type UserSessionDeleteArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
-    /**
-     * Select specific fields to fetch from the UserSession
-     */
-    select?: UserSessionSelect<ExtArgs> | null
-    /**
-     * Omit specific fields from the UserSession
-     */
-    omit?: UserSessionOmit<ExtArgs> | null
-    /**
-     * Choose, which related nodes to fetch as well
-     */
-    include?: UserSessionInclude<ExtArgs> | null
-    /**
-     * Filter which UserSession to delete.
-     */
-    where: UserSessionWhereUniqueInput
-  }
-
-  /**
-   * UserSession deleteMany
-   */
-  export type UserSessionDeleteManyArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
-    /**
-     * Filter which UserSessions to delete
-     */
-    where?: UserSessionWhereInput
-    /**
-     * Limit how many UserSessions to delete.
-     */
-    limit?: number
-  }
-
-  /**
-   * UserSession.revokedByUser
-   */
-  export type UserSession$revokedByUserArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
-    /**
-     * Select specific fields to fetch from the User
-     */
-    select?: UserSelect<ExtArgs> | null
-    /**
-     * Omit specific fields from the User
-     */
-    omit?: UserOmit<ExtArgs> | null
-    /**
-     * Choose, which related nodes to fetch as well
-     */
-    include?: UserInclude<ExtArgs> | null
-    where?: UserWhereInput
-  }
-
-  /**
-   * UserSession without action
-   */
-  export type UserSessionDefaultArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
-    /**
-     * Select specific fields to fetch from the UserSession
-     */
-    select?: UserSessionSelect<ExtArgs> | null
-    /**
-     * Omit specific fields from the UserSession
-     */
-    omit?: UserSessionOmit<ExtArgs> | null
-    /**
-     * Choose, which related nodes to fetch as well
-     */
-    include?: UserSessionInclude<ExtArgs> | null
-  }
-
-
-  /**
    * Model Tier
    */
 
@@ -61678,6 +60298,1386 @@ export namespace Prisma {
 
 
   /**
+   * Model UserSession
+   */
+
+  export type AggregateUserSession = {
+    _count: UserSessionCountAggregateOutputType | null
+    _avg: UserSessionAvgAggregateOutputType | null
+    _sum: UserSessionSumAggregateOutputType | null
+    _min: UserSessionMinAggregateOutputType | null
+    _max: UserSessionMaxAggregateOutputType | null
+  }
+
+  export type UserSessionAvgAggregateOutputType = {
+    id: number | null
+    userId: number | null
+    revokedBy: number | null
+  }
+
+  export type UserSessionSumAggregateOutputType = {
+    id: bigint | null
+    userId: bigint | null
+    revokedBy: bigint | null
+  }
+
+  export type UserSessionMinAggregateOutputType = {
+    id: bigint | null
+    uid: string | null
+    userId: bigint | null
+    sessionId: string | null
+    type: $Enums.SessionType | null
+    status: $Enums.SessionStatus | null
+    isAdmin: boolean | null
+    ipAddress: string | null
+    userAgent: string | null
+    deviceFingerprint: string | null
+    isMobile: boolean | null
+    deviceName: string | null
+    os: string | null
+    browser: string | null
+    createdAt: Date | null
+    updatedAt: Date | null
+    lastActiveAt: Date | null
+    expiresAt: Date | null
+    revokedAt: Date | null
+    revokedBy: bigint | null
+  }
+
+  export type UserSessionMaxAggregateOutputType = {
+    id: bigint | null
+    uid: string | null
+    userId: bigint | null
+    sessionId: string | null
+    type: $Enums.SessionType | null
+    status: $Enums.SessionStatus | null
+    isAdmin: boolean | null
+    ipAddress: string | null
+    userAgent: string | null
+    deviceFingerprint: string | null
+    isMobile: boolean | null
+    deviceName: string | null
+    os: string | null
+    browser: string | null
+    createdAt: Date | null
+    updatedAt: Date | null
+    lastActiveAt: Date | null
+    expiresAt: Date | null
+    revokedAt: Date | null
+    revokedBy: bigint | null
+  }
+
+  export type UserSessionCountAggregateOutputType = {
+    id: number
+    uid: number
+    userId: number
+    sessionId: number
+    type: number
+    status: number
+    isAdmin: number
+    ipAddress: number
+    userAgent: number
+    deviceFingerprint: number
+    isMobile: number
+    deviceName: number
+    os: number
+    browser: number
+    createdAt: number
+    updatedAt: number
+    lastActiveAt: number
+    expiresAt: number
+    revokedAt: number
+    revokedBy: number
+    metadata: number
+    _all: number
+  }
+
+
+  export type UserSessionAvgAggregateInputType = {
+    id?: true
+    userId?: true
+    revokedBy?: true
+  }
+
+  export type UserSessionSumAggregateInputType = {
+    id?: true
+    userId?: true
+    revokedBy?: true
+  }
+
+  export type UserSessionMinAggregateInputType = {
+    id?: true
+    uid?: true
+    userId?: true
+    sessionId?: true
+    type?: true
+    status?: true
+    isAdmin?: true
+    ipAddress?: true
+    userAgent?: true
+    deviceFingerprint?: true
+    isMobile?: true
+    deviceName?: true
+    os?: true
+    browser?: true
+    createdAt?: true
+    updatedAt?: true
+    lastActiveAt?: true
+    expiresAt?: true
+    revokedAt?: true
+    revokedBy?: true
+  }
+
+  export type UserSessionMaxAggregateInputType = {
+    id?: true
+    uid?: true
+    userId?: true
+    sessionId?: true
+    type?: true
+    status?: true
+    isAdmin?: true
+    ipAddress?: true
+    userAgent?: true
+    deviceFingerprint?: true
+    isMobile?: true
+    deviceName?: true
+    os?: true
+    browser?: true
+    createdAt?: true
+    updatedAt?: true
+    lastActiveAt?: true
+    expiresAt?: true
+    revokedAt?: true
+    revokedBy?: true
+  }
+
+  export type UserSessionCountAggregateInputType = {
+    id?: true
+    uid?: true
+    userId?: true
+    sessionId?: true
+    type?: true
+    status?: true
+    isAdmin?: true
+    ipAddress?: true
+    userAgent?: true
+    deviceFingerprint?: true
+    isMobile?: true
+    deviceName?: true
+    os?: true
+    browser?: true
+    createdAt?: true
+    updatedAt?: true
+    lastActiveAt?: true
+    expiresAt?: true
+    revokedAt?: true
+    revokedBy?: true
+    metadata?: true
+    _all?: true
+  }
+
+  export type UserSessionAggregateArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Filter which UserSession to aggregate.
+     */
+    where?: UserSessionWhereInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/sorting Sorting Docs}
+     * 
+     * Determine the order of UserSessions to fetch.
+     */
+    orderBy?: UserSessionOrderByWithRelationInput | UserSessionOrderByWithRelationInput[]
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination#cursor-based-pagination Cursor Docs}
+     * 
+     * Sets the start position
+     */
+    cursor?: UserSessionWhereUniqueInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Take `±n` UserSessions from the position of the cursor.
+     */
+    take?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Skip the first `n` UserSessions.
+     */
+    skip?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
+     * 
+     * Count returned UserSessions
+    **/
+    _count?: true | UserSessionCountAggregateInputType
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
+     * 
+     * Select which fields to average
+    **/
+    _avg?: UserSessionAvgAggregateInputType
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
+     * 
+     * Select which fields to sum
+    **/
+    _sum?: UserSessionSumAggregateInputType
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
+     * 
+     * Select which fields to find the minimum value
+    **/
+    _min?: UserSessionMinAggregateInputType
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
+     * 
+     * Select which fields to find the maximum value
+    **/
+    _max?: UserSessionMaxAggregateInputType
+  }
+
+  export type GetUserSessionAggregateType<T extends UserSessionAggregateArgs> = {
+        [P in keyof T & keyof AggregateUserSession]: P extends '_count' | 'count'
+      ? T[P] extends true
+        ? number
+        : GetScalarType<T[P], AggregateUserSession[P]>
+      : GetScalarType<T[P], AggregateUserSession[P]>
+  }
+
+
+
+
+  export type UserSessionGroupByArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    where?: UserSessionWhereInput
+    orderBy?: UserSessionOrderByWithAggregationInput | UserSessionOrderByWithAggregationInput[]
+    by: UserSessionScalarFieldEnum[] | UserSessionScalarFieldEnum
+    having?: UserSessionScalarWhereWithAggregatesInput
+    take?: number
+    skip?: number
+    _count?: UserSessionCountAggregateInputType | true
+    _avg?: UserSessionAvgAggregateInputType
+    _sum?: UserSessionSumAggregateInputType
+    _min?: UserSessionMinAggregateInputType
+    _max?: UserSessionMaxAggregateInputType
+  }
+
+  export type UserSessionGroupByOutputType = {
+    id: bigint
+    uid: string
+    userId: bigint
+    sessionId: string
+    type: $Enums.SessionType
+    status: $Enums.SessionStatus
+    isAdmin: boolean
+    ipAddress: string | null
+    userAgent: string | null
+    deviceFingerprint: string | null
+    isMobile: boolean | null
+    deviceName: string | null
+    os: string | null
+    browser: string | null
+    createdAt: Date
+    updatedAt: Date
+    lastActiveAt: Date
+    expiresAt: Date
+    revokedAt: Date | null
+    revokedBy: bigint | null
+    metadata: JsonValue | null
+    _count: UserSessionCountAggregateOutputType | null
+    _avg: UserSessionAvgAggregateOutputType | null
+    _sum: UserSessionSumAggregateOutputType | null
+    _min: UserSessionMinAggregateOutputType | null
+    _max: UserSessionMaxAggregateOutputType | null
+  }
+
+  type GetUserSessionGroupByPayload<T extends UserSessionGroupByArgs> = Prisma.PrismaPromise<
+    Array<
+      PickEnumerable<UserSessionGroupByOutputType, T['by']> &
+        {
+          [P in ((keyof T) & (keyof UserSessionGroupByOutputType))]: P extends '_count'
+            ? T[P] extends boolean
+              ? number
+              : GetScalarType<T[P], UserSessionGroupByOutputType[P]>
+            : GetScalarType<T[P], UserSessionGroupByOutputType[P]>
+        }
+      >
+    >
+
+
+  export type UserSessionSelect<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetSelect<{
+    id?: boolean
+    uid?: boolean
+    userId?: boolean
+    sessionId?: boolean
+    type?: boolean
+    status?: boolean
+    isAdmin?: boolean
+    ipAddress?: boolean
+    userAgent?: boolean
+    deviceFingerprint?: boolean
+    isMobile?: boolean
+    deviceName?: boolean
+    os?: boolean
+    browser?: boolean
+    createdAt?: boolean
+    updatedAt?: boolean
+    lastActiveAt?: boolean
+    expiresAt?: boolean
+    revokedAt?: boolean
+    revokedBy?: boolean
+    metadata?: boolean
+    user?: boolean | UserDefaultArgs<ExtArgs>
+    revokedByUser?: boolean | UserSession$revokedByUserArgs<ExtArgs>
+  }, ExtArgs["result"]["userSession"]>
+
+  export type UserSessionSelectCreateManyAndReturn<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetSelect<{
+    id?: boolean
+    uid?: boolean
+    userId?: boolean
+    sessionId?: boolean
+    type?: boolean
+    status?: boolean
+    isAdmin?: boolean
+    ipAddress?: boolean
+    userAgent?: boolean
+    deviceFingerprint?: boolean
+    isMobile?: boolean
+    deviceName?: boolean
+    os?: boolean
+    browser?: boolean
+    createdAt?: boolean
+    updatedAt?: boolean
+    lastActiveAt?: boolean
+    expiresAt?: boolean
+    revokedAt?: boolean
+    revokedBy?: boolean
+    metadata?: boolean
+    user?: boolean | UserDefaultArgs<ExtArgs>
+    revokedByUser?: boolean | UserSession$revokedByUserArgs<ExtArgs>
+  }, ExtArgs["result"]["userSession"]>
+
+  export type UserSessionSelectUpdateManyAndReturn<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetSelect<{
+    id?: boolean
+    uid?: boolean
+    userId?: boolean
+    sessionId?: boolean
+    type?: boolean
+    status?: boolean
+    isAdmin?: boolean
+    ipAddress?: boolean
+    userAgent?: boolean
+    deviceFingerprint?: boolean
+    isMobile?: boolean
+    deviceName?: boolean
+    os?: boolean
+    browser?: boolean
+    createdAt?: boolean
+    updatedAt?: boolean
+    lastActiveAt?: boolean
+    expiresAt?: boolean
+    revokedAt?: boolean
+    revokedBy?: boolean
+    metadata?: boolean
+    user?: boolean | UserDefaultArgs<ExtArgs>
+    revokedByUser?: boolean | UserSession$revokedByUserArgs<ExtArgs>
+  }, ExtArgs["result"]["userSession"]>
+
+  export type UserSessionSelectScalar = {
+    id?: boolean
+    uid?: boolean
+    userId?: boolean
+    sessionId?: boolean
+    type?: boolean
+    status?: boolean
+    isAdmin?: boolean
+    ipAddress?: boolean
+    userAgent?: boolean
+    deviceFingerprint?: boolean
+    isMobile?: boolean
+    deviceName?: boolean
+    os?: boolean
+    browser?: boolean
+    createdAt?: boolean
+    updatedAt?: boolean
+    lastActiveAt?: boolean
+    expiresAt?: boolean
+    revokedAt?: boolean
+    revokedBy?: boolean
+    metadata?: boolean
+  }
+
+  export type UserSessionOmit<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetOmit<"id" | "uid" | "userId" | "sessionId" | "type" | "status" | "isAdmin" | "ipAddress" | "userAgent" | "deviceFingerprint" | "isMobile" | "deviceName" | "os" | "browser" | "createdAt" | "updatedAt" | "lastActiveAt" | "expiresAt" | "revokedAt" | "revokedBy" | "metadata", ExtArgs["result"]["userSession"]>
+  export type UserSessionInclude<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    user?: boolean | UserDefaultArgs<ExtArgs>
+    revokedByUser?: boolean | UserSession$revokedByUserArgs<ExtArgs>
+  }
+  export type UserSessionIncludeCreateManyAndReturn<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    user?: boolean | UserDefaultArgs<ExtArgs>
+    revokedByUser?: boolean | UserSession$revokedByUserArgs<ExtArgs>
+  }
+  export type UserSessionIncludeUpdateManyAndReturn<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    user?: boolean | UserDefaultArgs<ExtArgs>
+    revokedByUser?: boolean | UserSession$revokedByUserArgs<ExtArgs>
+  }
+
+  export type $UserSessionPayload<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    name: "UserSession"
+    objects: {
+      /**
+       * 관계
+       */
+      user: Prisma.$UserPayload<ExtArgs>
+      revokedByUser: Prisma.$UserPayload<ExtArgs> | null
+    }
+    scalars: $Extensions.GetPayloadResult<{
+      /**
+       * 내부 관리용 ID (DB 저장 시 자동 생성)
+       */
+      id: bigint
+      /**
+       * 비즈니스용 고유 식별자 (CUID2)
+       */
+      uid: string
+      /**
+       * 세션 소유자 사용자 ID
+       */
+      userId: bigint
+      /**
+       * 실제 세션 ID (Express session ID 또는 Socket.io socket ID)
+       */
+      sessionId: string
+      /**
+       * 세션 타입 (HTTP, WEBSOCKET 등)
+       */
+      type: $Enums.SessionType
+      /**
+       * 세션 상태 (ACTIVE, REVOKED, EXPIRED)
+       */
+      status: $Enums.SessionStatus
+      /**
+       * 관리자 세션 여부 (HTTP 세션인 경우 Redis 키 prefix 결정에 사용)
+       */
+      isAdmin: boolean
+      /**
+       * 디바이스 정보
+       */
+      ipAddress: string | null
+      userAgent: string | null
+      deviceFingerprint: string | null
+      isMobile: boolean | null
+      /**
+       * 예: "iPhone 14 Pro", "Chrome on Windows"
+       */
+      deviceName: string | null
+      /**
+       * 예: "iOS 17.0", "Windows 11"
+       */
+      os: string | null
+      /**
+       * 예: "Chrome 120", "Safari 17"
+       */
+      browser: string | null
+      /**
+       * 타임스탬프
+       */
+      createdAt: Date
+      updatedAt: Date
+      lastActiveAt: Date
+      expiresAt: Date
+      /**
+       * 세션 종료 정보
+       * 세션 종료 시간 (REVOKED 상태일 때)
+       */
+      revokedAt: Date | null
+      /**
+       * 세션을 종료한 사용자 ID (관리자가 종료한 경우)
+       */
+      revokedBy: bigint | null
+      /**
+       * 추가 메타데이터 (JSON)
+       */
+      metadata: Prisma.JsonValue | null
+    }, ExtArgs["result"]["userSession"]>
+    composites: {}
+  }
+
+  type UserSessionGetPayload<S extends boolean | null | undefined | UserSessionDefaultArgs> = $Result.GetResult<Prisma.$UserSessionPayload, S>
+
+  type UserSessionCountArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> =
+    Omit<UserSessionFindManyArgs, 'select' | 'include' | 'distinct' | 'omit'> & {
+      select?: UserSessionCountAggregateInputType | true
+    }
+
+  export interface UserSessionDelegate<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs, GlobalOmitOptions = {}> {
+    [K: symbol]: { types: Prisma.TypeMap<ExtArgs>['model']['UserSession'], meta: { name: 'UserSession' } }
+    /**
+     * Find zero or one UserSession that matches the filter.
+     * @param {UserSessionFindUniqueArgs} args - Arguments to find a UserSession
+     * @example
+     * // Get one UserSession
+     * const userSession = await prisma.userSession.findUnique({
+     *   where: {
+     *     // ... provide filter here
+     *   }
+     * })
+     */
+    findUnique<T extends UserSessionFindUniqueArgs>(args: SelectSubset<T, UserSessionFindUniqueArgs<ExtArgs>>): Prisma__UserSessionClient<$Result.GetResult<Prisma.$UserSessionPayload<ExtArgs>, T, "findUnique", GlobalOmitOptions> | null, null, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Find one UserSession that matches the filter or throw an error with `error.code='P2025'`
+     * if no matches were found.
+     * @param {UserSessionFindUniqueOrThrowArgs} args - Arguments to find a UserSession
+     * @example
+     * // Get one UserSession
+     * const userSession = await prisma.userSession.findUniqueOrThrow({
+     *   where: {
+     *     // ... provide filter here
+     *   }
+     * })
+     */
+    findUniqueOrThrow<T extends UserSessionFindUniqueOrThrowArgs>(args: SelectSubset<T, UserSessionFindUniqueOrThrowArgs<ExtArgs>>): Prisma__UserSessionClient<$Result.GetResult<Prisma.$UserSessionPayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Find the first UserSession that matches the filter.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {UserSessionFindFirstArgs} args - Arguments to find a UserSession
+     * @example
+     * // Get one UserSession
+     * const userSession = await prisma.userSession.findFirst({
+     *   where: {
+     *     // ... provide filter here
+     *   }
+     * })
+     */
+    findFirst<T extends UserSessionFindFirstArgs>(args?: SelectSubset<T, UserSessionFindFirstArgs<ExtArgs>>): Prisma__UserSessionClient<$Result.GetResult<Prisma.$UserSessionPayload<ExtArgs>, T, "findFirst", GlobalOmitOptions> | null, null, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Find the first UserSession that matches the filter or
+     * throw `PrismaKnownClientError` with `P2025` code if no matches were found.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {UserSessionFindFirstOrThrowArgs} args - Arguments to find a UserSession
+     * @example
+     * // Get one UserSession
+     * const userSession = await prisma.userSession.findFirstOrThrow({
+     *   where: {
+     *     // ... provide filter here
+     *   }
+     * })
+     */
+    findFirstOrThrow<T extends UserSessionFindFirstOrThrowArgs>(args?: SelectSubset<T, UserSessionFindFirstOrThrowArgs<ExtArgs>>): Prisma__UserSessionClient<$Result.GetResult<Prisma.$UserSessionPayload<ExtArgs>, T, "findFirstOrThrow", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Find zero or more UserSessions that matches the filter.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {UserSessionFindManyArgs} args - Arguments to filter and select certain fields only.
+     * @example
+     * // Get all UserSessions
+     * const userSessions = await prisma.userSession.findMany()
+     * 
+     * // Get first 10 UserSessions
+     * const userSessions = await prisma.userSession.findMany({ take: 10 })
+     * 
+     * // Only select the `id`
+     * const userSessionWithIdOnly = await prisma.userSession.findMany({ select: { id: true } })
+     * 
+     */
+    findMany<T extends UserSessionFindManyArgs>(args?: SelectSubset<T, UserSessionFindManyArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$UserSessionPayload<ExtArgs>, T, "findMany", GlobalOmitOptions>>
+
+    /**
+     * Create a UserSession.
+     * @param {UserSessionCreateArgs} args - Arguments to create a UserSession.
+     * @example
+     * // Create one UserSession
+     * const UserSession = await prisma.userSession.create({
+     *   data: {
+     *     // ... data to create a UserSession
+     *   }
+     * })
+     * 
+     */
+    create<T extends UserSessionCreateArgs>(args: SelectSubset<T, UserSessionCreateArgs<ExtArgs>>): Prisma__UserSessionClient<$Result.GetResult<Prisma.$UserSessionPayload<ExtArgs>, T, "create", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Create many UserSessions.
+     * @param {UserSessionCreateManyArgs} args - Arguments to create many UserSessions.
+     * @example
+     * // Create many UserSessions
+     * const userSession = await prisma.userSession.createMany({
+     *   data: [
+     *     // ... provide data here
+     *   ]
+     * })
+     *     
+     */
+    createMany<T extends UserSessionCreateManyArgs>(args?: SelectSubset<T, UserSessionCreateManyArgs<ExtArgs>>): Prisma.PrismaPromise<BatchPayload>
+
+    /**
+     * Create many UserSessions and returns the data saved in the database.
+     * @param {UserSessionCreateManyAndReturnArgs} args - Arguments to create many UserSessions.
+     * @example
+     * // Create many UserSessions
+     * const userSession = await prisma.userSession.createManyAndReturn({
+     *   data: [
+     *     // ... provide data here
+     *   ]
+     * })
+     * 
+     * // Create many UserSessions and only return the `id`
+     * const userSessionWithIdOnly = await prisma.userSession.createManyAndReturn({
+     *   select: { id: true },
+     *   data: [
+     *     // ... provide data here
+     *   ]
+     * })
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * 
+     */
+    createManyAndReturn<T extends UserSessionCreateManyAndReturnArgs>(args?: SelectSubset<T, UserSessionCreateManyAndReturnArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$UserSessionPayload<ExtArgs>, T, "createManyAndReturn", GlobalOmitOptions>>
+
+    /**
+     * Delete a UserSession.
+     * @param {UserSessionDeleteArgs} args - Arguments to delete one UserSession.
+     * @example
+     * // Delete one UserSession
+     * const UserSession = await prisma.userSession.delete({
+     *   where: {
+     *     // ... filter to delete one UserSession
+     *   }
+     * })
+     * 
+     */
+    delete<T extends UserSessionDeleteArgs>(args: SelectSubset<T, UserSessionDeleteArgs<ExtArgs>>): Prisma__UserSessionClient<$Result.GetResult<Prisma.$UserSessionPayload<ExtArgs>, T, "delete", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Update one UserSession.
+     * @param {UserSessionUpdateArgs} args - Arguments to update one UserSession.
+     * @example
+     * // Update one UserSession
+     * const userSession = await prisma.userSession.update({
+     *   where: {
+     *     // ... provide filter here
+     *   },
+     *   data: {
+     *     // ... provide data here
+     *   }
+     * })
+     * 
+     */
+    update<T extends UserSessionUpdateArgs>(args: SelectSubset<T, UserSessionUpdateArgs<ExtArgs>>): Prisma__UserSessionClient<$Result.GetResult<Prisma.$UserSessionPayload<ExtArgs>, T, "update", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Delete zero or more UserSessions.
+     * @param {UserSessionDeleteManyArgs} args - Arguments to filter UserSessions to delete.
+     * @example
+     * // Delete a few UserSessions
+     * const { count } = await prisma.userSession.deleteMany({
+     *   where: {
+     *     // ... provide filter here
+     *   }
+     * })
+     * 
+     */
+    deleteMany<T extends UserSessionDeleteManyArgs>(args?: SelectSubset<T, UserSessionDeleteManyArgs<ExtArgs>>): Prisma.PrismaPromise<BatchPayload>
+
+    /**
+     * Update zero or more UserSessions.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {UserSessionUpdateManyArgs} args - Arguments to update one or more rows.
+     * @example
+     * // Update many UserSessions
+     * const userSession = await prisma.userSession.updateMany({
+     *   where: {
+     *     // ... provide filter here
+     *   },
+     *   data: {
+     *     // ... provide data here
+     *   }
+     * })
+     * 
+     */
+    updateMany<T extends UserSessionUpdateManyArgs>(args: SelectSubset<T, UserSessionUpdateManyArgs<ExtArgs>>): Prisma.PrismaPromise<BatchPayload>
+
+    /**
+     * Update zero or more UserSessions and returns the data updated in the database.
+     * @param {UserSessionUpdateManyAndReturnArgs} args - Arguments to update many UserSessions.
+     * @example
+     * // Update many UserSessions
+     * const userSession = await prisma.userSession.updateManyAndReturn({
+     *   where: {
+     *     // ... provide filter here
+     *   },
+     *   data: [
+     *     // ... provide data here
+     *   ]
+     * })
+     * 
+     * // Update zero or more UserSessions and only return the `id`
+     * const userSessionWithIdOnly = await prisma.userSession.updateManyAndReturn({
+     *   select: { id: true },
+     *   where: {
+     *     // ... provide filter here
+     *   },
+     *   data: [
+     *     // ... provide data here
+     *   ]
+     * })
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * 
+     */
+    updateManyAndReturn<T extends UserSessionUpdateManyAndReturnArgs>(args: SelectSubset<T, UserSessionUpdateManyAndReturnArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$UserSessionPayload<ExtArgs>, T, "updateManyAndReturn", GlobalOmitOptions>>
+
+    /**
+     * Create or update one UserSession.
+     * @param {UserSessionUpsertArgs} args - Arguments to update or create a UserSession.
+     * @example
+     * // Update or create a UserSession
+     * const userSession = await prisma.userSession.upsert({
+     *   create: {
+     *     // ... data to create a UserSession
+     *   },
+     *   update: {
+     *     // ... in case it already exists, update
+     *   },
+     *   where: {
+     *     // ... the filter for the UserSession we want to update
+     *   }
+     * })
+     */
+    upsert<T extends UserSessionUpsertArgs>(args: SelectSubset<T, UserSessionUpsertArgs<ExtArgs>>): Prisma__UserSessionClient<$Result.GetResult<Prisma.$UserSessionPayload<ExtArgs>, T, "upsert", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
+
+
+    /**
+     * Count the number of UserSessions.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {UserSessionCountArgs} args - Arguments to filter UserSessions to count.
+     * @example
+     * // Count the number of UserSessions
+     * const count = await prisma.userSession.count({
+     *   where: {
+     *     // ... the filter for the UserSessions we want to count
+     *   }
+     * })
+    **/
+    count<T extends UserSessionCountArgs>(
+      args?: Subset<T, UserSessionCountArgs>,
+    ): Prisma.PrismaPromise<
+      T extends $Utils.Record<'select', any>
+        ? T['select'] extends true
+          ? number
+          : GetScalarType<T['select'], UserSessionCountAggregateOutputType>
+        : number
+    >
+
+    /**
+     * Allows you to perform aggregations operations on a UserSession.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {UserSessionAggregateArgs} args - Select which aggregations you would like to apply and on what fields.
+     * @example
+     * // Ordered by age ascending
+     * // Where email contains prisma.io
+     * // Limited to the 10 users
+     * const aggregations = await prisma.user.aggregate({
+     *   _avg: {
+     *     age: true,
+     *   },
+     *   where: {
+     *     email: {
+     *       contains: "prisma.io",
+     *     },
+     *   },
+     *   orderBy: {
+     *     age: "asc",
+     *   },
+     *   take: 10,
+     * })
+    **/
+    aggregate<T extends UserSessionAggregateArgs>(args: Subset<T, UserSessionAggregateArgs>): Prisma.PrismaPromise<GetUserSessionAggregateType<T>>
+
+    /**
+     * Group by UserSession.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {UserSessionGroupByArgs} args - Group by arguments.
+     * @example
+     * // Group by city, order by createdAt, get count
+     * const result = await prisma.user.groupBy({
+     *   by: ['city', 'createdAt'],
+     *   orderBy: {
+     *     createdAt: true
+     *   },
+     *   _count: {
+     *     _all: true
+     *   },
+     * })
+     * 
+    **/
+    groupBy<
+      T extends UserSessionGroupByArgs,
+      HasSelectOrTake extends Or<
+        Extends<'skip', Keys<T>>,
+        Extends<'take', Keys<T>>
+      >,
+      OrderByArg extends True extends HasSelectOrTake
+        ? { orderBy: UserSessionGroupByArgs['orderBy'] }
+        : { orderBy?: UserSessionGroupByArgs['orderBy'] },
+      OrderFields extends ExcludeUnderscoreKeys<Keys<MaybeTupleToUnion<T['orderBy']>>>,
+      ByFields extends MaybeTupleToUnion<T['by']>,
+      ByValid extends Has<ByFields, OrderFields>,
+      HavingFields extends GetHavingFields<T['having']>,
+      HavingValid extends Has<ByFields, HavingFields>,
+      ByEmpty extends T['by'] extends never[] ? True : False,
+      InputErrors extends ByEmpty extends True
+      ? `Error: "by" must not be empty.`
+      : HavingValid extends False
+      ? {
+          [P in HavingFields]: P extends ByFields
+            ? never
+            : P extends string
+            ? `Error: Field "${P}" used in "having" needs to be provided in "by".`
+            : [
+                Error,
+                'Field ',
+                P,
+                ` in "having" needs to be provided in "by"`,
+              ]
+        }[HavingFields]
+      : 'take' extends Keys<T>
+      ? 'orderBy' extends Keys<T>
+        ? ByValid extends True
+          ? {}
+          : {
+              [P in OrderFields]: P extends ByFields
+                ? never
+                : `Error: Field "${P}" in "orderBy" needs to be provided in "by"`
+            }[OrderFields]
+        : 'Error: If you provide "take", you also need to provide "orderBy"'
+      : 'skip' extends Keys<T>
+      ? 'orderBy' extends Keys<T>
+        ? ByValid extends True
+          ? {}
+          : {
+              [P in OrderFields]: P extends ByFields
+                ? never
+                : `Error: Field "${P}" in "orderBy" needs to be provided in "by"`
+            }[OrderFields]
+        : 'Error: If you provide "skip", you also need to provide "orderBy"'
+      : ByValid extends True
+      ? {}
+      : {
+          [P in OrderFields]: P extends ByFields
+            ? never
+            : `Error: Field "${P}" in "orderBy" needs to be provided in "by"`
+        }[OrderFields]
+    >(args: SubsetIntersection<T, UserSessionGroupByArgs, OrderByArg> & InputErrors): {} extends InputErrors ? GetUserSessionGroupByPayload<T> : Prisma.PrismaPromise<InputErrors>
+  /**
+   * Fields of the UserSession model
+   */
+  readonly fields: UserSessionFieldRefs;
+  }
+
+  /**
+   * The delegate class that acts as a "Promise-like" for UserSession.
+   * Why is this prefixed with `Prisma__`?
+   * Because we want to prevent naming conflicts as mentioned in
+   * https://github.com/prisma/prisma-client-js/issues/707
+   */
+  export interface Prisma__UserSessionClient<T, Null = never, ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs, GlobalOmitOptions = {}> extends Prisma.PrismaPromise<T> {
+    readonly [Symbol.toStringTag]: "PrismaPromise"
+    user<T extends UserDefaultArgs<ExtArgs> = {}>(args?: Subset<T, UserDefaultArgs<ExtArgs>>): Prisma__UserClient<$Result.GetResult<Prisma.$UserPayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions> | Null, Null, ExtArgs, GlobalOmitOptions>
+    revokedByUser<T extends UserSession$revokedByUserArgs<ExtArgs> = {}>(args?: Subset<T, UserSession$revokedByUserArgs<ExtArgs>>): Prisma__UserClient<$Result.GetResult<Prisma.$UserPayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions> | null, null, ExtArgs, GlobalOmitOptions>
+    /**
+     * Attaches callbacks for the resolution and/or rejection of the Promise.
+     * @param onfulfilled The callback to execute when the Promise is resolved.
+     * @param onrejected The callback to execute when the Promise is rejected.
+     * @returns A Promise for the completion of which ever callback is executed.
+     */
+    then<TResult1 = T, TResult2 = never>(onfulfilled?: ((value: T) => TResult1 | PromiseLike<TResult1>) | undefined | null, onrejected?: ((reason: any) => TResult2 | PromiseLike<TResult2>) | undefined | null): $Utils.JsPromise<TResult1 | TResult2>
+    /**
+     * Attaches a callback for only the rejection of the Promise.
+     * @param onrejected The callback to execute when the Promise is rejected.
+     * @returns A Promise for the completion of the callback.
+     */
+    catch<TResult = never>(onrejected?: ((reason: any) => TResult | PromiseLike<TResult>) | undefined | null): $Utils.JsPromise<T | TResult>
+    /**
+     * Attaches a callback that is invoked when the Promise is settled (fulfilled or rejected). The
+     * resolved value cannot be modified from the callback.
+     * @param onfinally The callback to execute when the Promise is settled (fulfilled or rejected).
+     * @returns A Promise for the completion of the callback.
+     */
+    finally(onfinally?: (() => void) | undefined | null): $Utils.JsPromise<T>
+  }
+
+
+
+
+  /**
+   * Fields of the UserSession model
+   */
+  interface UserSessionFieldRefs {
+    readonly id: FieldRef<"UserSession", 'BigInt'>
+    readonly uid: FieldRef<"UserSession", 'String'>
+    readonly userId: FieldRef<"UserSession", 'BigInt'>
+    readonly sessionId: FieldRef<"UserSession", 'String'>
+    readonly type: FieldRef<"UserSession", 'SessionType'>
+    readonly status: FieldRef<"UserSession", 'SessionStatus'>
+    readonly isAdmin: FieldRef<"UserSession", 'Boolean'>
+    readonly ipAddress: FieldRef<"UserSession", 'String'>
+    readonly userAgent: FieldRef<"UserSession", 'String'>
+    readonly deviceFingerprint: FieldRef<"UserSession", 'String'>
+    readonly isMobile: FieldRef<"UserSession", 'Boolean'>
+    readonly deviceName: FieldRef<"UserSession", 'String'>
+    readonly os: FieldRef<"UserSession", 'String'>
+    readonly browser: FieldRef<"UserSession", 'String'>
+    readonly createdAt: FieldRef<"UserSession", 'DateTime'>
+    readonly updatedAt: FieldRef<"UserSession", 'DateTime'>
+    readonly lastActiveAt: FieldRef<"UserSession", 'DateTime'>
+    readonly expiresAt: FieldRef<"UserSession", 'DateTime'>
+    readonly revokedAt: FieldRef<"UserSession", 'DateTime'>
+    readonly revokedBy: FieldRef<"UserSession", 'BigInt'>
+    readonly metadata: FieldRef<"UserSession", 'Json'>
+  }
+    
+
+  // Custom InputTypes
+  /**
+   * UserSession findUnique
+   */
+  export type UserSessionFindUniqueArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the UserSession
+     */
+    select?: UserSessionSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the UserSession
+     */
+    omit?: UserSessionOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: UserSessionInclude<ExtArgs> | null
+    /**
+     * Filter, which UserSession to fetch.
+     */
+    where: UserSessionWhereUniqueInput
+  }
+
+  /**
+   * UserSession findUniqueOrThrow
+   */
+  export type UserSessionFindUniqueOrThrowArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the UserSession
+     */
+    select?: UserSessionSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the UserSession
+     */
+    omit?: UserSessionOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: UserSessionInclude<ExtArgs> | null
+    /**
+     * Filter, which UserSession to fetch.
+     */
+    where: UserSessionWhereUniqueInput
+  }
+
+  /**
+   * UserSession findFirst
+   */
+  export type UserSessionFindFirstArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the UserSession
+     */
+    select?: UserSessionSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the UserSession
+     */
+    omit?: UserSessionOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: UserSessionInclude<ExtArgs> | null
+    /**
+     * Filter, which UserSession to fetch.
+     */
+    where?: UserSessionWhereInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/sorting Sorting Docs}
+     * 
+     * Determine the order of UserSessions to fetch.
+     */
+    orderBy?: UserSessionOrderByWithRelationInput | UserSessionOrderByWithRelationInput[]
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination#cursor-based-pagination Cursor Docs}
+     * 
+     * Sets the position for searching for UserSessions.
+     */
+    cursor?: UserSessionWhereUniqueInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Take `±n` UserSessions from the position of the cursor.
+     */
+    take?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Skip the first `n` UserSessions.
+     */
+    skip?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/distinct Distinct Docs}
+     * 
+     * Filter by unique combinations of UserSessions.
+     */
+    distinct?: UserSessionScalarFieldEnum | UserSessionScalarFieldEnum[]
+  }
+
+  /**
+   * UserSession findFirstOrThrow
+   */
+  export type UserSessionFindFirstOrThrowArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the UserSession
+     */
+    select?: UserSessionSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the UserSession
+     */
+    omit?: UserSessionOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: UserSessionInclude<ExtArgs> | null
+    /**
+     * Filter, which UserSession to fetch.
+     */
+    where?: UserSessionWhereInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/sorting Sorting Docs}
+     * 
+     * Determine the order of UserSessions to fetch.
+     */
+    orderBy?: UserSessionOrderByWithRelationInput | UserSessionOrderByWithRelationInput[]
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination#cursor-based-pagination Cursor Docs}
+     * 
+     * Sets the position for searching for UserSessions.
+     */
+    cursor?: UserSessionWhereUniqueInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Take `±n` UserSessions from the position of the cursor.
+     */
+    take?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Skip the first `n` UserSessions.
+     */
+    skip?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/distinct Distinct Docs}
+     * 
+     * Filter by unique combinations of UserSessions.
+     */
+    distinct?: UserSessionScalarFieldEnum | UserSessionScalarFieldEnum[]
+  }
+
+  /**
+   * UserSession findMany
+   */
+  export type UserSessionFindManyArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the UserSession
+     */
+    select?: UserSessionSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the UserSession
+     */
+    omit?: UserSessionOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: UserSessionInclude<ExtArgs> | null
+    /**
+     * Filter, which UserSessions to fetch.
+     */
+    where?: UserSessionWhereInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/sorting Sorting Docs}
+     * 
+     * Determine the order of UserSessions to fetch.
+     */
+    orderBy?: UserSessionOrderByWithRelationInput | UserSessionOrderByWithRelationInput[]
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination#cursor-based-pagination Cursor Docs}
+     * 
+     * Sets the position for listing UserSessions.
+     */
+    cursor?: UserSessionWhereUniqueInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Take `±n` UserSessions from the position of the cursor.
+     */
+    take?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Skip the first `n` UserSessions.
+     */
+    skip?: number
+    distinct?: UserSessionScalarFieldEnum | UserSessionScalarFieldEnum[]
+  }
+
+  /**
+   * UserSession create
+   */
+  export type UserSessionCreateArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the UserSession
+     */
+    select?: UserSessionSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the UserSession
+     */
+    omit?: UserSessionOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: UserSessionInclude<ExtArgs> | null
+    /**
+     * The data needed to create a UserSession.
+     */
+    data: XOR<UserSessionCreateInput, UserSessionUncheckedCreateInput>
+  }
+
+  /**
+   * UserSession createMany
+   */
+  export type UserSessionCreateManyArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * The data used to create many UserSessions.
+     */
+    data: UserSessionCreateManyInput | UserSessionCreateManyInput[]
+    skipDuplicates?: boolean
+  }
+
+  /**
+   * UserSession createManyAndReturn
+   */
+  export type UserSessionCreateManyAndReturnArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the UserSession
+     */
+    select?: UserSessionSelectCreateManyAndReturn<ExtArgs> | null
+    /**
+     * Omit specific fields from the UserSession
+     */
+    omit?: UserSessionOmit<ExtArgs> | null
+    /**
+     * The data used to create many UserSessions.
+     */
+    data: UserSessionCreateManyInput | UserSessionCreateManyInput[]
+    skipDuplicates?: boolean
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: UserSessionIncludeCreateManyAndReturn<ExtArgs> | null
+  }
+
+  /**
+   * UserSession update
+   */
+  export type UserSessionUpdateArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the UserSession
+     */
+    select?: UserSessionSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the UserSession
+     */
+    omit?: UserSessionOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: UserSessionInclude<ExtArgs> | null
+    /**
+     * The data needed to update a UserSession.
+     */
+    data: XOR<UserSessionUpdateInput, UserSessionUncheckedUpdateInput>
+    /**
+     * Choose, which UserSession to update.
+     */
+    where: UserSessionWhereUniqueInput
+  }
+
+  /**
+   * UserSession updateMany
+   */
+  export type UserSessionUpdateManyArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * The data used to update UserSessions.
+     */
+    data: XOR<UserSessionUpdateManyMutationInput, UserSessionUncheckedUpdateManyInput>
+    /**
+     * Filter which UserSessions to update
+     */
+    where?: UserSessionWhereInput
+    /**
+     * Limit how many UserSessions to update.
+     */
+    limit?: number
+  }
+
+  /**
+   * UserSession updateManyAndReturn
+   */
+  export type UserSessionUpdateManyAndReturnArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the UserSession
+     */
+    select?: UserSessionSelectUpdateManyAndReturn<ExtArgs> | null
+    /**
+     * Omit specific fields from the UserSession
+     */
+    omit?: UserSessionOmit<ExtArgs> | null
+    /**
+     * The data used to update UserSessions.
+     */
+    data: XOR<UserSessionUpdateManyMutationInput, UserSessionUncheckedUpdateManyInput>
+    /**
+     * Filter which UserSessions to update
+     */
+    where?: UserSessionWhereInput
+    /**
+     * Limit how many UserSessions to update.
+     */
+    limit?: number
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: UserSessionIncludeUpdateManyAndReturn<ExtArgs> | null
+  }
+
+  /**
+   * UserSession upsert
+   */
+  export type UserSessionUpsertArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the UserSession
+     */
+    select?: UserSessionSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the UserSession
+     */
+    omit?: UserSessionOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: UserSessionInclude<ExtArgs> | null
+    /**
+     * The filter to search for the UserSession to update in case it exists.
+     */
+    where: UserSessionWhereUniqueInput
+    /**
+     * In case the UserSession found by the `where` argument doesn't exist, create a new UserSession with this data.
+     */
+    create: XOR<UserSessionCreateInput, UserSessionUncheckedCreateInput>
+    /**
+     * In case the UserSession was found with the provided `where` argument, update it with this data.
+     */
+    update: XOR<UserSessionUpdateInput, UserSessionUncheckedUpdateInput>
+  }
+
+  /**
+   * UserSession delete
+   */
+  export type UserSessionDeleteArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the UserSession
+     */
+    select?: UserSessionSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the UserSession
+     */
+    omit?: UserSessionOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: UserSessionInclude<ExtArgs> | null
+    /**
+     * Filter which UserSession to delete.
+     */
+    where: UserSessionWhereUniqueInput
+  }
+
+  /**
+   * UserSession deleteMany
+   */
+  export type UserSessionDeleteManyArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Filter which UserSessions to delete
+     */
+    where?: UserSessionWhereInput
+    /**
+     * Limit how many UserSessions to delete.
+     */
+    limit?: number
+  }
+
+  /**
+   * UserSession.revokedByUser
+   */
+  export type UserSession$revokedByUserArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the User
+     */
+    select?: UserSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the User
+     */
+    omit?: UserOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: UserInclude<ExtArgs> | null
+    where?: UserWhereInput
+  }
+
+  /**
+   * UserSession without action
+   */
+  export type UserSessionDefaultArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the UserSession
+     */
+    select?: UserSessionSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the UserSession
+     */
+    omit?: UserSessionOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: UserSessionInclude<ExtArgs> | null
+  }
+
+
+  /**
    * Enums
    */
 
@@ -62424,33 +62424,6 @@ export namespace Prisma {
   export type UserPromotionScalarFieldEnum = (typeof UserPromotionScalarFieldEnum)[keyof typeof UserPromotionScalarFieldEnum]
 
 
-  export const UserSessionScalarFieldEnum: {
-    id: 'id',
-    uid: 'uid',
-    userId: 'userId',
-    sessionId: 'sessionId',
-    type: 'type',
-    status: 'status',
-    isAdmin: 'isAdmin',
-    ipAddress: 'ipAddress',
-    userAgent: 'userAgent',
-    deviceFingerprint: 'deviceFingerprint',
-    isMobile: 'isMobile',
-    deviceName: 'deviceName',
-    os: 'os',
-    browser: 'browser',
-    createdAt: 'createdAt',
-    updatedAt: 'updatedAt',
-    lastActiveAt: 'lastActiveAt',
-    expiresAt: 'expiresAt',
-    revokedAt: 'revokedAt',
-    revokedBy: 'revokedBy',
-    metadata: 'metadata'
-  };
-
-  export type UserSessionScalarFieldEnum = (typeof UserSessionScalarFieldEnum)[keyof typeof UserSessionScalarFieldEnum]
-
-
   export const TierScalarFieldEnum: {
     id: 'id',
     uid: 'uid',
@@ -62531,6 +62504,33 @@ export namespace Prisma {
   };
 
   export type SystemAdjustmentDetailScalarFieldEnum = (typeof SystemAdjustmentDetailScalarFieldEnum)[keyof typeof SystemAdjustmentDetailScalarFieldEnum]
+
+
+  export const UserSessionScalarFieldEnum: {
+    id: 'id',
+    uid: 'uid',
+    userId: 'userId',
+    sessionId: 'sessionId',
+    type: 'type',
+    status: 'status',
+    isAdmin: 'isAdmin',
+    ipAddress: 'ipAddress',
+    userAgent: 'userAgent',
+    deviceFingerprint: 'deviceFingerprint',
+    isMobile: 'isMobile',
+    deviceName: 'deviceName',
+    os: 'os',
+    browser: 'browser',
+    createdAt: 'createdAt',
+    updatedAt: 'updatedAt',
+    lastActiveAt: 'lastActiveAt',
+    expiresAt: 'expiresAt',
+    revokedAt: 'revokedAt',
+    revokedBy: 'revokedBy',
+    metadata: 'metadata'
+  };
+
+  export type UserSessionScalarFieldEnum = (typeof UserSessionScalarFieldEnum)[keyof typeof UserSessionScalarFieldEnum]
 
 
   export const SortOrder: {
@@ -63154,34 +63154,6 @@ export namespace Prisma {
 
 
   /**
-   * Reference to a field of type 'SessionType'
-   */
-  export type EnumSessionTypeFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaModel, 'SessionType'>
-    
-
-
-  /**
-   * Reference to a field of type 'SessionType[]'
-   */
-  export type ListEnumSessionTypeFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaModel, 'SessionType[]'>
-    
-
-
-  /**
-   * Reference to a field of type 'SessionStatus'
-   */
-  export type EnumSessionStatusFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaModel, 'SessionStatus'>
-    
-
-
-  /**
-   * Reference to a field of type 'SessionStatus[]'
-   */
-  export type ListEnumSessionStatusFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaModel, 'SessionStatus[]'>
-    
-
-
-  /**
    * Reference to a field of type 'TierChangeType'
    */
   export type EnumTierChangeTypeFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaModel, 'TierChangeType'>
@@ -63206,6 +63178,34 @@ export namespace Prisma {
    * Reference to a field of type 'AdjustmentReasonCode[]'
    */
   export type ListEnumAdjustmentReasonCodeFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaModel, 'AdjustmentReasonCode[]'>
+    
+
+
+  /**
+   * Reference to a field of type 'SessionType'
+   */
+  export type EnumSessionTypeFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaModel, 'SessionType'>
+    
+
+
+  /**
+   * Reference to a field of type 'SessionType[]'
+   */
+  export type ListEnumSessionTypeFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaModel, 'SessionType[]'>
+    
+
+
+  /**
+   * Reference to a field of type 'SessionStatus'
+   */
+  export type EnumSessionStatusFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaModel, 'SessionStatus'>
+    
+
+
+  /**
+   * Reference to a field of type 'SessionStatus[]'
+   */
+  export type ListEnumSessionStatusFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaModel, 'SessionStatus[]'>
     
 
 
@@ -64008,7 +64008,7 @@ export namespace Prisma {
     AND?: CasinoGameWhereInput | CasinoGameWhereInput[]
     OR?: CasinoGameWhereInput[]
     NOT?: CasinoGameWhereInput | CasinoGameWhereInput[]
-    id?: IntFilter<"CasinoGame"> | number
+    id?: BigIntFilter<"CasinoGame"> | bigint | number
     aggregatorType?: EnumGameAggregatorTypeFilter<"CasinoGame"> | $Enums.GameAggregatorType
     provider?: EnumGameProviderFilter<"CasinoGame"> | $Enums.GameProvider
     category?: EnumGameCategoryFilter<"CasinoGame"> | $Enums.GameCategory
@@ -64050,7 +64050,7 @@ export namespace Prisma {
   }
 
   export type CasinoGameWhereUniqueInput = Prisma.AtLeast<{
-    id?: number
+    id?: bigint | number
     aggregatorType_provider_gameId?: CasinoGameAggregatorTypeProviderGameIdCompoundUniqueInput
     AND?: CasinoGameWhereInput | CasinoGameWhereInput[]
     OR?: CasinoGameWhereInput[]
@@ -64100,7 +64100,7 @@ export namespace Prisma {
     AND?: CasinoGameScalarWhereWithAggregatesInput | CasinoGameScalarWhereWithAggregatesInput[]
     OR?: CasinoGameScalarWhereWithAggregatesInput[]
     NOT?: CasinoGameScalarWhereWithAggregatesInput | CasinoGameScalarWhereWithAggregatesInput[]
-    id?: IntWithAggregatesFilter<"CasinoGame"> | number
+    id?: BigIntWithAggregatesFilter<"CasinoGame"> | bigint | number
     aggregatorType?: EnumGameAggregatorTypeWithAggregatesFilter<"CasinoGame"> | $Enums.GameAggregatorType
     provider?: EnumGameProviderWithAggregatesFilter<"CasinoGame"> | $Enums.GameProvider
     category?: EnumGameCategoryWithAggregatesFilter<"CasinoGame"> | $Enums.GameCategory
@@ -64121,7 +64121,7 @@ export namespace Prisma {
     OR?: CasinoGameTranslationWhereInput[]
     NOT?: CasinoGameTranslationWhereInput | CasinoGameTranslationWhereInput[]
     id?: IntFilter<"CasinoGameTranslation"> | number
-    gameId?: IntFilter<"CasinoGameTranslation"> | number
+    gameId?: BigIntFilter<"CasinoGameTranslation"> | bigint | number
     language?: EnumLanguageFilter<"CasinoGameTranslation"> | $Enums.Language
     providerName?: StringFilter<"CasinoGameTranslation"> | string
     categoryName?: StringFilter<"CasinoGameTranslation"> | string
@@ -64149,7 +64149,7 @@ export namespace Prisma {
     AND?: CasinoGameTranslationWhereInput | CasinoGameTranslationWhereInput[]
     OR?: CasinoGameTranslationWhereInput[]
     NOT?: CasinoGameTranslationWhereInput | CasinoGameTranslationWhereInput[]
-    gameId?: IntFilter<"CasinoGameTranslation"> | number
+    gameId?: BigIntFilter<"CasinoGameTranslation"> | bigint | number
     language?: EnumLanguageFilter<"CasinoGameTranslation"> | $Enums.Language
     providerName?: StringFilter<"CasinoGameTranslation"> | string
     categoryName?: StringFilter<"CasinoGameTranslation"> | string
@@ -64180,7 +64180,7 @@ export namespace Prisma {
     OR?: CasinoGameTranslationScalarWhereWithAggregatesInput[]
     NOT?: CasinoGameTranslationScalarWhereWithAggregatesInput | CasinoGameTranslationScalarWhereWithAggregatesInput[]
     id?: IntWithAggregatesFilter<"CasinoGameTranslation"> | number
-    gameId?: IntWithAggregatesFilter<"CasinoGameTranslation"> | number
+    gameId?: BigIntWithAggregatesFilter<"CasinoGameTranslation"> | bigint | number
     language?: EnumLanguageWithAggregatesFilter<"CasinoGameTranslation"> | $Enums.Language
     providerName?: StringWithAggregatesFilter<"CasinoGameTranslation"> | string
     categoryName?: StringWithAggregatesFilter<"CasinoGameTranslation"> | string
@@ -64204,7 +64204,7 @@ export namespace Prisma {
     gameCurrency?: EnumExchangeCurrencyCodeFilter<"CasinoGameSession"> | $Enums.ExchangeCurrencyCode
     exchangeRate?: DecimalFilter<"CasinoGameSession"> | Decimal | DecimalJsLike | number | string
     exchangeRateSnapshotAt?: DateTimeFilter<"CasinoGameSession"> | Date | string
-    gameId?: IntNullableFilter<"CasinoGameSession"> | number | null
+    gameId?: BigIntNullableFilter<"CasinoGameSession"> | bigint | number | null
     gameRounds?: GameRoundListRelationFilter
     game?: XOR<CasinoGameNullableScalarRelationFilter, CasinoGameWhereInput> | null
     user?: XOR<UserScalarRelationFilter, UserWhereInput>
@@ -64243,7 +64243,7 @@ export namespace Prisma {
     gameCurrency?: EnumExchangeCurrencyCodeFilter<"CasinoGameSession"> | $Enums.ExchangeCurrencyCode
     exchangeRate?: DecimalFilter<"CasinoGameSession"> | Decimal | DecimalJsLike | number | string
     exchangeRateSnapshotAt?: DateTimeFilter<"CasinoGameSession"> | Date | string
-    gameId?: IntNullableFilter<"CasinoGameSession"> | number | null
+    gameId?: BigIntNullableFilter<"CasinoGameSession"> | bigint | number | null
     gameRounds?: GameRoundListRelationFilter
     game?: XOR<CasinoGameNullableScalarRelationFilter, CasinoGameWhereInput> | null
     user?: XOR<UserScalarRelationFilter, UserWhereInput>
@@ -64284,7 +64284,7 @@ export namespace Prisma {
     gameCurrency?: EnumExchangeCurrencyCodeWithAggregatesFilter<"CasinoGameSession"> | $Enums.ExchangeCurrencyCode
     exchangeRate?: DecimalWithAggregatesFilter<"CasinoGameSession"> | Decimal | DecimalJsLike | number | string
     exchangeRateSnapshotAt?: DateTimeWithAggregatesFilter<"CasinoGameSession"> | Date | string
-    gameId?: IntNullableWithAggregatesFilter<"CasinoGameSession"> | number | null
+    gameId?: BigIntNullableWithAggregatesFilter<"CasinoGameSession"> | bigint | number | null
   }
 
   export type UserWhereInput = {
@@ -64769,7 +64769,7 @@ export namespace Prisma {
     jackpotContributionAmount?: DecimalFilter<"GameRound"> | Decimal | DecimalJsLike | number | string
     startedAt?: DateTimeNullableFilter<"GameRound"> | Date | string | null
     completedAt?: DateTimeNullableFilter<"GameRound"> | Date | string | null
-    gameId?: IntNullableFilter<"GameRound"> | number | null
+    gameId?: BigIntNullableFilter<"GameRound"> | bigint | number | null
     gameSessionId?: BigIntFilter<"GameRound"> | bigint | number
     AffiliateCommission?: AffiliateCommissionListRelationFilter
     bets?: GameBetListRelationFilter
@@ -64845,7 +64845,7 @@ export namespace Prisma {
     jackpotContributionAmount?: DecimalFilter<"GameRound"> | Decimal | DecimalJsLike | number | string
     startedAt?: DateTimeNullableFilter<"GameRound"> | Date | string | null
     completedAt?: DateTimeNullableFilter<"GameRound"> | Date | string | null
-    gameId?: IntNullableFilter<"GameRound"> | number | null
+    gameId?: BigIntNullableFilter<"GameRound"> | bigint | number | null
     gameSessionId?: BigIntFilter<"GameRound"> | bigint | number
     AffiliateCommission?: AffiliateCommissionListRelationFilter
     bets?: GameBetListRelationFilter
@@ -64919,7 +64919,7 @@ export namespace Prisma {
     jackpotContributionAmount?: DecimalWithAggregatesFilter<"GameRound"> | Decimal | DecimalJsLike | number | string
     startedAt?: DateTimeNullableWithAggregatesFilter<"GameRound"> | Date | string | null
     completedAt?: DateTimeNullableWithAggregatesFilter<"GameRound"> | Date | string | null
-    gameId?: IntNullableWithAggregatesFilter<"GameRound"> | number | null
+    gameId?: BigIntNullableWithAggregatesFilter<"GameRound"> | bigint | number | null
     gameSessionId?: BigIntWithAggregatesFilter<"GameRound"> | bigint | number
   }
 
@@ -65200,7 +65200,7 @@ export namespace Prisma {
     aggregatorSessionId?: StringNullableFilter<"BonusDetail"> | string | null
     isEndRound?: BoolNullableFilter<"BonusDetail"> | boolean | null
     description?: StringNullableFilter<"BonusDetail"> | string | null
-    gameId?: IntNullableFilter<"BonusDetail"> | number | null
+    gameId?: BigIntNullableFilter<"BonusDetail"> | bigint | number | null
     transactionId?: BigIntFilter<"BonusDetail"> | bigint | number
     casinoGame?: XOR<CasinoGameNullableScalarRelationFilter, CasinoGameWhereInput> | null
     transaction?: XOR<TransactionScalarRelationFilter, TransactionWhereInput>
@@ -65248,7 +65248,7 @@ export namespace Prisma {
     aggregatorSessionId?: StringNullableFilter<"BonusDetail"> | string | null
     isEndRound?: BoolNullableFilter<"BonusDetail"> | boolean | null
     description?: StringNullableFilter<"BonusDetail"> | string | null
-    gameId?: IntNullableFilter<"BonusDetail"> | number | null
+    gameId?: BigIntNullableFilter<"BonusDetail"> | bigint | number | null
     casinoGame?: XOR<CasinoGameNullableScalarRelationFilter, CasinoGameWhereInput> | null
     transaction?: XOR<TransactionScalarRelationFilter, TransactionWhereInput>
   }, "id" | "transactionId">
@@ -65297,7 +65297,7 @@ export namespace Prisma {
     aggregatorSessionId?: StringNullableWithAggregatesFilter<"BonusDetail"> | string | null
     isEndRound?: BoolNullableWithAggregatesFilter<"BonusDetail"> | boolean | null
     description?: StringNullableWithAggregatesFilter<"BonusDetail"> | string | null
-    gameId?: IntNullableWithAggregatesFilter<"BonusDetail"> | number | null
+    gameId?: BigIntNullableWithAggregatesFilter<"BonusDetail"> | bigint | number | null
     transactionId?: BigIntWithAggregatesFilter<"BonusDetail"> | bigint | number
   }
 
@@ -67144,146 +67144,6 @@ export namespace Prisma {
     updatedAt?: DateTimeWithAggregatesFilter<"UserPromotion"> | Date | string
   }
 
-  export type UserSessionWhereInput = {
-    AND?: UserSessionWhereInput | UserSessionWhereInput[]
-    OR?: UserSessionWhereInput[]
-    NOT?: UserSessionWhereInput | UserSessionWhereInput[]
-    id?: BigIntFilter<"UserSession"> | bigint | number
-    uid?: StringFilter<"UserSession"> | string
-    userId?: BigIntFilter<"UserSession"> | bigint | number
-    sessionId?: StringFilter<"UserSession"> | string
-    type?: EnumSessionTypeFilter<"UserSession"> | $Enums.SessionType
-    status?: EnumSessionStatusFilter<"UserSession"> | $Enums.SessionStatus
-    isAdmin?: BoolFilter<"UserSession"> | boolean
-    ipAddress?: StringNullableFilter<"UserSession"> | string | null
-    userAgent?: StringNullableFilter<"UserSession"> | string | null
-    deviceFingerprint?: StringNullableFilter<"UserSession"> | string | null
-    isMobile?: BoolNullableFilter<"UserSession"> | boolean | null
-    deviceName?: StringNullableFilter<"UserSession"> | string | null
-    os?: StringNullableFilter<"UserSession"> | string | null
-    browser?: StringNullableFilter<"UserSession"> | string | null
-    createdAt?: DateTimeFilter<"UserSession"> | Date | string
-    updatedAt?: DateTimeFilter<"UserSession"> | Date | string
-    lastActiveAt?: DateTimeFilter<"UserSession"> | Date | string
-    expiresAt?: DateTimeFilter<"UserSession"> | Date | string
-    revokedAt?: DateTimeNullableFilter<"UserSession"> | Date | string | null
-    revokedBy?: BigIntNullableFilter<"UserSession"> | bigint | number | null
-    metadata?: JsonNullableFilter<"UserSession">
-    user?: XOR<UserScalarRelationFilter, UserWhereInput>
-    revokedByUser?: XOR<UserNullableScalarRelationFilter, UserWhereInput> | null
-  }
-
-  export type UserSessionOrderByWithRelationInput = {
-    id?: SortOrder
-    uid?: SortOrder
-    userId?: SortOrder
-    sessionId?: SortOrder
-    type?: SortOrder
-    status?: SortOrder
-    isAdmin?: SortOrder
-    ipAddress?: SortOrderInput | SortOrder
-    userAgent?: SortOrderInput | SortOrder
-    deviceFingerprint?: SortOrderInput | SortOrder
-    isMobile?: SortOrderInput | SortOrder
-    deviceName?: SortOrderInput | SortOrder
-    os?: SortOrderInput | SortOrder
-    browser?: SortOrderInput | SortOrder
-    createdAt?: SortOrder
-    updatedAt?: SortOrder
-    lastActiveAt?: SortOrder
-    expiresAt?: SortOrder
-    revokedAt?: SortOrderInput | SortOrder
-    revokedBy?: SortOrderInput | SortOrder
-    metadata?: SortOrderInput | SortOrder
-    user?: UserOrderByWithRelationInput
-    revokedByUser?: UserOrderByWithRelationInput
-  }
-
-  export type UserSessionWhereUniqueInput = Prisma.AtLeast<{
-    id?: bigint | number
-    uid?: string
-    sessionId?: string
-    AND?: UserSessionWhereInput | UserSessionWhereInput[]
-    OR?: UserSessionWhereInput[]
-    NOT?: UserSessionWhereInput | UserSessionWhereInput[]
-    userId?: BigIntFilter<"UserSession"> | bigint | number
-    type?: EnumSessionTypeFilter<"UserSession"> | $Enums.SessionType
-    status?: EnumSessionStatusFilter<"UserSession"> | $Enums.SessionStatus
-    isAdmin?: BoolFilter<"UserSession"> | boolean
-    ipAddress?: StringNullableFilter<"UserSession"> | string | null
-    userAgent?: StringNullableFilter<"UserSession"> | string | null
-    deviceFingerprint?: StringNullableFilter<"UserSession"> | string | null
-    isMobile?: BoolNullableFilter<"UserSession"> | boolean | null
-    deviceName?: StringNullableFilter<"UserSession"> | string | null
-    os?: StringNullableFilter<"UserSession"> | string | null
-    browser?: StringNullableFilter<"UserSession"> | string | null
-    createdAt?: DateTimeFilter<"UserSession"> | Date | string
-    updatedAt?: DateTimeFilter<"UserSession"> | Date | string
-    lastActiveAt?: DateTimeFilter<"UserSession"> | Date | string
-    expiresAt?: DateTimeFilter<"UserSession"> | Date | string
-    revokedAt?: DateTimeNullableFilter<"UserSession"> | Date | string | null
-    revokedBy?: BigIntNullableFilter<"UserSession"> | bigint | number | null
-    metadata?: JsonNullableFilter<"UserSession">
-    user?: XOR<UserScalarRelationFilter, UserWhereInput>
-    revokedByUser?: XOR<UserNullableScalarRelationFilter, UserWhereInput> | null
-  }, "id" | "uid" | "sessionId">
-
-  export type UserSessionOrderByWithAggregationInput = {
-    id?: SortOrder
-    uid?: SortOrder
-    userId?: SortOrder
-    sessionId?: SortOrder
-    type?: SortOrder
-    status?: SortOrder
-    isAdmin?: SortOrder
-    ipAddress?: SortOrderInput | SortOrder
-    userAgent?: SortOrderInput | SortOrder
-    deviceFingerprint?: SortOrderInput | SortOrder
-    isMobile?: SortOrderInput | SortOrder
-    deviceName?: SortOrderInput | SortOrder
-    os?: SortOrderInput | SortOrder
-    browser?: SortOrderInput | SortOrder
-    createdAt?: SortOrder
-    updatedAt?: SortOrder
-    lastActiveAt?: SortOrder
-    expiresAt?: SortOrder
-    revokedAt?: SortOrderInput | SortOrder
-    revokedBy?: SortOrderInput | SortOrder
-    metadata?: SortOrderInput | SortOrder
-    _count?: UserSessionCountOrderByAggregateInput
-    _avg?: UserSessionAvgOrderByAggregateInput
-    _max?: UserSessionMaxOrderByAggregateInput
-    _min?: UserSessionMinOrderByAggregateInput
-    _sum?: UserSessionSumOrderByAggregateInput
-  }
-
-  export type UserSessionScalarWhereWithAggregatesInput = {
-    AND?: UserSessionScalarWhereWithAggregatesInput | UserSessionScalarWhereWithAggregatesInput[]
-    OR?: UserSessionScalarWhereWithAggregatesInput[]
-    NOT?: UserSessionScalarWhereWithAggregatesInput | UserSessionScalarWhereWithAggregatesInput[]
-    id?: BigIntWithAggregatesFilter<"UserSession"> | bigint | number
-    uid?: StringWithAggregatesFilter<"UserSession"> | string
-    userId?: BigIntWithAggregatesFilter<"UserSession"> | bigint | number
-    sessionId?: StringWithAggregatesFilter<"UserSession"> | string
-    type?: EnumSessionTypeWithAggregatesFilter<"UserSession"> | $Enums.SessionType
-    status?: EnumSessionStatusWithAggregatesFilter<"UserSession"> | $Enums.SessionStatus
-    isAdmin?: BoolWithAggregatesFilter<"UserSession"> | boolean
-    ipAddress?: StringNullableWithAggregatesFilter<"UserSession"> | string | null
-    userAgent?: StringNullableWithAggregatesFilter<"UserSession"> | string | null
-    deviceFingerprint?: StringNullableWithAggregatesFilter<"UserSession"> | string | null
-    isMobile?: BoolNullableWithAggregatesFilter<"UserSession"> | boolean | null
-    deviceName?: StringNullableWithAggregatesFilter<"UserSession"> | string | null
-    os?: StringNullableWithAggregatesFilter<"UserSession"> | string | null
-    browser?: StringNullableWithAggregatesFilter<"UserSession"> | string | null
-    createdAt?: DateTimeWithAggregatesFilter<"UserSession"> | Date | string
-    updatedAt?: DateTimeWithAggregatesFilter<"UserSession"> | Date | string
-    lastActiveAt?: DateTimeWithAggregatesFilter<"UserSession"> | Date | string
-    expiresAt?: DateTimeWithAggregatesFilter<"UserSession"> | Date | string
-    revokedAt?: DateTimeNullableWithAggregatesFilter<"UserSession"> | Date | string | null
-    revokedBy?: BigIntNullableWithAggregatesFilter<"UserSession"> | bigint | number | null
-    metadata?: JsonNullableWithAggregatesFilter<"UserSession">
-  }
-
   export type TierWhereInput = {
     AND?: TierWhereInput | TierWhereInput[]
     OR?: TierWhereInput[]
@@ -67726,6 +67586,146 @@ export namespace Prisma {
     triggerId?: StringNullableWithAggregatesFilter<"SystemAdjustmentDetail"> | string | null
     actionName?: StringWithAggregatesFilter<"SystemAdjustmentDetail"> | string
     metadata?: JsonNullableWithAggregatesFilter<"SystemAdjustmentDetail">
+  }
+
+  export type UserSessionWhereInput = {
+    AND?: UserSessionWhereInput | UserSessionWhereInput[]
+    OR?: UserSessionWhereInput[]
+    NOT?: UserSessionWhereInput | UserSessionWhereInput[]
+    id?: BigIntFilter<"UserSession"> | bigint | number
+    uid?: StringFilter<"UserSession"> | string
+    userId?: BigIntFilter<"UserSession"> | bigint | number
+    sessionId?: StringFilter<"UserSession"> | string
+    type?: EnumSessionTypeFilter<"UserSession"> | $Enums.SessionType
+    status?: EnumSessionStatusFilter<"UserSession"> | $Enums.SessionStatus
+    isAdmin?: BoolFilter<"UserSession"> | boolean
+    ipAddress?: StringNullableFilter<"UserSession"> | string | null
+    userAgent?: StringNullableFilter<"UserSession"> | string | null
+    deviceFingerprint?: StringNullableFilter<"UserSession"> | string | null
+    isMobile?: BoolNullableFilter<"UserSession"> | boolean | null
+    deviceName?: StringNullableFilter<"UserSession"> | string | null
+    os?: StringNullableFilter<"UserSession"> | string | null
+    browser?: StringNullableFilter<"UserSession"> | string | null
+    createdAt?: DateTimeFilter<"UserSession"> | Date | string
+    updatedAt?: DateTimeFilter<"UserSession"> | Date | string
+    lastActiveAt?: DateTimeFilter<"UserSession"> | Date | string
+    expiresAt?: DateTimeFilter<"UserSession"> | Date | string
+    revokedAt?: DateTimeNullableFilter<"UserSession"> | Date | string | null
+    revokedBy?: BigIntNullableFilter<"UserSession"> | bigint | number | null
+    metadata?: JsonNullableFilter<"UserSession">
+    user?: XOR<UserScalarRelationFilter, UserWhereInput>
+    revokedByUser?: XOR<UserNullableScalarRelationFilter, UserWhereInput> | null
+  }
+
+  export type UserSessionOrderByWithRelationInput = {
+    id?: SortOrder
+    uid?: SortOrder
+    userId?: SortOrder
+    sessionId?: SortOrder
+    type?: SortOrder
+    status?: SortOrder
+    isAdmin?: SortOrder
+    ipAddress?: SortOrderInput | SortOrder
+    userAgent?: SortOrderInput | SortOrder
+    deviceFingerprint?: SortOrderInput | SortOrder
+    isMobile?: SortOrderInput | SortOrder
+    deviceName?: SortOrderInput | SortOrder
+    os?: SortOrderInput | SortOrder
+    browser?: SortOrderInput | SortOrder
+    createdAt?: SortOrder
+    updatedAt?: SortOrder
+    lastActiveAt?: SortOrder
+    expiresAt?: SortOrder
+    revokedAt?: SortOrderInput | SortOrder
+    revokedBy?: SortOrderInput | SortOrder
+    metadata?: SortOrderInput | SortOrder
+    user?: UserOrderByWithRelationInput
+    revokedByUser?: UserOrderByWithRelationInput
+  }
+
+  export type UserSessionWhereUniqueInput = Prisma.AtLeast<{
+    id?: bigint | number
+    uid?: string
+    sessionId?: string
+    AND?: UserSessionWhereInput | UserSessionWhereInput[]
+    OR?: UserSessionWhereInput[]
+    NOT?: UserSessionWhereInput | UserSessionWhereInput[]
+    userId?: BigIntFilter<"UserSession"> | bigint | number
+    type?: EnumSessionTypeFilter<"UserSession"> | $Enums.SessionType
+    status?: EnumSessionStatusFilter<"UserSession"> | $Enums.SessionStatus
+    isAdmin?: BoolFilter<"UserSession"> | boolean
+    ipAddress?: StringNullableFilter<"UserSession"> | string | null
+    userAgent?: StringNullableFilter<"UserSession"> | string | null
+    deviceFingerprint?: StringNullableFilter<"UserSession"> | string | null
+    isMobile?: BoolNullableFilter<"UserSession"> | boolean | null
+    deviceName?: StringNullableFilter<"UserSession"> | string | null
+    os?: StringNullableFilter<"UserSession"> | string | null
+    browser?: StringNullableFilter<"UserSession"> | string | null
+    createdAt?: DateTimeFilter<"UserSession"> | Date | string
+    updatedAt?: DateTimeFilter<"UserSession"> | Date | string
+    lastActiveAt?: DateTimeFilter<"UserSession"> | Date | string
+    expiresAt?: DateTimeFilter<"UserSession"> | Date | string
+    revokedAt?: DateTimeNullableFilter<"UserSession"> | Date | string | null
+    revokedBy?: BigIntNullableFilter<"UserSession"> | bigint | number | null
+    metadata?: JsonNullableFilter<"UserSession">
+    user?: XOR<UserScalarRelationFilter, UserWhereInput>
+    revokedByUser?: XOR<UserNullableScalarRelationFilter, UserWhereInput> | null
+  }, "id" | "uid" | "sessionId">
+
+  export type UserSessionOrderByWithAggregationInput = {
+    id?: SortOrder
+    uid?: SortOrder
+    userId?: SortOrder
+    sessionId?: SortOrder
+    type?: SortOrder
+    status?: SortOrder
+    isAdmin?: SortOrder
+    ipAddress?: SortOrderInput | SortOrder
+    userAgent?: SortOrderInput | SortOrder
+    deviceFingerprint?: SortOrderInput | SortOrder
+    isMobile?: SortOrderInput | SortOrder
+    deviceName?: SortOrderInput | SortOrder
+    os?: SortOrderInput | SortOrder
+    browser?: SortOrderInput | SortOrder
+    createdAt?: SortOrder
+    updatedAt?: SortOrder
+    lastActiveAt?: SortOrder
+    expiresAt?: SortOrder
+    revokedAt?: SortOrderInput | SortOrder
+    revokedBy?: SortOrderInput | SortOrder
+    metadata?: SortOrderInput | SortOrder
+    _count?: UserSessionCountOrderByAggregateInput
+    _avg?: UserSessionAvgOrderByAggregateInput
+    _max?: UserSessionMaxOrderByAggregateInput
+    _min?: UserSessionMinOrderByAggregateInput
+    _sum?: UserSessionSumOrderByAggregateInput
+  }
+
+  export type UserSessionScalarWhereWithAggregatesInput = {
+    AND?: UserSessionScalarWhereWithAggregatesInput | UserSessionScalarWhereWithAggregatesInput[]
+    OR?: UserSessionScalarWhereWithAggregatesInput[]
+    NOT?: UserSessionScalarWhereWithAggregatesInput | UserSessionScalarWhereWithAggregatesInput[]
+    id?: BigIntWithAggregatesFilter<"UserSession"> | bigint | number
+    uid?: StringWithAggregatesFilter<"UserSession"> | string
+    userId?: BigIntWithAggregatesFilter<"UserSession"> | bigint | number
+    sessionId?: StringWithAggregatesFilter<"UserSession"> | string
+    type?: EnumSessionTypeWithAggregatesFilter<"UserSession"> | $Enums.SessionType
+    status?: EnumSessionStatusWithAggregatesFilter<"UserSession"> | $Enums.SessionStatus
+    isAdmin?: BoolWithAggregatesFilter<"UserSession"> | boolean
+    ipAddress?: StringNullableWithAggregatesFilter<"UserSession"> | string | null
+    userAgent?: StringNullableWithAggregatesFilter<"UserSession"> | string | null
+    deviceFingerprint?: StringNullableWithAggregatesFilter<"UserSession"> | string | null
+    isMobile?: BoolNullableWithAggregatesFilter<"UserSession"> | boolean | null
+    deviceName?: StringNullableWithAggregatesFilter<"UserSession"> | string | null
+    os?: StringNullableWithAggregatesFilter<"UserSession"> | string | null
+    browser?: StringNullableWithAggregatesFilter<"UserSession"> | string | null
+    createdAt?: DateTimeWithAggregatesFilter<"UserSession"> | Date | string
+    updatedAt?: DateTimeWithAggregatesFilter<"UserSession"> | Date | string
+    lastActiveAt?: DateTimeWithAggregatesFilter<"UserSession"> | Date | string
+    expiresAt?: DateTimeWithAggregatesFilter<"UserSession"> | Date | string
+    revokedAt?: DateTimeNullableWithAggregatesFilter<"UserSession"> | Date | string | null
+    revokedBy?: BigIntNullableWithAggregatesFilter<"UserSession"> | bigint | number | null
+    metadata?: JsonNullableWithAggregatesFilter<"UserSession">
   }
 
   export type AffiliateCodeCreateInput = {
@@ -68653,6 +68653,7 @@ export namespace Prisma {
   }
 
   export type CasinoGameCreateInput = {
+    id?: bigint | number
     aggregatorType: $Enums.GameAggregatorType
     provider: $Enums.GameProvider
     category: $Enums.GameCategory
@@ -68673,7 +68674,7 @@ export namespace Prisma {
   }
 
   export type CasinoGameUncheckedCreateInput = {
-    id?: number
+    id?: bigint | number
     aggregatorType: $Enums.GameAggregatorType
     provider: $Enums.GameProvider
     category: $Enums.GameCategory
@@ -68694,6 +68695,7 @@ export namespace Prisma {
   }
 
   export type CasinoGameUpdateInput = {
+    id?: BigIntFieldUpdateOperationsInput | bigint | number
     aggregatorType?: EnumGameAggregatorTypeFieldUpdateOperationsInput | $Enums.GameAggregatorType
     provider?: EnumGameProviderFieldUpdateOperationsInput | $Enums.GameProvider
     category?: EnumGameCategoryFieldUpdateOperationsInput | $Enums.GameCategory
@@ -68714,7 +68716,7 @@ export namespace Prisma {
   }
 
   export type CasinoGameUncheckedUpdateInput = {
-    id?: IntFieldUpdateOperationsInput | number
+    id?: BigIntFieldUpdateOperationsInput | bigint | number
     aggregatorType?: EnumGameAggregatorTypeFieldUpdateOperationsInput | $Enums.GameAggregatorType
     provider?: EnumGameProviderFieldUpdateOperationsInput | $Enums.GameProvider
     category?: EnumGameCategoryFieldUpdateOperationsInput | $Enums.GameCategory
@@ -68735,7 +68737,7 @@ export namespace Prisma {
   }
 
   export type CasinoGameCreateManyInput = {
-    id?: number
+    id?: bigint | number
     aggregatorType: $Enums.GameAggregatorType
     provider: $Enums.GameProvider
     category: $Enums.GameCategory
@@ -68752,6 +68754,7 @@ export namespace Prisma {
   }
 
   export type CasinoGameUpdateManyMutationInput = {
+    id?: BigIntFieldUpdateOperationsInput | bigint | number
     aggregatorType?: EnumGameAggregatorTypeFieldUpdateOperationsInput | $Enums.GameAggregatorType
     provider?: EnumGameProviderFieldUpdateOperationsInput | $Enums.GameProvider
     category?: EnumGameCategoryFieldUpdateOperationsInput | $Enums.GameCategory
@@ -68768,7 +68771,7 @@ export namespace Prisma {
   }
 
   export type CasinoGameUncheckedUpdateManyInput = {
-    id?: IntFieldUpdateOperationsInput | number
+    id?: BigIntFieldUpdateOperationsInput | bigint | number
     aggregatorType?: EnumGameAggregatorTypeFieldUpdateOperationsInput | $Enums.GameAggregatorType
     provider?: EnumGameProviderFieldUpdateOperationsInput | $Enums.GameProvider
     category?: EnumGameCategoryFieldUpdateOperationsInput | $Enums.GameCategory
@@ -68796,7 +68799,7 @@ export namespace Prisma {
 
   export type CasinoGameTranslationUncheckedCreateInput = {
     id?: number
-    gameId: number
+    gameId: bigint | number
     language: $Enums.Language
     providerName: string
     categoryName: string
@@ -68817,7 +68820,7 @@ export namespace Prisma {
 
   export type CasinoGameTranslationUncheckedUpdateInput = {
     id?: IntFieldUpdateOperationsInput | number
-    gameId?: IntFieldUpdateOperationsInput | number
+    gameId?: BigIntFieldUpdateOperationsInput | bigint | number
     language?: EnumLanguageFieldUpdateOperationsInput | $Enums.Language
     providerName?: StringFieldUpdateOperationsInput | string
     categoryName?: StringFieldUpdateOperationsInput | string
@@ -68828,7 +68831,7 @@ export namespace Prisma {
 
   export type CasinoGameTranslationCreateManyInput = {
     id?: number
-    gameId: number
+    gameId: bigint | number
     language: $Enums.Language
     providerName: string
     categoryName: string
@@ -68848,7 +68851,7 @@ export namespace Prisma {
 
   export type CasinoGameTranslationUncheckedUpdateManyInput = {
     id?: IntFieldUpdateOperationsInput | number
-    gameId?: IntFieldUpdateOperationsInput | number
+    gameId?: BigIntFieldUpdateOperationsInput | bigint | number
     language?: EnumLanguageFieldUpdateOperationsInput | $Enums.Language
     providerName?: StringFieldUpdateOperationsInput | string
     categoryName?: StringFieldUpdateOperationsInput | string
@@ -68885,7 +68888,7 @@ export namespace Prisma {
     gameCurrency: $Enums.ExchangeCurrencyCode
     exchangeRate: Decimal | DecimalJsLike | number | string
     exchangeRateSnapshotAt?: Date | string
-    gameId?: number | null
+    gameId?: bigint | number | null
     gameRounds?: GameRoundUncheckedCreateNestedManyWithoutGameSessionInput
   }
 
@@ -68917,7 +68920,7 @@ export namespace Prisma {
     gameCurrency?: EnumExchangeCurrencyCodeFieldUpdateOperationsInput | $Enums.ExchangeCurrencyCode
     exchangeRate?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
     exchangeRateSnapshotAt?: DateTimeFieldUpdateOperationsInput | Date | string
-    gameId?: NullableIntFieldUpdateOperationsInput | number | null
+    gameId?: NullableBigIntFieldUpdateOperationsInput | bigint | number | null
     gameRounds?: GameRoundUncheckedUpdateManyWithoutGameSessionNestedInput
   }
 
@@ -68933,7 +68936,7 @@ export namespace Prisma {
     gameCurrency: $Enums.ExchangeCurrencyCode
     exchangeRate: Decimal | DecimalJsLike | number | string
     exchangeRateSnapshotAt?: Date | string
-    gameId?: number | null
+    gameId?: bigint | number | null
   }
 
   export type CasinoGameSessionUpdateManyMutationInput = {
@@ -68961,7 +68964,7 @@ export namespace Prisma {
     gameCurrency?: EnumExchangeCurrencyCodeFieldUpdateOperationsInput | $Enums.ExchangeCurrencyCode
     exchangeRate?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
     exchangeRateSnapshotAt?: DateTimeFieldUpdateOperationsInput | Date | string
-    gameId?: NullableIntFieldUpdateOperationsInput | number | null
+    gameId?: NullableBigIntFieldUpdateOperationsInput | bigint | number | null
   }
 
   export type UserCreateInput = {
@@ -69554,7 +69557,7 @@ export namespace Prisma {
     jackpotContributionAmount?: Decimal | DecimalJsLike | number | string
     startedAt?: Date | string | null
     completedAt?: Date | string | null
-    gameId?: number | null
+    gameId?: bigint | number | null
     gameSessionId: bigint | number
     AffiliateCommission?: AffiliateCommissionUncheckedCreateNestedManyWithoutGameRoundInput
     bets?: GameBetUncheckedCreateNestedManyWithoutGameRoundInput
@@ -69620,7 +69623,7 @@ export namespace Prisma {
     jackpotContributionAmount?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
     startedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     completedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
-    gameId?: NullableIntFieldUpdateOperationsInput | number | null
+    gameId?: NullableBigIntFieldUpdateOperationsInput | bigint | number | null
     gameSessionId?: BigIntFieldUpdateOperationsInput | bigint | number
     AffiliateCommission?: AffiliateCommissionUncheckedUpdateManyWithoutGameRoundNestedInput
     bets?: GameBetUncheckedUpdateManyWithoutGameRoundNestedInput
@@ -69653,7 +69656,7 @@ export namespace Prisma {
     jackpotContributionAmount?: Decimal | DecimalJsLike | number | string
     startedAt?: Date | string | null
     completedAt?: Date | string | null
-    gameId?: number | null
+    gameId?: bigint | number | null
     gameSessionId: bigint | number
   }
 
@@ -69710,7 +69713,7 @@ export namespace Prisma {
     jackpotContributionAmount?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
     startedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     completedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
-    gameId?: NullableIntFieldUpdateOperationsInput | number | null
+    gameId?: NullableBigIntFieldUpdateOperationsInput | bigint | number | null
     gameSessionId?: BigIntFieldUpdateOperationsInput | bigint | number
   }
 
@@ -70034,7 +70037,7 @@ export namespace Prisma {
     aggregatorSessionId?: string | null
     isEndRound?: boolean | null
     description?: string | null
-    gameId?: number | null
+    gameId?: bigint | number | null
     transactionId: bigint | number
   }
 
@@ -70074,7 +70077,7 @@ export namespace Prisma {
     aggregatorSessionId?: NullableStringFieldUpdateOperationsInput | string | null
     isEndRound?: NullableBoolFieldUpdateOperationsInput | boolean | null
     description?: NullableStringFieldUpdateOperationsInput | string | null
-    gameId?: NullableIntFieldUpdateOperationsInput | number | null
+    gameId?: NullableBigIntFieldUpdateOperationsInput | bigint | number | null
     transactionId?: BigIntFieldUpdateOperationsInput | bigint | number
   }
 
@@ -70094,7 +70097,7 @@ export namespace Prisma {
     aggregatorSessionId?: string | null
     isEndRound?: boolean | null
     description?: string | null
-    gameId?: number | null
+    gameId?: bigint | number | null
     transactionId: bigint | number
   }
 
@@ -70132,7 +70135,7 @@ export namespace Prisma {
     aggregatorSessionId?: NullableStringFieldUpdateOperationsInput | string | null
     isEndRound?: NullableBoolFieldUpdateOperationsInput | boolean | null
     description?: NullableStringFieldUpdateOperationsInput | string | null
-    gameId?: NullableIntFieldUpdateOperationsInput | number | null
+    gameId?: NullableBigIntFieldUpdateOperationsInput | bigint | number | null
     transactionId?: BigIntFieldUpdateOperationsInput | bigint | number
   }
 
@@ -72197,172 +72200,6 @@ export namespace Prisma {
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
   }
 
-  export type UserSessionCreateInput = {
-    id?: bigint | number
-    uid?: string
-    sessionId: string
-    type: $Enums.SessionType
-    status?: $Enums.SessionStatus
-    isAdmin?: boolean
-    ipAddress?: string | null
-    userAgent?: string | null
-    deviceFingerprint?: string | null
-    isMobile?: boolean | null
-    deviceName?: string | null
-    os?: string | null
-    browser?: string | null
-    createdAt?: Date | string
-    updatedAt?: Date | string
-    lastActiveAt?: Date | string
-    expiresAt: Date | string
-    revokedAt?: Date | string | null
-    metadata?: NullableJsonNullValueInput | InputJsonValue
-    user: UserCreateNestedOneWithoutUserSessionInput
-    revokedByUser?: UserCreateNestedOneWithoutRevokedSessionsInput
-  }
-
-  export type UserSessionUncheckedCreateInput = {
-    id?: bigint | number
-    uid?: string
-    userId: bigint | number
-    sessionId: string
-    type: $Enums.SessionType
-    status?: $Enums.SessionStatus
-    isAdmin?: boolean
-    ipAddress?: string | null
-    userAgent?: string | null
-    deviceFingerprint?: string | null
-    isMobile?: boolean | null
-    deviceName?: string | null
-    os?: string | null
-    browser?: string | null
-    createdAt?: Date | string
-    updatedAt?: Date | string
-    lastActiveAt?: Date | string
-    expiresAt: Date | string
-    revokedAt?: Date | string | null
-    revokedBy?: bigint | number | null
-    metadata?: NullableJsonNullValueInput | InputJsonValue
-  }
-
-  export type UserSessionUpdateInput = {
-    id?: BigIntFieldUpdateOperationsInput | bigint | number
-    uid?: StringFieldUpdateOperationsInput | string
-    sessionId?: StringFieldUpdateOperationsInput | string
-    type?: EnumSessionTypeFieldUpdateOperationsInput | $Enums.SessionType
-    status?: EnumSessionStatusFieldUpdateOperationsInput | $Enums.SessionStatus
-    isAdmin?: BoolFieldUpdateOperationsInput | boolean
-    ipAddress?: NullableStringFieldUpdateOperationsInput | string | null
-    userAgent?: NullableStringFieldUpdateOperationsInput | string | null
-    deviceFingerprint?: NullableStringFieldUpdateOperationsInput | string | null
-    isMobile?: NullableBoolFieldUpdateOperationsInput | boolean | null
-    deviceName?: NullableStringFieldUpdateOperationsInput | string | null
-    os?: NullableStringFieldUpdateOperationsInput | string | null
-    browser?: NullableStringFieldUpdateOperationsInput | string | null
-    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
-    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
-    lastActiveAt?: DateTimeFieldUpdateOperationsInput | Date | string
-    expiresAt?: DateTimeFieldUpdateOperationsInput | Date | string
-    revokedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
-    metadata?: NullableJsonNullValueInput | InputJsonValue
-    user?: UserUpdateOneRequiredWithoutUserSessionNestedInput
-    revokedByUser?: UserUpdateOneWithoutRevokedSessionsNestedInput
-  }
-
-  export type UserSessionUncheckedUpdateInput = {
-    id?: BigIntFieldUpdateOperationsInput | bigint | number
-    uid?: StringFieldUpdateOperationsInput | string
-    userId?: BigIntFieldUpdateOperationsInput | bigint | number
-    sessionId?: StringFieldUpdateOperationsInput | string
-    type?: EnumSessionTypeFieldUpdateOperationsInput | $Enums.SessionType
-    status?: EnumSessionStatusFieldUpdateOperationsInput | $Enums.SessionStatus
-    isAdmin?: BoolFieldUpdateOperationsInput | boolean
-    ipAddress?: NullableStringFieldUpdateOperationsInput | string | null
-    userAgent?: NullableStringFieldUpdateOperationsInput | string | null
-    deviceFingerprint?: NullableStringFieldUpdateOperationsInput | string | null
-    isMobile?: NullableBoolFieldUpdateOperationsInput | boolean | null
-    deviceName?: NullableStringFieldUpdateOperationsInput | string | null
-    os?: NullableStringFieldUpdateOperationsInput | string | null
-    browser?: NullableStringFieldUpdateOperationsInput | string | null
-    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
-    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
-    lastActiveAt?: DateTimeFieldUpdateOperationsInput | Date | string
-    expiresAt?: DateTimeFieldUpdateOperationsInput | Date | string
-    revokedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
-    revokedBy?: NullableBigIntFieldUpdateOperationsInput | bigint | number | null
-    metadata?: NullableJsonNullValueInput | InputJsonValue
-  }
-
-  export type UserSessionCreateManyInput = {
-    id?: bigint | number
-    uid?: string
-    userId: bigint | number
-    sessionId: string
-    type: $Enums.SessionType
-    status?: $Enums.SessionStatus
-    isAdmin?: boolean
-    ipAddress?: string | null
-    userAgent?: string | null
-    deviceFingerprint?: string | null
-    isMobile?: boolean | null
-    deviceName?: string | null
-    os?: string | null
-    browser?: string | null
-    createdAt?: Date | string
-    updatedAt?: Date | string
-    lastActiveAt?: Date | string
-    expiresAt: Date | string
-    revokedAt?: Date | string | null
-    revokedBy?: bigint | number | null
-    metadata?: NullableJsonNullValueInput | InputJsonValue
-  }
-
-  export type UserSessionUpdateManyMutationInput = {
-    id?: BigIntFieldUpdateOperationsInput | bigint | number
-    uid?: StringFieldUpdateOperationsInput | string
-    sessionId?: StringFieldUpdateOperationsInput | string
-    type?: EnumSessionTypeFieldUpdateOperationsInput | $Enums.SessionType
-    status?: EnumSessionStatusFieldUpdateOperationsInput | $Enums.SessionStatus
-    isAdmin?: BoolFieldUpdateOperationsInput | boolean
-    ipAddress?: NullableStringFieldUpdateOperationsInput | string | null
-    userAgent?: NullableStringFieldUpdateOperationsInput | string | null
-    deviceFingerprint?: NullableStringFieldUpdateOperationsInput | string | null
-    isMobile?: NullableBoolFieldUpdateOperationsInput | boolean | null
-    deviceName?: NullableStringFieldUpdateOperationsInput | string | null
-    os?: NullableStringFieldUpdateOperationsInput | string | null
-    browser?: NullableStringFieldUpdateOperationsInput | string | null
-    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
-    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
-    lastActiveAt?: DateTimeFieldUpdateOperationsInput | Date | string
-    expiresAt?: DateTimeFieldUpdateOperationsInput | Date | string
-    revokedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
-    metadata?: NullableJsonNullValueInput | InputJsonValue
-  }
-
-  export type UserSessionUncheckedUpdateManyInput = {
-    id?: BigIntFieldUpdateOperationsInput | bigint | number
-    uid?: StringFieldUpdateOperationsInput | string
-    userId?: BigIntFieldUpdateOperationsInput | bigint | number
-    sessionId?: StringFieldUpdateOperationsInput | string
-    type?: EnumSessionTypeFieldUpdateOperationsInput | $Enums.SessionType
-    status?: EnumSessionStatusFieldUpdateOperationsInput | $Enums.SessionStatus
-    isAdmin?: BoolFieldUpdateOperationsInput | boolean
-    ipAddress?: NullableStringFieldUpdateOperationsInput | string | null
-    userAgent?: NullableStringFieldUpdateOperationsInput | string | null
-    deviceFingerprint?: NullableStringFieldUpdateOperationsInput | string | null
-    isMobile?: NullableBoolFieldUpdateOperationsInput | boolean | null
-    deviceName?: NullableStringFieldUpdateOperationsInput | string | null
-    os?: NullableStringFieldUpdateOperationsInput | string | null
-    browser?: NullableStringFieldUpdateOperationsInput | string | null
-    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
-    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
-    lastActiveAt?: DateTimeFieldUpdateOperationsInput | Date | string
-    expiresAt?: DateTimeFieldUpdateOperationsInput | Date | string
-    revokedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
-    revokedBy?: NullableBigIntFieldUpdateOperationsInput | bigint | number | null
-    metadata?: NullableJsonNullValueInput | InputJsonValue
-  }
-
   export type TierCreateInput = {
     id?: bigint | number
     uid: string
@@ -72815,6 +72652,172 @@ export namespace Prisma {
     serviceName?: StringFieldUpdateOperationsInput | string
     triggerId?: NullableStringFieldUpdateOperationsInput | string | null
     actionName?: StringFieldUpdateOperationsInput | string
+    metadata?: NullableJsonNullValueInput | InputJsonValue
+  }
+
+  export type UserSessionCreateInput = {
+    id?: bigint | number
+    uid?: string
+    sessionId: string
+    type: $Enums.SessionType
+    status?: $Enums.SessionStatus
+    isAdmin?: boolean
+    ipAddress?: string | null
+    userAgent?: string | null
+    deviceFingerprint?: string | null
+    isMobile?: boolean | null
+    deviceName?: string | null
+    os?: string | null
+    browser?: string | null
+    createdAt?: Date | string
+    updatedAt?: Date | string
+    lastActiveAt?: Date | string
+    expiresAt: Date | string
+    revokedAt?: Date | string | null
+    metadata?: NullableJsonNullValueInput | InputJsonValue
+    user: UserCreateNestedOneWithoutUserSessionInput
+    revokedByUser?: UserCreateNestedOneWithoutRevokedSessionsInput
+  }
+
+  export type UserSessionUncheckedCreateInput = {
+    id?: bigint | number
+    uid?: string
+    userId: bigint | number
+    sessionId: string
+    type: $Enums.SessionType
+    status?: $Enums.SessionStatus
+    isAdmin?: boolean
+    ipAddress?: string | null
+    userAgent?: string | null
+    deviceFingerprint?: string | null
+    isMobile?: boolean | null
+    deviceName?: string | null
+    os?: string | null
+    browser?: string | null
+    createdAt?: Date | string
+    updatedAt?: Date | string
+    lastActiveAt?: Date | string
+    expiresAt: Date | string
+    revokedAt?: Date | string | null
+    revokedBy?: bigint | number | null
+    metadata?: NullableJsonNullValueInput | InputJsonValue
+  }
+
+  export type UserSessionUpdateInput = {
+    id?: BigIntFieldUpdateOperationsInput | bigint | number
+    uid?: StringFieldUpdateOperationsInput | string
+    sessionId?: StringFieldUpdateOperationsInput | string
+    type?: EnumSessionTypeFieldUpdateOperationsInput | $Enums.SessionType
+    status?: EnumSessionStatusFieldUpdateOperationsInput | $Enums.SessionStatus
+    isAdmin?: BoolFieldUpdateOperationsInput | boolean
+    ipAddress?: NullableStringFieldUpdateOperationsInput | string | null
+    userAgent?: NullableStringFieldUpdateOperationsInput | string | null
+    deviceFingerprint?: NullableStringFieldUpdateOperationsInput | string | null
+    isMobile?: NullableBoolFieldUpdateOperationsInput | boolean | null
+    deviceName?: NullableStringFieldUpdateOperationsInput | string | null
+    os?: NullableStringFieldUpdateOperationsInput | string | null
+    browser?: NullableStringFieldUpdateOperationsInput | string | null
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    lastActiveAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    expiresAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    revokedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    metadata?: NullableJsonNullValueInput | InputJsonValue
+    user?: UserUpdateOneRequiredWithoutUserSessionNestedInput
+    revokedByUser?: UserUpdateOneWithoutRevokedSessionsNestedInput
+  }
+
+  export type UserSessionUncheckedUpdateInput = {
+    id?: BigIntFieldUpdateOperationsInput | bigint | number
+    uid?: StringFieldUpdateOperationsInput | string
+    userId?: BigIntFieldUpdateOperationsInput | bigint | number
+    sessionId?: StringFieldUpdateOperationsInput | string
+    type?: EnumSessionTypeFieldUpdateOperationsInput | $Enums.SessionType
+    status?: EnumSessionStatusFieldUpdateOperationsInput | $Enums.SessionStatus
+    isAdmin?: BoolFieldUpdateOperationsInput | boolean
+    ipAddress?: NullableStringFieldUpdateOperationsInput | string | null
+    userAgent?: NullableStringFieldUpdateOperationsInput | string | null
+    deviceFingerprint?: NullableStringFieldUpdateOperationsInput | string | null
+    isMobile?: NullableBoolFieldUpdateOperationsInput | boolean | null
+    deviceName?: NullableStringFieldUpdateOperationsInput | string | null
+    os?: NullableStringFieldUpdateOperationsInput | string | null
+    browser?: NullableStringFieldUpdateOperationsInput | string | null
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    lastActiveAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    expiresAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    revokedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    revokedBy?: NullableBigIntFieldUpdateOperationsInput | bigint | number | null
+    metadata?: NullableJsonNullValueInput | InputJsonValue
+  }
+
+  export type UserSessionCreateManyInput = {
+    id?: bigint | number
+    uid?: string
+    userId: bigint | number
+    sessionId: string
+    type: $Enums.SessionType
+    status?: $Enums.SessionStatus
+    isAdmin?: boolean
+    ipAddress?: string | null
+    userAgent?: string | null
+    deviceFingerprint?: string | null
+    isMobile?: boolean | null
+    deviceName?: string | null
+    os?: string | null
+    browser?: string | null
+    createdAt?: Date | string
+    updatedAt?: Date | string
+    lastActiveAt?: Date | string
+    expiresAt: Date | string
+    revokedAt?: Date | string | null
+    revokedBy?: bigint | number | null
+    metadata?: NullableJsonNullValueInput | InputJsonValue
+  }
+
+  export type UserSessionUpdateManyMutationInput = {
+    id?: BigIntFieldUpdateOperationsInput | bigint | number
+    uid?: StringFieldUpdateOperationsInput | string
+    sessionId?: StringFieldUpdateOperationsInput | string
+    type?: EnumSessionTypeFieldUpdateOperationsInput | $Enums.SessionType
+    status?: EnumSessionStatusFieldUpdateOperationsInput | $Enums.SessionStatus
+    isAdmin?: BoolFieldUpdateOperationsInput | boolean
+    ipAddress?: NullableStringFieldUpdateOperationsInput | string | null
+    userAgent?: NullableStringFieldUpdateOperationsInput | string | null
+    deviceFingerprint?: NullableStringFieldUpdateOperationsInput | string | null
+    isMobile?: NullableBoolFieldUpdateOperationsInput | boolean | null
+    deviceName?: NullableStringFieldUpdateOperationsInput | string | null
+    os?: NullableStringFieldUpdateOperationsInput | string | null
+    browser?: NullableStringFieldUpdateOperationsInput | string | null
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    lastActiveAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    expiresAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    revokedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    metadata?: NullableJsonNullValueInput | InputJsonValue
+  }
+
+  export type UserSessionUncheckedUpdateManyInput = {
+    id?: BigIntFieldUpdateOperationsInput | bigint | number
+    uid?: StringFieldUpdateOperationsInput | string
+    userId?: BigIntFieldUpdateOperationsInput | bigint | number
+    sessionId?: StringFieldUpdateOperationsInput | string
+    type?: EnumSessionTypeFieldUpdateOperationsInput | $Enums.SessionType
+    status?: EnumSessionStatusFieldUpdateOperationsInput | $Enums.SessionStatus
+    isAdmin?: BoolFieldUpdateOperationsInput | boolean
+    ipAddress?: NullableStringFieldUpdateOperationsInput | string | null
+    userAgent?: NullableStringFieldUpdateOperationsInput | string | null
+    deviceFingerprint?: NullableStringFieldUpdateOperationsInput | string | null
+    isMobile?: NullableBoolFieldUpdateOperationsInput | boolean | null
+    deviceName?: NullableStringFieldUpdateOperationsInput | string | null
+    os?: NullableStringFieldUpdateOperationsInput | string | null
+    browser?: NullableStringFieldUpdateOperationsInput | string | null
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    lastActiveAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    expiresAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    revokedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    revokedBy?: NullableBigIntFieldUpdateOperationsInput | bigint | number | null
     metadata?: NullableJsonNullValueInput | InputJsonValue
   }
 
@@ -73823,7 +73826,7 @@ export namespace Prisma {
   }
 
   export type CasinoGameTranslationGameIdLanguageCompoundUniqueInput = {
-    gameId: number
+    gameId: bigint | number
     language: $Enums.Language
   }
 
@@ -76715,122 +76718,6 @@ export namespace Prisma {
     _max?: NestedEnumUserPromotionStatusFilter<$PrismaModel>
   }
 
-  export type EnumSessionTypeFilter<$PrismaModel = never> = {
-    equals?: $Enums.SessionType | EnumSessionTypeFieldRefInput<$PrismaModel>
-    in?: $Enums.SessionType[] | ListEnumSessionTypeFieldRefInput<$PrismaModel>
-    notIn?: $Enums.SessionType[] | ListEnumSessionTypeFieldRefInput<$PrismaModel>
-    not?: NestedEnumSessionTypeFilter<$PrismaModel> | $Enums.SessionType
-  }
-
-  export type EnumSessionStatusFilter<$PrismaModel = never> = {
-    equals?: $Enums.SessionStatus | EnumSessionStatusFieldRefInput<$PrismaModel>
-    in?: $Enums.SessionStatus[] | ListEnumSessionStatusFieldRefInput<$PrismaModel>
-    notIn?: $Enums.SessionStatus[] | ListEnumSessionStatusFieldRefInput<$PrismaModel>
-    not?: NestedEnumSessionStatusFilter<$PrismaModel> | $Enums.SessionStatus
-  }
-
-  export type UserSessionCountOrderByAggregateInput = {
-    id?: SortOrder
-    uid?: SortOrder
-    userId?: SortOrder
-    sessionId?: SortOrder
-    type?: SortOrder
-    status?: SortOrder
-    isAdmin?: SortOrder
-    ipAddress?: SortOrder
-    userAgent?: SortOrder
-    deviceFingerprint?: SortOrder
-    isMobile?: SortOrder
-    deviceName?: SortOrder
-    os?: SortOrder
-    browser?: SortOrder
-    createdAt?: SortOrder
-    updatedAt?: SortOrder
-    lastActiveAt?: SortOrder
-    expiresAt?: SortOrder
-    revokedAt?: SortOrder
-    revokedBy?: SortOrder
-    metadata?: SortOrder
-  }
-
-  export type UserSessionAvgOrderByAggregateInput = {
-    id?: SortOrder
-    userId?: SortOrder
-    revokedBy?: SortOrder
-  }
-
-  export type UserSessionMaxOrderByAggregateInput = {
-    id?: SortOrder
-    uid?: SortOrder
-    userId?: SortOrder
-    sessionId?: SortOrder
-    type?: SortOrder
-    status?: SortOrder
-    isAdmin?: SortOrder
-    ipAddress?: SortOrder
-    userAgent?: SortOrder
-    deviceFingerprint?: SortOrder
-    isMobile?: SortOrder
-    deviceName?: SortOrder
-    os?: SortOrder
-    browser?: SortOrder
-    createdAt?: SortOrder
-    updatedAt?: SortOrder
-    lastActiveAt?: SortOrder
-    expiresAt?: SortOrder
-    revokedAt?: SortOrder
-    revokedBy?: SortOrder
-  }
-
-  export type UserSessionMinOrderByAggregateInput = {
-    id?: SortOrder
-    uid?: SortOrder
-    userId?: SortOrder
-    sessionId?: SortOrder
-    type?: SortOrder
-    status?: SortOrder
-    isAdmin?: SortOrder
-    ipAddress?: SortOrder
-    userAgent?: SortOrder
-    deviceFingerprint?: SortOrder
-    isMobile?: SortOrder
-    deviceName?: SortOrder
-    os?: SortOrder
-    browser?: SortOrder
-    createdAt?: SortOrder
-    updatedAt?: SortOrder
-    lastActiveAt?: SortOrder
-    expiresAt?: SortOrder
-    revokedAt?: SortOrder
-    revokedBy?: SortOrder
-  }
-
-  export type UserSessionSumOrderByAggregateInput = {
-    id?: SortOrder
-    userId?: SortOrder
-    revokedBy?: SortOrder
-  }
-
-  export type EnumSessionTypeWithAggregatesFilter<$PrismaModel = never> = {
-    equals?: $Enums.SessionType | EnumSessionTypeFieldRefInput<$PrismaModel>
-    in?: $Enums.SessionType[] | ListEnumSessionTypeFieldRefInput<$PrismaModel>
-    notIn?: $Enums.SessionType[] | ListEnumSessionTypeFieldRefInput<$PrismaModel>
-    not?: NestedEnumSessionTypeWithAggregatesFilter<$PrismaModel> | $Enums.SessionType
-    _count?: NestedIntFilter<$PrismaModel>
-    _min?: NestedEnumSessionTypeFilter<$PrismaModel>
-    _max?: NestedEnumSessionTypeFilter<$PrismaModel>
-  }
-
-  export type EnumSessionStatusWithAggregatesFilter<$PrismaModel = never> = {
-    equals?: $Enums.SessionStatus | EnumSessionStatusFieldRefInput<$PrismaModel>
-    in?: $Enums.SessionStatus[] | ListEnumSessionStatusFieldRefInput<$PrismaModel>
-    notIn?: $Enums.SessionStatus[] | ListEnumSessionStatusFieldRefInput<$PrismaModel>
-    not?: NestedEnumSessionStatusWithAggregatesFilter<$PrismaModel> | $Enums.SessionStatus
-    _count?: NestedIntFilter<$PrismaModel>
-    _min?: NestedEnumSessionStatusFilter<$PrismaModel>
-    _max?: NestedEnumSessionStatusFilter<$PrismaModel>
-  }
-
   export type UserTierListRelationFilter = {
     every?: UserTierWhereInput
     some?: UserTierWhereInput
@@ -77170,6 +77057,122 @@ export namespace Prisma {
   export type SystemAdjustmentDetailSumOrderByAggregateInput = {
     id?: SortOrder
     transactionId?: SortOrder
+  }
+
+  export type EnumSessionTypeFilter<$PrismaModel = never> = {
+    equals?: $Enums.SessionType | EnumSessionTypeFieldRefInput<$PrismaModel>
+    in?: $Enums.SessionType[] | ListEnumSessionTypeFieldRefInput<$PrismaModel>
+    notIn?: $Enums.SessionType[] | ListEnumSessionTypeFieldRefInput<$PrismaModel>
+    not?: NestedEnumSessionTypeFilter<$PrismaModel> | $Enums.SessionType
+  }
+
+  export type EnumSessionStatusFilter<$PrismaModel = never> = {
+    equals?: $Enums.SessionStatus | EnumSessionStatusFieldRefInput<$PrismaModel>
+    in?: $Enums.SessionStatus[] | ListEnumSessionStatusFieldRefInput<$PrismaModel>
+    notIn?: $Enums.SessionStatus[] | ListEnumSessionStatusFieldRefInput<$PrismaModel>
+    not?: NestedEnumSessionStatusFilter<$PrismaModel> | $Enums.SessionStatus
+  }
+
+  export type UserSessionCountOrderByAggregateInput = {
+    id?: SortOrder
+    uid?: SortOrder
+    userId?: SortOrder
+    sessionId?: SortOrder
+    type?: SortOrder
+    status?: SortOrder
+    isAdmin?: SortOrder
+    ipAddress?: SortOrder
+    userAgent?: SortOrder
+    deviceFingerprint?: SortOrder
+    isMobile?: SortOrder
+    deviceName?: SortOrder
+    os?: SortOrder
+    browser?: SortOrder
+    createdAt?: SortOrder
+    updatedAt?: SortOrder
+    lastActiveAt?: SortOrder
+    expiresAt?: SortOrder
+    revokedAt?: SortOrder
+    revokedBy?: SortOrder
+    metadata?: SortOrder
+  }
+
+  export type UserSessionAvgOrderByAggregateInput = {
+    id?: SortOrder
+    userId?: SortOrder
+    revokedBy?: SortOrder
+  }
+
+  export type UserSessionMaxOrderByAggregateInput = {
+    id?: SortOrder
+    uid?: SortOrder
+    userId?: SortOrder
+    sessionId?: SortOrder
+    type?: SortOrder
+    status?: SortOrder
+    isAdmin?: SortOrder
+    ipAddress?: SortOrder
+    userAgent?: SortOrder
+    deviceFingerprint?: SortOrder
+    isMobile?: SortOrder
+    deviceName?: SortOrder
+    os?: SortOrder
+    browser?: SortOrder
+    createdAt?: SortOrder
+    updatedAt?: SortOrder
+    lastActiveAt?: SortOrder
+    expiresAt?: SortOrder
+    revokedAt?: SortOrder
+    revokedBy?: SortOrder
+  }
+
+  export type UserSessionMinOrderByAggregateInput = {
+    id?: SortOrder
+    uid?: SortOrder
+    userId?: SortOrder
+    sessionId?: SortOrder
+    type?: SortOrder
+    status?: SortOrder
+    isAdmin?: SortOrder
+    ipAddress?: SortOrder
+    userAgent?: SortOrder
+    deviceFingerprint?: SortOrder
+    isMobile?: SortOrder
+    deviceName?: SortOrder
+    os?: SortOrder
+    browser?: SortOrder
+    createdAt?: SortOrder
+    updatedAt?: SortOrder
+    lastActiveAt?: SortOrder
+    expiresAt?: SortOrder
+    revokedAt?: SortOrder
+    revokedBy?: SortOrder
+  }
+
+  export type UserSessionSumOrderByAggregateInput = {
+    id?: SortOrder
+    userId?: SortOrder
+    revokedBy?: SortOrder
+  }
+
+  export type EnumSessionTypeWithAggregatesFilter<$PrismaModel = never> = {
+    equals?: $Enums.SessionType | EnumSessionTypeFieldRefInput<$PrismaModel>
+    in?: $Enums.SessionType[] | ListEnumSessionTypeFieldRefInput<$PrismaModel>
+    notIn?: $Enums.SessionType[] | ListEnumSessionTypeFieldRefInput<$PrismaModel>
+    not?: NestedEnumSessionTypeWithAggregatesFilter<$PrismaModel> | $Enums.SessionType
+    _count?: NestedIntFilter<$PrismaModel>
+    _min?: NestedEnumSessionTypeFilter<$PrismaModel>
+    _max?: NestedEnumSessionTypeFilter<$PrismaModel>
+  }
+
+  export type EnumSessionStatusWithAggregatesFilter<$PrismaModel = never> = {
+    equals?: $Enums.SessionStatus | EnumSessionStatusFieldRefInput<$PrismaModel>
+    in?: $Enums.SessionStatus[] | ListEnumSessionStatusFieldRefInput<$PrismaModel>
+    notIn?: $Enums.SessionStatus[] | ListEnumSessionStatusFieldRefInput<$PrismaModel>
+    not?: NestedEnumSessionStatusWithAggregatesFilter<$PrismaModel> | $Enums.SessionStatus
+    _count?: NestedIntFilter<$PrismaModel>
+    _min?: NestedEnumSessionStatusFilter<$PrismaModel>
+    _max?: NestedEnumSessionStatusFilter<$PrismaModel>
   }
 
   export type UserCreateNestedOneWithoutAffiliateCodesInput = {
@@ -79966,44 +79969,6 @@ export namespace Prisma {
     deleteMany?: RollingScalarWhereInput | RollingScalarWhereInput[]
   }
 
-  export type UserCreateNestedOneWithoutUserSessionInput = {
-    create?: XOR<UserCreateWithoutUserSessionInput, UserUncheckedCreateWithoutUserSessionInput>
-    connectOrCreate?: UserCreateOrConnectWithoutUserSessionInput
-    connect?: UserWhereUniqueInput
-  }
-
-  export type UserCreateNestedOneWithoutRevokedSessionsInput = {
-    create?: XOR<UserCreateWithoutRevokedSessionsInput, UserUncheckedCreateWithoutRevokedSessionsInput>
-    connectOrCreate?: UserCreateOrConnectWithoutRevokedSessionsInput
-    connect?: UserWhereUniqueInput
-  }
-
-  export type EnumSessionTypeFieldUpdateOperationsInput = {
-    set?: $Enums.SessionType
-  }
-
-  export type EnumSessionStatusFieldUpdateOperationsInput = {
-    set?: $Enums.SessionStatus
-  }
-
-  export type UserUpdateOneRequiredWithoutUserSessionNestedInput = {
-    create?: XOR<UserCreateWithoutUserSessionInput, UserUncheckedCreateWithoutUserSessionInput>
-    connectOrCreate?: UserCreateOrConnectWithoutUserSessionInput
-    upsert?: UserUpsertWithoutUserSessionInput
-    connect?: UserWhereUniqueInput
-    update?: XOR<XOR<UserUpdateToOneWithWhereWithoutUserSessionInput, UserUpdateWithoutUserSessionInput>, UserUncheckedUpdateWithoutUserSessionInput>
-  }
-
-  export type UserUpdateOneWithoutRevokedSessionsNestedInput = {
-    create?: XOR<UserCreateWithoutRevokedSessionsInput, UserUncheckedCreateWithoutRevokedSessionsInput>
-    connectOrCreate?: UserCreateOrConnectWithoutRevokedSessionsInput
-    upsert?: UserUpsertWithoutRevokedSessionsInput
-    disconnect?: UserWhereInput | boolean
-    delete?: UserWhereInput | boolean
-    connect?: UserWhereUniqueInput
-    update?: XOR<XOR<UserUpdateToOneWithWhereWithoutRevokedSessionsInput, UserUpdateWithoutRevokedSessionsInput>, UserUncheckedUpdateWithoutRevokedSessionsInput>
-  }
-
   export type UserTierCreateNestedManyWithoutTierInput = {
     create?: XOR<UserTierCreateWithoutTierInput, UserTierUncheckedCreateWithoutTierInput> | UserTierCreateWithoutTierInput[] | UserTierUncheckedCreateWithoutTierInput[]
     connectOrCreate?: UserTierCreateOrConnectWithoutTierInput | UserTierCreateOrConnectWithoutTierInput[]
@@ -80306,6 +80271,44 @@ export namespace Prisma {
     upsert?: TransactionUpsertWithoutSystemAdjustmentDetailInput
     connect?: TransactionWhereUniqueInput
     update?: XOR<XOR<TransactionUpdateToOneWithWhereWithoutSystemAdjustmentDetailInput, TransactionUpdateWithoutSystemAdjustmentDetailInput>, TransactionUncheckedUpdateWithoutSystemAdjustmentDetailInput>
+  }
+
+  export type UserCreateNestedOneWithoutUserSessionInput = {
+    create?: XOR<UserCreateWithoutUserSessionInput, UserUncheckedCreateWithoutUserSessionInput>
+    connectOrCreate?: UserCreateOrConnectWithoutUserSessionInput
+    connect?: UserWhereUniqueInput
+  }
+
+  export type UserCreateNestedOneWithoutRevokedSessionsInput = {
+    create?: XOR<UserCreateWithoutRevokedSessionsInput, UserUncheckedCreateWithoutRevokedSessionsInput>
+    connectOrCreate?: UserCreateOrConnectWithoutRevokedSessionsInput
+    connect?: UserWhereUniqueInput
+  }
+
+  export type EnumSessionTypeFieldUpdateOperationsInput = {
+    set?: $Enums.SessionType
+  }
+
+  export type EnumSessionStatusFieldUpdateOperationsInput = {
+    set?: $Enums.SessionStatus
+  }
+
+  export type UserUpdateOneRequiredWithoutUserSessionNestedInput = {
+    create?: XOR<UserCreateWithoutUserSessionInput, UserUncheckedCreateWithoutUserSessionInput>
+    connectOrCreate?: UserCreateOrConnectWithoutUserSessionInput
+    upsert?: UserUpsertWithoutUserSessionInput
+    connect?: UserWhereUniqueInput
+    update?: XOR<XOR<UserUpdateToOneWithWhereWithoutUserSessionInput, UserUpdateWithoutUserSessionInput>, UserUncheckedUpdateWithoutUserSessionInput>
+  }
+
+  export type UserUpdateOneWithoutRevokedSessionsNestedInput = {
+    create?: XOR<UserCreateWithoutRevokedSessionsInput, UserUncheckedCreateWithoutRevokedSessionsInput>
+    connectOrCreate?: UserCreateOrConnectWithoutRevokedSessionsInput
+    upsert?: UserUpsertWithoutRevokedSessionsInput
+    disconnect?: UserWhereInput | boolean
+    delete?: UserWhereInput | boolean
+    connect?: UserWhereUniqueInput
+    update?: XOR<XOR<UserUpdateToOneWithWhereWithoutRevokedSessionsInput, UserUpdateWithoutRevokedSessionsInput>, UserUncheckedUpdateWithoutRevokedSessionsInput>
   }
 
   export type NestedBigIntFilter<$PrismaModel = never> = {
@@ -81288,40 +81291,6 @@ export namespace Prisma {
     _max?: NestedEnumUserPromotionStatusFilter<$PrismaModel>
   }
 
-  export type NestedEnumSessionTypeFilter<$PrismaModel = never> = {
-    equals?: $Enums.SessionType | EnumSessionTypeFieldRefInput<$PrismaModel>
-    in?: $Enums.SessionType[] | ListEnumSessionTypeFieldRefInput<$PrismaModel>
-    notIn?: $Enums.SessionType[] | ListEnumSessionTypeFieldRefInput<$PrismaModel>
-    not?: NestedEnumSessionTypeFilter<$PrismaModel> | $Enums.SessionType
-  }
-
-  export type NestedEnumSessionStatusFilter<$PrismaModel = never> = {
-    equals?: $Enums.SessionStatus | EnumSessionStatusFieldRefInput<$PrismaModel>
-    in?: $Enums.SessionStatus[] | ListEnumSessionStatusFieldRefInput<$PrismaModel>
-    notIn?: $Enums.SessionStatus[] | ListEnumSessionStatusFieldRefInput<$PrismaModel>
-    not?: NestedEnumSessionStatusFilter<$PrismaModel> | $Enums.SessionStatus
-  }
-
-  export type NestedEnumSessionTypeWithAggregatesFilter<$PrismaModel = never> = {
-    equals?: $Enums.SessionType | EnumSessionTypeFieldRefInput<$PrismaModel>
-    in?: $Enums.SessionType[] | ListEnumSessionTypeFieldRefInput<$PrismaModel>
-    notIn?: $Enums.SessionType[] | ListEnumSessionTypeFieldRefInput<$PrismaModel>
-    not?: NestedEnumSessionTypeWithAggregatesFilter<$PrismaModel> | $Enums.SessionType
-    _count?: NestedIntFilter<$PrismaModel>
-    _min?: NestedEnumSessionTypeFilter<$PrismaModel>
-    _max?: NestedEnumSessionTypeFilter<$PrismaModel>
-  }
-
-  export type NestedEnumSessionStatusWithAggregatesFilter<$PrismaModel = never> = {
-    equals?: $Enums.SessionStatus | EnumSessionStatusFieldRefInput<$PrismaModel>
-    in?: $Enums.SessionStatus[] | ListEnumSessionStatusFieldRefInput<$PrismaModel>
-    notIn?: $Enums.SessionStatus[] | ListEnumSessionStatusFieldRefInput<$PrismaModel>
-    not?: NestedEnumSessionStatusWithAggregatesFilter<$PrismaModel> | $Enums.SessionStatus
-    _count?: NestedIntFilter<$PrismaModel>
-    _min?: NestedEnumSessionStatusFilter<$PrismaModel>
-    _max?: NestedEnumSessionStatusFilter<$PrismaModel>
-  }
-
   export type NestedEnumTierChangeTypeFilter<$PrismaModel = never> = {
     equals?: $Enums.TierChangeType | EnumTierChangeTypeFieldRefInput<$PrismaModel>
     in?: $Enums.TierChangeType[] | ListEnumTierChangeTypeFieldRefInput<$PrismaModel>
@@ -81354,6 +81323,40 @@ export namespace Prisma {
     _count?: NestedIntFilter<$PrismaModel>
     _min?: NestedEnumAdjustmentReasonCodeFilter<$PrismaModel>
     _max?: NestedEnumAdjustmentReasonCodeFilter<$PrismaModel>
+  }
+
+  export type NestedEnumSessionTypeFilter<$PrismaModel = never> = {
+    equals?: $Enums.SessionType | EnumSessionTypeFieldRefInput<$PrismaModel>
+    in?: $Enums.SessionType[] | ListEnumSessionTypeFieldRefInput<$PrismaModel>
+    notIn?: $Enums.SessionType[] | ListEnumSessionTypeFieldRefInput<$PrismaModel>
+    not?: NestedEnumSessionTypeFilter<$PrismaModel> | $Enums.SessionType
+  }
+
+  export type NestedEnumSessionStatusFilter<$PrismaModel = never> = {
+    equals?: $Enums.SessionStatus | EnumSessionStatusFieldRefInput<$PrismaModel>
+    in?: $Enums.SessionStatus[] | ListEnumSessionStatusFieldRefInput<$PrismaModel>
+    notIn?: $Enums.SessionStatus[] | ListEnumSessionStatusFieldRefInput<$PrismaModel>
+    not?: NestedEnumSessionStatusFilter<$PrismaModel> | $Enums.SessionStatus
+  }
+
+  export type NestedEnumSessionTypeWithAggregatesFilter<$PrismaModel = never> = {
+    equals?: $Enums.SessionType | EnumSessionTypeFieldRefInput<$PrismaModel>
+    in?: $Enums.SessionType[] | ListEnumSessionTypeFieldRefInput<$PrismaModel>
+    notIn?: $Enums.SessionType[] | ListEnumSessionTypeFieldRefInput<$PrismaModel>
+    not?: NestedEnumSessionTypeWithAggregatesFilter<$PrismaModel> | $Enums.SessionType
+    _count?: NestedIntFilter<$PrismaModel>
+    _min?: NestedEnumSessionTypeFilter<$PrismaModel>
+    _max?: NestedEnumSessionTypeFilter<$PrismaModel>
+  }
+
+  export type NestedEnumSessionStatusWithAggregatesFilter<$PrismaModel = never> = {
+    equals?: $Enums.SessionStatus | EnumSessionStatusFieldRefInput<$PrismaModel>
+    in?: $Enums.SessionStatus[] | ListEnumSessionStatusFieldRefInput<$PrismaModel>
+    notIn?: $Enums.SessionStatus[] | ListEnumSessionStatusFieldRefInput<$PrismaModel>
+    not?: NestedEnumSessionStatusWithAggregatesFilter<$PrismaModel> | $Enums.SessionStatus
+    _count?: NestedIntFilter<$PrismaModel>
+    _min?: NestedEnumSessionStatusFilter<$PrismaModel>
+    _max?: NestedEnumSessionStatusFilter<$PrismaModel>
   }
 
   export type UserCreateWithoutAffiliateCodesInput = {
@@ -82312,7 +82315,7 @@ export namespace Prisma {
     aggregatorSessionId?: StringNullableFilter<"BonusDetail"> | string | null
     isEndRound?: BoolNullableFilter<"BonusDetail"> | boolean | null
     description?: StringNullableFilter<"BonusDetail"> | string | null
-    gameId?: IntNullableFilter<"BonusDetail"> | number | null
+    gameId?: BigIntNullableFilter<"BonusDetail"> | bigint | number | null
     transactionId?: BigIntFilter<"BonusDetail"> | bigint | number
   }
 
@@ -82361,7 +82364,7 @@ export namespace Prisma {
     jackpotContributionAmount?: DecimalFilter<"GameRound"> | Decimal | DecimalJsLike | number | string
     startedAt?: DateTimeNullableFilter<"GameRound"> | Date | string | null
     completedAt?: DateTimeNullableFilter<"GameRound"> | Date | string | null
-    gameId?: IntNullableFilter<"GameRound"> | number | null
+    gameId?: BigIntNullableFilter<"GameRound"> | bigint | number | null
     gameSessionId?: BigIntFilter<"GameRound"> | bigint | number
   }
 
@@ -82396,7 +82399,7 @@ export namespace Prisma {
     gameCurrency?: EnumExchangeCurrencyCodeFilter<"CasinoGameSession"> | $Enums.ExchangeCurrencyCode
     exchangeRate?: DecimalFilter<"CasinoGameSession"> | Decimal | DecimalJsLike | number | string
     exchangeRateSnapshotAt?: DateTimeFilter<"CasinoGameSession"> | Date | string
-    gameId?: IntNullableFilter<"CasinoGameSession"> | number | null
+    gameId?: BigIntNullableFilter<"CasinoGameSession"> | bigint | number | null
   }
 
   export type CasinoGameTranslationUpsertWithWhereUniqueWithoutCasinoGameInput = {
@@ -82420,7 +82423,7 @@ export namespace Prisma {
     OR?: CasinoGameTranslationScalarWhereInput[]
     NOT?: CasinoGameTranslationScalarWhereInput | CasinoGameTranslationScalarWhereInput[]
     id?: IntFilter<"CasinoGameTranslation"> | number
-    gameId?: IntFilter<"CasinoGameTranslation"> | number
+    gameId?: BigIntFilter<"CasinoGameTranslation"> | bigint | number
     language?: EnumLanguageFilter<"CasinoGameTranslation"> | $Enums.Language
     providerName?: StringFilter<"CasinoGameTranslation"> | string
     categoryName?: StringFilter<"CasinoGameTranslation"> | string
@@ -82430,6 +82433,7 @@ export namespace Prisma {
   }
 
   export type CasinoGameCreateWithoutTranslationsInput = {
+    id?: bigint | number
     aggregatorType: $Enums.GameAggregatorType
     provider: $Enums.GameProvider
     category: $Enums.GameCategory
@@ -82449,7 +82453,7 @@ export namespace Prisma {
   }
 
   export type CasinoGameUncheckedCreateWithoutTranslationsInput = {
-    id?: number
+    id?: bigint | number
     aggregatorType: $Enums.GameAggregatorType
     provider: $Enums.GameProvider
     category: $Enums.GameCategory
@@ -82485,6 +82489,7 @@ export namespace Prisma {
   }
 
   export type CasinoGameUpdateWithoutTranslationsInput = {
+    id?: BigIntFieldUpdateOperationsInput | bigint | number
     aggregatorType?: EnumGameAggregatorTypeFieldUpdateOperationsInput | $Enums.GameAggregatorType
     provider?: EnumGameProviderFieldUpdateOperationsInput | $Enums.GameProvider
     category?: EnumGameCategoryFieldUpdateOperationsInput | $Enums.GameCategory
@@ -82504,7 +82509,7 @@ export namespace Prisma {
   }
 
   export type CasinoGameUncheckedUpdateWithoutTranslationsInput = {
-    id?: IntFieldUpdateOperationsInput | number
+    id?: BigIntFieldUpdateOperationsInput | bigint | number
     aggregatorType?: EnumGameAggregatorTypeFieldUpdateOperationsInput | $Enums.GameAggregatorType
     provider?: EnumGameProviderFieldUpdateOperationsInput | $Enums.GameProvider
     category?: EnumGameCategoryFieldUpdateOperationsInput | $Enums.GameCategory
@@ -82581,7 +82586,7 @@ export namespace Prisma {
     jackpotContributionAmount?: Decimal | DecimalJsLike | number | string
     startedAt?: Date | string | null
     completedAt?: Date | string | null
-    gameId?: number | null
+    gameId?: bigint | number | null
     AffiliateCommission?: AffiliateCommissionUncheckedCreateNestedManyWithoutGameRoundInput
     bets?: GameBetUncheckedCreateNestedManyWithoutGameRoundInput
     wins?: GameWinUncheckedCreateNestedManyWithoutGameRoundInput
@@ -82598,6 +82603,7 @@ export namespace Prisma {
   }
 
   export type CasinoGameCreateWithoutGameSessionsInput = {
+    id?: bigint | number
     aggregatorType: $Enums.GameAggregatorType
     provider: $Enums.GameProvider
     category: $Enums.GameCategory
@@ -82617,7 +82623,7 @@ export namespace Prisma {
   }
 
   export type CasinoGameUncheckedCreateWithoutGameSessionsInput = {
-    id?: number
+    id?: bigint | number
     aggregatorType: $Enums.GameAggregatorType
     provider: $Enums.GameProvider
     category: $Enums.GameCategory
@@ -82764,6 +82770,7 @@ export namespace Prisma {
   }
 
   export type CasinoGameUpdateWithoutGameSessionsInput = {
+    id?: BigIntFieldUpdateOperationsInput | bigint | number
     aggregatorType?: EnumGameAggregatorTypeFieldUpdateOperationsInput | $Enums.GameAggregatorType
     provider?: EnumGameProviderFieldUpdateOperationsInput | $Enums.GameProvider
     category?: EnumGameCategoryFieldUpdateOperationsInput | $Enums.GameCategory
@@ -82783,7 +82790,7 @@ export namespace Prisma {
   }
 
   export type CasinoGameUncheckedUpdateWithoutGameSessionsInput = {
-    id?: IntFieldUpdateOperationsInput | number
+    id?: BigIntFieldUpdateOperationsInput | bigint | number
     aggregatorType?: EnumGameAggregatorTypeFieldUpdateOperationsInput | $Enums.GameAggregatorType
     provider?: EnumGameProviderFieldUpdateOperationsInput | $Enums.GameProvider
     category?: EnumGameCategoryFieldUpdateOperationsInput | $Enums.GameCategory
@@ -83222,7 +83229,7 @@ export namespace Prisma {
     gameCurrency: $Enums.ExchangeCurrencyCode
     exchangeRate: Decimal | DecimalJsLike | number | string
     exchangeRateSnapshotAt?: Date | string
-    gameId?: number | null
+    gameId?: bigint | number | null
     gameRounds?: GameRoundUncheckedCreateNestedManyWithoutGameSessionInput
   }
 
@@ -85006,7 +85013,7 @@ export namespace Prisma {
     aggregatorSessionId?: string | null
     isEndRound?: boolean | null
     description?: string | null
-    gameId?: number | null
+    gameId?: bigint | number | null
   }
 
   export type BonusDetailCreateOrConnectWithoutTransactionInput = {
@@ -85167,7 +85174,7 @@ export namespace Prisma {
     jackpotContributionAmount?: Decimal | DecimalJsLike | number | string
     startedAt?: Date | string | null
     completedAt?: Date | string | null
-    gameId?: number | null
+    gameId?: bigint | number | null
     gameSessionId: bigint | number
     AffiliateCommission?: AffiliateCommissionUncheckedCreateNestedManyWithoutGameRoundInput
     bets?: GameBetUncheckedCreateNestedManyWithoutGameRoundInput
@@ -85437,7 +85444,7 @@ export namespace Prisma {
     aggregatorSessionId?: NullableStringFieldUpdateOperationsInput | string | null
     isEndRound?: NullableBoolFieldUpdateOperationsInput | boolean | null
     description?: NullableStringFieldUpdateOperationsInput | string | null
-    gameId?: NullableIntFieldUpdateOperationsInput | number | null
+    gameId?: NullableBigIntFieldUpdateOperationsInput | bigint | number | null
   }
 
   export type CompTransactionUpsertWithoutTransactionInput = {
@@ -85616,7 +85623,7 @@ export namespace Prisma {
     jackpotContributionAmount?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
     startedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     completedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
-    gameId?: NullableIntFieldUpdateOperationsInput | number | null
+    gameId?: NullableBigIntFieldUpdateOperationsInput | bigint | number | null
     gameSessionId?: BigIntFieldUpdateOperationsInput | bigint | number
     AffiliateCommission?: AffiliateCommissionUncheckedUpdateManyWithoutGameRoundNestedInput
     bets?: GameBetUncheckedUpdateManyWithoutGameRoundNestedInput
@@ -85945,6 +85952,7 @@ export namespace Prisma {
   }
 
   export type CasinoGameCreateWithoutGameRoundsInput = {
+    id?: bigint | number
     aggregatorType: $Enums.GameAggregatorType
     provider: $Enums.GameProvider
     category: $Enums.GameCategory
@@ -85964,7 +85972,7 @@ export namespace Prisma {
   }
 
   export type CasinoGameUncheckedCreateWithoutGameRoundsInput = {
-    id?: number
+    id?: bigint | number
     aggregatorType: $Enums.GameAggregatorType
     provider: $Enums.GameProvider
     category: $Enums.GameCategory
@@ -86015,7 +86023,7 @@ export namespace Prisma {
     gameCurrency: $Enums.ExchangeCurrencyCode
     exchangeRate: Decimal | DecimalJsLike | number | string
     exchangeRateSnapshotAt?: Date | string
-    gameId?: number | null
+    gameId?: bigint | number | null
   }
 
   export type CasinoGameSessionCreateOrConnectWithoutGameRoundsInput = {
@@ -86166,6 +86174,7 @@ export namespace Prisma {
   }
 
   export type CasinoGameUpdateWithoutGameRoundsInput = {
+    id?: BigIntFieldUpdateOperationsInput | bigint | number
     aggregatorType?: EnumGameAggregatorTypeFieldUpdateOperationsInput | $Enums.GameAggregatorType
     provider?: EnumGameProviderFieldUpdateOperationsInput | $Enums.GameProvider
     category?: EnumGameCategoryFieldUpdateOperationsInput | $Enums.GameCategory
@@ -86185,7 +86194,7 @@ export namespace Prisma {
   }
 
   export type CasinoGameUncheckedUpdateWithoutGameRoundsInput = {
-    id?: IntFieldUpdateOperationsInput | number
+    id?: BigIntFieldUpdateOperationsInput | bigint | number
     aggregatorType?: EnumGameAggregatorTypeFieldUpdateOperationsInput | $Enums.GameAggregatorType
     provider?: EnumGameProviderFieldUpdateOperationsInput | $Enums.GameProvider
     category?: EnumGameCategoryFieldUpdateOperationsInput | $Enums.GameCategory
@@ -86242,7 +86251,7 @@ export namespace Prisma {
     gameCurrency?: EnumExchangeCurrencyCodeFieldUpdateOperationsInput | $Enums.ExchangeCurrencyCode
     exchangeRate?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
     exchangeRateSnapshotAt?: DateTimeFieldUpdateOperationsInput | Date | string
-    gameId?: NullableIntFieldUpdateOperationsInput | number | null
+    gameId?: NullableBigIntFieldUpdateOperationsInput | bigint | number | null
   }
 
   export type TransactionUpsertWithoutGameRoundInput = {
@@ -86387,7 +86396,7 @@ export namespace Prisma {
     jackpotContributionAmount?: Decimal | DecimalJsLike | number | string
     startedAt?: Date | string | null
     completedAt?: Date | string | null
-    gameId?: number | null
+    gameId?: bigint | number | null
     gameSessionId: bigint | number
     AffiliateCommission?: AffiliateCommissionUncheckedCreateNestedManyWithoutGameRoundInput
     wins?: GameWinUncheckedCreateNestedManyWithoutGameRoundInput
@@ -86467,7 +86476,7 @@ export namespace Prisma {
     jackpotContributionAmount?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
     startedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     completedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
-    gameId?: NullableIntFieldUpdateOperationsInput | number | null
+    gameId?: NullableBigIntFieldUpdateOperationsInput | bigint | number | null
     gameSessionId?: BigIntFieldUpdateOperationsInput | bigint | number
     AffiliateCommission?: AffiliateCommissionUncheckedUpdateManyWithoutGameRoundNestedInput
     wins?: GameWinUncheckedUpdateManyWithoutGameRoundNestedInput
@@ -86531,7 +86540,7 @@ export namespace Prisma {
     jackpotContributionAmount?: Decimal | DecimalJsLike | number | string
     startedAt?: Date | string | null
     completedAt?: Date | string | null
-    gameId?: number | null
+    gameId?: bigint | number | null
     gameSessionId: bigint | number
     AffiliateCommission?: AffiliateCommissionUncheckedCreateNestedManyWithoutGameRoundInput
     bets?: GameBetUncheckedCreateNestedManyWithoutGameRoundInput
@@ -86611,7 +86620,7 @@ export namespace Prisma {
     jackpotContributionAmount?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
     startedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     completedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
-    gameId?: NullableIntFieldUpdateOperationsInput | number | null
+    gameId?: NullableBigIntFieldUpdateOperationsInput | bigint | number | null
     gameSessionId?: BigIntFieldUpdateOperationsInput | bigint | number
     AffiliateCommission?: AffiliateCommissionUncheckedUpdateManyWithoutGameRoundNestedInput
     bets?: GameBetUncheckedUpdateManyWithoutGameRoundNestedInput
@@ -86714,6 +86723,7 @@ export namespace Prisma {
   }
 
   export type CasinoGameCreateWithoutBonusDetailsInput = {
+    id?: bigint | number
     aggregatorType: $Enums.GameAggregatorType
     provider: $Enums.GameProvider
     category: $Enums.GameCategory
@@ -86733,7 +86743,7 @@ export namespace Prisma {
   }
 
   export type CasinoGameUncheckedCreateWithoutBonusDetailsInput = {
-    id?: number
+    id?: bigint | number
     aggregatorType: $Enums.GameAggregatorType
     provider: $Enums.GameProvider
     category: $Enums.GameCategory
@@ -86814,6 +86824,7 @@ export namespace Prisma {
   }
 
   export type CasinoGameUpdateWithoutBonusDetailsInput = {
+    id?: BigIntFieldUpdateOperationsInput | bigint | number
     aggregatorType?: EnumGameAggregatorTypeFieldUpdateOperationsInput | $Enums.GameAggregatorType
     provider?: EnumGameProviderFieldUpdateOperationsInput | $Enums.GameProvider
     category?: EnumGameCategoryFieldUpdateOperationsInput | $Enums.GameCategory
@@ -86833,7 +86844,7 @@ export namespace Prisma {
   }
 
   export type CasinoGameUncheckedUpdateWithoutBonusDetailsInput = {
-    id?: IntFieldUpdateOperationsInput | number
+    id?: BigIntFieldUpdateOperationsInput | bigint | number
     aggregatorType?: EnumGameAggregatorTypeFieldUpdateOperationsInput | $Enums.GameAggregatorType
     provider?: EnumGameProviderFieldUpdateOperationsInput | $Enums.GameProvider
     category?: EnumGameCategoryFieldUpdateOperationsInput | $Enums.GameCategory
@@ -88754,7 +88765,7 @@ export namespace Prisma {
     jackpotContributionAmount?: Decimal | DecimalJsLike | number | string
     startedAt?: Date | string | null
     completedAt?: Date | string | null
-    gameId?: number | null
+    gameId?: bigint | number | null
     gameSessionId: bigint | number
     bets?: GameBetUncheckedCreateNestedManyWithoutGameRoundInput
     wins?: GameWinUncheckedCreateNestedManyWithoutGameRoundInput
@@ -89030,7 +89041,7 @@ export namespace Prisma {
     jackpotContributionAmount?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
     startedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     completedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
-    gameId?: NullableIntFieldUpdateOperationsInput | number | null
+    gameId?: NullableBigIntFieldUpdateOperationsInput | bigint | number | null
     gameSessionId?: BigIntFieldUpdateOperationsInput | bigint | number
     bets?: GameBetUncheckedUpdateManyWithoutGameRoundNestedInput
     wins?: GameWinUncheckedUpdateManyWithoutGameRoundNestedInput
@@ -90953,398 +90964,6 @@ export namespace Prisma {
     adminAdjustmentDetails?: AdminAdjustmentDetailUncheckedUpdateManyWithoutAdminUserNestedInput
   }
 
-  export type UserCreateWithoutUserSessionInput = {
-    id?: bigint | number
-    uid?: string
-    whitecliffId?: bigint | number | null
-    whitecliffSystemId?: bigint | number | null
-    whitecliffUsername?: string | null
-    dcsId?: string | null
-    email?: string | null
-    passwordHash?: string | null
-    socialType?: $Enums.SocialType | null
-    socialId?: string | null
-    role?: $Enums.UserRoleType
-    status?: $Enums.UserStatus
-    kycLevel?: $Enums.KycLevel
-    country?: string | null
-    language?: $Enums.Language | null
-    timezone?: string | null
-    timezoneOffset?: number | null
-    createdAt?: Date | string
-    updatedAt?: Date | string
-    affiliateCodes?: AffiliateCodeCreateNestedManyWithoutUserInput
-    affiliateCommissions?: AffiliateCommissionCreateNestedManyWithoutAffiliateInput
-    subUserCommissions?: AffiliateCommissionCreateNestedManyWithoutSubUserInput
-    affiliateTier?: AffiliateTierCreateNestedOneWithoutAffiliateInput
-    affiliateWallets?: AffiliateWalletCreateNestedManyWithoutAffiliateInput
-    CompTransaction?: CompTransactionCreateNestedManyWithoutUserInput
-    DailyCompEarning?: DailyCompEarningCreateNestedManyWithoutUserInput
-    EmailLog?: EmailLogCreateNestedManyWithoutUserInput
-    GameSession?: CasinoGameSessionCreateNestedManyWithoutUserInput
-    affiliateReferrals?: ReferralCreateNestedManyWithoutAffiliateInput
-    referredUsers?: ReferralCreateNestedManyWithoutSubUserInput
-    Rolling?: RollingCreateNestedManyWithoutUserInput
-    transactions?: TransactionCreateNestedManyWithoutUserInput
-    depositDetails?: DepositDetailCreateNestedManyWithoutUserInput
-    balances?: UserBalanceCreateNestedManyWithoutUserInput
-    UserBalanceStats?: UserBalanceStatsCreateNestedManyWithoutUserInput
-    UserPromotion?: UserPromotionCreateNestedManyWithoutUserInput
-    RevokedSessions?: UserSessionCreateNestedManyWithoutRevokedByUserInput
-    UserToken?: UserTokenCreateNestedManyWithoutUserInput
-    loginAttempts?: LoginAttemptCreateNestedManyWithoutUserInput
-    userTier?: UserTierCreateNestedOneWithoutUserInput
-    tierHistory?: TierHistoryCreateNestedManyWithoutUserInput
-    adminAdjustmentDetails?: AdminAdjustmentDetailCreateNestedManyWithoutAdminUserInput
-  }
-
-  export type UserUncheckedCreateWithoutUserSessionInput = {
-    id?: bigint | number
-    uid?: string
-    whitecliffId?: bigint | number | null
-    whitecliffSystemId?: bigint | number | null
-    whitecliffUsername?: string | null
-    dcsId?: string | null
-    email?: string | null
-    passwordHash?: string | null
-    socialType?: $Enums.SocialType | null
-    socialId?: string | null
-    role?: $Enums.UserRoleType
-    status?: $Enums.UserStatus
-    kycLevel?: $Enums.KycLevel
-    country?: string | null
-    language?: $Enums.Language | null
-    timezone?: string | null
-    timezoneOffset?: number | null
-    createdAt?: Date | string
-    updatedAt?: Date | string
-    affiliateCodes?: AffiliateCodeUncheckedCreateNestedManyWithoutUserInput
-    affiliateCommissions?: AffiliateCommissionUncheckedCreateNestedManyWithoutAffiliateInput
-    subUserCommissions?: AffiliateCommissionUncheckedCreateNestedManyWithoutSubUserInput
-    affiliateTier?: AffiliateTierUncheckedCreateNestedOneWithoutAffiliateInput
-    affiliateWallets?: AffiliateWalletUncheckedCreateNestedManyWithoutAffiliateInput
-    CompTransaction?: CompTransactionUncheckedCreateNestedManyWithoutUserInput
-    DailyCompEarning?: DailyCompEarningUncheckedCreateNestedManyWithoutUserInput
-    EmailLog?: EmailLogUncheckedCreateNestedManyWithoutUserInput
-    GameSession?: CasinoGameSessionUncheckedCreateNestedManyWithoutUserInput
-    affiliateReferrals?: ReferralUncheckedCreateNestedManyWithoutAffiliateInput
-    referredUsers?: ReferralUncheckedCreateNestedManyWithoutSubUserInput
-    Rolling?: RollingUncheckedCreateNestedManyWithoutUserInput
-    transactions?: TransactionUncheckedCreateNestedManyWithoutUserInput
-    depositDetails?: DepositDetailUncheckedCreateNestedManyWithoutUserInput
-    balances?: UserBalanceUncheckedCreateNestedManyWithoutUserInput
-    UserBalanceStats?: UserBalanceStatsUncheckedCreateNestedManyWithoutUserInput
-    UserPromotion?: UserPromotionUncheckedCreateNestedManyWithoutUserInput
-    RevokedSessions?: UserSessionUncheckedCreateNestedManyWithoutRevokedByUserInput
-    UserToken?: UserTokenUncheckedCreateNestedManyWithoutUserInput
-    loginAttempts?: LoginAttemptUncheckedCreateNestedManyWithoutUserInput
-    userTier?: UserTierUncheckedCreateNestedOneWithoutUserInput
-    tierHistory?: TierHistoryUncheckedCreateNestedManyWithoutUserInput
-    adminAdjustmentDetails?: AdminAdjustmentDetailUncheckedCreateNestedManyWithoutAdminUserInput
-  }
-
-  export type UserCreateOrConnectWithoutUserSessionInput = {
-    where: UserWhereUniqueInput
-    create: XOR<UserCreateWithoutUserSessionInput, UserUncheckedCreateWithoutUserSessionInput>
-  }
-
-  export type UserCreateWithoutRevokedSessionsInput = {
-    id?: bigint | number
-    uid?: string
-    whitecliffId?: bigint | number | null
-    whitecliffSystemId?: bigint | number | null
-    whitecliffUsername?: string | null
-    dcsId?: string | null
-    email?: string | null
-    passwordHash?: string | null
-    socialType?: $Enums.SocialType | null
-    socialId?: string | null
-    role?: $Enums.UserRoleType
-    status?: $Enums.UserStatus
-    kycLevel?: $Enums.KycLevel
-    country?: string | null
-    language?: $Enums.Language | null
-    timezone?: string | null
-    timezoneOffset?: number | null
-    createdAt?: Date | string
-    updatedAt?: Date | string
-    affiliateCodes?: AffiliateCodeCreateNestedManyWithoutUserInput
-    affiliateCommissions?: AffiliateCommissionCreateNestedManyWithoutAffiliateInput
-    subUserCommissions?: AffiliateCommissionCreateNestedManyWithoutSubUserInput
-    affiliateTier?: AffiliateTierCreateNestedOneWithoutAffiliateInput
-    affiliateWallets?: AffiliateWalletCreateNestedManyWithoutAffiliateInput
-    CompTransaction?: CompTransactionCreateNestedManyWithoutUserInput
-    DailyCompEarning?: DailyCompEarningCreateNestedManyWithoutUserInput
-    EmailLog?: EmailLogCreateNestedManyWithoutUserInput
-    GameSession?: CasinoGameSessionCreateNestedManyWithoutUserInput
-    affiliateReferrals?: ReferralCreateNestedManyWithoutAffiliateInput
-    referredUsers?: ReferralCreateNestedManyWithoutSubUserInput
-    Rolling?: RollingCreateNestedManyWithoutUserInput
-    transactions?: TransactionCreateNestedManyWithoutUserInput
-    depositDetails?: DepositDetailCreateNestedManyWithoutUserInput
-    balances?: UserBalanceCreateNestedManyWithoutUserInput
-    UserBalanceStats?: UserBalanceStatsCreateNestedManyWithoutUserInput
-    UserPromotion?: UserPromotionCreateNestedManyWithoutUserInput
-    UserSession?: UserSessionCreateNestedManyWithoutUserInput
-    UserToken?: UserTokenCreateNestedManyWithoutUserInput
-    loginAttempts?: LoginAttemptCreateNestedManyWithoutUserInput
-    userTier?: UserTierCreateNestedOneWithoutUserInput
-    tierHistory?: TierHistoryCreateNestedManyWithoutUserInput
-    adminAdjustmentDetails?: AdminAdjustmentDetailCreateNestedManyWithoutAdminUserInput
-  }
-
-  export type UserUncheckedCreateWithoutRevokedSessionsInput = {
-    id?: bigint | number
-    uid?: string
-    whitecliffId?: bigint | number | null
-    whitecliffSystemId?: bigint | number | null
-    whitecliffUsername?: string | null
-    dcsId?: string | null
-    email?: string | null
-    passwordHash?: string | null
-    socialType?: $Enums.SocialType | null
-    socialId?: string | null
-    role?: $Enums.UserRoleType
-    status?: $Enums.UserStatus
-    kycLevel?: $Enums.KycLevel
-    country?: string | null
-    language?: $Enums.Language | null
-    timezone?: string | null
-    timezoneOffset?: number | null
-    createdAt?: Date | string
-    updatedAt?: Date | string
-    affiliateCodes?: AffiliateCodeUncheckedCreateNestedManyWithoutUserInput
-    affiliateCommissions?: AffiliateCommissionUncheckedCreateNestedManyWithoutAffiliateInput
-    subUserCommissions?: AffiliateCommissionUncheckedCreateNestedManyWithoutSubUserInput
-    affiliateTier?: AffiliateTierUncheckedCreateNestedOneWithoutAffiliateInput
-    affiliateWallets?: AffiliateWalletUncheckedCreateNestedManyWithoutAffiliateInput
-    CompTransaction?: CompTransactionUncheckedCreateNestedManyWithoutUserInput
-    DailyCompEarning?: DailyCompEarningUncheckedCreateNestedManyWithoutUserInput
-    EmailLog?: EmailLogUncheckedCreateNestedManyWithoutUserInput
-    GameSession?: CasinoGameSessionUncheckedCreateNestedManyWithoutUserInput
-    affiliateReferrals?: ReferralUncheckedCreateNestedManyWithoutAffiliateInput
-    referredUsers?: ReferralUncheckedCreateNestedManyWithoutSubUserInput
-    Rolling?: RollingUncheckedCreateNestedManyWithoutUserInput
-    transactions?: TransactionUncheckedCreateNestedManyWithoutUserInput
-    depositDetails?: DepositDetailUncheckedCreateNestedManyWithoutUserInput
-    balances?: UserBalanceUncheckedCreateNestedManyWithoutUserInput
-    UserBalanceStats?: UserBalanceStatsUncheckedCreateNestedManyWithoutUserInput
-    UserPromotion?: UserPromotionUncheckedCreateNestedManyWithoutUserInput
-    UserSession?: UserSessionUncheckedCreateNestedManyWithoutUserInput
-    UserToken?: UserTokenUncheckedCreateNestedManyWithoutUserInput
-    loginAttempts?: LoginAttemptUncheckedCreateNestedManyWithoutUserInput
-    userTier?: UserTierUncheckedCreateNestedOneWithoutUserInput
-    tierHistory?: TierHistoryUncheckedCreateNestedManyWithoutUserInput
-    adminAdjustmentDetails?: AdminAdjustmentDetailUncheckedCreateNestedManyWithoutAdminUserInput
-  }
-
-  export type UserCreateOrConnectWithoutRevokedSessionsInput = {
-    where: UserWhereUniqueInput
-    create: XOR<UserCreateWithoutRevokedSessionsInput, UserUncheckedCreateWithoutRevokedSessionsInput>
-  }
-
-  export type UserUpsertWithoutUserSessionInput = {
-    update: XOR<UserUpdateWithoutUserSessionInput, UserUncheckedUpdateWithoutUserSessionInput>
-    create: XOR<UserCreateWithoutUserSessionInput, UserUncheckedCreateWithoutUserSessionInput>
-    where?: UserWhereInput
-  }
-
-  export type UserUpdateToOneWithWhereWithoutUserSessionInput = {
-    where?: UserWhereInput
-    data: XOR<UserUpdateWithoutUserSessionInput, UserUncheckedUpdateWithoutUserSessionInput>
-  }
-
-  export type UserUpdateWithoutUserSessionInput = {
-    id?: BigIntFieldUpdateOperationsInput | bigint | number
-    uid?: StringFieldUpdateOperationsInput | string
-    whitecliffId?: NullableBigIntFieldUpdateOperationsInput | bigint | number | null
-    whitecliffSystemId?: NullableBigIntFieldUpdateOperationsInput | bigint | number | null
-    whitecliffUsername?: NullableStringFieldUpdateOperationsInput | string | null
-    dcsId?: NullableStringFieldUpdateOperationsInput | string | null
-    email?: NullableStringFieldUpdateOperationsInput | string | null
-    passwordHash?: NullableStringFieldUpdateOperationsInput | string | null
-    socialType?: NullableEnumSocialTypeFieldUpdateOperationsInput | $Enums.SocialType | null
-    socialId?: NullableStringFieldUpdateOperationsInput | string | null
-    role?: EnumUserRoleTypeFieldUpdateOperationsInput | $Enums.UserRoleType
-    status?: EnumUserStatusFieldUpdateOperationsInput | $Enums.UserStatus
-    kycLevel?: EnumKycLevelFieldUpdateOperationsInput | $Enums.KycLevel
-    country?: NullableStringFieldUpdateOperationsInput | string | null
-    language?: NullableEnumLanguageFieldUpdateOperationsInput | $Enums.Language | null
-    timezone?: NullableStringFieldUpdateOperationsInput | string | null
-    timezoneOffset?: NullableIntFieldUpdateOperationsInput | number | null
-    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
-    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
-    affiliateCodes?: AffiliateCodeUpdateManyWithoutUserNestedInput
-    affiliateCommissions?: AffiliateCommissionUpdateManyWithoutAffiliateNestedInput
-    subUserCommissions?: AffiliateCommissionUpdateManyWithoutSubUserNestedInput
-    affiliateTier?: AffiliateTierUpdateOneWithoutAffiliateNestedInput
-    affiliateWallets?: AffiliateWalletUpdateManyWithoutAffiliateNestedInput
-    CompTransaction?: CompTransactionUpdateManyWithoutUserNestedInput
-    DailyCompEarning?: DailyCompEarningUpdateManyWithoutUserNestedInput
-    EmailLog?: EmailLogUpdateManyWithoutUserNestedInput
-    GameSession?: CasinoGameSessionUpdateManyWithoutUserNestedInput
-    affiliateReferrals?: ReferralUpdateManyWithoutAffiliateNestedInput
-    referredUsers?: ReferralUpdateManyWithoutSubUserNestedInput
-    Rolling?: RollingUpdateManyWithoutUserNestedInput
-    transactions?: TransactionUpdateManyWithoutUserNestedInput
-    depositDetails?: DepositDetailUpdateManyWithoutUserNestedInput
-    balances?: UserBalanceUpdateManyWithoutUserNestedInput
-    UserBalanceStats?: UserBalanceStatsUpdateManyWithoutUserNestedInput
-    UserPromotion?: UserPromotionUpdateManyWithoutUserNestedInput
-    RevokedSessions?: UserSessionUpdateManyWithoutRevokedByUserNestedInput
-    UserToken?: UserTokenUpdateManyWithoutUserNestedInput
-    loginAttempts?: LoginAttemptUpdateManyWithoutUserNestedInput
-    userTier?: UserTierUpdateOneWithoutUserNestedInput
-    tierHistory?: TierHistoryUpdateManyWithoutUserNestedInput
-    adminAdjustmentDetails?: AdminAdjustmentDetailUpdateManyWithoutAdminUserNestedInput
-  }
-
-  export type UserUncheckedUpdateWithoutUserSessionInput = {
-    id?: BigIntFieldUpdateOperationsInput | bigint | number
-    uid?: StringFieldUpdateOperationsInput | string
-    whitecliffId?: NullableBigIntFieldUpdateOperationsInput | bigint | number | null
-    whitecliffSystemId?: NullableBigIntFieldUpdateOperationsInput | bigint | number | null
-    whitecliffUsername?: NullableStringFieldUpdateOperationsInput | string | null
-    dcsId?: NullableStringFieldUpdateOperationsInput | string | null
-    email?: NullableStringFieldUpdateOperationsInput | string | null
-    passwordHash?: NullableStringFieldUpdateOperationsInput | string | null
-    socialType?: NullableEnumSocialTypeFieldUpdateOperationsInput | $Enums.SocialType | null
-    socialId?: NullableStringFieldUpdateOperationsInput | string | null
-    role?: EnumUserRoleTypeFieldUpdateOperationsInput | $Enums.UserRoleType
-    status?: EnumUserStatusFieldUpdateOperationsInput | $Enums.UserStatus
-    kycLevel?: EnumKycLevelFieldUpdateOperationsInput | $Enums.KycLevel
-    country?: NullableStringFieldUpdateOperationsInput | string | null
-    language?: NullableEnumLanguageFieldUpdateOperationsInput | $Enums.Language | null
-    timezone?: NullableStringFieldUpdateOperationsInput | string | null
-    timezoneOffset?: NullableIntFieldUpdateOperationsInput | number | null
-    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
-    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
-    affiliateCodes?: AffiliateCodeUncheckedUpdateManyWithoutUserNestedInput
-    affiliateCommissions?: AffiliateCommissionUncheckedUpdateManyWithoutAffiliateNestedInput
-    subUserCommissions?: AffiliateCommissionUncheckedUpdateManyWithoutSubUserNestedInput
-    affiliateTier?: AffiliateTierUncheckedUpdateOneWithoutAffiliateNestedInput
-    affiliateWallets?: AffiliateWalletUncheckedUpdateManyWithoutAffiliateNestedInput
-    CompTransaction?: CompTransactionUncheckedUpdateManyWithoutUserNestedInput
-    DailyCompEarning?: DailyCompEarningUncheckedUpdateManyWithoutUserNestedInput
-    EmailLog?: EmailLogUncheckedUpdateManyWithoutUserNestedInput
-    GameSession?: CasinoGameSessionUncheckedUpdateManyWithoutUserNestedInput
-    affiliateReferrals?: ReferralUncheckedUpdateManyWithoutAffiliateNestedInput
-    referredUsers?: ReferralUncheckedUpdateManyWithoutSubUserNestedInput
-    Rolling?: RollingUncheckedUpdateManyWithoutUserNestedInput
-    transactions?: TransactionUncheckedUpdateManyWithoutUserNestedInput
-    depositDetails?: DepositDetailUncheckedUpdateManyWithoutUserNestedInput
-    balances?: UserBalanceUncheckedUpdateManyWithoutUserNestedInput
-    UserBalanceStats?: UserBalanceStatsUncheckedUpdateManyWithoutUserNestedInput
-    UserPromotion?: UserPromotionUncheckedUpdateManyWithoutUserNestedInput
-    RevokedSessions?: UserSessionUncheckedUpdateManyWithoutRevokedByUserNestedInput
-    UserToken?: UserTokenUncheckedUpdateManyWithoutUserNestedInput
-    loginAttempts?: LoginAttemptUncheckedUpdateManyWithoutUserNestedInput
-    userTier?: UserTierUncheckedUpdateOneWithoutUserNestedInput
-    tierHistory?: TierHistoryUncheckedUpdateManyWithoutUserNestedInput
-    adminAdjustmentDetails?: AdminAdjustmentDetailUncheckedUpdateManyWithoutAdminUserNestedInput
-  }
-
-  export type UserUpsertWithoutRevokedSessionsInput = {
-    update: XOR<UserUpdateWithoutRevokedSessionsInput, UserUncheckedUpdateWithoutRevokedSessionsInput>
-    create: XOR<UserCreateWithoutRevokedSessionsInput, UserUncheckedCreateWithoutRevokedSessionsInput>
-    where?: UserWhereInput
-  }
-
-  export type UserUpdateToOneWithWhereWithoutRevokedSessionsInput = {
-    where?: UserWhereInput
-    data: XOR<UserUpdateWithoutRevokedSessionsInput, UserUncheckedUpdateWithoutRevokedSessionsInput>
-  }
-
-  export type UserUpdateWithoutRevokedSessionsInput = {
-    id?: BigIntFieldUpdateOperationsInput | bigint | number
-    uid?: StringFieldUpdateOperationsInput | string
-    whitecliffId?: NullableBigIntFieldUpdateOperationsInput | bigint | number | null
-    whitecliffSystemId?: NullableBigIntFieldUpdateOperationsInput | bigint | number | null
-    whitecliffUsername?: NullableStringFieldUpdateOperationsInput | string | null
-    dcsId?: NullableStringFieldUpdateOperationsInput | string | null
-    email?: NullableStringFieldUpdateOperationsInput | string | null
-    passwordHash?: NullableStringFieldUpdateOperationsInput | string | null
-    socialType?: NullableEnumSocialTypeFieldUpdateOperationsInput | $Enums.SocialType | null
-    socialId?: NullableStringFieldUpdateOperationsInput | string | null
-    role?: EnumUserRoleTypeFieldUpdateOperationsInput | $Enums.UserRoleType
-    status?: EnumUserStatusFieldUpdateOperationsInput | $Enums.UserStatus
-    kycLevel?: EnumKycLevelFieldUpdateOperationsInput | $Enums.KycLevel
-    country?: NullableStringFieldUpdateOperationsInput | string | null
-    language?: NullableEnumLanguageFieldUpdateOperationsInput | $Enums.Language | null
-    timezone?: NullableStringFieldUpdateOperationsInput | string | null
-    timezoneOffset?: NullableIntFieldUpdateOperationsInput | number | null
-    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
-    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
-    affiliateCodes?: AffiliateCodeUpdateManyWithoutUserNestedInput
-    affiliateCommissions?: AffiliateCommissionUpdateManyWithoutAffiliateNestedInput
-    subUserCommissions?: AffiliateCommissionUpdateManyWithoutSubUserNestedInput
-    affiliateTier?: AffiliateTierUpdateOneWithoutAffiliateNestedInput
-    affiliateWallets?: AffiliateWalletUpdateManyWithoutAffiliateNestedInput
-    CompTransaction?: CompTransactionUpdateManyWithoutUserNestedInput
-    DailyCompEarning?: DailyCompEarningUpdateManyWithoutUserNestedInput
-    EmailLog?: EmailLogUpdateManyWithoutUserNestedInput
-    GameSession?: CasinoGameSessionUpdateManyWithoutUserNestedInput
-    affiliateReferrals?: ReferralUpdateManyWithoutAffiliateNestedInput
-    referredUsers?: ReferralUpdateManyWithoutSubUserNestedInput
-    Rolling?: RollingUpdateManyWithoutUserNestedInput
-    transactions?: TransactionUpdateManyWithoutUserNestedInput
-    depositDetails?: DepositDetailUpdateManyWithoutUserNestedInput
-    balances?: UserBalanceUpdateManyWithoutUserNestedInput
-    UserBalanceStats?: UserBalanceStatsUpdateManyWithoutUserNestedInput
-    UserPromotion?: UserPromotionUpdateManyWithoutUserNestedInput
-    UserSession?: UserSessionUpdateManyWithoutUserNestedInput
-    UserToken?: UserTokenUpdateManyWithoutUserNestedInput
-    loginAttempts?: LoginAttemptUpdateManyWithoutUserNestedInput
-    userTier?: UserTierUpdateOneWithoutUserNestedInput
-    tierHistory?: TierHistoryUpdateManyWithoutUserNestedInput
-    adminAdjustmentDetails?: AdminAdjustmentDetailUpdateManyWithoutAdminUserNestedInput
-  }
-
-  export type UserUncheckedUpdateWithoutRevokedSessionsInput = {
-    id?: BigIntFieldUpdateOperationsInput | bigint | number
-    uid?: StringFieldUpdateOperationsInput | string
-    whitecliffId?: NullableBigIntFieldUpdateOperationsInput | bigint | number | null
-    whitecliffSystemId?: NullableBigIntFieldUpdateOperationsInput | bigint | number | null
-    whitecliffUsername?: NullableStringFieldUpdateOperationsInput | string | null
-    dcsId?: NullableStringFieldUpdateOperationsInput | string | null
-    email?: NullableStringFieldUpdateOperationsInput | string | null
-    passwordHash?: NullableStringFieldUpdateOperationsInput | string | null
-    socialType?: NullableEnumSocialTypeFieldUpdateOperationsInput | $Enums.SocialType | null
-    socialId?: NullableStringFieldUpdateOperationsInput | string | null
-    role?: EnumUserRoleTypeFieldUpdateOperationsInput | $Enums.UserRoleType
-    status?: EnumUserStatusFieldUpdateOperationsInput | $Enums.UserStatus
-    kycLevel?: EnumKycLevelFieldUpdateOperationsInput | $Enums.KycLevel
-    country?: NullableStringFieldUpdateOperationsInput | string | null
-    language?: NullableEnumLanguageFieldUpdateOperationsInput | $Enums.Language | null
-    timezone?: NullableStringFieldUpdateOperationsInput | string | null
-    timezoneOffset?: NullableIntFieldUpdateOperationsInput | number | null
-    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
-    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
-    affiliateCodes?: AffiliateCodeUncheckedUpdateManyWithoutUserNestedInput
-    affiliateCommissions?: AffiliateCommissionUncheckedUpdateManyWithoutAffiliateNestedInput
-    subUserCommissions?: AffiliateCommissionUncheckedUpdateManyWithoutSubUserNestedInput
-    affiliateTier?: AffiliateTierUncheckedUpdateOneWithoutAffiliateNestedInput
-    affiliateWallets?: AffiliateWalletUncheckedUpdateManyWithoutAffiliateNestedInput
-    CompTransaction?: CompTransactionUncheckedUpdateManyWithoutUserNestedInput
-    DailyCompEarning?: DailyCompEarningUncheckedUpdateManyWithoutUserNestedInput
-    EmailLog?: EmailLogUncheckedUpdateManyWithoutUserNestedInput
-    GameSession?: CasinoGameSessionUncheckedUpdateManyWithoutUserNestedInput
-    affiliateReferrals?: ReferralUncheckedUpdateManyWithoutAffiliateNestedInput
-    referredUsers?: ReferralUncheckedUpdateManyWithoutSubUserNestedInput
-    Rolling?: RollingUncheckedUpdateManyWithoutUserNestedInput
-    transactions?: TransactionUncheckedUpdateManyWithoutUserNestedInput
-    depositDetails?: DepositDetailUncheckedUpdateManyWithoutUserNestedInput
-    balances?: UserBalanceUncheckedUpdateManyWithoutUserNestedInput
-    UserBalanceStats?: UserBalanceStatsUncheckedUpdateManyWithoutUserNestedInput
-    UserPromotion?: UserPromotionUncheckedUpdateManyWithoutUserNestedInput
-    UserSession?: UserSessionUncheckedUpdateManyWithoutUserNestedInput
-    UserToken?: UserTokenUncheckedUpdateManyWithoutUserNestedInput
-    loginAttempts?: LoginAttemptUncheckedUpdateManyWithoutUserNestedInput
-    userTier?: UserTierUncheckedUpdateOneWithoutUserNestedInput
-    tierHistory?: TierHistoryUncheckedUpdateManyWithoutUserNestedInput
-    adminAdjustmentDetails?: AdminAdjustmentDetailUncheckedUpdateManyWithoutAdminUserNestedInput
-  }
-
   export type UserTierCreateWithoutTierInput = {
     id?: bigint | number
     uid: string
@@ -92650,6 +92269,398 @@ export namespace Prisma {
     adminAdjustmentDetail?: AdminAdjustmentDetailUncheckedUpdateOneWithoutTransactionNestedInput
   }
 
+  export type UserCreateWithoutUserSessionInput = {
+    id?: bigint | number
+    uid?: string
+    whitecliffId?: bigint | number | null
+    whitecliffSystemId?: bigint | number | null
+    whitecliffUsername?: string | null
+    dcsId?: string | null
+    email?: string | null
+    passwordHash?: string | null
+    socialType?: $Enums.SocialType | null
+    socialId?: string | null
+    role?: $Enums.UserRoleType
+    status?: $Enums.UserStatus
+    kycLevel?: $Enums.KycLevel
+    country?: string | null
+    language?: $Enums.Language | null
+    timezone?: string | null
+    timezoneOffset?: number | null
+    createdAt?: Date | string
+    updatedAt?: Date | string
+    affiliateCodes?: AffiliateCodeCreateNestedManyWithoutUserInput
+    affiliateCommissions?: AffiliateCommissionCreateNestedManyWithoutAffiliateInput
+    subUserCommissions?: AffiliateCommissionCreateNestedManyWithoutSubUserInput
+    affiliateTier?: AffiliateTierCreateNestedOneWithoutAffiliateInput
+    affiliateWallets?: AffiliateWalletCreateNestedManyWithoutAffiliateInput
+    CompTransaction?: CompTransactionCreateNestedManyWithoutUserInput
+    DailyCompEarning?: DailyCompEarningCreateNestedManyWithoutUserInput
+    EmailLog?: EmailLogCreateNestedManyWithoutUserInput
+    GameSession?: CasinoGameSessionCreateNestedManyWithoutUserInput
+    affiliateReferrals?: ReferralCreateNestedManyWithoutAffiliateInput
+    referredUsers?: ReferralCreateNestedManyWithoutSubUserInput
+    Rolling?: RollingCreateNestedManyWithoutUserInput
+    transactions?: TransactionCreateNestedManyWithoutUserInput
+    depositDetails?: DepositDetailCreateNestedManyWithoutUserInput
+    balances?: UserBalanceCreateNestedManyWithoutUserInput
+    UserBalanceStats?: UserBalanceStatsCreateNestedManyWithoutUserInput
+    UserPromotion?: UserPromotionCreateNestedManyWithoutUserInput
+    RevokedSessions?: UserSessionCreateNestedManyWithoutRevokedByUserInput
+    UserToken?: UserTokenCreateNestedManyWithoutUserInput
+    loginAttempts?: LoginAttemptCreateNestedManyWithoutUserInput
+    userTier?: UserTierCreateNestedOneWithoutUserInput
+    tierHistory?: TierHistoryCreateNestedManyWithoutUserInput
+    adminAdjustmentDetails?: AdminAdjustmentDetailCreateNestedManyWithoutAdminUserInput
+  }
+
+  export type UserUncheckedCreateWithoutUserSessionInput = {
+    id?: bigint | number
+    uid?: string
+    whitecliffId?: bigint | number | null
+    whitecliffSystemId?: bigint | number | null
+    whitecliffUsername?: string | null
+    dcsId?: string | null
+    email?: string | null
+    passwordHash?: string | null
+    socialType?: $Enums.SocialType | null
+    socialId?: string | null
+    role?: $Enums.UserRoleType
+    status?: $Enums.UserStatus
+    kycLevel?: $Enums.KycLevel
+    country?: string | null
+    language?: $Enums.Language | null
+    timezone?: string | null
+    timezoneOffset?: number | null
+    createdAt?: Date | string
+    updatedAt?: Date | string
+    affiliateCodes?: AffiliateCodeUncheckedCreateNestedManyWithoutUserInput
+    affiliateCommissions?: AffiliateCommissionUncheckedCreateNestedManyWithoutAffiliateInput
+    subUserCommissions?: AffiliateCommissionUncheckedCreateNestedManyWithoutSubUserInput
+    affiliateTier?: AffiliateTierUncheckedCreateNestedOneWithoutAffiliateInput
+    affiliateWallets?: AffiliateWalletUncheckedCreateNestedManyWithoutAffiliateInput
+    CompTransaction?: CompTransactionUncheckedCreateNestedManyWithoutUserInput
+    DailyCompEarning?: DailyCompEarningUncheckedCreateNestedManyWithoutUserInput
+    EmailLog?: EmailLogUncheckedCreateNestedManyWithoutUserInput
+    GameSession?: CasinoGameSessionUncheckedCreateNestedManyWithoutUserInput
+    affiliateReferrals?: ReferralUncheckedCreateNestedManyWithoutAffiliateInput
+    referredUsers?: ReferralUncheckedCreateNestedManyWithoutSubUserInput
+    Rolling?: RollingUncheckedCreateNestedManyWithoutUserInput
+    transactions?: TransactionUncheckedCreateNestedManyWithoutUserInput
+    depositDetails?: DepositDetailUncheckedCreateNestedManyWithoutUserInput
+    balances?: UserBalanceUncheckedCreateNestedManyWithoutUserInput
+    UserBalanceStats?: UserBalanceStatsUncheckedCreateNestedManyWithoutUserInput
+    UserPromotion?: UserPromotionUncheckedCreateNestedManyWithoutUserInput
+    RevokedSessions?: UserSessionUncheckedCreateNestedManyWithoutRevokedByUserInput
+    UserToken?: UserTokenUncheckedCreateNestedManyWithoutUserInput
+    loginAttempts?: LoginAttemptUncheckedCreateNestedManyWithoutUserInput
+    userTier?: UserTierUncheckedCreateNestedOneWithoutUserInput
+    tierHistory?: TierHistoryUncheckedCreateNestedManyWithoutUserInput
+    adminAdjustmentDetails?: AdminAdjustmentDetailUncheckedCreateNestedManyWithoutAdminUserInput
+  }
+
+  export type UserCreateOrConnectWithoutUserSessionInput = {
+    where: UserWhereUniqueInput
+    create: XOR<UserCreateWithoutUserSessionInput, UserUncheckedCreateWithoutUserSessionInput>
+  }
+
+  export type UserCreateWithoutRevokedSessionsInput = {
+    id?: bigint | number
+    uid?: string
+    whitecliffId?: bigint | number | null
+    whitecliffSystemId?: bigint | number | null
+    whitecliffUsername?: string | null
+    dcsId?: string | null
+    email?: string | null
+    passwordHash?: string | null
+    socialType?: $Enums.SocialType | null
+    socialId?: string | null
+    role?: $Enums.UserRoleType
+    status?: $Enums.UserStatus
+    kycLevel?: $Enums.KycLevel
+    country?: string | null
+    language?: $Enums.Language | null
+    timezone?: string | null
+    timezoneOffset?: number | null
+    createdAt?: Date | string
+    updatedAt?: Date | string
+    affiliateCodes?: AffiliateCodeCreateNestedManyWithoutUserInput
+    affiliateCommissions?: AffiliateCommissionCreateNestedManyWithoutAffiliateInput
+    subUserCommissions?: AffiliateCommissionCreateNestedManyWithoutSubUserInput
+    affiliateTier?: AffiliateTierCreateNestedOneWithoutAffiliateInput
+    affiliateWallets?: AffiliateWalletCreateNestedManyWithoutAffiliateInput
+    CompTransaction?: CompTransactionCreateNestedManyWithoutUserInput
+    DailyCompEarning?: DailyCompEarningCreateNestedManyWithoutUserInput
+    EmailLog?: EmailLogCreateNestedManyWithoutUserInput
+    GameSession?: CasinoGameSessionCreateNestedManyWithoutUserInput
+    affiliateReferrals?: ReferralCreateNestedManyWithoutAffiliateInput
+    referredUsers?: ReferralCreateNestedManyWithoutSubUserInput
+    Rolling?: RollingCreateNestedManyWithoutUserInput
+    transactions?: TransactionCreateNestedManyWithoutUserInput
+    depositDetails?: DepositDetailCreateNestedManyWithoutUserInput
+    balances?: UserBalanceCreateNestedManyWithoutUserInput
+    UserBalanceStats?: UserBalanceStatsCreateNestedManyWithoutUserInput
+    UserPromotion?: UserPromotionCreateNestedManyWithoutUserInput
+    UserSession?: UserSessionCreateNestedManyWithoutUserInput
+    UserToken?: UserTokenCreateNestedManyWithoutUserInput
+    loginAttempts?: LoginAttemptCreateNestedManyWithoutUserInput
+    userTier?: UserTierCreateNestedOneWithoutUserInput
+    tierHistory?: TierHistoryCreateNestedManyWithoutUserInput
+    adminAdjustmentDetails?: AdminAdjustmentDetailCreateNestedManyWithoutAdminUserInput
+  }
+
+  export type UserUncheckedCreateWithoutRevokedSessionsInput = {
+    id?: bigint | number
+    uid?: string
+    whitecliffId?: bigint | number | null
+    whitecliffSystemId?: bigint | number | null
+    whitecliffUsername?: string | null
+    dcsId?: string | null
+    email?: string | null
+    passwordHash?: string | null
+    socialType?: $Enums.SocialType | null
+    socialId?: string | null
+    role?: $Enums.UserRoleType
+    status?: $Enums.UserStatus
+    kycLevel?: $Enums.KycLevel
+    country?: string | null
+    language?: $Enums.Language | null
+    timezone?: string | null
+    timezoneOffset?: number | null
+    createdAt?: Date | string
+    updatedAt?: Date | string
+    affiliateCodes?: AffiliateCodeUncheckedCreateNestedManyWithoutUserInput
+    affiliateCommissions?: AffiliateCommissionUncheckedCreateNestedManyWithoutAffiliateInput
+    subUserCommissions?: AffiliateCommissionUncheckedCreateNestedManyWithoutSubUserInput
+    affiliateTier?: AffiliateTierUncheckedCreateNestedOneWithoutAffiliateInput
+    affiliateWallets?: AffiliateWalletUncheckedCreateNestedManyWithoutAffiliateInput
+    CompTransaction?: CompTransactionUncheckedCreateNestedManyWithoutUserInput
+    DailyCompEarning?: DailyCompEarningUncheckedCreateNestedManyWithoutUserInput
+    EmailLog?: EmailLogUncheckedCreateNestedManyWithoutUserInput
+    GameSession?: CasinoGameSessionUncheckedCreateNestedManyWithoutUserInput
+    affiliateReferrals?: ReferralUncheckedCreateNestedManyWithoutAffiliateInput
+    referredUsers?: ReferralUncheckedCreateNestedManyWithoutSubUserInput
+    Rolling?: RollingUncheckedCreateNestedManyWithoutUserInput
+    transactions?: TransactionUncheckedCreateNestedManyWithoutUserInput
+    depositDetails?: DepositDetailUncheckedCreateNestedManyWithoutUserInput
+    balances?: UserBalanceUncheckedCreateNestedManyWithoutUserInput
+    UserBalanceStats?: UserBalanceStatsUncheckedCreateNestedManyWithoutUserInput
+    UserPromotion?: UserPromotionUncheckedCreateNestedManyWithoutUserInput
+    UserSession?: UserSessionUncheckedCreateNestedManyWithoutUserInput
+    UserToken?: UserTokenUncheckedCreateNestedManyWithoutUserInput
+    loginAttempts?: LoginAttemptUncheckedCreateNestedManyWithoutUserInput
+    userTier?: UserTierUncheckedCreateNestedOneWithoutUserInput
+    tierHistory?: TierHistoryUncheckedCreateNestedManyWithoutUserInput
+    adminAdjustmentDetails?: AdminAdjustmentDetailUncheckedCreateNestedManyWithoutAdminUserInput
+  }
+
+  export type UserCreateOrConnectWithoutRevokedSessionsInput = {
+    where: UserWhereUniqueInput
+    create: XOR<UserCreateWithoutRevokedSessionsInput, UserUncheckedCreateWithoutRevokedSessionsInput>
+  }
+
+  export type UserUpsertWithoutUserSessionInput = {
+    update: XOR<UserUpdateWithoutUserSessionInput, UserUncheckedUpdateWithoutUserSessionInput>
+    create: XOR<UserCreateWithoutUserSessionInput, UserUncheckedCreateWithoutUserSessionInput>
+    where?: UserWhereInput
+  }
+
+  export type UserUpdateToOneWithWhereWithoutUserSessionInput = {
+    where?: UserWhereInput
+    data: XOR<UserUpdateWithoutUserSessionInput, UserUncheckedUpdateWithoutUserSessionInput>
+  }
+
+  export type UserUpdateWithoutUserSessionInput = {
+    id?: BigIntFieldUpdateOperationsInput | bigint | number
+    uid?: StringFieldUpdateOperationsInput | string
+    whitecliffId?: NullableBigIntFieldUpdateOperationsInput | bigint | number | null
+    whitecliffSystemId?: NullableBigIntFieldUpdateOperationsInput | bigint | number | null
+    whitecliffUsername?: NullableStringFieldUpdateOperationsInput | string | null
+    dcsId?: NullableStringFieldUpdateOperationsInput | string | null
+    email?: NullableStringFieldUpdateOperationsInput | string | null
+    passwordHash?: NullableStringFieldUpdateOperationsInput | string | null
+    socialType?: NullableEnumSocialTypeFieldUpdateOperationsInput | $Enums.SocialType | null
+    socialId?: NullableStringFieldUpdateOperationsInput | string | null
+    role?: EnumUserRoleTypeFieldUpdateOperationsInput | $Enums.UserRoleType
+    status?: EnumUserStatusFieldUpdateOperationsInput | $Enums.UserStatus
+    kycLevel?: EnumKycLevelFieldUpdateOperationsInput | $Enums.KycLevel
+    country?: NullableStringFieldUpdateOperationsInput | string | null
+    language?: NullableEnumLanguageFieldUpdateOperationsInput | $Enums.Language | null
+    timezone?: NullableStringFieldUpdateOperationsInput | string | null
+    timezoneOffset?: NullableIntFieldUpdateOperationsInput | number | null
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    affiliateCodes?: AffiliateCodeUpdateManyWithoutUserNestedInput
+    affiliateCommissions?: AffiliateCommissionUpdateManyWithoutAffiliateNestedInput
+    subUserCommissions?: AffiliateCommissionUpdateManyWithoutSubUserNestedInput
+    affiliateTier?: AffiliateTierUpdateOneWithoutAffiliateNestedInput
+    affiliateWallets?: AffiliateWalletUpdateManyWithoutAffiliateNestedInput
+    CompTransaction?: CompTransactionUpdateManyWithoutUserNestedInput
+    DailyCompEarning?: DailyCompEarningUpdateManyWithoutUserNestedInput
+    EmailLog?: EmailLogUpdateManyWithoutUserNestedInput
+    GameSession?: CasinoGameSessionUpdateManyWithoutUserNestedInput
+    affiliateReferrals?: ReferralUpdateManyWithoutAffiliateNestedInput
+    referredUsers?: ReferralUpdateManyWithoutSubUserNestedInput
+    Rolling?: RollingUpdateManyWithoutUserNestedInput
+    transactions?: TransactionUpdateManyWithoutUserNestedInput
+    depositDetails?: DepositDetailUpdateManyWithoutUserNestedInput
+    balances?: UserBalanceUpdateManyWithoutUserNestedInput
+    UserBalanceStats?: UserBalanceStatsUpdateManyWithoutUserNestedInput
+    UserPromotion?: UserPromotionUpdateManyWithoutUserNestedInput
+    RevokedSessions?: UserSessionUpdateManyWithoutRevokedByUserNestedInput
+    UserToken?: UserTokenUpdateManyWithoutUserNestedInput
+    loginAttempts?: LoginAttemptUpdateManyWithoutUserNestedInput
+    userTier?: UserTierUpdateOneWithoutUserNestedInput
+    tierHistory?: TierHistoryUpdateManyWithoutUserNestedInput
+    adminAdjustmentDetails?: AdminAdjustmentDetailUpdateManyWithoutAdminUserNestedInput
+  }
+
+  export type UserUncheckedUpdateWithoutUserSessionInput = {
+    id?: BigIntFieldUpdateOperationsInput | bigint | number
+    uid?: StringFieldUpdateOperationsInput | string
+    whitecliffId?: NullableBigIntFieldUpdateOperationsInput | bigint | number | null
+    whitecliffSystemId?: NullableBigIntFieldUpdateOperationsInput | bigint | number | null
+    whitecliffUsername?: NullableStringFieldUpdateOperationsInput | string | null
+    dcsId?: NullableStringFieldUpdateOperationsInput | string | null
+    email?: NullableStringFieldUpdateOperationsInput | string | null
+    passwordHash?: NullableStringFieldUpdateOperationsInput | string | null
+    socialType?: NullableEnumSocialTypeFieldUpdateOperationsInput | $Enums.SocialType | null
+    socialId?: NullableStringFieldUpdateOperationsInput | string | null
+    role?: EnumUserRoleTypeFieldUpdateOperationsInput | $Enums.UserRoleType
+    status?: EnumUserStatusFieldUpdateOperationsInput | $Enums.UserStatus
+    kycLevel?: EnumKycLevelFieldUpdateOperationsInput | $Enums.KycLevel
+    country?: NullableStringFieldUpdateOperationsInput | string | null
+    language?: NullableEnumLanguageFieldUpdateOperationsInput | $Enums.Language | null
+    timezone?: NullableStringFieldUpdateOperationsInput | string | null
+    timezoneOffset?: NullableIntFieldUpdateOperationsInput | number | null
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    affiliateCodes?: AffiliateCodeUncheckedUpdateManyWithoutUserNestedInput
+    affiliateCommissions?: AffiliateCommissionUncheckedUpdateManyWithoutAffiliateNestedInput
+    subUserCommissions?: AffiliateCommissionUncheckedUpdateManyWithoutSubUserNestedInput
+    affiliateTier?: AffiliateTierUncheckedUpdateOneWithoutAffiliateNestedInput
+    affiliateWallets?: AffiliateWalletUncheckedUpdateManyWithoutAffiliateNestedInput
+    CompTransaction?: CompTransactionUncheckedUpdateManyWithoutUserNestedInput
+    DailyCompEarning?: DailyCompEarningUncheckedUpdateManyWithoutUserNestedInput
+    EmailLog?: EmailLogUncheckedUpdateManyWithoutUserNestedInput
+    GameSession?: CasinoGameSessionUncheckedUpdateManyWithoutUserNestedInput
+    affiliateReferrals?: ReferralUncheckedUpdateManyWithoutAffiliateNestedInput
+    referredUsers?: ReferralUncheckedUpdateManyWithoutSubUserNestedInput
+    Rolling?: RollingUncheckedUpdateManyWithoutUserNestedInput
+    transactions?: TransactionUncheckedUpdateManyWithoutUserNestedInput
+    depositDetails?: DepositDetailUncheckedUpdateManyWithoutUserNestedInput
+    balances?: UserBalanceUncheckedUpdateManyWithoutUserNestedInput
+    UserBalanceStats?: UserBalanceStatsUncheckedUpdateManyWithoutUserNestedInput
+    UserPromotion?: UserPromotionUncheckedUpdateManyWithoutUserNestedInput
+    RevokedSessions?: UserSessionUncheckedUpdateManyWithoutRevokedByUserNestedInput
+    UserToken?: UserTokenUncheckedUpdateManyWithoutUserNestedInput
+    loginAttempts?: LoginAttemptUncheckedUpdateManyWithoutUserNestedInput
+    userTier?: UserTierUncheckedUpdateOneWithoutUserNestedInput
+    tierHistory?: TierHistoryUncheckedUpdateManyWithoutUserNestedInput
+    adminAdjustmentDetails?: AdminAdjustmentDetailUncheckedUpdateManyWithoutAdminUserNestedInput
+  }
+
+  export type UserUpsertWithoutRevokedSessionsInput = {
+    update: XOR<UserUpdateWithoutRevokedSessionsInput, UserUncheckedUpdateWithoutRevokedSessionsInput>
+    create: XOR<UserCreateWithoutRevokedSessionsInput, UserUncheckedCreateWithoutRevokedSessionsInput>
+    where?: UserWhereInput
+  }
+
+  export type UserUpdateToOneWithWhereWithoutRevokedSessionsInput = {
+    where?: UserWhereInput
+    data: XOR<UserUpdateWithoutRevokedSessionsInput, UserUncheckedUpdateWithoutRevokedSessionsInput>
+  }
+
+  export type UserUpdateWithoutRevokedSessionsInput = {
+    id?: BigIntFieldUpdateOperationsInput | bigint | number
+    uid?: StringFieldUpdateOperationsInput | string
+    whitecliffId?: NullableBigIntFieldUpdateOperationsInput | bigint | number | null
+    whitecliffSystemId?: NullableBigIntFieldUpdateOperationsInput | bigint | number | null
+    whitecliffUsername?: NullableStringFieldUpdateOperationsInput | string | null
+    dcsId?: NullableStringFieldUpdateOperationsInput | string | null
+    email?: NullableStringFieldUpdateOperationsInput | string | null
+    passwordHash?: NullableStringFieldUpdateOperationsInput | string | null
+    socialType?: NullableEnumSocialTypeFieldUpdateOperationsInput | $Enums.SocialType | null
+    socialId?: NullableStringFieldUpdateOperationsInput | string | null
+    role?: EnumUserRoleTypeFieldUpdateOperationsInput | $Enums.UserRoleType
+    status?: EnumUserStatusFieldUpdateOperationsInput | $Enums.UserStatus
+    kycLevel?: EnumKycLevelFieldUpdateOperationsInput | $Enums.KycLevel
+    country?: NullableStringFieldUpdateOperationsInput | string | null
+    language?: NullableEnumLanguageFieldUpdateOperationsInput | $Enums.Language | null
+    timezone?: NullableStringFieldUpdateOperationsInput | string | null
+    timezoneOffset?: NullableIntFieldUpdateOperationsInput | number | null
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    affiliateCodes?: AffiliateCodeUpdateManyWithoutUserNestedInput
+    affiliateCommissions?: AffiliateCommissionUpdateManyWithoutAffiliateNestedInput
+    subUserCommissions?: AffiliateCommissionUpdateManyWithoutSubUserNestedInput
+    affiliateTier?: AffiliateTierUpdateOneWithoutAffiliateNestedInput
+    affiliateWallets?: AffiliateWalletUpdateManyWithoutAffiliateNestedInput
+    CompTransaction?: CompTransactionUpdateManyWithoutUserNestedInput
+    DailyCompEarning?: DailyCompEarningUpdateManyWithoutUserNestedInput
+    EmailLog?: EmailLogUpdateManyWithoutUserNestedInput
+    GameSession?: CasinoGameSessionUpdateManyWithoutUserNestedInput
+    affiliateReferrals?: ReferralUpdateManyWithoutAffiliateNestedInput
+    referredUsers?: ReferralUpdateManyWithoutSubUserNestedInput
+    Rolling?: RollingUpdateManyWithoutUserNestedInput
+    transactions?: TransactionUpdateManyWithoutUserNestedInput
+    depositDetails?: DepositDetailUpdateManyWithoutUserNestedInput
+    balances?: UserBalanceUpdateManyWithoutUserNestedInput
+    UserBalanceStats?: UserBalanceStatsUpdateManyWithoutUserNestedInput
+    UserPromotion?: UserPromotionUpdateManyWithoutUserNestedInput
+    UserSession?: UserSessionUpdateManyWithoutUserNestedInput
+    UserToken?: UserTokenUpdateManyWithoutUserNestedInput
+    loginAttempts?: LoginAttemptUpdateManyWithoutUserNestedInput
+    userTier?: UserTierUpdateOneWithoutUserNestedInput
+    tierHistory?: TierHistoryUpdateManyWithoutUserNestedInput
+    adminAdjustmentDetails?: AdminAdjustmentDetailUpdateManyWithoutAdminUserNestedInput
+  }
+
+  export type UserUncheckedUpdateWithoutRevokedSessionsInput = {
+    id?: BigIntFieldUpdateOperationsInput | bigint | number
+    uid?: StringFieldUpdateOperationsInput | string
+    whitecliffId?: NullableBigIntFieldUpdateOperationsInput | bigint | number | null
+    whitecliffSystemId?: NullableBigIntFieldUpdateOperationsInput | bigint | number | null
+    whitecliffUsername?: NullableStringFieldUpdateOperationsInput | string | null
+    dcsId?: NullableStringFieldUpdateOperationsInput | string | null
+    email?: NullableStringFieldUpdateOperationsInput | string | null
+    passwordHash?: NullableStringFieldUpdateOperationsInput | string | null
+    socialType?: NullableEnumSocialTypeFieldUpdateOperationsInput | $Enums.SocialType | null
+    socialId?: NullableStringFieldUpdateOperationsInput | string | null
+    role?: EnumUserRoleTypeFieldUpdateOperationsInput | $Enums.UserRoleType
+    status?: EnumUserStatusFieldUpdateOperationsInput | $Enums.UserStatus
+    kycLevel?: EnumKycLevelFieldUpdateOperationsInput | $Enums.KycLevel
+    country?: NullableStringFieldUpdateOperationsInput | string | null
+    language?: NullableEnumLanguageFieldUpdateOperationsInput | $Enums.Language | null
+    timezone?: NullableStringFieldUpdateOperationsInput | string | null
+    timezoneOffset?: NullableIntFieldUpdateOperationsInput | number | null
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    affiliateCodes?: AffiliateCodeUncheckedUpdateManyWithoutUserNestedInput
+    affiliateCommissions?: AffiliateCommissionUncheckedUpdateManyWithoutAffiliateNestedInput
+    subUserCommissions?: AffiliateCommissionUncheckedUpdateManyWithoutSubUserNestedInput
+    affiliateTier?: AffiliateTierUncheckedUpdateOneWithoutAffiliateNestedInput
+    affiliateWallets?: AffiliateWalletUncheckedUpdateManyWithoutAffiliateNestedInput
+    CompTransaction?: CompTransactionUncheckedUpdateManyWithoutUserNestedInput
+    DailyCompEarning?: DailyCompEarningUncheckedUpdateManyWithoutUserNestedInput
+    EmailLog?: EmailLogUncheckedUpdateManyWithoutUserNestedInput
+    GameSession?: CasinoGameSessionUncheckedUpdateManyWithoutUserNestedInput
+    affiliateReferrals?: ReferralUncheckedUpdateManyWithoutAffiliateNestedInput
+    referredUsers?: ReferralUncheckedUpdateManyWithoutSubUserNestedInput
+    Rolling?: RollingUncheckedUpdateManyWithoutUserNestedInput
+    transactions?: TransactionUncheckedUpdateManyWithoutUserNestedInput
+    depositDetails?: DepositDetailUncheckedUpdateManyWithoutUserNestedInput
+    balances?: UserBalanceUncheckedUpdateManyWithoutUserNestedInput
+    UserBalanceStats?: UserBalanceStatsUncheckedUpdateManyWithoutUserNestedInput
+    UserPromotion?: UserPromotionUncheckedUpdateManyWithoutUserNestedInput
+    UserSession?: UserSessionUncheckedUpdateManyWithoutUserNestedInput
+    UserToken?: UserTokenUncheckedUpdateManyWithoutUserNestedInput
+    loginAttempts?: LoginAttemptUncheckedUpdateManyWithoutUserNestedInput
+    userTier?: UserTierUncheckedUpdateOneWithoutUserNestedInput
+    tierHistory?: TierHistoryUncheckedUpdateManyWithoutUserNestedInput
+    adminAdjustmentDetails?: AdminAdjustmentDetailUncheckedUpdateManyWithoutAdminUserNestedInput
+  }
+
   export type ReferralCreateManyCodeInput = {
     id?: bigint | number
     uid: string
@@ -93019,7 +93030,7 @@ export namespace Prisma {
     jackpotContributionAmount?: Decimal | DecimalJsLike | number | string
     startedAt?: Date | string | null
     completedAt?: Date | string | null
-    gameId?: number | null
+    gameId?: bigint | number | null
   }
 
   export type GameRoundUpdateWithoutGameSessionInput = {
@@ -93080,7 +93091,7 @@ export namespace Prisma {
     jackpotContributionAmount?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
     startedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     completedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
-    gameId?: NullableIntFieldUpdateOperationsInput | number | null
+    gameId?: NullableBigIntFieldUpdateOperationsInput | bigint | number | null
     AffiliateCommission?: AffiliateCommissionUncheckedUpdateManyWithoutGameRoundNestedInput
     bets?: GameBetUncheckedUpdateManyWithoutGameRoundNestedInput
     wins?: GameWinUncheckedUpdateManyWithoutGameRoundNestedInput
@@ -93112,7 +93123,7 @@ export namespace Prisma {
     jackpotContributionAmount?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
     startedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     completedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
-    gameId?: NullableIntFieldUpdateOperationsInput | number | null
+    gameId?: NullableBigIntFieldUpdateOperationsInput | bigint | number | null
   }
 
   export type AffiliateCodeCreateManyUserInput = {
@@ -93220,7 +93231,7 @@ export namespace Prisma {
     gameCurrency: $Enums.ExchangeCurrencyCode
     exchangeRate: Decimal | DecimalJsLike | number | string
     exchangeRateSnapshotAt?: Date | string
-    gameId?: number | null
+    gameId?: bigint | number | null
   }
 
   export type ReferralCreateManyAffiliateInput = {
@@ -93744,7 +93755,7 @@ export namespace Prisma {
     gameCurrency?: EnumExchangeCurrencyCodeFieldUpdateOperationsInput | $Enums.ExchangeCurrencyCode
     exchangeRate?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
     exchangeRateSnapshotAt?: DateTimeFieldUpdateOperationsInput | Date | string
-    gameId?: NullableIntFieldUpdateOperationsInput | number | null
+    gameId?: NullableBigIntFieldUpdateOperationsInput | bigint | number | null
     gameRounds?: GameRoundUncheckedUpdateManyWithoutGameSessionNestedInput
   }
 
@@ -93759,7 +93770,7 @@ export namespace Prisma {
     gameCurrency?: EnumExchangeCurrencyCodeFieldUpdateOperationsInput | $Enums.ExchangeCurrencyCode
     exchangeRate?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
     exchangeRateSnapshotAt?: DateTimeFieldUpdateOperationsInput | Date | string
-    gameId?: NullableIntFieldUpdateOperationsInput | number | null
+    gameId?: NullableBigIntFieldUpdateOperationsInput | bigint | number | null
   }
 
   export type ReferralUpdateWithoutAffiliateInput = {

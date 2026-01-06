@@ -46,7 +46,7 @@ export interface GetGameListParams {
 }
 
 export interface GameInfo {
-  gameId: number;
+  gameId: bigint;
   gameName: string;
   category: GameCategory;
   provider: GameProvider;

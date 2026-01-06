@@ -23,7 +23,7 @@ export class GameSessionService {
   async createGameSession(params: {
     tx?: Prisma.TransactionClient;
     userId: bigint;
-    gameId?: number;
+    gameId?: bigint;
     aggregatorType: GameAggregatorType;
     walletCurrency: ExchangeCurrencyCode;
     gameCurrency: ExchangeCurrencyCode;

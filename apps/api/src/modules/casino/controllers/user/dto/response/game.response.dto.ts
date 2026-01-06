@@ -5,9 +5,9 @@ export class GameResponseDto {
     @ApiProperty({
         description: 'Game ID (게임 ID)',
         example: 1001,
-        type: Number,
+        type: BigInt,
     })
-    gameId: number;
+    gameId: bigint;
 
     @ApiProperty({
         description: 'Game Name (게임명)',

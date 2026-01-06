@@ -323,7 +323,7 @@ export class WhitecliffGameRefreshService {
   }
 
   private async updateExistingGame(
-    gameId: number,
+    gameId: bigint,
     gameData: any,
     lang: Language,
   ) {

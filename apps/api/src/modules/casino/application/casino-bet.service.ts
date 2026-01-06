@@ -26,7 +26,7 @@ export interface ProcessBetParams {
   aggregatorBetId: string;
   betTime: string;
   aggregatorGameId: number;
-  gameId: number;
+  gameId: bigint;
   jackpotContributionAmount: Prisma.Decimal;
   gameSessionId: bigint;
   betType: BetType;
@@ -93,7 +93,7 @@ export class CasinoBetService {
   constructor(
     private readonly prismaService: PrismaService,
     private readonly casinoBalanceService: CasinoBalanceService,
-  ) {}
+  ) { }
 
   /**
    * 베팅 처리
@@ -434,19 +434,19 @@ export class CasinoBetService {
             },
             // 승리 금액이 0이 아니면 잔액 변경 내역 생성
             ...(updatedUserBalance.mainBalanceChange.toNumber() !== 0 ||
-            updatedUserBalance.bonusBalanceChange.toNumber() !== 0
+              updatedUserBalance.bonusBalanceChange.toNumber() !== 0
               ? {
-                  balanceDetails: {
-                    create: {
-                      mainBalanceChange: updatedUserBalance.mainBalanceChange,
-                      mainBeforeAmount: updatedUserBalance.mainBeforeBalance,
-                      mainAfterAmount: updatedUserBalance.mainAfterBalance,
-                      bonusBalanceChange: updatedUserBalance.bonusBalanceChange,
-                      bonusBeforeAmount: updatedUserBalance.bonusBeforeBalance,
-                      bonusAfterAmount: updatedUserBalance.bonusAfterBalance,
-                    },
+                balanceDetails: {
+                  create: {
+                    mainBalanceChange: updatedUserBalance.mainBalanceChange,
+                    mainBeforeAmount: updatedUserBalance.mainBeforeBalance,
+                    mainAfterAmount: updatedUserBalance.mainAfterBalance,
+                    bonusBalanceChange: updatedUserBalance.bonusBalanceChange,
+                    bonusBeforeAmount: updatedUserBalance.bonusBeforeBalance,
+                    bonusAfterAmount: updatedUserBalance.bonusAfterBalance,
                   },
-                }
+                },
+              }
               : {}),
           },
         },
@@ -600,19 +600,19 @@ export class CasinoBetService {
             },
             // 잔액 변경 내역 생성
             ...(updatedUserBalance.mainBalanceChange.toNumber() !== 0 ||
-            updatedUserBalance.bonusBalanceChange.toNumber() !== 0
+              updatedUserBalance.bonusBalanceChange.toNumber() !== 0
               ? {
-                  balanceDetails: {
-                    create: {
-                      mainBalanceChange: updatedUserBalance.mainBalanceChange,
-                      mainBeforeAmount: updatedUserBalance.mainBeforeBalance,
-                      mainAfterAmount: updatedUserBalance.mainAfterBalance,
-                      bonusBalanceChange: updatedUserBalance.bonusBalanceChange,
-                      bonusBeforeAmount: updatedUserBalance.bonusBeforeBalance,
-                      bonusAfterAmount: updatedUserBalance.bonusAfterBalance,
-                    },
+                balanceDetails: {
+                  create: {
+                    mainBalanceChange: updatedUserBalance.mainBalanceChange,
+                    mainBeforeAmount: updatedUserBalance.mainBeforeBalance,
+                    mainAfterAmount: updatedUserBalance.mainAfterBalance,
+                    bonusBalanceChange: updatedUserBalance.bonusBalanceChange,
+                    bonusBeforeAmount: updatedUserBalance.bonusBeforeBalance,
+                    bonusAfterAmount: updatedUserBalance.bonusAfterBalance,
                   },
-                }
+                },
+              }
               : {}),
           },
         },

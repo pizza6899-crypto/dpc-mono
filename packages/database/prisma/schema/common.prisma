@@ -135,7 +135,7 @@ model GameRound {
   jackpotContributionAmount      Decimal               @default(0) @db.Decimal(32, 18)
   startedAt                      DateTime?
   completedAt                    DateTime?
-  gameId                         Int?
+  gameId                         BigInt?
   gameSessionId                  BigInt
   AffiliateCommission            AffiliateCommission[]
   bets                           GameBet[]
@@ -215,7 +215,7 @@ model BonusDetail {
   aggregatorSessionId     String?
   isEndRound              Boolean?
   description             String?
-  gameId                  Int?
+  gameId                  BigInt?
   transactionId           BigInt             @unique
   casinoGame              CasinoGame?        @relation(fields: [gameId], references: [id])
   transaction             Transaction        @relation(fields: [transactionId], references: [id])
