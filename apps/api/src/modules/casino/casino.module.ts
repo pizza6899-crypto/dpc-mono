@@ -3,7 +3,7 @@ import { PrismaModule } from 'src/infrastructure/prisma/prisma.module';
 import { WhitecliffModule } from './whitecliff/whitecliff.module';
 import { DcsModule } from './dcs/dcs.module';
 import { CasinoBalanceService } from './application/casino-balance.service';
-import { CasinoGameController } from './controllers/casino-game.controller';
+import { CasinoGameUserController } from './controllers/user/casino-game-user.controller';
 import { CasinoGameService } from './application/casino-game.service';
 import { CasinoBetService } from './application/casino-bet.service';
 import { ConcurrencyModule } from 'src/common/concurrency/concurrency.module';
@@ -33,7 +33,7 @@ import { AuditLogModule } from '../audit-log/audit-log.module';
     UserStatsModule,
     AuditLogModule,
   ],
-  controllers: [CasinoGameController],
+  controllers: [CasinoGameUserController],
   providers: [
     CasinoBalanceService,
     CasinoGameService,

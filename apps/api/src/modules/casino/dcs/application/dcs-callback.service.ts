@@ -1178,8 +1178,8 @@ export class DcsCallbackService {
         // 없으면 월렛 통화 값 그대로 반환 (fallback)
         const balance = gameSession
           ? gameSession.exchangeRate.mul(
-              bonusResult.afterMainBalance.add(bonusResult.afterBonusBalance),
-            )
+            bonusResult.afterMainBalance.add(bonusResult.afterBonusBalance),
+          )
           : bonusResult.afterMainBalance.add(bonusResult.afterBonusBalance);
 
         return getDcsResponse(DcsResponseCode.SUCCESS, {

@@ -10,7 +10,7 @@ export class CasinoBalanceService {
   constructor(
     private readonly prismaService: PrismaService,
     private readonly userStatsService: UserStatsService,
-  ) {}
+  ) { }
 
   /**
    * 사용자의 실시간 카지노 잔액 및 주요 값을 조회한다.

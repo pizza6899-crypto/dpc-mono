@@ -8,15 +8,50 @@ import {
 import { ApiException } from 'src/common/http/exception/api.exception';
 import { HttpStatusCode } from 'axios';
 import { CurrentUserWithSession } from 'src/common/auth/decorators/current-user.decorator';
-import {
-  GameLaunchRequestDto,
-  GameLaunchResponseDto,
-} from '../dtos/game-launch.dto';
-import { GameInfoDto, GameListRequestDto } from '../dtos/game-list.dto';
 import { WhitecliffGameService } from '../whitecliff/application/whitecliff-game.service';
-import { GameAggregatorType, Prisma } from '@repo/database';
+import {
+  GameAggregatorType,
+  Prisma,
+  GameCategory,
+  GameProvider,
+  Language,
+} from '@repo/database';
 import { DcsGameService } from '../dcs/application/dcs-game.service';
 import { EnvService } from 'src/common/env/env.service';
+import {
+  GamingCurrencyCode,
+  WalletCurrencyCode,
+} from 'src/utils/currency.util';
+
+export interface LaunchGameParams {
+  gameId: number;
+  isMobile: boolean;
+  walletCurrency: WalletCurrencyCode;
+  gameCurrency: GamingCurrencyCode;
+}
+
+export interface LaunchGameResult {
+  gameUrl: string;
+}
+
+export interface GetGameListParams {
+  category?: GameCategory[];
+  keyword?: string;
+  providerId?: GameProvider[];
+  limit?: number;
+  page?: number;
+  sortBy?: 'createdAt' | 'gameName' | 'categoryName';
+  sortOrder?: 'asc' | 'desc';
+  language?: Language;
+}
+
+export interface GameInfo {
+  gameId: number;
+  gameName: string;
+  category: GameCategory;
+  provider: GameProvider;
+  imageUrl: string;
+}
 
 @Injectable()
 export class CasinoGameService {
@@ -27,17 +62,17 @@ export class CasinoGameService {
     private readonly whitecliffGameService: WhitecliffGameService,
     private readonly dcsGameService: DcsGameService,
     private readonly envService: EnvService,
-  ) {}
+  ) { }
 
   /**
    * 게임 실행 (애그리게이터 자동 선택)
    */
   async launchGame(
     authUser: CurrentUserWithSession,
-    data: GameLaunchRequestDto,
+    params: LaunchGameParams,
     requestInfo: RequestClientInfo,
-  ): Promise<GameLaunchResponseDto> {
-    const { gameId, isMobile, walletCurrency, gameCurrency } = data;
+  ): Promise<LaunchGameResult> {
+    const { gameId, isMobile, walletCurrency, gameCurrency } = params;
 
     // 게임 정보 조회 (aggregatorType 포함)
     const game = await this.prismaService.game.findUnique({
@@ -58,7 +93,7 @@ export class CasinoGameService {
       case GameAggregatorType.WHITECLIFF:
         return await this.whitecliffGameService.launchGame(
           authUser,
-          data,
+          params,
           requestInfo,
         );
       case GameAggregatorType.DCS:
@@ -75,8 +110,8 @@ export class CasinoGameService {
   }
 
   async getGameList(
-    query: GameListRequestDto,
-  ): Promise<PaginatedData<GameInfoDto>> {
+    query: GetGameListParams,
+  ): Promise<PaginatedData<GameInfo>> {
     const {
       category,
       keyword,
@@ -85,7 +120,7 @@ export class CasinoGameService {
       page = 1,
       sortBy = 'createdAt',
       sortOrder = 'desc',
-      language = 'EN',
+      language = Language.EN,
     } = query;
 
     // Where 조건 구성
@@ -147,7 +182,7 @@ export class CasinoGameService {
     const total = await this.prismaService.gameTranslation.count({ where });
 
     // 응답 데이터 매핑
-    const data: GameInfoDto[] = games.map((game) => {
+    const data: GameInfo[] = games.map((game) => {
       const baseUrl = this.envService.app.staticAssetsBaseUrl || '/static';
       const iconLink = game.game.iconLink || '';
 
