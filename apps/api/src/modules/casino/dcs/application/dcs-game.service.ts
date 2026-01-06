@@ -11,7 +11,7 @@ import {
   GamingCurrencyCode,
   WalletCurrencyCode,
 } from 'src/utils/currency.util';
-import { GameSessionService } from '../../application/game-session.service';
+import { CreateCasinoGameSessionService } from '../../application/create-casino-game-session.service';
 import { GameAggregatorType } from '@repo/database';
 
 @Injectable()
@@ -19,7 +19,7 @@ export class DcsGameService {
   constructor(
     private readonly prismaService: PrismaService,
     private readonly dcsApiService: DcsApiService,
-    private readonly gameSessionService: GameSessionService,
+    private readonly createCasinoGameSessionService: CreateCasinoGameSessionService,
   ) { }
 
   async launchGame({
@@ -113,7 +113,7 @@ export class DcsGameService {
         );
       }
 
-      const gameSession = await this.gameSessionService.createGameSession({
+      const gameSession = await this.createCasinoGameSessionService.execute({
         userId,
         gameId: game.id,
         aggregatorType: GameAggregatorType.DCS,
@@ -165,3 +165,4 @@ export class DcsGameService {
     };
   }
 }
+

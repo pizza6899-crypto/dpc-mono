@@ -20,7 +20,7 @@ import {
   GamingCurrencyCode,
   WalletCurrencyCode,
 } from 'src/utils/currency.util';
-import { GameSessionService } from '../../application/game-session.service';
+import { CreateCasinoGameSessionService } from '../../application/create-casino-game-session.service';
 import { ExchangeRateService } from 'src/modules/exchange/application/exchange-rate.service';
 
 @Injectable()
@@ -31,7 +31,7 @@ export class WhitecliffGameService {
     private readonly prismaService: PrismaService,
     private readonly whitecliffApiService: WhitecliffApiService,
     private readonly whitecliffMapperService: WhitecliffMapperService,
-    private readonly gameSessionService: GameSessionService,
+    private readonly createCasinoGameSessionService: CreateCasinoGameSessionService,
     private readonly exchangeRateService: ExchangeRateService,
   ) { }
 
@@ -183,7 +183,7 @@ export class WhitecliffGameService {
       });
     }
 
-    const gameSession = await this.gameSessionService.createGameSession({
+    const gameSession = await this.createCasinoGameSessionService.execute({
       userId: user.id,
       gameId: game.id,
       aggregatorType: GameAggregatorType.WHITECLIFF,
@@ -197,3 +197,4 @@ export class WhitecliffGameService {
     };
   }
 }
+

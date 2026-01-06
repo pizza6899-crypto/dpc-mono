@@ -15,10 +15,8 @@ import { GamePostProcessProcessor } from './processors/game-post-process.process
 import { EnvModule } from 'src/common/env/env.module';
 import { CasinoRefundService } from './application/casino-refund.service';
 import { ExchangeModule } from '../exchange/exchange.module';
-import { GameSessionService } from './application/game-session.service';
 import { UserStatsModule } from '../user-stats/user-stats.module';
 import { AuditLogModule } from '../audit-log/audit-log.module';
-
 import { CasinoGameSessionMapper } from './infrastructure/mapper/casino-game-session.mapper';
 import { CasinoGameSessionRepository } from './infrastructure/repository/casino-game-session.repository';
 import { CASINO_GAME_SESSION_REPOSITORY } from './ports/out/casino-game-session.repository.token';
@@ -47,7 +45,6 @@ import { FindCasinoGameSessionService } from './application/find-casino-game-ses
     CasinoBonusService,
     CasinoRefundService,
     GamePostProcessProcessor,
-    GameSessionService,
     CasinoGameSessionMapper,
     {
       provide: CASINO_GAME_SESSION_REPOSITORY,
@@ -61,7 +58,6 @@ import { FindCasinoGameSessionService } from './application/find-casino-game-ses
     CasinoBetService,
     CasinoBonusService,
     CasinoRefundService,
-    GameSessionService,
     CreateCasinoGameSessionService,
     FindCasinoGameSessionService,
   ],
