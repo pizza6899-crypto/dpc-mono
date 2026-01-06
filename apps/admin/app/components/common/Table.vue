@@ -14,14 +14,51 @@ const props = defineProps<{
   title?: string
   icon?: string
   exportable?: boolean
+  copyableColumns?: string[]
+  search?: string
+  searchPlaceholder?: string
+  sort?: { column: string, direction: 'asc' | 'desc' }
+  modelValue?: T[] // For row selection
   ui?: any // Pass-through for UTable ui prop
 }>()
 
 const emit = defineEmits<{
   'update:page': [value: number]
   'update:itemsPerPage': [value: number]
+  'update:modelValue': [value: T[]]
+  'update:search': [value: string]
+  'update:sort': [value: { column: string, direction: 'asc' | 'desc' } | undefined]
   'export': [format: string]
 }>()
+
+const toast = useToast()
+
+const copyToClipboard = async (text: string) => {
+  if (!text) return
+  try {
+    await navigator.clipboard.writeText(String(text))
+    toast.add({ 
+      title: t('common.clipboard.copy_success'), 
+      icon: 'i-lucide-check-circle', 
+      color: 'success'
+    })
+  } catch (err) {
+    toast.add({ 
+      title: t('common.clipboard.copy_error'), 
+      color: 'error'
+    })
+  }
+}
+
+const searchTerm = computed({
+  get: () => props.search ?? '',
+  set: (val) => emit('update:search', val)
+})
+
+const currentSort = computed({
+  get: () => props.sort,
+  set: (val) => emit('update:sort', val)
+})
 
 // Internal computed properties for v-model bindings
 const currentPage = computed({
@@ -32,6 +69,11 @@ const currentPage = computed({
 const currentLimit = computed({
   get: () => props.itemsPerPage || 10,
   set: (val) => emit('update:itemsPerPage', val)
+})
+
+const selectedRows = computed({
+  get: () => props.modelValue || [],
+  set: (val) => emit('update:modelValue', val)
 })
 
 const exportOptions = computed(() => [
@@ -49,10 +91,10 @@ const exportOptions = computed(() => [
 // Default UI styling - matching the design system
 const defaultTableUI = {
   base: 'min-w-full border-separate border-spacing-0',
-  thead: '[&>tr]:bg-neutral-50 dark:[&>tr]:bg-neutral-800/50 [&>tr]:after:content-none',
+  thead: '[&>tr]:bg-neutral-50 dark:[&>tr]:bg-neutral-800/50 [&>tr]:after:content-none sticky top-0 z-10',
   tbody: '[&>tr]:last:[&>td]:border-b-0 [&>tr]:hover:bg-neutral-50/50 dark:[&>tr]:hover:bg-neutral-800/50',
-  th: 'py-3 text-neutral-700 dark:text-neutral-200 font-bold text-xs uppercase tracking-wider border-b border-neutral-200 dark:border-neutral-800 px-4',
-  td: 'py-3 border-b border-neutral-100 dark:border-neutral-800 px-4 tabular-nums',
+  th: 'py-2 text-neutral-700 dark:text-neutral-200 font-bold text-xs uppercase tracking-wider border-b border-neutral-200 dark:border-neutral-800 px-4',
+  td: 'py-1.5 border-b border-neutral-100 dark:border-neutral-800 px-4 text-[13px] tabular-nums whitespace-nowrap',
   separator: 'h-0'
 }
 
@@ -94,8 +136,25 @@ const mergedUI = computed(() => {
       </slot>
     </template>
 
+    <!-- Filters / Search Toolbar -->
+    <div v-if="search !== undefined || $slots.filters" class="p-4 border-b border-neutral-200 dark:border-neutral-800 flex flex-col sm:flex-row items-stretch sm:items-center justify-between gap-4">
+      <div v-if="search !== undefined" class="w-full sm:max-w-xs">
+        <UInput
+          v-model="searchTerm"
+          icon="i-lucide-search"
+          :placeholder="searchPlaceholder || t('common.search')"
+          size="sm"
+        />
+      </div>
+      <div v-if="$slots.filters" class="flex items-center gap-2 flex-wrap">
+        <slot name="filters" />
+      </div>
+    </div>
+
     <!-- Main Table -->
     <UTable
+      v-model="selectedRows"
+      v-model:sort="currentSort"
       :data="data"
       :columns="columns"
       :loading="loading"
@@ -105,6 +164,14 @@ const mergedUI = computed(() => {
       <!-- Dynamic Slot Pass-through -->
       <template v-for="(_, name) in $slots" #[name]="slotData">
         <slot :name="name" v-bind="slotData" />
+      </template>
+
+      <!-- Auto-generated Copyable Columns -->
+      <template v-for="col in copyableColumns" :key="col" #[`${col}-cell`]="{ row }">
+         <div class="flex items-center gap-1.5 group cursor-pointer hover:text-primary-500 max-w-[200px]" @click.stop="copyToClipboard((row.original as any)[col])">
+           <span class="truncate text-[13px] font-mono">{{ (row.original as any)[col] }}</span>
+           <UIcon name="i-lucide-copy" class="w-3.5 h-3.5 opacity-0 group-hover:opacity-100 transition-opacity flex-shrink-0 text-neutral-400 hover:text-primary-500" />
+         </div>
       </template>
       
       <!-- Empty State Default (can be overridden) -->
