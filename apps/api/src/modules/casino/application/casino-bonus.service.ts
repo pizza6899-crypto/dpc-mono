@@ -53,7 +53,7 @@ export class CasinoBonusService {
     private readonly prismaService: PrismaService,
     private readonly casinoBalanceService: CasinoBalanceService,
     private readonly exchangeRateService: ExchangeRateService,
-  ) {}
+  ) { }
 
   /**
    * 보너스 지급 처리
@@ -158,7 +158,7 @@ export class CasinoBonusService {
 
     // gameSessionId가 있으면 직접 조회, 없으면 round_id로 찾기
     if (params.gameSessionId) {
-      gameSession = await tx.gameSession.findUnique({
+      gameSession = await tx.casinoGameSession.findUnique({
         where: { id: params.gameSessionId },
         select: {
           walletCurrency: true,
@@ -186,7 +186,7 @@ export class CasinoBonusService {
       gameSession = gameRound?.GameSession;
     } else {
       // 기존 로직 (fallback)
-      gameSession = await tx.gameSession.findFirst({
+      gameSession = await tx.casinoGameSession.findFirst({
         where: {
           userId,
           aggregatorType: aggregatorType,

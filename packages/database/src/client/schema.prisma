@@ -242,7 +242,7 @@ model CasinoGame {
   updatedAt        DateTime                @updatedAt @map("updated_at")
   bonusDetails     BonusDetail[]
   gameRounds       GameRound[]
-  gameSessions     GameSession[]
+  gameSessions     CasinoGameSession[]
   translations     CasinoGameTranslation[]
 
   @@unique([aggregatorType, provider, gameId])
@@ -266,7 +266,7 @@ model CasinoGameTranslation {
   @@map("casino_game_translations")
 }
 
-model GameSession {
+model CasinoGameSession {
   id                     BigInt               @id @default(autoincrement())
   userId                 BigInt               @map("user_id")
   createdAt              DateTime             @default(now()) @map("created_at")
@@ -326,7 +326,7 @@ model User {
   CompTransaction        CompTransaction[]
   DailyCompEarning       DailyCompEarning[]
   EmailLog               EmailLog[]
-  GameSession            GameSession[]
+  GameSession            CasinoGameSession[]
   affiliateReferrals     Referral[]              @relation("AffiliateReferrals")
   referredUsers          Referral[]              @relation("ReferredUsers")
   Rolling                Rolling[]
@@ -430,7 +430,7 @@ model GameRound {
   AffiliateCommission            AffiliateCommission[]
   bets                           GameBet[]
   casinoGame                     CasinoGame?           @relation(fields: [gameId], references: [id])
-  GameSession                    GameSession           @relation(fields: [gameSessionId], references: [id])
+  GameSession                    CasinoGameSession     @relation(fields: [gameSessionId], references: [id])
   transaction                    Transaction           @relation(fields: [transactionId], references: [id])
   wins                           GameWin[]
 

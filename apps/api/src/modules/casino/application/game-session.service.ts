@@ -7,7 +7,7 @@ import {
   ExchangeCurrencyCode,
   Prisma,
 } from '@repo/database';
-import { GameSession } from '@repo/database';
+import { CasinoGameSession } from '@repo/database';
 import { nowUtc } from 'src/utils/date.util';
 
 @Injectable()
@@ -28,7 +28,7 @@ export class GameSessionService {
     walletCurrency: ExchangeCurrencyCode;
     gameCurrency: ExchangeCurrencyCode;
     token: string;
-  }): Promise<GameSession> {
+  }): Promise<CasinoGameSession> {
     const {
       tx = this.prismaService,
       userId,
@@ -46,7 +46,7 @@ export class GameSessionService {
     });
 
     // 2. GameSession 생성
-    return await tx.gameSession.create({
+    return await tx.casinoGameSession.create({
       data: {
         userId,
         aggregatorType,

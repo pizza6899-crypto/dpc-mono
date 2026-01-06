@@ -36,7 +36,7 @@ model User {
   CompTransaction        CompTransaction[]
   DailyCompEarning       DailyCompEarning[]
   EmailLog               EmailLog[]
-  GameSession            GameSession[]
+  GameSession            CasinoGameSession[]
   affiliateReferrals     Referral[]              @relation("AffiliateReferrals")
   referredUsers          Referral[]              @relation("ReferredUsers")
   Rolling                Rolling[]
@@ -140,7 +140,7 @@ model GameRound {
   AffiliateCommission            AffiliateCommission[]
   bets                           GameBet[]
   casinoGame                     CasinoGame?           @relation(fields: [gameId], references: [id])
-  GameSession                    GameSession           @relation(fields: [gameSessionId], references: [id])
+  GameSession                    CasinoGameSession     @relation(fields: [gameSessionId], references: [id])
   transaction                    Transaction           @relation(fields: [transactionId], references: [id])
   wins                           GameWin[]
 

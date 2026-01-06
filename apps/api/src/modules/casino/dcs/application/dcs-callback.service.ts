@@ -161,7 +161,7 @@ export class DcsCallbackService {
       jackpot_contribution ?? 0,
     );
 
-    const gameSession = await this.prismaService.gameSession.findFirst({
+    const gameSession = await this.prismaService.casinoGameSession.findFirst({
       where: {
         aggregatorType: GameAggregatorType.DCS,
         token,
@@ -436,7 +436,7 @@ export class DcsCallbackService {
           if (maxBalanceCurrency && maxBalance.gt(0)) {
             // 해당 currency로 gameSession 찾기
             const maxBalanceGameSession =
-              await this.prismaService.gameSession.findFirst({
+              await this.prismaService.casinoGameSession.findFirst({
                 where: {
                   userId: user.id,
                   aggregatorType: GameAggregatorType.DCS,
@@ -786,7 +786,7 @@ export class DcsCallbackService {
         if (user) {
           // gameCurrency로 walletCurrency를 추론하거나, 기본값 사용
           // 또는 GameSession을 조회해서 exchangeRate와 walletCurrency를 가져올 수 있음
-          const gameSession = await this.prismaService.gameSession.findFirst({
+          const gameSession = await this.prismaService.casinoGameSession.findFirst({
             where: {
               aggregatorType: GameAggregatorType.DCS,
               user: {
@@ -890,7 +890,7 @@ export class DcsCallbackService {
     }
 
     // 3. 게임 세션 찾기 (최근 세션)
-    const gameSession = await this.prismaService.gameSession.findFirst({
+    const gameSession = await this.prismaService.casinoGameSession.findFirst({
       where: {
         userId: user.id,
         aggregatorType: GameAggregatorType.DCS,
@@ -1049,7 +1049,7 @@ export class DcsCallbackService {
   ): Promise<GetDcsBalanceResponseDto> {
     const { brand_uid, token, currency } = body;
     try {
-      const gameSession = await this.prismaService.gameSession.findFirst({
+      const gameSession = await this.prismaService.casinoGameSession.findFirst({
         where: {
           aggregatorType: GameAggregatorType.DCS,
           token: token,
@@ -1146,7 +1146,7 @@ export class DcsCallbackService {
     try {
       return await this.prismaService.$transaction(async (tx) => {
         // gameSession을 먼저 조회하여 exchangeRate 가져오기
-        const gameSession = await tx.gameSession.findFirst({
+        const gameSession = await tx.casinoGameSession.findFirst({
           where: {
             userId: user.id,
             aggregatorType: GameAggregatorType.DCS,
@@ -1195,7 +1195,7 @@ export class DcsCallbackService {
         case 'BONUS_ALREADY_PROCESSED': {
           // 이미 처리된 보너스인 경우에도 실제 사용자 잔액 반환
           try {
-            const gameSession = await this.prismaService.gameSession.findFirst({
+            const gameSession = await this.prismaService.casinoGameSession.findFirst({
               where: {
                 userId: user.id,
                 aggregatorType: GameAggregatorType.DCS,

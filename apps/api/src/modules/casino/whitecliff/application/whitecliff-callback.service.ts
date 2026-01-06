@@ -64,7 +64,7 @@ export class WhitecliffCallbackService {
     const { user_id, prd_id, sid } = body;
 
     try {
-      const gameSession = await this.prismaService.gameSession.findFirst({
+      const gameSession = await this.prismaService.casinoGameSession.findFirst({
         where: {
           aggregatorType: GameAggregatorType.WHITECLIFF,
           token: sid, // sid로 직접 찾기
@@ -158,7 +158,7 @@ export class WhitecliffCallbackService {
       const provider =
         this.whitecliffMapperService.fromWhitecliffProvider(prd_id)!;
 
-      const gameSession = await this.prismaService.gameSession.findFirst({
+      const gameSession = await this.prismaService.casinoGameSession.findFirst({
         where: {
           aggregatorType: GameAggregatorType.WHITECLIFF,
           token: sid,
@@ -383,7 +383,7 @@ export class WhitecliffCallbackService {
       // validateRequiredFields 호출 필요
 
       // 2. sid로 gameSession 우선 조회 (debit과 동일한 패턴)
-      const gameSession = await this.prismaService.gameSession.findFirst({
+      const gameSession = await this.prismaService.casinoGameSession.findFirst({
         where: {
           aggregatorType: GameAggregatorType.WHITECLIFF,
           token: sid, // sid로 직접 찾기
@@ -596,7 +596,7 @@ export class WhitecliffCallbackService {
       }
 
       // 2. sid로 gameSession 우선 조회 (debit, credit과 동일한 패턴)
-      const gameSession = await this.prismaService.gameSession.findFirst({
+      const gameSession = await this.prismaService.casinoGameSession.findFirst({
         where: {
           aggregatorType: GameAggregatorType.WHITECLIFF,
           token: sid, // sid로 직접 찾기

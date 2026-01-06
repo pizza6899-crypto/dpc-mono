@@ -59,10 +59,10 @@ export type CasinoGame = $Result.DefaultSelection<Prisma.$CasinoGamePayload>
  */
 export type CasinoGameTranslation = $Result.DefaultSelection<Prisma.$CasinoGameTranslationPayload>
 /**
- * Model GameSession
+ * Model CasinoGameSession
  * 
  */
-export type GameSession = $Result.DefaultSelection<Prisma.$GameSessionPayload>
+export type CasinoGameSession = $Result.DefaultSelection<Prisma.$CasinoGameSessionPayload>
 /**
  * Model User
  * 
@@ -993,14 +993,14 @@ export class PrismaClient<
   get casinoGameTranslation(): Prisma.CasinoGameTranslationDelegate<ExtArgs, ClientOptions>;
 
   /**
-   * `prisma.gameSession`: Exposes CRUD operations for the **GameSession** model.
+   * `prisma.casinoGameSession`: Exposes CRUD operations for the **CasinoGameSession** model.
     * Example usage:
     * ```ts
-    * // Fetch zero or more GameSessions
-    * const gameSessions = await prisma.gameSession.findMany()
+    * // Fetch zero or more CasinoGameSessions
+    * const casinoGameSessions = await prisma.casinoGameSession.findMany()
     * ```
     */
-  get gameSession(): Prisma.GameSessionDelegate<ExtArgs, ClientOptions>;
+  get casinoGameSession(): Prisma.CasinoGameSessionDelegate<ExtArgs, ClientOptions>;
 
   /**
    * `prisma.user`: Exposes CRUD operations for the **User** model.
@@ -1794,7 +1794,7 @@ export namespace Prisma {
     UnifiedLog: 'UnifiedLog',
     CasinoGame: 'CasinoGame',
     CasinoGameTranslation: 'CasinoGameTranslation',
-    GameSession: 'GameSession',
+    CasinoGameSession: 'CasinoGameSession',
     User: 'User',
     UserBalance: 'UserBalance',
     UserBalanceStats: 'UserBalanceStats',
@@ -1845,7 +1845,7 @@ export namespace Prisma {
       omit: GlobalOmitOptions
     }
     meta: {
-      modelProps: "affiliateCode" | "referral" | "authAuditLog" | "activityLog" | "systemErrorLog" | "integrationLog" | "unifiedLog" | "casinoGame" | "casinoGameTranslation" | "gameSession" | "user" | "userBalance" | "userBalanceStats" | "transaction" | "gameRound" | "gameBet" | "gameWin" | "transactionBalanceDetail" | "bonusDetail" | "withdrawDetail" | "compTransaction" | "dailyCompEarning" | "nowPaymentCallbackLog" | "exchangeRate" | "rolling" | "userToken" | "emailLog" | "affiliateWallet" | "affiliateCommission" | "affiliateTier" | "loginAttempt" | "depositDetail" | "cryptoConfig" | "bankConfig" | "promotion" | "promotionTranslation" | "promotionCurrency" | "userPromotion" | "userSession" | "tier" | "tierTranslation" | "userTier" | "tierHistory" | "adminAdjustmentDetail" | "systemAdjustmentDetail"
+      modelProps: "affiliateCode" | "referral" | "authAuditLog" | "activityLog" | "systemErrorLog" | "integrationLog" | "unifiedLog" | "casinoGame" | "casinoGameTranslation" | "casinoGameSession" | "user" | "userBalance" | "userBalanceStats" | "transaction" | "gameRound" | "gameBet" | "gameWin" | "transactionBalanceDetail" | "bonusDetail" | "withdrawDetail" | "compTransaction" | "dailyCompEarning" | "nowPaymentCallbackLog" | "exchangeRate" | "rolling" | "userToken" | "emailLog" | "affiliateWallet" | "affiliateCommission" | "affiliateTier" | "loginAttempt" | "depositDetail" | "cryptoConfig" | "bankConfig" | "promotion" | "promotionTranslation" | "promotionCurrency" | "userPromotion" | "userSession" | "tier" | "tierTranslation" | "userTier" | "tierHistory" | "adminAdjustmentDetail" | "systemAdjustmentDetail"
       txIsolationLevel: Prisma.TransactionIsolationLevel
     }
     model: {
@@ -2515,77 +2515,77 @@ export namespace Prisma {
           }
         }
       }
-      GameSession: {
-        payload: Prisma.$GameSessionPayload<ExtArgs>
-        fields: Prisma.GameSessionFieldRefs
+      CasinoGameSession: {
+        payload: Prisma.$CasinoGameSessionPayload<ExtArgs>
+        fields: Prisma.CasinoGameSessionFieldRefs
         operations: {
           findUnique: {
-            args: Prisma.GameSessionFindUniqueArgs<ExtArgs>
-            result: $Utils.PayloadToResult<Prisma.$GameSessionPayload> | null
+            args: Prisma.CasinoGameSessionFindUniqueArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$CasinoGameSessionPayload> | null
           }
           findUniqueOrThrow: {
-            args: Prisma.GameSessionFindUniqueOrThrowArgs<ExtArgs>
-            result: $Utils.PayloadToResult<Prisma.$GameSessionPayload>
+            args: Prisma.CasinoGameSessionFindUniqueOrThrowArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$CasinoGameSessionPayload>
           }
           findFirst: {
-            args: Prisma.GameSessionFindFirstArgs<ExtArgs>
-            result: $Utils.PayloadToResult<Prisma.$GameSessionPayload> | null
+            args: Prisma.CasinoGameSessionFindFirstArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$CasinoGameSessionPayload> | null
           }
           findFirstOrThrow: {
-            args: Prisma.GameSessionFindFirstOrThrowArgs<ExtArgs>
-            result: $Utils.PayloadToResult<Prisma.$GameSessionPayload>
+            args: Prisma.CasinoGameSessionFindFirstOrThrowArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$CasinoGameSessionPayload>
           }
           findMany: {
-            args: Prisma.GameSessionFindManyArgs<ExtArgs>
-            result: $Utils.PayloadToResult<Prisma.$GameSessionPayload>[]
+            args: Prisma.CasinoGameSessionFindManyArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$CasinoGameSessionPayload>[]
           }
           create: {
-            args: Prisma.GameSessionCreateArgs<ExtArgs>
-            result: $Utils.PayloadToResult<Prisma.$GameSessionPayload>
+            args: Prisma.CasinoGameSessionCreateArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$CasinoGameSessionPayload>
           }
           createMany: {
-            args: Prisma.GameSessionCreateManyArgs<ExtArgs>
+            args: Prisma.CasinoGameSessionCreateManyArgs<ExtArgs>
             result: BatchPayload
           }
           createManyAndReturn: {
-            args: Prisma.GameSessionCreateManyAndReturnArgs<ExtArgs>
-            result: $Utils.PayloadToResult<Prisma.$GameSessionPayload>[]
+            args: Prisma.CasinoGameSessionCreateManyAndReturnArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$CasinoGameSessionPayload>[]
           }
           delete: {
-            args: Prisma.GameSessionDeleteArgs<ExtArgs>
-            result: $Utils.PayloadToResult<Prisma.$GameSessionPayload>
+            args: Prisma.CasinoGameSessionDeleteArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$CasinoGameSessionPayload>
           }
           update: {
-            args: Prisma.GameSessionUpdateArgs<ExtArgs>
-            result: $Utils.PayloadToResult<Prisma.$GameSessionPayload>
+            args: Prisma.CasinoGameSessionUpdateArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$CasinoGameSessionPayload>
           }
           deleteMany: {
-            args: Prisma.GameSessionDeleteManyArgs<ExtArgs>
+            args: Prisma.CasinoGameSessionDeleteManyArgs<ExtArgs>
             result: BatchPayload
           }
           updateMany: {
-            args: Prisma.GameSessionUpdateManyArgs<ExtArgs>
+            args: Prisma.CasinoGameSessionUpdateManyArgs<ExtArgs>
             result: BatchPayload
           }
           updateManyAndReturn: {
-            args: Prisma.GameSessionUpdateManyAndReturnArgs<ExtArgs>
-            result: $Utils.PayloadToResult<Prisma.$GameSessionPayload>[]
+            args: Prisma.CasinoGameSessionUpdateManyAndReturnArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$CasinoGameSessionPayload>[]
           }
           upsert: {
-            args: Prisma.GameSessionUpsertArgs<ExtArgs>
-            result: $Utils.PayloadToResult<Prisma.$GameSessionPayload>
+            args: Prisma.CasinoGameSessionUpsertArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$CasinoGameSessionPayload>
           }
           aggregate: {
-            args: Prisma.GameSessionAggregateArgs<ExtArgs>
-            result: $Utils.Optional<AggregateGameSession>
+            args: Prisma.CasinoGameSessionAggregateArgs<ExtArgs>
+            result: $Utils.Optional<AggregateCasinoGameSession>
           }
           groupBy: {
-            args: Prisma.GameSessionGroupByArgs<ExtArgs>
-            result: $Utils.Optional<GameSessionGroupByOutputType>[]
+            args: Prisma.CasinoGameSessionGroupByArgs<ExtArgs>
+            result: $Utils.Optional<CasinoGameSessionGroupByOutputType>[]
           }
           count: {
-            args: Prisma.GameSessionCountArgs<ExtArgs>
-            result: $Utils.Optional<GameSessionCountAggregateOutputType> | number
+            args: Prisma.CasinoGameSessionCountArgs<ExtArgs>
+            result: $Utils.Optional<CasinoGameSessionCountAggregateOutputType> | number
           }
         }
       }
@@ -5296,7 +5296,7 @@ export namespace Prisma {
     unifiedLog?: UnifiedLogOmit
     casinoGame?: CasinoGameOmit
     casinoGameTranslation?: CasinoGameTranslationOmit
-    gameSession?: GameSessionOmit
+    casinoGameSession?: CasinoGameSessionOmit
     user?: UserOmit
     userBalance?: UserBalanceOmit
     userBalanceStats?: UserBalanceStatsOmit
@@ -5485,7 +5485,7 @@ export namespace Prisma {
    * CasinoGameCountOutputType without action
    */
   export type CasinoGameCountOutputTypeCountGameSessionsArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
-    where?: GameSessionWhereInput
+    where?: CasinoGameSessionWhereInput
   }
 
   /**
@@ -5497,32 +5497,32 @@ export namespace Prisma {
 
 
   /**
-   * Count Type GameSessionCountOutputType
+   * Count Type CasinoGameSessionCountOutputType
    */
 
-  export type GameSessionCountOutputType = {
+  export type CasinoGameSessionCountOutputType = {
     gameRounds: number
   }
 
-  export type GameSessionCountOutputTypeSelect<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
-    gameRounds?: boolean | GameSessionCountOutputTypeCountGameRoundsArgs
+  export type CasinoGameSessionCountOutputTypeSelect<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    gameRounds?: boolean | CasinoGameSessionCountOutputTypeCountGameRoundsArgs
   }
 
   // Custom InputTypes
   /**
-   * GameSessionCountOutputType without action
+   * CasinoGameSessionCountOutputType without action
    */
-  export type GameSessionCountOutputTypeDefaultArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+  export type CasinoGameSessionCountOutputTypeDefaultArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
     /**
-     * Select specific fields to fetch from the GameSessionCountOutputType
+     * Select specific fields to fetch from the CasinoGameSessionCountOutputType
      */
-    select?: GameSessionCountOutputTypeSelect<ExtArgs> | null
+    select?: CasinoGameSessionCountOutputTypeSelect<ExtArgs> | null
   }
 
   /**
-   * GameSessionCountOutputType without action
+   * CasinoGameSessionCountOutputType without action
    */
-  export type GameSessionCountOutputTypeCountGameRoundsArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+  export type CasinoGameSessionCountOutputTypeCountGameRoundsArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
     where?: GameRoundWhereInput
   }
 
@@ -5645,7 +5645,7 @@ export namespace Prisma {
    * UserCountOutputType without action
    */
   export type UserCountOutputTypeCountGameSessionArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
-    where?: GameSessionWhereInput
+    where?: CasinoGameSessionWhereInput
   }
 
   /**
@@ -14816,7 +14816,7 @@ export namespace Prisma {
     objects: {
       bonusDetails: Prisma.$BonusDetailPayload<ExtArgs>[]
       gameRounds: Prisma.$GameRoundPayload<ExtArgs>[]
-      gameSessions: Prisma.$GameSessionPayload<ExtArgs>[]
+      gameSessions: Prisma.$CasinoGameSessionPayload<ExtArgs>[]
       translations: Prisma.$CasinoGameTranslationPayload<ExtArgs>[]
     }
     scalars: $Extensions.GetPayloadResult<{
@@ -15230,7 +15230,7 @@ export namespace Prisma {
     readonly [Symbol.toStringTag]: "PrismaPromise"
     bonusDetails<T extends CasinoGame$bonusDetailsArgs<ExtArgs> = {}>(args?: Subset<T, CasinoGame$bonusDetailsArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$BonusDetailPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
     gameRounds<T extends CasinoGame$gameRoundsArgs<ExtArgs> = {}>(args?: Subset<T, CasinoGame$gameRoundsArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$GameRoundPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
-    gameSessions<T extends CasinoGame$gameSessionsArgs<ExtArgs> = {}>(args?: Subset<T, CasinoGame$gameSessionsArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$GameSessionPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
+    gameSessions<T extends CasinoGame$gameSessionsArgs<ExtArgs> = {}>(args?: Subset<T, CasinoGame$gameSessionsArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$CasinoGameSessionPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
     translations<T extends CasinoGame$translationsArgs<ExtArgs> = {}>(args?: Subset<T, CasinoGame$translationsArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$CasinoGameTranslationPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
     /**
      * Attaches callbacks for the resolution and/or rejection of the Promise.
@@ -15715,23 +15715,23 @@ export namespace Prisma {
    */
   export type CasinoGame$gameSessionsArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
     /**
-     * Select specific fields to fetch from the GameSession
+     * Select specific fields to fetch from the CasinoGameSession
      */
-    select?: GameSessionSelect<ExtArgs> | null
+    select?: CasinoGameSessionSelect<ExtArgs> | null
     /**
-     * Omit specific fields from the GameSession
+     * Omit specific fields from the CasinoGameSession
      */
-    omit?: GameSessionOmit<ExtArgs> | null
+    omit?: CasinoGameSessionOmit<ExtArgs> | null
     /**
      * Choose, which related nodes to fetch as well
      */
-    include?: GameSessionInclude<ExtArgs> | null
-    where?: GameSessionWhereInput
-    orderBy?: GameSessionOrderByWithRelationInput | GameSessionOrderByWithRelationInput[]
-    cursor?: GameSessionWhereUniqueInput
+    include?: CasinoGameSessionInclude<ExtArgs> | null
+    where?: CasinoGameSessionWhereInput
+    orderBy?: CasinoGameSessionOrderByWithRelationInput | CasinoGameSessionOrderByWithRelationInput[]
+    cursor?: CasinoGameSessionWhereUniqueInput
     take?: number
     skip?: number
-    distinct?: GameSessionScalarFieldEnum | GameSessionScalarFieldEnum[]
+    distinct?: CasinoGameSessionScalarFieldEnum | CasinoGameSessionScalarFieldEnum[]
   }
 
   /**
@@ -16913,47 +16913,32 @@ export namespace Prisma {
 
 
   /**
-   * Model GameSession
+   * Model CasinoGameSession
    */
 
-  export type AggregateGameSession = {
-    _count: GameSessionCountAggregateOutputType | null
-    _avg: GameSessionAvgAggregateOutputType | null
-    _sum: GameSessionSumAggregateOutputType | null
-    _min: GameSessionMinAggregateOutputType | null
-    _max: GameSessionMaxAggregateOutputType | null
+  export type AggregateCasinoGameSession = {
+    _count: CasinoGameSessionCountAggregateOutputType | null
+    _avg: CasinoGameSessionAvgAggregateOutputType | null
+    _sum: CasinoGameSessionSumAggregateOutputType | null
+    _min: CasinoGameSessionMinAggregateOutputType | null
+    _max: CasinoGameSessionMaxAggregateOutputType | null
   }
 
-  export type GameSessionAvgAggregateOutputType = {
+  export type CasinoGameSessionAvgAggregateOutputType = {
     id: number | null
     userId: number | null
     exchangeRate: Decimal | null
     gameId: number | null
   }
 
-  export type GameSessionSumAggregateOutputType = {
+  export type CasinoGameSessionSumAggregateOutputType = {
     id: bigint | null
     userId: bigint | null
     exchangeRate: Decimal | null
     gameId: number | null
   }
 
-  export type GameSessionMinAggregateOutputType = {
-    id: bigint | null
-    userId: bigint | null
-    createdAt: Date | null
-    updatedAt: Date | null
-    lastAccessedAt: Date | null
-    aggregatorType: $Enums.GameAggregatorType | null
-    token: string | null
-    walletCurrency: $Enums.ExchangeCurrencyCode | null
-    gameCurrency: $Enums.ExchangeCurrencyCode | null
-    exchangeRate: Decimal | null
-    exchangeRateSnapshotAt: Date | null
-    gameId: number | null
-  }
-
-  export type GameSessionMaxAggregateOutputType = {
+  export type CasinoGameSessionMinAggregateOutputType = {
     id: bigint | null
     userId: bigint | null
     createdAt: Date | null
@@ -16968,7 +16953,22 @@ export namespace Prisma {
     gameId: number | null
   }
 
-  export type GameSessionCountAggregateOutputType = {
+  export type CasinoGameSessionMaxAggregateOutputType = {
+    id: bigint | null
+    userId: bigint | null
+    createdAt: Date | null
+    updatedAt: Date | null
+    lastAccessedAt: Date | null
+    aggregatorType: $Enums.GameAggregatorType | null
+    token: string | null
+    walletCurrency: $Enums.ExchangeCurrencyCode | null
+    gameCurrency: $Enums.ExchangeCurrencyCode | null
+    exchangeRate: Decimal | null
+    exchangeRateSnapshotAt: Date | null
+    gameId: number | null
+  }
+
+  export type CasinoGameSessionCountAggregateOutputType = {
     id: number
     userId: number
     createdAt: number
@@ -16985,36 +16985,21 @@ export namespace Prisma {
   }
 
 
-  export type GameSessionAvgAggregateInputType = {
+  export type CasinoGameSessionAvgAggregateInputType = {
     id?: true
     userId?: true
     exchangeRate?: true
     gameId?: true
   }
 
-  export type GameSessionSumAggregateInputType = {
+  export type CasinoGameSessionSumAggregateInputType = {
     id?: true
     userId?: true
     exchangeRate?: true
     gameId?: true
   }
 
-  export type GameSessionMinAggregateInputType = {
-    id?: true
-    userId?: true
-    createdAt?: true
-    updatedAt?: true
-    lastAccessedAt?: true
-    aggregatorType?: true
-    token?: true
-    walletCurrency?: true
-    gameCurrency?: true
-    exchangeRate?: true
-    exchangeRateSnapshotAt?: true
-    gameId?: true
-  }
-
-  export type GameSessionMaxAggregateInputType = {
+  export type CasinoGameSessionMinAggregateInputType = {
     id?: true
     userId?: true
     createdAt?: true
@@ -17029,7 +17014,22 @@ export namespace Prisma {
     gameId?: true
   }
 
-  export type GameSessionCountAggregateInputType = {
+  export type CasinoGameSessionMaxAggregateInputType = {
+    id?: true
+    userId?: true
+    createdAt?: true
+    updatedAt?: true
+    lastAccessedAt?: true
+    aggregatorType?: true
+    token?: true
+    walletCurrency?: true
+    gameCurrency?: true
+    exchangeRate?: true
+    exchangeRateSnapshotAt?: true
+    gameId?: true
+  }
+
+  export type CasinoGameSessionCountAggregateInputType = {
     id?: true
     userId?: true
     createdAt?: true
@@ -17045,93 +17045,93 @@ export namespace Prisma {
     _all?: true
   }
 
-  export type GameSessionAggregateArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+  export type CasinoGameSessionAggregateArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
     /**
-     * Filter which GameSession to aggregate.
+     * Filter which CasinoGameSession to aggregate.
      */
-    where?: GameSessionWhereInput
+    where?: CasinoGameSessionWhereInput
     /**
      * {@link https://www.prisma.io/docs/concepts/components/prisma-client/sorting Sorting Docs}
      * 
-     * Determine the order of GameSessions to fetch.
+     * Determine the order of CasinoGameSessions to fetch.
      */
-    orderBy?: GameSessionOrderByWithRelationInput | GameSessionOrderByWithRelationInput[]
+    orderBy?: CasinoGameSessionOrderByWithRelationInput | CasinoGameSessionOrderByWithRelationInput[]
     /**
      * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination#cursor-based-pagination Cursor Docs}
      * 
      * Sets the start position
      */
-    cursor?: GameSessionWhereUniqueInput
+    cursor?: CasinoGameSessionWhereUniqueInput
     /**
      * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
      * 
-     * Take `±n` GameSessions from the position of the cursor.
+     * Take `±n` CasinoGameSessions from the position of the cursor.
      */
     take?: number
     /**
      * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
      * 
-     * Skip the first `n` GameSessions.
+     * Skip the first `n` CasinoGameSessions.
      */
     skip?: number
     /**
      * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
      * 
-     * Count returned GameSessions
+     * Count returned CasinoGameSessions
     **/
-    _count?: true | GameSessionCountAggregateInputType
+    _count?: true | CasinoGameSessionCountAggregateInputType
     /**
      * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
      * 
      * Select which fields to average
     **/
-    _avg?: GameSessionAvgAggregateInputType
+    _avg?: CasinoGameSessionAvgAggregateInputType
     /**
      * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
      * 
      * Select which fields to sum
     **/
-    _sum?: GameSessionSumAggregateInputType
+    _sum?: CasinoGameSessionSumAggregateInputType
     /**
      * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
      * 
      * Select which fields to find the minimum value
     **/
-    _min?: GameSessionMinAggregateInputType
+    _min?: CasinoGameSessionMinAggregateInputType
     /**
      * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
      * 
      * Select which fields to find the maximum value
     **/
-    _max?: GameSessionMaxAggregateInputType
+    _max?: CasinoGameSessionMaxAggregateInputType
   }
 
-  export type GetGameSessionAggregateType<T extends GameSessionAggregateArgs> = {
-        [P in keyof T & keyof AggregateGameSession]: P extends '_count' | 'count'
+  export type GetCasinoGameSessionAggregateType<T extends CasinoGameSessionAggregateArgs> = {
+        [P in keyof T & keyof AggregateCasinoGameSession]: P extends '_count' | 'count'
       ? T[P] extends true
         ? number
-        : GetScalarType<T[P], AggregateGameSession[P]>
-      : GetScalarType<T[P], AggregateGameSession[P]>
+        : GetScalarType<T[P], AggregateCasinoGameSession[P]>
+      : GetScalarType<T[P], AggregateCasinoGameSession[P]>
   }
 
 
 
 
-  export type GameSessionGroupByArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
-    where?: GameSessionWhereInput
-    orderBy?: GameSessionOrderByWithAggregationInput | GameSessionOrderByWithAggregationInput[]
-    by: GameSessionScalarFieldEnum[] | GameSessionScalarFieldEnum
-    having?: GameSessionScalarWhereWithAggregatesInput
+  export type CasinoGameSessionGroupByArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    where?: CasinoGameSessionWhereInput
+    orderBy?: CasinoGameSessionOrderByWithAggregationInput | CasinoGameSessionOrderByWithAggregationInput[]
+    by: CasinoGameSessionScalarFieldEnum[] | CasinoGameSessionScalarFieldEnum
+    having?: CasinoGameSessionScalarWhereWithAggregatesInput
     take?: number
     skip?: number
-    _count?: GameSessionCountAggregateInputType | true
-    _avg?: GameSessionAvgAggregateInputType
-    _sum?: GameSessionSumAggregateInputType
-    _min?: GameSessionMinAggregateInputType
-    _max?: GameSessionMaxAggregateInputType
+    _count?: CasinoGameSessionCountAggregateInputType | true
+    _avg?: CasinoGameSessionAvgAggregateInputType
+    _sum?: CasinoGameSessionSumAggregateInputType
+    _min?: CasinoGameSessionMinAggregateInputType
+    _max?: CasinoGameSessionMaxAggregateInputType
   }
 
-  export type GameSessionGroupByOutputType = {
+  export type CasinoGameSessionGroupByOutputType = {
     id: bigint
     userId: bigint
     createdAt: Date
@@ -17144,28 +17144,28 @@ export namespace Prisma {
     exchangeRate: Decimal
     exchangeRateSnapshotAt: Date
     gameId: number | null
-    _count: GameSessionCountAggregateOutputType | null
-    _avg: GameSessionAvgAggregateOutputType | null
-    _sum: GameSessionSumAggregateOutputType | null
-    _min: GameSessionMinAggregateOutputType | null
-    _max: GameSessionMaxAggregateOutputType | null
+    _count: CasinoGameSessionCountAggregateOutputType | null
+    _avg: CasinoGameSessionAvgAggregateOutputType | null
+    _sum: CasinoGameSessionSumAggregateOutputType | null
+    _min: CasinoGameSessionMinAggregateOutputType | null
+    _max: CasinoGameSessionMaxAggregateOutputType | null
   }
 
-  type GetGameSessionGroupByPayload<T extends GameSessionGroupByArgs> = Prisma.PrismaPromise<
+  type GetCasinoGameSessionGroupByPayload<T extends CasinoGameSessionGroupByArgs> = Prisma.PrismaPromise<
     Array<
-      PickEnumerable<GameSessionGroupByOutputType, T['by']> &
+      PickEnumerable<CasinoGameSessionGroupByOutputType, T['by']> &
         {
-          [P in ((keyof T) & (keyof GameSessionGroupByOutputType))]: P extends '_count'
+          [P in ((keyof T) & (keyof CasinoGameSessionGroupByOutputType))]: P extends '_count'
             ? T[P] extends boolean
               ? number
-              : GetScalarType<T[P], GameSessionGroupByOutputType[P]>
-            : GetScalarType<T[P], GameSessionGroupByOutputType[P]>
+              : GetScalarType<T[P], CasinoGameSessionGroupByOutputType[P]>
+            : GetScalarType<T[P], CasinoGameSessionGroupByOutputType[P]>
         }
       >
     >
 
 
-  export type GameSessionSelect<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetSelect<{
+  export type CasinoGameSessionSelect<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetSelect<{
     id?: boolean
     userId?: boolean
     createdAt?: boolean
@@ -17178,13 +17178,13 @@ export namespace Prisma {
     exchangeRate?: boolean
     exchangeRateSnapshotAt?: boolean
     gameId?: boolean
-    gameRounds?: boolean | GameSession$gameRoundsArgs<ExtArgs>
-    game?: boolean | GameSession$gameArgs<ExtArgs>
+    gameRounds?: boolean | CasinoGameSession$gameRoundsArgs<ExtArgs>
+    game?: boolean | CasinoGameSession$gameArgs<ExtArgs>
     user?: boolean | UserDefaultArgs<ExtArgs>
-    _count?: boolean | GameSessionCountOutputTypeDefaultArgs<ExtArgs>
-  }, ExtArgs["result"]["gameSession"]>
+    _count?: boolean | CasinoGameSessionCountOutputTypeDefaultArgs<ExtArgs>
+  }, ExtArgs["result"]["casinoGameSession"]>
 
-  export type GameSessionSelectCreateManyAndReturn<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetSelect<{
+  export type CasinoGameSessionSelectCreateManyAndReturn<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetSelect<{
     id?: boolean
     userId?: boolean
     createdAt?: boolean
@@ -17197,11 +17197,11 @@ export namespace Prisma {
     exchangeRate?: boolean
     exchangeRateSnapshotAt?: boolean
     gameId?: boolean
-    game?: boolean | GameSession$gameArgs<ExtArgs>
+    game?: boolean | CasinoGameSession$gameArgs<ExtArgs>
     user?: boolean | UserDefaultArgs<ExtArgs>
-  }, ExtArgs["result"]["gameSession"]>
+  }, ExtArgs["result"]["casinoGameSession"]>
 
-  export type GameSessionSelectUpdateManyAndReturn<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetSelect<{
+  export type CasinoGameSessionSelectUpdateManyAndReturn<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetSelect<{
     id?: boolean
     userId?: boolean
     createdAt?: boolean
@@ -17214,11 +17214,11 @@ export namespace Prisma {
     exchangeRate?: boolean
     exchangeRateSnapshotAt?: boolean
     gameId?: boolean
-    game?: boolean | GameSession$gameArgs<ExtArgs>
+    game?: boolean | CasinoGameSession$gameArgs<ExtArgs>
     user?: boolean | UserDefaultArgs<ExtArgs>
-  }, ExtArgs["result"]["gameSession"]>
+  }, ExtArgs["result"]["casinoGameSession"]>
 
-  export type GameSessionSelectScalar = {
+  export type CasinoGameSessionSelectScalar = {
     id?: boolean
     userId?: boolean
     createdAt?: boolean
@@ -17233,24 +17233,24 @@ export namespace Prisma {
     gameId?: boolean
   }
 
-  export type GameSessionOmit<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetOmit<"id" | "userId" | "createdAt" | "updatedAt" | "lastAccessedAt" | "aggregatorType" | "token" | "walletCurrency" | "gameCurrency" | "exchangeRate" | "exchangeRateSnapshotAt" | "gameId", ExtArgs["result"]["gameSession"]>
-  export type GameSessionInclude<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
-    gameRounds?: boolean | GameSession$gameRoundsArgs<ExtArgs>
-    game?: boolean | GameSession$gameArgs<ExtArgs>
+  export type CasinoGameSessionOmit<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetOmit<"id" | "userId" | "createdAt" | "updatedAt" | "lastAccessedAt" | "aggregatorType" | "token" | "walletCurrency" | "gameCurrency" | "exchangeRate" | "exchangeRateSnapshotAt" | "gameId", ExtArgs["result"]["casinoGameSession"]>
+  export type CasinoGameSessionInclude<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    gameRounds?: boolean | CasinoGameSession$gameRoundsArgs<ExtArgs>
+    game?: boolean | CasinoGameSession$gameArgs<ExtArgs>
     user?: boolean | UserDefaultArgs<ExtArgs>
-    _count?: boolean | GameSessionCountOutputTypeDefaultArgs<ExtArgs>
+    _count?: boolean | CasinoGameSessionCountOutputTypeDefaultArgs<ExtArgs>
   }
-  export type GameSessionIncludeCreateManyAndReturn<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
-    game?: boolean | GameSession$gameArgs<ExtArgs>
+  export type CasinoGameSessionIncludeCreateManyAndReturn<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    game?: boolean | CasinoGameSession$gameArgs<ExtArgs>
     user?: boolean | UserDefaultArgs<ExtArgs>
   }
-  export type GameSessionIncludeUpdateManyAndReturn<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
-    game?: boolean | GameSession$gameArgs<ExtArgs>
+  export type CasinoGameSessionIncludeUpdateManyAndReturn<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    game?: boolean | CasinoGameSession$gameArgs<ExtArgs>
     user?: boolean | UserDefaultArgs<ExtArgs>
   }
 
-  export type $GameSessionPayload<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
-    name: "GameSession"
+  export type $CasinoGameSessionPayload<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    name: "CasinoGameSession"
     objects: {
       gameRounds: Prisma.$GameRoundPayload<ExtArgs>[]
       game: Prisma.$CasinoGamePayload<ExtArgs> | null
@@ -17269,136 +17269,136 @@ export namespace Prisma {
       exchangeRate: Prisma.Decimal
       exchangeRateSnapshotAt: Date
       gameId: number | null
-    }, ExtArgs["result"]["gameSession"]>
+    }, ExtArgs["result"]["casinoGameSession"]>
     composites: {}
   }
 
-  type GameSessionGetPayload<S extends boolean | null | undefined | GameSessionDefaultArgs> = $Result.GetResult<Prisma.$GameSessionPayload, S>
+  type CasinoGameSessionGetPayload<S extends boolean | null | undefined | CasinoGameSessionDefaultArgs> = $Result.GetResult<Prisma.$CasinoGameSessionPayload, S>
 
-  type GameSessionCountArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> =
-    Omit<GameSessionFindManyArgs, 'select' | 'include' | 'distinct' | 'omit'> & {
-      select?: GameSessionCountAggregateInputType | true
+  type CasinoGameSessionCountArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> =
+    Omit<CasinoGameSessionFindManyArgs, 'select' | 'include' | 'distinct' | 'omit'> & {
+      select?: CasinoGameSessionCountAggregateInputType | true
     }
 
-  export interface GameSessionDelegate<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs, GlobalOmitOptions = {}> {
-    [K: symbol]: { types: Prisma.TypeMap<ExtArgs>['model']['GameSession'], meta: { name: 'GameSession' } }
+  export interface CasinoGameSessionDelegate<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs, GlobalOmitOptions = {}> {
+    [K: symbol]: { types: Prisma.TypeMap<ExtArgs>['model']['CasinoGameSession'], meta: { name: 'CasinoGameSession' } }
     /**
-     * Find zero or one GameSession that matches the filter.
-     * @param {GameSessionFindUniqueArgs} args - Arguments to find a GameSession
+     * Find zero or one CasinoGameSession that matches the filter.
+     * @param {CasinoGameSessionFindUniqueArgs} args - Arguments to find a CasinoGameSession
      * @example
-     * // Get one GameSession
-     * const gameSession = await prisma.gameSession.findUnique({
+     * // Get one CasinoGameSession
+     * const casinoGameSession = await prisma.casinoGameSession.findUnique({
      *   where: {
      *     // ... provide filter here
      *   }
      * })
      */
-    findUnique<T extends GameSessionFindUniqueArgs>(args: SelectSubset<T, GameSessionFindUniqueArgs<ExtArgs>>): Prisma__GameSessionClient<$Result.GetResult<Prisma.$GameSessionPayload<ExtArgs>, T, "findUnique", GlobalOmitOptions> | null, null, ExtArgs, GlobalOmitOptions>
+    findUnique<T extends CasinoGameSessionFindUniqueArgs>(args: SelectSubset<T, CasinoGameSessionFindUniqueArgs<ExtArgs>>): Prisma__CasinoGameSessionClient<$Result.GetResult<Prisma.$CasinoGameSessionPayload<ExtArgs>, T, "findUnique", GlobalOmitOptions> | null, null, ExtArgs, GlobalOmitOptions>
 
     /**
-     * Find one GameSession that matches the filter or throw an error with `error.code='P2025'`
+     * Find one CasinoGameSession that matches the filter or throw an error with `error.code='P2025'`
      * if no matches were found.
-     * @param {GameSessionFindUniqueOrThrowArgs} args - Arguments to find a GameSession
+     * @param {CasinoGameSessionFindUniqueOrThrowArgs} args - Arguments to find a CasinoGameSession
      * @example
-     * // Get one GameSession
-     * const gameSession = await prisma.gameSession.findUniqueOrThrow({
+     * // Get one CasinoGameSession
+     * const casinoGameSession = await prisma.casinoGameSession.findUniqueOrThrow({
      *   where: {
      *     // ... provide filter here
      *   }
      * })
      */
-    findUniqueOrThrow<T extends GameSessionFindUniqueOrThrowArgs>(args: SelectSubset<T, GameSessionFindUniqueOrThrowArgs<ExtArgs>>): Prisma__GameSessionClient<$Result.GetResult<Prisma.$GameSessionPayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
+    findUniqueOrThrow<T extends CasinoGameSessionFindUniqueOrThrowArgs>(args: SelectSubset<T, CasinoGameSessionFindUniqueOrThrowArgs<ExtArgs>>): Prisma__CasinoGameSessionClient<$Result.GetResult<Prisma.$CasinoGameSessionPayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
 
     /**
-     * Find the first GameSession that matches the filter.
+     * Find the first CasinoGameSession that matches the filter.
      * Note, that providing `undefined` is treated as the value not being there.
      * Read more here: https://pris.ly/d/null-undefined
-     * @param {GameSessionFindFirstArgs} args - Arguments to find a GameSession
+     * @param {CasinoGameSessionFindFirstArgs} args - Arguments to find a CasinoGameSession
      * @example
-     * // Get one GameSession
-     * const gameSession = await prisma.gameSession.findFirst({
+     * // Get one CasinoGameSession
+     * const casinoGameSession = await prisma.casinoGameSession.findFirst({
      *   where: {
      *     // ... provide filter here
      *   }
      * })
      */
-    findFirst<T extends GameSessionFindFirstArgs>(args?: SelectSubset<T, GameSessionFindFirstArgs<ExtArgs>>): Prisma__GameSessionClient<$Result.GetResult<Prisma.$GameSessionPayload<ExtArgs>, T, "findFirst", GlobalOmitOptions> | null, null, ExtArgs, GlobalOmitOptions>
+    findFirst<T extends CasinoGameSessionFindFirstArgs>(args?: SelectSubset<T, CasinoGameSessionFindFirstArgs<ExtArgs>>): Prisma__CasinoGameSessionClient<$Result.GetResult<Prisma.$CasinoGameSessionPayload<ExtArgs>, T, "findFirst", GlobalOmitOptions> | null, null, ExtArgs, GlobalOmitOptions>
 
     /**
-     * Find the first GameSession that matches the filter or
+     * Find the first CasinoGameSession that matches the filter or
      * throw `PrismaKnownClientError` with `P2025` code if no matches were found.
      * Note, that providing `undefined` is treated as the value not being there.
      * Read more here: https://pris.ly/d/null-undefined
-     * @param {GameSessionFindFirstOrThrowArgs} args - Arguments to find a GameSession
+     * @param {CasinoGameSessionFindFirstOrThrowArgs} args - Arguments to find a CasinoGameSession
      * @example
-     * // Get one GameSession
-     * const gameSession = await prisma.gameSession.findFirstOrThrow({
+     * // Get one CasinoGameSession
+     * const casinoGameSession = await prisma.casinoGameSession.findFirstOrThrow({
      *   where: {
      *     // ... provide filter here
      *   }
      * })
      */
-    findFirstOrThrow<T extends GameSessionFindFirstOrThrowArgs>(args?: SelectSubset<T, GameSessionFindFirstOrThrowArgs<ExtArgs>>): Prisma__GameSessionClient<$Result.GetResult<Prisma.$GameSessionPayload<ExtArgs>, T, "findFirstOrThrow", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
+    findFirstOrThrow<T extends CasinoGameSessionFindFirstOrThrowArgs>(args?: SelectSubset<T, CasinoGameSessionFindFirstOrThrowArgs<ExtArgs>>): Prisma__CasinoGameSessionClient<$Result.GetResult<Prisma.$CasinoGameSessionPayload<ExtArgs>, T, "findFirstOrThrow", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
 
     /**
-     * Find zero or more GameSessions that matches the filter.
+     * Find zero or more CasinoGameSessions that matches the filter.
      * Note, that providing `undefined` is treated as the value not being there.
      * Read more here: https://pris.ly/d/null-undefined
-     * @param {GameSessionFindManyArgs} args - Arguments to filter and select certain fields only.
+     * @param {CasinoGameSessionFindManyArgs} args - Arguments to filter and select certain fields only.
      * @example
-     * // Get all GameSessions
-     * const gameSessions = await prisma.gameSession.findMany()
+     * // Get all CasinoGameSessions
+     * const casinoGameSessions = await prisma.casinoGameSession.findMany()
      * 
-     * // Get first 10 GameSessions
-     * const gameSessions = await prisma.gameSession.findMany({ take: 10 })
+     * // Get first 10 CasinoGameSessions
+     * const casinoGameSessions = await prisma.casinoGameSession.findMany({ take: 10 })
      * 
      * // Only select the `id`
-     * const gameSessionWithIdOnly = await prisma.gameSession.findMany({ select: { id: true } })
+     * const casinoGameSessionWithIdOnly = await prisma.casinoGameSession.findMany({ select: { id: true } })
      * 
      */
-    findMany<T extends GameSessionFindManyArgs>(args?: SelectSubset<T, GameSessionFindManyArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$GameSessionPayload<ExtArgs>, T, "findMany", GlobalOmitOptions>>
+    findMany<T extends CasinoGameSessionFindManyArgs>(args?: SelectSubset<T, CasinoGameSessionFindManyArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$CasinoGameSessionPayload<ExtArgs>, T, "findMany", GlobalOmitOptions>>
 
     /**
-     * Create a GameSession.
-     * @param {GameSessionCreateArgs} args - Arguments to create a GameSession.
+     * Create a CasinoGameSession.
+     * @param {CasinoGameSessionCreateArgs} args - Arguments to create a CasinoGameSession.
      * @example
-     * // Create one GameSession
-     * const GameSession = await prisma.gameSession.create({
+     * // Create one CasinoGameSession
+     * const CasinoGameSession = await prisma.casinoGameSession.create({
      *   data: {
-     *     // ... data to create a GameSession
+     *     // ... data to create a CasinoGameSession
      *   }
      * })
      * 
      */
-    create<T extends GameSessionCreateArgs>(args: SelectSubset<T, GameSessionCreateArgs<ExtArgs>>): Prisma__GameSessionClient<$Result.GetResult<Prisma.$GameSessionPayload<ExtArgs>, T, "create", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
+    create<T extends CasinoGameSessionCreateArgs>(args: SelectSubset<T, CasinoGameSessionCreateArgs<ExtArgs>>): Prisma__CasinoGameSessionClient<$Result.GetResult<Prisma.$CasinoGameSessionPayload<ExtArgs>, T, "create", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
 
     /**
-     * Create many GameSessions.
-     * @param {GameSessionCreateManyArgs} args - Arguments to create many GameSessions.
+     * Create many CasinoGameSessions.
+     * @param {CasinoGameSessionCreateManyArgs} args - Arguments to create many CasinoGameSessions.
      * @example
-     * // Create many GameSessions
-     * const gameSession = await prisma.gameSession.createMany({
+     * // Create many CasinoGameSessions
+     * const casinoGameSession = await prisma.casinoGameSession.createMany({
      *   data: [
      *     // ... provide data here
      *   ]
      * })
      *     
      */
-    createMany<T extends GameSessionCreateManyArgs>(args?: SelectSubset<T, GameSessionCreateManyArgs<ExtArgs>>): Prisma.PrismaPromise<BatchPayload>
+    createMany<T extends CasinoGameSessionCreateManyArgs>(args?: SelectSubset<T, CasinoGameSessionCreateManyArgs<ExtArgs>>): Prisma.PrismaPromise<BatchPayload>
 
     /**
-     * Create many GameSessions and returns the data saved in the database.
-     * @param {GameSessionCreateManyAndReturnArgs} args - Arguments to create many GameSessions.
+     * Create many CasinoGameSessions and returns the data saved in the database.
+     * @param {CasinoGameSessionCreateManyAndReturnArgs} args - Arguments to create many CasinoGameSessions.
      * @example
-     * // Create many GameSessions
-     * const gameSession = await prisma.gameSession.createManyAndReturn({
+     * // Create many CasinoGameSessions
+     * const casinoGameSession = await prisma.casinoGameSession.createManyAndReturn({
      *   data: [
      *     // ... provide data here
      *   ]
      * })
      * 
-     * // Create many GameSessions and only return the `id`
-     * const gameSessionWithIdOnly = await prisma.gameSession.createManyAndReturn({
+     * // Create many CasinoGameSessions and only return the `id`
+     * const casinoGameSessionWithIdOnly = await prisma.casinoGameSession.createManyAndReturn({
      *   select: { id: true },
      *   data: [
      *     // ... provide data here
@@ -17408,28 +17408,28 @@ export namespace Prisma {
      * Read more here: https://pris.ly/d/null-undefined
      * 
      */
-    createManyAndReturn<T extends GameSessionCreateManyAndReturnArgs>(args?: SelectSubset<T, GameSessionCreateManyAndReturnArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$GameSessionPayload<ExtArgs>, T, "createManyAndReturn", GlobalOmitOptions>>
+    createManyAndReturn<T extends CasinoGameSessionCreateManyAndReturnArgs>(args?: SelectSubset<T, CasinoGameSessionCreateManyAndReturnArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$CasinoGameSessionPayload<ExtArgs>, T, "createManyAndReturn", GlobalOmitOptions>>
 
     /**
-     * Delete a GameSession.
-     * @param {GameSessionDeleteArgs} args - Arguments to delete one GameSession.
+     * Delete a CasinoGameSession.
+     * @param {CasinoGameSessionDeleteArgs} args - Arguments to delete one CasinoGameSession.
      * @example
-     * // Delete one GameSession
-     * const GameSession = await prisma.gameSession.delete({
+     * // Delete one CasinoGameSession
+     * const CasinoGameSession = await prisma.casinoGameSession.delete({
      *   where: {
-     *     // ... filter to delete one GameSession
+     *     // ... filter to delete one CasinoGameSession
      *   }
      * })
      * 
      */
-    delete<T extends GameSessionDeleteArgs>(args: SelectSubset<T, GameSessionDeleteArgs<ExtArgs>>): Prisma__GameSessionClient<$Result.GetResult<Prisma.$GameSessionPayload<ExtArgs>, T, "delete", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
+    delete<T extends CasinoGameSessionDeleteArgs>(args: SelectSubset<T, CasinoGameSessionDeleteArgs<ExtArgs>>): Prisma__CasinoGameSessionClient<$Result.GetResult<Prisma.$CasinoGameSessionPayload<ExtArgs>, T, "delete", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
 
     /**
-     * Update one GameSession.
-     * @param {GameSessionUpdateArgs} args - Arguments to update one GameSession.
+     * Update one CasinoGameSession.
+     * @param {CasinoGameSessionUpdateArgs} args - Arguments to update one CasinoGameSession.
      * @example
-     * // Update one GameSession
-     * const gameSession = await prisma.gameSession.update({
+     * // Update one CasinoGameSession
+     * const casinoGameSession = await prisma.casinoGameSession.update({
      *   where: {
      *     // ... provide filter here
      *   },
@@ -17439,30 +17439,30 @@ export namespace Prisma {
      * })
      * 
      */
-    update<T extends GameSessionUpdateArgs>(args: SelectSubset<T, GameSessionUpdateArgs<ExtArgs>>): Prisma__GameSessionClient<$Result.GetResult<Prisma.$GameSessionPayload<ExtArgs>, T, "update", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
+    update<T extends CasinoGameSessionUpdateArgs>(args: SelectSubset<T, CasinoGameSessionUpdateArgs<ExtArgs>>): Prisma__CasinoGameSessionClient<$Result.GetResult<Prisma.$CasinoGameSessionPayload<ExtArgs>, T, "update", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
 
     /**
-     * Delete zero or more GameSessions.
-     * @param {GameSessionDeleteManyArgs} args - Arguments to filter GameSessions to delete.
+     * Delete zero or more CasinoGameSessions.
+     * @param {CasinoGameSessionDeleteManyArgs} args - Arguments to filter CasinoGameSessions to delete.
      * @example
-     * // Delete a few GameSessions
-     * const { count } = await prisma.gameSession.deleteMany({
+     * // Delete a few CasinoGameSessions
+     * const { count } = await prisma.casinoGameSession.deleteMany({
      *   where: {
      *     // ... provide filter here
      *   }
      * })
      * 
      */
-    deleteMany<T extends GameSessionDeleteManyArgs>(args?: SelectSubset<T, GameSessionDeleteManyArgs<ExtArgs>>): Prisma.PrismaPromise<BatchPayload>
+    deleteMany<T extends CasinoGameSessionDeleteManyArgs>(args?: SelectSubset<T, CasinoGameSessionDeleteManyArgs<ExtArgs>>): Prisma.PrismaPromise<BatchPayload>
 
     /**
-     * Update zero or more GameSessions.
+     * Update zero or more CasinoGameSessions.
      * Note, that providing `undefined` is treated as the value not being there.
      * Read more here: https://pris.ly/d/null-undefined
-     * @param {GameSessionUpdateManyArgs} args - Arguments to update one or more rows.
+     * @param {CasinoGameSessionUpdateManyArgs} args - Arguments to update one or more rows.
      * @example
-     * // Update many GameSessions
-     * const gameSession = await prisma.gameSession.updateMany({
+     * // Update many CasinoGameSessions
+     * const casinoGameSession = await prisma.casinoGameSession.updateMany({
      *   where: {
      *     // ... provide filter here
      *   },
@@ -17472,14 +17472,14 @@ export namespace Prisma {
      * })
      * 
      */
-    updateMany<T extends GameSessionUpdateManyArgs>(args: SelectSubset<T, GameSessionUpdateManyArgs<ExtArgs>>): Prisma.PrismaPromise<BatchPayload>
+    updateMany<T extends CasinoGameSessionUpdateManyArgs>(args: SelectSubset<T, CasinoGameSessionUpdateManyArgs<ExtArgs>>): Prisma.PrismaPromise<BatchPayload>
 
     /**
-     * Update zero or more GameSessions and returns the data updated in the database.
-     * @param {GameSessionUpdateManyAndReturnArgs} args - Arguments to update many GameSessions.
+     * Update zero or more CasinoGameSessions and returns the data updated in the database.
+     * @param {CasinoGameSessionUpdateManyAndReturnArgs} args - Arguments to update many CasinoGameSessions.
      * @example
-     * // Update many GameSessions
-     * const gameSession = await prisma.gameSession.updateManyAndReturn({
+     * // Update many CasinoGameSessions
+     * const casinoGameSession = await prisma.casinoGameSession.updateManyAndReturn({
      *   where: {
      *     // ... provide filter here
      *   },
@@ -17488,8 +17488,8 @@ export namespace Prisma {
      *   ]
      * })
      * 
-     * // Update zero or more GameSessions and only return the `id`
-     * const gameSessionWithIdOnly = await prisma.gameSession.updateManyAndReturn({
+     * // Update zero or more CasinoGameSessions and only return the `id`
+     * const casinoGameSessionWithIdOnly = await prisma.casinoGameSession.updateManyAndReturn({
      *   select: { id: true },
      *   where: {
      *     // ... provide filter here
@@ -17502,56 +17502,56 @@ export namespace Prisma {
      * Read more here: https://pris.ly/d/null-undefined
      * 
      */
-    updateManyAndReturn<T extends GameSessionUpdateManyAndReturnArgs>(args: SelectSubset<T, GameSessionUpdateManyAndReturnArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$GameSessionPayload<ExtArgs>, T, "updateManyAndReturn", GlobalOmitOptions>>
+    updateManyAndReturn<T extends CasinoGameSessionUpdateManyAndReturnArgs>(args: SelectSubset<T, CasinoGameSessionUpdateManyAndReturnArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$CasinoGameSessionPayload<ExtArgs>, T, "updateManyAndReturn", GlobalOmitOptions>>
 
     /**
-     * Create or update one GameSession.
-     * @param {GameSessionUpsertArgs} args - Arguments to update or create a GameSession.
+     * Create or update one CasinoGameSession.
+     * @param {CasinoGameSessionUpsertArgs} args - Arguments to update or create a CasinoGameSession.
      * @example
-     * // Update or create a GameSession
-     * const gameSession = await prisma.gameSession.upsert({
+     * // Update or create a CasinoGameSession
+     * const casinoGameSession = await prisma.casinoGameSession.upsert({
      *   create: {
-     *     // ... data to create a GameSession
+     *     // ... data to create a CasinoGameSession
      *   },
      *   update: {
      *     // ... in case it already exists, update
      *   },
      *   where: {
-     *     // ... the filter for the GameSession we want to update
+     *     // ... the filter for the CasinoGameSession we want to update
      *   }
      * })
      */
-    upsert<T extends GameSessionUpsertArgs>(args: SelectSubset<T, GameSessionUpsertArgs<ExtArgs>>): Prisma__GameSessionClient<$Result.GetResult<Prisma.$GameSessionPayload<ExtArgs>, T, "upsert", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
+    upsert<T extends CasinoGameSessionUpsertArgs>(args: SelectSubset<T, CasinoGameSessionUpsertArgs<ExtArgs>>): Prisma__CasinoGameSessionClient<$Result.GetResult<Prisma.$CasinoGameSessionPayload<ExtArgs>, T, "upsert", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
 
 
     /**
-     * Count the number of GameSessions.
+     * Count the number of CasinoGameSessions.
      * Note, that providing `undefined` is treated as the value not being there.
      * Read more here: https://pris.ly/d/null-undefined
-     * @param {GameSessionCountArgs} args - Arguments to filter GameSessions to count.
+     * @param {CasinoGameSessionCountArgs} args - Arguments to filter CasinoGameSessions to count.
      * @example
-     * // Count the number of GameSessions
-     * const count = await prisma.gameSession.count({
+     * // Count the number of CasinoGameSessions
+     * const count = await prisma.casinoGameSession.count({
      *   where: {
-     *     // ... the filter for the GameSessions we want to count
+     *     // ... the filter for the CasinoGameSessions we want to count
      *   }
      * })
     **/
-    count<T extends GameSessionCountArgs>(
-      args?: Subset<T, GameSessionCountArgs>,
+    count<T extends CasinoGameSessionCountArgs>(
+      args?: Subset<T, CasinoGameSessionCountArgs>,
     ): Prisma.PrismaPromise<
       T extends $Utils.Record<'select', any>
         ? T['select'] extends true
           ? number
-          : GetScalarType<T['select'], GameSessionCountAggregateOutputType>
+          : GetScalarType<T['select'], CasinoGameSessionCountAggregateOutputType>
         : number
     >
 
     /**
-     * Allows you to perform aggregations operations on a GameSession.
+     * Allows you to perform aggregations operations on a CasinoGameSession.
      * Note, that providing `undefined` is treated as the value not being there.
      * Read more here: https://pris.ly/d/null-undefined
-     * @param {GameSessionAggregateArgs} args - Select which aggregations you would like to apply and on what fields.
+     * @param {CasinoGameSessionAggregateArgs} args - Select which aggregations you would like to apply and on what fields.
      * @example
      * // Ordered by age ascending
      * // Where email contains prisma.io
@@ -17571,13 +17571,13 @@ export namespace Prisma {
      *   take: 10,
      * })
     **/
-    aggregate<T extends GameSessionAggregateArgs>(args: Subset<T, GameSessionAggregateArgs>): Prisma.PrismaPromise<GetGameSessionAggregateType<T>>
+    aggregate<T extends CasinoGameSessionAggregateArgs>(args: Subset<T, CasinoGameSessionAggregateArgs>): Prisma.PrismaPromise<GetCasinoGameSessionAggregateType<T>>
 
     /**
-     * Group by GameSession.
+     * Group by CasinoGameSession.
      * Note, that providing `undefined` is treated as the value not being there.
      * Read more here: https://pris.ly/d/null-undefined
-     * @param {GameSessionGroupByArgs} args - Group by arguments.
+     * @param {CasinoGameSessionGroupByArgs} args - Group by arguments.
      * @example
      * // Group by city, order by createdAt, get count
      * const result = await prisma.user.groupBy({
@@ -17592,14 +17592,14 @@ export namespace Prisma {
      * 
     **/
     groupBy<
-      T extends GameSessionGroupByArgs,
+      T extends CasinoGameSessionGroupByArgs,
       HasSelectOrTake extends Or<
         Extends<'skip', Keys<T>>,
         Extends<'take', Keys<T>>
       >,
       OrderByArg extends True extends HasSelectOrTake
-        ? { orderBy: GameSessionGroupByArgs['orderBy'] }
-        : { orderBy?: GameSessionGroupByArgs['orderBy'] },
+        ? { orderBy: CasinoGameSessionGroupByArgs['orderBy'] }
+        : { orderBy?: CasinoGameSessionGroupByArgs['orderBy'] },
       OrderFields extends ExcludeUnderscoreKeys<Keys<MaybeTupleToUnion<T['orderBy']>>>,
       ByFields extends MaybeTupleToUnion<T['by']>,
       ByValid extends Has<ByFields, OrderFields>,
@@ -17648,23 +17648,23 @@ export namespace Prisma {
             ? never
             : `Error: Field "${P}" in "orderBy" needs to be provided in "by"`
         }[OrderFields]
-    >(args: SubsetIntersection<T, GameSessionGroupByArgs, OrderByArg> & InputErrors): {} extends InputErrors ? GetGameSessionGroupByPayload<T> : Prisma.PrismaPromise<InputErrors>
+    >(args: SubsetIntersection<T, CasinoGameSessionGroupByArgs, OrderByArg> & InputErrors): {} extends InputErrors ? GetCasinoGameSessionGroupByPayload<T> : Prisma.PrismaPromise<InputErrors>
   /**
-   * Fields of the GameSession model
+   * Fields of the CasinoGameSession model
    */
-  readonly fields: GameSessionFieldRefs;
+  readonly fields: CasinoGameSessionFieldRefs;
   }
 
   /**
-   * The delegate class that acts as a "Promise-like" for GameSession.
+   * The delegate class that acts as a "Promise-like" for CasinoGameSession.
    * Why is this prefixed with `Prisma__`?
    * Because we want to prevent naming conflicts as mentioned in
    * https://github.com/prisma/prisma-client-js/issues/707
    */
-  export interface Prisma__GameSessionClient<T, Null = never, ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs, GlobalOmitOptions = {}> extends Prisma.PrismaPromise<T> {
+  export interface Prisma__CasinoGameSessionClient<T, Null = never, ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs, GlobalOmitOptions = {}> extends Prisma.PrismaPromise<T> {
     readonly [Symbol.toStringTag]: "PrismaPromise"
-    gameRounds<T extends GameSession$gameRoundsArgs<ExtArgs> = {}>(args?: Subset<T, GameSession$gameRoundsArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$GameRoundPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
-    game<T extends GameSession$gameArgs<ExtArgs> = {}>(args?: Subset<T, GameSession$gameArgs<ExtArgs>>): Prisma__CasinoGameClient<$Result.GetResult<Prisma.$CasinoGamePayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions> | null, null, ExtArgs, GlobalOmitOptions>
+    gameRounds<T extends CasinoGameSession$gameRoundsArgs<ExtArgs> = {}>(args?: Subset<T, CasinoGameSession$gameRoundsArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$GameRoundPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
+    game<T extends CasinoGameSession$gameArgs<ExtArgs> = {}>(args?: Subset<T, CasinoGameSession$gameArgs<ExtArgs>>): Prisma__CasinoGameClient<$Result.GetResult<Prisma.$CasinoGamePayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions> | null, null, ExtArgs, GlobalOmitOptions>
     user<T extends UserDefaultArgs<ExtArgs> = {}>(args?: Subset<T, UserDefaultArgs<ExtArgs>>): Prisma__UserClient<$Result.GetResult<Prisma.$UserPayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions> | Null, Null, ExtArgs, GlobalOmitOptions>
     /**
      * Attaches callbacks for the resolution and/or rejection of the Promise.
@@ -17692,420 +17692,420 @@ export namespace Prisma {
 
 
   /**
-   * Fields of the GameSession model
+   * Fields of the CasinoGameSession model
    */
-  interface GameSessionFieldRefs {
-    readonly id: FieldRef<"GameSession", 'BigInt'>
-    readonly userId: FieldRef<"GameSession", 'BigInt'>
-    readonly createdAt: FieldRef<"GameSession", 'DateTime'>
-    readonly updatedAt: FieldRef<"GameSession", 'DateTime'>
-    readonly lastAccessedAt: FieldRef<"GameSession", 'DateTime'>
-    readonly aggregatorType: FieldRef<"GameSession", 'GameAggregatorType'>
-    readonly token: FieldRef<"GameSession", 'String'>
-    readonly walletCurrency: FieldRef<"GameSession", 'ExchangeCurrencyCode'>
-    readonly gameCurrency: FieldRef<"GameSession", 'ExchangeCurrencyCode'>
-    readonly exchangeRate: FieldRef<"GameSession", 'Decimal'>
-    readonly exchangeRateSnapshotAt: FieldRef<"GameSession", 'DateTime'>
-    readonly gameId: FieldRef<"GameSession", 'Int'>
+  interface CasinoGameSessionFieldRefs {
+    readonly id: FieldRef<"CasinoGameSession", 'BigInt'>
+    readonly userId: FieldRef<"CasinoGameSession", 'BigInt'>
+    readonly createdAt: FieldRef<"CasinoGameSession", 'DateTime'>
+    readonly updatedAt: FieldRef<"CasinoGameSession", 'DateTime'>
+    readonly lastAccessedAt: FieldRef<"CasinoGameSession", 'DateTime'>
+    readonly aggregatorType: FieldRef<"CasinoGameSession", 'GameAggregatorType'>
+    readonly token: FieldRef<"CasinoGameSession", 'String'>
+    readonly walletCurrency: FieldRef<"CasinoGameSession", 'ExchangeCurrencyCode'>
+    readonly gameCurrency: FieldRef<"CasinoGameSession", 'ExchangeCurrencyCode'>
+    readonly exchangeRate: FieldRef<"CasinoGameSession", 'Decimal'>
+    readonly exchangeRateSnapshotAt: FieldRef<"CasinoGameSession", 'DateTime'>
+    readonly gameId: FieldRef<"CasinoGameSession", 'Int'>
   }
     
 
   // Custom InputTypes
   /**
-   * GameSession findUnique
+   * CasinoGameSession findUnique
    */
-  export type GameSessionFindUniqueArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+  export type CasinoGameSessionFindUniqueArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
     /**
-     * Select specific fields to fetch from the GameSession
+     * Select specific fields to fetch from the CasinoGameSession
      */
-    select?: GameSessionSelect<ExtArgs> | null
+    select?: CasinoGameSessionSelect<ExtArgs> | null
     /**
-     * Omit specific fields from the GameSession
+     * Omit specific fields from the CasinoGameSession
      */
-    omit?: GameSessionOmit<ExtArgs> | null
+    omit?: CasinoGameSessionOmit<ExtArgs> | null
     /**
      * Choose, which related nodes to fetch as well
      */
-    include?: GameSessionInclude<ExtArgs> | null
+    include?: CasinoGameSessionInclude<ExtArgs> | null
     /**
-     * Filter, which GameSession to fetch.
+     * Filter, which CasinoGameSession to fetch.
      */
-    where: GameSessionWhereUniqueInput
+    where: CasinoGameSessionWhereUniqueInput
   }
 
   /**
-   * GameSession findUniqueOrThrow
+   * CasinoGameSession findUniqueOrThrow
    */
-  export type GameSessionFindUniqueOrThrowArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+  export type CasinoGameSessionFindUniqueOrThrowArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
     /**
-     * Select specific fields to fetch from the GameSession
+     * Select specific fields to fetch from the CasinoGameSession
      */
-    select?: GameSessionSelect<ExtArgs> | null
+    select?: CasinoGameSessionSelect<ExtArgs> | null
     /**
-     * Omit specific fields from the GameSession
+     * Omit specific fields from the CasinoGameSession
      */
-    omit?: GameSessionOmit<ExtArgs> | null
+    omit?: CasinoGameSessionOmit<ExtArgs> | null
     /**
      * Choose, which related nodes to fetch as well
      */
-    include?: GameSessionInclude<ExtArgs> | null
+    include?: CasinoGameSessionInclude<ExtArgs> | null
     /**
-     * Filter, which GameSession to fetch.
+     * Filter, which CasinoGameSession to fetch.
      */
-    where: GameSessionWhereUniqueInput
+    where: CasinoGameSessionWhereUniqueInput
   }
 
   /**
-   * GameSession findFirst
+   * CasinoGameSession findFirst
    */
-  export type GameSessionFindFirstArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+  export type CasinoGameSessionFindFirstArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
     /**
-     * Select specific fields to fetch from the GameSession
+     * Select specific fields to fetch from the CasinoGameSession
      */
-    select?: GameSessionSelect<ExtArgs> | null
+    select?: CasinoGameSessionSelect<ExtArgs> | null
     /**
-     * Omit specific fields from the GameSession
+     * Omit specific fields from the CasinoGameSession
      */
-    omit?: GameSessionOmit<ExtArgs> | null
+    omit?: CasinoGameSessionOmit<ExtArgs> | null
     /**
      * Choose, which related nodes to fetch as well
      */
-    include?: GameSessionInclude<ExtArgs> | null
+    include?: CasinoGameSessionInclude<ExtArgs> | null
     /**
-     * Filter, which GameSession to fetch.
+     * Filter, which CasinoGameSession to fetch.
      */
-    where?: GameSessionWhereInput
+    where?: CasinoGameSessionWhereInput
     /**
      * {@link https://www.prisma.io/docs/concepts/components/prisma-client/sorting Sorting Docs}
      * 
-     * Determine the order of GameSessions to fetch.
+     * Determine the order of CasinoGameSessions to fetch.
      */
-    orderBy?: GameSessionOrderByWithRelationInput | GameSessionOrderByWithRelationInput[]
+    orderBy?: CasinoGameSessionOrderByWithRelationInput | CasinoGameSessionOrderByWithRelationInput[]
     /**
      * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination#cursor-based-pagination Cursor Docs}
      * 
-     * Sets the position for searching for GameSessions.
+     * Sets the position for searching for CasinoGameSessions.
      */
-    cursor?: GameSessionWhereUniqueInput
+    cursor?: CasinoGameSessionWhereUniqueInput
     /**
      * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
      * 
-     * Take `±n` GameSessions from the position of the cursor.
+     * Take `±n` CasinoGameSessions from the position of the cursor.
      */
     take?: number
     /**
      * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
      * 
-     * Skip the first `n` GameSessions.
+     * Skip the first `n` CasinoGameSessions.
      */
     skip?: number
     /**
      * {@link https://www.prisma.io/docs/concepts/components/prisma-client/distinct Distinct Docs}
      * 
-     * Filter by unique combinations of GameSessions.
+     * Filter by unique combinations of CasinoGameSessions.
      */
-    distinct?: GameSessionScalarFieldEnum | GameSessionScalarFieldEnum[]
+    distinct?: CasinoGameSessionScalarFieldEnum | CasinoGameSessionScalarFieldEnum[]
   }
 
   /**
-   * GameSession findFirstOrThrow
+   * CasinoGameSession findFirstOrThrow
    */
-  export type GameSessionFindFirstOrThrowArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+  export type CasinoGameSessionFindFirstOrThrowArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
     /**
-     * Select specific fields to fetch from the GameSession
+     * Select specific fields to fetch from the CasinoGameSession
      */
-    select?: GameSessionSelect<ExtArgs> | null
+    select?: CasinoGameSessionSelect<ExtArgs> | null
     /**
-     * Omit specific fields from the GameSession
+     * Omit specific fields from the CasinoGameSession
      */
-    omit?: GameSessionOmit<ExtArgs> | null
+    omit?: CasinoGameSessionOmit<ExtArgs> | null
     /**
      * Choose, which related nodes to fetch as well
      */
-    include?: GameSessionInclude<ExtArgs> | null
+    include?: CasinoGameSessionInclude<ExtArgs> | null
     /**
-     * Filter, which GameSession to fetch.
+     * Filter, which CasinoGameSession to fetch.
      */
-    where?: GameSessionWhereInput
+    where?: CasinoGameSessionWhereInput
     /**
      * {@link https://www.prisma.io/docs/concepts/components/prisma-client/sorting Sorting Docs}
      * 
-     * Determine the order of GameSessions to fetch.
+     * Determine the order of CasinoGameSessions to fetch.
      */
-    orderBy?: GameSessionOrderByWithRelationInput | GameSessionOrderByWithRelationInput[]
+    orderBy?: CasinoGameSessionOrderByWithRelationInput | CasinoGameSessionOrderByWithRelationInput[]
     /**
      * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination#cursor-based-pagination Cursor Docs}
      * 
-     * Sets the position for searching for GameSessions.
+     * Sets the position for searching for CasinoGameSessions.
      */
-    cursor?: GameSessionWhereUniqueInput
+    cursor?: CasinoGameSessionWhereUniqueInput
     /**
      * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
      * 
-     * Take `±n` GameSessions from the position of the cursor.
+     * Take `±n` CasinoGameSessions from the position of the cursor.
      */
     take?: number
     /**
      * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
      * 
-     * Skip the first `n` GameSessions.
+     * Skip the first `n` CasinoGameSessions.
      */
     skip?: number
     /**
      * {@link https://www.prisma.io/docs/concepts/components/prisma-client/distinct Distinct Docs}
      * 
-     * Filter by unique combinations of GameSessions.
+     * Filter by unique combinations of CasinoGameSessions.
      */
-    distinct?: GameSessionScalarFieldEnum | GameSessionScalarFieldEnum[]
+    distinct?: CasinoGameSessionScalarFieldEnum | CasinoGameSessionScalarFieldEnum[]
   }
 
   /**
-   * GameSession findMany
+   * CasinoGameSession findMany
    */
-  export type GameSessionFindManyArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+  export type CasinoGameSessionFindManyArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
     /**
-     * Select specific fields to fetch from the GameSession
+     * Select specific fields to fetch from the CasinoGameSession
      */
-    select?: GameSessionSelect<ExtArgs> | null
+    select?: CasinoGameSessionSelect<ExtArgs> | null
     /**
-     * Omit specific fields from the GameSession
+     * Omit specific fields from the CasinoGameSession
      */
-    omit?: GameSessionOmit<ExtArgs> | null
+    omit?: CasinoGameSessionOmit<ExtArgs> | null
     /**
      * Choose, which related nodes to fetch as well
      */
-    include?: GameSessionInclude<ExtArgs> | null
+    include?: CasinoGameSessionInclude<ExtArgs> | null
     /**
-     * Filter, which GameSessions to fetch.
+     * Filter, which CasinoGameSessions to fetch.
      */
-    where?: GameSessionWhereInput
+    where?: CasinoGameSessionWhereInput
     /**
      * {@link https://www.prisma.io/docs/concepts/components/prisma-client/sorting Sorting Docs}
      * 
-     * Determine the order of GameSessions to fetch.
+     * Determine the order of CasinoGameSessions to fetch.
      */
-    orderBy?: GameSessionOrderByWithRelationInput | GameSessionOrderByWithRelationInput[]
+    orderBy?: CasinoGameSessionOrderByWithRelationInput | CasinoGameSessionOrderByWithRelationInput[]
     /**
      * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination#cursor-based-pagination Cursor Docs}
      * 
-     * Sets the position for listing GameSessions.
+     * Sets the position for listing CasinoGameSessions.
      */
-    cursor?: GameSessionWhereUniqueInput
+    cursor?: CasinoGameSessionWhereUniqueInput
     /**
      * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
      * 
-     * Take `±n` GameSessions from the position of the cursor.
+     * Take `±n` CasinoGameSessions from the position of the cursor.
      */
     take?: number
     /**
      * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
      * 
-     * Skip the first `n` GameSessions.
+     * Skip the first `n` CasinoGameSessions.
      */
     skip?: number
-    distinct?: GameSessionScalarFieldEnum | GameSessionScalarFieldEnum[]
+    distinct?: CasinoGameSessionScalarFieldEnum | CasinoGameSessionScalarFieldEnum[]
   }
 
   /**
-   * GameSession create
+   * CasinoGameSession create
    */
-  export type GameSessionCreateArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+  export type CasinoGameSessionCreateArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
     /**
-     * Select specific fields to fetch from the GameSession
+     * Select specific fields to fetch from the CasinoGameSession
      */
-    select?: GameSessionSelect<ExtArgs> | null
+    select?: CasinoGameSessionSelect<ExtArgs> | null
     /**
-     * Omit specific fields from the GameSession
+     * Omit specific fields from the CasinoGameSession
      */
-    omit?: GameSessionOmit<ExtArgs> | null
+    omit?: CasinoGameSessionOmit<ExtArgs> | null
     /**
      * Choose, which related nodes to fetch as well
      */
-    include?: GameSessionInclude<ExtArgs> | null
+    include?: CasinoGameSessionInclude<ExtArgs> | null
     /**
-     * The data needed to create a GameSession.
+     * The data needed to create a CasinoGameSession.
      */
-    data: XOR<GameSessionCreateInput, GameSessionUncheckedCreateInput>
+    data: XOR<CasinoGameSessionCreateInput, CasinoGameSessionUncheckedCreateInput>
   }
 
   /**
-   * GameSession createMany
+   * CasinoGameSession createMany
    */
-  export type GameSessionCreateManyArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+  export type CasinoGameSessionCreateManyArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
     /**
-     * The data used to create many GameSessions.
+     * The data used to create many CasinoGameSessions.
      */
-    data: GameSessionCreateManyInput | GameSessionCreateManyInput[]
+    data: CasinoGameSessionCreateManyInput | CasinoGameSessionCreateManyInput[]
     skipDuplicates?: boolean
   }
 
   /**
-   * GameSession createManyAndReturn
+   * CasinoGameSession createManyAndReturn
    */
-  export type GameSessionCreateManyAndReturnArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+  export type CasinoGameSessionCreateManyAndReturnArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
     /**
-     * Select specific fields to fetch from the GameSession
+     * Select specific fields to fetch from the CasinoGameSession
      */
-    select?: GameSessionSelectCreateManyAndReturn<ExtArgs> | null
+    select?: CasinoGameSessionSelectCreateManyAndReturn<ExtArgs> | null
     /**
-     * Omit specific fields from the GameSession
+     * Omit specific fields from the CasinoGameSession
      */
-    omit?: GameSessionOmit<ExtArgs> | null
+    omit?: CasinoGameSessionOmit<ExtArgs> | null
     /**
-     * The data used to create many GameSessions.
+     * The data used to create many CasinoGameSessions.
      */
-    data: GameSessionCreateManyInput | GameSessionCreateManyInput[]
+    data: CasinoGameSessionCreateManyInput | CasinoGameSessionCreateManyInput[]
     skipDuplicates?: boolean
     /**
      * Choose, which related nodes to fetch as well
      */
-    include?: GameSessionIncludeCreateManyAndReturn<ExtArgs> | null
+    include?: CasinoGameSessionIncludeCreateManyAndReturn<ExtArgs> | null
   }
 
   /**
-   * GameSession update
+   * CasinoGameSession update
    */
-  export type GameSessionUpdateArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+  export type CasinoGameSessionUpdateArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
     /**
-     * Select specific fields to fetch from the GameSession
+     * Select specific fields to fetch from the CasinoGameSession
      */
-    select?: GameSessionSelect<ExtArgs> | null
+    select?: CasinoGameSessionSelect<ExtArgs> | null
     /**
-     * Omit specific fields from the GameSession
+     * Omit specific fields from the CasinoGameSession
      */
-    omit?: GameSessionOmit<ExtArgs> | null
+    omit?: CasinoGameSessionOmit<ExtArgs> | null
     /**
      * Choose, which related nodes to fetch as well
      */
-    include?: GameSessionInclude<ExtArgs> | null
+    include?: CasinoGameSessionInclude<ExtArgs> | null
     /**
-     * The data needed to update a GameSession.
+     * The data needed to update a CasinoGameSession.
      */
-    data: XOR<GameSessionUpdateInput, GameSessionUncheckedUpdateInput>
+    data: XOR<CasinoGameSessionUpdateInput, CasinoGameSessionUncheckedUpdateInput>
     /**
-     * Choose, which GameSession to update.
+     * Choose, which CasinoGameSession to update.
      */
-    where: GameSessionWhereUniqueInput
+    where: CasinoGameSessionWhereUniqueInput
   }
 
   /**
-   * GameSession updateMany
+   * CasinoGameSession updateMany
    */
-  export type GameSessionUpdateManyArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+  export type CasinoGameSessionUpdateManyArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
     /**
-     * The data used to update GameSessions.
+     * The data used to update CasinoGameSessions.
      */
-    data: XOR<GameSessionUpdateManyMutationInput, GameSessionUncheckedUpdateManyInput>
+    data: XOR<CasinoGameSessionUpdateManyMutationInput, CasinoGameSessionUncheckedUpdateManyInput>
     /**
-     * Filter which GameSessions to update
+     * Filter which CasinoGameSessions to update
      */
-    where?: GameSessionWhereInput
+    where?: CasinoGameSessionWhereInput
     /**
-     * Limit how many GameSessions to update.
+     * Limit how many CasinoGameSessions to update.
      */
     limit?: number
   }
 
   /**
-   * GameSession updateManyAndReturn
+   * CasinoGameSession updateManyAndReturn
    */
-  export type GameSessionUpdateManyAndReturnArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+  export type CasinoGameSessionUpdateManyAndReturnArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
     /**
-     * Select specific fields to fetch from the GameSession
+     * Select specific fields to fetch from the CasinoGameSession
      */
-    select?: GameSessionSelectUpdateManyAndReturn<ExtArgs> | null
+    select?: CasinoGameSessionSelectUpdateManyAndReturn<ExtArgs> | null
     /**
-     * Omit specific fields from the GameSession
+     * Omit specific fields from the CasinoGameSession
      */
-    omit?: GameSessionOmit<ExtArgs> | null
+    omit?: CasinoGameSessionOmit<ExtArgs> | null
     /**
-     * The data used to update GameSessions.
+     * The data used to update CasinoGameSessions.
      */
-    data: XOR<GameSessionUpdateManyMutationInput, GameSessionUncheckedUpdateManyInput>
+    data: XOR<CasinoGameSessionUpdateManyMutationInput, CasinoGameSessionUncheckedUpdateManyInput>
     /**
-     * Filter which GameSessions to update
+     * Filter which CasinoGameSessions to update
      */
-    where?: GameSessionWhereInput
+    where?: CasinoGameSessionWhereInput
     /**
-     * Limit how many GameSessions to update.
+     * Limit how many CasinoGameSessions to update.
      */
     limit?: number
     /**
      * Choose, which related nodes to fetch as well
      */
-    include?: GameSessionIncludeUpdateManyAndReturn<ExtArgs> | null
+    include?: CasinoGameSessionIncludeUpdateManyAndReturn<ExtArgs> | null
   }
 
   /**
-   * GameSession upsert
+   * CasinoGameSession upsert
    */
-  export type GameSessionUpsertArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+  export type CasinoGameSessionUpsertArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
     /**
-     * Select specific fields to fetch from the GameSession
+     * Select specific fields to fetch from the CasinoGameSession
      */
-    select?: GameSessionSelect<ExtArgs> | null
+    select?: CasinoGameSessionSelect<ExtArgs> | null
     /**
-     * Omit specific fields from the GameSession
+     * Omit specific fields from the CasinoGameSession
      */
-    omit?: GameSessionOmit<ExtArgs> | null
+    omit?: CasinoGameSessionOmit<ExtArgs> | null
     /**
      * Choose, which related nodes to fetch as well
      */
-    include?: GameSessionInclude<ExtArgs> | null
+    include?: CasinoGameSessionInclude<ExtArgs> | null
     /**
-     * The filter to search for the GameSession to update in case it exists.
+     * The filter to search for the CasinoGameSession to update in case it exists.
      */
-    where: GameSessionWhereUniqueInput
+    where: CasinoGameSessionWhereUniqueInput
     /**
-     * In case the GameSession found by the `where` argument doesn't exist, create a new GameSession with this data.
+     * In case the CasinoGameSession found by the `where` argument doesn't exist, create a new CasinoGameSession with this data.
      */
-    create: XOR<GameSessionCreateInput, GameSessionUncheckedCreateInput>
+    create: XOR<CasinoGameSessionCreateInput, CasinoGameSessionUncheckedCreateInput>
     /**
-     * In case the GameSession was found with the provided `where` argument, update it with this data.
+     * In case the CasinoGameSession was found with the provided `where` argument, update it with this data.
      */
-    update: XOR<GameSessionUpdateInput, GameSessionUncheckedUpdateInput>
+    update: XOR<CasinoGameSessionUpdateInput, CasinoGameSessionUncheckedUpdateInput>
   }
 
   /**
-   * GameSession delete
+   * CasinoGameSession delete
    */
-  export type GameSessionDeleteArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+  export type CasinoGameSessionDeleteArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
     /**
-     * Select specific fields to fetch from the GameSession
+     * Select specific fields to fetch from the CasinoGameSession
      */
-    select?: GameSessionSelect<ExtArgs> | null
+    select?: CasinoGameSessionSelect<ExtArgs> | null
     /**
-     * Omit specific fields from the GameSession
+     * Omit specific fields from the CasinoGameSession
      */
-    omit?: GameSessionOmit<ExtArgs> | null
+    omit?: CasinoGameSessionOmit<ExtArgs> | null
     /**
      * Choose, which related nodes to fetch as well
      */
-    include?: GameSessionInclude<ExtArgs> | null
+    include?: CasinoGameSessionInclude<ExtArgs> | null
     /**
-     * Filter which GameSession to delete.
+     * Filter which CasinoGameSession to delete.
      */
-    where: GameSessionWhereUniqueInput
+    where: CasinoGameSessionWhereUniqueInput
   }
 
   /**
-   * GameSession deleteMany
+   * CasinoGameSession deleteMany
    */
-  export type GameSessionDeleteManyArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+  export type CasinoGameSessionDeleteManyArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
     /**
-     * Filter which GameSessions to delete
+     * Filter which CasinoGameSessions to delete
      */
-    where?: GameSessionWhereInput
+    where?: CasinoGameSessionWhereInput
     /**
-     * Limit how many GameSessions to delete.
+     * Limit how many CasinoGameSessions to delete.
      */
     limit?: number
   }
 
   /**
-   * GameSession.gameRounds
+   * CasinoGameSession.gameRounds
    */
-  export type GameSession$gameRoundsArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+  export type CasinoGameSession$gameRoundsArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
     /**
      * Select specific fields to fetch from the GameRound
      */
@@ -18127,9 +18127,9 @@ export namespace Prisma {
   }
 
   /**
-   * GameSession.game
+   * CasinoGameSession.game
    */
-  export type GameSession$gameArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+  export type CasinoGameSession$gameArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
     /**
      * Select specific fields to fetch from the CasinoGame
      */
@@ -18146,21 +18146,21 @@ export namespace Prisma {
   }
 
   /**
-   * GameSession without action
+   * CasinoGameSession without action
    */
-  export type GameSessionDefaultArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+  export type CasinoGameSessionDefaultArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
     /**
-     * Select specific fields to fetch from the GameSession
+     * Select specific fields to fetch from the CasinoGameSession
      */
-    select?: GameSessionSelect<ExtArgs> | null
+    select?: CasinoGameSessionSelect<ExtArgs> | null
     /**
-     * Omit specific fields from the GameSession
+     * Omit specific fields from the CasinoGameSession
      */
-    omit?: GameSessionOmit<ExtArgs> | null
+    omit?: CasinoGameSessionOmit<ExtArgs> | null
     /**
      * Choose, which related nodes to fetch as well
      */
-    include?: GameSessionInclude<ExtArgs> | null
+    include?: CasinoGameSessionInclude<ExtArgs> | null
   }
 
 
@@ -18621,7 +18621,7 @@ export namespace Prisma {
       CompTransaction: Prisma.$CompTransactionPayload<ExtArgs>[]
       DailyCompEarning: Prisma.$DailyCompEarningPayload<ExtArgs>[]
       EmailLog: Prisma.$EmailLogPayload<ExtArgs>[]
-      GameSession: Prisma.$GameSessionPayload<ExtArgs>[]
+      GameSession: Prisma.$CasinoGameSessionPayload<ExtArgs>[]
       affiliateReferrals: Prisma.$ReferralPayload<ExtArgs>[]
       referredUsers: Prisma.$ReferralPayload<ExtArgs>[]
       Rolling: Prisma.$RollingPayload<ExtArgs>[]
@@ -19060,7 +19060,7 @@ export namespace Prisma {
     CompTransaction<T extends User$CompTransactionArgs<ExtArgs> = {}>(args?: Subset<T, User$CompTransactionArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$CompTransactionPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
     DailyCompEarning<T extends User$DailyCompEarningArgs<ExtArgs> = {}>(args?: Subset<T, User$DailyCompEarningArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$DailyCompEarningPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
     EmailLog<T extends User$EmailLogArgs<ExtArgs> = {}>(args?: Subset<T, User$EmailLogArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$EmailLogPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
-    GameSession<T extends User$GameSessionArgs<ExtArgs> = {}>(args?: Subset<T, User$GameSessionArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$GameSessionPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
+    GameSession<T extends User$GameSessionArgs<ExtArgs> = {}>(args?: Subset<T, User$GameSessionArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$CasinoGameSessionPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
     affiliateReferrals<T extends User$affiliateReferralsArgs<ExtArgs> = {}>(args?: Subset<T, User$affiliateReferralsArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$ReferralPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
     referredUsers<T extends User$referredUsersArgs<ExtArgs> = {}>(args?: Subset<T, User$referredUsersArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$ReferralPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
     Rolling<T extends User$RollingArgs<ExtArgs> = {}>(args?: Subset<T, User$RollingArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$RollingPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
@@ -19703,23 +19703,23 @@ export namespace Prisma {
    */
   export type User$GameSessionArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
     /**
-     * Select specific fields to fetch from the GameSession
+     * Select specific fields to fetch from the CasinoGameSession
      */
-    select?: GameSessionSelect<ExtArgs> | null
+    select?: CasinoGameSessionSelect<ExtArgs> | null
     /**
-     * Omit specific fields from the GameSession
+     * Omit specific fields from the CasinoGameSession
      */
-    omit?: GameSessionOmit<ExtArgs> | null
+    omit?: CasinoGameSessionOmit<ExtArgs> | null
     /**
      * Choose, which related nodes to fetch as well
      */
-    include?: GameSessionInclude<ExtArgs> | null
-    where?: GameSessionWhereInput
-    orderBy?: GameSessionOrderByWithRelationInput | GameSessionOrderByWithRelationInput[]
-    cursor?: GameSessionWhereUniqueInput
+    include?: CasinoGameSessionInclude<ExtArgs> | null
+    where?: CasinoGameSessionWhereInput
+    orderBy?: CasinoGameSessionOrderByWithRelationInput | CasinoGameSessionOrderByWithRelationInput[]
+    cursor?: CasinoGameSessionWhereUniqueInput
     take?: number
     skip?: number
-    distinct?: GameSessionScalarFieldEnum | GameSessionScalarFieldEnum[]
+    distinct?: CasinoGameSessionScalarFieldEnum | CasinoGameSessionScalarFieldEnum[]
   }
 
   /**
@@ -24220,7 +24220,7 @@ export namespace Prisma {
     AffiliateCommission?: boolean | GameRound$AffiliateCommissionArgs<ExtArgs>
     bets?: boolean | GameRound$betsArgs<ExtArgs>
     casinoGame?: boolean | GameRound$casinoGameArgs<ExtArgs>
-    GameSession?: boolean | GameSessionDefaultArgs<ExtArgs>
+    GameSession?: boolean | CasinoGameSessionDefaultArgs<ExtArgs>
     transaction?: boolean | TransactionDefaultArgs<ExtArgs>
     wins?: boolean | GameRound$winsArgs<ExtArgs>
     _count?: boolean | GameRoundCountOutputTypeDefaultArgs<ExtArgs>
@@ -24255,7 +24255,7 @@ export namespace Prisma {
     gameId?: boolean
     gameSessionId?: boolean
     casinoGame?: boolean | GameRound$casinoGameArgs<ExtArgs>
-    GameSession?: boolean | GameSessionDefaultArgs<ExtArgs>
+    GameSession?: boolean | CasinoGameSessionDefaultArgs<ExtArgs>
     transaction?: boolean | TransactionDefaultArgs<ExtArgs>
   }, ExtArgs["result"]["gameRound"]>
 
@@ -24288,7 +24288,7 @@ export namespace Prisma {
     gameId?: boolean
     gameSessionId?: boolean
     casinoGame?: boolean | GameRound$casinoGameArgs<ExtArgs>
-    GameSession?: boolean | GameSessionDefaultArgs<ExtArgs>
+    GameSession?: boolean | CasinoGameSessionDefaultArgs<ExtArgs>
     transaction?: boolean | TransactionDefaultArgs<ExtArgs>
   }, ExtArgs["result"]["gameRound"]>
 
@@ -24327,19 +24327,19 @@ export namespace Prisma {
     AffiliateCommission?: boolean | GameRound$AffiliateCommissionArgs<ExtArgs>
     bets?: boolean | GameRound$betsArgs<ExtArgs>
     casinoGame?: boolean | GameRound$casinoGameArgs<ExtArgs>
-    GameSession?: boolean | GameSessionDefaultArgs<ExtArgs>
+    GameSession?: boolean | CasinoGameSessionDefaultArgs<ExtArgs>
     transaction?: boolean | TransactionDefaultArgs<ExtArgs>
     wins?: boolean | GameRound$winsArgs<ExtArgs>
     _count?: boolean | GameRoundCountOutputTypeDefaultArgs<ExtArgs>
   }
   export type GameRoundIncludeCreateManyAndReturn<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
     casinoGame?: boolean | GameRound$casinoGameArgs<ExtArgs>
-    GameSession?: boolean | GameSessionDefaultArgs<ExtArgs>
+    GameSession?: boolean | CasinoGameSessionDefaultArgs<ExtArgs>
     transaction?: boolean | TransactionDefaultArgs<ExtArgs>
   }
   export type GameRoundIncludeUpdateManyAndReturn<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
     casinoGame?: boolean | GameRound$casinoGameArgs<ExtArgs>
-    GameSession?: boolean | GameSessionDefaultArgs<ExtArgs>
+    GameSession?: boolean | CasinoGameSessionDefaultArgs<ExtArgs>
     transaction?: boolean | TransactionDefaultArgs<ExtArgs>
   }
 
@@ -24349,7 +24349,7 @@ export namespace Prisma {
       AffiliateCommission: Prisma.$AffiliateCommissionPayload<ExtArgs>[]
       bets: Prisma.$GameBetPayload<ExtArgs>[]
       casinoGame: Prisma.$CasinoGamePayload<ExtArgs> | null
-      GameSession: Prisma.$GameSessionPayload<ExtArgs>
+      GameSession: Prisma.$CasinoGameSessionPayload<ExtArgs>
       transaction: Prisma.$TransactionPayload<ExtArgs>
       wins: Prisma.$GameWinPayload<ExtArgs>[]
     }
@@ -24778,7 +24778,7 @@ export namespace Prisma {
     AffiliateCommission<T extends GameRound$AffiliateCommissionArgs<ExtArgs> = {}>(args?: Subset<T, GameRound$AffiliateCommissionArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$AffiliateCommissionPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
     bets<T extends GameRound$betsArgs<ExtArgs> = {}>(args?: Subset<T, GameRound$betsArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$GameBetPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
     casinoGame<T extends GameRound$casinoGameArgs<ExtArgs> = {}>(args?: Subset<T, GameRound$casinoGameArgs<ExtArgs>>): Prisma__CasinoGameClient<$Result.GetResult<Prisma.$CasinoGamePayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions> | null, null, ExtArgs, GlobalOmitOptions>
-    GameSession<T extends GameSessionDefaultArgs<ExtArgs> = {}>(args?: Subset<T, GameSessionDefaultArgs<ExtArgs>>): Prisma__GameSessionClient<$Result.GetResult<Prisma.$GameSessionPayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions> | Null, Null, ExtArgs, GlobalOmitOptions>
+    GameSession<T extends CasinoGameSessionDefaultArgs<ExtArgs> = {}>(args?: Subset<T, CasinoGameSessionDefaultArgs<ExtArgs>>): Prisma__CasinoGameSessionClient<$Result.GetResult<Prisma.$CasinoGameSessionPayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions> | Null, Null, ExtArgs, GlobalOmitOptions>
     transaction<T extends TransactionDefaultArgs<ExtArgs> = {}>(args?: Subset<T, TransactionDefaultArgs<ExtArgs>>): Prisma__TransactionClient<$Result.GetResult<Prisma.$TransactionPayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions> | Null, Null, ExtArgs, GlobalOmitOptions>
     wins<T extends GameRound$winsArgs<ExtArgs> = {}>(args?: Subset<T, GameRound$winsArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$GameWinPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
     /**
@@ -61878,7 +61878,7 @@ export namespace Prisma {
   export type CasinoGameTranslationScalarFieldEnum = (typeof CasinoGameTranslationScalarFieldEnum)[keyof typeof CasinoGameTranslationScalarFieldEnum]
 
 
-  export const GameSessionScalarFieldEnum: {
+  export const CasinoGameSessionScalarFieldEnum: {
     id: 'id',
     userId: 'userId',
     createdAt: 'createdAt',
@@ -61893,7 +61893,7 @@ export namespace Prisma {
     gameId: 'gameId'
   };
 
-  export type GameSessionScalarFieldEnum = (typeof GameSessionScalarFieldEnum)[keyof typeof GameSessionScalarFieldEnum]
+  export type CasinoGameSessionScalarFieldEnum = (typeof CasinoGameSessionScalarFieldEnum)[keyof typeof CasinoGameSessionScalarFieldEnum]
 
 
   export const UserScalarFieldEnum: {
@@ -64024,7 +64024,7 @@ export namespace Prisma {
     updatedAt?: DateTimeFilter<"CasinoGame"> | Date | string
     bonusDetails?: BonusDetailListRelationFilter
     gameRounds?: GameRoundListRelationFilter
-    gameSessions?: GameSessionListRelationFilter
+    gameSessions?: CasinoGameSessionListRelationFilter
     translations?: CasinoGameTranslationListRelationFilter
   }
 
@@ -64045,7 +64045,7 @@ export namespace Prisma {
     updatedAt?: SortOrder
     bonusDetails?: BonusDetailOrderByRelationAggregateInput
     gameRounds?: GameRoundOrderByRelationAggregateInput
-    gameSessions?: GameSessionOrderByRelationAggregateInput
+    gameSessions?: CasinoGameSessionOrderByRelationAggregateInput
     translations?: CasinoGameTranslationOrderByRelationAggregateInput
   }
 
@@ -64070,7 +64070,7 @@ export namespace Prisma {
     updatedAt?: DateTimeFilter<"CasinoGame"> | Date | string
     bonusDetails?: BonusDetailListRelationFilter
     gameRounds?: GameRoundListRelationFilter
-    gameSessions?: GameSessionListRelationFilter
+    gameSessions?: CasinoGameSessionListRelationFilter
     translations?: CasinoGameTranslationListRelationFilter
   }, "id" | "aggregatorType_provider_gameId">
 
@@ -64189,28 +64189,28 @@ export namespace Prisma {
     updatedAt?: DateTimeWithAggregatesFilter<"CasinoGameTranslation"> | Date | string
   }
 
-  export type GameSessionWhereInput = {
-    AND?: GameSessionWhereInput | GameSessionWhereInput[]
-    OR?: GameSessionWhereInput[]
-    NOT?: GameSessionWhereInput | GameSessionWhereInput[]
-    id?: BigIntFilter<"GameSession"> | bigint | number
-    userId?: BigIntFilter<"GameSession"> | bigint | number
-    createdAt?: DateTimeFilter<"GameSession"> | Date | string
-    updatedAt?: DateTimeFilter<"GameSession"> | Date | string
-    lastAccessedAt?: DateTimeFilter<"GameSession"> | Date | string
-    aggregatorType?: EnumGameAggregatorTypeFilter<"GameSession"> | $Enums.GameAggregatorType
-    token?: StringFilter<"GameSession"> | string
-    walletCurrency?: EnumExchangeCurrencyCodeFilter<"GameSession"> | $Enums.ExchangeCurrencyCode
-    gameCurrency?: EnumExchangeCurrencyCodeFilter<"GameSession"> | $Enums.ExchangeCurrencyCode
-    exchangeRate?: DecimalFilter<"GameSession"> | Decimal | DecimalJsLike | number | string
-    exchangeRateSnapshotAt?: DateTimeFilter<"GameSession"> | Date | string
-    gameId?: IntNullableFilter<"GameSession"> | number | null
+  export type CasinoGameSessionWhereInput = {
+    AND?: CasinoGameSessionWhereInput | CasinoGameSessionWhereInput[]
+    OR?: CasinoGameSessionWhereInput[]
+    NOT?: CasinoGameSessionWhereInput | CasinoGameSessionWhereInput[]
+    id?: BigIntFilter<"CasinoGameSession"> | bigint | number
+    userId?: BigIntFilter<"CasinoGameSession"> | bigint | number
+    createdAt?: DateTimeFilter<"CasinoGameSession"> | Date | string
+    updatedAt?: DateTimeFilter<"CasinoGameSession"> | Date | string
+    lastAccessedAt?: DateTimeFilter<"CasinoGameSession"> | Date | string
+    aggregatorType?: EnumGameAggregatorTypeFilter<"CasinoGameSession"> | $Enums.GameAggregatorType
+    token?: StringFilter<"CasinoGameSession"> | string
+    walletCurrency?: EnumExchangeCurrencyCodeFilter<"CasinoGameSession"> | $Enums.ExchangeCurrencyCode
+    gameCurrency?: EnumExchangeCurrencyCodeFilter<"CasinoGameSession"> | $Enums.ExchangeCurrencyCode
+    exchangeRate?: DecimalFilter<"CasinoGameSession"> | Decimal | DecimalJsLike | number | string
+    exchangeRateSnapshotAt?: DateTimeFilter<"CasinoGameSession"> | Date | string
+    gameId?: IntNullableFilter<"CasinoGameSession"> | number | null
     gameRounds?: GameRoundListRelationFilter
     game?: XOR<CasinoGameNullableScalarRelationFilter, CasinoGameWhereInput> | null
     user?: XOR<UserScalarRelationFilter, UserWhereInput>
   }
 
-  export type GameSessionOrderByWithRelationInput = {
+  export type CasinoGameSessionOrderByWithRelationInput = {
     id?: SortOrder
     userId?: SortOrder
     createdAt?: SortOrder
@@ -64228,28 +64228,28 @@ export namespace Prisma {
     user?: UserOrderByWithRelationInput
   }
 
-  export type GameSessionWhereUniqueInput = Prisma.AtLeast<{
+  export type CasinoGameSessionWhereUniqueInput = Prisma.AtLeast<{
     id?: bigint | number
     token?: string
-    AND?: GameSessionWhereInput | GameSessionWhereInput[]
-    OR?: GameSessionWhereInput[]
-    NOT?: GameSessionWhereInput | GameSessionWhereInput[]
-    userId?: BigIntFilter<"GameSession"> | bigint | number
-    createdAt?: DateTimeFilter<"GameSession"> | Date | string
-    updatedAt?: DateTimeFilter<"GameSession"> | Date | string
-    lastAccessedAt?: DateTimeFilter<"GameSession"> | Date | string
-    aggregatorType?: EnumGameAggregatorTypeFilter<"GameSession"> | $Enums.GameAggregatorType
-    walletCurrency?: EnumExchangeCurrencyCodeFilter<"GameSession"> | $Enums.ExchangeCurrencyCode
-    gameCurrency?: EnumExchangeCurrencyCodeFilter<"GameSession"> | $Enums.ExchangeCurrencyCode
-    exchangeRate?: DecimalFilter<"GameSession"> | Decimal | DecimalJsLike | number | string
-    exchangeRateSnapshotAt?: DateTimeFilter<"GameSession"> | Date | string
-    gameId?: IntNullableFilter<"GameSession"> | number | null
+    AND?: CasinoGameSessionWhereInput | CasinoGameSessionWhereInput[]
+    OR?: CasinoGameSessionWhereInput[]
+    NOT?: CasinoGameSessionWhereInput | CasinoGameSessionWhereInput[]
+    userId?: BigIntFilter<"CasinoGameSession"> | bigint | number
+    createdAt?: DateTimeFilter<"CasinoGameSession"> | Date | string
+    updatedAt?: DateTimeFilter<"CasinoGameSession"> | Date | string
+    lastAccessedAt?: DateTimeFilter<"CasinoGameSession"> | Date | string
+    aggregatorType?: EnumGameAggregatorTypeFilter<"CasinoGameSession"> | $Enums.GameAggregatorType
+    walletCurrency?: EnumExchangeCurrencyCodeFilter<"CasinoGameSession"> | $Enums.ExchangeCurrencyCode
+    gameCurrency?: EnumExchangeCurrencyCodeFilter<"CasinoGameSession"> | $Enums.ExchangeCurrencyCode
+    exchangeRate?: DecimalFilter<"CasinoGameSession"> | Decimal | DecimalJsLike | number | string
+    exchangeRateSnapshotAt?: DateTimeFilter<"CasinoGameSession"> | Date | string
+    gameId?: IntNullableFilter<"CasinoGameSession"> | number | null
     gameRounds?: GameRoundListRelationFilter
     game?: XOR<CasinoGameNullableScalarRelationFilter, CasinoGameWhereInput> | null
     user?: XOR<UserScalarRelationFilter, UserWhereInput>
   }, "id" | "token">
 
-  export type GameSessionOrderByWithAggregationInput = {
+  export type CasinoGameSessionOrderByWithAggregationInput = {
     id?: SortOrder
     userId?: SortOrder
     createdAt?: SortOrder
@@ -64262,29 +64262,29 @@ export namespace Prisma {
     exchangeRate?: SortOrder
     exchangeRateSnapshotAt?: SortOrder
     gameId?: SortOrderInput | SortOrder
-    _count?: GameSessionCountOrderByAggregateInput
-    _avg?: GameSessionAvgOrderByAggregateInput
-    _max?: GameSessionMaxOrderByAggregateInput
-    _min?: GameSessionMinOrderByAggregateInput
-    _sum?: GameSessionSumOrderByAggregateInput
+    _count?: CasinoGameSessionCountOrderByAggregateInput
+    _avg?: CasinoGameSessionAvgOrderByAggregateInput
+    _max?: CasinoGameSessionMaxOrderByAggregateInput
+    _min?: CasinoGameSessionMinOrderByAggregateInput
+    _sum?: CasinoGameSessionSumOrderByAggregateInput
   }
 
-  export type GameSessionScalarWhereWithAggregatesInput = {
-    AND?: GameSessionScalarWhereWithAggregatesInput | GameSessionScalarWhereWithAggregatesInput[]
-    OR?: GameSessionScalarWhereWithAggregatesInput[]
-    NOT?: GameSessionScalarWhereWithAggregatesInput | GameSessionScalarWhereWithAggregatesInput[]
-    id?: BigIntWithAggregatesFilter<"GameSession"> | bigint | number
-    userId?: BigIntWithAggregatesFilter<"GameSession"> | bigint | number
-    createdAt?: DateTimeWithAggregatesFilter<"GameSession"> | Date | string
-    updatedAt?: DateTimeWithAggregatesFilter<"GameSession"> | Date | string
-    lastAccessedAt?: DateTimeWithAggregatesFilter<"GameSession"> | Date | string
-    aggregatorType?: EnumGameAggregatorTypeWithAggregatesFilter<"GameSession"> | $Enums.GameAggregatorType
-    token?: StringWithAggregatesFilter<"GameSession"> | string
-    walletCurrency?: EnumExchangeCurrencyCodeWithAggregatesFilter<"GameSession"> | $Enums.ExchangeCurrencyCode
-    gameCurrency?: EnumExchangeCurrencyCodeWithAggregatesFilter<"GameSession"> | $Enums.ExchangeCurrencyCode
-    exchangeRate?: DecimalWithAggregatesFilter<"GameSession"> | Decimal | DecimalJsLike | number | string
-    exchangeRateSnapshotAt?: DateTimeWithAggregatesFilter<"GameSession"> | Date | string
-    gameId?: IntNullableWithAggregatesFilter<"GameSession"> | number | null
+  export type CasinoGameSessionScalarWhereWithAggregatesInput = {
+    AND?: CasinoGameSessionScalarWhereWithAggregatesInput | CasinoGameSessionScalarWhereWithAggregatesInput[]
+    OR?: CasinoGameSessionScalarWhereWithAggregatesInput[]
+    NOT?: CasinoGameSessionScalarWhereWithAggregatesInput | CasinoGameSessionScalarWhereWithAggregatesInput[]
+    id?: BigIntWithAggregatesFilter<"CasinoGameSession"> | bigint | number
+    userId?: BigIntWithAggregatesFilter<"CasinoGameSession"> | bigint | number
+    createdAt?: DateTimeWithAggregatesFilter<"CasinoGameSession"> | Date | string
+    updatedAt?: DateTimeWithAggregatesFilter<"CasinoGameSession"> | Date | string
+    lastAccessedAt?: DateTimeWithAggregatesFilter<"CasinoGameSession"> | Date | string
+    aggregatorType?: EnumGameAggregatorTypeWithAggregatesFilter<"CasinoGameSession"> | $Enums.GameAggregatorType
+    token?: StringWithAggregatesFilter<"CasinoGameSession"> | string
+    walletCurrency?: EnumExchangeCurrencyCodeWithAggregatesFilter<"CasinoGameSession"> | $Enums.ExchangeCurrencyCode
+    gameCurrency?: EnumExchangeCurrencyCodeWithAggregatesFilter<"CasinoGameSession"> | $Enums.ExchangeCurrencyCode
+    exchangeRate?: DecimalWithAggregatesFilter<"CasinoGameSession"> | Decimal | DecimalJsLike | number | string
+    exchangeRateSnapshotAt?: DateTimeWithAggregatesFilter<"CasinoGameSession"> | Date | string
+    gameId?: IntNullableWithAggregatesFilter<"CasinoGameSession"> | number | null
   }
 
   export type UserWhereInput = {
@@ -64318,7 +64318,7 @@ export namespace Prisma {
     CompTransaction?: CompTransactionListRelationFilter
     DailyCompEarning?: DailyCompEarningListRelationFilter
     EmailLog?: EmailLogListRelationFilter
-    GameSession?: GameSessionListRelationFilter
+    GameSession?: CasinoGameSessionListRelationFilter
     affiliateReferrals?: ReferralListRelationFilter
     referredUsers?: ReferralListRelationFilter
     Rolling?: RollingListRelationFilter
@@ -64364,7 +64364,7 @@ export namespace Prisma {
     CompTransaction?: CompTransactionOrderByRelationAggregateInput
     DailyCompEarning?: DailyCompEarningOrderByRelationAggregateInput
     EmailLog?: EmailLogOrderByRelationAggregateInput
-    GameSession?: GameSessionOrderByRelationAggregateInput
+    GameSession?: CasinoGameSessionOrderByRelationAggregateInput
     affiliateReferrals?: ReferralOrderByRelationAggregateInput
     referredUsers?: ReferralOrderByRelationAggregateInput
     Rolling?: RollingOrderByRelationAggregateInput
@@ -64413,7 +64413,7 @@ export namespace Prisma {
     CompTransaction?: CompTransactionListRelationFilter
     DailyCompEarning?: DailyCompEarningListRelationFilter
     EmailLog?: EmailLogListRelationFilter
-    GameSession?: GameSessionListRelationFilter
+    GameSession?: CasinoGameSessionListRelationFilter
     affiliateReferrals?: ReferralListRelationFilter
     referredUsers?: ReferralListRelationFilter
     Rolling?: RollingListRelationFilter
@@ -64774,7 +64774,7 @@ export namespace Prisma {
     AffiliateCommission?: AffiliateCommissionListRelationFilter
     bets?: GameBetListRelationFilter
     casinoGame?: XOR<CasinoGameNullableScalarRelationFilter, CasinoGameWhereInput> | null
-    GameSession?: XOR<GameSessionScalarRelationFilter, GameSessionWhereInput>
+    GameSession?: XOR<CasinoGameSessionScalarRelationFilter, CasinoGameSessionWhereInput>
     transaction?: XOR<TransactionScalarRelationFilter, TransactionWhereInput>
     wins?: GameWinListRelationFilter
   }
@@ -64810,7 +64810,7 @@ export namespace Prisma {
     AffiliateCommission?: AffiliateCommissionOrderByRelationAggregateInput
     bets?: GameBetOrderByRelationAggregateInput
     casinoGame?: CasinoGameOrderByWithRelationInput
-    GameSession?: GameSessionOrderByWithRelationInput
+    GameSession?: CasinoGameSessionOrderByWithRelationInput
     transaction?: TransactionOrderByWithRelationInput
     wins?: GameWinOrderByRelationAggregateInput
   }
@@ -64850,7 +64850,7 @@ export namespace Prisma {
     AffiliateCommission?: AffiliateCommissionListRelationFilter
     bets?: GameBetListRelationFilter
     casinoGame?: XOR<CasinoGameNullableScalarRelationFilter, CasinoGameWhereInput> | null
-    GameSession?: XOR<GameSessionScalarRelationFilter, GameSessionWhereInput>
+    GameSession?: XOR<CasinoGameSessionScalarRelationFilter, CasinoGameSessionWhereInput>
     transaction?: XOR<TransactionScalarRelationFilter, TransactionWhereInput>
     wins?: GameWinListRelationFilter
   }, "id" | "transactionId" | "aggregatorTxId_aggregatorType">
@@ -68668,7 +68668,7 @@ export namespace Prisma {
     updatedAt?: Date | string
     bonusDetails?: BonusDetailCreateNestedManyWithoutCasinoGameInput
     gameRounds?: GameRoundCreateNestedManyWithoutCasinoGameInput
-    gameSessions?: GameSessionCreateNestedManyWithoutGameInput
+    gameSessions?: CasinoGameSessionCreateNestedManyWithoutGameInput
     translations?: CasinoGameTranslationCreateNestedManyWithoutCasinoGameInput
   }
 
@@ -68689,7 +68689,7 @@ export namespace Prisma {
     updatedAt?: Date | string
     bonusDetails?: BonusDetailUncheckedCreateNestedManyWithoutCasinoGameInput
     gameRounds?: GameRoundUncheckedCreateNestedManyWithoutCasinoGameInput
-    gameSessions?: GameSessionUncheckedCreateNestedManyWithoutGameInput
+    gameSessions?: CasinoGameSessionUncheckedCreateNestedManyWithoutGameInput
     translations?: CasinoGameTranslationUncheckedCreateNestedManyWithoutCasinoGameInput
   }
 
@@ -68709,7 +68709,7 @@ export namespace Prisma {
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
     bonusDetails?: BonusDetailUpdateManyWithoutCasinoGameNestedInput
     gameRounds?: GameRoundUpdateManyWithoutCasinoGameNestedInput
-    gameSessions?: GameSessionUpdateManyWithoutGameNestedInput
+    gameSessions?: CasinoGameSessionUpdateManyWithoutGameNestedInput
     translations?: CasinoGameTranslationUpdateManyWithoutCasinoGameNestedInput
   }
 
@@ -68730,7 +68730,7 @@ export namespace Prisma {
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
     bonusDetails?: BonusDetailUncheckedUpdateManyWithoutCasinoGameNestedInput
     gameRounds?: GameRoundUncheckedUpdateManyWithoutCasinoGameNestedInput
-    gameSessions?: GameSessionUncheckedUpdateManyWithoutGameNestedInput
+    gameSessions?: CasinoGameSessionUncheckedUpdateManyWithoutGameNestedInput
     translations?: CasinoGameTranslationUncheckedUpdateManyWithoutCasinoGameNestedInput
   }
 
@@ -68857,7 +68857,7 @@ export namespace Prisma {
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
   }
 
-  export type GameSessionCreateInput = {
+  export type CasinoGameSessionCreateInput = {
     id?: bigint | number
     createdAt?: Date | string
     updatedAt?: Date | string
@@ -68873,7 +68873,7 @@ export namespace Prisma {
     user: UserCreateNestedOneWithoutGameSessionInput
   }
 
-  export type GameSessionUncheckedCreateInput = {
+  export type CasinoGameSessionUncheckedCreateInput = {
     id?: bigint | number
     userId: bigint | number
     createdAt?: Date | string
@@ -68889,7 +68889,7 @@ export namespace Prisma {
     gameRounds?: GameRoundUncheckedCreateNestedManyWithoutGameSessionInput
   }
 
-  export type GameSessionUpdateInput = {
+  export type CasinoGameSessionUpdateInput = {
     id?: BigIntFieldUpdateOperationsInput | bigint | number
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
@@ -68905,7 +68905,7 @@ export namespace Prisma {
     user?: UserUpdateOneRequiredWithoutGameSessionNestedInput
   }
 
-  export type GameSessionUncheckedUpdateInput = {
+  export type CasinoGameSessionUncheckedUpdateInput = {
     id?: BigIntFieldUpdateOperationsInput | bigint | number
     userId?: BigIntFieldUpdateOperationsInput | bigint | number
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
@@ -68921,7 +68921,7 @@ export namespace Prisma {
     gameRounds?: GameRoundUncheckedUpdateManyWithoutGameSessionNestedInput
   }
 
-  export type GameSessionCreateManyInput = {
+  export type CasinoGameSessionCreateManyInput = {
     id?: bigint | number
     userId: bigint | number
     createdAt?: Date | string
@@ -68936,7 +68936,7 @@ export namespace Prisma {
     gameId?: number | null
   }
 
-  export type GameSessionUpdateManyMutationInput = {
+  export type CasinoGameSessionUpdateManyMutationInput = {
     id?: BigIntFieldUpdateOperationsInput | bigint | number
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
@@ -68949,7 +68949,7 @@ export namespace Prisma {
     exchangeRateSnapshotAt?: DateTimeFieldUpdateOperationsInput | Date | string
   }
 
-  export type GameSessionUncheckedUpdateManyInput = {
+  export type CasinoGameSessionUncheckedUpdateManyInput = {
     id?: BigIntFieldUpdateOperationsInput | bigint | number
     userId?: BigIntFieldUpdateOperationsInput | bigint | number
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
@@ -68992,7 +68992,7 @@ export namespace Prisma {
     CompTransaction?: CompTransactionCreateNestedManyWithoutUserInput
     DailyCompEarning?: DailyCompEarningCreateNestedManyWithoutUserInput
     EmailLog?: EmailLogCreateNestedManyWithoutUserInput
-    GameSession?: GameSessionCreateNestedManyWithoutUserInput
+    GameSession?: CasinoGameSessionCreateNestedManyWithoutUserInput
     affiliateReferrals?: ReferralCreateNestedManyWithoutAffiliateInput
     referredUsers?: ReferralCreateNestedManyWithoutSubUserInput
     Rolling?: RollingCreateNestedManyWithoutUserInput
@@ -69038,7 +69038,7 @@ export namespace Prisma {
     CompTransaction?: CompTransactionUncheckedCreateNestedManyWithoutUserInput
     DailyCompEarning?: DailyCompEarningUncheckedCreateNestedManyWithoutUserInput
     EmailLog?: EmailLogUncheckedCreateNestedManyWithoutUserInput
-    GameSession?: GameSessionUncheckedCreateNestedManyWithoutUserInput
+    GameSession?: CasinoGameSessionUncheckedCreateNestedManyWithoutUserInput
     affiliateReferrals?: ReferralUncheckedCreateNestedManyWithoutAffiliateInput
     referredUsers?: ReferralUncheckedCreateNestedManyWithoutSubUserInput
     Rolling?: RollingUncheckedCreateNestedManyWithoutUserInput
@@ -69084,7 +69084,7 @@ export namespace Prisma {
     CompTransaction?: CompTransactionUpdateManyWithoutUserNestedInput
     DailyCompEarning?: DailyCompEarningUpdateManyWithoutUserNestedInput
     EmailLog?: EmailLogUpdateManyWithoutUserNestedInput
-    GameSession?: GameSessionUpdateManyWithoutUserNestedInput
+    GameSession?: CasinoGameSessionUpdateManyWithoutUserNestedInput
     affiliateReferrals?: ReferralUpdateManyWithoutAffiliateNestedInput
     referredUsers?: ReferralUpdateManyWithoutSubUserNestedInput
     Rolling?: RollingUpdateManyWithoutUserNestedInput
@@ -69130,7 +69130,7 @@ export namespace Prisma {
     CompTransaction?: CompTransactionUncheckedUpdateManyWithoutUserNestedInput
     DailyCompEarning?: DailyCompEarningUncheckedUpdateManyWithoutUserNestedInput
     EmailLog?: EmailLogUncheckedUpdateManyWithoutUserNestedInput
-    GameSession?: GameSessionUncheckedUpdateManyWithoutUserNestedInput
+    GameSession?: CasinoGameSessionUncheckedUpdateManyWithoutUserNestedInput
     affiliateReferrals?: ReferralUncheckedUpdateManyWithoutAffiliateNestedInput
     referredUsers?: ReferralUncheckedUpdateManyWithoutSubUserNestedInput
     Rolling?: RollingUncheckedUpdateManyWithoutUserNestedInput
@@ -69523,7 +69523,7 @@ export namespace Prisma {
     AffiliateCommission?: AffiliateCommissionCreateNestedManyWithoutGameRoundInput
     bets?: GameBetCreateNestedManyWithoutGameRoundInput
     casinoGame?: CasinoGameCreateNestedOneWithoutGameRoundsInput
-    GameSession: GameSessionCreateNestedOneWithoutGameRoundsInput
+    GameSession: CasinoGameSessionCreateNestedOneWithoutGameRoundsInput
     transaction: TransactionCreateNestedOneWithoutGameRoundInput
     wins?: GameWinCreateNestedManyWithoutGameRoundInput
   }
@@ -69589,7 +69589,7 @@ export namespace Prisma {
     AffiliateCommission?: AffiliateCommissionUpdateManyWithoutGameRoundNestedInput
     bets?: GameBetUpdateManyWithoutGameRoundNestedInput
     casinoGame?: CasinoGameUpdateOneWithoutGameRoundsNestedInput
-    GameSession?: GameSessionUpdateOneRequiredWithoutGameRoundsNestedInput
+    GameSession?: CasinoGameSessionUpdateOneRequiredWithoutGameRoundsNestedInput
     transaction?: TransactionUpdateOneRequiredWithoutGameRoundNestedInput
     wins?: GameWinUpdateManyWithoutGameRoundNestedInput
   }
@@ -73665,10 +73665,10 @@ export namespace Prisma {
     none?: GameRoundWhereInput
   }
 
-  export type GameSessionListRelationFilter = {
-    every?: GameSessionWhereInput
-    some?: GameSessionWhereInput
-    none?: GameSessionWhereInput
+  export type CasinoGameSessionListRelationFilter = {
+    every?: CasinoGameSessionWhereInput
+    some?: CasinoGameSessionWhereInput
+    none?: CasinoGameSessionWhereInput
   }
 
   export type CasinoGameTranslationListRelationFilter = {
@@ -73685,7 +73685,7 @@ export namespace Prisma {
     _count?: SortOrder
   }
 
-  export type GameSessionOrderByRelationAggregateInput = {
+  export type CasinoGameSessionOrderByRelationAggregateInput = {
     _count?: SortOrder
   }
 
@@ -73892,7 +73892,7 @@ export namespace Prisma {
     isNot?: CasinoGameWhereInput | null
   }
 
-  export type GameSessionCountOrderByAggregateInput = {
+  export type CasinoGameSessionCountOrderByAggregateInput = {
     id?: SortOrder
     userId?: SortOrder
     createdAt?: SortOrder
@@ -73907,29 +73907,14 @@ export namespace Prisma {
     gameId?: SortOrder
   }
 
-  export type GameSessionAvgOrderByAggregateInput = {
+  export type CasinoGameSessionAvgOrderByAggregateInput = {
     id?: SortOrder
     userId?: SortOrder
     exchangeRate?: SortOrder
     gameId?: SortOrder
   }
 
-  export type GameSessionMaxOrderByAggregateInput = {
-    id?: SortOrder
-    userId?: SortOrder
-    createdAt?: SortOrder
-    updatedAt?: SortOrder
-    lastAccessedAt?: SortOrder
-    aggregatorType?: SortOrder
-    token?: SortOrder
-    walletCurrency?: SortOrder
-    gameCurrency?: SortOrder
-    exchangeRate?: SortOrder
-    exchangeRateSnapshotAt?: SortOrder
-    gameId?: SortOrder
-  }
-
-  export type GameSessionMinOrderByAggregateInput = {
+  export type CasinoGameSessionMaxOrderByAggregateInput = {
     id?: SortOrder
     userId?: SortOrder
     createdAt?: SortOrder
@@ -73944,7 +73929,22 @@ export namespace Prisma {
     gameId?: SortOrder
   }
 
-  export type GameSessionSumOrderByAggregateInput = {
+  export type CasinoGameSessionMinOrderByAggregateInput = {
+    id?: SortOrder
+    userId?: SortOrder
+    createdAt?: SortOrder
+    updatedAt?: SortOrder
+    lastAccessedAt?: SortOrder
+    aggregatorType?: SortOrder
+    token?: SortOrder
+    walletCurrency?: SortOrder
+    gameCurrency?: SortOrder
+    exchangeRate?: SortOrder
+    exchangeRateSnapshotAt?: SortOrder
+    gameId?: SortOrder
+  }
+
+  export type CasinoGameSessionSumOrderByAggregateInput = {
     id?: SortOrder
     userId?: SortOrder
     exchangeRate?: SortOrder
@@ -74581,9 +74581,9 @@ export namespace Prisma {
     none?: GameBetWhereInput
   }
 
-  export type GameSessionScalarRelationFilter = {
-    is?: GameSessionWhereInput
-    isNot?: GameSessionWhereInput
+  export type CasinoGameSessionScalarRelationFilter = {
+    is?: CasinoGameSessionWhereInput
+    isNot?: CasinoGameSessionWhereInput
   }
 
   export type TransactionScalarRelationFilter = {
@@ -77340,11 +77340,11 @@ export namespace Prisma {
     connect?: GameRoundWhereUniqueInput | GameRoundWhereUniqueInput[]
   }
 
-  export type GameSessionCreateNestedManyWithoutGameInput = {
-    create?: XOR<GameSessionCreateWithoutGameInput, GameSessionUncheckedCreateWithoutGameInput> | GameSessionCreateWithoutGameInput[] | GameSessionUncheckedCreateWithoutGameInput[]
-    connectOrCreate?: GameSessionCreateOrConnectWithoutGameInput | GameSessionCreateOrConnectWithoutGameInput[]
-    createMany?: GameSessionCreateManyGameInputEnvelope
-    connect?: GameSessionWhereUniqueInput | GameSessionWhereUniqueInput[]
+  export type CasinoGameSessionCreateNestedManyWithoutGameInput = {
+    create?: XOR<CasinoGameSessionCreateWithoutGameInput, CasinoGameSessionUncheckedCreateWithoutGameInput> | CasinoGameSessionCreateWithoutGameInput[] | CasinoGameSessionUncheckedCreateWithoutGameInput[]
+    connectOrCreate?: CasinoGameSessionCreateOrConnectWithoutGameInput | CasinoGameSessionCreateOrConnectWithoutGameInput[]
+    createMany?: CasinoGameSessionCreateManyGameInputEnvelope
+    connect?: CasinoGameSessionWhereUniqueInput | CasinoGameSessionWhereUniqueInput[]
   }
 
   export type CasinoGameTranslationCreateNestedManyWithoutCasinoGameInput = {
@@ -77368,11 +77368,11 @@ export namespace Prisma {
     connect?: GameRoundWhereUniqueInput | GameRoundWhereUniqueInput[]
   }
 
-  export type GameSessionUncheckedCreateNestedManyWithoutGameInput = {
-    create?: XOR<GameSessionCreateWithoutGameInput, GameSessionUncheckedCreateWithoutGameInput> | GameSessionCreateWithoutGameInput[] | GameSessionUncheckedCreateWithoutGameInput[]
-    connectOrCreate?: GameSessionCreateOrConnectWithoutGameInput | GameSessionCreateOrConnectWithoutGameInput[]
-    createMany?: GameSessionCreateManyGameInputEnvelope
-    connect?: GameSessionWhereUniqueInput | GameSessionWhereUniqueInput[]
+  export type CasinoGameSessionUncheckedCreateNestedManyWithoutGameInput = {
+    create?: XOR<CasinoGameSessionCreateWithoutGameInput, CasinoGameSessionUncheckedCreateWithoutGameInput> | CasinoGameSessionCreateWithoutGameInput[] | CasinoGameSessionUncheckedCreateWithoutGameInput[]
+    connectOrCreate?: CasinoGameSessionCreateOrConnectWithoutGameInput | CasinoGameSessionCreateOrConnectWithoutGameInput[]
+    createMany?: CasinoGameSessionCreateManyGameInputEnvelope
+    connect?: CasinoGameSessionWhereUniqueInput | CasinoGameSessionWhereUniqueInput[]
   }
 
   export type CasinoGameTranslationUncheckedCreateNestedManyWithoutCasinoGameInput = {
@@ -77430,18 +77430,18 @@ export namespace Prisma {
     deleteMany?: GameRoundScalarWhereInput | GameRoundScalarWhereInput[]
   }
 
-  export type GameSessionUpdateManyWithoutGameNestedInput = {
-    create?: XOR<GameSessionCreateWithoutGameInput, GameSessionUncheckedCreateWithoutGameInput> | GameSessionCreateWithoutGameInput[] | GameSessionUncheckedCreateWithoutGameInput[]
-    connectOrCreate?: GameSessionCreateOrConnectWithoutGameInput | GameSessionCreateOrConnectWithoutGameInput[]
-    upsert?: GameSessionUpsertWithWhereUniqueWithoutGameInput | GameSessionUpsertWithWhereUniqueWithoutGameInput[]
-    createMany?: GameSessionCreateManyGameInputEnvelope
-    set?: GameSessionWhereUniqueInput | GameSessionWhereUniqueInput[]
-    disconnect?: GameSessionWhereUniqueInput | GameSessionWhereUniqueInput[]
-    delete?: GameSessionWhereUniqueInput | GameSessionWhereUniqueInput[]
-    connect?: GameSessionWhereUniqueInput | GameSessionWhereUniqueInput[]
-    update?: GameSessionUpdateWithWhereUniqueWithoutGameInput | GameSessionUpdateWithWhereUniqueWithoutGameInput[]
-    updateMany?: GameSessionUpdateManyWithWhereWithoutGameInput | GameSessionUpdateManyWithWhereWithoutGameInput[]
-    deleteMany?: GameSessionScalarWhereInput | GameSessionScalarWhereInput[]
+  export type CasinoGameSessionUpdateManyWithoutGameNestedInput = {
+    create?: XOR<CasinoGameSessionCreateWithoutGameInput, CasinoGameSessionUncheckedCreateWithoutGameInput> | CasinoGameSessionCreateWithoutGameInput[] | CasinoGameSessionUncheckedCreateWithoutGameInput[]
+    connectOrCreate?: CasinoGameSessionCreateOrConnectWithoutGameInput | CasinoGameSessionCreateOrConnectWithoutGameInput[]
+    upsert?: CasinoGameSessionUpsertWithWhereUniqueWithoutGameInput | CasinoGameSessionUpsertWithWhereUniqueWithoutGameInput[]
+    createMany?: CasinoGameSessionCreateManyGameInputEnvelope
+    set?: CasinoGameSessionWhereUniqueInput | CasinoGameSessionWhereUniqueInput[]
+    disconnect?: CasinoGameSessionWhereUniqueInput | CasinoGameSessionWhereUniqueInput[]
+    delete?: CasinoGameSessionWhereUniqueInput | CasinoGameSessionWhereUniqueInput[]
+    connect?: CasinoGameSessionWhereUniqueInput | CasinoGameSessionWhereUniqueInput[]
+    update?: CasinoGameSessionUpdateWithWhereUniqueWithoutGameInput | CasinoGameSessionUpdateWithWhereUniqueWithoutGameInput[]
+    updateMany?: CasinoGameSessionUpdateManyWithWhereWithoutGameInput | CasinoGameSessionUpdateManyWithWhereWithoutGameInput[]
+    deleteMany?: CasinoGameSessionScalarWhereInput | CasinoGameSessionScalarWhereInput[]
   }
 
   export type CasinoGameTranslationUpdateManyWithoutCasinoGameNestedInput = {
@@ -77486,18 +77486,18 @@ export namespace Prisma {
     deleteMany?: GameRoundScalarWhereInput | GameRoundScalarWhereInput[]
   }
 
-  export type GameSessionUncheckedUpdateManyWithoutGameNestedInput = {
-    create?: XOR<GameSessionCreateWithoutGameInput, GameSessionUncheckedCreateWithoutGameInput> | GameSessionCreateWithoutGameInput[] | GameSessionUncheckedCreateWithoutGameInput[]
-    connectOrCreate?: GameSessionCreateOrConnectWithoutGameInput | GameSessionCreateOrConnectWithoutGameInput[]
-    upsert?: GameSessionUpsertWithWhereUniqueWithoutGameInput | GameSessionUpsertWithWhereUniqueWithoutGameInput[]
-    createMany?: GameSessionCreateManyGameInputEnvelope
-    set?: GameSessionWhereUniqueInput | GameSessionWhereUniqueInput[]
-    disconnect?: GameSessionWhereUniqueInput | GameSessionWhereUniqueInput[]
-    delete?: GameSessionWhereUniqueInput | GameSessionWhereUniqueInput[]
-    connect?: GameSessionWhereUniqueInput | GameSessionWhereUniqueInput[]
-    update?: GameSessionUpdateWithWhereUniqueWithoutGameInput | GameSessionUpdateWithWhereUniqueWithoutGameInput[]
-    updateMany?: GameSessionUpdateManyWithWhereWithoutGameInput | GameSessionUpdateManyWithWhereWithoutGameInput[]
-    deleteMany?: GameSessionScalarWhereInput | GameSessionScalarWhereInput[]
+  export type CasinoGameSessionUncheckedUpdateManyWithoutGameNestedInput = {
+    create?: XOR<CasinoGameSessionCreateWithoutGameInput, CasinoGameSessionUncheckedCreateWithoutGameInput> | CasinoGameSessionCreateWithoutGameInput[] | CasinoGameSessionUncheckedCreateWithoutGameInput[]
+    connectOrCreate?: CasinoGameSessionCreateOrConnectWithoutGameInput | CasinoGameSessionCreateOrConnectWithoutGameInput[]
+    upsert?: CasinoGameSessionUpsertWithWhereUniqueWithoutGameInput | CasinoGameSessionUpsertWithWhereUniqueWithoutGameInput[]
+    createMany?: CasinoGameSessionCreateManyGameInputEnvelope
+    set?: CasinoGameSessionWhereUniqueInput | CasinoGameSessionWhereUniqueInput[]
+    disconnect?: CasinoGameSessionWhereUniqueInput | CasinoGameSessionWhereUniqueInput[]
+    delete?: CasinoGameSessionWhereUniqueInput | CasinoGameSessionWhereUniqueInput[]
+    connect?: CasinoGameSessionWhereUniqueInput | CasinoGameSessionWhereUniqueInput[]
+    update?: CasinoGameSessionUpdateWithWhereUniqueWithoutGameInput | CasinoGameSessionUpdateWithWhereUniqueWithoutGameInput[]
+    updateMany?: CasinoGameSessionUpdateManyWithWhereWithoutGameInput | CasinoGameSessionUpdateManyWithWhereWithoutGameInput[]
+    deleteMany?: CasinoGameSessionScalarWhereInput | CasinoGameSessionScalarWhereInput[]
   }
 
   export type CasinoGameTranslationUncheckedUpdateManyWithoutCasinoGameNestedInput = {
@@ -77663,11 +77663,11 @@ export namespace Prisma {
     connect?: EmailLogWhereUniqueInput | EmailLogWhereUniqueInput[]
   }
 
-  export type GameSessionCreateNestedManyWithoutUserInput = {
-    create?: XOR<GameSessionCreateWithoutUserInput, GameSessionUncheckedCreateWithoutUserInput> | GameSessionCreateWithoutUserInput[] | GameSessionUncheckedCreateWithoutUserInput[]
-    connectOrCreate?: GameSessionCreateOrConnectWithoutUserInput | GameSessionCreateOrConnectWithoutUserInput[]
-    createMany?: GameSessionCreateManyUserInputEnvelope
-    connect?: GameSessionWhereUniqueInput | GameSessionWhereUniqueInput[]
+  export type CasinoGameSessionCreateNestedManyWithoutUserInput = {
+    create?: XOR<CasinoGameSessionCreateWithoutUserInput, CasinoGameSessionUncheckedCreateWithoutUserInput> | CasinoGameSessionCreateWithoutUserInput[] | CasinoGameSessionUncheckedCreateWithoutUserInput[]
+    connectOrCreate?: CasinoGameSessionCreateOrConnectWithoutUserInput | CasinoGameSessionCreateOrConnectWithoutUserInput[]
+    createMany?: CasinoGameSessionCreateManyUserInputEnvelope
+    connect?: CasinoGameSessionWhereUniqueInput | CasinoGameSessionWhereUniqueInput[]
   }
 
   export type ReferralCreateNestedManyWithoutAffiliateInput = {
@@ -77829,11 +77829,11 @@ export namespace Prisma {
     connect?: EmailLogWhereUniqueInput | EmailLogWhereUniqueInput[]
   }
 
-  export type GameSessionUncheckedCreateNestedManyWithoutUserInput = {
-    create?: XOR<GameSessionCreateWithoutUserInput, GameSessionUncheckedCreateWithoutUserInput> | GameSessionCreateWithoutUserInput[] | GameSessionUncheckedCreateWithoutUserInput[]
-    connectOrCreate?: GameSessionCreateOrConnectWithoutUserInput | GameSessionCreateOrConnectWithoutUserInput[]
-    createMany?: GameSessionCreateManyUserInputEnvelope
-    connect?: GameSessionWhereUniqueInput | GameSessionWhereUniqueInput[]
+  export type CasinoGameSessionUncheckedCreateNestedManyWithoutUserInput = {
+    create?: XOR<CasinoGameSessionCreateWithoutUserInput, CasinoGameSessionUncheckedCreateWithoutUserInput> | CasinoGameSessionCreateWithoutUserInput[] | CasinoGameSessionUncheckedCreateWithoutUserInput[]
+    connectOrCreate?: CasinoGameSessionCreateOrConnectWithoutUserInput | CasinoGameSessionCreateOrConnectWithoutUserInput[]
+    createMany?: CasinoGameSessionCreateManyUserInputEnvelope
+    connect?: CasinoGameSessionWhereUniqueInput | CasinoGameSessionWhereUniqueInput[]
   }
 
   export type ReferralUncheckedCreateNestedManyWithoutAffiliateInput = {
@@ -78068,18 +78068,18 @@ export namespace Prisma {
     deleteMany?: EmailLogScalarWhereInput | EmailLogScalarWhereInput[]
   }
 
-  export type GameSessionUpdateManyWithoutUserNestedInput = {
-    create?: XOR<GameSessionCreateWithoutUserInput, GameSessionUncheckedCreateWithoutUserInput> | GameSessionCreateWithoutUserInput[] | GameSessionUncheckedCreateWithoutUserInput[]
-    connectOrCreate?: GameSessionCreateOrConnectWithoutUserInput | GameSessionCreateOrConnectWithoutUserInput[]
-    upsert?: GameSessionUpsertWithWhereUniqueWithoutUserInput | GameSessionUpsertWithWhereUniqueWithoutUserInput[]
-    createMany?: GameSessionCreateManyUserInputEnvelope
-    set?: GameSessionWhereUniqueInput | GameSessionWhereUniqueInput[]
-    disconnect?: GameSessionWhereUniqueInput | GameSessionWhereUniqueInput[]
-    delete?: GameSessionWhereUniqueInput | GameSessionWhereUniqueInput[]
-    connect?: GameSessionWhereUniqueInput | GameSessionWhereUniqueInput[]
-    update?: GameSessionUpdateWithWhereUniqueWithoutUserInput | GameSessionUpdateWithWhereUniqueWithoutUserInput[]
-    updateMany?: GameSessionUpdateManyWithWhereWithoutUserInput | GameSessionUpdateManyWithWhereWithoutUserInput[]
-    deleteMany?: GameSessionScalarWhereInput | GameSessionScalarWhereInput[]
+  export type CasinoGameSessionUpdateManyWithoutUserNestedInput = {
+    create?: XOR<CasinoGameSessionCreateWithoutUserInput, CasinoGameSessionUncheckedCreateWithoutUserInput> | CasinoGameSessionCreateWithoutUserInput[] | CasinoGameSessionUncheckedCreateWithoutUserInput[]
+    connectOrCreate?: CasinoGameSessionCreateOrConnectWithoutUserInput | CasinoGameSessionCreateOrConnectWithoutUserInput[]
+    upsert?: CasinoGameSessionUpsertWithWhereUniqueWithoutUserInput | CasinoGameSessionUpsertWithWhereUniqueWithoutUserInput[]
+    createMany?: CasinoGameSessionCreateManyUserInputEnvelope
+    set?: CasinoGameSessionWhereUniqueInput | CasinoGameSessionWhereUniqueInput[]
+    disconnect?: CasinoGameSessionWhereUniqueInput | CasinoGameSessionWhereUniqueInput[]
+    delete?: CasinoGameSessionWhereUniqueInput | CasinoGameSessionWhereUniqueInput[]
+    connect?: CasinoGameSessionWhereUniqueInput | CasinoGameSessionWhereUniqueInput[]
+    update?: CasinoGameSessionUpdateWithWhereUniqueWithoutUserInput | CasinoGameSessionUpdateWithWhereUniqueWithoutUserInput[]
+    updateMany?: CasinoGameSessionUpdateManyWithWhereWithoutUserInput | CasinoGameSessionUpdateManyWithWhereWithoutUserInput[]
+    deleteMany?: CasinoGameSessionScalarWhereInput | CasinoGameSessionScalarWhereInput[]
   }
 
   export type ReferralUpdateManyWithoutAffiliateNestedInput = {
@@ -78396,18 +78396,18 @@ export namespace Prisma {
     deleteMany?: EmailLogScalarWhereInput | EmailLogScalarWhereInput[]
   }
 
-  export type GameSessionUncheckedUpdateManyWithoutUserNestedInput = {
-    create?: XOR<GameSessionCreateWithoutUserInput, GameSessionUncheckedCreateWithoutUserInput> | GameSessionCreateWithoutUserInput[] | GameSessionUncheckedCreateWithoutUserInput[]
-    connectOrCreate?: GameSessionCreateOrConnectWithoutUserInput | GameSessionCreateOrConnectWithoutUserInput[]
-    upsert?: GameSessionUpsertWithWhereUniqueWithoutUserInput | GameSessionUpsertWithWhereUniqueWithoutUserInput[]
-    createMany?: GameSessionCreateManyUserInputEnvelope
-    set?: GameSessionWhereUniqueInput | GameSessionWhereUniqueInput[]
-    disconnect?: GameSessionWhereUniqueInput | GameSessionWhereUniqueInput[]
-    delete?: GameSessionWhereUniqueInput | GameSessionWhereUniqueInput[]
-    connect?: GameSessionWhereUniqueInput | GameSessionWhereUniqueInput[]
-    update?: GameSessionUpdateWithWhereUniqueWithoutUserInput | GameSessionUpdateWithWhereUniqueWithoutUserInput[]
-    updateMany?: GameSessionUpdateManyWithWhereWithoutUserInput | GameSessionUpdateManyWithWhereWithoutUserInput[]
-    deleteMany?: GameSessionScalarWhereInput | GameSessionScalarWhereInput[]
+  export type CasinoGameSessionUncheckedUpdateManyWithoutUserNestedInput = {
+    create?: XOR<CasinoGameSessionCreateWithoutUserInput, CasinoGameSessionUncheckedCreateWithoutUserInput> | CasinoGameSessionCreateWithoutUserInput[] | CasinoGameSessionUncheckedCreateWithoutUserInput[]
+    connectOrCreate?: CasinoGameSessionCreateOrConnectWithoutUserInput | CasinoGameSessionCreateOrConnectWithoutUserInput[]
+    upsert?: CasinoGameSessionUpsertWithWhereUniqueWithoutUserInput | CasinoGameSessionUpsertWithWhereUniqueWithoutUserInput[]
+    createMany?: CasinoGameSessionCreateManyUserInputEnvelope
+    set?: CasinoGameSessionWhereUniqueInput | CasinoGameSessionWhereUniqueInput[]
+    disconnect?: CasinoGameSessionWhereUniqueInput | CasinoGameSessionWhereUniqueInput[]
+    delete?: CasinoGameSessionWhereUniqueInput | CasinoGameSessionWhereUniqueInput[]
+    connect?: CasinoGameSessionWhereUniqueInput | CasinoGameSessionWhereUniqueInput[]
+    update?: CasinoGameSessionUpdateWithWhereUniqueWithoutUserInput | CasinoGameSessionUpdateWithWhereUniqueWithoutUserInput[]
+    updateMany?: CasinoGameSessionUpdateManyWithWhereWithoutUserInput | CasinoGameSessionUpdateManyWithWhereWithoutUserInput[]
+    deleteMany?: CasinoGameSessionScalarWhereInput | CasinoGameSessionScalarWhereInput[]
   }
 
   export type ReferralUncheckedUpdateManyWithoutAffiliateNestedInput = {
@@ -78952,10 +78952,10 @@ export namespace Prisma {
     connect?: CasinoGameWhereUniqueInput
   }
 
-  export type GameSessionCreateNestedOneWithoutGameRoundsInput = {
-    create?: XOR<GameSessionCreateWithoutGameRoundsInput, GameSessionUncheckedCreateWithoutGameRoundsInput>
-    connectOrCreate?: GameSessionCreateOrConnectWithoutGameRoundsInput
-    connect?: GameSessionWhereUniqueInput
+  export type CasinoGameSessionCreateNestedOneWithoutGameRoundsInput = {
+    create?: XOR<CasinoGameSessionCreateWithoutGameRoundsInput, CasinoGameSessionUncheckedCreateWithoutGameRoundsInput>
+    connectOrCreate?: CasinoGameSessionCreateOrConnectWithoutGameRoundsInput
+    connect?: CasinoGameSessionWhereUniqueInput
   }
 
   export type TransactionCreateNestedOneWithoutGameRoundInput = {
@@ -79042,12 +79042,12 @@ export namespace Prisma {
     update?: XOR<XOR<CasinoGameUpdateToOneWithWhereWithoutGameRoundsInput, CasinoGameUpdateWithoutGameRoundsInput>, CasinoGameUncheckedUpdateWithoutGameRoundsInput>
   }
 
-  export type GameSessionUpdateOneRequiredWithoutGameRoundsNestedInput = {
-    create?: XOR<GameSessionCreateWithoutGameRoundsInput, GameSessionUncheckedCreateWithoutGameRoundsInput>
-    connectOrCreate?: GameSessionCreateOrConnectWithoutGameRoundsInput
-    upsert?: GameSessionUpsertWithoutGameRoundsInput
-    connect?: GameSessionWhereUniqueInput
-    update?: XOR<XOR<GameSessionUpdateToOneWithWhereWithoutGameRoundsInput, GameSessionUpdateWithoutGameRoundsInput>, GameSessionUncheckedUpdateWithoutGameRoundsInput>
+  export type CasinoGameSessionUpdateOneRequiredWithoutGameRoundsNestedInput = {
+    create?: XOR<CasinoGameSessionCreateWithoutGameRoundsInput, CasinoGameSessionUncheckedCreateWithoutGameRoundsInput>
+    connectOrCreate?: CasinoGameSessionCreateOrConnectWithoutGameRoundsInput
+    upsert?: CasinoGameSessionUpsertWithoutGameRoundsInput
+    connect?: CasinoGameSessionWhereUniqueInput
+    update?: XOR<XOR<CasinoGameSessionUpdateToOneWithWhereWithoutGameRoundsInput, CasinoGameSessionUpdateWithoutGameRoundsInput>, CasinoGameSessionUncheckedUpdateWithoutGameRoundsInput>
   }
 
   export type TransactionUpdateOneRequiredWithoutGameRoundNestedInput = {
@@ -81383,7 +81383,7 @@ export namespace Prisma {
     CompTransaction?: CompTransactionCreateNestedManyWithoutUserInput
     DailyCompEarning?: DailyCompEarningCreateNestedManyWithoutUserInput
     EmailLog?: EmailLogCreateNestedManyWithoutUserInput
-    GameSession?: GameSessionCreateNestedManyWithoutUserInput
+    GameSession?: CasinoGameSessionCreateNestedManyWithoutUserInput
     affiliateReferrals?: ReferralCreateNestedManyWithoutAffiliateInput
     referredUsers?: ReferralCreateNestedManyWithoutSubUserInput
     Rolling?: RollingCreateNestedManyWithoutUserInput
@@ -81428,7 +81428,7 @@ export namespace Prisma {
     CompTransaction?: CompTransactionUncheckedCreateNestedManyWithoutUserInput
     DailyCompEarning?: DailyCompEarningUncheckedCreateNestedManyWithoutUserInput
     EmailLog?: EmailLogUncheckedCreateNestedManyWithoutUserInput
-    GameSession?: GameSessionUncheckedCreateNestedManyWithoutUserInput
+    GameSession?: CasinoGameSessionUncheckedCreateNestedManyWithoutUserInput
     affiliateReferrals?: ReferralUncheckedCreateNestedManyWithoutAffiliateInput
     referredUsers?: ReferralUncheckedCreateNestedManyWithoutSubUserInput
     Rolling?: RollingUncheckedCreateNestedManyWithoutUserInput
@@ -81523,7 +81523,7 @@ export namespace Prisma {
     CompTransaction?: CompTransactionUpdateManyWithoutUserNestedInput
     DailyCompEarning?: DailyCompEarningUpdateManyWithoutUserNestedInput
     EmailLog?: EmailLogUpdateManyWithoutUserNestedInput
-    GameSession?: GameSessionUpdateManyWithoutUserNestedInput
+    GameSession?: CasinoGameSessionUpdateManyWithoutUserNestedInput
     affiliateReferrals?: ReferralUpdateManyWithoutAffiliateNestedInput
     referredUsers?: ReferralUpdateManyWithoutSubUserNestedInput
     Rolling?: RollingUpdateManyWithoutUserNestedInput
@@ -81568,7 +81568,7 @@ export namespace Prisma {
     CompTransaction?: CompTransactionUncheckedUpdateManyWithoutUserNestedInput
     DailyCompEarning?: DailyCompEarningUncheckedUpdateManyWithoutUserNestedInput
     EmailLog?: EmailLogUncheckedUpdateManyWithoutUserNestedInput
-    GameSession?: GameSessionUncheckedUpdateManyWithoutUserNestedInput
+    GameSession?: CasinoGameSessionUncheckedUpdateManyWithoutUserNestedInput
     affiliateReferrals?: ReferralUncheckedUpdateManyWithoutAffiliateNestedInput
     referredUsers?: ReferralUncheckedUpdateManyWithoutSubUserNestedInput
     Rolling?: RollingUncheckedUpdateManyWithoutUserNestedInput
@@ -81646,7 +81646,7 @@ export namespace Prisma {
     CompTransaction?: CompTransactionCreateNestedManyWithoutUserInput
     DailyCompEarning?: DailyCompEarningCreateNestedManyWithoutUserInput
     EmailLog?: EmailLogCreateNestedManyWithoutUserInput
-    GameSession?: GameSessionCreateNestedManyWithoutUserInput
+    GameSession?: CasinoGameSessionCreateNestedManyWithoutUserInput
     referredUsers?: ReferralCreateNestedManyWithoutSubUserInput
     Rolling?: RollingCreateNestedManyWithoutUserInput
     transactions?: TransactionCreateNestedManyWithoutUserInput
@@ -81691,7 +81691,7 @@ export namespace Prisma {
     CompTransaction?: CompTransactionUncheckedCreateNestedManyWithoutUserInput
     DailyCompEarning?: DailyCompEarningUncheckedCreateNestedManyWithoutUserInput
     EmailLog?: EmailLogUncheckedCreateNestedManyWithoutUserInput
-    GameSession?: GameSessionUncheckedCreateNestedManyWithoutUserInput
+    GameSession?: CasinoGameSessionUncheckedCreateNestedManyWithoutUserInput
     referredUsers?: ReferralUncheckedCreateNestedManyWithoutSubUserInput
     Rolling?: RollingUncheckedCreateNestedManyWithoutUserInput
     transactions?: TransactionUncheckedCreateNestedManyWithoutUserInput
@@ -81776,7 +81776,7 @@ export namespace Prisma {
     CompTransaction?: CompTransactionCreateNestedManyWithoutUserInput
     DailyCompEarning?: DailyCompEarningCreateNestedManyWithoutUserInput
     EmailLog?: EmailLogCreateNestedManyWithoutUserInput
-    GameSession?: GameSessionCreateNestedManyWithoutUserInput
+    GameSession?: CasinoGameSessionCreateNestedManyWithoutUserInput
     affiliateReferrals?: ReferralCreateNestedManyWithoutAffiliateInput
     Rolling?: RollingCreateNestedManyWithoutUserInput
     transactions?: TransactionCreateNestedManyWithoutUserInput
@@ -81821,7 +81821,7 @@ export namespace Prisma {
     CompTransaction?: CompTransactionUncheckedCreateNestedManyWithoutUserInput
     DailyCompEarning?: DailyCompEarningUncheckedCreateNestedManyWithoutUserInput
     EmailLog?: EmailLogUncheckedCreateNestedManyWithoutUserInput
-    GameSession?: GameSessionUncheckedCreateNestedManyWithoutUserInput
+    GameSession?: CasinoGameSessionUncheckedCreateNestedManyWithoutUserInput
     affiliateReferrals?: ReferralUncheckedCreateNestedManyWithoutAffiliateInput
     Rolling?: RollingUncheckedCreateNestedManyWithoutUserInput
     transactions?: TransactionUncheckedCreateNestedManyWithoutUserInput
@@ -81882,7 +81882,7 @@ export namespace Prisma {
     CompTransaction?: CompTransactionUpdateManyWithoutUserNestedInput
     DailyCompEarning?: DailyCompEarningUpdateManyWithoutUserNestedInput
     EmailLog?: EmailLogUpdateManyWithoutUserNestedInput
-    GameSession?: GameSessionUpdateManyWithoutUserNestedInput
+    GameSession?: CasinoGameSessionUpdateManyWithoutUserNestedInput
     referredUsers?: ReferralUpdateManyWithoutSubUserNestedInput
     Rolling?: RollingUpdateManyWithoutUserNestedInput
     transactions?: TransactionUpdateManyWithoutUserNestedInput
@@ -81927,7 +81927,7 @@ export namespace Prisma {
     CompTransaction?: CompTransactionUncheckedUpdateManyWithoutUserNestedInput
     DailyCompEarning?: DailyCompEarningUncheckedUpdateManyWithoutUserNestedInput
     EmailLog?: EmailLogUncheckedUpdateManyWithoutUserNestedInput
-    GameSession?: GameSessionUncheckedUpdateManyWithoutUserNestedInput
+    GameSession?: CasinoGameSessionUncheckedUpdateManyWithoutUserNestedInput
     referredUsers?: ReferralUncheckedUpdateManyWithoutSubUserNestedInput
     Rolling?: RollingUncheckedUpdateManyWithoutUserNestedInput
     transactions?: TransactionUncheckedUpdateManyWithoutUserNestedInput
@@ -82024,7 +82024,7 @@ export namespace Prisma {
     CompTransaction?: CompTransactionUpdateManyWithoutUserNestedInput
     DailyCompEarning?: DailyCompEarningUpdateManyWithoutUserNestedInput
     EmailLog?: EmailLogUpdateManyWithoutUserNestedInput
-    GameSession?: GameSessionUpdateManyWithoutUserNestedInput
+    GameSession?: CasinoGameSessionUpdateManyWithoutUserNestedInput
     affiliateReferrals?: ReferralUpdateManyWithoutAffiliateNestedInput
     Rolling?: RollingUpdateManyWithoutUserNestedInput
     transactions?: TransactionUpdateManyWithoutUserNestedInput
@@ -82069,7 +82069,7 @@ export namespace Prisma {
     CompTransaction?: CompTransactionUncheckedUpdateManyWithoutUserNestedInput
     DailyCompEarning?: DailyCompEarningUncheckedUpdateManyWithoutUserNestedInput
     EmailLog?: EmailLogUncheckedUpdateManyWithoutUserNestedInput
-    GameSession?: GameSessionUncheckedUpdateManyWithoutUserNestedInput
+    GameSession?: CasinoGameSessionUncheckedUpdateManyWithoutUserNestedInput
     affiliateReferrals?: ReferralUncheckedUpdateManyWithoutAffiliateNestedInput
     Rolling?: RollingUncheckedUpdateManyWithoutUserNestedInput
     transactions?: TransactionUncheckedUpdateManyWithoutUserNestedInput
@@ -82161,7 +82161,7 @@ export namespace Prisma {
     completedAt?: Date | string | null
     AffiliateCommission?: AffiliateCommissionCreateNestedManyWithoutGameRoundInput
     bets?: GameBetCreateNestedManyWithoutGameRoundInput
-    GameSession: GameSessionCreateNestedOneWithoutGameRoundsInput
+    GameSession: CasinoGameSessionCreateNestedOneWithoutGameRoundsInput
     transaction: TransactionCreateNestedOneWithoutGameRoundInput
     wins?: GameWinCreateNestedManyWithoutGameRoundInput
   }
@@ -82208,7 +82208,7 @@ export namespace Prisma {
     skipDuplicates?: boolean
   }
 
-  export type GameSessionCreateWithoutGameInput = {
+  export type CasinoGameSessionCreateWithoutGameInput = {
     id?: bigint | number
     createdAt?: Date | string
     updatedAt?: Date | string
@@ -82223,7 +82223,7 @@ export namespace Prisma {
     user: UserCreateNestedOneWithoutGameSessionInput
   }
 
-  export type GameSessionUncheckedCreateWithoutGameInput = {
+  export type CasinoGameSessionUncheckedCreateWithoutGameInput = {
     id?: bigint | number
     userId: bigint | number
     createdAt?: Date | string
@@ -82238,13 +82238,13 @@ export namespace Prisma {
     gameRounds?: GameRoundUncheckedCreateNestedManyWithoutGameSessionInput
   }
 
-  export type GameSessionCreateOrConnectWithoutGameInput = {
-    where: GameSessionWhereUniqueInput
-    create: XOR<GameSessionCreateWithoutGameInput, GameSessionUncheckedCreateWithoutGameInput>
+  export type CasinoGameSessionCreateOrConnectWithoutGameInput = {
+    where: CasinoGameSessionWhereUniqueInput
+    create: XOR<CasinoGameSessionCreateWithoutGameInput, CasinoGameSessionUncheckedCreateWithoutGameInput>
   }
 
-  export type GameSessionCreateManyGameInputEnvelope = {
-    data: GameSessionCreateManyGameInput | GameSessionCreateManyGameInput[]
+  export type CasinoGameSessionCreateManyGameInputEnvelope = {
+    data: CasinoGameSessionCreateManyGameInput | CasinoGameSessionCreateManyGameInput[]
     skipDuplicates?: boolean
   }
 
@@ -82365,38 +82365,38 @@ export namespace Prisma {
     gameSessionId?: BigIntFilter<"GameRound"> | bigint | number
   }
 
-  export type GameSessionUpsertWithWhereUniqueWithoutGameInput = {
-    where: GameSessionWhereUniqueInput
-    update: XOR<GameSessionUpdateWithoutGameInput, GameSessionUncheckedUpdateWithoutGameInput>
-    create: XOR<GameSessionCreateWithoutGameInput, GameSessionUncheckedCreateWithoutGameInput>
+  export type CasinoGameSessionUpsertWithWhereUniqueWithoutGameInput = {
+    where: CasinoGameSessionWhereUniqueInput
+    update: XOR<CasinoGameSessionUpdateWithoutGameInput, CasinoGameSessionUncheckedUpdateWithoutGameInput>
+    create: XOR<CasinoGameSessionCreateWithoutGameInput, CasinoGameSessionUncheckedCreateWithoutGameInput>
   }
 
-  export type GameSessionUpdateWithWhereUniqueWithoutGameInput = {
-    where: GameSessionWhereUniqueInput
-    data: XOR<GameSessionUpdateWithoutGameInput, GameSessionUncheckedUpdateWithoutGameInput>
+  export type CasinoGameSessionUpdateWithWhereUniqueWithoutGameInput = {
+    where: CasinoGameSessionWhereUniqueInput
+    data: XOR<CasinoGameSessionUpdateWithoutGameInput, CasinoGameSessionUncheckedUpdateWithoutGameInput>
   }
 
-  export type GameSessionUpdateManyWithWhereWithoutGameInput = {
-    where: GameSessionScalarWhereInput
-    data: XOR<GameSessionUpdateManyMutationInput, GameSessionUncheckedUpdateManyWithoutGameInput>
+  export type CasinoGameSessionUpdateManyWithWhereWithoutGameInput = {
+    where: CasinoGameSessionScalarWhereInput
+    data: XOR<CasinoGameSessionUpdateManyMutationInput, CasinoGameSessionUncheckedUpdateManyWithoutGameInput>
   }
 
-  export type GameSessionScalarWhereInput = {
-    AND?: GameSessionScalarWhereInput | GameSessionScalarWhereInput[]
-    OR?: GameSessionScalarWhereInput[]
-    NOT?: GameSessionScalarWhereInput | GameSessionScalarWhereInput[]
-    id?: BigIntFilter<"GameSession"> | bigint | number
-    userId?: BigIntFilter<"GameSession"> | bigint | number
-    createdAt?: DateTimeFilter<"GameSession"> | Date | string
-    updatedAt?: DateTimeFilter<"GameSession"> | Date | string
-    lastAccessedAt?: DateTimeFilter<"GameSession"> | Date | string
-    aggregatorType?: EnumGameAggregatorTypeFilter<"GameSession"> | $Enums.GameAggregatorType
-    token?: StringFilter<"GameSession"> | string
-    walletCurrency?: EnumExchangeCurrencyCodeFilter<"GameSession"> | $Enums.ExchangeCurrencyCode
-    gameCurrency?: EnumExchangeCurrencyCodeFilter<"GameSession"> | $Enums.ExchangeCurrencyCode
-    exchangeRate?: DecimalFilter<"GameSession"> | Decimal | DecimalJsLike | number | string
-    exchangeRateSnapshotAt?: DateTimeFilter<"GameSession"> | Date | string
-    gameId?: IntNullableFilter<"GameSession"> | number | null
+  export type CasinoGameSessionScalarWhereInput = {
+    AND?: CasinoGameSessionScalarWhereInput | CasinoGameSessionScalarWhereInput[]
+    OR?: CasinoGameSessionScalarWhereInput[]
+    NOT?: CasinoGameSessionScalarWhereInput | CasinoGameSessionScalarWhereInput[]
+    id?: BigIntFilter<"CasinoGameSession"> | bigint | number
+    userId?: BigIntFilter<"CasinoGameSession"> | bigint | number
+    createdAt?: DateTimeFilter<"CasinoGameSession"> | Date | string
+    updatedAt?: DateTimeFilter<"CasinoGameSession"> | Date | string
+    lastAccessedAt?: DateTimeFilter<"CasinoGameSession"> | Date | string
+    aggregatorType?: EnumGameAggregatorTypeFilter<"CasinoGameSession"> | $Enums.GameAggregatorType
+    token?: StringFilter<"CasinoGameSession"> | string
+    walletCurrency?: EnumExchangeCurrencyCodeFilter<"CasinoGameSession"> | $Enums.ExchangeCurrencyCode
+    gameCurrency?: EnumExchangeCurrencyCodeFilter<"CasinoGameSession"> | $Enums.ExchangeCurrencyCode
+    exchangeRate?: DecimalFilter<"CasinoGameSession"> | Decimal | DecimalJsLike | number | string
+    exchangeRateSnapshotAt?: DateTimeFilter<"CasinoGameSession"> | Date | string
+    gameId?: IntNullableFilter<"CasinoGameSession"> | number | null
   }
 
   export type CasinoGameTranslationUpsertWithWhereUniqueWithoutCasinoGameInput = {
@@ -82445,7 +82445,7 @@ export namespace Prisma {
     updatedAt?: Date | string
     bonusDetails?: BonusDetailCreateNestedManyWithoutCasinoGameInput
     gameRounds?: GameRoundCreateNestedManyWithoutCasinoGameInput
-    gameSessions?: GameSessionCreateNestedManyWithoutGameInput
+    gameSessions?: CasinoGameSessionCreateNestedManyWithoutGameInput
   }
 
   export type CasinoGameUncheckedCreateWithoutTranslationsInput = {
@@ -82465,7 +82465,7 @@ export namespace Prisma {
     updatedAt?: Date | string
     bonusDetails?: BonusDetailUncheckedCreateNestedManyWithoutCasinoGameInput
     gameRounds?: GameRoundUncheckedCreateNestedManyWithoutCasinoGameInput
-    gameSessions?: GameSessionUncheckedCreateNestedManyWithoutGameInput
+    gameSessions?: CasinoGameSessionUncheckedCreateNestedManyWithoutGameInput
   }
 
   export type CasinoGameCreateOrConnectWithoutTranslationsInput = {
@@ -82500,7 +82500,7 @@ export namespace Prisma {
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
     bonusDetails?: BonusDetailUpdateManyWithoutCasinoGameNestedInput
     gameRounds?: GameRoundUpdateManyWithoutCasinoGameNestedInput
-    gameSessions?: GameSessionUpdateManyWithoutGameNestedInput
+    gameSessions?: CasinoGameSessionUpdateManyWithoutGameNestedInput
   }
 
   export type CasinoGameUncheckedUpdateWithoutTranslationsInput = {
@@ -82520,7 +82520,7 @@ export namespace Prisma {
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
     bonusDetails?: BonusDetailUncheckedUpdateManyWithoutCasinoGameNestedInput
     gameRounds?: GameRoundUncheckedUpdateManyWithoutCasinoGameNestedInput
-    gameSessions?: GameSessionUncheckedUpdateManyWithoutGameNestedInput
+    gameSessions?: CasinoGameSessionUncheckedUpdateManyWithoutGameNestedInput
   }
 
   export type GameRoundCreateWithoutGameSessionInput = {
@@ -83196,7 +83196,7 @@ export namespace Prisma {
     skipDuplicates?: boolean
   }
 
-  export type GameSessionCreateWithoutUserInput = {
+  export type CasinoGameSessionCreateWithoutUserInput = {
     id?: bigint | number
     createdAt?: Date | string
     updatedAt?: Date | string
@@ -83211,7 +83211,7 @@ export namespace Prisma {
     game?: CasinoGameCreateNestedOneWithoutGameSessionsInput
   }
 
-  export type GameSessionUncheckedCreateWithoutUserInput = {
+  export type CasinoGameSessionUncheckedCreateWithoutUserInput = {
     id?: bigint | number
     createdAt?: Date | string
     updatedAt?: Date | string
@@ -83226,13 +83226,13 @@ export namespace Prisma {
     gameRounds?: GameRoundUncheckedCreateNestedManyWithoutGameSessionInput
   }
 
-  export type GameSessionCreateOrConnectWithoutUserInput = {
-    where: GameSessionWhereUniqueInput
-    create: XOR<GameSessionCreateWithoutUserInput, GameSessionUncheckedCreateWithoutUserInput>
+  export type CasinoGameSessionCreateOrConnectWithoutUserInput = {
+    where: CasinoGameSessionWhereUniqueInput
+    create: XOR<CasinoGameSessionCreateWithoutUserInput, CasinoGameSessionUncheckedCreateWithoutUserInput>
   }
 
-  export type GameSessionCreateManyUserInputEnvelope = {
-    data: GameSessionCreateManyUserInput | GameSessionCreateManyUserInput[]
+  export type CasinoGameSessionCreateManyUserInputEnvelope = {
+    data: CasinoGameSessionCreateManyUserInput | CasinoGameSessionCreateManyUserInput[]
     skipDuplicates?: boolean
   }
 
@@ -84096,20 +84096,20 @@ export namespace Prisma {
     createdAt?: DateTimeFilter<"EmailLog"> | Date | string
   }
 
-  export type GameSessionUpsertWithWhereUniqueWithoutUserInput = {
-    where: GameSessionWhereUniqueInput
-    update: XOR<GameSessionUpdateWithoutUserInput, GameSessionUncheckedUpdateWithoutUserInput>
-    create: XOR<GameSessionCreateWithoutUserInput, GameSessionUncheckedCreateWithoutUserInput>
+  export type CasinoGameSessionUpsertWithWhereUniqueWithoutUserInput = {
+    where: CasinoGameSessionWhereUniqueInput
+    update: XOR<CasinoGameSessionUpdateWithoutUserInput, CasinoGameSessionUncheckedUpdateWithoutUserInput>
+    create: XOR<CasinoGameSessionCreateWithoutUserInput, CasinoGameSessionUncheckedCreateWithoutUserInput>
   }
 
-  export type GameSessionUpdateWithWhereUniqueWithoutUserInput = {
-    where: GameSessionWhereUniqueInput
-    data: XOR<GameSessionUpdateWithoutUserInput, GameSessionUncheckedUpdateWithoutUserInput>
+  export type CasinoGameSessionUpdateWithWhereUniqueWithoutUserInput = {
+    where: CasinoGameSessionWhereUniqueInput
+    data: XOR<CasinoGameSessionUpdateWithoutUserInput, CasinoGameSessionUncheckedUpdateWithoutUserInput>
   }
 
-  export type GameSessionUpdateManyWithWhereWithoutUserInput = {
-    where: GameSessionScalarWhereInput
-    data: XOR<GameSessionUpdateManyMutationInput, GameSessionUncheckedUpdateManyWithoutUserInput>
+  export type CasinoGameSessionUpdateManyWithWhereWithoutUserInput = {
+    where: CasinoGameSessionScalarWhereInput
+    data: XOR<CasinoGameSessionUpdateManyMutationInput, CasinoGameSessionUncheckedUpdateManyWithoutUserInput>
   }
 
   export type ReferralUpsertWithWhereUniqueWithoutAffiliateInput = {
@@ -84607,7 +84607,7 @@ export namespace Prisma {
     CompTransaction?: CompTransactionCreateNestedManyWithoutUserInput
     DailyCompEarning?: DailyCompEarningCreateNestedManyWithoutUserInput
     EmailLog?: EmailLogCreateNestedManyWithoutUserInput
-    GameSession?: GameSessionCreateNestedManyWithoutUserInput
+    GameSession?: CasinoGameSessionCreateNestedManyWithoutUserInput
     affiliateReferrals?: ReferralCreateNestedManyWithoutAffiliateInput
     referredUsers?: ReferralCreateNestedManyWithoutSubUserInput
     Rolling?: RollingCreateNestedManyWithoutUserInput
@@ -84652,7 +84652,7 @@ export namespace Prisma {
     CompTransaction?: CompTransactionUncheckedCreateNestedManyWithoutUserInput
     DailyCompEarning?: DailyCompEarningUncheckedCreateNestedManyWithoutUserInput
     EmailLog?: EmailLogUncheckedCreateNestedManyWithoutUserInput
-    GameSession?: GameSessionUncheckedCreateNestedManyWithoutUserInput
+    GameSession?: CasinoGameSessionUncheckedCreateNestedManyWithoutUserInput
     affiliateReferrals?: ReferralUncheckedCreateNestedManyWithoutAffiliateInput
     referredUsers?: ReferralUncheckedCreateNestedManyWithoutSubUserInput
     Rolling?: RollingUncheckedCreateNestedManyWithoutUserInput
@@ -84713,7 +84713,7 @@ export namespace Prisma {
     CompTransaction?: CompTransactionUpdateManyWithoutUserNestedInput
     DailyCompEarning?: DailyCompEarningUpdateManyWithoutUserNestedInput
     EmailLog?: EmailLogUpdateManyWithoutUserNestedInput
-    GameSession?: GameSessionUpdateManyWithoutUserNestedInput
+    GameSession?: CasinoGameSessionUpdateManyWithoutUserNestedInput
     affiliateReferrals?: ReferralUpdateManyWithoutAffiliateNestedInput
     referredUsers?: ReferralUpdateManyWithoutSubUserNestedInput
     Rolling?: RollingUpdateManyWithoutUserNestedInput
@@ -84758,7 +84758,7 @@ export namespace Prisma {
     CompTransaction?: CompTransactionUncheckedUpdateManyWithoutUserNestedInput
     DailyCompEarning?: DailyCompEarningUncheckedUpdateManyWithoutUserNestedInput
     EmailLog?: EmailLogUncheckedUpdateManyWithoutUserNestedInput
-    GameSession?: GameSessionUncheckedUpdateManyWithoutUserNestedInput
+    GameSession?: CasinoGameSessionUncheckedUpdateManyWithoutUserNestedInput
     affiliateReferrals?: ReferralUncheckedUpdateManyWithoutAffiliateNestedInput
     referredUsers?: ReferralUncheckedUpdateManyWithoutSubUserNestedInput
     Rolling?: RollingUncheckedUpdateManyWithoutUserNestedInput
@@ -84803,7 +84803,7 @@ export namespace Prisma {
     CompTransaction?: CompTransactionCreateNestedManyWithoutUserInput
     DailyCompEarning?: DailyCompEarningCreateNestedManyWithoutUserInput
     EmailLog?: EmailLogCreateNestedManyWithoutUserInput
-    GameSession?: GameSessionCreateNestedManyWithoutUserInput
+    GameSession?: CasinoGameSessionCreateNestedManyWithoutUserInput
     affiliateReferrals?: ReferralCreateNestedManyWithoutAffiliateInput
     referredUsers?: ReferralCreateNestedManyWithoutSubUserInput
     Rolling?: RollingCreateNestedManyWithoutUserInput
@@ -84848,7 +84848,7 @@ export namespace Prisma {
     CompTransaction?: CompTransactionUncheckedCreateNestedManyWithoutUserInput
     DailyCompEarning?: DailyCompEarningUncheckedCreateNestedManyWithoutUserInput
     EmailLog?: EmailLogUncheckedCreateNestedManyWithoutUserInput
-    GameSession?: GameSessionUncheckedCreateNestedManyWithoutUserInput
+    GameSession?: CasinoGameSessionUncheckedCreateNestedManyWithoutUserInput
     affiliateReferrals?: ReferralUncheckedCreateNestedManyWithoutAffiliateInput
     referredUsers?: ReferralUncheckedCreateNestedManyWithoutSubUserInput
     Rolling?: RollingUncheckedCreateNestedManyWithoutUserInput
@@ -84909,7 +84909,7 @@ export namespace Prisma {
     CompTransaction?: CompTransactionUpdateManyWithoutUserNestedInput
     DailyCompEarning?: DailyCompEarningUpdateManyWithoutUserNestedInput
     EmailLog?: EmailLogUpdateManyWithoutUserNestedInput
-    GameSession?: GameSessionUpdateManyWithoutUserNestedInput
+    GameSession?: CasinoGameSessionUpdateManyWithoutUserNestedInput
     affiliateReferrals?: ReferralUpdateManyWithoutAffiliateNestedInput
     referredUsers?: ReferralUpdateManyWithoutSubUserNestedInput
     Rolling?: RollingUpdateManyWithoutUserNestedInput
@@ -84954,7 +84954,7 @@ export namespace Prisma {
     CompTransaction?: CompTransactionUncheckedUpdateManyWithoutUserNestedInput
     DailyCompEarning?: DailyCompEarningUncheckedUpdateManyWithoutUserNestedInput
     EmailLog?: EmailLogUncheckedUpdateManyWithoutUserNestedInput
-    GameSession?: GameSessionUncheckedUpdateManyWithoutUserNestedInput
+    GameSession?: CasinoGameSessionUncheckedUpdateManyWithoutUserNestedInput
     affiliateReferrals?: ReferralUncheckedUpdateManyWithoutAffiliateNestedInput
     referredUsers?: ReferralUncheckedUpdateManyWithoutSubUserNestedInput
     Rolling?: RollingUncheckedUpdateManyWithoutUserNestedInput
@@ -85138,7 +85138,7 @@ export namespace Prisma {
     AffiliateCommission?: AffiliateCommissionCreateNestedManyWithoutGameRoundInput
     bets?: GameBetCreateNestedManyWithoutGameRoundInput
     casinoGame?: CasinoGameCreateNestedOneWithoutGameRoundsInput
-    GameSession: GameSessionCreateNestedOneWithoutGameRoundsInput
+    GameSession: CasinoGameSessionCreateNestedOneWithoutGameRoundsInput
     wins?: GameWinCreateNestedManyWithoutGameRoundInput
   }
 
@@ -85207,7 +85207,7 @@ export namespace Prisma {
     CompTransaction?: CompTransactionCreateNestedManyWithoutUserInput
     DailyCompEarning?: DailyCompEarningCreateNestedManyWithoutUserInput
     EmailLog?: EmailLogCreateNestedManyWithoutUserInput
-    GameSession?: GameSessionCreateNestedManyWithoutUserInput
+    GameSession?: CasinoGameSessionCreateNestedManyWithoutUserInput
     affiliateReferrals?: ReferralCreateNestedManyWithoutAffiliateInput
     referredUsers?: ReferralCreateNestedManyWithoutSubUserInput
     Rolling?: RollingCreateNestedManyWithoutUserInput
@@ -85252,7 +85252,7 @@ export namespace Prisma {
     CompTransaction?: CompTransactionUncheckedCreateNestedManyWithoutUserInput
     DailyCompEarning?: DailyCompEarningUncheckedCreateNestedManyWithoutUserInput
     EmailLog?: EmailLogUncheckedCreateNestedManyWithoutUserInput
-    GameSession?: GameSessionUncheckedCreateNestedManyWithoutUserInput
+    GameSession?: CasinoGameSessionUncheckedCreateNestedManyWithoutUserInput
     affiliateReferrals?: ReferralUncheckedCreateNestedManyWithoutAffiliateInput
     referredUsers?: ReferralUncheckedCreateNestedManyWithoutSubUserInput
     Rolling?: RollingUncheckedCreateNestedManyWithoutUserInput
@@ -85587,7 +85587,7 @@ export namespace Prisma {
     AffiliateCommission?: AffiliateCommissionUpdateManyWithoutGameRoundNestedInput
     bets?: GameBetUpdateManyWithoutGameRoundNestedInput
     casinoGame?: CasinoGameUpdateOneWithoutGameRoundsNestedInput
-    GameSession?: GameSessionUpdateOneRequiredWithoutGameRoundsNestedInput
+    GameSession?: CasinoGameSessionUpdateOneRequiredWithoutGameRoundsNestedInput
     wins?: GameWinUpdateManyWithoutGameRoundNestedInput
   }
 
@@ -85662,7 +85662,7 @@ export namespace Prisma {
     CompTransaction?: CompTransactionUpdateManyWithoutUserNestedInput
     DailyCompEarning?: DailyCompEarningUpdateManyWithoutUserNestedInput
     EmailLog?: EmailLogUpdateManyWithoutUserNestedInput
-    GameSession?: GameSessionUpdateManyWithoutUserNestedInput
+    GameSession?: CasinoGameSessionUpdateManyWithoutUserNestedInput
     affiliateReferrals?: ReferralUpdateManyWithoutAffiliateNestedInput
     referredUsers?: ReferralUpdateManyWithoutSubUserNestedInput
     Rolling?: RollingUpdateManyWithoutUserNestedInput
@@ -85707,7 +85707,7 @@ export namespace Prisma {
     CompTransaction?: CompTransactionUncheckedUpdateManyWithoutUserNestedInput
     DailyCompEarning?: DailyCompEarningUncheckedUpdateManyWithoutUserNestedInput
     EmailLog?: EmailLogUncheckedUpdateManyWithoutUserNestedInput
-    GameSession?: GameSessionUncheckedUpdateManyWithoutUserNestedInput
+    GameSession?: CasinoGameSessionUncheckedUpdateManyWithoutUserNestedInput
     affiliateReferrals?: ReferralUncheckedUpdateManyWithoutAffiliateNestedInput
     referredUsers?: ReferralUncheckedUpdateManyWithoutSubUserNestedInput
     Rolling?: RollingUncheckedUpdateManyWithoutUserNestedInput
@@ -85959,7 +85959,7 @@ export namespace Prisma {
     createdAt?: Date | string
     updatedAt?: Date | string
     bonusDetails?: BonusDetailCreateNestedManyWithoutCasinoGameInput
-    gameSessions?: GameSessionCreateNestedManyWithoutGameInput
+    gameSessions?: CasinoGameSessionCreateNestedManyWithoutGameInput
     translations?: CasinoGameTranslationCreateNestedManyWithoutCasinoGameInput
   }
 
@@ -85979,7 +85979,7 @@ export namespace Prisma {
     createdAt?: Date | string
     updatedAt?: Date | string
     bonusDetails?: BonusDetailUncheckedCreateNestedManyWithoutCasinoGameInput
-    gameSessions?: GameSessionUncheckedCreateNestedManyWithoutGameInput
+    gameSessions?: CasinoGameSessionUncheckedCreateNestedManyWithoutGameInput
     translations?: CasinoGameTranslationUncheckedCreateNestedManyWithoutCasinoGameInput
   }
 
@@ -85988,7 +85988,7 @@ export namespace Prisma {
     create: XOR<CasinoGameCreateWithoutGameRoundsInput, CasinoGameUncheckedCreateWithoutGameRoundsInput>
   }
 
-  export type GameSessionCreateWithoutGameRoundsInput = {
+  export type CasinoGameSessionCreateWithoutGameRoundsInput = {
     id?: bigint | number
     createdAt?: Date | string
     updatedAt?: Date | string
@@ -86003,7 +86003,7 @@ export namespace Prisma {
     user: UserCreateNestedOneWithoutGameSessionInput
   }
 
-  export type GameSessionUncheckedCreateWithoutGameRoundsInput = {
+  export type CasinoGameSessionUncheckedCreateWithoutGameRoundsInput = {
     id?: bigint | number
     userId: bigint | number
     createdAt?: Date | string
@@ -86018,9 +86018,9 @@ export namespace Prisma {
     gameId?: number | null
   }
 
-  export type GameSessionCreateOrConnectWithoutGameRoundsInput = {
-    where: GameSessionWhereUniqueInput
-    create: XOR<GameSessionCreateWithoutGameRoundsInput, GameSessionUncheckedCreateWithoutGameRoundsInput>
+  export type CasinoGameSessionCreateOrConnectWithoutGameRoundsInput = {
+    where: CasinoGameSessionWhereUniqueInput
+    create: XOR<CasinoGameSessionCreateWithoutGameRoundsInput, CasinoGameSessionUncheckedCreateWithoutGameRoundsInput>
   }
 
   export type TransactionCreateWithoutGameRoundInput = {
@@ -86180,7 +86180,7 @@ export namespace Prisma {
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
     bonusDetails?: BonusDetailUpdateManyWithoutCasinoGameNestedInput
-    gameSessions?: GameSessionUpdateManyWithoutGameNestedInput
+    gameSessions?: CasinoGameSessionUpdateManyWithoutGameNestedInput
     translations?: CasinoGameTranslationUpdateManyWithoutCasinoGameNestedInput
   }
 
@@ -86200,22 +86200,22 @@ export namespace Prisma {
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
     bonusDetails?: BonusDetailUncheckedUpdateManyWithoutCasinoGameNestedInput
-    gameSessions?: GameSessionUncheckedUpdateManyWithoutGameNestedInput
+    gameSessions?: CasinoGameSessionUncheckedUpdateManyWithoutGameNestedInput
     translations?: CasinoGameTranslationUncheckedUpdateManyWithoutCasinoGameNestedInput
   }
 
-  export type GameSessionUpsertWithoutGameRoundsInput = {
-    update: XOR<GameSessionUpdateWithoutGameRoundsInput, GameSessionUncheckedUpdateWithoutGameRoundsInput>
-    create: XOR<GameSessionCreateWithoutGameRoundsInput, GameSessionUncheckedCreateWithoutGameRoundsInput>
-    where?: GameSessionWhereInput
+  export type CasinoGameSessionUpsertWithoutGameRoundsInput = {
+    update: XOR<CasinoGameSessionUpdateWithoutGameRoundsInput, CasinoGameSessionUncheckedUpdateWithoutGameRoundsInput>
+    create: XOR<CasinoGameSessionCreateWithoutGameRoundsInput, CasinoGameSessionUncheckedCreateWithoutGameRoundsInput>
+    where?: CasinoGameSessionWhereInput
   }
 
-  export type GameSessionUpdateToOneWithWhereWithoutGameRoundsInput = {
-    where?: GameSessionWhereInput
-    data: XOR<GameSessionUpdateWithoutGameRoundsInput, GameSessionUncheckedUpdateWithoutGameRoundsInput>
+  export type CasinoGameSessionUpdateToOneWithWhereWithoutGameRoundsInput = {
+    where?: CasinoGameSessionWhereInput
+    data: XOR<CasinoGameSessionUpdateWithoutGameRoundsInput, CasinoGameSessionUncheckedUpdateWithoutGameRoundsInput>
   }
 
-  export type GameSessionUpdateWithoutGameRoundsInput = {
+  export type CasinoGameSessionUpdateWithoutGameRoundsInput = {
     id?: BigIntFieldUpdateOperationsInput | bigint | number
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
@@ -86230,7 +86230,7 @@ export namespace Prisma {
     user?: UserUpdateOneRequiredWithoutGameSessionNestedInput
   }
 
-  export type GameSessionUncheckedUpdateWithoutGameRoundsInput = {
+  export type CasinoGameSessionUncheckedUpdateWithoutGameRoundsInput = {
     id?: BigIntFieldUpdateOperationsInput | bigint | number
     userId?: BigIntFieldUpdateOperationsInput | bigint | number
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
@@ -86356,7 +86356,7 @@ export namespace Prisma {
     completedAt?: Date | string | null
     AffiliateCommission?: AffiliateCommissionCreateNestedManyWithoutGameRoundInput
     casinoGame?: CasinoGameCreateNestedOneWithoutGameRoundsInput
-    GameSession: GameSessionCreateNestedOneWithoutGameRoundsInput
+    GameSession: CasinoGameSessionCreateNestedOneWithoutGameRoundsInput
     transaction: TransactionCreateNestedOneWithoutGameRoundInput
     wins?: GameWinCreateNestedManyWithoutGameRoundInput
   }
@@ -86436,7 +86436,7 @@ export namespace Prisma {
     completedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     AffiliateCommission?: AffiliateCommissionUpdateManyWithoutGameRoundNestedInput
     casinoGame?: CasinoGameUpdateOneWithoutGameRoundsNestedInput
-    GameSession?: GameSessionUpdateOneRequiredWithoutGameRoundsNestedInput
+    GameSession?: CasinoGameSessionUpdateOneRequiredWithoutGameRoundsNestedInput
     transaction?: TransactionUpdateOneRequiredWithoutGameRoundNestedInput
     wins?: GameWinUpdateManyWithoutGameRoundNestedInput
   }
@@ -86501,7 +86501,7 @@ export namespace Prisma {
     AffiliateCommission?: AffiliateCommissionCreateNestedManyWithoutGameRoundInput
     bets?: GameBetCreateNestedManyWithoutGameRoundInput
     casinoGame?: CasinoGameCreateNestedOneWithoutGameRoundsInput
-    GameSession: GameSessionCreateNestedOneWithoutGameRoundsInput
+    GameSession: CasinoGameSessionCreateNestedOneWithoutGameRoundsInput
     transaction: TransactionCreateNestedOneWithoutGameRoundInput
   }
 
@@ -86581,7 +86581,7 @@ export namespace Prisma {
     AffiliateCommission?: AffiliateCommissionUpdateManyWithoutGameRoundNestedInput
     bets?: GameBetUpdateManyWithoutGameRoundNestedInput
     casinoGame?: CasinoGameUpdateOneWithoutGameRoundsNestedInput
-    GameSession?: GameSessionUpdateOneRequiredWithoutGameRoundsNestedInput
+    GameSession?: CasinoGameSessionUpdateOneRequiredWithoutGameRoundsNestedInput
     transaction?: TransactionUpdateOneRequiredWithoutGameRoundNestedInput
   }
 
@@ -86728,7 +86728,7 @@ export namespace Prisma {
     createdAt?: Date | string
     updatedAt?: Date | string
     gameRounds?: GameRoundCreateNestedManyWithoutCasinoGameInput
-    gameSessions?: GameSessionCreateNestedManyWithoutGameInput
+    gameSessions?: CasinoGameSessionCreateNestedManyWithoutGameInput
     translations?: CasinoGameTranslationCreateNestedManyWithoutCasinoGameInput
   }
 
@@ -86748,7 +86748,7 @@ export namespace Prisma {
     createdAt?: Date | string
     updatedAt?: Date | string
     gameRounds?: GameRoundUncheckedCreateNestedManyWithoutCasinoGameInput
-    gameSessions?: GameSessionUncheckedCreateNestedManyWithoutGameInput
+    gameSessions?: CasinoGameSessionUncheckedCreateNestedManyWithoutGameInput
     translations?: CasinoGameTranslationUncheckedCreateNestedManyWithoutCasinoGameInput
   }
 
@@ -86828,7 +86828,7 @@ export namespace Prisma {
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
     gameRounds?: GameRoundUpdateManyWithoutCasinoGameNestedInput
-    gameSessions?: GameSessionUpdateManyWithoutGameNestedInput
+    gameSessions?: CasinoGameSessionUpdateManyWithoutGameNestedInput
     translations?: CasinoGameTranslationUpdateManyWithoutCasinoGameNestedInput
   }
 
@@ -86848,7 +86848,7 @@ export namespace Prisma {
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
     gameRounds?: GameRoundUncheckedUpdateManyWithoutCasinoGameNestedInput
-    gameSessions?: GameSessionUncheckedUpdateManyWithoutGameNestedInput
+    gameSessions?: CasinoGameSessionUncheckedUpdateManyWithoutGameNestedInput
     translations?: CasinoGameTranslationUncheckedUpdateManyWithoutCasinoGameNestedInput
   }
 
@@ -87099,7 +87099,7 @@ export namespace Prisma {
     affiliateWallets?: AffiliateWalletCreateNestedManyWithoutAffiliateInput
     DailyCompEarning?: DailyCompEarningCreateNestedManyWithoutUserInput
     EmailLog?: EmailLogCreateNestedManyWithoutUserInput
-    GameSession?: GameSessionCreateNestedManyWithoutUserInput
+    GameSession?: CasinoGameSessionCreateNestedManyWithoutUserInput
     affiliateReferrals?: ReferralCreateNestedManyWithoutAffiliateInput
     referredUsers?: ReferralCreateNestedManyWithoutSubUserInput
     Rolling?: RollingCreateNestedManyWithoutUserInput
@@ -87144,7 +87144,7 @@ export namespace Prisma {
     affiliateWallets?: AffiliateWalletUncheckedCreateNestedManyWithoutAffiliateInput
     DailyCompEarning?: DailyCompEarningUncheckedCreateNestedManyWithoutUserInput
     EmailLog?: EmailLogUncheckedCreateNestedManyWithoutUserInput
-    GameSession?: GameSessionUncheckedCreateNestedManyWithoutUserInput
+    GameSession?: CasinoGameSessionUncheckedCreateNestedManyWithoutUserInput
     affiliateReferrals?: ReferralUncheckedCreateNestedManyWithoutAffiliateInput
     referredUsers?: ReferralUncheckedCreateNestedManyWithoutSubUserInput
     Rolling?: RollingUncheckedCreateNestedManyWithoutUserInput
@@ -87290,7 +87290,7 @@ export namespace Prisma {
     affiliateWallets?: AffiliateWalletUpdateManyWithoutAffiliateNestedInput
     DailyCompEarning?: DailyCompEarningUpdateManyWithoutUserNestedInput
     EmailLog?: EmailLogUpdateManyWithoutUserNestedInput
-    GameSession?: GameSessionUpdateManyWithoutUserNestedInput
+    GameSession?: CasinoGameSessionUpdateManyWithoutUserNestedInput
     affiliateReferrals?: ReferralUpdateManyWithoutAffiliateNestedInput
     referredUsers?: ReferralUpdateManyWithoutSubUserNestedInput
     Rolling?: RollingUpdateManyWithoutUserNestedInput
@@ -87335,7 +87335,7 @@ export namespace Prisma {
     affiliateWallets?: AffiliateWalletUncheckedUpdateManyWithoutAffiliateNestedInput
     DailyCompEarning?: DailyCompEarningUncheckedUpdateManyWithoutUserNestedInput
     EmailLog?: EmailLogUncheckedUpdateManyWithoutUserNestedInput
-    GameSession?: GameSessionUncheckedUpdateManyWithoutUserNestedInput
+    GameSession?: CasinoGameSessionUncheckedUpdateManyWithoutUserNestedInput
     affiliateReferrals?: ReferralUncheckedUpdateManyWithoutAffiliateNestedInput
     referredUsers?: ReferralUncheckedUpdateManyWithoutSubUserNestedInput
     Rolling?: RollingUncheckedUpdateManyWithoutUserNestedInput
@@ -87408,7 +87408,7 @@ export namespace Prisma {
     affiliateWallets?: AffiliateWalletCreateNestedManyWithoutAffiliateInput
     CompTransaction?: CompTransactionCreateNestedManyWithoutUserInput
     EmailLog?: EmailLogCreateNestedManyWithoutUserInput
-    GameSession?: GameSessionCreateNestedManyWithoutUserInput
+    GameSession?: CasinoGameSessionCreateNestedManyWithoutUserInput
     affiliateReferrals?: ReferralCreateNestedManyWithoutAffiliateInput
     referredUsers?: ReferralCreateNestedManyWithoutSubUserInput
     Rolling?: RollingCreateNestedManyWithoutUserInput
@@ -87453,7 +87453,7 @@ export namespace Prisma {
     affiliateWallets?: AffiliateWalletUncheckedCreateNestedManyWithoutAffiliateInput
     CompTransaction?: CompTransactionUncheckedCreateNestedManyWithoutUserInput
     EmailLog?: EmailLogUncheckedCreateNestedManyWithoutUserInput
-    GameSession?: GameSessionUncheckedCreateNestedManyWithoutUserInput
+    GameSession?: CasinoGameSessionUncheckedCreateNestedManyWithoutUserInput
     affiliateReferrals?: ReferralUncheckedCreateNestedManyWithoutAffiliateInput
     referredUsers?: ReferralUncheckedCreateNestedManyWithoutSubUserInput
     Rolling?: RollingUncheckedCreateNestedManyWithoutUserInput
@@ -87530,7 +87530,7 @@ export namespace Prisma {
     affiliateWallets?: AffiliateWalletUpdateManyWithoutAffiliateNestedInput
     CompTransaction?: CompTransactionUpdateManyWithoutUserNestedInput
     EmailLog?: EmailLogUpdateManyWithoutUserNestedInput
-    GameSession?: GameSessionUpdateManyWithoutUserNestedInput
+    GameSession?: CasinoGameSessionUpdateManyWithoutUserNestedInput
     affiliateReferrals?: ReferralUpdateManyWithoutAffiliateNestedInput
     referredUsers?: ReferralUpdateManyWithoutSubUserNestedInput
     Rolling?: RollingUpdateManyWithoutUserNestedInput
@@ -87575,7 +87575,7 @@ export namespace Prisma {
     affiliateWallets?: AffiliateWalletUncheckedUpdateManyWithoutAffiliateNestedInput
     CompTransaction?: CompTransactionUncheckedUpdateManyWithoutUserNestedInput
     EmailLog?: EmailLogUncheckedUpdateManyWithoutUserNestedInput
-    GameSession?: GameSessionUncheckedUpdateManyWithoutUserNestedInput
+    GameSession?: CasinoGameSessionUncheckedUpdateManyWithoutUserNestedInput
     affiliateReferrals?: ReferralUncheckedUpdateManyWithoutAffiliateNestedInput
     referredUsers?: ReferralUncheckedUpdateManyWithoutSubUserNestedInput
     Rolling?: RollingUncheckedUpdateManyWithoutUserNestedInput
@@ -87694,7 +87694,7 @@ export namespace Prisma {
     CompTransaction?: CompTransactionCreateNestedManyWithoutUserInput
     DailyCompEarning?: DailyCompEarningCreateNestedManyWithoutUserInput
     EmailLog?: EmailLogCreateNestedManyWithoutUserInput
-    GameSession?: GameSessionCreateNestedManyWithoutUserInput
+    GameSession?: CasinoGameSessionCreateNestedManyWithoutUserInput
     affiliateReferrals?: ReferralCreateNestedManyWithoutAffiliateInput
     referredUsers?: ReferralCreateNestedManyWithoutSubUserInput
     transactions?: TransactionCreateNestedManyWithoutUserInput
@@ -87739,7 +87739,7 @@ export namespace Prisma {
     CompTransaction?: CompTransactionUncheckedCreateNestedManyWithoutUserInput
     DailyCompEarning?: DailyCompEarningUncheckedCreateNestedManyWithoutUserInput
     EmailLog?: EmailLogUncheckedCreateNestedManyWithoutUserInput
-    GameSession?: GameSessionUncheckedCreateNestedManyWithoutUserInput
+    GameSession?: CasinoGameSessionUncheckedCreateNestedManyWithoutUserInput
     affiliateReferrals?: ReferralUncheckedCreateNestedManyWithoutAffiliateInput
     referredUsers?: ReferralUncheckedCreateNestedManyWithoutSubUserInput
     transactions?: TransactionUncheckedCreateNestedManyWithoutUserInput
@@ -87912,7 +87912,7 @@ export namespace Prisma {
     CompTransaction?: CompTransactionUpdateManyWithoutUserNestedInput
     DailyCompEarning?: DailyCompEarningUpdateManyWithoutUserNestedInput
     EmailLog?: EmailLogUpdateManyWithoutUserNestedInput
-    GameSession?: GameSessionUpdateManyWithoutUserNestedInput
+    GameSession?: CasinoGameSessionUpdateManyWithoutUserNestedInput
     affiliateReferrals?: ReferralUpdateManyWithoutAffiliateNestedInput
     referredUsers?: ReferralUpdateManyWithoutSubUserNestedInput
     transactions?: TransactionUpdateManyWithoutUserNestedInput
@@ -87957,7 +87957,7 @@ export namespace Prisma {
     CompTransaction?: CompTransactionUncheckedUpdateManyWithoutUserNestedInput
     DailyCompEarning?: DailyCompEarningUncheckedUpdateManyWithoutUserNestedInput
     EmailLog?: EmailLogUncheckedUpdateManyWithoutUserNestedInput
-    GameSession?: GameSessionUncheckedUpdateManyWithoutUserNestedInput
+    GameSession?: CasinoGameSessionUncheckedUpdateManyWithoutUserNestedInput
     affiliateReferrals?: ReferralUncheckedUpdateManyWithoutAffiliateNestedInput
     referredUsers?: ReferralUncheckedUpdateManyWithoutSubUserNestedInput
     transactions?: TransactionUncheckedUpdateManyWithoutUserNestedInput
@@ -88041,7 +88041,7 @@ export namespace Prisma {
     CompTransaction?: CompTransactionCreateNestedManyWithoutUserInput
     DailyCompEarning?: DailyCompEarningCreateNestedManyWithoutUserInput
     EmailLog?: EmailLogCreateNestedManyWithoutUserInput
-    GameSession?: GameSessionCreateNestedManyWithoutUserInput
+    GameSession?: CasinoGameSessionCreateNestedManyWithoutUserInput
     affiliateReferrals?: ReferralCreateNestedManyWithoutAffiliateInput
     referredUsers?: ReferralCreateNestedManyWithoutSubUserInput
     Rolling?: RollingCreateNestedManyWithoutUserInput
@@ -88086,7 +88086,7 @@ export namespace Prisma {
     CompTransaction?: CompTransactionUncheckedCreateNestedManyWithoutUserInput
     DailyCompEarning?: DailyCompEarningUncheckedCreateNestedManyWithoutUserInput
     EmailLog?: EmailLogUncheckedCreateNestedManyWithoutUserInput
-    GameSession?: GameSessionUncheckedCreateNestedManyWithoutUserInput
+    GameSession?: CasinoGameSessionUncheckedCreateNestedManyWithoutUserInput
     affiliateReferrals?: ReferralUncheckedCreateNestedManyWithoutAffiliateInput
     referredUsers?: ReferralUncheckedCreateNestedManyWithoutSubUserInput
     Rolling?: RollingUncheckedCreateNestedManyWithoutUserInput
@@ -88147,7 +88147,7 @@ export namespace Prisma {
     CompTransaction?: CompTransactionUpdateManyWithoutUserNestedInput
     DailyCompEarning?: DailyCompEarningUpdateManyWithoutUserNestedInput
     EmailLog?: EmailLogUpdateManyWithoutUserNestedInput
-    GameSession?: GameSessionUpdateManyWithoutUserNestedInput
+    GameSession?: CasinoGameSessionUpdateManyWithoutUserNestedInput
     affiliateReferrals?: ReferralUpdateManyWithoutAffiliateNestedInput
     referredUsers?: ReferralUpdateManyWithoutSubUserNestedInput
     Rolling?: RollingUpdateManyWithoutUserNestedInput
@@ -88192,7 +88192,7 @@ export namespace Prisma {
     CompTransaction?: CompTransactionUncheckedUpdateManyWithoutUserNestedInput
     DailyCompEarning?: DailyCompEarningUncheckedUpdateManyWithoutUserNestedInput
     EmailLog?: EmailLogUncheckedUpdateManyWithoutUserNestedInput
-    GameSession?: GameSessionUncheckedUpdateManyWithoutUserNestedInput
+    GameSession?: CasinoGameSessionUncheckedUpdateManyWithoutUserNestedInput
     affiliateReferrals?: ReferralUncheckedUpdateManyWithoutAffiliateNestedInput
     referredUsers?: ReferralUncheckedUpdateManyWithoutSubUserNestedInput
     Rolling?: RollingUncheckedUpdateManyWithoutUserNestedInput
@@ -88236,7 +88236,7 @@ export namespace Prisma {
     affiliateWallets?: AffiliateWalletCreateNestedManyWithoutAffiliateInput
     CompTransaction?: CompTransactionCreateNestedManyWithoutUserInput
     DailyCompEarning?: DailyCompEarningCreateNestedManyWithoutUserInput
-    GameSession?: GameSessionCreateNestedManyWithoutUserInput
+    GameSession?: CasinoGameSessionCreateNestedManyWithoutUserInput
     affiliateReferrals?: ReferralCreateNestedManyWithoutAffiliateInput
     referredUsers?: ReferralCreateNestedManyWithoutSubUserInput
     Rolling?: RollingCreateNestedManyWithoutUserInput
@@ -88281,7 +88281,7 @@ export namespace Prisma {
     affiliateWallets?: AffiliateWalletUncheckedCreateNestedManyWithoutAffiliateInput
     CompTransaction?: CompTransactionUncheckedCreateNestedManyWithoutUserInput
     DailyCompEarning?: DailyCompEarningUncheckedCreateNestedManyWithoutUserInput
-    GameSession?: GameSessionUncheckedCreateNestedManyWithoutUserInput
+    GameSession?: CasinoGameSessionUncheckedCreateNestedManyWithoutUserInput
     affiliateReferrals?: ReferralUncheckedCreateNestedManyWithoutAffiliateInput
     referredUsers?: ReferralUncheckedCreateNestedManyWithoutSubUserInput
     Rolling?: RollingUncheckedCreateNestedManyWithoutUserInput
@@ -88342,7 +88342,7 @@ export namespace Prisma {
     affiliateWallets?: AffiliateWalletUpdateManyWithoutAffiliateNestedInput
     CompTransaction?: CompTransactionUpdateManyWithoutUserNestedInput
     DailyCompEarning?: DailyCompEarningUpdateManyWithoutUserNestedInput
-    GameSession?: GameSessionUpdateManyWithoutUserNestedInput
+    GameSession?: CasinoGameSessionUpdateManyWithoutUserNestedInput
     affiliateReferrals?: ReferralUpdateManyWithoutAffiliateNestedInput
     referredUsers?: ReferralUpdateManyWithoutSubUserNestedInput
     Rolling?: RollingUpdateManyWithoutUserNestedInput
@@ -88387,7 +88387,7 @@ export namespace Prisma {
     affiliateWallets?: AffiliateWalletUncheckedUpdateManyWithoutAffiliateNestedInput
     CompTransaction?: CompTransactionUncheckedUpdateManyWithoutUserNestedInput
     DailyCompEarning?: DailyCompEarningUncheckedUpdateManyWithoutUserNestedInput
-    GameSession?: GameSessionUncheckedUpdateManyWithoutUserNestedInput
+    GameSession?: CasinoGameSessionUncheckedUpdateManyWithoutUserNestedInput
     affiliateReferrals?: ReferralUncheckedUpdateManyWithoutAffiliateNestedInput
     referredUsers?: ReferralUncheckedUpdateManyWithoutSubUserNestedInput
     Rolling?: RollingUncheckedUpdateManyWithoutUserNestedInput
@@ -88432,7 +88432,7 @@ export namespace Prisma {
     CompTransaction?: CompTransactionCreateNestedManyWithoutUserInput
     DailyCompEarning?: DailyCompEarningCreateNestedManyWithoutUserInput
     EmailLog?: EmailLogCreateNestedManyWithoutUserInput
-    GameSession?: GameSessionCreateNestedManyWithoutUserInput
+    GameSession?: CasinoGameSessionCreateNestedManyWithoutUserInput
     affiliateReferrals?: ReferralCreateNestedManyWithoutAffiliateInput
     referredUsers?: ReferralCreateNestedManyWithoutSubUserInput
     Rolling?: RollingCreateNestedManyWithoutUserInput
@@ -88477,7 +88477,7 @@ export namespace Prisma {
     CompTransaction?: CompTransactionUncheckedCreateNestedManyWithoutUserInput
     DailyCompEarning?: DailyCompEarningUncheckedCreateNestedManyWithoutUserInput
     EmailLog?: EmailLogUncheckedCreateNestedManyWithoutUserInput
-    GameSession?: GameSessionUncheckedCreateNestedManyWithoutUserInput
+    GameSession?: CasinoGameSessionUncheckedCreateNestedManyWithoutUserInput
     affiliateReferrals?: ReferralUncheckedCreateNestedManyWithoutAffiliateInput
     referredUsers?: ReferralUncheckedCreateNestedManyWithoutSubUserInput
     Rolling?: RollingUncheckedCreateNestedManyWithoutUserInput
@@ -88538,7 +88538,7 @@ export namespace Prisma {
     CompTransaction?: CompTransactionUpdateManyWithoutUserNestedInput
     DailyCompEarning?: DailyCompEarningUpdateManyWithoutUserNestedInput
     EmailLog?: EmailLogUpdateManyWithoutUserNestedInput
-    GameSession?: GameSessionUpdateManyWithoutUserNestedInput
+    GameSession?: CasinoGameSessionUpdateManyWithoutUserNestedInput
     affiliateReferrals?: ReferralUpdateManyWithoutAffiliateNestedInput
     referredUsers?: ReferralUpdateManyWithoutSubUserNestedInput
     Rolling?: RollingUpdateManyWithoutUserNestedInput
@@ -88583,7 +88583,7 @@ export namespace Prisma {
     CompTransaction?: CompTransactionUncheckedUpdateManyWithoutUserNestedInput
     DailyCompEarning?: DailyCompEarningUncheckedUpdateManyWithoutUserNestedInput
     EmailLog?: EmailLogUncheckedUpdateManyWithoutUserNestedInput
-    GameSession?: GameSessionUncheckedUpdateManyWithoutUserNestedInput
+    GameSession?: CasinoGameSessionUncheckedUpdateManyWithoutUserNestedInput
     affiliateReferrals?: ReferralUncheckedUpdateManyWithoutAffiliateNestedInput
     referredUsers?: ReferralUncheckedUpdateManyWithoutSubUserNestedInput
     Rolling?: RollingUncheckedUpdateManyWithoutUserNestedInput
@@ -88628,7 +88628,7 @@ export namespace Prisma {
     CompTransaction?: CompTransactionCreateNestedManyWithoutUserInput
     DailyCompEarning?: DailyCompEarningCreateNestedManyWithoutUserInput
     EmailLog?: EmailLogCreateNestedManyWithoutUserInput
-    GameSession?: GameSessionCreateNestedManyWithoutUserInput
+    GameSession?: CasinoGameSessionCreateNestedManyWithoutUserInput
     affiliateReferrals?: ReferralCreateNestedManyWithoutAffiliateInput
     referredUsers?: ReferralCreateNestedManyWithoutSubUserInput
     Rolling?: RollingCreateNestedManyWithoutUserInput
@@ -88673,7 +88673,7 @@ export namespace Prisma {
     CompTransaction?: CompTransactionUncheckedCreateNestedManyWithoutUserInput
     DailyCompEarning?: DailyCompEarningUncheckedCreateNestedManyWithoutUserInput
     EmailLog?: EmailLogUncheckedCreateNestedManyWithoutUserInput
-    GameSession?: GameSessionUncheckedCreateNestedManyWithoutUserInput
+    GameSession?: CasinoGameSessionUncheckedCreateNestedManyWithoutUserInput
     affiliateReferrals?: ReferralUncheckedCreateNestedManyWithoutAffiliateInput
     referredUsers?: ReferralUncheckedCreateNestedManyWithoutSubUserInput
     Rolling?: RollingUncheckedCreateNestedManyWithoutUserInput
@@ -88723,7 +88723,7 @@ export namespace Prisma {
     completedAt?: Date | string | null
     bets?: GameBetCreateNestedManyWithoutGameRoundInput
     casinoGame?: CasinoGameCreateNestedOneWithoutGameRoundsInput
-    GameSession: GameSessionCreateNestedOneWithoutGameRoundsInput
+    GameSession: CasinoGameSessionCreateNestedOneWithoutGameRoundsInput
     transaction: TransactionCreateNestedOneWithoutGameRoundInput
     wins?: GameWinCreateNestedManyWithoutGameRoundInput
   }
@@ -88792,7 +88792,7 @@ export namespace Prisma {
     CompTransaction?: CompTransactionCreateNestedManyWithoutUserInput
     DailyCompEarning?: DailyCompEarningCreateNestedManyWithoutUserInput
     EmailLog?: EmailLogCreateNestedManyWithoutUserInput
-    GameSession?: GameSessionCreateNestedManyWithoutUserInput
+    GameSession?: CasinoGameSessionCreateNestedManyWithoutUserInput
     affiliateReferrals?: ReferralCreateNestedManyWithoutAffiliateInput
     referredUsers?: ReferralCreateNestedManyWithoutSubUserInput
     Rolling?: RollingCreateNestedManyWithoutUserInput
@@ -88837,7 +88837,7 @@ export namespace Prisma {
     CompTransaction?: CompTransactionUncheckedCreateNestedManyWithoutUserInput
     DailyCompEarning?: DailyCompEarningUncheckedCreateNestedManyWithoutUserInput
     EmailLog?: EmailLogUncheckedCreateNestedManyWithoutUserInput
-    GameSession?: GameSessionUncheckedCreateNestedManyWithoutUserInput
+    GameSession?: CasinoGameSessionUncheckedCreateNestedManyWithoutUserInput
     affiliateReferrals?: ReferralUncheckedCreateNestedManyWithoutAffiliateInput
     referredUsers?: ReferralUncheckedCreateNestedManyWithoutSubUserInput
     Rolling?: RollingUncheckedCreateNestedManyWithoutUserInput
@@ -88898,7 +88898,7 @@ export namespace Prisma {
     CompTransaction?: CompTransactionUpdateManyWithoutUserNestedInput
     DailyCompEarning?: DailyCompEarningUpdateManyWithoutUserNestedInput
     EmailLog?: EmailLogUpdateManyWithoutUserNestedInput
-    GameSession?: GameSessionUpdateManyWithoutUserNestedInput
+    GameSession?: CasinoGameSessionUpdateManyWithoutUserNestedInput
     affiliateReferrals?: ReferralUpdateManyWithoutAffiliateNestedInput
     referredUsers?: ReferralUpdateManyWithoutSubUserNestedInput
     Rolling?: RollingUpdateManyWithoutUserNestedInput
@@ -88943,7 +88943,7 @@ export namespace Prisma {
     CompTransaction?: CompTransactionUncheckedUpdateManyWithoutUserNestedInput
     DailyCompEarning?: DailyCompEarningUncheckedUpdateManyWithoutUserNestedInput
     EmailLog?: EmailLogUncheckedUpdateManyWithoutUserNestedInput
-    GameSession?: GameSessionUncheckedUpdateManyWithoutUserNestedInput
+    GameSession?: CasinoGameSessionUncheckedUpdateManyWithoutUserNestedInput
     affiliateReferrals?: ReferralUncheckedUpdateManyWithoutAffiliateNestedInput
     referredUsers?: ReferralUncheckedUpdateManyWithoutSubUserNestedInput
     Rolling?: RollingUncheckedUpdateManyWithoutUserNestedInput
@@ -88999,7 +88999,7 @@ export namespace Prisma {
     completedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     bets?: GameBetUpdateManyWithoutGameRoundNestedInput
     casinoGame?: CasinoGameUpdateOneWithoutGameRoundsNestedInput
-    GameSession?: GameSessionUpdateOneRequiredWithoutGameRoundsNestedInput
+    GameSession?: CasinoGameSessionUpdateOneRequiredWithoutGameRoundsNestedInput
     transaction?: TransactionUpdateOneRequiredWithoutGameRoundNestedInput
     wins?: GameWinUpdateManyWithoutGameRoundNestedInput
   }
@@ -89074,7 +89074,7 @@ export namespace Prisma {
     CompTransaction?: CompTransactionUpdateManyWithoutUserNestedInput
     DailyCompEarning?: DailyCompEarningUpdateManyWithoutUserNestedInput
     EmailLog?: EmailLogUpdateManyWithoutUserNestedInput
-    GameSession?: GameSessionUpdateManyWithoutUserNestedInput
+    GameSession?: CasinoGameSessionUpdateManyWithoutUserNestedInput
     affiliateReferrals?: ReferralUpdateManyWithoutAffiliateNestedInput
     referredUsers?: ReferralUpdateManyWithoutSubUserNestedInput
     Rolling?: RollingUpdateManyWithoutUserNestedInput
@@ -89119,7 +89119,7 @@ export namespace Prisma {
     CompTransaction?: CompTransactionUncheckedUpdateManyWithoutUserNestedInput
     DailyCompEarning?: DailyCompEarningUncheckedUpdateManyWithoutUserNestedInput
     EmailLog?: EmailLogUncheckedUpdateManyWithoutUserNestedInput
-    GameSession?: GameSessionUncheckedUpdateManyWithoutUserNestedInput
+    GameSession?: CasinoGameSessionUncheckedUpdateManyWithoutUserNestedInput
     affiliateReferrals?: ReferralUncheckedUpdateManyWithoutAffiliateNestedInput
     referredUsers?: ReferralUncheckedUpdateManyWithoutSubUserNestedInput
     Rolling?: RollingUncheckedUpdateManyWithoutUserNestedInput
@@ -89164,7 +89164,7 @@ export namespace Prisma {
     CompTransaction?: CompTransactionCreateNestedManyWithoutUserInput
     DailyCompEarning?: DailyCompEarningCreateNestedManyWithoutUserInput
     EmailLog?: EmailLogCreateNestedManyWithoutUserInput
-    GameSession?: GameSessionCreateNestedManyWithoutUserInput
+    GameSession?: CasinoGameSessionCreateNestedManyWithoutUserInput
     affiliateReferrals?: ReferralCreateNestedManyWithoutAffiliateInput
     referredUsers?: ReferralCreateNestedManyWithoutSubUserInput
     Rolling?: RollingCreateNestedManyWithoutUserInput
@@ -89209,7 +89209,7 @@ export namespace Prisma {
     CompTransaction?: CompTransactionUncheckedCreateNestedManyWithoutUserInput
     DailyCompEarning?: DailyCompEarningUncheckedCreateNestedManyWithoutUserInput
     EmailLog?: EmailLogUncheckedCreateNestedManyWithoutUserInput
-    GameSession?: GameSessionUncheckedCreateNestedManyWithoutUserInput
+    GameSession?: CasinoGameSessionUncheckedCreateNestedManyWithoutUserInput
     affiliateReferrals?: ReferralUncheckedCreateNestedManyWithoutAffiliateInput
     referredUsers?: ReferralUncheckedCreateNestedManyWithoutSubUserInput
     Rolling?: RollingUncheckedCreateNestedManyWithoutUserInput
@@ -89270,7 +89270,7 @@ export namespace Prisma {
     CompTransaction?: CompTransactionUpdateManyWithoutUserNestedInput
     DailyCompEarning?: DailyCompEarningUpdateManyWithoutUserNestedInput
     EmailLog?: EmailLogUpdateManyWithoutUserNestedInput
-    GameSession?: GameSessionUpdateManyWithoutUserNestedInput
+    GameSession?: CasinoGameSessionUpdateManyWithoutUserNestedInput
     affiliateReferrals?: ReferralUpdateManyWithoutAffiliateNestedInput
     referredUsers?: ReferralUpdateManyWithoutSubUserNestedInput
     Rolling?: RollingUpdateManyWithoutUserNestedInput
@@ -89315,7 +89315,7 @@ export namespace Prisma {
     CompTransaction?: CompTransactionUncheckedUpdateManyWithoutUserNestedInput
     DailyCompEarning?: DailyCompEarningUncheckedUpdateManyWithoutUserNestedInput
     EmailLog?: EmailLogUncheckedUpdateManyWithoutUserNestedInput
-    GameSession?: GameSessionUncheckedUpdateManyWithoutUserNestedInput
+    GameSession?: CasinoGameSessionUncheckedUpdateManyWithoutUserNestedInput
     affiliateReferrals?: ReferralUncheckedUpdateManyWithoutAffiliateNestedInput
     referredUsers?: ReferralUncheckedUpdateManyWithoutSubUserNestedInput
     Rolling?: RollingUncheckedUpdateManyWithoutUserNestedInput
@@ -89361,7 +89361,7 @@ export namespace Prisma {
     CompTransaction?: CompTransactionCreateNestedManyWithoutUserInput
     DailyCompEarning?: DailyCompEarningCreateNestedManyWithoutUserInput
     EmailLog?: EmailLogCreateNestedManyWithoutUserInput
-    GameSession?: GameSessionCreateNestedManyWithoutUserInput
+    GameSession?: CasinoGameSessionCreateNestedManyWithoutUserInput
     affiliateReferrals?: ReferralCreateNestedManyWithoutAffiliateInput
     referredUsers?: ReferralCreateNestedManyWithoutSubUserInput
     Rolling?: RollingCreateNestedManyWithoutUserInput
@@ -89406,7 +89406,7 @@ export namespace Prisma {
     CompTransaction?: CompTransactionUncheckedCreateNestedManyWithoutUserInput
     DailyCompEarning?: DailyCompEarningUncheckedCreateNestedManyWithoutUserInput
     EmailLog?: EmailLogUncheckedCreateNestedManyWithoutUserInput
-    GameSession?: GameSessionUncheckedCreateNestedManyWithoutUserInput
+    GameSession?: CasinoGameSessionUncheckedCreateNestedManyWithoutUserInput
     affiliateReferrals?: ReferralUncheckedCreateNestedManyWithoutAffiliateInput
     referredUsers?: ReferralUncheckedCreateNestedManyWithoutSubUserInput
     Rolling?: RollingUncheckedCreateNestedManyWithoutUserInput
@@ -89467,7 +89467,7 @@ export namespace Prisma {
     CompTransaction?: CompTransactionUpdateManyWithoutUserNestedInput
     DailyCompEarning?: DailyCompEarningUpdateManyWithoutUserNestedInput
     EmailLog?: EmailLogUpdateManyWithoutUserNestedInput
-    GameSession?: GameSessionUpdateManyWithoutUserNestedInput
+    GameSession?: CasinoGameSessionUpdateManyWithoutUserNestedInput
     affiliateReferrals?: ReferralUpdateManyWithoutAffiliateNestedInput
     referredUsers?: ReferralUpdateManyWithoutSubUserNestedInput
     Rolling?: RollingUpdateManyWithoutUserNestedInput
@@ -89512,7 +89512,7 @@ export namespace Prisma {
     CompTransaction?: CompTransactionUncheckedUpdateManyWithoutUserNestedInput
     DailyCompEarning?: DailyCompEarningUncheckedUpdateManyWithoutUserNestedInput
     EmailLog?: EmailLogUncheckedUpdateManyWithoutUserNestedInput
-    GameSession?: GameSessionUncheckedUpdateManyWithoutUserNestedInput
+    GameSession?: CasinoGameSessionUncheckedUpdateManyWithoutUserNestedInput
     affiliateReferrals?: ReferralUncheckedUpdateManyWithoutAffiliateNestedInput
     referredUsers?: ReferralUncheckedUpdateManyWithoutSubUserNestedInput
     Rolling?: RollingUncheckedUpdateManyWithoutUserNestedInput
@@ -89557,7 +89557,7 @@ export namespace Prisma {
     CompTransaction?: CompTransactionCreateNestedManyWithoutUserInput
     DailyCompEarning?: DailyCompEarningCreateNestedManyWithoutUserInput
     EmailLog?: EmailLogCreateNestedManyWithoutUserInput
-    GameSession?: GameSessionCreateNestedManyWithoutUserInput
+    GameSession?: CasinoGameSessionCreateNestedManyWithoutUserInput
     affiliateReferrals?: ReferralCreateNestedManyWithoutAffiliateInput
     referredUsers?: ReferralCreateNestedManyWithoutSubUserInput
     Rolling?: RollingCreateNestedManyWithoutUserInput
@@ -89602,7 +89602,7 @@ export namespace Prisma {
     CompTransaction?: CompTransactionUncheckedCreateNestedManyWithoutUserInput
     DailyCompEarning?: DailyCompEarningUncheckedCreateNestedManyWithoutUserInput
     EmailLog?: EmailLogUncheckedCreateNestedManyWithoutUserInput
-    GameSession?: GameSessionUncheckedCreateNestedManyWithoutUserInput
+    GameSession?: CasinoGameSessionUncheckedCreateNestedManyWithoutUserInput
     affiliateReferrals?: ReferralUncheckedCreateNestedManyWithoutAffiliateInput
     referredUsers?: ReferralUncheckedCreateNestedManyWithoutSubUserInput
     Rolling?: RollingUncheckedCreateNestedManyWithoutUserInput
@@ -89832,7 +89832,7 @@ export namespace Prisma {
     CompTransaction?: CompTransactionUpdateManyWithoutUserNestedInput
     DailyCompEarning?: DailyCompEarningUpdateManyWithoutUserNestedInput
     EmailLog?: EmailLogUpdateManyWithoutUserNestedInput
-    GameSession?: GameSessionUpdateManyWithoutUserNestedInput
+    GameSession?: CasinoGameSessionUpdateManyWithoutUserNestedInput
     affiliateReferrals?: ReferralUpdateManyWithoutAffiliateNestedInput
     referredUsers?: ReferralUpdateManyWithoutSubUserNestedInput
     Rolling?: RollingUpdateManyWithoutUserNestedInput
@@ -89877,7 +89877,7 @@ export namespace Prisma {
     CompTransaction?: CompTransactionUncheckedUpdateManyWithoutUserNestedInput
     DailyCompEarning?: DailyCompEarningUncheckedUpdateManyWithoutUserNestedInput
     EmailLog?: EmailLogUncheckedUpdateManyWithoutUserNestedInput
-    GameSession?: GameSessionUncheckedUpdateManyWithoutUserNestedInput
+    GameSession?: CasinoGameSessionUncheckedUpdateManyWithoutUserNestedInput
     affiliateReferrals?: ReferralUncheckedUpdateManyWithoutAffiliateNestedInput
     referredUsers?: ReferralUncheckedUpdateManyWithoutSubUserNestedInput
     Rolling?: RollingUncheckedUpdateManyWithoutUserNestedInput
@@ -90718,7 +90718,7 @@ export namespace Prisma {
     CompTransaction?: CompTransactionCreateNestedManyWithoutUserInput
     DailyCompEarning?: DailyCompEarningCreateNestedManyWithoutUserInput
     EmailLog?: EmailLogCreateNestedManyWithoutUserInput
-    GameSession?: GameSessionCreateNestedManyWithoutUserInput
+    GameSession?: CasinoGameSessionCreateNestedManyWithoutUserInput
     affiliateReferrals?: ReferralCreateNestedManyWithoutAffiliateInput
     referredUsers?: ReferralCreateNestedManyWithoutSubUserInput
     Rolling?: RollingCreateNestedManyWithoutUserInput
@@ -90763,7 +90763,7 @@ export namespace Prisma {
     CompTransaction?: CompTransactionUncheckedCreateNestedManyWithoutUserInput
     DailyCompEarning?: DailyCompEarningUncheckedCreateNestedManyWithoutUserInput
     EmailLog?: EmailLogUncheckedCreateNestedManyWithoutUserInput
-    GameSession?: GameSessionUncheckedCreateNestedManyWithoutUserInput
+    GameSession?: CasinoGameSessionUncheckedCreateNestedManyWithoutUserInput
     affiliateReferrals?: ReferralUncheckedCreateNestedManyWithoutAffiliateInput
     referredUsers?: ReferralUncheckedCreateNestedManyWithoutSubUserInput
     Rolling?: RollingUncheckedCreateNestedManyWithoutUserInput
@@ -90891,7 +90891,7 @@ export namespace Prisma {
     CompTransaction?: CompTransactionUpdateManyWithoutUserNestedInput
     DailyCompEarning?: DailyCompEarningUpdateManyWithoutUserNestedInput
     EmailLog?: EmailLogUpdateManyWithoutUserNestedInput
-    GameSession?: GameSessionUpdateManyWithoutUserNestedInput
+    GameSession?: CasinoGameSessionUpdateManyWithoutUserNestedInput
     affiliateReferrals?: ReferralUpdateManyWithoutAffiliateNestedInput
     referredUsers?: ReferralUpdateManyWithoutSubUserNestedInput
     Rolling?: RollingUpdateManyWithoutUserNestedInput
@@ -90936,7 +90936,7 @@ export namespace Prisma {
     CompTransaction?: CompTransactionUncheckedUpdateManyWithoutUserNestedInput
     DailyCompEarning?: DailyCompEarningUncheckedUpdateManyWithoutUserNestedInput
     EmailLog?: EmailLogUncheckedUpdateManyWithoutUserNestedInput
-    GameSession?: GameSessionUncheckedUpdateManyWithoutUserNestedInput
+    GameSession?: CasinoGameSessionUncheckedUpdateManyWithoutUserNestedInput
     affiliateReferrals?: ReferralUncheckedUpdateManyWithoutAffiliateNestedInput
     referredUsers?: ReferralUncheckedUpdateManyWithoutSubUserNestedInput
     Rolling?: RollingUncheckedUpdateManyWithoutUserNestedInput
@@ -90981,7 +90981,7 @@ export namespace Prisma {
     CompTransaction?: CompTransactionCreateNestedManyWithoutUserInput
     DailyCompEarning?: DailyCompEarningCreateNestedManyWithoutUserInput
     EmailLog?: EmailLogCreateNestedManyWithoutUserInput
-    GameSession?: GameSessionCreateNestedManyWithoutUserInput
+    GameSession?: CasinoGameSessionCreateNestedManyWithoutUserInput
     affiliateReferrals?: ReferralCreateNestedManyWithoutAffiliateInput
     referredUsers?: ReferralCreateNestedManyWithoutSubUserInput
     Rolling?: RollingCreateNestedManyWithoutUserInput
@@ -91026,7 +91026,7 @@ export namespace Prisma {
     CompTransaction?: CompTransactionUncheckedCreateNestedManyWithoutUserInput
     DailyCompEarning?: DailyCompEarningUncheckedCreateNestedManyWithoutUserInput
     EmailLog?: EmailLogUncheckedCreateNestedManyWithoutUserInput
-    GameSession?: GameSessionUncheckedCreateNestedManyWithoutUserInput
+    GameSession?: CasinoGameSessionUncheckedCreateNestedManyWithoutUserInput
     affiliateReferrals?: ReferralUncheckedCreateNestedManyWithoutAffiliateInput
     referredUsers?: ReferralUncheckedCreateNestedManyWithoutSubUserInput
     Rolling?: RollingUncheckedCreateNestedManyWithoutUserInput
@@ -91076,7 +91076,7 @@ export namespace Prisma {
     CompTransaction?: CompTransactionCreateNestedManyWithoutUserInput
     DailyCompEarning?: DailyCompEarningCreateNestedManyWithoutUserInput
     EmailLog?: EmailLogCreateNestedManyWithoutUserInput
-    GameSession?: GameSessionCreateNestedManyWithoutUserInput
+    GameSession?: CasinoGameSessionCreateNestedManyWithoutUserInput
     affiliateReferrals?: ReferralCreateNestedManyWithoutAffiliateInput
     referredUsers?: ReferralCreateNestedManyWithoutSubUserInput
     Rolling?: RollingCreateNestedManyWithoutUserInput
@@ -91121,7 +91121,7 @@ export namespace Prisma {
     CompTransaction?: CompTransactionUncheckedCreateNestedManyWithoutUserInput
     DailyCompEarning?: DailyCompEarningUncheckedCreateNestedManyWithoutUserInput
     EmailLog?: EmailLogUncheckedCreateNestedManyWithoutUserInput
-    GameSession?: GameSessionUncheckedCreateNestedManyWithoutUserInput
+    GameSession?: CasinoGameSessionUncheckedCreateNestedManyWithoutUserInput
     affiliateReferrals?: ReferralUncheckedCreateNestedManyWithoutAffiliateInput
     referredUsers?: ReferralUncheckedCreateNestedManyWithoutSubUserInput
     Rolling?: RollingUncheckedCreateNestedManyWithoutUserInput
@@ -91182,7 +91182,7 @@ export namespace Prisma {
     CompTransaction?: CompTransactionUpdateManyWithoutUserNestedInput
     DailyCompEarning?: DailyCompEarningUpdateManyWithoutUserNestedInput
     EmailLog?: EmailLogUpdateManyWithoutUserNestedInput
-    GameSession?: GameSessionUpdateManyWithoutUserNestedInput
+    GameSession?: CasinoGameSessionUpdateManyWithoutUserNestedInput
     affiliateReferrals?: ReferralUpdateManyWithoutAffiliateNestedInput
     referredUsers?: ReferralUpdateManyWithoutSubUserNestedInput
     Rolling?: RollingUpdateManyWithoutUserNestedInput
@@ -91227,7 +91227,7 @@ export namespace Prisma {
     CompTransaction?: CompTransactionUncheckedUpdateManyWithoutUserNestedInput
     DailyCompEarning?: DailyCompEarningUncheckedUpdateManyWithoutUserNestedInput
     EmailLog?: EmailLogUncheckedUpdateManyWithoutUserNestedInput
-    GameSession?: GameSessionUncheckedUpdateManyWithoutUserNestedInput
+    GameSession?: CasinoGameSessionUncheckedUpdateManyWithoutUserNestedInput
     affiliateReferrals?: ReferralUncheckedUpdateManyWithoutAffiliateNestedInput
     referredUsers?: ReferralUncheckedUpdateManyWithoutSubUserNestedInput
     Rolling?: RollingUncheckedUpdateManyWithoutUserNestedInput
@@ -91283,7 +91283,7 @@ export namespace Prisma {
     CompTransaction?: CompTransactionUpdateManyWithoutUserNestedInput
     DailyCompEarning?: DailyCompEarningUpdateManyWithoutUserNestedInput
     EmailLog?: EmailLogUpdateManyWithoutUserNestedInput
-    GameSession?: GameSessionUpdateManyWithoutUserNestedInput
+    GameSession?: CasinoGameSessionUpdateManyWithoutUserNestedInput
     affiliateReferrals?: ReferralUpdateManyWithoutAffiliateNestedInput
     referredUsers?: ReferralUpdateManyWithoutSubUserNestedInput
     Rolling?: RollingUpdateManyWithoutUserNestedInput
@@ -91328,7 +91328,7 @@ export namespace Prisma {
     CompTransaction?: CompTransactionUncheckedUpdateManyWithoutUserNestedInput
     DailyCompEarning?: DailyCompEarningUncheckedUpdateManyWithoutUserNestedInput
     EmailLog?: EmailLogUncheckedUpdateManyWithoutUserNestedInput
-    GameSession?: GameSessionUncheckedUpdateManyWithoutUserNestedInput
+    GameSession?: CasinoGameSessionUncheckedUpdateManyWithoutUserNestedInput
     affiliateReferrals?: ReferralUncheckedUpdateManyWithoutAffiliateNestedInput
     referredUsers?: ReferralUncheckedUpdateManyWithoutSubUserNestedInput
     Rolling?: RollingUncheckedUpdateManyWithoutUserNestedInput
@@ -91670,7 +91670,7 @@ export namespace Prisma {
     CompTransaction?: CompTransactionCreateNestedManyWithoutUserInput
     DailyCompEarning?: DailyCompEarningCreateNestedManyWithoutUserInput
     EmailLog?: EmailLogCreateNestedManyWithoutUserInput
-    GameSession?: GameSessionCreateNestedManyWithoutUserInput
+    GameSession?: CasinoGameSessionCreateNestedManyWithoutUserInput
     affiliateReferrals?: ReferralCreateNestedManyWithoutAffiliateInput
     referredUsers?: ReferralCreateNestedManyWithoutSubUserInput
     Rolling?: RollingCreateNestedManyWithoutUserInput
@@ -91715,7 +91715,7 @@ export namespace Prisma {
     CompTransaction?: CompTransactionUncheckedCreateNestedManyWithoutUserInput
     DailyCompEarning?: DailyCompEarningUncheckedCreateNestedManyWithoutUserInput
     EmailLog?: EmailLogUncheckedCreateNestedManyWithoutUserInput
-    GameSession?: GameSessionUncheckedCreateNestedManyWithoutUserInput
+    GameSession?: CasinoGameSessionUncheckedCreateNestedManyWithoutUserInput
     affiliateReferrals?: ReferralUncheckedCreateNestedManyWithoutAffiliateInput
     referredUsers?: ReferralUncheckedCreateNestedManyWithoutSubUserInput
     Rolling?: RollingUncheckedCreateNestedManyWithoutUserInput
@@ -91811,7 +91811,7 @@ export namespace Prisma {
     CompTransaction?: CompTransactionUpdateManyWithoutUserNestedInput
     DailyCompEarning?: DailyCompEarningUpdateManyWithoutUserNestedInput
     EmailLog?: EmailLogUpdateManyWithoutUserNestedInput
-    GameSession?: GameSessionUpdateManyWithoutUserNestedInput
+    GameSession?: CasinoGameSessionUpdateManyWithoutUserNestedInput
     affiliateReferrals?: ReferralUpdateManyWithoutAffiliateNestedInput
     referredUsers?: ReferralUpdateManyWithoutSubUserNestedInput
     Rolling?: RollingUpdateManyWithoutUserNestedInput
@@ -91856,7 +91856,7 @@ export namespace Prisma {
     CompTransaction?: CompTransactionUncheckedUpdateManyWithoutUserNestedInput
     DailyCompEarning?: DailyCompEarningUncheckedUpdateManyWithoutUserNestedInput
     EmailLog?: EmailLogUncheckedUpdateManyWithoutUserNestedInput
-    GameSession?: GameSessionUncheckedUpdateManyWithoutUserNestedInput
+    GameSession?: CasinoGameSessionUncheckedUpdateManyWithoutUserNestedInput
     affiliateReferrals?: ReferralUncheckedUpdateManyWithoutAffiliateNestedInput
     referredUsers?: ReferralUncheckedUpdateManyWithoutSubUserNestedInput
     Rolling?: RollingUncheckedUpdateManyWithoutUserNestedInput
@@ -91942,7 +91942,7 @@ export namespace Prisma {
     CompTransaction?: CompTransactionCreateNestedManyWithoutUserInput
     DailyCompEarning?: DailyCompEarningCreateNestedManyWithoutUserInput
     EmailLog?: EmailLogCreateNestedManyWithoutUserInput
-    GameSession?: GameSessionCreateNestedManyWithoutUserInput
+    GameSession?: CasinoGameSessionCreateNestedManyWithoutUserInput
     affiliateReferrals?: ReferralCreateNestedManyWithoutAffiliateInput
     referredUsers?: ReferralCreateNestedManyWithoutSubUserInput
     Rolling?: RollingCreateNestedManyWithoutUserInput
@@ -91987,7 +91987,7 @@ export namespace Prisma {
     CompTransaction?: CompTransactionUncheckedCreateNestedManyWithoutUserInput
     DailyCompEarning?: DailyCompEarningUncheckedCreateNestedManyWithoutUserInput
     EmailLog?: EmailLogUncheckedCreateNestedManyWithoutUserInput
-    GameSession?: GameSessionUncheckedCreateNestedManyWithoutUserInput
+    GameSession?: CasinoGameSessionUncheckedCreateNestedManyWithoutUserInput
     affiliateReferrals?: ReferralUncheckedCreateNestedManyWithoutAffiliateInput
     referredUsers?: ReferralUncheckedCreateNestedManyWithoutSubUserInput
     Rolling?: RollingUncheckedCreateNestedManyWithoutUserInput
@@ -92118,7 +92118,7 @@ export namespace Prisma {
     CompTransaction?: CompTransactionUpdateManyWithoutUserNestedInput
     DailyCompEarning?: DailyCompEarningUpdateManyWithoutUserNestedInput
     EmailLog?: EmailLogUpdateManyWithoutUserNestedInput
-    GameSession?: GameSessionUpdateManyWithoutUserNestedInput
+    GameSession?: CasinoGameSessionUpdateManyWithoutUserNestedInput
     affiliateReferrals?: ReferralUpdateManyWithoutAffiliateNestedInput
     referredUsers?: ReferralUpdateManyWithoutSubUserNestedInput
     Rolling?: RollingUpdateManyWithoutUserNestedInput
@@ -92163,7 +92163,7 @@ export namespace Prisma {
     CompTransaction?: CompTransactionUncheckedUpdateManyWithoutUserNestedInput
     DailyCompEarning?: DailyCompEarningUncheckedUpdateManyWithoutUserNestedInput
     EmailLog?: EmailLogUncheckedUpdateManyWithoutUserNestedInput
-    GameSession?: GameSessionUncheckedUpdateManyWithoutUserNestedInput
+    GameSession?: CasinoGameSessionUncheckedUpdateManyWithoutUserNestedInput
     affiliateReferrals?: ReferralUncheckedUpdateManyWithoutAffiliateNestedInput
     referredUsers?: ReferralUncheckedUpdateManyWithoutSubUserNestedInput
     Rolling?: RollingUncheckedUpdateManyWithoutUserNestedInput
@@ -92335,7 +92335,7 @@ export namespace Prisma {
     CompTransaction?: CompTransactionCreateNestedManyWithoutUserInput
     DailyCompEarning?: DailyCompEarningCreateNestedManyWithoutUserInput
     EmailLog?: EmailLogCreateNestedManyWithoutUserInput
-    GameSession?: GameSessionCreateNestedManyWithoutUserInput
+    GameSession?: CasinoGameSessionCreateNestedManyWithoutUserInput
     affiliateReferrals?: ReferralCreateNestedManyWithoutAffiliateInput
     referredUsers?: ReferralCreateNestedManyWithoutSubUserInput
     Rolling?: RollingCreateNestedManyWithoutUserInput
@@ -92380,7 +92380,7 @@ export namespace Prisma {
     CompTransaction?: CompTransactionUncheckedCreateNestedManyWithoutUserInput
     DailyCompEarning?: DailyCompEarningUncheckedCreateNestedManyWithoutUserInput
     EmailLog?: EmailLogUncheckedCreateNestedManyWithoutUserInput
-    GameSession?: GameSessionUncheckedCreateNestedManyWithoutUserInput
+    GameSession?: CasinoGameSessionUncheckedCreateNestedManyWithoutUserInput
     affiliateReferrals?: ReferralUncheckedCreateNestedManyWithoutAffiliateInput
     referredUsers?: ReferralUncheckedCreateNestedManyWithoutSubUserInput
     Rolling?: RollingUncheckedCreateNestedManyWithoutUserInput
@@ -92492,7 +92492,7 @@ export namespace Prisma {
     CompTransaction?: CompTransactionUpdateManyWithoutUserNestedInput
     DailyCompEarning?: DailyCompEarningUpdateManyWithoutUserNestedInput
     EmailLog?: EmailLogUpdateManyWithoutUserNestedInput
-    GameSession?: GameSessionUpdateManyWithoutUserNestedInput
+    GameSession?: CasinoGameSessionUpdateManyWithoutUserNestedInput
     affiliateReferrals?: ReferralUpdateManyWithoutAffiliateNestedInput
     referredUsers?: ReferralUpdateManyWithoutSubUserNestedInput
     Rolling?: RollingUpdateManyWithoutUserNestedInput
@@ -92537,7 +92537,7 @@ export namespace Prisma {
     CompTransaction?: CompTransactionUncheckedUpdateManyWithoutUserNestedInput
     DailyCompEarning?: DailyCompEarningUncheckedUpdateManyWithoutUserNestedInput
     EmailLog?: EmailLogUncheckedUpdateManyWithoutUserNestedInput
-    GameSession?: GameSessionUncheckedUpdateManyWithoutUserNestedInput
+    GameSession?: CasinoGameSessionUncheckedUpdateManyWithoutUserNestedInput
     affiliateReferrals?: ReferralUncheckedUpdateManyWithoutAffiliateNestedInput
     referredUsers?: ReferralUncheckedUpdateManyWithoutSubUserNestedInput
     Rolling?: RollingUncheckedUpdateManyWithoutUserNestedInput
@@ -92746,7 +92746,7 @@ export namespace Prisma {
     gameSessionId: bigint | number
   }
 
-  export type GameSessionCreateManyGameInput = {
+  export type CasinoGameSessionCreateManyGameInput = {
     id?: bigint | number
     userId: bigint | number
     createdAt?: Date | string
@@ -92854,7 +92854,7 @@ export namespace Prisma {
     completedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     AffiliateCommission?: AffiliateCommissionUpdateManyWithoutGameRoundNestedInput
     bets?: GameBetUpdateManyWithoutGameRoundNestedInput
-    GameSession?: GameSessionUpdateOneRequiredWithoutGameRoundsNestedInput
+    GameSession?: CasinoGameSessionUpdateOneRequiredWithoutGameRoundsNestedInput
     transaction?: TransactionUpdateOneRequiredWithoutGameRoundNestedInput
     wins?: GameWinUpdateManyWithoutGameRoundNestedInput
   }
@@ -92920,7 +92920,7 @@ export namespace Prisma {
     gameSessionId?: BigIntFieldUpdateOperationsInput | bigint | number
   }
 
-  export type GameSessionUpdateWithoutGameInput = {
+  export type CasinoGameSessionUpdateWithoutGameInput = {
     id?: BigIntFieldUpdateOperationsInput | bigint | number
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
@@ -92935,7 +92935,7 @@ export namespace Prisma {
     user?: UserUpdateOneRequiredWithoutGameSessionNestedInput
   }
 
-  export type GameSessionUncheckedUpdateWithoutGameInput = {
+  export type CasinoGameSessionUncheckedUpdateWithoutGameInput = {
     id?: BigIntFieldUpdateOperationsInput | bigint | number
     userId?: BigIntFieldUpdateOperationsInput | bigint | number
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
@@ -92950,7 +92950,7 @@ export namespace Prisma {
     gameRounds?: GameRoundUncheckedUpdateManyWithoutGameSessionNestedInput
   }
 
-  export type GameSessionUncheckedUpdateManyWithoutGameInput = {
+  export type CasinoGameSessionUncheckedUpdateManyWithoutGameInput = {
     id?: BigIntFieldUpdateOperationsInput | bigint | number
     userId?: BigIntFieldUpdateOperationsInput | bigint | number
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
@@ -93209,7 +93209,7 @@ export namespace Prisma {
     createdAt?: Date | string
   }
 
-  export type GameSessionCreateManyUserInput = {
+  export type CasinoGameSessionCreateManyUserInput = {
     id?: bigint | number
     createdAt?: Date | string
     updatedAt?: Date | string
@@ -93718,7 +93718,7 @@ export namespace Prisma {
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
   }
 
-  export type GameSessionUpdateWithoutUserInput = {
+  export type CasinoGameSessionUpdateWithoutUserInput = {
     id?: BigIntFieldUpdateOperationsInput | bigint | number
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
@@ -93733,7 +93733,7 @@ export namespace Prisma {
     game?: CasinoGameUpdateOneWithoutGameSessionsNestedInput
   }
 
-  export type GameSessionUncheckedUpdateWithoutUserInput = {
+  export type CasinoGameSessionUncheckedUpdateWithoutUserInput = {
     id?: BigIntFieldUpdateOperationsInput | bigint | number
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
@@ -93748,7 +93748,7 @@ export namespace Prisma {
     gameRounds?: GameRoundUncheckedUpdateManyWithoutGameSessionNestedInput
   }
 
-  export type GameSessionUncheckedUpdateManyWithoutUserInput = {
+  export type CasinoGameSessionUncheckedUpdateManyWithoutUserInput = {
     id?: BigIntFieldUpdateOperationsInput | bigint | number
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
