@@ -44,7 +44,7 @@ export class DepositDetailMapper {
     ipAddress: string | null;
     deviceFingerprint: string | null;
     failureReason: string | null;
-    providerMetadata: Record<string, any> | null;
+    providerMetadata: any;
     createdAt: Date;
     updatedAt: Date;
     confirmedAt: Date | null;

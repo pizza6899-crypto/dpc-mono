@@ -27,8 +27,7 @@ import { QueueService } from 'src/infrastructure/queue/queue.service';
 import { CasinoRefundService } from '../../application/casino-refund.service';
 import { nowUtc, parseDateStringOrThrow } from 'src/utils/date.util';
 import { InjectTransaction, Transactional } from '@nestjs-cls/transactional';
-import type { Transaction } from '@nestjs-cls/transactional';
-import { TransactionalAdapterPrisma } from '@nestjs-cls/transactional-adapter-prisma';
+import { type PrismaTransaction } from 'src/infrastructure/prisma/prisma.module';
 import { GAMING_CURRENCIES, type GamingCurrencyCode } from 'src/utils/currency.util';
 
 @Injectable()
@@ -37,7 +36,7 @@ export class WhitecliffCallbackService {
 
   constructor(
     @InjectTransaction()
-    private readonly tx: Transaction<TransactionalAdapterPrisma>,
+    private readonly tx: PrismaTransaction,
     private readonly envService: EnvService,
     private readonly whitecliffMapperService: WhitecliffMapperService,
     private readonly getUserBalanceService: GetUserBalanceService,

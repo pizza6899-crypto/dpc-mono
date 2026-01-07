@@ -1,7 +1,6 @@
 import { Injectable } from '@nestjs/common';
 import { InjectTransaction } from '@nestjs-cls/transactional';
-import type { Transaction } from '@nestjs-cls/transactional';
-import type { TransactionalAdapterPrisma } from '@nestjs-cls/transactional-adapter-prisma';
+import { type PrismaTransaction } from 'src/infrastructure/prisma/prisma.module';
 import type { LoginAttemptRepositoryPort } from '../ports/out';
 import { LoginAttempt } from '../domain';
 import { LoginAttemptMapper } from './mapper';
@@ -10,9 +9,9 @@ import { LoginAttemptMapper } from './mapper';
 export class LoginAttemptRepository implements LoginAttemptRepositoryPort {
   constructor(
     @InjectTransaction()
-    private readonly tx: Transaction<TransactionalAdapterPrisma>,
+    private readonly tx: PrismaTransaction,
     private readonly mapper: LoginAttemptMapper,
-  ) {}
+  ) { }
 
   async create(attempt: LoginAttempt): Promise<LoginAttempt> {
     const data = this.mapper.toPrisma(attempt);

@@ -1,8 +1,7 @@
 // src/modules/auth/credential/infrastructure/password-reset-token.repository.ts
 import { Injectable } from '@nestjs/common';
 import { InjectTransaction } from '@nestjs-cls/transactional';
-import type { Transaction } from '@nestjs-cls/transactional';
-import type { TransactionalAdapterPrisma } from '@nestjs-cls/transactional-adapter-prisma';
+import { type PrismaTransaction } from 'src/infrastructure/prisma/prisma.module';
 import type {
   PasswordResetTokenRepositoryPort,
   PasswordResetTokenData,
@@ -11,12 +10,11 @@ import { TokenType } from '@repo/database';
 
 @Injectable()
 export class PasswordResetTokenRepository
-  implements PasswordResetTokenRepositoryPort
-{
+  implements PasswordResetTokenRepositoryPort {
   constructor(
     @InjectTransaction()
-    private readonly tx: Transaction<TransactionalAdapterPrisma>,
-  ) {}
+    private readonly tx: PrismaTransaction,
+  ) { }
 
   async create(params: {
     userId: bigint;

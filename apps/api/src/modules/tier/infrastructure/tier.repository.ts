@@ -1,7 +1,5 @@
 import { HttpStatus, Injectable } from '@nestjs/common';
 import { InjectTransaction } from '@nestjs-cls/transactional';
-import type { Transaction } from '@nestjs-cls/transactional';
-import type { TransactionalAdapterPrisma } from '@nestjs-cls/transactional-adapter-prisma';
 import { TierRepositoryPort } from '../ports/tier.repository.port';
 import { TierMapper } from './tier.mapper';
 import { generateUid } from 'src/utils/id.util';
@@ -10,12 +8,13 @@ import { TierNotFoundException, TierException } from '../domain/tier.exception';
 import { LockNamespace } from 'src/common/concurrency/lock-namespace';
 import { DomainException } from 'src/common/exception/domain.exception';
 import { MessageCode } from '@repo/shared';
+import { type PrismaTransaction } from 'src/infrastructure/prisma/prisma.module';
 
 @Injectable()
 export class TierRepository implements TierRepositoryPort {
     constructor(
         @InjectTransaction()
-        private readonly tx: Transaction<TransactionalAdapterPrisma>,
+        private readonly tx: PrismaTransaction,
         private readonly mapper: TierMapper,
     ) { }
 

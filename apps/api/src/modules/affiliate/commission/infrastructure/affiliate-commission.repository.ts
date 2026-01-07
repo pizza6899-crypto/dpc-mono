@@ -1,8 +1,7 @@
 // src/modules/affiliate/commission/infrastructure/affiliate-commission.repository.ts
 import { Injectable } from '@nestjs/common';
 import { InjectTransaction } from '@nestjs-cls/transactional';
-import type { Transaction } from '@nestjs-cls/transactional';
-import type { TransactionalAdapterPrisma } from '@nestjs-cls/transactional-adapter-prisma';
+import { type PrismaTransaction } from 'src/infrastructure/prisma/prisma.module';
 import { CommissionStatus, ExchangeCurrencyCode } from '@repo/database';
 import { AffiliateCommission, CommissionNotFoundException } from '../domain';
 import type { AffiliateCommissionRepositoryPort } from '../ports/out/affiliate-commission.repository.port';
@@ -12,9 +11,9 @@ import { AffiliateCommissionMapper } from './affiliate-commission.mapper';
 export class AffiliateCommissionRepository implements AffiliateCommissionRepositoryPort {
   constructor(
     @InjectTransaction()
-    private readonly tx: Transaction<TransactionalAdapterPrisma>,
+    private readonly tx: PrismaTransaction,
     private readonly mapper: AffiliateCommissionMapper,
-  ) {}
+  ) { }
 
   async findByUid(uid: string): Promise<AffiliateCommission | null> {
     const result = await this.tx.affiliateCommission.findUnique({

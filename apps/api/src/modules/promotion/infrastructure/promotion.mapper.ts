@@ -77,8 +77,8 @@ export class PromotionMapper {
       updatedAt: Date;
     }>;
     currencies?: Array<{
-      id: number;
-      promotionId: number;
+      id: bigint;
+      promotionId: bigint;
       currency: string;
       minDepositAmount: any;
       maxBonusAmount: any;
@@ -136,9 +136,9 @@ export class PromotionMapper {
    * Prisma UserPromotion 모델 → Domain 엔티티 변환
    */
   userPromotionToDomain(prismaModel: {
-    id: number;
+    id: bigint;
     userId: bigint;
-    promotionId: number;
+    promotionId: bigint;
     status: string;
     depositAmount: any;
     bonusAmount: any;
@@ -149,9 +149,9 @@ export class PromotionMapper {
     updatedAt: Date;
   }): UserPromotion {
     return UserPromotion.fromPersistence({
-      id: prismaModel.id,
+      id: Number(prismaModel.id),
       userId: prismaModel.userId,
-      promotionId: prismaModel.promotionId,
+      promotionId: Number(prismaModel.promotionId),
       status: prismaModel.status as any,
       depositAmount: prismaModel.depositAmount,
       bonusAmount: prismaModel.bonusAmount,
@@ -167,8 +167,8 @@ export class PromotionMapper {
    * Prisma PromotionCurrency 모델 → Domain 엔티티 변환
    */
   currencyToDomain(prismaModel: {
-    id: number;
-    promotionId: number;
+    id: bigint;
+    promotionId: bigint;
     currency: string;
     minDepositAmount: any;
     maxBonusAmount: any;
@@ -176,8 +176,8 @@ export class PromotionMapper {
     updatedAt: Date;
   }): PromotionCurrency {
     return PromotionCurrency.fromPersistence({
-      id: prismaModel.id,
-      promotionId: prismaModel.promotionId,
+      id: Number(prismaModel.id),
+      promotionId: Number(prismaModel.promotionId),
       currency: prismaModel.currency as any,
       minDepositAmount: prismaModel.minDepositAmount,
       maxBonusAmount: prismaModel.maxBonusAmount,

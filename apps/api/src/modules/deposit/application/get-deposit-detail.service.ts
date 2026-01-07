@@ -1,8 +1,7 @@
 // src/modules/deposit/application/get-deposit-detail.service.ts
 import { Injectable, Logger } from '@nestjs/common';
 import { InjectTransaction } from '@nestjs-cls/transactional';
-import type { Transaction } from '@nestjs-cls/transactional';
-import type { TransactionalAdapterPrisma } from '@nestjs-cls/transactional-adapter-prisma';
+import { type PrismaTransaction } from 'src/infrastructure/prisma/prisma.module';
 import type { RequestClientInfo } from 'src/common/http/types';
 import { AdminDepositListItemDto } from '../dtos/admin-deposit-response.dto';
 import { DepositNotFoundException } from '../domain';
@@ -13,7 +12,7 @@ interface GetDepositDetailParams {
   requestInfo: RequestClientInfo;
 }
 
-interface GetDepositDetailResult extends AdminDepositListItemDto {}
+interface GetDepositDetailResult extends AdminDepositListItemDto { }
 
 @Injectable()
 export class GetDepositDetailService {
@@ -21,8 +20,8 @@ export class GetDepositDetailService {
 
   constructor(
     @InjectTransaction()
-    private readonly tx: Transaction<TransactionalAdapterPrisma>,
-  ) {}
+    private readonly tx: PrismaTransaction,
+  ) { }
 
   async execute(
     params: GetDepositDetailParams,
@@ -53,8 +52,8 @@ export class GetDepositDetailService {
 
     return {
       id: deposit.id.toString(),
-      userId: deposit.transaction.userId,
-      userEmail: deposit.transaction.user.email || '',
+      userId: deposit.userId,
+      userEmail: deposit.transaction?.user?.email || '',
       status: deposit.status,
       methodType: deposit.methodType,
       provider: deposit.provider,

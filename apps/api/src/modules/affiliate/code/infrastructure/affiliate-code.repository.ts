@@ -3,8 +3,7 @@ import { Injectable, HttpStatus } from '@nestjs/common';
 import { MessageCode } from '@repo/shared';
 import { DomainException } from 'src/common/exception/domain.exception';
 import { InjectTransaction } from '@nestjs-cls/transactional';
-import type { Transaction } from '@nestjs-cls/transactional';
-import type { TransactionalAdapterPrisma } from '@nestjs-cls/transactional-adapter-prisma';
+import { type PrismaTransaction } from 'src/infrastructure/prisma/prisma.module';
 import { Prisma } from '@repo/database';
 import { AffiliateCode } from '../domain';
 import type { AffiliateCodeRepositoryPort } from '../ports/out/affiliate-code.repository.port';
@@ -16,7 +15,7 @@ import { LockNamespace } from 'src/common/concurrency/lock-namespace';
 export class AffiliateCodeRepository implements AffiliateCodeRepositoryPort {
   constructor(
     @InjectTransaction()
-    private readonly tx: Transaction<TransactionalAdapterPrisma>,
+    private readonly tx: PrismaTransaction,
     private readonly mapper: AffiliateCodeMapper,
   ) { }
 

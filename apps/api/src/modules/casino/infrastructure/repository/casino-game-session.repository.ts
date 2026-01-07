@@ -1,7 +1,6 @@
 import { Injectable } from '@nestjs/common';
 import { InjectTransaction } from '@nestjs-cls/transactional';
-import type { Transaction } from '@nestjs-cls/transactional';
-import type { TransactionalAdapterPrisma } from '@nestjs-cls/transactional-adapter-prisma';
+import { type PrismaTransaction } from 'src/infrastructure/prisma/prisma.module';
 import { CasinoGameSessionRepositoryPort } from '../../ports/out/casino-game-session.repository.port';
 import { CasinoGameSession } from '../../domain/model/casino-game-session.entity';
 import { CasinoGameSessionMapper } from '../mapper/casino-game-session.mapper';
@@ -11,7 +10,7 @@ export class CasinoGameSessionRepository
     implements CasinoGameSessionRepositoryPort {
     constructor(
         @InjectTransaction()
-        private readonly tx: Transaction<TransactionalAdapterPrisma>,
+        private readonly tx: PrismaTransaction,
         private readonly mapper: CasinoGameSessionMapper,
     ) { }
 

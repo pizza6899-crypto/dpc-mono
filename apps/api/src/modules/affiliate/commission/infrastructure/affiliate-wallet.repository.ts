@@ -1,8 +1,7 @@
 // src/modules/affiliate/commission/infrastructure/affiliate-wallet.repository.ts
 import { Injectable } from '@nestjs/common';
 import { InjectTransaction } from '@nestjs-cls/transactional';
-import type { Transaction } from '@nestjs-cls/transactional';
-import type { TransactionalAdapterPrisma } from '@nestjs-cls/transactional-adapter-prisma';
+import { type PrismaTransaction } from 'src/infrastructure/prisma/prisma.module';
 import { ExchangeCurrencyCode, Prisma } from '@repo/database';
 import { AffiliateWallet, WalletNotFoundException } from '../domain';
 import type { AffiliateWalletRepositoryPort } from '../ports/out/affiliate-wallet.repository.port';
@@ -12,7 +11,7 @@ import { AffiliateWalletMapper } from './affiliate-wallet.mapper';
 export class AffiliateWalletRepository implements AffiliateWalletRepositoryPort {
   constructor(
     @InjectTransaction()
-    private readonly tx: Transaction<TransactionalAdapterPrisma>,
+    private readonly tx: PrismaTransaction,
     private readonly mapper: AffiliateWalletMapper,
   ) { }
 

@@ -1,8 +1,7 @@
 // src/modules/affiliate/referral/infrastructure/referral.repository.ts
 import { Injectable } from '@nestjs/common';
 import { InjectTransaction } from '@nestjs-cls/transactional';
-import type { Transaction } from '@nestjs-cls/transactional';
-import type { TransactionalAdapterPrisma } from '@nestjs-cls/transactional-adapter-prisma';
+import { type PrismaTransaction } from 'src/infrastructure/prisma/prisma.module';
 import { createId } from '@paralleldrive/cuid2';
 import { Referral, ReferralNotFoundException } from '../domain';
 import type { ReferralRepositoryPort } from '../ports/out/referral.repository.port';
@@ -12,7 +11,7 @@ import { ReferralMapper } from './referral.mapper';
 export class ReferralRepository implements ReferralRepositoryPort {
   constructor(
     @InjectTransaction()
-    private readonly tx: Transaction<TransactionalAdapterPrisma>,
+    private readonly tx: PrismaTransaction,
     private readonly mapper: ReferralMapper,
   ) { }
 
@@ -173,8 +172,8 @@ export class ReferralRepository implements ReferralRepositoryPort {
     const referrals = results.map((result) => {
       const domain = this.mapper.toDomain(result);
       return Object.assign(domain, {
-        affiliateEmail: result.affiliate.email,
-        subUserEmail: result.subUser.email,
+        affiliateEmail: result.affiliate.email ?? '',
+        subUserEmail: result.subUser.email ?? '',
         codeValue: result.code.code,
         campaignName: result.code.campaignName,
       });
@@ -207,8 +206,8 @@ export class ReferralRepository implements ReferralRepositoryPort {
 
     const domain = this.mapper.toDomain(result);
     return Object.assign(domain, {
-      affiliateEmail: result.affiliate.email,
-      subUserEmail: result.subUser.email,
+      affiliateEmail: result.affiliate.email ?? '',
+      subUserEmail: result.subUser.email ?? '',
       codeValue: result.code.code,
       campaignName: result.code.campaignName,
     });

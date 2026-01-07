@@ -57,7 +57,7 @@ export class IdUtil {
    * 데이터베이스에서 가장 큰 whitecliffId + 1 값 생성
    */
   static async generateNextWhitecliffId(
-    prisma: PrismaService,
+    prisma: PrismaService | Prisma.TransactionClient,
   ): Promise<bigint> {
     // 가장 큰 whitecliffId 값 조회
     const maxIdResult = await prisma.user.findFirst({

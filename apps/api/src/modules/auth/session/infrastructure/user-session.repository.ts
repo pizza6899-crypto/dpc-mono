@@ -1,7 +1,6 @@
 import { Injectable } from '@nestjs/common';
 import { InjectTransaction } from '@nestjs-cls/transactional';
-import type { Transaction } from '@nestjs-cls/transactional';
-import type { TransactionalAdapterPrisma } from '@nestjs-cls/transactional-adapter-prisma';
+import { type PrismaTransaction } from 'src/infrastructure/prisma/prisma.module';
 import type { Prisma } from '@repo/database';
 import type {
   UserSessionRepositoryPort,
@@ -15,9 +14,9 @@ import { UserSessionMapper } from './user-session.mapper';
 export class UserSessionRepository implements UserSessionRepositoryPort {
   constructor(
     @InjectTransaction()
-    private readonly tx: Transaction<TransactionalAdapterPrisma>,
+    private readonly tx: PrismaTransaction,
     private readonly mapper: UserSessionMapper,
-  ) {}
+  ) { }
 
   async create(session: UserSession): Promise<UserSession> {
     const data = this.mapper.toPrisma(session);
@@ -81,11 +80,11 @@ export class UserSessionRepository implements UserSessionRepositoryPort {
       ...(activeOnly && { status: SessionStatus.ACTIVE }),
       ...(startDate &&
         endDate && {
-          createdAt: {
-            gte: startDate,
-            lte: endDate,
-          },
-        }),
+        createdAt: {
+          gte: startDate,
+          lte: endDate,
+        },
+      }),
     };
 
     // 정렬 조건 구성

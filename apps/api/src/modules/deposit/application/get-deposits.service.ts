@@ -1,8 +1,7 @@
 // src/modules/deposit/application/get-deposits.service.ts
 import { Injectable, Logger } from '@nestjs/common';
 import { InjectTransaction } from '@nestjs-cls/transactional';
-import type { Transaction } from '@nestjs-cls/transactional';
-import type { TransactionalAdapterPrisma } from '@nestjs-cls/transactional-adapter-prisma';
+import { type PrismaTransaction } from 'src/infrastructure/prisma/prisma.module';
 import { Prisma } from '@repo/database';
 import type { PaginatedData, RequestClientInfo } from 'src/common/http/types';
 import { GetDepositsQueryDto } from '../dtos/get-deposits-query.dto';
@@ -14,7 +13,7 @@ interface GetDepositsParams {
   requestInfo: RequestClientInfo;
 }
 
-interface GetDepositsResult extends PaginatedData<AdminDepositListItemDto> {}
+interface GetDepositsResult extends PaginatedData<AdminDepositListItemDto> { }
 
 @Injectable()
 export class GetDepositsService {
@@ -22,8 +21,8 @@ export class GetDepositsService {
 
   constructor(
     @InjectTransaction()
-    private readonly tx: Transaction<TransactionalAdapterPrisma>,
-  ) {}
+    private readonly tx: PrismaTransaction,
+  ) { }
 
   async execute(params: GetDepositsParams): Promise<GetDepositsResult> {
     const { query, adminId, requestInfo } = params;
@@ -54,11 +53,11 @@ export class GetDepositsService {
       ...(currency && { depositCurrency: currency }),
       ...(startDate &&
         endDate && {
-          createdAt: {
-            gte: new Date(startDate),
-            lte: new Date(endDate),
-          },
-        }),
+        createdAt: {
+          gte: new Date(startDate),
+          lte: new Date(endDate),
+        },
+      }),
     };
 
     const orderBy: Prisma.DepositDetailOrderByWithRelationInput = {
@@ -90,8 +89,8 @@ export class GetDepositsService {
     return {
       data: deposits.map((deposit) => ({
         id: deposit.id.toString(),
-        userId: deposit.transaction.userId,
-        userEmail: deposit.transaction.user.email || '',
+        userId: deposit.userId,
+        userEmail: deposit.transaction?.user?.email || '',
         status: deposit.status,
         methodType: deposit.methodType,
         provider: deposit.provider,

@@ -7,10 +7,9 @@ import {
 } from 'src/infrastructure/queue/queue.types';
 import {
   InjectTransaction,
-  type Transaction,
   Transactional,
 } from '@nestjs-cls/transactional';
-import { TransactionalAdapterPrisma } from '@nestjs-cls/transactional-adapter-prisma';
+import { type PrismaTransaction } from 'src/infrastructure/prisma/prisma.module';
 import { Logger, OnApplicationShutdown } from '@nestjs/common';
 import { Prisma, TransactionStatus } from '@repo/database';
 
@@ -22,7 +21,7 @@ export class GamePostProcessProcessor
 
   constructor(
     @InjectTransaction()
-    private readonly tx: Transaction<TransactionalAdapterPrisma>,
+    private readonly tx: PrismaTransaction,
     private readonly cls: ClsService,
   ) {
     super();

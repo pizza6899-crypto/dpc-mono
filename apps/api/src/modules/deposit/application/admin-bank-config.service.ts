@@ -1,8 +1,7 @@
 // src/modules/deposit/application/admin-bank-config.service.ts
 import { Injectable, Logger } from '@nestjs/common';
 import { InjectTransaction } from '@nestjs-cls/transactional';
-import type { Transaction } from '@nestjs-cls/transactional';
-import type { TransactionalAdapterPrisma } from '@nestjs-cls/transactional-adapter-prisma';
+import { type PrismaTransaction } from 'src/infrastructure/prisma/prisma.module';
 import { Prisma } from '@repo/database';
 import { ExchangeCurrencyCode } from '@repo/database';
 import type { PaginatedData, RequestClientInfo } from 'src/common/http/types';
@@ -21,7 +20,7 @@ export class AdminBankConfigService {
 
   constructor(
     @InjectTransaction()
-    private readonly tx: Transaction<TransactionalAdapterPrisma>,
+    private readonly tx: PrismaTransaction,
   ) { }
 
   /**

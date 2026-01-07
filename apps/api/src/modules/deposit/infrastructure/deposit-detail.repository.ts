@@ -1,8 +1,7 @@
 // src/modules/deposit/infrastructure/deposit-detail.repository.ts
 import { Injectable } from '@nestjs/common';
 import { InjectTransaction } from '@nestjs-cls/transactional';
-import type { Transaction } from '@nestjs-cls/transactional';
-import type { TransactionalAdapterPrisma } from '@nestjs-cls/transactional-adapter-prisma';
+import { type PrismaTransaction } from 'src/infrastructure/prisma/prisma.module';
 import { DepositDetail, DepositNotFoundException } from '../domain';
 import type { DepositDetailRepositoryPort } from '../ports/out/deposit-detail.repository.port';
 import { DepositDetailMapper } from './deposit-detail.mapper';
@@ -18,7 +17,7 @@ import { generateUid } from 'src/utils/id.util';
 export class DepositDetailRepository implements DepositDetailRepositoryPort {
   constructor(
     @InjectTransaction()
-    private readonly tx: Transaction<TransactionalAdapterPrisma>,
+    private readonly tx: PrismaTransaction,
     private readonly mapper: DepositDetailMapper,
   ) { }
 
@@ -61,8 +60,8 @@ export class DepositDetailRepository implements DepositDetailRepositoryPort {
     const updateData = this.mapper.toPrismaUpdate(deposit);
 
     const result = await this.tx.depositDetail.update({
-      where: { id: deposit.id },
-      data: updateData,
+      where: { id: deposit.id! },
+      data: updateData as any,
     });
 
     return this.mapper.toDomain(result);

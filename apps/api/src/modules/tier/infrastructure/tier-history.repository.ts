@@ -1,7 +1,6 @@
 import { Injectable } from '@nestjs/common';
 import { InjectTransaction } from '@nestjs-cls/transactional';
-import type { Transaction } from '@nestjs-cls/transactional';
-import type { TransactionalAdapterPrisma } from '@nestjs-cls/transactional-adapter-prisma';
+import { type PrismaTransaction } from 'src/infrastructure/prisma/prisma.module';
 import { TierHistoryRepositoryPort, FindTierHistoryIsParams, FindTierHistoryResult, TierHistoryWithRelations } from '../ports/tier-history.repository.port';
 import { TierHistoryMapper } from './tier-history.mapper';
 import { TierHistory } from '../domain';
@@ -11,7 +10,7 @@ import { Prisma } from '@repo/database';
 export class TierHistoryRepository implements TierHistoryRepositoryPort {
     constructor(
         @InjectTransaction()
-        private readonly tx: Transaction<TransactionalAdapterPrisma>,
+        private readonly tx: PrismaTransaction,
         private readonly mapper: TierHistoryMapper,
     ) { }
 

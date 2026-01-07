@@ -1,8 +1,7 @@
 // src/modules/affiliate/commission/infrastructure/affiliate-tier.repository.ts
 import { Injectable } from '@nestjs/common';
 import { InjectTransaction } from '@nestjs-cls/transactional';
-import type { Transaction } from '@nestjs-cls/transactional';
-import type { TransactionalAdapterPrisma } from '@nestjs-cls/transactional-adapter-prisma';
+import { type PrismaTransaction } from 'src/infrastructure/prisma/prisma.module';
 import { AffiliateTierLevel, Prisma } from '@repo/database';
 import { AffiliateTier, TierNotFoundException } from '../domain';
 import type { AffiliateTierRepositoryPort } from '../ports/out/affiliate-tier.repository.port';
@@ -12,9 +11,9 @@ import { AffiliateTierMapper } from './affiliate-tier.mapper';
 export class AffiliateTierRepository implements AffiliateTierRepositoryPort {
   constructor(
     @InjectTransaction()
-    private readonly tx: Transaction<TransactionalAdapterPrisma>,
+    private readonly tx: PrismaTransaction,
     private readonly mapper: AffiliateTierMapper,
-  ) {}
+  ) { }
 
   async findByAffiliateId(affiliateId: bigint): Promise<AffiliateTier | null> {
     const result = await this.tx.affiliateTier.findUnique({

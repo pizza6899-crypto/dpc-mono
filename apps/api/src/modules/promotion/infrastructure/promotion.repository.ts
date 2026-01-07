@@ -1,8 +1,7 @@
 // src/modules/promotion/infrastructure/promotion.repository.ts
 import { Injectable } from '@nestjs/common';
 import { InjectTransaction } from '@nestjs-cls/transactional';
-import type { Transaction } from '@nestjs-cls/transactional';
-import type { TransactionalAdapterPrisma } from '@nestjs-cls/transactional-adapter-prisma';
+import { type PrismaTransaction } from 'src/infrastructure/prisma/prisma.module';
 import { Prisma, ExchangeCurrencyCode, Language } from '@repo/database';
 import { generateUid } from 'src/utils/id.util';
 import { Promotion, UserPromotion, PromotionCurrency } from '../domain';
@@ -14,9 +13,9 @@ import { PromotionMapper } from './promotion.mapper';
 export class PromotionRepository implements PromotionRepositoryPort {
   constructor(
     @InjectTransaction()
-    private readonly tx: Transaction<TransactionalAdapterPrisma>,
+    private readonly tx: PrismaTransaction,
     private readonly mapper: PromotionMapper,
-  ) {}
+  ) { }
 
   async findActivePromotions(now: Date = new Date()): Promise<Promotion[]> {
     const results = await this.tx.promotion.findMany({
@@ -326,7 +325,9 @@ export class PromotionRepository implements PromotionRepositoryPort {
   async hasWithdrawn(userId: bigint): Promise<boolean> {
     const count = await this.tx.withdrawDetail.count({
       where: {
-        userId,
+        transaction: {
+          userId,
+        },
         status: 'COMPLETED',
       },
     });
@@ -366,11 +367,11 @@ export class PromotionRepository implements PromotionRepositoryPort {
       ...(targetType && { targetType: targetType as any }),
       ...(startDate &&
         endDate && {
-          createdAt: {
-            gte: startDate,
-            lte: endDate,
-          },
-        }),
+        createdAt: {
+          gte: startDate,
+          lte: endDate,
+        },
+      }),
     };
 
     const orderBy: Prisma.PromotionOrderByWithRelationInput = {
