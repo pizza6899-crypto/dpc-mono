@@ -3,7 +3,6 @@ import { Injectable, Logger } from '@nestjs/common';
 import { InjectTransaction } from '@nestjs-cls/transactional';
 import { type PrismaTransaction } from 'src/infrastructure/prisma/prisma.module';
 import { Prisma } from '@repo/database';
-import { ExchangeCurrencyCode } from '@repo/database';
 import type { PaginatedData, RequestClientInfo } from 'src/common/http/types';
 import { generateUid } from 'src/utils/id.util';
 import { BankConfigNotFoundException } from '../domain';
@@ -75,7 +74,7 @@ export class AdminBankConfigService {
         description: config.description,
         notes: config.notes,
         minAmount: config.minAmount.toString(),
-        maxAmount: config.maxAmount?.toString(),
+        maxAmount: config.maxAmount?.toString() ?? null,
         totalDeposits: config.totalDeposits,
         totalDepositAmount: config.totalDepositAmount.toString(),
         createdAt: config.createdAt,
@@ -159,7 +158,7 @@ export class AdminBankConfigService {
       description: config.description,
       notes: config.notes,
       minAmount: config.minAmount.toString(),
-      maxAmount: config.maxAmount?.toString(),
+      maxAmount: config.maxAmount?.toString() ?? null,
       totalDeposits: config.totalDeposits,
       totalDepositAmount: config.totalDepositAmount.toString(),
       createdAt: config.createdAt,
