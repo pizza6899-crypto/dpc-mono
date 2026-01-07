@@ -1,7 +1,7 @@
 // src/modules/wallet/infrastructure/user-wallet.mapper.ts
 import { Injectable } from '@nestjs/common';
 import { UserWallet } from '../domain';
-import type { UserBalance as PrismaUserBalance, ExchangeCurrencyCode } from '@repo/database';
+import type { UserWallet as PrismaUserWallet, ExchangeCurrencyCode } from '@repo/database';
 import { Prisma } from '@repo/database';
 
 /**
@@ -14,7 +14,7 @@ export class UserWalletMapper {
   /**
    * Prisma 모델 → Domain 엔티티 변환
    */
-  toDomain(prismaModel: PrismaUserBalance): UserWallet {
+  toDomain(prismaModel: PrismaUserWallet): UserWallet {
     return UserWallet.fromPersistence({
       userId: prismaModel.userId,
       currency: prismaModel.currency,

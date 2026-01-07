@@ -1,6 +1,5 @@
 // src/modules/promotion/promotion.module.ts
 import { Module } from '@nestjs/common';
-import { RollingModule } from '../rolling/rolling.module';
 import { PromotionPolicy } from './domain';
 import { CheckEligiblePromotionsService } from './application/check-eligible-promotions.service';
 import { GrantPromotionBonusService } from './application/grant-promotion-bonus.service';
@@ -22,7 +21,7 @@ import { PromotionUserController } from './controllers/user/promotion-user.contr
 import { PromotionAdminController } from './controllers/admin/promotion-admin.controller';
 
 @Module({
-  imports: [RollingModule],
+  imports: [],
   providers: [
     PromotionPolicy,
     CheckEligiblePromotionsService,
@@ -51,5 +50,5 @@ import { PromotionAdminController } from './controllers/admin/promotion-admin.co
     FindActivePromotionsService,
   ],
 })
-export class PromotionModule {}
+export class PromotionModule { }
 

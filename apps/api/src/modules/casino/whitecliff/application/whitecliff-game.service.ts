@@ -77,7 +77,7 @@ export class WhitecliffGameService {
       toCurrency: gameCurrency,
     });
 
-    const userBalance = await this.tx.userBalance.findUnique({
+    const userBalance = await this.tx.userWallet.findUnique({
       where: { userId_currency: { userId: user.id, currency: walletCurrency } },
       select: { mainBalance: true, bonusBalance: true },
     });

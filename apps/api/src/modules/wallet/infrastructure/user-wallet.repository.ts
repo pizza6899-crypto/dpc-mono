@@ -28,7 +28,7 @@ export class UserWalletRepository implements UserWalletRepositoryPort {
     userId: bigint,
     currency: ExchangeCurrencyCode,
   ): Promise<UserWallet | null> {
-    const balance = await this.tx.userBalance.findUnique({
+    const balance = await this.tx.userWallet.findUnique({
       where: {
         userId_currency: {
           userId,
@@ -71,7 +71,7 @@ export class UserWalletRepository implements UserWalletRepositoryPort {
   }
 
   async findByUserId(userId: bigint): Promise<UserWallet[]> {
-    const balances = await this.tx.userBalance.findMany({
+    const balances = await this.tx.userWallet.findMany({
       where: {
         userId,
       },
@@ -82,7 +82,7 @@ export class UserWalletRepository implements UserWalletRepositoryPort {
 
   async upsert(wallet: UserWallet): Promise<UserWallet> {
     const data = this.mapper.toPrisma(wallet);
-    const result = await this.tx.userBalance.upsert({
+    const result = await this.tx.userWallet.upsert({
       where: {
         userId_currency: {
           userId: data.userId,

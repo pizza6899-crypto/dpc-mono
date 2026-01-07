@@ -144,4 +144,8 @@ export enum MessageCode {
     AFFILIATE_DEFAULT_LINK_CANNOT_DELETE = 'AFFILIATE_DEFAULT_LINK_CANNOT_DELETE', // 기본 레퍼럴 링크는 삭제 불가
     AFFILIATE_CODE_DEFAULT_MUST_EXIST = 'AFFILIATE_CODE_DEFAULT_MUST_EXIST', // 기본 어플리에이트 코드는 반드시 하나 이상 존재해야 함
     AFFILIATE_CODE_DEFAULT_CANNOT_BE_INACTIVE = 'AFFILIATE_CODE_DEFAULT_CANNOT_BE_INACTIVE', // 기본 어플리에이트 코드는 비활성화할 수 없음
+
+    // --- 롤링/와저링 관련 (Wagering/Rolling) ---
+    WAGERING_NOT_FOUND = 'WAGERING_NOT_FOUND', // 롤링 조건을 찾을 수 없을 때
+    WAGERING_INVALID_STATUS = 'WAGERING_INVALID_STATUS', // 유효하지 않은 롤링 상태일 때
 }

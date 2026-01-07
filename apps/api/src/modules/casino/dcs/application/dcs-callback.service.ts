@@ -395,7 +395,7 @@ export class DcsCallbackService {
           },
           select: {
             id: true,
-            balances: {
+            userWallets: {
               select: {
                 currency: true,
                 mainBalance: true,
@@ -405,12 +405,12 @@ export class DcsCallbackService {
           },
         });
 
-        if (user && user.balances.length > 0) {
+        if (user && user.userWallets.length > 0) {
           // 각 월렛의 총 잔액 계산 및 가장 큰 잔액 찾기
           let maxBalance = new Prisma.Decimal(0);
           let maxBalanceCurrency: WalletCurrencyCode | null = null;
 
-          for (const userBalance of user.balances) {
+          for (const userBalance of user.userWallets) {
             const totalBalance = userBalance.mainBalance.add(
               userBalance.bonusBalance,
             );

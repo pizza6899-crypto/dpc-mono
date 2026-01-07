@@ -5,10 +5,8 @@ import { CasinoGameUserController } from './controllers/user/casino-game-user.co
 import { CasinoGameService } from './application/casino-game.service';
 import { CasinoBetService } from './application/casino-bet.service';
 import { ConcurrencyModule } from 'src/common/concurrency/concurrency.module';
-import { CompModule } from '../comp/comp.module';
 import { CasinoBonusService } from './application/casino-bonus.service';
 import { QueueModule } from 'src/infrastructure/queue/queue.module';
-import { RollingModule } from '../rolling/rolling.module';
 import { GamePostProcessProcessor } from './processors/game-post-process.processor';
 import { EnvModule } from 'src/common/env/env.module';
 import { CasinoRefundService } from './application/casino-refund.service';
@@ -27,9 +25,7 @@ import { FindCasinoGameSessionService } from './application/find-casino-game-ses
     forwardRef(() => WhitecliffModule),
     forwardRef(() => DcsModule),
     ConcurrencyModule,
-    CompModule,
     QueueModule,
-    RollingModule,
     EnvModule,
     ExchangeModule,
     UserStatsModule,

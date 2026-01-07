@@ -9,8 +9,6 @@ import { PaymentModule } from './modules/payment/payment.module';
 import { DepositModule } from './modules/deposit/deposit.module';
 import { ExchangeModule } from './modules/exchange/exchange.module';
 import { SessionAuthGuard } from './common/auth/guards/session-auth.guard';
-import { CompModule } from './modules/comp/comp.module';
-import { RollingModule } from './modules/rolling/rolling.module';
 import { ThrottleModule } from './common/throttle/throttle.module';
 import { ThrottleGuard } from './common/throttle/throttle.guard';
 import { WebsocketModule } from './common/websocket/websocket.module';
@@ -23,6 +21,7 @@ import { AuditLogInterceptor } from './modules/audit-log/infrastructure/audit-lo
 import { RequestInfoInterceptor } from './common/http/interceptors/request-info.interceptor';
 import { PromotionModule } from './modules/promotion/promotion.module';
 import { TierModule } from './modules/tier/tier.module';
+import { WageringModule } from './modules/wagering/wagering.module';
 
 @Module({
   imports: [
@@ -38,12 +37,11 @@ import { TierModule } from './modules/tier/tier.module';
     PaymentModule,
     DepositModule,
     ExchangeModule,
-    CompModule,
-    RollingModule,
     AffiliateModule,
     WalletModule,
     PromotionModule,
     TierModule,
+    WageringModule,
   ],
   providers: [
     Reflector,

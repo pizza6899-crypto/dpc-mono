@@ -7,7 +7,6 @@ import { PromotionPolicy, PromotionNotFoundException } from '../domain';
 import type { Promotion, UserPromotion } from '../domain';
 import { PROMOTION_REPOSITORY } from '../ports/out';
 import type { PromotionRepositoryPort } from '../ports/out/promotion.repository.port';
-import { RollingService } from '../../rolling/application/rolling.service';
 
 interface GrantPromotionBonusParams {
   userId: bigint;
@@ -32,7 +31,6 @@ export class GrantPromotionBonusService {
     @Inject(PROMOTION_REPOSITORY)
     private readonly repository: PromotionRepositoryPort,
     private readonly policy: PromotionPolicy,
-    private readonly rollingService: RollingService,
     @InjectTransaction()
     @InjectTransaction()
     private readonly tx: PrismaTransaction,
@@ -108,17 +106,17 @@ export class GrantPromotionBonusService {
     });
 
     // 롤링 생성 (보너스 금액에만 롤링 적용)
-    let rollingCreated = false;
-    if (promotion.rollingMultiplier && bonusAmount.gt(0)) {
-      await this.rollingService.createPromotionRolling(
-        this.tx,
-        userId,
-        bonusAmount,
-        userPromotion.id,
-        rollingMultiplier,
-      );
-      rollingCreated = true;
-    }
+    // let rollingCreated = false;
+    // if (promotion.rollingMultiplier && bonusAmount.gt(0)) {
+    //   await this.rollingService.createPromotionRolling(
+    //     this.tx,
+    //     userId,
+    //     bonusAmount,
+    //     userPromotion.id,
+    //     rollingMultiplier,
+    //   );
+    //   rollingCreated = true;
+    // }
 
     this.logger.log(
       `Promotion bonus granted: userId=${userId}, promotionId=${promotionId}, bonusAmount=${bonusAmount.toString()}`,
@@ -127,7 +125,7 @@ export class GrantPromotionBonusService {
     return {
       userPromotion,
       bonusAmount,
-      rollingCreated,
+      rollingCreated: false,
     };
   }
 }
