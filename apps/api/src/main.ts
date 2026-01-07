@@ -137,9 +137,9 @@ async function bootstrap() {
     app.useGlobalPipes(new CustomValidationPipe());
 
     // 정적 파일 서빙 설정 추가
-    app.useStaticAssets(join(process.cwd(), 'public'), {
-      prefix: '/static',
-    });
+    // app.useStaticAssets(join(process.cwd(), 'public'), {
+    //   prefix: '/static',
+    // });
 
     if (isDevelopment) {
       const config = new DocumentBuilder()

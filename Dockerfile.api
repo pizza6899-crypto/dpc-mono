@@ -1,0 +1,90 @@
+# ============================================
+# Stage 1: Prune (필요한 패키지만 추출)
+# ============================================
+FROM node:22-slim AS pruner
+WORKDIR /app
+RUN npm install -g turbo
+COPY . .
+# api 앱과 그 의존성만 유지한 채 나머지는 제거
+RUN turbo prune api --docker
+
+# ============================================
+# Stage 2: Installer (의존성 설치 및 빌드)
+# ============================================
+FROM node:22-slim AS installer
+WORKDIR /app
+
+# 빌드 필수 도구 설치 (네이티브 모듈 빌드 대비)
+RUN apt-get update && apt-get install -y --no-install-recommends \
+    python3 make g++ && \
+    rm -rf /var/lib/apt/lists/*
+
+# pnpm 설치 및 CI 환경 설정
+ENV PNPM_HOME="/pnpm"
+ENV PATH="$PNPM_HOME:$PATH"
+ENV CI=true
+RUN corepack enable
+
+# Prune 단계에서 생성된 파일들 복사
+COPY --from=pruner /app/out/json/ .
+COPY --from=pruner /app/out/pnpm-lock.yaml ./
+COPY --from=pruner /app/out/pnpm-workspace.yaml ./
+
+# 의존성 설치
+RUN pnpm install --frozen-lockfile
+
+# 빌드를 위한 소스 코드 복사
+COPY --from=pruner /app/out/full/ .
+COPY turbo.json turbo.json
+
+# 빌드 중 Prisma Client 생성을 위한 더미 .env 파일 생성
+RUN touch .env
+
+# Prisma Client 생성 시 가짜 DATABASE_URL 주입
+RUN DATABASE_URL="postgresql://dummy:dummy@localhost:5432/dummy" pnpm db:generate
+RUN pnpm shared:build
+RUN pnpm api:build
+
+# 빌드 후 불필요한 devDependencies 제거
+RUN pnpm prune --prod --no-optional
+
+# ============================================
+# Stage 3: Runner (최적화된 실행 환경)
+# ============================================
+FROM node:22-slim AS runner
+WORKDIR /app
+
+# Prisma 사용을 위한 openssl 필수 설치
+RUN apt-get update && apt-get install -y --no-install-recommends \
+    dumb-init openssl \
+    && rm -rf /var/lib/apt/lists/*
+
+RUN groupadd -r nodejs && \
+    useradd -r -g nodejs -u 1001 nestjs
+
+# 1. 빌드 결과물 복사 (NestJS 앱)
+COPY --from=installer --chown=nestjs:nodejs /app/apps/api/dist ./apps/api/dist
+COPY --from=installer --chown=nestjs:nodejs /app/apps/api/package.json ./apps/api/package.json
+
+# 2. 의존성 및 워크스페이스 패키지 복사
+# 루트 node_modules 복사
+COPY --from=installer --chown=nestjs:nodejs /app/node_modules ./node_modules
+
+# database 패키지: Prisma Client 및 설정 파일 필수
+COPY --from=installer --chown=nestjs:nodejs /app/packages/database/node_modules ./packages/database/node_modules
+COPY --from=installer --chown=nestjs:nodejs /app/packages/database/package.json ./packages/database/package.json
+COPY --from=installer --chown=nestjs:nodejs /app/packages/database/prisma ./packages/database/prisma
+
+# shared 패키지: 빌드된 결과물(dist)만 복사
+COPY --from=installer --chown=nestjs:nodejs /app/packages/shared/dist ./packages/shared/dist
+COPY --from=installer --chown=nestjs:nodejs /app/packages/shared/package.json ./packages/shared/package.json
+
+USER nestjs
+EXPOSE 3000
+
+ENV NODE_ENV=production
+
+ENTRYPOINT ["/usr/bin/dumb-init", "--"]
+
+# 사용자가 확인해준 정확한 경로로 설정
+CMD ["node", "apps/api/dist/src/main.js"]

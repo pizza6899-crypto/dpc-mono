@@ -1,0 +1,35 @@
+# 의존성 및 캐시
+node_modules
+.pnpm-store
+.turbo
+
+# 빌드 결과물
+dist
+apps/*/dist
+apps/*/.next
+packages/*/dist
+build
+out
+
+# 환경 변수 (보안을 위해 로컬 .env 제외)
+.env
+.env.*
+!.env.example
+
+# 로그 파일
+*.log
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+pnpm-debug.log*
+
+# OS 및 IDE 파일
+.DS_Store
+.vscode
+.idea
+*.swp
+
+# 테스트 및 기타
+coverage
+deploy-package
+.git
