@@ -23820,6 +23820,7 @@ export namespace Prisma {
   export type GameRoundAvgAggregateOutputType = {
     id: number | null
     userId: number | null
+    transactionId: number | null
     aggregatorGameId: number | null
     totalBetAmountInGameCurrency: Decimal | null
     totalWinAmountInGameCurrency: Decimal | null
@@ -23827,7 +23828,6 @@ export namespace Prisma {
     totalBetAmountInWalletCurrency: Decimal | null
     totalWinAmountInWalletCurrency: Decimal | null
     netAmountInWalletCurrency: Decimal | null
-    transactionId: number | null
     totalPushAmount: Decimal | null
     tieBetAmount: Decimal | null
     contributionAmount: Decimal | null
@@ -23840,6 +23840,7 @@ export namespace Prisma {
   export type GameRoundSumAggregateOutputType = {
     id: bigint | null
     userId: bigint | null
+    transactionId: bigint | null
     aggregatorGameId: number | null
     totalBetAmountInGameCurrency: Decimal | null
     totalWinAmountInGameCurrency: Decimal | null
@@ -23847,7 +23848,6 @@ export namespace Prisma {
     totalBetAmountInWalletCurrency: Decimal | null
     totalWinAmountInWalletCurrency: Decimal | null
     netAmountInWalletCurrency: Decimal | null
-    transactionId: bigint | null
     totalPushAmount: Decimal | null
     tieBetAmount: Decimal | null
     contributionAmount: Decimal | null
@@ -23863,6 +23863,7 @@ export namespace Prisma {
     aggregatorType: $Enums.GameAggregatorType | null
     provider: $Enums.GameProvider | null
     aggregatorTxId: string | null
+    transactionId: bigint | null
     aggregatorGameId: number | null
     totalBetAmountInGameCurrency: Decimal | null
     totalWinAmountInGameCurrency: Decimal | null
@@ -23870,7 +23871,6 @@ export namespace Prisma {
     totalBetAmountInWalletCurrency: Decimal | null
     totalWinAmountInWalletCurrency: Decimal | null
     netAmountInWalletCurrency: Decimal | null
-    transactionId: bigint | null
     sessionId: string | null
     tableId: string | null
     roundId: string | null
@@ -23893,6 +23893,7 @@ export namespace Prisma {
     aggregatorType: $Enums.GameAggregatorType | null
     provider: $Enums.GameProvider | null
     aggregatorTxId: string | null
+    transactionId: bigint | null
     aggregatorGameId: number | null
     totalBetAmountInGameCurrency: Decimal | null
     totalWinAmountInGameCurrency: Decimal | null
@@ -23900,7 +23901,6 @@ export namespace Prisma {
     totalBetAmountInWalletCurrency: Decimal | null
     totalWinAmountInWalletCurrency: Decimal | null
     netAmountInWalletCurrency: Decimal | null
-    transactionId: bigint | null
     sessionId: string | null
     tableId: string | null
     roundId: string | null
@@ -23923,6 +23923,7 @@ export namespace Prisma {
     aggregatorType: number
     provider: number
     aggregatorTxId: number
+    transactionId: number
     aggregatorGameId: number
     totalBetAmountInGameCurrency: number
     totalWinAmountInGameCurrency: number
@@ -23930,7 +23931,6 @@ export namespace Prisma {
     totalBetAmountInWalletCurrency: number
     totalWinAmountInWalletCurrency: number
     netAmountInWalletCurrency: number
-    transactionId: number
     sessionId: number
     tableId: number
     roundId: number
@@ -23952,6 +23952,7 @@ export namespace Prisma {
   export type GameRoundAvgAggregateInputType = {
     id?: true
     userId?: true
+    transactionId?: true
     aggregatorGameId?: true
     totalBetAmountInGameCurrency?: true
     totalWinAmountInGameCurrency?: true
@@ -23959,7 +23960,6 @@ export namespace Prisma {
     totalBetAmountInWalletCurrency?: true
     totalWinAmountInWalletCurrency?: true
     netAmountInWalletCurrency?: true
-    transactionId?: true
     totalPushAmount?: true
     tieBetAmount?: true
     contributionAmount?: true
@@ -23972,6 +23972,7 @@ export namespace Prisma {
   export type GameRoundSumAggregateInputType = {
     id?: true
     userId?: true
+    transactionId?: true
     aggregatorGameId?: true
     totalBetAmountInGameCurrency?: true
     totalWinAmountInGameCurrency?: true
@@ -23979,7 +23980,6 @@ export namespace Prisma {
     totalBetAmountInWalletCurrency?: true
     totalWinAmountInWalletCurrency?: true
     netAmountInWalletCurrency?: true
-    transactionId?: true
     totalPushAmount?: true
     tieBetAmount?: true
     contributionAmount?: true
@@ -23995,6 +23995,7 @@ export namespace Prisma {
     aggregatorType?: true
     provider?: true
     aggregatorTxId?: true
+    transactionId?: true
     aggregatorGameId?: true
     totalBetAmountInGameCurrency?: true
     totalWinAmountInGameCurrency?: true
@@ -24002,7 +24003,6 @@ export namespace Prisma {
     totalBetAmountInWalletCurrency?: true
     totalWinAmountInWalletCurrency?: true
     netAmountInWalletCurrency?: true
-    transactionId?: true
     sessionId?: true
     tableId?: true
     roundId?: true
@@ -24025,6 +24025,7 @@ export namespace Prisma {
     aggregatorType?: true
     provider?: true
     aggregatorTxId?: true
+    transactionId?: true
     aggregatorGameId?: true
     totalBetAmountInGameCurrency?: true
     totalWinAmountInGameCurrency?: true
@@ -24032,7 +24033,6 @@ export namespace Prisma {
     totalBetAmountInWalletCurrency?: true
     totalWinAmountInWalletCurrency?: true
     netAmountInWalletCurrency?: true
-    transactionId?: true
     sessionId?: true
     tableId?: true
     roundId?: true
@@ -24055,6 +24055,7 @@ export namespace Prisma {
     aggregatorType?: true
     provider?: true
     aggregatorTxId?: true
+    transactionId?: true
     aggregatorGameId?: true
     totalBetAmountInGameCurrency?: true
     totalWinAmountInGameCurrency?: true
@@ -24062,7 +24063,6 @@ export namespace Prisma {
     totalBetAmountInWalletCurrency?: true
     totalWinAmountInWalletCurrency?: true
     netAmountInWalletCurrency?: true
-    transactionId?: true
     sessionId?: true
     tableId?: true
     roundId?: true
@@ -24172,14 +24172,14 @@ export namespace Prisma {
     aggregatorType: $Enums.GameAggregatorType
     provider: $Enums.GameProvider
     aggregatorTxId: string
-    aggregatorGameId: number
-    totalBetAmountInGameCurrency: Decimal | null
-    totalWinAmountInGameCurrency: Decimal | null
-    netAmountInGameCurrency: Decimal | null
-    totalBetAmountInWalletCurrency: Decimal | null
-    totalWinAmountInWalletCurrency: Decimal | null
-    netAmountInWalletCurrency: Decimal | null
     transactionId: bigint
+    aggregatorGameId: number
+    totalBetAmountInGameCurrency: Decimal
+    totalWinAmountInGameCurrency: Decimal
+    netAmountInGameCurrency: Decimal
+    totalBetAmountInWalletCurrency: Decimal
+    totalWinAmountInWalletCurrency: Decimal
+    netAmountInWalletCurrency: Decimal
     sessionId: string | null
     tableId: string | null
     roundId: string | null
@@ -24221,6 +24221,7 @@ export namespace Prisma {
     aggregatorType?: boolean
     provider?: boolean
     aggregatorTxId?: boolean
+    transactionId?: boolean
     aggregatorGameId?: boolean
     totalBetAmountInGameCurrency?: boolean
     totalWinAmountInGameCurrency?: boolean
@@ -24228,7 +24229,6 @@ export namespace Prisma {
     totalBetAmountInWalletCurrency?: boolean
     totalWinAmountInWalletCurrency?: boolean
     netAmountInWalletCurrency?: boolean
-    transactionId?: boolean
     sessionId?: boolean
     tableId?: boolean
     roundId?: boolean
@@ -24258,6 +24258,7 @@ export namespace Prisma {
     aggregatorType?: boolean
     provider?: boolean
     aggregatorTxId?: boolean
+    transactionId?: boolean
     aggregatorGameId?: boolean
     totalBetAmountInGameCurrency?: boolean
     totalWinAmountInGameCurrency?: boolean
@@ -24265,7 +24266,6 @@ export namespace Prisma {
     totalBetAmountInWalletCurrency?: boolean
     totalWinAmountInWalletCurrency?: boolean
     netAmountInWalletCurrency?: boolean
-    transactionId?: boolean
     sessionId?: boolean
     tableId?: boolean
     roundId?: boolean
@@ -24291,6 +24291,7 @@ export namespace Prisma {
     aggregatorType?: boolean
     provider?: boolean
     aggregatorTxId?: boolean
+    transactionId?: boolean
     aggregatorGameId?: boolean
     totalBetAmountInGameCurrency?: boolean
     totalWinAmountInGameCurrency?: boolean
@@ -24298,7 +24299,6 @@ export namespace Prisma {
     totalBetAmountInWalletCurrency?: boolean
     totalWinAmountInWalletCurrency?: boolean
     netAmountInWalletCurrency?: boolean
-    transactionId?: boolean
     sessionId?: boolean
     tableId?: boolean
     roundId?: boolean
@@ -24324,6 +24324,7 @@ export namespace Prisma {
     aggregatorType?: boolean
     provider?: boolean
     aggregatorTxId?: boolean
+    transactionId?: boolean
     aggregatorGameId?: boolean
     totalBetAmountInGameCurrency?: boolean
     totalWinAmountInGameCurrency?: boolean
@@ -24331,7 +24332,6 @@ export namespace Prisma {
     totalBetAmountInWalletCurrency?: boolean
     totalWinAmountInWalletCurrency?: boolean
     netAmountInWalletCurrency?: boolean
-    transactionId?: boolean
     sessionId?: boolean
     tableId?: boolean
     roundId?: boolean
@@ -24348,7 +24348,7 @@ export namespace Prisma {
     gameSessionId?: boolean
   }
 
-  export type GameRoundOmit<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetOmit<"id" | "userId" | "aggregatorType" | "provider" | "aggregatorTxId" | "aggregatorGameId" | "totalBetAmountInGameCurrency" | "totalWinAmountInGameCurrency" | "netAmountInGameCurrency" | "totalBetAmountInWalletCurrency" | "totalWinAmountInWalletCurrency" | "netAmountInWalletCurrency" | "transactionId" | "sessionId" | "tableId" | "roundId" | "replayType" | "replayData" | "totalPushAmount" | "tieBetAmount" | "contributionAmount" | "compEarned" | "jackpotContributionAmount" | "startedAt" | "completedAt" | "gameId" | "gameSessionId", ExtArgs["result"]["gameRound"]>
+  export type GameRoundOmit<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetOmit<"id" | "userId" | "aggregatorType" | "provider" | "aggregatorTxId" | "transactionId" | "aggregatorGameId" | "totalBetAmountInGameCurrency" | "totalWinAmountInGameCurrency" | "netAmountInGameCurrency" | "totalBetAmountInWalletCurrency" | "totalWinAmountInWalletCurrency" | "netAmountInWalletCurrency" | "sessionId" | "tableId" | "roundId" | "replayType" | "replayData" | "totalPushAmount" | "tieBetAmount" | "contributionAmount" | "compEarned" | "jackpotContributionAmount" | "startedAt" | "completedAt" | "gameId" | "gameSessionId", ExtArgs["result"]["gameRound"]>
   export type GameRoundInclude<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
     AffiliateCommission?: boolean | GameRound$AffiliateCommissionArgs<ExtArgs>
     bets?: boolean | GameRound$betsArgs<ExtArgs>
@@ -24385,14 +24385,14 @@ export namespace Prisma {
       aggregatorType: $Enums.GameAggregatorType
       provider: $Enums.GameProvider
       aggregatorTxId: string
-      aggregatorGameId: number
-      totalBetAmountInGameCurrency: Prisma.Decimal | null
-      totalWinAmountInGameCurrency: Prisma.Decimal | null
-      netAmountInGameCurrency: Prisma.Decimal | null
-      totalBetAmountInWalletCurrency: Prisma.Decimal | null
-      totalWinAmountInWalletCurrency: Prisma.Decimal | null
-      netAmountInWalletCurrency: Prisma.Decimal | null
       transactionId: bigint
+      aggregatorGameId: number
+      totalBetAmountInGameCurrency: Prisma.Decimal
+      totalWinAmountInGameCurrency: Prisma.Decimal
+      netAmountInGameCurrency: Prisma.Decimal
+      totalBetAmountInWalletCurrency: Prisma.Decimal
+      totalWinAmountInWalletCurrency: Prisma.Decimal
+      netAmountInWalletCurrency: Prisma.Decimal
       sessionId: string | null
       tableId: string | null
       roundId: string | null
@@ -24841,6 +24841,7 @@ export namespace Prisma {
     readonly aggregatorType: FieldRef<"GameRound", 'GameAggregatorType'>
     readonly provider: FieldRef<"GameRound", 'GameProvider'>
     readonly aggregatorTxId: FieldRef<"GameRound", 'String'>
+    readonly transactionId: FieldRef<"GameRound", 'BigInt'>
     readonly aggregatorGameId: FieldRef<"GameRound", 'Int'>
     readonly totalBetAmountInGameCurrency: FieldRef<"GameRound", 'Decimal'>
     readonly totalWinAmountInGameCurrency: FieldRef<"GameRound", 'Decimal'>
@@ -24848,7 +24849,6 @@ export namespace Prisma {
     readonly totalBetAmountInWalletCurrency: FieldRef<"GameRound", 'Decimal'>
     readonly totalWinAmountInWalletCurrency: FieldRef<"GameRound", 'Decimal'>
     readonly netAmountInWalletCurrency: FieldRef<"GameRound", 'Decimal'>
-    readonly transactionId: FieldRef<"GameRound", 'BigInt'>
     readonly sessionId: FieldRef<"GameRound", 'String'>
     readonly tableId: FieldRef<"GameRound", 'String'>
     readonly roundId: FieldRef<"GameRound", 'String'>
@@ -62000,6 +62000,7 @@ export namespace Prisma {
     aggregatorType: 'aggregatorType',
     provider: 'provider',
     aggregatorTxId: 'aggregatorTxId',
+    transactionId: 'transactionId',
     aggregatorGameId: 'aggregatorGameId',
     totalBetAmountInGameCurrency: 'totalBetAmountInGameCurrency',
     totalWinAmountInGameCurrency: 'totalWinAmountInGameCurrency',
@@ -62007,7 +62008,6 @@ export namespace Prisma {
     totalBetAmountInWalletCurrency: 'totalBetAmountInWalletCurrency',
     totalWinAmountInWalletCurrency: 'totalWinAmountInWalletCurrency',
     netAmountInWalletCurrency: 'netAmountInWalletCurrency',
-    transactionId: 'transactionId',
     sessionId: 'sessionId',
     tableId: 'tableId',
     roundId: 'roundId',
@@ -64787,14 +64787,14 @@ export namespace Prisma {
     aggregatorType?: EnumGameAggregatorTypeFilter<"GameRound"> | $Enums.GameAggregatorType
     provider?: EnumGameProviderFilter<"GameRound"> | $Enums.GameProvider
     aggregatorTxId?: StringFilter<"GameRound"> | string
-    aggregatorGameId?: IntFilter<"GameRound"> | number
-    totalBetAmountInGameCurrency?: DecimalNullableFilter<"GameRound"> | Decimal | DecimalJsLike | number | string | null
-    totalWinAmountInGameCurrency?: DecimalNullableFilter<"GameRound"> | Decimal | DecimalJsLike | number | string | null
-    netAmountInGameCurrency?: DecimalNullableFilter<"GameRound"> | Decimal | DecimalJsLike | number | string | null
-    totalBetAmountInWalletCurrency?: DecimalNullableFilter<"GameRound"> | Decimal | DecimalJsLike | number | string | null
-    totalWinAmountInWalletCurrency?: DecimalNullableFilter<"GameRound"> | Decimal | DecimalJsLike | number | string | null
-    netAmountInWalletCurrency?: DecimalNullableFilter<"GameRound"> | Decimal | DecimalJsLike | number | string | null
     transactionId?: BigIntFilter<"GameRound"> | bigint | number
+    aggregatorGameId?: IntFilter<"GameRound"> | number
+    totalBetAmountInGameCurrency?: DecimalFilter<"GameRound"> | Decimal | DecimalJsLike | number | string
+    totalWinAmountInGameCurrency?: DecimalFilter<"GameRound"> | Decimal | DecimalJsLike | number | string
+    netAmountInGameCurrency?: DecimalFilter<"GameRound"> | Decimal | DecimalJsLike | number | string
+    totalBetAmountInWalletCurrency?: DecimalFilter<"GameRound"> | Decimal | DecimalJsLike | number | string
+    totalWinAmountInWalletCurrency?: DecimalFilter<"GameRound"> | Decimal | DecimalJsLike | number | string
+    netAmountInWalletCurrency?: DecimalFilter<"GameRound"> | Decimal | DecimalJsLike | number | string
     sessionId?: StringNullableFilter<"GameRound"> | string | null
     tableId?: StringNullableFilter<"GameRound"> | string | null
     roundId?: StringNullableFilter<"GameRound"> | string | null
@@ -64823,14 +64823,14 @@ export namespace Prisma {
     aggregatorType?: SortOrder
     provider?: SortOrder
     aggregatorTxId?: SortOrder
-    aggregatorGameId?: SortOrder
-    totalBetAmountInGameCurrency?: SortOrderInput | SortOrder
-    totalWinAmountInGameCurrency?: SortOrderInput | SortOrder
-    netAmountInGameCurrency?: SortOrderInput | SortOrder
-    totalBetAmountInWalletCurrency?: SortOrderInput | SortOrder
-    totalWinAmountInWalletCurrency?: SortOrderInput | SortOrder
-    netAmountInWalletCurrency?: SortOrderInput | SortOrder
     transactionId?: SortOrder
+    aggregatorGameId?: SortOrder
+    totalBetAmountInGameCurrency?: SortOrder
+    totalWinAmountInGameCurrency?: SortOrder
+    netAmountInGameCurrency?: SortOrder
+    totalBetAmountInWalletCurrency?: SortOrder
+    totalWinAmountInWalletCurrency?: SortOrder
+    netAmountInWalletCurrency?: SortOrder
     sessionId?: SortOrderInput | SortOrder
     tableId?: SortOrderInput | SortOrder
     roundId?: SortOrderInput | SortOrder
@@ -64865,12 +64865,12 @@ export namespace Prisma {
     provider?: EnumGameProviderFilter<"GameRound"> | $Enums.GameProvider
     aggregatorTxId?: StringFilter<"GameRound"> | string
     aggregatorGameId?: IntFilter<"GameRound"> | number
-    totalBetAmountInGameCurrency?: DecimalNullableFilter<"GameRound"> | Decimal | DecimalJsLike | number | string | null
-    totalWinAmountInGameCurrency?: DecimalNullableFilter<"GameRound"> | Decimal | DecimalJsLike | number | string | null
-    netAmountInGameCurrency?: DecimalNullableFilter<"GameRound"> | Decimal | DecimalJsLike | number | string | null
-    totalBetAmountInWalletCurrency?: DecimalNullableFilter<"GameRound"> | Decimal | DecimalJsLike | number | string | null
-    totalWinAmountInWalletCurrency?: DecimalNullableFilter<"GameRound"> | Decimal | DecimalJsLike | number | string | null
-    netAmountInWalletCurrency?: DecimalNullableFilter<"GameRound"> | Decimal | DecimalJsLike | number | string | null
+    totalBetAmountInGameCurrency?: DecimalFilter<"GameRound"> | Decimal | DecimalJsLike | number | string
+    totalWinAmountInGameCurrency?: DecimalFilter<"GameRound"> | Decimal | DecimalJsLike | number | string
+    netAmountInGameCurrency?: DecimalFilter<"GameRound"> | Decimal | DecimalJsLike | number | string
+    totalBetAmountInWalletCurrency?: DecimalFilter<"GameRound"> | Decimal | DecimalJsLike | number | string
+    totalWinAmountInWalletCurrency?: DecimalFilter<"GameRound"> | Decimal | DecimalJsLike | number | string
+    netAmountInWalletCurrency?: DecimalFilter<"GameRound"> | Decimal | DecimalJsLike | number | string
     sessionId?: StringNullableFilter<"GameRound"> | string | null
     tableId?: StringNullableFilter<"GameRound"> | string | null
     roundId?: StringNullableFilter<"GameRound"> | string | null
@@ -64899,14 +64899,14 @@ export namespace Prisma {
     aggregatorType?: SortOrder
     provider?: SortOrder
     aggregatorTxId?: SortOrder
-    aggregatorGameId?: SortOrder
-    totalBetAmountInGameCurrency?: SortOrderInput | SortOrder
-    totalWinAmountInGameCurrency?: SortOrderInput | SortOrder
-    netAmountInGameCurrency?: SortOrderInput | SortOrder
-    totalBetAmountInWalletCurrency?: SortOrderInput | SortOrder
-    totalWinAmountInWalletCurrency?: SortOrderInput | SortOrder
-    netAmountInWalletCurrency?: SortOrderInput | SortOrder
     transactionId?: SortOrder
+    aggregatorGameId?: SortOrder
+    totalBetAmountInGameCurrency?: SortOrder
+    totalWinAmountInGameCurrency?: SortOrder
+    netAmountInGameCurrency?: SortOrder
+    totalBetAmountInWalletCurrency?: SortOrder
+    totalWinAmountInWalletCurrency?: SortOrder
+    netAmountInWalletCurrency?: SortOrder
     sessionId?: SortOrderInput | SortOrder
     tableId?: SortOrderInput | SortOrder
     roundId?: SortOrderInput | SortOrder
@@ -64937,14 +64937,14 @@ export namespace Prisma {
     aggregatorType?: EnumGameAggregatorTypeWithAggregatesFilter<"GameRound"> | $Enums.GameAggregatorType
     provider?: EnumGameProviderWithAggregatesFilter<"GameRound"> | $Enums.GameProvider
     aggregatorTxId?: StringWithAggregatesFilter<"GameRound"> | string
-    aggregatorGameId?: IntWithAggregatesFilter<"GameRound"> | number
-    totalBetAmountInGameCurrency?: DecimalNullableWithAggregatesFilter<"GameRound"> | Decimal | DecimalJsLike | number | string | null
-    totalWinAmountInGameCurrency?: DecimalNullableWithAggregatesFilter<"GameRound"> | Decimal | DecimalJsLike | number | string | null
-    netAmountInGameCurrency?: DecimalNullableWithAggregatesFilter<"GameRound"> | Decimal | DecimalJsLike | number | string | null
-    totalBetAmountInWalletCurrency?: DecimalNullableWithAggregatesFilter<"GameRound"> | Decimal | DecimalJsLike | number | string | null
-    totalWinAmountInWalletCurrency?: DecimalNullableWithAggregatesFilter<"GameRound"> | Decimal | DecimalJsLike | number | string | null
-    netAmountInWalletCurrency?: DecimalNullableWithAggregatesFilter<"GameRound"> | Decimal | DecimalJsLike | number | string | null
     transactionId?: BigIntWithAggregatesFilter<"GameRound"> | bigint | number
+    aggregatorGameId?: IntWithAggregatesFilter<"GameRound"> | number
+    totalBetAmountInGameCurrency?: DecimalWithAggregatesFilter<"GameRound"> | Decimal | DecimalJsLike | number | string
+    totalWinAmountInGameCurrency?: DecimalWithAggregatesFilter<"GameRound"> | Decimal | DecimalJsLike | number | string
+    netAmountInGameCurrency?: DecimalWithAggregatesFilter<"GameRound"> | Decimal | DecimalJsLike | number | string
+    totalBetAmountInWalletCurrency?: DecimalWithAggregatesFilter<"GameRound"> | Decimal | DecimalJsLike | number | string
+    totalWinAmountInWalletCurrency?: DecimalWithAggregatesFilter<"GameRound"> | Decimal | DecimalJsLike | number | string
+    netAmountInWalletCurrency?: DecimalWithAggregatesFilter<"GameRound"> | Decimal | DecimalJsLike | number | string
     sessionId?: StringNullableWithAggregatesFilter<"GameRound"> | string | null
     tableId?: StringNullableWithAggregatesFilter<"GameRound"> | string | null
     roundId?: StringNullableWithAggregatesFilter<"GameRound"> | string | null
@@ -69557,12 +69557,12 @@ export namespace Prisma {
     provider: $Enums.GameProvider
     aggregatorTxId: string
     aggregatorGameId: number
-    totalBetAmountInGameCurrency?: Decimal | DecimalJsLike | number | string | null
-    totalWinAmountInGameCurrency?: Decimal | DecimalJsLike | number | string | null
-    netAmountInGameCurrency?: Decimal | DecimalJsLike | number | string | null
-    totalBetAmountInWalletCurrency?: Decimal | DecimalJsLike | number | string | null
-    totalWinAmountInWalletCurrency?: Decimal | DecimalJsLike | number | string | null
-    netAmountInWalletCurrency?: Decimal | DecimalJsLike | number | string | null
+    totalBetAmountInGameCurrency?: Decimal | DecimalJsLike | number | string
+    totalWinAmountInGameCurrency?: Decimal | DecimalJsLike | number | string
+    netAmountInGameCurrency?: Decimal | DecimalJsLike | number | string
+    totalBetAmountInWalletCurrency?: Decimal | DecimalJsLike | number | string
+    totalWinAmountInWalletCurrency?: Decimal | DecimalJsLike | number | string
+    netAmountInWalletCurrency?: Decimal | DecimalJsLike | number | string
     sessionId?: string | null
     tableId?: string | null
     roundId?: string | null
@@ -69589,14 +69589,14 @@ export namespace Prisma {
     aggregatorType: $Enums.GameAggregatorType
     provider: $Enums.GameProvider
     aggregatorTxId: string
-    aggregatorGameId: number
-    totalBetAmountInGameCurrency?: Decimal | DecimalJsLike | number | string | null
-    totalWinAmountInGameCurrency?: Decimal | DecimalJsLike | number | string | null
-    netAmountInGameCurrency?: Decimal | DecimalJsLike | number | string | null
-    totalBetAmountInWalletCurrency?: Decimal | DecimalJsLike | number | string | null
-    totalWinAmountInWalletCurrency?: Decimal | DecimalJsLike | number | string | null
-    netAmountInWalletCurrency?: Decimal | DecimalJsLike | number | string | null
     transactionId: bigint | number
+    aggregatorGameId: number
+    totalBetAmountInGameCurrency?: Decimal | DecimalJsLike | number | string
+    totalWinAmountInGameCurrency?: Decimal | DecimalJsLike | number | string
+    netAmountInGameCurrency?: Decimal | DecimalJsLike | number | string
+    totalBetAmountInWalletCurrency?: Decimal | DecimalJsLike | number | string
+    totalWinAmountInWalletCurrency?: Decimal | DecimalJsLike | number | string
+    netAmountInWalletCurrency?: Decimal | DecimalJsLike | number | string
     sessionId?: string | null
     tableId?: string | null
     roundId?: string | null
@@ -69623,12 +69623,12 @@ export namespace Prisma {
     provider?: EnumGameProviderFieldUpdateOperationsInput | $Enums.GameProvider
     aggregatorTxId?: StringFieldUpdateOperationsInput | string
     aggregatorGameId?: IntFieldUpdateOperationsInput | number
-    totalBetAmountInGameCurrency?: NullableDecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string | null
-    totalWinAmountInGameCurrency?: NullableDecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string | null
-    netAmountInGameCurrency?: NullableDecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string | null
-    totalBetAmountInWalletCurrency?: NullableDecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string | null
-    totalWinAmountInWalletCurrency?: NullableDecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string | null
-    netAmountInWalletCurrency?: NullableDecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string | null
+    totalBetAmountInGameCurrency?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
+    totalWinAmountInGameCurrency?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
+    netAmountInGameCurrency?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
+    totalBetAmountInWalletCurrency?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
+    totalWinAmountInWalletCurrency?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
+    netAmountInWalletCurrency?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
     sessionId?: NullableStringFieldUpdateOperationsInput | string | null
     tableId?: NullableStringFieldUpdateOperationsInput | string | null
     roundId?: NullableStringFieldUpdateOperationsInput | string | null
@@ -69655,14 +69655,14 @@ export namespace Prisma {
     aggregatorType?: EnumGameAggregatorTypeFieldUpdateOperationsInput | $Enums.GameAggregatorType
     provider?: EnumGameProviderFieldUpdateOperationsInput | $Enums.GameProvider
     aggregatorTxId?: StringFieldUpdateOperationsInput | string
-    aggregatorGameId?: IntFieldUpdateOperationsInput | number
-    totalBetAmountInGameCurrency?: NullableDecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string | null
-    totalWinAmountInGameCurrency?: NullableDecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string | null
-    netAmountInGameCurrency?: NullableDecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string | null
-    totalBetAmountInWalletCurrency?: NullableDecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string | null
-    totalWinAmountInWalletCurrency?: NullableDecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string | null
-    netAmountInWalletCurrency?: NullableDecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string | null
     transactionId?: BigIntFieldUpdateOperationsInput | bigint | number
+    aggregatorGameId?: IntFieldUpdateOperationsInput | number
+    totalBetAmountInGameCurrency?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
+    totalWinAmountInGameCurrency?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
+    netAmountInGameCurrency?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
+    totalBetAmountInWalletCurrency?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
+    totalWinAmountInWalletCurrency?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
+    netAmountInWalletCurrency?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
     sessionId?: NullableStringFieldUpdateOperationsInput | string | null
     tableId?: NullableStringFieldUpdateOperationsInput | string | null
     roundId?: NullableStringFieldUpdateOperationsInput | string | null
@@ -69688,14 +69688,14 @@ export namespace Prisma {
     aggregatorType: $Enums.GameAggregatorType
     provider: $Enums.GameProvider
     aggregatorTxId: string
-    aggregatorGameId: number
-    totalBetAmountInGameCurrency?: Decimal | DecimalJsLike | number | string | null
-    totalWinAmountInGameCurrency?: Decimal | DecimalJsLike | number | string | null
-    netAmountInGameCurrency?: Decimal | DecimalJsLike | number | string | null
-    totalBetAmountInWalletCurrency?: Decimal | DecimalJsLike | number | string | null
-    totalWinAmountInWalletCurrency?: Decimal | DecimalJsLike | number | string | null
-    netAmountInWalletCurrency?: Decimal | DecimalJsLike | number | string | null
     transactionId: bigint | number
+    aggregatorGameId: number
+    totalBetAmountInGameCurrency?: Decimal | DecimalJsLike | number | string
+    totalWinAmountInGameCurrency?: Decimal | DecimalJsLike | number | string
+    netAmountInGameCurrency?: Decimal | DecimalJsLike | number | string
+    totalBetAmountInWalletCurrency?: Decimal | DecimalJsLike | number | string
+    totalWinAmountInWalletCurrency?: Decimal | DecimalJsLike | number | string
+    netAmountInWalletCurrency?: Decimal | DecimalJsLike | number | string
     sessionId?: string | null
     tableId?: string | null
     roundId?: string | null
@@ -69719,12 +69719,12 @@ export namespace Prisma {
     provider?: EnumGameProviderFieldUpdateOperationsInput | $Enums.GameProvider
     aggregatorTxId?: StringFieldUpdateOperationsInput | string
     aggregatorGameId?: IntFieldUpdateOperationsInput | number
-    totalBetAmountInGameCurrency?: NullableDecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string | null
-    totalWinAmountInGameCurrency?: NullableDecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string | null
-    netAmountInGameCurrency?: NullableDecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string | null
-    totalBetAmountInWalletCurrency?: NullableDecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string | null
-    totalWinAmountInWalletCurrency?: NullableDecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string | null
-    netAmountInWalletCurrency?: NullableDecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string | null
+    totalBetAmountInGameCurrency?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
+    totalWinAmountInGameCurrency?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
+    netAmountInGameCurrency?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
+    totalBetAmountInWalletCurrency?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
+    totalWinAmountInWalletCurrency?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
+    netAmountInWalletCurrency?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
     sessionId?: NullableStringFieldUpdateOperationsInput | string | null
     tableId?: NullableStringFieldUpdateOperationsInput | string | null
     roundId?: NullableStringFieldUpdateOperationsInput | string | null
@@ -69745,14 +69745,14 @@ export namespace Prisma {
     aggregatorType?: EnumGameAggregatorTypeFieldUpdateOperationsInput | $Enums.GameAggregatorType
     provider?: EnumGameProviderFieldUpdateOperationsInput | $Enums.GameProvider
     aggregatorTxId?: StringFieldUpdateOperationsInput | string
-    aggregatorGameId?: IntFieldUpdateOperationsInput | number
-    totalBetAmountInGameCurrency?: NullableDecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string | null
-    totalWinAmountInGameCurrency?: NullableDecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string | null
-    netAmountInGameCurrency?: NullableDecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string | null
-    totalBetAmountInWalletCurrency?: NullableDecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string | null
-    totalWinAmountInWalletCurrency?: NullableDecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string | null
-    netAmountInWalletCurrency?: NullableDecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string | null
     transactionId?: BigIntFieldUpdateOperationsInput | bigint | number
+    aggregatorGameId?: IntFieldUpdateOperationsInput | number
+    totalBetAmountInGameCurrency?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
+    totalWinAmountInGameCurrency?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
+    netAmountInGameCurrency?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
+    totalBetAmountInWalletCurrency?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
+    totalWinAmountInWalletCurrency?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
+    netAmountInWalletCurrency?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
     sessionId?: NullableStringFieldUpdateOperationsInput | string | null
     tableId?: NullableStringFieldUpdateOperationsInput | string | null
     roundId?: NullableStringFieldUpdateOperationsInput | string | null
@@ -74618,6 +74618,13 @@ export namespace Prisma {
     _max?: NestedEnumTransactionStatusFilter<$PrismaModel>
   }
 
+  export type EnumGameReplayTypeNullableFilter<$PrismaModel = never> = {
+    equals?: $Enums.GameReplayType | EnumGameReplayTypeFieldRefInput<$PrismaModel> | null
+    in?: $Enums.GameReplayType[] | ListEnumGameReplayTypeFieldRefInput<$PrismaModel> | null
+    notIn?: $Enums.GameReplayType[] | ListEnumGameReplayTypeFieldRefInput<$PrismaModel> | null
+    not?: NestedEnumGameReplayTypeNullableFilter<$PrismaModel> | $Enums.GameReplayType | null
+  }
+
   export type DecimalNullableFilter<$PrismaModel = never> = {
     equals?: Decimal | DecimalJsLike | number | string | DecimalFieldRefInput<$PrismaModel> | null
     in?: Decimal[] | DecimalJsLike[] | number[] | string[] | ListDecimalFieldRefInput<$PrismaModel> | null
@@ -74627,13 +74634,6 @@ export namespace Prisma {
     gt?: Decimal | DecimalJsLike | number | string | DecimalFieldRefInput<$PrismaModel>
     gte?: Decimal | DecimalJsLike | number | string | DecimalFieldRefInput<$PrismaModel>
     not?: NestedDecimalNullableFilter<$PrismaModel> | Decimal | DecimalJsLike | number | string | null
-  }
-
-  export type EnumGameReplayTypeNullableFilter<$PrismaModel = never> = {
-    equals?: $Enums.GameReplayType | EnumGameReplayTypeFieldRefInput<$PrismaModel> | null
-    in?: $Enums.GameReplayType[] | ListEnumGameReplayTypeFieldRefInput<$PrismaModel> | null
-    notIn?: $Enums.GameReplayType[] | ListEnumGameReplayTypeFieldRefInput<$PrismaModel> | null
-    not?: NestedEnumGameReplayTypeNullableFilter<$PrismaModel> | $Enums.GameReplayType | null
   }
 
   export type GameBetListRelationFilter = {
@@ -74677,6 +74677,7 @@ export namespace Prisma {
     aggregatorType?: SortOrder
     provider?: SortOrder
     aggregatorTxId?: SortOrder
+    transactionId?: SortOrder
     aggregatorGameId?: SortOrder
     totalBetAmountInGameCurrency?: SortOrder
     totalWinAmountInGameCurrency?: SortOrder
@@ -74684,7 +74685,6 @@ export namespace Prisma {
     totalBetAmountInWalletCurrency?: SortOrder
     totalWinAmountInWalletCurrency?: SortOrder
     netAmountInWalletCurrency?: SortOrder
-    transactionId?: SortOrder
     sessionId?: SortOrder
     tableId?: SortOrder
     roundId?: SortOrder
@@ -74704,6 +74704,7 @@ export namespace Prisma {
   export type GameRoundAvgOrderByAggregateInput = {
     id?: SortOrder
     userId?: SortOrder
+    transactionId?: SortOrder
     aggregatorGameId?: SortOrder
     totalBetAmountInGameCurrency?: SortOrder
     totalWinAmountInGameCurrency?: SortOrder
@@ -74711,7 +74712,6 @@ export namespace Prisma {
     totalBetAmountInWalletCurrency?: SortOrder
     totalWinAmountInWalletCurrency?: SortOrder
     netAmountInWalletCurrency?: SortOrder
-    transactionId?: SortOrder
     totalPushAmount?: SortOrder
     tieBetAmount?: SortOrder
     contributionAmount?: SortOrder
@@ -74727,6 +74727,7 @@ export namespace Prisma {
     aggregatorType?: SortOrder
     provider?: SortOrder
     aggregatorTxId?: SortOrder
+    transactionId?: SortOrder
     aggregatorGameId?: SortOrder
     totalBetAmountInGameCurrency?: SortOrder
     totalWinAmountInGameCurrency?: SortOrder
@@ -74734,7 +74735,6 @@ export namespace Prisma {
     totalBetAmountInWalletCurrency?: SortOrder
     totalWinAmountInWalletCurrency?: SortOrder
     netAmountInWalletCurrency?: SortOrder
-    transactionId?: SortOrder
     sessionId?: SortOrder
     tableId?: SortOrder
     roundId?: SortOrder
@@ -74757,6 +74757,7 @@ export namespace Prisma {
     aggregatorType?: SortOrder
     provider?: SortOrder
     aggregatorTxId?: SortOrder
+    transactionId?: SortOrder
     aggregatorGameId?: SortOrder
     totalBetAmountInGameCurrency?: SortOrder
     totalWinAmountInGameCurrency?: SortOrder
@@ -74764,7 +74765,6 @@ export namespace Prisma {
     totalBetAmountInWalletCurrency?: SortOrder
     totalWinAmountInWalletCurrency?: SortOrder
     netAmountInWalletCurrency?: SortOrder
-    transactionId?: SortOrder
     sessionId?: SortOrder
     tableId?: SortOrder
     roundId?: SortOrder
@@ -74784,6 +74784,7 @@ export namespace Prisma {
   export type GameRoundSumOrderByAggregateInput = {
     id?: SortOrder
     userId?: SortOrder
+    transactionId?: SortOrder
     aggregatorGameId?: SortOrder
     totalBetAmountInGameCurrency?: SortOrder
     totalWinAmountInGameCurrency?: SortOrder
@@ -74791,7 +74792,6 @@ export namespace Prisma {
     totalBetAmountInWalletCurrency?: SortOrder
     totalWinAmountInWalletCurrency?: SortOrder
     netAmountInWalletCurrency?: SortOrder
-    transactionId?: SortOrder
     totalPushAmount?: SortOrder
     tieBetAmount?: SortOrder
     contributionAmount?: SortOrder
@@ -74799,6 +74799,16 @@ export namespace Prisma {
     jackpotContributionAmount?: SortOrder
     gameId?: SortOrder
     gameSessionId?: SortOrder
+  }
+
+  export type EnumGameReplayTypeNullableWithAggregatesFilter<$PrismaModel = never> = {
+    equals?: $Enums.GameReplayType | EnumGameReplayTypeFieldRefInput<$PrismaModel> | null
+    in?: $Enums.GameReplayType[] | ListEnumGameReplayTypeFieldRefInput<$PrismaModel> | null
+    notIn?: $Enums.GameReplayType[] | ListEnumGameReplayTypeFieldRefInput<$PrismaModel> | null
+    not?: NestedEnumGameReplayTypeNullableWithAggregatesFilter<$PrismaModel> | $Enums.GameReplayType | null
+    _count?: NestedIntNullableFilter<$PrismaModel>
+    _min?: NestedEnumGameReplayTypeNullableFilter<$PrismaModel>
+    _max?: NestedEnumGameReplayTypeNullableFilter<$PrismaModel>
   }
 
   export type DecimalNullableWithAggregatesFilter<$PrismaModel = never> = {
@@ -74815,16 +74825,6 @@ export namespace Prisma {
     _sum?: NestedDecimalNullableFilter<$PrismaModel>
     _min?: NestedDecimalNullableFilter<$PrismaModel>
     _max?: NestedDecimalNullableFilter<$PrismaModel>
-  }
-
-  export type EnumGameReplayTypeNullableWithAggregatesFilter<$PrismaModel = never> = {
-    equals?: $Enums.GameReplayType | EnumGameReplayTypeFieldRefInput<$PrismaModel> | null
-    in?: $Enums.GameReplayType[] | ListEnumGameReplayTypeFieldRefInput<$PrismaModel> | null
-    notIn?: $Enums.GameReplayType[] | ListEnumGameReplayTypeFieldRefInput<$PrismaModel> | null
-    not?: NestedEnumGameReplayTypeNullableWithAggregatesFilter<$PrismaModel> | $Enums.GameReplayType | null
-    _count?: NestedIntNullableFilter<$PrismaModel>
-    _min?: NestedEnumGameReplayTypeNullableFilter<$PrismaModel>
-    _max?: NestedEnumGameReplayTypeNullableFilter<$PrismaModel>
   }
 
   export type EnumBetTypeFilter<$PrismaModel = never> = {
@@ -79053,16 +79053,16 @@ export namespace Prisma {
     connect?: GameWinWhereUniqueInput | GameWinWhereUniqueInput[]
   }
 
+  export type NullableEnumGameReplayTypeFieldUpdateOperationsInput = {
+    set?: $Enums.GameReplayType | null
+  }
+
   export type NullableDecimalFieldUpdateOperationsInput = {
     set?: Decimal | DecimalJsLike | number | string | null
     increment?: Decimal | DecimalJsLike | number | string
     decrement?: Decimal | DecimalJsLike | number | string
     multiply?: Decimal | DecimalJsLike | number | string
     divide?: Decimal | DecimalJsLike | number | string
-  }
-
-  export type NullableEnumGameReplayTypeFieldUpdateOperationsInput = {
-    set?: $Enums.GameReplayType | null
   }
 
   export type AffiliateCommissionUpdateManyWithoutGameRoundNestedInput = {
@@ -80891,6 +80891,13 @@ export namespace Prisma {
     _max?: NestedEnumTransactionStatusFilter<$PrismaModel>
   }
 
+  export type NestedEnumGameReplayTypeNullableFilter<$PrismaModel = never> = {
+    equals?: $Enums.GameReplayType | EnumGameReplayTypeFieldRefInput<$PrismaModel> | null
+    in?: $Enums.GameReplayType[] | ListEnumGameReplayTypeFieldRefInput<$PrismaModel> | null
+    notIn?: $Enums.GameReplayType[] | ListEnumGameReplayTypeFieldRefInput<$PrismaModel> | null
+    not?: NestedEnumGameReplayTypeNullableFilter<$PrismaModel> | $Enums.GameReplayType | null
+  }
+
   export type NestedDecimalNullableFilter<$PrismaModel = never> = {
     equals?: Decimal | DecimalJsLike | number | string | DecimalFieldRefInput<$PrismaModel> | null
     in?: Decimal[] | DecimalJsLike[] | number[] | string[] | ListDecimalFieldRefInput<$PrismaModel> | null
@@ -80902,11 +80909,14 @@ export namespace Prisma {
     not?: NestedDecimalNullableFilter<$PrismaModel> | Decimal | DecimalJsLike | number | string | null
   }
 
-  export type NestedEnumGameReplayTypeNullableFilter<$PrismaModel = never> = {
+  export type NestedEnumGameReplayTypeNullableWithAggregatesFilter<$PrismaModel = never> = {
     equals?: $Enums.GameReplayType | EnumGameReplayTypeFieldRefInput<$PrismaModel> | null
     in?: $Enums.GameReplayType[] | ListEnumGameReplayTypeFieldRefInput<$PrismaModel> | null
     notIn?: $Enums.GameReplayType[] | ListEnumGameReplayTypeFieldRefInput<$PrismaModel> | null
-    not?: NestedEnumGameReplayTypeNullableFilter<$PrismaModel> | $Enums.GameReplayType | null
+    not?: NestedEnumGameReplayTypeNullableWithAggregatesFilter<$PrismaModel> | $Enums.GameReplayType | null
+    _count?: NestedIntNullableFilter<$PrismaModel>
+    _min?: NestedEnumGameReplayTypeNullableFilter<$PrismaModel>
+    _max?: NestedEnumGameReplayTypeNullableFilter<$PrismaModel>
   }
 
   export type NestedDecimalNullableWithAggregatesFilter<$PrismaModel = never> = {
@@ -80923,16 +80933,6 @@ export namespace Prisma {
     _sum?: NestedDecimalNullableFilter<$PrismaModel>
     _min?: NestedDecimalNullableFilter<$PrismaModel>
     _max?: NestedDecimalNullableFilter<$PrismaModel>
-  }
-
-  export type NestedEnumGameReplayTypeNullableWithAggregatesFilter<$PrismaModel = never> = {
-    equals?: $Enums.GameReplayType | EnumGameReplayTypeFieldRefInput<$PrismaModel> | null
-    in?: $Enums.GameReplayType[] | ListEnumGameReplayTypeFieldRefInput<$PrismaModel> | null
-    notIn?: $Enums.GameReplayType[] | ListEnumGameReplayTypeFieldRefInput<$PrismaModel> | null
-    not?: NestedEnumGameReplayTypeNullableWithAggregatesFilter<$PrismaModel> | $Enums.GameReplayType | null
-    _count?: NestedIntNullableFilter<$PrismaModel>
-    _min?: NestedEnumGameReplayTypeNullableFilter<$PrismaModel>
-    _max?: NestedEnumGameReplayTypeNullableFilter<$PrismaModel>
   }
 
   export type NestedEnumBetTypeFilter<$PrismaModel = never> = {
@@ -82202,12 +82202,12 @@ export namespace Prisma {
     provider: $Enums.GameProvider
     aggregatorTxId: string
     aggregatorGameId: number
-    totalBetAmountInGameCurrency?: Decimal | DecimalJsLike | number | string | null
-    totalWinAmountInGameCurrency?: Decimal | DecimalJsLike | number | string | null
-    netAmountInGameCurrency?: Decimal | DecimalJsLike | number | string | null
-    totalBetAmountInWalletCurrency?: Decimal | DecimalJsLike | number | string | null
-    totalWinAmountInWalletCurrency?: Decimal | DecimalJsLike | number | string | null
-    netAmountInWalletCurrency?: Decimal | DecimalJsLike | number | string | null
+    totalBetAmountInGameCurrency?: Decimal | DecimalJsLike | number | string
+    totalWinAmountInGameCurrency?: Decimal | DecimalJsLike | number | string
+    netAmountInGameCurrency?: Decimal | DecimalJsLike | number | string
+    totalBetAmountInWalletCurrency?: Decimal | DecimalJsLike | number | string
+    totalWinAmountInWalletCurrency?: Decimal | DecimalJsLike | number | string
+    netAmountInWalletCurrency?: Decimal | DecimalJsLike | number | string
     sessionId?: string | null
     tableId?: string | null
     roundId?: string | null
@@ -82233,14 +82233,14 @@ export namespace Prisma {
     aggregatorType: $Enums.GameAggregatorType
     provider: $Enums.GameProvider
     aggregatorTxId: string
-    aggregatorGameId: number
-    totalBetAmountInGameCurrency?: Decimal | DecimalJsLike | number | string | null
-    totalWinAmountInGameCurrency?: Decimal | DecimalJsLike | number | string | null
-    netAmountInGameCurrency?: Decimal | DecimalJsLike | number | string | null
-    totalBetAmountInWalletCurrency?: Decimal | DecimalJsLike | number | string | null
-    totalWinAmountInWalletCurrency?: Decimal | DecimalJsLike | number | string | null
-    netAmountInWalletCurrency?: Decimal | DecimalJsLike | number | string | null
     transactionId: bigint | number
+    aggregatorGameId: number
+    totalBetAmountInGameCurrency?: Decimal | DecimalJsLike | number | string
+    totalWinAmountInGameCurrency?: Decimal | DecimalJsLike | number | string
+    netAmountInGameCurrency?: Decimal | DecimalJsLike | number | string
+    totalBetAmountInWalletCurrency?: Decimal | DecimalJsLike | number | string
+    totalWinAmountInWalletCurrency?: Decimal | DecimalJsLike | number | string
+    netAmountInWalletCurrency?: Decimal | DecimalJsLike | number | string
     sessionId?: string | null
     tableId?: string | null
     roundId?: string | null
@@ -82406,14 +82406,14 @@ export namespace Prisma {
     aggregatorType?: EnumGameAggregatorTypeFilter<"GameRound"> | $Enums.GameAggregatorType
     provider?: EnumGameProviderFilter<"GameRound"> | $Enums.GameProvider
     aggregatorTxId?: StringFilter<"GameRound"> | string
-    aggregatorGameId?: IntFilter<"GameRound"> | number
-    totalBetAmountInGameCurrency?: DecimalNullableFilter<"GameRound"> | Decimal | DecimalJsLike | number | string | null
-    totalWinAmountInGameCurrency?: DecimalNullableFilter<"GameRound"> | Decimal | DecimalJsLike | number | string | null
-    netAmountInGameCurrency?: DecimalNullableFilter<"GameRound"> | Decimal | DecimalJsLike | number | string | null
-    totalBetAmountInWalletCurrency?: DecimalNullableFilter<"GameRound"> | Decimal | DecimalJsLike | number | string | null
-    totalWinAmountInWalletCurrency?: DecimalNullableFilter<"GameRound"> | Decimal | DecimalJsLike | number | string | null
-    netAmountInWalletCurrency?: DecimalNullableFilter<"GameRound"> | Decimal | DecimalJsLike | number | string | null
     transactionId?: BigIntFilter<"GameRound"> | bigint | number
+    aggregatorGameId?: IntFilter<"GameRound"> | number
+    totalBetAmountInGameCurrency?: DecimalFilter<"GameRound"> | Decimal | DecimalJsLike | number | string
+    totalWinAmountInGameCurrency?: DecimalFilter<"GameRound"> | Decimal | DecimalJsLike | number | string
+    netAmountInGameCurrency?: DecimalFilter<"GameRound"> | Decimal | DecimalJsLike | number | string
+    totalBetAmountInWalletCurrency?: DecimalFilter<"GameRound"> | Decimal | DecimalJsLike | number | string
+    totalWinAmountInWalletCurrency?: DecimalFilter<"GameRound"> | Decimal | DecimalJsLike | number | string
+    netAmountInWalletCurrency?: DecimalFilter<"GameRound"> | Decimal | DecimalJsLike | number | string
     sessionId?: StringNullableFilter<"GameRound"> | string | null
     tableId?: StringNullableFilter<"GameRound"> | string | null
     roundId?: StringNullableFilter<"GameRound"> | string | null
@@ -82599,12 +82599,12 @@ export namespace Prisma {
     provider: $Enums.GameProvider
     aggregatorTxId: string
     aggregatorGameId: number
-    totalBetAmountInGameCurrency?: Decimal | DecimalJsLike | number | string | null
-    totalWinAmountInGameCurrency?: Decimal | DecimalJsLike | number | string | null
-    netAmountInGameCurrency?: Decimal | DecimalJsLike | number | string | null
-    totalBetAmountInWalletCurrency?: Decimal | DecimalJsLike | number | string | null
-    totalWinAmountInWalletCurrency?: Decimal | DecimalJsLike | number | string | null
-    netAmountInWalletCurrency?: Decimal | DecimalJsLike | number | string | null
+    totalBetAmountInGameCurrency?: Decimal | DecimalJsLike | number | string
+    totalWinAmountInGameCurrency?: Decimal | DecimalJsLike | number | string
+    netAmountInGameCurrency?: Decimal | DecimalJsLike | number | string
+    totalBetAmountInWalletCurrency?: Decimal | DecimalJsLike | number | string
+    totalWinAmountInWalletCurrency?: Decimal | DecimalJsLike | number | string
+    netAmountInWalletCurrency?: Decimal | DecimalJsLike | number | string
     sessionId?: string | null
     tableId?: string | null
     roundId?: string | null
@@ -82630,14 +82630,14 @@ export namespace Prisma {
     aggregatorType: $Enums.GameAggregatorType
     provider: $Enums.GameProvider
     aggregatorTxId: string
-    aggregatorGameId: number
-    totalBetAmountInGameCurrency?: Decimal | DecimalJsLike | number | string | null
-    totalWinAmountInGameCurrency?: Decimal | DecimalJsLike | number | string | null
-    netAmountInGameCurrency?: Decimal | DecimalJsLike | number | string | null
-    totalBetAmountInWalletCurrency?: Decimal | DecimalJsLike | number | string | null
-    totalWinAmountInWalletCurrency?: Decimal | DecimalJsLike | number | string | null
-    netAmountInWalletCurrency?: Decimal | DecimalJsLike | number | string | null
     transactionId: bigint | number
+    aggregatorGameId: number
+    totalBetAmountInGameCurrency?: Decimal | DecimalJsLike | number | string
+    totalWinAmountInGameCurrency?: Decimal | DecimalJsLike | number | string
+    netAmountInGameCurrency?: Decimal | DecimalJsLike | number | string
+    totalBetAmountInWalletCurrency?: Decimal | DecimalJsLike | number | string
+    totalWinAmountInWalletCurrency?: Decimal | DecimalJsLike | number | string
+    netAmountInWalletCurrency?: Decimal | DecimalJsLike | number | string
     sessionId?: string | null
     tableId?: string | null
     roundId?: string | null
@@ -85192,12 +85192,12 @@ export namespace Prisma {
     provider: $Enums.GameProvider
     aggregatorTxId: string
     aggregatorGameId: number
-    totalBetAmountInGameCurrency?: Decimal | DecimalJsLike | number | string | null
-    totalWinAmountInGameCurrency?: Decimal | DecimalJsLike | number | string | null
-    netAmountInGameCurrency?: Decimal | DecimalJsLike | number | string | null
-    totalBetAmountInWalletCurrency?: Decimal | DecimalJsLike | number | string | null
-    totalWinAmountInWalletCurrency?: Decimal | DecimalJsLike | number | string | null
-    netAmountInWalletCurrency?: Decimal | DecimalJsLike | number | string | null
+    totalBetAmountInGameCurrency?: Decimal | DecimalJsLike | number | string
+    totalWinAmountInGameCurrency?: Decimal | DecimalJsLike | number | string
+    netAmountInGameCurrency?: Decimal | DecimalJsLike | number | string
+    totalBetAmountInWalletCurrency?: Decimal | DecimalJsLike | number | string
+    totalWinAmountInWalletCurrency?: Decimal | DecimalJsLike | number | string
+    netAmountInWalletCurrency?: Decimal | DecimalJsLike | number | string
     sessionId?: string | null
     tableId?: string | null
     roundId?: string | null
@@ -85224,12 +85224,12 @@ export namespace Prisma {
     provider: $Enums.GameProvider
     aggregatorTxId: string
     aggregatorGameId: number
-    totalBetAmountInGameCurrency?: Decimal | DecimalJsLike | number | string | null
-    totalWinAmountInGameCurrency?: Decimal | DecimalJsLike | number | string | null
-    netAmountInGameCurrency?: Decimal | DecimalJsLike | number | string | null
-    totalBetAmountInWalletCurrency?: Decimal | DecimalJsLike | number | string | null
-    totalWinAmountInWalletCurrency?: Decimal | DecimalJsLike | number | string | null
-    netAmountInWalletCurrency?: Decimal | DecimalJsLike | number | string | null
+    totalBetAmountInGameCurrency?: Decimal | DecimalJsLike | number | string
+    totalWinAmountInGameCurrency?: Decimal | DecimalJsLike | number | string
+    netAmountInGameCurrency?: Decimal | DecimalJsLike | number | string
+    totalBetAmountInWalletCurrency?: Decimal | DecimalJsLike | number | string
+    totalWinAmountInWalletCurrency?: Decimal | DecimalJsLike | number | string
+    netAmountInWalletCurrency?: Decimal | DecimalJsLike | number | string
     sessionId?: string | null
     tableId?: string | null
     roundId?: string | null
@@ -85641,12 +85641,12 @@ export namespace Prisma {
     provider?: EnumGameProviderFieldUpdateOperationsInput | $Enums.GameProvider
     aggregatorTxId?: StringFieldUpdateOperationsInput | string
     aggregatorGameId?: IntFieldUpdateOperationsInput | number
-    totalBetAmountInGameCurrency?: NullableDecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string | null
-    totalWinAmountInGameCurrency?: NullableDecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string | null
-    netAmountInGameCurrency?: NullableDecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string | null
-    totalBetAmountInWalletCurrency?: NullableDecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string | null
-    totalWinAmountInWalletCurrency?: NullableDecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string | null
-    netAmountInWalletCurrency?: NullableDecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string | null
+    totalBetAmountInGameCurrency?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
+    totalWinAmountInGameCurrency?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
+    netAmountInGameCurrency?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
+    totalBetAmountInWalletCurrency?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
+    totalWinAmountInWalletCurrency?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
+    netAmountInWalletCurrency?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
     sessionId?: NullableStringFieldUpdateOperationsInput | string | null
     tableId?: NullableStringFieldUpdateOperationsInput | string | null
     roundId?: NullableStringFieldUpdateOperationsInput | string | null
@@ -85673,12 +85673,12 @@ export namespace Prisma {
     provider?: EnumGameProviderFieldUpdateOperationsInput | $Enums.GameProvider
     aggregatorTxId?: StringFieldUpdateOperationsInput | string
     aggregatorGameId?: IntFieldUpdateOperationsInput | number
-    totalBetAmountInGameCurrency?: NullableDecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string | null
-    totalWinAmountInGameCurrency?: NullableDecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string | null
-    netAmountInGameCurrency?: NullableDecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string | null
-    totalBetAmountInWalletCurrency?: NullableDecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string | null
-    totalWinAmountInWalletCurrency?: NullableDecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string | null
-    netAmountInWalletCurrency?: NullableDecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string | null
+    totalBetAmountInGameCurrency?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
+    totalWinAmountInGameCurrency?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
+    netAmountInGameCurrency?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
+    totalBetAmountInWalletCurrency?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
+    totalWinAmountInWalletCurrency?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
+    netAmountInWalletCurrency?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
     sessionId?: NullableStringFieldUpdateOperationsInput | string | null
     tableId?: NullableStringFieldUpdateOperationsInput | string | null
     roundId?: NullableStringFieldUpdateOperationsInput | string | null
@@ -86421,12 +86421,12 @@ export namespace Prisma {
     provider: $Enums.GameProvider
     aggregatorTxId: string
     aggregatorGameId: number
-    totalBetAmountInGameCurrency?: Decimal | DecimalJsLike | number | string | null
-    totalWinAmountInGameCurrency?: Decimal | DecimalJsLike | number | string | null
-    netAmountInGameCurrency?: Decimal | DecimalJsLike | number | string | null
-    totalBetAmountInWalletCurrency?: Decimal | DecimalJsLike | number | string | null
-    totalWinAmountInWalletCurrency?: Decimal | DecimalJsLike | number | string | null
-    netAmountInWalletCurrency?: Decimal | DecimalJsLike | number | string | null
+    totalBetAmountInGameCurrency?: Decimal | DecimalJsLike | number | string
+    totalWinAmountInGameCurrency?: Decimal | DecimalJsLike | number | string
+    netAmountInGameCurrency?: Decimal | DecimalJsLike | number | string
+    totalBetAmountInWalletCurrency?: Decimal | DecimalJsLike | number | string
+    totalWinAmountInWalletCurrency?: Decimal | DecimalJsLike | number | string
+    netAmountInWalletCurrency?: Decimal | DecimalJsLike | number | string
     sessionId?: string | null
     tableId?: string | null
     roundId?: string | null
@@ -86452,14 +86452,14 @@ export namespace Prisma {
     aggregatorType: $Enums.GameAggregatorType
     provider: $Enums.GameProvider
     aggregatorTxId: string
-    aggregatorGameId: number
-    totalBetAmountInGameCurrency?: Decimal | DecimalJsLike | number | string | null
-    totalWinAmountInGameCurrency?: Decimal | DecimalJsLike | number | string | null
-    netAmountInGameCurrency?: Decimal | DecimalJsLike | number | string | null
-    totalBetAmountInWalletCurrency?: Decimal | DecimalJsLike | number | string | null
-    totalWinAmountInWalletCurrency?: Decimal | DecimalJsLike | number | string | null
-    netAmountInWalletCurrency?: Decimal | DecimalJsLike | number | string | null
     transactionId: bigint | number
+    aggregatorGameId: number
+    totalBetAmountInGameCurrency?: Decimal | DecimalJsLike | number | string
+    totalWinAmountInGameCurrency?: Decimal | DecimalJsLike | number | string
+    netAmountInGameCurrency?: Decimal | DecimalJsLike | number | string
+    totalBetAmountInWalletCurrency?: Decimal | DecimalJsLike | number | string
+    totalWinAmountInWalletCurrency?: Decimal | DecimalJsLike | number | string
+    netAmountInWalletCurrency?: Decimal | DecimalJsLike | number | string
     sessionId?: string | null
     tableId?: string | null
     roundId?: string | null
@@ -86501,12 +86501,12 @@ export namespace Prisma {
     provider?: EnumGameProviderFieldUpdateOperationsInput | $Enums.GameProvider
     aggregatorTxId?: StringFieldUpdateOperationsInput | string
     aggregatorGameId?: IntFieldUpdateOperationsInput | number
-    totalBetAmountInGameCurrency?: NullableDecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string | null
-    totalWinAmountInGameCurrency?: NullableDecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string | null
-    netAmountInGameCurrency?: NullableDecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string | null
-    totalBetAmountInWalletCurrency?: NullableDecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string | null
-    totalWinAmountInWalletCurrency?: NullableDecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string | null
-    netAmountInWalletCurrency?: NullableDecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string | null
+    totalBetAmountInGameCurrency?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
+    totalWinAmountInGameCurrency?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
+    netAmountInGameCurrency?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
+    totalBetAmountInWalletCurrency?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
+    totalWinAmountInWalletCurrency?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
+    netAmountInWalletCurrency?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
     sessionId?: NullableStringFieldUpdateOperationsInput | string | null
     tableId?: NullableStringFieldUpdateOperationsInput | string | null
     roundId?: NullableStringFieldUpdateOperationsInput | string | null
@@ -86532,14 +86532,14 @@ export namespace Prisma {
     aggregatorType?: EnumGameAggregatorTypeFieldUpdateOperationsInput | $Enums.GameAggregatorType
     provider?: EnumGameProviderFieldUpdateOperationsInput | $Enums.GameProvider
     aggregatorTxId?: StringFieldUpdateOperationsInput | string
-    aggregatorGameId?: IntFieldUpdateOperationsInput | number
-    totalBetAmountInGameCurrency?: NullableDecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string | null
-    totalWinAmountInGameCurrency?: NullableDecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string | null
-    netAmountInGameCurrency?: NullableDecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string | null
-    totalBetAmountInWalletCurrency?: NullableDecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string | null
-    totalWinAmountInWalletCurrency?: NullableDecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string | null
-    netAmountInWalletCurrency?: NullableDecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string | null
     transactionId?: BigIntFieldUpdateOperationsInput | bigint | number
+    aggregatorGameId?: IntFieldUpdateOperationsInput | number
+    totalBetAmountInGameCurrency?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
+    totalWinAmountInGameCurrency?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
+    netAmountInGameCurrency?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
+    totalBetAmountInWalletCurrency?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
+    totalWinAmountInWalletCurrency?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
+    netAmountInWalletCurrency?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
     sessionId?: NullableStringFieldUpdateOperationsInput | string | null
     tableId?: NullableStringFieldUpdateOperationsInput | string | null
     roundId?: NullableStringFieldUpdateOperationsInput | string | null
@@ -86565,12 +86565,12 @@ export namespace Prisma {
     provider: $Enums.GameProvider
     aggregatorTxId: string
     aggregatorGameId: number
-    totalBetAmountInGameCurrency?: Decimal | DecimalJsLike | number | string | null
-    totalWinAmountInGameCurrency?: Decimal | DecimalJsLike | number | string | null
-    netAmountInGameCurrency?: Decimal | DecimalJsLike | number | string | null
-    totalBetAmountInWalletCurrency?: Decimal | DecimalJsLike | number | string | null
-    totalWinAmountInWalletCurrency?: Decimal | DecimalJsLike | number | string | null
-    netAmountInWalletCurrency?: Decimal | DecimalJsLike | number | string | null
+    totalBetAmountInGameCurrency?: Decimal | DecimalJsLike | number | string
+    totalWinAmountInGameCurrency?: Decimal | DecimalJsLike | number | string
+    netAmountInGameCurrency?: Decimal | DecimalJsLike | number | string
+    totalBetAmountInWalletCurrency?: Decimal | DecimalJsLike | number | string
+    totalWinAmountInWalletCurrency?: Decimal | DecimalJsLike | number | string
+    netAmountInWalletCurrency?: Decimal | DecimalJsLike | number | string
     sessionId?: string | null
     tableId?: string | null
     roundId?: string | null
@@ -86596,14 +86596,14 @@ export namespace Prisma {
     aggregatorType: $Enums.GameAggregatorType
     provider: $Enums.GameProvider
     aggregatorTxId: string
-    aggregatorGameId: number
-    totalBetAmountInGameCurrency?: Decimal | DecimalJsLike | number | string | null
-    totalWinAmountInGameCurrency?: Decimal | DecimalJsLike | number | string | null
-    netAmountInGameCurrency?: Decimal | DecimalJsLike | number | string | null
-    totalBetAmountInWalletCurrency?: Decimal | DecimalJsLike | number | string | null
-    totalWinAmountInWalletCurrency?: Decimal | DecimalJsLike | number | string | null
-    netAmountInWalletCurrency?: Decimal | DecimalJsLike | number | string | null
     transactionId: bigint | number
+    aggregatorGameId: number
+    totalBetAmountInGameCurrency?: Decimal | DecimalJsLike | number | string
+    totalWinAmountInGameCurrency?: Decimal | DecimalJsLike | number | string
+    netAmountInGameCurrency?: Decimal | DecimalJsLike | number | string
+    totalBetAmountInWalletCurrency?: Decimal | DecimalJsLike | number | string
+    totalWinAmountInWalletCurrency?: Decimal | DecimalJsLike | number | string
+    netAmountInWalletCurrency?: Decimal | DecimalJsLike | number | string
     sessionId?: string | null
     tableId?: string | null
     roundId?: string | null
@@ -86645,12 +86645,12 @@ export namespace Prisma {
     provider?: EnumGameProviderFieldUpdateOperationsInput | $Enums.GameProvider
     aggregatorTxId?: StringFieldUpdateOperationsInput | string
     aggregatorGameId?: IntFieldUpdateOperationsInput | number
-    totalBetAmountInGameCurrency?: NullableDecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string | null
-    totalWinAmountInGameCurrency?: NullableDecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string | null
-    netAmountInGameCurrency?: NullableDecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string | null
-    totalBetAmountInWalletCurrency?: NullableDecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string | null
-    totalWinAmountInWalletCurrency?: NullableDecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string | null
-    netAmountInWalletCurrency?: NullableDecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string | null
+    totalBetAmountInGameCurrency?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
+    totalWinAmountInGameCurrency?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
+    netAmountInGameCurrency?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
+    totalBetAmountInWalletCurrency?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
+    totalWinAmountInWalletCurrency?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
+    netAmountInWalletCurrency?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
     sessionId?: NullableStringFieldUpdateOperationsInput | string | null
     tableId?: NullableStringFieldUpdateOperationsInput | string | null
     roundId?: NullableStringFieldUpdateOperationsInput | string | null
@@ -86676,14 +86676,14 @@ export namespace Prisma {
     aggregatorType?: EnumGameAggregatorTypeFieldUpdateOperationsInput | $Enums.GameAggregatorType
     provider?: EnumGameProviderFieldUpdateOperationsInput | $Enums.GameProvider
     aggregatorTxId?: StringFieldUpdateOperationsInput | string
-    aggregatorGameId?: IntFieldUpdateOperationsInput | number
-    totalBetAmountInGameCurrency?: NullableDecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string | null
-    totalWinAmountInGameCurrency?: NullableDecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string | null
-    netAmountInGameCurrency?: NullableDecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string | null
-    totalBetAmountInWalletCurrency?: NullableDecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string | null
-    totalWinAmountInWalletCurrency?: NullableDecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string | null
-    netAmountInWalletCurrency?: NullableDecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string | null
     transactionId?: BigIntFieldUpdateOperationsInput | bigint | number
+    aggregatorGameId?: IntFieldUpdateOperationsInput | number
+    totalBetAmountInGameCurrency?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
+    totalWinAmountInGameCurrency?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
+    netAmountInGameCurrency?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
+    totalBetAmountInWalletCurrency?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
+    totalWinAmountInWalletCurrency?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
+    netAmountInWalletCurrency?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
     sessionId?: NullableStringFieldUpdateOperationsInput | string | null
     tableId?: NullableStringFieldUpdateOperationsInput | string | null
     roundId?: NullableStringFieldUpdateOperationsInput | string | null
@@ -88790,12 +88790,12 @@ export namespace Prisma {
     provider: $Enums.GameProvider
     aggregatorTxId: string
     aggregatorGameId: number
-    totalBetAmountInGameCurrency?: Decimal | DecimalJsLike | number | string | null
-    totalWinAmountInGameCurrency?: Decimal | DecimalJsLike | number | string | null
-    netAmountInGameCurrency?: Decimal | DecimalJsLike | number | string | null
-    totalBetAmountInWalletCurrency?: Decimal | DecimalJsLike | number | string | null
-    totalWinAmountInWalletCurrency?: Decimal | DecimalJsLike | number | string | null
-    netAmountInWalletCurrency?: Decimal | DecimalJsLike | number | string | null
+    totalBetAmountInGameCurrency?: Decimal | DecimalJsLike | number | string
+    totalWinAmountInGameCurrency?: Decimal | DecimalJsLike | number | string
+    netAmountInGameCurrency?: Decimal | DecimalJsLike | number | string
+    totalBetAmountInWalletCurrency?: Decimal | DecimalJsLike | number | string
+    totalWinAmountInWalletCurrency?: Decimal | DecimalJsLike | number | string
+    netAmountInWalletCurrency?: Decimal | DecimalJsLike | number | string
     sessionId?: string | null
     tableId?: string | null
     roundId?: string | null
@@ -88821,14 +88821,14 @@ export namespace Prisma {
     aggregatorType: $Enums.GameAggregatorType
     provider: $Enums.GameProvider
     aggregatorTxId: string
-    aggregatorGameId: number
-    totalBetAmountInGameCurrency?: Decimal | DecimalJsLike | number | string | null
-    totalWinAmountInGameCurrency?: Decimal | DecimalJsLike | number | string | null
-    netAmountInGameCurrency?: Decimal | DecimalJsLike | number | string | null
-    totalBetAmountInWalletCurrency?: Decimal | DecimalJsLike | number | string | null
-    totalWinAmountInWalletCurrency?: Decimal | DecimalJsLike | number | string | null
-    netAmountInWalletCurrency?: Decimal | DecimalJsLike | number | string | null
     transactionId: bigint | number
+    aggregatorGameId: number
+    totalBetAmountInGameCurrency?: Decimal | DecimalJsLike | number | string
+    totalWinAmountInGameCurrency?: Decimal | DecimalJsLike | number | string
+    netAmountInGameCurrency?: Decimal | DecimalJsLike | number | string
+    totalBetAmountInWalletCurrency?: Decimal | DecimalJsLike | number | string
+    totalWinAmountInWalletCurrency?: Decimal | DecimalJsLike | number | string
+    netAmountInWalletCurrency?: Decimal | DecimalJsLike | number | string
     sessionId?: string | null
     tableId?: string | null
     roundId?: string | null
@@ -89066,12 +89066,12 @@ export namespace Prisma {
     provider?: EnumGameProviderFieldUpdateOperationsInput | $Enums.GameProvider
     aggregatorTxId?: StringFieldUpdateOperationsInput | string
     aggregatorGameId?: IntFieldUpdateOperationsInput | number
-    totalBetAmountInGameCurrency?: NullableDecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string | null
-    totalWinAmountInGameCurrency?: NullableDecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string | null
-    netAmountInGameCurrency?: NullableDecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string | null
-    totalBetAmountInWalletCurrency?: NullableDecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string | null
-    totalWinAmountInWalletCurrency?: NullableDecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string | null
-    netAmountInWalletCurrency?: NullableDecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string | null
+    totalBetAmountInGameCurrency?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
+    totalWinAmountInGameCurrency?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
+    netAmountInGameCurrency?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
+    totalBetAmountInWalletCurrency?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
+    totalWinAmountInWalletCurrency?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
+    netAmountInWalletCurrency?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
     sessionId?: NullableStringFieldUpdateOperationsInput | string | null
     tableId?: NullableStringFieldUpdateOperationsInput | string | null
     roundId?: NullableStringFieldUpdateOperationsInput | string | null
@@ -89097,14 +89097,14 @@ export namespace Prisma {
     aggregatorType?: EnumGameAggregatorTypeFieldUpdateOperationsInput | $Enums.GameAggregatorType
     provider?: EnumGameProviderFieldUpdateOperationsInput | $Enums.GameProvider
     aggregatorTxId?: StringFieldUpdateOperationsInput | string
-    aggregatorGameId?: IntFieldUpdateOperationsInput | number
-    totalBetAmountInGameCurrency?: NullableDecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string | null
-    totalWinAmountInGameCurrency?: NullableDecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string | null
-    netAmountInGameCurrency?: NullableDecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string | null
-    totalBetAmountInWalletCurrency?: NullableDecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string | null
-    totalWinAmountInWalletCurrency?: NullableDecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string | null
-    netAmountInWalletCurrency?: NullableDecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string | null
     transactionId?: BigIntFieldUpdateOperationsInput | bigint | number
+    aggregatorGameId?: IntFieldUpdateOperationsInput | number
+    totalBetAmountInGameCurrency?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
+    totalWinAmountInGameCurrency?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
+    netAmountInGameCurrency?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
+    totalBetAmountInWalletCurrency?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
+    totalWinAmountInWalletCurrency?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
+    netAmountInWalletCurrency?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
     sessionId?: NullableStringFieldUpdateOperationsInput | string | null
     tableId?: NullableStringFieldUpdateOperationsInput | string | null
     roundId?: NullableStringFieldUpdateOperationsInput | string | null
@@ -92810,14 +92810,14 @@ export namespace Prisma {
     aggregatorType: $Enums.GameAggregatorType
     provider: $Enums.GameProvider
     aggregatorTxId: string
-    aggregatorGameId: number
-    totalBetAmountInGameCurrency?: Decimal | DecimalJsLike | number | string | null
-    totalWinAmountInGameCurrency?: Decimal | DecimalJsLike | number | string | null
-    netAmountInGameCurrency?: Decimal | DecimalJsLike | number | string | null
-    totalBetAmountInWalletCurrency?: Decimal | DecimalJsLike | number | string | null
-    totalWinAmountInWalletCurrency?: Decimal | DecimalJsLike | number | string | null
-    netAmountInWalletCurrency?: Decimal | DecimalJsLike | number | string | null
     transactionId: bigint | number
+    aggregatorGameId: number
+    totalBetAmountInGameCurrency?: Decimal | DecimalJsLike | number | string
+    totalWinAmountInGameCurrency?: Decimal | DecimalJsLike | number | string
+    netAmountInGameCurrency?: Decimal | DecimalJsLike | number | string
+    totalBetAmountInWalletCurrency?: Decimal | DecimalJsLike | number | string
+    totalWinAmountInWalletCurrency?: Decimal | DecimalJsLike | number | string
+    netAmountInWalletCurrency?: Decimal | DecimalJsLike | number | string
     sessionId?: string | null
     tableId?: string | null
     roundId?: string | null
@@ -92923,12 +92923,12 @@ export namespace Prisma {
     provider?: EnumGameProviderFieldUpdateOperationsInput | $Enums.GameProvider
     aggregatorTxId?: StringFieldUpdateOperationsInput | string
     aggregatorGameId?: IntFieldUpdateOperationsInput | number
-    totalBetAmountInGameCurrency?: NullableDecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string | null
-    totalWinAmountInGameCurrency?: NullableDecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string | null
-    netAmountInGameCurrency?: NullableDecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string | null
-    totalBetAmountInWalletCurrency?: NullableDecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string | null
-    totalWinAmountInWalletCurrency?: NullableDecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string | null
-    netAmountInWalletCurrency?: NullableDecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string | null
+    totalBetAmountInGameCurrency?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
+    totalWinAmountInGameCurrency?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
+    netAmountInGameCurrency?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
+    totalBetAmountInWalletCurrency?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
+    totalWinAmountInWalletCurrency?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
+    netAmountInWalletCurrency?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
     sessionId?: NullableStringFieldUpdateOperationsInput | string | null
     tableId?: NullableStringFieldUpdateOperationsInput | string | null
     roundId?: NullableStringFieldUpdateOperationsInput | string | null
@@ -92954,14 +92954,14 @@ export namespace Prisma {
     aggregatorType?: EnumGameAggregatorTypeFieldUpdateOperationsInput | $Enums.GameAggregatorType
     provider?: EnumGameProviderFieldUpdateOperationsInput | $Enums.GameProvider
     aggregatorTxId?: StringFieldUpdateOperationsInput | string
-    aggregatorGameId?: IntFieldUpdateOperationsInput | number
-    totalBetAmountInGameCurrency?: NullableDecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string | null
-    totalWinAmountInGameCurrency?: NullableDecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string | null
-    netAmountInGameCurrency?: NullableDecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string | null
-    totalBetAmountInWalletCurrency?: NullableDecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string | null
-    totalWinAmountInWalletCurrency?: NullableDecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string | null
-    netAmountInWalletCurrency?: NullableDecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string | null
     transactionId?: BigIntFieldUpdateOperationsInput | bigint | number
+    aggregatorGameId?: IntFieldUpdateOperationsInput | number
+    totalBetAmountInGameCurrency?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
+    totalWinAmountInGameCurrency?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
+    netAmountInGameCurrency?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
+    totalBetAmountInWalletCurrency?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
+    totalWinAmountInWalletCurrency?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
+    netAmountInWalletCurrency?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
     sessionId?: NullableStringFieldUpdateOperationsInput | string | null
     tableId?: NullableStringFieldUpdateOperationsInput | string | null
     roundId?: NullableStringFieldUpdateOperationsInput | string | null
@@ -92986,14 +92986,14 @@ export namespace Prisma {
     aggregatorType?: EnumGameAggregatorTypeFieldUpdateOperationsInput | $Enums.GameAggregatorType
     provider?: EnumGameProviderFieldUpdateOperationsInput | $Enums.GameProvider
     aggregatorTxId?: StringFieldUpdateOperationsInput | string
-    aggregatorGameId?: IntFieldUpdateOperationsInput | number
-    totalBetAmountInGameCurrency?: NullableDecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string | null
-    totalWinAmountInGameCurrency?: NullableDecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string | null
-    netAmountInGameCurrency?: NullableDecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string | null
-    totalBetAmountInWalletCurrency?: NullableDecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string | null
-    totalWinAmountInWalletCurrency?: NullableDecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string | null
-    netAmountInWalletCurrency?: NullableDecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string | null
     transactionId?: BigIntFieldUpdateOperationsInput | bigint | number
+    aggregatorGameId?: IntFieldUpdateOperationsInput | number
+    totalBetAmountInGameCurrency?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
+    totalWinAmountInGameCurrency?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
+    netAmountInGameCurrency?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
+    totalBetAmountInWalletCurrency?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
+    totalWinAmountInWalletCurrency?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
+    netAmountInWalletCurrency?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
     sessionId?: NullableStringFieldUpdateOperationsInput | string | null
     tableId?: NullableStringFieldUpdateOperationsInput | string | null
     roundId?: NullableStringFieldUpdateOperationsInput | string | null
@@ -93094,14 +93094,14 @@ export namespace Prisma {
     aggregatorType: $Enums.GameAggregatorType
     provider: $Enums.GameProvider
     aggregatorTxId: string
-    aggregatorGameId: number
-    totalBetAmountInGameCurrency?: Decimal | DecimalJsLike | number | string | null
-    totalWinAmountInGameCurrency?: Decimal | DecimalJsLike | number | string | null
-    netAmountInGameCurrency?: Decimal | DecimalJsLike | number | string | null
-    totalBetAmountInWalletCurrency?: Decimal | DecimalJsLike | number | string | null
-    totalWinAmountInWalletCurrency?: Decimal | DecimalJsLike | number | string | null
-    netAmountInWalletCurrency?: Decimal | DecimalJsLike | number | string | null
     transactionId: bigint | number
+    aggregatorGameId: number
+    totalBetAmountInGameCurrency?: Decimal | DecimalJsLike | number | string
+    totalWinAmountInGameCurrency?: Decimal | DecimalJsLike | number | string
+    netAmountInGameCurrency?: Decimal | DecimalJsLike | number | string
+    totalBetAmountInWalletCurrency?: Decimal | DecimalJsLike | number | string
+    totalWinAmountInWalletCurrency?: Decimal | DecimalJsLike | number | string
+    netAmountInWalletCurrency?: Decimal | DecimalJsLike | number | string
     sessionId?: string | null
     tableId?: string | null
     roundId?: string | null
@@ -93124,12 +93124,12 @@ export namespace Prisma {
     provider?: EnumGameProviderFieldUpdateOperationsInput | $Enums.GameProvider
     aggregatorTxId?: StringFieldUpdateOperationsInput | string
     aggregatorGameId?: IntFieldUpdateOperationsInput | number
-    totalBetAmountInGameCurrency?: NullableDecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string | null
-    totalWinAmountInGameCurrency?: NullableDecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string | null
-    netAmountInGameCurrency?: NullableDecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string | null
-    totalBetAmountInWalletCurrency?: NullableDecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string | null
-    totalWinAmountInWalletCurrency?: NullableDecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string | null
-    netAmountInWalletCurrency?: NullableDecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string | null
+    totalBetAmountInGameCurrency?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
+    totalWinAmountInGameCurrency?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
+    netAmountInGameCurrency?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
+    totalBetAmountInWalletCurrency?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
+    totalWinAmountInWalletCurrency?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
+    netAmountInWalletCurrency?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
     sessionId?: NullableStringFieldUpdateOperationsInput | string | null
     tableId?: NullableStringFieldUpdateOperationsInput | string | null
     roundId?: NullableStringFieldUpdateOperationsInput | string | null
@@ -93155,14 +93155,14 @@ export namespace Prisma {
     aggregatorType?: EnumGameAggregatorTypeFieldUpdateOperationsInput | $Enums.GameAggregatorType
     provider?: EnumGameProviderFieldUpdateOperationsInput | $Enums.GameProvider
     aggregatorTxId?: StringFieldUpdateOperationsInput | string
-    aggregatorGameId?: IntFieldUpdateOperationsInput | number
-    totalBetAmountInGameCurrency?: NullableDecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string | null
-    totalWinAmountInGameCurrency?: NullableDecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string | null
-    netAmountInGameCurrency?: NullableDecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string | null
-    totalBetAmountInWalletCurrency?: NullableDecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string | null
-    totalWinAmountInWalletCurrency?: NullableDecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string | null
-    netAmountInWalletCurrency?: NullableDecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string | null
     transactionId?: BigIntFieldUpdateOperationsInput | bigint | number
+    aggregatorGameId?: IntFieldUpdateOperationsInput | number
+    totalBetAmountInGameCurrency?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
+    totalWinAmountInGameCurrency?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
+    netAmountInGameCurrency?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
+    totalBetAmountInWalletCurrency?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
+    totalWinAmountInWalletCurrency?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
+    netAmountInWalletCurrency?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
     sessionId?: NullableStringFieldUpdateOperationsInput | string | null
     tableId?: NullableStringFieldUpdateOperationsInput | string | null
     roundId?: NullableStringFieldUpdateOperationsInput | string | null
@@ -93187,14 +93187,14 @@ export namespace Prisma {
     aggregatorType?: EnumGameAggregatorTypeFieldUpdateOperationsInput | $Enums.GameAggregatorType
     provider?: EnumGameProviderFieldUpdateOperationsInput | $Enums.GameProvider
     aggregatorTxId?: StringFieldUpdateOperationsInput | string
-    aggregatorGameId?: IntFieldUpdateOperationsInput | number
-    totalBetAmountInGameCurrency?: NullableDecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string | null
-    totalWinAmountInGameCurrency?: NullableDecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string | null
-    netAmountInGameCurrency?: NullableDecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string | null
-    totalBetAmountInWalletCurrency?: NullableDecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string | null
-    totalWinAmountInWalletCurrency?: NullableDecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string | null
-    netAmountInWalletCurrency?: NullableDecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string | null
     transactionId?: BigIntFieldUpdateOperationsInput | bigint | number
+    aggregatorGameId?: IntFieldUpdateOperationsInput | number
+    totalBetAmountInGameCurrency?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
+    totalWinAmountInGameCurrency?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
+    netAmountInGameCurrency?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
+    totalBetAmountInWalletCurrency?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
+    totalWinAmountInWalletCurrency?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
+    netAmountInWalletCurrency?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
     sessionId?: NullableStringFieldUpdateOperationsInput | string | null
     tableId?: NullableStringFieldUpdateOperationsInput | string | null
     roundId?: NullableStringFieldUpdateOperationsInput | string | null

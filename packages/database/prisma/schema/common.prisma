@@ -115,14 +115,14 @@ model GameRound {
   aggregatorType                 GameAggregatorType
   provider                       GameProvider
   aggregatorTxId                 String
-  aggregatorGameId               Int
-  totalBetAmountInGameCurrency   Decimal?              @db.Decimal(32, 18)
-  totalWinAmountInGameCurrency   Decimal?              @db.Decimal(32, 18)
-  netAmountInGameCurrency        Decimal?              @db.Decimal(32, 18)
-  totalBetAmountInWalletCurrency Decimal?              @db.Decimal(32, 18)
-  totalWinAmountInWalletCurrency Decimal?              @db.Decimal(32, 18)
-  netAmountInWalletCurrency      Decimal?              @db.Decimal(32, 18)
   transactionId                  BigInt                @unique
+  aggregatorGameId               Int
+  totalBetAmountInGameCurrency   Decimal               @default(0) @db.Decimal(32, 18)
+  totalWinAmountInGameCurrency   Decimal               @default(0) @db.Decimal(32, 18)
+  netAmountInGameCurrency        Decimal               @default(0) @db.Decimal(32, 18)
+  totalBetAmountInWalletCurrency Decimal               @default(0) @db.Decimal(32, 18)
+  totalWinAmountInWalletCurrency Decimal               @default(0) @db.Decimal(32, 18)
+  netAmountInWalletCurrency      Decimal               @default(0) @db.Decimal(32, 18)
   sessionId                      String?
   tableId                        String?
   roundId                        String?
