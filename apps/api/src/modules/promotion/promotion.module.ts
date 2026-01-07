@@ -19,9 +19,10 @@ import { PromotionMapper } from './infrastructure/promotion.mapper';
 import { PROMOTION_REPOSITORY } from './ports/out';
 import { PromotionUserController } from './controllers/user/promotion-user.controller';
 import { PromotionAdminController } from './controllers/admin/promotion-admin.controller';
+import { WageringModule } from '../wagering/wagering.module';
 
 @Module({
-  imports: [],
+  imports: [WageringModule],
   providers: [
     PromotionPolicy,
     CheckEligiblePromotionsService,

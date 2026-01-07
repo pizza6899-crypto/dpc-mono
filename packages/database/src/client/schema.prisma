@@ -961,8 +961,10 @@ model DepositDetail {
   providerMetadata     Json?                 @default("{}") @map("provider_metadata")
   bankConfigId         BigInt?               @map("bank_config_id")
   cryptoConfigId       BigInt?               @map("crypto_config_id")
+  promotionId          BigInt?               @map("promotion_id")
   BankConfig           BankConfig?           @relation(fields: [bankConfigId], references: [id])
   CryptoConfig         CryptoConfig?         @relation(fields: [cryptoConfigId], references: [id])
+  promotion            Promotion?            @relation(fields: [promotionId], references: [id])
   transaction          Transaction?          @relation(fields: [transactionId], references: [id])
   wageringRequirements WageringRequirement[]
 
@@ -1118,6 +1120,7 @@ model Promotion {
   translations                   PromotionTranslation[]
   currencies                     PromotionCurrency[]
   UserPromotion                  UserPromotion[]
+  depositDetails                 DepositDetail[]
 
   @@map("promotions")
 }

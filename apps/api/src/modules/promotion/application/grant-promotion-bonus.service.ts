@@ -1,12 +1,13 @@
 // src/modules/promotion/application/grant-promotion-bonus.service.ts
 import { Inject, Injectable, Logger } from '@nestjs/common';
-import { InjectTransaction, Transactional } from '@nestjs-cls/transactional';
-import { type PrismaTransaction } from 'src/infrastructure/prisma/prisma.module';
+import { Transactional } from '@nestjs-cls/transactional';
 import { Prisma, ExchangeCurrencyCode } from '@repo/database';
 import { PromotionPolicy, PromotionNotFoundException } from '../domain';
 import type { Promotion, UserPromotion } from '../domain';
 import { PROMOTION_REPOSITORY } from '../ports/out';
 import type { PromotionRepositoryPort } from '../ports/out/promotion.repository.port';
+import { CreateWageringRequirementService } from '../../wagering/application/create-wagering-requirement.service';
+import type { RequestClientInfo } from 'src/common/http/types';
 
 interface GrantPromotionBonusParams {
   userId: bigint;
@@ -15,6 +16,7 @@ interface GrantPromotionBonusParams {
   currency: ExchangeCurrencyCode;
   depositDetailId: bigint;
   now?: Date;
+  requestInfo?: RequestClientInfo;
 }
 
 interface GrantPromotionBonusResult {
@@ -31,9 +33,7 @@ export class GrantPromotionBonusService {
     @Inject(PROMOTION_REPOSITORY)
     private readonly repository: PromotionRepositoryPort,
     private readonly policy: PromotionPolicy,
-    @InjectTransaction()
-    @InjectTransaction()
-    private readonly tx: PrismaTransaction,
+    private readonly createWageringRequirementService: CreateWageringRequirementService,
   ) { }
 
   @Transactional()
@@ -44,6 +44,7 @@ export class GrantPromotionBonusService {
     currency,
     depositDetailId,
     now = new Date(),
+    requestInfo,
   }: GrantPromotionBonusParams): Promise<GrantPromotionBonusResult> {
     // 프로모션 조회
     const promotion = await this.repository.findById(promotionId);
@@ -106,17 +107,19 @@ export class GrantPromotionBonusService {
     });
 
     // 롤링 생성 (보너스 금액에만 롤링 적용)
-    // let rollingCreated = false;
-    // if (promotion.rollingMultiplier && bonusAmount.gt(0)) {
-    //   await this.rollingService.createPromotionRolling(
-    //     this.tx,
-    //     userId,
-    //     bonusAmount,
-    //     userPromotion.id,
-    //     rollingMultiplier,
-    //   );
-    //   rollingCreated = true;
-    // }
+    let rollingCreated = false;
+    if (targetRollingAmount.gt(0)) {
+      await this.createWageringRequirementService.execute({
+        userId,
+        currency,
+        sourceType: 'PROMOTION_BONUS',
+        requiredAmount: targetRollingAmount,
+        depositDetailId,
+        userPromotionId: BigInt(userPromotion.id),
+        requestInfo,
+      });
+      rollingCreated = true;
+    }
 
     this.logger.log(
       `Promotion bonus granted: userId=${userId}, promotionId=${promotionId}, bonusAmount=${bonusAmount.toString()}`,
@@ -125,7 +128,7 @@ export class GrantPromotionBonusService {
     return {
       userPromotion,
       bonusAmount,
-      rollingCreated: false,
+      rollingCreated,
     };
   }
 }

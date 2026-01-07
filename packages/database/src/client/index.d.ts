@@ -6083,12 +6083,14 @@ export namespace Prisma {
     translations: number
     currencies: number
     UserPromotion: number
+    depositDetails: number
   }
 
   export type PromotionCountOutputTypeSelect<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
     translations?: boolean | PromotionCountOutputTypeCountTranslationsArgs
     currencies?: boolean | PromotionCountOutputTypeCountCurrenciesArgs
     UserPromotion?: boolean | PromotionCountOutputTypeCountUserPromotionArgs
+    depositDetails?: boolean | PromotionCountOutputTypeCountDepositDetailsArgs
   }
 
   // Custom InputTypes
@@ -6121,6 +6123,13 @@ export namespace Prisma {
    */
   export type PromotionCountOutputTypeCountUserPromotionArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
     where?: UserPromotionWhereInput
+  }
+
+  /**
+   * PromotionCountOutputType without action
+   */
+  export type PromotionCountOutputTypeCountDepositDetailsArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    where?: DepositDetailWhereInput
   }
 
 
@@ -43417,6 +43426,7 @@ export namespace Prisma {
     feeAmount: Decimal | null
     bankConfigId: number | null
     cryptoConfigId: number | null
+    promotionId: number | null
   }
 
   export type DepositDetailSumAggregateOutputType = {
@@ -43429,6 +43439,7 @@ export namespace Prisma {
     feeAmount: Decimal | null
     bankConfigId: bigint | null
     cryptoConfigId: bigint | null
+    promotionId: bigint | null
   }
 
   export type DepositDetailMinAggregateOutputType = {
@@ -43462,6 +43473,7 @@ export namespace Prisma {
     failureReason: string | null
     bankConfigId: bigint | null
     cryptoConfigId: bigint | null
+    promotionId: bigint | null
   }
 
   export type DepositDetailMaxAggregateOutputType = {
@@ -43495,6 +43507,7 @@ export namespace Prisma {
     failureReason: string | null
     bankConfigId: bigint | null
     cryptoConfigId: bigint | null
+    promotionId: bigint | null
   }
 
   export type DepositDetailCountAggregateOutputType = {
@@ -43529,6 +43542,7 @@ export namespace Prisma {
     providerMetadata: number
     bankConfigId: number
     cryptoConfigId: number
+    promotionId: number
     _all: number
   }
 
@@ -43543,6 +43557,7 @@ export namespace Prisma {
     feeAmount?: true
     bankConfigId?: true
     cryptoConfigId?: true
+    promotionId?: true
   }
 
   export type DepositDetailSumAggregateInputType = {
@@ -43555,6 +43570,7 @@ export namespace Prisma {
     feeAmount?: true
     bankConfigId?: true
     cryptoConfigId?: true
+    promotionId?: true
   }
 
   export type DepositDetailMinAggregateInputType = {
@@ -43588,6 +43604,7 @@ export namespace Prisma {
     failureReason?: true
     bankConfigId?: true
     cryptoConfigId?: true
+    promotionId?: true
   }
 
   export type DepositDetailMaxAggregateInputType = {
@@ -43621,6 +43638,7 @@ export namespace Prisma {
     failureReason?: true
     bankConfigId?: true
     cryptoConfigId?: true
+    promotionId?: true
   }
 
   export type DepositDetailCountAggregateInputType = {
@@ -43655,6 +43673,7 @@ export namespace Prisma {
     providerMetadata?: true
     bankConfigId?: true
     cryptoConfigId?: true
+    promotionId?: true
     _all?: true
   }
 
@@ -43776,6 +43795,7 @@ export namespace Prisma {
     providerMetadata: JsonValue | null
     bankConfigId: bigint | null
     cryptoConfigId: bigint | null
+    promotionId: bigint | null
     _count: DepositDetailCountAggregateOutputType | null
     _avg: DepositDetailAvgAggregateOutputType | null
     _sum: DepositDetailSumAggregateOutputType | null
@@ -43829,9 +43849,11 @@ export namespace Prisma {
     providerMetadata?: boolean
     bankConfigId?: boolean
     cryptoConfigId?: boolean
+    promotionId?: boolean
     user?: boolean | UserDefaultArgs<ExtArgs>
     BankConfig?: boolean | DepositDetail$BankConfigArgs<ExtArgs>
     CryptoConfig?: boolean | DepositDetail$CryptoConfigArgs<ExtArgs>
+    promotion?: boolean | DepositDetail$promotionArgs<ExtArgs>
     transaction?: boolean | DepositDetail$transactionArgs<ExtArgs>
     wageringRequirements?: boolean | DepositDetail$wageringRequirementsArgs<ExtArgs>
     _count?: boolean | DepositDetailCountOutputTypeDefaultArgs<ExtArgs>
@@ -43869,9 +43891,11 @@ export namespace Prisma {
     providerMetadata?: boolean
     bankConfigId?: boolean
     cryptoConfigId?: boolean
+    promotionId?: boolean
     user?: boolean | UserDefaultArgs<ExtArgs>
     BankConfig?: boolean | DepositDetail$BankConfigArgs<ExtArgs>
     CryptoConfig?: boolean | DepositDetail$CryptoConfigArgs<ExtArgs>
+    promotion?: boolean | DepositDetail$promotionArgs<ExtArgs>
     transaction?: boolean | DepositDetail$transactionArgs<ExtArgs>
   }, ExtArgs["result"]["depositDetail"]>
 
@@ -43907,9 +43931,11 @@ export namespace Prisma {
     providerMetadata?: boolean
     bankConfigId?: boolean
     cryptoConfigId?: boolean
+    promotionId?: boolean
     user?: boolean | UserDefaultArgs<ExtArgs>
     BankConfig?: boolean | DepositDetail$BankConfigArgs<ExtArgs>
     CryptoConfig?: boolean | DepositDetail$CryptoConfigArgs<ExtArgs>
+    promotion?: boolean | DepositDetail$promotionArgs<ExtArgs>
     transaction?: boolean | DepositDetail$transactionArgs<ExtArgs>
   }, ExtArgs["result"]["depositDetail"]>
 
@@ -43945,13 +43971,15 @@ export namespace Prisma {
     providerMetadata?: boolean
     bankConfigId?: boolean
     cryptoConfigId?: boolean
+    promotionId?: boolean
   }
 
-  export type DepositDetailOmit<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetOmit<"id" | "uid" | "confirmedAt" | "failedAt" | "createdAt" | "updatedAt" | "status" | "userId" | "transactionId" | "methodType" | "provider" | "providerPaymentId" | "depositCurrency" | "depositNetwork" | "walletAddress" | "walletAddressExtraId" | "depositorName" | "transactionHash" | "requestedAmount" | "actuallyPaid" | "processedBy" | "adminNote" | "ipAddress" | "deviceFingerprint" | "feeAmount" | "feeCurrency" | "feePaidBy" | "failureReason" | "providerMetadata" | "bankConfigId" | "cryptoConfigId", ExtArgs["result"]["depositDetail"]>
+  export type DepositDetailOmit<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetOmit<"id" | "uid" | "confirmedAt" | "failedAt" | "createdAt" | "updatedAt" | "status" | "userId" | "transactionId" | "methodType" | "provider" | "providerPaymentId" | "depositCurrency" | "depositNetwork" | "walletAddress" | "walletAddressExtraId" | "depositorName" | "transactionHash" | "requestedAmount" | "actuallyPaid" | "processedBy" | "adminNote" | "ipAddress" | "deviceFingerprint" | "feeAmount" | "feeCurrency" | "feePaidBy" | "failureReason" | "providerMetadata" | "bankConfigId" | "cryptoConfigId" | "promotionId", ExtArgs["result"]["depositDetail"]>
   export type DepositDetailInclude<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
     user?: boolean | UserDefaultArgs<ExtArgs>
     BankConfig?: boolean | DepositDetail$BankConfigArgs<ExtArgs>
     CryptoConfig?: boolean | DepositDetail$CryptoConfigArgs<ExtArgs>
+    promotion?: boolean | DepositDetail$promotionArgs<ExtArgs>
     transaction?: boolean | DepositDetail$transactionArgs<ExtArgs>
     wageringRequirements?: boolean | DepositDetail$wageringRequirementsArgs<ExtArgs>
     _count?: boolean | DepositDetailCountOutputTypeDefaultArgs<ExtArgs>
@@ -43960,12 +43988,14 @@ export namespace Prisma {
     user?: boolean | UserDefaultArgs<ExtArgs>
     BankConfig?: boolean | DepositDetail$BankConfigArgs<ExtArgs>
     CryptoConfig?: boolean | DepositDetail$CryptoConfigArgs<ExtArgs>
+    promotion?: boolean | DepositDetail$promotionArgs<ExtArgs>
     transaction?: boolean | DepositDetail$transactionArgs<ExtArgs>
   }
   export type DepositDetailIncludeUpdateManyAndReturn<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
     user?: boolean | UserDefaultArgs<ExtArgs>
     BankConfig?: boolean | DepositDetail$BankConfigArgs<ExtArgs>
     CryptoConfig?: boolean | DepositDetail$CryptoConfigArgs<ExtArgs>
+    promotion?: boolean | DepositDetail$promotionArgs<ExtArgs>
     transaction?: boolean | DepositDetail$transactionArgs<ExtArgs>
   }
 
@@ -43975,6 +44005,7 @@ export namespace Prisma {
       user: Prisma.$UserPayload<ExtArgs>
       BankConfig: Prisma.$BankConfigPayload<ExtArgs> | null
       CryptoConfig: Prisma.$CryptoConfigPayload<ExtArgs> | null
+      promotion: Prisma.$PromotionPayload<ExtArgs> | null
       transaction: Prisma.$TransactionPayload<ExtArgs> | null
       wageringRequirements: Prisma.$WageringRequirementPayload<ExtArgs>[]
     }
@@ -44010,6 +44041,7 @@ export namespace Prisma {
       providerMetadata: Prisma.JsonValue | null
       bankConfigId: bigint | null
       cryptoConfigId: bigint | null
+      promotionId: bigint | null
     }, ExtArgs["result"]["depositDetail"]>
     composites: {}
   }
@@ -44407,6 +44439,7 @@ export namespace Prisma {
     user<T extends UserDefaultArgs<ExtArgs> = {}>(args?: Subset<T, UserDefaultArgs<ExtArgs>>): Prisma__UserClient<$Result.GetResult<Prisma.$UserPayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions> | Null, Null, ExtArgs, GlobalOmitOptions>
     BankConfig<T extends DepositDetail$BankConfigArgs<ExtArgs> = {}>(args?: Subset<T, DepositDetail$BankConfigArgs<ExtArgs>>): Prisma__BankConfigClient<$Result.GetResult<Prisma.$BankConfigPayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions> | null, null, ExtArgs, GlobalOmitOptions>
     CryptoConfig<T extends DepositDetail$CryptoConfigArgs<ExtArgs> = {}>(args?: Subset<T, DepositDetail$CryptoConfigArgs<ExtArgs>>): Prisma__CryptoConfigClient<$Result.GetResult<Prisma.$CryptoConfigPayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions> | null, null, ExtArgs, GlobalOmitOptions>
+    promotion<T extends DepositDetail$promotionArgs<ExtArgs> = {}>(args?: Subset<T, DepositDetail$promotionArgs<ExtArgs>>): Prisma__PromotionClient<$Result.GetResult<Prisma.$PromotionPayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions> | null, null, ExtArgs, GlobalOmitOptions>
     transaction<T extends DepositDetail$transactionArgs<ExtArgs> = {}>(args?: Subset<T, DepositDetail$transactionArgs<ExtArgs>>): Prisma__TransactionClient<$Result.GetResult<Prisma.$TransactionPayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions> | null, null, ExtArgs, GlobalOmitOptions>
     wageringRequirements<T extends DepositDetail$wageringRequirementsArgs<ExtArgs> = {}>(args?: Subset<T, DepositDetail$wageringRequirementsArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$WageringRequirementPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
     /**
@@ -44469,6 +44502,7 @@ export namespace Prisma {
     readonly providerMetadata: FieldRef<"DepositDetail", 'Json'>
     readonly bankConfigId: FieldRef<"DepositDetail", 'BigInt'>
     readonly cryptoConfigId: FieldRef<"DepositDetail", 'BigInt'>
+    readonly promotionId: FieldRef<"DepositDetail", 'BigInt'>
   }
     
 
@@ -44900,6 +44934,25 @@ export namespace Prisma {
      */
     include?: CryptoConfigInclude<ExtArgs> | null
     where?: CryptoConfigWhereInput
+  }
+
+  /**
+   * DepositDetail.promotion
+   */
+  export type DepositDetail$promotionArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the Promotion
+     */
+    select?: PromotionSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the Promotion
+     */
+    omit?: PromotionOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: PromotionInclude<ExtArgs> | null
+    where?: PromotionWhereInput
   }
 
   /**
@@ -47740,6 +47793,7 @@ export namespace Prisma {
     translations?: boolean | Promotion$translationsArgs<ExtArgs>
     currencies?: boolean | Promotion$currenciesArgs<ExtArgs>
     UserPromotion?: boolean | Promotion$UserPromotionArgs<ExtArgs>
+    depositDetails?: boolean | Promotion$depositDetailsArgs<ExtArgs>
     _count?: boolean | PromotionCountOutputTypeDefaultArgs<ExtArgs>
   }, ExtArgs["result"]["promotion"]>
 
@@ -47802,6 +47856,7 @@ export namespace Prisma {
     translations?: boolean | Promotion$translationsArgs<ExtArgs>
     currencies?: boolean | Promotion$currenciesArgs<ExtArgs>
     UserPromotion?: boolean | Promotion$UserPromotionArgs<ExtArgs>
+    depositDetails?: boolean | Promotion$depositDetailsArgs<ExtArgs>
     _count?: boolean | PromotionCountOutputTypeDefaultArgs<ExtArgs>
   }
   export type PromotionIncludeCreateManyAndReturn<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {}
@@ -47813,6 +47868,7 @@ export namespace Prisma {
       translations: Prisma.$PromotionTranslationPayload<ExtArgs>[]
       currencies: Prisma.$PromotionCurrencyPayload<ExtArgs>[]
       UserPromotion: Prisma.$UserPromotionPayload<ExtArgs>[]
+      depositDetails: Prisma.$DepositDetailPayload<ExtArgs>[]
     }
     scalars: $Extensions.GetPayloadResult<{
       id: bigint
@@ -48227,6 +48283,7 @@ export namespace Prisma {
     translations<T extends Promotion$translationsArgs<ExtArgs> = {}>(args?: Subset<T, Promotion$translationsArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$PromotionTranslationPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
     currencies<T extends Promotion$currenciesArgs<ExtArgs> = {}>(args?: Subset<T, Promotion$currenciesArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$PromotionCurrencyPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
     UserPromotion<T extends Promotion$UserPromotionArgs<ExtArgs> = {}>(args?: Subset<T, Promotion$UserPromotionArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$UserPromotionPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
+    depositDetails<T extends Promotion$depositDetailsArgs<ExtArgs> = {}>(args?: Subset<T, Promotion$depositDetailsArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$DepositDetailPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
     /**
      * Attaches callbacks for the resolution and/or rejection of the Promise.
      * @param onfulfilled The callback to execute when the Promise is resolved.
@@ -48728,6 +48785,30 @@ export namespace Prisma {
     take?: number
     skip?: number
     distinct?: UserPromotionScalarFieldEnum | UserPromotionScalarFieldEnum[]
+  }
+
+  /**
+   * Promotion.depositDetails
+   */
+  export type Promotion$depositDetailsArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the DepositDetail
+     */
+    select?: DepositDetailSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the DepositDetail
+     */
+    omit?: DepositDetailOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: DepositDetailInclude<ExtArgs> | null
+    where?: DepositDetailWhereInput
+    orderBy?: DepositDetailOrderByWithRelationInput | DepositDetailOrderByWithRelationInput[]
+    cursor?: DepositDetailWhereUniqueInput
+    take?: number
+    skip?: number
+    distinct?: DepositDetailScalarFieldEnum | DepositDetailScalarFieldEnum[]
   }
 
   /**
@@ -63720,7 +63801,8 @@ export namespace Prisma {
     failureReason: 'failureReason',
     providerMetadata: 'providerMetadata',
     bankConfigId: 'bankConfigId',
-    cryptoConfigId: 'cryptoConfigId'
+    cryptoConfigId: 'cryptoConfigId',
+    promotionId: 'promotionId'
   };
 
   export type DepositDetailScalarFieldEnum = (typeof DepositDetailScalarFieldEnum)[keyof typeof DepositDetailScalarFieldEnum]
@@ -67772,9 +67854,11 @@ export namespace Prisma {
     providerMetadata?: JsonNullableFilter<"DepositDetail">
     bankConfigId?: BigIntNullableFilter<"DepositDetail"> | bigint | number | null
     cryptoConfigId?: BigIntNullableFilter<"DepositDetail"> | bigint | number | null
+    promotionId?: BigIntNullableFilter<"DepositDetail"> | bigint | number | null
     user?: XOR<UserScalarRelationFilter, UserWhereInput>
     BankConfig?: XOR<BankConfigNullableScalarRelationFilter, BankConfigWhereInput> | null
     CryptoConfig?: XOR<CryptoConfigNullableScalarRelationFilter, CryptoConfigWhereInput> | null
+    promotion?: XOR<PromotionNullableScalarRelationFilter, PromotionWhereInput> | null
     transaction?: XOR<TransactionNullableScalarRelationFilter, TransactionWhereInput> | null
     wageringRequirements?: WageringRequirementListRelationFilter
   }
@@ -67811,9 +67895,11 @@ export namespace Prisma {
     providerMetadata?: SortOrderInput | SortOrder
     bankConfigId?: SortOrderInput | SortOrder
     cryptoConfigId?: SortOrderInput | SortOrder
+    promotionId?: SortOrderInput | SortOrder
     user?: UserOrderByWithRelationInput
     BankConfig?: BankConfigOrderByWithRelationInput
     CryptoConfig?: CryptoConfigOrderByWithRelationInput
+    promotion?: PromotionOrderByWithRelationInput
     transaction?: TransactionOrderByWithRelationInput
     wageringRequirements?: WageringRequirementOrderByRelationAggregateInput
   }
@@ -67853,9 +67939,11 @@ export namespace Prisma {
     providerMetadata?: JsonNullableFilter<"DepositDetail">
     bankConfigId?: BigIntNullableFilter<"DepositDetail"> | bigint | number | null
     cryptoConfigId?: BigIntNullableFilter<"DepositDetail"> | bigint | number | null
+    promotionId?: BigIntNullableFilter<"DepositDetail"> | bigint | number | null
     user?: XOR<UserScalarRelationFilter, UserWhereInput>
     BankConfig?: XOR<BankConfigNullableScalarRelationFilter, BankConfigWhereInput> | null
     CryptoConfig?: XOR<CryptoConfigNullableScalarRelationFilter, CryptoConfigWhereInput> | null
+    promotion?: XOR<PromotionNullableScalarRelationFilter, PromotionWhereInput> | null
     transaction?: XOR<TransactionNullableScalarRelationFilter, TransactionWhereInput> | null
     wageringRequirements?: WageringRequirementListRelationFilter
   }, "id" | "uid" | "transactionId" | "providerPaymentId">
@@ -67892,6 +67980,7 @@ export namespace Prisma {
     providerMetadata?: SortOrderInput | SortOrder
     bankConfigId?: SortOrderInput | SortOrder
     cryptoConfigId?: SortOrderInput | SortOrder
+    promotionId?: SortOrderInput | SortOrder
     _count?: DepositDetailCountOrderByAggregateInput
     _avg?: DepositDetailAvgOrderByAggregateInput
     _max?: DepositDetailMaxOrderByAggregateInput
@@ -67934,6 +68023,7 @@ export namespace Prisma {
     providerMetadata?: JsonNullableWithAggregatesFilter<"DepositDetail">
     bankConfigId?: BigIntNullableWithAggregatesFilter<"DepositDetail"> | bigint | number | null
     cryptoConfigId?: BigIntNullableWithAggregatesFilter<"DepositDetail"> | bigint | number | null
+    promotionId?: BigIntNullableWithAggregatesFilter<"DepositDetail"> | bigint | number | null
   }
 
   export type CryptoConfigWhereInput = {
@@ -68168,6 +68258,7 @@ export namespace Prisma {
     translations?: PromotionTranslationListRelationFilter
     currencies?: PromotionCurrencyListRelationFilter
     UserPromotion?: UserPromotionListRelationFilter
+    depositDetails?: DepositDetailListRelationFilter
   }
 
   export type PromotionOrderByWithRelationInput = {
@@ -68189,6 +68280,7 @@ export namespace Prisma {
     translations?: PromotionTranslationOrderByRelationAggregateInput
     currencies?: PromotionCurrencyOrderByRelationAggregateInput
     UserPromotion?: UserPromotionOrderByRelationAggregateInput
+    depositDetails?: DepositDetailOrderByRelationAggregateInput
   }
 
   export type PromotionWhereUniqueInput = Prisma.AtLeast<{
@@ -68213,6 +68305,7 @@ export namespace Prisma {
     translations?: PromotionTranslationListRelationFilter
     currencies?: PromotionCurrencyListRelationFilter
     UserPromotion?: UserPromotionListRelationFilter
+    depositDetails?: DepositDetailListRelationFilter
   }, "id" | "uid">
 
   export type PromotionOrderByWithAggregationInput = {
@@ -72804,6 +72897,7 @@ export namespace Prisma {
     user: UserCreateNestedOneWithoutDepositDetailsInput
     BankConfig?: BankConfigCreateNestedOneWithoutDepositDetailsInput
     CryptoConfig?: CryptoConfigCreateNestedOneWithoutDepositDetailsInput
+    promotion?: PromotionCreateNestedOneWithoutDepositDetailsInput
     transaction?: TransactionCreateNestedOneWithoutDepositDetailInput
     wageringRequirements?: WageringRequirementCreateNestedManyWithoutDepositDetailInput
   }
@@ -72840,6 +72934,7 @@ export namespace Prisma {
     providerMetadata?: NullableJsonNullValueInput | InputJsonValue
     bankConfigId?: bigint | number | null
     cryptoConfigId?: bigint | number | null
+    promotionId?: bigint | number | null
     wageringRequirements?: WageringRequirementUncheckedCreateNestedManyWithoutDepositDetailInput
   }
 
@@ -72874,6 +72969,7 @@ export namespace Prisma {
     user?: UserUpdateOneRequiredWithoutDepositDetailsNestedInput
     BankConfig?: BankConfigUpdateOneWithoutDepositDetailsNestedInput
     CryptoConfig?: CryptoConfigUpdateOneWithoutDepositDetailsNestedInput
+    promotion?: PromotionUpdateOneWithoutDepositDetailsNestedInput
     transaction?: TransactionUpdateOneWithoutDepositDetailNestedInput
     wageringRequirements?: WageringRequirementUpdateManyWithoutDepositDetailNestedInput
   }
@@ -72910,6 +73006,7 @@ export namespace Prisma {
     providerMetadata?: NullableJsonNullValueInput | InputJsonValue
     bankConfigId?: NullableBigIntFieldUpdateOperationsInput | bigint | number | null
     cryptoConfigId?: NullableBigIntFieldUpdateOperationsInput | bigint | number | null
+    promotionId?: NullableBigIntFieldUpdateOperationsInput | bigint | number | null
     wageringRequirements?: WageringRequirementUncheckedUpdateManyWithoutDepositDetailNestedInput
   }
 
@@ -72945,6 +73042,7 @@ export namespace Prisma {
     providerMetadata?: NullableJsonNullValueInput | InputJsonValue
     bankConfigId?: bigint | number | null
     cryptoConfigId?: bigint | number | null
+    promotionId?: bigint | number | null
   }
 
   export type DepositDetailUpdateManyMutationInput = {
@@ -73009,6 +73107,7 @@ export namespace Prisma {
     providerMetadata?: NullableJsonNullValueInput | InputJsonValue
     bankConfigId?: NullableBigIntFieldUpdateOperationsInput | bigint | number | null
     cryptoConfigId?: NullableBigIntFieldUpdateOperationsInput | bigint | number | null
+    promotionId?: NullableBigIntFieldUpdateOperationsInput | bigint | number | null
   }
 
   export type CryptoConfigCreateInput = {
@@ -73283,6 +73382,7 @@ export namespace Prisma {
     translations?: PromotionTranslationCreateNestedManyWithoutPromotionInput
     currencies?: PromotionCurrencyCreateNestedManyWithoutPromotionInput
     UserPromotion?: UserPromotionCreateNestedManyWithoutPromotionInput
+    depositDetails?: DepositDetailCreateNestedManyWithoutPromotionInput
   }
 
   export type PromotionUncheckedCreateInput = {
@@ -73304,6 +73404,7 @@ export namespace Prisma {
     translations?: PromotionTranslationUncheckedCreateNestedManyWithoutPromotionInput
     currencies?: PromotionCurrencyUncheckedCreateNestedManyWithoutPromotionInput
     UserPromotion?: UserPromotionUncheckedCreateNestedManyWithoutPromotionInput
+    depositDetails?: DepositDetailUncheckedCreateNestedManyWithoutPromotionInput
   }
 
   export type PromotionUpdateInput = {
@@ -73325,6 +73426,7 @@ export namespace Prisma {
     translations?: PromotionTranslationUpdateManyWithoutPromotionNestedInput
     currencies?: PromotionCurrencyUpdateManyWithoutPromotionNestedInput
     UserPromotion?: UserPromotionUpdateManyWithoutPromotionNestedInput
+    depositDetails?: DepositDetailUpdateManyWithoutPromotionNestedInput
   }
 
   export type PromotionUncheckedUpdateInput = {
@@ -73346,6 +73448,7 @@ export namespace Prisma {
     translations?: PromotionTranslationUncheckedUpdateManyWithoutPromotionNestedInput
     currencies?: PromotionCurrencyUncheckedUpdateManyWithoutPromotionNestedInput
     UserPromotion?: UserPromotionUncheckedUpdateManyWithoutPromotionNestedInput
+    depositDetails?: DepositDetailUncheckedUpdateManyWithoutPromotionNestedInput
   }
 
   export type PromotionCreateManyInput = {
@@ -77659,6 +77762,11 @@ export namespace Prisma {
     isNot?: CryptoConfigWhereInput | null
   }
 
+  export type PromotionNullableScalarRelationFilter = {
+    is?: PromotionWhereInput | null
+    isNot?: PromotionWhereInput | null
+  }
+
   export type TransactionNullableScalarRelationFilter = {
     is?: TransactionWhereInput | null
     isNot?: TransactionWhereInput | null
@@ -77696,6 +77804,7 @@ export namespace Prisma {
     providerMetadata?: SortOrder
     bankConfigId?: SortOrder
     cryptoConfigId?: SortOrder
+    promotionId?: SortOrder
   }
 
   export type DepositDetailAvgOrderByAggregateInput = {
@@ -77708,6 +77817,7 @@ export namespace Prisma {
     feeAmount?: SortOrder
     bankConfigId?: SortOrder
     cryptoConfigId?: SortOrder
+    promotionId?: SortOrder
   }
 
   export type DepositDetailMaxOrderByAggregateInput = {
@@ -77741,6 +77851,7 @@ export namespace Prisma {
     failureReason?: SortOrder
     bankConfigId?: SortOrder
     cryptoConfigId?: SortOrder
+    promotionId?: SortOrder
   }
 
   export type DepositDetailMinOrderByAggregateInput = {
@@ -77774,6 +77885,7 @@ export namespace Prisma {
     failureReason?: SortOrder
     bankConfigId?: SortOrder
     cryptoConfigId?: SortOrder
+    promotionId?: SortOrder
   }
 
   export type DepositDetailSumOrderByAggregateInput = {
@@ -77786,6 +77898,7 @@ export namespace Prisma {
     feeAmount?: SortOrder
     bankConfigId?: SortOrder
     cryptoConfigId?: SortOrder
+    promotionId?: SortOrder
   }
 
   export type EnumDepositDetailStatusWithAggregatesFilter<$PrismaModel = never> = {
@@ -81278,6 +81391,12 @@ export namespace Prisma {
     connect?: CryptoConfigWhereUniqueInput
   }
 
+  export type PromotionCreateNestedOneWithoutDepositDetailsInput = {
+    create?: XOR<PromotionCreateWithoutDepositDetailsInput, PromotionUncheckedCreateWithoutDepositDetailsInput>
+    connectOrCreate?: PromotionCreateOrConnectWithoutDepositDetailsInput
+    connect?: PromotionWhereUniqueInput
+  }
+
   export type TransactionCreateNestedOneWithoutDepositDetailInput = {
     create?: XOR<TransactionCreateWithoutDepositDetailInput, TransactionUncheckedCreateWithoutDepositDetailInput>
     connectOrCreate?: TransactionCreateOrConnectWithoutDepositDetailInput
@@ -81332,6 +81451,16 @@ export namespace Prisma {
     delete?: CryptoConfigWhereInput | boolean
     connect?: CryptoConfigWhereUniqueInput
     update?: XOR<XOR<CryptoConfigUpdateToOneWithWhereWithoutDepositDetailsInput, CryptoConfigUpdateWithoutDepositDetailsInput>, CryptoConfigUncheckedUpdateWithoutDepositDetailsInput>
+  }
+
+  export type PromotionUpdateOneWithoutDepositDetailsNestedInput = {
+    create?: XOR<PromotionCreateWithoutDepositDetailsInput, PromotionUncheckedCreateWithoutDepositDetailsInput>
+    connectOrCreate?: PromotionCreateOrConnectWithoutDepositDetailsInput
+    upsert?: PromotionUpsertWithoutDepositDetailsInput
+    disconnect?: PromotionWhereInput | boolean
+    delete?: PromotionWhereInput | boolean
+    connect?: PromotionWhereUniqueInput
+    update?: XOR<XOR<PromotionUpdateToOneWithWhereWithoutDepositDetailsInput, PromotionUpdateWithoutDepositDetailsInput>, PromotionUncheckedUpdateWithoutDepositDetailsInput>
   }
 
   export type TransactionUpdateOneWithoutDepositDetailNestedInput = {
@@ -81477,6 +81606,13 @@ export namespace Prisma {
     connect?: UserPromotionWhereUniqueInput | UserPromotionWhereUniqueInput[]
   }
 
+  export type DepositDetailCreateNestedManyWithoutPromotionInput = {
+    create?: XOR<DepositDetailCreateWithoutPromotionInput, DepositDetailUncheckedCreateWithoutPromotionInput> | DepositDetailCreateWithoutPromotionInput[] | DepositDetailUncheckedCreateWithoutPromotionInput[]
+    connectOrCreate?: DepositDetailCreateOrConnectWithoutPromotionInput | DepositDetailCreateOrConnectWithoutPromotionInput[]
+    createMany?: DepositDetailCreateManyPromotionInputEnvelope
+    connect?: DepositDetailWhereUniqueInput | DepositDetailWhereUniqueInput[]
+  }
+
   export type PromotionTranslationUncheckedCreateNestedManyWithoutPromotionInput = {
     create?: XOR<PromotionTranslationCreateWithoutPromotionInput, PromotionTranslationUncheckedCreateWithoutPromotionInput> | PromotionTranslationCreateWithoutPromotionInput[] | PromotionTranslationUncheckedCreateWithoutPromotionInput[]
     connectOrCreate?: PromotionTranslationCreateOrConnectWithoutPromotionInput | PromotionTranslationCreateOrConnectWithoutPromotionInput[]
@@ -81496,6 +81632,13 @@ export namespace Prisma {
     connectOrCreate?: UserPromotionCreateOrConnectWithoutPromotionInput | UserPromotionCreateOrConnectWithoutPromotionInput[]
     createMany?: UserPromotionCreateManyPromotionInputEnvelope
     connect?: UserPromotionWhereUniqueInput | UserPromotionWhereUniqueInput[]
+  }
+
+  export type DepositDetailUncheckedCreateNestedManyWithoutPromotionInput = {
+    create?: XOR<DepositDetailCreateWithoutPromotionInput, DepositDetailUncheckedCreateWithoutPromotionInput> | DepositDetailCreateWithoutPromotionInput[] | DepositDetailUncheckedCreateWithoutPromotionInput[]
+    connectOrCreate?: DepositDetailCreateOrConnectWithoutPromotionInput | DepositDetailCreateOrConnectWithoutPromotionInput[]
+    createMany?: DepositDetailCreateManyPromotionInputEnvelope
+    connect?: DepositDetailWhereUniqueInput | DepositDetailWhereUniqueInput[]
   }
 
   export type EnumPromotionTargetTypeFieldUpdateOperationsInput = {
@@ -81552,6 +81695,20 @@ export namespace Prisma {
     deleteMany?: UserPromotionScalarWhereInput | UserPromotionScalarWhereInput[]
   }
 
+  export type DepositDetailUpdateManyWithoutPromotionNestedInput = {
+    create?: XOR<DepositDetailCreateWithoutPromotionInput, DepositDetailUncheckedCreateWithoutPromotionInput> | DepositDetailCreateWithoutPromotionInput[] | DepositDetailUncheckedCreateWithoutPromotionInput[]
+    connectOrCreate?: DepositDetailCreateOrConnectWithoutPromotionInput | DepositDetailCreateOrConnectWithoutPromotionInput[]
+    upsert?: DepositDetailUpsertWithWhereUniqueWithoutPromotionInput | DepositDetailUpsertWithWhereUniqueWithoutPromotionInput[]
+    createMany?: DepositDetailCreateManyPromotionInputEnvelope
+    set?: DepositDetailWhereUniqueInput | DepositDetailWhereUniqueInput[]
+    disconnect?: DepositDetailWhereUniqueInput | DepositDetailWhereUniqueInput[]
+    delete?: DepositDetailWhereUniqueInput | DepositDetailWhereUniqueInput[]
+    connect?: DepositDetailWhereUniqueInput | DepositDetailWhereUniqueInput[]
+    update?: DepositDetailUpdateWithWhereUniqueWithoutPromotionInput | DepositDetailUpdateWithWhereUniqueWithoutPromotionInput[]
+    updateMany?: DepositDetailUpdateManyWithWhereWithoutPromotionInput | DepositDetailUpdateManyWithWhereWithoutPromotionInput[]
+    deleteMany?: DepositDetailScalarWhereInput | DepositDetailScalarWhereInput[]
+  }
+
   export type PromotionTranslationUncheckedUpdateManyWithoutPromotionNestedInput = {
     create?: XOR<PromotionTranslationCreateWithoutPromotionInput, PromotionTranslationUncheckedCreateWithoutPromotionInput> | PromotionTranslationCreateWithoutPromotionInput[] | PromotionTranslationUncheckedCreateWithoutPromotionInput[]
     connectOrCreate?: PromotionTranslationCreateOrConnectWithoutPromotionInput | PromotionTranslationCreateOrConnectWithoutPromotionInput[]
@@ -81592,6 +81749,20 @@ export namespace Prisma {
     update?: UserPromotionUpdateWithWhereUniqueWithoutPromotionInput | UserPromotionUpdateWithWhereUniqueWithoutPromotionInput[]
     updateMany?: UserPromotionUpdateManyWithWhereWithoutPromotionInput | UserPromotionUpdateManyWithWhereWithoutPromotionInput[]
     deleteMany?: UserPromotionScalarWhereInput | UserPromotionScalarWhereInput[]
+  }
+
+  export type DepositDetailUncheckedUpdateManyWithoutPromotionNestedInput = {
+    create?: XOR<DepositDetailCreateWithoutPromotionInput, DepositDetailUncheckedCreateWithoutPromotionInput> | DepositDetailCreateWithoutPromotionInput[] | DepositDetailUncheckedCreateWithoutPromotionInput[]
+    connectOrCreate?: DepositDetailCreateOrConnectWithoutPromotionInput | DepositDetailCreateOrConnectWithoutPromotionInput[]
+    upsert?: DepositDetailUpsertWithWhereUniqueWithoutPromotionInput | DepositDetailUpsertWithWhereUniqueWithoutPromotionInput[]
+    createMany?: DepositDetailCreateManyPromotionInputEnvelope
+    set?: DepositDetailWhereUniqueInput | DepositDetailWhereUniqueInput[]
+    disconnect?: DepositDetailWhereUniqueInput | DepositDetailWhereUniqueInput[]
+    delete?: DepositDetailWhereUniqueInput | DepositDetailWhereUniqueInput[]
+    connect?: DepositDetailWhereUniqueInput | DepositDetailWhereUniqueInput[]
+    update?: DepositDetailUpdateWithWhereUniqueWithoutPromotionInput | DepositDetailUpdateWithWhereUniqueWithoutPromotionInput[]
+    updateMany?: DepositDetailUpdateManyWithWhereWithoutPromotionInput | DepositDetailUpdateManyWithWhereWithoutPromotionInput[]
+    deleteMany?: DepositDetailScalarWhereInput | DepositDetailScalarWhereInput[]
   }
 
   export type PromotionCreateNestedOneWithoutTranslationsInput = {
@@ -85252,6 +85423,7 @@ export namespace Prisma {
     providerMetadata?: NullableJsonNullValueInput | InputJsonValue
     BankConfig?: BankConfigCreateNestedOneWithoutDepositDetailsInput
     CryptoConfig?: CryptoConfigCreateNestedOneWithoutDepositDetailsInput
+    promotion?: PromotionCreateNestedOneWithoutDepositDetailsInput
     transaction?: TransactionCreateNestedOneWithoutDepositDetailInput
     wageringRequirements?: WageringRequirementCreateNestedManyWithoutDepositDetailInput
   }
@@ -85287,6 +85459,7 @@ export namespace Prisma {
     providerMetadata?: NullableJsonNullValueInput | InputJsonValue
     bankConfigId?: bigint | number | null
     cryptoConfigId?: bigint | number | null
+    promotionId?: bigint | number | null
     wageringRequirements?: WageringRequirementUncheckedCreateNestedManyWithoutDepositDetailInput
   }
 
@@ -86105,6 +86278,7 @@ export namespace Prisma {
     providerMetadata?: JsonNullableFilter<"DepositDetail">
     bankConfigId?: BigIntNullableFilter<"DepositDetail"> | bigint | number | null
     cryptoConfigId?: BigIntNullableFilter<"DepositDetail"> | bigint | number | null
+    promotionId?: BigIntNullableFilter<"DepositDetail"> | bigint | number | null
   }
 
   export type UserWalletUpsertWithWhereUniqueWithoutUserInput = {
@@ -87016,6 +87190,7 @@ export namespace Prisma {
     user: UserCreateNestedOneWithoutDepositDetailsInput
     BankConfig?: BankConfigCreateNestedOneWithoutDepositDetailsInput
     CryptoConfig?: CryptoConfigCreateNestedOneWithoutDepositDetailsInput
+    promotion?: PromotionCreateNestedOneWithoutDepositDetailsInput
     wageringRequirements?: WageringRequirementCreateNestedManyWithoutDepositDetailInput
   }
 
@@ -87050,6 +87225,7 @@ export namespace Prisma {
     providerMetadata?: NullableJsonNullValueInput | InputJsonValue
     bankConfigId?: bigint | number | null
     cryptoConfigId?: bigint | number | null
+    promotionId?: bigint | number | null
     wageringRequirements?: WageringRequirementUncheckedCreateNestedManyWithoutDepositDetailInput
   }
 
@@ -87459,6 +87635,7 @@ export namespace Prisma {
     user?: UserUpdateOneRequiredWithoutDepositDetailsNestedInput
     BankConfig?: BankConfigUpdateOneWithoutDepositDetailsNestedInput
     CryptoConfig?: CryptoConfigUpdateOneWithoutDepositDetailsNestedInput
+    promotion?: PromotionUpdateOneWithoutDepositDetailsNestedInput
     wageringRequirements?: WageringRequirementUpdateManyWithoutDepositDetailNestedInput
   }
 
@@ -87493,6 +87670,7 @@ export namespace Prisma {
     providerMetadata?: NullableJsonNullValueInput | InputJsonValue
     bankConfigId?: NullableBigIntFieldUpdateOperationsInput | bigint | number | null
     cryptoConfigId?: NullableBigIntFieldUpdateOperationsInput | bigint | number | null
+    promotionId?: NullableBigIntFieldUpdateOperationsInput | bigint | number | null
     wageringRequirements?: WageringRequirementUncheckedUpdateManyWithoutDepositDetailNestedInput
   }
 
@@ -91244,6 +91422,53 @@ export namespace Prisma {
     create: XOR<CryptoConfigCreateWithoutDepositDetailsInput, CryptoConfigUncheckedCreateWithoutDepositDetailsInput>
   }
 
+  export type PromotionCreateWithoutDepositDetailsInput = {
+    id?: bigint | number
+    uid: string
+    managementName: string
+    isActive?: boolean
+    startDate?: Date | string | null
+    endDate?: Date | string | null
+    deletedAt?: Date | string | null
+    targetType: $Enums.PromotionTargetType
+    bonusType: $Enums.PromotionBonusType
+    bonusRate?: Decimal | DecimalJsLike | number | string | null
+    rollingMultiplier?: Decimal | DecimalJsLike | number | string | null
+    qualificationMaintainCondition: $Enums.PromotionQualification
+    isOneTime?: boolean
+    createdAt?: Date | string
+    updatedAt?: Date | string
+    translations?: PromotionTranslationCreateNestedManyWithoutPromotionInput
+    currencies?: PromotionCurrencyCreateNestedManyWithoutPromotionInput
+    UserPromotion?: UserPromotionCreateNestedManyWithoutPromotionInput
+  }
+
+  export type PromotionUncheckedCreateWithoutDepositDetailsInput = {
+    id?: bigint | number
+    uid: string
+    managementName: string
+    isActive?: boolean
+    startDate?: Date | string | null
+    endDate?: Date | string | null
+    deletedAt?: Date | string | null
+    targetType: $Enums.PromotionTargetType
+    bonusType: $Enums.PromotionBonusType
+    bonusRate?: Decimal | DecimalJsLike | number | string | null
+    rollingMultiplier?: Decimal | DecimalJsLike | number | string | null
+    qualificationMaintainCondition: $Enums.PromotionQualification
+    isOneTime?: boolean
+    createdAt?: Date | string
+    updatedAt?: Date | string
+    translations?: PromotionTranslationUncheckedCreateNestedManyWithoutPromotionInput
+    currencies?: PromotionCurrencyUncheckedCreateNestedManyWithoutPromotionInput
+    UserPromotion?: UserPromotionUncheckedCreateNestedManyWithoutPromotionInput
+  }
+
+  export type PromotionCreateOrConnectWithoutDepositDetailsInput = {
+    where: PromotionWhereUniqueInput
+    create: XOR<PromotionCreateWithoutDepositDetailsInput, PromotionUncheckedCreateWithoutDepositDetailsInput>
+  }
+
   export type TransactionCreateWithoutDepositDetailInput = {
     id?: bigint | number
     type: $Enums.TransactionType
@@ -91534,6 +91759,59 @@ export namespace Prisma {
     deletedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   }
 
+  export type PromotionUpsertWithoutDepositDetailsInput = {
+    update: XOR<PromotionUpdateWithoutDepositDetailsInput, PromotionUncheckedUpdateWithoutDepositDetailsInput>
+    create: XOR<PromotionCreateWithoutDepositDetailsInput, PromotionUncheckedCreateWithoutDepositDetailsInput>
+    where?: PromotionWhereInput
+  }
+
+  export type PromotionUpdateToOneWithWhereWithoutDepositDetailsInput = {
+    where?: PromotionWhereInput
+    data: XOR<PromotionUpdateWithoutDepositDetailsInput, PromotionUncheckedUpdateWithoutDepositDetailsInput>
+  }
+
+  export type PromotionUpdateWithoutDepositDetailsInput = {
+    id?: BigIntFieldUpdateOperationsInput | bigint | number
+    uid?: StringFieldUpdateOperationsInput | string
+    managementName?: StringFieldUpdateOperationsInput | string
+    isActive?: BoolFieldUpdateOperationsInput | boolean
+    startDate?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    endDate?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    deletedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    targetType?: EnumPromotionTargetTypeFieldUpdateOperationsInput | $Enums.PromotionTargetType
+    bonusType?: EnumPromotionBonusTypeFieldUpdateOperationsInput | $Enums.PromotionBonusType
+    bonusRate?: NullableDecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string | null
+    rollingMultiplier?: NullableDecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string | null
+    qualificationMaintainCondition?: EnumPromotionQualificationFieldUpdateOperationsInput | $Enums.PromotionQualification
+    isOneTime?: BoolFieldUpdateOperationsInput | boolean
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    translations?: PromotionTranslationUpdateManyWithoutPromotionNestedInput
+    currencies?: PromotionCurrencyUpdateManyWithoutPromotionNestedInput
+    UserPromotion?: UserPromotionUpdateManyWithoutPromotionNestedInput
+  }
+
+  export type PromotionUncheckedUpdateWithoutDepositDetailsInput = {
+    id?: BigIntFieldUpdateOperationsInput | bigint | number
+    uid?: StringFieldUpdateOperationsInput | string
+    managementName?: StringFieldUpdateOperationsInput | string
+    isActive?: BoolFieldUpdateOperationsInput | boolean
+    startDate?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    endDate?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    deletedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    targetType?: EnumPromotionTargetTypeFieldUpdateOperationsInput | $Enums.PromotionTargetType
+    bonusType?: EnumPromotionBonusTypeFieldUpdateOperationsInput | $Enums.PromotionBonusType
+    bonusRate?: NullableDecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string | null
+    rollingMultiplier?: NullableDecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string | null
+    qualificationMaintainCondition?: EnumPromotionQualificationFieldUpdateOperationsInput | $Enums.PromotionQualification
+    isOneTime?: BoolFieldUpdateOperationsInput | boolean
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    translations?: PromotionTranslationUncheckedUpdateManyWithoutPromotionNestedInput
+    currencies?: PromotionCurrencyUncheckedUpdateManyWithoutPromotionNestedInput
+    UserPromotion?: UserPromotionUncheckedUpdateManyWithoutPromotionNestedInput
+  }
+
   export type TransactionUpsertWithoutDepositDetailInput = {
     update: XOR<TransactionUpdateWithoutDepositDetailInput, TransactionUncheckedUpdateWithoutDepositDetailInput>
     create: XOR<TransactionCreateWithoutDepositDetailInput, TransactionUncheckedCreateWithoutDepositDetailInput>
@@ -91631,6 +91909,7 @@ export namespace Prisma {
     providerMetadata?: NullableJsonNullValueInput | InputJsonValue
     user: UserCreateNestedOneWithoutDepositDetailsInput
     BankConfig?: BankConfigCreateNestedOneWithoutDepositDetailsInput
+    promotion?: PromotionCreateNestedOneWithoutDepositDetailsInput
     transaction?: TransactionCreateNestedOneWithoutDepositDetailInput
     wageringRequirements?: WageringRequirementCreateNestedManyWithoutDepositDetailInput
   }
@@ -91666,6 +91945,7 @@ export namespace Prisma {
     failureReason?: string | null
     providerMetadata?: NullableJsonNullValueInput | InputJsonValue
     bankConfigId?: bigint | number | null
+    promotionId?: bigint | number | null
     wageringRequirements?: WageringRequirementUncheckedCreateNestedManyWithoutDepositDetailInput
   }
 
@@ -91725,6 +92005,7 @@ export namespace Prisma {
     providerMetadata?: NullableJsonNullValueInput | InputJsonValue
     user: UserCreateNestedOneWithoutDepositDetailsInput
     CryptoConfig?: CryptoConfigCreateNestedOneWithoutDepositDetailsInput
+    promotion?: PromotionCreateNestedOneWithoutDepositDetailsInput
     transaction?: TransactionCreateNestedOneWithoutDepositDetailInput
     wageringRequirements?: WageringRequirementCreateNestedManyWithoutDepositDetailInput
   }
@@ -91760,6 +92041,7 @@ export namespace Prisma {
     failureReason?: string | null
     providerMetadata?: NullableJsonNullValueInput | InputJsonValue
     cryptoConfigId?: bigint | number | null
+    promotionId?: bigint | number | null
     wageringRequirements?: WageringRequirementUncheckedCreateNestedManyWithoutDepositDetailInput
   }
 
@@ -91883,6 +92165,86 @@ export namespace Prisma {
     skipDuplicates?: boolean
   }
 
+  export type DepositDetailCreateWithoutPromotionInput = {
+    id?: bigint | number
+    uid: string
+    confirmedAt?: Date | string | null
+    failedAt?: Date | string | null
+    createdAt?: Date | string
+    updatedAt?: Date | string
+    status: $Enums.DepositDetailStatus
+    methodType: $Enums.DepositMethodType
+    provider: $Enums.PaymentProvider
+    providerPaymentId?: string | null
+    depositCurrency: $Enums.ExchangeCurrencyCode
+    depositNetwork?: string | null
+    walletAddress?: string | null
+    walletAddressExtraId?: string | null
+    depositorName?: string | null
+    transactionHash?: string | null
+    requestedAmount: Decimal | DecimalJsLike | number | string
+    actuallyPaid?: Decimal | DecimalJsLike | number | string | null
+    processedBy?: bigint | number | null
+    adminNote?: string | null
+    ipAddress?: string | null
+    deviceFingerprint?: string | null
+    feeAmount?: Decimal | DecimalJsLike | number | string | null
+    feeCurrency?: string | null
+    feePaidBy?: $Enums.FeePaidByType | null
+    failureReason?: string | null
+    providerMetadata?: NullableJsonNullValueInput | InputJsonValue
+    user: UserCreateNestedOneWithoutDepositDetailsInput
+    BankConfig?: BankConfigCreateNestedOneWithoutDepositDetailsInput
+    CryptoConfig?: CryptoConfigCreateNestedOneWithoutDepositDetailsInput
+    transaction?: TransactionCreateNestedOneWithoutDepositDetailInput
+    wageringRequirements?: WageringRequirementCreateNestedManyWithoutDepositDetailInput
+  }
+
+  export type DepositDetailUncheckedCreateWithoutPromotionInput = {
+    id?: bigint | number
+    uid: string
+    confirmedAt?: Date | string | null
+    failedAt?: Date | string | null
+    createdAt?: Date | string
+    updatedAt?: Date | string
+    status: $Enums.DepositDetailStatus
+    userId: bigint | number
+    transactionId?: bigint | number | null
+    methodType: $Enums.DepositMethodType
+    provider: $Enums.PaymentProvider
+    providerPaymentId?: string | null
+    depositCurrency: $Enums.ExchangeCurrencyCode
+    depositNetwork?: string | null
+    walletAddress?: string | null
+    walletAddressExtraId?: string | null
+    depositorName?: string | null
+    transactionHash?: string | null
+    requestedAmount: Decimal | DecimalJsLike | number | string
+    actuallyPaid?: Decimal | DecimalJsLike | number | string | null
+    processedBy?: bigint | number | null
+    adminNote?: string | null
+    ipAddress?: string | null
+    deviceFingerprint?: string | null
+    feeAmount?: Decimal | DecimalJsLike | number | string | null
+    feeCurrency?: string | null
+    feePaidBy?: $Enums.FeePaidByType | null
+    failureReason?: string | null
+    providerMetadata?: NullableJsonNullValueInput | InputJsonValue
+    bankConfigId?: bigint | number | null
+    cryptoConfigId?: bigint | number | null
+    wageringRequirements?: WageringRequirementUncheckedCreateNestedManyWithoutDepositDetailInput
+  }
+
+  export type DepositDetailCreateOrConnectWithoutPromotionInput = {
+    where: DepositDetailWhereUniqueInput
+    create: XOR<DepositDetailCreateWithoutPromotionInput, DepositDetailUncheckedCreateWithoutPromotionInput>
+  }
+
+  export type DepositDetailCreateManyPromotionInputEnvelope = {
+    data: DepositDetailCreateManyPromotionInput | DepositDetailCreateManyPromotionInput[]
+    skipDuplicates?: boolean
+  }
+
   export type PromotionTranslationUpsertWithWhereUniqueWithoutPromotionInput = {
     where: PromotionTranslationWhereUniqueInput
     update: XOR<PromotionTranslationUpdateWithoutPromotionInput, PromotionTranslationUncheckedUpdateWithoutPromotionInput>
@@ -91957,6 +92319,22 @@ export namespace Prisma {
     data: XOR<UserPromotionUpdateManyMutationInput, UserPromotionUncheckedUpdateManyWithoutPromotionInput>
   }
 
+  export type DepositDetailUpsertWithWhereUniqueWithoutPromotionInput = {
+    where: DepositDetailWhereUniqueInput
+    update: XOR<DepositDetailUpdateWithoutPromotionInput, DepositDetailUncheckedUpdateWithoutPromotionInput>
+    create: XOR<DepositDetailCreateWithoutPromotionInput, DepositDetailUncheckedCreateWithoutPromotionInput>
+  }
+
+  export type DepositDetailUpdateWithWhereUniqueWithoutPromotionInput = {
+    where: DepositDetailWhereUniqueInput
+    data: XOR<DepositDetailUpdateWithoutPromotionInput, DepositDetailUncheckedUpdateWithoutPromotionInput>
+  }
+
+  export type DepositDetailUpdateManyWithWhereWithoutPromotionInput = {
+    where: DepositDetailScalarWhereInput
+    data: XOR<DepositDetailUpdateManyMutationInput, DepositDetailUncheckedUpdateManyWithoutPromotionInput>
+  }
+
   export type PromotionCreateWithoutTranslationsInput = {
     id?: bigint | number
     uid: string
@@ -91975,6 +92353,7 @@ export namespace Prisma {
     updatedAt?: Date | string
     currencies?: PromotionCurrencyCreateNestedManyWithoutPromotionInput
     UserPromotion?: UserPromotionCreateNestedManyWithoutPromotionInput
+    depositDetails?: DepositDetailCreateNestedManyWithoutPromotionInput
   }
 
   export type PromotionUncheckedCreateWithoutTranslationsInput = {
@@ -91995,6 +92374,7 @@ export namespace Prisma {
     updatedAt?: Date | string
     currencies?: PromotionCurrencyUncheckedCreateNestedManyWithoutPromotionInput
     UserPromotion?: UserPromotionUncheckedCreateNestedManyWithoutPromotionInput
+    depositDetails?: DepositDetailUncheckedCreateNestedManyWithoutPromotionInput
   }
 
   export type PromotionCreateOrConnectWithoutTranslationsInput = {
@@ -92031,6 +92411,7 @@ export namespace Prisma {
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
     currencies?: PromotionCurrencyUpdateManyWithoutPromotionNestedInput
     UserPromotion?: UserPromotionUpdateManyWithoutPromotionNestedInput
+    depositDetails?: DepositDetailUpdateManyWithoutPromotionNestedInput
   }
 
   export type PromotionUncheckedUpdateWithoutTranslationsInput = {
@@ -92051,6 +92432,7 @@ export namespace Prisma {
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
     currencies?: PromotionCurrencyUncheckedUpdateManyWithoutPromotionNestedInput
     UserPromotion?: UserPromotionUncheckedUpdateManyWithoutPromotionNestedInput
+    depositDetails?: DepositDetailUncheckedUpdateManyWithoutPromotionNestedInput
   }
 
   export type PromotionCreateWithoutCurrenciesInput = {
@@ -92071,6 +92453,7 @@ export namespace Prisma {
     updatedAt?: Date | string
     translations?: PromotionTranslationCreateNestedManyWithoutPromotionInput
     UserPromotion?: UserPromotionCreateNestedManyWithoutPromotionInput
+    depositDetails?: DepositDetailCreateNestedManyWithoutPromotionInput
   }
 
   export type PromotionUncheckedCreateWithoutCurrenciesInput = {
@@ -92091,6 +92474,7 @@ export namespace Prisma {
     updatedAt?: Date | string
     translations?: PromotionTranslationUncheckedCreateNestedManyWithoutPromotionInput
     UserPromotion?: UserPromotionUncheckedCreateNestedManyWithoutPromotionInput
+    depositDetails?: DepositDetailUncheckedCreateNestedManyWithoutPromotionInput
   }
 
   export type PromotionCreateOrConnectWithoutCurrenciesInput = {
@@ -92127,6 +92511,7 @@ export namespace Prisma {
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
     translations?: PromotionTranslationUpdateManyWithoutPromotionNestedInput
     UserPromotion?: UserPromotionUpdateManyWithoutPromotionNestedInput
+    depositDetails?: DepositDetailUpdateManyWithoutPromotionNestedInput
   }
 
   export type PromotionUncheckedUpdateWithoutCurrenciesInput = {
@@ -92147,6 +92532,7 @@ export namespace Prisma {
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
     translations?: PromotionTranslationUncheckedUpdateManyWithoutPromotionNestedInput
     UserPromotion?: UserPromotionUncheckedUpdateManyWithoutPromotionNestedInput
+    depositDetails?: DepositDetailUncheckedUpdateManyWithoutPromotionNestedInput
   }
 
   export type WageringRequirementCreateWithoutUserPromotionInput = {
@@ -92219,6 +92605,7 @@ export namespace Prisma {
     updatedAt?: Date | string
     translations?: PromotionTranslationCreateNestedManyWithoutPromotionInput
     currencies?: PromotionCurrencyCreateNestedManyWithoutPromotionInput
+    depositDetails?: DepositDetailCreateNestedManyWithoutPromotionInput
   }
 
   export type PromotionUncheckedCreateWithoutUserPromotionInput = {
@@ -92239,6 +92626,7 @@ export namespace Prisma {
     updatedAt?: Date | string
     translations?: PromotionTranslationUncheckedCreateNestedManyWithoutPromotionInput
     currencies?: PromotionCurrencyUncheckedCreateNestedManyWithoutPromotionInput
+    depositDetails?: DepositDetailUncheckedCreateNestedManyWithoutPromotionInput
   }
 
   export type PromotionCreateOrConnectWithoutUserPromotionInput = {
@@ -92386,6 +92774,7 @@ export namespace Prisma {
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
     translations?: PromotionTranslationUpdateManyWithoutPromotionNestedInput
     currencies?: PromotionCurrencyUpdateManyWithoutPromotionNestedInput
+    depositDetails?: DepositDetailUpdateManyWithoutPromotionNestedInput
   }
 
   export type PromotionUncheckedUpdateWithoutUserPromotionInput = {
@@ -92406,6 +92795,7 @@ export namespace Prisma {
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
     translations?: PromotionTranslationUncheckedUpdateManyWithoutPromotionNestedInput
     currencies?: PromotionCurrencyUncheckedUpdateManyWithoutPromotionNestedInput
+    depositDetails?: DepositDetailUncheckedUpdateManyWithoutPromotionNestedInput
   }
 
   export type UserUpsertWithoutUserPromotionInput = {
@@ -94237,6 +94627,7 @@ export namespace Prisma {
     user: UserCreateNestedOneWithoutDepositDetailsInput
     BankConfig?: BankConfigCreateNestedOneWithoutDepositDetailsInput
     CryptoConfig?: CryptoConfigCreateNestedOneWithoutDepositDetailsInput
+    promotion?: PromotionCreateNestedOneWithoutDepositDetailsInput
     transaction?: TransactionCreateNestedOneWithoutDepositDetailInput
   }
 
@@ -94272,6 +94663,7 @@ export namespace Prisma {
     providerMetadata?: NullableJsonNullValueInput | InputJsonValue
     bankConfigId?: bigint | number | null
     cryptoConfigId?: bigint | number | null
+    promotionId?: bigint | number | null
   }
 
   export type DepositDetailCreateOrConnectWithoutWageringRequirementsInput = {
@@ -94498,6 +94890,7 @@ export namespace Prisma {
     user?: UserUpdateOneRequiredWithoutDepositDetailsNestedInput
     BankConfig?: BankConfigUpdateOneWithoutDepositDetailsNestedInput
     CryptoConfig?: CryptoConfigUpdateOneWithoutDepositDetailsNestedInput
+    promotion?: PromotionUpdateOneWithoutDepositDetailsNestedInput
     transaction?: TransactionUpdateOneWithoutDepositDetailNestedInput
   }
 
@@ -94533,6 +94926,7 @@ export namespace Prisma {
     providerMetadata?: NullableJsonNullValueInput | InputJsonValue
     bankConfigId?: NullableBigIntFieldUpdateOperationsInput | bigint | number | null
     cryptoConfigId?: NullableBigIntFieldUpdateOperationsInput | bigint | number | null
+    promotionId?: NullableBigIntFieldUpdateOperationsInput | bigint | number | null
   }
 
   export type UserWalletUpsertWithoutWageringRequirementsInput = {
@@ -95481,6 +95875,7 @@ export namespace Prisma {
     providerMetadata?: NullableJsonNullValueInput | InputJsonValue
     bankConfigId?: bigint | number | null
     cryptoConfigId?: bigint | number | null
+    promotionId?: bigint | number | null
   }
 
   export type UserWalletCreateManyUserInput = {
@@ -96116,6 +96511,7 @@ export namespace Prisma {
     providerMetadata?: NullableJsonNullValueInput | InputJsonValue
     BankConfig?: BankConfigUpdateOneWithoutDepositDetailsNestedInput
     CryptoConfig?: CryptoConfigUpdateOneWithoutDepositDetailsNestedInput
+    promotion?: PromotionUpdateOneWithoutDepositDetailsNestedInput
     transaction?: TransactionUpdateOneWithoutDepositDetailNestedInput
     wageringRequirements?: WageringRequirementUpdateManyWithoutDepositDetailNestedInput
   }
@@ -96151,6 +96547,7 @@ export namespace Prisma {
     providerMetadata?: NullableJsonNullValueInput | InputJsonValue
     bankConfigId?: NullableBigIntFieldUpdateOperationsInput | bigint | number | null
     cryptoConfigId?: NullableBigIntFieldUpdateOperationsInput | bigint | number | null
+    promotionId?: NullableBigIntFieldUpdateOperationsInput | bigint | number | null
     wageringRequirements?: WageringRequirementUncheckedUpdateManyWithoutDepositDetailNestedInput
   }
 
@@ -96185,6 +96582,7 @@ export namespace Prisma {
     providerMetadata?: NullableJsonNullValueInput | InputJsonValue
     bankConfigId?: NullableBigIntFieldUpdateOperationsInput | bigint | number | null
     cryptoConfigId?: NullableBigIntFieldUpdateOperationsInput | bigint | number | null
+    promotionId?: NullableBigIntFieldUpdateOperationsInput | bigint | number | null
   }
 
   export type UserWalletUpdateWithoutUserInput = {
@@ -97083,6 +97481,7 @@ export namespace Prisma {
     failureReason?: string | null
     providerMetadata?: NullableJsonNullValueInput | InputJsonValue
     bankConfigId?: bigint | number | null
+    promotionId?: bigint | number | null
   }
 
   export type DepositDetailUpdateWithoutCryptoConfigInput = {
@@ -97115,6 +97514,7 @@ export namespace Prisma {
     providerMetadata?: NullableJsonNullValueInput | InputJsonValue
     user?: UserUpdateOneRequiredWithoutDepositDetailsNestedInput
     BankConfig?: BankConfigUpdateOneWithoutDepositDetailsNestedInput
+    promotion?: PromotionUpdateOneWithoutDepositDetailsNestedInput
     transaction?: TransactionUpdateOneWithoutDepositDetailNestedInput
     wageringRequirements?: WageringRequirementUpdateManyWithoutDepositDetailNestedInput
   }
@@ -97150,6 +97550,7 @@ export namespace Prisma {
     failureReason?: NullableStringFieldUpdateOperationsInput | string | null
     providerMetadata?: NullableJsonNullValueInput | InputJsonValue
     bankConfigId?: NullableBigIntFieldUpdateOperationsInput | bigint | number | null
+    promotionId?: NullableBigIntFieldUpdateOperationsInput | bigint | number | null
     wageringRequirements?: WageringRequirementUncheckedUpdateManyWithoutDepositDetailNestedInput
   }
 
@@ -97184,6 +97585,7 @@ export namespace Prisma {
     failureReason?: NullableStringFieldUpdateOperationsInput | string | null
     providerMetadata?: NullableJsonNullValueInput | InputJsonValue
     bankConfigId?: NullableBigIntFieldUpdateOperationsInput | bigint | number | null
+    promotionId?: NullableBigIntFieldUpdateOperationsInput | bigint | number | null
   }
 
   export type DepositDetailCreateManyBankConfigInput = {
@@ -97217,6 +97619,7 @@ export namespace Prisma {
     failureReason?: string | null
     providerMetadata?: NullableJsonNullValueInput | InputJsonValue
     cryptoConfigId?: bigint | number | null
+    promotionId?: bigint | number | null
   }
 
   export type DepositDetailUpdateWithoutBankConfigInput = {
@@ -97249,6 +97652,7 @@ export namespace Prisma {
     providerMetadata?: NullableJsonNullValueInput | InputJsonValue
     user?: UserUpdateOneRequiredWithoutDepositDetailsNestedInput
     CryptoConfig?: CryptoConfigUpdateOneWithoutDepositDetailsNestedInput
+    promotion?: PromotionUpdateOneWithoutDepositDetailsNestedInput
     transaction?: TransactionUpdateOneWithoutDepositDetailNestedInput
     wageringRequirements?: WageringRequirementUpdateManyWithoutDepositDetailNestedInput
   }
@@ -97284,6 +97688,7 @@ export namespace Prisma {
     failureReason?: NullableStringFieldUpdateOperationsInput | string | null
     providerMetadata?: NullableJsonNullValueInput | InputJsonValue
     cryptoConfigId?: NullableBigIntFieldUpdateOperationsInput | bigint | number | null
+    promotionId?: NullableBigIntFieldUpdateOperationsInput | bigint | number | null
     wageringRequirements?: WageringRequirementUncheckedUpdateManyWithoutDepositDetailNestedInput
   }
 
@@ -97318,6 +97723,7 @@ export namespace Prisma {
     failureReason?: NullableStringFieldUpdateOperationsInput | string | null
     providerMetadata?: NullableJsonNullValueInput | InputJsonValue
     cryptoConfigId?: NullableBigIntFieldUpdateOperationsInput | bigint | number | null
+    promotionId?: NullableBigIntFieldUpdateOperationsInput | bigint | number | null
   }
 
   export type PromotionTranslationCreateManyPromotionInput = {
@@ -97349,6 +97755,40 @@ export namespace Prisma {
     currency: $Enums.ExchangeCurrencyCode
     createdAt?: Date | string
     updatedAt?: Date | string
+  }
+
+  export type DepositDetailCreateManyPromotionInput = {
+    id?: bigint | number
+    uid: string
+    confirmedAt?: Date | string | null
+    failedAt?: Date | string | null
+    createdAt?: Date | string
+    updatedAt?: Date | string
+    status: $Enums.DepositDetailStatus
+    userId: bigint | number
+    transactionId?: bigint | number | null
+    methodType: $Enums.DepositMethodType
+    provider: $Enums.PaymentProvider
+    providerPaymentId?: string | null
+    depositCurrency: $Enums.ExchangeCurrencyCode
+    depositNetwork?: string | null
+    walletAddress?: string | null
+    walletAddressExtraId?: string | null
+    depositorName?: string | null
+    transactionHash?: string | null
+    requestedAmount: Decimal | DecimalJsLike | number | string
+    actuallyPaid?: Decimal | DecimalJsLike | number | string | null
+    processedBy?: bigint | number | null
+    adminNote?: string | null
+    ipAddress?: string | null
+    deviceFingerprint?: string | null
+    feeAmount?: Decimal | DecimalJsLike | number | string | null
+    feeCurrency?: string | null
+    feePaidBy?: $Enums.FeePaidByType | null
+    failureReason?: string | null
+    providerMetadata?: NullableJsonNullValueInput | InputJsonValue
+    bankConfigId?: bigint | number | null
+    cryptoConfigId?: bigint | number | null
   }
 
   export type PromotionTranslationUpdateWithoutPromotionInput = {
@@ -97444,6 +97884,110 @@ export namespace Prisma {
     currency?: EnumExchangeCurrencyCodeFieldUpdateOperationsInput | $Enums.ExchangeCurrencyCode
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+  }
+
+  export type DepositDetailUpdateWithoutPromotionInput = {
+    id?: BigIntFieldUpdateOperationsInput | bigint | number
+    uid?: StringFieldUpdateOperationsInput | string
+    confirmedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    failedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    status?: EnumDepositDetailStatusFieldUpdateOperationsInput | $Enums.DepositDetailStatus
+    methodType?: EnumDepositMethodTypeFieldUpdateOperationsInput | $Enums.DepositMethodType
+    provider?: EnumPaymentProviderFieldUpdateOperationsInput | $Enums.PaymentProvider
+    providerPaymentId?: NullableStringFieldUpdateOperationsInput | string | null
+    depositCurrency?: EnumExchangeCurrencyCodeFieldUpdateOperationsInput | $Enums.ExchangeCurrencyCode
+    depositNetwork?: NullableStringFieldUpdateOperationsInput | string | null
+    walletAddress?: NullableStringFieldUpdateOperationsInput | string | null
+    walletAddressExtraId?: NullableStringFieldUpdateOperationsInput | string | null
+    depositorName?: NullableStringFieldUpdateOperationsInput | string | null
+    transactionHash?: NullableStringFieldUpdateOperationsInput | string | null
+    requestedAmount?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
+    actuallyPaid?: NullableDecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string | null
+    processedBy?: NullableBigIntFieldUpdateOperationsInput | bigint | number | null
+    adminNote?: NullableStringFieldUpdateOperationsInput | string | null
+    ipAddress?: NullableStringFieldUpdateOperationsInput | string | null
+    deviceFingerprint?: NullableStringFieldUpdateOperationsInput | string | null
+    feeAmount?: NullableDecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string | null
+    feeCurrency?: NullableStringFieldUpdateOperationsInput | string | null
+    feePaidBy?: NullableEnumFeePaidByTypeFieldUpdateOperationsInput | $Enums.FeePaidByType | null
+    failureReason?: NullableStringFieldUpdateOperationsInput | string | null
+    providerMetadata?: NullableJsonNullValueInput | InputJsonValue
+    user?: UserUpdateOneRequiredWithoutDepositDetailsNestedInput
+    BankConfig?: BankConfigUpdateOneWithoutDepositDetailsNestedInput
+    CryptoConfig?: CryptoConfigUpdateOneWithoutDepositDetailsNestedInput
+    transaction?: TransactionUpdateOneWithoutDepositDetailNestedInput
+    wageringRequirements?: WageringRequirementUpdateManyWithoutDepositDetailNestedInput
+  }
+
+  export type DepositDetailUncheckedUpdateWithoutPromotionInput = {
+    id?: BigIntFieldUpdateOperationsInput | bigint | number
+    uid?: StringFieldUpdateOperationsInput | string
+    confirmedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    failedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    status?: EnumDepositDetailStatusFieldUpdateOperationsInput | $Enums.DepositDetailStatus
+    userId?: BigIntFieldUpdateOperationsInput | bigint | number
+    transactionId?: NullableBigIntFieldUpdateOperationsInput | bigint | number | null
+    methodType?: EnumDepositMethodTypeFieldUpdateOperationsInput | $Enums.DepositMethodType
+    provider?: EnumPaymentProviderFieldUpdateOperationsInput | $Enums.PaymentProvider
+    providerPaymentId?: NullableStringFieldUpdateOperationsInput | string | null
+    depositCurrency?: EnumExchangeCurrencyCodeFieldUpdateOperationsInput | $Enums.ExchangeCurrencyCode
+    depositNetwork?: NullableStringFieldUpdateOperationsInput | string | null
+    walletAddress?: NullableStringFieldUpdateOperationsInput | string | null
+    walletAddressExtraId?: NullableStringFieldUpdateOperationsInput | string | null
+    depositorName?: NullableStringFieldUpdateOperationsInput | string | null
+    transactionHash?: NullableStringFieldUpdateOperationsInput | string | null
+    requestedAmount?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
+    actuallyPaid?: NullableDecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string | null
+    processedBy?: NullableBigIntFieldUpdateOperationsInput | bigint | number | null
+    adminNote?: NullableStringFieldUpdateOperationsInput | string | null
+    ipAddress?: NullableStringFieldUpdateOperationsInput | string | null
+    deviceFingerprint?: NullableStringFieldUpdateOperationsInput | string | null
+    feeAmount?: NullableDecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string | null
+    feeCurrency?: NullableStringFieldUpdateOperationsInput | string | null
+    feePaidBy?: NullableEnumFeePaidByTypeFieldUpdateOperationsInput | $Enums.FeePaidByType | null
+    failureReason?: NullableStringFieldUpdateOperationsInput | string | null
+    providerMetadata?: NullableJsonNullValueInput | InputJsonValue
+    bankConfigId?: NullableBigIntFieldUpdateOperationsInput | bigint | number | null
+    cryptoConfigId?: NullableBigIntFieldUpdateOperationsInput | bigint | number | null
+    wageringRequirements?: WageringRequirementUncheckedUpdateManyWithoutDepositDetailNestedInput
+  }
+
+  export type DepositDetailUncheckedUpdateManyWithoutPromotionInput = {
+    id?: BigIntFieldUpdateOperationsInput | bigint | number
+    uid?: StringFieldUpdateOperationsInput | string
+    confirmedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    failedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    status?: EnumDepositDetailStatusFieldUpdateOperationsInput | $Enums.DepositDetailStatus
+    userId?: BigIntFieldUpdateOperationsInput | bigint | number
+    transactionId?: NullableBigIntFieldUpdateOperationsInput | bigint | number | null
+    methodType?: EnumDepositMethodTypeFieldUpdateOperationsInput | $Enums.DepositMethodType
+    provider?: EnumPaymentProviderFieldUpdateOperationsInput | $Enums.PaymentProvider
+    providerPaymentId?: NullableStringFieldUpdateOperationsInput | string | null
+    depositCurrency?: EnumExchangeCurrencyCodeFieldUpdateOperationsInput | $Enums.ExchangeCurrencyCode
+    depositNetwork?: NullableStringFieldUpdateOperationsInput | string | null
+    walletAddress?: NullableStringFieldUpdateOperationsInput | string | null
+    walletAddressExtraId?: NullableStringFieldUpdateOperationsInput | string | null
+    depositorName?: NullableStringFieldUpdateOperationsInput | string | null
+    transactionHash?: NullableStringFieldUpdateOperationsInput | string | null
+    requestedAmount?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
+    actuallyPaid?: NullableDecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string | null
+    processedBy?: NullableBigIntFieldUpdateOperationsInput | bigint | number | null
+    adminNote?: NullableStringFieldUpdateOperationsInput | string | null
+    ipAddress?: NullableStringFieldUpdateOperationsInput | string | null
+    deviceFingerprint?: NullableStringFieldUpdateOperationsInput | string | null
+    feeAmount?: NullableDecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string | null
+    feeCurrency?: NullableStringFieldUpdateOperationsInput | string | null
+    feePaidBy?: NullableEnumFeePaidByTypeFieldUpdateOperationsInput | $Enums.FeePaidByType | null
+    failureReason?: NullableStringFieldUpdateOperationsInput | string | null
+    providerMetadata?: NullableJsonNullValueInput | InputJsonValue
+    bankConfigId?: NullableBigIntFieldUpdateOperationsInput | bigint | number | null
+    cryptoConfigId?: NullableBigIntFieldUpdateOperationsInput | bigint | number | null
   }
 
   export type WageringRequirementCreateManyUserPromotionInput = {

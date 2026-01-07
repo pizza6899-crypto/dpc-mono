@@ -101,6 +101,7 @@ export class CreateCryptoDepositService {
             method: depositMethod,
             amount: depositAmount,
             cryptoConfigId: cryptoConfig.id,
+            promotionId: depositPromotionId ? BigInt(depositPromotionId) : null,
             walletAddress,
             depositNetwork: payNetwork,
             ipAddress,

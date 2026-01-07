@@ -10,6 +10,7 @@ import { UserStatsModule } from '../user-stats/user-stats.module';
 import { PaymentModule } from '../payment/payment.module';
 import { WalletModule } from '../wallet/wallet.module';
 import { PromotionModule } from '../promotion/promotion.module';
+import { WageringModule } from '../wagering/wagering.module';
 import { GetDepositStatsService } from './application/get-deposit-stats.service';
 import { GetDepositsService } from './application/get-deposits.service';
 import { GetDepositDetailService } from './application/get-deposit-detail.service';
@@ -45,6 +46,7 @@ import {
     PaymentModule, // NowPaymentApiService 사용을 위해
     WalletModule, // UpdateUserBalanceAdminService 사용을 위해
     PromotionModule, // CheckEligiblePromotionsService 사용을 위해
+    WageringModule,
   ],
   providers: [
     // Infrastructure (Mapper)

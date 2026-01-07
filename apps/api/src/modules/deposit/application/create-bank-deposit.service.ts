@@ -107,6 +107,7 @@ export class CreateBankDepositService {
             method: depositMethod,
             amount: depositAmount,
             bankConfigId: selectedBank.id!,
+            promotionId: depositPromotionId ? BigInt(depositPromotionId) : null,
             depositorName,
             ipAddress,
             deviceFingerprint

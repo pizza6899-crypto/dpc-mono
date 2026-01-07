@@ -39,6 +39,7 @@ export class DepositDetailMapper {
     transactionHash: string | null;
     bankConfigId: bigint | null;
     cryptoConfigId: bigint | null;
+    promotionId: bigint | null;
     processedBy: bigint | null;
     adminNote: string | null;
     ipAddress: string | null;
@@ -72,6 +73,7 @@ export class DepositDetailMapper {
       transactionHash: prismaModel.transactionHash,
       bankConfigId: prismaModel.bankConfigId,
       cryptoConfigId: prismaModel.cryptoConfigId,
+      promotionId: prismaModel.promotionId,
       processedBy: prismaModel.processedBy,
       adminNote: prismaModel.adminNote,
       ipAddress: prismaModel.ipAddress,
@@ -130,6 +132,7 @@ export class DepositDetailMapper {
       transactionHash: persistence.transactionHash,
       bankConfigId: persistence.bankConfigId,
       cryptoConfigId: persistence.cryptoConfigId,
+      promotionId: persistence.promotionId,
       processedBy: persistence.processedBy,
       adminNote: persistence.adminNote,
       ipAddress: persistence.ipAddress,

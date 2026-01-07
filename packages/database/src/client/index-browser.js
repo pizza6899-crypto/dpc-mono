@@ -633,7 +633,8 @@ exports.Prisma.DepositDetailScalarFieldEnum = {
   failureReason: 'failureReason',
   providerMetadata: 'providerMetadata',
   bankConfigId: 'bankConfigId',
-  cryptoConfigId: 'cryptoConfigId'
+  cryptoConfigId: 'cryptoConfigId',
+  promotionId: 'promotionId'
 };
 
 exports.Prisma.CryptoConfigScalarFieldEnum = {

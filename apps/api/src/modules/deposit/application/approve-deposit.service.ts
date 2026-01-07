@@ -10,6 +10,8 @@ import { DepositAlreadyProcessedException } from '../domain';
 import type { DepositDetailRepositoryPort } from '../ports/out/deposit-detail.repository.port';
 import { DEPOSIT_DETAIL_REPOSITORY } from '../ports/out';
 import { BalanceType, UpdateOperation } from 'src/modules/wallet/domain';
+import { GrantPromotionBonusService } from '../../promotion/application/grant-promotion-bonus.service';
+import { CreateWageringRequirementService } from '../../wagering/application/create-wagering-requirement.service';
 
 interface ApproveDepositParams {
   id: bigint;
@@ -30,6 +32,8 @@ export class ApproveDepositService {
     @Inject(DEPOSIT_DETAIL_REPOSITORY)
     private readonly depositRepository: DepositDetailRepositoryPort,
     private readonly updateUserBalanceAdminService: UpdateUserBalanceAdminService,
+    private readonly grantPromotionBonusService: GrantPromotionBonusService,
+    private readonly createWageringRequirementService: CreateWageringRequirementService,
   ) { }
 
   @Transactional()
@@ -84,10 +88,36 @@ export class ApproveDepositService {
     // 6. DepositDetail 상태 업데이트 (엔티티의 변경사항 반영)
     await this.depositRepository.update(deposit);
 
+    // 7. 롤링(Wagering Requirement) 처리
+    let bonusAmount = new Prisma.Decimal(0);
+
+    if (deposit.promotionId) {
+      // 프로모션이 있는 경우: 보너스 지급 및 롤링 생성
+      const result = await this.grantPromotionBonusService.execute({
+        userId: deposit.userId,
+        promotionId: deposit.promotionId!,
+        depositAmount: actuallyPaid,
+        currency: deposit.depositCurrency,
+        depositDetailId: deposit.id!,
+        requestInfo,
+      });
+      bonusAmount = result.bonusAmount;
+    } else {
+      // 프로모션이 없는 경우: 입금액의 1배 롤링 생성
+      await this.createWageringRequirementService.execute({
+        userId: deposit.userId,
+        currency: deposit.depositCurrency,
+        sourceType: 'DEPOSIT',
+        requiredAmount: actuallyPaid, // 1배
+        depositDetailId: deposit.id!,
+        requestInfo: requestInfo,
+      });
+    }
+
     return {
       transactionId: transactionId.toString(),
       actuallyPaid: actuallyPaid.toString(),
-      bonusAmount: '0', // TODO: 보너스 계산 로직 추가
+      bonusAmount: bonusAmount.toString(),
       userId: deposit.userId.toString(),
     };
   }

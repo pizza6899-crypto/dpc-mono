@@ -38,6 +38,7 @@ export class DepositDetail {
     private _transactionHash: string | null,
     public readonly bankConfigId: bigint | null,
     public readonly cryptoConfigId: bigint | null,
+    public readonly promotionId: bigint | null,
     private _processedBy: bigint | null,
     private _adminNote: string | null,
     public readonly ipAddress: string | null,
@@ -61,6 +62,7 @@ export class DepositDetail {
     amount: DepositAmount;
     bankConfigId?: bigint | null;
     cryptoConfigId?: bigint | null;
+    promotionId?: bigint | null;
     walletAddress?: string | null;
     walletAddressExtraId?: string | null;
     depositNetwork?: string | null;
@@ -87,6 +89,7 @@ export class DepositDetail {
       null,
       params.bankConfigId ?? null,
       params.cryptoConfigId ?? null,
+      params.promotionId ?? null,
       null,
       null,
       params.ipAddress ?? null,
@@ -125,6 +128,7 @@ export class DepositDetail {
     transactionHash: string | null;
     bankConfigId: bigint | null;
     cryptoConfigId: bigint | null;
+    promotionId: bigint | null;
     processedBy: bigint | null;
     adminNote: string | null;
     ipAddress: string | null;
@@ -162,6 +166,7 @@ export class DepositDetail {
       data.transactionHash,
       data.bankConfigId,
       data.cryptoConfigId,
+      data.promotionId,
       data.processedBy,
       data.adminNote,
       data.ipAddress,
@@ -200,6 +205,7 @@ export class DepositDetail {
     transactionHash: string | null;
     bankConfigId: bigint | null;
     cryptoConfigId: bigint | null;
+    promotionId: bigint | null;
     processedBy: bigint | null;
     adminNote: string | null;
     ipAddress: string | null;
@@ -236,6 +242,7 @@ export class DepositDetail {
       transactionHash: this._transactionHash,
       bankConfigId: this.bankConfigId,
       cryptoConfigId: this.cryptoConfigId,
+      promotionId: this.promotionId,
       processedBy: this._processedBy,
       adminNote: this._adminNote,
       ipAddress: this.ipAddress,

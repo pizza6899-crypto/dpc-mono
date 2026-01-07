@@ -17,6 +17,7 @@ model Promotion {
   translations                   PromotionTranslation[]
   currencies                     PromotionCurrency[]
   UserPromotion                  UserPromotion[]
+  depositDetails                 DepositDetail[]
 
   @@map("promotions")
 }
