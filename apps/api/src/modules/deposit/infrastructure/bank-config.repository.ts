@@ -72,7 +72,7 @@ export class BankConfigRepository implements BankConfigRepositoryPort {
         const persistence = bankConfig.toPersistence();
         const data = this.mapper.toPrisma(bankConfig);
         const result = await this.tx.bankConfig.update({
-            where: { id: persistence.id },
+            where: { id: persistence.id! },
             data: data as any,
         });
         return this.mapper.toDomain(result);

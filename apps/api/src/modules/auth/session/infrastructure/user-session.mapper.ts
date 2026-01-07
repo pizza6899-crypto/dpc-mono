@@ -1,6 +1,6 @@
 import { Injectable } from '@nestjs/common';
 import { UserSession, SessionType, SessionStatus } from '../domain';
-import type { UserSession as PrismaUserSession } from '@repo/database';
+import type { UserSession as PrismaUserSession, Prisma } from '@repo/database';
 
 /**
  * UserSession Mapper
@@ -64,7 +64,7 @@ export class UserSessionMapper {
     expiresAt: Date;
     revokedAt: Date | null;
     revokedBy: bigint | null;
-    metadata: Record<string, unknown>;
+    metadata: Prisma.InputJsonValue;
   } {
     const deviceInfo = domain.deviceInfo.toPersistence();
 
@@ -88,7 +88,7 @@ export class UserSessionMapper {
       expiresAt: domain.expiresAt,
       revokedAt: domain.revokedAt,
       revokedBy: domain.revokedBy,
-      metadata: domain.metadata,
+      metadata: domain.metadata as Prisma.InputJsonValue,
     };
   }
 }
