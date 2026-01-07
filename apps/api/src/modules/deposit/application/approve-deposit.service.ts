@@ -85,10 +85,10 @@ export class ApproveDepositService {
     await this.depositRepository.update(deposit);
 
     return {
-      success: true,
       transactionId: transactionId.toString(),
       actuallyPaid: actuallyPaid.toString(),
       bonusAmount: '0', // TODO: 보너스 계산 로직 추가
+      userId: deposit.userId.toString(),
     };
   }
 }

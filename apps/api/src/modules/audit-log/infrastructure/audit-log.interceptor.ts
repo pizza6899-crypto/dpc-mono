@@ -79,7 +79,7 @@ export class AuditLogInterceptor implements NestInterceptor {
     clientInfo?: RequestClientInfo,
     user?: AuthenticatedUser,
   ): Promise<void> {
-    const userId = this.extractUserId(args, result, user);
+    const userId = this.extractUserId(options, request, args, result, undefined, user);
     const metadata = options.extractMetadata?.(request, args, result);
 
     const payload = this.buildLogPayload(
@@ -104,7 +104,7 @@ export class AuditLogInterceptor implements NestInterceptor {
     clientInfo?: RequestClientInfo,
     user?: AuthenticatedUser,
   ): Promise<void> {
-    const userId = this.extractUserId(args, undefined, user);
+    const userId = this.extractUserId(options, request, args, undefined, error, user);
     const metadata = options.extractMetadata?.(request, args, undefined, error);
 
     const payload = this.buildLogPayload(
@@ -161,38 +161,48 @@ export class AuditLogInterceptor implements NestInterceptor {
   }
 
   private extractUserId(
+    options: AuditLogOptions,
+    request: Request,
     args: any[],
     result?: any,
+    error?: Error,
     user?: AuthenticatedUser,
   ): string | undefined {
-    // 1. req.user가 있으면 우선 사용 (passport 인증 사용자)
-    if (user?.id !== undefined) {
-      return String(user.id);
-    }
-
-    // 2. 기본 추출 로직: 첫 번째 파라미터에서 userId 또는 user.id 찾기
-    for (const arg of args) {
-      if (typeof arg === 'object' && arg !== null) {
-        if (arg.userId !== undefined) {
-          return String(arg.userId);
-        }
-        if (arg.user?.id !== undefined) {
-          return String(arg.user.id);
-        }
-        if (arg.id !== undefined && typeof arg.id === 'bigint') {
-          return String(arg.id);
-        }
+    // 1. 데코레이터에서 userId가 명시된 경우 (우선순위 1)
+    if (options.userId) {
+      if (typeof options.userId === 'function') {
+        const extracted = options.userId(request, args, result, error);
+        if (extracted !== undefined) return String(extracted);
+      } else {
+        return String(options.userId);
       }
     }
 
-    // 4. result에서 찾기
+    // 2. 결과물(result)에서 userId, id 찾기 (우선순위 2)
+    // 성공 시 비즈니스 로직이 반환한 대상 유저 ID를 신뢰함
     if (result && typeof result === 'object') {
-      if (result.userId !== undefined) {
-        return String(result.userId);
-      }
-      if (result.id !== undefined) {
+      if (result.userId !== undefined) return String(result.userId);
+      // User 엔티티나 DTO에서 id가 있고 role이 있다면 유저로 간주
+      if (result.id !== undefined && (result.role !== undefined || result.email !== undefined)) {
         return String(result.id);
       }
+    }
+
+    // 3. 요청(request) 객체에서 대상 유저 ID 탐색 (우선순위 3)
+    // params -> body -> query 순서로 탐색
+    const searchTargets = [request.params, request.body, request.query];
+    for (const target of searchTargets) {
+      if (!target) continue;
+      if (target.userId !== undefined) return String(target.userId);
+      // 'id'는 모호할 수 있으므로 'userId'라는 이름이 없을 때만 차선책으로 사용
+    }
+
+    // 4. 요청 파라미터 중 명시적인 'userId' 경로 변수가 있는 경우 처리
+    if (request.params?.userId) return String(request.params.userId);
+
+    // 5. req.user (수행자 본인) - 최후의 수단 (우선순위 4)
+    if (user?.id !== undefined) {
+      return String(user.id);
     }
 
     return undefined;
@@ -208,12 +218,16 @@ export class AuditLogInterceptor implements NestInterceptor {
     user?: AuthenticatedUser,
   ): LogJobData {
     // 어드민 체크: role이 ADMIN 또는 SUPER_ADMIN이면 isAdmin 추가
-    // metadata에 이미 isAdmin이 있으면 덮어쓰지 않음 (로그인 시점 등)
     const isAdminFromUser = user?.role === 'ADMIN' || user?.role === 'SUPER_ADMIN';
+
+    // 실제 수행자와 로그 대상자가 다른 경우 (예: 어드민이 유저 액션 수행), actorId 기록
+    const performerId = user?.id ? String(user.id) : undefined;
+    const isActorDifferent = performerId !== undefined && userId !== undefined && performerId !== userId;
+
     const enrichedMetadata = {
       ...metadata,
-      // metadata에 isAdmin이 없고, user.role이 ADMIN이면 추가
       ...(isAdminFromUser && !metadata?.isAdmin && { isAdmin: true }),
+      ...(isActorDifferent && { actorId: performerId, actorRole: user?.role }),
     };
     if (options.type === LogType.AUTH) {
       return {

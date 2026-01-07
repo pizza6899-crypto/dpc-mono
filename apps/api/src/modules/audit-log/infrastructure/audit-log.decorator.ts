@@ -17,6 +17,19 @@ export interface AuditLogOptions {
     result?: any,
     error?: Error,
   ) => Record<string, any> | undefined;
+  /** 로그 기록의 주체가 될 사용자 ID (옵션)
+   * 지정하지 않으면 현재 로그인한 사용자의 ID를 사용합니다.
+   * 함수 형태 전달 시 request, args, result, error를 기반으로 동적 추출이 가능합니다.
+   */
+  userId?:
+  | string
+  | bigint
+  | ((
+    request: any,
+    args: any[],
+    result?: any,
+    error?: Error,
+  ) => string | bigint | undefined);
   /** 성공 시 로그 기록 여부 (기본값: true) */
   logOnSuccess?: boolean;
   /** 실패 시 로그 기록 여부 (기본값: true) */

@@ -56,6 +56,8 @@ export class WageringRequirementAdminController {
         type: LogType.ACTIVITY,
         action: 'VOID_WAGERING',
         category: 'ADMIN',
+        // 로그의 주체를 대상 유저로 지정 (검색 편의성)
+        userId: (_req, _args, result) => result?.userId,
         extractMetadata: (req, _args, _res, _err) => ({
             reason: req.body.reason,
             wageringId: req.params.id,

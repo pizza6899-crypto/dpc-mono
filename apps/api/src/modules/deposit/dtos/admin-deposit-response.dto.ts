@@ -39,9 +39,6 @@ export class AdminDepositListItemDto {
 }
 
 export class ApproveDepositResponseDto {
-  @ApiProperty({ description: 'Success status' })
-  success: boolean;
-
   @ApiProperty({ description: 'Transaction ID' })
   transactionId: string;
 
@@ -50,10 +47,13 @@ export class ApproveDepositResponseDto {
 
   @ApiProperty({ description: 'Bonus amount' })
   bonusAmount: string;
+
+  @ApiProperty({ description: 'Target User ID' })
+  userId: string;
 }
 
 export class RejectDepositResponseDto {
-  @ApiProperty({ description: 'Success status' })
-  success: boolean;
+  @ApiProperty({ description: 'Target User ID' })
+  userId: string;
 }
 

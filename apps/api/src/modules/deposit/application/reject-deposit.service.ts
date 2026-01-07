@@ -17,7 +17,7 @@ interface RejectDepositParams {
 }
 
 interface RejectDepositResult {
-  success: boolean;
+  userId: string;
 }
 
 @Injectable()
@@ -51,7 +51,9 @@ export class RejectDepositService {
     // 4. DepositDetail 상태 업데이트
     await this.depositRepository.update(deposit);
 
-    return { success: true };
+    return {
+      userId: deposit.userId.toString(),
+    };
   }
 }
 
