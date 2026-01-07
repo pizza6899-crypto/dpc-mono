@@ -297,9 +297,9 @@ export class PromotionAdminController {
   })
   async deletePromotion(
     @Param('id', ParseIntPipe) id: number,
-  ): Promise<{ success: true }> {
+  ): Promise<any> {
     await this.deletePromotionService.execute(BigInt(id));
-    return { success: true };
+    return {};
   }
 
   /**
@@ -429,7 +429,7 @@ export class PromotionAdminController {
   async upsertPromotionCurrency(
     @Param('id', ParseIntPipe) id: number,
     @Body() dto: UpsertCurrencySettingsRequestDto,
-  ): Promise<{ success: true }> {
+  ): Promise<any> {
     await this.repository.upsertCurrencySettings({
       promotionId: BigInt(id),
       currency: dto.currency,
@@ -439,7 +439,7 @@ export class PromotionAdminController {
         : null,
     });
 
-    return { success: true };
+    return {};
   }
 
   /**
@@ -474,9 +474,9 @@ export class PromotionAdminController {
   async deletePromotionCurrency(
     @Param('id', ParseIntPipe) id: number,
     @Param('currency') currency: ExchangeCurrencyCode,
-  ): Promise<{ success: true }> {
+  ): Promise<any> {
     await this.repository.deleteCurrencySettings(BigInt(id), currency);
-    return { success: true };
+    return {};
   }
 
   /**
@@ -559,7 +559,7 @@ export class PromotionAdminController {
   async upsertPromotionTranslation(
     @Param('id', ParseIntPipe) id: number,
     @Body() dto: UpsertTranslationRequestDto,
-  ): Promise<{ success: true }> {
+  ): Promise<any> {
     await this.repository.upsertTranslation({
       promotionId: BigInt(id),
       language: dto.language,
@@ -567,7 +567,7 @@ export class PromotionAdminController {
       description: dto.description ?? null,
     });
 
-    return { success: true };
+    return {};
   }
 
   /**
@@ -602,9 +602,9 @@ export class PromotionAdminController {
   async deletePromotionTranslation(
     @Param('id', ParseIntPipe) id: number,
     @Param('language') language: Language,
-  ): Promise<{ success: true }> {
+  ): Promise<any> {
     await this.repository.deleteTranslation(BigInt(id), language);
-    return { success: true };
+    return {};
   }
 
   /**

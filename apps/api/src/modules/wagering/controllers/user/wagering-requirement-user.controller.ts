@@ -8,6 +8,7 @@ import { GetMyWageringRequirementsQueryDto } from './dto/request/get-my-wagering
 import { WageringRequirementUserResponseDto } from './dto/response/wagering-requirement-user.response.dto';
 import { PaginatedWageringRequirementUserResponseDto } from './dto/response/paginated-wagering-requirement-user.response.dto';
 import { plainToInstance } from 'class-transformer';
+import { Paginated } from '../../../../common/http/decorators/paginated.decorator';
 
 @ApiTags('Wagering Requirements')
 @Controller('user/wagering-requirements')
@@ -18,12 +19,13 @@ export class WageringRequirementUserController {
     ) { }
 
     @Get()
+    @Paginated()
     @ApiOperation({ summary: 'Get my wagering requirements (내 롤링 조건 조회)' })
     @ApiResponse({ type: PaginatedWageringRequirementUserResponseDto })
     async getMyRequirements(
         @CurrentUser() user: AuthenticatedUser,
         @Query() query: GetMyWageringRequirementsQueryDto,
-    ): Promise<PaginatedWageringRequirementUserResponseDto> {
+    ): Promise<any> {
         const paginatedData = await this.findService.findPaginated({
             userId: user.id,
             statuses: query.statuses,
@@ -34,13 +36,10 @@ export class WageringRequirementUserController {
         });
 
         return {
-            success: true,
             data: plainToInstance(WageringRequirementUserResponseDto, paginatedData.data, { excludeExtraneousValues: true }),
-            pagination: {
-                page: paginatedData.page,
-                limit: paginatedData.limit,
-                total: paginatedData.total,
-            },
+            page: paginatedData.page,
+            limit: paginatedData.limit,
+            total: paginatedData.total,
         };
     }
 }

@@ -20,11 +20,6 @@ export class RevokeSessionResponseDto {
   })
   userId: string;
 
-  @ApiProperty({
-    description: '세션 종료 성공 여부',
-    example: true,
-  })
-  success: boolean;
 }
 
 export class RevokeUserSessionsResponseDto {

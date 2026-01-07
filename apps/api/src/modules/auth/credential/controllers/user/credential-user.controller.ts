@@ -220,7 +220,7 @@ export class CredentialUserController {
     }
 
     // 항상 성공 응답 반환
-    return { success: true };
+    return {};
   }
 
   @Get('status')
@@ -302,7 +302,7 @@ export class CredentialUserController {
       isAdmin: false,
     });
 
-    return { success: true };
+    return {};
   }
 
   @Post('password/reset-request')
@@ -341,7 +341,6 @@ export class CredentialUserController {
     });
 
     return {
-      success: true,
       message: 'Password reset email has been sent.',
     };
   }
@@ -390,6 +389,6 @@ export class CredentialUserController {
       requestInfo,
     });
 
-    return { success: true };
+    return {};
   }
 }

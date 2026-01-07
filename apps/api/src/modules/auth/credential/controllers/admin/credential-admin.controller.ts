@@ -233,7 +233,7 @@ export class CredentialAdminController {
     }
 
     // 항상 성공 응답 반환
-    return { success: true };
+    return {};
   }
 
   @Get('status')
@@ -351,7 +351,7 @@ export class CredentialAdminController {
       isAdmin: true,
     });
 
-    return { success: true };
+    return {};
   }
 
   @Patch('users/:userId/password')
@@ -392,7 +392,6 @@ export class CredentialAdminController {
     });
 
     return {
-      success: true,
       message: 'Password has been reset.',
     };
   }

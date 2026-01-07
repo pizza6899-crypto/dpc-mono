@@ -14,6 +14,7 @@ import type { WageringRequirementRepositoryPort } from '../../ports';
 import { AuditLog } from '../../../../modules/audit-log/infrastructure/audit-log.decorator';
 import { LogType } from '../../../../modules/audit-log/domain';
 import { WageringRequirementNotFoundException } from '../../domain';
+import { Paginated } from '../../../../common/http/decorators/paginated.decorator';
 
 @ApiTags('Admin Wagering Requirements')
 @Controller('admin/wagering-requirements')
@@ -27,9 +28,10 @@ export class WageringRequirementAdminController {
     ) { }
 
     @Get()
+    @Paginated()
     @ApiOperation({ summary: 'Find wagering requirements by User ID (유저 ID로 롤링 조건 조회)' })
     @ApiResponse({ type: PaginatedWageringRequirementAdminResponseDto })
-    async findByUserId(@Query() query: GetWageringRequirementsAdminQueryDto): Promise<PaginatedWageringRequirementAdminResponseDto> {
+    async findByUserId(@Query() query: GetWageringRequirementsAdminQueryDto): Promise<any> {
         const paginatedData = await this.findService.findPaginated({
             userId: BigInt(query.userId),
             statuses: query.statuses,
@@ -40,13 +42,10 @@ export class WageringRequirementAdminController {
         });
 
         return {
-            success: true,
             data: plainToInstance(WageringRequirementAdminResponseDto, paginatedData.data, { excludeExtraneousValues: true }),
-            pagination: {
-                page: paginatedData.page,
-                limit: paginatedData.limit,
-                total: paginatedData.total,
-            },
+            page: paginatedData.page,
+            limit: paginatedData.limit,
+            total: paginatedData.total,
         };
     }
 
