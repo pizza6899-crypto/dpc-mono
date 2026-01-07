@@ -6,6 +6,8 @@ import type { ExchangeCurrencyCode } from '@repo/database';
 import { Prisma } from '@repo/database';
 import { InjectTransaction } from '@nestjs-cls/transactional';
 import type { PrismaTransaction } from 'src/infrastructure/prisma/prisma.module';
+import { DispatchLogService } from 'src/modules/audit-log/application/dispatch-log.service';
+import { LogType } from 'src/modules/audit-log/domain';
 
 interface ProcessWageringContributionParams {
     userId: bigint;
@@ -25,6 +27,7 @@ export class ProcessWageringContributionService {
         private readonly policy: WageringPolicy,
         @InjectTransaction()
         private readonly tx: PrismaTransaction,
+        private readonly dispatchLogService: DispatchLogService,
     ) { }
 
     async execute(params: ProcessWageringContributionParams): Promise<void> {
@@ -72,6 +75,23 @@ export class ProcessWageringContributionService {
                     contributionRate: new Prisma.Decimal(gameContributionRate),
                     contributedAmount: contributedForThis,
                 });
+
+                if (requirement.isCompleted) {
+                    await this.dispatchLogService.dispatch({
+                        type: LogType.ACTIVITY,
+                        data: {
+                            userId: userId.toString(),
+                            category: 'WAGERING',
+                            action: 'COMPLETE_WAGERING_REQUIREMENT',
+                            metadata: {
+                                wageringId: requirement.id?.toString(),
+                                currency,
+                                finalAmount: requirement.props.currentAmount.toString(),
+                                gameRoundId: gameRoundId.toString(),
+                            }
+                        }
+                    });
+                }
 
                 this.logger.log(
                     `Wagering requirement ${requirement.id} contributed: ${contributedForThis} (Remaining to contribute: ${remainingContribution})`

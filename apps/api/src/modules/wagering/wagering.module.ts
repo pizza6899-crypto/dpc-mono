@@ -1,4 +1,5 @@
 import { Module } from '@nestjs/common';
+import { AuditLogModule } from '../audit-log/audit-log.module';
 import { WageringRequirementRepository } from './infrastructure/wagering-requirement.repository';
 import { WageringRequirementMapper } from './infrastructure/wagering-requirement.mapper';
 import {
@@ -13,6 +14,7 @@ import { WageringRequirementAdminController } from './controllers/admin/wagering
 import { WageringRequirementUserController } from './controllers/user/wagering-requirement-user.controller';
 
 @Module({
+    imports: [AuditLogModule],
     controllers: [
         WageringRequirementAdminController,
         WageringRequirementUserController

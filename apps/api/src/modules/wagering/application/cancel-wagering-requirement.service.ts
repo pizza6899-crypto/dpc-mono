@@ -6,6 +6,8 @@ import type { ExchangeCurrencyCode } from '@repo/database';
 import { Prisma } from '@repo/database';
 import { InjectTransaction } from '@nestjs-cls/transactional';
 import type { PrismaTransaction } from 'src/infrastructure/prisma/prisma.module';
+import { DispatchLogService } from 'src/modules/audit-log/application/dispatch-log.service';
+import { LogType } from 'src/modules/audit-log/domain';
 
 @Injectable()
 export class CancelWageringRequirementService {
@@ -17,6 +19,7 @@ export class CancelWageringRequirementService {
         private readonly policy: WageringPolicy,
         @InjectTransaction()
         private readonly tx: PrismaTransaction,
+        private readonly dispatchLogService: DispatchLogService,
     ) { }
 
     /**
@@ -39,6 +42,22 @@ export class CancelWageringRequirementService {
             if (this.policy.canBeCancelled(currentTotalBalance, threshold)) {
                 requirement.cancel(`Insufficient balance (O-ring). Current: ${currentTotalBalance}, Threshold: ${threshold}`);
                 await this.repository.save(requirement);
+
+                // Explicit Audit Log Dispatch
+                await this.dispatchLogService.dispatch({
+                    type: LogType.ACTIVITY,
+                    data: {
+                        userId: userId.toString(),
+                        category: 'WAGERING',
+                        action: 'CANCEL_WAGERING_REQUIREMENT',
+                        metadata: {
+                            wageringId: requirement.id?.toString(),
+                            reason: 'O_RING',
+                            currentTotalBalance: currentTotalBalance.toString(),
+                            threshold: threshold?.toString(),
+                        }
+                    }
+                });
 
                 this.logger.log(`Wagering requirement ${requirement.id} cancelled due to O-ring logic.`);
             }

@@ -6,6 +6,9 @@ import { Prisma } from '@repo/database';
 import type { ExchangeCurrencyCode, WageringSourceType } from '@repo/database';
 import { InjectTransaction } from '@nestjs-cls/transactional';
 import type { PrismaTransaction } from 'src/infrastructure/prisma/prisma.module';
+import { DispatchLogService } from 'src/modules/audit-log/application/dispatch-log.service';
+import { LogType } from 'src/modules/audit-log/domain';
+import type { RequestClientInfo } from 'src/common/http/types';
 
 interface CreateWageringRequirementParams {
     userId: bigint;
@@ -17,6 +20,7 @@ interface CreateWageringRequirementParams {
     userPromotionId?: bigint;
     expiresAt?: Date;
     cancellationBalanceThreshold?: Prisma.Decimal;
+    requestInfo?: RequestClientInfo;
 }
 
 @Injectable()
@@ -28,6 +32,7 @@ export class CreateWageringRequirementService {
         private readonly repository: WageringRequirementRepositoryPort,
         @InjectTransaction()
         private readonly tx: PrismaTransaction,
+        private readonly dispatchLogService: DispatchLogService,
     ) { }
 
     async execute(params: CreateWageringRequirementParams): Promise<WageringRequirement> {
@@ -65,6 +70,26 @@ export class CreateWageringRequirementService {
             cancellationBalanceThreshold,
         });
 
-        return await this.repository.create(wageringRequirement);
+        const created = await this.repository.create(wageringRequirement);
+
+        // Explicit Audit Log Dispatch
+        await this.dispatchLogService.dispatch({
+            type: LogType.ACTIVITY,
+            data: {
+                userId: userId.toString(),
+                category: 'WAGERING',
+                action: 'CREATE_WAGERING_REQUIREMENT',
+                metadata: {
+                    wageringId: created.id?.toString(),
+                    sourceType,
+                    requiredAmount: requiredAmount.toString(),
+                    currency,
+                    depositDetailId: depositDetailId?.toString(),
+                    userPromotionId: userPromotionId?.toString(),
+                }
+            }
+        }, params.requestInfo);
+
+        return created;
     }
 }
