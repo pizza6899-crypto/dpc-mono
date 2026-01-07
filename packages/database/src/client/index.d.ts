@@ -42126,6 +42126,7 @@ export namespace Prisma {
     baseRate: Decimal | null
     customRate: Decimal | null
     monthlyWagerAmount: Decimal | null
+    customRateSetBy: number | null
     id: number | null
   }
 
@@ -42134,6 +42135,7 @@ export namespace Prisma {
     baseRate: Decimal | null
     customRate: Decimal | null
     monthlyWagerAmount: Decimal | null
+    customRateSetBy: bigint | null
     id: bigint | null
   }
 
@@ -42144,7 +42146,7 @@ export namespace Prisma {
     customRate: Decimal | null
     isCustomRate: boolean | null
     monthlyWagerAmount: Decimal | null
-    customRateSetBy: string | null
+    customRateSetBy: bigint | null
     customRateSetAt: Date | null
     createdAt: Date | null
     updatedAt: Date | null
@@ -42159,7 +42161,7 @@ export namespace Prisma {
     customRate: Decimal | null
     isCustomRate: boolean | null
     monthlyWagerAmount: Decimal | null
-    customRateSetBy: string | null
+    customRateSetBy: bigint | null
     customRateSetAt: Date | null
     createdAt: Date | null
     updatedAt: Date | null
@@ -42189,6 +42191,7 @@ export namespace Prisma {
     baseRate?: true
     customRate?: true
     monthlyWagerAmount?: true
+    customRateSetBy?: true
     id?: true
   }
 
@@ -42197,6 +42200,7 @@ export namespace Prisma {
     baseRate?: true
     customRate?: true
     monthlyWagerAmount?: true
+    customRateSetBy?: true
     id?: true
   }
 
@@ -42339,7 +42343,7 @@ export namespace Prisma {
     customRate: Decimal | null
     isCustomRate: boolean
     monthlyWagerAmount: Decimal
-    customRateSetBy: string | null
+    customRateSetBy: bigint | null
     customRateSetAt: Date | null
     createdAt: Date
     updatedAt: Date
@@ -42452,7 +42456,7 @@ export namespace Prisma {
       customRate: Prisma.Decimal | null
       isCustomRate: boolean
       monthlyWagerAmount: Prisma.Decimal
-      customRateSetBy: string | null
+      customRateSetBy: bigint | null
       customRateSetAt: Date | null
       createdAt: Date
       updatedAt: Date
@@ -42888,7 +42892,7 @@ export namespace Prisma {
     readonly customRate: FieldRef<"AffiliateTier", 'Decimal'>
     readonly isCustomRate: FieldRef<"AffiliateTier", 'Boolean'>
     readonly monthlyWagerAmount: FieldRef<"AffiliateTier", 'Decimal'>
-    readonly customRateSetBy: FieldRef<"AffiliateTier", 'String'>
+    readonly customRateSetBy: FieldRef<"AffiliateTier", 'BigInt'>
     readonly customRateSetAt: FieldRef<"AffiliateTier", 'DateTime'>
     readonly createdAt: FieldRef<"AffiliateTier", 'DateTime'>
     readonly updatedAt: FieldRef<"AffiliateTier", 'DateTime'>
@@ -66257,7 +66261,7 @@ export namespace Prisma {
     customRate?: DecimalNullableFilter<"AffiliateTier"> | Decimal | DecimalJsLike | number | string | null
     isCustomRate?: BoolFilter<"AffiliateTier"> | boolean
     monthlyWagerAmount?: DecimalFilter<"AffiliateTier"> | Decimal | DecimalJsLike | number | string
-    customRateSetBy?: StringNullableFilter<"AffiliateTier"> | string | null
+    customRateSetBy?: BigIntNullableFilter<"AffiliateTier"> | bigint | number | null
     customRateSetAt?: DateTimeNullableFilter<"AffiliateTier"> | Date | string | null
     createdAt?: DateTimeFilter<"AffiliateTier"> | Date | string
     updatedAt?: DateTimeFilter<"AffiliateTier"> | Date | string
@@ -66294,7 +66298,7 @@ export namespace Prisma {
     customRate?: DecimalNullableFilter<"AffiliateTier"> | Decimal | DecimalJsLike | number | string | null
     isCustomRate?: BoolFilter<"AffiliateTier"> | boolean
     monthlyWagerAmount?: DecimalFilter<"AffiliateTier"> | Decimal | DecimalJsLike | number | string
-    customRateSetBy?: StringNullableFilter<"AffiliateTier"> | string | null
+    customRateSetBy?: BigIntNullableFilter<"AffiliateTier"> | bigint | number | null
     customRateSetAt?: DateTimeNullableFilter<"AffiliateTier"> | Date | string | null
     createdAt?: DateTimeFilter<"AffiliateTier"> | Date | string
     updatedAt?: DateTimeFilter<"AffiliateTier"> | Date | string
@@ -66331,7 +66335,7 @@ export namespace Prisma {
     customRate?: DecimalNullableWithAggregatesFilter<"AffiliateTier"> | Decimal | DecimalJsLike | number | string | null
     isCustomRate?: BoolWithAggregatesFilter<"AffiliateTier"> | boolean
     monthlyWagerAmount?: DecimalWithAggregatesFilter<"AffiliateTier"> | Decimal | DecimalJsLike | number | string
-    customRateSetBy?: StringNullableWithAggregatesFilter<"AffiliateTier"> | string | null
+    customRateSetBy?: BigIntNullableWithAggregatesFilter<"AffiliateTier"> | bigint | number | null
     customRateSetAt?: DateTimeNullableWithAggregatesFilter<"AffiliateTier"> | Date | string | null
     createdAt?: DateTimeWithAggregatesFilter<"AffiliateTier"> | Date | string
     updatedAt?: DateTimeWithAggregatesFilter<"AffiliateTier"> | Date | string
@@ -71183,7 +71187,7 @@ export namespace Prisma {
     customRate?: Decimal | DecimalJsLike | number | string | null
     isCustomRate?: boolean
     monthlyWagerAmount?: Decimal | DecimalJsLike | number | string
-    customRateSetBy?: string | null
+    customRateSetBy?: bigint | number | null
     customRateSetAt?: Date | string | null
     createdAt?: Date | string
     updatedAt?: Date | string
@@ -71199,7 +71203,7 @@ export namespace Prisma {
     customRate?: Decimal | DecimalJsLike | number | string | null
     isCustomRate?: boolean
     monthlyWagerAmount?: Decimal | DecimalJsLike | number | string
-    customRateSetBy?: string | null
+    customRateSetBy?: bigint | number | null
     customRateSetAt?: Date | string | null
     createdAt?: Date | string
     updatedAt?: Date | string
@@ -71213,7 +71217,7 @@ export namespace Prisma {
     customRate?: NullableDecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string | null
     isCustomRate?: BoolFieldUpdateOperationsInput | boolean
     monthlyWagerAmount?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
-    customRateSetBy?: NullableStringFieldUpdateOperationsInput | string | null
+    customRateSetBy?: NullableBigIntFieldUpdateOperationsInput | bigint | number | null
     customRateSetAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
@@ -71229,7 +71233,7 @@ export namespace Prisma {
     customRate?: NullableDecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string | null
     isCustomRate?: BoolFieldUpdateOperationsInput | boolean
     monthlyWagerAmount?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
-    customRateSetBy?: NullableStringFieldUpdateOperationsInput | string | null
+    customRateSetBy?: NullableBigIntFieldUpdateOperationsInput | bigint | number | null
     customRateSetAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
@@ -71244,7 +71248,7 @@ export namespace Prisma {
     customRate?: Decimal | DecimalJsLike | number | string | null
     isCustomRate?: boolean
     monthlyWagerAmount?: Decimal | DecimalJsLike | number | string
-    customRateSetBy?: string | null
+    customRateSetBy?: bigint | number | null
     customRateSetAt?: Date | string | null
     createdAt?: Date | string
     updatedAt?: Date | string
@@ -71258,7 +71262,7 @@ export namespace Prisma {
     customRate?: NullableDecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string | null
     isCustomRate?: BoolFieldUpdateOperationsInput | boolean
     monthlyWagerAmount?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
-    customRateSetBy?: NullableStringFieldUpdateOperationsInput | string | null
+    customRateSetBy?: NullableBigIntFieldUpdateOperationsInput | bigint | number | null
     customRateSetAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
@@ -71273,7 +71277,7 @@ export namespace Prisma {
     customRate?: NullableDecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string | null
     isCustomRate?: BoolFieldUpdateOperationsInput | boolean
     monthlyWagerAmount?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
-    customRateSetBy?: NullableStringFieldUpdateOperationsInput | string | null
+    customRateSetBy?: NullableBigIntFieldUpdateOperationsInput | bigint | number | null
     customRateSetAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
@@ -76006,6 +76010,7 @@ export namespace Prisma {
     baseRate?: SortOrder
     customRate?: SortOrder
     monthlyWagerAmount?: SortOrder
+    customRateSetBy?: SortOrder
     id?: SortOrder
   }
 
@@ -76044,6 +76049,7 @@ export namespace Prisma {
     baseRate?: SortOrder
     customRate?: SortOrder
     monthlyWagerAmount?: SortOrder
+    customRateSetBy?: SortOrder
     id?: SortOrder
   }
 
@@ -83116,7 +83122,7 @@ export namespace Prisma {
     customRate?: Decimal | DecimalJsLike | number | string | null
     isCustomRate?: boolean
     monthlyWagerAmount?: Decimal | DecimalJsLike | number | string
-    customRateSetBy?: string | null
+    customRateSetBy?: bigint | number | null
     customRateSetAt?: Date | string | null
     createdAt?: Date | string
     updatedAt?: Date | string
@@ -83130,7 +83136,7 @@ export namespace Prisma {
     customRate?: Decimal | DecimalJsLike | number | string | null
     isCustomRate?: boolean
     monthlyWagerAmount?: Decimal | DecimalJsLike | number | string
-    customRateSetBy?: string | null
+    customRateSetBy?: bigint | number | null
     customRateSetAt?: Date | string | null
     createdAt?: Date | string
     updatedAt?: Date | string
@@ -84027,7 +84033,7 @@ export namespace Prisma {
     customRate?: NullableDecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string | null
     isCustomRate?: BoolFieldUpdateOperationsInput | boolean
     monthlyWagerAmount?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
-    customRateSetBy?: NullableStringFieldUpdateOperationsInput | string | null
+    customRateSetBy?: NullableBigIntFieldUpdateOperationsInput | bigint | number | null
     customRateSetAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
@@ -84041,7 +84047,7 @@ export namespace Prisma {
     customRate?: NullableDecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string | null
     isCustomRate?: BoolFieldUpdateOperationsInput | boolean
     monthlyWagerAmount?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
-    customRateSetBy?: NullableStringFieldUpdateOperationsInput | string | null
+    customRateSetBy?: NullableBigIntFieldUpdateOperationsInput | bigint | number | null
     customRateSetAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string

@@ -434,7 +434,7 @@ model AffiliateTier {
   customRate         Decimal?           @db.Decimal(8, 4)
   isCustomRate       Boolean            @default(false)
   monthlyWagerAmount Decimal            @default(0) @db.Decimal(32, 18)
-  customRateSetBy    String?
+  customRateSetBy    BigInt?
   customRateSetAt    DateTime?
   createdAt          DateTime           @default(now())
   updatedAt          DateTime           @updatedAt
