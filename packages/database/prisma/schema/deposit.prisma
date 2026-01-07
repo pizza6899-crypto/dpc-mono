@@ -49,17 +49,17 @@ model DepositDetail {
   ipAddress         String? @map("ip_address")
   deviceFingerprint String? @map("device_fingerprint")
 
-  feeAmount        Decimal?       @map("fee_amount") @db.Decimal(32, 18)
-  feeCurrency      String?        @map("fee_currency")
-  feePaidBy        FeePaidByType? @map("fee_paid_by")
-  failureReason    String?        @map("failure_reason")
-  providerMetadata Json?          @default("{}") @map("provider_metadata")
-  bankConfigId     BigInt?        @map("bank_config_id")
-  cryptoConfigId   BigInt?        @map("crypto_config_id")
-  BankConfig       BankConfig?    @relation(fields: [bankConfigId], references: [id])
-  CryptoConfig     CryptoConfig?  @relation(fields: [cryptoConfigId], references: [id])
-  transaction      Transaction?   @relation(fields: [transactionId], references: [id])
-  Rolling          Rolling[]
+  feeAmount            Decimal?              @map("fee_amount") @db.Decimal(32, 18)
+  feeCurrency          String?               @map("fee_currency")
+  feePaidBy            FeePaidByType?        @map("fee_paid_by")
+  failureReason        String?               @map("failure_reason")
+  providerMetadata     Json?                 @default("{}") @map("provider_metadata")
+  bankConfigId         BigInt?               @map("bank_config_id")
+  cryptoConfigId       BigInt?               @map("crypto_config_id")
+  BankConfig           BankConfig?           @relation(fields: [bankConfigId], references: [id])
+  CryptoConfig         CryptoConfig?         @relation(fields: [cryptoConfigId], references: [id])
+  transaction          Transaction?          @relation(fields: [transactionId], references: [id])
+  wageringRequirements WageringRequirement[]
 
   @@index([provider, providerPaymentId])
   @@index([status, createdAt])

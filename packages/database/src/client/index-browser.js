@@ -319,7 +319,7 @@ exports.Prisma.UserScalarFieldEnum = {
   updatedAt: 'updatedAt'
 };
 
-exports.Prisma.UserBalanceScalarFieldEnum = {
+exports.Prisma.UserWalletScalarFieldEnum = {
   userId: 'userId',
   currency: 'currency',
   mainBalance: 'mainBalance',
@@ -514,24 +514,6 @@ exports.Prisma.ExchangeRateScalarFieldEnum = {
   previousRate: 'previousRate',
   changeRate: 'changeRate',
   isValid: 'isValid'
-};
-
-exports.Prisma.RollingScalarFieldEnum = {
-  id: 'id',
-  userId: 'userId',
-  sourceType: 'sourceType',
-  userPromotionId: 'userPromotionId',
-  requiredAmount: 'requiredAmount',
-  currentAmount: 'currentAmount',
-  cancellationBalanceThreshold: 'cancellationBalanceThreshold',
-  status: 'status',
-  depositAmount: 'depositAmount',
-  bonusAmount: 'bonusAmount',
-  completedAt: 'completedAt',
-  cancelledAt: 'cancelledAt',
-  createdAt: 'createdAt',
-  updatedAt: 'updatedAt',
-  depositDetailId: 'depositDetailId'
 };
 
 exports.Prisma.UserTokenScalarFieldEnum = {
@@ -829,6 +811,37 @@ exports.Prisma.UserSessionScalarFieldEnum = {
   metadata: 'metadata'
 };
 
+exports.Prisma.WageringRequirementScalarFieldEnum = {
+  id: 'id',
+  uid: 'uid',
+  userId: 'userId',
+  currency: 'currency',
+  sourceType: 'sourceType',
+  requiredAmount: 'requiredAmount',
+  currentAmount: 'currentAmount',
+  cancellationBalanceThreshold: 'cancellationBalanceThreshold',
+  status: 'status',
+  depositDetailId: 'depositDetailId',
+  userPromotionId: 'userPromotionId',
+  createdAt: 'createdAt',
+  updatedAt: 'updatedAt',
+  expiresAt: 'expiresAt',
+  completedAt: 'completedAt',
+  cancelledAt: 'cancelledAt',
+  cancellationNote: 'cancellationNote',
+  priority: 'priority'
+};
+
+exports.Prisma.WageringContributionLogScalarFieldEnum = {
+  id: 'id',
+  wageringRequirementId: 'wageringRequirementId',
+  gameRoundId: 'gameRoundId',
+  requestAmount: 'requestAmount',
+  contributionRate: 'contributionRate',
+  contributedAmount: 'contributedAmount',
+  createdAt: 'createdAt'
+};
+
 exports.Prisma.SortOrder = {
   asc: 'asc',
   desc: 'desc'
@@ -991,17 +1004,6 @@ exports.ExchangeRateProvider = exports.$Enums.ExchangeRateProvider = {
   OPEN_EXCHANGE_RATES: 'OPEN_EXCHANGE_RATES'
 };
 
-exports.RollingSourceType = exports.$Enums.RollingSourceType = {
-  DEPOSIT: 'DEPOSIT',
-  PROMOTION_BONUS: 'PROMOTION_BONUS'
-};
-
-exports.RollingStatus = exports.$Enums.RollingStatus = {
-  ACTIVE: 'ACTIVE',
-  COMPLETED: 'COMPLETED',
-  CANCELLED: 'CANCELLED'
-};
-
 exports.TokenType = exports.$Enums.TokenType = {
   PASSWORD_RESET: 'PASSWORD_RESET'
 };
@@ -1107,6 +1109,19 @@ exports.SessionStatus = exports.$Enums.SessionStatus = {
   EXPIRED: 'EXPIRED'
 };
 
+exports.WageringSourceType = exports.$Enums.WageringSourceType = {
+  DEPOSIT: 'DEPOSIT',
+  PROMOTION_BONUS: 'PROMOTION_BONUS'
+};
+
+exports.WageringStatus = exports.$Enums.WageringStatus = {
+  ACTIVE: 'ACTIVE',
+  COMPLETED: 'COMPLETED',
+  CANCELLED: 'CANCELLED',
+  EXPIRED: 'EXPIRED',
+  VOIDED: 'VOIDED'
+};
+
 exports.Prisma.ModelName = {
   AffiliateCode: 'AffiliateCode',
   Referral: 'Referral',
@@ -1119,7 +1134,7 @@ exports.Prisma.ModelName = {
   CasinoGameTranslation: 'CasinoGameTranslation',
   CasinoGameSession: 'CasinoGameSession',
   User: 'User',
-  UserBalance: 'UserBalance',
+  UserWallet: 'UserWallet',
   UserBalanceStats: 'UserBalanceStats',
   Transaction: 'Transaction',
   GameRound: 'GameRound',
@@ -1132,7 +1147,6 @@ exports.Prisma.ModelName = {
   DailyCompEarning: 'DailyCompEarning',
   NowPaymentCallbackLog: 'NowPaymentCallbackLog',
   ExchangeRate: 'ExchangeRate',
-  Rolling: 'Rolling',
   UserToken: 'UserToken',
   EmailLog: 'EmailLog',
   AffiliateWallet: 'AffiliateWallet',
@@ -1152,7 +1166,9 @@ exports.Prisma.ModelName = {
   TierHistory: 'TierHistory',
   AdminAdjustmentDetail: 'AdminAdjustmentDetail',
   SystemAdjustmentDetail: 'SystemAdjustmentDetail',
-  UserSession: 'UserSession'
+  UserSession: 'UserSession',
+  WageringRequirement: 'WageringRequirement',
+  WageringContributionLog: 'WageringContributionLog'
 };
 
 /**

@@ -39,10 +39,9 @@ model User {
   GameSession            CasinoGameSession[]
   affiliateReferrals     Referral[]              @relation("AffiliateReferrals")
   referredUsers          Referral[]              @relation("ReferredUsers")
-  Rolling                Rolling[]
   transactions           Transaction[]
   depositDetails         DepositDetail[]
-  balances               UserBalance[]
+  userWallets            UserWallet[]
   UserBalanceStats       UserBalanceStats[]
   UserPromotion          UserPromotion[]
   UserSession            UserSession[]           @relation("UserSessions")
@@ -52,19 +51,22 @@ model User {
   userTier               UserTier?
   tierHistory            TierHistory[]
   adminAdjustmentDetails AdminAdjustmentDetail[] @relation("AdminAdjustments")
+  wageringRequirements   WageringRequirement[]
 }
 
-model UserBalance {
-  userId       BigInt
-  currency     ExchangeCurrencyCode
-  mainBalance  Decimal              @default(0) @db.Decimal(32, 18)
-  bonusBalance Decimal              @default(0) @db.Decimal(32, 18)
-  updatedAt    DateTime             @updatedAt
-  user         User                 @relation(fields: [userId], references: [id])
+model UserWallet {
+  userId               BigInt
+  currency             ExchangeCurrencyCode
+  mainBalance          Decimal               @default(0) @db.Decimal(32, 18)
+  bonusBalance         Decimal               @default(0) @db.Decimal(32, 18)
+  updatedAt            DateTime              @updatedAt
+  user                 User                  @relation(fields: [userId], references: [id])
+  wageringRequirements WageringRequirement[]
 
   @@id([userId, currency])
   @@index([userId])
   @@index([currency])
+  @@map("user_wallets")
 }
 
 model UserBalanceStats {
@@ -315,32 +317,6 @@ model ExchangeRate {
   @@index([isActive, collectedAt])
 }
 
-model Rolling {
-  id                           BigInt            @id @default(autoincrement())
-  userId                       BigInt
-  sourceType                   RollingSourceType @default(DEPOSIT)
-  userPromotionId              BigInt?
-  requiredAmount               Decimal           @db.Decimal(32, 18)
-  currentAmount                Decimal           @default(0) @db.Decimal(32, 18)
-  cancellationBalanceThreshold Decimal?          @db.Decimal(32, 18)
-  status                       RollingStatus     @default(ACTIVE)
-  depositAmount                Decimal?          @db.Decimal(32, 18)
-  bonusAmount                  Decimal?          @db.Decimal(32, 18)
-  completedAt                  DateTime?
-  cancelledAt                  DateTime?
-  createdAt                    DateTime          @default(now())
-  updatedAt                    DateTime          @updatedAt
-  depositDetailId              BigInt?
-  DepositDetail                DepositDetail?    @relation(fields: [depositDetailId], references: [id])
-  user                         User              @relation(fields: [userId], references: [id])
-  userPromotion                UserPromotion?    @relation(fields: [userPromotionId], references: [id])
-
-  @@index([userId, status, createdAt])
-  @@index([sourceType])
-  @@index([userPromotionId])
-  @@index([status])
-}
-
 model UserToken {
   id        Int       @id @default(autoincrement())
   userId    BigInt
@@ -567,17 +543,6 @@ enum ExchangeRateProvider {
   NOWPAYMENT
   COINGECKO
   OPEN_EXCHANGE_RATES
-}
-
-enum RollingSourceType {
-  DEPOSIT
-  PROMOTION_BONUS
-}
-
-enum RollingStatus {
-  ACTIVE
-  COMPLETED
-  CANCELLED
 }
 
 enum TokenType {

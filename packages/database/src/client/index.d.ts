@@ -69,10 +69,10 @@ export type CasinoGameSession = $Result.DefaultSelection<Prisma.$CasinoGameSessi
  */
 export type User = $Result.DefaultSelection<Prisma.$UserPayload>
 /**
- * Model UserBalance
+ * Model UserWallet
  * 
  */
-export type UserBalance = $Result.DefaultSelection<Prisma.$UserBalancePayload>
+export type UserWallet = $Result.DefaultSelection<Prisma.$UserWalletPayload>
 /**
  * Model UserBalanceStats
  * 
@@ -133,11 +133,6 @@ export type NowPaymentCallbackLog = $Result.DefaultSelection<Prisma.$NowPaymentC
  * 
  */
 export type ExchangeRate = $Result.DefaultSelection<Prisma.$ExchangeRatePayload>
-/**
- * Model Rolling
- * 
- */
-export type Rolling = $Result.DefaultSelection<Prisma.$RollingPayload>
 /**
  * Model UserToken
  * 
@@ -264,6 +259,16 @@ export type SystemAdjustmentDetail = $Result.DefaultSelection<Prisma.$SystemAdju
  *  * - 디바이스 정보 및 메타데이터 저장
  */
 export type UserSession = $Result.DefaultSelection<Prisma.$UserSessionPayload>
+/**
+ * Model WageringRequirement
+ * 
+ */
+export type WageringRequirement = $Result.DefaultSelection<Prisma.$WageringRequirementPayload>
+/**
+ * Model WageringContributionLog
+ * 
+ */
+export type WageringContributionLog = $Result.DefaultSelection<Prisma.$WageringContributionLogPayload>
 
 /**
  * Enums
@@ -443,23 +448,6 @@ export const ExchangeRateProvider: {
 export type ExchangeRateProvider = (typeof ExchangeRateProvider)[keyof typeof ExchangeRateProvider]
 
 
-export const RollingSourceType: {
-  DEPOSIT: 'DEPOSIT',
-  PROMOTION_BONUS: 'PROMOTION_BONUS'
-};
-
-export type RollingSourceType = (typeof RollingSourceType)[keyof typeof RollingSourceType]
-
-
-export const RollingStatus: {
-  ACTIVE: 'ACTIVE',
-  COMPLETED: 'COMPLETED',
-  CANCELLED: 'CANCELLED'
-};
-
-export type RollingStatus = (typeof RollingStatus)[keyof typeof RollingStatus]
-
-
 export const TokenType: {
   PASSWORD_RESET: 'PASSWORD_RESET'
 };
@@ -631,6 +619,25 @@ export const SessionStatus: {
 
 export type SessionStatus = (typeof SessionStatus)[keyof typeof SessionStatus]
 
+
+export const WageringSourceType: {
+  DEPOSIT: 'DEPOSIT',
+  PROMOTION_BONUS: 'PROMOTION_BONUS'
+};
+
+export type WageringSourceType = (typeof WageringSourceType)[keyof typeof WageringSourceType]
+
+
+export const WageringStatus: {
+  ACTIVE: 'ACTIVE',
+  COMPLETED: 'COMPLETED',
+  CANCELLED: 'CANCELLED',
+  EXPIRED: 'EXPIRED',
+  VOIDED: 'VOIDED'
+};
+
+export type WageringStatus = (typeof WageringStatus)[keyof typeof WageringStatus]
+
 }
 
 export type SocialType = $Enums.SocialType
@@ -700,14 +707,6 @@ export const WithdrawDetailStatus: typeof $Enums.WithdrawDetailStatus
 export type ExchangeRateProvider = $Enums.ExchangeRateProvider
 
 export const ExchangeRateProvider: typeof $Enums.ExchangeRateProvider
-
-export type RollingSourceType = $Enums.RollingSourceType
-
-export const RollingSourceType: typeof $Enums.RollingSourceType
-
-export type RollingStatus = $Enums.RollingStatus
-
-export const RollingStatus: typeof $Enums.RollingStatus
 
 export type TokenType = $Enums.TokenType
 
@@ -784,6 +783,14 @@ export const SessionType: typeof $Enums.SessionType
 export type SessionStatus = $Enums.SessionStatus
 
 export const SessionStatus: typeof $Enums.SessionStatus
+
+export type WageringSourceType = $Enums.WageringSourceType
+
+export const WageringSourceType: typeof $Enums.WageringSourceType
+
+export type WageringStatus = $Enums.WageringStatus
+
+export const WageringStatus: typeof $Enums.WageringStatus
 
 /**
  * ##  Prisma Client ʲˢ
@@ -1013,14 +1020,14 @@ export class PrismaClient<
   get user(): Prisma.UserDelegate<ExtArgs, ClientOptions>;
 
   /**
-   * `prisma.userBalance`: Exposes CRUD operations for the **UserBalance** model.
+   * `prisma.userWallet`: Exposes CRUD operations for the **UserWallet** model.
     * Example usage:
     * ```ts
-    * // Fetch zero or more UserBalances
-    * const userBalances = await prisma.userBalance.findMany()
+    * // Fetch zero or more UserWallets
+    * const userWallets = await prisma.userWallet.findMany()
     * ```
     */
-  get userBalance(): Prisma.UserBalanceDelegate<ExtArgs, ClientOptions>;
+  get userWallet(): Prisma.UserWalletDelegate<ExtArgs, ClientOptions>;
 
   /**
    * `prisma.userBalanceStats`: Exposes CRUD operations for the **UserBalanceStats** model.
@@ -1141,16 +1148,6 @@ export class PrismaClient<
     * ```
     */
   get exchangeRate(): Prisma.ExchangeRateDelegate<ExtArgs, ClientOptions>;
-
-  /**
-   * `prisma.rolling`: Exposes CRUD operations for the **Rolling** model.
-    * Example usage:
-    * ```ts
-    * // Fetch zero or more Rollings
-    * const rollings = await prisma.rolling.findMany()
-    * ```
-    */
-  get rolling(): Prisma.RollingDelegate<ExtArgs, ClientOptions>;
 
   /**
    * `prisma.userToken`: Exposes CRUD operations for the **UserToken** model.
@@ -1351,6 +1348,26 @@ export class PrismaClient<
     * ```
     */
   get userSession(): Prisma.UserSessionDelegate<ExtArgs, ClientOptions>;
+
+  /**
+   * `prisma.wageringRequirement`: Exposes CRUD operations for the **WageringRequirement** model.
+    * Example usage:
+    * ```ts
+    * // Fetch zero or more WageringRequirements
+    * const wageringRequirements = await prisma.wageringRequirement.findMany()
+    * ```
+    */
+  get wageringRequirement(): Prisma.WageringRequirementDelegate<ExtArgs, ClientOptions>;
+
+  /**
+   * `prisma.wageringContributionLog`: Exposes CRUD operations for the **WageringContributionLog** model.
+    * Example usage:
+    * ```ts
+    * // Fetch zero or more WageringContributionLogs
+    * const wageringContributionLogs = await prisma.wageringContributionLog.findMany()
+    * ```
+    */
+  get wageringContributionLog(): Prisma.WageringContributionLogDelegate<ExtArgs, ClientOptions>;
 }
 
 export namespace Prisma {
@@ -1796,7 +1813,7 @@ export namespace Prisma {
     CasinoGameTranslation: 'CasinoGameTranslation',
     CasinoGameSession: 'CasinoGameSession',
     User: 'User',
-    UserBalance: 'UserBalance',
+    UserWallet: 'UserWallet',
     UserBalanceStats: 'UserBalanceStats',
     Transaction: 'Transaction',
     GameRound: 'GameRound',
@@ -1809,7 +1826,6 @@ export namespace Prisma {
     DailyCompEarning: 'DailyCompEarning',
     NowPaymentCallbackLog: 'NowPaymentCallbackLog',
     ExchangeRate: 'ExchangeRate',
-    Rolling: 'Rolling',
     UserToken: 'UserToken',
     EmailLog: 'EmailLog',
     AffiliateWallet: 'AffiliateWallet',
@@ -1829,7 +1845,9 @@ export namespace Prisma {
     TierHistory: 'TierHistory',
     AdminAdjustmentDetail: 'AdminAdjustmentDetail',
     SystemAdjustmentDetail: 'SystemAdjustmentDetail',
-    UserSession: 'UserSession'
+    UserSession: 'UserSession',
+    WageringRequirement: 'WageringRequirement',
+    WageringContributionLog: 'WageringContributionLog'
   };
 
   export type ModelName = (typeof ModelName)[keyof typeof ModelName]
@@ -1845,7 +1863,7 @@ export namespace Prisma {
       omit: GlobalOmitOptions
     }
     meta: {
-      modelProps: "affiliateCode" | "referral" | "authAuditLog" | "activityLog" | "systemErrorLog" | "integrationLog" | "unifiedLog" | "casinoGame" | "casinoGameTranslation" | "casinoGameSession" | "user" | "userBalance" | "userBalanceStats" | "transaction" | "gameRound" | "gameBet" | "gameWin" | "transactionBalanceDetail" | "bonusDetail" | "withdrawDetail" | "compTransaction" | "dailyCompEarning" | "nowPaymentCallbackLog" | "exchangeRate" | "rolling" | "userToken" | "emailLog" | "affiliateWallet" | "affiliateCommission" | "affiliateTier" | "loginAttempt" | "depositDetail" | "cryptoConfig" | "bankConfig" | "promotion" | "promotionTranslation" | "promotionCurrency" | "userPromotion" | "tier" | "tierTranslation" | "userTier" | "tierHistory" | "adminAdjustmentDetail" | "systemAdjustmentDetail" | "userSession"
+      modelProps: "affiliateCode" | "referral" | "authAuditLog" | "activityLog" | "systemErrorLog" | "integrationLog" | "unifiedLog" | "casinoGame" | "casinoGameTranslation" | "casinoGameSession" | "user" | "userWallet" | "userBalanceStats" | "transaction" | "gameRound" | "gameBet" | "gameWin" | "transactionBalanceDetail" | "bonusDetail" | "withdrawDetail" | "compTransaction" | "dailyCompEarning" | "nowPaymentCallbackLog" | "exchangeRate" | "userToken" | "emailLog" | "affiliateWallet" | "affiliateCommission" | "affiliateTier" | "loginAttempt" | "depositDetail" | "cryptoConfig" | "bankConfig" | "promotion" | "promotionTranslation" | "promotionCurrency" | "userPromotion" | "tier" | "tierTranslation" | "userTier" | "tierHistory" | "adminAdjustmentDetail" | "systemAdjustmentDetail" | "userSession" | "wageringRequirement" | "wageringContributionLog"
       txIsolationLevel: Prisma.TransactionIsolationLevel
     }
     model: {
@@ -2663,77 +2681,77 @@ export namespace Prisma {
           }
         }
       }
-      UserBalance: {
-        payload: Prisma.$UserBalancePayload<ExtArgs>
-        fields: Prisma.UserBalanceFieldRefs
+      UserWallet: {
+        payload: Prisma.$UserWalletPayload<ExtArgs>
+        fields: Prisma.UserWalletFieldRefs
         operations: {
           findUnique: {
-            args: Prisma.UserBalanceFindUniqueArgs<ExtArgs>
-            result: $Utils.PayloadToResult<Prisma.$UserBalancePayload> | null
+            args: Prisma.UserWalletFindUniqueArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$UserWalletPayload> | null
           }
           findUniqueOrThrow: {
-            args: Prisma.UserBalanceFindUniqueOrThrowArgs<ExtArgs>
-            result: $Utils.PayloadToResult<Prisma.$UserBalancePayload>
+            args: Prisma.UserWalletFindUniqueOrThrowArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$UserWalletPayload>
           }
           findFirst: {
-            args: Prisma.UserBalanceFindFirstArgs<ExtArgs>
-            result: $Utils.PayloadToResult<Prisma.$UserBalancePayload> | null
+            args: Prisma.UserWalletFindFirstArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$UserWalletPayload> | null
           }
           findFirstOrThrow: {
-            args: Prisma.UserBalanceFindFirstOrThrowArgs<ExtArgs>
-            result: $Utils.PayloadToResult<Prisma.$UserBalancePayload>
+            args: Prisma.UserWalletFindFirstOrThrowArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$UserWalletPayload>
           }
           findMany: {
-            args: Prisma.UserBalanceFindManyArgs<ExtArgs>
-            result: $Utils.PayloadToResult<Prisma.$UserBalancePayload>[]
+            args: Prisma.UserWalletFindManyArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$UserWalletPayload>[]
           }
           create: {
-            args: Prisma.UserBalanceCreateArgs<ExtArgs>
-            result: $Utils.PayloadToResult<Prisma.$UserBalancePayload>
+            args: Prisma.UserWalletCreateArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$UserWalletPayload>
           }
           createMany: {
-            args: Prisma.UserBalanceCreateManyArgs<ExtArgs>
+            args: Prisma.UserWalletCreateManyArgs<ExtArgs>
             result: BatchPayload
           }
           createManyAndReturn: {
-            args: Prisma.UserBalanceCreateManyAndReturnArgs<ExtArgs>
-            result: $Utils.PayloadToResult<Prisma.$UserBalancePayload>[]
+            args: Prisma.UserWalletCreateManyAndReturnArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$UserWalletPayload>[]
           }
           delete: {
-            args: Prisma.UserBalanceDeleteArgs<ExtArgs>
-            result: $Utils.PayloadToResult<Prisma.$UserBalancePayload>
+            args: Prisma.UserWalletDeleteArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$UserWalletPayload>
           }
           update: {
-            args: Prisma.UserBalanceUpdateArgs<ExtArgs>
-            result: $Utils.PayloadToResult<Prisma.$UserBalancePayload>
+            args: Prisma.UserWalletUpdateArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$UserWalletPayload>
           }
           deleteMany: {
-            args: Prisma.UserBalanceDeleteManyArgs<ExtArgs>
+            args: Prisma.UserWalletDeleteManyArgs<ExtArgs>
             result: BatchPayload
           }
           updateMany: {
-            args: Prisma.UserBalanceUpdateManyArgs<ExtArgs>
+            args: Prisma.UserWalletUpdateManyArgs<ExtArgs>
             result: BatchPayload
           }
           updateManyAndReturn: {
-            args: Prisma.UserBalanceUpdateManyAndReturnArgs<ExtArgs>
-            result: $Utils.PayloadToResult<Prisma.$UserBalancePayload>[]
+            args: Prisma.UserWalletUpdateManyAndReturnArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$UserWalletPayload>[]
           }
           upsert: {
-            args: Prisma.UserBalanceUpsertArgs<ExtArgs>
-            result: $Utils.PayloadToResult<Prisma.$UserBalancePayload>
+            args: Prisma.UserWalletUpsertArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$UserWalletPayload>
           }
           aggregate: {
-            args: Prisma.UserBalanceAggregateArgs<ExtArgs>
-            result: $Utils.Optional<AggregateUserBalance>
+            args: Prisma.UserWalletAggregateArgs<ExtArgs>
+            result: $Utils.Optional<AggregateUserWallet>
           }
           groupBy: {
-            args: Prisma.UserBalanceGroupByArgs<ExtArgs>
-            result: $Utils.Optional<UserBalanceGroupByOutputType>[]
+            args: Prisma.UserWalletGroupByArgs<ExtArgs>
+            result: $Utils.Optional<UserWalletGroupByOutputType>[]
           }
           count: {
-            args: Prisma.UserBalanceCountArgs<ExtArgs>
-            result: $Utils.Optional<UserBalanceCountAggregateOutputType> | number
+            args: Prisma.UserWalletCountArgs<ExtArgs>
+            result: $Utils.Optional<UserWalletCountAggregateOutputType> | number
           }
         }
       }
@@ -3622,80 +3640,6 @@ export namespace Prisma {
           count: {
             args: Prisma.ExchangeRateCountArgs<ExtArgs>
             result: $Utils.Optional<ExchangeRateCountAggregateOutputType> | number
-          }
-        }
-      }
-      Rolling: {
-        payload: Prisma.$RollingPayload<ExtArgs>
-        fields: Prisma.RollingFieldRefs
-        operations: {
-          findUnique: {
-            args: Prisma.RollingFindUniqueArgs<ExtArgs>
-            result: $Utils.PayloadToResult<Prisma.$RollingPayload> | null
-          }
-          findUniqueOrThrow: {
-            args: Prisma.RollingFindUniqueOrThrowArgs<ExtArgs>
-            result: $Utils.PayloadToResult<Prisma.$RollingPayload>
-          }
-          findFirst: {
-            args: Prisma.RollingFindFirstArgs<ExtArgs>
-            result: $Utils.PayloadToResult<Prisma.$RollingPayload> | null
-          }
-          findFirstOrThrow: {
-            args: Prisma.RollingFindFirstOrThrowArgs<ExtArgs>
-            result: $Utils.PayloadToResult<Prisma.$RollingPayload>
-          }
-          findMany: {
-            args: Prisma.RollingFindManyArgs<ExtArgs>
-            result: $Utils.PayloadToResult<Prisma.$RollingPayload>[]
-          }
-          create: {
-            args: Prisma.RollingCreateArgs<ExtArgs>
-            result: $Utils.PayloadToResult<Prisma.$RollingPayload>
-          }
-          createMany: {
-            args: Prisma.RollingCreateManyArgs<ExtArgs>
-            result: BatchPayload
-          }
-          createManyAndReturn: {
-            args: Prisma.RollingCreateManyAndReturnArgs<ExtArgs>
-            result: $Utils.PayloadToResult<Prisma.$RollingPayload>[]
-          }
-          delete: {
-            args: Prisma.RollingDeleteArgs<ExtArgs>
-            result: $Utils.PayloadToResult<Prisma.$RollingPayload>
-          }
-          update: {
-            args: Prisma.RollingUpdateArgs<ExtArgs>
-            result: $Utils.PayloadToResult<Prisma.$RollingPayload>
-          }
-          deleteMany: {
-            args: Prisma.RollingDeleteManyArgs<ExtArgs>
-            result: BatchPayload
-          }
-          updateMany: {
-            args: Prisma.RollingUpdateManyArgs<ExtArgs>
-            result: BatchPayload
-          }
-          updateManyAndReturn: {
-            args: Prisma.RollingUpdateManyAndReturnArgs<ExtArgs>
-            result: $Utils.PayloadToResult<Prisma.$RollingPayload>[]
-          }
-          upsert: {
-            args: Prisma.RollingUpsertArgs<ExtArgs>
-            result: $Utils.PayloadToResult<Prisma.$RollingPayload>
-          }
-          aggregate: {
-            args: Prisma.RollingAggregateArgs<ExtArgs>
-            result: $Utils.Optional<AggregateRolling>
-          }
-          groupBy: {
-            args: Prisma.RollingGroupByArgs<ExtArgs>
-            result: $Utils.Optional<RollingGroupByOutputType>[]
-          }
-          count: {
-            args: Prisma.RollingCountArgs<ExtArgs>
-            result: $Utils.Optional<RollingCountAggregateOutputType> | number
           }
         }
       }
@@ -5179,6 +5123,154 @@ export namespace Prisma {
           }
         }
       }
+      WageringRequirement: {
+        payload: Prisma.$WageringRequirementPayload<ExtArgs>
+        fields: Prisma.WageringRequirementFieldRefs
+        operations: {
+          findUnique: {
+            args: Prisma.WageringRequirementFindUniqueArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$WageringRequirementPayload> | null
+          }
+          findUniqueOrThrow: {
+            args: Prisma.WageringRequirementFindUniqueOrThrowArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$WageringRequirementPayload>
+          }
+          findFirst: {
+            args: Prisma.WageringRequirementFindFirstArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$WageringRequirementPayload> | null
+          }
+          findFirstOrThrow: {
+            args: Prisma.WageringRequirementFindFirstOrThrowArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$WageringRequirementPayload>
+          }
+          findMany: {
+            args: Prisma.WageringRequirementFindManyArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$WageringRequirementPayload>[]
+          }
+          create: {
+            args: Prisma.WageringRequirementCreateArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$WageringRequirementPayload>
+          }
+          createMany: {
+            args: Prisma.WageringRequirementCreateManyArgs<ExtArgs>
+            result: BatchPayload
+          }
+          createManyAndReturn: {
+            args: Prisma.WageringRequirementCreateManyAndReturnArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$WageringRequirementPayload>[]
+          }
+          delete: {
+            args: Prisma.WageringRequirementDeleteArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$WageringRequirementPayload>
+          }
+          update: {
+            args: Prisma.WageringRequirementUpdateArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$WageringRequirementPayload>
+          }
+          deleteMany: {
+            args: Prisma.WageringRequirementDeleteManyArgs<ExtArgs>
+            result: BatchPayload
+          }
+          updateMany: {
+            args: Prisma.WageringRequirementUpdateManyArgs<ExtArgs>
+            result: BatchPayload
+          }
+          updateManyAndReturn: {
+            args: Prisma.WageringRequirementUpdateManyAndReturnArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$WageringRequirementPayload>[]
+          }
+          upsert: {
+            args: Prisma.WageringRequirementUpsertArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$WageringRequirementPayload>
+          }
+          aggregate: {
+            args: Prisma.WageringRequirementAggregateArgs<ExtArgs>
+            result: $Utils.Optional<AggregateWageringRequirement>
+          }
+          groupBy: {
+            args: Prisma.WageringRequirementGroupByArgs<ExtArgs>
+            result: $Utils.Optional<WageringRequirementGroupByOutputType>[]
+          }
+          count: {
+            args: Prisma.WageringRequirementCountArgs<ExtArgs>
+            result: $Utils.Optional<WageringRequirementCountAggregateOutputType> | number
+          }
+        }
+      }
+      WageringContributionLog: {
+        payload: Prisma.$WageringContributionLogPayload<ExtArgs>
+        fields: Prisma.WageringContributionLogFieldRefs
+        operations: {
+          findUnique: {
+            args: Prisma.WageringContributionLogFindUniqueArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$WageringContributionLogPayload> | null
+          }
+          findUniqueOrThrow: {
+            args: Prisma.WageringContributionLogFindUniqueOrThrowArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$WageringContributionLogPayload>
+          }
+          findFirst: {
+            args: Prisma.WageringContributionLogFindFirstArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$WageringContributionLogPayload> | null
+          }
+          findFirstOrThrow: {
+            args: Prisma.WageringContributionLogFindFirstOrThrowArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$WageringContributionLogPayload>
+          }
+          findMany: {
+            args: Prisma.WageringContributionLogFindManyArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$WageringContributionLogPayload>[]
+          }
+          create: {
+            args: Prisma.WageringContributionLogCreateArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$WageringContributionLogPayload>
+          }
+          createMany: {
+            args: Prisma.WageringContributionLogCreateManyArgs<ExtArgs>
+            result: BatchPayload
+          }
+          createManyAndReturn: {
+            args: Prisma.WageringContributionLogCreateManyAndReturnArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$WageringContributionLogPayload>[]
+          }
+          delete: {
+            args: Prisma.WageringContributionLogDeleteArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$WageringContributionLogPayload>
+          }
+          update: {
+            args: Prisma.WageringContributionLogUpdateArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$WageringContributionLogPayload>
+          }
+          deleteMany: {
+            args: Prisma.WageringContributionLogDeleteManyArgs<ExtArgs>
+            result: BatchPayload
+          }
+          updateMany: {
+            args: Prisma.WageringContributionLogUpdateManyArgs<ExtArgs>
+            result: BatchPayload
+          }
+          updateManyAndReturn: {
+            args: Prisma.WageringContributionLogUpdateManyAndReturnArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$WageringContributionLogPayload>[]
+          }
+          upsert: {
+            args: Prisma.WageringContributionLogUpsertArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$WageringContributionLogPayload>
+          }
+          aggregate: {
+            args: Prisma.WageringContributionLogAggregateArgs<ExtArgs>
+            result: $Utils.Optional<AggregateWageringContributionLog>
+          }
+          groupBy: {
+            args: Prisma.WageringContributionLogGroupByArgs<ExtArgs>
+            result: $Utils.Optional<WageringContributionLogGroupByOutputType>[]
+          }
+          count: {
+            args: Prisma.WageringContributionLogCountArgs<ExtArgs>
+            result: $Utils.Optional<WageringContributionLogCountAggregateOutputType> | number
+          }
+        }
+      }
     }
   } & {
     other: {
@@ -5298,7 +5390,7 @@ export namespace Prisma {
     casinoGameTranslation?: CasinoGameTranslationOmit
     casinoGameSession?: CasinoGameSessionOmit
     user?: UserOmit
-    userBalance?: UserBalanceOmit
+    userWallet?: UserWalletOmit
     userBalanceStats?: UserBalanceStatsOmit
     transaction?: TransactionOmit
     gameRound?: GameRoundOmit
@@ -5311,7 +5403,6 @@ export namespace Prisma {
     dailyCompEarning?: DailyCompEarningOmit
     nowPaymentCallbackLog?: NowPaymentCallbackLogOmit
     exchangeRate?: ExchangeRateOmit
-    rolling?: RollingOmit
     userToken?: UserTokenOmit
     emailLog?: EmailLogOmit
     affiliateWallet?: AffiliateWalletOmit
@@ -5332,6 +5423,8 @@ export namespace Prisma {
     adminAdjustmentDetail?: AdminAdjustmentDetailOmit
     systemAdjustmentDetail?: SystemAdjustmentDetailOmit
     userSession?: UserSessionOmit
+    wageringRequirement?: WageringRequirementOmit
+    wageringContributionLog?: WageringContributionLogOmit
   }
 
   /* Types for Logging */
@@ -5542,10 +5635,9 @@ export namespace Prisma {
     GameSession: number
     affiliateReferrals: number
     referredUsers: number
-    Rolling: number
     transactions: number
     depositDetails: number
-    balances: number
+    userWallets: number
     UserBalanceStats: number
     UserPromotion: number
     UserSession: number
@@ -5554,6 +5646,7 @@ export namespace Prisma {
     loginAttempts: number
     tierHistory: number
     adminAdjustmentDetails: number
+    wageringRequirements: number
   }
 
   export type UserCountOutputTypeSelect<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
@@ -5567,10 +5660,9 @@ export namespace Prisma {
     GameSession?: boolean | UserCountOutputTypeCountGameSessionArgs
     affiliateReferrals?: boolean | UserCountOutputTypeCountAffiliateReferralsArgs
     referredUsers?: boolean | UserCountOutputTypeCountReferredUsersArgs
-    Rolling?: boolean | UserCountOutputTypeCountRollingArgs
     transactions?: boolean | UserCountOutputTypeCountTransactionsArgs
     depositDetails?: boolean | UserCountOutputTypeCountDepositDetailsArgs
-    balances?: boolean | UserCountOutputTypeCountBalancesArgs
+    userWallets?: boolean | UserCountOutputTypeCountUserWalletsArgs
     UserBalanceStats?: boolean | UserCountOutputTypeCountUserBalanceStatsArgs
     UserPromotion?: boolean | UserCountOutputTypeCountUserPromotionArgs
     UserSession?: boolean | UserCountOutputTypeCountUserSessionArgs
@@ -5579,6 +5671,7 @@ export namespace Prisma {
     loginAttempts?: boolean | UserCountOutputTypeCountLoginAttemptsArgs
     tierHistory?: boolean | UserCountOutputTypeCountTierHistoryArgs
     adminAdjustmentDetails?: boolean | UserCountOutputTypeCountAdminAdjustmentDetailsArgs
+    wageringRequirements?: boolean | UserCountOutputTypeCountWageringRequirementsArgs
   }
 
   // Custom InputTypes
@@ -5665,13 +5758,6 @@ export namespace Prisma {
   /**
    * UserCountOutputType without action
    */
-  export type UserCountOutputTypeCountRollingArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
-    where?: RollingWhereInput
-  }
-
-  /**
-   * UserCountOutputType without action
-   */
   export type UserCountOutputTypeCountTransactionsArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
     where?: TransactionWhereInput
   }
@@ -5686,8 +5772,8 @@ export namespace Prisma {
   /**
    * UserCountOutputType without action
    */
-  export type UserCountOutputTypeCountBalancesArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
-    where?: UserBalanceWhereInput
+  export type UserCountOutputTypeCountUserWalletsArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    where?: UserWalletWhereInput
   }
 
   /**
@@ -5744,6 +5830,44 @@ export namespace Prisma {
    */
   export type UserCountOutputTypeCountAdminAdjustmentDetailsArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
     where?: AdminAdjustmentDetailWhereInput
+  }
+
+  /**
+   * UserCountOutputType without action
+   */
+  export type UserCountOutputTypeCountWageringRequirementsArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    where?: WageringRequirementWhereInput
+  }
+
+
+  /**
+   * Count Type UserWalletCountOutputType
+   */
+
+  export type UserWalletCountOutputType = {
+    wageringRequirements: number
+  }
+
+  export type UserWalletCountOutputTypeSelect<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    wageringRequirements?: boolean | UserWalletCountOutputTypeCountWageringRequirementsArgs
+  }
+
+  // Custom InputTypes
+  /**
+   * UserWalletCountOutputType without action
+   */
+  export type UserWalletCountOutputTypeDefaultArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the UserWalletCountOutputType
+     */
+    select?: UserWalletCountOutputTypeSelect<ExtArgs> | null
+  }
+
+  /**
+   * UserWalletCountOutputType without action
+   */
+  export type UserWalletCountOutputTypeCountWageringRequirementsArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    where?: WageringRequirementWhereInput
   }
 
 
@@ -5863,11 +5987,11 @@ export namespace Prisma {
    */
 
   export type DepositDetailCountOutputType = {
-    Rolling: number
+    wageringRequirements: number
   }
 
   export type DepositDetailCountOutputTypeSelect<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
-    Rolling?: boolean | DepositDetailCountOutputTypeCountRollingArgs
+    wageringRequirements?: boolean | DepositDetailCountOutputTypeCountWageringRequirementsArgs
   }
 
   // Custom InputTypes
@@ -5884,8 +6008,8 @@ export namespace Prisma {
   /**
    * DepositDetailCountOutputType without action
    */
-  export type DepositDetailCountOutputTypeCountRollingArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
-    where?: RollingWhereInput
+  export type DepositDetailCountOutputTypeCountWageringRequirementsArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    where?: WageringRequirementWhereInput
   }
 
 
@@ -6005,11 +6129,11 @@ export namespace Prisma {
    */
 
   export type UserPromotionCountOutputType = {
-    Rolling: number
+    wageringRequirements: number
   }
 
   export type UserPromotionCountOutputTypeSelect<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
-    Rolling?: boolean | UserPromotionCountOutputTypeCountRollingArgs
+    wageringRequirements?: boolean | UserPromotionCountOutputTypeCountWageringRequirementsArgs
   }
 
   // Custom InputTypes
@@ -6026,8 +6150,8 @@ export namespace Prisma {
   /**
    * UserPromotionCountOutputType without action
    */
-  export type UserPromotionCountOutputTypeCountRollingArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
-    where?: RollingWhereInput
+  export type UserPromotionCountOutputTypeCountWageringRequirementsArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    where?: WageringRequirementWhereInput
   }
 
 
@@ -6086,6 +6210,37 @@ export namespace Prisma {
    */
   export type TierCountOutputTypeCountHistoryToArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
     where?: TierHistoryWhereInput
+  }
+
+
+  /**
+   * Count Type WageringRequirementCountOutputType
+   */
+
+  export type WageringRequirementCountOutputType = {
+    contributionLogs: number
+  }
+
+  export type WageringRequirementCountOutputTypeSelect<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    contributionLogs?: boolean | WageringRequirementCountOutputTypeCountContributionLogsArgs
+  }
+
+  // Custom InputTypes
+  /**
+   * WageringRequirementCountOutputType without action
+   */
+  export type WageringRequirementCountOutputTypeDefaultArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the WageringRequirementCountOutputType
+     */
+    select?: WageringRequirementCountOutputTypeSelect<ExtArgs> | null
+  }
+
+  /**
+   * WageringRequirementCountOutputType without action
+   */
+  export type WageringRequirementCountOutputTypeCountContributionLogsArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    where?: WageringContributionLogWhereInput
   }
 
 
@@ -18523,10 +18678,9 @@ export namespace Prisma {
     GameSession?: boolean | User$GameSessionArgs<ExtArgs>
     affiliateReferrals?: boolean | User$affiliateReferralsArgs<ExtArgs>
     referredUsers?: boolean | User$referredUsersArgs<ExtArgs>
-    Rolling?: boolean | User$RollingArgs<ExtArgs>
     transactions?: boolean | User$transactionsArgs<ExtArgs>
     depositDetails?: boolean | User$depositDetailsArgs<ExtArgs>
-    balances?: boolean | User$balancesArgs<ExtArgs>
+    userWallets?: boolean | User$userWalletsArgs<ExtArgs>
     UserBalanceStats?: boolean | User$UserBalanceStatsArgs<ExtArgs>
     UserPromotion?: boolean | User$UserPromotionArgs<ExtArgs>
     UserSession?: boolean | User$UserSessionArgs<ExtArgs>
@@ -18536,6 +18690,7 @@ export namespace Prisma {
     userTier?: boolean | User$userTierArgs<ExtArgs>
     tierHistory?: boolean | User$tierHistoryArgs<ExtArgs>
     adminAdjustmentDetails?: boolean | User$adminAdjustmentDetailsArgs<ExtArgs>
+    wageringRequirements?: boolean | User$wageringRequirementsArgs<ExtArgs>
     _count?: boolean | UserCountOutputTypeDefaultArgs<ExtArgs>
   }, ExtArgs["result"]["user"]>
 
@@ -18618,10 +18773,9 @@ export namespace Prisma {
     GameSession?: boolean | User$GameSessionArgs<ExtArgs>
     affiliateReferrals?: boolean | User$affiliateReferralsArgs<ExtArgs>
     referredUsers?: boolean | User$referredUsersArgs<ExtArgs>
-    Rolling?: boolean | User$RollingArgs<ExtArgs>
     transactions?: boolean | User$transactionsArgs<ExtArgs>
     depositDetails?: boolean | User$depositDetailsArgs<ExtArgs>
-    balances?: boolean | User$balancesArgs<ExtArgs>
+    userWallets?: boolean | User$userWalletsArgs<ExtArgs>
     UserBalanceStats?: boolean | User$UserBalanceStatsArgs<ExtArgs>
     UserPromotion?: boolean | User$UserPromotionArgs<ExtArgs>
     UserSession?: boolean | User$UserSessionArgs<ExtArgs>
@@ -18631,6 +18785,7 @@ export namespace Prisma {
     userTier?: boolean | User$userTierArgs<ExtArgs>
     tierHistory?: boolean | User$tierHistoryArgs<ExtArgs>
     adminAdjustmentDetails?: boolean | User$adminAdjustmentDetailsArgs<ExtArgs>
+    wageringRequirements?: boolean | User$wageringRequirementsArgs<ExtArgs>
     _count?: boolean | UserCountOutputTypeDefaultArgs<ExtArgs>
   }
   export type UserIncludeCreateManyAndReturn<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {}
@@ -18650,10 +18805,9 @@ export namespace Prisma {
       GameSession: Prisma.$CasinoGameSessionPayload<ExtArgs>[]
       affiliateReferrals: Prisma.$ReferralPayload<ExtArgs>[]
       referredUsers: Prisma.$ReferralPayload<ExtArgs>[]
-      Rolling: Prisma.$RollingPayload<ExtArgs>[]
       transactions: Prisma.$TransactionPayload<ExtArgs>[]
       depositDetails: Prisma.$DepositDetailPayload<ExtArgs>[]
-      balances: Prisma.$UserBalancePayload<ExtArgs>[]
+      userWallets: Prisma.$UserWalletPayload<ExtArgs>[]
       UserBalanceStats: Prisma.$UserBalanceStatsPayload<ExtArgs>[]
       UserPromotion: Prisma.$UserPromotionPayload<ExtArgs>[]
       UserSession: Prisma.$UserSessionPayload<ExtArgs>[]
@@ -18663,6 +18817,7 @@ export namespace Prisma {
       userTier: Prisma.$UserTierPayload<ExtArgs> | null
       tierHistory: Prisma.$TierHistoryPayload<ExtArgs>[]
       adminAdjustmentDetails: Prisma.$AdminAdjustmentDetailPayload<ExtArgs>[]
+      wageringRequirements: Prisma.$WageringRequirementPayload<ExtArgs>[]
     }
     scalars: $Extensions.GetPayloadResult<{
       id: bigint
@@ -19089,10 +19244,9 @@ export namespace Prisma {
     GameSession<T extends User$GameSessionArgs<ExtArgs> = {}>(args?: Subset<T, User$GameSessionArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$CasinoGameSessionPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
     affiliateReferrals<T extends User$affiliateReferralsArgs<ExtArgs> = {}>(args?: Subset<T, User$affiliateReferralsArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$ReferralPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
     referredUsers<T extends User$referredUsersArgs<ExtArgs> = {}>(args?: Subset<T, User$referredUsersArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$ReferralPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
-    Rolling<T extends User$RollingArgs<ExtArgs> = {}>(args?: Subset<T, User$RollingArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$RollingPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
     transactions<T extends User$transactionsArgs<ExtArgs> = {}>(args?: Subset<T, User$transactionsArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$TransactionPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
     depositDetails<T extends User$depositDetailsArgs<ExtArgs> = {}>(args?: Subset<T, User$depositDetailsArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$DepositDetailPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
-    balances<T extends User$balancesArgs<ExtArgs> = {}>(args?: Subset<T, User$balancesArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$UserBalancePayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
+    userWallets<T extends User$userWalletsArgs<ExtArgs> = {}>(args?: Subset<T, User$userWalletsArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$UserWalletPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
     UserBalanceStats<T extends User$UserBalanceStatsArgs<ExtArgs> = {}>(args?: Subset<T, User$UserBalanceStatsArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$UserBalanceStatsPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
     UserPromotion<T extends User$UserPromotionArgs<ExtArgs> = {}>(args?: Subset<T, User$UserPromotionArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$UserPromotionPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
     UserSession<T extends User$UserSessionArgs<ExtArgs> = {}>(args?: Subset<T, User$UserSessionArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$UserSessionPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
@@ -19102,6 +19256,7 @@ export namespace Prisma {
     userTier<T extends User$userTierArgs<ExtArgs> = {}>(args?: Subset<T, User$userTierArgs<ExtArgs>>): Prisma__UserTierClient<$Result.GetResult<Prisma.$UserTierPayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions> | null, null, ExtArgs, GlobalOmitOptions>
     tierHistory<T extends User$tierHistoryArgs<ExtArgs> = {}>(args?: Subset<T, User$tierHistoryArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$TierHistoryPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
     adminAdjustmentDetails<T extends User$adminAdjustmentDetailsArgs<ExtArgs> = {}>(args?: Subset<T, User$adminAdjustmentDetailsArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$AdminAdjustmentDetailPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
+    wageringRequirements<T extends User$wageringRequirementsArgs<ExtArgs> = {}>(args?: Subset<T, User$wageringRequirementsArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$WageringRequirementPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
     /**
      * Attaches callbacks for the resolution and/or rejection of the Promise.
      * @param onfulfilled The callback to execute when the Promise is resolved.
@@ -19797,30 +19952,6 @@ export namespace Prisma {
   }
 
   /**
-   * User.Rolling
-   */
-  export type User$RollingArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
-    /**
-     * Select specific fields to fetch from the Rolling
-     */
-    select?: RollingSelect<ExtArgs> | null
-    /**
-     * Omit specific fields from the Rolling
-     */
-    omit?: RollingOmit<ExtArgs> | null
-    /**
-     * Choose, which related nodes to fetch as well
-     */
-    include?: RollingInclude<ExtArgs> | null
-    where?: RollingWhereInput
-    orderBy?: RollingOrderByWithRelationInput | RollingOrderByWithRelationInput[]
-    cursor?: RollingWhereUniqueInput
-    take?: number
-    skip?: number
-    distinct?: RollingScalarFieldEnum | RollingScalarFieldEnum[]
-  }
-
-  /**
    * User.transactions
    */
   export type User$transactionsArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
@@ -19869,27 +20000,27 @@ export namespace Prisma {
   }
 
   /**
-   * User.balances
+   * User.userWallets
    */
-  export type User$balancesArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+  export type User$userWalletsArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
     /**
-     * Select specific fields to fetch from the UserBalance
+     * Select specific fields to fetch from the UserWallet
      */
-    select?: UserBalanceSelect<ExtArgs> | null
+    select?: UserWalletSelect<ExtArgs> | null
     /**
-     * Omit specific fields from the UserBalance
+     * Omit specific fields from the UserWallet
      */
-    omit?: UserBalanceOmit<ExtArgs> | null
+    omit?: UserWalletOmit<ExtArgs> | null
     /**
      * Choose, which related nodes to fetch as well
      */
-    include?: UserBalanceInclude<ExtArgs> | null
-    where?: UserBalanceWhereInput
-    orderBy?: UserBalanceOrderByWithRelationInput | UserBalanceOrderByWithRelationInput[]
-    cursor?: UserBalanceWhereUniqueInput
+    include?: UserWalletInclude<ExtArgs> | null
+    where?: UserWalletWhereInput
+    orderBy?: UserWalletOrderByWithRelationInput | UserWalletOrderByWithRelationInput[]
+    cursor?: UserWalletWhereUniqueInput
     take?: number
     skip?: number
-    distinct?: UserBalanceScalarFieldEnum | UserBalanceScalarFieldEnum[]
+    distinct?: UserWalletScalarFieldEnum | UserWalletScalarFieldEnum[]
   }
 
   /**
@@ -20104,6 +20235,30 @@ export namespace Prisma {
   }
 
   /**
+   * User.wageringRequirements
+   */
+  export type User$wageringRequirementsArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the WageringRequirement
+     */
+    select?: WageringRequirementSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the WageringRequirement
+     */
+    omit?: WageringRequirementOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: WageringRequirementInclude<ExtArgs> | null
+    where?: WageringRequirementWhereInput
+    orderBy?: WageringRequirementOrderByWithRelationInput | WageringRequirementOrderByWithRelationInput[]
+    cursor?: WageringRequirementWhereUniqueInput
+    take?: number
+    skip?: number
+    distinct?: WageringRequirementScalarFieldEnum | WageringRequirementScalarFieldEnum[]
+  }
+
+  /**
    * User without action
    */
   export type UserDefaultArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
@@ -20123,38 +20278,30 @@ export namespace Prisma {
 
 
   /**
-   * Model UserBalance
+   * Model UserWallet
    */
 
-  export type AggregateUserBalance = {
-    _count: UserBalanceCountAggregateOutputType | null
-    _avg: UserBalanceAvgAggregateOutputType | null
-    _sum: UserBalanceSumAggregateOutputType | null
-    _min: UserBalanceMinAggregateOutputType | null
-    _max: UserBalanceMaxAggregateOutputType | null
+  export type AggregateUserWallet = {
+    _count: UserWalletCountAggregateOutputType | null
+    _avg: UserWalletAvgAggregateOutputType | null
+    _sum: UserWalletSumAggregateOutputType | null
+    _min: UserWalletMinAggregateOutputType | null
+    _max: UserWalletMaxAggregateOutputType | null
   }
 
-  export type UserBalanceAvgAggregateOutputType = {
+  export type UserWalletAvgAggregateOutputType = {
     userId: number | null
     mainBalance: Decimal | null
     bonusBalance: Decimal | null
   }
 
-  export type UserBalanceSumAggregateOutputType = {
+  export type UserWalletSumAggregateOutputType = {
     userId: bigint | null
     mainBalance: Decimal | null
     bonusBalance: Decimal | null
   }
 
-  export type UserBalanceMinAggregateOutputType = {
-    userId: bigint | null
-    currency: $Enums.ExchangeCurrencyCode | null
-    mainBalance: Decimal | null
-    bonusBalance: Decimal | null
-    updatedAt: Date | null
-  }
-
-  export type UserBalanceMaxAggregateOutputType = {
+  export type UserWalletMinAggregateOutputType = {
     userId: bigint | null
     currency: $Enums.ExchangeCurrencyCode | null
     mainBalance: Decimal | null
@@ -20162,7 +20309,15 @@ export namespace Prisma {
     updatedAt: Date | null
   }
 
-  export type UserBalanceCountAggregateOutputType = {
+  export type UserWalletMaxAggregateOutputType = {
+    userId: bigint | null
+    currency: $Enums.ExchangeCurrencyCode | null
+    mainBalance: Decimal | null
+    bonusBalance: Decimal | null
+    updatedAt: Date | null
+  }
+
+  export type UserWalletCountAggregateOutputType = {
     userId: number
     currency: number
     mainBalance: number
@@ -20172,27 +20327,19 @@ export namespace Prisma {
   }
 
 
-  export type UserBalanceAvgAggregateInputType = {
+  export type UserWalletAvgAggregateInputType = {
     userId?: true
     mainBalance?: true
     bonusBalance?: true
   }
 
-  export type UserBalanceSumAggregateInputType = {
+  export type UserWalletSumAggregateInputType = {
     userId?: true
     mainBalance?: true
     bonusBalance?: true
   }
 
-  export type UserBalanceMinAggregateInputType = {
-    userId?: true
-    currency?: true
-    mainBalance?: true
-    bonusBalance?: true
-    updatedAt?: true
-  }
-
-  export type UserBalanceMaxAggregateInputType = {
+  export type UserWalletMinAggregateInputType = {
     userId?: true
     currency?: true
     mainBalance?: true
@@ -20200,7 +20347,15 @@ export namespace Prisma {
     updatedAt?: true
   }
 
-  export type UserBalanceCountAggregateInputType = {
+  export type UserWalletMaxAggregateInputType = {
+    userId?: true
+    currency?: true
+    mainBalance?: true
+    bonusBalance?: true
+    updatedAt?: true
+  }
+
+  export type UserWalletCountAggregateInputType = {
     userId?: true
     currency?: true
     mainBalance?: true
@@ -20209,147 +20364,149 @@ export namespace Prisma {
     _all?: true
   }
 
-  export type UserBalanceAggregateArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+  export type UserWalletAggregateArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
     /**
-     * Filter which UserBalance to aggregate.
+     * Filter which UserWallet to aggregate.
      */
-    where?: UserBalanceWhereInput
+    where?: UserWalletWhereInput
     /**
      * {@link https://www.prisma.io/docs/concepts/components/prisma-client/sorting Sorting Docs}
      * 
-     * Determine the order of UserBalances to fetch.
+     * Determine the order of UserWallets to fetch.
      */
-    orderBy?: UserBalanceOrderByWithRelationInput | UserBalanceOrderByWithRelationInput[]
+    orderBy?: UserWalletOrderByWithRelationInput | UserWalletOrderByWithRelationInput[]
     /**
      * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination#cursor-based-pagination Cursor Docs}
      * 
      * Sets the start position
      */
-    cursor?: UserBalanceWhereUniqueInput
+    cursor?: UserWalletWhereUniqueInput
     /**
      * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
      * 
-     * Take `±n` UserBalances from the position of the cursor.
+     * Take `±n` UserWallets from the position of the cursor.
      */
     take?: number
     /**
      * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
      * 
-     * Skip the first `n` UserBalances.
+     * Skip the first `n` UserWallets.
      */
     skip?: number
     /**
      * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
      * 
-     * Count returned UserBalances
+     * Count returned UserWallets
     **/
-    _count?: true | UserBalanceCountAggregateInputType
+    _count?: true | UserWalletCountAggregateInputType
     /**
      * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
      * 
      * Select which fields to average
     **/
-    _avg?: UserBalanceAvgAggregateInputType
+    _avg?: UserWalletAvgAggregateInputType
     /**
      * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
      * 
      * Select which fields to sum
     **/
-    _sum?: UserBalanceSumAggregateInputType
+    _sum?: UserWalletSumAggregateInputType
     /**
      * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
      * 
      * Select which fields to find the minimum value
     **/
-    _min?: UserBalanceMinAggregateInputType
+    _min?: UserWalletMinAggregateInputType
     /**
      * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
      * 
      * Select which fields to find the maximum value
     **/
-    _max?: UserBalanceMaxAggregateInputType
+    _max?: UserWalletMaxAggregateInputType
   }
 
-  export type GetUserBalanceAggregateType<T extends UserBalanceAggregateArgs> = {
-        [P in keyof T & keyof AggregateUserBalance]: P extends '_count' | 'count'
+  export type GetUserWalletAggregateType<T extends UserWalletAggregateArgs> = {
+        [P in keyof T & keyof AggregateUserWallet]: P extends '_count' | 'count'
       ? T[P] extends true
         ? number
-        : GetScalarType<T[P], AggregateUserBalance[P]>
-      : GetScalarType<T[P], AggregateUserBalance[P]>
+        : GetScalarType<T[P], AggregateUserWallet[P]>
+      : GetScalarType<T[P], AggregateUserWallet[P]>
   }
 
 
 
 
-  export type UserBalanceGroupByArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
-    where?: UserBalanceWhereInput
-    orderBy?: UserBalanceOrderByWithAggregationInput | UserBalanceOrderByWithAggregationInput[]
-    by: UserBalanceScalarFieldEnum[] | UserBalanceScalarFieldEnum
-    having?: UserBalanceScalarWhereWithAggregatesInput
+  export type UserWalletGroupByArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    where?: UserWalletWhereInput
+    orderBy?: UserWalletOrderByWithAggregationInput | UserWalletOrderByWithAggregationInput[]
+    by: UserWalletScalarFieldEnum[] | UserWalletScalarFieldEnum
+    having?: UserWalletScalarWhereWithAggregatesInput
     take?: number
     skip?: number
-    _count?: UserBalanceCountAggregateInputType | true
-    _avg?: UserBalanceAvgAggregateInputType
-    _sum?: UserBalanceSumAggregateInputType
-    _min?: UserBalanceMinAggregateInputType
-    _max?: UserBalanceMaxAggregateInputType
+    _count?: UserWalletCountAggregateInputType | true
+    _avg?: UserWalletAvgAggregateInputType
+    _sum?: UserWalletSumAggregateInputType
+    _min?: UserWalletMinAggregateInputType
+    _max?: UserWalletMaxAggregateInputType
   }
 
-  export type UserBalanceGroupByOutputType = {
+  export type UserWalletGroupByOutputType = {
     userId: bigint
     currency: $Enums.ExchangeCurrencyCode
     mainBalance: Decimal
     bonusBalance: Decimal
     updatedAt: Date
-    _count: UserBalanceCountAggregateOutputType | null
-    _avg: UserBalanceAvgAggregateOutputType | null
-    _sum: UserBalanceSumAggregateOutputType | null
-    _min: UserBalanceMinAggregateOutputType | null
-    _max: UserBalanceMaxAggregateOutputType | null
+    _count: UserWalletCountAggregateOutputType | null
+    _avg: UserWalletAvgAggregateOutputType | null
+    _sum: UserWalletSumAggregateOutputType | null
+    _min: UserWalletMinAggregateOutputType | null
+    _max: UserWalletMaxAggregateOutputType | null
   }
 
-  type GetUserBalanceGroupByPayload<T extends UserBalanceGroupByArgs> = Prisma.PrismaPromise<
+  type GetUserWalletGroupByPayload<T extends UserWalletGroupByArgs> = Prisma.PrismaPromise<
     Array<
-      PickEnumerable<UserBalanceGroupByOutputType, T['by']> &
+      PickEnumerable<UserWalletGroupByOutputType, T['by']> &
         {
-          [P in ((keyof T) & (keyof UserBalanceGroupByOutputType))]: P extends '_count'
+          [P in ((keyof T) & (keyof UserWalletGroupByOutputType))]: P extends '_count'
             ? T[P] extends boolean
               ? number
-              : GetScalarType<T[P], UserBalanceGroupByOutputType[P]>
-            : GetScalarType<T[P], UserBalanceGroupByOutputType[P]>
+              : GetScalarType<T[P], UserWalletGroupByOutputType[P]>
+            : GetScalarType<T[P], UserWalletGroupByOutputType[P]>
         }
       >
     >
 
 
-  export type UserBalanceSelect<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetSelect<{
+  export type UserWalletSelect<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetSelect<{
     userId?: boolean
     currency?: boolean
     mainBalance?: boolean
     bonusBalance?: boolean
     updatedAt?: boolean
     user?: boolean | UserDefaultArgs<ExtArgs>
-  }, ExtArgs["result"]["userBalance"]>
+    wageringRequirements?: boolean | UserWallet$wageringRequirementsArgs<ExtArgs>
+    _count?: boolean | UserWalletCountOutputTypeDefaultArgs<ExtArgs>
+  }, ExtArgs["result"]["userWallet"]>
 
-  export type UserBalanceSelectCreateManyAndReturn<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetSelect<{
+  export type UserWalletSelectCreateManyAndReturn<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetSelect<{
     userId?: boolean
     currency?: boolean
     mainBalance?: boolean
     bonusBalance?: boolean
     updatedAt?: boolean
     user?: boolean | UserDefaultArgs<ExtArgs>
-  }, ExtArgs["result"]["userBalance"]>
+  }, ExtArgs["result"]["userWallet"]>
 
-  export type UserBalanceSelectUpdateManyAndReturn<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetSelect<{
+  export type UserWalletSelectUpdateManyAndReturn<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetSelect<{
     userId?: boolean
     currency?: boolean
     mainBalance?: boolean
     bonusBalance?: boolean
     updatedAt?: boolean
     user?: boolean | UserDefaultArgs<ExtArgs>
-  }, ExtArgs["result"]["userBalance"]>
+  }, ExtArgs["result"]["userWallet"]>
 
-  export type UserBalanceSelectScalar = {
+  export type UserWalletSelectScalar = {
     userId?: boolean
     currency?: boolean
     mainBalance?: boolean
@@ -20357,21 +20514,24 @@ export namespace Prisma {
     updatedAt?: boolean
   }
 
-  export type UserBalanceOmit<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetOmit<"userId" | "currency" | "mainBalance" | "bonusBalance" | "updatedAt", ExtArgs["result"]["userBalance"]>
-  export type UserBalanceInclude<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+  export type UserWalletOmit<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetOmit<"userId" | "currency" | "mainBalance" | "bonusBalance" | "updatedAt", ExtArgs["result"]["userWallet"]>
+  export type UserWalletInclude<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    user?: boolean | UserDefaultArgs<ExtArgs>
+    wageringRequirements?: boolean | UserWallet$wageringRequirementsArgs<ExtArgs>
+    _count?: boolean | UserWalletCountOutputTypeDefaultArgs<ExtArgs>
+  }
+  export type UserWalletIncludeCreateManyAndReturn<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
     user?: boolean | UserDefaultArgs<ExtArgs>
   }
-  export type UserBalanceIncludeCreateManyAndReturn<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
-    user?: boolean | UserDefaultArgs<ExtArgs>
-  }
-  export type UserBalanceIncludeUpdateManyAndReturn<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+  export type UserWalletIncludeUpdateManyAndReturn<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
     user?: boolean | UserDefaultArgs<ExtArgs>
   }
 
-  export type $UserBalancePayload<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
-    name: "UserBalance"
+  export type $UserWalletPayload<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    name: "UserWallet"
     objects: {
       user: Prisma.$UserPayload<ExtArgs>
+      wageringRequirements: Prisma.$WageringRequirementPayload<ExtArgs>[]
     }
     scalars: $Extensions.GetPayloadResult<{
       userId: bigint
@@ -20379,136 +20539,136 @@ export namespace Prisma {
       mainBalance: Prisma.Decimal
       bonusBalance: Prisma.Decimal
       updatedAt: Date
-    }, ExtArgs["result"]["userBalance"]>
+    }, ExtArgs["result"]["userWallet"]>
     composites: {}
   }
 
-  type UserBalanceGetPayload<S extends boolean | null | undefined | UserBalanceDefaultArgs> = $Result.GetResult<Prisma.$UserBalancePayload, S>
+  type UserWalletGetPayload<S extends boolean | null | undefined | UserWalletDefaultArgs> = $Result.GetResult<Prisma.$UserWalletPayload, S>
 
-  type UserBalanceCountArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> =
-    Omit<UserBalanceFindManyArgs, 'select' | 'include' | 'distinct' | 'omit'> & {
-      select?: UserBalanceCountAggregateInputType | true
+  type UserWalletCountArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> =
+    Omit<UserWalletFindManyArgs, 'select' | 'include' | 'distinct' | 'omit'> & {
+      select?: UserWalletCountAggregateInputType | true
     }
 
-  export interface UserBalanceDelegate<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs, GlobalOmitOptions = {}> {
-    [K: symbol]: { types: Prisma.TypeMap<ExtArgs>['model']['UserBalance'], meta: { name: 'UserBalance' } }
+  export interface UserWalletDelegate<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs, GlobalOmitOptions = {}> {
+    [K: symbol]: { types: Prisma.TypeMap<ExtArgs>['model']['UserWallet'], meta: { name: 'UserWallet' } }
     /**
-     * Find zero or one UserBalance that matches the filter.
-     * @param {UserBalanceFindUniqueArgs} args - Arguments to find a UserBalance
+     * Find zero or one UserWallet that matches the filter.
+     * @param {UserWalletFindUniqueArgs} args - Arguments to find a UserWallet
      * @example
-     * // Get one UserBalance
-     * const userBalance = await prisma.userBalance.findUnique({
+     * // Get one UserWallet
+     * const userWallet = await prisma.userWallet.findUnique({
      *   where: {
      *     // ... provide filter here
      *   }
      * })
      */
-    findUnique<T extends UserBalanceFindUniqueArgs>(args: SelectSubset<T, UserBalanceFindUniqueArgs<ExtArgs>>): Prisma__UserBalanceClient<$Result.GetResult<Prisma.$UserBalancePayload<ExtArgs>, T, "findUnique", GlobalOmitOptions> | null, null, ExtArgs, GlobalOmitOptions>
+    findUnique<T extends UserWalletFindUniqueArgs>(args: SelectSubset<T, UserWalletFindUniqueArgs<ExtArgs>>): Prisma__UserWalletClient<$Result.GetResult<Prisma.$UserWalletPayload<ExtArgs>, T, "findUnique", GlobalOmitOptions> | null, null, ExtArgs, GlobalOmitOptions>
 
     /**
-     * Find one UserBalance that matches the filter or throw an error with `error.code='P2025'`
+     * Find one UserWallet that matches the filter or throw an error with `error.code='P2025'`
      * if no matches were found.
-     * @param {UserBalanceFindUniqueOrThrowArgs} args - Arguments to find a UserBalance
+     * @param {UserWalletFindUniqueOrThrowArgs} args - Arguments to find a UserWallet
      * @example
-     * // Get one UserBalance
-     * const userBalance = await prisma.userBalance.findUniqueOrThrow({
+     * // Get one UserWallet
+     * const userWallet = await prisma.userWallet.findUniqueOrThrow({
      *   where: {
      *     // ... provide filter here
      *   }
      * })
      */
-    findUniqueOrThrow<T extends UserBalanceFindUniqueOrThrowArgs>(args: SelectSubset<T, UserBalanceFindUniqueOrThrowArgs<ExtArgs>>): Prisma__UserBalanceClient<$Result.GetResult<Prisma.$UserBalancePayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
+    findUniqueOrThrow<T extends UserWalletFindUniqueOrThrowArgs>(args: SelectSubset<T, UserWalletFindUniqueOrThrowArgs<ExtArgs>>): Prisma__UserWalletClient<$Result.GetResult<Prisma.$UserWalletPayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
 
     /**
-     * Find the first UserBalance that matches the filter.
+     * Find the first UserWallet that matches the filter.
      * Note, that providing `undefined` is treated as the value not being there.
      * Read more here: https://pris.ly/d/null-undefined
-     * @param {UserBalanceFindFirstArgs} args - Arguments to find a UserBalance
+     * @param {UserWalletFindFirstArgs} args - Arguments to find a UserWallet
      * @example
-     * // Get one UserBalance
-     * const userBalance = await prisma.userBalance.findFirst({
+     * // Get one UserWallet
+     * const userWallet = await prisma.userWallet.findFirst({
      *   where: {
      *     // ... provide filter here
      *   }
      * })
      */
-    findFirst<T extends UserBalanceFindFirstArgs>(args?: SelectSubset<T, UserBalanceFindFirstArgs<ExtArgs>>): Prisma__UserBalanceClient<$Result.GetResult<Prisma.$UserBalancePayload<ExtArgs>, T, "findFirst", GlobalOmitOptions> | null, null, ExtArgs, GlobalOmitOptions>
+    findFirst<T extends UserWalletFindFirstArgs>(args?: SelectSubset<T, UserWalletFindFirstArgs<ExtArgs>>): Prisma__UserWalletClient<$Result.GetResult<Prisma.$UserWalletPayload<ExtArgs>, T, "findFirst", GlobalOmitOptions> | null, null, ExtArgs, GlobalOmitOptions>
 
     /**
-     * Find the first UserBalance that matches the filter or
+     * Find the first UserWallet that matches the filter or
      * throw `PrismaKnownClientError` with `P2025` code if no matches were found.
      * Note, that providing `undefined` is treated as the value not being there.
      * Read more here: https://pris.ly/d/null-undefined
-     * @param {UserBalanceFindFirstOrThrowArgs} args - Arguments to find a UserBalance
+     * @param {UserWalletFindFirstOrThrowArgs} args - Arguments to find a UserWallet
      * @example
-     * // Get one UserBalance
-     * const userBalance = await prisma.userBalance.findFirstOrThrow({
+     * // Get one UserWallet
+     * const userWallet = await prisma.userWallet.findFirstOrThrow({
      *   where: {
      *     // ... provide filter here
      *   }
      * })
      */
-    findFirstOrThrow<T extends UserBalanceFindFirstOrThrowArgs>(args?: SelectSubset<T, UserBalanceFindFirstOrThrowArgs<ExtArgs>>): Prisma__UserBalanceClient<$Result.GetResult<Prisma.$UserBalancePayload<ExtArgs>, T, "findFirstOrThrow", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
+    findFirstOrThrow<T extends UserWalletFindFirstOrThrowArgs>(args?: SelectSubset<T, UserWalletFindFirstOrThrowArgs<ExtArgs>>): Prisma__UserWalletClient<$Result.GetResult<Prisma.$UserWalletPayload<ExtArgs>, T, "findFirstOrThrow", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
 
     /**
-     * Find zero or more UserBalances that matches the filter.
+     * Find zero or more UserWallets that matches the filter.
      * Note, that providing `undefined` is treated as the value not being there.
      * Read more here: https://pris.ly/d/null-undefined
-     * @param {UserBalanceFindManyArgs} args - Arguments to filter and select certain fields only.
+     * @param {UserWalletFindManyArgs} args - Arguments to filter and select certain fields only.
      * @example
-     * // Get all UserBalances
-     * const userBalances = await prisma.userBalance.findMany()
+     * // Get all UserWallets
+     * const userWallets = await prisma.userWallet.findMany()
      * 
-     * // Get first 10 UserBalances
-     * const userBalances = await prisma.userBalance.findMany({ take: 10 })
+     * // Get first 10 UserWallets
+     * const userWallets = await prisma.userWallet.findMany({ take: 10 })
      * 
      * // Only select the `userId`
-     * const userBalanceWithUserIdOnly = await prisma.userBalance.findMany({ select: { userId: true } })
+     * const userWalletWithUserIdOnly = await prisma.userWallet.findMany({ select: { userId: true } })
      * 
      */
-    findMany<T extends UserBalanceFindManyArgs>(args?: SelectSubset<T, UserBalanceFindManyArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$UserBalancePayload<ExtArgs>, T, "findMany", GlobalOmitOptions>>
+    findMany<T extends UserWalletFindManyArgs>(args?: SelectSubset<T, UserWalletFindManyArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$UserWalletPayload<ExtArgs>, T, "findMany", GlobalOmitOptions>>
 
     /**
-     * Create a UserBalance.
-     * @param {UserBalanceCreateArgs} args - Arguments to create a UserBalance.
+     * Create a UserWallet.
+     * @param {UserWalletCreateArgs} args - Arguments to create a UserWallet.
      * @example
-     * // Create one UserBalance
-     * const UserBalance = await prisma.userBalance.create({
+     * // Create one UserWallet
+     * const UserWallet = await prisma.userWallet.create({
      *   data: {
-     *     // ... data to create a UserBalance
+     *     // ... data to create a UserWallet
      *   }
      * })
      * 
      */
-    create<T extends UserBalanceCreateArgs>(args: SelectSubset<T, UserBalanceCreateArgs<ExtArgs>>): Prisma__UserBalanceClient<$Result.GetResult<Prisma.$UserBalancePayload<ExtArgs>, T, "create", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
+    create<T extends UserWalletCreateArgs>(args: SelectSubset<T, UserWalletCreateArgs<ExtArgs>>): Prisma__UserWalletClient<$Result.GetResult<Prisma.$UserWalletPayload<ExtArgs>, T, "create", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
 
     /**
-     * Create many UserBalances.
-     * @param {UserBalanceCreateManyArgs} args - Arguments to create many UserBalances.
+     * Create many UserWallets.
+     * @param {UserWalletCreateManyArgs} args - Arguments to create many UserWallets.
      * @example
-     * // Create many UserBalances
-     * const userBalance = await prisma.userBalance.createMany({
+     * // Create many UserWallets
+     * const userWallet = await prisma.userWallet.createMany({
      *   data: [
      *     // ... provide data here
      *   ]
      * })
      *     
      */
-    createMany<T extends UserBalanceCreateManyArgs>(args?: SelectSubset<T, UserBalanceCreateManyArgs<ExtArgs>>): Prisma.PrismaPromise<BatchPayload>
+    createMany<T extends UserWalletCreateManyArgs>(args?: SelectSubset<T, UserWalletCreateManyArgs<ExtArgs>>): Prisma.PrismaPromise<BatchPayload>
 
     /**
-     * Create many UserBalances and returns the data saved in the database.
-     * @param {UserBalanceCreateManyAndReturnArgs} args - Arguments to create many UserBalances.
+     * Create many UserWallets and returns the data saved in the database.
+     * @param {UserWalletCreateManyAndReturnArgs} args - Arguments to create many UserWallets.
      * @example
-     * // Create many UserBalances
-     * const userBalance = await prisma.userBalance.createManyAndReturn({
+     * // Create many UserWallets
+     * const userWallet = await prisma.userWallet.createManyAndReturn({
      *   data: [
      *     // ... provide data here
      *   ]
      * })
      * 
-     * // Create many UserBalances and only return the `userId`
-     * const userBalanceWithUserIdOnly = await prisma.userBalance.createManyAndReturn({
+     * // Create many UserWallets and only return the `userId`
+     * const userWalletWithUserIdOnly = await prisma.userWallet.createManyAndReturn({
      *   select: { userId: true },
      *   data: [
      *     // ... provide data here
@@ -20518,28 +20678,28 @@ export namespace Prisma {
      * Read more here: https://pris.ly/d/null-undefined
      * 
      */
-    createManyAndReturn<T extends UserBalanceCreateManyAndReturnArgs>(args?: SelectSubset<T, UserBalanceCreateManyAndReturnArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$UserBalancePayload<ExtArgs>, T, "createManyAndReturn", GlobalOmitOptions>>
+    createManyAndReturn<T extends UserWalletCreateManyAndReturnArgs>(args?: SelectSubset<T, UserWalletCreateManyAndReturnArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$UserWalletPayload<ExtArgs>, T, "createManyAndReturn", GlobalOmitOptions>>
 
     /**
-     * Delete a UserBalance.
-     * @param {UserBalanceDeleteArgs} args - Arguments to delete one UserBalance.
+     * Delete a UserWallet.
+     * @param {UserWalletDeleteArgs} args - Arguments to delete one UserWallet.
      * @example
-     * // Delete one UserBalance
-     * const UserBalance = await prisma.userBalance.delete({
+     * // Delete one UserWallet
+     * const UserWallet = await prisma.userWallet.delete({
      *   where: {
-     *     // ... filter to delete one UserBalance
+     *     // ... filter to delete one UserWallet
      *   }
      * })
      * 
      */
-    delete<T extends UserBalanceDeleteArgs>(args: SelectSubset<T, UserBalanceDeleteArgs<ExtArgs>>): Prisma__UserBalanceClient<$Result.GetResult<Prisma.$UserBalancePayload<ExtArgs>, T, "delete", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
+    delete<T extends UserWalletDeleteArgs>(args: SelectSubset<T, UserWalletDeleteArgs<ExtArgs>>): Prisma__UserWalletClient<$Result.GetResult<Prisma.$UserWalletPayload<ExtArgs>, T, "delete", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
 
     /**
-     * Update one UserBalance.
-     * @param {UserBalanceUpdateArgs} args - Arguments to update one UserBalance.
+     * Update one UserWallet.
+     * @param {UserWalletUpdateArgs} args - Arguments to update one UserWallet.
      * @example
-     * // Update one UserBalance
-     * const userBalance = await prisma.userBalance.update({
+     * // Update one UserWallet
+     * const userWallet = await prisma.userWallet.update({
      *   where: {
      *     // ... provide filter here
      *   },
@@ -20549,30 +20709,30 @@ export namespace Prisma {
      * })
      * 
      */
-    update<T extends UserBalanceUpdateArgs>(args: SelectSubset<T, UserBalanceUpdateArgs<ExtArgs>>): Prisma__UserBalanceClient<$Result.GetResult<Prisma.$UserBalancePayload<ExtArgs>, T, "update", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
+    update<T extends UserWalletUpdateArgs>(args: SelectSubset<T, UserWalletUpdateArgs<ExtArgs>>): Prisma__UserWalletClient<$Result.GetResult<Prisma.$UserWalletPayload<ExtArgs>, T, "update", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
 
     /**
-     * Delete zero or more UserBalances.
-     * @param {UserBalanceDeleteManyArgs} args - Arguments to filter UserBalances to delete.
+     * Delete zero or more UserWallets.
+     * @param {UserWalletDeleteManyArgs} args - Arguments to filter UserWallets to delete.
      * @example
-     * // Delete a few UserBalances
-     * const { count } = await prisma.userBalance.deleteMany({
+     * // Delete a few UserWallets
+     * const { count } = await prisma.userWallet.deleteMany({
      *   where: {
      *     // ... provide filter here
      *   }
      * })
      * 
      */
-    deleteMany<T extends UserBalanceDeleteManyArgs>(args?: SelectSubset<T, UserBalanceDeleteManyArgs<ExtArgs>>): Prisma.PrismaPromise<BatchPayload>
+    deleteMany<T extends UserWalletDeleteManyArgs>(args?: SelectSubset<T, UserWalletDeleteManyArgs<ExtArgs>>): Prisma.PrismaPromise<BatchPayload>
 
     /**
-     * Update zero or more UserBalances.
+     * Update zero or more UserWallets.
      * Note, that providing `undefined` is treated as the value not being there.
      * Read more here: https://pris.ly/d/null-undefined
-     * @param {UserBalanceUpdateManyArgs} args - Arguments to update one or more rows.
+     * @param {UserWalletUpdateManyArgs} args - Arguments to update one or more rows.
      * @example
-     * // Update many UserBalances
-     * const userBalance = await prisma.userBalance.updateMany({
+     * // Update many UserWallets
+     * const userWallet = await prisma.userWallet.updateMany({
      *   where: {
      *     // ... provide filter here
      *   },
@@ -20582,14 +20742,14 @@ export namespace Prisma {
      * })
      * 
      */
-    updateMany<T extends UserBalanceUpdateManyArgs>(args: SelectSubset<T, UserBalanceUpdateManyArgs<ExtArgs>>): Prisma.PrismaPromise<BatchPayload>
+    updateMany<T extends UserWalletUpdateManyArgs>(args: SelectSubset<T, UserWalletUpdateManyArgs<ExtArgs>>): Prisma.PrismaPromise<BatchPayload>
 
     /**
-     * Update zero or more UserBalances and returns the data updated in the database.
-     * @param {UserBalanceUpdateManyAndReturnArgs} args - Arguments to update many UserBalances.
+     * Update zero or more UserWallets and returns the data updated in the database.
+     * @param {UserWalletUpdateManyAndReturnArgs} args - Arguments to update many UserWallets.
      * @example
-     * // Update many UserBalances
-     * const userBalance = await prisma.userBalance.updateManyAndReturn({
+     * // Update many UserWallets
+     * const userWallet = await prisma.userWallet.updateManyAndReturn({
      *   where: {
      *     // ... provide filter here
      *   },
@@ -20598,8 +20758,8 @@ export namespace Prisma {
      *   ]
      * })
      * 
-     * // Update zero or more UserBalances and only return the `userId`
-     * const userBalanceWithUserIdOnly = await prisma.userBalance.updateManyAndReturn({
+     * // Update zero or more UserWallets and only return the `userId`
+     * const userWalletWithUserIdOnly = await prisma.userWallet.updateManyAndReturn({
      *   select: { userId: true },
      *   where: {
      *     // ... provide filter here
@@ -20612,56 +20772,56 @@ export namespace Prisma {
      * Read more here: https://pris.ly/d/null-undefined
      * 
      */
-    updateManyAndReturn<T extends UserBalanceUpdateManyAndReturnArgs>(args: SelectSubset<T, UserBalanceUpdateManyAndReturnArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$UserBalancePayload<ExtArgs>, T, "updateManyAndReturn", GlobalOmitOptions>>
+    updateManyAndReturn<T extends UserWalletUpdateManyAndReturnArgs>(args: SelectSubset<T, UserWalletUpdateManyAndReturnArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$UserWalletPayload<ExtArgs>, T, "updateManyAndReturn", GlobalOmitOptions>>
 
     /**
-     * Create or update one UserBalance.
-     * @param {UserBalanceUpsertArgs} args - Arguments to update or create a UserBalance.
+     * Create or update one UserWallet.
+     * @param {UserWalletUpsertArgs} args - Arguments to update or create a UserWallet.
      * @example
-     * // Update or create a UserBalance
-     * const userBalance = await prisma.userBalance.upsert({
+     * // Update or create a UserWallet
+     * const userWallet = await prisma.userWallet.upsert({
      *   create: {
-     *     // ... data to create a UserBalance
+     *     // ... data to create a UserWallet
      *   },
      *   update: {
      *     // ... in case it already exists, update
      *   },
      *   where: {
-     *     // ... the filter for the UserBalance we want to update
+     *     // ... the filter for the UserWallet we want to update
      *   }
      * })
      */
-    upsert<T extends UserBalanceUpsertArgs>(args: SelectSubset<T, UserBalanceUpsertArgs<ExtArgs>>): Prisma__UserBalanceClient<$Result.GetResult<Prisma.$UserBalancePayload<ExtArgs>, T, "upsert", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
+    upsert<T extends UserWalletUpsertArgs>(args: SelectSubset<T, UserWalletUpsertArgs<ExtArgs>>): Prisma__UserWalletClient<$Result.GetResult<Prisma.$UserWalletPayload<ExtArgs>, T, "upsert", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
 
 
     /**
-     * Count the number of UserBalances.
+     * Count the number of UserWallets.
      * Note, that providing `undefined` is treated as the value not being there.
      * Read more here: https://pris.ly/d/null-undefined
-     * @param {UserBalanceCountArgs} args - Arguments to filter UserBalances to count.
+     * @param {UserWalletCountArgs} args - Arguments to filter UserWallets to count.
      * @example
-     * // Count the number of UserBalances
-     * const count = await prisma.userBalance.count({
+     * // Count the number of UserWallets
+     * const count = await prisma.userWallet.count({
      *   where: {
-     *     // ... the filter for the UserBalances we want to count
+     *     // ... the filter for the UserWallets we want to count
      *   }
      * })
     **/
-    count<T extends UserBalanceCountArgs>(
-      args?: Subset<T, UserBalanceCountArgs>,
+    count<T extends UserWalletCountArgs>(
+      args?: Subset<T, UserWalletCountArgs>,
     ): Prisma.PrismaPromise<
       T extends $Utils.Record<'select', any>
         ? T['select'] extends true
           ? number
-          : GetScalarType<T['select'], UserBalanceCountAggregateOutputType>
+          : GetScalarType<T['select'], UserWalletCountAggregateOutputType>
         : number
     >
 
     /**
-     * Allows you to perform aggregations operations on a UserBalance.
+     * Allows you to perform aggregations operations on a UserWallet.
      * Note, that providing `undefined` is treated as the value not being there.
      * Read more here: https://pris.ly/d/null-undefined
-     * @param {UserBalanceAggregateArgs} args - Select which aggregations you would like to apply and on what fields.
+     * @param {UserWalletAggregateArgs} args - Select which aggregations you would like to apply and on what fields.
      * @example
      * // Ordered by age ascending
      * // Where email contains prisma.io
@@ -20681,13 +20841,13 @@ export namespace Prisma {
      *   take: 10,
      * })
     **/
-    aggregate<T extends UserBalanceAggregateArgs>(args: Subset<T, UserBalanceAggregateArgs>): Prisma.PrismaPromise<GetUserBalanceAggregateType<T>>
+    aggregate<T extends UserWalletAggregateArgs>(args: Subset<T, UserWalletAggregateArgs>): Prisma.PrismaPromise<GetUserWalletAggregateType<T>>
 
     /**
-     * Group by UserBalance.
+     * Group by UserWallet.
      * Note, that providing `undefined` is treated as the value not being there.
      * Read more here: https://pris.ly/d/null-undefined
-     * @param {UserBalanceGroupByArgs} args - Group by arguments.
+     * @param {UserWalletGroupByArgs} args - Group by arguments.
      * @example
      * // Group by city, order by createdAt, get count
      * const result = await prisma.user.groupBy({
@@ -20702,14 +20862,14 @@ export namespace Prisma {
      * 
     **/
     groupBy<
-      T extends UserBalanceGroupByArgs,
+      T extends UserWalletGroupByArgs,
       HasSelectOrTake extends Or<
         Extends<'skip', Keys<T>>,
         Extends<'take', Keys<T>>
       >,
       OrderByArg extends True extends HasSelectOrTake
-        ? { orderBy: UserBalanceGroupByArgs['orderBy'] }
-        : { orderBy?: UserBalanceGroupByArgs['orderBy'] },
+        ? { orderBy: UserWalletGroupByArgs['orderBy'] }
+        : { orderBy?: UserWalletGroupByArgs['orderBy'] },
       OrderFields extends ExcludeUnderscoreKeys<Keys<MaybeTupleToUnion<T['orderBy']>>>,
       ByFields extends MaybeTupleToUnion<T['by']>,
       ByValid extends Has<ByFields, OrderFields>,
@@ -20758,22 +20918,23 @@ export namespace Prisma {
             ? never
             : `Error: Field "${P}" in "orderBy" needs to be provided in "by"`
         }[OrderFields]
-    >(args: SubsetIntersection<T, UserBalanceGroupByArgs, OrderByArg> & InputErrors): {} extends InputErrors ? GetUserBalanceGroupByPayload<T> : Prisma.PrismaPromise<InputErrors>
+    >(args: SubsetIntersection<T, UserWalletGroupByArgs, OrderByArg> & InputErrors): {} extends InputErrors ? GetUserWalletGroupByPayload<T> : Prisma.PrismaPromise<InputErrors>
   /**
-   * Fields of the UserBalance model
+   * Fields of the UserWallet model
    */
-  readonly fields: UserBalanceFieldRefs;
+  readonly fields: UserWalletFieldRefs;
   }
 
   /**
-   * The delegate class that acts as a "Promise-like" for UserBalance.
+   * The delegate class that acts as a "Promise-like" for UserWallet.
    * Why is this prefixed with `Prisma__`?
    * Because we want to prevent naming conflicts as mentioned in
    * https://github.com/prisma/prisma-client-js/issues/707
    */
-  export interface Prisma__UserBalanceClient<T, Null = never, ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs, GlobalOmitOptions = {}> extends Prisma.PrismaPromise<T> {
+  export interface Prisma__UserWalletClient<T, Null = never, ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs, GlobalOmitOptions = {}> extends Prisma.PrismaPromise<T> {
     readonly [Symbol.toStringTag]: "PrismaPromise"
     user<T extends UserDefaultArgs<ExtArgs> = {}>(args?: Subset<T, UserDefaultArgs<ExtArgs>>): Prisma__UserClient<$Result.GetResult<Prisma.$UserPayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions> | Null, Null, ExtArgs, GlobalOmitOptions>
+    wageringRequirements<T extends UserWallet$wageringRequirementsArgs<ExtArgs> = {}>(args?: Subset<T, UserWallet$wageringRequirementsArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$WageringRequirementPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
     /**
      * Attaches callbacks for the resolution and/or rejection of the Promise.
      * @param onfulfilled The callback to execute when the Promise is resolved.
@@ -20800,425 +20961,449 @@ export namespace Prisma {
 
 
   /**
-   * Fields of the UserBalance model
+   * Fields of the UserWallet model
    */
-  interface UserBalanceFieldRefs {
-    readonly userId: FieldRef<"UserBalance", 'BigInt'>
-    readonly currency: FieldRef<"UserBalance", 'ExchangeCurrencyCode'>
-    readonly mainBalance: FieldRef<"UserBalance", 'Decimal'>
-    readonly bonusBalance: FieldRef<"UserBalance", 'Decimal'>
-    readonly updatedAt: FieldRef<"UserBalance", 'DateTime'>
+  interface UserWalletFieldRefs {
+    readonly userId: FieldRef<"UserWallet", 'BigInt'>
+    readonly currency: FieldRef<"UserWallet", 'ExchangeCurrencyCode'>
+    readonly mainBalance: FieldRef<"UserWallet", 'Decimal'>
+    readonly bonusBalance: FieldRef<"UserWallet", 'Decimal'>
+    readonly updatedAt: FieldRef<"UserWallet", 'DateTime'>
   }
     
 
   // Custom InputTypes
   /**
-   * UserBalance findUnique
+   * UserWallet findUnique
    */
-  export type UserBalanceFindUniqueArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+  export type UserWalletFindUniqueArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
     /**
-     * Select specific fields to fetch from the UserBalance
+     * Select specific fields to fetch from the UserWallet
      */
-    select?: UserBalanceSelect<ExtArgs> | null
+    select?: UserWalletSelect<ExtArgs> | null
     /**
-     * Omit specific fields from the UserBalance
+     * Omit specific fields from the UserWallet
      */
-    omit?: UserBalanceOmit<ExtArgs> | null
+    omit?: UserWalletOmit<ExtArgs> | null
     /**
      * Choose, which related nodes to fetch as well
      */
-    include?: UserBalanceInclude<ExtArgs> | null
+    include?: UserWalletInclude<ExtArgs> | null
     /**
-     * Filter, which UserBalance to fetch.
+     * Filter, which UserWallet to fetch.
      */
-    where: UserBalanceWhereUniqueInput
+    where: UserWalletWhereUniqueInput
   }
 
   /**
-   * UserBalance findUniqueOrThrow
+   * UserWallet findUniqueOrThrow
    */
-  export type UserBalanceFindUniqueOrThrowArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+  export type UserWalletFindUniqueOrThrowArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
     /**
-     * Select specific fields to fetch from the UserBalance
+     * Select specific fields to fetch from the UserWallet
      */
-    select?: UserBalanceSelect<ExtArgs> | null
+    select?: UserWalletSelect<ExtArgs> | null
     /**
-     * Omit specific fields from the UserBalance
+     * Omit specific fields from the UserWallet
      */
-    omit?: UserBalanceOmit<ExtArgs> | null
+    omit?: UserWalletOmit<ExtArgs> | null
     /**
      * Choose, which related nodes to fetch as well
      */
-    include?: UserBalanceInclude<ExtArgs> | null
+    include?: UserWalletInclude<ExtArgs> | null
     /**
-     * Filter, which UserBalance to fetch.
+     * Filter, which UserWallet to fetch.
      */
-    where: UserBalanceWhereUniqueInput
+    where: UserWalletWhereUniqueInput
   }
 
   /**
-   * UserBalance findFirst
+   * UserWallet findFirst
    */
-  export type UserBalanceFindFirstArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+  export type UserWalletFindFirstArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
     /**
-     * Select specific fields to fetch from the UserBalance
+     * Select specific fields to fetch from the UserWallet
      */
-    select?: UserBalanceSelect<ExtArgs> | null
+    select?: UserWalletSelect<ExtArgs> | null
     /**
-     * Omit specific fields from the UserBalance
+     * Omit specific fields from the UserWallet
      */
-    omit?: UserBalanceOmit<ExtArgs> | null
+    omit?: UserWalletOmit<ExtArgs> | null
     /**
      * Choose, which related nodes to fetch as well
      */
-    include?: UserBalanceInclude<ExtArgs> | null
+    include?: UserWalletInclude<ExtArgs> | null
     /**
-     * Filter, which UserBalance to fetch.
+     * Filter, which UserWallet to fetch.
      */
-    where?: UserBalanceWhereInput
+    where?: UserWalletWhereInput
     /**
      * {@link https://www.prisma.io/docs/concepts/components/prisma-client/sorting Sorting Docs}
      * 
-     * Determine the order of UserBalances to fetch.
+     * Determine the order of UserWallets to fetch.
      */
-    orderBy?: UserBalanceOrderByWithRelationInput | UserBalanceOrderByWithRelationInput[]
+    orderBy?: UserWalletOrderByWithRelationInput | UserWalletOrderByWithRelationInput[]
     /**
      * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination#cursor-based-pagination Cursor Docs}
      * 
-     * Sets the position for searching for UserBalances.
+     * Sets the position for searching for UserWallets.
      */
-    cursor?: UserBalanceWhereUniqueInput
+    cursor?: UserWalletWhereUniqueInput
     /**
      * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
      * 
-     * Take `±n` UserBalances from the position of the cursor.
+     * Take `±n` UserWallets from the position of the cursor.
      */
     take?: number
     /**
      * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
      * 
-     * Skip the first `n` UserBalances.
+     * Skip the first `n` UserWallets.
      */
     skip?: number
     /**
      * {@link https://www.prisma.io/docs/concepts/components/prisma-client/distinct Distinct Docs}
      * 
-     * Filter by unique combinations of UserBalances.
+     * Filter by unique combinations of UserWallets.
      */
-    distinct?: UserBalanceScalarFieldEnum | UserBalanceScalarFieldEnum[]
+    distinct?: UserWalletScalarFieldEnum | UserWalletScalarFieldEnum[]
   }
 
   /**
-   * UserBalance findFirstOrThrow
+   * UserWallet findFirstOrThrow
    */
-  export type UserBalanceFindFirstOrThrowArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+  export type UserWalletFindFirstOrThrowArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
     /**
-     * Select specific fields to fetch from the UserBalance
+     * Select specific fields to fetch from the UserWallet
      */
-    select?: UserBalanceSelect<ExtArgs> | null
+    select?: UserWalletSelect<ExtArgs> | null
     /**
-     * Omit specific fields from the UserBalance
+     * Omit specific fields from the UserWallet
      */
-    omit?: UserBalanceOmit<ExtArgs> | null
+    omit?: UserWalletOmit<ExtArgs> | null
     /**
      * Choose, which related nodes to fetch as well
      */
-    include?: UserBalanceInclude<ExtArgs> | null
+    include?: UserWalletInclude<ExtArgs> | null
     /**
-     * Filter, which UserBalance to fetch.
+     * Filter, which UserWallet to fetch.
      */
-    where?: UserBalanceWhereInput
+    where?: UserWalletWhereInput
     /**
      * {@link https://www.prisma.io/docs/concepts/components/prisma-client/sorting Sorting Docs}
      * 
-     * Determine the order of UserBalances to fetch.
+     * Determine the order of UserWallets to fetch.
      */
-    orderBy?: UserBalanceOrderByWithRelationInput | UserBalanceOrderByWithRelationInput[]
+    orderBy?: UserWalletOrderByWithRelationInput | UserWalletOrderByWithRelationInput[]
     /**
      * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination#cursor-based-pagination Cursor Docs}
      * 
-     * Sets the position for searching for UserBalances.
+     * Sets the position for searching for UserWallets.
      */
-    cursor?: UserBalanceWhereUniqueInput
+    cursor?: UserWalletWhereUniqueInput
     /**
      * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
      * 
-     * Take `±n` UserBalances from the position of the cursor.
+     * Take `±n` UserWallets from the position of the cursor.
      */
     take?: number
     /**
      * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
      * 
-     * Skip the first `n` UserBalances.
+     * Skip the first `n` UserWallets.
      */
     skip?: number
     /**
      * {@link https://www.prisma.io/docs/concepts/components/prisma-client/distinct Distinct Docs}
      * 
-     * Filter by unique combinations of UserBalances.
+     * Filter by unique combinations of UserWallets.
      */
-    distinct?: UserBalanceScalarFieldEnum | UserBalanceScalarFieldEnum[]
+    distinct?: UserWalletScalarFieldEnum | UserWalletScalarFieldEnum[]
   }
 
   /**
-   * UserBalance findMany
+   * UserWallet findMany
    */
-  export type UserBalanceFindManyArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+  export type UserWalletFindManyArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
     /**
-     * Select specific fields to fetch from the UserBalance
+     * Select specific fields to fetch from the UserWallet
      */
-    select?: UserBalanceSelect<ExtArgs> | null
+    select?: UserWalletSelect<ExtArgs> | null
     /**
-     * Omit specific fields from the UserBalance
+     * Omit specific fields from the UserWallet
      */
-    omit?: UserBalanceOmit<ExtArgs> | null
+    omit?: UserWalletOmit<ExtArgs> | null
     /**
      * Choose, which related nodes to fetch as well
      */
-    include?: UserBalanceInclude<ExtArgs> | null
+    include?: UserWalletInclude<ExtArgs> | null
     /**
-     * Filter, which UserBalances to fetch.
+     * Filter, which UserWallets to fetch.
      */
-    where?: UserBalanceWhereInput
+    where?: UserWalletWhereInput
     /**
      * {@link https://www.prisma.io/docs/concepts/components/prisma-client/sorting Sorting Docs}
      * 
-     * Determine the order of UserBalances to fetch.
+     * Determine the order of UserWallets to fetch.
      */
-    orderBy?: UserBalanceOrderByWithRelationInput | UserBalanceOrderByWithRelationInput[]
+    orderBy?: UserWalletOrderByWithRelationInput | UserWalletOrderByWithRelationInput[]
     /**
      * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination#cursor-based-pagination Cursor Docs}
      * 
-     * Sets the position for listing UserBalances.
+     * Sets the position for listing UserWallets.
      */
-    cursor?: UserBalanceWhereUniqueInput
+    cursor?: UserWalletWhereUniqueInput
     /**
      * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
      * 
-     * Take `±n` UserBalances from the position of the cursor.
+     * Take `±n` UserWallets from the position of the cursor.
      */
     take?: number
     /**
      * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
      * 
-     * Skip the first `n` UserBalances.
+     * Skip the first `n` UserWallets.
      */
     skip?: number
-    distinct?: UserBalanceScalarFieldEnum | UserBalanceScalarFieldEnum[]
+    distinct?: UserWalletScalarFieldEnum | UserWalletScalarFieldEnum[]
   }
 
   /**
-   * UserBalance create
+   * UserWallet create
    */
-  export type UserBalanceCreateArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+  export type UserWalletCreateArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
     /**
-     * Select specific fields to fetch from the UserBalance
+     * Select specific fields to fetch from the UserWallet
      */
-    select?: UserBalanceSelect<ExtArgs> | null
+    select?: UserWalletSelect<ExtArgs> | null
     /**
-     * Omit specific fields from the UserBalance
+     * Omit specific fields from the UserWallet
      */
-    omit?: UserBalanceOmit<ExtArgs> | null
+    omit?: UserWalletOmit<ExtArgs> | null
     /**
      * Choose, which related nodes to fetch as well
      */
-    include?: UserBalanceInclude<ExtArgs> | null
+    include?: UserWalletInclude<ExtArgs> | null
     /**
-     * The data needed to create a UserBalance.
+     * The data needed to create a UserWallet.
      */
-    data: XOR<UserBalanceCreateInput, UserBalanceUncheckedCreateInput>
+    data: XOR<UserWalletCreateInput, UserWalletUncheckedCreateInput>
   }
 
   /**
-   * UserBalance createMany
+   * UserWallet createMany
    */
-  export type UserBalanceCreateManyArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+  export type UserWalletCreateManyArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
     /**
-     * The data used to create many UserBalances.
+     * The data used to create many UserWallets.
      */
-    data: UserBalanceCreateManyInput | UserBalanceCreateManyInput[]
+    data: UserWalletCreateManyInput | UserWalletCreateManyInput[]
     skipDuplicates?: boolean
   }
 
   /**
-   * UserBalance createManyAndReturn
+   * UserWallet createManyAndReturn
    */
-  export type UserBalanceCreateManyAndReturnArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+  export type UserWalletCreateManyAndReturnArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
     /**
-     * Select specific fields to fetch from the UserBalance
+     * Select specific fields to fetch from the UserWallet
      */
-    select?: UserBalanceSelectCreateManyAndReturn<ExtArgs> | null
+    select?: UserWalletSelectCreateManyAndReturn<ExtArgs> | null
     /**
-     * Omit specific fields from the UserBalance
+     * Omit specific fields from the UserWallet
      */
-    omit?: UserBalanceOmit<ExtArgs> | null
+    omit?: UserWalletOmit<ExtArgs> | null
     /**
-     * The data used to create many UserBalances.
+     * The data used to create many UserWallets.
      */
-    data: UserBalanceCreateManyInput | UserBalanceCreateManyInput[]
+    data: UserWalletCreateManyInput | UserWalletCreateManyInput[]
     skipDuplicates?: boolean
     /**
      * Choose, which related nodes to fetch as well
      */
-    include?: UserBalanceIncludeCreateManyAndReturn<ExtArgs> | null
+    include?: UserWalletIncludeCreateManyAndReturn<ExtArgs> | null
   }
 
   /**
-   * UserBalance update
+   * UserWallet update
    */
-  export type UserBalanceUpdateArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+  export type UserWalletUpdateArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
     /**
-     * Select specific fields to fetch from the UserBalance
+     * Select specific fields to fetch from the UserWallet
      */
-    select?: UserBalanceSelect<ExtArgs> | null
+    select?: UserWalletSelect<ExtArgs> | null
     /**
-     * Omit specific fields from the UserBalance
+     * Omit specific fields from the UserWallet
      */
-    omit?: UserBalanceOmit<ExtArgs> | null
+    omit?: UserWalletOmit<ExtArgs> | null
     /**
      * Choose, which related nodes to fetch as well
      */
-    include?: UserBalanceInclude<ExtArgs> | null
+    include?: UserWalletInclude<ExtArgs> | null
     /**
-     * The data needed to update a UserBalance.
+     * The data needed to update a UserWallet.
      */
-    data: XOR<UserBalanceUpdateInput, UserBalanceUncheckedUpdateInput>
+    data: XOR<UserWalletUpdateInput, UserWalletUncheckedUpdateInput>
     /**
-     * Choose, which UserBalance to update.
+     * Choose, which UserWallet to update.
      */
-    where: UserBalanceWhereUniqueInput
+    where: UserWalletWhereUniqueInput
   }
 
   /**
-   * UserBalance updateMany
+   * UserWallet updateMany
    */
-  export type UserBalanceUpdateManyArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+  export type UserWalletUpdateManyArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
     /**
-     * The data used to update UserBalances.
+     * The data used to update UserWallets.
      */
-    data: XOR<UserBalanceUpdateManyMutationInput, UserBalanceUncheckedUpdateManyInput>
+    data: XOR<UserWalletUpdateManyMutationInput, UserWalletUncheckedUpdateManyInput>
     /**
-     * Filter which UserBalances to update
+     * Filter which UserWallets to update
      */
-    where?: UserBalanceWhereInput
+    where?: UserWalletWhereInput
     /**
-     * Limit how many UserBalances to update.
+     * Limit how many UserWallets to update.
      */
     limit?: number
   }
 
   /**
-   * UserBalance updateManyAndReturn
+   * UserWallet updateManyAndReturn
    */
-  export type UserBalanceUpdateManyAndReturnArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+  export type UserWalletUpdateManyAndReturnArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
     /**
-     * Select specific fields to fetch from the UserBalance
+     * Select specific fields to fetch from the UserWallet
      */
-    select?: UserBalanceSelectUpdateManyAndReturn<ExtArgs> | null
+    select?: UserWalletSelectUpdateManyAndReturn<ExtArgs> | null
     /**
-     * Omit specific fields from the UserBalance
+     * Omit specific fields from the UserWallet
      */
-    omit?: UserBalanceOmit<ExtArgs> | null
+    omit?: UserWalletOmit<ExtArgs> | null
     /**
-     * The data used to update UserBalances.
+     * The data used to update UserWallets.
      */
-    data: XOR<UserBalanceUpdateManyMutationInput, UserBalanceUncheckedUpdateManyInput>
+    data: XOR<UserWalletUpdateManyMutationInput, UserWalletUncheckedUpdateManyInput>
     /**
-     * Filter which UserBalances to update
+     * Filter which UserWallets to update
      */
-    where?: UserBalanceWhereInput
+    where?: UserWalletWhereInput
     /**
-     * Limit how many UserBalances to update.
+     * Limit how many UserWallets to update.
      */
     limit?: number
     /**
      * Choose, which related nodes to fetch as well
      */
-    include?: UserBalanceIncludeUpdateManyAndReturn<ExtArgs> | null
+    include?: UserWalletIncludeUpdateManyAndReturn<ExtArgs> | null
   }
 
   /**
-   * UserBalance upsert
+   * UserWallet upsert
    */
-  export type UserBalanceUpsertArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+  export type UserWalletUpsertArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
     /**
-     * Select specific fields to fetch from the UserBalance
+     * Select specific fields to fetch from the UserWallet
      */
-    select?: UserBalanceSelect<ExtArgs> | null
+    select?: UserWalletSelect<ExtArgs> | null
     /**
-     * Omit specific fields from the UserBalance
+     * Omit specific fields from the UserWallet
      */
-    omit?: UserBalanceOmit<ExtArgs> | null
+    omit?: UserWalletOmit<ExtArgs> | null
     /**
      * Choose, which related nodes to fetch as well
      */
-    include?: UserBalanceInclude<ExtArgs> | null
+    include?: UserWalletInclude<ExtArgs> | null
     /**
-     * The filter to search for the UserBalance to update in case it exists.
+     * The filter to search for the UserWallet to update in case it exists.
      */
-    where: UserBalanceWhereUniqueInput
+    where: UserWalletWhereUniqueInput
     /**
-     * In case the UserBalance found by the `where` argument doesn't exist, create a new UserBalance with this data.
+     * In case the UserWallet found by the `where` argument doesn't exist, create a new UserWallet with this data.
      */
-    create: XOR<UserBalanceCreateInput, UserBalanceUncheckedCreateInput>
+    create: XOR<UserWalletCreateInput, UserWalletUncheckedCreateInput>
     /**
-     * In case the UserBalance was found with the provided `where` argument, update it with this data.
+     * In case the UserWallet was found with the provided `where` argument, update it with this data.
      */
-    update: XOR<UserBalanceUpdateInput, UserBalanceUncheckedUpdateInput>
+    update: XOR<UserWalletUpdateInput, UserWalletUncheckedUpdateInput>
   }
 
   /**
-   * UserBalance delete
+   * UserWallet delete
    */
-  export type UserBalanceDeleteArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+  export type UserWalletDeleteArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
     /**
-     * Select specific fields to fetch from the UserBalance
+     * Select specific fields to fetch from the UserWallet
      */
-    select?: UserBalanceSelect<ExtArgs> | null
+    select?: UserWalletSelect<ExtArgs> | null
     /**
-     * Omit specific fields from the UserBalance
+     * Omit specific fields from the UserWallet
      */
-    omit?: UserBalanceOmit<ExtArgs> | null
+    omit?: UserWalletOmit<ExtArgs> | null
     /**
      * Choose, which related nodes to fetch as well
      */
-    include?: UserBalanceInclude<ExtArgs> | null
+    include?: UserWalletInclude<ExtArgs> | null
     /**
-     * Filter which UserBalance to delete.
+     * Filter which UserWallet to delete.
      */
-    where: UserBalanceWhereUniqueInput
+    where: UserWalletWhereUniqueInput
   }
 
   /**
-   * UserBalance deleteMany
+   * UserWallet deleteMany
    */
-  export type UserBalanceDeleteManyArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+  export type UserWalletDeleteManyArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
     /**
-     * Filter which UserBalances to delete
+     * Filter which UserWallets to delete
      */
-    where?: UserBalanceWhereInput
+    where?: UserWalletWhereInput
     /**
-     * Limit how many UserBalances to delete.
+     * Limit how many UserWallets to delete.
      */
     limit?: number
   }
 
   /**
-   * UserBalance without action
+   * UserWallet.wageringRequirements
    */
-  export type UserBalanceDefaultArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+  export type UserWallet$wageringRequirementsArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
     /**
-     * Select specific fields to fetch from the UserBalance
+     * Select specific fields to fetch from the WageringRequirement
      */
-    select?: UserBalanceSelect<ExtArgs> | null
+    select?: WageringRequirementSelect<ExtArgs> | null
     /**
-     * Omit specific fields from the UserBalance
+     * Omit specific fields from the WageringRequirement
      */
-    omit?: UserBalanceOmit<ExtArgs> | null
+    omit?: WageringRequirementOmit<ExtArgs> | null
     /**
      * Choose, which related nodes to fetch as well
      */
-    include?: UserBalanceInclude<ExtArgs> | null
+    include?: WageringRequirementInclude<ExtArgs> | null
+    where?: WageringRequirementWhereInput
+    orderBy?: WageringRequirementOrderByWithRelationInput | WageringRequirementOrderByWithRelationInput[]
+    cursor?: WageringRequirementWhereUniqueInput
+    take?: number
+    skip?: number
+    distinct?: WageringRequirementScalarFieldEnum | WageringRequirementScalarFieldEnum[]
+  }
+
+  /**
+   * UserWallet without action
+   */
+  export type UserWalletDefaultArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the UserWallet
+     */
+    select?: UserWalletSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the UserWallet
+     */
+    omit?: UserWalletOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: UserWalletInclude<ExtArgs> | null
   }
 
 
@@ -36023,1314 +36208,6 @@ export namespace Prisma {
 
 
   /**
-   * Model Rolling
-   */
-
-  export type AggregateRolling = {
-    _count: RollingCountAggregateOutputType | null
-    _avg: RollingAvgAggregateOutputType | null
-    _sum: RollingSumAggregateOutputType | null
-    _min: RollingMinAggregateOutputType | null
-    _max: RollingMaxAggregateOutputType | null
-  }
-
-  export type RollingAvgAggregateOutputType = {
-    id: number | null
-    userId: number | null
-    userPromotionId: number | null
-    requiredAmount: Decimal | null
-    currentAmount: Decimal | null
-    cancellationBalanceThreshold: Decimal | null
-    depositAmount: Decimal | null
-    bonusAmount: Decimal | null
-    depositDetailId: number | null
-  }
-
-  export type RollingSumAggregateOutputType = {
-    id: bigint | null
-    userId: bigint | null
-    userPromotionId: bigint | null
-    requiredAmount: Decimal | null
-    currentAmount: Decimal | null
-    cancellationBalanceThreshold: Decimal | null
-    depositAmount: Decimal | null
-    bonusAmount: Decimal | null
-    depositDetailId: bigint | null
-  }
-
-  export type RollingMinAggregateOutputType = {
-    id: bigint | null
-    userId: bigint | null
-    sourceType: $Enums.RollingSourceType | null
-    userPromotionId: bigint | null
-    requiredAmount: Decimal | null
-    currentAmount: Decimal | null
-    cancellationBalanceThreshold: Decimal | null
-    status: $Enums.RollingStatus | null
-    depositAmount: Decimal | null
-    bonusAmount: Decimal | null
-    completedAt: Date | null
-    cancelledAt: Date | null
-    createdAt: Date | null
-    updatedAt: Date | null
-    depositDetailId: bigint | null
-  }
-
-  export type RollingMaxAggregateOutputType = {
-    id: bigint | null
-    userId: bigint | null
-    sourceType: $Enums.RollingSourceType | null
-    userPromotionId: bigint | null
-    requiredAmount: Decimal | null
-    currentAmount: Decimal | null
-    cancellationBalanceThreshold: Decimal | null
-    status: $Enums.RollingStatus | null
-    depositAmount: Decimal | null
-    bonusAmount: Decimal | null
-    completedAt: Date | null
-    cancelledAt: Date | null
-    createdAt: Date | null
-    updatedAt: Date | null
-    depositDetailId: bigint | null
-  }
-
-  export type RollingCountAggregateOutputType = {
-    id: number
-    userId: number
-    sourceType: number
-    userPromotionId: number
-    requiredAmount: number
-    currentAmount: number
-    cancellationBalanceThreshold: number
-    status: number
-    depositAmount: number
-    bonusAmount: number
-    completedAt: number
-    cancelledAt: number
-    createdAt: number
-    updatedAt: number
-    depositDetailId: number
-    _all: number
-  }
-
-
-  export type RollingAvgAggregateInputType = {
-    id?: true
-    userId?: true
-    userPromotionId?: true
-    requiredAmount?: true
-    currentAmount?: true
-    cancellationBalanceThreshold?: true
-    depositAmount?: true
-    bonusAmount?: true
-    depositDetailId?: true
-  }
-
-  export type RollingSumAggregateInputType = {
-    id?: true
-    userId?: true
-    userPromotionId?: true
-    requiredAmount?: true
-    currentAmount?: true
-    cancellationBalanceThreshold?: true
-    depositAmount?: true
-    bonusAmount?: true
-    depositDetailId?: true
-  }
-
-  export type RollingMinAggregateInputType = {
-    id?: true
-    userId?: true
-    sourceType?: true
-    userPromotionId?: true
-    requiredAmount?: true
-    currentAmount?: true
-    cancellationBalanceThreshold?: true
-    status?: true
-    depositAmount?: true
-    bonusAmount?: true
-    completedAt?: true
-    cancelledAt?: true
-    createdAt?: true
-    updatedAt?: true
-    depositDetailId?: true
-  }
-
-  export type RollingMaxAggregateInputType = {
-    id?: true
-    userId?: true
-    sourceType?: true
-    userPromotionId?: true
-    requiredAmount?: true
-    currentAmount?: true
-    cancellationBalanceThreshold?: true
-    status?: true
-    depositAmount?: true
-    bonusAmount?: true
-    completedAt?: true
-    cancelledAt?: true
-    createdAt?: true
-    updatedAt?: true
-    depositDetailId?: true
-  }
-
-  export type RollingCountAggregateInputType = {
-    id?: true
-    userId?: true
-    sourceType?: true
-    userPromotionId?: true
-    requiredAmount?: true
-    currentAmount?: true
-    cancellationBalanceThreshold?: true
-    status?: true
-    depositAmount?: true
-    bonusAmount?: true
-    completedAt?: true
-    cancelledAt?: true
-    createdAt?: true
-    updatedAt?: true
-    depositDetailId?: true
-    _all?: true
-  }
-
-  export type RollingAggregateArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
-    /**
-     * Filter which Rolling to aggregate.
-     */
-    where?: RollingWhereInput
-    /**
-     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/sorting Sorting Docs}
-     * 
-     * Determine the order of Rollings to fetch.
-     */
-    orderBy?: RollingOrderByWithRelationInput | RollingOrderByWithRelationInput[]
-    /**
-     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination#cursor-based-pagination Cursor Docs}
-     * 
-     * Sets the start position
-     */
-    cursor?: RollingWhereUniqueInput
-    /**
-     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
-     * 
-     * Take `±n` Rollings from the position of the cursor.
-     */
-    take?: number
-    /**
-     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
-     * 
-     * Skip the first `n` Rollings.
-     */
-    skip?: number
-    /**
-     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
-     * 
-     * Count returned Rollings
-    **/
-    _count?: true | RollingCountAggregateInputType
-    /**
-     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
-     * 
-     * Select which fields to average
-    **/
-    _avg?: RollingAvgAggregateInputType
-    /**
-     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
-     * 
-     * Select which fields to sum
-    **/
-    _sum?: RollingSumAggregateInputType
-    /**
-     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
-     * 
-     * Select which fields to find the minimum value
-    **/
-    _min?: RollingMinAggregateInputType
-    /**
-     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
-     * 
-     * Select which fields to find the maximum value
-    **/
-    _max?: RollingMaxAggregateInputType
-  }
-
-  export type GetRollingAggregateType<T extends RollingAggregateArgs> = {
-        [P in keyof T & keyof AggregateRolling]: P extends '_count' | 'count'
-      ? T[P] extends true
-        ? number
-        : GetScalarType<T[P], AggregateRolling[P]>
-      : GetScalarType<T[P], AggregateRolling[P]>
-  }
-
-
-
-
-  export type RollingGroupByArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
-    where?: RollingWhereInput
-    orderBy?: RollingOrderByWithAggregationInput | RollingOrderByWithAggregationInput[]
-    by: RollingScalarFieldEnum[] | RollingScalarFieldEnum
-    having?: RollingScalarWhereWithAggregatesInput
-    take?: number
-    skip?: number
-    _count?: RollingCountAggregateInputType | true
-    _avg?: RollingAvgAggregateInputType
-    _sum?: RollingSumAggregateInputType
-    _min?: RollingMinAggregateInputType
-    _max?: RollingMaxAggregateInputType
-  }
-
-  export type RollingGroupByOutputType = {
-    id: bigint
-    userId: bigint
-    sourceType: $Enums.RollingSourceType
-    userPromotionId: bigint | null
-    requiredAmount: Decimal
-    currentAmount: Decimal
-    cancellationBalanceThreshold: Decimal | null
-    status: $Enums.RollingStatus
-    depositAmount: Decimal | null
-    bonusAmount: Decimal | null
-    completedAt: Date | null
-    cancelledAt: Date | null
-    createdAt: Date
-    updatedAt: Date
-    depositDetailId: bigint | null
-    _count: RollingCountAggregateOutputType | null
-    _avg: RollingAvgAggregateOutputType | null
-    _sum: RollingSumAggregateOutputType | null
-    _min: RollingMinAggregateOutputType | null
-    _max: RollingMaxAggregateOutputType | null
-  }
-
-  type GetRollingGroupByPayload<T extends RollingGroupByArgs> = Prisma.PrismaPromise<
-    Array<
-      PickEnumerable<RollingGroupByOutputType, T['by']> &
-        {
-          [P in ((keyof T) & (keyof RollingGroupByOutputType))]: P extends '_count'
-            ? T[P] extends boolean
-              ? number
-              : GetScalarType<T[P], RollingGroupByOutputType[P]>
-            : GetScalarType<T[P], RollingGroupByOutputType[P]>
-        }
-      >
-    >
-
-
-  export type RollingSelect<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetSelect<{
-    id?: boolean
-    userId?: boolean
-    sourceType?: boolean
-    userPromotionId?: boolean
-    requiredAmount?: boolean
-    currentAmount?: boolean
-    cancellationBalanceThreshold?: boolean
-    status?: boolean
-    depositAmount?: boolean
-    bonusAmount?: boolean
-    completedAt?: boolean
-    cancelledAt?: boolean
-    createdAt?: boolean
-    updatedAt?: boolean
-    depositDetailId?: boolean
-    DepositDetail?: boolean | Rolling$DepositDetailArgs<ExtArgs>
-    user?: boolean | UserDefaultArgs<ExtArgs>
-    userPromotion?: boolean | Rolling$userPromotionArgs<ExtArgs>
-  }, ExtArgs["result"]["rolling"]>
-
-  export type RollingSelectCreateManyAndReturn<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetSelect<{
-    id?: boolean
-    userId?: boolean
-    sourceType?: boolean
-    userPromotionId?: boolean
-    requiredAmount?: boolean
-    currentAmount?: boolean
-    cancellationBalanceThreshold?: boolean
-    status?: boolean
-    depositAmount?: boolean
-    bonusAmount?: boolean
-    completedAt?: boolean
-    cancelledAt?: boolean
-    createdAt?: boolean
-    updatedAt?: boolean
-    depositDetailId?: boolean
-    DepositDetail?: boolean | Rolling$DepositDetailArgs<ExtArgs>
-    user?: boolean | UserDefaultArgs<ExtArgs>
-    userPromotion?: boolean | Rolling$userPromotionArgs<ExtArgs>
-  }, ExtArgs["result"]["rolling"]>
-
-  export type RollingSelectUpdateManyAndReturn<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetSelect<{
-    id?: boolean
-    userId?: boolean
-    sourceType?: boolean
-    userPromotionId?: boolean
-    requiredAmount?: boolean
-    currentAmount?: boolean
-    cancellationBalanceThreshold?: boolean
-    status?: boolean
-    depositAmount?: boolean
-    bonusAmount?: boolean
-    completedAt?: boolean
-    cancelledAt?: boolean
-    createdAt?: boolean
-    updatedAt?: boolean
-    depositDetailId?: boolean
-    DepositDetail?: boolean | Rolling$DepositDetailArgs<ExtArgs>
-    user?: boolean | UserDefaultArgs<ExtArgs>
-    userPromotion?: boolean | Rolling$userPromotionArgs<ExtArgs>
-  }, ExtArgs["result"]["rolling"]>
-
-  export type RollingSelectScalar = {
-    id?: boolean
-    userId?: boolean
-    sourceType?: boolean
-    userPromotionId?: boolean
-    requiredAmount?: boolean
-    currentAmount?: boolean
-    cancellationBalanceThreshold?: boolean
-    status?: boolean
-    depositAmount?: boolean
-    bonusAmount?: boolean
-    completedAt?: boolean
-    cancelledAt?: boolean
-    createdAt?: boolean
-    updatedAt?: boolean
-    depositDetailId?: boolean
-  }
-
-  export type RollingOmit<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetOmit<"id" | "userId" | "sourceType" | "userPromotionId" | "requiredAmount" | "currentAmount" | "cancellationBalanceThreshold" | "status" | "depositAmount" | "bonusAmount" | "completedAt" | "cancelledAt" | "createdAt" | "updatedAt" | "depositDetailId", ExtArgs["result"]["rolling"]>
-  export type RollingInclude<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
-    DepositDetail?: boolean | Rolling$DepositDetailArgs<ExtArgs>
-    user?: boolean | UserDefaultArgs<ExtArgs>
-    userPromotion?: boolean | Rolling$userPromotionArgs<ExtArgs>
-  }
-  export type RollingIncludeCreateManyAndReturn<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
-    DepositDetail?: boolean | Rolling$DepositDetailArgs<ExtArgs>
-    user?: boolean | UserDefaultArgs<ExtArgs>
-    userPromotion?: boolean | Rolling$userPromotionArgs<ExtArgs>
-  }
-  export type RollingIncludeUpdateManyAndReturn<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
-    DepositDetail?: boolean | Rolling$DepositDetailArgs<ExtArgs>
-    user?: boolean | UserDefaultArgs<ExtArgs>
-    userPromotion?: boolean | Rolling$userPromotionArgs<ExtArgs>
-  }
-
-  export type $RollingPayload<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
-    name: "Rolling"
-    objects: {
-      DepositDetail: Prisma.$DepositDetailPayload<ExtArgs> | null
-      user: Prisma.$UserPayload<ExtArgs>
-      userPromotion: Prisma.$UserPromotionPayload<ExtArgs> | null
-    }
-    scalars: $Extensions.GetPayloadResult<{
-      id: bigint
-      userId: bigint
-      sourceType: $Enums.RollingSourceType
-      userPromotionId: bigint | null
-      requiredAmount: Prisma.Decimal
-      currentAmount: Prisma.Decimal
-      cancellationBalanceThreshold: Prisma.Decimal | null
-      status: $Enums.RollingStatus
-      depositAmount: Prisma.Decimal | null
-      bonusAmount: Prisma.Decimal | null
-      completedAt: Date | null
-      cancelledAt: Date | null
-      createdAt: Date
-      updatedAt: Date
-      depositDetailId: bigint | null
-    }, ExtArgs["result"]["rolling"]>
-    composites: {}
-  }
-
-  type RollingGetPayload<S extends boolean | null | undefined | RollingDefaultArgs> = $Result.GetResult<Prisma.$RollingPayload, S>
-
-  type RollingCountArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> =
-    Omit<RollingFindManyArgs, 'select' | 'include' | 'distinct' | 'omit'> & {
-      select?: RollingCountAggregateInputType | true
-    }
-
-  export interface RollingDelegate<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs, GlobalOmitOptions = {}> {
-    [K: symbol]: { types: Prisma.TypeMap<ExtArgs>['model']['Rolling'], meta: { name: 'Rolling' } }
-    /**
-     * Find zero or one Rolling that matches the filter.
-     * @param {RollingFindUniqueArgs} args - Arguments to find a Rolling
-     * @example
-     * // Get one Rolling
-     * const rolling = await prisma.rolling.findUnique({
-     *   where: {
-     *     // ... provide filter here
-     *   }
-     * })
-     */
-    findUnique<T extends RollingFindUniqueArgs>(args: SelectSubset<T, RollingFindUniqueArgs<ExtArgs>>): Prisma__RollingClient<$Result.GetResult<Prisma.$RollingPayload<ExtArgs>, T, "findUnique", GlobalOmitOptions> | null, null, ExtArgs, GlobalOmitOptions>
-
-    /**
-     * Find one Rolling that matches the filter or throw an error with `error.code='P2025'`
-     * if no matches were found.
-     * @param {RollingFindUniqueOrThrowArgs} args - Arguments to find a Rolling
-     * @example
-     * // Get one Rolling
-     * const rolling = await prisma.rolling.findUniqueOrThrow({
-     *   where: {
-     *     // ... provide filter here
-     *   }
-     * })
-     */
-    findUniqueOrThrow<T extends RollingFindUniqueOrThrowArgs>(args: SelectSubset<T, RollingFindUniqueOrThrowArgs<ExtArgs>>): Prisma__RollingClient<$Result.GetResult<Prisma.$RollingPayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
-
-    /**
-     * Find the first Rolling that matches the filter.
-     * Note, that providing `undefined` is treated as the value not being there.
-     * Read more here: https://pris.ly/d/null-undefined
-     * @param {RollingFindFirstArgs} args - Arguments to find a Rolling
-     * @example
-     * // Get one Rolling
-     * const rolling = await prisma.rolling.findFirst({
-     *   where: {
-     *     // ... provide filter here
-     *   }
-     * })
-     */
-    findFirst<T extends RollingFindFirstArgs>(args?: SelectSubset<T, RollingFindFirstArgs<ExtArgs>>): Prisma__RollingClient<$Result.GetResult<Prisma.$RollingPayload<ExtArgs>, T, "findFirst", GlobalOmitOptions> | null, null, ExtArgs, GlobalOmitOptions>
-
-    /**
-     * Find the first Rolling that matches the filter or
-     * throw `PrismaKnownClientError` with `P2025` code if no matches were found.
-     * Note, that providing `undefined` is treated as the value not being there.
-     * Read more here: https://pris.ly/d/null-undefined
-     * @param {RollingFindFirstOrThrowArgs} args - Arguments to find a Rolling
-     * @example
-     * // Get one Rolling
-     * const rolling = await prisma.rolling.findFirstOrThrow({
-     *   where: {
-     *     // ... provide filter here
-     *   }
-     * })
-     */
-    findFirstOrThrow<T extends RollingFindFirstOrThrowArgs>(args?: SelectSubset<T, RollingFindFirstOrThrowArgs<ExtArgs>>): Prisma__RollingClient<$Result.GetResult<Prisma.$RollingPayload<ExtArgs>, T, "findFirstOrThrow", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
-
-    /**
-     * Find zero or more Rollings that matches the filter.
-     * Note, that providing `undefined` is treated as the value not being there.
-     * Read more here: https://pris.ly/d/null-undefined
-     * @param {RollingFindManyArgs} args - Arguments to filter and select certain fields only.
-     * @example
-     * // Get all Rollings
-     * const rollings = await prisma.rolling.findMany()
-     * 
-     * // Get first 10 Rollings
-     * const rollings = await prisma.rolling.findMany({ take: 10 })
-     * 
-     * // Only select the `id`
-     * const rollingWithIdOnly = await prisma.rolling.findMany({ select: { id: true } })
-     * 
-     */
-    findMany<T extends RollingFindManyArgs>(args?: SelectSubset<T, RollingFindManyArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$RollingPayload<ExtArgs>, T, "findMany", GlobalOmitOptions>>
-
-    /**
-     * Create a Rolling.
-     * @param {RollingCreateArgs} args - Arguments to create a Rolling.
-     * @example
-     * // Create one Rolling
-     * const Rolling = await prisma.rolling.create({
-     *   data: {
-     *     // ... data to create a Rolling
-     *   }
-     * })
-     * 
-     */
-    create<T extends RollingCreateArgs>(args: SelectSubset<T, RollingCreateArgs<ExtArgs>>): Prisma__RollingClient<$Result.GetResult<Prisma.$RollingPayload<ExtArgs>, T, "create", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
-
-    /**
-     * Create many Rollings.
-     * @param {RollingCreateManyArgs} args - Arguments to create many Rollings.
-     * @example
-     * // Create many Rollings
-     * const rolling = await prisma.rolling.createMany({
-     *   data: [
-     *     // ... provide data here
-     *   ]
-     * })
-     *     
-     */
-    createMany<T extends RollingCreateManyArgs>(args?: SelectSubset<T, RollingCreateManyArgs<ExtArgs>>): Prisma.PrismaPromise<BatchPayload>
-
-    /**
-     * Create many Rollings and returns the data saved in the database.
-     * @param {RollingCreateManyAndReturnArgs} args - Arguments to create many Rollings.
-     * @example
-     * // Create many Rollings
-     * const rolling = await prisma.rolling.createManyAndReturn({
-     *   data: [
-     *     // ... provide data here
-     *   ]
-     * })
-     * 
-     * // Create many Rollings and only return the `id`
-     * const rollingWithIdOnly = await prisma.rolling.createManyAndReturn({
-     *   select: { id: true },
-     *   data: [
-     *     // ... provide data here
-     *   ]
-     * })
-     * Note, that providing `undefined` is treated as the value not being there.
-     * Read more here: https://pris.ly/d/null-undefined
-     * 
-     */
-    createManyAndReturn<T extends RollingCreateManyAndReturnArgs>(args?: SelectSubset<T, RollingCreateManyAndReturnArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$RollingPayload<ExtArgs>, T, "createManyAndReturn", GlobalOmitOptions>>
-
-    /**
-     * Delete a Rolling.
-     * @param {RollingDeleteArgs} args - Arguments to delete one Rolling.
-     * @example
-     * // Delete one Rolling
-     * const Rolling = await prisma.rolling.delete({
-     *   where: {
-     *     // ... filter to delete one Rolling
-     *   }
-     * })
-     * 
-     */
-    delete<T extends RollingDeleteArgs>(args: SelectSubset<T, RollingDeleteArgs<ExtArgs>>): Prisma__RollingClient<$Result.GetResult<Prisma.$RollingPayload<ExtArgs>, T, "delete", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
-
-    /**
-     * Update one Rolling.
-     * @param {RollingUpdateArgs} args - Arguments to update one Rolling.
-     * @example
-     * // Update one Rolling
-     * const rolling = await prisma.rolling.update({
-     *   where: {
-     *     // ... provide filter here
-     *   },
-     *   data: {
-     *     // ... provide data here
-     *   }
-     * })
-     * 
-     */
-    update<T extends RollingUpdateArgs>(args: SelectSubset<T, RollingUpdateArgs<ExtArgs>>): Prisma__RollingClient<$Result.GetResult<Prisma.$RollingPayload<ExtArgs>, T, "update", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
-
-    /**
-     * Delete zero or more Rollings.
-     * @param {RollingDeleteManyArgs} args - Arguments to filter Rollings to delete.
-     * @example
-     * // Delete a few Rollings
-     * const { count } = await prisma.rolling.deleteMany({
-     *   where: {
-     *     // ... provide filter here
-     *   }
-     * })
-     * 
-     */
-    deleteMany<T extends RollingDeleteManyArgs>(args?: SelectSubset<T, RollingDeleteManyArgs<ExtArgs>>): Prisma.PrismaPromise<BatchPayload>
-
-    /**
-     * Update zero or more Rollings.
-     * Note, that providing `undefined` is treated as the value not being there.
-     * Read more here: https://pris.ly/d/null-undefined
-     * @param {RollingUpdateManyArgs} args - Arguments to update one or more rows.
-     * @example
-     * // Update many Rollings
-     * const rolling = await prisma.rolling.updateMany({
-     *   where: {
-     *     // ... provide filter here
-     *   },
-     *   data: {
-     *     // ... provide data here
-     *   }
-     * })
-     * 
-     */
-    updateMany<T extends RollingUpdateManyArgs>(args: SelectSubset<T, RollingUpdateManyArgs<ExtArgs>>): Prisma.PrismaPromise<BatchPayload>
-
-    /**
-     * Update zero or more Rollings and returns the data updated in the database.
-     * @param {RollingUpdateManyAndReturnArgs} args - Arguments to update many Rollings.
-     * @example
-     * // Update many Rollings
-     * const rolling = await prisma.rolling.updateManyAndReturn({
-     *   where: {
-     *     // ... provide filter here
-     *   },
-     *   data: [
-     *     // ... provide data here
-     *   ]
-     * })
-     * 
-     * // Update zero or more Rollings and only return the `id`
-     * const rollingWithIdOnly = await prisma.rolling.updateManyAndReturn({
-     *   select: { id: true },
-     *   where: {
-     *     // ... provide filter here
-     *   },
-     *   data: [
-     *     // ... provide data here
-     *   ]
-     * })
-     * Note, that providing `undefined` is treated as the value not being there.
-     * Read more here: https://pris.ly/d/null-undefined
-     * 
-     */
-    updateManyAndReturn<T extends RollingUpdateManyAndReturnArgs>(args: SelectSubset<T, RollingUpdateManyAndReturnArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$RollingPayload<ExtArgs>, T, "updateManyAndReturn", GlobalOmitOptions>>
-
-    /**
-     * Create or update one Rolling.
-     * @param {RollingUpsertArgs} args - Arguments to update or create a Rolling.
-     * @example
-     * // Update or create a Rolling
-     * const rolling = await prisma.rolling.upsert({
-     *   create: {
-     *     // ... data to create a Rolling
-     *   },
-     *   update: {
-     *     // ... in case it already exists, update
-     *   },
-     *   where: {
-     *     // ... the filter for the Rolling we want to update
-     *   }
-     * })
-     */
-    upsert<T extends RollingUpsertArgs>(args: SelectSubset<T, RollingUpsertArgs<ExtArgs>>): Prisma__RollingClient<$Result.GetResult<Prisma.$RollingPayload<ExtArgs>, T, "upsert", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
-
-
-    /**
-     * Count the number of Rollings.
-     * Note, that providing `undefined` is treated as the value not being there.
-     * Read more here: https://pris.ly/d/null-undefined
-     * @param {RollingCountArgs} args - Arguments to filter Rollings to count.
-     * @example
-     * // Count the number of Rollings
-     * const count = await prisma.rolling.count({
-     *   where: {
-     *     // ... the filter for the Rollings we want to count
-     *   }
-     * })
-    **/
-    count<T extends RollingCountArgs>(
-      args?: Subset<T, RollingCountArgs>,
-    ): Prisma.PrismaPromise<
-      T extends $Utils.Record<'select', any>
-        ? T['select'] extends true
-          ? number
-          : GetScalarType<T['select'], RollingCountAggregateOutputType>
-        : number
-    >
-
-    /**
-     * Allows you to perform aggregations operations on a Rolling.
-     * Note, that providing `undefined` is treated as the value not being there.
-     * Read more here: https://pris.ly/d/null-undefined
-     * @param {RollingAggregateArgs} args - Select which aggregations you would like to apply and on what fields.
-     * @example
-     * // Ordered by age ascending
-     * // Where email contains prisma.io
-     * // Limited to the 10 users
-     * const aggregations = await prisma.user.aggregate({
-     *   _avg: {
-     *     age: true,
-     *   },
-     *   where: {
-     *     email: {
-     *       contains: "prisma.io",
-     *     },
-     *   },
-     *   orderBy: {
-     *     age: "asc",
-     *   },
-     *   take: 10,
-     * })
-    **/
-    aggregate<T extends RollingAggregateArgs>(args: Subset<T, RollingAggregateArgs>): Prisma.PrismaPromise<GetRollingAggregateType<T>>
-
-    /**
-     * Group by Rolling.
-     * Note, that providing `undefined` is treated as the value not being there.
-     * Read more here: https://pris.ly/d/null-undefined
-     * @param {RollingGroupByArgs} args - Group by arguments.
-     * @example
-     * // Group by city, order by createdAt, get count
-     * const result = await prisma.user.groupBy({
-     *   by: ['city', 'createdAt'],
-     *   orderBy: {
-     *     createdAt: true
-     *   },
-     *   _count: {
-     *     _all: true
-     *   },
-     * })
-     * 
-    **/
-    groupBy<
-      T extends RollingGroupByArgs,
-      HasSelectOrTake extends Or<
-        Extends<'skip', Keys<T>>,
-        Extends<'take', Keys<T>>
-      >,
-      OrderByArg extends True extends HasSelectOrTake
-        ? { orderBy: RollingGroupByArgs['orderBy'] }
-        : { orderBy?: RollingGroupByArgs['orderBy'] },
-      OrderFields extends ExcludeUnderscoreKeys<Keys<MaybeTupleToUnion<T['orderBy']>>>,
-      ByFields extends MaybeTupleToUnion<T['by']>,
-      ByValid extends Has<ByFields, OrderFields>,
-      HavingFields extends GetHavingFields<T['having']>,
-      HavingValid extends Has<ByFields, HavingFields>,
-      ByEmpty extends T['by'] extends never[] ? True : False,
-      InputErrors extends ByEmpty extends True
-      ? `Error: "by" must not be empty.`
-      : HavingValid extends False
-      ? {
-          [P in HavingFields]: P extends ByFields
-            ? never
-            : P extends string
-            ? `Error: Field "${P}" used in "having" needs to be provided in "by".`
-            : [
-                Error,
-                'Field ',
-                P,
-                ` in "having" needs to be provided in "by"`,
-              ]
-        }[HavingFields]
-      : 'take' extends Keys<T>
-      ? 'orderBy' extends Keys<T>
-        ? ByValid extends True
-          ? {}
-          : {
-              [P in OrderFields]: P extends ByFields
-                ? never
-                : `Error: Field "${P}" in "orderBy" needs to be provided in "by"`
-            }[OrderFields]
-        : 'Error: If you provide "take", you also need to provide "orderBy"'
-      : 'skip' extends Keys<T>
-      ? 'orderBy' extends Keys<T>
-        ? ByValid extends True
-          ? {}
-          : {
-              [P in OrderFields]: P extends ByFields
-                ? never
-                : `Error: Field "${P}" in "orderBy" needs to be provided in "by"`
-            }[OrderFields]
-        : 'Error: If you provide "skip", you also need to provide "orderBy"'
-      : ByValid extends True
-      ? {}
-      : {
-          [P in OrderFields]: P extends ByFields
-            ? never
-            : `Error: Field "${P}" in "orderBy" needs to be provided in "by"`
-        }[OrderFields]
-    >(args: SubsetIntersection<T, RollingGroupByArgs, OrderByArg> & InputErrors): {} extends InputErrors ? GetRollingGroupByPayload<T> : Prisma.PrismaPromise<InputErrors>
-  /**
-   * Fields of the Rolling model
-   */
-  readonly fields: RollingFieldRefs;
-  }
-
-  /**
-   * The delegate class that acts as a "Promise-like" for Rolling.
-   * Why is this prefixed with `Prisma__`?
-   * Because we want to prevent naming conflicts as mentioned in
-   * https://github.com/prisma/prisma-client-js/issues/707
-   */
-  export interface Prisma__RollingClient<T, Null = never, ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs, GlobalOmitOptions = {}> extends Prisma.PrismaPromise<T> {
-    readonly [Symbol.toStringTag]: "PrismaPromise"
-    DepositDetail<T extends Rolling$DepositDetailArgs<ExtArgs> = {}>(args?: Subset<T, Rolling$DepositDetailArgs<ExtArgs>>): Prisma__DepositDetailClient<$Result.GetResult<Prisma.$DepositDetailPayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions> | null, null, ExtArgs, GlobalOmitOptions>
-    user<T extends UserDefaultArgs<ExtArgs> = {}>(args?: Subset<T, UserDefaultArgs<ExtArgs>>): Prisma__UserClient<$Result.GetResult<Prisma.$UserPayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions> | Null, Null, ExtArgs, GlobalOmitOptions>
-    userPromotion<T extends Rolling$userPromotionArgs<ExtArgs> = {}>(args?: Subset<T, Rolling$userPromotionArgs<ExtArgs>>): Prisma__UserPromotionClient<$Result.GetResult<Prisma.$UserPromotionPayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions> | null, null, ExtArgs, GlobalOmitOptions>
-    /**
-     * Attaches callbacks for the resolution and/or rejection of the Promise.
-     * @param onfulfilled The callback to execute when the Promise is resolved.
-     * @param onrejected The callback to execute when the Promise is rejected.
-     * @returns A Promise for the completion of which ever callback is executed.
-     */
-    then<TResult1 = T, TResult2 = never>(onfulfilled?: ((value: T) => TResult1 | PromiseLike<TResult1>) | undefined | null, onrejected?: ((reason: any) => TResult2 | PromiseLike<TResult2>) | undefined | null): $Utils.JsPromise<TResult1 | TResult2>
-    /**
-     * Attaches a callback for only the rejection of the Promise.
-     * @param onrejected The callback to execute when the Promise is rejected.
-     * @returns A Promise for the completion of the callback.
-     */
-    catch<TResult = never>(onrejected?: ((reason: any) => TResult | PromiseLike<TResult>) | undefined | null): $Utils.JsPromise<T | TResult>
-    /**
-     * Attaches a callback that is invoked when the Promise is settled (fulfilled or rejected). The
-     * resolved value cannot be modified from the callback.
-     * @param onfinally The callback to execute when the Promise is settled (fulfilled or rejected).
-     * @returns A Promise for the completion of the callback.
-     */
-    finally(onfinally?: (() => void) | undefined | null): $Utils.JsPromise<T>
-  }
-
-
-
-
-  /**
-   * Fields of the Rolling model
-   */
-  interface RollingFieldRefs {
-    readonly id: FieldRef<"Rolling", 'BigInt'>
-    readonly userId: FieldRef<"Rolling", 'BigInt'>
-    readonly sourceType: FieldRef<"Rolling", 'RollingSourceType'>
-    readonly userPromotionId: FieldRef<"Rolling", 'BigInt'>
-    readonly requiredAmount: FieldRef<"Rolling", 'Decimal'>
-    readonly currentAmount: FieldRef<"Rolling", 'Decimal'>
-    readonly cancellationBalanceThreshold: FieldRef<"Rolling", 'Decimal'>
-    readonly status: FieldRef<"Rolling", 'RollingStatus'>
-    readonly depositAmount: FieldRef<"Rolling", 'Decimal'>
-    readonly bonusAmount: FieldRef<"Rolling", 'Decimal'>
-    readonly completedAt: FieldRef<"Rolling", 'DateTime'>
-    readonly cancelledAt: FieldRef<"Rolling", 'DateTime'>
-    readonly createdAt: FieldRef<"Rolling", 'DateTime'>
-    readonly updatedAt: FieldRef<"Rolling", 'DateTime'>
-    readonly depositDetailId: FieldRef<"Rolling", 'BigInt'>
-  }
-    
-
-  // Custom InputTypes
-  /**
-   * Rolling findUnique
-   */
-  export type RollingFindUniqueArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
-    /**
-     * Select specific fields to fetch from the Rolling
-     */
-    select?: RollingSelect<ExtArgs> | null
-    /**
-     * Omit specific fields from the Rolling
-     */
-    omit?: RollingOmit<ExtArgs> | null
-    /**
-     * Choose, which related nodes to fetch as well
-     */
-    include?: RollingInclude<ExtArgs> | null
-    /**
-     * Filter, which Rolling to fetch.
-     */
-    where: RollingWhereUniqueInput
-  }
-
-  /**
-   * Rolling findUniqueOrThrow
-   */
-  export type RollingFindUniqueOrThrowArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
-    /**
-     * Select specific fields to fetch from the Rolling
-     */
-    select?: RollingSelect<ExtArgs> | null
-    /**
-     * Omit specific fields from the Rolling
-     */
-    omit?: RollingOmit<ExtArgs> | null
-    /**
-     * Choose, which related nodes to fetch as well
-     */
-    include?: RollingInclude<ExtArgs> | null
-    /**
-     * Filter, which Rolling to fetch.
-     */
-    where: RollingWhereUniqueInput
-  }
-
-  /**
-   * Rolling findFirst
-   */
-  export type RollingFindFirstArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
-    /**
-     * Select specific fields to fetch from the Rolling
-     */
-    select?: RollingSelect<ExtArgs> | null
-    /**
-     * Omit specific fields from the Rolling
-     */
-    omit?: RollingOmit<ExtArgs> | null
-    /**
-     * Choose, which related nodes to fetch as well
-     */
-    include?: RollingInclude<ExtArgs> | null
-    /**
-     * Filter, which Rolling to fetch.
-     */
-    where?: RollingWhereInput
-    /**
-     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/sorting Sorting Docs}
-     * 
-     * Determine the order of Rollings to fetch.
-     */
-    orderBy?: RollingOrderByWithRelationInput | RollingOrderByWithRelationInput[]
-    /**
-     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination#cursor-based-pagination Cursor Docs}
-     * 
-     * Sets the position for searching for Rollings.
-     */
-    cursor?: RollingWhereUniqueInput
-    /**
-     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
-     * 
-     * Take `±n` Rollings from the position of the cursor.
-     */
-    take?: number
-    /**
-     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
-     * 
-     * Skip the first `n` Rollings.
-     */
-    skip?: number
-    /**
-     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/distinct Distinct Docs}
-     * 
-     * Filter by unique combinations of Rollings.
-     */
-    distinct?: RollingScalarFieldEnum | RollingScalarFieldEnum[]
-  }
-
-  /**
-   * Rolling findFirstOrThrow
-   */
-  export type RollingFindFirstOrThrowArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
-    /**
-     * Select specific fields to fetch from the Rolling
-     */
-    select?: RollingSelect<ExtArgs> | null
-    /**
-     * Omit specific fields from the Rolling
-     */
-    omit?: RollingOmit<ExtArgs> | null
-    /**
-     * Choose, which related nodes to fetch as well
-     */
-    include?: RollingInclude<ExtArgs> | null
-    /**
-     * Filter, which Rolling to fetch.
-     */
-    where?: RollingWhereInput
-    /**
-     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/sorting Sorting Docs}
-     * 
-     * Determine the order of Rollings to fetch.
-     */
-    orderBy?: RollingOrderByWithRelationInput | RollingOrderByWithRelationInput[]
-    /**
-     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination#cursor-based-pagination Cursor Docs}
-     * 
-     * Sets the position for searching for Rollings.
-     */
-    cursor?: RollingWhereUniqueInput
-    /**
-     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
-     * 
-     * Take `±n` Rollings from the position of the cursor.
-     */
-    take?: number
-    /**
-     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
-     * 
-     * Skip the first `n` Rollings.
-     */
-    skip?: number
-    /**
-     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/distinct Distinct Docs}
-     * 
-     * Filter by unique combinations of Rollings.
-     */
-    distinct?: RollingScalarFieldEnum | RollingScalarFieldEnum[]
-  }
-
-  /**
-   * Rolling findMany
-   */
-  export type RollingFindManyArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
-    /**
-     * Select specific fields to fetch from the Rolling
-     */
-    select?: RollingSelect<ExtArgs> | null
-    /**
-     * Omit specific fields from the Rolling
-     */
-    omit?: RollingOmit<ExtArgs> | null
-    /**
-     * Choose, which related nodes to fetch as well
-     */
-    include?: RollingInclude<ExtArgs> | null
-    /**
-     * Filter, which Rollings to fetch.
-     */
-    where?: RollingWhereInput
-    /**
-     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/sorting Sorting Docs}
-     * 
-     * Determine the order of Rollings to fetch.
-     */
-    orderBy?: RollingOrderByWithRelationInput | RollingOrderByWithRelationInput[]
-    /**
-     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination#cursor-based-pagination Cursor Docs}
-     * 
-     * Sets the position for listing Rollings.
-     */
-    cursor?: RollingWhereUniqueInput
-    /**
-     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
-     * 
-     * Take `±n` Rollings from the position of the cursor.
-     */
-    take?: number
-    /**
-     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
-     * 
-     * Skip the first `n` Rollings.
-     */
-    skip?: number
-    distinct?: RollingScalarFieldEnum | RollingScalarFieldEnum[]
-  }
-
-  /**
-   * Rolling create
-   */
-  export type RollingCreateArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
-    /**
-     * Select specific fields to fetch from the Rolling
-     */
-    select?: RollingSelect<ExtArgs> | null
-    /**
-     * Omit specific fields from the Rolling
-     */
-    omit?: RollingOmit<ExtArgs> | null
-    /**
-     * Choose, which related nodes to fetch as well
-     */
-    include?: RollingInclude<ExtArgs> | null
-    /**
-     * The data needed to create a Rolling.
-     */
-    data: XOR<RollingCreateInput, RollingUncheckedCreateInput>
-  }
-
-  /**
-   * Rolling createMany
-   */
-  export type RollingCreateManyArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
-    /**
-     * The data used to create many Rollings.
-     */
-    data: RollingCreateManyInput | RollingCreateManyInput[]
-    skipDuplicates?: boolean
-  }
-
-  /**
-   * Rolling createManyAndReturn
-   */
-  export type RollingCreateManyAndReturnArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
-    /**
-     * Select specific fields to fetch from the Rolling
-     */
-    select?: RollingSelectCreateManyAndReturn<ExtArgs> | null
-    /**
-     * Omit specific fields from the Rolling
-     */
-    omit?: RollingOmit<ExtArgs> | null
-    /**
-     * The data used to create many Rollings.
-     */
-    data: RollingCreateManyInput | RollingCreateManyInput[]
-    skipDuplicates?: boolean
-    /**
-     * Choose, which related nodes to fetch as well
-     */
-    include?: RollingIncludeCreateManyAndReturn<ExtArgs> | null
-  }
-
-  /**
-   * Rolling update
-   */
-  export type RollingUpdateArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
-    /**
-     * Select specific fields to fetch from the Rolling
-     */
-    select?: RollingSelect<ExtArgs> | null
-    /**
-     * Omit specific fields from the Rolling
-     */
-    omit?: RollingOmit<ExtArgs> | null
-    /**
-     * Choose, which related nodes to fetch as well
-     */
-    include?: RollingInclude<ExtArgs> | null
-    /**
-     * The data needed to update a Rolling.
-     */
-    data: XOR<RollingUpdateInput, RollingUncheckedUpdateInput>
-    /**
-     * Choose, which Rolling to update.
-     */
-    where: RollingWhereUniqueInput
-  }
-
-  /**
-   * Rolling updateMany
-   */
-  export type RollingUpdateManyArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
-    /**
-     * The data used to update Rollings.
-     */
-    data: XOR<RollingUpdateManyMutationInput, RollingUncheckedUpdateManyInput>
-    /**
-     * Filter which Rollings to update
-     */
-    where?: RollingWhereInput
-    /**
-     * Limit how many Rollings to update.
-     */
-    limit?: number
-  }
-
-  /**
-   * Rolling updateManyAndReturn
-   */
-  export type RollingUpdateManyAndReturnArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
-    /**
-     * Select specific fields to fetch from the Rolling
-     */
-    select?: RollingSelectUpdateManyAndReturn<ExtArgs> | null
-    /**
-     * Omit specific fields from the Rolling
-     */
-    omit?: RollingOmit<ExtArgs> | null
-    /**
-     * The data used to update Rollings.
-     */
-    data: XOR<RollingUpdateManyMutationInput, RollingUncheckedUpdateManyInput>
-    /**
-     * Filter which Rollings to update
-     */
-    where?: RollingWhereInput
-    /**
-     * Limit how many Rollings to update.
-     */
-    limit?: number
-    /**
-     * Choose, which related nodes to fetch as well
-     */
-    include?: RollingIncludeUpdateManyAndReturn<ExtArgs> | null
-  }
-
-  /**
-   * Rolling upsert
-   */
-  export type RollingUpsertArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
-    /**
-     * Select specific fields to fetch from the Rolling
-     */
-    select?: RollingSelect<ExtArgs> | null
-    /**
-     * Omit specific fields from the Rolling
-     */
-    omit?: RollingOmit<ExtArgs> | null
-    /**
-     * Choose, which related nodes to fetch as well
-     */
-    include?: RollingInclude<ExtArgs> | null
-    /**
-     * The filter to search for the Rolling to update in case it exists.
-     */
-    where: RollingWhereUniqueInput
-    /**
-     * In case the Rolling found by the `where` argument doesn't exist, create a new Rolling with this data.
-     */
-    create: XOR<RollingCreateInput, RollingUncheckedCreateInput>
-    /**
-     * In case the Rolling was found with the provided `where` argument, update it with this data.
-     */
-    update: XOR<RollingUpdateInput, RollingUncheckedUpdateInput>
-  }
-
-  /**
-   * Rolling delete
-   */
-  export type RollingDeleteArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
-    /**
-     * Select specific fields to fetch from the Rolling
-     */
-    select?: RollingSelect<ExtArgs> | null
-    /**
-     * Omit specific fields from the Rolling
-     */
-    omit?: RollingOmit<ExtArgs> | null
-    /**
-     * Choose, which related nodes to fetch as well
-     */
-    include?: RollingInclude<ExtArgs> | null
-    /**
-     * Filter which Rolling to delete.
-     */
-    where: RollingWhereUniqueInput
-  }
-
-  /**
-   * Rolling deleteMany
-   */
-  export type RollingDeleteManyArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
-    /**
-     * Filter which Rollings to delete
-     */
-    where?: RollingWhereInput
-    /**
-     * Limit how many Rollings to delete.
-     */
-    limit?: number
-  }
-
-  /**
-   * Rolling.DepositDetail
-   */
-  export type Rolling$DepositDetailArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
-    /**
-     * Select specific fields to fetch from the DepositDetail
-     */
-    select?: DepositDetailSelect<ExtArgs> | null
-    /**
-     * Omit specific fields from the DepositDetail
-     */
-    omit?: DepositDetailOmit<ExtArgs> | null
-    /**
-     * Choose, which related nodes to fetch as well
-     */
-    include?: DepositDetailInclude<ExtArgs> | null
-    where?: DepositDetailWhereInput
-  }
-
-  /**
-   * Rolling.userPromotion
-   */
-  export type Rolling$userPromotionArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
-    /**
-     * Select specific fields to fetch from the UserPromotion
-     */
-    select?: UserPromotionSelect<ExtArgs> | null
-    /**
-     * Omit specific fields from the UserPromotion
-     */
-    omit?: UserPromotionOmit<ExtArgs> | null
-    /**
-     * Choose, which related nodes to fetch as well
-     */
-    include?: UserPromotionInclude<ExtArgs> | null
-    where?: UserPromotionWhereInput
-  }
-
-  /**
-   * Rolling without action
-   */
-  export type RollingDefaultArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
-    /**
-     * Select specific fields to fetch from the Rolling
-     */
-    select?: RollingSelect<ExtArgs> | null
-    /**
-     * Omit specific fields from the Rolling
-     */
-    omit?: RollingOmit<ExtArgs> | null
-    /**
-     * Choose, which related nodes to fetch as well
-     */
-    include?: RollingInclude<ExtArgs> | null
-  }
-
-
-  /**
    * Model UserToken
    */
 
@@ -44956,7 +43833,7 @@ export namespace Prisma {
     BankConfig?: boolean | DepositDetail$BankConfigArgs<ExtArgs>
     CryptoConfig?: boolean | DepositDetail$CryptoConfigArgs<ExtArgs>
     transaction?: boolean | DepositDetail$transactionArgs<ExtArgs>
-    Rolling?: boolean | DepositDetail$RollingArgs<ExtArgs>
+    wageringRequirements?: boolean | DepositDetail$wageringRequirementsArgs<ExtArgs>
     _count?: boolean | DepositDetailCountOutputTypeDefaultArgs<ExtArgs>
   }, ExtArgs["result"]["depositDetail"]>
 
@@ -45076,7 +43953,7 @@ export namespace Prisma {
     BankConfig?: boolean | DepositDetail$BankConfigArgs<ExtArgs>
     CryptoConfig?: boolean | DepositDetail$CryptoConfigArgs<ExtArgs>
     transaction?: boolean | DepositDetail$transactionArgs<ExtArgs>
-    Rolling?: boolean | DepositDetail$RollingArgs<ExtArgs>
+    wageringRequirements?: boolean | DepositDetail$wageringRequirementsArgs<ExtArgs>
     _count?: boolean | DepositDetailCountOutputTypeDefaultArgs<ExtArgs>
   }
   export type DepositDetailIncludeCreateManyAndReturn<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
@@ -45099,7 +43976,7 @@ export namespace Prisma {
       BankConfig: Prisma.$BankConfigPayload<ExtArgs> | null
       CryptoConfig: Prisma.$CryptoConfigPayload<ExtArgs> | null
       transaction: Prisma.$TransactionPayload<ExtArgs> | null
-      Rolling: Prisma.$RollingPayload<ExtArgs>[]
+      wageringRequirements: Prisma.$WageringRequirementPayload<ExtArgs>[]
     }
     scalars: $Extensions.GetPayloadResult<{
       id: bigint
@@ -45531,7 +44408,7 @@ export namespace Prisma {
     BankConfig<T extends DepositDetail$BankConfigArgs<ExtArgs> = {}>(args?: Subset<T, DepositDetail$BankConfigArgs<ExtArgs>>): Prisma__BankConfigClient<$Result.GetResult<Prisma.$BankConfigPayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions> | null, null, ExtArgs, GlobalOmitOptions>
     CryptoConfig<T extends DepositDetail$CryptoConfigArgs<ExtArgs> = {}>(args?: Subset<T, DepositDetail$CryptoConfigArgs<ExtArgs>>): Prisma__CryptoConfigClient<$Result.GetResult<Prisma.$CryptoConfigPayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions> | null, null, ExtArgs, GlobalOmitOptions>
     transaction<T extends DepositDetail$transactionArgs<ExtArgs> = {}>(args?: Subset<T, DepositDetail$transactionArgs<ExtArgs>>): Prisma__TransactionClient<$Result.GetResult<Prisma.$TransactionPayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions> | null, null, ExtArgs, GlobalOmitOptions>
-    Rolling<T extends DepositDetail$RollingArgs<ExtArgs> = {}>(args?: Subset<T, DepositDetail$RollingArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$RollingPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
+    wageringRequirements<T extends DepositDetail$wageringRequirementsArgs<ExtArgs> = {}>(args?: Subset<T, DepositDetail$wageringRequirementsArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$WageringRequirementPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
     /**
      * Attaches callbacks for the resolution and/or rejection of the Promise.
      * @param onfulfilled The callback to execute when the Promise is resolved.
@@ -46045,27 +44922,27 @@ export namespace Prisma {
   }
 
   /**
-   * DepositDetail.Rolling
+   * DepositDetail.wageringRequirements
    */
-  export type DepositDetail$RollingArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+  export type DepositDetail$wageringRequirementsArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
     /**
-     * Select specific fields to fetch from the Rolling
+     * Select specific fields to fetch from the WageringRequirement
      */
-    select?: RollingSelect<ExtArgs> | null
+    select?: WageringRequirementSelect<ExtArgs> | null
     /**
-     * Omit specific fields from the Rolling
+     * Omit specific fields from the WageringRequirement
      */
-    omit?: RollingOmit<ExtArgs> | null
+    omit?: WageringRequirementOmit<ExtArgs> | null
     /**
      * Choose, which related nodes to fetch as well
      */
-    include?: RollingInclude<ExtArgs> | null
-    where?: RollingWhereInput
-    orderBy?: RollingOrderByWithRelationInput | RollingOrderByWithRelationInput[]
-    cursor?: RollingWhereUniqueInput
+    include?: WageringRequirementInclude<ExtArgs> | null
+    where?: WageringRequirementWhereInput
+    orderBy?: WageringRequirementOrderByWithRelationInput | WageringRequirementOrderByWithRelationInput[]
+    cursor?: WageringRequirementWhereUniqueInput
     take?: number
     skip?: number
-    distinct?: RollingScalarFieldEnum | RollingScalarFieldEnum[]
+    distinct?: WageringRequirementScalarFieldEnum | WageringRequirementScalarFieldEnum[]
   }
 
   /**
@@ -52394,7 +51271,7 @@ export namespace Prisma {
     currency?: boolean
     createdAt?: boolean
     updatedAt?: boolean
-    Rolling?: boolean | UserPromotion$RollingArgs<ExtArgs>
+    wageringRequirements?: boolean | UserPromotion$wageringRequirementsArgs<ExtArgs>
     promotion?: boolean | PromotionDefaultArgs<ExtArgs>
     user?: boolean | UserDefaultArgs<ExtArgs>
     _count?: boolean | UserPromotionCountOutputTypeDefaultArgs<ExtArgs>
@@ -52448,7 +51325,7 @@ export namespace Prisma {
 
   export type UserPromotionOmit<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetOmit<"id" | "userId" | "promotionId" | "status" | "depositAmount" | "bonusAmount" | "targetRollingAmount" | "currentRollingAmount" | "currency" | "createdAt" | "updatedAt", ExtArgs["result"]["userPromotion"]>
   export type UserPromotionInclude<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
-    Rolling?: boolean | UserPromotion$RollingArgs<ExtArgs>
+    wageringRequirements?: boolean | UserPromotion$wageringRequirementsArgs<ExtArgs>
     promotion?: boolean | PromotionDefaultArgs<ExtArgs>
     user?: boolean | UserDefaultArgs<ExtArgs>
     _count?: boolean | UserPromotionCountOutputTypeDefaultArgs<ExtArgs>
@@ -52465,7 +51342,7 @@ export namespace Prisma {
   export type $UserPromotionPayload<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
     name: "UserPromotion"
     objects: {
-      Rolling: Prisma.$RollingPayload<ExtArgs>[]
+      wageringRequirements: Prisma.$WageringRequirementPayload<ExtArgs>[]
       promotion: Prisma.$PromotionPayload<ExtArgs>
       user: Prisma.$UserPayload<ExtArgs>
     }
@@ -52875,7 +51752,7 @@ export namespace Prisma {
    */
   export interface Prisma__UserPromotionClient<T, Null = never, ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs, GlobalOmitOptions = {}> extends Prisma.PrismaPromise<T> {
     readonly [Symbol.toStringTag]: "PrismaPromise"
-    Rolling<T extends UserPromotion$RollingArgs<ExtArgs> = {}>(args?: Subset<T, UserPromotion$RollingArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$RollingPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
+    wageringRequirements<T extends UserPromotion$wageringRequirementsArgs<ExtArgs> = {}>(args?: Subset<T, UserPromotion$wageringRequirementsArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$WageringRequirementPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
     promotion<T extends PromotionDefaultArgs<ExtArgs> = {}>(args?: Subset<T, PromotionDefaultArgs<ExtArgs>>): Prisma__PromotionClient<$Result.GetResult<Prisma.$PromotionPayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions> | Null, Null, ExtArgs, GlobalOmitOptions>
     user<T extends UserDefaultArgs<ExtArgs> = {}>(args?: Subset<T, UserDefaultArgs<ExtArgs>>): Prisma__UserClient<$Result.GetResult<Prisma.$UserPayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions> | Null, Null, ExtArgs, GlobalOmitOptions>
     /**
@@ -53314,27 +52191,27 @@ export namespace Prisma {
   }
 
   /**
-   * UserPromotion.Rolling
+   * UserPromotion.wageringRequirements
    */
-  export type UserPromotion$RollingArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+  export type UserPromotion$wageringRequirementsArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
     /**
-     * Select specific fields to fetch from the Rolling
+     * Select specific fields to fetch from the WageringRequirement
      */
-    select?: RollingSelect<ExtArgs> | null
+    select?: WageringRequirementSelect<ExtArgs> | null
     /**
-     * Omit specific fields from the Rolling
+     * Omit specific fields from the WageringRequirement
      */
-    omit?: RollingOmit<ExtArgs> | null
+    omit?: WageringRequirementOmit<ExtArgs> | null
     /**
      * Choose, which related nodes to fetch as well
      */
-    include?: RollingInclude<ExtArgs> | null
-    where?: RollingWhereInput
-    orderBy?: RollingOrderByWithRelationInput | RollingOrderByWithRelationInput[]
-    cursor?: RollingWhereUniqueInput
+    include?: WageringRequirementInclude<ExtArgs> | null
+    where?: WageringRequirementWhereInput
+    orderBy?: WageringRequirementOrderByWithRelationInput | WageringRequirementOrderByWithRelationInput[]
+    cursor?: WageringRequirementWhereUniqueInput
     take?: number
     skip?: number
-    distinct?: RollingScalarFieldEnum | RollingScalarFieldEnum[]
+    distinct?: WageringRequirementScalarFieldEnum | WageringRequirementScalarFieldEnum[]
   }
 
   /**
@@ -61708,6 +60585,2525 @@ export namespace Prisma {
 
 
   /**
+   * Model WageringRequirement
+   */
+
+  export type AggregateWageringRequirement = {
+    _count: WageringRequirementCountAggregateOutputType | null
+    _avg: WageringRequirementAvgAggregateOutputType | null
+    _sum: WageringRequirementSumAggregateOutputType | null
+    _min: WageringRequirementMinAggregateOutputType | null
+    _max: WageringRequirementMaxAggregateOutputType | null
+  }
+
+  export type WageringRequirementAvgAggregateOutputType = {
+    id: number | null
+    userId: number | null
+    requiredAmount: Decimal | null
+    currentAmount: Decimal | null
+    cancellationBalanceThreshold: Decimal | null
+    depositDetailId: number | null
+    userPromotionId: number | null
+    priority: number | null
+  }
+
+  export type WageringRequirementSumAggregateOutputType = {
+    id: bigint | null
+    userId: bigint | null
+    requiredAmount: Decimal | null
+    currentAmount: Decimal | null
+    cancellationBalanceThreshold: Decimal | null
+    depositDetailId: bigint | null
+    userPromotionId: bigint | null
+    priority: number | null
+  }
+
+  export type WageringRequirementMinAggregateOutputType = {
+    id: bigint | null
+    uid: string | null
+    userId: bigint | null
+    currency: $Enums.ExchangeCurrencyCode | null
+    sourceType: $Enums.WageringSourceType | null
+    requiredAmount: Decimal | null
+    currentAmount: Decimal | null
+    cancellationBalanceThreshold: Decimal | null
+    status: $Enums.WageringStatus | null
+    depositDetailId: bigint | null
+    userPromotionId: bigint | null
+    createdAt: Date | null
+    updatedAt: Date | null
+    expiresAt: Date | null
+    completedAt: Date | null
+    cancelledAt: Date | null
+    cancellationNote: string | null
+    priority: number | null
+  }
+
+  export type WageringRequirementMaxAggregateOutputType = {
+    id: bigint | null
+    uid: string | null
+    userId: bigint | null
+    currency: $Enums.ExchangeCurrencyCode | null
+    sourceType: $Enums.WageringSourceType | null
+    requiredAmount: Decimal | null
+    currentAmount: Decimal | null
+    cancellationBalanceThreshold: Decimal | null
+    status: $Enums.WageringStatus | null
+    depositDetailId: bigint | null
+    userPromotionId: bigint | null
+    createdAt: Date | null
+    updatedAt: Date | null
+    expiresAt: Date | null
+    completedAt: Date | null
+    cancelledAt: Date | null
+    cancellationNote: string | null
+    priority: number | null
+  }
+
+  export type WageringRequirementCountAggregateOutputType = {
+    id: number
+    uid: number
+    userId: number
+    currency: number
+    sourceType: number
+    requiredAmount: number
+    currentAmount: number
+    cancellationBalanceThreshold: number
+    status: number
+    depositDetailId: number
+    userPromotionId: number
+    createdAt: number
+    updatedAt: number
+    expiresAt: number
+    completedAt: number
+    cancelledAt: number
+    cancellationNote: number
+    priority: number
+    _all: number
+  }
+
+
+  export type WageringRequirementAvgAggregateInputType = {
+    id?: true
+    userId?: true
+    requiredAmount?: true
+    currentAmount?: true
+    cancellationBalanceThreshold?: true
+    depositDetailId?: true
+    userPromotionId?: true
+    priority?: true
+  }
+
+  export type WageringRequirementSumAggregateInputType = {
+    id?: true
+    userId?: true
+    requiredAmount?: true
+    currentAmount?: true
+    cancellationBalanceThreshold?: true
+    depositDetailId?: true
+    userPromotionId?: true
+    priority?: true
+  }
+
+  export type WageringRequirementMinAggregateInputType = {
+    id?: true
+    uid?: true
+    userId?: true
+    currency?: true
+    sourceType?: true
+    requiredAmount?: true
+    currentAmount?: true
+    cancellationBalanceThreshold?: true
+    status?: true
+    depositDetailId?: true
+    userPromotionId?: true
+    createdAt?: true
+    updatedAt?: true
+    expiresAt?: true
+    completedAt?: true
+    cancelledAt?: true
+    cancellationNote?: true
+    priority?: true
+  }
+
+  export type WageringRequirementMaxAggregateInputType = {
+    id?: true
+    uid?: true
+    userId?: true
+    currency?: true
+    sourceType?: true
+    requiredAmount?: true
+    currentAmount?: true
+    cancellationBalanceThreshold?: true
+    status?: true
+    depositDetailId?: true
+    userPromotionId?: true
+    createdAt?: true
+    updatedAt?: true
+    expiresAt?: true
+    completedAt?: true
+    cancelledAt?: true
+    cancellationNote?: true
+    priority?: true
+  }
+
+  export type WageringRequirementCountAggregateInputType = {
+    id?: true
+    uid?: true
+    userId?: true
+    currency?: true
+    sourceType?: true
+    requiredAmount?: true
+    currentAmount?: true
+    cancellationBalanceThreshold?: true
+    status?: true
+    depositDetailId?: true
+    userPromotionId?: true
+    createdAt?: true
+    updatedAt?: true
+    expiresAt?: true
+    completedAt?: true
+    cancelledAt?: true
+    cancellationNote?: true
+    priority?: true
+    _all?: true
+  }
+
+  export type WageringRequirementAggregateArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Filter which WageringRequirement to aggregate.
+     */
+    where?: WageringRequirementWhereInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/sorting Sorting Docs}
+     * 
+     * Determine the order of WageringRequirements to fetch.
+     */
+    orderBy?: WageringRequirementOrderByWithRelationInput | WageringRequirementOrderByWithRelationInput[]
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination#cursor-based-pagination Cursor Docs}
+     * 
+     * Sets the start position
+     */
+    cursor?: WageringRequirementWhereUniqueInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Take `±n` WageringRequirements from the position of the cursor.
+     */
+    take?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Skip the first `n` WageringRequirements.
+     */
+    skip?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
+     * 
+     * Count returned WageringRequirements
+    **/
+    _count?: true | WageringRequirementCountAggregateInputType
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
+     * 
+     * Select which fields to average
+    **/
+    _avg?: WageringRequirementAvgAggregateInputType
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
+     * 
+     * Select which fields to sum
+    **/
+    _sum?: WageringRequirementSumAggregateInputType
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
+     * 
+     * Select which fields to find the minimum value
+    **/
+    _min?: WageringRequirementMinAggregateInputType
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
+     * 
+     * Select which fields to find the maximum value
+    **/
+    _max?: WageringRequirementMaxAggregateInputType
+  }
+
+  export type GetWageringRequirementAggregateType<T extends WageringRequirementAggregateArgs> = {
+        [P in keyof T & keyof AggregateWageringRequirement]: P extends '_count' | 'count'
+      ? T[P] extends true
+        ? number
+        : GetScalarType<T[P], AggregateWageringRequirement[P]>
+      : GetScalarType<T[P], AggregateWageringRequirement[P]>
+  }
+
+
+
+
+  export type WageringRequirementGroupByArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    where?: WageringRequirementWhereInput
+    orderBy?: WageringRequirementOrderByWithAggregationInput | WageringRequirementOrderByWithAggregationInput[]
+    by: WageringRequirementScalarFieldEnum[] | WageringRequirementScalarFieldEnum
+    having?: WageringRequirementScalarWhereWithAggregatesInput
+    take?: number
+    skip?: number
+    _count?: WageringRequirementCountAggregateInputType | true
+    _avg?: WageringRequirementAvgAggregateInputType
+    _sum?: WageringRequirementSumAggregateInputType
+    _min?: WageringRequirementMinAggregateInputType
+    _max?: WageringRequirementMaxAggregateInputType
+  }
+
+  export type WageringRequirementGroupByOutputType = {
+    id: bigint
+    uid: string
+    userId: bigint
+    currency: $Enums.ExchangeCurrencyCode
+    sourceType: $Enums.WageringSourceType
+    requiredAmount: Decimal
+    currentAmount: Decimal
+    cancellationBalanceThreshold: Decimal | null
+    status: $Enums.WageringStatus
+    depositDetailId: bigint | null
+    userPromotionId: bigint | null
+    createdAt: Date
+    updatedAt: Date
+    expiresAt: Date | null
+    completedAt: Date | null
+    cancelledAt: Date | null
+    cancellationNote: string | null
+    priority: number
+    _count: WageringRequirementCountAggregateOutputType | null
+    _avg: WageringRequirementAvgAggregateOutputType | null
+    _sum: WageringRequirementSumAggregateOutputType | null
+    _min: WageringRequirementMinAggregateOutputType | null
+    _max: WageringRequirementMaxAggregateOutputType | null
+  }
+
+  type GetWageringRequirementGroupByPayload<T extends WageringRequirementGroupByArgs> = Prisma.PrismaPromise<
+    Array<
+      PickEnumerable<WageringRequirementGroupByOutputType, T['by']> &
+        {
+          [P in ((keyof T) & (keyof WageringRequirementGroupByOutputType))]: P extends '_count'
+            ? T[P] extends boolean
+              ? number
+              : GetScalarType<T[P], WageringRequirementGroupByOutputType[P]>
+            : GetScalarType<T[P], WageringRequirementGroupByOutputType[P]>
+        }
+      >
+    >
+
+
+  export type WageringRequirementSelect<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetSelect<{
+    id?: boolean
+    uid?: boolean
+    userId?: boolean
+    currency?: boolean
+    sourceType?: boolean
+    requiredAmount?: boolean
+    currentAmount?: boolean
+    cancellationBalanceThreshold?: boolean
+    status?: boolean
+    depositDetailId?: boolean
+    userPromotionId?: boolean
+    createdAt?: boolean
+    updatedAt?: boolean
+    expiresAt?: boolean
+    completedAt?: boolean
+    cancelledAt?: boolean
+    cancellationNote?: boolean
+    priority?: boolean
+    DepositDetail?: boolean | WageringRequirement$DepositDetailArgs<ExtArgs>
+    userWallet?: boolean | UserWalletDefaultArgs<ExtArgs>
+    userPromotion?: boolean | WageringRequirement$userPromotionArgs<ExtArgs>
+    user?: boolean | UserDefaultArgs<ExtArgs>
+    contributionLogs?: boolean | WageringRequirement$contributionLogsArgs<ExtArgs>
+    _count?: boolean | WageringRequirementCountOutputTypeDefaultArgs<ExtArgs>
+  }, ExtArgs["result"]["wageringRequirement"]>
+
+  export type WageringRequirementSelectCreateManyAndReturn<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetSelect<{
+    id?: boolean
+    uid?: boolean
+    userId?: boolean
+    currency?: boolean
+    sourceType?: boolean
+    requiredAmount?: boolean
+    currentAmount?: boolean
+    cancellationBalanceThreshold?: boolean
+    status?: boolean
+    depositDetailId?: boolean
+    userPromotionId?: boolean
+    createdAt?: boolean
+    updatedAt?: boolean
+    expiresAt?: boolean
+    completedAt?: boolean
+    cancelledAt?: boolean
+    cancellationNote?: boolean
+    priority?: boolean
+    DepositDetail?: boolean | WageringRequirement$DepositDetailArgs<ExtArgs>
+    userWallet?: boolean | UserWalletDefaultArgs<ExtArgs>
+    userPromotion?: boolean | WageringRequirement$userPromotionArgs<ExtArgs>
+    user?: boolean | UserDefaultArgs<ExtArgs>
+  }, ExtArgs["result"]["wageringRequirement"]>
+
+  export type WageringRequirementSelectUpdateManyAndReturn<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetSelect<{
+    id?: boolean
+    uid?: boolean
+    userId?: boolean
+    currency?: boolean
+    sourceType?: boolean
+    requiredAmount?: boolean
+    currentAmount?: boolean
+    cancellationBalanceThreshold?: boolean
+    status?: boolean
+    depositDetailId?: boolean
+    userPromotionId?: boolean
+    createdAt?: boolean
+    updatedAt?: boolean
+    expiresAt?: boolean
+    completedAt?: boolean
+    cancelledAt?: boolean
+    cancellationNote?: boolean
+    priority?: boolean
+    DepositDetail?: boolean | WageringRequirement$DepositDetailArgs<ExtArgs>
+    userWallet?: boolean | UserWalletDefaultArgs<ExtArgs>
+    userPromotion?: boolean | WageringRequirement$userPromotionArgs<ExtArgs>
+    user?: boolean | UserDefaultArgs<ExtArgs>
+  }, ExtArgs["result"]["wageringRequirement"]>
+
+  export type WageringRequirementSelectScalar = {
+    id?: boolean
+    uid?: boolean
+    userId?: boolean
+    currency?: boolean
+    sourceType?: boolean
+    requiredAmount?: boolean
+    currentAmount?: boolean
+    cancellationBalanceThreshold?: boolean
+    status?: boolean
+    depositDetailId?: boolean
+    userPromotionId?: boolean
+    createdAt?: boolean
+    updatedAt?: boolean
+    expiresAt?: boolean
+    completedAt?: boolean
+    cancelledAt?: boolean
+    cancellationNote?: boolean
+    priority?: boolean
+  }
+
+  export type WageringRequirementOmit<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetOmit<"id" | "uid" | "userId" | "currency" | "sourceType" | "requiredAmount" | "currentAmount" | "cancellationBalanceThreshold" | "status" | "depositDetailId" | "userPromotionId" | "createdAt" | "updatedAt" | "expiresAt" | "completedAt" | "cancelledAt" | "cancellationNote" | "priority", ExtArgs["result"]["wageringRequirement"]>
+  export type WageringRequirementInclude<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    DepositDetail?: boolean | WageringRequirement$DepositDetailArgs<ExtArgs>
+    userWallet?: boolean | UserWalletDefaultArgs<ExtArgs>
+    userPromotion?: boolean | WageringRequirement$userPromotionArgs<ExtArgs>
+    user?: boolean | UserDefaultArgs<ExtArgs>
+    contributionLogs?: boolean | WageringRequirement$contributionLogsArgs<ExtArgs>
+    _count?: boolean | WageringRequirementCountOutputTypeDefaultArgs<ExtArgs>
+  }
+  export type WageringRequirementIncludeCreateManyAndReturn<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    DepositDetail?: boolean | WageringRequirement$DepositDetailArgs<ExtArgs>
+    userWallet?: boolean | UserWalletDefaultArgs<ExtArgs>
+    userPromotion?: boolean | WageringRequirement$userPromotionArgs<ExtArgs>
+    user?: boolean | UserDefaultArgs<ExtArgs>
+  }
+  export type WageringRequirementIncludeUpdateManyAndReturn<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    DepositDetail?: boolean | WageringRequirement$DepositDetailArgs<ExtArgs>
+    userWallet?: boolean | UserWalletDefaultArgs<ExtArgs>
+    userPromotion?: boolean | WageringRequirement$userPromotionArgs<ExtArgs>
+    user?: boolean | UserDefaultArgs<ExtArgs>
+  }
+
+  export type $WageringRequirementPayload<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    name: "WageringRequirement"
+    objects: {
+      DepositDetail: Prisma.$DepositDetailPayload<ExtArgs> | null
+      userWallet: Prisma.$UserWalletPayload<ExtArgs>
+      userPromotion: Prisma.$UserPromotionPayload<ExtArgs> | null
+      user: Prisma.$UserPayload<ExtArgs>
+      contributionLogs: Prisma.$WageringContributionLogPayload<ExtArgs>[]
+    }
+    scalars: $Extensions.GetPayloadResult<{
+      id: bigint
+      uid: string
+      userId: bigint
+      currency: $Enums.ExchangeCurrencyCode
+      sourceType: $Enums.WageringSourceType
+      requiredAmount: Prisma.Decimal
+      currentAmount: Prisma.Decimal
+      cancellationBalanceThreshold: Prisma.Decimal | null
+      status: $Enums.WageringStatus
+      depositDetailId: bigint | null
+      userPromotionId: bigint | null
+      createdAt: Date
+      updatedAt: Date
+      expiresAt: Date | null
+      completedAt: Date | null
+      cancelledAt: Date | null
+      cancellationNote: string | null
+      priority: number
+    }, ExtArgs["result"]["wageringRequirement"]>
+    composites: {}
+  }
+
+  type WageringRequirementGetPayload<S extends boolean | null | undefined | WageringRequirementDefaultArgs> = $Result.GetResult<Prisma.$WageringRequirementPayload, S>
+
+  type WageringRequirementCountArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> =
+    Omit<WageringRequirementFindManyArgs, 'select' | 'include' | 'distinct' | 'omit'> & {
+      select?: WageringRequirementCountAggregateInputType | true
+    }
+
+  export interface WageringRequirementDelegate<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs, GlobalOmitOptions = {}> {
+    [K: symbol]: { types: Prisma.TypeMap<ExtArgs>['model']['WageringRequirement'], meta: { name: 'WageringRequirement' } }
+    /**
+     * Find zero or one WageringRequirement that matches the filter.
+     * @param {WageringRequirementFindUniqueArgs} args - Arguments to find a WageringRequirement
+     * @example
+     * // Get one WageringRequirement
+     * const wageringRequirement = await prisma.wageringRequirement.findUnique({
+     *   where: {
+     *     // ... provide filter here
+     *   }
+     * })
+     */
+    findUnique<T extends WageringRequirementFindUniqueArgs>(args: SelectSubset<T, WageringRequirementFindUniqueArgs<ExtArgs>>): Prisma__WageringRequirementClient<$Result.GetResult<Prisma.$WageringRequirementPayload<ExtArgs>, T, "findUnique", GlobalOmitOptions> | null, null, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Find one WageringRequirement that matches the filter or throw an error with `error.code='P2025'`
+     * if no matches were found.
+     * @param {WageringRequirementFindUniqueOrThrowArgs} args - Arguments to find a WageringRequirement
+     * @example
+     * // Get one WageringRequirement
+     * const wageringRequirement = await prisma.wageringRequirement.findUniqueOrThrow({
+     *   where: {
+     *     // ... provide filter here
+     *   }
+     * })
+     */
+    findUniqueOrThrow<T extends WageringRequirementFindUniqueOrThrowArgs>(args: SelectSubset<T, WageringRequirementFindUniqueOrThrowArgs<ExtArgs>>): Prisma__WageringRequirementClient<$Result.GetResult<Prisma.$WageringRequirementPayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Find the first WageringRequirement that matches the filter.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {WageringRequirementFindFirstArgs} args - Arguments to find a WageringRequirement
+     * @example
+     * // Get one WageringRequirement
+     * const wageringRequirement = await prisma.wageringRequirement.findFirst({
+     *   where: {
+     *     // ... provide filter here
+     *   }
+     * })
+     */
+    findFirst<T extends WageringRequirementFindFirstArgs>(args?: SelectSubset<T, WageringRequirementFindFirstArgs<ExtArgs>>): Prisma__WageringRequirementClient<$Result.GetResult<Prisma.$WageringRequirementPayload<ExtArgs>, T, "findFirst", GlobalOmitOptions> | null, null, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Find the first WageringRequirement that matches the filter or
+     * throw `PrismaKnownClientError` with `P2025` code if no matches were found.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {WageringRequirementFindFirstOrThrowArgs} args - Arguments to find a WageringRequirement
+     * @example
+     * // Get one WageringRequirement
+     * const wageringRequirement = await prisma.wageringRequirement.findFirstOrThrow({
+     *   where: {
+     *     // ... provide filter here
+     *   }
+     * })
+     */
+    findFirstOrThrow<T extends WageringRequirementFindFirstOrThrowArgs>(args?: SelectSubset<T, WageringRequirementFindFirstOrThrowArgs<ExtArgs>>): Prisma__WageringRequirementClient<$Result.GetResult<Prisma.$WageringRequirementPayload<ExtArgs>, T, "findFirstOrThrow", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Find zero or more WageringRequirements that matches the filter.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {WageringRequirementFindManyArgs} args - Arguments to filter and select certain fields only.
+     * @example
+     * // Get all WageringRequirements
+     * const wageringRequirements = await prisma.wageringRequirement.findMany()
+     * 
+     * // Get first 10 WageringRequirements
+     * const wageringRequirements = await prisma.wageringRequirement.findMany({ take: 10 })
+     * 
+     * // Only select the `id`
+     * const wageringRequirementWithIdOnly = await prisma.wageringRequirement.findMany({ select: { id: true } })
+     * 
+     */
+    findMany<T extends WageringRequirementFindManyArgs>(args?: SelectSubset<T, WageringRequirementFindManyArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$WageringRequirementPayload<ExtArgs>, T, "findMany", GlobalOmitOptions>>
+
+    /**
+     * Create a WageringRequirement.
+     * @param {WageringRequirementCreateArgs} args - Arguments to create a WageringRequirement.
+     * @example
+     * // Create one WageringRequirement
+     * const WageringRequirement = await prisma.wageringRequirement.create({
+     *   data: {
+     *     // ... data to create a WageringRequirement
+     *   }
+     * })
+     * 
+     */
+    create<T extends WageringRequirementCreateArgs>(args: SelectSubset<T, WageringRequirementCreateArgs<ExtArgs>>): Prisma__WageringRequirementClient<$Result.GetResult<Prisma.$WageringRequirementPayload<ExtArgs>, T, "create", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Create many WageringRequirements.
+     * @param {WageringRequirementCreateManyArgs} args - Arguments to create many WageringRequirements.
+     * @example
+     * // Create many WageringRequirements
+     * const wageringRequirement = await prisma.wageringRequirement.createMany({
+     *   data: [
+     *     // ... provide data here
+     *   ]
+     * })
+     *     
+     */
+    createMany<T extends WageringRequirementCreateManyArgs>(args?: SelectSubset<T, WageringRequirementCreateManyArgs<ExtArgs>>): Prisma.PrismaPromise<BatchPayload>
+
+    /**
+     * Create many WageringRequirements and returns the data saved in the database.
+     * @param {WageringRequirementCreateManyAndReturnArgs} args - Arguments to create many WageringRequirements.
+     * @example
+     * // Create many WageringRequirements
+     * const wageringRequirement = await prisma.wageringRequirement.createManyAndReturn({
+     *   data: [
+     *     // ... provide data here
+     *   ]
+     * })
+     * 
+     * // Create many WageringRequirements and only return the `id`
+     * const wageringRequirementWithIdOnly = await prisma.wageringRequirement.createManyAndReturn({
+     *   select: { id: true },
+     *   data: [
+     *     // ... provide data here
+     *   ]
+     * })
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * 
+     */
+    createManyAndReturn<T extends WageringRequirementCreateManyAndReturnArgs>(args?: SelectSubset<T, WageringRequirementCreateManyAndReturnArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$WageringRequirementPayload<ExtArgs>, T, "createManyAndReturn", GlobalOmitOptions>>
+
+    /**
+     * Delete a WageringRequirement.
+     * @param {WageringRequirementDeleteArgs} args - Arguments to delete one WageringRequirement.
+     * @example
+     * // Delete one WageringRequirement
+     * const WageringRequirement = await prisma.wageringRequirement.delete({
+     *   where: {
+     *     // ... filter to delete one WageringRequirement
+     *   }
+     * })
+     * 
+     */
+    delete<T extends WageringRequirementDeleteArgs>(args: SelectSubset<T, WageringRequirementDeleteArgs<ExtArgs>>): Prisma__WageringRequirementClient<$Result.GetResult<Prisma.$WageringRequirementPayload<ExtArgs>, T, "delete", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Update one WageringRequirement.
+     * @param {WageringRequirementUpdateArgs} args - Arguments to update one WageringRequirement.
+     * @example
+     * // Update one WageringRequirement
+     * const wageringRequirement = await prisma.wageringRequirement.update({
+     *   where: {
+     *     // ... provide filter here
+     *   },
+     *   data: {
+     *     // ... provide data here
+     *   }
+     * })
+     * 
+     */
+    update<T extends WageringRequirementUpdateArgs>(args: SelectSubset<T, WageringRequirementUpdateArgs<ExtArgs>>): Prisma__WageringRequirementClient<$Result.GetResult<Prisma.$WageringRequirementPayload<ExtArgs>, T, "update", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Delete zero or more WageringRequirements.
+     * @param {WageringRequirementDeleteManyArgs} args - Arguments to filter WageringRequirements to delete.
+     * @example
+     * // Delete a few WageringRequirements
+     * const { count } = await prisma.wageringRequirement.deleteMany({
+     *   where: {
+     *     // ... provide filter here
+     *   }
+     * })
+     * 
+     */
+    deleteMany<T extends WageringRequirementDeleteManyArgs>(args?: SelectSubset<T, WageringRequirementDeleteManyArgs<ExtArgs>>): Prisma.PrismaPromise<BatchPayload>
+
+    /**
+     * Update zero or more WageringRequirements.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {WageringRequirementUpdateManyArgs} args - Arguments to update one or more rows.
+     * @example
+     * // Update many WageringRequirements
+     * const wageringRequirement = await prisma.wageringRequirement.updateMany({
+     *   where: {
+     *     // ... provide filter here
+     *   },
+     *   data: {
+     *     // ... provide data here
+     *   }
+     * })
+     * 
+     */
+    updateMany<T extends WageringRequirementUpdateManyArgs>(args: SelectSubset<T, WageringRequirementUpdateManyArgs<ExtArgs>>): Prisma.PrismaPromise<BatchPayload>
+
+    /**
+     * Update zero or more WageringRequirements and returns the data updated in the database.
+     * @param {WageringRequirementUpdateManyAndReturnArgs} args - Arguments to update many WageringRequirements.
+     * @example
+     * // Update many WageringRequirements
+     * const wageringRequirement = await prisma.wageringRequirement.updateManyAndReturn({
+     *   where: {
+     *     // ... provide filter here
+     *   },
+     *   data: [
+     *     // ... provide data here
+     *   ]
+     * })
+     * 
+     * // Update zero or more WageringRequirements and only return the `id`
+     * const wageringRequirementWithIdOnly = await prisma.wageringRequirement.updateManyAndReturn({
+     *   select: { id: true },
+     *   where: {
+     *     // ... provide filter here
+     *   },
+     *   data: [
+     *     // ... provide data here
+     *   ]
+     * })
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * 
+     */
+    updateManyAndReturn<T extends WageringRequirementUpdateManyAndReturnArgs>(args: SelectSubset<T, WageringRequirementUpdateManyAndReturnArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$WageringRequirementPayload<ExtArgs>, T, "updateManyAndReturn", GlobalOmitOptions>>
+
+    /**
+     * Create or update one WageringRequirement.
+     * @param {WageringRequirementUpsertArgs} args - Arguments to update or create a WageringRequirement.
+     * @example
+     * // Update or create a WageringRequirement
+     * const wageringRequirement = await prisma.wageringRequirement.upsert({
+     *   create: {
+     *     // ... data to create a WageringRequirement
+     *   },
+     *   update: {
+     *     // ... in case it already exists, update
+     *   },
+     *   where: {
+     *     // ... the filter for the WageringRequirement we want to update
+     *   }
+     * })
+     */
+    upsert<T extends WageringRequirementUpsertArgs>(args: SelectSubset<T, WageringRequirementUpsertArgs<ExtArgs>>): Prisma__WageringRequirementClient<$Result.GetResult<Prisma.$WageringRequirementPayload<ExtArgs>, T, "upsert", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
+
+
+    /**
+     * Count the number of WageringRequirements.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {WageringRequirementCountArgs} args - Arguments to filter WageringRequirements to count.
+     * @example
+     * // Count the number of WageringRequirements
+     * const count = await prisma.wageringRequirement.count({
+     *   where: {
+     *     // ... the filter for the WageringRequirements we want to count
+     *   }
+     * })
+    **/
+    count<T extends WageringRequirementCountArgs>(
+      args?: Subset<T, WageringRequirementCountArgs>,
+    ): Prisma.PrismaPromise<
+      T extends $Utils.Record<'select', any>
+        ? T['select'] extends true
+          ? number
+          : GetScalarType<T['select'], WageringRequirementCountAggregateOutputType>
+        : number
+    >
+
+    /**
+     * Allows you to perform aggregations operations on a WageringRequirement.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {WageringRequirementAggregateArgs} args - Select which aggregations you would like to apply and on what fields.
+     * @example
+     * // Ordered by age ascending
+     * // Where email contains prisma.io
+     * // Limited to the 10 users
+     * const aggregations = await prisma.user.aggregate({
+     *   _avg: {
+     *     age: true,
+     *   },
+     *   where: {
+     *     email: {
+     *       contains: "prisma.io",
+     *     },
+     *   },
+     *   orderBy: {
+     *     age: "asc",
+     *   },
+     *   take: 10,
+     * })
+    **/
+    aggregate<T extends WageringRequirementAggregateArgs>(args: Subset<T, WageringRequirementAggregateArgs>): Prisma.PrismaPromise<GetWageringRequirementAggregateType<T>>
+
+    /**
+     * Group by WageringRequirement.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {WageringRequirementGroupByArgs} args - Group by arguments.
+     * @example
+     * // Group by city, order by createdAt, get count
+     * const result = await prisma.user.groupBy({
+     *   by: ['city', 'createdAt'],
+     *   orderBy: {
+     *     createdAt: true
+     *   },
+     *   _count: {
+     *     _all: true
+     *   },
+     * })
+     * 
+    **/
+    groupBy<
+      T extends WageringRequirementGroupByArgs,
+      HasSelectOrTake extends Or<
+        Extends<'skip', Keys<T>>,
+        Extends<'take', Keys<T>>
+      >,
+      OrderByArg extends True extends HasSelectOrTake
+        ? { orderBy: WageringRequirementGroupByArgs['orderBy'] }
+        : { orderBy?: WageringRequirementGroupByArgs['orderBy'] },
+      OrderFields extends ExcludeUnderscoreKeys<Keys<MaybeTupleToUnion<T['orderBy']>>>,
+      ByFields extends MaybeTupleToUnion<T['by']>,
+      ByValid extends Has<ByFields, OrderFields>,
+      HavingFields extends GetHavingFields<T['having']>,
+      HavingValid extends Has<ByFields, HavingFields>,
+      ByEmpty extends T['by'] extends never[] ? True : False,
+      InputErrors extends ByEmpty extends True
+      ? `Error: "by" must not be empty.`
+      : HavingValid extends False
+      ? {
+          [P in HavingFields]: P extends ByFields
+            ? never
+            : P extends string
+            ? `Error: Field "${P}" used in "having" needs to be provided in "by".`
+            : [
+                Error,
+                'Field ',
+                P,
+                ` in "having" needs to be provided in "by"`,
+              ]
+        }[HavingFields]
+      : 'take' extends Keys<T>
+      ? 'orderBy' extends Keys<T>
+        ? ByValid extends True
+          ? {}
+          : {
+              [P in OrderFields]: P extends ByFields
+                ? never
+                : `Error: Field "${P}" in "orderBy" needs to be provided in "by"`
+            }[OrderFields]
+        : 'Error: If you provide "take", you also need to provide "orderBy"'
+      : 'skip' extends Keys<T>
+      ? 'orderBy' extends Keys<T>
+        ? ByValid extends True
+          ? {}
+          : {
+              [P in OrderFields]: P extends ByFields
+                ? never
+                : `Error: Field "${P}" in "orderBy" needs to be provided in "by"`
+            }[OrderFields]
+        : 'Error: If you provide "skip", you also need to provide "orderBy"'
+      : ByValid extends True
+      ? {}
+      : {
+          [P in OrderFields]: P extends ByFields
+            ? never
+            : `Error: Field "${P}" in "orderBy" needs to be provided in "by"`
+        }[OrderFields]
+    >(args: SubsetIntersection<T, WageringRequirementGroupByArgs, OrderByArg> & InputErrors): {} extends InputErrors ? GetWageringRequirementGroupByPayload<T> : Prisma.PrismaPromise<InputErrors>
+  /**
+   * Fields of the WageringRequirement model
+   */
+  readonly fields: WageringRequirementFieldRefs;
+  }
+
+  /**
+   * The delegate class that acts as a "Promise-like" for WageringRequirement.
+   * Why is this prefixed with `Prisma__`?
+   * Because we want to prevent naming conflicts as mentioned in
+   * https://github.com/prisma/prisma-client-js/issues/707
+   */
+  export interface Prisma__WageringRequirementClient<T, Null = never, ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs, GlobalOmitOptions = {}> extends Prisma.PrismaPromise<T> {
+    readonly [Symbol.toStringTag]: "PrismaPromise"
+    DepositDetail<T extends WageringRequirement$DepositDetailArgs<ExtArgs> = {}>(args?: Subset<T, WageringRequirement$DepositDetailArgs<ExtArgs>>): Prisma__DepositDetailClient<$Result.GetResult<Prisma.$DepositDetailPayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions> | null, null, ExtArgs, GlobalOmitOptions>
+    userWallet<T extends UserWalletDefaultArgs<ExtArgs> = {}>(args?: Subset<T, UserWalletDefaultArgs<ExtArgs>>): Prisma__UserWalletClient<$Result.GetResult<Prisma.$UserWalletPayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions> | Null, Null, ExtArgs, GlobalOmitOptions>
+    userPromotion<T extends WageringRequirement$userPromotionArgs<ExtArgs> = {}>(args?: Subset<T, WageringRequirement$userPromotionArgs<ExtArgs>>): Prisma__UserPromotionClient<$Result.GetResult<Prisma.$UserPromotionPayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions> | null, null, ExtArgs, GlobalOmitOptions>
+    user<T extends UserDefaultArgs<ExtArgs> = {}>(args?: Subset<T, UserDefaultArgs<ExtArgs>>): Prisma__UserClient<$Result.GetResult<Prisma.$UserPayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions> | Null, Null, ExtArgs, GlobalOmitOptions>
+    contributionLogs<T extends WageringRequirement$contributionLogsArgs<ExtArgs> = {}>(args?: Subset<T, WageringRequirement$contributionLogsArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$WageringContributionLogPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
+    /**
+     * Attaches callbacks for the resolution and/or rejection of the Promise.
+     * @param onfulfilled The callback to execute when the Promise is resolved.
+     * @param onrejected The callback to execute when the Promise is rejected.
+     * @returns A Promise for the completion of which ever callback is executed.
+     */
+    then<TResult1 = T, TResult2 = never>(onfulfilled?: ((value: T) => TResult1 | PromiseLike<TResult1>) | undefined | null, onrejected?: ((reason: any) => TResult2 | PromiseLike<TResult2>) | undefined | null): $Utils.JsPromise<TResult1 | TResult2>
+    /**
+     * Attaches a callback for only the rejection of the Promise.
+     * @param onrejected The callback to execute when the Promise is rejected.
+     * @returns A Promise for the completion of the callback.
+     */
+    catch<TResult = never>(onrejected?: ((reason: any) => TResult | PromiseLike<TResult>) | undefined | null): $Utils.JsPromise<T | TResult>
+    /**
+     * Attaches a callback that is invoked when the Promise is settled (fulfilled or rejected). The
+     * resolved value cannot be modified from the callback.
+     * @param onfinally The callback to execute when the Promise is settled (fulfilled or rejected).
+     * @returns A Promise for the completion of the callback.
+     */
+    finally(onfinally?: (() => void) | undefined | null): $Utils.JsPromise<T>
+  }
+
+
+
+
+  /**
+   * Fields of the WageringRequirement model
+   */
+  interface WageringRequirementFieldRefs {
+    readonly id: FieldRef<"WageringRequirement", 'BigInt'>
+    readonly uid: FieldRef<"WageringRequirement", 'String'>
+    readonly userId: FieldRef<"WageringRequirement", 'BigInt'>
+    readonly currency: FieldRef<"WageringRequirement", 'ExchangeCurrencyCode'>
+    readonly sourceType: FieldRef<"WageringRequirement", 'WageringSourceType'>
+    readonly requiredAmount: FieldRef<"WageringRequirement", 'Decimal'>
+    readonly currentAmount: FieldRef<"WageringRequirement", 'Decimal'>
+    readonly cancellationBalanceThreshold: FieldRef<"WageringRequirement", 'Decimal'>
+    readonly status: FieldRef<"WageringRequirement", 'WageringStatus'>
+    readonly depositDetailId: FieldRef<"WageringRequirement", 'BigInt'>
+    readonly userPromotionId: FieldRef<"WageringRequirement", 'BigInt'>
+    readonly createdAt: FieldRef<"WageringRequirement", 'DateTime'>
+    readonly updatedAt: FieldRef<"WageringRequirement", 'DateTime'>
+    readonly expiresAt: FieldRef<"WageringRequirement", 'DateTime'>
+    readonly completedAt: FieldRef<"WageringRequirement", 'DateTime'>
+    readonly cancelledAt: FieldRef<"WageringRequirement", 'DateTime'>
+    readonly cancellationNote: FieldRef<"WageringRequirement", 'String'>
+    readonly priority: FieldRef<"WageringRequirement", 'Int'>
+  }
+    
+
+  // Custom InputTypes
+  /**
+   * WageringRequirement findUnique
+   */
+  export type WageringRequirementFindUniqueArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the WageringRequirement
+     */
+    select?: WageringRequirementSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the WageringRequirement
+     */
+    omit?: WageringRequirementOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: WageringRequirementInclude<ExtArgs> | null
+    /**
+     * Filter, which WageringRequirement to fetch.
+     */
+    where: WageringRequirementWhereUniqueInput
+  }
+
+  /**
+   * WageringRequirement findUniqueOrThrow
+   */
+  export type WageringRequirementFindUniqueOrThrowArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the WageringRequirement
+     */
+    select?: WageringRequirementSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the WageringRequirement
+     */
+    omit?: WageringRequirementOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: WageringRequirementInclude<ExtArgs> | null
+    /**
+     * Filter, which WageringRequirement to fetch.
+     */
+    where: WageringRequirementWhereUniqueInput
+  }
+
+  /**
+   * WageringRequirement findFirst
+   */
+  export type WageringRequirementFindFirstArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the WageringRequirement
+     */
+    select?: WageringRequirementSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the WageringRequirement
+     */
+    omit?: WageringRequirementOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: WageringRequirementInclude<ExtArgs> | null
+    /**
+     * Filter, which WageringRequirement to fetch.
+     */
+    where?: WageringRequirementWhereInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/sorting Sorting Docs}
+     * 
+     * Determine the order of WageringRequirements to fetch.
+     */
+    orderBy?: WageringRequirementOrderByWithRelationInput | WageringRequirementOrderByWithRelationInput[]
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination#cursor-based-pagination Cursor Docs}
+     * 
+     * Sets the position for searching for WageringRequirements.
+     */
+    cursor?: WageringRequirementWhereUniqueInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Take `±n` WageringRequirements from the position of the cursor.
+     */
+    take?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Skip the first `n` WageringRequirements.
+     */
+    skip?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/distinct Distinct Docs}
+     * 
+     * Filter by unique combinations of WageringRequirements.
+     */
+    distinct?: WageringRequirementScalarFieldEnum | WageringRequirementScalarFieldEnum[]
+  }
+
+  /**
+   * WageringRequirement findFirstOrThrow
+   */
+  export type WageringRequirementFindFirstOrThrowArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the WageringRequirement
+     */
+    select?: WageringRequirementSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the WageringRequirement
+     */
+    omit?: WageringRequirementOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: WageringRequirementInclude<ExtArgs> | null
+    /**
+     * Filter, which WageringRequirement to fetch.
+     */
+    where?: WageringRequirementWhereInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/sorting Sorting Docs}
+     * 
+     * Determine the order of WageringRequirements to fetch.
+     */
+    orderBy?: WageringRequirementOrderByWithRelationInput | WageringRequirementOrderByWithRelationInput[]
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination#cursor-based-pagination Cursor Docs}
+     * 
+     * Sets the position for searching for WageringRequirements.
+     */
+    cursor?: WageringRequirementWhereUniqueInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Take `±n` WageringRequirements from the position of the cursor.
+     */
+    take?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Skip the first `n` WageringRequirements.
+     */
+    skip?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/distinct Distinct Docs}
+     * 
+     * Filter by unique combinations of WageringRequirements.
+     */
+    distinct?: WageringRequirementScalarFieldEnum | WageringRequirementScalarFieldEnum[]
+  }
+
+  /**
+   * WageringRequirement findMany
+   */
+  export type WageringRequirementFindManyArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the WageringRequirement
+     */
+    select?: WageringRequirementSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the WageringRequirement
+     */
+    omit?: WageringRequirementOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: WageringRequirementInclude<ExtArgs> | null
+    /**
+     * Filter, which WageringRequirements to fetch.
+     */
+    where?: WageringRequirementWhereInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/sorting Sorting Docs}
+     * 
+     * Determine the order of WageringRequirements to fetch.
+     */
+    orderBy?: WageringRequirementOrderByWithRelationInput | WageringRequirementOrderByWithRelationInput[]
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination#cursor-based-pagination Cursor Docs}
+     * 
+     * Sets the position for listing WageringRequirements.
+     */
+    cursor?: WageringRequirementWhereUniqueInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Take `±n` WageringRequirements from the position of the cursor.
+     */
+    take?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Skip the first `n` WageringRequirements.
+     */
+    skip?: number
+    distinct?: WageringRequirementScalarFieldEnum | WageringRequirementScalarFieldEnum[]
+  }
+
+  /**
+   * WageringRequirement create
+   */
+  export type WageringRequirementCreateArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the WageringRequirement
+     */
+    select?: WageringRequirementSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the WageringRequirement
+     */
+    omit?: WageringRequirementOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: WageringRequirementInclude<ExtArgs> | null
+    /**
+     * The data needed to create a WageringRequirement.
+     */
+    data: XOR<WageringRequirementCreateInput, WageringRequirementUncheckedCreateInput>
+  }
+
+  /**
+   * WageringRequirement createMany
+   */
+  export type WageringRequirementCreateManyArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * The data used to create many WageringRequirements.
+     */
+    data: WageringRequirementCreateManyInput | WageringRequirementCreateManyInput[]
+    skipDuplicates?: boolean
+  }
+
+  /**
+   * WageringRequirement createManyAndReturn
+   */
+  export type WageringRequirementCreateManyAndReturnArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the WageringRequirement
+     */
+    select?: WageringRequirementSelectCreateManyAndReturn<ExtArgs> | null
+    /**
+     * Omit specific fields from the WageringRequirement
+     */
+    omit?: WageringRequirementOmit<ExtArgs> | null
+    /**
+     * The data used to create many WageringRequirements.
+     */
+    data: WageringRequirementCreateManyInput | WageringRequirementCreateManyInput[]
+    skipDuplicates?: boolean
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: WageringRequirementIncludeCreateManyAndReturn<ExtArgs> | null
+  }
+
+  /**
+   * WageringRequirement update
+   */
+  export type WageringRequirementUpdateArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the WageringRequirement
+     */
+    select?: WageringRequirementSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the WageringRequirement
+     */
+    omit?: WageringRequirementOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: WageringRequirementInclude<ExtArgs> | null
+    /**
+     * The data needed to update a WageringRequirement.
+     */
+    data: XOR<WageringRequirementUpdateInput, WageringRequirementUncheckedUpdateInput>
+    /**
+     * Choose, which WageringRequirement to update.
+     */
+    where: WageringRequirementWhereUniqueInput
+  }
+
+  /**
+   * WageringRequirement updateMany
+   */
+  export type WageringRequirementUpdateManyArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * The data used to update WageringRequirements.
+     */
+    data: XOR<WageringRequirementUpdateManyMutationInput, WageringRequirementUncheckedUpdateManyInput>
+    /**
+     * Filter which WageringRequirements to update
+     */
+    where?: WageringRequirementWhereInput
+    /**
+     * Limit how many WageringRequirements to update.
+     */
+    limit?: number
+  }
+
+  /**
+   * WageringRequirement updateManyAndReturn
+   */
+  export type WageringRequirementUpdateManyAndReturnArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the WageringRequirement
+     */
+    select?: WageringRequirementSelectUpdateManyAndReturn<ExtArgs> | null
+    /**
+     * Omit specific fields from the WageringRequirement
+     */
+    omit?: WageringRequirementOmit<ExtArgs> | null
+    /**
+     * The data used to update WageringRequirements.
+     */
+    data: XOR<WageringRequirementUpdateManyMutationInput, WageringRequirementUncheckedUpdateManyInput>
+    /**
+     * Filter which WageringRequirements to update
+     */
+    where?: WageringRequirementWhereInput
+    /**
+     * Limit how many WageringRequirements to update.
+     */
+    limit?: number
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: WageringRequirementIncludeUpdateManyAndReturn<ExtArgs> | null
+  }
+
+  /**
+   * WageringRequirement upsert
+   */
+  export type WageringRequirementUpsertArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the WageringRequirement
+     */
+    select?: WageringRequirementSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the WageringRequirement
+     */
+    omit?: WageringRequirementOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: WageringRequirementInclude<ExtArgs> | null
+    /**
+     * The filter to search for the WageringRequirement to update in case it exists.
+     */
+    where: WageringRequirementWhereUniqueInput
+    /**
+     * In case the WageringRequirement found by the `where` argument doesn't exist, create a new WageringRequirement with this data.
+     */
+    create: XOR<WageringRequirementCreateInput, WageringRequirementUncheckedCreateInput>
+    /**
+     * In case the WageringRequirement was found with the provided `where` argument, update it with this data.
+     */
+    update: XOR<WageringRequirementUpdateInput, WageringRequirementUncheckedUpdateInput>
+  }
+
+  /**
+   * WageringRequirement delete
+   */
+  export type WageringRequirementDeleteArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the WageringRequirement
+     */
+    select?: WageringRequirementSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the WageringRequirement
+     */
+    omit?: WageringRequirementOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: WageringRequirementInclude<ExtArgs> | null
+    /**
+     * Filter which WageringRequirement to delete.
+     */
+    where: WageringRequirementWhereUniqueInput
+  }
+
+  /**
+   * WageringRequirement deleteMany
+   */
+  export type WageringRequirementDeleteManyArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Filter which WageringRequirements to delete
+     */
+    where?: WageringRequirementWhereInput
+    /**
+     * Limit how many WageringRequirements to delete.
+     */
+    limit?: number
+  }
+
+  /**
+   * WageringRequirement.DepositDetail
+   */
+  export type WageringRequirement$DepositDetailArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the DepositDetail
+     */
+    select?: DepositDetailSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the DepositDetail
+     */
+    omit?: DepositDetailOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: DepositDetailInclude<ExtArgs> | null
+    where?: DepositDetailWhereInput
+  }
+
+  /**
+   * WageringRequirement.userPromotion
+   */
+  export type WageringRequirement$userPromotionArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the UserPromotion
+     */
+    select?: UserPromotionSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the UserPromotion
+     */
+    omit?: UserPromotionOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: UserPromotionInclude<ExtArgs> | null
+    where?: UserPromotionWhereInput
+  }
+
+  /**
+   * WageringRequirement.contributionLogs
+   */
+  export type WageringRequirement$contributionLogsArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the WageringContributionLog
+     */
+    select?: WageringContributionLogSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the WageringContributionLog
+     */
+    omit?: WageringContributionLogOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: WageringContributionLogInclude<ExtArgs> | null
+    where?: WageringContributionLogWhereInput
+    orderBy?: WageringContributionLogOrderByWithRelationInput | WageringContributionLogOrderByWithRelationInput[]
+    cursor?: WageringContributionLogWhereUniqueInput
+    take?: number
+    skip?: number
+    distinct?: WageringContributionLogScalarFieldEnum | WageringContributionLogScalarFieldEnum[]
+  }
+
+  /**
+   * WageringRequirement without action
+   */
+  export type WageringRequirementDefaultArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the WageringRequirement
+     */
+    select?: WageringRequirementSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the WageringRequirement
+     */
+    omit?: WageringRequirementOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: WageringRequirementInclude<ExtArgs> | null
+  }
+
+
+  /**
+   * Model WageringContributionLog
+   */
+
+  export type AggregateWageringContributionLog = {
+    _count: WageringContributionLogCountAggregateOutputType | null
+    _avg: WageringContributionLogAvgAggregateOutputType | null
+    _sum: WageringContributionLogSumAggregateOutputType | null
+    _min: WageringContributionLogMinAggregateOutputType | null
+    _max: WageringContributionLogMaxAggregateOutputType | null
+  }
+
+  export type WageringContributionLogAvgAggregateOutputType = {
+    id: number | null
+    wageringRequirementId: number | null
+    gameRoundId: number | null
+    requestAmount: Decimal | null
+    contributionRate: Decimal | null
+    contributedAmount: Decimal | null
+  }
+
+  export type WageringContributionLogSumAggregateOutputType = {
+    id: bigint | null
+    wageringRequirementId: bigint | null
+    gameRoundId: bigint | null
+    requestAmount: Decimal | null
+    contributionRate: Decimal | null
+    contributedAmount: Decimal | null
+  }
+
+  export type WageringContributionLogMinAggregateOutputType = {
+    id: bigint | null
+    wageringRequirementId: bigint | null
+    gameRoundId: bigint | null
+    requestAmount: Decimal | null
+    contributionRate: Decimal | null
+    contributedAmount: Decimal | null
+    createdAt: Date | null
+  }
+
+  export type WageringContributionLogMaxAggregateOutputType = {
+    id: bigint | null
+    wageringRequirementId: bigint | null
+    gameRoundId: bigint | null
+    requestAmount: Decimal | null
+    contributionRate: Decimal | null
+    contributedAmount: Decimal | null
+    createdAt: Date | null
+  }
+
+  export type WageringContributionLogCountAggregateOutputType = {
+    id: number
+    wageringRequirementId: number
+    gameRoundId: number
+    requestAmount: number
+    contributionRate: number
+    contributedAmount: number
+    createdAt: number
+    _all: number
+  }
+
+
+  export type WageringContributionLogAvgAggregateInputType = {
+    id?: true
+    wageringRequirementId?: true
+    gameRoundId?: true
+    requestAmount?: true
+    contributionRate?: true
+    contributedAmount?: true
+  }
+
+  export type WageringContributionLogSumAggregateInputType = {
+    id?: true
+    wageringRequirementId?: true
+    gameRoundId?: true
+    requestAmount?: true
+    contributionRate?: true
+    contributedAmount?: true
+  }
+
+  export type WageringContributionLogMinAggregateInputType = {
+    id?: true
+    wageringRequirementId?: true
+    gameRoundId?: true
+    requestAmount?: true
+    contributionRate?: true
+    contributedAmount?: true
+    createdAt?: true
+  }
+
+  export type WageringContributionLogMaxAggregateInputType = {
+    id?: true
+    wageringRequirementId?: true
+    gameRoundId?: true
+    requestAmount?: true
+    contributionRate?: true
+    contributedAmount?: true
+    createdAt?: true
+  }
+
+  export type WageringContributionLogCountAggregateInputType = {
+    id?: true
+    wageringRequirementId?: true
+    gameRoundId?: true
+    requestAmount?: true
+    contributionRate?: true
+    contributedAmount?: true
+    createdAt?: true
+    _all?: true
+  }
+
+  export type WageringContributionLogAggregateArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Filter which WageringContributionLog to aggregate.
+     */
+    where?: WageringContributionLogWhereInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/sorting Sorting Docs}
+     * 
+     * Determine the order of WageringContributionLogs to fetch.
+     */
+    orderBy?: WageringContributionLogOrderByWithRelationInput | WageringContributionLogOrderByWithRelationInput[]
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination#cursor-based-pagination Cursor Docs}
+     * 
+     * Sets the start position
+     */
+    cursor?: WageringContributionLogWhereUniqueInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Take `±n` WageringContributionLogs from the position of the cursor.
+     */
+    take?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Skip the first `n` WageringContributionLogs.
+     */
+    skip?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
+     * 
+     * Count returned WageringContributionLogs
+    **/
+    _count?: true | WageringContributionLogCountAggregateInputType
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
+     * 
+     * Select which fields to average
+    **/
+    _avg?: WageringContributionLogAvgAggregateInputType
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
+     * 
+     * Select which fields to sum
+    **/
+    _sum?: WageringContributionLogSumAggregateInputType
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
+     * 
+     * Select which fields to find the minimum value
+    **/
+    _min?: WageringContributionLogMinAggregateInputType
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
+     * 
+     * Select which fields to find the maximum value
+    **/
+    _max?: WageringContributionLogMaxAggregateInputType
+  }
+
+  export type GetWageringContributionLogAggregateType<T extends WageringContributionLogAggregateArgs> = {
+        [P in keyof T & keyof AggregateWageringContributionLog]: P extends '_count' | 'count'
+      ? T[P] extends true
+        ? number
+        : GetScalarType<T[P], AggregateWageringContributionLog[P]>
+      : GetScalarType<T[P], AggregateWageringContributionLog[P]>
+  }
+
+
+
+
+  export type WageringContributionLogGroupByArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    where?: WageringContributionLogWhereInput
+    orderBy?: WageringContributionLogOrderByWithAggregationInput | WageringContributionLogOrderByWithAggregationInput[]
+    by: WageringContributionLogScalarFieldEnum[] | WageringContributionLogScalarFieldEnum
+    having?: WageringContributionLogScalarWhereWithAggregatesInput
+    take?: number
+    skip?: number
+    _count?: WageringContributionLogCountAggregateInputType | true
+    _avg?: WageringContributionLogAvgAggregateInputType
+    _sum?: WageringContributionLogSumAggregateInputType
+    _min?: WageringContributionLogMinAggregateInputType
+    _max?: WageringContributionLogMaxAggregateInputType
+  }
+
+  export type WageringContributionLogGroupByOutputType = {
+    id: bigint
+    wageringRequirementId: bigint
+    gameRoundId: bigint
+    requestAmount: Decimal
+    contributionRate: Decimal
+    contributedAmount: Decimal
+    createdAt: Date
+    _count: WageringContributionLogCountAggregateOutputType | null
+    _avg: WageringContributionLogAvgAggregateOutputType | null
+    _sum: WageringContributionLogSumAggregateOutputType | null
+    _min: WageringContributionLogMinAggregateOutputType | null
+    _max: WageringContributionLogMaxAggregateOutputType | null
+  }
+
+  type GetWageringContributionLogGroupByPayload<T extends WageringContributionLogGroupByArgs> = Prisma.PrismaPromise<
+    Array<
+      PickEnumerable<WageringContributionLogGroupByOutputType, T['by']> &
+        {
+          [P in ((keyof T) & (keyof WageringContributionLogGroupByOutputType))]: P extends '_count'
+            ? T[P] extends boolean
+              ? number
+              : GetScalarType<T[P], WageringContributionLogGroupByOutputType[P]>
+            : GetScalarType<T[P], WageringContributionLogGroupByOutputType[P]>
+        }
+      >
+    >
+
+
+  export type WageringContributionLogSelect<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetSelect<{
+    id?: boolean
+    wageringRequirementId?: boolean
+    gameRoundId?: boolean
+    requestAmount?: boolean
+    contributionRate?: boolean
+    contributedAmount?: boolean
+    createdAt?: boolean
+    wageringRequirement?: boolean | WageringRequirementDefaultArgs<ExtArgs>
+  }, ExtArgs["result"]["wageringContributionLog"]>
+
+  export type WageringContributionLogSelectCreateManyAndReturn<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetSelect<{
+    id?: boolean
+    wageringRequirementId?: boolean
+    gameRoundId?: boolean
+    requestAmount?: boolean
+    contributionRate?: boolean
+    contributedAmount?: boolean
+    createdAt?: boolean
+    wageringRequirement?: boolean | WageringRequirementDefaultArgs<ExtArgs>
+  }, ExtArgs["result"]["wageringContributionLog"]>
+
+  export type WageringContributionLogSelectUpdateManyAndReturn<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetSelect<{
+    id?: boolean
+    wageringRequirementId?: boolean
+    gameRoundId?: boolean
+    requestAmount?: boolean
+    contributionRate?: boolean
+    contributedAmount?: boolean
+    createdAt?: boolean
+    wageringRequirement?: boolean | WageringRequirementDefaultArgs<ExtArgs>
+  }, ExtArgs["result"]["wageringContributionLog"]>
+
+  export type WageringContributionLogSelectScalar = {
+    id?: boolean
+    wageringRequirementId?: boolean
+    gameRoundId?: boolean
+    requestAmount?: boolean
+    contributionRate?: boolean
+    contributedAmount?: boolean
+    createdAt?: boolean
+  }
+
+  export type WageringContributionLogOmit<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetOmit<"id" | "wageringRequirementId" | "gameRoundId" | "requestAmount" | "contributionRate" | "contributedAmount" | "createdAt", ExtArgs["result"]["wageringContributionLog"]>
+  export type WageringContributionLogInclude<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    wageringRequirement?: boolean | WageringRequirementDefaultArgs<ExtArgs>
+  }
+  export type WageringContributionLogIncludeCreateManyAndReturn<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    wageringRequirement?: boolean | WageringRequirementDefaultArgs<ExtArgs>
+  }
+  export type WageringContributionLogIncludeUpdateManyAndReturn<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    wageringRequirement?: boolean | WageringRequirementDefaultArgs<ExtArgs>
+  }
+
+  export type $WageringContributionLogPayload<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    name: "WageringContributionLog"
+    objects: {
+      wageringRequirement: Prisma.$WageringRequirementPayload<ExtArgs>
+    }
+    scalars: $Extensions.GetPayloadResult<{
+      id: bigint
+      wageringRequirementId: bigint
+      gameRoundId: bigint
+      requestAmount: Prisma.Decimal
+      contributionRate: Prisma.Decimal
+      contributedAmount: Prisma.Decimal
+      createdAt: Date
+    }, ExtArgs["result"]["wageringContributionLog"]>
+    composites: {}
+  }
+
+  type WageringContributionLogGetPayload<S extends boolean | null | undefined | WageringContributionLogDefaultArgs> = $Result.GetResult<Prisma.$WageringContributionLogPayload, S>
+
+  type WageringContributionLogCountArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> =
+    Omit<WageringContributionLogFindManyArgs, 'select' | 'include' | 'distinct' | 'omit'> & {
+      select?: WageringContributionLogCountAggregateInputType | true
+    }
+
+  export interface WageringContributionLogDelegate<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs, GlobalOmitOptions = {}> {
+    [K: symbol]: { types: Prisma.TypeMap<ExtArgs>['model']['WageringContributionLog'], meta: { name: 'WageringContributionLog' } }
+    /**
+     * Find zero or one WageringContributionLog that matches the filter.
+     * @param {WageringContributionLogFindUniqueArgs} args - Arguments to find a WageringContributionLog
+     * @example
+     * // Get one WageringContributionLog
+     * const wageringContributionLog = await prisma.wageringContributionLog.findUnique({
+     *   where: {
+     *     // ... provide filter here
+     *   }
+     * })
+     */
+    findUnique<T extends WageringContributionLogFindUniqueArgs>(args: SelectSubset<T, WageringContributionLogFindUniqueArgs<ExtArgs>>): Prisma__WageringContributionLogClient<$Result.GetResult<Prisma.$WageringContributionLogPayload<ExtArgs>, T, "findUnique", GlobalOmitOptions> | null, null, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Find one WageringContributionLog that matches the filter or throw an error with `error.code='P2025'`
+     * if no matches were found.
+     * @param {WageringContributionLogFindUniqueOrThrowArgs} args - Arguments to find a WageringContributionLog
+     * @example
+     * // Get one WageringContributionLog
+     * const wageringContributionLog = await prisma.wageringContributionLog.findUniqueOrThrow({
+     *   where: {
+     *     // ... provide filter here
+     *   }
+     * })
+     */
+    findUniqueOrThrow<T extends WageringContributionLogFindUniqueOrThrowArgs>(args: SelectSubset<T, WageringContributionLogFindUniqueOrThrowArgs<ExtArgs>>): Prisma__WageringContributionLogClient<$Result.GetResult<Prisma.$WageringContributionLogPayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Find the first WageringContributionLog that matches the filter.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {WageringContributionLogFindFirstArgs} args - Arguments to find a WageringContributionLog
+     * @example
+     * // Get one WageringContributionLog
+     * const wageringContributionLog = await prisma.wageringContributionLog.findFirst({
+     *   where: {
+     *     // ... provide filter here
+     *   }
+     * })
+     */
+    findFirst<T extends WageringContributionLogFindFirstArgs>(args?: SelectSubset<T, WageringContributionLogFindFirstArgs<ExtArgs>>): Prisma__WageringContributionLogClient<$Result.GetResult<Prisma.$WageringContributionLogPayload<ExtArgs>, T, "findFirst", GlobalOmitOptions> | null, null, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Find the first WageringContributionLog that matches the filter or
+     * throw `PrismaKnownClientError` with `P2025` code if no matches were found.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {WageringContributionLogFindFirstOrThrowArgs} args - Arguments to find a WageringContributionLog
+     * @example
+     * // Get one WageringContributionLog
+     * const wageringContributionLog = await prisma.wageringContributionLog.findFirstOrThrow({
+     *   where: {
+     *     // ... provide filter here
+     *   }
+     * })
+     */
+    findFirstOrThrow<T extends WageringContributionLogFindFirstOrThrowArgs>(args?: SelectSubset<T, WageringContributionLogFindFirstOrThrowArgs<ExtArgs>>): Prisma__WageringContributionLogClient<$Result.GetResult<Prisma.$WageringContributionLogPayload<ExtArgs>, T, "findFirstOrThrow", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Find zero or more WageringContributionLogs that matches the filter.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {WageringContributionLogFindManyArgs} args - Arguments to filter and select certain fields only.
+     * @example
+     * // Get all WageringContributionLogs
+     * const wageringContributionLogs = await prisma.wageringContributionLog.findMany()
+     * 
+     * // Get first 10 WageringContributionLogs
+     * const wageringContributionLogs = await prisma.wageringContributionLog.findMany({ take: 10 })
+     * 
+     * // Only select the `id`
+     * const wageringContributionLogWithIdOnly = await prisma.wageringContributionLog.findMany({ select: { id: true } })
+     * 
+     */
+    findMany<T extends WageringContributionLogFindManyArgs>(args?: SelectSubset<T, WageringContributionLogFindManyArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$WageringContributionLogPayload<ExtArgs>, T, "findMany", GlobalOmitOptions>>
+
+    /**
+     * Create a WageringContributionLog.
+     * @param {WageringContributionLogCreateArgs} args - Arguments to create a WageringContributionLog.
+     * @example
+     * // Create one WageringContributionLog
+     * const WageringContributionLog = await prisma.wageringContributionLog.create({
+     *   data: {
+     *     // ... data to create a WageringContributionLog
+     *   }
+     * })
+     * 
+     */
+    create<T extends WageringContributionLogCreateArgs>(args: SelectSubset<T, WageringContributionLogCreateArgs<ExtArgs>>): Prisma__WageringContributionLogClient<$Result.GetResult<Prisma.$WageringContributionLogPayload<ExtArgs>, T, "create", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Create many WageringContributionLogs.
+     * @param {WageringContributionLogCreateManyArgs} args - Arguments to create many WageringContributionLogs.
+     * @example
+     * // Create many WageringContributionLogs
+     * const wageringContributionLog = await prisma.wageringContributionLog.createMany({
+     *   data: [
+     *     // ... provide data here
+     *   ]
+     * })
+     *     
+     */
+    createMany<T extends WageringContributionLogCreateManyArgs>(args?: SelectSubset<T, WageringContributionLogCreateManyArgs<ExtArgs>>): Prisma.PrismaPromise<BatchPayload>
+
+    /**
+     * Create many WageringContributionLogs and returns the data saved in the database.
+     * @param {WageringContributionLogCreateManyAndReturnArgs} args - Arguments to create many WageringContributionLogs.
+     * @example
+     * // Create many WageringContributionLogs
+     * const wageringContributionLog = await prisma.wageringContributionLog.createManyAndReturn({
+     *   data: [
+     *     // ... provide data here
+     *   ]
+     * })
+     * 
+     * // Create many WageringContributionLogs and only return the `id`
+     * const wageringContributionLogWithIdOnly = await prisma.wageringContributionLog.createManyAndReturn({
+     *   select: { id: true },
+     *   data: [
+     *     // ... provide data here
+     *   ]
+     * })
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * 
+     */
+    createManyAndReturn<T extends WageringContributionLogCreateManyAndReturnArgs>(args?: SelectSubset<T, WageringContributionLogCreateManyAndReturnArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$WageringContributionLogPayload<ExtArgs>, T, "createManyAndReturn", GlobalOmitOptions>>
+
+    /**
+     * Delete a WageringContributionLog.
+     * @param {WageringContributionLogDeleteArgs} args - Arguments to delete one WageringContributionLog.
+     * @example
+     * // Delete one WageringContributionLog
+     * const WageringContributionLog = await prisma.wageringContributionLog.delete({
+     *   where: {
+     *     // ... filter to delete one WageringContributionLog
+     *   }
+     * })
+     * 
+     */
+    delete<T extends WageringContributionLogDeleteArgs>(args: SelectSubset<T, WageringContributionLogDeleteArgs<ExtArgs>>): Prisma__WageringContributionLogClient<$Result.GetResult<Prisma.$WageringContributionLogPayload<ExtArgs>, T, "delete", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Update one WageringContributionLog.
+     * @param {WageringContributionLogUpdateArgs} args - Arguments to update one WageringContributionLog.
+     * @example
+     * // Update one WageringContributionLog
+     * const wageringContributionLog = await prisma.wageringContributionLog.update({
+     *   where: {
+     *     // ... provide filter here
+     *   },
+     *   data: {
+     *     // ... provide data here
+     *   }
+     * })
+     * 
+     */
+    update<T extends WageringContributionLogUpdateArgs>(args: SelectSubset<T, WageringContributionLogUpdateArgs<ExtArgs>>): Prisma__WageringContributionLogClient<$Result.GetResult<Prisma.$WageringContributionLogPayload<ExtArgs>, T, "update", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Delete zero or more WageringContributionLogs.
+     * @param {WageringContributionLogDeleteManyArgs} args - Arguments to filter WageringContributionLogs to delete.
+     * @example
+     * // Delete a few WageringContributionLogs
+     * const { count } = await prisma.wageringContributionLog.deleteMany({
+     *   where: {
+     *     // ... provide filter here
+     *   }
+     * })
+     * 
+     */
+    deleteMany<T extends WageringContributionLogDeleteManyArgs>(args?: SelectSubset<T, WageringContributionLogDeleteManyArgs<ExtArgs>>): Prisma.PrismaPromise<BatchPayload>
+
+    /**
+     * Update zero or more WageringContributionLogs.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {WageringContributionLogUpdateManyArgs} args - Arguments to update one or more rows.
+     * @example
+     * // Update many WageringContributionLogs
+     * const wageringContributionLog = await prisma.wageringContributionLog.updateMany({
+     *   where: {
+     *     // ... provide filter here
+     *   },
+     *   data: {
+     *     // ... provide data here
+     *   }
+     * })
+     * 
+     */
+    updateMany<T extends WageringContributionLogUpdateManyArgs>(args: SelectSubset<T, WageringContributionLogUpdateManyArgs<ExtArgs>>): Prisma.PrismaPromise<BatchPayload>
+
+    /**
+     * Update zero or more WageringContributionLogs and returns the data updated in the database.
+     * @param {WageringContributionLogUpdateManyAndReturnArgs} args - Arguments to update many WageringContributionLogs.
+     * @example
+     * // Update many WageringContributionLogs
+     * const wageringContributionLog = await prisma.wageringContributionLog.updateManyAndReturn({
+     *   where: {
+     *     // ... provide filter here
+     *   },
+     *   data: [
+     *     // ... provide data here
+     *   ]
+     * })
+     * 
+     * // Update zero or more WageringContributionLogs and only return the `id`
+     * const wageringContributionLogWithIdOnly = await prisma.wageringContributionLog.updateManyAndReturn({
+     *   select: { id: true },
+     *   where: {
+     *     // ... provide filter here
+     *   },
+     *   data: [
+     *     // ... provide data here
+     *   ]
+     * })
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * 
+     */
+    updateManyAndReturn<T extends WageringContributionLogUpdateManyAndReturnArgs>(args: SelectSubset<T, WageringContributionLogUpdateManyAndReturnArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$WageringContributionLogPayload<ExtArgs>, T, "updateManyAndReturn", GlobalOmitOptions>>
+
+    /**
+     * Create or update one WageringContributionLog.
+     * @param {WageringContributionLogUpsertArgs} args - Arguments to update or create a WageringContributionLog.
+     * @example
+     * // Update or create a WageringContributionLog
+     * const wageringContributionLog = await prisma.wageringContributionLog.upsert({
+     *   create: {
+     *     // ... data to create a WageringContributionLog
+     *   },
+     *   update: {
+     *     // ... in case it already exists, update
+     *   },
+     *   where: {
+     *     // ... the filter for the WageringContributionLog we want to update
+     *   }
+     * })
+     */
+    upsert<T extends WageringContributionLogUpsertArgs>(args: SelectSubset<T, WageringContributionLogUpsertArgs<ExtArgs>>): Prisma__WageringContributionLogClient<$Result.GetResult<Prisma.$WageringContributionLogPayload<ExtArgs>, T, "upsert", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
+
+
+    /**
+     * Count the number of WageringContributionLogs.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {WageringContributionLogCountArgs} args - Arguments to filter WageringContributionLogs to count.
+     * @example
+     * // Count the number of WageringContributionLogs
+     * const count = await prisma.wageringContributionLog.count({
+     *   where: {
+     *     // ... the filter for the WageringContributionLogs we want to count
+     *   }
+     * })
+    **/
+    count<T extends WageringContributionLogCountArgs>(
+      args?: Subset<T, WageringContributionLogCountArgs>,
+    ): Prisma.PrismaPromise<
+      T extends $Utils.Record<'select', any>
+        ? T['select'] extends true
+          ? number
+          : GetScalarType<T['select'], WageringContributionLogCountAggregateOutputType>
+        : number
+    >
+
+    /**
+     * Allows you to perform aggregations operations on a WageringContributionLog.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {WageringContributionLogAggregateArgs} args - Select which aggregations you would like to apply and on what fields.
+     * @example
+     * // Ordered by age ascending
+     * // Where email contains prisma.io
+     * // Limited to the 10 users
+     * const aggregations = await prisma.user.aggregate({
+     *   _avg: {
+     *     age: true,
+     *   },
+     *   where: {
+     *     email: {
+     *       contains: "prisma.io",
+     *     },
+     *   },
+     *   orderBy: {
+     *     age: "asc",
+     *   },
+     *   take: 10,
+     * })
+    **/
+    aggregate<T extends WageringContributionLogAggregateArgs>(args: Subset<T, WageringContributionLogAggregateArgs>): Prisma.PrismaPromise<GetWageringContributionLogAggregateType<T>>
+
+    /**
+     * Group by WageringContributionLog.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {WageringContributionLogGroupByArgs} args - Group by arguments.
+     * @example
+     * // Group by city, order by createdAt, get count
+     * const result = await prisma.user.groupBy({
+     *   by: ['city', 'createdAt'],
+     *   orderBy: {
+     *     createdAt: true
+     *   },
+     *   _count: {
+     *     _all: true
+     *   },
+     * })
+     * 
+    **/
+    groupBy<
+      T extends WageringContributionLogGroupByArgs,
+      HasSelectOrTake extends Or<
+        Extends<'skip', Keys<T>>,
+        Extends<'take', Keys<T>>
+      >,
+      OrderByArg extends True extends HasSelectOrTake
+        ? { orderBy: WageringContributionLogGroupByArgs['orderBy'] }
+        : { orderBy?: WageringContributionLogGroupByArgs['orderBy'] },
+      OrderFields extends ExcludeUnderscoreKeys<Keys<MaybeTupleToUnion<T['orderBy']>>>,
+      ByFields extends MaybeTupleToUnion<T['by']>,
+      ByValid extends Has<ByFields, OrderFields>,
+      HavingFields extends GetHavingFields<T['having']>,
+      HavingValid extends Has<ByFields, HavingFields>,
+      ByEmpty extends T['by'] extends never[] ? True : False,
+      InputErrors extends ByEmpty extends True
+      ? `Error: "by" must not be empty.`
+      : HavingValid extends False
+      ? {
+          [P in HavingFields]: P extends ByFields
+            ? never
+            : P extends string
+            ? `Error: Field "${P}" used in "having" needs to be provided in "by".`
+            : [
+                Error,
+                'Field ',
+                P,
+                ` in "having" needs to be provided in "by"`,
+              ]
+        }[HavingFields]
+      : 'take' extends Keys<T>
+      ? 'orderBy' extends Keys<T>
+        ? ByValid extends True
+          ? {}
+          : {
+              [P in OrderFields]: P extends ByFields
+                ? never
+                : `Error: Field "${P}" in "orderBy" needs to be provided in "by"`
+            }[OrderFields]
+        : 'Error: If you provide "take", you also need to provide "orderBy"'
+      : 'skip' extends Keys<T>
+      ? 'orderBy' extends Keys<T>
+        ? ByValid extends True
+          ? {}
+          : {
+              [P in OrderFields]: P extends ByFields
+                ? never
+                : `Error: Field "${P}" in "orderBy" needs to be provided in "by"`
+            }[OrderFields]
+        : 'Error: If you provide "skip", you also need to provide "orderBy"'
+      : ByValid extends True
+      ? {}
+      : {
+          [P in OrderFields]: P extends ByFields
+            ? never
+            : `Error: Field "${P}" in "orderBy" needs to be provided in "by"`
+        }[OrderFields]
+    >(args: SubsetIntersection<T, WageringContributionLogGroupByArgs, OrderByArg> & InputErrors): {} extends InputErrors ? GetWageringContributionLogGroupByPayload<T> : Prisma.PrismaPromise<InputErrors>
+  /**
+   * Fields of the WageringContributionLog model
+   */
+  readonly fields: WageringContributionLogFieldRefs;
+  }
+
+  /**
+   * The delegate class that acts as a "Promise-like" for WageringContributionLog.
+   * Why is this prefixed with `Prisma__`?
+   * Because we want to prevent naming conflicts as mentioned in
+   * https://github.com/prisma/prisma-client-js/issues/707
+   */
+  export interface Prisma__WageringContributionLogClient<T, Null = never, ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs, GlobalOmitOptions = {}> extends Prisma.PrismaPromise<T> {
+    readonly [Symbol.toStringTag]: "PrismaPromise"
+    wageringRequirement<T extends WageringRequirementDefaultArgs<ExtArgs> = {}>(args?: Subset<T, WageringRequirementDefaultArgs<ExtArgs>>): Prisma__WageringRequirementClient<$Result.GetResult<Prisma.$WageringRequirementPayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions> | Null, Null, ExtArgs, GlobalOmitOptions>
+    /**
+     * Attaches callbacks for the resolution and/or rejection of the Promise.
+     * @param onfulfilled The callback to execute when the Promise is resolved.
+     * @param onrejected The callback to execute when the Promise is rejected.
+     * @returns A Promise for the completion of which ever callback is executed.
+     */
+    then<TResult1 = T, TResult2 = never>(onfulfilled?: ((value: T) => TResult1 | PromiseLike<TResult1>) | undefined | null, onrejected?: ((reason: any) => TResult2 | PromiseLike<TResult2>) | undefined | null): $Utils.JsPromise<TResult1 | TResult2>
+    /**
+     * Attaches a callback for only the rejection of the Promise.
+     * @param onrejected The callback to execute when the Promise is rejected.
+     * @returns A Promise for the completion of the callback.
+     */
+    catch<TResult = never>(onrejected?: ((reason: any) => TResult | PromiseLike<TResult>) | undefined | null): $Utils.JsPromise<T | TResult>
+    /**
+     * Attaches a callback that is invoked when the Promise is settled (fulfilled or rejected). The
+     * resolved value cannot be modified from the callback.
+     * @param onfinally The callback to execute when the Promise is settled (fulfilled or rejected).
+     * @returns A Promise for the completion of the callback.
+     */
+    finally(onfinally?: (() => void) | undefined | null): $Utils.JsPromise<T>
+  }
+
+
+
+
+  /**
+   * Fields of the WageringContributionLog model
+   */
+  interface WageringContributionLogFieldRefs {
+    readonly id: FieldRef<"WageringContributionLog", 'BigInt'>
+    readonly wageringRequirementId: FieldRef<"WageringContributionLog", 'BigInt'>
+    readonly gameRoundId: FieldRef<"WageringContributionLog", 'BigInt'>
+    readonly requestAmount: FieldRef<"WageringContributionLog", 'Decimal'>
+    readonly contributionRate: FieldRef<"WageringContributionLog", 'Decimal'>
+    readonly contributedAmount: FieldRef<"WageringContributionLog", 'Decimal'>
+    readonly createdAt: FieldRef<"WageringContributionLog", 'DateTime'>
+  }
+    
+
+  // Custom InputTypes
+  /**
+   * WageringContributionLog findUnique
+   */
+  export type WageringContributionLogFindUniqueArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the WageringContributionLog
+     */
+    select?: WageringContributionLogSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the WageringContributionLog
+     */
+    omit?: WageringContributionLogOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: WageringContributionLogInclude<ExtArgs> | null
+    /**
+     * Filter, which WageringContributionLog to fetch.
+     */
+    where: WageringContributionLogWhereUniqueInput
+  }
+
+  /**
+   * WageringContributionLog findUniqueOrThrow
+   */
+  export type WageringContributionLogFindUniqueOrThrowArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the WageringContributionLog
+     */
+    select?: WageringContributionLogSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the WageringContributionLog
+     */
+    omit?: WageringContributionLogOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: WageringContributionLogInclude<ExtArgs> | null
+    /**
+     * Filter, which WageringContributionLog to fetch.
+     */
+    where: WageringContributionLogWhereUniqueInput
+  }
+
+  /**
+   * WageringContributionLog findFirst
+   */
+  export type WageringContributionLogFindFirstArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the WageringContributionLog
+     */
+    select?: WageringContributionLogSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the WageringContributionLog
+     */
+    omit?: WageringContributionLogOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: WageringContributionLogInclude<ExtArgs> | null
+    /**
+     * Filter, which WageringContributionLog to fetch.
+     */
+    where?: WageringContributionLogWhereInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/sorting Sorting Docs}
+     * 
+     * Determine the order of WageringContributionLogs to fetch.
+     */
+    orderBy?: WageringContributionLogOrderByWithRelationInput | WageringContributionLogOrderByWithRelationInput[]
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination#cursor-based-pagination Cursor Docs}
+     * 
+     * Sets the position for searching for WageringContributionLogs.
+     */
+    cursor?: WageringContributionLogWhereUniqueInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Take `±n` WageringContributionLogs from the position of the cursor.
+     */
+    take?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Skip the first `n` WageringContributionLogs.
+     */
+    skip?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/distinct Distinct Docs}
+     * 
+     * Filter by unique combinations of WageringContributionLogs.
+     */
+    distinct?: WageringContributionLogScalarFieldEnum | WageringContributionLogScalarFieldEnum[]
+  }
+
+  /**
+   * WageringContributionLog findFirstOrThrow
+   */
+  export type WageringContributionLogFindFirstOrThrowArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the WageringContributionLog
+     */
+    select?: WageringContributionLogSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the WageringContributionLog
+     */
+    omit?: WageringContributionLogOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: WageringContributionLogInclude<ExtArgs> | null
+    /**
+     * Filter, which WageringContributionLog to fetch.
+     */
+    where?: WageringContributionLogWhereInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/sorting Sorting Docs}
+     * 
+     * Determine the order of WageringContributionLogs to fetch.
+     */
+    orderBy?: WageringContributionLogOrderByWithRelationInput | WageringContributionLogOrderByWithRelationInput[]
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination#cursor-based-pagination Cursor Docs}
+     * 
+     * Sets the position for searching for WageringContributionLogs.
+     */
+    cursor?: WageringContributionLogWhereUniqueInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Take `±n` WageringContributionLogs from the position of the cursor.
+     */
+    take?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Skip the first `n` WageringContributionLogs.
+     */
+    skip?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/distinct Distinct Docs}
+     * 
+     * Filter by unique combinations of WageringContributionLogs.
+     */
+    distinct?: WageringContributionLogScalarFieldEnum | WageringContributionLogScalarFieldEnum[]
+  }
+
+  /**
+   * WageringContributionLog findMany
+   */
+  export type WageringContributionLogFindManyArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the WageringContributionLog
+     */
+    select?: WageringContributionLogSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the WageringContributionLog
+     */
+    omit?: WageringContributionLogOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: WageringContributionLogInclude<ExtArgs> | null
+    /**
+     * Filter, which WageringContributionLogs to fetch.
+     */
+    where?: WageringContributionLogWhereInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/sorting Sorting Docs}
+     * 
+     * Determine the order of WageringContributionLogs to fetch.
+     */
+    orderBy?: WageringContributionLogOrderByWithRelationInput | WageringContributionLogOrderByWithRelationInput[]
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination#cursor-based-pagination Cursor Docs}
+     * 
+     * Sets the position for listing WageringContributionLogs.
+     */
+    cursor?: WageringContributionLogWhereUniqueInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Take `±n` WageringContributionLogs from the position of the cursor.
+     */
+    take?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Skip the first `n` WageringContributionLogs.
+     */
+    skip?: number
+    distinct?: WageringContributionLogScalarFieldEnum | WageringContributionLogScalarFieldEnum[]
+  }
+
+  /**
+   * WageringContributionLog create
+   */
+  export type WageringContributionLogCreateArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the WageringContributionLog
+     */
+    select?: WageringContributionLogSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the WageringContributionLog
+     */
+    omit?: WageringContributionLogOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: WageringContributionLogInclude<ExtArgs> | null
+    /**
+     * The data needed to create a WageringContributionLog.
+     */
+    data: XOR<WageringContributionLogCreateInput, WageringContributionLogUncheckedCreateInput>
+  }
+
+  /**
+   * WageringContributionLog createMany
+   */
+  export type WageringContributionLogCreateManyArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * The data used to create many WageringContributionLogs.
+     */
+    data: WageringContributionLogCreateManyInput | WageringContributionLogCreateManyInput[]
+    skipDuplicates?: boolean
+  }
+
+  /**
+   * WageringContributionLog createManyAndReturn
+   */
+  export type WageringContributionLogCreateManyAndReturnArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the WageringContributionLog
+     */
+    select?: WageringContributionLogSelectCreateManyAndReturn<ExtArgs> | null
+    /**
+     * Omit specific fields from the WageringContributionLog
+     */
+    omit?: WageringContributionLogOmit<ExtArgs> | null
+    /**
+     * The data used to create many WageringContributionLogs.
+     */
+    data: WageringContributionLogCreateManyInput | WageringContributionLogCreateManyInput[]
+    skipDuplicates?: boolean
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: WageringContributionLogIncludeCreateManyAndReturn<ExtArgs> | null
+  }
+
+  /**
+   * WageringContributionLog update
+   */
+  export type WageringContributionLogUpdateArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the WageringContributionLog
+     */
+    select?: WageringContributionLogSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the WageringContributionLog
+     */
+    omit?: WageringContributionLogOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: WageringContributionLogInclude<ExtArgs> | null
+    /**
+     * The data needed to update a WageringContributionLog.
+     */
+    data: XOR<WageringContributionLogUpdateInput, WageringContributionLogUncheckedUpdateInput>
+    /**
+     * Choose, which WageringContributionLog to update.
+     */
+    where: WageringContributionLogWhereUniqueInput
+  }
+
+  /**
+   * WageringContributionLog updateMany
+   */
+  export type WageringContributionLogUpdateManyArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * The data used to update WageringContributionLogs.
+     */
+    data: XOR<WageringContributionLogUpdateManyMutationInput, WageringContributionLogUncheckedUpdateManyInput>
+    /**
+     * Filter which WageringContributionLogs to update
+     */
+    where?: WageringContributionLogWhereInput
+    /**
+     * Limit how many WageringContributionLogs to update.
+     */
+    limit?: number
+  }
+
+  /**
+   * WageringContributionLog updateManyAndReturn
+   */
+  export type WageringContributionLogUpdateManyAndReturnArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the WageringContributionLog
+     */
+    select?: WageringContributionLogSelectUpdateManyAndReturn<ExtArgs> | null
+    /**
+     * Omit specific fields from the WageringContributionLog
+     */
+    omit?: WageringContributionLogOmit<ExtArgs> | null
+    /**
+     * The data used to update WageringContributionLogs.
+     */
+    data: XOR<WageringContributionLogUpdateManyMutationInput, WageringContributionLogUncheckedUpdateManyInput>
+    /**
+     * Filter which WageringContributionLogs to update
+     */
+    where?: WageringContributionLogWhereInput
+    /**
+     * Limit how many WageringContributionLogs to update.
+     */
+    limit?: number
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: WageringContributionLogIncludeUpdateManyAndReturn<ExtArgs> | null
+  }
+
+  /**
+   * WageringContributionLog upsert
+   */
+  export type WageringContributionLogUpsertArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the WageringContributionLog
+     */
+    select?: WageringContributionLogSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the WageringContributionLog
+     */
+    omit?: WageringContributionLogOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: WageringContributionLogInclude<ExtArgs> | null
+    /**
+     * The filter to search for the WageringContributionLog to update in case it exists.
+     */
+    where: WageringContributionLogWhereUniqueInput
+    /**
+     * In case the WageringContributionLog found by the `where` argument doesn't exist, create a new WageringContributionLog with this data.
+     */
+    create: XOR<WageringContributionLogCreateInput, WageringContributionLogUncheckedCreateInput>
+    /**
+     * In case the WageringContributionLog was found with the provided `where` argument, update it with this data.
+     */
+    update: XOR<WageringContributionLogUpdateInput, WageringContributionLogUncheckedUpdateInput>
+  }
+
+  /**
+   * WageringContributionLog delete
+   */
+  export type WageringContributionLogDeleteArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the WageringContributionLog
+     */
+    select?: WageringContributionLogSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the WageringContributionLog
+     */
+    omit?: WageringContributionLogOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: WageringContributionLogInclude<ExtArgs> | null
+    /**
+     * Filter which WageringContributionLog to delete.
+     */
+    where: WageringContributionLogWhereUniqueInput
+  }
+
+  /**
+   * WageringContributionLog deleteMany
+   */
+  export type WageringContributionLogDeleteManyArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Filter which WageringContributionLogs to delete
+     */
+    where?: WageringContributionLogWhereInput
+    /**
+     * Limit how many WageringContributionLogs to delete.
+     */
+    limit?: number
+  }
+
+  /**
+   * WageringContributionLog without action
+   */
+  export type WageringContributionLogDefaultArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the WageringContributionLog
+     */
+    select?: WageringContributionLogSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the WageringContributionLog
+     */
+    omit?: WageringContributionLogOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: WageringContributionLogInclude<ExtArgs> | null
+  }
+
+
+  /**
    * Enums
    */
 
@@ -61953,7 +63349,7 @@ export namespace Prisma {
   export type UserScalarFieldEnum = (typeof UserScalarFieldEnum)[keyof typeof UserScalarFieldEnum]
 
 
-  export const UserBalanceScalarFieldEnum: {
+  export const UserWalletScalarFieldEnum: {
     userId: 'userId',
     currency: 'currency',
     mainBalance: 'mainBalance',
@@ -61961,7 +63357,7 @@ export namespace Prisma {
     updatedAt: 'updatedAt'
   };
 
-  export type UserBalanceScalarFieldEnum = (typeof UserBalanceScalarFieldEnum)[keyof typeof UserBalanceScalarFieldEnum]
+  export type UserWalletScalarFieldEnum = (typeof UserWalletScalarFieldEnum)[keyof typeof UserWalletScalarFieldEnum]
 
 
   export const UserBalanceStatsScalarFieldEnum: {
@@ -62187,27 +63583,6 @@ export namespace Prisma {
   };
 
   export type ExchangeRateScalarFieldEnum = (typeof ExchangeRateScalarFieldEnum)[keyof typeof ExchangeRateScalarFieldEnum]
-
-
-  export const RollingScalarFieldEnum: {
-    id: 'id',
-    userId: 'userId',
-    sourceType: 'sourceType',
-    userPromotionId: 'userPromotionId',
-    requiredAmount: 'requiredAmount',
-    currentAmount: 'currentAmount',
-    cancellationBalanceThreshold: 'cancellationBalanceThreshold',
-    status: 'status',
-    depositAmount: 'depositAmount',
-    bonusAmount: 'bonusAmount',
-    completedAt: 'completedAt',
-    cancelledAt: 'cancelledAt',
-    createdAt: 'createdAt',
-    updatedAt: 'updatedAt',
-    depositDetailId: 'depositDetailId'
-  };
-
-  export type RollingScalarFieldEnum = (typeof RollingScalarFieldEnum)[keyof typeof RollingScalarFieldEnum]
 
 
   export const UserTokenScalarFieldEnum: {
@@ -62563,6 +63938,43 @@ export namespace Prisma {
   };
 
   export type UserSessionScalarFieldEnum = (typeof UserSessionScalarFieldEnum)[keyof typeof UserSessionScalarFieldEnum]
+
+
+  export const WageringRequirementScalarFieldEnum: {
+    id: 'id',
+    uid: 'uid',
+    userId: 'userId',
+    currency: 'currency',
+    sourceType: 'sourceType',
+    requiredAmount: 'requiredAmount',
+    currentAmount: 'currentAmount',
+    cancellationBalanceThreshold: 'cancellationBalanceThreshold',
+    status: 'status',
+    depositDetailId: 'depositDetailId',
+    userPromotionId: 'userPromotionId',
+    createdAt: 'createdAt',
+    updatedAt: 'updatedAt',
+    expiresAt: 'expiresAt',
+    completedAt: 'completedAt',
+    cancelledAt: 'cancelledAt',
+    cancellationNote: 'cancellationNote',
+    priority: 'priority'
+  };
+
+  export type WageringRequirementScalarFieldEnum = (typeof WageringRequirementScalarFieldEnum)[keyof typeof WageringRequirementScalarFieldEnum]
+
+
+  export const WageringContributionLogScalarFieldEnum: {
+    id: 'id',
+    wageringRequirementId: 'wageringRequirementId',
+    gameRoundId: 'gameRoundId',
+    requestAmount: 'requestAmount',
+    contributionRate: 'contributionRate',
+    contributedAmount: 'contributedAmount',
+    createdAt: 'createdAt'
+  };
+
+  export type WageringContributionLogScalarFieldEnum = (typeof WageringContributionLogScalarFieldEnum)[keyof typeof WageringContributionLogScalarFieldEnum]
 
 
   export const SortOrder: {
@@ -62976,34 +64388,6 @@ export namespace Prisma {
 
 
   /**
-   * Reference to a field of type 'RollingSourceType'
-   */
-  export type EnumRollingSourceTypeFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaModel, 'RollingSourceType'>
-    
-
-
-  /**
-   * Reference to a field of type 'RollingSourceType[]'
-   */
-  export type ListEnumRollingSourceTypeFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaModel, 'RollingSourceType[]'>
-    
-
-
-  /**
-   * Reference to a field of type 'RollingStatus'
-   */
-  export type EnumRollingStatusFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaModel, 'RollingStatus'>
-    
-
-
-  /**
-   * Reference to a field of type 'RollingStatus[]'
-   */
-  export type ListEnumRollingStatusFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaModel, 'RollingStatus[]'>
-    
-
-
-  /**
    * Reference to a field of type 'TokenType'
    */
   export type EnumTokenTypeFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaModel, 'TokenType'>
@@ -63238,6 +64622,34 @@ export namespace Prisma {
    * Reference to a field of type 'SessionStatus[]'
    */
   export type ListEnumSessionStatusFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaModel, 'SessionStatus[]'>
+    
+
+
+  /**
+   * Reference to a field of type 'WageringSourceType'
+   */
+  export type EnumWageringSourceTypeFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaModel, 'WageringSourceType'>
+    
+
+
+  /**
+   * Reference to a field of type 'WageringSourceType[]'
+   */
+  export type ListEnumWageringSourceTypeFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaModel, 'WageringSourceType[]'>
+    
+
+
+  /**
+   * Reference to a field of type 'WageringStatus'
+   */
+  export type EnumWageringStatusFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaModel, 'WageringStatus'>
+    
+
+
+  /**
+   * Reference to a field of type 'WageringStatus[]'
+   */
+  export type ListEnumWageringStatusFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaModel, 'WageringStatus[]'>
     
 
 
@@ -64363,10 +65775,9 @@ export namespace Prisma {
     GameSession?: CasinoGameSessionListRelationFilter
     affiliateReferrals?: ReferralListRelationFilter
     referredUsers?: ReferralListRelationFilter
-    Rolling?: RollingListRelationFilter
     transactions?: TransactionListRelationFilter
     depositDetails?: DepositDetailListRelationFilter
-    balances?: UserBalanceListRelationFilter
+    userWallets?: UserWalletListRelationFilter
     UserBalanceStats?: UserBalanceStatsListRelationFilter
     UserPromotion?: UserPromotionListRelationFilter
     UserSession?: UserSessionListRelationFilter
@@ -64376,6 +65787,7 @@ export namespace Prisma {
     userTier?: XOR<UserTierNullableScalarRelationFilter, UserTierWhereInput> | null
     tierHistory?: TierHistoryListRelationFilter
     adminAdjustmentDetails?: AdminAdjustmentDetailListRelationFilter
+    wageringRequirements?: WageringRequirementListRelationFilter
   }
 
   export type UserOrderByWithRelationInput = {
@@ -64409,10 +65821,9 @@ export namespace Prisma {
     GameSession?: CasinoGameSessionOrderByRelationAggregateInput
     affiliateReferrals?: ReferralOrderByRelationAggregateInput
     referredUsers?: ReferralOrderByRelationAggregateInput
-    Rolling?: RollingOrderByRelationAggregateInput
     transactions?: TransactionOrderByRelationAggregateInput
     depositDetails?: DepositDetailOrderByRelationAggregateInput
-    balances?: UserBalanceOrderByRelationAggregateInput
+    userWallets?: UserWalletOrderByRelationAggregateInput
     UserBalanceStats?: UserBalanceStatsOrderByRelationAggregateInput
     UserPromotion?: UserPromotionOrderByRelationAggregateInput
     UserSession?: UserSessionOrderByRelationAggregateInput
@@ -64422,6 +65833,7 @@ export namespace Prisma {
     userTier?: UserTierOrderByWithRelationInput
     tierHistory?: TierHistoryOrderByRelationAggregateInput
     adminAdjustmentDetails?: AdminAdjustmentDetailOrderByRelationAggregateInput
+    wageringRequirements?: WageringRequirementOrderByRelationAggregateInput
   }
 
   export type UserWhereUniqueInput = Prisma.AtLeast<{
@@ -64458,10 +65870,9 @@ export namespace Prisma {
     GameSession?: CasinoGameSessionListRelationFilter
     affiliateReferrals?: ReferralListRelationFilter
     referredUsers?: ReferralListRelationFilter
-    Rolling?: RollingListRelationFilter
     transactions?: TransactionListRelationFilter
     depositDetails?: DepositDetailListRelationFilter
-    balances?: UserBalanceListRelationFilter
+    userWallets?: UserWalletListRelationFilter
     UserBalanceStats?: UserBalanceStatsListRelationFilter
     UserPromotion?: UserPromotionListRelationFilter
     UserSession?: UserSessionListRelationFilter
@@ -64471,6 +65882,7 @@ export namespace Prisma {
     userTier?: XOR<UserTierNullableScalarRelationFilter, UserTierWhereInput> | null
     tierHistory?: TierHistoryListRelationFilter
     adminAdjustmentDetails?: AdminAdjustmentDetailListRelationFilter
+    wageringRequirements?: WageringRequirementListRelationFilter
   }, "id" | "uid" | "whitecliffId" | "whitecliffSystemId" | "whitecliffUsername" | "dcsId" | "email">
 
   export type UserOrderByWithAggregationInput = {
@@ -64525,62 +65937,65 @@ export namespace Prisma {
     updatedAt?: DateTimeWithAggregatesFilter<"User"> | Date | string
   }
 
-  export type UserBalanceWhereInput = {
-    AND?: UserBalanceWhereInput | UserBalanceWhereInput[]
-    OR?: UserBalanceWhereInput[]
-    NOT?: UserBalanceWhereInput | UserBalanceWhereInput[]
-    userId?: BigIntFilter<"UserBalance"> | bigint | number
-    currency?: EnumExchangeCurrencyCodeFilter<"UserBalance"> | $Enums.ExchangeCurrencyCode
-    mainBalance?: DecimalFilter<"UserBalance"> | Decimal | DecimalJsLike | number | string
-    bonusBalance?: DecimalFilter<"UserBalance"> | Decimal | DecimalJsLike | number | string
-    updatedAt?: DateTimeFilter<"UserBalance"> | Date | string
+  export type UserWalletWhereInput = {
+    AND?: UserWalletWhereInput | UserWalletWhereInput[]
+    OR?: UserWalletWhereInput[]
+    NOT?: UserWalletWhereInput | UserWalletWhereInput[]
+    userId?: BigIntFilter<"UserWallet"> | bigint | number
+    currency?: EnumExchangeCurrencyCodeFilter<"UserWallet"> | $Enums.ExchangeCurrencyCode
+    mainBalance?: DecimalFilter<"UserWallet"> | Decimal | DecimalJsLike | number | string
+    bonusBalance?: DecimalFilter<"UserWallet"> | Decimal | DecimalJsLike | number | string
+    updatedAt?: DateTimeFilter<"UserWallet"> | Date | string
     user?: XOR<UserScalarRelationFilter, UserWhereInput>
+    wageringRequirements?: WageringRequirementListRelationFilter
   }
 
-  export type UserBalanceOrderByWithRelationInput = {
+  export type UserWalletOrderByWithRelationInput = {
     userId?: SortOrder
     currency?: SortOrder
     mainBalance?: SortOrder
     bonusBalance?: SortOrder
     updatedAt?: SortOrder
     user?: UserOrderByWithRelationInput
+    wageringRequirements?: WageringRequirementOrderByRelationAggregateInput
   }
 
-  export type UserBalanceWhereUniqueInput = Prisma.AtLeast<{
-    userId_currency?: UserBalanceUserIdCurrencyCompoundUniqueInput
-    AND?: UserBalanceWhereInput | UserBalanceWhereInput[]
-    OR?: UserBalanceWhereInput[]
-    NOT?: UserBalanceWhereInput | UserBalanceWhereInput[]
-    userId?: BigIntFilter<"UserBalance"> | bigint | number
-    currency?: EnumExchangeCurrencyCodeFilter<"UserBalance"> | $Enums.ExchangeCurrencyCode
-    mainBalance?: DecimalFilter<"UserBalance"> | Decimal | DecimalJsLike | number | string
-    bonusBalance?: DecimalFilter<"UserBalance"> | Decimal | DecimalJsLike | number | string
-    updatedAt?: DateTimeFilter<"UserBalance"> | Date | string
+  export type UserWalletWhereUniqueInput = Prisma.AtLeast<{
+    userId_currency?: UserWalletUserIdCurrencyCompoundUniqueInput
+    AND?: UserWalletWhereInput | UserWalletWhereInput[]
+    OR?: UserWalletWhereInput[]
+    NOT?: UserWalletWhereInput | UserWalletWhereInput[]
+    userId?: BigIntFilter<"UserWallet"> | bigint | number
+    currency?: EnumExchangeCurrencyCodeFilter<"UserWallet"> | $Enums.ExchangeCurrencyCode
+    mainBalance?: DecimalFilter<"UserWallet"> | Decimal | DecimalJsLike | number | string
+    bonusBalance?: DecimalFilter<"UserWallet"> | Decimal | DecimalJsLike | number | string
+    updatedAt?: DateTimeFilter<"UserWallet"> | Date | string
     user?: XOR<UserScalarRelationFilter, UserWhereInput>
+    wageringRequirements?: WageringRequirementListRelationFilter
   }, "userId_currency">
 
-  export type UserBalanceOrderByWithAggregationInput = {
+  export type UserWalletOrderByWithAggregationInput = {
     userId?: SortOrder
     currency?: SortOrder
     mainBalance?: SortOrder
     bonusBalance?: SortOrder
     updatedAt?: SortOrder
-    _count?: UserBalanceCountOrderByAggregateInput
-    _avg?: UserBalanceAvgOrderByAggregateInput
-    _max?: UserBalanceMaxOrderByAggregateInput
-    _min?: UserBalanceMinOrderByAggregateInput
-    _sum?: UserBalanceSumOrderByAggregateInput
+    _count?: UserWalletCountOrderByAggregateInput
+    _avg?: UserWalletAvgOrderByAggregateInput
+    _max?: UserWalletMaxOrderByAggregateInput
+    _min?: UserWalletMinOrderByAggregateInput
+    _sum?: UserWalletSumOrderByAggregateInput
   }
 
-  export type UserBalanceScalarWhereWithAggregatesInput = {
-    AND?: UserBalanceScalarWhereWithAggregatesInput | UserBalanceScalarWhereWithAggregatesInput[]
-    OR?: UserBalanceScalarWhereWithAggregatesInput[]
-    NOT?: UserBalanceScalarWhereWithAggregatesInput | UserBalanceScalarWhereWithAggregatesInput[]
-    userId?: BigIntWithAggregatesFilter<"UserBalance"> | bigint | number
-    currency?: EnumExchangeCurrencyCodeWithAggregatesFilter<"UserBalance"> | $Enums.ExchangeCurrencyCode
-    mainBalance?: DecimalWithAggregatesFilter<"UserBalance"> | Decimal | DecimalJsLike | number | string
-    bonusBalance?: DecimalWithAggregatesFilter<"UserBalance"> | Decimal | DecimalJsLike | number | string
-    updatedAt?: DateTimeWithAggregatesFilter<"UserBalance"> | Date | string
+  export type UserWalletScalarWhereWithAggregatesInput = {
+    AND?: UserWalletScalarWhereWithAggregatesInput | UserWalletScalarWhereWithAggregatesInput[]
+    OR?: UserWalletScalarWhereWithAggregatesInput[]
+    NOT?: UserWalletScalarWhereWithAggregatesInput | UserWalletScalarWhereWithAggregatesInput[]
+    userId?: BigIntWithAggregatesFilter<"UserWallet"> | bigint | number
+    currency?: EnumExchangeCurrencyCodeWithAggregatesFilter<"UserWallet"> | $Enums.ExchangeCurrencyCode
+    mainBalance?: DecimalWithAggregatesFilter<"UserWallet"> | Decimal | DecimalJsLike | number | string
+    bonusBalance?: DecimalWithAggregatesFilter<"UserWallet"> | Decimal | DecimalJsLike | number | string
+    updatedAt?: DateTimeWithAggregatesFilter<"UserWallet"> | Date | string
   }
 
   export type UserBalanceStatsWhereInput = {
@@ -65783,119 +67198,6 @@ export namespace Prisma {
     isValid?: BoolWithAggregatesFilter<"ExchangeRate"> | boolean
   }
 
-  export type RollingWhereInput = {
-    AND?: RollingWhereInput | RollingWhereInput[]
-    OR?: RollingWhereInput[]
-    NOT?: RollingWhereInput | RollingWhereInput[]
-    id?: BigIntFilter<"Rolling"> | bigint | number
-    userId?: BigIntFilter<"Rolling"> | bigint | number
-    sourceType?: EnumRollingSourceTypeFilter<"Rolling"> | $Enums.RollingSourceType
-    userPromotionId?: BigIntNullableFilter<"Rolling"> | bigint | number | null
-    requiredAmount?: DecimalFilter<"Rolling"> | Decimal | DecimalJsLike | number | string
-    currentAmount?: DecimalFilter<"Rolling"> | Decimal | DecimalJsLike | number | string
-    cancellationBalanceThreshold?: DecimalNullableFilter<"Rolling"> | Decimal | DecimalJsLike | number | string | null
-    status?: EnumRollingStatusFilter<"Rolling"> | $Enums.RollingStatus
-    depositAmount?: DecimalNullableFilter<"Rolling"> | Decimal | DecimalJsLike | number | string | null
-    bonusAmount?: DecimalNullableFilter<"Rolling"> | Decimal | DecimalJsLike | number | string | null
-    completedAt?: DateTimeNullableFilter<"Rolling"> | Date | string | null
-    cancelledAt?: DateTimeNullableFilter<"Rolling"> | Date | string | null
-    createdAt?: DateTimeFilter<"Rolling"> | Date | string
-    updatedAt?: DateTimeFilter<"Rolling"> | Date | string
-    depositDetailId?: BigIntNullableFilter<"Rolling"> | bigint | number | null
-    DepositDetail?: XOR<DepositDetailNullableScalarRelationFilter, DepositDetailWhereInput> | null
-    user?: XOR<UserScalarRelationFilter, UserWhereInput>
-    userPromotion?: XOR<UserPromotionNullableScalarRelationFilter, UserPromotionWhereInput> | null
-  }
-
-  export type RollingOrderByWithRelationInput = {
-    id?: SortOrder
-    userId?: SortOrder
-    sourceType?: SortOrder
-    userPromotionId?: SortOrderInput | SortOrder
-    requiredAmount?: SortOrder
-    currentAmount?: SortOrder
-    cancellationBalanceThreshold?: SortOrderInput | SortOrder
-    status?: SortOrder
-    depositAmount?: SortOrderInput | SortOrder
-    bonusAmount?: SortOrderInput | SortOrder
-    completedAt?: SortOrderInput | SortOrder
-    cancelledAt?: SortOrderInput | SortOrder
-    createdAt?: SortOrder
-    updatedAt?: SortOrder
-    depositDetailId?: SortOrderInput | SortOrder
-    DepositDetail?: DepositDetailOrderByWithRelationInput
-    user?: UserOrderByWithRelationInput
-    userPromotion?: UserPromotionOrderByWithRelationInput
-  }
-
-  export type RollingWhereUniqueInput = Prisma.AtLeast<{
-    id?: bigint | number
-    AND?: RollingWhereInput | RollingWhereInput[]
-    OR?: RollingWhereInput[]
-    NOT?: RollingWhereInput | RollingWhereInput[]
-    userId?: BigIntFilter<"Rolling"> | bigint | number
-    sourceType?: EnumRollingSourceTypeFilter<"Rolling"> | $Enums.RollingSourceType
-    userPromotionId?: BigIntNullableFilter<"Rolling"> | bigint | number | null
-    requiredAmount?: DecimalFilter<"Rolling"> | Decimal | DecimalJsLike | number | string
-    currentAmount?: DecimalFilter<"Rolling"> | Decimal | DecimalJsLike | number | string
-    cancellationBalanceThreshold?: DecimalNullableFilter<"Rolling"> | Decimal | DecimalJsLike | number | string | null
-    status?: EnumRollingStatusFilter<"Rolling"> | $Enums.RollingStatus
-    depositAmount?: DecimalNullableFilter<"Rolling"> | Decimal | DecimalJsLike | number | string | null
-    bonusAmount?: DecimalNullableFilter<"Rolling"> | Decimal | DecimalJsLike | number | string | null
-    completedAt?: DateTimeNullableFilter<"Rolling"> | Date | string | null
-    cancelledAt?: DateTimeNullableFilter<"Rolling"> | Date | string | null
-    createdAt?: DateTimeFilter<"Rolling"> | Date | string
-    updatedAt?: DateTimeFilter<"Rolling"> | Date | string
-    depositDetailId?: BigIntNullableFilter<"Rolling"> | bigint | number | null
-    DepositDetail?: XOR<DepositDetailNullableScalarRelationFilter, DepositDetailWhereInput> | null
-    user?: XOR<UserScalarRelationFilter, UserWhereInput>
-    userPromotion?: XOR<UserPromotionNullableScalarRelationFilter, UserPromotionWhereInput> | null
-  }, "id">
-
-  export type RollingOrderByWithAggregationInput = {
-    id?: SortOrder
-    userId?: SortOrder
-    sourceType?: SortOrder
-    userPromotionId?: SortOrderInput | SortOrder
-    requiredAmount?: SortOrder
-    currentAmount?: SortOrder
-    cancellationBalanceThreshold?: SortOrderInput | SortOrder
-    status?: SortOrder
-    depositAmount?: SortOrderInput | SortOrder
-    bonusAmount?: SortOrderInput | SortOrder
-    completedAt?: SortOrderInput | SortOrder
-    cancelledAt?: SortOrderInput | SortOrder
-    createdAt?: SortOrder
-    updatedAt?: SortOrder
-    depositDetailId?: SortOrderInput | SortOrder
-    _count?: RollingCountOrderByAggregateInput
-    _avg?: RollingAvgOrderByAggregateInput
-    _max?: RollingMaxOrderByAggregateInput
-    _min?: RollingMinOrderByAggregateInput
-    _sum?: RollingSumOrderByAggregateInput
-  }
-
-  export type RollingScalarWhereWithAggregatesInput = {
-    AND?: RollingScalarWhereWithAggregatesInput | RollingScalarWhereWithAggregatesInput[]
-    OR?: RollingScalarWhereWithAggregatesInput[]
-    NOT?: RollingScalarWhereWithAggregatesInput | RollingScalarWhereWithAggregatesInput[]
-    id?: BigIntWithAggregatesFilter<"Rolling"> | bigint | number
-    userId?: BigIntWithAggregatesFilter<"Rolling"> | bigint | number
-    sourceType?: EnumRollingSourceTypeWithAggregatesFilter<"Rolling"> | $Enums.RollingSourceType
-    userPromotionId?: BigIntNullableWithAggregatesFilter<"Rolling"> | bigint | number | null
-    requiredAmount?: DecimalWithAggregatesFilter<"Rolling"> | Decimal | DecimalJsLike | number | string
-    currentAmount?: DecimalWithAggregatesFilter<"Rolling"> | Decimal | DecimalJsLike | number | string
-    cancellationBalanceThreshold?: DecimalNullableWithAggregatesFilter<"Rolling"> | Decimal | DecimalJsLike | number | string | null
-    status?: EnumRollingStatusWithAggregatesFilter<"Rolling"> | $Enums.RollingStatus
-    depositAmount?: DecimalNullableWithAggregatesFilter<"Rolling"> | Decimal | DecimalJsLike | number | string | null
-    bonusAmount?: DecimalNullableWithAggregatesFilter<"Rolling"> | Decimal | DecimalJsLike | number | string | null
-    completedAt?: DateTimeNullableWithAggregatesFilter<"Rolling"> | Date | string | null
-    cancelledAt?: DateTimeNullableWithAggregatesFilter<"Rolling"> | Date | string | null
-    createdAt?: DateTimeWithAggregatesFilter<"Rolling"> | Date | string
-    updatedAt?: DateTimeWithAggregatesFilter<"Rolling"> | Date | string
-    depositDetailId?: BigIntNullableWithAggregatesFilter<"Rolling"> | bigint | number | null
-  }
-
   export type UserTokenWhereInput = {
     AND?: UserTokenWhereInput | UserTokenWhereInput[]
     OR?: UserTokenWhereInput[]
@@ -66474,7 +67776,7 @@ export namespace Prisma {
     BankConfig?: XOR<BankConfigNullableScalarRelationFilter, BankConfigWhereInput> | null
     CryptoConfig?: XOR<CryptoConfigNullableScalarRelationFilter, CryptoConfigWhereInput> | null
     transaction?: XOR<TransactionNullableScalarRelationFilter, TransactionWhereInput> | null
-    Rolling?: RollingListRelationFilter
+    wageringRequirements?: WageringRequirementListRelationFilter
   }
 
   export type DepositDetailOrderByWithRelationInput = {
@@ -66513,7 +67815,7 @@ export namespace Prisma {
     BankConfig?: BankConfigOrderByWithRelationInput
     CryptoConfig?: CryptoConfigOrderByWithRelationInput
     transaction?: TransactionOrderByWithRelationInput
-    Rolling?: RollingOrderByRelationAggregateInput
+    wageringRequirements?: WageringRequirementOrderByRelationAggregateInput
   }
 
   export type DepositDetailWhereUniqueInput = Prisma.AtLeast<{
@@ -66555,7 +67857,7 @@ export namespace Prisma {
     BankConfig?: XOR<BankConfigNullableScalarRelationFilter, BankConfigWhereInput> | null
     CryptoConfig?: XOR<CryptoConfigNullableScalarRelationFilter, CryptoConfigWhereInput> | null
     transaction?: XOR<TransactionNullableScalarRelationFilter, TransactionWhereInput> | null
-    Rolling?: RollingListRelationFilter
+    wageringRequirements?: WageringRequirementListRelationFilter
   }, "id" | "uid" | "transactionId" | "providerPaymentId">
 
   export type DepositDetailOrderByWithAggregationInput = {
@@ -67108,7 +68410,7 @@ export namespace Prisma {
     currency?: EnumExchangeCurrencyCodeFilter<"UserPromotion"> | $Enums.ExchangeCurrencyCode
     createdAt?: DateTimeFilter<"UserPromotion"> | Date | string
     updatedAt?: DateTimeFilter<"UserPromotion"> | Date | string
-    Rolling?: RollingListRelationFilter
+    wageringRequirements?: WageringRequirementListRelationFilter
     promotion?: XOR<PromotionScalarRelationFilter, PromotionWhereInput>
     user?: XOR<UserScalarRelationFilter, UserWhereInput>
   }
@@ -67125,7 +68427,7 @@ export namespace Prisma {
     currency?: SortOrder
     createdAt?: SortOrder
     updatedAt?: SortOrder
-    Rolling?: RollingOrderByRelationAggregateInput
+    wageringRequirements?: WageringRequirementOrderByRelationAggregateInput
     promotion?: PromotionOrderByWithRelationInput
     user?: UserOrderByWithRelationInput
   }
@@ -67145,7 +68447,7 @@ export namespace Prisma {
     currency?: EnumExchangeCurrencyCodeFilter<"UserPromotion"> | $Enums.ExchangeCurrencyCode
     createdAt?: DateTimeFilter<"UserPromotion"> | Date | string
     updatedAt?: DateTimeFilter<"UserPromotion"> | Date | string
-    Rolling?: RollingListRelationFilter
+    wageringRequirements?: WageringRequirementListRelationFilter
     promotion?: XOR<PromotionScalarRelationFilter, PromotionWhereInput>
     user?: XOR<UserScalarRelationFilter, UserWhereInput>
   }, "id">
@@ -67768,6 +69070,207 @@ export namespace Prisma {
     revokedAt?: DateTimeNullableWithAggregatesFilter<"UserSession"> | Date | string | null
     revokedBy?: BigIntNullableWithAggregatesFilter<"UserSession"> | bigint | number | null
     metadata?: JsonNullableWithAggregatesFilter<"UserSession">
+  }
+
+  export type WageringRequirementWhereInput = {
+    AND?: WageringRequirementWhereInput | WageringRequirementWhereInput[]
+    OR?: WageringRequirementWhereInput[]
+    NOT?: WageringRequirementWhereInput | WageringRequirementWhereInput[]
+    id?: BigIntFilter<"WageringRequirement"> | bigint | number
+    uid?: StringFilter<"WageringRequirement"> | string
+    userId?: BigIntFilter<"WageringRequirement"> | bigint | number
+    currency?: EnumExchangeCurrencyCodeFilter<"WageringRequirement"> | $Enums.ExchangeCurrencyCode
+    sourceType?: EnumWageringSourceTypeFilter<"WageringRequirement"> | $Enums.WageringSourceType
+    requiredAmount?: DecimalFilter<"WageringRequirement"> | Decimal | DecimalJsLike | number | string
+    currentAmount?: DecimalFilter<"WageringRequirement"> | Decimal | DecimalJsLike | number | string
+    cancellationBalanceThreshold?: DecimalNullableFilter<"WageringRequirement"> | Decimal | DecimalJsLike | number | string | null
+    status?: EnumWageringStatusFilter<"WageringRequirement"> | $Enums.WageringStatus
+    depositDetailId?: BigIntNullableFilter<"WageringRequirement"> | bigint | number | null
+    userPromotionId?: BigIntNullableFilter<"WageringRequirement"> | bigint | number | null
+    createdAt?: DateTimeFilter<"WageringRequirement"> | Date | string
+    updatedAt?: DateTimeFilter<"WageringRequirement"> | Date | string
+    expiresAt?: DateTimeNullableFilter<"WageringRequirement"> | Date | string | null
+    completedAt?: DateTimeNullableFilter<"WageringRequirement"> | Date | string | null
+    cancelledAt?: DateTimeNullableFilter<"WageringRequirement"> | Date | string | null
+    cancellationNote?: StringNullableFilter<"WageringRequirement"> | string | null
+    priority?: IntFilter<"WageringRequirement"> | number
+    DepositDetail?: XOR<DepositDetailNullableScalarRelationFilter, DepositDetailWhereInput> | null
+    userWallet?: XOR<UserWalletScalarRelationFilter, UserWalletWhereInput>
+    userPromotion?: XOR<UserPromotionNullableScalarRelationFilter, UserPromotionWhereInput> | null
+    user?: XOR<UserScalarRelationFilter, UserWhereInput>
+    contributionLogs?: WageringContributionLogListRelationFilter
+  }
+
+  export type WageringRequirementOrderByWithRelationInput = {
+    id?: SortOrder
+    uid?: SortOrder
+    userId?: SortOrder
+    currency?: SortOrder
+    sourceType?: SortOrder
+    requiredAmount?: SortOrder
+    currentAmount?: SortOrder
+    cancellationBalanceThreshold?: SortOrderInput | SortOrder
+    status?: SortOrder
+    depositDetailId?: SortOrderInput | SortOrder
+    userPromotionId?: SortOrderInput | SortOrder
+    createdAt?: SortOrder
+    updatedAt?: SortOrder
+    expiresAt?: SortOrderInput | SortOrder
+    completedAt?: SortOrderInput | SortOrder
+    cancelledAt?: SortOrderInput | SortOrder
+    cancellationNote?: SortOrderInput | SortOrder
+    priority?: SortOrder
+    DepositDetail?: DepositDetailOrderByWithRelationInput
+    userWallet?: UserWalletOrderByWithRelationInput
+    userPromotion?: UserPromotionOrderByWithRelationInput
+    user?: UserOrderByWithRelationInput
+    contributionLogs?: WageringContributionLogOrderByRelationAggregateInput
+  }
+
+  export type WageringRequirementWhereUniqueInput = Prisma.AtLeast<{
+    id?: bigint | number
+    uid?: string
+    AND?: WageringRequirementWhereInput | WageringRequirementWhereInput[]
+    OR?: WageringRequirementWhereInput[]
+    NOT?: WageringRequirementWhereInput | WageringRequirementWhereInput[]
+    userId?: BigIntFilter<"WageringRequirement"> | bigint | number
+    currency?: EnumExchangeCurrencyCodeFilter<"WageringRequirement"> | $Enums.ExchangeCurrencyCode
+    sourceType?: EnumWageringSourceTypeFilter<"WageringRequirement"> | $Enums.WageringSourceType
+    requiredAmount?: DecimalFilter<"WageringRequirement"> | Decimal | DecimalJsLike | number | string
+    currentAmount?: DecimalFilter<"WageringRequirement"> | Decimal | DecimalJsLike | number | string
+    cancellationBalanceThreshold?: DecimalNullableFilter<"WageringRequirement"> | Decimal | DecimalJsLike | number | string | null
+    status?: EnumWageringStatusFilter<"WageringRequirement"> | $Enums.WageringStatus
+    depositDetailId?: BigIntNullableFilter<"WageringRequirement"> | bigint | number | null
+    userPromotionId?: BigIntNullableFilter<"WageringRequirement"> | bigint | number | null
+    createdAt?: DateTimeFilter<"WageringRequirement"> | Date | string
+    updatedAt?: DateTimeFilter<"WageringRequirement"> | Date | string
+    expiresAt?: DateTimeNullableFilter<"WageringRequirement"> | Date | string | null
+    completedAt?: DateTimeNullableFilter<"WageringRequirement"> | Date | string | null
+    cancelledAt?: DateTimeNullableFilter<"WageringRequirement"> | Date | string | null
+    cancellationNote?: StringNullableFilter<"WageringRequirement"> | string | null
+    priority?: IntFilter<"WageringRequirement"> | number
+    DepositDetail?: XOR<DepositDetailNullableScalarRelationFilter, DepositDetailWhereInput> | null
+    userWallet?: XOR<UserWalletScalarRelationFilter, UserWalletWhereInput>
+    userPromotion?: XOR<UserPromotionNullableScalarRelationFilter, UserPromotionWhereInput> | null
+    user?: XOR<UserScalarRelationFilter, UserWhereInput>
+    contributionLogs?: WageringContributionLogListRelationFilter
+  }, "id" | "uid">
+
+  export type WageringRequirementOrderByWithAggregationInput = {
+    id?: SortOrder
+    uid?: SortOrder
+    userId?: SortOrder
+    currency?: SortOrder
+    sourceType?: SortOrder
+    requiredAmount?: SortOrder
+    currentAmount?: SortOrder
+    cancellationBalanceThreshold?: SortOrderInput | SortOrder
+    status?: SortOrder
+    depositDetailId?: SortOrderInput | SortOrder
+    userPromotionId?: SortOrderInput | SortOrder
+    createdAt?: SortOrder
+    updatedAt?: SortOrder
+    expiresAt?: SortOrderInput | SortOrder
+    completedAt?: SortOrderInput | SortOrder
+    cancelledAt?: SortOrderInput | SortOrder
+    cancellationNote?: SortOrderInput | SortOrder
+    priority?: SortOrder
+    _count?: WageringRequirementCountOrderByAggregateInput
+    _avg?: WageringRequirementAvgOrderByAggregateInput
+    _max?: WageringRequirementMaxOrderByAggregateInput
+    _min?: WageringRequirementMinOrderByAggregateInput
+    _sum?: WageringRequirementSumOrderByAggregateInput
+  }
+
+  export type WageringRequirementScalarWhereWithAggregatesInput = {
+    AND?: WageringRequirementScalarWhereWithAggregatesInput | WageringRequirementScalarWhereWithAggregatesInput[]
+    OR?: WageringRequirementScalarWhereWithAggregatesInput[]
+    NOT?: WageringRequirementScalarWhereWithAggregatesInput | WageringRequirementScalarWhereWithAggregatesInput[]
+    id?: BigIntWithAggregatesFilter<"WageringRequirement"> | bigint | number
+    uid?: StringWithAggregatesFilter<"WageringRequirement"> | string
+    userId?: BigIntWithAggregatesFilter<"WageringRequirement"> | bigint | number
+    currency?: EnumExchangeCurrencyCodeWithAggregatesFilter<"WageringRequirement"> | $Enums.ExchangeCurrencyCode
+    sourceType?: EnumWageringSourceTypeWithAggregatesFilter<"WageringRequirement"> | $Enums.WageringSourceType
+    requiredAmount?: DecimalWithAggregatesFilter<"WageringRequirement"> | Decimal | DecimalJsLike | number | string
+    currentAmount?: DecimalWithAggregatesFilter<"WageringRequirement"> | Decimal | DecimalJsLike | number | string
+    cancellationBalanceThreshold?: DecimalNullableWithAggregatesFilter<"WageringRequirement"> | Decimal | DecimalJsLike | number | string | null
+    status?: EnumWageringStatusWithAggregatesFilter<"WageringRequirement"> | $Enums.WageringStatus
+    depositDetailId?: BigIntNullableWithAggregatesFilter<"WageringRequirement"> | bigint | number | null
+    userPromotionId?: BigIntNullableWithAggregatesFilter<"WageringRequirement"> | bigint | number | null
+    createdAt?: DateTimeWithAggregatesFilter<"WageringRequirement"> | Date | string
+    updatedAt?: DateTimeWithAggregatesFilter<"WageringRequirement"> | Date | string
+    expiresAt?: DateTimeNullableWithAggregatesFilter<"WageringRequirement"> | Date | string | null
+    completedAt?: DateTimeNullableWithAggregatesFilter<"WageringRequirement"> | Date | string | null
+    cancelledAt?: DateTimeNullableWithAggregatesFilter<"WageringRequirement"> | Date | string | null
+    cancellationNote?: StringNullableWithAggregatesFilter<"WageringRequirement"> | string | null
+    priority?: IntWithAggregatesFilter<"WageringRequirement"> | number
+  }
+
+  export type WageringContributionLogWhereInput = {
+    AND?: WageringContributionLogWhereInput | WageringContributionLogWhereInput[]
+    OR?: WageringContributionLogWhereInput[]
+    NOT?: WageringContributionLogWhereInput | WageringContributionLogWhereInput[]
+    id?: BigIntFilter<"WageringContributionLog"> | bigint | number
+    wageringRequirementId?: BigIntFilter<"WageringContributionLog"> | bigint | number
+    gameRoundId?: BigIntFilter<"WageringContributionLog"> | bigint | number
+    requestAmount?: DecimalFilter<"WageringContributionLog"> | Decimal | DecimalJsLike | number | string
+    contributionRate?: DecimalFilter<"WageringContributionLog"> | Decimal | DecimalJsLike | number | string
+    contributedAmount?: DecimalFilter<"WageringContributionLog"> | Decimal | DecimalJsLike | number | string
+    createdAt?: DateTimeFilter<"WageringContributionLog"> | Date | string
+    wageringRequirement?: XOR<WageringRequirementScalarRelationFilter, WageringRequirementWhereInput>
+  }
+
+  export type WageringContributionLogOrderByWithRelationInput = {
+    id?: SortOrder
+    wageringRequirementId?: SortOrder
+    gameRoundId?: SortOrder
+    requestAmount?: SortOrder
+    contributionRate?: SortOrder
+    contributedAmount?: SortOrder
+    createdAt?: SortOrder
+    wageringRequirement?: WageringRequirementOrderByWithRelationInput
+  }
+
+  export type WageringContributionLogWhereUniqueInput = Prisma.AtLeast<{
+    id?: bigint | number
+    AND?: WageringContributionLogWhereInput | WageringContributionLogWhereInput[]
+    OR?: WageringContributionLogWhereInput[]
+    NOT?: WageringContributionLogWhereInput | WageringContributionLogWhereInput[]
+    wageringRequirementId?: BigIntFilter<"WageringContributionLog"> | bigint | number
+    gameRoundId?: BigIntFilter<"WageringContributionLog"> | bigint | number
+    requestAmount?: DecimalFilter<"WageringContributionLog"> | Decimal | DecimalJsLike | number | string
+    contributionRate?: DecimalFilter<"WageringContributionLog"> | Decimal | DecimalJsLike | number | string
+    contributedAmount?: DecimalFilter<"WageringContributionLog"> | Decimal | DecimalJsLike | number | string
+    createdAt?: DateTimeFilter<"WageringContributionLog"> | Date | string
+    wageringRequirement?: XOR<WageringRequirementScalarRelationFilter, WageringRequirementWhereInput>
+  }, "id">
+
+  export type WageringContributionLogOrderByWithAggregationInput = {
+    id?: SortOrder
+    wageringRequirementId?: SortOrder
+    gameRoundId?: SortOrder
+    requestAmount?: SortOrder
+    contributionRate?: SortOrder
+    contributedAmount?: SortOrder
+    createdAt?: SortOrder
+    _count?: WageringContributionLogCountOrderByAggregateInput
+    _avg?: WageringContributionLogAvgOrderByAggregateInput
+    _max?: WageringContributionLogMaxOrderByAggregateInput
+    _min?: WageringContributionLogMinOrderByAggregateInput
+    _sum?: WageringContributionLogSumOrderByAggregateInput
+  }
+
+  export type WageringContributionLogScalarWhereWithAggregatesInput = {
+    AND?: WageringContributionLogScalarWhereWithAggregatesInput | WageringContributionLogScalarWhereWithAggregatesInput[]
+    OR?: WageringContributionLogScalarWhereWithAggregatesInput[]
+    NOT?: WageringContributionLogScalarWhereWithAggregatesInput | WageringContributionLogScalarWhereWithAggregatesInput[]
+    id?: BigIntWithAggregatesFilter<"WageringContributionLog"> | bigint | number
+    wageringRequirementId?: BigIntWithAggregatesFilter<"WageringContributionLog"> | bigint | number
+    gameRoundId?: BigIntWithAggregatesFilter<"WageringContributionLog"> | bigint | number
+    requestAmount?: DecimalWithAggregatesFilter<"WageringContributionLog"> | Decimal | DecimalJsLike | number | string
+    contributionRate?: DecimalWithAggregatesFilter<"WageringContributionLog"> | Decimal | DecimalJsLike | number | string
+    contributedAmount?: DecimalWithAggregatesFilter<"WageringContributionLog"> | Decimal | DecimalJsLike | number | string
+    createdAt?: DateTimeWithAggregatesFilter<"WageringContributionLog"> | Date | string
   }
 
   export type AffiliateCodeCreateInput = {
@@ -69054,10 +70557,9 @@ export namespace Prisma {
     GameSession?: CasinoGameSessionCreateNestedManyWithoutUserInput
     affiliateReferrals?: ReferralCreateNestedManyWithoutAffiliateInput
     referredUsers?: ReferralCreateNestedManyWithoutSubUserInput
-    Rolling?: RollingCreateNestedManyWithoutUserInput
     transactions?: TransactionCreateNestedManyWithoutUserInput
     depositDetails?: DepositDetailCreateNestedManyWithoutUserInput
-    balances?: UserBalanceCreateNestedManyWithoutUserInput
+    userWallets?: UserWalletCreateNestedManyWithoutUserInput
     UserBalanceStats?: UserBalanceStatsCreateNestedManyWithoutUserInput
     UserPromotion?: UserPromotionCreateNestedManyWithoutUserInput
     UserSession?: UserSessionCreateNestedManyWithoutUserInput
@@ -69067,6 +70569,7 @@ export namespace Prisma {
     userTier?: UserTierCreateNestedOneWithoutUserInput
     tierHistory?: TierHistoryCreateNestedManyWithoutUserInput
     adminAdjustmentDetails?: AdminAdjustmentDetailCreateNestedManyWithoutAdminUserInput
+    wageringRequirements?: WageringRequirementCreateNestedManyWithoutUserInput
   }
 
   export type UserUncheckedCreateInput = {
@@ -69100,10 +70603,9 @@ export namespace Prisma {
     GameSession?: CasinoGameSessionUncheckedCreateNestedManyWithoutUserInput
     affiliateReferrals?: ReferralUncheckedCreateNestedManyWithoutAffiliateInput
     referredUsers?: ReferralUncheckedCreateNestedManyWithoutSubUserInput
-    Rolling?: RollingUncheckedCreateNestedManyWithoutUserInput
     transactions?: TransactionUncheckedCreateNestedManyWithoutUserInput
     depositDetails?: DepositDetailUncheckedCreateNestedManyWithoutUserInput
-    balances?: UserBalanceUncheckedCreateNestedManyWithoutUserInput
+    userWallets?: UserWalletUncheckedCreateNestedManyWithoutUserInput
     UserBalanceStats?: UserBalanceStatsUncheckedCreateNestedManyWithoutUserInput
     UserPromotion?: UserPromotionUncheckedCreateNestedManyWithoutUserInput
     UserSession?: UserSessionUncheckedCreateNestedManyWithoutUserInput
@@ -69113,6 +70615,7 @@ export namespace Prisma {
     userTier?: UserTierUncheckedCreateNestedOneWithoutUserInput
     tierHistory?: TierHistoryUncheckedCreateNestedManyWithoutUserInput
     adminAdjustmentDetails?: AdminAdjustmentDetailUncheckedCreateNestedManyWithoutAdminUserInput
+    wageringRequirements?: WageringRequirementUncheckedCreateNestedManyWithoutUserInput
   }
 
   export type UserUpdateInput = {
@@ -69146,10 +70649,9 @@ export namespace Prisma {
     GameSession?: CasinoGameSessionUpdateManyWithoutUserNestedInput
     affiliateReferrals?: ReferralUpdateManyWithoutAffiliateNestedInput
     referredUsers?: ReferralUpdateManyWithoutSubUserNestedInput
-    Rolling?: RollingUpdateManyWithoutUserNestedInput
     transactions?: TransactionUpdateManyWithoutUserNestedInput
     depositDetails?: DepositDetailUpdateManyWithoutUserNestedInput
-    balances?: UserBalanceUpdateManyWithoutUserNestedInput
+    userWallets?: UserWalletUpdateManyWithoutUserNestedInput
     UserBalanceStats?: UserBalanceStatsUpdateManyWithoutUserNestedInput
     UserPromotion?: UserPromotionUpdateManyWithoutUserNestedInput
     UserSession?: UserSessionUpdateManyWithoutUserNestedInput
@@ -69159,6 +70661,7 @@ export namespace Prisma {
     userTier?: UserTierUpdateOneWithoutUserNestedInput
     tierHistory?: TierHistoryUpdateManyWithoutUserNestedInput
     adminAdjustmentDetails?: AdminAdjustmentDetailUpdateManyWithoutAdminUserNestedInput
+    wageringRequirements?: WageringRequirementUpdateManyWithoutUserNestedInput
   }
 
   export type UserUncheckedUpdateInput = {
@@ -69192,10 +70695,9 @@ export namespace Prisma {
     GameSession?: CasinoGameSessionUncheckedUpdateManyWithoutUserNestedInput
     affiliateReferrals?: ReferralUncheckedUpdateManyWithoutAffiliateNestedInput
     referredUsers?: ReferralUncheckedUpdateManyWithoutSubUserNestedInput
-    Rolling?: RollingUncheckedUpdateManyWithoutUserNestedInput
     transactions?: TransactionUncheckedUpdateManyWithoutUserNestedInput
     depositDetails?: DepositDetailUncheckedUpdateManyWithoutUserNestedInput
-    balances?: UserBalanceUncheckedUpdateManyWithoutUserNestedInput
+    userWallets?: UserWalletUncheckedUpdateManyWithoutUserNestedInput
     UserBalanceStats?: UserBalanceStatsUncheckedUpdateManyWithoutUserNestedInput
     UserPromotion?: UserPromotionUncheckedUpdateManyWithoutUserNestedInput
     UserSession?: UserSessionUncheckedUpdateManyWithoutUserNestedInput
@@ -69205,6 +70707,7 @@ export namespace Prisma {
     userTier?: UserTierUncheckedUpdateOneWithoutUserNestedInput
     tierHistory?: TierHistoryUncheckedUpdateManyWithoutUserNestedInput
     adminAdjustmentDetails?: AdminAdjustmentDetailUncheckedUpdateManyWithoutAdminUserNestedInput
+    wageringRequirements?: WageringRequirementUncheckedUpdateManyWithoutUserNestedInput
   }
 
   export type UserCreateManyInput = {
@@ -69273,39 +70776,43 @@ export namespace Prisma {
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
   }
 
-  export type UserBalanceCreateInput = {
+  export type UserWalletCreateInput = {
     currency: $Enums.ExchangeCurrencyCode
     mainBalance?: Decimal | DecimalJsLike | number | string
     bonusBalance?: Decimal | DecimalJsLike | number | string
     updatedAt?: Date | string
-    user: UserCreateNestedOneWithoutBalancesInput
+    user: UserCreateNestedOneWithoutUserWalletsInput
+    wageringRequirements?: WageringRequirementCreateNestedManyWithoutUserWalletInput
   }
 
-  export type UserBalanceUncheckedCreateInput = {
+  export type UserWalletUncheckedCreateInput = {
     userId: bigint | number
     currency: $Enums.ExchangeCurrencyCode
     mainBalance?: Decimal | DecimalJsLike | number | string
     bonusBalance?: Decimal | DecimalJsLike | number | string
     updatedAt?: Date | string
+    wageringRequirements?: WageringRequirementUncheckedCreateNestedManyWithoutUserWalletInput
   }
 
-  export type UserBalanceUpdateInput = {
+  export type UserWalletUpdateInput = {
     currency?: EnumExchangeCurrencyCodeFieldUpdateOperationsInput | $Enums.ExchangeCurrencyCode
     mainBalance?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
     bonusBalance?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
-    user?: UserUpdateOneRequiredWithoutBalancesNestedInput
+    user?: UserUpdateOneRequiredWithoutUserWalletsNestedInput
+    wageringRequirements?: WageringRequirementUpdateManyWithoutUserWalletNestedInput
   }
 
-  export type UserBalanceUncheckedUpdateInput = {
+  export type UserWalletUncheckedUpdateInput = {
     userId?: BigIntFieldUpdateOperationsInput | bigint | number
     currency?: EnumExchangeCurrencyCodeFieldUpdateOperationsInput | $Enums.ExchangeCurrencyCode
     mainBalance?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
     bonusBalance?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    wageringRequirements?: WageringRequirementUncheckedUpdateManyWithoutUserWalletNestedInput
   }
 
-  export type UserBalanceCreateManyInput = {
+  export type UserWalletCreateManyInput = {
     userId: bigint | number
     currency: $Enums.ExchangeCurrencyCode
     mainBalance?: Decimal | DecimalJsLike | number | string
@@ -69313,14 +70820,14 @@ export namespace Prisma {
     updatedAt?: Date | string
   }
 
-  export type UserBalanceUpdateManyMutationInput = {
+  export type UserWalletUpdateManyMutationInput = {
     currency?: EnumExchangeCurrencyCodeFieldUpdateOperationsInput | $Enums.ExchangeCurrencyCode
     mainBalance?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
     bonusBalance?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
   }
 
-  export type UserBalanceUncheckedUpdateManyInput = {
+  export type UserWalletUncheckedUpdateManyInput = {
     userId?: BigIntFieldUpdateOperationsInput | bigint | number
     currency?: EnumExchangeCurrencyCodeFieldUpdateOperationsInput | $Enums.ExchangeCurrencyCode
     mainBalance?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
@@ -70678,129 +72185,6 @@ export namespace Prisma {
     isValid?: BoolFieldUpdateOperationsInput | boolean
   }
 
-  export type RollingCreateInput = {
-    id?: bigint | number
-    sourceType?: $Enums.RollingSourceType
-    requiredAmount: Decimal | DecimalJsLike | number | string
-    currentAmount?: Decimal | DecimalJsLike | number | string
-    cancellationBalanceThreshold?: Decimal | DecimalJsLike | number | string | null
-    status?: $Enums.RollingStatus
-    depositAmount?: Decimal | DecimalJsLike | number | string | null
-    bonusAmount?: Decimal | DecimalJsLike | number | string | null
-    completedAt?: Date | string | null
-    cancelledAt?: Date | string | null
-    createdAt?: Date | string
-    updatedAt?: Date | string
-    DepositDetail?: DepositDetailCreateNestedOneWithoutRollingInput
-    user: UserCreateNestedOneWithoutRollingInput
-    userPromotion?: UserPromotionCreateNestedOneWithoutRollingInput
-  }
-
-  export type RollingUncheckedCreateInput = {
-    id?: bigint | number
-    userId: bigint | number
-    sourceType?: $Enums.RollingSourceType
-    userPromotionId?: bigint | number | null
-    requiredAmount: Decimal | DecimalJsLike | number | string
-    currentAmount?: Decimal | DecimalJsLike | number | string
-    cancellationBalanceThreshold?: Decimal | DecimalJsLike | number | string | null
-    status?: $Enums.RollingStatus
-    depositAmount?: Decimal | DecimalJsLike | number | string | null
-    bonusAmount?: Decimal | DecimalJsLike | number | string | null
-    completedAt?: Date | string | null
-    cancelledAt?: Date | string | null
-    createdAt?: Date | string
-    updatedAt?: Date | string
-    depositDetailId?: bigint | number | null
-  }
-
-  export type RollingUpdateInput = {
-    id?: BigIntFieldUpdateOperationsInput | bigint | number
-    sourceType?: EnumRollingSourceTypeFieldUpdateOperationsInput | $Enums.RollingSourceType
-    requiredAmount?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
-    currentAmount?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
-    cancellationBalanceThreshold?: NullableDecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string | null
-    status?: EnumRollingStatusFieldUpdateOperationsInput | $Enums.RollingStatus
-    depositAmount?: NullableDecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string | null
-    bonusAmount?: NullableDecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string | null
-    completedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
-    cancelledAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
-    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
-    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
-    DepositDetail?: DepositDetailUpdateOneWithoutRollingNestedInput
-    user?: UserUpdateOneRequiredWithoutRollingNestedInput
-    userPromotion?: UserPromotionUpdateOneWithoutRollingNestedInput
-  }
-
-  export type RollingUncheckedUpdateInput = {
-    id?: BigIntFieldUpdateOperationsInput | bigint | number
-    userId?: BigIntFieldUpdateOperationsInput | bigint | number
-    sourceType?: EnumRollingSourceTypeFieldUpdateOperationsInput | $Enums.RollingSourceType
-    userPromotionId?: NullableBigIntFieldUpdateOperationsInput | bigint | number | null
-    requiredAmount?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
-    currentAmount?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
-    cancellationBalanceThreshold?: NullableDecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string | null
-    status?: EnumRollingStatusFieldUpdateOperationsInput | $Enums.RollingStatus
-    depositAmount?: NullableDecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string | null
-    bonusAmount?: NullableDecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string | null
-    completedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
-    cancelledAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
-    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
-    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
-    depositDetailId?: NullableBigIntFieldUpdateOperationsInput | bigint | number | null
-  }
-
-  export type RollingCreateManyInput = {
-    id?: bigint | number
-    userId: bigint | number
-    sourceType?: $Enums.RollingSourceType
-    userPromotionId?: bigint | number | null
-    requiredAmount: Decimal | DecimalJsLike | number | string
-    currentAmount?: Decimal | DecimalJsLike | number | string
-    cancellationBalanceThreshold?: Decimal | DecimalJsLike | number | string | null
-    status?: $Enums.RollingStatus
-    depositAmount?: Decimal | DecimalJsLike | number | string | null
-    bonusAmount?: Decimal | DecimalJsLike | number | string | null
-    completedAt?: Date | string | null
-    cancelledAt?: Date | string | null
-    createdAt?: Date | string
-    updatedAt?: Date | string
-    depositDetailId?: bigint | number | null
-  }
-
-  export type RollingUpdateManyMutationInput = {
-    id?: BigIntFieldUpdateOperationsInput | bigint | number
-    sourceType?: EnumRollingSourceTypeFieldUpdateOperationsInput | $Enums.RollingSourceType
-    requiredAmount?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
-    currentAmount?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
-    cancellationBalanceThreshold?: NullableDecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string | null
-    status?: EnumRollingStatusFieldUpdateOperationsInput | $Enums.RollingStatus
-    depositAmount?: NullableDecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string | null
-    bonusAmount?: NullableDecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string | null
-    completedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
-    cancelledAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
-    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
-    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
-  }
-
-  export type RollingUncheckedUpdateManyInput = {
-    id?: BigIntFieldUpdateOperationsInput | bigint | number
-    userId?: BigIntFieldUpdateOperationsInput | bigint | number
-    sourceType?: EnumRollingSourceTypeFieldUpdateOperationsInput | $Enums.RollingSourceType
-    userPromotionId?: NullableBigIntFieldUpdateOperationsInput | bigint | number | null
-    requiredAmount?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
-    currentAmount?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
-    cancellationBalanceThreshold?: NullableDecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string | null
-    status?: EnumRollingStatusFieldUpdateOperationsInput | $Enums.RollingStatus
-    depositAmount?: NullableDecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string | null
-    bonusAmount?: NullableDecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string | null
-    completedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
-    cancelledAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
-    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
-    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
-    depositDetailId?: NullableBigIntFieldUpdateOperationsInput | bigint | number | null
-  }
-
   export type UserTokenCreateInput = {
     type: $Enums.TokenType
     token: string
@@ -71421,7 +72805,7 @@ export namespace Prisma {
     BankConfig?: BankConfigCreateNestedOneWithoutDepositDetailsInput
     CryptoConfig?: CryptoConfigCreateNestedOneWithoutDepositDetailsInput
     transaction?: TransactionCreateNestedOneWithoutDepositDetailInput
-    Rolling?: RollingCreateNestedManyWithoutDepositDetailInput
+    wageringRequirements?: WageringRequirementCreateNestedManyWithoutDepositDetailInput
   }
 
   export type DepositDetailUncheckedCreateInput = {
@@ -71456,7 +72840,7 @@ export namespace Prisma {
     providerMetadata?: NullableJsonNullValueInput | InputJsonValue
     bankConfigId?: bigint | number | null
     cryptoConfigId?: bigint | number | null
-    Rolling?: RollingUncheckedCreateNestedManyWithoutDepositDetailInput
+    wageringRequirements?: WageringRequirementUncheckedCreateNestedManyWithoutDepositDetailInput
   }
 
   export type DepositDetailUpdateInput = {
@@ -71491,7 +72875,7 @@ export namespace Prisma {
     BankConfig?: BankConfigUpdateOneWithoutDepositDetailsNestedInput
     CryptoConfig?: CryptoConfigUpdateOneWithoutDepositDetailsNestedInput
     transaction?: TransactionUpdateOneWithoutDepositDetailNestedInput
-    Rolling?: RollingUpdateManyWithoutDepositDetailNestedInput
+    wageringRequirements?: WageringRequirementUpdateManyWithoutDepositDetailNestedInput
   }
 
   export type DepositDetailUncheckedUpdateInput = {
@@ -71526,7 +72910,7 @@ export namespace Prisma {
     providerMetadata?: NullableJsonNullValueInput | InputJsonValue
     bankConfigId?: NullableBigIntFieldUpdateOperationsInput | bigint | number | null
     cryptoConfigId?: NullableBigIntFieldUpdateOperationsInput | bigint | number | null
-    Rolling?: RollingUncheckedUpdateManyWithoutDepositDetailNestedInput
+    wageringRequirements?: WageringRequirementUncheckedUpdateManyWithoutDepositDetailNestedInput
   }
 
   export type DepositDetailCreateManyInput = {
@@ -72166,7 +73550,7 @@ export namespace Prisma {
     currency: $Enums.ExchangeCurrencyCode
     createdAt?: Date | string
     updatedAt?: Date | string
-    Rolling?: RollingCreateNestedManyWithoutUserPromotionInput
+    wageringRequirements?: WageringRequirementCreateNestedManyWithoutUserPromotionInput
     promotion: PromotionCreateNestedOneWithoutUserPromotionInput
     user: UserCreateNestedOneWithoutUserPromotionInput
   }
@@ -72183,7 +73567,7 @@ export namespace Prisma {
     currency: $Enums.ExchangeCurrencyCode
     createdAt?: Date | string
     updatedAt?: Date | string
-    Rolling?: RollingUncheckedCreateNestedManyWithoutUserPromotionInput
+    wageringRequirements?: WageringRequirementUncheckedCreateNestedManyWithoutUserPromotionInput
   }
 
   export type UserPromotionUpdateInput = {
@@ -72196,7 +73580,7 @@ export namespace Prisma {
     currency?: EnumExchangeCurrencyCodeFieldUpdateOperationsInput | $Enums.ExchangeCurrencyCode
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
-    Rolling?: RollingUpdateManyWithoutUserPromotionNestedInput
+    wageringRequirements?: WageringRequirementUpdateManyWithoutUserPromotionNestedInput
     promotion?: PromotionUpdateOneRequiredWithoutUserPromotionNestedInput
     user?: UserUpdateOneRequiredWithoutUserPromotionNestedInput
   }
@@ -72213,7 +73597,7 @@ export namespace Prisma {
     currency?: EnumExchangeCurrencyCodeFieldUpdateOperationsInput | $Enums.ExchangeCurrencyCode
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
-    Rolling?: RollingUncheckedUpdateManyWithoutUserPromotionNestedInput
+    wageringRequirements?: WageringRequirementUncheckedUpdateManyWithoutUserPromotionNestedInput
   }
 
   export type UserPromotionCreateManyInput = {
@@ -72875,6 +74259,222 @@ export namespace Prisma {
     revokedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     revokedBy?: NullableBigIntFieldUpdateOperationsInput | bigint | number | null
     metadata?: NullableJsonNullValueInput | InputJsonValue
+  }
+
+  export type WageringRequirementCreateInput = {
+    id?: bigint | number
+    uid?: string
+    sourceType?: $Enums.WageringSourceType
+    requiredAmount: Decimal | DecimalJsLike | number | string
+    currentAmount?: Decimal | DecimalJsLike | number | string
+    cancellationBalanceThreshold?: Decimal | DecimalJsLike | number | string | null
+    status?: $Enums.WageringStatus
+    createdAt?: Date | string
+    updatedAt?: Date | string
+    expiresAt?: Date | string | null
+    completedAt?: Date | string | null
+    cancelledAt?: Date | string | null
+    cancellationNote?: string | null
+    priority?: number
+    DepositDetail?: DepositDetailCreateNestedOneWithoutWageringRequirementsInput
+    userWallet: UserWalletCreateNestedOneWithoutWageringRequirementsInput
+    userPromotion?: UserPromotionCreateNestedOneWithoutWageringRequirementsInput
+    user: UserCreateNestedOneWithoutWageringRequirementsInput
+    contributionLogs?: WageringContributionLogCreateNestedManyWithoutWageringRequirementInput
+  }
+
+  export type WageringRequirementUncheckedCreateInput = {
+    id?: bigint | number
+    uid?: string
+    userId: bigint | number
+    currency: $Enums.ExchangeCurrencyCode
+    sourceType?: $Enums.WageringSourceType
+    requiredAmount: Decimal | DecimalJsLike | number | string
+    currentAmount?: Decimal | DecimalJsLike | number | string
+    cancellationBalanceThreshold?: Decimal | DecimalJsLike | number | string | null
+    status?: $Enums.WageringStatus
+    depositDetailId?: bigint | number | null
+    userPromotionId?: bigint | number | null
+    createdAt?: Date | string
+    updatedAt?: Date | string
+    expiresAt?: Date | string | null
+    completedAt?: Date | string | null
+    cancelledAt?: Date | string | null
+    cancellationNote?: string | null
+    priority?: number
+    contributionLogs?: WageringContributionLogUncheckedCreateNestedManyWithoutWageringRequirementInput
+  }
+
+  export type WageringRequirementUpdateInput = {
+    id?: BigIntFieldUpdateOperationsInput | bigint | number
+    uid?: StringFieldUpdateOperationsInput | string
+    sourceType?: EnumWageringSourceTypeFieldUpdateOperationsInput | $Enums.WageringSourceType
+    requiredAmount?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
+    currentAmount?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
+    cancellationBalanceThreshold?: NullableDecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string | null
+    status?: EnumWageringStatusFieldUpdateOperationsInput | $Enums.WageringStatus
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    expiresAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    completedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    cancelledAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    cancellationNote?: NullableStringFieldUpdateOperationsInput | string | null
+    priority?: IntFieldUpdateOperationsInput | number
+    DepositDetail?: DepositDetailUpdateOneWithoutWageringRequirementsNestedInput
+    userWallet?: UserWalletUpdateOneRequiredWithoutWageringRequirementsNestedInput
+    userPromotion?: UserPromotionUpdateOneWithoutWageringRequirementsNestedInput
+    user?: UserUpdateOneRequiredWithoutWageringRequirementsNestedInput
+    contributionLogs?: WageringContributionLogUpdateManyWithoutWageringRequirementNestedInput
+  }
+
+  export type WageringRequirementUncheckedUpdateInput = {
+    id?: BigIntFieldUpdateOperationsInput | bigint | number
+    uid?: StringFieldUpdateOperationsInput | string
+    userId?: BigIntFieldUpdateOperationsInput | bigint | number
+    currency?: EnumExchangeCurrencyCodeFieldUpdateOperationsInput | $Enums.ExchangeCurrencyCode
+    sourceType?: EnumWageringSourceTypeFieldUpdateOperationsInput | $Enums.WageringSourceType
+    requiredAmount?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
+    currentAmount?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
+    cancellationBalanceThreshold?: NullableDecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string | null
+    status?: EnumWageringStatusFieldUpdateOperationsInput | $Enums.WageringStatus
+    depositDetailId?: NullableBigIntFieldUpdateOperationsInput | bigint | number | null
+    userPromotionId?: NullableBigIntFieldUpdateOperationsInput | bigint | number | null
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    expiresAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    completedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    cancelledAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    cancellationNote?: NullableStringFieldUpdateOperationsInput | string | null
+    priority?: IntFieldUpdateOperationsInput | number
+    contributionLogs?: WageringContributionLogUncheckedUpdateManyWithoutWageringRequirementNestedInput
+  }
+
+  export type WageringRequirementCreateManyInput = {
+    id?: bigint | number
+    uid?: string
+    userId: bigint | number
+    currency: $Enums.ExchangeCurrencyCode
+    sourceType?: $Enums.WageringSourceType
+    requiredAmount: Decimal | DecimalJsLike | number | string
+    currentAmount?: Decimal | DecimalJsLike | number | string
+    cancellationBalanceThreshold?: Decimal | DecimalJsLike | number | string | null
+    status?: $Enums.WageringStatus
+    depositDetailId?: bigint | number | null
+    userPromotionId?: bigint | number | null
+    createdAt?: Date | string
+    updatedAt?: Date | string
+    expiresAt?: Date | string | null
+    completedAt?: Date | string | null
+    cancelledAt?: Date | string | null
+    cancellationNote?: string | null
+    priority?: number
+  }
+
+  export type WageringRequirementUpdateManyMutationInput = {
+    id?: BigIntFieldUpdateOperationsInput | bigint | number
+    uid?: StringFieldUpdateOperationsInput | string
+    sourceType?: EnumWageringSourceTypeFieldUpdateOperationsInput | $Enums.WageringSourceType
+    requiredAmount?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
+    currentAmount?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
+    cancellationBalanceThreshold?: NullableDecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string | null
+    status?: EnumWageringStatusFieldUpdateOperationsInput | $Enums.WageringStatus
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    expiresAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    completedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    cancelledAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    cancellationNote?: NullableStringFieldUpdateOperationsInput | string | null
+    priority?: IntFieldUpdateOperationsInput | number
+  }
+
+  export type WageringRequirementUncheckedUpdateManyInput = {
+    id?: BigIntFieldUpdateOperationsInput | bigint | number
+    uid?: StringFieldUpdateOperationsInput | string
+    userId?: BigIntFieldUpdateOperationsInput | bigint | number
+    currency?: EnumExchangeCurrencyCodeFieldUpdateOperationsInput | $Enums.ExchangeCurrencyCode
+    sourceType?: EnumWageringSourceTypeFieldUpdateOperationsInput | $Enums.WageringSourceType
+    requiredAmount?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
+    currentAmount?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
+    cancellationBalanceThreshold?: NullableDecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string | null
+    status?: EnumWageringStatusFieldUpdateOperationsInput | $Enums.WageringStatus
+    depositDetailId?: NullableBigIntFieldUpdateOperationsInput | bigint | number | null
+    userPromotionId?: NullableBigIntFieldUpdateOperationsInput | bigint | number | null
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    expiresAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    completedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    cancelledAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    cancellationNote?: NullableStringFieldUpdateOperationsInput | string | null
+    priority?: IntFieldUpdateOperationsInput | number
+  }
+
+  export type WageringContributionLogCreateInput = {
+    id?: bigint | number
+    gameRoundId: bigint | number
+    requestAmount: Decimal | DecimalJsLike | number | string
+    contributionRate: Decimal | DecimalJsLike | number | string
+    contributedAmount: Decimal | DecimalJsLike | number | string
+    createdAt?: Date | string
+    wageringRequirement: WageringRequirementCreateNestedOneWithoutContributionLogsInput
+  }
+
+  export type WageringContributionLogUncheckedCreateInput = {
+    id?: bigint | number
+    wageringRequirementId: bigint | number
+    gameRoundId: bigint | number
+    requestAmount: Decimal | DecimalJsLike | number | string
+    contributionRate: Decimal | DecimalJsLike | number | string
+    contributedAmount: Decimal | DecimalJsLike | number | string
+    createdAt?: Date | string
+  }
+
+  export type WageringContributionLogUpdateInput = {
+    id?: BigIntFieldUpdateOperationsInput | bigint | number
+    gameRoundId?: BigIntFieldUpdateOperationsInput | bigint | number
+    requestAmount?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
+    contributionRate?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
+    contributedAmount?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    wageringRequirement?: WageringRequirementUpdateOneRequiredWithoutContributionLogsNestedInput
+  }
+
+  export type WageringContributionLogUncheckedUpdateInput = {
+    id?: BigIntFieldUpdateOperationsInput | bigint | number
+    wageringRequirementId?: BigIntFieldUpdateOperationsInput | bigint | number
+    gameRoundId?: BigIntFieldUpdateOperationsInput | bigint | number
+    requestAmount?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
+    contributionRate?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
+    contributedAmount?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+  }
+
+  export type WageringContributionLogCreateManyInput = {
+    id?: bigint | number
+    wageringRequirementId: bigint | number
+    gameRoundId: bigint | number
+    requestAmount: Decimal | DecimalJsLike | number | string
+    contributionRate: Decimal | DecimalJsLike | number | string
+    contributedAmount: Decimal | DecimalJsLike | number | string
+    createdAt?: Date | string
+  }
+
+  export type WageringContributionLogUpdateManyMutationInput = {
+    id?: BigIntFieldUpdateOperationsInput | bigint | number
+    gameRoundId?: BigIntFieldUpdateOperationsInput | bigint | number
+    requestAmount?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
+    contributionRate?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
+    contributedAmount?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+  }
+
+  export type WageringContributionLogUncheckedUpdateManyInput = {
+    id?: BigIntFieldUpdateOperationsInput | bigint | number
+    wageringRequirementId?: BigIntFieldUpdateOperationsInput | bigint | number
+    gameRoundId?: BigIntFieldUpdateOperationsInput | bigint | number
+    requestAmount?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
+    contributionRate?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
+    contributedAmount?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
   }
 
   export type BigIntFilter<$PrismaModel = never> = {
@@ -74102,12 +75702,6 @@ export namespace Prisma {
     none?: EmailLogWhereInput
   }
 
-  export type RollingListRelationFilter = {
-    every?: RollingWhereInput
-    some?: RollingWhereInput
-    none?: RollingWhereInput
-  }
-
   export type TransactionListRelationFilter = {
     every?: TransactionWhereInput
     some?: TransactionWhereInput
@@ -74120,10 +75714,10 @@ export namespace Prisma {
     none?: DepositDetailWhereInput
   }
 
-  export type UserBalanceListRelationFilter = {
-    every?: UserBalanceWhereInput
-    some?: UserBalanceWhereInput
-    none?: UserBalanceWhereInput
+  export type UserWalletListRelationFilter = {
+    every?: UserWalletWhereInput
+    some?: UserWalletWhereInput
+    none?: UserWalletWhereInput
   }
 
   export type UserBalanceStatsListRelationFilter = {
@@ -74173,6 +75767,12 @@ export namespace Prisma {
     none?: AdminAdjustmentDetailWhereInput
   }
 
+  export type WageringRequirementListRelationFilter = {
+    every?: WageringRequirementWhereInput
+    some?: WageringRequirementWhereInput
+    none?: WageringRequirementWhereInput
+  }
+
   export type AffiliateCodeOrderByRelationAggregateInput = {
     _count?: SortOrder
   }
@@ -74197,10 +75797,6 @@ export namespace Prisma {
     _count?: SortOrder
   }
 
-  export type RollingOrderByRelationAggregateInput = {
-    _count?: SortOrder
-  }
-
   export type TransactionOrderByRelationAggregateInput = {
     _count?: SortOrder
   }
@@ -74209,7 +75805,7 @@ export namespace Prisma {
     _count?: SortOrder
   }
 
-  export type UserBalanceOrderByRelationAggregateInput = {
+  export type UserWalletOrderByRelationAggregateInput = {
     _count?: SortOrder
   }
 
@@ -74238,6 +75834,10 @@ export namespace Prisma {
   }
 
   export type AdminAdjustmentDetailOrderByRelationAggregateInput = {
+    _count?: SortOrder
+  }
+
+  export type WageringRequirementOrderByRelationAggregateInput = {
     _count?: SortOrder
   }
 
@@ -74371,12 +75971,12 @@ export namespace Prisma {
     _max?: NestedEnumLanguageNullableFilter<$PrismaModel>
   }
 
-  export type UserBalanceUserIdCurrencyCompoundUniqueInput = {
+  export type UserWalletUserIdCurrencyCompoundUniqueInput = {
     userId: bigint | number
     currency: $Enums.ExchangeCurrencyCode
   }
 
-  export type UserBalanceCountOrderByAggregateInput = {
+  export type UserWalletCountOrderByAggregateInput = {
     userId?: SortOrder
     currency?: SortOrder
     mainBalance?: SortOrder
@@ -74384,21 +75984,13 @@ export namespace Prisma {
     updatedAt?: SortOrder
   }
 
-  export type UserBalanceAvgOrderByAggregateInput = {
+  export type UserWalletAvgOrderByAggregateInput = {
     userId?: SortOrder
     mainBalance?: SortOrder
     bonusBalance?: SortOrder
   }
 
-  export type UserBalanceMaxOrderByAggregateInput = {
-    userId?: SortOrder
-    currency?: SortOrder
-    mainBalance?: SortOrder
-    bonusBalance?: SortOrder
-    updatedAt?: SortOrder
-  }
-
-  export type UserBalanceMinOrderByAggregateInput = {
+  export type UserWalletMaxOrderByAggregateInput = {
     userId?: SortOrder
     currency?: SortOrder
     mainBalance?: SortOrder
@@ -74406,7 +75998,15 @@ export namespace Prisma {
     updatedAt?: SortOrder
   }
 
-  export type UserBalanceSumOrderByAggregateInput = {
+  export type UserWalletMinOrderByAggregateInput = {
+    userId?: SortOrder
+    currency?: SortOrder
+    mainBalance?: SortOrder
+    bonusBalance?: SortOrder
+    updatedAt?: SortOrder
+  }
+
+  export type UserWalletSumOrderByAggregateInput = {
     userId?: SortOrder
     mainBalance?: SortOrder
     bonusBalance?: SortOrder
@@ -75549,123 +77149,6 @@ export namespace Prisma {
     _count?: NestedIntFilter<$PrismaModel>
     _min?: NestedEnumExchangeRateProviderFilter<$PrismaModel>
     _max?: NestedEnumExchangeRateProviderFilter<$PrismaModel>
-  }
-
-  export type EnumRollingSourceTypeFilter<$PrismaModel = never> = {
-    equals?: $Enums.RollingSourceType | EnumRollingSourceTypeFieldRefInput<$PrismaModel>
-    in?: $Enums.RollingSourceType[] | ListEnumRollingSourceTypeFieldRefInput<$PrismaModel>
-    notIn?: $Enums.RollingSourceType[] | ListEnumRollingSourceTypeFieldRefInput<$PrismaModel>
-    not?: NestedEnumRollingSourceTypeFilter<$PrismaModel> | $Enums.RollingSourceType
-  }
-
-  export type EnumRollingStatusFilter<$PrismaModel = never> = {
-    equals?: $Enums.RollingStatus | EnumRollingStatusFieldRefInput<$PrismaModel>
-    in?: $Enums.RollingStatus[] | ListEnumRollingStatusFieldRefInput<$PrismaModel>
-    notIn?: $Enums.RollingStatus[] | ListEnumRollingStatusFieldRefInput<$PrismaModel>
-    not?: NestedEnumRollingStatusFilter<$PrismaModel> | $Enums.RollingStatus
-  }
-
-  export type UserPromotionNullableScalarRelationFilter = {
-    is?: UserPromotionWhereInput | null
-    isNot?: UserPromotionWhereInput | null
-  }
-
-  export type RollingCountOrderByAggregateInput = {
-    id?: SortOrder
-    userId?: SortOrder
-    sourceType?: SortOrder
-    userPromotionId?: SortOrder
-    requiredAmount?: SortOrder
-    currentAmount?: SortOrder
-    cancellationBalanceThreshold?: SortOrder
-    status?: SortOrder
-    depositAmount?: SortOrder
-    bonusAmount?: SortOrder
-    completedAt?: SortOrder
-    cancelledAt?: SortOrder
-    createdAt?: SortOrder
-    updatedAt?: SortOrder
-    depositDetailId?: SortOrder
-  }
-
-  export type RollingAvgOrderByAggregateInput = {
-    id?: SortOrder
-    userId?: SortOrder
-    userPromotionId?: SortOrder
-    requiredAmount?: SortOrder
-    currentAmount?: SortOrder
-    cancellationBalanceThreshold?: SortOrder
-    depositAmount?: SortOrder
-    bonusAmount?: SortOrder
-    depositDetailId?: SortOrder
-  }
-
-  export type RollingMaxOrderByAggregateInput = {
-    id?: SortOrder
-    userId?: SortOrder
-    sourceType?: SortOrder
-    userPromotionId?: SortOrder
-    requiredAmount?: SortOrder
-    currentAmount?: SortOrder
-    cancellationBalanceThreshold?: SortOrder
-    status?: SortOrder
-    depositAmount?: SortOrder
-    bonusAmount?: SortOrder
-    completedAt?: SortOrder
-    cancelledAt?: SortOrder
-    createdAt?: SortOrder
-    updatedAt?: SortOrder
-    depositDetailId?: SortOrder
-  }
-
-  export type RollingMinOrderByAggregateInput = {
-    id?: SortOrder
-    userId?: SortOrder
-    sourceType?: SortOrder
-    userPromotionId?: SortOrder
-    requiredAmount?: SortOrder
-    currentAmount?: SortOrder
-    cancellationBalanceThreshold?: SortOrder
-    status?: SortOrder
-    depositAmount?: SortOrder
-    bonusAmount?: SortOrder
-    completedAt?: SortOrder
-    cancelledAt?: SortOrder
-    createdAt?: SortOrder
-    updatedAt?: SortOrder
-    depositDetailId?: SortOrder
-  }
-
-  export type RollingSumOrderByAggregateInput = {
-    id?: SortOrder
-    userId?: SortOrder
-    userPromotionId?: SortOrder
-    requiredAmount?: SortOrder
-    currentAmount?: SortOrder
-    cancellationBalanceThreshold?: SortOrder
-    depositAmount?: SortOrder
-    bonusAmount?: SortOrder
-    depositDetailId?: SortOrder
-  }
-
-  export type EnumRollingSourceTypeWithAggregatesFilter<$PrismaModel = never> = {
-    equals?: $Enums.RollingSourceType | EnumRollingSourceTypeFieldRefInput<$PrismaModel>
-    in?: $Enums.RollingSourceType[] | ListEnumRollingSourceTypeFieldRefInput<$PrismaModel>
-    notIn?: $Enums.RollingSourceType[] | ListEnumRollingSourceTypeFieldRefInput<$PrismaModel>
-    not?: NestedEnumRollingSourceTypeWithAggregatesFilter<$PrismaModel> | $Enums.RollingSourceType
-    _count?: NestedIntFilter<$PrismaModel>
-    _min?: NestedEnumRollingSourceTypeFilter<$PrismaModel>
-    _max?: NestedEnumRollingSourceTypeFilter<$PrismaModel>
-  }
-
-  export type EnumRollingStatusWithAggregatesFilter<$PrismaModel = never> = {
-    equals?: $Enums.RollingStatus | EnumRollingStatusFieldRefInput<$PrismaModel>
-    in?: $Enums.RollingStatus[] | ListEnumRollingStatusFieldRefInput<$PrismaModel>
-    notIn?: $Enums.RollingStatus[] | ListEnumRollingStatusFieldRefInput<$PrismaModel>
-    not?: NestedEnumRollingStatusWithAggregatesFilter<$PrismaModel> | $Enums.RollingStatus
-    _count?: NestedIntFilter<$PrismaModel>
-    _min?: NestedEnumRollingStatusFilter<$PrismaModel>
-    _max?: NestedEnumRollingStatusFilter<$PrismaModel>
   }
 
   export type EnumTokenTypeFilter<$PrismaModel = never> = {
@@ -77239,6 +78722,198 @@ export namespace Prisma {
     _max?: NestedEnumSessionStatusFilter<$PrismaModel>
   }
 
+  export type EnumWageringSourceTypeFilter<$PrismaModel = never> = {
+    equals?: $Enums.WageringSourceType | EnumWageringSourceTypeFieldRefInput<$PrismaModel>
+    in?: $Enums.WageringSourceType[] | ListEnumWageringSourceTypeFieldRefInput<$PrismaModel>
+    notIn?: $Enums.WageringSourceType[] | ListEnumWageringSourceTypeFieldRefInput<$PrismaModel>
+    not?: NestedEnumWageringSourceTypeFilter<$PrismaModel> | $Enums.WageringSourceType
+  }
+
+  export type EnumWageringStatusFilter<$PrismaModel = never> = {
+    equals?: $Enums.WageringStatus | EnumWageringStatusFieldRefInput<$PrismaModel>
+    in?: $Enums.WageringStatus[] | ListEnumWageringStatusFieldRefInput<$PrismaModel>
+    notIn?: $Enums.WageringStatus[] | ListEnumWageringStatusFieldRefInput<$PrismaModel>
+    not?: NestedEnumWageringStatusFilter<$PrismaModel> | $Enums.WageringStatus
+  }
+
+  export type UserWalletScalarRelationFilter = {
+    is?: UserWalletWhereInput
+    isNot?: UserWalletWhereInput
+  }
+
+  export type UserPromotionNullableScalarRelationFilter = {
+    is?: UserPromotionWhereInput | null
+    isNot?: UserPromotionWhereInput | null
+  }
+
+  export type WageringContributionLogListRelationFilter = {
+    every?: WageringContributionLogWhereInput
+    some?: WageringContributionLogWhereInput
+    none?: WageringContributionLogWhereInput
+  }
+
+  export type WageringContributionLogOrderByRelationAggregateInput = {
+    _count?: SortOrder
+  }
+
+  export type WageringRequirementCountOrderByAggregateInput = {
+    id?: SortOrder
+    uid?: SortOrder
+    userId?: SortOrder
+    currency?: SortOrder
+    sourceType?: SortOrder
+    requiredAmount?: SortOrder
+    currentAmount?: SortOrder
+    cancellationBalanceThreshold?: SortOrder
+    status?: SortOrder
+    depositDetailId?: SortOrder
+    userPromotionId?: SortOrder
+    createdAt?: SortOrder
+    updatedAt?: SortOrder
+    expiresAt?: SortOrder
+    completedAt?: SortOrder
+    cancelledAt?: SortOrder
+    cancellationNote?: SortOrder
+    priority?: SortOrder
+  }
+
+  export type WageringRequirementAvgOrderByAggregateInput = {
+    id?: SortOrder
+    userId?: SortOrder
+    requiredAmount?: SortOrder
+    currentAmount?: SortOrder
+    cancellationBalanceThreshold?: SortOrder
+    depositDetailId?: SortOrder
+    userPromotionId?: SortOrder
+    priority?: SortOrder
+  }
+
+  export type WageringRequirementMaxOrderByAggregateInput = {
+    id?: SortOrder
+    uid?: SortOrder
+    userId?: SortOrder
+    currency?: SortOrder
+    sourceType?: SortOrder
+    requiredAmount?: SortOrder
+    currentAmount?: SortOrder
+    cancellationBalanceThreshold?: SortOrder
+    status?: SortOrder
+    depositDetailId?: SortOrder
+    userPromotionId?: SortOrder
+    createdAt?: SortOrder
+    updatedAt?: SortOrder
+    expiresAt?: SortOrder
+    completedAt?: SortOrder
+    cancelledAt?: SortOrder
+    cancellationNote?: SortOrder
+    priority?: SortOrder
+  }
+
+  export type WageringRequirementMinOrderByAggregateInput = {
+    id?: SortOrder
+    uid?: SortOrder
+    userId?: SortOrder
+    currency?: SortOrder
+    sourceType?: SortOrder
+    requiredAmount?: SortOrder
+    currentAmount?: SortOrder
+    cancellationBalanceThreshold?: SortOrder
+    status?: SortOrder
+    depositDetailId?: SortOrder
+    userPromotionId?: SortOrder
+    createdAt?: SortOrder
+    updatedAt?: SortOrder
+    expiresAt?: SortOrder
+    completedAt?: SortOrder
+    cancelledAt?: SortOrder
+    cancellationNote?: SortOrder
+    priority?: SortOrder
+  }
+
+  export type WageringRequirementSumOrderByAggregateInput = {
+    id?: SortOrder
+    userId?: SortOrder
+    requiredAmount?: SortOrder
+    currentAmount?: SortOrder
+    cancellationBalanceThreshold?: SortOrder
+    depositDetailId?: SortOrder
+    userPromotionId?: SortOrder
+    priority?: SortOrder
+  }
+
+  export type EnumWageringSourceTypeWithAggregatesFilter<$PrismaModel = never> = {
+    equals?: $Enums.WageringSourceType | EnumWageringSourceTypeFieldRefInput<$PrismaModel>
+    in?: $Enums.WageringSourceType[] | ListEnumWageringSourceTypeFieldRefInput<$PrismaModel>
+    notIn?: $Enums.WageringSourceType[] | ListEnumWageringSourceTypeFieldRefInput<$PrismaModel>
+    not?: NestedEnumWageringSourceTypeWithAggregatesFilter<$PrismaModel> | $Enums.WageringSourceType
+    _count?: NestedIntFilter<$PrismaModel>
+    _min?: NestedEnumWageringSourceTypeFilter<$PrismaModel>
+    _max?: NestedEnumWageringSourceTypeFilter<$PrismaModel>
+  }
+
+  export type EnumWageringStatusWithAggregatesFilter<$PrismaModel = never> = {
+    equals?: $Enums.WageringStatus | EnumWageringStatusFieldRefInput<$PrismaModel>
+    in?: $Enums.WageringStatus[] | ListEnumWageringStatusFieldRefInput<$PrismaModel>
+    notIn?: $Enums.WageringStatus[] | ListEnumWageringStatusFieldRefInput<$PrismaModel>
+    not?: NestedEnumWageringStatusWithAggregatesFilter<$PrismaModel> | $Enums.WageringStatus
+    _count?: NestedIntFilter<$PrismaModel>
+    _min?: NestedEnumWageringStatusFilter<$PrismaModel>
+    _max?: NestedEnumWageringStatusFilter<$PrismaModel>
+  }
+
+  export type WageringRequirementScalarRelationFilter = {
+    is?: WageringRequirementWhereInput
+    isNot?: WageringRequirementWhereInput
+  }
+
+  export type WageringContributionLogCountOrderByAggregateInput = {
+    id?: SortOrder
+    wageringRequirementId?: SortOrder
+    gameRoundId?: SortOrder
+    requestAmount?: SortOrder
+    contributionRate?: SortOrder
+    contributedAmount?: SortOrder
+    createdAt?: SortOrder
+  }
+
+  export type WageringContributionLogAvgOrderByAggregateInput = {
+    id?: SortOrder
+    wageringRequirementId?: SortOrder
+    gameRoundId?: SortOrder
+    requestAmount?: SortOrder
+    contributionRate?: SortOrder
+    contributedAmount?: SortOrder
+  }
+
+  export type WageringContributionLogMaxOrderByAggregateInput = {
+    id?: SortOrder
+    wageringRequirementId?: SortOrder
+    gameRoundId?: SortOrder
+    requestAmount?: SortOrder
+    contributionRate?: SortOrder
+    contributedAmount?: SortOrder
+    createdAt?: SortOrder
+  }
+
+  export type WageringContributionLogMinOrderByAggregateInput = {
+    id?: SortOrder
+    wageringRequirementId?: SortOrder
+    gameRoundId?: SortOrder
+    requestAmount?: SortOrder
+    contributionRate?: SortOrder
+    contributedAmount?: SortOrder
+    createdAt?: SortOrder
+  }
+
+  export type WageringContributionLogSumOrderByAggregateInput = {
+    id?: SortOrder
+    wageringRequirementId?: SortOrder
+    gameRoundId?: SortOrder
+    requestAmount?: SortOrder
+    contributionRate?: SortOrder
+    contributedAmount?: SortOrder
+  }
+
   export type UserCreateNestedOneWithoutAffiliateCodesInput = {
     create?: XOR<UserCreateWithoutAffiliateCodesInput, UserUncheckedCreateWithoutAffiliateCodesInput>
     connectOrCreate?: UserCreateOrConnectWithoutAffiliateCodesInput
@@ -77751,13 +79426,6 @@ export namespace Prisma {
     connect?: ReferralWhereUniqueInput | ReferralWhereUniqueInput[]
   }
 
-  export type RollingCreateNestedManyWithoutUserInput = {
-    create?: XOR<RollingCreateWithoutUserInput, RollingUncheckedCreateWithoutUserInput> | RollingCreateWithoutUserInput[] | RollingUncheckedCreateWithoutUserInput[]
-    connectOrCreate?: RollingCreateOrConnectWithoutUserInput | RollingCreateOrConnectWithoutUserInput[]
-    createMany?: RollingCreateManyUserInputEnvelope
-    connect?: RollingWhereUniqueInput | RollingWhereUniqueInput[]
-  }
-
   export type TransactionCreateNestedManyWithoutUserInput = {
     create?: XOR<TransactionCreateWithoutUserInput, TransactionUncheckedCreateWithoutUserInput> | TransactionCreateWithoutUserInput[] | TransactionUncheckedCreateWithoutUserInput[]
     connectOrCreate?: TransactionCreateOrConnectWithoutUserInput | TransactionCreateOrConnectWithoutUserInput[]
@@ -77772,11 +79440,11 @@ export namespace Prisma {
     connect?: DepositDetailWhereUniqueInput | DepositDetailWhereUniqueInput[]
   }
 
-  export type UserBalanceCreateNestedManyWithoutUserInput = {
-    create?: XOR<UserBalanceCreateWithoutUserInput, UserBalanceUncheckedCreateWithoutUserInput> | UserBalanceCreateWithoutUserInput[] | UserBalanceUncheckedCreateWithoutUserInput[]
-    connectOrCreate?: UserBalanceCreateOrConnectWithoutUserInput | UserBalanceCreateOrConnectWithoutUserInput[]
-    createMany?: UserBalanceCreateManyUserInputEnvelope
-    connect?: UserBalanceWhereUniqueInput | UserBalanceWhereUniqueInput[]
+  export type UserWalletCreateNestedManyWithoutUserInput = {
+    create?: XOR<UserWalletCreateWithoutUserInput, UserWalletUncheckedCreateWithoutUserInput> | UserWalletCreateWithoutUserInput[] | UserWalletUncheckedCreateWithoutUserInput[]
+    connectOrCreate?: UserWalletCreateOrConnectWithoutUserInput | UserWalletCreateOrConnectWithoutUserInput[]
+    createMany?: UserWalletCreateManyUserInputEnvelope
+    connect?: UserWalletWhereUniqueInput | UserWalletWhereUniqueInput[]
   }
 
   export type UserBalanceStatsCreateNestedManyWithoutUserInput = {
@@ -77839,6 +79507,13 @@ export namespace Prisma {
     connectOrCreate?: AdminAdjustmentDetailCreateOrConnectWithoutAdminUserInput | AdminAdjustmentDetailCreateOrConnectWithoutAdminUserInput[]
     createMany?: AdminAdjustmentDetailCreateManyAdminUserInputEnvelope
     connect?: AdminAdjustmentDetailWhereUniqueInput | AdminAdjustmentDetailWhereUniqueInput[]
+  }
+
+  export type WageringRequirementCreateNestedManyWithoutUserInput = {
+    create?: XOR<WageringRequirementCreateWithoutUserInput, WageringRequirementUncheckedCreateWithoutUserInput> | WageringRequirementCreateWithoutUserInput[] | WageringRequirementUncheckedCreateWithoutUserInput[]
+    connectOrCreate?: WageringRequirementCreateOrConnectWithoutUserInput | WageringRequirementCreateOrConnectWithoutUserInput[]
+    createMany?: WageringRequirementCreateManyUserInputEnvelope
+    connect?: WageringRequirementWhereUniqueInput | WageringRequirementWhereUniqueInput[]
   }
 
   export type AffiliateCodeUncheckedCreateNestedManyWithoutUserInput = {
@@ -77917,13 +79592,6 @@ export namespace Prisma {
     connect?: ReferralWhereUniqueInput | ReferralWhereUniqueInput[]
   }
 
-  export type RollingUncheckedCreateNestedManyWithoutUserInput = {
-    create?: XOR<RollingCreateWithoutUserInput, RollingUncheckedCreateWithoutUserInput> | RollingCreateWithoutUserInput[] | RollingUncheckedCreateWithoutUserInput[]
-    connectOrCreate?: RollingCreateOrConnectWithoutUserInput | RollingCreateOrConnectWithoutUserInput[]
-    createMany?: RollingCreateManyUserInputEnvelope
-    connect?: RollingWhereUniqueInput | RollingWhereUniqueInput[]
-  }
-
   export type TransactionUncheckedCreateNestedManyWithoutUserInput = {
     create?: XOR<TransactionCreateWithoutUserInput, TransactionUncheckedCreateWithoutUserInput> | TransactionCreateWithoutUserInput[] | TransactionUncheckedCreateWithoutUserInput[]
     connectOrCreate?: TransactionCreateOrConnectWithoutUserInput | TransactionCreateOrConnectWithoutUserInput[]
@@ -77938,11 +79606,11 @@ export namespace Prisma {
     connect?: DepositDetailWhereUniqueInput | DepositDetailWhereUniqueInput[]
   }
 
-  export type UserBalanceUncheckedCreateNestedManyWithoutUserInput = {
-    create?: XOR<UserBalanceCreateWithoutUserInput, UserBalanceUncheckedCreateWithoutUserInput> | UserBalanceCreateWithoutUserInput[] | UserBalanceUncheckedCreateWithoutUserInput[]
-    connectOrCreate?: UserBalanceCreateOrConnectWithoutUserInput | UserBalanceCreateOrConnectWithoutUserInput[]
-    createMany?: UserBalanceCreateManyUserInputEnvelope
-    connect?: UserBalanceWhereUniqueInput | UserBalanceWhereUniqueInput[]
+  export type UserWalletUncheckedCreateNestedManyWithoutUserInput = {
+    create?: XOR<UserWalletCreateWithoutUserInput, UserWalletUncheckedCreateWithoutUserInput> | UserWalletCreateWithoutUserInput[] | UserWalletUncheckedCreateWithoutUserInput[]
+    connectOrCreate?: UserWalletCreateOrConnectWithoutUserInput | UserWalletCreateOrConnectWithoutUserInput[]
+    createMany?: UserWalletCreateManyUserInputEnvelope
+    connect?: UserWalletWhereUniqueInput | UserWalletWhereUniqueInput[]
   }
 
   export type UserBalanceStatsUncheckedCreateNestedManyWithoutUserInput = {
@@ -78005,6 +79673,13 @@ export namespace Prisma {
     connectOrCreate?: AdminAdjustmentDetailCreateOrConnectWithoutAdminUserInput | AdminAdjustmentDetailCreateOrConnectWithoutAdminUserInput[]
     createMany?: AdminAdjustmentDetailCreateManyAdminUserInputEnvelope
     connect?: AdminAdjustmentDetailWhereUniqueInput | AdminAdjustmentDetailWhereUniqueInput[]
+  }
+
+  export type WageringRequirementUncheckedCreateNestedManyWithoutUserInput = {
+    create?: XOR<WageringRequirementCreateWithoutUserInput, WageringRequirementUncheckedCreateWithoutUserInput> | WageringRequirementCreateWithoutUserInput[] | WageringRequirementUncheckedCreateWithoutUserInput[]
+    connectOrCreate?: WageringRequirementCreateOrConnectWithoutUserInput | WageringRequirementCreateOrConnectWithoutUserInput[]
+    createMany?: WageringRequirementCreateManyUserInputEnvelope
+    connect?: WageringRequirementWhereUniqueInput | WageringRequirementWhereUniqueInput[]
   }
 
   export type NullableEnumSocialTypeFieldUpdateOperationsInput = {
@@ -78177,20 +79852,6 @@ export namespace Prisma {
     deleteMany?: ReferralScalarWhereInput | ReferralScalarWhereInput[]
   }
 
-  export type RollingUpdateManyWithoutUserNestedInput = {
-    create?: XOR<RollingCreateWithoutUserInput, RollingUncheckedCreateWithoutUserInput> | RollingCreateWithoutUserInput[] | RollingUncheckedCreateWithoutUserInput[]
-    connectOrCreate?: RollingCreateOrConnectWithoutUserInput | RollingCreateOrConnectWithoutUserInput[]
-    upsert?: RollingUpsertWithWhereUniqueWithoutUserInput | RollingUpsertWithWhereUniqueWithoutUserInput[]
-    createMany?: RollingCreateManyUserInputEnvelope
-    set?: RollingWhereUniqueInput | RollingWhereUniqueInput[]
-    disconnect?: RollingWhereUniqueInput | RollingWhereUniqueInput[]
-    delete?: RollingWhereUniqueInput | RollingWhereUniqueInput[]
-    connect?: RollingWhereUniqueInput | RollingWhereUniqueInput[]
-    update?: RollingUpdateWithWhereUniqueWithoutUserInput | RollingUpdateWithWhereUniqueWithoutUserInput[]
-    updateMany?: RollingUpdateManyWithWhereWithoutUserInput | RollingUpdateManyWithWhereWithoutUserInput[]
-    deleteMany?: RollingScalarWhereInput | RollingScalarWhereInput[]
-  }
-
   export type TransactionUpdateManyWithoutUserNestedInput = {
     create?: XOR<TransactionCreateWithoutUserInput, TransactionUncheckedCreateWithoutUserInput> | TransactionCreateWithoutUserInput[] | TransactionUncheckedCreateWithoutUserInput[]
     connectOrCreate?: TransactionCreateOrConnectWithoutUserInput | TransactionCreateOrConnectWithoutUserInput[]
@@ -78219,18 +79880,18 @@ export namespace Prisma {
     deleteMany?: DepositDetailScalarWhereInput | DepositDetailScalarWhereInput[]
   }
 
-  export type UserBalanceUpdateManyWithoutUserNestedInput = {
-    create?: XOR<UserBalanceCreateWithoutUserInput, UserBalanceUncheckedCreateWithoutUserInput> | UserBalanceCreateWithoutUserInput[] | UserBalanceUncheckedCreateWithoutUserInput[]
-    connectOrCreate?: UserBalanceCreateOrConnectWithoutUserInput | UserBalanceCreateOrConnectWithoutUserInput[]
-    upsert?: UserBalanceUpsertWithWhereUniqueWithoutUserInput | UserBalanceUpsertWithWhereUniqueWithoutUserInput[]
-    createMany?: UserBalanceCreateManyUserInputEnvelope
-    set?: UserBalanceWhereUniqueInput | UserBalanceWhereUniqueInput[]
-    disconnect?: UserBalanceWhereUniqueInput | UserBalanceWhereUniqueInput[]
-    delete?: UserBalanceWhereUniqueInput | UserBalanceWhereUniqueInput[]
-    connect?: UserBalanceWhereUniqueInput | UserBalanceWhereUniqueInput[]
-    update?: UserBalanceUpdateWithWhereUniqueWithoutUserInput | UserBalanceUpdateWithWhereUniqueWithoutUserInput[]
-    updateMany?: UserBalanceUpdateManyWithWhereWithoutUserInput | UserBalanceUpdateManyWithWhereWithoutUserInput[]
-    deleteMany?: UserBalanceScalarWhereInput | UserBalanceScalarWhereInput[]
+  export type UserWalletUpdateManyWithoutUserNestedInput = {
+    create?: XOR<UserWalletCreateWithoutUserInput, UserWalletUncheckedCreateWithoutUserInput> | UserWalletCreateWithoutUserInput[] | UserWalletUncheckedCreateWithoutUserInput[]
+    connectOrCreate?: UserWalletCreateOrConnectWithoutUserInput | UserWalletCreateOrConnectWithoutUserInput[]
+    upsert?: UserWalletUpsertWithWhereUniqueWithoutUserInput | UserWalletUpsertWithWhereUniqueWithoutUserInput[]
+    createMany?: UserWalletCreateManyUserInputEnvelope
+    set?: UserWalletWhereUniqueInput | UserWalletWhereUniqueInput[]
+    disconnect?: UserWalletWhereUniqueInput | UserWalletWhereUniqueInput[]
+    delete?: UserWalletWhereUniqueInput | UserWalletWhereUniqueInput[]
+    connect?: UserWalletWhereUniqueInput | UserWalletWhereUniqueInput[]
+    update?: UserWalletUpdateWithWhereUniqueWithoutUserInput | UserWalletUpdateWithWhereUniqueWithoutUserInput[]
+    updateMany?: UserWalletUpdateManyWithWhereWithoutUserInput | UserWalletUpdateManyWithWhereWithoutUserInput[]
+    deleteMany?: UserWalletScalarWhereInput | UserWalletScalarWhereInput[]
   }
 
   export type UserBalanceStatsUpdateManyWithoutUserNestedInput = {
@@ -78353,6 +80014,20 @@ export namespace Prisma {
     update?: AdminAdjustmentDetailUpdateWithWhereUniqueWithoutAdminUserInput | AdminAdjustmentDetailUpdateWithWhereUniqueWithoutAdminUserInput[]
     updateMany?: AdminAdjustmentDetailUpdateManyWithWhereWithoutAdminUserInput | AdminAdjustmentDetailUpdateManyWithWhereWithoutAdminUserInput[]
     deleteMany?: AdminAdjustmentDetailScalarWhereInput | AdminAdjustmentDetailScalarWhereInput[]
+  }
+
+  export type WageringRequirementUpdateManyWithoutUserNestedInput = {
+    create?: XOR<WageringRequirementCreateWithoutUserInput, WageringRequirementUncheckedCreateWithoutUserInput> | WageringRequirementCreateWithoutUserInput[] | WageringRequirementUncheckedCreateWithoutUserInput[]
+    connectOrCreate?: WageringRequirementCreateOrConnectWithoutUserInput | WageringRequirementCreateOrConnectWithoutUserInput[]
+    upsert?: WageringRequirementUpsertWithWhereUniqueWithoutUserInput | WageringRequirementUpsertWithWhereUniqueWithoutUserInput[]
+    createMany?: WageringRequirementCreateManyUserInputEnvelope
+    set?: WageringRequirementWhereUniqueInput | WageringRequirementWhereUniqueInput[]
+    disconnect?: WageringRequirementWhereUniqueInput | WageringRequirementWhereUniqueInput[]
+    delete?: WageringRequirementWhereUniqueInput | WageringRequirementWhereUniqueInput[]
+    connect?: WageringRequirementWhereUniqueInput | WageringRequirementWhereUniqueInput[]
+    update?: WageringRequirementUpdateWithWhereUniqueWithoutUserInput | WageringRequirementUpdateWithWhereUniqueWithoutUserInput[]
+    updateMany?: WageringRequirementUpdateManyWithWhereWithoutUserInput | WageringRequirementUpdateManyWithWhereWithoutUserInput[]
+    deleteMany?: WageringRequirementScalarWhereInput | WageringRequirementScalarWhereInput[]
   }
 
   export type AffiliateCodeUncheckedUpdateManyWithoutUserNestedInput = {
@@ -78505,20 +80180,6 @@ export namespace Prisma {
     deleteMany?: ReferralScalarWhereInput | ReferralScalarWhereInput[]
   }
 
-  export type RollingUncheckedUpdateManyWithoutUserNestedInput = {
-    create?: XOR<RollingCreateWithoutUserInput, RollingUncheckedCreateWithoutUserInput> | RollingCreateWithoutUserInput[] | RollingUncheckedCreateWithoutUserInput[]
-    connectOrCreate?: RollingCreateOrConnectWithoutUserInput | RollingCreateOrConnectWithoutUserInput[]
-    upsert?: RollingUpsertWithWhereUniqueWithoutUserInput | RollingUpsertWithWhereUniqueWithoutUserInput[]
-    createMany?: RollingCreateManyUserInputEnvelope
-    set?: RollingWhereUniqueInput | RollingWhereUniqueInput[]
-    disconnect?: RollingWhereUniqueInput | RollingWhereUniqueInput[]
-    delete?: RollingWhereUniqueInput | RollingWhereUniqueInput[]
-    connect?: RollingWhereUniqueInput | RollingWhereUniqueInput[]
-    update?: RollingUpdateWithWhereUniqueWithoutUserInput | RollingUpdateWithWhereUniqueWithoutUserInput[]
-    updateMany?: RollingUpdateManyWithWhereWithoutUserInput | RollingUpdateManyWithWhereWithoutUserInput[]
-    deleteMany?: RollingScalarWhereInput | RollingScalarWhereInput[]
-  }
-
   export type TransactionUncheckedUpdateManyWithoutUserNestedInput = {
     create?: XOR<TransactionCreateWithoutUserInput, TransactionUncheckedCreateWithoutUserInput> | TransactionCreateWithoutUserInput[] | TransactionUncheckedCreateWithoutUserInput[]
     connectOrCreate?: TransactionCreateOrConnectWithoutUserInput | TransactionCreateOrConnectWithoutUserInput[]
@@ -78547,18 +80208,18 @@ export namespace Prisma {
     deleteMany?: DepositDetailScalarWhereInput | DepositDetailScalarWhereInput[]
   }
 
-  export type UserBalanceUncheckedUpdateManyWithoutUserNestedInput = {
-    create?: XOR<UserBalanceCreateWithoutUserInput, UserBalanceUncheckedCreateWithoutUserInput> | UserBalanceCreateWithoutUserInput[] | UserBalanceUncheckedCreateWithoutUserInput[]
-    connectOrCreate?: UserBalanceCreateOrConnectWithoutUserInput | UserBalanceCreateOrConnectWithoutUserInput[]
-    upsert?: UserBalanceUpsertWithWhereUniqueWithoutUserInput | UserBalanceUpsertWithWhereUniqueWithoutUserInput[]
-    createMany?: UserBalanceCreateManyUserInputEnvelope
-    set?: UserBalanceWhereUniqueInput | UserBalanceWhereUniqueInput[]
-    disconnect?: UserBalanceWhereUniqueInput | UserBalanceWhereUniqueInput[]
-    delete?: UserBalanceWhereUniqueInput | UserBalanceWhereUniqueInput[]
-    connect?: UserBalanceWhereUniqueInput | UserBalanceWhereUniqueInput[]
-    update?: UserBalanceUpdateWithWhereUniqueWithoutUserInput | UserBalanceUpdateWithWhereUniqueWithoutUserInput[]
-    updateMany?: UserBalanceUpdateManyWithWhereWithoutUserInput | UserBalanceUpdateManyWithWhereWithoutUserInput[]
-    deleteMany?: UserBalanceScalarWhereInput | UserBalanceScalarWhereInput[]
+  export type UserWalletUncheckedUpdateManyWithoutUserNestedInput = {
+    create?: XOR<UserWalletCreateWithoutUserInput, UserWalletUncheckedCreateWithoutUserInput> | UserWalletCreateWithoutUserInput[] | UserWalletUncheckedCreateWithoutUserInput[]
+    connectOrCreate?: UserWalletCreateOrConnectWithoutUserInput | UserWalletCreateOrConnectWithoutUserInput[]
+    upsert?: UserWalletUpsertWithWhereUniqueWithoutUserInput | UserWalletUpsertWithWhereUniqueWithoutUserInput[]
+    createMany?: UserWalletCreateManyUserInputEnvelope
+    set?: UserWalletWhereUniqueInput | UserWalletWhereUniqueInput[]
+    disconnect?: UserWalletWhereUniqueInput | UserWalletWhereUniqueInput[]
+    delete?: UserWalletWhereUniqueInput | UserWalletWhereUniqueInput[]
+    connect?: UserWalletWhereUniqueInput | UserWalletWhereUniqueInput[]
+    update?: UserWalletUpdateWithWhereUniqueWithoutUserInput | UserWalletUpdateWithWhereUniqueWithoutUserInput[]
+    updateMany?: UserWalletUpdateManyWithWhereWithoutUserInput | UserWalletUpdateManyWithWhereWithoutUserInput[]
+    deleteMany?: UserWalletScalarWhereInput | UserWalletScalarWhereInput[]
   }
 
   export type UserBalanceStatsUncheckedUpdateManyWithoutUserNestedInput = {
@@ -78683,18 +80344,74 @@ export namespace Prisma {
     deleteMany?: AdminAdjustmentDetailScalarWhereInput | AdminAdjustmentDetailScalarWhereInput[]
   }
 
-  export type UserCreateNestedOneWithoutBalancesInput = {
-    create?: XOR<UserCreateWithoutBalancesInput, UserUncheckedCreateWithoutBalancesInput>
-    connectOrCreate?: UserCreateOrConnectWithoutBalancesInput
+  export type WageringRequirementUncheckedUpdateManyWithoutUserNestedInput = {
+    create?: XOR<WageringRequirementCreateWithoutUserInput, WageringRequirementUncheckedCreateWithoutUserInput> | WageringRequirementCreateWithoutUserInput[] | WageringRequirementUncheckedCreateWithoutUserInput[]
+    connectOrCreate?: WageringRequirementCreateOrConnectWithoutUserInput | WageringRequirementCreateOrConnectWithoutUserInput[]
+    upsert?: WageringRequirementUpsertWithWhereUniqueWithoutUserInput | WageringRequirementUpsertWithWhereUniqueWithoutUserInput[]
+    createMany?: WageringRequirementCreateManyUserInputEnvelope
+    set?: WageringRequirementWhereUniqueInput | WageringRequirementWhereUniqueInput[]
+    disconnect?: WageringRequirementWhereUniqueInput | WageringRequirementWhereUniqueInput[]
+    delete?: WageringRequirementWhereUniqueInput | WageringRequirementWhereUniqueInput[]
+    connect?: WageringRequirementWhereUniqueInput | WageringRequirementWhereUniqueInput[]
+    update?: WageringRequirementUpdateWithWhereUniqueWithoutUserInput | WageringRequirementUpdateWithWhereUniqueWithoutUserInput[]
+    updateMany?: WageringRequirementUpdateManyWithWhereWithoutUserInput | WageringRequirementUpdateManyWithWhereWithoutUserInput[]
+    deleteMany?: WageringRequirementScalarWhereInput | WageringRequirementScalarWhereInput[]
+  }
+
+  export type UserCreateNestedOneWithoutUserWalletsInput = {
+    create?: XOR<UserCreateWithoutUserWalletsInput, UserUncheckedCreateWithoutUserWalletsInput>
+    connectOrCreate?: UserCreateOrConnectWithoutUserWalletsInput
     connect?: UserWhereUniqueInput
   }
 
-  export type UserUpdateOneRequiredWithoutBalancesNestedInput = {
-    create?: XOR<UserCreateWithoutBalancesInput, UserUncheckedCreateWithoutBalancesInput>
-    connectOrCreate?: UserCreateOrConnectWithoutBalancesInput
-    upsert?: UserUpsertWithoutBalancesInput
+  export type WageringRequirementCreateNestedManyWithoutUserWalletInput = {
+    create?: XOR<WageringRequirementCreateWithoutUserWalletInput, WageringRequirementUncheckedCreateWithoutUserWalletInput> | WageringRequirementCreateWithoutUserWalletInput[] | WageringRequirementUncheckedCreateWithoutUserWalletInput[]
+    connectOrCreate?: WageringRequirementCreateOrConnectWithoutUserWalletInput | WageringRequirementCreateOrConnectWithoutUserWalletInput[]
+    createMany?: WageringRequirementCreateManyUserWalletInputEnvelope
+    connect?: WageringRequirementWhereUniqueInput | WageringRequirementWhereUniqueInput[]
+  }
+
+  export type WageringRequirementUncheckedCreateNestedManyWithoutUserWalletInput = {
+    create?: XOR<WageringRequirementCreateWithoutUserWalletInput, WageringRequirementUncheckedCreateWithoutUserWalletInput> | WageringRequirementCreateWithoutUserWalletInput[] | WageringRequirementUncheckedCreateWithoutUserWalletInput[]
+    connectOrCreate?: WageringRequirementCreateOrConnectWithoutUserWalletInput | WageringRequirementCreateOrConnectWithoutUserWalletInput[]
+    createMany?: WageringRequirementCreateManyUserWalletInputEnvelope
+    connect?: WageringRequirementWhereUniqueInput | WageringRequirementWhereUniqueInput[]
+  }
+
+  export type UserUpdateOneRequiredWithoutUserWalletsNestedInput = {
+    create?: XOR<UserCreateWithoutUserWalletsInput, UserUncheckedCreateWithoutUserWalletsInput>
+    connectOrCreate?: UserCreateOrConnectWithoutUserWalletsInput
+    upsert?: UserUpsertWithoutUserWalletsInput
     connect?: UserWhereUniqueInput
-    update?: XOR<XOR<UserUpdateToOneWithWhereWithoutBalancesInput, UserUpdateWithoutBalancesInput>, UserUncheckedUpdateWithoutBalancesInput>
+    update?: XOR<XOR<UserUpdateToOneWithWhereWithoutUserWalletsInput, UserUpdateWithoutUserWalletsInput>, UserUncheckedUpdateWithoutUserWalletsInput>
+  }
+
+  export type WageringRequirementUpdateManyWithoutUserWalletNestedInput = {
+    create?: XOR<WageringRequirementCreateWithoutUserWalletInput, WageringRequirementUncheckedCreateWithoutUserWalletInput> | WageringRequirementCreateWithoutUserWalletInput[] | WageringRequirementUncheckedCreateWithoutUserWalletInput[]
+    connectOrCreate?: WageringRequirementCreateOrConnectWithoutUserWalletInput | WageringRequirementCreateOrConnectWithoutUserWalletInput[]
+    upsert?: WageringRequirementUpsertWithWhereUniqueWithoutUserWalletInput | WageringRequirementUpsertWithWhereUniqueWithoutUserWalletInput[]
+    createMany?: WageringRequirementCreateManyUserWalletInputEnvelope
+    set?: WageringRequirementWhereUniqueInput | WageringRequirementWhereUniqueInput[]
+    disconnect?: WageringRequirementWhereUniqueInput | WageringRequirementWhereUniqueInput[]
+    delete?: WageringRequirementWhereUniqueInput | WageringRequirementWhereUniqueInput[]
+    connect?: WageringRequirementWhereUniqueInput | WageringRequirementWhereUniqueInput[]
+    update?: WageringRequirementUpdateWithWhereUniqueWithoutUserWalletInput | WageringRequirementUpdateWithWhereUniqueWithoutUserWalletInput[]
+    updateMany?: WageringRequirementUpdateManyWithWhereWithoutUserWalletInput | WageringRequirementUpdateManyWithWhereWithoutUserWalletInput[]
+    deleteMany?: WageringRequirementScalarWhereInput | WageringRequirementScalarWhereInput[]
+  }
+
+  export type WageringRequirementUncheckedUpdateManyWithoutUserWalletNestedInput = {
+    create?: XOR<WageringRequirementCreateWithoutUserWalletInput, WageringRequirementUncheckedCreateWithoutUserWalletInput> | WageringRequirementCreateWithoutUserWalletInput[] | WageringRequirementUncheckedCreateWithoutUserWalletInput[]
+    connectOrCreate?: WageringRequirementCreateOrConnectWithoutUserWalletInput | WageringRequirementCreateOrConnectWithoutUserWalletInput[]
+    upsert?: WageringRequirementUpsertWithWhereUniqueWithoutUserWalletInput | WageringRequirementUpsertWithWhereUniqueWithoutUserWalletInput[]
+    createMany?: WageringRequirementCreateManyUserWalletInputEnvelope
+    set?: WageringRequirementWhereUniqueInput | WageringRequirementWhereUniqueInput[]
+    disconnect?: WageringRequirementWhereUniqueInput | WageringRequirementWhereUniqueInput[]
+    delete?: WageringRequirementWhereUniqueInput | WageringRequirementWhereUniqueInput[]
+    connect?: WageringRequirementWhereUniqueInput | WageringRequirementWhereUniqueInput[]
+    update?: WageringRequirementUpdateWithWhereUniqueWithoutUserWalletInput | WageringRequirementUpdateWithWhereUniqueWithoutUserWalletInput[]
+    updateMany?: WageringRequirementUpdateManyWithWhereWithoutUserWalletInput | WageringRequirementUpdateManyWithWhereWithoutUserWalletInput[]
+    deleteMany?: WageringRequirementScalarWhereInput | WageringRequirementScalarWhereInput[]
   }
 
   export type UserCreateNestedOneWithoutUserBalanceStatsInput = {
@@ -79393,60 +81110,6 @@ export namespace Prisma {
     set?: $Enums.ExchangeRateProvider
   }
 
-  export type DepositDetailCreateNestedOneWithoutRollingInput = {
-    create?: XOR<DepositDetailCreateWithoutRollingInput, DepositDetailUncheckedCreateWithoutRollingInput>
-    connectOrCreate?: DepositDetailCreateOrConnectWithoutRollingInput
-    connect?: DepositDetailWhereUniqueInput
-  }
-
-  export type UserCreateNestedOneWithoutRollingInput = {
-    create?: XOR<UserCreateWithoutRollingInput, UserUncheckedCreateWithoutRollingInput>
-    connectOrCreate?: UserCreateOrConnectWithoutRollingInput
-    connect?: UserWhereUniqueInput
-  }
-
-  export type UserPromotionCreateNestedOneWithoutRollingInput = {
-    create?: XOR<UserPromotionCreateWithoutRollingInput, UserPromotionUncheckedCreateWithoutRollingInput>
-    connectOrCreate?: UserPromotionCreateOrConnectWithoutRollingInput
-    connect?: UserPromotionWhereUniqueInput
-  }
-
-  export type EnumRollingSourceTypeFieldUpdateOperationsInput = {
-    set?: $Enums.RollingSourceType
-  }
-
-  export type EnumRollingStatusFieldUpdateOperationsInput = {
-    set?: $Enums.RollingStatus
-  }
-
-  export type DepositDetailUpdateOneWithoutRollingNestedInput = {
-    create?: XOR<DepositDetailCreateWithoutRollingInput, DepositDetailUncheckedCreateWithoutRollingInput>
-    connectOrCreate?: DepositDetailCreateOrConnectWithoutRollingInput
-    upsert?: DepositDetailUpsertWithoutRollingInput
-    disconnect?: DepositDetailWhereInput | boolean
-    delete?: DepositDetailWhereInput | boolean
-    connect?: DepositDetailWhereUniqueInput
-    update?: XOR<XOR<DepositDetailUpdateToOneWithWhereWithoutRollingInput, DepositDetailUpdateWithoutRollingInput>, DepositDetailUncheckedUpdateWithoutRollingInput>
-  }
-
-  export type UserUpdateOneRequiredWithoutRollingNestedInput = {
-    create?: XOR<UserCreateWithoutRollingInput, UserUncheckedCreateWithoutRollingInput>
-    connectOrCreate?: UserCreateOrConnectWithoutRollingInput
-    upsert?: UserUpsertWithoutRollingInput
-    connect?: UserWhereUniqueInput
-    update?: XOR<XOR<UserUpdateToOneWithWhereWithoutRollingInput, UserUpdateWithoutRollingInput>, UserUncheckedUpdateWithoutRollingInput>
-  }
-
-  export type UserPromotionUpdateOneWithoutRollingNestedInput = {
-    create?: XOR<UserPromotionCreateWithoutRollingInput, UserPromotionUncheckedCreateWithoutRollingInput>
-    connectOrCreate?: UserPromotionCreateOrConnectWithoutRollingInput
-    upsert?: UserPromotionUpsertWithoutRollingInput
-    disconnect?: UserPromotionWhereInput | boolean
-    delete?: UserPromotionWhereInput | boolean
-    connect?: UserPromotionWhereUniqueInput
-    update?: XOR<XOR<UserPromotionUpdateToOneWithWhereWithoutRollingInput, UserPromotionUpdateWithoutRollingInput>, UserPromotionUncheckedUpdateWithoutRollingInput>
-  }
-
   export type UserCreateNestedOneWithoutUserTokenInput = {
     create?: XOR<UserCreateWithoutUserTokenInput, UserUncheckedCreateWithoutUserTokenInput>
     connectOrCreate?: UserCreateOrConnectWithoutUserTokenInput
@@ -79621,18 +81284,18 @@ export namespace Prisma {
     connect?: TransactionWhereUniqueInput
   }
 
-  export type RollingCreateNestedManyWithoutDepositDetailInput = {
-    create?: XOR<RollingCreateWithoutDepositDetailInput, RollingUncheckedCreateWithoutDepositDetailInput> | RollingCreateWithoutDepositDetailInput[] | RollingUncheckedCreateWithoutDepositDetailInput[]
-    connectOrCreate?: RollingCreateOrConnectWithoutDepositDetailInput | RollingCreateOrConnectWithoutDepositDetailInput[]
-    createMany?: RollingCreateManyDepositDetailInputEnvelope
-    connect?: RollingWhereUniqueInput | RollingWhereUniqueInput[]
+  export type WageringRequirementCreateNestedManyWithoutDepositDetailInput = {
+    create?: XOR<WageringRequirementCreateWithoutDepositDetailInput, WageringRequirementUncheckedCreateWithoutDepositDetailInput> | WageringRequirementCreateWithoutDepositDetailInput[] | WageringRequirementUncheckedCreateWithoutDepositDetailInput[]
+    connectOrCreate?: WageringRequirementCreateOrConnectWithoutDepositDetailInput | WageringRequirementCreateOrConnectWithoutDepositDetailInput[]
+    createMany?: WageringRequirementCreateManyDepositDetailInputEnvelope
+    connect?: WageringRequirementWhereUniqueInput | WageringRequirementWhereUniqueInput[]
   }
 
-  export type RollingUncheckedCreateNestedManyWithoutDepositDetailInput = {
-    create?: XOR<RollingCreateWithoutDepositDetailInput, RollingUncheckedCreateWithoutDepositDetailInput> | RollingCreateWithoutDepositDetailInput[] | RollingUncheckedCreateWithoutDepositDetailInput[]
-    connectOrCreate?: RollingCreateOrConnectWithoutDepositDetailInput | RollingCreateOrConnectWithoutDepositDetailInput[]
-    createMany?: RollingCreateManyDepositDetailInputEnvelope
-    connect?: RollingWhereUniqueInput | RollingWhereUniqueInput[]
+  export type WageringRequirementUncheckedCreateNestedManyWithoutDepositDetailInput = {
+    create?: XOR<WageringRequirementCreateWithoutDepositDetailInput, WageringRequirementUncheckedCreateWithoutDepositDetailInput> | WageringRequirementCreateWithoutDepositDetailInput[] | WageringRequirementUncheckedCreateWithoutDepositDetailInput[]
+    connectOrCreate?: WageringRequirementCreateOrConnectWithoutDepositDetailInput | WageringRequirementCreateOrConnectWithoutDepositDetailInput[]
+    createMany?: WageringRequirementCreateManyDepositDetailInputEnvelope
+    connect?: WageringRequirementWhereUniqueInput | WageringRequirementWhereUniqueInput[]
   }
 
   export type EnumDepositDetailStatusFieldUpdateOperationsInput = {
@@ -79681,32 +81344,32 @@ export namespace Prisma {
     update?: XOR<XOR<TransactionUpdateToOneWithWhereWithoutDepositDetailInput, TransactionUpdateWithoutDepositDetailInput>, TransactionUncheckedUpdateWithoutDepositDetailInput>
   }
 
-  export type RollingUpdateManyWithoutDepositDetailNestedInput = {
-    create?: XOR<RollingCreateWithoutDepositDetailInput, RollingUncheckedCreateWithoutDepositDetailInput> | RollingCreateWithoutDepositDetailInput[] | RollingUncheckedCreateWithoutDepositDetailInput[]
-    connectOrCreate?: RollingCreateOrConnectWithoutDepositDetailInput | RollingCreateOrConnectWithoutDepositDetailInput[]
-    upsert?: RollingUpsertWithWhereUniqueWithoutDepositDetailInput | RollingUpsertWithWhereUniqueWithoutDepositDetailInput[]
-    createMany?: RollingCreateManyDepositDetailInputEnvelope
-    set?: RollingWhereUniqueInput | RollingWhereUniqueInput[]
-    disconnect?: RollingWhereUniqueInput | RollingWhereUniqueInput[]
-    delete?: RollingWhereUniqueInput | RollingWhereUniqueInput[]
-    connect?: RollingWhereUniqueInput | RollingWhereUniqueInput[]
-    update?: RollingUpdateWithWhereUniqueWithoutDepositDetailInput | RollingUpdateWithWhereUniqueWithoutDepositDetailInput[]
-    updateMany?: RollingUpdateManyWithWhereWithoutDepositDetailInput | RollingUpdateManyWithWhereWithoutDepositDetailInput[]
-    deleteMany?: RollingScalarWhereInput | RollingScalarWhereInput[]
+  export type WageringRequirementUpdateManyWithoutDepositDetailNestedInput = {
+    create?: XOR<WageringRequirementCreateWithoutDepositDetailInput, WageringRequirementUncheckedCreateWithoutDepositDetailInput> | WageringRequirementCreateWithoutDepositDetailInput[] | WageringRequirementUncheckedCreateWithoutDepositDetailInput[]
+    connectOrCreate?: WageringRequirementCreateOrConnectWithoutDepositDetailInput | WageringRequirementCreateOrConnectWithoutDepositDetailInput[]
+    upsert?: WageringRequirementUpsertWithWhereUniqueWithoutDepositDetailInput | WageringRequirementUpsertWithWhereUniqueWithoutDepositDetailInput[]
+    createMany?: WageringRequirementCreateManyDepositDetailInputEnvelope
+    set?: WageringRequirementWhereUniqueInput | WageringRequirementWhereUniqueInput[]
+    disconnect?: WageringRequirementWhereUniqueInput | WageringRequirementWhereUniqueInput[]
+    delete?: WageringRequirementWhereUniqueInput | WageringRequirementWhereUniqueInput[]
+    connect?: WageringRequirementWhereUniqueInput | WageringRequirementWhereUniqueInput[]
+    update?: WageringRequirementUpdateWithWhereUniqueWithoutDepositDetailInput | WageringRequirementUpdateWithWhereUniqueWithoutDepositDetailInput[]
+    updateMany?: WageringRequirementUpdateManyWithWhereWithoutDepositDetailInput | WageringRequirementUpdateManyWithWhereWithoutDepositDetailInput[]
+    deleteMany?: WageringRequirementScalarWhereInput | WageringRequirementScalarWhereInput[]
   }
 
-  export type RollingUncheckedUpdateManyWithoutDepositDetailNestedInput = {
-    create?: XOR<RollingCreateWithoutDepositDetailInput, RollingUncheckedCreateWithoutDepositDetailInput> | RollingCreateWithoutDepositDetailInput[] | RollingUncheckedCreateWithoutDepositDetailInput[]
-    connectOrCreate?: RollingCreateOrConnectWithoutDepositDetailInput | RollingCreateOrConnectWithoutDepositDetailInput[]
-    upsert?: RollingUpsertWithWhereUniqueWithoutDepositDetailInput | RollingUpsertWithWhereUniqueWithoutDepositDetailInput[]
-    createMany?: RollingCreateManyDepositDetailInputEnvelope
-    set?: RollingWhereUniqueInput | RollingWhereUniqueInput[]
-    disconnect?: RollingWhereUniqueInput | RollingWhereUniqueInput[]
-    delete?: RollingWhereUniqueInput | RollingWhereUniqueInput[]
-    connect?: RollingWhereUniqueInput | RollingWhereUniqueInput[]
-    update?: RollingUpdateWithWhereUniqueWithoutDepositDetailInput | RollingUpdateWithWhereUniqueWithoutDepositDetailInput[]
-    updateMany?: RollingUpdateManyWithWhereWithoutDepositDetailInput | RollingUpdateManyWithWhereWithoutDepositDetailInput[]
-    deleteMany?: RollingScalarWhereInput | RollingScalarWhereInput[]
+  export type WageringRequirementUncheckedUpdateManyWithoutDepositDetailNestedInput = {
+    create?: XOR<WageringRequirementCreateWithoutDepositDetailInput, WageringRequirementUncheckedCreateWithoutDepositDetailInput> | WageringRequirementCreateWithoutDepositDetailInput[] | WageringRequirementUncheckedCreateWithoutDepositDetailInput[]
+    connectOrCreate?: WageringRequirementCreateOrConnectWithoutDepositDetailInput | WageringRequirementCreateOrConnectWithoutDepositDetailInput[]
+    upsert?: WageringRequirementUpsertWithWhereUniqueWithoutDepositDetailInput | WageringRequirementUpsertWithWhereUniqueWithoutDepositDetailInput[]
+    createMany?: WageringRequirementCreateManyDepositDetailInputEnvelope
+    set?: WageringRequirementWhereUniqueInput | WageringRequirementWhereUniqueInput[]
+    disconnect?: WageringRequirementWhereUniqueInput | WageringRequirementWhereUniqueInput[]
+    delete?: WageringRequirementWhereUniqueInput | WageringRequirementWhereUniqueInput[]
+    connect?: WageringRequirementWhereUniqueInput | WageringRequirementWhereUniqueInput[]
+    update?: WageringRequirementUpdateWithWhereUniqueWithoutDepositDetailInput | WageringRequirementUpdateWithWhereUniqueWithoutDepositDetailInput[]
+    updateMany?: WageringRequirementUpdateManyWithWhereWithoutDepositDetailInput | WageringRequirementUpdateManyWithWhereWithoutDepositDetailInput[]
+    deleteMany?: WageringRequirementScalarWhereInput | WageringRequirementScalarWhereInput[]
   }
 
   export type DepositDetailCreateNestedManyWithoutCryptoConfigInput = {
@@ -79959,11 +81622,11 @@ export namespace Prisma {
     update?: XOR<XOR<PromotionUpdateToOneWithWhereWithoutCurrenciesInput, PromotionUpdateWithoutCurrenciesInput>, PromotionUncheckedUpdateWithoutCurrenciesInput>
   }
 
-  export type RollingCreateNestedManyWithoutUserPromotionInput = {
-    create?: XOR<RollingCreateWithoutUserPromotionInput, RollingUncheckedCreateWithoutUserPromotionInput> | RollingCreateWithoutUserPromotionInput[] | RollingUncheckedCreateWithoutUserPromotionInput[]
-    connectOrCreate?: RollingCreateOrConnectWithoutUserPromotionInput | RollingCreateOrConnectWithoutUserPromotionInput[]
-    createMany?: RollingCreateManyUserPromotionInputEnvelope
-    connect?: RollingWhereUniqueInput | RollingWhereUniqueInput[]
+  export type WageringRequirementCreateNestedManyWithoutUserPromotionInput = {
+    create?: XOR<WageringRequirementCreateWithoutUserPromotionInput, WageringRequirementUncheckedCreateWithoutUserPromotionInput> | WageringRequirementCreateWithoutUserPromotionInput[] | WageringRequirementUncheckedCreateWithoutUserPromotionInput[]
+    connectOrCreate?: WageringRequirementCreateOrConnectWithoutUserPromotionInput | WageringRequirementCreateOrConnectWithoutUserPromotionInput[]
+    createMany?: WageringRequirementCreateManyUserPromotionInputEnvelope
+    connect?: WageringRequirementWhereUniqueInput | WageringRequirementWhereUniqueInput[]
   }
 
   export type PromotionCreateNestedOneWithoutUserPromotionInput = {
@@ -79978,29 +81641,29 @@ export namespace Prisma {
     connect?: UserWhereUniqueInput
   }
 
-  export type RollingUncheckedCreateNestedManyWithoutUserPromotionInput = {
-    create?: XOR<RollingCreateWithoutUserPromotionInput, RollingUncheckedCreateWithoutUserPromotionInput> | RollingCreateWithoutUserPromotionInput[] | RollingUncheckedCreateWithoutUserPromotionInput[]
-    connectOrCreate?: RollingCreateOrConnectWithoutUserPromotionInput | RollingCreateOrConnectWithoutUserPromotionInput[]
-    createMany?: RollingCreateManyUserPromotionInputEnvelope
-    connect?: RollingWhereUniqueInput | RollingWhereUniqueInput[]
+  export type WageringRequirementUncheckedCreateNestedManyWithoutUserPromotionInput = {
+    create?: XOR<WageringRequirementCreateWithoutUserPromotionInput, WageringRequirementUncheckedCreateWithoutUserPromotionInput> | WageringRequirementCreateWithoutUserPromotionInput[] | WageringRequirementUncheckedCreateWithoutUserPromotionInput[]
+    connectOrCreate?: WageringRequirementCreateOrConnectWithoutUserPromotionInput | WageringRequirementCreateOrConnectWithoutUserPromotionInput[]
+    createMany?: WageringRequirementCreateManyUserPromotionInputEnvelope
+    connect?: WageringRequirementWhereUniqueInput | WageringRequirementWhereUniqueInput[]
   }
 
   export type EnumUserPromotionStatusFieldUpdateOperationsInput = {
     set?: $Enums.UserPromotionStatus
   }
 
-  export type RollingUpdateManyWithoutUserPromotionNestedInput = {
-    create?: XOR<RollingCreateWithoutUserPromotionInput, RollingUncheckedCreateWithoutUserPromotionInput> | RollingCreateWithoutUserPromotionInput[] | RollingUncheckedCreateWithoutUserPromotionInput[]
-    connectOrCreate?: RollingCreateOrConnectWithoutUserPromotionInput | RollingCreateOrConnectWithoutUserPromotionInput[]
-    upsert?: RollingUpsertWithWhereUniqueWithoutUserPromotionInput | RollingUpsertWithWhereUniqueWithoutUserPromotionInput[]
-    createMany?: RollingCreateManyUserPromotionInputEnvelope
-    set?: RollingWhereUniqueInput | RollingWhereUniqueInput[]
-    disconnect?: RollingWhereUniqueInput | RollingWhereUniqueInput[]
-    delete?: RollingWhereUniqueInput | RollingWhereUniqueInput[]
-    connect?: RollingWhereUniqueInput | RollingWhereUniqueInput[]
-    update?: RollingUpdateWithWhereUniqueWithoutUserPromotionInput | RollingUpdateWithWhereUniqueWithoutUserPromotionInput[]
-    updateMany?: RollingUpdateManyWithWhereWithoutUserPromotionInput | RollingUpdateManyWithWhereWithoutUserPromotionInput[]
-    deleteMany?: RollingScalarWhereInput | RollingScalarWhereInput[]
+  export type WageringRequirementUpdateManyWithoutUserPromotionNestedInput = {
+    create?: XOR<WageringRequirementCreateWithoutUserPromotionInput, WageringRequirementUncheckedCreateWithoutUserPromotionInput> | WageringRequirementCreateWithoutUserPromotionInput[] | WageringRequirementUncheckedCreateWithoutUserPromotionInput[]
+    connectOrCreate?: WageringRequirementCreateOrConnectWithoutUserPromotionInput | WageringRequirementCreateOrConnectWithoutUserPromotionInput[]
+    upsert?: WageringRequirementUpsertWithWhereUniqueWithoutUserPromotionInput | WageringRequirementUpsertWithWhereUniqueWithoutUserPromotionInput[]
+    createMany?: WageringRequirementCreateManyUserPromotionInputEnvelope
+    set?: WageringRequirementWhereUniqueInput | WageringRequirementWhereUniqueInput[]
+    disconnect?: WageringRequirementWhereUniqueInput | WageringRequirementWhereUniqueInput[]
+    delete?: WageringRequirementWhereUniqueInput | WageringRequirementWhereUniqueInput[]
+    connect?: WageringRequirementWhereUniqueInput | WageringRequirementWhereUniqueInput[]
+    update?: WageringRequirementUpdateWithWhereUniqueWithoutUserPromotionInput | WageringRequirementUpdateWithWhereUniqueWithoutUserPromotionInput[]
+    updateMany?: WageringRequirementUpdateManyWithWhereWithoutUserPromotionInput | WageringRequirementUpdateManyWithWhereWithoutUserPromotionInput[]
+    deleteMany?: WageringRequirementScalarWhereInput | WageringRequirementScalarWhereInput[]
   }
 
   export type PromotionUpdateOneRequiredWithoutUserPromotionNestedInput = {
@@ -80019,18 +81682,18 @@ export namespace Prisma {
     update?: XOR<XOR<UserUpdateToOneWithWhereWithoutUserPromotionInput, UserUpdateWithoutUserPromotionInput>, UserUncheckedUpdateWithoutUserPromotionInput>
   }
 
-  export type RollingUncheckedUpdateManyWithoutUserPromotionNestedInput = {
-    create?: XOR<RollingCreateWithoutUserPromotionInput, RollingUncheckedCreateWithoutUserPromotionInput> | RollingCreateWithoutUserPromotionInput[] | RollingUncheckedCreateWithoutUserPromotionInput[]
-    connectOrCreate?: RollingCreateOrConnectWithoutUserPromotionInput | RollingCreateOrConnectWithoutUserPromotionInput[]
-    upsert?: RollingUpsertWithWhereUniqueWithoutUserPromotionInput | RollingUpsertWithWhereUniqueWithoutUserPromotionInput[]
-    createMany?: RollingCreateManyUserPromotionInputEnvelope
-    set?: RollingWhereUniqueInput | RollingWhereUniqueInput[]
-    disconnect?: RollingWhereUniqueInput | RollingWhereUniqueInput[]
-    delete?: RollingWhereUniqueInput | RollingWhereUniqueInput[]
-    connect?: RollingWhereUniqueInput | RollingWhereUniqueInput[]
-    update?: RollingUpdateWithWhereUniqueWithoutUserPromotionInput | RollingUpdateWithWhereUniqueWithoutUserPromotionInput[]
-    updateMany?: RollingUpdateManyWithWhereWithoutUserPromotionInput | RollingUpdateManyWithWhereWithoutUserPromotionInput[]
-    deleteMany?: RollingScalarWhereInput | RollingScalarWhereInput[]
+  export type WageringRequirementUncheckedUpdateManyWithoutUserPromotionNestedInput = {
+    create?: XOR<WageringRequirementCreateWithoutUserPromotionInput, WageringRequirementUncheckedCreateWithoutUserPromotionInput> | WageringRequirementCreateWithoutUserPromotionInput[] | WageringRequirementUncheckedCreateWithoutUserPromotionInput[]
+    connectOrCreate?: WageringRequirementCreateOrConnectWithoutUserPromotionInput | WageringRequirementCreateOrConnectWithoutUserPromotionInput[]
+    upsert?: WageringRequirementUpsertWithWhereUniqueWithoutUserPromotionInput | WageringRequirementUpsertWithWhereUniqueWithoutUserPromotionInput[]
+    createMany?: WageringRequirementCreateManyUserPromotionInputEnvelope
+    set?: WageringRequirementWhereUniqueInput | WageringRequirementWhereUniqueInput[]
+    disconnect?: WageringRequirementWhereUniqueInput | WageringRequirementWhereUniqueInput[]
+    delete?: WageringRequirementWhereUniqueInput | WageringRequirementWhereUniqueInput[]
+    connect?: WageringRequirementWhereUniqueInput | WageringRequirementWhereUniqueInput[]
+    update?: WageringRequirementUpdateWithWhereUniqueWithoutUserPromotionInput | WageringRequirementUpdateWithWhereUniqueWithoutUserPromotionInput[]
+    updateMany?: WageringRequirementUpdateManyWithWhereWithoutUserPromotionInput | WageringRequirementUpdateManyWithWhereWithoutUserPromotionInput[]
+    deleteMany?: WageringRequirementScalarWhereInput | WageringRequirementScalarWhereInput[]
   }
 
   export type UserTierCreateNestedManyWithoutTierInput = {
@@ -80373,6 +82036,130 @@ export namespace Prisma {
     delete?: UserWhereInput | boolean
     connect?: UserWhereUniqueInput
     update?: XOR<XOR<UserUpdateToOneWithWhereWithoutRevokedSessionsInput, UserUpdateWithoutRevokedSessionsInput>, UserUncheckedUpdateWithoutRevokedSessionsInput>
+  }
+
+  export type DepositDetailCreateNestedOneWithoutWageringRequirementsInput = {
+    create?: XOR<DepositDetailCreateWithoutWageringRequirementsInput, DepositDetailUncheckedCreateWithoutWageringRequirementsInput>
+    connectOrCreate?: DepositDetailCreateOrConnectWithoutWageringRequirementsInput
+    connect?: DepositDetailWhereUniqueInput
+  }
+
+  export type UserWalletCreateNestedOneWithoutWageringRequirementsInput = {
+    create?: XOR<UserWalletCreateWithoutWageringRequirementsInput, UserWalletUncheckedCreateWithoutWageringRequirementsInput>
+    connectOrCreate?: UserWalletCreateOrConnectWithoutWageringRequirementsInput
+    connect?: UserWalletWhereUniqueInput
+  }
+
+  export type UserPromotionCreateNestedOneWithoutWageringRequirementsInput = {
+    create?: XOR<UserPromotionCreateWithoutWageringRequirementsInput, UserPromotionUncheckedCreateWithoutWageringRequirementsInput>
+    connectOrCreate?: UserPromotionCreateOrConnectWithoutWageringRequirementsInput
+    connect?: UserPromotionWhereUniqueInput
+  }
+
+  export type UserCreateNestedOneWithoutWageringRequirementsInput = {
+    create?: XOR<UserCreateWithoutWageringRequirementsInput, UserUncheckedCreateWithoutWageringRequirementsInput>
+    connectOrCreate?: UserCreateOrConnectWithoutWageringRequirementsInput
+    connect?: UserWhereUniqueInput
+  }
+
+  export type WageringContributionLogCreateNestedManyWithoutWageringRequirementInput = {
+    create?: XOR<WageringContributionLogCreateWithoutWageringRequirementInput, WageringContributionLogUncheckedCreateWithoutWageringRequirementInput> | WageringContributionLogCreateWithoutWageringRequirementInput[] | WageringContributionLogUncheckedCreateWithoutWageringRequirementInput[]
+    connectOrCreate?: WageringContributionLogCreateOrConnectWithoutWageringRequirementInput | WageringContributionLogCreateOrConnectWithoutWageringRequirementInput[]
+    createMany?: WageringContributionLogCreateManyWageringRequirementInputEnvelope
+    connect?: WageringContributionLogWhereUniqueInput | WageringContributionLogWhereUniqueInput[]
+  }
+
+  export type WageringContributionLogUncheckedCreateNestedManyWithoutWageringRequirementInput = {
+    create?: XOR<WageringContributionLogCreateWithoutWageringRequirementInput, WageringContributionLogUncheckedCreateWithoutWageringRequirementInput> | WageringContributionLogCreateWithoutWageringRequirementInput[] | WageringContributionLogUncheckedCreateWithoutWageringRequirementInput[]
+    connectOrCreate?: WageringContributionLogCreateOrConnectWithoutWageringRequirementInput | WageringContributionLogCreateOrConnectWithoutWageringRequirementInput[]
+    createMany?: WageringContributionLogCreateManyWageringRequirementInputEnvelope
+    connect?: WageringContributionLogWhereUniqueInput | WageringContributionLogWhereUniqueInput[]
+  }
+
+  export type EnumWageringSourceTypeFieldUpdateOperationsInput = {
+    set?: $Enums.WageringSourceType
+  }
+
+  export type EnumWageringStatusFieldUpdateOperationsInput = {
+    set?: $Enums.WageringStatus
+  }
+
+  export type DepositDetailUpdateOneWithoutWageringRequirementsNestedInput = {
+    create?: XOR<DepositDetailCreateWithoutWageringRequirementsInput, DepositDetailUncheckedCreateWithoutWageringRequirementsInput>
+    connectOrCreate?: DepositDetailCreateOrConnectWithoutWageringRequirementsInput
+    upsert?: DepositDetailUpsertWithoutWageringRequirementsInput
+    disconnect?: DepositDetailWhereInput | boolean
+    delete?: DepositDetailWhereInput | boolean
+    connect?: DepositDetailWhereUniqueInput
+    update?: XOR<XOR<DepositDetailUpdateToOneWithWhereWithoutWageringRequirementsInput, DepositDetailUpdateWithoutWageringRequirementsInput>, DepositDetailUncheckedUpdateWithoutWageringRequirementsInput>
+  }
+
+  export type UserWalletUpdateOneRequiredWithoutWageringRequirementsNestedInput = {
+    create?: XOR<UserWalletCreateWithoutWageringRequirementsInput, UserWalletUncheckedCreateWithoutWageringRequirementsInput>
+    connectOrCreate?: UserWalletCreateOrConnectWithoutWageringRequirementsInput
+    upsert?: UserWalletUpsertWithoutWageringRequirementsInput
+    connect?: UserWalletWhereUniqueInput
+    update?: XOR<XOR<UserWalletUpdateToOneWithWhereWithoutWageringRequirementsInput, UserWalletUpdateWithoutWageringRequirementsInput>, UserWalletUncheckedUpdateWithoutWageringRequirementsInput>
+  }
+
+  export type UserPromotionUpdateOneWithoutWageringRequirementsNestedInput = {
+    create?: XOR<UserPromotionCreateWithoutWageringRequirementsInput, UserPromotionUncheckedCreateWithoutWageringRequirementsInput>
+    connectOrCreate?: UserPromotionCreateOrConnectWithoutWageringRequirementsInput
+    upsert?: UserPromotionUpsertWithoutWageringRequirementsInput
+    disconnect?: UserPromotionWhereInput | boolean
+    delete?: UserPromotionWhereInput | boolean
+    connect?: UserPromotionWhereUniqueInput
+    update?: XOR<XOR<UserPromotionUpdateToOneWithWhereWithoutWageringRequirementsInput, UserPromotionUpdateWithoutWageringRequirementsInput>, UserPromotionUncheckedUpdateWithoutWageringRequirementsInput>
+  }
+
+  export type UserUpdateOneRequiredWithoutWageringRequirementsNestedInput = {
+    create?: XOR<UserCreateWithoutWageringRequirementsInput, UserUncheckedCreateWithoutWageringRequirementsInput>
+    connectOrCreate?: UserCreateOrConnectWithoutWageringRequirementsInput
+    upsert?: UserUpsertWithoutWageringRequirementsInput
+    connect?: UserWhereUniqueInput
+    update?: XOR<XOR<UserUpdateToOneWithWhereWithoutWageringRequirementsInput, UserUpdateWithoutWageringRequirementsInput>, UserUncheckedUpdateWithoutWageringRequirementsInput>
+  }
+
+  export type WageringContributionLogUpdateManyWithoutWageringRequirementNestedInput = {
+    create?: XOR<WageringContributionLogCreateWithoutWageringRequirementInput, WageringContributionLogUncheckedCreateWithoutWageringRequirementInput> | WageringContributionLogCreateWithoutWageringRequirementInput[] | WageringContributionLogUncheckedCreateWithoutWageringRequirementInput[]
+    connectOrCreate?: WageringContributionLogCreateOrConnectWithoutWageringRequirementInput | WageringContributionLogCreateOrConnectWithoutWageringRequirementInput[]
+    upsert?: WageringContributionLogUpsertWithWhereUniqueWithoutWageringRequirementInput | WageringContributionLogUpsertWithWhereUniqueWithoutWageringRequirementInput[]
+    createMany?: WageringContributionLogCreateManyWageringRequirementInputEnvelope
+    set?: WageringContributionLogWhereUniqueInput | WageringContributionLogWhereUniqueInput[]
+    disconnect?: WageringContributionLogWhereUniqueInput | WageringContributionLogWhereUniqueInput[]
+    delete?: WageringContributionLogWhereUniqueInput | WageringContributionLogWhereUniqueInput[]
+    connect?: WageringContributionLogWhereUniqueInput | WageringContributionLogWhereUniqueInput[]
+    update?: WageringContributionLogUpdateWithWhereUniqueWithoutWageringRequirementInput | WageringContributionLogUpdateWithWhereUniqueWithoutWageringRequirementInput[]
+    updateMany?: WageringContributionLogUpdateManyWithWhereWithoutWageringRequirementInput | WageringContributionLogUpdateManyWithWhereWithoutWageringRequirementInput[]
+    deleteMany?: WageringContributionLogScalarWhereInput | WageringContributionLogScalarWhereInput[]
+  }
+
+  export type WageringContributionLogUncheckedUpdateManyWithoutWageringRequirementNestedInput = {
+    create?: XOR<WageringContributionLogCreateWithoutWageringRequirementInput, WageringContributionLogUncheckedCreateWithoutWageringRequirementInput> | WageringContributionLogCreateWithoutWageringRequirementInput[] | WageringContributionLogUncheckedCreateWithoutWageringRequirementInput[]
+    connectOrCreate?: WageringContributionLogCreateOrConnectWithoutWageringRequirementInput | WageringContributionLogCreateOrConnectWithoutWageringRequirementInput[]
+    upsert?: WageringContributionLogUpsertWithWhereUniqueWithoutWageringRequirementInput | WageringContributionLogUpsertWithWhereUniqueWithoutWageringRequirementInput[]
+    createMany?: WageringContributionLogCreateManyWageringRequirementInputEnvelope
+    set?: WageringContributionLogWhereUniqueInput | WageringContributionLogWhereUniqueInput[]
+    disconnect?: WageringContributionLogWhereUniqueInput | WageringContributionLogWhereUniqueInput[]
+    delete?: WageringContributionLogWhereUniqueInput | WageringContributionLogWhereUniqueInput[]
+    connect?: WageringContributionLogWhereUniqueInput | WageringContributionLogWhereUniqueInput[]
+    update?: WageringContributionLogUpdateWithWhereUniqueWithoutWageringRequirementInput | WageringContributionLogUpdateWithWhereUniqueWithoutWageringRequirementInput[]
+    updateMany?: WageringContributionLogUpdateManyWithWhereWithoutWageringRequirementInput | WageringContributionLogUpdateManyWithWhereWithoutWageringRequirementInput[]
+    deleteMany?: WageringContributionLogScalarWhereInput | WageringContributionLogScalarWhereInput[]
+  }
+
+  export type WageringRequirementCreateNestedOneWithoutContributionLogsInput = {
+    create?: XOR<WageringRequirementCreateWithoutContributionLogsInput, WageringRequirementUncheckedCreateWithoutContributionLogsInput>
+    connectOrCreate?: WageringRequirementCreateOrConnectWithoutContributionLogsInput
+    connect?: WageringRequirementWhereUniqueInput
+  }
+
+  export type WageringRequirementUpdateOneRequiredWithoutContributionLogsNestedInput = {
+    create?: XOR<WageringRequirementCreateWithoutContributionLogsInput, WageringRequirementUncheckedCreateWithoutContributionLogsInput>
+    connectOrCreate?: WageringRequirementCreateOrConnectWithoutContributionLogsInput
+    upsert?: WageringRequirementUpsertWithoutContributionLogsInput
+    connect?: WageringRequirementWhereUniqueInput
+    update?: XOR<XOR<WageringRequirementUpdateToOneWithWhereWithoutContributionLogsInput, WageringRequirementUpdateWithoutContributionLogsInput>, WageringRequirementUncheckedUpdateWithoutContributionLogsInput>
   }
 
   export type NestedBigIntFilter<$PrismaModel = never> = {
@@ -81083,40 +82870,6 @@ export namespace Prisma {
     _max?: NestedEnumExchangeRateProviderFilter<$PrismaModel>
   }
 
-  export type NestedEnumRollingSourceTypeFilter<$PrismaModel = never> = {
-    equals?: $Enums.RollingSourceType | EnumRollingSourceTypeFieldRefInput<$PrismaModel>
-    in?: $Enums.RollingSourceType[] | ListEnumRollingSourceTypeFieldRefInput<$PrismaModel>
-    notIn?: $Enums.RollingSourceType[] | ListEnumRollingSourceTypeFieldRefInput<$PrismaModel>
-    not?: NestedEnumRollingSourceTypeFilter<$PrismaModel> | $Enums.RollingSourceType
-  }
-
-  export type NestedEnumRollingStatusFilter<$PrismaModel = never> = {
-    equals?: $Enums.RollingStatus | EnumRollingStatusFieldRefInput<$PrismaModel>
-    in?: $Enums.RollingStatus[] | ListEnumRollingStatusFieldRefInput<$PrismaModel>
-    notIn?: $Enums.RollingStatus[] | ListEnumRollingStatusFieldRefInput<$PrismaModel>
-    not?: NestedEnumRollingStatusFilter<$PrismaModel> | $Enums.RollingStatus
-  }
-
-  export type NestedEnumRollingSourceTypeWithAggregatesFilter<$PrismaModel = never> = {
-    equals?: $Enums.RollingSourceType | EnumRollingSourceTypeFieldRefInput<$PrismaModel>
-    in?: $Enums.RollingSourceType[] | ListEnumRollingSourceTypeFieldRefInput<$PrismaModel>
-    notIn?: $Enums.RollingSourceType[] | ListEnumRollingSourceTypeFieldRefInput<$PrismaModel>
-    not?: NestedEnumRollingSourceTypeWithAggregatesFilter<$PrismaModel> | $Enums.RollingSourceType
-    _count?: NestedIntFilter<$PrismaModel>
-    _min?: NestedEnumRollingSourceTypeFilter<$PrismaModel>
-    _max?: NestedEnumRollingSourceTypeFilter<$PrismaModel>
-  }
-
-  export type NestedEnumRollingStatusWithAggregatesFilter<$PrismaModel = never> = {
-    equals?: $Enums.RollingStatus | EnumRollingStatusFieldRefInput<$PrismaModel>
-    in?: $Enums.RollingStatus[] | ListEnumRollingStatusFieldRefInput<$PrismaModel>
-    notIn?: $Enums.RollingStatus[] | ListEnumRollingStatusFieldRefInput<$PrismaModel>
-    not?: NestedEnumRollingStatusWithAggregatesFilter<$PrismaModel> | $Enums.RollingStatus
-    _count?: NestedIntFilter<$PrismaModel>
-    _min?: NestedEnumRollingStatusFilter<$PrismaModel>
-    _max?: NestedEnumRollingStatusFilter<$PrismaModel>
-  }
-
   export type NestedEnumTokenTypeFilter<$PrismaModel = never> = {
     equals?: $Enums.TokenType | EnumTokenTypeFieldRefInput<$PrismaModel>
     in?: $Enums.TokenType[] | ListEnumTokenTypeFieldRefInput<$PrismaModel>
@@ -81423,6 +83176,40 @@ export namespace Prisma {
     _max?: NestedEnumSessionStatusFilter<$PrismaModel>
   }
 
+  export type NestedEnumWageringSourceTypeFilter<$PrismaModel = never> = {
+    equals?: $Enums.WageringSourceType | EnumWageringSourceTypeFieldRefInput<$PrismaModel>
+    in?: $Enums.WageringSourceType[] | ListEnumWageringSourceTypeFieldRefInput<$PrismaModel>
+    notIn?: $Enums.WageringSourceType[] | ListEnumWageringSourceTypeFieldRefInput<$PrismaModel>
+    not?: NestedEnumWageringSourceTypeFilter<$PrismaModel> | $Enums.WageringSourceType
+  }
+
+  export type NestedEnumWageringStatusFilter<$PrismaModel = never> = {
+    equals?: $Enums.WageringStatus | EnumWageringStatusFieldRefInput<$PrismaModel>
+    in?: $Enums.WageringStatus[] | ListEnumWageringStatusFieldRefInput<$PrismaModel>
+    notIn?: $Enums.WageringStatus[] | ListEnumWageringStatusFieldRefInput<$PrismaModel>
+    not?: NestedEnumWageringStatusFilter<$PrismaModel> | $Enums.WageringStatus
+  }
+
+  export type NestedEnumWageringSourceTypeWithAggregatesFilter<$PrismaModel = never> = {
+    equals?: $Enums.WageringSourceType | EnumWageringSourceTypeFieldRefInput<$PrismaModel>
+    in?: $Enums.WageringSourceType[] | ListEnumWageringSourceTypeFieldRefInput<$PrismaModel>
+    notIn?: $Enums.WageringSourceType[] | ListEnumWageringSourceTypeFieldRefInput<$PrismaModel>
+    not?: NestedEnumWageringSourceTypeWithAggregatesFilter<$PrismaModel> | $Enums.WageringSourceType
+    _count?: NestedIntFilter<$PrismaModel>
+    _min?: NestedEnumWageringSourceTypeFilter<$PrismaModel>
+    _max?: NestedEnumWageringSourceTypeFilter<$PrismaModel>
+  }
+
+  export type NestedEnumWageringStatusWithAggregatesFilter<$PrismaModel = never> = {
+    equals?: $Enums.WageringStatus | EnumWageringStatusFieldRefInput<$PrismaModel>
+    in?: $Enums.WageringStatus[] | ListEnumWageringStatusFieldRefInput<$PrismaModel>
+    notIn?: $Enums.WageringStatus[] | ListEnumWageringStatusFieldRefInput<$PrismaModel>
+    not?: NestedEnumWageringStatusWithAggregatesFilter<$PrismaModel> | $Enums.WageringStatus
+    _count?: NestedIntFilter<$PrismaModel>
+    _min?: NestedEnumWageringStatusFilter<$PrismaModel>
+    _max?: NestedEnumWageringStatusFilter<$PrismaModel>
+  }
+
   export type UserCreateWithoutAffiliateCodesInput = {
     id?: bigint | number
     uid?: string
@@ -81453,10 +83240,9 @@ export namespace Prisma {
     GameSession?: CasinoGameSessionCreateNestedManyWithoutUserInput
     affiliateReferrals?: ReferralCreateNestedManyWithoutAffiliateInput
     referredUsers?: ReferralCreateNestedManyWithoutSubUserInput
-    Rolling?: RollingCreateNestedManyWithoutUserInput
     transactions?: TransactionCreateNestedManyWithoutUserInput
     depositDetails?: DepositDetailCreateNestedManyWithoutUserInput
-    balances?: UserBalanceCreateNestedManyWithoutUserInput
+    userWallets?: UserWalletCreateNestedManyWithoutUserInput
     UserBalanceStats?: UserBalanceStatsCreateNestedManyWithoutUserInput
     UserPromotion?: UserPromotionCreateNestedManyWithoutUserInput
     UserSession?: UserSessionCreateNestedManyWithoutUserInput
@@ -81466,6 +83252,7 @@ export namespace Prisma {
     userTier?: UserTierCreateNestedOneWithoutUserInput
     tierHistory?: TierHistoryCreateNestedManyWithoutUserInput
     adminAdjustmentDetails?: AdminAdjustmentDetailCreateNestedManyWithoutAdminUserInput
+    wageringRequirements?: WageringRequirementCreateNestedManyWithoutUserInput
   }
 
   export type UserUncheckedCreateWithoutAffiliateCodesInput = {
@@ -81498,10 +83285,9 @@ export namespace Prisma {
     GameSession?: CasinoGameSessionUncheckedCreateNestedManyWithoutUserInput
     affiliateReferrals?: ReferralUncheckedCreateNestedManyWithoutAffiliateInput
     referredUsers?: ReferralUncheckedCreateNestedManyWithoutSubUserInput
-    Rolling?: RollingUncheckedCreateNestedManyWithoutUserInput
     transactions?: TransactionUncheckedCreateNestedManyWithoutUserInput
     depositDetails?: DepositDetailUncheckedCreateNestedManyWithoutUserInput
-    balances?: UserBalanceUncheckedCreateNestedManyWithoutUserInput
+    userWallets?: UserWalletUncheckedCreateNestedManyWithoutUserInput
     UserBalanceStats?: UserBalanceStatsUncheckedCreateNestedManyWithoutUserInput
     UserPromotion?: UserPromotionUncheckedCreateNestedManyWithoutUserInput
     UserSession?: UserSessionUncheckedCreateNestedManyWithoutUserInput
@@ -81511,6 +83297,7 @@ export namespace Prisma {
     userTier?: UserTierUncheckedCreateNestedOneWithoutUserInput
     tierHistory?: TierHistoryUncheckedCreateNestedManyWithoutUserInput
     adminAdjustmentDetails?: AdminAdjustmentDetailUncheckedCreateNestedManyWithoutAdminUserInput
+    wageringRequirements?: WageringRequirementUncheckedCreateNestedManyWithoutUserInput
   }
 
   export type UserCreateOrConnectWithoutAffiliateCodesInput = {
@@ -81593,10 +83380,9 @@ export namespace Prisma {
     GameSession?: CasinoGameSessionUpdateManyWithoutUserNestedInput
     affiliateReferrals?: ReferralUpdateManyWithoutAffiliateNestedInput
     referredUsers?: ReferralUpdateManyWithoutSubUserNestedInput
-    Rolling?: RollingUpdateManyWithoutUserNestedInput
     transactions?: TransactionUpdateManyWithoutUserNestedInput
     depositDetails?: DepositDetailUpdateManyWithoutUserNestedInput
-    balances?: UserBalanceUpdateManyWithoutUserNestedInput
+    userWallets?: UserWalletUpdateManyWithoutUserNestedInput
     UserBalanceStats?: UserBalanceStatsUpdateManyWithoutUserNestedInput
     UserPromotion?: UserPromotionUpdateManyWithoutUserNestedInput
     UserSession?: UserSessionUpdateManyWithoutUserNestedInput
@@ -81606,6 +83392,7 @@ export namespace Prisma {
     userTier?: UserTierUpdateOneWithoutUserNestedInput
     tierHistory?: TierHistoryUpdateManyWithoutUserNestedInput
     adminAdjustmentDetails?: AdminAdjustmentDetailUpdateManyWithoutAdminUserNestedInput
+    wageringRequirements?: WageringRequirementUpdateManyWithoutUserNestedInput
   }
 
   export type UserUncheckedUpdateWithoutAffiliateCodesInput = {
@@ -81638,10 +83425,9 @@ export namespace Prisma {
     GameSession?: CasinoGameSessionUncheckedUpdateManyWithoutUserNestedInput
     affiliateReferrals?: ReferralUncheckedUpdateManyWithoutAffiliateNestedInput
     referredUsers?: ReferralUncheckedUpdateManyWithoutSubUserNestedInput
-    Rolling?: RollingUncheckedUpdateManyWithoutUserNestedInput
     transactions?: TransactionUncheckedUpdateManyWithoutUserNestedInput
     depositDetails?: DepositDetailUncheckedUpdateManyWithoutUserNestedInput
-    balances?: UserBalanceUncheckedUpdateManyWithoutUserNestedInput
+    userWallets?: UserWalletUncheckedUpdateManyWithoutUserNestedInput
     UserBalanceStats?: UserBalanceStatsUncheckedUpdateManyWithoutUserNestedInput
     UserPromotion?: UserPromotionUncheckedUpdateManyWithoutUserNestedInput
     UserSession?: UserSessionUncheckedUpdateManyWithoutUserNestedInput
@@ -81651,6 +83437,7 @@ export namespace Prisma {
     userTier?: UserTierUncheckedUpdateOneWithoutUserNestedInput
     tierHistory?: TierHistoryUncheckedUpdateManyWithoutUserNestedInput
     adminAdjustmentDetails?: AdminAdjustmentDetailUncheckedUpdateManyWithoutAdminUserNestedInput
+    wageringRequirements?: WageringRequirementUncheckedUpdateManyWithoutUserNestedInput
   }
 
   export type ReferralUpsertWithWhereUniqueWithoutCodeInput = {
@@ -81715,10 +83502,9 @@ export namespace Prisma {
     EmailLog?: EmailLogCreateNestedManyWithoutUserInput
     GameSession?: CasinoGameSessionCreateNestedManyWithoutUserInput
     referredUsers?: ReferralCreateNestedManyWithoutSubUserInput
-    Rolling?: RollingCreateNestedManyWithoutUserInput
     transactions?: TransactionCreateNestedManyWithoutUserInput
     depositDetails?: DepositDetailCreateNestedManyWithoutUserInput
-    balances?: UserBalanceCreateNestedManyWithoutUserInput
+    userWallets?: UserWalletCreateNestedManyWithoutUserInput
     UserBalanceStats?: UserBalanceStatsCreateNestedManyWithoutUserInput
     UserPromotion?: UserPromotionCreateNestedManyWithoutUserInput
     UserSession?: UserSessionCreateNestedManyWithoutUserInput
@@ -81728,6 +83514,7 @@ export namespace Prisma {
     userTier?: UserTierCreateNestedOneWithoutUserInput
     tierHistory?: TierHistoryCreateNestedManyWithoutUserInput
     adminAdjustmentDetails?: AdminAdjustmentDetailCreateNestedManyWithoutAdminUserInput
+    wageringRequirements?: WageringRequirementCreateNestedManyWithoutUserInput
   }
 
   export type UserUncheckedCreateWithoutAffiliateReferralsInput = {
@@ -81760,10 +83547,9 @@ export namespace Prisma {
     EmailLog?: EmailLogUncheckedCreateNestedManyWithoutUserInput
     GameSession?: CasinoGameSessionUncheckedCreateNestedManyWithoutUserInput
     referredUsers?: ReferralUncheckedCreateNestedManyWithoutSubUserInput
-    Rolling?: RollingUncheckedCreateNestedManyWithoutUserInput
     transactions?: TransactionUncheckedCreateNestedManyWithoutUserInput
     depositDetails?: DepositDetailUncheckedCreateNestedManyWithoutUserInput
-    balances?: UserBalanceUncheckedCreateNestedManyWithoutUserInput
+    userWallets?: UserWalletUncheckedCreateNestedManyWithoutUserInput
     UserBalanceStats?: UserBalanceStatsUncheckedCreateNestedManyWithoutUserInput
     UserPromotion?: UserPromotionUncheckedCreateNestedManyWithoutUserInput
     UserSession?: UserSessionUncheckedCreateNestedManyWithoutUserInput
@@ -81773,6 +83559,7 @@ export namespace Prisma {
     userTier?: UserTierUncheckedCreateNestedOneWithoutUserInput
     tierHistory?: TierHistoryUncheckedCreateNestedManyWithoutUserInput
     adminAdjustmentDetails?: AdminAdjustmentDetailUncheckedCreateNestedManyWithoutAdminUserInput
+    wageringRequirements?: WageringRequirementUncheckedCreateNestedManyWithoutUserInput
   }
 
   export type UserCreateOrConnectWithoutAffiliateReferralsInput = {
@@ -81845,10 +83632,9 @@ export namespace Prisma {
     EmailLog?: EmailLogCreateNestedManyWithoutUserInput
     GameSession?: CasinoGameSessionCreateNestedManyWithoutUserInput
     affiliateReferrals?: ReferralCreateNestedManyWithoutAffiliateInput
-    Rolling?: RollingCreateNestedManyWithoutUserInput
     transactions?: TransactionCreateNestedManyWithoutUserInput
     depositDetails?: DepositDetailCreateNestedManyWithoutUserInput
-    balances?: UserBalanceCreateNestedManyWithoutUserInput
+    userWallets?: UserWalletCreateNestedManyWithoutUserInput
     UserBalanceStats?: UserBalanceStatsCreateNestedManyWithoutUserInput
     UserPromotion?: UserPromotionCreateNestedManyWithoutUserInput
     UserSession?: UserSessionCreateNestedManyWithoutUserInput
@@ -81858,6 +83644,7 @@ export namespace Prisma {
     userTier?: UserTierCreateNestedOneWithoutUserInput
     tierHistory?: TierHistoryCreateNestedManyWithoutUserInput
     adminAdjustmentDetails?: AdminAdjustmentDetailCreateNestedManyWithoutAdminUserInput
+    wageringRequirements?: WageringRequirementCreateNestedManyWithoutUserInput
   }
 
   export type UserUncheckedCreateWithoutReferredUsersInput = {
@@ -81890,10 +83677,9 @@ export namespace Prisma {
     EmailLog?: EmailLogUncheckedCreateNestedManyWithoutUserInput
     GameSession?: CasinoGameSessionUncheckedCreateNestedManyWithoutUserInput
     affiliateReferrals?: ReferralUncheckedCreateNestedManyWithoutAffiliateInput
-    Rolling?: RollingUncheckedCreateNestedManyWithoutUserInput
     transactions?: TransactionUncheckedCreateNestedManyWithoutUserInput
     depositDetails?: DepositDetailUncheckedCreateNestedManyWithoutUserInput
-    balances?: UserBalanceUncheckedCreateNestedManyWithoutUserInput
+    userWallets?: UserWalletUncheckedCreateNestedManyWithoutUserInput
     UserBalanceStats?: UserBalanceStatsUncheckedCreateNestedManyWithoutUserInput
     UserPromotion?: UserPromotionUncheckedCreateNestedManyWithoutUserInput
     UserSession?: UserSessionUncheckedCreateNestedManyWithoutUserInput
@@ -81903,6 +83689,7 @@ export namespace Prisma {
     userTier?: UserTierUncheckedCreateNestedOneWithoutUserInput
     tierHistory?: TierHistoryUncheckedCreateNestedManyWithoutUserInput
     adminAdjustmentDetails?: AdminAdjustmentDetailUncheckedCreateNestedManyWithoutAdminUserInput
+    wageringRequirements?: WageringRequirementUncheckedCreateNestedManyWithoutUserInput
   }
 
   export type UserCreateOrConnectWithoutReferredUsersInput = {
@@ -81951,10 +83738,9 @@ export namespace Prisma {
     EmailLog?: EmailLogUpdateManyWithoutUserNestedInput
     GameSession?: CasinoGameSessionUpdateManyWithoutUserNestedInput
     referredUsers?: ReferralUpdateManyWithoutSubUserNestedInput
-    Rolling?: RollingUpdateManyWithoutUserNestedInput
     transactions?: TransactionUpdateManyWithoutUserNestedInput
     depositDetails?: DepositDetailUpdateManyWithoutUserNestedInput
-    balances?: UserBalanceUpdateManyWithoutUserNestedInput
+    userWallets?: UserWalletUpdateManyWithoutUserNestedInput
     UserBalanceStats?: UserBalanceStatsUpdateManyWithoutUserNestedInput
     UserPromotion?: UserPromotionUpdateManyWithoutUserNestedInput
     UserSession?: UserSessionUpdateManyWithoutUserNestedInput
@@ -81964,6 +83750,7 @@ export namespace Prisma {
     userTier?: UserTierUpdateOneWithoutUserNestedInput
     tierHistory?: TierHistoryUpdateManyWithoutUserNestedInput
     adminAdjustmentDetails?: AdminAdjustmentDetailUpdateManyWithoutAdminUserNestedInput
+    wageringRequirements?: WageringRequirementUpdateManyWithoutUserNestedInput
   }
 
   export type UserUncheckedUpdateWithoutAffiliateReferralsInput = {
@@ -81996,10 +83783,9 @@ export namespace Prisma {
     EmailLog?: EmailLogUncheckedUpdateManyWithoutUserNestedInput
     GameSession?: CasinoGameSessionUncheckedUpdateManyWithoutUserNestedInput
     referredUsers?: ReferralUncheckedUpdateManyWithoutSubUserNestedInput
-    Rolling?: RollingUncheckedUpdateManyWithoutUserNestedInput
     transactions?: TransactionUncheckedUpdateManyWithoutUserNestedInput
     depositDetails?: DepositDetailUncheckedUpdateManyWithoutUserNestedInput
-    balances?: UserBalanceUncheckedUpdateManyWithoutUserNestedInput
+    userWallets?: UserWalletUncheckedUpdateManyWithoutUserNestedInput
     UserBalanceStats?: UserBalanceStatsUncheckedUpdateManyWithoutUserNestedInput
     UserPromotion?: UserPromotionUncheckedUpdateManyWithoutUserNestedInput
     UserSession?: UserSessionUncheckedUpdateManyWithoutUserNestedInput
@@ -82009,6 +83795,7 @@ export namespace Prisma {
     userTier?: UserTierUncheckedUpdateOneWithoutUserNestedInput
     tierHistory?: TierHistoryUncheckedUpdateManyWithoutUserNestedInput
     adminAdjustmentDetails?: AdminAdjustmentDetailUncheckedUpdateManyWithoutAdminUserNestedInput
+    wageringRequirements?: WageringRequirementUncheckedUpdateManyWithoutUserNestedInput
   }
 
   export type AffiliateCodeUpsertWithoutReferralsInput = {
@@ -82093,10 +83880,9 @@ export namespace Prisma {
     EmailLog?: EmailLogUpdateManyWithoutUserNestedInput
     GameSession?: CasinoGameSessionUpdateManyWithoutUserNestedInput
     affiliateReferrals?: ReferralUpdateManyWithoutAffiliateNestedInput
-    Rolling?: RollingUpdateManyWithoutUserNestedInput
     transactions?: TransactionUpdateManyWithoutUserNestedInput
     depositDetails?: DepositDetailUpdateManyWithoutUserNestedInput
-    balances?: UserBalanceUpdateManyWithoutUserNestedInput
+    userWallets?: UserWalletUpdateManyWithoutUserNestedInput
     UserBalanceStats?: UserBalanceStatsUpdateManyWithoutUserNestedInput
     UserPromotion?: UserPromotionUpdateManyWithoutUserNestedInput
     UserSession?: UserSessionUpdateManyWithoutUserNestedInput
@@ -82106,6 +83892,7 @@ export namespace Prisma {
     userTier?: UserTierUpdateOneWithoutUserNestedInput
     tierHistory?: TierHistoryUpdateManyWithoutUserNestedInput
     adminAdjustmentDetails?: AdminAdjustmentDetailUpdateManyWithoutAdminUserNestedInput
+    wageringRequirements?: WageringRequirementUpdateManyWithoutUserNestedInput
   }
 
   export type UserUncheckedUpdateWithoutReferredUsersInput = {
@@ -82138,10 +83925,9 @@ export namespace Prisma {
     EmailLog?: EmailLogUncheckedUpdateManyWithoutUserNestedInput
     GameSession?: CasinoGameSessionUncheckedUpdateManyWithoutUserNestedInput
     affiliateReferrals?: ReferralUncheckedUpdateManyWithoutAffiliateNestedInput
-    Rolling?: RollingUncheckedUpdateManyWithoutUserNestedInput
     transactions?: TransactionUncheckedUpdateManyWithoutUserNestedInput
     depositDetails?: DepositDetailUncheckedUpdateManyWithoutUserNestedInput
-    balances?: UserBalanceUncheckedUpdateManyWithoutUserNestedInput
+    userWallets?: UserWalletUncheckedUpdateManyWithoutUserNestedInput
     UserBalanceStats?: UserBalanceStatsUncheckedUpdateManyWithoutUserNestedInput
     UserPromotion?: UserPromotionUncheckedUpdateManyWithoutUserNestedInput
     UserSession?: UserSessionUncheckedUpdateManyWithoutUserNestedInput
@@ -82151,6 +83937,7 @@ export namespace Prisma {
     userTier?: UserTierUncheckedUpdateOneWithoutUserNestedInput
     tierHistory?: TierHistoryUncheckedUpdateManyWithoutUserNestedInput
     adminAdjustmentDetails?: AdminAdjustmentDetailUncheckedUpdateManyWithoutAdminUserNestedInput
+    wageringRequirements?: WageringRequirementUncheckedUpdateManyWithoutUserNestedInput
   }
 
   export type BonusDetailCreateWithoutCasinoGameInput = {
@@ -82747,10 +84534,9 @@ export namespace Prisma {
     EmailLog?: EmailLogCreateNestedManyWithoutUserInput
     affiliateReferrals?: ReferralCreateNestedManyWithoutAffiliateInput
     referredUsers?: ReferralCreateNestedManyWithoutSubUserInput
-    Rolling?: RollingCreateNestedManyWithoutUserInput
     transactions?: TransactionCreateNestedManyWithoutUserInput
     depositDetails?: DepositDetailCreateNestedManyWithoutUserInput
-    balances?: UserBalanceCreateNestedManyWithoutUserInput
+    userWallets?: UserWalletCreateNestedManyWithoutUserInput
     UserBalanceStats?: UserBalanceStatsCreateNestedManyWithoutUserInput
     UserPromotion?: UserPromotionCreateNestedManyWithoutUserInput
     UserSession?: UserSessionCreateNestedManyWithoutUserInput
@@ -82760,6 +84546,7 @@ export namespace Prisma {
     userTier?: UserTierCreateNestedOneWithoutUserInput
     tierHistory?: TierHistoryCreateNestedManyWithoutUserInput
     adminAdjustmentDetails?: AdminAdjustmentDetailCreateNestedManyWithoutAdminUserInput
+    wageringRequirements?: WageringRequirementCreateNestedManyWithoutUserInput
   }
 
   export type UserUncheckedCreateWithoutGameSessionInput = {
@@ -82792,10 +84579,9 @@ export namespace Prisma {
     EmailLog?: EmailLogUncheckedCreateNestedManyWithoutUserInput
     affiliateReferrals?: ReferralUncheckedCreateNestedManyWithoutAffiliateInput
     referredUsers?: ReferralUncheckedCreateNestedManyWithoutSubUserInput
-    Rolling?: RollingUncheckedCreateNestedManyWithoutUserInput
     transactions?: TransactionUncheckedCreateNestedManyWithoutUserInput
     depositDetails?: DepositDetailUncheckedCreateNestedManyWithoutUserInput
-    balances?: UserBalanceUncheckedCreateNestedManyWithoutUserInput
+    userWallets?: UserWalletUncheckedCreateNestedManyWithoutUserInput
     UserBalanceStats?: UserBalanceStatsUncheckedCreateNestedManyWithoutUserInput
     UserPromotion?: UserPromotionUncheckedCreateNestedManyWithoutUserInput
     UserSession?: UserSessionUncheckedCreateNestedManyWithoutUserInput
@@ -82805,6 +84591,7 @@ export namespace Prisma {
     userTier?: UserTierUncheckedCreateNestedOneWithoutUserInput
     tierHistory?: TierHistoryUncheckedCreateNestedManyWithoutUserInput
     adminAdjustmentDetails?: AdminAdjustmentDetailUncheckedCreateNestedManyWithoutAdminUserInput
+    wageringRequirements?: WageringRequirementUncheckedCreateNestedManyWithoutUserInput
   }
 
   export type UserCreateOrConnectWithoutGameSessionInput = {
@@ -82920,10 +84707,9 @@ export namespace Prisma {
     EmailLog?: EmailLogUpdateManyWithoutUserNestedInput
     affiliateReferrals?: ReferralUpdateManyWithoutAffiliateNestedInput
     referredUsers?: ReferralUpdateManyWithoutSubUserNestedInput
-    Rolling?: RollingUpdateManyWithoutUserNestedInput
     transactions?: TransactionUpdateManyWithoutUserNestedInput
     depositDetails?: DepositDetailUpdateManyWithoutUserNestedInput
-    balances?: UserBalanceUpdateManyWithoutUserNestedInput
+    userWallets?: UserWalletUpdateManyWithoutUserNestedInput
     UserBalanceStats?: UserBalanceStatsUpdateManyWithoutUserNestedInput
     UserPromotion?: UserPromotionUpdateManyWithoutUserNestedInput
     UserSession?: UserSessionUpdateManyWithoutUserNestedInput
@@ -82933,6 +84719,7 @@ export namespace Prisma {
     userTier?: UserTierUpdateOneWithoutUserNestedInput
     tierHistory?: TierHistoryUpdateManyWithoutUserNestedInput
     adminAdjustmentDetails?: AdminAdjustmentDetailUpdateManyWithoutAdminUserNestedInput
+    wageringRequirements?: WageringRequirementUpdateManyWithoutUserNestedInput
   }
 
   export type UserUncheckedUpdateWithoutGameSessionInput = {
@@ -82965,10 +84752,9 @@ export namespace Prisma {
     EmailLog?: EmailLogUncheckedUpdateManyWithoutUserNestedInput
     affiliateReferrals?: ReferralUncheckedUpdateManyWithoutAffiliateNestedInput
     referredUsers?: ReferralUncheckedUpdateManyWithoutSubUserNestedInput
-    Rolling?: RollingUncheckedUpdateManyWithoutUserNestedInput
     transactions?: TransactionUncheckedUpdateManyWithoutUserNestedInput
     depositDetails?: DepositDetailUncheckedUpdateManyWithoutUserNestedInput
-    balances?: UserBalanceUncheckedUpdateManyWithoutUserNestedInput
+    userWallets?: UserWalletUncheckedUpdateManyWithoutUserNestedInput
     UserBalanceStats?: UserBalanceStatsUncheckedUpdateManyWithoutUserNestedInput
     UserPromotion?: UserPromotionUncheckedUpdateManyWithoutUserNestedInput
     UserSession?: UserSessionUncheckedUpdateManyWithoutUserNestedInput
@@ -82978,6 +84764,7 @@ export namespace Prisma {
     userTier?: UserTierUncheckedUpdateOneWithoutUserNestedInput
     tierHistory?: TierHistoryUncheckedUpdateManyWithoutUserNestedInput
     adminAdjustmentDetails?: AdminAdjustmentDetailUncheckedUpdateManyWithoutAdminUserNestedInput
+    wageringRequirements?: WageringRequirementUncheckedUpdateManyWithoutUserNestedInput
   }
 
   export type AffiliateCodeCreateWithoutUserInput = {
@@ -83385,50 +85172,6 @@ export namespace Prisma {
     skipDuplicates?: boolean
   }
 
-  export type RollingCreateWithoutUserInput = {
-    id?: bigint | number
-    sourceType?: $Enums.RollingSourceType
-    requiredAmount: Decimal | DecimalJsLike | number | string
-    currentAmount?: Decimal | DecimalJsLike | number | string
-    cancellationBalanceThreshold?: Decimal | DecimalJsLike | number | string | null
-    status?: $Enums.RollingStatus
-    depositAmount?: Decimal | DecimalJsLike | number | string | null
-    bonusAmount?: Decimal | DecimalJsLike | number | string | null
-    completedAt?: Date | string | null
-    cancelledAt?: Date | string | null
-    createdAt?: Date | string
-    updatedAt?: Date | string
-    DepositDetail?: DepositDetailCreateNestedOneWithoutRollingInput
-    userPromotion?: UserPromotionCreateNestedOneWithoutRollingInput
-  }
-
-  export type RollingUncheckedCreateWithoutUserInput = {
-    id?: bigint | number
-    sourceType?: $Enums.RollingSourceType
-    userPromotionId?: bigint | number | null
-    requiredAmount: Decimal | DecimalJsLike | number | string
-    currentAmount?: Decimal | DecimalJsLike | number | string
-    cancellationBalanceThreshold?: Decimal | DecimalJsLike | number | string | null
-    status?: $Enums.RollingStatus
-    depositAmount?: Decimal | DecimalJsLike | number | string | null
-    bonusAmount?: Decimal | DecimalJsLike | number | string | null
-    completedAt?: Date | string | null
-    cancelledAt?: Date | string | null
-    createdAt?: Date | string
-    updatedAt?: Date | string
-    depositDetailId?: bigint | number | null
-  }
-
-  export type RollingCreateOrConnectWithoutUserInput = {
-    where: RollingWhereUniqueInput
-    create: XOR<RollingCreateWithoutUserInput, RollingUncheckedCreateWithoutUserInput>
-  }
-
-  export type RollingCreateManyUserInputEnvelope = {
-    data: RollingCreateManyUserInput | RollingCreateManyUserInput[]
-    skipDuplicates?: boolean
-  }
-
   export type TransactionCreateWithoutUserInput = {
     id?: bigint | number
     type: $Enums.TransactionType
@@ -83510,7 +85253,7 @@ export namespace Prisma {
     BankConfig?: BankConfigCreateNestedOneWithoutDepositDetailsInput
     CryptoConfig?: CryptoConfigCreateNestedOneWithoutDepositDetailsInput
     transaction?: TransactionCreateNestedOneWithoutDepositDetailInput
-    Rolling?: RollingCreateNestedManyWithoutDepositDetailInput
+    wageringRequirements?: WageringRequirementCreateNestedManyWithoutDepositDetailInput
   }
 
   export type DepositDetailUncheckedCreateWithoutUserInput = {
@@ -83544,7 +85287,7 @@ export namespace Prisma {
     providerMetadata?: NullableJsonNullValueInput | InputJsonValue
     bankConfigId?: bigint | number | null
     cryptoConfigId?: bigint | number | null
-    Rolling?: RollingUncheckedCreateNestedManyWithoutDepositDetailInput
+    wageringRequirements?: WageringRequirementUncheckedCreateNestedManyWithoutDepositDetailInput
   }
 
   export type DepositDetailCreateOrConnectWithoutUserInput = {
@@ -83557,27 +85300,29 @@ export namespace Prisma {
     skipDuplicates?: boolean
   }
 
-  export type UserBalanceCreateWithoutUserInput = {
+  export type UserWalletCreateWithoutUserInput = {
     currency: $Enums.ExchangeCurrencyCode
     mainBalance?: Decimal | DecimalJsLike | number | string
     bonusBalance?: Decimal | DecimalJsLike | number | string
     updatedAt?: Date | string
+    wageringRequirements?: WageringRequirementCreateNestedManyWithoutUserWalletInput
   }
 
-  export type UserBalanceUncheckedCreateWithoutUserInput = {
+  export type UserWalletUncheckedCreateWithoutUserInput = {
     currency: $Enums.ExchangeCurrencyCode
     mainBalance?: Decimal | DecimalJsLike | number | string
     bonusBalance?: Decimal | DecimalJsLike | number | string
     updatedAt?: Date | string
+    wageringRequirements?: WageringRequirementUncheckedCreateNestedManyWithoutUserWalletInput
   }
 
-  export type UserBalanceCreateOrConnectWithoutUserInput = {
-    where: UserBalanceWhereUniqueInput
-    create: XOR<UserBalanceCreateWithoutUserInput, UserBalanceUncheckedCreateWithoutUserInput>
+  export type UserWalletCreateOrConnectWithoutUserInput = {
+    where: UserWalletWhereUniqueInput
+    create: XOR<UserWalletCreateWithoutUserInput, UserWalletUncheckedCreateWithoutUserInput>
   }
 
-  export type UserBalanceCreateManyUserInputEnvelope = {
-    data: UserBalanceCreateManyUserInput | UserBalanceCreateManyUserInput[]
+  export type UserWalletCreateManyUserInputEnvelope = {
+    data: UserWalletCreateManyUserInput | UserWalletCreateManyUserInput[]
     skipDuplicates?: boolean
   }
 
@@ -83629,7 +85374,7 @@ export namespace Prisma {
     currency: $Enums.ExchangeCurrencyCode
     createdAt?: Date | string
     updatedAt?: Date | string
-    Rolling?: RollingCreateNestedManyWithoutUserPromotionInput
+    wageringRequirements?: WageringRequirementCreateNestedManyWithoutUserPromotionInput
     promotion: PromotionCreateNestedOneWithoutUserPromotionInput
   }
 
@@ -83644,7 +85389,7 @@ export namespace Prisma {
     currency: $Enums.ExchangeCurrencyCode
     createdAt?: Date | string
     updatedAt?: Date | string
-    Rolling?: RollingUncheckedCreateNestedManyWithoutUserPromotionInput
+    wageringRequirements?: WageringRequirementUncheckedCreateNestedManyWithoutUserPromotionInput
   }
 
   export type UserPromotionCreateOrConnectWithoutUserInput = {
@@ -83924,6 +85669,58 @@ export namespace Prisma {
 
   export type AdminAdjustmentDetailCreateManyAdminUserInputEnvelope = {
     data: AdminAdjustmentDetailCreateManyAdminUserInput | AdminAdjustmentDetailCreateManyAdminUserInput[]
+    skipDuplicates?: boolean
+  }
+
+  export type WageringRequirementCreateWithoutUserInput = {
+    id?: bigint | number
+    uid?: string
+    sourceType?: $Enums.WageringSourceType
+    requiredAmount: Decimal | DecimalJsLike | number | string
+    currentAmount?: Decimal | DecimalJsLike | number | string
+    cancellationBalanceThreshold?: Decimal | DecimalJsLike | number | string | null
+    status?: $Enums.WageringStatus
+    createdAt?: Date | string
+    updatedAt?: Date | string
+    expiresAt?: Date | string | null
+    completedAt?: Date | string | null
+    cancelledAt?: Date | string | null
+    cancellationNote?: string | null
+    priority?: number
+    DepositDetail?: DepositDetailCreateNestedOneWithoutWageringRequirementsInput
+    userWallet: UserWalletCreateNestedOneWithoutWageringRequirementsInput
+    userPromotion?: UserPromotionCreateNestedOneWithoutWageringRequirementsInput
+    contributionLogs?: WageringContributionLogCreateNestedManyWithoutWageringRequirementInput
+  }
+
+  export type WageringRequirementUncheckedCreateWithoutUserInput = {
+    id?: bigint | number
+    uid?: string
+    currency: $Enums.ExchangeCurrencyCode
+    sourceType?: $Enums.WageringSourceType
+    requiredAmount: Decimal | DecimalJsLike | number | string
+    currentAmount?: Decimal | DecimalJsLike | number | string
+    cancellationBalanceThreshold?: Decimal | DecimalJsLike | number | string | null
+    status?: $Enums.WageringStatus
+    depositDetailId?: bigint | number | null
+    userPromotionId?: bigint | number | null
+    createdAt?: Date | string
+    updatedAt?: Date | string
+    expiresAt?: Date | string | null
+    completedAt?: Date | string | null
+    cancelledAt?: Date | string | null
+    cancellationNote?: string | null
+    priority?: number
+    contributionLogs?: WageringContributionLogUncheckedCreateNestedManyWithoutWageringRequirementInput
+  }
+
+  export type WageringRequirementCreateOrConnectWithoutUserInput = {
+    where: WageringRequirementWhereUniqueInput
+    create: XOR<WageringRequirementCreateWithoutUserInput, WageringRequirementUncheckedCreateWithoutUserInput>
+  }
+
+  export type WageringRequirementCreateManyUserInputEnvelope = {
+    data: WageringRequirementCreateManyUserInput | WageringRequirementCreateManyUserInput[]
     skipDuplicates?: boolean
   }
 
@@ -84225,43 +86022,6 @@ export namespace Prisma {
     data: XOR<ReferralUpdateManyMutationInput, ReferralUncheckedUpdateManyWithoutSubUserInput>
   }
 
-  export type RollingUpsertWithWhereUniqueWithoutUserInput = {
-    where: RollingWhereUniqueInput
-    update: XOR<RollingUpdateWithoutUserInput, RollingUncheckedUpdateWithoutUserInput>
-    create: XOR<RollingCreateWithoutUserInput, RollingUncheckedCreateWithoutUserInput>
-  }
-
-  export type RollingUpdateWithWhereUniqueWithoutUserInput = {
-    where: RollingWhereUniqueInput
-    data: XOR<RollingUpdateWithoutUserInput, RollingUncheckedUpdateWithoutUserInput>
-  }
-
-  export type RollingUpdateManyWithWhereWithoutUserInput = {
-    where: RollingScalarWhereInput
-    data: XOR<RollingUpdateManyMutationInput, RollingUncheckedUpdateManyWithoutUserInput>
-  }
-
-  export type RollingScalarWhereInput = {
-    AND?: RollingScalarWhereInput | RollingScalarWhereInput[]
-    OR?: RollingScalarWhereInput[]
-    NOT?: RollingScalarWhereInput | RollingScalarWhereInput[]
-    id?: BigIntFilter<"Rolling"> | bigint | number
-    userId?: BigIntFilter<"Rolling"> | bigint | number
-    sourceType?: EnumRollingSourceTypeFilter<"Rolling"> | $Enums.RollingSourceType
-    userPromotionId?: BigIntNullableFilter<"Rolling"> | bigint | number | null
-    requiredAmount?: DecimalFilter<"Rolling"> | Decimal | DecimalJsLike | number | string
-    currentAmount?: DecimalFilter<"Rolling"> | Decimal | DecimalJsLike | number | string
-    cancellationBalanceThreshold?: DecimalNullableFilter<"Rolling"> | Decimal | DecimalJsLike | number | string | null
-    status?: EnumRollingStatusFilter<"Rolling"> | $Enums.RollingStatus
-    depositAmount?: DecimalNullableFilter<"Rolling"> | Decimal | DecimalJsLike | number | string | null
-    bonusAmount?: DecimalNullableFilter<"Rolling"> | Decimal | DecimalJsLike | number | string | null
-    completedAt?: DateTimeNullableFilter<"Rolling"> | Date | string | null
-    cancelledAt?: DateTimeNullableFilter<"Rolling"> | Date | string | null
-    createdAt?: DateTimeFilter<"Rolling"> | Date | string
-    updatedAt?: DateTimeFilter<"Rolling"> | Date | string
-    depositDetailId?: BigIntNullableFilter<"Rolling"> | bigint | number | null
-  }
-
   export type TransactionUpsertWithWhereUniqueWithoutUserInput = {
     where: TransactionWhereUniqueInput
     update: XOR<TransactionUpdateWithoutUserInput, TransactionUncheckedUpdateWithoutUserInput>
@@ -84347,31 +86107,31 @@ export namespace Prisma {
     cryptoConfigId?: BigIntNullableFilter<"DepositDetail"> | bigint | number | null
   }
 
-  export type UserBalanceUpsertWithWhereUniqueWithoutUserInput = {
-    where: UserBalanceWhereUniqueInput
-    update: XOR<UserBalanceUpdateWithoutUserInput, UserBalanceUncheckedUpdateWithoutUserInput>
-    create: XOR<UserBalanceCreateWithoutUserInput, UserBalanceUncheckedCreateWithoutUserInput>
+  export type UserWalletUpsertWithWhereUniqueWithoutUserInput = {
+    where: UserWalletWhereUniqueInput
+    update: XOR<UserWalletUpdateWithoutUserInput, UserWalletUncheckedUpdateWithoutUserInput>
+    create: XOR<UserWalletCreateWithoutUserInput, UserWalletUncheckedCreateWithoutUserInput>
   }
 
-  export type UserBalanceUpdateWithWhereUniqueWithoutUserInput = {
-    where: UserBalanceWhereUniqueInput
-    data: XOR<UserBalanceUpdateWithoutUserInput, UserBalanceUncheckedUpdateWithoutUserInput>
+  export type UserWalletUpdateWithWhereUniqueWithoutUserInput = {
+    where: UserWalletWhereUniqueInput
+    data: XOR<UserWalletUpdateWithoutUserInput, UserWalletUncheckedUpdateWithoutUserInput>
   }
 
-  export type UserBalanceUpdateManyWithWhereWithoutUserInput = {
-    where: UserBalanceScalarWhereInput
-    data: XOR<UserBalanceUpdateManyMutationInput, UserBalanceUncheckedUpdateManyWithoutUserInput>
+  export type UserWalletUpdateManyWithWhereWithoutUserInput = {
+    where: UserWalletScalarWhereInput
+    data: XOR<UserWalletUpdateManyMutationInput, UserWalletUncheckedUpdateManyWithoutUserInput>
   }
 
-  export type UserBalanceScalarWhereInput = {
-    AND?: UserBalanceScalarWhereInput | UserBalanceScalarWhereInput[]
-    OR?: UserBalanceScalarWhereInput[]
-    NOT?: UserBalanceScalarWhereInput | UserBalanceScalarWhereInput[]
-    userId?: BigIntFilter<"UserBalance"> | bigint | number
-    currency?: EnumExchangeCurrencyCodeFilter<"UserBalance"> | $Enums.ExchangeCurrencyCode
-    mainBalance?: DecimalFilter<"UserBalance"> | Decimal | DecimalJsLike | number | string
-    bonusBalance?: DecimalFilter<"UserBalance"> | Decimal | DecimalJsLike | number | string
-    updatedAt?: DateTimeFilter<"UserBalance"> | Date | string
+  export type UserWalletScalarWhereInput = {
+    AND?: UserWalletScalarWhereInput | UserWalletScalarWhereInput[]
+    OR?: UserWalletScalarWhereInput[]
+    NOT?: UserWalletScalarWhereInput | UserWalletScalarWhereInput[]
+    userId?: BigIntFilter<"UserWallet"> | bigint | number
+    currency?: EnumExchangeCurrencyCodeFilter<"UserWallet"> | $Enums.ExchangeCurrencyCode
+    mainBalance?: DecimalFilter<"UserWallet"> | Decimal | DecimalJsLike | number | string
+    bonusBalance?: DecimalFilter<"UserWallet"> | Decimal | DecimalJsLike | number | string
+    updatedAt?: DateTimeFilter<"UserWallet"> | Date | string
   }
 
   export type UserBalanceStatsUpsertWithWhereUniqueWithoutUserInput = {
@@ -84660,7 +86420,47 @@ export namespace Prisma {
     internalNote?: StringNullableFilter<"AdminAdjustmentDetail"> | string | null
   }
 
-  export type UserCreateWithoutBalancesInput = {
+  export type WageringRequirementUpsertWithWhereUniqueWithoutUserInput = {
+    where: WageringRequirementWhereUniqueInput
+    update: XOR<WageringRequirementUpdateWithoutUserInput, WageringRequirementUncheckedUpdateWithoutUserInput>
+    create: XOR<WageringRequirementCreateWithoutUserInput, WageringRequirementUncheckedCreateWithoutUserInput>
+  }
+
+  export type WageringRequirementUpdateWithWhereUniqueWithoutUserInput = {
+    where: WageringRequirementWhereUniqueInput
+    data: XOR<WageringRequirementUpdateWithoutUserInput, WageringRequirementUncheckedUpdateWithoutUserInput>
+  }
+
+  export type WageringRequirementUpdateManyWithWhereWithoutUserInput = {
+    where: WageringRequirementScalarWhereInput
+    data: XOR<WageringRequirementUpdateManyMutationInput, WageringRequirementUncheckedUpdateManyWithoutUserInput>
+  }
+
+  export type WageringRequirementScalarWhereInput = {
+    AND?: WageringRequirementScalarWhereInput | WageringRequirementScalarWhereInput[]
+    OR?: WageringRequirementScalarWhereInput[]
+    NOT?: WageringRequirementScalarWhereInput | WageringRequirementScalarWhereInput[]
+    id?: BigIntFilter<"WageringRequirement"> | bigint | number
+    uid?: StringFilter<"WageringRequirement"> | string
+    userId?: BigIntFilter<"WageringRequirement"> | bigint | number
+    currency?: EnumExchangeCurrencyCodeFilter<"WageringRequirement"> | $Enums.ExchangeCurrencyCode
+    sourceType?: EnumWageringSourceTypeFilter<"WageringRequirement"> | $Enums.WageringSourceType
+    requiredAmount?: DecimalFilter<"WageringRequirement"> | Decimal | DecimalJsLike | number | string
+    currentAmount?: DecimalFilter<"WageringRequirement"> | Decimal | DecimalJsLike | number | string
+    cancellationBalanceThreshold?: DecimalNullableFilter<"WageringRequirement"> | Decimal | DecimalJsLike | number | string | null
+    status?: EnumWageringStatusFilter<"WageringRequirement"> | $Enums.WageringStatus
+    depositDetailId?: BigIntNullableFilter<"WageringRequirement"> | bigint | number | null
+    userPromotionId?: BigIntNullableFilter<"WageringRequirement"> | bigint | number | null
+    createdAt?: DateTimeFilter<"WageringRequirement"> | Date | string
+    updatedAt?: DateTimeFilter<"WageringRequirement"> | Date | string
+    expiresAt?: DateTimeNullableFilter<"WageringRequirement"> | Date | string | null
+    completedAt?: DateTimeNullableFilter<"WageringRequirement"> | Date | string | null
+    cancelledAt?: DateTimeNullableFilter<"WageringRequirement"> | Date | string | null
+    cancellationNote?: StringNullableFilter<"WageringRequirement"> | string | null
+    priority?: IntFilter<"WageringRequirement"> | number
+  }
+
+  export type UserCreateWithoutUserWalletsInput = {
     id?: bigint | number
     uid?: string
     whitecliffId?: bigint | number | null
@@ -84691,7 +86491,6 @@ export namespace Prisma {
     GameSession?: CasinoGameSessionCreateNestedManyWithoutUserInput
     affiliateReferrals?: ReferralCreateNestedManyWithoutAffiliateInput
     referredUsers?: ReferralCreateNestedManyWithoutSubUserInput
-    Rolling?: RollingCreateNestedManyWithoutUserInput
     transactions?: TransactionCreateNestedManyWithoutUserInput
     depositDetails?: DepositDetailCreateNestedManyWithoutUserInput
     UserBalanceStats?: UserBalanceStatsCreateNestedManyWithoutUserInput
@@ -84703,9 +86502,10 @@ export namespace Prisma {
     userTier?: UserTierCreateNestedOneWithoutUserInput
     tierHistory?: TierHistoryCreateNestedManyWithoutUserInput
     adminAdjustmentDetails?: AdminAdjustmentDetailCreateNestedManyWithoutAdminUserInput
+    wageringRequirements?: WageringRequirementCreateNestedManyWithoutUserInput
   }
 
-  export type UserUncheckedCreateWithoutBalancesInput = {
+  export type UserUncheckedCreateWithoutUserWalletsInput = {
     id?: bigint | number
     uid?: string
     whitecliffId?: bigint | number | null
@@ -84736,7 +86536,6 @@ export namespace Prisma {
     GameSession?: CasinoGameSessionUncheckedCreateNestedManyWithoutUserInput
     affiliateReferrals?: ReferralUncheckedCreateNestedManyWithoutAffiliateInput
     referredUsers?: ReferralUncheckedCreateNestedManyWithoutSubUserInput
-    Rolling?: RollingUncheckedCreateNestedManyWithoutUserInput
     transactions?: TransactionUncheckedCreateNestedManyWithoutUserInput
     depositDetails?: DepositDetailUncheckedCreateNestedManyWithoutUserInput
     UserBalanceStats?: UserBalanceStatsUncheckedCreateNestedManyWithoutUserInput
@@ -84748,25 +86547,77 @@ export namespace Prisma {
     userTier?: UserTierUncheckedCreateNestedOneWithoutUserInput
     tierHistory?: TierHistoryUncheckedCreateNestedManyWithoutUserInput
     adminAdjustmentDetails?: AdminAdjustmentDetailUncheckedCreateNestedManyWithoutAdminUserInput
+    wageringRequirements?: WageringRequirementUncheckedCreateNestedManyWithoutUserInput
   }
 
-  export type UserCreateOrConnectWithoutBalancesInput = {
+  export type UserCreateOrConnectWithoutUserWalletsInput = {
     where: UserWhereUniqueInput
-    create: XOR<UserCreateWithoutBalancesInput, UserUncheckedCreateWithoutBalancesInput>
+    create: XOR<UserCreateWithoutUserWalletsInput, UserUncheckedCreateWithoutUserWalletsInput>
   }
 
-  export type UserUpsertWithoutBalancesInput = {
-    update: XOR<UserUpdateWithoutBalancesInput, UserUncheckedUpdateWithoutBalancesInput>
-    create: XOR<UserCreateWithoutBalancesInput, UserUncheckedCreateWithoutBalancesInput>
+  export type WageringRequirementCreateWithoutUserWalletInput = {
+    id?: bigint | number
+    uid?: string
+    sourceType?: $Enums.WageringSourceType
+    requiredAmount: Decimal | DecimalJsLike | number | string
+    currentAmount?: Decimal | DecimalJsLike | number | string
+    cancellationBalanceThreshold?: Decimal | DecimalJsLike | number | string | null
+    status?: $Enums.WageringStatus
+    createdAt?: Date | string
+    updatedAt?: Date | string
+    expiresAt?: Date | string | null
+    completedAt?: Date | string | null
+    cancelledAt?: Date | string | null
+    cancellationNote?: string | null
+    priority?: number
+    DepositDetail?: DepositDetailCreateNestedOneWithoutWageringRequirementsInput
+    userPromotion?: UserPromotionCreateNestedOneWithoutWageringRequirementsInput
+    user: UserCreateNestedOneWithoutWageringRequirementsInput
+    contributionLogs?: WageringContributionLogCreateNestedManyWithoutWageringRequirementInput
+  }
+
+  export type WageringRequirementUncheckedCreateWithoutUserWalletInput = {
+    id?: bigint | number
+    uid?: string
+    sourceType?: $Enums.WageringSourceType
+    requiredAmount: Decimal | DecimalJsLike | number | string
+    currentAmount?: Decimal | DecimalJsLike | number | string
+    cancellationBalanceThreshold?: Decimal | DecimalJsLike | number | string | null
+    status?: $Enums.WageringStatus
+    depositDetailId?: bigint | number | null
+    userPromotionId?: bigint | number | null
+    createdAt?: Date | string
+    updatedAt?: Date | string
+    expiresAt?: Date | string | null
+    completedAt?: Date | string | null
+    cancelledAt?: Date | string | null
+    cancellationNote?: string | null
+    priority?: number
+    contributionLogs?: WageringContributionLogUncheckedCreateNestedManyWithoutWageringRequirementInput
+  }
+
+  export type WageringRequirementCreateOrConnectWithoutUserWalletInput = {
+    where: WageringRequirementWhereUniqueInput
+    create: XOR<WageringRequirementCreateWithoutUserWalletInput, WageringRequirementUncheckedCreateWithoutUserWalletInput>
+  }
+
+  export type WageringRequirementCreateManyUserWalletInputEnvelope = {
+    data: WageringRequirementCreateManyUserWalletInput | WageringRequirementCreateManyUserWalletInput[]
+    skipDuplicates?: boolean
+  }
+
+  export type UserUpsertWithoutUserWalletsInput = {
+    update: XOR<UserUpdateWithoutUserWalletsInput, UserUncheckedUpdateWithoutUserWalletsInput>
+    create: XOR<UserCreateWithoutUserWalletsInput, UserUncheckedCreateWithoutUserWalletsInput>
     where?: UserWhereInput
   }
 
-  export type UserUpdateToOneWithWhereWithoutBalancesInput = {
+  export type UserUpdateToOneWithWhereWithoutUserWalletsInput = {
     where?: UserWhereInput
-    data: XOR<UserUpdateWithoutBalancesInput, UserUncheckedUpdateWithoutBalancesInput>
+    data: XOR<UserUpdateWithoutUserWalletsInput, UserUncheckedUpdateWithoutUserWalletsInput>
   }
 
-  export type UserUpdateWithoutBalancesInput = {
+  export type UserUpdateWithoutUserWalletsInput = {
     id?: BigIntFieldUpdateOperationsInput | bigint | number
     uid?: StringFieldUpdateOperationsInput | string
     whitecliffId?: NullableBigIntFieldUpdateOperationsInput | bigint | number | null
@@ -84797,7 +86648,6 @@ export namespace Prisma {
     GameSession?: CasinoGameSessionUpdateManyWithoutUserNestedInput
     affiliateReferrals?: ReferralUpdateManyWithoutAffiliateNestedInput
     referredUsers?: ReferralUpdateManyWithoutSubUserNestedInput
-    Rolling?: RollingUpdateManyWithoutUserNestedInput
     transactions?: TransactionUpdateManyWithoutUserNestedInput
     depositDetails?: DepositDetailUpdateManyWithoutUserNestedInput
     UserBalanceStats?: UserBalanceStatsUpdateManyWithoutUserNestedInput
@@ -84809,9 +86659,10 @@ export namespace Prisma {
     userTier?: UserTierUpdateOneWithoutUserNestedInput
     tierHistory?: TierHistoryUpdateManyWithoutUserNestedInput
     adminAdjustmentDetails?: AdminAdjustmentDetailUpdateManyWithoutAdminUserNestedInput
+    wageringRequirements?: WageringRequirementUpdateManyWithoutUserNestedInput
   }
 
-  export type UserUncheckedUpdateWithoutBalancesInput = {
+  export type UserUncheckedUpdateWithoutUserWalletsInput = {
     id?: BigIntFieldUpdateOperationsInput | bigint | number
     uid?: StringFieldUpdateOperationsInput | string
     whitecliffId?: NullableBigIntFieldUpdateOperationsInput | bigint | number | null
@@ -84842,7 +86693,6 @@ export namespace Prisma {
     GameSession?: CasinoGameSessionUncheckedUpdateManyWithoutUserNestedInput
     affiliateReferrals?: ReferralUncheckedUpdateManyWithoutAffiliateNestedInput
     referredUsers?: ReferralUncheckedUpdateManyWithoutSubUserNestedInput
-    Rolling?: RollingUncheckedUpdateManyWithoutUserNestedInput
     transactions?: TransactionUncheckedUpdateManyWithoutUserNestedInput
     depositDetails?: DepositDetailUncheckedUpdateManyWithoutUserNestedInput
     UserBalanceStats?: UserBalanceStatsUncheckedUpdateManyWithoutUserNestedInput
@@ -84854,6 +86704,23 @@ export namespace Prisma {
     userTier?: UserTierUncheckedUpdateOneWithoutUserNestedInput
     tierHistory?: TierHistoryUncheckedUpdateManyWithoutUserNestedInput
     adminAdjustmentDetails?: AdminAdjustmentDetailUncheckedUpdateManyWithoutAdminUserNestedInput
+    wageringRequirements?: WageringRequirementUncheckedUpdateManyWithoutUserNestedInput
+  }
+
+  export type WageringRequirementUpsertWithWhereUniqueWithoutUserWalletInput = {
+    where: WageringRequirementWhereUniqueInput
+    update: XOR<WageringRequirementUpdateWithoutUserWalletInput, WageringRequirementUncheckedUpdateWithoutUserWalletInput>
+    create: XOR<WageringRequirementCreateWithoutUserWalletInput, WageringRequirementUncheckedCreateWithoutUserWalletInput>
+  }
+
+  export type WageringRequirementUpdateWithWhereUniqueWithoutUserWalletInput = {
+    where: WageringRequirementWhereUniqueInput
+    data: XOR<WageringRequirementUpdateWithoutUserWalletInput, WageringRequirementUncheckedUpdateWithoutUserWalletInput>
+  }
+
+  export type WageringRequirementUpdateManyWithWhereWithoutUserWalletInput = {
+    where: WageringRequirementScalarWhereInput
+    data: XOR<WageringRequirementUpdateManyMutationInput, WageringRequirementUncheckedUpdateManyWithoutUserWalletInput>
   }
 
   export type UserCreateWithoutUserBalanceStatsInput = {
@@ -84887,10 +86754,9 @@ export namespace Prisma {
     GameSession?: CasinoGameSessionCreateNestedManyWithoutUserInput
     affiliateReferrals?: ReferralCreateNestedManyWithoutAffiliateInput
     referredUsers?: ReferralCreateNestedManyWithoutSubUserInput
-    Rolling?: RollingCreateNestedManyWithoutUserInput
     transactions?: TransactionCreateNestedManyWithoutUserInput
     depositDetails?: DepositDetailCreateNestedManyWithoutUserInput
-    balances?: UserBalanceCreateNestedManyWithoutUserInput
+    userWallets?: UserWalletCreateNestedManyWithoutUserInput
     UserPromotion?: UserPromotionCreateNestedManyWithoutUserInput
     UserSession?: UserSessionCreateNestedManyWithoutUserInput
     RevokedSessions?: UserSessionCreateNestedManyWithoutRevokedByUserInput
@@ -84899,6 +86765,7 @@ export namespace Prisma {
     userTier?: UserTierCreateNestedOneWithoutUserInput
     tierHistory?: TierHistoryCreateNestedManyWithoutUserInput
     adminAdjustmentDetails?: AdminAdjustmentDetailCreateNestedManyWithoutAdminUserInput
+    wageringRequirements?: WageringRequirementCreateNestedManyWithoutUserInput
   }
 
   export type UserUncheckedCreateWithoutUserBalanceStatsInput = {
@@ -84932,10 +86799,9 @@ export namespace Prisma {
     GameSession?: CasinoGameSessionUncheckedCreateNestedManyWithoutUserInput
     affiliateReferrals?: ReferralUncheckedCreateNestedManyWithoutAffiliateInput
     referredUsers?: ReferralUncheckedCreateNestedManyWithoutSubUserInput
-    Rolling?: RollingUncheckedCreateNestedManyWithoutUserInput
     transactions?: TransactionUncheckedCreateNestedManyWithoutUserInput
     depositDetails?: DepositDetailUncheckedCreateNestedManyWithoutUserInput
-    balances?: UserBalanceUncheckedCreateNestedManyWithoutUserInput
+    userWallets?: UserWalletUncheckedCreateNestedManyWithoutUserInput
     UserPromotion?: UserPromotionUncheckedCreateNestedManyWithoutUserInput
     UserSession?: UserSessionUncheckedCreateNestedManyWithoutUserInput
     RevokedSessions?: UserSessionUncheckedCreateNestedManyWithoutRevokedByUserInput
@@ -84944,6 +86810,7 @@ export namespace Prisma {
     userTier?: UserTierUncheckedCreateNestedOneWithoutUserInput
     tierHistory?: TierHistoryUncheckedCreateNestedManyWithoutUserInput
     adminAdjustmentDetails?: AdminAdjustmentDetailUncheckedCreateNestedManyWithoutAdminUserInput
+    wageringRequirements?: WageringRequirementUncheckedCreateNestedManyWithoutUserInput
   }
 
   export type UserCreateOrConnectWithoutUserBalanceStatsInput = {
@@ -84993,10 +86860,9 @@ export namespace Prisma {
     GameSession?: CasinoGameSessionUpdateManyWithoutUserNestedInput
     affiliateReferrals?: ReferralUpdateManyWithoutAffiliateNestedInput
     referredUsers?: ReferralUpdateManyWithoutSubUserNestedInput
-    Rolling?: RollingUpdateManyWithoutUserNestedInput
     transactions?: TransactionUpdateManyWithoutUserNestedInput
     depositDetails?: DepositDetailUpdateManyWithoutUserNestedInput
-    balances?: UserBalanceUpdateManyWithoutUserNestedInput
+    userWallets?: UserWalletUpdateManyWithoutUserNestedInput
     UserPromotion?: UserPromotionUpdateManyWithoutUserNestedInput
     UserSession?: UserSessionUpdateManyWithoutUserNestedInput
     RevokedSessions?: UserSessionUpdateManyWithoutRevokedByUserNestedInput
@@ -85005,6 +86871,7 @@ export namespace Prisma {
     userTier?: UserTierUpdateOneWithoutUserNestedInput
     tierHistory?: TierHistoryUpdateManyWithoutUserNestedInput
     adminAdjustmentDetails?: AdminAdjustmentDetailUpdateManyWithoutAdminUserNestedInput
+    wageringRequirements?: WageringRequirementUpdateManyWithoutUserNestedInput
   }
 
   export type UserUncheckedUpdateWithoutUserBalanceStatsInput = {
@@ -85038,10 +86905,9 @@ export namespace Prisma {
     GameSession?: CasinoGameSessionUncheckedUpdateManyWithoutUserNestedInput
     affiliateReferrals?: ReferralUncheckedUpdateManyWithoutAffiliateNestedInput
     referredUsers?: ReferralUncheckedUpdateManyWithoutSubUserNestedInput
-    Rolling?: RollingUncheckedUpdateManyWithoutUserNestedInput
     transactions?: TransactionUncheckedUpdateManyWithoutUserNestedInput
     depositDetails?: DepositDetailUncheckedUpdateManyWithoutUserNestedInput
-    balances?: UserBalanceUncheckedUpdateManyWithoutUserNestedInput
+    userWallets?: UserWalletUncheckedUpdateManyWithoutUserNestedInput
     UserPromotion?: UserPromotionUncheckedUpdateManyWithoutUserNestedInput
     UserSession?: UserSessionUncheckedUpdateManyWithoutUserNestedInput
     RevokedSessions?: UserSessionUncheckedUpdateManyWithoutRevokedByUserNestedInput
@@ -85050,6 +86916,7 @@ export namespace Prisma {
     userTier?: UserTierUncheckedUpdateOneWithoutUserNestedInput
     tierHistory?: TierHistoryUncheckedUpdateManyWithoutUserNestedInput
     adminAdjustmentDetails?: AdminAdjustmentDetailUncheckedUpdateManyWithoutAdminUserNestedInput
+    wageringRequirements?: WageringRequirementUncheckedUpdateManyWithoutUserNestedInput
   }
 
   export type BonusDetailCreateWithoutTransactionInput = {
@@ -85149,7 +87016,7 @@ export namespace Prisma {
     user: UserCreateNestedOneWithoutDepositDetailsInput
     BankConfig?: BankConfigCreateNestedOneWithoutDepositDetailsInput
     CryptoConfig?: CryptoConfigCreateNestedOneWithoutDepositDetailsInput
-    Rolling?: RollingCreateNestedManyWithoutDepositDetailInput
+    wageringRequirements?: WageringRequirementCreateNestedManyWithoutDepositDetailInput
   }
 
   export type DepositDetailUncheckedCreateWithoutTransactionInput = {
@@ -85183,7 +87050,7 @@ export namespace Prisma {
     providerMetadata?: NullableJsonNullValueInput | InputJsonValue
     bankConfigId?: bigint | number | null
     cryptoConfigId?: bigint | number | null
-    Rolling?: RollingUncheckedCreateNestedManyWithoutDepositDetailInput
+    wageringRequirements?: WageringRequirementUncheckedCreateNestedManyWithoutDepositDetailInput
   }
 
   export type DepositDetailCreateOrConnectWithoutTransactionInput = {
@@ -85291,9 +87158,8 @@ export namespace Prisma {
     GameSession?: CasinoGameSessionCreateNestedManyWithoutUserInput
     affiliateReferrals?: ReferralCreateNestedManyWithoutAffiliateInput
     referredUsers?: ReferralCreateNestedManyWithoutSubUserInput
-    Rolling?: RollingCreateNestedManyWithoutUserInput
     depositDetails?: DepositDetailCreateNestedManyWithoutUserInput
-    balances?: UserBalanceCreateNestedManyWithoutUserInput
+    userWallets?: UserWalletCreateNestedManyWithoutUserInput
     UserBalanceStats?: UserBalanceStatsCreateNestedManyWithoutUserInput
     UserPromotion?: UserPromotionCreateNestedManyWithoutUserInput
     UserSession?: UserSessionCreateNestedManyWithoutUserInput
@@ -85303,6 +87169,7 @@ export namespace Prisma {
     userTier?: UserTierCreateNestedOneWithoutUserInput
     tierHistory?: TierHistoryCreateNestedManyWithoutUserInput
     adminAdjustmentDetails?: AdminAdjustmentDetailCreateNestedManyWithoutAdminUserInput
+    wageringRequirements?: WageringRequirementCreateNestedManyWithoutUserInput
   }
 
   export type UserUncheckedCreateWithoutTransactionsInput = {
@@ -85336,9 +87203,8 @@ export namespace Prisma {
     GameSession?: CasinoGameSessionUncheckedCreateNestedManyWithoutUserInput
     affiliateReferrals?: ReferralUncheckedCreateNestedManyWithoutAffiliateInput
     referredUsers?: ReferralUncheckedCreateNestedManyWithoutSubUserInput
-    Rolling?: RollingUncheckedCreateNestedManyWithoutUserInput
     depositDetails?: DepositDetailUncheckedCreateNestedManyWithoutUserInput
-    balances?: UserBalanceUncheckedCreateNestedManyWithoutUserInput
+    userWallets?: UserWalletUncheckedCreateNestedManyWithoutUserInput
     UserBalanceStats?: UserBalanceStatsUncheckedCreateNestedManyWithoutUserInput
     UserPromotion?: UserPromotionUncheckedCreateNestedManyWithoutUserInput
     UserSession?: UserSessionUncheckedCreateNestedManyWithoutUserInput
@@ -85348,6 +87214,7 @@ export namespace Prisma {
     userTier?: UserTierUncheckedCreateNestedOneWithoutUserInput
     tierHistory?: TierHistoryUncheckedCreateNestedManyWithoutUserInput
     adminAdjustmentDetails?: AdminAdjustmentDetailUncheckedCreateNestedManyWithoutAdminUserInput
+    wageringRequirements?: WageringRequirementUncheckedCreateNestedManyWithoutUserInput
   }
 
   export type UserCreateOrConnectWithoutTransactionsInput = {
@@ -85592,7 +87459,7 @@ export namespace Prisma {
     user?: UserUpdateOneRequiredWithoutDepositDetailsNestedInput
     BankConfig?: BankConfigUpdateOneWithoutDepositDetailsNestedInput
     CryptoConfig?: CryptoConfigUpdateOneWithoutDepositDetailsNestedInput
-    Rolling?: RollingUpdateManyWithoutDepositDetailNestedInput
+    wageringRequirements?: WageringRequirementUpdateManyWithoutDepositDetailNestedInput
   }
 
   export type DepositDetailUncheckedUpdateWithoutTransactionInput = {
@@ -85626,7 +87493,7 @@ export namespace Prisma {
     providerMetadata?: NullableJsonNullValueInput | InputJsonValue
     bankConfigId?: NullableBigIntFieldUpdateOperationsInput | bigint | number | null
     cryptoConfigId?: NullableBigIntFieldUpdateOperationsInput | bigint | number | null
-    Rolling?: RollingUncheckedUpdateManyWithoutDepositDetailNestedInput
+    wageringRequirements?: WageringRequirementUncheckedUpdateManyWithoutDepositDetailNestedInput
   }
 
   export type GameRoundUpsertWithoutTransactionInput = {
@@ -85746,9 +87613,8 @@ export namespace Prisma {
     GameSession?: CasinoGameSessionUpdateManyWithoutUserNestedInput
     affiliateReferrals?: ReferralUpdateManyWithoutAffiliateNestedInput
     referredUsers?: ReferralUpdateManyWithoutSubUserNestedInput
-    Rolling?: RollingUpdateManyWithoutUserNestedInput
     depositDetails?: DepositDetailUpdateManyWithoutUserNestedInput
-    balances?: UserBalanceUpdateManyWithoutUserNestedInput
+    userWallets?: UserWalletUpdateManyWithoutUserNestedInput
     UserBalanceStats?: UserBalanceStatsUpdateManyWithoutUserNestedInput
     UserPromotion?: UserPromotionUpdateManyWithoutUserNestedInput
     UserSession?: UserSessionUpdateManyWithoutUserNestedInput
@@ -85758,6 +87624,7 @@ export namespace Prisma {
     userTier?: UserTierUpdateOneWithoutUserNestedInput
     tierHistory?: TierHistoryUpdateManyWithoutUserNestedInput
     adminAdjustmentDetails?: AdminAdjustmentDetailUpdateManyWithoutAdminUserNestedInput
+    wageringRequirements?: WageringRequirementUpdateManyWithoutUserNestedInput
   }
 
   export type UserUncheckedUpdateWithoutTransactionsInput = {
@@ -85791,9 +87658,8 @@ export namespace Prisma {
     GameSession?: CasinoGameSessionUncheckedUpdateManyWithoutUserNestedInput
     affiliateReferrals?: ReferralUncheckedUpdateManyWithoutAffiliateNestedInput
     referredUsers?: ReferralUncheckedUpdateManyWithoutSubUserNestedInput
-    Rolling?: RollingUncheckedUpdateManyWithoutUserNestedInput
     depositDetails?: DepositDetailUncheckedUpdateManyWithoutUserNestedInput
-    balances?: UserBalanceUncheckedUpdateManyWithoutUserNestedInput
+    userWallets?: UserWalletUncheckedUpdateManyWithoutUserNestedInput
     UserBalanceStats?: UserBalanceStatsUncheckedUpdateManyWithoutUserNestedInput
     UserPromotion?: UserPromotionUncheckedUpdateManyWithoutUserNestedInput
     UserSession?: UserSessionUncheckedUpdateManyWithoutUserNestedInput
@@ -85803,6 +87669,7 @@ export namespace Prisma {
     userTier?: UserTierUncheckedUpdateOneWithoutUserNestedInput
     tierHistory?: TierHistoryUncheckedUpdateManyWithoutUserNestedInput
     adminAdjustmentDetails?: AdminAdjustmentDetailUncheckedUpdateManyWithoutAdminUserNestedInput
+    wageringRequirements?: WageringRequirementUncheckedUpdateManyWithoutUserNestedInput
   }
 
   export type TransactionBalanceDetailUpsertWithWhereUniqueWithoutTransactionInput = {
@@ -87195,10 +89062,9 @@ export namespace Prisma {
     GameSession?: CasinoGameSessionCreateNestedManyWithoutUserInput
     affiliateReferrals?: ReferralCreateNestedManyWithoutAffiliateInput
     referredUsers?: ReferralCreateNestedManyWithoutSubUserInput
-    Rolling?: RollingCreateNestedManyWithoutUserInput
     transactions?: TransactionCreateNestedManyWithoutUserInput
     depositDetails?: DepositDetailCreateNestedManyWithoutUserInput
-    balances?: UserBalanceCreateNestedManyWithoutUserInput
+    userWallets?: UserWalletCreateNestedManyWithoutUserInput
     UserBalanceStats?: UserBalanceStatsCreateNestedManyWithoutUserInput
     UserPromotion?: UserPromotionCreateNestedManyWithoutUserInput
     UserSession?: UserSessionCreateNestedManyWithoutUserInput
@@ -87208,6 +89074,7 @@ export namespace Prisma {
     userTier?: UserTierCreateNestedOneWithoutUserInput
     tierHistory?: TierHistoryCreateNestedManyWithoutUserInput
     adminAdjustmentDetails?: AdminAdjustmentDetailCreateNestedManyWithoutAdminUserInput
+    wageringRequirements?: WageringRequirementCreateNestedManyWithoutUserInput
   }
 
   export type UserUncheckedCreateWithoutCompTransactionInput = {
@@ -87240,10 +89107,9 @@ export namespace Prisma {
     GameSession?: CasinoGameSessionUncheckedCreateNestedManyWithoutUserInput
     affiliateReferrals?: ReferralUncheckedCreateNestedManyWithoutAffiliateInput
     referredUsers?: ReferralUncheckedCreateNestedManyWithoutSubUserInput
-    Rolling?: RollingUncheckedCreateNestedManyWithoutUserInput
     transactions?: TransactionUncheckedCreateNestedManyWithoutUserInput
     depositDetails?: DepositDetailUncheckedCreateNestedManyWithoutUserInput
-    balances?: UserBalanceUncheckedCreateNestedManyWithoutUserInput
+    userWallets?: UserWalletUncheckedCreateNestedManyWithoutUserInput
     UserBalanceStats?: UserBalanceStatsUncheckedCreateNestedManyWithoutUserInput
     UserPromotion?: UserPromotionUncheckedCreateNestedManyWithoutUserInput
     UserSession?: UserSessionUncheckedCreateNestedManyWithoutUserInput
@@ -87253,6 +89119,7 @@ export namespace Prisma {
     userTier?: UserTierUncheckedCreateNestedOneWithoutUserInput
     tierHistory?: TierHistoryUncheckedCreateNestedManyWithoutUserInput
     adminAdjustmentDetails?: AdminAdjustmentDetailUncheckedCreateNestedManyWithoutAdminUserInput
+    wageringRequirements?: WageringRequirementUncheckedCreateNestedManyWithoutUserInput
   }
 
   export type UserCreateOrConnectWithoutCompTransactionInput = {
@@ -87386,10 +89253,9 @@ export namespace Prisma {
     GameSession?: CasinoGameSessionUpdateManyWithoutUserNestedInput
     affiliateReferrals?: ReferralUpdateManyWithoutAffiliateNestedInput
     referredUsers?: ReferralUpdateManyWithoutSubUserNestedInput
-    Rolling?: RollingUpdateManyWithoutUserNestedInput
     transactions?: TransactionUpdateManyWithoutUserNestedInput
     depositDetails?: DepositDetailUpdateManyWithoutUserNestedInput
-    balances?: UserBalanceUpdateManyWithoutUserNestedInput
+    userWallets?: UserWalletUpdateManyWithoutUserNestedInput
     UserBalanceStats?: UserBalanceStatsUpdateManyWithoutUserNestedInput
     UserPromotion?: UserPromotionUpdateManyWithoutUserNestedInput
     UserSession?: UserSessionUpdateManyWithoutUserNestedInput
@@ -87399,6 +89265,7 @@ export namespace Prisma {
     userTier?: UserTierUpdateOneWithoutUserNestedInput
     tierHistory?: TierHistoryUpdateManyWithoutUserNestedInput
     adminAdjustmentDetails?: AdminAdjustmentDetailUpdateManyWithoutAdminUserNestedInput
+    wageringRequirements?: WageringRequirementUpdateManyWithoutUserNestedInput
   }
 
   export type UserUncheckedUpdateWithoutCompTransactionInput = {
@@ -87431,10 +89298,9 @@ export namespace Prisma {
     GameSession?: CasinoGameSessionUncheckedUpdateManyWithoutUserNestedInput
     affiliateReferrals?: ReferralUncheckedUpdateManyWithoutAffiliateNestedInput
     referredUsers?: ReferralUncheckedUpdateManyWithoutSubUserNestedInput
-    Rolling?: RollingUncheckedUpdateManyWithoutUserNestedInput
     transactions?: TransactionUncheckedUpdateManyWithoutUserNestedInput
     depositDetails?: DepositDetailUncheckedUpdateManyWithoutUserNestedInput
-    balances?: UserBalanceUncheckedUpdateManyWithoutUserNestedInput
+    userWallets?: UserWalletUncheckedUpdateManyWithoutUserNestedInput
     UserBalanceStats?: UserBalanceStatsUncheckedUpdateManyWithoutUserNestedInput
     UserPromotion?: UserPromotionUncheckedUpdateManyWithoutUserNestedInput
     UserSession?: UserSessionUncheckedUpdateManyWithoutUserNestedInput
@@ -87444,6 +89310,7 @@ export namespace Prisma {
     userTier?: UserTierUncheckedUpdateOneWithoutUserNestedInput
     tierHistory?: TierHistoryUncheckedUpdateManyWithoutUserNestedInput
     adminAdjustmentDetails?: AdminAdjustmentDetailUncheckedUpdateManyWithoutAdminUserNestedInput
+    wageringRequirements?: WageringRequirementUncheckedUpdateManyWithoutUserNestedInput
   }
 
   export type CompTransactionCreateWithoutDailyCompEarningInput = {
@@ -87504,10 +89371,9 @@ export namespace Prisma {
     GameSession?: CasinoGameSessionCreateNestedManyWithoutUserInput
     affiliateReferrals?: ReferralCreateNestedManyWithoutAffiliateInput
     referredUsers?: ReferralCreateNestedManyWithoutSubUserInput
-    Rolling?: RollingCreateNestedManyWithoutUserInput
     transactions?: TransactionCreateNestedManyWithoutUserInput
     depositDetails?: DepositDetailCreateNestedManyWithoutUserInput
-    balances?: UserBalanceCreateNestedManyWithoutUserInput
+    userWallets?: UserWalletCreateNestedManyWithoutUserInput
     UserBalanceStats?: UserBalanceStatsCreateNestedManyWithoutUserInput
     UserPromotion?: UserPromotionCreateNestedManyWithoutUserInput
     UserSession?: UserSessionCreateNestedManyWithoutUserInput
@@ -87517,6 +89383,7 @@ export namespace Prisma {
     userTier?: UserTierCreateNestedOneWithoutUserInput
     tierHistory?: TierHistoryCreateNestedManyWithoutUserInput
     adminAdjustmentDetails?: AdminAdjustmentDetailCreateNestedManyWithoutAdminUserInput
+    wageringRequirements?: WageringRequirementCreateNestedManyWithoutUserInput
   }
 
   export type UserUncheckedCreateWithoutDailyCompEarningInput = {
@@ -87549,10 +89416,9 @@ export namespace Prisma {
     GameSession?: CasinoGameSessionUncheckedCreateNestedManyWithoutUserInput
     affiliateReferrals?: ReferralUncheckedCreateNestedManyWithoutAffiliateInput
     referredUsers?: ReferralUncheckedCreateNestedManyWithoutSubUserInput
-    Rolling?: RollingUncheckedCreateNestedManyWithoutUserInput
     transactions?: TransactionUncheckedCreateNestedManyWithoutUserInput
     depositDetails?: DepositDetailUncheckedCreateNestedManyWithoutUserInput
-    balances?: UserBalanceUncheckedCreateNestedManyWithoutUserInput
+    userWallets?: UserWalletUncheckedCreateNestedManyWithoutUserInput
     UserBalanceStats?: UserBalanceStatsUncheckedCreateNestedManyWithoutUserInput
     UserPromotion?: UserPromotionUncheckedCreateNestedManyWithoutUserInput
     UserSession?: UserSessionUncheckedCreateNestedManyWithoutUserInput
@@ -87562,6 +89428,7 @@ export namespace Prisma {
     userTier?: UserTierUncheckedCreateNestedOneWithoutUserInput
     tierHistory?: TierHistoryUncheckedCreateNestedManyWithoutUserInput
     adminAdjustmentDetails?: AdminAdjustmentDetailUncheckedCreateNestedManyWithoutAdminUserInput
+    wageringRequirements?: WageringRequirementUncheckedCreateNestedManyWithoutUserInput
   }
 
   export type UserCreateOrConnectWithoutDailyCompEarningInput = {
@@ -87626,10 +89493,9 @@ export namespace Prisma {
     GameSession?: CasinoGameSessionUpdateManyWithoutUserNestedInput
     affiliateReferrals?: ReferralUpdateManyWithoutAffiliateNestedInput
     referredUsers?: ReferralUpdateManyWithoutSubUserNestedInput
-    Rolling?: RollingUpdateManyWithoutUserNestedInput
     transactions?: TransactionUpdateManyWithoutUserNestedInput
     depositDetails?: DepositDetailUpdateManyWithoutUserNestedInput
-    balances?: UserBalanceUpdateManyWithoutUserNestedInput
+    userWallets?: UserWalletUpdateManyWithoutUserNestedInput
     UserBalanceStats?: UserBalanceStatsUpdateManyWithoutUserNestedInput
     UserPromotion?: UserPromotionUpdateManyWithoutUserNestedInput
     UserSession?: UserSessionUpdateManyWithoutUserNestedInput
@@ -87639,6 +89505,7 @@ export namespace Prisma {
     userTier?: UserTierUpdateOneWithoutUserNestedInput
     tierHistory?: TierHistoryUpdateManyWithoutUserNestedInput
     adminAdjustmentDetails?: AdminAdjustmentDetailUpdateManyWithoutAdminUserNestedInput
+    wageringRequirements?: WageringRequirementUpdateManyWithoutUserNestedInput
   }
 
   export type UserUncheckedUpdateWithoutDailyCompEarningInput = {
@@ -87671,10 +89538,9 @@ export namespace Prisma {
     GameSession?: CasinoGameSessionUncheckedUpdateManyWithoutUserNestedInput
     affiliateReferrals?: ReferralUncheckedUpdateManyWithoutAffiliateNestedInput
     referredUsers?: ReferralUncheckedUpdateManyWithoutSubUserNestedInput
-    Rolling?: RollingUncheckedUpdateManyWithoutUserNestedInput
     transactions?: TransactionUncheckedUpdateManyWithoutUserNestedInput
     depositDetails?: DepositDetailUncheckedUpdateManyWithoutUserNestedInput
-    balances?: UserBalanceUncheckedUpdateManyWithoutUserNestedInput
+    userWallets?: UserWalletUncheckedUpdateManyWithoutUserNestedInput
     UserBalanceStats?: UserBalanceStatsUncheckedUpdateManyWithoutUserNestedInput
     UserPromotion?: UserPromotionUncheckedUpdateManyWithoutUserNestedInput
     UserSession?: UserSessionUncheckedUpdateManyWithoutUserNestedInput
@@ -87684,426 +89550,7 @@ export namespace Prisma {
     userTier?: UserTierUncheckedUpdateOneWithoutUserNestedInput
     tierHistory?: TierHistoryUncheckedUpdateManyWithoutUserNestedInput
     adminAdjustmentDetails?: AdminAdjustmentDetailUncheckedUpdateManyWithoutAdminUserNestedInput
-  }
-
-  export type DepositDetailCreateWithoutRollingInput = {
-    id?: bigint | number
-    uid: string
-    confirmedAt?: Date | string | null
-    failedAt?: Date | string | null
-    createdAt?: Date | string
-    updatedAt?: Date | string
-    status: $Enums.DepositDetailStatus
-    methodType: $Enums.DepositMethodType
-    provider: $Enums.PaymentProvider
-    providerPaymentId?: string | null
-    depositCurrency: $Enums.ExchangeCurrencyCode
-    depositNetwork?: string | null
-    walletAddress?: string | null
-    walletAddressExtraId?: string | null
-    depositorName?: string | null
-    transactionHash?: string | null
-    requestedAmount: Decimal | DecimalJsLike | number | string
-    actuallyPaid?: Decimal | DecimalJsLike | number | string | null
-    processedBy?: bigint | number | null
-    adminNote?: string | null
-    ipAddress?: string | null
-    deviceFingerprint?: string | null
-    feeAmount?: Decimal | DecimalJsLike | number | string | null
-    feeCurrency?: string | null
-    feePaidBy?: $Enums.FeePaidByType | null
-    failureReason?: string | null
-    providerMetadata?: NullableJsonNullValueInput | InputJsonValue
-    user: UserCreateNestedOneWithoutDepositDetailsInput
-    BankConfig?: BankConfigCreateNestedOneWithoutDepositDetailsInput
-    CryptoConfig?: CryptoConfigCreateNestedOneWithoutDepositDetailsInput
-    transaction?: TransactionCreateNestedOneWithoutDepositDetailInput
-  }
-
-  export type DepositDetailUncheckedCreateWithoutRollingInput = {
-    id?: bigint | number
-    uid: string
-    confirmedAt?: Date | string | null
-    failedAt?: Date | string | null
-    createdAt?: Date | string
-    updatedAt?: Date | string
-    status: $Enums.DepositDetailStatus
-    userId: bigint | number
-    transactionId?: bigint | number | null
-    methodType: $Enums.DepositMethodType
-    provider: $Enums.PaymentProvider
-    providerPaymentId?: string | null
-    depositCurrency: $Enums.ExchangeCurrencyCode
-    depositNetwork?: string | null
-    walletAddress?: string | null
-    walletAddressExtraId?: string | null
-    depositorName?: string | null
-    transactionHash?: string | null
-    requestedAmount: Decimal | DecimalJsLike | number | string
-    actuallyPaid?: Decimal | DecimalJsLike | number | string | null
-    processedBy?: bigint | number | null
-    adminNote?: string | null
-    ipAddress?: string | null
-    deviceFingerprint?: string | null
-    feeAmount?: Decimal | DecimalJsLike | number | string | null
-    feeCurrency?: string | null
-    feePaidBy?: $Enums.FeePaidByType | null
-    failureReason?: string | null
-    providerMetadata?: NullableJsonNullValueInput | InputJsonValue
-    bankConfigId?: bigint | number | null
-    cryptoConfigId?: bigint | number | null
-  }
-
-  export type DepositDetailCreateOrConnectWithoutRollingInput = {
-    where: DepositDetailWhereUniqueInput
-    create: XOR<DepositDetailCreateWithoutRollingInput, DepositDetailUncheckedCreateWithoutRollingInput>
-  }
-
-  export type UserCreateWithoutRollingInput = {
-    id?: bigint | number
-    uid?: string
-    whitecliffId?: bigint | number | null
-    whitecliffSystemId?: bigint | number | null
-    whitecliffUsername?: string | null
-    dcsId?: string | null
-    email?: string | null
-    passwordHash?: string | null
-    socialType?: $Enums.SocialType | null
-    socialId?: string | null
-    role?: $Enums.UserRoleType
-    status?: $Enums.UserStatus
-    kycLevel?: $Enums.KycLevel
-    country?: string | null
-    language?: $Enums.Language | null
-    timezone?: string | null
-    timezoneOffset?: number | null
-    createdAt?: Date | string
-    updatedAt?: Date | string
-    affiliateCodes?: AffiliateCodeCreateNestedManyWithoutUserInput
-    affiliateCommissions?: AffiliateCommissionCreateNestedManyWithoutAffiliateInput
-    subUserCommissions?: AffiliateCommissionCreateNestedManyWithoutSubUserInput
-    affiliateTier?: AffiliateTierCreateNestedOneWithoutAffiliateInput
-    affiliateWallets?: AffiliateWalletCreateNestedManyWithoutAffiliateInput
-    CompTransaction?: CompTransactionCreateNestedManyWithoutUserInput
-    DailyCompEarning?: DailyCompEarningCreateNestedManyWithoutUserInput
-    EmailLog?: EmailLogCreateNestedManyWithoutUserInput
-    GameSession?: CasinoGameSessionCreateNestedManyWithoutUserInput
-    affiliateReferrals?: ReferralCreateNestedManyWithoutAffiliateInput
-    referredUsers?: ReferralCreateNestedManyWithoutSubUserInput
-    transactions?: TransactionCreateNestedManyWithoutUserInput
-    depositDetails?: DepositDetailCreateNestedManyWithoutUserInput
-    balances?: UserBalanceCreateNestedManyWithoutUserInput
-    UserBalanceStats?: UserBalanceStatsCreateNestedManyWithoutUserInput
-    UserPromotion?: UserPromotionCreateNestedManyWithoutUserInput
-    UserSession?: UserSessionCreateNestedManyWithoutUserInput
-    RevokedSessions?: UserSessionCreateNestedManyWithoutRevokedByUserInput
-    UserToken?: UserTokenCreateNestedManyWithoutUserInput
-    loginAttempts?: LoginAttemptCreateNestedManyWithoutUserInput
-    userTier?: UserTierCreateNestedOneWithoutUserInput
-    tierHistory?: TierHistoryCreateNestedManyWithoutUserInput
-    adminAdjustmentDetails?: AdminAdjustmentDetailCreateNestedManyWithoutAdminUserInput
-  }
-
-  export type UserUncheckedCreateWithoutRollingInput = {
-    id?: bigint | number
-    uid?: string
-    whitecliffId?: bigint | number | null
-    whitecliffSystemId?: bigint | number | null
-    whitecliffUsername?: string | null
-    dcsId?: string | null
-    email?: string | null
-    passwordHash?: string | null
-    socialType?: $Enums.SocialType | null
-    socialId?: string | null
-    role?: $Enums.UserRoleType
-    status?: $Enums.UserStatus
-    kycLevel?: $Enums.KycLevel
-    country?: string | null
-    language?: $Enums.Language | null
-    timezone?: string | null
-    timezoneOffset?: number | null
-    createdAt?: Date | string
-    updatedAt?: Date | string
-    affiliateCodes?: AffiliateCodeUncheckedCreateNestedManyWithoutUserInput
-    affiliateCommissions?: AffiliateCommissionUncheckedCreateNestedManyWithoutAffiliateInput
-    subUserCommissions?: AffiliateCommissionUncheckedCreateNestedManyWithoutSubUserInput
-    affiliateTier?: AffiliateTierUncheckedCreateNestedOneWithoutAffiliateInput
-    affiliateWallets?: AffiliateWalletUncheckedCreateNestedManyWithoutAffiliateInput
-    CompTransaction?: CompTransactionUncheckedCreateNestedManyWithoutUserInput
-    DailyCompEarning?: DailyCompEarningUncheckedCreateNestedManyWithoutUserInput
-    EmailLog?: EmailLogUncheckedCreateNestedManyWithoutUserInput
-    GameSession?: CasinoGameSessionUncheckedCreateNestedManyWithoutUserInput
-    affiliateReferrals?: ReferralUncheckedCreateNestedManyWithoutAffiliateInput
-    referredUsers?: ReferralUncheckedCreateNestedManyWithoutSubUserInput
-    transactions?: TransactionUncheckedCreateNestedManyWithoutUserInput
-    depositDetails?: DepositDetailUncheckedCreateNestedManyWithoutUserInput
-    balances?: UserBalanceUncheckedCreateNestedManyWithoutUserInput
-    UserBalanceStats?: UserBalanceStatsUncheckedCreateNestedManyWithoutUserInput
-    UserPromotion?: UserPromotionUncheckedCreateNestedManyWithoutUserInput
-    UserSession?: UserSessionUncheckedCreateNestedManyWithoutUserInput
-    RevokedSessions?: UserSessionUncheckedCreateNestedManyWithoutRevokedByUserInput
-    UserToken?: UserTokenUncheckedCreateNestedManyWithoutUserInput
-    loginAttempts?: LoginAttemptUncheckedCreateNestedManyWithoutUserInput
-    userTier?: UserTierUncheckedCreateNestedOneWithoutUserInput
-    tierHistory?: TierHistoryUncheckedCreateNestedManyWithoutUserInput
-    adminAdjustmentDetails?: AdminAdjustmentDetailUncheckedCreateNestedManyWithoutAdminUserInput
-  }
-
-  export type UserCreateOrConnectWithoutRollingInput = {
-    where: UserWhereUniqueInput
-    create: XOR<UserCreateWithoutRollingInput, UserUncheckedCreateWithoutRollingInput>
-  }
-
-  export type UserPromotionCreateWithoutRollingInput = {
-    id?: bigint | number
-    status?: $Enums.UserPromotionStatus
-    depositAmount: Decimal | DecimalJsLike | number | string
-    bonusAmount: Decimal | DecimalJsLike | number | string
-    targetRollingAmount: Decimal | DecimalJsLike | number | string
-    currentRollingAmount?: Decimal | DecimalJsLike | number | string
-    currency: $Enums.ExchangeCurrencyCode
-    createdAt?: Date | string
-    updatedAt?: Date | string
-    promotion: PromotionCreateNestedOneWithoutUserPromotionInput
-    user: UserCreateNestedOneWithoutUserPromotionInput
-  }
-
-  export type UserPromotionUncheckedCreateWithoutRollingInput = {
-    id?: bigint | number
-    userId: bigint | number
-    promotionId: bigint | number
-    status?: $Enums.UserPromotionStatus
-    depositAmount: Decimal | DecimalJsLike | number | string
-    bonusAmount: Decimal | DecimalJsLike | number | string
-    targetRollingAmount: Decimal | DecimalJsLike | number | string
-    currentRollingAmount?: Decimal | DecimalJsLike | number | string
-    currency: $Enums.ExchangeCurrencyCode
-    createdAt?: Date | string
-    updatedAt?: Date | string
-  }
-
-  export type UserPromotionCreateOrConnectWithoutRollingInput = {
-    where: UserPromotionWhereUniqueInput
-    create: XOR<UserPromotionCreateWithoutRollingInput, UserPromotionUncheckedCreateWithoutRollingInput>
-  }
-
-  export type DepositDetailUpsertWithoutRollingInput = {
-    update: XOR<DepositDetailUpdateWithoutRollingInput, DepositDetailUncheckedUpdateWithoutRollingInput>
-    create: XOR<DepositDetailCreateWithoutRollingInput, DepositDetailUncheckedCreateWithoutRollingInput>
-    where?: DepositDetailWhereInput
-  }
-
-  export type DepositDetailUpdateToOneWithWhereWithoutRollingInput = {
-    where?: DepositDetailWhereInput
-    data: XOR<DepositDetailUpdateWithoutRollingInput, DepositDetailUncheckedUpdateWithoutRollingInput>
-  }
-
-  export type DepositDetailUpdateWithoutRollingInput = {
-    id?: BigIntFieldUpdateOperationsInput | bigint | number
-    uid?: StringFieldUpdateOperationsInput | string
-    confirmedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
-    failedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
-    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
-    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
-    status?: EnumDepositDetailStatusFieldUpdateOperationsInput | $Enums.DepositDetailStatus
-    methodType?: EnumDepositMethodTypeFieldUpdateOperationsInput | $Enums.DepositMethodType
-    provider?: EnumPaymentProviderFieldUpdateOperationsInput | $Enums.PaymentProvider
-    providerPaymentId?: NullableStringFieldUpdateOperationsInput | string | null
-    depositCurrency?: EnumExchangeCurrencyCodeFieldUpdateOperationsInput | $Enums.ExchangeCurrencyCode
-    depositNetwork?: NullableStringFieldUpdateOperationsInput | string | null
-    walletAddress?: NullableStringFieldUpdateOperationsInput | string | null
-    walletAddressExtraId?: NullableStringFieldUpdateOperationsInput | string | null
-    depositorName?: NullableStringFieldUpdateOperationsInput | string | null
-    transactionHash?: NullableStringFieldUpdateOperationsInput | string | null
-    requestedAmount?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
-    actuallyPaid?: NullableDecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string | null
-    processedBy?: NullableBigIntFieldUpdateOperationsInput | bigint | number | null
-    adminNote?: NullableStringFieldUpdateOperationsInput | string | null
-    ipAddress?: NullableStringFieldUpdateOperationsInput | string | null
-    deviceFingerprint?: NullableStringFieldUpdateOperationsInput | string | null
-    feeAmount?: NullableDecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string | null
-    feeCurrency?: NullableStringFieldUpdateOperationsInput | string | null
-    feePaidBy?: NullableEnumFeePaidByTypeFieldUpdateOperationsInput | $Enums.FeePaidByType | null
-    failureReason?: NullableStringFieldUpdateOperationsInput | string | null
-    providerMetadata?: NullableJsonNullValueInput | InputJsonValue
-    user?: UserUpdateOneRequiredWithoutDepositDetailsNestedInput
-    BankConfig?: BankConfigUpdateOneWithoutDepositDetailsNestedInput
-    CryptoConfig?: CryptoConfigUpdateOneWithoutDepositDetailsNestedInput
-    transaction?: TransactionUpdateOneWithoutDepositDetailNestedInput
-  }
-
-  export type DepositDetailUncheckedUpdateWithoutRollingInput = {
-    id?: BigIntFieldUpdateOperationsInput | bigint | number
-    uid?: StringFieldUpdateOperationsInput | string
-    confirmedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
-    failedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
-    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
-    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
-    status?: EnumDepositDetailStatusFieldUpdateOperationsInput | $Enums.DepositDetailStatus
-    userId?: BigIntFieldUpdateOperationsInput | bigint | number
-    transactionId?: NullableBigIntFieldUpdateOperationsInput | bigint | number | null
-    methodType?: EnumDepositMethodTypeFieldUpdateOperationsInput | $Enums.DepositMethodType
-    provider?: EnumPaymentProviderFieldUpdateOperationsInput | $Enums.PaymentProvider
-    providerPaymentId?: NullableStringFieldUpdateOperationsInput | string | null
-    depositCurrency?: EnumExchangeCurrencyCodeFieldUpdateOperationsInput | $Enums.ExchangeCurrencyCode
-    depositNetwork?: NullableStringFieldUpdateOperationsInput | string | null
-    walletAddress?: NullableStringFieldUpdateOperationsInput | string | null
-    walletAddressExtraId?: NullableStringFieldUpdateOperationsInput | string | null
-    depositorName?: NullableStringFieldUpdateOperationsInput | string | null
-    transactionHash?: NullableStringFieldUpdateOperationsInput | string | null
-    requestedAmount?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
-    actuallyPaid?: NullableDecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string | null
-    processedBy?: NullableBigIntFieldUpdateOperationsInput | bigint | number | null
-    adminNote?: NullableStringFieldUpdateOperationsInput | string | null
-    ipAddress?: NullableStringFieldUpdateOperationsInput | string | null
-    deviceFingerprint?: NullableStringFieldUpdateOperationsInput | string | null
-    feeAmount?: NullableDecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string | null
-    feeCurrency?: NullableStringFieldUpdateOperationsInput | string | null
-    feePaidBy?: NullableEnumFeePaidByTypeFieldUpdateOperationsInput | $Enums.FeePaidByType | null
-    failureReason?: NullableStringFieldUpdateOperationsInput | string | null
-    providerMetadata?: NullableJsonNullValueInput | InputJsonValue
-    bankConfigId?: NullableBigIntFieldUpdateOperationsInput | bigint | number | null
-    cryptoConfigId?: NullableBigIntFieldUpdateOperationsInput | bigint | number | null
-  }
-
-  export type UserUpsertWithoutRollingInput = {
-    update: XOR<UserUpdateWithoutRollingInput, UserUncheckedUpdateWithoutRollingInput>
-    create: XOR<UserCreateWithoutRollingInput, UserUncheckedCreateWithoutRollingInput>
-    where?: UserWhereInput
-  }
-
-  export type UserUpdateToOneWithWhereWithoutRollingInput = {
-    where?: UserWhereInput
-    data: XOR<UserUpdateWithoutRollingInput, UserUncheckedUpdateWithoutRollingInput>
-  }
-
-  export type UserUpdateWithoutRollingInput = {
-    id?: BigIntFieldUpdateOperationsInput | bigint | number
-    uid?: StringFieldUpdateOperationsInput | string
-    whitecliffId?: NullableBigIntFieldUpdateOperationsInput | bigint | number | null
-    whitecliffSystemId?: NullableBigIntFieldUpdateOperationsInput | bigint | number | null
-    whitecliffUsername?: NullableStringFieldUpdateOperationsInput | string | null
-    dcsId?: NullableStringFieldUpdateOperationsInput | string | null
-    email?: NullableStringFieldUpdateOperationsInput | string | null
-    passwordHash?: NullableStringFieldUpdateOperationsInput | string | null
-    socialType?: NullableEnumSocialTypeFieldUpdateOperationsInput | $Enums.SocialType | null
-    socialId?: NullableStringFieldUpdateOperationsInput | string | null
-    role?: EnumUserRoleTypeFieldUpdateOperationsInput | $Enums.UserRoleType
-    status?: EnumUserStatusFieldUpdateOperationsInput | $Enums.UserStatus
-    kycLevel?: EnumKycLevelFieldUpdateOperationsInput | $Enums.KycLevel
-    country?: NullableStringFieldUpdateOperationsInput | string | null
-    language?: NullableEnumLanguageFieldUpdateOperationsInput | $Enums.Language | null
-    timezone?: NullableStringFieldUpdateOperationsInput | string | null
-    timezoneOffset?: NullableIntFieldUpdateOperationsInput | number | null
-    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
-    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
-    affiliateCodes?: AffiliateCodeUpdateManyWithoutUserNestedInput
-    affiliateCommissions?: AffiliateCommissionUpdateManyWithoutAffiliateNestedInput
-    subUserCommissions?: AffiliateCommissionUpdateManyWithoutSubUserNestedInput
-    affiliateTier?: AffiliateTierUpdateOneWithoutAffiliateNestedInput
-    affiliateWallets?: AffiliateWalletUpdateManyWithoutAffiliateNestedInput
-    CompTransaction?: CompTransactionUpdateManyWithoutUserNestedInput
-    DailyCompEarning?: DailyCompEarningUpdateManyWithoutUserNestedInput
-    EmailLog?: EmailLogUpdateManyWithoutUserNestedInput
-    GameSession?: CasinoGameSessionUpdateManyWithoutUserNestedInput
-    affiliateReferrals?: ReferralUpdateManyWithoutAffiliateNestedInput
-    referredUsers?: ReferralUpdateManyWithoutSubUserNestedInput
-    transactions?: TransactionUpdateManyWithoutUserNestedInput
-    depositDetails?: DepositDetailUpdateManyWithoutUserNestedInput
-    balances?: UserBalanceUpdateManyWithoutUserNestedInput
-    UserBalanceStats?: UserBalanceStatsUpdateManyWithoutUserNestedInput
-    UserPromotion?: UserPromotionUpdateManyWithoutUserNestedInput
-    UserSession?: UserSessionUpdateManyWithoutUserNestedInput
-    RevokedSessions?: UserSessionUpdateManyWithoutRevokedByUserNestedInput
-    UserToken?: UserTokenUpdateManyWithoutUserNestedInput
-    loginAttempts?: LoginAttemptUpdateManyWithoutUserNestedInput
-    userTier?: UserTierUpdateOneWithoutUserNestedInput
-    tierHistory?: TierHistoryUpdateManyWithoutUserNestedInput
-    adminAdjustmentDetails?: AdminAdjustmentDetailUpdateManyWithoutAdminUserNestedInput
-  }
-
-  export type UserUncheckedUpdateWithoutRollingInput = {
-    id?: BigIntFieldUpdateOperationsInput | bigint | number
-    uid?: StringFieldUpdateOperationsInput | string
-    whitecliffId?: NullableBigIntFieldUpdateOperationsInput | bigint | number | null
-    whitecliffSystemId?: NullableBigIntFieldUpdateOperationsInput | bigint | number | null
-    whitecliffUsername?: NullableStringFieldUpdateOperationsInput | string | null
-    dcsId?: NullableStringFieldUpdateOperationsInput | string | null
-    email?: NullableStringFieldUpdateOperationsInput | string | null
-    passwordHash?: NullableStringFieldUpdateOperationsInput | string | null
-    socialType?: NullableEnumSocialTypeFieldUpdateOperationsInput | $Enums.SocialType | null
-    socialId?: NullableStringFieldUpdateOperationsInput | string | null
-    role?: EnumUserRoleTypeFieldUpdateOperationsInput | $Enums.UserRoleType
-    status?: EnumUserStatusFieldUpdateOperationsInput | $Enums.UserStatus
-    kycLevel?: EnumKycLevelFieldUpdateOperationsInput | $Enums.KycLevel
-    country?: NullableStringFieldUpdateOperationsInput | string | null
-    language?: NullableEnumLanguageFieldUpdateOperationsInput | $Enums.Language | null
-    timezone?: NullableStringFieldUpdateOperationsInput | string | null
-    timezoneOffset?: NullableIntFieldUpdateOperationsInput | number | null
-    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
-    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
-    affiliateCodes?: AffiliateCodeUncheckedUpdateManyWithoutUserNestedInput
-    affiliateCommissions?: AffiliateCommissionUncheckedUpdateManyWithoutAffiliateNestedInput
-    subUserCommissions?: AffiliateCommissionUncheckedUpdateManyWithoutSubUserNestedInput
-    affiliateTier?: AffiliateTierUncheckedUpdateOneWithoutAffiliateNestedInput
-    affiliateWallets?: AffiliateWalletUncheckedUpdateManyWithoutAffiliateNestedInput
-    CompTransaction?: CompTransactionUncheckedUpdateManyWithoutUserNestedInput
-    DailyCompEarning?: DailyCompEarningUncheckedUpdateManyWithoutUserNestedInput
-    EmailLog?: EmailLogUncheckedUpdateManyWithoutUserNestedInput
-    GameSession?: CasinoGameSessionUncheckedUpdateManyWithoutUserNestedInput
-    affiliateReferrals?: ReferralUncheckedUpdateManyWithoutAffiliateNestedInput
-    referredUsers?: ReferralUncheckedUpdateManyWithoutSubUserNestedInput
-    transactions?: TransactionUncheckedUpdateManyWithoutUserNestedInput
-    depositDetails?: DepositDetailUncheckedUpdateManyWithoutUserNestedInput
-    balances?: UserBalanceUncheckedUpdateManyWithoutUserNestedInput
-    UserBalanceStats?: UserBalanceStatsUncheckedUpdateManyWithoutUserNestedInput
-    UserPromotion?: UserPromotionUncheckedUpdateManyWithoutUserNestedInput
-    UserSession?: UserSessionUncheckedUpdateManyWithoutUserNestedInput
-    RevokedSessions?: UserSessionUncheckedUpdateManyWithoutRevokedByUserNestedInput
-    UserToken?: UserTokenUncheckedUpdateManyWithoutUserNestedInput
-    loginAttempts?: LoginAttemptUncheckedUpdateManyWithoutUserNestedInput
-    userTier?: UserTierUncheckedUpdateOneWithoutUserNestedInput
-    tierHistory?: TierHistoryUncheckedUpdateManyWithoutUserNestedInput
-    adminAdjustmentDetails?: AdminAdjustmentDetailUncheckedUpdateManyWithoutAdminUserNestedInput
-  }
-
-  export type UserPromotionUpsertWithoutRollingInput = {
-    update: XOR<UserPromotionUpdateWithoutRollingInput, UserPromotionUncheckedUpdateWithoutRollingInput>
-    create: XOR<UserPromotionCreateWithoutRollingInput, UserPromotionUncheckedCreateWithoutRollingInput>
-    where?: UserPromotionWhereInput
-  }
-
-  export type UserPromotionUpdateToOneWithWhereWithoutRollingInput = {
-    where?: UserPromotionWhereInput
-    data: XOR<UserPromotionUpdateWithoutRollingInput, UserPromotionUncheckedUpdateWithoutRollingInput>
-  }
-
-  export type UserPromotionUpdateWithoutRollingInput = {
-    id?: BigIntFieldUpdateOperationsInput | bigint | number
-    status?: EnumUserPromotionStatusFieldUpdateOperationsInput | $Enums.UserPromotionStatus
-    depositAmount?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
-    bonusAmount?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
-    targetRollingAmount?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
-    currentRollingAmount?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
-    currency?: EnumExchangeCurrencyCodeFieldUpdateOperationsInput | $Enums.ExchangeCurrencyCode
-    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
-    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
-    promotion?: PromotionUpdateOneRequiredWithoutUserPromotionNestedInput
-    user?: UserUpdateOneRequiredWithoutUserPromotionNestedInput
-  }
-
-  export type UserPromotionUncheckedUpdateWithoutRollingInput = {
-    id?: BigIntFieldUpdateOperationsInput | bigint | number
-    userId?: BigIntFieldUpdateOperationsInput | bigint | number
-    promotionId?: BigIntFieldUpdateOperationsInput | bigint | number
-    status?: EnumUserPromotionStatusFieldUpdateOperationsInput | $Enums.UserPromotionStatus
-    depositAmount?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
-    bonusAmount?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
-    targetRollingAmount?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
-    currentRollingAmount?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
-    currency?: EnumExchangeCurrencyCodeFieldUpdateOperationsInput | $Enums.ExchangeCurrencyCode
-    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
-    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    wageringRequirements?: WageringRequirementUncheckedUpdateManyWithoutUserNestedInput
   }
 
   export type UserCreateWithoutUserTokenInput = {
@@ -88137,10 +89584,9 @@ export namespace Prisma {
     GameSession?: CasinoGameSessionCreateNestedManyWithoutUserInput
     affiliateReferrals?: ReferralCreateNestedManyWithoutAffiliateInput
     referredUsers?: ReferralCreateNestedManyWithoutSubUserInput
-    Rolling?: RollingCreateNestedManyWithoutUserInput
     transactions?: TransactionCreateNestedManyWithoutUserInput
     depositDetails?: DepositDetailCreateNestedManyWithoutUserInput
-    balances?: UserBalanceCreateNestedManyWithoutUserInput
+    userWallets?: UserWalletCreateNestedManyWithoutUserInput
     UserBalanceStats?: UserBalanceStatsCreateNestedManyWithoutUserInput
     UserPromotion?: UserPromotionCreateNestedManyWithoutUserInput
     UserSession?: UserSessionCreateNestedManyWithoutUserInput
@@ -88149,6 +89595,7 @@ export namespace Prisma {
     userTier?: UserTierCreateNestedOneWithoutUserInput
     tierHistory?: TierHistoryCreateNestedManyWithoutUserInput
     adminAdjustmentDetails?: AdminAdjustmentDetailCreateNestedManyWithoutAdminUserInput
+    wageringRequirements?: WageringRequirementCreateNestedManyWithoutUserInput
   }
 
   export type UserUncheckedCreateWithoutUserTokenInput = {
@@ -88182,10 +89629,9 @@ export namespace Prisma {
     GameSession?: CasinoGameSessionUncheckedCreateNestedManyWithoutUserInput
     affiliateReferrals?: ReferralUncheckedCreateNestedManyWithoutAffiliateInput
     referredUsers?: ReferralUncheckedCreateNestedManyWithoutSubUserInput
-    Rolling?: RollingUncheckedCreateNestedManyWithoutUserInput
     transactions?: TransactionUncheckedCreateNestedManyWithoutUserInput
     depositDetails?: DepositDetailUncheckedCreateNestedManyWithoutUserInput
-    balances?: UserBalanceUncheckedCreateNestedManyWithoutUserInput
+    userWallets?: UserWalletUncheckedCreateNestedManyWithoutUserInput
     UserBalanceStats?: UserBalanceStatsUncheckedCreateNestedManyWithoutUserInput
     UserPromotion?: UserPromotionUncheckedCreateNestedManyWithoutUserInput
     UserSession?: UserSessionUncheckedCreateNestedManyWithoutUserInput
@@ -88194,6 +89640,7 @@ export namespace Prisma {
     userTier?: UserTierUncheckedCreateNestedOneWithoutUserInput
     tierHistory?: TierHistoryUncheckedCreateNestedManyWithoutUserInput
     adminAdjustmentDetails?: AdminAdjustmentDetailUncheckedCreateNestedManyWithoutAdminUserInput
+    wageringRequirements?: WageringRequirementUncheckedCreateNestedManyWithoutUserInput
   }
 
   export type UserCreateOrConnectWithoutUserTokenInput = {
@@ -88243,10 +89690,9 @@ export namespace Prisma {
     GameSession?: CasinoGameSessionUpdateManyWithoutUserNestedInput
     affiliateReferrals?: ReferralUpdateManyWithoutAffiliateNestedInput
     referredUsers?: ReferralUpdateManyWithoutSubUserNestedInput
-    Rolling?: RollingUpdateManyWithoutUserNestedInput
     transactions?: TransactionUpdateManyWithoutUserNestedInput
     depositDetails?: DepositDetailUpdateManyWithoutUserNestedInput
-    balances?: UserBalanceUpdateManyWithoutUserNestedInput
+    userWallets?: UserWalletUpdateManyWithoutUserNestedInput
     UserBalanceStats?: UserBalanceStatsUpdateManyWithoutUserNestedInput
     UserPromotion?: UserPromotionUpdateManyWithoutUserNestedInput
     UserSession?: UserSessionUpdateManyWithoutUserNestedInput
@@ -88255,6 +89701,7 @@ export namespace Prisma {
     userTier?: UserTierUpdateOneWithoutUserNestedInput
     tierHistory?: TierHistoryUpdateManyWithoutUserNestedInput
     adminAdjustmentDetails?: AdminAdjustmentDetailUpdateManyWithoutAdminUserNestedInput
+    wageringRequirements?: WageringRequirementUpdateManyWithoutUserNestedInput
   }
 
   export type UserUncheckedUpdateWithoutUserTokenInput = {
@@ -88288,10 +89735,9 @@ export namespace Prisma {
     GameSession?: CasinoGameSessionUncheckedUpdateManyWithoutUserNestedInput
     affiliateReferrals?: ReferralUncheckedUpdateManyWithoutAffiliateNestedInput
     referredUsers?: ReferralUncheckedUpdateManyWithoutSubUserNestedInput
-    Rolling?: RollingUncheckedUpdateManyWithoutUserNestedInput
     transactions?: TransactionUncheckedUpdateManyWithoutUserNestedInput
     depositDetails?: DepositDetailUncheckedUpdateManyWithoutUserNestedInput
-    balances?: UserBalanceUncheckedUpdateManyWithoutUserNestedInput
+    userWallets?: UserWalletUncheckedUpdateManyWithoutUserNestedInput
     UserBalanceStats?: UserBalanceStatsUncheckedUpdateManyWithoutUserNestedInput
     UserPromotion?: UserPromotionUncheckedUpdateManyWithoutUserNestedInput
     UserSession?: UserSessionUncheckedUpdateManyWithoutUserNestedInput
@@ -88300,6 +89746,7 @@ export namespace Prisma {
     userTier?: UserTierUncheckedUpdateOneWithoutUserNestedInput
     tierHistory?: TierHistoryUncheckedUpdateManyWithoutUserNestedInput
     adminAdjustmentDetails?: AdminAdjustmentDetailUncheckedUpdateManyWithoutAdminUserNestedInput
+    wageringRequirements?: WageringRequirementUncheckedUpdateManyWithoutUserNestedInput
   }
 
   export type UserCreateWithoutEmailLogInput = {
@@ -88332,10 +89779,9 @@ export namespace Prisma {
     GameSession?: CasinoGameSessionCreateNestedManyWithoutUserInput
     affiliateReferrals?: ReferralCreateNestedManyWithoutAffiliateInput
     referredUsers?: ReferralCreateNestedManyWithoutSubUserInput
-    Rolling?: RollingCreateNestedManyWithoutUserInput
     transactions?: TransactionCreateNestedManyWithoutUserInput
     depositDetails?: DepositDetailCreateNestedManyWithoutUserInput
-    balances?: UserBalanceCreateNestedManyWithoutUserInput
+    userWallets?: UserWalletCreateNestedManyWithoutUserInput
     UserBalanceStats?: UserBalanceStatsCreateNestedManyWithoutUserInput
     UserPromotion?: UserPromotionCreateNestedManyWithoutUserInput
     UserSession?: UserSessionCreateNestedManyWithoutUserInput
@@ -88345,6 +89791,7 @@ export namespace Prisma {
     userTier?: UserTierCreateNestedOneWithoutUserInput
     tierHistory?: TierHistoryCreateNestedManyWithoutUserInput
     adminAdjustmentDetails?: AdminAdjustmentDetailCreateNestedManyWithoutAdminUserInput
+    wageringRequirements?: WageringRequirementCreateNestedManyWithoutUserInput
   }
 
   export type UserUncheckedCreateWithoutEmailLogInput = {
@@ -88377,10 +89824,9 @@ export namespace Prisma {
     GameSession?: CasinoGameSessionUncheckedCreateNestedManyWithoutUserInput
     affiliateReferrals?: ReferralUncheckedCreateNestedManyWithoutAffiliateInput
     referredUsers?: ReferralUncheckedCreateNestedManyWithoutSubUserInput
-    Rolling?: RollingUncheckedCreateNestedManyWithoutUserInput
     transactions?: TransactionUncheckedCreateNestedManyWithoutUserInput
     depositDetails?: DepositDetailUncheckedCreateNestedManyWithoutUserInput
-    balances?: UserBalanceUncheckedCreateNestedManyWithoutUserInput
+    userWallets?: UserWalletUncheckedCreateNestedManyWithoutUserInput
     UserBalanceStats?: UserBalanceStatsUncheckedCreateNestedManyWithoutUserInput
     UserPromotion?: UserPromotionUncheckedCreateNestedManyWithoutUserInput
     UserSession?: UserSessionUncheckedCreateNestedManyWithoutUserInput
@@ -88390,6 +89836,7 @@ export namespace Prisma {
     userTier?: UserTierUncheckedCreateNestedOneWithoutUserInput
     tierHistory?: TierHistoryUncheckedCreateNestedManyWithoutUserInput
     adminAdjustmentDetails?: AdminAdjustmentDetailUncheckedCreateNestedManyWithoutAdminUserInput
+    wageringRequirements?: WageringRequirementUncheckedCreateNestedManyWithoutUserInput
   }
 
   export type UserCreateOrConnectWithoutEmailLogInput = {
@@ -88438,10 +89885,9 @@ export namespace Prisma {
     GameSession?: CasinoGameSessionUpdateManyWithoutUserNestedInput
     affiliateReferrals?: ReferralUpdateManyWithoutAffiliateNestedInput
     referredUsers?: ReferralUpdateManyWithoutSubUserNestedInput
-    Rolling?: RollingUpdateManyWithoutUserNestedInput
     transactions?: TransactionUpdateManyWithoutUserNestedInput
     depositDetails?: DepositDetailUpdateManyWithoutUserNestedInput
-    balances?: UserBalanceUpdateManyWithoutUserNestedInput
+    userWallets?: UserWalletUpdateManyWithoutUserNestedInput
     UserBalanceStats?: UserBalanceStatsUpdateManyWithoutUserNestedInput
     UserPromotion?: UserPromotionUpdateManyWithoutUserNestedInput
     UserSession?: UserSessionUpdateManyWithoutUserNestedInput
@@ -88451,6 +89897,7 @@ export namespace Prisma {
     userTier?: UserTierUpdateOneWithoutUserNestedInput
     tierHistory?: TierHistoryUpdateManyWithoutUserNestedInput
     adminAdjustmentDetails?: AdminAdjustmentDetailUpdateManyWithoutAdminUserNestedInput
+    wageringRequirements?: WageringRequirementUpdateManyWithoutUserNestedInput
   }
 
   export type UserUncheckedUpdateWithoutEmailLogInput = {
@@ -88483,10 +89930,9 @@ export namespace Prisma {
     GameSession?: CasinoGameSessionUncheckedUpdateManyWithoutUserNestedInput
     affiliateReferrals?: ReferralUncheckedUpdateManyWithoutAffiliateNestedInput
     referredUsers?: ReferralUncheckedUpdateManyWithoutSubUserNestedInput
-    Rolling?: RollingUncheckedUpdateManyWithoutUserNestedInput
     transactions?: TransactionUncheckedUpdateManyWithoutUserNestedInput
     depositDetails?: DepositDetailUncheckedUpdateManyWithoutUserNestedInput
-    balances?: UserBalanceUncheckedUpdateManyWithoutUserNestedInput
+    userWallets?: UserWalletUncheckedUpdateManyWithoutUserNestedInput
     UserBalanceStats?: UserBalanceStatsUncheckedUpdateManyWithoutUserNestedInput
     UserPromotion?: UserPromotionUncheckedUpdateManyWithoutUserNestedInput
     UserSession?: UserSessionUncheckedUpdateManyWithoutUserNestedInput
@@ -88496,6 +89942,7 @@ export namespace Prisma {
     userTier?: UserTierUncheckedUpdateOneWithoutUserNestedInput
     tierHistory?: TierHistoryUncheckedUpdateManyWithoutUserNestedInput
     adminAdjustmentDetails?: AdminAdjustmentDetailUncheckedUpdateManyWithoutAdminUserNestedInput
+    wageringRequirements?: WageringRequirementUncheckedUpdateManyWithoutUserNestedInput
   }
 
   export type UserCreateWithoutAffiliateWalletsInput = {
@@ -88528,10 +89975,9 @@ export namespace Prisma {
     GameSession?: CasinoGameSessionCreateNestedManyWithoutUserInput
     affiliateReferrals?: ReferralCreateNestedManyWithoutAffiliateInput
     referredUsers?: ReferralCreateNestedManyWithoutSubUserInput
-    Rolling?: RollingCreateNestedManyWithoutUserInput
     transactions?: TransactionCreateNestedManyWithoutUserInput
     depositDetails?: DepositDetailCreateNestedManyWithoutUserInput
-    balances?: UserBalanceCreateNestedManyWithoutUserInput
+    userWallets?: UserWalletCreateNestedManyWithoutUserInput
     UserBalanceStats?: UserBalanceStatsCreateNestedManyWithoutUserInput
     UserPromotion?: UserPromotionCreateNestedManyWithoutUserInput
     UserSession?: UserSessionCreateNestedManyWithoutUserInput
@@ -88541,6 +89987,7 @@ export namespace Prisma {
     userTier?: UserTierCreateNestedOneWithoutUserInput
     tierHistory?: TierHistoryCreateNestedManyWithoutUserInput
     adminAdjustmentDetails?: AdminAdjustmentDetailCreateNestedManyWithoutAdminUserInput
+    wageringRequirements?: WageringRequirementCreateNestedManyWithoutUserInput
   }
 
   export type UserUncheckedCreateWithoutAffiliateWalletsInput = {
@@ -88573,10 +90020,9 @@ export namespace Prisma {
     GameSession?: CasinoGameSessionUncheckedCreateNestedManyWithoutUserInput
     affiliateReferrals?: ReferralUncheckedCreateNestedManyWithoutAffiliateInput
     referredUsers?: ReferralUncheckedCreateNestedManyWithoutSubUserInput
-    Rolling?: RollingUncheckedCreateNestedManyWithoutUserInput
     transactions?: TransactionUncheckedCreateNestedManyWithoutUserInput
     depositDetails?: DepositDetailUncheckedCreateNestedManyWithoutUserInput
-    balances?: UserBalanceUncheckedCreateNestedManyWithoutUserInput
+    userWallets?: UserWalletUncheckedCreateNestedManyWithoutUserInput
     UserBalanceStats?: UserBalanceStatsUncheckedCreateNestedManyWithoutUserInput
     UserPromotion?: UserPromotionUncheckedCreateNestedManyWithoutUserInput
     UserSession?: UserSessionUncheckedCreateNestedManyWithoutUserInput
@@ -88586,6 +90032,7 @@ export namespace Prisma {
     userTier?: UserTierUncheckedCreateNestedOneWithoutUserInput
     tierHistory?: TierHistoryUncheckedCreateNestedManyWithoutUserInput
     adminAdjustmentDetails?: AdminAdjustmentDetailUncheckedCreateNestedManyWithoutAdminUserInput
+    wageringRequirements?: WageringRequirementUncheckedCreateNestedManyWithoutUserInput
   }
 
   export type UserCreateOrConnectWithoutAffiliateWalletsInput = {
@@ -88634,10 +90081,9 @@ export namespace Prisma {
     GameSession?: CasinoGameSessionUpdateManyWithoutUserNestedInput
     affiliateReferrals?: ReferralUpdateManyWithoutAffiliateNestedInput
     referredUsers?: ReferralUpdateManyWithoutSubUserNestedInput
-    Rolling?: RollingUpdateManyWithoutUserNestedInput
     transactions?: TransactionUpdateManyWithoutUserNestedInput
     depositDetails?: DepositDetailUpdateManyWithoutUserNestedInput
-    balances?: UserBalanceUpdateManyWithoutUserNestedInput
+    userWallets?: UserWalletUpdateManyWithoutUserNestedInput
     UserBalanceStats?: UserBalanceStatsUpdateManyWithoutUserNestedInput
     UserPromotion?: UserPromotionUpdateManyWithoutUserNestedInput
     UserSession?: UserSessionUpdateManyWithoutUserNestedInput
@@ -88647,6 +90093,7 @@ export namespace Prisma {
     userTier?: UserTierUpdateOneWithoutUserNestedInput
     tierHistory?: TierHistoryUpdateManyWithoutUserNestedInput
     adminAdjustmentDetails?: AdminAdjustmentDetailUpdateManyWithoutAdminUserNestedInput
+    wageringRequirements?: WageringRequirementUpdateManyWithoutUserNestedInput
   }
 
   export type UserUncheckedUpdateWithoutAffiliateWalletsInput = {
@@ -88679,10 +90126,9 @@ export namespace Prisma {
     GameSession?: CasinoGameSessionUncheckedUpdateManyWithoutUserNestedInput
     affiliateReferrals?: ReferralUncheckedUpdateManyWithoutAffiliateNestedInput
     referredUsers?: ReferralUncheckedUpdateManyWithoutSubUserNestedInput
-    Rolling?: RollingUncheckedUpdateManyWithoutUserNestedInput
     transactions?: TransactionUncheckedUpdateManyWithoutUserNestedInput
     depositDetails?: DepositDetailUncheckedUpdateManyWithoutUserNestedInput
-    balances?: UserBalanceUncheckedUpdateManyWithoutUserNestedInput
+    userWallets?: UserWalletUncheckedUpdateManyWithoutUserNestedInput
     UserBalanceStats?: UserBalanceStatsUncheckedUpdateManyWithoutUserNestedInput
     UserPromotion?: UserPromotionUncheckedUpdateManyWithoutUserNestedInput
     UserSession?: UserSessionUncheckedUpdateManyWithoutUserNestedInput
@@ -88692,6 +90138,7 @@ export namespace Prisma {
     userTier?: UserTierUncheckedUpdateOneWithoutUserNestedInput
     tierHistory?: TierHistoryUncheckedUpdateManyWithoutUserNestedInput
     adminAdjustmentDetails?: AdminAdjustmentDetailUncheckedUpdateManyWithoutAdminUserNestedInput
+    wageringRequirements?: WageringRequirementUncheckedUpdateManyWithoutUserNestedInput
   }
 
   export type UserCreateWithoutAffiliateCommissionsInput = {
@@ -88724,10 +90171,9 @@ export namespace Prisma {
     GameSession?: CasinoGameSessionCreateNestedManyWithoutUserInput
     affiliateReferrals?: ReferralCreateNestedManyWithoutAffiliateInput
     referredUsers?: ReferralCreateNestedManyWithoutSubUserInput
-    Rolling?: RollingCreateNestedManyWithoutUserInput
     transactions?: TransactionCreateNestedManyWithoutUserInput
     depositDetails?: DepositDetailCreateNestedManyWithoutUserInput
-    balances?: UserBalanceCreateNestedManyWithoutUserInput
+    userWallets?: UserWalletCreateNestedManyWithoutUserInput
     UserBalanceStats?: UserBalanceStatsCreateNestedManyWithoutUserInput
     UserPromotion?: UserPromotionCreateNestedManyWithoutUserInput
     UserSession?: UserSessionCreateNestedManyWithoutUserInput
@@ -88737,6 +90183,7 @@ export namespace Prisma {
     userTier?: UserTierCreateNestedOneWithoutUserInput
     tierHistory?: TierHistoryCreateNestedManyWithoutUserInput
     adminAdjustmentDetails?: AdminAdjustmentDetailCreateNestedManyWithoutAdminUserInput
+    wageringRequirements?: WageringRequirementCreateNestedManyWithoutUserInput
   }
 
   export type UserUncheckedCreateWithoutAffiliateCommissionsInput = {
@@ -88769,10 +90216,9 @@ export namespace Prisma {
     GameSession?: CasinoGameSessionUncheckedCreateNestedManyWithoutUserInput
     affiliateReferrals?: ReferralUncheckedCreateNestedManyWithoutAffiliateInput
     referredUsers?: ReferralUncheckedCreateNestedManyWithoutSubUserInput
-    Rolling?: RollingUncheckedCreateNestedManyWithoutUserInput
     transactions?: TransactionUncheckedCreateNestedManyWithoutUserInput
     depositDetails?: DepositDetailUncheckedCreateNestedManyWithoutUserInput
-    balances?: UserBalanceUncheckedCreateNestedManyWithoutUserInput
+    userWallets?: UserWalletUncheckedCreateNestedManyWithoutUserInput
     UserBalanceStats?: UserBalanceStatsUncheckedCreateNestedManyWithoutUserInput
     UserPromotion?: UserPromotionUncheckedCreateNestedManyWithoutUserInput
     UserSession?: UserSessionUncheckedCreateNestedManyWithoutUserInput
@@ -88782,6 +90228,7 @@ export namespace Prisma {
     userTier?: UserTierUncheckedCreateNestedOneWithoutUserInput
     tierHistory?: TierHistoryUncheckedCreateNestedManyWithoutUserInput
     adminAdjustmentDetails?: AdminAdjustmentDetailUncheckedCreateNestedManyWithoutAdminUserInput
+    wageringRequirements?: WageringRequirementUncheckedCreateNestedManyWithoutUserInput
   }
 
   export type UserCreateOrConnectWithoutAffiliateCommissionsInput = {
@@ -88888,10 +90335,9 @@ export namespace Prisma {
     GameSession?: CasinoGameSessionCreateNestedManyWithoutUserInput
     affiliateReferrals?: ReferralCreateNestedManyWithoutAffiliateInput
     referredUsers?: ReferralCreateNestedManyWithoutSubUserInput
-    Rolling?: RollingCreateNestedManyWithoutUserInput
     transactions?: TransactionCreateNestedManyWithoutUserInput
     depositDetails?: DepositDetailCreateNestedManyWithoutUserInput
-    balances?: UserBalanceCreateNestedManyWithoutUserInput
+    userWallets?: UserWalletCreateNestedManyWithoutUserInput
     UserBalanceStats?: UserBalanceStatsCreateNestedManyWithoutUserInput
     UserPromotion?: UserPromotionCreateNestedManyWithoutUserInput
     UserSession?: UserSessionCreateNestedManyWithoutUserInput
@@ -88901,6 +90347,7 @@ export namespace Prisma {
     userTier?: UserTierCreateNestedOneWithoutUserInput
     tierHistory?: TierHistoryCreateNestedManyWithoutUserInput
     adminAdjustmentDetails?: AdminAdjustmentDetailCreateNestedManyWithoutAdminUserInput
+    wageringRequirements?: WageringRequirementCreateNestedManyWithoutUserInput
   }
 
   export type UserUncheckedCreateWithoutSubUserCommissionsInput = {
@@ -88933,10 +90380,9 @@ export namespace Prisma {
     GameSession?: CasinoGameSessionUncheckedCreateNestedManyWithoutUserInput
     affiliateReferrals?: ReferralUncheckedCreateNestedManyWithoutAffiliateInput
     referredUsers?: ReferralUncheckedCreateNestedManyWithoutSubUserInput
-    Rolling?: RollingUncheckedCreateNestedManyWithoutUserInput
     transactions?: TransactionUncheckedCreateNestedManyWithoutUserInput
     depositDetails?: DepositDetailUncheckedCreateNestedManyWithoutUserInput
-    balances?: UserBalanceUncheckedCreateNestedManyWithoutUserInput
+    userWallets?: UserWalletUncheckedCreateNestedManyWithoutUserInput
     UserBalanceStats?: UserBalanceStatsUncheckedCreateNestedManyWithoutUserInput
     UserPromotion?: UserPromotionUncheckedCreateNestedManyWithoutUserInput
     UserSession?: UserSessionUncheckedCreateNestedManyWithoutUserInput
@@ -88946,6 +90392,7 @@ export namespace Prisma {
     userTier?: UserTierUncheckedCreateNestedOneWithoutUserInput
     tierHistory?: TierHistoryUncheckedCreateNestedManyWithoutUserInput
     adminAdjustmentDetails?: AdminAdjustmentDetailUncheckedCreateNestedManyWithoutAdminUserInput
+    wageringRequirements?: WageringRequirementUncheckedCreateNestedManyWithoutUserInput
   }
 
   export type UserCreateOrConnectWithoutSubUserCommissionsInput = {
@@ -88994,10 +90441,9 @@ export namespace Prisma {
     GameSession?: CasinoGameSessionUpdateManyWithoutUserNestedInput
     affiliateReferrals?: ReferralUpdateManyWithoutAffiliateNestedInput
     referredUsers?: ReferralUpdateManyWithoutSubUserNestedInput
-    Rolling?: RollingUpdateManyWithoutUserNestedInput
     transactions?: TransactionUpdateManyWithoutUserNestedInput
     depositDetails?: DepositDetailUpdateManyWithoutUserNestedInput
-    balances?: UserBalanceUpdateManyWithoutUserNestedInput
+    userWallets?: UserWalletUpdateManyWithoutUserNestedInput
     UserBalanceStats?: UserBalanceStatsUpdateManyWithoutUserNestedInput
     UserPromotion?: UserPromotionUpdateManyWithoutUserNestedInput
     UserSession?: UserSessionUpdateManyWithoutUserNestedInput
@@ -89007,6 +90453,7 @@ export namespace Prisma {
     userTier?: UserTierUpdateOneWithoutUserNestedInput
     tierHistory?: TierHistoryUpdateManyWithoutUserNestedInput
     adminAdjustmentDetails?: AdminAdjustmentDetailUpdateManyWithoutAdminUserNestedInput
+    wageringRequirements?: WageringRequirementUpdateManyWithoutUserNestedInput
   }
 
   export type UserUncheckedUpdateWithoutAffiliateCommissionsInput = {
@@ -89039,10 +90486,9 @@ export namespace Prisma {
     GameSession?: CasinoGameSessionUncheckedUpdateManyWithoutUserNestedInput
     affiliateReferrals?: ReferralUncheckedUpdateManyWithoutAffiliateNestedInput
     referredUsers?: ReferralUncheckedUpdateManyWithoutSubUserNestedInput
-    Rolling?: RollingUncheckedUpdateManyWithoutUserNestedInput
     transactions?: TransactionUncheckedUpdateManyWithoutUserNestedInput
     depositDetails?: DepositDetailUncheckedUpdateManyWithoutUserNestedInput
-    balances?: UserBalanceUncheckedUpdateManyWithoutUserNestedInput
+    userWallets?: UserWalletUncheckedUpdateManyWithoutUserNestedInput
     UserBalanceStats?: UserBalanceStatsUncheckedUpdateManyWithoutUserNestedInput
     UserPromotion?: UserPromotionUncheckedUpdateManyWithoutUserNestedInput
     UserSession?: UserSessionUncheckedUpdateManyWithoutUserNestedInput
@@ -89052,6 +90498,7 @@ export namespace Prisma {
     userTier?: UserTierUncheckedUpdateOneWithoutUserNestedInput
     tierHistory?: TierHistoryUncheckedUpdateManyWithoutUserNestedInput
     adminAdjustmentDetails?: AdminAdjustmentDetailUncheckedUpdateManyWithoutAdminUserNestedInput
+    wageringRequirements?: WageringRequirementUncheckedUpdateManyWithoutUserNestedInput
   }
 
   export type GameRoundUpsertWithoutAffiliateCommissionInput = {
@@ -89170,10 +90617,9 @@ export namespace Prisma {
     GameSession?: CasinoGameSessionUpdateManyWithoutUserNestedInput
     affiliateReferrals?: ReferralUpdateManyWithoutAffiliateNestedInput
     referredUsers?: ReferralUpdateManyWithoutSubUserNestedInput
-    Rolling?: RollingUpdateManyWithoutUserNestedInput
     transactions?: TransactionUpdateManyWithoutUserNestedInput
     depositDetails?: DepositDetailUpdateManyWithoutUserNestedInput
-    balances?: UserBalanceUpdateManyWithoutUserNestedInput
+    userWallets?: UserWalletUpdateManyWithoutUserNestedInput
     UserBalanceStats?: UserBalanceStatsUpdateManyWithoutUserNestedInput
     UserPromotion?: UserPromotionUpdateManyWithoutUserNestedInput
     UserSession?: UserSessionUpdateManyWithoutUserNestedInput
@@ -89183,6 +90629,7 @@ export namespace Prisma {
     userTier?: UserTierUpdateOneWithoutUserNestedInput
     tierHistory?: TierHistoryUpdateManyWithoutUserNestedInput
     adminAdjustmentDetails?: AdminAdjustmentDetailUpdateManyWithoutAdminUserNestedInput
+    wageringRequirements?: WageringRequirementUpdateManyWithoutUserNestedInput
   }
 
   export type UserUncheckedUpdateWithoutSubUserCommissionsInput = {
@@ -89215,10 +90662,9 @@ export namespace Prisma {
     GameSession?: CasinoGameSessionUncheckedUpdateManyWithoutUserNestedInput
     affiliateReferrals?: ReferralUncheckedUpdateManyWithoutAffiliateNestedInput
     referredUsers?: ReferralUncheckedUpdateManyWithoutSubUserNestedInput
-    Rolling?: RollingUncheckedUpdateManyWithoutUserNestedInput
     transactions?: TransactionUncheckedUpdateManyWithoutUserNestedInput
     depositDetails?: DepositDetailUncheckedUpdateManyWithoutUserNestedInput
-    balances?: UserBalanceUncheckedUpdateManyWithoutUserNestedInput
+    userWallets?: UserWalletUncheckedUpdateManyWithoutUserNestedInput
     UserBalanceStats?: UserBalanceStatsUncheckedUpdateManyWithoutUserNestedInput
     UserPromotion?: UserPromotionUncheckedUpdateManyWithoutUserNestedInput
     UserSession?: UserSessionUncheckedUpdateManyWithoutUserNestedInput
@@ -89228,6 +90674,7 @@ export namespace Prisma {
     userTier?: UserTierUncheckedUpdateOneWithoutUserNestedInput
     tierHistory?: TierHistoryUncheckedUpdateManyWithoutUserNestedInput
     adminAdjustmentDetails?: AdminAdjustmentDetailUncheckedUpdateManyWithoutAdminUserNestedInput
+    wageringRequirements?: WageringRequirementUncheckedUpdateManyWithoutUserNestedInput
   }
 
   export type UserCreateWithoutAffiliateTierInput = {
@@ -89260,10 +90707,9 @@ export namespace Prisma {
     GameSession?: CasinoGameSessionCreateNestedManyWithoutUserInput
     affiliateReferrals?: ReferralCreateNestedManyWithoutAffiliateInput
     referredUsers?: ReferralCreateNestedManyWithoutSubUserInput
-    Rolling?: RollingCreateNestedManyWithoutUserInput
     transactions?: TransactionCreateNestedManyWithoutUserInput
     depositDetails?: DepositDetailCreateNestedManyWithoutUserInput
-    balances?: UserBalanceCreateNestedManyWithoutUserInput
+    userWallets?: UserWalletCreateNestedManyWithoutUserInput
     UserBalanceStats?: UserBalanceStatsCreateNestedManyWithoutUserInput
     UserPromotion?: UserPromotionCreateNestedManyWithoutUserInput
     UserSession?: UserSessionCreateNestedManyWithoutUserInput
@@ -89273,6 +90719,7 @@ export namespace Prisma {
     userTier?: UserTierCreateNestedOneWithoutUserInput
     tierHistory?: TierHistoryCreateNestedManyWithoutUserInput
     adminAdjustmentDetails?: AdminAdjustmentDetailCreateNestedManyWithoutAdminUserInput
+    wageringRequirements?: WageringRequirementCreateNestedManyWithoutUserInput
   }
 
   export type UserUncheckedCreateWithoutAffiliateTierInput = {
@@ -89305,10 +90752,9 @@ export namespace Prisma {
     GameSession?: CasinoGameSessionUncheckedCreateNestedManyWithoutUserInput
     affiliateReferrals?: ReferralUncheckedCreateNestedManyWithoutAffiliateInput
     referredUsers?: ReferralUncheckedCreateNestedManyWithoutSubUserInput
-    Rolling?: RollingUncheckedCreateNestedManyWithoutUserInput
     transactions?: TransactionUncheckedCreateNestedManyWithoutUserInput
     depositDetails?: DepositDetailUncheckedCreateNestedManyWithoutUserInput
-    balances?: UserBalanceUncheckedCreateNestedManyWithoutUserInput
+    userWallets?: UserWalletUncheckedCreateNestedManyWithoutUserInput
     UserBalanceStats?: UserBalanceStatsUncheckedCreateNestedManyWithoutUserInput
     UserPromotion?: UserPromotionUncheckedCreateNestedManyWithoutUserInput
     UserSession?: UserSessionUncheckedCreateNestedManyWithoutUserInput
@@ -89318,6 +90764,7 @@ export namespace Prisma {
     userTier?: UserTierUncheckedCreateNestedOneWithoutUserInput
     tierHistory?: TierHistoryUncheckedCreateNestedManyWithoutUserInput
     adminAdjustmentDetails?: AdminAdjustmentDetailUncheckedCreateNestedManyWithoutAdminUserInput
+    wageringRequirements?: WageringRequirementUncheckedCreateNestedManyWithoutUserInput
   }
 
   export type UserCreateOrConnectWithoutAffiliateTierInput = {
@@ -89366,10 +90813,9 @@ export namespace Prisma {
     GameSession?: CasinoGameSessionUpdateManyWithoutUserNestedInput
     affiliateReferrals?: ReferralUpdateManyWithoutAffiliateNestedInput
     referredUsers?: ReferralUpdateManyWithoutSubUserNestedInput
-    Rolling?: RollingUpdateManyWithoutUserNestedInput
     transactions?: TransactionUpdateManyWithoutUserNestedInput
     depositDetails?: DepositDetailUpdateManyWithoutUserNestedInput
-    balances?: UserBalanceUpdateManyWithoutUserNestedInput
+    userWallets?: UserWalletUpdateManyWithoutUserNestedInput
     UserBalanceStats?: UserBalanceStatsUpdateManyWithoutUserNestedInput
     UserPromotion?: UserPromotionUpdateManyWithoutUserNestedInput
     UserSession?: UserSessionUpdateManyWithoutUserNestedInput
@@ -89379,6 +90825,7 @@ export namespace Prisma {
     userTier?: UserTierUpdateOneWithoutUserNestedInput
     tierHistory?: TierHistoryUpdateManyWithoutUserNestedInput
     adminAdjustmentDetails?: AdminAdjustmentDetailUpdateManyWithoutAdminUserNestedInput
+    wageringRequirements?: WageringRequirementUpdateManyWithoutUserNestedInput
   }
 
   export type UserUncheckedUpdateWithoutAffiliateTierInput = {
@@ -89411,10 +90858,9 @@ export namespace Prisma {
     GameSession?: CasinoGameSessionUncheckedUpdateManyWithoutUserNestedInput
     affiliateReferrals?: ReferralUncheckedUpdateManyWithoutAffiliateNestedInput
     referredUsers?: ReferralUncheckedUpdateManyWithoutSubUserNestedInput
-    Rolling?: RollingUncheckedUpdateManyWithoutUserNestedInput
     transactions?: TransactionUncheckedUpdateManyWithoutUserNestedInput
     depositDetails?: DepositDetailUncheckedUpdateManyWithoutUserNestedInput
-    balances?: UserBalanceUncheckedUpdateManyWithoutUserNestedInput
+    userWallets?: UserWalletUncheckedUpdateManyWithoutUserNestedInput
     UserBalanceStats?: UserBalanceStatsUncheckedUpdateManyWithoutUserNestedInput
     UserPromotion?: UserPromotionUncheckedUpdateManyWithoutUserNestedInput
     UserSession?: UserSessionUncheckedUpdateManyWithoutUserNestedInput
@@ -89424,6 +90870,7 @@ export namespace Prisma {
     userTier?: UserTierUncheckedUpdateOneWithoutUserNestedInput
     tierHistory?: TierHistoryUncheckedUpdateManyWithoutUserNestedInput
     adminAdjustmentDetails?: AdminAdjustmentDetailUncheckedUpdateManyWithoutAdminUserNestedInput
+    wageringRequirements?: WageringRequirementUncheckedUpdateManyWithoutUserNestedInput
   }
 
   export type UserCreateWithoutLoginAttemptsInput = {
@@ -89457,10 +90904,9 @@ export namespace Prisma {
     GameSession?: CasinoGameSessionCreateNestedManyWithoutUserInput
     affiliateReferrals?: ReferralCreateNestedManyWithoutAffiliateInput
     referredUsers?: ReferralCreateNestedManyWithoutSubUserInput
-    Rolling?: RollingCreateNestedManyWithoutUserInput
     transactions?: TransactionCreateNestedManyWithoutUserInput
     depositDetails?: DepositDetailCreateNestedManyWithoutUserInput
-    balances?: UserBalanceCreateNestedManyWithoutUserInput
+    userWallets?: UserWalletCreateNestedManyWithoutUserInput
     UserBalanceStats?: UserBalanceStatsCreateNestedManyWithoutUserInput
     UserPromotion?: UserPromotionCreateNestedManyWithoutUserInput
     UserSession?: UserSessionCreateNestedManyWithoutUserInput
@@ -89469,6 +90915,7 @@ export namespace Prisma {
     userTier?: UserTierCreateNestedOneWithoutUserInput
     tierHistory?: TierHistoryCreateNestedManyWithoutUserInput
     adminAdjustmentDetails?: AdminAdjustmentDetailCreateNestedManyWithoutAdminUserInput
+    wageringRequirements?: WageringRequirementCreateNestedManyWithoutUserInput
   }
 
   export type UserUncheckedCreateWithoutLoginAttemptsInput = {
@@ -89502,10 +90949,9 @@ export namespace Prisma {
     GameSession?: CasinoGameSessionUncheckedCreateNestedManyWithoutUserInput
     affiliateReferrals?: ReferralUncheckedCreateNestedManyWithoutAffiliateInput
     referredUsers?: ReferralUncheckedCreateNestedManyWithoutSubUserInput
-    Rolling?: RollingUncheckedCreateNestedManyWithoutUserInput
     transactions?: TransactionUncheckedCreateNestedManyWithoutUserInput
     depositDetails?: DepositDetailUncheckedCreateNestedManyWithoutUserInput
-    balances?: UserBalanceUncheckedCreateNestedManyWithoutUserInput
+    userWallets?: UserWalletUncheckedCreateNestedManyWithoutUserInput
     UserBalanceStats?: UserBalanceStatsUncheckedCreateNestedManyWithoutUserInput
     UserPromotion?: UserPromotionUncheckedCreateNestedManyWithoutUserInput
     UserSession?: UserSessionUncheckedCreateNestedManyWithoutUserInput
@@ -89514,6 +90960,7 @@ export namespace Prisma {
     userTier?: UserTierUncheckedCreateNestedOneWithoutUserInput
     tierHistory?: TierHistoryUncheckedCreateNestedManyWithoutUserInput
     adminAdjustmentDetails?: AdminAdjustmentDetailUncheckedCreateNestedManyWithoutAdminUserInput
+    wageringRequirements?: WageringRequirementUncheckedCreateNestedManyWithoutUserInput
   }
 
   export type UserCreateOrConnectWithoutLoginAttemptsInput = {
@@ -89563,10 +91010,9 @@ export namespace Prisma {
     GameSession?: CasinoGameSessionUpdateManyWithoutUserNestedInput
     affiliateReferrals?: ReferralUpdateManyWithoutAffiliateNestedInput
     referredUsers?: ReferralUpdateManyWithoutSubUserNestedInput
-    Rolling?: RollingUpdateManyWithoutUserNestedInput
     transactions?: TransactionUpdateManyWithoutUserNestedInput
     depositDetails?: DepositDetailUpdateManyWithoutUserNestedInput
-    balances?: UserBalanceUpdateManyWithoutUserNestedInput
+    userWallets?: UserWalletUpdateManyWithoutUserNestedInput
     UserBalanceStats?: UserBalanceStatsUpdateManyWithoutUserNestedInput
     UserPromotion?: UserPromotionUpdateManyWithoutUserNestedInput
     UserSession?: UserSessionUpdateManyWithoutUserNestedInput
@@ -89575,6 +91021,7 @@ export namespace Prisma {
     userTier?: UserTierUpdateOneWithoutUserNestedInput
     tierHistory?: TierHistoryUpdateManyWithoutUserNestedInput
     adminAdjustmentDetails?: AdminAdjustmentDetailUpdateManyWithoutAdminUserNestedInput
+    wageringRequirements?: WageringRequirementUpdateManyWithoutUserNestedInput
   }
 
   export type UserUncheckedUpdateWithoutLoginAttemptsInput = {
@@ -89608,10 +91055,9 @@ export namespace Prisma {
     GameSession?: CasinoGameSessionUncheckedUpdateManyWithoutUserNestedInput
     affiliateReferrals?: ReferralUncheckedUpdateManyWithoutAffiliateNestedInput
     referredUsers?: ReferralUncheckedUpdateManyWithoutSubUserNestedInput
-    Rolling?: RollingUncheckedUpdateManyWithoutUserNestedInput
     transactions?: TransactionUncheckedUpdateManyWithoutUserNestedInput
     depositDetails?: DepositDetailUncheckedUpdateManyWithoutUserNestedInput
-    balances?: UserBalanceUncheckedUpdateManyWithoutUserNestedInput
+    userWallets?: UserWalletUncheckedUpdateManyWithoutUserNestedInput
     UserBalanceStats?: UserBalanceStatsUncheckedUpdateManyWithoutUserNestedInput
     UserPromotion?: UserPromotionUncheckedUpdateManyWithoutUserNestedInput
     UserSession?: UserSessionUncheckedUpdateManyWithoutUserNestedInput
@@ -89620,6 +91066,7 @@ export namespace Prisma {
     userTier?: UserTierUncheckedUpdateOneWithoutUserNestedInput
     tierHistory?: TierHistoryUncheckedUpdateManyWithoutUserNestedInput
     adminAdjustmentDetails?: AdminAdjustmentDetailUncheckedUpdateManyWithoutAdminUserNestedInput
+    wageringRequirements?: WageringRequirementUncheckedUpdateManyWithoutUserNestedInput
   }
 
   export type UserCreateWithoutDepositDetailsInput = {
@@ -89653,9 +91100,8 @@ export namespace Prisma {
     GameSession?: CasinoGameSessionCreateNestedManyWithoutUserInput
     affiliateReferrals?: ReferralCreateNestedManyWithoutAffiliateInput
     referredUsers?: ReferralCreateNestedManyWithoutSubUserInput
-    Rolling?: RollingCreateNestedManyWithoutUserInput
     transactions?: TransactionCreateNestedManyWithoutUserInput
-    balances?: UserBalanceCreateNestedManyWithoutUserInput
+    userWallets?: UserWalletCreateNestedManyWithoutUserInput
     UserBalanceStats?: UserBalanceStatsCreateNestedManyWithoutUserInput
     UserPromotion?: UserPromotionCreateNestedManyWithoutUserInput
     UserSession?: UserSessionCreateNestedManyWithoutUserInput
@@ -89665,6 +91111,7 @@ export namespace Prisma {
     userTier?: UserTierCreateNestedOneWithoutUserInput
     tierHistory?: TierHistoryCreateNestedManyWithoutUserInput
     adminAdjustmentDetails?: AdminAdjustmentDetailCreateNestedManyWithoutAdminUserInput
+    wageringRequirements?: WageringRequirementCreateNestedManyWithoutUserInput
   }
 
   export type UserUncheckedCreateWithoutDepositDetailsInput = {
@@ -89698,9 +91145,8 @@ export namespace Prisma {
     GameSession?: CasinoGameSessionUncheckedCreateNestedManyWithoutUserInput
     affiliateReferrals?: ReferralUncheckedCreateNestedManyWithoutAffiliateInput
     referredUsers?: ReferralUncheckedCreateNestedManyWithoutSubUserInput
-    Rolling?: RollingUncheckedCreateNestedManyWithoutUserInput
     transactions?: TransactionUncheckedCreateNestedManyWithoutUserInput
-    balances?: UserBalanceUncheckedCreateNestedManyWithoutUserInput
+    userWallets?: UserWalletUncheckedCreateNestedManyWithoutUserInput
     UserBalanceStats?: UserBalanceStatsUncheckedCreateNestedManyWithoutUserInput
     UserPromotion?: UserPromotionUncheckedCreateNestedManyWithoutUserInput
     UserSession?: UserSessionUncheckedCreateNestedManyWithoutUserInput
@@ -89710,6 +91156,7 @@ export namespace Prisma {
     userTier?: UserTierUncheckedCreateNestedOneWithoutUserInput
     tierHistory?: TierHistoryUncheckedCreateNestedManyWithoutUserInput
     adminAdjustmentDetails?: AdminAdjustmentDetailUncheckedCreateNestedManyWithoutAdminUserInput
+    wageringRequirements?: WageringRequirementUncheckedCreateNestedManyWithoutUserInput
   }
 
   export type UserCreateOrConnectWithoutDepositDetailsInput = {
@@ -89842,47 +91289,55 @@ export namespace Prisma {
     create: XOR<TransactionCreateWithoutDepositDetailInput, TransactionUncheckedCreateWithoutDepositDetailInput>
   }
 
-  export type RollingCreateWithoutDepositDetailInput = {
+  export type WageringRequirementCreateWithoutDepositDetailInput = {
     id?: bigint | number
-    sourceType?: $Enums.RollingSourceType
+    uid?: string
+    sourceType?: $Enums.WageringSourceType
     requiredAmount: Decimal | DecimalJsLike | number | string
     currentAmount?: Decimal | DecimalJsLike | number | string
     cancellationBalanceThreshold?: Decimal | DecimalJsLike | number | string | null
-    status?: $Enums.RollingStatus
-    depositAmount?: Decimal | DecimalJsLike | number | string | null
-    bonusAmount?: Decimal | DecimalJsLike | number | string | null
-    completedAt?: Date | string | null
-    cancelledAt?: Date | string | null
+    status?: $Enums.WageringStatus
     createdAt?: Date | string
     updatedAt?: Date | string
-    user: UserCreateNestedOneWithoutRollingInput
-    userPromotion?: UserPromotionCreateNestedOneWithoutRollingInput
+    expiresAt?: Date | string | null
+    completedAt?: Date | string | null
+    cancelledAt?: Date | string | null
+    cancellationNote?: string | null
+    priority?: number
+    userWallet: UserWalletCreateNestedOneWithoutWageringRequirementsInput
+    userPromotion?: UserPromotionCreateNestedOneWithoutWageringRequirementsInput
+    user: UserCreateNestedOneWithoutWageringRequirementsInput
+    contributionLogs?: WageringContributionLogCreateNestedManyWithoutWageringRequirementInput
   }
 
-  export type RollingUncheckedCreateWithoutDepositDetailInput = {
+  export type WageringRequirementUncheckedCreateWithoutDepositDetailInput = {
     id?: bigint | number
+    uid?: string
     userId: bigint | number
-    sourceType?: $Enums.RollingSourceType
-    userPromotionId?: bigint | number | null
+    currency: $Enums.ExchangeCurrencyCode
+    sourceType?: $Enums.WageringSourceType
     requiredAmount: Decimal | DecimalJsLike | number | string
     currentAmount?: Decimal | DecimalJsLike | number | string
     cancellationBalanceThreshold?: Decimal | DecimalJsLike | number | string | null
-    status?: $Enums.RollingStatus
-    depositAmount?: Decimal | DecimalJsLike | number | string | null
-    bonusAmount?: Decimal | DecimalJsLike | number | string | null
-    completedAt?: Date | string | null
-    cancelledAt?: Date | string | null
+    status?: $Enums.WageringStatus
+    userPromotionId?: bigint | number | null
     createdAt?: Date | string
     updatedAt?: Date | string
+    expiresAt?: Date | string | null
+    completedAt?: Date | string | null
+    cancelledAt?: Date | string | null
+    cancellationNote?: string | null
+    priority?: number
+    contributionLogs?: WageringContributionLogUncheckedCreateNestedManyWithoutWageringRequirementInput
   }
 
-  export type RollingCreateOrConnectWithoutDepositDetailInput = {
-    where: RollingWhereUniqueInput
-    create: XOR<RollingCreateWithoutDepositDetailInput, RollingUncheckedCreateWithoutDepositDetailInput>
+  export type WageringRequirementCreateOrConnectWithoutDepositDetailInput = {
+    where: WageringRequirementWhereUniqueInput
+    create: XOR<WageringRequirementCreateWithoutDepositDetailInput, WageringRequirementUncheckedCreateWithoutDepositDetailInput>
   }
 
-  export type RollingCreateManyDepositDetailInputEnvelope = {
-    data: RollingCreateManyDepositDetailInput | RollingCreateManyDepositDetailInput[]
+  export type WageringRequirementCreateManyDepositDetailInputEnvelope = {
+    data: WageringRequirementCreateManyDepositDetailInput | WageringRequirementCreateManyDepositDetailInput[]
     skipDuplicates?: boolean
   }
 
@@ -89928,9 +91383,8 @@ export namespace Prisma {
     GameSession?: CasinoGameSessionUpdateManyWithoutUserNestedInput
     affiliateReferrals?: ReferralUpdateManyWithoutAffiliateNestedInput
     referredUsers?: ReferralUpdateManyWithoutSubUserNestedInput
-    Rolling?: RollingUpdateManyWithoutUserNestedInput
     transactions?: TransactionUpdateManyWithoutUserNestedInput
-    balances?: UserBalanceUpdateManyWithoutUserNestedInput
+    userWallets?: UserWalletUpdateManyWithoutUserNestedInput
     UserBalanceStats?: UserBalanceStatsUpdateManyWithoutUserNestedInput
     UserPromotion?: UserPromotionUpdateManyWithoutUserNestedInput
     UserSession?: UserSessionUpdateManyWithoutUserNestedInput
@@ -89940,6 +91394,7 @@ export namespace Prisma {
     userTier?: UserTierUpdateOneWithoutUserNestedInput
     tierHistory?: TierHistoryUpdateManyWithoutUserNestedInput
     adminAdjustmentDetails?: AdminAdjustmentDetailUpdateManyWithoutAdminUserNestedInput
+    wageringRequirements?: WageringRequirementUpdateManyWithoutUserNestedInput
   }
 
   export type UserUncheckedUpdateWithoutDepositDetailsInput = {
@@ -89973,9 +91428,8 @@ export namespace Prisma {
     GameSession?: CasinoGameSessionUncheckedUpdateManyWithoutUserNestedInput
     affiliateReferrals?: ReferralUncheckedUpdateManyWithoutAffiliateNestedInput
     referredUsers?: ReferralUncheckedUpdateManyWithoutSubUserNestedInput
-    Rolling?: RollingUncheckedUpdateManyWithoutUserNestedInput
     transactions?: TransactionUncheckedUpdateManyWithoutUserNestedInput
-    balances?: UserBalanceUncheckedUpdateManyWithoutUserNestedInput
+    userWallets?: UserWalletUncheckedUpdateManyWithoutUserNestedInput
     UserBalanceStats?: UserBalanceStatsUncheckedUpdateManyWithoutUserNestedInput
     UserPromotion?: UserPromotionUncheckedUpdateManyWithoutUserNestedInput
     UserSession?: UserSessionUncheckedUpdateManyWithoutUserNestedInput
@@ -89985,6 +91439,7 @@ export namespace Prisma {
     userTier?: UserTierUncheckedUpdateOneWithoutUserNestedInput
     tierHistory?: TierHistoryUncheckedUpdateManyWithoutUserNestedInput
     adminAdjustmentDetails?: AdminAdjustmentDetailUncheckedUpdateManyWithoutAdminUserNestedInput
+    wageringRequirements?: WageringRequirementUncheckedUpdateManyWithoutUserNestedInput
   }
 
   export type BankConfigUpsertWithoutDepositDetailsInput = {
@@ -90130,20 +91585,20 @@ export namespace Prisma {
     systemAdjustmentDetail?: SystemAdjustmentDetailUncheckedUpdateOneWithoutTransactionNestedInput
   }
 
-  export type RollingUpsertWithWhereUniqueWithoutDepositDetailInput = {
-    where: RollingWhereUniqueInput
-    update: XOR<RollingUpdateWithoutDepositDetailInput, RollingUncheckedUpdateWithoutDepositDetailInput>
-    create: XOR<RollingCreateWithoutDepositDetailInput, RollingUncheckedCreateWithoutDepositDetailInput>
+  export type WageringRequirementUpsertWithWhereUniqueWithoutDepositDetailInput = {
+    where: WageringRequirementWhereUniqueInput
+    update: XOR<WageringRequirementUpdateWithoutDepositDetailInput, WageringRequirementUncheckedUpdateWithoutDepositDetailInput>
+    create: XOR<WageringRequirementCreateWithoutDepositDetailInput, WageringRequirementUncheckedCreateWithoutDepositDetailInput>
   }
 
-  export type RollingUpdateWithWhereUniqueWithoutDepositDetailInput = {
-    where: RollingWhereUniqueInput
-    data: XOR<RollingUpdateWithoutDepositDetailInput, RollingUncheckedUpdateWithoutDepositDetailInput>
+  export type WageringRequirementUpdateWithWhereUniqueWithoutDepositDetailInput = {
+    where: WageringRequirementWhereUniqueInput
+    data: XOR<WageringRequirementUpdateWithoutDepositDetailInput, WageringRequirementUncheckedUpdateWithoutDepositDetailInput>
   }
 
-  export type RollingUpdateManyWithWhereWithoutDepositDetailInput = {
-    where: RollingScalarWhereInput
-    data: XOR<RollingUpdateManyMutationInput, RollingUncheckedUpdateManyWithoutDepositDetailInput>
+  export type WageringRequirementUpdateManyWithWhereWithoutDepositDetailInput = {
+    where: WageringRequirementScalarWhereInput
+    data: XOR<WageringRequirementUpdateManyMutationInput, WageringRequirementUncheckedUpdateManyWithoutDepositDetailInput>
   }
 
   export type DepositDetailCreateWithoutCryptoConfigInput = {
@@ -90177,7 +91632,7 @@ export namespace Prisma {
     user: UserCreateNestedOneWithoutDepositDetailsInput
     BankConfig?: BankConfigCreateNestedOneWithoutDepositDetailsInput
     transaction?: TransactionCreateNestedOneWithoutDepositDetailInput
-    Rolling?: RollingCreateNestedManyWithoutDepositDetailInput
+    wageringRequirements?: WageringRequirementCreateNestedManyWithoutDepositDetailInput
   }
 
   export type DepositDetailUncheckedCreateWithoutCryptoConfigInput = {
@@ -90211,7 +91666,7 @@ export namespace Prisma {
     failureReason?: string | null
     providerMetadata?: NullableJsonNullValueInput | InputJsonValue
     bankConfigId?: bigint | number | null
-    Rolling?: RollingUncheckedCreateNestedManyWithoutDepositDetailInput
+    wageringRequirements?: WageringRequirementUncheckedCreateNestedManyWithoutDepositDetailInput
   }
 
   export type DepositDetailCreateOrConnectWithoutCryptoConfigInput = {
@@ -90271,7 +91726,7 @@ export namespace Prisma {
     user: UserCreateNestedOneWithoutDepositDetailsInput
     CryptoConfig?: CryptoConfigCreateNestedOneWithoutDepositDetailsInput
     transaction?: TransactionCreateNestedOneWithoutDepositDetailInput
-    Rolling?: RollingCreateNestedManyWithoutDepositDetailInput
+    wageringRequirements?: WageringRequirementCreateNestedManyWithoutDepositDetailInput
   }
 
   export type DepositDetailUncheckedCreateWithoutBankConfigInput = {
@@ -90305,7 +91760,7 @@ export namespace Prisma {
     failureReason?: string | null
     providerMetadata?: NullableJsonNullValueInput | InputJsonValue
     cryptoConfigId?: bigint | number | null
-    Rolling?: RollingUncheckedCreateNestedManyWithoutDepositDetailInput
+    wageringRequirements?: WageringRequirementUncheckedCreateNestedManyWithoutDepositDetailInput
   }
 
   export type DepositDetailCreateOrConnectWithoutBankConfigInput = {
@@ -90400,7 +91855,7 @@ export namespace Prisma {
     currency: $Enums.ExchangeCurrencyCode
     createdAt?: Date | string
     updatedAt?: Date | string
-    Rolling?: RollingCreateNestedManyWithoutUserPromotionInput
+    wageringRequirements?: WageringRequirementCreateNestedManyWithoutUserPromotionInput
     user: UserCreateNestedOneWithoutUserPromotionInput
   }
 
@@ -90415,7 +91870,7 @@ export namespace Prisma {
     currency: $Enums.ExchangeCurrencyCode
     createdAt?: Date | string
     updatedAt?: Date | string
-    Rolling?: RollingUncheckedCreateNestedManyWithoutUserPromotionInput
+    wageringRequirements?: WageringRequirementUncheckedCreateNestedManyWithoutUserPromotionInput
   }
 
   export type UserPromotionCreateOrConnectWithoutPromotionInput = {
@@ -90694,47 +92149,55 @@ export namespace Prisma {
     UserPromotion?: UserPromotionUncheckedUpdateManyWithoutPromotionNestedInput
   }
 
-  export type RollingCreateWithoutUserPromotionInput = {
+  export type WageringRequirementCreateWithoutUserPromotionInput = {
     id?: bigint | number
-    sourceType?: $Enums.RollingSourceType
+    uid?: string
+    sourceType?: $Enums.WageringSourceType
     requiredAmount: Decimal | DecimalJsLike | number | string
     currentAmount?: Decimal | DecimalJsLike | number | string
     cancellationBalanceThreshold?: Decimal | DecimalJsLike | number | string | null
-    status?: $Enums.RollingStatus
-    depositAmount?: Decimal | DecimalJsLike | number | string | null
-    bonusAmount?: Decimal | DecimalJsLike | number | string | null
-    completedAt?: Date | string | null
-    cancelledAt?: Date | string | null
+    status?: $Enums.WageringStatus
     createdAt?: Date | string
     updatedAt?: Date | string
-    DepositDetail?: DepositDetailCreateNestedOneWithoutRollingInput
-    user: UserCreateNestedOneWithoutRollingInput
+    expiresAt?: Date | string | null
+    completedAt?: Date | string | null
+    cancelledAt?: Date | string | null
+    cancellationNote?: string | null
+    priority?: number
+    DepositDetail?: DepositDetailCreateNestedOneWithoutWageringRequirementsInput
+    userWallet: UserWalletCreateNestedOneWithoutWageringRequirementsInput
+    user: UserCreateNestedOneWithoutWageringRequirementsInput
+    contributionLogs?: WageringContributionLogCreateNestedManyWithoutWageringRequirementInput
   }
 
-  export type RollingUncheckedCreateWithoutUserPromotionInput = {
+  export type WageringRequirementUncheckedCreateWithoutUserPromotionInput = {
     id?: bigint | number
+    uid?: string
     userId: bigint | number
-    sourceType?: $Enums.RollingSourceType
+    currency: $Enums.ExchangeCurrencyCode
+    sourceType?: $Enums.WageringSourceType
     requiredAmount: Decimal | DecimalJsLike | number | string
     currentAmount?: Decimal | DecimalJsLike | number | string
     cancellationBalanceThreshold?: Decimal | DecimalJsLike | number | string | null
-    status?: $Enums.RollingStatus
-    depositAmount?: Decimal | DecimalJsLike | number | string | null
-    bonusAmount?: Decimal | DecimalJsLike | number | string | null
-    completedAt?: Date | string | null
-    cancelledAt?: Date | string | null
+    status?: $Enums.WageringStatus
+    depositDetailId?: bigint | number | null
     createdAt?: Date | string
     updatedAt?: Date | string
-    depositDetailId?: bigint | number | null
+    expiresAt?: Date | string | null
+    completedAt?: Date | string | null
+    cancelledAt?: Date | string | null
+    cancellationNote?: string | null
+    priority?: number
+    contributionLogs?: WageringContributionLogUncheckedCreateNestedManyWithoutWageringRequirementInput
   }
 
-  export type RollingCreateOrConnectWithoutUserPromotionInput = {
-    where: RollingWhereUniqueInput
-    create: XOR<RollingCreateWithoutUserPromotionInput, RollingUncheckedCreateWithoutUserPromotionInput>
+  export type WageringRequirementCreateOrConnectWithoutUserPromotionInput = {
+    where: WageringRequirementWhereUniqueInput
+    create: XOR<WageringRequirementCreateWithoutUserPromotionInput, WageringRequirementUncheckedCreateWithoutUserPromotionInput>
   }
 
-  export type RollingCreateManyUserPromotionInputEnvelope = {
-    data: RollingCreateManyUserPromotionInput | RollingCreateManyUserPromotionInput[]
+  export type WageringRequirementCreateManyUserPromotionInputEnvelope = {
+    data: WageringRequirementCreateManyUserPromotionInput | WageringRequirementCreateManyUserPromotionInput[]
     skipDuplicates?: boolean
   }
 
@@ -90814,10 +92277,9 @@ export namespace Prisma {
     GameSession?: CasinoGameSessionCreateNestedManyWithoutUserInput
     affiliateReferrals?: ReferralCreateNestedManyWithoutAffiliateInput
     referredUsers?: ReferralCreateNestedManyWithoutSubUserInput
-    Rolling?: RollingCreateNestedManyWithoutUserInput
     transactions?: TransactionCreateNestedManyWithoutUserInput
     depositDetails?: DepositDetailCreateNestedManyWithoutUserInput
-    balances?: UserBalanceCreateNestedManyWithoutUserInput
+    userWallets?: UserWalletCreateNestedManyWithoutUserInput
     UserBalanceStats?: UserBalanceStatsCreateNestedManyWithoutUserInput
     UserSession?: UserSessionCreateNestedManyWithoutUserInput
     RevokedSessions?: UserSessionCreateNestedManyWithoutRevokedByUserInput
@@ -90826,6 +92288,7 @@ export namespace Prisma {
     userTier?: UserTierCreateNestedOneWithoutUserInput
     tierHistory?: TierHistoryCreateNestedManyWithoutUserInput
     adminAdjustmentDetails?: AdminAdjustmentDetailCreateNestedManyWithoutAdminUserInput
+    wageringRequirements?: WageringRequirementCreateNestedManyWithoutUserInput
   }
 
   export type UserUncheckedCreateWithoutUserPromotionInput = {
@@ -90859,10 +92322,9 @@ export namespace Prisma {
     GameSession?: CasinoGameSessionUncheckedCreateNestedManyWithoutUserInput
     affiliateReferrals?: ReferralUncheckedCreateNestedManyWithoutAffiliateInput
     referredUsers?: ReferralUncheckedCreateNestedManyWithoutSubUserInput
-    Rolling?: RollingUncheckedCreateNestedManyWithoutUserInput
     transactions?: TransactionUncheckedCreateNestedManyWithoutUserInput
     depositDetails?: DepositDetailUncheckedCreateNestedManyWithoutUserInput
-    balances?: UserBalanceUncheckedCreateNestedManyWithoutUserInput
+    userWallets?: UserWalletUncheckedCreateNestedManyWithoutUserInput
     UserBalanceStats?: UserBalanceStatsUncheckedCreateNestedManyWithoutUserInput
     UserSession?: UserSessionUncheckedCreateNestedManyWithoutUserInput
     RevokedSessions?: UserSessionUncheckedCreateNestedManyWithoutRevokedByUserInput
@@ -90871,6 +92333,7 @@ export namespace Prisma {
     userTier?: UserTierUncheckedCreateNestedOneWithoutUserInput
     tierHistory?: TierHistoryUncheckedCreateNestedManyWithoutUserInput
     adminAdjustmentDetails?: AdminAdjustmentDetailUncheckedCreateNestedManyWithoutAdminUserInput
+    wageringRequirements?: WageringRequirementUncheckedCreateNestedManyWithoutUserInput
   }
 
   export type UserCreateOrConnectWithoutUserPromotionInput = {
@@ -90878,20 +92341,20 @@ export namespace Prisma {
     create: XOR<UserCreateWithoutUserPromotionInput, UserUncheckedCreateWithoutUserPromotionInput>
   }
 
-  export type RollingUpsertWithWhereUniqueWithoutUserPromotionInput = {
-    where: RollingWhereUniqueInput
-    update: XOR<RollingUpdateWithoutUserPromotionInput, RollingUncheckedUpdateWithoutUserPromotionInput>
-    create: XOR<RollingCreateWithoutUserPromotionInput, RollingUncheckedCreateWithoutUserPromotionInput>
+  export type WageringRequirementUpsertWithWhereUniqueWithoutUserPromotionInput = {
+    where: WageringRequirementWhereUniqueInput
+    update: XOR<WageringRequirementUpdateWithoutUserPromotionInput, WageringRequirementUncheckedUpdateWithoutUserPromotionInput>
+    create: XOR<WageringRequirementCreateWithoutUserPromotionInput, WageringRequirementUncheckedCreateWithoutUserPromotionInput>
   }
 
-  export type RollingUpdateWithWhereUniqueWithoutUserPromotionInput = {
-    where: RollingWhereUniqueInput
-    data: XOR<RollingUpdateWithoutUserPromotionInput, RollingUncheckedUpdateWithoutUserPromotionInput>
+  export type WageringRequirementUpdateWithWhereUniqueWithoutUserPromotionInput = {
+    where: WageringRequirementWhereUniqueInput
+    data: XOR<WageringRequirementUpdateWithoutUserPromotionInput, WageringRequirementUncheckedUpdateWithoutUserPromotionInput>
   }
 
-  export type RollingUpdateManyWithWhereWithoutUserPromotionInput = {
-    where: RollingScalarWhereInput
-    data: XOR<RollingUpdateManyMutationInput, RollingUncheckedUpdateManyWithoutUserPromotionInput>
+  export type WageringRequirementUpdateManyWithWhereWithoutUserPromotionInput = {
+    where: WageringRequirementScalarWhereInput
+    data: XOR<WageringRequirementUpdateManyMutationInput, WageringRequirementUncheckedUpdateManyWithoutUserPromotionInput>
   }
 
   export type PromotionUpsertWithoutUserPromotionInput = {
@@ -90987,10 +92450,9 @@ export namespace Prisma {
     GameSession?: CasinoGameSessionUpdateManyWithoutUserNestedInput
     affiliateReferrals?: ReferralUpdateManyWithoutAffiliateNestedInput
     referredUsers?: ReferralUpdateManyWithoutSubUserNestedInput
-    Rolling?: RollingUpdateManyWithoutUserNestedInput
     transactions?: TransactionUpdateManyWithoutUserNestedInput
     depositDetails?: DepositDetailUpdateManyWithoutUserNestedInput
-    balances?: UserBalanceUpdateManyWithoutUserNestedInput
+    userWallets?: UserWalletUpdateManyWithoutUserNestedInput
     UserBalanceStats?: UserBalanceStatsUpdateManyWithoutUserNestedInput
     UserSession?: UserSessionUpdateManyWithoutUserNestedInput
     RevokedSessions?: UserSessionUpdateManyWithoutRevokedByUserNestedInput
@@ -90999,6 +92461,7 @@ export namespace Prisma {
     userTier?: UserTierUpdateOneWithoutUserNestedInput
     tierHistory?: TierHistoryUpdateManyWithoutUserNestedInput
     adminAdjustmentDetails?: AdminAdjustmentDetailUpdateManyWithoutAdminUserNestedInput
+    wageringRequirements?: WageringRequirementUpdateManyWithoutUserNestedInput
   }
 
   export type UserUncheckedUpdateWithoutUserPromotionInput = {
@@ -91032,10 +92495,9 @@ export namespace Prisma {
     GameSession?: CasinoGameSessionUncheckedUpdateManyWithoutUserNestedInput
     affiliateReferrals?: ReferralUncheckedUpdateManyWithoutAffiliateNestedInput
     referredUsers?: ReferralUncheckedUpdateManyWithoutSubUserNestedInput
-    Rolling?: RollingUncheckedUpdateManyWithoutUserNestedInput
     transactions?: TransactionUncheckedUpdateManyWithoutUserNestedInput
     depositDetails?: DepositDetailUncheckedUpdateManyWithoutUserNestedInput
-    balances?: UserBalanceUncheckedUpdateManyWithoutUserNestedInput
+    userWallets?: UserWalletUncheckedUpdateManyWithoutUserNestedInput
     UserBalanceStats?: UserBalanceStatsUncheckedUpdateManyWithoutUserNestedInput
     UserSession?: UserSessionUncheckedUpdateManyWithoutUserNestedInput
     RevokedSessions?: UserSessionUncheckedUpdateManyWithoutRevokedByUserNestedInput
@@ -91044,6 +92506,7 @@ export namespace Prisma {
     userTier?: UserTierUncheckedUpdateOneWithoutUserNestedInput
     tierHistory?: TierHistoryUncheckedUpdateManyWithoutUserNestedInput
     adminAdjustmentDetails?: AdminAdjustmentDetailUncheckedUpdateManyWithoutAdminUserNestedInput
+    wageringRequirements?: WageringRequirementUncheckedUpdateManyWithoutUserNestedInput
   }
 
   export type UserTierCreateWithoutTierInput = {
@@ -91374,10 +92837,9 @@ export namespace Prisma {
     GameSession?: CasinoGameSessionCreateNestedManyWithoutUserInput
     affiliateReferrals?: ReferralCreateNestedManyWithoutAffiliateInput
     referredUsers?: ReferralCreateNestedManyWithoutSubUserInput
-    Rolling?: RollingCreateNestedManyWithoutUserInput
     transactions?: TransactionCreateNestedManyWithoutUserInput
     depositDetails?: DepositDetailCreateNestedManyWithoutUserInput
-    balances?: UserBalanceCreateNestedManyWithoutUserInput
+    userWallets?: UserWalletCreateNestedManyWithoutUserInput
     UserBalanceStats?: UserBalanceStatsCreateNestedManyWithoutUserInput
     UserPromotion?: UserPromotionCreateNestedManyWithoutUserInput
     UserSession?: UserSessionCreateNestedManyWithoutUserInput
@@ -91386,6 +92848,7 @@ export namespace Prisma {
     loginAttempts?: LoginAttemptCreateNestedManyWithoutUserInput
     tierHistory?: TierHistoryCreateNestedManyWithoutUserInput
     adminAdjustmentDetails?: AdminAdjustmentDetailCreateNestedManyWithoutAdminUserInput
+    wageringRequirements?: WageringRequirementCreateNestedManyWithoutUserInput
   }
 
   export type UserUncheckedCreateWithoutUserTierInput = {
@@ -91419,10 +92882,9 @@ export namespace Prisma {
     GameSession?: CasinoGameSessionUncheckedCreateNestedManyWithoutUserInput
     affiliateReferrals?: ReferralUncheckedCreateNestedManyWithoutAffiliateInput
     referredUsers?: ReferralUncheckedCreateNestedManyWithoutSubUserInput
-    Rolling?: RollingUncheckedCreateNestedManyWithoutUserInput
     transactions?: TransactionUncheckedCreateNestedManyWithoutUserInput
     depositDetails?: DepositDetailUncheckedCreateNestedManyWithoutUserInput
-    balances?: UserBalanceUncheckedCreateNestedManyWithoutUserInput
+    userWallets?: UserWalletUncheckedCreateNestedManyWithoutUserInput
     UserBalanceStats?: UserBalanceStatsUncheckedCreateNestedManyWithoutUserInput
     UserPromotion?: UserPromotionUncheckedCreateNestedManyWithoutUserInput
     UserSession?: UserSessionUncheckedCreateNestedManyWithoutUserInput
@@ -91431,6 +92893,7 @@ export namespace Prisma {
     loginAttempts?: LoginAttemptUncheckedCreateNestedManyWithoutUserInput
     tierHistory?: TierHistoryUncheckedCreateNestedManyWithoutUserInput
     adminAdjustmentDetails?: AdminAdjustmentDetailUncheckedCreateNestedManyWithoutAdminUserInput
+    wageringRequirements?: WageringRequirementUncheckedCreateNestedManyWithoutUserInput
   }
 
   export type UserCreateOrConnectWithoutUserTierInput = {
@@ -91515,10 +92978,9 @@ export namespace Prisma {
     GameSession?: CasinoGameSessionUpdateManyWithoutUserNestedInput
     affiliateReferrals?: ReferralUpdateManyWithoutAffiliateNestedInput
     referredUsers?: ReferralUpdateManyWithoutSubUserNestedInput
-    Rolling?: RollingUpdateManyWithoutUserNestedInput
     transactions?: TransactionUpdateManyWithoutUserNestedInput
     depositDetails?: DepositDetailUpdateManyWithoutUserNestedInput
-    balances?: UserBalanceUpdateManyWithoutUserNestedInput
+    userWallets?: UserWalletUpdateManyWithoutUserNestedInput
     UserBalanceStats?: UserBalanceStatsUpdateManyWithoutUserNestedInput
     UserPromotion?: UserPromotionUpdateManyWithoutUserNestedInput
     UserSession?: UserSessionUpdateManyWithoutUserNestedInput
@@ -91527,6 +92989,7 @@ export namespace Prisma {
     loginAttempts?: LoginAttemptUpdateManyWithoutUserNestedInput
     tierHistory?: TierHistoryUpdateManyWithoutUserNestedInput
     adminAdjustmentDetails?: AdminAdjustmentDetailUpdateManyWithoutAdminUserNestedInput
+    wageringRequirements?: WageringRequirementUpdateManyWithoutUserNestedInput
   }
 
   export type UserUncheckedUpdateWithoutUserTierInput = {
@@ -91560,10 +93023,9 @@ export namespace Prisma {
     GameSession?: CasinoGameSessionUncheckedUpdateManyWithoutUserNestedInput
     affiliateReferrals?: ReferralUncheckedUpdateManyWithoutAffiliateNestedInput
     referredUsers?: ReferralUncheckedUpdateManyWithoutSubUserNestedInput
-    Rolling?: RollingUncheckedUpdateManyWithoutUserNestedInput
     transactions?: TransactionUncheckedUpdateManyWithoutUserNestedInput
     depositDetails?: DepositDetailUncheckedUpdateManyWithoutUserNestedInput
-    balances?: UserBalanceUncheckedUpdateManyWithoutUserNestedInput
+    userWallets?: UserWalletUncheckedUpdateManyWithoutUserNestedInput
     UserBalanceStats?: UserBalanceStatsUncheckedUpdateManyWithoutUserNestedInput
     UserPromotion?: UserPromotionUncheckedUpdateManyWithoutUserNestedInput
     UserSession?: UserSessionUncheckedUpdateManyWithoutUserNestedInput
@@ -91572,6 +93034,7 @@ export namespace Prisma {
     loginAttempts?: LoginAttemptUncheckedUpdateManyWithoutUserNestedInput
     tierHistory?: TierHistoryUncheckedUpdateManyWithoutUserNestedInput
     adminAdjustmentDetails?: AdminAdjustmentDetailUncheckedUpdateManyWithoutAdminUserNestedInput
+    wageringRequirements?: WageringRequirementUncheckedUpdateManyWithoutUserNestedInput
   }
 
   export type TierUpsertWithoutUserTiersInput = {
@@ -91646,10 +93109,9 @@ export namespace Prisma {
     GameSession?: CasinoGameSessionCreateNestedManyWithoutUserInput
     affiliateReferrals?: ReferralCreateNestedManyWithoutAffiliateInput
     referredUsers?: ReferralCreateNestedManyWithoutSubUserInput
-    Rolling?: RollingCreateNestedManyWithoutUserInput
     transactions?: TransactionCreateNestedManyWithoutUserInput
     depositDetails?: DepositDetailCreateNestedManyWithoutUserInput
-    balances?: UserBalanceCreateNestedManyWithoutUserInput
+    userWallets?: UserWalletCreateNestedManyWithoutUserInput
     UserBalanceStats?: UserBalanceStatsCreateNestedManyWithoutUserInput
     UserPromotion?: UserPromotionCreateNestedManyWithoutUserInput
     UserSession?: UserSessionCreateNestedManyWithoutUserInput
@@ -91658,6 +93120,7 @@ export namespace Prisma {
     loginAttempts?: LoginAttemptCreateNestedManyWithoutUserInput
     userTier?: UserTierCreateNestedOneWithoutUserInput
     adminAdjustmentDetails?: AdminAdjustmentDetailCreateNestedManyWithoutAdminUserInput
+    wageringRequirements?: WageringRequirementCreateNestedManyWithoutUserInput
   }
 
   export type UserUncheckedCreateWithoutTierHistoryInput = {
@@ -91691,10 +93154,9 @@ export namespace Prisma {
     GameSession?: CasinoGameSessionUncheckedCreateNestedManyWithoutUserInput
     affiliateReferrals?: ReferralUncheckedCreateNestedManyWithoutAffiliateInput
     referredUsers?: ReferralUncheckedCreateNestedManyWithoutSubUserInput
-    Rolling?: RollingUncheckedCreateNestedManyWithoutUserInput
     transactions?: TransactionUncheckedCreateNestedManyWithoutUserInput
     depositDetails?: DepositDetailUncheckedCreateNestedManyWithoutUserInput
-    balances?: UserBalanceUncheckedCreateNestedManyWithoutUserInput
+    userWallets?: UserWalletUncheckedCreateNestedManyWithoutUserInput
     UserBalanceStats?: UserBalanceStatsUncheckedCreateNestedManyWithoutUserInput
     UserPromotion?: UserPromotionUncheckedCreateNestedManyWithoutUserInput
     UserSession?: UserSessionUncheckedCreateNestedManyWithoutUserInput
@@ -91703,6 +93165,7 @@ export namespace Prisma {
     loginAttempts?: LoginAttemptUncheckedCreateNestedManyWithoutUserInput
     userTier?: UserTierUncheckedCreateNestedOneWithoutUserInput
     adminAdjustmentDetails?: AdminAdjustmentDetailUncheckedCreateNestedManyWithoutAdminUserInput
+    wageringRequirements?: WageringRequirementUncheckedCreateNestedManyWithoutUserInput
   }
 
   export type UserCreateOrConnectWithoutTierHistoryInput = {
@@ -91822,10 +93285,9 @@ export namespace Prisma {
     GameSession?: CasinoGameSessionUpdateManyWithoutUserNestedInput
     affiliateReferrals?: ReferralUpdateManyWithoutAffiliateNestedInput
     referredUsers?: ReferralUpdateManyWithoutSubUserNestedInput
-    Rolling?: RollingUpdateManyWithoutUserNestedInput
     transactions?: TransactionUpdateManyWithoutUserNestedInput
     depositDetails?: DepositDetailUpdateManyWithoutUserNestedInput
-    balances?: UserBalanceUpdateManyWithoutUserNestedInput
+    userWallets?: UserWalletUpdateManyWithoutUserNestedInput
     UserBalanceStats?: UserBalanceStatsUpdateManyWithoutUserNestedInput
     UserPromotion?: UserPromotionUpdateManyWithoutUserNestedInput
     UserSession?: UserSessionUpdateManyWithoutUserNestedInput
@@ -91834,6 +93296,7 @@ export namespace Prisma {
     loginAttempts?: LoginAttemptUpdateManyWithoutUserNestedInput
     userTier?: UserTierUpdateOneWithoutUserNestedInput
     adminAdjustmentDetails?: AdminAdjustmentDetailUpdateManyWithoutAdminUserNestedInput
+    wageringRequirements?: WageringRequirementUpdateManyWithoutUserNestedInput
   }
 
   export type UserUncheckedUpdateWithoutTierHistoryInput = {
@@ -91867,10 +93330,9 @@ export namespace Prisma {
     GameSession?: CasinoGameSessionUncheckedUpdateManyWithoutUserNestedInput
     affiliateReferrals?: ReferralUncheckedUpdateManyWithoutAffiliateNestedInput
     referredUsers?: ReferralUncheckedUpdateManyWithoutSubUserNestedInput
-    Rolling?: RollingUncheckedUpdateManyWithoutUserNestedInput
     transactions?: TransactionUncheckedUpdateManyWithoutUserNestedInput
     depositDetails?: DepositDetailUncheckedUpdateManyWithoutUserNestedInput
-    balances?: UserBalanceUncheckedUpdateManyWithoutUserNestedInput
+    userWallets?: UserWalletUncheckedUpdateManyWithoutUserNestedInput
     UserBalanceStats?: UserBalanceStatsUncheckedUpdateManyWithoutUserNestedInput
     UserPromotion?: UserPromotionUncheckedUpdateManyWithoutUserNestedInput
     UserSession?: UserSessionUncheckedUpdateManyWithoutUserNestedInput
@@ -91879,6 +93341,7 @@ export namespace Prisma {
     loginAttempts?: LoginAttemptUncheckedUpdateManyWithoutUserNestedInput
     userTier?: UserTierUncheckedUpdateOneWithoutUserNestedInput
     adminAdjustmentDetails?: AdminAdjustmentDetailUncheckedUpdateManyWithoutAdminUserNestedInput
+    wageringRequirements?: WageringRequirementUncheckedUpdateManyWithoutUserNestedInput
   }
 
   export type TierUpsertWithoutHistoryFromInput = {
@@ -92039,10 +93502,9 @@ export namespace Prisma {
     GameSession?: CasinoGameSessionCreateNestedManyWithoutUserInput
     affiliateReferrals?: ReferralCreateNestedManyWithoutAffiliateInput
     referredUsers?: ReferralCreateNestedManyWithoutSubUserInput
-    Rolling?: RollingCreateNestedManyWithoutUserInput
     transactions?: TransactionCreateNestedManyWithoutUserInput
     depositDetails?: DepositDetailCreateNestedManyWithoutUserInput
-    balances?: UserBalanceCreateNestedManyWithoutUserInput
+    userWallets?: UserWalletCreateNestedManyWithoutUserInput
     UserBalanceStats?: UserBalanceStatsCreateNestedManyWithoutUserInput
     UserPromotion?: UserPromotionCreateNestedManyWithoutUserInput
     UserSession?: UserSessionCreateNestedManyWithoutUserInput
@@ -92051,6 +93513,7 @@ export namespace Prisma {
     loginAttempts?: LoginAttemptCreateNestedManyWithoutUserInput
     userTier?: UserTierCreateNestedOneWithoutUserInput
     tierHistory?: TierHistoryCreateNestedManyWithoutUserInput
+    wageringRequirements?: WageringRequirementCreateNestedManyWithoutUserInput
   }
 
   export type UserUncheckedCreateWithoutAdminAdjustmentDetailsInput = {
@@ -92084,10 +93547,9 @@ export namespace Prisma {
     GameSession?: CasinoGameSessionUncheckedCreateNestedManyWithoutUserInput
     affiliateReferrals?: ReferralUncheckedCreateNestedManyWithoutAffiliateInput
     referredUsers?: ReferralUncheckedCreateNestedManyWithoutSubUserInput
-    Rolling?: RollingUncheckedCreateNestedManyWithoutUserInput
     transactions?: TransactionUncheckedCreateNestedManyWithoutUserInput
     depositDetails?: DepositDetailUncheckedCreateNestedManyWithoutUserInput
-    balances?: UserBalanceUncheckedCreateNestedManyWithoutUserInput
+    userWallets?: UserWalletUncheckedCreateNestedManyWithoutUserInput
     UserBalanceStats?: UserBalanceStatsUncheckedCreateNestedManyWithoutUserInput
     UserPromotion?: UserPromotionUncheckedCreateNestedManyWithoutUserInput
     UserSession?: UserSessionUncheckedCreateNestedManyWithoutUserInput
@@ -92096,6 +93558,7 @@ export namespace Prisma {
     loginAttempts?: LoginAttemptUncheckedCreateNestedManyWithoutUserInput
     userTier?: UserTierUncheckedCreateNestedOneWithoutUserInput
     tierHistory?: TierHistoryUncheckedCreateNestedManyWithoutUserInput
+    wageringRequirements?: WageringRequirementUncheckedCreateNestedManyWithoutUserInput
   }
 
   export type UserCreateOrConnectWithoutAdminAdjustmentDetailsInput = {
@@ -92196,10 +93659,9 @@ export namespace Prisma {
     GameSession?: CasinoGameSessionUpdateManyWithoutUserNestedInput
     affiliateReferrals?: ReferralUpdateManyWithoutAffiliateNestedInput
     referredUsers?: ReferralUpdateManyWithoutSubUserNestedInput
-    Rolling?: RollingUpdateManyWithoutUserNestedInput
     transactions?: TransactionUpdateManyWithoutUserNestedInput
     depositDetails?: DepositDetailUpdateManyWithoutUserNestedInput
-    balances?: UserBalanceUpdateManyWithoutUserNestedInput
+    userWallets?: UserWalletUpdateManyWithoutUserNestedInput
     UserBalanceStats?: UserBalanceStatsUpdateManyWithoutUserNestedInput
     UserPromotion?: UserPromotionUpdateManyWithoutUserNestedInput
     UserSession?: UserSessionUpdateManyWithoutUserNestedInput
@@ -92208,6 +93670,7 @@ export namespace Prisma {
     loginAttempts?: LoginAttemptUpdateManyWithoutUserNestedInput
     userTier?: UserTierUpdateOneWithoutUserNestedInput
     tierHistory?: TierHistoryUpdateManyWithoutUserNestedInput
+    wageringRequirements?: WageringRequirementUpdateManyWithoutUserNestedInput
   }
 
   export type UserUncheckedUpdateWithoutAdminAdjustmentDetailsInput = {
@@ -92241,10 +93704,9 @@ export namespace Prisma {
     GameSession?: CasinoGameSessionUncheckedUpdateManyWithoutUserNestedInput
     affiliateReferrals?: ReferralUncheckedUpdateManyWithoutAffiliateNestedInput
     referredUsers?: ReferralUncheckedUpdateManyWithoutSubUserNestedInput
-    Rolling?: RollingUncheckedUpdateManyWithoutUserNestedInput
     transactions?: TransactionUncheckedUpdateManyWithoutUserNestedInput
     depositDetails?: DepositDetailUncheckedUpdateManyWithoutUserNestedInput
-    balances?: UserBalanceUncheckedUpdateManyWithoutUserNestedInput
+    userWallets?: UserWalletUncheckedUpdateManyWithoutUserNestedInput
     UserBalanceStats?: UserBalanceStatsUncheckedUpdateManyWithoutUserNestedInput
     UserPromotion?: UserPromotionUncheckedUpdateManyWithoutUserNestedInput
     UserSession?: UserSessionUncheckedUpdateManyWithoutUserNestedInput
@@ -92253,6 +93715,7 @@ export namespace Prisma {
     loginAttempts?: LoginAttemptUncheckedUpdateManyWithoutUserNestedInput
     userTier?: UserTierUncheckedUpdateOneWithoutUserNestedInput
     tierHistory?: TierHistoryUncheckedUpdateManyWithoutUserNestedInput
+    wageringRequirements?: WageringRequirementUncheckedUpdateManyWithoutUserNestedInput
   }
 
   export type TransactionCreateWithoutSystemAdjustmentDetailInput = {
@@ -92382,10 +93845,9 @@ export namespace Prisma {
     GameSession?: CasinoGameSessionCreateNestedManyWithoutUserInput
     affiliateReferrals?: ReferralCreateNestedManyWithoutAffiliateInput
     referredUsers?: ReferralCreateNestedManyWithoutSubUserInput
-    Rolling?: RollingCreateNestedManyWithoutUserInput
     transactions?: TransactionCreateNestedManyWithoutUserInput
     depositDetails?: DepositDetailCreateNestedManyWithoutUserInput
-    balances?: UserBalanceCreateNestedManyWithoutUserInput
+    userWallets?: UserWalletCreateNestedManyWithoutUserInput
     UserBalanceStats?: UserBalanceStatsCreateNestedManyWithoutUserInput
     UserPromotion?: UserPromotionCreateNestedManyWithoutUserInput
     RevokedSessions?: UserSessionCreateNestedManyWithoutRevokedByUserInput
@@ -92394,6 +93856,7 @@ export namespace Prisma {
     userTier?: UserTierCreateNestedOneWithoutUserInput
     tierHistory?: TierHistoryCreateNestedManyWithoutUserInput
     adminAdjustmentDetails?: AdminAdjustmentDetailCreateNestedManyWithoutAdminUserInput
+    wageringRequirements?: WageringRequirementCreateNestedManyWithoutUserInput
   }
 
   export type UserUncheckedCreateWithoutUserSessionInput = {
@@ -92427,10 +93890,9 @@ export namespace Prisma {
     GameSession?: CasinoGameSessionUncheckedCreateNestedManyWithoutUserInput
     affiliateReferrals?: ReferralUncheckedCreateNestedManyWithoutAffiliateInput
     referredUsers?: ReferralUncheckedCreateNestedManyWithoutSubUserInput
-    Rolling?: RollingUncheckedCreateNestedManyWithoutUserInput
     transactions?: TransactionUncheckedCreateNestedManyWithoutUserInput
     depositDetails?: DepositDetailUncheckedCreateNestedManyWithoutUserInput
-    balances?: UserBalanceUncheckedCreateNestedManyWithoutUserInput
+    userWallets?: UserWalletUncheckedCreateNestedManyWithoutUserInput
     UserBalanceStats?: UserBalanceStatsUncheckedCreateNestedManyWithoutUserInput
     UserPromotion?: UserPromotionUncheckedCreateNestedManyWithoutUserInput
     RevokedSessions?: UserSessionUncheckedCreateNestedManyWithoutRevokedByUserInput
@@ -92439,6 +93901,7 @@ export namespace Prisma {
     userTier?: UserTierUncheckedCreateNestedOneWithoutUserInput
     tierHistory?: TierHistoryUncheckedCreateNestedManyWithoutUserInput
     adminAdjustmentDetails?: AdminAdjustmentDetailUncheckedCreateNestedManyWithoutAdminUserInput
+    wageringRequirements?: WageringRequirementUncheckedCreateNestedManyWithoutUserInput
   }
 
   export type UserCreateOrConnectWithoutUserSessionInput = {
@@ -92477,10 +93940,9 @@ export namespace Prisma {
     GameSession?: CasinoGameSessionCreateNestedManyWithoutUserInput
     affiliateReferrals?: ReferralCreateNestedManyWithoutAffiliateInput
     referredUsers?: ReferralCreateNestedManyWithoutSubUserInput
-    Rolling?: RollingCreateNestedManyWithoutUserInput
     transactions?: TransactionCreateNestedManyWithoutUserInput
     depositDetails?: DepositDetailCreateNestedManyWithoutUserInput
-    balances?: UserBalanceCreateNestedManyWithoutUserInput
+    userWallets?: UserWalletCreateNestedManyWithoutUserInput
     UserBalanceStats?: UserBalanceStatsCreateNestedManyWithoutUserInput
     UserPromotion?: UserPromotionCreateNestedManyWithoutUserInput
     UserSession?: UserSessionCreateNestedManyWithoutUserInput
@@ -92489,6 +93951,7 @@ export namespace Prisma {
     userTier?: UserTierCreateNestedOneWithoutUserInput
     tierHistory?: TierHistoryCreateNestedManyWithoutUserInput
     adminAdjustmentDetails?: AdminAdjustmentDetailCreateNestedManyWithoutAdminUserInput
+    wageringRequirements?: WageringRequirementCreateNestedManyWithoutUserInput
   }
 
   export type UserUncheckedCreateWithoutRevokedSessionsInput = {
@@ -92522,10 +93985,9 @@ export namespace Prisma {
     GameSession?: CasinoGameSessionUncheckedCreateNestedManyWithoutUserInput
     affiliateReferrals?: ReferralUncheckedCreateNestedManyWithoutAffiliateInput
     referredUsers?: ReferralUncheckedCreateNestedManyWithoutSubUserInput
-    Rolling?: RollingUncheckedCreateNestedManyWithoutUserInput
     transactions?: TransactionUncheckedCreateNestedManyWithoutUserInput
     depositDetails?: DepositDetailUncheckedCreateNestedManyWithoutUserInput
-    balances?: UserBalanceUncheckedCreateNestedManyWithoutUserInput
+    userWallets?: UserWalletUncheckedCreateNestedManyWithoutUserInput
     UserBalanceStats?: UserBalanceStatsUncheckedCreateNestedManyWithoutUserInput
     UserPromotion?: UserPromotionUncheckedCreateNestedManyWithoutUserInput
     UserSession?: UserSessionUncheckedCreateNestedManyWithoutUserInput
@@ -92534,6 +93996,7 @@ export namespace Prisma {
     userTier?: UserTierUncheckedCreateNestedOneWithoutUserInput
     tierHistory?: TierHistoryUncheckedCreateNestedManyWithoutUserInput
     adminAdjustmentDetails?: AdminAdjustmentDetailUncheckedCreateNestedManyWithoutAdminUserInput
+    wageringRequirements?: WageringRequirementUncheckedCreateNestedManyWithoutUserInput
   }
 
   export type UserCreateOrConnectWithoutRevokedSessionsInput = {
@@ -92583,10 +94046,9 @@ export namespace Prisma {
     GameSession?: CasinoGameSessionUpdateManyWithoutUserNestedInput
     affiliateReferrals?: ReferralUpdateManyWithoutAffiliateNestedInput
     referredUsers?: ReferralUpdateManyWithoutSubUserNestedInput
-    Rolling?: RollingUpdateManyWithoutUserNestedInput
     transactions?: TransactionUpdateManyWithoutUserNestedInput
     depositDetails?: DepositDetailUpdateManyWithoutUserNestedInput
-    balances?: UserBalanceUpdateManyWithoutUserNestedInput
+    userWallets?: UserWalletUpdateManyWithoutUserNestedInput
     UserBalanceStats?: UserBalanceStatsUpdateManyWithoutUserNestedInput
     UserPromotion?: UserPromotionUpdateManyWithoutUserNestedInput
     RevokedSessions?: UserSessionUpdateManyWithoutRevokedByUserNestedInput
@@ -92595,6 +94057,7 @@ export namespace Prisma {
     userTier?: UserTierUpdateOneWithoutUserNestedInput
     tierHistory?: TierHistoryUpdateManyWithoutUserNestedInput
     adminAdjustmentDetails?: AdminAdjustmentDetailUpdateManyWithoutAdminUserNestedInput
+    wageringRequirements?: WageringRequirementUpdateManyWithoutUserNestedInput
   }
 
   export type UserUncheckedUpdateWithoutUserSessionInput = {
@@ -92628,10 +94091,9 @@ export namespace Prisma {
     GameSession?: CasinoGameSessionUncheckedUpdateManyWithoutUserNestedInput
     affiliateReferrals?: ReferralUncheckedUpdateManyWithoutAffiliateNestedInput
     referredUsers?: ReferralUncheckedUpdateManyWithoutSubUserNestedInput
-    Rolling?: RollingUncheckedUpdateManyWithoutUserNestedInput
     transactions?: TransactionUncheckedUpdateManyWithoutUserNestedInput
     depositDetails?: DepositDetailUncheckedUpdateManyWithoutUserNestedInput
-    balances?: UserBalanceUncheckedUpdateManyWithoutUserNestedInput
+    userWallets?: UserWalletUncheckedUpdateManyWithoutUserNestedInput
     UserBalanceStats?: UserBalanceStatsUncheckedUpdateManyWithoutUserNestedInput
     UserPromotion?: UserPromotionUncheckedUpdateManyWithoutUserNestedInput
     RevokedSessions?: UserSessionUncheckedUpdateManyWithoutRevokedByUserNestedInput
@@ -92640,6 +94102,7 @@ export namespace Prisma {
     userTier?: UserTierUncheckedUpdateOneWithoutUserNestedInput
     tierHistory?: TierHistoryUncheckedUpdateManyWithoutUserNestedInput
     adminAdjustmentDetails?: AdminAdjustmentDetailUncheckedUpdateManyWithoutAdminUserNestedInput
+    wageringRequirements?: WageringRequirementUncheckedUpdateManyWithoutUserNestedInput
   }
 
   export type UserUpsertWithoutRevokedSessionsInput = {
@@ -92684,10 +94147,9 @@ export namespace Prisma {
     GameSession?: CasinoGameSessionUpdateManyWithoutUserNestedInput
     affiliateReferrals?: ReferralUpdateManyWithoutAffiliateNestedInput
     referredUsers?: ReferralUpdateManyWithoutSubUserNestedInput
-    Rolling?: RollingUpdateManyWithoutUserNestedInput
     transactions?: TransactionUpdateManyWithoutUserNestedInput
     depositDetails?: DepositDetailUpdateManyWithoutUserNestedInput
-    balances?: UserBalanceUpdateManyWithoutUserNestedInput
+    userWallets?: UserWalletUpdateManyWithoutUserNestedInput
     UserBalanceStats?: UserBalanceStatsUpdateManyWithoutUserNestedInput
     UserPromotion?: UserPromotionUpdateManyWithoutUserNestedInput
     UserSession?: UserSessionUpdateManyWithoutUserNestedInput
@@ -92696,6 +94158,7 @@ export namespace Prisma {
     userTier?: UserTierUpdateOneWithoutUserNestedInput
     tierHistory?: TierHistoryUpdateManyWithoutUserNestedInput
     adminAdjustmentDetails?: AdminAdjustmentDetailUpdateManyWithoutAdminUserNestedInput
+    wageringRequirements?: WageringRequirementUpdateManyWithoutUserNestedInput
   }
 
   export type UserUncheckedUpdateWithoutRevokedSessionsInput = {
@@ -92729,10 +94192,9 @@ export namespace Prisma {
     GameSession?: CasinoGameSessionUncheckedUpdateManyWithoutUserNestedInput
     affiliateReferrals?: ReferralUncheckedUpdateManyWithoutAffiliateNestedInput
     referredUsers?: ReferralUncheckedUpdateManyWithoutSubUserNestedInput
-    Rolling?: RollingUncheckedUpdateManyWithoutUserNestedInput
     transactions?: TransactionUncheckedUpdateManyWithoutUserNestedInput
     depositDetails?: DepositDetailUncheckedUpdateManyWithoutUserNestedInput
-    balances?: UserBalanceUncheckedUpdateManyWithoutUserNestedInput
+    userWallets?: UserWalletUncheckedUpdateManyWithoutUserNestedInput
     UserBalanceStats?: UserBalanceStatsUncheckedUpdateManyWithoutUserNestedInput
     UserPromotion?: UserPromotionUncheckedUpdateManyWithoutUserNestedInput
     UserSession?: UserSessionUncheckedUpdateManyWithoutUserNestedInput
@@ -92741,6 +94203,632 @@ export namespace Prisma {
     userTier?: UserTierUncheckedUpdateOneWithoutUserNestedInput
     tierHistory?: TierHistoryUncheckedUpdateManyWithoutUserNestedInput
     adminAdjustmentDetails?: AdminAdjustmentDetailUncheckedUpdateManyWithoutAdminUserNestedInput
+    wageringRequirements?: WageringRequirementUncheckedUpdateManyWithoutUserNestedInput
+  }
+
+  export type DepositDetailCreateWithoutWageringRequirementsInput = {
+    id?: bigint | number
+    uid: string
+    confirmedAt?: Date | string | null
+    failedAt?: Date | string | null
+    createdAt?: Date | string
+    updatedAt?: Date | string
+    status: $Enums.DepositDetailStatus
+    methodType: $Enums.DepositMethodType
+    provider: $Enums.PaymentProvider
+    providerPaymentId?: string | null
+    depositCurrency: $Enums.ExchangeCurrencyCode
+    depositNetwork?: string | null
+    walletAddress?: string | null
+    walletAddressExtraId?: string | null
+    depositorName?: string | null
+    transactionHash?: string | null
+    requestedAmount: Decimal | DecimalJsLike | number | string
+    actuallyPaid?: Decimal | DecimalJsLike | number | string | null
+    processedBy?: bigint | number | null
+    adminNote?: string | null
+    ipAddress?: string | null
+    deviceFingerprint?: string | null
+    feeAmount?: Decimal | DecimalJsLike | number | string | null
+    feeCurrency?: string | null
+    feePaidBy?: $Enums.FeePaidByType | null
+    failureReason?: string | null
+    providerMetadata?: NullableJsonNullValueInput | InputJsonValue
+    user: UserCreateNestedOneWithoutDepositDetailsInput
+    BankConfig?: BankConfigCreateNestedOneWithoutDepositDetailsInput
+    CryptoConfig?: CryptoConfigCreateNestedOneWithoutDepositDetailsInput
+    transaction?: TransactionCreateNestedOneWithoutDepositDetailInput
+  }
+
+  export type DepositDetailUncheckedCreateWithoutWageringRequirementsInput = {
+    id?: bigint | number
+    uid: string
+    confirmedAt?: Date | string | null
+    failedAt?: Date | string | null
+    createdAt?: Date | string
+    updatedAt?: Date | string
+    status: $Enums.DepositDetailStatus
+    userId: bigint | number
+    transactionId?: bigint | number | null
+    methodType: $Enums.DepositMethodType
+    provider: $Enums.PaymentProvider
+    providerPaymentId?: string | null
+    depositCurrency: $Enums.ExchangeCurrencyCode
+    depositNetwork?: string | null
+    walletAddress?: string | null
+    walletAddressExtraId?: string | null
+    depositorName?: string | null
+    transactionHash?: string | null
+    requestedAmount: Decimal | DecimalJsLike | number | string
+    actuallyPaid?: Decimal | DecimalJsLike | number | string | null
+    processedBy?: bigint | number | null
+    adminNote?: string | null
+    ipAddress?: string | null
+    deviceFingerprint?: string | null
+    feeAmount?: Decimal | DecimalJsLike | number | string | null
+    feeCurrency?: string | null
+    feePaidBy?: $Enums.FeePaidByType | null
+    failureReason?: string | null
+    providerMetadata?: NullableJsonNullValueInput | InputJsonValue
+    bankConfigId?: bigint | number | null
+    cryptoConfigId?: bigint | number | null
+  }
+
+  export type DepositDetailCreateOrConnectWithoutWageringRequirementsInput = {
+    where: DepositDetailWhereUniqueInput
+    create: XOR<DepositDetailCreateWithoutWageringRequirementsInput, DepositDetailUncheckedCreateWithoutWageringRequirementsInput>
+  }
+
+  export type UserWalletCreateWithoutWageringRequirementsInput = {
+    currency: $Enums.ExchangeCurrencyCode
+    mainBalance?: Decimal | DecimalJsLike | number | string
+    bonusBalance?: Decimal | DecimalJsLike | number | string
+    updatedAt?: Date | string
+    user: UserCreateNestedOneWithoutUserWalletsInput
+  }
+
+  export type UserWalletUncheckedCreateWithoutWageringRequirementsInput = {
+    userId: bigint | number
+    currency: $Enums.ExchangeCurrencyCode
+    mainBalance?: Decimal | DecimalJsLike | number | string
+    bonusBalance?: Decimal | DecimalJsLike | number | string
+    updatedAt?: Date | string
+  }
+
+  export type UserWalletCreateOrConnectWithoutWageringRequirementsInput = {
+    where: UserWalletWhereUniqueInput
+    create: XOR<UserWalletCreateWithoutWageringRequirementsInput, UserWalletUncheckedCreateWithoutWageringRequirementsInput>
+  }
+
+  export type UserPromotionCreateWithoutWageringRequirementsInput = {
+    id?: bigint | number
+    status?: $Enums.UserPromotionStatus
+    depositAmount: Decimal | DecimalJsLike | number | string
+    bonusAmount: Decimal | DecimalJsLike | number | string
+    targetRollingAmount: Decimal | DecimalJsLike | number | string
+    currentRollingAmount?: Decimal | DecimalJsLike | number | string
+    currency: $Enums.ExchangeCurrencyCode
+    createdAt?: Date | string
+    updatedAt?: Date | string
+    promotion: PromotionCreateNestedOneWithoutUserPromotionInput
+    user: UserCreateNestedOneWithoutUserPromotionInput
+  }
+
+  export type UserPromotionUncheckedCreateWithoutWageringRequirementsInput = {
+    id?: bigint | number
+    userId: bigint | number
+    promotionId: bigint | number
+    status?: $Enums.UserPromotionStatus
+    depositAmount: Decimal | DecimalJsLike | number | string
+    bonusAmount: Decimal | DecimalJsLike | number | string
+    targetRollingAmount: Decimal | DecimalJsLike | number | string
+    currentRollingAmount?: Decimal | DecimalJsLike | number | string
+    currency: $Enums.ExchangeCurrencyCode
+    createdAt?: Date | string
+    updatedAt?: Date | string
+  }
+
+  export type UserPromotionCreateOrConnectWithoutWageringRequirementsInput = {
+    where: UserPromotionWhereUniqueInput
+    create: XOR<UserPromotionCreateWithoutWageringRequirementsInput, UserPromotionUncheckedCreateWithoutWageringRequirementsInput>
+  }
+
+  export type UserCreateWithoutWageringRequirementsInput = {
+    id?: bigint | number
+    uid?: string
+    whitecliffId?: bigint | number | null
+    whitecliffSystemId?: bigint | number | null
+    whitecliffUsername?: string | null
+    dcsId?: string | null
+    email?: string | null
+    passwordHash?: string | null
+    socialType?: $Enums.SocialType | null
+    socialId?: string | null
+    role?: $Enums.UserRoleType
+    status?: $Enums.UserStatus
+    kycLevel?: $Enums.KycLevel
+    country?: string | null
+    language?: $Enums.Language | null
+    timezone?: string | null
+    timezoneOffset?: number | null
+    createdAt?: Date | string
+    updatedAt?: Date | string
+    affiliateCodes?: AffiliateCodeCreateNestedManyWithoutUserInput
+    affiliateCommissions?: AffiliateCommissionCreateNestedManyWithoutAffiliateInput
+    subUserCommissions?: AffiliateCommissionCreateNestedManyWithoutSubUserInput
+    affiliateTier?: AffiliateTierCreateNestedOneWithoutAffiliateInput
+    affiliateWallets?: AffiliateWalletCreateNestedManyWithoutAffiliateInput
+    CompTransaction?: CompTransactionCreateNestedManyWithoutUserInput
+    DailyCompEarning?: DailyCompEarningCreateNestedManyWithoutUserInput
+    EmailLog?: EmailLogCreateNestedManyWithoutUserInput
+    GameSession?: CasinoGameSessionCreateNestedManyWithoutUserInput
+    affiliateReferrals?: ReferralCreateNestedManyWithoutAffiliateInput
+    referredUsers?: ReferralCreateNestedManyWithoutSubUserInput
+    transactions?: TransactionCreateNestedManyWithoutUserInput
+    depositDetails?: DepositDetailCreateNestedManyWithoutUserInput
+    userWallets?: UserWalletCreateNestedManyWithoutUserInput
+    UserBalanceStats?: UserBalanceStatsCreateNestedManyWithoutUserInput
+    UserPromotion?: UserPromotionCreateNestedManyWithoutUserInput
+    UserSession?: UserSessionCreateNestedManyWithoutUserInput
+    RevokedSessions?: UserSessionCreateNestedManyWithoutRevokedByUserInput
+    UserToken?: UserTokenCreateNestedManyWithoutUserInput
+    loginAttempts?: LoginAttemptCreateNestedManyWithoutUserInput
+    userTier?: UserTierCreateNestedOneWithoutUserInput
+    tierHistory?: TierHistoryCreateNestedManyWithoutUserInput
+    adminAdjustmentDetails?: AdminAdjustmentDetailCreateNestedManyWithoutAdminUserInput
+  }
+
+  export type UserUncheckedCreateWithoutWageringRequirementsInput = {
+    id?: bigint | number
+    uid?: string
+    whitecliffId?: bigint | number | null
+    whitecliffSystemId?: bigint | number | null
+    whitecliffUsername?: string | null
+    dcsId?: string | null
+    email?: string | null
+    passwordHash?: string | null
+    socialType?: $Enums.SocialType | null
+    socialId?: string | null
+    role?: $Enums.UserRoleType
+    status?: $Enums.UserStatus
+    kycLevel?: $Enums.KycLevel
+    country?: string | null
+    language?: $Enums.Language | null
+    timezone?: string | null
+    timezoneOffset?: number | null
+    createdAt?: Date | string
+    updatedAt?: Date | string
+    affiliateCodes?: AffiliateCodeUncheckedCreateNestedManyWithoutUserInput
+    affiliateCommissions?: AffiliateCommissionUncheckedCreateNestedManyWithoutAffiliateInput
+    subUserCommissions?: AffiliateCommissionUncheckedCreateNestedManyWithoutSubUserInput
+    affiliateTier?: AffiliateTierUncheckedCreateNestedOneWithoutAffiliateInput
+    affiliateWallets?: AffiliateWalletUncheckedCreateNestedManyWithoutAffiliateInput
+    CompTransaction?: CompTransactionUncheckedCreateNestedManyWithoutUserInput
+    DailyCompEarning?: DailyCompEarningUncheckedCreateNestedManyWithoutUserInput
+    EmailLog?: EmailLogUncheckedCreateNestedManyWithoutUserInput
+    GameSession?: CasinoGameSessionUncheckedCreateNestedManyWithoutUserInput
+    affiliateReferrals?: ReferralUncheckedCreateNestedManyWithoutAffiliateInput
+    referredUsers?: ReferralUncheckedCreateNestedManyWithoutSubUserInput
+    transactions?: TransactionUncheckedCreateNestedManyWithoutUserInput
+    depositDetails?: DepositDetailUncheckedCreateNestedManyWithoutUserInput
+    userWallets?: UserWalletUncheckedCreateNestedManyWithoutUserInput
+    UserBalanceStats?: UserBalanceStatsUncheckedCreateNestedManyWithoutUserInput
+    UserPromotion?: UserPromotionUncheckedCreateNestedManyWithoutUserInput
+    UserSession?: UserSessionUncheckedCreateNestedManyWithoutUserInput
+    RevokedSessions?: UserSessionUncheckedCreateNestedManyWithoutRevokedByUserInput
+    UserToken?: UserTokenUncheckedCreateNestedManyWithoutUserInput
+    loginAttempts?: LoginAttemptUncheckedCreateNestedManyWithoutUserInput
+    userTier?: UserTierUncheckedCreateNestedOneWithoutUserInput
+    tierHistory?: TierHistoryUncheckedCreateNestedManyWithoutUserInput
+    adminAdjustmentDetails?: AdminAdjustmentDetailUncheckedCreateNestedManyWithoutAdminUserInput
+  }
+
+  export type UserCreateOrConnectWithoutWageringRequirementsInput = {
+    where: UserWhereUniqueInput
+    create: XOR<UserCreateWithoutWageringRequirementsInput, UserUncheckedCreateWithoutWageringRequirementsInput>
+  }
+
+  export type WageringContributionLogCreateWithoutWageringRequirementInput = {
+    id?: bigint | number
+    gameRoundId: bigint | number
+    requestAmount: Decimal | DecimalJsLike | number | string
+    contributionRate: Decimal | DecimalJsLike | number | string
+    contributedAmount: Decimal | DecimalJsLike | number | string
+    createdAt?: Date | string
+  }
+
+  export type WageringContributionLogUncheckedCreateWithoutWageringRequirementInput = {
+    id?: bigint | number
+    gameRoundId: bigint | number
+    requestAmount: Decimal | DecimalJsLike | number | string
+    contributionRate: Decimal | DecimalJsLike | number | string
+    contributedAmount: Decimal | DecimalJsLike | number | string
+    createdAt?: Date | string
+  }
+
+  export type WageringContributionLogCreateOrConnectWithoutWageringRequirementInput = {
+    where: WageringContributionLogWhereUniqueInput
+    create: XOR<WageringContributionLogCreateWithoutWageringRequirementInput, WageringContributionLogUncheckedCreateWithoutWageringRequirementInput>
+  }
+
+  export type WageringContributionLogCreateManyWageringRequirementInputEnvelope = {
+    data: WageringContributionLogCreateManyWageringRequirementInput | WageringContributionLogCreateManyWageringRequirementInput[]
+    skipDuplicates?: boolean
+  }
+
+  export type DepositDetailUpsertWithoutWageringRequirementsInput = {
+    update: XOR<DepositDetailUpdateWithoutWageringRequirementsInput, DepositDetailUncheckedUpdateWithoutWageringRequirementsInput>
+    create: XOR<DepositDetailCreateWithoutWageringRequirementsInput, DepositDetailUncheckedCreateWithoutWageringRequirementsInput>
+    where?: DepositDetailWhereInput
+  }
+
+  export type DepositDetailUpdateToOneWithWhereWithoutWageringRequirementsInput = {
+    where?: DepositDetailWhereInput
+    data: XOR<DepositDetailUpdateWithoutWageringRequirementsInput, DepositDetailUncheckedUpdateWithoutWageringRequirementsInput>
+  }
+
+  export type DepositDetailUpdateWithoutWageringRequirementsInput = {
+    id?: BigIntFieldUpdateOperationsInput | bigint | number
+    uid?: StringFieldUpdateOperationsInput | string
+    confirmedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    failedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    status?: EnumDepositDetailStatusFieldUpdateOperationsInput | $Enums.DepositDetailStatus
+    methodType?: EnumDepositMethodTypeFieldUpdateOperationsInput | $Enums.DepositMethodType
+    provider?: EnumPaymentProviderFieldUpdateOperationsInput | $Enums.PaymentProvider
+    providerPaymentId?: NullableStringFieldUpdateOperationsInput | string | null
+    depositCurrency?: EnumExchangeCurrencyCodeFieldUpdateOperationsInput | $Enums.ExchangeCurrencyCode
+    depositNetwork?: NullableStringFieldUpdateOperationsInput | string | null
+    walletAddress?: NullableStringFieldUpdateOperationsInput | string | null
+    walletAddressExtraId?: NullableStringFieldUpdateOperationsInput | string | null
+    depositorName?: NullableStringFieldUpdateOperationsInput | string | null
+    transactionHash?: NullableStringFieldUpdateOperationsInput | string | null
+    requestedAmount?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
+    actuallyPaid?: NullableDecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string | null
+    processedBy?: NullableBigIntFieldUpdateOperationsInput | bigint | number | null
+    adminNote?: NullableStringFieldUpdateOperationsInput | string | null
+    ipAddress?: NullableStringFieldUpdateOperationsInput | string | null
+    deviceFingerprint?: NullableStringFieldUpdateOperationsInput | string | null
+    feeAmount?: NullableDecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string | null
+    feeCurrency?: NullableStringFieldUpdateOperationsInput | string | null
+    feePaidBy?: NullableEnumFeePaidByTypeFieldUpdateOperationsInput | $Enums.FeePaidByType | null
+    failureReason?: NullableStringFieldUpdateOperationsInput | string | null
+    providerMetadata?: NullableJsonNullValueInput | InputJsonValue
+    user?: UserUpdateOneRequiredWithoutDepositDetailsNestedInput
+    BankConfig?: BankConfigUpdateOneWithoutDepositDetailsNestedInput
+    CryptoConfig?: CryptoConfigUpdateOneWithoutDepositDetailsNestedInput
+    transaction?: TransactionUpdateOneWithoutDepositDetailNestedInput
+  }
+
+  export type DepositDetailUncheckedUpdateWithoutWageringRequirementsInput = {
+    id?: BigIntFieldUpdateOperationsInput | bigint | number
+    uid?: StringFieldUpdateOperationsInput | string
+    confirmedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    failedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    status?: EnumDepositDetailStatusFieldUpdateOperationsInput | $Enums.DepositDetailStatus
+    userId?: BigIntFieldUpdateOperationsInput | bigint | number
+    transactionId?: NullableBigIntFieldUpdateOperationsInput | bigint | number | null
+    methodType?: EnumDepositMethodTypeFieldUpdateOperationsInput | $Enums.DepositMethodType
+    provider?: EnumPaymentProviderFieldUpdateOperationsInput | $Enums.PaymentProvider
+    providerPaymentId?: NullableStringFieldUpdateOperationsInput | string | null
+    depositCurrency?: EnumExchangeCurrencyCodeFieldUpdateOperationsInput | $Enums.ExchangeCurrencyCode
+    depositNetwork?: NullableStringFieldUpdateOperationsInput | string | null
+    walletAddress?: NullableStringFieldUpdateOperationsInput | string | null
+    walletAddressExtraId?: NullableStringFieldUpdateOperationsInput | string | null
+    depositorName?: NullableStringFieldUpdateOperationsInput | string | null
+    transactionHash?: NullableStringFieldUpdateOperationsInput | string | null
+    requestedAmount?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
+    actuallyPaid?: NullableDecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string | null
+    processedBy?: NullableBigIntFieldUpdateOperationsInput | bigint | number | null
+    adminNote?: NullableStringFieldUpdateOperationsInput | string | null
+    ipAddress?: NullableStringFieldUpdateOperationsInput | string | null
+    deviceFingerprint?: NullableStringFieldUpdateOperationsInput | string | null
+    feeAmount?: NullableDecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string | null
+    feeCurrency?: NullableStringFieldUpdateOperationsInput | string | null
+    feePaidBy?: NullableEnumFeePaidByTypeFieldUpdateOperationsInput | $Enums.FeePaidByType | null
+    failureReason?: NullableStringFieldUpdateOperationsInput | string | null
+    providerMetadata?: NullableJsonNullValueInput | InputJsonValue
+    bankConfigId?: NullableBigIntFieldUpdateOperationsInput | bigint | number | null
+    cryptoConfigId?: NullableBigIntFieldUpdateOperationsInput | bigint | number | null
+  }
+
+  export type UserWalletUpsertWithoutWageringRequirementsInput = {
+    update: XOR<UserWalletUpdateWithoutWageringRequirementsInput, UserWalletUncheckedUpdateWithoutWageringRequirementsInput>
+    create: XOR<UserWalletCreateWithoutWageringRequirementsInput, UserWalletUncheckedCreateWithoutWageringRequirementsInput>
+    where?: UserWalletWhereInput
+  }
+
+  export type UserWalletUpdateToOneWithWhereWithoutWageringRequirementsInput = {
+    where?: UserWalletWhereInput
+    data: XOR<UserWalletUpdateWithoutWageringRequirementsInput, UserWalletUncheckedUpdateWithoutWageringRequirementsInput>
+  }
+
+  export type UserWalletUpdateWithoutWageringRequirementsInput = {
+    currency?: EnumExchangeCurrencyCodeFieldUpdateOperationsInput | $Enums.ExchangeCurrencyCode
+    mainBalance?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
+    bonusBalance?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    user?: UserUpdateOneRequiredWithoutUserWalletsNestedInput
+  }
+
+  export type UserWalletUncheckedUpdateWithoutWageringRequirementsInput = {
+    userId?: BigIntFieldUpdateOperationsInput | bigint | number
+    currency?: EnumExchangeCurrencyCodeFieldUpdateOperationsInput | $Enums.ExchangeCurrencyCode
+    mainBalance?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
+    bonusBalance?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+  }
+
+  export type UserPromotionUpsertWithoutWageringRequirementsInput = {
+    update: XOR<UserPromotionUpdateWithoutWageringRequirementsInput, UserPromotionUncheckedUpdateWithoutWageringRequirementsInput>
+    create: XOR<UserPromotionCreateWithoutWageringRequirementsInput, UserPromotionUncheckedCreateWithoutWageringRequirementsInput>
+    where?: UserPromotionWhereInput
+  }
+
+  export type UserPromotionUpdateToOneWithWhereWithoutWageringRequirementsInput = {
+    where?: UserPromotionWhereInput
+    data: XOR<UserPromotionUpdateWithoutWageringRequirementsInput, UserPromotionUncheckedUpdateWithoutWageringRequirementsInput>
+  }
+
+  export type UserPromotionUpdateWithoutWageringRequirementsInput = {
+    id?: BigIntFieldUpdateOperationsInput | bigint | number
+    status?: EnumUserPromotionStatusFieldUpdateOperationsInput | $Enums.UserPromotionStatus
+    depositAmount?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
+    bonusAmount?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
+    targetRollingAmount?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
+    currentRollingAmount?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
+    currency?: EnumExchangeCurrencyCodeFieldUpdateOperationsInput | $Enums.ExchangeCurrencyCode
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    promotion?: PromotionUpdateOneRequiredWithoutUserPromotionNestedInput
+    user?: UserUpdateOneRequiredWithoutUserPromotionNestedInput
+  }
+
+  export type UserPromotionUncheckedUpdateWithoutWageringRequirementsInput = {
+    id?: BigIntFieldUpdateOperationsInput | bigint | number
+    userId?: BigIntFieldUpdateOperationsInput | bigint | number
+    promotionId?: BigIntFieldUpdateOperationsInput | bigint | number
+    status?: EnumUserPromotionStatusFieldUpdateOperationsInput | $Enums.UserPromotionStatus
+    depositAmount?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
+    bonusAmount?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
+    targetRollingAmount?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
+    currentRollingAmount?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
+    currency?: EnumExchangeCurrencyCodeFieldUpdateOperationsInput | $Enums.ExchangeCurrencyCode
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+  }
+
+  export type UserUpsertWithoutWageringRequirementsInput = {
+    update: XOR<UserUpdateWithoutWageringRequirementsInput, UserUncheckedUpdateWithoutWageringRequirementsInput>
+    create: XOR<UserCreateWithoutWageringRequirementsInput, UserUncheckedCreateWithoutWageringRequirementsInput>
+    where?: UserWhereInput
+  }
+
+  export type UserUpdateToOneWithWhereWithoutWageringRequirementsInput = {
+    where?: UserWhereInput
+    data: XOR<UserUpdateWithoutWageringRequirementsInput, UserUncheckedUpdateWithoutWageringRequirementsInput>
+  }
+
+  export type UserUpdateWithoutWageringRequirementsInput = {
+    id?: BigIntFieldUpdateOperationsInput | bigint | number
+    uid?: StringFieldUpdateOperationsInput | string
+    whitecliffId?: NullableBigIntFieldUpdateOperationsInput | bigint | number | null
+    whitecliffSystemId?: NullableBigIntFieldUpdateOperationsInput | bigint | number | null
+    whitecliffUsername?: NullableStringFieldUpdateOperationsInput | string | null
+    dcsId?: NullableStringFieldUpdateOperationsInput | string | null
+    email?: NullableStringFieldUpdateOperationsInput | string | null
+    passwordHash?: NullableStringFieldUpdateOperationsInput | string | null
+    socialType?: NullableEnumSocialTypeFieldUpdateOperationsInput | $Enums.SocialType | null
+    socialId?: NullableStringFieldUpdateOperationsInput | string | null
+    role?: EnumUserRoleTypeFieldUpdateOperationsInput | $Enums.UserRoleType
+    status?: EnumUserStatusFieldUpdateOperationsInput | $Enums.UserStatus
+    kycLevel?: EnumKycLevelFieldUpdateOperationsInput | $Enums.KycLevel
+    country?: NullableStringFieldUpdateOperationsInput | string | null
+    language?: NullableEnumLanguageFieldUpdateOperationsInput | $Enums.Language | null
+    timezone?: NullableStringFieldUpdateOperationsInput | string | null
+    timezoneOffset?: NullableIntFieldUpdateOperationsInput | number | null
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    affiliateCodes?: AffiliateCodeUpdateManyWithoutUserNestedInput
+    affiliateCommissions?: AffiliateCommissionUpdateManyWithoutAffiliateNestedInput
+    subUserCommissions?: AffiliateCommissionUpdateManyWithoutSubUserNestedInput
+    affiliateTier?: AffiliateTierUpdateOneWithoutAffiliateNestedInput
+    affiliateWallets?: AffiliateWalletUpdateManyWithoutAffiliateNestedInput
+    CompTransaction?: CompTransactionUpdateManyWithoutUserNestedInput
+    DailyCompEarning?: DailyCompEarningUpdateManyWithoutUserNestedInput
+    EmailLog?: EmailLogUpdateManyWithoutUserNestedInput
+    GameSession?: CasinoGameSessionUpdateManyWithoutUserNestedInput
+    affiliateReferrals?: ReferralUpdateManyWithoutAffiliateNestedInput
+    referredUsers?: ReferralUpdateManyWithoutSubUserNestedInput
+    transactions?: TransactionUpdateManyWithoutUserNestedInput
+    depositDetails?: DepositDetailUpdateManyWithoutUserNestedInput
+    userWallets?: UserWalletUpdateManyWithoutUserNestedInput
+    UserBalanceStats?: UserBalanceStatsUpdateManyWithoutUserNestedInput
+    UserPromotion?: UserPromotionUpdateManyWithoutUserNestedInput
+    UserSession?: UserSessionUpdateManyWithoutUserNestedInput
+    RevokedSessions?: UserSessionUpdateManyWithoutRevokedByUserNestedInput
+    UserToken?: UserTokenUpdateManyWithoutUserNestedInput
+    loginAttempts?: LoginAttemptUpdateManyWithoutUserNestedInput
+    userTier?: UserTierUpdateOneWithoutUserNestedInput
+    tierHistory?: TierHistoryUpdateManyWithoutUserNestedInput
+    adminAdjustmentDetails?: AdminAdjustmentDetailUpdateManyWithoutAdminUserNestedInput
+  }
+
+  export type UserUncheckedUpdateWithoutWageringRequirementsInput = {
+    id?: BigIntFieldUpdateOperationsInput | bigint | number
+    uid?: StringFieldUpdateOperationsInput | string
+    whitecliffId?: NullableBigIntFieldUpdateOperationsInput | bigint | number | null
+    whitecliffSystemId?: NullableBigIntFieldUpdateOperationsInput | bigint | number | null
+    whitecliffUsername?: NullableStringFieldUpdateOperationsInput | string | null
+    dcsId?: NullableStringFieldUpdateOperationsInput | string | null
+    email?: NullableStringFieldUpdateOperationsInput | string | null
+    passwordHash?: NullableStringFieldUpdateOperationsInput | string | null
+    socialType?: NullableEnumSocialTypeFieldUpdateOperationsInput | $Enums.SocialType | null
+    socialId?: NullableStringFieldUpdateOperationsInput | string | null
+    role?: EnumUserRoleTypeFieldUpdateOperationsInput | $Enums.UserRoleType
+    status?: EnumUserStatusFieldUpdateOperationsInput | $Enums.UserStatus
+    kycLevel?: EnumKycLevelFieldUpdateOperationsInput | $Enums.KycLevel
+    country?: NullableStringFieldUpdateOperationsInput | string | null
+    language?: NullableEnumLanguageFieldUpdateOperationsInput | $Enums.Language | null
+    timezone?: NullableStringFieldUpdateOperationsInput | string | null
+    timezoneOffset?: NullableIntFieldUpdateOperationsInput | number | null
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    affiliateCodes?: AffiliateCodeUncheckedUpdateManyWithoutUserNestedInput
+    affiliateCommissions?: AffiliateCommissionUncheckedUpdateManyWithoutAffiliateNestedInput
+    subUserCommissions?: AffiliateCommissionUncheckedUpdateManyWithoutSubUserNestedInput
+    affiliateTier?: AffiliateTierUncheckedUpdateOneWithoutAffiliateNestedInput
+    affiliateWallets?: AffiliateWalletUncheckedUpdateManyWithoutAffiliateNestedInput
+    CompTransaction?: CompTransactionUncheckedUpdateManyWithoutUserNestedInput
+    DailyCompEarning?: DailyCompEarningUncheckedUpdateManyWithoutUserNestedInput
+    EmailLog?: EmailLogUncheckedUpdateManyWithoutUserNestedInput
+    GameSession?: CasinoGameSessionUncheckedUpdateManyWithoutUserNestedInput
+    affiliateReferrals?: ReferralUncheckedUpdateManyWithoutAffiliateNestedInput
+    referredUsers?: ReferralUncheckedUpdateManyWithoutSubUserNestedInput
+    transactions?: TransactionUncheckedUpdateManyWithoutUserNestedInput
+    depositDetails?: DepositDetailUncheckedUpdateManyWithoutUserNestedInput
+    userWallets?: UserWalletUncheckedUpdateManyWithoutUserNestedInput
+    UserBalanceStats?: UserBalanceStatsUncheckedUpdateManyWithoutUserNestedInput
+    UserPromotion?: UserPromotionUncheckedUpdateManyWithoutUserNestedInput
+    UserSession?: UserSessionUncheckedUpdateManyWithoutUserNestedInput
+    RevokedSessions?: UserSessionUncheckedUpdateManyWithoutRevokedByUserNestedInput
+    UserToken?: UserTokenUncheckedUpdateManyWithoutUserNestedInput
+    loginAttempts?: LoginAttemptUncheckedUpdateManyWithoutUserNestedInput
+    userTier?: UserTierUncheckedUpdateOneWithoutUserNestedInput
+    tierHistory?: TierHistoryUncheckedUpdateManyWithoutUserNestedInput
+    adminAdjustmentDetails?: AdminAdjustmentDetailUncheckedUpdateManyWithoutAdminUserNestedInput
+  }
+
+  export type WageringContributionLogUpsertWithWhereUniqueWithoutWageringRequirementInput = {
+    where: WageringContributionLogWhereUniqueInput
+    update: XOR<WageringContributionLogUpdateWithoutWageringRequirementInput, WageringContributionLogUncheckedUpdateWithoutWageringRequirementInput>
+    create: XOR<WageringContributionLogCreateWithoutWageringRequirementInput, WageringContributionLogUncheckedCreateWithoutWageringRequirementInput>
+  }
+
+  export type WageringContributionLogUpdateWithWhereUniqueWithoutWageringRequirementInput = {
+    where: WageringContributionLogWhereUniqueInput
+    data: XOR<WageringContributionLogUpdateWithoutWageringRequirementInput, WageringContributionLogUncheckedUpdateWithoutWageringRequirementInput>
+  }
+
+  export type WageringContributionLogUpdateManyWithWhereWithoutWageringRequirementInput = {
+    where: WageringContributionLogScalarWhereInput
+    data: XOR<WageringContributionLogUpdateManyMutationInput, WageringContributionLogUncheckedUpdateManyWithoutWageringRequirementInput>
+  }
+
+  export type WageringContributionLogScalarWhereInput = {
+    AND?: WageringContributionLogScalarWhereInput | WageringContributionLogScalarWhereInput[]
+    OR?: WageringContributionLogScalarWhereInput[]
+    NOT?: WageringContributionLogScalarWhereInput | WageringContributionLogScalarWhereInput[]
+    id?: BigIntFilter<"WageringContributionLog"> | bigint | number
+    wageringRequirementId?: BigIntFilter<"WageringContributionLog"> | bigint | number
+    gameRoundId?: BigIntFilter<"WageringContributionLog"> | bigint | number
+    requestAmount?: DecimalFilter<"WageringContributionLog"> | Decimal | DecimalJsLike | number | string
+    contributionRate?: DecimalFilter<"WageringContributionLog"> | Decimal | DecimalJsLike | number | string
+    contributedAmount?: DecimalFilter<"WageringContributionLog"> | Decimal | DecimalJsLike | number | string
+    createdAt?: DateTimeFilter<"WageringContributionLog"> | Date | string
+  }
+
+  export type WageringRequirementCreateWithoutContributionLogsInput = {
+    id?: bigint | number
+    uid?: string
+    sourceType?: $Enums.WageringSourceType
+    requiredAmount: Decimal | DecimalJsLike | number | string
+    currentAmount?: Decimal | DecimalJsLike | number | string
+    cancellationBalanceThreshold?: Decimal | DecimalJsLike | number | string | null
+    status?: $Enums.WageringStatus
+    createdAt?: Date | string
+    updatedAt?: Date | string
+    expiresAt?: Date | string | null
+    completedAt?: Date | string | null
+    cancelledAt?: Date | string | null
+    cancellationNote?: string | null
+    priority?: number
+    DepositDetail?: DepositDetailCreateNestedOneWithoutWageringRequirementsInput
+    userWallet: UserWalletCreateNestedOneWithoutWageringRequirementsInput
+    userPromotion?: UserPromotionCreateNestedOneWithoutWageringRequirementsInput
+    user: UserCreateNestedOneWithoutWageringRequirementsInput
+  }
+
+  export type WageringRequirementUncheckedCreateWithoutContributionLogsInput = {
+    id?: bigint | number
+    uid?: string
+    userId: bigint | number
+    currency: $Enums.ExchangeCurrencyCode
+    sourceType?: $Enums.WageringSourceType
+    requiredAmount: Decimal | DecimalJsLike | number | string
+    currentAmount?: Decimal | DecimalJsLike | number | string
+    cancellationBalanceThreshold?: Decimal | DecimalJsLike | number | string | null
+    status?: $Enums.WageringStatus
+    depositDetailId?: bigint | number | null
+    userPromotionId?: bigint | number | null
+    createdAt?: Date | string
+    updatedAt?: Date | string
+    expiresAt?: Date | string | null
+    completedAt?: Date | string | null
+    cancelledAt?: Date | string | null
+    cancellationNote?: string | null
+    priority?: number
+  }
+
+  export type WageringRequirementCreateOrConnectWithoutContributionLogsInput = {
+    where: WageringRequirementWhereUniqueInput
+    create: XOR<WageringRequirementCreateWithoutContributionLogsInput, WageringRequirementUncheckedCreateWithoutContributionLogsInput>
+  }
+
+  export type WageringRequirementUpsertWithoutContributionLogsInput = {
+    update: XOR<WageringRequirementUpdateWithoutContributionLogsInput, WageringRequirementUncheckedUpdateWithoutContributionLogsInput>
+    create: XOR<WageringRequirementCreateWithoutContributionLogsInput, WageringRequirementUncheckedCreateWithoutContributionLogsInput>
+    where?: WageringRequirementWhereInput
+  }
+
+  export type WageringRequirementUpdateToOneWithWhereWithoutContributionLogsInput = {
+    where?: WageringRequirementWhereInput
+    data: XOR<WageringRequirementUpdateWithoutContributionLogsInput, WageringRequirementUncheckedUpdateWithoutContributionLogsInput>
+  }
+
+  export type WageringRequirementUpdateWithoutContributionLogsInput = {
+    id?: BigIntFieldUpdateOperationsInput | bigint | number
+    uid?: StringFieldUpdateOperationsInput | string
+    sourceType?: EnumWageringSourceTypeFieldUpdateOperationsInput | $Enums.WageringSourceType
+    requiredAmount?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
+    currentAmount?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
+    cancellationBalanceThreshold?: NullableDecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string | null
+    status?: EnumWageringStatusFieldUpdateOperationsInput | $Enums.WageringStatus
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    expiresAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    completedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    cancelledAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    cancellationNote?: NullableStringFieldUpdateOperationsInput | string | null
+    priority?: IntFieldUpdateOperationsInput | number
+    DepositDetail?: DepositDetailUpdateOneWithoutWageringRequirementsNestedInput
+    userWallet?: UserWalletUpdateOneRequiredWithoutWageringRequirementsNestedInput
+    userPromotion?: UserPromotionUpdateOneWithoutWageringRequirementsNestedInput
+    user?: UserUpdateOneRequiredWithoutWageringRequirementsNestedInput
+  }
+
+  export type WageringRequirementUncheckedUpdateWithoutContributionLogsInput = {
+    id?: BigIntFieldUpdateOperationsInput | bigint | number
+    uid?: StringFieldUpdateOperationsInput | string
+    userId?: BigIntFieldUpdateOperationsInput | bigint | number
+    currency?: EnumExchangeCurrencyCodeFieldUpdateOperationsInput | $Enums.ExchangeCurrencyCode
+    sourceType?: EnumWageringSourceTypeFieldUpdateOperationsInput | $Enums.WageringSourceType
+    requiredAmount?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
+    currentAmount?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
+    cancellationBalanceThreshold?: NullableDecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string | null
+    status?: EnumWageringStatusFieldUpdateOperationsInput | $Enums.WageringStatus
+    depositDetailId?: NullableBigIntFieldUpdateOperationsInput | bigint | number | null
+    userPromotionId?: NullableBigIntFieldUpdateOperationsInput | bigint | number | null
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    expiresAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    completedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    cancelledAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    cancellationNote?: NullableStringFieldUpdateOperationsInput | string | null
+    priority?: IntFieldUpdateOperationsInput | number
   }
 
   export type ReferralCreateManyCodeInput = {
@@ -93350,23 +95438,6 @@ export namespace Prisma {
     codeId: bigint | number
   }
 
-  export type RollingCreateManyUserInput = {
-    id?: bigint | number
-    sourceType?: $Enums.RollingSourceType
-    userPromotionId?: bigint | number | null
-    requiredAmount: Decimal | DecimalJsLike | number | string
-    currentAmount?: Decimal | DecimalJsLike | number | string
-    cancellationBalanceThreshold?: Decimal | DecimalJsLike | number | string | null
-    status?: $Enums.RollingStatus
-    depositAmount?: Decimal | DecimalJsLike | number | string | null
-    bonusAmount?: Decimal | DecimalJsLike | number | string | null
-    completedAt?: Date | string | null
-    cancelledAt?: Date | string | null
-    createdAt?: Date | string
-    updatedAt?: Date | string
-    depositDetailId?: bigint | number | null
-  }
-
   export type TransactionCreateManyUserInput = {
     id?: bigint | number
     type: $Enums.TransactionType
@@ -93412,7 +95483,7 @@ export namespace Prisma {
     cryptoConfigId?: bigint | number | null
   }
 
-  export type UserBalanceCreateManyUserInput = {
+  export type UserWalletCreateManyUserInput = {
     currency: $Enums.ExchangeCurrencyCode
     mainBalance?: Decimal | DecimalJsLike | number | string
     bonusBalance?: Decimal | DecimalJsLike | number | string
@@ -93535,6 +95606,26 @@ export namespace Prisma {
     transactionId: bigint | number
     reasonCode: $Enums.AdjustmentReasonCode
     internalNote?: string | null
+  }
+
+  export type WageringRequirementCreateManyUserInput = {
+    id?: bigint | number
+    uid?: string
+    currency: $Enums.ExchangeCurrencyCode
+    sourceType?: $Enums.WageringSourceType
+    requiredAmount: Decimal | DecimalJsLike | number | string
+    currentAmount?: Decimal | DecimalJsLike | number | string
+    cancellationBalanceThreshold?: Decimal | DecimalJsLike | number | string | null
+    status?: $Enums.WageringStatus
+    depositDetailId?: bigint | number | null
+    userPromotionId?: bigint | number | null
+    createdAt?: Date | string
+    updatedAt?: Date | string
+    expiresAt?: Date | string | null
+    completedAt?: Date | string | null
+    cancelledAt?: Date | string | null
+    cancellationNote?: string | null
+    priority?: number
   }
 
   export type AffiliateCodeUpdateWithoutUserInput = {
@@ -93943,57 +96034,6 @@ export namespace Prisma {
     codeId?: BigIntFieldUpdateOperationsInput | bigint | number
   }
 
-  export type RollingUpdateWithoutUserInput = {
-    id?: BigIntFieldUpdateOperationsInput | bigint | number
-    sourceType?: EnumRollingSourceTypeFieldUpdateOperationsInput | $Enums.RollingSourceType
-    requiredAmount?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
-    currentAmount?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
-    cancellationBalanceThreshold?: NullableDecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string | null
-    status?: EnumRollingStatusFieldUpdateOperationsInput | $Enums.RollingStatus
-    depositAmount?: NullableDecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string | null
-    bonusAmount?: NullableDecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string | null
-    completedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
-    cancelledAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
-    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
-    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
-    DepositDetail?: DepositDetailUpdateOneWithoutRollingNestedInput
-    userPromotion?: UserPromotionUpdateOneWithoutRollingNestedInput
-  }
-
-  export type RollingUncheckedUpdateWithoutUserInput = {
-    id?: BigIntFieldUpdateOperationsInput | bigint | number
-    sourceType?: EnumRollingSourceTypeFieldUpdateOperationsInput | $Enums.RollingSourceType
-    userPromotionId?: NullableBigIntFieldUpdateOperationsInput | bigint | number | null
-    requiredAmount?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
-    currentAmount?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
-    cancellationBalanceThreshold?: NullableDecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string | null
-    status?: EnumRollingStatusFieldUpdateOperationsInput | $Enums.RollingStatus
-    depositAmount?: NullableDecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string | null
-    bonusAmount?: NullableDecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string | null
-    completedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
-    cancelledAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
-    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
-    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
-    depositDetailId?: NullableBigIntFieldUpdateOperationsInput | bigint | number | null
-  }
-
-  export type RollingUncheckedUpdateManyWithoutUserInput = {
-    id?: BigIntFieldUpdateOperationsInput | bigint | number
-    sourceType?: EnumRollingSourceTypeFieldUpdateOperationsInput | $Enums.RollingSourceType
-    userPromotionId?: NullableBigIntFieldUpdateOperationsInput | bigint | number | null
-    requiredAmount?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
-    currentAmount?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
-    cancellationBalanceThreshold?: NullableDecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string | null
-    status?: EnumRollingStatusFieldUpdateOperationsInput | $Enums.RollingStatus
-    depositAmount?: NullableDecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string | null
-    bonusAmount?: NullableDecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string | null
-    completedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
-    cancelledAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
-    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
-    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
-    depositDetailId?: NullableBigIntFieldUpdateOperationsInput | bigint | number | null
-  }
-
   export type TransactionUpdateWithoutUserInput = {
     id?: BigIntFieldUpdateOperationsInput | bigint | number
     type?: EnumTransactionTypeFieldUpdateOperationsInput | $Enums.TransactionType
@@ -94077,7 +96117,7 @@ export namespace Prisma {
     BankConfig?: BankConfigUpdateOneWithoutDepositDetailsNestedInput
     CryptoConfig?: CryptoConfigUpdateOneWithoutDepositDetailsNestedInput
     transaction?: TransactionUpdateOneWithoutDepositDetailNestedInput
-    Rolling?: RollingUpdateManyWithoutDepositDetailNestedInput
+    wageringRequirements?: WageringRequirementUpdateManyWithoutDepositDetailNestedInput
   }
 
   export type DepositDetailUncheckedUpdateWithoutUserInput = {
@@ -94111,7 +96151,7 @@ export namespace Prisma {
     providerMetadata?: NullableJsonNullValueInput | InputJsonValue
     bankConfigId?: NullableBigIntFieldUpdateOperationsInput | bigint | number | null
     cryptoConfigId?: NullableBigIntFieldUpdateOperationsInput | bigint | number | null
-    Rolling?: RollingUncheckedUpdateManyWithoutDepositDetailNestedInput
+    wageringRequirements?: WageringRequirementUncheckedUpdateManyWithoutDepositDetailNestedInput
   }
 
   export type DepositDetailUncheckedUpdateManyWithoutUserInput = {
@@ -94147,21 +96187,23 @@ export namespace Prisma {
     cryptoConfigId?: NullableBigIntFieldUpdateOperationsInput | bigint | number | null
   }
 
-  export type UserBalanceUpdateWithoutUserInput = {
+  export type UserWalletUpdateWithoutUserInput = {
     currency?: EnumExchangeCurrencyCodeFieldUpdateOperationsInput | $Enums.ExchangeCurrencyCode
     mainBalance?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
     bonusBalance?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    wageringRequirements?: WageringRequirementUpdateManyWithoutUserWalletNestedInput
   }
 
-  export type UserBalanceUncheckedUpdateWithoutUserInput = {
+  export type UserWalletUncheckedUpdateWithoutUserInput = {
     currency?: EnumExchangeCurrencyCodeFieldUpdateOperationsInput | $Enums.ExchangeCurrencyCode
     mainBalance?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
     bonusBalance?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    wageringRequirements?: WageringRequirementUncheckedUpdateManyWithoutUserWalletNestedInput
   }
 
-  export type UserBalanceUncheckedUpdateManyWithoutUserInput = {
+  export type UserWalletUncheckedUpdateManyWithoutUserInput = {
     currency?: EnumExchangeCurrencyCodeFieldUpdateOperationsInput | $Enums.ExchangeCurrencyCode
     mainBalance?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
     bonusBalance?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
@@ -94220,7 +96262,7 @@ export namespace Prisma {
     currency?: EnumExchangeCurrencyCodeFieldUpdateOperationsInput | $Enums.ExchangeCurrencyCode
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
-    Rolling?: RollingUpdateManyWithoutUserPromotionNestedInput
+    wageringRequirements?: WageringRequirementUpdateManyWithoutUserPromotionNestedInput
     promotion?: PromotionUpdateOneRequiredWithoutUserPromotionNestedInput
   }
 
@@ -94235,7 +96277,7 @@ export namespace Prisma {
     currency?: EnumExchangeCurrencyCodeFieldUpdateOperationsInput | $Enums.ExchangeCurrencyCode
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
-    Rolling?: RollingUncheckedUpdateManyWithoutUserPromotionNestedInput
+    wageringRequirements?: WageringRequirementUncheckedUpdateManyWithoutUserPromotionNestedInput
   }
 
   export type UserPromotionUncheckedUpdateManyWithoutUserInput = {
@@ -94523,6 +96565,147 @@ export namespace Prisma {
     internalNote?: NullableStringFieldUpdateOperationsInput | string | null
   }
 
+  export type WageringRequirementUpdateWithoutUserInput = {
+    id?: BigIntFieldUpdateOperationsInput | bigint | number
+    uid?: StringFieldUpdateOperationsInput | string
+    sourceType?: EnumWageringSourceTypeFieldUpdateOperationsInput | $Enums.WageringSourceType
+    requiredAmount?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
+    currentAmount?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
+    cancellationBalanceThreshold?: NullableDecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string | null
+    status?: EnumWageringStatusFieldUpdateOperationsInput | $Enums.WageringStatus
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    expiresAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    completedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    cancelledAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    cancellationNote?: NullableStringFieldUpdateOperationsInput | string | null
+    priority?: IntFieldUpdateOperationsInput | number
+    DepositDetail?: DepositDetailUpdateOneWithoutWageringRequirementsNestedInput
+    userWallet?: UserWalletUpdateOneRequiredWithoutWageringRequirementsNestedInput
+    userPromotion?: UserPromotionUpdateOneWithoutWageringRequirementsNestedInput
+    contributionLogs?: WageringContributionLogUpdateManyWithoutWageringRequirementNestedInput
+  }
+
+  export type WageringRequirementUncheckedUpdateWithoutUserInput = {
+    id?: BigIntFieldUpdateOperationsInput | bigint | number
+    uid?: StringFieldUpdateOperationsInput | string
+    currency?: EnumExchangeCurrencyCodeFieldUpdateOperationsInput | $Enums.ExchangeCurrencyCode
+    sourceType?: EnumWageringSourceTypeFieldUpdateOperationsInput | $Enums.WageringSourceType
+    requiredAmount?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
+    currentAmount?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
+    cancellationBalanceThreshold?: NullableDecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string | null
+    status?: EnumWageringStatusFieldUpdateOperationsInput | $Enums.WageringStatus
+    depositDetailId?: NullableBigIntFieldUpdateOperationsInput | bigint | number | null
+    userPromotionId?: NullableBigIntFieldUpdateOperationsInput | bigint | number | null
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    expiresAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    completedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    cancelledAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    cancellationNote?: NullableStringFieldUpdateOperationsInput | string | null
+    priority?: IntFieldUpdateOperationsInput | number
+    contributionLogs?: WageringContributionLogUncheckedUpdateManyWithoutWageringRequirementNestedInput
+  }
+
+  export type WageringRequirementUncheckedUpdateManyWithoutUserInput = {
+    id?: BigIntFieldUpdateOperationsInput | bigint | number
+    uid?: StringFieldUpdateOperationsInput | string
+    currency?: EnumExchangeCurrencyCodeFieldUpdateOperationsInput | $Enums.ExchangeCurrencyCode
+    sourceType?: EnumWageringSourceTypeFieldUpdateOperationsInput | $Enums.WageringSourceType
+    requiredAmount?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
+    currentAmount?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
+    cancellationBalanceThreshold?: NullableDecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string | null
+    status?: EnumWageringStatusFieldUpdateOperationsInput | $Enums.WageringStatus
+    depositDetailId?: NullableBigIntFieldUpdateOperationsInput | bigint | number | null
+    userPromotionId?: NullableBigIntFieldUpdateOperationsInput | bigint | number | null
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    expiresAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    completedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    cancelledAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    cancellationNote?: NullableStringFieldUpdateOperationsInput | string | null
+    priority?: IntFieldUpdateOperationsInput | number
+  }
+
+  export type WageringRequirementCreateManyUserWalletInput = {
+    id?: bigint | number
+    uid?: string
+    sourceType?: $Enums.WageringSourceType
+    requiredAmount: Decimal | DecimalJsLike | number | string
+    currentAmount?: Decimal | DecimalJsLike | number | string
+    cancellationBalanceThreshold?: Decimal | DecimalJsLike | number | string | null
+    status?: $Enums.WageringStatus
+    depositDetailId?: bigint | number | null
+    userPromotionId?: bigint | number | null
+    createdAt?: Date | string
+    updatedAt?: Date | string
+    expiresAt?: Date | string | null
+    completedAt?: Date | string | null
+    cancelledAt?: Date | string | null
+    cancellationNote?: string | null
+    priority?: number
+  }
+
+  export type WageringRequirementUpdateWithoutUserWalletInput = {
+    id?: BigIntFieldUpdateOperationsInput | bigint | number
+    uid?: StringFieldUpdateOperationsInput | string
+    sourceType?: EnumWageringSourceTypeFieldUpdateOperationsInput | $Enums.WageringSourceType
+    requiredAmount?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
+    currentAmount?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
+    cancellationBalanceThreshold?: NullableDecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string | null
+    status?: EnumWageringStatusFieldUpdateOperationsInput | $Enums.WageringStatus
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    expiresAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    completedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    cancelledAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    cancellationNote?: NullableStringFieldUpdateOperationsInput | string | null
+    priority?: IntFieldUpdateOperationsInput | number
+    DepositDetail?: DepositDetailUpdateOneWithoutWageringRequirementsNestedInput
+    userPromotion?: UserPromotionUpdateOneWithoutWageringRequirementsNestedInput
+    user?: UserUpdateOneRequiredWithoutWageringRequirementsNestedInput
+    contributionLogs?: WageringContributionLogUpdateManyWithoutWageringRequirementNestedInput
+  }
+
+  export type WageringRequirementUncheckedUpdateWithoutUserWalletInput = {
+    id?: BigIntFieldUpdateOperationsInput | bigint | number
+    uid?: StringFieldUpdateOperationsInput | string
+    sourceType?: EnumWageringSourceTypeFieldUpdateOperationsInput | $Enums.WageringSourceType
+    requiredAmount?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
+    currentAmount?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
+    cancellationBalanceThreshold?: NullableDecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string | null
+    status?: EnumWageringStatusFieldUpdateOperationsInput | $Enums.WageringStatus
+    depositDetailId?: NullableBigIntFieldUpdateOperationsInput | bigint | number | null
+    userPromotionId?: NullableBigIntFieldUpdateOperationsInput | bigint | number | null
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    expiresAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    completedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    cancelledAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    cancellationNote?: NullableStringFieldUpdateOperationsInput | string | null
+    priority?: IntFieldUpdateOperationsInput | number
+    contributionLogs?: WageringContributionLogUncheckedUpdateManyWithoutWageringRequirementNestedInput
+  }
+
+  export type WageringRequirementUncheckedUpdateManyWithoutUserWalletInput = {
+    id?: BigIntFieldUpdateOperationsInput | bigint | number
+    uid?: StringFieldUpdateOperationsInput | string
+    sourceType?: EnumWageringSourceTypeFieldUpdateOperationsInput | $Enums.WageringSourceType
+    requiredAmount?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
+    currentAmount?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
+    cancellationBalanceThreshold?: NullableDecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string | null
+    status?: EnumWageringStatusFieldUpdateOperationsInput | $Enums.WageringStatus
+    depositDetailId?: NullableBigIntFieldUpdateOperationsInput | bigint | number | null
+    userPromotionId?: NullableBigIntFieldUpdateOperationsInput | bigint | number | null
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    expiresAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    completedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    cancelledAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    cancellationNote?: NullableStringFieldUpdateOperationsInput | string | null
+    priority?: IntFieldUpdateOperationsInput | number
+  }
+
   export type TransactionBalanceDetailCreateManyTransactionInput = {
     id?: bigint | number
     mainBalanceChange?: Decimal | DecimalJsLike | number | string | null
@@ -94787,72 +96970,86 @@ export namespace Prisma {
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
   }
 
-  export type RollingCreateManyDepositDetailInput = {
+  export type WageringRequirementCreateManyDepositDetailInput = {
     id?: bigint | number
+    uid?: string
     userId: bigint | number
-    sourceType?: $Enums.RollingSourceType
-    userPromotionId?: bigint | number | null
+    currency: $Enums.ExchangeCurrencyCode
+    sourceType?: $Enums.WageringSourceType
     requiredAmount: Decimal | DecimalJsLike | number | string
     currentAmount?: Decimal | DecimalJsLike | number | string
     cancellationBalanceThreshold?: Decimal | DecimalJsLike | number | string | null
-    status?: $Enums.RollingStatus
-    depositAmount?: Decimal | DecimalJsLike | number | string | null
-    bonusAmount?: Decimal | DecimalJsLike | number | string | null
-    completedAt?: Date | string | null
-    cancelledAt?: Date | string | null
+    status?: $Enums.WageringStatus
+    userPromotionId?: bigint | number | null
     createdAt?: Date | string
     updatedAt?: Date | string
+    expiresAt?: Date | string | null
+    completedAt?: Date | string | null
+    cancelledAt?: Date | string | null
+    cancellationNote?: string | null
+    priority?: number
   }
 
-  export type RollingUpdateWithoutDepositDetailInput = {
+  export type WageringRequirementUpdateWithoutDepositDetailInput = {
     id?: BigIntFieldUpdateOperationsInput | bigint | number
-    sourceType?: EnumRollingSourceTypeFieldUpdateOperationsInput | $Enums.RollingSourceType
+    uid?: StringFieldUpdateOperationsInput | string
+    sourceType?: EnumWageringSourceTypeFieldUpdateOperationsInput | $Enums.WageringSourceType
     requiredAmount?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
     currentAmount?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
     cancellationBalanceThreshold?: NullableDecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string | null
-    status?: EnumRollingStatusFieldUpdateOperationsInput | $Enums.RollingStatus
-    depositAmount?: NullableDecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string | null
-    bonusAmount?: NullableDecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string | null
-    completedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
-    cancelledAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    status?: EnumWageringStatusFieldUpdateOperationsInput | $Enums.WageringStatus
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
-    user?: UserUpdateOneRequiredWithoutRollingNestedInput
-    userPromotion?: UserPromotionUpdateOneWithoutRollingNestedInput
+    expiresAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    completedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    cancelledAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    cancellationNote?: NullableStringFieldUpdateOperationsInput | string | null
+    priority?: IntFieldUpdateOperationsInput | number
+    userWallet?: UserWalletUpdateOneRequiredWithoutWageringRequirementsNestedInput
+    userPromotion?: UserPromotionUpdateOneWithoutWageringRequirementsNestedInput
+    user?: UserUpdateOneRequiredWithoutWageringRequirementsNestedInput
+    contributionLogs?: WageringContributionLogUpdateManyWithoutWageringRequirementNestedInput
   }
 
-  export type RollingUncheckedUpdateWithoutDepositDetailInput = {
+  export type WageringRequirementUncheckedUpdateWithoutDepositDetailInput = {
     id?: BigIntFieldUpdateOperationsInput | bigint | number
+    uid?: StringFieldUpdateOperationsInput | string
     userId?: BigIntFieldUpdateOperationsInput | bigint | number
-    sourceType?: EnumRollingSourceTypeFieldUpdateOperationsInput | $Enums.RollingSourceType
-    userPromotionId?: NullableBigIntFieldUpdateOperationsInput | bigint | number | null
+    currency?: EnumExchangeCurrencyCodeFieldUpdateOperationsInput | $Enums.ExchangeCurrencyCode
+    sourceType?: EnumWageringSourceTypeFieldUpdateOperationsInput | $Enums.WageringSourceType
     requiredAmount?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
     currentAmount?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
     cancellationBalanceThreshold?: NullableDecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string | null
-    status?: EnumRollingStatusFieldUpdateOperationsInput | $Enums.RollingStatus
-    depositAmount?: NullableDecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string | null
-    bonusAmount?: NullableDecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string | null
-    completedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
-    cancelledAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    status?: EnumWageringStatusFieldUpdateOperationsInput | $Enums.WageringStatus
+    userPromotionId?: NullableBigIntFieldUpdateOperationsInput | bigint | number | null
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    expiresAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    completedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    cancelledAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    cancellationNote?: NullableStringFieldUpdateOperationsInput | string | null
+    priority?: IntFieldUpdateOperationsInput | number
+    contributionLogs?: WageringContributionLogUncheckedUpdateManyWithoutWageringRequirementNestedInput
   }
 
-  export type RollingUncheckedUpdateManyWithoutDepositDetailInput = {
+  export type WageringRequirementUncheckedUpdateManyWithoutDepositDetailInput = {
     id?: BigIntFieldUpdateOperationsInput | bigint | number
+    uid?: StringFieldUpdateOperationsInput | string
     userId?: BigIntFieldUpdateOperationsInput | bigint | number
-    sourceType?: EnumRollingSourceTypeFieldUpdateOperationsInput | $Enums.RollingSourceType
-    userPromotionId?: NullableBigIntFieldUpdateOperationsInput | bigint | number | null
+    currency?: EnumExchangeCurrencyCodeFieldUpdateOperationsInput | $Enums.ExchangeCurrencyCode
+    sourceType?: EnumWageringSourceTypeFieldUpdateOperationsInput | $Enums.WageringSourceType
     requiredAmount?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
     currentAmount?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
     cancellationBalanceThreshold?: NullableDecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string | null
-    status?: EnumRollingStatusFieldUpdateOperationsInput | $Enums.RollingStatus
-    depositAmount?: NullableDecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string | null
-    bonusAmount?: NullableDecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string | null
-    completedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
-    cancelledAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    status?: EnumWageringStatusFieldUpdateOperationsInput | $Enums.WageringStatus
+    userPromotionId?: NullableBigIntFieldUpdateOperationsInput | bigint | number | null
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    expiresAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    completedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    cancelledAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    cancellationNote?: NullableStringFieldUpdateOperationsInput | string | null
+    priority?: IntFieldUpdateOperationsInput | number
   }
 
   export type DepositDetailCreateManyCryptoConfigInput = {
@@ -94919,7 +97116,7 @@ export namespace Prisma {
     user?: UserUpdateOneRequiredWithoutDepositDetailsNestedInput
     BankConfig?: BankConfigUpdateOneWithoutDepositDetailsNestedInput
     transaction?: TransactionUpdateOneWithoutDepositDetailNestedInput
-    Rolling?: RollingUpdateManyWithoutDepositDetailNestedInput
+    wageringRequirements?: WageringRequirementUpdateManyWithoutDepositDetailNestedInput
   }
 
   export type DepositDetailUncheckedUpdateWithoutCryptoConfigInput = {
@@ -94953,7 +97150,7 @@ export namespace Prisma {
     failureReason?: NullableStringFieldUpdateOperationsInput | string | null
     providerMetadata?: NullableJsonNullValueInput | InputJsonValue
     bankConfigId?: NullableBigIntFieldUpdateOperationsInput | bigint | number | null
-    Rolling?: RollingUncheckedUpdateManyWithoutDepositDetailNestedInput
+    wageringRequirements?: WageringRequirementUncheckedUpdateManyWithoutDepositDetailNestedInput
   }
 
   export type DepositDetailUncheckedUpdateManyWithoutCryptoConfigInput = {
@@ -95053,7 +97250,7 @@ export namespace Prisma {
     user?: UserUpdateOneRequiredWithoutDepositDetailsNestedInput
     CryptoConfig?: CryptoConfigUpdateOneWithoutDepositDetailsNestedInput
     transaction?: TransactionUpdateOneWithoutDepositDetailNestedInput
-    Rolling?: RollingUpdateManyWithoutDepositDetailNestedInput
+    wageringRequirements?: WageringRequirementUpdateManyWithoutDepositDetailNestedInput
   }
 
   export type DepositDetailUncheckedUpdateWithoutBankConfigInput = {
@@ -95087,7 +97284,7 @@ export namespace Prisma {
     failureReason?: NullableStringFieldUpdateOperationsInput | string | null
     providerMetadata?: NullableJsonNullValueInput | InputJsonValue
     cryptoConfigId?: NullableBigIntFieldUpdateOperationsInput | bigint | number | null
-    Rolling?: RollingUncheckedUpdateManyWithoutDepositDetailNestedInput
+    wageringRequirements?: WageringRequirementUncheckedUpdateManyWithoutDepositDetailNestedInput
   }
 
   export type DepositDetailUncheckedUpdateManyWithoutBankConfigInput = {
@@ -95218,7 +97415,7 @@ export namespace Prisma {
     currency?: EnumExchangeCurrencyCodeFieldUpdateOperationsInput | $Enums.ExchangeCurrencyCode
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
-    Rolling?: RollingUpdateManyWithoutUserPromotionNestedInput
+    wageringRequirements?: WageringRequirementUpdateManyWithoutUserPromotionNestedInput
     user?: UserUpdateOneRequiredWithoutUserPromotionNestedInput
   }
 
@@ -95233,7 +97430,7 @@ export namespace Prisma {
     currency?: EnumExchangeCurrencyCodeFieldUpdateOperationsInput | $Enums.ExchangeCurrencyCode
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
-    Rolling?: RollingUncheckedUpdateManyWithoutUserPromotionNestedInput
+    wageringRequirements?: WageringRequirementUncheckedUpdateManyWithoutUserPromotionNestedInput
   }
 
   export type UserPromotionUncheckedUpdateManyWithoutPromotionInput = {
@@ -95249,72 +97446,86 @@ export namespace Prisma {
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
   }
 
-  export type RollingCreateManyUserPromotionInput = {
+  export type WageringRequirementCreateManyUserPromotionInput = {
     id?: bigint | number
+    uid?: string
     userId: bigint | number
-    sourceType?: $Enums.RollingSourceType
+    currency: $Enums.ExchangeCurrencyCode
+    sourceType?: $Enums.WageringSourceType
     requiredAmount: Decimal | DecimalJsLike | number | string
     currentAmount?: Decimal | DecimalJsLike | number | string
     cancellationBalanceThreshold?: Decimal | DecimalJsLike | number | string | null
-    status?: $Enums.RollingStatus
-    depositAmount?: Decimal | DecimalJsLike | number | string | null
-    bonusAmount?: Decimal | DecimalJsLike | number | string | null
-    completedAt?: Date | string | null
-    cancelledAt?: Date | string | null
+    status?: $Enums.WageringStatus
+    depositDetailId?: bigint | number | null
     createdAt?: Date | string
     updatedAt?: Date | string
-    depositDetailId?: bigint | number | null
+    expiresAt?: Date | string | null
+    completedAt?: Date | string | null
+    cancelledAt?: Date | string | null
+    cancellationNote?: string | null
+    priority?: number
   }
 
-  export type RollingUpdateWithoutUserPromotionInput = {
+  export type WageringRequirementUpdateWithoutUserPromotionInput = {
     id?: BigIntFieldUpdateOperationsInput | bigint | number
-    sourceType?: EnumRollingSourceTypeFieldUpdateOperationsInput | $Enums.RollingSourceType
+    uid?: StringFieldUpdateOperationsInput | string
+    sourceType?: EnumWageringSourceTypeFieldUpdateOperationsInput | $Enums.WageringSourceType
     requiredAmount?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
     currentAmount?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
     cancellationBalanceThreshold?: NullableDecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string | null
-    status?: EnumRollingStatusFieldUpdateOperationsInput | $Enums.RollingStatus
-    depositAmount?: NullableDecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string | null
-    bonusAmount?: NullableDecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string | null
-    completedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
-    cancelledAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    status?: EnumWageringStatusFieldUpdateOperationsInput | $Enums.WageringStatus
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
-    DepositDetail?: DepositDetailUpdateOneWithoutRollingNestedInput
-    user?: UserUpdateOneRequiredWithoutRollingNestedInput
+    expiresAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    completedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    cancelledAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    cancellationNote?: NullableStringFieldUpdateOperationsInput | string | null
+    priority?: IntFieldUpdateOperationsInput | number
+    DepositDetail?: DepositDetailUpdateOneWithoutWageringRequirementsNestedInput
+    userWallet?: UserWalletUpdateOneRequiredWithoutWageringRequirementsNestedInput
+    user?: UserUpdateOneRequiredWithoutWageringRequirementsNestedInput
+    contributionLogs?: WageringContributionLogUpdateManyWithoutWageringRequirementNestedInput
   }
 
-  export type RollingUncheckedUpdateWithoutUserPromotionInput = {
+  export type WageringRequirementUncheckedUpdateWithoutUserPromotionInput = {
     id?: BigIntFieldUpdateOperationsInput | bigint | number
+    uid?: StringFieldUpdateOperationsInput | string
     userId?: BigIntFieldUpdateOperationsInput | bigint | number
-    sourceType?: EnumRollingSourceTypeFieldUpdateOperationsInput | $Enums.RollingSourceType
+    currency?: EnumExchangeCurrencyCodeFieldUpdateOperationsInput | $Enums.ExchangeCurrencyCode
+    sourceType?: EnumWageringSourceTypeFieldUpdateOperationsInput | $Enums.WageringSourceType
     requiredAmount?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
     currentAmount?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
     cancellationBalanceThreshold?: NullableDecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string | null
-    status?: EnumRollingStatusFieldUpdateOperationsInput | $Enums.RollingStatus
-    depositAmount?: NullableDecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string | null
-    bonusAmount?: NullableDecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string | null
-    completedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
-    cancelledAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    status?: EnumWageringStatusFieldUpdateOperationsInput | $Enums.WageringStatus
+    depositDetailId?: NullableBigIntFieldUpdateOperationsInput | bigint | number | null
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
-    depositDetailId?: NullableBigIntFieldUpdateOperationsInput | bigint | number | null
+    expiresAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    completedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    cancelledAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    cancellationNote?: NullableStringFieldUpdateOperationsInput | string | null
+    priority?: IntFieldUpdateOperationsInput | number
+    contributionLogs?: WageringContributionLogUncheckedUpdateManyWithoutWageringRequirementNestedInput
   }
 
-  export type RollingUncheckedUpdateManyWithoutUserPromotionInput = {
+  export type WageringRequirementUncheckedUpdateManyWithoutUserPromotionInput = {
     id?: BigIntFieldUpdateOperationsInput | bigint | number
+    uid?: StringFieldUpdateOperationsInput | string
     userId?: BigIntFieldUpdateOperationsInput | bigint | number
-    sourceType?: EnumRollingSourceTypeFieldUpdateOperationsInput | $Enums.RollingSourceType
+    currency?: EnumExchangeCurrencyCodeFieldUpdateOperationsInput | $Enums.ExchangeCurrencyCode
+    sourceType?: EnumWageringSourceTypeFieldUpdateOperationsInput | $Enums.WageringSourceType
     requiredAmount?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
     currentAmount?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
     cancellationBalanceThreshold?: NullableDecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string | null
-    status?: EnumRollingStatusFieldUpdateOperationsInput | $Enums.RollingStatus
-    depositAmount?: NullableDecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string | null
-    bonusAmount?: NullableDecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string | null
-    completedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
-    cancelledAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    status?: EnumWageringStatusFieldUpdateOperationsInput | $Enums.WageringStatus
+    depositDetailId?: NullableBigIntFieldUpdateOperationsInput | bigint | number | null
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
-    depositDetailId?: NullableBigIntFieldUpdateOperationsInput | bigint | number | null
+    expiresAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    completedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    cancelledAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    cancellationNote?: NullableStringFieldUpdateOperationsInput | string | null
+    priority?: IntFieldUpdateOperationsInput | number
   }
 
   export type UserTierCreateManyTierInput = {
@@ -95495,6 +97706,42 @@ export namespace Prisma {
     bonusAmount?: NullableDecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string | null
     changedAt?: DateTimeFieldUpdateOperationsInput | Date | string
     changeBy?: NullableStringFieldUpdateOperationsInput | string | null
+  }
+
+  export type WageringContributionLogCreateManyWageringRequirementInput = {
+    id?: bigint | number
+    gameRoundId: bigint | number
+    requestAmount: Decimal | DecimalJsLike | number | string
+    contributionRate: Decimal | DecimalJsLike | number | string
+    contributedAmount: Decimal | DecimalJsLike | number | string
+    createdAt?: Date | string
+  }
+
+  export type WageringContributionLogUpdateWithoutWageringRequirementInput = {
+    id?: BigIntFieldUpdateOperationsInput | bigint | number
+    gameRoundId?: BigIntFieldUpdateOperationsInput | bigint | number
+    requestAmount?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
+    contributionRate?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
+    contributedAmount?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+  }
+
+  export type WageringContributionLogUncheckedUpdateWithoutWageringRequirementInput = {
+    id?: BigIntFieldUpdateOperationsInput | bigint | number
+    gameRoundId?: BigIntFieldUpdateOperationsInput | bigint | number
+    requestAmount?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
+    contributionRate?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
+    contributedAmount?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+  }
+
+  export type WageringContributionLogUncheckedUpdateManyWithoutWageringRequirementInput = {
+    id?: BigIntFieldUpdateOperationsInput | bigint | number
+    gameRoundId?: BigIntFieldUpdateOperationsInput | bigint | number
+    requestAmount?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
+    contributionRate?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
+    contributedAmount?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
   }
 
 
