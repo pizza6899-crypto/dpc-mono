@@ -8,7 +8,6 @@ import { WageringRequirementAdminResponseDto } from './dto/response/wagering-req
 import { GetWageringRequirementsAdminQueryDto } from './dto/request/get-wagering-requirements-admin-query.dto';
 import { PaginatedWageringRequirementAdminResponseDto } from './dto/response/paginated-wagering-requirement-admin.response.dto';
 import { VoidWageringRequirementDto } from './dto/request/void-wagering.dto';
-import { plainToInstance } from 'class-transformer';
 import { WAGERING_REQUIREMENT_REPOSITORY } from '../../ports';
 import type { WageringRequirementRepositoryPort } from '../../ports';
 import { AuditLog } from '../../../../modules/audit-log/infrastructure/audit-log.decorator';
@@ -91,7 +90,7 @@ export class WageringRequirementAdminController {
     async voidRequirement(
         @Param('id') id: string,
         @Body() dto: VoidWageringRequirementDto,
-    ): Promise<WageringRequirementAdminResponseDto> {
+    ): Promise<any> {
         const requirement = await this.findService.findById(BigInt(id));
         if (!requirement) {
             throw new WageringRequirementNotFoundException(id);
@@ -103,6 +102,26 @@ export class WageringRequirementAdminController {
         // Persist via repository
         const updated = await this.repository.save(requirement);
 
-        return plainToInstance(WageringRequirementAdminResponseDto, updated, { excludeExtraneousValues: true });
+        return {
+            id: updated.id?.toString(),
+            userId: updated.userId?.toString(),
+            uid: updated.uid,
+            currency: updated.currency,
+            sourceType: updated.sourceType,
+            requiredAmount: updated.requiredAmount?.toString(),
+            currentAmount: updated.currentAmount?.toString(),
+            remainingAmount: updated.remainingAmount?.toString(),
+            status: updated.status,
+            priority: updated.priority,
+            createdAt: updated.createdAt,
+            updatedAt: updated.updatedAt,
+            expiresAt: updated.expiresAt,
+            completedAt: updated.completedAt,
+            cancelledAt: updated.cancelledAt,
+            cancellationNote: updated.cancellationNote,
+            depositDetailId: updated.depositDetailId?.toString(),
+            userPromotionId: updated.userPromotionId?.toString(),
+            cancellationBalanceThreshold: updated.cancellationBalanceThreshold?.toString(),
+        };
     }
 }
