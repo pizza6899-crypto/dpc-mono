@@ -2,7 +2,7 @@ import { Inject, Injectable } from '@nestjs/common';
 import { WAGERING_REQUIREMENT_REPOSITORY } from '../ports';
 import type { WageringRequirementRepositoryPort } from '../ports';
 import { WageringRequirement } from '../domain';
-import type { WageringStatus } from '@repo/database';
+import type { WageringStatus, ExchangeCurrencyCode, WageringSourceType } from '@repo/database';
 import type { PaginatedData } from 'src/common/http/types/pagination.types';
 
 @Injectable()
@@ -21,8 +21,12 @@ export class FindWageringRequirementsService {
     }
 
     async findPaginated(params: {
-        userId: bigint;
+        userId?: bigint;
         statuses?: WageringStatus[];
+        sourceType?: WageringSourceType;
+        currency?: ExchangeCurrencyCode;
+        fromAt?: Date;
+        toAt?: Date;
         page: number;
         limit: number;
         sortBy?: string;

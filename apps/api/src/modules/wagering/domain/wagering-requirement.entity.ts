@@ -42,13 +42,67 @@ export class WageringRequirement {
         return this.props.currency;
     }
 
+    get sourceType(): WageringSourceType {
+        return this.props.sourceType;
+    }
+
+    get requiredAmount(): Prisma.Decimal {
+        return this.props.requiredAmount || new Prisma.Decimal('0');
+    }
+
+    get currentAmount(): Prisma.Decimal {
+        return this.props.currentAmount || new Prisma.Decimal('0');
+    }
+
+    get priority(): number {
+        return this.props.priority;
+    }
+
     get status(): WageringStatus {
         return this.props.status;
     }
 
+    get depositDetailId(): bigint | null {
+        return this.props.depositDetailId;
+    }
+
+    get userPromotionId(): bigint | null {
+        return this.props.userPromotionId;
+    }
+
+    get createdAt(): Date {
+        return this.props.createdAt;
+    }
+
+    get updatedAt(): Date {
+        return this.props.updatedAt;
+    }
+
+    get expiresAt(): Date | null {
+        return this.props.expiresAt;
+    }
+
+    get completedAt(): Date | null {
+        return this.props.completedAt;
+    }
+
+    get cancelledAt(): Date | null {
+        return this.props.cancelledAt;
+    }
+
+    get cancellationNote(): string | null {
+        return this.props.cancellationNote;
+    }
+
+    get cancellationBalanceThreshold(): Prisma.Decimal | null {
+        return this.props.cancellationBalanceThreshold;
+    }
+
     get remainingAmount(): Prisma.Decimal {
-        const remaining = this.props.requiredAmount.sub(this.props.currentAmount);
-        return remaining.isNeg() ? new Prisma.Decimal(0) : remaining;
+        const req = this.requiredAmount;
+        const curr = this.currentAmount;
+        const remaining = req.sub(curr);
+        return remaining.isNeg() ? new Prisma.Decimal('0') : remaining;
     }
 
     get isCompleted(): boolean {

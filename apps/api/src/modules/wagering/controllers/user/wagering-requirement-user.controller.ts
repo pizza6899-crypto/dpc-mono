@@ -7,7 +7,6 @@ import { FindWageringRequirementsService } from '../../application/find-wagering
 import { GetMyWageringRequirementsQueryDto } from './dto/request/get-my-wagering-requirements-query.dto';
 import { WageringRequirementUserResponseDto } from './dto/response/wagering-requirement-user.response.dto';
 import { PaginatedWageringRequirementUserResponseDto } from './dto/response/paginated-wagering-requirement-user.response.dto';
-import { plainToInstance } from 'class-transformer';
 import { Paginated } from '../../../../common/http/decorators/paginated.decorator';
 
 @ApiTags('Wagering Requirements')
@@ -29,14 +28,29 @@ export class WageringRequirementUserController {
         const paginatedData = await this.findService.findPaginated({
             userId: user.id,
             statuses: query.statuses,
+            currency: query.currency,
+            sourceType: query.sourceType,
+            fromAt: query.fromAt,
+            toAt: query.toAt,
             page: query.page!,
             limit: query.limit!,
             sortBy: query.sortBy,
             sortOrder: query.sortOrder,
         });
 
+        const mappedData = paginatedData.data.map(item => ({
+            uid: item.uid,
+            currency: item.currency,
+            requiredAmount: item.requiredAmount?.toString(),
+            currentAmount: item.currentAmount?.toString(),
+            remainingAmount: item.remainingAmount?.toString(),
+            status: item.status,
+            expiresAt: item.expiresAt,
+            createdAt: item.createdAt,
+        }));
+
         return {
-            data: plainToInstance(WageringRequirementUserResponseDto, paginatedData.data, { excludeExtraneousValues: true }),
+            data: mappedData,
             page: paginatedData.page,
             limit: paginatedData.limit,
             total: paginatedData.total,

@@ -1,5 +1,5 @@
 import type { WageringRequirement } from '../domain/wagering-requirement.entity';
-import type { ExchangeCurrencyCode, WageringStatus } from '@repo/database';
+import type { ExchangeCurrencyCode, WageringStatus, WageringSourceType } from '@repo/database';
 import type { PaginatedData } from 'src/common/http/types/pagination.types';
 
 export interface WageringRequirementRepositoryPort {
@@ -53,8 +53,12 @@ export interface WageringRequirementRepositoryPort {
      * 유저의 모든 롤링 조건을 페이지네이션하여 조회합니다.
      */
     findPaginated(params: {
-        userId: bigint;
+        userId?: bigint;
         statuses?: WageringStatus[];
+        sourceType?: WageringSourceType;
+        currency?: ExchangeCurrencyCode;
+        fromAt?: Date;
+        toAt?: Date;
         page: number;
         limit: number;
         sortBy?: string;

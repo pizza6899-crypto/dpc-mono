@@ -29,20 +29,46 @@ export class WageringRequirementAdminController {
 
     @Get()
     @Paginated()
-    @ApiOperation({ summary: 'Find wagering requirements by User ID (유저 ID로 롤링 조건 조회)' })
+    @ApiOperation({ summary: 'Find wagering requirements with filters (필터로 롤링 조건 조회)' })
     @ApiResponse({ type: PaginatedWageringRequirementAdminResponseDto })
-    async findByUserId(@Query() query: GetWageringRequirementsAdminQueryDto): Promise<any> {
+    async list(@Query() query: GetWageringRequirementsAdminQueryDto): Promise<any> {
         const paginatedData = await this.findService.findPaginated({
-            userId: BigInt(query.userId),
+            userId: query.userId ? BigInt(query.userId) : undefined,
             statuses: query.statuses,
+            sourceType: query.sourceType,
+            currency: query.currency,
+            fromAt: query.fromAt,
+            toAt: query.toAt,
             page: query.page!,
             limit: query.limit!,
             sortBy: query.sortBy,
             sortOrder: query.sortOrder,
         });
 
+        const mappedData = paginatedData.data.map(item => ({
+            id: item.id?.toString(),
+            userId: item.userId?.toString(),
+            uid: item.uid,
+            currency: item.currency,
+            sourceType: item.sourceType,
+            requiredAmount: item.requiredAmount?.toString(),
+            currentAmount: item.currentAmount?.toString(),
+            remainingAmount: item.remainingAmount?.toString(),
+            status: item.status,
+            priority: item.priority,
+            createdAt: item.createdAt,
+            updatedAt: item.updatedAt,
+            expiresAt: item.expiresAt,
+            completedAt: item.completedAt,
+            cancelledAt: item.cancelledAt,
+            cancellationNote: item.cancellationNote,
+            depositDetailId: item.depositDetailId?.toString(),
+            userPromotionId: item.userPromotionId?.toString(),
+            cancellationBalanceThreshold: item.cancellationBalanceThreshold?.toString(),
+        }));
+
         return {
-            data: plainToInstance(WageringRequirementAdminResponseDto, paginatedData.data, { excludeExtraneousValues: true }),
+            data: mappedData,
             page: paginatedData.page,
             limit: paginatedData.limit,
             total: paginatedData.total,

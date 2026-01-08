@@ -4,7 +4,7 @@ import { type PrismaTransaction } from 'src/infrastructure/prisma/prisma.module'
 import type { WageringRequirementRepositoryPort } from '../ports';
 import { WageringRequirement, WageringRequirementException, WageringRequirementNotFoundException } from '../domain';
 import { WageringRequirementMapper } from './wagering-requirement.mapper';
-import type { ExchangeCurrencyCode, WageringStatus } from '@repo/database';
+import { type ExchangeCurrencyCode, type WageringStatus, type WageringSourceType } from '@repo/database';
 import type { PaginatedData } from 'src/common/http/types/pagination.types';
 
 @Injectable()
@@ -109,22 +109,43 @@ export class WageringRequirementRepository implements WageringRequirementReposit
     }
 
     async findPaginated(params: {
-        userId: bigint;
+        userId?: bigint;
         statuses?: WageringStatus[];
+        sourceType?: WageringSourceType;
+        currency?: ExchangeCurrencyCode;
+        fromAt?: Date;
+        toAt?: Date;
         page: number;
         limit: number;
         sortBy?: string;
         sortOrder?: 'asc' | 'desc';
     }): Promise<PaginatedData<WageringRequirement>> {
-        const { userId, statuses, page, limit, sortBy = 'createdAt', sortOrder = 'desc' } = params;
+        const { userId, statuses, sourceType, currency, fromAt, toAt, page, limit, sortBy = 'createdAt', sortOrder = 'desc' } = params;
         const skip = (page - 1) * limit;
 
-        const where: any = {
-            userId,
-        };
+        const where: any = {};
+
+        if (userId) {
+            where.userId = userId;
+        }
 
         if (statuses && statuses.length > 0) {
             where.status = { in: statuses };
+        }
+
+        if (sourceType) {
+            where.sourceType = sourceType;
+        }
+
+        if (currency) {
+            where.currency = currency;
+        }
+
+        if (fromAt || toAt) {
+            where.createdAt = {
+                gte: fromAt ?? undefined,
+                lte: toAt ?? undefined,
+            };
         }
 
         const [total, results] = await Promise.all([
@@ -133,7 +154,7 @@ export class WageringRequirementRepository implements WageringRequirementReposit
                 where,
                 skip,
                 take: limit,
-                orderBy: { [sortBy]: sortOrder },
+                orderBy: { [sortBy as any]: sortOrder },
             }),
         ]);
 

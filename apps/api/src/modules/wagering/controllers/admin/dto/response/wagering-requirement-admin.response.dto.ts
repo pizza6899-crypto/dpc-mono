@@ -5,13 +5,17 @@ import { ApiProperty } from '@nestjs/swagger';
 export class WageringRequirementAdminResponseDto {
     @Expose()
     @ApiProperty({ description: 'ID', type: String })
-    @Transform(({ value }) => value.toString())
+    @Transform(({ value }) => (value != null ? value.toString() : value))
     id: bigint;
 
     @Expose()
     @ApiProperty({ description: 'User ID', type: String })
-    @Transform(({ value }) => value.toString())
+    @Transform(({ value }) => (value != null ? value.toString() : value))
     userId: bigint;
+
+    @Expose()
+    @ApiProperty({ description: 'UID' })
+    uid: string;
 
     @Expose()
     @ApiProperty({ description: 'Currency' })
@@ -23,11 +27,18 @@ export class WageringRequirementAdminResponseDto {
 
     @Expose()
     @ApiProperty({ description: 'Required Amount' })
+    @Transform(({ value }) => (value != null ? value.toString() : value))
     requiredAmount: string;
 
     @Expose()
     @ApiProperty({ description: 'Current Amount' })
+    @Transform(({ value }) => (value != null ? value.toString() : value))
     currentAmount: string;
+
+    @Expose()
+    @ApiProperty({ description: 'Remaining Amount' })
+    @Transform(({ value }) => (value != null ? value.toString() : value))
+    remainingAmount: string;
 
     @Expose()
     @ApiProperty({ description: 'Status (ACTIVE, COMPLETED, CANCELLED, EXPIRED, VOIDED)' })
@@ -60,4 +71,19 @@ export class WageringRequirementAdminResponseDto {
     @Expose()
     @ApiProperty({ description: 'Cancellation Note', required: false })
     cancellationNote: string | null;
+
+    @Expose()
+    @ApiProperty({ description: 'Deposit Detail ID', required: false })
+    @Transform(({ value }) => (value != null ? value.toString() : value))
+    depositDetailId: bigint | null;
+
+    @Expose()
+    @ApiProperty({ description: 'User Promotion ID', required: false })
+    @Transform(({ value }) => (value != null ? value.toString() : value))
+    userPromotionId: bigint | null;
+
+    @Expose()
+    @ApiProperty({ description: 'Cancellation Balance Threshold', required: false })
+    @Transform(({ value }) => (value != null ? value.toString() : value))
+    cancellationBalanceThreshold: string | null;
 }
