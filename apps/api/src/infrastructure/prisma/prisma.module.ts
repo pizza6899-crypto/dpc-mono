@@ -31,4 +31,4 @@ export type PrismaTransaction = Transaction<PrismaTransactionalAdapter>;
   providers: [PrismaService],
   exports: [PrismaService, ClsModule],
 })
-export class PrismaModule {}
+export class PrismaModule { }

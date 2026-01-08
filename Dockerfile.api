@@ -1,34 +1,57 @@
-# 1. 베이스 이미지 선택
-FROM node:22-slim
-
-# 2. 환경 변수 및 작업 디렉토리 설정
+# 1. Builder stage
+FROM node:24-slim AS builder
 WORKDIR /app
 
-# 3. pnpm 설치 (Corepack 활용)
+# pnpm 및 시스템 의존성 설치
+ENV PNPM_HOME="/pnpm"
+ENV PATH="$PNPM_HOME:$PATH"
 RUN corepack enable && corepack prepare pnpm@latest --activate
+RUN apt-get update && apt-get install -y openssl python3 make g++
 
-# 4. 설정 파일 복사 (캐시 활용을 위해 lock파일 먼저)
-COPY pnpm-lock.yaml ./
-COPY package.json ./
-# 모노레포라면 워크스페이스 설정 파일도 필요합니다
-COPY pnpm-workspace.yaml ./ 
+# 락파일과 워크스페이스 설정만 먼저 복사하여 종속성 설치 캐싱
+COPY pnpm-lock.yaml pnpm-workspace.yaml package.json ./
+# 하위 패키지들의 package.json들도 복사 (pnpm install을 위해 필요)
+COPY apps/api/package.json ./apps/api/
+COPY packages/shared/package.json ./packages/shared/
+COPY packages/database/package.json ./packages/database/
 
-# 5. 의존성 설치
-# --shamefully-hoist: 모든 모듈을 node_modules 루트에 평평하게 깔아서 경로 문제를 방지
-# --frozen-lockfile: lock파일 변경 없이 설치
-RUN pnpm install --shamefully-hoist --frozen-lockfile
+# 의존성 설치 (캐시 마운트 활용)
+RUN --mount=type=cache,id=pnpm,target=/pnpm/store pnpm install --frozen-lockfile
 
-# 6. 소스 코드 전체 복사
+# 소스 코드 전체 복사
 COPY . .
 
-# 7. 빌드 실행 (NestJS 등)
-RUN pnpm -F shared i
-RUN pnpm -F shared build
-RUN pnpm -F database i
-RUN pnpm -F database build
-RUN pnpm -F api i
-RUN pnpm -F api build
+# 빌드 실행
+# 1. Prisma 클라이언트 생성 (데이터베이스 URL은 생성 시점에만 필요하므로 더미 값 사용)
+RUN DATABASE_URL="postgresql://dummy:dummy@localhost:5432/db" pnpm -F @repo/database generate
 
-# 8. 포트 개방 및 실행
-EXPOSE 3000
-CMD ["node", "apps/api/dist/src/main.js"]
+# 2. 관련 패키지들 빌드 (shared -> api 순서로 자동 빌드)
+# pnpm -r --filter api... build 는 api와 그 의존성 패키지들의 build 스크립트를 실행합니다.
+RUN pnpm -r --filter api... build
+
+# 3. 프로덕션 실행용 격리 배포
+# --prod: devDependencies 제외
+# --legacy: 프로덕션 환경과의 호환성을 위해 구조 유지
+RUN pnpm --filter api --prod deploy --legacy /out
+
+# 빌드된 dist를 deploy된 폴더 안으로 복사
+RUN cp -r apps/api/dist /out/dist
+
+# 2. Runner stage
+FROM node:24-slim AS runner
+WORKDIR /app
+
+# 런타임 최소 패키지 설치
+RUN apt-get update && apt-get install -y \
+    ca-certificates \
+    openssl \
+    && rm -rf /var/lib/apt/lists/*
+
+# 빌드 결과물만 복사
+COPY --from=builder /out ./
+
+EXPOSE 3001
+ENV NODE_ENV="production"
+
+# pnpm deploy 이후 구조에서는 dist가 루트에 위치함
+CMD ["node", "dist/src/main.js"]

@@ -31,7 +31,7 @@
     "zip": "node scripts/package-for-deploy.js && open .",
     "swagger": "pnpm -F api swagger && pnpm -F admin orval",
     "docker:build": "node scripts/docker-build.js",
-    "docker:run": "docker run --env-file .env -p 3000:3000 dpc-api:latest",
+    "docker:run": "docker run --rm --env-file .env.local -p 3001:3001 dpc-api:latest",
     "docker:push-ecr": "pnpm -F api docker:tag-ecr && pnpm -F api docker:build && pnpm -F api docker:push",
     "docker:clean": "docker system prune -f"
   },
@@ -40,5 +40,10 @@
     "dotenv-cli": "^11.0.0",
     "turbo": "latest"
   },
-  "packageManager": "pnpm@10.26.2"
+  "packageManager": "pnpm@10.26.2",
+  "pnpm": {
+    "overrides": {
+      "typescript": "^5.9.3"
+    }
+  }
 }

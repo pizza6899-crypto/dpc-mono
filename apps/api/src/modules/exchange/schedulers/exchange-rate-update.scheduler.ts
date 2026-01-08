@@ -25,7 +25,7 @@ export class ExchangeRateUpdateScheduler implements OnApplicationBootstrap {
     private readonly openExchangeRatesApiService: OpenExchangeRatesApiService,
     private readonly exchangeRateValidator: ExchangeRateValidator,
     private readonly exchangeRateService: ExchangeRateService,
-  ) {}
+  ) { }
 
   /**
    * 애플리케이션 부팅 완료 후 환율 데이터가 없으면 즉시 업데이트
@@ -42,6 +42,7 @@ export class ExchangeRateUpdateScheduler implements OnApplicationBootstrap {
         this.logger.debug('환율 갱신 스케줄러가 비활성화되어 있습니다.');
         return;
       }
+
 
       // DB에 환율 데이터가 있는지 확인
       const count = await this.prismaService.exchangeRate.count({
@@ -60,7 +61,11 @@ export class ExchangeRateUpdateScheduler implements OnApplicationBootstrap {
         this.logger.log(`환율 데이터 ${count}개가 이미 존재합니다.`);
       }
     } catch (error) {
-      this.logger.error('초기 환율 데이터 로드 중 오류 발생', error);
+      this.logger.error(
+        `초기 환율 데이터 로드 중 오류 발생: [${(error as any)?.code || 'N/A'}] ${error instanceof Error ? error.message : String(error)
+        }`,
+        error instanceof Error ? error.stack : undefined,
+      );
       // 초기화 실패해도 앱은 계속 실행되도록 에러만 로깅
     }
   }

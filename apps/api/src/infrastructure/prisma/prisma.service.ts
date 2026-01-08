@@ -17,13 +17,17 @@ import { EnvService } from 'src/common/env/env.service';
 @Injectable()
 export class PrismaService
   extends PrismaClient<Prisma.PrismaClientOptions>
-  implements OnModuleInit, OnModuleDestroy
-{
+  implements OnModuleInit, OnModuleDestroy {
   private readonly logger = new Logger(PrismaService.name);
 
   constructor() {
     // DATABASE_URL 환경변수에서 연결 문자열 가져오기
-    const connectionString = process.env.DATABASE_URL;
+    let connectionString = process.env.DATABASE_URL || '';
+
+    // 환경 변수에 따옴표가 포함되어 있으면 제거 (Docker --env-file 이슈 대응)
+    const originalConnectionString = connectionString;
+    connectionString = connectionString.replace(/^["']|["']$/g, '');
+
     if (!connectionString) {
       throw new Error(
         'DATABASE_URL is not defined in environment variables. Please set DATABASE_URL in your .env file.',
