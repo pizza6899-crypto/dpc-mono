@@ -2,7 +2,6 @@
 import { Module } from '@nestjs/common';
 import { DepositController } from './controllers/user/deposit.controller';
 import { AdminDepositController } from './controllers/admin/deposit.controller';
-import { ConcurrencyModule } from '../../common/concurrency/concurrency.module';
 import { PrismaModule } from 'src/infrastructure/prisma/prisma.module';
 import { EnvModule } from 'src/common/env/env.module';
 import { UserValidationModule } from 'src/common/user-validation/user-validation.module';
@@ -38,7 +37,6 @@ import {
 
 @Module({
   imports: [
-    ConcurrencyModule,
     PrismaModule,
     EnvModule,
     UserValidationModule,

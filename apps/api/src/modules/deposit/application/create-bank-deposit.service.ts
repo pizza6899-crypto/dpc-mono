@@ -21,6 +21,7 @@ import {
 import { CreateDepositResponseDto } from '../dtos/create-deposit-response.dto';
 import { CreateBankDepositRequestDto } from '../dtos/create-bank-deposit-request.dto';
 import { CheckEligiblePromotionsService } from '../../promotion/application/check-eligible-promotions.service';
+import { Transactional } from '@nestjs-cls/transactional';
 
 interface CreateBankDepositParams extends CreateBankDepositRequestDto {
     userId: bigint;
@@ -38,6 +39,7 @@ export class CreateBankDepositService {
         private readonly promotionsService: CheckEligiblePromotionsService,
     ) { }
 
+    @Transactional()
     async execute(params: CreateBankDepositParams): Promise<CreateDepositResponseDto> {
         const {
             userId,
@@ -48,6 +50,9 @@ export class CreateBankDepositService {
             ipAddress,
             deviceFingerprint,
         } = params;
+
+        // 락 획득 (DB Advisory Lock)
+        await this.depositRepository.acquireUserLock(userId);
 
         // 0. 중복 입금 신청 확인
         const hasPendingDeposit = await this.depositRepository.existsPendingByUserId(userId);

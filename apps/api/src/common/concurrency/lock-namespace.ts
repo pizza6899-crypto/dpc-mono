@@ -9,5 +9,7 @@ export enum LockNamespace {
     TIER_CREATION = 1002, // 어드민 레벨에서 공통으로 사용
     USER_TIER = 1003,
     USER_WALLET = 1004,
+    DEPOSIT = 1005,
+    USER_DEPOSIT = 1006,
     // 향후 추가될 네임스페이스들
 }

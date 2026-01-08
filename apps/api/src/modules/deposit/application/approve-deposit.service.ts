@@ -41,6 +41,9 @@ export class ApproveDepositService {
     const { id, actuallyPaid, transactionHash, memo, adminId, requestInfo } =
       params;
 
+    // 락 획득 (DB Advisory Lock)
+    await this.depositRepository.acquireDepositLock(id);
+
     // 1. DepositDetail 조회 (transaction 포함)
     const deposit = await this.depositRepository.getById(id, {
       transaction: true,

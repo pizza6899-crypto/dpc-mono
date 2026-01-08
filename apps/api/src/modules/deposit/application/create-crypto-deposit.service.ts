@@ -20,6 +20,7 @@ import {
 import { CreateDepositResponseDto } from '../dtos/create-deposit-response.dto';
 import { CreateCryptoDepositRequestDto } from '../dtos/create-crypto-deposit-request.dto';
 import { CheckEligiblePromotionsService } from '../../promotion/application/check-eligible-promotions.service';
+import { Transactional } from '@nestjs-cls/transactional';
 
 interface CreateCryptoDepositParams extends CreateCryptoDepositRequestDto {
     userId: bigint;
@@ -37,6 +38,7 @@ export class CreateCryptoDepositService {
         private readonly checkEligiblePromotionsService: CheckEligiblePromotionsService,
     ) { }
 
+    @Transactional()
     async execute(params: CreateCryptoDepositParams): Promise<CreateDepositResponseDto> {
         const {
             userId,
@@ -47,6 +49,9 @@ export class CreateCryptoDepositService {
             ipAddress,
             deviceFingerprint,
         } = params;
+
+        // 락 획득 (DB Advisory Lock)
+        await this.depositRepository.acquireUserLock(userId);
 
         // 0. 중복 입금 신청 확인 (Pending 상태인 입금이 있으면 차단)
         const hasPendingDeposit = await this.depositRepository.existsPendingByUserId(userId);

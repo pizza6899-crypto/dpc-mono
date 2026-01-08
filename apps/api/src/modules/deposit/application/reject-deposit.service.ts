@@ -33,6 +33,9 @@ export class RejectDepositService {
   async execute(params: RejectDepositParams): Promise<RejectDepositResult> {
     const { id, failureReason, adminId } = params;
 
+    // 락 획득 (DB Advisory Lock)
+    await this.depositRepository.acquireDepositLock(id);
+
     // 1. DepositDetail 조회
     const deposit = await this.depositRepository.getById(id, {
       transaction: true,

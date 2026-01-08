@@ -20,5 +20,7 @@ export interface DepositDetailRepositoryPort {
   listByUserId(userId: bigint, query: any): Promise<{ items: DepositDetail[]; total: number }>;
   findByUidAndUserId(uid: string, userId: bigint): Promise<DepositDetail | null>;
   existsPendingByUserId(userId: bigint): Promise<boolean>;
+  acquireUserLock(userId: bigint): Promise<void>;
+  acquireDepositLock(depositId: bigint): Promise<void>;
 }
 

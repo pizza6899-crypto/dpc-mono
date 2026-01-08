@@ -7,6 +7,10 @@ import type { DepositDetailRepositoryPort } from '../ports/out/deposit-detail.re
 import { DepositDetailMapper } from './deposit-detail.mapper';
 import { TransactionStatus, TransactionType, ExchangeCurrencyCode, Prisma } from '@repo/database';
 import { generateUid } from 'src/utils/id.util';
+import { LockNamespace } from 'src/common/concurrency/lock-namespace';
+import { DomainException } from 'src/common/exception/domain.exception';
+import { MessageCode } from '@repo/shared';
+import { HttpStatus } from '@nestjs/common';
 
 /**
  * DepositDetail Repository Implementation
@@ -183,6 +187,47 @@ export class DepositDetailRepository implements DepositDetailRepositoryPort {
       },
     });
     return count > 0;
+  }
+
+  async acquireUserLock(userId: bigint): Promise<void> {
+    try {
+      await this.tx.$executeRaw`SET LOCAL lock_timeout = '3s'`;
+      await this.tx.$executeRaw`SELECT pg_advisory_xact_lock(('x' || substr(md5(${LockNamespace.USER_DEPOSIT}::text || ${userId.toString()}), 1, 16))::bit(64)::bigint)`;
+    } catch (error: any) {
+      if (this.isLockTimeout(error)) {
+        throw new DomainException(
+          'Your deposit is being processed. Please try again later.',
+          MessageCode.THROTTLE_TOO_MANY_REQUESTS,
+          HttpStatus.TOO_MANY_REQUESTS,
+        );
+      }
+      throw error;
+    }
+  }
+
+  async acquireDepositLock(depositId: bigint): Promise<void> {
+    try {
+      await this.tx.$executeRaw`SET LOCAL lock_timeout = '3s'`;
+      await this.tx.$executeRaw`SELECT pg_advisory_xact_lock(('x' || substr(md5(${LockNamespace.DEPOSIT}::text || ${depositId.toString()}), 1, 16))::bit(64)::bigint)`;
+    } catch (error: any) {
+      if (this.isLockTimeout(error)) {
+        throw new DomainException(
+          'This deposit is being processed by another administrator. Please try again later.',
+          MessageCode.THROTTLE_TOO_MANY_REQUESTS,
+          HttpStatus.TOO_MANY_REQUESTS,
+        );
+      }
+      throw error;
+    }
+  }
+
+  private isLockTimeout(error: any): boolean {
+    return (
+      error.code === '55P03' ||
+      error.meta?.code === '55P03' ||
+      error.message?.includes('55P03') ||
+      error.message?.includes('lock timeout')
+    );
   }
 }
 
