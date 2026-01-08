@@ -15,11 +15,8 @@ import passport from 'passport';
 import { RedisStore } from 'connect-redis';
 import { createClient } from 'redis';
 import type { NestExpressApplication } from '@nestjs/platform-express';
-import { join } from 'path';
 import { SchedulerRegistry } from '@nestjs/schedule';
 import { Prisma } from '@repo/database';
-import { AsyncApiModule } from 'nestjs-asyncapi';
-import { AsyncApiDocumentBuilder } from 'nestjs-asyncapi';
 
 // BigInt JSON 직렬화 설정
 (BigInt.prototype as any).toJSON = function () {
@@ -152,24 +149,29 @@ async function bootstrap() {
       const document = SwaggerModule.createDocument(app, config);
       SwaggerModule.setup('api', app, document);
 
-      const asyncApiOptions = new AsyncApiDocumentBuilder()
-        .setTitle('DPC Backend WebSocket API')
-        .setDescription('DPC Backend WebSocket 이벤트 문서')
-        .setVersion('1.0')
-        .setDefaultContentType('application/json')
-        .addServer('local', {
-          url: `ws://localhost:${envService.app.port}`,
-          protocol: 'socket.io',
-          protocolVersion: '4',
-          description: 'DPC Backend WebSocket Server',
-        })
-        .build();
+      // AsyncAPI 설정 (운영 환경 제외)
+      if ((envService.app.nodeEnv as string) !== 'production') {
+        const { AsyncApiModule: DynamicAsyncApiModule, AsyncApiDocumentBuilder: DynamicAsyncApiDocumentBuilder } = require('nestjs-asyncapi');
 
-      const asyncapiDocument = await AsyncApiModule.createDocument(
-        app,
-        asyncApiOptions,
-      );
-      await AsyncApiModule.setup('async', app, asyncapiDocument);
+        const asyncApiOptions = new DynamicAsyncApiDocumentBuilder()
+          .setTitle('DPC Backend WebSocket API')
+          .setDescription('DPC Backend WebSocket 이벤트 문서')
+          .setVersion('1.0')
+          .setDefaultContentType('application/json')
+          .addServer('local', {
+            url: `ws://localhost:${envService.app.port}`,
+            protocol: 'socket.io',
+            protocolVersion: '4',
+            description: 'DPC Backend WebSocket Server',
+          })
+          .build();
+
+        const asyncapiDocument = await DynamicAsyncApiModule.createDocument(
+          app,
+          asyncApiOptions,
+        );
+        await DynamicAsyncApiModule.setup('async', app, asyncapiDocument);
+      }
     }
 
     const logger = app.get(Logger);

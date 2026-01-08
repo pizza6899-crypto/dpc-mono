@@ -22,24 +22,35 @@ RUN --mount=type=cache,id=pnpm,target=/pnpm/store pnpm install --frozen-lockfile
 COPY . .
 
 # 빌드 실행
-# 1. Prisma 클라이언트 생성 (데이터베이스 URL은 생성 시점에만 필요하므로 더미 값 사용)
+# 1. Prisma 클라이언트 생성
 RUN DATABASE_URL="postgresql://dummy:dummy@localhost:5432/db" pnpm -F @repo/database generate
 
 # 2. 관련 패키지들 빌드 (shared -> api 순서로 자동 빌드)
-# pnpm -r --filter api... build 는 api와 그 의존성 패키지들의 build 스크립트를 실행합니다.
 RUN pnpm -r --filter api... build
 
 # 3. 프로덕션 실행용 격리 배포
-# --prod: devDependencies 제외
-# --legacy: 프로덕션 환경과의 호환성을 위해 구조 유지
 RUN pnpm --filter api --prod deploy --legacy /out
 
 # 빌드된 dist를 deploy된 폴더 안으로 복사
 RUN cp -r apps/api/dist /out/dist
 
+# 4. 의존성 및 이미지 최적화 (arm64 엔진만 보존)
+RUN rm -rf /out/node_modules/.pnpm/typescript* \
+    && rm -rf /out/node_modules/.pnpm/prisma@* \
+    && rm -rf /out/node_modules/.pnpm/@prisma+studio-core* \
+    && rm -rf /out/node_modules/.pnpm/ts-node* \
+    # Prisma 엔진 최적화: linux-arm64용만 남기기
+    && find /out/node_modules/.pnpm -name "libquery_engine-*" ! -name "*linux-arm64-openssl-*.so.node" -delete \
+    # 기타 찌꺼기 제거
+    && find /out/node_modules -name "*.d.ts" -delete \
+    && find /out/node_modules -name "*.map" -delete \
+    && find /out/node_modules -name "*.md" -delete
+
 # 2. Runner stage
 FROM node:24-slim AS runner
 WORKDIR /app
+
+ENV NODE_ENV="production"
 
 # 런타임 최소 패키지 설치
 RUN apt-get update && apt-get install -y \
@@ -47,11 +58,13 @@ RUN apt-get update && apt-get install -y \
     openssl \
     && rm -rf /var/lib/apt/lists/*
 
-# 빌드 결과물만 복사
-COPY --from=builder /out ./
+# 최적화된 결과물만 복사
+COPY --from=builder /out/package.json ./
+COPY --from=builder /out/node_modules ./node_modules
+COPY --from=builder /out/dist ./dist
 
 EXPOSE 3001
 ENV NODE_ENV="production"
 
-# pnpm deploy 이후 구조에서는 dist가 루트에 위치함
-CMD ["node", "dist/src/main.js"]
+# 실행
+CMD ["node", "dist/main.js"]

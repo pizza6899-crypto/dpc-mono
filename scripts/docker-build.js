@@ -15,9 +15,9 @@ try {
       ...process.env, 
       DOCKER_BUILDKIT: '1' // 내 컴퓨터 변수는 안 쓰더라도 엔진 설정은 유지
     }
-});
+  });
   
-// execSync('docker system prune -f', { stdio: 'inherit' });
+  execSync('docker system prune -f', { stdio: 'inherit' });
   console.log(`✅ 빌드 성공: ${imageName}:${tag}`);
 
 } catch (error) {

@@ -17,7 +17,7 @@ import { EnvService } from 'src/common/env/env.service';
 import session from 'express-session';
 import passport from 'passport';
 import { ApiProperty } from '@nestjs/swagger';
-import { AsyncApiPub, AsyncApiSub } from 'nestjs-asyncapi';
+import { AsyncApiPub, AsyncApiSub } from 'src/common/decorators/async-api.decorator';
 import { IsNotEmpty, IsString, ValidateNested } from 'class-validator';
 import { Type } from 'class-transformer';
 import { CustomValidationPipe } from '../http/pipes/validation.pipe'; // 추가
@@ -26,7 +26,6 @@ import { ExceptionResponseDto } from './dtos/exception-response.dto';
 import { CreateSessionService } from 'src/modules/auth/session/application/create-session.service';
 import { SessionTrackerService } from 'src/modules/auth/session/infrastructure/session-tracker.service';
 import { SessionType, DeviceInfo } from 'src/modules/auth/session/domain';
-import type { RequestClientInfo } from '../http/types/client-info.types';
 import { extractClientInfo } from '../http/utils/request-info.util';
 
 // DTO 클래스 정의 - export 필수!
@@ -75,8 +74,7 @@ export class MessageResponseDto {
 @UsePipes(CustomValidationPipe)
 @UseFilters(WebsocketExceptionFilter)
 export class WebsocketGateway
-  implements OnGatewayInit, OnGatewayConnection, OnGatewayDisconnect
-{
+  implements OnGatewayInit, OnGatewayConnection, OnGatewayDisconnect {
   @WebSocketServer()
   server: Server;
 
@@ -87,7 +85,7 @@ export class WebsocketGateway
     private readonly envService: EnvService,
     private readonly createSessionService: CreateSessionService,
     private readonly sessionTracker: SessionTrackerService,
-  ) {}
+  ) { }
 
   // Gateway 초기화 시 Redis Adapter 설정
   afterInit(server: Server) {
@@ -135,7 +133,7 @@ export class WebsocketGateway
     try {
       // 클라이언트 정보 추출 (HTTP 세션과 동일한 정보 사용)
       const clientInfo = extractClientInfo(client.request as any);
-      
+
       // DeviceInfo 생성 (HTTP 세션과 동일한 정보 사용)
       const deviceInfo = DeviceInfo.create({
         ipAddress: clientInfo.ip ?? null,
