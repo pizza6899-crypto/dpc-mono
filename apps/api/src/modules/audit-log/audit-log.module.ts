@@ -57,10 +57,12 @@ import {
   CRITICAL_LOG_QUEUE_CONFIG,
   HEAVY_LOG_QUEUE_CONFIG,
 } from './infrastructure/queue.constants';
+import { SnowflakeModule } from 'src/common/snowflake/snowflake.module';
 
 @Module({
   imports: [
     PrismaModule,
+    SnowflakeModule,
     BullModule.registerQueue(CRITICAL_LOG_QUEUE_CONFIG),
     BullModule.registerQueue(HEAVY_LOG_QUEUE_CONFIG),
   ],

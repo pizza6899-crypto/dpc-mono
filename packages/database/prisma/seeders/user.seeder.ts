@@ -15,11 +15,11 @@ export async function seedUsers(prisma: PrismaClient) {
       country: 'JP',
       language: Language.KO,
       timezone: 'Asia/Tokyo',
-      balances: {
-        // create: WALLET_CURRENCIES.map((currency) => ({
-        //   currency,
-        // })),
-      },
+      // userWallets: {
+      // create: WALLET_CURRENCIES.map((currency) => ({
+      //   currency,
+      // })),
+      // },
     },
   });
 

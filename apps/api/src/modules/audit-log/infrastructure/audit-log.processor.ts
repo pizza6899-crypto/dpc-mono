@@ -22,8 +22,7 @@ interface LogQueueJobData {
 @Processor(CRITICAL_LOG_QUEUE_NAME)
 export class CriticalLogProcessor
   extends WorkerHost
-  implements OnApplicationShutdown
-{
+  implements OnApplicationShutdown {
   private readonly logger = new Logger(CriticalLogProcessor.name);
 
   constructor(
@@ -35,12 +34,13 @@ export class CriticalLogProcessor
 
   async process(job: Job<LogQueueJobData>): Promise<void> {
     const { id, payload } = job.data;
+    const snowflakeId = BigInt(id);
 
     try {
       if (payload.type === LogType.AUTH) {
-        await this.auditLogRepository.saveAuthLog(id, payload.data);
+        await this.auditLogRepository.saveAuthLog(snowflakeId, payload.data);
       } else if (payload.type === LogType.INTEGRATION) {
-        await this.auditLogRepository.saveIntegrationLog(id, payload.data);
+        await this.auditLogRepository.saveIntegrationLog(snowflakeId, payload.data);
       } else {
         this.logger.warn(
           `Unexpected log type in critical queue: ${payload.type}`,
@@ -86,8 +86,7 @@ export class CriticalLogProcessor
 @Processor(HEAVY_LOG_QUEUE_NAME)
 export class HeavyLogProcessor
   extends WorkerHost
-  implements OnApplicationShutdown
-{
+  implements OnApplicationShutdown {
   private readonly logger = new Logger(HeavyLogProcessor.name);
 
   constructor(
@@ -99,12 +98,13 @@ export class HeavyLogProcessor
 
   async process(job: Job<LogQueueJobData>): Promise<void> {
     const { id, payload } = job.data;
+    const snowflakeId = BigInt(id);
 
     try {
       if (payload.type === LogType.ACTIVITY) {
-        await this.auditLogRepository.saveActivityLog(id, payload.data);
+        await this.auditLogRepository.saveActivityLog(snowflakeId, payload.data);
       } else if (payload.type === LogType.ERROR) {
-        await this.auditLogRepository.saveSystemErrorLog(id, payload.data);
+        await this.auditLogRepository.saveSystemErrorLog(snowflakeId, payload.data);
       } else {
         this.logger.warn(`Unexpected log type in heavy queue: ${payload.type}`);
       }

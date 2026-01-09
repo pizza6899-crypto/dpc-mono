@@ -11,14 +11,17 @@ import {
   CRITICAL_LOG_QUEUE_NAME,
   HEAVY_LOG_QUEUE_NAME,
 } from '../infrastructure/queue.constants';
-import * as idUtil from 'src/utils/id.util';
+import { SnowflakeService } from 'src/common/snowflake/snowflake.service';
 import type { RequestClientInfo } from 'src/common/http/types/client-info.types';
 
 describe('DispatchLogService', () => {
   let service: DispatchLogService;
   let mockCriticalQueue: jest.Mocked<Queue>;
   let mockHeavyQueue: jest.Mocked<Queue>;
+  let mockSnowflakeService: jest.Mocked<SnowflakeService>;
   let loggerErrorSpy: jest.SpyInstance;
+
+  const mockSnowflakeId = 123456789012345678n;
 
   beforeEach(async () => {
     mockCriticalQueue = {
@@ -40,10 +43,17 @@ describe('DispatchLogService', () => {
           provide: getQueueToken(HEAVY_LOG_QUEUE_NAME),
           useValue: mockHeavyQueue,
         },
+        {
+          provide: SnowflakeService,
+          useValue: {
+            nextId: jest.fn().mockReturnValue(mockSnowflakeId),
+          },
+        },
       ],
     }).compile();
 
     service = module.get<DispatchLogService>(DispatchLogService);
+    mockSnowflakeService = module.get(SnowflakeService);
 
     // Logger는 서비스 내부에서 생성되므로 prototype에 spy 설정
     loggerErrorSpy = jest
@@ -51,7 +61,6 @@ describe('DispatchLogService', () => {
       .mockImplementation();
 
     jest.clearAllMocks();
-    jest.spyOn(idUtil, 'generateUid').mockReturnValue('test-id-123');
   });
 
   afterEach(() => {
@@ -77,11 +86,11 @@ describe('DispatchLogService', () => {
         expect(mockCriticalQueue.add).toHaveBeenCalledWith(
           'auth-log',
           {
-            id: 'test-id-123',
+            id: mockSnowflakeId.toString(),
             payload,
           },
           {
-            jobId: 'test-id-123',
+            jobId: mockSnowflakeId.toString(),
             removeOnComplete: true,
             attempts: 10,
             backoff: { type: 'exponential', delay: 1000 },
@@ -109,11 +118,11 @@ describe('DispatchLogService', () => {
         expect(mockCriticalQueue.add).toHaveBeenCalledWith(
           'integration-log',
           {
-            id: 'test-id-123',
+            id: mockSnowflakeId.toString(),
             payload,
           },
           {
-            jobId: 'test-id-123',
+            jobId: mockSnowflakeId.toString(),
             removeOnComplete: true,
             attempts: 10,
             backoff: { type: 'exponential', delay: 1000 },
@@ -140,11 +149,11 @@ describe('DispatchLogService', () => {
         expect(mockHeavyQueue.add).toHaveBeenCalledWith(
           'activity-log',
           {
-            id: 'test-id-123',
+            id: mockSnowflakeId.toString(),
             payload,
           },
           {
-            jobId: 'test-id-123',
+            jobId: mockSnowflakeId.toString(),
             removeOnComplete: true,
             attempts: 3,
             backoff: { type: 'exponential', delay: 1000 },
@@ -172,11 +181,11 @@ describe('DispatchLogService', () => {
         expect(mockHeavyQueue.add).toHaveBeenCalledWith(
           'error-log',
           {
-            id: 'test-id-123',
+            id: mockSnowflakeId.toString(),
             payload,
           },
           {
-            jobId: 'test-id-123',
+            jobId: mockSnowflakeId.toString(),
             removeOnComplete: true,
             attempts: 3,
             backoff: { type: 'exponential', delay: 1000 },
@@ -229,7 +238,7 @@ describe('DispatchLogService', () => {
     });
 
     describe('ID 생성', () => {
-      it('각 dispatch마다 새로운 ID를 생성해야 함', async () => {
+      it('각 dispatch마다 새로운 Snowflake ID를 생성해야 함', async () => {
         const payload1: LogJobData = {
           type: LogType.AUTH,
           data: {
@@ -246,24 +255,26 @@ describe('DispatchLogService', () => {
           },
         };
 
-        jest
-          .spyOn(idUtil, 'generateUid')
-          .mockReturnValueOnce('id-1')
-          .mockReturnValueOnce('id-2');
+        const id1 = 123456789012345678n;
+        const id2 = 987654321098765432n;
+
+        mockSnowflakeService.nextId
+          .mockReturnValueOnce(id1)
+          .mockReturnValueOnce(id2);
 
         await service.dispatch(payload1);
         await service.dispatch(payload2);
 
         expect(mockCriticalQueue.add).toHaveBeenCalledWith(
           expect.any(String),
-          { id: 'id-1', payload: payload1 },
-          expect.objectContaining({ jobId: 'id-1' }),
+          { id: id1.toString(), payload: payload1 },
+          expect.objectContaining({ jobId: id1.toString() }),
         );
 
         expect(mockHeavyQueue.add).toHaveBeenCalledWith(
           expect.any(String),
-          { id: 'id-2', payload: payload2 },
-          expect.objectContaining({ jobId: 'id-2' }),
+          { id: id2.toString(), payload: payload2 },
+          expect.objectContaining({ jobId: id2.toString() }),
         );
       });
     });
@@ -311,7 +322,7 @@ describe('DispatchLogService', () => {
           expect(mockCriticalQueue.add).toHaveBeenCalledWith(
             'auth-log',
             {
-              id: 'test-id-123',
+              id: mockSnowflakeId.toString(),
               payload: {
                 type: LogType.AUTH,
                 data: {
@@ -332,7 +343,7 @@ describe('DispatchLogService', () => {
               },
             },
             expect.objectContaining({
-              jobId: 'test-id-123',
+              jobId: mockSnowflakeId.toString(),
             }),
           );
         });
@@ -352,11 +363,11 @@ describe('DispatchLogService', () => {
           expect(mockCriticalQueue.add).toHaveBeenCalledWith(
             'auth-log',
             {
-              id: 'test-id-123',
+              id: mockSnowflakeId.toString(),
               payload,
             },
             expect.objectContaining({
-              jobId: 'test-id-123',
+              jobId: mockSnowflakeId.toString(),
             }),
           );
         });
@@ -379,7 +390,7 @@ describe('DispatchLogService', () => {
           expect(mockHeavyQueue.add).toHaveBeenCalledWith(
             'activity-log',
             {
-              id: 'test-id-123',
+              id: mockSnowflakeId.toString(),
               payload: {
                 type: LogType.ACTIVITY,
                 data: {
@@ -387,15 +398,18 @@ describe('DispatchLogService', () => {
                   category: 'PAYMENT',
                   action: 'DEPOSIT_REQUEST',
                   metadata: { amount: 1000 },
+                  sessionId: mockClientInfo.sessionId,
+                  traceId: mockClientInfo.traceId,
                   country: mockClientInfo.country,
                   city: mockClientInfo.city,
                   isMobile: mockClientInfo.isMobile,
                   cfRay: mockClientInfo.cfRay,
+                  ip: mockClientInfo.ip,
                 },
               },
             },
             expect.objectContaining({
-              jobId: 'test-id-123',
+              jobId: mockSnowflakeId.toString(),
             }),
           );
         });
@@ -416,7 +430,7 @@ describe('DispatchLogService', () => {
           expect(mockHeavyQueue.add).toHaveBeenCalledWith(
             'error-log',
             {
-              id: 'test-id-123',
+              id: mockSnowflakeId.toString(),
               payload: {
                 type: LogType.ERROR,
                 data: {
@@ -434,7 +448,7 @@ describe('DispatchLogService', () => {
               },
             },
             expect.objectContaining({
-              jobId: 'test-id-123',
+              jobId: mockSnowflakeId.toString(),
             }),
           );
         });
@@ -458,7 +472,7 @@ describe('DispatchLogService', () => {
           expect(mockCriticalQueue.add).toHaveBeenCalledWith(
             'integration-log',
             {
-              id: 'test-id-123',
+              id: mockSnowflakeId.toString(),
               payload: {
                 type: LogType.INTEGRATION,
                 data: {
@@ -477,7 +491,7 @@ describe('DispatchLogService', () => {
               },
             },
             expect.objectContaining({
-              jobId: 'test-id-123',
+              jobId: mockSnowflakeId.toString(),
             }),
           );
         });

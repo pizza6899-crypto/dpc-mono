@@ -1,6 +1,8 @@
+// ID는 Snowflake ID를 사용하며, 향후 데이터베이스 뷰(View) 생성 및 파티셔닝(Partitioning)을 고려하여 설계되었습니다.
+
 // 1. 보안/인증 로그
 model AuthAuditLog {
-  id                String   @default(cuid())
+  id                BigInt
   createdAt         DateTime @default(now()) @map("created_at")
   userId            BigInt?  @map("user_id")
   sessionId         String?  @map("session_id")
@@ -40,7 +42,7 @@ model AuthAuditLog {
 
 // 2. 서비스 활동 로그
 model ActivityLog {
-  id        String   @default(cuid())
+  id        BigInt
   createdAt DateTime @default(now()) @map("created_at")
   userId    BigInt?  @map("user_id")
   sessionId String?  @map("session_id")
@@ -73,7 +75,7 @@ model ActivityLog {
 
 // 3. 기술적 문제 로그
 model SystemErrorLog {
-  id           String    @default(cuid())
+  id           BigInt
   createdAt    DateTime  @default(now()) @map("created_at")
   userId       BigInt?   @map("user_id")
   sessionId    String?   @map("session_id")
@@ -118,7 +120,7 @@ model SystemErrorLog {
 
 // 4. 외부 서비스 연동 기록
 model IntegrationLog {
-  id           String   @default(cuid())
+  id           BigInt
   createdAt    DateTime @default(now()) @map("created_at")
   userId       BigInt?  @map("user_id")
   sessionId    String?  @map("session_id")
@@ -153,28 +155,4 @@ model IntegrationLog {
   // 지역별 연동 분석
   @@index([country, createdAt(sort: Desc)])
   @@map("integration_logs")
-}
-
-/// @view
-model UnifiedLog {
-  id        String   @id
-  createdAt DateTime @map("created_at")
-  userId    BigInt?  @map("user_id")
-  sessionId String?  @map("session_id")
-  traceId   String?  @map("trace_id")
-  cfRay     String?  @map("cf_ray")
-  country   String?
-  city      String?
-  bot       Boolean?
-  threat    String?
-  isMobile  Boolean? @map("is_mobile")
-  ip        String?
-
-  // 구분자 필드
-  logType  String @map("log_type") // AUTH, ACTIVITY, ERROR, INTEGRATION
-  category String // 각 테이블의 주요 분류
-  detail   String // 주요 내용 (상태, 액션, 에러메시지 등)
-  metadata Json?
-
-  @@map("unified_logs")
 }

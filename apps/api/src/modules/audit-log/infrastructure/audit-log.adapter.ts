@@ -16,10 +16,10 @@ import type {
 export class AuditLogAdapter implements AuditLogRepositoryPort {
   constructor(private readonly prisma: PrismaService) { }
 
-  async saveAuthLog(id: string, payload: AuthLogPayload): Promise<void> {
+  async saveAuthLog(id: bigint, payload: AuthLogPayload): Promise<void> {
     await this.prisma.authAuditLog.create({
       data: {
-        id,
+        id: id,
         createdAt: new Date(),
         userId: payload.userId ? BigInt(payload.userId) : null,
         sessionId: payload.sessionId || null,
@@ -45,7 +45,7 @@ export class AuditLogAdapter implements AuditLogRepositoryPort {
   }
 
   async saveActivityLog(
-    id: string,
+    id: bigint,
     payload: ActivityLogPayload,
   ): Promise<void> {
     await this.prisma.activityLog.create({
@@ -71,7 +71,7 @@ export class AuditLogAdapter implements AuditLogRepositoryPort {
   }
 
   async saveSystemErrorLog(
-    id: string,
+    id: bigint,
     payload: SystemErrorLogPayload,
   ): Promise<void> {
     await this.prisma.systemErrorLog.create({
@@ -108,7 +108,7 @@ export class AuditLogAdapter implements AuditLogRepositoryPort {
   }
 
   async saveIntegrationLog(
-    id: string,
+    id: bigint,
     payload: IntegrationLogPayload,
   ): Promise<void> {
     await this.prisma.integrationLog.create({

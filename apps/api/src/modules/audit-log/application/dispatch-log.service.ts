@@ -10,7 +10,7 @@ import {
   CRITICAL_LOG_QUEUE_NAME,
   HEAVY_LOG_QUEUE_NAME,
 } from '../infrastructure/queue.constants';
-import { generateUid } from 'src/utils/id.util';
+import { SnowflakeService } from 'src/common/snowflake/snowflake.service';
 import type { RequestClientInfo } from 'src/common/http/types/client-info.types';
 import { sanitizeAndTruncate } from 'src/utils/log-sanitizer.util';
 
@@ -33,6 +33,7 @@ export class DispatchLogService {
     private readonly criticalLogQueue: Queue<LogQueueJobData>,
     @InjectQueue(HEAVY_LOG_QUEUE_NAME)
     private readonly heavyLogQueue: Queue<LogQueueJobData>,
+    private readonly snowflakeService: SnowflakeService,
   ) { }
 
   /**
@@ -184,8 +185,8 @@ export class DispatchLogService {
       // 데이터 정제 및 길이 제한 (특히 Integration 로그의 요청/응답 바디)
       const sanitizedPayload = this.sanitizePayload(enrichedPayload);
 
-      const id = generateUid();
-      const jobData: LogQueueJobData = { id, payload: sanitizedPayload };
+      const id = this.snowflakeService.nextId();
+      const jobData: LogQueueJobData = { id: id.toString(), payload: sanitizedPayload };
 
       // 로그 타입에 따라 적절한 큐에 추가
       if (
@@ -196,7 +197,7 @@ export class DispatchLogService {
           `${sanitizedPayload.type.toLowerCase()}-log`,
           jobData,
           {
-            jobId: id,
+            jobId: id.toString(),
             removeOnComplete: true,
             attempts: 10,
             backoff: { type: 'exponential', delay: 1000 },
@@ -208,7 +209,7 @@ export class DispatchLogService {
           `${enrichedPayload.type.toLowerCase()}-log`,
           jobData,
           {
-            jobId: id,
+            jobId: id.toString(),
             removeOnComplete: true,
             attempts: 3,
             backoff: { type: 'exponential', delay: 1000 },
