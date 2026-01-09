@@ -189,7 +189,7 @@ export class DispatchLogService {
       // 로그 발생 시점의 타임스탬프 생성
       const createdAt = new Date();
       // 타임스탬프 기반 Snowflake ID 생성 (ID와 시간의 일관성 보장)
-      const id = this.snowflakeService.generateFromTimestamp(createdAt);
+      const id = this.snowflakeService.generate(createdAt);
 
       const jobData: LogQueueJobData = {
         id: id.toString(),

@@ -20,7 +20,7 @@ describe('DispatchLogService', () => {
   };
 
   const mockSnowflakeService = {
-    generateFromTimestamp: jest.fn().mockReturnValue(1234567890n),
+    generate: jest.fn().mockReturnValue(1234567890n),
   };
 
   beforeEach(async () => {
@@ -67,7 +67,7 @@ describe('DispatchLogService', () => {
 
       await service.dispatch(payload);
 
-      expect(snowflakeService.generateFromTimestamp).toHaveBeenCalled();
+      expect(snowflakeService.generate).toHaveBeenCalled();
       expect(criticalQueue.add).toHaveBeenCalledWith(
         'auth-log',
         expect.objectContaining({
@@ -237,11 +237,11 @@ describe('DispatchLogService', () => {
 
       await service.dispatch(payload);
 
-      // generateFromTimestamp가 호출되었는지 확인
-      expect(snowflakeService.generateFromTimestamp).toHaveBeenCalledTimes(1);
+      // generate가 호출되었는지 확인
+      expect(snowflakeService.generate).toHaveBeenCalledTimes(1);
 
       // 호출된 인자가 Date 객체인지 확인
-      const callArg = (snowflakeService.generateFromTimestamp as jest.Mock).mock.calls[0][0];
+      const callArg = (snowflakeService.generate as jest.Mock).mock.calls[0][0];
       expect(callArg).toBeInstanceOf(Date);
     });
 

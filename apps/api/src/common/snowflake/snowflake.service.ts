@@ -116,45 +116,25 @@ export class SnowflakeService implements OnModuleInit, OnModuleDestroy {
     }
 
     /**
-     * 다음 Snowflake ID를 생성합니다.
-     * 현재 시간을 기준으로 하며, 시계 역행 방지 로직이 포함되어 있습니다.
-     * 
-     * @returns {bigint} 고유한 Snowflake ID
-     */
-    nextId(): bigint {
-        if (this.nodeId === undefined) {
-            throw new SnowflakeNodeIdNotAssignedException();
-        }
-
-        let timestamp = BigInt(Date.now());
-
-        // 시계 역행 감지
-        if (timestamp < this.lastTimestamp) {
-            const diff = this.lastTimestamp - timestamp;
-
-            // 5ms 이내의 미세한 역행이면 대기 후 처리 (Clock Drift 대응)
-            if (diff < 5n) {
-                this.logger.warn(`Clock moved backwards by ${diff}ms. Waiting for synchronization...`);
-                timestamp = this.waitNextMillis(this.lastTimestamp);
-            } else {
-                this.logger.error(
-                    `Clock moved backwards. Refusing to generate id for ${diff}ms`,
-                );
-                throw new SnowflakeClockBackwardsException(diff);
-            }
-        }
-
-        return this.internalGenerate(timestamp);
-    }
-
-    /**
      * 특정 타임스탬프를 기준으로 Snowflake ID를 생성합니다.
-     * 외부 서비스의 발생 시간(wonAt) 등을 ID에 반영할 때 사용합니다.
+     * DB 레코드 생성 시 ID와 시간을 함께 처리하기 위해 타임스탬프를 명시적으로 받습니다.
      * 
-     * @param {Date | bigint} targetTime - ID에 심을 대상 시간
+     * @param {Date | bigint | number} targetTime - ID에 심을 대상 시간
      * @returns {bigint} 생성된 Snowflake ID
+     * 
+     * @example
+     * // 현재 시간 기준 ID 생성
+     * const now = new Date();
+     * const id = snowflakeService.generate(now);
+     * await prisma.create({ id, createdAt: now });
+     * 
+     * @example
+     * // 특정 시간 기준 ID 생성 (외부 이벤트 시간 반영)
+     * const wonAt = new Date(externalEvent.timestamp);
+     * const id = snowflakeService.generate(wonAt);
+     * await prisma.create({ id, wonAt });
      */
-    generateFromTimestamp(targetTime: Date | bigint | number): bigint {
+    generate(targetTime: Date | bigint | number): bigint {
         if (this.nodeId === undefined) {
             throw new SnowflakeNodeIdNotAssignedException();
         }

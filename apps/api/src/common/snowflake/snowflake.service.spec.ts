@@ -47,9 +47,9 @@ describe('SnowflakeService', () => {
         expect(service).toBeDefined();
     });
 
-    describe('nextId', () => {
+    describe('generate', () => {
         it('should generate a valid bigint ID', () => {
-            const id = service.nextId();
+            const id = service.generate(new Date());
             expect(typeof id).toBe('bigint');
             expect(id).toBeGreaterThan(0n);
         });
@@ -59,7 +59,7 @@ describe('SnowflakeService', () => {
             const count = 10000;
 
             for (let i = 0; i < count; i++) {
-                const id = service.nextId();
+                const id = service.generate(new Date());
                 ids.add(id);
             }
 
@@ -68,9 +68,9 @@ describe('SnowflakeService', () => {
         });
 
         it('should generate increasing IDs', () => {
-            const id1 = service.nextId();
-            const id2 = service.nextId();
-            const id3 = service.nextId();
+            const id1 = service.generate(new Date());
+            const id2 = service.generate(new Date());
+            const id3 = service.generate(new Date());
 
             expect(id2).toBeGreaterThan(id1);
             expect(id3).toBeGreaterThan(id2);
@@ -81,8 +81,9 @@ describe('SnowflakeService', () => {
             const count = 100;
 
             // 동일 밀리초 내에서 빠르게 생성
+            const now = new Date();
             for (let i = 0; i < count; i++) {
-                ids.push(service.nextId());
+                ids.push(service.generate(now));
             }
 
             // 모든 ID가 고유해야 함
@@ -98,7 +99,7 @@ describe('SnowflakeService', () => {
 
     describe('parse', () => {
         it('should correctly parse a generated ID', () => {
-            const id = service.nextId();
+            const id = service.generate(new Date());
             const parsed = service.parse(id);
 
             expect(parsed.timestamp).toBeGreaterThan(0n);
@@ -109,7 +110,7 @@ describe('SnowflakeService', () => {
         });
 
         it('should extract correct node ID', () => {
-            const id = service.nextId();
+            const id = service.generate(new Date());
             const parsed = service.parse(id);
 
             // EnvService mock에서 pm2InstanceNumber가 '0'이므로 nodeId는 0
@@ -118,7 +119,7 @@ describe('SnowflakeService', () => {
 
         it('should extract valid timestamp', () => {
             const beforeGeneration = Date.now();
-            const id = service.nextId();
+            const id = service.generate(new Date());
             const afterGeneration = Date.now();
 
             const parsed = service.parse(id);
@@ -156,7 +157,7 @@ describe('SnowflakeService', () => {
 
             const testService = testModule.get<SnowflakeService>(SnowflakeService);
             await testService.onModuleInit();
-            const id = testService.nextId();
+            const id = testService.generate(new Date());
             const parsed = testService.parse(id);
 
             expect(parsed.nodeId).toBe(5n);
@@ -188,7 +189,7 @@ describe('SnowflakeService', () => {
 
             const testService = testModule.get<SnowflakeService>(SnowflakeService);
             await testService.onModuleInit();
-            const id = testService.nextId();
+            const id = testService.generate(new Date());
             const parsed = testService.parse(id);
 
             // 2048 & 0x3ff = 0 (비트 마스킹 결과)
@@ -203,7 +204,7 @@ describe('SnowflakeService', () => {
 
             // 동일 밀리초 내에서 여러 ID 생성
             for (let i = 0; i < 10; i++) {
-                ids.push(service.nextId());
+                ids.push(service.generate(new Date()));
             }
 
             const parsed = ids.map((id) => service.parse(id));
@@ -220,53 +221,12 @@ describe('SnowflakeService', () => {
         });
     });
 
-    describe('Clock Drift handling', () => {
-        let mockNow: jest.SpyInstance;
 
-        beforeEach(() => {
-            mockNow = jest.spyOn(Date, 'now');
-        });
 
-        afterEach(() => {
-            mockNow.mockRestore();
-        });
-
-        it('should wait and recover if clock moves backwards by less than 5ms', () => {
-            const baseTime = Date.now();
-            mockNow.mockReturnValue(baseTime);
-            service.nextId(); // lastTimestamp = baseTime
-
-            // 시계를 2ms 뒤로 돌림
-            mockNow.mockReturnValue(baseTime - 2);
-
-            // 다음 호출 시 waitNextMillis가 작동하여 baseTime 이후의 값을 반환해야 함
-            // 여기서는 waitNextMillis 내부에서 다시 Date.now()를 호출하므로 순차적인 반환값을 설정
-            mockNow
-                .mockReturnValueOnce(baseTime - 2) // nextId() 진입 시점
-                .mockReturnValueOnce(baseTime + 1); // waitNextMillis() 내부 시점
-
-            const id = service.nextId();
-            const parsed = service.parse(id);
-
-            expect(parsed.timestamp).toBe(BigInt(baseTime + 1));
-        });
-
-        it('should throw error if clock moves backwards by 5ms or more', () => {
-            const baseTime = Date.now();
-            mockNow.mockReturnValue(baseTime);
-            service.nextId(); // lastTimestamp = baseTime
-
-            // 시계를 5ms 뒤로 돌림
-            mockNow.mockReturnValue(baseTime - 5);
-
-            expect(() => service.nextId()).toThrow('Clock moved backwards');
-        });
-    });
-
-    describe('generateFromTimestamp', () => {
+    describe('generate', () => {
         it('should generate ID with specific timestamp', () => {
             const targetTime = new Date('2027-01-01T00:00:00Z');
-            const id = service.generateFromTimestamp(targetTime);
+            const id = service.generate(targetTime);
             const parsed = service.parse(id);
 
             expect(parsed.date.getTime()).toBe(targetTime.getTime());
@@ -277,9 +237,9 @@ describe('SnowflakeService', () => {
             const targetBigInt = BigInt(targetDate.getTime());
             const targetNumber = targetDate.getTime();
 
-            const id1 = service.generateFromTimestamp(targetDate);
-            const id2 = service.generateFromTimestamp(targetBigInt);
-            const id3 = service.generateFromTimestamp(targetNumber);
+            const id1 = service.generate(targetDate);
+            const id2 = service.generate(targetBigInt);
+            const id3 = service.generate(targetNumber);
 
             const parsed1 = service.parse(id1);
             const parsed2 = service.parse(id2);
@@ -291,9 +251,9 @@ describe('SnowflakeService', () => {
         });
 
         it('should handle past timestamp after current timestamp generation', () => {
-            service.nextId(); // 현재 시간으로 생성
+            service.generate(new Date()); // 현재 시간으로 생성
             const pastTime = new Date('2026-06-01T00:00:00Z'); // EPOCH(2026-01-01) 이후 시간
-            const id = service.generateFromTimestamp(pastTime);
+            const id = service.generate(pastTime);
 
             expect(id).toBeGreaterThan(0n);
             const parsed = service.parse(id);
@@ -305,7 +265,7 @@ describe('SnowflakeService', () => {
             const ids = new Set<bigint>();
 
             for (let i = 0; i < 100; i++) {
-                ids.add(service.generateFromTimestamp(fixedTime));
+                ids.add(service.generate(fixedTime));
             }
 
             expect(ids.size).toBe(100); // 모두 고유해야 함
@@ -313,9 +273,9 @@ describe('SnowflakeService', () => {
 
         it('should increment sequence for same fixed timestamp', () => {
             const fixedTime = new Date('2027-01-01T00:00:00Z');
-            const id1 = service.generateFromTimestamp(fixedTime);
-            const id2 = service.generateFromTimestamp(fixedTime);
-            const id3 = service.generateFromTimestamp(fixedTime);
+            const id1 = service.generate(fixedTime);
+            const id2 = service.generate(fixedTime);
+            const id3 = service.generate(fixedTime);
 
             const parsed1 = service.parse(id1);
             const parsed2 = service.parse(id2);
@@ -331,11 +291,11 @@ describe('SnowflakeService', () => {
 
             // 4096번 생성 (시퀀스 0-4095)
             for (let i = 0; i < 4096; i++) {
-                service.generateFromTimestamp(fixedTime);
+                service.generate(fixedTime);
             }
 
             // 4097번째 호출 시 에러 발생해야 함
-            expect(() => service.generateFromTimestamp(fixedTime)).toThrow(
+            expect(() => service.generate(fixedTime)).toThrow(
                 'Sequence overflow for fixed timestamp'
             );
         });
@@ -344,10 +304,10 @@ describe('SnowflakeService', () => {
             const time1 = new Date('2027-01-01T00:00:00.000Z');
             const time2 = new Date('2027-01-01T00:00:00.001Z'); // 1ms 차이
 
-            service.generateFromTimestamp(time1); // sequence = 0
-            service.generateFromTimestamp(time1); // sequence = 1
+            service.generate(time1); // sequence = 0
+            service.generate(time1); // sequence = 1
 
-            const id = service.generateFromTimestamp(time2); // 새 타임스탬프, sequence = 0
+            const id = service.generate(time2); // 새 타임스탬프, sequence = 0
             const parsed = service.parse(id);
 
             expect(parsed.sequence).toBe(0n);

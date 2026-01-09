@@ -188,7 +188,7 @@ export class CasinoBetService {
           },
           bets: {
             create: {
-              id: this.snowflakeService.generateFromTimestamp(betTimeDate),
+              id: this.snowflakeService.generate(betTimeDate),
               userId,
               betAmount: betAmountInWalletCurrency,
               betAmountInGameCurrency: betAmountInGameCurrency,
@@ -267,7 +267,7 @@ export class CasinoBetService {
               gameSessionId,
               bets: {
                 create: {
-                  id: this.snowflakeService.generateFromTimestamp(betTimeDate),
+                  id: this.snowflakeService.generate(betTimeDate),
                   userId,
                   betAmount: betAmountInWalletCurrency,
                   betAmountInGameCurrency: betAmountInGameCurrency,
@@ -450,7 +450,7 @@ export class CasinoBetService {
         },
         wins: {
           create: {
-            id: this.snowflakeService.generateFromTimestamp(winTimeDate),
+            id: this.snowflakeService.generate(winTimeDate),
             userId,
             winType: WinType.NORMAL,
             aggregatorType,
@@ -618,7 +618,7 @@ export class CasinoBetService {
         },
         wins: {
           create: {
-            id: this.snowflakeService.generateFromTimestamp(winTime),
+            id: this.snowflakeService.generate(winTime),
             userId,
             winType: WinType.JACKPOT,
             aggregatorType,
