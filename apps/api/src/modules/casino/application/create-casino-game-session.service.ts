@@ -44,7 +44,13 @@ export class CreateCasinoGameSessionService {
             toCurrency: gameCurrency,
         });
 
-        // 2. 도메인 엔티티 생성
+        // 2. USD 환율 조회 (Tier Rolling 용)
+        const usdExchangeRate = await this.exchangeRateService.getRate({
+            fromCurrency: walletCurrency,
+            toCurrency: ExchangeCurrencyCode.USD,
+        });
+
+        // 3. 도메인 엔티티 생성
         const session = CasinoGameSession.create({
             uid: generateUid(),
             userId,
@@ -54,10 +60,11 @@ export class CreateCasinoGameSessionService {
             walletCurrency,
             gameCurrency,
             exchangeRate,
+            usdExchangeRate,
             casinoGameId: gameId,
         });
 
-        // 3. 저장
+        // 4. 저장
         return await this.repository.create(session);
     }
 }

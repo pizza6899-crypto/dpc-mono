@@ -29,8 +29,8 @@ export class AnalyticsAdminController {
         type: LogType.ACTIVITY,
         category: 'ANALYTICS',
         action: 'USER_STATS_VIEW',
-        extractMetadata: (_, args) => ({
-            userId: args[0],
+        extractMetadata: (req) => ({
+            userId: req.params.userId,
         }),
     })
     @ApiParam({ name: 'userId', description: 'User ID' })

@@ -21,7 +21,10 @@ export class AddUserRollingService {
     ) { }
 
     @Transactional()
-    async execute(userId: bigint, amount: number): Promise<void> {
+    async execute(
+        userId: bigint,
+        amount: Prisma.Decimal,
+    ): Promise<void> {
         // 1. Lock UserTier
         await this.userTierRepository.acquireLock(userId);
 
@@ -31,9 +34,8 @@ export class AddUserRollingService {
             throw new UserTierNotFoundException(userId);
         }
 
-        // 3. Add Rolling Amount
-        const rollingAmount = new Prisma.Decimal(amount);
-        userTier.addRolling(rollingAmount);
+        // 3. Add Rolling Amount (USD 변환은 보류, 현재는 Decimal 정밀도만 유지)
+        userTier.addRolling(amount);
 
         // 4. Check for Tier Upgrade
         const currentTier = userTier.tier;

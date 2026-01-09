@@ -53,6 +53,7 @@ model CasinoGameSession {
   gameCurrency           ExchangeCurrencyCode @map("game_currency")
   exchangeRate           Decimal              @map("exchange_rate") @db.Decimal(32, 18)
   exchangeRateSnapshotAt DateTime             @default(now()) @map("exchange_rate_snapshot_at")
+  usdExchangeRate        Decimal              @map("usd_exchange_rate") @db.Decimal(32, 18)
   casinoGameId           BigInt?              @map("casino_game_id")
   gameRounds             GameRound[]
   casinoGame             CasinoGame?          @relation(fields: [casinoGameId], references: [id])

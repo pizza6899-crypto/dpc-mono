@@ -11,8 +11,11 @@ import {
 } from '@nestjs-cls/transactional';
 import { type PrismaTransaction } from 'src/infrastructure/prisma/prisma.module';
 import { Logger, OnApplicationShutdown } from '@nestjs/common';
-import { Prisma, TransactionStatus } from '@repo/database';
+import { Prisma, TransactionStatus, ExchangeCurrencyCode } from '@repo/database';
 import { ProcessWageringContributionService } from '../../wagering/application/process-wagering-contribution.service';
+import { AnalyticsQueueService } from '../../analytics/application/analytics-queue.service';
+import { GameCategory } from '@repo/database';
+import { AddUserRollingService } from '../../tier/application/add-user-rolling.service';
 
 @Processor(QueueNames.GAME_POST_PROCESS)
 export class GamePostProcessProcessor
@@ -25,6 +28,8 @@ export class GamePostProcessProcessor
     private readonly tx: PrismaTransaction,
     private readonly cls: ClsService,
     private readonly wageringService: ProcessWageringContributionService,
+    private readonly analyticsQueue: AnalyticsQueueService,
+    private readonly tierService: AddUserRollingService,
   ) {
     super();
   }
@@ -47,8 +52,16 @@ export class GamePostProcessProcessor
           id: true,
           userId: true,
           totalBetAmountInGameCurrency: true,
+          totalBetAmountInWalletCurrency: true,
+          totalWinAmountInWalletCurrency: true,
           totalPushAmount: true,
           tieBetAmount: true,
+          completedAt: true,
+          GameSession: {
+            select: {
+              usdExchangeRate: true,
+            },
+          },
           transaction: {
             select: {
               currency: true,
@@ -58,6 +71,7 @@ export class GamePostProcessProcessor
           casinoGame: {
             select: {
               contributionRate: true,
+              category: true,
             },
           },
         },
@@ -144,18 +158,41 @@ export class GamePostProcessProcessor
         betAmount: betAmountForProcessing,
         gameContributionRate: gameRound.casinoGame?.contributionRate?.toNumber(),
       });
+
+      // --- 통계 기록 추가 ---
+      const categoryMap: Record<string, 'slot' | 'live' | 'other'> = {
+        [GameCategory.SLOTS]: 'slot',
+        [GameCategory.LIVE_CASINO]: 'live',
+      };
+
+      await this.analyticsQueue.enqueueGame({
+        userId,
+        currency,
+        betAmount: gameRound.totalBetAmountInWalletCurrency,
+        winAmount: gameRound.totalWinAmountInWalletCurrency,
+        category: gameRound.casinoGame?.category
+          ? categoryMap[gameRound.casinoGame.category] || 'other'
+          : 'other',
+        date: gameRound.completedAt || new Date(),
+      });
+
       this.logger.log(
-        `롤링 처리 완료: userId=${userId}, betAmount=${betAmountForProcessing}, gameRoundId=${gameRoundId}`,
+        `롤링 및 통계 처리 완료: userId=${userId}, betAmount=${betAmountForProcessing}, gameRoundId=${gameRoundId}`,
       );
 
-      // 6. VIP 레벨 업데이트 (롤링 누적)
-      //   await this.vipMembershipService.updateAccumulatedRolling(
-      //     userId,
-      //     betAmountForProcessing,
-      //   );
-      //   this.logger.log(
-      //     `VIP 롤링 누적 완료: userId=${userId}, rollingAmount=${betAmountForProcessing}, transactionId=${transactionId}`,
-      //   );
+      // 6. VIP 티어 업데이트 (롤링 누적)
+      // 세션에 저장된 환율(Play Currency -> USD)을 사용하여 USD 기준 롤링 금액 계산
+      const usdExchangeRate =
+        gameRound.GameSession?.usdExchangeRate || new Prisma.Decimal(1);
+      const rollingAmountUsd = betAmountForProcessing.mul(usdExchangeRate);
+
+      await this.tierService.execute(
+        userId,
+        rollingAmountUsd,
+      );
+      this.logger.log(
+        `티어 롤링 누적 완료: userId=${userId}, rollingAmountUsd=${rollingAmountUsd}, rate=${usdExchangeRate}`,
+      );
 
       // 7. 게임 트랜잭션에 기여도 및 콤프 정보 업데이트
       //   await this.tx.gameTransaction.update({

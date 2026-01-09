@@ -16,6 +16,7 @@ export class CasinoGameSession {
         public readonly gameCurrency: ExchangeCurrencyCode,
         public readonly exchangeRate: Prisma.Decimal,
         public readonly exchangeRateSnapshotAt: Date,
+        public readonly usdExchangeRate: Prisma.Decimal,
         public readonly casinoGameId: bigint | null,
         public readonly createdAt: Date,
         public readonly updatedAt: Date,
@@ -33,6 +34,7 @@ export class CasinoGameSession {
         gameCurrency: ExchangeCurrencyCode;
         exchangeRate: Prisma.Decimal;
         exchangeRateSnapshotAt?: Date;
+        usdExchangeRate?: Prisma.Decimal;
         casinoGameId?: bigint | null;
         createdAt?: Date;
         updatedAt?: Date;
@@ -49,6 +51,7 @@ export class CasinoGameSession {
             params.gameCurrency,
             params.exchangeRate,
             params.exchangeRateSnapshotAt ?? new Date(),
+            params.usdExchangeRate ?? new Prisma.Decimal(1),
             params.casinoGameId ?? null,
             params.createdAt ?? new Date(),
             params.updatedAt ?? new Date(),

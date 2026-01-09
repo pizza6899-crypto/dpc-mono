@@ -20,6 +20,8 @@ import { CASINO_GAME_SESSION_REPOSITORY } from './ports/out/casino-game-session.
 import { CreateCasinoGameSessionService } from './application/create-casino-game-session.service';
 import { FindCasinoGameSessionService } from './application/find-casino-game-session.service';
 import { WageringModule } from '../wagering/wagering.module';
+import { AnalyticsModule } from '../analytics/analytics.module';
+import { TierModule } from '../tier/tier.module';
 
 @Module({
   imports: [
@@ -33,6 +35,8 @@ import { WageringModule } from '../wagering/wagering.module';
     AuditLogModule,
     WalletModule,
     WageringModule,
+    AnalyticsModule,
+    TierModule,
   ],
   controllers: [CasinoGameUserController],
   providers: [
