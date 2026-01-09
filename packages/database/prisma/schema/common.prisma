@@ -53,6 +53,7 @@ model User {
   tierHistory            TierHistory[]
   adminAdjustmentDetails AdminAdjustmentDetail[] @relation("AdminAdjustments")
   wageringRequirements   WageringRequirement[]
+  hourlyStats            UserHourlyStat[]
 }
 
 model UserWallet {

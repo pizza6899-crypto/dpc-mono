@@ -21,10 +21,10 @@ export class GetActivePromotionsForUserService {
   constructor(
     @Inject(PROMOTION_REPOSITORY)
     private readonly repository: PromotionRepositoryPort,
-  ) {}
+  ) { }
 
   async execute(
-    params: GetActivePromotionsForUserParams,
+    params: GetActivePromotionsForUserParams & { userId?: bigint },
   ): Promise<PaginatedData<PromotionResponseDto>> {
     const {
       page = 1,
@@ -33,6 +33,7 @@ export class GetActivePromotionsForUserService {
       sortOrder = 'desc',
       language = Language.EN,
       currency = ExchangeCurrencyCode.USD,
+      userId,
     } = params;
 
     const result = await this.repository.findActivePromotionsPaginated({
@@ -42,8 +43,26 @@ export class GetActivePromotionsForUserService {
       sortOrder,
     });
 
-    // 번역과 통화 정보가 모두 있는 프로모션만 필터링
+    let userParticipatedPromotionIds = new Set<string>(); // BigInt to String
+
+    if (userId) {
+      const userPromotions = await this.repository.findUserPromotions(userId);
+      userPromotions.forEach((up) => {
+        userParticipatedPromotionIds.add(up.promotionId.toString());
+      });
+    }
+
+    // 번역과 통화 정보가 모두 있는 프로모션만 필터링 + 유저 참여 여부 필터링
     const filteredPromotions = result.promotions.filter((promotion) => {
+      // 1. 이미 참여한 일회성 프로모션 제외
+      if (
+        userId &&
+        promotion.isOneTime &&
+        userParticipatedPromotionIds.has(promotion.id.toString())
+      ) {
+        return false;
+      }
+
       const translations = promotion.getTranslations();
       const currencies = promotion.getCurrencies();
       const currentTranslation = translations?.find(
@@ -99,7 +118,7 @@ export class GetActivePromotionsForUserService {
       data,
       page,
       limit,
-      total: filteredPromotions.length,
+      total: filteredPromotions.length, // 필터링된 개수로 업데이트 (페이지네이션 정보는 다소 부정확해질 수 있음)
     };
   }
 }

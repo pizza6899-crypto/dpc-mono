@@ -21,7 +21,6 @@ import { CurrentUser } from 'src/common/auth/decorators/current-user.decorator';
 import type { CurrentUserWithSession } from 'src/common/auth/decorators/current-user.decorator';
 import { AuditLog } from 'src/modules/audit-log/infrastructure';
 import { LogType } from 'src/modules/audit-log/domain';
-import { FindUserPromotionsService } from '../../application/find-user-promotions.service';
 import { GetActivePromotionsForUserService } from '../../application/get-active-promotions-for-user.service';
 import { GetPromotionByIdForUserService } from '../../application/get-promotion-by-id-for-user.service';
 import {
@@ -42,7 +41,6 @@ import { Language } from '@repo/database';
 @ApiStandardErrors()
 export class PromotionUserController {
   constructor(
-    private readonly findUserPromotionsService: FindUserPromotionsService,
     private readonly getActivePromotionsForUserService: GetActivePromotionsForUserService,
     private readonly getPromotionByIdForUserService: GetPromotionByIdForUserService,
     @Inject(PROMOTION_REPOSITORY)
@@ -76,6 +74,7 @@ export class PromotionUserController {
     },
   })
   async getActivePromotions(
+    @CurrentUser() user: CurrentUserWithSession | undefined,
     @Query() query: ListActivePromotionsQueryDto,
   ): Promise<PaginatedData<PromotionResponseDto>> {
     return await this.getActivePromotionsForUserService.execute({
@@ -85,47 +84,7 @@ export class PromotionUserController {
       sortOrder: query.sortOrder,
       language: query.language,
       currency: query.currency,
-    });
-  }
-
-  /**
-   * 프로모션 상세 조회
-   */
-  @Get(':id')
-  @HttpCode(HttpStatus.OK)
-  @ApiOperation({
-    summary: 'Get promotion by ID / 프로모션 상세 조회',
-    description: '특정 프로모션의 상세 정보를 조회합니다. 언어 파라미터로 번역 정보를 받을 수 있습니다.',
-  })
-  @ApiQuery({
-    name: 'language',
-    required: false,
-    enum: Language,
-    description: '언어 코드 (번역 정보 포함, 기본값: EN)',
-    example: Language.EN,
-  })
-  @ApiStandardResponse(PromotionResponseDto, {
-    status: HttpStatus.OK,
-    description: 'Successfully retrieved promotion / 프로모션 조회 성공',
-  })
-  @AuditLog({
-    type: LogType.ACTIVITY,
-    action: 'VIEW_PROMOTION_DETAIL',
-    category: 'PROMOTION',
-    extractMetadata: (_, args) => {
-      const [id] = args;
-      return {
-        promotionId: id,
-      };
-    },
-  })
-  async getPromotionById(
-    @Param('id', ParseIntPipe) id: number,
-    @Query('language') language?: Language,
-  ): Promise<PromotionResponseDto> {
-    return await this.getPromotionByIdForUserService.execute({
-      id: BigInt(id),
-      language,
+      userId: user?.id,
     });
   }
 
@@ -196,6 +155,47 @@ export class PromotionUserController {
       limit: query.limit || 20,
       total: result.total,
     };
+  }
+
+  /**
+   * 프로모션 상세 조회
+   */
+  @Get(':id')
+  @HttpCode(HttpStatus.OK)
+  @ApiOperation({
+    summary: 'Get promotion by ID / 프로모션 상세 조회',
+    description: '특정 프로모션의 상세 정보를 조회합니다. 언어 파라미터로 번역 정보를 받을 수 있습니다.',
+  })
+  @ApiQuery({
+    name: 'language',
+    required: false,
+    enum: Language,
+    description: '언어 코드 (번역 정보 포함, 기본값: EN)',
+    example: Language.EN,
+  })
+  @ApiStandardResponse(PromotionResponseDto, {
+    status: HttpStatus.OK,
+    description: 'Successfully retrieved promotion / 프로모션 조회 성공',
+  })
+  @AuditLog({
+    type: LogType.ACTIVITY,
+    action: 'VIEW_PROMOTION_DETAIL',
+    category: 'PROMOTION',
+    extractMetadata: (_, args) => {
+      const [id] = args;
+      return {
+        promotionId: id,
+      };
+    },
+  })
+  async getPromotionById(
+    @Param('id', ParseIntPipe) id: number,
+    @Query('language') language?: Language,
+  ): Promise<PromotionResponseDto> {
+    return await this.getPromotionByIdForUserService.execute({
+      id: BigInt(id),
+      language,
+    });
   }
 }
 
