@@ -14,6 +14,9 @@ export interface AggregatedStat {
     netWin: Prisma.Decimal;
     ggr: Prisma.Decimal;
     totalGameCount: number;
+    totalBonusGiven: Prisma.Decimal;
+    totalBonusUsed: Prisma.Decimal;
+    totalBonusConverted: Prisma.Decimal;
     totalCompEarned: Prisma.Decimal;
     totalCompConverted: Prisma.Decimal;
     totalCompDeducted: Prisma.Decimal;
@@ -64,6 +67,9 @@ export class FindUserStatsService {
             netWin: zero,
             ggr: zero,
             totalGameCount: 0,
+            totalBonusGiven: zero,
+            totalBonusUsed: zero,
+            totalBonusConverted: zero,
             totalCompEarned: zero,
             totalCompConverted: zero,
             totalCompDeducted: zero,
@@ -81,6 +87,9 @@ export class FindUserStatsService {
             aggregated.netWin = aggregated.netWin.add(stat.netWin);
             aggregated.ggr = aggregated.ggr.add(stat.ggr);
             aggregated.totalGameCount += stat.totalGameCount;
+            aggregated.totalBonusGiven = aggregated.totalBonusGiven.add(stat.totalBonusGiven);
+            aggregated.totalBonusUsed = aggregated.totalBonusUsed.add(stat.totalBonusUsed);
+            aggregated.totalBonusConverted = aggregated.totalBonusConverted.add(stat.totalBonusConverted);
             aggregated.totalCompEarned = aggregated.totalCompEarned.add(stat.totalCompEarned);
             aggregated.totalCompConverted = aggregated.totalCompConverted.add(stat.totalCompConverted);
             aggregated.totalCompDeducted = aggregated.totalCompDeducted.add(stat.totalCompDeducted);

@@ -4,7 +4,6 @@ import { FindUserStatsService } from '../../application/find-user-stats.service'
 import { FindStatsRequestDto } from './dto/request/find-stats.request.dto';
 import { UserHourlyStatResponseDto } from './dto/response/stat.response.dto';
 import { AggregatedStatResponseDto } from './dto/response/aggregated-stat.response.dto';
-import { plainToInstance } from 'class-transformer';
 import { CurrentUser, type CurrentUserWithSession } from 'src/common/auth/decorators/current-user.decorator';
 import { AuditLog } from 'src/modules/audit-log/infrastructure/audit-log.decorator';
 import { LogType } from 'src/modules/audit-log/domain';
@@ -55,7 +54,7 @@ export class AnalyticsUserController {
             dto.currency,
         );
 
-        return plainToInstance(UserHourlyStatResponseDto, stats);
+        return stats.map(stat => UserHourlyStatResponseDto.fromDomain(stat));
     }
 
     @Get('stats/aggregated')
@@ -99,6 +98,6 @@ export class AnalyticsUserController {
             dto.currency,
         );
 
-        return plainToInstance(AggregatedStatResponseDto, stat);
+        return AggregatedStatResponseDto.fromAggregated(stat);
     }
 }

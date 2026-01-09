@@ -3,7 +3,6 @@ import { ApiTags, ApiOperation, ApiParam } from '@nestjs/swagger';
 import { FindUserStatsService } from '../../application/find-user-stats.service';
 import { FindStatsRequestDto } from '../user/dto/request/find-stats.request.dto';
 import { AdminStatResponseDto } from './dto/response/admin-stat.response.dto';
-import { plainToInstance } from 'class-transformer';
 import { RequireRoles } from 'src/common/auth/decorators/roles.decorator';
 import { UserRoleType } from '@repo/database';
 import { AuditLog } from 'src/modules/audit-log/infrastructure/audit-log.decorator';
@@ -57,6 +56,6 @@ export class AnalyticsAdminController {
             dto.currency,
         );
 
-        return plainToInstance(AdminStatResponseDto, stats);
+        return stats.map(stat => AdminStatResponseDto.fromDomain(stat));
     }
 }
