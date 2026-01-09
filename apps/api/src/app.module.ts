@@ -22,6 +22,7 @@ import { RequestInfoInterceptor } from './common/http/interceptors/request-info.
 import { PromotionModule } from './modules/promotion/promotion.module';
 import { TierModule } from './modules/tier/tier.module';
 import { WageringModule } from './modules/wagering/wagering.module';
+import { AnalyticsModule } from './modules/analytics/analytics.module';
 
 @Module({
   imports: [
@@ -42,6 +43,7 @@ import { WageringModule } from './modules/wagering/wagering.module';
     PromotionModule,
     TierModule,
     WageringModule,
+    AnalyticsModule,
   ],
   providers: [
     Reflector,
