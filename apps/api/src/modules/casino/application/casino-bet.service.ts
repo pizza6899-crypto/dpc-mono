@@ -15,6 +15,7 @@ import { UpdateUserBalanceService } from 'src/modules/wallet/application/update-
 import { BalanceType, UpdateOperation } from 'src/modules/wallet/domain';
 import { InjectTransaction } from '@nestjs-cls/transactional';
 import { type PrismaTransaction } from 'src/infrastructure/prisma/prisma.module';
+import { SnowflakeService } from 'src/common/snowflake/snowflake.service';
 
 export interface ProcessBetParams {
   userId: bigint;
@@ -94,6 +95,7 @@ export class CasinoBetService {
     @InjectTransaction()
     private readonly tx: PrismaTransaction,
     private readonly updateUserBalanceService: UpdateUserBalanceService,
+    private readonly snowflakeService: SnowflakeService,
   ) { }
 
   /**
@@ -334,14 +336,15 @@ export class CasinoBetService {
       isEndRound,
     } = params;
 
-    const winTimeDate = parseDateStringOrThrow(winTime);
+    const winTimeDate = parseDateStringOrThrow(winTime) || new Date();
 
     // DCS의 경우: 같은 round_id에 대해 다른 wager_id로 여러 win이 올 수 있음
     // 따라서 같은 aggregatorWinId가 이미 존재하는지만 확인 (어느 round_id에 속해 있든 중복)
     // aggregatorWinId_aggregatorType은 unique constraint이므로 이 체크만으로 충분
     const existingWin = await this.tx.gameWin.findUnique({
       where: {
-        aggregatorWinId_aggregatorType: {
+        aggregatorWinId_aggregatorType_wonAt: {
+          wonAt: winTimeDate,
           aggregatorWinId,
           aggregatorType,
         },
@@ -445,6 +448,7 @@ export class CasinoBetService {
         },
         wins: {
           create: {
+            id: this.snowflakeService.generateFromTimestamp(winTimeDate),
             userId,
             winType: WinType.NORMAL,
             aggregatorType,
@@ -612,6 +616,7 @@ export class CasinoBetService {
         },
         wins: {
           create: {
+            id: this.snowflakeService.generateFromTimestamp(winTime),
             userId,
             winType: WinType.JACKPOT,
             aggregatorType,

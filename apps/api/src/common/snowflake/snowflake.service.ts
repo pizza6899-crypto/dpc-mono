@@ -22,8 +22,8 @@ import {
 export class SnowflakeService implements OnModuleInit, OnModuleDestroy {
     private readonly logger = new Logger(SnowflakeService.name);
 
-    // 커스텀 에포크: 2024-01-01 00:00:00 UTC (밀리초)
-    private readonly EPOCH = 1704067200000n;
+    // 커스텀 에포크: 2026-01-01 00:00:00 UTC (밀리초)
+    private readonly EPOCH = 1767225600000n;
 
     // 비트 시프트 값
     private readonly NODE_ID_SHIFT = 12n;
@@ -117,6 +117,7 @@ export class SnowflakeService implements OnModuleInit, OnModuleDestroy {
 
     /**
      * 다음 Snowflake ID를 생성합니다.
+     * 현재 시간을 기준으로 하며, 시계 역행 방지 로직이 포함되어 있습니다.
      * 
      * @returns {bigint} 고유한 Snowflake ID
      */
@@ -125,7 +126,7 @@ export class SnowflakeService implements OnModuleInit, OnModuleDestroy {
             throw new SnowflakeNodeIdNotAssignedException();
         }
 
-        let timestamp = this.getCurrentTimestamp();
+        let timestamp = BigInt(Date.now());
 
         // 시계 역행 감지
         if (timestamp < this.lastTimestamp) {
@@ -143,13 +144,63 @@ export class SnowflakeService implements OnModuleInit, OnModuleDestroy {
             }
         }
 
-        // 같은 밀리초 내에서 호출된 경우
-        if (timestamp === this.lastTimestamp) {
+        return this.internalGenerate(timestamp);
+    }
+
+    /**
+     * 특정 타임스탬프를 기준으로 Snowflake ID를 생성합니다.
+     * 외부 서비스의 발생 시간(wonAt) 등을 ID에 반영할 때 사용합니다.
+     * 
+     * @param {Date | bigint} targetTime - ID에 심을 대상 시간
+     * @returns {bigint} 생성된 Snowflake ID
+     */
+    generateFromTimestamp(targetTime: Date | bigint | number): bigint {
+        if (this.nodeId === undefined) {
+            throw new SnowflakeNodeIdNotAssignedException();
+        }
+
+        let timestamp: bigint;
+        if (targetTime instanceof Date) {
+            timestamp = BigInt(targetTime.getTime());
+        } else {
+            timestamp = BigInt(targetTime);
+        }
+
+        return this.internalGenerate(timestamp);
+    }
+
+    /**
+     * 내부적으로 타임스탬프와 시퀀스를 관리하며 ID를 생성합니다.
+     */
+    private internalGenerate(timestamp: bigint): bigint {
+        // 과거 타임스탬프가 명시적으로 들어온 경우
+        if (timestamp < this.lastTimestamp) {
+            this.logger.warn(
+                `Generating ID for past timestamp (${timestamp}) after future timestamp (${this.lastTimestamp}). ` +
+                `Sequence reset to 0. Potential ID collision risk if same timestamp is reused.`
+            );
+            this.sequence = 0n;
+        } else if (timestamp === this.lastTimestamp) {
+            // 같은 밀리초 내에서 호출된 경우 시퀀스 증가
             this.sequence = (this.sequence + 1n) & this.SEQUENCE_MASK;
 
-            // 시퀀스 오버플로우 발생 시 다음 밀리초까지 대기
+            // 시퀀스 오버플로우 발생 (4096번 초과)
             if (this.sequence === 0n) {
-                timestamp = this.waitNextMillis(this.lastTimestamp);
+                // 현재 시간 기준 생성인지 확인 (±10ms 허용)
+                const currentTime = BigInt(Date.now());
+                const isRealtimeGeneration = timestamp >= currentTime - 10n && timestamp <= currentTime + 10n;
+
+                if (isRealtimeGeneration) {
+                    // 실시간 생성: 다음 밀리초까지 대기
+                    this.logger.warn(`Sequence overflow. Waiting for next millisecond.`);
+                    timestamp = this.waitNextMillis(this.lastTimestamp);
+                } else {
+                    // 고정 타임스탬프 생성: 에러 발생 (무한 루프 방지)
+                    throw new Error(
+                        `Sequence overflow for fixed timestamp: ${timestamp}. ` +
+                        `Cannot generate more than 4096 IDs for the same millisecond.`
+                    );
+                }
             }
         } else {
             // 새로운 밀리초인 경우 시퀀스 초기화
@@ -158,13 +209,16 @@ export class SnowflakeService implements OnModuleInit, OnModuleDestroy {
 
         this.lastTimestamp = timestamp;
 
-        // ID 조합
-        const id =
-            ((timestamp - this.EPOCH) << this.TIMESTAMP_SHIFT) |
-            (this.nodeId << this.NODE_ID_SHIFT) |
-            this.sequence;
+        return this.buildId(timestamp, this.sequence);
+    }
 
-        return id;
+    /**
+     * 타임스탬프, 노드 ID, 시퀀스를 조합하여 64비트 ID를 빌드합니다.
+     */
+    private buildId(timestamp: bigint, sequence: bigint): bigint {
+        return ((timestamp - this.EPOCH) << this.TIMESTAMP_SHIFT) |
+            (this.nodeId << this.NODE_ID_SHIFT) |
+            (sequence & this.SEQUENCE_MASK);
     }
 
     /**

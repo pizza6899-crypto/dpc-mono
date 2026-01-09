@@ -262,4 +262,95 @@ describe('SnowflakeService', () => {
             expect(() => service.nextId()).toThrow('Clock moved backwards');
         });
     });
+
+    describe('generateFromTimestamp', () => {
+        it('should generate ID with specific timestamp', () => {
+            const targetTime = new Date('2027-01-01T00:00:00Z');
+            const id = service.generateFromTimestamp(targetTime);
+            const parsed = service.parse(id);
+
+            expect(parsed.date.getTime()).toBe(targetTime.getTime());
+        });
+
+        it('should accept Date, bigint, and number as input', () => {
+            const targetDate = new Date('2027-01-01T00:00:00Z');
+            const targetBigInt = BigInt(targetDate.getTime());
+            const targetNumber = targetDate.getTime();
+
+            const id1 = service.generateFromTimestamp(targetDate);
+            const id2 = service.generateFromTimestamp(targetBigInt);
+            const id3 = service.generateFromTimestamp(targetNumber);
+
+            const parsed1 = service.parse(id1);
+            const parsed2 = service.parse(id2);
+            const parsed3 = service.parse(id3);
+
+            expect(parsed1.date.getTime()).toBe(targetDate.getTime());
+            expect(parsed2.date.getTime()).toBe(targetDate.getTime());
+            expect(parsed3.date.getTime()).toBe(targetDate.getTime());
+        });
+
+        it('should handle past timestamp after current timestamp generation', () => {
+            service.nextId(); // 현재 시간으로 생성
+            const pastTime = new Date('2026-06-01T00:00:00Z'); // EPOCH(2026-01-01) 이후 시간
+            const id = service.generateFromTimestamp(pastTime);
+
+            expect(id).toBeGreaterThan(0n);
+            const parsed = service.parse(id);
+            expect(parsed.date.getTime()).toBe(pastTime.getTime());
+        });
+
+        it('should generate unique IDs for multiple calls with same timestamp', () => {
+            const fixedTime = new Date('2027-01-01T00:00:00Z');
+            const ids = new Set<bigint>();
+
+            for (let i = 0; i < 100; i++) {
+                ids.add(service.generateFromTimestamp(fixedTime));
+            }
+
+            expect(ids.size).toBe(100); // 모두 고유해야 함
+        });
+
+        it('should increment sequence for same fixed timestamp', () => {
+            const fixedTime = new Date('2027-01-01T00:00:00Z');
+            const id1 = service.generateFromTimestamp(fixedTime);
+            const id2 = service.generateFromTimestamp(fixedTime);
+            const id3 = service.generateFromTimestamp(fixedTime);
+
+            const parsed1 = service.parse(id1);
+            const parsed2 = service.parse(id2);
+            const parsed3 = service.parse(id3);
+
+            expect(parsed1.sequence).toBe(0n);
+            expect(parsed2.sequence).toBe(1n);
+            expect(parsed3.sequence).toBe(2n);
+        });
+
+        it('should throw error when sequence overflows for fixed timestamp', () => {
+            const fixedTime = new Date('2027-01-01T00:00:00Z');
+
+            // 4096번 생성 (시퀀스 0-4095)
+            for (let i = 0; i < 4096; i++) {
+                service.generateFromTimestamp(fixedTime);
+            }
+
+            // 4097번째 호출 시 에러 발생해야 함
+            expect(() => service.generateFromTimestamp(fixedTime)).toThrow(
+                'Sequence overflow for fixed timestamp'
+            );
+        });
+
+        it('should reset sequence when timestamp changes', () => {
+            const time1 = new Date('2027-01-01T00:00:00.000Z');
+            const time2 = new Date('2027-01-01T00:00:00.001Z'); // 1ms 차이
+
+            service.generateFromTimestamp(time1); // sequence = 0
+            service.generateFromTimestamp(time1); // sequence = 1
+
+            const id = service.generateFromTimestamp(time2); // 새 타임스탬프, sequence = 0
+            const parsed = service.parse(id);
+
+            expect(parsed.sequence).toBe(0n);
+        });
+    });
 });

@@ -22,6 +22,7 @@ import { WageringModule } from '../wagering/wagering.module';
 import { AnalyticsModule } from '../analytics/analytics.module';
 import { TierModule } from '../tier/tier.module';
 import { CompModule } from '../comp/comp.module';
+import { SnowflakeModule } from 'src/common/snowflake/snowflake.module';
 
 @Module({
   imports: [
@@ -37,6 +38,7 @@ import { CompModule } from '../comp/comp.module';
     AnalyticsModule,
     TierModule,
     CompModule,
+    SnowflakeModule,
   ],
   controllers: [CasinoGameUserController],
   providers: [

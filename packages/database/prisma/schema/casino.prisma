@@ -63,3 +63,24 @@ model CasinoGameSession {
   @@index([userId])
   @@map("casino_game_sessions")
 }
+
+model GameWin {
+  id                      BigInt
+  userId                  BigInt             @map("user_id")
+  gameRoundId             BigInt             @map("game_round_id")
+  aggregatorType          GameAggregatorType @map("aggregator_type")
+  aggregatorWinId         String             @map("aggregator_win_id")
+  winType                 WinType            @map("win_type")
+  winAmount               Decimal            @map("win_amount") @db.Decimal(32, 18)
+  wonAt                   DateTime           @map("won_at")
+  description             String?
+  winAmountInGameCurrency Decimal            @map("win_amount_in_game_currency") @db.Decimal(32, 18)
+  gameRound               GameRound          @relation(fields: [gameRoundId], references: [id], onDelete: Cascade)
+
+  // PK에 파티션 키(wonAt)를 포함시킵니다.
+  @@id([id, wonAt])
+  // 비즈니스 로직상 유니크 제약조건에도 파티션 키가 포함되어야 합니다.
+  @@unique([aggregatorWinId, aggregatorType, wonAt])
+  @@index([gameRoundId])
+  @@map("game_wins")
+}
