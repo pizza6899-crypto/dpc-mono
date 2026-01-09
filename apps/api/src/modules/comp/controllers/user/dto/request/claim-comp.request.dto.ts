@@ -1,14 +1,18 @@
-import { IsEnum, IsNumber, IsPositive } from 'class-validator';
+import { IsEnum, IsNumber, IsPositive, IsNotEmpty } from 'class-validator';
 import { Type } from 'class-transformer';
-import { ExchangeCurrencyCode, Prisma } from '@repo/database';
+import { ApiProperty } from '@nestjs/swagger';
+import { ExchangeCurrencyCode } from '@repo/database';
 
 export class ClaimCompRequestDto {
+    @ApiProperty({ enum: ExchangeCurrencyCode, example: ExchangeCurrencyCode.KRW })
     @IsEnum(ExchangeCurrencyCode)
+    @IsNotEmpty()
     currency: ExchangeCurrencyCode;
 
+    @ApiProperty({ example: 1000 })
     @IsNumber()
     @IsPositive()
-    @Type(() => Number) // Handle number conversion if JSON sends number
-    // Or handle string-to-decimal if we want high precision from client
+    @IsNotEmpty()
+    @Type(() => Number)
     amount: number;
 }

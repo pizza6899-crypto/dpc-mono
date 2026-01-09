@@ -41,7 +41,8 @@ interface RecordCompParams {
     userId: bigint;
     currency: ExchangeCurrencyCode;
     date: Date;
-    earnedAmount: Prisma.Decimal;
+    earnedAmount?: Prisma.Decimal;
+    convertedAmount?: Prisma.Decimal;
 }
 
 @Injectable()
@@ -183,7 +184,14 @@ export class RecordUserActivityService {
             params.currency,
         );
 
-        stat.totalCompEarned = stat.totalCompEarned.add(params.earnedAmount);
+        if (params.earnedAmount) {
+            stat.totalCompEarned = stat.totalCompEarned.add(params.earnedAmount);
+        }
+
+        if (params.convertedAmount) {
+            stat.totalCompConverted = stat.totalCompConverted.add(params.convertedAmount);
+            stat.endBalance = stat.endBalance.add(params.convertedAmount);
+        }
 
         await this.repository.save(stat);
     }

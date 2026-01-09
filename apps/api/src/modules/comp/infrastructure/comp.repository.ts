@@ -5,6 +5,10 @@ import { ExchangeCurrencyCode, Prisma, TransactionStatus, TransactionType } from
 import { CompRepositoryPort } from '../ports';
 import { CompWallet, CompTransaction } from '../domain';
 import { CompMapper } from './comp.mapper';
+import { LockNamespace } from 'src/common/concurrency/lock-namespace';
+import { DomainException } from 'src/common/exception/domain.exception';
+import { MessageCode } from '@repo/shared';
+import { HttpStatus } from '@nestjs/common';
 
 @Injectable()
 export class CompRepository implements CompRepositoryPort {
@@ -24,6 +28,35 @@ export class CompRepository implements CompRepositoryPort {
             },
         });
         return result ? this.mapper.toDomain(result) : null;
+    }
+
+    /**
+     * PostgreSQL Advisory Lock을 사용하여 사용자 콤프 지갑에 대한 배타적 락을 획득합니다.
+     * 트랜잭션이 종료되면 자동으로 해제됩니다 (Transaction-level advisory lock).
+     */
+    async acquireLock(userId: bigint): Promise<void> {
+        try {
+            // 락 타임아웃 3초 설정
+            await this.tx.$executeRaw`SET LOCAL lock_timeout = '3s'`;
+
+            // MD5 해시의 앞 16자리를 사용하여 충돌 가능성을 최소화한 64비트 정수로 변환
+            await this.tx.$executeRaw`SELECT pg_advisory_xact_lock(('x' || substr(md5(${LockNamespace.COMP_WALLET}::text || ${userId.toString()}), 1, 16))::bit(64)::bigint)`;
+        } catch (error: any) {
+            const isLockTimeout =
+                error.code === '55P03' ||
+                error.meta?.code === '55P03' ||
+                error.message?.includes('55P03') ||
+                error.message?.includes('lock timeout');
+
+            if (isLockTimeout) {
+                throw new DomainException(
+                    'User comp wallet is being processed by another transaction. Please try again.',
+                    MessageCode.THROTTLE_TOO_MANY_REQUESTS,
+                    HttpStatus.TOO_MANY_REQUESTS,
+                );
+            }
+            throw error;
+        }
     }
 
     async save(wallet: CompWallet): Promise<CompWallet> {
@@ -83,6 +116,7 @@ export class CompRepository implements CompRepositoryPort {
             bonusBeforeAmount: Prisma.Decimal;
             bonusAfterAmount: Prisma.Decimal;
         };
+        compWalletTransactionId?: bigint;
     }): Promise<bigint> {
         const result = await this.tx.transaction.create({
             data: {
@@ -93,11 +127,159 @@ export class CompRepository implements CompRepositoryPort {
                 amount: data.amount,
                 beforeAmount: data.beforeAmount,
                 afterAmount: data.afterAmount,
+                compWalletTransactionId: data.compWalletTransactionId,
                 balanceDetails: {
                     create: data.balanceDetails,
                 },
             },
         });
         return result.id;
+    }
+
+    async findTransactions(params: {
+        userId: bigint;
+        currency?: ExchangeCurrencyCode;
+        startDate?: Date;
+        endDate?: Date;
+        page: number;
+        limit: number;
+    }): Promise<{ data: CompTransaction[]; total: number }> {
+        const { userId, currency, startDate, endDate, page, limit } = params;
+        const skip = (page - 1) * limit;
+
+        const where: Prisma.CompWalletTransactionWhereInput = {
+            wallet: {
+                userId: userId,
+                ...(currency && { currency }),
+            },
+            ...((startDate || endDate) && {
+                createdAt: {
+                    ...(startDate && { gte: startDate }),
+                    ...(endDate && { lte: endDate }),
+                },
+            }),
+        };
+
+        const [data, total] = await Promise.all([
+            this.tx.compWalletTransaction.findMany({
+                where,
+                skip,
+                take: limit,
+                orderBy: { createdAt: 'desc' },
+            }),
+            this.tx.compWalletTransaction.count({ where }),
+        ]);
+
+        return {
+            data: data.map(tx => this.mapper.toTransactionDomain(tx)),
+            total,
+        };
+    }
+
+    async getStatsOverview(params: {
+        currency?: ExchangeCurrencyCode;
+        startDate?: Date;
+        endDate?: Date;
+    }): Promise<{ totalEarned: Prisma.Decimal; totalUsed: Prisma.Decimal }> {
+        const { currency, startDate, endDate } = params;
+        const where: Prisma.CompWalletTransactionWhereInput = {
+            ...(currency && { wallet: { currency } }),
+            ...((startDate || endDate) && {
+                createdAt: {
+                    ...(startDate && { gte: startDate }),
+                    ...(endDate && { lte: endDate }),
+                },
+            }),
+        };
+
+        const earns = await this.tx.compWalletTransaction.aggregate({
+            _sum: { amount: true },
+            where: { ...where, amount: { gt: 0 } },
+        });
+
+        const claims = await this.tx.compWalletTransaction.aggregate({
+            _sum: { amount: true },
+            where: { ...where, amount: { lt: 0 } },
+        });
+
+        return {
+            totalEarned: earns._sum.amount || new Prisma.Decimal(0),
+            totalUsed: (claims._sum.amount || new Prisma.Decimal(0)).abs(),
+        };
+    }
+
+    async getDailyStats(params: {
+        currency?: ExchangeCurrencyCode;
+        startDate?: Date;
+        endDate?: Date;
+    }): Promise<Array<{ date: string; earned: Prisma.Decimal; used: Prisma.Decimal }>> {
+        const { currency, startDate, endDate } = params;
+        const where: Prisma.CompWalletTransactionWhereInput = {
+            ...(currency && { wallet: { currency } }),
+            ...((startDate || endDate) && {
+                createdAt: {
+                    ...(startDate && { gte: startDate }),
+                    ...(endDate && { lte: endDate }),
+                },
+            }),
+        };
+
+        const txs = await this.tx.compWalletTransaction.findMany({
+            where,
+            select: {
+                amount: true,
+                createdAt: true,
+            },
+        });
+
+        const dailyMap = new Map<string, { earned: Prisma.Decimal; used: Prisma.Decimal }>();
+        txs.forEach(t => {
+            const dateStr = t.createdAt.toISOString().split('T')[0];
+            const current = dailyMap.get(dateStr) || { earned: new Prisma.Decimal(0), used: new Prisma.Decimal(0) };
+            if (t.amount.gt(0)) {
+                current.earned = current.earned.add(t.amount);
+            } else {
+                current.used = current.used.add(t.amount.abs());
+            }
+            dailyMap.set(dateStr, current);
+        });
+
+        return Array.from(dailyMap.entries())
+            .map(([date, stats]) => ({ date, ...stats }))
+            .sort((a, b) => a.date.localeCompare(b.date));
+    }
+
+    async getTopEarners(params: {
+        currency?: ExchangeCurrencyCode;
+        limit: number;
+    }): Promise<Array<{ userId: bigint; totalEarned: Prisma.Decimal }>> {
+        const { currency, limit } = params;
+        const where: Prisma.CompWalletTransactionWhereInput = {
+            amount: { gt: 0 },
+            ...(currency && { wallet: { currency } }),
+        };
+
+        const groups = await this.tx.compWalletTransaction.groupBy({
+            by: ['compWalletId'],
+            _sum: { amount: true },
+            where,
+            orderBy: {
+                _sum: { amount: 'desc' },
+            },
+            take: limit,
+        });
+
+        const results = await Promise.all(groups.map(async g => {
+            const wallet = await this.tx.userCompWallet.findUnique({
+                where: { id: g.compWalletId },
+                select: { userId: true },
+            });
+            return {
+                userId: wallet?.userId || BigInt(0),
+                totalEarned: g._sum.amount || new Prisma.Decimal(0),
+            };
+        }));
+
+        return results;
     }
 }

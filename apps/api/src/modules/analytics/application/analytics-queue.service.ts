@@ -39,7 +39,8 @@ interface EnqueueBonusParams {
 interface EnqueueCompParams {
     userId: bigint;
     currency: ExchangeCurrencyCode;
-    earnedAmount: Prisma.Decimal;
+    earnedAmount?: Prisma.Decimal;
+    convertedAmount?: Prisma.Decimal;
     date?: Date;
 }
 
@@ -96,7 +97,8 @@ export class AnalyticsQueueService {
         await this.addJob(AnalyticsJobName.RECORD_COMP, {
             userId: params.userId.toString(),
             currency: params.currency,
-            earnedAmount: params.earnedAmount.toString(),
+            earnedAmount: params.earnedAmount?.toString(),
+            convertedAmount: params.convertedAmount?.toString(),
             date: (params.date || new Date()).toISOString(),
         });
     }

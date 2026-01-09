@@ -1,14 +1,21 @@
 import { Body, Controller, Get, Param, Post, Query, UseGuards, HttpCode, HttpStatus } from '@nestjs/common';
 import { ApiTags, ApiOperation, ApiParam } from '@nestjs/swagger';
-import { ExchangeCurrencyCode, Prisma, UserRoleType } from '@repo/database';
+import { Prisma, UserRoleType } from '@repo/database';
+import { FindCompTransactionsService } from '../../application/find-comp-transactions.service';
+import { FindCompTransactionsQueryDto } from '../dto/request/find-comp-transactions-query.dto';
+import { CompTransactionResponseDto } from '../dto/response/comp-transaction.response.dto';
 import { FindCompBalanceService } from '../../application/find-comp-balance.service';
 import { EarnCompService } from '../../application/earn-comp.service';
+import { DeductCompService } from '../../application/deduct-comp.service';
 import { CompBalanceResponseDto } from '../user/dto/response/comp-balance.response.dto';
 import { RequireRoles } from 'src/common/auth/decorators/roles.decorator';
 import { AuditLog } from 'src/modules/audit-log/infrastructure/audit-log.decorator';
 import { LogType } from 'src/modules/audit-log/domain';
-import { ApiStandardErrors } from 'src/common/http/decorators/api-response.decorator';
+import { ApiStandardErrors, ApiPaginatedResponse } from 'src/common/http/decorators/api-response.decorator';
 import { AdminCompAdjustRequestDto, AdminCompAdjustType } from './dto/request/admin-comp-adjust.request.dto';
+import { AdminCompBalanceQueryDto } from './dto/request/admin-comp-balance-query.dto';
+import { Paginated } from 'src/common/http/decorators/paginated.decorator';
+import { PaginatedData } from 'src/common/http/types/pagination.types';
 
 @ApiTags('Admin Comp')
 @Controller('admin/comp')
@@ -18,6 +25,8 @@ export class CompAdminController {
     constructor(
         private readonly findCompBalanceService: FindCompBalanceService,
         private readonly earnCompService: EarnCompService,
+        private readonly deductCompService: DeductCompService,
+        private readonly findCompTransactionsService: FindCompTransactionsService,
     ) { }
 
     @Get('users/:userId/balance')
@@ -26,9 +35,9 @@ export class CompAdminController {
     @ApiParam({ name: 'userId', example: '1' })
     async getUserBalance(
         @Param('userId') userId: string,
-        @Query('currency') currency: ExchangeCurrencyCode,
+        @Query() query: AdminCompBalanceQueryDto,
     ): Promise<CompBalanceResponseDto> {
-        const wallet = await this.findCompBalanceService.execute(BigInt(userId), currency);
+        const wallet = await this.findCompBalanceService.execute(BigInt(userId), query.currency);
         return CompBalanceResponseDto.fromDomain(wallet);
     }
 
@@ -53,13 +62,43 @@ export class CompAdminController {
                 userId: uid,
                 currency: dto.currency,
                 amount: amount,
-                description: dto.reason || 'Admin Adjustment',
-                referenceId: `ADMIN-${Date.now()}`
+                description: dto.reason || 'Admin Adjustment (GIVE)',
+                referenceId: `ADMIN-GIVE-${Date.now()}`
             });
             return { success: true, newBalance: wallet.balance.toString() };
         } else {
-            // Deduct logic implementation needed
-            return { success: false, message: 'DEDUCT not implemented yet' };
+            const wallet = await this.deductCompService.execute({
+                userId: uid,
+                currency: dto.currency,
+                amount: amount,
+                description: dto.reason || 'Admin Adjustment (DEDUCT)',
+            });
+            return { success: true, newBalance: wallet.balance.toString() };
         }
+    }
+
+    @Get('users/:userId/transactions')
+    @HttpCode(HttpStatus.OK)
+    @ApiOperation({ summary: 'Get user comp transactions (Admin)' })
+    @ApiParam({ name: 'userId', example: '1' })
+    @Paginated()
+    @ApiPaginatedResponse(CompTransactionResponseDto)
+    async getUserTransactions(
+        @Param('userId') userId: string,
+        @Query() query: FindCompTransactionsQueryDto,
+    ): Promise<PaginatedData<CompTransactionResponseDto>> {
+        const result = await this.findCompTransactionsService.execute({
+            userId: BigInt(userId),
+            ...query,
+            startDate: query.startDate ? new Date(query.startDate) : undefined,
+            endDate: query.endDate ? new Date(query.endDate) : undefined,
+            page: query.page ?? 1,
+            limit: query.limit ?? 20,
+        });
+
+        return {
+            ...result,
+            data: result.data.map(CompTransactionResponseDto.fromDomain),
+        };
     }
 }

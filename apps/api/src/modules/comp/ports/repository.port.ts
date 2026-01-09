@@ -5,6 +5,7 @@ import { CompTransaction } from '../domain/model/comp-transaction.entity';
 export interface CompRepositoryPort {
     findByUserIdAndCurrency(userId: bigint, currency: ExchangeCurrencyCode): Promise<CompWallet | null>;
     save(wallet: CompWallet): Promise<CompWallet>;
+    acquireLock(userId: bigint): Promise<void>;
     createTransaction(transaction: CompTransaction): Promise<CompTransaction>;
     createMainTransaction(data: {
         userId: bigint;
@@ -22,5 +23,42 @@ export interface CompRepositoryPort {
             bonusBeforeAmount: Prisma.Decimal;
             bonusAfterAmount: Prisma.Decimal;
         };
+        compWalletTransactionId?: bigint;
     }): Promise<bigint>;
+
+    findTransactions(params: {
+        userId: bigint;
+        currency?: ExchangeCurrencyCode;
+        startDate?: Date;
+        endDate?: Date;
+        page: number;
+        limit: number;
+    }): Promise<{ data: CompTransaction[]; total: number }>;
+
+    getStatsOverview(params: {
+        currency?: ExchangeCurrencyCode;
+        startDate?: Date;
+        endDate?: Date;
+    }): Promise<{
+        totalEarned: Prisma.Decimal;
+        totalUsed: Prisma.Decimal;
+    }>;
+
+    getDailyStats(params: {
+        currency?: ExchangeCurrencyCode;
+        startDate?: Date;
+        endDate?: Date;
+    }): Promise<Array<{
+        date: string;
+        earned: Prisma.Decimal;
+        used: Prisma.Decimal;
+    }>>;
+
+    getTopEarners(params: {
+        currency?: ExchangeCurrencyCode;
+        limit: number;
+    }): Promise<Array<{
+        userId: bigint;
+        totalEarned: Prisma.Decimal;
+    }>>;
 }

@@ -34,8 +34,6 @@ model User {
   subUserCommissions     AffiliateCommission[]   @relation("SubUserCommissions")
   affiliateTier          AffiliateTier?
   affiliateWallets       AffiliateWallet[]       @relation("AffiliateWallets")
-  CompTransaction        CompTransaction[]
-  DailyCompEarning       DailyCompEarning[]
   EmailLog               EmailLog[]
   GameSession            CasinoGameSession[]
   affiliateReferrals     Referral[]              @relation("AffiliateReferrals")
@@ -104,7 +102,6 @@ model Transaction {
   createdAt              DateTime                   @default(now())
   updatedAt              DateTime                   @updatedAt
   bonusDetail            BonusDetail?
-  compTransaction        CompTransaction?
   depositDetail          DepositDetail?
   gameRound              GameRound?
   user                   User                       @relation(fields: [userId], references: [id])
@@ -112,6 +109,9 @@ model Transaction {
   withdrawDetail         WithdrawDetail?
   adminAdjustmentDetail  AdminAdjustmentDetail?
   systemAdjustmentDetail SystemAdjustmentDetail?
+
+  compWalletTransactionId BigInt?                @map("comp_wallet_transaction_id")
+  compWalletTransaction   CompWalletTransaction? @relation(fields: [compWalletTransactionId], references: [id])
 }
 
 model GameRound {
@@ -251,40 +251,6 @@ model WithdrawDetail {
   @@index([provider, status])
   @@index([transactionHash])
   @@index([status, createdAt])
-}
-
-model CompTransaction {
-  id                 BigInt           @id @default(autoincrement())
-  userId             BigInt
-  amount             Decimal          @db.Decimal(32, 18)
-  dailyCompEarningId Int
-  transactionId      BigInt           @unique
-  createdAt          DateTime         @default(now())
-  updatedAt          DateTime         @updatedAt
-  dailyCompEarning   DailyCompEarning @relation(fields: [dailyCompEarningId], references: [id])
-  transaction        Transaction      @relation(fields: [transactionId], references: [id])
-  user               User             @relation(fields: [userId], references: [id])
-
-  @@index([userId])
-  @@index([createdAt])
-}
-
-model DailyCompEarning {
-  id                Int               @id @default(autoincrement())
-  userId            BigInt
-  earningDate       DateTime
-  totalContribution Decimal           @db.Decimal(32, 18)
-  compEarned        Decimal           @db.Decimal(32, 18)
-  isProcessed       Boolean           @default(false)
-  processedAt       DateTime?
-  createdAt         DateTime          @default(now())
-  updatedAt         DateTime          @updatedAt
-  CompTransaction   CompTransaction[]
-  user              User              @relation(fields: [userId], references: [id])
-
-  @@unique([userId, earningDate])
-  @@index([earningDate])
-  @@index([isProcessed])
 }
 
 model NowPaymentCallbackLog {

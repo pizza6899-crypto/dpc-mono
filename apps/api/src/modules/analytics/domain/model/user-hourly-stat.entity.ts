@@ -33,6 +33,7 @@ export class UserHourlyStat {
         public liveGameCount: number,
         // --- 콤프/포인트 집계 ---
         public totalCompEarned: Prisma.Decimal,
+        public totalCompConverted: Prisma.Decimal,
         // --- 잔액 스냅샷 (현금) ---
         public startBalance: Prisma.Decimal,
         public endBalance: Prisma.Decimal,
@@ -83,6 +84,7 @@ export class UserHourlyStat {
             0,
             // 콤프
             zero,
+            zero,
             // 잔액 스냅샷 (현금)
             params.startBalance ?? zero,
             params.startBalance ?? zero,
@@ -120,6 +122,7 @@ export class UserHourlyStat {
         liveGgr: Prisma.Decimal;
         liveGameCount: number;
         totalCompEarned: Prisma.Decimal;
+        totalCompConverted: Prisma.Decimal;
         startBalance: Prisma.Decimal;
         endBalance: Prisma.Decimal;
         startBonusBalance: Prisma.Decimal;
@@ -152,6 +155,7 @@ export class UserHourlyStat {
             params.liveGgr,
             params.liveGameCount,
             params.totalCompEarned,
+            params.totalCompConverted,
             params.startBalance,
             params.endBalance,
             params.startBonusBalance,

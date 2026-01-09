@@ -11,5 +11,6 @@ export enum LockNamespace {
     USER_WALLET = 1004,
     DEPOSIT = 1005,
     USER_DEPOSIT = 1006,
+    COMP_WALLET = 1007,
     // 향후 추가될 네임스페이스들
 }

@@ -5,7 +5,6 @@ import { AdminDepositController } from './controllers/admin/deposit.controller';
 import { PrismaModule } from 'src/infrastructure/prisma/prisma.module';
 import { EnvModule } from 'src/common/env/env.module';
 import { UserValidationModule } from 'src/common/user-validation/user-validation.module';
-import { UserStatsModule } from '../user-stats/user-stats.module';
 import { PaymentModule } from '../payment/payment.module';
 import { WalletModule } from '../wallet/wallet.module';
 import { PromotionModule } from '../promotion/promotion.module';
@@ -41,7 +40,6 @@ import {
     PrismaModule,
     EnvModule,
     UserValidationModule,
-    UserStatsModule,
     PaymentModule, // NowPaymentApiService 사용을 위해
     WalletModule, // UpdateUserBalanceAdminService 사용을 위해
     PromotionModule, // CheckEligiblePromotionsService 사용을 위해

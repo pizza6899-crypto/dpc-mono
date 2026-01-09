@@ -51,7 +51,8 @@ model UserHourlyStat {
   liveGameCount Int     @default(0) @map("live_game_count")
 
   // --- 콤프/포인트 집계 ---
-  totalCompEarned Decimal @default(0) @map("total_comp_earned") @db.Decimal(32, 18)
+  totalCompEarned    Decimal @default(0) @map("total_comp_earned") @db.Decimal(32, 18)
+  totalCompConverted Decimal @default(0) @map("total_comp_converted") @db.Decimal(32, 18)
 
   // --- 잔액 스냅샷 (현금) ---
   // 그 시간의 시작 잔액

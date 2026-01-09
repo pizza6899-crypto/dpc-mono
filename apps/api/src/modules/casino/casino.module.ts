@@ -11,7 +11,6 @@ import { GamePostProcessProcessor } from './processors/game-post-process.process
 import { EnvModule } from 'src/common/env/env.module';
 import { CasinoRefundService } from './application/casino-refund.service';
 import { ExchangeModule } from '../exchange/exchange.module';
-import { UserStatsModule } from '../user-stats/user-stats.module';
 import { AuditLogModule } from '../audit-log/audit-log.module';
 import { WalletModule } from '../wallet/wallet.module';
 import { CasinoGameSessionMapper } from './infrastructure/mapper/casino-game-session.mapper';
@@ -32,7 +31,6 @@ import { CompModule } from '../comp/comp.module';
     QueueModule,
     EnvModule,
     ExchangeModule,
-    UserStatsModule,
     AuditLogModule,
     WalletModule,
     WageringModule,

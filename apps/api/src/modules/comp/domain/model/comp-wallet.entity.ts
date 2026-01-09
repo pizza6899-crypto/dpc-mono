@@ -68,4 +68,25 @@ export class CompWallet {
             new Date(),
         );
     }
+
+    deduct(amount: Prisma.Decimal): CompWallet {
+        if (this.balance.lessThan(amount)) {
+            throw new InsufficientCompBalanceException(
+                this.userId,
+                amount.toString(),
+                this.balance.toString()
+            );
+        }
+
+        return new CompWallet(
+            this.id,
+            this.userId,
+            this.currency,
+            this.balance.sub(amount),
+            this.totalEarned,
+            this.totalUsed.add(amount), // Also count as used/deducted
+            this.createdAt,
+            new Date(),
+        );
+    }
 }

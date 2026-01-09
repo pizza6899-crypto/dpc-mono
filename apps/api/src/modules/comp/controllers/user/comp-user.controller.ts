@@ -5,8 +5,15 @@ import { ExchangeCurrencyCode, Prisma } from '@repo/database';
 import { ClaimCompService } from '../../application/claim-comp.service';
 import { FindCompBalanceService } from '../../application/find-comp-balance.service';
 import { ClaimCompRequestDto } from './dto/request/claim-comp.request.dto';
+import { CompBalanceQueryDto } from './dto/request/comp-balance-query.dto';
 import { CompBalanceResponseDto } from './dto/response/comp-balance.response.dto';
-import { ApiStandardResponse, ApiStandardErrors } from 'src/common/http/decorators/api-response.decorator';
+import { ApiStandardResponse, ApiStandardErrors, ApiPaginatedResponse } from 'src/common/http/decorators/api-response.decorator';
+import type { AuthenticatedUser } from 'src/common/auth/types/auth.types';
+import { FindCompTransactionsService } from '../../application/find-comp-transactions.service';
+import { FindCompTransactionsQueryDto } from '../dto/request/find-comp-transactions-query.dto';
+import { CompTransactionResponseDto } from '../dto/response/comp-transaction.response.dto';
+import { PaginatedData } from 'src/common/http/types/pagination.types';
+import { Paginated } from 'src/common/http/decorators/paginated.decorator';
 
 @ApiTags('Comp')
 @Controller('user/comp')
@@ -15,6 +22,7 @@ export class CompUserController {
     constructor(
         private readonly claimCompService: ClaimCompService,
         private readonly findCompBalanceService: FindCompBalanceService,
+        private readonly findCompTransactionsService: FindCompTransactionsService,
     ) { }
 
     @Get('balance')
@@ -22,11 +30,11 @@ export class CompUserController {
     @ApiOperation({ summary: 'Get user comp balance' })
     @ApiStandardResponse(CompBalanceResponseDto)
     async getBalance(
-        @CurrentUser() user: any,
-        @Query('currency') currency: ExchangeCurrencyCode,
+        @CurrentUser() user: AuthenticatedUser,
+        @Query() query: CompBalanceQueryDto,
     ): Promise<CompBalanceResponseDto> {
         const userId = BigInt(user.id);
-        const wallet = await this.findCompBalanceService.execute(userId, currency);
+        const wallet = await this.findCompBalanceService.execute(userId, query.currency);
         return CompBalanceResponseDto.fromDomain(wallet);
     }
 
@@ -34,7 +42,7 @@ export class CompUserController {
     @HttpCode(HttpStatus.OK)
     @ApiOperation({ summary: 'Claim comp points as cash' })
     async claim(
-        @CurrentUser() user: any,
+        @CurrentUser() user: AuthenticatedUser,
         @Body() dto: ClaimCompRequestDto,
     ): Promise<any> {
         const userId = BigInt(user.id);
@@ -49,6 +57,30 @@ export class CompUserController {
             claimedAmount: result.claimedAmount.toString(),
             newCompBalance: result.newCompBalance.toString(),
             newCashBalance: result.newCashBalance.toString(),
+        };
+    }
+
+    @Get('transactions')
+    @HttpCode(HttpStatus.OK)
+    @ApiOperation({ summary: 'Get my comp transactions' })
+    @Paginated()
+    @ApiPaginatedResponse(CompTransactionResponseDto)
+    async getTransactions(
+        @CurrentUser() user: AuthenticatedUser,
+        @Query() query: FindCompTransactionsQueryDto,
+    ): Promise<PaginatedData<CompTransactionResponseDto>> {
+        const result = await this.findCompTransactionsService.execute({
+            userId: BigInt(user.id),
+            ...query,
+            startDate: query.startDate ? new Date(query.startDate) : undefined,
+            endDate: query.endDate ? new Date(query.endDate) : undefined,
+            page: query.page ?? 1,
+            limit: query.limit ?? 20,
+        });
+
+        return {
+            ...result,
+            data: result.data.map(CompTransactionResponseDto.fromDomain),
         };
     }
 }

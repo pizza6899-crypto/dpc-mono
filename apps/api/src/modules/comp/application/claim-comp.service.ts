@@ -6,6 +6,7 @@ import type { CompRepositoryPort } from '../ports';
 import { CompTransaction, InsufficientCompBalanceException } from '../domain';
 import { UpdateUserBalanceService } from '../../wallet/application/update-user-balance.service';
 import { BalanceType, UpdateOperation } from '../../wallet/domain';
+import { AnalyticsQueueService } from '../../analytics/application/analytics-queue.service';
 
 interface ClaimCompParams {
     userId: bigint;
@@ -27,11 +28,15 @@ export class ClaimCompService {
         @Inject(COMP_REPOSITORY)
         private readonly compRepository: CompRepositoryPort,
         private readonly updateUserBalanceService: UpdateUserBalanceService,
+        private readonly analyticsQueueService: AnalyticsQueueService,
     ) { }
 
     @Transactional()
     async execute(params: ClaimCompParams): Promise<ClaimCompResult> {
         const { userId, currency, amount } = params;
+
+        // 0. Acquire Lock
+        await this.compRepository.acquireLock(userId);
 
         // 1. Get Wallet
         let wallet = await this.compRepository.findByUserIdAndCurrency(userId, currency);
@@ -53,7 +58,7 @@ export class ClaimCompService {
             type: CompTransactionType.CLAIM,
             description: 'Comp conversion to cash',
         });
-        await this.compRepository.createTransaction(compTx);
+        const createdCompTx = await this.compRepository.createTransaction(compTx);
 
         // 5. Update Main User Balance (Cash)
         const balanceUpdate = await this.updateUserBalanceService.execute({
@@ -73,6 +78,7 @@ export class ClaimCompService {
             amount: amount,
             beforeAmount: balanceUpdate.beforeMainBalance.add(balanceUpdate.beforeBonusBalance),
             afterAmount: balanceUpdate.afterMainBalance.add(balanceUpdate.afterBonusBalance),
+            compWalletTransactionId: createdCompTx.id,
             balanceDetails: {
                 mainBalanceChange: balanceUpdate.mainBalanceChange,
                 mainBeforeAmount: balanceUpdate.beforeMainBalance,
@@ -81,6 +87,14 @@ export class ClaimCompService {
                 bonusBeforeAmount: balanceUpdate.beforeBonusBalance,
                 bonusAfterAmount: balanceUpdate.afterBonusBalance,
             },
+        });
+
+        // 7. Enqueue Analytics
+        await this.analyticsQueueService.enqueueComp({
+            userId,
+            currency,
+            convertedAmount: amount, // Claimed amount is converted amount
+            date: new Date(),
         });
 
         this.logger.log(`Comp Claimed: user=${userId}, compDeducted=${amount}, cashAdded=${amount}`);
