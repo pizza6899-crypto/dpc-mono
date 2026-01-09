@@ -24,6 +24,7 @@ import { TierModule } from './modules/tier/tier.module';
 import { WageringModule } from './modules/wagering/wagering.module';
 import { AnalyticsModule } from './modules/analytics/analytics.module';
 import { CompModule } from './modules/comp/comp.module';
+import { SnowflakeModule } from './common/snowflake/snowflake.module';
 
 @Module({
   imports: [
@@ -32,6 +33,7 @@ import { CompModule } from './modules/comp/comp.module';
     ThrottleModule,
     CommonLoggerModule,
     WebsocketModule,
+    SnowflakeModule,
     ScheduleModule.forRoot(),
     AuditLogModule,
     AuthModule,
