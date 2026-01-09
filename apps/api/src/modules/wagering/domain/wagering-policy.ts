@@ -1,5 +1,4 @@
 import { Prisma } from '@repo/database';
-import type { ExchangeCurrencyCode } from '@repo/database';
 
 export class WageringPolicy {
     /**

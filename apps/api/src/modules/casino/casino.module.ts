@@ -19,6 +19,7 @@ import { CasinoGameSessionRepository } from './infrastructure/repository/casino-
 import { CASINO_GAME_SESSION_REPOSITORY } from './ports/out/casino-game-session.repository.token';
 import { CreateCasinoGameSessionService } from './application/create-casino-game-session.service';
 import { FindCasinoGameSessionService } from './application/find-casino-game-session.service';
+import { WageringModule } from '../wagering/wagering.module';
 
 @Module({
   imports: [
@@ -31,6 +32,7 @@ import { FindCasinoGameSessionService } from './application/find-casino-game-ses
     UserStatsModule,
     AuditLogModule,
     WalletModule,
+    WageringModule,
   ],
   controllers: [CasinoGameUserController],
   providers: [

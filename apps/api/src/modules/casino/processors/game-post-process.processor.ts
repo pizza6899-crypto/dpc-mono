@@ -12,6 +12,7 @@ import {
 import { type PrismaTransaction } from 'src/infrastructure/prisma/prisma.module';
 import { Logger, OnApplicationShutdown } from '@nestjs/common';
 import { Prisma, TransactionStatus } from '@repo/database';
+import { ProcessWageringContributionService } from '../../wagering/application/process-wagering-contribution.service';
 
 @Processor(QueueNames.GAME_POST_PROCESS)
 export class GamePostProcessProcessor
@@ -23,6 +24,7 @@ export class GamePostProcessProcessor
     @InjectTransaction()
     private readonly tx: PrismaTransaction,
     private readonly cls: ClsService,
+    private readonly wageringService: ProcessWageringContributionService,
   ) {
     super();
   }
@@ -135,28 +137,16 @@ export class GamePostProcessProcessor
       //   }
 
       // 5. 롤링 처리
-      //   const userBalance = await this.tx.userBalance.findUnique({
-      //     where: {
-      //       userId_currency: {
-      //         userId,
-      //         currency,
-      //       },
-      //     },
-      //     select: {
-      //       mainBalance: true,
-      //     },
-      //   });
-
-      //   if (userBalance) {
-      //     await this.rollingService.processRolling(
-      //       userId,
-      //       betAmountForProcessing,
-      //       userBalance.mainBalance,
-      //     );
-      //     this.logger.log(
-      //       `롤링 처리 완료: userId=${userId}, rollingAmount=${betAmountForProcessing}, gameTransactionId=${gameTransactionId}`,
-      //     );
-      //   }
+      await this.wageringService.execute({
+        userId,
+        currency,
+        gameRoundId: BigInt(gameRoundId),
+        betAmount: betAmountForProcessing,
+        gameContributionRate: gameRound.casinoGame?.contributionRate?.toNumber(),
+      });
+      this.logger.log(
+        `롤링 처리 완료: userId=${userId}, betAmount=${betAmountForProcessing}, gameRoundId=${gameRoundId}`,
+      );
 
       // 6. VIP 레벨 업데이트 (롤링 누적)
       //   await this.vipMembershipService.updateAccumulatedRolling(
