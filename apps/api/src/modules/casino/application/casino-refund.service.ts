@@ -10,7 +10,6 @@ import { UpdateUserBalanceService } from 'src/modules/wallet/application/update-
 import { BalanceType, UpdateOperation } from 'src/modules/wallet/domain';
 import { InjectTransaction } from '@nestjs-cls/transactional';
 import { type PrismaTransaction } from 'src/infrastructure/prisma/prisma.module';
-import { SnowflakeService } from 'src/common/snowflake/snowflake.service';
 
 export interface ProcessCancelParams {
   aggregatorTxId: string;
@@ -37,7 +36,6 @@ export class CasinoRefundService {
     @InjectTransaction()
     private readonly tx: PrismaTransaction,
     private readonly updateUserBalanceService: UpdateUserBalanceService,
-    private readonly snowflakeService: SnowflakeService,
   ) { }
 
   /**
