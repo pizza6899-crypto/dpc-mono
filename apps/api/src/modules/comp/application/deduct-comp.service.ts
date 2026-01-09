@@ -4,6 +4,7 @@ import { ExchangeCurrencyCode, Prisma, CompTransactionType } from '@repo/databas
 import { COMP_REPOSITORY } from '../ports/repository.token';
 import type { CompRepositoryPort } from '../ports';
 import { CompWallet, CompTransaction, CompNotFoundException } from '../domain';
+import { AnalyticsQueueService } from '../../analytics/application/analytics-queue.service';
 
 interface DeductCompParams {
     userId: bigint;
@@ -19,6 +20,7 @@ export class DeductCompService {
     constructor(
         @Inject(COMP_REPOSITORY)
         private readonly compRepository: CompRepositoryPort,
+        private readonly analyticsQueueService: AnalyticsQueueService,
     ) { }
 
     @Transactional()
@@ -49,6 +51,14 @@ export class DeductCompService {
             description: description || 'Admin Deduction',
         });
         await this.compRepository.createTransaction(transaction);
+
+        // 5. Enqueue Analytics
+        await this.analyticsQueueService.enqueueComp({
+            userId,
+            currency,
+            deductedAmount: amount,
+            date: new Date(),
+        });
 
         this.logger.log(`Comp Deducted by Admin: user=${userId}, amount=${amount}, curr=${currency}, newBal=${savedWallet.balance}`);
 

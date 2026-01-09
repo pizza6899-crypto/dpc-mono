@@ -41,6 +41,7 @@ interface EnqueueCompParams {
     currency: ExchangeCurrencyCode;
     earnedAmount?: Prisma.Decimal;
     convertedAmount?: Prisma.Decimal;
+    deductedAmount?: Prisma.Decimal;
     date?: Date;
 }
 
@@ -99,6 +100,7 @@ export class AnalyticsQueueService {
             currency: params.currency,
             earnedAmount: params.earnedAmount?.toString(),
             convertedAmount: params.convertedAmount?.toString(),
+            deductedAmount: params.deductedAmount?.toString(),
             date: (params.date || new Date()).toISOString(),
         });
     }

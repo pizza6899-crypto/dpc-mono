@@ -45,7 +45,7 @@ export class AnalyticsConsumer extends WorkerHost implements OnApplicationShutdo
                         userId,
                         currency: data.currency,
                         date,
-                        amount: new Prisma.Decimal(data.amount),
+                        amount: data.amount ? new Prisma.Decimal(data.amount) : new Prisma.Decimal(0),
                     });
                     break;
 
@@ -54,7 +54,7 @@ export class AnalyticsConsumer extends WorkerHost implements OnApplicationShutdo
                         userId,
                         currency: data.currency,
                         date,
-                        amount: new Prisma.Decimal(data.amount),
+                        amount: data.amount ? new Prisma.Decimal(data.amount) : new Prisma.Decimal(0),
                     });
                     break;
 
@@ -63,8 +63,8 @@ export class AnalyticsConsumer extends WorkerHost implements OnApplicationShutdo
                         userId,
                         currency: data.currency,
                         date,
-                        betAmount: new Prisma.Decimal(data.betAmount),
-                        winAmount: new Prisma.Decimal(data.winAmount),
+                        betAmount: data.betAmount ? new Prisma.Decimal(data.betAmount) : new Prisma.Decimal(0),
+                        winAmount: data.winAmount ? new Prisma.Decimal(data.winAmount) : new Prisma.Decimal(0),
                         category: data.category,
                     });
                     break;
@@ -85,7 +85,9 @@ export class AnalyticsConsumer extends WorkerHost implements OnApplicationShutdo
                         userId,
                         currency: data.currency,
                         date,
-                        earnedAmount: new Prisma.Decimal(data.earnedAmount),
+                        earnedAmount: data.earnedAmount ? new Prisma.Decimal(data.earnedAmount) : undefined,
+                        convertedAmount: data.convertedAmount ? new Prisma.Decimal(data.convertedAmount) : undefined,
+                        deductedAmount: data.deductedAmount ? new Prisma.Decimal(data.deductedAmount) : undefined,
                     });
                     break;
 

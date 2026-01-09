@@ -43,6 +43,7 @@ interface RecordCompParams {
     date: Date;
     earnedAmount?: Prisma.Decimal;
     convertedAmount?: Prisma.Decimal;
+    deductedAmount?: Prisma.Decimal;
 }
 
 @Injectable()
@@ -191,6 +192,10 @@ export class RecordUserActivityService {
         if (params.convertedAmount) {
             stat.totalCompConverted = stat.totalCompConverted.add(params.convertedAmount);
             stat.endBalance = stat.endBalance.add(params.convertedAmount);
+        }
+
+        if (params.deductedAmount) {
+            stat.totalCompDeducted = stat.totalCompDeducted.add(params.deductedAmount);
         }
 
         await this.repository.save(stat);

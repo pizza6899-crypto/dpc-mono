@@ -14,7 +14,9 @@ export interface AggregatedStat {
     netWin: Prisma.Decimal;
     ggr: Prisma.Decimal;
     totalGameCount: number;
-    // ... other aggregated fields as needed
+    totalCompEarned: Prisma.Decimal;
+    totalCompConverted: Prisma.Decimal;
+    totalCompDeducted: Prisma.Decimal;
 }
 
 @Injectable()
@@ -62,6 +64,9 @@ export class FindUserStatsService {
             netWin: zero,
             ggr: zero,
             totalGameCount: 0,
+            totalCompEarned: zero,
+            totalCompConverted: zero,
+            totalCompDeducted: zero,
         };
 
         for (const stat of stats) {
@@ -76,6 +81,9 @@ export class FindUserStatsService {
             aggregated.netWin = aggregated.netWin.add(stat.netWin);
             aggregated.ggr = aggregated.ggr.add(stat.ggr);
             aggregated.totalGameCount += stat.totalGameCount;
+            aggregated.totalCompEarned = aggregated.totalCompEarned.add(stat.totalCompEarned);
+            aggregated.totalCompConverted = aggregated.totalCompConverted.add(stat.totalCompConverted);
+            aggregated.totalCompDeducted = aggregated.totalCompDeducted.add(stat.totalCompDeducted);
         }
 
         return aggregated;

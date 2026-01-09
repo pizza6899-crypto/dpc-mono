@@ -17,6 +17,7 @@ import { AdminCompBalanceQueryDto } from './dto/request/admin-comp-balance-query
 import { Paginated } from 'src/common/http/decorators/paginated.decorator';
 import { PaginatedData } from 'src/common/http/types/pagination.types';
 
+
 @ApiTags('Admin Comp')
 @Controller('admin/comp')
 @RequireRoles(UserRoleType.ADMIN, UserRoleType.SUPER_ADMIN)
