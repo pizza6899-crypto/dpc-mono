@@ -12,6 +12,7 @@ import {
 
 interface LogQueueJobData {
   id: string;
+  createdAt: string; // Snowflake ID에서 추출한 타임스탬프 (ISO 8601)
   payload: LogJobData;
 }
 
@@ -33,14 +34,15 @@ export class CriticalLogProcessor
   }
 
   async process(job: Job<LogQueueJobData>): Promise<void> {
-    const { id, payload } = job.data;
+    const { id, createdAt, payload } = job.data;
     const snowflakeId = BigInt(id);
+    const timestamp = new Date(createdAt);
 
     try {
       if (payload.type === LogType.AUTH) {
-        await this.auditLogRepository.saveAuthLog(snowflakeId, payload.data);
+        await this.auditLogRepository.saveAuthLog(snowflakeId, timestamp, payload.data);
       } else if (payload.type === LogType.INTEGRATION) {
-        await this.auditLogRepository.saveIntegrationLog(snowflakeId, payload.data);
+        await this.auditLogRepository.saveIntegrationLog(snowflakeId, timestamp, payload.data);
       } else {
         this.logger.warn(
           `Unexpected log type in critical queue: ${payload.type}`,
@@ -97,14 +99,15 @@ export class HeavyLogProcessor
   }
 
   async process(job: Job<LogQueueJobData>): Promise<void> {
-    const { id, payload } = job.data;
+    const { id, createdAt, payload } = job.data;
     const snowflakeId = BigInt(id);
+    const timestamp = new Date(createdAt);
 
     try {
       if (payload.type === LogType.ACTIVITY) {
-        await this.auditLogRepository.saveActivityLog(snowflakeId, payload.data);
+        await this.auditLogRepository.saveActivityLog(snowflakeId, timestamp, payload.data);
       } else if (payload.type === LogType.ERROR) {
-        await this.auditLogRepository.saveSystemErrorLog(snowflakeId, payload.data);
+        await this.auditLogRepository.saveSystemErrorLog(snowflakeId, timestamp, payload.data);
       } else {
         this.logger.warn(`Unexpected log type in heavy queue: ${payload.type}`);
       }

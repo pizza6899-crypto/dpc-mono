@@ -16,11 +16,11 @@ import type {
 export class AuditLogAdapter implements AuditLogRepositoryPort {
   constructor(private readonly prisma: PrismaService) { }
 
-  async saveAuthLog(id: bigint, payload: AuthLogPayload): Promise<void> {
+  async saveAuthLog(id: bigint, createdAt: Date, payload: AuthLogPayload): Promise<void> {
     await this.prisma.authAuditLog.create({
       data: {
         id: id,
-        createdAt: new Date(),
+        createdAt,
         userId: payload.userId ? BigInt(payload.userId) : null,
         sessionId: payload.sessionId || null,
         traceId: payload.traceId || null,
@@ -46,12 +46,13 @@ export class AuditLogAdapter implements AuditLogRepositoryPort {
 
   async saveActivityLog(
     id: bigint,
+    createdAt: Date,
     payload: ActivityLogPayload,
   ): Promise<void> {
     await this.prisma.activityLog.create({
       data: {
         id,
-        createdAt: new Date(),
+        createdAt,
         userId: payload.userId ? BigInt(payload.userId) : null,
         sessionId: payload.sessionId || null,
         traceId: payload.traceId || null,
@@ -72,12 +73,13 @@ export class AuditLogAdapter implements AuditLogRepositoryPort {
 
   async saveSystemErrorLog(
     id: bigint,
+    createdAt: Date,
     payload: SystemErrorLogPayload,
   ): Promise<void> {
     await this.prisma.systemErrorLog.create({
       data: {
         id,
-        createdAt: new Date(),
+        createdAt,
         userId: payload.userId ? BigInt(payload.userId) : null,
         sessionId: payload.sessionId || null,
         traceId: payload.traceId || null,
@@ -109,12 +111,13 @@ export class AuditLogAdapter implements AuditLogRepositoryPort {
 
   async saveIntegrationLog(
     id: bigint,
+    createdAt: Date,
     payload: IntegrationLogPayload,
   ): Promise<void> {
     await this.prisma.integrationLog.create({
       data: {
         id,
-        createdAt: new Date(),
+        createdAt,
         userId: payload.userId ? BigInt(payload.userId) : null,
         sessionId: payload.sessionId || null,
         traceId: payload.traceId || null,

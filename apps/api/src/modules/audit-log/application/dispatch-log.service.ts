@@ -16,6 +16,7 @@ import { sanitizeAndTruncate } from 'src/utils/log-sanitizer.util';
 
 interface LogQueueJobData {
   id: string;
+  createdAt: string; // Snowflake ID에서 추출한 타임스탬프 (ISO 8601)
   payload: LogJobData;
 }
 
@@ -185,8 +186,16 @@ export class DispatchLogService {
       // 데이터 정제 및 길이 제한 (특히 Integration 로그의 요청/응답 바디)
       const sanitizedPayload = this.sanitizePayload(enrichedPayload);
 
-      const id = this.snowflakeService.nextId();
-      const jobData: LogQueueJobData = { id: id.toString(), payload: sanitizedPayload };
+      // 로그 발생 시점의 타임스탬프 생성
+      const createdAt = new Date();
+      // 타임스탬프 기반 Snowflake ID 생성 (ID와 시간의 일관성 보장)
+      const id = this.snowflakeService.generateFromTimestamp(createdAt);
+
+      const jobData: LogQueueJobData = {
+        id: id.toString(),
+        createdAt: createdAt.toISOString(),
+        payload: sanitizedPayload
+      };
 
       // 로그 타입에 따라 적절한 큐에 추가
       if (
