@@ -91,8 +91,9 @@ export class RecordUserActivityService {
 
         stat.totalDeposit = stat.totalDeposit.add(params.amount);
         stat.depositCount += 1;
-        // Balance update logic depends on whether we track balance snapshot or just flow
-        // For now assuming external balance service handles actual balance, we just track flow
+
+        // Update balance snapshot
+        stat.endBalance = stat.endBalance.add(params.amount);
 
         await this.repository.save(stat);
     }
@@ -107,6 +108,9 @@ export class RecordUserActivityService {
 
         stat.totalWithdraw = stat.totalWithdraw.add(params.amount);
         stat.withdrawCount += 1;
+
+        // Update balance snapshot
+        stat.endBalance = stat.endBalance.sub(params.amount);
 
         await this.repository.save(stat);
     }
@@ -137,6 +141,9 @@ export class RecordUserActivityService {
             stat.liveGameCount += 1;
         }
 
+        // Update balance snapshot (Balance += Win - Bet)
+        stat.endBalance = stat.endBalance.add(params.winAmount).sub(params.betAmount);
+
         await this.repository.save(stat);
     }
 
@@ -150,14 +157,19 @@ export class RecordUserActivityService {
 
         if (params.givenAmount) {
             stat.totalBonusGiven = stat.totalBonusGiven.add(params.givenAmount);
+            stat.endBonusBalance = stat.endBonusBalance.add(params.givenAmount);
         }
         if (params.usedAmount) {
             stat.totalBonusUsed = stat.totalBonusUsed.add(params.usedAmount);
+            stat.endBonusBalance = stat.endBonusBalance.sub(params.usedAmount);
         }
         if (params.convertedAmount) {
             stat.totalBonusConverted = stat.totalBonusConverted.add(
                 params.convertedAmount,
             );
+            // Converted bonus usually moves to cash balance
+            stat.endBonusBalance = stat.endBonusBalance.sub(params.convertedAmount);
+            stat.endBalance = stat.endBalance.add(params.convertedAmount);
         }
 
         await this.repository.save(stat);
