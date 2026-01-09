@@ -23,6 +23,7 @@ import { PromotionModule } from './modules/promotion/promotion.module';
 import { TierModule } from './modules/tier/tier.module';
 import { WageringModule } from './modules/wagering/wagering.module';
 import { AnalyticsModule } from './modules/analytics/analytics.module';
+import { CompModule } from './modules/comp/comp.module';
 
 @Module({
   imports: [
@@ -44,6 +45,7 @@ import { AnalyticsModule } from './modules/analytics/analytics.module';
     TierModule,
     WageringModule,
     AnalyticsModule,
+    CompModule,
   ],
   providers: [
     Reflector,

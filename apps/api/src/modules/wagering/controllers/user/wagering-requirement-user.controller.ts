@@ -1,17 +1,14 @@
-import { Controller, Get, Query, UseGuards } from '@nestjs/common';
+import { Controller, Get, Query } from '@nestjs/common';
 import { ApiTags, ApiOperation, ApiResponse } from '@nestjs/swagger';
-import { SessionAuthGuard } from '../../../../common/auth/guards/session-auth.guard';
 import { CurrentUser } from '../../../../common/auth/decorators/current-user.decorator';
 import type { AuthenticatedUser } from '../../../../common/auth/types/auth.types';
 import { FindWageringRequirementsService } from '../../application/find-wagering-requirements.service';
 import { GetMyWageringRequirementsQueryDto } from './dto/request/get-my-wagering-requirements-query.dto';
-import { WageringRequirementUserResponseDto } from './dto/response/wagering-requirement-user.response.dto';
 import { PaginatedWageringRequirementUserResponseDto } from './dto/response/paginated-wagering-requirement-user.response.dto';
 import { Paginated } from '../../../../common/http/decorators/paginated.decorator';
 
 @ApiTags('Wagering Requirements')
 @Controller('user/wagering-requirements')
-@UseGuards(SessionAuthGuard)
 export class WageringRequirementUserController {
     constructor(
         private readonly findService: FindWageringRequirementsService,

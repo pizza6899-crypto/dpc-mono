@@ -5,7 +5,6 @@ import { FindStatsRequestDto } from './dto/request/find-stats.request.dto';
 import { UserHourlyStatResponseDto } from './dto/response/stat.response.dto';
 import { AggregatedStatResponseDto } from './dto/response/aggregated-stat.response.dto';
 import { plainToInstance } from 'class-transformer';
-import { SessionAuthGuard } from 'src/common/auth/guards/session-auth.guard';
 import { CurrentUser, type CurrentUserWithSession } from 'src/common/auth/decorators/current-user.decorator';
 import { AuditLog } from 'src/modules/audit-log/infrastructure/audit-log.decorator';
 import { LogType } from 'src/modules/audit-log/domain';
@@ -14,7 +13,6 @@ import { AnalyticsInvalidParameterException, AnalyticsInvalidDateRangeException 
 
 @ApiTags('Analytics')
 @Controller('user/analytics')
-@UseGuards(SessionAuthGuard)
 @ApiStandardErrors()
 export class AnalyticsUserController {
     constructor(private readonly findStatsService: FindUserStatsService) { }

@@ -55,6 +55,8 @@ export enum MessageCode {
     COMP_ALREADY_CLAIMED = 'COMP_ALREADY_CLAIMED', // 이미 수령된 콤프일 때
     COMP_NOT_FOUND = 'COMP_NOT_FOUND', // 해당 날짜에 적립된 콤프가 없을 때
     COMP_NO_AMOUNT = 'COMP_NO_AMOUNT', // 수령할 콤프가 없을 때
+    COMP_INSUFFICIENT_BALANCE = 'COMP_INSUFFICIENT_BALANCE', // 콤프 잔액이 부족할 때
+    COMP_INVALID_PARAMETER = 'COMP_INVALID_PARAMETER', // 콤프 관련 파라미터가 유효하지 않을 때
 
     // --- 게임 관련 (Game) ---
     GAME_NOT_FOUND = 'GAME_NOT_FOUND', // 게임을 찾을 수 없을 때

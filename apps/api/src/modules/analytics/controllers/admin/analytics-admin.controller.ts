@@ -4,7 +4,6 @@ import { FindUserStatsService } from '../../application/find-user-stats.service'
 import { FindStatsRequestDto } from '../user/dto/request/find-stats.request.dto';
 import { AdminStatResponseDto } from './dto/response/admin-stat.response.dto';
 import { plainToInstance } from 'class-transformer';
-import { SessionAuthGuard } from 'src/common/auth/guards/session-auth.guard';
 import { RequireRoles } from 'src/common/auth/decorators/roles.decorator';
 import { UserRoleType } from '@repo/database';
 import { AuditLog } from 'src/modules/audit-log/infrastructure/audit-log.decorator';
@@ -14,7 +13,6 @@ import { AnalyticsInvalidDateRangeException } from '../../domain';
 
 @ApiTags('Admin Analytics')
 @Controller('admin/analytics')
-@UseGuards(SessionAuthGuard)
 @RequireRoles(UserRoleType.ADMIN, UserRoleType.SUPER_ADMIN)
 @ApiStandardErrors()
 export class AnalyticsAdminController {

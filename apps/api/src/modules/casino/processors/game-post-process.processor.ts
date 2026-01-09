@@ -16,6 +16,7 @@ import { ProcessWageringContributionService } from '../../wagering/application/p
 import { AnalyticsQueueService } from '../../analytics/application/analytics-queue.service';
 import { GameCategory } from '@repo/database';
 import { AddUserRollingService } from '../../tier/application/add-user-rolling.service';
+import { EarnCompService } from '../../comp/application/earn-comp.service';
 
 @Processor(QueueNames.GAME_POST_PROCESS)
 export class GamePostProcessProcessor
@@ -30,6 +31,7 @@ export class GamePostProcessProcessor
     private readonly wageringService: ProcessWageringContributionService,
     private readonly analyticsQueue: AnalyticsQueueService,
     private readonly tierService: AddUserRollingService,
+    private readonly earnCompService: EarnCompService,
   ) {
     super();
   }
@@ -60,6 +62,7 @@ export class GamePostProcessProcessor
           GameSession: {
             select: {
               usdExchangeRate: true,
+              compRate: true, // Fetch compRate
             },
           },
           transaction: {
@@ -181,20 +184,45 @@ export class GamePostProcessProcessor
       );
 
       // 6. VIP 티어 업데이트 (롤링 누적)
-      // 세션에 저장된 환율(Play Currency -> USD)을 사용하여 USD 기준 롤링 금액 계산
-      const usdExchangeRate =
-        gameRound.GameSession?.usdExchangeRate || new Prisma.Decimal(1);
-      const rollingAmountUsd = betAmountForProcessing.mul(usdExchangeRate);
+      try {
+        // 세션에 저장된 환율(Play Currency -> USD)을 사용하여 USD 기준 롤링 금액 계산
+        const usdExchangeRate =
+          gameRound.GameSession?.usdExchangeRate || new Prisma.Decimal(1);
+        const rollingAmountUsd = betAmountForProcessing.mul(usdExchangeRate);
 
-      await this.tierService.execute(
-        userId,
-        rollingAmountUsd,
-      );
-      this.logger.log(
-        `티어 롤링 누적 완료: userId=${userId}, rollingAmountUsd=${rollingAmountUsd}, rate=${usdExchangeRate}`,
-      );
+        await this.tierService.execute(gameRound.userId, rollingAmountUsd);
+        this.logger.log(
+          `티어 롤링 누적 완료: userId=${userId}, rollingAmountUsd=${rollingAmountUsd}, rate=${usdExchangeRate}`,
+        );
+      } catch (error) {
+        this.logger.error(`Failed to process tier rolling: ${error.message}`, error.stack);
+      }
 
-      // 7. 게임 트랜잭션에 기여도 및 콤프 정보 업데이트
+      // 7. Comp Accumulation
+      try {
+        const compRate = gameRound.GameSession?.compRate; // Use optional chaining for GameSession
+        if (compRate && compRate.greaterThan(0)) {
+          const compAmount = betAmountForProcessing.mul(compRate);
+          if (compAmount.greaterThan(0)) {
+            await this.earnCompService.execute({
+              userId: gameRound.userId,
+              currency: gameRound.transaction.currency, // Use currency from transaction
+              amount: compAmount,
+              referenceId: gameRound.id.toString(),
+              description: `Game Comp: ${gameRound.id}`,
+              // TODO: If we want to store USD value of comp, we might need conversion, 
+              // but for now we follow the plan: Comp Currency = Wallet Currency (1:1 value)
+            });
+            this.logger.log(
+              `콤프 적립 완료: userId=${userId}, compAmount=${compAmount}, gameRoundId=${gameRoundId}`,
+            );
+          }
+        }
+      } catch (error) {
+        this.logger.error(`Failed to process comp earning: ${error.message}`, error.stack);
+      }
+
+      // 8. 게임 트랜잭션에 기여도 및 콤프 정보 업데이트
       //   await this.tx.gameTransaction.update({
       //     where: { id: gameTransaction.id },
       //     data: {

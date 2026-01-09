@@ -54,6 +54,7 @@ model User {
   adminAdjustmentDetails AdminAdjustmentDetail[] @relation("AdminAdjustments")
   wageringRequirements   WageringRequirement[]
   hourlyStats            UserHourlyStat[]
+  compWallets            UserCompWallet[]
 }
 
 model UserWallet {

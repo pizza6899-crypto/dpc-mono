@@ -1,10 +1,8 @@
 import { Controller, Get, Post, Body, Param, Query, UseGuards, Inject } from '@nestjs/common';
 import { ApiTags, ApiOperation, ApiResponse } from '@nestjs/swagger';
-import { SessionAuthGuard } from '../../../../common/auth/guards/session-auth.guard';
 import { RequireRoles } from '../../../../common/auth/decorators/roles.decorator';
 import { UserRoleType } from '@repo/database';
 import { FindWageringRequirementsService } from '../../application/find-wagering-requirements.service';
-import { WageringRequirementAdminResponseDto } from './dto/response/wagering-requirement-admin.response.dto';
 import { GetWageringRequirementsAdminQueryDto } from './dto/request/get-wagering-requirements-admin-query.dto';
 import { PaginatedWageringRequirementAdminResponseDto } from './dto/response/paginated-wagering-requirement-admin.response.dto';
 import { VoidWageringRequirementDto } from './dto/request/void-wagering.dto';
@@ -17,7 +15,6 @@ import { Paginated } from '../../../../common/http/decorators/paginated.decorato
 
 @ApiTags('Admin Wagering Requirements')
 @Controller('admin/wagering-requirements')
-@UseGuards(SessionAuthGuard)
 @RequireRoles(UserRoleType.ADMIN, UserRoleType.SUPER_ADMIN)
 export class WageringRequirementAdminController {
     constructor(

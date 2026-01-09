@@ -9,7 +9,6 @@ import {
     BalanceType,
     UpdateOperation,
 } from '../domain';
-import { UserNotFoundException } from 'src/modules/user/domain/user.exception';
 import type { ExchangeCurrencyCode } from '@repo/database';
 import { Prisma } from '@repo/database';
 import { Transactional } from '@nestjs-cls/transactional';

@@ -22,6 +22,7 @@ import { FindCasinoGameSessionService } from './application/find-casino-game-ses
 import { WageringModule } from '../wagering/wagering.module';
 import { AnalyticsModule } from '../analytics/analytics.module';
 import { TierModule } from '../tier/tier.module';
+import { CompModule } from '../comp/comp.module';
 
 @Module({
   imports: [
@@ -37,6 +38,7 @@ import { TierModule } from '../tier/tier.module';
     WageringModule,
     AnalyticsModule,
     TierModule,
+    CompModule,
   ],
   controllers: [CasinoGameUserController],
   providers: [
