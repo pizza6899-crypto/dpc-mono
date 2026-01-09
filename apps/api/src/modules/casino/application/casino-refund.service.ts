@@ -10,6 +10,7 @@ import { UpdateUserBalanceService } from 'src/modules/wallet/application/update-
 import { BalanceType, UpdateOperation } from 'src/modules/wallet/domain';
 import { InjectTransaction } from '@nestjs-cls/transactional';
 import { type PrismaTransaction } from 'src/infrastructure/prisma/prisma.module';
+import { SnowflakeService } from 'src/common/snowflake/snowflake.service';
 
 export interface ProcessCancelParams {
   aggregatorTxId: string;
@@ -35,7 +36,9 @@ export class CasinoRefundService {
   constructor(
     @InjectTransaction()
     private readonly tx: PrismaTransaction,
-    private readonly updateUserBalanceService: UpdateUserBalanceService) { }
+    private readonly updateUserBalanceService: UpdateUserBalanceService,
+    private readonly snowflakeService: SnowflakeService,
+  ) { }
 
   /**
    * 베팅 취소 처리
@@ -55,18 +58,16 @@ export class CasinoRefundService {
       aggregatorTxId,
     } = params;
 
-    const existingGameBet = await this.tx.gameBet.findUnique({
+    const existingGameBet = await this.tx.gameBet.findFirst({
       where: {
-        aggregatorBetId_aggregatorType: {
-          aggregatorBetId,
-          aggregatorType,
-        },
+        aggregatorBetId,
+        aggregatorType,
       },
       select: {
         id: true,
         isCancelled: true,
         betAmount: true, // 베팅 금액 추가
-        createdAt: true, // 베팅 시점 추가 (필요시)
+        bettedAt: true,
         gameRound: {
           select: {
             id: true,
@@ -168,7 +169,12 @@ export class CasinoRefundService {
 
     // 트랜잭션 업데이트
     await this.tx.gameBet.update({
-      where: { id: existingGameBet.id },
+      where: {
+        id_bettedAt: {
+          id: existingGameBet.id,
+          bettedAt: existingGameBet.bettedAt,
+        }
+      },
       data: {
         isCancelled: true,
         cancelledAt: cancelTime,

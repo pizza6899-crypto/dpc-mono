@@ -188,6 +188,7 @@ export class CasinoBetService {
           },
           bets: {
             create: {
+              id: this.snowflakeService.generateFromTimestamp(betTimeDate),
               userId,
               betAmount: betAmountInWalletCurrency,
               betAmountInGameCurrency: betAmountInGameCurrency,
@@ -266,6 +267,7 @@ export class CasinoBetService {
               gameSessionId,
               bets: {
                 create: {
+                  id: this.snowflakeService.generateFromTimestamp(betTimeDate),
                   userId,
                   betAmount: betAmountInWalletCurrency,
                   betAmountInGameCurrency: betAmountInGameCurrency,

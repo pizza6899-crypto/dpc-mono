@@ -64,6 +64,28 @@ model CasinoGameSession {
   @@map("casino_game_sessions")
 }
 
+model GameBet {
+  id                      BigInt
+  userId                  BigInt             @map("user_id")
+  gameRoundId             BigInt             @map("game_round_id")
+  aggregatorType          GameAggregatorType @map("aggregator_type")
+  aggregatorBetId         String             @map("aggregator_bet_id")
+  betType                 BetType            @map("bet_type")
+  betAmount               Decimal            @map("bet_amount") @db.Decimal(32, 18)
+  bettedAt                DateTime           @map("betted_at")
+  betAmountInGameCurrency Decimal            @map("bet_amount_in_game_currency") @db.Decimal(32, 18)
+  isCancelled             Boolean            @default(false) @map("is_cancelled")
+  cancelledAt             DateTime?          @map("cancelled_at")
+  gameRound               GameRound          @relation(fields: [gameRoundId], references: [id], onDelete: Cascade)
+
+  // 1. PK에 파티션 키 포함
+  @@id([id, bettedAt])
+  // 2. 유니크 제약조건에도 파티션 키 필수 (DB 물리적 제약)
+  @@unique([aggregatorBetId, aggregatorType, bettedAt])
+  @@index([gameRoundId, bettedAt])
+  @@map("game_bets")
+}
+
 model GameWin {
   id                      BigInt
   userId                  BigInt             @map("user_id")
