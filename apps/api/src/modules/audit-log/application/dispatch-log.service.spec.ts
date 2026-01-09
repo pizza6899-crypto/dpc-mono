@@ -57,7 +57,7 @@ describe('DispatchLogService', () => {
   describe('dispatch - AUTH 로그', () => {
     it('AUTH 로그를 critical 큐에 추가해야 함', async () => {
       const payload = {
-        type: LogType.AUTH,
+        type: LogType.AUTH as const,
         data: {
           action: 'LOGIN',
           status: 'SUCCESS',
@@ -87,7 +87,7 @@ describe('DispatchLogService', () => {
 
     it('clientInfo가 제공되면 AUTH 로그에 Cloudflare 정보를 추가해야 함', async () => {
       const payload = {
-        type: LogType.AUTH,
+        type: LogType.AUTH as const,
         data: {
           action: 'LOGIN',
           status: 'SUCCESS',
@@ -97,12 +97,23 @@ describe('DispatchLogService', () => {
       const clientInfo: RequestClientInfo = {
         ip: '1.2.3.4',
         userAgent: 'Mozilla/5.0',
+        protocol: 'https',
+        method: 'POST',
+        path: '/api/auth/login',
+        timestamp: new Date(),
         country: 'KR',
         city: 'Seoul',
+        timezone: 'Asia/Seoul',
+        isp: 'Test ISP',
+        asn: 'AS12345',
         cfRay: 'test-ray-id',
         isMobile: false,
         bot: false,
         threat: null,
+        referer: 'https://example.com',
+        acceptLanguage: 'ko-KR,ko;q=0.9,en-US;q=0.8,en;q=0.7',
+        browser: 'Chrome',
+        os: 'Windows',
         fingerprint: 'test-fingerprint',
         sessionId: 'test-session',
         traceId: 'test-trace',
@@ -132,7 +143,7 @@ describe('DispatchLogService', () => {
   describe('dispatch - INTEGRATION 로그', () => {
     it('INTEGRATION 로그를 critical 큐에 추가해야 함', async () => {
       const payload = {
-        type: LogType.INTEGRATION,
+        type: LogType.INTEGRATION as const,
         data: {
           provider: 'payment-gateway',
           method: 'POST',
@@ -162,7 +173,7 @@ describe('DispatchLogService', () => {
   describe('dispatch - ACTIVITY 로그', () => {
     it('ACTIVITY 로그를 heavy 큐에 추가해야 함', async () => {
       const payload = {
-        type: LogType.ACTIVITY,
+        type: LogType.ACTIVITY as const,
         data: {
           category: 'USER',
           action: 'PROFILE_UPDATE',
@@ -190,7 +201,7 @@ describe('DispatchLogService', () => {
   describe('dispatch - ERROR 로그', () => {
     it('ERROR 로그를 heavy 큐에 추가해야 함', async () => {
       const payload = {
-        type: LogType.ERROR,
+        type: LogType.ERROR as const,
         data: {
           errorMessage: 'Test error',
           severity: 'ERROR' as const,
@@ -217,7 +228,7 @@ describe('DispatchLogService', () => {
   describe('Snowflake ID 및 타임스탬프', () => {
     it('동일한 타임스탬프로 Snowflake ID를 생성해야 함', async () => {
       const payload = {
-        type: LogType.AUTH,
+        type: LogType.AUTH as const,
         data: {
           action: 'LOGIN',
           status: 'SUCCESS',
@@ -236,7 +247,7 @@ describe('DispatchLogService', () => {
 
     it('생성된 ID와 타임스탬프를 큐 데이터에 포함해야 함', async () => {
       const payload = {
-        type: LogType.AUTH,
+        type: LogType.AUTH as const,
         data: {
           action: 'LOGIN',
           status: 'SUCCESS',
@@ -263,7 +274,7 @@ describe('DispatchLogService', () => {
       criticalQueue.add.mockRejectedValueOnce(new Error('Queue error'));
 
       const payload = {
-        type: LogType.AUTH,
+        type: LogType.AUTH as const,
         data: {
           action: 'LOGIN',
           status: 'SUCCESS',

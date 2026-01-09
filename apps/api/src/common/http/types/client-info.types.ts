@@ -57,7 +57,7 @@ export interface RequestClientInfo {
 
   // 보안 정보
   /** 위험도 점수 (CF-Threat) */
-  threat: string;
+  threat: string | null;
   /** 봇 여부 (CF-Bot-Management) */
   bot: boolean;
 

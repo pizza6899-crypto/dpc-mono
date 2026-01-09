@@ -26,7 +26,7 @@ export interface AuthLogPayload {
   city?: string; // CF-IPCity
   // Cloudflare 보안 정보
   bot?: boolean; // CF-Bot-Management: 봇 공격 감지
-  threat?: string; // CF-Threat: 위협 점수
+  threat?: string | null; // CF-Threat: 위협 점수 (null 가능)
   // 디바이스 정보
   isMobile?: boolean; // 모바일 여부
   // Cloudflare 추적 정보 (디버깅용)
@@ -79,7 +79,7 @@ export interface SystemErrorLogPayload {
   city?: string; // CF-IPCity
   // Cloudflare 보안 정보 (공격성 에러 감지용)
   bot?: boolean; // CF-Bot-Management
-  threat?: string; // CF-Threat
+  threat?: string | null; // CF-Threat (null 가능)
   // 디바이스 정보
   isMobile?: boolean; // 모바일 여부
   // Cloudflare 추적 정보 (디버깅용)
@@ -103,7 +103,7 @@ export interface IntegrationLogPayload {
   city?: string; // CF-IPCity
   // Cloudflare 보안 정보 (공격성 요청 감지용)
   bot?: boolean; // CF-Bot-Management
-  threat?: string; // CF-Threat
+  threat?: string | null; // CF-Threat (null 가능)
   // Cloudflare 추적 정보 (디버깅용)
   cfRay?: string; // CF-Ray: 요청 추적 ID
   ip?: string; // 클라이언트 IP
