@@ -1,7 +1,7 @@
 // src/modules/wallet/application/get-user-balance.service.ts
 import { Injectable, Logger } from '@nestjs/common';
 import { WalletQueryService } from './wallet-query.service';
-import { UserWallet } from '../domain';
+import { UserWallet, WalletNotFoundException } from '../domain';
 import type { ExchangeCurrencyCode } from '@repo/database';
 
 interface GetUserBalanceParams {
@@ -38,9 +38,8 @@ export class GetUserBalanceService {
         // 특정 통화 조회
         const wallet = await this.walletQueryService.getWallet(userId, currency, false);
 
-        // autoCreate=true이므로 null일 수 없으나 타입 안전성을 위해 처리
         if (!wallet) {
-          throw new Error('Failed to create wallet');
+          throw new WalletNotFoundException(userId, currency);
         }
 
         return { wallet };
