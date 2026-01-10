@@ -14,6 +14,13 @@ export enum MessageCode {
     CRYPTO_CONFIG_NOT_FOUND = 'CRYPTO_CONFIG_NOT_FOUND', // 암호화폐 설정을 찾을 수 없을 때
     CRYPTO_CONFIG_INACTIVE = 'CRYPTO_CONFIG_INACTIVE', // 암호화폐 설정이 비활성화되어 있을 때
 
+    // --- 출금 관련 (Withdrawal) ---
+    WITHDRAWAL_NOT_FOUND = 'WITHDRAWAL_NOT_FOUND', // 출금 내역을 찾을 수 없을 때
+    WITHDRAWAL_INVALID_STATUS = 'WITHDRAWAL_INVALID_STATUS', // 출금 상태가 유효하지 않을 때
+    WITHDRAWAL_AMOUNT_BELOW_MINIMUM = 'WITHDRAWAL_AMOUNT_BELOW_MINIMUM', // 출금 금액이 최소 금액보다 작을 때
+    WITHDRAWAL_AMOUNT_EXCEEDS_MAXIMUM = 'WITHDRAWAL_AMOUNT_EXCEEDS_MAXIMUM', // 출금 금액이 최대 금액을 초과할 때
+    INSUFFICIENT_BALANCE = 'INSUFFICIENT_BALANCE', // 잔액이 부족할 때
+
     // --- 인증 관련 (Authentication) ---
     AUTH_INVALID_TOKEN = 'AUTH_INVALID_TOKEN', // JWT 토큰이 유효하지 않을 때
     AUTH_TOKEN_EXPIRED = 'AUTH_TOKEN_EXPIRED', // JWT 토큰이 만료되었을 때
