@@ -7,9 +7,11 @@ import { WithdrawalRepository } from './infrastructure/withdrawal.repository';
 import { WithdrawalMapper } from './infrastructure/withdrawal.mapper';
 import {
     RequestCryptoWithdrawalService,
+    RequestBankWithdrawalService,
     CancelWithdrawalService,
     FindWithdrawalsService,
     GetWithdrawalService,
+    GetWithdrawalOptionsService,
     ApproveWithdrawalService,
     RejectWithdrawalService,
     FindPendingWithdrawalsService,
@@ -37,9 +39,11 @@ import { WithdrawalAdminController } from './controllers/admin/withdrawal-admin.
 
         // Application Services
         RequestCryptoWithdrawalService,
+        RequestBankWithdrawalService,
         CancelWithdrawalService,
         FindWithdrawalsService,
         GetWithdrawalService,
+        GetWithdrawalOptionsService,
         ApproveWithdrawalService,
         RejectWithdrawalService,
         FindPendingWithdrawalsService,
@@ -48,10 +52,13 @@ import { WithdrawalAdminController } from './controllers/admin/withdrawal-admin.
     exports: [
         WITHDRAWAL_REPOSITORY,
         RequestCryptoWithdrawalService,
+        RequestBankWithdrawalService,
         CancelWithdrawalService,
         FindWithdrawalsService,
         GetWithdrawalService,
+        GetWithdrawalOptionsService,
         ProcessWithdrawalService,
     ],
 })
 export class WithdrawalModule { }
+

@@ -29,16 +29,20 @@ import { LogType } from 'src/modules/audit-log/domain';
 import { ExchangeCurrencyCode } from '@repo/database';
 import {
     RequestCryptoWithdrawalService,
+    RequestBankWithdrawalService,
     CancelWithdrawalService,
     FindWithdrawalsService,
     GetWithdrawalService,
+    GetWithdrawalOptionsService,
 } from '../../application';
 import {
     RequestCryptoWithdrawalDto,
+    RequestBankWithdrawalDto,
     GetWithdrawalsQueryDto,
     WithdrawalResponseDto,
     CreateWithdrawalResponseDto,
     CancelWithdrawalResponseDto,
+    WithdrawalOptionsResponseDto,
 } from './dto';
 
 @ApiTags('Withdrawal')
@@ -48,9 +52,11 @@ import {
 export class WithdrawalUserController {
     constructor(
         private readonly requestCryptoWithdrawalService: RequestCryptoWithdrawalService,
+        private readonly requestBankWithdrawalService: RequestBankWithdrawalService,
         private readonly cancelWithdrawalService: CancelWithdrawalService,
         private readonly findWithdrawalsService: FindWithdrawalsService,
         private readonly getWithdrawalService: GetWithdrawalService,
+        private readonly getWithdrawalOptionsService: GetWithdrawalOptionsService,
     ) { }
 
     @Get()
@@ -214,5 +220,74 @@ export class WithdrawalUserController {
             status: result.status,
             cancelledAt: result.cancelledAt,
         };
+    }
+
+    @Post('bank')
+    @HttpCode(HttpStatus.CREATED)
+    @ApiOperation({
+        summary: 'Request bank withdrawal',
+        description: 'Create a new bank withdrawal request.',
+    })
+    @ApiStandardResponse(CreateWithdrawalResponseDto, {
+        status: 201,
+        description: 'Bank withdrawal request created successfully',
+    })
+    @AuditLog({
+        type: LogType.ACTIVITY,
+        action: 'CREATE_BANK_WITHDRAWAL_REQUEST',
+        category: 'WITHDRAWAL',
+        extractMetadata: (_, args) => ({
+            bankConfigId: args[0]?.bankConfigId,
+            amount: args[0]?.amount,
+            bankName: args[0]?.bankName,
+        }),
+    })
+    async requestBankWithdrawal(
+        @Body() dto: RequestBankWithdrawalDto,
+        @CurrentUser() user: CurrentUserWithSession,
+        @RequestClientInfoParam() clientInfo: RequestClientInfo,
+    ): Promise<CreateWithdrawalResponseDto> {
+        const result = await this.requestBankWithdrawalService.execute({
+            userId: user.id,
+            currency: ExchangeCurrencyCode.KRW, // TODO: Config에서 currency 가져오기
+            amount: dto.amount,
+            bankConfigId: BigInt(dto.bankConfigId),
+            bankName: dto.bankName,
+            accountNumber: dto.accountNumber,
+            accountHolder: dto.accountHolder,
+            ipAddress: clientInfo.ip,
+            deviceFingerprint: clientInfo.userAgent,
+        });
+
+        return {
+            withdrawalId: result.withdrawalId.toString(),
+            status: result.status,
+            processingMode: result.processingMode,
+            requestedAmount: result.requestedAmount,
+            feeAmount: result.feeAmount ?? undefined,
+            netAmount: result.netAmount,
+        };
+    }
+
+    @Get('options')
+    @HttpCode(HttpStatus.OK)
+    @ApiOperation({
+        summary: 'Get withdrawal options',
+        description: 'Retrieve available withdrawal methods (crypto and bank).',
+    })
+    @ApiStandardResponse(WithdrawalOptionsResponseDto, {
+        status: 200,
+        description: 'Withdrawal options retrieved successfully',
+    })
+    @AuditLog({
+        type: LogType.ACTIVITY,
+        action: 'VIEW_WITHDRAWAL_OPTIONS',
+        category: 'WITHDRAWAL',
+    })
+    async getWithdrawalOptions(
+        @CurrentUser() user: CurrentUserWithSession,
+        @RequestClientInfoParam() requestInfo: RequestClientInfo,
+    ): Promise<WithdrawalOptionsResponseDto> {
+        return await this.getWithdrawalOptionsService.execute();
     }
 }
