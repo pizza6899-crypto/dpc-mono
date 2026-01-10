@@ -18,11 +18,11 @@ describe('Promotion Entity', () => {
             isActive: true,
             startDate: new Date('2024-01-01'),
             endDate: new Date('2024-12-31'),
-            targetType: PromotionTargetType.ALL_USERS,
+            targetType: PromotionTargetType.NEW_USER_FIRST_DEPOSIT,
             bonusType: PromotionBonusType.PERCENTAGE,
             bonusRate: new Prisma.Decimal(0.1), // 10%
             rollingMultiplier: new Prisma.Decimal(5),
-            qualificationMaintainCondition: PromotionQualification.ALWAYS,
+            qualificationMaintainCondition: PromotionQualification.UNTIL_FIRST_WITHDRAWAL,
             isOneTime: false,
             createdAt: new Date(),
             updatedAt: new Date(),
@@ -50,11 +50,11 @@ describe('Promotion Entity', () => {
                 isActive: true,
                 startDate: null,
                 endDate: null,
-                targetType: PromotionTargetType.ALL_USERS,
+                targetType: PromotionTargetType.NEW_USER_FIRST_DEPOSIT,
                 bonusType: PromotionBonusType.PERCENTAGE,
                 bonusRate: null,
                 rollingMultiplier: null,
-                qualificationMaintainCondition: PromotionQualification.ALWAYS,
+                qualificationMaintainCondition: PromotionQualification.UNTIL_FIRST_WITHDRAWAL,
                 createdAt: new Date(),
                 updatedAt: new Date(),
             });
@@ -137,16 +137,6 @@ describe('Promotion Entity', () => {
             const promotion = createPromotion({
                 bonusType: PromotionBonusType.PERCENTAGE,
                 bonusRate: null,
-            });
-
-            const bonus = promotion.calculateBonus(new Prisma.Decimal(100));
-            expect(bonus).toEqual(new Prisma.Decimal(0));
-        });
-
-        it('should return 0 for non-percentage bonus type', () => {
-            const promotion = createPromotion({
-                bonusType: PromotionBonusType.FIXED,
-                bonusRate: new Prisma.Decimal(50),
             });
 
             const bonus = promotion.calculateBonus(new Prisma.Decimal(100));

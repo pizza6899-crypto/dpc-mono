@@ -28,11 +28,11 @@ describe('CreatePromotionService', () => {
         isActive: true,
         startDate: null,
         endDate: null,
-        targetType: PromotionTargetType.ALL_USERS,
+        targetType: PromotionTargetType.NEW_USER_FIRST_DEPOSIT,
         bonusType: PromotionBonusType.PERCENTAGE,
         bonusRate: new Prisma.Decimal(0.1),
         rollingMultiplier: new Prisma.Decimal(5),
-        qualificationMaintainCondition: PromotionQualification.ALWAYS,
+        qualificationMaintainCondition: PromotionQualification.UNTIL_FIRST_WITHDRAWAL,
         isOneTime: false,
         createdAt: new Date(),
         updatedAt: new Date(),
@@ -65,9 +65,9 @@ describe('CreatePromotionService', () => {
         it('should create promotion with basic fields', async () => {
             const result = await service.execute({
                 managementName: 'Test Promotion',
-                targetType: PromotionTargetType.ALL_USERS,
+                targetType: PromotionTargetType.NEW_USER_FIRST_DEPOSIT,
                 bonusType: PromotionBonusType.PERCENTAGE,
-                qualificationMaintainCondition: PromotionQualification.ALWAYS,
+                qualificationMaintainCondition: PromotionQualification.UNTIL_FIRST_WITHDRAWAL,
             });
 
             expect(result).toBe(createdPromotion);
@@ -83,9 +83,9 @@ describe('CreatePromotionService', () => {
         it('should create currency settings when provided', async () => {
             await service.execute({
                 managementName: 'Test Promotion',
-                targetType: PromotionTargetType.ALL_USERS,
+                targetType: PromotionTargetType.NEW_USER_FIRST_DEPOSIT,
                 bonusType: PromotionBonusType.PERCENTAGE,
-                qualificationMaintainCondition: PromotionQualification.ALWAYS,
+                qualificationMaintainCondition: PromotionQualification.UNTIL_FIRST_WITHDRAWAL,
                 currencies: [
                     {
                         currency: ExchangeCurrencyCode.USDT,
@@ -111,9 +111,9 @@ describe('CreatePromotionService', () => {
         it('should create translations when provided', async () => {
             await service.execute({
                 managementName: 'Test Promotion',
-                targetType: PromotionTargetType.ALL_USERS,
+                targetType: PromotionTargetType.NEW_USER_FIRST_DEPOSIT,
                 bonusType: PromotionBonusType.PERCENTAGE,
-                qualificationMaintainCondition: PromotionQualification.ALWAYS,
+                qualificationMaintainCondition: PromotionQualification.UNTIL_FIRST_WITHDRAWAL,
                 translations: [
                     {
                         language: Language.EN,

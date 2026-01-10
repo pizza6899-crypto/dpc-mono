@@ -32,11 +32,11 @@ describe('PromotionPolicy', () => {
             isActive: true,
             startDate: new Date('2024-01-01'),
             endDate: new Date('2024-12-31'),
-            targetType: PromotionTargetType.ALL_USERS,
+            targetType: PromotionTargetType.NEW_USER_FIRST_DEPOSIT,
             bonusType: PromotionBonusType.PERCENTAGE,
             bonusRate: new Prisma.Decimal(0.1),
             rollingMultiplier: new Prisma.Decimal(5),
-            qualificationMaintainCondition: PromotionQualification.ALWAYS,
+            qualificationMaintainCondition: PromotionQualification.UNTIL_FIRST_WITHDRAWAL,
             isOneTime: false,
             createdAt: new Date(),
             updatedAt: new Date(),
@@ -182,15 +182,7 @@ describe('PromotionPolicy', () => {
             ).toThrow(PromotionNotEligibleException);
         });
 
-        it('should pass for all users promotion with previous deposits', () => {
-            const promotion = createPromotion({
-                targetType: PromotionTargetType.ALL_USERS,
-            });
 
-            expect(() =>
-                policy.validateFirstDepositEligibility(promotion, true),
-            ).not.toThrow();
-        });
     });
 
     describe('validateUntilFirstWithdrawalEligibility', () => {
@@ -214,15 +206,7 @@ describe('PromotionPolicy', () => {
             ).toThrow(PromotionNotEligibleException);
         });
 
-        it('should pass for ALWAYS qualification even with withdrawal', () => {
-            const promotion = createPromotion({
-                qualificationMaintainCondition: PromotionQualification.ALWAYS,
-            });
 
-            expect(() =>
-                policy.validateUntilFirstWithdrawalEligibility(promotion, true),
-            ).not.toThrow();
-        });
     });
 
     describe('validateEligibility', () => {
