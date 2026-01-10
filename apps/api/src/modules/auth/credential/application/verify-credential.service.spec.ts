@@ -14,7 +14,8 @@ describe('VerifyCredentialService', () => {
   let service: VerifyCredentialService;
   let repository: jest.Mocked<CredentialUserRepositoryPort>;
 
-  const mockUserId = 'user-123';
+  const mockUserId = BigInt(123);
+  const mockUid = 'user-uid-123';
   const mockEmail = 'user@example.com';
   const mockPassword = 'password123';
   let mockPasswordHash: string;
@@ -26,6 +27,7 @@ describe('VerifyCredentialService', () => {
   beforeEach(async () => {
     const mockRepository: jest.Mocked<CredentialUserRepositoryPort> = {
       findByEmail: jest.fn(),
+      findById: jest.fn(),
     };
 
     const module: TestingModule = await Test.createTestingModule({
@@ -47,6 +49,7 @@ describe('VerifyCredentialService', () => {
       // Arrange
       const user = CredentialUser.fromPersistence({
         id: mockUserId,
+        uid: mockUid,
         email: mockEmail,
         passwordHash: mockPasswordHash,
         status: UserStatus.ACTIVE,
@@ -64,6 +67,7 @@ describe('VerifyCredentialService', () => {
       // Assert
       expect(result).toEqual({
         id: mockUserId,
+        uid: mockUid,
         email: mockEmail,
         role: UserRoleType.USER,
       });
@@ -88,6 +92,7 @@ describe('VerifyCredentialService', () => {
       // Arrange
       const user = CredentialUser.fromPersistence({
         id: mockUserId,
+        uid: mockUid,
         email: mockEmail,
         passwordHash: null,
         status: UserStatus.ACTIVE,
@@ -110,6 +115,7 @@ describe('VerifyCredentialService', () => {
       // Arrange
       const user = CredentialUser.fromPersistence({
         id: mockUserId,
+        uid: mockUid,
         email: mockEmail,
         passwordHash: mockPasswordHash,
         status: UserStatus.ACTIVE,
@@ -132,6 +138,7 @@ describe('VerifyCredentialService', () => {
       // Arrange
       const user = CredentialUser.fromPersistence({
         id: mockUserId,
+        uid: mockUid,
         email: mockEmail,
         passwordHash: mockPasswordHash,
         status: UserStatus.SUSPENDED,
@@ -154,6 +161,7 @@ describe('VerifyCredentialService', () => {
       // Arrange
       const user = CredentialUser.fromPersistence({
         id: mockUserId,
+        uid: mockUid,
         email: mockEmail,
         passwordHash: mockPasswordHash,
         status: UserStatus.ACTIVE,
@@ -177,6 +185,7 @@ describe('VerifyCredentialService', () => {
       // Arrange
       const user = CredentialUser.fromPersistence({
         id: mockUserId,
+        uid: mockUid,
         email: mockEmail,
         passwordHash: mockPasswordHash,
         status: UserStatus.ACTIVE,
@@ -195,6 +204,7 @@ describe('VerifyCredentialService', () => {
       // Assert
       expect(result).toEqual({
         id: mockUserId,
+        uid: mockUid,
         email: mockEmail,
         role: UserRoleType.ADMIN,
       });
@@ -204,6 +214,7 @@ describe('VerifyCredentialService', () => {
       // Arrange
       const user = CredentialUser.fromPersistence({
         id: mockUserId,
+        uid: mockUid,
         email: mockEmail,
         passwordHash: mockPasswordHash,
         status: UserStatus.ACTIVE,
@@ -222,9 +233,34 @@ describe('VerifyCredentialService', () => {
       // Assert
       expect(result).toEqual({
         id: mockUserId,
+        uid: mockUid,
         email: mockEmail,
         role: UserRoleType.SUPER_ADMIN,
       });
+    });
+
+    it('일반 사용자 로그인 시도에서 관리자는 null을 반환한다', async () => {
+      // Arrange
+      const user = CredentialUser.fromPersistence({
+        id: mockUserId,
+        uid: mockUid,
+        email: mockEmail,
+        passwordHash: mockPasswordHash,
+        status: UserStatus.ACTIVE,
+        role: UserRoleType.ADMIN,
+      });
+
+      repository.findByEmail.mockResolvedValue(user);
+
+      // Act
+      const result = await service.execute({
+        email: mockEmail,
+        password: mockPassword,
+        isAdmin: false,
+      });
+
+      // Assert
+      expect(result).toBeNull();
     });
 
     it('타이밍 공격 방지: 사용자가 없어도 비밀번호 검증을 수행한다', async () => {

@@ -33,7 +33,7 @@ export class VerifyCredentialService {
   constructor(
     @Inject(CREDENTIAL_USER_REPOSITORY)
     private readonly userRepository: CredentialUserRepositoryPort,
-  ) {}
+  ) { }
 
   async execute({
     email,
@@ -59,6 +59,11 @@ export class VerifyCredentialService {
 
     // 관리자 로그인 시도인 경우 권한 체크
     if (isAdmin && !user.isAdmin()) {
+      return null;
+    }
+
+    // 일반 사용자 로그인 시도인 경우 관리자 차단
+    if (!isAdmin && user.isAdmin()) {
       return null;
     }
 
