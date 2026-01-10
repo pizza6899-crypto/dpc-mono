@@ -82,7 +82,7 @@ model SystemErrorLog {
   traceId      String?   @map("trace_id") // 분산 추적 ID (OpenTelemetry 등)
   errorCode    String?   @map("error_code")
   errorMessage String    @map("error_message")
-  stackTrace   String?   @map("stack_trace") @db.Text
+  stackTrace   String?   @map("stack_trace")
   metadata     Json? // 에러 당시 Request/Session 스냅샷용 추가
   path         String?
   method       String?

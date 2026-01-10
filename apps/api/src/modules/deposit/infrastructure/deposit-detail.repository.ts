@@ -29,16 +29,16 @@ export class DepositDetailRepository implements DepositDetailRepositoryPort {
     id: bigint,
     include?: {
       transaction?: boolean;
-      BankConfig?: boolean;
-      CryptoConfig?: boolean;
+      bankDepositConfig?: boolean;
+      cryptoDepositConfig?: boolean;
     },
   ): Promise<DepositDetail | null> {
     const result = await this.tx.depositDetail.findUnique({
       where: { id },
       include: {
         transaction: include?.transaction ?? false,
-        BankConfig: include?.BankConfig ?? false,
-        CryptoConfig: include?.CryptoConfig ?? false,
+        bankDepositConfig: include?.bankDepositConfig ?? false,
+        cryptoDepositConfig: include?.cryptoDepositConfig ?? false,
       },
     });
 
@@ -49,8 +49,8 @@ export class DepositDetailRepository implements DepositDetailRepositoryPort {
     id: bigint,
     include?: {
       transaction?: boolean;
-      BankConfig?: boolean;
-      CryptoConfig?: boolean;
+      bankDepositConfig?: boolean;
+      cryptoDepositConfig?: boolean;
     },
   ): Promise<DepositDetail> {
     const deposit = await this.findById(id, include);
@@ -146,8 +146,8 @@ export class DepositDetailRepository implements DepositDetailRepositoryPort {
         },
         include: {
           transaction: false,
-          BankConfig: true,
-          CryptoConfig: true,
+          bankDepositConfig: true,
+          cryptoDepositConfig: true,
         },
       }),
     ]);
@@ -169,8 +169,8 @@ export class DepositDetailRepository implements DepositDetailRepositoryPort {
       },
       include: {
         transaction: false,
-        BankConfig: true,
-        CryptoConfig: true,
+        bankDepositConfig: true,
+        cryptoDepositConfig: true,
       },
     });
 

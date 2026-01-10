@@ -37,8 +37,8 @@ export class DepositDetailMapper {
     depositorName: string | null;
     providerPaymentId: string | null;
     transactionHash: string | null;
-    bankConfigId: bigint | null;
-    cryptoConfigId: bigint | null;
+    bankDepositConfigId: bigint | null;
+    cryptoDepositConfigId: bigint | null;
     promotionId: bigint | null;
     processedBy: bigint | null;
     adminNote: string | null;
@@ -71,8 +71,8 @@ export class DepositDetailMapper {
       depositorName: prismaModel.depositorName,
       providerPaymentId: prismaModel.providerPaymentId,
       transactionHash: prismaModel.transactionHash,
-      bankConfigId: prismaModel.bankConfigId,
-      cryptoConfigId: prismaModel.cryptoConfigId,
+      bankConfigId: prismaModel.bankDepositConfigId,
+      cryptoConfigId: prismaModel.cryptoDepositConfigId,
       promotionId: prismaModel.promotionId,
       processedBy: prismaModel.processedBy,
       adminNote: prismaModel.adminNote,
@@ -130,8 +130,8 @@ export class DepositDetailMapper {
       depositorName: persistence.depositorName,
       providerPaymentId: persistence.providerPaymentId,
       transactionHash: persistence.transactionHash,
-      bankConfigId: persistence.bankConfigId,
-      cryptoConfigId: persistence.cryptoConfigId,
+      bankDepositConfigId: persistence.bankConfigId,
+      cryptoDepositConfigId: persistence.cryptoConfigId,
       promotionId: persistence.promotionId,
       processedBy: persistence.processedBy,
       adminNote: persistence.adminNote,

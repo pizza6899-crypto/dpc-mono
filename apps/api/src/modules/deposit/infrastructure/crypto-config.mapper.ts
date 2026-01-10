@@ -1,6 +1,6 @@
 // src/modules/deposit/infrastructure/crypto-config.mapper.ts
 import { Injectable } from '@nestjs/common';
-import { CryptoConfig as PrismaCryptoConfig } from '@repo/database';
+import { CryptoDepositConfig as PrismaCryptoConfig } from '@repo/database';
 import { CryptoConfig } from '../domain';
 
 @Injectable()

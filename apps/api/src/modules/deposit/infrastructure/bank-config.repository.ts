@@ -17,7 +17,7 @@ export class BankConfigRepository implements BankConfigRepositoryPort {
     ) { }
 
     async listActive(currency?: ExchangeCurrencyCode): Promise<BankConfig[]> {
-        const configs = await this.tx.bankConfig.findMany({
+        const configs = await this.tx.bankDepositConfig.findMany({
             where: {
                 isActive: true,
                 deletedAt: null,
@@ -31,7 +31,7 @@ export class BankConfigRepository implements BankConfigRepositoryPort {
     }
 
     async findByUid(uid: string): Promise<BankConfig | null> {
-        const config = await this.tx.bankConfig.findFirst({
+        const config = await this.tx.bankDepositConfig.findFirst({
             where: { uid, deletedAt: null },
         });
         return config ? this.mapper.toDomain(config) : null;
@@ -46,7 +46,7 @@ export class BankConfigRepository implements BankConfigRepositoryPort {
     }
 
     async findById(id: bigint): Promise<BankConfig | null> {
-        const config = await this.tx.bankConfig.findFirst({
+        const config = await this.tx.bankDepositConfig.findFirst({
             where: { id, deletedAt: null },
         });
         return config ? this.mapper.toDomain(config) : null;
@@ -62,19 +62,63 @@ export class BankConfigRepository implements BankConfigRepositoryPort {
 
     async create(bankConfig: BankConfig): Promise<BankConfig> {
         const data = this.mapper.toPrisma(bankConfig);
-        const result = await this.tx.bankConfig.create({
+        const result = await this.tx.bankDepositConfig.create({
             data: data as any,
         });
         return this.mapper.toDomain(result);
     }
 
     async update(bankConfig: BankConfig): Promise<BankConfig> {
-        const persistence = bankConfig.toPersistence();
         const data = this.mapper.toPrisma(bankConfig);
-        const result = await this.tx.bankConfig.update({
-            where: { id: persistence.id! },
+        const result = await this.tx.bankDepositConfig.update({
+            where: { id: bankConfig.id! },
             data: data as any,
         });
         return this.mapper.toDomain(result);
+    }
+
+    async list(params: {
+        skip?: number;
+        take?: number;
+        currency?: ExchangeCurrencyCode;
+        isActive?: boolean;
+        sortBy?: string;
+        sortOrder?: 'asc' | 'desc';
+    }): Promise<BankConfig[]> {
+        const { skip, take, currency, isActive, sortBy = 'createdAt', sortOrder = 'desc' } = params;
+        const configs = await this.tx.bankDepositConfig.findMany({
+            where: {
+                deletedAt: null,
+                ...(currency && { currency }),
+                ...(isActive !== undefined && { isActive }),
+            },
+            skip,
+            take,
+            orderBy: {
+                [sortBy]: sortOrder,
+            },
+        });
+        return configs.map((config) => this.mapper.toDomain(config));
+    }
+
+    async count(params: {
+        currency?: ExchangeCurrencyCode;
+        isActive?: boolean;
+    }): Promise<number> {
+        const { currency, isActive } = params;
+        return await this.tx.bankDepositConfig.count({
+            where: {
+                deletedAt: null,
+                ...(currency && { currency }),
+                ...(isActive !== undefined && { isActive }),
+            },
+        });
+    }
+
+    async delete(id: bigint): Promise<void> {
+        await this.tx.bankDepositConfig.update({
+            where: { id },
+            data: { deletedAt: new Date() },
+        });
     }
 }

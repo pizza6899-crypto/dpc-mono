@@ -41,8 +41,8 @@ export class GetDepositDetailService {
             },
           },
         },
-        BankConfig: true,
-        CryptoConfig: true,
+        bankDepositConfig: true,
+        cryptoDepositConfig: true,
       },
     });
 

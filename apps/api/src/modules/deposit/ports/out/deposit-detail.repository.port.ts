@@ -3,8 +3,8 @@ import { Prisma, TransactionStatus, TransactionType, ExchangeCurrencyCode } from
 import { DepositDetail } from '../../domain';
 
 export interface DepositDetailRepositoryPort {
-  findById(id: bigint, include?: { transaction?: boolean; BankConfig?: boolean }): Promise<DepositDetail | null>;
-  getById(id: bigint, include?: { transaction?: boolean; BankConfig?: boolean }): Promise<DepositDetail>;
+  findById(id: bigint, include?: { transaction?: boolean; bankDepositConfig?: boolean; cryptoDepositConfig?: boolean }): Promise<DepositDetail | null>;
+  getById(id: bigint, include?: { transaction?: boolean; bankDepositConfig?: boolean; cryptoDepositConfig?: boolean }): Promise<DepositDetail>;
   update(deposit: DepositDetail): Promise<DepositDetail>;
   create(deposit: DepositDetail): Promise<DepositDetail>;
   createTransaction(data: {

@@ -160,8 +160,8 @@ model BankWithdrawConfig {
     withdrawFeeFixed Decimal @default(0) @map("withdraw_fee_fixed") @db.Decimal(32, 18)
     withdrawFeeRate  Decimal @default(0) @map("withdraw_fee_rate") @db.Decimal(8, 4)
 
-    description String? @db.Text
-    notes       String? @db.Text
+    description String?
+    notes       String?
 
     createdAt DateTime  @default(now()) @map("created_at")
     updatedAt DateTime  @updatedAt @map("updated_at")

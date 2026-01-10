@@ -15,8 +15,15 @@ import { GetDepositsService } from './application/get-deposits.service';
 import { GetDepositDetailService } from './application/get-deposit-detail.service';
 import { ApproveDepositService } from './application/approve-deposit.service';
 import { RejectDepositService } from './application/reject-deposit.service';
-import { AdminBankConfigService } from './application/admin-bank-config.service';
-import { AdminCryptoConfigService } from './application/admin-crypto-config.service';
+import { FindBankConfigsAdminService } from './application/find-bank-configs-admin.service';
+import { GetBankConfigAdminService } from './application/get-bank-config-admin.service';
+import { UpdateBankConfigAdminService } from './application/update-bank-config-admin.service';
+import { DeleteBankConfigAdminService } from './application/delete-bank-config-admin.service';
+import { FindCryptoConfigsAdminService } from './application/find-crypto-configs-admin.service';
+import { GetCryptoConfigAdminService } from './application/get-crypto-config-admin.service';
+import { CreateCryptoConfigService } from './application/create-crypto-config.service';
+import { UpdateCryptoConfigAdminService } from './application/update-crypto-config-admin.service';
+import { DeleteCryptoConfigAdminService } from './application/delete-crypto-config-admin.service';
 import { GetAvailableDepositMethodsService } from './application/get-available-deposit-methods.service';
 import { CreateBankConfigService } from './application/create-bank-config.service';
 import { CreateCryptoDepositService } from './application/create-crypto-deposit.service';
@@ -72,8 +79,17 @@ import {
     GetDepositDetailService,
     ApproveDepositService,
     RejectDepositService,
-    AdminBankConfigService,
-    AdminCryptoConfigService,
+    FindBankConfigsAdminService,
+    GetBankConfigAdminService,
+    UpdateBankConfigAdminService,
+    DeleteBankConfigAdminService,
+
+    FindCryptoConfigsAdminService,
+    GetCryptoConfigAdminService,
+    CreateCryptoConfigService,
+    UpdateCryptoConfigAdminService,
+    DeleteCryptoConfigAdminService,
+
     GetAvailableDepositMethodsService,
     CreateBankConfigService,
     CreateCryptoDepositService,
@@ -91,8 +107,17 @@ import {
     GetDepositDetailService,
     ApproveDepositService,
     RejectDepositService,
-    AdminBankConfigService,
-    AdminCryptoConfigService,
+    FindBankConfigsAdminService,
+    GetBankConfigAdminService,
+    UpdateBankConfigAdminService,
+    DeleteBankConfigAdminService,
+
+    FindCryptoConfigsAdminService,
+    GetCryptoConfigAdminService,
+    CreateCryptoConfigService,
+    UpdateCryptoConfigAdminService,
+    DeleteCryptoConfigAdminService,
+
     GetAvailableDepositMethodsService,
     CreateBankConfigService,
     CreateCryptoDepositService,

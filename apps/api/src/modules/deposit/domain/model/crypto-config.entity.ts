@@ -22,7 +22,35 @@ export class CryptoConfig {
     public readonly contractAddress: string | null,
     public readonly createdAt: Date,
     public readonly updatedAt: Date,
-  ) {}
+  ) { }
+
+  /**
+   * 새로운 엔티티 생성 (팩토리 메서드)
+   */
+  static create(params: {
+    uid: string;
+    symbol: string;
+    network: string;
+    isActive?: boolean;
+    minDepositAmount: Prisma.Decimal;
+    depositFeeRate: Prisma.Decimal;
+    confirmations: number;
+    contractAddress?: string | null;
+  }): CryptoConfig {
+    return new CryptoConfig(
+      null as any, // 새 엔티티는 id 없음
+      params.uid,
+      params.symbol,
+      params.network,
+      params.isActive ?? true,
+      params.minDepositAmount,
+      params.depositFeeRate,
+      params.confirmations,
+      params.contractAddress ?? null,
+      new Date(),
+      new Date(),
+    );
+  }
 
   /**
    * DB에서 조회한 데이터로부터 엔티티 생성
@@ -84,6 +112,33 @@ export class CryptoConfig {
       createdAt: this.createdAt,
       updatedAt: this.updatedAt,
     };
+  }
+
+  /**
+   * 엔티티 정보 업데이트
+   */
+  update(params: {
+    symbol?: string;
+    network?: string;
+    isActive?: boolean;
+    minDepositAmount?: Prisma.Decimal;
+    depositFeeRate?: Prisma.Decimal;
+    confirmations?: number;
+    contractAddress?: string | null;
+  }): CryptoConfig {
+    return new CryptoConfig(
+      this.id,
+      this.uid,
+      params.symbol ?? this.symbol,
+      params.network ?? this.network,
+      params.isActive ?? this._isActive,
+      params.minDepositAmount ?? this.minDepositAmount,
+      params.depositFeeRate ?? this.depositFeeRate,
+      params.confirmations ?? this.confirmations,
+      params.contractAddress !== undefined ? params.contractAddress : this.contractAddress,
+      this.createdAt,
+      new Date(),
+    );
   }
 
   // 상태 관련 메서드

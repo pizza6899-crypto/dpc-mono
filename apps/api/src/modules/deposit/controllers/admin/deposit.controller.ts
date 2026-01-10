@@ -39,8 +39,15 @@ import { GetDepositsService } from '../../application/get-deposits.service';
 import { GetDepositDetailService } from '../../application/get-deposit-detail.service';
 import { ApproveDepositService } from '../../application/approve-deposit.service';
 import { RejectDepositService } from '../../application/reject-deposit.service';
-import { AdminBankConfigService } from '../../application/admin-bank-config.service';
-import { AdminCryptoConfigService } from '../../application/admin-crypto-config.service';
+import { FindBankConfigsAdminService } from '../../application/find-bank-configs-admin.service';
+import { GetBankConfigAdminService } from '../../application/get-bank-config-admin.service';
+import { UpdateBankConfigAdminService } from '../../application/update-bank-config-admin.service';
+import { DeleteBankConfigAdminService } from '../../application/delete-bank-config-admin.service';
+import { FindCryptoConfigsAdminService } from '../../application/find-crypto-configs-admin.service';
+import { GetCryptoConfigAdminService } from '../../application/get-crypto-config-admin.service';
+import { CreateCryptoConfigService } from '../../application/create-crypto-config.service';
+import { UpdateCryptoConfigAdminService } from '../../application/update-crypto-config-admin.service';
+import { DeleteCryptoConfigAdminService } from '../../application/delete-crypto-config-admin.service';
 import { CreateBankConfigService } from '../../application/create-bank-config.service';
 import {
   CreateBankConfigRequestDto,
@@ -68,8 +75,15 @@ export class AdminDepositController {
     private readonly getDepositDetailService: GetDepositDetailService,
     private readonly approveDepositService: ApproveDepositService,
     private readonly rejectDepositService: RejectDepositService,
-    private readonly adminBankConfigService: AdminBankConfigService,
-    private readonly adminCryptoConfigService: AdminCryptoConfigService,
+    private readonly findBankConfigsAdminService: FindBankConfigsAdminService,
+    private readonly getBankConfigAdminService: GetBankConfigAdminService,
+    private readonly updateBankConfigAdminService: UpdateBankConfigAdminService,
+    private readonly deleteBankConfigAdminService: DeleteBankConfigAdminService,
+    private readonly findCryptoConfigsAdminService: FindCryptoConfigsAdminService,
+    private readonly getCryptoConfigAdminService: GetCryptoConfigAdminService,
+    private readonly createCryptoConfigService: CreateCryptoConfigService,
+    private readonly updateCryptoConfigAdminService: UpdateCryptoConfigAdminService,
+    private readonly deleteCryptoConfigAdminService: DeleteCryptoConfigAdminService,
     private readonly createBankConfigService: CreateBankConfigService,
   ) { }
   // ============================================
@@ -271,11 +285,11 @@ export class AdminDepositController {
     @CurrentUser() admin: CurrentUserWithSession,
     @RequestClientInfoParam() requestInfo: RequestClientInfo,
   ): Promise<PaginatedData<BankConfigResponseDto>> {
-    return await this.adminBankConfigService.getBankConfigs(
-      query,
-      admin.id,
-      requestInfo,
-    );
+    const result = await this.findBankConfigsAdminService.execute(query);
+    return {
+      ...result,
+      data: result.data.map(config => this.toBankConfigResponseDto(config)),
+    };
   }
 
   @Post('configs/bank')
@@ -354,11 +368,8 @@ export class AdminDepositController {
     @CurrentUser() admin: CurrentUserWithSession,
     @RequestClientInfoParam() requestInfo: RequestClientInfo,
   ): Promise<BankConfigResponseDto> {
-    return await this.adminBankConfigService.getBankConfigDetail(
-      BigInt(id),
-      admin.id,
-      requestInfo,
-    );
+    const config = await this.getBankConfigAdminService.execute({ id: BigInt(id) });
+    return this.toBankConfigResponseDto(config);
   }
 
   @Patch('configs/bank/:id')
@@ -392,12 +403,11 @@ export class AdminDepositController {
     @CurrentUser() admin: CurrentUserWithSession,
     @RequestClientInfoParam() requestInfo: RequestClientInfo,
   ): Promise<BankConfigResponseDto> {
-    return await this.adminBankConfigService.updateBankConfig(
-      BigInt(id),
-      dto,
-      admin.id,
-      requestInfo,
-    );
+    const config = await this.updateBankConfigAdminService.execute({
+      id: BigInt(id),
+      ...dto
+    });
+    return this.toBankConfigResponseDto(config);
   }
 
   @Delete('configs/bank/:id')
@@ -429,11 +439,8 @@ export class AdminDepositController {
     @CurrentUser() admin: CurrentUserWithSession,
     @RequestClientInfoParam() requestInfo: RequestClientInfo,
   ): Promise<SuccessResponseDto> {
-    return await this.adminBankConfigService.deleteBankConfig(
-      BigInt(id),
-      admin.id,
-      requestInfo,
-    );
+    await this.deleteBankConfigAdminService.execute({ id: BigInt(id) });
+    return { success: true };
   }
 
   // ============================================
@@ -462,11 +469,11 @@ export class AdminDepositController {
     @CurrentUser() admin: CurrentUserWithSession,
     @RequestClientInfoParam() requestInfo: RequestClientInfo,
   ): Promise<PaginatedData<CryptoConfigResponseDto>> {
-    return await this.adminCryptoConfigService.getCryptoConfigs(
-      query,
-      admin.id,
-      requestInfo,
-    );
+    const paginated = await this.findCryptoConfigsAdminService.execute(query);
+    return {
+      ...paginated,
+      data: paginated.data.map(config => this.toCryptoConfigResponseDto(config)),
+    };
   }
 
   @Get('configs/crypto/:id')
@@ -498,11 +505,8 @@ export class AdminDepositController {
     @CurrentUser() admin: CurrentUserWithSession,
     @RequestClientInfoParam() requestInfo: RequestClientInfo,
   ): Promise<CryptoConfigResponseDto> {
-    return await this.adminCryptoConfigService.getCryptoConfigDetail(
-      BigInt(id),
-      admin.id,
-      requestInfo,
-    );
+    const config = await this.getCryptoConfigAdminService.execute({ id: BigInt(id) });
+    return this.toCryptoConfigResponseDto(config);
   }
 
   @Patch('configs/crypto/:id')
@@ -536,12 +540,11 @@ export class AdminDepositController {
     @CurrentUser() admin: CurrentUserWithSession,
     @RequestClientInfoParam() requestInfo: RequestClientInfo,
   ): Promise<CryptoConfigResponseDto> {
-    return await this.adminCryptoConfigService.updateCryptoConfig(
-      BigInt(id),
-      dto,
-      admin.id,
-      requestInfo,
-    );
+    const config = await this.updateCryptoConfigAdminService.execute({
+      id: BigInt(id),
+      ...dto
+    });
+    return this.toCryptoConfigResponseDto(config);
   }
 
   @Post('configs/crypto')
@@ -569,11 +572,8 @@ export class AdminDepositController {
     @CurrentUser() admin: CurrentUserWithSession,
     @RequestClientInfoParam() requestInfo: RequestClientInfo,
   ): Promise<CryptoConfigResponseDto> {
-    return await this.adminCryptoConfigService.createCryptoConfig(
-      dto,
-      admin.id,
-      requestInfo,
-    );
+    const config = await this.createCryptoConfigService.execute(dto);
+    return this.toCryptoConfigResponseDto(config);
   }
 
   @Delete('configs/crypto/:id')
@@ -605,11 +605,45 @@ export class AdminDepositController {
     @CurrentUser() admin: CurrentUserWithSession,
     @RequestClientInfoParam() requestInfo: RequestClientInfo,
   ): Promise<SuccessResponseDto> {
-    return await this.adminCryptoConfigService.deleteCryptoConfig(
-      BigInt(id),
-      admin.id,
-      requestInfo,
-    );
+    await this.deleteCryptoConfigAdminService.execute({ id: BigInt(id) });
+    return { success: true };
+  }
+
+  private toCryptoConfigResponseDto(config: any): CryptoConfigResponseDto {
+    return {
+      id: config.id.toString(),
+      uid: config.uid,
+      symbol: config.symbol,
+      network: config.network,
+      isActive: config.isActive,
+      minDepositAmount: config.minDepositAmount.toString(),
+      depositFeeRate: config.depositFeeRate.toString(),
+      confirmations: config.confirmations,
+      contractAddress: config.contractAddress,
+      createdAt: config.createdAt,
+      updatedAt: config.updatedAt,
+    };
+  }
+
+  private toBankConfigResponseDto(config: any): BankConfigResponseDto {
+    return {
+      id: config.id.toString(),
+      uid: config.uid,
+      currency: config.currency,
+      bankName: config.bankName,
+      accountNumber: config.accountNumber,
+      accountHolder: config.accountHolder,
+      isActive: config.isActive,
+      priority: config.priority,
+      description: config.description,
+      notes: config.notes,
+      minAmount: config.minAmount.toString(),
+      maxAmount: config.maxAmount?.toString() ?? null,
+      totalDeposits: config.totalDeposits,
+      totalDepositAmount: config.totalDepositAmount.toString(),
+      createdAt: config.createdAt,
+      updatedAt: config.updatedAt,
+    };
   }
 }
 

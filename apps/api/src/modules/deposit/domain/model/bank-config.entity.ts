@@ -240,5 +240,41 @@ export class BankConfig {
   isAvailable(): boolean {
     return this._isActive && !this.isDeleted();
   }
+
+  /**
+   * 엔티티 정보 업데이트
+   */
+  update(params: {
+    currency?: ExchangeCurrencyCode;
+    bankName?: string;
+    accountNumber?: string;
+    accountHolder?: string;
+    isActive?: boolean;
+    priority?: number;
+    description?: string | null;
+    notes?: string | null;
+    minAmount?: Prisma.Decimal;
+    maxAmount?: Prisma.Decimal | null;
+  }): BankConfig {
+    return new BankConfig(
+      this.id,
+      this.uid,
+      params.currency ?? this.currency,
+      params.bankName ?? this.bankName,
+      params.accountNumber ?? this.accountNumber,
+      params.accountHolder ?? this.accountHolder,
+      params.isActive ?? this._isActive,
+      params.priority ?? this.priority,
+      params.description !== undefined ? params.description : this.description,
+      params.notes !== undefined ? params.notes : this.notes,
+      params.minAmount ?? this.minAmount,
+      params.maxAmount !== undefined ? params.maxAmount : this.maxAmount,
+      this._totalDeposits,
+      this._totalDepositAmount,
+      this.createdAt,
+      new Date(),
+      this._deletedAt,
+    );
+  }
 }
 

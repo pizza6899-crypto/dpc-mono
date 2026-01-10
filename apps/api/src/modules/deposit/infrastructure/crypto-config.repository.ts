@@ -16,7 +16,7 @@ export class CryptoConfigRepository implements CryptoConfigRepositoryPort {
     ) { }
 
     async listActive(): Promise<CryptoConfig[]> {
-        const configs = await this.tx.cryptoConfig.findMany({
+        const configs = await this.tx.cryptoDepositConfig.findMany({
             where: {
                 isActive: true,
                 deletedAt: null,
@@ -26,7 +26,7 @@ export class CryptoConfigRepository implements CryptoConfigRepositoryPort {
     }
 
     async findByUid(uid: string): Promise<CryptoConfig | null> {
-        const config = await this.tx.cryptoConfig.findUnique({
+        const config = await this.tx.cryptoDepositConfig.findUnique({
             where: {
                 uid,
                 deletedAt: null,
@@ -44,7 +44,7 @@ export class CryptoConfigRepository implements CryptoConfigRepositoryPort {
     }
 
     async findById(id: bigint): Promise<CryptoConfig | null> {
-        const config = await this.tx.cryptoConfig.findUnique({
+        const config = await this.tx.cryptoDepositConfig.findUnique({
             where: {
                 id,
                 deletedAt: null,
@@ -62,7 +62,7 @@ export class CryptoConfigRepository implements CryptoConfigRepositoryPort {
     }
 
     async findBySymbolAndNetwork(symbol: string, network: string): Promise<CryptoConfig | null> {
-        const config = await this.tx.cryptoConfig.findFirst({
+        const config = await this.tx.cryptoDepositConfig.findFirst({
             where: {
                 symbol,
                 network,
@@ -78,5 +78,71 @@ export class CryptoConfigRepository implements CryptoConfigRepositoryPort {
             throw new CryptoConfigNotFoundException(`${symbol}/${network}`);
         }
         return config;
+    }
+
+    async create(config: CryptoConfig): Promise<CryptoConfig> {
+        const data = this.mapper.toPrisma(config);
+        const result = await this.tx.cryptoDepositConfig.create({
+            data: data as any,
+        });
+        return this.mapper.toDomain(result);
+    }
+
+    async update(config: CryptoConfig): Promise<CryptoConfig> {
+        const data = this.mapper.toPrisma(config);
+        const result = await this.tx.cryptoDepositConfig.update({
+            where: { id: config.id! },
+            data: data as any,
+        });
+        return this.mapper.toDomain(result);
+    }
+
+    async list(params: {
+        skip?: number;
+        take?: number;
+        symbol?: string;
+        network?: string;
+        isActive?: boolean;
+        sortBy?: string;
+        sortOrder?: 'asc' | 'desc';
+    }): Promise<CryptoConfig[]> {
+        const { skip, take, symbol, network, isActive, sortBy = 'createdAt', sortOrder = 'desc' } = params;
+        const configs = await this.tx.cryptoDepositConfig.findMany({
+            where: {
+                deletedAt: null,
+                ...(symbol && { symbol }),
+                ...(network && { network }),
+                ...(isActive !== undefined && { isActive }),
+            },
+            skip,
+            take,
+            orderBy: {
+                [sortBy]: sortOrder,
+            },
+        });
+        return configs.map((config) => this.mapper.toDomain(config));
+    }
+
+    async count(params: {
+        symbol?: string;
+        network?: string;
+        isActive?: boolean;
+    }): Promise<number> {
+        const { symbol, network, isActive } = params;
+        return await this.tx.cryptoDepositConfig.count({
+            where: {
+                deletedAt: null,
+                ...(symbol && { symbol }),
+                ...(network && { network }),
+                ...(isActive !== undefined && { isActive }),
+            },
+        });
+    }
+
+    async delete(id: bigint): Promise<void> {
+        await this.tx.cryptoDepositConfig.update({
+            where: { id },
+            data: { deletedAt: new Date() },
+        });
     }
 }

@@ -41,7 +41,7 @@ model DepositDetail {
 
   // 2. 관리자 수동 처리 추적 (MANUAL 프로바이더용)
   processedBy BigInt? @map("processed_by")
-  adminNote   String? @map("admin_note") @db.Text
+  adminNote   String? @map("admin_note")
 
   // 3. 보안 및 어뷰징 방지
   // 상세 보안 정보는 ActivityLog에 기록되며, 여기서는 최소한의 핵심 정보만 저장
@@ -49,19 +49,19 @@ model DepositDetail {
   ipAddress         String? @map("ip_address")
   deviceFingerprint String? @map("device_fingerprint")
 
-  feeAmount            Decimal?              @map("fee_amount") @db.Decimal(32, 18)
-  feeCurrency          String?               @map("fee_currency")
-  feePaidBy            FeePaidByType?        @map("fee_paid_by")
-  failureReason        String?               @map("failure_reason")
-  providerMetadata     Json?                 @default("{}") @map("provider_metadata")
-  bankConfigId         BigInt?               @map("bank_config_id")
-  cryptoConfigId       BigInt?               @map("crypto_config_id")
-  promotionId          BigInt?               @map("promotion_id")
-  BankConfig           BankConfig?           @relation(fields: [bankConfigId], references: [id])
-  CryptoConfig         CryptoConfig?         @relation(fields: [cryptoConfigId], references: [id])
-  promotion            Promotion?            @relation(fields: [promotionId], references: [id])
-  transaction          Transaction?          @relation(fields: [transactionId], references: [id])
-  wageringRequirements WageringRequirement[]
+  feeAmount             Decimal?              @map("fee_amount") @db.Decimal(32, 18)
+  feeCurrency           String?               @map("fee_currency")
+  feePaidBy             FeePaidByType?        @map("fee_paid_by")
+  failureReason         String?               @map("failure_reason")
+  providerMetadata      Json?                 @default("{}") @map("provider_metadata")
+  bankDepositConfigId   BigInt?               @map("bank_deposit_config_id")
+  cryptoDepositConfigId BigInt?               @map("crypto_deposit_config_id")
+  promotionId           BigInt?               @map("promotion_id")
+  bankDepositConfig     BankDepositConfig?    @relation(fields: [bankDepositConfigId], references: [id])
+  cryptoDepositConfig   CryptoDepositConfig?  @relation(fields: [cryptoDepositConfigId], references: [id])
+  promotion             Promotion?            @relation(fields: [promotionId], references: [id])
+  transaction           Transaction?          @relation(fields: [transactionId], references: [id])
+  wageringRequirements  WageringRequirement[]
 
   @@index([provider, providerPaymentId])
   @@index([status, createdAt])
@@ -73,8 +73,8 @@ model DepositDetail {
   @@index([ipAddress, deviceFingerprint])
   @@index([ipAddress])
   @@index([deviceFingerprint])
-  @@index([bankConfigId])
-  @@index([cryptoConfigId])
+  @@index([bankDepositConfigId])
+  @@index([cryptoDepositConfigId])
   @@map("deposit_details")
 }
 
@@ -139,7 +139,7 @@ enum FeePaidByType {
  * - 최소 입금 금액, 수수료율, 승인 필요 블록 수 등 설정
  * - 토큰의 경우 contractAddress 저장
  */
-model CryptoConfig {
+model CryptoDepositConfig {
   id               BigInt          @id @default(autoincrement())
   uid              String          @unique
   symbol           String // BTC, ETH, USDT 등
@@ -157,7 +157,7 @@ model CryptoConfig {
   @@unique([symbol, network])
   @@index([symbol, network, isActive])
   @@index([isActive])
-  @@map("crypto_configs")
+  @@map("crypto_deposit_configs")
 }
 
 /**
@@ -168,7 +168,7 @@ model CryptoConfig {
  * - 통계 정보 (총 입금 횟수, 총 입금 금액)
  * - 소프트 삭제 지원
  */
-model BankConfig {
+model BankDepositConfig {
   id                 BigInt               @id @default(autoincrement())
   uid                String               @unique
   currency           ExchangeCurrencyCode
@@ -177,8 +177,8 @@ model BankConfig {
   accountHolder      String               @map("account_holder")
   isActive           Boolean              @default(true) @map("is_active")
   priority           Int                  @default(0)
-  description        String?              @db.Text // 유저에게 보여줄 안내 사항 (예: "반드시 본인 성함으로 입금")
-  notes              String?              @db.Text // 관리자용 메모
+  description        String? // 유저에게 보여줄 안내 사항 (예: "반드시 본인 성함으로 입금")
+  notes              String? // 관리자용 메모
   minAmount          Decimal              @map("min_amount") @db.Decimal(32, 18)
   maxAmount          Decimal?             @map("max_amount") @db.Decimal(32, 18) // null이면 제한 없음
   totalDeposits      Int                  @default(0) @map("total_deposits")
@@ -193,5 +193,5 @@ model BankConfig {
   @@index([currency])
   @@index([priority])
   @@index([deletedAt])
-  @@map("bank_configs")
+  @@map("bank_deposit_configs")
 }

@@ -49,7 +49,7 @@ export class ApproveDepositService {
     // 1. DepositDetail 조회 (transaction 포함)
     const deposit = await this.depositRepository.getById(id, {
       transaction: true,
-      BankConfig: true,
+      bankDepositConfig: true,
     });
 
     // 2. 엔티티 비즈니스 로직 실행 전 검증 (이미 처리된 경우 등)
