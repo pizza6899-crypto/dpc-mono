@@ -122,6 +122,9 @@ export class UserDepositResponseDto {
     @ApiProperty({ enum: DepositMethodType, description: 'Deposit method type' })
     methodType: DepositMethodType;
 
+    @ApiPropertyOptional({ description: 'Payment provider', nullable: true })
+    provider?: string | null;
+
     @ApiProperty({ enum: ExchangeCurrencyCode, description: 'Deposit currency' })
     depositCurrency: ExchangeCurrencyCode;
 
@@ -148,6 +151,9 @@ export class UserDepositResponseDto {
 
     @ApiProperty({ description: 'Confirmed at', nullable: true })
     confirmedAt: Date | null;
+
+    @ApiProperty({ description: 'Failed at', nullable: true })
+    failedAt: Date | null;
 
     @ApiProperty({ description: 'Failure reason if failed', nullable: true })
     failureReason: string | null;

@@ -11,7 +11,7 @@ import { Prisma } from '@repo/database';
  */
 export class CryptoConfig {
   private constructor(
-    public readonly id: bigint,
+    public readonly id: bigint | null,
     public readonly uid: string,
     public readonly symbol: string,
     public readonly network: string,
@@ -38,7 +38,7 @@ export class CryptoConfig {
     contractAddress?: string | null;
   }): CryptoConfig {
     return new CryptoConfig(
-      null as any, // 새 엔티티는 id 없음
+      null, // 새 엔티티는 id 없음
       params.uid,
       params.symbol,
       params.network,
@@ -87,7 +87,7 @@ export class CryptoConfig {
    * Domain 엔티티를 Persistence 레이어로 변환
    */
   toPersistence(): {
-    id: bigint;
+    id: bigint | null;
     uid: string;
     symbol: string;
     network: string;
@@ -146,16 +146,25 @@ export class CryptoConfig {
     return this._isActive;
   }
 
-  toggleActive(): void {
-    this._isActive = !this._isActive;
+  /**
+   * 활성 상태 전환 (불변 패턴 - 새 인스턴스 반환)
+   */
+  toggleActive(): CryptoConfig {
+    return this.update({ isActive: !this._isActive });
   }
 
-  activate(): void {
-    this._isActive = true;
+  /**
+   * 활성화 (불변 패턴 - 새 인스턴스 반환)
+   */
+  activate(): CryptoConfig {
+    return this.update({ isActive: true });
   }
 
-  deactivate(): void {
-    this._isActive = false;
+  /**
+   * 비활성화 (불변 패턴 - 새 인스턴스 반환)
+   */
+  deactivate(): CryptoConfig {
+    return this.update({ isActive: false });
   }
 
   // 검증 메서드
