@@ -323,11 +323,9 @@ export class PromotionRepository implements PromotionRepositoryPort {
   }
 
   async hasWithdrawn(userId: bigint): Promise<boolean> {
-    const count = await this.tx.withdrawDetail.count({
+    const count = await this.tx.withdrawalDetail.count({
       where: {
-        transaction: {
-          userId,
-        },
+        userId,
         status: 'COMPLETED',
       },
     });
@@ -489,7 +487,7 @@ export class PromotionRepository implements PromotionRepositoryPort {
     const currencySettings = await this.tx.promotionCurrency.findUnique({
       where: {
         promotionId_currency: {
-          promotionId: Number(promotionId),
+          promotionId,
           currency,
         },
       },
@@ -510,7 +508,7 @@ export class PromotionRepository implements PromotionRepositoryPort {
   ): Promise<PromotionCurrency[]> {
     const currencySettings = await this.tx.promotionCurrency.findMany({
       where: {
-        promotionId: Number(promotionId),
+        promotionId,
       },
       orderBy: {
         currency: 'asc',
@@ -529,12 +527,12 @@ export class PromotionRepository implements PromotionRepositoryPort {
     await this.tx.promotionCurrency.upsert({
       where: {
         promotionId_currency: {
-          promotionId: Number(params.promotionId),
+          promotionId: params.promotionId,
           currency: params.currency,
         },
       },
       create: {
-        promotionId: Number(params.promotionId),
+        promotionId: params.promotionId,
         currency: params.currency,
         minDepositAmount: params.minDepositAmount,
         maxBonusAmount: params.maxBonusAmount ?? null,
@@ -554,7 +552,7 @@ export class PromotionRepository implements PromotionRepositoryPort {
     await this.tx.promotionCurrency.delete({
       where: {
         promotionId_currency: {
-          promotionId: Number(promotionId),
+          promotionId,
           currency,
         },
       },
