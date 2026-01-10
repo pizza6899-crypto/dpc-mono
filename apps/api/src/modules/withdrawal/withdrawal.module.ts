@@ -1,5 +1,6 @@
 import { Module } from '@nestjs/common';
 import { SnowflakeModule } from 'src/common/snowflake/snowflake.module';
+import { PaymentModule } from 'src/modules/payment/payment.module';
 import { WithdrawalPolicy } from './domain';
 import { WITHDRAWAL_REPOSITORY } from './ports';
 import { WithdrawalRepository } from './infrastructure/withdrawal.repository';
@@ -12,12 +13,13 @@ import {
     ApproveWithdrawalService,
     RejectWithdrawalService,
     FindPendingWithdrawalsService,
+    ProcessWithdrawalService,
 } from './application';
 import { WithdrawalUserController } from './controllers/user/withdrawal-user.controller';
 import { WithdrawalAdminController } from './controllers/admin/withdrawal-admin.controller';
 
 @Module({
-    imports: [SnowflakeModule],
+    imports: [SnowflakeModule, PaymentModule],
     controllers: [
         WithdrawalUserController,
         WithdrawalAdminController,
@@ -41,6 +43,7 @@ import { WithdrawalAdminController } from './controllers/admin/withdrawal-admin.
         ApproveWithdrawalService,
         RejectWithdrawalService,
         FindPendingWithdrawalsService,
+        ProcessWithdrawalService,
     ],
     exports: [
         WITHDRAWAL_REPOSITORY,
@@ -48,6 +51,7 @@ import { WithdrawalAdminController } from './controllers/admin/withdrawal-admin.
         CancelWithdrawalService,
         FindWithdrawalsService,
         GetWithdrawalService,
+        ProcessWithdrawalService,
     ],
 })
 export class WithdrawalModule { }

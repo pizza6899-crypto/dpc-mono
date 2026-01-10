@@ -20,3 +20,6 @@ export type { RejectWithdrawalParams, RejectWithdrawalResult } from './reject-wi
 
 export { FindPendingWithdrawalsService } from './find-pending-withdrawals.service';
 export type { FindPendingWithdrawalsParams, FindPendingWithdrawalsResult } from './find-pending-withdrawals.service';
+
+export { ProcessWithdrawalService } from './process-withdrawal.service';
+export type { ProcessWithdrawalParams, ProcessWithdrawalResult } from './process-withdrawal.service';

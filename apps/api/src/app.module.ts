@@ -25,6 +25,7 @@ import { WageringModule } from './modules/wagering/wagering.module';
 import { AnalyticsModule } from './modules/analytics/analytics.module';
 import { CompModule } from './modules/comp/comp.module';
 import { SnowflakeModule } from './common/snowflake/snowflake.module';
+import { WithdrawalModule } from './modules/withdrawal/withdrawal.module';
 
 @Module({
   imports: [
@@ -40,6 +41,7 @@ import { SnowflakeModule } from './common/snowflake/snowflake.module';
     CasinoModule,
     PaymentModule,
     DepositModule,
+    WithdrawalModule,
     ExchangeModule,
     AffiliateModule,
     WalletModule,
