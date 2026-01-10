@@ -58,8 +58,8 @@ export class AuthenticateCredentialService {
       limit: 5,
     });
 
-    // 비활성화
-    if (false && this.policy.isAccountLocked(recentAttempts)) {
+    // 계정 잠금 체크
+    if (this.policy.isAccountLocked(recentAttempts)) {
       // 계정 잠김 시도 기록
       await this.recordService.execute({
         email,

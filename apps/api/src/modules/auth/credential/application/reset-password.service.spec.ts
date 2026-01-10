@@ -10,8 +10,8 @@ import type { PasswordResetTokenRepositoryPort } from '../ports/out/password-res
 import { User } from 'src/modules/user/domain';
 import { UserStatus, UserRoleType, SocialType } from '@repo/database';
 import { hashPassword } from 'src/utils/password.util';
-import { ApiException } from 'src/common/http/exception/api.exception';
-import { MessageCode } from 'src/common/http/types';
+import { InvalidPasswordResetTokenException } from '../domain/exception';
+import { UserNotFoundException } from 'src/modules/user/domain/user.exception';
 import type { RequestClientInfo } from 'src/common/http/types/client-info.types';
 import { PrismaModule } from 'src/infrastructure/prisma/prisma.module';
 import { EnvModule } from 'src/common/env/env.module';
@@ -169,7 +169,7 @@ describe('ResetPasswordService', () => {
       );
     });
 
-    it('토큰이 존재하지 않으면 AUTH_INVALID_CREDENTIALS 예외를 발생시켜야 함', async () => {
+    it('토큰이 존재하지 않으면 InvalidPasswordResetTokenException 예외를 발생시켜야 함', async () => {
       // Arrange
       mockTokenRepository.findByToken.mockResolvedValue(null);
 
@@ -180,25 +180,7 @@ describe('ResetPasswordService', () => {
           newPassword: mockNewPassword,
           requestInfo: mockClientInfo,
         }),
-      ).rejects.toThrow(ApiException);
-
-      // 에러 상세 검증
-      try {
-        await service.execute({
-          token: mockToken,
-          newPassword: mockNewPassword,
-          requestInfo: mockClientInfo,
-        });
-        fail('예외가 발생해야 합니다');
-      } catch (error) {
-        expect(error).toBeInstanceOf(ApiException);
-        expect((error as ApiException).messageCode).toBe(
-          MessageCode.AUTH_INVALID_CREDENTIALS,
-        );
-        expect((error as ApiException).getStatus()).toBe(
-          HttpStatus.BAD_REQUEST,
-        );
-      }
+      ).rejects.toThrow(InvalidPasswordResetTokenException);
 
       expect(mockTokenRepository.findByToken).toHaveBeenCalledWith(mockToken);
       expect(mockUserRepository.findById).not.toHaveBeenCalled();
@@ -206,7 +188,7 @@ describe('ResetPasswordService', () => {
       expect(mockTokenRepository.markAsUsed).not.toHaveBeenCalled();
     });
 
-    it('사용자가 존재하지 않으면 USER_NOT_FOUND 예외를 발생시켜야 함', async () => {
+    it('사용자가 존재하지 않으면 UserNotFoundException 예외를 발생시켜야 함', async () => {
       // Arrange
       mockTokenRepository.findByToken.mockResolvedValue(mockTokenData);
       mockUserRepository.findById.mockResolvedValue(null);
@@ -218,23 +200,7 @@ describe('ResetPasswordService', () => {
           newPassword: mockNewPassword,
           requestInfo: mockClientInfo,
         }),
-      ).rejects.toThrow(ApiException);
-
-      // 에러 상세 검증
-      try {
-        await service.execute({
-          token: mockToken,
-          newPassword: mockNewPassword,
-          requestInfo: mockClientInfo,
-        });
-        fail('예외가 발생해야 합니다');
-      } catch (error) {
-        expect(error).toBeInstanceOf(ApiException);
-        expect((error as ApiException).messageCode).toBe(
-          MessageCode.USER_NOT_FOUND,
-        );
-        expect((error as ApiException).getStatus()).toBe(HttpStatus.NOT_FOUND);
-      }
+      ).rejects.toThrow(UserNotFoundException);
 
       expect(mockTokenRepository.findByToken).toHaveBeenCalledWith(mockToken);
       expect(mockUserRepository.findById).toHaveBeenCalledWith(mockUserId);
@@ -242,7 +208,7 @@ describe('ResetPasswordService', () => {
       expect(mockTokenRepository.markAsUsed).not.toHaveBeenCalled();
     });
 
-    it('소셜 로그인 사용자면 AUTH_INVALID_CREDENTIALS 예외를 발생시켜야 함', async () => {
+    it('소셜 로그인 사용자면 InvalidPasswordResetTokenException 예외를 발생시켜야 함', async () => {
       // Arrange
       const mockSocialUser = createMockSocialUser();
       mockTokenRepository.findByToken.mockResolvedValue(mockTokenData);
@@ -255,25 +221,7 @@ describe('ResetPasswordService', () => {
           newPassword: mockNewPassword,
           requestInfo: mockClientInfo,
         }),
-      ).rejects.toThrow(ApiException);
-
-      // 에러 상세 검증
-      try {
-        await service.execute({
-          token: mockToken,
-          newPassword: mockNewPassword,
-          requestInfo: mockClientInfo,
-        });
-        fail('예외가 발생해야 합니다');
-      } catch (error) {
-        expect(error).toBeInstanceOf(ApiException);
-        expect((error as ApiException).messageCode).toBe(
-          MessageCode.AUTH_INVALID_CREDENTIALS,
-        );
-        expect((error as ApiException).getStatus()).toBe(
-          HttpStatus.BAD_REQUEST,
-        );
-      }
+      ).rejects.toThrow(InvalidPasswordResetTokenException);
 
       expect(mockTokenRepository.findByToken).toHaveBeenCalledWith(mockToken);
       expect(mockUserRepository.findById).toHaveBeenCalledWith(mockUserId);

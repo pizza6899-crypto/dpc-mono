@@ -8,8 +8,8 @@ import type { UserRepositoryPort } from 'src/modules/user/ports/out/user.reposit
 import { User } from 'src/modules/user/domain';
 import { UserStatus, UserRoleType, SocialType } from '@repo/database';
 import { hashPassword } from 'src/utils/password.util';
-import { ApiException } from 'src/common/http/exception/api.exception';
-import { MessageCode } from 'src/common/http/types';
+import { LoginFailedException } from '../domain/exception';
+import { UserNotFoundException } from 'src/modules/user/domain/user.exception';
 import type { RequestClientInfo } from 'src/common/http/types/client-info.types';
 import { PrismaModule } from 'src/infrastructure/prisma/prisma.module';
 import { EnvModule } from 'src/common/env/env.module';
@@ -181,7 +181,7 @@ describe('ResetUserPasswordAdminService', () => {
       );
     });
 
-    it('사용자가 존재하지 않으면 USER_NOT_FOUND 예외를 발생시켜야 함', async () => {
+    it('사용자가 존재하지 않으면 UserNotFoundException 예외를 발생시켜야 함', async () => {
       // Arrange
       mockUserRepository.findById.mockResolvedValue(null);
 
@@ -193,24 +193,7 @@ describe('ResetUserPasswordAdminService', () => {
           newPassword: mockNewPassword,
           requestInfo: mockClientInfo,
         }),
-      ).rejects.toThrow(ApiException);
-
-      // 에러 상세 검증
-      try {
-        await service.execute({
-          targetUserId: mockTargetUserId,
-          adminUserId: mockAdminUserId,
-          newPassword: mockNewPassword,
-          requestInfo: mockClientInfo,
-        });
-        fail('예외가 발생해야 합니다');
-      } catch (error) {
-        expect(error).toBeInstanceOf(ApiException);
-        expect((error as ApiException).messageCode).toBe(
-          MessageCode.USER_NOT_FOUND,
-        );
-        expect((error as ApiException).getStatus()).toBe(HttpStatus.NOT_FOUND);
-      }
+      ).rejects.toThrow(UserNotFoundException);
 
       expect(mockUserRepository.findById).toHaveBeenCalledWith(
         mockTargetUserId,
@@ -218,7 +201,7 @@ describe('ResetUserPasswordAdminService', () => {
       expect(mockUserRepository.updatePassword).not.toHaveBeenCalled();
     });
 
-    it('소셜 로그인 사용자면 AUTH_INVALID_CREDENTIALS 예외를 발생시켜야 함', async () => {
+    it('소셜 로그인 사용자면 LoginFailedException 예외를 발생시켜야 함', async () => {
       // Arrange
       const mockSocialUser = createMockSocialUser();
       mockUserRepository.findById.mockResolvedValue(mockSocialUser);
@@ -231,26 +214,7 @@ describe('ResetUserPasswordAdminService', () => {
           newPassword: mockNewPassword,
           requestInfo: mockClientInfo,
         }),
-      ).rejects.toThrow(ApiException);
-
-      // 에러 상세 검증
-      try {
-        await service.execute({
-          targetUserId: mockTargetUserId,
-          adminUserId: mockAdminUserId,
-          newPassword: mockNewPassword,
-          requestInfo: mockClientInfo,
-        });
-        fail('예외가 발생해야 합니다');
-      } catch (error) {
-        expect(error).toBeInstanceOf(ApiException);
-        expect((error as ApiException).messageCode).toBe(
-          MessageCode.AUTH_INVALID_CREDENTIALS,
-        );
-        expect((error as ApiException).getStatus()).toBe(
-          HttpStatus.BAD_REQUEST,
-        );
-      }
+      ).rejects.toThrow(LoginFailedException);
 
       expect(mockUserRepository.findById).toHaveBeenCalledWith(
         mockTargetUserId,
@@ -307,7 +271,7 @@ describe('ResetUserPasswordAdminService', () => {
           });
         });
         // Audit log는 컨트롤러에서 처리되므로 서비스 테스트에서는 제거
-      // mockDispatchLogService.dispatch.mockResolvedValue(undefined);
+        // mockDispatchLogService.dispatch.mockResolvedValue(undefined);
 
         // Act - 여러 번 실행하여 다양한 비밀번호 생성 확인
         const passwords: string[] = [];
@@ -320,23 +284,23 @@ describe('ResetUserPasswordAdminService', () => {
           passwords.push(result.newPassword);
         }
 
-      // Assert - 각 비밀번호의 형식 검증
-      passwords.forEach((password, index) => {
-        expect(password.length).toBe(10);
-        expect(password).toMatch(/[A-Z]/); // 대문자 포함
-        expect(password).toMatch(/[a-z]/); // 소문자 포함
-        expect(password).toMatch(/[0-9]/); // 숫자 포함
-        expect(password).toMatch(/^[A-Za-z0-9]+$/); // 알파벳과 숫자만 포함
-      });
+        // Assert - 각 비밀번호의 형식 검증
+        passwords.forEach((password, index) => {
+          expect(password.length).toBe(10);
+          expect(password).toMatch(/[A-Z]/); // 대문자 포함
+          expect(password).toMatch(/[a-z]/); // 소문자 포함
+          expect(password).toMatch(/[0-9]/); // 숫자 포함
+          expect(password).toMatch(/^[A-Za-z0-9]+$/); // 알파벳과 숫자만 포함
+        });
 
-      // 랜덤성 검증 - 모든 비밀번호가 서로 다른지 확인
-      const uniquePasswords = new Set(passwords);
-      // 10개 중 최소 9개 이상이 서로 달라야 함 (90% 이상의 고유성 보장)
-      // 통계적으로 거의 모든 경우에 10개가 모두 달라야 하므로 9개 이상으로 설정
-      expect(uniquePasswords.size).toBeGreaterThanOrEqual(9);
-      
-      // 추가 검증: 비밀번호 배열의 길이 확인
-      expect(passwords.length).toBe(10);
+        // 랜덤성 검증 - 모든 비밀번호가 서로 다른지 확인
+        const uniquePasswords = new Set(passwords);
+        // 10개 중 최소 9개 이상이 서로 달라야 함 (90% 이상의 고유성 보장)
+        // 통계적으로 거의 모든 경우에 10개가 모두 달라야 하므로 9개 이상으로 설정
+        expect(uniquePasswords.size).toBeGreaterThanOrEqual(9);
+
+        // 추가 검증: 비밀번호 배열의 길이 확인
+        expect(passwords.length).toBe(10);
       },
       10000, // 타임아웃 10초 (10번 반복 실행으로 인한 지연 고려)
     );

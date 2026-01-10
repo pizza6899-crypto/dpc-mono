@@ -9,8 +9,8 @@ import type { UserRepositoryPort } from 'src/modules/user/ports/out/user.reposit
 import { User } from 'src/modules/user/domain';
 import { UserStatus, UserRoleType, SocialType } from '@repo/database';
 import { hashPassword } from 'src/utils/password.util';
-import { ApiException } from 'src/common/http/exception/api.exception';
-import { MessageCode } from 'src/common/http/types';
+import { PasswordMismatchException, LoginFailedException } from '../domain/exception';
+import { UserNotFoundException } from 'src/modules/user/domain/user.exception';
 import type { RequestClientInfo } from 'src/common/http/types/client-info.types';
 import { PrismaModule } from 'src/infrastructure/prisma/prisma.module';
 import { EnvModule } from 'src/common/env/env.module';
@@ -152,7 +152,7 @@ describe('ChangePasswordService', () => {
       );
     });
 
-    it('사용자가 존재하지 않으면 USER_NOT_FOUND 예외를 발생시켜야 함', async () => {
+    it('사용자가 존재하지 않으면 UserNotFoundException 예외를 발생시켜야 함', async () => {
       // Arrange
       mockUserRepository.findById.mockResolvedValue(null);
 
@@ -165,32 +165,14 @@ describe('ChangePasswordService', () => {
           requestInfo: mockClientInfo,
           isAdmin: false,
         }),
-      ).rejects.toThrow(ApiException);
-
-      // 에러 상세 검증
-      try {
-        await service.execute({
-          userId: mockUserId,
-          currentPassword: mockCurrentPassword,
-          newPassword: mockNewPassword,
-          requestInfo: mockClientInfo,
-          isAdmin: false,
-        });
-        fail('예외가 발생해야 합니다');
-      } catch (error) {
-        expect(error).toBeInstanceOf(ApiException);
-        expect((error as ApiException).messageCode).toBe(
-          MessageCode.USER_NOT_FOUND,
-        );
-        expect((error as ApiException).getStatus()).toBe(HttpStatus.NOT_FOUND);
-      }
+      ).rejects.toThrow(UserNotFoundException);
 
       expect(mockUserRepository.findById).toHaveBeenCalledWith(mockUserId);
       expect(mockVerifyService.execute).not.toHaveBeenCalled();
       expect(mockUserRepository.updatePassword).not.toHaveBeenCalled();
     });
 
-    it('일반 회원가입 사용자가 아니면 AUTH_INVALID_CREDENTIALS 예외를 발생시켜야 함', async () => {
+    it('일반 회원가입 사용자가 아니면 LoginFailedException 예외를 발생시켜야 함', async () => {
       // Arrange
       const mockSocialUser = User.fromPersistence({
         id: mockUserId,
@@ -218,34 +200,14 @@ describe('ChangePasswordService', () => {
           requestInfo: mockClientInfo,
           isAdmin: false,
         }),
-      ).rejects.toThrow(ApiException);
-
-      // 에러 상세 검증
-      try {
-        await service.execute({
-          userId: mockUserId,
-          currentPassword: mockCurrentPassword,
-          newPassword: mockNewPassword,
-          requestInfo: mockClientInfo,
-          isAdmin: false,
-        });
-        fail('예외가 발생해야 합니다');
-      } catch (error) {
-        expect(error).toBeInstanceOf(ApiException);
-        expect((error as ApiException).messageCode).toBe(
-          MessageCode.AUTH_INVALID_CREDENTIALS,
-        );
-        expect((error as ApiException).getStatus()).toBe(
-          HttpStatus.BAD_REQUEST,
-        );
-      }
+      ).rejects.toThrow(LoginFailedException);
 
       expect(mockUserRepository.findById).toHaveBeenCalledWith(mockUserId);
       expect(mockVerifyService.execute).not.toHaveBeenCalled();
       expect(mockUserRepository.updatePassword).not.toHaveBeenCalled();
     });
 
-    it('passwordHash가 null이면 AUTH_INVALID_CREDENTIALS 예외를 발생시켜야 함', async () => {
+    it('passwordHash가 null이면 LoginFailedException 예외를 발생시켜야 함', async () => {
       // Arrange
       const mockUserWithoutPassword = User.fromPersistence({
         id: mockUserId,
@@ -273,34 +235,14 @@ describe('ChangePasswordService', () => {
           requestInfo: mockClientInfo,
           isAdmin: false,
         }),
-      ).rejects.toThrow(ApiException);
-
-      // 에러 상세 검증
-      try {
-        await service.execute({
-          userId: mockUserId,
-          currentPassword: mockCurrentPassword,
-          newPassword: mockNewPassword,
-          requestInfo: mockClientInfo,
-          isAdmin: false,
-        });
-        fail('예외가 발생해야 합니다');
-      } catch (error) {
-        expect(error).toBeInstanceOf(ApiException);
-        expect((error as ApiException).messageCode).toBe(
-          MessageCode.AUTH_INVALID_CREDENTIALS,
-        );
-        expect((error as ApiException).getStatus()).toBe(
-          HttpStatus.BAD_REQUEST,
-        );
-      }
+      ).rejects.toThrow(LoginFailedException);
 
       expect(mockUserRepository.findById).toHaveBeenCalledWith(mockUserId);
       expect(mockVerifyService.execute).not.toHaveBeenCalled();
       expect(mockUserRepository.updatePassword).not.toHaveBeenCalled();
     });
 
-    it('현재 비밀번호가 틀리면 AUTH_INVALID_CREDENTIALS 예외를 발생시켜야 함', async () => {
+    it('현재 비밀번호가 틀리면 PasswordMismatchException 예외를 발생시켜야 함', async () => {
       // Arrange
       const mockUser = createMockCredentialUser();
 
@@ -316,27 +258,7 @@ describe('ChangePasswordService', () => {
           requestInfo: mockClientInfo,
           isAdmin: false,
         }),
-      ).rejects.toThrow(ApiException);
-
-      // 에러 상세 검증
-      try {
-        await service.execute({
-          userId: mockUserId,
-          currentPassword: 'wrongPassword',
-          newPassword: mockNewPassword,
-          requestInfo: mockClientInfo,
-          isAdmin: false,
-        });
-        fail('예외가 발생해야 합니다');
-      } catch (error) {
-        expect(error).toBeInstanceOf(ApiException);
-        expect((error as ApiException).messageCode).toBe(
-          MessageCode.AUTH_INVALID_CREDENTIALS,
-        );
-        expect((error as ApiException).getStatus()).toBe(
-          HttpStatus.UNAUTHORIZED,
-        );
-      }
+      ).rejects.toThrow(PasswordMismatchException);
 
       expect(mockUserRepository.findById).toHaveBeenCalledWith(mockUserId);
       expect(mockVerifyService.execute).toHaveBeenCalledWith({

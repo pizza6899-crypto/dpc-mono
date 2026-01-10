@@ -28,7 +28,7 @@ export class RequestPasswordResetService {
     private readonly userRepository: UserRepositoryPort,
     @Inject(PASSWORD_RESET_TOKEN_REPOSITORY)
     private readonly tokenRepository: PasswordResetTokenRepositoryPort,
-  ) {}
+  ) { }
 
   @Transactional()
   async execute(params: RequestPasswordResetParams): Promise<void> {
@@ -63,6 +63,12 @@ export class RequestPasswordResetService {
       token,
       expiresAt,
     });
+
+    // TODO: 향후 노티피케이션 모듈로 대체
+    // 현재는 Mock 처리 (개발 환경에서 토큰 확인용)
+    this.logger.log(
+      `[MOCK EMAIL] Password reset email sent to ${user.email}. Token: ${token} (expires: ${expiresAt.toISOString()})`,
+    );
   }
 }
 

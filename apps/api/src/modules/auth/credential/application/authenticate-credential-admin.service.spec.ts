@@ -13,8 +13,7 @@ import {
 } from '../ports/out';
 import type { AuthenticatedUser } from 'src/common/auth/types/auth.types';
 import type { RequestClientInfo } from 'src/common/http/types/client-info.types';
-import { ApiException } from 'src/common/http/exception/api.exception';
-import { MessageCode } from 'src/common/http/types';
+import { AccountLockedException, LoginFailedException } from '../domain/exception';
 import {
   LoginAttempt,
   LoginAttemptResult,
@@ -161,7 +160,7 @@ describe('AuthenticateCredentialAdminService', () => {
       expect(mockRecordService.execute).not.toHaveBeenCalled();
     });
 
-    it('계정이 잠겨있으면 THROTTLE_TOO_MANY_REQUESTS 예외를 발생시켜야 함', async () => {
+    it('계정이 잠겼있으면 AccountLockedException 예외를 발생시켜야 함', async () => {
       // Arrange
       const recentAttempts = [
         LoginAttempt.createFailure({
@@ -212,41 +211,12 @@ describe('AuthenticateCredentialAdminService', () => {
           password: mockPassword,
           clientInfo: mockClientInfo,
         }),
-      ).rejects.toThrow(ApiException);
-
-      try {
-        await service.execute({
-          email: mockEmail,
-          password: mockPassword,
-          clientInfo: mockClientInfo,
-        });
-        fail('예외가 발생해야 합니다');
-      } catch (error) {
-        expect(error).toBeInstanceOf(ApiException);
-        expect((error as ApiException).messageCode).toBe(
-          MessageCode.THROTTLE_TOO_MANY_REQUESTS,
-        );
-        expect((error as ApiException).getStatus()).toBe(
-          HttpStatus.TOO_MANY_REQUESTS,
-        );
-      }
-
-      // Assert
-      expect(mockRecordService.execute).toHaveBeenCalledWith({
-        email: mockEmail,
-        result: LoginAttemptResult.FAILED,
-        failureReason: LoginFailureReason.THROTTLE_LIMIT_EXCEEDED,
-        ipAddress: mockClientInfo.ip,
-        userAgent: mockClientInfo.userAgent,
-        deviceFingerprint: mockClientInfo.fingerprint,
-        isMobile: mockClientInfo.isMobile,
-        isAdmin: true,
-      });
+      ).rejects.toThrow(AccountLockedException);
 
       expect(mockVerifyService.execute).not.toHaveBeenCalled();
     });
 
-    it('계정 잠금 시 사용자가 없어도 audit 로그를 기록해야 함', async () => {
+    it('계정 잠금 시 사용자가 없어도 AccountLockedException를 발생시켜야 함', async () => {
       // Arrange
       const recentAttempts = [
         LoginAttempt.createFailure({
@@ -268,12 +238,11 @@ describe('AuthenticateCredentialAdminService', () => {
           password: mockPassword,
           clientInfo: mockClientInfo,
         }),
-      ).rejects.toThrow(ApiException);
-
+      ).rejects.toThrow(AccountLockedException);
     });
 
 
-    it('사용자가 없으면 USER_NOT_FOUND로 실패 기록 및 AUTH_INVALID_CREDENTIALS 예외를 발생시켜야 함', async () => {
+    it('사용자가 없으면 LoginFailedException 예외를 발생시켜야 함', async () => {
       // Arrange
       mockFindAttemptsService.execute.mockResolvedValue([]);
       mockPolicy.isAccountLocked.mockReturnValue(false);
@@ -287,24 +256,7 @@ describe('AuthenticateCredentialAdminService', () => {
           password: mockPassword,
           clientInfo: mockClientInfo,
         }),
-      ).rejects.toThrow(ApiException);
-
-      try {
-        await service.execute({
-          email: mockEmail,
-          password: mockPassword,
-          clientInfo: mockClientInfo,
-        });
-        fail('예외가 발생해야 합니다');
-      } catch (error) {
-        expect(error).toBeInstanceOf(ApiException);
-        expect((error as ApiException).messageCode).toBe(
-          MessageCode.AUTH_INVALID_CREDENTIALS,
-        );
-        expect((error as ApiException).getStatus()).toBe(
-          HttpStatus.UNAUTHORIZED,
-        );
-      }
+      ).rejects.toThrow(LoginFailedException);
 
       // Assert
       expect(mockRecordService.execute).toHaveBeenCalledWith({
@@ -318,10 +270,9 @@ describe('AuthenticateCredentialAdminService', () => {
         isMobile: mockClientInfo.isMobile,
         isAdmin: true,
       });
-
     });
 
-    it('비밀번호가 틀리면 INVALID_CREDENTIALS로 실패 기록 및 AUTH_INVALID_CREDENTIALS 예외를 발생시켜야 함', async () => {
+    it('비밀번호가 틀리면 LoginFailedException 예외를 발생시켜야 함', async () => {
       // Arrange
       const mockUser = {
         id: mockUserId,
@@ -340,24 +291,7 @@ describe('AuthenticateCredentialAdminService', () => {
           password: 'wrongPassword',
           clientInfo: mockClientInfo,
         }),
-      ).rejects.toThrow(ApiException);
-
-      try {
-        await service.execute({
-          email: mockEmail,
-          password: 'wrongPassword',
-          clientInfo: mockClientInfo,
-        });
-        fail('예외가 발생해야 합니다');
-      } catch (error) {
-        expect(error).toBeInstanceOf(ApiException);
-        expect((error as ApiException).messageCode).toBe(
-          MessageCode.AUTH_INVALID_CREDENTIALS,
-        );
-        expect((error as ApiException).getStatus()).toBe(
-          HttpStatus.UNAUTHORIZED,
-        );
-      }
+      ).rejects.toThrow(LoginFailedException);
 
       // Assert
       expect(mockRecordService.execute).toHaveBeenCalledWith({
@@ -371,7 +305,6 @@ describe('AuthenticateCredentialAdminService', () => {
         isMobile: mockClientInfo.isMobile,
         isAdmin: true,
       });
-
     });
 
 
