@@ -206,7 +206,7 @@ export class DispatchLogService {
           `${sanitizedPayload.type.toLowerCase()}-log`,
           jobData,
           {
-            jobId: id.toString(),
+            jobId: `log_${id.toString()}`,
             removeOnComplete: true,
             attempts: 10,
             backoff: { type: 'exponential', delay: 1000 },
@@ -218,7 +218,7 @@ export class DispatchLogService {
           `${enrichedPayload.type.toLowerCase()}-log`,
           jobData,
           {
-            jobId: id.toString(),
+            jobId: `log_${id.toString()}`,
             removeOnComplete: true,
             attempts: 3,
             backoff: { type: 'exponential', delay: 1000 },
