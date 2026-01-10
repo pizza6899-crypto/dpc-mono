@@ -1,0 +1,39 @@
+import { ApiPropertyOptional } from '@nestjs/swagger';
+import { Transform } from 'class-transformer';
+import { IsBoolean, IsNumber, IsOptional, IsString, Min } from 'class-validator';
+
+export class FindCryptoConfigsRequestDto {
+    @ApiPropertyOptional({ default: 1 })
+    @IsOptional()
+    @Transform(({ value }) => parseInt(value))
+    @IsNumber()
+    @Min(1)
+    page?: number = 1;
+
+    @ApiPropertyOptional({ default: 20 })
+    @IsOptional()
+    @Transform(({ value }) => parseInt(value))
+    @IsNumber()
+    @Min(1)
+    limit?: number = 20;
+
+    @ApiPropertyOptional()
+    @IsOptional()
+    @IsString()
+    symbol?: string;
+
+    @ApiPropertyOptional()
+    @IsOptional()
+    @IsString()
+    network?: string;
+
+    @ApiPropertyOptional()
+    @IsOptional()
+    @Transform(({ value }) => {
+        if (value === 'true') return true;
+        if (value === 'false') return false;
+        return value;
+    })
+    @IsBoolean()
+    isActive?: boolean;
+}

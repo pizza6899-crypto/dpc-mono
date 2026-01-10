@@ -93,6 +93,22 @@ export class WithdrawalMapper {
     }
 
     // ===== CryptoWithdrawConfig =====
+    toPrismaCryptoConfig(domain: CryptoWithdrawConfig) {
+        return {
+            id: domain.id,
+            symbol: domain.props.symbol,
+            network: domain.props.network,
+            isActive: domain.props.isActive,
+            minWithdrawAmount: domain.props.minWithdrawAmount,
+            maxWithdrawAmount: domain.props.maxWithdrawAmount,
+            autoProcessLimit: domain.props.autoProcessLimit,
+            withdrawFeeFixed: domain.props.withdrawFeeFixed,
+            withdrawFeeRate: domain.props.withdrawFeeRate,
+            createdAt: domain.props.createdAt,
+            updatedAt: domain.props.updatedAt,
+            deletedAt: domain.props.deletedAt,
+        };
+    }
 
     cryptoConfigToDomain(prisma: PrismaCryptoWithdrawConfig): CryptoWithdrawConfig {
         return CryptoWithdrawConfig.rehydrate(prisma.id, {
@@ -111,6 +127,24 @@ export class WithdrawalMapper {
     }
 
     // ===== BankWithdrawConfig =====
+
+    toPrismaBankConfig(domain: BankWithdrawConfig) {
+        return {
+            id: domain.id,
+            currency: domain.props.currency,
+            bankName: domain.props.bankName,
+            isActive: domain.props.isActive,
+            minWithdrawAmount: domain.props.minWithdrawAmount,
+            maxWithdrawAmount: domain.props.maxWithdrawAmount,
+            withdrawFeeFixed: domain.props.withdrawFeeFixed,
+            withdrawFeeRate: domain.props.withdrawFeeRate,
+            description: domain.props.description,
+            notes: domain.props.notes,
+            createdAt: domain.props.createdAt,
+            updatedAt: domain.props.updatedAt,
+            deletedAt: domain.props.deletedAt,
+        };
+    }
 
     bankConfigToDomain(prisma: PrismaBankWithdrawConfig): BankWithdrawConfig {
         return BankWithdrawConfig.rehydrate(prisma.id, {

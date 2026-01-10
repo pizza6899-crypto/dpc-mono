@@ -16,15 +16,29 @@ import {
     RejectWithdrawalService,
     FindPendingWithdrawalsService,
     ProcessWithdrawalService,
+
+    // Config Services
+    CreateCryptoConfigService,
+    UpdateCryptoConfigService,
+    FindCryptoConfigsAdminService,
+    ToggleCryptoConfigActiveService,
+    DeleteCryptoConfigService,
+    CreateBankConfigService,
+    UpdateBankConfigService,
+    FindBankConfigsAdminService,
+    ToggleBankConfigActiveService,
+    DeleteBankConfigService,
 } from './application';
 import { WithdrawalUserController } from './controllers/user/withdrawal-user.controller';
 import { WithdrawalAdminController } from './controllers/admin/withdrawal-admin.controller';
+import { WithdrawalConfigAdminController } from './controllers/admin/withdrawal-config-admin.controller';
 
 @Module({
     imports: [SnowflakeModule, PaymentModule],
     controllers: [
         WithdrawalUserController,
         WithdrawalAdminController,
+        WithdrawalConfigAdminController,
     ],
     providers: [
         // Domain
@@ -48,6 +62,18 @@ import { WithdrawalAdminController } from './controllers/admin/withdrawal-admin.
         RejectWithdrawalService,
         FindPendingWithdrawalsService,
         ProcessWithdrawalService,
+
+        // Config Services
+        CreateCryptoConfigService,
+        UpdateCryptoConfigService,
+        FindCryptoConfigsAdminService,
+        ToggleCryptoConfigActiveService,
+        DeleteCryptoConfigService,
+        CreateBankConfigService,
+        UpdateBankConfigService,
+        FindBankConfigsAdminService,
+        ToggleBankConfigActiveService,
+        DeleteBankConfigService,
     ],
     exports: [
         WITHDRAWAL_REPOSITORY,

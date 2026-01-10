@@ -25,6 +25,36 @@ export class BankWithdrawConfig {
         return new BankWithdrawConfig(id, props);
     }
 
+    // 팩토리 메서드 (New)
+    static createNew(id: bigint, props: Omit<BankWithdrawConfigProps, 'id' | 'createdAt' | 'updatedAt' | 'deletedAt'>): BankWithdrawConfig {
+        const now = new Date();
+        return new BankWithdrawConfig(id, {
+            ...props,
+            createdAt: now,
+            updatedAt: now,
+            deletedAt: null,
+        });
+    }
+
+    /**
+     * 상태 변경
+     */
+    update(props: Partial<Omit<BankWithdrawConfigProps, 'id' | 'createdAt' | 'updatedAt' | 'deletedAt'>>): void {
+        Object.assign(this.props, {
+            ...props,
+            updatedAt: new Date(),
+        });
+    }
+
+    toggleActive(): void {
+        this.props.isActive = !this.props.isActive;
+        this.props.updatedAt = new Date();
+    }
+
+    delete(): void {
+        this.props.deletedAt = new Date();
+    }
+
     get currency(): ExchangeCurrencyCode {
         return this.props.currency;
     }

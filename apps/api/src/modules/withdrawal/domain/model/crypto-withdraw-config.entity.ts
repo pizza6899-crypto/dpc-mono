@@ -24,6 +24,25 @@ export class CryptoWithdrawConfig {
         return new CryptoWithdrawConfig(id, props);
     }
 
+    static create(id: bigint, props: Omit<CryptoWithdrawConfigProps, 'updatedAt' | 'deletedAt'>): CryptoWithdrawConfig {
+        return new CryptoWithdrawConfig(id, {
+            ...props,
+            updatedAt: props.createdAt,
+            deletedAt: null,
+        });
+    }
+
+    // 팩토리 메서드 (New)
+    static createNew(id: bigint, props: Omit<CryptoWithdrawConfigProps, 'id' | 'createdAt' | 'updatedAt' | 'deletedAt'>): CryptoWithdrawConfig {
+        const now = new Date();
+        return new CryptoWithdrawConfig(id, {
+            ...props,
+            createdAt: now,
+            updatedAt: now,
+            deletedAt: null,
+        });
+    }
+
     get symbol(): string {
         return this.props.symbol;
     }
@@ -46,6 +65,25 @@ export class CryptoWithdrawConfig {
 
     get autoProcessLimit(): Prisma.Decimal | null {
         return this.props.autoProcessLimit;
+    }
+
+    /**
+     * 상태 변경
+     */
+    update(props: Partial<Omit<CryptoWithdrawConfigProps, 'id' | 'createdAt' | 'updatedAt' | 'deletedAt'>>): void {
+        Object.assign(this.props, {
+            ...props,
+            updatedAt: new Date(),
+        });
+    }
+
+    toggleActive(): void {
+        this.props.isActive = !this.props.isActive;
+        this.props.updatedAt = new Date();
+    }
+
+    delete(): void {
+        this.props.deletedAt = new Date();
     }
 
     /**

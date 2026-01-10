@@ -181,6 +181,59 @@ export class WithdrawalRepository implements WithdrawalRepositoryPort {
         return results.map((r) => this.mapper.cryptoConfigToDomain(r));
     }
 
+    async getCryptoConfigById(id: bigint): Promise<CryptoWithdrawConfig> {
+        const config = await this.findCryptoConfigById(id);
+        if (!config) {
+            // 임시로 symbol/network에 id 문자열 전달
+            throw new CryptoWithdrawConfigNotFoundException(id.toString(), 'ID');
+        }
+        return config;
+    }
+
+    async findCryptoConfigs(options?: {
+        page?: number;
+        limit?: number;
+        symbol?: string;
+        network?: string;
+        isActive?: boolean;
+    }): Promise<{ configs: CryptoWithdrawConfig[]; total: number }> {
+        const where: Prisma.CryptoWithdrawConfigWhereInput = {
+            deletedAt: null,
+            ...(options?.symbol && { symbol: { contains: options.symbol, mode: 'insensitive' } }),
+            ...(options?.network && { network: options.network }),
+            ...(options?.isActive !== undefined && { isActive: options.isActive }),
+        };
+
+        const [configs, total] = await Promise.all([
+            this.tx.cryptoWithdrawConfig.findMany({
+                where,
+                skip: ((options?.page ?? 1) - 1) * (options?.limit ?? 20),
+                take: options?.limit ?? 20,
+                orderBy: { createdAt: 'desc' },
+            }),
+            this.tx.cryptoWithdrawConfig.count({ where }),
+        ]);
+
+        return {
+            configs: configs.map((c) => this.mapper.cryptoConfigToDomain(c)),
+            total,
+        };
+    }
+
+    async saveCryptoConfig(config: CryptoWithdrawConfig): Promise<CryptoWithdrawConfig> {
+        const data = this.mapper.toPrismaCryptoConfig(config);
+        const result = await this.tx.cryptoWithdrawConfig.upsert({
+            where: { id: config.id },
+            create: data,
+            update: {
+                ...data,
+                id: undefined, // ID는 업데이트 불가
+                createdAt: undefined, // 생성일은 업데이트 불가
+            },
+        });
+        return this.mapper.cryptoConfigToDomain(result);
+    }
+
     // ===== BankWithdrawConfig =====
 
     async findBankConfigById(id: bigint): Promise<BankWithdrawConfig | null> {
@@ -221,5 +274,49 @@ export class WithdrawalRepository implements WithdrawalRepositoryPort {
             orderBy: [{ currency: 'asc' }, { bankName: 'asc' }],
         });
         return results.map((r) => this.mapper.bankConfigToDomain(r));
+    }
+
+    async findBankConfigs(options?: {
+        page?: number;
+        limit?: number;
+        bankName?: string;
+        currency?: ExchangeCurrencyCode;
+        isActive?: boolean;
+    }): Promise<{ configs: BankWithdrawConfig[]; total: number }> {
+        const where: Prisma.BankWithdrawConfigWhereInput = {
+            deletedAt: null,
+            ...(options?.bankName && { bankName: { contains: options.bankName, mode: 'insensitive' } }),
+            ...(options?.currency && { currency: options.currency }),
+            ...(options?.isActive !== undefined && { isActive: options.isActive }),
+        };
+
+        const [configs, total] = await Promise.all([
+            this.tx.bankWithdrawConfig.findMany({
+                where,
+                skip: ((options?.page ?? 1) - 1) * (options?.limit ?? 20),
+                take: options?.limit ?? 20,
+                orderBy: { createdAt: 'desc' },
+            }),
+            this.tx.bankWithdrawConfig.count({ where }),
+        ]);
+
+        return {
+            configs: configs.map((c) => this.mapper.bankConfigToDomain(c)),
+            total,
+        };
+    }
+
+    async saveBankConfig(config: BankWithdrawConfig): Promise<BankWithdrawConfig> {
+        const data = this.mapper.toPrismaBankConfig(config);
+        const result = await this.tx.bankWithdrawConfig.upsert({
+            where: { id: config.id },
+            create: data,
+            update: {
+                ...data,
+                id: undefined,
+                createdAt: undefined,
+            },
+        });
+        return this.mapper.bankConfigToDomain(result);
     }
 }
