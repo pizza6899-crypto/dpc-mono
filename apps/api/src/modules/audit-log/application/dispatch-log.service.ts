@@ -184,7 +184,10 @@ export class DispatchLogService {
         : payload;
 
       // 데이터 정제 및 길이 제한 (특히 Integration 로그의 요청/응답 바디)
-      const sanitizedPayload = this.sanitizePayload(enrichedPayload);
+      let sanitizedPayload = this.sanitizePayload(enrichedPayload);
+
+      // 순환 참조 제거 (JSON.stringify 에러 방지)
+      sanitizedPayload = this.removeCircularReferences(sanitizedPayload);
 
       // 로그 발생 시점의 타임스탬프 생성
       const createdAt = new Date();
@@ -234,5 +237,26 @@ export class DispatchLogService {
     }
   }
 
+  /**
+   * 객체 내의 순환 참조를 제거하여 JSON 직렬화 가능하게 만듭니다.
+   */
+  private removeCircularReferences<T>(obj: T): T {
+    const seen = new WeakSet();
+    const detect = (value: any): any => {
+      if (typeof value === 'object' && value !== null) {
+        if (seen.has(value)) {
+          return '[Circular]';
+        }
+        seen.add(value);
+        const newObj: any = Array.isArray(value) ? [] : {};
+        for (const key in value) {
+          newObj[key] = detect(value[key]);
+        }
+        return newObj;
+      }
+      return value;
+    };
+    return detect(obj);
+  }
 }
 
