@@ -55,6 +55,11 @@ export class BankWithdrawConfig {
         this.props.deletedAt = new Date();
     }
 
+    restore(): void {
+        this.props.deletedAt = null;
+        this.props.updatedAt = new Date();
+    }
+
     get currency(): ExchangeCurrencyCode {
         return this.props.currency;
     }

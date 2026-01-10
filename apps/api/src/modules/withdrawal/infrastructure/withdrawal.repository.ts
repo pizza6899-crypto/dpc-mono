@@ -137,13 +137,13 @@ export class WithdrawalRepository implements WithdrawalRepositoryPort {
     async findCryptoConfigBySymbolAndNetwork(
         symbol: string,
         network: string,
+        includeDeleted = false,
     ): Promise<CryptoWithdrawConfig | null> {
         const result = await this.tx.cryptoWithdrawConfig.findFirst({
             where: {
                 symbol,
                 network,
-                isActive: true,
-                deletedAt: null,
+                ...(!includeDeleted && { deletedAt: null }),
             },
         });
         return result ? this.mapper.cryptoConfigToDomain(result) : null;
@@ -155,7 +155,7 @@ export class WithdrawalRepository implements WithdrawalRepositoryPort {
     ): Promise<CryptoWithdrawConfig> {
         const config = await this.findCryptoConfigBySymbolAndNetwork(symbol, network);
         if (!config) {
-            throw new CryptoWithdrawConfigNotFoundException(symbol, network);
+            throw new CryptoWithdrawConfigNotFoundException(`${symbol}/${network}`);
         }
         return config;
     }
@@ -184,8 +184,7 @@ export class WithdrawalRepository implements WithdrawalRepositoryPort {
     async getCryptoConfigById(id: bigint): Promise<CryptoWithdrawConfig> {
         const config = await this.findCryptoConfigById(id);
         if (!config) {
-            // 임시로 symbol/network에 id 문자열 전달
-            throw new CryptoWithdrawConfigNotFoundException(id.toString(), 'ID');
+            throw new CryptoWithdrawConfigNotFoundException(id);
         }
         return config;
     }
@@ -252,6 +251,21 @@ export class WithdrawalRepository implements WithdrawalRepositoryPort {
             throw new BankWithdrawConfigNotFoundException(id);
         }
         return config;
+    }
+
+    async findBankConfigByCurrencyAndName(
+        currency: ExchangeCurrencyCode,
+        bankName: string,
+        includeDeleted = false,
+    ): Promise<BankWithdrawConfig | null> {
+        const result = await this.tx.bankWithdrawConfig.findFirst({
+            where: {
+                currency,
+                bankName,
+                ...(!includeDeleted && { deletedAt: null }),
+            },
+        });
+        return result ? this.mapper.bankConfigToDomain(result) : null;
     }
 
     async findBankConfigsByCurrency(currency: ExchangeCurrencyCode): Promise<BankWithdrawConfig[]> {

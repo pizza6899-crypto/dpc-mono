@@ -36,6 +36,7 @@ export interface WithdrawalRepositoryPort {
     findCryptoConfigBySymbolAndNetwork(
         symbol: string,
         network: string,
+        includeDeleted?: boolean,
     ): Promise<CryptoWithdrawConfig | null>;
     getCryptoConfigBySymbolAndNetwork(
         symbol: string,
@@ -57,6 +58,11 @@ export interface WithdrawalRepositoryPort {
     // BankWithdrawConfig
     findBankConfigById(id: bigint): Promise<BankWithdrawConfig | null>;
     getBankConfigById(id: bigint): Promise<BankWithdrawConfig>;
+    findBankConfigByCurrencyAndName(
+        currency: ExchangeCurrencyCode,
+        bankName: string,
+        includeDeleted?: boolean,
+    ): Promise<BankWithdrawConfig | null>;
     findBankConfigsByCurrency(currency: ExchangeCurrencyCode): Promise<BankWithdrawConfig[]>;
     findActiveBankConfigs(): Promise<BankWithdrawConfig[]>;
     // Admin용 메서드

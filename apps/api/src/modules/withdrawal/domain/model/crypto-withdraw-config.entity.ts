@@ -86,6 +86,11 @@ export class CryptoWithdrawConfig {
         this.props.deletedAt = new Date();
     }
 
+    restore(): void {
+        this.props.deletedAt = null;
+        this.props.updatedAt = new Date();
+    }
+
     /**
      * 수수료 계산
      */

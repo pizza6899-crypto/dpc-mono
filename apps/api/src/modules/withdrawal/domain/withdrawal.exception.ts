@@ -20,10 +20,9 @@ export class WithdrawalException extends DomainException {
  * Withdrawal을 찾을 수 없을 때 발생하는 예외
  */
 export class WithdrawalNotFoundException extends WithdrawalException {
-    constructor(id: bigint | string) {
-        const idStr = typeof id === 'bigint' ? id.toString() : id;
+    constructor(identifier: bigint | string) {
         super(
-            `Withdrawal not found: id=${idStr}`,
+            `Withdrawal not found: ${identifier}`,
             MessageCode.WITHDRAWAL_NOT_FOUND,
             HttpStatus.NOT_FOUND,
         );
@@ -36,13 +35,12 @@ export class WithdrawalNotFoundException extends WithdrawalException {
  */
 export class InvalidWithdrawalStatusException extends WithdrawalException {
     constructor(
-        id: bigint | string,
+        identifier: bigint | string,
         currentStatus: string,
         expectedStatuses: string[],
     ) {
-        const idStr = typeof id === 'bigint' ? id.toString() : id;
         super(
-            `Invalid withdrawal status: id=${idStr}, currentStatus=${currentStatus}, expectedStatuses=[${expectedStatuses.join(', ')}]`,
+            `Invalid withdrawal status: id=${identifier}, currentStatus=${currentStatus}, expectedStatuses=[${expectedStatuses.join(', ')}]`,
             MessageCode.WITHDRAWAL_INVALID_STATUS,
             HttpStatus.BAD_REQUEST,
         );
@@ -97,9 +95,8 @@ export class InsufficientBalanceException extends WithdrawalException {
  */
 export class WageringNotCompletedException extends WithdrawalException {
     constructor(userId: bigint | string) {
-        const idStr = typeof userId === 'bigint' ? userId.toString() : userId;
         super(
-            `Wagering requirement not completed for user: ${idStr}`,
+            `Wagering requirement not completed for user: ${userId}`,
             MessageCode.ROLLING_NOT_COMPLETED,
             HttpStatus.BAD_REQUEST,
         );
@@ -111,9 +108,9 @@ export class WageringNotCompletedException extends WithdrawalException {
  * 암호화폐 출금 설정을 찾을 수 없을 때 발생하는 예외
  */
 export class CryptoWithdrawConfigNotFoundException extends WithdrawalException {
-    constructor(symbol: string, network: string) {
+    constructor(identifier: string | bigint) {
         super(
-            `Crypto withdraw config not found: symbol=${symbol}, network=${network}`,
+            `Crypto withdraw config not found: ${identifier}`,
             MessageCode.CRYPTO_CONFIG_NOT_FOUND,
             HttpStatus.NOT_FOUND,
         );
@@ -122,13 +119,26 @@ export class CryptoWithdrawConfigNotFoundException extends WithdrawalException {
 }
 
 /**
+ * 암호화폐 출금 설정이 이미 존재할 때 발생하는 예외
+ */
+export class CryptoWithdrawConfigAlreadyExistsException extends WithdrawalException {
+    constructor(symbol: string, network: string) {
+        super(
+            `Crypto withdraw config already exists for symbol=${symbol}, network=${network}`,
+            MessageCode.VALIDATION_ERROR,
+            HttpStatus.CONFLICT,
+        );
+        this.name = 'CryptoWithdrawConfigAlreadyExistsException';
+    }
+}
+
+/**
  * 은행 출금 설정을 찾을 수 없을 때 발생하는 예외
  */
 export class BankWithdrawConfigNotFoundException extends WithdrawalException {
-    constructor(id: bigint | string) {
-        const idStr = typeof id === 'bigint' ? id.toString() : id;
+    constructor(identifier: bigint | string) {
         super(
-            `Bank withdraw config not found: id=${idStr}`,
+            `Bank withdraw config not found: ${identifier}`,
             MessageCode.BANK_CONFIG_NOT_FOUND,
             HttpStatus.NOT_FOUND,
         );
@@ -137,13 +147,26 @@ export class BankWithdrawConfigNotFoundException extends WithdrawalException {
 }
 
 /**
+ * 은행 출금 설정이 이미 존재할 때 발생하는 예외
+ */
+export class BankWithdrawConfigAlreadyExistsException extends WithdrawalException {
+    constructor(currency: string, bankName: string) {
+        super(
+            `Bank withdraw config already exists for currency=${currency}, bankName=${bankName}`,
+            MessageCode.VALIDATION_ERROR,
+            HttpStatus.CONFLICT,
+        );
+        this.name = 'BankWithdrawConfigAlreadyExistsException';
+    }
+}
+
+/**
  * 출금을 취소할 수 없는 상태일 때 발생하는 예외
  */
 export class WithdrawalCannotBeCancelledException extends WithdrawalException {
-    constructor(id: bigint | string, currentStatus: string) {
-        const idStr = typeof id === 'bigint' ? id.toString() : id;
+    constructor(identifier: bigint | string, currentStatus: string) {
         super(
-            `Withdrawal cannot be cancelled: id=${idStr}, status=${currentStatus}`,
+            `Withdrawal cannot be cancelled: id=${identifier}, status=${currentStatus}`,
             MessageCode.WITHDRAWAL_INVALID_STATUS,
             HttpStatus.BAD_REQUEST,
         );

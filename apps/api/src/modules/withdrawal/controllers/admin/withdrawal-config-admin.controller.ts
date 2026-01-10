@@ -11,9 +11,16 @@ import {
     HttpCode,
     HttpStatus,
 } from '@nestjs/common';
-import { ApiBearerAuth, ApiOperation, ApiTags } from '@nestjs/swagger';
+import { ApiBearerAuth, ApiOperation, ApiTags, ApiParam } from '@nestjs/swagger';
 import { UserRoleType } from '@repo/database';
 import { RequireRoles } from 'src/common/auth/decorators/roles.decorator';
+import {
+    ApiStandardResponse,
+    ApiStandardErrors,
+    ApiPaginatedResponse,
+} from 'src/common/http/decorators/api-response.decorator';
+import { AuditLog } from 'src/modules/audit-log/infrastructure';
+import { LogType } from 'src/modules/audit-log/domain';
 
 import {
     CreateCryptoConfigService,
@@ -43,6 +50,7 @@ import { CryptoWithdrawConfig, BankWithdrawConfig } from '../../domain';
 @ApiTags('Admin Withdrawal Config')
 @Controller('admin/withdrawals/config')
 @ApiBearerAuth()
+@ApiStandardErrors()
 @RequireRoles(UserRoleType.ADMIN, UserRoleType.SUPER_ADMIN)
 export class WithdrawalConfigAdminController {
     constructor(
@@ -63,8 +71,14 @@ export class WithdrawalConfigAdminController {
 
     // ===== Crypto Configs =====
 
-    @ApiOperation({ summary: '암호화폐 출금 설정 목록 조회' })
+    @ApiOperation({ summary: 'Get crypto withdrawal configs' })
     @Get('crypto')
+    @ApiPaginatedResponse(CryptoConfigResponseDto)
+    @AuditLog({
+        type: LogType.ACTIVITY,
+        action: 'VIEW_CRYPTO_CONFIGS',
+        category: 'WITHDRAWAL_CONFIG',
+    })
     async getCryptoConfigs(
         @Query() query: FindCryptoConfigsRequestDto,
     ): Promise<{ configs: CryptoConfigResponseDto[]; total: number }> {
@@ -75,8 +89,15 @@ export class WithdrawalConfigAdminController {
         };
     }
 
-    @ApiOperation({ summary: '암호화폐 출금 설정 생성' })
+    @ApiOperation({ summary: 'Create crypto withdrawal config' })
     @Post('crypto')
+    @ApiStandardResponse(CryptoConfigResponseDto, { status: HttpStatus.CREATED })
+    @AuditLog({
+        type: LogType.ACTIVITY,
+        action: 'CREATE_CRYPTO_CONFIG',
+        category: 'WITHDRAWAL_CONFIG',
+        extractMetadata: (dto) => dto,
+    })
     async createCryptoConfig(
         @Body() dto: CreateCryptoConfigDto,
     ): Promise<CryptoConfigResponseDto> {
@@ -84,8 +105,16 @@ export class WithdrawalConfigAdminController {
         return this.toCryptoResponse(config);
     }
 
-    @ApiOperation({ summary: '암호화폐 출금 설정 수정' })
+    @ApiOperation({ summary: 'Update crypto withdrawal config' })
     @Put('crypto/:id')
+    @ApiParam({ name: 'id', type: String })
+    @ApiStandardResponse(CryptoConfigResponseDto)
+    @AuditLog({
+        type: LogType.ACTIVITY,
+        action: 'UPDATE_CRYPTO_CONFIG',
+        category: 'WITHDRAWAL_CONFIG',
+        extractMetadata: (id, dto) => ({ id, ...dto }),
+    })
     async updateCryptoConfig(
         @Param('id') id: string,
         @Body() dto: UpdateCryptoConfigDto,
@@ -97,8 +126,16 @@ export class WithdrawalConfigAdminController {
         return this.toCryptoResponse(config);
     }
 
-    @ApiOperation({ summary: '암호화폐 출금 설정 활성/비활성 토글' })
+    @ApiOperation({ summary: 'Toggle crypto withdrawal config active state' })
     @Patch('crypto/:id/active')
+    @ApiParam({ name: 'id', type: String })
+    @ApiStandardResponse(CryptoConfigResponseDto)
+    @AuditLog({
+        type: LogType.ACTIVITY,
+        action: 'TOGGLE_CRYPTO_CONFIG_ACTIVE',
+        category: 'WITHDRAWAL_CONFIG',
+        extractMetadata: (id) => ({ id }),
+    })
     async toggleCryptoConfigActive(
         @Param('id') id: string,
     ): Promise<CryptoConfigResponseDto> {
@@ -106,9 +143,16 @@ export class WithdrawalConfigAdminController {
         return this.toCryptoResponse(config);
     }
 
-    @ApiOperation({ summary: '암호화폐 출금 설정 삭제' })
+    @ApiOperation({ summary: 'Delete crypto withdrawal config' })
     @Delete('crypto/:id')
+    @ApiParam({ name: 'id', type: String })
     @HttpCode(HttpStatus.NO_CONTENT)
+    @AuditLog({
+        type: LogType.ACTIVITY,
+        action: 'DELETE_CRYPTO_CONFIG',
+        category: 'WITHDRAWAL_CONFIG',
+        extractMetadata: (id) => ({ id }),
+    })
     async deleteCryptoConfig(
         @Param('id') id: string,
     ): Promise<void> {
@@ -117,8 +161,14 @@ export class WithdrawalConfigAdminController {
 
     // ===== Bank Configs =====
 
-    @ApiOperation({ summary: '은행 출금 설정 목록 조회' })
+    @ApiOperation({ summary: 'Get bank withdrawal configs' })
     @Get('bank')
+    @ApiPaginatedResponse(BankConfigResponseDto)
+    @AuditLog({
+        type: LogType.ACTIVITY,
+        action: 'VIEW_BANK_CONFIGS',
+        category: 'WITHDRAWAL_CONFIG',
+    })
     async getBankConfigs(
         @Query() query: FindBankConfigsRequestDto,
     ): Promise<{ configs: BankConfigResponseDto[]; total: number }> {
@@ -129,8 +179,15 @@ export class WithdrawalConfigAdminController {
         };
     }
 
-    @ApiOperation({ summary: '은행 출금 설정 생성' })
+    @ApiOperation({ summary: 'Create bank withdrawal config' })
     @Post('bank')
+    @ApiStandardResponse(BankConfigResponseDto, { status: HttpStatus.CREATED })
+    @AuditLog({
+        type: LogType.ACTIVITY,
+        action: 'CREATE_BANK_CONFIG',
+        category: 'WITHDRAWAL_CONFIG',
+        extractMetadata: (dto) => dto,
+    })
     async createBankConfig(
         @Body() dto: CreateBankConfigDto,
     ): Promise<BankConfigResponseDto> {
@@ -138,8 +195,16 @@ export class WithdrawalConfigAdminController {
         return this.toBankResponse(config);
     }
 
-    @ApiOperation({ summary: '은행 출금 설정 수정' })
+    @ApiOperation({ summary: 'Update bank withdrawal config' })
     @Put('bank/:id')
+    @ApiParam({ name: 'id', type: String })
+    @ApiStandardResponse(BankConfigResponseDto)
+    @AuditLog({
+        type: LogType.ACTIVITY,
+        action: 'UPDATE_BANK_CONFIG',
+        category: 'WITHDRAWAL_CONFIG',
+        extractMetadata: (id, dto) => ({ id, ...dto }),
+    })
     async updateBankConfig(
         @Param('id') id: string,
         @Body() dto: UpdateBankConfigDto,
@@ -151,8 +216,16 @@ export class WithdrawalConfigAdminController {
         return this.toBankResponse(config);
     }
 
-    @ApiOperation({ summary: '은행 출금 설정 활성/비활성 토글' })
+    @ApiOperation({ summary: 'Toggle bank withdrawal config active state' })
     @Patch('bank/:id/active')
+    @ApiParam({ name: 'id', type: String })
+    @ApiStandardResponse(BankConfigResponseDto)
+    @AuditLog({
+        type: LogType.ACTIVITY,
+        action: 'TOGGLE_BANK_CONFIG_ACTIVE',
+        category: 'WITHDRAWAL_CONFIG',
+        extractMetadata: (id) => ({ id }),
+    })
     async toggleBankConfigActive(
         @Param('id') id: string,
     ): Promise<BankConfigResponseDto> {
@@ -160,9 +233,16 @@ export class WithdrawalConfigAdminController {
         return this.toBankResponse(config);
     }
 
-    @ApiOperation({ summary: '은행 출금 설정 삭제' })
+    @ApiOperation({ summary: 'Delete bank withdrawal config' })
     @Delete('bank/:id')
+    @ApiParam({ name: 'id', type: String })
     @HttpCode(HttpStatus.NO_CONTENT)
+    @AuditLog({
+        type: LogType.ACTIVITY,
+        action: 'DELETE_BANK_CONFIG',
+        category: 'WITHDRAWAL_CONFIG',
+        extractMetadata: (id) => ({ id }),
+    })
     async deleteBankConfig(
         @Param('id') id: string,
     ): Promise<void> {
