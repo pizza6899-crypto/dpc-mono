@@ -1,4 +1,5 @@
 export { ApproveWithdrawalDto, RejectWithdrawalDto } from './request/admin-withdrawal.dto';
+export { GetAdminWithdrawalsQueryDto } from './request/get-admin-withdrawals-query.dto';
 export {
     AdminWithdrawalResponseDto,
     ApproveWithdrawalResponseDto,

@@ -17,8 +17,10 @@ import {
 import {
     ApiStandardResponse,
     ApiStandardErrors,
+    ApiPaginatedResponse,
 } from 'src/common/http/decorators/api-response.decorator';
-import type { RequestClientInfo } from 'src/common/http/types';
+import { Paginated } from 'src/common/http/decorators/paginated.decorator';
+import type { PaginatedData, RequestClientInfo } from 'src/common/http/types';
 import { CurrentUser } from 'src/common/auth/decorators/current-user.decorator';
 import type { CurrentUserWithSession } from 'src/common/auth/decorators/current-user.decorator';
 import { RequestClientInfoParam } from 'src/common/auth/decorators/request-info.decorator';
@@ -53,14 +55,14 @@ export class WithdrawalUserController {
 
     @Get()
     @HttpCode(HttpStatus.OK)
+    @Paginated()
     @ApiOperation({
         summary: 'Get my withdrawal list',
         description: 'Retrieve my withdrawal history with pagination.',
     })
-    @ApiStandardResponse(WithdrawalResponseDto, {
+    @ApiPaginatedResponse(WithdrawalResponseDto, {
         status: 200,
         description: 'Withdrawal list retrieved successfully',
-        isArray: true,
     })
     @AuditLog({
         type: LogType.ACTIVITY,
@@ -71,7 +73,7 @@ export class WithdrawalUserController {
         @Query() query: GetWithdrawalsQueryDto,
         @CurrentUser() user: CurrentUserWithSession,
         @RequestClientInfoParam() requestInfo: RequestClientInfo,
-    ): Promise<{ withdrawals: WithdrawalResponseDto[]; total: number }> {
+    ): Promise<PaginatedData<WithdrawalResponseDto>> {
         const page = query.page ?? 1;
         const limit = query.limit ?? 20;
         const offset = (page - 1) * limit;
@@ -85,8 +87,10 @@ export class WithdrawalUserController {
         });
 
         return {
-            withdrawals: result.withdrawals.map(WithdrawalResponseDto.fromDomain),
+            data: result.withdrawals.map(WithdrawalResponseDto.fromDomain),
             total: result.total,
+            page,
+            limit,
         };
     }
 

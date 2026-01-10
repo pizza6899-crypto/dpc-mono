@@ -56,6 +56,9 @@ export class RequestCryptoWithdrawalService {
 
         const requestedAmount = new Prisma.Decimal(amount);
 
+        // 0. 락 획득 (동일 유저의 동시 출금 요청 방지)
+        await this.repository.acquireUserLock(userId);
+
         // 1. Config 조회 (symbol + network)
         const config = await this.repository.getCryptoConfigBySymbolAndNetwork(symbol, network);
 

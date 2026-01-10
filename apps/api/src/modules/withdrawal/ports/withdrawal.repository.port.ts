@@ -2,6 +2,9 @@ import { ExchangeCurrencyCode, WithdrawalStatus, WithdrawalMethodType } from '@r
 import { WithdrawalDetail, CryptoWithdrawConfig, BankWithdrawConfig } from '../domain';
 
 export interface WithdrawalRepositoryPort {
+    // 동시성 제어
+    acquireUserLock(userId: bigint): Promise<void>;
+
     // WithdrawalDetail CRUD
     create(withdrawal: WithdrawalDetail): Promise<WithdrawalDetail>;
     save(withdrawal: WithdrawalDetail): Promise<WithdrawalDetail>;

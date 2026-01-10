@@ -13,13 +13,14 @@ import {
     ApiOperation,
     ApiBearerAuth,
     ApiParam,
-    ApiQuery,
 } from '@nestjs/swagger';
 import {
     ApiStandardResponse,
     ApiStandardErrors,
+    ApiPaginatedResponse,
 } from 'src/common/http/decorators/api-response.decorator';
-import type { RequestClientInfo } from 'src/common/http/types';
+import { Paginated } from 'src/common/http/decorators/paginated.decorator';
+import type { PaginatedData, RequestClientInfo } from 'src/common/http/types';
 import { CurrentUser } from 'src/common/auth/decorators/current-user.decorator';
 import type { CurrentUserWithSession } from 'src/common/auth/decorators/current-user.decorator';
 import { RequestClientInfoParam } from 'src/common/auth/decorators/request-info.decorator';
@@ -39,6 +40,7 @@ import {
     AdminWithdrawalResponseDto,
     ApproveWithdrawalResponseDto,
     RejectWithdrawalResponseDto,
+    GetAdminWithdrawalsQueryDto,
 } from './dto';
 
 @ApiTags('Admin Withdrawal')
@@ -56,20 +58,14 @@ export class WithdrawalAdminController {
 
     @Get()
     @HttpCode(HttpStatus.OK)
+    @Paginated()
     @ApiOperation({
         summary: 'Get pending withdrawals',
         description: 'Retrieve list of withdrawals pending review.',
     })
-    @ApiQuery({
-        name: 'status',
-        required: false,
-        enum: WithdrawalStatus,
-        description: 'Filter by status (default: PENDING_REVIEW)',
-    })
-    @ApiStandardResponse(AdminWithdrawalResponseDto, {
+    @ApiPaginatedResponse(AdminWithdrawalResponseDto, {
         status: 200,
         description: 'Pending withdrawals retrieved successfully',
-        isArray: true,
     })
     @AuditLog({
         type: LogType.ACTIVITY,
@@ -77,16 +73,24 @@ export class WithdrawalAdminController {
         category: 'WITHDRAWAL',
     })
     async getPendingWithdrawals(
-        @Query('status') status?: WithdrawalStatus,
-        @CurrentUser() admin?: CurrentUserWithSession,
-        @RequestClientInfoParam() requestInfo?: RequestClientInfo,
-    ): Promise<{ withdrawals: AdminWithdrawalResponseDto[] }> {
+        @Query() query: GetAdminWithdrawalsQueryDto,
+        @CurrentUser() admin: CurrentUserWithSession,
+        @RequestClientInfoParam() requestInfo: RequestClientInfo,
+    ): Promise<PaginatedData<AdminWithdrawalResponseDto>> {
+        const page = query.page ?? 1;
+        const limit = query.limit ?? 50;
+
         const result = await this.findPendingWithdrawalsService.execute({
-            status: status ?? WithdrawalStatus.PENDING_REVIEW,
+            status: query.status ?? WithdrawalStatus.PENDING_REVIEW,
+            limit,
+            offset: (page - 1) * limit,
         });
 
         return {
-            withdrawals: result.withdrawals.map(AdminWithdrawalResponseDto.fromDomain),
+            data: result.withdrawals.map(AdminWithdrawalResponseDto.fromDomain),
+            total: result.withdrawals.length, // TODO: count 쿼리 추가 필요
+            page,
+            limit,
         };
     }
 

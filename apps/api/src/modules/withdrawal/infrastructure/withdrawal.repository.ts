@@ -21,6 +21,13 @@ export class WithdrawalRepository implements WithdrawalRepositoryPort {
         private readonly mapper: WithdrawalMapper,
     ) { }
 
+    // ===== 동시성 제어 =====
+
+    async acquireUserLock(userId: bigint): Promise<void> {
+        // DB Advisory Lock을 사용하여 동일 유저의 동시 출금 요청 방지
+        await this.tx.$queryRaw`SELECT pg_advisory_xact_lock(${userId})`;
+    }
+
     // ===== WithdrawalDetail CRUD =====
 
     async create(withdrawal: WithdrawalDetail): Promise<WithdrawalDetail> {
