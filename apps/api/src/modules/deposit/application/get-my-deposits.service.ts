@@ -50,7 +50,7 @@ export class GetMyDepositsService {
                     depositNetwork: deposit.depositNetwork,
 
                     // 계좌 정보
-                    bankName: null,
+                    bankName: deposit.bankName ?? null,
 
                     createdAt: deposit.createdAt,
                     confirmedAt: deposit.confirmedAt ?? null,

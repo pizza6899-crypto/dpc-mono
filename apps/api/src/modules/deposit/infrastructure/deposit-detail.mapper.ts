@@ -50,6 +50,7 @@ export class DepositDetailMapper {
     updatedAt: Date;
     confirmedAt: Date | null;
     failedAt: Date | null;
+    bankDepositConfig?: { bankName: string } | null;
   }): DepositDetail {
     return DepositDetail.fromPersistence({
       id: prismaModel.id,
@@ -84,6 +85,7 @@ export class DepositDetailMapper {
       updatedAt: prismaModel.updatedAt,
       confirmedAt: prismaModel.confirmedAt,
       failedAt: prismaModel.failedAt,
+      bankName: prismaModel.bankDepositConfig?.bankName,
     });
   }
 

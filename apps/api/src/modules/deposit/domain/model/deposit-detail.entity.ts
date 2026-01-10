@@ -49,6 +49,7 @@ export class DepositDetail {
     private _updatedAt: Date,
     private _confirmedAt: Date | null,
     private _failedAt: Date | null,
+    private _bankName: string | null = null,
   ) { }
 
   /**
@@ -100,6 +101,7 @@ export class DepositDetail {
       new Date(),
       null,
       null,
+      null,
     );
   }
 
@@ -139,6 +141,7 @@ export class DepositDetail {
     updatedAt: Date;
     confirmedAt: Date | null;
     failedAt: Date | null;
+    bankName?: string | null;
   }): DepositDetail {
     return new DepositDetail(
       data.id,
@@ -177,6 +180,7 @@ export class DepositDetail {
       data.updatedAt,
       data.confirmedAt,
       data.failedAt,
+      data.bankName ?? null,
     );
   }
 
@@ -384,6 +388,13 @@ export class DepositDetail {
 
   get failedAt(): Date | null {
     return this._failedAt;
+  }
+
+  /**
+   * 은행명 (관계형 데이터에서 로드된 경우)
+   */
+  get bankName(): string | null {
+    return this._bankName;
   }
 
   /**

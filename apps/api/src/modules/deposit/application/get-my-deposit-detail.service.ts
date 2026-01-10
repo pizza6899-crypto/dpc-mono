@@ -41,7 +41,7 @@ export class GetMyDepositDetailService {
             walletAddress: deposit.walletAddress,
             depositNetwork: deposit.depositNetwork,
 
-            bankName: null, // 임시처리
+            bankName: deposit.bankName ?? null,
 
             createdAt: deposit.createdAt,
             confirmedAt: deposit.confirmedAt ?? null,
