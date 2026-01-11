@@ -1,7 +1,7 @@
 import { Injectable } from '@nestjs/common';
 import Sqids from 'sqids';
 import { EnvService } from '../env/env.service';
-import { SQIDS_DELIMITER, SqidsPrefixType, KNUTH_PRIME, KNUTH_INVERSE, KNUTH_MASK } from './sqids.constants';
+import { SQIDS_DELIMITER, SqidsPrefixType, SqidsPrefix, KNUTH_PRIME, KNUTH_INVERSE, KNUTH_MASK } from './sqids.constants';
 import { InvalidSqidFormatException, InvalidSqidIdException } from './sqids.exception';
 
 @Injectable()
@@ -65,6 +65,58 @@ export class SqidsService {
         const decoded = this.sqids.decode(targetSqid);
         if (decoded.length < 2) {
             throw new InvalidSqidFormatException(sqid, prefix);
+        }
+
+        const [high, low] = decoded;
+
+        // 1. 상하위 비트 병합
+        const scrambledId = (BigInt(high) << 32n) | BigInt(low);
+
+        // 2. Multiplicative Inverse 적용 (복구)
+        const originalId = (scrambledId * KNUTH_INVERSE) & KNUTH_MASK;
+
+        return originalId;
+    }
+
+    /**
+     * Sqid 문자열을 자동으로 접두사를 감지하여 디코딩합니다. (관리자용)
+     * 접두사가 포함되어 있으면 자동으로 분리하여 처리합니다.
+     * 
+     * @param sqid 디코딩할 Sqid 문자열 (접두사 포함/미포함 모두 가능)
+     * @returns { id: bigint, prefix: string | null } 디코딩된 ID와 감지된 접두사
+     * @throws InvalidSqidFormatException 유효하지 않은 Sqid 형식인 경우
+     */
+    decodeAuto(sqid: string): { id: bigint; prefix: string | null } {
+        // 구분자가 있는지 확인
+        const delimiterIndex = sqid.indexOf(SQIDS_DELIMITER);
+
+        if (delimiterIndex > 0) {
+            const potentialPrefix = sqid.slice(0, delimiterIndex);
+            const validPrefixes = Object.values(SqidsPrefix) as string[];
+
+            // 유효한 접두사인지 확인
+            if (validPrefixes.includes(potentialPrefix)) {
+                const targetSqid = sqid.slice(delimiterIndex + 1);
+                const id = this.decodeRaw(targetSqid);
+                return { id, prefix: potentialPrefix };
+            }
+        }
+
+        // 접두사가 없는 경우 전체를 Sqid로 처리
+        const id = this.decodeRaw(sqid);
+        return { id, prefix: null };
+    }
+
+    /**
+     * 순수 Sqid 문자열만 디코딩합니다. (접두사/구분자 처리 없음)
+     * 
+     * @param sqid 순수 Sqid 문자열
+     * @throws InvalidSqidFormatException 유효하지 않은 Sqid 형식인 경우
+     */
+    private decodeRaw(sqid: string): bigint {
+        const decoded = this.sqids.decode(sqid);
+        if (decoded.length < 2) {
+            throw new InvalidSqidFormatException(sqid);
         }
 
         const [high, low] = decoded;
