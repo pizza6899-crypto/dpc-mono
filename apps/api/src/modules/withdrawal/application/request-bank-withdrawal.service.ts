@@ -104,17 +104,17 @@ export class RequestBankWithdrawalService {
         // 8. 수동 검토 상태로 전이
         withdrawal.markPendingReview();
 
-        // 9. 저장
-        const saved = await this.repository.create(withdrawal);
-
-        // 10. 잔액 차감 (mainBalance에서 차감)
+        // 9. 잔액 차감 (mainBalance에서 차감) - 저장 전에 먼저 차감
         await this.updateUserBalanceService.execute({
             userId,
             currency,
             balanceType: BalanceType.MAIN,
-            operation: UpdateOperation.DEDUCT,
+            operation: UpdateOperation.SUBTRACT,
             amount: requestedAmount,
         });
+
+        // 10. 출금 요청 저장
+        const saved = await this.repository.create(withdrawal);
 
         return {
             withdrawalId: saved.id,

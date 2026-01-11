@@ -122,17 +122,17 @@ export class RequestCryptoWithdrawalService {
             withdrawal.markPendingReview();
         }
 
-        // 10. 저장
-        const saved = await this.repository.create(withdrawal);
-
-        // 11. 잔액 차감 (mainBalance에서 차감)
+        // 10. 잔액 차감 (mainBalance에서 차감) - 저장 전에 먼저 차감
         await this.updateUserBalanceService.execute({
             userId,
             currency,
             balanceType: BalanceType.MAIN,
-            operation: UpdateOperation.DEDUCT,
+            operation: UpdateOperation.SUBTRACT,
             amount: requestedAmount,
         });
+
+        // 11. 출금 요청 저장
+        const saved = await this.repository.create(withdrawal);
 
         // Note: AUTO 모드 자동 처리는 별도 스케줄러/웹훅에서 처리
 
