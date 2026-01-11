@@ -1,6 +1,6 @@
 import { ApiProperty } from '@nestjs/swagger';
 
-export class CryptoConfigResponseDto {
+export class WithdrawalCryptoConfigResponseDto {
     @ApiProperty()
     id: string;
 

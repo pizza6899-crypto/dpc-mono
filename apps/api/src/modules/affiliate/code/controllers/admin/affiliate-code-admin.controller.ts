@@ -128,7 +128,7 @@ export class AffiliateCodeAdminController {
   async getCode(
     @Param('id') id: string,
   ): Promise<AdminCodeResponseDto> {
-    const code = await this.findCodeByIdAdminService.execute(id);
+    const code = await this.findCodeByIdAdminService.execute(BigInt(id));
     return this.toResponseDto(code);
   }
 
@@ -194,11 +194,11 @@ export class AffiliateCodeAdminController {
     @Body() dto: UpdateCodeAdminRequestDto,
   ): Promise<AdminCodeResponseDto> {
     // 1. 코드를 먼저 조회하여 Owner ID 획득
-    const existingCode = await this.findCodeByIdAdminService.execute(id);
+    const existingCode = await this.findCodeByIdAdminService.execute(BigInt(id));
 
     // 2. UpdateService 호출 (Owner ID 전달)
     const updatedCode = await this.updateCodeService.execute({
-      id: existingCode.uid,
+      id: existingCode.id!,
       userId: existingCode.userId,
       campaignName: dto.campaignName,
       isActive: dto.isActive,

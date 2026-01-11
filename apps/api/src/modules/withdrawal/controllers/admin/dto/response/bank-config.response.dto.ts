@@ -1,7 +1,7 @@
 import { ApiProperty } from '@nestjs/swagger';
 import { ExchangeCurrencyCode } from '@repo/database';
 
-export class BankConfigResponseDto {
+export class WithdrawalBankConfigResponseDto {
     @ApiProperty()
     id: string;
 

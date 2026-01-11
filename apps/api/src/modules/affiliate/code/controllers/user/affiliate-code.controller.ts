@@ -34,6 +34,8 @@ import { ValidateCodeFormatResponseDto } from './dto/response/validate-code-form
 import { AffiliateCode } from '../../domain';
 import { LogType } from 'src/modules/audit-log/domain';
 import { AuditLog } from 'src/modules/audit-log/infrastructure/audit-log.decorator';
+import { SqidsService } from 'src/common/sqids/sqids.service';
+import { SqidsPrefix } from 'src/common/sqids/sqids.constants';
 
 @ApiTags('Affiliate Codes (어플리에이트 코드)')
 @Controller('affiliate-codes')
@@ -45,6 +47,7 @@ export class AffiliateCodeController {
     private readonly findDefaultCodeService: FindDefaultCodeService,
     private readonly updateCodeService: UpdateCodeService,
     private readonly validateCodeFormatService: ValidateCodeFormatService,
+    private readonly sqidsService: SqidsService,
   ) { }
 
   /**
@@ -182,8 +185,9 @@ export class AffiliateCodeController {
     @Param('id') id: string,
     @Body() dto: UpdateAffiliateCodeDto,
   ): Promise<AffiliateCodeResponseDto> {
+    const decodedId = this.sqidsService.decode(id, SqidsPrefix.AFFILIATE_CODE);
     const code = await this.updateCodeService.execute({
-      id,
+      id: decodedId,
       userId: user.id,
       campaignName: dto.campaignName,
       isActive: dto.isActive,
@@ -226,7 +230,7 @@ export class AffiliateCodeController {
    */
   private toResponse(code: AffiliateCode): AffiliateCodeResponseDto {
     return {
-      id: code.uid,
+      id: this.sqidsService.encode(code.id!, SqidsPrefix.AFFILIATE_CODE),
       code: code.code,
       campaignName: code.campaignName,
       isActive: code.isActive,

@@ -70,10 +70,10 @@ export class AffiliateCodeRepository implements AffiliateCodeRepositoryPort {
     return results.map((result) => this.mapper.toDomain(result));
   }
 
-  async findByUid(uid: string): Promise<AffiliateCode | null> {
+  async findById(id: bigint): Promise<AffiliateCode | null> {
     const result = await this.tx.affiliateCode.findFirst({
       where: {
-        uid,
+        id,
       },
     });
 

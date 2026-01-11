@@ -42,8 +42,8 @@ import {
     CreateBankConfigDto,
     UpdateBankConfigDto,
     FindBankConfigsRequestDto,
-    CryptoConfigResponseDto,
-    BankConfigResponseDto,
+    WithdrawalCryptoConfigResponseDto,
+    WithdrawalBankConfigResponseDto,
 } from './dto';
 import { CryptoWithdrawConfig, BankWithdrawConfig } from '../../domain';
 
@@ -73,7 +73,7 @@ export class WithdrawalConfigAdminController {
 
     @ApiOperation({ summary: 'Get crypto withdrawal configs' })
     @Get('crypto')
-    @ApiPaginatedResponse(CryptoConfigResponseDto)
+    @ApiPaginatedResponse(WithdrawalCryptoConfigResponseDto)
     @AuditLog({
         type: LogType.ACTIVITY,
         action: 'VIEW_CRYPTO_CONFIGS',
@@ -81,7 +81,7 @@ export class WithdrawalConfigAdminController {
     })
     async getCryptoConfigs(
         @Query() query: FindCryptoConfigsRequestDto,
-    ): Promise<{ configs: CryptoConfigResponseDto[]; total: number }> {
+    ): Promise<{ configs: WithdrawalCryptoConfigResponseDto[]; total: number }> {
         const { configs, total } = await this.findCryptoConfigsService.execute(query);
         return {
             configs: configs.map(this.toCryptoResponse),
@@ -91,7 +91,7 @@ export class WithdrawalConfigAdminController {
 
     @ApiOperation({ summary: 'Create crypto withdrawal config' })
     @Post('crypto')
-    @ApiStandardResponse(CryptoConfigResponseDto, { status: HttpStatus.CREATED })
+    @ApiStandardResponse(WithdrawalCryptoConfigResponseDto, { status: HttpStatus.CREATED })
     @AuditLog({
         type: LogType.ACTIVITY,
         action: 'CREATE_CRYPTO_CONFIG',
@@ -100,7 +100,7 @@ export class WithdrawalConfigAdminController {
     })
     async createCryptoConfig(
         @Body() dto: CreateCryptoConfigDto,
-    ): Promise<CryptoConfigResponseDto> {
+    ): Promise<WithdrawalCryptoConfigResponseDto> {
         const config = await this.createCryptoConfigService.execute(dto);
         return this.toCryptoResponse(config);
     }
@@ -108,7 +108,7 @@ export class WithdrawalConfigAdminController {
     @ApiOperation({ summary: 'Update crypto withdrawal config' })
     @Put('crypto/:id')
     @ApiParam({ name: 'id', type: String })
-    @ApiStandardResponse(CryptoConfigResponseDto)
+    @ApiStandardResponse(WithdrawalCryptoConfigResponseDto)
     @AuditLog({
         type: LogType.ACTIVITY,
         action: 'UPDATE_CRYPTO_CONFIG',
@@ -118,7 +118,7 @@ export class WithdrawalConfigAdminController {
     async updateCryptoConfig(
         @Param('id') id: string,
         @Body() dto: UpdateCryptoConfigDto,
-    ): Promise<CryptoConfigResponseDto> {
+    ): Promise<WithdrawalCryptoConfigResponseDto> {
         const config = await this.updateCryptoConfigService.execute({
             id: BigInt(id),
             ...dto,
@@ -129,7 +129,7 @@ export class WithdrawalConfigAdminController {
     @ApiOperation({ summary: 'Toggle crypto withdrawal config active state' })
     @Patch('crypto/:id/active')
     @ApiParam({ name: 'id', type: String })
-    @ApiStandardResponse(CryptoConfigResponseDto)
+    @ApiStandardResponse(WithdrawalCryptoConfigResponseDto)
     @AuditLog({
         type: LogType.ACTIVITY,
         action: 'TOGGLE_CRYPTO_CONFIG_ACTIVE',
@@ -138,7 +138,7 @@ export class WithdrawalConfigAdminController {
     })
     async toggleCryptoConfigActive(
         @Param('id') id: string,
-    ): Promise<CryptoConfigResponseDto> {
+    ): Promise<WithdrawalCryptoConfigResponseDto> {
         const config = await this.toggleCryptoConfigActiveService.execute(BigInt(id));
         return this.toCryptoResponse(config);
     }
@@ -163,7 +163,7 @@ export class WithdrawalConfigAdminController {
 
     @ApiOperation({ summary: 'Get bank withdrawal configs' })
     @Get('bank')
-    @ApiPaginatedResponse(BankConfigResponseDto)
+    @ApiPaginatedResponse(WithdrawalBankConfigResponseDto)
     @AuditLog({
         type: LogType.ACTIVITY,
         action: 'VIEW_BANK_CONFIGS',
@@ -171,7 +171,7 @@ export class WithdrawalConfigAdminController {
     })
     async getBankConfigs(
         @Query() query: FindBankConfigsRequestDto,
-    ): Promise<{ configs: BankConfigResponseDto[]; total: number }> {
+    ): Promise<{ configs: WithdrawalBankConfigResponseDto[]; total: number }> {
         const { configs, total } = await this.findBankConfigsService.execute(query);
         return {
             configs: configs.map(this.toBankResponse),
@@ -181,7 +181,7 @@ export class WithdrawalConfigAdminController {
 
     @ApiOperation({ summary: 'Create bank withdrawal config' })
     @Post('bank')
-    @ApiStandardResponse(BankConfigResponseDto, { status: HttpStatus.CREATED })
+    @ApiStandardResponse(WithdrawalBankConfigResponseDto, { status: HttpStatus.CREATED })
     @AuditLog({
         type: LogType.ACTIVITY,
         action: 'CREATE_BANK_CONFIG',
@@ -190,7 +190,7 @@ export class WithdrawalConfigAdminController {
     })
     async createBankConfig(
         @Body() dto: CreateBankConfigDto,
-    ): Promise<BankConfigResponseDto> {
+    ): Promise<WithdrawalBankConfigResponseDto> {
         const config = await this.createBankConfigService.execute(dto);
         return this.toBankResponse(config);
     }
@@ -198,7 +198,7 @@ export class WithdrawalConfigAdminController {
     @ApiOperation({ summary: 'Update bank withdrawal config' })
     @Put('bank/:id')
     @ApiParam({ name: 'id', type: String })
-    @ApiStandardResponse(BankConfigResponseDto)
+    @ApiStandardResponse(WithdrawalBankConfigResponseDto)
     @AuditLog({
         type: LogType.ACTIVITY,
         action: 'UPDATE_BANK_CONFIG',
@@ -208,7 +208,7 @@ export class WithdrawalConfigAdminController {
     async updateBankConfig(
         @Param('id') id: string,
         @Body() dto: UpdateBankConfigDto,
-    ): Promise<BankConfigResponseDto> {
+    ): Promise<WithdrawalBankConfigResponseDto> {
         const config = await this.updateBankConfigService.execute({
             id: BigInt(id),
             ...dto,
@@ -219,7 +219,7 @@ export class WithdrawalConfigAdminController {
     @ApiOperation({ summary: 'Toggle bank withdrawal config active state' })
     @Patch('bank/:id/active')
     @ApiParam({ name: 'id', type: String })
-    @ApiStandardResponse(BankConfigResponseDto)
+    @ApiStandardResponse(WithdrawalBankConfigResponseDto)
     @AuditLog({
         type: LogType.ACTIVITY,
         action: 'TOGGLE_BANK_CONFIG_ACTIVE',
@@ -228,7 +228,7 @@ export class WithdrawalConfigAdminController {
     })
     async toggleBankConfigActive(
         @Param('id') id: string,
-    ): Promise<BankConfigResponseDto> {
+    ): Promise<WithdrawalBankConfigResponseDto> {
         const config = await this.toggleBankConfigActiveService.execute(BigInt(id));
         return this.toBankResponse(config);
     }
@@ -251,7 +251,7 @@ export class WithdrawalConfigAdminController {
 
     // ===== Helpers =====
 
-    private toCryptoResponse(config: CryptoWithdrawConfig): CryptoConfigResponseDto {
+    private toCryptoResponse(config: CryptoWithdrawConfig): WithdrawalCryptoConfigResponseDto {
         return {
             id: config.id.toString(),
             symbol: config.props.symbol,
@@ -267,7 +267,7 @@ export class WithdrawalConfigAdminController {
         };
     }
 
-    private toBankResponse(config: BankWithdrawConfig): BankConfigResponseDto {
+    private toBankResponse(config: BankWithdrawConfig): WithdrawalBankConfigResponseDto {
         return {
             id: config.id.toString(),
             currency: config.props.currency,

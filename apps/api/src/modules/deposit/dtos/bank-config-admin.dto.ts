@@ -174,7 +174,7 @@ export class GetBankConfigsQueryDto {
     isActive?: boolean;
 }
 
-export class BankConfigResponseDto {
+export class DepositBankConfigResponseDto {
     @ApiProperty({ description: 'ID' })
     id: string;
 

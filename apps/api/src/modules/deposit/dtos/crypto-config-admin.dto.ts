@@ -122,7 +122,7 @@ export class GetCryptoConfigsQueryDto {
     isActive?: boolean;
 }
 
-export class CryptoConfigResponseDto {
+export class DepositCryptoConfigResponseDto {
     @ApiProperty({ description: 'ID' })
     id: string;
 

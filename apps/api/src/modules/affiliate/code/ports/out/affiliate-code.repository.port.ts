@@ -28,9 +28,9 @@ export interface AffiliateCodeRepositoryPort {
   ): Promise<AffiliateCode[]>;
 
   /**
-   * UID로 코드 조회 (사용자용)
+   * ID로 코드 조회 (사용자용)
    */
-  findByUid(uid: string): Promise<AffiliateCode | null>;
+  findById(id: bigint): Promise<AffiliateCode | null>;
 
   /**
    * 코드 문자열로 조회 (활성 코드만)

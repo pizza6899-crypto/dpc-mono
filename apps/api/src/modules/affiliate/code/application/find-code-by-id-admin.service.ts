@@ -13,8 +13,8 @@ export class FindCodeByIdAdminService {
         private readonly repository: AffiliateCodeRepositoryPort,
     ) { }
 
-    async execute(id: string): Promise<AffiliateCode> {
-        const code = await this.repository.findByIdAdmin(BigInt(id));
+    async execute(id: bigint): Promise<AffiliateCode> {
+        const code = await this.repository.findByIdAdmin(id);
 
         if (!code) {
             throw new AffiliateCodeNotFoundException(id);
