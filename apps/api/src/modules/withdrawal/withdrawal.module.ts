@@ -1,6 +1,9 @@
 import { Module } from '@nestjs/common';
 import { SnowflakeModule } from 'src/common/snowflake/snowflake.module';
 import { PaymentModule } from 'src/modules/payment/payment.module';
+import { WalletModule } from 'src/modules/wallet/wallet.module';
+import { WageringModule } from 'src/modules/wagering/wagering.module';
+import { AnalyticsModule } from 'src/modules/analytics/analytics.module';
 import { WithdrawalPolicy } from './domain';
 import { WITHDRAWAL_REPOSITORY } from './ports';
 import { WithdrawalRepository } from './infrastructure/withdrawal.repository';
@@ -34,7 +37,7 @@ import { WithdrawalAdminController } from './controllers/admin/withdrawal-admin.
 import { WithdrawalConfigAdminController } from './controllers/admin/withdrawal-config-admin.controller';
 
 @Module({
-    imports: [SnowflakeModule, PaymentModule],
+    imports: [SnowflakeModule, PaymentModule, WalletModule, WageringModule, AnalyticsModule],
     controllers: [
         WithdrawalUserController,
         WithdrawalAdminController,

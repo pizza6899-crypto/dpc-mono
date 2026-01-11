@@ -2,6 +2,11 @@ import { Injectable, Inject } from '@nestjs/common';
 import { Prisma, ExchangeCurrencyCode, WithdrawalProcessingMode } from '@repo/database';
 import { Transactional } from '@nestjs-cls/transactional';
 import { SnowflakeService } from 'src/common/snowflake/snowflake.service';
+import { UpdateUserBalanceService } from 'src/modules/wallet/application/update-user-balance.service';
+import { WalletQueryService } from 'src/modules/wallet/application/wallet-query.service';
+import { BalanceType, UpdateOperation } from 'src/modules/wallet/domain';
+import { WAGERING_REQUIREMENT_REPOSITORY } from 'src/modules/wagering/ports';
+import type { WageringRequirementRepositoryPort } from 'src/modules/wagering/ports';
 import {
     WithdrawalDetail,
     WithdrawalPolicy,
@@ -36,8 +41,12 @@ export class RequestCryptoWithdrawalService {
     constructor(
         @Inject(WITHDRAWAL_REPOSITORY)
         private readonly repository: WithdrawalRepositoryPort,
+        @Inject(WAGERING_REQUIREMENT_REPOSITORY)
+        private readonly wageringRepository: WageringRequirementRepositoryPort,
         private readonly policy: WithdrawalPolicy,
         private readonly snowflakeService: SnowflakeService,
+        private readonly updateUserBalanceService: UpdateUserBalanceService,
+        private readonly walletQueryService: WalletQueryService,
     ) { }
 
     @Transactional()
@@ -70,16 +79,19 @@ export class RequestCryptoWithdrawalService {
         this.policy.validateCryptoAmount(requestedAmount, config);
 
         // 4. 롤링 조건 검증 (활성 WageringRequirement 없어야 함)
-        // TODO: WageringRepository 연동 필요
-        // const hasActiveWagering = await this.wageringRepository.hasActiveByUserId(userId, currency);
-        // if (hasActiveWagering) {
-        //     throw new WageringNotCompletedException(userId);
-        // }
+        const activeWageringRequirements = await this.wageringRepository.findActiveByUserIdAndCurrency(userId, currency);
+        if (activeWageringRequirements.length > 0) {
+            throw new WageringNotCompletedException(userId);
+        }
 
         // 5. 잔액 검증
-        // TODO: BalanceService 연동 필요
-        // const balance = await this.balanceService.getBalance(userId, currency);
-        // this.policy.validateBalance(requestedAmount, balance);
+        const wallet = await this.walletQueryService.getWallet(userId, currency, false);
+        if (wallet) {
+            this.policy.validateBalance(requestedAmount, {
+                mainBalance: wallet.mainBalance,
+                bonusBalance: wallet.bonusBalance,
+            });
+        }
 
         // 6. 수수료 계산
         const { feeAmount, netAmount } = this.policy.calculateFee(requestedAmount, config);
@@ -87,7 +99,7 @@ export class RequestCryptoWithdrawalService {
         // 7. 처리 모드 결정 (AUTO/MANUAL)
         const processingMode = this.policy.determineCryptoProcessingMode(requestedAmount, config);
 
-        // 7. WithdrawalDetail 생성
+        // 8. WithdrawalDetail 생성
         const withdrawal = WithdrawalDetail.createCrypto({
             snowflakeService: this.snowflakeService,
             userId,
@@ -105,21 +117,24 @@ export class RequestCryptoWithdrawalService {
             netAmount,
         });
 
-        // 8. 수동 검토가 필요하면 상태 전이
+        // 9. 수동 검토가 필요하면 상태 전이
         if (processingMode === WithdrawalProcessingMode.MANUAL) {
             withdrawal.markPendingReview();
         }
 
-        // 9. 저장
+        // 10. 저장
         const saved = await this.repository.create(withdrawal);
 
-        // 10. TODO: 잔액 차감 (BalanceService)
-        // await this.balanceService.deductBalance(userId, currency, requestedAmount);
+        // 11. 잔액 차감 (mainBalance에서 차감)
+        await this.updateUserBalanceService.execute({
+            userId,
+            currency,
+            balanceType: BalanceType.MAIN,
+            operation: UpdateOperation.DEDUCT,
+            amount: requestedAmount,
+        });
 
-        // 11. TODO: 자동 처리 시작 (AUTO 모드인 경우)
-        // if (processingMode === WithdrawalProcessingMode.AUTO) {
-        //     await this.processWithdrawalService.execute(saved.id);
-        // }
+        // Note: AUTO 모드 자동 처리는 별도 스케줄러/웹훅에서 처리
 
         return {
             withdrawalId: saved.id,

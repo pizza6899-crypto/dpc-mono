@@ -2,6 +2,9 @@ import { Injectable, Inject, Logger } from '@nestjs/common';
 import { Transactional } from '@nestjs-cls/transactional';
 import { WithdrawalProcessingMode } from '@repo/database';
 import { NowPaymentApiService } from 'src/modules/payment/infrastructure/now-payment-api.service';
+import { UpdateUserBalanceService } from 'src/modules/wallet/application/update-user-balance.service';
+import { BalanceType, UpdateOperation } from 'src/modules/wallet/domain';
+import { AnalyticsQueueService } from 'src/modules/analytics/application/analytics-queue.service';
 import { WithdrawalDetail, WithdrawalProcessingException } from '../domain';
 import { WITHDRAWAL_REPOSITORY } from '../ports';
 import type { WithdrawalRepositoryPort } from '../ports';
@@ -25,6 +28,8 @@ export class ProcessWithdrawalService {
         @Inject(WITHDRAWAL_REPOSITORY)
         private readonly repository: WithdrawalRepositoryPort,
         private readonly nowPaymentApiService: NowPaymentApiService,
+        private readonly updateUserBalanceService: UpdateUserBalanceService,
+        private readonly analyticsQueueService: AnalyticsQueueService,
     ) { }
 
     @Transactional()
@@ -69,7 +74,8 @@ export class ProcessWithdrawalService {
             withdrawal.fail(errorMessage);
             await this.repository.save(withdrawal);
 
-            // TODO: 잔액 복원 필요
+            // 잔액 복원
+            await this.restoreBalance(withdrawal);
 
             // 외부 에러를 도메인 에러로 래핑
             throw new WithdrawalProcessingException(withdrawalId, errorMessage);
@@ -83,13 +89,12 @@ export class ProcessWithdrawalService {
         const network = withdrawal.props.network ?? (config.network as string);
 
         // NowPayment 페이아웃 생성
-        // TODO: 실제 연동 시 currency 매핑 필요
         const payoutResult = await this.nowPaymentApiService.createPayout({
             address: withdrawal.props.walletAddress!,
             addressExtraId: withdrawal.props.walletAddressExtraId ?? undefined,
             fiat_amount: Number(withdrawal.requestedAmount),
             fiat_currency: withdrawal.currency,
-            crypto_currency: withdrawal.currency, // TODO: 적절한 매핑 필요
+            crypto_currency: (config.symbol as string) ?? withdrawal.currency,
         });
 
         const payoutWithdrawal = payoutResult.withdrawals[0];
@@ -116,5 +121,50 @@ export class ProcessWithdrawalService {
             status: withdrawal.status,
             providerWithdrawalId: payoutResult.id,
         };
+    }
+
+    /**
+     * 실패/취소 시 잔액 복원
+     */
+    private async restoreBalance(withdrawal: WithdrawalDetail): Promise<void> {
+        try {
+            await this.updateUserBalanceService.execute({
+                userId: withdrawal.userId,
+                currency: withdrawal.currency,
+                balanceType: BalanceType.MAIN,
+                operation: UpdateOperation.ADD,
+                amount: withdrawal.requestedAmount,
+            });
+
+            this.logger.log(
+                `Restored balance for failed withdrawal ${withdrawal.id}: ${withdrawal.requestedAmount} ${withdrawal.currency}`,
+            );
+        } catch (error) {
+            this.logger.error(
+                `Failed to restore balance for withdrawal ${withdrawal.id}`,
+                error instanceof Error ? error.stack : String(error),
+            );
+            // 잔액 복원 실패는 로깅하고 계속 진행 (수동 처리 필요)
+        }
+    }
+
+    /**
+     * 출금 완료 시 통계 기록 (웹훅에서 호출)
+     */
+    async recordWithdrawalCompleted(withdrawal: WithdrawalDetail): Promise<void> {
+        try {
+            await this.analyticsQueueService.enqueueWithdraw({
+                userId: withdrawal.userId,
+                currency: withdrawal.currency,
+                amount: withdrawal.requestedAmount,
+                date: new Date(),
+            });
+        } catch (error) {
+            this.logger.error(
+                `Failed to record withdrawal completion for ${withdrawal.id}`,
+                error instanceof Error ? error.stack : String(error),
+            );
+            // 통계 기록 실패는 로깅하고 계속 진행
+        }
     }
 }

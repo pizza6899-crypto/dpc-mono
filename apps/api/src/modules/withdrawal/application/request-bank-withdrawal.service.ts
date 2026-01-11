@@ -1,7 +1,10 @@
 import { Injectable, Inject } from '@nestjs/common';
-import { Prisma, ExchangeCurrencyCode, WithdrawalProcessingMode } from '@repo/database';
+import { Prisma, ExchangeCurrencyCode } from '@repo/database';
 import { Transactional } from '@nestjs-cls/transactional';
 import { SnowflakeService } from 'src/common/snowflake/snowflake.service';
+import { UpdateUserBalanceService } from 'src/modules/wallet/application/update-user-balance.service';
+import { WalletQueryService } from 'src/modules/wallet/application/wallet-query.service';
+import { BalanceType, UpdateOperation } from 'src/modules/wallet/domain';
 import { WithdrawalDetail, WithdrawalPolicy } from '../domain';
 import { WITHDRAWAL_REPOSITORY } from '../ports';
 import type { WithdrawalRepositoryPort } from '../ports';
@@ -34,6 +37,8 @@ export class RequestBankWithdrawalService {
         private readonly repository: WithdrawalRepositoryPort,
         private readonly policy: WithdrawalPolicy,
         private readonly snowflakeService: SnowflakeService,
+        private readonly updateUserBalanceService: UpdateUserBalanceService,
+        private readonly walletQueryService: WalletQueryService,
     ) { }
 
     @Transactional()
@@ -65,13 +70,16 @@ export class RequestBankWithdrawalService {
         // 3. 금액 검증
         this.policy.validateBankAmount(requestedAmount, config);
 
-        // 4. 롤링 조건 검증
-        // TODO: WageringRepository 연동 필요
+        // 4. 잔액 검증
+        const wallet = await this.walletQueryService.getWallet(userId, currency, false);
+        if (wallet) {
+            this.policy.validateBalance(requestedAmount, {
+                mainBalance: wallet.mainBalance,
+                bonusBalance: wallet.bonusBalance,
+            });
+        }
 
-        // 5. 잔액 검증
-        // TODO: BalanceService 연동 필요
-
-        // 6. 수수료 계산
+        // 5. 수수료 계산
         const { feeAmount, netAmount } = this.policy.calculateFee(requestedAmount, config);
 
         // 6. 처리 모드 (은행 출금은 항상 MANUAL - 엔티티 내부에서 결정)
@@ -99,7 +107,14 @@ export class RequestBankWithdrawalService {
         // 9. 저장
         const saved = await this.repository.create(withdrawal);
 
-        // 10. TODO: 잔액 차감 (BalanceService)
+        // 10. 잔액 차감 (mainBalance에서 차감)
+        await this.updateUserBalanceService.execute({
+            userId,
+            currency,
+            balanceType: BalanceType.MAIN,
+            operation: UpdateOperation.DEDUCT,
+            amount: requestedAmount,
+        });
 
         return {
             withdrawalId: saved.id,
