@@ -51,6 +51,12 @@ export class CasinoGameUserController {
         type: LogType.ACTIVITY,
         category: 'CASINO',
         action: 'LAUNCH_GAME',
+        extractMetadata: (_, args, result) => ({
+            gameId: args[1]?.id,
+            walletCurrency: args[1]?.walletCurrency,
+            gameCurrency: args[1]?.gameCurrency,
+            isMobile: args[1]?.isMobile,
+        }),
     })
     @ApiOperation({ summary: 'Launch Game (게임 실행)' })
     @ApiStandardResponse(GameLaunchResponseDto, {
@@ -84,6 +90,17 @@ export class CasinoGameUserController {
         limit: 100,
         ttl: 60, // 1분
         scope: ThrottleScope.IP,
+    })
+    @AuditLog({
+        type: LogType.ACTIVITY,
+        category: 'CASINO',
+        action: 'GAME_LIST_VIEW',
+        extractMetadata: (_, args, result) => ({
+            totalGames: result?.total,
+            page: args[0]?.page,
+            category: args[0]?.category,
+            provider: args[0]?.providerId,
+        }),
     })
     @ApiOperation({ summary: 'Get Game List (게임 목록 조회)' })
     @ApiPaginatedResponse(GameResponseDto, {
