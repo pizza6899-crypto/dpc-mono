@@ -16,6 +16,8 @@ import { AuditLog } from 'src/modules/audit-log/infrastructure/audit-log.decorat
 
 import { GetUserTierService } from '../../application/get-user-tier.service';
 import { UserTierResponseDto } from './dto/response/user-tier.response.dto';
+import { SqidsService } from 'src/common/sqids/sqids.service';
+import { SqidsPrefix } from 'src/common/sqids/sqids.constants';
 
 @ApiTags('User Tier')
 @Controller('user/my-tier')
@@ -23,6 +25,7 @@ import { UserTierResponseDto } from './dto/response/user-tier.response.dto';
 export class TierUserController {
     constructor(
         private readonly getUserTierService: GetUserTierService,
+        private readonly sqidsService: SqidsService,
     ) { }
 
     @Get()
@@ -50,6 +53,18 @@ export class TierUserController {
             const { NotFoundException } = await import('@nestjs/common');
             throw new NotFoundException('User tier not found');
         }
-        return new UserTierResponseDto(userTier);
+        return {
+            id: this.sqidsService.encode(userTier.id!, SqidsPrefix.USER_TIER),
+            tierCode: userTier.tier?.code ?? 'UNKNOWN',
+            totalRollingUsd: userTier.totalRollingUsd.toString(),
+            highestPromotedPriority: userTier.highestPromotedPriority,
+            isManualLock: userTier.isManualLock,
+            lastPromotedAt: userTier.lastPromotedAt,
+            tierRequirementUsd: userTier.tier?.requirementUsd.toString(),
+            tierTranslations: userTier.tier?.translations.map(t => ({
+                language: t.language as any,
+                name: t.name,
+            })),
+        };
     }
 }

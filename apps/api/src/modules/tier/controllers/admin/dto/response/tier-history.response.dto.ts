@@ -24,17 +24,6 @@ export class TierHistoryResponseDto {
 
     @ApiProperty()
     createdAt: Date;
-
-    constructor(history: any) {
-        this.id = history.id.toString();
-        this.userId = history.userId;
-        this.userEmail = history.userEmail;
-        this.oldTierCode = history.oldTierCode;
-        this.newTierCode = history.newTierCode;
-        this.changeType = history.changeType;
-        this.reason = history.reason;
-        this.createdAt = history.createdAt;
-    }
 }
 
 export class TierHistoryListResponseDto {

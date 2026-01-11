@@ -1,15 +1,4 @@
-import {
-    Controller,
-    Get,
-    Post,
-    Body,
-    Patch,
-    Put,
-    Param,
-    Query,
-    HttpCode,
-    HttpStatus,
-} from '@nestjs/common';
+import { Controller, Get, Post, Body, Patch, Put, Param, Query, HttpCode, HttpStatus } from '@nestjs/common';
 import { ApiTags, ApiOperation } from '@nestjs/swagger';
 import { RequireRoles } from 'src/common/auth/decorators/roles.decorator';
 import { UserRoleType } from '@repo/database';
@@ -89,7 +78,19 @@ export class TierAdminController {
         if (!userTier) {
             throw new UserTierNotFoundException(params.userId);
         }
-        return new UserTierResponseDto(userTier);
+        return {
+            id: userTier.id?.toString() ?? '',
+            tierCode: userTier.tier?.code ?? 'UNKNOWN',
+            totalRollingUsd: userTier.totalRollingUsd.toString(),
+            highestPromotedPriority: userTier.highestPromotedPriority,
+            isManualLock: userTier.isManualLock,
+            lastPromotedAt: userTier.lastPromotedAt,
+            tierRequirementUsd: userTier.tier?.requirementUsd.toString(),
+            tierTranslations: userTier.tier?.translations.map(t => ({
+                language: t.language as any,
+                name: t.name,
+            })),
+        };
     }
 
     @Post()
@@ -110,7 +111,20 @@ export class TierAdminController {
     })
     async create(@Body() dto: CreateTierDto): Promise<TierResponseDto> {
         const tier = await this.createTierService.execute(dto);
-        return new TierResponseDto(tier);
+        return {
+            id: tier.id?.toString() ?? '',
+            priority: tier.priority,
+            code: tier.code,
+            requirementUsd: tier.requirementUsd.toString(),
+            levelUpBonusUsd: tier.levelUpBonusUsd.toString(),
+            compRate: tier.compRate.toString(),
+            createdAt: tier.createdAt,
+            updatedAt: tier.updatedAt,
+            translations: tier.translations.map(t => ({
+                language: t.language as any,
+                name: t.name,
+            })),
+        };
     }
 
     @Get()
@@ -131,7 +145,20 @@ export class TierAdminController {
     })
     async findAll(): Promise<TierResponseDto[]> {
         const tiers = await this.findTiersService.execute();
-        return tiers.map(tier => new TierResponseDto(tier));
+        return tiers.map(tier => ({
+            id: tier.id?.toString() ?? '',
+            priority: tier.priority,
+            code: tier.code,
+            requirementUsd: tier.requirementUsd.toString(),
+            levelUpBonusUsd: tier.levelUpBonusUsd.toString(),
+            compRate: tier.compRate.toString(),
+            createdAt: tier.createdAt,
+            updatedAt: tier.updatedAt,
+            translations: tier.translations.map(t => ({
+                language: t.language as any,
+                name: t.name,
+            })),
+        }));
     }
 
     @Patch(':id')
@@ -158,7 +185,20 @@ export class TierAdminController {
             ...dto,
             id: BigInt(params.id),
         });
-        return new TierResponseDto(tier);
+        return {
+            id: tier.id?.toString() ?? '',
+            priority: tier.priority,
+            code: tier.code,
+            requirementUsd: tier.requirementUsd.toString(),
+            levelUpBonusUsd: tier.levelUpBonusUsd.toString(),
+            compRate: tier.compRate.toString(),
+            createdAt: tier.createdAt,
+            updatedAt: tier.updatedAt,
+            translations: tier.translations.map(t => ({
+                language: t.language as any,
+                name: t.name,
+            })),
+        };
     }
 
     @Put(':id/translations/:language')
@@ -271,7 +311,16 @@ export class TierAdminController {
         });
 
         return {
-            data: result.items.map(h => new TierHistoryResponseDto(h)),
+            data: result.items.map(h => ({
+                id: h.id?.toString() ?? '',
+                userId: h.userId.toString(),
+                userEmail: h.userEmail,
+                oldTierCode: h.oldTierCode,
+                newTierCode: h.newTierCode,
+                changeType: h.changeType,
+                reason: h.reason,
+                createdAt: h.createdAt,
+            })),
             total: result.total,
             page: query.page ?? 1,
             limit: query.limit ?? 20,
@@ -304,7 +353,16 @@ export class TierAdminController {
         });
 
         return {
-            data: result.items.map(h => new TierHistoryResponseDto(h)),
+            data: result.items.map(h => ({
+                id: h.id?.toString() ?? '',
+                userId: h.userId.toString(),
+                userEmail: h.userEmail,
+                oldTierCode: h.oldTierCode,
+                newTierCode: h.newTierCode,
+                changeType: h.changeType,
+                reason: h.reason,
+                createdAt: h.createdAt,
+            })),
             total: result.total,
             page: query.page ?? 1,
             limit: query.limit ?? 20,
@@ -338,7 +396,19 @@ export class TierAdminController {
         });
 
         return {
-            data: users.map(user => new UserTierResponseDto(user)),
+            data: users.map(userTier => ({
+                id: userTier.id?.toString() ?? '',
+                tierCode: userTier.tier?.code ?? 'UNKNOWN',
+                totalRollingUsd: userTier.totalRollingUsd.toString(),
+                highestPromotedPriority: userTier.highestPromotedPriority,
+                isManualLock: userTier.isManualLock,
+                lastPromotedAt: userTier.lastPromotedAt,
+                tierRequirementUsd: userTier.tier?.requirementUsd.toString(),
+                tierTranslations: userTier.tier?.translations.map(t => ({
+                    language: t.language as any,
+                    name: t.name,
+                })),
+            })),
             total,
             page: query.page ?? 1,
             limit: query.limit ?? 20,

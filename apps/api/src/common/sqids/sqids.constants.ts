@@ -12,6 +12,8 @@ export const SqidsPrefix = {
     WITHDRAWAL: 'w',
     TRANSACTION: 'tx',
     AFFILIATE_CODE: 'ac',
+    USER_TIER: 'ut',
+    TIER: 't',
     // 필요에 따라 추가
 } as const;
 
