@@ -15,6 +15,8 @@ import { WalletAdminController } from './controllers/admin/wallet-admin.controll
 import { UserModule } from '../user/user.module';
 import { WALLET_TRANSACTION_REPOSITORY } from './ports/out/wallet-transaction.repository.token';
 import { WalletTransactionRepository } from './infrastructure/wallet-transaction.repository';
+import { CreateWalletTransactionService } from './application/create-wallet-transaction.service';
+
 /**
  * Wallet 모듈
  *
@@ -56,6 +58,7 @@ import { WalletTransactionRepository } from './infrastructure/wallet-transaction
     },
     WalletQueryService,
     UpdateUserBalanceService,
+    CreateWalletTransactionService,
   ],
   controllers: [WalletController, WalletAdminController],
   exports: [
@@ -64,6 +67,7 @@ import { WalletTransactionRepository } from './infrastructure/wallet-transaction
     GetUserBalanceAdminService,
     UpdateUserBalanceAdminService,
     UpdateUserBalanceService,
+    CreateWalletTransactionService,
     GetWalletTransactionHistoryAdminService,
     WalletQueryService,
   ],

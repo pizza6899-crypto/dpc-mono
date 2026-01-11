@@ -3,9 +3,11 @@ import { Transactional } from '@nestjs-cls/transactional';
 import { WithdrawalProcessingMode } from '@repo/database';
 import { NowPaymentApiService } from 'src/modules/payment/infrastructure/now-payment-api.service';
 import { UpdateUserBalanceService } from 'src/modules/wallet/application/update-user-balance.service';
+import { CreateWalletTransactionService } from 'src/modules/wallet/application/create-wallet-transaction.service';
 import { BalanceType, UpdateOperation } from 'src/modules/wallet/domain';
 import { AnalyticsQueueService } from 'src/modules/analytics/application/analytics-queue.service';
 import { WithdrawalDetail, WithdrawalProcessingException } from '../domain';
+import { TransactionType, TransactionStatus } from '@repo/database';
 import { WITHDRAWAL_REPOSITORY } from '../ports';
 import type { WithdrawalRepositoryPort } from '../ports';
 
@@ -29,6 +31,7 @@ export class ProcessWithdrawalService {
         private readonly repository: WithdrawalRepositoryPort,
         private readonly nowPaymentApiService: NowPaymentApiService,
         private readonly updateUserBalanceService: UpdateUserBalanceService,
+        private readonly createWalletTransactionService: CreateWalletTransactionService,
         private readonly analyticsQueueService: AnalyticsQueueService,
     ) { }
 
@@ -128,12 +131,36 @@ export class ProcessWithdrawalService {
      */
     private async restoreBalance(withdrawal: WithdrawalDetail): Promise<void> {
         try {
-            await this.updateUserBalanceService.execute({
+            const balanceResult = await this.updateUserBalanceService.execute({
                 userId: withdrawal.userId,
                 currency: withdrawal.currency,
                 balanceType: BalanceType.MAIN,
                 operation: UpdateOperation.ADD,
                 amount: withdrawal.requestedAmount,
+            });
+
+            // 트랜잭션 기록 생성 (실패 환불)
+            await this.createWalletTransactionService.execute({
+                userId: withdrawal.userId,
+                type: TransactionType.WITHDRAW,
+                status: TransactionStatus.CANCELLED,
+                currency: withdrawal.currency,
+                amount: withdrawal.requestedAmount,
+                beforeBalance: balanceResult.beforeMainBalance.add(balanceResult.beforeBonusBalance),
+                afterBalance: balanceResult.afterMainBalance.add(balanceResult.afterBonusBalance),
+                balanceDetail: {
+                    mainBalanceChange: balanceResult.mainBalanceChange,
+                    mainBeforeAmount: balanceResult.beforeMainBalance,
+                    mainAfterAmount: balanceResult.afterMainBalance,
+                    bonusBalanceChange: balanceResult.bonusBalanceChange,
+                    bonusBeforeAmount: balanceResult.beforeBonusBalance,
+                    bonusAfterAmount: balanceResult.afterBonusBalance,
+                },
+                description: 'Withdrawal processing failed - balance restored',
+                metadata: {
+                    withdrawalId: withdrawal.id.toString(),
+                    reason: 'PROCESSING_FAILED'
+                },
             });
 
             this.logger.log(

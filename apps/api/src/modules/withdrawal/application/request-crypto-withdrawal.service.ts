@@ -3,8 +3,10 @@ import { Prisma, ExchangeCurrencyCode, WithdrawalProcessingMode } from '@repo/da
 import { Transactional } from '@nestjs-cls/transactional';
 import { SnowflakeService } from 'src/common/snowflake/snowflake.service';
 import { UpdateUserBalanceService } from 'src/modules/wallet/application/update-user-balance.service';
+import { CreateWalletTransactionService } from 'src/modules/wallet/application/create-wallet-transaction.service';
 import { WalletQueryService } from 'src/modules/wallet/application/wallet-query.service';
 import { BalanceType, UpdateOperation } from 'src/modules/wallet/domain';
+import { TransactionType, TransactionStatus } from '@repo/database';
 import { WAGERING_REQUIREMENT_REPOSITORY } from 'src/modules/wagering/ports';
 import type { WageringRequirementRepositoryPort } from 'src/modules/wagering/ports';
 import {
@@ -46,6 +48,7 @@ export class RequestCryptoWithdrawalService {
         private readonly policy: WithdrawalPolicy,
         private readonly snowflakeService: SnowflakeService,
         private readonly updateUserBalanceService: UpdateUserBalanceService,
+        private readonly createWalletTransactionService: CreateWalletTransactionService,
         private readonly walletQueryService: WalletQueryService,
     ) { }
 
@@ -123,7 +126,7 @@ export class RequestCryptoWithdrawalService {
         }
 
         // 10. 잔액 차감 (mainBalance에서 차감) - 저장 전에 먼저 차감
-        await this.updateUserBalanceService.execute({
+        const balanceResult = await this.updateUserBalanceService.execute({
             userId,
             currency,
             balanceType: BalanceType.MAIN,
@@ -133,6 +136,32 @@ export class RequestCryptoWithdrawalService {
 
         // 11. 출금 요청 저장
         const saved = await this.repository.create(withdrawal);
+
+        // 12. 트랜잭션 기록 생성
+        await this.createWalletTransactionService.execute({
+            userId,
+            type: TransactionType.WITHDRAW,
+            status: TransactionStatus.PENDING,
+            currency,
+            amount: requestedAmount,
+            beforeBalance: balanceResult.beforeMainBalance.add(balanceResult.beforeBonusBalance),
+            afterBalance: balanceResult.afterMainBalance.add(balanceResult.afterBonusBalance),
+            balanceDetail: {
+                mainBalanceChange: balanceResult.mainBalanceChange,
+                mainBeforeAmount: balanceResult.beforeMainBalance,
+                mainAfterAmount: balanceResult.afterMainBalance,
+                bonusBalanceChange: balanceResult.bonusBalanceChange,
+                bonusBeforeAmount: balanceResult.beforeBonusBalance,
+                bonusAfterAmount: balanceResult.afterBonusBalance,
+            },
+            description: 'Crypto withdrawal request',
+            metadata: {
+                withdrawalId: saved.id.toString(),
+                withdrawalType: 'CRYPTO',
+                network,
+                walletAddress
+            },
+        });
 
         // Note: AUTO 모드 자동 처리는 별도 스케줄러/웹훅에서 처리
 

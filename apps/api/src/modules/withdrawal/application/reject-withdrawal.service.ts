@@ -1,7 +1,9 @@
 import { Injectable, Inject, Logger } from '@nestjs/common';
 import { Transactional } from '@nestjs-cls/transactional';
 import { UpdateUserBalanceService } from 'src/modules/wallet/application/update-user-balance.service';
+import { CreateWalletTransactionService } from 'src/modules/wallet/application/create-wallet-transaction.service';
 import { BalanceType, UpdateOperation } from 'src/modules/wallet/domain';
+import { TransactionType, TransactionStatus } from '@repo/database';
 import { WITHDRAWAL_REPOSITORY } from '../ports';
 import type { WithdrawalRepositoryPort } from '../ports';
 
@@ -26,6 +28,7 @@ export class RejectWithdrawalService {
         @Inject(WITHDRAWAL_REPOSITORY)
         private readonly repository: WithdrawalRepositoryPort,
         private readonly updateUserBalanceService: UpdateUserBalanceService,
+        private readonly createWalletTransactionService: CreateWalletTransactionService,
     ) { }
 
     @Transactional()
@@ -43,12 +46,37 @@ export class RejectWithdrawalService {
 
         // 4. 잔액 복원 (mainBalance에 복원)
         try {
-            await this.updateUserBalanceService.execute({
+            const balanceResult = await this.updateUserBalanceService.execute({
                 userId: withdrawal.userId,
                 currency: withdrawal.currency,
                 balanceType: BalanceType.MAIN,
                 operation: UpdateOperation.ADD,
                 amount: withdrawal.requestedAmount,
+            });
+
+            // 5. 트랜잭션 기록 생성 (거부/환불)
+            await this.createWalletTransactionService.execute({
+                userId: withdrawal.userId,
+                type: TransactionType.WITHDRAW,
+                status: TransactionStatus.CANCELLED,
+                currency: withdrawal.currency,
+                amount: withdrawal.requestedAmount,
+                beforeBalance: balanceResult.beforeMainBalance.add(balanceResult.beforeBonusBalance),
+                afterBalance: balanceResult.afterMainBalance.add(balanceResult.afterBonusBalance),
+                balanceDetail: {
+                    mainBalanceChange: balanceResult.mainBalanceChange,
+                    mainBeforeAmount: balanceResult.beforeMainBalance,
+                    mainAfterAmount: balanceResult.afterMainBalance,
+                    bonusBalanceChange: balanceResult.bonusBalanceChange,
+                    bonusBeforeAmount: balanceResult.beforeBonusBalance,
+                    bonusAfterAmount: balanceResult.afterBonusBalance,
+                },
+                description: 'Withdrawal rejected - balance restored',
+                metadata: {
+                    withdrawalId: withdrawal.id.toString(),
+                    reason,
+                    adminId: adminId.toString()
+                },
             });
         } catch (error) {
             this.logger.error(
