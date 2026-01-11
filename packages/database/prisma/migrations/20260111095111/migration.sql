@@ -115,6 +115,15 @@ CREATE TYPE "WageringSourceType" AS ENUM ('DEPOSIT', 'PROMOTION_BONUS');
 -- CreateEnum
 CREATE TYPE "WageringStatus" AS ENUM ('ACTIVE', 'COMPLETED', 'CANCELLED', 'EXPIRED', 'VOIDED');
 
+-- CreateEnum
+CREATE TYPE "WithdrawalMethodType" AS ENUM ('CRYPTO_WALLET', 'BANK_TRANSFER');
+
+-- CreateEnum
+CREATE TYPE "WithdrawalStatus" AS ENUM ('PENDING', 'PENDING_REVIEW', 'PROCESSING', 'SENDING', 'COMPLETED', 'FAILED', 'CANCELLED', 'REJECTED');
+
+-- CreateEnum
+CREATE TYPE "WithdrawalProcessingMode" AS ENUM ('AUTO', 'MANUAL');
+
 -- CreateTable
 CREATE TABLE "affiliate_codes" (
     "id" BIGSERIAL NOT NULL,
@@ -190,7 +199,7 @@ CREATE TABLE "user_hourly_stats" (
 -- CreateTable
 CREATE TABLE "auth_audit_logs" (
     "id" BIGINT NOT NULL,
-    "created_at" TIMESTAMP(3) NOT NULL DEFAULT CURRENT_TIMESTAMP,
+    "created_at" TIMESTAMP(3) NOT NULL,
     "user_id" BIGINT,
     "session_id" TEXT,
     "trace_id" TEXT,
@@ -213,7 +222,7 @@ CREATE TABLE "auth_audit_logs" (
 -- CreateTable
 CREATE TABLE "activity_logs" (
     "id" BIGINT NOT NULL,
-    "created_at" TIMESTAMP(3) NOT NULL DEFAULT CURRENT_TIMESTAMP,
+    "created_at" TIMESTAMP(3) NOT NULL,
     "user_id" BIGINT,
     "session_id" TEXT,
     "trace_id" TEXT,
@@ -232,7 +241,7 @@ CREATE TABLE "activity_logs" (
 -- CreateTable
 CREATE TABLE "system_error_logs" (
     "id" BIGINT NOT NULL,
-    "created_at" TIMESTAMP(3) NOT NULL DEFAULT CURRENT_TIMESTAMP,
+    "created_at" TIMESTAMP(3) NOT NULL,
     "user_id" BIGINT,
     "session_id" TEXT,
     "trace_id" TEXT,
@@ -261,7 +270,7 @@ CREATE TABLE "system_error_logs" (
 -- CreateTable
 CREATE TABLE "integration_logs" (
     "id" BIGINT NOT NULL,
-    "created_at" TIMESTAMP(3) NOT NULL DEFAULT CURRENT_TIMESTAMP,
+    "created_at" TIMESTAMP(3) NOT NULL,
     "user_id" BIGINT,
     "session_id" TEXT,
     "trace_id" TEXT,
@@ -341,6 +350,39 @@ CREATE TABLE "casino_game_sessions" (
 );
 
 -- CreateTable
+CREATE TABLE "game_bets" (
+    "id" BIGINT NOT NULL,
+    "user_id" BIGINT NOT NULL,
+    "game_round_id" BIGINT NOT NULL,
+    "aggregator_type" "GameAggregatorType" NOT NULL,
+    "aggregator_bet_id" TEXT NOT NULL,
+    "bet_type" "BetType" NOT NULL,
+    "bet_amount" DECIMAL(32,18) NOT NULL,
+    "betted_at" TIMESTAMP(3) NOT NULL,
+    "bet_amount_in_game_currency" DECIMAL(32,18) NOT NULL,
+    "is_cancelled" BOOLEAN NOT NULL DEFAULT false,
+    "cancelled_at" TIMESTAMP(3),
+
+    CONSTRAINT "game_bets_pkey" PRIMARY KEY ("id","betted_at")
+);
+
+-- CreateTable
+CREATE TABLE "game_wins" (
+    "id" BIGINT NOT NULL,
+    "user_id" BIGINT NOT NULL,
+    "game_round_id" BIGINT NOT NULL,
+    "aggregator_type" "GameAggregatorType" NOT NULL,
+    "aggregator_win_id" TEXT NOT NULL,
+    "win_type" "WinType" NOT NULL,
+    "win_amount" DECIMAL(32,18) NOT NULL,
+    "won_at" TIMESTAMP(3) NOT NULL,
+    "description" TEXT,
+    "win_amount_in_game_currency" DECIMAL(32,18) NOT NULL,
+
+    CONSTRAINT "game_wins_pkey" PRIMARY KEY ("id","won_at")
+);
+
+-- CreateTable
 CREATE TABLE "User" (
     "id" BIGSERIAL NOT NULL,
     "uid" TEXT NOT NULL,
@@ -396,7 +438,7 @@ CREATE TABLE "UserBalanceStats" (
 
 -- CreateTable
 CREATE TABLE "Transaction" (
-    "id" BIGINT NOT NULL,
+    "id" BIGSERIAL NOT NULL,
     "userId" BIGINT NOT NULL,
     "type" "TransactionType" NOT NULL,
     "status" "TransactionStatus" NOT NULL,
@@ -413,7 +455,7 @@ CREATE TABLE "Transaction" (
 
 -- CreateTable
 CREATE TABLE "GameRound" (
-    "id" BIGINT NOT NULL,
+    "id" BIGSERIAL NOT NULL,
     "userId" BIGINT NOT NULL,
     "aggregatorType" "GameAggregatorType" NOT NULL,
     "provider" "GameProvider" NOT NULL,
@@ -445,43 +487,8 @@ CREATE TABLE "GameRound" (
 );
 
 -- CreateTable
-CREATE TABLE "GameBet" (
-    "id" BIGINT NOT NULL,
-    "userId" BIGINT NOT NULL,
-    "gameRoundId" BIGINT NOT NULL,
-    "aggregatorType" "GameAggregatorType" NOT NULL,
-    "aggregatorBetId" TEXT NOT NULL,
-    "betType" "BetType" NOT NULL,
-    "betAmount" DECIMAL(32,18) NOT NULL,
-    "bettedAt" TIMESTAMP(3) NOT NULL,
-    "betAmountInGameCurrency" DECIMAL(32,18) NOT NULL,
-    "createdAt" TIMESTAMP(3) NOT NULL DEFAULT CURRENT_TIMESTAMP,
-    "isCancelled" BOOLEAN NOT NULL DEFAULT false,
-    "cancelledAt" TIMESTAMP(3),
-
-    CONSTRAINT "GameBet_pkey" PRIMARY KEY ("id")
-);
-
--- CreateTable
-CREATE TABLE "GameWin" (
-    "id" BIGINT NOT NULL,
-    "userId" BIGINT NOT NULL,
-    "gameRoundId" BIGINT NOT NULL,
-    "aggregatorType" "GameAggregatorType" NOT NULL,
-    "aggregatorWinId" TEXT NOT NULL,
-    "winType" "WinType" NOT NULL,
-    "winAmount" DECIMAL(32,18) NOT NULL,
-    "wonAt" TIMESTAMP(3) NOT NULL,
-    "description" TEXT,
-    "winAmountInGameCurrency" DECIMAL(32,18) NOT NULL,
-    "createdAt" TIMESTAMP(3) NOT NULL DEFAULT CURRENT_TIMESTAMP,
-
-    CONSTRAINT "GameWin_pkey" PRIMARY KEY ("id")
-);
-
--- CreateTable
 CREATE TABLE "TransactionBalanceDetail" (
-    "id" BIGINT NOT NULL,
+    "id" BIGSERIAL NOT NULL,
     "transactionId" BIGINT NOT NULL,
     "mainBalanceChange" DECIMAL(32,18),
     "mainBeforeAmount" DECIMAL(32,18),
@@ -496,7 +503,7 @@ CREATE TABLE "TransactionBalanceDetail" (
 
 -- CreateTable
 CREATE TABLE "BonusDetail" (
-    "id" BIGINT NOT NULL,
+    "id" BIGSERIAL NOT NULL,
     "createdAt" TIMESTAMP(3) NOT NULL DEFAULT CURRENT_TIMESTAMP,
     "transactionTime" TIMESTAMP(3) NOT NULL,
     "aggregatorType" "GameAggregatorType" NOT NULL,
@@ -515,30 +522,6 @@ CREATE TABLE "BonusDetail" (
     "transactionId" BIGINT NOT NULL,
 
     CONSTRAINT "BonusDetail_pkey" PRIMARY KEY ("id")
-);
-
--- CreateTable
-CREATE TABLE "WithdrawDetail" (
-    "id" BIGINT NOT NULL,
-    "createdAt" TIMESTAMP(3) NOT NULL DEFAULT CURRENT_TIMESTAMP,
-    "updatedAt" TIMESTAMP(3) NOT NULL,
-    "status" "WithdrawDetailStatus" NOT NULL,
-    "transactionId" BIGINT NOT NULL,
-    "withdrawCurrency" "ExchangeCurrencyCode" NOT NULL,
-    "withdrawNetwork" TEXT NOT NULL,
-    "withdrawAmount" DECIMAL(32,18) NOT NULL,
-    "walletAddress" TEXT NOT NULL,
-    "walletAddressExtraId" TEXT,
-    "provider" "PaymentProvider" NOT NULL,
-    "providerWithdrawalId" TEXT,
-    "transactionHash" TEXT,
-    "errorMessage" TEXT,
-    "feeAmount" DECIMAL(32,18),
-    "feeCurrency" TEXT,
-    "feePaidBy" "FeePaidByType",
-    "providerMetadata" JSONB DEFAULT '{}',
-
-    CONSTRAINT "WithdrawDetail_pkey" PRIMARY KEY ("id")
 );
 
 -- CreateTable
@@ -737,15 +720,15 @@ CREATE TABLE "deposit_details" (
     "fee_paid_by" "FeePaidByType",
     "failure_reason" TEXT,
     "provider_metadata" JSONB DEFAULT '{}',
-    "bank_config_id" BIGINT,
-    "crypto_config_id" BIGINT,
+    "bank_deposit_config_id" BIGINT,
+    "crypto_deposit_config_id" BIGINT,
     "promotion_id" BIGINT,
 
     CONSTRAINT "deposit_details_pkey" PRIMARY KEY ("id")
 );
 
 -- CreateTable
-CREATE TABLE "crypto_configs" (
+CREATE TABLE "crypto_deposit_configs" (
     "id" BIGSERIAL NOT NULL,
     "uid" TEXT NOT NULL,
     "symbol" TEXT NOT NULL,
@@ -759,11 +742,11 @@ CREATE TABLE "crypto_configs" (
     "updated_at" TIMESTAMP(3) NOT NULL,
     "deleted_at" TIMESTAMP(3),
 
-    CONSTRAINT "crypto_configs_pkey" PRIMARY KEY ("id")
+    CONSTRAINT "crypto_deposit_configs_pkey" PRIMARY KEY ("id")
 );
 
 -- CreateTable
-CREATE TABLE "bank_configs" (
+CREATE TABLE "bank_deposit_configs" (
     "id" BIGSERIAL NOT NULL,
     "uid" TEXT NOT NULL,
     "currency" "ExchangeCurrencyCode" NOT NULL,
@@ -782,7 +765,7 @@ CREATE TABLE "bank_configs" (
     "updated_at" TIMESTAMP(3) NOT NULL,
     "deleted_at" TIMESTAMP(3),
 
-    CONSTRAINT "bank_configs_pkey" PRIMARY KEY ("id")
+    CONSTRAINT "bank_deposit_configs_pkey" PRIMARY KEY ("id")
 );
 
 -- CreateTable
@@ -995,6 +978,84 @@ CREATE TABLE "wagering_contribution_logs" (
     CONSTRAINT "wagering_contribution_logs_pkey" PRIMARY KEY ("id")
 );
 
+-- CreateTable
+CREATE TABLE "withdrawal_details" (
+    "id" BIGINT NOT NULL,
+    "user_id" BIGINT NOT NULL,
+    "transaction_id" BIGINT,
+    "method_type" "WithdrawalMethodType" NOT NULL,
+    "status" "WithdrawalStatus" NOT NULL,
+    "processing_mode" "WithdrawalProcessingMode" NOT NULL,
+    "currency" "ExchangeCurrencyCode" NOT NULL,
+    "requested_amount" DECIMAL(32,18) NOT NULL,
+    "net_amount" DECIMAL(32,18),
+    "fee_amount" DECIMAL(32,18),
+    "fee_currency" TEXT,
+    "fee_paid_by" "FeePaidByType",
+    "network" TEXT,
+    "wallet_address" TEXT,
+    "wallet_address_extra_id" TEXT,
+    "transaction_hash" TEXT,
+    "bank_name" TEXT,
+    "account_number" TEXT,
+    "account_holder" TEXT,
+    "provider" "PaymentProvider" NOT NULL,
+    "provider_withdrawal_id" TEXT,
+    "provider_metadata" JSONB DEFAULT '{}',
+    "processed_by" BIGINT,
+    "admin_notes" TEXT[] DEFAULT ARRAY[]::TEXT[],
+    "failure_reason" TEXT,
+    "ip_address" TEXT,
+    "device_fingerprint" TEXT,
+    "created_at" TIMESTAMP(3) NOT NULL DEFAULT CURRENT_TIMESTAMP,
+    "updated_at" TIMESTAMP(3) NOT NULL,
+    "confirmed_at" TIMESTAMP(3),
+    "failed_at" TIMESTAMP(3),
+    "cancelled_at" TIMESTAMP(3),
+    "applied_config" JSONB DEFAULT '{}',
+    "crypto_withdraw_config_id" BIGINT,
+    "bank_withdraw_config_id" BIGINT,
+
+    CONSTRAINT "withdrawal_details_pkey" PRIMARY KEY ("id")
+);
+
+-- CreateTable
+CREATE TABLE "crypto_withdraw_configs" (
+    "id" BIGSERIAL NOT NULL,
+    "symbol" TEXT NOT NULL,
+    "network" TEXT NOT NULL,
+    "is_active" BOOLEAN NOT NULL DEFAULT true,
+    "min_withdraw_amount" DECIMAL(32,18) NOT NULL,
+    "max_withdraw_amount" DECIMAL(32,18),
+    "auto_process_limit" DECIMAL(32,18),
+    "withdraw_fee_fixed" DECIMAL(32,18) NOT NULL DEFAULT 0,
+    "withdraw_fee_rate" DECIMAL(8,4) NOT NULL DEFAULT 0,
+    "created_at" TIMESTAMP(3) NOT NULL DEFAULT CURRENT_TIMESTAMP,
+    "updated_at" TIMESTAMP(3) NOT NULL,
+    "deleted_at" TIMESTAMP(3),
+
+    CONSTRAINT "crypto_withdraw_configs_pkey" PRIMARY KEY ("id")
+);
+
+-- CreateTable
+CREATE TABLE "bank_withdraw_configs" (
+    "id" BIGSERIAL NOT NULL,
+    "currency" "ExchangeCurrencyCode" NOT NULL,
+    "bank_name" TEXT NOT NULL,
+    "is_active" BOOLEAN NOT NULL DEFAULT true,
+    "min_withdraw_amount" DECIMAL(32,18) NOT NULL,
+    "max_withdraw_amount" DECIMAL(32,18),
+    "withdraw_fee_fixed" DECIMAL(32,18) NOT NULL DEFAULT 0,
+    "withdraw_fee_rate" DECIMAL(8,4) NOT NULL DEFAULT 0,
+    "description" TEXT,
+    "notes" TEXT,
+    "created_at" TIMESTAMP(3) NOT NULL DEFAULT CURRENT_TIMESTAMP,
+    "updated_at" TIMESTAMP(3) NOT NULL,
+    "deleted_at" TIMESTAMP(3),
+
+    CONSTRAINT "bank_withdraw_configs_pkey" PRIMARY KEY ("id")
+);
+
 -- CreateIndex
 CREATE UNIQUE INDEX "affiliate_codes_uid_key" ON "affiliate_codes"("uid");
 
@@ -1128,6 +1189,18 @@ CREATE UNIQUE INDEX "casino_game_sessions_token_key" ON "casino_game_sessions"("
 CREATE INDEX "casino_game_sessions_user_id_idx" ON "casino_game_sessions"("user_id");
 
 -- CreateIndex
+CREATE INDEX "game_bets_game_round_id_betted_at_idx" ON "game_bets"("game_round_id", "betted_at");
+
+-- CreateIndex
+CREATE UNIQUE INDEX "game_bets_aggregator_bet_id_aggregator_type_betted_at_key" ON "game_bets"("aggregator_bet_id", "aggregator_type", "betted_at");
+
+-- CreateIndex
+CREATE INDEX "game_wins_game_round_id_idx" ON "game_wins"("game_round_id");
+
+-- CreateIndex
+CREATE UNIQUE INDEX "game_wins_aggregator_win_id_aggregator_type_won_at_key" ON "game_wins"("aggregator_win_id", "aggregator_type", "won_at");
+
+-- CreateIndex
 CREATE UNIQUE INDEX "User_uid_key" ON "User"("uid");
 
 -- CreateIndex
@@ -1164,40 +1237,10 @@ CREATE UNIQUE INDEX "GameRound_transactionId_key" ON "GameRound"("transactionId"
 CREATE UNIQUE INDEX "GameRound_aggregatorTxId_aggregatorType_key" ON "GameRound"("aggregatorTxId", "aggregatorType");
 
 -- CreateIndex
-CREATE INDEX "GameBet_gameRoundId_idx" ON "GameBet"("gameRoundId");
-
--- CreateIndex
-CREATE UNIQUE INDEX "GameBet_aggregatorBetId_aggregatorType_key" ON "GameBet"("aggregatorBetId", "aggregatorType");
-
--- CreateIndex
-CREATE INDEX "GameWin_gameRoundId_idx" ON "GameWin"("gameRoundId");
-
--- CreateIndex
-CREATE UNIQUE INDEX "GameWin_aggregatorWinId_aggregatorType_key" ON "GameWin"("aggregatorWinId", "aggregatorType");
-
--- CreateIndex
 CREATE INDEX "TransactionBalanceDetail_transactionId_idx" ON "TransactionBalanceDetail"("transactionId");
 
 -- CreateIndex
 CREATE UNIQUE INDEX "BonusDetail_transactionId_key" ON "BonusDetail"("transactionId");
-
--- CreateIndex
-CREATE UNIQUE INDEX "WithdrawDetail_transactionId_key" ON "WithdrawDetail"("transactionId");
-
--- CreateIndex
-CREATE UNIQUE INDEX "WithdrawDetail_providerWithdrawalId_key" ON "WithdrawDetail"("providerWithdrawalId");
-
--- CreateIndex
-CREATE INDEX "WithdrawDetail_provider_providerWithdrawalId_idx" ON "WithdrawDetail"("provider", "providerWithdrawalId");
-
--- CreateIndex
-CREATE INDEX "WithdrawDetail_provider_status_idx" ON "WithdrawDetail"("provider", "status");
-
--- CreateIndex
-CREATE INDEX "WithdrawDetail_transactionHash_idx" ON "WithdrawDetail"("transactionHash");
-
--- CreateIndex
-CREATE INDEX "WithdrawDetail_status_createdAt_idx" ON "WithdrawDetail"("status", "createdAt");
 
 -- CreateIndex
 CREATE INDEX "ExchangeRate_baseCurrency_quoteCurrency_idx" ON "ExchangeRate"("baseCurrency", "quoteCurrency");
@@ -1353,40 +1396,40 @@ CREATE INDEX "deposit_details_ip_address_idx" ON "deposit_details"("ip_address")
 CREATE INDEX "deposit_details_device_fingerprint_idx" ON "deposit_details"("device_fingerprint");
 
 -- CreateIndex
-CREATE INDEX "deposit_details_bank_config_id_idx" ON "deposit_details"("bank_config_id");
+CREATE INDEX "deposit_details_bank_deposit_config_id_idx" ON "deposit_details"("bank_deposit_config_id");
 
 -- CreateIndex
-CREATE INDEX "deposit_details_crypto_config_id_idx" ON "deposit_details"("crypto_config_id");
+CREATE INDEX "deposit_details_crypto_deposit_config_id_idx" ON "deposit_details"("crypto_deposit_config_id");
 
 -- CreateIndex
-CREATE UNIQUE INDEX "crypto_configs_uid_key" ON "crypto_configs"("uid");
+CREATE UNIQUE INDEX "crypto_deposit_configs_uid_key" ON "crypto_deposit_configs"("uid");
 
 -- CreateIndex
-CREATE INDEX "crypto_configs_symbol_network_isActive_idx" ON "crypto_configs"("symbol", "network", "isActive");
+CREATE INDEX "crypto_deposit_configs_symbol_network_isActive_idx" ON "crypto_deposit_configs"("symbol", "network", "isActive");
 
 -- CreateIndex
-CREATE INDEX "crypto_configs_isActive_idx" ON "crypto_configs"("isActive");
+CREATE INDEX "crypto_deposit_configs_isActive_idx" ON "crypto_deposit_configs"("isActive");
 
 -- CreateIndex
-CREATE UNIQUE INDEX "crypto_configs_symbol_network_key" ON "crypto_configs"("symbol", "network");
+CREATE UNIQUE INDEX "crypto_deposit_configs_symbol_network_key" ON "crypto_deposit_configs"("symbol", "network");
 
 -- CreateIndex
-CREATE UNIQUE INDEX "bank_configs_uid_key" ON "bank_configs"("uid");
+CREATE UNIQUE INDEX "bank_deposit_configs_uid_key" ON "bank_deposit_configs"("uid");
 
 -- CreateIndex
-CREATE INDEX "bank_configs_currency_is_active_priority_idx" ON "bank_configs"("currency", "is_active", "priority");
+CREATE INDEX "bank_deposit_configs_currency_is_active_priority_idx" ON "bank_deposit_configs"("currency", "is_active", "priority");
 
 -- CreateIndex
-CREATE INDEX "bank_configs_is_active_idx" ON "bank_configs"("is_active");
+CREATE INDEX "bank_deposit_configs_is_active_idx" ON "bank_deposit_configs"("is_active");
 
 -- CreateIndex
-CREATE INDEX "bank_configs_currency_idx" ON "bank_configs"("currency");
+CREATE INDEX "bank_deposit_configs_currency_idx" ON "bank_deposit_configs"("currency");
 
 -- CreateIndex
-CREATE INDEX "bank_configs_priority_idx" ON "bank_configs"("priority");
+CREATE INDEX "bank_deposit_configs_priority_idx" ON "bank_deposit_configs"("priority");
 
 -- CreateIndex
-CREATE INDEX "bank_configs_deleted_at_idx" ON "bank_configs"("deleted_at");
+CREATE INDEX "bank_deposit_configs_deleted_at_idx" ON "bank_deposit_configs"("deleted_at");
 
 -- CreateIndex
 CREATE UNIQUE INDEX "promotions_uid_key" ON "promotions"("uid");
@@ -1532,6 +1575,48 @@ CREATE INDEX "wagering_contribution_logs_wagering_requirement_id_idx" ON "wageri
 -- CreateIndex
 CREATE INDEX "wagering_contribution_logs_game_round_id_idx" ON "wagering_contribution_logs"("game_round_id");
 
+-- CreateIndex
+CREATE UNIQUE INDEX "withdrawal_details_transaction_id_key" ON "withdrawal_details"("transaction_id");
+
+-- CreateIndex
+CREATE UNIQUE INDEX "withdrawal_details_provider_withdrawal_id_key" ON "withdrawal_details"("provider_withdrawal_id");
+
+-- CreateIndex
+CREATE INDEX "withdrawal_details_user_id_status_idx" ON "withdrawal_details"("user_id", "status");
+
+-- CreateIndex
+CREATE INDEX "withdrawal_details_status_created_at_idx" ON "withdrawal_details"("status", "created_at");
+
+-- CreateIndex
+CREATE INDEX "withdrawal_details_provider_status_idx" ON "withdrawal_details"("provider", "status");
+
+-- CreateIndex
+CREATE INDEX "withdrawal_details_transaction_hash_idx" ON "withdrawal_details"("transaction_hash");
+
+-- CreateIndex
+CREATE INDEX "withdrawal_details_method_type_status_idx" ON "withdrawal_details"("method_type", "status");
+
+-- CreateIndex
+CREATE INDEX "withdrawal_details_processing_mode_status_idx" ON "withdrawal_details"("processing_mode", "status");
+
+-- CreateIndex
+CREATE INDEX "withdrawal_details_processed_by_idx" ON "withdrawal_details"("processed_by");
+
+-- CreateIndex
+CREATE INDEX "crypto_withdraw_configs_symbol_network_is_active_idx" ON "crypto_withdraw_configs"("symbol", "network", "is_active");
+
+-- CreateIndex
+CREATE INDEX "crypto_withdraw_configs_is_active_idx" ON "crypto_withdraw_configs"("is_active");
+
+-- CreateIndex
+CREATE UNIQUE INDEX "crypto_withdraw_configs_symbol_network_key" ON "crypto_withdraw_configs"("symbol", "network");
+
+-- CreateIndex
+CREATE INDEX "bank_withdraw_configs_currency_is_active_idx" ON "bank_withdraw_configs"("currency", "is_active");
+
+-- CreateIndex
+CREATE INDEX "bank_withdraw_configs_is_active_idx" ON "bank_withdraw_configs"("is_active");
+
 -- AddForeignKey
 ALTER TABLE "affiliate_codes" ADD CONSTRAINT "affiliate_codes_user_id_fkey" FOREIGN KEY ("user_id") REFERENCES "User"("id") ON DELETE CASCADE ON UPDATE CASCADE;
 
@@ -1557,6 +1642,12 @@ ALTER TABLE "casino_game_sessions" ADD CONSTRAINT "casino_game_sessions_casino_g
 ALTER TABLE "casino_game_sessions" ADD CONSTRAINT "casino_game_sessions_user_id_fkey" FOREIGN KEY ("user_id") REFERENCES "User"("id") ON DELETE RESTRICT ON UPDATE CASCADE;
 
 -- AddForeignKey
+ALTER TABLE "game_bets" ADD CONSTRAINT "game_bets_game_round_id_fkey" FOREIGN KEY ("game_round_id") REFERENCES "GameRound"("id") ON DELETE CASCADE ON UPDATE CASCADE;
+
+-- AddForeignKey
+ALTER TABLE "game_wins" ADD CONSTRAINT "game_wins_game_round_id_fkey" FOREIGN KEY ("game_round_id") REFERENCES "GameRound"("id") ON DELETE CASCADE ON UPDATE CASCADE;
+
+-- AddForeignKey
 ALTER TABLE "user_wallets" ADD CONSTRAINT "user_wallets_userId_fkey" FOREIGN KEY ("userId") REFERENCES "User"("id") ON DELETE RESTRICT ON UPDATE CASCADE;
 
 -- AddForeignKey
@@ -1578,12 +1669,6 @@ ALTER TABLE "GameRound" ADD CONSTRAINT "GameRound_gameSessionId_fkey" FOREIGN KE
 ALTER TABLE "GameRound" ADD CONSTRAINT "GameRound_transactionId_fkey" FOREIGN KEY ("transactionId") REFERENCES "Transaction"("id") ON DELETE RESTRICT ON UPDATE CASCADE;
 
 -- AddForeignKey
-ALTER TABLE "GameBet" ADD CONSTRAINT "GameBet_gameRoundId_fkey" FOREIGN KEY ("gameRoundId") REFERENCES "GameRound"("id") ON DELETE CASCADE ON UPDATE CASCADE;
-
--- AddForeignKey
-ALTER TABLE "GameWin" ADD CONSTRAINT "GameWin_gameRoundId_fkey" FOREIGN KEY ("gameRoundId") REFERENCES "GameRound"("id") ON DELETE CASCADE ON UPDATE CASCADE;
-
--- AddForeignKey
 ALTER TABLE "TransactionBalanceDetail" ADD CONSTRAINT "TransactionBalanceDetail_transactionId_fkey" FOREIGN KEY ("transactionId") REFERENCES "Transaction"("id") ON DELETE RESTRICT ON UPDATE CASCADE;
 
 -- AddForeignKey
@@ -1591,9 +1676,6 @@ ALTER TABLE "BonusDetail" ADD CONSTRAINT "BonusDetail_gameId_fkey" FOREIGN KEY (
 
 -- AddForeignKey
 ALTER TABLE "BonusDetail" ADD CONSTRAINT "BonusDetail_transactionId_fkey" FOREIGN KEY ("transactionId") REFERENCES "Transaction"("id") ON DELETE RESTRICT ON UPDATE CASCADE;
-
--- AddForeignKey
-ALTER TABLE "WithdrawDetail" ADD CONSTRAINT "WithdrawDetail_transactionId_fkey" FOREIGN KEY ("transactionId") REFERENCES "Transaction"("id") ON DELETE RESTRICT ON UPDATE CASCADE;
 
 -- AddForeignKey
 ALTER TABLE "UserToken" ADD CONSTRAINT "UserToken_userId_fkey" FOREIGN KEY ("userId") REFERENCES "User"("id") ON DELETE CASCADE ON UPDATE CASCADE;
@@ -1629,10 +1711,10 @@ ALTER TABLE "comp_wallet_transactions" ADD CONSTRAINT "comp_wallet_transactions_
 ALTER TABLE "deposit_details" ADD CONSTRAINT "deposit_details_user_id_fkey" FOREIGN KEY ("user_id") REFERENCES "User"("id") ON DELETE RESTRICT ON UPDATE CASCADE;
 
 -- AddForeignKey
-ALTER TABLE "deposit_details" ADD CONSTRAINT "deposit_details_bank_config_id_fkey" FOREIGN KEY ("bank_config_id") REFERENCES "bank_configs"("id") ON DELETE SET NULL ON UPDATE CASCADE;
+ALTER TABLE "deposit_details" ADD CONSTRAINT "deposit_details_bank_deposit_config_id_fkey" FOREIGN KEY ("bank_deposit_config_id") REFERENCES "bank_deposit_configs"("id") ON DELETE SET NULL ON UPDATE CASCADE;
 
 -- AddForeignKey
-ALTER TABLE "deposit_details" ADD CONSTRAINT "deposit_details_crypto_config_id_fkey" FOREIGN KEY ("crypto_config_id") REFERENCES "crypto_configs"("id") ON DELETE SET NULL ON UPDATE CASCADE;
+ALTER TABLE "deposit_details" ADD CONSTRAINT "deposit_details_crypto_deposit_config_id_fkey" FOREIGN KEY ("crypto_deposit_config_id") REFERENCES "crypto_deposit_configs"("id") ON DELETE SET NULL ON UPDATE CASCADE;
 
 -- AddForeignKey
 ALTER TABLE "deposit_details" ADD CONSTRAINT "deposit_details_promotion_id_fkey" FOREIGN KEY ("promotion_id") REFERENCES "promotions"("id") ON DELETE SET NULL ON UPDATE CASCADE;
@@ -1699,3 +1781,15 @@ ALTER TABLE "wagering_requirements" ADD CONSTRAINT "wagering_requirements_user_i
 
 -- AddForeignKey
 ALTER TABLE "wagering_contribution_logs" ADD CONSTRAINT "wagering_contribution_logs_wagering_requirement_id_fkey" FOREIGN KEY ("wagering_requirement_id") REFERENCES "wagering_requirements"("id") ON DELETE RESTRICT ON UPDATE CASCADE;
+
+-- AddForeignKey
+ALTER TABLE "withdrawal_details" ADD CONSTRAINT "withdrawal_details_user_id_fkey" FOREIGN KEY ("user_id") REFERENCES "User"("id") ON DELETE RESTRICT ON UPDATE CASCADE;
+
+-- AddForeignKey
+ALTER TABLE "withdrawal_details" ADD CONSTRAINT "withdrawal_details_transaction_id_fkey" FOREIGN KEY ("transaction_id") REFERENCES "Transaction"("id") ON DELETE SET NULL ON UPDATE CASCADE;
+
+-- AddForeignKey
+ALTER TABLE "withdrawal_details" ADD CONSTRAINT "withdrawal_details_crypto_withdraw_config_id_fkey" FOREIGN KEY ("crypto_withdraw_config_id") REFERENCES "crypto_withdraw_configs"("id") ON DELETE SET NULL ON UPDATE CASCADE;
+
+-- AddForeignKey
+ALTER TABLE "withdrawal_details" ADD CONSTRAINT "withdrawal_details_bank_withdraw_config_id_fkey" FOREIGN KEY ("bank_withdraw_config_id") REFERENCES "bank_withdraw_configs"("id") ON DELETE SET NULL ON UPDATE CASCADE;

@@ -197,7 +197,6 @@ export interface PromotionRepositoryPort {
       userPromotion: UserPromotion;
       user: {
         id: bigint;
-        uid: string | null;
         email: string | null;
       } | null;
     }>;

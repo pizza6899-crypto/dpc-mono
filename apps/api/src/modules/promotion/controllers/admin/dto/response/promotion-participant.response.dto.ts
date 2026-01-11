@@ -16,13 +16,6 @@ export class PromotionParticipantResponseDto {
   userId: string;
 
   @ApiProperty({
-    description: '사용자 UID',
-    example: 'user-1234567890',
-    nullable: true,
-  })
-  userUid: string | null;
-
-  @ApiProperty({
     description: '사용자 이메일',
     example: 'user@example.com',
     nullable: true,

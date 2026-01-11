@@ -19,14 +19,13 @@ import { UserLocation } from './value-objects/user-location.vo';
 export class User {
   private constructor(
     public readonly id: bigint,
-    public readonly uid: string,
     private authInfo: UserAuth,
     private location: UserLocation,
     public readonly status: PrismaUserStatus,
     public readonly role: UserRoleType,
     public readonly createdAt: Date,
     public readonly updatedAt: Date,
-  ) {}
+  ) { }
 
   /**
    * DB에서 조회한 데이터로부터 엔티티 생성
@@ -34,7 +33,6 @@ export class User {
    */
   static fromPersistence(data: {
     id: bigint;
-    uid: string;
     email: string;
     passwordHash: string | null;
     socialId: string | null;
@@ -48,7 +46,6 @@ export class User {
   }): User {
     return new User(
       data.id,
-      data.uid,
       UserAuth.fromPersistence({
         email: data.email,
         passwordHash: data.passwordHash,
@@ -71,7 +68,6 @@ export class User {
    */
   toPersistence(): {
     id: bigint;
-    uid: string;
     email: string;
     passwordHash: string | null;
     socialId: string | null;
@@ -88,7 +84,6 @@ export class User {
 
     return {
       id: this.id,
-      uid: this.uid,
       email: auth.email,
       passwordHash: auth.passwordHash,
       socialId: auth.socialId,
@@ -155,7 +150,6 @@ export class User {
     const updatedAuthInfo = this.authInfo.withPasswordHash(newPasswordHash);
     return new User(
       this.id,
-      this.uid,
       updatedAuthInfo,
       this.location,
       this.status,

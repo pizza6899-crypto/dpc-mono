@@ -11,12 +11,6 @@ export class UserListItemDto {
   id: string;
 
   @ApiProperty({
-    description: '사용자 UID',
-    example: 'user-1234567890',
-  })
-  uid: string;
-
-  @ApiProperty({
     description: '이메일',
     example: 'user@example.com',
     nullable: true,

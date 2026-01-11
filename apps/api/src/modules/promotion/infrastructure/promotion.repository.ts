@@ -572,7 +572,6 @@ export class PromotionRepository implements PromotionRepositoryPort {
       userPromotion: UserPromotion;
       user: {
         id: bigint;
-        uid: string | null;
         email: string | null;
       } | null;
     }>;
@@ -610,7 +609,6 @@ export class PromotionRepository implements PromotionRepositoryPort {
           user: {
             select: {
               id: true,
-              uid: true,
               email: true,
             },
           },

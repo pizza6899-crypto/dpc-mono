@@ -18,7 +18,6 @@ export class UserMapper {
   toDomain(prismaModel: PrismaUser): User {
     return User.fromPersistence({
       id: prismaModel.id,
-      uid: prismaModel.uid,
       email: prismaModel.email || '',
       passwordHash: prismaModel.passwordHash,
       socialId: prismaModel.socialId,
@@ -37,7 +36,6 @@ export class UserMapper {
    */
   toPrisma(domain: User): {
     id: bigint;
-    uid: string;
     email: string;
     passwordHash: string | null;
     socialId: string | null;
@@ -52,7 +50,6 @@ export class UserMapper {
     const persistence = domain.toPersistence();
     return {
       id: persistence.id,
-      uid: persistence.uid,
       email: persistence.email,
       passwordHash: persistence.passwordHash,
       socialId: persistence.socialId,

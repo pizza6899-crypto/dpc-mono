@@ -15,22 +15,10 @@ export class GetUserService {
         return this.userRepository.findById(id);
     }
 
-    async findByUid(uid: string): Promise<User | null> {
-        return this.userRepository.findByUid(uid);
-    }
-
     async getById(id: bigint): Promise<User> {
         const user = await this.findById(id);
         if (!user) {
             throw new NotFoundException(`User with ID ${id} not found`);
-        }
-        return user;
-    }
-
-    async getByUid(uid: string): Promise<User> {
-        const user = await this.findByUid(uid);
-        if (!user) {
-            throw new NotFoundException(`User with UID ${uid} not found`);
         }
         return user;
     }

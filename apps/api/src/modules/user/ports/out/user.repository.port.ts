@@ -62,11 +62,6 @@ export interface UserRepositoryPort {
   findById(id: bigint): Promise<User | null>;
 
   /**
-   * UID로 사용자 조회
-   */
-  findByUid(uid: string): Promise<User | null>;
-
-  /**
    * 사용자 목록 조회 (페이징, 필터링 지원)
    */
   findMany(params: FindUsersParams): Promise<FindUsersResult>;

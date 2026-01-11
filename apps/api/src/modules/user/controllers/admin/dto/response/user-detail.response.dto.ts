@@ -7,9 +7,6 @@ export class UserDetailResponseDto {
     @ApiProperty({ description: '사용자 ID', example: '1234567890...' })
     id: string;
 
-    @ApiProperty({ description: '사용자 UID', example: 'user-...' })
-    uid: string;
-
     @ApiProperty({ description: '이메일', example: 'user@example.com' })
     email: string;
 
@@ -33,7 +30,6 @@ export class UserDetailResponseDto {
 
     constructor(user: User) {
         this.id = user.id.toString();
-        this.uid = user.uid;
         this.email = user.email;
         this.role = user.role;
         this.status = user.status;

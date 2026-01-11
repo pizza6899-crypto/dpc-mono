@@ -83,7 +83,6 @@ export class UserAdminController {
     return {
       data: result.data.map((user) => ({
         id: user.id.toString(),
-        uid: user.uid,
         email: user.email,
         role: user.role,
         status: user.status,

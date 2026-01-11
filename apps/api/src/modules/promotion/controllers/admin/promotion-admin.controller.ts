@@ -654,7 +654,6 @@ export class PromotionAdminController {
         ({ userPromotion, user }): PromotionParticipantResponseDto => ({
           id: userPromotion.id,
           userId: userPromotion.userId.toString(),
-          userUid: user?.uid || null,
           userEmail: user?.email || null,
           promotionId: userPromotion.promotionId,
           status: userPromotion.status as string,
