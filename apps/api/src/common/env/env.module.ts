@@ -18,6 +18,7 @@ import {
   depositConfig,
   walletConfig,
   openExchangeRatesConfig,
+  sqidsConfig,
 } from './env.config';
 
 @Module({
@@ -30,7 +31,7 @@ import {
         redisConfig,
         googleOAuthConfig,
         whitecliffConfig,
-        dcsConfig, 
+        dcsConfig,
         schedulerConfig,
         nowPaymentConfig,
         sessionConfig,
@@ -41,10 +42,11 @@ import {
         openExchangeRatesConfig,
         depositConfig,
         walletConfig,
+        sqidsConfig,
       ],
     }),
   ],
   providers: [EnvService],
   exports: [EnvService, ConfigModule],
 })
-export class EnvModule {}
+export class EnvModule { }

@@ -135,6 +135,11 @@ export interface WalletConfig {
   allowedCurrencies: ExchangeCurrencyCode[];
 }
 
+export interface SqidsConfig {
+  alphabet: string;
+  minLength: number;
+}
+
 export interface EnvironmentConfig {
   app: AppConfig;
   jwt: JwtConfig;
@@ -152,4 +157,5 @@ export interface EnvironmentConfig {
   openExchangeRates: OpenExchangeRatesConfig;
   deposit: DepositConfig;
   wallet: WalletConfig;
+  sqids: SqidsConfig;
 }

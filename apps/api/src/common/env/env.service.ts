@@ -18,11 +18,12 @@ import {
   DepositConfig,
   WalletConfig,
   OpenExchangeRatesConfig,
+  SqidsConfig,
 } from './env.types';
 
 @Injectable()
 export class EnvService {
-  constructor(private configService: ConfigService) {}
+  constructor(private configService: ConfigService) { }
 
   get nodeEnv(): string {
     return this.configService.get<string>('NODE_ENV', 'development');
@@ -102,6 +103,10 @@ export class EnvService {
     return this.configService.get<WalletConfig>('wallet')!;
   }
 
+  get sqids(): SqidsConfig {
+    return this.configService.get<SqidsConfig>('sqids')!;
+  }
+
   get all(): EnvironmentConfig {
     return {
       app: this.app,
@@ -120,6 +125,7 @@ export class EnvService {
       openExchangeRates: this.openExchangeRates,
       deposit: this.deposit,
       wallet: this.wallet,
+      sqids: this.sqids,
     };
   }
 }

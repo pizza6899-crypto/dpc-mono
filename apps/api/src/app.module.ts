@@ -26,6 +26,7 @@ import { AnalyticsModule } from './modules/analytics/analytics.module';
 import { CompModule } from './modules/comp/comp.module';
 import { SnowflakeModule } from './common/snowflake/snowflake.module';
 import { WithdrawalModule } from './modules/withdrawal/withdrawal.module';
+import { SqidsModule } from './common/sqids/sqids.module';
 
 @Module({
   imports: [
@@ -35,6 +36,7 @@ import { WithdrawalModule } from './modules/withdrawal/withdrawal.module';
     CommonLoggerModule,
     WebsocketModule,
     SnowflakeModule,
+    SqidsModule,
     ScheduleModule.forRoot(),
     AuditLogModule,
     AuthModule,
