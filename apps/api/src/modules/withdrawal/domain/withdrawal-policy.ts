@@ -6,6 +6,7 @@ import {
     WithdrawalAmountBelowMinimumException,
     WithdrawalAmountExceedsMaximumException,
     InsufficientBalanceException,
+    PendingWithdrawalExistsException,
 } from './withdrawal.exception';
 
 interface BalanceInfo {
@@ -105,5 +106,15 @@ export class WithdrawalPolicy {
         const feeAmount = config.calculateFee(requestedAmount);
         const netAmount = requestedAmount.sub(feeAmount);
         return { feeAmount, netAmount };
+    }
+
+    /**
+     * 진행 중인 출금 요청 없음 검증
+     * - 이미 진행 중인 출금 요청(PENDING, PENDING_REVIEW, PROCESSING, SENDING)이 있으면 예외 발생
+     */
+    validateNoPendingWithdrawal(userId: bigint, hasPending: boolean): void {
+        if (hasPending) {
+            throw new PendingWithdrawalExistsException(userId);
+        }
     }
 }

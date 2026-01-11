@@ -32,6 +32,12 @@ export interface WithdrawalRepositoryPort {
 
     countByUserId(userId: bigint, status?: WithdrawalStatus): Promise<number>;
 
+    /**
+     * 유저가 진행 중인 출금 요청이 있는지 확인
+     * PENDING, PENDING_REVIEW, PROCESSING, SENDING 상태를 확인
+     */
+    hasPendingWithdrawal(userId: bigint): Promise<boolean>;
+
     // CryptoWithdrawConfig
     findCryptoConfigBySymbolAndNetwork(
         symbol: string,

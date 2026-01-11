@@ -2,7 +2,7 @@ import { Injectable, Inject, Logger } from '@nestjs/common';
 import { Transactional } from '@nestjs-cls/transactional';
 import { WithdrawalProcessingMode } from '@repo/database';
 import { NowPaymentApiService } from 'src/modules/payment/infrastructure/now-payment-api.service';
-import { WithdrawalDetail } from '../domain';
+import { WithdrawalDetail, WithdrawalProcessingException } from '../domain';
 import { WITHDRAWAL_REPOSITORY } from '../ports';
 import type { WithdrawalRepositoryPort } from '../ports';
 
@@ -63,13 +63,16 @@ export class ProcessWithdrawalService {
         } catch (error) {
             this.logger.error(`Failed to process withdrawal ${withdrawalId}`, error);
 
+            const errorMessage = error instanceof Error ? error.message : 'Unknown error';
+
             // 실패 처리
-            withdrawal.fail(error instanceof Error ? error.message : 'Unknown error');
+            withdrawal.fail(errorMessage);
             await this.repository.save(withdrawal);
 
             // TODO: 잔액 복원 필요
 
-            throw error;
+            // 외부 에러를 도메인 에러로 래핑
+            throw new WithdrawalProcessingException(withdrawalId, errorMessage);
         }
     }
 

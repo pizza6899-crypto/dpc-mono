@@ -173,3 +173,31 @@ export class WithdrawalCannotBeCancelledException extends WithdrawalException {
         this.name = 'WithdrawalCannotBeCancelledException';
     }
 }
+
+/**
+ * 진행 중인 출금이 이미 존재할 때 발생하는 예외
+ */
+export class PendingWithdrawalExistsException extends WithdrawalException {
+    constructor(userId: bigint | string) {
+        super(
+            `User ${userId} already has a pending withdrawal request`,
+            MessageCode.WITHDRAWAL_PENDING_EXISTS,
+            HttpStatus.CONFLICT,
+        );
+        this.name = 'PendingWithdrawalExistsException';
+    }
+}
+
+/**
+ * 외부 결제 처리 중 오류가 발생했을 때 발생하는 예외
+ */
+export class WithdrawalProcessingException extends WithdrawalException {
+    constructor(withdrawalId: bigint | string, reason: string) {
+        super(
+            `Failed to process withdrawal ${withdrawalId}: ${reason}`,
+            MessageCode.WITHDRAWAL_PROCESSING_FAILED,
+            HttpStatus.BAD_GATEWAY,
+        );
+        this.name = 'WithdrawalProcessingException';
+    }
+}

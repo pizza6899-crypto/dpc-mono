@@ -132,6 +132,24 @@ export class WithdrawalRepository implements WithdrawalRepositoryPort {
         });
     }
 
+    async hasPendingWithdrawal(userId: bigint): Promise<boolean> {
+        const pendingStatuses: WithdrawalStatus[] = [
+            WithdrawalStatus.PENDING,
+            WithdrawalStatus.PENDING_REVIEW,
+            WithdrawalStatus.PROCESSING,
+            WithdrawalStatus.SENDING,
+        ];
+
+        const count = await this.tx.withdrawalDetail.count({
+            where: {
+                userId,
+                status: { in: pendingStatuses },
+            },
+        });
+
+        return count > 0;
+    }
+
     // ===== CryptoWithdrawConfig =====
 
     async findCryptoConfigBySymbolAndNetwork(

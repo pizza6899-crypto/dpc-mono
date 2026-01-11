@@ -55,19 +55,23 @@ export class RequestBankWithdrawalService {
         // 0. 락 획득 (동일 유저의 동시 출금 요청 방지)
         await this.repository.acquireUserLock(userId);
 
-        // 1. Config 조회
+        // 1. 진행 중인 출금 요청 확인 (1개만 진행 가능)
+        const hasPending = await this.repository.hasPendingWithdrawal(userId);
+        this.policy.validateNoPendingWithdrawal(userId, hasPending);
+
+        // 2. Config 조회
         const config = await this.repository.getBankConfigById(bankConfigId);
 
-        // 2. 금액 검증
+        // 3. 금액 검증
         this.policy.validateBankAmount(requestedAmount, config);
 
-        // 3. 롤링 조건 검증
+        // 4. 롤링 조건 검증
         // TODO: WageringRepository 연동 필요
 
-        // 4. 잔액 검증
+        // 5. 잔액 검증
         // TODO: BalanceService 연동 필요
 
-        // 5. 수수료 계산
+        // 6. 수수료 계산
         const { feeAmount, netAmount } = this.policy.calculateFee(requestedAmount, config);
 
         // 6. 처리 모드 (은행 출금은 항상 MANUAL - 엔티티 내부에서 결정)
