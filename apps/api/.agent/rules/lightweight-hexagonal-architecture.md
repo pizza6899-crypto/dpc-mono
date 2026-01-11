@@ -94,7 +94,6 @@ module-name/
 export class AffiliateCode {
   private constructor(
     public readonly id: bigint | null,    // 내부 관리용 (DB 저장 시 자동 생성)
-    public readonly uid: string | null,   // 비즈니스용 (CUID2, DB 저장 시 자동 생성)
     private _code: AffiliateCodeValue,
   ) {}
 
@@ -130,52 +129,6 @@ import { AffiliateCode, AffiliateCodePolicy } from '../../domain';
 
 // ❌ 비권장: 직접 경로 참조
 // import { AffiliateCode } from '../../domain/model/entity';
-```
-
-## 식별자 정책 (Hybrid Identity)
-
-**이중 식별자 구조**: 모든 엔티티는 내부 관리용 `id` (BigInt)와 비즈니스용 `uid` (CUID2)를 모두 가진다.
-
-**도메인 엔티티**:
-- ✅ 생성 시에는 `uid`만 가지며 `id`는 `null`이다
-- ✅ 영속화된 엔티티(Rehydrated)는 두 식별자를 모두 보유한다
-
-**노출 원칙**:
-- ✅ **Client API**: `uid`만 노출하고 이를 기반으로 요청을 받는다
-- ✅ **Admin API / 운영툴**: 운영 편의를 위해 `id`와 `uid`를 모두 노출할 수 있다
-
-**조회(Repository)**:
-- ✅ 기본: `findByUid`, `getByUid` 사용
-- ✅ 어드민 전용 Use Case에서는 `findById`, `getById` 사용 허용
-
-**예시**:
-```typescript
-// domain/model/entity.ts
-export class AffiliateCode {
-  private constructor(
-    public readonly id: bigint | null,    // 내부 관리용 (DB 저장 시 자동 생성)
-    public readonly uid: string | null,   // 비즈니스용 (CUID2, DB 저장 시 자동 생성)
-    private _code: AffiliateCodeValue,
-  ) {}
-
-  static create(params: { id?: bigint; uid?: string; code: string; ... }): AffiliateCode {
-    // 새 엔티티 생성 시: id=null, uid만 설정 (DB 저장 시 자동 생성)
-    // 영속화된 엔티티: id와 uid 모두 보유
-  }
-}
-
-// infrastructure/repository.ts
-// 기본 조회: uid 사용
-async findByUid(uid: string): Promise<AffiliateCode | null> {
-  const result = await this.tx.affiliateCode.findUnique({ where: { uid } });
-  return result ? this.mapper.toDomain(result) : null;
-}
-
-// 어드민 전용: id 사용
-async findById(id: bigint): Promise<AffiliateCode | null> {
-  const result = await this.tx.affiliateCode.findUnique({ where: { id } });
-  return result ? this.mapper.toDomain(result) : null;
-}
 ```
 
 ### 2. Application (애플리케이션 레이어)
