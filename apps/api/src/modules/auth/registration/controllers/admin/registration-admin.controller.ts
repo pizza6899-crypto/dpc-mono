@@ -46,7 +46,12 @@ export class RegistrationAdminController {
       requestInfo,
     });
 
-    return result;
+    return {
+      id: result.id.toString(),
+      email: result.email,
+      role: result.role,
+      status: result.status,
+    };
   }
 }
 

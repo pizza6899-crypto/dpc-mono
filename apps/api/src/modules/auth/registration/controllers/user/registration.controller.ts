@@ -12,6 +12,8 @@ import { ThrottleScope } from 'src/common/throttle/types/throttle.types';
 import { RegisterCredentialService } from '../../application/register-credential.service';
 import { RegisterRequestDto } from './dto/request/register.request.dto';
 import { RegisterResponseDto } from './dto/response/register.response.dto';
+import { SqidsService } from 'src/common/sqids/sqids.service';
+import { SqidsPrefix } from 'src/common/sqids/sqids.constants';
 
 @Controller('auth/register')
 @ApiTags('Auth(인증)')
@@ -19,7 +21,8 @@ import { RegisterResponseDto } from './dto/response/register.response.dto';
 export class RegistrationController {
   constructor(
     private readonly registerCredentialService: RegisterCredentialService,
-  ) {}
+    private readonly sqidsService: SqidsService,
+  ) { }
 
   @Post()
   @HttpCode(HttpStatus.CREATED)
@@ -49,6 +52,9 @@ export class RegistrationController {
       requestInfo,
     });
 
-    return result;
+    return {
+      id: this.sqidsService.encode(result.id, SqidsPrefix.USER),
+      email: result.email,
+    };
   }
 }
