@@ -12,7 +12,7 @@ import {
 import { createPaginationQueryDto } from 'src/common/http/types';
 import { GameCategory, GameProvider, Language } from '@repo/database';
 
-type GameSortFields = 'createdAt' | 'gameName' | 'categoryName';
+type GameSortFields = 'createdAt' | 'name' | 'categoryName';
 
 export class GameListRequestDto extends createPaginationQueryDto<GameSortFields>(
     {
@@ -21,7 +21,7 @@ export class GameListRequestDto extends createPaginationQueryDto<GameSortFields>
         defaultSortBy: 'createdAt',
         defaultSortOrder: 'desc',
     },
-    ['createdAt', 'gameName', 'categoryName'],
+    ['createdAt', 'name', 'categoryName'],
 ) {
     @ApiPropertyOptional({
         description: 'Language (언어) - 게임 번역 언어 선택',

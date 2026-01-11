@@ -24,7 +24,7 @@ import {
 } from 'src/utils/currency.util';
 
 export interface LaunchGameParams {
-  gameId: number;
+  id: number;
   isMobile: boolean;
   walletCurrency: WalletCurrencyCode;
   gameCurrency: GamingCurrencyCode;
@@ -40,14 +40,14 @@ export interface GetGameListParams {
   providerId?: GameProvider[];
   limit?: number;
   page?: number;
-  sortBy?: 'createdAt' | 'gameName' | 'categoryName';
+  sortBy?: 'createdAt' | 'name' | 'categoryName';
   sortOrder?: 'asc' | 'desc';
   language?: Language;
 }
 
 export interface GameInfo {
-  gameId: bigint;
-  gameName: string;
+  id: bigint;
+  name: string;
   category: GameCategory;
   provider: GameProvider;
   imageUrl: string;
@@ -72,11 +72,11 @@ export class CasinoGameService {
     params: LaunchGameParams,
     requestInfo: RequestClientInfo,
   ): Promise<LaunchGameResult> {
-    const { gameId, isMobile, walletCurrency, gameCurrency } = params;
+    const { id, isMobile, walletCurrency, gameCurrency } = params;
 
     // 게임 정보 조회 (aggregatorType 포함)
     const game = await this.prismaService.casinoGame.findUnique({
-      where: { id: gameId },
+      where: { id: id },
       select: {
         aggregatorType: true,
       },
@@ -93,14 +93,19 @@ export class CasinoGameService {
       case GameAggregatorType.WHITECLIFF:
         return await this.whitecliffGameService.launchGame(
           authUser,
-          params,
+          {
+            gameId: id,
+            isMobile,
+            walletCurrency,
+            gameCurrency,
+          },
           requestInfo,
         );
       case GameAggregatorType.DCS:
         return await this.dcsGameService.launchGame({
           requestInfo,
           userId: authUser.id,
-          gameId: gameId,
+          gameId: params.id,
           channel: isMobile ? 'mobile' : 'pc',
           country_code: requestInfo.country,
           gameCurrency: gameCurrency,
@@ -144,7 +149,7 @@ export class CasinoGameService {
     // 정렬 조건 구성
     const orderBy: Prisma.CasinoGameTranslationOrderByWithRelationInput = (() => {
       switch (sortBy) {
-        case 'gameName':
+        case 'name':
           return { gameName: sortOrder };
         case 'categoryName':
           return { categoryName: sortOrder };
@@ -196,8 +201,8 @@ export class CasinoGameService {
       }
 
       return {
-        gameId: game.casinoGame.id,
-        gameName: game.gameName,
+        id: game.casinoGame.id,
+        name: game.gameName,
         category: game.casinoGame.category,
         provider: game.casinoGame.provider,
         imageUrl: imageUrl || '',

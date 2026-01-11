@@ -1,5 +1,5 @@
 import { ApiProperty } from '@nestjs/swagger';
-import { IsBoolean, IsEnum, IsNumber, Min } from 'class-validator';
+import { IsBoolean, IsEnum, IsString } from 'class-validator';
 import { GAMING_CURRENCIES, WALLET_CURRENCIES } from 'src/utils/currency.util';
 import type {
     GamingCurrencyCode,
@@ -8,13 +8,11 @@ import type {
 
 export class GameLaunchRequestDto {
     @ApiProperty({
-        description: 'Game Translation ID (게임 번역 ID)',
-        example: 1001,
-        type: Number,
+        description: 'Game ID (Sqid)',
+        example: 'cg_abcdef123',
     })
-    @IsNumber()
-    @Min(1)
-    gameId: number;
+    @IsString()
+    id: string;
 
     @ApiProperty({
         description: 'Is Mobile (모바일 여부)',

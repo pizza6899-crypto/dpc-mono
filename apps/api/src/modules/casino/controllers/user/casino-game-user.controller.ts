@@ -27,6 +27,8 @@ import { Throttle } from 'src/common/throttle/decorators/throttle.decorator';
 import { ThrottleScope } from 'src/common/throttle/types/throttle.types';
 import { AuditLog } from 'src/modules/audit-log/infrastructure/audit-log.decorator';
 import { LogType } from 'src/modules/audit-log/domain';
+import { SqidsService } from 'src/common/sqids/sqids.service';
+import { SqidsPrefix } from 'src/common/sqids/sqids.constants';
 
 @Controller('casino/games')
 @ApiTags('Casino Games')
@@ -34,6 +36,7 @@ import { LogType } from 'src/modules/audit-log/domain';
 export class CasinoGameUserController {
     constructor(
         private readonly casinoGameService: CasinoGameService,
+        private readonly sqidsService: SqidsService,
     ) { }
 
     @Post('launch')
@@ -59,9 +62,15 @@ export class CasinoGameUserController {
         @Body() data: GameLaunchRequestDto,
         @RequestClientInfoParam() request: RequestClientInfo,
     ): Promise<GameLaunchResponseDto> {
+        const decodedId = this.sqidsService.decode(data.id, SqidsPrefix.CASINO_GAME);
         const result = await this.casinoGameService.launchGame(
             user,
-            data,
+            {
+                id: Number(decodedId),
+                isMobile: data.isMobile,
+                walletCurrency: data.walletCurrency,
+                gameCurrency: data.gameCurrency,
+            },
             request,
         );
 
@@ -84,6 +93,18 @@ export class CasinoGameUserController {
     async getGameList(
         @Query() query: GameListRequestDto,
     ): Promise<PaginatedData<GameResponseDto>> {
-        return await this.casinoGameService.getGameList(query);
+        const result = await this.casinoGameService.getGameList(query);
+        return {
+            data: result.data.map(game => ({
+                id: this.sqidsService.encode(game.id, SqidsPrefix.CASINO_GAME),
+                name: game.name,
+                category: game.category,
+                provider: game.provider,
+                imageUrl: game.imageUrl,
+            })),
+            page: result.page,
+            limit: result.limit,
+            total: result.total,
+        };
     }
 }

@@ -3,17 +3,16 @@ import { GameCategory, GameProvider } from '@repo/database';
 
 export class GameResponseDto {
     @ApiProperty({
-        description: 'Game ID (게임 ID)',
-        example: 1001,
-        type: BigInt,
+        description: 'ID (Sqid)',
+        example: 'cg_abcdef123',
     })
-    gameId: bigint;
+    id: string;
 
     @ApiProperty({
         description: 'Game Name (게임명)',
         example: 'Fortune Tiger',
     })
-    gameName: string;
+    name: string;
 
     @ApiProperty({
         description: 'Category Name (카테고리명)',

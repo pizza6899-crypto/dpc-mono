@@ -14,6 +14,7 @@ export const SqidsPrefix = {
     AFFILIATE_CODE: 'ac',
     USER_TIER: 'ut',
     TIER: 't',
+    CASINO_GAME: 'cg',
     // 필요에 따라 추가
 } as const;
 
