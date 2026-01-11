@@ -132,7 +132,7 @@ export class CredentialAdminController {
 
     return {
       user: {
-        uid: authenticatedUser.uid,
+        id: authenticatedUser.id.toString(),
         email: authenticatedUser.email,
       },
     };
@@ -277,7 +277,7 @@ export class CredentialAdminController {
       user:
         isAuthenticated && user
           ? {
-            uid: user.uid,
+            id: user.id.toString(),
             email: user.email,
           }
           : null,

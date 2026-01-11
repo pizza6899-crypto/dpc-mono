@@ -5,8 +5,10 @@ import type { UserRepositoryPort } from 'src/modules/user/ports/out/user.reposit
 import { hashPassword } from 'src/utils/password.util';
 import type { RequestClientInfo } from 'src/common/http/types/client-info.types';
 import { UserNotFoundException } from 'src/modules/user/domain/user.exception';
-import { LoginFailedException } from '../domain/exception';
+import { LoginFailedException, InsufficientPermissionException } from '../domain/exception';
 import { nanoid } from 'nanoid';
+import { UserRoleType } from '@repo/database';
+import { User } from 'src/modules/user/domain';
 
 export interface ResetUserPasswordAdminParams {
   targetUserId: bigint;
@@ -52,13 +54,21 @@ export class ResetUserPasswordAdminService {
       throw new LoginFailedException('Target user is not a credential user');
     }
 
-    // 3. 새 비밀번호 생성 또는 사용
+    // 3. 관리자(실행자) 조회 및 권한 체크
+    const adminUser = await this.userRepository.findById(adminUserId);
+    if (!adminUser) {
+      throw new UserNotFoundException(adminUserId.toString());
+    }
+
+    this.validatePermission(adminUser, targetUser);
+
+    // 4. 새 비밀번호 생성 또는 사용
     const finalPassword = newPassword || this.generateRandomPassword();
 
-    // 4. 비밀번호 해싱
+    // 5. 비밀번호 해싱
     const passwordHash = await hashPassword(finalPassword);
 
-    // 5. 비밀번호 업데이트
+    // 6. 비밀번호 업데이트
     await this.userRepository.updatePassword(targetUserId, passwordHash);
 
     return {
@@ -105,6 +115,34 @@ export class ResetUserPasswordAdminService {
     }
 
     return chars.join('');
+  }
+
+  /**
+   * 권한 검증
+   * - SUPER_ADMIN: 모든 사용자 초기화 가능
+   * - ADMIN: 일반 사용자(USER)만 초기화 가능
+   */
+  private validatePermission(admin: User, target: User): void {
+    // 1. 최고 관리자(SUPER_ADMIN)는 모든 사용자의 비밀번호를 초기화할 수 있음
+    if (admin.role === UserRoleType.SUPER_ADMIN) {
+      return;
+    }
+
+    // 2. 일반 관리자(ADMIN)는 일반 사용자(USER)의 비밀번호만 초기화할 수 있음
+    if (admin.role === UserRoleType.ADMIN) {
+      // 대상이 일반 사용자(USER)인 경우 허용
+      if (target.role === UserRoleType.USER) {
+        return;
+      }
+
+      // 본인 계정인 경우 허용 (보통 ChangePasswordService를 쓰지만 여기서도 허용)
+      if (admin.id === target.id) {
+        return;
+      }
+    }
+
+    // 그 외의 경우 (예: ADMIN이 다른 ADMIN이나 SUPER_ADMIN의 비밀번호를 바꾸려 할 때)
+    throw new InsufficientPermissionException();
   }
 }
 

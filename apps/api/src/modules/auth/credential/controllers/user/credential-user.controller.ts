@@ -29,6 +29,8 @@ import { ResetPasswordService } from '../../application/reset-password.service';
 import { CheckUserStatusService } from '../../application/check-user-status.service';
 import { CredentialUserLoginRequestDto } from './dto/request/login.request.dto';
 import { CredentialUserLoginResponseDto } from './dto/response/login.response.dto';
+import { SqidsService } from 'src/common/sqids/sqids.service';
+import { SqidsPrefix } from 'src/common/sqids/sqids.constants';
 import { CredentialUserAuthStatusResponseDto } from './dto/response/auth-status.response.dto';
 import { CredentialUserLogoutResponseDto } from './dto/response/logout.response.dto';
 import { ChangePasswordRequestDto } from './dto/request/change-password.request.dto';
@@ -43,7 +45,7 @@ import { AuditLog } from 'src/modules/audit-log/infrastructure';
 import { LogType } from 'src/modules/audit-log/domain';
 
 @Controller('auth')
-@ApiTags('Auth(인증)')
+@ApiTags('Auth')
 @ApiStandardErrors()
 export class CredentialUserController {
   constructor(
@@ -54,6 +56,7 @@ export class CredentialUserController {
     private readonly requestPasswordResetService: RequestPasswordResetService,
     private readonly resetPasswordService: ResetPasswordService,
     private readonly checkUserStatusService: CheckUserStatusService,
+    private readonly sqidsService: SqidsService,
   ) { }
 
   @Post('login')
@@ -115,7 +118,7 @@ export class CredentialUserController {
 
     return {
       user: {
-        uid: authenticatedUser.uid,
+        id: this.sqidsService.encode(authenticatedUser.id, SqidsPrefix.USER),
         email: authenticatedUser.email,
       },
     };
@@ -260,7 +263,7 @@ export class CredentialUserController {
       user:
         isAuthenticated && user
           ? {
-            uid: user.uid,
+            id: this.sqidsService.encode(user.id, SqidsPrefix.USER),
             email: user.email,
           }
           : null,

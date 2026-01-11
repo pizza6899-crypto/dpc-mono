@@ -49,3 +49,17 @@ export class InvalidPasswordResetTokenException extends DomainException {
     this.name = 'InvalidPasswordResetTokenException';
   }
 }
+
+/**
+ * 권한 부족 예외
+ */
+export class InsufficientPermissionException extends DomainException {
+  constructor() {
+    super(
+      'Insufficient permission to perform this action',
+      MessageCode.AUTH_INSUFFICIENT_PERMISSIONS,
+      HttpStatus.FORBIDDEN,
+    );
+    this.name = 'InsufficientPermissionException';
+  }
+}
