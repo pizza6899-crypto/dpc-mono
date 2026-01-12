@@ -61,8 +61,8 @@ export class CreateDepositResponseDto {
   isDuplicate?: boolean;
 
   @ApiPropertyOptional({
-    description: 'Deposit Record UID (입금 기록 UID)',
+    description: 'Deposit Record ID (입금 기록 ID)',
   })
-  depositUid?: string;
+  id?: string;
 }
 

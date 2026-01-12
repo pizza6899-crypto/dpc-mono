@@ -113,8 +113,8 @@ export class BankDepositAddressResponseDto {
  * 사용자 입금 상세/목록 정보 DTO
  */
 export class UserDepositResponseDto {
-    @ApiProperty({ description: 'Deposit Record UID' })
-    uid: string;
+    @ApiProperty({ description: 'Deposit Record ID' })
+    id: string;
 
     @ApiProperty({ enum: DepositDetailStatus, description: 'Deposit status' })
     status: DepositDetailStatus;

@@ -1,11 +1,10 @@
 import { Injectable, Inject } from '@nestjs/common';
-import { UserDepositResponseDto } from '../dtos/deposit-address-user.dto';
 import { DEPOSIT_DETAIL_REPOSITORY } from '../ports/out';
 import type { DepositDetailRepositoryPort } from '../ports/out/deposit-detail.repository.port';
-import { DepositNotFoundException } from '../domain';
+import { DepositNotFoundException, DepositDetail } from '../domain';
 
 interface GetMyDepositDetailParams {
-    uid: string;
+    id: bigint;
     userId: bigint;
 }
 
@@ -16,37 +15,15 @@ export class GetMyDepositDetailService {
         private readonly depositRepository: DepositDetailRepositoryPort,
     ) { }
 
-    async execute(params: GetMyDepositDetailParams): Promise<UserDepositResponseDto> {
-        const { uid, userId } = params;
+    async execute(params: GetMyDepositDetailParams): Promise<DepositDetail> {
+        const { id, userId } = params;
 
-        const deposit = await this.depositRepository.findByUidAndUserId(uid, userId);
+        const deposit = await this.depositRepository.findByIdAndUserId(id, userId);
 
         if (!deposit) {
-            throw new DepositNotFoundException(uid);
+            throw new DepositNotFoundException(id.toString());
         }
 
-        const amount = deposit.getAmount();
-        // 엔티티를 DTO로 매핑
-        return {
-            uid: deposit.uid,
-            status: deposit.status,
-            methodType: deposit.getMethod().methodType,
-            provider: deposit.getMethod().provider as any,
-
-            requestedAmount: amount.requestedAmount.toString(),
-            actuallyPaid: amount.actuallyPaid?.toString() ?? null,
-            feeAmount: amount.feeAmount?.toString() ?? null,
-            depositCurrency: deposit.depositCurrency,
-
-            walletAddress: deposit.walletAddress,
-            depositNetwork: deposit.depositNetwork,
-
-            bankName: deposit.bankName ?? null,
-
-            createdAt: deposit.createdAt,
-            confirmedAt: deposit.confirmedAt ?? null,
-            failedAt: deposit.failedAt ?? null,
-            failureReason: deposit.failureReason ?? null,
-        } as UserDepositResponseDto;
+        return deposit;
     }
 }

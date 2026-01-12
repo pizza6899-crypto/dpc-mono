@@ -43,6 +43,9 @@ import {
 } from './dto/response/deposit.response.dto';
 import { GetAvailableDepositMethodsResponseDto } from './dto/response/deposit-methods.response.dto';
 import { GetDepositsQueryDto } from './dto/request/get-deposits-query.dto';
+import { SqidsService } from 'src/common/sqids/sqids.service';
+import { SqidsPrefix } from 'src/common/sqids/sqids.constants';
+import { DepositDetail } from '../../domain';
 
 @ApiTags('입금 (Deposit)')
 @Controller('deposits')
@@ -55,6 +58,7 @@ export class DepositController {
     private readonly createBankDepositService: CreateBankDepositService,
     private readonly getMyDepositsService: GetMyDepositsService,
     private readonly getMyDepositDetailService: GetMyDepositDetailService,
+    private readonly sqidsService: SqidsService,
   ) { }
 
   // ============================================
@@ -110,14 +114,20 @@ export class DepositController {
     @CurrentUser() user: CurrentUserWithSession,
     @RequestClientInfoParam() requestInfo: RequestClientInfo,
   ): Promise<PaginatedData<UserDepositResponseDto>> {
-    return this.getMyDepositsService.execute({
+    const result = await this.getMyDepositsService.execute({
       query,
       userId: user.id,
       requestInfo,
     });
+    return {
+      data: result.data.map(deposit => this.toResponseDto(deposit)),
+      page: result.page,
+      limit: result.limit,
+      total: result.total,
+    };
   }
 
-  @Get(':uid')
+  @Get(':id')
   @HttpCode(HttpStatus.OK)
   @ApiOperation({
     summary: 'Get deposit detail / 입금 상세 조회',
@@ -125,8 +135,8 @@ export class DepositController {
       'Retrieve detailed information of a specific deposit. (특정 입금의 상세 정보를 조회합니다.)',
   })
   @ApiParam({
-    name: 'uid',
-    description: 'DepositDetail UID / 입금 상세 UID',
+    name: 'id',
+    description: 'Deposit ID / 입금 ID',
     type: String,
   })
   @ApiStandardResponse(UserDepositResponseDto, {
@@ -138,18 +148,20 @@ export class DepositController {
     action: 'VIEW_DEPOSIT_DETAIL',
     category: 'DEPOSIT',
     extractMetadata: (_, args) => ({
-      depositUid: args[0],
+      depositId: args[0],
     }),
   })
   async getDepositDetail(
-    @Param('uid') uid: string,
+    @Param('id') id: string,
     @CurrentUser() user: CurrentUserWithSession,
     @RequestClientInfoParam() requestInfo: RequestClientInfo,
   ): Promise<UserDepositResponseDto> {
-    return this.getMyDepositDetailService.execute({
-      uid,
+    const decodedId = this.sqidsService.decode(id, SqidsPrefix.DEPOSIT);
+    const deposit = await this.getMyDepositDetailService.execute({
+      id: decodedId,
       userId: user.id,
     });
+    return this.toResponseDto(deposit);
   }
 
   @Post('crypto')
@@ -177,12 +189,21 @@ export class DepositController {
     @CurrentUser() user: CurrentUserWithSession,
     @RequestClientInfoParam() clientInfo: RequestClientInfo,
   ): Promise<CreateDepositResponseDto> {
-    return await this.createCryptoDepositService.execute({
+    const deposit = await this.createCryptoDepositService.execute({
       ...dto,
       userId: user.id,
       ipAddress: clientInfo.ip,
       deviceFingerprint: clientInfo.userAgent,
     });
+    return {
+      id: this.sqidsService.encode(deposit.id!, SqidsPrefix.DEPOSIT),
+      payAddress: deposit.walletAddress ?? undefined,
+      payCurrency: deposit.depositCurrency,
+      payNetwork: deposit.depositNetwork ?? undefined,
+      payAddressExtraId: deposit.walletAddressExtraId,
+      transactionId: deposit.transactionId?.toString(),
+      isDuplicate: false,
+    };
   }
 
   @Post('bank')
@@ -210,12 +231,21 @@ export class DepositController {
     @CurrentUser() user: CurrentUserWithSession,
     @RequestClientInfoParam() clientInfo: RequestClientInfo,
   ): Promise<CreateDepositResponseDto> {
-    return await this.createBankDepositService.execute({
+    const deposit = await this.createBankDepositService.execute({
       ...dto,
       userId: user.id,
       ipAddress: clientInfo.ip,
       deviceFingerprint: clientInfo.userAgent,
     });
+    // Bank config is needed for response, but service returns deposit entity
+    // This would need to be fetched or included in the deposit entity
+    return {
+      id: this.sqidsService.encode(deposit.id!, SqidsPrefix.DEPOSIT),
+      payCurrency: deposit.depositCurrency,
+      transactionId: deposit.transactionId?.toString(),
+      isDuplicate: false,
+      // TODO: Add bank details from config
+    };
   }
 
   @Delete(':uid')
@@ -248,5 +278,26 @@ export class DepositController {
     @RequestClientInfoParam() requestInfo: RequestClientInfo,
   ): Promise<CancelDepositResponseDto> {
     throw new NotImplementedException('서비스 구현 필요');
+  }
+
+  private toResponseDto(deposit: DepositDetail): UserDepositResponseDto {
+    const amount = deposit.getAmount();
+    return {
+      id: this.sqidsService.encode(deposit.id!, SqidsPrefix.DEPOSIT),
+      status: deposit.status,
+      methodType: deposit.getMethod().methodType,
+      provider: deposit.getMethod().provider as any,
+      requestedAmount: amount.requestedAmount.toString(),
+      actuallyPaid: amount.actuallyPaid?.toString() ?? null,
+      feeAmount: amount.feeAmount?.toString() ?? null,
+      depositCurrency: deposit.depositCurrency,
+      walletAddress: deposit.walletAddress,
+      depositNetwork: deposit.depositNetwork,
+      bankName: deposit.bankName ?? null,
+      createdAt: deposit.createdAt,
+      confirmedAt: deposit.confirmedAt ?? null,
+      failedAt: deposit.failedAt ?? null,
+      failureReason: deposit.failureReason ?? null,
+    };
   }
 }

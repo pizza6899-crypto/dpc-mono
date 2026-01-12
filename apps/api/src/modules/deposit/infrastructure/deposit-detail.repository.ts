@@ -177,6 +177,25 @@ export class DepositDetailRepository implements DepositDetailRepositoryPort {
     return result ? this.mapper.toDomain(result) : null;
   }
 
+  async findByIdAndUserId(
+    id: bigint,
+    userId: bigint,
+  ): Promise<DepositDetail | null> {
+    const result = await this.tx.depositDetail.findFirst({
+      where: {
+        id,
+        userId,
+      },
+      include: {
+        transaction: false,
+        bankDepositConfig: true,
+        cryptoDepositConfig: true,
+      },
+    });
+
+    return result ? this.mapper.toDomain(result) : null;
+  }
+
   async existsPendingByUserId(userId: bigint): Promise<boolean> {
     const count = await this.tx.depositDetail.count({
       where: {
