@@ -33,8 +33,14 @@ export class CompAdminController {
 
     @Get('users/:userId/balance')
     @HttpCode(HttpStatus.OK)
-    @ApiOperation({ summary: 'Get user comp balance (Admin)' })
-    @ApiParam({ name: 'userId', example: '1' })
+    @ApiOperation({
+        summary: 'Get user comp balance (Admin)',
+        description: '관리자가 특정 사용자의 콤프 잔액 및 통계를 조회합니다.'
+    })
+    @ApiParam({ name: 'userId', example: '1', description: 'User ID' })
+    @ApiStandardResponse(CompBalanceResponseDto, {
+        description: 'Successfully retrieved user comp balance'
+    })
     @AuditLog({
         type: LogType.ACTIVITY,
         category: 'COMP',
@@ -59,9 +65,14 @@ export class CompAdminController {
 
     @Post('users/:userId/adjust')
     @HttpCode(HttpStatus.OK)
-    @ApiOperation({ summary: 'Adjust user comp balance (GIVE/DEDUCT)' })
-    @ApiParam({ name: 'userId', example: '1' })
-    @ApiStandardResponse(AdminCompAdjustResponseDto)
+    @ApiOperation({
+        summary: 'Adjust user comp balance (GIVE/DEDUCT)',
+        description: '관리자가 특정 사용자의 콤프 잔액을 수동으로 지급하거나 차감합니다.'
+    })
+    @ApiParam({ name: 'userId', example: '1', description: 'User ID' })
+    @ApiStandardResponse(AdminCompAdjustResponseDto, {
+        description: 'Successfully adjusted user comp balance'
+    })
     @AuditLog({
         type: LogType.ACTIVITY,
         category: 'COMP',
@@ -103,10 +114,15 @@ export class CompAdminController {
 
     @Get('users/:userId/transactions')
     @HttpCode(HttpStatus.OK)
-    @ApiOperation({ summary: 'Get user comp transactions (Admin)' })
-    @ApiParam({ name: 'userId', example: '1' })
+    @ApiOperation({
+        summary: 'Get user comp transactions (Admin)',
+        description: '관리자가 특정 사용자의 콤프 거래 내역을 조회합니다.'
+    })
+    @ApiParam({ name: 'userId', example: '1', description: 'User ID' })
     @Paginated()
-    @ApiPaginatedResponse(CompTransactionResponseDto)
+    @ApiPaginatedResponse(CompTransactionResponseDto, {
+        description: 'Successfully retrieved user comp transactions'
+    })
     @AuditLog({
         type: LogType.ACTIVITY,
         category: 'COMP',

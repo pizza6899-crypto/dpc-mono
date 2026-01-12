@@ -28,8 +28,13 @@ export class CompStatsController {
 
     @Get('overview')
     @HttpCode(HttpStatus.OK)
-    @ApiOperation({ summary: 'Get platform comp overview' })
-    @ApiStandardResponse(CompOverviewResponseDto)
+    @ApiOperation({
+        summary: 'Get platform comp overview',
+        description: '플랫폼 전체의 콤프 적립 및 사용 현황 개요를 조회합니다.'
+    })
+    @ApiStandardResponse(CompOverviewResponseDto, {
+        description: 'Successfully retrieved platform comp overview'
+    })
     @AuditLog({
         type: LogType.ACTIVITY,
         category: 'COMP',
@@ -48,8 +53,14 @@ export class CompStatsController {
 
     @Get('daily')
     @HttpCode(HttpStatus.OK)
-    @ApiOperation({ summary: 'Get daily comp trends' })
-    @ApiStandardResponse(CompDailyStatResponseDto, { isArray: true })
+    @ApiOperation({
+        summary: 'Get daily comp trends',
+        description: '날짜별 콤프 적립 및 사용 트렌드 목록을 조회합니다.'
+    })
+    @ApiStandardResponse(CompDailyStatResponseDto, {
+        isArray: true,
+        description: 'Successfully retrieved daily comp trends'
+    })
     @AuditLog({
         type: LogType.ACTIVITY,
         category: 'COMP',
@@ -68,8 +79,14 @@ export class CompStatsController {
 
     @Get('top-earners')
     @HttpCode(HttpStatus.OK)
-    @ApiOperation({ summary: 'Get top comp earners' })
-    @ApiStandardResponse(CompTopEarnerResponseDto, { isArray: true })
+    @ApiOperation({
+        summary: 'Get top comp earners',
+        description: '가장 많은 콤프 포인트를 획득한 상위 사용자 목록을 조회합니다.'
+    })
+    @ApiStandardResponse(CompTopEarnerResponseDto, {
+        isArray: true,
+        description: 'Successfully retrieved top comp earners'
+    })
     @AuditLog({
         type: LogType.ACTIVITY,
         category: 'COMP',
