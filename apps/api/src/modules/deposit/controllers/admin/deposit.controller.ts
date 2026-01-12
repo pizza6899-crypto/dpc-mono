@@ -9,7 +9,6 @@ import {
   Query,
   HttpCode,
   HttpStatus,
-  NotImplementedException,
 } from '@nestjs/common';
 import { ApiTags, ApiOperation, ApiParam } from '@nestjs/swagger';
 import { RequireRoles } from 'src/common/auth/decorators/roles.decorator';

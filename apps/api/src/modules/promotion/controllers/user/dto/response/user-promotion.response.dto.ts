@@ -1,5 +1,5 @@
 // src/modules/promotion/controllers/user/dto/response/user-promotion.response.dto.ts
-import { ApiProperty, ApiPropertyOptional } from '@nestjs/swagger';
+import { ApiProperty } from '@nestjs/swagger';
 
 export class UserPromotionResponseDto {
   @ApiProperty({

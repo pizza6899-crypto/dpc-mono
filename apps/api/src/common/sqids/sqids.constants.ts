@@ -20,6 +20,9 @@ export const SqidsPrefix = {
     USER_PROMOTION: 'up',
     WITHDRAW_BANK_CONFIG: 'wbc',
     WITHDRAW_CRYPTO_CONFIG: 'wcc',
+    COMMISSION: 'com',
+    COM_WALLET: 'cw',
+    COM_TRANSACTION: 'ctx',
     // 필요에 따라 추가
 } as const;
 

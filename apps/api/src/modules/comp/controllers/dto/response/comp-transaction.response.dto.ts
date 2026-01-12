@@ -2,10 +2,10 @@ import { ApiProperty, ApiPropertyOptional } from '@nestjs/swagger';
 import { CompTransactionType } from '@repo/database';
 
 export class CompTransactionResponseDto {
-    @ApiProperty({ description: 'Transaction ID' })
+    @ApiProperty({ description: 'Transaction ID (Encoded)', example: 'ctx_abc123' })
     id: string;
 
-    @ApiProperty({ description: 'Comp Wallet ID' })
+    @ApiProperty({ description: 'Comp Wallet ID (Encoded)', example: 'cw_abc123' })
     compWalletId: string;
 
     @ApiProperty({ description: 'Amount' })

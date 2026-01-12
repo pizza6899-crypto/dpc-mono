@@ -8,22 +8,22 @@ import {
 
 export class CommissionResponseDto {
   @ApiProperty({
-    description: '커미션 UID (비즈니스용)',
-    example: 'cmt-1234567890',
+    description: '커미션 ID (Encoded)',
+    example: 'com_abc123',
   })
-  uid: string;
+  id: string;
 
   @ApiProperty({
-    description: '어필리에이트 ID',
-    example: '123',
+    description: '어필리에이트 ID (Encoded)',
+    example: 'u_abc123',
   })
-  affiliateId: bigint;
+  affiliateId: string;
 
   @ApiProperty({
-    description: '피추천인 사용자 ID',
-    example: '456',
+    description: '피추천인 사용자 ID (Encoded)',
+    example: 'u_def456',
   })
-  subUserId: bigint;
+  subUserId: string;
 
   @ApiProperty({
     description: '게임 라운드 ID',

@@ -17,6 +17,8 @@ import { PaginatedData } from 'src/common/http/types/pagination.types';
 import { Paginated } from 'src/common/http/decorators/paginated.decorator';
 import { AuditLog } from 'src/modules/audit-log/infrastructure/audit-log.decorator';
 import { LogType } from 'src/modules/audit-log/domain';
+import { SqidsService } from 'src/common/sqids/sqids.service';
+import { SqidsPrefix } from 'src/common/sqids/sqids.constants';
 
 @ApiTags('Comp')
 @Controller('user/comp')
@@ -26,6 +28,7 @@ export class CompUserController {
         private readonly claimCompService: ClaimCompService,
         private readonly findCompBalanceService: FindCompBalanceService,
         private readonly findCompTransactionsService: FindCompTransactionsService,
+        private readonly sqidsService: SqidsService,
     ) { }
 
     @Get('balance')
@@ -132,8 +135,8 @@ export class CompUserController {
 
         return {
             data: result.data.map(item => ({
-                id: item.id.toString(),
-                compWalletId: item.compWalletId.toString(),
+                id: this.sqidsService.encode(item.id, SqidsPrefix.COM_TRANSACTION),
+                compWalletId: this.sqidsService.encode(item.compWalletId, SqidsPrefix.COM_WALLET),
                 amount: item.amount.toString(),
                 balanceAfter: item.balanceAfter.toString(),
                 type: item.type,

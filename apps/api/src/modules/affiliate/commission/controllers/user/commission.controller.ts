@@ -32,6 +32,8 @@ import { WithdrawCommissionResponseDto } from './dto/response/withdraw-commissio
 import { AffiliateCommission } from '../../domain';
 import { AuditLog } from 'src/modules/audit-log/infrastructure/audit-log.decorator';
 import { LogType } from 'src/modules/audit-log/domain';
+import { SqidsService } from 'src/common/sqids/sqids.service';
+import { SqidsPrefix } from 'src/common/sqids/sqids.constants';
 
 @ApiTags('Affiliate Commission (어필리에이트 커미션)')
 @Controller('commissions')
@@ -43,6 +45,7 @@ export class AffiliateCommissionController {
     private readonly getWalletBalanceService: GetWalletBalanceService,
     private readonly getCommissionRateService: GetCommissionRateService,
     private readonly withdrawCommissionService: WithdrawCommissionService,
+    private readonly sqidsService: SqidsService,
   ) { }
 
   /**
@@ -102,33 +105,35 @@ export class AffiliateCommissionController {
   }
 
   /**
-   * 커미션 상세 조회 (UID)
+   * 커미션 상세 조회 (ID)
    */
-  @Get(':uid')
+  @Get(':id')
   @HttpCode(HttpStatus.OK)
   @ApiOperation({
-    summary: 'Get commission by UID / 커미션 UID로 조회',
+    summary: 'Get commission by ID / 커미션 ID로 조회',
   })
   @AuditLog({
     type: LogType.ACTIVITY,
     category: 'COMMISSION',
     action: 'COMMISSION_DETAIL_VIEW',
-    extractMetadata: (_, args, result) => ({
-      commissionUid: args[1],
+    extractMetadata: (_, args) => ({
+      commissionId: args[1],
     }),
   })
-  @ApiParam({ name: 'uid', description: 'Commission UID / 커미션 UID' })
+  @ApiParam({ name: 'id', description: 'Commission ID (Encoded) / 커미션 ID' })
   @ApiStandardResponse(CommissionResponseDto, {
     status: 200,
     description: 'Successfully retrieved commission / 커미션 조회 성공',
   })
-  async getCommissionByUid(
+  async getCommissionById(
     @CurrentUser() user: CurrentUserWithSession,
-    @Param('uid') uid: string,
+    @Param('id') id: string,
     @RequestClientInfoParam() requestInfo: RequestClientInfo,
   ): Promise<CommissionResponseDto> {
+    const decodedId = this.sqidsService.decode(id, SqidsPrefix.COMMISSION);
+
     const commission = await this.findCommissionByIdService.execute({
-      uid,
+      id: decodedId,
       affiliateId: user.id,
     });
 
@@ -273,9 +278,9 @@ export class AffiliateCommissionController {
     commission: AffiliateCommission,
   ): CommissionResponseDto {
     return {
-      uid: commission.uid,
-      affiliateId: commission.affiliateId,
-      subUserId: commission.subUserId,
+      id: this.sqidsService.encode(commission.id!, SqidsPrefix.COMMISSION),
+      affiliateId: this.sqidsService.encode(commission.affiliateId, SqidsPrefix.USER),
+      subUserId: this.sqidsService.encode(commission.subUserId, SqidsPrefix.USER),
       gameRoundId: commission.gameRoundId
         ? commission.gameRoundId.toString()
         : '',

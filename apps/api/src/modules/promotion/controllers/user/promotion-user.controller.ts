@@ -4,7 +4,6 @@ import {
   Get,
   HttpCode,
   HttpStatus,
-  ForbiddenException,
   Query,
   Param,
   Inject,
