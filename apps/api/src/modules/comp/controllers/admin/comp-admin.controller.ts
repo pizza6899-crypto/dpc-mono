@@ -11,11 +11,12 @@ import { CompBalanceResponseDto } from '../user/dto/response/comp-balance.respon
 import { RequireRoles } from 'src/common/auth/decorators/roles.decorator';
 import { AuditLog } from 'src/modules/audit-log/infrastructure/audit-log.decorator';
 import { LogType } from 'src/modules/audit-log/domain';
-import { ApiStandardErrors, ApiPaginatedResponse } from 'src/common/http/decorators/api-response.decorator';
+import { ApiStandardErrors, ApiPaginatedResponse, ApiStandardResponse } from 'src/common/http/decorators/api-response.decorator';
 import { AdminCompAdjustRequestDto, AdminCompAdjustType } from './dto/request/admin-comp-adjust.request.dto';
 import { AdminCompBalanceQueryDto } from './dto/request/admin-comp-balance-query.dto';
 import { Paginated } from 'src/common/http/decorators/paginated.decorator';
 import { PaginatedData } from 'src/common/http/types/pagination.types';
+import { AdminCompAdjustResponseDto } from './dto/response/admin-comp-adjust.response.dto';
 
 
 @ApiTags('Admin Comp')
@@ -60,6 +61,7 @@ export class CompAdminController {
     @HttpCode(HttpStatus.OK)
     @ApiOperation({ summary: 'Adjust user comp balance (GIVE/DEDUCT)' })
     @ApiParam({ name: 'userId', example: '1' })
+    @ApiStandardResponse(AdminCompAdjustResponseDto)
     @AuditLog({
         type: LogType.ACTIVITY,
         category: 'COMP',
@@ -75,7 +77,7 @@ export class CompAdminController {
     async adjustUserComp(
         @Param('userId') userId: string,
         @Body() dto: AdminCompAdjustRequestDto,
-    ): Promise<any> {
+    ): Promise<AdminCompAdjustResponseDto> {
         const uid = BigInt(userId);
         const amount = new Prisma.Decimal(dto.amount);
 
