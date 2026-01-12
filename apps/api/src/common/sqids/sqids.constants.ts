@@ -15,6 +15,7 @@ export const SqidsPrefix = {
     USER_TIER: 'ut',
     TIER: 't',
     CASINO_GAME: 'cg',
+    WAGERING_REQUIREMENT: 'wr',
     // 필요에 따라 추가
 } as const;
 

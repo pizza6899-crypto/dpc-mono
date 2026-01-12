@@ -6,12 +6,15 @@ import { FindWageringRequirementsService } from '../../application/find-wagering
 import { GetMyWageringRequirementsQueryDto } from './dto/request/get-my-wagering-requirements-query.dto';
 import { PaginatedWageringRequirementUserResponseDto } from './dto/response/paginated-wagering-requirement-user.response.dto';
 import { Paginated } from '../../../../common/http/decorators/paginated.decorator';
+import { SqidsService } from '../../../../common/sqids/sqids.service';
+import { SqidsPrefix } from '../../../../common/sqids/sqids.constants';
 
 @ApiTags('Wagering Requirements')
 @Controller('user/wagering-requirements')
 export class WageringRequirementUserController {
     constructor(
         private readonly findService: FindWageringRequirementsService,
+        private readonly sqidsService: SqidsService,
     ) { }
 
     @Get()
@@ -36,7 +39,7 @@ export class WageringRequirementUserController {
         });
 
         const mappedData = paginatedData.data.map(item => ({
-            uid: item.uid,
+            id: this.sqidsService.encode(item.id!, SqidsPrefix.WAGERING_REQUIREMENT),
             currency: item.currency,
             requiredAmount: item.requiredAmount?.toString(),
             currentAmount: item.currentAmount?.toString(),
