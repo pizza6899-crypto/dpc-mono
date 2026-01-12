@@ -54,7 +54,24 @@ export class AnalyticsUserController {
             dto.currency,
         );
 
-        return stats.map(stat => UserHourlyStatResponseDto.fromDomain(stat));
+        return stats.map(stat => ({
+            currency: stat.currency,
+            date: stat.date,
+            totalDeposit: stat.totalDeposit.toNumber(),
+            totalWithdraw: stat.totalWithdraw.toNumber(),
+            depositCount: stat.depositCount,
+            withdrawCount: stat.withdrawCount,
+            totalBet: stat.totalBet.toNumber(),
+            totalWin: stat.totalWin.toNumber(),
+            netWin: stat.netWin.toNumber(),
+            totalGameCount: stat.totalGameCount,
+            totalBonusGiven: stat.totalBonusGiven.toNumber(),
+            totalBonusUsed: stat.totalBonusUsed.toNumber(),
+            totalBonusConverted: stat.totalBonusConverted.toNumber(),
+            totalCompEarned: stat.totalCompEarned.toNumber(),
+            totalCompConverted: stat.totalCompConverted.toNumber(),
+            totalCompDeducted: stat.totalCompDeducted.toNumber(),
+        }));
     }
 
     @Get('stats/aggregated')
@@ -98,6 +115,22 @@ export class AnalyticsUserController {
             dto.currency,
         );
 
-        return AggregatedStatResponseDto.fromAggregated(stat);
+        return {
+            totalDeposit: stat.totalDeposit.toNumber(),
+            totalWithdraw: stat.totalWithdraw.toNumber(),
+            depositCount: stat.depositCount,
+            withdrawCount: stat.withdrawCount,
+            totalBet: stat.totalBet.toNumber(),
+            totalWin: stat.totalWin.toNumber(),
+            netWin: stat.netWin.toNumber(),
+            ggr: stat.ggr.toNumber(),
+            totalGameCount: stat.totalGameCount,
+            totalBonusGiven: stat.totalBonusGiven.toNumber(),
+            totalBonusUsed: stat.totalBonusUsed.toNumber(),
+            totalBonusConverted: stat.totalBonusConverted.toNumber(),
+            totalCompEarned: stat.totalCompEarned.toNumber(),
+            totalCompConverted: stat.totalCompConverted.toNumber(),
+            totalCompDeducted: stat.totalCompDeducted.toNumber(),
+        };
     }
 }

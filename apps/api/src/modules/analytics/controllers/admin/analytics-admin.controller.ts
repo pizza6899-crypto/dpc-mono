@@ -56,6 +56,27 @@ export class AnalyticsAdminController {
             dto.currency,
         );
 
-        return stats.map(stat => AdminStatResponseDto.fromDomain(stat));
+        return stats.map(stat => ({
+            userId: stat.userId.toString(),
+            currency: stat.currency,
+            date: stat.date,
+            totalDeposit: stat.totalDeposit.toNumber(),
+            totalWithdraw: stat.totalWithdraw.toNumber(),
+            depositCount: stat.depositCount,
+            withdrawCount: stat.withdrawCount,
+            totalBet: stat.totalBet.toNumber(),
+            totalWin: stat.totalWin.toNumber(),
+            netWin: stat.netWin.toNumber(),
+            ggr: stat.ggr.toNumber(),
+            totalGameCount: stat.totalGameCount,
+            totalBonusGiven: stat.totalBonusGiven.toNumber(),
+            totalBonusUsed: stat.totalBonusUsed.toNumber(),
+            totalBonusConverted: stat.totalBonusConverted.toNumber(),
+            totalCompEarned: stat.totalCompEarned.toNumber(),
+            totalCompConverted: stat.totalCompConverted.toNumber(),
+            totalCompDeducted: stat.totalCompDeducted.toNumber(),
+            startBalance: stat.startBalance.toNumber(),
+            endBalance: stat.endBalance.toNumber(),
+        }));
     }
 }

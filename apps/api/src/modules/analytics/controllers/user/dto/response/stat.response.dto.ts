@@ -1,11 +1,7 @@
 import { ApiProperty } from '@nestjs/swagger';
 import { ExchangeCurrencyCode } from '@repo/database';
-import { UserHourlyStat } from 'src/modules/analytics/domain/model/user-hourly-stat.entity';
 
 export class UserHourlyStatResponseDto {
-    @ApiProperty({ description: 'User ID', example: '12345' })
-    userId: string;
-
     @ApiProperty({ description: 'Currency code', enum: ['KRW', 'USD', 'JPY'] })
     currency: ExchangeCurrencyCode;
 
@@ -53,26 +49,4 @@ export class UserHourlyStatResponseDto {
 
     @ApiProperty({ description: 'Total comp deducted by admin', example: 100 })
     totalCompDeducted: number;
-
-    static fromDomain(stat: UserHourlyStat): UserHourlyStatResponseDto {
-        const dto = new UserHourlyStatResponseDto();
-        dto.userId = stat.userId.toString();
-        dto.currency = stat.currency;
-        dto.date = stat.date;
-        dto.totalDeposit = stat.totalDeposit.toNumber();
-        dto.totalWithdraw = stat.totalWithdraw.toNumber();
-        dto.depositCount = stat.depositCount;
-        dto.withdrawCount = stat.withdrawCount;
-        dto.totalBet = stat.totalBet.toNumber();
-        dto.totalWin = stat.totalWin.toNumber();
-        dto.netWin = stat.netWin.toNumber();
-        dto.totalGameCount = stat.totalGameCount;
-        dto.totalBonusGiven = stat.totalBonusGiven.toNumber();
-        dto.totalBonusUsed = stat.totalBonusUsed.toNumber();
-        dto.totalBonusConverted = stat.totalBonusConverted.toNumber();
-        dto.totalCompEarned = stat.totalCompEarned.toNumber();
-        dto.totalCompConverted = stat.totalCompConverted.toNumber();
-        dto.totalCompDeducted = stat.totalCompDeducted.toNumber();
-        return dto;
-    }
 }
