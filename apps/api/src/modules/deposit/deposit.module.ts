@@ -15,6 +15,7 @@ import { GetDepositsService } from './application/get-deposits.service';
 import { GetDepositDetailService } from './application/get-deposit-detail.service';
 import { ApproveDepositService } from './application/approve-deposit.service';
 import { RejectDepositService } from './application/reject-deposit.service';
+import { CancelDepositService } from './application/cancel-deposit.service';
 import { FindBankConfigsAdminService } from './application/find-bank-configs-admin.service';
 import { GetBankConfigAdminService } from './application/get-bank-config-admin.service';
 import { UpdateBankConfigAdminService } from './application/update-bank-config-admin.service';
@@ -79,6 +80,7 @@ import {
     GetDepositDetailService,
     ApproveDepositService,
     RejectDepositService,
+    CancelDepositService,
     FindBankConfigsAdminService,
     GetBankConfigAdminService,
     UpdateBankConfigAdminService,
@@ -107,6 +109,7 @@ import {
     GetDepositDetailService,
     ApproveDepositService,
     RejectDepositService,
+    CancelDepositService,
     FindBankConfigsAdminService,
     GetBankConfigAdminService,
     UpdateBankConfigAdminService,

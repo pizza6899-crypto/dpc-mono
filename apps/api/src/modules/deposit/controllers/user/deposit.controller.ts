@@ -9,7 +9,6 @@ import {
   Delete,
   HttpCode,
   HttpStatus,
-  NotImplementedException,
 } from '@nestjs/common';
 import {
   ApiTags,
@@ -37,6 +36,7 @@ import { CreateCryptoDepositService } from '../../application/create-crypto-depo
 import { CreateBankDepositService } from '../../application/create-bank-deposit.service';
 import { GetMyDepositsService } from '../../application/get-my-deposits.service';
 import { GetMyDepositDetailService } from '../../application/get-my-deposit-detail.service';
+import { CancelDepositService } from '../../application/cancel-deposit.service';
 import {
   UserDepositResponseDto,
   CancelDepositResponseDto,
@@ -58,6 +58,7 @@ export class DepositController {
     private readonly createBankDepositService: CreateBankDepositService,
     private readonly getMyDepositsService: GetMyDepositsService,
     private readonly getMyDepositDetailService: GetMyDepositDetailService,
+    private readonly cancelDepositService: CancelDepositService,
     private readonly sqidsService: SqidsService,
   ) { }
 
@@ -257,7 +258,7 @@ export class DepositController {
     };
   }
 
-  @Delete(':uid')
+  @Delete(':id')
   @HttpCode(HttpStatus.OK)
   @ApiOperation({
     summary: 'Cancel deposit request / 입금 신청 취소',
@@ -265,8 +266,8 @@ export class DepositController {
       'Cancel a pending deposit request. (대기 중인 입금 요청을 취소합니다.)',
   })
   @ApiParam({
-    name: 'uid',
-    description: 'DepositDetail UID / 입금 상세 UID',
+    name: 'id',
+    description: 'DepositDetail ID (Encoded) / 인코딩된 입금 상세 ID',
     type: String,
   })
   @ApiStandardResponse(CancelDepositResponseDto, {
@@ -278,15 +279,22 @@ export class DepositController {
     action: 'CANCEL_DEPOSIT_REQUEST',
     category: 'DEPOSIT',
     extractMetadata: (_, args) => ({
-      depositUid: args[0],
+      depositId: args[0],
     }),
   })
   async cancelDeposit(
-    @Param('uid') uid: string,
+    @Param('id') id: string,
     @CurrentUser() user: CurrentUserWithSession,
     @RequestClientInfoParam() requestInfo: RequestClientInfo,
   ): Promise<CancelDepositResponseDto> {
-    throw new NotImplementedException('서비스 구현 필요');
+    const decodedId = this.sqidsService.decode(id, SqidsPrefix.DEPOSIT);
+
+    await this.cancelDepositService.execute({
+      id: decodedId,
+      userId: user.id,
+    });
+
+    return { success: true };
   }
 
   private toResponseDto(deposit: DepositDetail): UserDepositResponseDto {

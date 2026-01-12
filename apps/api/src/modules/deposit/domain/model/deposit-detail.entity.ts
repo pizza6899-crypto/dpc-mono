@@ -460,4 +460,21 @@ export class DepositDetail {
     this._failedAt = new Date();
     this._updatedAt = new Date();
   }
+
+  /**
+   * 입금 취소 처리 (사용자 직접 취소)
+   * @throws {DepositAlreadyProcessedException} 이미 처리된 입금인 경우
+   */
+  cancel(): void {
+    if (!this.id) throw new DepositException('Entity must be persisted before cancellation');
+    if (!this.canBeProcessed()) {
+      throw new DepositAlreadyProcessedException(this.id, this._status);
+    }
+
+    // 상태 변경
+    this._status = DepositDetailStatus.CANCELLED;
+
+    // 메타데이터 업데이트
+    this._updatedAt = new Date();
+  }
 }
