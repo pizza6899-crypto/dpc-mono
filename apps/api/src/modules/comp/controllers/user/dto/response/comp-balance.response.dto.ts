@@ -1,18 +1,16 @@
+import { ApiProperty } from '@nestjs/swagger';
 import { ExchangeCurrencyCode } from '@repo/database';
-import { CompWallet } from 'src/modules/comp/domain';
 
 export class CompBalanceResponseDto {
+    @ApiProperty({ enum: ExchangeCurrencyCode, description: 'Currency code' })
     currency: ExchangeCurrencyCode;
-    balance: string;
-    totalEarned: string;
-    totalUsed: string;
 
-    static fromDomain(wallet: CompWallet): CompBalanceResponseDto {
-        const dto = new CompBalanceResponseDto();
-        dto.currency = wallet.currency;
-        dto.balance = wallet.balance.toString();
-        dto.totalEarned = wallet.totalEarned.toString();
-        dto.totalUsed = wallet.totalUsed.toString();
-        return dto;
-    }
+    @ApiProperty({ description: 'Current balance', example: '1000.50' })
+    balance: string;
+
+    @ApiProperty({ description: 'Total earned comp points', example: '5000.00' })
+    totalEarned: string;
+
+    @ApiProperty({ description: 'Total used comp points', example: '2000.00' })
+    totalUsed: string;
 }

@@ -34,12 +34,26 @@ export class CompAdminController {
     @HttpCode(HttpStatus.OK)
     @ApiOperation({ summary: 'Get user comp balance (Admin)' })
     @ApiParam({ name: 'userId', example: '1' })
+    @AuditLog({
+        type: LogType.ACTIVITY,
+        category: 'COMP',
+        action: 'USER_BALANCE_VIEW',
+        extractMetadata: (_, args) => ({
+            userId: args[0],
+            currency: args[1]?.currency,
+        }),
+    })
     async getUserBalance(
         @Param('userId') userId: string,
         @Query() query: AdminCompBalanceQueryDto,
     ): Promise<CompBalanceResponseDto> {
         const wallet = await this.findCompBalanceService.execute(BigInt(userId), query.currency);
-        return CompBalanceResponseDto.fromDomain(wallet);
+        return {
+            currency: wallet.currency,
+            balance: wallet.balance.toString(),
+            totalEarned: wallet.totalEarned.toString(),
+            totalUsed: wallet.totalUsed.toString(),
+        };
     }
 
     @Post('users/:userId/adjust')
@@ -50,6 +64,13 @@ export class CompAdminController {
         type: LogType.ACTIVITY,
         category: 'COMP',
         action: 'ADJUST_BALANCE',
+        extractMetadata: (_, args) => ({
+            userId: args[0],
+            type: args[1]?.type,
+            amount: args[1]?.amount,
+            currency: args[1]?.currency,
+            reason: args[1]?.reason,
+        }),
     })
     async adjustUserComp(
         @Param('userId') userId: string,
@@ -84,6 +105,15 @@ export class CompAdminController {
     @ApiParam({ name: 'userId', example: '1' })
     @Paginated()
     @ApiPaginatedResponse(CompTransactionResponseDto)
+    @AuditLog({
+        type: LogType.ACTIVITY,
+        category: 'COMP',
+        action: 'USER_TRANSACTIONS_VIEW',
+        extractMetadata: (_, args, result) => ({
+            userId: args[0],
+            total: result?.total,
+        }),
+    })
     async getUserTransactions(
         @Param('userId') userId: string,
         @Query() query: FindCompTransactionsQueryDto,
@@ -99,7 +129,16 @@ export class CompAdminController {
 
         return {
             ...result,
-            data: result.data.map(CompTransactionResponseDto.fromDomain),
+            data: result.data.map(item => ({
+                id: item.id.toString(),
+                compWalletId: item.compWalletId.toString(),
+                amount: item.amount.toString(),
+                balanceAfter: item.balanceAfter.toString(),
+                type: item.type,
+                referenceId: item.referenceId ?? undefined,
+                description: item.description ?? undefined,
+                createdAt: item.createdAt,
+            })),
         };
     }
 }

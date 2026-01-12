@@ -1,7 +1,5 @@
 import { ApiProperty, ApiPropertyOptional } from '@nestjs/swagger';
-import { ExchangeCurrencyCode, CompTransactionType } from '@repo/database';
-import { CompWalletTransaction } from '@repo/database';
-import { CompTransaction } from 'src/modules/comp/domain';
+import { CompTransactionType } from '@repo/database';
 
 export class CompTransactionResponseDto {
     @ApiProperty({ description: 'Transaction ID' })
@@ -27,17 +25,4 @@ export class CompTransactionResponseDto {
 
     @ApiProperty({ description: 'Created At' })
     createdAt: Date;
-
-    static fromDomain(entity: CompTransaction): CompTransactionResponseDto {
-        const dto = new CompTransactionResponseDto();
-        dto.id = entity.id.toString();
-        dto.compWalletId = entity.compWalletId.toString();
-        dto.amount = entity.amount.toString();
-        dto.balanceAfter = entity.balanceAfter.toString();
-        dto.type = entity.type;
-        dto.referenceId = entity.referenceId ?? undefined;
-        dto.description = entity.description ?? undefined;
-        dto.createdAt = entity.createdAt;
-        return dto;
-    }
 }
