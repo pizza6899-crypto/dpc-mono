@@ -24,14 +24,14 @@ import type { CurrentUserWithSession } from 'src/common/auth/decorators/current-
 import { RequestClientInfoParam } from 'src/common/auth/decorators/request-info.decorator';
 import type { PaginatedData, RequestClientInfo } from 'src/common/http/types';
 import { Paginated } from 'src/common/http/decorators/paginated.decorator';
-import { GetDepositsQueryDto } from '../../dtos/get-deposits-query.dto';
-import { ApproveBankDepositDto } from '../../dtos/approve-bank-deposit.dto';
-import { RejectDepositDto } from '../../dtos/reject-deposit.dto';
+import { GetDepositsQueryDto } from './dto/request/get-deposits-query.dto';
+import { ApproveBankDepositDto } from './dto/request/approve-bank-deposit.dto';
+import { RejectDepositDto } from './dto/request/reject-deposit.dto';
 import {
   AdminDepositListItemDto,
   ApproveDepositResponseDto,
   RejectDepositResponseDto,
-} from '../../dtos/admin-deposit-response.dto';
+} from './dto/response/deposit.response.dto';
 import { AuditLog } from 'src/modules/audit-log/infrastructure';
 import { LogType } from 'src/modules/audit-log/domain';
 import { GetDepositStatsService } from '../../application/get-deposit-stats.service';
@@ -53,15 +53,15 @@ import {
   CreateBankConfigRequestDto,
   UpdateBankConfigRequestDto,
   GetBankConfigsQueryDto,
-  DepositBankConfigResponseDto
-} from '../../dtos/bank-config-admin.dto';
+} from './dto/request/bank-config.request.dto';
+import { BankConfigResponseDto } from './dto/response/bank-config.response.dto';
 import {
-  DepositCryptoConfigResponseDto,
-  GetCryptoConfigsQueryDto,
-  UpdateCryptoConfigRequestDto,
   CreateCryptoConfigRequestDto,
-} from '../../dtos/crypto-config-admin.dto';
-import { DepositStatsResponseDto } from '../../dtos/deposit-stats.dto';
+  UpdateCryptoConfigRequestDto,
+  GetCryptoConfigsQueryDto,
+} from './dto/request/crypto-config.request.dto';
+import { CryptoConfigResponseDto } from './dto/response/crypto-config.response.dto';
+import { DepositStatsResponseDto } from './dto/response/deposit-stats.response.dto';
 import { SuccessResponseDto } from 'src/common/dtos/success-response.dto';
 
 @Controller('admin/deposits')
@@ -271,7 +271,7 @@ export class AdminDepositController {
     description:
       'Retrieve list of bank account configurations. (은행 계좌 설정 목록을 조회합니다.)',
   })
-  @ApiPaginatedResponse(DepositBankConfigResponseDto, {
+  @ApiPaginatedResponse(BankConfigResponseDto, {
     status: 200,
     description: 'Bank config list retrieved successfully / 은행 계좌 목록 조회 성공',
   })
@@ -284,7 +284,7 @@ export class AdminDepositController {
     @Query() query: GetBankConfigsQueryDto,
     @CurrentUser() admin: CurrentUserWithSession,
     @RequestClientInfoParam() requestInfo: RequestClientInfo,
-  ): Promise<PaginatedData<DepositBankConfigResponseDto>> {
+  ): Promise<PaginatedData<BankConfigResponseDto>> {
     const result = await this.findBankConfigsAdminService.execute(query);
     return {
       ...result,
@@ -299,7 +299,7 @@ export class AdminDepositController {
     description:
       'Register a new bank account configuration. (새로운 은행 계좌 설정을 등록합니다.)',
   })
-  @ApiStandardResponse(DepositBankConfigResponseDto, {
+  @ApiStandardResponse(BankConfigResponseDto, {
     status: 201,
     description: 'Bank config created successfully / 은행 계좌 등록 성공',
   })
@@ -316,7 +316,7 @@ export class AdminDepositController {
     @Body() dto: CreateBankConfigRequestDto,
     @CurrentUser() admin: CurrentUserWithSession,
     @RequestClientInfoParam() requestInfo: RequestClientInfo,
-  ): Promise<DepositBankConfigResponseDto> {
+  ): Promise<BankConfigResponseDto> {
     const config = await this.createBankConfigService.execute(dto);
 
     return {
@@ -351,7 +351,7 @@ export class AdminDepositController {
     description: 'BankConfig ID / 은행 계좌 설정 ID',
     type: String,
   })
-  @ApiStandardResponse(DepositBankConfigResponseDto, {
+  @ApiStandardResponse(BankConfigResponseDto, {
     status: 200,
     description: 'Bank config detail retrieved successfully / 은행 계좌 상세 조회 성공',
   })
@@ -367,7 +367,7 @@ export class AdminDepositController {
     @Param('id') id: string,
     @CurrentUser() admin: CurrentUserWithSession,
     @RequestClientInfoParam() requestInfo: RequestClientInfo,
-  ): Promise<DepositBankConfigResponseDto> {
+  ): Promise<BankConfigResponseDto> {
     const config = await this.getBankConfigAdminService.execute({ id: BigInt(id) });
     return this.toBankConfigResponseDto(config);
   }
@@ -384,7 +384,7 @@ export class AdminDepositController {
     description: 'BankConfig ID / 은행 계좌 설정 ID',
     type: String,
   })
-  @ApiStandardResponse(DepositBankConfigResponseDto, {
+  @ApiStandardResponse(BankConfigResponseDto, {
     status: 200,
     description: 'Bank config updated successfully / 은행 계좌 수정 성공',
   })
@@ -402,7 +402,7 @@ export class AdminDepositController {
     @Body() dto: UpdateBankConfigRequestDto,
     @CurrentUser() admin: CurrentUserWithSession,
     @RequestClientInfoParam() requestInfo: RequestClientInfo,
-  ): Promise<DepositBankConfigResponseDto> {
+  ): Promise<BankConfigResponseDto> {
     const config = await this.updateBankConfigAdminService.execute({
       id: BigInt(id),
       ...dto
@@ -455,7 +455,7 @@ export class AdminDepositController {
     description:
       'Retrieve list of cryptocurrency configurations. (암호화폐 설정 목록을 조회합니다.)',
   })
-  @ApiPaginatedResponse(DepositCryptoConfigResponseDto, {
+  @ApiPaginatedResponse(CryptoConfigResponseDto, {
     status: 200,
     description: 'Crypto config list retrieved successfully / 암호화폐 설정 목록 조회 성공',
   })
@@ -468,7 +468,7 @@ export class AdminDepositController {
     @Query() query: GetCryptoConfigsQueryDto,
     @CurrentUser() admin: CurrentUserWithSession,
     @RequestClientInfoParam() requestInfo: RequestClientInfo,
-  ): Promise<PaginatedData<DepositCryptoConfigResponseDto>> {
+  ): Promise<PaginatedData<CryptoConfigResponseDto>> {
     const paginated = await this.findCryptoConfigsAdminService.execute(query);
     return {
       ...paginated,
@@ -488,7 +488,7 @@ export class AdminDepositController {
     description: 'CryptoConfig ID / 암호화폐 설정 ID',
     type: String,
   })
-  @ApiStandardResponse(DepositCryptoConfigResponseDto, {
+  @ApiStandardResponse(CryptoConfigResponseDto, {
     status: 200,
     description: 'Crypto config detail retrieved successfully / 암호화폐 설정 상세 조회 성공',
   })
@@ -504,7 +504,7 @@ export class AdminDepositController {
     @Param('id') id: string,
     @CurrentUser() admin: CurrentUserWithSession,
     @RequestClientInfoParam() requestInfo: RequestClientInfo,
-  ): Promise<DepositCryptoConfigResponseDto> {
+  ): Promise<CryptoConfigResponseDto> {
     const config = await this.getCryptoConfigAdminService.execute({ id: BigInt(id) });
     return this.toCryptoConfigResponseDto(config);
   }
@@ -521,7 +521,7 @@ export class AdminDepositController {
     description: 'CryptoConfig ID / 암호화폐 설정 ID',
     type: String,
   })
-  @ApiStandardResponse(DepositCryptoConfigResponseDto, {
+  @ApiStandardResponse(CryptoConfigResponseDto, {
     status: 200,
     description: 'Crypto config updated successfully / 암호화폐 설정 수정 성공',
   })
@@ -539,7 +539,7 @@ export class AdminDepositController {
     @Body() dto: UpdateCryptoConfigRequestDto,
     @CurrentUser() admin: CurrentUserWithSession,
     @RequestClientInfoParam() requestInfo: RequestClientInfo,
-  ): Promise<DepositCryptoConfigResponseDto> {
+  ): Promise<CryptoConfigResponseDto> {
     const config = await this.updateCryptoConfigAdminService.execute({
       id: BigInt(id),
       ...dto
@@ -554,7 +554,7 @@ export class AdminDepositController {
     description:
       'Create a new cryptocurrency configuration. (새로운 암호화폐 설정을 생성합니다.)',
   })
-  @ApiStandardResponse(DepositCryptoConfigResponseDto, {
+  @ApiStandardResponse(CryptoConfigResponseDto, {
     status: 201,
     description: 'Crypto config created successfully / 암호화폐 설정 생성 성공',
   })
@@ -571,7 +571,7 @@ export class AdminDepositController {
     @Body() dto: CreateCryptoConfigRequestDto,
     @CurrentUser() admin: CurrentUserWithSession,
     @RequestClientInfoParam() requestInfo: RequestClientInfo,
-  ): Promise<DepositCryptoConfigResponseDto> {
+  ): Promise<CryptoConfigResponseDto> {
     const config = await this.createCryptoConfigService.execute(dto);
     return this.toCryptoConfigResponseDto(config);
   }
@@ -609,7 +609,7 @@ export class AdminDepositController {
     return { success: true };
   }
 
-  private toCryptoConfigResponseDto(config: any): DepositCryptoConfigResponseDto {
+  private toCryptoConfigResponseDto(config: any): CryptoConfigResponseDto {
     return {
       id: config.id.toString(),
       uid: config.uid,
@@ -625,7 +625,7 @@ export class AdminDepositController {
     };
   }
 
-  private toBankConfigResponseDto(config: any): DepositBankConfigResponseDto {
+  private toBankConfigResponseDto(config: any): BankConfigResponseDto {
     return {
       id: config.id.toString(),
       uid: config.uid,

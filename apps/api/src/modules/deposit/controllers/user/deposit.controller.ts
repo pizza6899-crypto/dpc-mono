@@ -24,9 +24,9 @@ import {
 } from 'src/common/http/decorators/api-response.decorator';
 import { Paginated } from 'src/common/http/decorators/paginated.decorator';
 import type { PaginatedData, RequestClientInfo } from 'src/common/http/types';
-import { CreateDepositResponseDto } from '../../dtos/create-deposit-response.dto';
-import { CreateCryptoDepositRequestDto } from '../../dtos/create-crypto-deposit-request.dto';
-import { CreateBankDepositRequestDto } from '../../dtos/create-bank-deposit-request.dto';
+import { CreateDepositResponseDto } from './dto/response/create-deposit-response.dto';
+import { CreateCryptoDepositRequestDto } from './dto/request/create-crypto-deposit-request.dto';
+import { CreateBankDepositRequestDto } from './dto/request/create-bank-deposit-request.dto';
 import { CurrentUser } from 'src/common/auth/decorators/current-user.decorator';
 import type { CurrentUserWithSession } from 'src/common/auth/decorators/current-user.decorator';
 import { RequestClientInfoParam } from 'src/common/auth/decorators/request-info.decorator';
@@ -40,9 +40,9 @@ import { GetMyDepositDetailService } from '../../application/get-my-deposit-deta
 import {
   UserDepositResponseDto,
   CancelDepositResponseDto,
-} from '../../dtos/deposit-address-user.dto';
-import { GetAvailableDepositMethodsResponseDto } from '../../dtos/deposit-method-user.dto';
-import { GetDepositsQueryDto } from '../../dtos/get-deposits-query.dto';
+} from './dto/response/deposit.response.dto';
+import { GetAvailableDepositMethodsResponseDto } from './dto/response/deposit-methods.response.dto';
+import { GetDepositsQueryDto } from './dto/request/get-deposits-query.dto';
 
 @ApiTags('입금 (Deposit)')
 @Controller('deposits')

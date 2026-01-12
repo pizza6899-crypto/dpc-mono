@@ -1,4 +1,3 @@
-// src/modules/deposit/dtos/crypto-config-admin.dto.ts
 import { ApiProperty, ApiPropertyOptional } from '@nestjs/swagger';
 import { IsEnum, IsString, IsNotEmpty, IsBoolean, IsOptional, IsInt, Min, IsNumberString } from 'class-validator';
 import { Type } from 'class-transformer';
@@ -120,39 +119,4 @@ export class GetCryptoConfigsQueryDto {
     @IsOptional()
     @Type(() => Boolean)
     isActive?: boolean;
-}
-
-export class DepositCryptoConfigResponseDto {
-    @ApiProperty({ description: 'ID' })
-    id: string;
-
-    @ApiProperty({ description: 'Business UID' })
-    uid: string;
-
-    @ApiProperty({ description: 'Symbol' })
-    symbol: string;
-
-    @ApiProperty({ description: 'Network' })
-    network: string;
-
-    @ApiProperty({ description: 'Active Status' })
-    isActive: boolean;
-
-    @ApiProperty({ description: 'Minimum Deposit Amount' })
-    minDepositAmount: string;
-
-    @ApiProperty({ description: 'Deposit Fee Rate' })
-    depositFeeRate: string;
-
-    @ApiProperty({ description: 'Confirmations Needed' })
-    confirmations: number;
-
-    @ApiPropertyOptional({ description: 'Contract Address' })
-    contractAddress: string | null;
-
-    @ApiProperty({ description: 'Created At' })
-    createdAt: Date;
-
-    @ApiProperty({ description: 'Updated At' })
-    updatedAt: Date;
 }
