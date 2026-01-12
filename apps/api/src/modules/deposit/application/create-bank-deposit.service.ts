@@ -1,3 +1,4 @@
+// src/modules/deposit/application/create-bank-deposit.service.ts
 import { Injectable, Inject } from '@nestjs/common';
 import { Prisma, DepositMethodType, ExchangeCurrencyCode, PaymentProvider } from '@repo/database';
 import { createId } from '@paralleldrive/cuid2';
@@ -17,16 +18,24 @@ import {
     InvalidPromotionSelectionException,
     NoActiveBankConfigException,
     InvalidDepositAmountException,
+    BankConfig,
 } from '../domain';
-import { CreateDepositResponseDto } from '../dtos/create-deposit-response.dto';
-import { CreateBankDepositRequestDto } from '../dtos/create-bank-deposit-request.dto';
 import { CheckEligiblePromotionsService } from '../../promotion/application/check-eligible-promotions.service';
 import { Transactional } from '@nestjs-cls/transactional';
 
-interface CreateBankDepositParams extends CreateBankDepositRequestDto {
+interface CreateBankDepositParams {
     userId: bigint;
+    payCurrency: string;
+    amount: string | number;
+    depositorName?: string;
+    depositPromotionId?: string | number;
     ipAddress?: string;
     deviceFingerprint?: string;
+}
+
+interface CreateBankDepositResult {
+    deposit: DepositDetail;
+    selectedBank: BankConfig;
 }
 
 @Injectable()
@@ -40,7 +49,7 @@ export class CreateBankDepositService {
     ) { }
 
     @Transactional()
-    async execute(params: CreateBankDepositParams): Promise<CreateDepositResponseDto> {
+    async execute(params: CreateBankDepositParams): Promise<CreateBankDepositResult> {
         const {
             userId,
             payCurrency,
@@ -121,15 +130,10 @@ export class CreateBankDepositService {
         // 5. 저장
         const savedDeposit = await this.depositRepository.create(depositDetail);
 
-        // 6. 응답
+        // 6. 도메인 엔티티 반환
         return {
-            depositUid: savedDeposit.uid,
-            payCurrency: savedDeposit.depositCurrency,
-            bankName: selectedBank.bankName,
-            accountNumber: selectedBank.accountNumber,
-            accountHolder: selectedBank.accountHolder,
-            transactionId: savedDeposit.transactionId?.toString(),
-            isDuplicate: false,
+            deposit: savedDeposit,
+            selectedBank,
         };
     }
 }

@@ -2,18 +2,12 @@
 import { Inject, Injectable, Logger } from '@nestjs/common';
 import { Transactional } from '@nestjs-cls/transactional';
 import { DEPOSIT_DETAIL_REPOSITORY } from '../ports/out';
-import type { DepositDetailRepositoryPort } from '../ports/out';
-import type { RequestClientInfo } from 'src/common/http/types';
-import {
-  DepositNotFoundException,
-  DepositAlreadyProcessedException,
-} from '../domain';
+import type { DepositDetailRepositoryPort } from '../ports/out/deposit-detail.repository.port';
 
 interface RejectDepositParams {
   id: bigint;
   failureReason: string;
   adminId: bigint;
-  requestInfo: RequestClientInfo;
 }
 
 interface RejectDepositResult {
@@ -44,14 +38,7 @@ export class RejectDepositService {
     // 2. 엔티티 비즈니스 로직 실행 (거부 처리)
     deposit.reject(failureReason, adminId);
 
-    // 3. 만약 이미 트랜잭션이 있다면 상태 업데이트 (취소 처리)
-    // Note: 지연 생성 정책에 따라 보통은 없을 것이나, 시스템 일관성을 위해 체크
-    if (deposit.transactionId) {
-      // TODO: Transaction 상태 업데이트 로직 (Repository 메서드 필요할 수 있음)
-      // 현재는 Repository에 트랜잭션 업데이트 메서드가 없으므로 생략하거나 추가
-    }
-
-    // 4. DepositDetail 상태 업데이트
+    // 3. DepositDetail 상태 업데이트
     await this.depositRepository.update(deposit);
 
     return {
@@ -59,4 +46,3 @@ export class RejectDepositService {
     };
   }
 }
-

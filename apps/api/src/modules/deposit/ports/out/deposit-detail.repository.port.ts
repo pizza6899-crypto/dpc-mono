@@ -1,6 +1,33 @@
 // apps/api/src/modules/deposit/ports/out/deposit-detail.repository.port.ts
-import { Prisma, TransactionStatus, TransactionType, ExchangeCurrencyCode } from '@repo/database';
+import { Prisma, TransactionStatus, TransactionType, ExchangeCurrencyCode, DepositDetailStatus, DepositMethodType } from '@repo/database';
 import { DepositDetail } from '../../domain';
+
+export interface DepositListQuery {
+  skip?: number;
+  take?: number;
+  status?: DepositDetailStatus;
+  methodType?: DepositMethodType;
+  userId?: bigint;
+  currency?: ExchangeCurrencyCode;
+  startDate?: string;
+  endDate?: string;
+  sortBy?: string;
+  sortOrder?: 'asc' | 'desc';
+}
+
+export interface DepositStats {
+  todayTotalAmount: Prisma.Decimal;
+  pendingCount: number;
+  methodDistribution: {
+    crypto: number;
+    bank: number;
+  };
+}
+
+export interface DepositWithUser {
+  deposit: DepositDetail;
+  userEmail: string | null;
+}
 
 export interface DepositDetailRepositoryPort {
   findById(id: bigint, include?: { transaction?: boolean; bankDepositConfig?: boolean; cryptoDepositConfig?: boolean }): Promise<DepositDetail | null>;
@@ -17,10 +44,19 @@ export interface DepositDetailRepositoryPort {
     afterAmount: Prisma.Decimal;
   }): Promise<bigint>;
   getTransactionUserId(transactionId: bigint): Promise<bigint | null>;
-  listByUserId(userId: bigint, query: any): Promise<{ items: DepositDetail[]; total: number }>;
+
+  // User queries
+  listByUserId(userId: bigint, query: DepositListQuery): Promise<{ items: DepositDetail[]; total: number }>;
   findByUidAndUserId(uid: string, userId: bigint): Promise<DepositDetail | null>;
   findByIdAndUserId(id: bigint, userId: bigint): Promise<DepositDetail | null>;
   existsPendingByUserId(userId: bigint): Promise<boolean>;
+
+  // Admin queries
+  list(query: DepositListQuery): Promise<{ items: DepositWithUser[]; total: number }>;
+  getByIdWithUser(id: bigint): Promise<DepositWithUser>;
+  getStats(): Promise<DepositStats>;
+
+  // Locks
   acquireUserLock(userId: bigint): Promise<void>;
   acquireDepositLock(depositId: bigint): Promise<void>;
 }

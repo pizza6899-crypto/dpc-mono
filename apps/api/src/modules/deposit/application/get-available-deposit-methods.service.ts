@@ -8,13 +8,28 @@ import type {
     BankConfigRepositoryPort,
     CryptoConfigRepositoryPort,
 } from '../ports/out';
-import { CryptoConfig, BankConfig } from '../domain'; // BankConfig import 추가
-import {
-    GetAvailableDepositMethodsResponseDto,
-    CryptoGroupSimpleDto,
-    BankGroupSimpleDto,
-} from '../dtos/deposit-method-user.dto';
-import { ExchangeCurrencyCode, Prisma } from '@repo/database'; // Prisma util for decimal comparison if needed
+import { CryptoConfig, BankConfig } from '../domain';
+import { ExchangeCurrencyCode } from '@repo/database';
+
+interface CryptoNetworkInfo {
+    network: string;
+    minDepositAmount: string;
+}
+
+interface CryptoGroup {
+    symbol: ExchangeCurrencyCode;
+    networks: CryptoNetworkInfo[];
+}
+
+interface BankGroup {
+    currency: ExchangeCurrencyCode;
+    minAmount: string;
+}
+
+interface GetAvailableDepositMethodsResult {
+    bank: BankGroup[];
+    crypto: CryptoGroup[];
+}
 
 @Injectable()
 export class GetAvailableDepositMethodsService {
@@ -25,7 +40,7 @@ export class GetAvailableDepositMethodsService {
         private readonly cryptoConfigRepository: CryptoConfigRepositoryPort,
     ) { }
 
-    async execute(): Promise<GetAvailableDepositMethodsResponseDto> {
+    async execute(): Promise<GetAvailableDepositMethodsResult> {
         const [bankConfigs, cryptoConfigs] = await Promise.all([
             this.bankConfigRepository.listActive(),
             this.cryptoConfigRepository.listActive(),
@@ -39,7 +54,7 @@ export class GetAvailableDepositMethodsService {
             cryptoGroupMap.set(config.symbol, list);
         });
 
-        const cryptoResponse: CryptoGroupSimpleDto[] = Array.from(cryptoGroupMap.entries()).map(([symbol, configs]) => ({
+        const cryptoResponse: CryptoGroup[] = Array.from(cryptoGroupMap.entries()).map(([symbol, configs]) => ({
             symbol: symbol as ExchangeCurrencyCode,
             networks: configs.map((config) => ({
                 network: config.network,
@@ -55,7 +70,7 @@ export class GetAvailableDepositMethodsService {
             bankGroupMap.set(config.currency, list);
         });
 
-        const bankResponse: BankGroupSimpleDto[] = Array.from(bankGroupMap.entries()).map(([currency, configs]) => {
+        const bankResponse: BankGroup[] = Array.from(bankGroupMap.entries()).map(([currency, configs]) => {
             // 해당 통화의 모든 설정 중 가장 작은 최소 입금액 찾기
             let minAmount = configs[0].minAmount;
             for (const config of configs) {

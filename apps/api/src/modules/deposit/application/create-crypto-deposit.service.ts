@@ -1,3 +1,4 @@
+// src/modules/deposit/application/create-crypto-deposit.service.ts
 import { Injectable, Inject } from '@nestjs/common';
 import { Prisma, DepositMethodType, ExchangeCurrencyCode, PaymentProvider } from '@repo/database';
 import { createId } from '@paralleldrive/cuid2';
@@ -17,13 +18,15 @@ import {
     InvalidPromotionSelectionException,
     UnavailableCryptoConfigException,
 } from '../domain';
-import { CreateDepositResponseDto } from '../dtos/create-deposit-response.dto';
-import { CreateCryptoDepositRequestDto } from '../dtos/create-crypto-deposit-request.dto';
 import { CheckEligiblePromotionsService } from '../../promotion/application/check-eligible-promotions.service';
 import { Transactional } from '@nestjs-cls/transactional';
 
-interface CreateCryptoDepositParams extends CreateCryptoDepositRequestDto {
+interface CreateCryptoDepositParams {
     userId: bigint;
+    payCurrency: string;
+    payNetwork: string;
+    amount?: string | number;
+    depositPromotionId?: string | number;
     ipAddress?: string;
     deviceFingerprint?: string;
 }
@@ -39,7 +42,7 @@ export class CreateCryptoDepositService {
     ) { }
 
     @Transactional()
-    async execute(params: CreateCryptoDepositParams): Promise<CreateDepositResponseDto> {
+    async execute(params: CreateCryptoDepositParams): Promise<DepositDetail> {
         const {
             userId,
             payCurrency,
@@ -89,7 +92,7 @@ export class CreateCryptoDepositService {
         // 2. DepositMethod 생성
         const depositMethod = DepositMethod.create(
             DepositMethodType.CRYPTO_WALLET,
-            PaymentProvider.MANUAL, // TODO: 적절한 Provider로 변경
+            PaymentProvider.MANUAL,
         );
 
         // 3. DepositAmount 생성
@@ -113,18 +116,7 @@ export class CreateCryptoDepositService {
             deviceFingerprint
         });
 
-        // 5. 저장
-        const savedDeposit = await this.depositRepository.create(depositDetail);
-
-        // 6. 응답
-        return {
-            depositUid: savedDeposit.uid,
-            payAddress: savedDeposit.walletAddress ?? undefined,
-            payCurrency: savedDeposit.depositCurrency,
-            payNetwork: savedDeposit.depositNetwork ?? undefined,
-            payAddressExtraId: savedDeposit.walletAddressExtraId,
-            transactionId: savedDeposit.transactionId?.toString(),
-            isDuplicate: false,
-        };
+        // 5. 저장 및 반환
+        return await this.depositRepository.create(depositDetail);
     }
 }

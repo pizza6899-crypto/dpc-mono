@@ -4,7 +4,6 @@ import { Transactional } from '@nestjs-cls/transactional';
 import { Prisma, AdjustmentReasonCode } from '@repo/database';
 import { TransactionStatus, TransactionType } from '@repo/database';
 import type { RequestClientInfo } from 'src/common/http/types';
-import { ApproveDepositResponseDto } from '../dtos/admin-deposit-response.dto';
 import { UpdateUserBalanceAdminService } from '../../wallet/application/update-user-balance-admin.service';
 import { DepositAlreadyProcessedException } from '../domain';
 import type { DepositDetailRepositoryPort } from '../ports/out/deposit-detail.repository.port';
@@ -23,7 +22,12 @@ interface ApproveDepositParams {
   requestInfo: RequestClientInfo;
 }
 
-interface ApproveDepositResult extends ApproveDepositResponseDto { }
+interface ApproveDepositResult {
+  transactionId: string;
+  actuallyPaid: string;
+  bonusAmount: string;
+  userId: string;
+}
 
 @Injectable()
 export class ApproveDepositService {
@@ -70,7 +74,6 @@ export class ApproveDepositService {
     });
 
     // 4. Transaction 생성 (지연 생성)
-    // 기존에 트랜잭션이 없었다면 새로 생성, 있었다면 상태만 업데이트 (현 시나리오는 지연 생성이므로 새로 생성)
     let transactionId = deposit.transactionId;
     if (!transactionId) {
       transactionId = await this.depositRepository.createTransaction({
@@ -82,9 +85,6 @@ export class ApproveDepositService {
         beforeAmount: balanceUpdate.beforeMainBalance,
         afterAmount: balanceUpdate.afterMainBalance,
       });
-    } else {
-      // 만약 이미 트랜잭션이 있다면 (예: CONFIRMING 상태에서 미리 생성된 경우 - 현재는 없음)
-      // TODO: 기존 트랜잭션 상태 업데이트 로직 필요 시 추가
     }
 
     // 5. 엔티티 승인 처리 (상태 변경 및 트랜잭션 링크)
@@ -135,4 +135,3 @@ export class ApproveDepositService {
     };
   }
 }
-

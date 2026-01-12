@@ -115,9 +115,18 @@ export class DepositController {
     @RequestClientInfoParam() requestInfo: RequestClientInfo,
   ): Promise<PaginatedData<UserDepositResponseDto>> {
     const result = await this.getMyDepositsService.execute({
-      query,
+      query: {
+        skip: ((query.page || 1) - 1) * (query.limit || 20),
+        take: query.limit || 20,
+        status: query.status,
+        methodType: query.methodType,
+        currency: query.currency,
+        startDate: query.startDate,
+        endDate: query.endDate,
+        sortBy: query.sortBy,
+        sortOrder: query.sortOrder,
+      },
       userId: user.id,
-      requestInfo,
     });
     return {
       data: result.data.map(deposit => this.toResponseDto(deposit)),
@@ -231,20 +240,20 @@ export class DepositController {
     @CurrentUser() user: CurrentUserWithSession,
     @RequestClientInfoParam() clientInfo: RequestClientInfo,
   ): Promise<CreateDepositResponseDto> {
-    const deposit = await this.createBankDepositService.execute({
+    const result = await this.createBankDepositService.execute({
       ...dto,
       userId: user.id,
       ipAddress: clientInfo.ip,
       deviceFingerprint: clientInfo.userAgent,
     });
-    // Bank config is needed for response, but service returns deposit entity
-    // This would need to be fetched or included in the deposit entity
     return {
-      id: this.sqidsService.encode(deposit.id!, SqidsPrefix.DEPOSIT),
-      payCurrency: deposit.depositCurrency,
-      transactionId: deposit.transactionId?.toString(),
+      id: this.sqidsService.encode(result.deposit.id!, SqidsPrefix.DEPOSIT),
+      payCurrency: result.deposit.depositCurrency,
+      bankName: result.selectedBank.bankName,
+      accountNumber: result.selectedBank.accountNumber,
+      accountHolder: result.selectedBank.accountHolder,
+      transactionId: result.deposit.transactionId?.toString(),
       isDuplicate: false,
-      // TODO: Add bank details from config
     };
   }
 

@@ -110,10 +110,7 @@ export class AdminDepositController {
     @CurrentUser() admin: CurrentUserWithSession,
     @RequestClientInfoParam() requestInfo: RequestClientInfo,
   ): Promise<DepositStatsResponseDto> {
-    return await this.getDepositStatsService.execute({
-      adminId: admin.id,
-      requestInfo,
-    });
+    return await this.getDepositStatsService.execute();
   }
 
   @Get()
@@ -138,11 +135,37 @@ export class AdminDepositController {
     @CurrentUser() admin: CurrentUserWithSession,
     @RequestClientInfoParam() requestInfo: RequestClientInfo,
   ): Promise<PaginatedData<AdminDepositListItemDto>> {
-    return await this.getDepositsService.execute({
-      query,
-      adminId: admin.id,
-      requestInfo,
+    const result = await this.getDepositsService.execute({
+      query: {
+        skip: ((query.page || 1) - 1) * (query.limit || 20),
+        take: query.limit || 20,
+        status: query.status,
+        methodType: query.methodType,
+        userId: query.userId,
+        currency: query.currency,
+        startDate: query.startDate,
+        endDate: query.endDate,
+        sortBy: query.sortBy,
+        sortOrder: query.sortOrder,
+      },
     });
+    return {
+      data: result.data.map((item) => ({
+        id: item.deposit.id!.toString(),
+        userId: item.deposit.userId,
+        userEmail: item.userEmail || '',
+        status: item.deposit.status,
+        methodType: item.deposit.getMethod().methodType,
+        provider: item.deposit.getMethod().provider,
+        depositCurrency: item.deposit.depositCurrency,
+        createdAt: item.deposit.createdAt,
+        updatedAt: item.deposit.updatedAt,
+        failureReason: item.deposit.failureReason || '',
+      })),
+      page: result.page,
+      limit: result.limit,
+      total: result.total,
+    };
   }
 
   @Get(':id')
@@ -174,11 +197,21 @@ export class AdminDepositController {
     @CurrentUser() admin: CurrentUserWithSession,
     @RequestClientInfoParam() requestInfo: RequestClientInfo,
   ): Promise<AdminDepositListItemDto> {
-    return await this.getDepositDetailService.execute({
+    const result = await this.getDepositDetailService.execute({
       id: BigInt(id),
-      adminId: admin.id,
-      requestInfo,
     });
+    return {
+      id: result.deposit.id!.toString(),
+      userId: result.deposit.userId,
+      userEmail: result.userEmail || '',
+      status: result.deposit.status,
+      methodType: result.deposit.getMethod().methodType,
+      provider: result.deposit.getMethod().provider,
+      depositCurrency: result.deposit.depositCurrency,
+      createdAt: result.deposit.createdAt,
+      updatedAt: result.deposit.updatedAt,
+      failureReason: result.deposit.failureReason || '',
+    };
   }
 
   @Post(':id/approve')
@@ -257,7 +290,6 @@ export class AdminDepositController {
       id: BigInt(id),
       failureReason: dto.failureReason,
       adminId: admin.id,
-      requestInfo,
     });
   }
 

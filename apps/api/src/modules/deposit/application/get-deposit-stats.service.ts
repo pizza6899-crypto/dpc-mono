@@ -1,17 +1,7 @@
 // src/modules/deposit/application/get-deposit-stats.service.ts
-import { Injectable, Logger } from '@nestjs/common';
-import { InjectTransaction } from '@nestjs-cls/transactional';
-import { type PrismaTransaction } from 'src/infrastructure/prisma/prisma.module';
-import {
-  DepositDetailStatus,
-  DepositMethodType,
-} from '@repo/database';
-import type { RequestClientInfo } from 'src/common/http/types';
-
-interface GetDepositStatsParams {
-  adminId: bigint;
-  requestInfo: RequestClientInfo;
-}
+import { Injectable, Inject } from '@nestjs/common';
+import { DEPOSIT_DETAIL_REPOSITORY } from '../ports/out';
+import type { DepositDetailRepositoryPort, DepositStats } from '../ports/out/deposit-detail.repository.port';
 
 interface GetDepositStatsResult {
   todayTotalAmount: string;
@@ -24,72 +14,18 @@ interface GetDepositStatsResult {
 
 @Injectable()
 export class GetDepositStatsService {
-  private readonly logger = new Logger(GetDepositStatsService.name);
-
   constructor(
-    @InjectTransaction()
-    private readonly tx: PrismaTransaction,
+    @Inject(DEPOSIT_DETAIL_REPOSITORY)
+    private readonly depositRepository: DepositDetailRepositoryPort,
   ) { }
 
-  async execute(
-    params: GetDepositStatsParams,
-  ): Promise<GetDepositStatsResult> {
-    const { adminId, requestInfo } = params;
-
-    const today = new Date();
-    today.setHours(0, 0, 0, 0);
-
-    const [todayDeposits, pendingDeposits, methodStats] = await Promise.all([
-      // 오늘 총 입금액
-      this.tx.depositDetail.aggregate({
-        where: {
-          status: DepositDetailStatus.COMPLETED,
-          createdAt: {
-            gte: today,
-          },
-        },
-        _sum: {
-          actuallyPaid: true,
-        },
-      }),
-      // 대기 중인 요청 수
-      this.tx.depositDetail.count({
-        where: {
-          status: {
-            in: [DepositDetailStatus.PENDING, DepositDetailStatus.CONFIRMING],
-          },
-        },
-      }),
-      // 수단별 점유율
-      this.tx.depositDetail.groupBy({
-        by: ['methodType'],
-        where: {
-          status: DepositDetailStatus.COMPLETED,
-          createdAt: {
-            gte: today,
-          },
-        },
-        _count: {
-          id: true,
-        },
-      }),
-    ]);
-
-    const methodDistribution = {
-      crypto:
-        methodStats.find((s) => s.methodType === DepositMethodType.CRYPTO_WALLET)
-          ?._count.id || 0,
-      bank:
-        methodStats.find((s) => s.methodType === DepositMethodType.BANK_TRANSFER)
-          ?._count.id || 0,
-    };
+  async execute(): Promise<GetDepositStatsResult> {
+    const stats = await this.depositRepository.getStats();
 
     return {
-      todayTotalAmount:
-        todayDeposits._sum.actuallyPaid?.toString() || '0',
-      pendingCount: pendingDeposits,
-      methodDistribution,
+      todayTotalAmount: stats.todayTotalAmount.toString(),
+      pendingCount: stats.pendingCount,
+      methodDistribution: stats.methodDistribution,
     };
   }
 }
-

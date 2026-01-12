@@ -1,16 +1,15 @@
 // src/modules/deposit/infrastructure/deposit-detail.repository.ts
-import { Injectable } from '@nestjs/common';
+import { Injectable, HttpStatus } from '@nestjs/common';
 import { InjectTransaction } from '@nestjs-cls/transactional';
 import { type PrismaTransaction } from 'src/infrastructure/prisma/prisma.module';
 import { DepositDetail, DepositNotFoundException } from '../domain';
-import type { DepositDetailRepositoryPort } from '../ports/out/deposit-detail.repository.port';
+import type { DepositDetailRepositoryPort, DepositListQuery, DepositStats, DepositWithUser } from '../ports/out/deposit-detail.repository.port';
 import { DepositDetailMapper } from './deposit-detail.mapper';
-import { TransactionStatus, TransactionType, ExchangeCurrencyCode, Prisma } from '@repo/database';
+import { TransactionStatus, TransactionType, ExchangeCurrencyCode, Prisma, DepositDetailStatus, DepositMethodType } from '@repo/database';
 import { generateUid } from 'src/utils/id.util';
 import { LockNamespace } from 'src/common/concurrency/lock-namespace';
 import { DomainException } from 'src/common/exception/domain.exception';
 import { MessageCode } from '@repo/shared';
-import { HttpStatus } from '@nestjs/common';
 
 /**
  * DepositDetail Repository Implementation
@@ -110,18 +109,18 @@ export class DepositDetailRepository implements DepositDetailRepositoryPort {
 
   async listByUserId(
     userId: bigint,
-    query: any,
+    query: DepositListQuery,
   ): Promise<{ items: DepositDetail[]; total: number }> {
     const {
-      skip,
-      take,
+      skip = 0,
+      take = 20,
       status,
       methodType,
       currency,
       startDate,
       endDate,
-      sortBy,
-      sortOrder,
+      sortBy = 'createdAt',
+      sortOrder = 'desc',
     } = query;
 
     const where: Prisma.DepositDetailWhereInput = {
@@ -155,6 +154,150 @@ export class DepositDetailRepository implements DepositDetailRepositoryPort {
     return {
       items: items.map((item) => this.mapper.toDomain(item)),
       total,
+    };
+  }
+
+  // Admin queries
+  async list(query: DepositListQuery): Promise<{ items: DepositWithUser[]; total: number }> {
+    const {
+      skip = 0,
+      take = 20,
+      status,
+      methodType,
+      userId,
+      currency,
+      startDate,
+      endDate,
+      sortBy = 'createdAt',
+      sortOrder = 'desc',
+    } = query;
+
+    const where: Prisma.DepositDetailWhereInput = {
+      ...(status && { status }),
+      ...(methodType && { methodType }),
+      ...(userId && { userId }),
+      ...(currency && { depositCurrency: currency }),
+      ...(startDate && endDate && {
+        createdAt: {
+          gte: new Date(startDate),
+          lte: new Date(endDate),
+        },
+      }),
+    };
+
+    const orderBy: Prisma.DepositDetailOrderByWithRelationInput = {
+      [sortBy]: sortOrder,
+    };
+
+    const [deposits, total] = await Promise.all([
+      this.tx.depositDetail.findMany({
+        where,
+        skip,
+        take,
+        orderBy,
+        include: {
+          transaction: {
+            select: {
+              userId: true,
+              user: {
+                select: {
+                  email: true,
+                },
+              },
+            },
+          },
+          bankDepositConfig: true,
+          cryptoDepositConfig: true,
+        },
+      }),
+      this.tx.depositDetail.count({ where }),
+    ]);
+
+    return {
+      items: deposits.map((deposit) => ({
+        deposit: this.mapper.toDomain(deposit),
+        userEmail: deposit.transaction?.user?.email || null,
+      })),
+      total,
+    };
+  }
+
+  async getByIdWithUser(id: bigint): Promise<DepositWithUser> {
+    const result = await this.tx.depositDetail.findUnique({
+      where: { id },
+      include: {
+        transaction: {
+          select: {
+            userId: true,
+            user: {
+              select: {
+                email: true,
+              },
+            },
+          },
+        },
+        bankDepositConfig: true,
+        cryptoDepositConfig: true,
+      },
+    });
+
+    if (!result) {
+      throw new DepositNotFoundException(id);
+    }
+
+    return {
+      deposit: this.mapper.toDomain(result),
+      userEmail: result.transaction?.user?.email || null,
+    };
+  }
+
+  async getStats(): Promise<DepositStats> {
+    const today = new Date();
+    today.setHours(0, 0, 0, 0);
+
+    const [todayDeposits, pendingDeposits, methodStats] = await Promise.all([
+      // 오늘 총 입금액
+      this.tx.depositDetail.aggregate({
+        where: {
+          status: DepositDetailStatus.COMPLETED,
+          createdAt: {
+            gte: today,
+          },
+        },
+        _sum: {
+          actuallyPaid: true,
+        },
+      }),
+      // 대기 중인 요청 수
+      this.tx.depositDetail.count({
+        where: {
+          status: {
+            in: [DepositDetailStatus.PENDING, DepositDetailStatus.CONFIRMING],
+          },
+        },
+      }),
+      // 수단별 점유율
+      this.tx.depositDetail.groupBy({
+        by: ['methodType'],
+        where: {
+          status: DepositDetailStatus.COMPLETED,
+          createdAt: {
+            gte: today,
+          },
+        },
+        _count: {
+          id: true,
+        },
+      }),
+    ]);
+
+    return {
+      todayTotalAmount: todayDeposits._sum.actuallyPaid || new Prisma.Decimal(0),
+      pendingCount: pendingDeposits,
+      methodDistribution: {
+        crypto: methodStats.find((s) => s.methodType === DepositMethodType.CRYPTO_WALLET)?._count.id || 0,
+        bank: methodStats.find((s) => s.methodType === DepositMethodType.BANK_TRANSFER)?._count.id || 0,
+      },
     };
   }
 
@@ -249,4 +392,5 @@ export class DepositDetailRepository implements DepositDetailRepositoryPort {
     );
   }
 }
+
 
