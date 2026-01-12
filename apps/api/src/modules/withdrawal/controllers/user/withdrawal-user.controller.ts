@@ -257,11 +257,12 @@ export class WithdrawalUserController {
         @CurrentUser() user: CurrentUserWithSession,
         @RequestClientInfoParam() clientInfo: RequestClientInfo,
     ): Promise<CreateWithdrawalResponseDto> {
+        const decodedBankConfigId = this.sqidsService.decode(dto.bankConfigId, SqidsPrefix.WITHDRAW_BANK_CONFIG);
         const result = await this.requestBankWithdrawalService.execute({
             userId: user.id,
             currency: ExchangeCurrencyCode.KRW, // TODO: Config에서 currency 가져오기
             amount: dto.amount,
-            bankConfigId: BigInt(dto.bankConfigId),
+            bankConfigId: decodedBankConfigId,
             bankName: dto.bankName,
             accountNumber: dto.accountNumber,
             accountHolder: dto.accountHolder,
@@ -295,7 +296,28 @@ export class WithdrawalUserController {
         category: 'WITHDRAWAL',
     })
     async getWithdrawalOptions(): Promise<WithdrawalOptionsResponseDto> {
-        return await this.getWithdrawalOptionsService.execute();
+        const { crypto, bank } = await this.getWithdrawalOptionsService.execute();
+
+        return {
+            crypto: crypto.map(config => ({
+                id: this.sqidsService.encode(config.id, SqidsPrefix.WITHDRAW_CRYPTO_CONFIG),
+                symbol: config.symbol,
+                network: config.network,
+                minAmount: config.minWithdrawAmount.toString(),
+                maxAmount: config.maxWithdrawAmount?.toString() ?? null,
+                feeFixed: config.props.withdrawFeeFixed.toString(),
+                feeRate: config.props.withdrawFeeRate.toString(),
+            })),
+            bank: bank.map(config => ({
+                id: this.sqidsService.encode(config.id, SqidsPrefix.WITHDRAW_BANK_CONFIG),
+                currency: config.currency,
+                bankName: config.bankName,
+                minAmount: config.minWithdrawAmount.toString(),
+                maxAmount: config.maxWithdrawAmount?.toString() ?? null,
+                feeFixed: config.props.withdrawFeeFixed.toString(),
+                feeRate: config.props.withdrawFeeRate.toString(),
+            })),
+        };
     }
 
     private toResponseDto(withdrawal: WithdrawalDetail): WithdrawalResponseDto {

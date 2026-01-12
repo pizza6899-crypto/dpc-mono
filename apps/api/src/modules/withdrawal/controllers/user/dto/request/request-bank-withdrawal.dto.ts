@@ -12,8 +12,8 @@ export class RequestBankWithdrawalDto {
     amount: string;
 
     @ApiProperty({
-        description: 'Bank config ID',
-        example: '1',
+        description: 'Bank config ID (Encoded)',
+        example: 'wbc_abc123',
     })
     @IsString()
     @IsNotEmpty()

@@ -1,7 +1,7 @@
 import { ApiProperty, ApiPropertyOptional } from '@nestjs/swagger';
 import { WithdrawalStatus, WithdrawalMethodType, WithdrawalProcessingMode, ExchangeCurrencyCode } from '@repo/database';
 export class WithdrawalResponseDto {
-    @ApiProperty({ description: 'Withdrawal ID' })
+    @ApiProperty({ description: 'Withdrawal ID (Encoded)', example: 'w_abc123' })
     id!: string;
 
     @ApiProperty({ description: 'Status', enum: WithdrawalStatus })
@@ -48,7 +48,7 @@ export class WithdrawalResponseDto {
 }
 
 export class CreateWithdrawalResponseDto {
-    @ApiProperty({ description: 'Withdrawal ID' })
+    @ApiProperty({ description: 'Withdrawal ID (Encoded)', example: 'w_abc123' })
     withdrawalId!: string;
 
     @ApiProperty({ description: 'Status', enum: WithdrawalStatus })
@@ -68,7 +68,7 @@ export class CreateWithdrawalResponseDto {
 }
 
 export class CancelWithdrawalResponseDto {
-    @ApiProperty({ description: 'Withdrawal ID' })
+    @ApiProperty({ description: 'Withdrawal ID (Encoded)', example: 'w_abc123' })
     withdrawalId!: string;
 
     @ApiProperty({ description: 'Status', enum: WithdrawalStatus })

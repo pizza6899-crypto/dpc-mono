@@ -1,7 +1,7 @@
 import { ApiProperty } from '@nestjs/swagger';
 
 export class CryptoWithdrawOptionDto {
-    @ApiProperty({ description: 'Config ID', example: '1' })
+    @ApiProperty({ description: 'Config ID (Encoded)', example: 'wcc_abc123' })
     id: string;
 
     @ApiProperty({ description: 'Symbol', example: 'USDT' })
@@ -24,7 +24,7 @@ export class CryptoWithdrawOptionDto {
 }
 
 export class BankWithdrawOptionDto {
-    @ApiProperty({ description: 'Config ID', example: '1' })
+    @ApiProperty({ description: 'Config ID (Encoded)', example: 'wbc_abc123' })
     id: string;
 
     @ApiProperty({ description: 'Currency', example: 'KRW' })
