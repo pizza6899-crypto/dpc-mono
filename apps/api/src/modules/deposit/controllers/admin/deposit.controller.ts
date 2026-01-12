@@ -65,7 +65,7 @@ import { DepositStatsResponseDto } from './dto/response/deposit-stats.response.d
 import { SuccessResponseDto } from 'src/common/dtos/success-response.dto';
 
 @Controller('admin/deposits')
-@ApiTags('Admin Deposit Management (관리자 입금 관리)')
+@ApiTags('Admin Deposit Management')
 @ApiStandardErrors()
 @RequireRoles(UserRoleType.ADMIN, UserRoleType.SUPER_ADMIN)
 export class AdminDepositController {
@@ -97,7 +97,7 @@ export class AdminDepositController {
     description:
       'Get real-time deposit statistics including total deposit amount today, pending requests count, and method distribution. (실시간 입금 현황 요약: 오늘 총 입금액, 대기 중인 요청 수, 수단별 점유율을 조회합니다.)',
   })
-  @ApiStandardResponse(Object, {
+  @ApiStandardResponse(DepositStatsResponseDto, {
     status: 200,
     description: 'Deposit statistics retrieved successfully / 입금 현황 요약 조회 성공',
   })
@@ -200,6 +200,7 @@ export class AdminDepositController {
   @AuditLog({
     type: LogType.AUTH,
     action: 'APPROVE_DEPOSIT',
+    category: 'DEPOSIT',
     extractMetadata: (_, args) => ({
       depositId: args[0]?.id || args[0],
       actuallyPaid: args[1]?.actuallyPaid,
@@ -240,6 +241,7 @@ export class AdminDepositController {
   @AuditLog({
     type: LogType.AUTH,
     action: 'REJECT_DEPOSIT',
+    category: 'DEPOSIT',
     extractMetadata: (_, args) => ({
       depositId: args[0]?.id || args[0],
       failureReason: args[1]?.failureReason,

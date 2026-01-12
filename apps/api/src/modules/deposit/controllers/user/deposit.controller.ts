@@ -47,7 +47,7 @@ import { SqidsService } from 'src/common/sqids/sqids.service';
 import { SqidsPrefix } from 'src/common/sqids/sqids.constants';
 import { DepositDetail } from '../../domain';
 
-@ApiTags('입금 (Deposit)')
+@ApiTags('deposit')
 @Controller('deposits')
 @ApiBearerAuth()
 @ApiStandardErrors()
