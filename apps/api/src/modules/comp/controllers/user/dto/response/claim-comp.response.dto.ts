@@ -1,8 +1,7 @@
 import { ApiProperty } from '@nestjs/swagger';
 
 export class ClaimCompResponseDto {
-    @ApiProperty({ description: 'Success flag' })
-    success: boolean;
+
 
     @ApiProperty({ description: 'Claimed amount as cash', example: '1000.00' })
     claimedAmount: string;

@@ -1,7 +1,7 @@
 import { CompTransactionType, Prisma } from '@repo/database';
 
 export class CompTransaction {
-    constructor(
+    private constructor(
         public readonly id: bigint,
         public readonly compWalletId: bigint,
         public readonly amount: Prisma.Decimal,
@@ -13,24 +13,48 @@ export class CompTransaction {
     ) { }
 
     static create(params: {
-        id?: bigint;
         compWalletId: bigint;
         amount: Prisma.Decimal;
         balanceAfter: Prisma.Decimal;
         type: CompTransactionType;
         referenceId?: string;
         description?: string;
-        createdAt?: Date;
     }): CompTransaction {
         return new CompTransaction(
-            params.id ?? BigInt(0),
+            BigInt(0), // ID is assigned by DB
             params.compWalletId,
             params.amount,
             params.balanceAfter,
             params.type,
             params.referenceId ?? null,
             params.description ?? null,
-            params.createdAt ?? new Date(),
+            new Date(),
+        );
+    }
+
+    /**
+     * Rehydrate a CompTransaction from persistence layer.
+     * Used by repository/mapper only.
+     */
+    static rehydrate(params: {
+        id: bigint;
+        compWalletId: bigint;
+        amount: Prisma.Decimal;
+        balanceAfter: Prisma.Decimal;
+        type: CompTransactionType;
+        referenceId: string | null;
+        description: string | null;
+        createdAt: Date;
+    }): CompTransaction {
+        return new CompTransaction(
+            params.id,
+            params.compWalletId,
+            params.amount,
+            params.balanceAfter,
+            params.type,
+            params.referenceId,
+            params.description,
+            params.createdAt,
         );
     }
 }

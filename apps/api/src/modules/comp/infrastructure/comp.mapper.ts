@@ -5,16 +5,16 @@ import { UserCompWallet, CompWalletTransaction } from '@repo/database';
 @Injectable()
 export class CompMapper {
     toDomain(model: UserCompWallet): CompWallet {
-        return new CompWallet(
-            model.id,
-            model.userId,
-            model.currency,
-            model.balance,
-            model.totalEarned,
-            model.totalUsed,
-            model.createdAt,
-            model.updatedAt,
-        );
+        return CompWallet.rehydrate({
+            id: model.id,
+            userId: model.userId,
+            currency: model.currency,
+            balance: model.balance,
+            totalEarned: model.totalEarned,
+            totalUsed: model.totalUsed,
+            createdAt: model.createdAt,
+            updatedAt: model.updatedAt,
+        });
     }
 
     toPersistence(entity: CompWallet): Partial<UserCompWallet> {
@@ -31,16 +31,16 @@ export class CompMapper {
     }
 
     toTransactionDomain(model: CompWalletTransaction): CompTransaction {
-        return new CompTransaction(
-            model.id,
-            model.compWalletId,
-            model.amount,
-            model.balanceAfter,
-            model.type,
-            model.referenceId,
-            model.description,
-            model.createdAt,
-        );
+        return CompTransaction.rehydrate({
+            id: model.id,
+            compWalletId: model.compWalletId,
+            amount: model.amount,
+            balanceAfter: model.balanceAfter,
+            type: model.type,
+            referenceId: model.referenceId,
+            description: model.description,
+            createdAt: model.createdAt,
+        });
     }
 
     toTransactionPersistence(entity: CompTransaction): Partial<CompWalletTransaction> {

@@ -82,7 +82,6 @@ export class CompUserController {
         });
 
         return {
-            success: true,
             claimedAmount: result.claimedAmount.toString(),
             newCompBalance: result.newCompBalance.toString(),
             newCashBalance: result.newCashBalance.toString(),
@@ -117,7 +116,6 @@ export class CompUserController {
         });
 
         return {
-            ...result,
             data: result.data.map(item => ({
                 id: item.id.toString(),
                 compWalletId: item.compWalletId.toString(),
@@ -128,6 +126,9 @@ export class CompUserController {
                 description: item.description ?? undefined,
                 createdAt: item.createdAt,
             })),
+            total: result.total,
+            page: query.page ?? 1,
+            limit: query.limit ?? 20,
         };
     }
 }

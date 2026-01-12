@@ -89,7 +89,7 @@ export class CompAdminController {
                 description: dto.reason || 'Admin Adjustment (GIVE)',
                 referenceId: `ADMIN-GIVE-${Date.now()}`
             });
-            return { success: true, newBalance: wallet.balance.toString() };
+            return { newBalance: wallet.balance.toString() };
         } else {
             const wallet = await this.deductCompService.execute({
                 userId: uid,
@@ -97,7 +97,7 @@ export class CompAdminController {
                 amount: amount,
                 description: dto.reason || 'Admin Adjustment (DEDUCT)',
             });
-            return { success: true, newBalance: wallet.balance.toString() };
+            return { newBalance: wallet.balance.toString() };
         }
     }
 
@@ -130,7 +130,6 @@ export class CompAdminController {
         });
 
         return {
-            ...result,
             data: result.data.map(item => ({
                 id: item.id.toString(),
                 compWalletId: item.compWalletId.toString(),
@@ -141,6 +140,9 @@ export class CompAdminController {
                 description: item.description ?? undefined,
                 createdAt: item.createdAt,
             })),
+            total: result.total,
+            page: query.page ?? 1,
+            limit: query.limit ?? 20,
         };
     }
 }
