@@ -5,8 +5,6 @@ import { AffiliateCommission } from '../domain';
 import { AFFILIATE_COMMISSION_REPOSITORY } from '../ports/out/affiliate-commission.repository.token';
 import type { AffiliateCommissionRepositoryPort } from '../ports/out/affiliate-commission.repository.port';
 import type { RequestClientInfo } from 'src/common/http/types/client-info.types';
-import { DispatchLogService } from 'src/modules/audit-log/application/dispatch-log.service';
-import { LogType } from 'src/modules/audit-log/domain';
 
 interface FindCommissionsParams {
   affiliateId: bigint;
@@ -19,6 +17,11 @@ interface FindCommissionsParams {
     offset?: number;
   };
   requestInfo?: RequestClientInfo;
+}
+
+interface FindCommissionsResult {
+  commissions: AffiliateCommission[];
+  total: number;
 }
 
 @Injectable()
@@ -34,16 +37,19 @@ export class FindCommissionsService {
     affiliateId,
     options,
     requestInfo,
-  }: FindCommissionsParams): Promise<AffiliateCommission[]> {
+  }: FindCommissionsParams): Promise<FindCommissionsResult> {
     try {
-      const commissions = await this.repository.findByAffiliateId(
-        affiliateId,
-        options,
-      );
+      const [commissions, total] = await Promise.all([
+        this.repository.findByAffiliateId(affiliateId, options),
+        this.repository.countByAffiliateId(affiliateId, {
+          status: options?.status,
+          currency: options?.currency,
+          startDate: options?.startDate,
+          endDate: options?.endDate,
+        }),
+      ]);
 
-
-
-      return commissions;
+      return { commissions, total };
     } catch (error) {
       this.logger.error(
         `커미션 목록 조회 실패 - affiliateId: ${affiliateId}, options: ${JSON.stringify(options)}`,

@@ -12,11 +12,14 @@ import { ApiTags, ApiOperation, ApiParam } from '@nestjs/swagger';
 import {
   ApiStandardResponse,
   ApiStandardErrors,
+  ApiPaginatedResponse,
 } from 'src/common/http/decorators/api-response.decorator';
 import { CurrentUser } from 'src/common/auth/decorators/current-user.decorator';
 import type { CurrentUserWithSession } from 'src/common/auth/decorators/current-user.decorator';
 import { RequestClientInfoParam } from 'src/common/auth/decorators/request-info.decorator';
 import type { RequestClientInfo } from 'src/common/http/types/client-info.types';
+import { PaginatedResponseDto } from 'src/common/http/types/pagination.types';
+import { Paginated } from 'src/common/http/decorators/paginated.decorator';
 import { Prisma } from '@repo/database';
 import { FindCommissionsService } from '../../application/find-commissions.service';
 import { FindCommissionByIdService } from '../../application/find-commission-by-id.service';
@@ -29,13 +32,13 @@ import { CommissionResponseDto } from './dto/response/commission.response.dto';
 import { WalletBalanceResponseDto } from './dto/response/wallet-balance.response.dto';
 import { CommissionRateResponseDto } from './dto/response/commission-rate.response.dto';
 import { WithdrawCommissionResponseDto } from './dto/response/withdraw-commission.response.dto';
-import { AffiliateCommission } from '../../domain';
+import { AffiliateCommission, CommissionNotFoundException, CommissionAccessDeniedException } from '../../domain';
 import { AuditLog } from 'src/modules/audit-log/infrastructure/audit-log.decorator';
 import { LogType } from 'src/modules/audit-log/domain';
 import { SqidsService } from 'src/common/sqids/sqids.service';
 import { SqidsPrefix } from 'src/common/sqids/sqids.constants';
 
-@ApiTags('Affiliate Commission (어필리에이트 커미션)')
+@ApiTags('Affiliate Commission')
 @Controller('commissions')
 @ApiStandardErrors()
 export class AffiliateCommissionController {
@@ -53,6 +56,7 @@ export class AffiliateCommissionController {
    */
   @Get()
   @HttpCode(HttpStatus.OK)
+  @Paginated()
   @ApiOperation({
     summary: 'Get commission list / 커미션 목록 조회',
   })
@@ -61,21 +65,21 @@ export class AffiliateCommissionController {
     category: 'COMMISSION',
     action: 'COMMISSION_LIST_VIEW',
     extractMetadata: (_, args, result) => ({
-      count: result?.length ?? 0,
+      count: result?.data?.length ?? 0,
+      total: result?.pagination?.total ?? 0,
       query: args[1], // query params
     }),
   })
-  @ApiStandardResponse(CommissionResponseDto, {
-    status: 200,
+  @ApiPaginatedResponse(CommissionResponseDto, {
+    status: HttpStatus.OK,
     description:
       'Successfully retrieved commission list / 커미션 목록 조회 성공',
-    isArray: true,
   })
   async getCommissions(
     @CurrentUser() user: CurrentUserWithSession,
     @Query() query: FindCommissionsQueryDto,
     @RequestClientInfoParam() requestInfo: RequestClientInfo,
-  ): Promise<CommissionResponseDto[]> {
+  ): Promise<PaginatedResponseDto<CommissionResponseDto>> {
     const {
       page = 1,
       limit = 20,
@@ -86,7 +90,7 @@ export class AffiliateCommissionController {
     } = query;
     const offset = (page - 1) * limit;
 
-    const commissions = await this.findCommissionsService.execute({
+    const { commissions, total } = await this.findCommissionsService.execute({
       affiliateId: user.id,
       options: {
         status,
@@ -99,9 +103,16 @@ export class AffiliateCommissionController {
       requestInfo,
     });
 
-    return commissions.map((commission) =>
-      this.toCommissionResponse(commission),
-    );
+    return {
+      data: commissions.map((commission) =>
+        this.toCommissionResponse(commission),
+      ),
+      pagination: {
+        page,
+        limit,
+        total,
+      },
+    };
   }
 
   /**
@@ -128,7 +139,6 @@ export class AffiliateCommissionController {
   async getCommissionById(
     @CurrentUser() user: CurrentUserWithSession,
     @Param('id') id: string,
-    @RequestClientInfoParam() requestInfo: RequestClientInfo,
   ): Promise<CommissionResponseDto> {
     const decodedId = this.sqidsService.decode(id, SqidsPrefix.COMMISSION);
 
@@ -138,12 +148,12 @@ export class AffiliateCommissionController {
     });
 
     if (!commission) {
-      throw new Error('Commission not found');
+      throw new CommissionNotFoundException(decodedId);
     }
 
     // 본인 커미션만 조회 가능
     if (commission.affiliateId !== user.id) {
-      throw new Error('Unauthorized');
+      throw new CommissionAccessDeniedException(decodedId);
     }
 
     return this.toCommissionResponse(commission);

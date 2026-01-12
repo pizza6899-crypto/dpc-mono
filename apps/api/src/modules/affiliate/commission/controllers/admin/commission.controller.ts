@@ -27,7 +27,7 @@ import { SetCustomRateDto } from './dto/request/set-custom-rate.dto';
 import { ResetCustomRateDto } from './dto/request/reset-custom-rate.dto';
 import { CommissionResponseDto } from './dto/response/commission.response.dto';
 import { AffiliateTierResponseDto } from './dto/response/affiliate-tier.response.dto';
-import { AffiliateCommission, AffiliateTier } from '../../domain';
+import { AffiliateCommission, AffiliateTier, CommissionNotFoundException } from '../../domain';
 import { AuditLog } from 'src/modules/audit-log/infrastructure/audit-log.decorator';
 import { LogType } from 'src/modules/audit-log/domain';
 
@@ -72,7 +72,7 @@ export class AdminCommissionController {
     });
 
     if (!commission) {
-      throw new Error('Commission not found');
+      throw new CommissionNotFoundException(BigInt(id));
     }
 
     return this.toCommissionResponse(commission);

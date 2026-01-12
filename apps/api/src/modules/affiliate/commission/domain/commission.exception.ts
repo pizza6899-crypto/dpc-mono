@@ -162,3 +162,17 @@ export class InvalidParameterException extends CommissionException {
     this.name = 'InvalidParameterException';
   }
 }
+
+/**
+ * 커미션에 대한 접근 권한이 없는 경우
+ */
+export class CommissionAccessDeniedException extends CommissionException {
+  constructor(commissionId: bigint) {
+    super(
+      `Access denied to commission: ${commissionId}`,
+      MessageCode.COMMISSION_ACCESS_DENIED,
+      HttpStatus.FORBIDDEN,
+    );
+    this.name = 'CommissionAccessDeniedException';
+  }
+}
