@@ -15,24 +15,8 @@ export class AffiliateCommissionRepository implements AffiliateCommissionReposit
     private readonly mapper: AffiliateCommissionMapper,
   ) { }
 
-  async findByUid(uid: string): Promise<AffiliateCommission | null> {
-    const result = await this.tx.affiliateCommission.findUnique({
-      where: { uid },
-    });
-
-    return result ? this.mapper.toDomain(result) : null;
-  }
-
-  async getByUid(uid: string): Promise<AffiliateCommission> {
-    const commission = await this.findByUid(uid);
-    if (!commission) {
-      throw new CommissionNotFoundException(uid);
-    }
-    return commission;
-  }
-
   async findById(id: bigint): Promise<AffiliateCommission | null> {
-    const result = await this.tx.affiliateCommission.findUnique({
+    const result = await this.tx.affiliateCommission.findFirst({
       where: { id },
     });
 
@@ -152,7 +136,6 @@ export class AffiliateCommissionRepository implements AffiliateCommissionReposit
     const data = this.mapper.toPrisma(commission);
     const result = await this.tx.affiliateCommission.create({
       data: {
-        uid: data.uid,
         affiliateId: data.affiliateId,
         subUserId: data.subUserId,
         gameRoundId: data.gameRoundId,
@@ -175,7 +158,8 @@ export class AffiliateCommissionRepository implements AffiliateCommissionReposit
   }
 
   async updateStatus(
-    uid: string,
+    id: bigint,
+    createdAt: Date,
     status: CommissionStatus,
     settlementDate?: Date | null,
     claimedAt?: Date | null,
@@ -197,7 +181,12 @@ export class AffiliateCommissionRepository implements AffiliateCommissionReposit
     }
 
     const result = await this.tx.affiliateCommission.update({
-      where: { uid },
+      where: {
+        createdAt_id: {
+          createdAt,
+          id,
+        },
+      },
       data: updateData,
     });
 

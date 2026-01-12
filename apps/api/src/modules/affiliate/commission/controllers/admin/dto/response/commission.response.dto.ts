@@ -8,10 +8,11 @@ import {
 
 export class CommissionResponseDto {
   @ApiProperty({
-    description: '커미션 UID (비즈니스용)',
-    example: 'cmt-1234567890',
+    description: '커미션 ID',
+    example: '123',
+    type: String,
   })
-  uid: string;
+  id: string;
 
   @ApiProperty({
     description: '어필리에이트 ID',

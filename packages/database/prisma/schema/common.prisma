@@ -261,72 +261,6 @@ model EmailLog {
   @@index([type, status])
 }
 
-model AffiliateWallet {
-  affiliateId      BigInt
-  currency         ExchangeCurrencyCode
-  availableBalance Decimal              @default(0) @db.Decimal(32, 18)
-  pendingBalance   Decimal              @default(0) @db.Decimal(32, 18)
-  totalEarned      Decimal              @default(0) @db.Decimal(32, 18)
-  updatedAt        DateTime             @updatedAt
-  affiliate        User                 @relation("AffiliateWallets", fields: [affiliateId], references: [id], onDelete: Cascade)
-
-  @@id([affiliateId, currency])
-  @@index([affiliateId])
-  @@index([currency])
-}
-
-model AffiliateCommission {
-  affiliateId    BigInt
-  subUserId      BigInt
-  gameRoundId    BigInt?
-  wagerAmount    Decimal              @db.Decimal(32, 18)
-  winAmount      Decimal?             @db.Decimal(32, 18)
-  commission     Decimal              @db.Decimal(32, 18)
-  rateApplied    Decimal              @db.Decimal(8, 4)
-  currency       ExchangeCurrencyCode
-  status         CommissionStatus     @default(PENDING)
-  gameCategory   GameCategory?
-  /// settlementDate: PENDING → AVAILABLE 전환 시점 (월간 정산일)
-  /// claimedAt: AVAILABLE → CLAIMED 전환 시점 (출금 요청 시점)
-  /// withdrawnAt: CLAIMED → WITHDRAWN 전환 시점 (출금 처리 완료 시점)
-  settlementDate DateTime?
-  claimedAt      DateTime?
-  withdrawnAt    DateTime?
-  createdAt      DateTime             @default(now())
-  updatedAt      DateTime             @updatedAt
-  uid            String               @unique
-  id             BigInt               @id @default(autoincrement())
-  affiliate      User                 @relation("AffiliateCommissions", fields: [affiliateId], references: [id], onDelete: Cascade)
-  gameRound      GameRound?           @relation(fields: [gameRoundId], references: [id])
-  subUser        User                 @relation("SubUserCommissions", fields: [subUserId], references: [id], onDelete: Cascade)
-
-  @@index([affiliateId, status])
-  @@index([affiliateId, createdAt])
-  @@index([subUserId])
-  @@index([status, createdAt])
-  @@index([settlementDate])
-  @@index([gameRoundId])
-}
-
-model AffiliateTier {
-  affiliateId        BigInt             @unique
-  tier               AffiliateTierLevel @default(BRONZE)
-  baseRate           Decimal            @db.Decimal(8, 4)
-  customRate         Decimal?           @db.Decimal(8, 4)
-  isCustomRate       Boolean            @default(false)
-  monthlyWagerAmount Decimal            @default(0) @db.Decimal(32, 18)
-  customRateSetBy    BigInt?
-  customRateSetAt    DateTime?
-  createdAt          DateTime           @default(now())
-  updatedAt          DateTime           @updatedAt
-  uid                String             @unique
-  id                 BigInt             @id @default(autoincrement())
-  affiliate          User               @relation(fields: [affiliateId], references: [id], onDelete: Cascade)
-
-  @@index([affiliateId])
-  @@index([tier])
-}
-
 enum SocialType {
   GOOGLE
   APPLE
@@ -461,22 +395,6 @@ enum EmailType {
 enum EmailStatus {
   SENT
   FAILED
-}
-
-enum CommissionStatus {
-  PENDING
-  AVAILABLE
-  CLAIMED
-  WITHDRAWN
-  CANCELLED
-}
-
-enum AffiliateTierLevel {
-  BRONZE
-  SILVER
-  GOLD
-  PLATINUM
-  DIAMOND
 }
 
 enum LoginAttemptResult {

@@ -8,29 +8,14 @@ import type { AffiliateCommission } from '../../domain';
  */
 export interface AffiliateCommissionRepositoryPort {
   /**
-   * 커미션 UID로 조회 (기본)
-   * @param uid - 커미션 UID (CUID)
-   * @returns 커미션 엔티티 또는 null
-   */
-  findByUid(uid: string): Promise<AffiliateCommission | null>;
-
-  /**
-   * 커미션 UID로 조회 (없으면 예외) (기본)
-   * @param uid - 커미션 UID (CUID)
-   * @returns 커미션 엔티티
-   * @throws {CommissionNotFoundException} 커미션이 없는 경우
-   */
-  getByUid(uid: string): Promise<AffiliateCommission>;
-
-  /**
-   * 커미션 ID로 조회 (어드민 전용)
+   * 커미션 ID로 조회
    * @param id - 커미션 ID (BigInt)
    * @returns 커미션 엔티티 또는 null
    */
   findById(id: bigint): Promise<AffiliateCommission | null>;
 
   /**
-   * 커미션 ID로 조회 (없으면 예외) (어드민 전용)
+   * 커미션 ID로 조회 (없으면 예외)
    * @param id - 커미션 ID (BigInt)
    * @returns 커미션 엔티티
    * @throws {CommissionNotFoundException} 커미션이 없는 경우
@@ -102,8 +87,9 @@ export interface AffiliateCommissionRepositoryPort {
   create(commission: AffiliateCommission): Promise<AffiliateCommission>;
 
   /**
-   * 커미션 상태 업데이트 (기본)
-   * @param uid - 커미션 UID (CUID)
+   * 커미션 상태 업데이트
+   * @param id - 커미션 ID (BigInt)
+   * @param createdAt - 생성일 (복합 PK용)
    * @param status - 새로운 상태
    * @param settlementDate - 정산일 (선택적)
    * @param claimedAt - 출금 요청일 (선택적)
@@ -111,7 +97,8 @@ export interface AffiliateCommissionRepositoryPort {
    * @returns 업데이트된 커미션 엔티티
    */
   updateStatus(
-    uid: string,
+    id: bigint,
+    createdAt: Date,
     status: CommissionStatus,
     settlementDate?: Date | null,
     claimedAt?: Date | null,

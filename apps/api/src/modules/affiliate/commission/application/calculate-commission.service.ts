@@ -95,7 +95,6 @@ export class CalculateCommissionService {
 
     // 6. 커미션 엔티티 생성 및 저장
     const commissionEntity = AffiliateCommission.create({
-      uid: IdUtil.generateUid(),
       affiliateId,
       subUserId,
       gameRoundId,

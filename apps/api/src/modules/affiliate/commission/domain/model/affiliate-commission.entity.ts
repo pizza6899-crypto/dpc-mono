@@ -18,7 +18,6 @@ import {
 export class AffiliateCommission {
   private constructor(
     public readonly id: bigint | null, // 내부 관리용 (DB 저장 시 자동 생성)
-    public readonly uid: string, // 비즈니스용 (CUID, 애플리케이션에서 생성 필수)
     public readonly affiliateId: bigint,
     public readonly subUserId: bigint,
     public readonly gameRoundId: bigint | null, // Prisma BigInt 타입
@@ -34,18 +33,17 @@ export class AffiliateCommission {
     private _withdrawnAt: Date | null,
     public readonly createdAt: Date,
     private _updatedAt: Date,
-  ) {}
+  ) { }
 
   /**
    * 새로운 커미션 생성
    * @param params - 커미션 생성 파라미터
    * @returns 생성된 커미션 엔티티
-   * @description 새 엔티티 생성 시 id=null, uid는 애플리케이션에서 CUID 생성하여 전달 필수
+   * @description 새 엔티티 생성 시 id=null, DB 저장 시 자동 생성
    * @description Application 레이어에서 Prisma.Decimal로 변환하여 전달해야 함
    */
   static create(params: {
     id?: bigint; // 선택적: 영속화된 엔티티 재생성 시에만 사용
-    uid: string; // 필수: 애플리케이션에서 CUID 생성하여 전달 (IdUtil.generateCuid() 사용)
     affiliateId: bigint;
     subUserId: bigint;
     gameRoundId: bigint | null;
@@ -70,7 +68,6 @@ export class AffiliateCommission {
     const now = new Date();
     return new AffiliateCommission(
       params.id ?? null, // 새 엔티티는 null, DB 저장 시 자동 생성
-      params.uid, // 애플리케이션에서 생성한 CUID
       params.affiliateId,
       params.subUserId,
       params.gameRoundId,
@@ -91,12 +88,11 @@ export class AffiliateCommission {
 
   /**
    * DB에서 조회한 데이터로부터 엔티티 생성
-   * @description 영속화된 엔티티는 id와 uid 모두 보유
+   * @description 영속화된 엔티티는 id 보유
    * @description Mapper에서 Prisma.Decimal로 변환하여 전달해야 함
    */
   static fromPersistence(data: {
     id: bigint | null;
-    uid: string;
     affiliateId: bigint;
     subUserId: bigint;
     gameRoundId: bigint | null;
@@ -115,7 +111,6 @@ export class AffiliateCommission {
   }): AffiliateCommission {
     return new AffiliateCommission(
       data.id,
-      data.uid,
       data.affiliateId,
       data.subUserId,
       data.gameRoundId,
@@ -273,7 +268,6 @@ export class AffiliateCommission {
   toPersistence() {
     return {
       id: this.id,
-      uid: this.uid,
       affiliateId: this.affiliateId,
       subUserId: this.subUserId,
       gameRoundId: this.gameRoundId,

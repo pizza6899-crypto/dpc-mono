@@ -157,7 +157,7 @@ export class AdminCommissionController {
     commission: AffiliateCommission,
   ): CommissionResponseDto {
     return {
-      uid: commission.uid,
+      id: commission.id!.toString(), // BigInt를 string으로 변환
       affiliateId: commission.affiliateId,
       subUserId: commission.subUserId,
       gameRoundId: commission.gameRoundId

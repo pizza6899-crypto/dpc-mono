@@ -19,7 +19,6 @@ export class AffiliateCommissionMapper {
    */
   toDomain(prismaModel: {
     id: bigint;
-    uid: string;
     affiliateId: bigint;
     subUserId: bigint;
     gameRoundId: bigint | null;
@@ -38,7 +37,6 @@ export class AffiliateCommissionMapper {
   }): AffiliateCommission {
     return AffiliateCommission.fromPersistence({
       id: prismaModel.id,
-      uid: prismaModel.uid,
       affiliateId: prismaModel.affiliateId,
       subUserId: prismaModel.subUserId,
       gameRoundId: prismaModel.gameRoundId,
@@ -62,7 +60,6 @@ export class AffiliateCommissionMapper {
    */
   toPrisma(domain: AffiliateCommission): {
     id: bigint | null;
-    uid: string;
     affiliateId: bigint;
     subUserId: bigint;
     gameRoundId: bigint | null;
@@ -82,7 +79,6 @@ export class AffiliateCommissionMapper {
     const persistence = domain.toPersistence();
     return {
       id: persistence.id,
-      uid: persistence.uid,
       affiliateId: persistence.affiliateId,
       subUserId: persistence.subUserId,
       gameRoundId: persistence.gameRoundId,
