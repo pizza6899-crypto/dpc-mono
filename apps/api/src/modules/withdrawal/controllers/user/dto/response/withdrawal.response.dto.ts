@@ -1,7 +1,5 @@
 import { ApiProperty, ApiPropertyOptional } from '@nestjs/swagger';
 import { WithdrawalStatus, WithdrawalMethodType, WithdrawalProcessingMode, ExchangeCurrencyCode } from '@repo/database';
-import { WithdrawalDetail } from '../../../../domain';
-
 export class WithdrawalResponseDto {
     @ApiProperty({ description: 'Withdrawal ID' })
     id!: string;
@@ -47,26 +45,6 @@ export class WithdrawalResponseDto {
 
     @ApiPropertyOptional({ description: 'Cancelled at' })
     cancelledAt?: Date;
-
-    static fromDomain(withdrawal: WithdrawalDetail): WithdrawalResponseDto {
-        return {
-            id: withdrawal.id.toString(),
-            status: withdrawal.status,
-            methodType: withdrawal.methodType,
-            processingMode: withdrawal.processingMode,
-            currency: withdrawal.currency,
-            requestedAmount: withdrawal.requestedAmount.toString(),
-            feeAmount: withdrawal.props.feeAmount?.toString(),
-            netAmount: withdrawal.props.netAmount?.toString(),
-            network: withdrawal.props.network ?? undefined,
-            walletAddress: withdrawal.props.walletAddress ?? undefined,
-            transactionHash: withdrawal.props.transactionHash ?? undefined,
-            failureReason: withdrawal.props.failureReason ?? undefined,
-            createdAt: withdrawal.props.createdAt,
-            confirmedAt: withdrawal.props.confirmedAt ?? undefined,
-            cancelledAt: withdrawal.props.cancelledAt ?? undefined,
-        };
-    }
 }
 
 export class CreateWithdrawalResponseDto {
