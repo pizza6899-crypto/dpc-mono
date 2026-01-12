@@ -1,34 +1,53 @@
+// src/modules/affiliate/commission/application/reset-custom-rate.service.ts
 import { Inject, Injectable } from '@nestjs/common';
-import { AffiliateTier } from '../domain';
-import { AFFILIATE_TIER_REPOSITORY } from '../ports/out/affiliate-tier.repository.token';
-import type { AffiliateTierRepositoryPort } from '../ports/out/affiliate-tier.repository.port';
-import type { RequestClientInfo } from 'src/common/http/types/client-info.types';
+import { Prisma } from '@repo/database';
+import { USER_TIER_REPOSITORY } from '../../../tier/ports/repository.token';
+import type { UserTierRepositoryPort } from '../../../tier/ports/user-tier.repository.port';
+import { UserTierNotFoundException } from '../../../tier/domain';
 import { Transactional } from '@nestjs-cls/transactional';
 
 interface ResetCustomRateParams {
   affiliateId: bigint;
-  resetBy: bigint; // 관리자 ID
-  requestInfo?: RequestClientInfo;
+}
+
+interface ResetCustomRateResult {
+  tierCode: string;
+  baseRate: Prisma.Decimal;
+  customRate: null;
+  isCustomRate: false;
+  effectiveRate: Prisma.Decimal;
 }
 
 @Injectable()
 export class ResetCustomRateService {
   constructor(
-    @Inject(AFFILIATE_TIER_REPOSITORY)
-    private readonly repository: AffiliateTierRepositoryPort,
+    @Inject(USER_TIER_REPOSITORY)
+    private readonly userTierRepository: UserTierRepositoryPort,
   ) { }
 
   @Transactional()
   async execute({
     affiliateId,
-  }: ResetCustomRateParams): Promise<AffiliateTier> {
-    // 티어 조회
-    const tier = await this.repository.getByAffiliateId(affiliateId);
+  }: ResetCustomRateParams): Promise<ResetCustomRateResult> {
+    // UserTier 조회
+    const userTier = await this.userTierRepository.findByUserId(affiliateId);
 
-    // 수동 요율 해제 (엔티티 상태 변경)
-    tier.resetCustomRate();
+    if (!userTier || !userTier.tier) {
+      throw new UserTierNotFoundException(affiliateId);
+    }
 
-    // 엔티티를 변경한 후 Repository에 저장
-    return await this.repository.upsert(tier);
+    // 수동 요율 해제
+    userTier.resetAffiliateCustomRate();
+
+    // 저장
+    await this.userTierRepository.update(userTier);
+
+    return {
+      tierCode: userTier.tier.code,
+      baseRate: userTier.tier.affiliateCommissionRate,
+      customRate: null,
+      isCustomRate: false,
+      effectiveRate: userTier.tier.affiliateCommissionRate,
+    };
   }
 }

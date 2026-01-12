@@ -1,8 +1,7 @@
 // src/modules/affiliate/commission/domain/commission-policy.ts
-import { AffiliateTierLevel, CommissionStatus, Prisma } from '@repo/database';
+import { CommissionStatus, Prisma } from '@repo/database';
 import {
   InvalidCommissionRateException,
-  InsufficientBalanceException,
   CommissionNotAvailableException,
 } from './commission.exception';
 
@@ -10,33 +9,9 @@ import {
  * 커미션 도메인 정책 (Policy)
  * 비즈니스 규칙과 검증 로직을 담당
  * @description 엔티티와 일관성을 위해 Prisma.Decimal 사용
+ * @description 티어별 기본 요율은 이제 Tier 테이블의 affiliateCommissionRate에서 관리
  */
 export class CommissionPolicy {
-  /**
-   * 티어별 기본 요율 맵
-   * Bet Share 모델: 베팅 금액의 일정 비율
-   * 값은 소수점으로 표현 (예: 0.005 = 0.5%, 0.01 = 1%, 0.02 = 2%)
-   */
-  private static readonly TIER_BASE_RATES: Record<
-    AffiliateTierLevel,
-    Prisma.Decimal
-  > = {
-    [AffiliateTierLevel.BRONZE]: new Prisma.Decimal('0.005'), // 0.5%
-    [AffiliateTierLevel.SILVER]: new Prisma.Decimal('0.0075'), // 0.75%
-    [AffiliateTierLevel.GOLD]: new Prisma.Decimal('0.01'), // 1.0%
-    [AffiliateTierLevel.PLATINUM]: new Prisma.Decimal('0.015'), // 1.5%
-    [AffiliateTierLevel.DIAMOND]: new Prisma.Decimal('0.02'), // 2.0%
-  };
-
-  /**
-   * 티어별 기본 요율 조회
-   * @param tier - 티어 레벨
-   * @returns 기본 요율 (예: 0.01 = 1%)
-   */
-  getBaseRateForTier(tier: AffiliateTierLevel): Prisma.Decimal {
-    return CommissionPolicy.TIER_BASE_RATES[tier];
-  }
-
   /**
    * 커미션 계산
    * @param wagerAmount - 베팅 금액

@@ -16,6 +16,7 @@ import { CreateTierService } from './application/create-tier.service';
 import { UpdateTierService } from './application/update-tier.service';
 import { FindTiersService } from './application/find-tiers.service';
 import { GetUserTierService } from './application/get-user-tier.service';
+import { GetAffiliateRateService } from './application/get-affiliate-rate.service';
 import { TierAdminController } from './controllers/admin/tier-admin.controller';
 import { TierUserController } from './controllers/user/tier-user.controller';
 import { UpdateTierTranslationService } from './application/translation/update-tier-translation.service';
@@ -27,6 +28,7 @@ import { AddUserRollingService } from './application/add-user-rolling.service';
 import { InitializeMissingUserTiersService } from './application/initialize-missing-user-tiers.service';
 import { FindTierHistoryService } from './application/find-tier-history.service';
 import { UnlockUserTierService } from './application/unlock-user-tier.service';
+import { UpdateAffiliateMonthlyWagerService } from './application/update-affiliate-monthly-wager.service';
 
 @Module({
   imports: [],
@@ -38,6 +40,7 @@ import { UnlockUserTierService } from './application/unlock-user-tier.service';
     UpdateTierService,
     FindTiersService,
     GetUserTierService,
+    GetAffiliateRateService,
     UpdateTierTranslationService,
     AssignDefaultTierService,
     ForceUpdateUserTierService,
@@ -47,6 +50,7 @@ import { UnlockUserTierService } from './application/unlock-user-tier.service';
     InitializeMissingUserTiersService,
     FindTierHistoryService,
     UnlockUserTierService,
+    UpdateAffiliateMonthlyWagerService,
     {
       provide: TIER_REPOSITORY,
       useClass: TierRepository,
@@ -73,6 +77,7 @@ import { UnlockUserTierService } from './application/unlock-user-tier.service';
     UpdateTierService,
     FindTiersService,
     GetUserTierService,
+    GetAffiliateRateService,
     AssignDefaultTierService,
     ForceUpdateUserTierService,
     CountUsersByTierService,
@@ -81,6 +86,7 @@ import { UnlockUserTierService } from './application/unlock-user-tier.service';
     InitializeMissingUserTiersService,
     FindTierHistoryService,
     UnlockUserTierService,
+    UpdateAffiliateMonthlyWagerService,
   ],
 })
 

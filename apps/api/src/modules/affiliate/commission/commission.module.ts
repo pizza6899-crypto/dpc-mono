@@ -1,6 +1,7 @@
 // src/modules/affiliate/commission/commission.module.ts
 import { Module } from '@nestjs/common';
 import { AffiliateReferralModule } from '../referral/referral.module';
+import { TierModule } from '../../tier/tier.module';
 import { CommissionPolicy } from './domain';
 
 // Use Case Services
@@ -20,13 +21,10 @@ import { AffiliateWalletMapper } from './infrastructure/affiliate-wallet.mapper'
 import { AffiliateWalletRepository } from './infrastructure/affiliate-wallet.repository';
 import { AffiliateCommissionMapper } from './infrastructure/affiliate-commission.mapper';
 import { AffiliateCommissionRepository } from './infrastructure/affiliate-commission.repository';
-import { AffiliateTierMapper } from './infrastructure/affiliate-tier.mapper';
-import { AffiliateTierRepository } from './infrastructure/affiliate-tier.repository';
 
 // Ports
 import { AFFILIATE_WALLET_REPOSITORY } from './ports/out/affiliate-wallet.repository.token';
 import { AFFILIATE_COMMISSION_REPOSITORY } from './ports/out/affiliate-commission.repository.token';
-import { AFFILIATE_TIER_REPOSITORY } from './ports/out/affiliate-tier.repository.token';
 
 // Controllers
 import { AffiliateCommissionController } from './controllers/user/commission.controller';
@@ -42,6 +40,7 @@ import { ConcurrencyModule } from 'src/common/concurrency/concurrency.module';
     EnvModule,
     ConcurrencyModule,
     AffiliateReferralModule, // 레퍼럴 관계 조회를 위해 필요
+    TierModule, // 어필리에이트 요율 조회를 위해 필요
   ],
   providers: [
     // Domain Policy
@@ -50,7 +49,6 @@ import { ConcurrencyModule } from 'src/common/concurrency/concurrency.module';
     // Infrastructure (Mapper)
     AffiliateWalletMapper,
     AffiliateCommissionMapper,
-    AffiliateTierMapper,
 
     // Repository (Outbound Port 구현)
     {
@@ -60,10 +58,6 @@ import { ConcurrencyModule } from 'src/common/concurrency/concurrency.module';
     {
       provide: AFFILIATE_COMMISSION_REPOSITORY,
       useClass: AffiliateCommissionRepository,
-    },
-    {
-      provide: AFFILIATE_TIER_REPOSITORY,
-      useClass: AffiliateTierRepository,
     },
 
     // Use Case Services

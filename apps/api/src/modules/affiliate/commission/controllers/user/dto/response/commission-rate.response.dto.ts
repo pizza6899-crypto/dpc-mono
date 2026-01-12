@@ -1,14 +1,12 @@
 // src/modules/affiliate/commission/controllers/user/dto/response/commission-rate.response.dto.ts
 import { ApiProperty } from '@nestjs/swagger';
-import { AffiliateTierLevel } from '@repo/database';
 
 export class CommissionRateResponseDto {
   @ApiProperty({
-    description: '티어',
-    enum: AffiliateTierLevel,
-    example: AffiliateTierLevel.BRONZE,
+    description: '티어 코드',
+    example: 'BRONZE',
   })
-  tier: AffiliateTierLevel;
+  tierCode: string;
 
   @ApiProperty({
     description: '기본 요율',

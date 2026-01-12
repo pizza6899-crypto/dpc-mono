@@ -31,7 +31,6 @@ model User {
   affiliateCodes         AffiliateCode[]         @relation("AffiliateCodes")
   affiliateCommissions   AffiliateCommission[]   @relation("AffiliateCommissions")
   subUserCommissions     AffiliateCommission[]   @relation("SubUserCommissions")
-  affiliateTier          AffiliateTier?
   affiliateWallets       AffiliateWallet[]       @relation("AffiliateWallets")
   EmailLog               EmailLog[]
   GameSession            CasinoGameSession[]

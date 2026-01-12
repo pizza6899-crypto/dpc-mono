@@ -10,6 +10,9 @@ model Tier {
   levelUpBonusUsd Decimal @default(0) @map("level_up_bonus") @db.Decimal(32, 18)
   compRate        Decimal @default(0) @map("comp_rate") @db.Decimal(8, 4) // Integrated Comp Rate
 
+  // Affiliate Benefits (어필리에이트 기본 커미션 요율)
+  affiliateCommissionRate Decimal @default(0) @map("affiliate_commission_rate") @db.Decimal(8, 4)
+
   createdAt DateTime @default(now()) @map("created_at")
   updatedAt DateTime @updatedAt @map("updated_at")
 
@@ -51,6 +54,11 @@ model UserTier {
   isManualLock            Boolean  @default(false) @map("is_manual_lock") // 관리자 강제 등급 고정
   lastPromotedAt          DateTime @default(now()) @map("last_promoted_at")
 
+  // 어필리에이트 관련 필드
+  affiliateCustomRate         Decimal? @map("affiliate_custom_rate") @db.Decimal(8, 4)
+  isAffiliateCustomRate       Boolean  @default(false) @map("is_affiliate_custom_rate")
+  affiliateMonthlyWagerAmount Decimal  @default(0) @map("affiliate_monthly_wager_amount") @db.Decimal(32, 18)
+
   createdAt DateTime @default(now()) @map("created_at")
   updatedAt DateTime @updatedAt @map("updated_at")
 
@@ -58,6 +66,7 @@ model UserTier {
   tier Tier @relation(fields: [tierId], references: [id])
 
   @@index([tierId])
+  @@index([affiliateMonthlyWagerAmount])
   @@map("user_tier")
 }
 

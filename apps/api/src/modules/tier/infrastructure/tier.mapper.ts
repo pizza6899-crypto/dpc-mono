@@ -14,6 +14,7 @@ export class TierMapper {
             requirementUsd: model.requirementUsd,
             levelUpBonusUsd: model.levelUpBonusUsd,
             compRate: model.compRate,
+            affiliateCommissionRate: model.affiliateCommissionRate,
             createdAt: model.createdAt,
             updatedAt: model.updatedAt,
             translations: model.translations?.map(t => ({
@@ -32,6 +33,7 @@ export class TierMapper {
             requirementUsd: domain.requirementUsd,
             levelUpBonusUsd: domain.levelUpBonusUsd,
             compRate: domain.compRate,
+            affiliateCommissionRate: domain.affiliateCommissionRate,
             createdAt: domain.createdAt,
             updatedAt: domain.updatedAt,
         };

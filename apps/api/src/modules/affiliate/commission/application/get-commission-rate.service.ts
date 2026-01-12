@@ -1,16 +1,15 @@
-import { Inject, Injectable } from '@nestjs/common';
-import { AffiliateTierLevel, Prisma } from '@repo/database';
-import { AffiliateTier, CommissionPolicy } from '../domain';
-import { AFFILIATE_TIER_REPOSITORY } from '../ports/out/affiliate-tier.repository.token';
-import type { AffiliateTierRepositoryPort } from '../ports/out/affiliate-tier.repository.port';
-import { IdUtil } from 'src/utils/id.util';
+// src/modules/affiliate/commission/application/get-commission-rate.service.ts
+import { Injectable } from '@nestjs/common';
+import { Prisma } from '@repo/database';
+import { GetAffiliateRateService } from '../../../tier/application/get-affiliate-rate.service';
+import { GetUserTierService } from '../../../tier/application/get-user-tier.service';
 
 interface GetCommissionRateParams {
   affiliateId: bigint;
 }
 
 interface CommissionRateResult {
-  tier: AffiliateTierLevel;
+  tierCode: string; // Tier.code (e.g., "BRONZE", "SILVER")
   baseRate: Prisma.Decimal;
   customRate: Prisma.Decimal | null;
   isCustomRate: boolean;
@@ -19,41 +18,31 @@ interface CommissionRateResult {
 
 @Injectable()
 export class GetCommissionRateService {
-
   constructor(
-    @Inject(AFFILIATE_TIER_REPOSITORY)
-    private readonly repository: AffiliateTierRepositoryPort,
-    private readonly policy: CommissionPolicy,
+    private readonly getAffiliateRateService: GetAffiliateRateService,
+    private readonly getUserTierService: GetUserTierService,
   ) { }
 
   async execute({
     affiliateId,
   }: GetCommissionRateParams): Promise<CommissionRateResult> {
-    // 티어 조회 (없으면 기본 티어로 생성)
-    let tier = await this.repository.findByAffiliateId(affiliateId);
+    // UserTier 조회 (tier 정보 포함)
+    const userTier = await this.getUserTierService.execute(affiliateId);
 
-    if (!tier) {
-      // 기본 티어(BRONZE)로 생성
-      const baseRate = this.policy.getBaseRateForTier(
-        AffiliateTierLevel.BRONZE,
-      );
-      const newTier = AffiliateTier.create({
-        uid: IdUtil.generateUid(),
-        affiliateId,
-        tier: AffiliateTierLevel.BRONZE,
-        baseRate,
-      });
-      tier = await this.repository.upsert(newTier);
+    if (!userTier || !userTier.tier) {
+      throw new Error('User tier not found');
     }
 
-    const result = {
-      tier: tier.tier,
-      baseRate: tier.baseRate,
-      customRate: tier.customRate,
-      isCustomRate: tier.isCustomRate,
-      effectiveRate: tier.getEffectiveRate(),
-    };
+    // 어필리에이트 요율 조회
+    const { rate: effectiveRate, isCustom } =
+      await this.getAffiliateRateService.execute(affiliateId);
 
-    return result;
+    return {
+      tierCode: userTier.tier.code,
+      baseRate: userTier.tier.affiliateCommissionRate,
+      customRate: userTier.affiliateCustomRate,
+      isCustomRate: isCustom,
+      effectiveRate,
+    };
   }
 }

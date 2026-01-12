@@ -94,38 +94,10 @@ model AffiliateWallet {
   @@map("affiliate_wallets")
 }
 
-model AffiliateTier {
-  id                 BigInt             @id @default(autoincrement())
-  uid                String             @unique
-  affiliateId        BigInt             @unique @map("affiliate_id")
-  tier               AffiliateTierLevel @default(BRONZE)
-  baseRate           Decimal            @map("base_rate") @db.Decimal(8, 4)
-  customRate         Decimal?           @map("custom_rate") @db.Decimal(8, 4)
-  isCustomRate       Boolean            @default(false) @map("is_custom_rate")
-  monthlyWagerAmount Decimal            @default(0) @map("monthly_wager_amount") @db.Decimal(32, 18)
-  customRateSetBy    BigInt?            @map("custom_rate_set_by")
-  customRateSetAt    DateTime?          @map("custom_rate_set_at")
-  createdAt          DateTime           @default(now()) @map("created_at")
-  updatedAt          DateTime           @updatedAt @map("updated_at")
-  affiliate          User               @relation(fields: [affiliateId], references: [id], onDelete: Cascade)
-
-  @@index([affiliateId])
-  @@index([tier])
-  @@map("affiliate_tiers")
-}
-
 enum CommissionStatus {
   PENDING
   AVAILABLE
   CLAIMED
   WITHDRAWN
   CANCELLED
-}
-
-enum AffiliateTierLevel {
-  BRONZE
-  SILVER
-  GOLD
-  PLATINUM
-  DIAMOND
 }

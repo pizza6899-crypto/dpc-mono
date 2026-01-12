@@ -22,6 +22,11 @@ export class UserTier {
         private _isManualLock: boolean,
         private _lastPromotedAt: Date,
 
+        // Affiliate fields
+        private _affiliateCustomRate: Prisma.Decimal | null,
+        private _isAffiliateCustomRate: boolean,
+        private _affiliateMonthlyWagerAmount: Prisma.Decimal,
+
         public readonly createdAt: Date,
         public readonly updatedAt: Date,
 
@@ -38,12 +43,20 @@ export class UserTier {
         highestPromotedPriority?: number;
         isManualLock?: boolean;
         lastPromotedAt?: Date;
+        affiliateCustomRate?: Prisma.Decimal | null;
+        isAffiliateCustomRate?: boolean;
+        affiliateMonthlyWagerAmount?: Prisma.Decimal | number;
         tier?: Tier;
     }): UserTier {
         const rolling =
             params.totalRollingUsd instanceof Prisma.Decimal
                 ? params.totalRollingUsd
                 : new Prisma.Decimal(params.totalRollingUsd ?? 0);
+
+        const affiliateMonthlyWager =
+            params.affiliateMonthlyWagerAmount instanceof Prisma.Decimal
+                ? params.affiliateMonthlyWagerAmount
+                : new Prisma.Decimal(params.affiliateMonthlyWagerAmount ?? 0);
 
         return new UserTier(
             params.id ?? null,
@@ -54,6 +67,9 @@ export class UserTier {
             params.highestPromotedPriority ?? 0,
             params.isManualLock ?? false,
             params.lastPromotedAt ?? new Date(),
+            params.affiliateCustomRate ?? null,
+            params.isAffiliateCustomRate ?? false,
+            affiliateMonthlyWager,
             new Date(),
             new Date(),
             params.tier
@@ -69,6 +85,9 @@ export class UserTier {
         highestPromotedPriority: number;
         isManualLock: boolean;
         lastPromotedAt: Date;
+        affiliateCustomRate: Prisma.Decimal | null;
+        isAffiliateCustomRate: boolean;
+        affiliateMonthlyWagerAmount: Prisma.Decimal;
         createdAt: Date;
         updatedAt: Date;
         tier?: Tier;
@@ -82,6 +101,9 @@ export class UserTier {
             data.highestPromotedPriority,
             data.isManualLock,
             data.lastPromotedAt,
+            data.affiliateCustomRate,
+            data.isAffiliateCustomRate,
+            data.affiliateMonthlyWagerAmount,
             data.createdAt,
             data.updatedAt,
             data.tier
@@ -94,6 +116,9 @@ export class UserTier {
     get highestPromotedPriority(): number { return this._highestPromotedPriority; }
     get isManualLock(): boolean { return this._isManualLock; }
     get lastPromotedAt(): Date { return this._lastPromotedAt; }
+    get affiliateCustomRate(): Prisma.Decimal | null { return this._affiliateCustomRate; }
+    get isAffiliateCustomRate(): boolean { return this._isAffiliateCustomRate; }
+    get affiliateMonthlyWagerAmount(): Prisma.Decimal { return this._affiliateMonthlyWagerAmount; }
 
     // Business Logic
 
@@ -170,5 +195,38 @@ export class UserTier {
 
     unlock(): void {
         this._isManualLock = false;
+    }
+
+    // Affiliate Business Logic
+
+    /**
+     * 어필리에이트 월간 베팅 금액 추가
+     */
+    addAffiliateMonthlyWager(amount: Prisma.Decimal): void {
+        if (amount.lte(0)) throw new InvalidRollingAmountException(amount.toString());
+        this._affiliateMonthlyWagerAmount = this._affiliateMonthlyWagerAmount.add(amount);
+    }
+
+    /**
+     * 어필리에이트 월간 베팅 금액 초기화 (월간 리셋)
+     */
+    resetAffiliateMonthlyWager(): void {
+        this._affiliateMonthlyWagerAmount = new Prisma.Decimal(0);
+    }
+
+    /**
+     * 수동 커미션 요율 설정
+     */
+    setAffiliateCustomRate(rate: Prisma.Decimal): void {
+        this._affiliateCustomRate = rate;
+        this._isAffiliateCustomRate = true;
+    }
+
+    /**
+     * 수동 커미션 요율 해제 (기본 요율로 복귀)
+     */
+    resetAffiliateCustomRate(): void {
+        this._affiliateCustomRate = null;
+        this._isAffiliateCustomRate = false;
     }
 }

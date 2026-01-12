@@ -21,6 +21,7 @@ export class Tier {
         // Benefits
         public readonly levelUpBonusUsd: Prisma.Decimal,
         public readonly compRate: Prisma.Decimal,
+        public readonly affiliateCommissionRate: Prisma.Decimal,
 
         public readonly createdAt: Date,
         public readonly updatedAt: Date,
@@ -40,6 +41,7 @@ export class Tier {
         requirementUsd: Prisma.Decimal | number;
         levelUpBonusUsd?: Prisma.Decimal | number;
         compRate?: Prisma.Decimal | number;
+        affiliateCommissionRate?: Prisma.Decimal | number;
         displayName?: string;
         translations?: { language: string; name: string }[];
     }): Tier {
@@ -57,6 +59,11 @@ export class Tier {
             params.compRate instanceof Prisma.Decimal
                 ? params.compRate
                 : new Prisma.Decimal(params.compRate ?? 0);
+
+        const affiliateCommissionRate =
+            params.affiliateCommissionRate instanceof Prisma.Decimal
+                ? params.affiliateCommissionRate
+                : new Prisma.Decimal(params.affiliateCommissionRate ?? 0);
 
         // Default empty ID/UID for creation if not provided (DB will handle)
         // However, domain entity should ideally have valid data. 
@@ -81,6 +88,7 @@ export class Tier {
             requirementUsd,
             levelUpBonusUsd,
             compRate,
+            affiliateCommissionRate,
             new Date(),
             new Date(),
             params.translations ?? [],
@@ -96,6 +104,7 @@ export class Tier {
         requirementUsd: Prisma.Decimal;
         levelUpBonusUsd: Prisma.Decimal;
         compRate: Prisma.Decimal;
+        affiliateCommissionRate: Prisma.Decimal;
         createdAt: Date;
         updatedAt: Date;
         translations?: { language: string; name: string }[];
@@ -108,6 +117,7 @@ export class Tier {
             data.requirementUsd,
             data.levelUpBonusUsd,
             data.compRate,
+            data.affiliateCommissionRate,
             data.createdAt,
             data.updatedAt,
             data.translations ?? [],
@@ -123,6 +133,7 @@ export class Tier {
             requirementUsd: this.requirementUsd,
             levelUpBonusUsd: this.levelUpBonusUsd,
             compRate: this.compRate,
+            affiliateCommissionRate: this.affiliateCommissionRate,
             createdAt: this.createdAt,
             updatedAt: this.updatedAt,
         };

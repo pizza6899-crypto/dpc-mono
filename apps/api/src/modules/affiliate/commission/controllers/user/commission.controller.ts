@@ -233,7 +233,7 @@ export class AffiliateCommissionController {
     });
 
     return {
-      tier: rate.tier,
+      tierCode: rate.tierCode,
       baseRate: rate.baseRate.toString(),
       customRate: rate.customRate?.toString() || null,
       isCustomRate: rate.isCustomRate,

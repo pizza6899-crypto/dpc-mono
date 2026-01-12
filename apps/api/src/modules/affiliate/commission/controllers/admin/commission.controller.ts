@@ -26,12 +26,12 @@ import { ResetCustomRateService } from '../../application/reset-custom-rate.serv
 import { SetCustomRateDto } from './dto/request/set-custom-rate.dto';
 import { ResetCustomRateDto } from './dto/request/reset-custom-rate.dto';
 import { CommissionResponseDto } from './dto/response/commission.response.dto';
-import { AffiliateTierResponseDto } from './dto/response/affiliate-tier.response.dto';
-import { AffiliateCommission, AffiliateTier, CommissionNotFoundException } from '../../domain';
+import { CommissionRateResponseDto } from './dto/response/commission-rate.response.dto';
+import { AffiliateCommission, CommissionNotFoundException } from '../../domain';
 import { AuditLog } from 'src/modules/audit-log/infrastructure/audit-log.decorator';
 import { LogType } from 'src/modules/audit-log/domain';
 
-@ApiTags('Admin Commission Management (관리자 커미션 관리)')
+@ApiTags('Admin Commission Management')
 @Controller('admin/commissions')
 @RequireRoles(UserRoleType.ADMIN, UserRoleType.SUPER_ADMIN)
 @ApiStandardErrors()
@@ -96,7 +96,7 @@ export class AdminCommissionController {
       setBy: args[0]?.id?.toString(),
     }),
   })
-  @ApiStandardResponse(AffiliateTierResponseDto, {
+  @ApiStandardResponse(CommissionRateResponseDto, {
     status: 200,
     description: 'Successfully set custom rate / 수동 요율 설정 성공',
   })
@@ -104,15 +104,13 @@ export class AdminCommissionController {
     @CurrentUser() user: CurrentUserWithSession,
     @Body() dto: SetCustomRateDto,
     @RequestClientInfoParam() requestInfo: RequestClientInfo,
-  ): Promise<AffiliateTierResponseDto> {
-    const tier = await this.setCustomRateService.execute({
+  ): Promise<CommissionRateResponseDto> {
+    const result = await this.setCustomRateService.execute({
       affiliateId: dto.affiliateId,
       customRate: new Prisma.Decimal(dto.customRate),
-      setBy: user.id,
-      requestInfo,
     });
 
-    return this.toTierResponse(tier);
+    return this.toRateResponse(result);
   }
 
   /**
@@ -132,7 +130,7 @@ export class AdminCommissionController {
       resetBy: args[0]?.id?.toString(),
     }),
   })
-  @ApiStandardResponse(AffiliateTierResponseDto, {
+  @ApiStandardResponse(CommissionRateResponseDto, {
     status: 200,
     description: 'Successfully reset custom rate / 수동 요율 해제 성공',
   })
@@ -140,14 +138,12 @@ export class AdminCommissionController {
     @CurrentUser() user: CurrentUserWithSession,
     @Body() dto: ResetCustomRateDto,
     @RequestClientInfoParam() requestInfo: RequestClientInfo,
-  ): Promise<AffiliateTierResponseDto> {
-    const tier = await this.resetCustomRateService.execute({
+  ): Promise<CommissionRateResponseDto> {
+    const result = await this.resetCustomRateService.execute({
       affiliateId: dto.affiliateId,
-      resetBy: user.id,
-      requestInfo,
     });
 
-    return this.toTierResponse(tier);
+    return this.toRateResponse(result);
   }
 
   /**
@@ -157,7 +153,7 @@ export class AdminCommissionController {
     commission: AffiliateCommission,
   ): CommissionResponseDto {
     return {
-      id: commission.id!.toString(), // BigInt를 string으로 변환
+      id: commission.id!.toString(),
       affiliateId: commission.affiliateId,
       subUserId: commission.subUserId,
       gameRoundId: commission.gameRoundId
@@ -179,21 +175,21 @@ export class AdminCommissionController {
   }
 
   /**
-   * 도메인 엔티티를 Tier Response DTO로 변환
+   * Rate 결과를 Response DTO로 변환
    */
-  private toTierResponse(tier: AffiliateTier): AffiliateTierResponseDto {
+  private toRateResponse(result: {
+    tierCode: string;
+    baseRate: any;
+    customRate: any;
+    isCustomRate: boolean;
+    effectiveRate: any;
+  }): CommissionRateResponseDto {
     return {
-      uid: tier.uid,
-      affiliateId: tier.affiliateId,
-      tier: tier.tier,
-      baseRate: tier.baseRate.toString(),
-      customRate: tier.customRate?.toString() || null,
-      isCustomRate: tier.isCustomRate,
-      monthlyWagerAmount: tier.monthlyWagerAmount.toString(),
-      customRateSetBy: tier.customRateSetBy,
-      customRateSetAt: tier.customRateSetAt,
-      createdAt: tier.createdAt,
-      updatedAt: tier.updatedAt,
+      tierCode: result.tierCode,
+      baseRate: result.baseRate.toString(),
+      customRate: result.customRate?.toString() || null,
+      isCustomRate: result.isCustomRate,
+      effectiveRate: result.effectiveRate.toString(),
     };
   }
 }

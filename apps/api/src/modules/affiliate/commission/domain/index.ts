@@ -4,7 +4,6 @@
 // Entities
 export * from './model/affiliate-wallet.entity';
 export * from './model/affiliate-commission.entity';
-export * from './model/affiliate-tier.entity';
 
 // Policies
 export * from './commission-policy';
