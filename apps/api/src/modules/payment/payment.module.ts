@@ -9,8 +9,6 @@ import { PrismaModule } from 'src/infrastructure/prisma/prisma.module';
 import { QueueModule } from 'src/infrastructure/queue/queue.module';
 import { HttpModule } from '@nestjs/axios';
 import { NowPaymentCallbackLogService } from './application/now-payment-callback-log.service';
-import { WithdrawService } from './application/withdraw.service';
-import { WithdrawController } from './controllers/withdraw.controller';
 
 @Module({
   imports: [
@@ -23,14 +21,12 @@ import { WithdrawController } from './controllers/withdraw.controller';
   ],
   controllers: [
     NowPaymentCallbackController,
-    WithdrawController,
   ],
   providers: [
     NowPaymentApiService,
     NowPaymentCallbackService,
     NowPaymentCallbackLogService,
-    WithdrawService,
   ],
-  exports: [NowPaymentApiService, NowPaymentCallbackService, WithdrawService],
+  exports: [NowPaymentApiService, NowPaymentCallbackService],
 })
-export class PaymentModule {}
+export class PaymentModule { }
