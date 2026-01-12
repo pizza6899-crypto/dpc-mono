@@ -3,16 +3,16 @@ import { ApiProperty, ApiPropertyOptional } from '@nestjs/swagger';
 
 export class UserPromotionResponseDto {
   @ApiProperty({
-    description: '사용자 프로모션 ID',
-    example: 1,
+    description: '사용자 프로모션 ID (Encoded)',
+    example: 'up_abc123',
   })
-  id: number;
+  id: string;
 
   @ApiProperty({
-    description: '프로모션 ID',
-    example: 1,
+    description: '프로모션 ID (Encoded)',
+    example: 'p_abc123',
   })
-  promotionId: number;
+  promotionId: string;
 
   @ApiProperty({
     description: '프로모션 상태',

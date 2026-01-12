@@ -1,14 +1,20 @@
 // src/modules/promotion/application/get-promotion-by-id-for-user.service.ts
 import { Inject, Injectable } from '@nestjs/common';
 import { Language } from '@repo/database';
-import { PromotionNotFoundException } from '../domain';
+import { PromotionNotFoundException, Promotion, PromotionTranslation } from '../domain';
 import { PROMOTION_REPOSITORY } from '../ports/out';
 import type { PromotionRepositoryPort } from '../ports/out/promotion.repository.port';
-import type { PromotionResponseDto } from '../controllers/user/dto/response/promotion.response.dto';
+import { PromotionCurrency } from '../domain/model/promotion-currency.entity';
 
 interface GetPromotionByIdForUserParams {
   id: bigint;
   language?: Language;
+}
+
+export interface PromotionDetailInfo {
+  promotion: Promotion;
+  translation: PromotionTranslation;
+  currencySetting: PromotionCurrency;
 }
 
 @Injectable()
@@ -16,11 +22,11 @@ export class GetPromotionByIdForUserService {
   constructor(
     @Inject(PROMOTION_REPOSITORY)
     private readonly repository: PromotionRepositoryPort,
-  ) {}
+  ) { }
 
   async execute(
     params: GetPromotionByIdForUserParams,
-  ): Promise<PromotionResponseDto> {
+  ): Promise<PromotionDetailInfo> {
     const { id, language = Language.EN } = params;
 
     const promotion = await this.repository.findById(id);
@@ -41,27 +47,9 @@ export class GetPromotionByIdForUserService {
     }
 
     return {
-      uid: promotion.uid,
-      name: currentTranslation.name,
-      description: currentTranslation.description ?? null,
-      language: currentTranslation.language,
-      currency: currentCurrency.currency,
-      minDepositAmount: currentCurrency.minDepositAmount.toString(),
-      maxBonusAmount: currentCurrency.maxBonusAmount
-        ? currentCurrency.maxBonusAmount.toString()
-        : null,
-      targetType: promotion.targetType as string,
-      bonusType: promotion.bonusType as string,
-      bonusRate: promotion.bonusRate
-        ? promotion.bonusRate.toString()
-        : undefined,
-      rollingMultiplier: promotion.rollingMultiplier
-        ? promotion.rollingMultiplier.toString()
-        : undefined,
-      isOneTime: promotion.isOneTime,
-      startDate: promotion.startDate,
-      endDate: promotion.endDate,
+      promotion,
+      translation: currentTranslation,
+      currencySetting: currentCurrency,
     };
   }
 }
-

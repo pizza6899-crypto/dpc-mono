@@ -7,9 +7,9 @@ import {
   ForbiddenException,
   Query,
   Param,
-  ParseIntPipe,
+  Inject,
 } from '@nestjs/common';
-import { ApiTags, ApiOperation, ApiQuery } from '@nestjs/swagger';
+import { ApiTags, ApiOperation, ApiQuery, ApiBearerAuth } from '@nestjs/swagger';
 import {
   ApiStandardResponse,
   ApiStandardErrors,
@@ -33,11 +33,15 @@ import { ListActivePromotionsQueryDto } from './dto/request/list-active-promotio
 import { ListMyPromotionsQueryDto } from './dto/request/list-my-promotions-query.dto';
 import { PROMOTION_REPOSITORY } from '../../ports/out';
 import type { PromotionRepositoryPort } from '../../ports/out/promotion.repository.port';
-import { Inject } from '@nestjs/common';
 import { Language } from '@repo/database';
+import { SqidsService } from 'src/common/sqids/sqids.service';
+import { SqidsPrefix } from 'src/common/sqids/sqids.constants';
+import { Promotion, PromotionTranslation, UserPromotion } from '../../domain';
+import { PromotionCurrency } from '../../domain/model/promotion-currency.entity';
 
 @Controller('promotions')
 @ApiTags('Promotion (프로모션)')
+@ApiBearerAuth()
 @ApiStandardErrors()
 export class PromotionUserController {
   constructor(
@@ -45,6 +49,7 @@ export class PromotionUserController {
     private readonly getPromotionByIdForUserService: GetPromotionByIdForUserService,
     @Inject(PROMOTION_REPOSITORY)
     private readonly repository: PromotionRepositoryPort,
+    private readonly sqidsService: SqidsService,
   ) { }
 
   /**
@@ -77,7 +82,7 @@ export class PromotionUserController {
     @CurrentUser() user: CurrentUserWithSession | undefined,
     @Query() query: ListActivePromotionsQueryDto,
   ): Promise<PaginatedData<PromotionResponseDto>> {
-    return await this.getActivePromotionsForUserService.execute({
+    const result = await this.getActivePromotionsForUserService.execute({
       page: query.page,
       limit: query.limit,
       sortBy: query.sortBy,
@@ -86,6 +91,13 @@ export class PromotionUserController {
       currency: query.currency,
       userId: user?.id,
     });
+
+    return {
+      data: result.data.map((info) => this.mapPromotionToDto(info.promotion, info.translation, info.currencySetting)),
+      page: result.page,
+      limit: result.limit,
+      total: result.total,
+    };
   }
 
   /**
@@ -123,10 +135,6 @@ export class PromotionUserController {
     @CurrentUser() user: CurrentUserWithSession,
     @Query() query: ListMyPromotionsQueryDto,
   ): Promise<PaginatedData<UserPromotionResponseDto>> {
-    if (!user) {
-      throw new ForbiddenException('User not authenticated');
-    }
-
     const result = await this.repository.findUserPromotionsPaginated({
       userId: user.id,
       page: query.page,
@@ -137,20 +145,7 @@ export class PromotionUserController {
     });
 
     return {
-      data: result.userPromotions.map(
-        (up): UserPromotionResponseDto => ({
-          id: up.id,
-          promotionId: up.promotionId,
-          status: up.status as string,
-          bonusGranted: up.bonusGranted,
-          depositAmount: up.depositAmount.toString(),
-          bonusAmount: up.bonusAmount.toString(),
-          targetRollingAmount: up.targetRollingAmount.toString(),
-          currentRollingAmount: up.currentRollingAmount.toString(),
-          currency: up.currency,
-          createdAt: up.createdAt,
-        }),
-      ),
+      data: result.userPromotions.map((up) => this.mapUserPromotionToDto(up)),
       page: query.page || 1,
       limit: query.limit || 20,
       total: result.total,
@@ -189,13 +184,60 @@ export class PromotionUserController {
     },
   })
   async getPromotionById(
-    @Param('id', ParseIntPipe) id: number,
+    @Param('id') id: string,
     @Query('language') language?: Language,
   ): Promise<PromotionResponseDto> {
-    return await this.getPromotionByIdForUserService.execute({
-      id: BigInt(id),
+    const decodedId = this.sqidsService.decode(id, SqidsPrefix.PROMOTION);
+
+    const result = await this.getPromotionByIdForUserService.execute({
+      id: decodedId,
       language,
     });
+
+    return this.mapPromotionToDto(result.promotion, result.translation, result.currencySetting);
+  }
+
+  private mapPromotionToDto(
+    promotion: Promotion,
+    translation: PromotionTranslation,
+    currencySetting: PromotionCurrency,
+  ): PromotionResponseDto {
+    return {
+      id: this.sqidsService.encode(promotion.id, SqidsPrefix.PROMOTION),
+      name: translation.name,
+      description: translation.description ?? null,
+      language: translation.language,
+      currency: currencySetting.currency,
+      minDepositAmount: currencySetting.minDepositAmount.toString(),
+      maxBonusAmount: currencySetting.maxBonusAmount
+        ? currencySetting.maxBonusAmount.toString()
+        : null,
+      targetType: promotion.targetType as string,
+      bonusType: promotion.bonusType as string,
+      bonusRate: promotion.bonusRate
+        ? promotion.bonusRate.toString()
+        : undefined,
+      rollingMultiplier: promotion.rollingMultiplier
+        ? promotion.rollingMultiplier.toString()
+        : undefined,
+      isOneTime: promotion.isOneTime,
+      startDate: promotion.startDate,
+      endDate: promotion.endDate,
+    };
+  }
+
+  private mapUserPromotionToDto(up: UserPromotion): UserPromotionResponseDto {
+    return {
+      id: this.sqidsService.encode(up.id, SqidsPrefix.USER_PROMOTION),
+      promotionId: this.sqidsService.encode(up.promotionId, SqidsPrefix.PROMOTION),
+      status: up.status as string,
+      bonusGranted: up.bonusGranted,
+      depositAmount: up.depositAmount.toString(),
+      bonusAmount: up.bonusAmount.toString(),
+      targetRollingAmount: up.targetRollingAmount.toString(),
+      currentRollingAmount: up.currentRollingAmount.toString(),
+      currency: up.currency,
+      createdAt: up.createdAt,
+    };
   }
 }
-
