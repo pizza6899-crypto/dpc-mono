@@ -1,8 +1,7 @@
 // apps/api/src/modules/notification/alert/alert.module.ts
 
 import { Module } from '@nestjs/common';
-import { BullModule } from '@nestjs/bullmq';
-import { NOTIFICATION_QUEUES } from '../common';
+import { NotificationQueueModule } from '../common/notification-queue.module';
 import { CreateAlertService } from './application/create-alert.service';
 import { FindAlertsService } from './application/find-alerts.service';
 import { AlertMapper } from './infrastructure/alert.mapper';
@@ -12,18 +11,7 @@ import { ALERT_REPOSITORY } from './ports';
 
 @Module({
     imports: [
-        BullModule.registerQueue({
-            name: NOTIFICATION_QUEUES.ALERT,
-            defaultJobOptions: {
-                attempts: 3,
-                backoff: {
-                    type: 'exponential',
-                    delay: 1000,
-                },
-                removeOnComplete: 100,
-                removeOnFail: 200,
-            },
-        }),
+        NotificationQueueModule,
     ],
     controllers: [AlertAdminController],
     providers: [

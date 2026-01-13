@@ -1,8 +1,7 @@
 // apps/api/src/modules/notification/processor/processor.module.ts
 
 import { Module, forwardRef } from '@nestjs/common';
-import { BullModule } from '@nestjs/bullmq';
-import { NOTIFICATION_QUEUES } from '../common';
+import { NotificationQueueModule } from '../common/notification-queue.module';
 import { InboxModule } from '../inbox/inbox.module';
 import { RealTimeModule } from '../realtime/realtime.module';
 import { AlertModule } from '../alert/alert.module';
@@ -27,37 +26,7 @@ import { AlertWorker } from './workers/alert.worker';
         forwardRef(() => RealTimeModule),
         AlertModule,
         TemplateModule,
-        BullModule.registerQueue(
-            {
-                name: NOTIFICATION_QUEUES.ALERT,
-                defaultJobOptions: {
-                    attempts: 3,
-                    backoff: { type: 'exponential', delay: 2000 },
-                    removeOnComplete: 100,
-                    removeOnFail: 500,
-                },
-            },
-            {
-                name: NOTIFICATION_QUEUES.EMAIL,
-                defaultJobOptions: {
-                    attempts: 3,
-                    backoff: { type: 'exponential', delay: 5000 },
-                    removeOnComplete: 100,
-                    removeOnFail: 500,
-                },
-                // limiter: { max: 100, duration: 60000 }, // 분당 100건
-            },
-            {
-                name: NOTIFICATION_QUEUES.SMS,
-                defaultJobOptions: {
-                    attempts: 3,
-                    backoff: { type: 'exponential', delay: 10000 },
-                    removeOnComplete: 100,
-                    removeOnFail: 500,
-                },
-                // limiter: { max: 10, duration: 60000 }, // 분당 10건
-            },
-        ),
+        NotificationQueueModule,
     ],
     providers: [
         // Providers

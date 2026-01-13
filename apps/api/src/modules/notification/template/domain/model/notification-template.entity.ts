@@ -80,6 +80,19 @@ export class NotificationTemplate {
         return [...this._translations];
     }
 
+    update(params: Partial<CreateTemplateParams>): void {
+        if (params.name !== undefined) (this as any).name = params.name;
+        if (params.description !== undefined) (this as any).description = params.description ?? null;
+        if (params.event !== undefined) (this as any).event = params.event;
+        if (params.channel !== undefined) (this as any).channel = params.channel;
+        if (params.variables !== undefined) (this as any).variables = params.variables;
+        this._updatedAt = new Date();
+    }
+
+    clearTranslations(): void {
+        this._translations = [];
+    }
+
     addTranslation(translation: NotificationTemplateTranslation): void {
         // 이미 존재하는 로케일인지 확인 (실제로는 Repository 레벨에서 체크하거나 Map으로 관리 가능)
         const exists = this._translations.some((t) => t.locale === translation.locale);

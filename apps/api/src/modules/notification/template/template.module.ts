@@ -8,6 +8,10 @@ import { HandlebarsRenderer } from './infrastructure/renderers/handlebars.render
 import { EmailHandlebarsRenderer } from './infrastructure/renderers/email-handlebars.renderer';
 import { RendererFactory } from './infrastructure/renderers/renderer.factory';
 import { RenderTemplateService } from './application/render-template.service';
+import { CreateTemplateService } from './application/create-template.service';
+import { UpdateTemplateService } from './application/update-template.service';
+import { FindTemplatesService, FindTemplateByIdService } from './application/find-templates.service';
+import { DeleteTemplateService } from './application/delete-template.service';
 import { TemplateAdminController } from './controllers/admin/template-admin.controller';
 
 @Module({
@@ -29,6 +33,11 @@ import { TemplateAdminController } from './controllers/admin/template-admin.cont
 
         // Application Service
         RenderTemplateService,
+        CreateTemplateService,
+        UpdateTemplateService,
+        FindTemplatesService,
+        FindTemplateByIdService,
+        DeleteTemplateService,
     ],
     exports: [
         RenderTemplateService,

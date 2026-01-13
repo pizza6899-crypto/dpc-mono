@@ -1,45 +1,35 @@
 // apps/api/src/modules/notification/alert/controllers/admin/dto/response/alert.response.dto.ts
 
+import { ApiProperty } from '@nestjs/swagger';
 import { AlertStatus } from '@repo/database';
-import { Alert } from '../../../../domain';
 
 export class AlertResponseDto {
+    @ApiProperty({ description: 'Alert ID', example: '1234567890' })
     id: string;
+
+    @ApiProperty({ description: 'Event name', example: 'user.registered' })
     event: string;
+
+    @ApiProperty({ description: 'User ID', example: '1234567890', nullable: true })
     userId: string | null;
+
+    @ApiProperty({ description: 'Target group', example: 'VIP', nullable: true })
     targetGroup: string | null;
+
+    @ApiProperty({ description: 'Alert payload', example: { email: 'user@example.com' } })
     payload: Record<string, unknown>;
+
+    @ApiProperty({ description: 'Idempotency key', example: 'uuid-v4-key', nullable: true })
     idempotencyKey: string | null;
+
+    @ApiProperty({ description: 'Alert status', enum: AlertStatus, example: AlertStatus.PENDING })
     status: AlertStatus;
+
+    @ApiProperty({ description: 'Created at', example: '2024-01-01T00:00:00.000Z' })
     createdAt: string;
+
+    @ApiProperty({ description: 'Updated at', example: '2024-01-01T00:00:00.000Z' })
     updatedAt: string;
-
-    static fromEntity(alert: Alert): AlertResponseDto {
-        const dto = new AlertResponseDto();
-        dto.id = alert.id?.toString() ?? '';
-        dto.event = alert.event;
-        dto.userId = alert.userId?.toString() ?? null;
-        dto.targetGroup = alert.targetGroup;
-        dto.payload = alert.payload;
-        dto.idempotencyKey = alert.idempotencyKey;
-        dto.status = alert.status;
-        dto.createdAt = alert.createdAt.toISOString();
-        dto.updatedAt = alert.updatedAt.toISOString();
-        return dto;
-    }
 }
 
-export class AlertListResponseDto {
-    items: AlertResponseDto[];
-    total: number;
 
-    static fromEntities(
-        items: Alert[],
-        total: number,
-    ): AlertListResponseDto {
-        const dto = new AlertListResponseDto();
-        dto.items = items.map(AlertResponseDto.fromEntity);
-        dto.total = total;
-        return dto;
-    }
-}

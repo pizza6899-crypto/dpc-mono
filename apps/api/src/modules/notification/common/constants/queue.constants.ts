@@ -1,10 +1,10 @@
 // apps/api/src/modules/notification/common/constants/queue.constants.ts
 
 export const NOTIFICATION_QUEUES = {
-    ALERT: 'notification:alert',
-    SOCKET: 'notification:socket',
-    EMAIL: 'notification:email',
-    SMS: 'notification:sms',
+    ALERT: 'notification-alert',
+    SOCKET: 'notification-socket',
+    EMAIL: 'notification-email',
+    SMS: 'notification-sms',
 } as const;
 
 export type NotificationQueueName =

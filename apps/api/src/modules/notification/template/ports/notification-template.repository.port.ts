@@ -36,4 +36,9 @@ export interface NotificationTemplateRepositoryPort {
      * 템플릿 목록 조회
      */
     list(): Promise<NotificationTemplate[]>;
+
+    /**
+     * 템플릿 삭제
+     */
+    delete(id: bigint): Promise<void>;
 }

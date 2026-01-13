@@ -116,4 +116,14 @@ export class NotificationTemplateRepository implements NotificationTemplateRepos
         });
         return templates.map((t) => this.mapper.toDomain(t));
     }
+
+    async delete(id: bigint): Promise<void> {
+        // Cascade delete is handled by DB for translations usually, but let's be safe or just follow schema.
+        await this.tx.notificationTemplateTranslation.deleteMany({
+            where: { templateId: id },
+        });
+        await this.tx.notificationTemplate.delete({
+            where: { id },
+        });
+    }
 }

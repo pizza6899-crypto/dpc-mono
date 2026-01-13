@@ -1,11 +1,9 @@
-// apps/api/src/modules/notification/template/controllers/admin/dto/request/create-template.request.dto.ts
-
 import { IsString, IsEnum, IsArray, IsOptional, ValidateNested } from 'class-validator';
 import { Type } from 'class-transformer';
 import { ApiProperty } from '@nestjs/swagger';
 import { ChannelType } from '@repo/database';
 
-class CreateTranslationDto {
+class UpdateTranslationDto {
     @ApiProperty({ description: 'Locale', example: 'en' })
     @IsString()
     locale: string;
@@ -24,33 +22,37 @@ class CreateTranslationDto {
     actionUriTemplate?: string;
 }
 
-export class CreateTemplateRequestDto {
-    @ApiProperty({ description: 'Template name', example: 'Welcome Email' })
+export class UpdateTemplateRequestDto {
+    @ApiProperty({ description: 'Template name', example: 'Welcome Email', required: false })
+    @IsOptional()
     @IsString()
-    name: string;
+    name?: string;
 
     @ApiProperty({ description: 'Description', example: 'Sent when a new user joins', required: false })
     @IsOptional()
     @IsString()
     description?: string;
 
-    @ApiProperty({ description: 'Event name', example: 'user.registered' })
+    @ApiProperty({ description: 'Event name', example: 'user.registered', required: false })
+    @IsOptional()
     @IsString()
-    event: string;
+    event?: string;
 
-    @ApiProperty({ description: 'Channel type', enum: ChannelType, example: ChannelType.EMAIL })
+    @ApiProperty({ description: 'Channel type', enum: ChannelType, example: ChannelType.EMAIL, required: false })
+    @IsOptional()
     @IsEnum(ChannelType)
-    channel: ChannelType;
+    channel?: ChannelType;
 
-    @ApiProperty({ description: 'Variables used in template', example: ['name', 'expiry_date'] })
+    @ApiProperty({ description: 'Variables used in template', example: ['name', 'expiry_date'], required: false })
+    @IsOptional()
     @IsArray()
     @IsString({ each: true })
-    variables: string[];
+    variables?: string[];
 
-    @ApiProperty({ type: [CreateTranslationDto], required: false })
+    @ApiProperty({ type: [UpdateTranslationDto], required: false })
     @IsOptional()
     @IsArray()
     @ValidateNested({ each: true })
-    @Type(() => CreateTranslationDto)
-    translations?: CreateTranslationDto[];
+    @Type(() => UpdateTranslationDto)
+    translations?: UpdateTranslationDto[];
 }
