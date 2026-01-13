@@ -3,6 +3,7 @@ import { ChannelType } from '@repo/database';
 import { NOTIFICATION_TEMPLATE_REPOSITORY } from '../ports';
 import type { NotificationTemplateRepositoryPort } from '../ports';
 import { NotificationTemplate, NotificationTemplateTranslation } from '../domain';
+import { DuplicateTemplateException } from '../domain/template.exception';
 
 interface CreateTemplateParams {
     name: string;
@@ -26,6 +27,11 @@ export class CreateTemplateService {
     ) { }
 
     async execute(params: CreateTemplateParams): Promise<NotificationTemplate> {
+        const existing = await this.repository.findByEventAndChannel(params.event, params.channel);
+        if (existing) {
+            throw new DuplicateTemplateException(params.event, params.channel);
+        }
+
         const template = NotificationTemplate.create({
             name: params.name,
             description: params.description,

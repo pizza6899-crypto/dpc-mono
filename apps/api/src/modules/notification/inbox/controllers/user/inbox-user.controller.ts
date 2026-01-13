@@ -19,6 +19,7 @@ import { LogType } from 'src/modules/audit-log/domain';
 import { AuditLog } from 'src/modules/audit-log/infrastructure/audit-log.decorator';
 import { CurrentUser } from 'src/common/auth/decorators/current-user.decorator';
 import type { CurrentUserWithSession } from 'src/common/auth/decorators/current-user.decorator';
+import { MessageCode } from '@repo/shared';
 import { SqidsService } from 'src/common/sqids/sqids.service';
 import { SqidsPrefix } from 'src/common/sqids/sqids.constants';
 import { FindNotificationsService } from '../../application/find-notifications.service';
@@ -26,7 +27,7 @@ import { GetUnreadCountService } from '../../application/get-unread-count.servic
 import { MarkAsReadService } from '../../application/mark-as-read.service';
 import { MarkAllAsReadService } from '../../application/mark-all-as-read.service';
 import { DeleteNotificationService } from '../../application/delete-notification.service';
-import { NotificationLog } from '../../domain';
+import { NotificationLog, InboxException } from '../../domain';
 import { FindNotificationsQueryDto } from './dto/request/find-notifications-query.dto';
 import {
     NotificationResponseDto,
@@ -118,7 +119,7 @@ export class InboxUserController {
         const notification = await this.markAsReadService.execute({
             receiverId: user.id,
             notificationId: this.sqidsService.decode(id, SqidsPrefix.NOTIFICATION),
-            notificationCreatedAt: new Date(createdAt),
+            notificationCreatedAt: this.parseDateOrThrow(createdAt),
         });
 
         return this.toResponseDto(notification);
@@ -164,7 +165,7 @@ export class InboxUserController {
         const notification = await this.deleteNotificationService.execute({
             receiverId: user.id,
             notificationId: this.sqidsService.decode(id, SqidsPrefix.NOTIFICATION),
-            notificationCreatedAt: new Date(createdAt),
+            notificationCreatedAt: this.parseDateOrThrow(createdAt),
         });
 
         return this.toResponseDto(notification);
@@ -181,5 +182,17 @@ export class InboxUserController {
             readAt: log.readAt?.toISOString() ?? null,
             metadata: log.metadata,
         };
+    }
+
+    private parseDateOrThrow(dateString: string): Date {
+        const date = new Date(dateString);
+        if (isNaN(date.getTime())) {
+            throw new InboxException(
+                `Invalid date format: ${dateString}`,
+                MessageCode.VALIDATION_ERROR,
+                HttpStatus.BAD_REQUEST,
+            );
+        }
+        return date;
     }
 }

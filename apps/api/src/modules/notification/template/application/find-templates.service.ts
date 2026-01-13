@@ -1,7 +1,8 @@
-import { Injectable, Inject, NotFoundException } from '@nestjs/common';
+import { Injectable, Inject } from '@nestjs/common';
 import { NOTIFICATION_TEMPLATE_REPOSITORY } from '../ports';
 import type { NotificationTemplateRepositoryPort } from '../ports';
 import { NotificationTemplate } from '../domain';
+import { TemplateNotFoundException } from '../domain/template.exception';
 
 @Injectable()
 export class FindTemplatesService {
@@ -25,7 +26,7 @@ export class FindTemplateByIdService {
     async execute(id: bigint): Promise<NotificationTemplate> {
         const template = await this.repository.findById(id);
         if (!template) {
-            throw new NotFoundException(`Template not found: ${id}`);
+            throw new TemplateNotFoundException(id);
         }
         return template;
     }

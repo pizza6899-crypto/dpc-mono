@@ -1,5 +1,3 @@
-// apps/api/src/modules/notification/alert/controllers/admin/alert-admin.controller.ts
-
 import {
     Controller,
     Get,
@@ -22,10 +20,11 @@ import { LogType } from 'src/modules/audit-log/domain';
 import { AuditLog } from 'src/modules/audit-log/infrastructure/audit-log.decorator';
 import { CreateAlertService } from '../../application/create-alert.service';
 import { FindAlertsService } from '../../application/find-alerts.service';
-import { Alert } from '../../domain';
+import { Alert, AlertException } from '../../domain';
 import { CreateAlertRequestDto } from './dto/request/create-alert.request.dto';
 import { FindAlertsQueryDto } from './dto/request/find-alerts-query.dto';
 import { AlertResponseDto } from './dto/response/alert.response.dto';
+import { MessageCode } from '@repo/shared';
 
 @ApiTags('Notification Admin')
 @Controller('admin/notifications/alerts')
@@ -59,7 +58,7 @@ export class AlertAdminController {
     ): Promise<AlertResponseDto> {
         const alert = await this.createAlertService.execute({
             event: dto.event,
-            userId: dto.userId ? BigInt(dto.userId) : undefined,
+            userId: dto.userId ? this.parseBigIntOrThrow(dto.userId) : undefined,
             targetGroup: dto.targetGroup,
             payload: dto.payload,
             channels: dto.channels,
@@ -94,9 +93,9 @@ export class AlertAdminController {
         const { items, total } = await this.findAlertsService.execute({
             status: query.status,
             event: query.event,
-            userId: query.userId ? BigInt(query.userId) : undefined,
-            startDate: query.startDate ? new Date(query.startDate) : undefined,
-            endDate: query.endDate ? new Date(query.endDate) : undefined,
+            userId: query.userId ? this.parseBigIntOrThrow(query.userId) : undefined,
+            startDate: query.startDate ? this.parseDateOrThrow(query.startDate) : undefined,
+            endDate: query.endDate ? this.parseDateOrThrow(query.endDate) : undefined,
             skip: (page - 1) * limit,
             take: limit,
         });
@@ -123,5 +122,29 @@ export class AlertAdminController {
             createdAt: alert.createdAt.toISOString(),
             updatedAt: alert.updatedAt.toISOString(),
         };
+    }
+
+    private parseBigIntOrThrow(value: string): bigint {
+        try {
+            return BigInt(value);
+        } catch {
+            throw new AlertException(
+                `Invalid ID format: ${value}`,
+                MessageCode.VALIDATION_ERROR,
+                HttpStatus.BAD_REQUEST,
+            );
+        }
+    }
+
+    private parseDateOrThrow(dateString: string): Date {
+        const date = new Date(dateString);
+        if (isNaN(date.getTime())) {
+            throw new AlertException(
+                `Invalid date format: ${dateString}`,
+                MessageCode.VALIDATION_ERROR,
+                HttpStatus.BAD_REQUEST,
+            );
+        }
+        return date;
     }
 }

@@ -1,8 +1,9 @@
-import { Injectable, Inject, NotFoundException } from '@nestjs/common';
+import { Injectable, Inject } from '@nestjs/common';
 import { ChannelType } from '@repo/database';
 import { NOTIFICATION_TEMPLATE_REPOSITORY } from '../ports';
 import type { NotificationTemplateRepositoryPort } from '../ports';
 import { NotificationTemplate, NotificationTemplateTranslation } from '../domain';
+import { TemplateNotFoundException, DuplicateTemplateException } from '../domain/template.exception';
 
 interface UpdateTemplateParams {
     id: bigint;
@@ -29,7 +30,21 @@ export class UpdateTemplateService {
     async execute({ id, ...params }: UpdateTemplateParams): Promise<NotificationTemplate> {
         const template = await this.repository.findById(id);
         if (!template) {
-            throw new NotFoundException(`Template not found: ${id}`);
+            throw new TemplateNotFoundException(id);
+        }
+
+        // Check for duplicates if event or channel is changed
+        if (
+            (params.event && params.event !== template.event) ||
+            (params.channel && params.channel !== template.channel)
+        ) {
+            const newEvent = params.event ?? template.event;
+            const newChannel = params.channel ?? template.channel;
+            const existing = await this.repository.findByEventAndChannel(newEvent, newChannel);
+
+            if (existing && existing.id !== template.id) {
+                throw new DuplicateTemplateException(newEvent, newChannel);
+            }
         }
 
         // Apply changes
