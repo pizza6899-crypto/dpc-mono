@@ -28,6 +28,7 @@ import { SnowflakeModule } from './common/snowflake/snowflake.module';
 import { WithdrawalModule } from './modules/withdrawal/withdrawal.module';
 import { SqidsModule } from './common/sqids/sqids.module';
 import { NotificationModule } from './modules/notification/notification.module';
+import { SocketModule } from './modules/socket/socket.module';
 
 @Module({
   imports: [
@@ -54,6 +55,7 @@ import { NotificationModule } from './modules/notification/notification.module';
     AnalyticsModule,
     CompModule,
     NotificationModule,
+    SocketModule,
   ],
   providers: [
     Reflector,

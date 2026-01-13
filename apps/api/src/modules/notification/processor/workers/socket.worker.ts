@@ -1,10 +1,8 @@
-// apps/api/src/modules/notification/processor/workers/socket.worker.ts
-
 import { Processor, WorkerHost } from '@nestjs/bullmq';
 import { Inject, Logger } from '@nestjs/common';
 import { Job } from 'bullmq';
 import { NOTIFICATION_QUEUES } from '../../common';
-import { NotificationGateway } from '../../realtime/notification.gateway';
+import { SocketService } from 'src/modules/socket/socket.service';
 import {
     NOTIFICATION_LOG_REPOSITORY,
 } from '../../inbox/ports';
@@ -28,7 +26,7 @@ export class SocketWorker extends WorkerHost {
     constructor(
         @Inject(NOTIFICATION_LOG_REPOSITORY)
         private readonly notificationLogRepository: NotificationLogRepositoryPort,
-        private readonly gateway: NotificationGateway,
+        private readonly socketService: SocketService,
     ) {
         super();
     }
@@ -59,7 +57,7 @@ export class SocketWorker extends WorkerHost {
         await this.notificationLogRepository.update(log);
 
         // 소켓 발송
-        this.gateway.emitNotification(log.receiverId, {
+        this.socketService.sendToUser(log.receiverId, 'notification:new', {
             id: log.id!.toString(),
             createdAt: log.createdAt.toISOString(),
             title: log.title,
@@ -77,7 +75,7 @@ export class SocketWorker extends WorkerHost {
 
     private async processVolatile(data: VolatileJobData): Promise<void> {
         const userId = BigInt(data.userId);
-        this.gateway.emitToUser(userId, data.type, data.data);
+        this.socketService.sendToUser(userId, data.type, data.data);
         this.logger.debug(`Sent volatile ${data.type} to user ${userId}`);
     }
 }

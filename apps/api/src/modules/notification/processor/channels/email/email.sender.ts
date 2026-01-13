@@ -7,14 +7,14 @@ import {
     ChannelSendParams,
     EmailProviderAdapter,
 } from '../../../common';
-import { SESAdapter } from './providers/ses.adapter';
+import { NodemailerAdapter } from './providers/nodemailer.adapter';
 
 @Injectable()
 export class EmailSender implements ChannelSender {
     private provider: EmailProviderAdapter;
 
-    constructor(sesAdapter: SESAdapter) {
-        this.provider = sesAdapter;
+    constructor(nodemailerAdapter: NodemailerAdapter) {
+        this.provider = nodemailerAdapter;
     }
 
     getChannelType(): ChannelType {

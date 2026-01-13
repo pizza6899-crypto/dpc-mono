@@ -1,20 +1,18 @@
-// apps/api/src/modules/notification/processor/channels/socket/socket.sender.ts
-
 import { Injectable } from '@nestjs/common';
 import { ChannelType } from '@repo/database';
 import { ChannelSender, ChannelSendParams } from '../../../common';
-import { NotificationGateway } from '../../../realtime/notification.gateway';
+import { SocketService } from 'src/modules/socket/socket.service';
 
 @Injectable()
 export class SocketSender implements ChannelSender {
-    constructor(private readonly gateway: NotificationGateway) { }
+    constructor(private readonly socketService: SocketService) { }
 
     getChannelType(): ChannelType {
         return ChannelType.IN_APP;
     }
 
     async send(params: ChannelSendParams): Promise<void> {
-        this.gateway.emitNotification(params.receiverId, {
+        this.socketService.sendToUser(params.receiverId, 'notification:new', {
             id: params.logId.toString(),
             createdAt: params.logCreatedAt.toISOString(),
             title: params.title,
