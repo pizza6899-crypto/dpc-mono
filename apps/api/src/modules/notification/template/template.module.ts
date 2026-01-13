@@ -13,9 +13,14 @@ import { UpdateTemplateService } from './application/update-template.service';
 import { FindTemplatesService, FindTemplateByIdService } from './application/find-templates.service';
 import { DeleteTemplateService } from './application/delete-template.service';
 import { TemplateAdminController } from './controllers/admin/template-admin.controller';
+import { TemplateTranslationAdminController } from './controllers/admin/template-translation-admin.controller';
+import { UpdateTemplateTranslationService } from './application/update-template-translation.service';
 
 @Module({
-    controllers: [TemplateAdminController],
+    controllers: [
+        TemplateAdminController,
+        TemplateTranslationAdminController, // New controller
+    ],
     providers: [
         // Mapper
         NotificationTemplateMapper,
@@ -38,6 +43,7 @@ import { TemplateAdminController } from './controllers/admin/template-admin.cont
         FindTemplatesService,
         FindTemplateByIdService,
         DeleteTemplateService,
+        UpdateTemplateTranslationService, // New service
     ],
     exports: [
         RenderTemplateService,

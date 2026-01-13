@@ -24,7 +24,6 @@ export const SqidsPrefix = {
     COM_WALLET: 'cw',
     COM_TRANSACTION: 'ctx',
     NOTIFICATION: 'n',
-    NOTIFICATION_TEMPLATE: 'nt',
     // 필요에 따라 추가
 } as const;
 
