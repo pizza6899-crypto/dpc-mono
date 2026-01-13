@@ -18,7 +18,7 @@ import type { NotificationTemplateRepositoryPort } from '../../template/ports';
 import { NotificationLog } from '../../inbox/domain';
 import { InjectQueue } from '@nestjs/bullmq';
 import { Queue } from 'bullmq';
-import { AlertStatus, ChannelType } from '@repo/database';
+import { AlertStatus, ChannelType, Language } from '@repo/database';
 
 interface AlertJobData {
     alertId: string;
@@ -87,7 +87,7 @@ export class AlertWorker extends WorkerHost {
                 try {
                     // Render Template
                     // Locale: Hardcoded 'ko' for now, or fetch from User entity if available
-                    const locale = 'ko';
+                    const locale = Language.JA;
                     const renderResult = await this.renderService.execute({
                         event: alert.event,
                         channel: template.channel,

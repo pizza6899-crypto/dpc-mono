@@ -304,6 +304,7 @@ enum Language {
   EN
   KO
   JA
+  ZH
 }
 
 enum KycLevel {

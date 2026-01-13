@@ -1,7 +1,7 @@
 // apps/api/src/modules/notification/template/application/render-template.service.ts
 
 import { Inject, Injectable } from '@nestjs/common';
-import { ChannelType } from '@repo/database';
+import { ChannelType, Language } from '@repo/database';
 import {
     NOTIFICATION_TEMPLATE_REPOSITORY,
     RenderResult,
@@ -16,7 +16,7 @@ import {
 interface RenderTemplateParams {
     event: string;
     channel: ChannelType;
-    locale: string;
+    locale: Language;
     variables: Record<string, unknown>;
 }
 

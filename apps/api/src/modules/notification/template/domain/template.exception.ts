@@ -3,6 +3,7 @@
 import { HttpStatus } from '@nestjs/common';
 import { DomainException } from 'src/common/exception/domain.exception';
 import { MessageCode } from '@repo/shared';
+import { Language } from '@repo/database';
 
 export class TemplateException extends DomainException {
     constructor(
@@ -25,7 +26,7 @@ export class TemplateNotFoundException extends TemplateException {
 }
 
 export class TemplateTranslationNotFoundException extends TemplateException {
-    constructor(templateId: bigint, locale: string) {
+    constructor(templateId: bigint, locale: string | Language) {
         super(
             `Translation not found for template ${templateId} and locale ${locale}`,
             MessageCode.NOTIFICATION_TEMPLATE_TRANSLATION_NOT_FOUND,

@@ -1,14 +1,13 @@
-// apps/api/src/modules/notification/template/controllers/admin/dto/request/create-template.request.dto.ts
-
 import { IsString, IsEnum, IsArray, IsOptional, ValidateNested } from 'class-validator';
 import { Type } from 'class-transformer';
 import { ApiProperty } from '@nestjs/swagger';
-import { ChannelType } from '@repo/database';
+import { ChannelType, Language } from '@repo/database';
+import { NOTIFICATION_EVENTS } from '../../../../../common';
 
 class CreateTranslationDto {
-    @ApiProperty({ description: 'Locale', example: 'en' })
-    @IsString()
-    locale: string;
+    @ApiProperty({ description: 'Locale', enum: Language, example: Language.EN })
+    @IsEnum(Language)
+    locale: Language;
 
     @ApiProperty({ description: 'Title template', example: 'Welcome, {{name}}!' })
     @IsString()
@@ -34,8 +33,8 @@ export class CreateTemplateRequestDto {
     @IsString()
     description?: string;
 
-    @ApiProperty({ description: 'Event name', example: 'user.registered' })
-    @IsString()
+    @ApiProperty({ description: 'Event name', enum: NOTIFICATION_EVENTS, example: NOTIFICATION_EVENTS.USER_REGISTERED })
+    @IsEnum(NOTIFICATION_EVENTS)
     event: string;
 
     @ApiProperty({ description: 'Channel type', enum: ChannelType, example: ChannelType.EMAIL })

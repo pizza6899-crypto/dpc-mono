@@ -1,6 +1,6 @@
 // apps/api/src/modules/notification/template/domain/model/notification-template.entity.ts
 
-import { ChannelType } from '@repo/database';
+import { ChannelType, Language } from '@repo/database';
 import { NotificationTemplateTranslation } from './notification-template-translation.entity';
 
 interface CreateTemplateParams {
@@ -101,17 +101,12 @@ export class NotificationTemplate {
         }
     }
 
-    getTranslation(locale: string): NotificationTemplateTranslation | undefined {
-        // 1. 정확한 로케일 매칭 (e.g. 'ko-KR')
-        let translation = this._translations.find((t) => t.locale === locale);
+    getTranslation(locale: Language): NotificationTemplateTranslation | undefined {
+        // 1. 요청된 언어로 번역 조회
+        const translation = this._translations.find((t) => t.locale === locale);
         if (translation) return translation;
 
-        // 2. 언어 코드 매칭 (e.g. 'ko')
-        const lang = locale.split('-')[0];
-        translation = this._translations.find((t) => t.locale === lang);
-        if (translation) return translation;
-
-        // 3. 기본 로케일 매칭 ('en') - 서비스 레벨에서 처리할 수도 있음
-        return this._translations.find((t) => t.locale === 'en');
+        // 2. 부재 시 기본 언어(EN)로 Fallback
+        return this._translations.find((t) => t.locale === Language.EN);
     }
 }

@@ -1,6 +1,6 @@
 // apps/api/src/modules/notification/inbox/domain/model/notification-log.entity.ts
 
-import { ChannelType, NotifyStatus } from '@repo/database';
+import { ChannelType, NotifyStatus, Language } from '@repo/database';
 import {
     NotificationAlreadyReadException,
     NotificationAlreadyDeletedException,
@@ -11,7 +11,7 @@ interface CreateNotificationLogParams {
     alertCreatedAt: Date;
     templateId?: bigint | null;
     templateEvent?: string | null;
-    locale?: string | null;
+    locale?: Language | null;
     channel: ChannelType;
     receiverId: bigint;
     target?: string | null;
@@ -29,7 +29,7 @@ interface FromPersistenceParams {
     alertCreatedAt: Date;
     templateId: bigint | null;
     templateEvent: string | null;
-    locale: string | null;
+    locale: Language | null;
     channel: ChannelType;
     receiverId: bigint;
     target: string | null;
@@ -66,7 +66,7 @@ export class NotificationLog {
         public readonly alertCreatedAt: Date,
         public readonly templateId: bigint | null,
         public readonly templateEvent: string | null,
-        public readonly locale: string | null,
+        public readonly locale: Language | null,
         public readonly channel: ChannelType,
         public readonly receiverId: bigint,
         public readonly target: string | null,

@@ -5,7 +5,7 @@ import { IsString, IsOptional, IsEnum, IsArray, IsObject } from 'class-validator
 import { Type } from 'class-transformer';
 import { ChannelType } from '@repo/database';
 
-import { NOTIFICATION_EVENTS } from '../../../../../common/constants/event.constants';
+import { NOTIFICATION_EVENTS, NOTIFICATION_TARGET_GROUPS } from '../../../../../common';
 
 export class CreateAlertRequestDto {
     @ApiProperty({ description: 'Event name', enum: NOTIFICATION_EVENTS, example: NOTIFICATION_EVENTS.DEPOSIT_COMPLETED })
@@ -17,9 +17,9 @@ export class CreateAlertRequestDto {
     @Type(() => String)
     userId?: string;
 
-    @ApiProperty({ description: 'Target group', example: 'VIP', required: false })
+    @ApiProperty({ description: 'Target group', enum: NOTIFICATION_TARGET_GROUPS, example: NOTIFICATION_TARGET_GROUPS.ALL, required: false })
     @IsOptional()
-    @IsString()
+    @IsEnum(NOTIFICATION_TARGET_GROUPS)
     targetGroup?: string;
 
     @ApiProperty({ description: 'Alert payload', example: { email: 'user@example.com' } })

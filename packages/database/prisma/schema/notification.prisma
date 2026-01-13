@@ -47,9 +47,9 @@ model NotificationTemplate {
 
 // 템플릿 다국어 지원
 model NotificationTemplateTranslation {
-  id         BigInt @id @default(autoincrement())
-  templateId BigInt @map("template_id")
-  locale     String // "ko", "en", "ja", "zh" 등
+  id         BigInt   @id @default(autoincrement())
+  templateId BigInt   @map("template_id")
+  locale     Language
 
   titleTemplate     String  @map("title_template")
   bodyTemplate      String  @map("body_template")
@@ -71,9 +71,9 @@ model NotificationLog {
   alertCreatedAt DateTime @map("alert_created_at")
 
   // 템플릿 참조
-  templateId    BigInt? @map("template_id") // 사용된 템플릿
-  templateEvent String? @map("template_event") // 스냅샷 (템플릿 삭제/변경 대비)
-  locale        String? // 렌더링에 사용된 언어
+  templateId    BigInt?   @map("template_id") // 사용된 템플릿
+  templateEvent String?   @map("template_event") // 스냅샷 (템플릿 삭제/변경 대비)
+  locale        Language? // 렌더링에 사용된 언어
 
   channel    ChannelType
   receiverId BigInt      @map("receiver_id")

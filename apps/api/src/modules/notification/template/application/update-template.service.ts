@@ -1,5 +1,5 @@
 import { Injectable, Inject } from '@nestjs/common';
-import { ChannelType } from '@repo/database';
+import { ChannelType, Language } from '@repo/database';
 import { NOTIFICATION_TEMPLATE_REPOSITORY } from '../ports';
 import type { NotificationTemplateRepositoryPort } from '../ports';
 import { NotificationTemplate, NotificationTemplateTranslation } from '../domain';
@@ -13,7 +13,7 @@ interface UpdateTemplateParams {
     channel?: ChannelType;
     variables?: string[];
     translations?: {
-        locale: string;
+        locale: Language;
         titleTemplate: string;
         bodyTemplate: string;
         actionUriTemplate?: string;

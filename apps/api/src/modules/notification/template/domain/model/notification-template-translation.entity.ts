@@ -1,8 +1,9 @@
 // apps/api/src/modules/notification/template/domain/model/notification-template-translation.entity.ts
+import { Language } from '@repo/database';
 
 interface CreateTranslationParams {
     templateId?: bigint; // 생성 시점엔 없을 수 있음 (부모와 함께 저장 시)
-    locale: string;
+    locale: Language;
     titleTemplate: string;
     bodyTemplate: string;
     actionUriTemplate?: string;
@@ -11,7 +12,7 @@ interface CreateTranslationParams {
 interface FromPersistenceParams {
     id: bigint;
     templateId: bigint;
-    locale: string;
+    locale: Language;
     titleTemplate: string;
     bodyTemplate: string;
     actionUriTemplate: string | null;
@@ -29,7 +30,7 @@ export class NotificationTemplateTranslation {
     private constructor(
         public readonly id: bigint | null,
         public readonly templateId: bigint | null,
-        public readonly locale: string,
+        public readonly locale: Language,
         public readonly titleTemplate: string,
         public readonly bodyTemplate: string,
         public readonly actionUriTemplate: string | null,
