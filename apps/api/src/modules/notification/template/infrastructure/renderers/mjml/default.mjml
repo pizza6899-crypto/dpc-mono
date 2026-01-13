@@ -1,0 +1,47 @@
+<mjml>
+  <mj-head>
+    <mj-attributes>
+      <mj-all font-family="'Helvetica Neue', Helvetica, Arial, sans-serif" color="#333333" line-height="1.6" />
+      <mj-text font-size="16px" />
+    </mj-attributes>
+    <mj-style inline="inline">
+      .header-border { border-bottom: 2px solid {{_accentColor}}; }
+      .link-color { color: {{_accentColor}}; text-decoration: none; }
+      .button-style { background-color: {{_accentColor}} !important; }
+    </mj-style>
+  </mj-head>
+  <mj-body background-color="#f4f4f4" width="600px">
+    <mj-spacer height="40px" />
+    <mj-wrapper padding="0" background-color="#ffffff" border-radius="8px">
+      <!-- Header -->
+      <mj-section padding="20px">
+        <mj-column css-class="header-border">
+          <mj-text align="center" font-size="24px" font-weight="bold" color="{{_accentColor}}">
+            {{appName}}
+          </mj-text>
+        </mj-column>
+      </mj-section>
+      
+      <!-- Body Content -->
+      <mj-section padding="0 20px">
+        <mj-column>
+          <mj-text>
+            <!-- Handlebars injection point -->
+            {{{body}}}
+          </mj-text>
+        </mj-column>
+      </mj-section>
+
+      <!-- Footer -->
+      <mj-section padding="20px">
+        <mj-column border-top="1px solid #eeeeee">
+          <mj-text align="center" font-size="12px" color="#aaaaaa" padding-top="20px">
+            &copy; {{year}} {{appName}}. {{_footerCopyright}}<br />
+            {{_footerNoReply}}
+          </mj-text>
+        </mj-column>
+      </mj-section>
+    </mj-wrapper>
+    <mj-spacer height="40px" />
+  </mj-body>
+</mjml>

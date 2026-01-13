@@ -1,6 +1,6 @@
 // apps/api/src/modules/notification/template/ports/template-renderer.port.ts
 
-import { ChannelType } from '@repo/database';
+import { ChannelType, Language } from '@repo/database';
 
 export interface RenderResult {
     title: string;
@@ -13,7 +13,7 @@ export interface RenderParams {
     titleTemplate: string; // Handlebars template string for title
     actionUriTemplate?: string | null;
     variables: Record<string, unknown>;
-    locale: string;
+    locale: Language;
 }
 
 /**
