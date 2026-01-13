@@ -48,14 +48,23 @@ export class TemplateListItemResponseDto {
     @ApiProperty({ description: 'Template name', example: 'Welcome Email' })
     name: string;
 
+    @ApiProperty({ description: 'Description', example: 'Sent when a new user joins', required: false, nullable: true })
+    description: string | null;
+
     @ApiProperty({ description: 'Event name', example: 'user.registered' })
     event: string;
 
     @ApiProperty({ description: 'Channel type', enum: ChannelType, example: ChannelType.EMAIL })
     channel: ChannelType;
 
+    @ApiProperty({ description: 'Variables used in template', example: ['name', 'expiry_date'] })
+    variables: string[];
+
     @ApiProperty({ description: 'Number of translations', example: 2 })
     translationsCount: number;
+
+    @ApiProperty({ type: [TemplateTranslationResponseDto] })
+    translations: TemplateTranslationResponseDto[];
 
     @ApiProperty({ description: 'Updated date', example: '2024-01-01T00:00:00Z' })
     updatedAt: string;

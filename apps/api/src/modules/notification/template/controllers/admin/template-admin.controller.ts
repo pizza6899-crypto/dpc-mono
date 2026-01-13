@@ -3,7 +3,6 @@
 import {
     Controller,
     Get,
-    Param,
     HttpStatus,
 } from '@nestjs/common';
 import { ApiTags, ApiOperation } from '@nestjs/swagger';
@@ -15,10 +14,9 @@ import { RequireRoles } from 'src/common/auth/decorators/roles.decorator';
 import { UserRoleType } from '@repo/database';
 import { LogType } from 'src/modules/audit-log/domain';
 import { AuditLog } from 'src/modules/audit-log/infrastructure/audit-log.decorator';
-import { FindTemplatesService, FindTemplateByIdService } from '../../application/find-templates.service';
+import { FindTemplatesService } from '../../application/find-templates.service';
 import { NotificationTemplate } from '../../domain';
 import {
-    TemplateResponseDto,
     TemplateListItemResponseDto,
 } from './dto/response/template.response.dto';
 
@@ -29,7 +27,6 @@ import {
 export class TemplateAdminController {
     constructor(
         private readonly findTemplatesService: FindTemplatesService,
-        private readonly findTemplateByIdService: FindTemplateByIdService,
     ) { }
 
     @Get()
@@ -49,26 +46,7 @@ export class TemplateAdminController {
         return templates.map(t => this.toListItemResponseDto(t));
     }
 
-    @Get(':id')
-    @AuditLog({
-        type: LogType.ACTIVITY,
-        category: 'NOTIFICATION',
-        action: 'NOTIFICATION_TEMPLATE_ADMIN_GET',
-        extractMetadata: (_, args) => ({
-            templateId: args[0],
-        }),
-    })
-    @ApiOperation({ summary: 'Get template' })
-    @ApiStandardResponse(TemplateResponseDto, {
-        status: HttpStatus.OK,
-        description: 'Successfully retrieved template',
-    })
-    async get(@Param('id') id: string): Promise<TemplateResponseDto> {
-        const template = await this.findTemplateByIdService.execute(BigInt(id));
-        return this.toResponseDto(template);
-    }
-
-    private toResponseDto(template: NotificationTemplate): TemplateResponseDto {
+    private toListItemResponseDto(template: NotificationTemplate): TemplateListItemResponseDto {
         return {
             id: template.id!.toString(),
             name: template.name,
@@ -76,23 +54,13 @@ export class TemplateAdminController {
             event: template.event,
             channel: template.channel,
             variables: template.variables,
+            translationsCount: template.translations.length,
             translations: template.translations.map(t => ({
                 locale: t.locale,
                 titleTemplate: t.titleTemplate,
                 bodyTemplate: t.bodyTemplate,
                 actionUriTemplate: t.actionUriTemplate,
             })),
-            updatedAt: template.updatedAt.toISOString(),
-        };
-    }
-
-    private toListItemResponseDto(template: NotificationTemplate): TemplateListItemResponseDto {
-        return {
-            id: template.id!.toString(),
-            name: template.name,
-            event: template.event,
-            channel: template.channel,
-            translationsCount: template.translations.length,
             updatedAt: template.updatedAt.toISOString(),
         };
     }
