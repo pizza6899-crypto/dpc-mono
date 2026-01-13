@@ -1,6 +1,7 @@
 import { seedUsers } from './seeders/user.seeder';
 import { seedLobbyGames } from './seeders/game.seeder';
 import { seedTiers } from './seeders/tier.seeder';
+import { seedNotificationTemplates } from './seeders/notification.seeder';
 import { PrismaClient } from '../src';
 import { PrismaPg } from '@prisma/adapter-pg';
 
@@ -27,6 +28,11 @@ async function main() {
 
     // 티어 시딩 처리
     await seedTiers(prisma);
+    console.log('✅ 티어 시딩이 완료되었습니다.');
+
+    // 알림 템플릿 시딩 처리
+    await seedNotificationTemplates(prisma);
+    console.log('✅ 알림 템플릿 시딩이 완료되었습니다.');
 
 
 
