@@ -18,7 +18,7 @@ import { RequireRoles } from 'src/common/auth/decorators/roles.decorator';
 import { UserRoleType } from '@repo/database';
 import { LogType } from 'src/modules/audit-log/domain';
 import { AuditLog } from 'src/modules/audit-log/infrastructure/audit-log.decorator';
-import { CreateAlertService } from '../../application/create-alert.service';
+import { SendAlertService } from '../../application/send-alert.service';
 import { FindAlertsService } from '../../application/find-alerts.service';
 import { Alert, AlertException } from '../../domain';
 import { CreateAlertRequestDto } from './dto/request/create-alert.request.dto';
@@ -32,7 +32,7 @@ import { MessageCode } from '@repo/shared';
 @ApiStandardErrors()
 export class AlertAdminController {
     constructor(
-        private readonly createAlertService: CreateAlertService,
+        private readonly sendAlertService: SendAlertService,
         private readonly findAlertsService: FindAlertsService,
     ) { }
 
@@ -56,7 +56,7 @@ export class AlertAdminController {
     async createAlert(
         @Body() dto: CreateAlertRequestDto,
     ): Promise<AlertResponseDto> {
-        const alert = await this.createAlertService.execute({
+        const alert = await this.sendAlertService.execute({
             event: dto.event,
             userId: dto.userId ? this.parseBigIntOrThrow(dto.userId) : undefined,
             targetGroup: dto.targetGroup,

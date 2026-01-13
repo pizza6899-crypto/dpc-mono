@@ -5,9 +5,11 @@ import { IsString, IsOptional, IsEnum, IsArray, IsObject } from 'class-validator
 import { Type } from 'class-transformer';
 import { ChannelType } from '@repo/database';
 
+import { NOTIFICATION_EVENTS } from '../../../../../common/constants/event.constants';
+
 export class CreateAlertRequestDto {
-    @ApiProperty({ description: 'Event name', example: 'user.registered' })
-    @IsString()
+    @ApiProperty({ description: 'Event name', enum: NOTIFICATION_EVENTS, example: NOTIFICATION_EVENTS.DEPOSIT_COMPLETED })
+    @IsEnum(NOTIFICATION_EVENTS)
     event: string;
 
     @ApiProperty({ description: 'User ID', example: '1234567890', required: false })

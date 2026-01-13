@@ -25,6 +25,8 @@ interface AlertJobData {
     alertCreatedAt: string;
 }
 
+import { Transactional } from '@nestjs-cls/transactional';
+
 @Processor(NOTIFICATION_QUEUES.ALERT)
 export class AlertWorker extends WorkerHost {
     private readonly logger = new Logger(AlertWorker.name);
@@ -39,11 +41,11 @@ export class AlertWorker extends WorkerHost {
         private readonly renderService: RenderTemplateService,
         @InjectQueue(NOTIFICATION_QUEUES.EMAIL) private readonly emailQueue: Queue,
         @InjectQueue(NOTIFICATION_QUEUES.SMS) private readonly smsQueue: Queue,
-        // Add other queues here
     ) {
         super();
     }
 
+    @Transactional()
     async process(job: Job<AlertJobData>): Promise<void> {
         const { data } = job;
         this.logger.debug(`Processing alert job ${job.id} for alert ${data.alertId}`);

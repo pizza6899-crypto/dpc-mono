@@ -7,3 +7,6 @@ export * from './constants/event.constants';
 // Interfaces
 export * from './interfaces/channel-sender.interface';
 export * from './interfaces/provider-adapter.interface';
+
+// Types
+export * from './types/notification-payload.types';
