@@ -18,6 +18,7 @@ import { LogType } from 'src/modules/audit-log/domain';
 import { AuditLog } from 'src/modules/audit-log/infrastructure/audit-log.decorator';
 import { UpdateTemplateTranslationService } from '../../application/update-template-translation.service';
 import { TemplateResponseDto } from './dto/response/template.response.dto';
+import { TemplateTranslationParamDto } from './dto/request/template-translation.param.dto';
 import { UpdateTemplateTranslationRequestDto } from './dto/request/update-template-translation.request.dto';
 
 @ApiTags('Notification Template Admin')
@@ -35,9 +36,9 @@ export class TemplateTranslationAdminController {
         category: 'NOTIFICATION',
         action: 'NOTIFICATION_TEMPLATE_TRANSLATION_UPDATE',
         extractMetadata: (_, args) => ({
-            templateId: args[0],
-            locale: args[1],
-            request: args[2],
+            templateId: args[0].id,
+            locale: args[0].locale,
+            request: args[1],
         }),
     })
     @ApiOperation({ summary: 'Update or Create translation for template' })
@@ -46,13 +47,12 @@ export class TemplateTranslationAdminController {
         description: 'Successfully updated translation',
     })
     async update(
-        @Param('id') id: string,
-        @Param('locale') locale: Language,
+        @Param() params: TemplateTranslationParamDto,
         @Body() dto: UpdateTemplateTranslationRequestDto,
     ): Promise<TemplateResponseDto> {
         const template = await this.updateTranslationService.execute({
-            templateId: BigInt(id),
-            locale,
+            templateId: BigInt(params.id),
+            locale: params.locale,
             ...dto,
         });
 
