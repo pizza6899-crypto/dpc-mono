@@ -27,6 +27,7 @@ import { CompModule } from './modules/comp/comp.module';
 import { SnowflakeModule } from './common/snowflake/snowflake.module';
 import { WithdrawalModule } from './modules/withdrawal/withdrawal.module';
 import { SqidsModule } from './common/sqids/sqids.module';
+import { NotificationModule } from './modules/notification/notification.module';
 
 @Module({
   imports: [
@@ -52,6 +53,7 @@ import { SqidsModule } from './common/sqids/sqids.module';
     WageringModule,
     AnalyticsModule,
     CompModule,
+    NotificationModule,
   ],
   providers: [
     Reflector,
