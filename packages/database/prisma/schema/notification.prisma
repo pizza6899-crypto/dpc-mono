@@ -1,0 +1,77 @@
+model Alert {
+  id             BigInt            @default(autoincrement())
+  event          String
+  userId         BigInt?           @map("user_id")
+  targetGroup    String?           @map("target_group")
+  payload        Json
+  idempotencyKey String?           @map("idempotency_key")
+  status         AlertStatus       @default(PENDING)
+  createdAt      DateTime          @default(now()) @map("created_at")
+  updatedAt      DateTime          @updatedAt @map("updated_at")
+  notifications  NotificationLog[]
+  user           User?             @relation(fields: [userId], references: [id])
+
+  @@id([createdAt, id])
+  @@unique([idempotencyKey, createdAt])
+  @@index([userId])
+  @@index([createdAt])
+  @@index([status, createdAt])
+  @@index([event, createdAt])
+  @@map("alerts")
+}
+
+model NotificationLog {
+  id             BigInt       @default(autoincrement())
+  alertId        BigInt       @map("alert_id")
+  alertCreatedAt DateTime     @map("alert_created_at")
+  channel        ChannelType
+  receiverId     BigInt       @map("receiver_id")
+  target         String?
+  title          String       @db.VarChar(100)
+  body           String       @db.Text
+  actionUri      String?      @map("action_uri") @db.VarChar(500)
+  isRead         Boolean      @default(false) @map("is_read")
+  readAt         DateTime?    @map("read_at")
+  isDeleted      Boolean      @default(false) @map("is_deleted")
+  deletedAt      DateTime?    @map("deleted_at")
+  priority       Int          @default(5) // 낮을수록 우선순위가 높음
+  scheduledAt    DateTime     @default(now()) @map("scheduled_at")
+  status         NotifyStatus @default(PENDING)
+  errorMessage   String?      @map("error_message") @db.Text
+  sentAt         DateTime?    @map("sent_at")
+  retryCount     Int          @default(0) @map("retry_count")
+  metadata       Json?        @default("{}") @map("metadata")
+  createdAt      DateTime     @default(now()) @map("created_at")
+  updatedAt      DateTime     @updatedAt @map("updated_at")
+
+  alert    Alert @relation(fields: [alertCreatedAt, alertId], references: [createdAt, id])
+  receiver User  @relation(fields: [receiverId], references: [id])
+
+  @@id([createdAt, id])
+  @@index([createdAt, alertId])
+  @@index([receiverId, channel, isDeleted, id(sort: Desc)])
+  @@index([receiverId, channel, isRead, createdAt])
+  @@index([status, scheduledAt, priority])
+  @@map("notification_logs")
+}
+
+enum AlertStatus {
+  PENDING
+  PROCESSING
+  COMPLETED
+  FAILED
+}
+
+enum NotifyStatus {
+  PENDING
+  SENDING
+  SUCCESS
+  FAILED
+  CANCELED
+}
+
+enum ChannelType {
+  EMAIL
+  SMS
+  IN_APP
+}

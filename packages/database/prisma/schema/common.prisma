@@ -52,6 +52,8 @@ model User {
   wageringRequirements   WageringRequirement[]
   hourlyStats            UserHourlyStat[]
   compWallets            UserCompWallet[]
+  alerts                 Alert[]
+  notificationLogs       NotificationLog[]
 }
 
 model UserWallet {
