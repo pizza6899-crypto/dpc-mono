@@ -22,7 +22,6 @@ describe('DeletePromotionService', () => {
     const createPromotion = (deletedAt: Date | null = null) => {
         return Promotion.fromPersistence({
             id: BigInt(1),
-            uid: 'promo-uid-123',
             managementName: 'Test Promotion',
             isActive: true,
             startDate: null,

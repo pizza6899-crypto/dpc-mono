@@ -3,7 +3,6 @@ import { Injectable } from '@nestjs/common';
 import { InjectTransaction } from '@nestjs-cls/transactional';
 import { type PrismaTransaction } from 'src/infrastructure/prisma/prisma.module';
 import { Prisma, ExchangeCurrencyCode, Language } from '@repo/database';
-import { generateUid } from 'src/utils/id.util';
 import { Promotion, UserPromotion, PromotionCurrency } from '../domain';
 import type { PromotionTranslation } from '../domain/model/promotion.entity';
 import type { PromotionRepositoryPort } from '../ports/out/promotion.repository.port';
@@ -403,13 +402,9 @@ export class PromotionRepository implements PromotionRepositoryPort {
     rollingMultiplier?: Prisma.Decimal | null;
     qualificationMaintainCondition: string;
     isOneTime?: boolean;
-    uid?: string; // 선택적: 제공되지 않으면 생성
   }): Promise<Promotion> {
-    const uid = params.uid || generateUid();
-
     const result = await this.tx.promotion.create({
       data: {
-        uid,
         managementName: params.managementName,
         isActive: params.isActive ?? true,
         startDate: params.startDate ?? null,

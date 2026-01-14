@@ -13,7 +13,6 @@ describe('Promotion Entity', () => {
     const createPromotion = (overrides: Partial<Parameters<typeof Promotion.fromPersistence>[0]> = {}) => {
         return Promotion.fromPersistence({
             id: BigInt(1),
-            uid: 'promo-uid-123',
             managementName: 'Test Promotion',
             isActive: true,
             startDate: new Date('2024-01-01'),
@@ -35,7 +34,6 @@ describe('Promotion Entity', () => {
             const promotion = createPromotion();
 
             expect(promotion.id).toBe(BigInt(1));
-            expect(promotion.uid).toBe('promo-uid-123');
             expect(promotion.managementName).toBe('Test Promotion');
             expect(promotion.isActive).toBe(true);
             expect(promotion.bonusType).toBe(PromotionBonusType.PERCENTAGE);
@@ -45,7 +43,6 @@ describe('Promotion Entity', () => {
         it('should handle optional fields with defaults', () => {
             const promotion = Promotion.fromPersistence({
                 id: BigInt(1),
-                uid: 'promo-uid',
                 managementName: 'Test',
                 isActive: true,
                 startDate: null,

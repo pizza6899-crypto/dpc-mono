@@ -20,7 +20,6 @@ export interface PromotionTranslation {
 export class Promotion {
   private constructor(
     public readonly id: bigint,
-    public readonly uid: string,
     public readonly managementName: string,
     private _isActive: boolean,
     public readonly startDate: Date | null,
@@ -36,11 +35,10 @@ export class Promotion {
     private _deletedAt: Date | null = null, // 소프트 삭제
     private _currencies?: PromotionCurrency[], // 통화별 설정 (optional, 필요시 로드)
     private _translations?: PromotionTranslation[], // 번역 정보 (optional, 필요시 로드)
-  ) {}
+  ) { }
 
   static fromPersistence(data: {
     id: bigint;
-    uid: string;
     managementName: string;
     isActive: boolean;
     startDate: Date | null;
@@ -59,7 +57,6 @@ export class Promotion {
   }): Promotion {
     return new Promotion(
       data.id,
-      data.uid,
       data.managementName,
       data.isActive,
       data.startDate,
@@ -191,7 +188,6 @@ export class Promotion {
   toPersistence() {
     return {
       id: this.id,
-      uid: this.uid,
       managementName: this.managementName,
       isActive: this._isActive,
       startDate: this.startDate,

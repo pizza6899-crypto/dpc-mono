@@ -1,6 +1,5 @@
 model Promotion {
   id                             BigInt                 @id @default(autoincrement())
-  uid                            String                 @unique
   managementName                 String                 @map("management_name")
   isActive                       Boolean                @default(true) @map("is_active")
   startDate                      DateTime?              @map("start_date")

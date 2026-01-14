@@ -22,7 +22,6 @@ describe('UpdatePromotionService', () => {
     const createPromotion = (overrides: Partial<Parameters<typeof Promotion.fromPersistence>[0]> = {}) => {
         return Promotion.fromPersistence({
             id: BigInt(1),
-            uid: 'promo-uid-123',
             managementName: 'Original Name',
             isActive: true,
             startDate: null,

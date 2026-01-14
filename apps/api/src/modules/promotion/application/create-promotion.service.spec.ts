@@ -23,7 +23,6 @@ describe('CreatePromotionService', () => {
 
     const createdPromotion = Promotion.fromPersistence({
         id: BigInt(1),
-        uid: 'promo-uid-123',
         managementName: 'Test Promotion',
         isActive: true,
         startDate: null,

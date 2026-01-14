@@ -22,7 +22,6 @@ describe('TogglePromotionActiveService', () => {
     const createPromotion = (isActive: boolean) => {
         return Promotion.fromPersistence({
             id: BigInt(1),
-            uid: 'promo-uid-123',
             managementName: 'Test Promotion',
             isActive,
             startDate: null,
