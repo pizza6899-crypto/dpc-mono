@@ -8,7 +8,6 @@ import { FindUserPromotionsService } from './application/find-user-promotions.se
 import { FindPromotionsAdminService } from './application/find-promotions-admin.service';
 import { CreatePromotionService } from './application/create-promotion.service';
 import { UpdatePromotionService } from './application/update-promotion.service';
-import { DeletePromotionService } from './application/delete-promotion.service';
 import { FindPromotionParticipantsService } from './application/find-promotion-participants.service';
 import { GetActivePromotionsForUserService } from './application/get-active-promotions-for-user.service';
 import { GetPromotionByCodeForUserService } from './application/get-promotion-by-code-for-user.service';
@@ -31,7 +30,6 @@ import { WageringModule } from '../wagering/wagering.module';
     FindPromotionsAdminService,
     CreatePromotionService,
     UpdatePromotionService,
-    DeletePromotionService,
     FindPromotionParticipantsService,
     GetActivePromotionsForUserService,
     GetPromotionByCodeForUserService,

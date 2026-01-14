@@ -28,7 +28,7 @@ import { LogType } from 'src/modules/audit-log/domain';
 import { FindPromotionsAdminService } from '../../application/find-promotions-admin.service';
 import { CreatePromotionService } from '../../application/create-promotion.service';
 import { UpdatePromotionService } from '../../application/update-promotion.service';
-import { DeletePromotionService } from '../../application/delete-promotion.service';
+
 import { FindPromotionParticipantsService } from '../../application/find-promotion-participants.service';
 import { CreatePromotionRequestDto } from './dto/request/create-promotion.request.dto';
 import { UpdatePromotionRequestDto } from './dto/request/update-promotion.request.dto';
@@ -64,7 +64,6 @@ export class PromotionAdminController {
     private readonly findPromotionsAdminService: FindPromotionsAdminService,
     private readonly createPromotionService: CreatePromotionService,
     private readonly updatePromotionService: UpdatePromotionService,
-    private readonly deletePromotionService: DeletePromotionService,
     private readonly findPromotionParticipantsService: FindPromotionParticipantsService,
     @Inject(PROMOTION_REPOSITORY)
     private readonly repository: PromotionRepositoryPort,
@@ -226,39 +225,7 @@ export class PromotionAdminController {
     return this.mapToAdminResponseDto(promotion);
   }
 
-  /**
-   * 프로모션 삭제
-   */
-  @Delete(':id')
-  @HttpCode(HttpStatus.OK)
-  @ApiOperation({
-    summary: 'Delete promotion / 프로모션 삭제',
-    description: '프로모션을 삭제합니다.',
-  })
-  @ApiStandardResponse(
-    Object,
-    {
-      status: HttpStatus.OK,
-      description: 'Promotion deleted successfully / 프로모션 삭제 성공',
-    },
-  )
-  @AuditLog({
-    type: LogType.ACTIVITY,
-    action: 'DELETE_PROMOTION',
-    category: 'PROMOTION',
-    extractMetadata: (_, args) => {
-      const [id] = args;
-      return {
-        promotionId: id,
-      };
-    },
-  })
-  async deletePromotion(
-    @Param('id', ParseIntPipe) id: number,
-  ): Promise<any> {
-    await this.deletePromotionService.execute(BigInt(id));
-    return {};
-  }
+
 
   /**
    * 프로모션의 통화별 설정 목록 조회 (더 구체적인 라우트를 먼저 배치)
@@ -586,8 +553,6 @@ export class PromotionAdminController {
       total: result.total,
     };
   }
-
-
 
   private mapToAdminResponseDto(
     promotion: Promotion,

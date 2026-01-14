@@ -93,6 +93,3 @@ export class PromotionAdminResponseDto {
   statistics?: PromotionStatisticsResponseDto;
 }
 
-// PromotionListAdminResponseDto는 더 이상 사용하지 않음
-// PaginatedData<PromotionAdminResponseDto> 형태로 반환
-
