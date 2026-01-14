@@ -140,6 +140,16 @@ export interface SqidsConfig {
   minLength: number;
 }
 
+// S3 외에 다른 스토리지(예: 로컬, GCS) 추가 가능성을 고려하여 StorageConfig로 명명
+export interface StorageConfig {
+  region: string;
+  bucket: string;
+  accessKeyId: string;
+  secretAccessKey: string;
+  endpoint?: string;
+  forcePathStyle?: boolean;
+}
+
 export interface EnvironmentConfig {
   app: AppConfig;
   jwt: JwtConfig;
@@ -158,4 +168,5 @@ export interface EnvironmentConfig {
   deposit: DepositConfig;
   wallet: WalletConfig;
   sqids: SqidsConfig;
+  storage: StorageConfig;
 }

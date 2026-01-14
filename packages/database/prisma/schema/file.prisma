@@ -1,0 +1,23 @@
+model File {
+    id       BigInt @id @default(autoincrement())
+    uid      String @unique
+    bucket   String
+    key      String
+    url      String
+    filename String
+    mimetype String
+    size     Int
+    width    Int?
+    height   Int?
+
+    uploaderId BigInt?
+    // User 모델에 files 관계를 추가한 후 아래 주석을 해제하세요.
+    // uploader   User?    @relation(fields: [uploaderId], references: [id], onDelete: SetNull)
+
+    createdAt DateTime @default(now())
+    updatedAt DateTime @updatedAt
+
+    @@index([key])
+    @@index([uploaderId])
+    @@map("files")
+}

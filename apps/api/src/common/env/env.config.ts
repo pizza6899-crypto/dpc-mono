@@ -174,3 +174,12 @@ export const sqidsConfig = registerAs('sqids', () => ({
   alphabet: process.env.SQIDS_ALPHABET,
   minLength: parseInt(process.env.SQIDS_MIN_LENGTH ?? '10', 10),
 }));
+
+export const storageConfig = registerAs('storage', () => ({
+  region: process.env.AWS_S3_REGION,
+  bucket: process.env.AWS_S3_BUCKET,
+  accessKeyId: process.env.AWS_S3_ACCESS_KEY_ID,
+  secretAccessKey: process.env.AWS_S3_SECRET_ACCESS_KEY,
+  endpoint: process.env.AWS_S3_ENDPOINT,
+  forcePathStyle: process.env.AWS_S3_FORCE_PATH_STYLE === 'true',
+}));

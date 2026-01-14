@@ -19,6 +19,7 @@ import {
   walletConfig,
   openExchangeRatesConfig,
   sqidsConfig,
+  storageConfig,
 } from './env.config';
 
 @Module({
@@ -43,6 +44,7 @@ import {
         depositConfig,
         walletConfig,
         sqidsConfig,
+        storageConfig,
       ],
     }),
   ],

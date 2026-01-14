@@ -19,6 +19,7 @@ import {
   WalletConfig,
   OpenExchangeRatesConfig,
   SqidsConfig,
+  StorageConfig,
 } from './env.types';
 
 @Injectable()
@@ -107,6 +108,10 @@ export class EnvService {
     return this.configService.get<SqidsConfig>('sqids')!;
   }
 
+  get storage(): StorageConfig {
+    return this.configService.get<StorageConfig>('storage')!;
+  }
+
   get all(): EnvironmentConfig {
     return {
       app: this.app,
@@ -126,6 +131,7 @@ export class EnvService {
       deposit: this.deposit,
       wallet: this.wallet,
       sqids: this.sqids,
+      storage: this.storage,
     };
   }
 }

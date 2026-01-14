@@ -31,6 +31,8 @@ import { WithdrawalModule } from './modules/withdrawal/withdrawal.module';
 import { SqidsModule } from './common/sqids/sqids.module';
 import { NotificationModule } from './modules/notification/notification.module';
 import { SocketModule } from './modules/socket/socket.module';
+import { StorageModule } from './infrastructure/storage/storage.module';
+import { FileModule } from './modules/file/file.module';
 
 @Module({
   imports: [
@@ -73,6 +75,8 @@ import { SocketModule } from './modules/socket/socket.module';
     CompModule,
     NotificationModule,
     SocketModule,
+    StorageModule,
+    FileModule,
   ],
   providers: [
     Reflector,
