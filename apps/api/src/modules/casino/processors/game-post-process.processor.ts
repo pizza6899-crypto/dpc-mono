@@ -256,11 +256,11 @@ export class GamePostProcessProcessor
       await this.worker.close();
 
       this.logger.log(
-        'WhitecliffFetchGameResultUrlProcessor가 정상적으로 종료되었습니다.',
+        'GamePostProcessProcessor가 정상적으로 종료되었습니다.',
       );
     } catch (error) {
       this.logger.error(
-        'WhitecliffFetchGameResultUrlProcessor 종료 중 오류 발생',
+        'GamePostProcessProcessor 종료 중 오류 발생',
         error,
       );
       // 에러가 발생해도 프로세스를 종료할 수 있도록 에러를 다시 throw하지 않음

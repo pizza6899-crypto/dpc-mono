@@ -1,8 +1,9 @@
 import { Processor, WorkerHost } from '@nestjs/bullmq';
-import { Inject, Logger } from '@nestjs/common';
+import { Inject, Logger, OnApplicationShutdown } from '@nestjs/common';
 import { Job } from 'bullmq';
 import { NOTIFICATION_QUEUES } from '../../common';
 import { SocketService } from 'src/modules/socket/socket.service';
+import { ClsService } from 'nestjs-cls';
 import {
     NOTIFICATION_LOG_REPOSITORY,
 } from '../../inbox/ports';
@@ -20,30 +21,33 @@ interface VolatileJobData {
 }
 
 @Processor(NOTIFICATION_QUEUES.SOCKET)
-export class SocketWorker extends WorkerHost {
+export class SocketWorker extends WorkerHost implements OnApplicationShutdown {
     private readonly logger = new Logger(SocketWorker.name);
 
     constructor(
         @Inject(NOTIFICATION_LOG_REPOSITORY)
         private readonly notificationLogRepository: NotificationLogRepositoryPort,
         private readonly socketService: SocketService,
+        private readonly cls: ClsService,
     ) {
         super();
     }
 
     async process(job: Job<NotificationJobData | VolatileJobData>): Promise<void> {
-        const { name, data } = job;
+        return this.cls.run(async () => {
+            const { name, data } = job;
 
-        try {
-            if (name === 'send-in-app') {
-                await this.processNotification(data as NotificationJobData);
-            } else if (name === 'volatile') {
-                await this.processVolatile(data as VolatileJobData);
+            try {
+                if (name === 'send-in-app') {
+                    await this.processNotification(data as NotificationJobData);
+                } else if (name === 'volatile') {
+                    await this.processVolatile(data as VolatileJobData);
+                }
+            } catch (error) {
+                this.logger.error(`Failed to process job ${job.id}:`, error);
+                throw error;
             }
-        } catch (error) {
-            this.logger.error(`Failed to process job ${job.id}:`, error);
-            throw error;
-        }
+        });
     }
 
     private async processNotification(data: NotificationJobData): Promise<void> {
@@ -77,5 +81,17 @@ export class SocketWorker extends WorkerHost {
         const userId = BigInt(data.userId);
         this.socketService.sendToUser(userId, data.type, data.data);
         this.logger.debug(`Sent volatile ${data.type} to user ${userId}`);
+    }
+
+    async onApplicationShutdown(signal?: string): Promise<void> {
+        try {
+            const worker = this.worker;
+            if (worker) {
+                await worker.close();
+                this.logger.log('SocketWorker closed successfully');
+            }
+        } catch (error) {
+            this.logger.error('Failed to close SocketWorker:', error);
+        }
     }
 }
