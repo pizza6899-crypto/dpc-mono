@@ -588,43 +588,6 @@ export class PromotionAdminController {
   }
 
   /**
-   * 프로모션 통계 조회
-   */
-  @Get(':id/statistics')
-  @HttpCode(HttpStatus.OK)
-  @ApiOperation({
-    summary: 'Get promotion statistics / 프로모션 통계 조회',
-    description: '프로모션의 참가자 통계 정보를 조회합니다.',
-  })
-  @ApiStandardResponse(PromotionStatisticsResponseDto, {
-    status: HttpStatus.OK,
-    description: 'Successfully retrieved statistics / 통계 조회 성공',
-  })
-  @AuditLog({
-    type: LogType.ACTIVITY,
-    action: 'VIEW_PROMOTION_STATISTICS_ADMIN',
-    category: 'PROMOTION',
-    extractMetadata: (_, args) => {
-      const [id] = args;
-      return {
-        promotionId: id,
-      };
-    },
-  })
-  async getPromotionStatistics(
-    @Param('id', ParseIntPipe) id: number,
-  ): Promise<PromotionStatisticsResponseDto> {
-    const statistics = await this.getPromotionStatisticsService.execute(
-      BigInt(id),
-    );
-
-    return {
-      totalParticipants: statistics.totalParticipants,
-      statusCounts: statistics.statusCounts,
-    };
-  }
-
-  /**
    * 단일 프로모션 상세 조회 (더 일반적인 라우트는 나중에 배치)
    */
   @Get(':id')
@@ -651,15 +614,23 @@ export class PromotionAdminController {
   async getPromotionById(
     @Param('id', ParseIntPipe) id: number,
   ): Promise<PromotionAdminResponseDto> {
-    const promotion = await this.repository.findById(BigInt(id));
+    const promotionId = BigInt(id);
+    const promotion = await this.repository.findById(promotionId);
     if (!promotion) {
-      throw new PromotionNotFoundException(BigInt(id));
+      throw new PromotionNotFoundException(promotionId);
     }
 
-    return this.mapToAdminResponseDto(promotion);
+    const statistics = await this.getPromotionStatisticsService.execute(
+      promotionId,
+    );
+
+    return this.mapToAdminResponseDto(promotion, statistics);
   }
 
-  private mapToAdminResponseDto(promotion: Promotion): PromotionAdminResponseDto {
+  private mapToAdminResponseDto(
+    promotion: Promotion,
+    statistics?: PromotionStatisticsResponseDto,
+  ): PromotionAdminResponseDto {
     return {
       id: promotion.id.toString(),
       managementName: promotion.managementName,
@@ -674,6 +645,7 @@ export class PromotionAdminController {
       endDate: promotion.endDate,
       createdAt: promotion.createdAt,
       updatedAt: promotion.updatedAt,
+      statistics,
     };
   }
 }

@@ -1,5 +1,6 @@
 // src/modules/promotion/controllers/admin/dto/response/promotion-admin.response.dto.ts
 import { ApiProperty, ApiPropertyOptional } from '@nestjs/swagger';
+import { PromotionStatisticsResponseDto } from './promotion-statistics.response.dto';
 
 export class PromotionAdminResponseDto {
   @ApiProperty({
@@ -84,6 +85,12 @@ export class PromotionAdminResponseDto {
     example: '2024-01-01T00:00:00Z',
   })
   updatedAt: Date;
+
+  @ApiPropertyOptional({
+    description: '프로모션 통계',
+    type: PromotionStatisticsResponseDto,
+  })
+  statistics?: PromotionStatisticsResponseDto;
 }
 
 // PromotionListAdminResponseDto는 더 이상 사용하지 않음
