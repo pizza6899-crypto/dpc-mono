@@ -205,15 +205,7 @@ export class CreatePromotionRequestDto {
   @IsOptional()
   bonusExpiryMinutes?: number;
 
-  @ApiPropertyOptional({
-    description: '관리자용 메모',
-    example: ['이 프로모션은 VIP 전용입니다.'],
-    type: [String],
-  })
-  @IsOptional()
-  @IsArray()
-  @IsString({ each: true })
-  note?: string[];
+
 
   @ApiPropertyOptional({
     description: '통화별 설정 목록',

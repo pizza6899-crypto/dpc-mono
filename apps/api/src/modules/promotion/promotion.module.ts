@@ -11,6 +11,7 @@ import { UpdatePromotionService } from './application/update-promotion.service';
 import { FindPromotionParticipantsService } from './application/find-promotion-participants.service';
 import { GetPromotionAdminService } from './application/get-promotion-admin.service';
 import { DeletePromotionService } from './application/delete-promotion.service';
+import { AddPromotionNoteService } from './application/add-promotion-note.service';
 import { GetActivePromotionsForUserService } from './application/get-active-promotions-for-user.service';
 import { GetPromotionByCodeForUserService } from './application/get-promotion-by-code-for-user.service';
 import { GetMyPromotionsForUserService } from './application/get-my-promotions-for-user.service';
@@ -36,6 +37,7 @@ import { WageringModule } from '../wagering/wagering.module';
     FindPromotionParticipantsService,
     GetPromotionAdminService,
     DeletePromotionService,
+    AddPromotionNoteService,
     GetActivePromotionsForUserService,
     GetPromotionByCodeForUserService,
     GetMyPromotionsForUserService,

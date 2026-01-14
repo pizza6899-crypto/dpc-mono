@@ -106,6 +106,10 @@ export class Promotion {
     this._isActive = active;
   }
 
+  addNote(note: string): void {
+    this.note.push(note);
+  }
+
   isCurrentlyActive(now: Date = new Date()): boolean {
     if (!this._isActive) {
       return false;

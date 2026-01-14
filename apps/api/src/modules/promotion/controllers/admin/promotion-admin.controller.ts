@@ -31,6 +31,7 @@ import { UpdatePromotionService } from '../../application/update-promotion.servi
 import { FindPromotionParticipantsService } from '../../application/find-promotion-participants.service';
 import { GetPromotionAdminService } from '../../application/get-promotion-admin.service';
 import { DeletePromotionService } from '../../application/delete-promotion.service';
+import { AddPromotionNoteService } from '../../application/add-promotion-note.service';
 import { CreatePromotionRequestDto } from './dto/request/create-promotion.request.dto';
 import { UpdatePromotionRequestDto } from './dto/request/update-promotion.request.dto';
 import { PromotionAdminResponseDto } from './dto/response/promotion-admin.response.dto';
@@ -38,6 +39,7 @@ import { ListPromotionsQueryDto } from './dto/request/list-promotions-query.dto'
 import { ListParticipantsQueryDto } from './dto/request/list-participants-query.dto';
 import { UpsertCurrencySettingsRequestDto } from './dto/request/upsert-currency-settings.request.dto';
 import { UpsertTranslationRequestDto } from './dto/request/upsert-translation.request.dto';
+import { AddPromotionNoteRequestDto } from './dto/request/add-promotion-note.request.dto';
 import {
   PromotionParticipantResponseDto,
 } from './dto/response/promotion-participant.response.dto';
@@ -60,6 +62,7 @@ export class PromotionAdminController {
     private readonly findPromotionParticipantsService: FindPromotionParticipantsService,
     private readonly getPromotionAdminService: GetPromotionAdminService,
     private readonly deletePromotionService: DeletePromotionService,
+    private readonly addPromotionNoteService: AddPromotionNoteService,
     private readonly policy: PromotionPolicy,
     @Inject(PROMOTION_REPOSITORY)
     private readonly repository: PromotionRepositoryPort,
@@ -279,6 +282,40 @@ export class PromotionAdminController {
   ): Promise<any> {
     await this.deletePromotionService.execute(BigInt(id));
     return {};
+  }
+
+  /**
+   * 프로모션 메모 추가
+   */
+  @Post(':id/notes')
+  @HttpCode(HttpStatus.OK)
+  @ApiOperation({
+    summary: 'Add promotion note / 프로모션 메모 추가',
+    description: '프로모션에 새로운 관리자 메모를 추가합니다.',
+  })
+  @ApiStandardResponse(PromotionAdminResponseDto, {
+    status: HttpStatus.OK,
+    description: 'Note added successfully / 메모 추가 성공',
+  })
+  @AuditLog({
+    type: LogType.ACTIVITY,
+    action: 'ADD_PROMOTION_NOTE',
+    category: 'PROMOTION',
+    extractMetadata: (_, args) => {
+      const [id, dto] = args;
+      return { promotionId: id, note: dto?.note };
+    },
+  })
+  async addNote(
+    @Param('id', ParseIntPipe) id: number,
+    @Body() dto: AddPromotionNoteRequestDto,
+  ): Promise<PromotionAdminResponseDto> {
+    const promotion = await this.addPromotionNoteService.execute(
+      BigInt(id),
+      dto.note,
+    );
+    // 상세 정보 포함을 위해 statistics 없이 매핑하거나, 필요시 statistics 추가 조회
+    return this.mapToAdminResponseDto(promotion);
   }
 
 

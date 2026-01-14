@@ -37,7 +37,6 @@ interface CreatePromotionParams {
   isDepositRequired?: boolean;
   maxUsageCount?: number | null;
   bonusExpiryMinutes?: number | null;
-  note?: string[];
   code: string;
   currencies?: CurrencySetting[];
   translations?: Translation[];
@@ -82,7 +81,7 @@ export class CreatePromotionService {
       isDepositRequired: params.isDepositRequired ?? true,
       maxUsageCount: params.maxUsageCount ?? null,
       bonusExpiryMinutes: params.bonusExpiryMinutes ?? null,
-      note: params.note ?? [],
+      note: [],
       code: params.code,
     });
 

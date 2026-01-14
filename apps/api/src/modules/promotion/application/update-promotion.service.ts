@@ -24,7 +24,6 @@ interface UpdatePromotionParams {
   isDepositRequired?: boolean;
   maxUsageCount?: number | null;
   bonusExpiryMinutes?: number | null;
-  note?: string[];
 }
 
 @Injectable()
@@ -85,7 +84,6 @@ export class UpdatePromotionService {
       ...(params.isDepositRequired !== undefined && { isDepositRequired: params.isDepositRequired }),
       ...(params.maxUsageCount !== undefined && { maxUsageCount: params.maxUsageCount }),
       ...(params.bonusExpiryMinutes !== undefined && { bonusExpiryMinutes: params.bonusExpiryMinutes }),
-      ...(params.note !== undefined && { note: params.note }),
     });
 
     this.logger.log(`Promotion updated: id=${params.id}`);
