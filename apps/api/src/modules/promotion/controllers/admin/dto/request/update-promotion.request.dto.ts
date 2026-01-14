@@ -1,6 +1,6 @@
-// src/modules/promotion/controllers/admin/dto/request/update-promotion.request.dto.ts
 import { ApiPropertyOptional } from '@nestjs/swagger';
-import { IsString, IsOptional, IsBoolean, IsDateString, IsArray } from 'class-validator';
+import { IsString, IsOptional, IsBoolean, IsDateString, IsEnum } from 'class-validator';
+import { PromotionBonusType, PromotionTargetType } from '@repo/database';
 
 export class UpdatePromotionRequestDto {
   @ApiPropertyOptional({
@@ -28,6 +28,24 @@ export class UpdatePromotionRequestDto {
   code?: string;
 
   @ApiPropertyOptional({
+    description: '프로모션 타겟 타입',
+    example: PromotionTargetType.NEW_USER_FIRST_DEPOSIT,
+    enum: PromotionTargetType,
+  })
+  @IsOptional()
+  @IsEnum(PromotionTargetType)
+  targetType?: PromotionTargetType;
+
+  @ApiPropertyOptional({
+    description: '보너스 타입',
+    example: PromotionBonusType.PERCENTAGE,
+    enum: PromotionBonusType,
+  })
+  @IsOptional()
+  @IsEnum(PromotionBonusType)
+  bonusType?: PromotionBonusType;
+
+  @ApiPropertyOptional({
     description: '프로모션 시작일',
     example: '2024-01-01T00:00:00Z',
     nullable: true,
@@ -49,19 +67,21 @@ export class UpdatePromotionRequestDto {
     description: '보너스 비율',
     example: '1.0',
     type: String,
+    nullable: true,
   })
   @IsOptional()
   @IsString()
-  bonusRate?: string;
+  bonusRate?: string | null;
 
   @ApiPropertyOptional({
     description: '롤링 배수',
     example: '20.0',
     type: String,
+    nullable: true,
   })
   @IsOptional()
   @IsString()
-  rollingMultiplier?: string;
+  rollingMultiplier?: string | null;
 
   @ApiPropertyOptional({
     description: '1회성 프로모션 여부',

@@ -1,7 +1,7 @@
 // src/modules/promotion/application/update-promotion.service.ts
 import { Inject, Injectable, Logger } from '@nestjs/common';
 import { Transactional } from '@nestjs-cls/transactional';
-import { Prisma } from '@repo/database';
+import { Prisma, PromotionBonusType, PromotionTargetType } from '@repo/database';
 import {
   Promotion,
   PromotionPolicy,
@@ -21,6 +21,8 @@ interface UpdatePromotionParams {
   rollingMultiplier?: Prisma.Decimal | null;
   isOneTime?: boolean;
   code?: string;
+  bonusType?: PromotionBonusType;
+  targetType?: PromotionTargetType;
   isDepositRequired?: boolean;
   maxUsageCount?: number | null;
   bonusExpiryMinutes?: number | null;
@@ -61,10 +63,9 @@ export class UpdatePromotionService {
     // 설정 유효성 검사 (기존 값과 파라미터 병합)
     this.policy.validateConfiguration({
       isDepositRequired: params.isDepositRequired ?? promotion.isDepositRequired,
-      bonusType: promotion.bonusType, // bonusType은 현재 수정을 받지 않음 (필요시 추가)
-      bonusRate: params.bonusRate !== undefined ? params.bonusRate : promotion.bonusRate,
-      // currencies는 현재 별도 API로 관리되므로 여기서는 체크 생략하거나
-      // 전체 생명주기 관리 방식에 따라 보강 필요
+      bonusType: (params.bonusType ?? promotion.bonusType) as any,
+      bonusRate:
+        params.bonusRate !== undefined ? params.bonusRate : promotion.bonusRate,
     });
 
     const updated = await this.repository.update({
@@ -72,7 +73,7 @@ export class UpdatePromotionService {
       ...(params.managementName !== undefined && {
         managementName: params.managementName,
       }),
-      ...(params.isActive !== undefined && { isActive: promotion.isActive }),
+      ...(params.isActive !== undefined && { isActive: params.isActive }),
       ...(params.startDate !== undefined && { startDate: params.startDate }),
       ...(params.endDate !== undefined && { endDate: params.endDate }),
       ...(params.bonusRate !== undefined && { bonusRate: params.bonusRate }),
@@ -81,9 +82,17 @@ export class UpdatePromotionService {
       }),
       ...(params.isOneTime !== undefined && { isOneTime: params.isOneTime }),
       ...(params.code !== undefined && { code: params.code }),
-      ...(params.isDepositRequired !== undefined && { isDepositRequired: params.isDepositRequired }),
-      ...(params.maxUsageCount !== undefined && { maxUsageCount: params.maxUsageCount }),
-      ...(params.bonusExpiryMinutes !== undefined && { bonusExpiryMinutes: params.bonusExpiryMinutes }),
+      ...(params.bonusType !== undefined && { bonusType: params.bonusType }),
+      ...(params.targetType !== undefined && { targetType: params.targetType }),
+      ...(params.isDepositRequired !== undefined && {
+        isDepositRequired: params.isDepositRequired,
+      }),
+      ...(params.maxUsageCount !== undefined && {
+        maxUsageCount: params.maxUsageCount,
+      }),
+      ...(params.bonusExpiryMinutes !== undefined && {
+        bonusExpiryMinutes: params.bonusExpiryMinutes,
+      }),
     });
 
     this.logger.log(`Promotion updated: id=${params.id}`);

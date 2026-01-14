@@ -165,6 +165,12 @@ export interface PromotionRepositoryPort {
   delete(id: bigint): Promise<void>;
 
   /**
+   * PostgreSQL Advisory Lock을 사용하여 사용자별 프로모션 처리에 대한 락을 획득합니다.
+   * 트랜잭션 종료 시 자동 해제됩니다.
+   */
+  acquireLock(userId: bigint): Promise<void>;
+
+  /**
    * 프로모션 사용 횟수 증가 (Atomic)
    * 증가 후의 최신 프로모션 상태를 반환
    */

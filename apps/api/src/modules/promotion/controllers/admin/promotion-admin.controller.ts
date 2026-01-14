@@ -125,7 +125,31 @@ export class PromotionAdminController {
   @HttpCode(HttpStatus.CREATED)
   @ApiOperation({
     summary: 'Create promotion / 프로모션 생성',
-    description: '새로운 프로모션을 생성합니다.',
+    description: `
+새로운 프로모션의 기본 정보를 생성합니다. 
+생성 후 상세 페이지에서 통화별 설정 및 다국어 정보를 등록해야 합니다.
+
+### 주요 설정 안내
+1. **입금 필수 여부 (isDepositRequired)**:
+   - \`true\`: 사용자가 입금을 해야 보너스가 지급됩니다.
+   - \`false\`: 쿠폰 방식으로, 사용자가 코드를 입력하면 즉시 보너스가 지급됩니다. (보너스 타입은 반드시 \`FIXED_AMOUNT\`여야 함)
+2. **보너스 타입 (bonusType)**:
+   - \`PERCENTAGE\`: 입금액의 특정 비율(bonusRate)만큼 보너스 지급.
+   - \`FIXED_AMOUNT\`: 입금액과 상관없이 고정 금액 지급. (통화별 설정의 \`maxBonusAmount\`가 지급액이 됨)
+
+### 유효성 검사 규칙
+- 비입금 프로모션은 \`bonusType\`이 \`FIXED_AMOUNT\`여야 합니다.
+- \`PERCENTAGE\` 타입은 \`bonusRate\`가 필수입니다.
+
+### 설정 예시
+1. **100% 첫 충전 보너스** (입금형):
+   - \`isDepositRequired\`: true
+   - \`bonusType\`: PERCENTAGE
+   - \`bonusRate\`: 1.0 (100%)
+2. **20 USDT 무료 쿠폰** (비입금형):
+   - \`isDepositRequired\`: false
+   - \`bonusType\`: FIXED_AMOUNT
+    `,
   })
   @ApiStandardResponse(PromotionAdminResponseDto, {
     status: HttpStatus.CREATED,
@@ -161,18 +185,6 @@ export class PromotionAdminController {
       qualificationMaintainCondition: dto.qualificationMaintainCondition as string,
       isOneTime: dto.isOneTime,
       code: dto.code,
-      currencies: dto.currencies?.map((currency) => ({
-        currency: currency.currency,
-        minDepositAmount: new Prisma.Decimal(currency.minDepositAmount),
-        maxBonusAmount: currency.maxBonusAmount
-          ? new Prisma.Decimal(currency.maxBonusAmount)
-          : null,
-      })),
-      translations: dto.translations?.map((translation) => ({
-        language: translation.language,
-        name: translation.name,
-        description: translation.description ?? null,
-      })),
     });
 
     return this.mapToAdminResponseDto(promotion);
@@ -185,7 +197,26 @@ export class PromotionAdminController {
   @HttpCode(HttpStatus.OK)
   @ApiOperation({
     summary: 'Update promotion / 프로모션 수정',
-    description: '프로모션 정보를 수정합니다.',
+    description: `
+프로모션의 기본 정보를 수정합니다.
+
+### 수정 가능 항목
+- 관리용 이름, 활성화 상태, 프로모션 코드
+- 시작일 및 종료일
+- 보너스 비율(PERCENTAGE 타입용), 롤링 배수
+- 1회성 여부, 입금 필수 여부 등
+
+**주의**: 보너스 타입(\`bonusType\`)이나 타겟 타입(\`targetType\`) 등 핵심 도메인 로직과 직결된 값은 수정을 제한하는 것을 권장하며, 변경 시 기존 참여자와의 정합성에 유의해야 합니다.
+
+### 수정 예시 (활성화 및 기간 연장)
+\`\`\`json
+{
+  "isActive": true,
+  "endDate": "2026-12-31T23:59:59Z",
+  "managementName": "첫 충전 이벤트 (연장)"
+}
+\`\`\`
+    `,
   })
   @ApiStandardResponse(PromotionAdminResponseDto, {
     status: HttpStatus.OK,
@@ -211,14 +242,37 @@ export class PromotionAdminController {
       id: BigInt(id),
       managementName: dto.managementName,
       isActive: dto.isActive,
-      startDate: dto.startDate ? new Date(dto.startDate) : null,
-      endDate: dto.endDate ? new Date(dto.endDate) : null,
-      bonusRate: dto.bonusRate ? new Prisma.Decimal(dto.bonusRate) : undefined,
-      rollingMultiplier: dto.rollingMultiplier
-        ? new Prisma.Decimal(dto.rollingMultiplier)
-        : undefined,
+      startDate:
+        dto.startDate === undefined
+          ? undefined
+          : dto.startDate === null
+            ? null
+            : new Date(dto.startDate),
+      endDate:
+        dto.endDate === undefined
+          ? undefined
+          : dto.endDate === null
+            ? null
+            : new Date(dto.endDate),
+      bonusRate:
+        dto.bonusRate === undefined
+          ? undefined
+          : dto.bonusRate === null
+            ? null
+            : new Prisma.Decimal(dto.bonusRate),
+      rollingMultiplier:
+        dto.rollingMultiplier === undefined
+          ? undefined
+          : dto.rollingMultiplier === null
+            ? null
+            : new Prisma.Decimal(dto.rollingMultiplier),
       isOneTime: dto.isOneTime,
       code: dto.code,
+      bonusType: dto.bonusType,
+      targetType: dto.targetType,
+      isDepositRequired: dto.isDepositRequired,
+      maxUsageCount: dto.maxUsageCount,
+      bonusExpiryMinutes: dto.bonusExpiryMinutes,
     });
 
     return this.mapToAdminResponseDto(promotion);

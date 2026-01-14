@@ -42,7 +42,9 @@ import { PromotionCurrency } from '../../domain/model/promotion-currency.entity'
 import { GetMyPromotionsForUserService } from '../../application/get-my-promotions-for-user.service';
 import { VerifyPromotionCodeService } from '../../application/verify-promotion-code.service';
 import { VerifyPromotionCodeRequestDto } from './dto/request/verify-promotion-code.request.dto';
+import { ApplyCouponRequestDto } from './dto/request/apply-coupon.request.dto';
 import { VerifyPromotionCodeResponseDto } from './dto/response/verify-promotion-code.response.dto';
+import { ApplyCouponPromotionService } from '../../application/apply-coupon-promotion.service';
 import { Prisma } from '@repo/database';
 
 @Controller('promotions')
@@ -55,6 +57,7 @@ export class PromotionUserController {
     private readonly getPromotionByCodeForUserService: GetPromotionByCodeForUserService,
     private readonly getMyPromotionsForUserService: GetMyPromotionsForUserService,
     private readonly verifyPromotionCodeService: VerifyPromotionCodeService,
+    private readonly applyCouponPromotionService: ApplyCouponPromotionService,
     @Inject(PROMOTION_REPOSITORY)
     private readonly repository: PromotionRepositoryPort,
     private readonly sqidsService: SqidsService,
@@ -266,6 +269,44 @@ export class PromotionUserController {
           )
           : undefined,
     };
+  }
+
+  /**
+   * 비입금 프로모션(쿠폰) 적용
+   */
+  @Post('apply-coupon')
+  @HttpCode(HttpStatus.OK)
+  @ApiOperation({
+    summary: 'Apply coupon (Non-deposit promotion) / 비입금 프로모션(쿠폰) 적용',
+    description: '입금 없이 즉시 보너스가 지급되는 쿠폰 프로모션을 적용합니다.',
+  })
+  @ApiStandardResponse(UserPromotionResponseDto, {
+    status: HttpStatus.OK,
+    description: 'Coupon applied successfully / 쿠폰 적용 성공',
+  })
+  @AuditLog({
+    type: LogType.ACTIVITY,
+    action: 'APPLY_COUPON',
+    category: 'PROMOTION',
+    extractMetadata: (_, args) => {
+      const [, dto] = args;
+      return {
+        code: dto?.code,
+        currency: dto?.currency,
+      };
+    },
+  })
+  async applyCoupon(
+    @CurrentUser() user: CurrentUserWithSession,
+    @Body() dto: ApplyCouponRequestDto,
+  ): Promise<UserPromotionResponseDto> {
+    const userPromotion = await this.applyCouponPromotionService.execute({
+      userId: user.id,
+      code: dto.code,
+      currency: dto.currency,
+    });
+
+    return this.mapUserPromotionToDto(userPromotion);
   }
 
   private mapPromotionToDto(

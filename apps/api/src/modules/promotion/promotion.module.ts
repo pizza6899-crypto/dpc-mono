@@ -16,6 +16,7 @@ import { GetActivePromotionsForUserService } from './application/get-active-prom
 import { GetPromotionByCodeForUserService } from './application/get-promotion-by-code-for-user.service';
 import { GetMyPromotionsForUserService } from './application/get-my-promotions-for-user.service';
 import { VerifyPromotionCodeService } from './application/verify-promotion-code.service';
+import { ApplyCouponPromotionService } from './application/apply-coupon-promotion.service';
 import { PromotionRepository } from './infrastructure/promotion.repository';
 import { PromotionMapper } from './infrastructure/promotion.mapper';
 import { PROMOTION_REPOSITORY } from './ports/out';
@@ -42,6 +43,7 @@ import { WageringModule } from '../wagering/wagering.module';
     GetPromotionByCodeForUserService,
     GetMyPromotionsForUserService,
     VerifyPromotionCodeService,
+    ApplyCouponPromotionService,
     PromotionMapper,
     {
       provide: PROMOTION_REPOSITORY,

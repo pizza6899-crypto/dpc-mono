@@ -46,6 +46,9 @@ export class GrantPromotionBonusService {
     now = new Date(),
     requestInfo,
   }: GrantPromotionBonusParams): Promise<GrantPromotionBonusResult> {
+    // 0. 락 획득 (동시성 제어)
+    await this.repository.acquireLock(userId);
+
     // 프로모션 조회
     const promotion = await this.repository.findById(promotionId);
     if (!promotion) {

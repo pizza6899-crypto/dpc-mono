@@ -6,11 +6,8 @@ import {
   IsBoolean,
   IsDateString,
   IsEnum,
-  IsArray,
-  ValidateNested,
   IsNotEmpty,
 } from 'class-validator';
-import { Type } from 'class-transformer';
 import {
   PromotionQualification,
   PromotionTargetType,
@@ -204,27 +201,5 @@ export class CreatePromotionRequestDto {
   })
   @IsOptional()
   bonusExpiryMinutes?: number;
-
-
-
-  @ApiPropertyOptional({
-    description: '통화별 설정 목록',
-    type: [CurrencySettingDto],
-  })
-  @IsOptional()
-  @IsArray()
-  @ValidateNested({ each: true })
-  @Type(() => CurrencySettingDto)
-  currencies?: CurrencySettingDto[];
-
-  @ApiPropertyOptional({
-    description: '번역 정보 목록',
-    type: [TranslationDto],
-  })
-  @IsOptional()
-  @IsArray()
-  @ValidateNested({ each: true })
-  @Type(() => TranslationDto)
-  translations?: TranslationDto[];
 }
 
