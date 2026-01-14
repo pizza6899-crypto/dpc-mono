@@ -178,7 +178,7 @@ export class ApplyCouponPromotionService {
                 channels: [ChannelType.IN_APP],
                 payload: {
                     promotionName:
-                        promotion.getTranslation(user.language.toString())?.name ||
+                        promotion.getTranslation(user.language)?.name ||
                         promotion.getTranslations()?.[0]?.name ||
                         promotion.code,
                     bonusAmount: bonusAmount.toString(),

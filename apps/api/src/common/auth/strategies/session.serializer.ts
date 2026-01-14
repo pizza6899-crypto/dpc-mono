@@ -8,7 +8,6 @@ import type { UserSessionRepositoryPort } from 'src/modules/auth/session/ports/o
 
 interface UserForSerialization {
   id: string; // bigint를 문자열로 변환하여 저장
-  uid: string;
   email: string;
   role: UserRoleType;
   status: UserStatus;
@@ -32,7 +31,6 @@ export class SessionSerializer extends PassportSerializer {
     // status는 로그인 시점의 값이지만, 세션 만료 시 재검증됨
     const serializedUser: UserForSerialization = {
       id: user.id.toString(),
-      uid: user.uid,
       email: user.email,
       role: user.role,
       status: UserStatus.ACTIVE, // 로그인 시점에는 항상 ACTIVE
@@ -78,7 +76,6 @@ export class SessionSerializer extends PassportSerializer {
     // 세션에 저장된 정보를 사용하여 AuthenticatedUser 생성
     const authUser: AuthenticatedUser = {
       id: BigInt(payload.id),
-      uid: payload.uid,
       email: payload.email,
       role: payload.role,
       language: payload.language ?? Language.JA,

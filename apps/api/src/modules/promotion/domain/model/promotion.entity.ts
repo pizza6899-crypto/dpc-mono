@@ -191,7 +191,7 @@ export class Promotion {
   /**
    * 특정 언어의 번역 조회
    */
-  getTranslation(language: string): PromotionTranslation | undefined {
+  getTranslation(language: Language): PromotionTranslation | undefined {
     return this._translations?.find((t) => t.language === language);
   }
 
