@@ -79,3 +79,14 @@ export class PromotionCodeAlreadyExistsException extends PromotionException {
     this.name = 'PromotionCodeAlreadyExistsException';
   }
 }
+
+export class PromotionInvalidConfigurationException extends PromotionException {
+  constructor(reason: string) {
+    super(
+      `Invalid promotion configuration: ${reason}`,
+      MessageCode.VALIDATION_ERROR,
+      HttpStatus.BAD_REQUEST,
+    );
+    this.name = 'PromotionInvalidConfigurationException';
+  }
+}

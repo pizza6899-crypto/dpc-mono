@@ -60,6 +60,48 @@ export class PromotionAdminResponseDto {
   })
   isOneTime: boolean;
 
+  @ApiProperty({
+    description: '입금 필수 여부',
+    example: true,
+  })
+  isDepositRequired: boolean;
+
+  @ApiPropertyOptional({
+    description: '최대 사용 횟수',
+    example: 100,
+    type: Number,
+    nullable: true,
+  })
+  maxUsageCount: number | null;
+
+  @ApiProperty({
+    description: '현재 사용 횟수',
+    example: 10,
+    type: Number,
+  })
+  currentUsageCount: number;
+
+  @ApiPropertyOptional({
+    description: '보너스 만료 분',
+    example: 1440,
+    type: Number,
+    nullable: true,
+  })
+  bonusExpiryMinutes: number | null;
+
+  @ApiProperty({
+    description: '관리자 메모',
+    example: ['VIP Only'],
+    type: [String],
+  })
+  note: string[];
+
+  @ApiProperty({
+    description: '자격 유지 조건',
+    example: 'FORFEIT_BONUS_ON_WITHDRAWAL',
+  })
+  qualificationMaintainCondition: string;
+
   @ApiPropertyOptional({
     description: '프로모션 시작일',
     example: '2024-01-01T00:00:00Z',

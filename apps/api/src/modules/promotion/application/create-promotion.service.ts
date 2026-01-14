@@ -4,6 +4,7 @@ import { Transactional } from '@nestjs-cls/transactional';
 import { Prisma, ExchangeCurrencyCode, Language } from '@repo/database';
 import {
   Promotion,
+  PromotionPolicy,
   PromotionCodeAlreadyExistsException,
 } from '../domain';
 import { PROMOTION_REPOSITORY } from '../ports/out';
@@ -49,6 +50,7 @@ export class CreatePromotionService {
   constructor(
     @Inject(PROMOTION_REPOSITORY)
     private readonly repository: PromotionRepositoryPort,
+    private readonly policy: PromotionPolicy,
   ) { }
 
   @Transactional()
@@ -57,6 +59,14 @@ export class CreatePromotionService {
     if (existing) {
       throw new PromotionCodeAlreadyExistsException(params.code);
     }
+
+    // 설정 유효성 검사
+    this.policy.validateConfiguration({
+      isDepositRequired: params.isDepositRequired ?? true,
+      bonusType: params.bonusType as any,
+      bonusRate: params.bonusRate,
+      currencies: params.currencies,
+    });
 
     const promotion = await this.repository.create({
       managementName: params.managementName,

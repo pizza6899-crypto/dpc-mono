@@ -4,6 +4,7 @@ import { Transactional } from '@nestjs-cls/transactional';
 import { Prisma } from '@repo/database';
 import {
   Promotion,
+  PromotionPolicy,
   PromotionNotFoundException,
   PromotionCodeAlreadyExistsException,
 } from '../domain';
@@ -33,6 +34,7 @@ export class UpdatePromotionService {
   constructor(
     @Inject(PROMOTION_REPOSITORY)
     private readonly repository: PromotionRepositoryPort,
+    private readonly policy: PromotionPolicy,
   ) { }
 
   @Transactional()
@@ -56,6 +58,15 @@ export class UpdatePromotionService {
         throw new PromotionCodeAlreadyExistsException(params.code);
       }
     }
+
+    // 설정 유효성 검사 (기존 값과 파라미터 병합)
+    this.policy.validateConfiguration({
+      isDepositRequired: params.isDepositRequired ?? promotion.isDepositRequired,
+      bonusType: promotion.bonusType, // bonusType은 현재 수정을 받지 않음 (필요시 추가)
+      bonusRate: params.bonusRate !== undefined ? params.bonusRate : promotion.bonusRate,
+      // currencies는 현재 별도 API로 관리되므로 여기서는 체크 생략하거나
+      // 전체 생명주기 관리 방식에 따라 보강 필요
+    });
 
     const updated = await this.repository.update({
       id: promotion.id,

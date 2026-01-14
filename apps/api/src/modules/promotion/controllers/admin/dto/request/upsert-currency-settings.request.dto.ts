@@ -30,5 +30,14 @@ export class UpsertCurrencySettingsRequestDto {
   @IsOptional()
   @IsString()
   maxBonusAmount?: string;
+
+  @ApiPropertyOptional({
+    description: '최대 출금 금액',
+    example: '5000.00',
+    type: String,
+  })
+  @IsOptional()
+  @IsString()
+  maxWithdrawAmount?: string;
 }
 

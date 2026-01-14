@@ -3,6 +3,7 @@ import {
   Prisma,
   PromotionTargetType,
   PromotionQualification,
+  PromotionBonusType,
 } from '@repo/database';
 import type { Promotion } from './model/promotion.entity';
 import type { UserPromotion } from './model/user-promotion.entity';
@@ -11,6 +12,7 @@ import {
   PromotionNotEligibleException,
   PromotionAlreadyUsedException,
   PromotionNotActiveException,
+  PromotionInvalidConfigurationException,
 } from './promotion.exception';
 
 /**
@@ -136,6 +138,72 @@ export class PromotionPolicy {
 
     // 6. 선착순 마감 확인
     this.validateMaxUsageCount(promotion);
+  }
+
+  /**
+   * 프로모션 설정 유효성 검사 (생성/수정 시 호출)
+   */
+  validateConfiguration(params: {
+    isDepositRequired: boolean;
+    bonusType: PromotionBonusType;
+    bonusRate?: Prisma.Decimal | null;
+    currencies?: Array<{
+      minDepositAmount: Prisma.Decimal;
+      maxBonusAmount?: Prisma.Decimal | null;
+    }>;
+  }): void {
+    const { isDepositRequired, bonusType, bonusRate, currencies } = params;
+
+    // 1. 비입금 프로모션 (isDepositRequired: false)
+    if (!isDepositRequired) {
+      if (bonusType !== PromotionBonusType.FIXED_AMOUNT) {
+        throw new PromotionInvalidConfigurationException(
+          'Non-deposit promotion must have FIXED_AMOUNT bonus type',
+        );
+      }
+    }
+
+    // 2. 입금 프로모션 (isDepositRequired: true)
+    if (isDepositRequired) {
+      // PERCENTAGE 타입인 경우 bonusRate 필수
+      if (bonusType === PromotionBonusType.PERCENTAGE) {
+        if (!bonusRate || bonusRate.lte(0)) {
+          throw new PromotionInvalidConfigurationException(
+            'Deposit promotion with PERCENTAGE type requires a positive bonus rate',
+          );
+        }
+      }
+    }
+
+    // 3. 통화별 설정 검증
+    if (currencies) {
+      for (const config of currencies) {
+        // 입금 프로모션인 경우 minDepositAmount는 양수여야 함
+        if (isDepositRequired) {
+          if (config.minDepositAmount.lte(0)) {
+            throw new PromotionInvalidConfigurationException(
+              'Deposit promotion requires a positive minimum deposit amount',
+            );
+          }
+        } else {
+          // 비입금 프로모션인 경우 minDepositAmount는 0이어야 함 (무시하거나 0 강제)
+          if (config.minDepositAmount.gt(0)) {
+            throw new PromotionInvalidConfigurationException(
+              'Non-deposit promotion must have 0 minimum deposit amount',
+            );
+          }
+        }
+
+        // FIXED_AMOUNT 타입인 경우 지급할 고정 금액(maxBonusAmount)이 필수
+        if (bonusType === PromotionBonusType.FIXED_AMOUNT) {
+          if (!config.maxBonusAmount || config.maxBonusAmount.lte(0)) {
+            throw new PromotionInvalidConfigurationException(
+              'FIXED_AMOUNT bonus type requires a positive maxBonusAmount as the fixed bonus amount',
+            );
+          }
+        }
+      }
+    }
   }
 }
 

@@ -51,7 +51,7 @@ import {
 import { PromotionStatisticsResponseDto } from './dto/response/promotion-statistics.response.dto';
 import { PROMOTION_REPOSITORY } from '../../ports/out';
 import type { PromotionRepositoryPort } from '../../ports/out/promotion.repository.port';
-import { Promotion, PromotionNotFoundException } from '../../domain';
+import { Promotion, PromotionNotFoundException, PromotionPolicy } from '../../domain';
 import { Inject } from '@nestjs/common';
 import { ExchangeCurrencyCode, Language, Prisma } from '@repo/database';
 
@@ -65,6 +65,7 @@ export class PromotionAdminController {
     private readonly createPromotionService: CreatePromotionService,
     private readonly updatePromotionService: UpdatePromotionService,
     private readonly findPromotionParticipantsService: FindPromotionParticipantsService,
+    private readonly policy: PromotionPolicy,
     @Inject(PROMOTION_REPOSITORY)
     private readonly repository: PromotionRepositoryPort,
   ) { }
@@ -309,12 +310,35 @@ export class PromotionAdminController {
     @Param('id', ParseIntPipe) id: number,
     @Body() dto: UpsertCurrencySettingsRequestDto,
   ): Promise<any> {
+    const promotion = await this.repository.findById(BigInt(id));
+    if (!promotion) {
+      throw new PromotionNotFoundException(BigInt(id));
+    }
+
+    // 설정 유효성 검사
+    this.policy.validateConfiguration({
+      isDepositRequired: promotion.isDepositRequired,
+      bonusType: promotion.bonusType,
+      bonusRate: promotion.bonusRate,
+      currencies: [
+        {
+          minDepositAmount: new Prisma.Decimal(dto.minDepositAmount),
+          maxBonusAmount: dto.maxBonusAmount
+            ? new Prisma.Decimal(dto.maxBonusAmount)
+            : null,
+        },
+      ],
+    });
+
     await this.repository.upsertCurrencySettings({
       promotionId: BigInt(id),
       currency: dto.currency,
       minDepositAmount: new Prisma.Decimal(dto.minDepositAmount),
       maxBonusAmount: dto.maxBonusAmount
         ? new Prisma.Decimal(dto.maxBonusAmount)
+        : null,
+      maxWithdrawAmount: dto.maxWithdrawAmount
+        ? new Prisma.Decimal(dto.maxWithdrawAmount)
         : null,
     });
 
@@ -568,6 +592,12 @@ export class PromotionAdminController {
       bonusRate: promotion.bonusRate?.toString(),
       rollingMultiplier: promotion.rollingMultiplier?.toString(),
       isOneTime: promotion.isOneTime,
+      isDepositRequired: promotion.isDepositRequired,
+      maxUsageCount: promotion.maxUsageCount,
+      currentUsageCount: promotion.currentUsageCount,
+      bonusExpiryMinutes: promotion.bonusExpiryMinutes,
+      note: promotion.note,
+      qualificationMaintainCondition: promotion.qualificationMaintainCondition as string,
       startDate: promotion.startDate,
       endDate: promotion.endDate,
       createdAt: promotion.createdAt,

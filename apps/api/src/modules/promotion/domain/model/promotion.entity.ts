@@ -126,6 +126,12 @@ export class Promotion {
     depositAmount: Prisma.Decimal,
     maxBonusAmount?: Prisma.Decimal | null,
   ): Prisma.Decimal {
+    // 1. FIXED 보너스인 경우
+    if (this.bonusType === PromotionBonusType.FIXED_AMOUNT) {
+      return maxBonusAmount ?? new Prisma.Decimal(0);
+    }
+
+    // 2. PERCENTAGE 보너스인 경우
     if (this.bonusType !== PromotionBonusType.PERCENTAGE) {
       return new Prisma.Decimal(0);
     }
