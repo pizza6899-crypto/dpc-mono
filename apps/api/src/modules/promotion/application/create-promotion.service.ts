@@ -25,6 +25,7 @@ interface CreatePromotionParams {
   maxUsageCount?: number | null;
   bonusExpiryMinutes?: number | null;
   code: string;
+  targetUserIds?: bigint[];
 }
 
 @Injectable()
@@ -67,6 +68,7 @@ export class CreatePromotionService {
       bonusExpiryMinutes: params.bonusExpiryMinutes ?? null,
       note: [],
       code: params.code,
+      targetUserIds: params.targetUserIds,
     });
 
     this.logger.log(`Promotion created: id=${promotion.id}, name=${params.managementName}`);

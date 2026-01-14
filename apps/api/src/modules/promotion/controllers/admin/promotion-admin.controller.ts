@@ -185,6 +185,7 @@ export class PromotionAdminController {
       qualificationMaintainCondition: dto.qualificationMaintainCondition as string,
       isOneTime: dto.isOneTime,
       code: dto.code,
+      targetUserIds: dto.targetUserIds,
     });
 
     return this.mapToAdminResponseDto(promotion);
@@ -383,7 +384,21 @@ export class PromotionAdminController {
   @HttpCode(HttpStatus.OK)
   @ApiOperation({
     summary: 'Upsert promotion currency settings / 프로모션 통화별 설정 생성/수정',
-    description: '프로모션의 통화별 설정을 생성하거나 수정합니다.',
+    description: `
+프로모션의 통화별 정책(금액 설정)을 생성하거나 수정합니다.
+
+### 주요 설정 안내
+1. **최소 입금액 (minDepositAmount)**:
+   - 프로모션의 \`isDepositRequired\`가 \`true\`인 경우: 반드시 0보다 큰 값을 입력해야 합니다.
+   - 프로모션의 \`isDepositRequired\`가 \`false\`(쿠폰형)인 경우: \`0\`으로 설정되며, 생략 시 자동으로 \`0\`이 입력됩니다.
+2. **최대 보너스액 (maxBonusAmount)**:
+   - 보너스 타입이 \`PERCENTAGE\`인 경우: 입금액 대비 지급될 수 있는 최대 한도입니다.
+   - 보너스 타입이 \`FIXED_AMOUNT\`인 경우: **실제로 지급될 고정 금액**이 됩니다. (필수 입력)
+3. **최대 출금액 (maxWithdrawAmount)**:
+   - 해당 보너스를 통해 획득한 당첨금 중 출금 가능한 최대 금액을 제한할 때 사용합니다. (Optional)
+
+**참고**: 특정 통화에 대한 설정이 이미 존재하면 수정하고, 없으면 새로 생성합니다.
+    `,
   })
   @ApiStandardResponse(
     Object,
@@ -416,6 +431,12 @@ export class PromotionAdminController {
       throw new PromotionNotFoundException(BigInt(id));
     }
 
+    const minDepositAmount = dto.minDepositAmount
+      ? new Prisma.Decimal(dto.minDepositAmount)
+      : promotion.isDepositRequired
+        ? new Prisma.Decimal(0) // 입금 필수인데 없으면 0으로 일단 처리 (validateConfiguration에서 걸릴 것)
+        : new Prisma.Decimal(0); // 비입금 프로모션은 기본 0
+
     // 설정 유효성 검사
     this.policy.validateConfiguration({
       isDepositRequired: promotion.isDepositRequired,
@@ -423,7 +444,7 @@ export class PromotionAdminController {
       bonusRate: promotion.bonusRate,
       currencies: [
         {
-          minDepositAmount: new Prisma.Decimal(dto.minDepositAmount),
+          minDepositAmount,
           maxBonusAmount: dto.maxBonusAmount
             ? new Prisma.Decimal(dto.maxBonusAmount)
             : null,
@@ -434,7 +455,7 @@ export class PromotionAdminController {
     await this.repository.upsertCurrencySettings({
       promotionId: BigInt(id),
       currency: dto.currency,
-      minDepositAmount: new Prisma.Decimal(dto.minDepositAmount),
+      minDepositAmount,
       maxBonusAmount: dto.maxBonusAmount
         ? new Prisma.Decimal(dto.maxBonusAmount)
         : null,

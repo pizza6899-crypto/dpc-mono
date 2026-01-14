@@ -1,13 +1,16 @@
 // src/modules/promotion/application/apply-coupon-promotion.service.ts
 import { Inject, Injectable, Logger } from '@nestjs/common';
 import { Transactional } from '@nestjs-cls/transactional';
-import { Prisma, ExchangeCurrencyCode } from '@repo/database';
+import { Prisma, ExchangeCurrencyCode, TransactionType, TransactionStatus } from '@repo/database';
 import { PromotionPolicy, PromotionNotFoundException, PromotionInvalidConfigurationException } from '../domain';
 import type { UserPromotion } from '../domain';
 import { PROMOTION_REPOSITORY } from '../ports/out';
 import type { PromotionRepositoryPort } from '../ports/out/promotion.repository.port';
 import { CreateWageringRequirementService } from '../../wagering/application/create-wagering-requirement.service';
 import type { RequestClientInfo } from 'src/common/http/types';
+import { UpdateUserBalanceService } from '../../wallet/application/update-user-balance.service';
+import { CreateWalletTransactionService } from '../../wallet/application/create-wallet-transaction.service';
+import { BalanceType, UpdateOperation } from '../../wallet/domain';
 
 interface ApplyCouponPromotionParams {
     userId: bigint;
@@ -26,6 +29,8 @@ export class ApplyCouponPromotionService {
         private readonly repository: PromotionRepositoryPort,
         private readonly policy: PromotionPolicy,
         private readonly createWageringRequirementService: CreateWageringRequirementService,
+        private readonly updateUserBalanceService: UpdateUserBalanceService,
+        private readonly createWalletTransactionService: CreateWalletTransactionService,
     ) { }
 
     @Transactional()
@@ -99,7 +104,41 @@ export class ApplyCouponPromotionService {
             expiresAt = new Date(now.getTime() + promotion.bonusExpiryMinutes * 60 * 1000);
         }
 
-        // 11. UserPromotion 생성
+        // 11. 지갑 잔액 업데이트 (보너스 지급)
+        const updateResult = await this.updateUserBalanceService.execute({
+            userId,
+            currency,
+            balanceType: BalanceType.BONUS,
+            operation: UpdateOperation.ADD,
+            amount: bonusAmount,
+        });
+
+        // 12. 트랜잭션 기록 생성
+        await this.createWalletTransactionService.execute({
+            userId,
+            type: TransactionType.BONUS,
+            status: TransactionStatus.COMPLETED,
+            currency,
+            amount: bonusAmount,
+            beforeBalance: updateResult.beforeMainBalance.add(updateResult.beforeBonusBalance),
+            afterBalance: updateResult.afterMainBalance.add(updateResult.afterBonusBalance),
+            balanceDetail: {
+                mainBalanceChange: updateResult.mainBalanceChange,
+                mainBeforeAmount: updateResult.beforeMainBalance,
+                mainAfterAmount: updateResult.afterMainBalance,
+                bonusBalanceChange: updateResult.bonusBalanceChange,
+                bonusBeforeAmount: updateResult.beforeBonusBalance,
+                bonusAfterAmount: updateResult.afterBonusBalance,
+            },
+            description: `Promotion Code: ${code}`,
+            metadata: {
+                promotionId: promotion.id.toString(),
+                code,
+                promotionType: 'COUPON',
+            },
+        });
+
+        // 13. UserPromotion 생성
         const userPromotion = await this.repository.createUserPromotion({
             userId,
             promotionId: promotion.id,
@@ -111,7 +150,7 @@ export class ApplyCouponPromotionService {
             expiresAt,
         });
 
-        // 12. 롤링 생성
+        // 14. 롤링 생성
         if (targetRollingAmount.gt(0)) {
             await this.createWageringRequirementService.execute({
                 userId,

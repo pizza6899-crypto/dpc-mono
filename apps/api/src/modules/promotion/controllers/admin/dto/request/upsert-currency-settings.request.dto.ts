@@ -13,14 +13,14 @@ export class UpsertCurrencySettingsRequestDto {
   @IsEnum(ExchangeCurrencyCode)
   currency: ExchangeCurrencyCode;
 
-  @ApiProperty({
-    description: '최소 입금 금액',
+  @ApiPropertyOptional({
+    description: '최소 입금 금액 (입금형 프로모션인 경우 필수)',
     example: '10.00',
     type: String,
   })
-  @IsNotEmpty()
+  @IsOptional()
   @IsString()
-  minDepositAmount: string;
+  minDepositAmount?: string;
 
   @ApiPropertyOptional({
     description: '최대 보너스 금액',

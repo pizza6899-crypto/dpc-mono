@@ -7,7 +7,12 @@ import {
   IsDateString,
   IsEnum,
   IsNotEmpty,
+  IsArray,
+  IsNumberString,
+  IsInt,
+  Min,
 } from 'class-validator';
+import { Type } from 'class-transformer';
 import {
   PromotionQualification,
   PromotionTargetType,
@@ -15,6 +20,7 @@ import {
   ExchangeCurrencyCode,
   Language,
 } from '@repo/database';
+import { Transform } from 'class-transformer';
 
 export class CurrencySettingDto {
   @ApiProperty({
@@ -131,14 +137,26 @@ export class CreatePromotionRequestDto {
     example: PromotionTargetType.NEW_USER_FIRST_DEPOSIT,
     enum: PromotionTargetType,
   })
+  @IsNotEmpty()
   @IsEnum(PromotionTargetType)
   targetType: PromotionTargetType;
+
+  @ApiPropertyOptional({
+    description: '타겟 유저 ID 목록 (targetType이 SPECIFIC_USERS인 경우 필수)',
+    example: ['1', '2'],
+    type: [String],
+  })
+  @IsOptional()
+  @IsArray()
+  @Transform(({ value }) => (Array.isArray(value) ? value.map((v) => BigInt(v)) : value))
+  targetUserIds?: bigint[];
 
   @ApiProperty({
     description: '보너스 타입',
     example: PromotionBonusType.PERCENTAGE,
     enum: PromotionBonusType,
   })
+  @IsNotEmpty()
   @IsEnum(PromotionBonusType)
   bonusType: PromotionBonusType;
 
@@ -148,7 +166,7 @@ export class CreatePromotionRequestDto {
     type: String,
   })
   @IsOptional()
-  @IsString()
+  @IsNumberString()
   bonusRate?: string;
 
   @ApiPropertyOptional({
@@ -157,7 +175,7 @@ export class CreatePromotionRequestDto {
     type: String,
   })
   @IsOptional()
-  @IsString()
+  @IsNumberString()
   rollingMultiplier?: string;
 
   @ApiProperty({
@@ -165,6 +183,7 @@ export class CreatePromotionRequestDto {
     example: PromotionQualification.FORFEIT_BONUS_ON_WITHDRAWAL,
     enum: PromotionQualification,
   })
+  @IsNotEmpty()
   @IsEnum(PromotionQualification)
   qualificationMaintainCondition: PromotionQualification;
 
@@ -192,6 +211,9 @@ export class CreatePromotionRequestDto {
     type: Number,
   })
   @IsOptional()
+  @Type(() => Number)
+  @IsInt()
+  @Min(1)
   maxUsageCount?: number;
 
   @ApiPropertyOptional({
@@ -200,6 +222,9 @@ export class CreatePromotionRequestDto {
     type: Number,
   })
   @IsOptional()
+  @Type(() => Number)
+  @IsInt()
+  @Min(1)
   bonusExpiryMinutes?: number;
 }
 

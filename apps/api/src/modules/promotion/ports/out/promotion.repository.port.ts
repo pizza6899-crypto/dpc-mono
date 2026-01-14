@@ -152,6 +152,7 @@ export interface PromotionRepositoryPort {
     maxUsageCount?: number | null;
     bonusExpiryMinutes?: number | null;
     note?: string[];
+    targetUserIds?: bigint[];
   }): Promise<Promotion>;
 
   /**

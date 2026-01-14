@@ -288,11 +288,13 @@ export class PromotionUserController {
     type: LogType.ACTIVITY,
     action: 'APPLY_COUPON',
     category: 'PROMOTION',
-    extractMetadata: (_, args) => {
+    extractMetadata: (_, args, result) => {
       const [, dto] = args;
       return {
         code: dto?.code,
         currency: dto?.currency,
+        bonusAmount: result?.bonusAmount,
+        userPromotionId: result?.id,
       };
     },
   })

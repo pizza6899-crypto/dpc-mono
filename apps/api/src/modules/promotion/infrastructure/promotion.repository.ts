@@ -449,6 +449,7 @@ export class PromotionRepository implements PromotionRepositoryPort {
     maxUsageCount?: number | null;
     bonusExpiryMinutes?: number | null;
     note?: string[];
+    targetUserIds?: bigint[];
     code: string;
   }): Promise<Promotion> {
     const result = await this.tx.promotion.create({
@@ -468,6 +469,11 @@ export class PromotionRepository implements PromotionRepositoryPort {
         maxUsageCount: params.maxUsageCount ?? null,
         bonusExpiryMinutes: params.bonusExpiryMinutes ?? null,
         note: params.note ?? [],
+        ...(params.targetUserIds && {
+          allowlist: {
+            create: params.targetUserIds.map((userId) => ({ userId })),
+          },
+        }),
       },
     });
 

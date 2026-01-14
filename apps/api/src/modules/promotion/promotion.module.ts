@@ -23,9 +23,10 @@ import { PROMOTION_REPOSITORY } from './ports/out';
 import { PromotionUserController } from './controllers/user/promotion-user.controller';
 import { PromotionAdminController } from './controllers/admin/promotion-admin.controller';
 import { WageringModule } from '../wagering/wagering.module';
+import { WalletModule } from '../wallet/wallet.module';
 
 @Module({
-  imports: [WageringModule],
+  imports: [WageringModule, WalletModule],
   providers: [
     PromotionPolicy,
     CheckEligiblePromotionsService,
