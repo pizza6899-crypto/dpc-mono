@@ -13,7 +13,7 @@ export class PromotionMapper {
    */
   toDomain(prismaModel: {
     id: bigint;
-    code: string | null;
+    code: string;
     managementName: string;
     isActive: boolean;
     startDate: Date | null;
@@ -53,7 +53,7 @@ export class PromotionMapper {
    */
   toDomainWithRelations(prismaModel: {
     id: bigint;
-    code: string | null;
+    code: string;
     managementName: string;
     isActive: boolean;
     startDate: Date | null;
@@ -148,7 +148,7 @@ export class PromotionMapper {
     createdAt: Date;
     updatedAt: Date;
     promotion?: {
-      code: string | null;
+      code: string;
     };
   }): UserPromotion {
     return UserPromotion.fromPersistence({
