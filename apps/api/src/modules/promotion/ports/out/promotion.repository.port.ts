@@ -180,13 +180,6 @@ export interface PromotionRepositoryPort {
   ): Promise<PromotionCurrency>;
 
   /**
-   * 프로모션의 모든 통화별 설정 조회
-   */
-  getCurrencySettingsByPromotionId(
-    promotionId: bigint,
-  ): Promise<PromotionCurrency[]>;
-
-  /**
    * 프로모션의 통화별 설정 생성 또는 업데이트
    */
   upsertCurrencySettings(params: {
@@ -235,15 +228,7 @@ export interface PromotionRepositoryPort {
     statusCounts: Record<string, number>;
   }>;
 
-  /**
-   * 프로모션 번역 생성
-   */
-  createTranslation(params: {
-    promotionId: bigint;
-    language: Language;
-    name: string;
-    description?: string | null;
-  }): Promise<PromotionTranslation>;
+
 
   /**
    * 프로모션 번역 일괄 생성
@@ -257,12 +242,7 @@ export interface PromotionRepositoryPort {
     }>,
   ): Promise<PromotionTranslation[]>;
 
-  /**
-   * 프로모션의 모든 번역 조회
-   */
-  getTranslationsByPromotionId(
-    promotionId: bigint,
-  ): Promise<PromotionTranslation[]>;
+
 
   /**
    * 프로모션 번역 생성 또는 업데이트

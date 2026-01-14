@@ -4,7 +4,6 @@ import {
   Get,
   Post,
   Put,
-  Patch,
   Delete,
   Body,
   Param,
@@ -30,6 +29,8 @@ import { CreatePromotionService } from '../../application/create-promotion.servi
 import { UpdatePromotionService } from '../../application/update-promotion.service';
 
 import { FindPromotionParticipantsService } from '../../application/find-promotion-participants.service';
+import { GetPromotionAdminService } from '../../application/get-promotion-admin.service';
+import { DeletePromotionService } from '../../application/delete-promotion.service';
 import { CreatePromotionRequestDto } from './dto/request/create-promotion.request.dto';
 import { UpdatePromotionRequestDto } from './dto/request/update-promotion.request.dto';
 import { PromotionAdminResponseDto } from './dto/response/promotion-admin.response.dto';
@@ -37,14 +38,6 @@ import { ListPromotionsQueryDto } from './dto/request/list-promotions-query.dto'
 import { ListParticipantsQueryDto } from './dto/request/list-participants-query.dto';
 import { UpsertCurrencySettingsRequestDto } from './dto/request/upsert-currency-settings.request.dto';
 import { UpsertTranslationRequestDto } from './dto/request/upsert-translation.request.dto';
-import {
-  PromotionCurrencyResponseDto,
-  PromotionCurrencyListResponseDto,
-} from './dto/response/promotion-currency.response.dto';
-import {
-  PromotionTranslationResponseDto,
-  PromotionTranslationListResponseDto,
-} from './dto/response/promotion-translation.response.dto';
 import {
   PromotionParticipantResponseDto,
 } from './dto/response/promotion-participant.response.dto';
@@ -65,6 +58,8 @@ export class PromotionAdminController {
     private readonly createPromotionService: CreatePromotionService,
     private readonly updatePromotionService: UpdatePromotionService,
     private readonly findPromotionParticipantsService: FindPromotionParticipantsService,
+    private readonly getPromotionAdminService: GetPromotionAdminService,
+    private readonly deletePromotionService: DeletePromotionService,
     private readonly policy: PromotionPolicy,
     @Inject(PROMOTION_REPOSITORY)
     private readonly repository: PromotionRepositoryPort,
@@ -226,54 +221,69 @@ export class PromotionAdminController {
     return this.mapToAdminResponseDto(promotion);
   }
 
-
-
   /**
-   * 프로모션의 통화별 설정 목록 조회 (더 구체적인 라우트를 먼저 배치)
+   * 프로모션 상세 조회 (관리자)
    */
-  @Get(':id/currencies')
+  @Get(':id')
   @HttpCode(HttpStatus.OK)
   @ApiOperation({
-    summary: 'Get promotion currency settings / 프로모션 통화별 설정 목록 조회',
-    description: '프로모션의 모든 통화별 설정을 조회합니다.',
+    summary: 'Get promotion detail (Admin) / 프로모션 상세 조회 (관리자)',
+    description: '특정 프로모션의 상세 정보(통화별 설정, 번역, 통계 등)를 조회합니다.',
   })
-  @ApiStandardResponse(PromotionCurrencyListResponseDto, {
+  @ApiStandardResponse(PromotionAdminResponseDto, {
     status: HttpStatus.OK,
-    description:
-      'Successfully retrieved currency settings / 통화별 설정 목록 조회 성공',
+    description: 'Successfully retrieved promotion detail / 프로모션 상세 조회 성공',
   })
   @AuditLog({
     type: LogType.ACTIVITY,
-    action: 'VIEW_PROMOTION_CURRENCIES_ADMIN',
+    action: 'VIEW_PROMOTION_DETAIL_ADMIN',
     category: 'PROMOTION',
     extractMetadata: (_, args) => {
       const [id] = args;
-      return {
-        promotionId: id,
-      };
+      return { promotionId: id };
     },
   })
-  async getPromotionCurrencies(
+  async getPromotion(
     @Param('id', ParseIntPipe) id: number,
-  ): Promise<PromotionCurrencyListResponseDto> {
-    const currencies = await this.repository.getCurrencySettingsByPromotionId(
+  ): Promise<PromotionAdminResponseDto> {
+    const { promotion, statistics } = await this.getPromotionAdminService.execute(
       BigInt(id),
     );
-
-    return {
-      currencies: currencies.map(
-        (currency): PromotionCurrencyResponseDto => ({
-          id: currency.id.toString(),
-          promotionId: currency.promotionId.toString(),
-          currency: currency.currency,
-          minDepositAmount: currency.minDepositAmount.toString(),
-          maxBonusAmount: currency.maxBonusAmount?.toString(),
-          createdAt: currency.createdAt,
-          updatedAt: currency.updatedAt,
-        }),
-      ),
-    };
+    return this.mapToAdminResponseDto(promotion, statistics);
   }
+
+  /**
+   * 프로모션 삭제 (Soft Delete)
+   */
+  @Delete(':id')
+  @HttpCode(HttpStatus.OK)
+  @ApiOperation({
+    summary: 'Delete promotion / 프로모션 삭제',
+    description: '프로모션을 삭제(소프트 삭제) 처리합니다.',
+  })
+  @ApiStandardResponse(Object, {
+    status: HttpStatus.OK,
+    description: 'Promotion deleted successfully / 프로모션 삭제 성공',
+  })
+  @AuditLog({
+    type: LogType.ACTIVITY,
+    action: 'DELETE_PROMOTION',
+    category: 'PROMOTION',
+    extractMetadata: (_, args) => {
+      const [id] = args;
+      return { promotionId: id };
+    },
+  })
+  async deletePromotion(
+    @Param('id', ParseIntPipe) id: number,
+  ): Promise<any> {
+    await this.deletePromotionService.execute(BigInt(id));
+    return {};
+  }
+
+
+
+
 
   /**
    * 프로모션의 통화별 설정 생성/수정
@@ -382,52 +392,7 @@ export class PromotionAdminController {
     return {};
   }
 
-  /**
-   * 프로모션의 번역 정보 목록 조회
-   */
-  @Get(':id/translations')
-  @HttpCode(HttpStatus.OK)
-  @ApiOperation({
-    summary: 'Get promotion translations / 프로모션 번역 정보 목록 조회',
-    description: '프로모션의 모든 번역 정보를 조회합니다.',
-  })
-  @ApiStandardResponse(PromotionTranslationListResponseDto, {
-    status: HttpStatus.OK,
-    description:
-      'Successfully retrieved translations / 번역 정보 목록 조회 성공',
-  })
-  @AuditLog({
-    type: LogType.ACTIVITY,
-    action: 'VIEW_PROMOTION_TRANSLATIONS_ADMIN',
-    category: 'PROMOTION',
-    extractMetadata: (_, args) => {
-      const [id] = args;
-      return {
-        promotionId: id,
-      };
-    },
-  })
-  async getPromotionTranslations(
-    @Param('id', ParseIntPipe) id: number,
-  ): Promise<PromotionTranslationListResponseDto> {
-    const translations = await this.repository.getTranslationsByPromotionId(
-      BigInt(id),
-    );
 
-    return {
-      translations: translations.map(
-        (translation): PromotionTranslationResponseDto => ({
-          id: translation.id.toString(),
-          promotionId: translation.promotionId.toString(),
-          language: translation.language,
-          name: translation.name,
-          description: translation.description,
-          createdAt: translation.createdAt,
-          updatedAt: translation.updatedAt,
-        }),
-      ),
-    };
-  }
 
   /**
    * 프로모션의 번역 정보 생성/수정
@@ -603,6 +568,27 @@ export class PromotionAdminController {
       createdAt: promotion.createdAt,
       updatedAt: promotion.updatedAt,
       statistics,
+      currencies:
+        promotion.getCurrencies()?.map((c) => ({
+          id: c.id.toString(),
+          promotionId: c.promotionId.toString(),
+          currency: c.currency,
+          minDepositAmount: c.minDepositAmount.toString(),
+          maxBonusAmount: c.maxBonusAmount?.toString(),
+          maxWithdrawAmount: c.maxWithdrawAmount?.toString(),
+          createdAt: c.createdAt,
+          updatedAt: c.updatedAt,
+        })) || [],
+      translations:
+        promotion.getTranslations()?.map((t) => ({
+          id: t.id.toString(),
+          promotionId: t.promotionId.toString(),
+          language: t.language,
+          name: t.name,
+          description: t.description,
+          createdAt: t.createdAt,
+          updatedAt: t.updatedAt,
+        })) || [],
     };
   }
 }

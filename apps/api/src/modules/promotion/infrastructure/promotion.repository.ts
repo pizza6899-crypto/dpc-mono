@@ -411,6 +411,10 @@ export class PromotionRepository implements PromotionRepositoryPort {
     const [results, total] = await Promise.all([
       this.tx.promotion.findMany({
         where,
+        include: {
+          translations: true,
+          currencies: true,
+        },
         orderBy,
         skip,
         take: limit,
@@ -419,7 +423,9 @@ export class PromotionRepository implements PromotionRepositoryPort {
     ]);
 
     return {
-      promotions: results.map((result) => this.mapper.toDomain(result)),
+      promotions: results.map((result) =>
+        this.mapper.toDomainWithRelations(result),
+      ),
       total,
     };
   }
@@ -569,20 +575,7 @@ export class PromotionRepository implements PromotionRepositoryPort {
     return this.mapper.currencyToDomain(currencySettings);
   }
 
-  async getCurrencySettingsByPromotionId(
-    promotionId: bigint,
-  ): Promise<PromotionCurrency[]> {
-    const currencySettings = await this.tx.promotionCurrency.findMany({
-      where: {
-        promotionId,
-      },
-      orderBy: {
-        currency: 'asc',
-      },
-    });
 
-    return currencySettings.map((cs) => this.mapper.currencyToDomain(cs));
-  }
 
   async upsertCurrencySettings(params: {
     promotionId: bigint;
@@ -721,32 +714,6 @@ export class PromotionRepository implements PromotionRepositoryPort {
     };
   }
 
-  async createTranslation(params: {
-    promotionId: bigint;
-    language: Language;
-    name: string;
-    description?: string | null;
-  }): Promise<PromotionTranslation> {
-    const result = await this.tx.promotionTranslation.create({
-      data: {
-        promotionId: params.promotionId,
-        language: params.language,
-        name: params.name,
-        description: params.description ?? null,
-      },
-    });
-
-    return {
-      id: result.id,
-      promotionId: result.promotionId,
-      language: result.language,
-      name: result.name,
-      description: result.description,
-      createdAt: result.createdAt,
-      updatedAt: result.updatedAt,
-    };
-  }
-
   async createTranslations(
     promotionId: bigint,
     translations: Array<{
@@ -760,40 +727,28 @@ export class PromotionRepository implements PromotionRepositoryPort {
     }
 
     const results = await Promise.all(
-      translations.map((translation) =>
-        this.createTranslation({
-          promotionId,
-          language: translation.language,
-          name: translation.name,
-          description: translation.description,
-        }),
-      ),
+      translations.map(async (translation) => {
+        const result = await this.tx.promotionTranslation.create({
+          data: {
+            promotionId,
+            language: translation.language,
+            name: translation.name,
+            description: translation.description ?? null,
+          },
+        });
+        return {
+          id: result.id,
+          promotionId: result.promotionId,
+          language: result.language,
+          name: result.name,
+          description: result.description,
+          createdAt: result.createdAt,
+          updatedAt: result.updatedAt,
+        };
+      }),
     );
 
     return results;
-  }
-
-  async getTranslationsByPromotionId(
-    promotionId: bigint,
-  ): Promise<PromotionTranslation[]> {
-    const translations = await this.tx.promotionTranslation.findMany({
-      where: {
-        promotionId,
-      },
-      orderBy: {
-        language: 'asc',
-      },
-    });
-
-    return translations.map((t) => ({
-      id: t.id,
-      promotionId: t.promotionId,
-      language: t.language,
-      name: t.name,
-      description: t.description,
-      createdAt: t.createdAt,
-      updatedAt: t.updatedAt,
-    }));
   }
 
   async upsertTranslation(params: {

@@ -2,6 +2,55 @@
 import { ApiProperty, ApiPropertyOptional } from '@nestjs/swagger';
 import { PromotionStatisticsResponseDto } from './promotion-statistics.response.dto';
 
+export class PromotionCurrencyResponseDto {
+  @ApiProperty({ description: 'ID', example: '1' })
+  id: string;
+
+  @ApiProperty({ description: '프로모션 ID', example: '1' })
+  promotionId: string;
+
+  @ApiProperty({ description: '통화 코드', example: 'USDT' })
+  currency: string;
+
+  @ApiProperty({ description: '최소 입금 금액', example: '10.00' })
+  minDepositAmount: string;
+
+  @ApiPropertyOptional({ description: '최대 보너스 금액', example: '100.00', nullable: true })
+  maxBonusAmount: string | null;
+
+  @ApiPropertyOptional({ description: '최대 출금 금액', example: '500.00', nullable: true })
+  maxWithdrawAmount: string | null;
+
+  @ApiProperty({ description: '생성일시' })
+  createdAt: Date;
+
+  @ApiProperty({ description: '수정일시' })
+  updatedAt: Date;
+}
+
+export class PromotionTranslationResponseDto {
+  @ApiProperty({ description: 'ID', example: '1' })
+  id: string;
+
+  @ApiProperty({ description: '프로모션 ID', example: '1' })
+  promotionId: string;
+
+  @ApiProperty({ description: '언어 코드', example: 'EN' })
+  language: string;
+
+  @ApiProperty({ description: '프로모션 이름', example: 'Welcome Bonus' })
+  name: string;
+
+  @ApiPropertyOptional({ description: '프로모션 설명', example: 'Get 100% bonus', nullable: true })
+  description: string | null;
+
+  @ApiProperty({ description: '생성일시' })
+  createdAt: Date;
+
+  @ApiProperty({ description: '수정일시' })
+  updatedAt: Date;
+}
+
 export class PromotionAdminResponseDto {
   @ApiProperty({
     description: '프로모션 ID',
@@ -133,5 +182,17 @@ export class PromotionAdminResponseDto {
     type: PromotionStatisticsResponseDto,
   })
   statistics?: PromotionStatisticsResponseDto;
+
+  @ApiProperty({
+    description: '통화별 설정 목록',
+    type: [PromotionCurrencyResponseDto],
+  })
+  currencies: PromotionCurrencyResponseDto[];
+
+  @ApiProperty({
+    description: '번역 정보 목록',
+    type: [PromotionTranslationResponseDto],
+  })
+  translations: PromotionTranslationResponseDto[];
 }
 
