@@ -30,7 +30,6 @@ import { CreatePromotionService } from '../../application/create-promotion.servi
 import { UpdatePromotionService } from '../../application/update-promotion.service';
 import { DeletePromotionService } from '../../application/delete-promotion.service';
 import { FindPromotionParticipantsService } from '../../application/find-promotion-participants.service';
-import { GetPromotionStatisticsService } from '../../application/get-promotion-statistics.service';
 import { CreatePromotionRequestDto } from './dto/request/create-promotion.request.dto';
 import { UpdatePromotionRequestDto } from './dto/request/update-promotion.request.dto';
 import { PromotionAdminResponseDto } from './dto/response/promotion-admin.response.dto';
@@ -67,7 +66,6 @@ export class PromotionAdminController {
     private readonly updatePromotionService: UpdatePromotionService,
     private readonly deletePromotionService: DeletePromotionService,
     private readonly findPromotionParticipantsService: FindPromotionParticipantsService,
-    private readonly getPromotionStatisticsService: GetPromotionStatisticsService,
     @Inject(PROMOTION_REPOSITORY)
     private readonly repository: PromotionRepositoryPort,
   ) { }
@@ -113,7 +111,9 @@ export class PromotionAdminController {
     });
 
     return {
-      data: result.promotions.map((promotion) => this.mapToAdminResponseDto(promotion)),
+      data: result.promotions.map(({ promotion, statistics }) =>
+        this.mapToAdminResponseDto(promotion, statistics),
+      ),
       page: query.page || 1,
       limit: query.limit || 20,
       total: result.total,
@@ -587,45 +587,7 @@ export class PromotionAdminController {
     };
   }
 
-  /**
-   * 단일 프로모션 상세 조회 (더 일반적인 라우트는 나중에 배치)
-   */
-  @Get(':id')
-  @HttpCode(HttpStatus.OK)
-  @ApiOperation({
-    summary: 'Get promotion by ID / 프로모션 상세 조회',
-    description: '관리자가 특정 프로모션의 상세 정보를 조회합니다.',
-  })
-  @ApiStandardResponse(PromotionAdminResponseDto, {
-    status: HttpStatus.OK,
-    description: 'Successfully retrieved promotion / 프로모션 조회 성공',
-  })
-  @AuditLog({
-    type: LogType.ACTIVITY,
-    action: 'VIEW_PROMOTION_DETAIL_ADMIN',
-    category: 'PROMOTION',
-    extractMetadata: (_, args) => {
-      const [id] = args;
-      return {
-        promotionId: id,
-      };
-    },
-  })
-  async getPromotionById(
-    @Param('id', ParseIntPipe) id: number,
-  ): Promise<PromotionAdminResponseDto> {
-    const promotionId = BigInt(id);
-    const promotion = await this.repository.findById(promotionId);
-    if (!promotion) {
-      throw new PromotionNotFoundException(promotionId);
-    }
 
-    const statistics = await this.getPromotionStatisticsService.execute(
-      promotionId,
-    );
-
-    return this.mapToAdminResponseDto(promotion, statistics);
-  }
 
   private mapToAdminResponseDto(
     promotion: Promotion,

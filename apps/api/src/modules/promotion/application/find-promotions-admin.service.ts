@@ -20,15 +20,35 @@ export class FindPromotionsAdminService {
   constructor(
     @Inject(PROMOTION_REPOSITORY)
     private readonly repository: PromotionRepositoryPort,
-  ) {}
+  ) { }
 
   async execute(
     params: FindPromotionsAdminParams = {},
   ): Promise<{
-    promotions: Promotion[];
+    promotions: Array<{
+      promotion: Promotion;
+      statistics: {
+        totalParticipants: number;
+        statusCounts: Record<string, number>;
+      };
+    }>;
     total: number;
   }> {
-    return await this.repository.findManyForAdmin(params);
+    const { promotions, total } = await this.repository.findManyForAdmin(params);
+
+    const promotionsWithStats = await Promise.all(
+      promotions.map(async (promotion) => {
+        const statistics = await this.repository.getPromotionStatistics(
+          promotion.id,
+        );
+        return { promotion, statistics };
+      }),
+    );
+
+    return {
+      promotions: promotionsWithStats,
+      total,
+    };
   }
 }
 
