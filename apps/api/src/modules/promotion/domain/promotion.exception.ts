@@ -14,9 +14,9 @@ export class PromotionException extends DomainException {
 }
 
 export class PromotionNotFoundException extends PromotionException {
-  constructor(id?: bigint) {
+  constructor(identifier?: bigint | string) {
     super(
-      id ? `Promotion '${id}' not found` : 'Promotion not found',
+      identifier ? `Promotion '${identifier}' not found` : 'Promotion not found',
       MessageCode.PROMOTION_NOT_FOUND,
       HttpStatus.NOT_FOUND,
     );
@@ -25,9 +25,9 @@ export class PromotionNotFoundException extends PromotionException {
 }
 
 export class PromotionNotActiveException extends PromotionException {
-  constructor(id: bigint) {
+  constructor(identifier: bigint | string) {
     super(
-      `Promotion '${id}' is not active`,
+      `Promotion '${identifier}' is not active`,
       MessageCode.PROMOTION_NOT_ACTIVE,
       HttpStatus.BAD_REQUEST,
     );
@@ -47,9 +47,9 @@ export class PromotionNotEligibleException extends PromotionException {
 }
 
 export class PromotionAlreadyUsedException extends PromotionException {
-  constructor(id: bigint) {
+  constructor(identifier: bigint | string) {
     super(
-      `Promotion '${id}' has already been used`,
+      `Promotion '${identifier}' has already been used`,
       MessageCode.PROMOTION_ALREADY_USED,
       HttpStatus.BAD_REQUEST,
     );
@@ -67,4 +67,3 @@ export class UserPromotionNotFoundException extends PromotionException {
     this.name = 'UserPromotionNotFoundException';
   }
 }
-

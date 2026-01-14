@@ -10,11 +10,12 @@ import {
 
 export class CreateBankDepositRequestDto {
     @ApiPropertyOptional({
-        description: 'Deposit promotion ID (입금 프로모션 ID)',
+        description: 'Deposit promotion code (입금 프로모션 코드)',
+        example: 'WELCOME_BONUS',
     })
     @IsOptional()
-    @IsNumber()
-    depositPromotionId?: number;
+    @IsString()
+    depositPromotionCode?: string;
 
     @ApiProperty({
         description: 'Currency code (입금할 통화 코드)',

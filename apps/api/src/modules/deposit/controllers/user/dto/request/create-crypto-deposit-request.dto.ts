@@ -9,11 +9,12 @@ import {
 
 export class CreateCryptoDepositRequestDto {
     @ApiPropertyOptional({
-        description: 'Deposit promotion ID (입금 프로모션 ID)',
+        description: 'Deposit promotion code (입금 프로모션 코드)',
+        example: 'WELCOME_BONUS',
     })
     @IsOptional()
-    @IsNumber()
-    depositPromotionId?: number;
+    @IsString()
+    depositPromotionCode?: string;
 
     @ApiProperty({
         description: 'Currency symbol (입금할 암호화폐 심볼)',

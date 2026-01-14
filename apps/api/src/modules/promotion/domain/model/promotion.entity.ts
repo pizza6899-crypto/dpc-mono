@@ -20,6 +20,7 @@ export interface PromotionTranslation {
 export class Promotion {
   private constructor(
     public readonly id: bigint,
+    public readonly code: string | null,
     public readonly managementName: string,
     private _isActive: boolean,
     public readonly startDate: Date | null,
@@ -39,6 +40,7 @@ export class Promotion {
 
   static fromPersistence(data: {
     id: bigint;
+    code: string | null;
     managementName: string;
     isActive: boolean;
     startDate: Date | null;
@@ -57,6 +59,7 @@ export class Promotion {
   }): Promotion {
     return new Promotion(
       data.id,
+      data.code,
       data.managementName,
       data.isActive,
       data.startDate,
@@ -188,6 +191,7 @@ export class Promotion {
   toPersistence() {
     return {
       id: this.id,
+      code: this.code,
       managementName: this.managementName,
       isActive: this._isActive,
       startDate: this.startDate,

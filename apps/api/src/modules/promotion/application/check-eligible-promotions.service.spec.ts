@@ -26,6 +26,7 @@ describe('CheckEligiblePromotionsService', () => {
     const createPromotion = (id: bigint, overrides: Partial<Parameters<typeof Promotion.fromPersistence>[0]> = {}) => {
         return Promotion.fromPersistence({
             id,
+            code: `PROMO-${id}`,
             managementName: `Promotion ${id}`,
             isActive: true,
             startDate: new Date('2024-01-01'),

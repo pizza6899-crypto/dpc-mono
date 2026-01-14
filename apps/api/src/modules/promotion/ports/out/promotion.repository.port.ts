@@ -29,6 +29,11 @@ export interface PromotionRepositoryPort {
   findById(id: bigint): Promise<Promotion | null>;
 
   /**
+   * Code로 프로모션 조회
+   */
+  findByCode(code: string): Promise<Promotion | null>;
+
+  /**
    * 타입별 활성 프로모션 조회
    */
   findByTargetType(
@@ -129,6 +134,7 @@ export interface PromotionRepositoryPort {
     isActive?: boolean;
     startDate?: Date | null;
     endDate?: Date | null;
+    code?: string | null;
     targetType: string;
     bonusType: string;
     bonusRate?: Prisma.Decimal | null;

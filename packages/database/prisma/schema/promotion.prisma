@@ -8,6 +8,7 @@ model Promotion {
   targetType                     PromotionTargetType    @map("target_type")
   bonusType                      PromotionBonusType     @map("bonus_type")
   bonusRate                      Decimal?               @map("bonus_rate") @db.Decimal(8, 4)
+  code                           String?                @unique @map("code")
   rollingMultiplier              Decimal?               @map("rolling_multiplier") @db.Decimal(8, 4)
   qualificationMaintainCondition PromotionQualification @map("qualification_maintain_condition")
   isOneTime                      Boolean                @default(false) @map("is_one_time")
@@ -97,8 +98,9 @@ enum PromotionTargetType {
 enum PromotionBonusType {
   /// 퍼센트 기반 보너스 - 입금 금액의 일정 비율로 지급
   PERCENTAGE
+  /// 고정 금액 보너스 - 입금 금액과 무관하게 고정 금액 지급
+  FIXED_AMOUNT
   // 추천 추가 값들:
-  // FIXED_AMOUNT                // 고정 금액 보너스
   // FREE_SPINS                  // 무료 스핀
   // CASHBACK                    // 캐시백
   // MATCH_BONUS                 // 매칭 보너스 (예: 100% 매칭)

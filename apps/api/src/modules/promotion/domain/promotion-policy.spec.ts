@@ -27,6 +27,7 @@ describe('PromotionPolicy', () => {
     const createPromotion = (overrides: Partial<Parameters<typeof Promotion.fromPersistence>[0]> = {}) => {
         return Promotion.fromPersistence({
             id: BigInt(1),
+            code: 'PROMO_CODE',
             managementName: 'Test Promotion',
             isActive: true,
             startDate: new Date('2024-01-01'),

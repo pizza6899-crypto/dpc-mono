@@ -30,6 +30,7 @@ describe('GrantPromotionBonusService', () => {
     const createPromotion = () => {
         return Promotion.fromPersistence({
             id: promotionId,
+            code: 'PROMO_CODE',
             managementName: 'Test Promotion',
             isActive: true,
             startDate: new Date('2024-01-01'),
@@ -157,6 +158,7 @@ describe('GrantPromotionBonusService', () => {
         it('should not create wagering when target rolling is 0', async () => {
             const promotion = Promotion.fromPersistence({
                 id: promotionId,
+                code: 'PROMO_CODE',
                 managementName: 'Test Promotion',
                 isActive: true,
                 startDate: null,

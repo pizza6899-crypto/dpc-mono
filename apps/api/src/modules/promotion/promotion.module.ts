@@ -13,7 +13,8 @@ import { TogglePromotionActiveService } from './application/toggle-promotion-act
 import { FindPromotionParticipantsService } from './application/find-promotion-participants.service';
 import { GetPromotionStatisticsService } from './application/get-promotion-statistics.service';
 import { GetActivePromotionsForUserService } from './application/get-active-promotions-for-user.service';
-import { GetPromotionByIdForUserService } from './application/get-promotion-by-id-for-user.service';
+import { GetPromotionByCodeForUserService } from './application/get-promotion-by-code-for-user.service';
+import { GetMyPromotionsForUserService } from './application/get-my-promotions-for-user.service';
 import { PromotionRepository } from './infrastructure/promotion.repository';
 import { PromotionMapper } from './infrastructure/promotion.mapper';
 import { PROMOTION_REPOSITORY } from './ports/out';
@@ -37,7 +38,8 @@ import { WageringModule } from '../wagering/wagering.module';
     FindPromotionParticipantsService,
     GetPromotionStatisticsService,
     GetActivePromotionsForUserService,
-    GetPromotionByIdForUserService,
+    GetPromotionByCodeForUserService,
+    GetMyPromotionsForUserService,
     PromotionMapper,
     {
       provide: PROMOTION_REPOSITORY,
@@ -49,7 +51,7 @@ import { WageringModule } from '../wagering/wagering.module';
     GrantPromotionBonusService,
     CheckEligiblePromotionsService,
     FindActivePromotionsService,
+    PROMOTION_REPOSITORY,
   ],
 })
 export class PromotionModule { }
-

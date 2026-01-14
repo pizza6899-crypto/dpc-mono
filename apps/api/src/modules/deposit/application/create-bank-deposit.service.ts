@@ -21,6 +21,8 @@ import {
     BankConfig,
 } from '../domain';
 import { CheckEligiblePromotionsService } from '../../promotion/application/check-eligible-promotions.service';
+import { PROMOTION_REPOSITORY } from '../../promotion/ports/out';
+import type { PromotionRepositoryPort } from '../../promotion/ports/out/promotion.repository.port';
 import { Transactional } from '@nestjs-cls/transactional';
 
 interface CreateBankDepositParams {
@@ -28,7 +30,7 @@ interface CreateBankDepositParams {
     payCurrency: string;
     amount: string | number;
     depositorName?: string;
-    depositPromotionId?: string | number;
+    depositPromotionCode?: string;
     ipAddress?: string;
     deviceFingerprint?: string;
 }
@@ -45,6 +47,8 @@ export class CreateBankDepositService {
         private readonly depositRepository: DepositDetailRepositoryPort,
         @Inject(BANK_CONFIG_REPOSITORY)
         private readonly bankConfigRepository: BankConfigRepositoryPort,
+        @Inject(PROMOTION_REPOSITORY)
+        private readonly promotionRepository: PromotionRepositoryPort,
         private readonly promotionsService: CheckEligiblePromotionsService,
     ) { }
 
@@ -54,7 +58,7 @@ export class CreateBankDepositService {
             userId,
             payCurrency,
             amount,
-            depositPromotionId,
+            depositPromotionCode,
             depositorName,
             ipAddress,
             deviceFingerprint,
@@ -69,18 +73,27 @@ export class CreateBankDepositService {
             throw new PendingDepositExistsException(userId);
         }
 
+        let promotionId: bigint | null = null;
+
         // 1. 프로모션 유효성 검사
-        if (depositPromotionId) {
+        if (depositPromotionCode) {
+            // 코드로 프로모션 조회
+            const promotion = await this.promotionRepository.findByCode(depositPromotionCode);
+            if (!promotion) {
+                throw new InvalidPromotionSelectionException(depositPromotionCode);
+            }
+
             const eligiblePromotions = await this.promotionsService.execute({
                 userId,
                 depositAmount: new Prisma.Decimal(amount),
                 currency: payCurrency as ExchangeCurrencyCode,
             });
 
-            const isEligible = eligiblePromotions.some((p) => Number(p.id) === Number(depositPromotionId));
+            const isEligible = eligiblePromotions.some((p) => p.code === depositPromotionCode);
             if (!isEligible) {
-                throw new InvalidPromotionSelectionException(depositPromotionId);
+                throw new InvalidPromotionSelectionException(depositPromotionCode);
             }
+            promotionId = promotion.id;
         }
 
         // 2. 활성화된 은행 계좌 조회
@@ -121,7 +134,7 @@ export class CreateBankDepositService {
             method: depositMethod,
             amount: depositAmount,
             bankConfigId: selectedBank.id!,
-            promotionId: depositPromotionId ? BigInt(depositPromotionId) : null,
+            promotionId,
             depositorName,
             ipAddress,
             deviceFingerprint

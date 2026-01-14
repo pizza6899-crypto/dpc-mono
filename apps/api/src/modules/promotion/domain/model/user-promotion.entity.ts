@@ -15,7 +15,8 @@ export class UserPromotion {
     public readonly currency: ExchangeCurrencyCode,
     public readonly createdAt: Date,
     public readonly updatedAt: Date,
-  ) {}
+    public readonly promotionCode?: string | null,
+  ) { }
 
   static fromPersistence(data: {
     id: number;
@@ -29,6 +30,7 @@ export class UserPromotion {
     currency: ExchangeCurrencyCode;
     createdAt: Date;
     updatedAt: Date;
+    promotionCode?: string | null;
   }): UserPromotion {
     return new UserPromotion(
       data.id,
@@ -42,6 +44,7 @@ export class UserPromotion {
       data.currency,
       data.createdAt,
       data.updatedAt,
+      data.promotionCode,
     );
   }
 
@@ -110,4 +113,3 @@ export class UserPromotion {
     };
   }
 }
-

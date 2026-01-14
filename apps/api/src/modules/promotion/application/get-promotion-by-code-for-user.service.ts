@@ -1,4 +1,4 @@
-// src/modules/promotion/application/get-promotion-by-id-for-user.service.ts
+// src/modules/promotion/application/get-promotion-by-code-for-user.service.ts
 import { Inject, Injectable } from '@nestjs/common';
 import { Language } from '@repo/database';
 import { PromotionNotFoundException, Promotion, PromotionTranslation } from '../domain';
@@ -6,8 +6,8 @@ import { PROMOTION_REPOSITORY } from '../ports/out';
 import type { PromotionRepositoryPort } from '../ports/out/promotion.repository.port';
 import { PromotionCurrency } from '../domain/model/promotion-currency.entity';
 
-interface GetPromotionByIdForUserParams {
-  id: bigint;
+interface GetPromotionByCodeForUserParams {
+  code: string;
   language?: Language;
 }
 
@@ -18,20 +18,20 @@ export interface PromotionDetailInfo {
 }
 
 @Injectable()
-export class GetPromotionByIdForUserService {
+export class GetPromotionByCodeForUserService {
   constructor(
     @Inject(PROMOTION_REPOSITORY)
     private readonly repository: PromotionRepositoryPort,
   ) { }
 
   async execute(
-    params: GetPromotionByIdForUserParams,
+    params: GetPromotionByCodeForUserParams,
   ): Promise<PromotionDetailInfo> {
-    const { id, language = Language.EN } = params;
+    const { code, language = Language.EN } = params;
 
-    const promotion = await this.repository.findById(id);
+    const promotion = await this.repository.findByCode(code);
     if (!promotion) {
-      throw new PromotionNotFoundException(id);
+      throw new PromotionNotFoundException(code);
     }
 
     const translations = promotion.getTranslations();
@@ -43,7 +43,7 @@ export class GetPromotionByIdForUserService {
 
     // 번역과 통화 정보가 모두 있어야 노출
     if (!currentTranslation || !currentCurrency) {
-      throw new PromotionNotFoundException(id);
+      throw new PromotionNotFoundException(code);
     }
 
     return {

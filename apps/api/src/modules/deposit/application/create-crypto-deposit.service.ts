@@ -19,6 +19,8 @@ import {
     UnavailableCryptoConfigException,
 } from '../domain';
 import { CheckEligiblePromotionsService } from '../../promotion/application/check-eligible-promotions.service';
+import { PROMOTION_REPOSITORY } from '../../promotion/ports/out';
+import type { PromotionRepositoryPort } from '../../promotion/ports/out/promotion.repository.port';
 import { Transactional } from '@nestjs-cls/transactional';
 
 interface CreateCryptoDepositParams {
@@ -26,7 +28,7 @@ interface CreateCryptoDepositParams {
     payCurrency: string;
     payNetwork: string;
     amount?: string | number;
-    depositPromotionId?: string | number;
+    depositPromotionCode?: string;
     ipAddress?: string;
     deviceFingerprint?: string;
 }
@@ -38,6 +40,8 @@ export class CreateCryptoDepositService {
         private readonly depositRepository: DepositDetailRepositoryPort,
         @Inject(CRYPTO_CONFIG_REPOSITORY)
         private readonly cryptoConfigRepository: CryptoConfigRepositoryPort,
+        @Inject(PROMOTION_REPOSITORY)
+        private readonly promotionRepository: PromotionRepositoryPort,
         private readonly checkEligiblePromotionsService: CheckEligiblePromotionsService,
     ) { }
 
@@ -48,7 +52,7 @@ export class CreateCryptoDepositService {
             payCurrency,
             payNetwork,
             amount,
-            depositPromotionId,
+            depositPromotionCode,
             ipAddress,
             deviceFingerprint,
         } = params;
@@ -62,18 +66,27 @@ export class CreateCryptoDepositService {
             throw new PendingDepositExistsException(userId);
         }
 
+        let promotionId: bigint | null = null;
+
         // 1. 프로모션 유효성 검사
-        if (depositPromotionId) {
+        if (depositPromotionCode) {
+            // 코드로 프로모션 조회
+            const promotion = await this.promotionRepository.findByCode(depositPromotionCode);
+            if (!promotion) {
+                throw new InvalidPromotionSelectionException(depositPromotionCode);
+            }
+
             const eligiblePromotions = await this.checkEligiblePromotionsService.execute({
                 userId,
                 depositAmount: amount ? new Prisma.Decimal(amount) : new Prisma.Decimal(0),
                 currency: payCurrency as ExchangeCurrencyCode,
             });
 
-            const isEligible = eligiblePromotions.some((p) => Number(p.id) === Number(depositPromotionId));
+            const isEligible = eligiblePromotions.some((p) => p.code === depositPromotionCode);
             if (!isEligible) {
-                throw new InvalidPromotionSelectionException(depositPromotionId);
+                throw new InvalidPromotionSelectionException(depositPromotionCode);
             }
+            promotionId = promotion.id;
         }
 
         // 2. 암호화폐 설정 조회 및 검증
@@ -109,7 +122,7 @@ export class CreateCryptoDepositService {
             method: depositMethod,
             amount: depositAmount,
             cryptoConfigId: cryptoConfig.id,
-            promotionId: depositPromotionId ? BigInt(depositPromotionId) : null,
+            promotionId,
             walletAddress,
             depositNetwork: payNetwork,
             ipAddress,

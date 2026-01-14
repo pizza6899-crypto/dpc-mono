@@ -21,7 +21,7 @@ import type { CurrentUserWithSession } from 'src/common/auth/decorators/current-
 import { AuditLog } from 'src/modules/audit-log/infrastructure';
 import { LogType } from 'src/modules/audit-log/domain';
 import { GetActivePromotionsForUserService } from '../../application/get-active-promotions-for-user.service';
-import { GetPromotionByIdForUserService } from '../../application/get-promotion-by-id-for-user.service';
+import { GetPromotionByCodeForUserService } from '../../application/get-promotion-by-code-for-user.service';
 import {
   PromotionResponseDto,
 } from './dto/response/promotion.response.dto';
@@ -37,15 +37,17 @@ import { SqidsService } from 'src/common/sqids/sqids.service';
 import { SqidsPrefix } from 'src/common/sqids/sqids.constants';
 import { Promotion, PromotionTranslation, UserPromotion } from '../../domain';
 import { PromotionCurrency } from '../../domain/model/promotion-currency.entity';
+import { GetMyPromotionsForUserService } from '../../application/get-my-promotions-for-user.service';
 
 @Controller('promotions')
-@ApiTags('Promotion (프로모션)')
+@ApiTags('Promotion')
 @ApiBearerAuth()
 @ApiStandardErrors()
 export class PromotionUserController {
   constructor(
     private readonly getActivePromotionsForUserService: GetActivePromotionsForUserService,
-    private readonly getPromotionByIdForUserService: GetPromotionByIdForUserService,
+    private readonly getPromotionByCodeForUserService: GetPromotionByCodeForUserService,
+    private readonly getMyPromotionsForUserService: GetMyPromotionsForUserService,
     @Inject(PROMOTION_REPOSITORY)
     private readonly repository: PromotionRepositoryPort,
     private readonly sqidsService: SqidsService,
@@ -134,7 +136,7 @@ export class PromotionUserController {
     @CurrentUser() user: CurrentUserWithSession,
     @Query() query: ListMyPromotionsQueryDto,
   ): Promise<PaginatedData<UserPromotionResponseDto>> {
-    const result = await this.repository.findUserPromotionsPaginated({
+    const result = await this.getMyPromotionsForUserService.execute({
       userId: user.id,
       page: query.page,
       limit: query.limit,
@@ -152,13 +154,13 @@ export class PromotionUserController {
   }
 
   /**
-   * 프로모션 상세 조회
+   * 프로모션 상세 조회 (코드 기반)
    */
-  @Get(':id')
+  @Get(':code')
   @HttpCode(HttpStatus.OK)
   @ApiOperation({
-    summary: 'Get promotion by ID / 프로모션 상세 조회',
-    description: '특정 프로모션의 상세 정보를 조회합니다. 언어 파라미터로 번역 정보를 받을 수 있습니다.',
+    summary: 'Get promotion by Code / 프로모션 상세 조회 (코드 기반)',
+    description: '특정 프로모션 코드를 사용하여 상세 정보를 조회합니다. 언어 파라미터로 번역 정보를 받을 수 있습니다.',
   })
   @ApiQuery({
     name: 'language',
@@ -176,20 +178,18 @@ export class PromotionUserController {
     action: 'VIEW_PROMOTION_DETAIL',
     category: 'PROMOTION',
     extractMetadata: (_, args) => {
-      const [id] = args;
+      const [code] = args;
       return {
-        promotionId: id,
+        promotionCode: code,
       };
     },
   })
-  async getPromotionById(
-    @Param('id') id: string,
+  async getPromotionByCode(
+    @Param('code') code: string,
     @Query('language') language?: Language,
   ): Promise<PromotionResponseDto> {
-    const decodedId = this.sqidsService.decode(id, SqidsPrefix.PROMOTION);
-
-    const result = await this.getPromotionByIdForUserService.execute({
-      id: decodedId,
+    const result = await this.getPromotionByCodeForUserService.execute({
+      code,
       language,
     });
 
@@ -202,23 +202,17 @@ export class PromotionUserController {
     currencySetting: PromotionCurrency,
   ): PromotionResponseDto {
     return {
-      id: this.sqidsService.encode(promotion.id, SqidsPrefix.PROMOTION),
+      code: promotion.code,
       name: translation.name,
       description: translation.description ?? null,
       language: translation.language,
       currency: currencySetting.currency,
       minDepositAmount: currencySetting.minDepositAmount.toString(),
-      maxBonusAmount: currencySetting.maxBonusAmount
-        ? currencySetting.maxBonusAmount.toString()
-        : null,
-      targetType: promotion.targetType as string,
-      bonusType: promotion.bonusType as string,
-      bonusRate: promotion.bonusRate
-        ? promotion.bonusRate.toString()
-        : undefined,
-      rollingMultiplier: promotion.rollingMultiplier
-        ? promotion.rollingMultiplier.toString()
-        : undefined,
+      maxBonusAmount: currencySetting.maxBonusAmount?.toString() || null,
+      targetType: promotion.targetType,
+      bonusType: promotion.bonusType,
+      bonusRate: promotion.bonusRate?.toString(),
+      rollingMultiplier: promotion.rollingMultiplier?.toString(),
       isOneTime: promotion.isOneTime,
       startDate: promotion.startDate,
       endDate: promotion.endDate,
@@ -228,7 +222,7 @@ export class PromotionUserController {
   private mapUserPromotionToDto(up: UserPromotion): UserPromotionResponseDto {
     return {
       id: this.sqidsService.encode(up.id, SqidsPrefix.USER_PROMOTION),
-      promotionId: this.sqidsService.encode(up.promotionId, SqidsPrefix.PROMOTION),
+      promotionCode: up.promotionCode,
       status: up.status as string,
       bonusGranted: up.bonusGranted,
       depositAmount: up.depositAmount.toString(),

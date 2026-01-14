@@ -13,6 +13,7 @@ describe('Promotion Entity', () => {
     const createPromotion = (overrides: Partial<Parameters<typeof Promotion.fromPersistence>[0]> = {}) => {
         return Promotion.fromPersistence({
             id: BigInt(1),
+            code: 'PROMO_CODE',
             managementName: 'Test Promotion',
             isActive: true,
             startDate: new Date('2024-01-01'),
@@ -43,6 +44,7 @@ describe('Promotion Entity', () => {
         it('should handle optional fields with defaults', () => {
             const promotion = Promotion.fromPersistence({
                 id: BigInt(1),
+                code: 'PROMO_CODE',
                 managementName: 'Test',
                 isActive: true,
                 startDate: null,

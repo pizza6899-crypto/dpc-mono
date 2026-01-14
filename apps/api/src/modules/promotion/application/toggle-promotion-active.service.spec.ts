@@ -22,6 +22,7 @@ describe('TogglePromotionActiveService', () => {
     const createPromotion = (isActive: boolean) => {
         return Promotion.fromPersistence({
             id: BigInt(1),
+            code: 'PROMO_CODE',
             managementName: 'Test Promotion',
             isActive,
             startDate: null,

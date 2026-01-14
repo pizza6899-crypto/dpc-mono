@@ -130,6 +130,25 @@ export class PromotionRepository implements PromotionRepositoryPort {
     return this.mapper.toDomainWithRelations(result);
   }
 
+  async findByCode(code: string): Promise<Promotion | null> {
+    const result = await this.tx.promotion.findFirst({
+      where: {
+        code,
+        deletedAt: null,
+      },
+      include: {
+        translations: true,
+        currencies: true,
+      },
+    });
+
+    if (!result) {
+      return null;
+    }
+
+    return this.mapper.toDomainWithRelations(result);
+  }
+
   async findByTargetType(
     targetType: string,
     now: Date = new Date(),
@@ -402,6 +421,7 @@ export class PromotionRepository implements PromotionRepositoryPort {
     rollingMultiplier?: Prisma.Decimal | null;
     qualificationMaintainCondition: string;
     isOneTime?: boolean;
+    code?: string | null;
   }): Promise<Promotion> {
     const result = await this.tx.promotion.create({
       data: {
@@ -409,6 +429,7 @@ export class PromotionRepository implements PromotionRepositoryPort {
         isActive: params.isActive ?? true,
         startDate: params.startDate ?? null,
         endDate: params.endDate ?? null,
+        code: params.code ?? null,
         targetType: params.targetType as any,
         bonusType: params.bonusType as any,
         bonusRate: params.bonusRate ?? null,
@@ -455,6 +476,9 @@ export class PromotionRepository implements PromotionRepositoryPort {
         }),
         ...(promotion.isOneTime !== undefined && {
           isOneTime: promotion.isOneTime,
+        }),
+        ...(promotion.code !== undefined && {
+          code: promotion.code,
         }),
         updatedAt: new Date(),
       },

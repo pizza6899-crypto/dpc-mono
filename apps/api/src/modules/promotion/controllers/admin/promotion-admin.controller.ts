@@ -48,7 +48,6 @@ import {
   PromotionTranslationListResponseDto,
 } from './dto/response/promotion-translation.response.dto';
 import {
-  PromotionParticipantListResponseDto,
   PromotionParticipantResponseDto,
 } from './dto/response/promotion-participant.response.dto';
 import { PromotionStatisticsResponseDto } from './dto/response/promotion-statistics.response.dto';
@@ -59,7 +58,7 @@ import { Inject } from '@nestjs/common';
 import { ExchangeCurrencyCode, Language, Prisma } from '@repo/database';
 
 @Controller('admin/promotions')
-@ApiTags('Admin - Promotion (관리자 - 프로모션)')
+@ApiTags('Admin Promotion')
 @ApiStandardErrors()
 @RequireRoles(UserRoleType.ADMIN, UserRoleType.SUPER_ADMIN)
 export class PromotionAdminController {

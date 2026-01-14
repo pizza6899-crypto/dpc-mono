@@ -2,11 +2,12 @@
 import { ApiProperty, ApiPropertyOptional } from '@nestjs/swagger';
 
 export class PromotionResponseDto {
-  @ApiProperty({
-    description: '프로모션 ID (Encoded)',
-    example: 'p_abc123',
+  @ApiPropertyOptional({
+    description: '프로모션 코드',
+    example: 'WELCOME_BONUS',
+    nullable: true,
   })
-  id: string;
+  code?: string | null;
 
   @ApiProperty({
     description: '프로모션 이름 (현재 언어)',
@@ -102,4 +103,3 @@ export class ActivePromotionsResponseDto {
   })
   promotions: PromotionResponseDto[];
 }
-

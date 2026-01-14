@@ -22,7 +22,8 @@ describe('UpdatePromotionService', () => {
     const createPromotion = (overrides: Partial<Parameters<typeof Promotion.fromPersistence>[0]> = {}) => {
         return Promotion.fromPersistence({
             id: BigInt(1),
-            managementName: 'Original Name',
+            code: 'PROMO_CODE',
+            managementName: 'Test Promotion',
             isActive: true,
             startDate: null,
             endDate: null,
@@ -63,7 +64,7 @@ describe('UpdatePromotionService', () => {
     describe('execute', () => {
         it('should update promotion fields', async () => {
             const existingPromotion = createPromotion();
-            const updatedPromotion = createPromotion({ managementName: 'Updated Name' });
+            const updatedPromotion = createPromotion({ managementName: 'Updated Name', code: 'PROMO_CODE' });
 
             mockRepository.findById.mockResolvedValue(existingPromotion);
             mockRepository.update.mockResolvedValue(updatedPromotion);
@@ -86,7 +87,7 @@ describe('UpdatePromotionService', () => {
 
         it('should toggle isActive when changed', async () => {
             const activePromotion = createPromotion({ isActive: true });
-            const updatedPromotion = createPromotion({ isActive: false });
+            const updatedPromotion = createPromotion({ isActive: false, code: 'PROMO_CODE' });
 
             mockRepository.findById.mockResolvedValue(activePromotion);
             mockRepository.update.mockResolvedValue(updatedPromotion);

@@ -1,5 +1,5 @@
 // src/modules/promotion/controllers/user/dto/response/user-promotion.response.dto.ts
-import { ApiProperty } from '@nestjs/swagger';
+import { ApiProperty, ApiPropertyOptional } from '@nestjs/swagger';
 
 export class UserPromotionResponseDto {
   @ApiProperty({
@@ -8,11 +8,11 @@ export class UserPromotionResponseDto {
   })
   id: string;
 
-  @ApiProperty({
-    description: '프로모션 ID (Encoded)',
-    example: 'p_abc123',
+  @ApiPropertyOptional({
+    description: '프로모션 코드',
+    example: 'WELCOME_BONUS',
   })
-  promotionId: string;
+  promotionCode?: string | null;
 
   @ApiProperty({
     description: '프로모션 상태',
@@ -74,4 +74,3 @@ export class MyPromotionsResponseDto {
   })
   promotions: UserPromotionResponseDto[];
 }
-
