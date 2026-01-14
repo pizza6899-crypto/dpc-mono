@@ -40,9 +40,7 @@ export class UpdatePromotionService {
 
     // 업데이트할 필드만 변경
     if (params.isActive !== undefined) {
-      if (params.isActive !== promotion.isActive) {
-        promotion.toggleActive();
-      }
+      promotion.setActive(params.isActive);
     }
 
     if (

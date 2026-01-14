@@ -9,7 +9,6 @@ import { FindPromotionsAdminService } from './application/find-promotions-admin.
 import { CreatePromotionService } from './application/create-promotion.service';
 import { UpdatePromotionService } from './application/update-promotion.service';
 import { DeletePromotionService } from './application/delete-promotion.service';
-import { TogglePromotionActiveService } from './application/toggle-promotion-active.service';
 import { FindPromotionParticipantsService } from './application/find-promotion-participants.service';
 import { GetPromotionStatisticsService } from './application/get-promotion-statistics.service';
 import { GetActivePromotionsForUserService } from './application/get-active-promotions-for-user.service';
@@ -34,7 +33,6 @@ import { WageringModule } from '../wagering/wagering.module';
     CreatePromotionService,
     UpdatePromotionService,
     DeletePromotionService,
-    TogglePromotionActiveService,
     FindPromotionParticipantsService,
     GetPromotionStatisticsService,
     GetActivePromotionsForUserService,

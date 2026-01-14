@@ -29,7 +29,6 @@ import { FindPromotionsAdminService } from '../../application/find-promotions-ad
 import { CreatePromotionService } from '../../application/create-promotion.service';
 import { UpdatePromotionService } from '../../application/update-promotion.service';
 import { DeletePromotionService } from '../../application/delete-promotion.service';
-import { TogglePromotionActiveService } from '../../application/toggle-promotion-active.service';
 import { FindPromotionParticipantsService } from '../../application/find-promotion-participants.service';
 import { GetPromotionStatisticsService } from '../../application/get-promotion-statistics.service';
 import { CreatePromotionRequestDto } from './dto/request/create-promotion.request.dto';
@@ -67,7 +66,6 @@ export class PromotionAdminController {
     private readonly createPromotionService: CreatePromotionService,
     private readonly updatePromotionService: UpdatePromotionService,
     private readonly deletePromotionService: DeletePromotionService,
-    private readonly togglePromotionActiveService: TogglePromotionActiveService,
     private readonly findPromotionParticipantsService: FindPromotionParticipantsService,
     private readonly getPromotionStatisticsService: GetPromotionStatisticsService,
     @Inject(PROMOTION_REPOSITORY)
@@ -260,38 +258,6 @@ export class PromotionAdminController {
   ): Promise<any> {
     await this.deletePromotionService.execute(BigInt(id));
     return {};
-  }
-
-  /**
-   * 프로모션 활성화/비활성화 토글
-   */
-  @Patch(':id/toggle-active')
-  @HttpCode(HttpStatus.OK)
-  @ApiOperation({
-    summary: 'Toggle promotion active / 프로모션 활성화/비활성화',
-    description: '프로모션의 활성화 상태를 토글합니다.',
-  })
-  @ApiStandardResponse(PromotionAdminResponseDto, {
-    status: HttpStatus.OK,
-    description: 'Promotion status toggled successfully / 프로모션 상태 변경 성공',
-  })
-  @AuditLog({
-    type: LogType.ACTIVITY,
-    action: 'TOGGLE_PROMOTION_ACTIVE',
-    category: 'PROMOTION',
-    extractMetadata: (_, args, result) => {
-      const [id] = args;
-      return {
-        promotionId: id,
-        isActive: result?.isActive,
-      };
-    },
-  })
-  async togglePromotionActive(
-    @Param('id', ParseIntPipe) id: number,
-  ): Promise<PromotionAdminResponseDto> {
-    const promotion = await this.togglePromotionActiveService.execute(BigInt(id));
-    return this.mapToAdminResponseDto(promotion);
   }
 
   /**

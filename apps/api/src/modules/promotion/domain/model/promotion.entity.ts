@@ -87,6 +87,10 @@ export class Promotion {
     this._isActive = !this._isActive;
   }
 
+  setActive(active: boolean): void {
+    this._isActive = active;
+  }
+
   isCurrentlyActive(now: Date = new Date()): boolean {
     if (!this._isActive) {
       return false;
