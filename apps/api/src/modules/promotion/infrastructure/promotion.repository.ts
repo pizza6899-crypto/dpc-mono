@@ -421,7 +421,7 @@ export class PromotionRepository implements PromotionRepositoryPort {
     rollingMultiplier?: Prisma.Decimal | null;
     qualificationMaintainCondition: string;
     isOneTime?: boolean;
-    code?: string | null;
+    code: string;
   }): Promise<Promotion> {
     const result = await this.tx.promotion.create({
       data: {
@@ -429,7 +429,7 @@ export class PromotionRepository implements PromotionRepositoryPort {
         isActive: params.isActive ?? true,
         startDate: params.startDate ?? null,
         endDate: params.endDate ?? null,
-        code: params.code ?? null,
+        code: params.code,
         targetType: params.targetType as any,
         bonusType: params.bonusType as any,
         bonusRate: params.bonusRate ?? null,

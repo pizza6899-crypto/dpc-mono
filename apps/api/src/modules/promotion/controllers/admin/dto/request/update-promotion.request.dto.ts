@@ -25,7 +25,7 @@ export class UpdatePromotionRequestDto {
   })
   @IsOptional()
   @IsString()
-  code?: string | null;
+  code?: string;
 
   @ApiPropertyOptional({
     description: '프로모션 시작일',

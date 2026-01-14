@@ -16,11 +16,11 @@ export class PromotionAdminResponseDto {
   })
   managementName: string;
 
-  @ApiPropertyOptional({
+  @ApiProperty({
     description: '프로모션 코드',
     example: 'WELCOME_BONUS',
   })
-  code: string | null;
+  code: string;
 
   @ApiProperty({
     description: '활성화 여부',

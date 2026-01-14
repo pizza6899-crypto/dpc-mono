@@ -45,8 +45,8 @@ describe('CheckEligiblePromotionsService', () => {
 
     const createCurrencySettings = (minDeposit = 10) => {
         return PromotionCurrency.fromPersistence({
-            id: 1,
-            promotionId: 1,
+            id: BigInt(1),
+            promotionId: BigInt(1),
             currency: ExchangeCurrencyCode.USDT,
             minDepositAmount: new Prisma.Decimal(minDeposit),
             maxBonusAmount: new Prisma.Decimal(100),
@@ -167,9 +167,9 @@ describe('CheckEligiblePromotionsService', () => {
             ];
 
             const usedUserPromotion = UserPromotion.fromPersistence({
-                id: 1,
+                id: BigInt(1),
                 userId,
-                promotionId: 1,
+                promotionId: BigInt(1),
                 status: UserPromotionStatus.COMPLETED,
                 depositAmount: new Prisma.Decimal(100),
                 bonusAmount: new Prisma.Decimal(10), // Bonus granted

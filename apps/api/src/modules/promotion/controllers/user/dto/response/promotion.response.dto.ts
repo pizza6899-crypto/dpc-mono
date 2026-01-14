@@ -8,12 +8,11 @@ import {
 } from '@repo/database';
 
 export class PromotionResponseDto {
-  @ApiPropertyOptional({
+  @ApiProperty({
     description: '프로모션 코드',
     example: 'WELCOME_BONUS',
-    nullable: true,
   })
-  code?: string | null;
+  code: string;
 
   @ApiProperty({
     description: '프로모션 이름 (현재 언어)',

@@ -203,8 +203,8 @@ describe('Promotion Entity', () => {
         it('should get currency settings', () => {
             const currencies = [
                 PromotionCurrency.fromPersistence({
-                    id: 1,
-                    promotionId: 1,
+                    id: BigInt(1),
+                    promotionId: BigInt(1),
                     currency: ExchangeCurrencyCode.USDT,
                     minDepositAmount: new Prisma.Decimal(10),
                     maxBonusAmount: new Prisma.Decimal(100),
@@ -228,6 +228,7 @@ describe('Promotion Entity', () => {
             const persistence = promotion.toPersistence();
 
             expect(persistence.id).toBe(BigInt(1));
+            expect(persistence.code).toBe('PROMO_CODE');
             expect(persistence.managementName).toBe('Test Promotion');
             expect(persistence.isActive).toBe(true);
             expect(persistence.bonusRate).toEqual(new Prisma.Decimal(0.1));

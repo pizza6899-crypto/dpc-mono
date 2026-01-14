@@ -46,8 +46,8 @@ describe('PromotionPolicy', () => {
 
     const createCurrencySettings = (overrides: Partial<Parameters<typeof PromotionCurrency.fromPersistence>[0]> = {}) => {
         return PromotionCurrency.fromPersistence({
-            id: 1,
-            promotionId: 1,
+            id: BigInt(1),
+            promotionId: BigInt(1),
             currency: ExchangeCurrencyCode.USDT,
             minDepositAmount: new Prisma.Decimal(10),
             maxBonusAmount: new Prisma.Decimal(100),
@@ -59,9 +59,9 @@ describe('PromotionPolicy', () => {
 
     const createUserPromotion = (overrides: Partial<Parameters<typeof UserPromotion.fromPersistence>[0]> = {}) => {
         return UserPromotion.fromPersistence({
-            id: 1,
+            id: BigInt(1),
             userId: BigInt(100),
-            promotionId: 1,
+            promotionId: BigInt(1),
             status: UserPromotionStatus.ACTIVE,
             depositAmount: new Prisma.Decimal(100),
             bonusAmount: new Prisma.Decimal(10),

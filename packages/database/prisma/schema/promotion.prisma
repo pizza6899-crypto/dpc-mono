@@ -8,7 +8,7 @@ model Promotion {
   targetType                     PromotionTargetType    @map("target_type")
   bonusType                      PromotionBonusType     @map("bonus_type")
   bonusRate                      Decimal?               @map("bonus_rate") @db.Decimal(8, 4)
-  code                           String?                @unique @map("code")
+  code                           String                 @unique @map("code")
   rollingMultiplier              Decimal?               @map("rolling_multiplier") @db.Decimal(8, 4)
   qualificationMaintainCondition PromotionQualification @map("qualification_maintain_condition")
   isOneTime                      Boolean                @default(false) @map("is_one_time")

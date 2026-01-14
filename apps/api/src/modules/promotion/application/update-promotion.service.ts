@@ -19,7 +19,7 @@ interface UpdatePromotionParams {
   bonusRate?: Prisma.Decimal | null;
   rollingMultiplier?: Prisma.Decimal | null;
   isOneTime?: boolean;
-  code?: string | null;
+  code?: string;
 }
 
 @Injectable()
@@ -45,7 +45,6 @@ export class UpdatePromotionService {
 
     if (
       params.code !== undefined &&
-      params.code !== null &&
       params.code !== promotion.code
     ) {
       const existing = await this.repository.findByCode(params.code);

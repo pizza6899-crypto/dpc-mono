@@ -41,6 +41,7 @@ describe('CreatePromotionService', () => {
     beforeEach(async () => {
         mockRepository = {
             create: jest.fn().mockResolvedValue(createdPromotion),
+            findByCode: jest.fn().mockResolvedValue(null),
             upsertCurrencySettings: jest.fn().mockResolvedValue(undefined),
             createTranslations: jest.fn().mockResolvedValue([]),
         } as any;
@@ -65,6 +66,7 @@ describe('CreatePromotionService', () => {
         it('should create promotion with basic fields', async () => {
             const result = await service.execute({
                 managementName: 'Test Promotion',
+                code: 'PROMO_CODE',
                 targetType: PromotionTargetType.NEW_USER_FIRST_DEPOSIT,
                 bonusType: PromotionBonusType.PERCENTAGE,
                 qualificationMaintainCondition: PromotionQualification.UNTIL_FIRST_WITHDRAWAL,
@@ -74,6 +76,7 @@ describe('CreatePromotionService', () => {
             expect(mockRepository.create).toHaveBeenCalledWith(
                 expect.objectContaining({
                     managementName: 'Test Promotion',
+                    code: 'PROMO_CODE',
                     isActive: true, // default
                     isOneTime: false, // default
                 }),
@@ -83,6 +86,7 @@ describe('CreatePromotionService', () => {
         it('should create currency settings when provided', async () => {
             await service.execute({
                 managementName: 'Test Promotion',
+                code: 'PROMO_CODE',
                 targetType: PromotionTargetType.NEW_USER_FIRST_DEPOSIT,
                 bonusType: PromotionBonusType.PERCENTAGE,
                 qualificationMaintainCondition: PromotionQualification.UNTIL_FIRST_WITHDRAWAL,
@@ -111,6 +115,7 @@ describe('CreatePromotionService', () => {
         it('should create translations when provided', async () => {
             await service.execute({
                 managementName: 'Test Promotion',
+                code: 'PROMO_CODE',
                 targetType: PromotionTargetType.NEW_USER_FIRST_DEPOSIT,
                 bonusType: PromotionBonusType.PERCENTAGE,
                 qualificationMaintainCondition: PromotionQualification.UNTIL_FIRST_WITHDRAWAL,
@@ -140,6 +145,7 @@ describe('CreatePromotionService', () => {
         it('should use provided optional values', async () => {
             await service.execute({
                 managementName: 'Test',
+                code: 'PROMO_CODE',
                 targetType: PromotionTargetType.NEW_USER_FIRST_DEPOSIT,
                 bonusType: PromotionBonusType.PERCENTAGE,
                 qualificationMaintainCondition: PromotionQualification.UNTIL_FIRST_WITHDRAWAL,

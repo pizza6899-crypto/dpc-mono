@@ -32,7 +32,7 @@ interface CreatePromotionParams {
   rollingMultiplier?: Prisma.Decimal | null;
   qualificationMaintainCondition: string;
   isOneTime?: boolean;
-  code?: string | null;
+  code: string;
   currencies?: CurrencySetting[];
   translations?: Translation[];
 }
@@ -48,11 +48,9 @@ export class CreatePromotionService {
 
   @Transactional()
   async execute(params: CreatePromotionParams): Promise<Promotion> {
-    if (params.code) {
-      const existing = await this.repository.findByCode(params.code);
-      if (existing) {
-        throw new PromotionCodeAlreadyExistsException(params.code);
-      }
+    const existing = await this.repository.findByCode(params.code);
+    if (existing) {
+      throw new PromotionCodeAlreadyExistsException(params.code);
     }
 
     const promotion = await this.repository.create({
@@ -66,7 +64,7 @@ export class CreatePromotionService {
       rollingMultiplier: params.rollingMultiplier ?? null,
       qualificationMaintainCondition: params.qualificationMaintainCondition as any,
       isOneTime: params.isOneTime ?? false,
-      code: params.code ?? null,
+      code: params.code,
     });
 
     const promotionId = promotion.id;
