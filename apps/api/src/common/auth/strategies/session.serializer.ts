@@ -36,7 +36,7 @@ export class SessionSerializer extends PassportSerializer {
       email: user.email,
       role: user.role,
       status: UserStatus.ACTIVE, // 로그인 시점에는 항상 ACTIVE
-      language: user.language,
+      language: user.language ?? Language.JA,
     };
 
     done(null, serializedUser);
@@ -81,7 +81,7 @@ export class SessionSerializer extends PassportSerializer {
       uid: payload.uid,
       email: payload.email,
       role: payload.role,
-      language: payload.language,
+      language: payload.language ?? Language.JA,
     };
 
     done(null, authUser);
