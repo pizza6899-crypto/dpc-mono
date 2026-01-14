@@ -35,7 +35,7 @@ export class SocketWorker extends WorkerHost {
         const { name, data } = job;
 
         try {
-            if (name === 'notification') {
+            if (name === 'send-in-app') {
                 await this.processNotification(data as NotificationJobData);
             } else if (name === 'volatile') {
                 await this.processVolatile(data as VolatileJobData);

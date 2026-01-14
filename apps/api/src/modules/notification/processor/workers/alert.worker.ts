@@ -41,6 +41,7 @@ export class AlertWorker extends WorkerHost {
         private readonly renderService: RenderTemplateService,
         @InjectQueue(NOTIFICATION_QUEUES.EMAIL) private readonly emailQueue: Queue,
         @InjectQueue(NOTIFICATION_QUEUES.SMS) private readonly smsQueue: Queue,
+        @InjectQueue(NOTIFICATION_QUEUES.SOCKET) private readonly socketQueue: Queue,
     ) {
         super();
     }
@@ -122,6 +123,8 @@ export class AlertWorker extends WorkerHost {
                         await this.emailQueue.add('send-email', jobData);
                     } else if (template.channel === ChannelType.SMS) {
                         await this.smsQueue.add('send-sms', jobData);
+                    } else if (template.channel === ChannelType.IN_APP) {
+                        await this.socketQueue.add('send-in-app', jobData);
                     } else {
                         this.logger.warn(`Unsupported channel type for queuing: ${template.channel}`);
                     }
