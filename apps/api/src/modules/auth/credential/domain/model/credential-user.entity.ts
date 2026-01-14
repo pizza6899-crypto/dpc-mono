@@ -1,4 +1,4 @@
-import { UserStatus, UserRoleType } from '@repo/database';
+import { UserStatus, UserRoleType, Language } from '@repo/database';
 
 export class CredentialUser {
   private constructor(
@@ -8,7 +8,8 @@ export class CredentialUser {
     public readonly passwordHash: string | null,
     public readonly status: UserStatus,
     public readonly role: UserRoleType,
-  ) {}
+    public readonly language: Language,
+  ) { }
 
   /**
    * 새로운 CredentialUser 생성
@@ -24,6 +25,7 @@ export class CredentialUser {
     passwordHash: string | null;
     status: UserStatus;
     role: UserRoleType;
+    language: Language;
   }): CredentialUser {
     return new CredentialUser(
       params.id ?? null,
@@ -32,6 +34,7 @@ export class CredentialUser {
       params.passwordHash,
       params.status,
       params.role,
+      params.language,
     );
   }
 
@@ -48,6 +51,7 @@ export class CredentialUser {
     passwordHash: string | null;
     status: UserStatus;
     role: UserRoleType;
+    language?: Language; // Optional for backward compatibility if needed, but should be there
   }): CredentialUser {
     return new CredentialUser(
       data.id,
@@ -56,6 +60,7 @@ export class CredentialUser {
       data.passwordHash,
       data.status,
       data.role,
+      data.language ?? Language.JA, // Default to JA if missing
     );
   }
 

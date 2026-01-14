@@ -239,7 +239,7 @@ export class PromotionUserController {
     @Body() dto: ApplyCouponRequestDto,
   ): Promise<UserPromotionResponseDto> {
     const userPromotion = await this.applyCouponPromotionService.execute({
-      userId: user.id,
+      user,
       code: dto.code,
       currency: dto.currency,
     });

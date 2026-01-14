@@ -23,9 +23,10 @@ import { PromotionUserController } from './controllers/user/promotion-user.contr
 import { PromotionAdminController } from './controllers/admin/promotion-admin.controller';
 import { WageringModule } from '../wagering/wagering.module';
 import { WalletModule } from '../wallet/wallet.module';
+import { NotificationModule } from '../notification/notification.module';
 
 @Module({
-  imports: [WageringModule, WalletModule],
+  imports: [WageringModule, WalletModule, NotificationModule],
   providers: [
     PromotionPolicy,
     CheckEligiblePromotionsService,

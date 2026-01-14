@@ -15,6 +15,7 @@ export class CredentialUserMapper {
       passwordHash: prismaModel.passwordHash,
       status: prismaModel.status,
       role: prismaModel.role,
+      language: prismaModel.language,
     });
   }
 }

@@ -26,6 +26,31 @@ const templates = [
             ],
         },
     },
+    {
+        name: '프로모션 적용 알림',
+        event: 'PROMOTION_APPLIED',
+        channel: ChannelType.IN_APP,
+        variables: ['promotionName', 'bonusAmount', 'currency'],
+        translations: {
+            create: [
+                {
+                    locale: Language.KO,
+                    titleTemplate: '프로모션 보너스 지급',
+                    bodyTemplate: '[{{promotionName}}] 프로모션이 적용되어 {{bonusAmount}} {{currency}} 보너스가 지급되었습니다.',
+                },
+                {
+                    locale: Language.EN,
+                    titleTemplate: 'Promotion Bonus Granted',
+                    bodyTemplate: '[{{promotionName}}] promotion has been applied, and you received {{bonusAmount}} {{currency}} bonus.',
+                },
+                {
+                    locale: Language.JA,
+                    titleTemplate: 'プロモーションボーナス支給',
+                    bodyTemplate: '[{{promotionName}}] プロモーションが適用され、{{bonusAmount}} {{currency}} ボーナスが支給されました。',
+                },
+            ],
+        },
+    },
 ];
 
 export async function seedNotificationTemplates(prisma: PrismaClient) {

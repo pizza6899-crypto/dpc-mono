@@ -11,9 +11,14 @@ import type { RequestClientInfo } from 'src/common/http/types';
 import { UpdateUserBalanceService } from '../../wallet/application/update-user-balance.service';
 import { CreateWalletTransactionService } from '../../wallet/application/create-wallet-transaction.service';
 import { BalanceType, UpdateOperation } from '../../wallet/domain';
+import { SendAlertService } from '../../notification/alert/application/send-alert.service';
+import { NOTIFICATION_EVENTS } from '../../notification/common';
+import { ChannelType } from '@repo/database';
+
+import { AuthenticatedUser } from 'src/common/auth/types/auth.types';
 
 interface ApplyCouponPromotionParams {
-    userId: bigint;
+    user: AuthenticatedUser;
     code: string;
     currency: ExchangeCurrencyCode;
     now?: Date;
@@ -31,16 +36,19 @@ export class ApplyCouponPromotionService {
         private readonly createWageringRequirementService: CreateWageringRequirementService,
         private readonly updateUserBalanceService: UpdateUserBalanceService,
         private readonly createWalletTransactionService: CreateWalletTransactionService,
+        private readonly sendAlertService: SendAlertService,
     ) { }
 
     @Transactional()
     async execute({
-        userId,
+        user,
         code,
         currency,
         now = new Date(),
         requestInfo,
     }: ApplyCouponPromotionParams): Promise<UserPromotion> {
+        const userId = user.id;
+
         // 0. 락 획득 (동시성 제어)
         await this.repository.acquireLock(userId);
 
@@ -160,6 +168,26 @@ export class ApplyCouponPromotionService {
                 userPromotionId: BigInt(userPromotion.id),
                 requestInfo,
             });
+        }
+
+        // 15. 인박스 알림 발송
+        try {
+            await this.sendAlertService.execute({
+                event: NOTIFICATION_EVENTS.PROMOTION_APPLIED,
+                userId,
+                channels: [ChannelType.IN_APP],
+                payload: {
+                    promotionName:
+                        promotion.getTranslation(user.language.toString())?.name ||
+                        promotion.getTranslations()?.[0]?.name ||
+                        promotion.code,
+                    bonusAmount: bonusAmount.toString(),
+                    currency: currency,
+                },
+            });
+        } catch (error) {
+            // 알림 발송 실패가 비즈니스 로직(쿠폰 지급)을 실패하게 하면 안 됨
+            this.logger.error(`Failed to send promotion inbox notification: ${error}`);
         }
 
         this.logger.log(

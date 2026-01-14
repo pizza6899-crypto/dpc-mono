@@ -77,6 +77,7 @@ export class VerifyCredentialService {
       uid: user.uid,
       email: user.email,
       role: user.role,
+      language: user.language,
     };
   }
 }
