@@ -32,7 +32,7 @@ import { RequestClientInfoParam } from 'src/common/auth/decorators/request-info.
 import type { RequestClientInfo } from 'src/common/http/types/client-info.types';
 
 @Controller('admin/sessions')
-@ApiTags('Admin Sessions (관리자 세션 관리)')
+@ApiTags('Admin Sessions')
 @RequireRoles(UserRoleType.ADMIN, UserRoleType.SUPER_ADMIN)
 @ApiStandardErrors()
 export class SessionAdminController {

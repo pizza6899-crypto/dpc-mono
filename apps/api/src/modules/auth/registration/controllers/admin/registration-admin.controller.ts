@@ -13,7 +13,7 @@ import { RegisterAdminRequestDto } from './dto/request/register-admin.request.dt
 import { RegisterAdminResponseDto } from './dto/response/register-admin.response.dto';
 
 @Controller('admin/registration')
-@ApiTags('Admin Registration (관리자 회원가입 관리)')
+@ApiTags('Admin Registration')
 @ApiStandardErrors()
 @RequireRoles(UserRoleType.ADMIN, UserRoleType.SUPER_ADMIN)
 export class RegistrationAdminController {

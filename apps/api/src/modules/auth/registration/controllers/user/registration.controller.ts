@@ -16,7 +16,7 @@ import { SqidsService } from 'src/common/sqids/sqids.service';
 import { SqidsPrefix } from 'src/common/sqids/sqids.constants';
 
 @Controller('auth/register')
-@ApiTags('Auth(인증)')
+@ApiTags('Auth')
 @ApiStandardErrors()
 export class RegistrationController {
   constructor(

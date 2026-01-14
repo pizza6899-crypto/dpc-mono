@@ -32,7 +32,7 @@ import { DcsCallbackService } from '../application/dcs-callback.service';
 import { AuditLog } from 'src/modules/audit-log/infrastructure/audit-log.decorator';
 import { LogType } from 'src/modules/audit-log/domain';
 
-@ApiTags('DCS Callback(콜백)')
+@ApiTags('DCS Callback')
 @Controller('dopaminedev')
 @GuestOnly()
 @UseFilters() // 글로벌 예외 필터 비활성화

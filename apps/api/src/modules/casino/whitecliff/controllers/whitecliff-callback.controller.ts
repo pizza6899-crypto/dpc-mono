@@ -23,7 +23,7 @@ import { WhitecliffCallbackService } from '../application/whitecliff-callback.se
 import { AuditLog } from '../../../audit-log/infrastructure/audit-log.decorator';
 import { getWhitecliffAuditOptions } from '../infrastructure/whitecliff-audit.util';
 
-@ApiTags('Whitecliff Callback(콜백)')
+@ApiTags('Whitecliff Callback')
 @Controller('dopaminedev')
 @GuestOnly()
 @UseFilters() // 글로벌 예외 필터 비활성화

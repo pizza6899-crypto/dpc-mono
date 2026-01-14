@@ -37,7 +37,7 @@ import { AuditLog } from 'src/modules/audit-log/infrastructure/audit-log.decorat
 import { SqidsService } from 'src/common/sqids/sqids.service';
 import { SqidsPrefix } from 'src/common/sqids/sqids.constants';
 
-@ApiTags('Affiliate Codes (어플리에이트 코드)')
+@ApiTags('Affiliate Codes')
 @Controller('affiliate-codes')
 @ApiStandardErrors()
 export class AffiliateCodeController {

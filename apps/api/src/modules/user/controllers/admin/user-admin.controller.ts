@@ -24,7 +24,7 @@ import { UserListItemDto } from './dto/response/user-list.response.dto';
 import { UserDetailResponseDto } from './dto/response/user-detail.response.dto';
 
 @Controller('admin/users')
-@ApiTags('Admin Users (관리자 사용자 관리)')
+@ApiTags('Admin Users')
 @RequireRoles(UserRoleType.ADMIN, UserRoleType.SUPER_ADMIN)
 @ApiStandardErrors()
 export class UserAdminController {
