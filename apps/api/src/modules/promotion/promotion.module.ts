@@ -15,7 +15,6 @@ import { AddPromotionNoteService } from './application/add-promotion-note.servic
 import { GetActivePromotionsForUserService } from './application/get-active-promotions-for-user.service';
 import { GetPromotionByCodeForUserService } from './application/get-promotion-by-code-for-user.service';
 import { GetMyPromotionsForUserService } from './application/get-my-promotions-for-user.service';
-import { VerifyPromotionCodeService } from './application/verify-promotion-code.service';
 import { ApplyCouponPromotionService } from './application/apply-coupon-promotion.service';
 import { PromotionRepository } from './infrastructure/promotion.repository';
 import { PromotionMapper } from './infrastructure/promotion.mapper';
@@ -43,7 +42,6 @@ import { WalletModule } from '../wallet/wallet.module';
     GetActivePromotionsForUserService,
     GetPromotionByCodeForUserService,
     GetMyPromotionsForUserService,
-    VerifyPromotionCodeService,
     ApplyCouponPromotionService,
     PromotionMapper,
     {

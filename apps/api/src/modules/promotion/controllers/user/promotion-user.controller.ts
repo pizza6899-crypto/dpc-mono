@@ -6,7 +6,6 @@ import {
   HttpStatus,
   Query,
   Param,
-  Inject,
   Post,
   Body,
 } from '@nestjs/common';
@@ -32,20 +31,14 @@ import {
 } from './dto/response/user-promotion.response.dto';
 import { ListActivePromotionsQueryDto } from './dto/request/list-active-promotions-query.dto';
 import { ListMyPromotionsQueryDto } from './dto/request/list-my-promotions-query.dto';
-import { PROMOTION_REPOSITORY } from '../../ports/out';
-import type { PromotionRepositoryPort } from '../../ports/out/promotion.repository.port';
 import { Language, ExchangeCurrencyCode } from '@repo/database';
 import { SqidsService } from 'src/common/sqids/sqids.service';
 import { SqidsPrefix } from 'src/common/sqids/sqids.constants';
 import { Promotion, PromotionTranslation, UserPromotion } from '../../domain';
 import { PromotionCurrency } from '../../domain/model/promotion-currency.entity';
-import { GetMyPromotionsForUserService } from '../../application/get-my-promotions-for-user.service';
-import { VerifyPromotionCodeService } from '../../application/verify-promotion-code.service';
-import { VerifyPromotionCodeRequestDto } from './dto/request/verify-promotion-code.request.dto';
 import { ApplyCouponRequestDto } from './dto/request/apply-coupon.request.dto';
-import { VerifyPromotionCodeResponseDto } from './dto/response/verify-promotion-code.response.dto';
 import { ApplyCouponPromotionService } from '../../application/apply-coupon-promotion.service';
-import { Prisma } from '@repo/database';
+import { GetMyPromotionsForUserService } from '../../application/get-my-promotions-for-user.service';
 
 @Controller('promotions')
 @ApiTags('Promotion')
@@ -56,10 +49,7 @@ export class PromotionUserController {
     private readonly getActivePromotionsForUserService: GetActivePromotionsForUserService,
     private readonly getPromotionByCodeForUserService: GetPromotionByCodeForUserService,
     private readonly getMyPromotionsForUserService: GetMyPromotionsForUserService,
-    private readonly verifyPromotionCodeService: VerifyPromotionCodeService,
     private readonly applyCouponPromotionService: ApplyCouponPromotionService,
-    @Inject(PROMOTION_REPOSITORY)
-    private readonly repository: PromotionRepositoryPort,
     private readonly sqidsService: SqidsService,
   ) { }
 
@@ -215,61 +205,7 @@ export class PromotionUserController {
     return this.mapPromotionToDto(result.promotion, result.translation, result.currencySetting);
   }
 
-  /**
-   * 프로모션 코드 검증 (입금 전 확인용)
-   */
-  @Post('verify')
-  @HttpCode(HttpStatus.OK)
-  @ApiOperation({
-    summary: 'Verify promotion code / 프로모션 코드 검증',
-    description: '입력한 프로모션 코드가 현재 사용자에게 유효한지 검증하고 예상 보너스 금액을 반환합니다.',
-  })
-  @ApiStandardResponse(VerifyPromotionCodeResponseDto, {
-    status: HttpStatus.OK,
-    description: 'Verification result / 검증 결과',
-  })
-  @AuditLog({
-    type: LogType.ACTIVITY,
-    action: 'VERIFY_PROMOTION_CODE',
-    category: 'PROMOTION',
-    extractMetadata: (_, args) => {
-      const [user, dto] = args;
-      return {
-        code: dto?.code,
-        depositAmount: dto?.depositAmount,
-        currency: dto?.currency,
-      };
-    },
-  })
-  async verifyPromotion(
-    @CurrentUser() user: CurrentUserWithSession,
-    @Body() dto: VerifyPromotionCodeRequestDto,
-  ): Promise<VerifyPromotionCodeResponseDto> {
-    const result = await this.verifyPromotionCodeService.execute({
-      userId: user.id,
-      code: dto.code,
-      depositAmount: new Prisma.Decimal(dto.depositAmount),
-      currency: dto.currency,
-      language: undefined, // 유저 선호 언어는 추후 추가 (현재는 EN 기본)
-    });
 
-    return {
-      isValid: result.isValid,
-      message: result.message,
-      estimatedBonusAmount: result.estimatedBonusAmount?.toString(),
-      promotion:
-        result.isValid &&
-          result.promotion &&
-          result.translation &&
-          result.currencySetting
-          ? this.mapPromotionToDto(
-            result.promotion,
-            result.translation,
-            result.currencySetting,
-          )
-          : undefined,
-    };
-  }
 
   /**
    * 비입금 프로모션(쿠폰) 적용
