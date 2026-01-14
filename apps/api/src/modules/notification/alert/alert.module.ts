@@ -1,6 +1,7 @@
 import { Module } from '@nestjs/common';
 import { NotificationQueueModule } from '../common/notification-queue.module';
 import { SendAlertService } from './application/send-alert.service';
+import { SendRealtimeService } from './application/send-realtime.service';
 import { FindAlertsService } from './application/find-alerts.service';
 import { AlertMapper } from './infrastructure/alert.mapper';
 import { AlertRepository } from './infrastructure/alert.repository';
@@ -24,8 +25,9 @@ import { ALERT_REPOSITORY } from './ports';
 
         // Services
         SendAlertService,
+        SendRealtimeService,
         FindAlertsService,
     ],
-    exports: [SendAlertService, FindAlertsService, ALERT_REPOSITORY],
+    exports: [SendAlertService, SendRealtimeService, FindAlertsService, ALERT_REPOSITORY],
 })
 export class AlertModule { }

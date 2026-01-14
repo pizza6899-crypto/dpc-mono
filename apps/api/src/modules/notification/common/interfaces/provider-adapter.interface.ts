@@ -38,15 +38,6 @@ export interface SMSProviderParams {
     from?: string;
 }
 
-// Push Provider 파라미터
-export interface PushProviderParams {
-    token: string;
-    title: string;
-    body: string;
-    data?: Record<string, unknown>;
-}
-
 // Provider 별 타입 정의
 export type EmailProviderAdapter = ProviderAdapter<EmailProviderParams>;
 export type SMSProviderAdapter = ProviderAdapter<SMSProviderParams>;
-export type PushProviderAdapter = ProviderAdapter<PushProviderParams>;

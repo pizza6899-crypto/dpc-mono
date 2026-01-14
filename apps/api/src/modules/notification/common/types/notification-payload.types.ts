@@ -1,4 +1,4 @@
-import { NOTIFICATION_EVENTS, NotificationEventType } from '../constants/event.constants';
+import { NOTIFICATION_EVENTS, REALTIME_EVENTS } from '../constants/event.constants';
 
 // --- 입출금 ---
 export interface DepositPayload {
@@ -36,6 +36,27 @@ export interface SystemPayload {
     severity?: 'info' | 'warning' | 'error';
 }
 
+// --- 실시간 유저 상태 ---
+export interface BalanceUpdatedPayload {
+    balance: string;
+    currency: string;
+    prevBalance?: string;
+    reason?: string;
+}
+
+export interface LevelUpdatedPayload {
+    level: number;
+    levelName: string;
+}
+
+// --- 실시간 시스템 ---
+export interface AlertPopupPayload {
+    title: string;
+    message: string;
+    type?: 'info' | 'success' | 'warning' | 'error';
+    duration?: number;
+}
+
 /**
  * 이벤트별 페이로드 매핑
  * 새로운 이벤트 추가 시 여기에 타입을 매핑해야 합니다.
@@ -59,5 +80,17 @@ export type NotificationPayloadMap = {
     [NOTIFICATION_EVENTS.MAINTENANCE_NOTICE]: SystemPayload;
 
     // 기본 타입 (정의되지 않은 이벤트용)
+    [key: string]: any;
+};
+
+/**
+ * 실시간(휘발성) 이벤트별 페이로드 매핑
+ */
+export type RealtimePayloadMap = {
+    [REALTIME_EVENTS.BALANCE_UPDATED]: BalanceUpdatedPayload;
+    [REALTIME_EVENTS.LEVEL_UPDATED]: LevelUpdatedPayload;
+    [REALTIME_EVENTS.ALERT_POPUP]: AlertPopupPayload;
+
+    // 기본 타입
     [key: string]: any;
 };
