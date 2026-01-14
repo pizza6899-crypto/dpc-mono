@@ -20,6 +20,10 @@ interface UpdatePromotionParams {
   rollingMultiplier?: Prisma.Decimal | null;
   isOneTime?: boolean;
   code?: string;
+  isDepositRequired?: boolean;
+  maxUsageCount?: number | null;
+  bonusExpiryMinutes?: number | null;
+  note?: string[];
 }
 
 @Injectable()
@@ -67,6 +71,10 @@ export class UpdatePromotionService {
       }),
       ...(params.isOneTime !== undefined && { isOneTime: params.isOneTime }),
       ...(params.code !== undefined && { code: params.code }),
+      ...(params.isDepositRequired !== undefined && { isDepositRequired: params.isDepositRequired }),
+      ...(params.maxUsageCount !== undefined && { maxUsageCount: params.maxUsageCount }),
+      ...(params.bonusExpiryMinutes !== undefined && { bonusExpiryMinutes: params.bonusExpiryMinutes }),
+      ...(params.note !== undefined && { note: params.note }),
     });
 
     this.logger.log(`Promotion updated: id=${params.id}`);

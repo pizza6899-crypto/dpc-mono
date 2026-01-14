@@ -87,9 +87,11 @@ export interface PromotionRepositoryPort {
     userId: bigint;
     promotionId: bigint;
     depositAmount: Prisma.Decimal;
+    lockedAmount: Prisma.Decimal;
     bonusAmount: Prisma.Decimal;
     targetRollingAmount: Prisma.Decimal;
     currency: ExchangeCurrencyCode;
+    expiresAt?: Date | null;
   }): Promise<UserPromotion>;
 
   /**
@@ -108,6 +110,11 @@ export interface PromotionRepositoryPort {
    * 사용자가 출금한 적이 있는지 확인
    */
   hasWithdrawn(userId: bigint): Promise<boolean>;
+
+  /**
+   * 사용자가 프로모션 화이트리스트에 포함되어 있는지 확인
+   */
+  isUserAllowed(promotionId: bigint, userId: bigint): Promise<boolean>;
 
   /**
    * 관리자용 프로모션 목록 조회
@@ -141,6 +148,10 @@ export interface PromotionRepositoryPort {
     rollingMultiplier?: Prisma.Decimal | null;
     qualificationMaintainCondition: string;
     isOneTime?: boolean;
+    isDepositRequired?: boolean;
+    maxUsageCount?: number | null;
+    bonusExpiryMinutes?: number | null;
+    note?: string[];
   }): Promise<Promotion>;
 
   /**
@@ -152,6 +163,12 @@ export interface PromotionRepositoryPort {
    * 프로모션 삭제
    */
   delete(id: bigint): Promise<void>;
+
+  /**
+   * 프로모션 사용 횟수 증가 (Atomic)
+   * 증가 후의 최신 프로모션 상태를 반환
+   */
+  incrementUsageCount(id: bigint): Promise<Promotion>;
 
   /**
    * 프로모션의 통화별 설정 조회
@@ -177,6 +194,7 @@ export interface PromotionRepositoryPort {
     currency: ExchangeCurrencyCode;
     minDepositAmount: Prisma.Decimal;
     maxBonusAmount?: Prisma.Decimal | null;
+    maxWithdrawAmount?: Prisma.Decimal | null;
   }): Promise<void>;
 
   /**

@@ -1,6 +1,6 @@
 // src/modules/promotion/controllers/admin/dto/request/update-promotion.request.dto.ts
 import { ApiPropertyOptional } from '@nestjs/swagger';
-import { IsString, IsOptional, IsBoolean, IsDateString } from 'class-validator';
+import { IsString, IsOptional, IsBoolean, IsDateString, IsArray } from 'class-validator';
 
 export class UpdatePromotionRequestDto {
   @ApiPropertyOptional({
@@ -70,5 +70,39 @@ export class UpdatePromotionRequestDto {
   @IsOptional()
   @IsBoolean()
   isOneTime?: boolean;
+
+  @ApiPropertyOptional({
+    description: '입금 필수 여부',
+    example: true,
+  })
+  @IsOptional()
+  @IsBoolean()
+  isDepositRequired?: boolean;
+
+  @ApiPropertyOptional({
+    description: '최대 사용 횟수 (선착순)',
+    example: 100,
+    type: Number,
+  })
+  @IsOptional()
+  maxUsageCount?: number | null;
+
+  @ApiPropertyOptional({
+    description: '보너스 유효 기간 (분 단위)',
+    example: 1440,
+    type: Number,
+  })
+  @IsOptional()
+  bonusExpiryMinutes?: number | null;
+
+  @ApiPropertyOptional({
+    description: '관리자용 메모',
+    example: ['이 프로모션은 VIP 전용입니다.'],
+    type: [String],
+  })
+  @IsOptional()
+  @IsArray()
+  @IsString({ each: true })
+  note?: string[];
 }
 

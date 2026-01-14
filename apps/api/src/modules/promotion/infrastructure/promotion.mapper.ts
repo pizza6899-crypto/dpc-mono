@@ -26,6 +26,11 @@ export class PromotionMapper {
     createdAt: Date;
     updatedAt: Date;
     isOneTime?: boolean; // 스키마에 없을 수 있음
+    isDepositRequired?: boolean;
+    maxUsageCount?: number | null;
+    currentUsageCount?: number;
+    bonusExpiryMinutes?: number | null;
+    note?: string[];
     deletedAt?: Date | null; // 스키마에 없을 수 있음
   }): Promotion {
     return Promotion.fromPersistence({
@@ -42,6 +47,11 @@ export class PromotionMapper {
       qualificationMaintainCondition:
         prismaModel.qualificationMaintainCondition as any,
       isOneTime: prismaModel.isOneTime,
+      isDepositRequired: prismaModel.isDepositRequired,
+      maxUsageCount: prismaModel.maxUsageCount,
+      currentUsageCount: prismaModel.currentUsageCount,
+      bonusExpiryMinutes: prismaModel.bonusExpiryMinutes,
+      note: prismaModel.note,
       createdAt: prismaModel.createdAt,
       updatedAt: prismaModel.updatedAt,
       deletedAt: prismaModel.deletedAt,
@@ -66,6 +76,11 @@ export class PromotionMapper {
     createdAt: Date;
     updatedAt: Date;
     isOneTime?: boolean;
+    isDepositRequired?: boolean;
+    maxUsageCount?: number | null;
+    currentUsageCount?: number;
+    bonusExpiryMinutes?: number | null;
+    note?: string[];
     deletedAt?: Date | null;
     translations?: Array<{
       id: bigint;
@@ -82,6 +97,7 @@ export class PromotionMapper {
       currency: string;
       minDepositAmount: any;
       maxBonusAmount: any;
+      maxWithdrawAmount: any;
       createdAt: Date;
       updatedAt: Date;
     }>;
@@ -100,6 +116,11 @@ export class PromotionMapper {
       qualificationMaintainCondition:
         prismaModel.qualificationMaintainCondition as any,
       isOneTime: prismaModel.isOneTime,
+      isDepositRequired: prismaModel.isDepositRequired,
+      maxUsageCount: prismaModel.maxUsageCount,
+      currentUsageCount: prismaModel.currentUsageCount,
+      bonusExpiryMinutes: prismaModel.bonusExpiryMinutes,
+      note: prismaModel.note,
       createdAt: prismaModel.createdAt,
       updatedAt: prismaModel.updatedAt,
       deletedAt: prismaModel.deletedAt,
@@ -141,12 +162,14 @@ export class PromotionMapper {
     promotionId: bigint;
     status: string;
     depositAmount: any;
+    lockedAmount: any;
     bonusAmount: any;
     targetRollingAmount: any;
     currentRollingAmount: any;
     currency: string;
     createdAt: Date;
     updatedAt: Date;
+    expiresAt?: Date | null;
     promotion?: {
       code: string;
     };
@@ -157,10 +180,12 @@ export class PromotionMapper {
       promotionId: prismaModel.promotionId,
       status: prismaModel.status as any,
       depositAmount: prismaModel.depositAmount,
+      lockedAmount: prismaModel.lockedAmount,
       bonusAmount: prismaModel.bonusAmount,
       targetRollingAmount: prismaModel.targetRollingAmount,
       currentRollingAmount: prismaModel.currentRollingAmount,
       currency: prismaModel.currency as any,
+      expiresAt: prismaModel.expiresAt ?? null,
       createdAt: prismaModel.createdAt,
       updatedAt: prismaModel.updatedAt,
       promotionCode: prismaModel.promotion?.code,
@@ -176,6 +201,7 @@ export class PromotionMapper {
     currency: string;
     minDepositAmount: any;
     maxBonusAmount: any;
+    maxWithdrawAmount: any;
     createdAt: Date;
     updatedAt: Date;
   }): PromotionCurrency {
@@ -185,6 +211,7 @@ export class PromotionMapper {
       currency: prismaModel.currency as any,
       minDepositAmount: prismaModel.minDepositAmount,
       maxBonusAmount: prismaModel.maxBonusAmount,
+      maxWithdrawAmount: prismaModel.maxWithdrawAmount,
       createdAt: prismaModel.createdAt,
       updatedAt: prismaModel.updatedAt,
     });

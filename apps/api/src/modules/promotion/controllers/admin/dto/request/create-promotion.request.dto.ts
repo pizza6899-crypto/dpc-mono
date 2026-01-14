@@ -46,6 +46,15 @@ export class CurrencySettingDto {
   @IsOptional()
   @IsString()
   maxBonusAmount?: string;
+
+  @ApiPropertyOptional({
+    description: '최대 출금 금액',
+    example: '5000.00',
+    type: String,
+  })
+  @IsOptional()
+  @IsString()
+  maxWithdrawAmount?: string;
 }
 
 export class TranslationDto {
@@ -156,7 +165,7 @@ export class CreatePromotionRequestDto {
 
   @ApiProperty({
     description: '자격 유지 조건',
-    example: PromotionQualification.UNTIL_FIRST_WITHDRAWAL,
+    example: PromotionQualification.FORFEIT_BONUS_ON_WITHDRAWAL,
     enum: PromotionQualification,
   })
   @IsEnum(PromotionQualification)
@@ -170,6 +179,41 @@ export class CreatePromotionRequestDto {
   @IsOptional()
   @IsBoolean()
   isOneTime?: boolean;
+
+  @ApiPropertyOptional({
+    description: '입금 필수 여부',
+    example: true,
+    default: true,
+  })
+  @IsOptional()
+  @IsBoolean()
+  isDepositRequired?: boolean;
+
+  @ApiPropertyOptional({
+    description: '최대 사용 횟수 (선착순)',
+    example: 100,
+    type: Number,
+  })
+  @IsOptional()
+  maxUsageCount?: number;
+
+  @ApiPropertyOptional({
+    description: '보너스 유효 기간 (분 단위)',
+    example: 1440, // 24시간
+    type: Number,
+  })
+  @IsOptional()
+  bonusExpiryMinutes?: number;
+
+  @ApiPropertyOptional({
+    description: '관리자용 메모',
+    example: ['이 프로모션은 VIP 전용입니다.'],
+    type: [String],
+  })
+  @IsOptional()
+  @IsArray()
+  @IsString({ each: true })
+  note?: string[];
 
   @ApiPropertyOptional({
     description: '통화별 설정 목록',

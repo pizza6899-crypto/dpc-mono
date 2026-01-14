@@ -9,10 +9,12 @@ export class UserPromotion {
     public readonly promotionId: bigint,
     private _status: UserPromotionStatus,
     public readonly depositAmount: Prisma.Decimal,
+    private _lockedAmount: Prisma.Decimal,
     public readonly bonusAmount: Prisma.Decimal,
     public readonly targetRollingAmount: Prisma.Decimal,
     private _currentRollingAmount: Prisma.Decimal,
     public readonly currency: ExchangeCurrencyCode,
+    public readonly expiresAt: Date | null,
     public readonly createdAt: Date,
     public readonly updatedAt: Date,
     public readonly promotionCode?: string | null,
@@ -24,10 +26,12 @@ export class UserPromotion {
     promotionId: bigint;
     status: UserPromotionStatus;
     depositAmount: Prisma.Decimal;
+    lockedAmount: Prisma.Decimal;
     bonusAmount: Prisma.Decimal;
     targetRollingAmount: Prisma.Decimal;
     currentRollingAmount: Prisma.Decimal;
     currency: ExchangeCurrencyCode;
+    expiresAt: Date | null;
     createdAt: Date;
     updatedAt: Date;
     promotionCode?: string | null;
@@ -38,14 +42,20 @@ export class UserPromotion {
       data.promotionId,
       data.status,
       data.depositAmount,
+      data.lockedAmount,
       data.bonusAmount,
       data.targetRollingAmount,
       data.currentRollingAmount,
       data.currency,
+      data.expiresAt,
       data.createdAt,
       data.updatedAt,
       data.promotionCode,
     );
+  }
+
+  get lockedAmount(): Prisma.Decimal {
+    return this._lockedAmount;
   }
 
   get status(): UserPromotionStatus {
@@ -97,6 +107,17 @@ export class UserPromotion {
     return this._status === UserPromotionStatus.COMPLETED;
   }
 
+  isExpired(now: Date = new Date()): boolean {
+    if (this.expiresAt && now > this.expiresAt) {
+      return true;
+    }
+    return this._status === UserPromotionStatus.EXPIRED;
+  }
+
+  unlock(): void {
+    this._lockedAmount = new Prisma.Decimal(0);
+  }
+
   toPersistence() {
     return {
       id: this.id,
@@ -104,10 +125,12 @@ export class UserPromotion {
       promotionId: this.promotionId,
       status: this._status,
       depositAmount: this.depositAmount,
+      lockedAmount: this._lockedAmount,
       bonusAmount: this.bonusAmount,
       targetRollingAmount: this.targetRollingAmount,
       currentRollingAmount: this._currentRollingAmount,
       currency: this.currency,
+      expiresAt: this.expiresAt,
       createdAt: this.createdAt,
       updatedAt: this.updatedAt,
     };

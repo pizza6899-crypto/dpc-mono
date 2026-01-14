@@ -8,6 +8,7 @@ export class PromotionCurrency {
     public readonly currency: ExchangeCurrencyCode,
     public readonly minDepositAmount: Prisma.Decimal,
     public readonly maxBonusAmount: Prisma.Decimal | null,
+    public readonly maxWithdrawAmount: Prisma.Decimal | null,
     public readonly createdAt: Date,
     public readonly updatedAt: Date,
   ) { }
@@ -18,6 +19,7 @@ export class PromotionCurrency {
     currency: ExchangeCurrencyCode;
     minDepositAmount: Prisma.Decimal;
     maxBonusAmount: Prisma.Decimal | null;
+    maxWithdrawAmount: Prisma.Decimal | null;
     createdAt: Date;
     updatedAt: Date;
   }): PromotionCurrency {
@@ -27,6 +29,7 @@ export class PromotionCurrency {
       data.currency,
       data.minDepositAmount,
       data.maxBonusAmount,
+      data.maxWithdrawAmount,
       data.createdAt,
       data.updatedAt,
     );
@@ -49,6 +52,16 @@ export class PromotionCurrency {
     return bonusAmount.lte(this.maxBonusAmount);
   }
 
+  /**
+   * 출금 금액이 최대 출금 금액을 초과하는지 확인
+   */
+  validateMaxWithdrawAmount(withdrawAmount: Prisma.Decimal): boolean {
+    if (!this.maxWithdrawAmount) {
+      return true; // 최대 출금 금액이 없으면 제한 없음
+    }
+    return withdrawAmount.lte(this.maxWithdrawAmount);
+  }
+
   toPersistence() {
     return {
       id: this.id,
@@ -56,9 +69,9 @@ export class PromotionCurrency {
       currency: this.currency,
       minDepositAmount: this.minDepositAmount,
       maxBonusAmount: this.maxBonusAmount,
+      maxWithdrawAmount: this.maxWithdrawAmount,
       createdAt: this.createdAt,
       updatedAt: this.updatedAt,
     };
   }
 }
-

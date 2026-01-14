@@ -17,7 +17,7 @@ export class CheckEligiblePromotionsService {
   constructor(
     @Inject(PROMOTION_REPOSITORY)
     private readonly repository: PromotionRepositoryPort,
-  ) {}
+  ) { }
 
   async execute({
     userId,
@@ -44,45 +44,49 @@ export class CheckEligiblePromotionsService {
           currency,
         );
 
-        // 최소 입금 금액 확인 (통화별 설정 사용)
-        if (depositAmount.lt(currencySettings.minDepositAmount)) {
-          continue;
-        }
-
-        // 첫 입금 프로모션 확인
-        const targetType = promotion.targetType as string;
-        if (
-          targetType === 'NEW_USER_FIRST_DEPOSIT' &&
-          hasPreviousDeposits
-        ) {
-          continue;
-        }
-
-        // 첫 출금까지 프로모션 확인
-        if (
-          promotion.qualificationMaintainCondition ===
-            'UNTIL_FIRST_WITHDRAWAL' &&
-          hasWithdrawn
-        ) {
-          continue;
-        }
-
-        // 1회성 프로모션 확인
-        if (promotion.isOneTime) {
-          const existingUserPromotion =
-            await this.repository.findUserPromotion(userId, promotion.id);
-          if (existingUserPromotion?.bonusGranted) {
+        // 최소 입금 금액 확인
+        // 입금 필수일 경우에만 체크, 비입금 쿠폰은 패스
+        if (promotion.isDepositRequired) {
+          if (depositAmount.lt(currencySettings.minDepositAmount)) {
             continue;
           }
         }
 
-        // 주간/주말 프로모션 확인
-        const dayOfWeek = now.getDay();
-        if (targetType === 'WEEKLY' && (dayOfWeek === 0 || dayOfWeek === 6)) {
+        // 선착순 마감 확인
+        if (
+          promotion.maxUsageCount !== null &&
+          promotion.currentUsageCount >= promotion.maxUsageCount
+        ) {
           continue;
         }
-        if (targetType === 'WEEKEND' && dayOfWeek !== 0 && dayOfWeek !== 6) {
-          continue;
+
+        // 타겟 타입별 자격 확인
+        const targetType = promotion.targetType as string;
+
+        if (targetType === 'NEW_USER_FIRST_DEPOSIT') {
+          if (hasPreviousDeposits) {
+            continue;
+          }
+        } else if (targetType === 'SPECIFIC_USERS') {
+          const isAllowed = await this.repository.isUserAllowed(
+            promotion.id,
+            userId,
+          );
+          if (!isAllowed) {
+            continue;
+          }
+        }
+        // ALL_USERS는 추가 체크 없음
+
+        // 1회성 프로모션 확인
+        if (promotion.isOneTime) {
+          const existingUserPromotion = await this.repository.findUserPromotion(
+            userId,
+            promotion.id,
+          );
+          if (existingUserPromotion?.bonusGranted) {
+            continue;
+          }
         }
 
         eligiblePromotions.push(promotion);

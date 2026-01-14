@@ -1,4 +1,7 @@
 -- CreateEnum
+CREATE TYPE "CommissionStatus" AS ENUM ('PENDING', 'AVAILABLE', 'CLAIMED', 'WITHDRAWN', 'CANCELLED');
+
+-- CreateEnum
 CREATE TYPE "SocialType" AS ENUM ('GOOGLE', 'APPLE', 'TELEGRAM');
 
 -- CreateEnum
@@ -59,12 +62,6 @@ CREATE TYPE "EmailType" AS ENUM ('PASSWORD_RESET');
 CREATE TYPE "EmailStatus" AS ENUM ('SENT', 'FAILED');
 
 -- CreateEnum
-CREATE TYPE "CommissionStatus" AS ENUM ('PENDING', 'AVAILABLE', 'CLAIMED', 'WITHDRAWN', 'CANCELLED');
-
--- CreateEnum
-CREATE TYPE "AffiliateTierLevel" AS ENUM ('BRONZE', 'SILVER', 'GOLD', 'PLATINUM', 'DIAMOND');
-
--- CreateEnum
 CREATE TYPE "LoginAttemptResult" AS ENUM ('SUCCESS', 'FAILED');
 
 -- CreateEnum
@@ -86,13 +83,22 @@ CREATE TYPE "PaymentProvider" AS ENUM ('NOWPAYMENT', 'MANUAL');
 CREATE TYPE "FeePaidByType" AS ENUM ('USER', 'SYSTEM');
 
 -- CreateEnum
-CREATE TYPE "PromotionTargetType" AS ENUM ('NEW_USER_FIRST_DEPOSIT');
+CREATE TYPE "AlertStatus" AS ENUM ('PENDING', 'PROCESSING', 'COMPLETED', 'FAILED');
 
 -- CreateEnum
-CREATE TYPE "PromotionBonusType" AS ENUM ('PERCENTAGE');
+CREATE TYPE "NotifyStatus" AS ENUM ('PENDING', 'SENDING', 'SUCCESS', 'FAILED', 'CANCELED');
 
 -- CreateEnum
-CREATE TYPE "PromotionQualification" AS ENUM ('UNTIL_FIRST_WITHDRAWAL');
+CREATE TYPE "ChannelType" AS ENUM ('EMAIL', 'SMS', 'IN_APP');
+
+-- CreateEnum
+CREATE TYPE "PromotionTargetType" AS ENUM ('NEW_USER_FIRST_DEPOSIT', 'ALL_USERS', 'SPECIFIC_USERS');
+
+-- CreateEnum
+CREATE TYPE "PromotionBonusType" AS ENUM ('PERCENTAGE', 'FIXED_AMOUNT');
+
+-- CreateEnum
+CREATE TYPE "PromotionQualification" AS ENUM ('FORFEIT_BONUS_ON_WITHDRAWAL', 'MUST_COMPLETE_ROLLING_CONDITION');
 
 -- CreateEnum
 CREATE TYPE "UserPromotionStatus" AS ENUM ('ACTIVE', 'COMPLETED', 'QUALIFICATION_LOST', 'EXPIRED', 'FAILED');
@@ -156,6 +162,40 @@ CREATE TABLE "referrals" (
     "code_id" BIGINT NOT NULL,
 
     CONSTRAINT "referrals_pkey" PRIMARY KEY ("id")
+);
+
+-- CreateTable
+CREATE TABLE "affiliate_commissions" (
+    "id" BIGSERIAL NOT NULL,
+    "affiliate_id" BIGINT NOT NULL,
+    "sub_user_id" BIGINT NOT NULL,
+    "game_round_id" BIGINT,
+    "wager_amount" DECIMAL(32,18) NOT NULL,
+    "win_amount" DECIMAL(32,18),
+    "commission" DECIMAL(32,18) NOT NULL,
+    "rate_applied" DECIMAL(8,4) NOT NULL,
+    "currency" "ExchangeCurrencyCode" NOT NULL,
+    "status" "CommissionStatus" NOT NULL DEFAULT 'PENDING',
+    "game_category" "GameCategory",
+    "settlement_date" TIMESTAMP(3),
+    "claimed_at" TIMESTAMP(3),
+    "withdrawn_at" TIMESTAMP(3),
+    "created_at" TIMESTAMP(3) NOT NULL DEFAULT CURRENT_TIMESTAMP,
+    "updated_at" TIMESTAMP(3) NOT NULL,
+
+    CONSTRAINT "affiliate_commissions_pkey" PRIMARY KEY ("created_at","id")
+);
+
+-- CreateTable
+CREATE TABLE "affiliate_wallets" (
+    "affiliate_id" BIGINT NOT NULL,
+    "currency" "ExchangeCurrencyCode" NOT NULL,
+    "available_balance" DECIMAL(32,18) NOT NULL DEFAULT 0,
+    "pending_balance" DECIMAL(32,18) NOT NULL DEFAULT 0,
+    "total_earned" DECIMAL(32,18) NOT NULL DEFAULT 0,
+    "updated_at" TIMESTAMP(3) NOT NULL,
+
+    CONSTRAINT "affiliate_wallets_pkey" PRIMARY KEY ("affiliate_id","currency")
 );
 
 -- CreateTable
@@ -385,7 +425,6 @@ CREATE TABLE "game_wins" (
 -- CreateTable
 CREATE TABLE "User" (
     "id" BIGSERIAL NOT NULL,
-    "uid" TEXT NOT NULL,
     "whitecliffId" BIGINT,
     "whitecliffSystemId" BIGINT,
     "whitecliffUsername" TEXT,
@@ -591,59 +630,6 @@ CREATE TABLE "EmailLog" (
 );
 
 -- CreateTable
-CREATE TABLE "AffiliateWallet" (
-    "affiliateId" BIGINT NOT NULL,
-    "currency" "ExchangeCurrencyCode" NOT NULL,
-    "availableBalance" DECIMAL(32,18) NOT NULL DEFAULT 0,
-    "pendingBalance" DECIMAL(32,18) NOT NULL DEFAULT 0,
-    "totalEarned" DECIMAL(32,18) NOT NULL DEFAULT 0,
-    "updatedAt" TIMESTAMP(3) NOT NULL,
-
-    CONSTRAINT "AffiliateWallet_pkey" PRIMARY KEY ("affiliateId","currency")
-);
-
--- CreateTable
-CREATE TABLE "AffiliateCommission" (
-    "affiliateId" BIGINT NOT NULL,
-    "subUserId" BIGINT NOT NULL,
-    "gameRoundId" BIGINT,
-    "wagerAmount" DECIMAL(32,18) NOT NULL,
-    "winAmount" DECIMAL(32,18),
-    "commission" DECIMAL(32,18) NOT NULL,
-    "rateApplied" DECIMAL(8,4) NOT NULL,
-    "currency" "ExchangeCurrencyCode" NOT NULL,
-    "status" "CommissionStatus" NOT NULL DEFAULT 'PENDING',
-    "gameCategory" "GameCategory",
-    "settlementDate" TIMESTAMP(3),
-    "claimedAt" TIMESTAMP(3),
-    "withdrawnAt" TIMESTAMP(3),
-    "createdAt" TIMESTAMP(3) NOT NULL DEFAULT CURRENT_TIMESTAMP,
-    "updatedAt" TIMESTAMP(3) NOT NULL,
-    "uid" TEXT NOT NULL,
-    "id" BIGSERIAL NOT NULL,
-
-    CONSTRAINT "AffiliateCommission_pkey" PRIMARY KEY ("id")
-);
-
--- CreateTable
-CREATE TABLE "AffiliateTier" (
-    "affiliateId" BIGINT NOT NULL,
-    "tier" "AffiliateTierLevel" NOT NULL DEFAULT 'BRONZE',
-    "baseRate" DECIMAL(8,4) NOT NULL,
-    "customRate" DECIMAL(8,4),
-    "isCustomRate" BOOLEAN NOT NULL DEFAULT false,
-    "monthlyWagerAmount" DECIMAL(32,18) NOT NULL DEFAULT 0,
-    "customRateSetBy" BIGINT,
-    "customRateSetAt" TIMESTAMP(3),
-    "createdAt" TIMESTAMP(3) NOT NULL DEFAULT CURRENT_TIMESTAMP,
-    "updatedAt" TIMESTAMP(3) NOT NULL,
-    "uid" TEXT NOT NULL,
-    "id" BIGSERIAL NOT NULL,
-
-    CONSTRAINT "AffiliateTier_pkey" PRIMARY KEY ("id")
-);
-
--- CreateTable
 CREATE TABLE "LoginAttempt" (
     "id" BIGSERIAL NOT NULL,
     "uid" TEXT NOT NULL,
@@ -769,9 +755,82 @@ CREATE TABLE "bank_deposit_configs" (
 );
 
 -- CreateTable
+CREATE TABLE "alerts" (
+    "id" BIGSERIAL NOT NULL,
+    "event" TEXT NOT NULL,
+    "user_id" BIGINT,
+    "target_group" TEXT,
+    "payload" JSONB NOT NULL,
+    "idempotency_key" TEXT,
+    "status" "AlertStatus" NOT NULL DEFAULT 'PENDING',
+    "created_at" TIMESTAMP(3) NOT NULL DEFAULT CURRENT_TIMESTAMP,
+    "updated_at" TIMESTAMP(3) NOT NULL,
+
+    CONSTRAINT "alerts_pkey" PRIMARY KEY ("created_at","id")
+);
+
+-- CreateTable
+CREATE TABLE "notification_templates" (
+    "id" BIGSERIAL NOT NULL,
+    "name" TEXT NOT NULL,
+    "description" TEXT,
+    "event" TEXT NOT NULL,
+    "channel" "ChannelType" NOT NULL,
+    "variables" JSONB NOT NULL DEFAULT '[]',
+    "created_at" TIMESTAMP(3) NOT NULL DEFAULT CURRENT_TIMESTAMP,
+    "updated_at" TIMESTAMP(3) NOT NULL,
+
+    CONSTRAINT "notification_templates_pkey" PRIMARY KEY ("id")
+);
+
+-- CreateTable
+CREATE TABLE "notification_template_translations" (
+    "id" BIGSERIAL NOT NULL,
+    "template_id" BIGINT NOT NULL,
+    "locale" "Language" NOT NULL,
+    "title_template" TEXT NOT NULL,
+    "body_template" TEXT NOT NULL,
+    "action_uri_template" TEXT,
+    "created_at" TIMESTAMP(3) NOT NULL DEFAULT CURRENT_TIMESTAMP,
+    "updated_at" TIMESTAMP(3) NOT NULL,
+
+    CONSTRAINT "notification_template_translations_pkey" PRIMARY KEY ("id")
+);
+
+-- CreateTable
+CREATE TABLE "notification_logs" (
+    "id" BIGSERIAL NOT NULL,
+    "alert_id" BIGINT NOT NULL,
+    "alert_created_at" TIMESTAMP(3) NOT NULL,
+    "template_id" BIGINT,
+    "template_event" TEXT,
+    "locale" "Language",
+    "channel" "ChannelType" NOT NULL,
+    "receiver_id" BIGINT NOT NULL,
+    "target" TEXT,
+    "title" TEXT NOT NULL,
+    "body" TEXT NOT NULL,
+    "action_uri" TEXT,
+    "is_read" BOOLEAN NOT NULL DEFAULT false,
+    "read_at" TIMESTAMP(3),
+    "is_deleted" BOOLEAN NOT NULL DEFAULT false,
+    "deleted_at" TIMESTAMP(3),
+    "priority" INTEGER NOT NULL DEFAULT 3,
+    "scheduled_at" TIMESTAMP(3) NOT NULL DEFAULT CURRENT_TIMESTAMP,
+    "status" "NotifyStatus" NOT NULL DEFAULT 'PENDING',
+    "error_message" TEXT,
+    "sent_at" TIMESTAMP(3),
+    "retry_count" INTEGER NOT NULL DEFAULT 0,
+    "metadata" JSONB DEFAULT '{}',
+    "created_at" TIMESTAMP(3) NOT NULL DEFAULT CURRENT_TIMESTAMP,
+    "updated_at" TIMESTAMP(3) NOT NULL,
+
+    CONSTRAINT "notification_logs_pkey" PRIMARY KEY ("created_at","id")
+);
+
+-- CreateTable
 CREATE TABLE "promotions" (
     "id" BIGSERIAL NOT NULL,
-    "uid" TEXT NOT NULL,
     "management_name" TEXT NOT NULL,
     "is_active" BOOLEAN NOT NULL DEFAULT true,
     "start_date" TIMESTAMP(3),
@@ -780,13 +839,29 @@ CREATE TABLE "promotions" (
     "target_type" "PromotionTargetType" NOT NULL,
     "bonus_type" "PromotionBonusType" NOT NULL,
     "bonus_rate" DECIMAL(8,4),
+    "code" TEXT NOT NULL,
     "rolling_multiplier" DECIMAL(8,4),
     "qualification_maintain_condition" "PromotionQualification" NOT NULL,
     "is_one_time" BOOLEAN NOT NULL DEFAULT false,
+    "is_deposit_required" BOOLEAN NOT NULL DEFAULT true,
+    "max_usage_count" INTEGER,
+    "current_usage_count" INTEGER NOT NULL DEFAULT 0,
+    "bonus_expiry_minutes" INTEGER,
+    "note" TEXT[] DEFAULT ARRAY[]::TEXT[],
     "created_at" TIMESTAMP(3) NOT NULL DEFAULT CURRENT_TIMESTAMP,
     "updated_at" TIMESTAMP(3) NOT NULL,
 
     CONSTRAINT "promotions_pkey" PRIMARY KEY ("id")
+);
+
+-- CreateTable
+CREATE TABLE "promotion_allowlists" (
+    "id" BIGSERIAL NOT NULL,
+    "promotion_id" BIGINT NOT NULL,
+    "user_id" BIGINT NOT NULL,
+    "created_at" TIMESTAMP(3) NOT NULL DEFAULT CURRENT_TIMESTAMP,
+
+    CONSTRAINT "promotion_allowlists_pkey" PRIMARY KEY ("id")
 );
 
 -- CreateTable
@@ -807,8 +882,9 @@ CREATE TABLE "promotion_currencies" (
     "id" BIGSERIAL NOT NULL,
     "promotion_id" BIGINT NOT NULL,
     "currency" "ExchangeCurrencyCode" NOT NULL,
-    "min_deposit_amount" DECIMAL(32,18) NOT NULL,
+    "min_deposit_amount" DECIMAL(32,18) NOT NULL DEFAULT 0,
     "max_bonus_amount" DECIMAL(32,18),
+    "max_withdraw_amount" DECIMAL(32,18),
     "created_at" TIMESTAMP(3) NOT NULL DEFAULT CURRENT_TIMESTAMP,
     "updated_at" TIMESTAMP(3) NOT NULL,
 
@@ -821,11 +897,13 @@ CREATE TABLE "user_promotions" (
     "user_id" BIGINT NOT NULL,
     "promotion_id" BIGINT NOT NULL,
     "status" "UserPromotionStatus" NOT NULL DEFAULT 'ACTIVE',
-    "deposit_amount" DECIMAL(32,18) NOT NULL,
+    "deposit_amount" DECIMAL(32,18) NOT NULL DEFAULT 0,
+    "locked_amount" DECIMAL(32,18) NOT NULL DEFAULT 0,
     "bonus_amount" DECIMAL(32,18) NOT NULL,
     "target_rolling_amount" DECIMAL(32,18) NOT NULL,
     "current_rolling_amount" DECIMAL(32,18) NOT NULL DEFAULT 0,
     "currency" "ExchangeCurrencyCode" NOT NULL,
+    "expires_at" TIMESTAMP(3),
     "created_at" TIMESTAMP(3) NOT NULL DEFAULT CURRENT_TIMESTAMP,
     "updated_at" TIMESTAMP(3) NOT NULL,
 
@@ -841,6 +919,7 @@ CREATE TABLE "tier" (
     "requirement_usd" DECIMAL(32,18) NOT NULL,
     "level_up_bonus" DECIMAL(32,18) NOT NULL DEFAULT 0,
     "comp_rate" DECIMAL(8,4) NOT NULL DEFAULT 0,
+    "affiliate_commission_rate" DECIMAL(8,4) NOT NULL DEFAULT 0,
     "created_at" TIMESTAMP(3) NOT NULL DEFAULT CURRENT_TIMESTAMP,
     "updated_at" TIMESTAMP(3) NOT NULL,
 
@@ -868,6 +947,9 @@ CREATE TABLE "user_tier" (
     "highest_promoted_priority" INTEGER NOT NULL DEFAULT 0,
     "is_manual_lock" BOOLEAN NOT NULL DEFAULT false,
     "last_promoted_at" TIMESTAMP(3) NOT NULL DEFAULT CURRENT_TIMESTAMP,
+    "affiliate_custom_rate" DECIMAL(8,4),
+    "is_affiliate_custom_rate" BOOLEAN NOT NULL DEFAULT false,
+    "affiliate_monthly_wager_amount" DECIMAL(32,18) NOT NULL DEFAULT 0,
     "created_at" TIMESTAMP(3) NOT NULL DEFAULT CURRENT_TIMESTAMP,
     "updated_at" TIMESTAMP(3) NOT NULL,
 
@@ -1093,6 +1175,30 @@ CREATE INDEX "referrals_ip_address_device_fingerprint_idx" ON "referrals"("ip_ad
 CREATE UNIQUE INDEX "referrals_affiliate_id_sub_user_id_key" ON "referrals"("affiliate_id", "sub_user_id");
 
 -- CreateIndex
+CREATE INDEX "affiliate_commissions_affiliate_id_status_idx" ON "affiliate_commissions"("affiliate_id", "status");
+
+-- CreateIndex
+CREATE INDEX "affiliate_commissions_affiliate_id_created_at_idx" ON "affiliate_commissions"("affiliate_id", "created_at");
+
+-- CreateIndex
+CREATE INDEX "affiliate_commissions_sub_user_id_idx" ON "affiliate_commissions"("sub_user_id");
+
+-- CreateIndex
+CREATE INDEX "affiliate_commissions_status_created_at_idx" ON "affiliate_commissions"("status", "created_at");
+
+-- CreateIndex
+CREATE INDEX "affiliate_commissions_settlement_date_idx" ON "affiliate_commissions"("settlement_date");
+
+-- CreateIndex
+CREATE INDEX "affiliate_commissions_game_round_id_idx" ON "affiliate_commissions"("game_round_id");
+
+-- CreateIndex
+CREATE INDEX "affiliate_wallets_affiliate_id_idx" ON "affiliate_wallets"("affiliate_id");
+
+-- CreateIndex
+CREATE INDEX "affiliate_wallets_currency_idx" ON "affiliate_wallets"("currency");
+
+-- CreateIndex
 CREATE INDEX "user_hourly_stats_date_idx" ON "user_hourly_stats"("date");
 
 -- CreateIndex
@@ -1201,9 +1307,6 @@ CREATE INDEX "game_wins_game_round_id_idx" ON "game_wins"("game_round_id");
 CREATE UNIQUE INDEX "game_wins_aggregator_win_id_aggregator_type_won_at_key" ON "game_wins"("aggregator_win_id", "aggregator_type", "won_at");
 
 -- CreateIndex
-CREATE UNIQUE INDEX "User_uid_key" ON "User"("uid");
-
--- CreateIndex
 CREATE UNIQUE INDEX "User_whitecliffId_key" ON "User"("whitecliffId");
 
 -- CreateIndex
@@ -1283,45 +1386,6 @@ CREATE INDEX "EmailLog_status_createdAt_idx" ON "EmailLog"("status", "createdAt"
 
 -- CreateIndex
 CREATE INDEX "EmailLog_type_status_idx" ON "EmailLog"("type", "status");
-
--- CreateIndex
-CREATE INDEX "AffiliateWallet_affiliateId_idx" ON "AffiliateWallet"("affiliateId");
-
--- CreateIndex
-CREATE INDEX "AffiliateWallet_currency_idx" ON "AffiliateWallet"("currency");
-
--- CreateIndex
-CREATE UNIQUE INDEX "AffiliateCommission_uid_key" ON "AffiliateCommission"("uid");
-
--- CreateIndex
-CREATE INDEX "AffiliateCommission_affiliateId_status_idx" ON "AffiliateCommission"("affiliateId", "status");
-
--- CreateIndex
-CREATE INDEX "AffiliateCommission_affiliateId_createdAt_idx" ON "AffiliateCommission"("affiliateId", "createdAt");
-
--- CreateIndex
-CREATE INDEX "AffiliateCommission_subUserId_idx" ON "AffiliateCommission"("subUserId");
-
--- CreateIndex
-CREATE INDEX "AffiliateCommission_status_createdAt_idx" ON "AffiliateCommission"("status", "createdAt");
-
--- CreateIndex
-CREATE INDEX "AffiliateCommission_settlementDate_idx" ON "AffiliateCommission"("settlementDate");
-
--- CreateIndex
-CREATE INDEX "AffiliateCommission_gameRoundId_idx" ON "AffiliateCommission"("gameRoundId");
-
--- CreateIndex
-CREATE UNIQUE INDEX "AffiliateTier_affiliateId_key" ON "AffiliateTier"("affiliateId");
-
--- CreateIndex
-CREATE UNIQUE INDEX "AffiliateTier_uid_key" ON "AffiliateTier"("uid");
-
--- CreateIndex
-CREATE INDEX "AffiliateTier_affiliateId_idx" ON "AffiliateTier"("affiliateId");
-
--- CreateIndex
-CREATE INDEX "AffiliateTier_tier_idx" ON "AffiliateTier"("tier");
 
 -- CreateIndex
 CREATE UNIQUE INDEX "LoginAttempt_uid_key" ON "LoginAttempt"("uid");
@@ -1432,7 +1496,55 @@ CREATE INDEX "bank_deposit_configs_priority_idx" ON "bank_deposit_configs"("prio
 CREATE INDEX "bank_deposit_configs_deleted_at_idx" ON "bank_deposit_configs"("deleted_at");
 
 -- CreateIndex
-CREATE UNIQUE INDEX "promotions_uid_key" ON "promotions"("uid");
+CREATE INDEX "alerts_user_id_idx" ON "alerts"("user_id");
+
+-- CreateIndex
+CREATE INDEX "alerts_created_at_idx" ON "alerts"("created_at");
+
+-- CreateIndex
+CREATE INDEX "alerts_status_created_at_idx" ON "alerts"("status", "created_at");
+
+-- CreateIndex
+CREATE INDEX "alerts_event_created_at_idx" ON "alerts"("event", "created_at");
+
+-- CreateIndex
+CREATE UNIQUE INDEX "alerts_idempotency_key_created_at_key" ON "alerts"("idempotency_key", "created_at");
+
+-- CreateIndex
+CREATE UNIQUE INDEX "notification_templates_event_channel_key" ON "notification_templates"("event", "channel");
+
+-- CreateIndex
+CREATE INDEX "notification_template_translations_locale_idx" ON "notification_template_translations"("locale");
+
+-- CreateIndex
+CREATE UNIQUE INDEX "notification_template_translations_template_id_locale_key" ON "notification_template_translations"("template_id", "locale");
+
+-- CreateIndex
+CREATE INDEX "notification_logs_created_at_alert_id_idx" ON "notification_logs"("created_at", "alert_id");
+
+-- CreateIndex
+CREATE INDEX "notification_logs_receiver_id_channel_is_deleted_id_idx" ON "notification_logs"("receiver_id", "channel", "is_deleted", "id" DESC);
+
+-- CreateIndex
+CREATE INDEX "notification_logs_receiver_id_channel_is_read_created_at_idx" ON "notification_logs"("receiver_id", "channel", "is_read", "created_at");
+
+-- CreateIndex
+CREATE INDEX "notification_logs_status_scheduled_at_priority_idx" ON "notification_logs"("status", "scheduled_at", "priority");
+
+-- CreateIndex
+CREATE INDEX "notification_logs_template_id_idx" ON "notification_logs"("template_id");
+
+-- CreateIndex
+CREATE UNIQUE INDEX "promotions_code_key" ON "promotions"("code");
+
+-- CreateIndex
+CREATE INDEX "promotion_allowlists_promotion_id_idx" ON "promotion_allowlists"("promotion_id");
+
+-- CreateIndex
+CREATE INDEX "promotion_allowlists_user_id_idx" ON "promotion_allowlists"("user_id");
+
+-- CreateIndex
+CREATE UNIQUE INDEX "promotion_allowlists_promotion_id_user_id_key" ON "promotion_allowlists"("promotion_id", "user_id");
 
 -- CreateIndex
 CREATE INDEX "promotion_translations_language_idx" ON "promotion_translations"("language");
@@ -1484,6 +1596,9 @@ CREATE UNIQUE INDEX "user_tier_user_id_key" ON "user_tier"("user_id");
 
 -- CreateIndex
 CREATE INDEX "user_tier_tier_id_idx" ON "user_tier"("tier_id");
+
+-- CreateIndex
+CREATE INDEX "user_tier_affiliate_monthly_wager_amount_idx" ON "user_tier"("affiliate_monthly_wager_amount");
 
 -- CreateIndex
 CREATE UNIQUE INDEX "tier_history_uid_key" ON "tier_history"("uid");
@@ -1630,6 +1745,18 @@ ALTER TABLE "referrals" ADD CONSTRAINT "referrals_code_id_fkey" FOREIGN KEY ("co
 ALTER TABLE "referrals" ADD CONSTRAINT "referrals_sub_user_id_fkey" FOREIGN KEY ("sub_user_id") REFERENCES "User"("id") ON DELETE CASCADE ON UPDATE CASCADE;
 
 -- AddForeignKey
+ALTER TABLE "affiliate_commissions" ADD CONSTRAINT "affiliate_commissions_affiliate_id_fkey" FOREIGN KEY ("affiliate_id") REFERENCES "User"("id") ON DELETE CASCADE ON UPDATE CASCADE;
+
+-- AddForeignKey
+ALTER TABLE "affiliate_commissions" ADD CONSTRAINT "affiliate_commissions_game_round_id_fkey" FOREIGN KEY ("game_round_id") REFERENCES "GameRound"("id") ON DELETE SET NULL ON UPDATE CASCADE;
+
+-- AddForeignKey
+ALTER TABLE "affiliate_commissions" ADD CONSTRAINT "affiliate_commissions_sub_user_id_fkey" FOREIGN KEY ("sub_user_id") REFERENCES "User"("id") ON DELETE CASCADE ON UPDATE CASCADE;
+
+-- AddForeignKey
+ALTER TABLE "affiliate_wallets" ADD CONSTRAINT "affiliate_wallets_affiliate_id_fkey" FOREIGN KEY ("affiliate_id") REFERENCES "User"("id") ON DELETE CASCADE ON UPDATE CASCADE;
+
+-- AddForeignKey
 ALTER TABLE "user_hourly_stats" ADD CONSTRAINT "user_hourly_stats_user_id_fkey" FOREIGN KEY ("user_id") REFERENCES "User"("id") ON DELETE RESTRICT ON UPDATE CASCADE;
 
 -- AddForeignKey
@@ -1684,21 +1811,6 @@ ALTER TABLE "UserToken" ADD CONSTRAINT "UserToken_userId_fkey" FOREIGN KEY ("use
 ALTER TABLE "EmailLog" ADD CONSTRAINT "EmailLog_userId_fkey" FOREIGN KEY ("userId") REFERENCES "User"("id") ON DELETE SET NULL ON UPDATE CASCADE;
 
 -- AddForeignKey
-ALTER TABLE "AffiliateWallet" ADD CONSTRAINT "AffiliateWallet_affiliateId_fkey" FOREIGN KEY ("affiliateId") REFERENCES "User"("id") ON DELETE CASCADE ON UPDATE CASCADE;
-
--- AddForeignKey
-ALTER TABLE "AffiliateCommission" ADD CONSTRAINT "AffiliateCommission_affiliateId_fkey" FOREIGN KEY ("affiliateId") REFERENCES "User"("id") ON DELETE CASCADE ON UPDATE CASCADE;
-
--- AddForeignKey
-ALTER TABLE "AffiliateCommission" ADD CONSTRAINT "AffiliateCommission_gameRoundId_fkey" FOREIGN KEY ("gameRoundId") REFERENCES "GameRound"("id") ON DELETE SET NULL ON UPDATE CASCADE;
-
--- AddForeignKey
-ALTER TABLE "AffiliateCommission" ADD CONSTRAINT "AffiliateCommission_subUserId_fkey" FOREIGN KEY ("subUserId") REFERENCES "User"("id") ON DELETE CASCADE ON UPDATE CASCADE;
-
--- AddForeignKey
-ALTER TABLE "AffiliateTier" ADD CONSTRAINT "AffiliateTier_affiliateId_fkey" FOREIGN KEY ("affiliateId") REFERENCES "User"("id") ON DELETE CASCADE ON UPDATE CASCADE;
-
--- AddForeignKey
 ALTER TABLE "LoginAttempt" ADD CONSTRAINT "LoginAttempt_userId_fkey" FOREIGN KEY ("userId") REFERENCES "User"("id") ON DELETE SET NULL ON UPDATE CASCADE;
 
 -- AddForeignKey
@@ -1721,6 +1833,24 @@ ALTER TABLE "deposit_details" ADD CONSTRAINT "deposit_details_promotion_id_fkey"
 
 -- AddForeignKey
 ALTER TABLE "deposit_details" ADD CONSTRAINT "deposit_details_transaction_id_fkey" FOREIGN KEY ("transaction_id") REFERENCES "Transaction"("id") ON DELETE SET NULL ON UPDATE CASCADE;
+
+-- AddForeignKey
+ALTER TABLE "alerts" ADD CONSTRAINT "alerts_user_id_fkey" FOREIGN KEY ("user_id") REFERENCES "User"("id") ON DELETE SET NULL ON UPDATE CASCADE;
+
+-- AddForeignKey
+ALTER TABLE "notification_template_translations" ADD CONSTRAINT "notification_template_translations_template_id_fkey" FOREIGN KEY ("template_id") REFERENCES "notification_templates"("id") ON DELETE CASCADE ON UPDATE CASCADE;
+
+-- AddForeignKey
+ALTER TABLE "notification_logs" ADD CONSTRAINT "notification_logs_alert_created_at_alert_id_fkey" FOREIGN KEY ("alert_created_at", "alert_id") REFERENCES "alerts"("created_at", "id") ON DELETE RESTRICT ON UPDATE CASCADE;
+
+-- AddForeignKey
+ALTER TABLE "notification_logs" ADD CONSTRAINT "notification_logs_receiver_id_fkey" FOREIGN KEY ("receiver_id") REFERENCES "User"("id") ON DELETE RESTRICT ON UPDATE CASCADE;
+
+-- AddForeignKey
+ALTER TABLE "notification_logs" ADD CONSTRAINT "notification_logs_template_id_fkey" FOREIGN KEY ("template_id") REFERENCES "notification_templates"("id") ON DELETE SET NULL ON UPDATE CASCADE;
+
+-- AddForeignKey
+ALTER TABLE "promotion_allowlists" ADD CONSTRAINT "promotion_allowlists_promotion_id_fkey" FOREIGN KEY ("promotion_id") REFERENCES "promotions"("id") ON DELETE CASCADE ON UPDATE CASCADE;
 
 -- AddForeignKey
 ALTER TABLE "promotion_translations" ADD CONSTRAINT "promotion_translations_promotion_id_fkey" FOREIGN KEY ("promotion_id") REFERENCES "promotions"("id") ON DELETE CASCADE ON UPDATE CASCADE;

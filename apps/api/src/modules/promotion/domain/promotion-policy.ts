@@ -33,8 +33,9 @@ export class PromotionPolicy {
   validateMinDepositAmount(
     depositAmount: Prisma.Decimal,
     currencySettings: PromotionCurrency,
+    isDepositRequired: boolean = true,
   ): void {
-    if (!currencySettings.validateMinDepositAmount(depositAmount)) {
+    if (isDepositRequired && !currencySettings.validateMinDepositAmount(depositAmount)) {
       throw new PromotionNotEligibleException(
         `Minimum deposit amount is ${currencySettings.minDepositAmount.toString()}`,
       );
@@ -72,6 +73,18 @@ export class PromotionPolicy {
   }
 
   /**
+   * 선착순 마감 확인
+   */
+  validateMaxUsageCount(promotion: Promotion): void {
+    if (
+      promotion.maxUsageCount !== null &&
+      promotion.currentUsageCount >= promotion.maxUsageCount
+    ) {
+      throw new PromotionNotEligibleException('Promotion usage limit reached');
+    }
+  }
+
+  /**
    * 첫 입금 프로모션 자격 확인
    */
   validateFirstDepositEligibility(
@@ -88,23 +101,7 @@ export class PromotionPolicy {
     }
   }
 
-  /**
-   * 첫 출금까지 프로모션 자격 확인
-   */
-  validateUntilFirstWithdrawalEligibility(
-    promotion: Promotion,
-    hasWithdrawn: boolean,
-  ): void {
-    if (
-      promotion.qualificationMaintainCondition ===
-        PromotionQualification.UNTIL_FIRST_WITHDRAWAL &&
-      hasWithdrawn
-    ) {
-      throw new PromotionNotEligibleException(
-        'This promotion qualification is lost after first withdrawal',
-      );
-    }
-  }
+
 
   /**
    * 프로모션 자격 종합 검증
@@ -122,7 +119,11 @@ export class PromotionPolicy {
     this.isPromotionActive(promotion, now);
 
     // 2. 최소 입금 금액 확인 (통화별 설정 사용)
-    this.validateMinDepositAmount(depositAmount, currencySettings);
+    this.validateMinDepositAmount(
+      depositAmount,
+      currencySettings,
+      promotion.isDepositRequired,
+    );
 
     // 3. 1회성 프로모션 확인
     this.validateOneTimePromotion(promotion, existingUserPromotion);
@@ -133,8 +134,8 @@ export class PromotionPolicy {
     // 5. 첫 입금 프로모션 확인
     this.validateFirstDepositEligibility(promotion, hasPreviousDeposits);
 
-    // 6. 첫 출금까지 프로모션 확인
-    this.validateUntilFirstWithdrawalEligibility(promotion, hasWithdrawn);
+    // 6. 선착순 마감 확인
+    this.validateMaxUsageCount(promotion);
   }
 }
 

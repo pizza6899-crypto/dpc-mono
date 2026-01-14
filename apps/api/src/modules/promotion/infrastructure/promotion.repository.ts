@@ -292,9 +292,11 @@ export class PromotionRepository implements PromotionRepositoryPort {
     userId: bigint;
     promotionId: bigint;
     depositAmount: Prisma.Decimal;
+    lockedAmount: Prisma.Decimal;
     bonusAmount: Prisma.Decimal;
     targetRollingAmount: Prisma.Decimal;
     currency: ExchangeCurrencyCode;
+    expiresAt?: Date | null;
   }): Promise<UserPromotion> {
     const result = await this.tx.userPromotion.create({
       data: {
@@ -302,10 +304,12 @@ export class PromotionRepository implements PromotionRepositoryPort {
         promotionId: params.promotionId,
         status: 'ACTIVE',
         depositAmount: params.depositAmount,
+        lockedAmount: params.lockedAmount,
         bonusAmount: params.bonusAmount,
         targetRollingAmount: params.targetRollingAmount,
         currentRollingAmount: new Prisma.Decimal(0),
         currency: params.currency,
+        expiresAt: params.expiresAt ?? null,
       },
     });
 
@@ -348,6 +352,16 @@ export class PromotionRepository implements PromotionRepositoryPort {
       },
     });
 
+    return count > 0;
+  }
+
+  async isUserAllowed(promotionId: bigint, userId: bigint): Promise<boolean> {
+    const count = await this.tx.promotionAllowlist.count({
+      where: {
+        promotionId,
+        userId,
+      },
+    });
     return count > 0;
   }
 
@@ -421,6 +435,10 @@ export class PromotionRepository implements PromotionRepositoryPort {
     rollingMultiplier?: Prisma.Decimal | null;
     qualificationMaintainCondition: string;
     isOneTime?: boolean;
+    isDepositRequired?: boolean;
+    maxUsageCount?: number | null;
+    bonusExpiryMinutes?: number | null;
+    note?: string[];
     code: string;
   }): Promise<Promotion> {
     const result = await this.tx.promotion.create({
@@ -436,6 +454,10 @@ export class PromotionRepository implements PromotionRepositoryPort {
         rollingMultiplier: params.rollingMultiplier ?? null,
         qualificationMaintainCondition: params.qualificationMaintainCondition as any,
         isOneTime: params.isOneTime ?? false,
+        isDepositRequired: params.isDepositRequired ?? true,
+        maxUsageCount: params.maxUsageCount ?? null,
+        bonusExpiryMinutes: params.bonusExpiryMinutes ?? null,
+        note: params.note ?? [],
       },
     });
 
@@ -477,6 +499,18 @@ export class PromotionRepository implements PromotionRepositoryPort {
         ...(promotion.isOneTime !== undefined && {
           isOneTime: promotion.isOneTime,
         }),
+        ...(promotion.isDepositRequired !== undefined && {
+          isDepositRequired: promotion.isDepositRequired,
+        }),
+        ...(promotion.maxUsageCount !== undefined && {
+          maxUsageCount: promotion.maxUsageCount,
+        }),
+        ...(promotion.bonusExpiryMinutes !== undefined && {
+          bonusExpiryMinutes: promotion.bonusExpiryMinutes,
+        }),
+        ...(promotion.note !== undefined && {
+          note: promotion.note,
+        }),
         ...(promotion.code !== undefined && {
           code: promotion.code,
         }),
@@ -496,6 +530,19 @@ export class PromotionRepository implements PromotionRepositoryPort {
         updatedAt: new Date(),
       },
     });
+  }
+
+  async incrementUsageCount(id: bigint): Promise<Promotion> {
+    const result = await this.tx.promotion.update({
+      where: { id },
+      data: {
+        currentUsageCount: {
+          increment: 1,
+        },
+      },
+    });
+
+    return this.mapper.toDomain(result);
   }
 
   async getCurrencySettings(
@@ -542,6 +589,7 @@ export class PromotionRepository implements PromotionRepositoryPort {
     currency: ExchangeCurrencyCode;
     minDepositAmount: Prisma.Decimal;
     maxBonusAmount?: Prisma.Decimal | null;
+    maxWithdrawAmount?: Prisma.Decimal | null;
   }): Promise<void> {
     await this.tx.promotionCurrency.upsert({
       where: {
@@ -555,10 +603,12 @@ export class PromotionRepository implements PromotionRepositoryPort {
         currency: params.currency,
         minDepositAmount: params.minDepositAmount,
         maxBonusAmount: params.maxBonusAmount ?? null,
+        maxWithdrawAmount: params.maxWithdrawAmount ?? null,
       },
       update: {
         minDepositAmount: params.minDepositAmount,
         maxBonusAmount: params.maxBonusAmount ?? null,
+        maxWithdrawAmount: params.maxWithdrawAmount ?? null,
         updatedAt: new Date(),
       },
     });

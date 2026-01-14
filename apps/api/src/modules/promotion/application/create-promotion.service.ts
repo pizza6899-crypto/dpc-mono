@@ -13,6 +13,7 @@ interface CurrencySetting {
   currency: ExchangeCurrencyCode;
   minDepositAmount: Prisma.Decimal;
   maxBonusAmount?: Prisma.Decimal | null;
+  maxWithdrawAmount?: Prisma.Decimal | null;
 }
 
 interface Translation {
@@ -32,6 +33,10 @@ interface CreatePromotionParams {
   rollingMultiplier?: Prisma.Decimal | null;
   qualificationMaintainCondition: string;
   isOneTime?: boolean;
+  isDepositRequired?: boolean;
+  maxUsageCount?: number | null;
+  bonusExpiryMinutes?: number | null;
+  note?: string[];
   code: string;
   currencies?: CurrencySetting[];
   translations?: Translation[];
@@ -64,6 +69,10 @@ export class CreatePromotionService {
       rollingMultiplier: params.rollingMultiplier ?? null,
       qualificationMaintainCondition: params.qualificationMaintainCondition as any,
       isOneTime: params.isOneTime ?? false,
+      isDepositRequired: params.isDepositRequired ?? true,
+      maxUsageCount: params.maxUsageCount ?? null,
+      bonusExpiryMinutes: params.bonusExpiryMinutes ?? null,
+      note: params.note ?? [],
       code: params.code,
     });
 
@@ -78,6 +87,7 @@ export class CreatePromotionService {
             currency: currency.currency,
             minDepositAmount: currency.minDepositAmount,
             maxBonusAmount: currency.maxBonusAmount,
+            maxWithdrawAmount: currency.maxWithdrawAmount,
           }),
         ),
       );

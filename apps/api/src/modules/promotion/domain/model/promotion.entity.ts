@@ -31,7 +31,12 @@ export class Promotion {
     public readonly bonusRate: Prisma.Decimal | null,
     public readonly rollingMultiplier: Prisma.Decimal | null,
     public readonly qualificationMaintainCondition: PromotionQualification,
-    public readonly isOneTime: boolean = false, // 1회성 여부 (기본값: false)
+    public readonly isOneTime: boolean = false,
+    public readonly isDepositRequired: boolean = true,
+    public readonly maxUsageCount: number | null,
+    public readonly currentUsageCount: number,
+    public readonly bonusExpiryMinutes: number | null,
+    public readonly note: string[],
     public readonly createdAt: Date,
     public readonly updatedAt: Date,
     private _deletedAt: Date | null = null, // 소프트 삭제
@@ -51,7 +56,12 @@ export class Promotion {
     bonusRate: Prisma.Decimal | null;
     rollingMultiplier: Prisma.Decimal | null;
     qualificationMaintainCondition: PromotionQualification;
-    isOneTime?: boolean; // 스키마에 없을 수 있으므로 optional
+    isOneTime?: boolean;
+    isDepositRequired?: boolean;
+    maxUsageCount?: number | null;
+    currentUsageCount?: number;
+    bonusExpiryMinutes?: number | null;
+    note?: string[];
     createdAt: Date;
     updatedAt: Date;
     deletedAt?: Date | null; // 스키마에 없을 수 있으므로 optional
@@ -71,6 +81,11 @@ export class Promotion {
       data.rollingMultiplier,
       data.qualificationMaintainCondition,
       data.isOneTime ?? false,
+      data.isDepositRequired ?? true,
+      data.maxUsageCount ?? null,
+      data.currentUsageCount ?? 0,
+      data.bonusExpiryMinutes ?? null,
+      data.note ?? [],
       data.createdAt,
       data.updatedAt,
       data.deletedAt ?? null,
@@ -207,6 +222,11 @@ export class Promotion {
       rollingMultiplier: this.rollingMultiplier,
       qualificationMaintainCondition: this.qualificationMaintainCondition,
       isOneTime: this.isOneTime,
+      isDepositRequired: this.isDepositRequired,
+      maxUsageCount: this.maxUsageCount,
+      currentUsageCount: this.currentUsageCount,
+      bonusExpiryMinutes: this.bonusExpiryMinutes,
+      note: this.note,
       createdAt: this.createdAt,
       updatedAt: this.updatedAt,
       deletedAt: this._deletedAt,

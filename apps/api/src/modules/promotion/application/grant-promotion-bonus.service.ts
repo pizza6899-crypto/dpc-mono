@@ -95,15 +95,36 @@ export class GrantPromotionBonusService {
     const rollingMultiplier = promotion.getRollingMultiplier();
     const targetRollingAmount = bonusAmount.mul(rollingMultiplier);
 
+    // 사용 횟수 증가 (Atomic)
+    // 동시성 제어를 위해 DB에서 원자적으로 증가시키고 결과를 확인
+    const updatedPromotion = await this.repository.incrementUsageCount(promotionId);
+
+    if (
+      updatedPromotion.maxUsageCount !== null &&
+      updatedPromotion.currentUsageCount > updatedPromotion.maxUsageCount
+    ) {
+      // 선착순 마감됨 (트랜잭션 롤백)
+      // TODO: 정확한 에러 타입 정의 필요
+      throw new Error('Promotion usage limit exceeded');
+    }
+
+    // 만료 시간 계산
+    let expiresAt: Date | null = null;
+    if (promotion.bonusExpiryMinutes) {
+      expiresAt = new Date(now.getTime() + promotion.bonusExpiryMinutes * 60 * 1000);
+    }
+
     // UserPromotion 생성 (Policy에서 이미 중복 참여 검증 완료)
     // 1회성 프로모션이 아닌 경우 여러 번 참여 가능
     userPromotion = await this.repository.createUserPromotion({
       userId,
       promotionId,
       depositAmount,
+      lockedAmount: depositAmount, // 기본적으로 입금 원금을 잠금
       bonusAmount,
       targetRollingAmount,
       currency,
+      expiresAt,
     });
 
     // 롤링 생성 (보너스 금액에만 롤링 적용)
