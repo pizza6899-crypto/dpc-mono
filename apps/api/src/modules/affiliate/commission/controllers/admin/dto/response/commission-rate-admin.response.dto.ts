@@ -2,7 +2,7 @@
 import { ApiProperty } from '@nestjs/swagger';
 import { Prisma } from '@repo/database';
 
-export class CommissionRateResponseDto {
+export class CommissionRateAdminResponseDto {
     @ApiProperty({
         description: 'Tier code / 티어 코드',
         example: 'BRONZE',

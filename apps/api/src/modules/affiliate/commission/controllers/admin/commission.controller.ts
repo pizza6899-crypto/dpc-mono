@@ -25,8 +25,8 @@ import { SetCustomRateService } from '../../application/set-custom-rate.service'
 import { ResetCustomRateService } from '../../application/reset-custom-rate.service';
 import { SetCustomRateDto } from './dto/request/set-custom-rate.dto';
 import { ResetCustomRateDto } from './dto/request/reset-custom-rate.dto';
-import { CommissionResponseDto } from './dto/response/commission.response.dto';
-import { CommissionRateResponseDto } from './dto/response/commission-rate.response.dto';
+import { CommissionAdminResponseDto } from './dto/response/commission-admin.response.dto';
+import { CommissionRateAdminResponseDto } from './dto/response/commission-rate-admin.response.dto';
 import { AffiliateCommission, CommissionNotFoundException } from '../../domain';
 import { AuditLog } from 'src/modules/audit-log/infrastructure/audit-log.decorator';
 import { LogType } from 'src/modules/audit-log/domain';
@@ -60,13 +60,13 @@ export class AdminCommissionController {
     }),
   })
   @ApiParam({ name: 'id', description: 'Commission ID / 커미션 ID' })
-  @ApiStandardResponse(CommissionResponseDto, {
+  @ApiStandardResponse(CommissionAdminResponseDto, {
     status: 200,
     description: 'Successfully retrieved commission / 커미션 조회 성공',
   })
   async getCommissionById(
     @Param('id') id: string,
-  ): Promise<CommissionResponseDto> {
+  ): Promise<CommissionAdminResponseDto> {
     const commission = await this.findCommissionByIdService.execute({
       id: BigInt(id),
     });
@@ -96,7 +96,7 @@ export class AdminCommissionController {
       setBy: args[0]?.id?.toString(),
     }),
   })
-  @ApiStandardResponse(CommissionRateResponseDto, {
+  @ApiStandardResponse(CommissionRateAdminResponseDto, {
     status: 200,
     description: 'Successfully set custom rate / 수동 요율 설정 성공',
   })
@@ -104,7 +104,7 @@ export class AdminCommissionController {
     @CurrentUser() user: CurrentUserWithSession,
     @Body() dto: SetCustomRateDto,
     @RequestClientInfoParam() requestInfo: RequestClientInfo,
-  ): Promise<CommissionRateResponseDto> {
+  ): Promise<CommissionRateAdminResponseDto> {
     const result = await this.setCustomRateService.execute({
       affiliateId: dto.affiliateId,
       customRate: new Prisma.Decimal(dto.customRate),
@@ -130,7 +130,7 @@ export class AdminCommissionController {
       resetBy: args[0]?.id?.toString(),
     }),
   })
-  @ApiStandardResponse(CommissionRateResponseDto, {
+  @ApiStandardResponse(CommissionRateAdminResponseDto, {
     status: 200,
     description: 'Successfully reset custom rate / 수동 요율 해제 성공',
   })
@@ -138,7 +138,7 @@ export class AdminCommissionController {
     @CurrentUser() user: CurrentUserWithSession,
     @Body() dto: ResetCustomRateDto,
     @RequestClientInfoParam() requestInfo: RequestClientInfo,
-  ): Promise<CommissionRateResponseDto> {
+  ): Promise<CommissionRateAdminResponseDto> {
     const result = await this.resetCustomRateService.execute({
       affiliateId: dto.affiliateId,
     });
@@ -151,7 +151,7 @@ export class AdminCommissionController {
    */
   private toCommissionResponse(
     commission: AffiliateCommission,
-  ): CommissionResponseDto {
+  ): CommissionAdminResponseDto {
     return {
       id: commission.id!.toString(),
       affiliateId: commission.affiliateId,
@@ -183,7 +183,7 @@ export class AdminCommissionController {
     customRate: any;
     isCustomRate: boolean;
     effectiveRate: any;
-  }): CommissionRateResponseDto {
+  }): CommissionRateAdminResponseDto {
     return {
       tierCode: result.tierCode,
       baseRate: result.baseRate.toString(),

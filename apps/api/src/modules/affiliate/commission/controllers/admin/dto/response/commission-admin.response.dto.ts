@@ -6,7 +6,7 @@ import {
   GameCategory,
 } from '@repo/database';
 
-export class CommissionResponseDto {
+export class CommissionAdminResponseDto {
   @ApiProperty({
     description: '커미션 ID',
     example: '123',
