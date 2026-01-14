@@ -11,7 +11,6 @@ import { DcsCallbackService } from './application/dcs-callback.service';
 import { DcsGameService } from './application/dcs-game.service';
 import { CasinoModule } from '../casino.module';
 import { DcsGameRefreshService } from './application/dcs-game-refresh.service';
-import { QueueModule } from 'src/infrastructure/queue/queue.module';
 import { DcsFetchGameReplayUrlProcessor } from './processors/dcs-fetch-game-replay-url.processor';
 import { AuditLogModule } from 'src/modules/audit-log/audit-log.module';
 import { WalletModule } from 'src/modules/wallet/wallet.module';
@@ -23,7 +22,6 @@ import { WalletModule } from 'src/modules/wallet/wallet.module';
     ConcurrencyModule,
     RedisModule,
     forwardRef(() => CasinoModule),
-    QueueModule,
     AuditLogModule,
     WalletModule,
   ],

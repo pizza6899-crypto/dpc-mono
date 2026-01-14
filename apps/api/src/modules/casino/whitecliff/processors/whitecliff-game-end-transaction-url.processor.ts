@@ -1,9 +1,9 @@
 import { Processor, WorkerHost } from '@nestjs/bullmq';
 import { Job } from 'bullmq';
 import {
-  QueueNames,
+  CasinoQueueNames,
   WhitecliffFetchGameResultUrlData,
-} from 'src/infrastructure/queue/queue.types';
+} from 'src/modules/casino/infrastructure/queue/casino-queue.types';
 import { PrismaService } from 'src/infrastructure/prisma/prisma.service';
 import {
   TransactionResultsResponse,
@@ -14,7 +14,7 @@ import { GameReplayType, Language } from '@repo/database';
 import { GamingCurrencyCode } from 'src/utils/currency.util';
 import { ClsService } from 'nestjs-cls';
 
-@Processor(QueueNames.WHITECLIFF_FETCH_GAME_RESULT_URL)
+@Processor(CasinoQueueNames.WHITECLIFF_FETCH_GAME_RESULT_URL)
 export class WhitecliffFetchGameResultUrlProcessor
   extends WorkerHost
   implements OnApplicationShutdown {

@@ -2,9 +2,9 @@ import { Processor, WorkerHost } from '@nestjs/bullmq';
 import { Job } from 'bullmq';
 import { ClsService } from 'nestjs-cls';
 import {
-  QueueNames,
+  CasinoQueueNames,
   GamePostProcessData,
-} from 'src/infrastructure/queue/queue.types';
+} from '../infrastructure/queue/casino-queue.types';
 import {
   InjectTransaction,
   Transactional,
@@ -18,7 +18,7 @@ import { GameCategory } from '@repo/database';
 import { AddUserRollingService } from '../../tier/application/add-user-rolling.service';
 import { EarnCompService } from '../../comp/application/earn-comp.service';
 
-@Processor(QueueNames.GAME_POST_PROCESS)
+@Processor(CasinoQueueNames.GAME_POST_PROCESS)
 export class GamePostProcessProcessor
   extends WorkerHost
   implements OnApplicationShutdown {

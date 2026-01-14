@@ -25,7 +25,7 @@ import {
 } from '../constants/dcs-response-codes';
 
 import { DcsMapperService } from '../infrastructure/dcs-mapper.service';
-import { QueueService } from 'src/infrastructure/queue/queue.service';
+import { CasinoQueueService } from '../../infrastructure/queue/casino-queue.service';
 import { CasinoBetService } from '../../application/casino-bet.service';
 import {
   BetType,
@@ -55,7 +55,7 @@ export class DcsCallbackService {
     private readonly tx: PrismaTransaction,
     private readonly envService: EnvService,
     private readonly dcsMapperService: DcsMapperService,
-    private readonly queueService: QueueService,
+    private readonly queueService: CasinoQueueService,
     private readonly casinoBetService: CasinoBetService,
     private readonly casinoRefundService: CasinoRefundService,
     private readonly casinoBonusService: CasinoBonusService,

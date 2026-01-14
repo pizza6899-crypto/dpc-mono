@@ -3,9 +3,9 @@
 import { Processor, WorkerHost } from '@nestjs/bullmq';
 import { Job } from 'bullmq';
 import {
-  QueueNames,
+  CasinoQueueNames,
   DcsFetchGameReplayUrlData,
-} from 'src/infrastructure/queue/queue.types';
+} from 'src/modules/casino/infrastructure/queue/casino-queue.types';
 import { PrismaService } from 'src/infrastructure/prisma/prisma.service';
 import { DcsApiService } from '../infrastructure/dcs-api.service';
 import { Logger, OnApplicationShutdown } from '@nestjs/common';
@@ -16,7 +16,7 @@ import { GameReplayType } from '@repo/database';
 import { GamingCurrencyCode } from 'src/utils/currency.util';
 import { ClsService } from 'nestjs-cls';
 
-@Processor(QueueNames.DCS_FETCH_GAME_REPLAY_URL, {
+@Processor(CasinoQueueNames.DCS_FETCH_GAME_REPLAY_URL, {
   limiter: {
     max: 3,
     duration: 1000,

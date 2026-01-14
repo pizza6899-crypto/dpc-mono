@@ -12,7 +12,6 @@ import { RedisModule } from 'src/infrastructure/redis/redis.module';
 import { WhitecliffMapperService } from './infrastructure/whitecliff-mapper.service';
 import { CasinoModule } from '../casino.module';
 import { WhitecliffTestController } from './controllers/whitecliff-test.controller';
-import { QueueModule } from 'src/infrastructure/queue/queue.module';
 import { WhitecliffFetchGameResultUrlProcessor } from './processors/whitecliff-game-end-transaction-url.processor';
 import { ExchangeModule } from 'src/modules/exchange/exchange.module';
 import { WhitecliffPushedBetHistoryScheduler } from './schedulers/whitecliff-pushed-bet-history.scheduler';
@@ -26,7 +25,6 @@ import { WalletModule } from 'src/modules/wallet/wallet.module';
     ConcurrencyModule,
     RedisModule,
     forwardRef(() => CasinoModule),
-    QueueModule,
     ExchangeModule,
     AuditLogModule,
     WalletModule,

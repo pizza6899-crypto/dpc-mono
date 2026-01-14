@@ -6,7 +6,9 @@ import { CasinoGameService } from './application/casino-game.service';
 import { CasinoBetService } from './application/casino-bet.service';
 import { ConcurrencyModule } from 'src/common/concurrency/concurrency.module';
 import { CasinoBonusService } from './application/casino-bonus.service';
-import { QueueModule } from 'src/infrastructure/queue/queue.module';
+import { BullModule } from '@nestjs/bullmq';
+import { CasinoQueueNames } from './infrastructure/queue/casino-queue.types';
+import { CasinoQueueService } from './infrastructure/queue/casino-queue.service';
 import { GamePostProcessProcessor } from './processors/game-post-process.processor';
 import { EnvModule } from 'src/common/env/env.module';
 import { CasinoRefundService } from './application/casino-refund.service';
@@ -29,7 +31,16 @@ import { SnowflakeModule } from 'src/common/snowflake/snowflake.module';
     forwardRef(() => WhitecliffModule),
     forwardRef(() => DcsModule),
     ConcurrencyModule,
-    QueueModule,
+    // QueueModule 제거
+    BullModule.registerQueue({
+      name: CasinoQueueNames.WHITECLIFF_FETCH_GAME_RESULT_URL,
+    }),
+    BullModule.registerQueue({
+      name: CasinoQueueNames.DCS_FETCH_GAME_REPLAY_URL,
+    }),
+    BullModule.registerQueue({
+      name: CasinoQueueNames.GAME_POST_PROCESS,
+    }),
     EnvModule,
     ExchangeModule,
     AuditLogModule,
@@ -54,6 +65,7 @@ import { SnowflakeModule } from 'src/common/snowflake/snowflake.module';
     },
     CreateCasinoGameSessionService,
     FindCasinoGameSessionService,
+    CasinoQueueService,
   ],
   exports: [
     CasinoBetService,
@@ -61,6 +73,7 @@ import { SnowflakeModule } from 'src/common/snowflake/snowflake.module';
     CasinoRefundService,
     CreateCasinoGameSessionService,
     FindCasinoGameSessionService,
+    CasinoQueueService,
   ],
 })
 export class CasinoModule { }

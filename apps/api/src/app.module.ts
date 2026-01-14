@@ -1,6 +1,8 @@
 import { Module } from '@nestjs/common';
 import { AuthModule } from './modules/auth/auth.module';
+import { BullModule } from '@nestjs/bullmq';
 import { EnvModule } from './common/env/env.module';
+import { EnvService } from './common/env/env.service';
 import { APP_FILTER, APP_GUARD, APP_INTERCEPTOR, Reflector } from '@nestjs/core';
 import { PrismaModule } from 'src/infrastructure/prisma/prisma.module';
 import { CasinoModule } from './modules/casino/casino.module';
@@ -41,6 +43,21 @@ import { SocketModule } from './modules/socket/socket.module';
     SqidsModule,
     ScheduleModule.forRoot(),
     AuditLogModule,
+    BullModule.forRootAsync({
+      imports: [EnvModule],
+      useFactory: (envService: EnvService) => ({
+        connection: {
+          host: envService.redis.host,
+          port: envService.redis.port,
+          password: envService.redis.password,
+        },
+        defaultJobOptions: {
+          removeOnComplete: 100,
+          removeOnFail: 50,
+        },
+      }),
+      inject: [EnvService],
+    }),
     AuthModule,
     CasinoModule,
     PaymentModule,

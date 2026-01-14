@@ -23,7 +23,7 @@ import { CasinoBetService } from '../../application/casino-bet.service';
 import { CasinoBonusService } from '../../application/casino-bonus.service';
 import { getCasinoErrorCode } from '../utils/whitecliff-error-response.util';
 import { CasinoErrorCode } from '../../constants/casino-error-codes';
-import { QueueService } from 'src/infrastructure/queue/queue.service';
+import { CasinoQueueService } from '../../infrastructure/queue/casino-queue.service';
 import { CasinoRefundService } from '../../application/casino-refund.service';
 import { nowUtc, parseDateStringOrThrow } from 'src/utils/date.util';
 import { InjectTransaction, Transactional } from '@nestjs-cls/transactional';
@@ -42,7 +42,7 @@ export class WhitecliffCallbackService {
     private readonly getUserBalanceService: GetUserBalanceService,
     private readonly casinoBetService: CasinoBetService,
     private readonly casinoBonusService: CasinoBonusService,
-    private readonly queueService: QueueService,
+    private readonly queueService: CasinoQueueService,
     private readonly casinoRefundService: CasinoRefundService,
   ) { }
 

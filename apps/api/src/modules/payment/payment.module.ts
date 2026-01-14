@@ -6,7 +6,7 @@ import { ConcurrencyModule } from '../../common/concurrency/concurrency.module';
 import { RedisModule } from 'src/infrastructure/redis/redis.module';
 import { EnvModule } from 'src/common/env/env.module';
 import { PrismaModule } from 'src/infrastructure/prisma/prisma.module';
-import { QueueModule } from 'src/infrastructure/queue/queue.module';
+
 import { HttpModule } from '@nestjs/axios';
 import { NowPaymentCallbackLogService } from './application/now-payment-callback-log.service';
 
@@ -16,7 +16,7 @@ import { NowPaymentCallbackLogService } from './application/now-payment-callback
     RedisModule,
     EnvModule,
     PrismaModule,
-    QueueModule,
+
     HttpModule,
   ],
   controllers: [
