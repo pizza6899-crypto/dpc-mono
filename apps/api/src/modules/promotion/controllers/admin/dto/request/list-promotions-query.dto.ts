@@ -1,9 +1,8 @@
-// src/modules/promotion/controllers/admin/dto/request/list-promotions-query.dto.ts
 import { ApiPropertyOptional } from '@nestjs/swagger';
 import { IsBoolean, IsDateString, IsEnum, IsOptional, IsString } from 'class-validator';
-import { Type } from 'class-transformer';
 import { createPaginationQueryDto } from 'src/common/http/types/pagination.types';
 import { PromotionTargetType } from '@repo/database';
+import { TransformToBoolean } from 'src/common/http/decorators/transform-boolean.decorator';
 
 type PromotionSortFields = 'createdAt' | 'updatedAt' | 'id';
 
@@ -21,7 +20,7 @@ export class ListPromotionsQueryDto extends createPaginationQueryDto<PromotionSo
     example: true,
   })
   @IsOptional()
-  @Type(() => Boolean)
+  @TransformToBoolean()
   @IsBoolean()
   isActive?: boolean;
 

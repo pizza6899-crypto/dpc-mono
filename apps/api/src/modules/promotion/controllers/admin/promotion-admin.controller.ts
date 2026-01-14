@@ -109,7 +109,7 @@ export class PromotionAdminController {
       sortBy: query.sortBy,
       sortOrder: query.sortOrder,
       isActive: query.isActive,
-      targetType: query.targetType as string,
+      targetType: query.targetType,
       startDate: query.startDate ? new Date(query.startDate) : undefined,
       endDate: query.endDate ? new Date(query.endDate) : undefined,
     });
@@ -591,7 +591,7 @@ export class PromotionAdminController {
       limit: query.limit,
       sortBy: query.sortBy,
       sortOrder: query.sortOrder,
-      status: query.status as string,
+      status: query.status,
       userId: query.userId ? BigInt(query.userId) : undefined,
     });
 

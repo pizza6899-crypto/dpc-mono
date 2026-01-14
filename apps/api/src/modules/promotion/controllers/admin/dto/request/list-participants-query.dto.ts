@@ -1,52 +1,20 @@
 // src/modules/promotion/controllers/admin/dto/request/list-participants-query.dto.ts
 import { ApiPropertyOptional } from '@nestjs/swagger';
-import { IsOptional, IsEnum, IsInt, Min, IsString } from 'class-validator';
-import { Type } from 'class-transformer';
+import { IsOptional, IsEnum, IsString, IsNumberString } from 'class-validator';
 import { UserPromotionStatus } from '@repo/database';
+import { createPaginationQueryDto } from 'src/common/http/types/pagination.types';
 
-export class ListParticipantsQueryDto {
-  @ApiPropertyOptional({
-    description: '페이지 번호',
-    example: 1,
-    default: 1,
-  })
-  @IsOptional()
-  @Type(() => Number)
-  @IsInt()
-  @Min(1)
-  page?: number = 1;
+type ParticipantSortFields = 'createdAt' | 'updatedAt' | 'id';
 
-  @ApiPropertyOptional({
-    description: '페이지당 항목 수',
-    example: 20,
-    default: 20,
-  })
-  @IsOptional()
-  @Type(() => Number)
-  @IsInt()
-  @Min(1)
-  limit?: number = 20;
-
-  @ApiPropertyOptional({
-    description: '정렬 기준',
-    example: 'createdAt',
-    enum: ['createdAt', 'updatedAt', 'id'],
-    default: 'createdAt',
-  })
-  @IsOptional()
-  @IsEnum(['createdAt', 'updatedAt', 'id'])
-  sortBy?: 'createdAt' | 'updatedAt' | 'id' = 'createdAt';
-
-  @ApiPropertyOptional({
-    description: '정렬 순서',
-    example: 'desc',
-    enum: ['asc', 'desc'],
-    default: 'desc',
-  })
-  @IsOptional()
-  @IsEnum(['asc', 'desc'])
-  sortOrder?: 'asc' | 'desc' = 'desc';
-
+export class ListParticipantsQueryDto extends createPaginationQueryDto<ParticipantSortFields>(
+  {
+    defaultLimit: 20,
+    maxLimit: 100,
+    defaultSortBy: 'createdAt',
+    defaultSortOrder: 'desc',
+  },
+  ['createdAt', 'updatedAt', 'id'],
+) {
   @ApiPropertyOptional({
     description: '상태 필터',
     example: UserPromotionStatus.ACTIVE,
@@ -62,7 +30,6 @@ export class ListParticipantsQueryDto {
     type: String,
   })
   @IsOptional()
-  @IsString()
+  @IsNumberString()
   userId?: string;
 }
-
