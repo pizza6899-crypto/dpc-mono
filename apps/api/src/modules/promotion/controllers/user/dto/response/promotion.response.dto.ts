@@ -1,5 +1,11 @@
 // src/modules/promotion/controllers/user/dto/response/promotion.response.dto.ts
 import { ApiProperty, ApiPropertyOptional } from '@nestjs/swagger';
+import {
+  Language,
+  ExchangeCurrencyCode,
+  PromotionTargetType,
+  PromotionBonusType,
+} from '@repo/database';
 
 export class PromotionResponseDto {
   @ApiPropertyOptional({
@@ -24,15 +30,17 @@ export class PromotionResponseDto {
 
   @ApiPropertyOptional({
     description: '언어 코드',
-    example: 'KO',
+    example: Language.KO,
+    enum: Language,
   })
-  language?: string;
+  language?: Language;
 
   @ApiPropertyOptional({
     description: '통화 코드',
-    example: 'USDT',
+    example: ExchangeCurrencyCode.USDT,
+    enum: ExchangeCurrencyCode,
   })
-  currency?: string;
+  currency?: ExchangeCurrencyCode;
 
   @ApiPropertyOptional({
     description: '최소 입금 금액',
@@ -51,15 +59,17 @@ export class PromotionResponseDto {
 
   @ApiProperty({
     description: '프로모션 타겟 타입',
-    example: 'NEW_USER_FIRST_DEPOSIT',
+    example: PromotionTargetType.NEW_USER_FIRST_DEPOSIT,
+    enum: PromotionTargetType,
   })
-  targetType: string;
+  targetType: PromotionTargetType;
 
   @ApiProperty({
     description: '보너스 타입',
-    example: 'PERCENTAGE',
+    example: PromotionBonusType.PERCENTAGE,
+    enum: PromotionBonusType,
   })
-  bonusType: string;
+  bonusType: PromotionBonusType;
 
   @ApiPropertyOptional({
     description: '보너스 비율 (PERCENTAGE 타입인 경우)',

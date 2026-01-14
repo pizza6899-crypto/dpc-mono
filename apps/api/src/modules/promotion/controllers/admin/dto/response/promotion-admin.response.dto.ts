@@ -4,15 +4,22 @@ import { ApiProperty, ApiPropertyOptional } from '@nestjs/swagger';
 export class PromotionAdminResponseDto {
   @ApiProperty({
     description: '프로모션 ID',
-    example: 1,
+    example: '1',
+    type: String,
   })
-  id: number;
+  id: string;
 
   @ApiProperty({
     description: '관리용 프로모션 이름',
     example: '첫 충전 100% 보너스',
   })
   managementName: string;
+
+  @ApiPropertyOptional({
+    description: '프로모션 코드',
+    example: 'WELCOME_BONUS',
+  })
+  code: string | null;
 
   @ApiProperty({
     description: '활성화 여부',

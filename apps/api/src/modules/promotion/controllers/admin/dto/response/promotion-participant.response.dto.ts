@@ -4,9 +4,10 @@ import { ApiProperty, ApiPropertyOptional } from '@nestjs/swagger';
 export class PromotionParticipantResponseDto {
   @ApiProperty({
     description: 'UserPromotion ID',
-    example: 1,
+    example: '1',
+    type: String,
   })
-  id: number;
+  id: string;
 
   @ApiProperty({
     description: '사용자 ID',
@@ -24,9 +25,16 @@ export class PromotionParticipantResponseDto {
 
   @ApiProperty({
     description: '프로모션 ID',
-    example: 1,
+    example: '1',
+    type: String,
   })
-  promotionId: number;
+  promotionId: string;
+
+  @ApiPropertyOptional({
+    description: '프로모션 코드',
+    example: 'WELCOME_BONUS',
+  })
+  promotionCode?: string | null;
 
   @ApiProperty({
     description: '상태',
@@ -118,4 +126,3 @@ export class PromotionParticipantListResponseDto {
   })
   limit: number;
 }
-

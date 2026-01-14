@@ -3,18 +3,18 @@ import { Prisma, ExchangeCurrencyCode } from '@repo/database';
 
 export class PromotionCurrency {
   private constructor(
-    public readonly id: number,
-    public readonly promotionId: number,
+    public readonly id: bigint,
+    public readonly promotionId: bigint,
     public readonly currency: ExchangeCurrencyCode,
     public readonly minDepositAmount: Prisma.Decimal,
     public readonly maxBonusAmount: Prisma.Decimal | null,
     public readonly createdAt: Date,
     public readonly updatedAt: Date,
-  ) {}
+  ) { }
 
   static fromPersistence(data: {
-    id: number;
-    promotionId: number;
+    id: bigint;
+    promotionId: bigint;
     currency: ExchangeCurrencyCode;
     minDepositAmount: Prisma.Decimal;
     maxBonusAmount: Prisma.Decimal | null;

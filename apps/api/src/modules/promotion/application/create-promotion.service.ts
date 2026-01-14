@@ -2,7 +2,10 @@
 import { Inject, Injectable, Logger } from '@nestjs/common';
 import { Transactional } from '@nestjs-cls/transactional';
 import { Prisma, ExchangeCurrencyCode, Language } from '@repo/database';
-import { Promotion } from '../domain';
+import {
+  Promotion,
+  PromotionCodeAlreadyExistsException,
+} from '../domain';
 import { PROMOTION_REPOSITORY } from '../ports/out';
 import type { PromotionRepositoryPort } from '../ports/out/promotion.repository.port';
 
@@ -29,6 +32,7 @@ interface CreatePromotionParams {
   rollingMultiplier?: Prisma.Decimal | null;
   qualificationMaintainCondition: string;
   isOneTime?: boolean;
+  code?: string | null;
   currencies?: CurrencySetting[];
   translations?: Translation[];
 }
@@ -44,6 +48,13 @@ export class CreatePromotionService {
 
   @Transactional()
   async execute(params: CreatePromotionParams): Promise<Promotion> {
+    if (params.code) {
+      const existing = await this.repository.findByCode(params.code);
+      if (existing) {
+        throw new PromotionCodeAlreadyExistsException(params.code);
+      }
+    }
+
     const promotion = await this.repository.create({
       managementName: params.managementName,
       isActive: params.isActive ?? true,
@@ -55,6 +66,7 @@ export class CreatePromotionService {
       rollingMultiplier: params.rollingMultiplier ?? null,
       qualificationMaintainCondition: params.qualificationMaintainCondition as any,
       isOneTime: params.isOneTime ?? false,
+      code: params.code ?? null,
     });
 
     const promotionId = promotion.id;

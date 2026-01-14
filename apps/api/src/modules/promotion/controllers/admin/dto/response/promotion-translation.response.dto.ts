@@ -1,24 +1,28 @@
 // src/modules/promotion/controllers/admin/dto/response/promotion-translation.response.dto.ts
 import { ApiProperty, ApiPropertyOptional } from '@nestjs/swagger';
+import { Language } from '@repo/database';
 
 export class PromotionTranslationResponseDto {
   @ApiProperty({
     description: '번역 ID',
-    example: 1,
+    example: '1',
+    type: String,
   })
-  id: number;
+  id: string;
 
   @ApiProperty({
     description: '프로모션 ID',
-    example: 1,
+    example: '1',
+    type: String,
   })
-  promotionId: number;
+  promotionId: string;
 
   @ApiProperty({
     description: '언어 코드',
-    example: 'KO',
+    example: Language.KO,
+    enum: Language,
   })
-  language: string;
+  language: Language;
 
   @ApiProperty({
     description: '프로모션 이름',
@@ -53,4 +57,3 @@ export class PromotionTranslationListResponseDto {
   })
   translations: PromotionTranslationResponseDto[];
 }
-

@@ -20,6 +20,14 @@ export class UpdatePromotionRequestDto {
   isActive?: boolean;
 
   @ApiPropertyOptional({
+    description: '프로모션 코드',
+    example: 'WELCOME_BONUS',
+  })
+  @IsOptional()
+  @IsString()
+  code?: string | null;
+
+  @ApiPropertyOptional({
     description: '프로모션 시작일',
     example: '2024-01-01T00:00:00Z',
     nullable: true,

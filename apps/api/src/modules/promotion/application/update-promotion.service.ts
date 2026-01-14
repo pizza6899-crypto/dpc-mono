@@ -2,7 +2,11 @@
 import { Inject, Injectable, Logger } from '@nestjs/common';
 import { Transactional } from '@nestjs-cls/transactional';
 import { Prisma } from '@repo/database';
-import { Promotion, PromotionNotFoundException } from '../domain';
+import {
+  Promotion,
+  PromotionNotFoundException,
+  PromotionCodeAlreadyExistsException,
+} from '../domain';
 import { PROMOTION_REPOSITORY } from '../ports/out';
 import type { PromotionRepositoryPort } from '../ports/out/promotion.repository.port';
 
@@ -15,6 +19,7 @@ interface UpdatePromotionParams {
   bonusRate?: Prisma.Decimal | null;
   rollingMultiplier?: Prisma.Decimal | null;
   isOneTime?: boolean;
+  code?: string | null;
 }
 
 @Injectable()
@@ -24,7 +29,7 @@ export class UpdatePromotionService {
   constructor(
     @Inject(PROMOTION_REPOSITORY)
     private readonly repository: PromotionRepositoryPort,
-  ) {}
+  ) { }
 
   @Transactional()
   async execute(params: UpdatePromotionParams): Promise<Promotion> {
@@ -37,6 +42,17 @@ export class UpdatePromotionService {
     if (params.isActive !== undefined) {
       if (params.isActive !== promotion.isActive) {
         promotion.toggleActive();
+      }
+    }
+
+    if (
+      params.code !== undefined &&
+      params.code !== null &&
+      params.code !== promotion.code
+    ) {
+      const existing = await this.repository.findByCode(params.code);
+      if (existing && existing.id !== promotion.id) {
+        throw new PromotionCodeAlreadyExistsException(params.code);
       }
     }
 
@@ -53,6 +69,7 @@ export class UpdatePromotionService {
         rollingMultiplier: params.rollingMultiplier,
       }),
       ...(params.isOneTime !== undefined && { isOneTime: params.isOneTime }),
+      ...(params.code !== undefined && { code: params.code }),
     });
 
     this.logger.log(`Promotion updated: id=${params.id}`);

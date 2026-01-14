@@ -4,9 +4,9 @@ import { UserPromotionStatus } from '@repo/database';
 
 export class UserPromotion {
   private constructor(
-    public readonly id: number,
+    public readonly id: bigint,
     public readonly userId: bigint,
-    public readonly promotionId: number,
+    public readonly promotionId: bigint,
     private _status: UserPromotionStatus,
     public readonly depositAmount: Prisma.Decimal,
     public readonly bonusAmount: Prisma.Decimal,
@@ -19,9 +19,9 @@ export class UserPromotion {
   ) { }
 
   static fromPersistence(data: {
-    id: number;
+    id: bigint;
     userId: bigint;
-    promotionId: number;
+    promotionId: bigint;
     status: UserPromotionStatus;
     depositAmount: Prisma.Decimal;
     bonusAmount: Prisma.Decimal;

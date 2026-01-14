@@ -1,24 +1,28 @@
 // src/modules/promotion/controllers/admin/dto/response/promotion-currency.response.dto.ts
 import { ApiProperty, ApiPropertyOptional } from '@nestjs/swagger';
+import { ExchangeCurrencyCode } from '@repo/database';
 
 export class PromotionCurrencyResponseDto {
   @ApiProperty({
     description: '통화별 설정 ID',
-    example: 1,
+    example: '1',
+    type: String,
   })
-  id: number;
+  id: string;
 
   @ApiProperty({
     description: '프로모션 ID',
-    example: 1,
+    example: '1',
+    type: String,
   })
-  promotionId: number;
+  promotionId: string;
 
   @ApiProperty({
     description: '통화 코드',
-    example: 'USDT',
+    example: ExchangeCurrencyCode.USDT,
+    enum: ExchangeCurrencyCode,
   })
-  currency: string;
+  currency: ExchangeCurrencyCode;
 
   @ApiProperty({
     description: '최소 입금 금액',
@@ -54,4 +58,3 @@ export class PromotionCurrencyListResponseDto {
   })
   currencies: PromotionCurrencyResponseDto[];
 }
-

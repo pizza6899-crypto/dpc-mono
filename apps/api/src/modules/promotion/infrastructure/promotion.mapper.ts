@@ -111,7 +111,7 @@ export class PromotionMapper {
         (t) => ({
           id: t.id,
           promotionId: t.promotionId,
-          language: t.language,
+          language: t.language as any,
           name: t.name,
           description: t.description,
           createdAt: t.createdAt,
@@ -152,9 +152,9 @@ export class PromotionMapper {
     };
   }): UserPromotion {
     return UserPromotion.fromPersistence({
-      id: Number(prismaModel.id),
+      id: prismaModel.id,
       userId: prismaModel.userId,
-      promotionId: Number(prismaModel.promotionId),
+      promotionId: prismaModel.promotionId,
       status: prismaModel.status as any,
       depositAmount: prismaModel.depositAmount,
       bonusAmount: prismaModel.bonusAmount,
@@ -180,8 +180,8 @@ export class PromotionMapper {
     updatedAt: Date;
   }): PromotionCurrency {
     return PromotionCurrency.fromPersistence({
-      id: Number(prismaModel.id),
-      promotionId: Number(prismaModel.promotionId),
+      id: prismaModel.id,
+      promotionId: prismaModel.promotionId,
       currency: prismaModel.currency as any,
       minDepositAmount: prismaModel.minDepositAmount,
       maxBonusAmount: prismaModel.maxBonusAmount,

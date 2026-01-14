@@ -32,7 +32,7 @@ import { ListActivePromotionsQueryDto } from './dto/request/list-active-promotio
 import { ListMyPromotionsQueryDto } from './dto/request/list-my-promotions-query.dto';
 import { PROMOTION_REPOSITORY } from '../../ports/out';
 import type { PromotionRepositoryPort } from '../../ports/out/promotion.repository.port';
-import { Language } from '@repo/database';
+import { Language, ExchangeCurrencyCode } from '@repo/database';
 import { SqidsService } from 'src/common/sqids/sqids.service';
 import { SqidsPrefix } from 'src/common/sqids/sqids.constants';
 import { Promotion, PromotionTranslation, UserPromotion } from '../../domain';
@@ -169,6 +169,13 @@ export class PromotionUserController {
     description: '언어 코드 (번역 정보 포함, 기본값: EN)',
     example: Language.EN,
   })
+  @ApiQuery({
+    name: 'currency',
+    required: false,
+    enum: ExchangeCurrencyCode,
+    description: '통화 코드',
+    example: ExchangeCurrencyCode.USDT,
+  })
   @ApiStandardResponse(PromotionResponseDto, {
     status: HttpStatus.OK,
     description: 'Successfully retrieved promotion / 프로모션 조회 성공',
@@ -187,10 +194,12 @@ export class PromotionUserController {
   async getPromotionByCode(
     @Param('code') code: string,
     @Query('language') language?: Language,
+    @Query('currency') currency?: ExchangeCurrencyCode,
   ): Promise<PromotionResponseDto> {
     const result = await this.getPromotionByCodeForUserService.execute({
       code,
       language,
+      currency,
     });
 
     return this.mapPromotionToDto(result.promotion, result.translation, result.currencySetting);

@@ -53,7 +53,7 @@ import {
 import { PromotionStatisticsResponseDto } from './dto/response/promotion-statistics.response.dto';
 import { PROMOTION_REPOSITORY } from '../../ports/out';
 import type { PromotionRepositoryPort } from '../../ports/out/promotion.repository.port';
-import { PromotionNotFoundException } from '../../domain';
+import { Promotion, PromotionNotFoundException } from '../../domain';
 import { Inject } from '@nestjs/common';
 import { ExchangeCurrencyCode, Language, Prisma } from '@repo/database';
 
@@ -115,22 +115,7 @@ export class PromotionAdminController {
     });
 
     return {
-      data: result.promotions.map(
-        (promotion): PromotionAdminResponseDto => ({
-          id: Number(promotion.id),
-          managementName: promotion.managementName,
-          isActive: promotion.isActive,
-          targetType: promotion.targetType as string,
-          bonusType: promotion.bonusType as string,
-          bonusRate: promotion.bonusRate?.toString(),
-          rollingMultiplier: promotion.rollingMultiplier?.toString(),
-          isOneTime: promotion.isOneTime,
-          startDate: promotion.startDate,
-          endDate: promotion.endDate,
-          createdAt: promotion.createdAt,
-          updatedAt: promotion.updatedAt,
-        }),
-      ),
+      data: result.promotions.map((promotion) => this.mapToAdminResponseDto(promotion)),
       page: query.page || 1,
       limit: query.limit || 20,
       total: result.total,
@@ -179,6 +164,7 @@ export class PromotionAdminController {
         : null,
       qualificationMaintainCondition: dto.qualificationMaintainCondition as string,
       isOneTime: dto.isOneTime,
+      code: dto.code,
       currencies: dto.currencies?.map((currency) => ({
         currency: currency.currency,
         minDepositAmount: new Prisma.Decimal(currency.minDepositAmount),
@@ -193,20 +179,7 @@ export class PromotionAdminController {
       })),
     });
 
-    return {
-      id: Number(promotion.id),
-      managementName: promotion.managementName,
-      isActive: promotion.isActive,
-      targetType: promotion.targetType as string,
-      bonusType: promotion.bonusType as string,
-      bonusRate: promotion.bonusRate?.toString(),
-      rollingMultiplier: promotion.rollingMultiplier?.toString(),
-      isOneTime: promotion.isOneTime,
-      startDate: promotion.startDate,
-      endDate: promotion.endDate,
-      createdAt: promotion.createdAt,
-      updatedAt: promotion.updatedAt,
-    };
+    return this.mapToAdminResponseDto(promotion);
   }
 
   /**
@@ -249,22 +222,10 @@ export class PromotionAdminController {
         ? new Prisma.Decimal(dto.rollingMultiplier)
         : undefined,
       isOneTime: dto.isOneTime,
+      code: dto.code,
     });
 
-    return {
-      id: Number(promotion.id),
-      managementName: promotion.managementName,
-      isActive: promotion.isActive,
-      targetType: promotion.targetType as string,
-      bonusType: promotion.bonusType as string,
-      bonusRate: promotion.bonusRate?.toString(),
-      rollingMultiplier: promotion.rollingMultiplier?.toString(),
-      isOneTime: promotion.isOneTime,
-      startDate: promotion.startDate,
-      endDate: promotion.endDate,
-      createdAt: promotion.createdAt,
-      updatedAt: promotion.updatedAt,
-    };
+    return this.mapToAdminResponseDto(promotion);
   }
 
   /**
@@ -330,21 +291,7 @@ export class PromotionAdminController {
     @Param('id', ParseIntPipe) id: number,
   ): Promise<PromotionAdminResponseDto> {
     const promotion = await this.togglePromotionActiveService.execute(BigInt(id));
-
-    return {
-      id: Number(promotion.id),
-      managementName: promotion.managementName,
-      isActive: promotion.isActive,
-      targetType: promotion.targetType as string,
-      bonusType: promotion.bonusType as string,
-      bonusRate: promotion.bonusRate?.toString(),
-      rollingMultiplier: promotion.rollingMultiplier?.toString(),
-      isOneTime: promotion.isOneTime,
-      startDate: promotion.startDate,
-      endDate: promotion.endDate,
-      createdAt: promotion.createdAt,
-      updatedAt: promotion.updatedAt,
-    };
+    return this.mapToAdminResponseDto(promotion);
   }
 
   /**
@@ -382,8 +329,8 @@ export class PromotionAdminController {
     return {
       currencies: currencies.map(
         (currency): PromotionCurrencyResponseDto => ({
-          id: currency.id,
-          promotionId: currency.promotionId,
+          id: currency.id.toString(),
+          promotionId: currency.promotionId.toString(),
           currency: currency.currency,
           minDepositAmount: currency.minDepositAmount.toString(),
           maxBonusAmount: currency.maxBonusAmount?.toString(),
@@ -513,8 +460,8 @@ export class PromotionAdminController {
     return {
       translations: translations.map(
         (translation): PromotionTranslationResponseDto => ({
-          id: Number(translation.id),
-          promotionId: Number(translation.promotionId),
+          id: translation.id.toString(),
+          promotionId: translation.promotionId.toString(),
           language: translation.language,
           name: translation.name,
           description: translation.description,
@@ -651,10 +598,11 @@ export class PromotionAdminController {
     return {
       data: result.userPromotions.map(
         ({ userPromotion, user }): PromotionParticipantResponseDto => ({
-          id: userPromotion.id,
+          id: userPromotion.id.toString(),
           userId: userPromotion.userId.toString(),
           userEmail: user?.email || null,
-          promotionId: userPromotion.promotionId,
+          promotionId: userPromotion.promotionId.toString(),
+          promotionCode: userPromotion.promotionCode,
           status: userPromotion.status as string,
           depositAmount: userPromotion.depositAmount.toString(),
           bonusAmount: userPromotion.bonusAmount.toString(),
@@ -742,9 +690,14 @@ export class PromotionAdminController {
       throw new PromotionNotFoundException(BigInt(id));
     }
 
+    return this.mapToAdminResponseDto(promotion);
+  }
+
+  private mapToAdminResponseDto(promotion: Promotion): PromotionAdminResponseDto {
     return {
-      id: Number(promotion.id),
+      id: promotion.id.toString(),
       managementName: promotion.managementName,
+      code: promotion.code,
       isActive: promotion.isActive,
       targetType: promotion.targetType as string,
       bonusType: promotion.bonusType as string,

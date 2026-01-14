@@ -4,13 +4,14 @@ import {
   PromotionTargetType,
   PromotionBonusType,
   PromotionQualification,
+  Language,
 } from '@repo/database';
 import { PromotionCurrency } from './promotion-currency.entity';
 
 export interface PromotionTranslation {
   id: bigint;
   promotionId: bigint;
-  language: string;
+  language: Language;
   name: string;
   description: string | null;
   createdAt: Date;

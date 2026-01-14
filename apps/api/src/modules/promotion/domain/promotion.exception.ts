@@ -57,6 +57,7 @@ export class PromotionAlreadyUsedException extends PromotionException {
   }
 }
 
+
 export class UserPromotionNotFoundException extends PromotionException {
   constructor(id?: bigint) {
     super(
@@ -65,5 +66,16 @@ export class UserPromotionNotFoundException extends PromotionException {
       HttpStatus.NOT_FOUND,
     );
     this.name = 'UserPromotionNotFoundException';
+  }
+}
+
+export class PromotionCodeAlreadyExistsException extends PromotionException {
+  constructor(code: string) {
+    super(
+      `Promotion code '${code}' already exists`,
+      MessageCode.VALIDATION_ERROR,
+      HttpStatus.CONFLICT,
+    );
+    this.name = 'PromotionCodeAlreadyExistsException';
   }
 }

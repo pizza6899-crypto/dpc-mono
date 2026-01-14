@@ -95,6 +95,14 @@ export class CreatePromotionRequestDto {
   isActive?: boolean;
 
   @ApiPropertyOptional({
+    description: '유저 노출용 프로모션 코드',
+    example: 'WELCOME_BONUS',
+  })
+  @IsOptional()
+  @IsString()
+  code?: string | null;
+
+  @ApiPropertyOptional({
     description: '프로모션 시작일',
     example: '2024-01-01T00:00:00Z',
     nullable: true,
@@ -180,7 +188,7 @@ export class CreatePromotionRequestDto {
   @IsOptional()
   @IsArray()
   @ValidateNested({ each: true })
-    @Type(() => TranslationDto)
-    translations?: TranslationDto[];
+  @Type(() => TranslationDto)
+  translations?: TranslationDto[];
 }
 
