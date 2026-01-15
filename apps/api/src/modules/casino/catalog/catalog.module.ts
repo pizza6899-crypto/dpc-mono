@@ -21,4 +21,4 @@ import { SqidsModule } from 'src/common/sqids/sqids.module';
     ],
     exports: [FindCasinoGamesService, UpdateCasinoGameService],
 })
-export class GameManagementModule { }
+export class CatalogModule { }

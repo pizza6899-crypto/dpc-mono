@@ -2,7 +2,7 @@ import { forwardRef, Module } from '@nestjs/common';
 import { WhitecliffModule } from './whitecliff/whitecliff.module';
 import { DcsModule } from './dcs/dcs.module';
 import { CasinoGameUserController } from './controllers/user/casino-game-user.controller';
-import { GameManagementModule } from './game-management/game-management.module';
+import { CatalogModule } from './catalog/catalog.module';
 import { CasinoGameService } from './application/casino-game.service';
 import { CasinoBetService } from './application/casino-bet.service';
 import { ConcurrencyModule } from 'src/common/concurrency/concurrency.module';
@@ -51,7 +51,7 @@ import { SnowflakeModule } from 'src/common/snowflake/snowflake.module';
     TierModule,
     CompModule,
     SnowflakeModule,
-    GameManagementModule,
+    CatalogModule,
   ],
   controllers: [CasinoGameUserController],
   providers: [
