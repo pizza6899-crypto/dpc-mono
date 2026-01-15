@@ -1,23 +1,24 @@
 import { ApiProperty } from '@nestjs/swagger';
-import { IsEnum, IsOptional, IsString } from 'class-validator';
-import { FileUsageType } from '../../../domain';
+import { IsEnum, IsOptional } from 'class-validator';
+import { FileAccessType } from '../../../domain';
 
 export class UploadFileRequestDto {
     @ApiProperty({
-        description: '파일 사용처 타입 (File Usage Type)',
-        required: true,
-        enum: FileUsageType,
-        example: FileUsageType.USER_PROFILE
+        description: '파일 접근 권한 설정 (File Access Type) - 기본값: PRIVATE',
+        required: false,
+        enum: FileAccessType,
+        example: FileAccessType.PUBLIC,
+        default: FileAccessType.PRIVATE
     })
-    @IsEnum(FileUsageType)
-    usageType: FileUsageType;
+    @IsOptional()
+    @IsEnum(FileAccessType)
+    accessType?: FileAccessType;
 
     @ApiProperty({
-        description: '파일 사용처 ID (File Usage ID)',
-        required: false,
-        example: '123'
+        type: 'string',
+        format: 'binary',
+        description: '업로드할 파일 (Upload File)',
+        required: true,
     })
-    @IsString()
-    @IsOptional()
-    usageId?: string;
+    file: any;
 }

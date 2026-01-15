@@ -5,3 +5,4 @@ export * from './model/file-usage.config';
 export * from './model/file-usage.entity';
 export * from './file.exception';
 export * from './file.policy';
+export * from './file.constants';
