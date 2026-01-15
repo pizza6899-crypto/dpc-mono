@@ -5,10 +5,17 @@
 export function sanitizeApiMessage(message: string): string {
   if (!message) return '';
 
-  // 한글 문자 체크
-  const hasKorean = /[가-힣ㄱ-ㅎㅏ-ㅣ]/.test(message);
+  // "English / Korean" 형식인 경우 앞부분(영어)만 추출 시도
+  if (message.includes(' / ')) {
+    const parts = message.split(' / ');
+    // 첫 번째 파트가 한글이 없다면 반환
+    if (parts.length > 0 && !hasKorean(parts[0])) {
+      return parts[0].trim();
+    }
+  }
 
-  if (hasKorean) {
+  // 한글 문자 체크
+  if (hasKorean(message)) {
     return '';
   }
 

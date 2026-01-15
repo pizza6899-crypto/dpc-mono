@@ -4,46 +4,88 @@ import {
     UseInterceptors,
     UploadedFile,
     Body,
-    BadRequestException,
+    UseGuards,
+    HttpStatus,
 } from '@nestjs/common';
 import { FileInterceptor } from '@nestjs/platform-express';
-import { UploadFileRequestDto } from './dto/upload-file.request.dto';
-import { UploadFileResponseDto } from './dto/upload-file.response.dto';
+import { ApiTags, ApiOperation, ApiConsumes, ApiBody } from '@nestjs/swagger';
+import { UploadFileRequestDto } from './dto/request/upload-file.request.dto';
+import { FileResponseDto } from './dto/response/file.response.dto';
 import { EnvService } from 'src/common/env/env.service';
-import { UploadFileService } from '../application/upload-file.service';
+import { CreateFileService } from '../application/create-file.service';
+import { FileEntity, FileValidationException } from '../domain';
+import { SessionAuthGuard } from 'src/common/auth/guards/session-auth.guard';
+import { CurrentUser } from 'src/common/auth/decorators/current-user.decorator';
+import { type AuthenticatedUser } from 'src/common/auth/types/auth.types';
+import { ApiStandardResponse, ApiStandardErrors } from 'src/common/http/decorators/api-response.decorator';
 
 @Controller('file')
+@ApiTags('File')
+@ApiStandardErrors()
 export class FileController {
     constructor(
-        private readonly uploadFileService: UploadFileService,
+        private readonly createFileService: CreateFileService,
         private readonly envService: EnvService,
     ) { }
 
     @Post('upload')
+    @UseGuards(SessionAuthGuard)
     @UseInterceptors(FileInterceptor('file'))
+    @ApiOperation({
+        summary: 'Upload File / 파일 업로드',
+        description: 'Upload a file to the storage system. / 파일을 스토리지 시스템에 업로드합니다.',
+    })
+    @ApiConsumes('multipart/form-data')
+    @ApiBody({
+        description: 'File and metadata / 파일 및 메타데이터',
+        type: UploadFileRequestDto,
+    })
+    @ApiStandardResponse(FileResponseDto, {
+        status: HttpStatus.CREATED,
+        description: 'File uploaded successfully / 파일 업로드 성공',
+    })
     async uploadFile(
         @UploadedFile() file: Express.Multer.File,
         @Body() dto: UploadFileRequestDto,
-    ): Promise<UploadFileResponseDto> {
+        @CurrentUser() user: AuthenticatedUser,
+    ): Promise<FileResponseDto> {
         if (!file) {
-            throw new BadRequestException('File is required');
+            throw new FileValidationException('File is required / 파일은 필수입니다.');
         }
 
-        const key = await this.uploadFileService.execute(file, dto.folder);
+        const createdFile = await this.createFileService.execute({
+            file,
+            uploaderId: user.id,
+            uploaderRole: user.role,
+            usageType: dto.usageType,
+            usageId: dto.usageId ? BigInt(dto.usageId) : undefined,
+        });
 
-        // CDN URL 생성
-        // 만약 staticAssetsBaseUrl이 전체 URL이면 그대로 사용, 아니면 path만 있는 경우 처리 필요
-        // env.config.ts를 보면 staticAssetsBaseUrl은 '/static' 이 기본값.
-        // 하지만 S3/CDN을 쓴다면 env.app.cdnUrl 같은 설정이 있을 것 (env.types.ts에 cdnUrl이 있음)
-        const cdnUrl = this.envService.app.cdnUrl || 'https://example.com'; // 임시 폴백
+        return this.toResponseDto(createdFile);
+    }
 
-        // cdnUrl이 '/'로 끝나지 않으면 추가
-        const baseUrl = cdnUrl.endsWith('/') ? cdnUrl : `${cdnUrl}/`;
-        const url = `${baseUrl}${key}`;
+    private toResponseDto(file: FileEntity): FileResponseDto {
+        // Generate URL
+        const cdnUrl = this.envService.app.cdnUrl || '';
+        const baseUrl = cdnUrl.endsWith('/') ? cdnUrl : (cdnUrl ? `${cdnUrl}/` : '');
+        const url = baseUrl ? `${baseUrl}${file.key}` : file.key;
 
         return {
-            key,
-            url,
+            id: file.id?.toString() || '',
+            bucket: file.bucket,
+            path: file.path,
+            key: file.key,
+            url: url,
+            filename: file.filename,
+            mimetype: file.mimetype,
+            size: file.size.toString(),
+            width: file.width ?? undefined,
+            height: file.height ?? undefined,
+            status: file.status,
+            accessType: file.accessType,
+            uploaderId: file.uploaderId?.toString(),
+            createdAt: file.createdAt,
+            updatedAt: file.updatedAt,
         };
     }
 }
