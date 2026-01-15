@@ -1,16 +1,18 @@
 import { ApiProperty } from '@nestjs/swagger';
-import { IsEnum, IsString, IsNotEmpty } from 'class-validator';
+import { IsEnum, IsString, IsNotEmpty, IsArray, ArrayNotEmpty } from 'class-validator';
 import { FileUsageType } from '../../../domain';
 
 export class AttachFileRequestDto {
     @ApiProperty({
-        description: '파일 ID (File ID)',
+        description: '파일 ID 목록 (List of File IDs)',
         required: true,
-        example: '123'
+        type: [String],
+        example: ['f_123', 'f_456']
     })
-    @IsString()
-    @IsNotEmpty()
-    fileId: string;
+    @IsArray()
+    @ArrayNotEmpty()
+    @IsString({ each: true })
+    fileIds: string[];
 
     @ApiProperty({
         description: '연결할 대상의 타입 (Usage Type)',

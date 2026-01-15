@@ -2,9 +2,7 @@ import { Module } from '@nestjs/common';
 import { EnvModule } from 'src/common/env/env.module';
 import { FileController } from './controllers/file.controller';
 import { CreateFileService } from './application/create-file.service';
-import { FindFileService } from './application/find-file.service';
 import { AttachFileService } from './application/attach-file.service';
-import { DetachFileService } from './application/detach-file.service';
 import { FileRepository } from './infrastructure/file.repository';
 import { FileUsageRepository } from './infrastructure/file-usage.repository';
 import { FileMapper } from './infrastructure/file.mapper';
@@ -17,9 +15,7 @@ import { FILE_USAGE_REPOSITORY } from './ports/file-usage.repository.token';
     controllers: [FileController],
     providers: [
         CreateFileService,
-        FindFileService,
         AttachFileService,
-        DetachFileService,
         FileMapper,
         FileUsageMapper,
         {
@@ -33,9 +29,7 @@ import { FILE_USAGE_REPOSITORY } from './ports/file-usage.repository.token';
     ],
     exports: [
         CreateFileService,
-        FindFileService,
         AttachFileService,
-        DetachFileService
     ],
 })
 export class FileModule { }

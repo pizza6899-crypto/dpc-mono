@@ -87,4 +87,27 @@ export class FileEntity {
             params.updatedAt,
         );
     }
+    updatePath(params: {
+        path: string;
+        key: string;
+        accessType?: FileAccessType;
+    }): FileEntity {
+        return new FileEntity(
+            this.id,
+            this.bucket,
+            params.path,
+            params.key,
+            this.hash,
+            this.filename,
+            this.mimetype,
+            this.size,
+            this.width,
+            this.height,
+            this.status,
+            params.accessType ?? this.accessType,
+            this.uploaderId,
+            this.createdAt,
+            new Date(),
+        );
+    }
 }

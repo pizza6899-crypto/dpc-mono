@@ -3,6 +3,7 @@ import {
     S3Client,
     DeleteObjectCommand,
     GetObjectCommand,
+    CopyObjectCommand,
 } from '@aws-sdk/client-s3';
 import { getSignedUrl } from '@aws-sdk/s3-request-presigner';
 import { Upload } from '@aws-sdk/lib-storage';
@@ -65,6 +66,26 @@ export class StorageService implements OnModuleInit {
             this.logger.error(`S3 Delete Error: ${key}`, error);
             throw error;
         }
+    }
+
+    async copy(sourceKey: string, destinationKey: string) {
+        try {
+            const command = new CopyObjectCommand({
+                Bucket: this.envService.storage.bucket,
+                CopySource: `${this.envService.storage.bucket}/${sourceKey}`,
+                Key: destinationKey,
+            });
+
+            return await this.client.send(command);
+        } catch (error) {
+            this.logger.error(`S3 Copy Error: ${sourceKey} -> ${destinationKey}`, error);
+            throw error;
+        }
+    }
+
+    async move(sourceKey: string, destinationKey: string) {
+        await this.copy(sourceKey, destinationKey);
+        await this.delete(sourceKey);
     }
 
     async getPresignedUrl(key: string, expiresIn = 3600) {
