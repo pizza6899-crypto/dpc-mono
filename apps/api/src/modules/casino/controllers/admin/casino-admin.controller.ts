@@ -10,8 +10,7 @@ import {
     HttpStatus,
 } from '@nestjs/common';
 import { ApiTags, ApiOperation } from '@nestjs/swagger';
-import { RequireRoles } from 'src/common/auth/decorators/roles.decorator';
-import { UserRoleType } from '@repo/database';
+import { Admin } from 'src/common/auth/decorators/roles.decorator';
 import {
     ApiPaginatedResponse,
     ApiStandardErrors,
@@ -31,7 +30,7 @@ import { AdminUpdateGameRequestDto } from './dto/request/admin-update-game.reque
 
 @ApiTags('Admin Casino')
 @Controller('admin/casino')
-@RequireRoles(UserRoleType.ADMIN, UserRoleType.SUPER_ADMIN)
+@Admin()
 @ApiStandardErrors()
 export class CasinoAdminController {
     constructor(

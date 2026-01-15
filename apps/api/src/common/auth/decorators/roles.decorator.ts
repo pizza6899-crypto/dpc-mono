@@ -1,5 +1,5 @@
 import { applyDecorators, SetMetadata } from '@nestjs/common';
-import { ApiBearerAuth, ApiCookieAuth } from '@nestjs/swagger';
+import { ApiCookieAuth } from '@nestjs/swagger';
 import { UserRoleType } from '@repo/database';
 
 export const IS_PUBLIC_KEY = 'isPublic';
@@ -9,13 +9,15 @@ export const PERMISSIONS_KEY = 'permissions';
 
 export const Public = () => SetMetadata(IS_PUBLIC_KEY, true);
 export const GuestOnly = () => SetMetadata(GUEST_ONLY_KEY, true);
+
 export const RequireRoles = (...aud: Array<UserRoleType>) =>
-  SetMetadata(ROLES_KEY, aud);
+  applyDecorators(SetMetadata(ROLES_KEY, aud), ApiCookieAuth());
+
 export const Perms = (...perms: string[]) =>
-  SetMetadata(PERMISSIONS_KEY, perms);
+  applyDecorators(SetMetadata(PERMISSIONS_KEY, perms), ApiCookieAuth());
+
 export const AuthAll = (...p: string[]) =>
   applyDecorators(
-    ApiCookieAuth(),
     RequireRoles(
       UserRoleType.USER,
       UserRoleType.AGENT,
@@ -24,3 +26,9 @@ export const AuthAll = (...p: string[]) =>
     ),
     Perms(...p),
   );
+
+export const Admin = (...p: string[]) =>
+  applyDecorators(RequireRoles(UserRoleType.ADMIN, UserRoleType.SUPER_ADMIN), Perms(...p));
+
+export const SuperAdmin = (...p: string[]) =>
+  applyDecorators(RequireRoles(UserRoleType.SUPER_ADMIN), Perms(...p));
