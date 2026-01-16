@@ -6,6 +6,7 @@ import {
 } from '@nestjs/common';
 import { PrismaClient, Prisma } from '@repo/database';
 import { PrismaPg } from '@prisma/adapter-pg';
+import { extension } from '@repo/database/kysely';
 
 /**
  * Prisma 데이터베이스 서비스
@@ -18,6 +19,9 @@ export class PrismaService
   extends PrismaClient<Prisma.PrismaClientOptions>
   implements OnModuleInit, OnModuleDestroy {
   private readonly logger = new Logger(PrismaService.name);
+
+  // Kysely 확장 클라이언트 타입을 유추하거나 any로 설정 (필요시 구체적 타입 정의)
+  public readonly $extended: any;
 
   constructor() {
     // DATABASE_URL 환경변수에서 연결 문자열 가져오기
@@ -40,6 +44,9 @@ export class PrismaService
     super({
       adapter,
     });
+
+    // Kysely 확장 등록 (database 패키지에서 제공하는 확장 사용)
+    this.$extended = this.$extends(extension());
   }
 
   /**
@@ -49,6 +56,14 @@ export class PrismaService
     try {
       await this.$connect();
       this.logger.log('Database connection established');
+
+      if (this.$extended && this.$extended.$kysely) {
+        this.logger.log('Kysely extension initialized successfully');
+        // 간단한 쿼리 실행으로 동작 확인 (선택 사항)
+        // await this.$extended.$kysely.selectFrom('User').select('id').limit(1).execute();
+      } else {
+        this.logger.warn('Kysely extension NOT initialized');
+      }
     } catch (error) {
       this.logger.error('Failed to connect to database', error);
       throw error;

@@ -391,6 +391,12 @@ importers:
       '@prisma/client':
         specifier: ^7.2.0
         version: 7.2.0(prisma@7.2.0(@types/react@19.2.7)(magicast@0.3.5)(react-dom@19.2.3(react@19.2.3))(react@19.2.3)(typescript@5.9.3))(typescript@5.9.3)
+      kysely:
+        specifier: ^0.28.9
+        version: 0.28.9
+      prisma-extension-kysely:
+        specifier: ^3.0.0
+        version: 3.0.0(@prisma/client@7.2.0(prisma@7.2.0(@types/react@19.2.7)(magicast@0.3.5)(react-dom@19.2.3(react@19.2.3))(react@19.2.3)(typescript@5.9.3))(typescript@5.9.3))
     devDependencies:
       '@paralleldrive/cuid2':
         specifier: ^2.2.2
@@ -404,9 +410,6 @@ importers:
       bcryptjs:
         specifier: ^3.0.3
         version: 3.0.3
-      kysely:
-        specifier: ^0.28.9
-        version: 0.28.9
       prisma:
         specifier: ^7.2.0
         version: 7.2.0(@types/react@19.2.7)(magicast@0.3.5)(react-dom@19.2.3(react@19.2.3))(react@19.2.3)(typescript@5.9.3)
@@ -10478,6 +10481,11 @@ packages:
   pretty-format@30.2.0:
     resolution: {integrity: sha512-9uBdv/B4EefsuAL+pWqueZyZS2Ba+LxfFeQ9DN14HU4bN8bhaxKdkpjpB6fs9+pSjIBu+FXQHImEg8j/Lw0+vA==}
     engines: {node: ^18.14.0 || ^20.0.0 || ^22.0.0 || >=24.0.0}
+
+  prisma-extension-kysely@3.0.0:
+    resolution: {integrity: sha512-J8gtIINuqsmbucei7PehAiuKvlPEe6SpRNXM6SdG7wXvY2aNxm5RnjnTwWITLTvzM3smarsKfMMfpMcNua82mA==}
+    peerDependencies:
+      '@prisma/client': latest
 
   prisma-kysely@3.0.0:
     resolution: {integrity: sha512-jJ9gtK4RpwB4oyjKwjxr6+seZpYXEgbMrWo37OnAqLKKtGyNA6yqPNV8f1NkB85zSxX6LTXAOdyfNr8iT7P3iQ==}
@@ -25750,6 +25758,10 @@ snapshots:
       '@jest/schemas': 30.0.5
       ansi-styles: 5.2.0
       react-is: 18.3.1
+
+  prisma-extension-kysely@3.0.0(@prisma/client@7.2.0(prisma@7.2.0(@types/react@19.2.7)(magicast@0.3.5)(react-dom@19.2.3(react@19.2.3))(react@19.2.3)(typescript@5.9.3))(typescript@5.9.3)):
+    dependencies:
+      '@prisma/client': 7.2.0(prisma@7.2.0(@types/react@19.2.7)(magicast@0.3.5)(react-dom@19.2.3(react@19.2.3))(react@19.2.3)(typescript@5.9.3))(typescript@5.9.3)
 
   prisma-kysely@3.0.0(magicast@0.3.5)(prisma@7.2.0(@types/react@19.2.7)(magicast@0.3.5)(react-dom@19.2.3(react@19.2.3))(react@19.2.3)(typescript@5.9.3)):
     dependencies:
