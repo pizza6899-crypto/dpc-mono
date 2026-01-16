@@ -1,3 +1,6 @@
+// 카테고리 관련 해서 테이블 생성해서 리팩토링 진행할거
+// 기존 카지노 게임은 냅두고
+
 model CasinoGame {
   id               BigInt                  @id @default(autoincrement())
   aggregatorType   GameAggregatorType      @map("aggregator_type")
