@@ -2,8 +2,12 @@
     "name": "@repo/database",
     "version": "0.0.0",
     "private": true,
-    "main": "./src/index.js",
-    "types": "./src/index.ts",
+    "main": "./src/prisma/index.js",
+    "types": "./src/prisma/index.ts",
+    "exports": {
+        ".": "./src/prisma/index.js",
+        "./kysely": "./src/kysely.ts"
+    },
     "scripts": {
         "prisma": "dotenv -e ../../.env -- prisma",
         "clean:client": "rm -rf src/client",
@@ -25,6 +29,8 @@
         "@prisma/client": "^7.2.0"
     },
     "devDependencies": {
+        "kysely": "^0.28.9",
+        "prisma-kysely": "^3.0.0",
         "@paralleldrive/cuid2": "^2.2.2",
         "@types/bcryptjs": "^3.0.0",
         "@types/node": "^25.0.3",

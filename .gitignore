@@ -37,4 +37,6 @@ Thumbs.db
 .idea/
 
 deploy-package
-packages/database/src
+packages/database/src/*
+!packages/database/src/index.ts
+!packages/database/src/kysely.ts
