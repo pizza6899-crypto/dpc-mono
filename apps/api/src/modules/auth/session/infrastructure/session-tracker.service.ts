@@ -21,7 +21,7 @@ export class SessionTrackerService {
 
   constructor(
     private readonly redisService: RedisService,
-  ) {}
+  ) { }
 
   /**
    * WebSocket 서버 등록

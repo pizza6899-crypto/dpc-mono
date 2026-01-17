@@ -1,5 +1,6 @@
 import { Injectable, Logger } from '@nestjs/common';
 import { Cron, CronExpression } from '@nestjs/schedule';
+import { ClsService } from 'nestjs-cls';
 import { EnvService } from '../../../../common/env/env.service';
 import {
   PushedBetHistoryResponse,
@@ -34,6 +35,7 @@ export class WhitecliffPushedBetHistoryScheduler {
     private readonly concurrencyService: ConcurrencyService,
     private readonly whitecliffMapperService: WhitecliffMapperService,
     private readonly redisService: RedisService,
+    private readonly cls: ClsService,
   ) { }
 
   /**
@@ -43,107 +45,109 @@ export class WhitecliffPushedBetHistoryScheduler {
    */
   @Cron(CronExpression.EVERY_MINUTE)
   async updatePushedBetHistory() {
-    // 스케줄러가 비활성화된 경우 실행하지 않음
-    if (!this.envService.scheduler.enabled) {
-      return;
-    }
+    await this.cls.run(async () => {
+      // 스케줄러가 비활성화된 경우 실행하지 않음
+      if (!this.envService.scheduler.enabled) {
+        return;
+      }
 
-    // 푸시 베팅 내역 스케줄러가 비활성화된 경우 실행하지 않음
-    if (!this.envService.scheduler.whitecliffPushedBetHistoryEnabled) {
-      return;
-    }
+      // 푸시 베팅 내역 스케줄러가 비활성화된 경우 실행하지 않음
+      if (!this.envService.scheduler.whitecliffPushedBetHistoryEnabled) {
+        return;
+      }
 
-    // 글로벌 락을 사용하여 다중 인스턴스 환경에서 중복 실행 방지
-    const lock = await this.concurrencyService.acquireGlobalLock(
-      'whitecliff-pushed-bet-history-scheduler',
-      {
-        ttl: 300, // 5분 TTL (스케줄러 실행 시간보다 충분히 길게)
-        retryCount: 0, // 락 획득 실패 시 즉시 종료
-      },
-    );
-
-    if (!lock) {
-      this.logger.debug(
-        '다른 인스턴스에서 이미 푸시 베팅 내역 스케줄러가 실행 중입니다.',
+      // 글로벌 락을 사용하여 다중 인스턴스 환경에서 중복 실행 방지
+      const lock = await this.concurrencyService.acquireGlobalLock(
+        'whitecliff-pushed-bet-history-scheduler',
+        {
+          ttl: 300, // 5분 TTL (스케줄러 실행 시간보다 충분히 길게)
+          retryCount: 0, // 락 획득 실패 시 즉시 종료
+        },
       );
-      return;
-    }
 
-    try {
-      const endDate =
-        nowUtcMinus({ seconds: 30 }).toISOString().slice(0, -5) + 'Z';
-      const endDateObj = new Date(endDate);
+      if (!lock) {
+        this.logger.debug(
+          '다른 인스턴스에서 이미 푸시 베팅 내역 스케줄러가 실행 중입니다.',
+        );
+        return;
+      }
 
-      // env에서 모든 whitecliff 설정을 가져와서 각각 처리
-      const whitecliffConfigs = this.envService.whitecliff;
+      try {
+        const endDate =
+          nowUtcMinus({ seconds: 30 }).toISOString().slice(0, -5) + 'Z';
+        const endDateObj = new Date(endDate);
 
-      for (const config of whitecliffConfigs) {
-        // API가 비활성화된 설정은 스킵
-        if (!config.apiEnabled) {
-          this.logger.debug(
-            `Whitecliff 설정이 비활성화됨: currency=${config.currency}`,
-          );
-          continue;
-        }
+        // env에서 모든 whitecliff 설정을 가져와서 각각 처리
+        const whitecliffConfigs = this.envService.whitecliff;
 
-        const gameCurrency =
-          this.whitecliffMapperService.convertWhitecliffCurrencyToGamingCurrency(
-            config.currency,
-          );
+        for (const config of whitecliffConfigs) {
+          // API가 비활성화된 설정은 스킵
+          if (!config.apiEnabled) {
+            this.logger.debug(
+              `Whitecliff 설정이 비활성화됨: currency=${config.currency}`,
+            );
+            continue;
+          }
 
-        // Evolution Live Casino 게임들 (Baccarat, Blackjack 등)
-        // currency에 따라 다른 product ID 사용
-        const liveCasinoProductIds =
-          gameCurrency === 'KRW' ? [31] : gameCurrency === 'IDR' ? [29] : [1];
+          const gameCurrency =
+            this.whitecliffMapperService.convertWhitecliffCurrencyToGamingCurrency(
+              config.currency,
+            );
 
-        for (const prdId of liveCasinoProductIds) {
-          // 마지막 처리 시간 조회
-          const lastProcessedTime = await this.getLastProcessedTime(
-            gameCurrency,
-            prdId,
-          );
+          // Evolution Live Casino 게임들 (Baccarat, Blackjack 등)
+          // currency에 따라 다른 product ID 사용
+          const liveCasinoProductIds =
+            gameCurrency === 'KRW' ? [31] : gameCurrency === 'IDR' ? [29] : [1];
 
-          // 마지막 처리 시간이 있으면 그 이후부터, 없으면 최근 2시간만
-          const initialStartDate = lastProcessedTime
-            ? new Date(lastProcessedTime)
-            : nowUtcMinus({ minutes: 120 });
+          for (const prdId of liveCasinoProductIds) {
+            // 마지막 처리 시간 조회
+            const lastProcessedTime = await this.getLastProcessedTime(
+              gameCurrency,
+              prdId,
+            );
 
-          // 한 번의 호출에서는 최대 2시간 범위만 처리
-          const maxGapMs = 2 * 60 * 60 * 1000; // 2시간을 밀리초로
-          const currentEnd = new Date(
-            Math.min(
-              initialStartDate.getTime() + maxGapMs,
-              endDateObj.getTime(),
-            ),
-          );
+            // 마지막 처리 시간이 있으면 그 이후부터, 없으면 최근 2시간만
+            const initialStartDate = lastProcessedTime
+              ? new Date(lastProcessedTime)
+              : nowUtcMinus({ minutes: 120 });
 
-          const startDateStr =
-            initialStartDate.toISOString().slice(0, -5) + 'Z';
-          const endDateStr = currentEnd.toISOString().slice(0, -5) + 'Z';
+            // 한 번의 호출에서는 최대 2시간 범위만 처리
+            const maxGapMs = 2 * 60 * 60 * 1000; // 2시간을 밀리초로
+            const currentEnd = new Date(
+              Math.min(
+                initialStartDate.getTime() + maxGapMs,
+                endDateObj.getTime(),
+              ),
+            );
 
-          this.logger.debug(
-            `제품 ${prdId} 처리: ${startDateStr} ~ ${endDateStr}`,
-          );
+            const startDateStr =
+              initialStartDate.toISOString().slice(0, -5) + 'Z';
+            const endDateStr = currentEnd.toISOString().slice(0, -5) + 'Z';
 
-          const success = await this.processPushedBetHistoryForProduct({
-            gameCurrency,
-            prdId,
-            startDate: startDateStr,
-            endDate: endDateStr,
-          });
+            this.logger.debug(
+              `제품 ${prdId} 처리: ${startDateStr} ~ ${endDateStr}`,
+            );
 
-          // 처리 성공한 경우에만 마지막 처리 시간 업데이트
-          if (success) {
-            await this.setLastProcessedTime(gameCurrency, prdId, endDateStr);
+            const success = await this.processPushedBetHistoryForProduct({
+              gameCurrency,
+              prdId,
+              startDate: startDateStr,
+              endDate: endDateStr,
+            });
+
+            // 처리 성공한 경우에만 마지막 처리 시간 업데이트
+            if (success) {
+              await this.setLastProcessedTime(gameCurrency, prdId, endDateStr);
+            }
           }
         }
+      } catch (error) {
+        this.logger.error(error, `푸시 베팅 내역 업데이트 스케줄러 실패`);
+      } finally {
+        // 락 해제
+        await this.concurrencyService.releaseLock(lock);
       }
-    } catch (error) {
-      this.logger.error(error, `푸시 베팅 내역 업데이트 스케줄러 실패`);
-    } finally {
-      // 락 해제
-      await this.concurrencyService.releaseLock(lock);
-    }
+    });
   }
 
   /**

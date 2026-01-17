@@ -36,7 +36,7 @@ export class ExpireSessionsBatchService {
     private readonly repository: UserSessionRepositoryPort,
     private readonly sessionTracker: SessionTrackerService,
     private readonly dispatchLogService: DispatchLogService,
-  ) {}
+  ) { }
 
   @Transactional()
   async execute(
