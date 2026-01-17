@@ -25,7 +25,8 @@
     "cli": "ts-node -r tsconfig-paths/register src/cli/cli.ts",
     "zip": "pnpm run format && pnpm run build && node scripts/deployScript && open .",
     "template": "plop",
-    "swagger": "ts-node -r tsconfig-paths/register scripts/generate-swagger.ts"
+    "swagger": "ts-node -r tsconfig-paths/register scripts/generate-swagger.ts",
+    "prisma": "dotenv -e .env -- prisma"
   },
   "dependencies": {
     "@aws-sdk/client-s3": "^3.968.0",
@@ -48,6 +49,7 @@
     "@nestjs/websockets": "^11.1.9",
     "@paralleldrive/cuid2": "^2.2.2",
     "@prisma/adapter-pg": "^7.2.0",
+    "@prisma/client": "^7.2.0",
     "@repo/database": "workspace:*",
     "@repo/shared": "workspace:*",
     "@socket.io/redis-adapter": "^8.3.0",
@@ -118,6 +120,7 @@
     "mjml": "^4.18.0",
     "plop": "^4.0.4",
     "prettier": "^3.4.2",
+    "prisma": "^7.2.0",
     "source-map-support": "^0.5.21",
     "supertest": "^7.0.0",
     "ts-jest": "^29.2.5",

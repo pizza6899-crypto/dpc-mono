@@ -1,0 +1,103 @@
+model AffiliateCode {
+  id           BigInt     @id @default(autoincrement())
+  uid          String     @unique
+  userId       BigInt     @map("user_id")
+  code         String     @unique
+  campaignName String?    @map("campaign_name")
+  description  String?
+  isActive     Boolean    @default(true) @map("is_active")
+  isDefault    Boolean    @default(false) @map("is_default")
+  expiresAt    DateTime?  @map("expires_at")
+  createdAt    DateTime   @default(now()) @map("created_at")
+  updatedAt    DateTime   @updatedAt @map("updated_at")
+  lastUsedAt   DateTime?  @map("last_used_at")
+  user         User       @relation("AffiliateCodes", fields: [userId], references: [id], onDelete: Cascade)
+  referrals    Referral[]
+
+  @@index([userId])
+  @@index([userId, isActive])
+  @@index([code])
+  @@map("affiliate_codes")
+}
+
+model Referral {
+  id                BigInt        @id @default(autoincrement())
+  uid               String        @unique
+  affiliateId       BigInt        @map("affiliate_id")
+  subUserId         BigInt        @map("sub_user_id")
+  ipAddress         String?       @map("ip_address")
+  deviceFingerprint String?       @map("device_fingerprint")
+  userAgent         String?       @map("user_agent")
+  createdAt         DateTime      @default(now()) @map("created_at")
+  updatedAt         DateTime      @updatedAt @map("updated_at")
+  codeId            BigInt        @map("code_id")
+  affiliate         User          @relation("AffiliateReferrals", fields: [affiliateId], references: [id], onDelete: Cascade)
+  code              AffiliateCode @relation(fields: [codeId], references: [id], onDelete: Cascade)
+  subUser           User          @relation("ReferredUsers", fields: [subUserId], references: [id], onDelete: Cascade)
+
+  @@unique([affiliateId, subUserId])
+  @@index([affiliateId])
+  @@index([codeId])
+  @@index([subUserId])
+  @@index([affiliateId, codeId])
+  @@index([ipAddress, deviceFingerprint])
+  @@map("referrals")
+}
+
+model AffiliateCommission {
+  id             BigInt               @default(autoincrement())
+  affiliateId    BigInt               @map("affiliate_id")
+  subUserId      BigInt               @map("sub_user_id")
+  gameRoundId    BigInt?              @map("game_round_id")
+  wagerAmount    Decimal              @map("wager_amount") @db.Decimal(32, 18)
+  winAmount      Decimal?             @map("win_amount") @db.Decimal(32, 18)
+  commission     Decimal              @db.Decimal(32, 18)
+  rateApplied    Decimal              @map("rate_applied") @db.Decimal(8, 4)
+  currency       ExchangeCurrencyCode
+  status         CommissionStatus     @default(PENDING)
+  gameCategory   GameCategory?        @map("game_category")
+  /// settlementDate: PENDING → AVAILABLE 전환 시점 (월간 정산일)
+  /// claimedAt: AVAILABLE → CLAIMED 전환 시점 (출금 요청 시점)
+  /// withdrawnAt: CLAIMED → WITHDRAWN 전환 시점 (출금 처리 완료 시점)
+  settlementDate DateTime?            @map("settlement_date")
+  claimedAt      DateTime?            @map("claimed_at")
+  withdrawnAt    DateTime?            @map("withdrawn_at")
+  createdAt      DateTime             @default(now()) @map("created_at")
+  updatedAt      DateTime             @updatedAt @map("updated_at")
+
+  affiliate User       @relation("AffiliateCommissions", fields: [affiliateId], references: [id], onDelete: Cascade)
+  gameRound GameRound? @relation(fields: [gameRoundId], references: [id])
+  subUser   User       @relation("SubUserCommissions", fields: [subUserId], references: [id], onDelete: Cascade)
+
+  @@id([createdAt, id])
+  @@index([affiliateId, status])
+  @@index([affiliateId, createdAt])
+  @@index([subUserId])
+  @@index([status, createdAt])
+  @@index([settlementDate])
+  @@index([gameRoundId])
+  @@map("affiliate_commissions")
+}
+
+model AffiliateWallet {
+  affiliateId      BigInt               @map("affiliate_id")
+  currency         ExchangeCurrencyCode
+  availableBalance Decimal              @default(0) @map("available_balance") @db.Decimal(32, 18)
+  pendingBalance   Decimal              @default(0) @map("pending_balance") @db.Decimal(32, 18)
+  totalEarned      Decimal              @default(0) @map("total_earned") @db.Decimal(32, 18)
+  updatedAt        DateTime             @updatedAt @map("updated_at")
+  affiliate        User                 @relation("AffiliateWallets", fields: [affiliateId], references: [id], onDelete: Cascade)
+
+  @@id([affiliateId, currency])
+  @@index([affiliateId])
+  @@index([currency])
+  @@map("affiliate_wallets")
+}
+
+enum CommissionStatus {
+  PENDING
+  AVAILABLE
+  CLAIMED
+  WITHDRAWN
+  CANCELLED
+}

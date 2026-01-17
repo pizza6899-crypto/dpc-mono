@@ -21,6 +21,7 @@ build/
 # 경로 앞에 /를 붙이면 루트 기준이므로, 하위 폴더까지 고려해 아래처럼 쓰기도 합니다.
 apps/api/prisma/*.db
 apps/api/prisma/*.db-journal
+apps/api/src/generated/
 
 # Logs
 npm-debug.log*

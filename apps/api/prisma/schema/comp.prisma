@@ -1,0 +1,44 @@
+model UserCompWallet {
+  id          BigInt               @id @default(autoincrement())
+  userId      BigInt               @map("user_id")
+  currency    ExchangeCurrencyCode
+  balance     Decimal              @default(0) @db.Decimal(32, 18) // 현재 잔액
+  totalEarned Decimal              @default(0) @map("total_earned") @db.Decimal(32, 18) // 누적 획득
+  totalUsed   Decimal              @default(0) @map("total_used") @db.Decimal(32, 18) // 누적 사용
+
+  updatedAt DateTime @updatedAt @map("updated_at")
+  createdAt DateTime @default(now()) @map("created_at")
+
+  transactions CompWalletTransaction[] // 1:N 관계
+  user         User                    @relation(fields: [userId], references: [id])
+
+  @@unique([userId, currency])
+  @@map("user_comp_wallets")
+}
+
+model CompWalletTransaction {
+  id           BigInt              @id @default(autoincrement())
+  compWalletId BigInt              @map("comp_wallet_id") // 어느 지갑의 거래인가
+  amount       Decimal             @db.Decimal(32, 18) // 변경 금액 (양수: 획득, 음수: 사용/차감)
+  balanceAfter Decimal             @map("balance_after") @db.Decimal(32, 18) // 변경 후 잔액
+  type         CompTransactionType // EARN(적립), CLAIM(전환), ADMIN(관리자), EXPIRE(소멸)
+
+  referenceId String? @map("reference_id") // 예: gameRoundId, paymentId
+  description String? // 비고
+
+  createdAt DateTime @default(now()) @map("created_at")
+
+  wallet       UserCompWallet @relation(fields: [compWalletId], references: [id])
+  transactions Transaction[]
+
+  @@index([compWalletId])
+  @@index([createdAt])
+  @@map("comp_wallet_transactions")
+}
+
+enum CompTransactionType {
+  EARN // 게임 플레이 등으로 적립
+  CLAIM // 현금으로 전환 (사용)
+  ADMIN // 관리자 조정 (지급/차감)
+  EXPIRE // 유효기간 만료 소멸 (옵션)
+}

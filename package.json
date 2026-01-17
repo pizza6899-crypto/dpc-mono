@@ -45,6 +45,23 @@
   "pnpm": {
     "overrides": {
       "typescript": "^5.9.3"
-    }
+    },
+    "onlyBuiltDependencies": [
+      "@hebilicious/vue-query-nuxt",
+      "@nestjs/core",
+      "@parcel/watcher",
+      "@prisma/client",
+      "@prisma/engines",
+      "@scarf/scarf",
+      "bcrypt",
+      "esbuild",
+      "maplibre-gl",
+      "msgpackr-extract",
+      "prisma",
+      "protobufjs",
+      "sharp",
+      "unrs-resolver",
+      "vue-demi"
+    ]
   }
 }

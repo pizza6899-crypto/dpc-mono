@@ -1,0 +1,217 @@
+/**
+ * 출금(Withdrawal) 관련 스키마
+ * 출금 상세 정보 및 출금 설정 관리
+ */
+
+/**
+ * 출금 상세 정보 모델
+ * 사용자의 출금 요청 및 처리 상태를 추적합니다.
+ * 출금 방법:
+ * - CRYPTO_WALLET: 암호화폐 지갑 출금 (기본 자동, 특정 건 수동 가능)
+ * - BANK_TRANSFER: 은행 계좌 이체 (항상 수동, 관리자 승인 필요)
+ * 처리 흐름:
+ * - 암호화폐(자동): PENDING → PROCESSING → SENDING → COMPLETED
+ * - 암호화폐(수동): PENDING → PENDING_REVIEW → PROCESSING → SENDING → COMPLETED
+ * - 피아트: PENDING → PENDING_REVIEW → PROCESSING → COMPLETED
+ * 잔액 처리:
+ * - 출금 신청 시 잔액 즉시 차감 (게임 방지)
+ * - 취소/거부 시 잔액 복원
+ * 롤링 조건:
+ * - 출금 시 WageringRequirement 완료 여부 확인 필수
+ * - 롤링 미완료 시 출금 불가
+ */
+model WithdrawalDetail {
+  // snowflake id
+  id            BigInt  @id
+  userId        BigInt  @map("user_id")
+  transactionId BigInt? @unique @map("transaction_id")
+
+  // 출금 방법 및 상태
+  methodType WithdrawalMethodType @map("method_type")
+  status     WithdrawalStatus
+
+  // 처리 모드: 자동 vs 수동
+  // 암호화폐: 기본 AUTO, 특정 조건에서 MANUAL로 전환 가능
+  // 피아트: 항상 MANUAL
+  processingMode WithdrawalProcessingMode @map("processing_mode")
+
+  // 금액 정보
+  currency        ExchangeCurrencyCode
+  requestedAmount Decimal              @map("requested_amount") @db.Decimal(32, 18)
+  netAmount       Decimal?             @map("net_amount") @db.Decimal(32, 18)
+
+  // 수수료 (추후 확장)
+  feeAmount   Decimal?       @map("fee_amount") @db.Decimal(32, 18)
+  feeCurrency String?        @map("fee_currency")
+  feePaidBy   FeePaidByType? @map("fee_paid_by")
+
+  // 암호화폐 출금 정보
+  network              String?
+  walletAddress        String? @map("wallet_address")
+  walletAddressExtraId String? @map("wallet_address_extra_id")
+  transactionHash      String? @map("transaction_hash")
+
+  // 은행 출금 정보 (피아트)
+  bankName      String? @map("bank_name")
+  accountNumber String? @map("account_number")
+  accountHolder String? @map("account_holder")
+
+  // 프로바이더 정보
+  // NowPayment: 암호화폐 전용
+  // MANUAL: 피아트 및 수동 처리
+  provider             PaymentProvider
+  providerWithdrawalId String?         @unique @map("provider_withdrawal_id")
+  providerMetadata     Json?           @default("{}") @map("provider_metadata")
+
+  // 관리자 처리 정보
+  processedBy   BigInt?  @map("processed_by")
+  adminNotes    String[] @default([]) @map("admin_notes")
+  failureReason String?  @map("failure_reason")
+
+  // 보안 정보
+  ipAddress         String? @map("ip_address")
+  deviceFingerprint String? @map("device_fingerprint")
+
+  // 타임스탬프
+  createdAt   DateTime  @default(now()) @map("created_at")
+  updatedAt   DateTime  @updatedAt @map("updated_at")
+  confirmedAt DateTime? @map("confirmed_at")
+  failedAt    DateTime? @map("failed_at")
+  cancelledAt DateTime? @map("cancelled_at")
+
+  // 출금 시점 적용된 설정 스냅샷
+  // - 서비스에서 Config 조회 → 검증 → 레코드 생성 시 스냅샷 저장
+  // - 설정 변경되어도 과거 출금 기록의 정확성 보장
+  // - Config 삭제되어도 출금 기록 완전성 유지
+  // 예시: { "configId": 1, "symbol": "USDT", "network": "TRC20", "minAmount": "10", "maxAmount": "10000", "feeFixed": "1", "feeRate": "0.001" }
+  appliedConfig Json? @default("{}") @map("applied_config")
+
+  // 관계
+  user                   User                  @relation(fields: [userId], references: [id])
+  transaction            Transaction?          @relation(fields: [transactionId], references: [id])
+  // Config 관계 (조회 편의성) + appliedConfig 스냅샷 (이력 보존) 병행 사용
+  cryptoWithdrawConfigId BigInt?               @map("crypto_withdraw_config_id")
+  cryptoWithdrawConfig   CryptoWithdrawConfig? @relation(fields: [cryptoWithdrawConfigId], references: [id])
+  bankWithdrawConfigId   BigInt?               @map("bank_withdraw_config_id")
+  bankWithdrawConfig     BankWithdrawConfig?   @relation(fields: [bankWithdrawConfigId], references: [id])
+
+  @@index([userId, status])
+  @@index([status, createdAt])
+  @@index([provider, status])
+  @@index([transactionHash])
+  @@index([methodType, status])
+  @@index([processingMode, status])
+  @@index([processedBy])
+  @@map("withdrawal_details")
+}
+
+/**
+ * 암호화폐 출금 설정 모델
+ * 암호화폐별 출금 설정을 관리합니다.
+ * - symbol과 network 조합으로 고유하게 관리
+ * - 최소/최대 출금 금액, 수수료 설정
+ * - 자동 처리 한도 설정 (초과 시 수동 검토 필요)
+ */
+model CryptoWithdrawConfig {
+  id       BigInt  @id @default(autoincrement())
+  symbol   String // BTC, ETH, USDT 등
+  network  String // Mainnet, ERC20, TRC20 등
+  isActive Boolean @default(true) @map("is_active")
+
+  // 금액 제한
+  minWithdrawAmount Decimal  @map("min_withdraw_amount") @db.Decimal(32, 18)
+  maxWithdrawAmount Decimal? @map("max_withdraw_amount") @db.Decimal(32, 18)
+
+  // 자동 처리 한도 (이 금액 초과 시 수동 검토로 전환)
+  autoProcessLimit Decimal? @map("auto_process_limit") @db.Decimal(32, 18)
+
+  // 수수료 설정 (추후 확장)
+  withdrawFeeFixed Decimal @default(0) @map("withdraw_fee_fixed") @db.Decimal(32, 18)
+  withdrawFeeRate  Decimal @default(0) @map("withdraw_fee_rate") @db.Decimal(8, 4)
+
+  createdAt         DateTime           @default(now()) @map("created_at")
+  updatedAt         DateTime           @updatedAt @map("updated_at")
+  deletedAt         DateTime?          @map("deleted_at")
+  withdrawalDetails WithdrawalDetail[]
+
+  @@unique([symbol, network])
+  @@index([symbol, network, isActive])
+  @@index([isActive])
+  @@map("crypto_withdraw_configs")
+}
+
+/**
+ * 은행 출금 설정 모델
+ * 은행 계좌별 출금 설정을 관리합니다.
+ * - 출금 가능한 은행 계좌 정보
+ * - 최소/최대 출금 금액 설정
+ */
+model BankWithdrawConfig {
+  id       BigInt               @id @default(autoincrement())
+  currency ExchangeCurrencyCode
+  bankName String               @map("bank_name")
+  isActive Boolean              @default(true) @map("is_active")
+
+  // 금액 제한
+  minWithdrawAmount Decimal  @map("min_withdraw_amount") @db.Decimal(32, 18)
+  maxWithdrawAmount Decimal? @map("max_withdraw_amount") @db.Decimal(32, 18)
+
+  // 수수료 설정 (추후 확장)
+  withdrawFeeFixed Decimal @default(0) @map("withdraw_fee_fixed") @db.Decimal(32, 18)
+  withdrawFeeRate  Decimal @default(0) @map("withdraw_fee_rate") @db.Decimal(8, 4)
+
+  description String?
+  notes       String?
+
+  createdAt DateTime  @default(now()) @map("created_at")
+  updatedAt DateTime  @updatedAt @map("updated_at")
+  deletedAt DateTime? @map("deleted_at")
+
+  withdrawalDetails WithdrawalDetail[]
+
+  @@index([currency, isActive])
+  @@index([isActive])
+  @@map("bank_withdraw_configs")
+}
+
+/**
+ * 출금 방법 타입
+ */
+enum WithdrawalMethodType {
+  /// 암호화폐 지갑 출금 - 기본 자동, 특정 건 수동 가능
+  CRYPTO_WALLET
+  /// 은행 계좌 이체 - 항상 수동 (관리자 승인 필요)
+  BANK_TRANSFER
+}
+
+/**
+ * 출금 상태
+ */
+enum WithdrawalStatus {
+  /// 대기 중 - 출금 신청이 생성됨 (잔액 차감됨)
+  PENDING
+  /// 검토 대기 - 관리자 승인 필요 (수동 처리 또는 한도 초과)
+  PENDING_REVIEW
+  /// 처리 중 - 출금 처리 진행 중
+  PROCESSING
+  /// 전송 중 - 프로바이더로 요청됨 (암호화폐)
+  SENDING
+  /// 완료 - 출금 성공
+  COMPLETED
+  /// 실패 - 출금 처리 중 오류 발생
+  FAILED
+  /// 취소됨 - 유저가 취소 (잔액 복원됨)
+  CANCELLED
+  /// 거부됨 - 관리자가 거부 (잔액 복원됨)
+  REJECTED
+}
+
+/**
+ * 출금 처리 모드
+ */
+enum WithdrawalProcessingMode {
+  /// 자동 처리 - 프로바이더 자동 연동 (암호화폐 기본)
+  AUTO
+  /// 수동 처리 - 관리자 승인/처리 필요 (피아트 기본, 암호화폐 특정 건)
+  MANUAL
+}
