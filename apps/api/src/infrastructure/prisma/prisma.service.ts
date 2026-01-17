@@ -78,6 +78,10 @@ export class PrismaService
     super({
       adapter,
     });
+
+    // Kysely 확장 클라이언트 즉시 초기화
+    // (Factory Provider에서 접근 가능하도록 생성자에서 초기화)
+    this._extendedClient = this.createExtendedClient();
   }
 
   /**
@@ -119,22 +123,12 @@ export class PrismaService
       await this.$connect();
       this.logger.log('✅ Prisma connection established');
 
-      // 2. Kysely 확장 적용 (중복 방지)
+      // 2. Kysely 확장 적용 (생성자에서 이미 초기화됨)
       if (!this._extendedClient) {
-        try {
-          this.logger.log('Tried to initialize Kysely extension...');
-          this._extendedClient = this.createExtendedClient();
-          this.logger.log('✅ Kysely extension initialized');
-        } catch (extError) {
-          this.logger.error(
-            '❌ Failed to initialize Kysely extension',
-            extError,
-          );
-          throw extError;
-        }
-      } else {
-        this.logger.log('ℹ️ Extended client already exists');
+        // 방어 코드: 혹시라도 null이면 다시 초기화
+        this._extendedClient = this.createExtendedClient();
       }
+      this.logger.log('✅ Kysely extension is ready');
 
       // 3. 연결 테스트 (Health Check)
       // Prisma Ping
@@ -210,25 +204,6 @@ export class PrismaService
       );
     }
     return this._extendedClient.$kysely;
-  }
-
-  /**
-   * $transaction 오버라이드
-   *
-   * nestjs-cls가 트랜잭션을 시작할 때 이 메서드를 호출합니다.
-   * 이때 확장된 클라이언트(extended client)의 $transaction을 호출해야
-   * 트랜잭션 내에서 Kysely($kysely)를 사용할 수 있습니다.
-   */
-  // eslint-disable-next-line @typescript-eslint/no-explicit-any
-  override async $transaction(...args: any[]) {
-    // 확장 클라이언트가 준비되었으면 그것을 사용
-    if (this._extendedClient) {
-      // eslint-disable-next-line @typescript-eslint/ban-types
-      return (this._extendedClient as any).$transaction(...args);
-    }
-    // 아니면 기본 동작 (하지만 onModuleInit에서 초기화되므로 이럴 일은 거의 없음)
-    // eslint-disable-next-line @typescript-eslint/ban-types
-    return super.$transaction.apply(this, args as [any]);
   }
 
   /**
