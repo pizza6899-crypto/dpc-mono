@@ -6,7 +6,14 @@ import {
 } from '@nestjs/common';
 import { PrismaClient, Prisma } from 'src/generated/prisma';
 import { PrismaPg } from '@prisma/adapter-pg';
-import { EnvService } from 'src/common/env/env.service';
+import {
+  Kysely,
+  PostgresAdapter,
+  PostgresIntrospector,
+  PostgresQueryCompiler,
+} from 'kysely';
+import { DB } from '../../generated/kysely/types';
+import kyselyExtension from 'prisma-extension-kysely';
 
 /**
  * Prisma 데이터베이스 서비스
@@ -41,6 +48,29 @@ export class PrismaService
     super({
       adapter,
     });
+
+    // prisma-extension-kysely 적용 및 인스턴스 교체
+    return this.$extends(
+      kyselyExtension({
+        kysely: (driver) =>
+          new Kysely<DB>({
+            dialect: {
+              createAdapter: () => new PostgresAdapter(),
+              createDriver: () => driver,
+              createIntrospector: (db) => new PostgresIntrospector(db),
+              createQueryCompiler: () => new PostgresQueryCompiler(),
+            },
+          }),
+      }),
+    ) as any;
+  }
+
+  /**
+   * Kysely 인스턴스에 접근하기 위한 게터
+   * 확장된 클라이언트에서 $kysely 속성을 가져옵니다.
+   */
+  get kysely(): Kysely<DB> {
+    return (this as any).$kysely;
   }
 
   /**
@@ -50,6 +80,14 @@ export class PrismaService
     try {
       await this.$connect();
       this.logger.log('Database connection established');
+
+      // Kysely Integration Test
+      try {
+        const result = await this.kysely.selectFrom('User').select('id').limit(1).execute();
+        this.logger.log(`[Kysely] Integration Test Success: Connection works (Found ${result.length} users)`);
+      } catch (kError) {
+        this.logger.error('[Kysely] Integration Test Failed', kError);
+      }
     } catch (error) {
       this.logger.error('Failed to connect to database', error);
       throw error;
@@ -69,3 +107,4 @@ export class PrismaService
     }
   }
 }
+

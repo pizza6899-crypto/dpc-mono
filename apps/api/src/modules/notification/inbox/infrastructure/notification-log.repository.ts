@@ -4,7 +4,7 @@ import { Injectable } from '@nestjs/common';
 import { InjectTransaction } from '@nestjs-cls/transactional';
 import type { Transaction } from '@nestjs-cls/transactional';
 import type { TransactionalAdapterPrisma } from '@nestjs-cls/transactional-adapter-prisma';
-import { ChannelType, NotifyStatus } from 'src/generated/prisma';
+import { ChannelType, NotifyStatus, Prisma } from 'src/generated/prisma';
 import { NotificationLog, NotificationLogNotFoundException } from '../domain';
 import {
     NotificationLogRepositoryPort,
@@ -22,12 +22,23 @@ export class NotificationLogRepository implements NotificationLogRepositoryPort 
 
     async create(log: NotificationLog): Promise<NotificationLog> {
         const data = this.mapper.toCreateInput(log);
-        const result = await this.tx.notificationLog.create({ data });
+        const result = await this.tx.notificationLog.create({
+            data: {
+                ...data,
+                metadata: (data.metadata ?? Prisma.JsonNull) as Prisma.InputJsonValue,
+            },
+        });
         return this.mapper.toDomain(result);
     }
 
     async createMany(logs: NotificationLog[]): Promise<void> {
-        const data = logs.map((log) => this.mapper.toCreateInput(log));
+        const data = logs.map((log) => {
+            const input = this.mapper.toCreateInput(log);
+            return {
+                ...input,
+                metadata: (input.metadata ?? Prisma.JsonNull) as Prisma.InputJsonValue,
+            };
+        });
         await this.tx.notificationLog.createMany({ data });
     }
 

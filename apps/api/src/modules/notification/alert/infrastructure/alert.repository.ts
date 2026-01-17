@@ -4,7 +4,7 @@ import { Injectable } from '@nestjs/common';
 import { InjectTransaction } from '@nestjs-cls/transactional';
 import type { Transaction } from '@nestjs-cls/transactional';
 import type { TransactionalAdapterPrisma } from '@nestjs-cls/transactional-adapter-prisma';
-import { AlertStatus } from 'src/generated/prisma';
+import { AlertStatus, Prisma } from 'src/generated/prisma';
 import { Alert, AlertNotFoundException } from '../domain';
 import { AlertRepositoryPort, AlertListQuery } from '../ports';
 import { AlertMapper } from './alert.mapper';
@@ -19,7 +19,12 @@ export class AlertRepository implements AlertRepositoryPort {
 
     async create(alert: Alert): Promise<Alert> {
         const data = this.mapper.toCreateInput(alert);
-        const result = await this.tx.alert.create({ data });
+        const result = await this.tx.alert.create({
+            data: {
+                ...data,
+                payload: (data.payload ?? Prisma.JsonNull) as Prisma.InputJsonValue,
+            },
+        });
         return this.mapper.toDomain(result);
     }
 
@@ -62,7 +67,10 @@ export class AlertRepository implements AlertRepositoryPort {
             where: {
                 createdAt_id: { createdAt: alert.createdAt, id: alert.id },
             },
-            data,
+            data: {
+                ...data,
+                payload: ((data as any).payload ?? Prisma.JsonNull) as Prisma.InputJsonValue,
+            },
         });
         return this.mapper.toDomain(result);
     }

@@ -4,7 +4,7 @@ import { Injectable } from '@nestjs/common';
 import { InjectTransaction } from '@nestjs-cls/transactional';
 import type { Transaction } from '@nestjs-cls/transactional';
 import type { TransactionalAdapterPrisma } from '@nestjs-cls/transactional-adapter-prisma';
-import { ChannelType } from 'src/generated/prisma';
+import { ChannelType, Prisma } from 'src/generated/prisma';
 import { NotificationTemplateRepositoryPort } from '../../ports';
 import { NotificationTemplate } from '../../domain';
 import { NotificationTemplateMapper } from '../mappers/notification-template.mapper';
@@ -22,6 +22,7 @@ export class NotificationTemplateRepository implements NotificationTemplateRepos
         const created = await this.tx.notificationTemplate.create({
             data: {
                 ...data,
+                variables: (data.variables ?? Prisma.JsonNull) as Prisma.InputJsonValue,
                 translations: {
                     create: template.translations.map((t) => this.mapper.toPrismaTranslation(t)),
                 },
@@ -78,7 +79,10 @@ export class NotificationTemplateRepository implements NotificationTemplateRepos
         // 2. Transactional Update (Upsert Translations)
         const updated = await this.tx.notificationTemplate.update({
             where: { id: template.id! },
-            data: templateData,
+            data: {
+                ...templateData,
+                variables: (templateData.variables ?? Prisma.JsonNull) as Prisma.InputJsonValue,
+            },
             include: { translations: true },
         });
 

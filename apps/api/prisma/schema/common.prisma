@@ -5,6 +5,12 @@ generator client {
   binaryTargets = ["native", "linux-arm64-openssl-3.0.x"]
 }
 
+generator kysely {
+  provider = "prisma-kysely"
+  output   = "../../src/generated/kysely" // Kysely 타입 위치
+  fileName = "types.ts"
+}
+
 datasource db {
   provider = "postgresql"
 }
