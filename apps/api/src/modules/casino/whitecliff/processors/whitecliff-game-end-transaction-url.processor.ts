@@ -46,7 +46,7 @@ export class WhitecliffFetchGameResultUrlProcessor
           replayData: true,
           provider: true,
           aggregatorType: true,
-          GameSession: {
+          gameSession: {
             select: {
               gameCurrency: true,
             },
@@ -61,7 +61,7 @@ export class WhitecliffFetchGameResultUrlProcessor
       // 2. URL이 이미 존재하는지 확인
       if (
         (gameRound.replayType && gameRound.replayData) ||
-        !gameRound.GameSession
+        !gameRound.gameSession
       ) {
         return {
           success: true,
@@ -70,7 +70,7 @@ export class WhitecliffFetchGameResultUrlProcessor
 
       const transactionResults =
         await this.whitecliffApiService.getTransactionResults({
-          gameCurrency: gameRound.GameSession.gameCurrency as GamingCurrencyCode,
+          gameCurrency: gameRound.gameSession.gameCurrency as GamingCurrencyCode,
           lang: Language.KO,
           provider: gameRound.provider,
           txn_id: gameRound.aggregatorTxId,

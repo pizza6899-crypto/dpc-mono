@@ -144,7 +144,7 @@ model CryptoDepositConfig {
   uid              String          @unique
   symbol           String // BTC, ETH, USDT 등
   network          String // Mainnet, ERC20, TRC20 등
-  isActive         Boolean         @default(true)
+  isActive         Boolean         @default(true) @map("is_active")
   minDepositAmount Decimal         @map("min_deposit_amount") @db.Decimal(32, 18)
   depositFeeRate   Decimal         @default(0) @map("deposit_fee_rate") @db.Decimal(8, 4) // 입금 수수료율 (예: 0.001 = 0.1%)
   confirmations    Int             @default(3) // 승인 필요한 블록 수

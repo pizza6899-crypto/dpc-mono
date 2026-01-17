@@ -13,9 +13,7 @@
         "reset": "pnpm prisma migrate reset",
         "deploy": "pnpm clean:client && pnpm prisma migrate deploy && pnpm prisma generate",
         "seed": "pnpm prisma db seed",
-        "studio": "pnpm prisma studio",
-        "create:unified-logs-view": "dotenv -e ../../.env -- tsx prisma/scripts/create-unified-logs-view.ts",
-        "partition:audit-tables": "dotenv -e ../../.env -- tsx prisma/scripts/partition-audit-tables.ts"
+        "studio": "pnpm prisma studio"
     },
     "prisma": {
         "seed": "tsx prisma/seed.ts"

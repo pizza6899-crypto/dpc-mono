@@ -71,7 +71,7 @@ export class CasinoRefundService {
             id: true,
             aggregatorTxId: true,
             jackpotContributionAmount: true,
-            GameSession: {
+            gameSession: {
               select: {
                 walletCurrency: true,
                 exchangeRate: true,
@@ -111,10 +111,10 @@ export class CasinoRefundService {
     }
 
     // 취소해야 하는 GameBet의 betAmount와 일치하는 TransactionBalanceDetail 찾기
-    const walletCurrency = existingGameBet.gameRound.GameSession.walletCurrency;
+    const walletCurrency = existingGameBet.gameRound.gameSession.walletCurrency;
     const betAmountInWalletCurrency = existingGameBet.betAmount;
     const betAmountInGameCurrency = existingGameBet.betAmount.mul(
-      existingGameBet.gameRound.GameSession.exchangeRate,
+      existingGameBet.gameRound.gameSession.exchangeRate,
     );
     const balanceDetails = existingGameBet.gameRound.transaction.balanceDetails;
 

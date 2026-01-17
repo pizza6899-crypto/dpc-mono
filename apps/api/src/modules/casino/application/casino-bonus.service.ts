@@ -173,7 +173,7 @@ export class CasinoBonusService {
           },
         },
         select: {
-          GameSession: {
+          gameSession: {
             select: {
               walletCurrency: true,
               exchangeRate: true,
@@ -181,7 +181,7 @@ export class CasinoBonusService {
           },
         },
       });
-      gameSession = gameRound?.GameSession;
+      gameSession = gameRound?.gameSession;
     } else {
       // 기존 로직 (fallback)
       gameSession = await this.tx.casinoGameSession.findFirst({

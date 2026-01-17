@@ -23,7 +23,7 @@ model Promotion {
   updatedAt                      DateTime               @updatedAt @map("updated_at")
   translations                   PromotionTranslation[]
   currencies                     PromotionCurrency[]
-  UserPromotion                  UserPromotion[]
+  userPromotions                 UserPromotion[]
   depositDetails                 DepositDetail[]
 
   @@map("promotions")

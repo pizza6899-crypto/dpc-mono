@@ -29,7 +29,7 @@ model WageringRequirement {
   priority Int @default(0)
 
   // Relations
-  DepositDetail    DepositDetail?            @relation(fields: [depositDetailId], references: [id])
+  depositDetail    DepositDetail?            @relation(fields: [depositDetailId], references: [id])
   userWallet       UserWallet                @relation(fields: [userId, currency], references: [userId, currency])
   userPromotion    UserPromotion?            @relation(fields: [userPromotionId], references: [id])
   user             User                      @relation(fields: [userId], references: [id])

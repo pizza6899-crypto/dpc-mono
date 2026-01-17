@@ -293,7 +293,7 @@ export class DcsCallbackService {
         },
       },
       select: {
-        GameSession: {
+        gameSession: {
           select: {
             uid: true,
             exchangeRate: true,
@@ -310,7 +310,7 @@ export class DcsCallbackService {
         throw new Error(CasinoErrorCode.INVALID_TXN);
       }
 
-      const gameSession = gameRound.GameSession;
+      const gameSession = gameRound.gameSession;
 
       // brand_uid 검증 (보안을 위해)
       if (gameSession.playerName !== brand_uid) {
@@ -368,7 +368,7 @@ export class DcsCallbackService {
 
       // gameSession이 이미 있으므로 이를 활용하여 실제 밸런스 조회
       let balance = new Prisma.Decimal(0);
-      const gameSession = gameRound?.GameSession;
+      const gameSession = gameRound?.gameSession;
 
       if (gameSession) {
         const balanceResult = await this.getUserBalanceService.execute({
@@ -499,7 +499,7 @@ export class DcsCallbackService {
         },
       },
       select: {
-        GameSession: {
+        gameSession: {
           select: {
             id: true,
             exchangeRate: true,
@@ -524,7 +524,7 @@ export class DcsCallbackService {
       return getDcsResponse(DcsResponseCode.BET_RECORD_NOT_EXIST);
     }
 
-    const gameSession = gameRound.GameSession;
+    const gameSession = gameRound.gameSession;
 
     // brand_uid 검증 (보안을 위해)
     if (gameSession.playerName !== brand_uid) {
@@ -550,7 +550,7 @@ export class DcsCallbackService {
         isEndRound: isEndRound,
         gameId: gameRound.casinoGame!.id,
         description: description,
-        gameSessionId: gameRound.GameSession.id, // 추가
+        gameSessionId: gameRound.gameSession.id, // 추가
       });
 
       const result = {
@@ -659,7 +659,7 @@ export class DcsCallbackService {
         },
       },
       select: {
-        GameSession: {
+        gameSession: {
           select: {
             exchangeRate: true,
             walletCurrency: true,
@@ -678,7 +678,7 @@ export class DcsCallbackService {
         throw new Error(CasinoErrorCode.INVALID_TXN);
       }
 
-      const gameSession = gameRound.GameSession;
+      const gameSession = gameRound.gameSession;
 
       const winTransactionResult = await this.casinoBetService.processWin(
         {
@@ -734,8 +734,8 @@ export class DcsCallbackService {
       if (gameRound) {
         // gameRound가 존재하는 경우 (DUPLICATE_CREDIT 등)
         const balanceResult = await this.getUserBalanceService.execute({
-          userId: gameRound.GameSession.userId,
-          currency: gameRound.GameSession.walletCurrency,
+          userId: gameRound.gameSession.userId,
+          currency: gameRound.gameSession.walletCurrency,
         });
 
         const userWallet = Array.isArray(balanceResult.wallet)
@@ -743,7 +743,7 @@ export class DcsCallbackService {
           : balanceResult.wallet;
 
         if (userWallet) {
-          balance = gameRound.GameSession.exchangeRate.mul(
+          balance = gameRound.gameSession.exchangeRate.mul(
             userWallet.totalBalance,
           );
         }

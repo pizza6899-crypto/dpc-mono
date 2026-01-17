@@ -59,7 +59,7 @@ export class GamePostProcessProcessor
           totalPushAmount: true,
           tieBetAmount: true,
           completedAt: true,
-          GameSession: {
+          gameSession: {
             select: {
               usdExchangeRate: true,
               compRate: true, // Fetch compRate
@@ -187,7 +187,7 @@ export class GamePostProcessProcessor
       try {
         // 세션에 저장된 환율(Play Currency -> USD)을 사용하여 USD 기준 롤링 금액 계산
         const usdExchangeRate =
-          gameRound.GameSession?.usdExchangeRate || new Prisma.Decimal(1);
+          gameRound.gameSession?.usdExchangeRate || new Prisma.Decimal(1);
         const rollingAmountUsd = betAmountForProcessing.mul(usdExchangeRate);
 
         await this.tierService.execute(gameRound.userId, rollingAmountUsd);
@@ -200,7 +200,7 @@ export class GamePostProcessProcessor
 
       // 7. Comp Accumulation
       try {
-        const compRate = gameRound.GameSession?.compRate; // Use optional chaining for GameSession
+        const compRate = gameRound.gameSession?.compRate; // Use optional chaining for gameSession
         if (compRate && compRate.greaterThan(0)) {
           const compAmount = betAmountForProcessing.mul(compRate);
           if (compAmount.greaterThan(0)) {

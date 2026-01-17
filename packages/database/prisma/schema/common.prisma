@@ -1,50 +1,56 @@
 generator client {
-  provider      = "prisma-client-js"
-  output        = "../../src"
-  moduleFormat  = "cjs"
-  binaryTargets = ["native", "linux-arm64-openssl-3.0.x"]
+  provider        = "prisma-client-js"
+  output          = "../../src"
+  moduleFormat    = "cjs"
+  binaryTargets   = ["native", "linux-arm64-openssl-3.0.x"]
+  previewFeatures = ["postgresqlExtensions"]
 }
 
 datasource db {
-  provider = "postgresql"
+  provider   = "postgresql"
+  // 크론은 첫 실행때만 설치 마이그레이션 파일로 명시적으로 처리.
+  // 자꾸 문제생겨서 변경
+  // 크론 및 크론 관련의존성은 프리즈마에서 관리 안함.
+  // cron, partman, stat_statements, repack
+  extensions = [pg_trgm, unaccent, vector, pgcrypto, uuid_ossp(map: "uuid-ossp"), citext, btree_gist, tsm_system_rows, fuzzystrmatch]
 }
 
 model User {
   id                     BigInt                  @id @default(autoincrement())
-  whitecliffId           BigInt?                 @unique
-  whitecliffSystemId     BigInt?                 @unique
-  whitecliffUsername     String?                 @unique
-  dcsId                  String?                 @unique
+  whitecliffId           BigInt?                 @unique @map("whitecliff_id")
+  whitecliffSystemId     BigInt?                 @unique @map("whitecliff_system_id")
+  whitecliffUsername     String?                 @unique @map("whitecliff_username")
+  dcsId                  String?                 @unique @map("dcs_id")
   email                  String?                 @unique
-  passwordHash           String?
-  socialType             SocialType?
-  socialId               String?
+  passwordHash           String?                 @map("password_hash")
+  socialType             SocialType?             @map("social_type")
+  socialId               String?                 @map("social_id")
   role                   UserRoleType            @default(USER)
   status                 UserStatus              @default(ACTIVE)
-  kycLevel               KycLevel                @default(NONE)
+  kycLevel               KycLevel                @default(NONE) @map("kyc_level")
   country                String?
   language               Language?
   timezone               String?
-  timezoneOffset         Int?
-  createdAt              DateTime                @default(now())
-  updatedAt              DateTime                @updatedAt
+  timezoneOffset         Int?                    @map("timezone_offset")
+  createdAt              DateTime                @default(now()) @map("created_at")
+  updatedAt              DateTime                @updatedAt @map("updated_at")
   affiliateCodes         AffiliateCode[]         @relation("AffiliateCodes")
   affiliateCommissions   AffiliateCommission[]   @relation("AffiliateCommissions")
   subUserCommissions     AffiliateCommission[]   @relation("SubUserCommissions")
   affiliateWallets       AffiliateWallet[]       @relation("AffiliateWallets")
-  EmailLog               EmailLog[]
-  GameSession            CasinoGameSession[]
+  emailLogs              EmailLog[]
+  gameSessions           CasinoGameSession[]
   affiliateReferrals     Referral[]              @relation("AffiliateReferrals")
   referredUsers          Referral[]              @relation("ReferredUsers")
   transactions           Transaction[]
   depositDetails         DepositDetail[]
   withdrawalDetails      WithdrawalDetail[]
   userWallets            UserWallet[]
-  UserBalanceStats       UserBalanceStats[]
-  UserPromotion          UserPromotion[]
-  UserSession            UserSession[]           @relation("UserSessions")
-  RevokedSessions        UserSession[]           @relation("RevokedSessions")
-  UserToken              UserToken[]
+  userBalanceStats       UserBalanceStats[]
+  userPromotions         UserPromotion[]
+  userSessions           UserSession[]           @relation("UserSessions")
+  revokedSessions        UserSession[]           @relation("RevokedSessions")
+  userTokens             UserToken[]
   loginAttempts          LoginAttempt[]
   userTier               UserTier?
   tierHistory            TierHistory[]
@@ -54,14 +60,16 @@ model User {
   compWallets            UserCompWallet[]
   alerts                 Alert[]
   notificationLogs       NotificationLog[]
+
+  @@map("users")
 }
 
 model UserWallet {
-  userId               BigInt
+  userId               BigInt                @map("user_id")
   currency             ExchangeCurrencyCode
-  mainBalance          Decimal               @default(0) @db.Decimal(32, 18)
-  bonusBalance         Decimal               @default(0) @db.Decimal(32, 18)
-  updatedAt            DateTime              @updatedAt
+  mainBalance          Decimal               @default(0) @map("main_balance") @db.Decimal(32, 18)
+  bonusBalance         Decimal               @default(0) @map("bonus_balance") @db.Decimal(32, 18)
+  updatedAt            DateTime              @updatedAt @map("updated_at")
   user                 User                  @relation(fields: [userId], references: [id])
   wageringRequirements WageringRequirement[]
 
@@ -72,36 +80,37 @@ model UserWallet {
 }
 
 model UserBalanceStats {
-  userId                 BigInt
+  userId                 BigInt               @map("user_id")
   currency               ExchangeCurrencyCode
-  totalDeposit           Decimal              @default(0) @db.Decimal(32, 18)
-  totalWithdraw          Decimal              @default(0) @db.Decimal(32, 18)
-  totalBet               Decimal              @default(0) @db.Decimal(32, 18)
-  totalWin               Decimal              @default(0) @db.Decimal(32, 18)
-  totalBonus             Decimal              @default(0) @db.Decimal(32, 18)
-  totalCompEarned        Decimal              @default(0) @db.Decimal(32, 18)
-  totalCompUsed          Decimal              @default(0) @db.Decimal(32, 18)
-  totalSettlementFromBet Decimal              @default(0) @db.Decimal(32, 18)
-  totalSettlementFromVip Decimal              @default(0) @db.Decimal(32, 18)
-  updatedAt              DateTime             @updatedAt
+  totalDeposit           Decimal              @default(0) @map("total_deposit") @db.Decimal(32, 18)
+  totalWithdraw          Decimal              @default(0) @map("total_withdraw") @db.Decimal(32, 18)
+  totalBet               Decimal              @default(0) @map("total_bet") @db.Decimal(32, 18)
+  totalWin               Decimal              @default(0) @map("total_win") @db.Decimal(32, 18)
+  totalBonus             Decimal              @default(0) @map("total_bonus") @db.Decimal(32, 18)
+  totalCompEarned        Decimal              @default(0) @map("total_comp_earned") @db.Decimal(32, 18)
+  totalCompUsed          Decimal              @default(0) @map("total_comp_used") @db.Decimal(32, 18)
+  totalSettlementFromBet Decimal              @default(0) @map("total_settlement_from_bet") @db.Decimal(32, 18)
+  totalSettlementFromVip Decimal              @default(0) @map("total_settlement_from_vip") @db.Decimal(32, 18)
+  updatedAt              DateTime             @updatedAt @map("updated_at")
   user                   User                 @relation(fields: [userId], references: [id])
 
   @@id([userId, currency])
   @@index([userId])
   @@index([currency])
+  @@map("user_balance_stats")
 }
 
 model Transaction {
   id                     BigInt                     @id @default(autoincrement())
-  userId                 BigInt
+  userId                 BigInt                     @map("user_id")
   type                   TransactionType
   status                 TransactionStatus
   currency               ExchangeCurrencyCode
   amount                 Decimal                    @db.Decimal(32, 18)
-  beforeAmount           Decimal                    @db.Decimal(32, 18)
-  afterAmount            Decimal                    @db.Decimal(32, 18)
-  createdAt              DateTime                   @default(now())
-  updatedAt              DateTime                   @updatedAt
+  beforeAmount           Decimal                    @map("before_amount") @db.Decimal(32, 18)
+  afterAmount            Decimal                    @map("after_amount") @db.Decimal(32, 18)
+  createdAt              DateTime                   @default(now()) @map("created_at")
+  updatedAt              DateTime                   @updatedAt @map("updated_at")
   bonusDetail            BonusDetail?
   gameRound              GameRound?
   user                   User                       @relation(fields: [userId], references: [id])
@@ -113,153 +122,164 @@ model Transaction {
   compWalletTransaction   CompWalletTransaction? @relation(fields: [compWalletTransactionId], references: [id])
   depositDetail           DepositDetail?
   withdrawalDetail        WithdrawalDetail?
+
+  @@map("transactions")
 }
 
 model GameRound {
   id                             BigInt                @id @default(autoincrement())
-  userId                         BigInt
-  aggregatorType                 GameAggregatorType
+  userId                         BigInt                @map("user_id")
+  aggregatorType                 GameAggregatorType    @map("aggregator_type")
   provider                       GameProvider
-  aggregatorTxId                 String
-  transactionId                  BigInt                @unique
-  aggregatorGameId               Int
-  totalBetAmountInGameCurrency   Decimal               @default(0) @db.Decimal(32, 18)
-  totalWinAmountInGameCurrency   Decimal               @default(0) @db.Decimal(32, 18)
-  netAmountInGameCurrency        Decimal               @default(0) @db.Decimal(32, 18)
-  totalBetAmountInWalletCurrency Decimal               @default(0) @db.Decimal(32, 18)
-  totalWinAmountInWalletCurrency Decimal               @default(0) @db.Decimal(32, 18)
-  netAmountInWalletCurrency      Decimal               @default(0) @db.Decimal(32, 18)
-  sessionId                      String?
-  tableId                        String?
-  roundId                        String?
-  replayType                     GameReplayType?
-  replayData                     String?
-  totalPushAmount                Decimal?              @db.Decimal(32, 18)
-  tieBetAmount                   Decimal?              @db.Decimal(32, 18)
-  contributionAmount             Decimal?              @db.Decimal(32, 18)
-  compEarned                     Decimal?              @db.Decimal(32, 18)
-  jackpotContributionAmount      Decimal               @default(0) @db.Decimal(32, 18)
-  startedAt                      DateTime?
-  completedAt                    DateTime?
-  gameId                         BigInt?
-  gameSessionId                  BigInt
-  AffiliateCommission            AffiliateCommission[]
+  aggregatorTxId                 String                @map("aggregator_tx_id")
+  transactionId                  BigInt                @unique @map("transaction_id")
+  aggregatorGameId               Int                   @map("aggregator_game_id")
+  totalBetAmountInGameCurrency   Decimal               @default(0) @map("total_bet_amount_in_game_currency") @db.Decimal(32, 18)
+  totalWinAmountInGameCurrency   Decimal               @default(0) @map("total_win_amount_in_game_currency") @db.Decimal(32, 18)
+  netAmountInGameCurrency        Decimal               @default(0) @map("net_amount_in_game_currency") @db.Decimal(32, 18)
+  totalBetAmountInWalletCurrency Decimal               @default(0) @map("total_bet_amount_in_wallet_currency") @db.Decimal(32, 18)
+  totalWinAmountInWalletCurrency Decimal               @default(0) @map("total_win_amount_in_wallet_currency") @db.Decimal(32, 18)
+  netAmountInWalletCurrency      Decimal               @default(0) @map("net_amount_in_wallet_currency") @db.Decimal(32, 18)
+  sessionId                      String?               @map("session_id")
+  tableId                        String?               @map("table_id")
+  roundId                        String?               @map("round_id")
+  replayType                     GameReplayType?       @map("replay_type")
+  replayData                     String?               @map("replay_data")
+  totalPushAmount                Decimal?              @map("total_push_amount") @db.Decimal(32, 18)
+  tieBetAmount                   Decimal?              @map("tie_bet_amount") @db.Decimal(32, 18)
+  contributionAmount             Decimal?              @map("contribution_amount") @db.Decimal(32, 18)
+  compEarned                     Decimal?              @map("comp_earned") @db.Decimal(32, 18)
+  jackpotContributionAmount      Decimal               @default(0) @map("jackpot_contribution_amount") @db.Decimal(32, 18)
+  startedAt                      DateTime?             @map("started_at")
+  completedAt                    DateTime?             @map("completed_at")
+  gameId                         BigInt?               @map("game_id")
+  gameSessionId                  BigInt                @map("game_session_id")
+  affiliateCommissions           AffiliateCommission[]
   bets                           GameBet[]
   casinoGame                     CasinoGame?           @relation(fields: [gameId], references: [id])
-  GameSession                    CasinoGameSession     @relation(fields: [gameSessionId], references: [id])
+  gameSession                    CasinoGameSession     @relation(fields: [gameSessionId], references: [id])
   transaction                    Transaction           @relation(fields: [transactionId], references: [id])
   wins                           GameWin[]
 
   @@unique([aggregatorTxId, aggregatorType])
+  @@map("game_rounds")
 }
 
 model TransactionBalanceDetail {
   id                 BigInt      @id @default(autoincrement())
-  transactionId      BigInt
-  mainBalanceChange  Decimal?    @db.Decimal(32, 18)
-  mainBeforeAmount   Decimal?    @db.Decimal(32, 18)
-  mainAfterAmount    Decimal?    @db.Decimal(32, 18)
-  bonusBalanceChange Decimal?    @db.Decimal(32, 18)
-  bonusBeforeAmount  Decimal?    @db.Decimal(32, 18)
-  bonusAfterAmount   Decimal?    @db.Decimal(32, 18)
-  createdAt          DateTime    @default(now())
+  transactionId      BigInt      @map("transaction_id")
+  mainBalanceChange  Decimal?    @map("main_balance_change") @db.Decimal(32, 18)
+  mainBeforeAmount   Decimal?    @map("main_before_amount") @db.Decimal(32, 18)
+  mainAfterAmount    Decimal?    @map("main_after_amount") @db.Decimal(32, 18)
+  bonusBalanceChange Decimal?    @map("bonus_balance_change") @db.Decimal(32, 18)
+  bonusBeforeAmount  Decimal?    @map("bonus_before_amount") @db.Decimal(32, 18)
+  bonusAfterAmount   Decimal?    @map("bonus_after_amount") @db.Decimal(32, 18)
+  createdAt          DateTime    @default(now()) @map("created_at")
   transaction        Transaction @relation(fields: [transactionId], references: [id])
 
   @@index([transactionId])
+  @@map("transaction_balance_details")
 }
 
 model BonusDetail {
   id                      BigInt             @id @default(autoincrement())
-  createdAt               DateTime           @default(now())
-  transactionTime         DateTime
-  aggregatorType          GameAggregatorType
+  createdAt               DateTime           @default(now()) @map("created_at")
+  transactionTime         DateTime           @map("transaction_time")
+  aggregatorType          GameAggregatorType @map("aggregator_type")
   provider                GameProvider
-  bonusType               BonusType
+  bonusType               BonusType          @map("bonus_type")
   amount                  Decimal            @db.Decimal(32, 18)
-  aggregatorPromotionId   String?
-  aggregatorRoundId       String?
-  aggregatorWagerId       String?
-  aggregatorTransactionId String?
-  aggregatorFreespinId    String?
-  aggregatorSessionId     String?
-  isEndRound              Boolean?
+  aggregatorPromotionId   String?            @map("aggregator_promotion_id")
+  aggregatorRoundId       String?            @map("aggregator_round_id")
+  aggregatorWagerId       String?            @map("aggregator_wager_id")
+  aggregatorTransactionId String?            @map("aggregator_transaction_id")
+  aggregatorFreespinId    String?            @map("aggregator_freespin_id")
+  aggregatorSessionId     String?            @map("aggregator_session_id")
+  isEndRound              Boolean?           @map("is_end_round")
   description             String?
-  gameId                  BigInt?
-  transactionId           BigInt             @unique
+  gameId                  BigInt?            @map("game_id")
+  transactionId           BigInt             @unique @map("transaction_id")
   casinoGame              CasinoGame?        @relation(fields: [gameId], references: [id])
   transaction             Transaction        @relation(fields: [transactionId], references: [id])
+
+  @@map("bonus_details")
 }
 
 model NowPaymentCallbackLog {
   id              BigInt    @id @default(autoincrement())
-  requestHeaders  Json?
-  requestBody     Json
-  responseStatus  Int?
-  responseBody    Json?
+  requestHeaders  Json?     @map("request_headers")
+  requestBody     Json      @map("request_body")
+  responseStatus  Int?      @map("response_status")
+  responseBody    Json?     @map("response_body")
   processed       Boolean   @default(false)
-  processingError String?
-  processedAt     DateTime?
-  createdAt       DateTime  @default(now())
+  processingError String?   @map("processing_error")
+  processedAt     DateTime? @map("processed_at")
+  createdAt       DateTime  @default(now()) @map("created_at")
+
+  @@map("now_payment_callback_logs")
 }
 
 model ExchangeRate {
   id            Int                  @id @default(autoincrement())
-  baseCurrency  ExchangeCurrencyCode
-  quoteCurrency ExchangeCurrencyCode
+  baseCurrency  ExchangeCurrencyCode @map("base_currency")
+  quoteCurrency ExchangeCurrencyCode @map("quote_currency")
   rate          Decimal              @db.Decimal(32, 18)
   provider      ExchangeRateProvider
-  collectedAt   DateTime             @default(now())
-  isActive      Boolean              @default(true)
-  createdAt     DateTime             @default(now())
-  updatedAt     DateTime             @updatedAt
-  previousRate  Decimal?             @db.Decimal(32, 18)
-  changeRate    Decimal?             @db.Decimal(8, 4)
-  isValid       Boolean              @default(true)
+  collectedAt   DateTime             @default(now()) @map("collected_at")
+  isActive      Boolean              @default(true) @map("is_active")
+  createdAt     DateTime             @default(now()) @map("created_at")
+  updatedAt     DateTime             @updatedAt @map("updated_at")
+  previousRate  Decimal?             @map("previous_rate") @db.Decimal(32, 18)
+  changeRate    Decimal?             @map("change_rate") @db.Decimal(8, 4)
+  isValid       Boolean              @default(true) @map("is_valid")
 
   @@unique([baseCurrency, quoteCurrency, provider])
   @@index([baseCurrency, quoteCurrency])
   @@index([baseCurrency, quoteCurrency, provider])
   @@index([collectedAt])
   @@index([isActive, collectedAt])
+  @@map("exchange_rates")
 }
 
 model UserToken {
   id        Int       @id @default(autoincrement())
-  userId    BigInt
+  userId    BigInt    @map("user_id")
   type      TokenType
   token     String    @unique
-  expiresAt DateTime
-  usedAt    DateTime?
+  expiresAt DateTime  @map("expires_at")
+  usedAt    DateTime? @map("used_at")
   metadata  Json?     @default("{}")
-  createdAt DateTime  @default(now())
-  updatedAt DateTime  @updatedAt
+  createdAt DateTime  @default(now()) @map("created_at")
+  updatedAt DateTime  @updatedAt @map("updated_at")
   user      User      @relation(fields: [userId], references: [id], onDelete: Cascade)
 
   @@index([userId, type])
   @@index([type, expiresAt])
   @@index([userId, type, usedAt])
   @@index([expiresAt])
+  @@map("user_tokens")
 }
 
 model EmailLog {
   id        Int         @id @default(autoincrement())
-  userId    BigInt?
+  userId    BigInt?     @map("user_id")
   type      EmailType
   status    EmailStatus
   to        String
   subject   String
   from      String?
-  messageId String?
+  messageId String?     @map("message_id")
   error     String?
   metadata  Json?       @default("{}")
-  sentAt    DateTime?
-  createdAt DateTime    @default(now())
+  sentAt    DateTime?   @map("sent_at")
+  createdAt DateTime    @default(now()) @map("created_at")
   user      User?       @relation(fields: [userId], references: [id])
 
   @@index([userId, type, createdAt])
   @@index([to, type, createdAt])
   @@index([status, createdAt])
   @@index([type, status])
+  @@map("email_logs")
 }
 
 enum SocialType {
@@ -415,16 +435,16 @@ enum LoginFailureReason {
 model LoginAttempt {
   id                BigInt              @id @default(autoincrement())
   uid               String              @unique
-  userId            BigInt?
+  userId            BigInt?             @map("user_id")
   result            LoginAttemptResult
-  failureReason     LoginFailureReason?
-  ipAddress         String?
-  userAgent         String?
-  deviceFingerprint String?
-  isMobile          Boolean?
-  attemptedAt       DateTime            @default(now())
+  failureReason     LoginFailureReason? @map("failure_reason")
+  ipAddress         String?             @map("ip_address")
+  userAgent         String?             @map("user_agent")
+  deviceFingerprint String?             @map("device_fingerprint")
+  isMobile          Boolean?            @map("is_mobile")
+  attemptedAt       DateTime            @default(now()) @map("attempted_at")
   email             String?
-  isAdmin           Boolean             @default(false)
+  isAdmin           Boolean             @default(false) @map("is_admin")
   user              User?               @relation(fields: [userId], references: [id], onDelete: SetNull)
 
   @@index([userId])
@@ -434,4 +454,5 @@ model LoginAttempt {
   @@index([result])
   @@index([email, attemptedAt])
   @@index([ipAddress, attemptedAt])
+  @@map("login_attempts")
 }

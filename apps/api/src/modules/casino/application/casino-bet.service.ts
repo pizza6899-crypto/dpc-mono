@@ -530,7 +530,7 @@ export class CasinoBetService {
       },
       select: {
         id: true,
-        GameSession: {
+        gameSession: {
           select: {
             walletCurrency: true,
             exchangeRate: true,
@@ -548,9 +548,9 @@ export class CasinoBetService {
       throw new Error(CasinoErrorCode.INVALID_TXN);
     }
 
-    const walletCurrency = gameRound.GameSession.walletCurrency;
+    const walletCurrency = gameRound.gameSession.walletCurrency;
     const winAmountInWalletCurrency = winAmountInGameCurrency.div(
-      gameRound.GameSession.exchangeRate,
+      gameRound.gameSession.exchangeRate,
     );
 
     // 3. 유저 밸런스 업데이트
