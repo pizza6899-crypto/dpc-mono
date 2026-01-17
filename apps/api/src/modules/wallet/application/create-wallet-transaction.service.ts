@@ -2,8 +2,8 @@ import { Injectable, Inject } from '@nestjs/common';
 import { WALLET_TRANSACTION_REPOSITORY } from '../ports/out/wallet-transaction.repository.token';
 import type { WalletTransactionRepositoryPort } from '../ports/out/wallet-transaction.repository.port';
 import { WalletTransaction, WalletBalanceDetail } from '../domain';
-import type { ExchangeCurrencyCode, TransactionType, TransactionStatus } from '@repo/database';
-import { Prisma } from '@repo/database';
+import type { ExchangeCurrencyCode, TransactionType, TransactionStatus } from 'src/generated/prisma';
+import { Prisma } from 'src/generated/prisma';
 
 export interface CreateWalletTransactionParams {
     userId: bigint;

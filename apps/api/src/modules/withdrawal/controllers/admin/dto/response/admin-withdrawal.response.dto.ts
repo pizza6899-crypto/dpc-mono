@@ -1,5 +1,5 @@
 import { ApiProperty, ApiPropertyOptional } from '@nestjs/swagger';
-import { WithdrawalStatus, WithdrawalMethodType, WithdrawalProcessingMode, ExchangeCurrencyCode } from '@repo/database';
+import { WithdrawalStatus, WithdrawalMethodType, WithdrawalProcessingMode, ExchangeCurrencyCode } from 'src/generated/prisma';
 import { WithdrawalDetail } from '../../../../domain';
 
 export class AdminWithdrawalResponseDto {

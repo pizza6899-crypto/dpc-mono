@@ -1,7 +1,7 @@
 import { Controller, Get, Post, Body, Patch, Put, Param, Query, HttpCode, HttpStatus } from '@nestjs/common';
 import { ApiTags, ApiOperation } from '@nestjs/swagger';
 import { RequireRoles } from 'src/common/auth/decorators/roles.decorator';
-import { UserRoleType } from '@repo/database';
+import { UserRoleType } from 'src/generated/prisma';
 import {
     ApiStandardErrors,
     ApiStandardResponse,

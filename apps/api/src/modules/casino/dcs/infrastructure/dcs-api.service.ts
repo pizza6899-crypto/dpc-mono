@@ -9,7 +9,7 @@ import * as crypto from 'crypto';
 import { ApiException } from 'src/common/http/exception/api.exception';
 import { MessageCode } from 'src/common/http/types';
 import { HttpStatusCode } from 'axios';
-import { GameProvider } from '@repo/database';
+import { GameProvider } from 'src/generated/prisma';
 import { DcsMapperService } from './dcs-mapper.service';
 import { GamingCurrencyCode } from 'src/utils/currency.util';
 import { DispatchLogService } from 'src/modules/audit-log/application/dispatch-log.service';

@@ -4,7 +4,7 @@ import { EnvService } from 'src/common/env/env.service';
 import { firstValueFrom } from 'rxjs';
 import { WhitecliffConfig } from 'src/common/env/env.types';
 
-import { GameProvider, Language } from '@repo/database';
+import { GameProvider, Language } from 'src/generated/prisma';
 import { WhitecliffMapperService } from './whitecliff-mapper.service';
 import { GamingCurrencyCode } from 'src/utils/currency.util';
 import { DispatchLogService } from 'src/modules/audit-log/application/dispatch-log.service';

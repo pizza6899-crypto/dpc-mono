@@ -1,7 +1,7 @@
 // apps/api/src/modules/notification/alert/application/find-alerts.service.ts
 
 import { Injectable, Inject } from '@nestjs/common';
-import { AlertStatus } from '@repo/database';
+import { AlertStatus } from 'src/generated/prisma';
 import { Alert } from '../domain';
 import { ALERT_REPOSITORY } from '../ports';
 import type { AlertRepositoryPort } from '../ports';

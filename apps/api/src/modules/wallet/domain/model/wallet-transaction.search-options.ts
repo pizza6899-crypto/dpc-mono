@@ -1,5 +1,5 @@
 // src/modules/wallet/domain/model/wallet-transaction.search-options.ts
-import type { ExchangeCurrencyCode, TransactionType } from '@repo/database';
+import type { ExchangeCurrencyCode, TransactionType } from 'src/generated/prisma';
 
 export interface WalletTransactionSearchOptions {
     userId: bigint;

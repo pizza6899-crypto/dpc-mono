@@ -1,6 +1,6 @@
 // src/modules/wallet/ports/out/user-wallet.repository.port.ts
 import type { UserWallet } from '../../domain';
-import type { ExchangeCurrencyCode } from '@repo/database';
+import type { ExchangeCurrencyCode } from 'src/generated/prisma';
 
 /**
  * UserWallet Repository Port

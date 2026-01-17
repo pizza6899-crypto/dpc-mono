@@ -7,7 +7,7 @@ import {
   type CredentialUserRepositoryPort,
 } from '../ports/out';
 import { CredentialUser } from '../domain/model/credential-user.entity';
-import { UserStatus, UserRoleType } from '@repo/database';
+import { UserStatus, UserRoleType } from 'src/generated/prisma';
 import { hashPassword } from 'src/utils/password.util';
 
 describe('VerifyCredentialService', () => {

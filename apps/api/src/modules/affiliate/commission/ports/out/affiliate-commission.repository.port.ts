@@ -1,5 +1,5 @@
 // src/modules/affiliate/commission/ports/out/affiliate-commission.repository.port.ts
-import type { CommissionStatus, ExchangeCurrencyCode } from '@repo/database';
+import type { CommissionStatus, ExchangeCurrencyCode } from 'src/generated/prisma';
 import type { AffiliateCommission } from '../../domain';
 
 /**

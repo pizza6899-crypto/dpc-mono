@@ -1,6 +1,6 @@
 // src/modules/tier/application/update-affiliate-monthly-wager.service.ts
 import { Inject, Injectable } from '@nestjs/common';
-import { Prisma } from '@repo/database';
+import { Prisma } from 'src/generated/prisma';
 import type { UserTierRepositoryPort } from '../ports/user-tier.repository.port';
 import { USER_TIER_REPOSITORY } from '../ports/repository.token';
 import { UserTierNotFoundException } from '../domain';

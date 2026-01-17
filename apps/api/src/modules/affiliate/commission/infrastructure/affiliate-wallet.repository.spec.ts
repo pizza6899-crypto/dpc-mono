@@ -1,7 +1,7 @@
 // src/modules/affiliate/commission/infrastructure/affiliate-wallet.repository.spec.ts
 import type { Transaction } from '@nestjs-cls/transactional';
 import type { TransactionalAdapterPrisma } from '@nestjs-cls/transactional-adapter-prisma';
-import { ExchangeCurrencyCode, Prisma } from '@repo/database';
+import { ExchangeCurrencyCode, Prisma } from 'src/generated/prisma';
 import { AffiliateWallet, WalletNotFoundException } from '../domain';
 import type { AffiliateWalletMapper } from './affiliate-wallet.mapper';
 import { AffiliateWalletRepository } from './affiliate-wallet.repository';

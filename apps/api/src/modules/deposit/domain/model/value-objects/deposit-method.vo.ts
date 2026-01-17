@@ -1,5 +1,5 @@
 // src/modules/deposit/domain/model/value-objects/deposit-method.vo.ts
-import { DepositMethodType, PaymentProvider } from '@repo/database';
+import { DepositMethodType, PaymentProvider } from 'src/generated/prisma';
 
 /**
  * 입금 방법 Value Object

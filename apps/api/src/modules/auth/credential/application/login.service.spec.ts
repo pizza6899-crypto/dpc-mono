@@ -7,7 +7,7 @@ import { RecordLoginAttemptService } from './record-login-attempt.service';
 import { LoginAttempt, LoginAttemptResult } from '../domain';
 import type { AuthenticatedUser } from 'src/common/auth/types/auth.types';
 import type { RequestClientInfo } from 'src/common/http/types/client-info.types';
-import { UserRoleType } from '@repo/database';
+import { UserRoleType } from 'src/generated/prisma';
 import { PrismaModule } from 'src/infrastructure/prisma/prisma.module';
 import { EnvModule } from 'src/common/env/env.module';
 import { CreateSessionService } from '../../session/application/create-session.service';

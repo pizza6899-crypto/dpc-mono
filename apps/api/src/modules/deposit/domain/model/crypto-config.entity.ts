@@ -1,5 +1,5 @@
 // src/modules/deposit/domain/model/crypto-config.entity.ts
-import { Prisma } from '@repo/database';
+import { Prisma } from 'src/generated/prisma';
 
 /**
  * CryptoConfig 도메인 엔티티

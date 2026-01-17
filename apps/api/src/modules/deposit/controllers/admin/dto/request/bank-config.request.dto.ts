@@ -1,6 +1,6 @@
 import { ApiProperty, ApiPropertyOptional } from '@nestjs/swagger';
 import { IsEnum, IsString, IsNotEmpty, IsBoolean, IsOptional, IsNumber, IsInt, Min } from 'class-validator';
-import { ExchangeCurrencyCode } from '@repo/database';
+import { ExchangeCurrencyCode } from 'src/generated/prisma';
 import { Type } from 'class-transformer';
 
 export class CreateBankConfigRequestDto {

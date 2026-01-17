@@ -12,7 +12,7 @@ import { Logger, OnApplicationShutdown } from '@nestjs/common';
 import { ApiException } from 'src/common/http/exception/api.exception';
 import { MessageCode } from 'src/common/http/types';
 import { HttpStatusCode } from 'axios';
-import { GameReplayType } from '@repo/database';
+import { GameReplayType } from 'src/generated/prisma';
 import { GamingCurrencyCode } from 'src/utils/currency.util';
 import { ClsService } from 'nestjs-cls';
 

@@ -6,7 +6,7 @@ import { USER_REPOSITORY } from '../ports/out/user.repository.token';
 import type { UserRepositoryPort } from '../ports/out/user.repository.port';
 import { User } from '../domain';
 import { UserAlreadyExistsException } from '../domain/user.exception';
-import { UserRoleType, UserStatus, SocialType } from '@repo/database';
+import { UserRoleType, UserStatus, SocialType } from 'src/generated/prisma';
 import { PrismaModule } from 'src/infrastructure/prisma/prisma.module';
 import { EnvModule } from 'src/common/env/env.module';
 

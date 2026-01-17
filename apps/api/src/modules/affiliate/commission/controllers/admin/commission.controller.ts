@@ -18,8 +18,8 @@ import type { CurrentUserWithSession } from 'src/common/auth/decorators/current-
 import { RequestClientInfoParam } from 'src/common/auth/decorators/request-info.decorator';
 import type { RequestClientInfo } from 'src/common/http/types/client-info.types';
 import { RequireRoles } from 'src/common/auth/decorators/roles.decorator';
-import { UserRoleType } from '@repo/database';
-import { Prisma } from '@repo/database';
+import { UserRoleType } from 'src/generated/prisma';
+import { Prisma } from 'src/generated/prisma';
 import { FindCommissionByIdService } from '../../application/find-commission-by-id.service';
 import { SetCustomRateService } from '../../application/set-custom-rate.service';
 import { ResetCustomRateService } from '../../application/reset-custom-rate.service';

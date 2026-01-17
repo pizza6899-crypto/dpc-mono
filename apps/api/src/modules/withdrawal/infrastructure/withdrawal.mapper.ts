@@ -4,7 +4,7 @@ import type {
     CryptoWithdrawConfig as PrismaCryptoWithdrawConfig,
     BankWithdrawConfig as PrismaBankWithdrawConfig,
     Prisma,
-} from '@repo/database';
+} from 'src/generated/prisma';
 import {
     WithdrawalDetail,
     CryptoWithdrawConfig,

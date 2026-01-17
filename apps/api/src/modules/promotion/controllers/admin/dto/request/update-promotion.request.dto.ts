@@ -1,6 +1,6 @@
 import { ApiPropertyOptional } from '@nestjs/swagger';
 import { IsString, IsOptional, IsBoolean, IsDateString, IsEnum } from 'class-validator';
-import { PromotionBonusType, PromotionTargetType } from '@repo/database';
+import { PromotionBonusType, PromotionTargetType } from 'src/generated/prisma';
 
 export class UpdatePromotionRequestDto {
   @ApiPropertyOptional({

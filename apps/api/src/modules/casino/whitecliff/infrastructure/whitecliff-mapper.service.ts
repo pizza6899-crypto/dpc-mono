@@ -1,7 +1,7 @@
 // infrastructure/whitecliff-mapper.service.ts
 
 import { Injectable } from '@nestjs/common';
-import { GameProvider, GameCategory } from '@repo/database';
+import { GameProvider, GameCategory } from 'src/generated/prisma';
 import { GamingCurrencyCode } from 'src/utils/currency.util';
 
 @Injectable()
@@ -38,11 +38,11 @@ export class WhitecliffMapperService {
   private static readonly PROVIDER_REVERSE_MAP: Partial<
     Record<GameProvider, number>
   > = {
-    [GameProvider.EVOLUTION]: 1,
-    [GameProvider.PRAGMATIC_PLAY_LIVE]: 28,
-    [GameProvider.PG_SOFT]: 285,
-    [GameProvider.PRAGMATIC_PLAY_SLOTS]: 226,
-  };
+      [GameProvider.EVOLUTION]: 1,
+      [GameProvider.PRAGMATIC_PLAY_LIVE]: 28,
+      [GameProvider.PG_SOFT]: 285,
+      [GameProvider.PRAGMATIC_PLAY_SLOTS]: 226,
+    };
 
   fromWhitecliffProvider(providerId: number): GameProvider | null {
     return WhitecliffMapperService.PROVIDER_MAP[providerId] || null;

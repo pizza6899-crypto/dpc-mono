@@ -1,5 +1,5 @@
 import { Injectable, Inject } from '@nestjs/common';
-import { ChannelType, Language } from '@repo/database';
+import { ChannelType, Language } from 'src/generated/prisma';
 import { NOTIFICATION_TEMPLATE_REPOSITORY } from '../ports';
 import type { NotificationTemplateRepositoryPort } from '../ports';
 import { NotificationTemplate, NotificationTemplateTranslation } from '../domain';

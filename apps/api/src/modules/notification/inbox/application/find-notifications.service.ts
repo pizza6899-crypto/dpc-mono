@@ -1,7 +1,7 @@
 // apps/api/src/modules/notification/inbox/application/find-notifications.service.ts
 
 import { Injectable, Inject } from '@nestjs/common';
-import { ChannelType } from '@repo/database';
+import { ChannelType } from 'src/generated/prisma';
 import { NotificationLog } from '../domain';
 import { NOTIFICATION_LOG_REPOSITORY } from '../ports';
 import type { NotificationLogRepositoryPort } from '../ports';

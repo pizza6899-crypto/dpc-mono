@@ -3,7 +3,7 @@ import { Transactional } from '@nestjs-cls/transactional';
 import { UpdateUserBalanceService } from 'src/modules/wallet/application/update-user-balance.service';
 import { CreateWalletTransactionService } from 'src/modules/wallet/application/create-wallet-transaction.service';
 import { BalanceType, UpdateOperation } from 'src/modules/wallet/domain';
-import { TransactionType, TransactionStatus } from '@repo/database';
+import { TransactionType, TransactionStatus } from 'src/generated/prisma';
 import { WITHDRAWAL_REPOSITORY } from '../ports';
 import type { WithdrawalRepositoryPort } from '../ports';
 

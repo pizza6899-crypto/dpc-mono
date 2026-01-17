@@ -1,7 +1,7 @@
 // infrastructure/whitecliff-mapper.service.ts
 
 import { Injectable } from '@nestjs/common';
-import { GameProvider, GameCategory } from '@repo/database';
+import { GameProvider, GameCategory } from 'src/generated/prisma';
 import { GamingCurrencyCode } from 'src/utils/currency.util';
 
 @Injectable()
@@ -34,9 +34,9 @@ export class DcsMapperService {
   private static readonly PROVIDER_REVERSE_MAP: Partial<
     Record<GameProvider, string>
   > = {
-    [GameProvider.RELAX_GAMING]: 'relax',
-    [GameProvider.PLAYNGO]: 'png',
-  };
+      [GameProvider.RELAX_GAMING]: 'relax',
+      [GameProvider.PLAYNGO]: 'png',
+    };
 
   fromDcsProvider(providerId: string): GameProvider | null {
     return DcsMapperService.PROVIDER_MAP[providerId] || null;

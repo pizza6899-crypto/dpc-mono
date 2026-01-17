@@ -1,5 +1,5 @@
 import { ApiProperty, ApiPropertyOptional } from '@nestjs/swagger';
-import { CompTransactionType } from '@repo/database';
+import { CompTransactionType } from 'src/generated/prisma';
 
 export class CompTransactionResponseDto {
     @ApiProperty({ description: 'Transaction ID (Encoded)', example: 'ctx_abc123' })

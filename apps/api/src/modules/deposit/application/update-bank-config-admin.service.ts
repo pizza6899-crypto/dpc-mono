@@ -1,7 +1,7 @@
 // src/modules/deposit/application/update-bank-config-admin.service.ts
 import { Inject, Injectable } from '@nestjs/common';
-import { Prisma } from '@repo/database';
-import { ExchangeCurrencyCode } from '@repo/database';
+import { Prisma } from 'src/generated/prisma';
+import { ExchangeCurrencyCode } from 'src/generated/prisma';
 import { BANK_CONFIG_REPOSITORY } from '../ports/out';
 import type { BankConfigRepositoryPort } from '../ports/out';
 import { BankConfig } from '../domain';

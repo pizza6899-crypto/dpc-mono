@@ -6,7 +6,7 @@ import { ResetUserPasswordAdminService } from './reset-user-password-admin.servi
 import { USER_REPOSITORY } from 'src/modules/user/ports/out/user.repository.token';
 import type { UserRepositoryPort } from 'src/modules/user/ports/out/user.repository.port';
 import { User } from 'src/modules/user/domain';
-import { UserStatus, UserRoleType, SocialType } from '@repo/database';
+import { UserStatus, UserRoleType, SocialType } from 'src/generated/prisma';
 import { hashPassword } from 'src/utils/password.util';
 import { LoginFailedException } from '../domain/exception';
 import { UserNotFoundException } from 'src/modules/user/domain/user.exception';

@@ -1,7 +1,7 @@
 // src/modules/user/infrastructure/user.mapper.ts
 import { Injectable } from '@nestjs/common';
 import { User } from '../domain';
-import type { User as PrismaUser } from '@repo/database';
+import type { User as PrismaUser } from 'src/generated/prisma';
 import type { CreateUserParams } from '../ports/out/user.repository.port';
 
 /**

@@ -6,7 +6,7 @@ import {
   ExchangeCurrencyCode,
   GameCategory,
   Prisma,
-} from '@repo/database';
+} from 'src/generated/prisma';
 import { AccumulateCommissionService } from './accumulate-commission.service';
 import { CalculateCommissionService } from './calculate-commission.service';
 import { AffiliateCommission } from '../domain';

@@ -1,5 +1,5 @@
 import { ApiProperty } from '@nestjs/swagger';
-import { UserRoleType, UserStatus } from '@repo/database';
+import { UserRoleType, UserStatus } from 'src/generated/prisma';
 
 export class RegisterAdminResponseDto {
   @ApiProperty({ description: 'User ID' })

@@ -1,5 +1,5 @@
 // src/modules/tier/domain/model/tier.entity.spec.ts
-import { Prisma } from '@repo/database';
+import { Prisma } from 'src/generated/prisma';
 import { Tier } from './tier.entity';
 import { TierException } from '../tier.exception';
 

@@ -1,6 +1,6 @@
 // src/modules/deposit/application/create-bank-config.service.spec.ts
 import { Test, TestingModule } from '@nestjs/testing';
-import { Prisma, ExchangeCurrencyCode } from '@repo/database';
+import { Prisma, ExchangeCurrencyCode } from 'src/generated/prisma';
 import { CreateBankConfigService } from './create-bank-config.service';
 import { BANK_CONFIG_REPOSITORY } from '../ports/out';
 import { BankConfig } from '../domain';

@@ -1,6 +1,6 @@
 import { ApiProperty } from '@nestjs/swagger';
 import { IsDateString, IsEnum, IsOptional } from 'class-validator';
-import { ExchangeCurrencyCode } from '@repo/database';
+import { ExchangeCurrencyCode } from 'src/generated/prisma';
 
 export class FindStatsRequestDto {
     @IsDateString()

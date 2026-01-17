@@ -1,4 +1,4 @@
-import { ExchangeCurrencyCode } from '@repo/database';
+import { ExchangeCurrencyCode } from 'src/generated/prisma';
 import { UserHourlyStat } from '../domain/model/user-hourly-stat.entity';
 
 export interface AnalyticsRepositoryPort {

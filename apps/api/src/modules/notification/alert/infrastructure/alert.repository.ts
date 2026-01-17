@@ -4,7 +4,7 @@ import { Injectable } from '@nestjs/common';
 import { InjectTransaction } from '@nestjs-cls/transactional';
 import type { Transaction } from '@nestjs-cls/transactional';
 import type { TransactionalAdapterPrisma } from '@nestjs-cls/transactional-adapter-prisma';
-import { AlertStatus } from '@repo/database';
+import { AlertStatus } from 'src/generated/prisma';
 import { Alert, AlertNotFoundException } from '../domain';
 import { AlertRepositoryPort, AlertListQuery } from '../ports';
 import { AlertMapper } from './alert.mapper';

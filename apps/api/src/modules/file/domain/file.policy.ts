@@ -1,4 +1,4 @@
-import { UserRoleType } from '@repo/database';
+import { UserRoleType } from 'src/generated/prisma';
 import { MessageCode } from '@repo/shared';
 import { FileAccessType } from './model/file.enum';
 import { FileUsageType } from './model/file-usage.type';

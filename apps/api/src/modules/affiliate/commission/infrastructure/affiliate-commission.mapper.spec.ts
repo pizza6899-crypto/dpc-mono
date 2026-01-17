@@ -4,7 +4,7 @@ import {
   ExchangeCurrencyCode,
   GameCategory,
   Prisma,
-} from '@repo/database';
+} from 'src/generated/prisma';
 import { AffiliateCommission } from '../domain';
 import { AffiliateCommissionMapper } from './affiliate-commission.mapper';
 
@@ -445,7 +445,7 @@ describe('AffiliateCommissionMapper', () => {
             status === CommissionStatus.AVAILABLE ? mockSettlementDate : null,
           claimedAt:
             status === CommissionStatus.CLAIMED ||
-            status === CommissionStatus.WITHDRAWN
+              status === CommissionStatus.WITHDRAWN
               ? mockClaimedAt
               : null,
           withdrawnAt:

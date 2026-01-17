@@ -1,5 +1,5 @@
 import { Injectable } from '@nestjs/common';
-import { TierHistory as TierHistoryModel, Prisma } from '@repo/database';
+import { TierHistory as TierHistoryModel, Prisma } from 'src/generated/prisma';
 import { TierHistory, TierChangeType } from '../domain';
 
 @Injectable()

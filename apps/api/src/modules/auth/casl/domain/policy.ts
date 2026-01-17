@@ -1,5 +1,5 @@
 import { Injectable } from '@nestjs/common';
-import { UserRoleType } from '@repo/database';
+import { UserRoleType } from 'src/generated/prisma';
 import { Action, Permission, SubjectType } from './model/ability.types';
 
 /**

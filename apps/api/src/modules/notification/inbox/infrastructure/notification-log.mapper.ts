@@ -2,7 +2,7 @@
 
 import { Injectable } from '@nestjs/common';
 import { NotificationLog } from '../domain';
-import { ChannelType, NotifyStatus, Language } from '@repo/database';
+import { ChannelType, NotifyStatus, Language } from 'src/generated/prisma';
 
 type PrismaNotificationLog = {
     id: bigint;

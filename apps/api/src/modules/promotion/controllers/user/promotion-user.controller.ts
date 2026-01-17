@@ -31,7 +31,7 @@ import {
 } from './dto/response/user-promotion.response.dto';
 import { ListActivePromotionsQueryDto } from './dto/request/list-active-promotions-query.dto';
 import { ListMyPromotionsQueryDto } from './dto/request/list-my-promotions-query.dto';
-import { Language, ExchangeCurrencyCode } from '@repo/database';
+import { Language, ExchangeCurrencyCode } from 'src/generated/prisma';
 import { SqidsService } from 'src/common/sqids/sqids.service';
 import { SqidsPrefix } from 'src/common/sqids/sqids.constants';
 import { Promotion, PromotionTranslation, UserPromotion } from '../../domain';

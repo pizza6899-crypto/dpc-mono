@@ -1,6 +1,6 @@
 // src/modules/affiliate/commission/application/set-custom-rate.service.ts
 import { Inject, Injectable } from '@nestjs/common';
-import { Prisma } from '@repo/database';
+import { Prisma } from 'src/generated/prisma';
 import { CommissionPolicy } from '../domain';
 import { USER_TIER_REPOSITORY } from '../../../tier/ports/repository.token';
 import type { UserTierRepositoryPort } from '../../../tier/ports/user-tier.repository.port';

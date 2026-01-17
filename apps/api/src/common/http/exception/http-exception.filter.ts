@@ -14,7 +14,7 @@ import { ApiException } from './api.exception';
 import { DomainException } from '../../exception/domain.exception';
 import { sanitizeApiMessage, hasKorean } from 'src/utils/message.util';
 import { extractClientInfo } from '../utils/request-info.util';
-import { Prisma } from '@repo/database';
+import { Prisma } from 'src/generated/prisma';
 import { DispatchLogService } from 'src/modules/audit-log/application/dispatch-log.service';
 import { LogType } from 'src/modules/audit-log/domain';
 

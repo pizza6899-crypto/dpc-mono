@@ -1,5 +1,5 @@
 // apps/api/src/modules/notification/template/domain/model/notification-template-translation.entity.ts
-import { Language } from '@repo/database';
+import { Language } from 'src/generated/prisma';
 
 interface CreateTranslationParams {
     templateId?: bigint; // 생성 시점엔 없을 수 있음 (부모와 함께 저장 시)

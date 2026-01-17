@@ -6,7 +6,7 @@ import type {
   PasswordResetTokenRepositoryPort,
   PasswordResetTokenData,
 } from '../ports/out/password-reset-token.repository.port';
-import { TokenType } from '@repo/database';
+import { TokenType } from 'src/generated/prisma';
 
 @Injectable()
 export class PasswordResetTokenRepository

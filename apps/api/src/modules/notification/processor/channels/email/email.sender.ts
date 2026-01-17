@@ -1,7 +1,7 @@
 // apps/api/src/modules/notification/processor/channels/email/email.sender.ts
 
 import { Injectable } from '@nestjs/common';
-import { ChannelType } from '@repo/database';
+import { ChannelType } from 'src/generated/prisma';
 import {
     ChannelSender,
     ChannelSendParams,

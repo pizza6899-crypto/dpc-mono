@@ -2,7 +2,7 @@ import { Inject, Injectable } from '@nestjs/common';
 import { WAGERING_REQUIREMENT_REPOSITORY } from '../ports';
 import type { WageringRequirementRepositoryPort } from '../ports';
 import { WageringRequirement } from '../domain';
-import type { WageringStatus, ExchangeCurrencyCode, WageringSourceType } from '@repo/database';
+import type { WageringStatus, ExchangeCurrencyCode, WageringSourceType } from 'src/generated/prisma';
 import type { PaginatedData } from 'src/common/http/types/pagination.types';
 
 @Injectable()

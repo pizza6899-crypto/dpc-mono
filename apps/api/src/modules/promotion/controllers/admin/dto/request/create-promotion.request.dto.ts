@@ -19,7 +19,7 @@ import {
   PromotionBonusType,
   ExchangeCurrencyCode,
   Language,
-} from '@repo/database';
+} from 'src/generated/prisma';
 import { Transform } from 'class-transformer';
 
 export class CurrencySettingDto {

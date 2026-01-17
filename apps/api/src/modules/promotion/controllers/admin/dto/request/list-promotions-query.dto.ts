@@ -1,7 +1,7 @@
 import { ApiPropertyOptional } from '@nestjs/swagger';
 import { IsBoolean, IsDateString, IsEnum, IsOptional, IsString } from 'class-validator';
 import { createPaginationQueryDto } from 'src/common/http/types/pagination.types';
-import { PromotionTargetType } from '@repo/database';
+import { PromotionTargetType } from 'src/generated/prisma';
 import { TransformToBoolean } from 'src/common/http/decorators/transform-boolean.decorator';
 
 type PromotionSortFields = 'createdAt' | 'updatedAt' | 'id';

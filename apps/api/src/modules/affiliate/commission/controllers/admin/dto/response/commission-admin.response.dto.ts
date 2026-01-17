@@ -4,7 +4,7 @@ import {
   CommissionStatus,
   ExchangeCurrencyCode,
   GameCategory,
-} from '@repo/database';
+} from 'src/generated/prisma';
 
 export class CommissionAdminResponseDto {
   @ApiProperty({

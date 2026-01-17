@@ -1,6 +1,6 @@
 // apps/api/src/modules/notification/inbox/domain/model/notification-log.entity.ts
 
-import { ChannelType, NotifyStatus, Language } from '@repo/database';
+import { ChannelType, Language, NotifyStatus } from 'src/generated/prisma';
 import {
     NotificationAlreadyReadException,
     NotificationAlreadyDeletedException,

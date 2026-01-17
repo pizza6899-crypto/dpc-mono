@@ -1,6 +1,6 @@
 // apps/api/src/modules/notification/common/interfaces/channel-sender.interface.ts
 
-import { ChannelType } from '@repo/database';
+import { ChannelType } from 'src/generated/prisma';
 
 /**
  * 채널별 발송 인터페이스

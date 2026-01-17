@@ -2,7 +2,7 @@
 import { Injectable } from '@nestjs/common';
 import { InjectTransaction } from '@nestjs-cls/transactional';
 import { type PrismaTransaction } from 'src/infrastructure/prisma/prisma.module';
-import { CommissionStatus, ExchangeCurrencyCode } from '@repo/database';
+import { CommissionStatus, ExchangeCurrencyCode } from 'src/generated/prisma';
 import { AffiliateCommission, CommissionNotFoundException } from '../domain';
 import type { AffiliateCommissionRepositoryPort } from '../ports/out/affiliate-commission.repository.port';
 import { AffiliateCommissionMapper } from './affiliate-commission.mapper';

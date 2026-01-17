@@ -3,7 +3,7 @@ import { Injectable, BadRequestException, Logger } from '@nestjs/common';
 import { PrismaService } from 'src/infrastructure/prisma/prisma.service';
 import { ApiException } from '../http/exception/api.exception';
 import { MessageCode } from '../http/types/message-codes';
-import { UserStatus, UserRoleType, KycLevel } from '@repo/database';
+import { UserStatus, UserRoleType, KycLevel } from 'src/generated/prisma';
 import {
   UserValidationOptions,
   KYC_LEVEL_PRIORITY,
@@ -13,7 +13,7 @@ import {
 export class UserValidationService {
   private readonly logger = new Logger(UserValidationService.name);
 
-  constructor(private readonly prismaService: PrismaService) {}
+  constructor(private readonly prismaService: PrismaService) { }
 
   /**
    * 유저 유효성 검사

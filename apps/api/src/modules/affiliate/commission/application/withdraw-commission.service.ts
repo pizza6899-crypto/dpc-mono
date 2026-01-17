@@ -1,5 +1,5 @@
 import { Inject, Injectable } from '@nestjs/common';
-import { ExchangeCurrencyCode, Prisma } from '@repo/database';
+import { ExchangeCurrencyCode, Prisma } from 'src/generated/prisma';
 import { AffiliateWallet } from '../domain';
 import { AFFILIATE_WALLET_REPOSITORY } from '../ports/out/affiliate-wallet.repository.token';
 import type { AffiliateWalletRepositoryPort } from '../ports/out/affiliate-wallet.repository.port';

@@ -1,6 +1,6 @@
 // src/modules/wallet/domain/model/user-wallet.entity.ts
-import type { ExchangeCurrencyCode } from '@repo/database';
-import { Prisma } from '@repo/database';
+import type { ExchangeCurrencyCode } from 'src/generated/prisma';
+import { Prisma } from 'src/generated/prisma';
 import {
   InvalidWalletBalanceException,
   InsufficientBalanceException,

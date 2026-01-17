@@ -2,7 +2,7 @@
 
 import { Injectable } from '@nestjs/common';
 import { Alert } from '../domain';
-import { AlertStatus } from '@repo/database';
+import { AlertStatus } from 'src/generated/prisma';
 
 type PrismaAlert = {
     id: bigint;

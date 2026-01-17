@@ -2,7 +2,7 @@
 
 import { Injectable, Logger } from '@nestjs/common';
 import * as Handlebars from 'handlebars';
-import { ChannelType, Language } from '@repo/database';
+import { ChannelType, Language } from 'src/generated/prisma';
 import {
     TemplateRenderer,
     RenderParams,

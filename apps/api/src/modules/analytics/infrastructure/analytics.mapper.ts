@@ -1,5 +1,5 @@
 import { Injectable } from '@nestjs/common';
-import { UserHourlyStat as PrismaUserHourlyStat } from '@repo/database';
+import { UserHourlyStat as PrismaUserHourlyStat } from 'src/generated/prisma';
 import { UserHourlyStat } from '../domain/model/user-hourly-stat.entity';
 
 @Injectable()

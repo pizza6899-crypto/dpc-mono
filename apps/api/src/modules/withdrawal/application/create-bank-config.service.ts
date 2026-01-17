@@ -1,5 +1,5 @@
 import { Inject, Injectable } from '@nestjs/common';
-import { Prisma, ExchangeCurrencyCode } from '@repo/database';
+import { Prisma, ExchangeCurrencyCode } from 'src/generated/prisma';
 import { SnowflakeService } from 'src/common/snowflake/snowflake.service';
 import { BankWithdrawConfig, BankWithdrawConfigAlreadyExistsException } from '../domain';
 import { type WithdrawalRepositoryPort } from '../ports/withdrawal.repository.port';

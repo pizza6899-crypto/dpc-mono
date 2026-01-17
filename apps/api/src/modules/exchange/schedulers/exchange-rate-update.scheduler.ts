@@ -6,7 +6,7 @@ import {
   ExchangeCurrencyCode,
   ExchangeRateProvider,
   Prisma,
-} from '@repo/database';
+} from 'src/generated/prisma';
 import { EnvService } from 'src/common/env/env.service';
 import { nowUtc } from 'src/utils/date.util';
 import { OpenExchangeRatesApiService } from '../infrastructure/open-exchange-rates-api.service';

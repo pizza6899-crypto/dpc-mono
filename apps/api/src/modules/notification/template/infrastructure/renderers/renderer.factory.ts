@@ -1,7 +1,7 @@
 // apps/api/src/modules/notification/template/infrastructure/renderers/renderer.factory.ts
 
 import { Injectable } from '@nestjs/common';
-import { ChannelType } from '@repo/database';
+import { ChannelType } from 'src/generated/prisma';
 import { TemplateRenderer } from '../../ports';
 import { HandlebarsRenderer } from './handlebars.renderer';
 import { EmailHandlebarsRenderer } from './email-handlebars.renderer';

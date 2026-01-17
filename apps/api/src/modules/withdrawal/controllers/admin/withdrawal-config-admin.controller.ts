@@ -12,7 +12,7 @@ import {
     HttpStatus,
 } from '@nestjs/common';
 import { ApiBearerAuth, ApiOperation, ApiTags, ApiParam } from '@nestjs/swagger';
-import { UserRoleType } from '@repo/database';
+import { UserRoleType } from 'src/generated/prisma';
 import { RequireRoles } from 'src/common/auth/decorators/roles.decorator';
 import {
     ApiStandardResponse,

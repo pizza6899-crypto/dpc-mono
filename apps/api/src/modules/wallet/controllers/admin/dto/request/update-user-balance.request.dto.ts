@@ -7,7 +7,7 @@ import {
   IsIn,
 } from 'class-validator';
 import { ApiProperty } from '@nestjs/swagger';
-import { ExchangeCurrencyCode, AdjustmentReasonCode } from '@repo/database';
+import { ExchangeCurrencyCode, AdjustmentReasonCode } from 'src/generated/prisma';
 import { WALLET_CURRENCIES } from 'src/utils/currency.util';
 import { BalanceType, UpdateOperation } from 'src/modules/wallet/domain';
 

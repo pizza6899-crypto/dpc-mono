@@ -1,5 +1,5 @@
 import { ApiProperty } from '@nestjs/swagger';
-import { DepositDetailStatus, ExchangeCurrencyCode } from '@repo/database';
+import { DepositDetailStatus, ExchangeCurrencyCode } from 'src/generated/prisma';
 
 export class BankDepositListItemDto {
   @ApiProperty({ description: '입금 상세 ID' })

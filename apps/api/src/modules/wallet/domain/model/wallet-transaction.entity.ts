@@ -1,11 +1,11 @@
 // src/modules/wallet/domain/model/wallet-transaction.entity.ts
-import { Prisma } from '@repo/database';
+import { Prisma } from 'src/generated/prisma';
 import type {
     ExchangeCurrencyCode,
     TransactionType,
     TransactionStatus,
     AdjustmentReasonCode,
-} from '@repo/database';
+} from 'src/generated/prisma';
 
 export interface WalletBalanceDetail {
     mainBalanceChange: Prisma.Decimal;

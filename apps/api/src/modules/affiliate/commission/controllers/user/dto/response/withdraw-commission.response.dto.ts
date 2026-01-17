@@ -1,6 +1,6 @@
 // src/modules/affiliate/commission/controllers/user/dto/response/withdraw-commission.response.dto.ts
 import { ApiProperty } from '@nestjs/swagger';
-import { ExchangeCurrencyCode } from '@repo/database';
+import { ExchangeCurrencyCode } from 'src/generated/prisma';
 
 export class WithdrawCommissionResponseDto {
   @ApiProperty({

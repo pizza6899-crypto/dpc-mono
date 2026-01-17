@@ -1,5 +1,5 @@
 import { Inject, Injectable } from '@nestjs/common';
-import { ExchangeCurrencyCode, Prisma } from '@repo/database';
+import { ExchangeCurrencyCode, Prisma } from 'src/generated/prisma';
 import { COMP_REPOSITORY } from '../ports/repository.token';
 import type { CompRepositoryPort } from '../ports';
 

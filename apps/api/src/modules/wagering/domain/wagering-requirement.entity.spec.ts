@@ -1,5 +1,5 @@
 // src/modules/wagering/domain/wagering-requirement.entity.spec.ts
-import { Prisma, ExchangeCurrencyCode, WageringSourceType, WageringStatus } from '@repo/database';
+import { Prisma, ExchangeCurrencyCode, WageringSourceType, WageringStatus } from 'src/generated/prisma';
 import { WageringRequirement } from './wagering-requirement.entity';
 
 describe('WageringRequirement Entity', () => {

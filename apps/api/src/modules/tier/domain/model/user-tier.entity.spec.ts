@@ -1,5 +1,5 @@
 // src/modules/tier/domain/model/user-tier.entity.spec.ts
-import { Prisma } from '@repo/database';
+import { Prisma } from 'src/generated/prisma';
 import { UserTier } from './user-tier.entity';
 import { Tier } from './tier.entity';
 import { InvalidRollingAmountException, TierException } from '../tier.exception';

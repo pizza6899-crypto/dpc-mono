@@ -1,4 +1,4 @@
-import type { ExchangeCurrencyCode, WageringStatus } from '@repo/database';
+import type { ExchangeCurrencyCode, WageringStatus } from 'src/generated/prisma';
 import { ApiProperty } from '@nestjs/swagger';
 
 export class WageringRequirementUserResponseDto {

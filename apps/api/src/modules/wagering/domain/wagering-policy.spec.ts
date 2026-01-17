@@ -1,5 +1,5 @@
 // src/modules/wagering/domain/wagering-policy.spec.ts
-import { Prisma } from '@repo/database';
+import { Prisma } from 'src/generated/prisma';
 import { WageringPolicy } from './wagering-policy';
 
 describe('WageringPolicy', () => {

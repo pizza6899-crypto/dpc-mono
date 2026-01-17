@@ -1,6 +1,6 @@
 // src/modules/affiliate/commission/domain/model/affiliate-wallet.entity.ts
-import type { ExchangeCurrencyCode } from '@repo/database';
-import { Prisma } from '@repo/database';
+import type { ExchangeCurrencyCode } from 'src/generated/prisma';
+import { Prisma } from 'src/generated/prisma';
 import {
   InsufficientBalanceException,
   InvalidWalletBalanceException,
@@ -18,7 +18,7 @@ export class AffiliateWallet {
     private _pendingBalance: Prisma.Decimal, // 대기 중인 커미션
     private _totalEarned: Prisma.Decimal, // 총 적립 커미션
     private _updatedAt: Date,
-  ) {}
+  ) { }
 
   /**
    * 새로운 월렛 생성

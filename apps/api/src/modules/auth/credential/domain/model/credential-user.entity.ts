@@ -1,4 +1,4 @@
-import { UserStatus, UserRoleType, Language } from '@repo/database';
+import { UserStatus, UserRoleType, Language } from 'src/generated/prisma';
 
 export class CredentialUser {
   private constructor(

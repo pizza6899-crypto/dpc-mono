@@ -1,7 +1,7 @@
 import { Body, Controller, Get, Post, Query, UseGuards, HttpCode, HttpStatus } from '@nestjs/common';
 import { ApiTags, ApiOperation } from '@nestjs/swagger';
 import { CurrentUser } from 'src/common/auth/decorators/current-user.decorator';
-import { ExchangeCurrencyCode, Prisma } from '@repo/database';
+import { ExchangeCurrencyCode, Prisma } from 'src/generated/prisma';
 import { ClaimCompService } from '../../application/claim-comp.service';
 import { FindCompBalanceService } from '../../application/find-comp-balance.service';
 import { ClaimCompRequestDto } from './dto/request/claim-comp.request.dto';

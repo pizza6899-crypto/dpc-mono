@@ -3,7 +3,7 @@
 import { ApiProperty } from '@nestjs/swagger';
 import { IsString, IsOptional, IsEnum, IsArray, IsObject } from 'class-validator';
 import { Type } from 'class-transformer';
-import { ChannelType } from '@repo/database';
+import { ChannelType } from 'src/generated/prisma';
 
 import { NOTIFICATION_EVENTS, NOTIFICATION_TARGET_GROUPS } from '../../../../../common';
 

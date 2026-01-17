@@ -1,6 +1,6 @@
 // src/modules/user/domain/model/user.entity.ts
-import type { UserRoleType, SocialType } from '@repo/database';
-import { UserStatus as PrismaUserStatus } from '@repo/database';
+import type { UserRoleType, SocialType } from 'src/generated/prisma';
+import { UserStatus as PrismaUserStatus } from 'src/generated/prisma';
 import { UserAuth } from './value-objects/user-auth.vo';
 import { UserLocation } from './value-objects/user-location.vo';
 

@@ -1,5 +1,5 @@
 import { Injectable } from '@nestjs/common';
-import type { FileUsage as PrismaFileUsage } from '@repo/database';
+import type { FileUsage as PrismaFileUsage } from 'src/generated/prisma';
 import { FileUsageEntity, FileUsageType } from '../domain';
 
 @Injectable()

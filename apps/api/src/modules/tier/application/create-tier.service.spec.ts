@@ -3,7 +3,7 @@ import type { TestingModule } from '@nestjs/testing';
 import { Test } from '@nestjs/testing';
 import { PrismaModule } from 'src/infrastructure/prisma/prisma.module';
 import { EnvModule } from 'src/common/env/env.module';
-import { Prisma } from '@repo/database';
+import { Prisma } from 'src/generated/prisma';
 import { CreateTierService } from './create-tier.service';
 import { TIER_REPOSITORY } from '../ports/repository.token';
 import type { TierRepositoryPort } from '../ports/tier.repository.port';

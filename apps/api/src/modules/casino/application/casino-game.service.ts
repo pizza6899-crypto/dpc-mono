@@ -15,7 +15,7 @@ import {
   GameCategory,
   GameProvider,
   Language,
-} from '@repo/database';
+} from 'src/generated/prisma';
 import { DcsGameService } from '../dcs/application/dcs-game.service';
 import { EnvService } from 'src/common/env/env.service';
 import {

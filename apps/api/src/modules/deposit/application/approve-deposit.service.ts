@@ -1,8 +1,8 @@
 // src/modules/deposit/application/approve-deposit.service.ts
 import { Inject, Injectable, Logger } from '@nestjs/common';
 import { Transactional } from '@nestjs-cls/transactional';
-import { Prisma, AdjustmentReasonCode } from '@repo/database';
-import { TransactionStatus, TransactionType } from '@repo/database';
+import { Prisma, AdjustmentReasonCode } from 'src/generated/prisma';
+import { TransactionStatus, TransactionType } from 'src/generated/prisma';
 import type { RequestClientInfo } from 'src/common/http/types';
 import { UpdateUserBalanceAdminService } from '../../wallet/application/update-user-balance-admin.service';
 import { DepositAlreadyProcessedException } from '../domain';

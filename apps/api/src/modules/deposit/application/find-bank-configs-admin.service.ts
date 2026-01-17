@@ -2,7 +2,7 @@
 import { Inject, Injectable } from '@nestjs/common';
 import { BANK_CONFIG_REPOSITORY } from '../ports/out';
 import type { BankConfigRepositoryPort } from '../ports/out';
-import { ExchangeCurrencyCode } from '@repo/database';
+import { ExchangeCurrencyCode } from 'src/generated/prisma';
 import { BankConfig } from '../domain';
 import type { PaginatedData } from 'src/common/http/types';
 

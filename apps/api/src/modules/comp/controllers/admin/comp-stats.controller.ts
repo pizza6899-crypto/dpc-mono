@@ -1,6 +1,6 @@
 import { Controller, Get, Query, HttpCode, HttpStatus } from '@nestjs/common';
 import { ApiTags, ApiOperation } from '@nestjs/swagger';
-import { UserRoleType } from '@repo/database';
+import { UserRoleType } from 'src/generated/prisma';
 import { RequireRoles } from 'src/common/auth/decorators/roles.decorator';
 import { ApiStandardErrors } from 'src/common/http/decorators/api-response.decorator';
 import { CompStatsQueryDto } from './dto/request/comp-stats-query.dto';

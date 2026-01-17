@@ -1,4 +1,4 @@
-import { ExchangeCurrencyCode, WithdrawalStatus, WithdrawalMethodType } from '@repo/database';
+import { ExchangeCurrencyCode, WithdrawalStatus, WithdrawalMethodType } from 'src/generated/prisma';
 import { WithdrawalDetail, CryptoWithdrawConfig, BankWithdrawConfig } from '../domain';
 
 export interface WithdrawalRepositoryPort {

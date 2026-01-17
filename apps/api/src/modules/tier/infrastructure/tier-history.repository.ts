@@ -4,7 +4,7 @@ import { type PrismaTransaction } from 'src/infrastructure/prisma/prisma.module'
 import { TierHistoryRepositoryPort, FindTierHistoryIsParams, FindTierHistoryResult, TierHistoryWithRelations } from '../ports/tier-history.repository.port';
 import { TierHistoryMapper } from './tier-history.mapper';
 import { TierHistory } from '../domain';
-import { Prisma } from '@repo/database';
+import { Prisma } from 'src/generated/prisma';
 
 @Injectable()
 export class TierHistoryRepository implements TierHistoryRepositoryPort {

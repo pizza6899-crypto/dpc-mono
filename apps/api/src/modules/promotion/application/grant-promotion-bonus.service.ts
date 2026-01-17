@@ -1,7 +1,7 @@
 // src/modules/promotion/application/grant-promotion-bonus.service.ts
 import { Inject, Injectable, Logger } from '@nestjs/common';
 import { Transactional } from '@nestjs-cls/transactional';
-import { Prisma, ExchangeCurrencyCode } from '@repo/database';
+import { Prisma, ExchangeCurrencyCode } from 'src/generated/prisma';
 import { PromotionPolicy, PromotionNotFoundException } from '../domain';
 import type { Promotion, UserPromotion } from '../domain';
 import { PROMOTION_REPOSITORY } from '../ports/out';

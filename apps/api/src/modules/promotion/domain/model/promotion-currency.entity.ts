@@ -1,5 +1,5 @@
 // src/modules/promotion/domain/model/promotion-currency.entity.ts
-import { Prisma, ExchangeCurrencyCode } from '@repo/database';
+import { Prisma, ExchangeCurrencyCode } from 'src/generated/prisma';
 
 export class PromotionCurrency {
   private constructor(

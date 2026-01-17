@@ -4,7 +4,7 @@ import { Injectable } from '@nestjs/common';
 import {
     NotificationTemplate as PrismaTemplate,
     NotificationTemplateTranslation as PrismaTranslation,
-} from '@repo/database';
+} from 'src/generated/prisma';
 import {
     NotificationTemplate,
     NotificationTemplateTranslation,

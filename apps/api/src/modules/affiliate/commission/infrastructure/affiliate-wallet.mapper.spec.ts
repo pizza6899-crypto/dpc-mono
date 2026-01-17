@@ -1,5 +1,5 @@
 // src/modules/affiliate/commission/infrastructure/affiliate-wallet.mapper.spec.ts
-import { ExchangeCurrencyCode, Prisma } from '@repo/database';
+import { ExchangeCurrencyCode, Prisma } from 'src/generated/prisma';
 import { AffiliateWallet } from '../domain';
 import { AffiliateWalletMapper } from './affiliate-wallet.mapper';
 

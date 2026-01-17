@@ -1,7 +1,7 @@
 import { ApiPropertyOptional } from '@nestjs/swagger';
 import { IsEnum, IsOptional, IsInt, Min, Max } from 'class-validator';
 import { Transform } from 'class-transformer';
-import { WithdrawalStatus } from '@repo/database';
+import { WithdrawalStatus } from 'src/generated/prisma';
 
 export class GetAdminWithdrawalsQueryDto {
     @ApiPropertyOptional({

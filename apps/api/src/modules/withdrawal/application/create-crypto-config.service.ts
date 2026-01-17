@@ -1,5 +1,5 @@
 import { Inject, Injectable } from '@nestjs/common';
-import { Prisma } from '@repo/database';
+import { Prisma } from 'src/generated/prisma';
 import { SnowflakeService } from 'src/common/snowflake/snowflake.service';
 import { CryptoWithdrawConfig, CryptoWithdrawConfigAlreadyExistsException } from '../domain';
 import { type WithdrawalRepositoryPort } from '../ports/withdrawal.repository.port';

@@ -3,7 +3,7 @@
 import { HttpStatus } from '@nestjs/common';
 import { DomainException } from 'src/common/exception/domain.exception';
 import { MessageCode } from '@repo/shared';
-import { Language } from '@repo/database';
+import { Language } from 'src/generated/prisma';
 
 export class TemplateException extends DomainException {
     constructor(

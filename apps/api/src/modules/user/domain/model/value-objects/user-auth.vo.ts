@@ -1,5 +1,5 @@
 // src/modules/user/domain/model/value-objects/user-auth.vo.ts
-import type { SocialType } from '@repo/database';
+import type { SocialType } from 'src/generated/prisma';
 
 /**
  * UserAuth Value Object

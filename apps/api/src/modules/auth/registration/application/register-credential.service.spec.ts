@@ -19,7 +19,7 @@ import {
 } from 'src/modules/affiliate/referral/domain/referral.exception';
 import { ApiException } from 'src/common/http/exception/api.exception';
 import { MessageCode } from 'src/common/http/types/message-codes';
-import { UserRoleType, UserStatus } from '@repo/database';
+import { UserRoleType, UserStatus } from 'src/generated/prisma';
 import type { RequestClientInfo } from 'src/common/http/types/client-info.types';
 import { Referral } from 'src/modules/affiliate/referral/domain/model/referral.entity';
 import { PrismaModule } from 'src/infrastructure/prisma/prisma.module';

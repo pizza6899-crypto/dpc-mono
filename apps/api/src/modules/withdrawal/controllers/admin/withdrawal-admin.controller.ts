@@ -27,7 +27,7 @@ import { RequestClientInfoParam } from 'src/common/auth/decorators/request-info.
 import { AuditLog } from 'src/modules/audit-log/infrastructure';
 import { LogType } from 'src/modules/audit-log/domain';
 import { RequireRoles } from 'src/common/auth/decorators/roles.decorator';
-import { UserRoleType, WithdrawalStatus } from '@repo/database';
+import { UserRoleType, WithdrawalStatus } from 'src/generated/prisma';
 import {
     ApproveWithdrawalService,
     RejectWithdrawalService,

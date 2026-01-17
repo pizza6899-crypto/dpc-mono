@@ -1,4 +1,4 @@
-import { Prisma } from '@repo/database';
+import { Prisma } from 'src/generated/prisma';
 import { generateUid } from 'src/utils/id.util';
 
 export enum TierChangeType {

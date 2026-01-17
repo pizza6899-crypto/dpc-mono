@@ -6,7 +6,7 @@ import type {
   FindUsersParams,
 } from '../ports/out/user.repository.port';
 import type { PaginatedData } from 'src/common/http/types';
-import type { UserRoleType, UserStatus } from '@repo/database';
+import type { UserRoleType, UserStatus } from 'src/generated/prisma';
 import { User } from '../domain';
 
 interface ListUsersServiceParams {
@@ -21,7 +21,7 @@ interface ListUsersServiceParams {
   endDate?: string;
 }
 
-interface ListUsersServiceResult extends PaginatedData<User> {}
+interface ListUsersServiceResult extends PaginatedData<User> { }
 
 /**
  * 사용자 목록 조회 Use Case
@@ -36,7 +36,7 @@ export class ListUsersService {
   constructor(
     @Inject(USER_REPOSITORY)
     private readonly userRepository: UserRepositoryPort,
-  ) {}
+  ) { }
 
   async execute(
     params: ListUsersServiceParams,

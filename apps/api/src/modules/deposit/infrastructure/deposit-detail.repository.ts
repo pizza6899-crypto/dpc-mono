@@ -5,7 +5,7 @@ import { type PrismaTransaction } from 'src/infrastructure/prisma/prisma.module'
 import { DepositDetail, DepositNotFoundException } from '../domain';
 import type { DepositDetailRepositoryPort, DepositListQuery, DepositStats, DepositWithUser } from '../ports/out/deposit-detail.repository.port';
 import { DepositDetailMapper } from './deposit-detail.mapper';
-import { TransactionStatus, TransactionType, ExchangeCurrencyCode, Prisma, DepositDetailStatus, DepositMethodType } from '@repo/database';
+import { TransactionStatus, TransactionType, ExchangeCurrencyCode, Prisma, DepositDetailStatus, DepositMethodType } from 'src/generated/prisma';
 import { generateUid } from 'src/utils/id.util';
 import { LockNamespace } from 'src/common/concurrency/lock-namespace';
 import { DomainException } from 'src/common/exception/domain.exception';

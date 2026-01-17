@@ -1,5 +1,5 @@
-import { Prisma } from '@repo/database';
-import type { ExchangeCurrencyCode, WageringSourceType, WageringStatus } from '@repo/database';
+import { Prisma } from 'src/generated/prisma';
+import type { ExchangeCurrencyCode, WageringSourceType, WageringStatus } from 'src/generated/prisma';
 import { createId } from '@paralleldrive/cuid2';
 
 export interface WageringRequirementProps {

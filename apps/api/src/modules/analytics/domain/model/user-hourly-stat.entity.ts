@@ -1,4 +1,4 @@
-import { ExchangeCurrencyCode, Prisma } from '@repo/database';
+import { ExchangeCurrencyCode, Prisma } from 'src/generated/prisma';
 
 export class UserHourlyStat {
     private constructor(

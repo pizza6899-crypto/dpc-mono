@@ -1,7 +1,7 @@
 // src/modules/promotion/controllers/admin/dto/request/upsert-translation.request.dto.ts
 import { ApiProperty, ApiPropertyOptional } from '@nestjs/swagger';
 import { IsString, IsEnum, IsNotEmpty, IsOptional } from 'class-validator';
-import { Language } from '@repo/database';
+import { Language } from 'src/generated/prisma';
 
 export class UpsertTranslationRequestDto {
   @ApiProperty({

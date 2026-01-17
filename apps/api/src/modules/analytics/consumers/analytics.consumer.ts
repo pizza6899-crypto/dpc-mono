@@ -2,7 +2,7 @@ import { Processor, WorkerHost } from '@nestjs/bullmq';
 import { Job } from 'bullmq';
 import { Logger, OnApplicationShutdown } from '@nestjs/common';
 import { RecordUserActivityService } from '../application/record-user-activity.service';
-import { ExchangeCurrencyCode, Prisma } from '@repo/database';
+import { ExchangeCurrencyCode, Prisma } from 'src/generated/prisma';
 
 export const ANALYTICS_QUEUE_NAME = 'analytics';
 

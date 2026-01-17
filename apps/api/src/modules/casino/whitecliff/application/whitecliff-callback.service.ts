@@ -16,7 +16,7 @@ import {
   GameProvider,
   Prisma,
   TransactionStatus,
-} from '@repo/database';
+} from 'src/generated/prisma';
 import { WhitecliffMapperService } from '../infrastructure/whitecliff-mapper.service';
 import { GetUserBalanceService } from 'src/modules/wallet/application/get-user-balance.service';
 import { CasinoBetService } from '../../application/casino-bet.service';

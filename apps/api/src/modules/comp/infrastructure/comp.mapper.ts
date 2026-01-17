@@ -1,6 +1,6 @@
 import { Injectable } from '@nestjs/common';
 import { CompWallet, CompTransaction } from '../domain';
-import { UserCompWallet, CompWalletTransaction } from '@repo/database';
+import { UserCompWallet, CompWalletTransaction } from 'src/generated/prisma';
 
 @Injectable()
 export class CompMapper {

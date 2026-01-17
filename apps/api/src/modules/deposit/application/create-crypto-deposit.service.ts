@@ -1,6 +1,6 @@
 // src/modules/deposit/application/create-crypto-deposit.service.ts
 import { Injectable, Inject } from '@nestjs/common';
-import { Prisma, DepositMethodType, ExchangeCurrencyCode, PaymentProvider } from '@repo/database';
+import { Prisma, DepositMethodType, ExchangeCurrencyCode, PaymentProvider } from 'src/generated/prisma';
 import { createId } from '@paralleldrive/cuid2';
 import {
     DEPOSIT_DETAIL_REPOSITORY,

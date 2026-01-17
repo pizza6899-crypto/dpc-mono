@@ -1,6 +1,6 @@
 // src/modules/affiliate/commission/application/settle-daily-commissions.service.ts
 import { Inject, Injectable, Logger } from '@nestjs/common';
-import { ExchangeCurrencyCode, Prisma } from '@repo/database';
+import { ExchangeCurrencyCode, Prisma } from 'src/generated/prisma';
 import {
   AffiliateWallet,
   CommissionPolicy,
@@ -32,7 +32,7 @@ export class SettleDailyCommissionsService {
     private readonly commissionRepository: AffiliateCommissionRepositoryPort,
     @Inject(AFFILIATE_WALLET_REPOSITORY)
     private readonly walletRepository: AffiliateWalletRepositoryPort,
-  ) {}
+  ) { }
 
   /**
    * 일일 커미션 정산 처리

@@ -1,6 +1,6 @@
 // src/modules/user/controllers/admin/dto/response/user-list.response.dto.ts
 import { ApiProperty } from '@nestjs/swagger';
-import { UserRoleType, UserStatus } from '@repo/database';
+import { UserRoleType, UserStatus } from 'src/generated/prisma';
 
 export class UserListItemDto {
   @ApiProperty({

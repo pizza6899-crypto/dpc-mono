@@ -1,6 +1,6 @@
 // src/modules/deposit/infrastructure/bank-config.mapper.ts
 import { Injectable } from '@nestjs/common';
-import { BankDepositConfig as PrismaBankConfig } from '@repo/database';
+import { BankDepositConfig as PrismaBankConfig } from 'src/generated/prisma';
 import { BankConfig } from '../domain';
 
 @Injectable()

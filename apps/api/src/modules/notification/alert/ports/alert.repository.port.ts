@@ -1,6 +1,6 @@
 // apps/api/src/modules/notification/alert/ports/alert.repository.port.ts
 
-import { AlertStatus } from '@repo/database';
+import { AlertStatus } from 'src/generated/prisma';
 import { Alert } from '../domain';
 
 export interface AlertListQuery {

@@ -1,5 +1,5 @@
 import { Inject, Injectable } from '@nestjs/common';
-import { ExchangeCurrencyCode } from '@repo/database';
+import { ExchangeCurrencyCode } from 'src/generated/prisma';
 import { BankWithdrawConfig } from '../domain';
 import { type WithdrawalRepositoryPort } from '../ports/withdrawal.repository.port';
 import { WITHDRAWAL_REPOSITORY } from '../ports/withdrawal.repository.token';

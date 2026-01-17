@@ -1,7 +1,7 @@
 import { ApiProperty } from '@nestjs/swagger';
 import { IsEnum, IsNumber, IsOptional, IsString, Min, IsNotEmpty } from 'class-validator';
 import { Type } from 'class-transformer';
-import { ExchangeCurrencyCode } from '@repo/database';
+import { ExchangeCurrencyCode } from 'src/generated/prisma';
 
 export enum AdminCompAdjustType {
     GIVE = 'GIVE',

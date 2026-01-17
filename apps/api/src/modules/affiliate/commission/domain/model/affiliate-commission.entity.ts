@@ -3,8 +3,8 @@ import type {
   ExchangeCurrencyCode,
   GameCategory,
   Prisma,
-} from '@repo/database';
-import { CommissionStatus } from '@repo/database';
+} from 'src/generated/prisma';
+import { CommissionStatus } from 'src/generated/prisma';
 import {
   CommissionNotAvailableException,
   InvalidCommissionCalculationException,

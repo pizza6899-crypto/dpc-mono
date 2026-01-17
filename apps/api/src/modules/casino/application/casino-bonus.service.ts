@@ -1,11 +1,11 @@
 import { Injectable, Logger } from '@nestjs/common';
-import { GameProvider, Prisma } from '@repo/database';
+import { GameProvider, Prisma } from 'src/generated/prisma';
 import {
   GameAggregatorType,
   TransactionType,
   TransactionStatus,
   BonusType,
-} from '@repo/database';
+} from 'src/generated/prisma';
 import { CasinoErrorCode } from '../constants/casino-error-codes';
 import {
   GamingCurrencyCode,

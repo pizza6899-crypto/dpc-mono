@@ -1,7 +1,7 @@
 // src/modules/promotion/controllers/admin/dto/request/list-participants-query.dto.ts
 import { ApiPropertyOptional } from '@nestjs/swagger';
 import { IsOptional, IsEnum, IsString, IsNumberString } from 'class-validator';
-import { UserPromotionStatus } from '@repo/database';
+import { UserPromotionStatus } from 'src/generated/prisma';
 import { createPaginationQueryDto } from 'src/common/http/types/pagination.types';
 
 type ParticipantSortFields = 'createdAt' | 'updatedAt' | 'id';

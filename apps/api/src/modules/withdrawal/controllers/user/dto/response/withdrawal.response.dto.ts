@@ -1,5 +1,5 @@
 import { ApiProperty, ApiPropertyOptional } from '@nestjs/swagger';
-import { WithdrawalStatus, WithdrawalMethodType, WithdrawalProcessingMode, ExchangeCurrencyCode } from '@repo/database';
+import { WithdrawalStatus, WithdrawalMethodType, WithdrawalProcessingMode, ExchangeCurrencyCode } from 'src/generated/prisma';
 export class WithdrawalResponseDto {
     @ApiProperty({ description: 'Withdrawal ID (Encoded)', example: 'w_abc123' })
     id!: string;

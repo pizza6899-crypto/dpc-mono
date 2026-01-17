@@ -1,7 +1,7 @@
 import { ApiPropertyOptional } from '@nestjs/swagger';
 import { IsOptional, IsEnum, IsString, IsInt, Min } from 'class-validator';
 import { Type } from 'class-transformer';
-import { GameCategory, GameProvider, Language } from '@repo/database';
+import { GameCategory, GameProvider, Language } from 'src/generated/prisma';
 
 export class AdminGameListRequestDto {
     @ApiPropertyOptional({ enum: GameCategory, isArray: true })

@@ -11,10 +11,10 @@ import {
 } from '@nestjs-cls/transactional';
 import { type PrismaTransaction } from 'src/infrastructure/prisma/prisma.module';
 import { Logger, OnApplicationShutdown } from '@nestjs/common';
-import { Prisma, TransactionStatus, ExchangeCurrencyCode } from '@repo/database';
+import { Prisma, TransactionStatus, ExchangeCurrencyCode } from 'src/generated/prisma';
 import { ProcessWageringContributionService } from '../../wagering/application/process-wagering-contribution.service';
 import { AnalyticsQueueService } from '../../analytics/application/analytics-queue.service';
-import { GameCategory } from '@repo/database';
+import { GameCategory } from 'src/generated/prisma';
 import { AddUserRollingService } from '../../tier/application/add-user-rolling.service';
 import { EarnCompService } from '../../comp/application/earn-comp.service';
 

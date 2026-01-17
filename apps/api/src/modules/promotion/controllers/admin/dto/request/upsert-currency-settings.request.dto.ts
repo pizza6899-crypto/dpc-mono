@@ -1,7 +1,7 @@
 // src/modules/promotion/controllers/admin/dto/request/upsert-currency-settings.request.dto.ts
 import { ApiProperty, ApiPropertyOptional } from '@nestjs/swagger';
 import { IsString, IsEnum, IsNotEmpty, IsOptional } from 'class-validator';
-import { ExchangeCurrencyCode } from '@repo/database';
+import { ExchangeCurrencyCode } from 'src/generated/prisma';
 
 export class UpsertCurrencySettingsRequestDto {
   @ApiProperty({

@@ -4,7 +4,7 @@ import {
   ExchangeCurrencyCode,
   ExchangeRateProvider,
   Prisma,
-} from '@repo/database';
+} from 'src/generated/prisma';
 import { ApiException } from 'src/common/http/exception/api.exception';
 import { MessageCode } from 'src/common/http/types';
 import { RedisService } from 'src/infrastructure/redis/redis.service';
@@ -30,7 +30,7 @@ export class ExchangeRateService {
   constructor(
     private readonly prismaService: PrismaService,
     private readonly redisService: RedisService,
-  ) {}
+  ) { }
 
   private getCacheKey(
     provider: ExchangeRateProvider,

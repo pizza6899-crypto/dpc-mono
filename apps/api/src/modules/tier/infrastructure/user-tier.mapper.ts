@@ -1,5 +1,5 @@
 import { Injectable } from '@nestjs/common';
-import { UserTier as UserTierModel, Tier as TierModel, Prisma } from '@repo/database';
+import { UserTier as UserTierModel, Tier as TierModel, Prisma } from 'src/generated/prisma';
 import { UserTier } from '../domain';
 import { TierMapper } from './tier.mapper';
 

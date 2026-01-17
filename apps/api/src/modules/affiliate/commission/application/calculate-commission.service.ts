@@ -1,6 +1,6 @@
 // src/modules/affiliate/commission/application/calculate-commission.service.ts
 import { Inject, Injectable } from '@nestjs/common';
-import { ExchangeCurrencyCode, GameCategory, Prisma } from '@repo/database';
+import { ExchangeCurrencyCode, GameCategory, Prisma } from 'src/generated/prisma';
 import { AffiliateCommission, AffiliateWallet, CommissionPolicy } from '../domain';
 import { AFFILIATE_COMMISSION_REPOSITORY } from '../ports/out/affiliate-commission.repository.token';
 import type { AffiliateCommissionRepositoryPort } from '../ports/out/affiliate-commission.repository.port';

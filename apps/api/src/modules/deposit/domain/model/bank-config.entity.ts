@@ -1,6 +1,6 @@
 // src/modules/deposit/domain/model/bank-config.entity.ts
-import { Prisma } from '@repo/database';
-import { ExchangeCurrencyCode } from '@repo/database';
+import { Prisma } from 'src/generated/prisma';
+import { ExchangeCurrencyCode } from 'src/generated/prisma';
 
 /**
  * BankConfig 도메인 엔티티

@@ -17,7 +17,7 @@ import { ApiPaginatedResponse } from 'src/common/http/decorators/api-response.de
 import { RequireRoles } from 'src/common/auth/decorators/roles.decorator';
 import { CurrentUser } from 'src/common/auth/decorators/current-user.decorator';
 import type { CurrentUserWithSession } from 'src/common/auth/decorators/current-user.decorator';
-import { UserRoleType } from '@repo/database';
+import { UserRoleType } from 'src/generated/prisma';
 import { PaginatedData } from 'src/common/http/types';
 import { ListSessionsService } from '../../application/list-sessions.service';
 import { RevokeSessionService } from '../../application/revoke-session.service';

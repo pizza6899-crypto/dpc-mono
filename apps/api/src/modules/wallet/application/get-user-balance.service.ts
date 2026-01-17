@@ -2,7 +2,7 @@
 import { Injectable, Logger } from '@nestjs/common';
 import { WalletQueryService } from './wallet-query.service';
 import { UserWallet, WalletNotFoundException } from '../domain';
-import type { ExchangeCurrencyCode } from '@repo/database';
+import type { ExchangeCurrencyCode } from 'src/generated/prisma';
 
 interface GetUserBalanceParams {
   userId: bigint;

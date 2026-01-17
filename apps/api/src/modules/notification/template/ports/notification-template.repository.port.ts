@@ -1,6 +1,6 @@
 // apps/api/src/modules/notification/template/ports/notification-template.repository.port.ts
 
-import { ChannelType } from '@repo/database';
+import { ChannelType } from 'src/generated/prisma';
 import { NotificationTemplate } from '../domain';
 
 export interface NotificationTemplateRepositoryPort {

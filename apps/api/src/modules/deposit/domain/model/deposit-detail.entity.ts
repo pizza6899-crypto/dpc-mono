@@ -1,10 +1,10 @@
 // src/modules/deposit/domain/model/deposit-detail.entity.ts
-import { Prisma } from '@repo/database';
+import { Prisma } from 'src/generated/prisma';
 import {
   DepositDetailStatus,
   ExchangeCurrencyCode,
   FeePaidByType,
-} from '@repo/database';
+} from 'src/generated/prisma';
 import { DepositMethod } from './value-objects/deposit-method.vo';
 import { DepositAmount } from './value-objects/deposit-amount.vo';
 import { DepositAlreadyProcessedException, DepositException } from '../deposit.exception';

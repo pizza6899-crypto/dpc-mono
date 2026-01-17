@@ -1,5 +1,5 @@
 // src/modules/comp/domain/model/comp-wallet.entity.spec.ts
-import { Prisma, ExchangeCurrencyCode } from '@repo/database';
+import { Prisma, ExchangeCurrencyCode } from 'src/generated/prisma';
 import { CompWallet } from './comp-wallet.entity';
 import { InsufficientCompBalanceException } from '../comp.exception';
 

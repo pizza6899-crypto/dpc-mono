@@ -3,7 +3,7 @@
 import { ApiProperty } from '@nestjs/swagger';
 import { IsOptional, IsString, IsEnum, IsDateString } from 'class-validator';
 import { Type } from 'class-transformer';
-import { AlertStatus } from '@repo/database';
+import { AlertStatus } from 'src/generated/prisma';
 
 export class FindAlertsQueryDto {
     @ApiProperty({ description: 'Filter by status', enum: AlertStatus, required: false })

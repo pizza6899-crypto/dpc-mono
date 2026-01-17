@@ -1,6 +1,6 @@
 import { ApiPropertyOptional } from '@nestjs/swagger';
 import { IsEnum, IsOptional, IsDateString, IsInt, Min, IsIn } from 'class-validator';
-import { ExchangeCurrencyCode, TransactionType } from '@repo/database';
+import { ExchangeCurrencyCode, TransactionType } from 'src/generated/prisma';
 import { Type } from 'class-transformer';
 import { WALLET_CURRENCIES } from 'src/utils/currency.util';
 

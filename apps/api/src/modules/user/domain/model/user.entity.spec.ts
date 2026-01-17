@@ -1,6 +1,6 @@
 // src/modules/user/domain/model/user.entity.spec.ts
 import { User } from './user.entity';
-import { UserRoleType, UserStatus, SocialType } from '@repo/database';
+import { UserRoleType, UserStatus, SocialType } from 'src/generated/prisma';
 import { UserAuth } from './value-objects/user-auth.vo';
 import { UserLocation } from './value-objects/user-location.vo';
 

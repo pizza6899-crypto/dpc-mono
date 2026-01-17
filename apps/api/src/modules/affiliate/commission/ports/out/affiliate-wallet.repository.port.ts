@@ -1,5 +1,5 @@
 // src/modules/affiliate/commission/ports/out/affiliate-wallet.repository.port.ts
-import type { ExchangeCurrencyCode } from '@repo/database';
+import type { ExchangeCurrencyCode } from 'src/generated/prisma';
 import type { AffiliateWallet } from '../../domain';
 
 /**

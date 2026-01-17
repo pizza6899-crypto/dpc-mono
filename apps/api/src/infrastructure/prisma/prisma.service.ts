@@ -4,7 +4,7 @@ import {
   OnModuleDestroy,
   Logger,
 } from '@nestjs/common';
-import { PrismaClient, Prisma } from '@repo/database';
+import { PrismaClient, Prisma } from 'src/generated/prisma';
 import { PrismaPg } from '@prisma/adapter-pg';
 import { EnvService } from 'src/common/env/env.service';
 

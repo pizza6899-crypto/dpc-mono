@@ -18,7 +18,7 @@ import type { NotificationTemplateRepositoryPort } from '../../template/ports';
 import { NotificationLog } from '../../inbox/domain';
 import { InjectQueue } from '@nestjs/bullmq';
 import { Queue } from 'bullmq';
-import { AlertStatus, ChannelType, Language } from '@repo/database';
+import { AlertStatus, ChannelType, Language } from 'src/generated/prisma';
 
 interface AlertJobData {
     alertId: string;

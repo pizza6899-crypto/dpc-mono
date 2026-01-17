@@ -20,7 +20,7 @@ import { RequestClientInfoParam } from 'src/common/auth/decorators/request-info.
 import type { RequestClientInfo } from 'src/common/http/types/client-info.types';
 import { PaginatedResponseDto } from 'src/common/http/types/pagination.types';
 import { Paginated } from 'src/common/http/decorators/paginated.decorator';
-import { Prisma } from '@repo/database';
+import { Prisma } from 'src/generated/prisma';
 import { FindCommissionsService } from '../../application/find-commissions.service';
 import { FindCommissionByIdService } from '../../application/find-commission-by-id.service';
 import { GetWalletBalanceService } from '../../application/get-wallet-balance.service';

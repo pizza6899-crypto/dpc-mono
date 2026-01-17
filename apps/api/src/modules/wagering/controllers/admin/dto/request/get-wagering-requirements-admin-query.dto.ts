@@ -1,7 +1,7 @@
 import { ApiProperty, ApiPropertyOptional } from '@nestjs/swagger';
 import { IsArray, IsEnum, IsNotEmpty, IsNumberString, IsOptional } from 'class-validator';
 import { createPaginationQueryDto } from 'src/common/http/types/pagination.types';
-import { WageringStatus, WageringSourceType, ExchangeCurrencyCode } from '@repo/database';
+import { WageringStatus, WageringSourceType, ExchangeCurrencyCode } from 'src/generated/prisma';
 import { Transform } from 'class-transformer';
 
 type WageringSortFields = 'createdAt' | 'updatedAt' | 'priority' | 'id';

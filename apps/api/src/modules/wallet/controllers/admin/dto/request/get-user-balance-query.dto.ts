@@ -1,7 +1,7 @@
 // src/modules/wallet/controllers/admin/dto/request/get-user-balance-query.dto.ts
 import { ApiPropertyOptional } from '@nestjs/swagger';
 import { IsOptional, IsIn } from 'class-validator';
-import { ExchangeCurrencyCode } from '@repo/database';
+import { ExchangeCurrencyCode } from 'src/generated/prisma';
 import { WALLET_CURRENCIES } from 'src/utils/currency.util';
 
 export class GetUserBalanceQueryDto {

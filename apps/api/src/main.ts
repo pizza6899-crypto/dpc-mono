@@ -16,7 +16,7 @@ import { RedisStore } from 'connect-redis';
 import { createClient } from 'redis';
 import type { NestExpressApplication } from '@nestjs/platform-express';
 import { SchedulerRegistry } from '@nestjs/schedule';
-import { Prisma } from '@repo/database';
+import { Prisma } from 'src/generated/prisma';
 
 // BigInt JSON 직렬화 설정
 (BigInt.prototype as any).toJSON = function () {

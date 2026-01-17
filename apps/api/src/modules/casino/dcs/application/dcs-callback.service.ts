@@ -33,7 +33,7 @@ import {
   GameAggregatorType,
   Prisma,
   TransactionStatus,
-} from '@repo/database';
+} from 'src/generated/prisma';
 import { CasinoRefundService } from '../../application/casino-refund.service';
 import { parseDateStringOrThrow } from 'src/utils/date.util';
 import { CasinoBonusService } from '../../application/casino-bonus.service';

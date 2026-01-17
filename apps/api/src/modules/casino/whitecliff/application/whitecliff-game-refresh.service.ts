@@ -12,7 +12,7 @@ import {
   GameCategory,
   Language,
   GameProvider,
-} from '@repo/database';
+} from 'src/generated/prisma';
 import { toLanguageEnum } from 'src/utils/language.util';
 import { GAMING_CURRENCIES } from 'src/utils/currency.util';
 import { InjectTransaction } from '@nestjs-cls/transactional';

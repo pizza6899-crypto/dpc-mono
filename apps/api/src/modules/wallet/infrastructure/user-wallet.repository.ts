@@ -5,7 +5,7 @@ import type { PrismaTransaction } from 'src/infrastructure/prisma/prisma.module'
 import type { UserWalletRepositoryPort } from '../ports/out/user-wallet.repository.port';
 import { UserWallet } from '../domain';
 import { UserWalletMapper } from './user-wallet.mapper';
-import type { ExchangeCurrencyCode } from '@repo/database';
+import type { ExchangeCurrencyCode } from 'src/generated/prisma';
 import { LockNamespace } from 'src/common/concurrency/lock-namespace';
 import { DomainException } from 'src/common/exception/domain.exception';
 import { MessageCode } from '@repo/shared';

@@ -1,5 +1,5 @@
 import { ApiProperty } from '@nestjs/swagger';
-import { GameCategory, GameProvider, GameAggregatorType } from '@repo/database';
+import { GameCategory, GameProvider, GameAggregatorType } from 'src/generated/prisma';
 
 export class AdminGameResponseDto {
     @ApiProperty()

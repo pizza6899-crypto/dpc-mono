@@ -1,6 +1,6 @@
 // src/modules/user/ports/out/user.repository.port.ts
 import type { User } from '../../domain';
-import type { UserRoleType, SocialType, UserStatus } from '@repo/database';
+import type { UserRoleType, SocialType, UserStatus } from 'src/generated/prisma';
 
 /**
  * User 생성 파라미터

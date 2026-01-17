@@ -1,7 +1,7 @@
 // apps/api/src/modules/notification/template/application/update-template-translation.service.ts
 
 import { Injectable, Inject } from '@nestjs/common';
-import { Language } from '@repo/database';
+import { Language } from 'src/generated/prisma';
 import { NOTIFICATION_TEMPLATE_REPOSITORY } from '../ports';
 import type { NotificationTemplateRepositoryPort } from '../ports';
 import { NotificationTemplate, NotificationTemplateTranslation } from '../domain';

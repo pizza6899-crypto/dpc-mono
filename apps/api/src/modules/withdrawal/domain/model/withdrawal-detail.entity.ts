@@ -6,7 +6,7 @@ import {
     WithdrawalStatus,
     WithdrawalProcessingMode,
     FeePaidByType,
-} from '@repo/database';
+} from 'src/generated/prisma';
 import { SnowflakeService } from 'src/common/snowflake/snowflake.service';
 import {
     InvalidWithdrawalStatusException,

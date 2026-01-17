@@ -8,7 +8,7 @@ import {
   GameProvider,
   Language,
   GameCategory,
-} from '@repo/database';
+} from 'src/generated/prisma';
 import { DcsResponseCode } from '../constants/dcs-response-codes';
 import { mockResponse1 } from './dc-mock1';
 import { InjectTransaction } from '@nestjs-cls/transactional';

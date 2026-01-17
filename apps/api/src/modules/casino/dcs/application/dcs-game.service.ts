@@ -11,7 +11,7 @@ import {
   WalletCurrencyCode,
 } from 'src/utils/currency.util';
 import { CreateCasinoGameSessionService } from '../../application/create-casino-game-session.service';
-import { GameAggregatorType } from '@repo/database';
+import { GameAggregatorType } from 'src/generated/prisma';
 import { InjectTransaction } from '@nestjs-cls/transactional';
 import { type PrismaTransaction } from 'src/infrastructure/prisma/prisma.module';
 

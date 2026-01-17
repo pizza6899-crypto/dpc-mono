@@ -15,7 +15,7 @@ import {
   GameProvider,
   Prisma,
   TransactionStatus,
-} from '@repo/database';
+} from 'src/generated/prisma';
 import { GamingCurrencyCode } from 'src/utils/currency.util';
 
 @Injectable()

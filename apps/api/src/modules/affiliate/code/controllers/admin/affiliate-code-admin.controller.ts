@@ -20,7 +20,7 @@ import {
 import { PaginatedResponseDto } from 'src/common/http/types/pagination.types';
 import { Paginated } from 'src/common/http/decorators/paginated.decorator';
 import { RequireRoles } from 'src/common/auth/decorators/roles.decorator';
-import { UserRoleType } from '@repo/database';
+import { UserRoleType } from 'src/generated/prisma';
 import { CurrentUser } from 'src/common/auth/decorators/current-user.decorator';
 import type { CurrentUserWithSession } from 'src/common/auth/decorators/current-user.decorator';
 import { FindCodesAdminService } from '../../application/find-codes-admin.service';

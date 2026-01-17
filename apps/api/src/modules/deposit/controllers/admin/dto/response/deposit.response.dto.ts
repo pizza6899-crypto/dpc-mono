@@ -4,7 +4,7 @@ import {
   DepositMethodType,
   PaymentProvider,
   ExchangeCurrencyCode,
-} from '@repo/database';
+} from 'src/generated/prisma';
 
 export class AdminDepositListItemDto {
   @ApiProperty({ description: 'Deposit detail ID' })

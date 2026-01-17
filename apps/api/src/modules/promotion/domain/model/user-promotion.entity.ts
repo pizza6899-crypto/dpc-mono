@@ -1,6 +1,6 @@
 // src/modules/promotion/domain/model/user-promotion.entity.ts
-import { Prisma, ExchangeCurrencyCode } from '@repo/database';
-import { UserPromotionStatus } from '@repo/database';
+import { Prisma, ExchangeCurrencyCode } from 'src/generated/prisma';
+import { UserPromotionStatus } from 'src/generated/prisma';
 
 export class UserPromotion {
   private constructor(

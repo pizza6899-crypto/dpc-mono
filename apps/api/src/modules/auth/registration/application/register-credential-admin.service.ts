@@ -13,7 +13,7 @@ import {
   ReferralCodeInactiveException,
   ReferralCodeExpiredException,
 } from 'src/modules/affiliate/referral/domain/referral.exception';
-import { UserRoleType, UserStatus } from '@repo/database';
+import { UserRoleType, UserStatus } from 'src/generated/prisma';
 import { CreateUserService } from 'src/modules/user/application/create-user.service';
 import { UserAlreadyExistsException } from 'src/modules/user/domain/user.exception';
 import { CreateWalletService } from 'src/modules/wallet/application/create-wallet.service';

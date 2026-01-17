@@ -1,11 +1,11 @@
 // src/modules/deposit/infrastructure/deposit-detail.mapper.ts
 import { Injectable } from '@nestjs/common';
-import { Prisma } from '@repo/database';
+import { Prisma } from 'src/generated/prisma';
 import {
   DepositDetailStatus,
   ExchangeCurrencyCode,
   FeePaidByType,
-} from '@repo/database';
+} from 'src/generated/prisma';
 import { DepositDetail } from '../domain';
 
 /**

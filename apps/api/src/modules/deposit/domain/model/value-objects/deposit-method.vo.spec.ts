@@ -1,5 +1,5 @@
 // src/modules/deposit/domain/model/value-objects/deposit-method.vo.spec.ts
-import { DepositMethodType, PaymentProvider } from '@repo/database';
+import { DepositMethodType, PaymentProvider } from 'src/generated/prisma';
 import { DepositMethod } from './deposit-method.vo';
 
 describe('DepositMethod Value Object', () => {

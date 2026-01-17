@@ -4,7 +4,7 @@ import { MessageCode } from '@repo/shared';
 import { DomainException } from 'src/common/exception/domain.exception';
 import { InjectTransaction } from '@nestjs-cls/transactional';
 import { type PrismaTransaction } from 'src/infrastructure/prisma/prisma.module';
-import { Prisma } from '@repo/database';
+import { Prisma } from 'src/generated/prisma';
 import { AffiliateCode } from '../domain';
 import type { AffiliateCodeRepositoryPort } from '../ports/out/affiliate-code.repository.port';
 import { AffiliateCodeMapper } from './affiliate-code.mapper';

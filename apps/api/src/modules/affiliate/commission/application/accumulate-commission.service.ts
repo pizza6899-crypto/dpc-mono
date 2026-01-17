@@ -1,5 +1,5 @@
 import { Injectable } from '@nestjs/common';
-import { ExchangeCurrencyCode, GameCategory, Prisma } from '@repo/database';
+import { ExchangeCurrencyCode, GameCategory, Prisma } from 'src/generated/prisma';
 import { AffiliateCommission } from '../domain';
 import { CalculateCommissionService } from './calculate-commission.service';
 import { Transactional } from '@nestjs-cls/transactional';

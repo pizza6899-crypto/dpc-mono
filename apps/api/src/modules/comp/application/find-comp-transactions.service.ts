@@ -1,7 +1,7 @@
 import { Inject, Injectable } from '@nestjs/common';
 import { COMP_REPOSITORY } from '../ports';
 import type { CompRepositoryPort } from '../ports';
-import { ExchangeCurrencyCode } from '@repo/database';
+import { ExchangeCurrencyCode } from 'src/generated/prisma';
 import { PaginatedData } from 'src/common/http/types/pagination.types';
 import { CompTransaction } from '../domain';
 
