@@ -4,6 +4,7 @@ import { Injectable } from '@nestjs/common';
 import {
     NotificationTemplate as PrismaTemplate,
     NotificationTemplateTranslation as PrismaTranslation,
+    Prisma,
 } from '@repo/database';
 import {
     NotificationTemplate,
@@ -43,13 +44,19 @@ export class NotificationTemplateMapper {
         });
     }
 
-    toPrisma(entity: NotificationTemplate): Omit<PrismaTemplate, 'id' | 'createdAt' | 'updatedAt'> {
+    toPrisma(entity: NotificationTemplate): {
+        name: string;
+        description: string | null;
+        event: string;
+        channel: PrismaTemplate['channel'];
+        variables: Prisma.InputJsonValue;
+    } {
         return {
             name: entity.name,
             description: entity.description,
             event: entity.event,
             channel: entity.channel,
-            variables: entity.variables,
+            variables: entity.variables as Prisma.InputJsonValue,
         };
     }
 

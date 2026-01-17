@@ -2,7 +2,7 @@
 
 import { Injectable } from '@nestjs/common';
 import { NotificationLog } from '../domain';
-import { ChannelType, NotifyStatus, Language } from '@repo/database';
+import { ChannelType, NotifyStatus, Language, Prisma } from '@repo/database';
 
 type PrismaNotificationLog = {
     id: bigint;
@@ -79,7 +79,7 @@ export class NotificationLogMapper {
         priority: number;
         scheduledAt: Date;
         status: NotifyStatus;
-        metadata: unknown;
+        metadata: Prisma.InputJsonValue | undefined;
     } {
         return {
             alertId: log.alertId,
@@ -96,7 +96,7 @@ export class NotificationLogMapper {
             priority: log.priority,
             scheduledAt: log.scheduledAt,
             status: log.status,
-            metadata: log.metadata,
+            metadata: log.metadata as Prisma.InputJsonValue | undefined,
         };
     }
 

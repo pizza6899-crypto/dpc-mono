@@ -3,11 +3,11 @@ import { ClsModule } from 'nestjs-cls';
 import { ClsPluginTransactional } from '@nestjs-cls/transactional';
 import { TransactionalAdapterPrisma } from '@nestjs-cls/transactional-adapter-prisma';
 import type { Transaction } from '@nestjs-cls/transactional';
-import { PrismaService } from './prisma.service';
+import { PrismaService, type ExtendedClient } from './prisma.service';
 import type { PrismaClient } from '@repo/database';
 
 // Transaction 어댑터 타입 정의
-export type PrismaTransactionalAdapter = TransactionalAdapterPrisma<PrismaClient>;
+export type PrismaTransactionalAdapter = TransactionalAdapterPrisma<ExtendedClient>;
 
 // Transaction 타입 정의 (Repository에서 사용)
 export type PrismaTransaction = Transaction<PrismaTransactionalAdapter>;

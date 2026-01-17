@@ -2,7 +2,7 @@
 
 import { Injectable } from '@nestjs/common';
 import { Alert } from '../domain';
-import { AlertStatus } from '@repo/database';
+import { AlertStatus, Prisma } from '@repo/database';
 
 type PrismaAlert = {
     id: bigint;
@@ -36,7 +36,7 @@ export class AlertMapper {
         event: string;
         userId: bigint | null;
         targetGroup: string | null;
-        payload: unknown;
+        payload: Prisma.InputJsonValue;
         idempotencyKey: string | null;
         status: AlertStatus;
     } {
@@ -44,7 +44,7 @@ export class AlertMapper {
             event: alert.event,
             userId: alert.userId,
             targetGroup: alert.targetGroup,
-            payload: alert.payload,
+            payload: alert.payload as Prisma.InputJsonValue,
             idempotencyKey: alert.idempotencyKey,
             status: alert.status,
         };

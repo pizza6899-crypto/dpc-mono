@@ -1,7 +1,11 @@
 // src/utils/id.util.ts
 import { init } from '@paralleldrive/cuid2';
 import { customAlphabet } from 'nanoid';
-import type { PrismaService } from 'src/infrastructure/prisma/prisma.service';
+import type {
+  PrismaService,
+  ExtendedClient,
+} from 'src/infrastructure/prisma/prisma.service';
+import type { PrismaTransaction } from 'src/infrastructure/prisma/prisma.module';
 import { nowUtc } from './date.util';
 import type { Prisma } from '@repo/database';
 
@@ -57,10 +61,15 @@ export class IdUtil {
    * 데이터베이스에서 가장 큰 whitecliffId + 1 값 생성
    */
   static async generateNextWhitecliffId(
-    prisma: PrismaService | Prisma.TransactionClient,
+    prisma:
+      | PrismaService
+      | Prisma.TransactionClient
+      | ExtendedClient
+      | PrismaTransaction,
   ): Promise<bigint> {
     // 가장 큰 whitecliffId 값 조회
-    const maxIdResult = await prisma.user.findFirst({
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
+    const maxIdResult = await (prisma as any).user.findFirst({
       where: {
         whitecliffId: { not: null },
       },
@@ -81,10 +90,15 @@ export class IdUtil {
   }
 
   static async generateNextDcsId(
-    prisma: PrismaService | Prisma.TransactionClient,
+    prisma:
+      | PrismaService
+      | Prisma.TransactionClient
+      | ExtendedClient
+      | PrismaTransaction,
   ): Promise<string> {
     // 가장 큰 dcsId 값 조회
-    const maxIdResult = await (prisma as PrismaService).user.findFirst({
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
+    const maxIdResult = await (prisma as any).user.findFirst({
       where: {
         dcsId: { not: null },
       },
