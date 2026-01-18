@@ -1,4 +1,5 @@
 import { forwardRef, Module } from '@nestjs/common';
+import { AggregatorModule } from './aggregator/aggregator.module';
 import { WhitecliffModule } from './whitecliff/whitecliff.module';
 import { DcsModule } from './dcs/dcs.module';
 import { CasinoGameUserController } from './controllers/user/casino-game-user.controller';
@@ -29,6 +30,7 @@ import { SnowflakeModule } from 'src/common/snowflake/snowflake.module';
 
 @Module({
   imports: [
+    AggregatorModule,
     forwardRef(() => WhitecliffModule),
     forwardRef(() => DcsModule),
     ConcurrencyModule,
