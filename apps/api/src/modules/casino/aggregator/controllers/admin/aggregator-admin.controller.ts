@@ -5,10 +5,8 @@ import { Admin } from 'src/common/auth/decorators/roles.decorator';
 import { AuditLog } from 'src/modules/audit-log/infrastructure/audit-log.decorator';
 import { FindAggregatorService } from '../../application/find-aggregator.service';
 import { FindAggregatorsService } from '../../application/find-aggregators.service';
-import { CreateAggregatorService } from '../../application/create-aggregator.service';
 import { UpdateAggregatorService } from '../../application/update-aggregator.service';
 import { AggregatorRegistryService } from '../../application/aggregator-registry.service';
-import { CreateAggregatorDto } from './dto/request/create-aggregator.dto';
 import { UpdateAggregatorDto } from './dto/request/update-aggregator.dto';
 import { AggregatorResponseDto } from './dto/response/aggregator.response.dto';
 
@@ -19,7 +17,6 @@ export class AggregatorAdminController {
     constructor(
         private readonly findAggregatorService: FindAggregatorService,
         private readonly findAggregatorsService: FindAggregatorsService,
-        private readonly createAggregatorService: CreateAggregatorService,
         private readonly updateAggregatorService: UpdateAggregatorService,
         private readonly registryService: AggregatorRegistryService,
     ) { }
@@ -38,17 +35,8 @@ export class AggregatorAdminController {
         return AggregatorResponseDto.from(aggregator);
     }
 
-    @Post()
-    @AuditLog({ type: LogType.ACTIVITY, category: 'CASINO', action: 'AGGREGATOR_CREATE' })
-    @ApiOperation({ summary: '애그리게이터 생성' })
-    async create(@Body() dto: CreateAggregatorDto): Promise<AggregatorResponseDto> {
-        const aggregator = await this.createAggregatorService.execute(dto);
-        await this.registryService.reload(); // 캐시 갱신
-        return AggregatorResponseDto.from(aggregator);
-    }
-
     @Put(':id')
-    @AuditLog({ type: LogType.ACTIVITY, category: 'CASINO', action: 'AGGREGATOR_CREATE' })
+    @AuditLog({ type: LogType.ACTIVITY, category: 'CASINO', action: 'AGGREGATOR_UPDATE' })
     @ApiOperation({ summary: '애그리게이터 수정' })
     async update(
         @Param('id') id: string,
