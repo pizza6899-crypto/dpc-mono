@@ -1,6 +1,10 @@
 // 카테고리 관련 해서 테이블 생성해서 리팩토링 진행할거
 // 기존 카지노 게임은 냅두고
 
+// ═══════════════════════════════════════════════════════════════
+// 기존 카지노 게임 (Legacy - 유지)
+// ═══════════════════════════════════════════════════════════════
+
 model CasinoGame {
   id               BigInt                  @id @default(autoincrement())
   aggregatorType   GameAggregatorType      @map("aggregator_type")
@@ -108,4 +112,30 @@ model GameWin {
   @@unique([aggregatorWinId, aggregatorType, wonAt])
   @@index([gameRoundId])
   @@map("game_wins")
+}
+
+// ═══════════════════════════════════════════════════════════════
+// 신규 카지노 구조 (Refactored)
+// ═══════════════════════════════════════════════════════════════
+
+model CasinoAggregator {
+  id   BigInt @id @default(autoincrement())
+  name String @map("name") // 표기용 이름 (예: DC, W)
+  code String @unique @map("code") // 시스템 식별 코드 (예: DC, WC)
+
+  // 상태 관리를 조금 더 세분화 (Active, Inactive, Maintenance)
+  status AggregatorStatus @map("status")
+
+  config Json @map("config")
+
+  createdAt DateTime @default(now()) @map("created_at")
+  updatedAt DateTime @updatedAt @map("updated_at")
+
+  @@map("casino_aggregators")
+}
+
+enum AggregatorStatus {
+  ACTIVE
+  INACTIVE
+  MAINTENANCE
 }
