@@ -26,7 +26,6 @@ export class UpdateAggregatorService {
             name: command.name ?? aggregator.name,
             code: aggregator.code,
             status: command.status ?? aggregator.status,
-            config: aggregator.config,
             createdAt: aggregator.createdAt,
             updatedAt: new Date(),
         });

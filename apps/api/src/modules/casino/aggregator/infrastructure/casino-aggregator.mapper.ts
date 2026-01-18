@@ -1,6 +1,6 @@
 import { Injectable } from '@nestjs/common';
 import { CasinoAggregator as PrismaCasinoAggregator, Prisma } from '@repo/database';
-import { CasinoAggregator, AggregatorConfig } from '../domain';
+import { CasinoAggregator } from '../domain';
 
 @Injectable()
 export class CasinoAggregatorMapper {
@@ -10,7 +10,6 @@ export class CasinoAggregatorMapper {
             name: prisma.name,
             code: prisma.code,
             status: prisma.status,
-            config: prisma.config as unknown as AggregatorConfig,
             createdAt: prisma.createdAt,
             updatedAt: prisma.updatedAt,
         });
@@ -21,7 +20,6 @@ export class CasinoAggregatorMapper {
             name: domain.name,
             code: domain.code,
             status: domain.status,
-            config: domain.config as unknown as Prisma.InputJsonValue,
         };
     }
 }

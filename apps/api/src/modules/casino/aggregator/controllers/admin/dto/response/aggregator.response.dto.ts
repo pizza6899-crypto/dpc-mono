@@ -1,7 +1,6 @@
 import { ApiProperty } from '@nestjs/swagger';
 import { AggregatorStatus } from '@repo/database';
 import { CasinoAggregator } from '../../../../domain';
-import type { AggregatorConfig } from '../../../../domain';
 
 export class AggregatorResponseDto {
     @ApiProperty()
@@ -17,9 +16,6 @@ export class AggregatorResponseDto {
     status!: AggregatorStatus;
 
     @ApiProperty()
-    config!: AggregatorConfig;
-
-    @ApiProperty()
     createdAt!: Date;
 
     @ApiProperty()
@@ -31,7 +27,6 @@ export class AggregatorResponseDto {
         dto.name = aggregator.name;
         dto.code = aggregator.code;
         dto.status = aggregator.status;
-        dto.config = aggregator.config;
         dto.createdAt = aggregator.createdAt;
         dto.updatedAt = aggregator.updatedAt;
         return dto;

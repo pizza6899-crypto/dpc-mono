@@ -12,6 +12,7 @@
         "format": "pnpm prisma format",
         "reset": "pnpm prisma migrate reset",
         "deploy": "pnpm clean:client && pnpm prisma migrate deploy && pnpm prisma generate",
+        "db:push": "pnpm clean:client && pnpm prisma db push && pnpm prisma generate",
         "seed": "pnpm prisma db seed",
         "studio": "pnpm prisma studio"
     },

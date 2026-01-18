@@ -22,6 +22,7 @@
     "db:format": "pnpm -F @repo/database format",
     "db:reset": "pnpm -F @repo/database reset",
     "db:deploy": "pnpm -F @repo/database run deploy",
+    "db:push": "pnpm -F @repo/database db:push",
     "db:seed": "pnpm -F @repo/database seed",
     "db:studio": "pnpm -F @repo/database studio",
     "shared:build": "pnpm -F @repo/shared build",

@@ -2,6 +2,7 @@ import { seedUsers } from './seeders/user.seeder';
 import { seedLobbyGames } from './seeders/game.seeder';
 import { seedTiers } from './seeders/tier.seeder';
 import { seedNotificationTemplates } from './seeders/notification.seeder';
+import { seedAggregators } from './seeders/aggregator.seeder';
 import { PrismaClient } from '../src';
 import { PrismaPg } from '@prisma/adapter-pg';
 
@@ -34,7 +35,9 @@ async function main() {
     await seedNotificationTemplates(prisma);
     console.log('✅ 알림 템플릿 시딩이 완료되었습니다.');
 
-
+    // 카지노 애그리게이터 시딩 처리
+    await seedAggregators(prisma);
+    console.log('✅ 카지노 애그리게이터 시딩이 완료되었습니다.');
 
   } catch (error) {
     console.error('❌ 시딩 중 오류가 발생했습니다:', error);

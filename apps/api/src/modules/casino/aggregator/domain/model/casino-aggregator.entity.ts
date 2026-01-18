@@ -1,13 +1,14 @@
 import { AggregatorStatus } from '@repo/database';
-import { AggregatorConfig } from './aggregator-config.vo';
 
 export class CasinoAggregator {
+    static readonly CODE_DC = 'DC';
+    static readonly CODE_WC = 'WC';
+
     private constructor(
         public readonly id: bigint | null,
         public readonly name: string,
         public readonly code: string,
         public readonly status: AggregatorStatus,
-        public readonly config: AggregatorConfig,
         public readonly createdAt: Date,
         public readonly updatedAt: Date,
     ) { }
@@ -17,7 +18,6 @@ export class CasinoAggregator {
         name: string;
         code: string;
         status?: AggregatorStatus;
-        config: AggregatorConfig;
         createdAt?: Date;
         updatedAt?: Date;
     }): CasinoAggregator {
@@ -26,7 +26,6 @@ export class CasinoAggregator {
             params.name,
             params.code,
             params.status ?? AggregatorStatus.ACTIVE,
-            params.config,
             params.createdAt ?? new Date(),
             params.updatedAt ?? new Date(),
         );
@@ -38,5 +37,13 @@ export class CasinoAggregator {
 
     isMaintenance(): boolean {
         return this.status === AggregatorStatus.MAINTENANCE;
+    }
+
+    isDc(): boolean {
+        return this.code === CasinoAggregator.CODE_DC;
+    }
+
+    isWhitecliff(): boolean {
+        return this.code === CasinoAggregator.CODE_WC;
     }
 }
