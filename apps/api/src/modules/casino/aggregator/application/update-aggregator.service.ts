@@ -1,5 +1,5 @@
 import { Inject, Injectable } from '@nestjs/common';
-import { CasinoAggregator, AggregatorConfig } from '../domain';
+import { CasinoAggregator } from '../domain';
 import { CASINO_AGGREGATOR_REPOSITORY } from '../ports';
 import type { CasinoAggregatorRepositoryPort } from '../ports';
 import { AggregatorStatus } from '@repo/database';
@@ -8,7 +8,6 @@ interface UpdateAggregatorCommand {
     id: bigint;
     name?: string;
     status?: AggregatorStatus;
-    config?: AggregatorConfig;
 }
 
 @Injectable()
@@ -27,7 +26,7 @@ export class UpdateAggregatorService {
             name: command.name ?? aggregator.name,
             code: aggregator.code,
             status: command.status ?? aggregator.status,
-            config: command.config ?? aggregator.config,
+            config: aggregator.config,
             createdAt: aggregator.createdAt,
             updatedAt: new Date(),
         });

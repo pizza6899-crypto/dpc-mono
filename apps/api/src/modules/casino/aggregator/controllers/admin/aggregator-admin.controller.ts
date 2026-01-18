@@ -3,7 +3,6 @@ import { ApiTags, ApiOperation } from '@nestjs/swagger';
 import { LogType } from 'src/modules/audit-log/domain';
 import { Admin } from 'src/common/auth/decorators/roles.decorator';
 import { AuditLog } from 'src/modules/audit-log/infrastructure/audit-log.decorator';
-import { FindAggregatorService } from '../../application/find-aggregator.service';
 import { FindAggregatorsService } from '../../application/find-aggregators.service';
 import { UpdateAggregatorService } from '../../application/update-aggregator.service';
 import { AggregatorRegistryService } from '../../application/aggregator-registry.service';
@@ -15,7 +14,6 @@ import { AggregatorResponseDto } from './dto/response/aggregator.response.dto';
 @Admin()
 export class AggregatorAdminController {
     constructor(
-        private readonly findAggregatorService: FindAggregatorService,
         private readonly findAggregatorsService: FindAggregatorsService,
         private readonly updateAggregatorService: UpdateAggregatorService,
         private readonly registryService: AggregatorRegistryService,
@@ -26,13 +24,6 @@ export class AggregatorAdminController {
     async findAll(): Promise<AggregatorResponseDto[]> {
         const aggregators = await this.findAggregatorsService.execute();
         return aggregators.map(AggregatorResponseDto.from);
-    }
-
-    @Get(':id')
-    @ApiOperation({ summary: '애그리게이터 상세 조회' })
-    async findOne(@Param('id') id: string): Promise<AggregatorResponseDto> {
-        const aggregator = await this.findAggregatorService.execute({ id: BigInt(id) });
-        return AggregatorResponseDto.from(aggregator);
     }
 
     @Put(':id')
