@@ -1,5 +1,5 @@
 ---
-name: controller_implementation
+name: controller_skill
 description: NestJS Controller Implementation Guide & Best Practices
 ---
 

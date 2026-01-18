@@ -14,7 +14,7 @@ description: API 서버 개발 기술 가이드 관제탑
 
 ### 2. Controller & API
 일관된 컨트롤러 구현을 위한 표준 지침 (User/Admin 분리, DTO, ID 난독화 등).
-- **Guide:** `view_file apps/api/.agent/skills/my-skill/controller-implementation.md`
+- **Guide:** `view_file apps/api/.agent/skills/my-skill/controller-skill.md`
 - **Rule:** Admin은 Raw ID, User는 Sqids 사용 / `@ApiTags` 영어 사용 / `@AuditLog` 필수
 
 ## 🚀 Usage
