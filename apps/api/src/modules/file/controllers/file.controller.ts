@@ -139,13 +139,13 @@ export class FileController {
     ): Promise<FileUsageResponseDto[]> {
         const usageId = this.resolveUsageId(dto.usageType, dto.usageId);
 
-        const fileUsages = await this.attachFileService.execute({
+        const { usages } = await this.attachFileService.execute({
             fileIds: dto.fileIds,
             usageType: dto.usageType,
             usageId: usageId,
         });
 
-        return fileUsages.map(usage => this.toUsageResponseDto(usage));
+        return usages.map(usage => this.toUsageResponseDto(usage));
     }
 
     private resolveUsageId(usageType: string, id: string): bigint {
@@ -169,18 +169,9 @@ export class FileController {
 
 
     private toResponseDto(file: FileEntity): FileResponseDto {
-        let url: string | undefined;
-
-        if (file.accessType !== FileAccessType.PRIVATE) {
-            // Generate URL only for non-private files
-            const cdnUrl = this.envService.app.cdnUrl || '';
-            const baseUrl = cdnUrl.endsWith('/') ? cdnUrl : (cdnUrl ? `${cdnUrl}/` : '');
-            url = baseUrl ? `${baseUrl}${file.key}` : file.key;
-        }
-
         return {
             id: this.sqidsService.encode(file.id!, SqidsPrefix.FILE),
-            url: url,
+            url: file.publicUrl(this.envService.app.cdnUrl) ?? undefined,
         };
     }
     private toUsageResponseDto(usage: FileUsageEntity): FileUsageResponseDto {

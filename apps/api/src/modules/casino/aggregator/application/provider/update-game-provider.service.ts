@@ -1,4 +1,5 @@
 import { Inject, Injectable } from '@nestjs/common';
+import { Transactional } from '@nestjs-cls/transactional';
 import { CasinoGameProvider } from '../../domain';
 import { CASINO_GAME_PROVIDER_REPOSITORY } from '../../ports/casino-game-provider.repository.token';
 import { type CasinoGameProviderRepositoryPort } from '../../ports/casino-game-provider.repository.port';
@@ -13,7 +14,6 @@ import { SqidsPrefix } from 'src/common/sqids/sqids.constants';
 interface UpdateGameProviderParams {
     id: bigint;
     name?: string;
-    groupCode?: string;
     imageId?: string;
     isActive?: boolean;
 }
@@ -30,37 +30,34 @@ export class UpdateGameProviderService {
         private readonly sqidsService: SqidsService,
     ) { }
 
+    @Transactional()
     async execute(params: UpdateGameProviderParams): Promise<CasinoGameProvider> {
         const provider = await this.repository.getById(params.id);
         let newImageUrl: string | undefined;
 
         if (params.imageId) {
-            await this.attachFileService.execute({
+            // 1. 파일을 비즈니스 엔티티와 연결 (이 과정에서 파일이 public/casino_provider_logo/... 경로로 이동됨)
+            const { files } = await this.attachFileService.execute({
                 fileIds: [params.imageId],
                 usageType: FileUsageType.CASINO_PROVIDER_LOGO,
                 usageId: provider.id!,
             });
 
-            // 파일 정보 조회하여 URL 구성 (ID 디코딩 필요)
-            const fileId = typeof params.imageId === 'string' && params.imageId.includes('_')
-                ? this.sqidsService.decode(params.imageId, SqidsPrefix.FILE)
-                : BigInt(params.imageId);
-
-            const file = await this.fileRepository.findById(fileId);
+            // 2. 파일 정보 재조회 없이 반환값 사용 (이미지 경로가 temp에서 정식 경로로 변경된 데이터)
+            const file = files[0];
             if (file) {
-                // S3 CloudFront URL 구성 (환경변수 의존)
-                const distributionUrl = this.envService.app.cdnUrl;
-                newImageUrl = `${distributionUrl}/${file.key}`;
+                // CDN 베이스 URL과 결합하여 전체 조회 URL 생성 (역정규화 저장용)
+                newImageUrl = file.publicUrl(this.envService.app.cdnUrl) ?? undefined;
             }
         }
 
         const updatedProvider = provider.update({
             name: params.name,
-            groupCode: params.groupCode,
-            imageUrl: newImageUrl, // 이미지가 변경된 경우에만 업데이트
+            imageUrl: newImageUrl, // 새로 생성된 URL이 있으면 덮어쓰고, 없으면 기존 URL 유지
             isActive: params.isActive,
         });
 
+        // 3. 최종적으로 프로바이더의 imageUrl 컬럼에 경로 저장
         return await this.repository.update(updatedProvider);
     }
 }

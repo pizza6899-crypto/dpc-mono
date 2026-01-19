@@ -7,11 +7,6 @@ export class UpdateGameProviderRequestDto {
     @IsOptional()
     name?: string;
 
-    @ApiPropertyOptional({ description: 'Brand group code / 브랜드 그룹 코드' })
-    @IsString()
-    @IsOptional()
-    groupCode?: string;
-
     @ApiPropertyOptional({
         description: 'Logo image ID (File ID from /file/upload) / 로고 이미지 ID (파일 업로드 API 결과값)',
         example: 'f_abc123'

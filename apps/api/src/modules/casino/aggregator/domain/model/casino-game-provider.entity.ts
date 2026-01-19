@@ -38,7 +38,6 @@ export class CasinoGameProvider {
 
     update(params: {
         name?: string;
-        groupCode?: string;
         imageUrl?: string | null;
         isActive?: boolean;
     }): CasinoGameProvider {
@@ -47,7 +46,7 @@ export class CasinoGameProvider {
             this.aggregatorId,
             params.name ?? this.name,
             this.code,
-            params.groupCode ?? this.groupCode,
+            this.groupCode,
             params.imageUrl !== undefined ? params.imageUrl : this.imageUrl,
             params.isActive !== undefined ? params.isActive : this.isActive,
             this.createdAt,

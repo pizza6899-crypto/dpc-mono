@@ -1,6 +1,6 @@
 import { Inject, Injectable } from '@nestjs/common';
 import * as path from 'path';
-import { FileUsageEntity, FileUsageType, FileAccessType, FileValidationException, getFileUsageConfig } from '../domain';
+import { FileEntity, FileUsageEntity, FileUsageType, FileAccessType, FileValidationException, getFileUsageConfig } from '../domain';
 import { FILE_USAGE_REPOSITORY } from '../ports/file-usage.repository.token';
 import { type FileUsageRepositoryPort } from '../ports/file-usage.repository.port';
 import { FILE_REPOSITORY } from '../ports/file.repository.token';
@@ -12,7 +12,7 @@ import { SqidsService } from 'src/common/sqids/sqids.service';
 import { SqidsPrefix } from 'src/common/sqids/sqids.constants';
 
 interface AttachFileCommand {
-    fileIds: string[];
+    fileIds: bigint[] | string[];
     usageType: FileUsageType;
     usageId: bigint;
     accessType?: FileAccessType;
@@ -30,7 +30,7 @@ export class AttachFileService {
     ) { }
 
     @Transactional()
-    async execute(command: AttachFileCommand): Promise<FileUsageEntity[]> {
+    async execute(command: AttachFileCommand): Promise<{ usages: FileUsageEntity[]; files: FileEntity[] }> {
         const { fileIds: inputIds, usageType, usageId } = command;
 
         // 0. Decode file IDs if they are strings
@@ -48,7 +48,7 @@ export class AttachFileService {
         const folder = accessType === FileAccessType.PUBLIC ? 'public' : 'private';
 
         // 2. Move Files & Update Entities
-        await Promise.all(files.map(async (file) => {
+        const updatedFiles = await Promise.all(files.map(async (file) => {
             const fileName = path.basename(file.key);
             const newPath = `${folder}/${usageType.toLowerCase()}/${usageId}`;
             const newKey = `${newPath}/${fileName}`;
@@ -63,8 +63,9 @@ export class AttachFileService {
                     key: newKey,
                     accessType: accessType,
                 });
-                await this.fileRepository.update(updatedFile);
+                return await this.fileRepository.update(updatedFile);
             }
+            return file;
         }));
 
         // 3. Create Usages
@@ -77,9 +78,14 @@ export class AttachFileService {
             })
         );
 
-        return await Promise.all(
+        const savedUsages = await Promise.all(
             fileUsages.map(usage => this.fileUsageRepository.create(usage))
         );
+
+        return {
+            usages: savedUsages,
+            files: updatedFiles,
+        };
     }
 
     private resolveAccessType(usageType: FileUsageType): FileAccessType {

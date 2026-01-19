@@ -110,4 +110,12 @@ export class FileEntity {
             new Date(),
         );
     }
+
+    publicUrl(cdnUrl: string): string | null {
+        if (this.accessType === FileAccessType.PRIVATE) {
+            return null;
+        }
+        const baseUrl = cdnUrl.endsWith('/') ? cdnUrl.slice(0, -1) : cdnUrl;
+        return `${baseUrl}/${this.key}`;
+    }
 }
