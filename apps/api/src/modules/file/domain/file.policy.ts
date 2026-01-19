@@ -53,6 +53,16 @@ export class FilePolicy {
             accessType: FileAccessType.PUBLIC,
             uploadRoles: ['ADMIN', 'SUPER_ADMIN'],
         },
+        [FileUsageType.CASINO_CATEGORY_ICON]: {
+            folder: 'casino/category/icon',
+            accessType: FileAccessType.PUBLIC,
+            uploadRoles: ['ADMIN', 'SUPER_ADMIN'],
+        },
+        [FileUsageType.CASINO_CATEGORY_BANNER]: {
+            folder: 'casino/category/banner',
+            accessType: FileAccessType.PUBLIC,
+            uploadRoles: ['ADMIN', 'SUPER_ADMIN'],
+        },
     };
 
     static getConfig(usageType: FileUsageType): FilePolicyConfig {

@@ -23,8 +23,11 @@ import { CategoryAdminController } from './controllers/admin/category-admin.cont
 import { GameAdminController } from './controllers/admin/game-admin.controller';
 import { CategoryUserController } from './controllers/user/category-user.controller';
 import { GameUserController } from './controllers/user/game-user.controller';
+import { FileModule } from '../../file/file.module';
+import { EnvModule } from 'src/common/env/env.module';
 
 @Module({
+    imports: [FileModule, EnvModule],
     controllers: [
         CategoryAdminController,
         GameAdminController,

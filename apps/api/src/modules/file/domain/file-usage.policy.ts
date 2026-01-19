@@ -14,9 +14,12 @@ export const FILE_USAGE_CONFIGS: Record<FileUsageType, FileUsageConfig> = {
     },
     [FileUsageType.CASINO_PROVIDER_LOGO]: {
         accessType: FileAccessType.PUBLIC,
-        // Proivder ID uses BigInt directly without sqids? 
-        // Based on previous code, provider methods use direct BigInt ops.
-        // Assuming no sqids prefix needed or none defined for Casino Provider yet.
+    },
+    [FileUsageType.CASINO_CATEGORY_ICON]: {
+        accessType: FileAccessType.PUBLIC,
+    },
+    [FileUsageType.CASINO_CATEGORY_BANNER]: {
+        accessType: FileAccessType.PUBLIC,
     },
 };
 
