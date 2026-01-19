@@ -18,8 +18,6 @@ export class CategoryMapper {
             sortOrder: prismaCategory.sortOrder,
             isActive: prismaCategory.isActive,
             isSystem: prismaCategory.isSystem,
-            autoPopulate: prismaCategory.autoPopulate,
-            autoRule: prismaCategory.autoRule,
             translations: prismaCategory.translations.map((t) => ({
                 language: t.language,
                 name: t.name,
@@ -37,8 +35,6 @@ export class CategoryMapper {
             sortOrder: domain.sortOrder,
             isActive: domain.isActive,
             isSystem: domain.isSystem,
-            autoPopulate: domain.autoPopulate,
-            autoRule: domain.autoRule,
         };
     }
 

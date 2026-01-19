@@ -2,7 +2,7 @@ import { Inject, Injectable } from '@nestjs/common';
 import { CATEGORY_REPOSITORY } from '../ports';
 import type { CategoryRepositoryPort } from '../ports';
 import { CasinoGameCategory } from '../domain';
-import { Language, Prisma } from '@repo/database';
+import { Language } from '@repo/database';
 
 interface UpdateCategoryParams {
     id: bigint;
@@ -10,8 +10,6 @@ interface UpdateCategoryParams {
     bannerUrl?: string | null;
     sortOrder?: number;
     isActive?: boolean;
-    autoPopulate?: boolean;
-    autoRule?: Prisma.JsonValue | null;
     translations?: {
         language: Language;
         name: string;
@@ -34,8 +32,6 @@ export class UpdateCategoryService {
             bannerUrl: params.bannerUrl,
             sortOrder: params.sortOrder,
             isActive: params.isActive,
-            autoPopulate: params.autoPopulate,
-            autoRule: params.autoRule,
             translations: params.translations,
         });
 

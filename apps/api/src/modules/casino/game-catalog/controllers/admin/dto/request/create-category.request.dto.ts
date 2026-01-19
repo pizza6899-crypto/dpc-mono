@@ -54,11 +54,6 @@ export class CreateCategoryAdminRequestDto {
     @IsBoolean()
     isSystem?: boolean;
 
-    @ApiPropertyOptional()
-    @IsOptional()
-    @IsBoolean()
-    autoPopulate?: boolean;
-
     @ApiProperty({ type: [CategoryTranslationRequestDto] })
     @IsArray()
     @ValidateNested({ each: true })

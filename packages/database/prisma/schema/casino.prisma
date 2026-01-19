@@ -186,8 +186,8 @@ model CasinoGameCategory {
   isSystem  Boolean @default(false) @map("is_system") // 시스템 생성 (삭제 방지)
 
   // 자동 채우기 규칙 (스케줄러 연동 - COLLECTION 타입 전용)
-  autoPopulate Boolean @default(false) @map("auto_populate") // 자동 갱신 여부
-  autoRule     Json?   @map("auto_rule") // 자동 규칙 (예: {"type": "most_played", "period": "7d", "limit": 20})
+  // autoPopulate Boolean @default(false) @map("auto_populate") // 자동 갱신 여부
+  // autoRule     Json?   @map("auto_rule") // 자동 규칙 (예: {"type": "most_played", "period": "7d", "limit": 20})
 
   createdAt DateTime @default(now()) @map("created_at")
   updatedAt DateTime @updatedAt @map("updated_at")

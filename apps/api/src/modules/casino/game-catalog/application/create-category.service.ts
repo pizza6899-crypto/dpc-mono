@@ -2,7 +2,7 @@ import { Inject, Injectable } from '@nestjs/common';
 import { CATEGORY_REPOSITORY } from '../ports';
 import type { CategoryRepositoryPort } from '../ports';
 import { CasinoGameCategory, CategoryAlreadyExistsException } from '../domain';
-import { CategoryType, Language, Prisma } from '@repo/database';
+import { CategoryType, Language } from '@repo/database';
 
 interface CreateCategoryParams {
     code: string;
@@ -12,8 +12,6 @@ interface CreateCategoryParams {
     sortOrder?: number;
     isActive?: boolean;
     isSystem?: boolean;
-    autoPopulate?: boolean;
-    autoRule?: Prisma.JsonValue;
     translations: {
         language: Language;
         name: string;
