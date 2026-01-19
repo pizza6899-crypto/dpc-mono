@@ -33,7 +33,8 @@ export interface WhitecliffAggregatorConfig {
     apiEnabled: boolean;
 
     // Env API 설정 (통화별)
-    currency: string;
+    internalCurrency: string; // 내부 시스템 용
+    externalCurrency: string; // 외부 서비스 용 (3rd party)
     endpoint: string;
     agentCode: string;
     token: string;
@@ -65,10 +66,20 @@ export function createDcsAggregatorConfig(
     };
 }
 
+import { WHITECLIFF_CURRENCY_MAPPING } from '../const/currency-mapping.const';
+
 export function createWhitecliffAggregatorConfig(
     meta: { id: bigint; code: string; name: string; status: string; apiEnabled: boolean },
     env: WhitecliffConfig,
 ): WhitecliffAggregatorConfig {
+    // 1. 매핑 테이블에서 내부 통화 코드 조회
+    // 2. 없으면 외부 통화 코드를 그대로 사용 (예: KRW -> KRW)
+    const internalCurrency = WHITECLIFF_CURRENCY_MAPPING[env.currency] || env.currency;
+
+    if (!internalCurrency) {
+        throw new Error('Internal currency must be defined for Whitecliff configuration');
+    }
+
     return {
         // DB 메타
         id: meta.id,
@@ -77,7 +88,8 @@ export function createWhitecliffAggregatorConfig(
         status: meta.status,
         apiEnabled: meta.apiEnabled,
         // Env 설정
-        currency: env.currency,
+        internalCurrency: internalCurrency,
+        externalCurrency: env.currency,
         endpoint: env.endpoint,
         agentCode: env.agentCode,
         token: env.token,

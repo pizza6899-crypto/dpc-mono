@@ -96,31 +96,39 @@ export class AggregatorRegistryService implements OnModuleInit {
     }
 
     /**
-     * Whitecliff 통합 설정을 반환합니다 (특정 통화).
+     * Whitecliff 통합 설정을 반환합니다 (특정 내부 통화).
      * DB 상태 검증 + Env 설정을 결합한 단일 객체.
+     * @param internalCurrency 내부 시스템 통화 코드 (예: USDT)
      */
-    getWhitecliff(currency: string): WhitecliffAggregatorConfig {
+    getWhitecliff(internalCurrency: string): WhitecliffAggregatorConfig {
         const aggregator = this.getOrThrowIfUnavailable(CasinoAggregator.CODE_WC);
 
         if (!aggregator.apiEnabled) {
             throw new CasinoAggregatorInactiveException(CasinoAggregator.CODE_WC);
         }
 
-        const envConfig = this.envService.whitecliff.find(wc => wc.currency === currency);
-        if (!envConfig) {
-            throw new Error(`Whitecliff configuration for currency '${currency}' not found.`);
+        // 모든 Env 설정을 통합 객체로 먼저 변환 (매핑 로직 적용을 위해)
+        const fullConfigs = this.envService.whitecliff.map(env =>
+            createWhitecliffAggregatorConfig(
+                {
+                    id: aggregator.id!,
+                    code: aggregator.code,
+                    name: aggregator.name,
+                    status: aggregator.status,
+                    apiEnabled: aggregator.apiEnabled,
+                },
+                env,
+            )
+        );
+
+        // 변환된 객체 중에서 내부 통화 코드가 일치하는 것을 탐색
+        const config = fullConfigs.find(c => c.internalCurrency === internalCurrency);
+
+        if (!config) {
+            throw new Error(`Whitecliff configuration for internal currency '${internalCurrency}' not found.`);
         }
 
-        return createWhitecliffAggregatorConfig(
-            {
-                id: aggregator.id!,
-                code: aggregator.code,
-                name: aggregator.name,
-                status: aggregator.status,
-                apiEnabled: aggregator.apiEnabled,
-            },
-            envConfig,
-        );
+        return config;
     }
 
     /**

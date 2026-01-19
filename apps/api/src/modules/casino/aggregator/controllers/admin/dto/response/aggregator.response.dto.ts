@@ -1,25 +1,25 @@
-import { ApiProperty, ApiPropertyOptional } from '@nestjs/swagger';
+import { ApiProperty } from '@nestjs/swagger';
 import { AggregatorStatus } from '@repo/database';
 
 export class AggregatorResponseDto {
-    @ApiProperty({ description: 'Aggregator ID', example: '1' })
+    @ApiProperty({ description: 'Aggregator ID / 애그리게이터 ID', example: '1' })
     id!: string;
 
-    @ApiProperty({ description: 'Aggregator Name', example: 'DC ACE' })
+    @ApiProperty({ description: 'Aggregator name / 애그리게이터 이름', example: 'DC ACE' })
     name!: string;
 
-    @ApiProperty({ description: 'Aggregator Code', example: 'DC' })
+    @ApiProperty({ description: 'Aggregator code / 애그리게이터 코드', example: 'DC' })
     code!: string;
 
-    @ApiProperty({ enum: AggregatorStatus, description: 'Aggregator Status' })
+    @ApiProperty({ enum: AggregatorStatus, description: 'Aggregator status / 애그리게이터 상태' })
     status!: AggregatorStatus;
 
-    @ApiProperty({ description: 'API Communication Enabled', example: true })
+    @ApiProperty({ description: 'API enabled / API 호출 활성 여부', example: true })
     apiEnabled!: boolean;
 
-    @ApiProperty({ description: 'Created At' })
+    @ApiProperty({ description: 'Created date / 생성일' })
     createdAt!: Date;
 
-    @ApiProperty({ description: 'Updated At' })
+    @ApiProperty({ description: 'Updated date / 수정일' })
     updatedAt!: Date;
 }

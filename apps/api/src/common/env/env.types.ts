@@ -39,7 +39,7 @@ export interface WhitecliffConfig {
   agentCode: string;
   token: string;
   secretKey: string;
-  currency: string;
+  currency: string; // 외부 서비스(WC) 통화 코드 (예: TET)
   walletType: string;
 }
 
