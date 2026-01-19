@@ -4,7 +4,7 @@ import { Public } from 'src/common/auth/decorators/roles.decorator';
 import { SqidsService } from 'src/common/sqids/sqids.service';
 import { SqidsPrefix } from 'src/common/sqids/sqids.constants';
 import { FindGamesService } from '../../application/find-games.service';
-import { GameResponseDto } from './dto/response/game.response.dto';
+import { CatalogGameResponseDto } from './dto/response/game.response.dto';
 import { GameListRequestDto } from './dto/request/game-list.request.dto';
 import { Paginated } from 'src/common/http/decorators/paginated.decorator';
 import { ApiPaginatedResponse } from 'src/common/http/decorators/api-response.decorator';
@@ -24,8 +24,8 @@ export class GameUserController {
     @Public()
     @Paginated()
     @ApiOperation({ summary: 'List active and visible games / 게임 목록 조회' })
-    @ApiPaginatedResponse(GameResponseDto)
-    async list(@Query() query: GameListRequestDto): Promise<PaginatedData<GameResponseDto>> {
+    @ApiPaginatedResponse(CatalogGameResponseDto)
+    async list(@Query() query: GameListRequestDto): Promise<PaginatedData<CatalogGameResponseDto>> {
         const lang = query.language || Language.EN;
         // Handle providerId if it's a Sqid
         let decodedProviderId: bigint | undefined;

@@ -1,6 +1,6 @@
 import { ApiProperty, ApiPropertyOptional } from '@nestjs/swagger';
 
-export class GameResponseDto {
+export class CatalogGameResponseDto {
     @ApiProperty({ description: 'Game ID (Sqid) (게임 아이디)' })
     id: string;
 
