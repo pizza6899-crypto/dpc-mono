@@ -27,13 +27,18 @@ import { GameUserController } from './controllers/user/game-user.controller';
 import { FileModule } from '../../file/file.module';
 import { EnvModule } from 'src/common/env/env.module';
 
+import { WhitecliffModule } from '../whitecliff/whitecliff.module';
+import { SyncAdminController } from './controllers/admin/sync.admin.controller';
+import { SyncGamesService } from './application/sync-games.service';
+
 @Module({
-    imports: [FileModule, EnvModule],
+    imports: [FileModule, EnvModule, WhitecliffModule],
     controllers: [
         CategoryAdminController,
         GameAdminController,
         CategoryUserController,
         GameUserController,
+        SyncAdminController,
     ],
     providers: [
         CategoryMapper,
@@ -59,6 +64,7 @@ import { EnvModule } from 'src/common/env/env.module';
         CreateGameService,
         UpdateGameService,
         FindGameByIdService,
+        SyncGamesService,
     ],
     exports: [
         FindCategoriesService,
@@ -67,6 +73,7 @@ import { EnvModule } from 'src/common/env/env.module';
         CreateGameService,
         UpdateGameService,
         FindGameByIdService,
+        SyncGamesService,
     ],
 })
 export class GameCatalogModule { }
