@@ -1,16 +1,5 @@
-import { ApiProperty } from '@nestjs/swagger';
-import { CategoryType, Language } from '@repo/database';
-
-export class CategoryTranslationResponseDto {
-    @ApiProperty({ enum: Language })
-    language: Language;
-
-    @ApiProperty()
-    name: string;
-
-    @ApiProperty({ required: false })
-    description?: string;
-}
+import { ApiProperty, ApiPropertyOptional } from '@nestjs/swagger';
+import { CategoryType } from '@repo/database';
 
 export class CategoryResponseDto {
     @ApiProperty({ description: 'Category Code' })
@@ -19,12 +8,15 @@ export class CategoryResponseDto {
     @ApiProperty({ enum: CategoryType })
     type: CategoryType;
 
-    @ApiProperty({ required: false })
+    @ApiProperty({ description: 'Category name (localized)' })
+    name: string;
+
+    @ApiPropertyOptional({ description: 'Category description (localized)' })
+    description?: string;
+
+    @ApiPropertyOptional()
     iconUrl?: string;
 
-    @ApiProperty({ required: false })
+    @ApiPropertyOptional()
     bannerUrl?: string;
-
-    @ApiProperty({ type: [CategoryTranslationResponseDto] })
-    translations: CategoryTranslationResponseDto[];
 }

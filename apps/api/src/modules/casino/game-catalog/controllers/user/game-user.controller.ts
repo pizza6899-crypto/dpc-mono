@@ -10,6 +10,8 @@ import { Paginated } from 'src/common/http/decorators/paginated.decorator';
 import { ApiPaginatedResponse } from 'src/common/http/decorators/api-response.decorator';
 import { PaginatedData } from 'src/common/http/types';
 
+import { Language } from '@repo/database';
+
 @ApiTags('Casino Game')
 @Controller('casino/games')
 export class GameUserController {
@@ -24,6 +26,7 @@ export class GameUserController {
     @ApiOperation({ summary: 'List active and visible games / 게임 목록 조회' })
     @ApiPaginatedResponse(GameResponseDto)
     async list(@Query() query: GameListRequestDto): Promise<PaginatedData<GameResponseDto>> {
+        const lang = query.language || Language.EN;
         // Handle providerId if it's a Sqid
         let decodedProviderId: bigint | undefined;
         if (query.providerId) {
@@ -37,7 +40,7 @@ export class GameUserController {
 
         const result = await this.findGamesService.execute({
             providerId: decodedProviderId,
-            keyword: query.keyword, // 키워드 전달
+            keyword: query.keyword,
             isEnabled: true,
             isVisible: true,
             page: query.page,
@@ -45,19 +48,22 @@ export class GameUserController {
         });
 
         return {
-            data: result.data.map(game => ({
-                id: game.id ? this.sqidsService.encode(game.id, SqidsPrefix.CASINO_GAME) : '',
-                code: game.code,
-                thumbnailUrl: game.thumbnailUrl ?? undefined,
-                bannerUrl: game.bannerUrl ?? undefined,
-                rtp: game.rtp?.toString(),
-                volatility: game.volatility ?? undefined,
-                gameType: game.gameType ?? undefined,
-                translations: game.translations.map(t => ({
-                    language: t.language,
-                    name: t.name,
-                })),
-            })),
+            data: result.data.map(game => {
+                const translation =
+                    game.translations.find(t => t.language === lang) ||
+                    game.translations.find(t => t.language === Language.EN) ||
+                    game.translations[0];
+                return {
+                    id: game.id ? this.sqidsService.encode(game.id, SqidsPrefix.CASINO_GAME) : '',
+                    code: game.code,
+                    name: translation?.name || game.code,
+                    thumbnailUrl: game.thumbnailUrl ?? undefined,
+                    bannerUrl: game.bannerUrl ?? undefined,
+                    rtp: game.rtp?.toString(),
+                    volatility: game.volatility ?? undefined,
+                    gameType: game.gameType ?? undefined,
+                };
+            }),
             page: result.page,
             limit: result.limit,
             total: result.total,

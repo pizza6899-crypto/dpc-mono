@@ -1,13 +1,4 @@
-import { ApiProperty } from '@nestjs/swagger';
-import { Language } from '@repo/database';
-
-export class GameTranslationResponseDto {
-    @ApiProperty({ enum: Language })
-    language: Language;
-
-    @ApiProperty()
-    name: string;
-}
+import { ApiProperty, ApiPropertyOptional } from '@nestjs/swagger';
 
 export class GameResponseDto {
     @ApiProperty({ description: 'Game ID (Sqid)' })
@@ -16,21 +7,21 @@ export class GameResponseDto {
     @ApiProperty()
     code: string;
 
-    @ApiProperty({ required: false })
+    @ApiProperty({ description: 'Game name (localized)' })
+    name: string;
+
+    @ApiPropertyOptional()
     thumbnailUrl?: string;
 
-    @ApiProperty({ required: false })
+    @ApiPropertyOptional()
     bannerUrl?: string;
 
-    @ApiProperty({ required: false })
+    @ApiPropertyOptional()
     rtp?: string;
 
-    @ApiProperty({ required: false })
+    @ApiPropertyOptional()
     volatility?: string;
 
-    @ApiProperty({ required: false })
+    @ApiPropertyOptional()
     gameType?: string;
-
-    @ApiProperty({ type: [GameTranslationResponseDto] })
-    translations: GameTranslationResponseDto[];
 }

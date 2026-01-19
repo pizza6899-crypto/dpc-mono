@@ -181,7 +181,7 @@ model CasinoGameCategory {
   iconUrl   String? @map("icon_url") // 카테고리 아이콘 URL
   bannerUrl String? @map("banner_url") // 배너 이미지 URL
 
-  sortOrder Int     @default(0) @map("sort_order") // 정렬 순서
+  sortOrder Int     @default(0) @map("sort_order") // 정렬 순서 (값이 낮을수록 왼쪽부터 표시)
   isActive  Boolean @default(true) @map("is_active") // 활성화 여부
   isSystem  Boolean @default(false) @map("is_system") // 시스템 생성 (삭제 방지)
 

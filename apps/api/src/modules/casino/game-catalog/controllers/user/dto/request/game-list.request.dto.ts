@@ -1,8 +1,13 @@
 import { ApiPropertyOptional } from '@nestjs/swagger';
+import { Language } from '@repo/database';
 import { Type } from 'class-transformer';
-import { IsBoolean, IsInt, IsOptional, IsString, Max, Min } from 'class-validator';
+import { IsBoolean, IsEnum, IsInt, IsOptional, IsString, Max, Min } from 'class-validator';
 
 export class GameListRequestDto {
+    @ApiPropertyOptional({ enum: Language, description: 'Language for translations' })
+    @IsOptional()
+    @IsEnum(Language)
+    language?: Language;
     @ApiPropertyOptional({ description: 'Provider ID (Sqid or Raw ID)' })
     @IsOptional()
     @IsString()
