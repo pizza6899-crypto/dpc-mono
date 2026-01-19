@@ -8,6 +8,11 @@ import { CreateCategoryService } from '../../application/create-category.service
 import { UpdateCategoryService } from '../../application/update-category.service';
 import { DeleteCategoryService } from '../../application/delete-category.service';
 import { CreateCategoryAdminRequestDto } from './dto/request/create-category.request.dto';
+import { CategoryAdminResponseDto } from './dto/response/category-admin.response.dto';
+
+import { Paginated } from 'src/common/http/decorators/paginated.decorator';
+import { ApiPaginatedResponse } from 'src/common/http/decorators/api-response.decorator';
+import { PaginatedData, PaginationQueryDto } from 'src/common/http/types';
 
 @ApiTags('Admin Casino Category')
 @Controller('admin/casino/categories')
@@ -21,11 +26,22 @@ export class CategoryAdminController {
     ) { }
 
     @Get()
-    @ApiOperation({ summary: 'List all categories' })
+    @Paginated()
+    @ApiOperation({ summary: 'List all categories (Admin) / 모든 카테고리 목록 조회 (관리자)' })
+    @ApiPaginatedResponse(CategoryAdminResponseDto) // Assuming we use a similar response DTO
     @AuditLog({ type: LogType.ACTIVITY, category: 'CASINO', action: 'CATEGORY_LIST_ADMIN' })
-    async list(@Query('isActive') isActive?: boolean) {
-        const categories = await this.findCategoriesService.execute({ isActive });
-        return categories.map((cat) => this.toResponseDto(cat));
+    async list(@Query() query: PaginationQueryDto) {
+        const result = await this.findCategoriesService.execute({
+            page: query.page,
+            limit: query.limit,
+        });
+
+        return {
+            data: result.data.map((cat) => this.toResponseDto(cat)),
+            page: result.page,
+            limit: result.limit,
+            total: result.total,
+        };
     }
 
     @Post()

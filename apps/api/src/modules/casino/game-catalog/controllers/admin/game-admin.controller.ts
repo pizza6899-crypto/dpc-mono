@@ -15,6 +15,10 @@ import { UpdateGameService } from '../../application/update-game.service';
 import { GameAdminResponseDto } from './dto/response/game-admin.response.dto';
 import { CreateGameAdminRequestDto } from './dto/request/create-game.request.dto';
 
+import { Paginated } from 'src/common/http/decorators/paginated.decorator';
+import { ApiPaginatedResponse } from 'src/common/http/decorators/api-response.decorator';
+import { PaginatedData, PaginationQueryDto } from 'src/common/http/types';
+
 @ApiTags('Admin Casino Game')
 @Controller('admin/casino/games')
 @Admin()
@@ -28,11 +32,23 @@ export class GameAdminController {
     ) { }
 
     @Get()
-    @ApiOperation({ summary: 'List all games (Admin)' })
+    @Paginated()
+    @ApiOperation({ summary: 'List all games (Admin) / 모든 게임 목록 조회 (관리자)' })
+    @ApiPaginatedResponse(GameAdminResponseDto)
     @AuditLog({ type: LogType.ACTIVITY, category: 'CASINO', action: 'GAME_LIST_ADMIN' })
-    async list(@Query('isEnabled') isEnabled?: boolean) {
-        const games = await this.findGamesService.execute({ isEnabled });
-        return games.map(game => this.toResponseDto(game));
+    async list(@Query() query: PaginationQueryDto & { isEnabled?: boolean }) {
+        const result = await this.findGamesService.execute({
+            isEnabled: query.isEnabled,
+            page: query.page,
+            limit: query.limit,
+        });
+
+        return {
+            data: result.data.map(game => this.toResponseDto(game)),
+            page: result.page,
+            limit: result.limit,
+            total: result.total,
+        };
     }
 
     @Get(':id')

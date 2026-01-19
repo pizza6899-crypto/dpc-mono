@@ -3,6 +3,7 @@ import { CasinoGameV2 } from '../domain';
 export interface GameListOptions {
     providerId?: bigint;
     categoryId?: bigint;
+    keyword?: string; // 검색 키워드 추가
     isEnabled?: boolean;
     isVisible?: boolean;
     limit?: number;

@@ -41,13 +41,21 @@ export class CategoryRepository implements CategoryRepositoryPort {
         return category;
     }
 
-    async list(options?: { isActive?: boolean }): Promise<CasinoGameCategory[]> {
+    async list(options?: { isActive?: boolean; limit?: number; offset?: number }): Promise<CasinoGameCategory[]> {
         const result = await this.tx.casinoGameCategory.findMany({
             where: options?.isActive !== undefined ? { isActive: options.isActive } : {},
             include: { translations: true },
             orderBy: { sortOrder: 'asc' },
+            take: options?.limit,
+            skip: options?.offset,
         });
         return result.map((r) => this.mapper.toDomain(r as any));
+    }
+
+    async count(options?: { isActive?: boolean }): Promise<number> {
+        return await this.tx.casinoGameCategory.count({
+            where: options?.isActive !== undefined ? { isActive: options.isActive } : {},
+        });
     }
 
     async create(category: CasinoGameCategory): Promise<CasinoGameCategory> {

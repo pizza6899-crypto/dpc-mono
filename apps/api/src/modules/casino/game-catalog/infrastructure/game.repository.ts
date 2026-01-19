@@ -47,15 +47,7 @@ export class GameRepository implements GameRepositoryPort {
     }
 
     async list(options?: GameListOptions): Promise<CasinoGameV2[]> {
-        const where: any = {};
-        if (options?.providerId) where.providerId = options.providerId;
-        if (options?.isEnabled !== undefined) where.isEnabled = options.isEnabled;
-        if (options?.isVisible !== undefined) where.isVisible = options.isVisible;
-        if (options?.categoryId) {
-            where.categoryItems = {
-                some: { categoryId: options.categoryId },
-            };
-        }
+        const where = this.buildWhere(options);
 
         const result = await this.tx.casinoGameV2.findMany({
             where,
@@ -68,17 +60,36 @@ export class GameRepository implements GameRepositoryPort {
     }
 
     async count(options?: GameListOptions): Promise<number> {
+        const where = this.buildWhere(options);
+        return await this.tx.casinoGameV2.count({ where });
+    }
+
+    private buildWhere(options?: GameListOptions): any {
         const where: any = {};
         if (options?.providerId) where.providerId = options.providerId;
         if (options?.isEnabled !== undefined) where.isEnabled = options.isEnabled;
         if (options?.isVisible !== undefined) where.isVisible = options.isVisible;
+
+        // 카테고리 필터
         if (options?.categoryId) {
             where.categoryItems = {
                 some: { categoryId: options.categoryId },
             };
         }
 
-        return await this.tx.casinoGameV2.count({ where });
+        // 키워드(게임 이름) 검색
+        if (options?.keyword) {
+            where.translations = {
+                some: {
+                    name: {
+                        contains: options.keyword,
+                        mode: 'insensitive',
+                    },
+                },
+            };
+        }
+
+        return where;
     }
 
     async create(game: CasinoGameV2): Promise<CasinoGameV2> {
