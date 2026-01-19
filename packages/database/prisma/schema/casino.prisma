@@ -132,7 +132,29 @@ model CasinoAggregator {
   createdAt DateTime @default(now()) @map("created_at")
   updatedAt DateTime @updatedAt @map("updated_at")
 
+  providers CasinoGameProvider[]
+
   @@map("casino_aggregators")
+}
+
+model CasinoGameProvider {
+  id           BigInt @id @default(autoincrement())
+  aggregatorId BigInt @map("aggregator_id")
+  name         String @map("name") // 영어로(글로벌하게 사용할것 다국어 처리 X)
+  code         String @map("code") // 공급사 식별 코드 (예: PRAGMATIC, EVO_KR, EVO_IN)
+  groupCode    String @map("group_code") // 브랜드 통합 코드 (예: PRAGMATIC, EVOLUTION). 일반적으로 code와 동일
+
+  imageUrl String? @map("image_url") // 로고 이미지 URL
+
+  isActive Boolean @default(true) @map("is_active")
+
+  createdAt DateTime @default(now()) @map("created_at")
+  updatedAt DateTime @updatedAt @map("updated_at")
+
+  aggregator CasinoAggregator @relation(fields: [aggregatorId], references: [id])
+
+  @@unique([aggregatorId, code])
+  @@map("casino_game_providers")
 }
 
 enum AggregatorStatus {

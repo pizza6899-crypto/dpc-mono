@@ -17,3 +17,9 @@ export class CasinoAggregatorMaintenanceException extends DomainException {
         super(`Casino aggregator is under maintenance: ${code}`);
     }
 }
+
+export class CasinoGameProviderNotFoundException extends DomainException {
+    constructor(identifier: string | bigint) {
+        super(`Casino game provider not found: ${identifier}`);
+    }
+}

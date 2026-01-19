@@ -7,9 +7,14 @@ import { UpdateAggregatorService } from './application/update-aggregator.service
 import { AggregatorRegistryService } from './application/aggregator-registry.service';
 import { AggregatorAdminController } from './controllers/admin/aggregator-admin.controller';
 import { EnvModule } from 'src/common/env/env.module';
+import { FileModule } from '../../file/file.module';
+
+import { CASINO_GAME_PROVIDER_REPOSITORY } from './ports/casino-game-provider.repository.token';
+import { CasinoGameProviderRepository } from './infrastructure/casino-game-provider.repository';
+import { CasinoGameProviderMapper } from './infrastructure/casino-game-provider.mapper';
 
 @Module({
-    imports: [EnvModule],
+    imports: [EnvModule, FileModule],
     controllers: [AggregatorAdminController],
     providers: [
         // Infrastructure
@@ -17,6 +22,11 @@ import { EnvModule } from 'src/common/env/env.module';
         {
             provide: CASINO_AGGREGATOR_REPOSITORY,
             useClass: CasinoAggregatorRepository,
+        },
+        CasinoGameProviderMapper,
+        {
+            provide: CASINO_GAME_PROVIDER_REPOSITORY,
+            useClass: CasinoGameProviderRepository,
         },
         // Application
         FindAggregatorsService,

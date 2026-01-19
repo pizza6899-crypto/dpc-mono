@@ -10,7 +10,7 @@ import { UpdateAggregatorDto } from './dto/request/update-aggregator.dto';
 import { AggregatorResponseDto } from './dto/response/aggregator.response.dto';
 import { CasinoAggregator } from '../../domain';
 
-@ApiTags('Admin/Casino/Aggregator')
+@ApiTags('Admin Casino Aggregator')
 @Controller('admin/casino/aggregators')
 @Admin()
 export class AggregatorAdminController {

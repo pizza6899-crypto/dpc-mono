@@ -48,11 +48,11 @@ export class FilePolicy {
             uploadRoles: ['USER', 'ADMIN', 'SUPER_ADMIN'], // User can update their own profile
             maxSize: 2 * 1024 * 1024, // 2MB
         },
-        // [FileUsageType.BANNER]: {
-        //     folder: 'banner',
-        //     accessType: FileAccessType.PUBLIC,
-        //     uploadRoles: ['ADMIN', 'SUPER_ADMIN'],
-        // }
+        [FileUsageType.CASINO_PROVIDER_LOGO]: {
+            folder: 'casino/provider/logo',
+            accessType: FileAccessType.PUBLIC,
+            uploadRoles: ['ADMIN', 'SUPER_ADMIN'],
+        },
     };
 
     static getConfig(usageType: FileUsageType): FilePolicyConfig {
