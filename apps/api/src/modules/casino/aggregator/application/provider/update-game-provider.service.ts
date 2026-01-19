@@ -4,12 +4,9 @@ import { CasinoGameProvider } from '../../domain';
 import { CASINO_GAME_PROVIDER_REPOSITORY } from '../../ports/casino-game-provider.repository.token';
 import { type CasinoGameProviderRepositoryPort } from '../../ports/casino-game-provider.repository.port';
 import { AttachFileService } from '../../../../file/application/attach-file.service';
-import { FILE_REPOSITORY } from '../../../../file/ports/file.repository.token';
-import { type FileRepositoryPort } from '../../../../file/ports/file.repository.port';
 import { FileUsageType } from '../../../../file/domain';
 import { EnvService } from 'src/common/env/env.service';
 import { SqidsService } from 'src/common/sqids/sqids.service';
-import { SqidsPrefix } from 'src/common/sqids/sqids.constants';
 
 interface UpdateGameProviderParams {
     id: bigint;
@@ -24,10 +21,7 @@ export class UpdateGameProviderService {
         @Inject(CASINO_GAME_PROVIDER_REPOSITORY)
         private readonly repository: CasinoGameProviderRepositoryPort,
         private readonly attachFileService: AttachFileService,
-        @Inject(FILE_REPOSITORY)
-        private readonly fileRepository: FileRepositoryPort,
         private readonly envService: EnvService,
-        private readonly sqidsService: SqidsService,
     ) { }
 
     @Transactional()

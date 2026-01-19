@@ -10,8 +10,8 @@ import { MessageCode } from '@repo/shared';
 export class DomainException extends Error {
   constructor(
     message: string,
-    public readonly errorCode: MessageCode = MessageCode.VALIDATION_ERROR,
-    public readonly httpStatus: HttpStatus = HttpStatus.BAD_REQUEST,
+    public readonly errorCode: MessageCode,
+    public readonly httpStatus: HttpStatus
   ) {
     super(message);
     this.name = this.constructor.name;

@@ -13,26 +13,38 @@ import { CASINO_GAME_PROVIDER_REPOSITORY } from './ports/casino-game-provider.re
 import { CasinoGameProviderRepository } from './infrastructure/casino-game-provider.repository';
 import { CasinoGameProviderMapper } from './infrastructure/casino-game-provider.mapper';
 
+// Provider Application Services
+import { CreateGameProviderService } from './application/provider/create-game-provider.service';
+import { FindGameProvidersService } from './application/provider/find-game-providers.service';
+import { UpdateGameProviderService } from './application/provider/update-game-provider.service';
+import { GameProviderAdminController } from './controllers/admin/game-provider-admin.controller';
+
 @Module({
     imports: [EnvModule, FileModule],
-    controllers: [AggregatorAdminController],
+    controllers: [AggregatorAdminController, GameProviderAdminController],
     providers: [
-        // Infrastructure
+        // Infrastructure - Aggregator
         CasinoAggregatorMapper,
         {
             provide: CASINO_AGGREGATOR_REPOSITORY,
             useClass: CasinoAggregatorRepository,
         },
+        // Infrastructure - Provider
         CasinoGameProviderMapper,
         {
             provide: CASINO_GAME_PROVIDER_REPOSITORY,
             useClass: CasinoGameProviderRepository,
         },
-        // Application
+        // Application - Aggregator
         FindAggregatorsService,
         UpdateAggregatorService,
         AggregatorRegistryService,
+        // Application - Provider
+        CreateGameProviderService,
+        FindGameProvidersService,
+        UpdateGameProviderService,
     ],
     exports: [AggregatorRegistryService],
 })
 export class AggregatorModule { }
+

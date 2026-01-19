@@ -6,7 +6,6 @@ import { CasinoGameProviderMapper } from './casino-game-provider.mapper';
 // Note: You might need to define a specific exception for Provider not found, or reuse a generic one.
 // For now I'll assume we can use a generic DomainException or similar if needed, 
 // but based on valid patterns, I should throw a specific exception in 'get'.
-import { DomainException } from 'src/common/exception/domain.exception';
 import { CasinoGameProvider, CasinoGameProviderNotFoundException } from '../domain';
 
 @Injectable()
@@ -26,12 +25,9 @@ export class CasinoGameProviderRepository implements CasinoGameProviderRepositor
     }
 
     async update(provider: CasinoGameProvider): Promise<CasinoGameProvider> {
-        if (!provider.id) {
-            throw new DomainException('Cannot update provider without ID');
-        }
         const data = this.mapper.toPrisma(provider);
         const updated = await this.tx.casinoGameProvider.update({
-            where: { id: provider.id },
+            where: { id: provider.id! },
             data,
         });
         return this.mapper.toDomain(updated);

@@ -69,6 +69,10 @@ export enum MessageCode {
 
     // --- 게임 관련 (Game) ---
     GAME_NOT_FOUND = 'GAME_NOT_FOUND', // 게임을 찾을 수 없을 때
+    CASINO_AGGREGATOR_NOT_FOUND = 'CASINO_AGGREGATOR_NOT_FOUND', // 카지노 어그리게이터를 찾을 수 없을 때
+    CASINO_AGGREGATOR_INACTIVE = 'CASINO_AGGREGATOR_INACTIVE', // 카지노 어그리게이터가 비활성 상태일 때
+    CASINO_AGGREGATOR_MAINTENANCE = 'CASINO_AGGREGATOR_MAINTENANCE', // 카지노 어그리게이터가 점검 중일 때
+    CASINO_GAME_PROVIDER_NOT_FOUND = 'CASINO_GAME_PROVIDER_NOT_FOUND', // 카지노 게임 프로바이더를 찾을 수 없을 때
 
     // --- 통화 관련 (Currency) ---
     CURRENCY_UNSUPPORTED = 'CURRENCY_UNSUPPORTED', // 지원하지 않는 통화일 때
