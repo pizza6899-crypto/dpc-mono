@@ -73,6 +73,8 @@ export enum MessageCode {
     CASINO_AGGREGATOR_INACTIVE = 'CASINO_AGGREGATOR_INACTIVE', // 카지노 어그리게이터가 비활성 상태일 때
     CASINO_AGGREGATOR_MAINTENANCE = 'CASINO_AGGREGATOR_MAINTENANCE', // 카지노 어그리게이터가 점검 중일 때
     CASINO_GAME_PROVIDER_NOT_FOUND = 'CASINO_GAME_PROVIDER_NOT_FOUND', // 카지노 게임 프로바이더를 찾을 수 없을 때
+    CASINO_CATEGORY_NOT_FOUND = 'CASINO_CATEGORY_NOT_FOUND', // 카지노 카테고리를 찾을 수 없을 때
+    CASINO_CATEGORY_ALREADY_EXISTS = 'CASINO_CATEGORY_ALREADY_EXISTS', // 이미 존재하는 카지노 카테고리일 때
 
     // --- 통화 관련 (Currency) ---
     CURRENCY_UNSUPPORTED = 'CURRENCY_UNSUPPORTED', // 지원하지 않는 통화일 때
