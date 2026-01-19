@@ -10,7 +10,7 @@ export async function seedGameCategories(prisma: PrismaClient) {
         {
             code: 'SLOTS',
             type: CategoryType.PRIMARY,
-            sortOrder: 1,
+            sortOrder: 10,
             isSystem: true, // 시스템 카테고리 (삭제 방지)
             translations: {
                 [Language.KO]: { name: '슬롯', description: '다양한 테마의 슬롯 게임' },
@@ -21,7 +21,7 @@ export async function seedGameCategories(prisma: PrismaClient) {
         {
             code: 'LIVE_CASINO',
             type: CategoryType.PRIMARY,
-            sortOrder: 2,
+            sortOrder: 20,
             isSystem: true,
             translations: {
                 [Language.KO]: { name: '라이브 카지노', description: '실시간 딜러와 함께하는 게임' },
@@ -36,7 +36,7 @@ export async function seedGameCategories(prisma: PrismaClient) {
         {
             code: 'POPULAR',
             type: CategoryType.COLLECTION,
-            sortOrder: 10,
+            sortOrder: 30,
             isSystem: false,
             translations: {
                 [Language.KO]: { name: '인기 게임', description: '가장 많이 플레이되는 게임' },
@@ -47,7 +47,7 @@ export async function seedGameCategories(prisma: PrismaClient) {
         {
             code: 'RECOMMENDED',
             type: CategoryType.COLLECTION,
-            sortOrder: 12,
+            sortOrder: 40,
             isSystem: false,
             translations: {
                 [Language.KO]: { name: '추천 게임', description: '운영진이 추천하는 게임' },
@@ -58,7 +58,7 @@ export async function seedGameCategories(prisma: PrismaClient) {
         {
             code: 'WEEKLY_HOT',
             type: CategoryType.COLLECTION,
-            sortOrder: 13,
+            sortOrder: 50,
             isSystem: false,
             translations: {
                 [Language.KO]: { name: '주간 인기', description: '이번 주 가장 핫한 게임' },
@@ -69,7 +69,7 @@ export async function seedGameCategories(prisma: PrismaClient) {
         {
             code: 'HIGH_RTP',
             type: CategoryType.COLLECTION,
-            sortOrder: 14,
+            sortOrder: 60,
             isSystem: false,
             translations: {
                 [Language.KO]: { name: '높은 환수율', description: 'RTP가 높은 게임' },
