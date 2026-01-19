@@ -38,6 +38,11 @@ description: NestJS Controller Implementation Guide & Best Practices
   - 다만, 클라이언트 요구사항이나 특정 보안 정책에 따라 인코딩이 필요할 수도 있습니다.
   - 별도 요청이 없다면 Response/Request 모두 원래 값을 사용합니다.
 
+### 4. Pagination
+- **List Queries**: 목록을 반환하는 모든 GET 요청에는 **반드시** `@Paginated()` 데코레이터를 적용해야 합니다.
+- **Swagger**: `@ApiPaginatedResponse(ResponseDto)`를 사용하여 Swagger 문서에 페이지네이션 응답 형식을 명시합니다.
+- **Response**: `PaginatedData<T>` 형식을 사용하여 데이터와 페이지네이션 정보를 함께 반환하십시오.
+
 ## 💻 Template Code
 
 ### Admin Controller Template
@@ -102,16 +107,18 @@ export class ItemController {
   constructor(private readonly service: ItemService) {}
 
   @Get()
-  @Paginated() // ✅ Pagination Decorator
+  @Paginated() // ✅ Pagination Decorator (Required for list)
   @ApiOperation({ summary: 'List Items / 아이템 목록 조회' })
   @ApiPaginatedResponse(ItemResponseDto)
   async list(
     @Query() query: GetItemsQueryDto
-  ): Promise<PaginatedResponseDto<ItemResponseDto>> {
+  ): Promise<PaginatedData<ItemResponseDto>> {
     const result = await this.service.findAll(query);
     return {
       data: result.items.map(this.toResponse),
-      pagination: result.pagination,
+      page: result.page,
+      limit: result.limit,
+      total: result.total,
     };
   }
 }

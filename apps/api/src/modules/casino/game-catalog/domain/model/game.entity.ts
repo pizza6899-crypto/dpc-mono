@@ -82,4 +82,34 @@ export class CasinoGameV2 {
     get isEnabled(): boolean { return this._isEnabled; }
     get isVisible(): boolean { return this._isVisible; }
     get translations(): GameTranslation[] { return this._translations; }
+
+    update(params: Partial<{
+        thumbnailUrl: string | null;
+        bannerUrl: string | null;
+        rtp: Prisma.Decimal | null;
+        volatility: string | null;
+        gameType: string | null;
+        tableId: string | null;
+        tags: string[];
+        houseEdge: Prisma.Decimal;
+        contributionRate: Prisma.Decimal;
+        sortOrder: number;
+        isEnabled: boolean;
+        isVisible: boolean;
+        translations: GameTranslation[];
+    }>): void {
+        if (params.thumbnailUrl !== undefined) this._thumbnailUrl = params.thumbnailUrl;
+        if (params.bannerUrl !== undefined) this._bannerUrl = params.bannerUrl;
+        if (params.rtp !== undefined) this._rtp = params.rtp;
+        if (params.volatility !== undefined) this._volatility = params.volatility;
+        if (params.gameType !== undefined) this._gameType = params.gameType;
+        if (params.tableId !== undefined) this._tableId = params.tableId;
+        if (params.tags !== undefined) this._tags = params.tags;
+        if (params.houseEdge !== undefined) this._houseEdge = params.houseEdge;
+        if (params.contributionRate !== undefined) this._contributionRate = params.contributionRate;
+        if (params.sortOrder !== undefined) this._sortOrder = params.sortOrder;
+        if (params.isEnabled !== undefined) this._isEnabled = params.isEnabled;
+        if (params.isVisible !== undefined) this._isVisible = params.isVisible;
+        if (params.translations !== undefined) this._translations = params.translations;
+    }
 }
