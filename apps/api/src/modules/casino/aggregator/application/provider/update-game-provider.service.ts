@@ -6,7 +6,6 @@ import { type CasinoGameProviderRepositoryPort } from '../../ports/casino-game-p
 import { AttachFileService } from '../../../../file/application/attach-file.service';
 import { FileUsageType } from '../../../../file/domain';
 import { EnvService } from 'src/common/env/env.service';
-import { SqidsService } from 'src/common/sqids/sqids.service';
 
 interface UpdateGameProviderParams {
     id: bigint;
