@@ -8,6 +8,7 @@ export class CasinoGameProviderMapper {
         return CasinoGameProvider.create({
             id: model.id,
             aggregatorId: model.aggregatorId,
+            externalId: model.externalId,
             name: model.name,
             code: model.code,
             groupCode: model.groupCode,
@@ -21,12 +22,12 @@ export class CasinoGameProviderMapper {
     toPrisma(domain: CasinoGameProvider): Prisma.CasinoGameProviderUncheckedCreateInput {
         return {
             aggregatorId: domain.aggregatorId,
+            externalId: domain.externalId,
             name: domain.name,
             code: domain.code,
             groupCode: domain.groupCode,
             imageUrl: domain.imageUrl,
             isActive: domain.isActive,
-            // We don't map id, createdAt, updatedAt for creation usually, or handle separately
         };
     }
 }

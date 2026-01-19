@@ -31,6 +31,11 @@ export interface CasinoGameProviderRepositoryPort {
     findByCode(aggregatorId: bigint, code: string): Promise<CasinoGameProvider | null>;
 
     /**
+     * 외부 ID로 조회 (Optional) - 어그리게이터 ID와 함께 조회해야 유니크함
+     */
+    findByExternalId(aggregatorId: bigint, externalId: string): Promise<CasinoGameProvider | null>;
+
+    /**
      * 목록 조회
      */
     list(options?: ListProvidersOptions): Promise<CasinoGameProvider[]>;

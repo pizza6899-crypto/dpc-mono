@@ -3,6 +3,7 @@ export class CasinoGameProvider {
     private constructor(
         public readonly id: bigint | null,
         public readonly aggregatorId: bigint,
+        public readonly externalId: string,
         public readonly name: string,
         public readonly code: string,
         public readonly groupCode: string,
@@ -15,6 +16,7 @@ export class CasinoGameProvider {
     static create(params: {
         id?: bigint;
         aggregatorId: bigint;
+        externalId: string;
         name: string;
         code: string;
         groupCode: string;
@@ -26,6 +28,7 @@ export class CasinoGameProvider {
         return new CasinoGameProvider(
             params.id ?? null,
             params.aggregatorId,
+            params.externalId,
             params.name,
             params.code,
             params.groupCode,
@@ -44,6 +47,7 @@ export class CasinoGameProvider {
         return new CasinoGameProvider(
             this.id,
             this.aggregatorId,
+            this.externalId,
             params.name ?? this.name,
             this.code,
             this.groupCode,

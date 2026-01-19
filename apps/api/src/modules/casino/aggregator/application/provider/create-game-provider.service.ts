@@ -5,6 +5,7 @@ import { type CasinoGameProviderRepositoryPort } from '../../ports/casino-game-p
 
 interface CreateGameProviderParams {
     aggregatorId: bigint;
+    externalId: string;
     name: string;
     code: string;
     groupCode?: string;
@@ -27,6 +28,7 @@ export class CreateGameProviderService {
 
         const provider = CasinoGameProvider.create({
             aggregatorId: params.aggregatorId,
+            externalId: params.externalId,
             name: params.name,
             code: params.code,
             groupCode: params.groupCode ?? params.code, // 기본값: code와 동일

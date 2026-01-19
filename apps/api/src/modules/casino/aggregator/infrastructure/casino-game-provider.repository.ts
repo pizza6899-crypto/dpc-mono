@@ -60,6 +60,18 @@ export class CasinoGameProviderRepository implements CasinoGameProviderRepositor
         return found ? this.mapper.toDomain(found) : null;
     }
 
+    async findByExternalId(aggregatorId: bigint, externalId: string): Promise<CasinoGameProvider | null> {
+        const found = await this.tx.casinoGameProvider.findUnique({
+            where: {
+                aggregatorId_externalId: {
+                    aggregatorId,
+                    externalId,
+                },
+            },
+        });
+        return found ? this.mapper.toDomain(found) : null;
+    }
+
     async list(options?: ListProvidersOptions): Promise<CasinoGameProvider[]> {
         const where: any = {};
         if (options?.aggregatorId) {

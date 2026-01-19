@@ -7,6 +7,9 @@ export class GameProviderResponseDto {
     @ApiProperty({ type: String, description: 'Aggregator ID / 어그리게이터 ID' })
     aggregatorId: string;
 
+    @ApiProperty({ description: 'External Provider ID / 외부 프로바이더 ID (API 호출용)' })
+    externalId: string;
+
     @ApiProperty({ description: 'Provider name / 게임사 이름' })
     name: string;
 

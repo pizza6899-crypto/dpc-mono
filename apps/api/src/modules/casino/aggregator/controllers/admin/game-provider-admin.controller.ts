@@ -52,6 +52,7 @@ export class GameProviderAdminController {
         return {
             id: provider.id!.toString(),
             aggregatorId: provider.aggregatorId.toString(),
+            externalId: provider.externalId,
             name: provider.name,
             code: provider.code,
             groupCode: provider.groupCode,
