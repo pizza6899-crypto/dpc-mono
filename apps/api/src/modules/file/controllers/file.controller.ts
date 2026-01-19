@@ -14,10 +14,7 @@ import { UploadFileRequestDto } from './dto/request/upload-file.request.dto';
 import { FileResponseDto } from './dto/response/file.response.dto';
 import { EnvService } from 'src/common/env/env.service';
 import { CreateFileService } from '../application/create-file.service';
-import { AttachFileService } from '../application/attach-file.service';
-import { FileEntity, FileValidationException, FileUsageEntity, FileAccessType, FileConstants, FileUsageType, getFileUsageConfig } from '../domain';
-import { AttachFileRequestDto } from './dto/request/attach-file.request.dto';
-import { FileUsageResponseDto } from './dto/response/file-usage.response.dto';
+import { FileEntity, FileValidationException, FileAccessType, FileConstants } from '../domain';
 import { SessionAuthGuard } from 'src/common/auth/guards/session-auth.guard';
 import { CurrentUser } from 'src/common/auth/decorators/current-user.decorator';
 import { type AuthenticatedUser } from 'src/common/auth/types/auth.types';
@@ -34,7 +31,6 @@ import { FileSizeExceptionFilter } from '../filters/file-size.filter';
 export class FileController {
     constructor(
         private readonly createFileService: CreateFileService,
-        private readonly attachFileService: AttachFileService,
         private readonly envService: EnvService,
         private readonly sqidsService: SqidsService,
     ) { }
@@ -56,20 +52,14 @@ export class FileController {
     @ApiOperation({
         summary: 'Upload File / 파일 업로드',
         description: `
-### 📝 파일 업로드 및 사용 시나리오 (File Upload & Usage Scenario)
+### 📝 파일 업로드 사용법 (File Upload Usage)
 
-이 시스템의 파일 처리는 **2단계(2-Step)**로 이루어집니다.
-(File processing in this system consists of **2 steps**.)
+1. **파일 업로드**: 이 API (**POST /file/upload**)로 파일을 업로드합니다.
+2. **파일 ID 보관**: 응답의 **\`id\`** (예: \`f_abc123\`)를 프론트엔드에서 보관합니다.
+3. **비즈니스 API 호출**: 해당 파일 ID를 비즈니스 API (예: 카테고리 생성, 프로필 수정)에 전달합니다.
+4. **자동 연결**: 비즈니스 로직에서 파일이 자동으로 연결되고 영구 저장됩니다.
 
-#### 1️⃣ 1단계: 파일 업로드 (Step 1: File Upload)
-- 이 API (**POST /file/upload**)를 호출하여 파일을 업로드합니다.
-- 파일은 임시 저장소(temp)에 저장됩니다. (Files are saved in temporary storage).
-- 응답으로 받은 **\`id\`** (예: \`f_abc123\`)를 프론트엔드에서 보관합니다. (Keep the received \`id\` in the frontend).
-
-#### 2️⃣ 2단계: 파일 첨부 (Step 2: File Attachment)
-- 비즈니스 로직(예: 프로필 수정, 게시글 작성) 완료 시, 보관해둔 **\`id\`**와 **사용처 정보(\`usageType\`, \`usageId\`)**를 가지고 **[POST /file/attach]** API를 호출합니다.
-- 이 과정을 거쳐야 파일이 영구 저장되고 비즈니스 엔티티와 연결됩니다. (This step is required to permanently save the file and link it to a business entity).
-- **주의:** 첨부(연결)되지 않은 파일은 일정 시간 후 자동 삭제될 수 있습니다. (Unattached files may be automatically deleted after a certain period).
+**주의:** 연결되지 않은 파일은 일정 시간 후 자동 삭제될 수 있습니다.
         `,
     })
     @ApiConsumes('multipart/form-data')
@@ -111,77 +101,10 @@ export class FileController {
         return this.toResponseDto(createdFile);
     }
 
-    @Post('attach')
-    @UseGuards(SessionAuthGuard)
-    @ApiOperation({
-        summary: 'Attach File / 파일 첨부',
-        description: 'Attach uploaded files to a specific usage. / 업로드된 파일들을 특정 사용처에 첨부(연결)합니다.',
-    })
-    @ApiBody({ type: AttachFileRequestDto })
-    @ApiStandardResponse(FileUsageResponseDto, {
-        status: HttpStatus.CREATED,
-        description: 'Files attached successfully / 파일 첨부 성공',
-        isArray: true,
-    })
-    @AuditLog({
-        type: LogType.ACTIVITY,
-        category: 'FILE',
-        action: 'FILE_ATTACH',
-        extractMetadata: (req, args, result: FileUsageResponseDto[]) => ({
-            fileCount: result?.length,
-            usageType: args[0]?.usageType,
-            usageId: args[0]?.usageId,
-            fileIds: args[0]?.fileIds,
-        }),
-    })
-    async attachFile(
-        @Body() dto: AttachFileRequestDto,
-    ): Promise<FileUsageResponseDto[]> {
-        const usageId = this.resolveUsageId(dto.usageType, dto.usageId);
-
-        const { usages } = await this.attachFileService.execute({
-            fileIds: dto.fileIds,
-            usageType: dto.usageType,
-            usageId: usageId,
-        });
-
-        return usages.map(usage => this.toUsageResponseDto(usage));
-    }
-
-    private resolveUsageId(usageType: string, id: string): bigint {
-        // 1. If strictly numeric string, parse as BigInt
-        if (/^\d+$/.test(id)) {
-            return BigInt(id);
-        }
-
-        // 2. If encoded string, try to decode based on usageType
-        const type = usageType as FileUsageType;
-        if (Object.values(FileUsageType).includes(type)) {
-            const config = getFileUsageConfig(type);
-            if (config.sqidsPrefix) {
-                return this.sqidsService.decode(id, config.sqidsPrefix);
-            }
-        }
-
-        throw new FileValidationException('Invalid usageId format or unknown usage type for decoding.');
-    }
-
-
-
     private toResponseDto(file: FileEntity): FileResponseDto {
         return {
             id: this.sqidsService.encode(file.id!, SqidsPrefix.FILE),
             url: file.publicUrl(this.envService.app.cdnUrl) ?? undefined,
-        };
-    }
-    private toUsageResponseDto(usage: FileUsageEntity): FileUsageResponseDto {
-        return {
-            id: usage.id?.toString() || '',
-            fileId: this.sqidsService.encode(usage.fileId, SqidsPrefix.FILE), // Encode fileId in response
-            usageType: usage.usageType,
-            usageId: usage.usageId.toString(),
-            order: usage.order,
-            createdAt: usage.createdAt,
         };
     }
 }
