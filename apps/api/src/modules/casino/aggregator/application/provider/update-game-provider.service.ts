@@ -7,6 +7,8 @@ import { FILE_REPOSITORY } from '../../../../file/ports/file.repository.token';
 import { type FileRepositoryPort } from '../../../../file/ports/file.repository.port';
 import { FileUsageType } from '../../../../file/domain';
 import { EnvService } from 'src/common/env/env.service';
+import { SqidsService } from 'src/common/sqids/sqids.service';
+import { SqidsPrefix } from 'src/common/sqids/sqids.constants';
 
 interface UpdateGameProviderParams {
     id: bigint;
@@ -25,6 +27,7 @@ export class UpdateGameProviderService {
         @Inject(FILE_REPOSITORY)
         private readonly fileRepository: FileRepositoryPort,
         private readonly envService: EnvService,
+        private readonly sqidsService: SqidsService,
     ) { }
 
     async execute(params: UpdateGameProviderParams): Promise<CasinoGameProvider> {
@@ -32,14 +35,17 @@ export class UpdateGameProviderService {
         let newImageUrl: string | undefined;
 
         if (params.imageId) {
-            const fileId = BigInt(params.imageId);
             await this.attachFileService.execute({
-                fileIds: [fileId],
+                fileIds: [params.imageId],
                 usageType: FileUsageType.CASINO_PROVIDER_LOGO,
                 usageId: provider.id!,
             });
 
-            // 파일 정보 조회하여 URL 구성
+            // 파일 정보 조회하여 URL 구성 (ID 디코딩 필요)
+            const fileId = typeof params.imageId === 'string' && params.imageId.includes('_')
+                ? this.sqidsService.decode(params.imageId, SqidsPrefix.FILE)
+                : BigInt(params.imageId);
+
             const file = await this.fileRepository.findById(fileId);
             if (file) {
                 // S3 CloudFront URL 구성 (환경변수 의존)

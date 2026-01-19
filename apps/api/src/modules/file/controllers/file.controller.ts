@@ -137,11 +137,10 @@ export class FileController {
     async attachFile(
         @Body() dto: AttachFileRequestDto,
     ): Promise<FileUsageResponseDto[]> {
-        const fileIds = dto.fileIds.map(id => this.sqidsService.decode(id, SqidsPrefix.FILE));
         const usageId = this.resolveUsageId(dto.usageType, dto.usageId);
 
         const fileUsages = await this.attachFileService.execute({
-            fileIds: fileIds,
+            fileIds: dto.fileIds,
             usageType: dto.usageType,
             usageId: usageId,
         });
@@ -156,7 +155,6 @@ export class FileController {
         }
 
         // 2. If encoded string, try to decode based on usageType
-        // Use FileUsagePolicy to determine decoding strategy
         const type = usageType as FileUsageType;
         if (Object.values(FileUsageType).includes(type)) {
             const config = getFileUsageConfig(type);
@@ -165,9 +163,10 @@ export class FileController {
             }
         }
 
-        // Default or unknown type for decoding.
         throw new FileValidationException('Invalid usageId format or unknown usage type for decoding.');
     }
+
+
 
     private toResponseDto(file: FileEntity): FileResponseDto {
         let url: string | undefined;

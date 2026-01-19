@@ -8,8 +8,11 @@ import { type FileRepositoryPort } from '../ports/file.repository.port';
 import { Transactional } from '@nestjs-cls/transactional';
 import { StorageService } from 'src/infrastructure/storage/storage.service';
 
+import { SqidsService } from 'src/common/sqids/sqids.service';
+import { SqidsPrefix } from 'src/common/sqids/sqids.constants';
+
 interface AttachFileCommand {
-    fileIds: bigint[];
+    fileIds: string[];
     usageType: FileUsageType;
     usageId: bigint;
     accessType?: FileAccessType;
@@ -23,11 +26,17 @@ export class AttachFileService {
         @Inject(FILE_REPOSITORY)
         private readonly fileRepository: FileRepositoryPort,
         private readonly storageService: StorageService,
+        private readonly sqidsService: SqidsService,
     ) { }
 
     @Transactional()
     async execute(command: AttachFileCommand): Promise<FileUsageEntity[]> {
-        const { fileIds, usageType, usageId } = command;
+        const { fileIds: inputIds, usageType, usageId } = command;
+
+        // 0. Decode file IDs if they are strings
+        const fileIds = inputIds.map(id =>
+            typeof id === 'string' ? this.sqidsService.decode(id, SqidsPrefix.FILE) : id
+        );
 
         // 1. Fetch Files
         const files = await this.fileRepository.findByIds(fileIds);
