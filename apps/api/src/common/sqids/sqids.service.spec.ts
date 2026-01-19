@@ -96,4 +96,34 @@ describe('SqidsService', () => {
             expect(() => service.decode('invalid!')).toThrow(InvalidSqidFormatException);
         });
     });
+
+    describe('prefix-based encoding', () => {
+        it('should produce different sqid values for the same ID with different prefixes', () => {
+            const id = 12345n;
+            const encodedUser = service.encode(id, SqidsPrefix.USER);
+            const encodedFile = service.encode(id, SqidsPrefix.FILE);
+            const encodedDeposit = service.encode(id, SqidsPrefix.DEPOSIT);
+
+            // 접두사 제거 후 sqid 부분만 비교
+            const sqidUser = encodedUser.slice(2); // 'u_' 제거
+            const sqidFile = encodedFile.slice(2); // 'f_' 제거
+            const sqidDeposit = encodedDeposit.slice(2); // 'd_' 제거
+
+            // 동일한 ID라도 prefix에 따라 다른 sqid가 생성되어야 함
+            expect(sqidUser).not.toBe(sqidFile);
+            expect(sqidUser).not.toBe(sqidDeposit);
+            expect(sqidFile).not.toBe(sqidDeposit);
+        });
+
+        it('should correctly decode each prefix-encoded sqid', () => {
+            const id = 99999n;
+            const prefixes = [SqidsPrefix.USER, SqidsPrefix.FILE, SqidsPrefix.DEPOSIT, SqidsPrefix.TRANSACTION];
+
+            for (const prefix of prefixes) {
+                const encoded = service.encode(id, prefix);
+                const decoded = service.decode(encoded, prefix);
+                expect(decoded).toBe(id);
+            }
+        });
+    });
 });

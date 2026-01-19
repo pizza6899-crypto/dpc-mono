@@ -1,19 +1,53 @@
 import { Injectable } from '@nestjs/common';
 import Sqids from 'sqids';
 import { EnvService } from '../env/env.service';
-import { SQIDS_DELIMITER, SqidsPrefixType, SqidsPrefix, KNUTH_PRIME, KNUTH_INVERSE, KNUTH_MASK } from './sqids.constants';
+import {
+    SQIDS_DELIMITER,
+    SqidsPrefixType,
+    SqidsPrefix,
+    KNUTH_PRIME,
+    KNUTH_INVERSE,
+    KNUTH_MASK,
+    shuffleAlphabet,
+} from './sqids.constants';
 import { InvalidSqidFormatException, InvalidSqidIdException } from './sqids.exception';
+
 
 @Injectable()
 export class SqidsService {
-    private readonly sqids: Sqids;
+    private readonly sqidsCache: Map<string, Sqids> = new Map();
+    private readonly baseAlphabet: string;
+    private readonly minLength: number;
 
     constructor(private readonly envService: EnvService) {
         const { alphabet, minLength } = this.envService.sqids;
-        this.sqids = new Sqids({
-            alphabet,
-            minLength,
+        this.baseAlphabet = alphabet;
+        this.minLength = minLength;
+    }
+
+    /**
+     * prefix에 대한 Sqids 인스턴스를 가져옵니다. (캐싱)
+     * 각 prefix는 고유한 셔플된 alphabet을 사용합니다.
+     * @param prefix SqidsPrefix 상수에 정의된 접두사 라벨 (선택 사항)
+     * @returns Sqids 인스턴스
+     */
+    private getSqidsInstance(prefix?: SqidsPrefixType): Sqids {
+        const cacheKey = prefix || 'default';
+        if (this.sqidsCache.has(cacheKey)) {
+            return this.sqidsCache.get(cacheKey)!;
+        }
+
+        let alphabetToUse = this.baseAlphabet;
+        if (prefix) {
+            alphabetToUse = shuffleAlphabet(this.baseAlphabet, prefix);
+        }
+
+        const sqidsInstance = new Sqids({
+            alphabet: alphabetToUse,
+            minLength: this.minLength,
         });
+        this.sqidsCache.set(cacheKey, sqidsInstance);
+        return sqidsInstance;
     }
 
     /**
@@ -40,7 +74,8 @@ export class SqidsService {
         const low = Number(scrambledId & 0xffffffffn);
 
         // 3. Sqids 인코딩
-        const sqid = this.sqids.encode([high, low]);
+        const sqidsInstance = this.getSqidsInstance(prefix);
+        const sqid = sqidsInstance.encode([high, low]);
         return prefix ? `${prefix}${SQIDS_DELIMITER}${sqid}` : sqid;
     }
 
@@ -62,7 +97,8 @@ export class SqidsService {
             targetSqid = sqid.slice(prefixWithDelimiter.length);
         }
 
-        const decoded = this.sqids.decode(targetSqid);
+        const sqidsInstance = this.getSqidsInstance(prefix);
+        const decoded = sqidsInstance.decode(targetSqid);
         if (decoded.length < 2) {
             throw new InvalidSqidFormatException(sqid, prefix);
         }
@@ -97,36 +133,33 @@ export class SqidsService {
             // 유효한 접두사인지 확인
             if (validPrefixes.includes(potentialPrefix)) {
                 const targetSqid = sqid.slice(delimiterIndex + 1);
-                const id = this.decodeRaw(targetSqid);
-                return { id, prefix: potentialPrefix };
+                const sqidsInstance = this.getSqidsInstance(potentialPrefix as SqidsPrefixType);
+                const decoded = sqidsInstance.decode(targetSqid);
+
+                if (decoded.length < 2) {
+                    throw new InvalidSqidFormatException(sqid);
+                }
+
+                const [high, low] = decoded;
+                const scrambledId = (BigInt(high) << 32n) | BigInt(low);
+                const originalId = (scrambledId * KNUTH_INVERSE) & KNUTH_MASK;
+
+                return { id: originalId, prefix: potentialPrefix };
             }
         }
 
-        // 접두사가 없는 경우 전체를 Sqid로 처리
-        const id = this.decodeRaw(sqid);
-        return { id, prefix: null };
-    }
+        // 접두사가 없는 경우 기본 Sqids로 처리
+        const sqidsInstance = this.getSqidsInstance();
+        const decoded = sqidsInstance.decode(sqid);
 
-    /**
-     * 순수 Sqid 문자열만 디코딩합니다. (접두사/구분자 처리 없음)
-     * 
-     * @param sqid 순수 Sqid 문자열
-     * @throws InvalidSqidFormatException 유효하지 않은 Sqid 형식인 경우
-     */
-    private decodeRaw(sqid: string): bigint {
-        const decoded = this.sqids.decode(sqid);
         if (decoded.length < 2) {
             throw new InvalidSqidFormatException(sqid);
         }
 
         const [high, low] = decoded;
-
-        // 1. 상하위 비트 병합
         const scrambledId = (BigInt(high) << 32n) | BigInt(low);
-
-        // 2. Multiplicative Inverse 적용 (복구)
         const originalId = (scrambledId * KNUTH_INVERSE) & KNUTH_MASK;
 
-        return originalId;
+        return { id: originalId, prefix: null };
     }
 }
