@@ -1,4 +1,4 @@
-import { IsEnum, IsOptional, IsString } from 'class-validator';
+import { IsEnum, IsOptional, IsString, IsBoolean } from 'class-validator';
 import { ApiPropertyOptional } from '@nestjs/swagger';
 import { AggregatorStatus } from '@repo/database';
 
@@ -12,4 +12,9 @@ export class UpdateAggregatorDto {
     @IsOptional()
     @IsEnum(AggregatorStatus)
     status?: AggregatorStatus;
+
+    @ApiPropertyOptional({ description: 'API 호출 활성 여부' })
+    @IsOptional()
+    @IsBoolean()
+    apiEnabled?: boolean;
 }

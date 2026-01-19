@@ -6,8 +6,10 @@ import { FindAggregatorsService } from './application/find-aggregators.service';
 import { UpdateAggregatorService } from './application/update-aggregator.service';
 import { AggregatorRegistryService } from './application/aggregator-registry.service';
 import { AggregatorAdminController } from './controllers/admin/aggregator-admin.controller';
+import { EnvModule } from 'src/common/env/env.module';
 
 @Module({
+    imports: [EnvModule],
     controllers: [AggregatorAdminController],
     providers: [
         // Infrastructure

@@ -9,6 +9,7 @@ export class CasinoAggregator {
         public readonly name: string,
         public readonly code: string,
         public readonly status: AggregatorStatus,
+        public readonly apiEnabled: boolean,
         public readonly createdAt: Date,
         public readonly updatedAt: Date,
     ) { }
@@ -18,6 +19,7 @@ export class CasinoAggregator {
         name: string;
         code: string;
         status?: AggregatorStatus;
+        apiEnabled?: boolean;
         createdAt?: Date;
         updatedAt?: Date;
     }): CasinoAggregator {
@@ -26,6 +28,7 @@ export class CasinoAggregator {
             params.name,
             params.code,
             params.status ?? AggregatorStatus.ACTIVE,
+            params.apiEnabled ?? true,
             params.createdAt ?? new Date(),
             params.updatedAt ?? new Date(),
         );
@@ -37,6 +40,14 @@ export class CasinoAggregator {
 
     isMaintenance(): boolean {
         return this.status === AggregatorStatus.MAINTENANCE;
+    }
+
+    /**
+     * 최종적으로 API 통신이 가능한 상태인지 확인
+     * (DB 상태가 활성이고 + API 스위치가 켜져 있어야 함)
+     */
+    canCallApi(): boolean {
+        return this.isActive() && this.apiEnabled;
     }
 
     isDc(): boolean {

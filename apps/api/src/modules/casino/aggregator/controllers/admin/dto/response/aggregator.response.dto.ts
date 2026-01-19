@@ -1,34 +1,25 @@
-import { ApiProperty } from '@nestjs/swagger';
+import { ApiProperty, ApiPropertyOptional } from '@nestjs/swagger';
 import { AggregatorStatus } from '@repo/database';
-import { CasinoAggregator } from '../../../../domain';
 
 export class AggregatorResponseDto {
-    @ApiProperty()
+    @ApiProperty({ description: 'Aggregator ID', example: '1' })
     id!: string;
 
-    @ApiProperty()
+    @ApiProperty({ description: 'Aggregator Name', example: 'DC ACE' })
     name!: string;
 
-    @ApiProperty()
+    @ApiProperty({ description: 'Aggregator Code', example: 'DC' })
     code!: string;
 
-    @ApiProperty({ enum: AggregatorStatus })
+    @ApiProperty({ enum: AggregatorStatus, description: 'Aggregator Status' })
     status!: AggregatorStatus;
 
-    @ApiProperty()
+    @ApiProperty({ description: 'API Communication Enabled', example: true })
+    apiEnabled!: boolean;
+
+    @ApiProperty({ description: 'Created At' })
     createdAt!: Date;
 
-    @ApiProperty()
+    @ApiProperty({ description: 'Updated At' })
     updatedAt!: Date;
-
-    static from(aggregator: CasinoAggregator): AggregatorResponseDto {
-        const dto = new AggregatorResponseDto();
-        dto.id = aggregator.id!.toString();
-        dto.name = aggregator.name;
-        dto.code = aggregator.code;
-        dto.status = aggregator.status;
-        dto.createdAt = aggregator.createdAt;
-        dto.updatedAt = aggregator.updatedAt;
-        return dto;
-    }
 }

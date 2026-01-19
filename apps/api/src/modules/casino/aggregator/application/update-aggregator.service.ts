@@ -8,6 +8,7 @@ interface UpdateAggregatorCommand {
     id: bigint;
     name?: string;
     status?: AggregatorStatus;
+    apiEnabled?: boolean;
 }
 
 @Injectable()
@@ -26,6 +27,7 @@ export class UpdateAggregatorService {
             name: command.name ?? aggregator.name,
             code: aggregator.code,
             status: command.status ?? aggregator.status,
+            apiEnabled: command.apiEnabled ?? aggregator.apiEnabled,
             createdAt: aggregator.createdAt,
             updatedAt: new Date(),
         });

@@ -8,7 +8,12 @@ import {
     CasinoAggregatorMaintenanceException,
 } from '../domain';
 import { EnvService } from 'src/common/env/env.service';
-import type { DcsConfig, WhitecliffConfig } from 'src/common/env/env.types';
+import {
+    DcsAggregatorConfig,
+    WhitecliffAggregatorConfig,
+    createDcsAggregatorConfig,
+    createWhitecliffAggregatorConfig,
+} from '../domain/model/aggregator-config';
 
 @Injectable()
 export class AggregatorRegistryService implements OnModuleInit {
@@ -64,27 +69,82 @@ export class AggregatorRegistryService implements OnModuleInit {
     }
 
     // ============================================================
-    // API 설정 접근 (EnvService에서 가져옴)
+    // 통합 설정 접근 (DB 메타 + Env 설정 결합)
     // ============================================================
 
     /**
-     * DCS(DC) API 설정 조회
+     * DCS 통합 설정을 반환합니다.
+     * DB 상태 검증 + Env 설정을 결합한 단일 객체.
      */
-    getDcsConfig(): DcsConfig {
-        return this.envService.dcs;
+    getDcs(): DcsAggregatorConfig {
+        const aggregator = this.getOrThrowIfUnavailable(CasinoAggregator.CODE_DC);
+
+        if (!aggregator.apiEnabled) {
+            throw new CasinoAggregatorInactiveException(CasinoAggregator.CODE_DC);
+        }
+
+        return createDcsAggregatorConfig(
+            {
+                id: aggregator.id!,
+                code: aggregator.code,
+                name: aggregator.name,
+                status: aggregator.status,
+                apiEnabled: aggregator.apiEnabled,
+            },
+            this.envService.dcs,
+        );
     }
 
     /**
-     * Whitecliff 설정 목록 조회 (통화별)
+     * Whitecliff 통합 설정을 반환합니다 (특정 통화).
+     * DB 상태 검증 + Env 설정을 결합한 단일 객체.
      */
-    getWhitecliffConfigs(): WhitecliffConfig[] {
-        return this.envService.whitecliff;
+    getWhitecliff(currency: string): WhitecliffAggregatorConfig {
+        const aggregator = this.getOrThrowIfUnavailable(CasinoAggregator.CODE_WC);
+
+        if (!aggregator.apiEnabled) {
+            throw new CasinoAggregatorInactiveException(CasinoAggregator.CODE_WC);
+        }
+
+        const envConfig = this.envService.whitecliff.find(wc => wc.currency === currency);
+        if (!envConfig) {
+            throw new Error(`Whitecliff configuration for currency '${currency}' not found.`);
+        }
+
+        return createWhitecliffAggregatorConfig(
+            {
+                id: aggregator.id!,
+                code: aggregator.code,
+                name: aggregator.name,
+                status: aggregator.status,
+                apiEnabled: aggregator.apiEnabled,
+            },
+            envConfig,
+        );
     }
 
     /**
-     * 특정 통화에 해당하는 Whitecliff 설정 조회
+     * 모든 Whitecliff 통합 설정을 반환합니다.
+     * DB 상태 검증 + 각 통화별 Env 설정을 결합한 배열.
      */
-    getWhitecliffConfigByCurrency(currency: string): WhitecliffConfig | undefined {
-        return this.envService.whitecliff.find(wc => wc.currency === currency);
+    getAllWhitecliff(): WhitecliffAggregatorConfig[] {
+        const aggregator = this.getOrThrowIfUnavailable(CasinoAggregator.CODE_WC);
+
+        if (!aggregator.apiEnabled) {
+            throw new CasinoAggregatorInactiveException(CasinoAggregator.CODE_WC);
+        }
+
+        return this.envService.whitecliff.map(envConfig =>
+            createWhitecliffAggregatorConfig(
+                {
+                    id: aggregator.id!,
+                    code: aggregator.code,
+                    name: aggregator.name,
+                    status: aggregator.status,
+                    apiEnabled: aggregator.apiEnabled,
+                },
+                envConfig,
+            ),
+        );
     }
 }

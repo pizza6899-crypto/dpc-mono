@@ -8,6 +8,7 @@ import { UpdateAggregatorService } from '../../application/update-aggregator.ser
 import { AggregatorRegistryService } from '../../application/aggregator-registry.service';
 import { UpdateAggregatorDto } from './dto/request/update-aggregator.dto';
 import { AggregatorResponseDto } from './dto/response/aggregator.response.dto';
+import { CasinoAggregator } from '../../domain';
 
 @ApiTags('Admin/Casino/Aggregator')
 @Controller('admin/casino/aggregators')
@@ -20,29 +21,41 @@ export class AggregatorAdminController {
     ) { }
 
     @Get()
-    @ApiOperation({ summary: '애그리게이터 목록 조회' })
+    @ApiOperation({ summary: 'List aggregators / 애그리게이터 목록 조회' })
     async findAll(): Promise<AggregatorResponseDto[]> {
         const aggregators = await this.findAggregatorsService.execute();
-        return aggregators.map(AggregatorResponseDto.from);
+        return aggregators.map(agg => this.toResponseDto(agg));
     }
 
     @Put(':id')
     @AuditLog({ type: LogType.ACTIVITY, category: 'CASINO', action: 'AGGREGATOR_UPDATE' })
-    @ApiOperation({ summary: '애그리게이터 수정' })
+    @ApiOperation({ summary: 'Update aggregator / 애그리게이터 수정' })
     async update(
         @Param('id') id: string,
         @Body() dto: UpdateAggregatorDto,
     ): Promise<AggregatorResponseDto> {
         const aggregator = await this.updateAggregatorService.execute({ id: BigInt(id), ...dto });
         await this.registryService.reload(); // 캐시 갱신
-        return AggregatorResponseDto.from(aggregator);
+        return this.toResponseDto(aggregator);
     }
 
     @Post('reload')
     @AuditLog({ type: LogType.ACTIVITY, category: 'CASINO', action: 'AGGREGATOR_UPDATE' })
-    @ApiOperation({ summary: '애그리게이터 캐시 수동 리로드' })
+    @ApiOperation({ summary: 'Reload aggregator cache / 애그리게이터 캐시 수동 리로드' })
     async reload(): Promise<{ message: string }> {
         await this.registryService.reload();
         return { message: 'Aggregator cache reloaded successfully' };
+    }
+
+    private toResponseDto(aggregator: CasinoAggregator): AggregatorResponseDto {
+        return {
+            id: aggregator.id!.toString(),
+            name: aggregator.name,
+            code: aggregator.code,
+            status: aggregator.status,
+            apiEnabled: aggregator.apiEnabled,
+            createdAt: aggregator.createdAt,
+            updatedAt: aggregator.updatedAt,
+        };
     }
 }

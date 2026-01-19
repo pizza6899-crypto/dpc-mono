@@ -123,8 +123,11 @@ model CasinoAggregator {
   name String @map("name") // 표기용 이름 (예: DC, W)
   code String @unique @map("code") // 시스템 식별 코드 (예: DC, WC)
 
-  // 상태 관리를 조금 더 세분화 (Active, Inactive, Maintenance)
+  // 상태 관리 (Active, Inactive, Maintenance)
   status AggregatorStatus @map("status")
+
+  // API 호출 활성화 여부
+  apiEnabled Boolean @default(true) @map("api_enabled")
 
   createdAt DateTime @default(now()) @map("created_at")
   updatedAt DateTime @updatedAt @map("updated_at")

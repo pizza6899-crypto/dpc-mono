@@ -10,6 +10,7 @@ export class CasinoAggregatorMapper {
             name: prisma.name,
             code: prisma.code,
             status: prisma.status,
+            apiEnabled: prisma.apiEnabled,
             createdAt: prisma.createdAt,
             updatedAt: prisma.updatedAt,
         });
@@ -20,6 +21,7 @@ export class CasinoAggregatorMapper {
             name: domain.name,
             code: domain.code,
             status: domain.status,
+            apiEnabled: domain.apiEnabled,
         };
     }
 }
