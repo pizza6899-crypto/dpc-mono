@@ -2,7 +2,6 @@
 
 import { Injectable, Logger } from '@nestjs/common';
 import { DcsApiService } from '../infrastructure/dcs-api.service';
-import { PrismaService } from 'src/infrastructure/prisma/prisma.service';
 import {
   GameAggregatorType,
   GameProvider,
@@ -10,7 +9,6 @@ import {
   GameCategory,
 } from '@repo/database';
 import { DcsResponseCode } from '../constants/dcs-response-codes';
-import { mockResponse1 } from './dc-mock1';
 import { InjectTransaction } from '@nestjs-cls/transactional';
 import { type PrismaTransaction } from 'src/infrastructure/prisma/prisma.module';
 

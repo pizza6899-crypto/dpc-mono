@@ -27,12 +27,12 @@ import { GameUserController } from './controllers/user/game-user.controller';
 import { FileModule } from '../../file/file.module';
 import { EnvModule } from 'src/common/env/env.module';
 
-import { WhitecliffModule } from '../whitecliff/whitecliff.module';
+import { AggregatorModule } from '../aggregator/aggregator.module';
 import { SyncAdminController } from './controllers/admin/sync.admin.controller';
 import { SyncGamesService } from './application/sync-games.service';
 
 @Module({
-    imports: [FileModule, EnvModule, WhitecliffModule],
+    imports: [FileModule, EnvModule, AggregatorModule],
     controllers: [
         CategoryAdminController,
         GameAdminController,
