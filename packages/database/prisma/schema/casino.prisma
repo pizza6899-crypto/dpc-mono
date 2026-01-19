@@ -303,5 +303,6 @@ model CasinoGameV2Translation {
 
   @@unique([gameId, language])
   @@index([language])
+  @@index([name(ops: raw("gin_trgm_ops"))], type: Gin)
   @@map("casino_game_v2_translations")
 }
