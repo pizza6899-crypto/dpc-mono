@@ -1,23 +1,20 @@
-import { Body, Controller, Get, Param, Patch, Post, Query } from '@nestjs/common';
+import { Body, Controller, Get, Param, Patch, Query } from '@nestjs/common';
 import { ApiTags, ApiOperation } from '@nestjs/swagger';
 import { Admin } from 'src/common/auth/decorators/roles.decorator';
 import { AuditLog } from 'src/modules/audit-log/infrastructure/audit-log.decorator';
 import { LogType } from 'src/modules/audit-log/domain';
-import { SqidsService } from 'src/common/sqids/sqids.service';
-import { SqidsPrefix } from 'src/common/sqids/sqids.constants';
 import { Prisma } from '@repo/database';
 
 import { FindGamesService } from '../../application/find-games.service';
-import { FindGameByIdService } from '../../application/find-game-by-id.service';
-import { CreateGameService } from '../../application/create-game.service';
 import { UpdateGameService } from '../../application/update-game.service';
 
 import { GameAdminResponseDto } from './dto/response/game-admin.response.dto';
-import { CreateGameAdminRequestDto } from './dto/request/create-game.request.dto';
+import { UpdateGameAdminRequestDto } from './dto/request/update-game.request.dto';
 
 import { Paginated } from 'src/common/http/decorators/paginated.decorator';
-import { ApiPaginatedResponse } from 'src/common/http/decorators/api-response.decorator';
-import { PaginatedData, PaginationQueryDto } from 'src/common/http/types';
+import { ApiPaginatedResponse, ApiStandardResponse } from 'src/common/http/decorators/api-response.decorator';
+import { PaginationQueryDto } from 'src/common/http/types';
+import { CasinoGameV2 } from '../../domain';
 
 @ApiTags('Admin Casino Game')
 @Controller('admin/casino/games')
@@ -25,17 +22,24 @@ import { PaginatedData, PaginationQueryDto } from 'src/common/http/types';
 export class GameAdminController {
     constructor(
         private readonly findGamesService: FindGamesService,
-        private readonly findGameByIdService: FindGameByIdService,
-        private readonly createGameService: CreateGameService,
         private readonly updateGameService: UpdateGameService,
-        private readonly sqidsService: SqidsService,
     ) { }
 
     @Get()
     @Paginated()
-    @ApiOperation({ summary: 'List all games (Admin) / 모든 게임 목록 조회 (관리자)' })
+    @ApiOperation({
+        summary: 'List all games (Admin) / 모든 게임 목록 조회 (관리자)',
+        description: 'Retrieves a paginated list of all casino games with administrative details. / 관리자 측면에서의 모든 카지노 게임 목록을 페이징하여 조회합니다.',
+    })
     @ApiPaginatedResponse(GameAdminResponseDto)
-    @AuditLog({ type: LogType.ACTIVITY, category: 'CASINO', action: 'GAME_LIST_ADMIN' })
+    @AuditLog({
+        type: LogType.ACTIVITY,
+        category: 'CASINO',
+        action: 'GAME_LIST_ADMIN',
+        extractMetadata: (req, args) => ({
+            query: args[0],
+        }),
+    })
     async list(@Query() query: PaginationQueryDto & { isEnabled?: boolean }) {
         const result = await this.findGamesService.execute({
             isEnabled: query.isEnabled,
@@ -51,41 +55,26 @@ export class GameAdminController {
         };
     }
 
-    @Get(':id')
-    @ApiOperation({ summary: 'Get game detail (Admin)' })
-    @AuditLog({ type: LogType.ACTIVITY, category: 'CASINO', action: 'GAME_DETAIL_ADMIN' })
-    async get(@Param('id') id: string) {
-        const decodedId = this.sqidsService.decode(id, SqidsPrefix.CASINO_GAME);
-        const game = await this.findGameByIdService.execute(BigInt(decodedId));
-        return this.toResponseDto(game);
-    }
-
-    @Post()
-    @ApiOperation({ summary: 'Create a new game (Admin)' })
-    @AuditLog({ type: LogType.ACTIVITY, category: 'CASINO', action: 'GAME_CREATE_ADMIN' })
-    async create(@Body() dto: CreateGameAdminRequestDto) {
-        const providerId = this.sqidsService.decode(dto.providerId); // Assuming providerId matches a Sqid prefix or we use it directly
-
-        const game = await this.createGameService.execute({
-            ...dto,
-            providerId: BigInt(providerId),
-            rtp: dto.rtp ? new Prisma.Decimal(dto.rtp) : undefined,
-            houseEdge: dto.houseEdge ? new Prisma.Decimal(dto.houseEdge) : undefined,
-            contributionRate: dto.contributionRate ? new Prisma.Decimal(dto.contributionRate) : undefined,
-        });
-
-        return this.toResponseDto(game);
-    }
 
     @Patch(':id')
-    @ApiOperation({ summary: 'Update a game (Admin)' })
-    @AuditLog({ type: LogType.ACTIVITY, category: 'CASINO', action: 'GAME_UPDATE_ADMIN' })
-    async update(@Param('id') id: string, @Body() dto: Partial<CreateGameAdminRequestDto>) {
-        const decodedId = this.sqidsService.decode(id, SqidsPrefix.CASINO_GAME);
-
+    @ApiOperation({
+        summary: 'Update a game (Admin) / 게임 수정 (관리자)',
+        description: 'Updates an existing game identified by its internal ID. Game creation is only available via aggregator sync. / 내부 ID로 식별된 기존 게임 정보를 수정합니다. 게임 생성은 애그리게이터 동기화로만 가능합니다.',
+    })
+    @ApiStandardResponse(GameAdminResponseDto)
+    @AuditLog({
+        type: LogType.ACTIVITY,
+        category: 'CASINO',
+        action: 'GAME_UPDATE_ADMIN',
+        extractMetadata: (req, args, result: GameAdminResponseDto) => ({
+            id: args[0],
+            updates: args[1],
+        }),
+    })
+    async update(@Param('id') id: string, @Body() dto: UpdateGameAdminRequestDto) {
         const game = await this.updateGameService.execute({
             ...dto,
-            id: BigInt(decodedId),
+            id: BigInt(id),
             rtp: dto.rtp ? new Prisma.Decimal(dto.rtp) : undefined,
             houseEdge: dto.houseEdge ? new Prisma.Decimal(dto.houseEdge) : undefined,
             contributionRate: dto.contributionRate ? new Prisma.Decimal(dto.contributionRate) : undefined,
@@ -94,25 +83,28 @@ export class GameAdminController {
         return this.toResponseDto(game);
     }
 
-    private toResponseDto(game: any): GameAdminResponseDto {
+    private toResponseDto(game: CasinoGameV2): GameAdminResponseDto {
         return {
-            id: this.sqidsService.encode(game.id, SqidsPrefix.CASINO_GAME),
-            providerId: this.sqidsService.encode(game.providerId), // We might need a prefix for provider
+            id: game.id?.toString() ?? '',
+            providerId: game.providerId.toString(),
             externalGameId: game.externalGameId,
             code: game.code,
-            thumbnailUrl: game.thumbnailUrl,
-            bannerUrl: game.bannerUrl,
+            thumbnailUrl: game.thumbnailUrl ?? undefined,
+            bannerUrl: game.bannerUrl ?? undefined,
             rtp: game.rtp?.toString(),
-            volatility: game.volatility,
-            gameType: game.gameType,
-            tableId: game.tableId,
+            volatility: game.volatility ?? undefined,
+            gameType: game.gameType ?? undefined,
+            tableId: game.tableId ?? undefined,
             tags: game.tags,
             houseEdge: game.houseEdge.toString(),
             contributionRate: game.contributionRate.toString(),
             sortOrder: game.sortOrder,
             isEnabled: game.isEnabled,
             isVisible: game.isVisible,
-            translations: game.translations,
+            translations: game.translations.map(t => ({
+                language: t.language,
+                name: t.name,
+            })),
         };
     }
 }

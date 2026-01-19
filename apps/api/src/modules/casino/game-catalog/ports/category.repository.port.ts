@@ -16,6 +16,8 @@ export interface CategoryRepositoryPort {
     create(category: CasinoGameCategory): Promise<CasinoGameCategory>;
     update(category: CasinoGameCategory): Promise<CasinoGameCategory>;
     delete(id: bigint): Promise<void>;
+    addGames(categoryId: bigint, gameIds: bigint[]): Promise<void>;
+    removeGames(categoryId: bigint, gameIds: bigint[]): Promise<void>;
 }
 
 export const CATEGORY_REPOSITORY = Symbol('CATEGORY_REPOSITORY');

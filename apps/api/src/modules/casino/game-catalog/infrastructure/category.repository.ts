@@ -2,7 +2,7 @@ import { Injectable } from '@nestjs/common';
 import { InjectTransaction } from '@nestjs-cls/transactional';
 import { type PrismaTransaction } from 'src/infrastructure/prisma/prisma.module';
 import { CategoryRepositoryPort } from '../ports';
-import { CasinoGameCategory, CategoryNotFoundException } from '../domain';
+import { CasinoGameCategory, CategoryNotFoundException, CategoryValidationException } from '../domain';
 import { CategoryMapper } from './category.mapper';
 
 @Injectable()
@@ -76,7 +76,7 @@ export class CategoryRepository implements CategoryRepositoryPort {
     }
 
     async update(category: CasinoGameCategory): Promise<CasinoGameCategory> {
-        if (!category.id) throw new Error('Category ID is required for update');
+        if (!category.id) throw new CategoryValidationException('Category ID is required for update');
 
         const data = this.mapper.toPrisma(category);
         const translations = this.mapper.toPrismaTranslations(category);
@@ -102,6 +102,27 @@ export class CategoryRepository implements CategoryRepositoryPort {
     async delete(id: bigint): Promise<void> {
         await this.tx.casinoGameCategory.delete({
             where: { id },
+        });
+    }
+
+    async addGames(categoryId: bigint, gameIds: bigint[]): Promise<void> {
+        // 이미 존재하는 매핑은 무시하고 새로운 것만 추가 (createMany with skipDuplicates)
+        await this.tx.casinoGameCategoryItem.createMany({
+            data: gameIds.map(gameId => ({
+                categoryId,
+                gameId,
+                sortOrder: 100, // 기본값
+            })),
+            skipDuplicates: true,
+        });
+    }
+
+    async removeGames(categoryId: bigint, gameIds: bigint[]): Promise<void> {
+        await this.tx.casinoGameCategoryItem.deleteMany({
+            where: {
+                categoryId,
+                gameId: { in: gameIds },
+            },
         });
     }
 }

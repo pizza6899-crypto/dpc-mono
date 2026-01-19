@@ -25,3 +25,9 @@ export class CategoryAlreadyExistsException extends CatalogException {
         super(`Category with code already exists: ${code}`, MessageCode.CASINO_CATEGORY_ALREADY_EXISTS, HttpStatus.CONFLICT);
     }
 }
+
+export class CategoryValidationException extends CatalogException {
+    constructor(message: string) {
+        super(message, MessageCode.VALIDATION_ERROR, HttpStatus.BAD_REQUEST);
+    }
+}

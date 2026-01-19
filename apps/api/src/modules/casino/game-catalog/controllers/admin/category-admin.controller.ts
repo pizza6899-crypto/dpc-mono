@@ -1,4 +1,4 @@
-import { Body, Controller, Delete, Get, Param, Patch, Post, Query, HttpStatus } from '@nestjs/common';
+import { Body, Controller, Delete, Get, Param, Patch, Post, Query, HttpStatus, HttpCode } from '@nestjs/common';
 import { ApiTags, ApiOperation } from '@nestjs/swagger';
 import { Admin } from 'src/common/auth/decorators/roles.decorator';
 import { AuditLog } from 'src/modules/audit-log/infrastructure/audit-log.decorator';
@@ -6,9 +6,11 @@ import { LogType } from 'src/modules/audit-log/domain';
 import { FindCategoriesService } from '../../application/find-categories.service';
 import { CreateCategoryService } from '../../application/create-category.service';
 import { UpdateCategoryService } from '../../application/update-category.service';
-import { DeleteCategoryService } from '../../application/delete-category.service';
+import { AddGamesToCategoryService, RemoveGamesFromCategoryService } from '../../application/manage-category-games.service';
+
 import { CreateCategoryAdminRequestDto } from './dto/request/create-category.request.dto';
 import { UpdateCategoryAdminRequestDto } from './dto/request/update-category.request.dto';
+import { AddGamesToCategoryRequestDto, RemoveGamesFromCategoryRequestDto } from './dto/request/manage-category-games.request.dto';
 import { CategoryAdminResponseDto } from './dto/response/category-admin.response.dto';
 
 import { Paginated } from 'src/common/http/decorators/paginated.decorator';
@@ -24,7 +26,53 @@ export class CategoryAdminController {
         private readonly findCategoriesService: FindCategoriesService,
         private readonly createCategoryService: CreateCategoryService,
         private readonly updateCategoryService: UpdateCategoryService,
+        private readonly addGamesToCategoryService: AddGamesToCategoryService,
+        private readonly removeGamesFromCategoryService: RemoveGamesFromCategoryService,
     ) { }
+
+    @Post(':id/games')
+    @HttpCode(HttpStatus.NO_CONTENT)
+    @ApiOperation({
+        summary: 'Add games to category / 카테고리에 게임 추가',
+        description: 'Adds selected games to a specific category. Validates game existence and handles duplicates. / 특정 카테고리에 선택된 게임들을 추가합니다. 게임 존재 여부를 확인하고 중복을 처리합니다.'
+    })
+    @AuditLog({
+        type: LogType.ACTIVITY,
+        category: 'CASINO',
+        action: 'CATEGORY_ADD_GAMES_ADMIN',
+        extractMetadata: (req, args) => ({
+            categoryId: args[0],
+            gameIds: args[1].gameIds,
+        }),
+    })
+    async addGames(
+        @Param('id') id: string,
+        @Body() dto: AddGamesToCategoryRequestDto
+    ): Promise<void> {
+        await this.addGamesToCategoryService.execute(BigInt(id), dto);
+    }
+
+    @Delete(':id/games')
+    @HttpCode(HttpStatus.NO_CONTENT)
+    @ApiOperation({
+        summary: 'Remove games from category / 카테고리에서 게임 제거',
+        description: 'Removes selected games from a specific category. / 특정 카테고리에서 선택된 게임들을 제거합니다.'
+    })
+    @AuditLog({
+        type: LogType.ACTIVITY,
+        category: 'CASINO',
+        action: 'CATEGORY_REMOVE_GAMES_ADMIN',
+        extractMetadata: (req, args) => ({
+            categoryId: args[0],
+            gameIds: args[1].gameIds,
+        }),
+    })
+    async removeGames(
+        @Param('id') id: string,
+        @Body() dto: RemoveGamesFromCategoryRequestDto
+    ): Promise<void> {
+        await this.removeGamesFromCategoryService.execute(BigInt(id), dto);
+    }
 
     @Get()
     @Paginated()
@@ -120,3 +168,4 @@ export class CategoryAdminController {
         };
     }
 }
+

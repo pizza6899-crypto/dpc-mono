@@ -1,42 +1,43 @@
-import { ApiProperty } from '@nestjs/swagger';
+import { ApiProperty, ApiPropertyOptional } from '@nestjs/swagger';
 import { CategoryType, Language } from '@repo/database';
 
 export class CategoryTranslationAdminResponseDto {
-    @ApiProperty({ enum: Language })
+    @ApiProperty({ enum: Language, description: '언어 코드 / Language code' })
     language: Language;
 
-    @ApiProperty()
+    @ApiProperty({ description: '카테고리 이름 / Category name' })
     name: string;
 
-    @ApiProperty({ required: false })
+    @ApiPropertyOptional({ description: '카테고리 설명 / Category description' })
     description?: string;
 }
 
 export class CategoryAdminResponseDto {
-    @ApiProperty({ description: 'Internal ID' })
+    @ApiProperty({ description: '내부 ID (숫자) / Internal ID (numeric)' })
     id: string;
 
-    @ApiProperty({ description: 'Category Code' })
+    @ApiProperty({ description: '카테고리 코드 / Category Code' })
     code: string;
 
-    @ApiProperty({ enum: CategoryType })
+    @ApiProperty({ enum: CategoryType, description: '카테고리 타입 (PRIMARY, COLLECTION) / Category Type' })
     type: CategoryType;
 
-    @ApiProperty({ required: false })
+    @ApiPropertyOptional({ description: '아이콘 URL / Icon URL' })
     iconUrl?: string;
 
-    @ApiProperty({ required: false })
+    @ApiPropertyOptional({ description: '배너 URL / Banner URL' })
     bannerUrl?: string;
 
-    @ApiProperty()
+    @ApiProperty({ description: '정렬 순서 / Sort order' })
     sortOrder: number;
 
-    @ApiProperty()
+    @ApiProperty({ description: '활성화 여부 / Active status' })
     isActive: boolean;
 
-    @ApiProperty()
+    @ApiProperty({ description: '시스템 카테고리 여부 (삭제 불가) / System category flag' })
     isSystem: boolean;
 
-    @ApiProperty({ type: [CategoryTranslationAdminResponseDto] })
+    @ApiProperty({ type: [CategoryTranslationAdminResponseDto], description: '번역 정보 / Translations' })
     translations: CategoryTranslationAdminResponseDto[];
 }
+

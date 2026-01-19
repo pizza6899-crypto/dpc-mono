@@ -11,6 +11,7 @@ import { GetCategoryByCodeService } from './application/get-category-by-code.ser
 import { CreateCategoryService } from './application/create-category.service';
 import { UpdateCategoryService } from './application/update-category.service';
 import { DeleteCategoryService } from './application/delete-category.service';
+import { AddGamesToCategoryService, RemoveGamesFromCategoryService } from './application/manage-category-games.service';
 
 // Application Services - Game
 import { FindGamesService } from './application/find-games.service';
@@ -51,6 +52,8 @@ import { EnvModule } from 'src/common/env/env.module';
         CreateCategoryService,
         UpdateCategoryService,
         DeleteCategoryService,
+        AddGamesToCategoryService,
+        RemoveGamesFromCategoryService,
         // Game Services
         FindGamesService,
         CreateGameService,

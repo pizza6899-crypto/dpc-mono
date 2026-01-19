@@ -2,21 +2,21 @@ import { ApiProperty, ApiPropertyOptional } from '@nestjs/swagger';
 import { CategoryType } from '@repo/database';
 
 export class CategoryResponseDto {
-    @ApiProperty({ description: 'Category Code' })
+    @ApiProperty({ description: 'Category Code (카테고리 코드)' })
     code: string;
 
-    @ApiProperty({ enum: CategoryType })
+    @ApiProperty({ enum: CategoryType, description: 'Category Type (카테고리 타입)' })
     type: CategoryType;
 
-    @ApiProperty({ description: 'Category name (localized)' })
+    @ApiProperty({ description: 'Category name (localized) (카테고리 이름)' })
     name: string;
 
-    @ApiPropertyOptional({ description: 'Category description (localized)' })
+    @ApiPropertyOptional({ description: 'Category description (localized) (카테고리 설명)' })
     description?: string;
 
-    @ApiPropertyOptional()
+    @ApiPropertyOptional({ description: 'Icon URL (아이콘 URL)' })
     iconUrl?: string;
 
-    @ApiPropertyOptional()
+    @ApiPropertyOptional({ description: 'Banner URL (배너 URL)' })
     bannerUrl?: string;
 }
