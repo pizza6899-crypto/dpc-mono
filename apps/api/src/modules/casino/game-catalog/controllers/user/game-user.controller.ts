@@ -11,12 +11,14 @@ import { ApiPaginatedResponse } from 'src/common/http/decorators/api-response.de
 import { PaginatedData } from 'src/common/http/types';
 
 import { Language } from '@repo/database';
+import { GetCategoryByCodeService } from '../../application/get-category-by-code.service';
 
 @ApiTags('Casino Game')
 @Controller('casino/games')
 export class GameUserController {
     constructor(
         private readonly findGamesService: FindGamesService,
+        private readonly getCategoryByCodeService: GetCategoryByCodeService,
         private readonly sqidsService: SqidsService,
     ) { }
 
@@ -27,19 +29,27 @@ export class GameUserController {
     @ApiPaginatedResponse(CatalogGameResponseDto)
     async list(@Query() query: GameListRequestDto): Promise<PaginatedData<CatalogGameResponseDto>> {
         const lang = query.language || Language.EN;
-        // Handle providerId if it's a Sqid
-        let decodedProviderId: bigint | undefined;
-        if (query.providerId) {
+
+        // Handle categoryCode
+        let categoryId: bigint | undefined;
+        if (query.categoryCode) {
             try {
-                const result = this.sqidsService.decodeAuto(query.providerId);
-                decodedProviderId = result.id;
+                const category = await this.getCategoryByCodeService.execute({ code: query.categoryCode });
+                categoryId = category.id ?? undefined;
             } catch (e) {
-                // Ignore invalid sqid
+                // Return empty result if category doesn't exist but was requested
+                return {
+                    data: [],
+                    page: query.page ?? 1,
+                    limit: query.limit ?? 30,
+                    total: 0,
+                };
             }
         }
 
         const result = await this.findGamesService.execute({
-            providerId: decodedProviderId,
+            providerCode: query.providerCode,
+            categoryId,
             keyword: query.keyword,
             isEnabled: true,
             isVisible: true,

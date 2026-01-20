@@ -67,6 +67,11 @@ export class GameRepository implements GameRepositoryPort {
     private buildWhere(options?: GameListOptions): any {
         const where: any = {};
         if (options?.providerId) where.providerId = options.providerId;
+        if (options?.providerCode) {
+            where.provider = {
+                code: options.providerCode,
+            };
+        }
         if (options?.isEnabled !== undefined) where.isEnabled = options.isEnabled;
         if (options?.isVisible !== undefined) where.isVisible = options.isVisible;
 

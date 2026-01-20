@@ -6,6 +6,7 @@ import { PaginatedData } from 'src/common/http/types';
 
 interface FindGamesParams {
     providerId?: bigint;
+    providerCode?: string;
     categoryId?: bigint;
     keyword?: string;
     isEnabled?: boolean;

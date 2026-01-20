@@ -9,10 +9,10 @@ export class GameListRequestDto {
     @IsEnum(Language)
     language?: Language;
 
-    @ApiPropertyOptional({ description: 'Provider ID (Sqid or Raw ID) (프로바이더 아이디)' })
+    @ApiPropertyOptional({ description: 'Provider Code (프로바이더 코드)' })
     @IsOptional()
     @IsString()
-    providerId?: string;
+    providerCode?: string;
 
     @ApiPropertyOptional({ description: 'Category Code (카테고리 코드)' })
     @IsOptional()

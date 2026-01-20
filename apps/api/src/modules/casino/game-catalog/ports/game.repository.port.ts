@@ -2,6 +2,7 @@ import { CasinoGameV2 } from '../domain';
 
 export interface GameListOptions {
     providerId?: bigint;
+    providerCode?: string; // 프로바이더 코드로 필터링 추가
     categoryId?: bigint;
     keyword?: string; // 검색 키워드 추가
     isEnabled?: boolean;
