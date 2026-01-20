@@ -1,9 +1,9 @@
-import { Injectable, Logger, Inject } from '@nestjs/common';
+import { Injectable, Logger } from '@nestjs/common';
 import { InjectTransaction } from '@nestjs-cls/transactional';
 import { type PrismaTransaction } from 'src/infrastructure/prisma/prisma.module';
-import { GameAggregatorType, Language, GameProvider, GameCategory } from '@repo/database';
+import { GameAggregatorType, Language, GameProvider } from '@repo/database';
 import { SyncResultResponseDto } from '../controllers/admin/dto/response/sync-result.response.dto';
-import { type GameRepositoryPort, GAME_REPOSITORY } from '../ports/game.repository.port';
+
 import { AggregatorClientFactory } from '../../aggregator/infrastructure/aggregator.factory';
 import { AggregatorGameDto, AGGREGATOR_CODE_MAP } from '../../aggregator/ports/aggregator-game.dto';
 import { DcsMapperService } from '../../providers/dcs/infrastructure/dcs-mapper.service';
@@ -14,8 +14,6 @@ export class SyncGamesService {
     private readonly logger = new Logger(SyncGamesService.name);
 
     constructor(
-        @Inject(GAME_REPOSITORY)
-        private readonly gameRepository: GameRepositoryPort,
         private readonly aggregatorClientFactory: AggregatorClientFactory,
         @InjectTransaction()
         private readonly tx: PrismaTransaction,
@@ -137,7 +135,7 @@ export class SyncGamesService {
         let categoryCode = 'SLOTS'; // Default Category Code
 
         if (gameDto.category) {
-            let mappedCategory: GameCategory | undefined;
+            let mappedCategory: string | undefined;
             if (aggregatorType === GameAggregatorType.WHITECLIFF) {
                 mappedCategory = WhitecliffMapperService.CATEGORY_MAP[gameDto.category];
             } else if (aggregatorType === GameAggregatorType.DC) {

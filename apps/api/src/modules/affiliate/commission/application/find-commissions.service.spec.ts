@@ -4,7 +4,6 @@ import { Test } from '@nestjs/testing';
 import {
   CommissionStatus,
   ExchangeCurrencyCode,
-  GameCategory,
   Prisma,
 } from '@repo/database';
 import { FindCommissionsService } from './find-commissions.service';
@@ -49,7 +48,7 @@ describe('FindCommissionsService', () => {
       rateApplied: new Prisma.Decimal('0.01'),
       currency: overrides?.currency ?? mockCurrency,
       status: overrides?.status ?? CommissionStatus.PENDING,
-      gameCategory: GameCategory.SLOTS,
+      gameCategory: "SLOTS",
       settlementDate: null,
       claimedAt: null,
       withdrawnAt: null,

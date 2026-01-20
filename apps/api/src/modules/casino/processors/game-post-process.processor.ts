@@ -14,7 +14,7 @@ import { Logger, OnApplicationShutdown } from '@nestjs/common';
 import { Prisma, TransactionStatus, ExchangeCurrencyCode } from '@repo/database';
 import { ProcessWageringContributionService } from '../../wagering/application/process-wagering-contribution.service';
 import { AnalyticsQueueService } from '../../analytics/application/analytics-queue.service';
-import { GameCategory } from '@repo/database';
+
 import { AddUserRollingService } from '../../tier/application/add-user-rolling.service';
 import { EarnCompService } from '../../comp/application/earn-comp.service';
 
@@ -173,8 +173,8 @@ export class GamePostProcessProcessor
 
       // --- 통계 기록 추가 ---
       const categoryMap: Record<string, 'slot' | 'live' | 'other'> = {
-        [GameCategory.SLOTS]: 'slot',
-        [GameCategory.LIVE_CASINO]: 'live',
+        ['SLOTS']: 'slot',
+        ['LIVE_CASINO']: 'live',
       };
 
       await this.analyticsQueue.enqueueGame({

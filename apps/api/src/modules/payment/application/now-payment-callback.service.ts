@@ -3,17 +3,15 @@ import * as crypto from 'crypto';
 import { PaymentCallbackDto } from '../dtos/now-payment-callback.dto';
 import { EnvService } from 'src/common/env/env.service';
 import { NowPaymentCallbackLogService } from './now-payment-callback-log.service';
-import { PrismaService } from 'src/infrastructure/prisma/prisma.service';
 
 @Injectable()
 export class NowPaymentCallbackService {
   private readonly logger = new Logger(NowPaymentCallbackService.name);
 
   constructor(
-    private readonly prismaService: PrismaService,
     private readonly envService: EnvService,
     private readonly callbackLogService: NowPaymentCallbackLogService,
-  ) {}
+  ) { }
 
   /**
    * NowPayment 콜백 서명 검증

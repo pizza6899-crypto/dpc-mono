@@ -4,7 +4,6 @@ import type { TransactionalAdapterPrisma } from '@nestjs-cls/transactional-adapt
 import {
   CommissionStatus,
   ExchangeCurrencyCode,
-  GameCategory,
   Prisma,
 } from '@repo/database';
 import { AffiliateCommission, CommissionNotFoundException } from '../domain';
@@ -44,7 +43,7 @@ describe('AffiliateCommissionRepository', () => {
     rateApplied: new Prisma.Decimal('0.01'),
     currency: mockCurrency,
     status: overrides?.status ?? CommissionStatus.PENDING,
-    gameCategory: GameCategory.SLOTS,
+    gameCategory: "SLOTS",
     settlementDate: overrides?.settlementDate ?? null,
     claimedAt: overrides?.claimedAt ?? null,
     withdrawnAt: overrides?.withdrawnAt ?? null,
@@ -65,7 +64,7 @@ describe('AffiliateCommissionRepository', () => {
       rateApplied: new Prisma.Decimal('0.01'),
       currency: mockCurrency,
       status: CommissionStatus.PENDING,
-      gameCategory: GameCategory.SLOTS,
+      gameCategory: "SLOTS",
       settlementDate: null,
       claimedAt: null,
       withdrawnAt: null,
@@ -480,7 +479,7 @@ describe('AffiliateCommissionRepository', () => {
         rateApplied: new Prisma.Decimal('0.01'),
         currency: mockCurrency,
         status: CommissionStatus.PENDING,
-        gameCategory: GameCategory.SLOTS,
+        gameCategory: "SLOTS",
         settlementDate: null,
         claimedAt: null,
         withdrawnAt: null,

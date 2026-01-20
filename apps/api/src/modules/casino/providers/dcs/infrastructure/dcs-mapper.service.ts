@@ -1,28 +1,28 @@
 // infrastructure/whitecliff-mapper.service.ts
 
 import { Injectable } from '@nestjs/common';
-import { GameProvider, GameCategory, Language } from '@repo/database';
+import { GameProvider, Language } from '@repo/database';
 import { GamingCurrencyCode } from 'src/utils/currency.util';
 
 @Injectable()
 export class DcsMapperService {
   // 카테고리 맵핑
-  public static readonly CATEGORY_MAP: Record<string, GameCategory> = {
-    'Live Casino': GameCategory.LIVE_CASINO,
-    Slots: GameCategory.SLOTS,
-    Standard: GameCategory.SLOTS, // DCS specific
+  public static readonly CATEGORY_MAP: Record<string, string> = {
+    'Live Casino': 'LIVE_CASINO',
+    Slots: 'SLOTS',
+    Standard: 'SLOTS', // DCS specific
   };
 
-  private static readonly CATEGORY_REVERSE_MAP: Record<GameCategory, string> = {
-    [GameCategory.LIVE_CASINO]: 'Live Casino',
-    [GameCategory.SLOTS]: 'Slots',
+  private static readonly CATEGORY_REVERSE_MAP: Record<string, string> = {
+    ['LIVE_CASINO']: 'Live Casino',
+    ['SLOTS']: 'Slots',
   };
 
-  fromDcsCategory(categoryCode: string): GameCategory | null {
+  fromDcsCategory(categoryCode: string): string | null {
     return DcsMapperService.CATEGORY_MAP[categoryCode] || null;
   }
 
-  toDcsCategory(category: GameCategory): string | null {
+  toDcsCategory(category: string): string | null {
     return DcsMapperService.CATEGORY_REVERSE_MAP[category] || null;
   }
 

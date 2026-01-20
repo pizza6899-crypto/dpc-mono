@@ -1,5 +1,5 @@
 import { Injectable } from '@nestjs/common';
-import { ExchangeCurrencyCode, GameCategory, Prisma } from '@repo/database';
+import { ExchangeCurrencyCode, Prisma } from '@repo/database';
 import { AffiliateCommission } from '../domain';
 import { CalculateCommissionService } from './calculate-commission.service';
 import { Transactional } from '@nestjs-cls/transactional';
@@ -10,7 +10,7 @@ export interface GameRound {
   wagerAmount: Prisma.Decimal;
   winAmount?: Prisma.Decimal | null;
   currency: ExchangeCurrencyCode;
-  gameCategory?: GameCategory | null;
+  gameCategory?: string | null;
 }
 
 interface AccumulateCommissionParams {

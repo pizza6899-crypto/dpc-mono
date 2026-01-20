@@ -2,7 +2,6 @@
 import {
   CommissionStatus,
   ExchangeCurrencyCode,
-  GameCategory,
   Prisma,
 } from '@repo/database';
 import { AffiliateCommission } from './affiliate-commission.entity';
@@ -23,7 +22,7 @@ describe('AffiliateCommission Entity', () => {
   const mockCommission = new Prisma.Decimal('100');
   const mockRateApplied = new Prisma.Decimal('0.01'); // 1%
   const mockCurrency = ExchangeCurrencyCode.USD;
-  const mockGameCategory = GameCategory.SLOTS;
+  const mockGameCategory = "SLOTS";
   const mockCreatedAt = new Date('2024-01-01T00:00:00Z');
   const mockUpdatedAt = new Date('2024-01-02T00:00:00Z');
 
@@ -39,7 +38,6 @@ describe('AffiliateCommission Entity', () => {
         commission: mockCommission,
         rateApplied: mockRateApplied,
         currency: mockCurrency,
-        gameCategory: mockGameCategory,
       });
 
       expect(commission.id).toBeNull();
@@ -157,7 +155,6 @@ describe('AffiliateCommission Entity', () => {
         rateApplied: mockRateApplied,
         currency: mockCurrency,
         status: CommissionStatus.PENDING,
-        gameCategory: mockGameCategory,
         settlementDate: null,
         claimedAt: null,
         withdrawnAt: null,
@@ -200,7 +197,6 @@ describe('AffiliateCommission Entity', () => {
         rateApplied: new Prisma.Decimal('0.01'),
         currency: mockCurrency,
         status: CommissionStatus.PENDING,
-        gameCategory: mockGameCategory,
         settlementDate: null,
         claimedAt: null,
         withdrawnAt: null,
@@ -264,7 +260,6 @@ describe('AffiliateCommission Entity', () => {
         rateApplied: mockRateApplied,
         currency: mockCurrency,
         status: CommissionStatus.WITHDRAWN,
-        gameCategory: mockGameCategory,
         settlementDate,
         claimedAt,
         withdrawnAt,
@@ -295,7 +290,6 @@ describe('AffiliateCommission Entity', () => {
         commission: mockCommission,
         rateApplied: mockRateApplied,
         currency: mockCurrency,
-        gameCategory: mockGameCategory,
       });
     });
 
@@ -1055,7 +1049,6 @@ describe('AffiliateCommission Entity', () => {
         rateApplied: mockRateApplied,
         currency: mockCurrency,
         status: CommissionStatus.AVAILABLE,
-        gameCategory: mockGameCategory,
         settlementDate: new Date('2024-02-01T00:00:00Z'),
         claimedAt: null,
         withdrawnAt: null,
@@ -1096,7 +1089,6 @@ describe('AffiliateCommission Entity', () => {
         commission: mockCommission,
         rateApplied: mockRateApplied,
         currency: mockCurrency,
-        gameCategory: mockGameCategory,
       });
 
       const persistence = commission.toPersistence();

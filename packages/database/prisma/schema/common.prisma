@@ -323,11 +323,6 @@ enum GameAggregatorType {
   DC
 }
 
-enum GameCategory {
-  LIVE_CASINO
-  SLOTS
-}
-
 enum GameProvider {
   EVOLUTION
   EVOLUTION_ASIA

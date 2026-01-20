@@ -2,7 +2,6 @@
 import {
   CommissionStatus,
   ExchangeCurrencyCode,
-  GameCategory,
   Prisma,
 } from '@repo/database';
 import { AffiliateCommission } from '../domain';
@@ -22,7 +21,7 @@ describe('AffiliateCommissionMapper', () => {
   const mockRateApplied = new Prisma.Decimal('0.01');
   const mockCurrency = ExchangeCurrencyCode.USD;
   const mockStatus = CommissionStatus.PENDING;
-  const mockGameCategory = GameCategory.SLOTS;
+  const mockGameCategory = "SLOTS";
   const mockSettlementDate = new Date('2024-01-15T00:00:00Z');
   const mockClaimedAt = new Date('2024-01-20T00:00:00Z');
   const mockWithdrawnAt = new Date('2024-01-25T00:00:00Z');
@@ -48,7 +47,6 @@ describe('AffiliateCommissionMapper', () => {
         rateApplied: mockRateApplied,
         currency: mockCurrency,
         status: mockStatus,
-        gameCategory: mockGameCategory,
         settlementDate: null,
         claimedAt: null,
         withdrawnAt: null,
@@ -132,7 +130,6 @@ describe('AffiliateCommissionMapper', () => {
         rateApplied: mockRateApplied,
         currency: mockCurrency,
         status: CommissionStatus.AVAILABLE,
-        gameCategory: mockGameCategory,
         settlementDate: mockSettlementDate,
         claimedAt: null,
         withdrawnAt: null,
@@ -162,7 +159,6 @@ describe('AffiliateCommissionMapper', () => {
         rateApplied: mockRateApplied,
         currency: mockCurrency,
         status: CommissionStatus.WITHDRAWN,
-        gameCategory: mockGameCategory,
         settlementDate: mockSettlementDate,
         claimedAt: mockClaimedAt,
         withdrawnAt: mockWithdrawnAt,
@@ -196,7 +192,6 @@ describe('AffiliateCommissionMapper', () => {
         rateApplied: mockRateApplied,
         currency: mockCurrency,
         status: mockStatus,
-        gameCategory: mockGameCategory,
         settlementDate: null,
         claimedAt: null,
         withdrawnAt: null,
@@ -245,7 +240,6 @@ describe('AffiliateCommissionMapper', () => {
         rateApplied: mockRateApplied,
         currency: mockCurrency,
         status: mockStatus,
-        gameCategory: mockGameCategory,
         settlementDate: null,
         claimedAt: null,
         withdrawnAt: null,
@@ -293,7 +287,6 @@ describe('AffiliateCommissionMapper', () => {
         commission: mockCommission,
         rateApplied: mockRateApplied,
         currency: mockCurrency,
-        gameCategory: mockGameCategory,
       });
 
       // When
@@ -320,7 +313,6 @@ describe('AffiliateCommissionMapper', () => {
         rateApplied: mockRateApplied,
         currency: mockCurrency,
         status: mockStatus,
-        gameCategory: mockGameCategory,
         settlementDate: null,
         claimedAt: null,
         withdrawnAt: null,
@@ -440,7 +432,6 @@ describe('AffiliateCommissionMapper', () => {
           rateApplied: mockRateApplied,
           currency: mockCurrency,
           status,
-          gameCategory: mockGameCategory,
           settlementDate:
             status === CommissionStatus.AVAILABLE ? mockSettlementDate : null,
           claimedAt:

@@ -55,7 +55,7 @@ model AffiliateCommission {
   rateApplied    Decimal              @map("rate_applied") @db.Decimal(8, 4)
   currency       ExchangeCurrencyCode
   status         CommissionStatus     @default(PENDING)
-  gameCategory   GameCategory?        @map("game_category")
+  gameCategory   String?              @map("game_category")
   /// settlementDate: PENDING → AVAILABLE 전환 시점 (월간 정산일)
   /// claimedAt: AVAILABLE → CLAIMED 전환 시점 (출금 요청 시점)
   /// withdrawnAt: CLAIMED → WITHDRAWN 전환 시점 (출금 처리 완료 시점)

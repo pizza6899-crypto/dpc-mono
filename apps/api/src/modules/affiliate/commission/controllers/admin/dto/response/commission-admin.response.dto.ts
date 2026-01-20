@@ -3,7 +3,6 @@ import { ApiProperty } from '@nestjs/swagger';
 import {
   CommissionStatus,
   ExchangeCurrencyCode,
-  GameCategory,
 } from '@repo/database';
 
 export class CommissionAdminResponseDto {
@@ -78,11 +77,10 @@ export class CommissionAdminResponseDto {
 
   @ApiProperty({
     description: '게임 카테고리',
-    enum: GameCategory,
-    example: GameCategory.SLOTS,
+    example: 'SLOTS',
     nullable: true,
   })
-  gameCategory: GameCategory | null;
+  gameCategory: string | null;
 
   @ApiProperty({
     description: '정산일',

@@ -1,6 +1,6 @@
 // src/modules/affiliate/commission/application/calculate-commission.service.ts
 import { Inject, Injectable } from '@nestjs/common';
-import { ExchangeCurrencyCode, GameCategory, Prisma } from '@repo/database';
+import { ExchangeCurrencyCode, Prisma } from '@repo/database';
 import { AffiliateCommission, AffiliateWallet, CommissionPolicy } from '../domain';
 import { AFFILIATE_COMMISSION_REPOSITORY } from '../ports/out/affiliate-commission.repository.token';
 import type { AffiliateCommissionRepositoryPort } from '../ports/out/affiliate-commission.repository.port';
@@ -17,7 +17,7 @@ interface CalculateCommissionParams {
   wagerAmount: Prisma.Decimal;
   winAmount?: Prisma.Decimal | null;
   currency: ExchangeCurrencyCode;
-  gameCategory?: GameCategory | null;
+  gameCategory?: string | null;
 }
 
 @Injectable()

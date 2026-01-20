@@ -4,7 +4,6 @@ import { Test } from '@nestjs/testing';
 import {
   CommissionStatus,
   ExchangeCurrencyCode,
-  GameCategory,
   Prisma,
 } from '@repo/database';
 import { AccumulateCommissionService } from './accumulate-commission.service';
@@ -30,7 +29,7 @@ describe('AccumulateCommissionService', () => {
   const mockCommission = new Prisma.Decimal('100');
   const mockRateApplied = new Prisma.Decimal('0.01');
   const mockCurrency = ExchangeCurrencyCode.USD;
-  const mockGameCategory = GameCategory.SLOTS;
+  const mockGameCategory = "SLOTS";
   const mockCreatedAt = new Date('2024-01-01T00:00:00Z');
   const mockUpdatedAt = new Date('2024-01-01T00:00:00Z');
 
@@ -47,7 +46,6 @@ describe('AccumulateCommissionService', () => {
       rateApplied: mockRateApplied,
       currency: mockCurrency,
       status: CommissionStatus.PENDING,
-      gameCategory: mockGameCategory,
       settlementDate: null,
       claimedAt: null,
       withdrawnAt: null,
@@ -98,7 +96,6 @@ describe('AccumulateCommissionService', () => {
           wagerAmount: mockWagerAmount,
           winAmount: mockWinAmount,
           currency: mockCurrency,
-          gameCategory: mockGameCategory,
         },
         {
           subUserId: mockSubUserId,
@@ -106,7 +103,6 @@ describe('AccumulateCommissionService', () => {
           wagerAmount: mockWagerAmount,
           winAmount: mockWinAmount,
           currency: mockCurrency,
-          gameCategory: mockGameCategory,
         },
         {
           subUserId: mockSubUserId,
@@ -114,7 +110,6 @@ describe('AccumulateCommissionService', () => {
           wagerAmount: mockWagerAmount,
           winAmount: mockWinAmount,
           currency: mockCurrency,
-          gameCategory: mockGameCategory,
         },
       ];
 
@@ -147,7 +142,6 @@ describe('AccumulateCommissionService', () => {
           wagerAmount: mockWagerAmount,
           winAmount: mockWinAmount,
           currency: mockCurrency,
-          gameCategory: mockGameCategory,
         },
       );
       expect(mockCalculateCommissionService.execute).toHaveBeenNthCalledWith(
@@ -158,7 +152,6 @@ describe('AccumulateCommissionService', () => {
           wagerAmount: mockWagerAmount,
           winAmount: mockWinAmount,
           currency: mockCurrency,
-          gameCategory: mockGameCategory,
         },
       );
       expect(mockCalculateCommissionService.execute).toHaveBeenNthCalledWith(
@@ -169,7 +162,6 @@ describe('AccumulateCommissionService', () => {
           wagerAmount: mockWagerAmount,
           winAmount: mockWinAmount,
           currency: mockCurrency,
-          gameCategory: mockGameCategory,
         },
       );
     });
@@ -186,7 +178,6 @@ describe('AccumulateCommissionService', () => {
           wagerAmount: mockWagerAmount,
           winAmount: mockWinAmount,
           currency: mockCurrency,
-          gameCategory: mockGameCategory,
         },
         {
           subUserId: mockSubUserId,
@@ -194,7 +185,6 @@ describe('AccumulateCommissionService', () => {
           wagerAmount: mockWagerAmount,
           winAmount: mockWinAmount,
           currency: mockCurrency,
-          gameCategory: mockGameCategory,
         },
         {
           subUserId: mockSubUserId,
@@ -202,7 +192,6 @@ describe('AccumulateCommissionService', () => {
           wagerAmount: mockWagerAmount,
           winAmount: mockWinAmount,
           currency: mockCurrency,
-          gameCategory: mockGameCategory,
         },
       ];
 
@@ -252,7 +241,6 @@ describe('AccumulateCommissionService', () => {
           wagerAmount: mockWagerAmount,
           winAmount: mockWinAmount,
           currency: mockCurrency,
-          gameCategory: mockGameCategory,
         },
         {
           subUserId: mockSubUserId,
@@ -260,7 +248,6 @@ describe('AccumulateCommissionService', () => {
           wagerAmount: mockWagerAmount,
           winAmount: mockWinAmount,
           currency: mockCurrency,
-          gameCategory: mockGameCategory,
         },
       ];
 
@@ -293,7 +280,6 @@ describe('AccumulateCommissionService', () => {
           wagerAmount: mockWagerAmount,
           winAmount: null,
           currency: mockCurrency,
-          gameCategory: mockGameCategory,
         },
       ];
 
@@ -316,7 +302,6 @@ describe('AccumulateCommissionService', () => {
         wagerAmount: mockWagerAmount,
         winAmount: null,
         currency: mockCurrency,
-        gameCategory: mockGameCategory,
       });
     });
 
@@ -370,7 +355,6 @@ describe('AccumulateCommissionService', () => {
           wagerAmount: mockWagerAmount,
           winAmount: mockWinAmount,
           currency: ExchangeCurrencyCode.USD,
-          gameCategory: mockGameCategory,
         },
         {
           subUserId: mockSubUserId,
@@ -378,7 +362,6 @@ describe('AccumulateCommissionService', () => {
           wagerAmount: mockWagerAmount,
           winAmount: mockWinAmount,
           currency: ExchangeCurrencyCode.KRW,
-          gameCategory: mockGameCategory,
         },
       ];
 
@@ -422,7 +405,6 @@ describe('AccumulateCommissionService', () => {
           wagerAmount: mockWagerAmount,
           winAmount: mockWinAmount,
           currency: mockCurrency,
-          gameCategory: mockGameCategory,
         },
         {
           subUserId: mockSubUserId,
@@ -430,7 +412,6 @@ describe('AccumulateCommissionService', () => {
           wagerAmount: mockWagerAmount,
           winAmount: mockWinAmount,
           currency: mockCurrency,
-          gameCategory: mockGameCategory,
         },
       ];
 

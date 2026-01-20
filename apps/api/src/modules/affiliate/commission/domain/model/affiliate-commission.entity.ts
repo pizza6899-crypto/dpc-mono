@@ -1,7 +1,6 @@
 // src/modules/affiliate/commission/domain/model/affiliate-commission.entity.ts
 import type {
   ExchangeCurrencyCode,
-  GameCategory,
   Prisma,
 } from '@repo/database';
 import { CommissionStatus } from '@repo/database';
@@ -27,7 +26,7 @@ export class AffiliateCommission {
     private _rateApplied: Prisma.Decimal, // 적용된 요율 (예: 0.01 = 1%)
     public readonly currency: ExchangeCurrencyCode,
     private _status: CommissionStatus,
-    public readonly gameCategory: GameCategory | null,
+    public readonly gameCategory: string | null,
     private _settlementDate: Date | null,
     private _claimedAt: Date | null,
     private _withdrawnAt: Date | null,
@@ -52,7 +51,7 @@ export class AffiliateCommission {
     commission: Prisma.Decimal;
     rateApplied: Prisma.Decimal;
     currency: ExchangeCurrencyCode;
-    gameCategory: GameCategory | null;
+    gameCategory: string | null;
   }): AffiliateCommission {
     // 커미션 계산 검증: wagerAmount * rateApplied === commission
     const expectedCommission = params.wagerAmount.mul(params.rateApplied);
@@ -102,7 +101,7 @@ export class AffiliateCommission {
     rateApplied: Prisma.Decimal;
     currency: ExchangeCurrencyCode;
     status: CommissionStatus;
-    gameCategory: GameCategory | null;
+    gameCategory: string | null;
     settlementDate: Date | null;
     claimedAt: Date | null;
     withdrawnAt: Date | null;

@@ -3,7 +3,6 @@ import { Injectable } from '@nestjs/common';
 import {
   CommissionStatus,
   ExchangeCurrencyCode,
-  GameCategory,
   Prisma,
 } from '@repo/database';
 import { AffiliateCommission } from '../domain';
@@ -28,7 +27,7 @@ export class AffiliateCommissionMapper {
     rateApplied: Prisma.Decimal;
     currency: ExchangeCurrencyCode;
     status: CommissionStatus;
-    gameCategory: GameCategory | null;
+    gameCategory: string | null;
     settlementDate: Date | null;
     claimedAt: Date | null;
     withdrawnAt: Date | null;
@@ -69,7 +68,7 @@ export class AffiliateCommissionMapper {
     rateApplied: Prisma.Decimal;
     currency: ExchangeCurrencyCode;
     status: CommissionStatus;
-    gameCategory: GameCategory | null;
+    gameCategory: string | null;
     settlementDate: Date | null;
     claimedAt: Date | null;
     withdrawnAt: Date | null;

@@ -4,7 +4,6 @@ import { Test } from '@nestjs/testing';
 import {
   CommissionStatus,
   ExchangeCurrencyCode,
-  GameCategory,
   Prisma,
 } from '@repo/database';
 import { SettleDailyCommissionsService } from './settle-daily-commissions.service';
@@ -68,7 +67,7 @@ describe('SettleDailyCommissionsService', () => {
       rateApplied: new Prisma.Decimal('0.01'),
       currency: overrides?.currency ?? ExchangeCurrencyCode.USD,
       status: overrides?.status ?? CommissionStatus.PENDING,
-      gameCategory: GameCategory.SLOTS,
+      gameCategory: "SLOTS",
       settlementDate: null,
       claimedAt: null,
       withdrawnAt: null,
