@@ -4,9 +4,6 @@ export class CatalogGameResponseDto {
     @ApiProperty({ description: 'Game ID (Sqid) (게임 아이디)' })
     id: string;
 
-    @ApiProperty({ description: 'Game Code (게임 코드)' })
-    code: string;
-
     @ApiProperty({ description: 'Game name (localized) (게임 이름)' })
     name: string;
 

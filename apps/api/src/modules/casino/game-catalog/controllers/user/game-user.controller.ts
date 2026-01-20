@@ -77,7 +77,6 @@ export class GameUserController {
                     game.translations[0];
                 return {
                     id: game.id ? this.sqidsService.encode(game.id, SqidsPrefix.CASINO_GAME) : '',
-                    code: game.code,
                     name: translation?.name || game.code,
                     thumbnailUrl: game.thumbnailUrl ?? undefined,
                     bannerUrl: game.bannerUrl ?? undefined,
