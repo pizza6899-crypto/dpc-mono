@@ -5,7 +5,7 @@ export async function seedAggregators(prisma: PrismaClient) {
 
     const AGGREGATORS = [
         {
-            code: 'DC',
+            code: 'DCS',
             name: 'DC ACE',
         },
         {

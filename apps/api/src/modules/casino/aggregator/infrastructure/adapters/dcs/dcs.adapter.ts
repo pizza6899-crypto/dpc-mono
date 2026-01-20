@@ -27,7 +27,7 @@ export class DcsAdapter implements AggregatorClientPort {
                 category: game.content_type || undefined, // "Standard" 등
                 // 선택적
                 gameType: game.game_type || undefined, // "5-Reel Slot Machine" 등
-                thumbnailUrl: game.game_icon || undefined,
+                iconUrl: game.game_icon || undefined,
             });
         }
 

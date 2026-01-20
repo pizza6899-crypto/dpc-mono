@@ -1,11 +1,11 @@
 import { Injectable, Logger, Inject } from '@nestjs/common';
 import { InjectTransaction } from '@nestjs-cls/transactional';
 import { type PrismaTransaction } from 'src/infrastructure/prisma/prisma.module';
-import { GameAggregatorType, Language } from '@repo/database';
+import { GameAggregatorType, Language, GameProvider, GameCategory } from '@repo/database';
 import { SyncResultResponseDto } from '../controllers/admin/dto/response/sync-result.response.dto';
 import { type GameRepositoryPort, GAME_REPOSITORY } from '../ports/game.repository.port';
 import { AggregatorClientFactory } from '../../aggregator/infrastructure/aggregator.factory';
-import { AggregatorGameDto } from '../../aggregator/ports/aggregator-game.dto';
+import { AggregatorGameDto, AGGREGATOR_CODE_MAP, WC_PROVIDER_MAP, DCS_PROVIDER_MAP, CATEGORY_MAP } from '../../aggregator/ports/aggregator-game.dto';
 
 @Injectable()
 export class SyncGamesService {
@@ -34,7 +34,7 @@ export class SyncGamesService {
             // Supported aggregators to sync
             const aggregatorsToSync = [
                 GameAggregatorType.WHITECLIFF,
-                // GameAggregatorType.DCS, // Add when ready
+                GameAggregatorType.DCS,
             ];
 
             for (const type of aggregatorsToSync) {
@@ -59,12 +59,12 @@ export class SyncGamesService {
 
         try {
             const client = this.aggregatorClientFactory.getClient(type);
-            const games = await client.fetchGameList();
+            const games = await client.fetchGameList(Language.EN);
 
             stats.total += games.length;
 
             // Get aggregator ID from DB
-            const aggregatorCode = type === GameAggregatorType.WHITECLIFF ? 'WC' : 'DCS';
+            const aggregatorCode = AGGREGATOR_CODE_MAP[type];
 
             const aggregator = await this.tx.casinoAggregator.findUnique({
                 where: { code: aggregatorCode }
@@ -77,8 +77,12 @@ export class SyncGamesService {
 
             for (const gameDto of games) {
                 try {
-                    await this.upsertGame(aggregator.id, gameDto);
-                    stats.updated++;
+                    const created = await this.upsertGame(type, aggregator.id, gameDto);
+                    if (created) {
+                        stats.created++;
+                    } else {
+                        // stats.skipped++; // 필요한 경우 skipped 통계 추가
+                    }
                 } catch (e) {
                     this.logger.error(`Failed to sync game ${gameDto.gameCode}: ${e.message}`);
                     stats.failed++;
@@ -91,30 +95,57 @@ export class SyncGamesService {
         }
     }
 
-    private async upsertGame(aggregatorId: bigint, gameDto: AggregatorGameDto) {
-        // 1. Find Provider by Name/Code
-        // We use providerName from DTO as identifying code for now.
-        // Ideally DTO should have providerCode from adapter.
+    private async upsertGame(aggregatorType: GameAggregatorType, aggregatorId: bigint, gameDto: AggregatorGameDto): Promise<boolean> {
+        // 1. Find Provider
+        // 우선 매핑된 코드로 DB에서 Provider 검색
+        let providerCodeEnum: GameProvider | undefined;
 
-        const providerName = gameDto.providerName;
-
-        const provider = await this.tx.casinoGameProvider.findFirst({
-            where: {
-                aggregatorId: aggregatorId,
-                name: providerName,
+        if (gameDto.providerCode) {
+            const map = aggregatorType === GameAggregatorType.WHITECLIFF ? WC_PROVIDER_MAP : DCS_PROVIDER_MAP;
+            const mappedCodeStr = map[gameDto.providerCode];
+            if (mappedCodeStr) {
+                // 문자열 키로 Enum 값 매칭
+                providerCodeEnum = GameProvider[mappedCodeStr as keyof typeof GameProvider];
             }
-        });
+        }
+
+        let provider = providerCodeEnum ? await this.tx.casinoGameProvider.findFirst({
+            where: {
+                aggregatorId,
+                // code는 String 컬럼이지만 Enum 값을 저장/조회
+                code: providerCodeEnum.toString(),
+            },
+        }) : null;
+
+        // 매핑된 코드로 못 찾았거나 매핑이 없으면 이름으로 백업 검색
+        if (!provider) {
+            provider = await this.tx.casinoGameProvider.findFirst({
+                where: {
+                    aggregatorId,
+                    name: gameDto.providerName,
+                },
+            });
+        }
 
         if (!provider) {
-            // Provider must exist. Skipping if not found.
-            // In real world, we might auto-create provider here too.
-            // this.logger.warn(`Provider ${gameDto.providerName} not found. Skipping game ${gameDto.gameName}`);
-            return;
+            // Provider가 없으면 스킵
+            return false;
         }
+
+        // 2. Map Category & Find Category Entity
+        let categoryCode = 'SLOTS'; // Default Category Code
+
+        if (gameDto.category && CATEGORY_MAP[gameDto.category]) {
+            categoryCode = CATEGORY_MAP[gameDto.category];
+        }
+
+        const categoryEntity = await this.tx.casinoGameCategory.findUnique({
+            where: { code: categoryCode }
+        });
 
         const externalGameId = gameDto.gameCode;
 
-        // 2. Find existing game
+        // 3. Check Existing Game
         const existingGame = await this.tx.casinoGameV2.findUnique({
             where: {
                 providerId_externalGameId: {
@@ -124,39 +155,42 @@ export class SyncGamesService {
             }
         });
 
+        if (existingGame) {
+            // 이미 존재하면 업데이트 하지 않음 (관리자 관리 영역)
+            return false;
+        }
+
+        // 4. Create New Game
         const code = this.generateGameCode(gameDto.providerName, gameDto.gameName);
 
-        if (existingGame) {
-            // Update
-            await this.tx.casinoGameV2.update({
-                where: { id: existingGame.id },
-                data: {
-                    thumbnailUrl: gameDto.thumbnailUrl,
-                    updatedAt: new Date(),
-                }
-            });
-        } else {
-            // Create
-            await this.tx.casinoGameV2.create({
-                data: {
-                    providerId: provider.id,
-                    externalGameId,
-                    code,
-                    thumbnailUrl: gameDto.thumbnailUrl,
-                    gameType: gameDto.gameType,
-                    tableId: gameDto.tableId,
-                    isEnabled: false,
-                    isVisible: false,
-                    translations: {
-                        create: {
-                            language: Language.EN, // Default EN translation
-                            name: gameDto.gameName
-                        }
+        await this.tx.casinoGameV2.create({
+            data: {
+                providerId: provider.id,
+                externalGameId,
+                code,
+                thumbnailUrl: gameDto.iconUrl,
+                gameType: gameDto.gameType,
+                tableId: gameDto.tableId,
+                isEnabled: gameDto.isEnabled ?? false, // 기본값 false
+                isVisible: false,
+                translations: {
+                    create: {
+                        language: Language.EN, // Default EN translation
+                        name: gameDto.gameName
                     }
-                }
-            });
-            // TODO: Update 'created' stat properly
-        }
+                },
+                // 기본 카테고리 연결
+                categoryItems: categoryEntity ? {
+                    create: {
+                        categoryId: categoryEntity.id,
+                        isPrimary: true,
+                        sortOrder: 0
+                    }
+                } : undefined
+            }
+        });
+
+        return true;
     }
 
     private generateGameCode(providerName: string, gameName: string): string {
