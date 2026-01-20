@@ -7,7 +7,6 @@ import {
 export class CasinoGameSession {
     private constructor(
         public readonly id: bigint | null,
-        public readonly uid: string,
         public readonly userId: bigint,
         public readonly playerName: string,
         public readonly token: string,
@@ -26,7 +25,6 @@ export class CasinoGameSession {
 
     static create(params: {
         id?: bigint;
-        uid: string;
         userId: bigint;
         playerName: string;
         token: string;
@@ -44,7 +42,6 @@ export class CasinoGameSession {
     }): CasinoGameSession {
         return new CasinoGameSession(
             params.id ?? null,
-            params.uid,
             params.userId,
             params.playerName,
             params.token,

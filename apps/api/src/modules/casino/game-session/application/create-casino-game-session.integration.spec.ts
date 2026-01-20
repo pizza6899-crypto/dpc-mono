@@ -8,7 +8,7 @@ import {
     GameAggregatorType,
     Prisma,
 } from '@repo/database';
-import { generateUid } from 'src/utils/id.util';
+import { IdUtil } from 'src/utils/id.util';
 
 describe('CreateCasinoGameSessionService (Integration)', () => {
     let service: CreateCasinoGameSessionService;
@@ -46,7 +46,7 @@ describe('CreateCasinoGameSessionService (Integration)', () => {
             aggregatorType: GameAggregatorType.WHITECLIFF, // or any valid type
             walletCurrency,
             gameCurrency,
-            token: generateUid(),
+            token: IdUtil.generateUrlSafeNanoid(32),
             playerName: 'test_player',
         });
 
@@ -56,12 +56,12 @@ describe('CreateCasinoGameSessionService (Integration)', () => {
 
         // Verify DB Persistence
         const dbSession = await prisma.casinoGameSession.findUnique({
-            where: { uid: session.uid },
+            where: { id: session.id! },
         });
         expect(dbSession).toBeDefined();
         expect(dbSession?.usdExchangeRate.toNumber()).toBe(0.00075);
 
         // Cleanup
-        await prisma.casinoGameSession.delete({ where: { uid: session.uid } });
+        await prisma.casinoGameSession.delete({ where: { id: session.id! } });
     });
 });

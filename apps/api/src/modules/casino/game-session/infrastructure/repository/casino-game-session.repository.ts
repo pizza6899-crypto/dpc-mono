@@ -27,13 +27,6 @@ export class CasinoGameSessionRepository
         return found ? this.mapper.toDomain(found) : null;
     }
 
-    async findByUid(uid: string): Promise<CasinoGameSession | null> {
-        const found = await this.tx.casinoGameSession.findUnique({
-            where: { uid },
-        });
-        return found ? this.mapper.toDomain(found) : null;
-    }
-
     async findByid(id: bigint): Promise<CasinoGameSession | null> {
         const found = await this.tx.casinoGameSession.findUnique({
             where: { id },

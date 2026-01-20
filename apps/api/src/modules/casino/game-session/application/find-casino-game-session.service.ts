@@ -22,10 +22,6 @@ export class FindCasinoGameSessionService {
         return session;
     }
 
-    async findByUid(uid: string): Promise<CasinoGameSession | null> {
-        return await this.repository.findByUid(uid);
-    }
-
     async findByid(id: bigint): Promise<CasinoGameSession | null> {
         return await this.repository.findByid(id);
     }

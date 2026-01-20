@@ -8,7 +8,6 @@ import { CasinoGameSession } from '../domain';
 import { CASINO_GAME_SESSION_REPOSITORY } from '../ports/casino-game-session.repository.token';
 import type { CasinoGameSessionRepositoryPort } from '../ports/casino-game-session.repository.port';
 import { ExchangeRateService } from 'src/modules/exchange/application/exchange-rate.service';
-import { generateUid } from 'src/utils/id.util';
 import { GetUserTierService } from '../../../tier/application/get-user-tier.service';
 
 interface CreateSessionParams {
@@ -59,7 +58,6 @@ export class CreateCasinoGameSessionService {
 
         // 4. 도메인 엔티티 생성
         const session = CasinoGameSession.create({
-            uid: generateUid(),
             userId,
             playerName, // playername 추가
             token,

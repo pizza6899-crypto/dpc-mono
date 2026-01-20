@@ -7,7 +7,6 @@ export class CasinoGameSessionMapper {
     toDomain(model: PrismaModel): CasinoGameSession {
         return CasinoGameSession.create({
             id: model.id,
-            uid: model.uid,
             userId: model.userId,
             playerName: model.playerName,
             token: model.token,
@@ -30,7 +29,6 @@ export class CasinoGameSessionMapper {
         return {
             // id는 자동 생성이므로 제외 (또는 존재할 경우 포함)
             ...(entity.id && { id: entity.id }),
-            uid: entity.uid,
             userId: entity.userId,
             playerName: entity.playerName,
             token: entity.token,
