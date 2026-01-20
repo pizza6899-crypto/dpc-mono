@@ -7,7 +7,6 @@
 
 model CasinoGameSession {
   id                     BigInt               @id @default(autoincrement())
-  uid                    String               @unique
   userId                 BigInt               @map("user_id")
   token                  String               @unique
   playerName             String               @map("player_name")
