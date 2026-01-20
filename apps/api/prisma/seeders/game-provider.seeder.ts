@@ -1,4 +1,4 @@
-import { PrismaClient } from '../../src';
+import { PrismaClient } from '@repo/database';
 
 // DTO의 WC_PROVIDER_MAP 참고
 const WC_PROVIDERS = [

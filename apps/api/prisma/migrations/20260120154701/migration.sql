@@ -56,9 +56,6 @@ CREATE TYPE "KycLevel" AS ENUM ('NONE', 'BASIC', 'FULL');
 CREATE TYPE "GameAggregatorType" AS ENUM ('WHITECLIFF', 'DC');
 
 -- CreateEnum
-CREATE TYPE "GameCategory" AS ENUM ('LIVE_CASINO', 'SLOTS');
-
--- CreateEnum
 CREATE TYPE "GameProvider" AS ENUM ('EVOLUTION', 'EVOLUTION_ASIA', 'EVOLUTION_INDIA', 'EVOLUTION_KOREA', 'PRAGMATIC_PLAY_LIVE', 'PG_SOFT', 'PRAGMATIC_PLAY_SLOTS', 'RELAX_GAMING', 'PLAYNGO');
 
 -- CreateEnum
@@ -87,12 +84,6 @@ CREATE TYPE "ExchangeRateProvider" AS ENUM ('NOWPAYMENT', 'COINGECKO', 'OPEN_EXC
 
 -- CreateEnum
 CREATE TYPE "TokenType" AS ENUM ('PASSWORD_RESET');
-
--- CreateEnum
-CREATE TYPE "EmailType" AS ENUM ('PASSWORD_RESET');
-
--- CreateEnum
-CREATE TYPE "EmailStatus" AS ENUM ('SENT', 'FAILED');
 
 -- CreateEnum
 CREATE TYPE "LoginAttemptResult" AS ENUM ('SUCCESS', 'FAILED');
@@ -215,7 +206,7 @@ CREATE TABLE "affiliate_commissions" (
     "rate_applied" DECIMAL(8,4) NOT NULL,
     "currency" "ExchangeCurrencyCode" NOT NULL,
     "status" "CommissionStatus" NOT NULL DEFAULT 'PENDING',
-    "game_category" "GameCategory",
+    "game_category" TEXT,
     "settlement_date" TIMESTAMP(3),
     "claimed_at" TIMESTAMP(3),
     "withdrawn_at" TIMESTAMP(3),
@@ -722,24 +713,6 @@ CREATE TABLE "user_tokens" (
     "updated_at" TIMESTAMP(3) NOT NULL,
 
     CONSTRAINT "user_tokens_pkey" PRIMARY KEY ("id")
-);
-
--- CreateTable
-CREATE TABLE "email_logs" (
-    "id" SERIAL NOT NULL,
-    "user_id" BIGINT,
-    "type" "EmailType" NOT NULL,
-    "status" "EmailStatus" NOT NULL,
-    "to" TEXT NOT NULL,
-    "subject" TEXT NOT NULL,
-    "from" TEXT,
-    "message_id" TEXT,
-    "error" TEXT,
-    "metadata" JSONB DEFAULT '{}',
-    "sent_at" TIMESTAMP(3),
-    "created_at" TIMESTAMP(3) NOT NULL DEFAULT CURRENT_TIMESTAMP,
-
-    CONSTRAINT "email_logs_pkey" PRIMARY KEY ("id")
 );
 
 -- CreateTable
@@ -1552,18 +1525,6 @@ CREATE INDEX "user_tokens_user_id_type_used_at_idx" ON "user_tokens"("user_id", 
 CREATE INDEX "user_tokens_expires_at_idx" ON "user_tokens"("expires_at");
 
 -- CreateIndex
-CREATE INDEX "email_logs_user_id_type_created_at_idx" ON "email_logs"("user_id", "type", "created_at");
-
--- CreateIndex
-CREATE INDEX "email_logs_to_type_created_at_idx" ON "email_logs"("to", "type", "created_at");
-
--- CreateIndex
-CREATE INDEX "email_logs_status_created_at_idx" ON "email_logs"("status", "created_at");
-
--- CreateIndex
-CREATE INDEX "email_logs_type_status_idx" ON "email_logs"("type", "status");
-
--- CreateIndex
 CREATE UNIQUE INDEX "login_attempts_uid_key" ON "login_attempts"("uid");
 
 -- CreateIndex
@@ -2018,9 +1979,6 @@ ALTER TABLE "bonus_details" ADD CONSTRAINT "bonus_details_transaction_id_fkey" F
 
 -- AddForeignKey
 ALTER TABLE "user_tokens" ADD CONSTRAINT "user_tokens_user_id_fkey" FOREIGN KEY ("user_id") REFERENCES "users"("id") ON DELETE CASCADE ON UPDATE CASCADE;
-
--- AddForeignKey
-ALTER TABLE "email_logs" ADD CONSTRAINT "email_logs_user_id_fkey" FOREIGN KEY ("user_id") REFERENCES "users"("id") ON DELETE SET NULL ON UPDATE CASCADE;
 
 -- AddForeignKey
 ALTER TABLE "login_attempts" ADD CONSTRAINT "login_attempts_user_id_fkey" FOREIGN KEY ("user_id") REFERENCES "users"("id") ON DELETE SET NULL ON UPDATE CASCADE;

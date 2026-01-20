@@ -1,4 +1,4 @@
-import { PrismaClient, AggregatorStatus } from '../../src';
+import { PrismaClient, AggregatorStatus } from '@repo/database';
 
 export async function seedAggregators(prisma: PrismaClient) {
     console.log('🎰 카지노 애그리게이터 시딩을 시작합니다...');

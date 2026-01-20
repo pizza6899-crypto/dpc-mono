@@ -1,6 +1,6 @@
 generator client {
   provider        = "prisma-client-js"
-  output          = "../../src"
+  output          = "../../src/generated/prisma"
   moduleFormat    = "cjs"
   binaryTargets   = ["native", "linux-arm64-openssl-3.0.x"]
   previewFeatures = ["postgresqlExtensions"]
@@ -9,7 +9,7 @@ generator client {
 // Kysely 타입 생성기 - Prisma 스키마로부터 타입 안전한 SQL 쿼리를 위한 타입 생성
 generator kysely {
   provider     = "prisma-kysely"
-  output       = "../../src"
+  output       = "../../src/generated/kysely"
   fileName     = "kysely-types.ts"
   enumFileName = "kysely-enums.ts"
 }

@@ -25,7 +25,13 @@
     "cli": "ts-node -r tsconfig-paths/register src/cli/cli.ts",
     "zip": "pnpm run format && pnpm run build && node scripts/deployScript && open .",
     "template": "plop",
-    "swagger": "ts-node -r tsconfig-paths/register scripts/generate-swagger.ts"
+    "swagger": "ts-node -r tsconfig-paths/register scripts/generate-swagger.ts",
+    "prisma": "dotenv -e .env -- prisma",
+    "db:generate": "dotenv -e .env -- prisma generate",
+    "db:migrate": "dotenv -e .env -- prisma migrate dev",
+    "db:push": "dotenv -e .env -- prisma db push",
+    "db:seed": "dotenv -e .env -- prisma db seed",
+    "db:studio": "dotenv -e .env -- prisma studio"
   },
   "dependencies": {
     "@aws-sdk/client-s3": "^3.968.0",
@@ -48,7 +54,7 @@
     "@nestjs/websockets": "^11.1.9",
     "@paralleldrive/cuid2": "^2.2.2",
     "@prisma/adapter-pg": "^7.2.0",
-    "@repo/database": "workspace:*",
+    "@prisma/client": "^7.2.0",
     "@repo/shared": "workspace:*",
     "@socket.io/redis-adapter": "^8.3.0",
     "@types/ioredis": "^4.28.10",
@@ -127,7 +133,9 @@
     "ts-node": "^10.9.2",
     "tsconfig-paths": "^4.2.0",
     "typescript": "^5.7.3",
-    "typescript-eslint": "^8.20.0"
+    "typescript-eslint": "^8.20.0",
+    "prisma": "^7.2.0",
+    "prisma-kysely": "^3.0.0"
   },
   "jest": {
     "moduleFileExtensions": [

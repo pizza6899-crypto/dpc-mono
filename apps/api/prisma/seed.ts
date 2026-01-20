@@ -4,8 +4,8 @@ import { seedNotificationTemplates } from './seeders/notification.seeder';
 import { seedAggregators } from './seeders/aggregator.seeder';
 import { seedGameProviders } from './seeders/game-provider.seeder';
 import { seedGameCategories } from './seeders/game-category.seeder';
-import { PrismaClient } from '../src';
 import { PrismaPg } from '@prisma/adapter-pg';
+import { PrismaClient } from '@repo/database';
 
 const connectionString = `${process.env.DATABASE_URL}`
 

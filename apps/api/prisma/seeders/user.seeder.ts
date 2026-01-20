@@ -1,5 +1,5 @@
-import { Language, PrismaClient, UserRoleType, UserStatus } from "../../src";
 import * as bcrypt from 'bcryptjs';
+import { Language, PrismaClient, UserRoleType, UserStatus } from '@repo/database';
 
 export async function seedUsers(prisma: PrismaClient) {
   // 관리자 계정 생성

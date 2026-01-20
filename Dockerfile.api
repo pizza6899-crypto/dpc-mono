@@ -13,7 +13,6 @@ COPY pnpm-lock.yaml pnpm-workspace.yaml package.json ./
 # 하위 패키지들의 package.json들도 복사 (pnpm install을 위해 필요)
 COPY apps/api/package.json ./apps/api/
 COPY packages/shared/package.json ./packages/shared/
-COPY packages/database/package.json ./packages/database/
 
 # 의존성 설치 (캐시 마운트 활용)
 RUN --mount=type=cache,id=pnpm,target=/pnpm/store pnpm install --frozen-lockfile
@@ -23,7 +22,7 @@ COPY . .
 
 # 빌드 실행
 # 1. Prisma 클라이언트 생성
-RUN DATABASE_URL="postgresql://dummy:dummy@localhost:5432/db" pnpm -F @repo/database generate
+RUN pnpm -F api db:generate
 
 # 2. 관련 패키지들 빌드 (shared -> api 순서로 자동 빌드)
 RUN pnpm shared:build
