@@ -11,8 +11,9 @@ export class WhitecliffAdapter implements AggregatorClientPort {
 
     constructor(private readonly whitecliffApiService: WhitecliffApiService) { }
 
-    async fetchGameList(language: Language = Language.EN): Promise<AggregatorGameDto[]> {
-        this.logger.log(`Fetching game list from Whitecliff (language: ${language})...`);
+    async fetchGameList(): Promise<AggregatorGameDto[]> {
+        const language = Language.EN;
+        this.logger.log(`Fetching game list from Whitecliff (default language: ${language})...`);
 
         // 1. Fetch from WC API
         // TODO: 실제 API 호출로 전환 시 language 파라미터 사용

@@ -61,7 +61,7 @@ export class SyncGamesService {
 
         try {
             const client = this.aggregatorClientFactory.getClient(type);
-            const games = await client.fetchGameList(Language.EN);
+            const games = await client.fetchGameList();
 
             stats.total += games.length;
 

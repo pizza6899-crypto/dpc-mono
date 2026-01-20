@@ -1,5 +1,5 @@
 import { Injectable, Logger } from '@nestjs/common';
-import { Language } from '@repo/database';
+
 import { AggregatorClientPort } from '../../../ports/aggregator.client.port';
 import { AggregatorGameDto } from '../../../ports/aggregator-game.dto';
 import { mockResponse1 } from './dc-mock1';
@@ -9,7 +9,7 @@ export class DcsAdapter implements AggregatorClientPort {
     private readonly logger = new Logger(DcsAdapter.name);
 
     // DCS는 언어와 무관하게 동일 결과 반환 (영어 이름만 제공)
-    async fetchGameList(_language?: Language): Promise<AggregatorGameDto[]> {
+    async fetchGameList(): Promise<AggregatorGameDto[]> {
         this.logger.log('Fetching game list from DCS...');
 
         // TODO: Replace with actual DCS API call
