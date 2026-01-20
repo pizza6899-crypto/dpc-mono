@@ -6,7 +6,6 @@ import { EnvModule } from 'src/common/env/env.module';
 import { ConcurrencyModule } from 'src/common/concurrency/concurrency.module';
 import { WhitecliffCallbackController } from './controllers/whitecliff-callback.controller';
 import { WhitecliffGameService } from './application/whitecliff-game.service';
-import { WhitecliffAdminController } from './controllers/whitecliff-admin.controller';
 import { WhitecliffGameRefreshService } from './application/whitecliff-game-refresh.service';
 import { RedisModule } from 'src/infrastructure/redis/redis.module';
 import { WhitecliffMapperService } from './infrastructure/whitecliff-mapper.service';
@@ -31,7 +30,6 @@ import { CasinoModule } from '../../casino.module';
   ],
   controllers: [
     WhitecliffCallbackController,
-    WhitecliffAdminController,
     WhitecliffTestController,
   ],
   providers: [
