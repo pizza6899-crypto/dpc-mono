@@ -38,3 +38,6 @@ Thumbs.db
 
 deploy-package
 packages/database/src
+
+# Deploy Artifacts
+output-deploy.zip
