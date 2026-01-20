@@ -9,11 +9,11 @@ import { FindGamesService } from '../../application/find-games.service';
 import { UpdateGameService } from '../../application/update-game.service';
 
 import { GameAdminResponseDto } from './dto/response/game-admin.response.dto';
+import { GetGamesAdminQueryDto } from './dto/request/get-games-admin-query.dto';
 import { UpdateGameAdminRequestDto } from './dto/request/update-game.request.dto';
 
 import { Paginated } from 'src/common/http/decorators/paginated.decorator';
 import { ApiPaginatedResponse, ApiStandardResponse } from 'src/common/http/decorators/api-response.decorator';
-import { PaginationQueryDto } from 'src/common/http/types';
 import { CasinoGameV2 } from '../../domain';
 
 @ApiTags('Admin Casino Game')
@@ -40,11 +40,15 @@ export class GameAdminController {
             query: args[0],
         }),
     })
-    async list(@Query() query: PaginationQueryDto & { isEnabled?: boolean }) {
+    async list(@Query() query: GetGamesAdminQueryDto) {
         const result = await this.findGamesService.execute({
-            isEnabled: query.isEnabled,
             page: query.page,
             limit: query.limit,
+            isEnabled: query.isEnabled,
+            isVisible: query.isVisible,
+            providerId: query.providerId ? BigInt(query.providerId) : undefined,
+            categoryId: query.categoryId ? BigInt(query.categoryId) : undefined,
+            keyword: query.keyword,
         });
 
         return {
@@ -54,7 +58,6 @@ export class GameAdminController {
             total: result.total,
         };
     }
-
 
     @Patch(':id')
     @ApiOperation({

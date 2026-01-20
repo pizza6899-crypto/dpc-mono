@@ -4,7 +4,6 @@ import { GameCatalogModule } from './game-catalog/game-catalog.module';
 import { WhitecliffModule } from './whitecliff/whitecliff.module';
 import { DcsModule } from './dcs/dcs.module';
 import { CasinoGameUserController } from './controllers/user/casino-game-user.controller';
-import { CasinoAdminController } from './controllers/admin/casino-admin.controller';
 import { CasinoGameService } from './application/casino-game.service';
 import { CasinoBetService } from './application/casino-bet.service';
 import { ConcurrencyModule } from 'src/common/concurrency/concurrency.module';
@@ -56,7 +55,7 @@ import { SnowflakeModule } from 'src/common/snowflake/snowflake.module';
     CompModule,
     SnowflakeModule,
   ],
-  controllers: [CasinoGameUserController, CasinoAdminController],
+  controllers: [CasinoGameUserController],
   providers: [
     CasinoGameService,
     CasinoBetService,
