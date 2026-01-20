@@ -8,7 +8,8 @@
 
 # 문서, 스크립트, 템플릿
 **/docs
-**/scripts
+scripts
+!apps/api/scripts
 **/plop*
 **/eslint*
 **/.eslint*

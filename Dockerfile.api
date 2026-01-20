@@ -26,7 +26,8 @@ COPY . .
 RUN DATABASE_URL="postgresql://dummy:dummy@localhost:5432/db" pnpm -F @repo/database generate
 
 # 2. 관련 패키지들 빌드 (shared -> api 순서로 자동 빌드)
-RUN pnpm -r --filter api... build
+RUN pnpm shared:build
+RUN pnpm api:build
 
 # 3. 프로덕션 실행용 격리 배포
 RUN pnpm --filter api --prod deploy --legacy /out
