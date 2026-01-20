@@ -79,12 +79,9 @@ export class SyncGamesService {
 
             for (const gameDto of games) {
                 try {
-                    const created = await this.upsertGame(type, aggregator.id, gameDto);
-                    if (created) {
-                        stats.created++;
-                    } else {
-                        // stats.skipped++; // 필요한 경우 skipped 통계 추가
-                    }
+                    const status = await this.upsertGame(type, aggregator.id, gameDto);
+                    if (status === 'created') stats.created++;
+                    else if (status === 'updated') stats.updated++;
                 } catch (e) {
                     this.logger.error(`Failed to sync game ${gameDto.gameCode}: ${e.message}`);
                     stats.failed++;
@@ -97,7 +94,7 @@ export class SyncGamesService {
         }
     }
 
-    private async upsertGame(aggregatorType: GameAggregatorType, aggregatorId: bigint, gameDto: AggregatorGameDto): Promise<boolean> {
+    private async upsertGame(aggregatorType: GameAggregatorType, aggregatorId: bigint, gameDto: AggregatorGameDto): Promise<'created' | 'updated' | 'skipped'> {
         // 1. Find Provider
         // 우선 매핑된 코드로 DB에서 Provider 검색
         let providerCodeEnum: GameProvider | undefined;
@@ -133,7 +130,7 @@ export class SyncGamesService {
 
         if (!provider) {
             // Provider가 없으면 스킵
-            return false;
+            return 'skipped';
         }
 
         // 2. Map Category & Find Category Entity
@@ -169,8 +166,28 @@ export class SyncGamesService {
         });
 
         if (existingGame) {
-            // 이미 존재하면 업데이트 하지 않음 (관리자 관리 영역)
-            return false;
+            // 이미 존재하면 필요한 필드만 업데이트 (이름, 아이콘, 활성여부 등 기본 정보만)
+            const needsUpdate =
+                existingGame.thumbnailUrl !== gameDto.iconUrl ||
+                existingGame.gameType !== (gameDto.gameType ?? null) ||
+                existingGame.tableId !== (gameDto.tableId ?? null);
+            // isEnabled는 관리자가 직접 끌 수 있으므로, 싱크에서 강제로 켜지 않도록 정책 고려 필요
+            // 여기서는 일단 위 필드들만 체크
+
+            if (needsUpdate) {
+                await this.tx.casinoGameV2.update({
+                    where: { id: existingGame.id },
+                    data: {
+                        thumbnailUrl: gameDto.iconUrl,
+                        gameType: gameDto.gameType,
+                        tableId: gameDto.tableId,
+                        // 번역 정보 업데이트는 필요한 경우 추가 (Language.EN 기준)
+                    },
+                });
+                return 'updated';
+            }
+
+            return 'skipped';
         }
 
         // 4. Create New Game
@@ -203,7 +220,7 @@ export class SyncGamesService {
             }
         });
 
-        return true;
+        return 'created';
     }
 
     private generateGameCode(providerName: string, gameName: string): string {

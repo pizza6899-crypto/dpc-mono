@@ -21,7 +21,7 @@ export async function seedGameProviders(prisma: PrismaClient) {
 
     // 1. Aggregator 조회
     const wc = await prisma.casinoAggregator.findUnique({ where: { code: 'WC' } });
-    const dcs = await prisma.casinoAggregator.findUnique({ where: { code: 'DCS' } });
+    const dcs = await prisma.casinoAggregator.findUnique({ where: { code: 'DC' } });
 
     if (!wc || !dcs) {
         console.error('❌ Aggregator가 존재하지 않습니다. Aggregator 시딩을 먼저 실행해주세요.');
