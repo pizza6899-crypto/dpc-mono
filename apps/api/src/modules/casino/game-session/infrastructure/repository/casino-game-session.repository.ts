@@ -1,8 +1,8 @@
 import { Injectable } from '@nestjs/common';
 import { InjectTransaction } from '@nestjs-cls/transactional';
 import { type PrismaTransaction } from 'src/infrastructure/prisma/prisma.module';
-import { CasinoGameSessionRepositoryPort } from '../../ports/out/casino-game-session.repository.port';
-import { CasinoGameSession } from '../../domain/model/casino-game-session.entity';
+import { CasinoGameSessionRepositoryPort } from '../../ports/casino-game-session.repository.port';
+import { CasinoGameSession } from '../../domain';
 import { CasinoGameSessionMapper } from '../mapper/casino-game-session.mapper';
 
 @Injectable()

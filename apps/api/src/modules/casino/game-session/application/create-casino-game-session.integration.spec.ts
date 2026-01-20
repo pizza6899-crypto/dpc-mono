@@ -1,7 +1,7 @@
 import { Test, TestingModule } from '@nestjs/testing';
 import { PrismaService } from 'src/infrastructure/prisma/prisma.service';
 import { CreateCasinoGameSessionService } from './create-casino-game-session.service';
-import { CasinoModule } from '../casino.module';
+import { GameSessionModule } from '../game-session.module';
 import { ExchangeRateService } from 'src/modules/exchange/application/exchange-rate.service';
 import {
     ExchangeCurrencyCode,
@@ -17,7 +17,7 @@ describe('CreateCasinoGameSessionService (Integration)', () => {
 
     beforeAll(async () => {
         const module: TestingModule = await Test.createTestingModule({
-            imports: [CasinoModule],
+            imports: [GameSessionModule],
         }).compile();
 
         service = module.get<CreateCasinoGameSessionService>(CreateCasinoGameSessionService);

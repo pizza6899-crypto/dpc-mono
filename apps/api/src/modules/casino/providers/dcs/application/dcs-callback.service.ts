@@ -38,7 +38,7 @@ import { parseDateStringOrThrow } from 'src/utils/date.util';
 import { CasinoBonusService } from '../../../application/casino-bonus.service';
 import { WalletCurrencyCode } from 'src/utils/currency.util';
 import { CasinoErrorCode } from '../../../constants/casino-error-codes';
-import { FindCasinoGameSessionService } from '../../../application/find-casino-game-session.service';
+import { FindCasinoGameSessionService } from '../../../game-session/application/find-casino-game-session.service';
 import { GetUserBalanceService } from 'src/modules/wallet/application/get-user-balance.service';
 import { InjectTransaction, Transactional } from '@nestjs-cls/transactional';
 import { type PrismaTransaction } from 'src/infrastructure/prisma/prisma.module';

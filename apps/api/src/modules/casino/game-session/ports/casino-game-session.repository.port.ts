@@ -1,4 +1,4 @@
-import { CasinoGameSession } from '../../domain/model/casino-game-session.entity';
+import { CasinoGameSession } from '../domain';
 
 export interface CasinoGameSessionRepositoryPort {
     create(session: CasinoGameSession): Promise<CasinoGameSession>;

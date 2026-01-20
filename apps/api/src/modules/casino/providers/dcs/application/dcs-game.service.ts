@@ -13,7 +13,7 @@ import {
 import { GameAggregatorType } from '@repo/database';
 import { InjectTransaction } from '@nestjs-cls/transactional';
 import { type PrismaTransaction } from 'src/infrastructure/prisma/prisma.module';
-import { CreateCasinoGameSessionService } from 'src/modules/casino/application/create-casino-game-session.service';
+import { CreateCasinoGameSessionService } from 'src/modules/casino/game-session/application/create-casino-game-session.service';
 import { CasinoGameV2 } from 'src/modules/casino/game-catalog/domain';
 import { CasinoGameProvider } from 'src/modules/casino/aggregator/domain';
 import { CurrentUserWithSession } from 'src/common/auth/decorators/current-user.decorator';

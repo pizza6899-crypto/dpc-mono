@@ -1,7 +1,7 @@
 import { Inject, Injectable, NotFoundException } from '@nestjs/common';
-import { CASINO_GAME_SESSION_REPOSITORY } from '../ports/out/casino-game-session.repository.token';
-import type { CasinoGameSessionRepositoryPort } from '../ports/out/casino-game-session.repository.port';
-import { CasinoGameSession } from '../domain/model/casino-game-session.entity';
+import { CASINO_GAME_SESSION_REPOSITORY } from '../ports/casino-game-session.repository.token';
+import type { CasinoGameSessionRepositoryPort } from '../ports/casino-game-session.repository.port';
+import { CasinoGameSession } from '../domain';
 
 @Injectable()
 export class FindCasinoGameSessionService {

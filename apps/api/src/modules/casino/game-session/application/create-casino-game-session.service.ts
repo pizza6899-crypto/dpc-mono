@@ -4,12 +4,12 @@ import {
     GameAggregatorType,
     Prisma,
 } from '@repo/database';
-import { CasinoGameSession } from '../domain/model/casino-game-session.entity';
-import { CASINO_GAME_SESSION_REPOSITORY } from '../ports/out/casino-game-session.repository.token';
-import type { CasinoGameSessionRepositoryPort } from '../ports/out/casino-game-session.repository.port';
+import { CasinoGameSession } from '../domain';
+import { CASINO_GAME_SESSION_REPOSITORY } from '../ports/casino-game-session.repository.token';
+import type { CasinoGameSessionRepositoryPort } from '../ports/casino-game-session.repository.port';
 import { ExchangeRateService } from 'src/modules/exchange/application/exchange-rate.service';
 import { generateUid } from 'src/utils/id.util';
-import { GetUserTierService } from '../../tier/application/get-user-tier.service';
+import { GetUserTierService } from '../../../tier/application/get-user-tier.service';
 
 interface CreateSessionParams {
     userId: bigint;

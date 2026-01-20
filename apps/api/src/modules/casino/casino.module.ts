@@ -1,6 +1,7 @@
 import { forwardRef, Module } from '@nestjs/common';
 import { AggregatorModule } from './aggregator/aggregator.module';
 import { GameCatalogModule } from './game-catalog/game-catalog.module';
+import { GameSessionModule } from './game-session/game-session.module';
 import { WhitecliffModule } from './providers/whitecliff/whitecliff.module';
 import { DcsModule } from './providers/dcs/dcs.module';
 import { CasinoBetService } from './application/casino-bet.service';
@@ -15,11 +16,6 @@ import { CasinoRefundService } from './application/casino-refund.service';
 import { ExchangeModule } from '../exchange/exchange.module';
 import { AuditLogModule } from '../audit-log/audit-log.module';
 import { WalletModule } from '../wallet/wallet.module';
-import { CasinoGameSessionMapper } from './infrastructure/mapper/casino-game-session.mapper';
-import { CasinoGameSessionRepository } from './infrastructure/repository/casino-game-session.repository';
-import { CASINO_GAME_SESSION_REPOSITORY } from './ports/out/casino-game-session.repository.token';
-import { CreateCasinoGameSessionService } from './application/create-casino-game-session.service';
-import { FindCasinoGameSessionService } from './application/find-casino-game-session.service';
 import { WageringModule } from '../wagering/wagering.module';
 import { AnalyticsModule } from '../analytics/analytics.module';
 import { TierModule } from '../tier/tier.module';
@@ -31,10 +27,10 @@ import { LaunchGameService } from './application/launch-game.service';
   imports: [
     AggregatorModule,
     GameCatalogModule,
+    GameSessionModule,
     forwardRef(() => WhitecliffModule),
     forwardRef(() => DcsModule),
     ConcurrencyModule,
-    // QueueModule 제거
     BullModule.registerQueue({
       name: CasinoQueueNames.WHITECLIFF_FETCH_GAME_RESULT_URL,
     }),
@@ -60,13 +56,6 @@ import { LaunchGameService } from './application/launch-game.service';
     CasinoBonusService,
     CasinoRefundService,
     GamePostProcessProcessor,
-    CasinoGameSessionMapper,
-    {
-      provide: CASINO_GAME_SESSION_REPOSITORY,
-      useClass: CasinoGameSessionRepository,
-    },
-    CreateCasinoGameSessionService,
-    FindCasinoGameSessionService,
     LaunchGameService,
     CasinoQueueService,
   ],
@@ -74,8 +63,7 @@ import { LaunchGameService } from './application/launch-game.service';
     CasinoBetService,
     CasinoBonusService,
     CasinoRefundService,
-    CreateCasinoGameSessionService,
-    FindCasinoGameSessionService,
+    GameSessionModule,
     LaunchGameService,
     CasinoQueueService,
   ],

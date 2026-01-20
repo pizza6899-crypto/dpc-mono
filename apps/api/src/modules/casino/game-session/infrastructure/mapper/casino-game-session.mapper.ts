@@ -1,6 +1,6 @@
 import { Injectable } from '@nestjs/common';
 import { CasinoGameSession as PrismaModel } from '@repo/database';
-import { CasinoGameSession } from '../../domain/model/casino-game-session.entity';
+import { CasinoGameSession } from '../../domain';
 
 @Injectable()
 export class CasinoGameSessionMapper {
