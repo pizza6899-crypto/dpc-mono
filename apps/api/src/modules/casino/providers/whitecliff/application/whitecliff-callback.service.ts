@@ -47,6 +47,7 @@ export class WhitecliffCallbackService {
    */
   async getBalance(
     body: GetWhitecliffBalanceRequestDto,
+    currency?: GamingCurrencyCode,
   ): Promise<GetWhitecliffBalanceResponseDto> {
     const { user_id, prd_id, sid } = body;
 
@@ -63,6 +64,7 @@ export class WhitecliffCallbackService {
           id: true,
           exchangeRate: true,
           walletCurrency: true,
+          gameCurrency: true,
           user: {
             select: {
               id: true,
@@ -86,6 +88,14 @@ export class WhitecliffCallbackService {
       ) {
         this.logger.error(
           `❌ Balance API - user_id 불일치: session_user_id=${gameSession.user.whitecliffSystemId}, request_user_id=${user_id}`,
+        );
+        throw new Error(CasinoErrorCode.INVALID_USER);
+      }
+
+      // 4. gameCurrency 검증
+      if (currency && gameSession.gameCurrency !== currency) {
+        this.logger.error(
+          `❌ Balance API - gameCurrency 불일치: session_currency=${gameSession.gameCurrency}, request_currency=${currency}`,
         );
         throw new Error(CasinoErrorCode.INVALID_USER);
       }
@@ -129,6 +139,7 @@ export class WhitecliffCallbackService {
   @Transactional()
   async debit(
     body: DebitRequestDto,
+    currency?: GamingCurrencyCode,
   ): Promise<TransactionResponseDto> {
     const {
       user_id,
@@ -147,8 +158,15 @@ export class WhitecliffCallbackService {
     } = body;
 
     try {
+      this.validateRequiredFields(body, ['user_id', 'amount', 'txn_id', 'round_id']);
+
       const provider =
-        this.whitecliffMapperService.fromWhitecliffProvider(prd_id)!;
+        this.whitecliffMapperService.fromWhitecliffProvider(prd_id);
+
+      if (!provider) {
+        this.logger.error(`❌ Debit API - 잘못된 Provider ID: ${prd_id}`);
+        throw new Error(CasinoErrorCode.INVALID_PRODUCT);
+      }
 
       const gameSession = await this.tx.casinoGameSession.findFirst({
         where: {
@@ -188,6 +206,14 @@ export class WhitecliffCallbackService {
       ) {
         this.logger.error(
           `❌ Debit API - user_id 불일치: session_user_id=${gameSession.user.whitecliffSystemId}, request_user_id=${user_id}`,
+        );
+        throw new Error(CasinoErrorCode.INVALID_USER);
+      }
+
+      // 4. gameCurrency 검증
+      if (currency && gameSession.gameCurrency !== currency) {
+        this.logger.error(
+          `❌ Debit API - gameCurrency 불일치: session_currency=${gameSession.gameCurrency}, request_currency=${currency}`,
         );
         throw new Error(CasinoErrorCode.INVALID_USER);
       }
@@ -348,6 +374,7 @@ export class WhitecliffCallbackService {
   @Transactional()
   async credit(
     body: CreditRequestDto,
+    currency?: GamingCurrencyCode,
   ): Promise<TransactionResponseDto> {
     const {
       user_id,
@@ -364,8 +391,15 @@ export class WhitecliffCallbackService {
     } = body;
 
     try {
-      // 1. validateRequiredFields 추가 (DCS 패턴)
-      // validateRequiredFields 호출 필요
+      this.validateRequiredFields(body, ['user_id', 'amount', 'txn_id']);
+
+      const provider =
+        this.whitecliffMapperService.fromWhitecliffProvider(prd_id);
+
+      if (!provider) {
+        this.logger.error(`❌ Credit API - 잘못된 Provider ID: ${prd_id}`);
+        throw new Error(CasinoErrorCode.INVALID_PRODUCT);
+      }
 
       // 2. sid로 gameSession 우선 조회 (debit과 동일한 패턴)
       const gameSession = await this.tx.casinoGameSession.findFirst({
@@ -404,6 +438,14 @@ export class WhitecliffCallbackService {
       ) {
         this.logger.error(
           `❌ Credit API - user_id 불일치: session_user_id=${gameSession.user.whitecliffSystemId}, request_user_id=${user_id}`,
+        );
+        throw new Error(CasinoErrorCode.INVALID_USER);
+      }
+
+      // 4. gameCurrency 검증
+      if (currency && gameSession.gameCurrency !== currency) {
+        this.logger.error(
+          `❌ Credit API - gameCurrency 불일치: session_currency=${gameSession.gameCurrency}, request_currency=${currency}`,
         );
         throw new Error(CasinoErrorCode.INVALID_USER);
       }
@@ -551,7 +593,12 @@ export class WhitecliffCallbackService {
       }
 
       const provider =
-        this.whitecliffMapperService.fromWhitecliffProvider(prd_id)!;
+        this.whitecliffMapperService.fromWhitecliffProvider(prd_id);
+
+      if (!provider) {
+        this.logger.error(`❌ Bonus API - 잘못된 Provider ID: ${prd_id}`);
+        throw new Error(CasinoErrorCode.INVALID_PRODUCT);
+      }
 
       // 1. 게임 조회
       const game = await this.tx.casinoGameV2.findFirst({
@@ -753,5 +800,19 @@ export class WhitecliffCallbackService {
       isValid: config !== undefined,
       currency: currency,
     };
+  }
+
+  /**
+   * 필수 파라미터 검증
+   * @param body 요청 바디
+   * @param fields 필수 필드 목록
+   */
+  private validateRequiredFields(body: any, fields: string[]) {
+    for (const field of fields) {
+      if (body[field] === undefined || body[field] === null) {
+        this.logger.error(`❌ 파라미터 누락: ${field}`);
+        throw new Error(CasinoErrorCode.PARAMETER_MISSING);
+      }
+    }
   }
 }

@@ -47,7 +47,7 @@ export class WhitecliffCallbackController {
       };
     }
 
-    return this.whitecliffCallbackService.getBalance(body);
+    return this.whitecliffCallbackService.getBalance(body, currency);
   }
 
   @Post('/debit')
@@ -72,7 +72,7 @@ export class WhitecliffCallbackController {
     }
 
     // 서비스 호출
-    return this.whitecliffCallbackService.debit(body);
+    return this.whitecliffCallbackService.debit(body, currency);
   }
 
   @Post('/credit')
@@ -97,7 +97,7 @@ export class WhitecliffCallbackController {
     }
 
     // 서비스 호출
-    return this.whitecliffCallbackService.credit(body);
+    return this.whitecliffCallbackService.credit(body, currency);
   }
 
   @Post('/bonus')
