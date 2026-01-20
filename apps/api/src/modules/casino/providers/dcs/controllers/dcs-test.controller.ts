@@ -3,7 +3,7 @@ import { ApiTags, ApiOperation, ApiBody } from '@nestjs/swagger';
 import { Public } from 'src/common/auth/decorators/roles.decorator';
 import { ApiStandardErrors } from 'src/common/http/decorators/api-response.decorator';
 import { DcsApiService } from '../infrastructure/dcs-api.service';
-import { GameProvider } from '@repo/database';
+import { GameProvider, Language } from '@repo/database';
 import { GamingCurrencyCode } from 'src/utils/currency.util';
 
 @Controller('dcs/test')
@@ -94,14 +94,15 @@ export class DcsTestController {
       full_screen?: boolean;
     },
   ) {
+    const isMobile = body.channel === 'mobile';
     return this.dcsApiService.loginGame({
       dcsUserId: body.dcsUserId,
       dcsUserToken: body.dcsUserToken,
       gameId: body.gameId,
       gameCurrency: body.gameCurrency,
-      language: body.language,
-      country_code: body.country_code,
-      channel: body.channel,
+      language: body.language as Language,
+      countryCode: body.country_code,
+      isMobile,
       return_url: body.return_url,
       full_screen: body.full_screen,
     });
@@ -120,7 +121,15 @@ export class DcsTestController {
       full_screen?: boolean;
     },
   ) {
-    return this.dcsApiService.tryGame(body);
+    const isMobile = body.channel === 'mobile';
+    return this.dcsApiService.tryGame({
+      gameId: body.gameId,
+      gameCurrency: body.gameCurrency,
+      language: body.language as Language,
+      isMobile,
+      return_url: body.return_url,
+      full_screen: body.full_screen,
+    });
   }
 
   @Get('getBetData')

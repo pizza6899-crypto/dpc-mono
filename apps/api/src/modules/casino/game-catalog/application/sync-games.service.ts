@@ -5,7 +5,9 @@ import { GameAggregatorType, Language, GameProvider, GameCategory } from '@repo/
 import { SyncResultResponseDto } from '../controllers/admin/dto/response/sync-result.response.dto';
 import { type GameRepositoryPort, GAME_REPOSITORY } from '../ports/game.repository.port';
 import { AggregatorClientFactory } from '../../aggregator/infrastructure/aggregator.factory';
-import { AggregatorGameDto, AGGREGATOR_CODE_MAP, WC_PROVIDER_MAP, DCS_PROVIDER_MAP, CATEGORY_MAP } from '../../aggregator/ports/aggregator-game.dto';
+import { AggregatorGameDto, AGGREGATOR_CODE_MAP } from '../../aggregator/ports/aggregator-game.dto';
+import { DcsMapperService } from '../../providers/dcs/infrastructure/dcs-mapper.service';
+import { WhitecliffMapperService } from '../../providers/whitecliff/infrastructure/whitecliff-mapper.service';
 
 @Injectable()
 export class SyncGamesService {
@@ -101,11 +103,13 @@ export class SyncGamesService {
         let providerCodeEnum: GameProvider | undefined;
 
         if (gameDto.providerCode) {
-            const map = aggregatorType === GameAggregatorType.WHITECLIFF ? WC_PROVIDER_MAP : DCS_PROVIDER_MAP;
-            const mappedCodeStr = map[gameDto.providerCode];
-            if (mappedCodeStr) {
-                // 문자열 키로 Enum 값 매칭
-                providerCodeEnum = GameProvider[mappedCodeStr as keyof typeof GameProvider];
+            if (aggregatorType === GameAggregatorType.WHITECLIFF) {
+                const id = parseInt(gameDto.providerCode, 10);
+                if (!isNaN(id)) {
+                    providerCodeEnum = WhitecliffMapperService.PROVIDER_MAP[id];
+                }
+            } else if (aggregatorType === GameAggregatorType.DC) {
+                providerCodeEnum = DcsMapperService.PROVIDER_MAP[gameDto.providerCode];
             }
         }
 
@@ -135,8 +139,17 @@ export class SyncGamesService {
         // 2. Map Category & Find Category Entity
         let categoryCode = 'SLOTS'; // Default Category Code
 
-        if (gameDto.category && CATEGORY_MAP[gameDto.category]) {
-            categoryCode = CATEGORY_MAP[gameDto.category];
+        if (gameDto.category) {
+            let mappedCategory: GameCategory | undefined;
+            if (aggregatorType === GameAggregatorType.WHITECLIFF) {
+                mappedCategory = WhitecliffMapperService.CATEGORY_MAP[gameDto.category];
+            } else if (aggregatorType === GameAggregatorType.DC) {
+                mappedCategory = DcsMapperService.CATEGORY_MAP[gameDto.category];
+            }
+
+            if (mappedCategory) {
+                categoryCode = mappedCategory;
+            }
         }
 
         const categoryEntity = await this.tx.casinoGameCategory.findUnique({

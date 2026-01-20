@@ -7,7 +7,7 @@ import { GamingCurrencyCode } from 'src/utils/currency.util';
 @Injectable()
 export class WhitecliffMapperService {
   // 카테고리 맵핑
-  private static readonly CATEGORY_MAP: Record<string, GameCategory> = {
+  public static readonly CATEGORY_MAP: Record<string, GameCategory> = {
     'Live Casino': GameCategory.LIVE_CASINO,
     Slots: GameCategory.SLOTS,
   };
@@ -26,7 +26,7 @@ export class WhitecliffMapperService {
   }
 
   // 프로바이더 맵핑
-  private static readonly PROVIDER_MAP: Record<number, GameProvider> = {
+  public static readonly PROVIDER_MAP: Record<number, GameProvider> = {
     1: GameProvider.EVOLUTION,
     29: GameProvider.EVOLUTION,
     31: GameProvider.EVOLUTION,

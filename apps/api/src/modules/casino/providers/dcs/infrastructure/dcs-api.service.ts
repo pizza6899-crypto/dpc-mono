@@ -9,7 +9,7 @@ import * as crypto from 'crypto';
 import { ApiException } from 'src/common/http/exception/api.exception';
 import { MessageCode } from 'src/common/http/types';
 import { HttpStatusCode } from 'axios';
-import { GameProvider } from '@repo/database';
+import { GameProvider, Language } from '@repo/database';
 import { DcsMapperService } from './dcs-mapper.service';
 import { GamingCurrencyCode } from 'src/utils/currency.util';
 import { DispatchLogService } from 'src/modules/audit-log/application/dispatch-log.service';
@@ -150,8 +150,8 @@ export class DcsApiService {
     gameId,
     gameCurrency,
     language,
-    country_code,
-    channel,
+    countryCode,
+    isMobile,
     full_screen,
     return_url,
   }: {
@@ -159,14 +159,18 @@ export class DcsApiService {
     dcsUserToken: string;
     gameId: number;
     gameCurrency: GamingCurrencyCode;
-    language: string;
-    channel: string;
-    country_code: string;
+    language: Language;
+    isMobile: boolean;
+    countryCode?: string;
     return_url?: string;
     full_screen?: boolean;
   }) {
     const dcsCurrency =
       this.dcsMapperService.convertGamingCurrencyToDcsCurrency(gameCurrency);
+    const dcsLanguage = this.dcsMapperService.convertLanguageToDcs(language);
+    const channel = this.dcsMapperService.convertChannelToDcs(isMobile);
+    const dcsCountryCode =
+      this.dcsMapperService.convertCountryCodeToDcs(countryCode);
 
     const url = `${this.dcsConfig.apiUrl}/dcs/loginGame`;
     const body = {
@@ -175,10 +179,10 @@ export class DcsApiService {
       brand_uid: dcsUserId,
       token: dcsUserToken,
       game_id: gameId,
-      language: language,
+      language: dcsLanguage,
       currency: dcsCurrency,
       channel: channel,
-      country_code,
+      country_code: dcsCountryCode,
     };
 
     const result = await this.request<{
@@ -216,19 +220,21 @@ export class DcsApiService {
     gameId,
     language,
     gameCurrency,
-    channel,
+    isMobile,
     return_url,
     full_screen,
   }: {
     gameId: number;
     gameCurrency: GamingCurrencyCode;
-    language: string;
-    channel: string;
+    language: Language;
+    isMobile: boolean;
     return_url?: string;
     full_screen?: boolean;
   }) {
     const dcsCurrency =
       this.dcsMapperService.convertGamingCurrencyToDcsCurrency(gameCurrency);
+    const dcsLanguage = this.dcsMapperService.convertLanguageToDcs(language);
+    const channel = this.dcsMapperService.convertChannelToDcs(isMobile);
 
     const url = `${this.dcsConfig.apiUrl}/dcs/tryGame`;
     const body = {
@@ -236,7 +242,7 @@ export class DcsApiService {
       sign: this.generateSign(gameId),
       game_id: gameId,
       currency: dcsCurrency,
-      language,
+      language: dcsLanguage,
       channel,
       return_url,
       full_screen,

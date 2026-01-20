@@ -5,7 +5,7 @@ import { ApiException } from 'src/common/http/exception/api.exception';
 import { HttpStatusCode } from 'axios';
 import { IdUtil } from 'src/utils/id.util';
 import { DcsResponseCode } from '../constants/dcs-response-codes';
-import { fromLanguageEnum, toLanguageEnum } from 'src/utils/language.util';
+import { toLanguageEnum } from 'src/utils/language.util';
 import {
   GamingCurrencyCode,
   WalletCurrencyCode,
@@ -84,9 +84,9 @@ export class DcsGameService {
         dcsUserToken: newDcsToken,
         gameId: Number(game.externalGameId),
         gameCurrency: gameCurrency,
-        language: fromLanguageEnum(language || updatedUser.language),
-        channel: isMobile ? 'mobile' : 'pc',
-        country_code: requestInfo.country == 'XX' ? 'JP' : (requestInfo.country || 'JP'),
+        language: language || updatedUser.language || Language.EN,
+        isMobile: isMobile,
+        countryCode: requestInfo.country,
         full_screen: true,
       });
 
@@ -131,8 +131,8 @@ export class DcsGameService {
     const response = await this.dcsApiService.tryGame({
       gameId: gameId,
       gameCurrency: gameCurrency,
-      language: fromLanguageEnum(toLanguageEnum(language)),
-      channel: channel,
+      language: toLanguageEnum(language),
+      isMobile: channel === 'mobile',
       full_screen: full_screen,
     });
 
