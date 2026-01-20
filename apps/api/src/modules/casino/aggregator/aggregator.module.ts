@@ -16,6 +16,7 @@ import { CasinoGameProviderMapper } from './infrastructure/casino-game-provider.
 // Provider Application Services
 import { CreateGameProviderService } from './application/provider/create-game-provider.service';
 import { FindGameProvidersService } from './application/provider/find-game-providers.service';
+import { FindGameProviderByIdService } from './application/provider/find-game-provider-by-id.service';
 import { UpdateGameProviderService } from './application/provider/update-game-provider.service';
 import { GameProviderAdminController } from './controllers/admin/game-provider-admin.controller';
 
@@ -51,9 +52,10 @@ import { DcsAdapter } from './infrastructure/adapters/dcs/dcs.adapter';
         // Application - Provider
         CreateGameProviderService,
         FindGameProvidersService,
+        FindGameProviderByIdService,
         UpdateGameProviderService,
     ],
-    exports: [AggregatorRegistryService, AggregatorClientFactory],
+    exports: [AggregatorRegistryService, AggregatorClientFactory, FindGameProviderByIdService],
 })
 export class AggregatorModule { }
 

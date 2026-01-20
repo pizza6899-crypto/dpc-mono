@@ -7,11 +7,10 @@ import { MessageCode, RequestClientInfo } from 'src/common/http/types';
 import { ApiException } from 'src/common/http/exception/api.exception';
 import { HttpStatusCode } from 'axios';
 import { IdUtil } from 'src/utils/id.util';
-import { CurrentUserWithSession } from 'src/common/auth/decorators/current-user.decorator';
+import type { CurrentUserWithSession } from 'src/common/auth/decorators/current-user.decorator';
 import { WhitecliffMapperService } from '../infrastructure/whitecliff-mapper.service';
 import {
   GameAggregatorType,
-  GameCategory,
   GameProvider,
   Language,
 } from '@repo/database';
@@ -23,6 +22,8 @@ import { ExchangeRateService } from 'src/modules/exchange/application/exchange-r
 import { InjectTransaction } from '@nestjs-cls/transactional';
 import { type PrismaTransaction } from 'src/infrastructure/prisma/prisma.module';
 import { CreateCasinoGameSessionService } from 'src/modules/casino/application/create-casino-game-session.service';
+import { CasinoGameV2 } from 'src/modules/casino/game-catalog/domain';
+import { CasinoGameProvider } from 'src/modules/casino/aggregator/domain';
 
 @Injectable()
 export class WhitecliffGameService {
@@ -43,14 +44,15 @@ export class WhitecliffGameService {
   async launchGame(
     authUser: CurrentUserWithSession,
     data: {
-      gameId: number;
+      game: CasinoGameV2;
+      provider: CasinoGameProvider;
       isMobile: boolean;
       walletCurrency: WalletCurrencyCode;
       gameCurrency: GamingCurrencyCode;
     },
     requestInfo: RequestClientInfo,
   ): Promise<{ gameUrl: string }> {
-    const { gameId, isMobile, walletCurrency, gameCurrency } = data;
+    const { game, provider, isMobile, walletCurrency, gameCurrency } = data;
     const token = IdUtil.generateUrlSafeNanoid(32);
 
     const user = await this.tx.user.findUnique({
@@ -94,38 +96,26 @@ export class WhitecliffGameService {
       .toNumber();
     const whitecliffUsername = user.whitecliffUsername;
 
-    const game = await this.tx.casinoGame.findUnique({
-      where: { id: gameId },
-      select: {
-        id: true,
-        provider: true,
-        gameId: true,
-        category: true,
-        tableId: true,
-      },
-    });
+    // Whitecliff expected provider ID and game type
+    // provider.code should be used to map to WC provider ID
+    // game.externalGameId is the game ID in WC
+    // game.tableId is used for live games
 
-    if (!game) {
-      throw new ApiException(
-        MessageCode.GAME_NOT_FOUND,
-        HttpStatusCode.NotFound,
-      );
-    }
+    // We need to check if provider code is an enum of GameProvider
+    const providerEnum = GameProvider[provider.code as keyof typeof GameProvider];
 
-    const type = game.category === GameCategory.LIVE_CASINO ? 0 : game.gameId;
-
-    // 에볼루션인 경우 currency에 따라 프로바이더 ID 변경
-    let providerId = this.whitecliffMapperService.toWhitecliffProvider(
-      game.provider,
+    let wcProviderId = this.whitecliffMapperService.toWhitecliffProvider(
+      providerEnum,
     )!;
 
-    if (game.provider === GameProvider.EVOLUTION) {
+    // Evolution special handling
+    if (providerEnum === GameProvider.EVOLUTION) {
       if (gameCurrency === 'KRW') {
-        providerId = 31;
+        wcProviderId = 31;
       } else if (gameCurrency === 'IDR') {
-        providerId = 29;
+        wcProviderId = 29;
       } else {
-        providerId = 1; // 기본값
+        wcProviderId = 1; // Default
       }
     }
 
@@ -139,28 +129,26 @@ export class WhitecliffGameService {
         token: token,
       },
       prd: {
-        id: providerId,
-        type,
+        id: wcProviderId,
+        type: Number(game.externalGameId), // Assuming numeric external ID for WC
         table_id: game.tableId || '',
         is_mobile: isMobile,
       },
     });
 
     if (gameUrl.status === 0 && gameUrl.error == 'INVALID_USER') {
-      const whitecliffId = await IdUtil.generateNextWhitecliffId(
-        this.tx,
-      );
-      const whitecliffUsername = `wcf${whitecliffId}`;
+      const whitecliffId = await IdUtil.generateNextWhitecliffId(this.tx);
+      const newWhitecliffUsername = `wcf${whitecliffId}`;
 
       await this.tx.user.update({
         where: { id: user.id },
         data: {
           whitecliffId: whitecliffId,
-          whitecliffUsername: whitecliffUsername,
+          whitecliffUsername: newWhitecliffUsername,
           whitecliffSystemId: null,
         },
       });
-
+      // Should ideally retry launch here or throw specific error to client to retry
     }
 
     if (gameUrl.status === 0) {
@@ -185,9 +173,9 @@ export class WhitecliffGameService {
       });
     }
 
-    const gameSession = await this.createCasinoGameSessionService.execute({
+    await this.createCasinoGameSessionService.execute({
       userId: user.id,
-      gameId: game.id,
+      gameId: game.id!,
       aggregatorType: GameAggregatorType.WHITECLIFF,
       walletCurrency,
       gameCurrency,
@@ -200,4 +188,3 @@ export class WhitecliffGameService {
     };
   }
 }
-

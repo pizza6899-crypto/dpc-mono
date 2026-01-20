@@ -68,6 +68,14 @@ export class AggregatorRegistryService implements OnModuleInit {
         return Array.from(this.aggregators.values());
     }
 
+    getById(id: bigint): CasinoAggregator {
+        const aggregator = Array.from(this.aggregators.values()).find(agg => agg.id === id);
+        if (!aggregator) {
+            throw new CasinoAggregatorNotFoundException(id.toString());
+        }
+        return aggregator;
+    }
+
     // ============================================================
     // 통합 설정 접근 (DB 메타 + Env 설정 결합)
     // ============================================================

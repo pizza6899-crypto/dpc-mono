@@ -1,4 +1,4 @@
-import { Inject, Injectable } from '@nestjs/common';
+import { Injectable } from '@nestjs/common';
 import { DcsApiService } from '../infrastructure/dcs-api.service';
 import { MessageCode, RequestClientInfo } from 'src/common/http/types';
 import { ApiException } from 'src/common/http/exception/api.exception';
@@ -14,6 +14,9 @@ import { GameAggregatorType } from '@repo/database';
 import { InjectTransaction } from '@nestjs-cls/transactional';
 import { type PrismaTransaction } from 'src/infrastructure/prisma/prisma.module';
 import { CreateCasinoGameSessionService } from 'src/modules/casino/application/create-casino-game-session.service';
+import { CasinoGameV2 } from 'src/modules/casino/game-catalog/domain';
+import { CasinoGameProvider } from 'src/modules/casino/aggregator/domain';
+import { CurrentUserWithSession } from 'src/common/auth/decorators/current-user.decorator';
 
 @Injectable()
 export class DcsGameService {
@@ -25,20 +28,18 @@ export class DcsGameService {
   ) { }
 
   async launchGame({
-    userId,
-    gameId,
-    channel,
-    country_code,
-    full_screen,
-    gameCurrency,
+    user: authUser,
+    game,
+    provider,
+    isMobile,
     walletCurrency,
+    gameCurrency,
     requestInfo,
   }: {
-    userId: bigint;
-    gameId: number;
-    channel: string;
-    country_code: string;
-    full_screen?: boolean;
+    user: CurrentUserWithSession;
+    game: CasinoGameV2;
+    provider: CasinoGameProvider;
+    isMobile: boolean;
     gameCurrency: GamingCurrencyCode;
     walletCurrency: WalletCurrencyCode;
     requestInfo: RequestClientInfo;
@@ -46,25 +47,25 @@ export class DcsGameService {
     const newDcsToken = IdUtil.generateUrlSafeNanoid(32);
 
     try {
-      const user = await this.tx.user.findUnique({
-        where: { id: userId },
+      const dbUser = await this.tx.user.findUnique({
+        where: { id: authUser.id },
         select: {
           dcsId: true,
           language: true,
         },
       });
 
-      if (!user) {
+      if (!dbUser) {
         throw new ApiException(
           MessageCode.USER_NOT_FOUND,
           HttpStatusCode.NotFound,
         );
       }
 
-      const dcsId = user.dcsId ?? (await IdUtil.generateNextDcsId(this.tx));
+      const dcsId = dbUser.dcsId ?? (await IdUtil.generateNextDcsId(this.tx));
 
       const updatedUser = await this.tx.user.update({
-        where: { id: userId },
+        where: { id: authUser.id },
         data: { dcsId },
         select: {
           dcsId: true,
@@ -72,44 +73,28 @@ export class DcsGameService {
         },
       });
 
-      const game = await this.tx.casinoGame.findUnique({
-        where: { id: gameId },
-        select: {
-          id: true,
-          gameId: true,
-        },
-      });
-
-      if (!game) {
-        throw new ApiException(
-          MessageCode.GAME_NOT_FOUND,
-          HttpStatusCode.NotFound,
-        );
-      }
-
-      // 3. API 호출 (트랜잭션 밖에서 - 외부 API이므로 롤백 불가)
+      // 3. API 호출
       const response = await this.dcsApiService.loginGame({
         dcsUserId: updatedUser.dcsId!,
         dcsUserToken: newDcsToken,
-        gameId: game.gameId,
+        gameId: Number(game.externalGameId),
         gameCurrency: gameCurrency,
         language: fromLanguageEnum(updatedUser.language),
-        channel: channel,
-        country_code: country_code == 'XX' ? 'JP' : country_code,
-        full_screen: full_screen,
+        channel: isMobile ? 'mobile' : 'pc',
+        country_code: requestInfo.country == 'XX' ? 'JP' : (requestInfo.country || 'JP'),
+        full_screen: true,
       });
 
       if (response.code !== DcsResponseCode.SUCCESS) {
-
         throw new ApiException(
           MessageCode.INTERNAL_SERVER_ERROR,
           HttpStatusCode.InternalServerError,
         );
       }
 
-      const gameSession = await this.createCasinoGameSessionService.execute({
-        userId,
-        gameId: game.id,
+      await this.createCasinoGameSessionService.execute({
+        userId: authUser.id,
+        gameId: game.id!,
         aggregatorType: GameAggregatorType.DCS,
         walletCurrency,
         gameCurrency,
@@ -117,12 +102,10 @@ export class DcsGameService {
         playerName: updatedUser.dcsId!,
       });
 
-
       return {
         gameUrl: response.data.game_url,
       };
     } catch (error) {
-
       throw error;
     }
   }
@@ -160,4 +143,3 @@ export class DcsGameService {
     };
   }
 }
-

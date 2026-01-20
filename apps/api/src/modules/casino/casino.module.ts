@@ -25,6 +25,7 @@ import { AnalyticsModule } from '../analytics/analytics.module';
 import { TierModule } from '../tier/tier.module';
 import { CompModule } from '../comp/comp.module';
 import { SnowflakeModule } from 'src/common/snowflake/snowflake.module';
+import { LaunchGameService } from './application/launch-game.service';
 
 @Module({
   imports: [
@@ -66,6 +67,7 @@ import { SnowflakeModule } from 'src/common/snowflake/snowflake.module';
     },
     CreateCasinoGameSessionService,
     FindCasinoGameSessionService,
+    LaunchGameService,
     CasinoQueueService,
   ],
   exports: [
@@ -74,6 +76,7 @@ import { SnowflakeModule } from 'src/common/snowflake/snowflake.module';
     CasinoRefundService,
     CreateCasinoGameSessionService,
     FindCasinoGameSessionService,
+    LaunchGameService,
     CasinoQueueService,
   ],
 })

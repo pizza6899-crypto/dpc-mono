@@ -1,4 +1,4 @@
-import { Module } from '@nestjs/common';
+import { forwardRef, Module } from '@nestjs/common';
 import { CATEGORY_REPOSITORY, GAME_REPOSITORY } from './ports';
 import { CategoryRepository } from './infrastructure/category.repository';
 import { CategoryMapper } from './infrastructure/category.mapper';
@@ -30,9 +30,10 @@ import { EnvModule } from 'src/common/env/env.module';
 import { AggregatorModule } from '../aggregator/aggregator.module';
 import { SyncAdminController } from './controllers/admin/sync.admin.controller';
 import { SyncGamesService } from './application/sync-games.service';
+import { CasinoModule } from '../casino.module';
 
 @Module({
-    imports: [FileModule, EnvModule, AggregatorModule],
+    imports: [FileModule, EnvModule, AggregatorModule, forwardRef(() => CasinoModule)],
     controllers: [
         CategoryAdminController,
         GameAdminController,

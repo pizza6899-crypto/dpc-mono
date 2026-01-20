@@ -1,17 +1,28 @@
-import { Controller, Get, Query } from '@nestjs/common';
+import { Controller, Get, Query, Post, Body, HttpCode, HttpStatus } from '@nestjs/common';
 import { ApiTags, ApiOperation } from '@nestjs/swagger';
-import { Public } from 'src/common/auth/decorators/roles.decorator';
+import { Public, AuthAll } from 'src/common/auth/decorators/roles.decorator';
 import { SqidsService } from 'src/common/sqids/sqids.service';
 import { SqidsPrefix } from 'src/common/sqids/sqids.constants';
 import { FindGamesService } from '../../application/find-games.service';
 import { CatalogGameResponseDto } from './dto/response/game.response.dto';
 import { GameListRequestDto } from './dto/request/game-list.request.dto';
 import { Paginated } from 'src/common/http/decorators/paginated.decorator';
-import { ApiPaginatedResponse } from 'src/common/http/decorators/api-response.decorator';
+import { ApiPaginatedResponse, ApiStandardResponse } from 'src/common/http/decorators/api-response.decorator';
 import { PaginatedData } from 'src/common/http/types';
+import type { RequestClientInfo } from 'src/common/http/types';
 
 import { Language } from '@repo/database';
 import { GetCategoryByCodeService } from '../../application/get-category-by-code.service';
+import { LaunchGameService } from '../../../application/launch-game.service';
+import { Throttle } from 'src/common/throttle/decorators/throttle.decorator';
+import { ThrottleScope } from 'src/common/throttle/types/throttle.types';
+import { AuditLog } from 'src/modules/audit-log/infrastructure/audit-log.decorator';
+import { LogType } from 'src/modules/audit-log/domain';
+import { LaunchGameRequestDto } from './dto/request/launch-game.request.dto';
+import { LaunchGameResponseDto } from './dto/response/launch-game.response.dto';
+import { CurrentUser } from 'src/common/auth/decorators/current-user.decorator';
+import type { CurrentUserWithSession } from 'src/common/auth/decorators/current-user.decorator';
+import { RequestClientInfoParam } from 'src/common/auth/decorators/request-info.decorator';
 
 @ApiTags('Casino Game')
 @Controller('casino/games')
@@ -19,6 +30,7 @@ export class GameUserController {
     constructor(
         private readonly findGamesService: FindGamesService,
         private readonly getCategoryByCodeService: GetCategoryByCodeService,
+        private readonly launchGameService: LaunchGameService,
         private readonly sqidsService: SqidsService,
     ) { }
 
@@ -78,5 +90,50 @@ export class GameUserController {
             limit: result.limit,
             total: result.total,
         };
+    }
+
+    @Post('launch')
+    @AuthAll()
+    @HttpCode(HttpStatus.OK)
+    @Throttle({
+        limit: 30,
+        ttl: 60, // 1 minute
+        scope: ThrottleScope.USER,
+    })
+    @AuditLog({
+        type: LogType.ACTIVITY,
+        category: 'CASINO',
+        action: 'LAUNCH_GAME',
+        extractMetadata: (_, args) => ({
+            id: args[1]?.gameId,
+            walletCurrency: args[1]?.walletCurrency,
+            gameCurrency: args[1]?.gameCurrency,
+            isMobile: args[1]?.isMobile,
+        }),
+    })
+    @ApiOperation({ summary: 'Launch Game (게임 실행)' })
+    @ApiStandardResponse(LaunchGameResponseDto, {
+        status: 200,
+        description: 'Game launch success',
+    })
+    async launchGame(
+        @CurrentUser() user: CurrentUserWithSession,
+        @Body() dto: LaunchGameRequestDto,
+        @RequestClientInfoParam() request: RequestClientInfo,
+    ): Promise<LaunchGameResponseDto> {
+        const decodedId = this.sqidsService.decode(dto.gameId, SqidsPrefix.CASINO_GAME);
+
+        const result = await this.launchGameService.execute(
+            user,
+            {
+                gameId: BigInt(decodedId),
+                isMobile: dto.isMobile,
+                walletCurrency: dto.walletCurrency,
+                gameCurrency: dto.gameCurrency,
+            },
+            request,
+        );
+
+        return result;
     }
 }
