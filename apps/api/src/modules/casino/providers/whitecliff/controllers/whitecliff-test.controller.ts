@@ -11,13 +11,8 @@ import {
   ProductGameListResponse,
   PushedBetHistoryResponse,
 } from '../infrastructure/whitecliff-api.service';
-import {
-  GameListUpdateResponseDto,
-  GameListUpdateStatusDto,
-} from '../dtos/game-update.dto';
 import { GAMING_CURRENCIES } from 'src/utils/currency.util';
 import type { GamingCurrencyCode } from 'src/utils/currency.util';
-import { WhitecliffGameRefreshService } from '../application/whitecliff-game-refresh.service';
 
 @Controller('whitecliff/test')
 @ApiTags('Whitecliff Test')
@@ -26,7 +21,6 @@ import { WhitecliffGameRefreshService } from '../application/whitecliff-game-ref
 export class WhitecliffTestController {
   constructor(
     private readonly whitecliffApiService: WhitecliffApiService,
-    private readonly whitecliffGameRefreshService: WhitecliffGameRefreshService,
   ) { }
   @Get('getBetResults')
   @ApiOperation({ summary: '베팅 결과 재확인 테스트' })
@@ -174,51 +168,5 @@ export class WhitecliffTestController {
     | { status: number; error: string; message?: string }
   > {
     return this.whitecliffApiService.getPushedBetHistory(body);
-  }
-
-  // ========== 게임 목록 갱신 테스트 ==========
-
-  @Post('refresh-game-list')
-  @ApiOperation({
-    summary: '[TEST] 게임 목록 갱신 테스트',
-    description: 'mock2 데이터를 사용하여 게임 목록 갱신을 테스트합니다.',
-  })
-  @ApiBody({
-    description: '게임 목록 갱신 요청 데이터',
-    schema: {
-      type: 'object',
-      properties: {
-        language: {
-          type: 'string',
-          description: '언어 코드 (예: en, ko)',
-          example: 'en',
-        },
-      },
-      required: ['language'],
-    },
-  })
-  @ApiStandardResponse(GameListUpdateResponseDto, {
-    status: 200,
-    description: '게임 목록 갱신 시작',
-  })
-  async refreshGameList(
-    @Body() body: { language: string },
-  ): Promise<GameListUpdateResponseDto> {
-    return this.whitecliffGameRefreshService.updateGameListManually(
-      body.language,
-    );
-  }
-
-  @Get('refresh-status')
-  @ApiOperation({
-    summary: '[TEST] 게임 목록 갱신 상태 조회',
-    description: '현재 게임 목록 갱신 진행 상태를 조회합니다.',
-  })
-  @ApiStandardResponse(GameListUpdateStatusDto, {
-    status: 200,
-    description: '상태 조회 성공',
-  })
-  async getRefreshStatus(): Promise<GameListUpdateStatusDto> {
-    return this.whitecliffGameRefreshService.getUpdateStatus();
   }
 }

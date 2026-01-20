@@ -5,7 +5,6 @@ import { ApiStandardErrors } from 'src/common/http/decorators/api-response.decor
 import { DcsApiService } from '../infrastructure/dcs-api.service';
 import { GameProvider } from '@repo/database';
 import { GamingCurrencyCode } from 'src/utils/currency.util';
-import { DcsGameRefreshService } from '../application/dcs-game-refresh.service';
 
 @Controller('dcs/test')
 @ApiTags('DCS Test')
@@ -14,7 +13,6 @@ import { DcsGameRefreshService } from '../application/dcs-game-refresh.service';
 export class DcsTestController {
   constructor(
     private readonly dcsApiService: DcsApiService,
-    private readonly dcsGameRefreshService: DcsGameRefreshService,
   ) { }
 
   @Post('loginGame')
@@ -243,26 +241,5 @@ export class DcsTestController {
       provider,
       brand_uid,
     });
-  }
-
-  @Post('updateGameList')
-  @ApiOperation({
-    summary: '게임 목록 업데이트 테스트',
-    description:
-      'DCS API에서 게임 목록을 가져와 데이터베이스를 업데이트합니다. provider와 language가 필요합니다.',
-  })
-  async updateGameList(
-    @Body()
-    body: {
-      provider: GameProvider;
-      language: string;
-    },
-  ) {
-    this.dcsGameRefreshService.updateGameListManually();
-
-    return {
-      success: true,
-      message: 'Game list updated successfully.',
-    };
   }
 }
