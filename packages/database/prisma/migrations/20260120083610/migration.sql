@@ -29,6 +29,12 @@ CREATE EXTENSION IF NOT EXISTS "vector";
 CREATE TYPE "CommissionStatus" AS ENUM ('PENDING', 'AVAILABLE', 'CLAIMED', 'WITHDRAWN', 'CANCELLED');
 
 -- CreateEnum
+CREATE TYPE "AggregatorStatus" AS ENUM ('ACTIVE', 'INACTIVE', 'MAINTENANCE');
+
+-- CreateEnum
+CREATE TYPE "CategoryType" AS ENUM ('PRIMARY', 'COLLECTION');
+
+-- CreateEnum
 CREATE TYPE "SocialType" AS ENUM ('GOOGLE', 'APPLE', 'TELEGRAM');
 
 -- CreateEnum
@@ -47,13 +53,13 @@ CREATE TYPE "Language" AS ENUM ('EN', 'KO', 'JA');
 CREATE TYPE "KycLevel" AS ENUM ('NONE', 'BASIC', 'FULL');
 
 -- CreateEnum
-CREATE TYPE "GameAggregatorType" AS ENUM ('WHITECLIFF', 'DCS');
+CREATE TYPE "GameAggregatorType" AS ENUM ('WHITECLIFF', 'DC');
 
 -- CreateEnum
 CREATE TYPE "GameCategory" AS ENUM ('LIVE_CASINO', 'SLOTS');
 
 -- CreateEnum
-CREATE TYPE "GameProvider" AS ENUM ('EVOLUTION', 'PRAGMATIC_PLAY_LIVE', 'PG_SOFT', 'PRAGMATIC_PLAY_SLOTS', 'RELAX_GAMING', 'PLAYNGO');
+CREATE TYPE "GameProvider" AS ENUM ('EVOLUTION', 'EVOLUTION_ASIA', 'EVOLUTION_INDIA', 'EVOLUTION_KOREA', 'PRAGMATIC_PLAY_LIVE', 'PG_SOFT', 'PRAGMATIC_PLAY_SLOTS', 'RELAX_GAMING', 'PLAYNGO');
 
 -- CreateEnum
 CREATE TYPE "TransactionType" AS ENUM ('DEPOSIT', 'WITHDRAW', 'GAME', 'BONUS', 'COMP_CLAIM', 'SYSTEM', 'ADMIN_ADJUST');
@@ -367,43 +373,8 @@ CREATE TABLE "integration_logs" (
 );
 
 -- CreateTable
-CREATE TABLE "casino_games" (
-    "id" BIGSERIAL NOT NULL,
-    "aggregator_type" "GameAggregatorType" NOT NULL,
-    "provider" "GameProvider" NOT NULL,
-    "category" "GameCategory" NOT NULL,
-    "game_id" INTEGER NOT NULL,
-    "game_type" TEXT,
-    "table_id" TEXT,
-    "icon_link" TEXT,
-    "is_enabled" BOOLEAN NOT NULL,
-    "is_visible_to_user" BOOLEAN NOT NULL DEFAULT true,
-    "house_edge" DECIMAL(8,4) NOT NULL DEFAULT 0.04,
-    "contribution_rate" DECIMAL(8,4) NOT NULL DEFAULT 1.0,
-    "created_at" TIMESTAMP(3) NOT NULL DEFAULT CURRENT_TIMESTAMP,
-    "updated_at" TIMESTAMP(3) NOT NULL,
-
-    CONSTRAINT "casino_games_pkey" PRIMARY KEY ("id")
-);
-
--- CreateTable
-CREATE TABLE "casino_game_translations" (
-    "id" SERIAL NOT NULL,
-    "game_id" BIGINT NOT NULL,
-    "language" "Language" NOT NULL,
-    "provider_name" TEXT NOT NULL,
-    "category_name" TEXT NOT NULL,
-    "game_name" TEXT NOT NULL,
-    "created_at" TIMESTAMP(3) NOT NULL DEFAULT CURRENT_TIMESTAMP,
-    "updated_at" TIMESTAMP(3) NOT NULL,
-
-    CONSTRAINT "casino_game_translations_pkey" PRIMARY KEY ("id")
-);
-
--- CreateTable
 CREATE TABLE "casino_game_sessions" (
     "id" BIGSERIAL NOT NULL,
-    "uid" TEXT NOT NULL,
     "user_id" BIGINT NOT NULL,
     "token" TEXT NOT NULL,
     "player_name" TEXT NOT NULL,
@@ -417,7 +388,7 @@ CREATE TABLE "casino_game_sessions" (
     "exchange_rate_snapshot_at" TIMESTAMP(3) NOT NULL DEFAULT CURRENT_TIMESTAMP,
     "usd_exchange_rate" DECIMAL(32,18) NOT NULL,
     "comp_rate" DECIMAL(8,4) NOT NULL,
-    "casino_game_id" BIGINT,
+    "game_id" BIGINT,
 
     CONSTRAINT "casino_game_sessions_pkey" PRIMARY KEY ("id")
 );
@@ -453,6 +424,115 @@ CREATE TABLE "game_wins" (
     "win_amount_in_game_currency" DECIMAL(32,18) NOT NULL,
 
     CONSTRAINT "game_wins_pkey" PRIMARY KEY ("id","won_at")
+);
+
+-- CreateTable
+CREATE TABLE "casino_aggregators" (
+    "id" BIGSERIAL NOT NULL,
+    "name" TEXT NOT NULL,
+    "code" TEXT NOT NULL,
+    "status" "AggregatorStatus" NOT NULL,
+    "api_enabled" BOOLEAN NOT NULL DEFAULT true,
+    "created_at" TIMESTAMP(3) NOT NULL DEFAULT CURRENT_TIMESTAMP,
+    "updated_at" TIMESTAMP(3) NOT NULL,
+
+    CONSTRAINT "casino_aggregators_pkey" PRIMARY KEY ("id")
+);
+
+-- CreateTable
+CREATE TABLE "casino_game_providers" (
+    "id" BIGSERIAL NOT NULL,
+    "aggregator_id" BIGINT NOT NULL,
+    "external_id" TEXT NOT NULL,
+    "code" TEXT NOT NULL,
+    "group_code" TEXT NOT NULL,
+    "name" TEXT NOT NULL,
+    "image_url" TEXT,
+    "is_active" BOOLEAN NOT NULL DEFAULT true,
+    "created_at" TIMESTAMP(3) NOT NULL DEFAULT CURRENT_TIMESTAMP,
+    "updated_at" TIMESTAMP(3) NOT NULL,
+
+    CONSTRAINT "casino_game_providers_pkey" PRIMARY KEY ("id")
+);
+
+-- CreateTable
+CREATE TABLE "casino_game_categories" (
+    "id" BIGSERIAL NOT NULL,
+    "code" TEXT NOT NULL,
+    "type" "CategoryType" NOT NULL DEFAULT 'PRIMARY',
+    "icon_url" TEXT,
+    "banner_url" TEXT,
+    "sort_order" INTEGER NOT NULL DEFAULT 0,
+    "is_active" BOOLEAN NOT NULL DEFAULT true,
+    "is_system" BOOLEAN NOT NULL DEFAULT false,
+    "created_at" TIMESTAMP(3) NOT NULL DEFAULT CURRENT_TIMESTAMP,
+    "updated_at" TIMESTAMP(3) NOT NULL,
+
+    CONSTRAINT "casino_game_categories_pkey" PRIMARY KEY ("id")
+);
+
+-- CreateTable
+CREATE TABLE "casino_game_category_translations" (
+    "id" BIGSERIAL NOT NULL,
+    "category_id" BIGINT NOT NULL,
+    "language" "Language" NOT NULL,
+    "name" TEXT NOT NULL,
+    "description" TEXT,
+    "created_at" TIMESTAMP(3) NOT NULL DEFAULT CURRENT_TIMESTAMP,
+    "updated_at" TIMESTAMP(3) NOT NULL,
+
+    CONSTRAINT "casino_game_category_translations_pkey" PRIMARY KEY ("id")
+);
+
+-- CreateTable
+CREATE TABLE "casino_game_category_items" (
+    "id" BIGSERIAL NOT NULL,
+    "category_id" BIGINT NOT NULL,
+    "game_id" BIGINT NOT NULL,
+    "sort_order" INTEGER NOT NULL DEFAULT 0,
+    "is_primary" BOOLEAN NOT NULL DEFAULT false,
+    "added_at" TIMESTAMP(3) NOT NULL DEFAULT CURRENT_TIMESTAMP,
+    "expires_at" TIMESTAMP(3),
+    "created_at" TIMESTAMP(3) NOT NULL DEFAULT CURRENT_TIMESTAMP,
+    "updated_at" TIMESTAMP(3) NOT NULL,
+
+    CONSTRAINT "casino_game_category_items_pkey" PRIMARY KEY ("id")
+);
+
+-- CreateTable
+CREATE TABLE "casino_games_v2" (
+    "id" BIGSERIAL NOT NULL,
+    "provider_id" BIGINT NOT NULL,
+    "external_game_id" TEXT NOT NULL,
+    "code" TEXT NOT NULL,
+    "thumbnail_url" TEXT,
+    "banner_url" TEXT,
+    "rtp" DECIMAL(5,2),
+    "volatility" TEXT,
+    "game_type" TEXT,
+    "table_id" TEXT,
+    "tags" TEXT[],
+    "house_edge" DECIMAL(8,4) NOT NULL DEFAULT 0.04,
+    "contribution_rate" DECIMAL(8,4) NOT NULL DEFAULT 1.0,
+    "sort_order" INTEGER NOT NULL DEFAULT 0,
+    "is_enabled" BOOLEAN NOT NULL DEFAULT true,
+    "is_visible" BOOLEAN NOT NULL DEFAULT true,
+    "created_at" TIMESTAMP(3) NOT NULL DEFAULT CURRENT_TIMESTAMP,
+    "updated_at" TIMESTAMP(3) NOT NULL,
+
+    CONSTRAINT "casino_games_v2_pkey" PRIMARY KEY ("id")
+);
+
+-- CreateTable
+CREATE TABLE "casino_game_v2_translations" (
+    "id" BIGSERIAL NOT NULL,
+    "game_id" BIGINT NOT NULL,
+    "language" "Language" NOT NULL,
+    "name" TEXT NOT NULL,
+    "created_at" TIMESTAMP(3) NOT NULL DEFAULT CURRENT_TIMESTAMP,
+    "updated_at" TIMESTAMP(3) NOT NULL,
+
+    CONSTRAINT "casino_game_v2_translations_pkey" PRIMARY KEY ("id")
 );
 
 -- CreateTable
@@ -1340,21 +1420,6 @@ CREATE INDEX "integration_logs_trace_id_created_at_idx" ON "integration_logs"("t
 CREATE INDEX "integration_logs_country_created_at_idx" ON "integration_logs"("country", "created_at" DESC);
 
 -- CreateIndex
-CREATE INDEX "casino_games_is_enabled_idx" ON "casino_games"("is_enabled");
-
--- CreateIndex
-CREATE UNIQUE INDEX "casino_games_aggregator_type_provider_game_id_key" ON "casino_games"("aggregator_type", "provider", "game_id");
-
--- CreateIndex
-CREATE INDEX "casino_game_translations_language_idx" ON "casino_game_translations"("language");
-
--- CreateIndex
-CREATE UNIQUE INDEX "casino_game_translations_game_id_language_key" ON "casino_game_translations"("game_id", "language");
-
--- CreateIndex
-CREATE UNIQUE INDEX "casino_game_sessions_uid_key" ON "casino_game_sessions"("uid");
-
--- CreateIndex
 CREATE UNIQUE INDEX "casino_game_sessions_token_key" ON "casino_game_sessions"("token");
 
 -- CreateIndex
@@ -1371,6 +1436,51 @@ CREATE INDEX "game_wins_game_round_id_idx" ON "game_wins"("game_round_id");
 
 -- CreateIndex
 CREATE UNIQUE INDEX "game_wins_aggregator_win_id_aggregator_type_won_at_key" ON "game_wins"("aggregator_win_id", "aggregator_type", "won_at");
+
+-- CreateIndex
+CREATE UNIQUE INDEX "casino_aggregators_code_key" ON "casino_aggregators"("code");
+
+-- CreateIndex
+CREATE UNIQUE INDEX "casino_game_providers_aggregator_id_code_key" ON "casino_game_providers"("aggregator_id", "code");
+
+-- CreateIndex
+CREATE UNIQUE INDEX "casino_game_providers_aggregator_id_external_id_key" ON "casino_game_providers"("aggregator_id", "external_id");
+
+-- CreateIndex
+CREATE UNIQUE INDEX "casino_game_categories_code_key" ON "casino_game_categories"("code");
+
+-- CreateIndex
+CREATE UNIQUE INDEX "casino_game_category_translations_category_id_language_key" ON "casino_game_category_translations"("category_id", "language");
+
+-- CreateIndex
+CREATE INDEX "casino_game_category_items_category_id_sort_order_idx" ON "casino_game_category_items"("category_id", "sort_order");
+
+-- CreateIndex
+CREATE INDEX "casino_game_category_items_game_id_is_primary_idx" ON "casino_game_category_items"("game_id", "is_primary");
+
+-- CreateIndex
+CREATE INDEX "casino_game_category_items_expires_at_idx" ON "casino_game_category_items"("expires_at");
+
+-- CreateIndex
+CREATE UNIQUE INDEX "casino_game_category_items_category_id_game_id_key" ON "casino_game_category_items"("category_id", "game_id");
+
+-- CreateIndex
+CREATE INDEX "casino_games_v2_is_enabled_is_visible_idx" ON "casino_games_v2"("is_enabled", "is_visible");
+
+-- CreateIndex
+CREATE INDEX "casino_games_v2_sort_order_idx" ON "casino_games_v2"("sort_order");
+
+-- CreateIndex
+CREATE UNIQUE INDEX "casino_games_v2_provider_id_external_game_id_key" ON "casino_games_v2"("provider_id", "external_game_id");
+
+-- CreateIndex
+CREATE INDEX "casino_game_v2_translations_language_idx" ON "casino_game_v2_translations"("language");
+
+-- CreateIndex
+CREATE INDEX "casino_game_v2_translations_name_idx" ON "casino_game_v2_translations" USING GIN ("name" gin_trgm_ops);
+
+-- CreateIndex
+CREATE UNIQUE INDEX "casino_game_v2_translations_game_id_language_key" ON "casino_game_v2_translations"("game_id", "language");
 
 -- CreateIndex
 CREATE UNIQUE INDEX "users_whitecliff_id_key" ON "users"("whitecliff_id");
@@ -1847,10 +1957,7 @@ ALTER TABLE "affiliate_wallets" ADD CONSTRAINT "affiliate_wallets_affiliate_id_f
 ALTER TABLE "user_hourly_stats" ADD CONSTRAINT "user_hourly_stats_user_id_fkey" FOREIGN KEY ("user_id") REFERENCES "users"("id") ON DELETE RESTRICT ON UPDATE CASCADE;
 
 -- AddForeignKey
-ALTER TABLE "casino_game_translations" ADD CONSTRAINT "casino_game_translations_game_id_fkey" FOREIGN KEY ("game_id") REFERENCES "casino_games"("id") ON DELETE CASCADE ON UPDATE CASCADE;
-
--- AddForeignKey
-ALTER TABLE "casino_game_sessions" ADD CONSTRAINT "casino_game_sessions_casino_game_id_fkey" FOREIGN KEY ("casino_game_id") REFERENCES "casino_games"("id") ON DELETE SET NULL ON UPDATE CASCADE;
+ALTER TABLE "casino_game_sessions" ADD CONSTRAINT "casino_game_sessions_game_id_fkey" FOREIGN KEY ("game_id") REFERENCES "casino_games_v2"("id") ON DELETE SET NULL ON UPDATE CASCADE;
 
 -- AddForeignKey
 ALTER TABLE "casino_game_sessions" ADD CONSTRAINT "casino_game_sessions_user_id_fkey" FOREIGN KEY ("user_id") REFERENCES "users"("id") ON DELETE RESTRICT ON UPDATE CASCADE;
@@ -1860,6 +1967,24 @@ ALTER TABLE "game_bets" ADD CONSTRAINT "game_bets_game_round_id_fkey" FOREIGN KE
 
 -- AddForeignKey
 ALTER TABLE "game_wins" ADD CONSTRAINT "game_wins_game_round_id_fkey" FOREIGN KEY ("game_round_id") REFERENCES "game_rounds"("id") ON DELETE CASCADE ON UPDATE CASCADE;
+
+-- AddForeignKey
+ALTER TABLE "casino_game_providers" ADD CONSTRAINT "casino_game_providers_aggregator_id_fkey" FOREIGN KEY ("aggregator_id") REFERENCES "casino_aggregators"("id") ON DELETE RESTRICT ON UPDATE CASCADE;
+
+-- AddForeignKey
+ALTER TABLE "casino_game_category_translations" ADD CONSTRAINT "casino_game_category_translations_category_id_fkey" FOREIGN KEY ("category_id") REFERENCES "casino_game_categories"("id") ON DELETE CASCADE ON UPDATE CASCADE;
+
+-- AddForeignKey
+ALTER TABLE "casino_game_category_items" ADD CONSTRAINT "casino_game_category_items_category_id_fkey" FOREIGN KEY ("category_id") REFERENCES "casino_game_categories"("id") ON DELETE CASCADE ON UPDATE CASCADE;
+
+-- AddForeignKey
+ALTER TABLE "casino_game_category_items" ADD CONSTRAINT "casino_game_category_items_game_id_fkey" FOREIGN KEY ("game_id") REFERENCES "casino_games_v2"("id") ON DELETE CASCADE ON UPDATE CASCADE;
+
+-- AddForeignKey
+ALTER TABLE "casino_games_v2" ADD CONSTRAINT "casino_games_v2_provider_id_fkey" FOREIGN KEY ("provider_id") REFERENCES "casino_game_providers"("id") ON DELETE RESTRICT ON UPDATE CASCADE;
+
+-- AddForeignKey
+ALTER TABLE "casino_game_v2_translations" ADD CONSTRAINT "casino_game_v2_translations_game_id_fkey" FOREIGN KEY ("game_id") REFERENCES "casino_games_v2"("id") ON DELETE CASCADE ON UPDATE CASCADE;
 
 -- AddForeignKey
 ALTER TABLE "user_wallets" ADD CONSTRAINT "user_wallets_user_id_fkey" FOREIGN KEY ("user_id") REFERENCES "users"("id") ON DELETE RESTRICT ON UPDATE CASCADE;
@@ -1874,7 +1999,7 @@ ALTER TABLE "transactions" ADD CONSTRAINT "transactions_user_id_fkey" FOREIGN KE
 ALTER TABLE "transactions" ADD CONSTRAINT "transactions_comp_wallet_transaction_id_fkey" FOREIGN KEY ("comp_wallet_transaction_id") REFERENCES "comp_wallet_transactions"("id") ON DELETE SET NULL ON UPDATE CASCADE;
 
 -- AddForeignKey
-ALTER TABLE "game_rounds" ADD CONSTRAINT "game_rounds_game_id_fkey" FOREIGN KEY ("game_id") REFERENCES "casino_games"("id") ON DELETE SET NULL ON UPDATE CASCADE;
+ALTER TABLE "game_rounds" ADD CONSTRAINT "game_rounds_game_id_fkey" FOREIGN KEY ("game_id") REFERENCES "casino_games_v2"("id") ON DELETE SET NULL ON UPDATE CASCADE;
 
 -- AddForeignKey
 ALTER TABLE "game_rounds" ADD CONSTRAINT "game_rounds_game_session_id_fkey" FOREIGN KEY ("game_session_id") REFERENCES "casino_game_sessions"("id") ON DELETE RESTRICT ON UPDATE CASCADE;
@@ -1886,7 +2011,7 @@ ALTER TABLE "game_rounds" ADD CONSTRAINT "game_rounds_transaction_id_fkey" FOREI
 ALTER TABLE "transaction_balance_details" ADD CONSTRAINT "transaction_balance_details_transaction_id_fkey" FOREIGN KEY ("transaction_id") REFERENCES "transactions"("id") ON DELETE RESTRICT ON UPDATE CASCADE;
 
 -- AddForeignKey
-ALTER TABLE "bonus_details" ADD CONSTRAINT "bonus_details_game_id_fkey" FOREIGN KEY ("game_id") REFERENCES "casino_games"("id") ON DELETE SET NULL ON UPDATE CASCADE;
+ALTER TABLE "bonus_details" ADD CONSTRAINT "bonus_details_game_id_fkey" FOREIGN KEY ("game_id") REFERENCES "casino_games_v2"("id") ON DELETE SET NULL ON UPDATE CASCADE;
 
 -- AddForeignKey
 ALTER TABLE "bonus_details" ADD CONSTRAINT "bonus_details_transaction_id_fkey" FOREIGN KEY ("transaction_id") REFERENCES "transactions"("id") ON DELETE RESTRICT ON UPDATE CASCADE;

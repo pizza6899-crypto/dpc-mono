@@ -1,5 +1,4 @@
 import { seedUsers } from './seeders/user.seeder';
-import { seedLobbyGames } from './seeders/game.seeder';
 import { seedTiers } from './seeders/tier.seeder';
 import { seedNotificationTemplates } from './seeders/notification.seeder';
 import { seedAggregators } from './seeders/aggregator.seeder';
@@ -24,10 +23,6 @@ async function main() {
     // 유저 시딩 처리
     await seedUsers(prisma);
     console.log('✅ 유저 시딩이 완료되었습니다.');
-
-    // 게임 시딩 처리
-    await seedLobbyGames(prisma);
-    console.log('✅ 게임 시딩이 완료되었습니다.');
 
     // 티어 시딩 처리
     await seedTiers(prisma);
