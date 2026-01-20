@@ -295,7 +295,6 @@ export class DcsCallbackService {
       select: {
         gameSession: {
           select: {
-            uid: true,
             exchangeRate: true,
             walletCurrency: true,
             userId: true,
