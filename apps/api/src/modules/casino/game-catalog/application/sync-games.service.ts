@@ -34,7 +34,7 @@ export class SyncGamesService {
             // Supported aggregators to sync
             const aggregatorsToSync = [
                 GameAggregatorType.WHITECLIFF,
-                GameAggregatorType.DCS,
+                GameAggregatorType.DC,
             ];
 
             for (const type of aggregatorsToSync) {

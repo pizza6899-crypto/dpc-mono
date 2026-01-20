@@ -15,7 +15,7 @@ export class AggregatorClientFactory {
         switch (type) {
             case GameAggregatorType.WHITECLIFF:
                 return this.whitecliffAdapter;
-            case GameAggregatorType.DCS:
+            case GameAggregatorType.DC:
                 return this.dcsAdapter;
             default:
                 throw new Error(`Unsupported aggregator type: ${type}`);

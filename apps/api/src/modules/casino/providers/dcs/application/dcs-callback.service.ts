@@ -173,7 +173,7 @@ export class DcsCallbackService {
       return getDcsResponse(DcsResponseCode.PLAYER_NOT_EXIST);
     }
 
-    if (gameSession.aggregatorType !== GameAggregatorType.DCS) {
+    if (gameSession.aggregatorType !== GameAggregatorType.DC) {
       this.logger.error(
         `❌ Login API - 게임 세션 타입 불일치: ${gameSession.aggregatorType}`,
       );
@@ -199,7 +199,7 @@ export class DcsCallbackService {
           gameSessionId: gameSession.id!,
           aggregatorTxId: round_id,
           aggregatorBetId: wager_id,
-          aggregatorType: GameAggregatorType.DCS,
+          aggregatorType: GameAggregatorType.DC,
           aggregatorGameId: game_id,
           provider: providerEnum,
           gameId: gameSession.gameId!,
@@ -289,7 +289,7 @@ export class DcsCallbackService {
       where: {
         aggregatorTxId_aggregatorType: {
           aggregatorTxId: round_id,
-          aggregatorType: GameAggregatorType.DCS,
+          aggregatorType: GameAggregatorType.DC,
         },
       },
       select: {
@@ -325,7 +325,7 @@ export class DcsCallbackService {
             gameCurrency: currencyEnum,
             aggregatorTxId: round_id,
             aggregatorBetId: wager_id,
-            aggregatorType: GameAggregatorType.DCS,
+            aggregatorType: GameAggregatorType.DC,
             cancelTime: parseDateStringOrThrow(transaction_time),
             isEndRound: is_endround,
           });
@@ -348,7 +348,7 @@ export class DcsCallbackService {
             gameCurrency: currencyEnum,
             aggregatorTxId: round_id,
             aggregatorBetId: wager_id,
-            aggregatorType: GameAggregatorType.DCS,
+            aggregatorType: GameAggregatorType.DC,
             cancelTime: parseDateStringOrThrow(transaction_time),
             isEndRound: is_endround,
           });
@@ -426,7 +426,7 @@ export class DcsCallbackService {
               await this.tx.casinoGameSession.findFirst({
                 where: {
                   userId: user.id,
-                  aggregatorType: GameAggregatorType.DCS,
+                  aggregatorType: GameAggregatorType.DC,
                   gameCurrency: currencyEnum,
                   walletCurrency: maxBalanceCurrency,
                 },
@@ -494,7 +494,7 @@ export class DcsCallbackService {
       where: {
         aggregatorTxId_aggregatorType: {
           aggregatorTxId: round_id,
-          aggregatorType: GameAggregatorType.DCS,
+          aggregatorType: GameAggregatorType.DC,
         },
       },
       select: {
@@ -540,7 +540,7 @@ export class DcsCallbackService {
         userId: gameSession.userId,
         gameCurrency: currencyEnum,
         transactionTime: parseDateStringOrThrow(transaction_time),
-        aggregatorType: GameAggregatorType.DCS,
+        aggregatorType: GameAggregatorType.DC,
         provider: providerEnum,
         bonusType: BonusType.PROMOTION,
         bonusAmountInGameCurrency: new Prisma.Decimal(amount),
@@ -569,7 +569,7 @@ export class DcsCallbackService {
           where: {
             aggregatorTxId_aggregatorType: {
               aggregatorTxId: round_id,
-              aggregatorType: GameAggregatorType.DCS,
+              aggregatorType: GameAggregatorType.DC,
             },
           },
           data: {
@@ -654,7 +654,7 @@ export class DcsCallbackService {
       where: {
         aggregatorTxId_aggregatorType: {
           aggregatorTxId: round_id,
-          aggregatorType: GameAggregatorType.DCS,
+          aggregatorType: GameAggregatorType.DC,
         },
       },
       select: {
@@ -687,7 +687,7 @@ export class DcsCallbackService {
           winAmountInWalletCurrency: new Prisma.Decimal(amount).div(
             gameSession.exchangeRate,
           ),
-          aggregatorType: GameAggregatorType.DCS,
+          aggregatorType: GameAggregatorType.DC,
           winAmountInGameCurrency: new Prisma.Decimal(amount),
           winTime: transaction_time,
           aggregatorTxId: round_id,
@@ -761,7 +761,7 @@ export class DcsCallbackService {
           // 또는 GameSession을 조회해서 exchangeRate와 walletCurrency를 가져올 수 있음
           const gameSession = await this.tx.casinoGameSession.findFirst({
             where: {
-              aggregatorType: GameAggregatorType.DCS,
+              aggregatorType: GameAggregatorType.DC,
               user: {
                 dcsId: brand_uid,
               },
@@ -871,7 +871,7 @@ export class DcsCallbackService {
     const gameSession = await this.tx.casinoGameSession.findFirst({
       where: {
         userId: user.id,
-        aggregatorType: GameAggregatorType.DCS,
+        aggregatorType: GameAggregatorType.DC,
         gameCurrency: gameCurrencyEnum,
         gameId: game.id,
       },
@@ -901,7 +901,7 @@ export class DcsCallbackService {
         userId: gameSession.userId,
         gameCurrency: gameCurrencyEnum,
         transactionTime: parseDateStringOrThrow(transaction_time),
-        aggregatorType: GameAggregatorType.DCS,
+        aggregatorType: GameAggregatorType.DC,
         provider: providerEnum,
         bonusType: BonusType.IN_GAME_BONUS,
         bonusAmountInGameCurrency: new Prisma.Decimal(amount),
@@ -933,7 +933,7 @@ export class DcsCallbackService {
           where: {
             aggregatorTxId_aggregatorType: {
               aggregatorTxId: round_id,
-              aggregatorType: GameAggregatorType.DCS,
+              aggregatorType: GameAggregatorType.DC,
             },
           },
           select: {
@@ -947,7 +947,7 @@ export class DcsCallbackService {
               where: {
                 aggregatorTxId_aggregatorType: {
                   aggregatorTxId: round_id,
-                  aggregatorType: GameAggregatorType.DCS,
+                  aggregatorType: GameAggregatorType.DC,
                 },
               },
               data: {
@@ -1112,7 +1112,7 @@ export class DcsCallbackService {
       const gameSession = await this.tx.casinoGameSession.findFirst({
         where: {
           userId: user.id,
-          aggregatorType: GameAggregatorType.DCS,
+          aggregatorType: GameAggregatorType.DC,
           gameCurrency: gameCurrencyEnum,
         },
         select: {
@@ -1128,7 +1128,7 @@ export class DcsCallbackService {
         userId: user.id,
         gameCurrency: gameCurrencyEnum,
         transactionTime: transactionTime,
-        aggregatorType: GameAggregatorType.DCS,
+        aggregatorType: GameAggregatorType.DC,
         provider: providerEnum,
         bonusType: BonusType.PROMOTION,
         bonusAmountInGameCurrency: bonusAmount,
@@ -1159,7 +1159,7 @@ export class DcsCallbackService {
             const gameSession = await this.tx.casinoGameSession.findFirst({
               where: {
                 userId: user.id,
-                aggregatorType: GameAggregatorType.DCS,
+                aggregatorType: GameAggregatorType.DC,
                 gameCurrency: gameCurrencyEnum,
               },
               select: {

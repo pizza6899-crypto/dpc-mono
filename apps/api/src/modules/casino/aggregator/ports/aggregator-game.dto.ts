@@ -72,7 +72,7 @@ export interface AggregatorGameDto {
  */
 export const AGGREGATOR_CODE_MAP: Record<GameAggregatorType, string> = {
     [GameAggregatorType.WHITECLIFF]: 'WC',
-    [GameAggregatorType.DCS]: 'DCS',
+    [GameAggregatorType.DC]: 'DC',
 };
 
 /**

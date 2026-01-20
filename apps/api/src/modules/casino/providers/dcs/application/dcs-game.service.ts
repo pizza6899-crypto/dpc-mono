@@ -100,7 +100,7 @@ export class DcsGameService {
       await this.createCasinoGameSessionService.execute({
         userId: authUser.id,
         gameId: game.id!,
-        aggregatorType: GameAggregatorType.DCS,
+        aggregatorType: GameAggregatorType.DC,
         walletCurrency,
         gameCurrency,
         token: newDcsToken,

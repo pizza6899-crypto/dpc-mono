@@ -342,7 +342,7 @@ enum KycLevel {
 
 enum GameAggregatorType {
   WHITECLIFF
-  DCS
+  DC
 }
 
 enum GameCategory {
