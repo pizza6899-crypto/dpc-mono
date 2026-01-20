@@ -5,6 +5,7 @@ import { AggregatorRegistryService } from '../aggregator/application/aggregator-
 import { WhitecliffGameService } from '../providers/whitecliff/application/whitecliff-game.service';
 import { DcsGameService } from '../providers/dcs/application/dcs-game.service';
 import { CasinoAggregator } from '../aggregator/domain';
+import { CasinoAggregatorUnsupportedException } from '../aggregator/domain/casino-aggregator.exception';
 import type { CurrentUserWithSession } from 'src/common/auth/decorators/current-user.decorator';
 import type { RequestClientInfo } from 'src/common/http/types';
 import { Language } from '@repo/database';
@@ -79,6 +80,6 @@ export class LaunchGameService {
             });
         }
 
-        throw new Error(`Unsupported aggregator code: ${aggregator.code}`);
+        throw new CasinoAggregatorUnsupportedException(aggregator.code);
     }
 }

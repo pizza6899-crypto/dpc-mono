@@ -25,3 +25,9 @@ export class CasinoGameProviderNotFoundException extends DomainException {
         super(`Casino game provider not found: ${identifier}`, MessageCode.CASINO_GAME_PROVIDER_NOT_FOUND, HttpStatus.NOT_FOUND);
     }
 }
+
+export class CasinoAggregatorUnsupportedException extends DomainException {
+    constructor(code: string) {
+        super(`Unsupported aggregator type: ${code}`, MessageCode.CASINO_AGGREGATOR_NOT_FOUND, HttpStatus.BAD_REQUEST);
+    }
+}
