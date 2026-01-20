@@ -10,7 +10,7 @@ import {
   GameListUpdateStatusDto,
   GameListUpdateRequestDto,
 } from '../dtos/game-update.dto';
-import { WhitecliffGameRefreshService } from '../../../../../../../application/whitecliff-game-refresh.service';
+import { WhitecliffGameRefreshService } from '../application/whitecliff-game-refresh.service';
 
 @Controller('whitecliff/admin')
 @ApiTags('Whitecliff Admin')
@@ -19,7 +19,7 @@ import { WhitecliffGameRefreshService } from '../../../../../../../application/w
 export class WhitecliffAdminController {
   constructor(
     private readonly whitecliffGameRefreshService: WhitecliffGameRefreshService,
-  ) {}
+  ) { }
 
   @Post('update-game-list')
   @ApiOperation({

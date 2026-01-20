@@ -8,20 +8,12 @@ import {
   UseFilters,
 } from '@nestjs/common';
 import { ApiTags, ApiOperation, ApiBody } from '@nestjs/swagger';
-import {
-  GetWhitecliffBalanceRequestDto,
-  GetWhitecliffBalanceResponseDto,
-  DebitRequestDto,
-  CreditRequestDto,
-  TransactionResponseDto,
-  GetBonusRequestDto,
-  GetBonusResponseDto,
-} from '../../../../dtos';
 import { CasinoResponse } from '../../../../../common/http/decorators/casino-response.decorator';
 import { GuestOnly } from 'src/common/auth/decorators/roles.decorator';
-import { WhitecliffCallbackService } from '../../../../../../../application/whitecliff-callback.service';
 import { AuditLog } from '../../../../audit-log/infrastructure/audit-log.decorator';
 import { getWhitecliffAuditOptions } from '../infrastructure/whitecliff-audit.util';
+import { WhitecliffCallbackService } from '../application/whitecliff-callback.service';
+import { CreditRequestDto, DebitRequestDto, GetBonusRequestDto, GetBonusResponseDto, GetWhitecliffBalanceRequestDto, GetWhitecliffBalanceResponseDto, TransactionResponseDto } from '../dtos';
 
 @ApiTags('Whitecliff Callback')
 @Controller('dopaminedev')

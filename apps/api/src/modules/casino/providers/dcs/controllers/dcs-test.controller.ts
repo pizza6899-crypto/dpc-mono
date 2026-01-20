@@ -3,9 +3,9 @@ import { ApiTags, ApiOperation, ApiBody } from '@nestjs/swagger';
 import { Public } from 'src/common/auth/decorators/roles.decorator';
 import { ApiStandardErrors } from 'src/common/http/decorators/api-response.decorator';
 import { DcsApiService } from '../infrastructure/dcs-api.service';
-import { DcsGameRefreshService } from '../../../../../../../application/dcs-game-refresh.service';
 import { GameProvider } from '@repo/database';
 import { GamingCurrencyCode } from 'src/utils/currency.util';
+import { DcsGameRefreshService } from '../application/dcs-game-refresh.service';
 
 @Controller('dcs/test')
 @ApiTags('DCS Test')

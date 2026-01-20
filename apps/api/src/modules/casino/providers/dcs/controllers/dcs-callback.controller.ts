@@ -28,9 +28,9 @@ import {
 } from '../dtos/callback.dto';
 import { CasinoResponse } from 'src/common/http/decorators/casino-response.decorator';
 import { GuestOnly } from 'src/common/auth/decorators/roles.decorator';
-import { DcsCallbackService } from '../../../../../../../application/dcs-callback.service';
 import { AuditLog } from 'src/modules/audit-log/infrastructure/audit-log.decorator';
 import { LogType } from 'src/modules/audit-log/domain';
+import { DcsCallbackService } from '../application/dcs-callback.service';
 
 @ApiTags('DCS Callback')
 @Controller('dopaminedev')

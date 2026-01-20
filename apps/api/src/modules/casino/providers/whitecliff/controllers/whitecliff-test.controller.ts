@@ -8,19 +8,16 @@ import {
 import { WhitecliffApiService } from '../infrastructure/whitecliff-api.service';
 import { Language } from '@repo/database';
 import {
-  WhitecliffGameLaunchResponse,
-  TransactionResultsResponse,
   ProductGameListResponse,
   PushedBetHistoryResponse,
 } from '../infrastructure/whitecliff-api.service';
-import { WhitecliffGameRefreshService } from '../../../../../../../application/whitecliff-game-refresh.service';
 import {
   GameListUpdateResponseDto,
   GameListUpdateStatusDto,
-  GameListUpdateRequestDto,
 } from '../dtos/game-update.dto';
 import { GAMING_CURRENCIES } from 'src/utils/currency.util';
 import type { GamingCurrencyCode } from 'src/utils/currency.util';
+import { WhitecliffGameRefreshService } from '../application/whitecliff-game-refresh.service';
 
 @Controller('whitecliff/test')
 @ApiTags('Whitecliff Test')
