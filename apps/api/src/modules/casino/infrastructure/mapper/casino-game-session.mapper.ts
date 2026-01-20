@@ -18,7 +18,7 @@ export class CasinoGameSessionMapper {
             exchangeRateSnapshotAt: model.exchangeRateSnapshotAt,
             usdExchangeRate: model.usdExchangeRate,
             compRate: model.compRate,
-            casinoGameId: model.casinoGameId,
+            gameId: model.gameId,
             createdAt: model.createdAt,
             updatedAt: model.updatedAt,
             lastAccessedAt: model.lastAccessedAt,
@@ -41,7 +41,7 @@ export class CasinoGameSessionMapper {
             exchangeRateSnapshotAt: entity.exchangeRateSnapshotAt,
             usdExchangeRate: entity.usdExchangeRate,
             compRate: entity.compRate,
-            casinoGameId: entity.casinoGameId,
+            gameId: entity.gameId,
             // createdAt, updatedAt은 DB 기본값 사용 또는 엔티티 값 사용
             createdAt: entity.createdAt,
             updatedAt: entity.updatedAt,

@@ -202,7 +202,7 @@ export class DcsCallbackService {
           aggregatorType: GameAggregatorType.DCS,
           aggregatorGameId: game_id,
           provider: providerEnum,
-          gameId: gameSession.casinoGameId!,
+          gameId: gameSession.gameId!,
           betTime: transaction_time,
           jackpotContributionAmount,
           betType: bet_type === 1 ? BetType.NORMAL : BetType.TIP,
@@ -508,10 +508,10 @@ export class DcsCallbackService {
             playerName: true,
           },
         },
-        casinoGame: {
+        casinoGameV2: {
           select: {
             id: true,
-            gameId: true,
+            externalGameId: true,
           },
         },
       },
@@ -532,7 +532,7 @@ export class DcsCallbackService {
     }
 
     // 게임 ID 검증
-    if (!gameRound.casinoGame || gameRound.casinoGame.gameId !== game_id) {
+    if (!gameRound.casinoGameV2 || gameRound.casinoGameV2.externalGameId !== String(game_id)) {
       return getDcsResponse(DcsResponseCode.GAME_ID_NOT_EXIST);
     }
 
@@ -548,7 +548,7 @@ export class DcsCallbackService {
         aggregatorRoundId: round_id,
         aggregatorWagerId: wager_id,
         isEndRound: isEndRound,
-        gameId: gameRound.casinoGame!.id,
+        gameId: gameRound.casinoGameV2!.id,
         description: description,
         gameSessionId: gameRound.gameSession.id, // 추가
       });
@@ -851,15 +851,16 @@ export class DcsCallbackService {
     }
 
     // 2. 게임 조회
-    const game = await this.tx.casinoGame.findFirst({
+    const game = await this.tx.casinoGameV2.findFirst({
       where: {
-        aggregatorType: GameAggregatorType.DCS,
-        provider: providerEnum,
-        gameId: game_id,
+        provider: {
+          code: providerEnum,
+        },
+        externalGameId: String(game_id),
       },
       select: {
         id: true,
-        gameId: true,
+        externalGameId: true,
       },
     });
 
@@ -873,7 +874,7 @@ export class DcsCallbackService {
         userId: user.id,
         aggregatorType: GameAggregatorType.DCS,
         gameCurrency: gameCurrencyEnum,
-        casinoGameId: game.id,
+        gameId: game.id,
       },
       orderBy: {
         createdAt: 'desc',

@@ -279,8 +279,10 @@ export class WhitecliffPushedBetHistoryScheduler {
               lte: endDateObj,
             },
           },
-          casinoGame: {
-            provider: GameProvider.EVOLUTION,
+          casinoGameV2: {
+            provider: {
+              code: GameProvider.EVOLUTION,
+            },
           },
         },
         select: {

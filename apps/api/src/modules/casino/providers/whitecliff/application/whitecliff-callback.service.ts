@@ -166,7 +166,7 @@ export class WhitecliffCallbackService {
               whitecliffSystemId: true,
             },
           },
-          casinoGame: {
+          casinoGameV2: {
             select: {
               id: true,
             },
@@ -193,15 +193,14 @@ export class WhitecliffCallbackService {
       }
 
       // 5. game 조회 (gameSession에 없으면 별도 조회)
-      let gameId = gameSession.casinoGame?.id;
+      let gameId = gameSession.casinoGameV2?.id;
       if (!gameId) {
-        const game = await this.tx.casinoGame.findUnique({
+        const game = await this.tx.casinoGameV2.findFirst({
           where: {
-            aggregatorType_provider_gameId: {
-              aggregatorType: GameAggregatorType.WHITECLIFF,
-              provider,
-              gameId: game_id,
+            provider: {
+              code: provider,
             },
+            externalGameId: String(game_id),
           },
           select: {
             id: true,
@@ -555,13 +554,12 @@ export class WhitecliffCallbackService {
         this.whitecliffMapperService.fromWhitecliffProvider(prd_id)!;
 
       // 1. 게임 조회
-      const game = await this.tx.casinoGame.findUnique({
+      const game = await this.tx.casinoGameV2.findFirst({
         where: {
-          aggregatorType_provider_gameId: {
-            aggregatorType: GameAggregatorType.WHITECLIFF,
-            provider: provider,
-            gameId: game_id,
+          provider: {
+            code: provider,
           },
+          externalGameId: String(game_id),
         },
         select: {
           id: true,
@@ -578,7 +576,7 @@ export class WhitecliffCallbackService {
         where: {
           aggregatorType: GameAggregatorType.WHITECLIFF,
           token: sid, // sid로 직접 찾기
-          casinoGameId: game.id, // 게임 ID도 함께 확인 (DCS 패턴)
+          gameId: game.id, // 게임 ID도 함께 확인 (DCS 패턴)
         },
         orderBy: {
           createdAt: 'desc',

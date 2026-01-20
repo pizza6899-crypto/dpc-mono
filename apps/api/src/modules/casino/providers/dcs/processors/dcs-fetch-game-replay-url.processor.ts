@@ -7,7 +7,6 @@ import {
   DcsFetchGameReplayUrlData,
 } from 'src/modules/casino/infrastructure/queue/casino-queue.types';
 import { PrismaService } from 'src/infrastructure/prisma/prisma.service';
-import { DcsApiService } from 'infrastructure/dcs-api.service';
 import { Logger, OnApplicationShutdown } from '@nestjs/common';
 import { ApiException } from 'src/common/http/exception/api.exception';
 import { MessageCode } from 'src/common/http/types';
@@ -15,6 +14,7 @@ import { HttpStatusCode } from 'axios';
 import { GameReplayType } from '@repo/database';
 import { GamingCurrencyCode } from 'src/utils/currency.util';
 import { ClsService } from 'nestjs-cls';
+import { DcsApiService } from '../infrastructure/dcs-api.service';
 
 @Processor(CasinoQueueNames.DCS_FETCH_GAME_REPLAY_URL, {
   limiter: {

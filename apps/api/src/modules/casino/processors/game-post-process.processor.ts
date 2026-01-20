@@ -71,10 +71,19 @@ export class GamePostProcessProcessor
               status: true,
             },
           },
-          casinoGame: {
+          casinoGameV2: {
             select: {
               contributionRate: true,
-              category: true,
+              categoryItems: {
+                where: { isPrimary: true },
+                select: {
+                  category: {
+                    select: {
+                      code: true,
+                    },
+                  },
+                },
+              },
             },
           },
         },
@@ -133,7 +142,7 @@ export class GamePostProcessProcessor
 
       // 3. 기여도 금액 계산
       const contributionRate =
-        gameRound.casinoGame?.contributionRate || new Prisma.Decimal(0);
+        gameRound.casinoGameV2?.contributionRate || new Prisma.Decimal(0);
       const contributionAmount = betAmountForProcessing.mul(contributionRate);
 
       // 4. 콤프 처리
@@ -159,7 +168,7 @@ export class GamePostProcessProcessor
         currency,
         gameRoundId: BigInt(gameRoundId),
         betAmount: betAmountForProcessing,
-        gameContributionRate: gameRound.casinoGame?.contributionRate?.toNumber(),
+        gameContributionRate: gameRound.casinoGameV2?.contributionRate?.toNumber(),
       });
 
       // --- 통계 기록 추가 ---
@@ -173,8 +182,8 @@ export class GamePostProcessProcessor
         currency,
         betAmount: gameRound.totalBetAmountInWalletCurrency,
         winAmount: gameRound.totalWinAmountInWalletCurrency,
-        category: gameRound.casinoGame?.category
-          ? categoryMap[gameRound.casinoGame.category] || 'other'
+        category: gameRound.casinoGameV2?.categoryItems?.[0]?.category?.code
+          ? categoryMap[gameRound.casinoGameV2.categoryItems[0].category.code] || 'other'
           : 'other',
         date: gameRound.completedAt || new Date(),
       });

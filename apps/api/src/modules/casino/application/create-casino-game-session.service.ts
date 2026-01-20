@@ -69,7 +69,7 @@ export class CreateCasinoGameSessionService {
             exchangeRate,
             usdExchangeRate,
             compRate,
-            casinoGameId: gameId,
+            gameId,
         });
 
         // 5. 저장
