@@ -52,7 +52,7 @@ export class WhitecliffGameService {
       language?: Language;
     },
     requestInfo: RequestClientInfo,
-  ): Promise<{ gameUrl: string }> {
+  ): Promise<{ gameUrl: string; sessionId: string }> {
     const { game, provider, isMobile, walletCurrency, gameCurrency, language } = data;
     const token = IdUtil.generateUrlSafeNanoid(32);
 
@@ -174,7 +174,7 @@ export class WhitecliffGameService {
       });
     }
 
-    await this.createCasinoGameSessionService.execute({
+    const session = await this.createCasinoGameSessionService.execute({
       userId: user.id,
       gameId: game.id!,
       aggregatorType: GameAggregatorType.WHITECLIFF,
@@ -186,6 +186,7 @@ export class WhitecliffGameService {
 
     return {
       gameUrl: result.launch_url,
+      sessionId: session.uid,
     };
   }
 }

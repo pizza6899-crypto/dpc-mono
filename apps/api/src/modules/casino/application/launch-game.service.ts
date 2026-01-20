@@ -20,6 +20,7 @@ interface LaunchGameParams {
 
 interface LaunchGameResult {
     gameUrl: string;
+    sessionId: string;
 }
 
 @Injectable()
