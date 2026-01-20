@@ -31,3 +31,5 @@ export class CategoryValidationException extends CatalogException {
         super(message, MessageCode.VALIDATION_ERROR, HttpStatus.BAD_REQUEST);
     }
 }
+
+

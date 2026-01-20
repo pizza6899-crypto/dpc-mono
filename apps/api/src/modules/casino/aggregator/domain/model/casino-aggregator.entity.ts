@@ -1,9 +1,7 @@
-import { AggregatorStatus } from '@repo/database';
+import { AggregatorStatus, GameAggregatorType } from '@repo/database';
+import { AGGREGATOR_CODE_MAP } from '../../ports/aggregator-game.dto';
 
 export class CasinoAggregator {
-    static readonly CODE_DC = 'DC';
-    static readonly CODE_WC = 'WC';
-
     private constructor(
         public readonly id: bigint | null,
         public readonly name: string,
@@ -13,6 +11,9 @@ export class CasinoAggregator {
         public readonly createdAt: Date,
         public readonly updatedAt: Date,
     ) { }
+
+    static readonly CODE_DC = AGGREGATOR_CODE_MAP[GameAggregatorType.DC];
+    static readonly CODE_WC = AGGREGATOR_CODE_MAP[GameAggregatorType.WHITECLIFF];
 
     static create(params: {
         id?: bigint;
@@ -51,10 +52,10 @@ export class CasinoAggregator {
     }
 
     isDc(): boolean {
-        return this.code === CasinoAggregator.CODE_DC;
+        return this.code === AGGREGATOR_CODE_MAP[GameAggregatorType.DC];
     }
 
     isWhitecliff(): boolean {
-        return this.code === CasinoAggregator.CODE_WC;
+        return this.code === AGGREGATOR_CODE_MAP[GameAggregatorType.WHITECLIFF];
     }
 }

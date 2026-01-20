@@ -220,7 +220,7 @@ export class WhitecliffApiService {
         id: user.id,
         name: user.name,
         balance: user.balance,
-        language: user.language || 'en',
+        language: this.whitecliffMapperService.convertLanguageToWhitecliff(user.language),
         sid: user.token || '',
         currency: whitecliffConfig.currency,
         home_url: whitecliffConfig.redirectHomeUrl,
@@ -281,26 +281,22 @@ export class WhitecliffApiService {
     provider: GameProvider;
     txn_id: string;
   }): Promise<TransactionResultsResponse | WhitecliffErrorResponse> {
-    // 기본적으로 맵핑을 통해서 enum -> int 변경
-    let prd_id = this.whitecliffMapperService.toWhitecliffProvider(provider);
+    // Mapper를 통해 provider ID 획득 (Evolution 통화별 처리 포함)
+    const prd_id = this.whitecliffMapperService.toWhitecliffProviderWithCurrency(
+      provider,
+      gameCurrency,
+    );
 
-    // 에볼루션인 경우 currency에 따라 다르게 응답
-    if (provider === GameProvider.EVOLUTION) {
-      switch (gameCurrency) {
-        case 'KRW':
-          prd_id = 31;
-          break;
-        case 'IDR':
-          prd_id = 29;
-          break;
-        default:
-          prd_id = 1;
-          break;
-      }
+    if (!prd_id) {
+      return {
+        status: 0,
+        error: 'INVALID_PROVIDER',
+        message: `Provider ${provider} is not supported by Whitecliff`,
+      };
     }
 
     const body: any = {
-      lang,
+      lang: this.whitecliffMapperService.convertLanguageToWhitecliff(lang),
       prd_id,
       txn_id,
     };
@@ -334,7 +330,10 @@ export class WhitecliffApiService {
       gameCurrency,
       'POST',
       '/gamelist',
-      { language, prd_id },
+      {
+        language: this.whitecliffMapperService.convertLanguageToWhitecliff(language),
+        prd_id,
+      },
       'Product(s) Game List API',
     );
 

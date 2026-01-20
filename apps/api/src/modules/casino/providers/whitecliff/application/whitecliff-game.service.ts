@@ -3,17 +3,15 @@ import {
   WhitecliffApiService,
   WhitecliffGameLaunchResponse,
 } from '../infrastructure/whitecliff-api.service';
-import { MessageCode, RequestClientInfo } from 'src/common/http/types';
-import { ApiException } from 'src/common/http/exception/api.exception';
-import { HttpStatusCode } from 'axios';
+import { MessageCode, type RequestClientInfo } from 'src/common/http/types';
 import { IdUtil } from 'src/utils/id.util';
 import type { CurrentUserWithSession } from 'src/common/auth/decorators/current-user.decorator';
 import { WhitecliffMapperService } from '../infrastructure/whitecliff-mapper.service';
-import {
-  GameAggregatorType,
-  GameProvider,
-  Language,
-} from '@repo/database';
+import { UserNotFoundException } from 'src/modules/user/domain/user.exception';
+import { WalletNotFoundException } from 'src/modules/wallet/domain/wallet.exception';
+import { GameProvider, Language, GameAggregatorType } from '@repo/database';
+import { CasinoGameProviderNotFoundException } from 'src/modules/casino/aggregator/domain/casino-aggregator.exception';
+import { GameNotFoundException } from 'src/modules/casino/game-catalog/domain';
 import {
   GamingCurrencyCode,
   WalletCurrencyCode,
@@ -54,126 +52,110 @@ export class WhitecliffGameService {
     requestInfo: RequestClientInfo,
   ): Promise<{ gameUrl: string }> {
     const { game, provider, isMobile, walletCurrency, gameCurrency, language } = data;
-    const token = IdUtil.generateUrlSafeNanoid(32);
 
-    const user = await this.tx.user.findUnique({
-      where: { id: authUser.id },
-      select: {
-        id: true,
-        whitecliffId: true,
-        whitecliffUsername: true,
-        whitecliffSystemId: true,
-        language: true,
-      },
-    });
+    // 1. 사용자 및 잔액 정보 조회 (데이터 무결성 확인)
+    const [user, userBalance, exchangeRate] = await Promise.all([
+      this.tx.user.findUnique({
+        where: { id: authUser.id },
+        select: {
+          id: true,
+          whitecliffId: true,
+          whitecliffUsername: true,
+          whitecliffSystemId: true,
+          language: true,
+        },
+      }),
+      this.tx.userWallet.findUnique({
+        where: { userId_currency: { userId: authUser.id, currency: walletCurrency } },
+        select: { mainBalance: true, bonusBalance: true },
+      }),
+      this.exchangeRateService.getRate({
+        fromCurrency: walletCurrency,
+        toCurrency: gameCurrency,
+      }),
+    ]);
 
-    if (!user) {
-      throw new ApiException(
-        MessageCode.USER_NOT_FOUND,
-        HttpStatusCode.NotFound,
-      );
-    }
-
-    const exchangeRate = await this.exchangeRateService.getRate({
-      fromCurrency: walletCurrency,
-      toCurrency: gameCurrency,
-    });
-
-    const userBalance = await this.tx.userWallet.findUnique({
-      where: { userId_currency: { userId: user.id, currency: walletCurrency } },
-      select: { mainBalance: true, bonusBalance: true },
-    });
-
-    if (!userBalance) {
-      throw new ApiException(
-        MessageCode.USER_BALANCE_NOT_FOUND,
-        HttpStatusCode.NotFound,
-      );
-    }
+    if (!user) throw new UserNotFoundException(authUser.id);
+    if (!userBalance) throw new WalletNotFoundException(authUser.id, walletCurrency);
 
     const balance = exchangeRate
       .mul(userBalance.mainBalance.add(userBalance.bonusBalance))
       .toDecimalPlaces(2)
       .toNumber();
-    const whitecliffUsername = user.whitecliffUsername;
 
-    // Whitecliff expected provider ID and game type
-    // provider.code should be used to map to WC provider ID
-    // game.externalGameId is the game ID in WC
-    // game.tableId is used for live games
-
-    // We need to check if provider code is an enum of GameProvider
+    // 2. Provider 매핑
     const providerEnum = GameProvider[provider.code as keyof typeof GameProvider];
-
-    let wcProviderId = this.whitecliffMapperService.toWhitecliffProvider(
+    const wcProviderId = this.whitecliffMapperService.toWhitecliffProviderWithCurrency(
       providerEnum,
-    )!;
+      gameCurrency,
+    );
 
-    // Evolution special handling
-    if (providerEnum === GameProvider.EVOLUTION) {
-      if (gameCurrency === 'KRW') {
-        wcProviderId = 31;
-      } else if (gameCurrency === 'IDR') {
-        wcProviderId = 29;
-      } else {
-        wcProviderId = 1; // Default
-      }
+    if (!wcProviderId) {
+      throw new CasinoGameProviderNotFoundException(provider.code);
     }
 
-    const gameUrl = await this.whitecliffApiService.launchGame({
+    // 3. Whitecliff Identity 확보 (지연된 온보딩 지원)
+    let identity = await this.ensureWhitecliffIdentity(user);
+    const token = IdUtil.generateUrlSafeNanoid(32);
+
+    // 4. 게임 실행 시도 (최대 2회 - INVALID_USER 대응)
+    let apiResponse = await this.whitecliffApiService.launchGame({
       user: {
-        id: Number(user.whitecliffId),
+        id: Number(identity.id),
         language: language || user.language || Language.EN,
-        name: whitecliffUsername || '',
-        balance: balance,
-        gameCurrency: gameCurrency,
-        token: token,
+        name: identity.username,
+        balance,
+        gameCurrency,
+        token,
       },
       prd: {
         id: wcProviderId,
-        type: Number(game.externalGameId), // Assuming numeric external ID for WC
+        type: Number(game.externalGameId),
         table_id: game.tableId || '',
         is_mobile: isMobile,
       },
     });
 
-    if (gameUrl.status === 0 && gameUrl.error == 'INVALID_USER') {
-      const whitecliffId = await IdUtil.generateNextWhitecliffId(this.tx);
-      const newWhitecliffUsername = `wcf${whitecliffId}`;
+    // INVALID_USER 에러 시 ID 재생성 후 1회 재시도
+    if (apiResponse.status === 0 && apiResponse.error === 'INVALID_USER') {
+      this.logger.warn(`Whitecliff INVALID_USER (wcid: ${identity.id}). Regenerating identity for ${user.id}...`);
+      identity = await this.regenerateWhitecliffIdentity(user.id);
 
-      await this.tx.user.update({
-        where: { id: user.id },
-        data: {
-          whitecliffId: whitecliffId,
-          whitecliffUsername: newWhitecliffUsername,
-          whitecliffSystemId: null,
+      apiResponse = await this.whitecliffApiService.launchGame({
+        user: {
+          id: Number(identity.id),
+          language: language || user.language || Language.EN,
+          name: identity.username,
+          balance,
+          gameCurrency,
+          token,
         },
-      });
-      // Should ideally retry launch here or throw specific error to client to retry
-    }
-
-    if (gameUrl.status === 0) {
-      this.logger.error(`게임 실행 실패: ${gameUrl.error}`);
-      throw new ApiException(
-        MessageCode.GAME_NOT_FOUND,
-        HttpStatusCode.BadRequest,
-      );
-    }
-
-    const result = gameUrl as WhitecliffGameLaunchResponse;
-
-    if (
-      user.whitecliffSystemId == null ||
-      Number(user.whitecliffSystemId) !== result.user_id
-    ) {
-      await this.tx.user.update({
-        where: { id: user.id },
-        data: {
-          whitecliffSystemId: result.user_id,
+        prd: {
+          id: wcProviderId,
+          type: Number(game.externalGameId),
+          table_id: game.tableId || '',
+          is_mobile: isMobile,
         },
       });
     }
 
+    // 최종 결과 확인
+    if (apiResponse.status === 0) {
+      this.logger.error(`Whitecliff Game Launch Failed: ${apiResponse.error}`, { userId: user.id, gameId: game.id });
+      throw new GameNotFoundException(game.id!);
+    }
+
+    const result = apiResponse as WhitecliffGameLaunchResponse;
+
+    // 5. Whitecliff 연동 정보 동기화 (필요한 경우에만 1회 업데이트)
+    if (!user.whitecliffSystemId || Number(user.whitecliffSystemId) !== result.user_id) {
+      await this.tx.user.update({
+        where: { id: user.id },
+        data: { whitecliffSystemId: result.user_id },
+      });
+    }
+
+    // 6. 게임 세션 생성 (애플리케이션 레이어 위임)
     await this.createCasinoGameSessionService.execute({
       userId: user.id,
       gameId: game.id!,
@@ -181,11 +163,44 @@ export class WhitecliffGameService {
       walletCurrency,
       gameCurrency,
       token: result.sid,
-      playerName: whitecliffUsername!,
+      playerName: identity.username,
     });
 
-    return {
-      gameUrl: result.launch_url,
-    };
+    return { gameUrl: result.launch_url };
+  }
+
+  /**
+   * 사용자의 Whitecliff 식별 정보를 확보합니다.
+   * 누락된 경우 즉시 생성하여 DB에 반영합니다.
+   */
+  private async ensureWhitecliffIdentity(user: {
+    id: bigint;
+    whitecliffId: bigint | null;
+    whitecliffUsername: string | null;
+  }): Promise<{ id: bigint; username: string }> {
+    if (user.whitecliffId && user.whitecliffUsername) {
+      return { id: user.whitecliffId, username: user.whitecliffUsername };
+    }
+    return this.regenerateWhitecliffIdentity(user.id);
+  }
+
+  /**
+   * 사용자의 Whitecliff 식별 정보를 새로 생성하고 DB에 반영합니다.
+   * 기존 연동 정보(System ID)가 있다면 초기화합니다.
+   */
+  private async regenerateWhitecliffIdentity(userId: bigint): Promise<{ id: bigint; username: string }> {
+    const nextId = await IdUtil.generateNextWhitecliffId(this.tx);
+    const username = `wcf${nextId}`;
+
+    await this.tx.user.update({
+      where: { id: userId },
+      data: {
+        whitecliffId: nextId,
+        whitecliffUsername: username,
+        whitecliffSystemId: null, // 초기화
+      },
+    });
+
+    return { id: nextId, username: username };
   }
 }

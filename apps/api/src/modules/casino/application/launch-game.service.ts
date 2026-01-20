@@ -4,12 +4,18 @@ import { FindGameProviderByIdService } from '../aggregator/application/provider/
 import { AggregatorRegistryService } from '../aggregator/application/aggregator-registry.service';
 import { WhitecliffGameService } from '../providers/whitecliff/application/whitecliff-game.service';
 import { DcsGameService } from '../providers/dcs/application/dcs-game.service';
-import { CasinoAggregator } from '../aggregator/domain';
 import { CasinoAggregatorUnsupportedException } from '../aggregator/domain/casino-aggregator.exception';
 import type { CurrentUserWithSession } from 'src/common/auth/decorators/current-user.decorator';
 import type { RequestClientInfo } from 'src/common/http/types';
-import { Language } from '@repo/database';
-import type { GamingCurrencyCode, WalletCurrencyCode } from 'src/utils/currency.util';
+import { Language, GameAggregatorType } from '@repo/database';
+import { AGGREGATOR_CODE_MAP } from '../aggregator/ports/aggregator-game.dto';
+import { CurrencyUnsupportedException } from '../domain/casino.exception';
+import {
+    GAMING_CURRENCIES,
+    type GamingCurrencyCode,
+    WALLET_CURRENCIES,
+    type WalletCurrencyCode,
+} from 'src/utils/currency.util';
 
 interface LaunchGameParams {
     gameId: bigint;
@@ -42,6 +48,14 @@ export class LaunchGameService {
     ): Promise<LaunchGameResult> {
         const { gameId, isMobile, walletCurrency, gameCurrency, language } = params;
 
+        if (!WALLET_CURRENCIES.includes(walletCurrency)) {
+            throw new CurrencyUnsupportedException(walletCurrency);
+        }
+
+        if (!GAMING_CURRENCIES.includes(gameCurrency)) {
+            throw new CurrencyUnsupportedException(gameCurrency);
+        }
+
         // 1. Get Game Entity (GameCatalog)
         const game = await this.findGameByIdService.execute(gameId);
 
@@ -54,7 +68,7 @@ export class LaunchGameService {
         const aggregator = this.aggregatorRegistryService.getById(provider.aggregatorId);
 
         // 4. Dispatch to worker service based on aggregator code
-        if (aggregator.code === CasinoAggregator.CODE_WC) {
+        if (aggregator.code === AGGREGATOR_CODE_MAP[GameAggregatorType.WHITECLIFF]) {
             return await this.whitecliffGameService.launchGame(
                 user,
                 {
@@ -67,7 +81,7 @@ export class LaunchGameService {
                 },
                 requestInfo,
             );
-        } else if (aggregator.code === CasinoAggregator.CODE_DC) {
+        } else if (aggregator.code === AGGREGATOR_CODE_MAP[GameAggregatorType.DC]) {
             return await this.dcsGameService.launchGame({
                 user,
                 game,
