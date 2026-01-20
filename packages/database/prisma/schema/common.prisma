@@ -24,29 +24,29 @@ datasource db {
 }
 
 model User {
-  id                     BigInt                  @id @default(autoincrement())
-  whitecliffId           BigInt?                 @unique @map("whitecliff_id")
-  whitecliffSystemId     BigInt?                 @unique @map("whitecliff_system_id")
-  whitecliffUsername     String?                 @unique @map("whitecliff_username")
-  dcsId                  String?                 @unique @map("dcs_id")
-  email                  String?                 @unique
-  passwordHash           String?                 @map("password_hash")
-  socialType             SocialType?             @map("social_type")
-  socialId               String?                 @map("social_id")
-  role                   UserRoleType            @default(USER)
-  status                 UserStatus              @default(ACTIVE)
-  kycLevel               KycLevel                @default(NONE) @map("kyc_level")
-  country                String?
-  language               Language?
-  timezone               String?
-  timezoneOffset         Int?                    @map("timezone_offset")
-  createdAt              DateTime                @default(now()) @map("created_at")
-  updatedAt              DateTime                @updatedAt @map("updated_at")
-  affiliateCodes         AffiliateCode[]         @relation("AffiliateCodes")
-  affiliateCommissions   AffiliateCommission[]   @relation("AffiliateCommissions")
-  subUserCommissions     AffiliateCommission[]   @relation("SubUserCommissions")
-  affiliateWallets       AffiliateWallet[]       @relation("AffiliateWallets")
-  emailLogs              EmailLog[]
+  id                   BigInt                @id @default(autoincrement())
+  whitecliffId         BigInt?               @unique @map("whitecliff_id")
+  whitecliffSystemId   BigInt?               @unique @map("whitecliff_system_id")
+  whitecliffUsername   String?               @unique @map("whitecliff_username")
+  dcsId                String?               @unique @map("dcs_id")
+  email                String?               @unique
+  passwordHash         String?               @map("password_hash")
+  socialType           SocialType?           @map("social_type")
+  socialId             String?               @map("social_id")
+  role                 UserRoleType          @default(USER)
+  status               UserStatus            @default(ACTIVE)
+  kycLevel             KycLevel              @default(NONE) @map("kyc_level")
+  country              String?
+  language             Language?
+  timezone             String?
+  timezoneOffset       Int?                  @map("timezone_offset")
+  createdAt            DateTime              @default(now()) @map("created_at")
+  updatedAt            DateTime              @updatedAt @map("updated_at")
+  affiliateCodes       AffiliateCode[]       @relation("AffiliateCodes")
+  affiliateCommissions AffiliateCommission[] @relation("AffiliateCommissions")
+  subUserCommissions   AffiliateCommission[] @relation("SubUserCommissions")
+  affiliateWallets     AffiliateWallet[]     @relation("AffiliateWallets")
+
   gameSessions           CasinoGameSession[]
   affiliateReferrals     Referral[]              @relation("AffiliateReferrals")
   referredUsers          Referral[]              @relation("ReferredUsers")
@@ -268,28 +268,6 @@ model UserToken {
   @@map("user_tokens")
 }
 
-model EmailLog {
-  id        Int         @id @default(autoincrement())
-  userId    BigInt?     @map("user_id")
-  type      EmailType
-  status    EmailStatus
-  to        String
-  subject   String
-  from      String?
-  messageId String?     @map("message_id")
-  error     String?
-  metadata  Json?       @default("{}")
-  sentAt    DateTime?   @map("sent_at")
-  createdAt DateTime    @default(now()) @map("created_at")
-  user      User?       @relation(fields: [userId], references: [id])
-
-  @@index([userId, type, createdAt])
-  @@index([to, type, createdAt])
-  @@index([status, createdAt])
-  @@index([type, status])
-  @@map("email_logs")
-}
-
 enum SocialType {
   GOOGLE
   APPLE
@@ -418,15 +396,6 @@ enum ExchangeRateProvider {
 
 enum TokenType {
   PASSWORD_RESET
-}
-
-enum EmailType {
-  PASSWORD_RESET
-}
-
-enum EmailStatus {
-  SENT
-  FAILED
 }
 
 enum LoginAttemptResult {
