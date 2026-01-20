@@ -49,10 +49,11 @@ export class WhitecliffGameService {
       isMobile: boolean;
       walletCurrency: WalletCurrencyCode;
       gameCurrency: GamingCurrencyCode;
+      language?: Language;
     },
     requestInfo: RequestClientInfo,
   ): Promise<{ gameUrl: string }> {
-    const { game, provider, isMobile, walletCurrency, gameCurrency } = data;
+    const { game, provider, isMobile, walletCurrency, gameCurrency, language } = data;
     const token = IdUtil.generateUrlSafeNanoid(32);
 
     const user = await this.tx.user.findUnique({
@@ -122,7 +123,7 @@ export class WhitecliffGameService {
     const gameUrl = await this.whitecliffApiService.launchGame({
       user: {
         id: Number(user.whitecliffId),
-        language: user.language || Language.EN,
+        language: language || user.language || Language.EN,
         name: whitecliffUsername || '',
         balance: balance,
         gameCurrency: gameCurrency,

@@ -7,6 +7,7 @@ import { DcsGameService } from '../providers/dcs/application/dcs-game.service';
 import { CasinoAggregator } from '../aggregator/domain';
 import type { CurrentUserWithSession } from 'src/common/auth/decorators/current-user.decorator';
 import type { RequestClientInfo } from 'src/common/http/types';
+import { Language } from '@repo/database';
 import type { GamingCurrencyCode, WalletCurrencyCode } from 'src/utils/currency.util';
 
 interface LaunchGameParams {
@@ -14,6 +15,7 @@ interface LaunchGameParams {
     isMobile: boolean;
     walletCurrency: WalletCurrencyCode;
     gameCurrency: GamingCurrencyCode;
+    language?: Language;
 }
 
 interface LaunchGameResult {
@@ -37,7 +39,7 @@ export class LaunchGameService {
         params: LaunchGameParams,
         requestInfo: RequestClientInfo,
     ): Promise<LaunchGameResult> {
-        const { gameId, isMobile, walletCurrency, gameCurrency } = params;
+        const { gameId, isMobile, walletCurrency, gameCurrency, language } = params;
 
         // 1. Get Game Entity (GameCatalog)
         const game = await this.findGameByIdService.execute(gameId);
@@ -60,6 +62,7 @@ export class LaunchGameService {
                     isMobile,
                     walletCurrency,
                     gameCurrency,
+                    language,
                 },
                 requestInfo,
             );
@@ -71,6 +74,7 @@ export class LaunchGameService {
                 isMobile,
                 gameCurrency,
                 walletCurrency,
+                language,
                 requestInfo,
             });
         }

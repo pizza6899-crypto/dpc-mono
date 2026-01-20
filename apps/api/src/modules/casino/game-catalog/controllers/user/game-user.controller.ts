@@ -130,6 +130,7 @@ export class GameUserController {
                 isMobile: dto.isMobile,
                 walletCurrency: dto.walletCurrency,
                 gameCurrency: dto.gameCurrency,
+                language: dto.language,
             },
             request,
         );

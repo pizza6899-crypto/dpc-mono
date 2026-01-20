@@ -10,7 +10,10 @@ import {
   GamingCurrencyCode,
   WalletCurrencyCode,
 } from 'src/utils/currency.util';
-import { GameAggregatorType } from '@repo/database';
+import {
+  GameAggregatorType,
+  Language,
+} from '@repo/database';
 import { InjectTransaction } from '@nestjs-cls/transactional';
 import { type PrismaTransaction } from 'src/infrastructure/prisma/prisma.module';
 import { CreateCasinoGameSessionService } from 'src/modules/casino/game-session/application/create-casino-game-session.service';
@@ -34,6 +37,7 @@ export class DcsGameService {
     isMobile,
     walletCurrency,
     gameCurrency,
+    language,
     requestInfo,
   }: {
     user: CurrentUserWithSession;
@@ -42,6 +46,7 @@ export class DcsGameService {
     isMobile: boolean;
     gameCurrency: GamingCurrencyCode;
     walletCurrency: WalletCurrencyCode;
+    language?: Language;
     requestInfo: RequestClientInfo;
   }) {
     const newDcsToken = IdUtil.generateUrlSafeNanoid(32);
@@ -79,7 +84,7 @@ export class DcsGameService {
         dcsUserToken: newDcsToken,
         gameId: Number(game.externalGameId),
         gameCurrency: gameCurrency,
-        language: fromLanguageEnum(updatedUser.language),
+        language: fromLanguageEnum(language || updatedUser.language),
         channel: isMobile ? 'mobile' : 'pc',
         country_code: requestInfo.country == 'XX' ? 'JP' : (requestInfo.country || 'JP'),
         full_screen: true,
