@@ -6,7 +6,7 @@ import { Admin } from 'src/common/auth/decorators/roles.decorator';
 import { AuditLog } from 'src/modules/audit-log/infrastructure/audit-log.decorator';
 import { LogType } from 'src/modules/audit-log/domain';
 
-@ApiTags('Casino Game (Admin)')
+@ApiTags('Admin Casino Game')
 @Controller('admin/casino/sync')
 @Admin()
 export class SyncAdminController {
