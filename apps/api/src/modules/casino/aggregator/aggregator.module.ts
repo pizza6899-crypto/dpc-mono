@@ -19,7 +19,7 @@ import { FindGameProvidersService } from './application/provider/find-game-provi
 import { UpdateGameProviderService } from './application/provider/update-game-provider.service';
 import { GameProviderAdminController } from './controllers/admin/game-provider-admin.controller';
 
-import { WhitecliffModule } from '../whitecliff/whitecliff.module';
+import { WhitecliffModule } from '../providers/whitecliff/whitecliff.module';
 import { AggregatorClientFactory } from './infrastructure/aggregator.factory';
 import { WhitecliffAdapter } from './infrastructure/adapters/whitecliff/whitecliff.adapter';
 import { DcsAdapter } from './infrastructure/adapters/dcs/dcs.adapter';

@@ -1,10 +1,8 @@
 import { forwardRef, Module } from '@nestjs/common';
 import { AggregatorModule } from './aggregator/aggregator.module';
 import { GameCatalogModule } from './game-catalog/game-catalog.module';
-import { WhitecliffModule } from './whitecliff/whitecliff.module';
-import { DcsModule } from './dcs/dcs.module';
-import { CasinoGameUserController } from './controllers/user/casino-game-user.controller';
-import { CasinoGameService } from './application/casino-game.service';
+import { WhitecliffModule } from './providers/whitecliff/whitecliff.module';
+import { DcsModule } from './providers/dcs/dcs.module';
 import { CasinoBetService } from './application/casino-bet.service';
 import { ConcurrencyModule } from 'src/common/concurrency/concurrency.module';
 import { CasinoBonusService } from './application/casino-bonus.service';
@@ -55,9 +53,8 @@ import { SnowflakeModule } from 'src/common/snowflake/snowflake.module';
     CompModule,
     SnowflakeModule,
   ],
-  controllers: [CasinoGameUserController],
+  controllers: [],
   providers: [
-    CasinoGameService,
     CasinoBetService,
     CasinoBonusService,
     CasinoRefundService,

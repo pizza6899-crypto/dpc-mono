@@ -5,47 +5,6 @@
 // 기존 카지노 게임 (Legacy - 유지)
 // ═══════════════════════════════════════════════════════════════
 
-model CasinoGame {
-  id               BigInt                  @id @default(autoincrement())
-  aggregatorType   GameAggregatorType      @map("aggregator_type")
-  provider         GameProvider
-  category         GameCategory
-  gameId           Int                     @map("game_id")
-  gameType         String?                 @map("game_type")
-  tableId          String?                 @map("table_id")
-  iconLink         String?                 @map("icon_link")
-  isEnabled        Boolean                 @map("is_enabled")
-  isVisibleToUser  Boolean                 @default(true) @map("is_visible_to_user")
-  houseEdge        Decimal                 @default(0.04) @map("house_edge") @db.Decimal(8, 4)
-  contributionRate Decimal                 @default(1.0) @map("contribution_rate") @db.Decimal(8, 4)
-  createdAt        DateTime                @default(now()) @map("created_at")
-  updatedAt        DateTime                @updatedAt @map("updated_at")
-  bonusDetails     BonusDetail[]
-  gameRounds       GameRound[]
-  gameSessions     CasinoGameSession[]
-  translations     CasinoGameTranslation[]
-
-  @@unique([aggregatorType, provider, gameId])
-  @@index([isEnabled])
-  @@map("casino_games")
-}
-
-model CasinoGameTranslation {
-  id           Int        @id @default(autoincrement())
-  gameId       BigInt     @map("game_id")
-  language     Language
-  providerName String     @map("provider_name")
-  categoryName String     @map("category_name")
-  gameName     String     @map("game_name")
-  createdAt    DateTime   @default(now()) @map("created_at")
-  updatedAt    DateTime   @updatedAt @map("updated_at")
-  casinoGame   CasinoGame @relation(fields: [gameId], references: [id], onDelete: Cascade)
-
-  @@unique([gameId, language])
-  @@index([language])
-  @@map("casino_game_translations")
-}
-
 model CasinoGameSession {
   id                     BigInt               @id @default(autoincrement())
   uid                    String               @unique
@@ -62,9 +21,9 @@ model CasinoGameSession {
   exchangeRateSnapshotAt DateTime             @default(now()) @map("exchange_rate_snapshot_at")
   usdExchangeRate        Decimal              @map("usd_exchange_rate") @db.Decimal(32, 18)
   compRate               Decimal              @map("comp_rate") @db.Decimal(8, 4)
-  casinoGameId           BigInt?              @map("casino_game_id")
+  gameId                 BigInt?              @map("game_id") // 현재 실행 중인 게임 (선택적)
   gameRounds             GameRound[]
-  casinoGame             CasinoGame?          @relation(fields: [casinoGameId], references: [id])
+  casinoGameV2           CasinoGameV2?        @relation(fields: [gameId], references: [id])
   user                   User                 @relation(fields: [userId], references: [id])
 
   @@index([userId])
@@ -280,9 +239,12 @@ model CasinoGameV2 {
   updatedAt DateTime @updatedAt @map("updated_at")
 
   // Relations
-  provider      CasinoGameProvider        @relation(fields: [providerId], references: [id])
-  translations  CasinoGameV2Translation[]
-  categoryItems CasinoGameCategoryItem[] // N:M 카테고리 관계
+  provider           CasinoGameProvider        @relation(fields: [providerId], references: [id])
+  translations       CasinoGameV2Translation[]
+  categoryItems      CasinoGameCategoryItem[] // N:M 카테고리 관계
+  gameRounds         GameRound[] // 게임 라운드 (레거시 호환)
+  bonusDetails       BonusDetail[] // 보너스 상세 (레거시 호환)
+  casinoGameSessions CasinoGameSession[]
 
   @@unique([providerId, externalGameId]) // 프로바이더 + 외부게임ID 조합은 유니크
   @@index([isEnabled, isVisible])
