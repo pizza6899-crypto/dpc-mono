@@ -48,7 +48,7 @@ export class DcsGameService {
     walletCurrency: WalletCurrencyCode;
     language?: Language;
     requestInfo: RequestClientInfo;
-  }): Promise<{ gameUrl: string; sessionId: string }> {
+  }) {
     const newDcsToken = IdUtil.generateUrlSafeNanoid(32);
 
     try {
@@ -97,7 +97,7 @@ export class DcsGameService {
         );
       }
 
-      const session = await this.createCasinoGameSessionService.execute({
+      await this.createCasinoGameSessionService.execute({
         userId: authUser.id,
         gameId: game.id!,
         aggregatorType: GameAggregatorType.DCS,
@@ -109,7 +109,6 @@ export class DcsGameService {
 
       return {
         gameUrl: response.data.game_url,
-        sessionId: session.uid,
       };
     } catch (error) {
       throw error;
