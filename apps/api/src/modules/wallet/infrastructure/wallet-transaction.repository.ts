@@ -6,6 +6,7 @@ import { WalletTransactionRepositoryPort } from '../ports/out/wallet-transaction
 import { WalletTransaction } from '../domain';
 import { WalletTransactionSearchOptions } from '../application/wallet-transaction.search-options';
 import { Prisma } from '@prisma/client';
+import { WalletTransactionMapper } from './wallet-transaction.mapper';
 
 @Injectable()
 export class WalletTransactionRepository
@@ -13,28 +14,17 @@ export class WalletTransactionRepository
     constructor(
         @InjectTransaction()
         private readonly tx: PrismaTransaction,
+        private readonly mapper: WalletTransactionMapper,
     ) { }
 
     async create(transaction: WalletTransaction): Promise<WalletTransaction> {
-        const data = {
-            userId: transaction.userId,
-            currency: transaction.currency,
-            type: transaction.type,
-            balanceType: transaction.balanceType,
-            amount: transaction.amount,
-            balanceAfter: transaction.balanceAfter,
-            referenceId: transaction.referenceId,
-            metadata: transaction.metadata as Prisma.InputJsonValue,
-            ipAddress: transaction.ipAddress,
-            countryCode: transaction.countryCode,
-            createdAt: transaction.createdAt,
-        };
+        const data = this.mapper.toPrisma(transaction);
 
         const result = await this.tx.walletTransaction.create({
             data,
         });
 
-        return WalletTransaction.fromPersistence(result);
+        return this.mapper.toDomain(result);
     }
 
     async listByUserId(
@@ -67,7 +57,7 @@ export class WalletTransactionRepository
         ]);
 
         const transactions = items.map((item) =>
-            WalletTransaction.fromPersistence(item),
+            this.mapper.toDomain(item),
         );
 
         return [transactions, total];

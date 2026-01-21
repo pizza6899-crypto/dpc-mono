@@ -3,6 +3,7 @@ import { WalletQueryService } from './application/wallet-query.service';
 import { GetWalletTransactionHistoryService } from './application/get-wallet-transaction-history.service';
 import { UserWalletRepository } from './infrastructure/user-wallet.repository';
 import { UserWalletMapper } from './infrastructure/user-wallet.mapper';
+import { WalletTransactionMapper } from './infrastructure/wallet-transaction.mapper';
 import { USER_WALLET_REPOSITORY } from './ports/out/user-wallet.repository.token';
 import { WalletController } from './controllers/user/wallet.controller';
 import { WalletAdminController } from './controllers/admin/wallet-admin.controller';
@@ -51,6 +52,7 @@ import { SqidsModule } from 'src/common/sqids/sqids.module';
     UserWalletPolicy,
     GetWalletTransactionHistoryService,
     UserWalletMapper,
+    WalletTransactionMapper,
   ],
   controllers: [WalletController, WalletAdminController],
   exports: [

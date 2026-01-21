@@ -94,17 +94,7 @@ export class UserWalletRepository implements UserWalletRepositoryPort {
   async create(wallet: UserWallet): Promise<UserWallet> {
     const data = this.mapper.toPrisma(wallet);
     const result = await this.tx.userWallet.create({
-      data: {
-        userId: data.userId,
-        currency: data.currency,
-        cash: data.cash,
-        bonus: data.bonus,
-        reward: data.reward,
-        lock: data.lock,
-        vault: data.vault,
-        status: data.status,
-        updatedAt: data.updatedAt,
-      },
+      data,
     });
     return this.mapper.toDomain(result);
   }
@@ -118,15 +108,7 @@ export class UserWalletRepository implements UserWalletRepositoryPort {
           currency: data.currency,
         },
       },
-      data: {
-        cash: data.cash,
-        bonus: data.bonus,
-        reward: data.reward,
-        lock: data.lock,
-        vault: data.vault,
-        status: data.status,
-        updatedAt: data.updatedAt,
-      },
+      data,
     });
     return this.mapper.toDomain(result);
   }
