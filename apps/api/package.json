@@ -6,6 +6,9 @@
   "private": true,
   "license": "UNLICENSED",
   "packageManager": "pnpm@10.26.2",
+  "files": [
+    "dist"
+  ],
   "scripts": {
     "build": "pnpm run generate:layouts && nest build",
     "generate:layouts": "ts-node scripts/generate-email-layouts.ts",

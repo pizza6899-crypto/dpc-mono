@@ -6,6 +6,8 @@ WORKDIR /app
 ENV PNPM_HOME="/pnpm"
 ENV PATH="$PNPM_HOME:$PATH"
 RUN corepack enable && corepack prepare pnpm@latest --activate
+# 의존성 해결을 위해 호이스팅 설정 추가
+RUN echo "shamefully-hoist=true" > .npmrc
 RUN apt-get update && apt-get install -y openssl python3 make g++
 
 # 락파일과 워크스페이스 설정만 먼저 복사하여 종속성 설치 캐싱
@@ -28,23 +30,8 @@ RUN pnpm -F api db:generate
 RUN pnpm shared:build
 RUN pnpm api:build
 
-# 3. 프로덕션 실행용 격리 배포
-RUN pnpm --filter api --prod deploy --legacy /out
-
-# 빌드된 dist를 deploy된 폴더 안으로 복사
-RUN cp -r apps/api/dist /out/dist
-
-# 4. 의존성 및 이미지 최적화 (arm64 엔진만 보존)
-RUN rm -rf /out/node_modules/.pnpm/typescript* \
-    && rm -rf /out/node_modules/.pnpm/prisma@* \
-    && rm -rf /out/node_modules/.pnpm/@prisma+studio-core* \
-    && rm -rf /out/node_modules/.pnpm/ts-node* \
-    # Prisma 엔진 최적화: linux-arm64용만 남기기
-    && find /out/node_modules/.pnpm -name "libquery_engine-*" ! -name "*linux-arm64-openssl-*.so.node" -delete \
-    # 기타 찌꺼기 제거
-    && find /out/node_modules -name "*.d.ts" -delete \
-    && find /out/node_modules -name "*.map" -delete \
-    && find /out/node_modules -name "*.md" -delete
+# devDependencies 제거
+RUN CI=true pnpm prune --prod
 
 # 2. Runner stage
 FROM node:24-slim AS runner
@@ -58,13 +45,23 @@ RUN apt-get update && apt-get install -y \
     openssl \
     && rm -rf /var/lib/apt/lists/*
 
-# 최적화된 결과물만 복사
-COPY --from=builder /out/package.json ./
-COPY --from=builder /out/node_modules ./node_modules
-COPY --from=builder /out/dist ./dist
+# [수정] 구조를 그대로 유지하며 복사합니다.
+# 1. 루트 node_modules 복사 (실제 파일 .pnpm 포함)
+COPY --from=builder /app/node_modules ./node_modules
 
+# 2. 각 패키지의 node_modules "링크"들도 복사해야 합니다.
+# (이게 없으면 앱이 루트의 .pnpm을 찾아가는 길을 잃어버립니다.)
+COPY --from=builder /app/apps/api/node_modules ./apps/api/node_modules
+COPY --from=builder /app/packages/shared/node_modules ./packages/shared/node_modules
+
+# 3. 빌드 결과물 복사
+COPY --from=builder /app/apps/api/dist ./apps/api/dist
+COPY --from=builder /app/apps/api/package.json ./apps/api/package.json
+COPY --from=builder /app/apps/api/.env ./apps/api/.env
+COPY --from=builder /app/packages/shared/dist ./packages/shared/dist
+COPY --from=builder /app/packages/shared/package.json ./packages/shared/package.json
+
+WORKDIR /app/apps/api
 EXPOSE 3001
-ENV NODE_ENV="production"
 
-# 실행
 CMD ["node", "dist/src/main.js"]

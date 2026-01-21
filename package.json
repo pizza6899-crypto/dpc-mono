@@ -31,7 +31,7 @@
     "swagger": "pnpm -F api swagger && pnpm -F admin orval",
     "docker:build": "node scripts/docker-build.js",
     "docker:save": "pnpm docker:build && echo '💾 Saving image to dpc-api.tar...' && docker save dpc-api:latest -o dpc-api.tar && echo '✅ Saved to dpc-api.tar' && open .",
-    "docker:run": "docker run --rm --env-file .env.local -p 3001:3001 dpc-api:latest",
+    "docker:run": "docker run --rm --env-file .env.local --network dpc-mono_default -p 3001:3001 dpc-api:latest",
     "docker:push-ecr": "pnpm -F api docker:tag-ecr && pnpm -F api docker:build && pnpm -F api docker:push",
     "docker:clean": "docker system prune -f"
   },
