@@ -1,12 +1,12 @@
 import { Injectable, Inject } from '@nestjs/common';
-import { Prisma, ExchangeCurrencyCode, WithdrawalProcessingMode } from '@repo/database';
+import { Prisma, ExchangeCurrencyCode, WithdrawalProcessingMode } from '@prisma/client';
 import { Transactional } from '@nestjs-cls/transactional';
 import { SnowflakeService } from 'src/common/snowflake/snowflake.service';
 import { UpdateUserBalanceService } from 'src/modules/wallet/application/update-user-balance.service';
 import { CreateWalletTransactionService } from 'src/modules/wallet/application/create-wallet-transaction.service';
 import { WalletQueryService } from 'src/modules/wallet/application/wallet-query.service';
 import { BalanceType, UpdateOperation } from 'src/modules/wallet/domain';
-import { TransactionType, TransactionStatus } from '@repo/database';
+import { TransactionType, TransactionStatus } from '@prisma/client';
 import { WAGERING_REQUIREMENT_REPOSITORY } from 'src/modules/wagering/ports';
 import type { WageringRequirementRepositoryPort } from 'src/modules/wagering/ports';
 import {

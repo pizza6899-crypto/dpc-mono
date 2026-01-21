@@ -3,7 +3,7 @@ import { ApiProperty } from '@nestjs/swagger';
 import {
   CommissionStatus,
   ExchangeCurrencyCode,
-} from '@repo/database';
+} from '@prisma/client';
 
 export class CommissionAdminResponseDto {
   @ApiProperty({

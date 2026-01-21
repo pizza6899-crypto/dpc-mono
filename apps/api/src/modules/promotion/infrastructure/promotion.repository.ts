@@ -2,7 +2,7 @@
 import { Injectable } from '@nestjs/common';
 import { InjectTransaction } from '@nestjs-cls/transactional';
 import { type PrismaTransaction } from 'src/infrastructure/prisma/prisma.module';
-import { Prisma, ExchangeCurrencyCode, Language } from '@repo/database';
+import { Prisma, ExchangeCurrencyCode, Language } from '@prisma/client';
 import { Promotion, UserPromotion, PromotionCurrency } from '../domain';
 import type { PromotionTranslation } from '../domain/model/promotion.entity';
 import type { PromotionRepositoryPort } from '../ports/out/promotion.repository.port';

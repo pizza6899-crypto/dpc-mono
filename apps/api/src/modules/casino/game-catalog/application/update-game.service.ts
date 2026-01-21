@@ -2,7 +2,7 @@ import { Inject, Injectable } from '@nestjs/common';
 import { GAME_REPOSITORY } from '../ports';
 import type { GameRepositoryPort } from '../ports';
 import { CasinoGameV2 } from '../domain';
-import { Language, Prisma } from '@repo/database';
+import { Language, Prisma } from '@prisma/client';
 
 interface UpdateGameParams {
     id: bigint;

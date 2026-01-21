@@ -2,7 +2,7 @@ import { Inject, Injectable } from '@nestjs/common';
 import { CATEGORY_REPOSITORY } from '../ports';
 import type { CategoryRepositoryPort } from '../ports';
 import { CasinoGameCategory, CategoryAlreadyExistsException } from '../domain';
-import { CategoryType, Language } from '@repo/database';
+import { CategoryType, Language } from '@prisma/client';
 import { AttachFileService } from '../../../file/application/attach-file.service';
 import { FileUsageType } from '../../../file/domain';
 import { Transactional } from '@nestjs-cls/transactional';

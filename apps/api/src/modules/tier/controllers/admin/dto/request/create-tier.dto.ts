@@ -1,6 +1,6 @@
 import { IsNumber, IsString, IsOptional, Min, IsEnum, IsNotEmpty } from 'class-validator';
 import { ApiProperty } from '@nestjs/swagger';
-import { Language } from '@repo/database';
+import { Language } from '@prisma/client';
 
 export class TierTranslationDto {
     @ApiProperty({ enum: Language, description: 'Language code / 언어 코드', example: Language.EN })

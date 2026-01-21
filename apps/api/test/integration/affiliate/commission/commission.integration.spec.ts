@@ -10,7 +10,7 @@ import {
   CommissionStatus,
   AffiliateTierLevel,
   Prisma,
-} from '@repo/database';;
+} from '@prisma/client';;
 import { AffiliateWallet } from 'src/modules/affiliate/commission/domain';
 import { AFFILIATE_WALLET_REPOSITORY } from 'src/modules/affiliate/commission/ports/out/affiliate-wallet.repository.token';
 import { AFFILIATE_COMMISSION_REPOSITORY } from 'src/modules/affiliate/commission/ports/out/affiliate-commission.repository.token';

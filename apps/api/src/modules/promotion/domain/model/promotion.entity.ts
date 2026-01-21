@@ -1,11 +1,11 @@
 // src/modules/promotion/domain/model/promotion.entity.ts
-import { Prisma } from '@repo/database';
+import { Prisma } from '@prisma/client';
 import {
   PromotionTargetType,
   PromotionBonusType,
   PromotionQualification,
   Language,
-} from '@repo/database';
+} from '@prisma/client';
 import { PromotionCurrency } from './promotion-currency.entity';
 
 export interface PromotionTranslation {

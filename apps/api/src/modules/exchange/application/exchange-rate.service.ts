@@ -4,7 +4,7 @@ import {
   ExchangeCurrencyCode,
   ExchangeRateProvider,
   Prisma,
-} from '@repo/database';
+} from '@prisma/client';
 import { ApiException } from 'src/common/http/exception/api.exception';
 import { MessageCode } from 'src/common/http/types';
 import { RedisService } from 'src/infrastructure/redis/redis.service';

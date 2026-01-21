@@ -4,7 +4,7 @@ import { type PrismaTransaction } from 'src/infrastructure/prisma/prisma.module'
 import type { WageringRequirementRepositoryPort } from '../ports';
 import { WageringRequirement, WageringRequirementException, WageringRequirementNotFoundException } from '../domain';
 import { WageringRequirementMapper } from './wagering-requirement.mapper';
-import { type ExchangeCurrencyCode, type WageringStatus, type WageringSourceType } from '@repo/database';
+import { type ExchangeCurrencyCode, type WageringStatus, type WageringSourceType } from '@prisma/client';
 import type { PaginatedData } from 'src/common/http/types/pagination.types';
 
 @Injectable()

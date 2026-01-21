@@ -1,6 +1,6 @@
 import { ApiProperty } from '@nestjs/swagger';
 import { IsEnum, IsOptional } from 'class-validator';
-import { ExchangeCurrencyCode } from '@repo/database';
+import { ExchangeCurrencyCode } from '@prisma/client';
 
 export class CompStatsQueryDto {
     @ApiProperty({ enum: ExchangeCurrencyCode, example: ExchangeCurrencyCode.KRW, required: false })

@@ -6,7 +6,7 @@ import { SettleDailyCommissionsScheduler } from './settle-daily-commissions.sche
 import { SettleDailyCommissionsService } from '../application/settle-daily-commissions.service';
 import { EnvService } from 'src/common/env/env.service';
 import { ConcurrencyService } from 'src/common/concurrency/concurrency.service';
-import { Prisma } from '@repo/database';
+import { Prisma } from '@prisma/client';
 import { nowUtc } from 'src/utils/date.util';
 
 // nowUtc 모킹

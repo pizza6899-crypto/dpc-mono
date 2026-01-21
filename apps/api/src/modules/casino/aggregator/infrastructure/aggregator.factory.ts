@@ -1,5 +1,5 @@
 import { Injectable } from '@nestjs/common';
-import { GameAggregatorType } from '@repo/database';
+import { GameAggregatorType } from '@prisma/client';
 import { AggregatorClientPort } from '../ports/aggregator.client.port';
 import { WhitecliffAdapter } from './adapters/whitecliff/whitecliff.adapter';
 import { DcsAdapter } from './adapters/dcs/dcs.adapter';

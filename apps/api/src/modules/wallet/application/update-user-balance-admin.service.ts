@@ -15,8 +15,8 @@ import {
   UpdateOperation,
 } from '../domain';
 import { UserNotFoundException } from 'src/modules/user/domain/user.exception';
-import type { ExchangeCurrencyCode } from '@repo/database';
-import { Prisma, TransactionType, TransactionStatus, AdjustmentReasonCode } from '@repo/database';
+import type { ExchangeCurrencyCode } from '@prisma/client';
+import { Prisma, TransactionType, TransactionStatus, AdjustmentReasonCode } from '@prisma/client';
 import { Transactional } from '@nestjs-cls/transactional';
 
 interface UpdateUserBalanceAdminParams {

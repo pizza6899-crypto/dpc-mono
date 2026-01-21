@@ -3,7 +3,7 @@ import type { TestingModule } from '@nestjs/testing';
 import { Test } from '@nestjs/testing';
 import { PrismaModule } from 'src/infrastructure/prisma/prisma.module';
 import { EnvModule } from 'src/common/env/env.module';
-import { Prisma, ExchangeCurrencyCode, WageringSourceType, WageringStatus } from '@repo/database';
+import { Prisma, ExchangeCurrencyCode, WageringSourceType, WageringStatus } from '@prisma/client';
 import { CancelWageringRequirementService } from './cancel-wagering-requirement.service';
 import { WAGERING_REQUIREMENT_REPOSITORY } from '../ports';
 import type { WageringRequirementRepositoryPort } from '../ports';

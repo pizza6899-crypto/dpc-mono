@@ -1,5 +1,5 @@
 // apps/api/src/modules/deposit/ports/out/deposit-detail.repository.port.ts
-import { Prisma, TransactionStatus, TransactionType, ExchangeCurrencyCode, DepositDetailStatus, DepositMethodType } from '@repo/database';
+import { Prisma, TransactionStatus, TransactionType, ExchangeCurrencyCode, DepositDetailStatus, DepositMethodType } from '@prisma/client';
 import { DepositDetail } from '../../domain';
 
 export interface DepositListQuery {

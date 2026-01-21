@@ -1,6 +1,6 @@
 import { Injectable } from '@nestjs/common';
 import { UserSession, SessionType, SessionStatus } from '../domain';
-import type { UserSession as PrismaUserSession, Prisma } from '@repo/database';
+import type { UserSession as PrismaUserSession, Prisma } from '@prisma/client';
 
 /**
  * UserSession Mapper

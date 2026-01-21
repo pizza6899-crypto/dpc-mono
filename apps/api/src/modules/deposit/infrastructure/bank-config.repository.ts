@@ -6,7 +6,7 @@ import { BankConfig } from '../domain';
 import { BankConfigNotFoundException } from '../domain';
 import { BankConfigRepositoryPort } from '../ports/out';
 import { BankConfigMapper } from './bank-config.mapper';
-import { ExchangeCurrencyCode } from '@repo/database';
+import { ExchangeCurrencyCode } from '@prisma/client';
 
 @Injectable()
 export class BankConfigRepository implements BankConfigRepositoryPort {

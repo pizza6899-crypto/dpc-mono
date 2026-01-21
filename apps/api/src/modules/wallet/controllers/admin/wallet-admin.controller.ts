@@ -16,7 +16,7 @@ import {
   ApiPaginatedResponse,
 } from 'src/common/http/decorators/api-response.decorator';
 import { RequireRoles } from 'src/common/auth/decorators/roles.decorator';
-import { UserRoleType } from '@repo/database';
+import { UserRoleType } from '@prisma/client';
 import { GetUserBalanceAdminService } from '../../application/get-user-balance-admin.service';
 import { UpdateUserBalanceAdminService } from '../../application/update-user-balance-admin.service';
 import { AdminUserBalanceResponseDto } from './dto/response/admin-user-balance.response.dto';
@@ -25,7 +25,7 @@ import { GetUserBalanceQueryDto } from './dto/request/get-user-balance-query.dto
 import { UpdateUserBalanceRequestDto } from './dto/request/update-user-balance.request.dto';
 import { AuditLog } from 'src/modules/audit-log/infrastructure/audit-log.decorator';
 import { LogType } from 'src/modules/audit-log/domain';
-import { Prisma } from '@repo/database';
+import { Prisma } from '@prisma/client';
 import { GetWalletTransactionHistoryAdminService } from '../../application/get-wallet-transaction-history-admin.service';
 import {
   WalletTransactionResponseDto,

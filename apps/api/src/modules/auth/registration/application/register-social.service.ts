@@ -6,7 +6,7 @@ import { DispatchLogService } from 'src/modules/audit-log/application/dispatch-l
 import { LogType } from 'src/modules/audit-log/domain';
 import { CountryUtil } from 'src/utils/country.util';
 import { CreateCodeService } from 'src/modules/affiliate/code/application/create-code.service';
-import { SocialType, UserRoleType } from '@repo/database';
+import { SocialType, UserRoleType } from '@prisma/client';
 import { User } from 'src/modules/user/domain';
 import { USER_REPOSITORY } from 'src/modules/user/ports/out/user.repository.token';
 import type { UserRepositoryPort } from 'src/modules/user/ports/out/user.repository.port';

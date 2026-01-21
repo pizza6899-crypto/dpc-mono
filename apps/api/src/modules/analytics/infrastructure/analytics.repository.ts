@@ -3,7 +3,7 @@ import {
     InjectTransaction,
 } from '@nestjs-cls/transactional';
 import { type PrismaTransaction } from 'src/infrastructure/prisma/prisma.module';
-import { ExchangeCurrencyCode } from '@repo/database';
+import { ExchangeCurrencyCode } from '@prisma/client';
 import { AnalyticsRepositoryPort } from '../ports/analytics.repository.port';
 import { AnalyticsMapper } from './analytics.mapper';
 import { UserHourlyStat, UserHourlyStatNotFoundException } from '../domain';

@@ -2,7 +2,7 @@
 
 import { Injectable, Inject } from '@nestjs/common';
 import { Transactional } from '@nestjs-cls/transactional';
-import { ChannelType } from '@repo/database';
+import { ChannelType } from '@prisma/client';
 import { NOTIFICATION_LOG_REPOSITORY } from '../ports';
 import type { NotificationLogRepositoryPort } from '../ports';
 

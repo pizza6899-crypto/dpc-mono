@@ -9,7 +9,7 @@ import {
     DepositMethodType,
     PaymentProvider,
     ExchangeCurrencyCode,
-} from '@repo/database';
+} from '@prisma/client';
 import { ApproveDepositService } from './approve-deposit.service';
 import { DEPOSIT_DETAIL_REPOSITORY } from '../ports/out';
 import type { DepositDetailRepositoryPort } from '../ports/out/deposit-detail.repository.port';

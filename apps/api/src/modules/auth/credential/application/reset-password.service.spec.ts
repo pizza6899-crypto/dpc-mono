@@ -8,7 +8,7 @@ import type { UserRepositoryPort } from 'src/modules/user/ports/out/user.reposit
 import { PASSWORD_RESET_TOKEN_REPOSITORY } from '../ports/out/password-reset-token.repository.token';
 import type { PasswordResetTokenRepositoryPort } from '../ports/out/password-reset-token.repository.port';
 import { User } from 'src/modules/user/domain';
-import { UserStatus, UserRoleType, SocialType } from '@repo/database';
+import { UserStatus, UserRoleType, SocialType } from '@prisma/client';
 import { hashPassword } from 'src/utils/password.util';
 import { InvalidPasswordResetTokenException } from '../domain/exception';
 import { UserNotFoundException } from 'src/modules/user/domain/user.exception';

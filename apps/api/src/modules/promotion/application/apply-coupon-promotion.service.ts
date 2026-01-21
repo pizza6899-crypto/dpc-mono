@@ -1,7 +1,7 @@
 // src/modules/promotion/application/apply-coupon-promotion.service.ts
 import { Inject, Injectable, Logger } from '@nestjs/common';
 import { Transactional } from '@nestjs-cls/transactional';
-import { Prisma, ExchangeCurrencyCode, TransactionType, TransactionStatus } from '@repo/database';
+import { Prisma, ExchangeCurrencyCode, TransactionType, TransactionStatus } from '@prisma/client';
 import { PromotionPolicy, PromotionNotFoundException, PromotionInvalidConfigurationException } from '../domain';
 import type { UserPromotion } from '../domain';
 import { PROMOTION_REPOSITORY } from '../ports/out';
@@ -13,7 +13,7 @@ import { CreateWalletTransactionService } from '../../wallet/application/create-
 import { BalanceType, UpdateOperation } from '../../wallet/domain';
 import { SendAlertService } from '../../notification/alert/application/send-alert.service';
 import { NOTIFICATION_EVENTS } from '../../notification/common';
-import { ChannelType } from '@repo/database';
+import { ChannelType } from '@prisma/client';
 
 import { AuthenticatedUser } from 'src/common/auth/types/auth.types';
 

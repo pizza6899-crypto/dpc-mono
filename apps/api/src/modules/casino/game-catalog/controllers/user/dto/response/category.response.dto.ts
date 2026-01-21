@@ -1,5 +1,5 @@
 import { ApiProperty, ApiPropertyOptional } from '@nestjs/swagger';
-import { CategoryType } from '@repo/database';
+import { CategoryType } from '@prisma/client';
 
 export class CategoryResponseDto {
     @ApiProperty({ description: 'Category Code (카테고리 코드)' })

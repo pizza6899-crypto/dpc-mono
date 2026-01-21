@@ -8,7 +8,7 @@ import type {
   FindUsersResult,
 } from '../ports/out/user.repository.port';
 import { User } from '../domain';
-import { UserRoleType, UserStatus } from '@repo/database';
+import { UserRoleType, UserStatus } from '@prisma/client';
 import { PrismaModule } from 'src/infrastructure/prisma/prisma.module';
 import { EnvModule } from 'src/common/env/env.module';
 

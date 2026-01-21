@@ -1,6 +1,6 @@
 // src/modules/promotion/application/get-active-promotions-for-user.service.ts
 import { Inject, Injectable } from '@nestjs/common';
-import { Language, ExchangeCurrencyCode } from '@repo/database';
+import { Language, ExchangeCurrencyCode } from '@prisma/client';
 import { Promotion, PromotionTranslation } from '../domain/model/promotion.entity';
 import { PromotionCurrency } from '../domain/model/promotion-currency.entity';
 import { PROMOTION_REPOSITORY } from '../ports/out';

@@ -11,7 +11,7 @@ import {
     ApiStandardErrors,
 } from 'src/common/http/decorators/api-response.decorator';
 import { RequireRoles } from 'src/common/auth/decorators/roles.decorator';
-import { UserRoleType } from '@repo/database';
+import { UserRoleType } from '@prisma/client';
 import { LogType } from 'src/modules/audit-log/domain';
 import { AuditLog } from 'src/modules/audit-log/infrastructure/audit-log.decorator';
 import { FindTemplatesService } from '../../application/find-templates.service';

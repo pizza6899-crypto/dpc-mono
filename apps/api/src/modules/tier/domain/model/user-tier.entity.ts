@@ -1,4 +1,4 @@
-import { Prisma } from '@repo/database';
+import { Prisma } from '@prisma/client';
 import { generateUid } from 'src/utils/id.util';
 import { Tier } from './tier.entity';
 import { InvalidRollingAmountException, TierException } from '../tier.exception';

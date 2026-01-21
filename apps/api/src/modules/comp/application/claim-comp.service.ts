@@ -1,6 +1,6 @@
 import { Inject, Injectable, Logger } from '@nestjs/common';
 import { Transactional } from '@nestjs-cls/transactional';
-import { ExchangeCurrencyCode, Prisma, CompTransactionType, TransactionType, TransactionStatus } from '@repo/database';
+import { ExchangeCurrencyCode, Prisma, CompTransactionType, TransactionType, TransactionStatus } from '@prisma/client';
 import { COMP_REPOSITORY } from '../ports/repository.token';
 import type { CompRepositoryPort } from '../ports';
 import { CompTransaction, InsufficientCompBalanceException } from '../domain';

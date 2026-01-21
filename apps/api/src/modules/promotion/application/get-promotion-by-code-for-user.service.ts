@@ -1,5 +1,5 @@
 import { Inject, Injectable } from '@nestjs/common';
-import { Language, ExchangeCurrencyCode } from '@repo/database';
+import { Language, ExchangeCurrencyCode } from '@prisma/client';
 import { PromotionNotFoundException, Promotion, PromotionTranslation } from '../domain';
 import { PROMOTION_REPOSITORY } from '../ports/out';
 import type { PromotionRepositoryPort } from '../ports/out/promotion.repository.port';

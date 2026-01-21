@@ -1,4 +1,4 @@
-import { AggregatorStatus, GameAggregatorType } from '@repo/database';
+import { AggregatorStatus, GameAggregatorType } from '@prisma/client';
 import { AGGREGATOR_CODE_MAP } from '../../ports/aggregator-game.dto';
 
 export class CasinoAggregator {

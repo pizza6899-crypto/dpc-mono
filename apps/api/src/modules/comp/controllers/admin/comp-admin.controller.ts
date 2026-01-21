@@ -1,6 +1,6 @@
 import { Body, Controller, Get, Param, Post, Query, UseGuards, HttpCode, HttpStatus } from '@nestjs/common';
 import { ApiTags, ApiOperation, ApiParam } from '@nestjs/swagger';
-import { Prisma, UserRoleType } from '@repo/database';
+import { Prisma, UserRoleType } from '@prisma/client';
 import { FindCompTransactionsService } from '../../application/find-comp-transactions.service';
 import { FindCompTransactionsQueryDto } from '../dto/request/find-comp-transactions-query.dto';
 import { CompTransactionResponseDto } from '../dto/response/comp-transaction.response.dto';

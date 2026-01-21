@@ -1,4 +1,4 @@
-import { Prisma } from '@repo/database';
+import { Prisma } from '@prisma/client';
 
 export class WageringPolicy {
     /**

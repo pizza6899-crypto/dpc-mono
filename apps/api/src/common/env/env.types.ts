@@ -1,4 +1,4 @@
-import type { ExchangeCurrencyCode } from '@repo/database';
+import type { ExchangeCurrencyCode } from '@prisma/client';
 
 export interface AppConfig {
   port: number;

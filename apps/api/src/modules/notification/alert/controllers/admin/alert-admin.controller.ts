@@ -15,7 +15,7 @@ import {
 } from 'src/common/http/decorators/api-response.decorator';
 import { PaginatedResponseDto } from 'src/common/http/types/pagination.types';
 import { RequireRoles } from 'src/common/auth/decorators/roles.decorator';
-import { UserRoleType } from '@repo/database';
+import { UserRoleType } from '@prisma/client';
 import { LogType } from 'src/modules/audit-log/domain';
 import { AuditLog } from 'src/modules/audit-log/infrastructure/audit-log.decorator';
 import { SendAlertService } from '../../application/send-alert.service';

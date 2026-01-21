@@ -1,5 +1,5 @@
 import type { WageringRequirement } from '../domain/wagering-requirement.entity';
-import type { ExchangeCurrencyCode, WageringStatus, WageringSourceType } from '@repo/database';
+import type { ExchangeCurrencyCode, WageringStatus, WageringSourceType } from '@prisma/client';
 import type { PaginatedData } from 'src/common/http/types/pagination.types';
 
 export interface WageringRequirementRepositoryPort {

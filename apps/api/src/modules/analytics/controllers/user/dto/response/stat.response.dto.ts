@@ -1,5 +1,5 @@
 import { ApiProperty } from '@nestjs/swagger';
-import { ExchangeCurrencyCode } from '@repo/database';
+import { ExchangeCurrencyCode } from '@prisma/client';
 
 export class UserHourlyStatResponseDto {
     @ApiProperty({ description: 'Currency code', enum: ['KRW', 'USD', 'JPY'] })

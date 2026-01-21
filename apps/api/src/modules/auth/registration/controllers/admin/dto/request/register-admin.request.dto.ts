@@ -8,7 +8,7 @@ import {
   Matches,
 } from 'class-validator';
 import { ApiProperty, ApiPropertyOptional } from '@nestjs/swagger';
-import { UserRoleType } from '@repo/database';
+import { UserRoleType } from '@prisma/client';
 
 export class RegisterAdminRequestDto {
   @ApiProperty({

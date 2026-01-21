@@ -4,7 +4,7 @@ import { HttpStatus, Injectable, Inject } from '@nestjs/common';
 import { InjectQueue } from '@nestjs/bullmq';
 import { Queue } from 'bullmq';
 import { Transactional } from '@nestjs-cls/transactional';
-import { ChannelType } from '@repo/database';
+import { ChannelType } from '@prisma/client';
 import { MessageCode } from '@repo/shared';
 import { Alert, DuplicateAlertException, AlertException } from '../domain';
 import { ALERT_REPOSITORY } from '../ports';

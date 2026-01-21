@@ -4,7 +4,7 @@ import {
   PromotionTargetType,
   PromotionQualification,
   PromotionBonusType,
-} from '@repo/database';
+} from '@prisma/client';
 import type { Promotion } from './model/promotion.entity';
 import type { UserPromotion } from './model/user-promotion.entity';
 import type { PromotionCurrency } from './model/promotion-currency.entity';

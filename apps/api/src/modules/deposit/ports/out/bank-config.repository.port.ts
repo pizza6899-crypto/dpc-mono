@@ -1,6 +1,6 @@
 // src/modules/deposit/ports/out/bank-config.repository.port.ts
 import { BankConfig } from '../../domain';
-import { ExchangeCurrencyCode } from '@repo/database';
+import { ExchangeCurrencyCode } from '@prisma/client';
 
 export interface BankConfigRepositoryPort {
     listActive(currency?: ExchangeCurrencyCode): Promise<BankConfig[]>;

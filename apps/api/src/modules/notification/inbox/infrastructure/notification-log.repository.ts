@@ -4,7 +4,7 @@ import { Injectable } from '@nestjs/common';
 import { InjectTransaction } from '@nestjs-cls/transactional';
 import type { Transaction } from '@nestjs-cls/transactional';
 import type { TransactionalAdapterPrisma } from '@nestjs-cls/transactional-adapter-prisma';
-import { ChannelType, NotifyStatus } from '@repo/database';
+import { ChannelType, NotifyStatus } from '@prisma/client';
 import { NotificationLog, NotificationLogNotFoundException } from '../domain';
 import {
     NotificationLogRepositoryPort,

@@ -21,13 +21,6 @@
     "noImplicitAny": false,
     "strictBindCallApply": false,
     "noFallthroughCasesInSwitch": false,
-    "paths": {
-      "@repo/database": [
-        "src/generated/prisma"
-      ],
-      "@repo/database/src/kysely-types": [
-        "src/generated/kysely/kysely-types"
-      ]
-    }
+    "paths": {}
   }
 }

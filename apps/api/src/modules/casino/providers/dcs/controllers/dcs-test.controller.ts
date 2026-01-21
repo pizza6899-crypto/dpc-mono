@@ -3,7 +3,7 @@ import { ApiTags, ApiOperation, ApiBody } from '@nestjs/swagger';
 import { Public } from 'src/common/auth/decorators/roles.decorator';
 import { ApiStandardErrors } from 'src/common/http/decorators/api-response.decorator';
 import { DcsApiService } from '../infrastructure/dcs-api.service';
-import { GameProvider, Language } from '@repo/database';
+import { GameProvider, Language } from '@prisma/client';
 import { GamingCurrencyCode } from 'src/utils/currency.util';
 
 @Controller('dcs/test')

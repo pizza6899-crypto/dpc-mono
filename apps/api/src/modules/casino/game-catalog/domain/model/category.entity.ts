@@ -1,4 +1,4 @@
-import { CategoryType, Language } from "@repo/database";
+import { CategoryType, Language } from "@prisma/client";
 
 export interface CategoryTranslation {
     language: Language;

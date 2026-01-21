@@ -1,5 +1,5 @@
 import { ApiProperty } from '@nestjs/swagger';
-import { AggregatorStatus } from '@repo/database';
+import { AggregatorStatus } from '@prisma/client';
 
 export class AggregatorResponseDto {
     @ApiProperty({ description: 'Aggregator ID / 애그리게이터 ID', example: '1' })

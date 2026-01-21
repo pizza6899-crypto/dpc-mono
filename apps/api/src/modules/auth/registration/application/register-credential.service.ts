@@ -14,7 +14,7 @@ import {
   ReferralCodeExpiredException,
 } from 'src/modules/affiliate/referral/domain/referral.exception';
 import { WALLET_CURRENCIES } from 'src/utils/currency.util';
-import { UserRoleType } from '@repo/database';
+import { UserRoleType } from '@prisma/client';
 import { CreateUserService } from 'src/modules/user/application/create-user.service';
 import { UserAlreadyExistsException } from 'src/modules/user/domain/user.exception';
 import { CreateWalletService } from 'src/modules/wallet/application/create-wallet.service';

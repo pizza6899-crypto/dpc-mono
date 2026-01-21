@@ -1,7 +1,7 @@
 // apps/api/src/modules/notification/template/application/render-template.service.ts
 
 import { Inject, Injectable } from '@nestjs/common';
-import { ChannelType, Language } from '@repo/database';
+import { ChannelType, Language } from '@prisma/client';
 import {
     NOTIFICATION_TEMPLATE_REPOSITORY,
     RenderResult,

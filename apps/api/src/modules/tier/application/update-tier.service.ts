@@ -1,5 +1,5 @@
 import { Inject, Injectable } from '@nestjs/common';
-import { Prisma } from '@repo/database';
+import { Prisma } from '@prisma/client';
 import { Tier } from '../domain';
 import type { TierRepositoryPort } from '../ports/tier.repository.port';
 import { TIER_REPOSITORY } from '../ports/repository.token';

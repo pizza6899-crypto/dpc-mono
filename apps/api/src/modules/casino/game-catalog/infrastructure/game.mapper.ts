@@ -1,5 +1,5 @@
 import { Injectable } from '@nestjs/common';
-import { CasinoGameV2 as PrismaGame, CasinoGameV2Translation as PrismaTranslation } from '@repo/database';
+import { CasinoGameV2 as PrismaGame, CasinoGameV2Translation as PrismaTranslation } from '@prisma/client';
 import { CasinoGameV2, GameTranslation } from '../domain';
 
 type PrismaGameWithTranslations = PrismaGame & {

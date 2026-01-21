@@ -3,7 +3,7 @@ import {
     ExchangeCurrencyCode,
     GameAggregatorType,
     Prisma,
-} from '@repo/database';
+} from '@prisma/client';
 import { CasinoGameSession } from '../domain';
 import { CASINO_GAME_SESSION_REPOSITORY } from '../ports/casino-game-session.repository.token';
 import type { CasinoGameSessionRepositoryPort } from '../ports/casino-game-session.repository.port';

@@ -11,7 +11,7 @@ import { ApiPaginatedResponse, ApiStandardResponse } from 'src/common/http/decor
 import { PaginatedData } from 'src/common/http/types';
 import type { RequestClientInfo } from 'src/common/http/types';
 
-import { Language } from '@repo/database';
+import { Language } from '@prisma/client';
 import { GetCategoryByCodeService } from '../../application/get-category-by-code.service';
 import { LaunchGameService } from '../../../application/launch-game.service';
 import { Throttle } from 'src/common/throttle/decorators/throttle.decorator';

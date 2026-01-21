@@ -1,5 +1,5 @@
 import { Injectable, Inject } from '@nestjs/common';
-import { WithdrawalStatus } from '@repo/database';
+import { WithdrawalStatus } from '@prisma/client';
 import { WithdrawalDetail } from '../domain';
 import { WITHDRAWAL_REPOSITORY } from '../ports';
 import type { WithdrawalRepositoryPort } from '../ports';

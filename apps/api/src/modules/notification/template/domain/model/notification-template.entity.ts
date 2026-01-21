@@ -1,6 +1,6 @@
 // apps/api/src/modules/notification/template/domain/model/notification-template.entity.ts
 
-import { ChannelType, Language } from '@repo/database';
+import { ChannelType, Language } from '@prisma/client';
 import { NotificationTemplateTranslation } from './notification-template-translation.entity';
 
 interface CreateTemplateParams {

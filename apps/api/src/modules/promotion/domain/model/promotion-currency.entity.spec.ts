@@ -1,5 +1,5 @@
 // src/modules/promotion/domain/model/promotion-currency.entity.spec.ts
-import { Prisma, ExchangeCurrencyCode } from '@repo/database';
+import { Prisma, ExchangeCurrencyCode } from '@prisma/client';
 import { PromotionCurrency } from './promotion-currency.entity';
 
 describe('PromotionCurrency Entity', () => {

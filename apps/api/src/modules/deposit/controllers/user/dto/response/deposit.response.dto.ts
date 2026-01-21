@@ -5,7 +5,7 @@ import {
     DepositDetailStatus,
     DepositMethodType,
     ExchangeCurrencyCode,
-} from '@repo/database';
+} from '@prisma/client';
 
 /**
  * 암호화폐 입금 주소 요청 DTO

@@ -1,6 +1,6 @@
 // src/modules/affiliate/commission/infrastructure/affiliate-wallet.mapper.ts
 import { Injectable } from '@nestjs/common';
-import { ExchangeCurrencyCode, Prisma } from '@repo/database';
+import { ExchangeCurrencyCode, Prisma } from '@prisma/client';
 import { AffiliateWallet } from '../domain';
 
 /**

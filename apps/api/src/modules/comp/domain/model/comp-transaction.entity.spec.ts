@@ -1,5 +1,5 @@
 // src/modules/comp/domain/model/comp-transaction.entity.spec.ts
-import { Prisma, CompTransactionType } from '@repo/database';
+import { Prisma, CompTransactionType } from '@prisma/client';
 import { CompTransaction } from './comp-transaction.entity';
 
 describe('CompTransaction Entity', () => {

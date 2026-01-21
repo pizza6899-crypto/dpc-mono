@@ -9,7 +9,7 @@ import type {
     CryptoConfigRepositoryPort,
 } from '../ports/out';
 import { CryptoConfig, BankConfig } from '../domain';
-import { ExchangeCurrencyCode } from '@repo/database';
+import { ExchangeCurrencyCode } from '@prisma/client';
 
 interface CryptoNetworkInfo {
     network: string;

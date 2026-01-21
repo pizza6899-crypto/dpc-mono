@@ -1,6 +1,6 @@
 // src/modules/affiliate/commission/domain/model/affiliate-wallet.entity.ts
-import type { ExchangeCurrencyCode } from '@repo/database';
-import { Prisma } from '@repo/database';
+import type { ExchangeCurrencyCode } from '@prisma/client';
+import { Prisma } from '@prisma/client';
 import {
   InsufficientBalanceException,
   InvalidWalletBalanceException,

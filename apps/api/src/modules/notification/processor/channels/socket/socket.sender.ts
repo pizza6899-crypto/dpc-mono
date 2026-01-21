@@ -1,5 +1,5 @@
 import { Injectable } from '@nestjs/common';
-import { ChannelType } from '@repo/database';
+import { ChannelType } from '@prisma/client';
 import { ChannelSender, ChannelSendParams } from '../../../common';
 import { SocketService } from 'src/modules/socket/socket.service';
 

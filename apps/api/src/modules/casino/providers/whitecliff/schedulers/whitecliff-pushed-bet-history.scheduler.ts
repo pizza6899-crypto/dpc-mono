@@ -14,7 +14,7 @@ import {
   GameProvider,
   Prisma,
   TransactionStatus,
-} from '@repo/database';
+} from '@prisma/client';
 import { GamingCurrencyCode } from 'src/utils/currency.util';
 import { ConcurrencyService } from 'src/common/concurrency/concurrency.service';
 import { EnvService } from 'src/common/env/env.service';

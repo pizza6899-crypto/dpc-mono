@@ -1,6 +1,6 @@
 import { IsEnum, IsNumberString, IsString } from 'class-validator';
 import { ApiProperty } from '@nestjs/swagger';
-import { Language } from '@repo/database';
+import { Language } from '@prisma/client';
 
 export class TierParamDto {
     @ApiProperty({ description: 'Tier ID / 티어 ID', example: '1' })

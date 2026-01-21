@@ -1,6 +1,6 @@
 import { ApiPropertyOptional } from '@nestjs/swagger';
 import { IsDateString, IsEnum, IsOptional } from 'class-validator';
-import { ExchangeCurrencyCode } from '@repo/database';
+import { ExchangeCurrencyCode } from '@prisma/client';
 import { PaginationQueryDto } from 'src/common/http/types/pagination.types';
 
 export class FindCompTransactionsQueryDto extends PaginationQueryDto {

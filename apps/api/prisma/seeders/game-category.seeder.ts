@@ -1,4 +1,4 @@
-import { PrismaClient, Language, CategoryType } from '@repo/database';
+import { PrismaClient, Language, CategoryType } from '@prisma/client';
 
 export async function seedGameCategories(prisma: PrismaClient) {
     console.log('🎮 게임 카테고리 시딩을 시작합니다...');

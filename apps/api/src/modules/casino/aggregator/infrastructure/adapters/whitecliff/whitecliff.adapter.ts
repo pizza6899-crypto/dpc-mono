@@ -1,7 +1,7 @@
 import { Injectable, Logger } from '@nestjs/common';
 import { AggregatorClientPort } from '../../../ports/aggregator.client.port';
 import { AggregatorGameDto } from '../../../ports/aggregator-game.dto';
-import { Language } from '@repo/database';
+import { Language } from '@prisma/client';
 import { mockResponse2 } from './mock2';
 import { WhitecliffApiService } from 'src/modules/casino/providers/whitecliff/infrastructure/whitecliff-api.service';
 

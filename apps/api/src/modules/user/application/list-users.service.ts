@@ -6,7 +6,7 @@ import type {
   FindUsersParams,
 } from '../ports/out/user.repository.port';
 import type { PaginatedData } from 'src/common/http/types';
-import type { UserRoleType, UserStatus } from '@repo/database';
+import type { UserRoleType, UserStatus } from '@prisma/client';
 import { User } from '../domain';
 
 interface ListUsersServiceParams {

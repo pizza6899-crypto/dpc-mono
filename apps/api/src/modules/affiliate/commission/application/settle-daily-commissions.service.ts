@@ -1,6 +1,6 @@
 // src/modules/affiliate/commission/application/settle-daily-commissions.service.ts
 import { Inject, Injectable, Logger } from '@nestjs/common';
-import { ExchangeCurrencyCode, Prisma } from '@repo/database';
+import { ExchangeCurrencyCode, Prisma } from '@prisma/client';
 import {
   AffiliateWallet,
   CommissionPolicy,

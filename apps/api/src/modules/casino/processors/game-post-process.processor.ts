@@ -11,7 +11,7 @@ import {
 } from '@nestjs-cls/transactional';
 import { type PrismaTransaction } from 'src/infrastructure/prisma/prisma.module';
 import { Logger, OnApplicationShutdown } from '@nestjs/common';
-import { Prisma, TransactionStatus, ExchangeCurrencyCode } from '@repo/database';
+import { Prisma, TransactionStatus, ExchangeCurrencyCode } from '@prisma/client';
 import { ProcessWageringContributionService } from '../../wagering/application/process-wagering-contribution.service';
 import { AnalyticsQueueService } from '../../analytics/application/analytics-queue.service';
 

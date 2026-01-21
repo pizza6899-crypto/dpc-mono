@@ -5,7 +5,7 @@ import {
     PromotionBonusType,
     PromotionQualification,
     ExchangeCurrencyCode,
-} from '@repo/database';
+} from '@prisma/client';
 import { Promotion } from './promotion.entity';
 import { PromotionCurrency } from './promotion-currency.entity';
 

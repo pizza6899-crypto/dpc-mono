@@ -1,7 +1,7 @@
 // src/modules/promotion/application/update-promotion.service.ts
 import { Inject, Injectable, Logger } from '@nestjs/common';
 import { Transactional } from '@nestjs-cls/transactional';
-import { Prisma, PromotionBonusType, PromotionTargetType } from '@repo/database';
+import { Prisma, PromotionBonusType, PromotionTargetType } from '@prisma/client';
 import {
   Promotion,
   PromotionPolicy,

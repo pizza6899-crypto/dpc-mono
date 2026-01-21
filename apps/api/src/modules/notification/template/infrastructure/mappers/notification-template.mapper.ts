@@ -5,7 +5,7 @@ import {
     NotificationTemplate as PrismaTemplate,
     NotificationTemplateTranslation as PrismaTranslation,
     Prisma,
-} from '@repo/database';
+} from '@prisma/client';
 import {
     NotificationTemplate,
     NotificationTemplateTranslation,

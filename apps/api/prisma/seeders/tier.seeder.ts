@@ -1,4 +1,4 @@
-import { PrismaClient, Language } from '@repo/database';
+import { PrismaClient, Language } from '@prisma/client';
 import { createId } from '@paralleldrive/cuid2';
 
 

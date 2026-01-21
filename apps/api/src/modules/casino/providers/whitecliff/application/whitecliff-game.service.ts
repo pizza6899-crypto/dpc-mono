@@ -9,7 +9,7 @@ import type { CurrentUserWithSession } from 'src/common/auth/decorators/current-
 import { WhitecliffMapperService } from '../infrastructure/whitecliff-mapper.service';
 import { UserNotFoundException } from 'src/modules/user/domain/user.exception';
 import { WalletNotFoundException } from 'src/modules/wallet/domain/wallet.exception';
-import { GameProvider, Language, GameAggregatorType } from '@repo/database';
+import { GameProvider, Language, GameAggregatorType } from '@prisma/client';
 import { CasinoGameProviderNotFoundException } from 'src/modules/casino/aggregator/domain/casino-aggregator.exception';
 import { GameNotFoundException } from 'src/modules/casino/game-catalog/domain';
 import {

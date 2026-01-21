@@ -1,7 +1,7 @@
 import { Injectable } from '@nestjs/common';
 import { InjectTransaction } from '@nestjs-cls/transactional';
 import { type PrismaTransaction } from 'src/infrastructure/prisma/prisma.module';
-import type { Prisma } from '@repo/database';
+import type { Prisma } from '@prisma/client';
 import type {
   UserSessionRepositoryPort,
   FindSessionsParams,

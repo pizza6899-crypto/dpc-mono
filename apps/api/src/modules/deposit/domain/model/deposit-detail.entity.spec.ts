@@ -6,7 +6,7 @@ import {
     PaymentProvider,
     ExchangeCurrencyCode,
     FeePaidByType,
-} from '@repo/database';
+} from '@prisma/client';
 import { DepositDetail } from './deposit-detail.entity';
 import { DepositMethod } from './value-objects/deposit-method.vo';
 import { DepositAmount } from './value-objects/deposit-amount.vo';

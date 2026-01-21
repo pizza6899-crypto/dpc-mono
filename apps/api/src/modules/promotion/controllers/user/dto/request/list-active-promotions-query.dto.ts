@@ -2,7 +2,7 @@
 import { ApiPropertyOptional } from '@nestjs/swagger';
 import { IsEnum, IsOptional } from 'class-validator';
 import { createPaginationQueryDto } from 'src/common/http/types/pagination.types';
-import { Language, ExchangeCurrencyCode } from '@repo/database';
+import { Language, ExchangeCurrencyCode } from '@prisma/client';
 
 type PromotionSortFields = 'createdAt' | 'updatedAt' | 'id';
 

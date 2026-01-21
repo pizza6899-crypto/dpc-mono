@@ -1,5 +1,5 @@
 // src/modules/auth/credential/domain/model/credential-user.entity.spec.ts
-import { UserStatus, UserRoleType } from '@repo/database';
+import { UserStatus, UserRoleType } from '@prisma/client';
 import { CredentialUser } from './credential-user.entity';
 
 describe('CredentialUser Entity', () => {

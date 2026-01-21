@@ -13,7 +13,7 @@ import {
 import {
   GameAggregatorType,
   Language,
-} from '@repo/database';
+} from '@prisma/client';
 import { InjectTransaction } from '@nestjs-cls/transactional';
 import { type PrismaTransaction } from 'src/infrastructure/prisma/prisma.module';
 import { CreateCasinoGameSessionService } from 'src/modules/casino/game-session/application/create-casino-game-session.service';

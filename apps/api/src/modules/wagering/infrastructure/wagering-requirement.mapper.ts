@@ -1,6 +1,6 @@
 import { Injectable } from '@nestjs/common';
 import { WageringRequirement } from '../domain';
-import type { WageringRequirement as PrismaWageringRequirement } from '@repo/database';
+import type { WageringRequirement as PrismaWageringRequirement } from '@prisma/client';
 
 @Injectable()
 export class WageringRequirementMapper {

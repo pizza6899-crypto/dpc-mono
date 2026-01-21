@@ -1,4 +1,4 @@
-import { ExchangeCurrencyCode, Prisma } from '@repo/database';
+import { ExchangeCurrencyCode, Prisma } from '@prisma/client';
 import { InsufficientCompBalanceException } from '../comp.exception';
 
 export class CompWallet {

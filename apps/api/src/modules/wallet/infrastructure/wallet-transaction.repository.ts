@@ -5,7 +5,7 @@ import type { PrismaTransaction } from 'src/infrastructure/prisma/prisma.module'
 import { WalletTransactionRepositoryPort } from '../ports/out/wallet-transaction.repository.port';
 import { WalletTransaction } from '../domain';
 import { WalletTransactionSearchOptions } from '../domain/model/wallet-transaction.search-options';
-import { Prisma } from '@repo/database';
+import { Prisma } from '@prisma/client';
 
 @Injectable()
 export class WalletTransactionRepository

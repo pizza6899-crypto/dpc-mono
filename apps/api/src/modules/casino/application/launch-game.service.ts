@@ -7,7 +7,7 @@ import { DcsGameService } from '../providers/dcs/application/dcs-game.service';
 import { CasinoAggregatorUnsupportedException } from '../aggregator/domain/casino-aggregator.exception';
 import type { CurrentUserWithSession } from 'src/common/auth/decorators/current-user.decorator';
 import type { RequestClientInfo } from 'src/common/http/types';
-import { Language, GameAggregatorType } from '@repo/database';
+import { Language, GameAggregatorType } from '@prisma/client';
 import { AGGREGATOR_CODE_MAP } from '../aggregator/ports/aggregator-game.dto';
 import { CurrencyUnsupportedException } from '../domain/casino.exception';
 import {

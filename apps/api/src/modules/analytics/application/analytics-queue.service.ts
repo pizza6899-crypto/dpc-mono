@@ -1,7 +1,7 @@
 import { Injectable, Logger } from '@nestjs/common';
 import { InjectQueue } from '@nestjs/bullmq';
 import { Queue } from 'bullmq';
-import { ExchangeCurrencyCode, Prisma } from '@repo/database';
+import { ExchangeCurrencyCode, Prisma } from '@prisma/client';
 import { ANALYTICS_QUEUE_NAME, AnalyticsJobName } from '../consumers/analytics.consumer';
 
 interface EnqueueDepositParams {

@@ -3,7 +3,7 @@ import { ApiTags, ApiOperation } from '@nestjs/swagger';
 import { Admin } from 'src/common/auth/decorators/roles.decorator';
 import { AuditLog } from 'src/modules/audit-log/infrastructure/audit-log.decorator';
 import { LogType } from 'src/modules/audit-log/domain';
-import { Prisma } from '@repo/database';
+import { Prisma } from '@prisma/client';
 
 import { FindGamesService } from '../../application/find-games.service';
 import { UpdateGameService } from '../../application/update-game.service';

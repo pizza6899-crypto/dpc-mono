@@ -1,6 +1,6 @@
 import { applyDecorators, SetMetadata } from '@nestjs/common';
 import { ApiCookieAuth } from '@nestjs/swagger';
-import { UserRoleType } from '@repo/database';
+import { UserRoleType } from '@prisma/client';
 
 export const IS_PUBLIC_KEY = 'isPublic';
 export const GUEST_ONLY_KEY = 'guestOnly';

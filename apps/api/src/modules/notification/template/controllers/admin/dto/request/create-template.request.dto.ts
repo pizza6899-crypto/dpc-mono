@@ -1,7 +1,7 @@
 import { IsString, IsEnum, IsArray, IsOptional, ValidateNested } from 'class-validator';
 import { Type } from 'class-transformer';
 import { ApiProperty } from '@nestjs/swagger';
-import { ChannelType, Language } from '@repo/database';
+import { ChannelType, Language } from '@prisma/client';
 import { NOTIFICATION_EVENTS } from '../../../../../common';
 
 class CreateTranslationDto {

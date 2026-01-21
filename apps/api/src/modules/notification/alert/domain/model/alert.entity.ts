@@ -1,6 +1,6 @@
 // apps/api/src/modules/notification/alert/domain/model/alert.entity.ts
 
-import { AlertStatus, ChannelType } from '@repo/database';
+import { AlertStatus, ChannelType } from '@prisma/client';
 import { InvalidAlertStatusTransitionException } from '../alert.exception';
 
 interface CreateAlertParams {

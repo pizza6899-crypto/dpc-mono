@@ -32,7 +32,7 @@ import {
   GameAggregatorType,
   Prisma,
   TransactionStatus,
-} from '@repo/database';
+} from '@prisma/client';
 import { CasinoRefundService } from '../../../application/casino-refund.service';
 import { parseDateStringOrThrow } from 'src/utils/date.util';
 import { CasinoBonusService } from '../../../application/casino-bonus.service';

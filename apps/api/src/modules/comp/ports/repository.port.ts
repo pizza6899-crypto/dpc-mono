@@ -1,4 +1,4 @@
-import { ExchangeCurrencyCode, Prisma, TransactionStatus, TransactionType } from '@repo/database';
+import { ExchangeCurrencyCode, Prisma, TransactionStatus, TransactionType } from '@prisma/client';
 import { CompWallet } from '../domain/model/comp-wallet.entity';
 import { CompTransaction } from '../domain/model/comp-transaction.entity';
 

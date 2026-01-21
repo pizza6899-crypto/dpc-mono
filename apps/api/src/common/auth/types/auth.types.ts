@@ -1,4 +1,4 @@
-import type { UserRoleType, Language } from '@repo/database';
+import type { UserRoleType, Language } from '@prisma/client';
 
 export interface AuthenticatedUser {
   id: bigint;

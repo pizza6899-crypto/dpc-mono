@@ -1,6 +1,6 @@
 // src/modules/deposit/domain/model/value-objects/deposit-amount.vo.ts
-import { Prisma } from '@repo/database';
-import { FeePaidByType } from '@repo/database';
+import { Prisma } from '@prisma/client';
+import { FeePaidByType } from '@prisma/client';
 
 /**
  * 입금 금액 Value Object

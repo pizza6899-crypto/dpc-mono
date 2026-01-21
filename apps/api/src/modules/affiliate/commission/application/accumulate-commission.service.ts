@@ -1,5 +1,5 @@
 import { Injectable } from '@nestjs/common';
-import { ExchangeCurrencyCode, Prisma } from '@repo/database';
+import { ExchangeCurrencyCode, Prisma } from '@prisma/client';
 import { AffiliateCommission } from '../domain';
 import { CalculateCommissionService } from './calculate-commission.service';
 import { Transactional } from '@nestjs-cls/transactional';

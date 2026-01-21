@@ -1,4 +1,4 @@
-import { CompTransactionType, Prisma } from '@repo/database';
+import { CompTransactionType, Prisma } from '@prisma/client';
 
 export class CompTransaction {
     private constructor(

@@ -1,5 +1,5 @@
 import { Injectable } from '@nestjs/common';
-import { Tier as TierModel, Prisma } from '@repo/database';
+import { Tier as TierModel, Prisma } from '@prisma/client';
 import { generateUid } from 'src/utils/id.util';
 import { Tier } from '../domain';
 

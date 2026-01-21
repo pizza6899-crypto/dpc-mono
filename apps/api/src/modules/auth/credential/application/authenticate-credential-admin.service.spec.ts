@@ -19,7 +19,7 @@ import {
   LoginAttemptResult,
   LoginFailureReason,
 } from '../domain/model/login-attempt.entity';
-import { UserRoleType } from '@repo/database';
+import { UserRoleType } from '@prisma/client';
 import { PrismaModule } from 'src/infrastructure/prisma/prisma.module';
 import { EnvModule } from 'src/common/env/env.module';
 

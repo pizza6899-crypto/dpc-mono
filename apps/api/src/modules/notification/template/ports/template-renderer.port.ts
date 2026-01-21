@@ -1,6 +1,6 @@
 // apps/api/src/modules/notification/template/ports/template-renderer.port.ts
 
-import { ChannelType, Language } from '@repo/database';
+import { ChannelType, Language } from '@prisma/client';
 
 export interface RenderResult {
     title: string;

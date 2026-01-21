@@ -1,5 +1,5 @@
 import { ApiProperty, ApiPropertyOptional } from '@nestjs/swagger';
-import { Language } from '@repo/database';
+import { Language } from '@prisma/client';
 
 export class GameTranslationAdminResponseDto {
     @ApiProperty({ enum: Language, description: '언어 코드 / Language code' })

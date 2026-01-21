@@ -1,5 +1,5 @@
 import { Injectable } from '@nestjs/common';
-import { CasinoGameProvider as PrismaCasinoGameProvider, Prisma } from '@repo/database';
+import { CasinoGameProvider as PrismaCasinoGameProvider, Prisma } from '@prisma/client';
 import { CasinoGameProvider } from '../domain';
 
 @Injectable()

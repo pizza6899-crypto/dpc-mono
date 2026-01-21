@@ -9,8 +9,8 @@ import {
     BalanceType,
     UpdateOperation,
 } from '../domain';
-import type { ExchangeCurrencyCode } from '@repo/database';
-import { Prisma } from '@repo/database';
+import type { ExchangeCurrencyCode } from '@prisma/client';
+import { Prisma } from '@prisma/client';
 import { Transactional } from '@nestjs-cls/transactional';
 
 interface UpdateUserBalanceParams {

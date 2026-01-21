@@ -1,5 +1,5 @@
 import { ApiProperty } from '@nestjs/swagger';
-import { ChannelType } from '@repo/database';
+import { ChannelType } from '@prisma/client';
 
 export class TemplateTranslationResponseDto {
     @ApiProperty({ description: 'Locale', example: 'en' })

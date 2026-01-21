@@ -1,6 +1,6 @@
 // src/platform/user-validation/user-validation.types.ts
-import type { UserRoleType, KycLevel } from '@repo/database';
-import { UserStatus } from '@repo/database';
+import type { UserRoleType, KycLevel } from '@prisma/client';
+import { UserStatus } from '@prisma/client';
 
 /**
  * 유저 유효성 검사 옵션

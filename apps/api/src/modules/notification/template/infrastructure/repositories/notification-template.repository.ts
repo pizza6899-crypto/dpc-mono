@@ -4,7 +4,7 @@ import { Injectable } from '@nestjs/common';
 import { InjectTransaction } from '@nestjs-cls/transactional';
 import type { Transaction } from '@nestjs-cls/transactional';
 import type { TransactionalAdapterPrisma } from '@nestjs-cls/transactional-adapter-prisma';
-import { ChannelType } from '@repo/database';
+import { ChannelType } from '@prisma/client';
 import { NotificationTemplateRepositoryPort } from '../../ports';
 import { NotificationTemplate } from '../../domain';
 import { NotificationTemplateMapper } from '../mappers/notification-template.mapper';

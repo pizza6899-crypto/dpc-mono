@@ -1,6 +1,6 @@
 // src/modules/wallet/controllers/admin/dto/response/update-user-balance.response.dto.ts
 import { ApiProperty } from '@nestjs/swagger';
-import { ExchangeCurrencyCode } from '@repo/database';
+import { ExchangeCurrencyCode } from '@prisma/client';
 
 export class UpdateUserBalanceResponseDto {
   @ApiProperty({

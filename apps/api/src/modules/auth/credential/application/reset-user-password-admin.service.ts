@@ -7,7 +7,7 @@ import type { RequestClientInfo } from 'src/common/http/types/client-info.types'
 import { UserNotFoundException } from 'src/modules/user/domain/user.exception';
 import { LoginFailedException, InsufficientPermissionException } from '../domain/exception';
 import { nanoid } from 'nanoid';
-import { UserRoleType } from '@repo/database';
+import { UserRoleType } from '@prisma/client';
 import { User } from 'src/modules/user/domain';
 
 export interface ResetUserPasswordAdminParams {

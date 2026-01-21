@@ -1,7 +1,7 @@
 // apps/api/src/modules/notification/alert/controllers/admin/dto/response/alert.response.dto.ts
 
 import { ApiProperty } from '@nestjs/swagger';
-import { AlertStatus } from '@repo/database';
+import { AlertStatus } from '@prisma/client';
 
 export class AlertResponseDto {
     @ApiProperty({ description: 'Alert ID', example: '1234567890' })

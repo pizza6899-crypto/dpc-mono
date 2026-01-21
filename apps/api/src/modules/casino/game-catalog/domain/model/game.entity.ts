@@ -1,4 +1,4 @@
-import { Language, Prisma } from "@repo/database";
+import { Language, Prisma } from "@prisma/client";
 
 export interface GameTranslation {
     language: Language;

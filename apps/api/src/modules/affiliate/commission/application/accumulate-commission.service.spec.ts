@@ -5,7 +5,7 @@ import {
   CommissionStatus,
   ExchangeCurrencyCode,
   Prisma,
-} from '@repo/database';
+} from '@prisma/client';
 import { AccumulateCommissionService } from './accumulate-commission.service';
 import { CalculateCommissionService } from './calculate-commission.service';
 import { AffiliateCommission } from '../domain';

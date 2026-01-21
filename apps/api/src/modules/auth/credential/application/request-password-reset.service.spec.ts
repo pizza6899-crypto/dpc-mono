@@ -8,7 +8,7 @@ import type { UserRepositoryPort } from 'src/modules/user/ports/out/user.reposit
 import { PASSWORD_RESET_TOKEN_REPOSITORY } from '../ports/out/password-reset-token.repository.token';
 import type { PasswordResetTokenRepositoryPort } from '../ports/out/password-reset-token.repository.port';
 import { User } from 'src/modules/user/domain';
-import { UserStatus, UserRoleType, SocialType } from '@repo/database';
+import { UserStatus, UserRoleType, SocialType } from '@prisma/client';
 import type { RequestClientInfo } from 'src/common/http/types/client-info.types';
 import { PrismaModule } from 'src/infrastructure/prisma/prisma.module';
 import { EnvModule } from 'src/common/env/env.module';

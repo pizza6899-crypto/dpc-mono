@@ -12,7 +12,7 @@ import {
 } from '@nestjs/common';
 import { ApiTags, ApiOperation, ApiParam } from '@nestjs/swagger';
 import { RequireRoles } from 'src/common/auth/decorators/roles.decorator';
-import { UserRoleType, Prisma } from '@repo/database';
+import { UserRoleType, Prisma } from '@prisma/client';
 import {
   ApiStandardResponse,
   ApiStandardErrors,

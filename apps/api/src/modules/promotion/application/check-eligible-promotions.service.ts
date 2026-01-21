@@ -1,6 +1,6 @@
 // src/modules/promotion/application/check-eligible-promotions.service.ts
 import { Inject, Injectable } from '@nestjs/common';
-import { Prisma, ExchangeCurrencyCode } from '@repo/database';
+import { Prisma, ExchangeCurrencyCode } from '@prisma/client';
 import type { Promotion } from '../domain';
 import { PROMOTION_REPOSITORY } from '../ports/out';
 import type { PromotionRepositoryPort } from '../ports/out/promotion.repository.port';

@@ -1,4 +1,4 @@
-import { GameAggregatorType } from '@repo/database';
+import { GameAggregatorType } from '@prisma/client';
 
 /**
  * Aggregator로부터 받아오는 게임 정보를 표준화한 DTO

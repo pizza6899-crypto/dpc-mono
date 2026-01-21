@@ -1,6 +1,6 @@
 import { Inject, Injectable } from '@nestjs/common';
 import { Transactional } from '@nestjs-cls/transactional';
-import { Prisma } from '@repo/database';
+import { Prisma } from '@prisma/client';
 import type { UserTierRepositoryPort } from '../ports/user-tier.repository.port';
 import type { TierRepositoryPort } from '../ports/tier.repository.port';
 import type { TierHistoryRepositoryPort } from '../ports/tier-history.repository.port';

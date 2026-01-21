@@ -1,6 +1,6 @@
 // src/modules/deposit/application/create-crypto-config.service.ts
 import { Inject, Injectable } from '@nestjs/common';
-import { Prisma } from '@repo/database';
+import { Prisma } from '@prisma/client';
 import { CRYPTO_CONFIG_REPOSITORY } from '../ports/out';
 import type { CryptoConfigRepositoryPort } from '../ports/out';
 import { CryptoConfig } from '../domain';

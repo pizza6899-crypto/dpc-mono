@@ -1,6 +1,6 @@
 // apps/api/src/modules/notification/inbox/ports/notification-log.repository.port.ts
 
-import { ChannelType, NotifyStatus } from '@repo/database';
+import { ChannelType, NotifyStatus } from '@prisma/client';
 import { NotificationLog } from '../domain';
 
 export interface NotificationLogListQuery {

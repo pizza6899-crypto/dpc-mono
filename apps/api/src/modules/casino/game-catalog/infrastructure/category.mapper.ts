@@ -1,5 +1,5 @@
 import { Injectable } from '@nestjs/common';
-import { CasinoGameCategory as PrismaCategory, CasinoGameCategoryTranslation as PrismaTranslation } from '@repo/database';
+import { CasinoGameCategory as PrismaCategory, CasinoGameCategoryTranslation as PrismaTranslation } from '@prisma/client';
 import { CasinoGameCategory } from '../domain';
 
 type PrismaCategoryWithTranslations = PrismaCategory & {

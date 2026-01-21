@@ -4,7 +4,6 @@ import {
   OnModuleDestroy,
   Logger,
 } from '@nestjs/common';
-import { PrismaClient, Prisma } from '../../generated/prisma';
 import { PrismaPg } from '@prisma/adapter-pg';
 import kyselyExtension, {
   PrismaKyselyExtensionArgs,
@@ -21,7 +20,8 @@ import {
   PostgresQueryCompiler,
   sql,
 } from 'kysely';
-import { DB } from '@repo/database/src/kysely-types';
+import { DB } from '../../generated/kysely/kysely-types';
+import { Prisma, PrismaClient } from '@prisma/client';
 
 /**
  * Prisma 데이터베이스 서비스 (Kysely 확장 포함)

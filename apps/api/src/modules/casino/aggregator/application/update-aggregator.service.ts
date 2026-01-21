@@ -2,7 +2,7 @@ import { Inject, Injectable } from '@nestjs/common';
 import { CasinoAggregator } from '../domain';
 import { CASINO_AGGREGATOR_REPOSITORY } from '../ports';
 import type { CasinoAggregatorRepositoryPort } from '../ports';
-import { AggregatorStatus } from '@repo/database';
+import { AggregatorStatus } from '@prisma/client';
 
 interface UpdateAggregatorCommand {
     id: bigint;

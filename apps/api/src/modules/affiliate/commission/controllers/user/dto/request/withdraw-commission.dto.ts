@@ -1,7 +1,7 @@
 // src/modules/affiliate/commission/controllers/dto/request/withdraw-commission.dto.ts
 import { ApiProperty } from '@nestjs/swagger';
 import { IsEnum, IsString, Matches } from 'class-validator';
-import { ExchangeCurrencyCode } from '@repo/database';
+import { ExchangeCurrencyCode } from '@prisma/client';
 
 export class WithdrawCommissionDto {
   @ApiProperty({

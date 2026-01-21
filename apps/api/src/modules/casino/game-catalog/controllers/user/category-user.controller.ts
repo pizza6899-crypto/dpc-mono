@@ -7,7 +7,7 @@ import { FindCategoriesService } from '../../application/find-categories.service
 import { CategoryResponseDto } from './dto/response/category.response.dto';
 import { CategoryListRequestDto } from './dto/request/category-list.request.dto';
 import { PaginatedData } from 'src/common/http/types';
-import { Language } from '@repo/database';
+import { Language } from '@prisma/client';
 
 @ApiTags('Casino Category')
 @Controller('casino/categories')

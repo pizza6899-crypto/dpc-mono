@@ -1,7 +1,7 @@
 import { Injectable, Logger } from '@nestjs/common';
 import { InjectTransaction } from '@nestjs-cls/transactional';
 import { type PrismaTransaction } from 'src/infrastructure/prisma/prisma.module';
-import { GameAggregatorType, Language, GameProvider } from '@repo/database';
+import { GameAggregatorType, Language, GameProvider } from '@prisma/client';
 import { SyncResultResponseDto } from '../controllers/admin/dto/response/sync-result.response.dto';
 
 import { AggregatorClientFactory } from '../../aggregator/infrastructure/aggregator.factory';

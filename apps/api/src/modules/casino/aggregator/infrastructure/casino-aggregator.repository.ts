@@ -4,7 +4,7 @@ import { type PrismaTransaction } from 'src/infrastructure/prisma/prisma.module'
 import { CasinoAggregatorRepositoryPort } from '../ports/casino-aggregator.repository.port';
 import { CasinoAggregator, CasinoAggregatorNotFoundException } from '../domain';
 import { CasinoAggregatorMapper } from './casino-aggregator.mapper';
-import { AggregatorStatus } from '@repo/database';
+import { AggregatorStatus } from '@prisma/client';
 
 @Injectable()
 export class CasinoAggregatorRepository implements CasinoAggregatorRepositoryPort {

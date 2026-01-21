@@ -1,7 +1,7 @@
 // src/platform/auth/strategies/session.serializer.ts
 import { Injectable, Inject } from '@nestjs/common';
 import { PassportSerializer } from '@nestjs/passport';
-import { UserStatus, UserRoleType, Language } from '@repo/database';
+import { UserStatus, UserRoleType, Language } from '@prisma/client';
 import { AuthenticatedUser } from '../types/auth.types';
 import { USER_SESSION_REPOSITORY } from 'src/modules/auth/session/ports/out';
 import type { UserSessionRepositoryPort } from 'src/modules/auth/session/ports/out';

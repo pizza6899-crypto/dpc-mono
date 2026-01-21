@@ -8,7 +8,7 @@ import type {
   FindUsersParams,
   FindUsersResult,
 } from '../ports/out/user.repository.port';
-import { Prisma } from '@repo/database';
+import { Prisma } from '@prisma/client';
 import { User } from '../domain';
 import { UserMapper } from './user.mapper';
 

@@ -7,7 +7,7 @@ import {
 import { RequestClientInfoParam } from 'src/common/auth/decorators/request-info.decorator';
 import type { RequestClientInfo } from 'src/common/http/types/client-info.types';
 import { RequireRoles } from 'src/common/auth/decorators/roles.decorator';
-import { UserRoleType } from '@repo/database';
+import { UserRoleType } from '@prisma/client';
 import { RegisterCredentialAdminService } from '../../application/register-credential-admin.service';
 import { RegisterAdminRequestDto } from './dto/request/register-admin.request.dto';
 import { RegisterAdminResponseDto } from './dto/response/register-admin.response.dto';

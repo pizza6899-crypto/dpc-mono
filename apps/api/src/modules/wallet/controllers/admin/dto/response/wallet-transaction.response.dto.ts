@@ -1,6 +1,6 @@
 import { ApiProperty } from '@nestjs/swagger';
-import { ExchangeCurrencyCode, TransactionStatus, TransactionType, AdjustmentReasonCode } from '@repo/database';
-import { Prisma } from '@repo/database';
+import { ExchangeCurrencyCode, TransactionStatus, TransactionType, AdjustmentReasonCode } from '@prisma/client';
+import { Prisma } from '@prisma/client';
 
 export class WalletBalanceDetailResponseDto {
     @ApiProperty({ description: '메인 잔액 변경량' })

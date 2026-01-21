@@ -1,13 +1,13 @@
 import { Injectable, Inject, Logger } from '@nestjs/common';
 import { Transactional } from '@nestjs-cls/transactional';
-import { WithdrawalProcessingMode } from '@repo/database';
+import { WithdrawalProcessingMode } from '@prisma/client';
 import { NowPaymentApiService } from 'src/modules/payment/infrastructure/now-payment-api.service';
 import { UpdateUserBalanceService } from 'src/modules/wallet/application/update-user-balance.service';
 import { CreateWalletTransactionService } from 'src/modules/wallet/application/create-wallet-transaction.service';
 import { BalanceType, UpdateOperation } from 'src/modules/wallet/domain';
 import { AnalyticsQueueService } from 'src/modules/analytics/application/analytics-queue.service';
 import { WithdrawalDetail, WithdrawalProcessingException } from '../domain';
-import { TransactionType, TransactionStatus } from '@repo/database';
+import { TransactionType, TransactionStatus } from '@prisma/client';
 import { WITHDRAWAL_REPOSITORY } from '../ports';
 import type { WithdrawalRepositoryPort } from '../ports';
 

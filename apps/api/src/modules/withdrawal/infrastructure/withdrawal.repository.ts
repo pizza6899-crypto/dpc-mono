@@ -1,6 +1,6 @@
 import { Injectable } from '@nestjs/common';
 import { InjectTransaction } from '@nestjs-cls/transactional';
-import { ExchangeCurrencyCode, WithdrawalStatus, WithdrawalMethodType, Prisma } from '@repo/database';
+import { ExchangeCurrencyCode, WithdrawalStatus, WithdrawalMethodType, Prisma } from '@prisma/client';
 import type { PrismaTransaction } from 'src/infrastructure/prisma/prisma.module';
 import {
     WithdrawalDetail,

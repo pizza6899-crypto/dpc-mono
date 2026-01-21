@@ -1,4 +1,4 @@
-import { Prisma, ExchangeCurrencyCode } from '@repo/database';
+import { Prisma, ExchangeCurrencyCode } from '@prisma/client';
 
 export interface BankWithdrawConfigProps {
     currency: ExchangeCurrencyCode;

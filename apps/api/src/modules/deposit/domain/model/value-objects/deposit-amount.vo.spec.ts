@@ -1,5 +1,5 @@
 // src/modules/deposit/domain/model/value-objects/deposit-amount.vo.spec.ts
-import { Prisma, FeePaidByType } from '@repo/database';
+import { Prisma, FeePaidByType } from '@prisma/client';
 import { DepositAmount } from './deposit-amount.vo';
 
 describe('DepositAmount Value Object', () => {

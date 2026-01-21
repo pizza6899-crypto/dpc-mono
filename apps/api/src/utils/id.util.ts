@@ -7,7 +7,7 @@ import type {
 } from 'src/infrastructure/prisma/prisma.service';
 import type { PrismaTransaction } from 'src/infrastructure/prisma/prisma.module';
 import { nowUtc } from './date.util';
-import type { Prisma } from '@repo/database';
+import type { Prisma } from '@prisma/client';
 
 // 디폴트 설정으로 한 번만 초기화 (성능 최적화)
 const generateId = init();

@@ -21,7 +21,7 @@ import {
 import { Paginated } from 'src/common/http/decorators/paginated.decorator';
 import type { PaginatedData } from 'src/common/http/types/pagination.types';
 import { RequireRoles } from 'src/common/auth/decorators/roles.decorator';
-import { UserRoleType } from '@repo/database';
+import { UserRoleType } from '@prisma/client';
 import { AuditLog } from 'src/modules/audit-log/infrastructure';
 import { LogType } from 'src/modules/audit-log/domain';
 import { FindPromotionsAdminService } from '../../application/find-promotions-admin.service';
@@ -48,7 +48,7 @@ import { PROMOTION_REPOSITORY } from '../../ports/out';
 import type { PromotionRepositoryPort } from '../../ports/out/promotion.repository.port';
 import { Promotion, PromotionNotFoundException, PromotionPolicy } from '../../domain';
 import { Inject } from '@nestjs/common';
-import { ExchangeCurrencyCode, Language, Prisma } from '@repo/database';
+import { ExchangeCurrencyCode, Language, Prisma } from '@prisma/client';
 
 @Controller('admin/promotions')
 @ApiTags('Admin Promotion')

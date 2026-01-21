@@ -1,6 +1,6 @@
 import { IsEnum, IsNumberString } from 'class-validator';
 import { ApiProperty } from '@nestjs/swagger';
-import { Language } from '@repo/database';
+import { Language } from '@prisma/client';
 
 export class TemplateTranslationParamDto {
     @ApiProperty({ description: 'Template ID', example: '1' })

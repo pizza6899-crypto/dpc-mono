@@ -5,7 +5,7 @@ import {
   CommissionStatus,
   ExchangeCurrencyCode,
   Prisma,
-} from '@repo/database';
+} from '@prisma/client';
 import { AffiliateCommission, CommissionNotFoundException } from '../domain';
 import type { AffiliateCommissionMapper } from './affiliate-commission.mapper';
 import { AffiliateCommissionRepository } from './affiliate-commission.repository';

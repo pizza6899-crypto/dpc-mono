@@ -8,7 +8,7 @@ import type { UserRepositoryPort } from 'src/modules/user/ports/out/user.reposit
 import { UserWallet } from '../domain';
 import { UserNotFoundException } from 'src/modules/user/domain/user.exception';
 import { WalletNotFoundException } from '../domain';
-import type { ExchangeCurrencyCode } from '@repo/database';
+import type { ExchangeCurrencyCode } from '@prisma/client';
 
 interface GetUserBalanceAdminParams {
   userId: bigint;

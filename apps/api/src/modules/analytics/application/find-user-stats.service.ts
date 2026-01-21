@@ -1,5 +1,5 @@
 import { Inject, Injectable } from '@nestjs/common';
-import { ExchangeCurrencyCode, Prisma } from '@repo/database';
+import { ExchangeCurrencyCode, Prisma } from '@prisma/client';
 import { ANALYTICS_REPOSITORY } from '../ports/analytics.repository.token';
 import type { AnalyticsRepositoryPort } from '../ports/analytics.repository.port';
 import { UserHourlyStat } from '../domain/model/user-hourly-stat.entity';

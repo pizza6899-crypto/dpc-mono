@@ -2,7 +2,7 @@ import {
     GameAggregatorType,
     ExchangeCurrencyCode,
     Prisma,
-} from '@repo/database';
+} from '@prisma/client';
 
 export class CasinoGameSession {
     private constructor(

@@ -7,7 +7,7 @@ import {
     ExchangeCurrencyCode,
     GameAggregatorType,
     Prisma,
-} from '@repo/database';
+} from '@prisma/client';
 import { IdUtil } from 'src/utils/id.util';
 
 describe('CreateCasinoGameSessionService (Integration)', () => {

@@ -1,6 +1,6 @@
 import { IsEnum, IsOptional, IsString, IsBoolean } from 'class-validator';
 import { ApiPropertyOptional } from '@nestjs/swagger';
-import { AggregatorStatus } from '@repo/database';
+import { AggregatorStatus } from '@prisma/client';
 
 export class UpdateAggregatorDto {
     @ApiPropertyOptional({ description: 'Aggregator name / 애그리게이터 이름' })

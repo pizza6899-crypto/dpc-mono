@@ -1,5 +1,5 @@
 // src/modules/deposit/domain/model/crypto-config.entity.spec.ts
-import { Prisma } from '@repo/database';
+import { Prisma } from '@prisma/client';
 import { CryptoConfig } from './crypto-config.entity';
 
 describe('CryptoConfig Entity', () => {

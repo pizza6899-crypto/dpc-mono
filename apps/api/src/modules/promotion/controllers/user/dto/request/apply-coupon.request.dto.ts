@@ -1,7 +1,7 @@
 // src/modules/promotion/controllers/user/dto/request/apply-coupon.request.dto.ts
 import { ApiProperty } from '@nestjs/swagger';
 import { IsEnum, IsNotEmpty, IsString } from 'class-validator';
-import { ExchangeCurrencyCode } from '@repo/database';
+import { ExchangeCurrencyCode } from '@prisma/client';
 
 export class ApplyCouponRequestDto {
     @ApiProperty({

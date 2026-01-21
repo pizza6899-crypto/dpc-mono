@@ -39,7 +39,7 @@ import { ChangePasswordRequestDto } from '../user/dto/request/change-password.re
 import { ChangePasswordResponseDto } from '../user/dto/response/change-password.response.dto';
 import { ResetUserPasswordRequestDto } from './dto/request/reset-user-password.request.dto';
 import { ResetUserPasswordResponseDto } from './dto/response/reset-user-password.response.dto';
-import { UserRoleType } from '@repo/database';
+import { UserRoleType } from '@prisma/client';
 import type { Request } from 'express';
 import { AuditLog } from 'src/modules/audit-log/infrastructure';
 import { LogType } from 'src/modules/audit-log/domain';

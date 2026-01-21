@@ -10,7 +10,7 @@ import {
   WhitecliffApiService,
 } from 'src/modules/casino/providers/whitecliff/infrastructure/whitecliff-api.service';
 import { Logger, OnApplicationShutdown } from '@nestjs/common';
-import { GameReplayType, Language } from '@repo/database';
+import { GameReplayType, Language } from '@prisma/client';
 import { GamingCurrencyCode } from 'src/utils/currency.util';
 import { ClsService } from 'nestjs-cls';
 

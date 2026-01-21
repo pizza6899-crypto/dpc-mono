@@ -1,5 +1,5 @@
 // src/modules/promotion/domain/model/user-promotion.entity.spec.ts
-import { Prisma, ExchangeCurrencyCode, UserPromotionStatus } from '@repo/database';
+import { Prisma, ExchangeCurrencyCode, UserPromotionStatus } from '@prisma/client';
 import { UserPromotion } from './user-promotion.entity';
 
 describe('UserPromotion Entity', () => {

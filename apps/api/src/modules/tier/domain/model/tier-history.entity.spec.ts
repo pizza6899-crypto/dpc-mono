@@ -1,5 +1,5 @@
 // src/modules/tier/domain/model/tier-history.entity.spec.ts
-import { Prisma } from '@repo/database';
+import { Prisma } from '@prisma/client';
 import { TierHistory, TierChangeType } from './tier-history.entity';
 
 describe('TierHistory Entity', () => {

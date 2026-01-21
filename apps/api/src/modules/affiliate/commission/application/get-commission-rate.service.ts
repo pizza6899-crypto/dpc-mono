@@ -1,6 +1,6 @@
 // src/modules/affiliate/commission/application/get-commission-rate.service.ts
 import { Injectable } from '@nestjs/common';
-import { Prisma } from '@repo/database';
+import { Prisma } from '@prisma/client';
 import { GetAffiliateRateService } from '../../../tier/application/get-affiliate-rate.service';
 import { GetUserTierService } from '../../../tier/application/get-user-tier.service';
 

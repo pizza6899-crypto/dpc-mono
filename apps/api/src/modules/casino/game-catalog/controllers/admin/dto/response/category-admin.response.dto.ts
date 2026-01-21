@@ -1,5 +1,5 @@
 import { ApiProperty, ApiPropertyOptional } from '@nestjs/swagger';
-import { CategoryType, Language } from '@repo/database';
+import { CategoryType, Language } from '@prisma/client';
 
 export class CategoryTranslationAdminResponseDto {
     @ApiProperty({ enum: Language, description: '언어 코드 / Language code' })

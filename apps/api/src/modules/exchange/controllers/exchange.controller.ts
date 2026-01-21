@@ -12,7 +12,7 @@ import {
   ConvertCurrencyQueryDto,
   ConvertCurrencyResponseDto,
 } from '../dtos/exchange-rate.dto';
-import { ExchangeCurrencyCode, Prisma } from '@repo/database';
+import { ExchangeCurrencyCode, Prisma } from '@prisma/client';
 import { Public } from 'src/common/auth/decorators/roles.decorator';
 import { Throttle } from 'src/common/throttle/decorators/throttle.decorator';
 import { ThrottleScope } from 'src/common/throttle/types/throttle.types';

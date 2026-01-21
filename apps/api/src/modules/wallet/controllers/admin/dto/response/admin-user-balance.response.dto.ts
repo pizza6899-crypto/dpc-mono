@@ -1,6 +1,6 @@
 // src/modules/wallet/controllers/admin/dto/response/admin-user-balance.response.dto.ts
 import { ApiProperty } from '@nestjs/swagger';
-import { ExchangeCurrencyCode } from '@repo/database';
+import { ExchangeCurrencyCode } from '@prisma/client';
 
 export class AdminUserBalanceItemDto {
   @ApiProperty({

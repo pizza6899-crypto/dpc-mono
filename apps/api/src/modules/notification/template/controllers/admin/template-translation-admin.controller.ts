@@ -13,7 +13,7 @@ import {
     ApiStandardErrors,
 } from 'src/common/http/decorators/api-response.decorator';
 import { RequireRoles } from 'src/common/auth/decorators/roles.decorator';
-import { UserRoleType, Language } from '@repo/database';
+import { UserRoleType, Language } from '@prisma/client';
 import { LogType } from 'src/modules/audit-log/domain';
 import { AuditLog } from 'src/modules/audit-log/infrastructure/audit-log.decorator';
 import { UpdateTemplateTranslationService } from '../../application/update-template-translation.service';

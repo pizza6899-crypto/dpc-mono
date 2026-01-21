@@ -1,4 +1,4 @@
-import { PrismaClient, ChannelType, Language } from '@repo/database';
+import { PrismaClient, ChannelType, Language } from '@prisma/client';
 
 const templates = [
     {

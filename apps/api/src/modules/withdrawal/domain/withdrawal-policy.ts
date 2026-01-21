@@ -1,5 +1,5 @@
 import { Injectable } from '@nestjs/common';
-import { Prisma, ExchangeCurrencyCode, WithdrawalProcessingMode } from '@repo/database';
+import { Prisma, ExchangeCurrencyCode, WithdrawalProcessingMode } from '@prisma/client';
 import { CryptoWithdrawConfig } from './model/crypto-withdraw-config.entity';
 import { BankWithdrawConfig } from './model/bank-withdraw-config.entity';
 import {

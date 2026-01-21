@@ -2,7 +2,7 @@ import { ApiProperty, ApiPropertyOptional } from '@nestjs/swagger';
 import { IsBoolean, IsEnum, IsNotEmpty, IsOptional, IsString } from 'class-validator';
 import { WALLET_CURRENCIES, type WalletCurrencyCode } from 'src/utils/currency.util';
 import { GAMING_CURRENCIES, type GamingCurrencyCode } from 'src/utils/currency.util';
-import { Language } from '@repo/database';
+import { Language } from '@prisma/client';
 
 export class LaunchGameRequestDto {
     @ApiProperty({ description: 'Encoded game ID (Sqids) / 인코딩된 게임 ID (Sqids)' })

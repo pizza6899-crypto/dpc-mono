@@ -5,7 +5,7 @@ import {
   ExchangeCurrencyCode,
   PromotionTargetType,
   PromotionBonusType,
-} from '@repo/database';
+} from '@prisma/client';
 
 export class PromotionResponseDto {
   @ApiProperty({

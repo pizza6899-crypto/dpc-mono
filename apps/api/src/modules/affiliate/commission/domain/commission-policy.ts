@@ -1,5 +1,5 @@
 // src/modules/affiliate/commission/domain/commission-policy.ts
-import { CommissionStatus, Prisma } from '@repo/database';
+import { CommissionStatus, Prisma } from '@prisma/client';
 import {
   InvalidCommissionRateException,
   CommissionNotAvailableException,

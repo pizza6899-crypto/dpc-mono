@@ -4,7 +4,7 @@ import { FindUserStatsService } from '../../application/find-user-stats.service'
 import { FindStatsRequestDto } from '../user/dto/request/find-stats.request.dto';
 import { AdminStatResponseDto } from './dto/response/admin-stat.response.dto';
 import { RequireRoles } from 'src/common/auth/decorators/roles.decorator';
-import { UserRoleType } from '@repo/database';
+import { UserRoleType } from '@prisma/client';
 import { AuditLog } from 'src/modules/audit-log/infrastructure/audit-log.decorator';
 import { LogType } from 'src/modules/audit-log/domain';
 import { ApiStandardResponse, ApiStandardErrors } from 'src/common/http/decorators/api-response.decorator';

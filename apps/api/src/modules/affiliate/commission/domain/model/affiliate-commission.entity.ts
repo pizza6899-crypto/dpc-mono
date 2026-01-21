@@ -2,8 +2,8 @@
 import type {
   ExchangeCurrencyCode,
   Prisma,
-} from '@repo/database';
-import { CommissionStatus } from '@repo/database';
+} from '@prisma/client';
+import { CommissionStatus } from '@prisma/client';
 import {
   CommissionNotAvailableException,
   InvalidCommissionCalculationException,

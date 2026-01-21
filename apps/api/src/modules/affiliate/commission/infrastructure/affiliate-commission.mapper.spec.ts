@@ -3,7 +3,7 @@ import {
   CommissionStatus,
   ExchangeCurrencyCode,
   Prisma,
-} from '@repo/database';
+} from '@prisma/client';
 import { AffiliateCommission } from '../domain';
 import { AffiliateCommissionMapper } from './affiliate-commission.mapper';
 

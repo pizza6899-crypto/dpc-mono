@@ -1,5 +1,5 @@
 import { Expose, Transform } from 'class-transformer';
-import type { ExchangeCurrencyCode, WageringSourceType, WageringStatus } from '@repo/database';
+import type { ExchangeCurrencyCode, WageringSourceType, WageringStatus } from '@prisma/client';
 import { ApiProperty } from '@nestjs/swagger';
 
 export class WageringRequirementAdminResponseDto {
